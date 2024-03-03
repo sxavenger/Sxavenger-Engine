@@ -23,8 +23,8 @@ Camera3D::Camera3D(const std::string& filePath) {
 	ReadJsonCameraData(filePath);
 	SetProjection(0.45f, static_cast<float>(kWindowWidth) / static_cast<float>(kWindowHeight), 0.1f, 100.0f);
 
-	resource_ = new DxObject::BufferPtrResource<Vector3f>(MyEngine::GetDevice(), 1);
-	resource_->Set(0, &direction);
+	resource_ = new DxObject::BufferPtrResource<Vector4f>(MyEngine::GetDevice(), 1);
+	resource_->Set(0, &position);
 }
 
 Camera3D::~Camera3D() { Term(); }
@@ -47,8 +47,8 @@ void Camera3D::SetCamera(const Vector3f& scale, const Vector3f& rotate, const Ve
 	Matrix4x4 cameraMatrix = Matrix::MakeAffine(camera_.scale, camera_.rotate, camera_.translate);
 	viewMatrix_ = Matrix::Inverse(cameraMatrix);
 
-	/*position = { camera_.translate.x, camera_.translate.y, camera_.translate.z, 1.0f };*/
-	direction = Matrix::Transform({0.0f, 0.0f, 1.0f}, Matrix::MakeRotate(rotate));
+	position = { camera_.translate.x, camera_.translate.y, camera_.translate.z, 1.0f };
+	/*direction = Matrix::Transform({0.0f, 0.0f, 1.0f}, Matrix::MakeRotate(rotate));*/
 }
 
 void Camera3D::SetProjection(float fovY, float aspectRatio, float nearClip, float farClip) {
@@ -100,5 +100,6 @@ void Camera3D::RecalculateCamera() {
 	Matrix4x4 cameraMatrix = Matrix::MakeAffine(camera_.scale, camera_.rotate, camera_.translate);
 	viewMatrix_ = Matrix::Inverse(cameraMatrix);
 
-	direction = Matrix::Transform({ 0.0f, 0.0f, 1.0f }, Matrix::MakeRotate(camera_.rotate));
+	position = { camera_.translate.x, camera_.translate.y, camera_.translate.z, 1.0f };
+	/*direction = Matrix::Transform({ 0.0f, 0.0f, 1.0f }, Matrix::MakeRotate(camera_.rotate));*/
 }

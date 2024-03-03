@@ -20,7 +20,7 @@ ConstantBuffer<DirectionalLight> gDirectionalLight : register(b1);
 
 struct Camera3D
 {
-    float3 direction;
+    float4 position;
 };
 ConstantBuffer<Camera3D> gCamera3D : register(b2);
 
@@ -64,9 +64,13 @@ PSOutput main(VSOutput input)
     if (gMaterial.enableBlinnPhong != 0) //!< enableBlinnPhong = true;
     {
         // blinnePhong
-        float3 H = normalize(-gCamera3D.direction - gDirectionalLight.direction);
+        
+        float3 lightDirection = gDirectionalLight.direction;
+        float3 cameraDirection = normalize(input.worldPos - gCamera3D.position).xyz;
+        
+        float3 H = normalize(-cameraDirection - lightDirection);
   
-        float NdotH = dot(normalize(input.normal), H);
+        float NdotH = max(dot(normalize(input.normal), H), 0);
         float4 spec = pow(NdotH, gMaterial.specPow) * gDirectionalLight.color; //!< specColor = lightColor
   
         float4 blinnPhong = saturate(spec * gDirectionalLight.color * gDirectionalLight.intensity);

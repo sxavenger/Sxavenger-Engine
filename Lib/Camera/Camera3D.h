@@ -77,8 +77,8 @@ private:
 	Matrix4x4 viewMatrix_;
 	Matrix4x4 projectionMatrix_;
 
-	Object_Ptr<DxObject::BufferPtrResource<Vector3f>> resource_;
-	Vector3f direction;
+	Object_Ptr<DxObject::BufferPtrResource<Vector4f>> resource_;
+	Vector4f position;
 
 	//=========================================================================================
 	// private methods

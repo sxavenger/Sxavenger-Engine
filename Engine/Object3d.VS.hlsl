@@ -20,6 +20,7 @@ VSOutput main(VSInput input)
 {
     VSOutput output;
     output.position = mul(input.position, gTransformationMatrix.WVP);
+    output.worldPos = mul(input.position, gTransformationMatrix.World);
     output.texcoord = input.texcoord;
     output.normal   = normalize(mul(input.normal, (float3x3)gTransformationMatrix.World));
     return output;
