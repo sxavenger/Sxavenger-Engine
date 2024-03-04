@@ -28,7 +28,7 @@ void Texture::Load(const std::string& filePath, DirectXCommon* dxCommon) {
 	textureResource_ = TextureMethod::CreateTextureResource(device, metadata);
 	ComPtr<ID3D12Resource> intermediateResouce = TextureMethod::UploadTextureData(textureResource_.Get(), mipImage, device, commandList);
 
-	dxCommon->End();
+	dxCommon->Sent();
 
 	intermediateResouce->Release();
 

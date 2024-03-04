@@ -214,6 +214,9 @@
     <ClCompile Include="Game\Object\Suzanne.cpp">
       <Filter>Game\Object\source</Filter>
     </ClCompile>
+    <ClCompile Include="Lib\Light\Light.cpp">
+      <Filter>Lib\Light\source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\MyEngine.h">
@@ -362,6 +365,9 @@
     </ClInclude>
     <ClInclude Include="Game\Object\Suzanne.h">
       <Filter>Game\Object\include</Filter>
+    </ClInclude>
+    <ClInclude Include="Lib\Light\Light.h">
+      <Filter>Lib\Light\include</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

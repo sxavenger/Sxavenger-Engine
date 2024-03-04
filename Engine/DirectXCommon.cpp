@@ -183,7 +183,7 @@ void DirectXCommon::EndFrame() {
 	command_->Reset();
 }
 
-void DirectXCommon::End() {
+void DirectXCommon::Sent() {
 	command_->Close();
 
 	// GPUにシグナルを送る

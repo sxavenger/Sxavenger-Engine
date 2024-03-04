@@ -51,7 +51,7 @@ public:
 	void EndFrame();
 
 	//!
-	void End();
+	void Sent();
 
 	void SetPipelineState(uint32_t index);
 
