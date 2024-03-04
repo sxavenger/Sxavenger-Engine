@@ -5,15 +5,16 @@
 //-----------------------------------------------------------------------------------------
 #include "MyEngine.h" //!< textureの取り出し
 
+// c++
+#include <memory>
+
 // ObjectStructure
 #include <ObjectStructure.h>
-
-// Object_Ptr
-#include <ObjectPtr.h>
 
 // DirectX12
 #include <DxBufferResource.h>
 
+// Lib
 #include <DirectionalLight.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -63,8 +64,8 @@ protected:
 	Matrix4x4 uvMatrix_ = Matrix4x4::MakeIdentity();
 
 	// resource
-	Object_Ptr<DxObject::BufferResource<TransformationMatrix>> matrixResource_;
-	Object_Ptr<DxObject::BufferPtrResource<Material>>          materialResource_;
+	std::unique_ptr<DxObject::BufferResource<TransformationMatrix>> matrixResource_;
+	std::unique_ptr<DxObject::BufferPtrResource<Material>>          materialResource_;
 
 	// bool
 	bool isDelete_ = false;

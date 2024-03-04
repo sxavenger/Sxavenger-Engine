@@ -5,7 +5,7 @@
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 void Teapot::Init() {
-	model_ = new Model("resources/model", "teapot.obj");
+	model_ = std::make_unique<Model>("resources/model", "teapot.obj");
 }
 
 void Teapot::EditorImGui(int identifier) {
@@ -28,5 +28,5 @@ void Teapot::Draw(ID3D12GraphicsCommandList* commandList, Directional* direction
 }
 
 void Teapot::Term() {
-	model_.Release();
+	model_.reset();
 }

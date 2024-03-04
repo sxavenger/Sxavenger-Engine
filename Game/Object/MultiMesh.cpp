@@ -5,7 +5,7 @@
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 void MultiMesh::Init() {
-	model_ = new Model("resources/model", "multiMesh.obj");
+	model_ = std::make_unique<Model>("resources/model", "multiMesh.obj");
 }
 
 void MultiMesh::EditorImGui(int identifier) {
@@ -15,7 +15,7 @@ void MultiMesh::EditorImGui(int identifier) {
 }
 
 void MultiMesh::Draw(ID3D12GraphicsCommandList* commandList, Directional* directionalLight) {
-	for (uint32_t i = 0; i < model_->GetModelSize(); ++i) {
+	for (uint32_t i = 0; i < model_->GetSize(); ++i) {
 		model_->SetBuffers(commandList, i);
 
 		commandList->SetGraphicsRootConstantBufferView(0, materialResource_->GetGPUVirtualAddress());
@@ -30,5 +30,5 @@ void MultiMesh::Draw(ID3D12GraphicsCommandList* commandList, Directional* direct
 }
 
 void MultiMesh::Term() {
-	model_.Release();
+	model_.reset();
 }

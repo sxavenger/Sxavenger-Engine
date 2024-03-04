@@ -45,7 +45,7 @@ private:
 	static const uint32_t kVertexNum_ = 3;
 
 	// resource
-	Object_Ptr<DxObject::BufferResource<VertexData>> vertexResource_;
-	D3D12_VERTEX_BUFFER_VIEW                         vertexBufferView_;
+	std::unique_ptr<DxObject::BufferResource<VertexData>> vertexResource_;
+	D3D12_VERTEX_BUFFER_VIEW                              vertexBufferView_;
 
 };

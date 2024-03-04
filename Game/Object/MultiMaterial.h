@@ -44,7 +44,7 @@ private:
 	// private variables
 	//=========================================================================================
 
-	Object_Ptr<Model> model_;
+	std::unique_ptr<Model> model_;
 
 	// multimaterailなのでmaterialが2つ必要...
 	static const uint32_t kMaterialNum_ = 2; // materail分用意...
@@ -57,6 +57,6 @@ private:
 	bool isEnableBlinnPhongs_[kMaterialNum_];
 
 	// resource
-	Object_Ptr<DxObject::BufferPtrResource<Material>> materialResources_[kMaterialNum_];
+	std::unique_ptr<DxObject::BufferPtrResource<Material>> materialResources_[kMaterialNum_];
 
 };

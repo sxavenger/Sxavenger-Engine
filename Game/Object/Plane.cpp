@@ -5,7 +5,7 @@
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 void Plane::Init() {
-	model_ = new Model("resources/model", "plane2.obj");
+	model_ = std::make_unique<Model>("resources/model", "plane2.obj");
 	/*model_ = new Model("resources/model", "cube.obj");*/
 }
 
@@ -29,5 +29,5 @@ void Plane::Draw(ID3D12GraphicsCommandList* commandList, Directional* directiona
 }
 
 void Plane::Term() {
-	model_.Release();
+	model_.reset();
 }

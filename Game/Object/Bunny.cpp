@@ -5,7 +5,7 @@
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 void Bunny::Init() {
-	model_ = new Model("resources/model", "bunny.obj");
+	model_ = std::make_unique<Model>("resources/model", "bunny.obj");
 }
 
 void Bunny::EditorImGui(int identifier) {
@@ -14,7 +14,7 @@ void Bunny::EditorImGui(int identifier) {
 	SetImGui(title);
 
 	ImGui::Text("Bunny Debacker");
-	ImGui::Text("vertexSize: %d, indexSize: %d, face: %d", model_->GetModelData(0).vertexResource->GetSize(), model_->GetModelData(0).indexResource->GetSize(), model_->GetModelData(0).indexResource->GetSize() / 3);
+	ImGui::Text("vertexSize: %d, indexSize: %d, face: %d", model_->GetMeshData(0).vertexResource->GetSize(), model_->GetMeshData(0).indexResource->GetSize(), model_->GetMeshData(0).indexResource->GetSize() / 3);
 }
 
 void Bunny::Draw(ID3D12GraphicsCommandList* commandList, Directional* directionalLight) {
@@ -31,5 +31,5 @@ void Bunny::Draw(ID3D12GraphicsCommandList* commandList, Directional* directiona
 }
 
 void Bunny::Term() {
-	model_.Release();
+	model_.reset();
 }

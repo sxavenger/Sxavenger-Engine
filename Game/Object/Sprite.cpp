@@ -6,7 +6,7 @@
 
 void Sprite::Init() {
 	// vertexResource
-	vertexResource_ = new DxObject::BufferResource<VertexData>(MyEngine::GetDevice(), 4);
+	vertexResource_ = std::make_unique<DxObject::BufferResource<VertexData>>(MyEngine::GetDevice(), 4);
 	vertexBufferView_ = vertexResource_->GetVertexBufferView();
 
 	vertexResource_->operator[](0).position = { 0.0f, 360.0f, 0.0f, 1.0f };   // leftBottom
@@ -19,7 +19,7 @@ void Sprite::Init() {
 	vertexResource_->operator[](3).texcoord = { 1.0f, 0.0f };
 
 	// indexResource
-	indexResource_ = new DxObject::IndexBufferResource(MyEngine::GetDevice(), vertexResource_.Get());
+	indexResource_ = std::make_unique<DxObject::IndexBufferResource>(MyEngine::GetDevice(), vertexResource_.get());
 	indexBufferView_ = indexResource_->GetIndexBufferView();
 
 	indexResource_->SetTriangle(1, { 0, 1, 2 });
@@ -90,6 +90,6 @@ void Sprite::Draw(ID3D12GraphicsCommandList* commandList, Directional* direction
 }
 
 void Sprite::Term() {
-	vertexResource_.Release();
-	indexResource_.Release();
+	vertexResource_.reset();
+	indexResource_.reset();
 }

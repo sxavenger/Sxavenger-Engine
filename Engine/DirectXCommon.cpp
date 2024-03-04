@@ -16,20 +16,20 @@ DirectXCommon::~DirectXCommon() {
 
 void DirectXCommon::Init(WinApp* winApp, int32_t clientWidth, int32_t clientHeight) {
 	// DirectXObjectの初期化
-	devices_ = new DxObject::Devices();
-	command_ = new DxObject::Command(devices_.Get());
-	descriptorHeaps_ = new DxObject::DescriptorHeaps(devices_.Get());
-	swapChains_ = new DxObject::SwapChain(devices_.Get(), command_.Get(), descriptorHeaps_.Get(), winApp, clientWidth, clientHeight);
-	fences_ = new DxObject::Fence(devices_.Get());
+	devices_ = std::make_unique<DxObject::Devices>();
+	command_ = std::make_unique<DxObject::Command>(devices_.get());
+	descriptorHeaps_ = std::make_unique<DxObject::DescriptorHeaps>(devices_.get());
+	swapChains_ = std::make_unique<DxObject::SwapChain>(devices_.get(), command_.get(), descriptorHeaps_.get(), winApp, clientWidth, clientHeight);
+	fences_ = std::make_unique<DxObject::Fence>(devices_.get());
 
 	// TODO: パイプラインの使用方法, 作成方法の修正
 
-	depthStencil_ = new DxObject::DepthStencil(devices_.Get(), descriptorHeaps_.Get(), clientWidth, clientHeight);
+	depthStencil_ = std::make_unique<DxObject::DepthStencil>(devices_.get(), descriptorHeaps_.get(), clientWidth, clientHeight);
 
 	// pipeline[0]の生成
 	{
 		// texture pipeline
-		shaderBlob_[0] = new DxObject::ShaderBlob(L"./Engine/Object3d.VS.hlsl", L"./Engine/Object3d.PS.hlsl");
+		shaderBlob_[0] = std::make_unique<DxObject::ShaderBlob>(L"./Engine/Object3d.VS.hlsl", L"./Engine/Object3d.PS.hlsl");
 
 		// rootSignatureDescsの初期化
 		DxObject::RootSignatureDescs desc(5, 1);
@@ -73,15 +73,15 @@ void DirectXCommon::Init(WinApp* winApp, int32_t clientWidth, int32_t clientHeig
 		desc.sampler[0].ShaderRegister   = 0;
 		desc.sampler[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
 
-		rootSignature_[0] = new DxObject::RootSignature(devices_.Get(), desc);
+		rootSignature_[0] = std::make_unique<DxObject::RootSignature>(devices_.get(), desc);
 		pipeline_[0]
-			= new DxObject::PipelineState(devices_.Get(), shaderBlob_[0].Get(), rootSignature_[0].Get(), clientWidth, clientHeight);
+			= std::make_unique<DxObject::PipelineState>(devices_.get(), shaderBlob_[0].get(), rootSignature_[0].get(), clientWidth, clientHeight);
 	}
 
 	// pipeline[1]の生成
 	{
 		// texture pipeline
-		shaderBlob_[1] = new DxObject::ShaderBlob(L"./Engine/Object3d.VS.hlsl", L"./Engine/Polygon3d.PS.hlsl");
+		shaderBlob_[1] = std::make_unique<DxObject::ShaderBlob>(L"./Engine/Object3d.VS.hlsl", L"./Engine/Polygon3d.PS.hlsl");
 
 		// rootSignatureDescsの初期化
 		DxObject::RootSignatureDescs desc(4, 0);
@@ -103,26 +103,26 @@ void DirectXCommon::Init(WinApp* winApp, int32_t clientWidth, int32_t clientHeig
 		desc.param[3].ShaderVisibility          = D3D12_SHADER_VISIBILITY_PIXEL;
 		desc.param[3].Descriptor.ShaderRegister = 2;
 
-		rootSignature_[1] = new DxObject::RootSignature(devices_.Get(), desc);
+		rootSignature_[1] = std::make_unique<DxObject::RootSignature>(devices_.get(), desc);
 		pipeline_[1]
-			= new DxObject::PipelineState(devices_.Get(), shaderBlob_[1].Get(), rootSignature_[1].Get(), clientWidth, clientHeight);
+			= std::make_unique<DxObject::PipelineState>(devices_.get(), shaderBlob_[1].get(), rootSignature_[1].get(), clientWidth, clientHeight);
 	}
 }
 
 void DirectXCommon::Term() {
 	// DirectXObjectの解放
 	for (uint32_t i = 0; i < kPipelineNum_; ++i) {
-		pipeline_[i].Release();
-		shaderBlob_[i].Release();
-		rootSignature_[i].Release();
+		pipeline_[i].reset();
+		shaderBlob_[i].reset();
+		rootSignature_[i].reset();
 	}
 
-	depthStencil_.Release();
-	fences_.Release();
-	swapChains_.Release();
-	descriptorHeaps_.Release();
-	command_.Release();
-	devices_.Release();
+	depthStencil_.reset();
+	fences_.reset();
+	swapChains_.reset();
+	descriptorHeaps_.reset();
+	command_.reset();
+	devices_.reset();
 }
 
 void DirectXCommon::BeginFrame() {
@@ -176,7 +176,20 @@ void DirectXCommon::EndFrame() {
 	// GPUにシグナルを送る
 	fences_->AddFenceValue();
 
-	command_->Signal(fences_.Get());
+	command_->Signal(fences_.get());
+
+	fences_->WaitGPU();
+
+	command_->Reset();
+}
+
+void DirectXCommon::End() {
+	command_->Close();
+
+	// GPUにシグナルを送る
+	fences_->AddFenceValue();
+
+	command_->Signal(fences_.get());
 
 	fences_->WaitGPU();
 
@@ -184,7 +197,7 @@ void DirectXCommon::EndFrame() {
 }
 
 void DirectXCommon::SetPipelineState(uint32_t index) {
-	pipeline_[index]->SetCommandPipelineState(command_.Get());
+	pipeline_[index]->SetCommandPipelineState(command_.get());
 }
 
 DirectXCommon* DirectXCommon::GetInstance() {

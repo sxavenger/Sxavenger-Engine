@@ -228,9 +228,6 @@
     <ClInclude Include="Engine\Logger.h">
       <Filter>Engine\include</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\ObjectPtr.h">
-      <Filter>Engine\include</Filter>
-    </ClInclude>
     <ClInclude Include="Lib\Environment.h">
       <Filter>Lib</Filter>
     </ClInclude>
@@ -381,9 +378,6 @@
       <Filter>Engine\resource</Filter>
     </FxCompile>
     <FxCompile Include="Engine\Polygon3d.PS.hlsl">
-      <Filter>Engine\resource</Filter>
-    </FxCompile>
-    <FxCompile Include="Engine\Object3d.MS.hlsl">
       <Filter>Engine\resource</Filter>
     </FxCompile>
   </ItemGroup>

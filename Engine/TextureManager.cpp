@@ -18,15 +18,19 @@ void Texture::Load(const std::string& filePath, DirectXCommon* dxCommon) {
 	// dxCommonの保存
 	dxCommon_ = dxCommon;
 
-	// デバイスの取り出し
+	// デバイス, CommandListの取り出し
 	ID3D12Device* device = dxCommon_->GetDeviceObj()->GetDevice();
+	ID3D12GraphicsCommandList* commandList = dxCommon->GetCommandList();
 
 	DirectX::ScratchImage mipImage = TextureMethod::LoadTexture(filePath);
 	const DirectX::TexMetadata metadata = mipImage.GetMetadata();
 
 	textureResource_ = TextureMethod::CreateTextureResource(device, metadata);
-	TextureMethod::UploadTextureData(textureResource_.Get(), mipImage);
+	ComPtr<ID3D12Resource> intermediateResouce = TextureMethod::UploadTextureData(textureResource_.Get(), mipImage, device, commandList);
 
+	dxCommon->End();
+
+	intermediateResouce->Release();
 
 	// SRV - shaderResourceViewの生成
 	{
@@ -72,9 +76,12 @@ void TextureManager::Init(DirectXCommon* dxCommon) {
 	// 初期texture
 	textures_["resources/uvChecker.png"];
 	textures_["resources/monsterBall.png"];
+	textures_["resources/model/uvChecker.png"];
+	textures_["resources/model/monsterBall.png"];
+	textures_["resources/model/checkerBoard.png"];
 
 	for (auto& pair : textures_) {
-		pair.second.texture = new Texture(pair.first, dxCommon_);
+		pair.second.texture = std::make_unique<Texture>(pair.first, dxCommon_);
 		pair.second.referenceNum = 1;
 	}
 }
@@ -82,7 +89,7 @@ void TextureManager::Init(DirectXCommon* dxCommon) {
 void TextureManager::Term() {
 
 	for (auto& pair : textures_) {
-		pair.second.texture.Release();
+		pair.second.texture.reset();
 		pair.second.referenceNum = NULL;
 	}
 
@@ -99,7 +106,7 @@ void TextureManager::LoadTexture(const std::string& filePath) {
 	}
 
 	// textureの登録
-	textures_[filePath].texture = new Texture(filePath, dxCommon_);
+	textures_[filePath].texture = std::make_unique<Texture>(filePath, dxCommon_);
 	textures_[filePath].referenceNum = 1;
 }
 
@@ -111,7 +118,7 @@ void TextureManager::UnloadTexture(const std::string& filePath) {
 	textures_[filePath].referenceNum--;
 
 	if (textures_[filePath].referenceNum == 0) { //!< 参照先がない場合
-		textures_[filePath].texture.Release();
+		textures_[filePath].texture.reset();
 		textures_.erase(filePath);
 	}
 }
@@ -171,9 +178,7 @@ ID3D12Resource* TextureMethod::CreateTextureResource(ID3D12Device* device, const
 
 	// ヒーププロパティの設定
 	D3D12_HEAP_PROPERTIES prop = {};
-	prop.Type                 = D3D12_HEAP_TYPE_CUSTOM;
-	prop.CPUPageProperty      = D3D12_CPU_PAGE_PROPERTY_WRITE_BACK;
-	prop.MemoryPoolPreference = D3D12_MEMORY_POOL_L0;
+	prop.Type                 = D3D12_HEAP_TYPE_DEFAULT;
 
 	// Resourceの生成
 	ID3D12Resource* result = nullptr;
@@ -182,7 +187,7 @@ ID3D12Resource* TextureMethod::CreateTextureResource(ID3D12Device* device, const
 		&prop,
 		D3D12_HEAP_FLAG_NONE,
 		&desc,
-		D3D12_RESOURCE_STATE_GENERIC_READ,
+		D3D12_RESOURCE_STATE_COPY_DEST,
 		nullptr,
 		IID_PPV_ARGS(&result)
 	);
@@ -192,23 +197,30 @@ ID3D12Resource* TextureMethod::CreateTextureResource(ID3D12Device* device, const
 	return result;
 }
 
-void TextureMethod::UploadTextureData(ID3D12Resource* texture, const DirectX::ScratchImage& mipImage) {
-	// metadataを取得
-	const DirectX::TexMetadata& metadata = mipImage.GetMetadata();
+[[nodiscard]]
+ComPtr<ID3D12Resource> TextureMethod::UploadTextureData(
+	ID3D12Resource* texture, const DirectX::ScratchImage& mipImages,
+	ID3D12Device* device, ID3D12GraphicsCommandList* commandList) {
 
-	for (size_t mipLevel = 0; mipLevel < metadata.mipLevels; ++mipLevel) {
-		// mipLevelを指定して各imageを取得
-		const DirectX::Image* img = mipImage.GetImage(mipLevel, 0, 0);
+	std::vector<D3D12_SUBRESOURCE_DATA> subresource;
+	DirectX::PrepareUpload(device, mipImages.GetImages(), mipImages.GetImageCount(), mipImages.GetMetadata(), subresource);
 
-		// Textureに転送
-		auto hr = texture->WriteToSubresource(
-			UINT(mipLevel),
-			nullptr,
-			img->pixels,
-			UINT(img->rowPitch),
-			UINT(img->slicePitch)
-		);
+	uint64_t intermediateSize = GetRequiredIntermediateSize(texture, 0, UINT(subresource.size()));
+	ComPtr<ID3D12Resource> intermediateResource = DxObjectMethod::CreateBufferResource(device, intermediateSize);
+	UpdateSubresources(commandList, texture, intermediateResource.Get(), 0, 0, UINT(subresource.size()), subresource.data());
 
-		assert(SUCCEEDED(hr));
-	}
+	// 転送後は利用できるように D3D12_RESOUCE_STATE_COPY_DESC -> D3D12_RESOUCE_STATE_GENETIC_READ へ変更
+	D3D12_RESOURCE_BARRIER barrier = {};
+	barrier.Type                   = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+	barrier.Flags                  = D3D12_RESOURCE_BARRIER_FLAG_NONE;
+	barrier.Transition.pResource   = texture;
+	barrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
+	barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_COPY_DEST;
+	barrier.Transition.StateAfter  = D3D12_RESOURCE_STATE_GENERIC_READ;
+
+	commandList->ResourceBarrier(1, &barrier);
+
+	return intermediateResource;
+
+	// TODO: 02-04 ex advance
 }

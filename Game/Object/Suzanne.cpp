@@ -5,7 +5,7 @@
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 void Suzanne::Init() {
-	model_ = new Model("resources/model", "Suzanne.obj");
+	model_ = std::make_unique<Model>("resources/model", "Suzanne.obj");
 }
 
 void Suzanne::EditorImGui(int identifier) {
@@ -26,5 +26,5 @@ void Suzanne::Draw(ID3D12GraphicsCommandList* commandList, Directional* directio
 }
 
 void Suzanne::Term() {
-	model_.Release();
+	model_.reset();
 }

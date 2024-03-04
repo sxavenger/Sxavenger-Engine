@@ -41,6 +41,6 @@ private:
 	// private variables
 	//=========================================================================================
 
-	Object_Ptr<Model> model_;
+	std::unique_ptr<Model> model_;
 
 };

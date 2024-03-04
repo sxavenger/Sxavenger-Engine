@@ -12,8 +12,8 @@
 #include <string>
 #include <unordered_map>
 #include <vector>
+#include <memory>
 
-#include <ObjectPtr.h>
 // ComPtr
 #include <ComPtr.h>
 
@@ -101,7 +101,7 @@ private:
 	// TextureData structure
 	////////////////////////////////////////////////////////////////////////////////////////////
 	struct TextureData {
-		Object_Ptr<Texture> texture;
+		std::unique_ptr<Texture> texture;
 		uint32_t referenceNum = 0;
 	};
 
@@ -124,6 +124,10 @@ namespace TextureMethod {
 
 	ID3D12Resource* CreateTextureResource(ID3D12Device* device, const DirectX::TexMetadata& metadata);
 
-	void UploadTextureData(ID3D12Resource* texture, const DirectX::ScratchImage& mipImage);
+	[[nodiscard]]
+	ComPtr<ID3D12Resource> UploadTextureData(
+		ID3D12Resource* texture, const DirectX::ScratchImage& mipImages,
+		ID3D12Device* device, ID3D12GraphicsCommandList* commandList
+	);
 
 }

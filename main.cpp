@@ -15,11 +15,9 @@
 // Light
 #include <DirectionalLight.h>
 
-// Object_Ptr
-#include "ObjectPtr.h"
-
 // c++
 #include <list>
+#include <memory>
 
 /// Game
 // Object
@@ -49,15 +47,15 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	//-----------------------------------------------------------------------------------------
 	// Camera
 	//-----------------------------------------------------------------------------------------
-	Object_Ptr<Camera3D> camera3D = new Camera3D("camera3D.json");
-	MyEngine::camera3D_ = camera3D.Get();
-	Object_Ptr<Camera2D> camera2D = new Camera2D();
-	MyEngine::camera2D_ = camera2D.Get();
+	std::unique_ptr<Camera3D> camera3D = std::make_unique<Camera3D>("camera3D.json");
+	MyEngine::camera3D_ = camera3D.get();
+	std::unique_ptr<Camera2D> camera2D = std::make_unique<Camera2D>();
+	MyEngine::camera2D_ = camera2D.get();
 
 	//-----------------------------------------------------------------------------------------
 	// Light
 	//-----------------------------------------------------------------------------------------
-	Object_Ptr<Directional> directional = new Directional(MyEngine::GetDevice());
+	std::unique_ptr<Directional> directional = std::make_unique<Directional>(MyEngine::GetDevice());
 
 	//-----------------------------------------------------------------------------------------
 	// Object
@@ -199,7 +197,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 		// object 描画処理
 		for (const auto& it : objects) {
-			it->Draw(commandList, directional.Get());
+			it->Draw(commandList, directional.get());
 		}
 
 		MyEngine::EndFrame();
@@ -207,10 +205,10 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	}
 
 	// camera
-	camera3D.Release();
-	camera2D.Release();
+	camera3D.reset();
+	camera2D.reset();
 	// light
-	directional.Release();
+	directional.reset();
 
 	// object
 	for (auto& it : objects) {
@@ -220,5 +218,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	objects.clear();
 
 	MyEngine::Finalize();
+	
 	return 0;
+
 }

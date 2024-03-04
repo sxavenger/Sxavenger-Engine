@@ -7,8 +7,8 @@
 void Sphere::Init() {
 	DrawData data = DrawMethods::SphereData(1.0f, 16);
 
-	vertexResource_ = data.vertex;
-	indexResource_ = data.index;
+	vertexResource_.reset(data.vertex);
+	indexResource_.reset(data.index);
 
 	vertexBufferView_ = vertexResource_->GetVertexBufferView();
 	indexBufferView_ = indexResource_->GetIndexBufferView();
@@ -37,6 +37,6 @@ void Sphere::Draw(ID3D12GraphicsCommandList* commandList, Directional* direction
 }
 
 void Sphere::Term() {
-	vertexResource_.Release();
-	indexResource_.Release();
+	vertexResource_.reset();
+	indexResource_.reset();
 }

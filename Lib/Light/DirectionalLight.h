@@ -7,12 +7,12 @@
 #include <DxDevices.h>
 #include <DxBufferResource.h>
 
+// c++
+#include <memory>
+
 // Geometry
 #include <Vector4.h>
 #include <Vector3.h>
-
-// Object_Ptr
-#include <ObjectPtr.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // DirectionalLight structure
@@ -55,7 +55,7 @@ private:
 	// private variables
 	//=========================================================================================
 
-	Object_Ptr<DxObject::BufferPtrResource<DirectionalLight>> resource_;
+	std::unique_ptr<DxObject::BufferPtrResource<DirectionalLight>> resource_;
 
 	DirectionalLight lightData_;
 

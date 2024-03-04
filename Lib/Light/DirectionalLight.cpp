@@ -10,7 +10,7 @@ Directional::~Directional() { Term(); }
 void Directional::Init(DxObject::Devices* devices) {
 
 	// resourceの確保
-	resource_ = new DxObject::BufferPtrResource<DirectionalLight>(devices, 1);
+	resource_ = std::make_unique<DxObject::BufferPtrResource<DirectionalLight>>(devices, 1);
 
 	resource_->Set(0, &lightData_);
 
@@ -20,7 +20,7 @@ void Directional::Init(DxObject::Devices* devices) {
 }
 
 void Directional::Term() {
-	resource_.Release();
+	resource_.reset();
 }
 
 void Directional::UpdateImGui(const char* title, const char* lightName) {

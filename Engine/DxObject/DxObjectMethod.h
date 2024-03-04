@@ -37,7 +37,7 @@ namespace DxObjectMethod {
 	//! 
 	//! @return DesriptorHeapの返却
 	ComPtr<ID3D12DescriptorHeap> CreateDescriptorHeap(
-		ComPtr<ID3D12Device> device,
+		ID3D12Device* device,
 		D3D12_DESCRIPTOR_HEAP_TYPE heapType,
 		UINT numDescriptors,
 		bool shaderVisible
@@ -52,7 +52,7 @@ namespace DxObjectMethod {
 	//! @param[in] includeHandler IDxcIncludeHandler*
 	//! 
 	//! @return shaderBlopを返却
-	IDxcBlob* CompilerShader(
+	ComPtr<IDxcBlob> CompilerShader(
 		const std::wstring& filePath,
 		const wchar_t* profile,
 		IDxcUtils* dxcUtils,
@@ -67,7 +67,7 @@ namespace DxObjectMethod {
 	//! 
 	//! @return バッファ確保したResourceを返却
 	ComPtr<ID3D12Resource> CreateBufferResource(
-		ComPtr<ID3D12Device> device,
+		ID3D12Device* device,
 		size_t sizeInBytes
 	);
 
@@ -79,7 +79,7 @@ namespace DxObjectMethod {
 	//! 
 	//! @return 深度バッファResourceを返却
 	ComPtr<ID3D12Resource> CreateDepthStencilTextureResource(
-		ComPtr<ID3D12Device> device,
+		ID3D12Device* device,
 		int32_t width,
 		int32_t height
 	);

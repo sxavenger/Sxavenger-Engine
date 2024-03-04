@@ -11,12 +11,12 @@ const char* Object::lambertItem_[kLambertTypeCount] = { "lambert", "halfLambert"
 
 void Object::InitResource() {
 	// matrixResource
-	matrixResource_ = new DxObject::BufferResource<TransformationMatrix>(MyEngine::GetDevice(), 1);
+	matrixResource_ = std::make_unique<DxObject::BufferResource<TransformationMatrix>>(MyEngine::GetDevice(), 1);
 	matrixResource_->operator[](0).world = worldMatrix_;
 	matrixResource_->operator[](0).wvp = worldMatrix_ * MyEngine::camera3D_->GetViewProjectionMatrix();
 
 	// materialResource_
-	materialResource_ = new DxObject::BufferPtrResource<Material>(MyEngine::GetDevice(), 1);
+	materialResource_ = std::make_unique<DxObject::BufferPtrResource<Material>>(MyEngine::GetDevice(), 1);
 	materialResource_->Set(0, &material_);
 
 	material_.color = { 1.0f, 1.0f, 1.0f, 1.0f };
@@ -27,8 +27,8 @@ void Object::InitResource() {
 }
 
 void Object::TermResource() {
-	matrixResource_.Release();
-	materialResource_.Release();
+	matrixResource_.reset();
+	materialResource_.reset();
 }
 
 void Object::SetImGui(const std::string& title) {

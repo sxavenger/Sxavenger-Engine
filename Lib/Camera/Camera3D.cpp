@@ -23,7 +23,7 @@ Camera3D::Camera3D(const std::string& filePath) {
 	ReadJsonCameraData(filePath);
 	SetProjection(0.45f, static_cast<float>(kWindowWidth) / static_cast<float>(kWindowHeight), 0.1f, 100.0f);
 
-	resource_ = new DxObject::BufferPtrResource<Vector4f>(MyEngine::GetDevice(), 1);
+	resource_ =std::make_unique<DxObject::BufferPtrResource<Vector4f>>(MyEngine::GetDevice(), 1);
 	resource_->Set(0, &position);
 }
 
@@ -38,7 +38,7 @@ void Camera3D::Init() {
 }
 
 void Camera3D::Term() {
-	resource_.Release();
+	resource_.reset();
 }
 
 void Camera3D::SetCamera(const Vector3f& scale, const Vector3f& rotate, const Vector3f& transform) {

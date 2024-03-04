@@ -10,9 +10,9 @@
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 ComPtr<ID3D12DescriptorHeap> DxObjectMethod::CreateDescriptorHeap(
-	ComPtr<ID3D12Device> device, D3D12_DESCRIPTOR_HEAP_TYPE heapType, UINT numDescriptors, bool shaderVisible) {
+	ID3D12Device* device, D3D12_DESCRIPTOR_HEAP_TYPE heapType, UINT numDescriptors, bool shaderVisible) {
 
-	ID3D12DescriptorHeap* result;
+	ComPtr<ID3D12DescriptorHeap> result;
 
 	D3D12_DESCRIPTOR_HEAP_DESC desc = {};
 	desc.Type           = heapType;
@@ -26,7 +26,7 @@ ComPtr<ID3D12DescriptorHeap> DxObjectMethod::CreateDescriptorHeap(
 	return result;
 }
 
-IDxcBlob* DxObjectMethod::CompilerShader(
+ComPtr<IDxcBlob> DxObjectMethod::CompilerShader(
 	const std::wstring& filePath,
 	const wchar_t* profile,
 	IDxcUtils* dxcUtils,
@@ -88,9 +88,9 @@ IDxcBlob* DxObjectMethod::CompilerShader(
 }
 
 ComPtr<ID3D12Resource> DxObjectMethod::CreateBufferResource(
-	ComPtr<ID3D12Device> device, size_t sizeInBytes) {
+	ID3D12Device* device, size_t sizeInBytes) {
 
-	ID3D12Resource* result;
+	ComPtr<ID3D12Resource> result;
 
 	// 頂点リソース用のヒープの設定
 	D3D12_HEAP_PROPERTIES prop = {};
@@ -121,7 +121,7 @@ ComPtr<ID3D12Resource> DxObjectMethod::CreateBufferResource(
 }
 
 ComPtr<ID3D12Resource> DxObjectMethod::CreateDepthStencilTextureResource(
-	ComPtr<ID3D12Device> device, int32_t width, int32_t height) {
+	ID3D12Device* device, int32_t width, int32_t height) {
 
 	// descの設定
 	D3D12_RESOURCE_DESC desc = {};

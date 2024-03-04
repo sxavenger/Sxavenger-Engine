@@ -45,9 +45,9 @@ private:
 	// private variables
 	//=========================================================================================
 
-	Object_Ptr<DxObject::BufferResource<VertexData>> vertexResource_;
-	D3D12_VERTEX_BUFFER_VIEW                         vertexBufferView_;
-	Object_Ptr<DxObject::IndexBufferResource>        indexResource_;
-	D3D12_INDEX_BUFFER_VIEW                          indexBufferView_;
+	std::unique_ptr<DxObject::BufferResource<VertexData>> vertexResource_;
+	D3D12_VERTEX_BUFFER_VIEW                              vertexBufferView_;
+	std::unique_ptr<DxObject::IndexBufferResource>        indexResource_;
+	D3D12_INDEX_BUFFER_VIEW                               indexBufferView_;
 
 };

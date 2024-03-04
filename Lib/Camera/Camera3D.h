@@ -9,11 +9,10 @@
 
 // c++
 #include <string>
+#include <memory>
 
 // DxObject
 #include <DxBufferResource.h>
-
-#include <ObjectPtr.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Camera3D class
@@ -77,7 +76,7 @@ private:
 	Matrix4x4 viewMatrix_;
 	Matrix4x4 projectionMatrix_;
 
-	Object_Ptr<DxObject::BufferPtrResource<Vector4f>> resource_;
+	std::unique_ptr<DxObject::BufferPtrResource<Vector4f>> resource_;
 	Vector4f position;
 
 	//=========================================================================================

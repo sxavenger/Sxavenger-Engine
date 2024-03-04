@@ -5,11 +5,11 @@
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 void MultiMaterial::Init() {
-	model_ = new Model("resources/model", "multiMaterial.obj");
+	model_ = std::make_unique<Model>("resources/model", "multiMaterial.obj");
 
 	// materailsの初期化
 	for (uint32_t i = 0; i < kMaterialNum_; ++i) {
-		materialResources_[i] = new DxObject::BufferPtrResource<Material>(MyEngine::GetDevice(), 1);
+		materialResources_[i] = std::make_unique<DxObject::BufferPtrResource<Material>>(MyEngine::GetDevice(), 1);
 		materialResources_[i]->Set(0, &materials_[i]);
 
 		materials_[i].color = { 1.0f, 1.0f, 1.0f, 1.0f };
@@ -79,7 +79,7 @@ void MultiMaterial::EditorImGui(int identifier) {
 }
 
 void MultiMaterial::Draw(ID3D12GraphicsCommandList* commandList, Directional* directionalLight) {
-	for (uint32_t i = 0; i < model_->GetModelSize(); ++i) {
+	for (uint32_t i = 0; i < model_->GetSize(); ++i) {
 		model_->SetBuffers(commandList, i);
 
 		commandList->SetGraphicsRootConstantBufferView(0, materialResources_[i]->GetGPUVirtualAddress());
@@ -94,9 +94,9 @@ void MultiMaterial::Draw(ID3D12GraphicsCommandList* commandList, Directional* di
 }
 
 void MultiMaterial::Term() {
-	model_.Release();
+	model_.reset();
 
 	for (uint32_t i = 0; i < kMaterialNum_; ++i) {
-		materialResources_[i].Release();
+		materialResources_[i].reset();
 	}
 }

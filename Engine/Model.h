@@ -16,7 +16,6 @@
 
 // DxObject
 #include <DxBufferResource.h>
-#include <ObjectPtr.h>
 
 // Geometry
 #include <Vector4.h>
@@ -26,20 +25,28 @@
 #include <ObjectStructure.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
+// MeshData structure
+////////////////////////////////////////////////////////////////////////////////////////////
+struct MeshData {
+	DxObject::BufferResource<VertexData>* vertexResource;
+	DxObject::IndexBufferResource*        indexResource;
+};
+
+////////////////////////////////////////////////////////////////////////////////////////////
 // MaterialData structure
 ////////////////////////////////////////////////////////////////////////////////////////////
 struct MaterialData {
 	std::string textureFilePath;
-	bool isUseTexture;
+	bool        isUseTexture;
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // ModelData structure
 ////////////////////////////////////////////////////////////////////////////////////////////
 struct ModelData {
-	DxObject::BufferResource<VertexData>* vertexResource;
-	DxObject::IndexBufferResource*        indexResource;
-	MaterialData                          material;
+	std::vector<MeshData>     meshs;
+	std::vector<MaterialData> materials;
+	// meshsとmaterialsのsizeは同じ
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -61,40 +68,44 @@ public:
 
 	void Term();
 
-	const uint32_t GetModelSize() const { return modelDataSize_; }
+	const uint32_t GetSize() const { return size_; }
 	
 	// Draw
 	void SetBuffers(ID3D12GraphicsCommandList* commandList, uint32_t index) {
-		if (index >= modelDataSize_) {
+		if (index >= size_) {
 			assert(false); //!< 配列以上のmodelDataの呼び出し
 		}
 
-		if (modelDatas_.at(index).material.isUseTexture) {
+		if (modelData_.materials[index].isUseTexture) {
 			MyEngine::SetPipeLineState(TEXTURE);
 
 		} else {
 			MyEngine::SetPipeLineState(POLYGON);
 		}
 
-		D3D12_VERTEX_BUFFER_VIEW vertexBufferView = modelDatas_.at(index).vertexResource->GetVertexBufferView();
-		D3D12_INDEX_BUFFER_VIEW indexBufferView = modelDatas_.at(index).indexResource->GetIndexBufferView();
+		D3D12_VERTEX_BUFFER_VIEW vertexBufferView = modelData_.meshs[index].vertexResource->GetVertexBufferView();
+		D3D12_INDEX_BUFFER_VIEW indexBufferView = modelData_.meshs[index].indexResource->GetIndexBufferView();
 
 		commandList->IASetVertexBuffers(0, 1, &vertexBufferView);
 		commandList->IASetIndexBuffer(&indexBufferView);
 	}
 
 	void SetTexture(UINT parameterNum, ID3D12GraphicsCommandList* commandList, uint32_t index) {
-		if (modelDatas_.at(index).material.isUseTexture) {
-			commandList->SetGraphicsRootDescriptorTable(parameterNum, MyEngine::GetTextureHandleGPU(modelDatas_.at(index).material.textureFilePath));
+		if (modelData_.materials[index].isUseTexture) {
+			commandList->SetGraphicsRootDescriptorTable(parameterNum, MyEngine::GetTextureHandleGPU(modelData_.materials[index].textureFilePath));
 		}
 	}
 
 	void DrawCall(ID3D12GraphicsCommandList* commandList, uint32_t index) {
-		commandList->DrawIndexedInstanced(modelDatas_.at(index).indexResource->GetSize(), 1, 0, 0, 0);
+		commandList->DrawIndexedInstanced(modelData_.meshs[index].indexResource->GetSize(), 1, 0, 0, 0);
 	}
 
-	const ModelData& GetModelData(uint32_t index) const { // debug
-		return modelDatas_.at(index);
+	//const ModelData& GetModelData() const { // debug
+	//	return modelData_;
+	//}
+
+	const MeshData& GetMeshData(uint32_t index) const {
+		return modelData_.meshs[index];
 	}
 
 private:
@@ -103,8 +114,8 @@ private:
 	// private variables
 	//=========================================================================================
 
-	std::vector<ModelData> modelDatas_;
-	uint32_t modelDataSize_;
+	ModelData modelData_;
+	uint32_t  size_;
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -112,7 +123,7 @@ private:
 ////////////////////////////////////////////////////////////////////////////////////////////
 namespace ModelMethods {
 
-	std::vector<ModelData> LoadObjFile(const std::string& directoryPath, const std::string& filename);
+	ModelData LoadObjFile(const std::string& directoryPath, const std::string& filename);
 
 	MaterialData LoadMaterailFile(const std::string& directoryPath, const std::string& filename, const std::string& usemtl);
 }

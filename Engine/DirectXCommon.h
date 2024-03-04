@@ -3,8 +3,6 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
-#include <ObjectPtr.h>
-
 // DxObject
 #include <DxDevices.h>
 #include <DxCommand.h>
@@ -15,6 +13,9 @@
 #include <DxDepthStencil.h>
 #include <DxRootSignature.h>
 #include <DxPipelineState.h>
+
+// c++
+#include <memory>
 
 //-----------------------------------------------------------------------------------------
 // forward
@@ -49,16 +50,19 @@ public:
 	//! @brief フレームの終了処理
 	void EndFrame();
 
+	//!
+	void End();
+
 	void SetPipelineState(uint32_t index);
 
 	static DirectXCommon* GetInstance();
 
 	// TODO: コマンドリストを外に出したくない...
 	ID3D12GraphicsCommandList* GetCommandList() const { return command_->GetCommandList(); }
-	DxObject::Devices* GetDeviceObj() const { return devices_.Get(); }
+	DxObject::Devices* GetDeviceObj() const { return devices_.get(); }
 
-	DxObject::DescriptorHeaps* GetDescriptorsObj() const { return descriptorHeaps_.Get(); }
-	DxObject::SwapChain* GetSwapChainObj() const { return swapChains_.Get(); } //!< ImGuiManagerで使う kBufferCount
+	DxObject::DescriptorHeaps* GetDescriptorsObj() const { return descriptorHeaps_.get(); }
+	DxObject::SwapChain* GetSwapChainObj() const { return swapChains_.get(); } //!< ImGuiManagerで使う kBufferCount
 
 private:
 
@@ -66,18 +70,18 @@ private:
 	// private variables
 	//=========================================================================================
 
-	Object_Ptr<DxObject::Devices>          devices_;
-	Object_Ptr<DxObject::Command>         command_;
-	Object_Ptr<DxObject::DescriptorHeaps> descriptorHeaps_;
-	Object_Ptr<DxObject::SwapChain>       swapChains_;
-	Object_Ptr<DxObject::Fence>           fences_;
+	std::unique_ptr<DxObject::Devices>         devices_;
+	std::unique_ptr<DxObject::Command>         command_;
+	std::unique_ptr<DxObject::DescriptorHeaps> descriptorHeaps_;
+	std::unique_ptr<DxObject::SwapChain>       swapChains_;
+	std::unique_ptr<DxObject::Fence>           fences_;
 
 	static const uint32_t kPipelineNum_ = 2;
 
-	Object_Ptr<DxObject::DepthStencil>  depthStencil_; //!< depthStencilは共通
-	Object_Ptr<DxObject::ShaderBlob>    shaderBlob_[2];
-	Object_Ptr<DxObject::RootSignature> rootSignature_[2];
-	Object_Ptr<DxObject::PipelineState> pipeline_[2];
+	std::unique_ptr<DxObject::DepthStencil>  depthStencil_; //!< depthStencilは共通
+	std::unique_ptr<DxObject::ShaderBlob>    shaderBlob_[2];
+	std::unique_ptr<DxObject::RootSignature> rootSignature_[2];
+	std::unique_ptr<DxObject::PipelineState> pipeline_[2];
 
 	UINT backBufferIndex_;
 

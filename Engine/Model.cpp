@@ -9,39 +9,41 @@
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 void Model::Init(const std::string& directoryPath, const std::string& filename) {
-	modelDatas_ = ModelMethods::LoadObjFile(directoryPath, filename);
+	modelData_ = ModelMethods::LoadObjFile(directoryPath, filename);
 
-	modelDataSize_ = static_cast<uint32_t>(modelDatas_.size());
+	size_ = static_cast<uint32_t>(modelData_.meshs.size());
 
 	// textureManagerでモデルで使うloadTextureを呼び出し
-	for (auto& it : modelDatas_) {
-		if (it.material.isUseTexture) {
-			MyEngine::GetTextureManager()->LoadTexture(it.material.textureFilePath);
+	for (auto& it : modelData_.materials) {
+		if (it.isUseTexture) {
+			MyEngine::GetTextureManager()->LoadTexture(it.textureFilePath);
 		}
 	}
 }
 
 void Model::Term() {
-	for (auto& it : modelDatas_) {
-		delete it.vertexResource;
-		it.vertexResource = nullptr;
 
-		delete it.indexResource;
-		it.indexResource = nullptr;
+	for (uint32_t i = 0; i < size_; ++i) {
+		// meshDataのdelete
+		delete modelData_.meshs[i].vertexResource;
+		delete modelData_.meshs[i].indexResource;
 
-		if (it.material.isUseTexture) {
-			MyEngine::GetTextureManager()->UnloadTexture(it.material.textureFilePath);
+		// materialDataの終了処理
+		if (modelData_.materials[i].isUseTexture) {
+			MyEngine::GetTextureManager()->UnloadTexture(modelData_.materials[i].textureFilePath);
 		}
 	}
 
-	modelDatas_.clear();
+	// modelDataの削除
+	modelData_.meshs.clear();
+	modelData_.materials.clear();
 }
 
-std::vector<ModelData> ModelMethods::LoadObjFile(const std::string& directoryPath, const std::string& filename) {
-	std::vector<ModelData> result;
+ModelData ModelMethods::LoadObjFile(const std::string& directoryPath, const std::string& filename) {
+	ModelData result;
 
 	std::string mtlFilename;
-	MaterialData material;
+	MaterialData materialData;
 
 	std::string line;
 
@@ -84,22 +86,21 @@ std::vector<ModelData> ModelMethods::LoadObjFile(const std::string& directoryPat
 		if (identifire == "mtllib") { //!< マテリアルファイル名
 			s >> mtlFilename; // ファイルnameの保存
 
-		} else if (identifire == "o") { //!< ModelDataの切り替え
+		} else if (identifire == "o") {
 			if (!positions.empty()) { //!< 二回目以降の"o"の場合
 				// mesh一つ分の書き込みが終わったので保存
-				ModelData data;
-				data.vertexResource 
+				MeshData meshData;
+				meshData.vertexResource
 					= new DxObject::BufferResource<VertexData>(MyEngine::GetDevice(), static_cast<uint32_t>(vertexDatas.size()));
-				data.vertexResource->Memcpy(vertexDatas.data());
+				meshData.vertexResource->Memcpy(vertexDatas.data());
 
-				data.indexResource 
+				meshData.indexResource
 					= new DxObject::IndexBufferResource(MyEngine::GetDevice(), static_cast<uint32_t>(indexDatas.size()));
-				data.indexResource->Memcpy(indexDatas.data());
+				meshData.indexResource->Memcpy(indexDatas.data());
 
-				// materialデータの格納
-				data.material = material;
-
-				result.push_back(data);
+				// meshとmaterialをmodelDataに格納
+				result.meshs.push_back(meshData);
+				result.materials.push_back(materialData);
 
 				// 書き込みが終了したのでデータ初期化
 				for (int i = 0; i < kFaceTypeCount; ++i) {
@@ -163,7 +164,7 @@ std::vector<ModelData> ModelMethods::LoadObjFile(const std::string& directoryPat
 			std::string usemtl;
 			s >> usemtl;
 
-			material = ModelMethods::LoadMaterailFile(directoryPath, mtlFilename, usemtl);
+			materialData = ModelMethods::LoadMaterailFile(directoryPath, mtlFilename, usemtl);
 
 		} else if (identifire == "f") { //!< face 四角形ポリゴンに対応
 			// (f) "1/2/3", "4/5/6", "7/8/9" ... と読み込む
@@ -256,19 +257,18 @@ std::vector<ModelData> ModelMethods::LoadObjFile(const std::string& directoryPat
 	// fileが終わったので最後のやつを初期化
 	if (!positions.empty()) {
 		// mesh一つ分の書き込みが終わったので保存
-		ModelData data;
-		data.vertexResource
+		MeshData meshData;
+		meshData.vertexResource
 			= new DxObject::BufferResource<VertexData>(MyEngine::GetDevice(), static_cast<uint32_t>(vertexDatas.size()));
-		data.vertexResource->Memcpy(vertexDatas.data());
+		meshData.vertexResource->Memcpy(vertexDatas.data());
 
-		data.indexResource
+		meshData.indexResource
 			= new DxObject::IndexBufferResource(MyEngine::GetDevice(), static_cast<uint32_t>(indexDatas.size()));
-		data.indexResource->Memcpy(indexDatas.data());
-
-		// materialデータの格納
-		data.material = material;
-
-		result.push_back(data);
+		meshData.indexResource->Memcpy(indexDatas.data());
+		
+		// meshとmaterialをmodelDataに格納
+		result.meshs.push_back(meshData);
+		result.materials.push_back(materialData);
 
 		// 書き込みが終了したのでデータ初期化
 		for (int i = 0; i < kFaceTypeCount; ++i) {
@@ -339,10 +339,6 @@ MaterialData ModelMethods::LoadMaterailFile(const std::string& directoryPath, co
 	}
 
 	file.close();
-
-	//if (!isMatchUsemtl) {
-	//	assert(false); //!< mtlfileを見てもusemtlと一致するものが無かった.
-	//}
 
 	return result;
 }

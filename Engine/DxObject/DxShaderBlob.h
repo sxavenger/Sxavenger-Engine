@@ -13,6 +13,8 @@
 #include <string>
 #include <cassert>
 
+#include <ComPtr.h>
+
 // DxObject
 #include <DxObjectMethod.h>
 
@@ -61,12 +63,12 @@ namespace DxObject {
 		//! @brief shaderBlob_VSを取得
 		//! 
 		//! @return shaderBlob_VSを返却
-		IDxcBlob* GetShaderBlob_VS() const { return shaderBlob_VS_; }
+		IDxcBlob* GetShaderBlob_VS() const { return shaderBlob_VS_.Get(); }
 
 		//! @brief shaderBlob_PSを取得
 		//! 
 		//! @return shaderBlob_PSを返却
-		IDxcBlob* GetShaderBlob_PS() const { return shaderBlob_PS_; }
+		IDxcBlob* GetShaderBlob_PS() const { return shaderBlob_PS_.Get(); }
 
 	private:
 
@@ -74,13 +76,13 @@ namespace DxObject {
 		// private variables
 		//=========================================================================================
 
-		IDxcUtils*     dxcUtils_;
-		IDxcCompiler3* dxcCompiler_;
+		ComPtr<IDxcUtils>     dxcUtils_;
+		ComPtr<IDxcCompiler3> dxcCompiler_;
 
-		IDxcIncludeHandler* includeHandler_;
+		ComPtr<IDxcIncludeHandler> includeHandler_;
 
-		IDxcBlob* shaderBlob_VS_;
-		IDxcBlob* shaderBlob_PS_;
+		ComPtr<IDxcBlob> shaderBlob_VS_;
+		ComPtr<IDxcBlob> shaderBlob_PS_;
 
 	};
 

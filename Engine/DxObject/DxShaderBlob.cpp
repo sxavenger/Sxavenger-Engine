@@ -41,7 +41,7 @@ void DxObject::ShaderBlob::Init(const std::wstring& vsFilePath, const std::wstri
 	{
 		shaderBlob_VS_ = DxObjectMethod::CompilerShader(
 			vsFilePath, L"vs_6_0",
-			dxcUtils_, dxcCompiler_, includeHandler_
+			dxcUtils_.Get(), dxcCompiler_.Get(), includeHandler_.Get()
 		);
 
 		assert(shaderBlob_VS_ != nullptr);
@@ -49,7 +49,7 @@ void DxObject::ShaderBlob::Init(const std::wstring& vsFilePath, const std::wstri
 
 		shaderBlob_PS_ = DxObjectMethod::CompilerShader(
 			psFilePath, L"ps_6_0",
-			dxcUtils_, dxcCompiler_, includeHandler_
+			dxcUtils_.Get(), dxcCompiler_.Get(), includeHandler_.Get()
 		);
 
 		assert(shaderBlob_PS_ != nullptr);
@@ -58,9 +58,4 @@ void DxObject::ShaderBlob::Init(const std::wstring& vsFilePath, const std::wstri
 }
 
 void DxObject::ShaderBlob::Term() {
-	shaderBlob_VS_->Release();
-	shaderBlob_PS_->Release();
-	includeHandler_->Release();
-	dxcCompiler_->Release();
-	dxcUtils_->Release();
 }

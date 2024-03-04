@@ -6,7 +6,7 @@
 
 void Triangle::Init() {
 	// vertexResource
-	vertexResource_ = new DxObject::BufferResource<VertexData>(MyEngine::GetDevice(), kVertexNum_);
+	vertexResource_ = std::make_unique<DxObject::BufferResource<VertexData>>(MyEngine::GetDevice(), kVertexNum_);
 
 	vertexResource_->operator[](0).position = { -0.5f, -0.5f, 0.0f, 1.0f };
 	vertexResource_->operator[](0).texcoord = { 0.0f, 1.0f };
@@ -45,5 +45,5 @@ void Triangle::Draw(ID3D12GraphicsCommandList* commandList, Directional* directi
 }
 
 void Triangle::Term() {
-	vertexResource_.Release();
+	vertexResource_.reset();
 }
