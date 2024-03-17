@@ -35,22 +35,21 @@ namespace DxObject {
 	class Devices;
 
 	////////////////////////////////////////////////////////////////////////////////////////////
+	// DescriptorType enum
+	////////////////////////////////////////////////////////////////////////////////////////////
+	enum DescriptorType {
+		RTV,
+		SRV,
+		DSV,
+
+		kDescriptorHeapCount
+	};
+
+	////////////////////////////////////////////////////////////////////////////////////////////
 	// DescriptorHeaps class
 	////////////////////////////////////////////////////////////////////////////////////////////
 	class DescriptorHeaps {
 	public:
-
-		////////////////////////////////////////////////////////////////////////////////////////////
-		// DescriptorType enum
-		////////////////////////////////////////////////////////////////////////////////////////////
-		enum DescriptorType {
-			RTV,
-			SRV,
-			DSV,
-
-			kDescriptorHeapCount
-		};
-
 
 		//=========================================================================================
 		// public methods
@@ -95,8 +94,8 @@ namespace DxObject {
 			assert(type < DescriptorType::kDescriptorHeapCount);
 
 			return DxObjectMethod::GetCPUDescriptorHandle(
-				descriptorHeaps_[static_cast<uint32_t>(type)].Get(),
-				descriptorSize_[static_cast<uint32_t>(type)],
+				descriptorHeaps_[type].Get(),
+				descriptorSize_[type],
 				index
 			);
 		}
@@ -111,8 +110,8 @@ namespace DxObject {
 			assert(type < DescriptorType::kDescriptorHeapCount);
 
 			return DxObjectMethod::GetGPUDescriptorHandle(
-				descriptorHeaps_[static_cast<uint32_t>(type)].Get(),
-				descriptorSize_[static_cast<uint32_t>(type)],
+				descriptorHeaps_[type].Get(),
+				descriptorSize_[type],
 				index
 			);
 		}
@@ -124,7 +123,7 @@ namespace DxObject {
 		//! @return 要素サイズを返却
 		const uint32_t GetIndexSize(DescriptorType type) const {
 			assert(type < DescriptorType::kDescriptorHeapCount);
-			return descriptorIndexSize_[static_cast<uint32_t>(type)];
+			return descriptorIndexSize_[type];
 		}
 
 		//! @brief DescriptorHeapを取得
@@ -134,7 +133,7 @@ namespace DxObject {
 		//! @return DescriptorHeapを返却
 		ID3D12DescriptorHeap* GetDescriptorHeap(DescriptorType type) const {
 			assert(type < DescriptorType::kDescriptorHeapCount);
-			return descriptorHeaps_[static_cast<uint32_t>(type)].Get();
+			return descriptorHeaps_[type].Get();
 		}
 
 		void Debug();

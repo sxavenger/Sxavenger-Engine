@@ -21,10 +21,10 @@ void ImGuiManager::Init(WinApp* winApp, DirectXCommon* dxCommon) {
 	dxCommon_ = dxCommon;
 
 	// SRVの取り出し
-	descriptorHeap_SRV_ = dxCommon_->GetDescriptorsObj()->GetDescriptorHeap(DxObject::DescriptorHeaps::SRV);
+	descriptorHeap_SRV_ = dxCommon_->GetDescriptorsObj()->GetDescriptorHeap(DxObject::DescriptorType::SRV);
 
 	// handleの取得
-	descriptorIndex_ = dxCommon_->GetDescriptorsObj()->GetDescriptorCurrentIndex(DxObject::DescriptorHeaps::SRV);
+	descriptorIndex_ = dxCommon_->GetDescriptorsObj()->GetDescriptorCurrentIndex(DxObject::DescriptorType::SRV);
 
 	// ImGuiの初期化
 	IMGUI_CHECKVERSION();
@@ -36,8 +36,8 @@ void ImGuiManager::Init(WinApp* winApp, DirectXCommon* dxCommon) {
 		dxCommon_->GetSwapChainObj()->GetBufferCount(),
 		DXGI_FORMAT_R8G8B8A8_UNORM_SRGB, //!< RTV -> desc.Format
 		descriptorHeap_SRV_,
-		dxCommon_->GetDescriptorsObj()->GetCPUDescriptorHandle(DxObject::DescriptorHeaps::SRV, descriptorIndex_),
-		dxCommon_->GetDescriptorsObj()->GetGPUDescriptorHandle(DxObject::DescriptorHeaps::SRV, descriptorIndex_)
+		dxCommon_->GetDescriptorsObj()->GetCPUDescriptorHandle(DxObject::DescriptorType::SRV, descriptorIndex_),
+		dxCommon_->GetDescriptorsObj()->GetGPUDescriptorHandle(DxObject::DescriptorType::SRV, descriptorIndex_)
 	);
 }
 

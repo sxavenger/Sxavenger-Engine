@@ -4,8 +4,8 @@
 // include
 //-----------------------------------------------------------------------------------------
 // DxObject
-#include "DxDevices.h"
-#include "DxFence.h"
+#include <DxDevices.h>
+#include <DxFence.h>
 
 #include <Logger.h>
 

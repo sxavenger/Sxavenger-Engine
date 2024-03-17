@@ -10,6 +10,7 @@
 // c++
 #include <string>
 #include <memory>
+#include <numbers>
 
 // DxObject
 #include <DxBufferResource.h>
@@ -18,6 +19,17 @@
 // Camera3D class
 ////////////////////////////////////////////////////////////////////////////////////////////
 class Camera3D {
+private:
+
+	////////////////////////////////////////////////////////////////////////////////////////////
+	// Camera structure
+	////////////////////////////////////////////////////////////////////////////////////////////
+	struct Camera { //!< Transform
+		Vector3f scale;
+		Vector3f rotate;
+		Vector3f translate;
+	};
+
 public:
 
 	//=========================================================================================
@@ -56,16 +68,11 @@ public:
 		return resource_->GetGPUVirtualAddress();
 	}
 
-private:
+	const Camera& GetCamera() const {
+		return camera_;
+	}
 
-	////////////////////////////////////////////////////////////////////////////////////////////
-	// Camera structure
-	////////////////////////////////////////////////////////////////////////////////////////////
-	struct Camera { //!< Transform
-		Vector3f scale;
-		Vector3f rotate;
-		Vector3f translate;
-	};
+private:
 
 	//=========================================================================================
 	// private variables

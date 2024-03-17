@@ -41,22 +41,22 @@ void Texture::Load(const std::string& filePath, DirectXCommon* dxCommon) {
 		desc.Texture2D.MipLevels     = UINT(metadata.mipLevels);
 
 		// SRVを生成するDescriptorHeapの場所を決める
-		descriptorIndex_ = dxCommon_->GetDescriptorsObj()->GetDescriptorCurrentIndex(DxObject::DescriptorHeaps::SRV);
+		descriptorIndex_ = dxCommon_->GetDescriptorsObj()->GetDescriptorCurrentIndex(DxObject::DescriptorType::SRV);
 
 		// SRVの生成
 		device->CreateShaderResourceView(
 			textureResource_.Get(),
 			&desc,
-			dxCommon_->GetDescriptorsObj()->GetCPUDescriptorHandle(DxObject::DescriptorHeaps::SRV, descriptorIndex_)
+			dxCommon_->GetDescriptorsObj()->GetCPUDescriptorHandle(DxObject::DescriptorType::SRV, descriptorIndex_)
 		);
 
-		handleGPU_ = dxCommon_->GetDescriptorsObj()->GetGPUDescriptorHandle(DxObject::DescriptorHeaps::SRV, descriptorIndex_);
+		handleGPU_ = dxCommon_->GetDescriptorsObj()->GetGPUDescriptorHandle(DxObject::DescriptorType::SRV, descriptorIndex_);
 	}
 }
 
 void Texture::Unload() {
 	textureResource_->Release();
-	dxCommon_->GetDescriptorsObj()->Erase(DxObject::DescriptorHeaps::SRV, descriptorIndex_);
+	dxCommon_->GetDescriptorsObj()->Erase(DxObject::DescriptorType::SRV, descriptorIndex_);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -78,7 +78,10 @@ void TextureManager::Init(DirectXCommon* dxCommon) {
 	textures_["resources/monsterBall.png"];
 	textures_["resources/model/uvChecker.png"];
 	textures_["resources/model/monsterBall.png"];
-	textures_["resources/model/checkerBoard.png"];
+	/*textures_["resources/model/checkerBoard.png"];*/
+
+	/*textures_["resources/particleDemo.png"];
+	textures_["resources/model/wireFrame.png"];*/
 
 	for (auto& pair : textures_) {
 		pair.second.texture = std::make_unique<Texture>(pair.first, dxCommon_);

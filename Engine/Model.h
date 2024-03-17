@@ -76,12 +76,12 @@ public:
 			assert(false); //!< 配列以上のmodelDataの呼び出し
 		}
 
-		if (modelData_.materials[index].isUseTexture) {
+		/*if (modelData_.materials[index].isUseTexture) {
 			MyEngine::SetPipeLineState(TEXTURE);
 
 		} else {
 			MyEngine::SetPipeLineState(POLYGON);
-		}
+		}*/
 
 		D3D12_VERTEX_BUFFER_VIEW vertexBufferView = modelData_.meshs[index].vertexResource->GetVertexBufferView();
 		D3D12_INDEX_BUFFER_VIEW indexBufferView = modelData_.meshs[index].indexResource->GetIndexBufferView();
@@ -96,8 +96,8 @@ public:
 		}
 	}
 
-	void DrawCall(ID3D12GraphicsCommandList* commandList, uint32_t index) {
-		commandList->DrawIndexedInstanced(modelData_.meshs[index].indexResource->GetSize(), 1, 0, 0, 0);
+	void DrawCall(ID3D12GraphicsCommandList* commandList, uint32_t index, uint32_t instanceCount) {
+		commandList->DrawIndexedInstanced(modelData_.meshs[index].indexResource->GetSize(), instanceCount, 0, 0, 0);
 	}
 
 	//const ModelData& GetModelData() const { // debug

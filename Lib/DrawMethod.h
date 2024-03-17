@@ -4,8 +4,10 @@
 // include
 //-----------------------------------------------------------------------------------------
 // c++
-#define _USE_MATH_DEFINES
 #include <cmath>
+#include <numbers>
+#include <memory>
+
 // MyEngine
 #include "MyEngine.h" //!< デバイス取り出し
 
@@ -19,17 +21,20 @@
 // DrawData structure
 ////////////////////////////////////////////////////////////////////////////////////////////
 struct DrawData {
-	DxObject::BufferResource<VertexData>* vertex;
-	DxObject::IndexBufferResource*        index;
+	std::unique_ptr<DxObject::BufferResource<VertexData>> vertex;
+	std::unique_ptr<DxObject::IndexBufferResource>        index;
+
+	void Reset() {
+		vertex.reset();
+		index.reset();
+	}
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // DrawMethod namespace
 ////////////////////////////////////////////////////////////////////////////////////////////
 namespace DrawMethods {
-	
-	DxObject::BufferResource<VertexData>* Sphere(float radius, uint32_t kSubdivision);
 
-	DrawData SphereData(float radius, uint32_t kSubdivision);
+	DrawData Sphere(float radius, uint32_t kSubdivision);
 
 };

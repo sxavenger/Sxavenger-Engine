@@ -13,10 +13,11 @@
 
 #include <ComPtr.h>
 
-//-----------------------------------------------------------------------------------------
-// namespace
-//-----------------------------------------------------------------------------------------
+#include <ExecutionSpeed.h>
 
+////////////////////////////////////////////////////////////////////////////////////////////
+// namespace
+////////////////////////////////////////////////////////////////////////////////////////////
 namespace {
 
 	////////////////////////////////////////////////////////////////////////////////////////////
@@ -51,7 +52,7 @@ namespace {
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 //-----------------------------------------------------------------------------------------
-// init variables
+// static variables
 //-----------------------------------------------------------------------------------------
 Camera3D* MyEngine::camera3D_ = nullptr;
 Camera2D* MyEngine::camera2D_ = nullptr;
@@ -107,6 +108,7 @@ void MyEngine::Finalize() {
 }
 
 void MyEngine::BeginFrame() {
+	ExecutionSpeed::Begin();
 	sDirectXCommon->BeginFrame();
 	sImGuiManager->Begin();
 }
@@ -116,12 +118,21 @@ void MyEngine::EndFrame() {
 
 	sImGuiManager->End();
 	sDirectXCommon->EndFrame();
+	ExecutionSpeed::End();
 }
 
 int MyEngine::ProcessMessage() { return sWinApp->ProcessMessage() ? 1 : 0; }
 
-void MyEngine::SetPipeLineState(PipelineType type) {
-	sDirectXCommon->SetPipelineState(static_cast<uint32_t>(type));
+void MyEngine::SetPipelineType(DxObject::PipelineType pipelineType) {
+	sDirectXCommon->SetPipelineType(pipelineType);
+}
+
+void MyEngine::SetBlendMode(BlendMode mode) {
+	sDirectXCommon->SetBlendMode(mode);
+}
+
+void MyEngine::SetPipelineState() {
+	sDirectXCommon->SetPipelineState();
 }
 
 ID3D12GraphicsCommandList* MyEngine::GetCommandList() {
@@ -129,7 +140,7 @@ ID3D12GraphicsCommandList* MyEngine::GetCommandList() {
 	return sDirectXCommon->GetCommandList();
 }
 
-DxObject::Devices* MyEngine::GetDevice() {
+DxObject::Devices* MyEngine::GetDevicesObj() {
 	assert(sDirectXCommon != nullptr);
 	return sDirectXCommon->GetDeviceObj();
 }

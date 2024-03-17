@@ -1,10 +1,12 @@
 #include <MyEngine.h> // sxavenger engine
+#include <DirectXCommon.h>
 
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
 /// lib
 #include <Environment.h>
+#include <ExecutionSpeed.h>
 // Geometry
 #include <Vector4.h>
 #include <Matrix4x4.h>
@@ -13,23 +15,14 @@
 #include <Camera3D.h>
 #include <Camera2D.h>
 // Light
-#include <DirectionalLight.h>
+#include <Light.h>
 
 // c++
 #include <list>
 #include <memory>
 
-/// Game
-// Object
-#include <Triangle.h>
+// Game
 #include <Sphere.h>
-#include <Sprite.h>
-#include <Plane.h>
-#include <Teapot.h>
-#include <Bunny.h>
-#include <MultiMesh.h>
-#include <MultiMaterial.h>
-#include <Suzanne.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // メイン関数
@@ -55,31 +48,12 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	//-----------------------------------------------------------------------------------------
 	// Light
 	//-----------------------------------------------------------------------------------------
-	std::unique_ptr<Directional> directional = std::make_unique<Directional>(MyEngine::GetDevice());
+	std::unique_ptr<Light> light = std::make_unique<Light>(MyEngine::GetDevicesObj());
 
 	//-----------------------------------------------------------------------------------------
 	// Object
 	//-----------------------------------------------------------------------------------------
-	std::list<Object*> objects;
-
-	// list
-	const char* items[] = { "Triangle", "Sphere", "Sprite", "Plane", "Teapot", "Bunny", "MultiMesh", "MultiMaterial", "Suzanne" };
-	enum ItemType {
-		Type_Traingle,
-		Type_Sphere,
-		Type_Sprite,
-		Type_Plane,
-		Type_Teapot,
-		Type_Bunny,
-		Type_MultiMesh,
-		Type_MultiMaterial,
-		Type_Suzanne,
-
-		kItemTypeCount
-	};
-
-	// select
-	int currentType = Type_Traingle;
+	std::unique_ptr<Sphere> sphere = std::make_unique<Sphere>();
 
 	////////////////////////////////////////////////////////////////////////////////////////////
 	// メインループ
@@ -92,102 +66,15 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		// 更新処理
 		//=========================================================================================
 		camera3D->UpdateImGui();
-		directional->UpdateImGui();
+		light->UpdateImGui();
 
-		ImGui::Begin("object");
+		ImGui::Begin("system");
+		ImGui::Text("speed(s): %.6f", ExecutionSpeed::freamsParSec_);
+		ImGui::Text("FPS: %.1f", 1.0f / ExecutionSpeed::freamsParSec_);
+		ImGui::End();
 
-		// object追加処理
-		if (ImGui::BeginCombo("object", items[currentType])) {
-
-			for (int i = 0; i < ItemType::kItemTypeCount; ++i) {
-				// item[i]が選択されてるかどうか
-				bool isSelected = (i == currentType);
-
-				if (ImGui::Selectable(items[i], isSelected)) {
-					currentType = i;
-				}
-			}
-
-			ImGui::EndCombo();
-		}
-
-		ImGui::SameLine();
-
-		if (ImGui::Button("create")) {
-			switch (currentType) {
-				case Type_Traingle:
-					objects.push_back(new Triangle());
-					break;
-
-				case Type_Sphere:
-					objects.push_back(new Sphere());
-					break;
-
-				case Type_Sprite:
-					objects.push_back(new Sprite());
-					break;
-
-				case Type_Plane:
-					objects.push_back(new Plane());
-					break;
-
-				case Type_Teapot:
-					objects.push_back(new Teapot());
-					break;
-
-				case Type_Bunny:
-					objects.push_back(new Bunny());
-					break;
-
-				case Type_MultiMesh:
-					objects.push_back(new MultiMesh());
-					break;
-
-				case Type_MultiMaterial:
-					objects.push_back(new MultiMaterial());
-					break;
-
-				case Type_Suzanne:
-					objects.push_back(new Suzanne());
-					break;
-
-				default:
-					break;
-			}
-			
-		}
-
-		ImGui::Separator();
-
-		// object単体の処理
-		int identifier = 0;
-		for (auto it = objects.begin(); it != objects.end();) {
-
-			(*it)->EditorImGui(identifier);
-			identifier++;
-			ImGui::Separator();
-			
-			if ((*it)->GetIsDelete()) {
-				// listからの削除
-				delete* it;
-				it = objects.erase(it);
-				continue;
-			}
-
-			++it;
-		}
-
-		ImGui::Spacing();
-
-		if (ImGui::Button("clear")) {
-			// object
-			for (auto& it : objects) {
-				delete it;
-				it = nullptr;
-			}
-			objects.clear();
-		}
-
+		ImGui::Begin("main");
+		sphere->SetOnImGui();
 		ImGui::End();
 
 		//=========================================================================================
@@ -195,27 +82,17 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		//=========================================================================================
 		
 
-		// object 描画処理
-		for (const auto& it : objects) {
-			it->Draw(commandList, directional.get());
-		}
 
 		MyEngine::EndFrame();
-
 	}
 
 	// camera
 	camera3D.reset();
 	camera2D.reset();
 	// light
-	directional.reset();
+	light.reset();
 
-	// object
-	for (auto& it : objects) {
-		delete it;
-		it = nullptr;
-	}
-	objects.clear();
+	sphere.reset();
 
 	MyEngine::Finalize();
 	

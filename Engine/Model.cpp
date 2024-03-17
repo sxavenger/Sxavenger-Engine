@@ -91,11 +91,11 @@ ModelData ModelMethods::LoadObjFile(const std::string& directoryPath, const std:
 				// mesh一つ分の書き込みが終わったので保存
 				MeshData meshData;
 				meshData.vertexResource
-					= new DxObject::BufferResource<VertexData>(MyEngine::GetDevice(), static_cast<uint32_t>(vertexDatas.size()));
+					= new DxObject::BufferResource<VertexData>(MyEngine::GetDevicesObj(), static_cast<uint32_t>(vertexDatas.size()));
 				meshData.vertexResource->Memcpy(vertexDatas.data());
 
 				meshData.indexResource
-					= new DxObject::IndexBufferResource(MyEngine::GetDevice(), static_cast<uint32_t>(indexDatas.size()));
+					= new DxObject::IndexBufferResource(MyEngine::GetDevicesObj(), static_cast<uint32_t>(indexDatas.size()));
 				meshData.indexResource->Memcpy(indexDatas.data());
 
 				// meshとmaterialをmodelDataに格納
@@ -259,11 +259,11 @@ ModelData ModelMethods::LoadObjFile(const std::string& directoryPath, const std:
 		// mesh一つ分の書き込みが終わったので保存
 		MeshData meshData;
 		meshData.vertexResource
-			= new DxObject::BufferResource<VertexData>(MyEngine::GetDevice(), static_cast<uint32_t>(vertexDatas.size()));
+			= new DxObject::BufferResource<VertexData>(MyEngine::GetDevicesObj(), static_cast<uint32_t>(vertexDatas.size()));
 		meshData.vertexResource->Memcpy(vertexDatas.data());
 
 		meshData.indexResource
-			= new DxObject::IndexBufferResource(MyEngine::GetDevice(), static_cast<uint32_t>(indexDatas.size()));
+			= new DxObject::IndexBufferResource(MyEngine::GetDevicesObj(), static_cast<uint32_t>(indexDatas.size()));
 		meshData.indexResource->Memcpy(indexDatas.data());
 		
 		// meshとmaterialをmodelDataに格納

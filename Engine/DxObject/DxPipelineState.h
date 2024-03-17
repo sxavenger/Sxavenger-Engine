@@ -50,8 +50,7 @@ namespace DxObject {
 		//! @param[in] clientWidth  クライアント領域横幅
 		//! @param[in] clientHeight クライアント領域縦幅
 		PipelineState(
-			Devices* devices, ShaderBlob* shaderBlob, RootSignature* rootSignature,
-			int32_t clientWidth, int32_t clientHeight
+			Devices* devices, ShaderBlob* shaderBlob, RootSignature* rootSignature, const D3D12_BLEND_DESC& blendDesc
 		);
 
 		//! @brief デストラクタ
@@ -61,18 +60,14 @@ namespace DxObject {
 		//! 
 		//! @param[in] devices      DxObject::Device
 		//! @param[in] shaderBlob   DxObject::Shader
-		//! @param[in] clientWidth  クライアント領域横幅
-		//! @param[in] clientHeight クライアント領域縦幅
 		void Init(
-			Devices* devices, ShaderBlob* shaderBlob, RootSignature* rootSignature,
-			int32_t clientWidth, int32_t clientHeight
+			Devices* devices, ShaderBlob* shaderBlob, RootSignature* rootSignature, const D3D12_BLEND_DESC& blendDesc
 		);
 
 		//! @brief 終了処理
 		void Term();
 
-		//! @brief commandListにPipelineStateを設定
-		void SetCommandPipelineState(Command* command);
+		ID3D12PipelineState* GetPipelineState() const { return graphicsPipelineState_.Get(); }
 
 	private:
 
@@ -80,12 +75,7 @@ namespace DxObject {
 		// private variables
 		//=========================================================================================
 
-		ID3D12RootSignature* rootSignature_;
-
 		ComPtr<ID3D12PipelineState> graphicsPipelineState_;
-
-		D3D12_VIEWPORT viewport_;
-		D3D12_RECT     scissorRect_;
 
 	};
 

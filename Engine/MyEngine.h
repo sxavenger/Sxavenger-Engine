@@ -10,6 +10,7 @@
 // DxObject
 #include <DxDevices.h>
 #include <DxDescriptorHeaps.h>
+#include <DxPipelineManager.h>
 
 // Camera
 #include <Camera3D.h>
@@ -20,11 +21,6 @@
 //-----------------------------------------------------------------------------------------
 class DirectXCommon;
 class TextureManager;
-
-enum PipelineType {
-	TEXTURE,
-	POLYGON
-};
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // MyEngine class
@@ -58,11 +54,18 @@ public:
 	//! @retval 0 ゲーム継続
 	static int ProcessMessage();
 
+	// ---- pipeline関係 ---- //
+
+	static void SetPipelineType(DxObject::PipelineType pipelineType);
+
+	static void SetBlendMode(BlendMode mode);
+
+	static void SetPipelineState();
+
 	// TODO: あんましたくない
-	static void SetPipeLineState(PipelineType type);
 	static ID3D12GraphicsCommandList* GetCommandList();
 
-	static DxObject::Devices* GetDevice();
+	static DxObject::Devices* GetDevicesObj();
 	static DirectXCommon* GetDxCommon();
 
 	static TextureManager* GetTextureManager();
@@ -74,7 +77,6 @@ public:
 	//=========================================================================================
 	
 	static Camera3D* camera3D_;
-
 	static Camera2D* camera2D_;
 
 private:

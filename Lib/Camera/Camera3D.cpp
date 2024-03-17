@@ -23,7 +23,7 @@ Camera3D::Camera3D(const std::string& filePath) {
 	ReadJsonCameraData(filePath);
 	SetProjection(0.45f, static_cast<float>(kWindowWidth) / static_cast<float>(kWindowHeight), 0.1f, 100.0f);
 
-	resource_ =std::make_unique<DxObject::BufferPtrResource<Vector4f>>(MyEngine::GetDevice(), 1);
+	resource_ = std::make_unique<DxObject::BufferPtrResource<Vector4f>>(MyEngine::GetDevicesObj(), 1);
 	resource_->Set(0, &position);
 }
 
@@ -32,9 +32,6 @@ Camera3D::~Camera3D() { Term(); }
 void Camera3D::Init() {
 	SetCamera(unitVector, origin, {0.0f, 0.0f, -10.0f});
 	SetProjection(0.45f, static_cast<float>(kWindowWidth) / static_cast<float>(kWindowHeight), 0.1f, 100.0f);
-
-	/*resource_ = new DxObject::BufferPtrResource<Vector3f>(MyEngine::GetDevice(), 1);
-	resource_->Set(0, &direction);*/
 }
 
 void Camera3D::Term() {
@@ -48,7 +45,6 @@ void Camera3D::SetCamera(const Vector3f& scale, const Vector3f& rotate, const Ve
 	viewMatrix_ = Matrix::Inverse(cameraMatrix);
 
 	position = { camera_.translate.x, camera_.translate.y, camera_.translate.z, 1.0f };
-	/*direction = Matrix::Transform({0.0f, 0.0f, 1.0f}, Matrix::MakeRotate(rotate));*/
 }
 
 void Camera3D::SetProjection(float fovY, float aspectRatio, float nearClip, float farClip) {
@@ -101,5 +97,4 @@ void Camera3D::RecalculateCamera() {
 	viewMatrix_ = Matrix::Inverse(cameraMatrix);
 
 	position = { camera_.translate.x, camera_.translate.y, camera_.translate.z, 1.0f };
-	/*direction = Matrix::Transform({ 0.0f, 0.0f, 1.0f }, Matrix::MakeRotate(camera_.rotate));*/
 }

@@ -10,9 +10,6 @@
     <Filter Include="Engine\source">
       <UniqueIdentifier>{b5e92c7c-2603-4853-bd7b-292422ff40ae}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Engine\resource">
-      <UniqueIdentifier>{68e98ad9-6621-41f0-b00e-320e57b5c9ad}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Lib">
       <UniqueIdentifier>{45df3929-c511-410b-bd2a-b6aa3bc53b67}</UniqueIdentifier>
     </Filter>
@@ -64,17 +61,26 @@
     <Filter Include="Engine\DxObject\source">
       <UniqueIdentifier>{10c19859-4678-4b5e-b5c5-28df2213ff6d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Lib\Adapter\Random">
+      <UniqueIdentifier>{c32eefb0-dc42-4eb8-9cb7-5edcfecb4c74}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Lib\Adapter\ExecutionSpeed">
+      <UniqueIdentifier>{5422f44a-4902-4946-941c-d8ed7deab608}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Lib\Collider">
+      <UniqueIdentifier>{c313588c-2f0a-4766-84df-e98f062882d9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Lib\Collider\include">
+      <UniqueIdentifier>{cd73d38c-c8f5-4435-9c3f-e90223ec75a6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Lib\Collider\source">
+      <UniqueIdentifier>{cf8abcbb-54a4-49f0-b300-24452291069a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\resource">
+      <UniqueIdentifier>{590689eb-50a7-4210-9bf4-b45857862fbd}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Game">
-      <UniqueIdentifier>{057e3c48-3983-4bbb-b899-fbb91025ace1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Game\Object">
-      <UniqueIdentifier>{a760ad1a-de4b-45cc-8294-7e94907203a3}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Game\Object\include">
-      <UniqueIdentifier>{65bcbe61-10ff-4e8a-8303-4a15b4503ce0}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Game\Object\source">
-      <UniqueIdentifier>{20e3ec2a-b05f-4666-864a-5f7e5e9d0b1f}</UniqueIdentifier>
+      <UniqueIdentifier>{dc5061ec-2db5-43c7-b706-56ae0e2e10c7}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -142,9 +148,6 @@
     <ClCompile Include="Lib\DrawMethod.cpp">
       <Filter>Lib</Filter>
     </ClCompile>
-    <ClCompile Include="Lib\Light\DirectionalLight.cpp">
-      <Filter>Lib\Light\source</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\DxObject\DxBufferResource.cpp">
       <Filter>Engine\DxObject\source</Filter>
     </ClCompile>
@@ -181,41 +184,29 @@
     <ClCompile Include="Engine\Model.cpp">
       <Filter>Engine\source</Filter>
     </ClCompile>
-    <ClCompile Include="Game\Object\Triangle.cpp">
-      <Filter>Game\Object\source</Filter>
-    </ClCompile>
-    <ClCompile Include="Game\Object\Object.cpp">
-      <Filter>Game\Object\source</Filter>
-    </ClCompile>
-    <ClCompile Include="Game\Object\Sphere.cpp">
-      <Filter>Game\Object\source</Filter>
-    </ClCompile>
-    <ClCompile Include="Game\Object\Sprite.cpp">
-      <Filter>Game\Object\source</Filter>
-    </ClCompile>
-    <ClCompile Include="Game\Object\Plane.cpp">
-      <Filter>Game\Object\source</Filter>
-    </ClCompile>
-    <ClCompile Include="Game\Object\Bunny.cpp">
-      <Filter>Game\Object\source</Filter>
-    </ClCompile>
-    <ClCompile Include="Game\Object\Teapot.cpp">
-      <Filter>Game\Object\source</Filter>
-    </ClCompile>
-    <ClCompile Include="Game\Object\MultiMesh.cpp">
-      <Filter>Game\Object\source</Filter>
-    </ClCompile>
-    <ClCompile Include="Game\Object\MultiMaterial.cpp">
-      <Filter>Game\Object\source</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\DxObject\DxRootSignature.cpp">
       <Filter>Engine\DxObject\source</Filter>
     </ClCompile>
-    <ClCompile Include="Game\Object\Suzanne.cpp">
-      <Filter>Game\Object\source</Filter>
-    </ClCompile>
     <ClCompile Include="Lib\Light\Light.cpp">
       <Filter>Lib\Light\source</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\DxObject\DxBlendState.cpp">
+      <Filter>Engine\DxObject\source</Filter>
+    </ClCompile>
+    <ClCompile Include="Lib\Adapter\Random\Random.cpp">
+      <Filter>Lib\Adapter\Random</Filter>
+    </ClCompile>
+    <ClCompile Include="Lib\Adapter\ExecutionSpeed\ExecutionSpeed.cpp">
+      <Filter>Lib\Adapter\ExecutionSpeed</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\DxObject\DxPipelineManager.cpp">
+      <Filter>Engine\DxObject\source</Filter>
+    </ClCompile>
+    <ClCompile Include="Lib\Collider\Collider.cpp">
+      <Filter>Lib\Collider\source</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Sphere.cpp">
+      <Filter>Game</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -288,9 +279,6 @@
     <ClInclude Include="Lib\DrawMethod.h">
       <Filter>Lib</Filter>
     </ClInclude>
-    <ClInclude Include="Lib\Light\DirectionalLight.h">
-      <Filter>Lib\Light\include</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\DxObject\DxBufferResource.h">
       <Filter>Engine\DxObject\include</Filter>
     </ClInclude>
@@ -330,66 +318,66 @@
     <ClInclude Include="Engine\ComPtr.h">
       <Filter>Engine\include</Filter>
     </ClInclude>
-    <ClInclude Include="Game\Object\Triangle.h">
-      <Filter>Game\Object\include</Filter>
-    </ClInclude>
-    <ClInclude Include="Game\Object\Object.h">
-      <Filter>Game\Object\include</Filter>
-    </ClInclude>
-    <ClInclude Include="Game\Object\Sphere.h">
-      <Filter>Game\Object\include</Filter>
-    </ClInclude>
-    <ClInclude Include="Game\Object\Sprite.h">
-      <Filter>Game\Object\include</Filter>
-    </ClInclude>
-    <ClInclude Include="Game\Object\ObjectStructure.h">
-      <Filter>Game\Object\include</Filter>
-    </ClInclude>
-    <ClInclude Include="Game\Object\Plane.h">
-      <Filter>Game\Object\include</Filter>
-    </ClInclude>
-    <ClInclude Include="Game\Object\Bunny.h">
-      <Filter>Game\Object\include</Filter>
-    </ClInclude>
-    <ClInclude Include="Game\Object\Teapot.h">
-      <Filter>Game\Object\include</Filter>
-    </ClInclude>
-    <ClInclude Include="Game\Object\MultiMesh.h">
-      <Filter>Game\Object\include</Filter>
-    </ClInclude>
-    <ClInclude Include="Game\Object\MultiMaterial.h">
-      <Filter>Game\Object\include</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\DxObject\DxRootSignature.h">
       <Filter>Engine\DxObject\include</Filter>
-    </ClInclude>
-    <ClInclude Include="Game\Object\Suzanne.h">
-      <Filter>Game\Object\include</Filter>
     </ClInclude>
     <ClInclude Include="Lib\Light\Light.h">
       <Filter>Lib\Light\include</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\DxObject\DxBlendState.h">
+      <Filter>Engine\DxObject\include</Filter>
+    </ClInclude>
+    <ClInclude Include="Lib\Adapter\Random\Random.h">
+      <Filter>Lib\Adapter\Random</Filter>
+    </ClInclude>
+    <ClInclude Include="Lib\Adapter\ExecutionSpeed\ExecutionSpeed.h">
+      <Filter>Lib\Adapter\ExecutionSpeed</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\DxObject\DxPipelineManager.h">
+      <Filter>Engine\DxObject\include</Filter>
+    </ClInclude>
+    <ClInclude Include="Lib\Collider\Collider.h">
+      <Filter>Lib\Collider\include</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\ObjectStructure.h">
+      <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Sphere.h">
+      <Filter>Game</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />
-    <None Include="Engine\Object3d.hlsli">
+    <None Include="Engine\resource\Object3d.hlsli">
       <Filter>Engine\resource</Filter>
     </None>
-  </ItemGroup>
-  <ItemGroup>
-    <FxCompile Include="Engine\Object3d.VS.hlsl">
+    <None Include="Engine\resource\Particle.hlsli">
       <Filter>Engine\resource</Filter>
-    </FxCompile>
-    <FxCompile Include="Engine\Object3d.PS.hlsl">
-      <Filter>Engine\resource</Filter>
-    </FxCompile>
-    <FxCompile Include="Engine\Polygon3d.PS.hlsl">
-      <Filter>Engine\resource</Filter>
-    </FxCompile>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Text Include="externals\imgui\LICENSE.txt">
       <Filter>externals\imgui</Filter>
     </Text>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="Engine\resource\Object3d.PS.hlsl">
+      <Filter>Engine\resource</Filter>
+    </FxCompile>
+    <FxCompile Include="Engine\resource\Object3d.VS.hlsl">
+      <Filter>Engine\resource</Filter>
+    </FxCompile>
+    <FxCompile Include="Engine\resource\Particle.PS.hlsl">
+      <Filter>Engine\resource</Filter>
+    </FxCompile>
+    <FxCompile Include="Engine\resource\Particle.VS.hlsl">
+      <Filter>Engine\resource</Filter>
+    </FxCompile>
+    <FxCompile Include="Engine\resource\Polygon3d.PS.hlsl">
+      <Filter>Engine\resource</Filter>
+    </FxCompile>
+    <FxCompile Include="Engine\resource\Area.PS.hlsl">
+      <Filter>Engine\resource</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

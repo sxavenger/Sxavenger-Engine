@@ -55,7 +55,6 @@ void DxObject::RootSignature::Init(Devices* devices, const RootSignatureDescs& d
 }
 
 void DxObject::RootSignature::Term() {
-	rootSignature_->Release();
 	signatureBlob_->Release();
 
 	if (signatureErrorBlob_) {

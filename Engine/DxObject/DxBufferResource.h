@@ -123,7 +123,9 @@ namespace DxObject {
 		//! @brief BufferResourceを取得
 		//! 
 		//! @return BufferResourceを返却
-		/*ID3D12Resource* GetResource() const { return resource_; }*/
+		ID3D12Resource* GetResource() const {
+			return resource_.Get();
+		}
 
 		//! @brief GPUAddressを取得
 		//! 
@@ -144,17 +146,17 @@ namespace DxObject {
 			return result;
 		}
 
-		////! @brief dataArrayにvalueを設定
-		////! 
-		////! @param[in] index 要素数
-		////! @param[in] value データ
-		//void Set(uint32_t index, const T& value) {
-		//	if (!CheckIndex(index)) {
-		//		return;
-		//	}
+		//! @brief dataArrayにvalueを設定
+		//! 
+		//! @param[in] index 要素数
+		//! @param[in] value データ
+		/*void Set(uint32_t index, const T& value) {
+			if (!CheckIndex(index)) {
+				return;
+			}
 
-		//	dataArray_[index] = value;
-		//}
+			dataArray_[index] = value;
+		}*/
 
 		void Memcpy(const T* value) {
 			memcpy(dataArray_, value, sizeof(T) * indexSize_);

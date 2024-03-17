@@ -74,13 +74,13 @@ void DxObject::SwapChain::Init(
 		desc.Format        = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
 		desc.ViewDimension = D3D12_RTV_DIMENSION_TEXTURE2D;
 
-		assert(descriptorHeaps->GetIndexSize(DescriptorHeaps::RTV) >= kBufferCount_);
+		assert(descriptorHeaps->GetIndexSize(DescriptorType::RTV) >= kBufferCount_);
 
 		for (uint32_t i = 0; i < kBufferCount_; ++i) {
-			uint32_t descriptorIndex = descriptorHeaps->GetDescriptorCurrentIndex(DescriptorHeaps::RTV);
+			uint32_t descriptorIndex = descriptorHeaps->GetDescriptorCurrentIndex(DescriptorType::RTV);
 
 			handleCPU_RTV_[i]
-				= descriptorHeaps->GetCPUDescriptorHandle(DescriptorHeaps::RTV, descriptorIndex);
+				= descriptorHeaps->GetCPUDescriptorHandle(DescriptorType::RTV, descriptorIndex);
 
 			device->CreateRenderTargetView(
 				swapChainResource_[i].Get(), &desc, handleCPU_RTV_[i]
