@@ -7,7 +7,6 @@
 
 // origin
 #include <WinApp.h>
-#include <DirectXCommon.h>
 #include <ImGuiManager.h>
 #include <TextureManager.h>
 
