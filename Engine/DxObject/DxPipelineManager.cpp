@@ -48,6 +48,83 @@ void DxObject::PipelineManager::Init(
 		scissorRect_.bottom = clientHeight;
 	}
 
+	CreatePipelineTable();
+	
+}
+
+void DxObject::PipelineManager::Term() {
+	for (int i = 0; i < PipelineType::kCountOfPipeline; ++i) {
+		pipelineMenbers_[i].Reset();
+	}
+
+	/*pipelineState_.reset();*/
+
+	for (auto& it : pipelines_) {
+		it.pipeline.reset();
+	}
+}
+
+void DxObject::PipelineManager::CreatePipeline() {
+
+	if ((pipelines_[pipelineType_].settingBlendMode_ != blendMode_) || (pipelines_[pipelineType_].pipeline == nullptr)) {
+		pipelines_[pipelineType_].pipeline = std::make_unique<PipelineState>(
+			devices_,
+			pipelineMenbers_[pipelineType_].shaderBlob.get(), pipelineMenbers_[pipelineType_].rootSignature.get(),
+			blendState_->operator[](blendMode_)
+		);
+
+		pipelines_[pipelineType_].settingBlendMode_ = blendMode_;
+	}
+}
+
+void DxObject::PipelineManager::SetPipeline() {
+	assert(pipelines_[pipelineType_].pipeline != nullptr);
+
+	// commandListの取り出し
+	ID3D12GraphicsCommandList* commandList = command_->GetCommandList();
+
+	commandList->RSSetViewports(1, &viewport_);
+	commandList->RSSetScissorRects(1, &scissorRect_);
+
+	commandList->SetGraphicsRootSignature(pipelineMenbers_[pipelineType_].rootSignature->GetRootSignature());
+	commandList->SetPipelineState(pipelines_[pipelineType_].pipeline->GetPipelineState());
+
+	commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+}
+
+void DxObject::PipelineManager::CreatePipelineTable() {
+
+	{
+		// rootSignatureDescsの初期化
+		DxObject::RootSignatureDescs desc(2, 0);
+
+		// rangeの設定
+		D3D12_DESCRIPTOR_RANGE rangeInstanceing[1] = {};
+		rangeInstanceing[0].BaseShaderRegister                = 0;
+		rangeInstanceing[0].NumDescriptors                    = 1;
+		rangeInstanceing[0].RangeType                         = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
+		rangeInstanceing[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
+
+		// parameterの設定
+		desc.param[0].ParameterType                       = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
+		desc.param[0].ShaderVisibility                    = D3D12_SHADER_VISIBILITY_VERTEX;
+		desc.param[0].DescriptorTable.pDescriptorRanges   = rangeInstanceing;
+		desc.param[0].DescriptorTable.NumDescriptorRanges = _countof(rangeInstanceing);
+		//!< FloorForGPU
+
+		desc.param[1].ParameterType             = D3D12_ROOT_PARAMETER_TYPE_CBV;
+		desc.param[1].ShaderVisibility          = D3D12_SHADER_VISIBILITY_PIXEL;
+		desc.param[1].Descriptor.ShaderRegister = 0;
+		//!< Material
+
+		pipelineMenbers_[PipelineType::FLOOR].rootSignature = std::make_unique<DxObject::RootSignature>(devices_, desc);
+
+		pipelineMenbers_[PipelineType::FLOOR].shaderBlob = std::make_unique<DxObject::ShaderBlob>(
+			L"Floor.VS.hlsl", L"Floor.GS.hlsl", L"Floor.PS.hlsl"
+		);
+
+	}
+
 	{
 		// rootSignatureDescsの初期化
 		DxObject::RootSignatureDescs desc(3, 1);
@@ -90,50 +167,11 @@ void DxObject::PipelineManager::Init(
 		desc.sampler[0].ShaderRegister   = 0;
 		desc.sampler[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
 
+		pipelineMenbers_[PipelineType::PARTICLE].rootSignature = std::make_unique<DxObject::RootSignature>(devices_, desc);
+
 		pipelineMenbers_[PipelineType::PARTICLE].shaderBlob = std::make_unique<DxObject::ShaderBlob>(
 			L"Particle.VS.hlsl", L"Particle.GS.hlsl", L"Particle.PS.hlsl"
 		);
-
-		pipelineMenbers_[PipelineType::PARTICLE].rootSignature = std::make_unique<DxObject::RootSignature>(devices_, desc);
-	}
-}
-
-void DxObject::PipelineManager::Term() {
-	for (int i = 0; i < PipelineType::kCountOfPipeline; ++i) {
-		pipelineMenbers_[i].Reset();
 	}
 
-	/*pipelineState_.reset();*/
-
-	for (auto& it : pipelines_) {
-		it.pipeline.reset();
-	}
-}
-
-void DxObject::PipelineManager::CreatePipeline() {
-
-	if ((pipelines_[pipelineType_].settingBlendMode_ != blendMode_) || (pipelines_[pipelineType_].pipeline == nullptr)) {
-		pipelines_[pipelineType_].pipeline = std::make_unique<PipelineState>(
-			devices_,
-			pipelineMenbers_[pipelineType_].shaderBlob.get(), pipelineMenbers_[pipelineType_].rootSignature.get(),
-			blendState_->operator[](blendMode_)
-		);
-
-		pipelines_[pipelineType_].settingBlendMode_ = blendMode_;
-	}
-}
-
-void DxObject::PipelineManager::SetPipeline() {
-	assert(pipelines_[pipelineType_].pipeline != nullptr);
-
-	// commandListの取り出し
-	ID3D12GraphicsCommandList* commandList = command_->GetCommandList();
-
-	commandList->RSSetViewports(1, &viewport_);
-	commandList->RSSetScissorRects(1, &scissorRect_);
-
-	commandList->SetGraphicsRootSignature(pipelineMenbers_[pipelineType_].rootSignature->GetRootSignature());
-	commandList->SetPipelineState(pipelines_[pipelineType_].pipeline->GetPipelineState());
-
-	commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 }

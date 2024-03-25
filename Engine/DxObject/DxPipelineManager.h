@@ -18,6 +18,7 @@
 // PipelineType enum
 ////////////////////////////////////////////////////////////////////////////////////////////
 enum PipelineType {
+	FLOOR,
 	PARTICLE,
 
 	kCountOfPipeline
@@ -137,6 +138,12 @@ namespace DxObject {
 		// viewports
 		D3D12_VIEWPORT viewport_;
 		D3D12_RECT     scissorRect_;
+
+		//=========================================================================================
+		// private methods
+		//=========================================================================================
+
+		void CreatePipelineTable();
 
 	};
 

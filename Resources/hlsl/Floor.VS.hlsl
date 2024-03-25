@@ -1,4 +1,7 @@
-#include "Particle.hlsli"
+//-----------------------------------------------------------------------------------------
+// include
+//-----------------------------------------------------------------------------------------
+#include "Floor.hlsli"
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // VSInput structure
@@ -12,14 +15,14 @@ struct VSInput {
 ////////////////////////////////////////////////////////////////////////////////////////////
 // StructuredBuffers
 ////////////////////////////////////////////////////////////////////////////////////////////
-struct ParticleForGPU {
-	float4x4 WVP;
-	float4x4 World;
+struct FloorForGPU {
+	float4x4 wvp;
+	float4x4 world;
 	float4   color;
 };
-StructuredBuffer<ParticleForGPU> gParticle : register(t0);
+StructuredBuffer<FloorForGPU> gFloor : register(t0);
 
-
+// todo: 非均一スケールの対応
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // メイン
@@ -27,10 +30,13 @@ StructuredBuffer<ParticleForGPU> gParticle : register(t0);
 VSOutput main(VSInput input, uint instanceId : SV_InstanceID) {
 	
 	VSOutput output;
-	output.position = mul(input.position, gParticle[instanceId].WVP);
-	output.worldPos = mul(input.position, gParticle[instanceId].World);
+	
+	output.position = mul(input.position, gFloor[instanceId].wvp);
+	output.worldPos = mul(input.position, gFloor[instanceId].world);
 	output.texcoord = input.texcoord;
-	output.normal = normalize(mul(input.normal, (float3x3)gParticle[instanceId].World));
-	output.color = gParticle[instanceId].color;
+	output.normal = normalize(mul(input.normal, (float3x3)gFloor[instanceId].world));
+	output.color = gFloor[instanceId].color;
+	
 	return output;
+	
 }

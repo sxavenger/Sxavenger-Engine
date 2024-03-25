@@ -88,6 +88,18 @@
     <Filter Include="Resource\hlsl\Particle">
       <UniqueIdentifier>{5e8f90bf-919d-4dc8-a78c-0c02bd22b8f5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Game\Particle">
+      <UniqueIdentifier>{59a26e1a-2aa8-42d5-85c3-aff325528ab4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\Particle\IceParticle">
+      <UniqueIdentifier>{c46edb30-e5d3-4205-be1a-da4393f670a8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\Floor">
+      <UniqueIdentifier>{f3eb80fa-85dd-492f-a984-69667a3ed68c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource\hlsl\Floor">
+      <UniqueIdentifier>{caff2c69-010b-4713-a983-b786b400b167}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
@@ -213,6 +225,15 @@
     </ClCompile>
     <ClCompile Include="Engine\DxObject\DxCompilers.cpp">
       <Filter>Engine\DxObject\source</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Particle\IceParticle.cpp">
+      <Filter>Game\Particle\IceParticle</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Particle\Particle.cpp">
+      <Filter>Game\Particle</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Floor\Floor.cpp">
+      <Filter>Game\Floor</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -351,11 +372,23 @@
     <ClInclude Include="Engine\DxObject\DxCompilers.h">
       <Filter>Engine\DxObject\include</Filter>
     </ClInclude>
+    <ClInclude Include="Game\Particle\IceParticle.h">
+      <Filter>Game\Particle\IceParticle</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Particle\Particle.h">
+      <Filter>Game\Particle</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Floor\Floor.h">
+      <Filter>Game\Floor</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />
     <None Include="Resources\hlsl\Particle.hlsli">
       <Filter>Resource\hlsl\Particle</Filter>
+    </None>
+    <None Include="Resources\hlsl\Floor.hlsli">
+      <Filter>Resource\hlsl\Floor</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -372,6 +405,15 @@
     </FxCompile>
     <FxCompile Include="Resources\hlsl\Particle.PS.hlsl">
       <Filter>Resource\hlsl\Particle</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\hlsl\Floor.VS.hlsl">
+      <Filter>Resource\hlsl\Floor</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\hlsl\Floor.GS.hlsl">
+      <Filter>Resource\hlsl\Floor</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\hlsl\Floor.PS.hlsl">
+      <Filter>Resource\hlsl\Floor</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>
