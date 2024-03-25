@@ -34,9 +34,6 @@
     <Filter Include="externals">
       <UniqueIdentifier>{43c05318-9472-48f0-850c-d2d184687826}</UniqueIdentifier>
     </Filter>
-    <Filter Include="externals\imgui">
-      <UniqueIdentifier>{ef83f67c-f410-431e-9701-50e4d655fd09}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Lib\Camera\include">
       <UniqueIdentifier>{01188340-a3d9-456e-96bd-81ff0a16b3c6}</UniqueIdentifier>
     </Filter>
@@ -76,11 +73,17 @@
     <Filter Include="Lib\Collider\source">
       <UniqueIdentifier>{cf8abcbb-54a4-49f0-b300-24452291069a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Engine\resource">
-      <UniqueIdentifier>{590689eb-50a7-4210-9bf4-b45857862fbd}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Game">
       <UniqueIdentifier>{dc5061ec-2db5-43c7-b706-56ae0e2e10c7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="externals\imgui">
+      <UniqueIdentifier>{7ed608b7-008b-4b29-af56-0edd4f20a9c3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource">
+      <UniqueIdentifier>{47c11d8e-7ba0-4897-96f0-4f075fed9977}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource\hlsl">
+      <UniqueIdentifier>{4a0a5389-70df-42d6-a5fc-9ee50eebc35f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -115,27 +118,6 @@
     <ClCompile Include="Engine\ImGuiManager.cpp">
       <Filter>Engine\source</Filter>
     </ClCompile>
-    <ClCompile Include="externals\imgui\imgui.cpp">
-      <Filter>externals\imgui</Filter>
-    </ClCompile>
-    <ClCompile Include="externals\imgui\imgui_demo.cpp">
-      <Filter>externals\imgui</Filter>
-    </ClCompile>
-    <ClCompile Include="externals\imgui\imgui_draw.cpp">
-      <Filter>externals\imgui</Filter>
-    </ClCompile>
-    <ClCompile Include="externals\imgui\imgui_impl_dx12.cpp">
-      <Filter>externals\imgui</Filter>
-    </ClCompile>
-    <ClCompile Include="externals\imgui\imgui_impl_win32.cpp">
-      <Filter>externals\imgui</Filter>
-    </ClCompile>
-    <ClCompile Include="externals\imgui\imgui_tables.cpp">
-      <Filter>externals\imgui</Filter>
-    </ClCompile>
-    <ClCompile Include="externals\imgui\imgui_widgets.cpp">
-      <Filter>externals\imgui</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\TextureManager.cpp">
       <Filter>Engine\source</Filter>
     </ClCompile>
@@ -144,9 +126,6 @@
     </ClCompile>
     <ClCompile Include="Lib\Camera\Camera3D.cpp">
       <Filter>Lib\Camera\source</Filter>
-    </ClCompile>
-    <ClCompile Include="Lib\DrawMethod.cpp">
-      <Filter>Lib</Filter>
     </ClCompile>
     <ClCompile Include="Engine\DxObject\DxBufferResource.cpp">
       <Filter>Engine\DxObject\source</Filter>
@@ -161,9 +140,6 @@
       <Filter>Engine\DxObject\source</Filter>
     </ClCompile>
     <ClCompile Include="Engine\DxObject\DxDevices.cpp">
-      <Filter>Engine\DxObject\source</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\DxObject\DxFence.cpp">
       <Filter>Engine\DxObject\source</Filter>
     </ClCompile>
     <ClCompile Include="Engine\DxObject\DxObjectMethod.cpp">
@@ -205,8 +181,41 @@
     <ClCompile Include="Lib\Collider\Collider.cpp">
       <Filter>Lib\Collider\source</Filter>
     </ClCompile>
+    <ClCompile Include="Lib\DrawMethod.cpp">
+      <Filter>Lib</Filter>
+    </ClCompile>
     <ClCompile Include="Game\Sphere.cpp">
       <Filter>Game</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Terrain.cpp">
+      <Filter>Game</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\DxObject\DxFence.cpp">
+      <Filter>Engine\DxObject\source</Filter>
+    </ClCompile>
+    <ClCompile Include="externals\imgui\imgui.cpp">
+      <Filter>externals\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="externals\imgui\imgui_demo.cpp">
+      <Filter>externals\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="externals\imgui\imgui_draw.cpp">
+      <Filter>externals\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="externals\imgui\imgui_impl_dx12.cpp">
+      <Filter>externals\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="externals\imgui\imgui_impl_win32.cpp">
+      <Filter>externals\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="externals\imgui\imgui_tables.cpp">
+      <Filter>externals\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="externals\imgui\imgui_widgets.cpp">
+      <Filter>externals\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\DxObject\DxCompilers.cpp">
+      <Filter>Engine\DxObject\source</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -243,30 +252,6 @@
     <ClInclude Include="Engine\ImGuiManager.h">
       <Filter>Engine\include</Filter>
     </ClInclude>
-    <ClInclude Include="externals\imgui\imconfig.h">
-      <Filter>externals\imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="externals\imgui\imgui.h">
-      <Filter>externals\imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="externals\imgui\imgui_impl_dx12.h">
-      <Filter>externals\imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="externals\imgui\imgui_impl_win32.h">
-      <Filter>externals\imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="externals\imgui\imgui_internal.h">
-      <Filter>externals\imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="externals\imgui\imstb_rectpack.h">
-      <Filter>externals\imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="externals\imgui\imstb_textedit.h">
-      <Filter>externals\imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="externals\imgui\imstb_truetype.h">
-      <Filter>externals\imgui</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\TextureManager.h">
       <Filter>Engine\include</Filter>
     </ClInclude>
@@ -275,9 +260,6 @@
     </ClInclude>
     <ClInclude Include="Lib\Camera\Camera3D.h">
       <Filter>Lib\Camera\include</Filter>
-    </ClInclude>
-    <ClInclude Include="Lib\DrawMethod.h">
-      <Filter>Lib</Filter>
     </ClInclude>
     <ClInclude Include="Engine\DxObject\DxBufferResource.h">
       <Filter>Engine\DxObject\include</Filter>
@@ -342,17 +324,50 @@
     <ClInclude Include="Game\ObjectStructure.h">
       <Filter>Game</Filter>
     </ClInclude>
+    <ClInclude Include="Lib\DrawMethod.h">
+      <Filter>Lib</Filter>
+    </ClInclude>
     <ClInclude Include="Game\Sphere.h">
       <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Terrain.h">
+      <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="externals\imgui\imconfig.h">
+      <Filter>externals\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="externals\imgui\imgui.h">
+      <Filter>externals\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="externals\imgui\imgui_impl_dx12.h">
+      <Filter>externals\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="externals\imgui\imgui_impl_win32.h">
+      <Filter>externals\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="externals\imgui\imgui_internal.h">
+      <Filter>externals\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="externals\imgui\imstb_rectpack.h">
+      <Filter>externals\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="externals\imgui\imstb_textedit.h">
+      <Filter>externals\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="externals\imgui\imstb_truetype.h">
+      <Filter>externals\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\DxObject\DxCompilers.h">
+      <Filter>Engine\DxObject\include</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />
-    <None Include="Engine\resource\Object3d.hlsli">
-      <Filter>Engine\resource</Filter>
+    <None Include="Resources\hlsl\Object3d.hlsli">
+      <Filter>Resource\hlsl</Filter>
     </None>
-    <None Include="Engine\resource\Particle.hlsli">
-      <Filter>Engine\resource</Filter>
+    <None Include="Resources\hlsl\Particle.hlsli">
+      <Filter>Resource\hlsl</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -361,23 +376,29 @@
     </Text>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="Engine\resource\Object3d.PS.hlsl">
-      <Filter>Engine\resource</Filter>
+    <FxCompile Include="Resources\hlsl\Area.PS.hlsl">
+      <Filter>Resource\hlsl</Filter>
     </FxCompile>
-    <FxCompile Include="Engine\resource\Object3d.VS.hlsl">
-      <Filter>Engine\resource</Filter>
+    <FxCompile Include="Resources\hlsl\Object3d.GS.hlsl">
+      <Filter>Resource\hlsl</Filter>
     </FxCompile>
-    <FxCompile Include="Engine\resource\Particle.PS.hlsl">
-      <Filter>Engine\resource</Filter>
+    <FxCompile Include="Resources\hlsl\Object3d.PS.hlsl">
+      <Filter>Resource\hlsl</Filter>
     </FxCompile>
-    <FxCompile Include="Engine\resource\Particle.VS.hlsl">
-      <Filter>Engine\resource</Filter>
+    <FxCompile Include="Resources\hlsl\Object3d.VS.hlsl">
+      <Filter>Resource\hlsl</Filter>
     </FxCompile>
-    <FxCompile Include="Engine\resource\Polygon3d.PS.hlsl">
-      <Filter>Engine\resource</Filter>
+    <FxCompile Include="Resources\hlsl\Object3dGS.PS.hlsl">
+      <Filter>Resource\hlsl</Filter>
     </FxCompile>
-    <FxCompile Include="Engine\resource\Area.PS.hlsl">
-      <Filter>Engine\resource</Filter>
+    <FxCompile Include="Resources\hlsl\Particle.PS.hlsl">
+      <Filter>Resource\hlsl</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\hlsl\Particle.VS.hlsl">
+      <Filter>Resource\hlsl</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\hlsl\Polygon3d.PS.hlsl">
+      <Filter>Resource\hlsl</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

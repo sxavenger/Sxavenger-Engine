@@ -1,18 +1,26 @@
 #pragma once
 
 //-----------------------------------------------------------------------------------------
-// Include
+// include
 //-----------------------------------------------------------------------------------------
-#include <windows.h>
 #include <string>
 #include <format>
 
 //-----------------------------------------------------------------------------------------
-// ConertString
+// Convert String
 //-----------------------------------------------------------------------------------------
-std::wstring ConvertString(const std::string& str);
+std::wstring ToWstring(const std::string& str);
+std::string ToString(const std::wstring& str);
 
-std::string ConvertString(const std::wstring& str);
-
+//-----------------------------------------------------------------------------------------
+// Output Log
+//-----------------------------------------------------------------------------------------
 void Log(const std::string& log);
 void Log(const std::wstring& logW);
+
+//-----------------------------------------------------------------------------------------
+// Assertion
+//-----------------------------------------------------------------------------------------
+void Assert(bool isSuccess, const std::string& errorLog);
+
+void Assert(bool isSuccess, const std::string& errorLog, const std::string& textTitle);

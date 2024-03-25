@@ -92,11 +92,15 @@ void DxObject::PipelineManager::Init(
 		desc.sampler[0].ShaderRegister   = 0;
 		desc.sampler[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
 
-		pipelineMenbers_[TEXTURE].shaderBlob = std::make_unique<DxObject::ShaderBlob>(
-			L"./Engine/resource/Object3d.VS.hlsl", L"./Engine/resource/Object3d.PS.hlsl"
+		/*pipelineMenbers_[PipelineType::TEXTURE].shaderBlob = std::make_unique<DxObject::ShaderBlob>(
+			L"Object3d.VS.hlsl", L"Object3d.PS.hlsl"
+		);*/
+
+		pipelineMenbers_[PipelineType::TEXTURE].shaderBlob = std::make_unique<DxObject::ShaderBlob>(
+			L"Object3d.VS.hlsl", L"Object3d.GS.hlsl", L"Object3dGS.PS.hlsl"
 		);
 
-		pipelineMenbers_[TEXTURE].rootSignature = std::make_unique<DxObject::RootSignature>(devices_, desc);
+		pipelineMenbers_[PipelineType::TEXTURE].rootSignature = std::make_unique<DxObject::RootSignature>(devices_, desc);
 	}
 
 	{
@@ -120,11 +124,11 @@ void DxObject::PipelineManager::Init(
 		desc.param[3].ShaderVisibility          = D3D12_SHADER_VISIBILITY_PIXEL;
 		desc.param[3].Descriptor.ShaderRegister = 2;
 
-		pipelineMenbers_[POLYGON].shaderBlob = std::make_unique<DxObject::ShaderBlob>(
-			L"./Engine/resource/Object3d.VS.hlsl", L"./Engine/resource/Polygon3d.PS.hlsl"
+		pipelineMenbers_[PipelineType::POLYGON].shaderBlob = std::make_unique<DxObject::ShaderBlob>(
+			L"Object3d.VS.hlsl", L"Polygon3d.PS.hlsl"
 		);
 
-		pipelineMenbers_[POLYGON].rootSignature = std::make_unique<DxObject::RootSignature>(devices_, desc);
+		pipelineMenbers_[PipelineType::POLYGON].rootSignature = std::make_unique<DxObject::RootSignature>(devices_, desc);
 	}
 
 	{
@@ -169,11 +173,11 @@ void DxObject::PipelineManager::Init(
 		desc.sampler[0].ShaderRegister   = 0;
 		desc.sampler[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
 
-		pipelineMenbers_[PARTICLE].shaderBlob = std::make_unique<DxObject::ShaderBlob>(
-			L"./Engine/resource/Particle.VS.hlsl", L"./Engine/resource/Particle.PS.hlsl"
+		pipelineMenbers_[PipelineType::PARTICLE].shaderBlob = std::make_unique<DxObject::ShaderBlob>(
+			L"Particle.VS.hlsl", L"Particle.PS.hlsl"
 		);
 
-		pipelineMenbers_[PARTICLE].rootSignature = std::make_unique<DxObject::RootSignature>(devices_, desc);
+		pipelineMenbers_[PipelineType::PARTICLE].rootSignature = std::make_unique<DxObject::RootSignature>(devices_, desc);
 	}
 
 	{
@@ -211,11 +215,11 @@ void DxObject::PipelineManager::Init(
 		desc.sampler[0].ShaderRegister   = 0;
 		desc.sampler[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
 
-		pipelineMenbers_[AREA].shaderBlob = std::make_unique<DxObject::ShaderBlob>(
-			L"./Engine/resource/Object3d.VS.hlsl", L"./Engine/resource/Area.PS.hlsl"
+		pipelineMenbers_[PipelineType::AREA].shaderBlob = std::make_unique<DxObject::ShaderBlob>(
+			L"Object3d.VS.hlsl", L"Area.PS.hlsl"
 		);
 
-		pipelineMenbers_[AREA].rootSignature = std::make_unique<DxObject::RootSignature>(devices_, desc);
+		pipelineMenbers_[PipelineType::AREA].rootSignature = std::make_unique<DxObject::RootSignature>(devices_, desc);
 	}
 
 }

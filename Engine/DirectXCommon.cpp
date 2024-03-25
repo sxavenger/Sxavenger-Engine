@@ -21,6 +21,7 @@ void DirectXCommon::Init(WinApp* winApp, int32_t clientWidth, int32_t clientHeig
 	descriptorHeaps_ = std::make_unique<DxObject::DescriptorHeaps>(devices_.get());
 	swapChains_      = std::make_unique<DxObject::SwapChain>(devices_.get(), command_.get(), descriptorHeaps_.get(), winApp, clientWidth, clientHeight);
 	fences_          = std::make_unique<DxObject::Fence>(devices_.get());
+	compilers_       = std::make_unique<DxObject::Compilers>();
 
 	blendState_   = std::make_unique<DxObject::BlendState>();
 	depthStencil_ = std::make_unique<DxObject::DepthStencil>(devices_.get(), descriptorHeaps_.get(), clientWidth, clientHeight);

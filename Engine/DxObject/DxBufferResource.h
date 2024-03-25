@@ -10,6 +10,7 @@
 // c++
 #include <cstdint>
 #include <cassert>
+#include <vector>
 
 // DxObject
 #include <DxObjectMethod.h>
@@ -28,11 +29,6 @@
 // DxObject namespace
 ////////////////////////////////////////////////////////////////////////////////////////////
 namespace DxObject {
-
-	//-----------------------------------------------------------------------------------------
-	// DxObject forward
-	//-----------------------------------------------------------------------------------------
-	class Devices;
 
 	////////////////////////////////////////////////////////////////////////////////////////////
 	// BufferIndex class
@@ -252,8 +248,8 @@ namespace DxObject {
 		// private variables
 		//=========================================================================================
 
-		T*  dataArray_;
-		T** dataPtrArray_;
+		T* dataArray_;
+		std::vector<T*> dataPtrArray_;
 
 		//=========================================================================================
 		// private methods
@@ -269,15 +265,6 @@ namespace DxObject {
 	class IndexBufferResource
 		: public BufferIndex {
 	public:
-
-		////////////////////////////////////////////////////////////////////////////////////////////
-		// TriangleIndex strcture
-		////////////////////////////////////////////////////////////////////////////////////////////
-		struct TriangleIndex {
-			uint32_t index1;
-			uint32_t index2;
-			uint32_t index3;
-		};
 
 		//=========================================================================================
 		// public methods
@@ -331,27 +318,6 @@ namespace DxObject {
 			dataArray_[index] = value;
 		}
 
-		//! @brief Triangleのindexを設定
-		//! 
-		//! @param[in] triangleNum 三角形番号. 1から
-		//! @param[in] indexs      三角形のindex
-		void SetTriangle(uint32_t triangleNum, const TriangleIndex& indexs) {
-			if (triangleNum == 0 || triangleNum > kMaxTriangleCount_) {
-				assert(false); //!< trinagleNumが0, または最大ポリゴン数を超えている
-				return;
-			}
-
-			// index調整
-			triangleNum--;
-
-			for (uint32_t i = 0; i < 3; ++i) {
-				const uint32_t* ptr = &indexs.index1;
-				ptr += i;
-
-				dataArray_[triangleNum * 3 + i] = *ptr;
-			}
-		}
-
 		void Memcpy(const uint32_t* value) {
 			memcpy(dataArray_, value, sizeof(uint32_t) * indexSize_);
 		}
@@ -376,10 +342,11 @@ namespace DxObject {
 
 		uint32_t kMaxTriangleCount_;
 	};
+
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// BufferResource methods
+// BufferResource class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 template<typename T>
@@ -404,7 +371,7 @@ void DxObject::BufferResource<T>::Term() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// BufferPtrResource methods
+// BufferPtrResource class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 template<typename T>
@@ -422,16 +389,16 @@ void DxObject::BufferPtrResource<T>::Init(DxObject::Devices* devices) {
 	resource_->Map(0, nullptr, reinterpret_cast<void**>(&dataArray_));
 
 	// ptrArrayの配列数を動的生成
-	dataPtrArray_ = new T* [indexSize_];
+	dataPtrArray_.resize(indexSize_);
 }
 
 template<typename T>
 void DxObject::BufferPtrResource<T>::Term() {
 	resource_->Release();
-	delete[] dataPtrArray_;
+	dataPtrArray_.clear();
 }
 
 template<typename T>
 void DxObject::BufferPtrResource<T>::LoadPtrData() {
-	memcpy(dataArray_, *dataPtrArray_, sizeof(T) * indexSize_);
+	memcpy(dataArray_, *dataPtrArray_.data(), sizeof(T) * indexSize_);
 }

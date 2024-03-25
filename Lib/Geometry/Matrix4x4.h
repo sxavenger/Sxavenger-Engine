@@ -124,6 +124,8 @@ namespace Matrix {
 
 	Matrix4x4 Inverse(const Matrix4x4& m);
 
+	Matrix4x4 Transpose(const Matrix4x4& m);
+
 	// graphics matrix //
 	Matrix4x4 MakePerspectiveFov(float fovY, float aspectRatio, float nearClip, float farClip);
 	Matrix4x4 MakeOrthographic(float left, float top, float right, float bottom, float nearZ, float farZ);

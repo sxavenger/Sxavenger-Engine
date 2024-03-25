@@ -11,6 +11,10 @@
 #include <ObjectStructure.h>
 #include <DrawMethod.h>
 
+#include "MyEngine.h"
+
+#include <Light.h>
+
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Sphere class
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -27,7 +31,7 @@ public:
 
 	void Init();
 
-	void Draw();
+	void Draw(Light* light);
 
 	void Term();
 
@@ -43,11 +47,9 @@ private:
 
 	// resource
 	std::unique_ptr<DxObject::BufferResource<TransformationMatrix>> matrixResource_;
-	std::unique_ptr<DxObject::BufferPtrResource<Material>>             materialResource_;
+	Transform transform_;
 
+	std::unique_ptr<DxObject::BufferPtrResource<Material>> materialResource_;
 	Material material_;
-
-	static const char* lambertItems_[LambertType::kLambertTypeCount];
-	static const char* phongItems_[PhongType::kPhongTypeCount];
 	
 };

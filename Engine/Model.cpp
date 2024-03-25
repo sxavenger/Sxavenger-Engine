@@ -25,8 +25,8 @@ void Model::Term() {
 
 	for (uint32_t i = 0; i < size_; ++i) {
 		// meshDataのdelete
-		delete modelData_.meshs[i].vertexResource;
-		delete modelData_.meshs[i].indexResource;
+		modelData_.meshs[i].vertexResource.reset();
+		modelData_.meshs[i].indexResource.reset();
 
 		// materialDataの終了処理
 		if (modelData_.materials[i].isUseTexture) {
@@ -91,16 +91,16 @@ ModelData ModelMethods::LoadObjFile(const std::string& directoryPath, const std:
 				// mesh一つ分の書き込みが終わったので保存
 				MeshData meshData;
 				meshData.vertexResource
-					= new DxObject::BufferResource<VertexData>(MyEngine::GetDevicesObj(), static_cast<uint32_t>(vertexDatas.size()));
+					= std::make_unique<DxObject::BufferResource<VertexData>>(MyEngine::GetDevicesObj(), static_cast<uint32_t>(vertexDatas.size()));
 				meshData.vertexResource->Memcpy(vertexDatas.data());
 
 				meshData.indexResource
-					= new DxObject::IndexBufferResource(MyEngine::GetDevicesObj(), static_cast<uint32_t>(indexDatas.size()));
+					= std::make_unique<DxObject::IndexBufferResource>(MyEngine::GetDevicesObj(), static_cast<uint32_t>(indexDatas.size()));
 				meshData.indexResource->Memcpy(indexDatas.data());
 
 				// meshとmaterialをmodelDataに格納
-				result.meshs.push_back(meshData);
-				result.materials.push_back(materialData);
+				result.meshs.push_back(std::move(meshData));
+				result.materials.push_back(std::move(materialData));
 
 				// 書き込みが終了したのでデータ初期化
 				for (int i = 0; i < kFaceTypeCount; ++i) {
@@ -259,16 +259,16 @@ ModelData ModelMethods::LoadObjFile(const std::string& directoryPath, const std:
 		// mesh一つ分の書き込みが終わったので保存
 		MeshData meshData;
 		meshData.vertexResource
-			= new DxObject::BufferResource<VertexData>(MyEngine::GetDevicesObj(), static_cast<uint32_t>(vertexDatas.size()));
+			= std::make_unique<DxObject::BufferResource<VertexData>>(MyEngine::GetDevicesObj(), static_cast<uint32_t>(vertexDatas.size()));
 		meshData.vertexResource->Memcpy(vertexDatas.data());
 
 		meshData.indexResource
-			= new DxObject::IndexBufferResource(MyEngine::GetDevicesObj(), static_cast<uint32_t>(indexDatas.size()));
+			= std::make_unique<DxObject::IndexBufferResource>(MyEngine::GetDevicesObj(), static_cast<uint32_t>(indexDatas.size()));
 		meshData.indexResource->Memcpy(indexDatas.data());
 		
 		// meshとmaterialをmodelDataに格納
-		result.meshs.push_back(meshData);
-		result.materials.push_back(materialData);
+		result.meshs.push_back(std::move(meshData));
+		result.materials.push_back(std::move(materialData));
 
 		// 書き込みが終了したのでデータ初期化
 		for (int i = 0; i < kFaceTypeCount; ++i) {

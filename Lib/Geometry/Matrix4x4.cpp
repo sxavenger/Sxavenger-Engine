@@ -173,6 +173,18 @@ Matrix4x4 Matrix::Inverse(const Matrix4x4& m) {
 	return result;
 }
 
+Matrix4x4 Matrix::Transpose(const Matrix4x4& m) {
+	Matrix4x4 result;
+
+	for (int row = 0; row < 4; row++) {
+		for (int column = 0; column < 4; column++) {
+			result.m[row][column] = m.m[column][row];
+		}
+	}
+
+	return result;
+}
+
 Matrix4x4 Matrix::MakePerspectiveFov(float fovY, float aspectRatio, float nearClip, float farClip) {
 	return {
 		(1.0f / (aspectRatio * std::tan(fovY / 2.0f))), 0.0f, 0.0f, 0.0f,

@@ -39,6 +39,14 @@ void ImGuiManager::Init(WinApp* winApp, DirectXCommon* dxCommon) {
 		dxCommon_->GetDescriptorsObj()->GetCPUDescriptorHandle(DxObject::DescriptorType::SRV, descriptorIndex_),
 		dxCommon_->GetDescriptorsObj()->GetGPUDescriptorHandle(DxObject::DescriptorType::SRV, descriptorIndex_)
 	);
+
+	// imguiの設定
+	ImGuiIO& io = ImGui::GetIO();
+	(void)io;
+
+	io.ConfigFlags |= ImGuiConfigFlags_::ImGuiConfigFlags_DockingEnable;
+	// imgui dockingブランチを参照...
+
 }
 
 void ImGuiManager::Term() {

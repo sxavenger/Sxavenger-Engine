@@ -44,4 +44,10 @@ public:
 	//! @param[in] data Jsonデータ
 	static void WriteJson(const std::string& path, const Json& data);
 
+	//! @brief Jsonファイル上書き
+	//! 
+	//! @param[in] path ファイルパス. directory_ + path
+	//! @param[in] data Jsonデータ
+	static void OverwriteJson(const std::string& path, const Json& data);
+
 };

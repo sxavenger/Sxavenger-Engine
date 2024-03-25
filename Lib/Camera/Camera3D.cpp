@@ -62,6 +62,51 @@ void Camera3D::UpdateImGui(const char* title, const char* cameraName) {
 
 		RecalculateCamera();
 
+		// Json Adapter
+		ImGui::Separator();
+		static const int strNum = 50;
+		static char str[strNum] = {};
+
+		ImGui::Text(JsonAdapter::directory_.c_str());
+		ImGui::InputText("path", str, strNum);
+		
+		if (ImGui::Button("Read")) {
+			std::string path = str;
+			
+			if (path.size() >= 5) {
+				std::string suffix = path.substr(path.size() - 5);
+
+				if (suffix != ".json") {
+					path += ".json";
+				}
+
+			} else {
+				path += ".json";
+			}
+			
+
+			ReadJsonCameraData(path);
+		}
+
+		ImGui::SameLine();
+
+		if (ImGui::Button("Write")) {
+			std::string path = str;
+
+			if (path.size() >= 5) {
+				std::string suffix = path.substr(path.size() - 5);
+
+				if (suffix != ".json") {
+					path += ".json";
+				}
+
+			} else {
+				path += ".json";
+			}
+
+			WriteJsonCameraData(path);
+		}
+
 		ImGui::TreePop();
 	}
 
@@ -90,6 +135,25 @@ void Camera3D::ReadJsonCameraData(const std::string& filePath) {
 	};
 
 	RecalculateCamera();
+}
+
+void Camera3D::WriteJsonCameraData(const std::string& filePath) {
+
+	Json parameter;
+
+	parameter["transform"]["scale"]["x"] = camera_.scale.x;
+	parameter["transform"]["scale"]["y"] = camera_.scale.y;
+	parameter["transform"]["scale"]["z"] = camera_.scale.z;
+
+	parameter["transform"]["rotate"]["x"] = camera_.rotate.x;
+	parameter["transform"]["rotate"]["y"] = camera_.rotate.y;
+	parameter["transform"]["rotate"]["z"] = camera_.rotate.z;
+
+	parameter["transform"]["translate"]["x"] = camera_.translate.x;
+	parameter["transform"]["translate"]["y"] = camera_.translate.y;
+	parameter["transform"]["translate"]["z"] = camera_.translate.z;
+
+	JsonAdapter::OverwriteJson(filePath, parameter);
 }
 
 void Camera3D::RecalculateCamera() {

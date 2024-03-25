@@ -8,13 +8,15 @@
 #include <string>
 
 // DxObject
-#include <DxDevices.h>
-#include <DxDescriptorHeaps.h>
+#include <DxBlendState.h>
 #include <DxPipelineManager.h>
 
 // Camera
 #include <Camera3D.h>
 #include <Camera2D.h>
+
+namespace Sxavenger {
+}
 
 //-----------------------------------------------------------------------------------------
 // forward
@@ -56,7 +58,7 @@ public:
 
 	// ---- pipeline関係 ---- //
 
-	static void SetPipelineType(DxObject::PipelineType pipelineType);
+	static void SetPipelineType(PipelineType pipelineType);
 
 	static void SetBlendMode(BlendMode mode);
 

@@ -6,16 +6,11 @@
 // directX
 #include <d3d12.h>
 #include <dxgi1_6.h>
-
-// methods
-#include <DxObjectMethod.h>
+#include <dxcapi.h>
 
 // c++
-#include <cstdint>
 #include <cassert>
-#include <vector>
 
-// ComPtr
 #include <ComPtr.h>
 
 //-----------------------------------------------------------------------------------------
@@ -23,6 +18,7 @@
 //-----------------------------------------------------------------------------------------
 #pragma comment(lib, "d3d12.lib")
 #pragma comment(lib, "dxgi.lib")
+#pragma comment(lib, "dxcompiler.lib")
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // DxObject namespace
@@ -32,52 +28,44 @@ namespace DxObject {
 	//-----------------------------------------------------------------------------------------
 	// forward
 	//-----------------------------------------------------------------------------------------
-	class Devices;
+	class ShaderBlob;
 
 	////////////////////////////////////////////////////////////////////////////////////////////
-	// RootSignatureDesc structure
+	// Compilers class
 	////////////////////////////////////////////////////////////////////////////////////////////
-	struct RootSignatureDescs {
-		std::vector<D3D12_ROOT_PARAMETER>      param;
-		std::vector<D3D12_STATIC_SAMPLER_DESC> sampler;
-
-		//! @breif コンストラクタ
-		//! 
-		//! @param[in] paramSize   paramの配列数
-		//! @param[in] samplerSize samplerの配列数
-		RootSignatureDescs(uint32_t paramSize, uint32_t samplerSize) {
-			param.resize(paramSize);
-			sampler.resize(samplerSize);
-		}
-
-		//! @brief デストラクタ
-		~RootSignatureDescs() {
-			param.clear();
-			sampler.clear();
-		}
-	};
-
-	////////////////////////////////////////////////////////////////////////////////////////////
-	// RootSignature class
-	////////////////////////////////////////////////////////////////////////////////////////////
-	class RootSignature {
+	class Compilers {
 	public:
 
 		//=========================================================================================
-		// public methods
+		// public variables
 		//=========================================================================================
 
-		RootSignature(Devices* devices, const RootSignatureDescs& descs) {
-			Init(devices, descs);
-		}
+		//! @brief コンストラクタ
+		Compilers() { Init(); }
 
-		~RootSignature() { Term(); }
+		//! @brief デストラクタ
+		~Compilers() { Term(); }
 
-		void Init(Devices* devices, const RootSignatureDescs& descs);
+		//! @brief 初期化処理
+		void Init();
 
+		//! @brief 終了処理
 		void Term();
 
-		ID3D12RootSignature* GetRootSignature() const { return rootSignature_.Get(); }
+		//! @brief dxcUtilsの取得
+		//! 
+		//! @return IDxcUtilsの返却
+		IDxcUtils* GetDxcUtils() const { return dxcUtils_.Get(); }
+
+		//! @brief dxcCompilerの取得
+		//! 
+		//! @return dxcCompilerの返却
+		IDxcCompiler3* GetDxcCompilder() const { return dxcCompiler_.Get(); }
+
+		//! @brief includeHandlerの取得
+		//! 
+		//! @return includeHandlerの返却
+		IDxcIncludeHandler* GetIncluderHandler() const { return includeHandler_.Get(); }
 
 	private:
 
@@ -85,9 +73,10 @@ namespace DxObject {
 		// private variables
 		//=========================================================================================
 
-		ComPtr<ID3D12RootSignature> rootSignature_;
-		ID3DBlob* signatureBlob_;
-		ID3DBlob* signatureErrorBlob_;
+		ComPtr<IDxcUtils>     dxcUtils_;
+		ComPtr<IDxcCompiler3> dxcCompiler_;
+
+		ComPtr<IDxcIncludeHandler> includeHandler_;
 
 	};
 

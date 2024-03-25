@@ -58,11 +58,12 @@ void DxObject::PipelineState::Init(
 	// shaderBlobの取り出し
 	IDxcBlob* blob_VS = shaderBlob->GetShaderBlob_VS();
 	IDxcBlob* blob_PS = shaderBlob->GetShaderBlob_PS();
+	IDxcBlob* blob_GS = shaderBlob->GetShaderBlob_GS();
 
 	// DepthStensilStateの設定 TODO: depthStencil class
 	D3D12_DEPTH_STENCIL_DESC descDS = {};
 	descDS.DepthEnable    = true;
-	descDS.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ZERO; //!< Partice用にZERO
+	descDS.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ALL;
 	descDS.DepthFunc      = D3D12_COMPARISON_FUNC_LESS_EQUAL;
 
 	// PipelineStateの生成
@@ -82,13 +83,16 @@ void DxObject::PipelineState::Init(
 		desc.DepthStencilState     = descDS;
 		desc.DSVFormat             = DXGI_FORMAT_D24_UNORM_S8_UINT;
 
+		if (blob_GS != nullptr) { //!< GSがある場合
+			desc.GS = { blob_GS->GetBufferPointer(), blob_GS->GetBufferSize() };
+		}
+
 		auto hr = device->CreateGraphicsPipelineState(
 			&desc,
 			IID_PPV_ARGS(&graphicsPipelineState_)
 		);
 
 		assert(SUCCEEDED(hr));
-		/*Log("[DxObject.PipelineState]: graphicsPipelineState_ << Complete Create \n");*/
 	}
 }
 

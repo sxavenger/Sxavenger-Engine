@@ -83,6 +83,8 @@ void TextureManager::Init(DirectXCommon* dxCommon) {
 	/*textures_["resources/particleDemo.png"];
 	textures_["resources/model/wireFrame.png"];*/
 
+	textures_["resources/model/grass.png"];
+
 	for (auto& pair : textures_) {
 		pair.second.texture = std::make_unique<Texture>(pair.first, dxCommon_);
 		pair.second.referenceNum = 1;
@@ -140,7 +142,7 @@ TextureManager* TextureManager::GetInstance() {
 
 DirectX::ScratchImage TextureMethod::LoadTexture(const std::string& filePath) {
 	DirectX::ScratchImage image = {};
-	std::wstring filePathW = ConvertString(filePath); //!< wstringに変換
+	std::wstring filePathW = ToWstring(filePath); //!< wstringに変換
 
 	auto hr = DirectX::LoadFromWICFile(
 		filePathW.c_str(),
@@ -181,7 +183,7 @@ ID3D12Resource* TextureMethod::CreateTextureResource(ID3D12Device* device, const
 
 	// ヒーププロパティの設定
 	D3D12_HEAP_PROPERTIES prop = {};
-	prop.Type                 = D3D12_HEAP_TYPE_DEFAULT;
+	prop.Type = D3D12_HEAP_TYPE_DEFAULT;
 
 	// Resourceの生成
 	ID3D12Resource* result = nullptr;
@@ -224,6 +226,4 @@ ComPtr<ID3D12Resource> TextureMethod::UploadTextureData(
 	commandList->ResourceBarrier(1, &barrier);
 
 	return intermediateResource;
-
-	// TODO: 02-04 ex advance
 }

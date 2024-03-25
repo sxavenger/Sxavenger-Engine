@@ -52,7 +52,7 @@ namespace DxObjectMethod {
 	//! @param[in] includeHandler IDxcIncludeHandler*
 	//! 
 	//! @return shaderBlopを返却
-	ComPtr<IDxcBlob> CompilerShader(
+	ComPtr<IDxcBlob> CompileShader(
 		const std::wstring& filePath,
 		const wchar_t* profile,
 		IDxcUtils* dxcUtils,

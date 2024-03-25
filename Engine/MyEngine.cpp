@@ -7,6 +7,7 @@
 
 // origin
 #include <WinApp.h>
+#include <DirectXCommon.h>
 #include <ImGuiManager.h>
 #include <TextureManager.h>
 
@@ -15,27 +16,9 @@
 #include <ExecutionSpeed.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// namespace
+// namespace -anonymouse-
 ////////////////////////////////////////////////////////////////////////////////////////////
 namespace {
-
-	////////////////////////////////////////////////////////////////////////////////////////////
-	// EngineSystem
-	////////////////////////////////////////////////////////////////////////////////////////////
-	class EngineSystem {
-	public:
-		EngineSystem();
-		~EngineSystem();
-
-	private:
-
-	};
-
-	EngineSystem::EngineSystem() {
-	}
-
-	EngineSystem::~EngineSystem() {
-	}
 
 	//-----------------------------------------------------------------------------------------
 	// 汎用機能
@@ -67,7 +50,7 @@ void MyEngine::Initialize(int32_t kWindowWidth, int32_t kWindowHeight, const cha
 	{
 		sWinApp = WinApp::GetInstance();
 
-		std::wstring titleString = ConvertString(kWindowTitle);
+		std::wstring titleString = ToWstring(kWindowTitle);
 		sWinApp->CreateGameWindow(kWindowWidth, kWindowHeight, titleString.c_str());
 	}
 
@@ -122,7 +105,7 @@ void MyEngine::EndFrame() {
 
 int MyEngine::ProcessMessage() { return sWinApp->ProcessMessage() ? 1 : 0; }
 
-void MyEngine::SetPipelineType(DxObject::PipelineType pipelineType) {
+void MyEngine::SetPipelineType(PipelineType pipelineType) {
 	sDirectXCommon->SetPipelineType(pipelineType);
 }
 

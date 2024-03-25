@@ -8,7 +8,7 @@
 //=========================================================================================
 // static variables
 //=========================================================================================
-const char* Light::item[kLightTypeCount] = { "Directional", "Point" };
+const char* Light::item[kLightTypeCount] = { "Directional", "Point", "Spot" };
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Light methods
@@ -27,14 +27,7 @@ void Light::UpdateImGui(const char* windowName, const char* treeName) {
 
 		ImGui::ColorEdit4("color", &lightData_.color.x);
 		ImGui::DragFloat3("position", &lightData_.position.x, 0.01f);
-		ImGui::DragFloat3("rotate", &rotate_.x, 0.01f);
-
-		// directionの計算
-		lightData_.direction = Matrix::Transform({ 0.0f, 0.0f, 1.0f }, Matrix::MakeRotate(rotate_));
-
-		ImGui::Text("> [direction] x: %.3f y: %.3f z: %.3f", lightData_.direction.x, lightData_.direction.y, lightData_.direction.z);
-
-		ImGui::SliderFloat("shininess", &lightData_.shininess, 0.0f, 1.0f);
+		ImGui::SliderFloat("intensity", &lightData_.intensity, 0.0f, 1.0f);
 
 		if (ImGui::BeginCombo("lightType", item[lightData_.lightType])) {
 
@@ -50,8 +43,48 @@ void Light::UpdateImGui(const char* windowName, const char* treeName) {
 			ImGui::EndCombo();
 		}
 
-		if (lightData_.lightType == TYPE_POINT) {
-			ImGui::DragFloat("range", &lightData_.range, 1.0f, 0.0f, 100.0f);
+		ImGui::Separator();
+		ImGui::Spacing();
+
+		switch (lightData_.lightType) {
+			case TYPE_DIRECTIONAL:
+
+				ImGui::DragFloat3("rotate", &rotate_.x, 0.01f);
+				// rotateからdirectionの計算
+				lightData_.direction = Matrix::Transform({ 0.0f, 0.0f, 1.0f }, Matrix::MakeRotate(rotate_));
+				ImGui::Text("> [direction] x: %.3f y: %.3f z: %.3f", lightData_.direction.x, lightData_.direction.y, lightData_.direction.z);
+
+				break;
+
+			case TYPE_POINT:
+
+				ImGui::DragFloat("range", &lightData_.range, 0.1f, 0.0f, 100.0f);
+				ImGui::DragFloat("decay", &lightData_.decay, 0.1f, 0.0f, 100.0f);
+
+				break;
+
+			case TYPE_SPOT:
+
+				ImGui::DragFloat3("rotate", &rotate_.x, 0.01f);
+				// rotateからdirectionの計算
+				lightData_.direction = Matrix::Transform({ 0.0f, 0.0f, 1.0f }, Matrix::MakeRotate(rotate_));
+				ImGui::Text("> [direction] x: %.3f y: %.3f z: %.3f", lightData_.direction.x, lightData_.direction.y, lightData_.direction.z);
+
+				ImGui::DragFloat("range", &lightData_.range, 0.1f, 0.0f, 100.0f);
+				ImGui::DragFloat("decay", &lightData_.decay, 0.1f, 0.0f, 100.0f);
+
+				ImGui::SliderFloat("angle", &lightData_.angle, -1.0f, 1.0f);
+
+				if (lightData_.falloffAngle < lightData_.angle ) {
+					lightData_.falloffAngle = lightData_.angle;
+				}
+
+				ImGui::SliderFloat("falloffStartAngle", &lightData_.falloffAngle, lightData_.angle, 1.0f);
+
+				break;
+
+			default:
+				break;
 		}
 
 		ImGui::TreePop();

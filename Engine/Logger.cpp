@@ -1,6 +1,16 @@
 #include "Logger.h"
 
-std::wstring ConvertString(const std::string& str) {
+//-----------------------------------------------------------------------------------------
+// include
+//-----------------------------------------------------------------------------------------
+#include <windows.h>
+#include <assert.h>
+
+//-----------------------------------------------------------------------------------------
+// methods
+//-----------------------------------------------------------------------------------------
+
+std::wstring ToWstring(const std::string& str) {
 	if (str.empty()) {
 		return std::wstring();
 	}
@@ -15,7 +25,7 @@ std::wstring ConvertString(const std::string& str) {
 
 }
 
-std::string ConvertString(const std::wstring& str) {
+std::string ToString(const std::wstring& str) {
 	if (str.empty()) {
 		return std::string();
 	}
@@ -35,7 +45,23 @@ void Log(const std::string& log) {
 }
 
 void Log(const std::wstring& logW) {
-	std::string str = ConvertString(logW);
+	std::string str = ToString(logW);
 
 	Log(str);
+}
+
+void Assert(bool isSuccess, const std::string& errorLog) {
+	if (!isSuccess) {
+		MessageBoxW(nullptr, ToWstring(errorLog).c_str(), L"Error Message", 0);
+		assert(isSuccess);
+		exit(1);
+	}
+}
+
+void Assert(bool isSuccess, const std::string& errorLog, const std::string& textTitle) {
+	if (!isSuccess) {
+		MessageBoxW(nullptr, ToWstring(errorLog).c_str(), ToWstring(textTitle).c_str(), 0);
+		assert(isSuccess);
+		exit(1);
+	}
 }

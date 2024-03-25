@@ -10,6 +10,7 @@
 #include <DxSwapChain.h>
 #include <DxFence.h>
 #include <DxBlendState.h>
+#include <DxCompilers.h>
 #include <DxShaderBlob.h>
 #include <DxDepthStencil.h>
 #include <DxRootSignature.h>
@@ -57,7 +58,7 @@ public:
 
 	// ---- pipeline関係 ---- //
 
-	void SetPipelineType(DxObject::PipelineType type) {
+	void SetPipelineType(PipelineType type) {
 		pipelineManager_->SetPipelineType(type);
 	}
 
@@ -90,6 +91,7 @@ private:
 	std::unique_ptr<DxObject::DescriptorHeaps> descriptorHeaps_;
 	std::unique_ptr<DxObject::SwapChain>       swapChains_;
 	std::unique_ptr<DxObject::Fence>           fences_;
+	std::unique_ptr<DxObject::Compilers>       compilers_;
 
 	std::unique_ptr<DxObject::BlendState> blendState_;
 	std::unique_ptr<DxObject::DepthStencil>  depthStencil_; //!< depthStencilは共通

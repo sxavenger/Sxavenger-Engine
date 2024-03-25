@@ -25,6 +25,7 @@ struct VertexData {
 struct TransformationMatrix {
 	Matrix4x4 wvp;
 	Matrix4x4 world;
+	Matrix4x4 worldInverseTranspose;
 };
 
 struct Transform {
@@ -53,6 +54,9 @@ enum LambertType {
 	kLambertTypeCount
 };
 
+static const char* lambertItems_[LambertType::kLambertTypeCount]
+	= { "Lambert", "HalfLambert", "None" };
+
 enum PhongType {
 	TYPE_PHONG,
 	TYPE_BLINNPHONG,
@@ -60,6 +64,8 @@ enum PhongType {
 
 	kPhongTypeCount
 };
+static const char* phongItems_[PhongType::kPhongTypeCount]
+	= { "Phong", "BlinnPhong", "None" };
 
 struct Material {
 	Vector4f color = { 1.0f, 1.0f, 1.0f, 1.0f };
@@ -67,6 +73,39 @@ struct Material {
 	int lambertType; //!< LambertType参照
 	int phongType;   //!< phongType参照
 	float specPow;
+
+	void SetImGuiCommand() {
+		if (ImGui::TreeNode("material")) {
+
+			ImGui::ColorEdit4("color", &color.r);
+
+			if (ImGui::BeginCombo("lambertType", lambertItems_[lambertType])) {
+				for (int i = 0; i < LambertType::kLambertTypeCount; ++i) {
+					bool isSelect = (lambertType == i);
+
+					if (ImGui::Selectable(lambertItems_[i], isSelect)) {
+						lambertType = i;
+					}
+				}
+				ImGui::EndCombo();
+			}
+
+			if (ImGui::BeginCombo("phongType", phongItems_[phongType])) {
+				for (int i = 0; i < PhongType::kPhongTypeCount; ++i) {
+					bool isSelect = (phongType == i);
+
+					if (ImGui::Selectable(phongItems_[i], isSelect)) {
+						phongType = i;
+					}
+				}
+				ImGui::EndCombo();
+			}
+
+			ImGui::DragFloat("specPow", &specPow, 0.1f);
+
+			ImGui::TreePop();
+		}
+	}
 
 //private:
 //	float padding[3];

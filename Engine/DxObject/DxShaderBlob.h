@@ -30,6 +30,11 @@
 ////////////////////////////////////////////////////////////////////////////////////////////
 namespace DxObject {
 
+	//-----------------------------------------------------------------------------------------
+	// forward
+	//-----------------------------------------------------------------------------------------
+	class Compilers;
+
 	////////////////////////////////////////////////////////////////////////////////////////////
 	// ShaderBlob class
 	////////////////////////////////////////////////////////////////////////////////////////////
@@ -40,12 +45,27 @@ namespace DxObject {
 		// public methods
 		//=========================================================================================
 
+		//! @brief DxObject::Compilersのセット
+		//! 
+		//! @param[in] compilers DxObject::Compilders
+		static void SetCompilders(Compilers* compilers) { compilers_ = compilers; }
+
+
 		//! @brief コンストラクタ
 		//! 
-		//! @param[in] vsFilePath vsファイルパス
-		//! @param[in] psFilePath psファイルパス
-		ShaderBlob(const std::wstring& vsFilePath, const std::wstring& psFilePath) {
-			Init(vsFilePath, psFilePath);
+		//! @param[in] vsFileName directory_ + vsfileName
+		//! @param[in] psFileName directory_ + psfileName
+		ShaderBlob(const std::wstring& vsFileName, const std::wstring& psFileName) {
+			Init(vsFileName, psFileName);
+		}
+
+		//! @brief コンストラクタ
+		//! 
+		//! @param[in] vsFileName directory_ + vsfileName
+		//! @param[in] gsFileName directory_ + gsfileName
+		//! @param[in] psFileName directory_ + psfileName
+		ShaderBlob(const std::wstring& vsFileName, const std::wstring& gsFileName, const std::wstring& psFileName) {
+			Init(vsFileName, gsFileName, psFileName);
 		}
 
 		//! @brief デストラクタ
@@ -53,9 +73,16 @@ namespace DxObject {
 
 		//! @brief 初期化処理
 		//! 
-		//! @param[in] vsFilePath vsファイルパス
-		//! @param[in] psFilePath psファイルパス
-		void Init(const std::wstring& vsFilePath, const std::wstring& psFilePath);
+		//! @param[in] vsFileName vsファイルパス
+		//! @param[in] psFileName psファイルパス
+		void Init(const std::wstring& vsFileName, const std::wstring& psFileName);
+
+		//! @brief 初期化処理
+		//! 
+		//! @param[in] vsFileName vsファイルパス
+		//! @param[in] gsFileName gsファイルパス
+		//! @param[in] psFileName psファイルパス
+		void Init(const std::wstring& vsFileName, const std::wstring& gsFileName, const std::wstring& psFileName);
 
 		//! @brief 終了処理
 		void Term();
@@ -70,18 +97,25 @@ namespace DxObject {
 		//! @return shaderBlob_PSを返却
 		IDxcBlob* GetShaderBlob_PS() const { return shaderBlob_PS_.Get(); }
 
+		//! @brief shaderBlob_GSを取得
+		//! 
+		//! @return shaderBlob_GSを返却
+		IDxcBlob* GetShaderBlob_GS() const { return shaderBlob_GS_.Get(); }
+
 	private:
 
 		//=========================================================================================
 		// private variables
 		//=========================================================================================
 
-		ComPtr<IDxcUtils>     dxcUtils_;
-		ComPtr<IDxcCompiler3> dxcCompiler_;
+		// directoryPath
+		static const std::wstring directory_;
 
-		ComPtr<IDxcIncludeHandler> includeHandler_;
+		// dxcCompilers
+		static Compilers* compilers_;
 
 		ComPtr<IDxcBlob> shaderBlob_VS_;
+		ComPtr<IDxcBlob> shaderBlob_GS_;
 		ComPtr<IDxcBlob> shaderBlob_PS_;
 
 	};

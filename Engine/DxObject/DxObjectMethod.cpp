@@ -26,7 +26,7 @@ ComPtr<ID3D12DescriptorHeap> DxObjectMethod::CreateDescriptorHeap(
 	return result;
 }
 
-ComPtr<IDxcBlob> DxObjectMethod::CompilerShader(
+ComPtr<IDxcBlob> DxObjectMethod::CompileShader(
 	const std::wstring& filePath,
 	const wchar_t* profile,
 	IDxcUtils* dxcUtils,
@@ -38,7 +38,15 @@ ComPtr<IDxcBlob> DxObjectMethod::CompilerShader(
 	IDxcBlobEncoding* shaderSource = nullptr;
 	auto hr = dxcUtils->LoadFile(filePath.c_str(), nullptr, &shaderSource);
 	// 読めなかったら止める
-	assert(SUCCEEDED(hr));
+	/*assert(SUCCEEDED(hr));*/
+	
+	if (FAILED(hr)) {
+		std::string	errorLog;
+		errorLog
+			= "[HLSL Not Found] \n filePath: " + ToString(filePath);
+
+		Assert(false, errorLog, "Error: CompileShader");
+	}
 
 	// 読み込んだファイルの内容を設定する
 	DxcBuffer shaderSourceBuffer;
@@ -73,7 +81,12 @@ ComPtr<IDxcBlob> DxObjectMethod::CompilerShader(
 
 	if (shaderError != nullptr && shaderError->GetStringLength() != 0) {
 		Log(shaderError->GetStringPointer());
-		assert(false);
+		// hlslのerror
+		std::string	errorLog;
+		errorLog
+			= "[HLSL Error] \n filePath: " + ToString(filePath);
+
+		Assert(false, errorLog, "Error: CompileShader");
 	}
 
 	IDxcBlob* shaderBlob = nullptr;

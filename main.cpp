@@ -23,6 +23,7 @@
 
 // Game
 #include <Sphere.h>
+#include <Terrain.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // メイン関数
@@ -34,8 +35,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	//=========================================================================================
 	MyEngine::Initialize(kWindowWidth, kWindowHeight, kWindowTitle);
 
-	ID3D12GraphicsCommandList* commandList = MyEngine::GetCommandList();
-	commandList;
+	/*ID3D12GraphicsCommandList* commandList = MyEngine::GetCommandList();*/
 
 	//-----------------------------------------------------------------------------------------
 	// Camera
@@ -54,7 +54,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	// Object
 	//-----------------------------------------------------------------------------------------
 	std::unique_ptr<Sphere> sphere = std::make_unique<Sphere>();
-
+	std::unique_ptr<Terrain> terrain = std::make_unique<Terrain>();
 
 	////////////////////////////////////////////////////////////////////////////////////////////
 	// メインループ
@@ -76,24 +76,28 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 		ImGui::Begin("main");
 		sphere->SetOnImGui();
+		terrain->SetOnImGui();
 		ImGui::End();
 
 		//=========================================================================================
 		// 描画処理
 		//=========================================================================================
 		
-
+		sphere->Draw(light.get());
+		terrain->Draw(light.get());
 
 		MyEngine::EndFrame();
 	}
 
-	// camera
+	// camer
 	camera3D.reset();
 	camera2D.reset();
 	// light
 	light.reset();
 
+	// object
 	sphere.reset();
+	terrain.reset();
 
 	MyEngine::Finalize();
 	

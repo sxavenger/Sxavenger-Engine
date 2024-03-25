@@ -3,8 +3,6 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
-#include <Collider.h>
-
 // c++
 #include <memory>
 
@@ -12,36 +10,33 @@
 #include <DxBufferResource.h>
 
 #include <Model.h>
-#include <ObjectStructure.h>
 
 //-----------------------------------------------------------------------------------------
 // forward
 //-----------------------------------------------------------------------------------------
-class Particle;
+class Light;
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// Field class
+// Terrain class
 ////////////////////////////////////////////////////////////////////////////////////////////
-class Field {
+class Terrain {
 public:
 
 	//=========================================================================================
 	// public methods
 	//=========================================================================================
 
-	Field() { Init(); }
+	Terrain() { Init(); }
 
-	~Field() { Term(); }
+	~Terrain() { Term(); }
 
 	void Init();
 
-	void Update(Particle* particle);
-
-	void Draw();
+	void Draw(Light* light);
 
 	void Term();
 
-	void SetOnImGuiEditor();
+	void SetOnImGui();
 
 private:
 
@@ -49,14 +44,14 @@ private:
 	// private variables
 	//=========================================================================================
 
-	Vector3f pos_;
-	Vector3f size_;
-	Vector3f acceleration_;
-
-	// draw
+	// model
 	std::unique_ptr<Model> model_;
 
-	std::unique_ptr<DxObject::BufferResource<TransformationMatrix>> matrix_;
-	std::unique_ptr<DxObject::BufferResource<Vector4f>>             material_;
+	// resource
+	std::unique_ptr<DxObject::BufferResource<TransformationMatrix>> matrixResource_;
+	Transform transform_;
+
+	std::unique_ptr<DxObject::BufferPtrResource<Material>> materialResource_;
+	Material material_;
 
 };

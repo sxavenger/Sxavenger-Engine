@@ -62,6 +62,8 @@ public:
 
 	void ReadJsonCameraData(const std::string& filePath);
 
+	void WriteJsonCameraData(const std::string& filePath);
+
 	const Matrix4x4 GetViewProjectionMatrix() const { return viewMatrix_ * projectionMatrix_; }
 
 	const D3D12_GPU_VIRTUAL_ADDRESS GetGPUVirtualAddress() {
