@@ -184,12 +184,6 @@
     <ClCompile Include="Lib\DrawMethod.cpp">
       <Filter>Lib</Filter>
     </ClCompile>
-    <ClCompile Include="Game\Sphere.cpp">
-      <Filter>Game</Filter>
-    </ClCompile>
-    <ClCompile Include="Game\Terrain.cpp">
-      <Filter>Game</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\DxObject\DxFence.cpp">
       <Filter>Engine\DxObject\source</Filter>
     </ClCompile>
@@ -326,12 +320,6 @@
     </ClInclude>
     <ClInclude Include="Lib\DrawMethod.h">
       <Filter>Lib</Filter>
-    </ClInclude>
-    <ClInclude Include="Game\Sphere.h">
-      <Filter>Game</Filter>
-    </ClInclude>
-    <ClInclude Include="Game\Terrain.h">
-      <Filter>Game</Filter>
     </ClInclude>
     <ClInclude Include="externals\imgui\imconfig.h">
       <Filter>externals\imgui</Filter>

@@ -117,8 +117,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="externals\imgui\imgui_impl_win32.cpp" />
     <ClCompile Include="externals\imgui\imgui_tables.cpp" />
     <ClCompile Include="externals\imgui\imgui_widgets.cpp" />
-    <ClCompile Include="Game\Sphere.cpp" />
-    <ClCompile Include="Game\Terrain.cpp" />
     <ClCompile Include="Lib\Adapter\ExecutionSpeed\ExecutionSpeed.cpp" />
     <ClCompile Include="Lib\Adapter\Json\Json.cpp" />
     <ClCompile Include="Lib\Adapter\Random\Random.cpp" />
@@ -168,8 +166,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="externals\imgui\imstb_textedit.h" />
     <ClInclude Include="externals\imgui\imstb_truetype.h" />
     <ClInclude Include="Game\ObjectStructure.h" />
-    <ClInclude Include="Game\Sphere.h" />
-    <ClInclude Include="Game\Terrain.h" />
     <ClInclude Include="Lib\Adapter\ExecutionSpeed\ExecutionSpeed.h" />
     <ClInclude Include="Lib\Adapter\Json\Json.h" />
     <ClInclude Include="Lib\Adapter\Random\Random.h" />
