@@ -54,6 +54,7 @@ PSOutput main(GSOutput input) {
 	float4 defaultColor = gMaterial.color * textureColor;
 	output.color = defaultColor;
 	
+	
 	if (defaultColor.a == 0.0f) {
 		discard;
 	}
