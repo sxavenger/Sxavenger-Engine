@@ -11,9 +11,7 @@
 #include <Vector4.h>
 #include <Matrix4x4.h>
 #include <Vector2.h>
-// Camera
-#include <Camera3D.h>
-#include <Camera2D.h>
+
 // Light
 #include <Light.h>
 
@@ -58,9 +56,13 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		ImGui::Text("FPS: %.1f", 1.0f / ExecutionSpeed::freamsParSec_);
 		ImGui::End();
 
+
+
 		//=========================================================================================
 		// 描画処理
 		//=========================================================================================
+
+
 		
 		MyEngine::EndFrame();
 	}

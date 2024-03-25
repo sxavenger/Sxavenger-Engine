@@ -85,6 +85,9 @@
     <Filter Include="Resource\hlsl">
       <UniqueIdentifier>{4a0a5389-70df-42d6-a5fc-9ee50eebc35f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resource\hlsl\Particle">
+      <UniqueIdentifier>{5e8f90bf-919d-4dc8-a78c-0c02bd22b8f5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
@@ -351,11 +354,8 @@
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />
-    <None Include="Resources\hlsl\Object3d.hlsli">
-      <Filter>Resource\hlsl</Filter>
-    </None>
     <None Include="Resources\hlsl\Particle.hlsli">
-      <Filter>Resource\hlsl</Filter>
+      <Filter>Resource\hlsl\Particle</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -364,29 +364,14 @@
     </Text>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="Resources\hlsl\Area.PS.hlsl">
-      <Filter>Resource\hlsl</Filter>
+    <FxCompile Include="Resources\hlsl\Particle.VS.hlsl">
+      <Filter>Resource\hlsl\Particle</Filter>
     </FxCompile>
-    <FxCompile Include="Resources\hlsl\Object3d.GS.hlsl">
-      <Filter>Resource\hlsl</Filter>
-    </FxCompile>
-    <FxCompile Include="Resources\hlsl\Object3d.PS.hlsl">
-      <Filter>Resource\hlsl</Filter>
-    </FxCompile>
-    <FxCompile Include="Resources\hlsl\Object3d.VS.hlsl">
-      <Filter>Resource\hlsl</Filter>
-    </FxCompile>
-    <FxCompile Include="Resources\hlsl\Object3dGS.PS.hlsl">
-      <Filter>Resource\hlsl</Filter>
+    <FxCompile Include="Resources\hlsl\Particle.GS.hlsl">
+      <Filter>Resource\hlsl\Particle</Filter>
     </FxCompile>
     <FxCompile Include="Resources\hlsl\Particle.PS.hlsl">
-      <Filter>Resource\hlsl</Filter>
-    </FxCompile>
-    <FxCompile Include="Resources\hlsl\Particle.VS.hlsl">
-      <Filter>Resource\hlsl</Filter>
-    </FxCompile>
-    <FxCompile Include="Resources\hlsl\Polygon3d.PS.hlsl">
-      <Filter>Resource\hlsl</Filter>
+      <Filter>Resource\hlsl\Particle</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

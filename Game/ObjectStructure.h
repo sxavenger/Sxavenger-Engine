@@ -107,7 +107,4 @@ struct Material {
 		}
 	}
 
-//private:
-//	float padding[3];
-//public:
 };

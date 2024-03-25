@@ -18,10 +18,7 @@
 // PipelineType enum
 ////////////////////////////////////////////////////////////////////////////////////////////
 enum PipelineType {
-	TEXTURE,
-	POLYGON,
 	PARTICLE,
-	AREA,
 
 	kCountOfPipeline
 };
@@ -131,7 +128,7 @@ namespace DxObject {
 
 		// pipeline
 		std::array<PipelineMenber, PipelineType::kCountOfPipeline> pipelineMenbers_;
-		PipelineType                                               pipelineType_ = PipelineType::TEXTURE;
+		PipelineType                                               pipelineType_ = static_cast<PipelineType>(0);
 
 		// pipelines
 		std::array<PipelineData, PipelineType::kCountOfPipeline> pipelines_;
@@ -140,10 +137,6 @@ namespace DxObject {
 		// viewports
 		D3D12_VIEWPORT viewport_;
 		D3D12_RECT     scissorRect_;
-
-		//=========================================================================================
-		// private methods
-		//=========================================================================================
 
 	};
 

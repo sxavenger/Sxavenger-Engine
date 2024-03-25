@@ -1,13 +1,12 @@
-#include "Object3d.hlsli"
+#include "Particle.hlsli"
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // メイン
 ////////////////////////////////////////////////////////////////////////////////////////////
-[maxvertexcount(3)] // maxvertexcount(..) < max: 1204(32bit) / GSOutputのfloat数)
+[maxvertexcount(3)] // maxvertexcount(..) < max: 1204(32bit) / GSOutputのfloat数
 void main(
 	triangle VSOutput input[3],
 	inout TriangleStream<GSOutput> output) {
-	
 	
 	for (uint i = 0; i < 3; ++i) {
 		GSOutput element;
@@ -16,8 +15,9 @@ void main(
 		element.worldPos = input[i].worldPos;
 		element.normal   = input[i].normal;
 		element.texcoord = input[i].texcoord;
+		element.color    = input[i].color;
 		
 		output.Append(element);
 	}
-
+	
 }
