@@ -6,15 +6,13 @@
 #include <Logger.h>
 
 // DxObject
-#include <DxCompilers.h>
+#include <DxShaderTable.h>
 
 //=========================================================================================
 // static variables
 //=========================================================================================
-const std::wstring DxObject::ShaderBlob::directory_
-	= L"./Resources/hlsl/";
 
-DxObject::Compilers* DxObject::ShaderBlob::compilers_ = nullptr;
+DxObject::ShaderTable* DxObject::ShaderBlob::shaderTable_ = nullptr;
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // ShaderBlob class methods
@@ -23,19 +21,13 @@ DxObject::Compilers* DxObject::ShaderBlob::compilers_ = nullptr;
 void DxObject::ShaderBlob::Init(const std::wstring& vsFileName, const std::wstring& psFileName) {
 
 	// VS
-	shaderBlob_VS_ = DxObjectMethod::CompileShader(
-		directory_ + vsFileName, L"vs_6_0",
-		compilers_->GetDxcUtils(), compilers_->GetDxcCompilder(), compilers_->GetIncluderHandler()
-	);
+	shaderBlob_VS_ = shaderTable_->GetShaderBlob(vsFileName, ShaderType::Vertex);
 
 	assert(shaderBlob_VS_ != nullptr);
 	Log("[DxObject.ShaderBlob]: shaderBlob_VS_ << Complete Create \n");
 
 	// PS
-	shaderBlob_PS_ = DxObjectMethod::CompileShader(
-		directory_ + psFileName, L"ps_6_0",
-		compilers_->GetDxcUtils(), compilers_->GetDxcCompilder(), compilers_->GetIncluderHandler()
-	);
+	shaderBlob_PS_ = shaderTable_->GetShaderBlob(psFileName, ShaderType::Pixel);
 
 	assert(shaderBlob_PS_ != nullptr);
 	Log("[DxObject.ShaderBlob]: shaderBlob_PS_ << Complete Create \n");
@@ -46,33 +38,18 @@ void DxObject::ShaderBlob::Init(
 	const std::wstring& vsFileName, const std::wstring& gsFileName, const std::wstring& psFileName) {
 
 	// VS
-	shaderBlob_VS_ = DxObjectMethod::CompileShader(
-		directory_ + vsFileName, L"vs_6_0",
-		compilers_->GetDxcUtils(), compilers_->GetDxcCompilder(), compilers_->GetIncluderHandler()
-	);
-
-	assert(shaderBlob_VS_ != nullptr);
-	Log("[DxObject.ShaderBlob]: shaderBlob_VS_ << Complete Create \n");
+	shaderBlob_VS_ = shaderTable_->GetShaderBlob(vsFileName, ShaderType::Vertex);
 
 	// GS
-	shaderBlob_GS_ = DxObjectMethod::CompileShader(
-		directory_ + gsFileName, L"gs_6_0",
-		compilers_->GetDxcUtils(), compilers_->GetDxcCompilder(), compilers_->GetIncluderHandler()
-	);
-
-	assert(shaderBlob_GS_ != nullptr);
-	Log("[DxObject.ShaderBlob]: shaderBlob_GS_ << Complete Create \n");
+	shaderBlob_GS_ = shaderTable_->GetShaderBlob(gsFileName, ShaderType::Geometry);
 
 	// PS
-	shaderBlob_PS_ = DxObjectMethod::CompileShader(
-		directory_ + psFileName, L"ps_6_0",
-		compilers_->GetDxcUtils(), compilers_->GetDxcCompilder(), compilers_->GetIncluderHandler()
-	);
-
-	assert(shaderBlob_PS_ != nullptr);
-	Log("[DxObject.ShaderBlob]: shaderBlob_PS_ << Complete Create \n");
+	shaderBlob_PS_ = shaderTable_->GetShaderBlob(psFileName, ShaderType::Pixel);
 
 }
 
 void DxObject::ShaderBlob::Term() {
+	shaderBlob_VS_ = nullptr;
+	shaderBlob_GS_ = nullptr;
+	shaderBlob_PS_ = nullptr;
 }

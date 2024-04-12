@@ -19,6 +19,10 @@
 #include <list>
 #include <memory>
 
+// Game
+#include <Floor/Floor.h>
+#include <Logger.h>
+
 ////////////////////////////////////////////////////////////////////////////////////////////
 // メイン関数
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -39,6 +43,11 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	std::unique_ptr<Camera2D> camera2D = std::make_unique<Camera2D>();
 	MyEngine::camera2D_ = camera2D.get();
 
+	//-----------------------------------------------------------------------------------------
+	// Floor
+	//-----------------------------------------------------------------------------------------
+	auto floor = std::make_unique<Floor>();
+
 	////////////////////////////////////////////////////////////////////////////////////////////
 	// メインループ
 	////////////////////////////////////////////////////////////////////////////////////////////
@@ -56,13 +65,15 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		ImGui::Text("FPS: %.1f", 1.0f / ExecutionSpeed::freamsParSec_);
 		ImGui::End();
 
-
+		ImGui::Begin("main");
+		floor->SetOnImGui();
+		ImGui::End();
 
 		//=========================================================================================
 		// 描画処理
 		//=========================================================================================
 
-
+		floor->Draw();
 		
 		MyEngine::EndFrame();
 	}
@@ -70,6 +81,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	// camer
 	camera3D.reset();
 	camera2D.reset();
+
+	floor.reset();
 
 	MyEngine::Finalize();
 	

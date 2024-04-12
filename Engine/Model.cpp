@@ -3,6 +3,7 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
+#include <Logger.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Model Methods
@@ -76,7 +77,13 @@ ModelData ModelMethods::LoadObjFile(const std::string& directoryPath, const std:
 
 	// Objファイルを開く
 	std::ifstream file(directoryPath + "/" + filename);
-	assert(file.is_open()); //!< fileが見つからなかった.
+	
+	if (!file.is_open()) { //!< fileが見つからなかった.
+		std::string errorLog;
+		errorLog = "[Model Not Found] \n filePath: " + directoryPath + "/" + filename;
+
+		Assert(false, errorLog, "Error: LoadObjFile");
+	}
 
 	while (std::getline(file, line)) { // fileから一列ずつ読み込み
 		std::string identifire; // 識別子

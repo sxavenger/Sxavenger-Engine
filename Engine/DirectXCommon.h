@@ -12,6 +12,7 @@
 #include <DxBlendState.h>
 #include <DxCompilers.h>
 #include <DxShaderBlob.h>
+#include <DxShaderTable.h>
 #include <DxDepthStencil.h>
 #include <DxRootSignature.h>
 #include <DxPipelineState.h>
@@ -92,6 +93,7 @@ private:
 	std::unique_ptr<DxObject::SwapChain>       swapChains_;
 	std::unique_ptr<DxObject::Fence>           fences_;
 	std::unique_ptr<DxObject::Compilers>       compilers_;
+	std::unique_ptr<DxObject::ShaderTable>     shaderTable_;
 
 	std::unique_ptr<DxObject::BlendState> blendState_;
 	std::unique_ptr<DxObject::DepthStencil>  depthStencil_; //!< depthStencilは共通

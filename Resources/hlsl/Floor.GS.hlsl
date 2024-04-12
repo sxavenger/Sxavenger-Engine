@@ -15,7 +15,6 @@ void main(
 		element.worldPos = input[i].worldPos;
 		element.normal   = input[i].normal;
 		element.texcoord = input[i].texcoord;
-		element.color    = input[i].color;
 		
 		output.Append(element);
 	}

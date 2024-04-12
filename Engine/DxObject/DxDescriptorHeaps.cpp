@@ -76,7 +76,7 @@ void DxObject::DescriptorHeaps::Init(Devices* devices) {
 
 void DxObject::DescriptorHeaps::Term() {
 	for (int i = 0; i < kDescriptorHeapCount; ++i) {
-		descriptorHeaps_[i]->Release();
+		/*descriptorHeaps_[i]->Release();*/
 		descriptorSize_[i] = 0;
 
 		descriptorIndexSize_[i] = 0;

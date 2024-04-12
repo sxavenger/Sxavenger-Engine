@@ -33,7 +33,7 @@ namespace DxObject {
 	//-----------------------------------------------------------------------------------------
 	// forward
 	//-----------------------------------------------------------------------------------------
-	class Compilers;
+	class ShaderTable;
 
 	////////////////////////////////////////////////////////////////////////////////////////////
 	// ShaderBlob class
@@ -44,12 +44,6 @@ namespace DxObject {
 		//=========================================================================================
 		// public methods
 		//=========================================================================================
-
-		//! @brief DxObject::Compilersのセット
-		//! 
-		//! @param[in] compilers DxObject::Compilders
-		static void SetCompilders(Compilers* compilers) { compilers_ = compilers; }
-
 
 		//! @brief コンストラクタ
 		//! 
@@ -90,17 +84,22 @@ namespace DxObject {
 		//! @brief shaderBlob_VSを取得
 		//! 
 		//! @return shaderBlob_VSを返却
-		IDxcBlob* GetShaderBlob_VS() const { return shaderBlob_VS_.Get(); }
+		IDxcBlob* GetShaderBlob_VS() const { return shaderBlob_VS_; }
 
 		//! @brief shaderBlob_PSを取得
 		//! 
 		//! @return shaderBlob_PSを返却
-		IDxcBlob* GetShaderBlob_PS() const { return shaderBlob_PS_.Get(); }
+		IDxcBlob* GetShaderBlob_PS() const { return shaderBlob_PS_; }
 
 		//! @brief shaderBlob_GSを取得
 		//! 
 		//! @return shaderBlob_GSを返却
-		IDxcBlob* GetShaderBlob_GS() const { return shaderBlob_GS_.Get(); }
+		IDxcBlob* GetShaderBlob_GS() const { return shaderBlob_GS_; }
+
+		//! @brief shaderTableを設定
+		//! 
+		//! @param[in] shaderTable DxObject::ShaderTable
+		static void SetShaderTable(ShaderTable* shaderTable) { shaderTable_ = shaderTable; }
 
 	private:
 
@@ -108,15 +107,11 @@ namespace DxObject {
 		// private variables
 		//=========================================================================================
 
-		// directoryPath
-		static const std::wstring directory_;
+		static ShaderTable* shaderTable_;
 
-		// dxcCompilers
-		static Compilers* compilers_;
-
-		ComPtr<IDxcBlob> shaderBlob_VS_;
-		ComPtr<IDxcBlob> shaderBlob_GS_;
-		ComPtr<IDxcBlob> shaderBlob_PS_;
+		IDxcBlob* shaderBlob_VS_;
+		IDxcBlob* shaderBlob_GS_;
+		IDxcBlob* shaderBlob_PS_;
 
 	};
 

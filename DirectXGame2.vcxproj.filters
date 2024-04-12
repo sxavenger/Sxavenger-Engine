@@ -160,9 +160,6 @@
     <ClCompile Include="Engine\DxObject\DxObjectMethod.cpp">
       <Filter>Engine\DxObject\source</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\DxObject\DxPipelineState.cpp">
-      <Filter>Engine\DxObject\source</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\DxObject\DxShaderBlob.cpp">
       <Filter>Engine\DxObject\source</Filter>
     </ClCompile>
@@ -235,6 +232,12 @@
     <ClCompile Include="Game\Floor\Floor.cpp">
       <Filter>Game\Floor</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\DxObject\DxShaderTable.cpp">
+      <Filter>Engine\DxObject\source</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\DxObject\DxPipelineState.cpp">
+      <Filter>Engine\DxObject\source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\MyEngine.h">
@@ -298,9 +301,6 @@
       <Filter>Engine\DxObject\include</Filter>
     </ClInclude>
     <ClInclude Include="Engine\DxObject\DxObjectMethod.h">
-      <Filter>Engine\DxObject\include</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\DxObject\DxPipelineState.h">
       <Filter>Engine\DxObject\include</Filter>
     </ClInclude>
     <ClInclude Include="Engine\DxObject\DxShaderBlob.h">
@@ -380,6 +380,12 @@
     </ClInclude>
     <ClInclude Include="Game\Floor\Floor.h">
       <Filter>Game\Floor</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\DxObject\DxShaderTable.h">
+      <Filter>Engine\DxObject\include</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\DxObject\DxPipelineState.h">
+      <Filter>Engine\DxObject\include</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

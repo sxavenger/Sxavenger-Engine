@@ -20,7 +20,7 @@ public:
 	};
 
 	union {
-		T w, a;
+		T w, a = 1.0f;
 	};
 
 };

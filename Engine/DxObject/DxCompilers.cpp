@@ -7,6 +7,7 @@
 
 // DxObject
 #include <DxShaderBlob.h>
+#include <DxShaderTable.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Compilers class methods
@@ -41,7 +42,7 @@ void DxObject::Compilers::Init() {
 	}
 
 	// shaderBlobに設定
-	ShaderBlob::SetCompilders(this);
+	ShaderTable::SetCompilers(this);
 
 }
 

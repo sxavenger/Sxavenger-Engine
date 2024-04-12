@@ -68,7 +68,10 @@ void TextureManager::Init(DirectXCommon* dxCommon) {
 	dxCommon_ = dxCommon;
 
 	// 初期texture
-	
+	textures_["resources/uvChecker.png"];
+
+	// Floor
+	textures_["resources/tile_black.png"];
 
 	for (auto& pair : textures_) {
 		pair.second.texture = std::make_unique<Texture>(pair.first, dxCommon_);
