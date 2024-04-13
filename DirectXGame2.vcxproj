@@ -108,6 +108,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\DxObject\DxShaderBlob.cpp" />
     <ClCompile Include="Engine\DxObject\DxShaderTable.cpp" />
     <ClCompile Include="Engine\DxObject\DxSwapChain.cpp" />
+    <ClCompile Include="Engine\DxrObject\DxrDevices.cpp" />
     <ClCompile Include="Engine\ImGuiManager.cpp" />
     <ClCompile Include="Engine\Logger.cpp" />
     <ClCompile Include="Engine\Model.cpp" />
@@ -159,6 +160,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\DxObject\DxShaderBlob.h" />
     <ClInclude Include="Engine\DxObject\DxShaderTable.h" />
     <ClInclude Include="Engine\DxObject\DxSwapChain.h" />
+    <ClInclude Include="Engine\DxrObject\DxrDevices.h" />
     <ClInclude Include="Engine\ImGuiManager.h" />
     <ClInclude Include="Engine\Logger.h" />
     <ClInclude Include="Engine\Model.h" />

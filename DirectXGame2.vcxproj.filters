@@ -100,6 +100,15 @@
     <Filter Include="Resource\hlsl\Floor">
       <UniqueIdentifier>{caff2c69-010b-4713-a983-b786b400b167}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Engine\DxrObject">
+      <UniqueIdentifier>{749f3f9b-184f-4b27-8ed8-a2d3be3e8c31}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\DxrObject\include">
+      <UniqueIdentifier>{fde2c75f-50b7-4e77-b4bb-a31ab440be0a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\DxrObject\source">
+      <UniqueIdentifier>{d4e808f0-59d0-4f07-bc11-d0e972703443}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
@@ -237,6 +246,9 @@
     </ClCompile>
     <ClCompile Include="Engine\DxObject\DxPipelineState.cpp">
       <Filter>Engine\DxObject\source</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\DxrObject\DxrDevices.cpp">
+      <Filter>Engine\DxrObject\source</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -386,6 +398,9 @@
     </ClInclude>
     <ClInclude Include="Engine\DxObject\DxPipelineState.h">
       <Filter>Engine\DxObject\include</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\DxrObject\DxrDevices.h">
+      <Filter>Engine\DxrObject\include</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
