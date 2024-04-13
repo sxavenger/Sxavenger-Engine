@@ -71,10 +71,10 @@ public:
 	//=========================================================================================
 
 	//! @brief コンストラクタ
-	TextureManager();
+	TextureManager() {}
 
 	//! @brief デストラクタ
-	~TextureManager();
+	~TextureManager() {}
 
 	//! @brief 初期化処理
 	void Init(DirectXCommon* dxCommon);
@@ -112,7 +112,7 @@ private:
 	std::unordered_map<std::string, TextureData> textures_;
 	//!< key = filePath, value = texture
 
-	DirectXCommon* dxCommon_;
+	DirectXCommon* dxCommon_ = nullptr;
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////

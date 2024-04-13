@@ -11,9 +11,7 @@
 #include <Vector4.h>
 #include <Matrix4x4.h>
 #include <Vector2.h>
-// Camera
-#include <Camera3D.h>
-#include <Camera2D.h>
+
 // Light
 #include <Light.h>
 
@@ -22,8 +20,8 @@
 #include <memory>
 
 // Game
-#include <Sphere.h>
-#include <Terrain.h>
+#include <Floor/Floor.h>
+#include <Logger.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // メイン関数
@@ -46,15 +44,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	MyEngine::camera2D_ = camera2D.get();
 
 	//-----------------------------------------------------------------------------------------
-	// Light
+	// Floor
 	//-----------------------------------------------------------------------------------------
-	std::unique_ptr<Light> light = std::make_unique<Light>(MyEngine::GetDevicesObj());
-
-	//-----------------------------------------------------------------------------------------
-	// Object
-	//-----------------------------------------------------------------------------------------
-	std::unique_ptr<Sphere> sphere = std::make_unique<Sphere>();
-	std::unique_ptr<Terrain> terrain = std::make_unique<Terrain>();
+	auto floor = std::make_unique<Floor>();
 
 	////////////////////////////////////////////////////////////////////////////////////////////
 	// メインループ
@@ -67,7 +59,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		// 更新処理
 		//=========================================================================================
 		camera3D->UpdateImGui();
-		light->UpdateImGui();
 
 		ImGui::Begin("system");
 		ImGui::Text("speed(s): %.6f", ExecutionSpeed::freamsParSec_);
@@ -75,29 +66,23 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		ImGui::End();
 
 		ImGui::Begin("main");
-		sphere->SetOnImGui();
-		terrain->SetOnImGui();
+		floor->SetOnImGui();
 		ImGui::End();
 
 		//=========================================================================================
 		// 描画処理
 		//=========================================================================================
-		
-		sphere->Draw(light.get());
-		terrain->Draw(light.get());
 
+		floor->Draw();
+		
 		MyEngine::EndFrame();
 	}
 
 	// camer
 	camera3D.reset();
 	camera2D.reset();
-	// light
-	light.reset();
 
-	// object
-	sphere.reset();
-	terrain.reset();
+	floor.reset();
 
 	MyEngine::Finalize();
 	

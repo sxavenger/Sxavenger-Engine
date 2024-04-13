@@ -93,6 +93,9 @@ void DxObject::BlendState::Init() {
 		// (1.0f - DescColor) * SrcColor + DescColor
 		blendDesc_[BlendMode::kBlendModeScreen] = desc;
 	}
+
+	// setting ptr
+
 }
 
 void DxObject::BlendState::Term() {

@@ -24,7 +24,7 @@ Camera3D::Camera3D(const std::string& filePath) {
 	SetProjection(0.45f, static_cast<float>(kWindowWidth) / static_cast<float>(kWindowHeight), 0.1f, 100.0f);
 
 	resource_ = std::make_unique<DxObject::BufferPtrResource<Vector4f>>(MyEngine::GetDevicesObj(), 1);
-	resource_->Set(0, &position);
+	resource_->SetPtr(0, &position);
 }
 
 Camera3D::~Camera3D() { Term(); }

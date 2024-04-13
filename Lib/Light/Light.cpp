@@ -17,7 +17,7 @@ const char* Light::item[kLightTypeCount] = { "Directional", "Point", "Spot" };
 void Light::Init(DxObject::Devices* device) {
 	// resource
 	resource_ = std::make_unique<DxObject::BufferPtrResource<LightData>>(device, 1);
-	resource_->Set(0, &lightData_);
+	resource_->SetPtr(0, &lightData_);
 }
 
 void Light::UpdateImGui(const char* windowName, const char* treeName) {

@@ -10,7 +10,7 @@
 #include <DirectXCommon.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// Texture methods
+// Texture class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 void Texture::Load(const std::string& filePath, DirectXCommon* dxCommon) {
@@ -60,14 +60,8 @@ void Texture::Unload() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// TextureManager methods
+// TextureManager class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
-
-TextureManager::TextureManager() {
-}
-
-TextureManager::~TextureManager() {
-}
 
 void TextureManager::Init(DirectXCommon* dxCommon) {
 	// dxCommonの保存
@@ -75,15 +69,9 @@ void TextureManager::Init(DirectXCommon* dxCommon) {
 
 	// 初期texture
 	textures_["resources/uvChecker.png"];
-	textures_["resources/monsterBall.png"];
-	textures_["resources/model/uvChecker.png"];
-	textures_["resources/model/monsterBall.png"];
-	/*textures_["resources/model/checkerBoard.png"];*/
 
-	/*textures_["resources/particleDemo.png"];
-	textures_["resources/model/wireFrame.png"];*/
-
-	textures_["resources/model/grass.png"];
+	// Floor
+	textures_["resources/tile_black.png"];
 
 	for (auto& pair : textures_) {
 		pair.second.texture = std::make_unique<Texture>(pair.first, dxCommon_);
@@ -151,7 +139,13 @@ DirectX::ScratchImage TextureMethod::LoadTexture(const std::string& filePath) {
 		image
 	);
 
-	assert(SUCCEEDED(hr));
+	if (FAILED(hr)) {
+		std::string errorLog;
+		errorLog
+			= "[Texture Not Found] \n filePath: " + filePath;
+
+		Assert(false, errorLog, "Error: LoadTexture");
+	}
 
 	// MipMapsの生成
 	DirectX::ScratchImage mipImage = {};

@@ -32,6 +32,9 @@ enum BlendMode {
 	kBlendModeScreen,   //!< スクリーン
 
 	kCountOfBlendMode,
+
+	// option
+	DefaultBlendMode = kBlendModeNormal,
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////

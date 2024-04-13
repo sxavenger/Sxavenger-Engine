@@ -76,7 +76,7 @@ void DxObject::DescriptorHeaps::Init(Devices* devices) {
 
 void DxObject::DescriptorHeaps::Term() {
 	for (int i = 0; i < kDescriptorHeapCount; ++i) {
-		descriptorHeaps_[i]->Release();
+		/*descriptorHeaps_[i]->Release();*/
 		descriptorSize_[i] = 0;
 
 		descriptorIndexSize_[i] = 0;
@@ -130,7 +130,7 @@ void DxObject::DescriptorHeaps::Debug() {
 
 		if (ImGui::TreeNode("VacantIndexs - deque")) {
 			if (descriptorVacantIndexs_[SRV].empty()) {
-				ImGui::Text("> empty descriptorVacantIndexs deque...");
+				ImGui::Text("> empty...");
 
 			} else {
 				int i = 0;

@@ -22,12 +22,6 @@ struct VertexData {
 	Vector3f normal;
 };
 
-struct TransformationMatrix {
-	Matrix4x4 wvp;
-	Matrix4x4 world;
-	Matrix4x4 worldInverseTranspose;
-};
-
 struct Transform {
 	Vector3f scale;
 	Vector3f rotate;
@@ -44,6 +38,18 @@ struct Transform {
 		ImGui::DragFloat3("rotate", &rotate.x, granularity);
 		ImGui::DragFloat3("translate", &translate.x, granularity);
 	}
+};
+
+struct TransformationMatrix {
+	Matrix4x4 wvp;
+	Matrix4x4 world;
+	Matrix4x4 worldInverseTranspose;
+
+	/*void SetTransform(const Transform& transform, const Matrix4x4& viewProjMatrix) {
+		world = Matrix::MakeAffine(transform.scale, transform.rotate, transform.translate);
+		worldInverseTranspose = Matrix::Transpose(Matrix::Inverse(world));
+		wvp = world * viewProjMatrix;
+	}*/
 };
 
 enum LambertType {
@@ -107,7 +113,4 @@ struct Material {
 		}
 	}
 
-//private:
-//	float padding[3];
-//public:
 };

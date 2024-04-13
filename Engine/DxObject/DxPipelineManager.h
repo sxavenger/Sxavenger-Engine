@@ -18,10 +18,8 @@
 // PipelineType enum
 ////////////////////////////////////////////////////////////////////////////////////////////
 enum PipelineType {
-	TEXTURE,
-	POLYGON,
+	FLOOR,
 	PARTICLE,
-	AREA,
 
 	kCountOfPipeline
 };
@@ -131,7 +129,7 @@ namespace DxObject {
 
 		// pipeline
 		std::array<PipelineMenber, PipelineType::kCountOfPipeline> pipelineMenbers_;
-		PipelineType                                               pipelineType_ = PipelineType::TEXTURE;
+		PipelineType                                               pipelineType_ = static_cast<PipelineType>(0);
 
 		// pipelines
 		std::array<PipelineData, PipelineType::kCountOfPipeline> pipelines_;
@@ -144,6 +142,8 @@ namespace DxObject {
 		//=========================================================================================
 		// private methods
 		//=========================================================================================
+
+		void CreatePipelineTable();
 
 	};
 

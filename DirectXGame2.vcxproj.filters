@@ -85,6 +85,21 @@
     <Filter Include="Resource\hlsl">
       <UniqueIdentifier>{4a0a5389-70df-42d6-a5fc-9ee50eebc35f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resource\hlsl\Particle">
+      <UniqueIdentifier>{5e8f90bf-919d-4dc8-a78c-0c02bd22b8f5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\Particle">
+      <UniqueIdentifier>{59a26e1a-2aa8-42d5-85c3-aff325528ab4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\Particle\IceParticle">
+      <UniqueIdentifier>{c46edb30-e5d3-4205-be1a-da4393f670a8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\Floor">
+      <UniqueIdentifier>{f3eb80fa-85dd-492f-a984-69667a3ed68c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource\hlsl\Floor">
+      <UniqueIdentifier>{caff2c69-010b-4713-a983-b786b400b167}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
@@ -145,9 +160,6 @@
     <ClCompile Include="Engine\DxObject\DxObjectMethod.cpp">
       <Filter>Engine\DxObject\source</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\DxObject\DxPipelineState.cpp">
-      <Filter>Engine\DxObject\source</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\DxObject\DxShaderBlob.cpp">
       <Filter>Engine\DxObject\source</Filter>
     </ClCompile>
@@ -184,12 +196,6 @@
     <ClCompile Include="Lib\DrawMethod.cpp">
       <Filter>Lib</Filter>
     </ClCompile>
-    <ClCompile Include="Game\Sphere.cpp">
-      <Filter>Game</Filter>
-    </ClCompile>
-    <ClCompile Include="Game\Terrain.cpp">
-      <Filter>Game</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\DxObject\DxFence.cpp">
       <Filter>Engine\DxObject\source</Filter>
     </ClCompile>
@@ -215,6 +221,21 @@
       <Filter>externals\imgui</Filter>
     </ClCompile>
     <ClCompile Include="Engine\DxObject\DxCompilers.cpp">
+      <Filter>Engine\DxObject\source</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Particle\IceParticle.cpp">
+      <Filter>Game\Particle\IceParticle</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Particle\Particle.cpp">
+      <Filter>Game\Particle</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Floor\Floor.cpp">
+      <Filter>Game\Floor</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\DxObject\DxShaderTable.cpp">
+      <Filter>Engine\DxObject\source</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\DxObject\DxPipelineState.cpp">
       <Filter>Engine\DxObject\source</Filter>
     </ClCompile>
   </ItemGroup>
@@ -282,9 +303,6 @@
     <ClInclude Include="Engine\DxObject\DxObjectMethod.h">
       <Filter>Engine\DxObject\include</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\DxObject\DxPipelineState.h">
-      <Filter>Engine\DxObject\include</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\DxObject\DxShaderBlob.h">
       <Filter>Engine\DxObject\include</Filter>
     </ClInclude>
@@ -327,12 +345,6 @@
     <ClInclude Include="Lib\DrawMethod.h">
       <Filter>Lib</Filter>
     </ClInclude>
-    <ClInclude Include="Game\Sphere.h">
-      <Filter>Game</Filter>
-    </ClInclude>
-    <ClInclude Include="Game\Terrain.h">
-      <Filter>Game</Filter>
-    </ClInclude>
     <ClInclude Include="externals\imgui\imconfig.h">
       <Filter>externals\imgui</Filter>
     </ClInclude>
@@ -360,14 +372,29 @@
     <ClInclude Include="Engine\DxObject\DxCompilers.h">
       <Filter>Engine\DxObject\include</Filter>
     </ClInclude>
+    <ClInclude Include="Game\Particle\IceParticle.h">
+      <Filter>Game\Particle\IceParticle</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Particle\Particle.h">
+      <Filter>Game\Particle</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Floor\Floor.h">
+      <Filter>Game\Floor</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\DxObject\DxShaderTable.h">
+      <Filter>Engine\DxObject\include</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\DxObject\DxPipelineState.h">
+      <Filter>Engine\DxObject\include</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />
-    <None Include="Resources\hlsl\Object3d.hlsli">
-      <Filter>Resource\hlsl</Filter>
-    </None>
     <None Include="Resources\hlsl\Particle.hlsli">
-      <Filter>Resource\hlsl</Filter>
+      <Filter>Resource\hlsl\Particle</Filter>
+    </None>
+    <None Include="Resources\hlsl\Floor.hlsli">
+      <Filter>Resource\hlsl\Floor</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -376,29 +403,23 @@
     </Text>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="Resources\hlsl\Area.PS.hlsl">
-      <Filter>Resource\hlsl</Filter>
+    <FxCompile Include="Resources\hlsl\Particle.VS.hlsl">
+      <Filter>Resource\hlsl\Particle</Filter>
     </FxCompile>
-    <FxCompile Include="Resources\hlsl\Object3d.GS.hlsl">
-      <Filter>Resource\hlsl</Filter>
-    </FxCompile>
-    <FxCompile Include="Resources\hlsl\Object3d.PS.hlsl">
-      <Filter>Resource\hlsl</Filter>
-    </FxCompile>
-    <FxCompile Include="Resources\hlsl\Object3d.VS.hlsl">
-      <Filter>Resource\hlsl</Filter>
-    </FxCompile>
-    <FxCompile Include="Resources\hlsl\Object3dGS.PS.hlsl">
-      <Filter>Resource\hlsl</Filter>
+    <FxCompile Include="Resources\hlsl\Particle.GS.hlsl">
+      <Filter>Resource\hlsl\Particle</Filter>
     </FxCompile>
     <FxCompile Include="Resources\hlsl\Particle.PS.hlsl">
-      <Filter>Resource\hlsl</Filter>
+      <Filter>Resource\hlsl\Particle</Filter>
     </FxCompile>
-    <FxCompile Include="Resources\hlsl\Particle.VS.hlsl">
-      <Filter>Resource\hlsl</Filter>
+    <FxCompile Include="Resources\hlsl\Floor.VS.hlsl">
+      <Filter>Resource\hlsl\Floor</Filter>
     </FxCompile>
-    <FxCompile Include="Resources\hlsl\Polygon3d.PS.hlsl">
-      <Filter>Resource\hlsl</Filter>
+    <FxCompile Include="Resources\hlsl\Floor.GS.hlsl">
+      <Filter>Resource\hlsl\Floor</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\hlsl\Floor.PS.hlsl">
+      <Filter>Resource\hlsl\Floor</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

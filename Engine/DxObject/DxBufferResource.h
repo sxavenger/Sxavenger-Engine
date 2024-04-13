@@ -142,18 +142,6 @@ namespace DxObject {
 			return result;
 		}
 
-		//! @brief dataArrayにvalueを設定
-		//! 
-		//! @param[in] index 要素数
-		//! @param[in] value データ
-		/*void Set(uint32_t index, const T& value) {
-			if (!CheckIndex(index)) {
-				return;
-			}
-
-			dataArray_[index] = value;
-		}*/
-
 		void Memcpy(const T* value) {
 			memcpy(dataArray_, value, sizeof(T) * indexSize_);
 		}
@@ -219,7 +207,7 @@ namespace DxObject {
 		//! @brief VertexBufferを取得
 		//! 
 		//! @return VertexBufferを返却
-		const D3D12_VERTEX_BUFFER_VIEW GetBufferView() {
+		const D3D12_VERTEX_BUFFER_VIEW GetVertexBufferView() {
 			LoadPtrData();
 
 			D3D12_VERTEX_BUFFER_VIEW result = {};
@@ -234,7 +222,7 @@ namespace DxObject {
 		//! 
 		//! @param[in] index 要素数
 		//! @param[in] value データ
-		void Set(uint32_t index, T* value) {
+		void SetPtr(uint32_t index, T* value) {
 			if (!CheckIndex(index)) {
 				return;
 			}
