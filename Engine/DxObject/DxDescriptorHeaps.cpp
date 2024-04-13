@@ -130,7 +130,7 @@ void DxObject::DescriptorHeaps::Debug() {
 
 		if (ImGui::TreeNode("VacantIndexs - deque")) {
 			if (descriptorVacantIndexs_[SRV].empty()) {
-				ImGui::Text("> empty descriptorVacantIndexs deque...");
+				ImGui::Text("> empty...");
 
 			} else {
 				int i = 0;
