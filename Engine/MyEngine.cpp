@@ -11,6 +11,9 @@
 #include <ImGuiManager.h>
 #include <TextureManager.h>
 
+// test origin
+#include <DxrCommon.h>
+
 #include <ComPtr.h>
 
 #include <ExecutionSpeed.h>
@@ -27,6 +30,8 @@ namespace {
 	DirectXCommon* sDirectXCommon = nullptr;   //!< DirectX12 system
 	ImGuiManager* sImGuiManager = nullptr;     //!< ImGui system
 	TextureManager* sTextureManager = nullptr; //!< TextureManager system
+
+	
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -103,7 +108,9 @@ void MyEngine::EndFrame() {
 	ExecutionSpeed::End();
 }
 
-int MyEngine::ProcessMessage() { return sWinApp->ProcessMessage() ? 1 : 0; }
+int MyEngine::ProcessMessage() {
+	return sWinApp->ProcessMessage() ? 1 : 0;
+}
 
 void MyEngine::SetPipelineType(PipelineType pipelineType) {
 	sDirectXCommon->SetPipelineType(pipelineType);
@@ -140,4 +147,58 @@ TextureManager* MyEngine::GetTextureManager() {
 const D3D12_GPU_DESCRIPTOR_HANDLE& MyEngine::GetTextureHandleGPU(const std::string& textureKey) {
 	assert(sTextureManager != nullptr);
 	return sTextureManager->GetHandleGPU(textureKey);
+}
+
+
+////////////////////////////////////////////////////////////////////////////////////////////
+// namespace -anonymouse- // test function
+////////////////////////////////////////////////////////////////////////////////////////////
+namespace {
+	//-----------------------------------------------------------------------------------------
+	// テスト機能
+	//-----------------------------------------------------------------------------------------
+	DxrCommon* sDxrCommon = nullptr;
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////
+// MyDxrEngine class
+////////////////////////////////////////////////////////////////////////////////////////////
+
+void MyDxrEngine::Initialize(int32_t kWindowWidth, int32_t kWindowHeight, const char* kWindowTitle) {
+	CoInitializeEx(0, COINIT_MULTITHREADED);
+
+	// ウィンドウの生成
+	{
+		sWinApp = WinApp::GetInstance();
+		std::wstring titleString = ToWstring(kWindowTitle);
+		sWinApp->CreateGameWindow(kWindowWidth, kWindowHeight, titleString.c_str());
+	}
+
+	// DxrCommon初期化
+	{
+		sDxrCommon = DxrCommon::GetInstance();
+		sDxrCommon->Init(sWinApp, kWindowWidth, kWindowHeight);
+	}
+}
+
+void MyDxrEngine::Finalize() {
+	sWinApp->Term();
+	sWinApp = nullptr;
+
+	sDxrCommon->Term();
+	sDxrCommon = nullptr;
+
+	CoUninitialize();
+}
+
+void MyDxrEngine::BeginFrame() {
+	sDxrCommon->BeginFrame();
+}
+
+void MyDxrEngine::EndFrame() {
+	sDxrCommon->EndFrame();
+}
+
+int MyDxrEngine::ProcessMessage() {
+	return sWinApp->ProcessMessage() ? 1 : 0;
 }

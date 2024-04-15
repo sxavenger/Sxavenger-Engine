@@ -4,6 +4,7 @@
 // include
 //-----------------------------------------------------------------------------------------
 #include <Logger.h>
+#include <cassert>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Devices class methods
@@ -96,6 +97,7 @@ void DxrObject::Devices::Init() {
 
 		assert(SUCCEEDED(hr));
 		assert(option.RaytracingTier >= D3D12_RAYTRACING_TIER_1_0);
+		Log("-- DXR version is compatible. \n");
 	}
 
 #ifdef _DEBUG
@@ -118,8 +120,8 @@ void DxrObject::Devices::Init() {
 			D3D12_MESSAGE_SEVERITY serverities[] = { D3D12_MESSAGE_SEVERITY_INFO };
 
 			D3D12_INFO_QUEUE_FILTER filter = {};
-			filter.DenyList.NumIDs = _countof(denyIds);
-			filter.DenyList.pIDList = denyIds;
+			filter.DenyList.NumIDs        = _countof(denyIds);
+			filter.DenyList.pIDList       = denyIds;
 			filter.DenyList.NumSeverities = _countof(serverities);
 			filter.DenyList.pSeverityList = serverities;
 

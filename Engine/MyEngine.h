@@ -16,6 +16,7 @@
 #include <Camera2D.h>
 
 namespace Sxavenger {
+
 }
 
 //-----------------------------------------------------------------------------------------
@@ -80,6 +81,31 @@ public:
 	
 	static Camera3D* camera3D_;
 	static Camera2D* camera2D_;
+
+private:
+};
+
+////////////////////////////////////////////////////////////////////////////////////////////
+// DxrEnigine class
+////////////////////////////////////////////////////////////////////////////////////////////
+class MyDxrEngine final {
+public:
+
+	static void Initialize(int32_t kWindowWidth, int32_t kWindowHeight, const char* kWindowTitle);
+
+	static void Finalize();
+
+	//! @brief フレームの開始
+	static void BeginFrame();
+
+	//! @brief フレームの終了
+	static void EndFrame();
+
+	//! @brief プロセスメッセージを取得
+	//! 
+	//! @retval 1 ゲーム終了
+	//! @retval 0 ゲーム継続
+	static int ProcessMessage();
 
 private:
 };

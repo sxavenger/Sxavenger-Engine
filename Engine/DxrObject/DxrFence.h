@@ -6,7 +6,6 @@
 // directX
 #include <d3d12.h>
 #include <dxgi1_6.h>
-#include <dxgidebug.h>
 
 // c++
 #include <cstdint>
@@ -19,17 +18,26 @@
 //-----------------------------------------------------------------------------------------
 #pragma comment(lib, "d3d12.lib")
 #pragma comment(lib, "dxgi.lib")
-#pragma comment(lib, "dxguid.lib")
+
+//-----------------------------------------------------------------------------------------
+// forward
+//-----------------------------------------------------------------------------------------
+class WinApp;
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// DxrObject namespace
+// DxObject namespace
 ////////////////////////////////////////////////////////////////////////////////////////////
 namespace DxrObject {
 
+	//-----------------------------------------------------------------------------------------
+	// DxObject forward
+	//-----------------------------------------------------------------------------------------
+	class Devices;
+
 	////////////////////////////////////////////////////////////////////////////////////////////
-	// Devices class
+	// Fence class
 	////////////////////////////////////////////////////////////////////////////////////////////
-	class Devices {
+	class Fence {
 	public:
 
 		//=========================================================================================
@@ -37,57 +45,47 @@ namespace DxrObject {
 		//=========================================================================================
 
 		//! @brief コンストラクタ
-		Devices() { Init(); }
+		//! 
+		//! @param[in] devices DxObject::Devices
+		Fence(Devices* devices) { Init(devices); }
 
 		//! @brief デストラクタ
-		~Devices() { Term(); }
+		~Fence() { Term(); }
 
-		//! @brief 初期化
-		void Init();
+		//! @brief 初期化処理/
+		//! 
+		//! @param[in] devices DxObject::Devices
+		void Init(Devices* devices);
 
 		//! @brief 終了処理
 		void Term();
 
-		//! @brief device_の返却
-		ID3D12Device5* GetDevice() const { return device_.Get(); }
+		//! @brief fenceValueをインクリメント
+		void AddFenceValue();
 
-		//! @brief DXGIファクトリーを取得
+		//! @brief GPUのイベントを待つ
+		void WaitGPU();
+
+		//! @brief フェンスを取得
 		//! 
-		//! @return DXGIファクトリーを返却
-		IDXGIFactory7* GetFactory() const { return dxgiFactory_.Get(); }
+		//! @return フェンスを返却
+		ID3D12Fence* GetFence() const { return fence_.Get(); }
+
+		//! @brief fenceValueを取得
+		//! 
+		//! @return fenceValueを返却
+		uint64_t GetFenceValue() const { return fenceValue_; }
 
 	private:
 
-		////////////////////////////////////////////////////////////////////////////////////////////
-		// DxLeakChecker class
-		////////////////////////////////////////////////////////////////////////////////////////////
-		class DxrLeakChecker {
-		public:
-
-			~DxrLeakChecker() {
-				ComPtr<IDXGIDebug1> debug;
-
-				if (SUCCEEDED(DXGIGetDebugInterface1(0, IID_PPV_ARGS(debug.GetAddressOf())))) {
-					debug->ReportLiveObjects(DXGI_DEBUG_ALL, DXGI_DEBUG_RLO_ALL);
-					debug->ReportLiveObjects(DXGI_DEBUG_APP, DXGI_DEBUG_RLO_ALL);
-					debug->ReportLiveObjects(DXGI_DEBUG_D3D12, DXGI_DEBUG_RLO_ALL);
-				}
-			}
-		};
-
 		//=========================================================================================
-		// private methods
+		// private variables
 		//=========================================================================================
 
-		DxrLeakChecker leakChecker_;
+		ComPtr<ID3D12Fence> fence_;
 
-		ComPtr<ID3D12Debug1> debugController_;
-
-		ComPtr<IDXGIFactory7> dxgiFactory_;
-		ComPtr<IDXGIAdapter4> useAdapter_;
-
-		ComPtr<ID3D12Device5> device_;
-
+		uint64_t fenceValue_;
+		HANDLE   fenceEvent_;
 	};
 
 }

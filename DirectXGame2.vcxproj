@@ -52,7 +52,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)\Game\Particle;$(ProjectDir)\Game;$(ProjectDir)\Lib\Adapter\ExecutionSpeed;$(ProjectDir)\Lib\Adapter\Random;$(ProjectDir)\Lib\Adapter\Json;$(ProjectDir)\Lib\Collider;$(ProjectDir)\Lib\Light;$(ProjectDir)\Lib\Camera;$(ProjectDir)\Lib\Geometry;$(ProjectDir)\Lib;$(ProjectDir)\externals;$(ProjectDir)\Engine\DxObject;$(ProjectDir)\Engine;$(ProjectDir)\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)\Lib\Adapter\ExecutionSpeed;$(ProjectDir)\Lib\Adapter\Random;$(ProjectDir)\Lib\Adapter\Json;$(ProjectDir)\Lib\Collider;$(ProjectDir)\Lib\Light;$(ProjectDir)\Lib\Camera;$(ProjectDir)\Lib\Geometry;$(ProjectDir)\Lib;$(ProjectDir)\externals;$(ProjectDir)\Engine\DxrObject;$(ProjectDir)\Engine\DxObject;$(ProjectDir)\Engine;$(ProjectDir)\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
@@ -108,7 +108,14 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\DxObject\DxShaderBlob.cpp" />
     <ClCompile Include="Engine\DxObject\DxShaderTable.cpp" />
     <ClCompile Include="Engine\DxObject\DxSwapChain.cpp" />
+    <ClCompile Include="Engine\DxrCommon.cpp" />
+    <ClCompile Include="Engine\DxrObject\DxrAccelerationStructure.cpp" />
+    <ClCompile Include="Engine\DxrObject\DxrCommand.cpp" />
+    <ClCompile Include="Engine\DxrObject\DxrDescriptorHeaps.cpp" />
     <ClCompile Include="Engine\DxrObject\DxrDevices.cpp" />
+    <ClCompile Include="Engine\DxrObject\DxrFence.cpp" />
+    <ClCompile Include="Engine\DxrObject\DxrObjectMethods.cpp" />
+    <ClCompile Include="Engine\DxrObject\DxrSwapChain.cpp" />
     <ClCompile Include="Engine\ImGuiManager.cpp" />
     <ClCompile Include="Engine\Logger.cpp" />
     <ClCompile Include="Engine\Model.cpp" />
@@ -122,9 +129,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="externals\imgui\imgui_impl_win32.cpp" />
     <ClCompile Include="externals\imgui\imgui_tables.cpp" />
     <ClCompile Include="externals\imgui\imgui_widgets.cpp" />
-    <ClCompile Include="Game\Floor\Floor.cpp" />
-    <ClCompile Include="Game\Particle\IceParticle.cpp" />
-    <ClCompile Include="Game\Particle\Particle.cpp" />
     <ClCompile Include="Lib\Adapter\ExecutionSpeed\ExecutionSpeed.cpp" />
     <ClCompile Include="Lib\Adapter\Json\Json.cpp" />
     <ClCompile Include="Lib\Adapter\Random\Random.cpp" />
@@ -160,7 +164,14 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\DxObject\DxShaderBlob.h" />
     <ClInclude Include="Engine\DxObject\DxShaderTable.h" />
     <ClInclude Include="Engine\DxObject\DxSwapChain.h" />
+    <ClInclude Include="Engine\DxrCommon.h" />
+    <ClInclude Include="Engine\DxrObject\DxrAccelerationStructure.h" />
+    <ClInclude Include="Engine\DxrObject\DxrCommand.h" />
+    <ClInclude Include="Engine\DxrObject\DxrDescriptorHeaps.h" />
     <ClInclude Include="Engine\DxrObject\DxrDevices.h" />
+    <ClInclude Include="Engine\DxrObject\DxrFence.h" />
+    <ClInclude Include="Engine\DxrObject\DxrObjectMethods.h" />
+    <ClInclude Include="Engine\DxrObject\DxrSwapChain.h" />
     <ClInclude Include="Engine\ImGuiManager.h" />
     <ClInclude Include="Engine\Logger.h" />
     <ClInclude Include="Engine\Model.h" />
@@ -175,10 +186,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="externals\imgui\imstb_rectpack.h" />
     <ClInclude Include="externals\imgui\imstb_textedit.h" />
     <ClInclude Include="externals\imgui\imstb_truetype.h" />
-    <ClInclude Include="Game\Floor\Floor.h" />
-    <ClInclude Include="Game\ObjectStructure.h" />
-    <ClInclude Include="Game\Particle\IceParticle.h" />
-    <ClInclude Include="Game\Particle\Particle.h" />
     <ClInclude Include="Lib\Adapter\ExecutionSpeed\ExecutionSpeed.h" />
     <ClInclude Include="Lib\Adapter\Json\Json.h" />
     <ClInclude Include="Lib\Adapter\Random\Random.h" />
@@ -193,6 +200,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Lib\Geometry\Vector3.h" />
     <ClInclude Include="Lib\Geometry\Vector4.h" />
     <ClInclude Include="Lib\Light\Light.h" />
+    <ClInclude Include="Lib\ObjectStructure.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

@@ -20,7 +20,6 @@
 #include <memory>
 
 // Game
-#include <Floor/Floor.h>
 #include <Logger.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -31,39 +30,39 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	//=========================================================================================
 	// 初期化
 	//=========================================================================================
-	MyEngine::Initialize(kWindowWidth, kWindowHeight, kWindowTitle);
-
-	//-----------------------------------------------------------------------------------------
-	// Floor
-	//-----------------------------------------------------------------------------------------
+	MyDxrEngine::Initialize(kWindowWidth, kWindowHeight, kWindowTitle);
 
 	////////////////////////////////////////////////////////////////////////////////////////////
 	// メインループ
 	////////////////////////////////////////////////////////////////////////////////////////////
-	while (MyEngine::ProcessMessage() == 0) {
+	while (MyDxrEngine::ProcessMessage() == 0) {
 
-		MyEngine::BeginFrame();
+		/*MyEngine::BeginFrame();*/
+		MyDxrEngine::BeginFrame();
 
 		//=========================================================================================
 		// 更新処理
 		//=========================================================================================
 
-		ImGui::Begin("system");
+		/*ImGui::Begin("system");
 		ImGui::Text("speed(s): %.6f", ExecutionSpeed::freamsParSec_);
 		ImGui::Text("FPS: %.1f", 1.0f / ExecutionSpeed::freamsParSec_);
 		ImGui::End();
 
 		ImGui::Begin("main");
-		ImGui::End();
+		ImGui::End();*/
+
+		
 
 		//=========================================================================================
 		// 描画処理
 		//=========================================================================================
 		
-		MyEngine::EndFrame();
+		/*MyEngine::EndFrame();*/
+		MyDxrEngine::EndFrame();
 	}
 
-	MyEngine::Finalize();
+	MyDxrEngine::Finalize();
 	
 	return 0;
 
