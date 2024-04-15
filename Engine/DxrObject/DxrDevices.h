@@ -43,12 +43,16 @@ namespace DxrObject {
 		// public methods
 		//=========================================================================================
 
-		Devices();
+		//! @brief コンストラクタ
+		Devices() { Init(); }
 
-		~Devices();
+		//! @brief デストラクタ
+		~Devices() { Term(); }
 
+		//! @brief 初期化
 		void Init();
 
+		//! @brief 終了処理
 		void Term();
 
 	private:

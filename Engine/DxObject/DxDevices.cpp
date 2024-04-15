@@ -126,5 +126,3 @@ void DxObject::Devices::Init() {
 #endif // _DEBUG
 }
 
-void DxObject::Devices::Term() {
-}

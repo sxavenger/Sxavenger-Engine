@@ -33,20 +33,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	//=========================================================================================
 	MyEngine::Initialize(kWindowWidth, kWindowHeight, kWindowTitle);
 
-	/*ID3D12GraphicsCommandList* commandList = MyEngine::GetCommandList();*/
-
-	//-----------------------------------------------------------------------------------------
-	// Camera
-	//-----------------------------------------------------------------------------------------
-	std::unique_ptr<Camera3D> camera3D = std::make_unique<Camera3D>("camera3D.json");
-	MyEngine::camera3D_ = camera3D.get();
-	std::unique_ptr<Camera2D> camera2D = std::make_unique<Camera2D>();
-	MyEngine::camera2D_ = camera2D.get();
-
 	//-----------------------------------------------------------------------------------------
 	// Floor
 	//-----------------------------------------------------------------------------------------
-	auto floor = std::make_unique<Floor>();
 
 	////////////////////////////////////////////////////////////////////////////////////////////
 	// メインループ
@@ -58,7 +47,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		//=========================================================================================
 		// 更新処理
 		//=========================================================================================
-		camera3D->UpdateImGui();
 
 		ImGui::Begin("system");
 		ImGui::Text("speed(s): %.6f", ExecutionSpeed::freamsParSec_);
@@ -66,23 +54,14 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		ImGui::End();
 
 		ImGui::Begin("main");
-		floor->SetOnImGui();
 		ImGui::End();
 
 		//=========================================================================================
 		// 描画処理
 		//=========================================================================================
-
-		floor->Draw();
 		
 		MyEngine::EndFrame();
 	}
-
-	// camer
-	camera3D.reset();
-	camera2D.reset();
-
-	floor.reset();
 
 	MyEngine::Finalize();
 	
