@@ -5,6 +5,7 @@
 //-----------------------------------------------------------------------------------------
 // DxObject
 #include "DxDevices.h"
+#include "DxSwapChain.h"
 
 #include <Logger.h>
 #include "externals/imgui/imgui.h"
@@ -23,7 +24,7 @@ void DxObject::DescriptorHeaps::Init(Devices* devices) {
 	ID3D12Device* device = devices->GetDevice();
 
 	// descriptorの要素数を決定
-	descriptorIndexSize_[RTV] = 2; //!< [DxObject.SwapChain]: kBufferCount
+	descriptorIndexSize_[RTV] = SwapChain::GetBufferCount();
 	descriptorIndexSize_[SRV] = 128;
 	descriptorIndexSize_[DSV] = 1;
 

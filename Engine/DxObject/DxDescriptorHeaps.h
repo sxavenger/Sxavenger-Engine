@@ -38,9 +38,9 @@ namespace DxObject {
 	// DescriptorType enum
 	////////////////////////////////////////////////////////////////////////////////////////////
 	enum DescriptorType {
-		RTV,
-		SRV,
-		DSV,
+		RTV, //!< RenderTargetView
+		SRV, //!< ShaderResourceView
+		DSV, //!< DepthStencilView
 
 		kDescriptorHeapCount
 	};
@@ -151,6 +151,19 @@ namespace DxObject {
 		uint32_t descriptorIndexCount_[DescriptorType::kDescriptorHeapCount];
 
 		std::deque<uint32_t> descriptorVacantIndexs_[DescriptorType::kDescriptorHeapCount]; //!< 動的テクスチャの隙間を埋めるため
+	};
+
+	////////////////////////////////////////////////////////////////////////////////////////////
+	// OffScreenRender class
+	////////////////////////////////////////////////////////////////////////////////////////////
+	class OffScreenRender
+		: public DescriptorHeaps {
+	public:
+
+		//*****************************************************************************************
+		// OffScreenRender用 と 描画用のRTV, SRV
+		// TextureのID3D12Resource*が欲しい
+		//*****************************************************************************************
 	};
 
 }
