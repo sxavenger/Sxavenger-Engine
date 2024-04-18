@@ -43,6 +43,13 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	////////////////////////////////////////////////////////////////////////////////////////////
 	while (MyEngine::ProcessMessage() == 0) {
 
+		MyEngine::GetDxCommon()->BeginOffscreen();
+
+		// offscreen Update
+
+
+		MyEngine::GetDxCommon()->EndOffscreen();
+
 		MyEngine::BeginFrame();
 
 		//=========================================================================================
@@ -85,11 +92,10 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		ImGui::SetCursorPos(topLeft);
 
 		//!< ここのTextureHandleがRTVになればOK!
-		D3D12_GPU_DESCRIPTOR_HANDLE handle = MyEngine::GetTextureHandleGPU("resources/uvChecker.png");
+		D3D12_GPU_DESCRIPTOR_HANDLE handle = MyEngine::GetTextureHandleGPU("offscreen");
 		ImGui::Image((ImTextureID)handle.ptr, finalWndSize);
 
 		ImGui::End();
-		
 
 		//=========================================================================================
 		// 描画処理

@@ -8,6 +8,8 @@
 #include "externals/DirectXTex/DirectXTex.h"
 #include "externals/DirectXTex/d3dx12.h"
 
+#include <DxDescriptorHeaps.h>
+
 // c++
 #include <string>
 #include <unordered_map>
@@ -35,6 +37,10 @@ public:
 	//! @brief コンストラクタ
 	Texture(const std::string& filePath, DirectXCommon* dxCommon) { Load(filePath, dxCommon); }
 
+	//! @brief コンストラクタ
+	//! @brief ダミーテクスチャ用
+	Texture(int32_t width, int32_t height) { CreateDummy(width, height); }
+
 	//! @brief デストラクタ
 	~Texture() { Unload(); }
 
@@ -46,16 +52,24 @@ public:
 	//! @brief テクスチャの解放
 	void Unload();
 
+	void CreateDummy(int32_t width, int32_t height);
+
 	//! @brief テクスチャのGPUハンドルを取得
 	//! 
 	//! @return テクスチャのGPUハンドルを返却
 	const D3D12_GPU_DESCRIPTOR_HANDLE& GetHandle() const { return handleGPU_; }
+
+	const D3D12_CPU_DESCRIPTOR_HANDLE& GetRTVHandleCPU() const { return rtv_.handleCPU; }
+
+	ID3D12Resource* GetResource() const { return textureResource_.Get(); }
 
 private:
 
 	ComPtr<ID3D12Resource>      textureResource_;
 	D3D12_GPU_DESCRIPTOR_HANDLE handleGPU_;
 	uint32_t                    descriptorIndex_;
+
+	DxObject::Descriptor rtv_;
 
 	DirectXCommon* dxCommon_;
 };
@@ -89,9 +103,18 @@ public:
 		return it->second.texture->GetHandle();
 	}
 
+	const Texture* GetTexture(const std::string& key) const {
+		auto it = textures_.find(key);
+		assert(it != textures_.end());
+
+		return it->second.texture.get();
+	}
+
 	void LoadTexture(const std::string& filePath);
 
 	void UnloadTexture(const std::string& filePath);
+
+	void CreateDummyTexture(int32_t width, int32_t height, std::string key);
 
 	static TextureManager* GetInstance();
 
@@ -122,7 +145,7 @@ namespace TextureMethod {
 
 	DirectX::ScratchImage LoadTexture(const std::string& filePath);
 
-	ID3D12Resource* CreateTextureResource(ID3D12Device* device, const DirectX::TexMetadata& metadata);
+	ComPtr<ID3D12Resource> CreateTextureResource(ID3D12Device* device, const DirectX::TexMetadata& metadata);
 
 	[[nodiscard]]
 	ComPtr<ID3D12Resource> UploadTextureData(

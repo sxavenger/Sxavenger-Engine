@@ -9,6 +9,11 @@
 #include <MyEngine.h>
 #include <DirectXCommon.h>
 
+//-----------------------------------------------------------------------------------------
+// using
+//-----------------------------------------------------------------------------------------
+using namespace DxObject;
+
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Texture class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -55,8 +60,81 @@ void Texture::Load(const std::string& filePath, DirectXCommon* dxCommon) {
 }
 
 void Texture::Unload() {
-	textureResource_->Release();
 	dxCommon_->GetDescriptorsObj()->Erase(DxObject::DescriptorType::SRV, descriptorIndex_);
+}
+
+void Texture::CreateDummy(int32_t width, int32_t height) {
+
+	// dxCommonの保存
+	dxCommon_ = MyEngine::GetDxCommon(); // hack:
+
+
+	auto device = dxCommon_->GetDeviceObj()->GetDevice();
+
+	{
+		D3D12_RESOURCE_DESC desc = {};
+		desc.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
+		desc.Width = width;
+		desc.Height = height;
+		desc.MipLevels = 1;
+		desc.Format = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
+		desc.Flags = D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET;
+		desc.SampleDesc.Count = 1;
+		desc.DepthOrArraySize = 1;
+
+		D3D12_HEAP_PROPERTIES prop = {};
+		prop.Type = D3D12_HEAP_TYPE_DEFAULT; // hack: 
+
+		D3D12_CLEAR_VALUE clearValue = {};
+		clearValue.Format = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
+		clearValue.Color[0] = 0.0f;
+		clearValue.Color[1] = 0.0f;
+		clearValue.Color[2] = 0.0f;
+		clearValue.Color[3] = 1.0f;
+
+		device->CreateCommittedResource(
+			&prop,
+			D3D12_HEAP_FLAG_ALLOW_ALL_BUFFERS_AND_TEXTURES,
+			&desc,
+			D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE,
+			&clearValue,
+			IID_PPV_ARGS(&textureResource_)
+		);
+	}
+
+	// SRV - shaderResourceViewの生成
+	{
+		D3D12_SHADER_RESOURCE_VIEW_DESC desc = {};
+		desc.Format = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
+		desc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
+		desc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
+		desc.Texture2D.MipLevels = 1;
+
+		// SRVを生成するDescriptorHeapの場所を決める
+		descriptorIndex_ = dxCommon_->GetDescriptorsObj()->GetDescriptorCurrentIndex(DxObject::DescriptorType::SRV);
+
+		// SRVの生成
+		device->CreateShaderResourceView(
+			textureResource_.Get(),
+			&desc,
+			dxCommon_->GetDescriptorsObj()->GetCPUDescriptorHandle(DxObject::DescriptorType::SRV, descriptorIndex_)
+		);
+
+		handleGPU_ = dxCommon_->GetDescriptorsObj()->GetGPUDescriptorHandle(DxObject::DescriptorType::SRV, descriptorIndex_);
+	}
+
+	// RTV
+	{
+
+		rtv_ = dxCommon_->GetDescriptorsObj()->GetCurrentDescriptor(DescriptorType::RTV);
+
+		device->CreateRenderTargetView(
+			textureResource_.Get(),
+			nullptr,
+			rtv_.handleCPU
+		);
+	}
+
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -80,11 +158,6 @@ void TextureManager::Init(DirectXCommon* dxCommon) {
 }
 
 void TextureManager::Term() {
-
-	for (auto& pair : textures_) {
-		pair.second.texture.reset();
-		pair.second.referenceNum = NULL;
-	}
 
 	textures_.clear();
 	dxCommon_ = nullptr;
@@ -115,6 +188,17 @@ void TextureManager::UnloadTexture(const std::string& filePath) {
 		textures_.erase(filePath);
 	}
 }
+
+void TextureManager::CreateDummyTexture(int32_t width, int32_t height, std::string key) {
+	auto it = textures_.find(key);
+	if (it != textures_.end()) {
+		Log("TextureManager::CreateDummyTexture \n if (it != textures_.end()) { \n return; \n} ");
+		return;
+	}
+
+	textures_[key].texture = std::make_unique<Texture>(width, height);
+}
+
 
 //=========================================================================================
 // static methods
@@ -164,7 +248,7 @@ DirectX::ScratchImage TextureMethod::LoadTexture(const std::string& filePath) {
 	return mipImage;
 }
 
-ID3D12Resource* TextureMethod::CreateTextureResource(ID3D12Device* device, const DirectX::TexMetadata& metadata) {
+ComPtr<ID3D12Resource> TextureMethod::CreateTextureResource(ID3D12Device* device, const DirectX::TexMetadata& metadata) {
 	// デスクの設定
 	D3D12_RESOURCE_DESC desc = {};
 	desc.Width            = UINT(metadata.width);
@@ -180,7 +264,7 @@ ID3D12Resource* TextureMethod::CreateTextureResource(ID3D12Device* device, const
 	prop.Type = D3D12_HEAP_TYPE_DEFAULT;
 
 	// Resourceの生成
-	ID3D12Resource* result = nullptr;
+	ComPtr<ID3D12Resource> result;
 
 	auto hr = device->CreateCommittedResource(
 		&prop,

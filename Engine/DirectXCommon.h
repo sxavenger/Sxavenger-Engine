@@ -48,6 +48,9 @@ public:
 	//! @brief DirectXの終了
 	void Term();
 
+	void BeginOffscreen();
+	void EndOffscreen();
+
 	//! @brief フレームの開始処理
 	void BeginFrame();
 

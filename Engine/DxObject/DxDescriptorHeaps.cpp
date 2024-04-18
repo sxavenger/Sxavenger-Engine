@@ -24,7 +24,7 @@ void DxObject::DescriptorHeaps::Init(Devices* devices) {
 	ID3D12Device* device = devices->GetDevice();
 
 	// descriptorの要素数を決定
-	descriptorIndexSize_[RTV] = SwapChain::GetBufferCount();
+	descriptorIndexSize_[RTV] = 10;
 	descriptorIndexSize_[SRV] = 128;
 	descriptorIndexSize_[DSV] = 1;
 
@@ -129,7 +129,11 @@ DxObject::Descriptor DxObject::DescriptorHeaps::GetCurrentDescriptor(DescriptorT
 
 	result.index = GetDescriptorCurrentIndex(type);
 	result.handleCPU = GetCPUDescriptorHandle(type, result.index);
-	result.handleGPU = GetGPUDescriptorHandle(type, result.index);
+
+	if (type != DescriptorType::RTV) {
+		result.handleGPU = GetGPUDescriptorHandle(type, result.index);
+	}
+
 	result.type = type;
 
 	return result;

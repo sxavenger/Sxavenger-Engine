@@ -3,7 +3,7 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
-
+#include <TextureManager.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // DirectXCommon class
@@ -29,6 +29,7 @@ void DirectXCommon::Init(WinApp* winApp, int32_t clientWidth, int32_t clientHeig
 
 	pipelineManager_ = std::make_unique<DxObject::PipelineManager>(devices_.get(), command_.get(), blendState_.get(), clientWidth, clientHeight);
 
+	
 }
 
 void DirectXCommon::Term() {
@@ -44,6 +45,67 @@ void DirectXCommon::Term() {
 	descriptorHeaps_.reset();
 	command_.reset();
 	devices_.reset();
+}
+
+void DirectXCommon::BeginOffscreen() {
+	
+	
+	// コマンドリストの取得
+	auto commandList = command_->GetCommandList();
+
+	D3D12_RESOURCE_BARRIER barrier = {};
+	barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+	barrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
+	barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
+	barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_RENDER_TARGET;
+	barrier.Transition.pResource = TextureManager::GetInstance()->GetTexture("offscreen")->GetResource();
+
+	commandList->ResourceBarrier(
+		1,
+		&barrier
+	);
+
+	D3D12_CPU_DESCRIPTOR_HANDLE handle_RTV = TextureManager::GetInstance()->GetTexture("offscreen")->GetRTVHandleCPU();
+
+	commandList->OMSetRenderTargets(
+		1,
+		&handle_RTV,
+		false,
+		&depthStencil_->GetHandle()
+	);
+
+	// 画面のクリア
+	float clearColor[] = { 0.0f, 0.0f, 0.0f, 1.0f };
+	commandList->ClearRenderTargetView(
+		handle_RTV,
+		clearColor,
+		0, nullptr
+	);
+
+	// 深度をクリア
+	commandList->ClearDepthStencilView(
+		depthStencil_->GetHandle(),
+		D3D12_CLEAR_FLAG_DEPTH,
+		1.0f,
+		0, 0, nullptr
+	);
+}
+
+void DirectXCommon::EndOffscreen() {
+	// コマンドリストの取得
+	auto commandList = command_->GetCommandList();
+
+	D3D12_RESOURCE_BARRIER barrier = {};
+	barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+	barrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
+	barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_RENDER_TARGET;
+	barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
+	barrier.Transition.pResource = TextureManager::GetInstance()->GetTexture("offscreen")->GetResource();
+
+	commandList->ResourceBarrier(
+		1,
+		&barrier
+	);
 }
 
 void DirectXCommon::BeginFrame() {

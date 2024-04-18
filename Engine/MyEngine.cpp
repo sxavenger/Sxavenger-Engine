@@ -76,6 +76,9 @@ void MyEngine::Initialize(int32_t kWindowWidth, int32_t kWindowHeight, const cha
 		sTextureManager = TextureManager::GetInstance();
 		sTextureManager->Init(sDirectXCommon);
 	}
+
+	TextureManager::GetInstance()->CreateDummyTexture(kWindowWidth, kWindowHeight, "offscreen");
+
 }
 
 void MyEngine::Finalize() {
