@@ -124,6 +124,17 @@ void DxObject::DescriptorHeaps::Erase(DescriptorType type, uint32_t index) {
 	descriptorVacantIndexs_[typeIndex].push_back(index);
 }
 
+DxObject::Descriptor DxObject::DescriptorHeaps::GetCurrentDescriptor(DescriptorType type) {
+	Descriptor result;
+
+	result.index = GetDescriptorCurrentIndex(type);
+	result.handleCPU = GetCPUDescriptorHandle(type, result.index);
+	result.handleGPU = GetGPUDescriptorHandle(type, result.index);
+	result.type = type;
+
+	return result;
+}
+
 void DxObject::DescriptorHeaps::Debug() {
 	ImGui::Begin("[DxObject]:DescriptorHeaps - debacker");
 

@@ -82,8 +82,8 @@ public:
 	//! @brief 終了処理
 	void Term();
 
-	const D3D12_GPU_DESCRIPTOR_HANDLE& GetHandleGPU(const std::string& key) const {
-		auto it = textures_.find(key);
+	const D3D12_GPU_DESCRIPTOR_HANDLE& GetHandleGPU(const std::string& filePath) const {
+		auto it = textures_.find(filePath);
 		assert(it != textures_.end());
 
 		return it->second.texture->GetHandle();
