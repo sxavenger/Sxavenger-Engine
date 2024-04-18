@@ -99,8 +99,11 @@ void MyEngine::Finalize() {
 
 void MyEngine::BeginFrame() {
 	ExecutionSpeed::Begin();
-	sDirectXCommon->BeginFrame();
 	sImGuiManager->Begin();
+}
+
+void MyEngine::TEST_Draw() {
+	sDirectXCommon->BeginFrame();
 }
 
 void MyEngine::EndFrame() {

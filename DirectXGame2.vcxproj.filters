@@ -97,6 +97,9 @@
     <Filter Include="Engine\DxrObject\source">
       <UniqueIdentifier>{d4e808f0-59d0-4f07-bc11-d0e972703443}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Game">
+      <UniqueIdentifier>{7b9b6874-d5f0-4a58-83d4-1b0e8b12f30a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
@@ -249,6 +252,9 @@
     </ClCompile>
     <ClCompile Include="Engine\DxrObject\DxrObjectMethods.cpp">
       <Filter>Engine\DxrObject\source</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Floor\Floor.cpp">
+      <Filter>Game</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -413,6 +419,9 @@
     </ClInclude>
     <ClInclude Include="Engine\DxrObject\DxrObjectMethods.h">
       <Filter>Engine\DxrObject\include</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Floor\Floor.h">
+      <Filter>Game</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

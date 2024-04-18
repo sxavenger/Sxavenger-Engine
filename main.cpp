@@ -25,6 +25,9 @@
 //
 #include "externals/imgui/imgui_internal.h"
 
+// Game
+#include "Game/Floor/Floor.h"
+
 ////////////////////////////////////////////////////////////////////////////////////////////
 // メイン関数
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -35,6 +38,11 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	//=========================================================================================
 	MyEngine::Initialize(kWindowWidth, kWindowHeight, kWindowTitle);
 
+	Floor* floor = new Floor();
+	
+	std::unique_ptr<Camera3D> camera = std::make_unique<Camera3D>();
+	MyEngine::camera3D_ = camera.get();
+
 	/// Console class にまとめる
 	static bool isOpenWindow = true;
 
@@ -42,13 +50,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	// メインループ
 	////////////////////////////////////////////////////////////////////////////////////////////
 	while (MyEngine::ProcessMessage() == 0) {
-
-		MyEngine::GetDxCommon()->BeginOffscreen();
-
-		// offscreen Update
-
-
-		MyEngine::GetDxCommon()->EndOffscreen();
 
 		MyEngine::BeginFrame();
 
@@ -61,7 +62,11 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		ImGui::Text("FPS: %.1f", 1.0f / ExecutionSpeed::freamsParSec_);
 		ImGui::End();
 
+		camera->UpdateImGui();
+
 		ImGui::Begin("game");
+		floor->SetOnImGui();
+	
 		ImGui::End();
 
 		// コンソール
@@ -97,6 +102,18 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 		ImGui::End();
 
+
+		floor->Update();
+
+		MyEngine::GetDxCommon()->BeginOffscreen();
+
+		// offscreen Update
+		floor->Draw();
+
+		MyEngine::GetDxCommon()->EndOffscreen();
+
+		MyEngine::TEST_Draw();
+
 		//=========================================================================================
 		// 描画処理
 		//=========================================================================================
@@ -113,6 +130,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 	}
 
+	delete floor;
 	MyEngine::Finalize();
 	
 	return 0;

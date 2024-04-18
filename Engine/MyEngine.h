@@ -48,6 +48,8 @@ public:
 	//! @brief フレームの開始
 	static void BeginFrame();
 
+	static void TEST_Draw();
+
 	//! @brief フレームの終了
 	static void EndFrame();
 
