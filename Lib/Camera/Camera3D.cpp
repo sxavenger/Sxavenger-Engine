@@ -13,6 +13,8 @@
 // Adapter
 #include <Json.h>
 
+#include "Console.h"
+
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Camera3D method
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -32,6 +34,10 @@ Camera3D::~Camera3D() { Term(); }
 void Camera3D::Init() {
 	SetCamera(unitVector, origin, {0.0f, 0.0f, -10.0f});
 	SetProjection(0.45f, static_cast<float>(kWindowWidth) / static_cast<float>(kWindowHeight), 0.1f, 100.0f);
+
+	// Hierarchy
+	name_ = "camera";
+	Console::GetInstance()->SetHierarchy(this);
 }
 
 void Camera3D::Term() {
@@ -154,6 +160,14 @@ void Camera3D::WriteJsonCameraData(const std::string& filePath) {
 	parameter["transform"]["translate"]["z"] = camera_.translate.z;
 
 	JsonAdapter::OverwriteJson(filePath, parameter);
+}
+
+void Camera3D::SetHierarchyImGui() {
+	ImGui::DragFloat3("scale", &camera_.scale.x, 0.01f);
+	ImGui::DragFloat3("rotate", &camera_.rotate.x, 0.01f);
+	ImGui::DragFloat3("translate", &camera_.translate.x, 0.01f);
+
+	RecalculateCamera();
 }
 
 void Camera3D::RecalculateCamera() {

@@ -4,21 +4,26 @@
 // include
 //-----------------------------------------------------------------------------------------
 #include "MyEngine.h"
+#include "Console.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Floor class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 void Floor::Init() {
-	
+
+	// hierarcy base object
+	name_ = "Floor";
+	Console::GetInstance()->SetHierarchy(this);
+
 	// vertices
-	vertices_[LEFTBOTTOM].position    = { -floorSize_.x / 2.0f, 0.0f, -floorSize_.y / 2.0f };
-	vertices_[LEFTTOP].position       = { -floorSize_.x / 2.0f, 0.0f, floorSize_.y / 2.0f };
-	vertices_[RIGHTTOP].position      = { floorSize_.x / 2.0f, 0.0f, floorSize_.y / 2.0f };
-	vertices_[RIGHTBOTTOM].position   = { floorSize_.x / 2.0f, 0.0f, -floorSize_.y / 2.0f };
-	
+	vertices_[LEFTBOTTOM].position = { -floorSize_.x / 2.0f, 0.0f, -floorSize_.y / 2.0f };
+	vertices_[LEFTTOP].position = { -floorSize_.x / 2.0f, 0.0f, floorSize_.y / 2.0f };
+	vertices_[RIGHTTOP].position = { floorSize_.x / 2.0f, 0.0f, floorSize_.y / 2.0f };
+	vertices_[RIGHTBOTTOM].position = { floorSize_.x / 2.0f, 0.0f, -floorSize_.y / 2.0f };
+
 	for (uint32_t i = 0; i < kCountOfVertexType; ++i) {
-		vertices_[i].normal   = { 0.0f, 1.0f, 0.0f };
+		vertices_[i].normal = { 0.0f, 1.0f, 0.0f };
 		vertices_[i].texcoord = { vertices_[i].position.x * tileScale, vertices_[i].position.z * tileScale };
 	}
 
@@ -84,7 +89,7 @@ void Floor::Draw() {
 	ID3D12GraphicsCommandList* commandList = MyEngine::GetCommandList();
 
 	D3D12_VERTEX_BUFFER_VIEW vertexBufferView = vertexResource_->GetVertexBufferView();
-	D3D12_INDEX_BUFFER_VIEW indexBufferView   = indexResource_->GetIndexBufferView();
+	D3D12_INDEX_BUFFER_VIEW indexBufferView = indexResource_->GetIndexBufferView();
 
 	commandList->IASetVertexBuffers(0, 1, &vertexBufferView);
 	commandList->IASetIndexBuffer(&indexBufferView);
@@ -114,6 +119,16 @@ void Floor::SetOnImGui() {
 
 		ImGui::TreePop();
 	}
+
+	Update();
+}
+
+void Floor::SetHierarchyImGui() {
+	ImGui::DragFloat2("size", &floorSize_.x, 0.01f);
+	ImGui::DragFloat("tileScale", &tileScale, 0.01f, 0.0f, 1000.0f);
+
+	ImGui::DragFloat3("translate", &transform_.translate.x, 0.1f);
+
 
 	Update();
 }

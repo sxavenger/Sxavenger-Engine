@@ -8,6 +8,8 @@
 #include "Environment.h"
 #include "ExecutionSpeed.h"
 
+#include <Hierarchy.h>
+
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Console class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -26,12 +28,14 @@ void Console::Init() {
 }
 
 void Console::Term() {
+	logDatas_.clear();
 }
 
 void Console::Update() {
 	OutputConsole();
 	OutputLog();
 	OutputSpeed();
+	OutputHierarchy();
 }
 
 void Console::SetLog(const std::string& log, const Vector4f& color) {
@@ -110,6 +114,35 @@ void Console::OutputSpeed() {
 	ImGui::Text("speed(s): %.6f", ExecutionSpeed::freamsParSec_);
 	ImGui::Text("FPS: %.1f", 1.0f / ExecutionSpeed::freamsParSec_);
 
+	ImGui::End();
+}
+
+void Console::OutputHierarchy() {
+	// Inspectorの選択window
+	static bool isOpenWindow = true;
+	ImGui::Begin("Hierarchy", &isOpenWindow, ImGuiWindowFlags_NoCollapse);
+
+	// TODO: 重複参照対策
+
+	
+	for (const auto& object : hierarchys_) {
+		bool isSelect = (object == selectedHierarchy_);
+
+		std::string name = object->GetName();
+
+		if (ImGui::Selectable(name.c_str(), isSelect)) {
+			selectedHierarchy_ = object;
+		}
+	}
+
+	ImGui::End();
+
+	// inspector
+	ImGui::Begin("Inspector", &isOpenWindow, ImGuiWindowFlags_NoCollapse);
+	if (selectedHierarchy_ != nullptr) {
+		ImGui::TextColored({1.0f, 1.0f, 1.0f, 1.0f}, selectedHierarchy_->GetName().c_str());
+		selectedHierarchy_->SetHierarchyImGui();
+	}
 	ImGui::End();
 }
 

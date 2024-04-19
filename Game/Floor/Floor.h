@@ -14,10 +14,13 @@
 
 #include <Model.h>
 
+#include <Hierarchy.h>
+
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Floor class
 ////////////////////////////////////////////////////////////////////////////////////////////
-class Floor {
+class Floor
+	: public Hierarchy {
 public:
 
 	//=========================================================================================
@@ -39,6 +42,8 @@ public:
 	void Term();
 
 	void SetOnImGui();
+
+	void SetHierarchyImGui() override;
 
 private:
 

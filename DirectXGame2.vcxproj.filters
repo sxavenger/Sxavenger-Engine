@@ -259,6 +259,9 @@
     <ClCompile Include="Engine\Console.cpp">
       <Filter>Engine\source</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\Hierarchy.cpp">
+      <Filter>Engine\source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\MyEngine.h">
@@ -427,6 +430,9 @@
       <Filter>Game</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Console.h">
+      <Filter>Engine\include</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Hierarchy.h">
       <Filter>Engine\include</Filter>
     </ClInclude>
   </ItemGroup>

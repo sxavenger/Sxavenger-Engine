@@ -58,15 +58,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		// 更新処理
 		//=========================================================================================
 
-		
-
-		camera->UpdateImGui();
-
-		ImGui::Begin("game");
-		floor->SetOnImGui();
-	
-		ImGui::End();
-
 		static int frame = 0;
 		++frame;
 
@@ -75,7 +66,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		}
 
 		Console::GetInstance()->Update();
-
 
 		floor->Update();
 
