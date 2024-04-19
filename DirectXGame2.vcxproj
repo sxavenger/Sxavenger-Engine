@@ -92,6 +92,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Engine\Console.cpp" />
     <ClCompile Include="Engine\DirectXCommon.cpp" />
     <ClCompile Include="Engine\DxObject\DxBlendState.cpp" />
     <ClCompile Include="Engine\DxObject\DxBufferResource.cpp" />
@@ -149,6 +150,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\ComPtr.h" />
+    <ClInclude Include="Engine\Console.h" />
     <ClInclude Include="Engine\DirectXCommon.h" />
     <ClInclude Include="Engine\DxObject\DxBlendState.h" />
     <ClInclude Include="Engine\DxObject\DxBufferResource.h" />

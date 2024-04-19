@@ -1,9 +1,11 @@
 #include <MyEngine.h> // sxavenger engine
-#include <DirectXCommon.h>
+#include "DirectXCommon.h"
 
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
+// Console
+#include <Console.h>
 /// lib
 #include <Environment.h>
 #include <ExecutionSpeed.h>
@@ -43,8 +45,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	std::unique_ptr<Camera3D> camera = std::make_unique<Camera3D>();
 	MyEngine::camera3D_ = camera.get();
 
-	/// Console class にまとめる
-	static bool isOpenWindow = true;
+	Console::GetInstance()->Init();
 
 	////////////////////////////////////////////////////////////////////////////////////////////
 	// メインループ
@@ -57,10 +58,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		// 更新処理
 		//=========================================================================================
 
-		ImGui::Begin("system");
-		ImGui::Text("speed(s): %.6f", ExecutionSpeed::freamsParSec_);
-		ImGui::Text("FPS: %.1f", 1.0f / ExecutionSpeed::freamsParSec_);
-		ImGui::End();
+		
 
 		camera->UpdateImGui();
 
@@ -69,64 +67,35 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	
 		ImGui::End();
 
-		// コンソール
-		ImGui::Begin("console", &isOpenWindow, ImGuiWindowFlags_NoCollapse);
+		static int frame = 0;
+		++frame;
 
-		//タブ等を除いたウィンドウのサイズを取得(計算)
-		ImVec2 cntRegionMax = ImGui::GetWindowContentRegionMax();
-		ImVec2 cntRegionMin = ImGui::GetWindowContentRegionMin();
-		ImVec2 wndSize = { cntRegionMax.x - cntRegionMin.x, cntRegionMax.y - cntRegionMin.y };
-
-		//元のアス比とImGuiウィンドウのアス比を比較
-		float outerWindowAspectRatio = static_cast<float>(kWindowWidth) / static_cast<float>(kWindowHeight);
-		float innerWindowAspectRatio = wndSize.x / wndSize.y;
-		ImVec2 finalWndSize = wndSize;
-
-		//横幅が大きかったら縦基準で画像サイズを決定
-		if (outerWindowAspectRatio <= innerWindowAspectRatio) {
-			finalWndSize.x *= outerWindowAspectRatio / innerWindowAspectRatio;
-		}
-		//縦幅が大きかったら横基準で画像サイズを決定
-		else {
-			finalWndSize.y *= innerWindowAspectRatio / outerWindowAspectRatio;
+		if (frame % 60 == 0) {
+			Console::GetInstance()->SetLog(std::format("[debug] frame: {}, speed: {}", frame / 60, ExecutionSpeed::freamsParSec_), {0.0f, 0.5f, 0.0f, 1.0f});
 		}
 
-		//画像を中央に持ってくる
-		ImVec2 topLeft = { (wndSize.x - finalWndSize.x) * 0.5f + cntRegionMin.x,
-							(wndSize.y - finalWndSize.y) * 0.5f + cntRegionMin.y };
-		ImGui::SetCursorPos(topLeft);
-
-		//!< ここのTextureHandleがRTVになればOK!
-		D3D12_GPU_DESCRIPTOR_HANDLE handle = MyEngine::GetTextureHandleGPU("offscreen");
-		ImGui::Image((ImTextureID)handle.ptr, finalWndSize);
-
-		ImGui::End();
+		Console::GetInstance()->Update();
 
 
 		floor->Update();
 
-		MyEngine::GetDxCommon()->BeginOffscreen();
-
-		// offscreen Update
-		floor->Draw();
-
-		MyEngine::GetDxCommon()->EndOffscreen();
-
-		MyEngine::TEST_Draw();
+		MyEngine::BeginOffScreen();
 
 		//=========================================================================================
-		// 描画処理
+		// オフスクリーン描画処理
+		//=========================================================================================
+		
+		floor->Draw();
+
+		MyEngine::EndOffScreen();
+
+		MyEngine::BeginDraw();
+
+		//=========================================================================================
+		// スクリーン描画処理
 		//=========================================================================================
 		
 		MyEngine::EndFrame();
-
-		//*****************************************************************************************
-		// 今の BeginFrame ~ EndFrame を offscreenの書き込みコマンドにする。
-		// その後EndFrameでRenderTargetViewのTextureを生成. メモリ上でいい感じにTextureにする
-		// 詳細 >>
-		// 
-		// 最後にRTVのTextureをScreenに描画して1frame終了
-		//*****************************************************************************************
 
 	}
 

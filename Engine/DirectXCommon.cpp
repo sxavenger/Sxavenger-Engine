@@ -75,7 +75,7 @@ void DirectXCommon::BeginOffscreen() {
 	);
 
 	// 画面のクリア
-	float clearColor[] = { 0.0f, 0.0f, 0.0f, 1.0f };
+	float clearColor[] = { 0.1f, 0.25f, 0.5f, 1.0f };
 	commandList->ClearRenderTargetView(
 		handle_RTV,
 		clearColor,
@@ -96,11 +96,11 @@ void DirectXCommon::EndOffscreen() {
 	auto commandList = command_->GetCommandList();
 
 	D3D12_RESOURCE_BARRIER barrier = {};
-	barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
-	barrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
+	barrier.Type                   = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+	barrier.Flags                  = D3D12_RESOURCE_BARRIER_FLAG_NONE;
 	barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_RENDER_TARGET;
-	barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
-	barrier.Transition.pResource = TextureManager::GetInstance()->GetTexture("offscreen")->GetResource();
+	barrier.Transition.StateAfter  = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
+	barrier.Transition.pResource   = TextureManager::GetInstance()->GetTexture("offscreen")->GetResource();
 
 	commandList->ResourceBarrier(
 		1,

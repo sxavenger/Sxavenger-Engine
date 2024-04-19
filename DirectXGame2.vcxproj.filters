@@ -256,6 +256,9 @@
     <ClCompile Include="Game\Floor\Floor.cpp">
       <Filter>Game</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\Console.cpp">
+      <Filter>Engine\source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\MyEngine.h">
@@ -422,6 +425,9 @@
     </ClInclude>
     <ClInclude Include="Game\Floor\Floor.h">
       <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Console.h">
+      <Filter>Engine\include</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

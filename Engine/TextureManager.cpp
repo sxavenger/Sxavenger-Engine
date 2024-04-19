@@ -87,9 +87,9 @@ void Texture::CreateDummy(int32_t width, int32_t height) {
 
 		D3D12_CLEAR_VALUE clearValue = {};
 		clearValue.Format = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
-		clearValue.Color[0] = 0.0f;
-		clearValue.Color[1] = 0.0f;
-		clearValue.Color[2] = 0.0f;
+		clearValue.Color[0] = 0.1f;
+		clearValue.Color[1] = 0.25f;
+		clearValue.Color[2] = 0.5f;
 		clearValue.Color[3] = 1.0f;
 
 		device->CreateCommittedResource(

@@ -102,8 +102,16 @@ void MyEngine::BeginFrame() {
 	sImGuiManager->Begin();
 }
 
-void MyEngine::TEST_Draw() {
+void MyEngine::BeginDraw() {
 	sDirectXCommon->BeginFrame();
+}
+
+void MyEngine::BeginOffScreen() {
+	sDirectXCommon->BeginOffscreen();
+}
+
+void MyEngine::EndOffScreen() {
+	sDirectXCommon->EndOffscreen();
 }
 
 void MyEngine::EndFrame() {

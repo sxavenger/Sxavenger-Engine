@@ -48,10 +48,14 @@ public:
 	//! @brief フレームの開始
 	static void BeginFrame();
 
-	static void TEST_Draw();
-
 	//! @brief フレームの終了
 	static void EndFrame();
+
+	static void BeginDraw();
+
+	static void BeginOffScreen();
+
+	static void EndOffScreen();
 
 	//! @brief プロセスメッセージを取得
 	//! 
