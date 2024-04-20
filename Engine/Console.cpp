@@ -32,9 +32,10 @@ void Console::Term() {
 }
 
 void Console::Update() {
+	ImGui::ShowDemoWindow();
 	OutputConsole();
 	OutputLog();
-	OutputSpeed();
+	OutputPerformance();
 	OutputHierarchy();
 }
 
@@ -107,11 +108,12 @@ void Console::OutputLog() {
 	ImGui::End();
 }
 
-void Console::OutputSpeed() {
+void Console::OutputPerformance() {
 	static bool isOpenWindow = true;
-	ImGui::Begin("Speed", &isOpenWindow);
+	ImGui::Begin("Performance", &isOpenWindow, ImGuiWindowFlags_NoTitleBar);
 
-	ImGui::Text("speed(s): %.6f", ExecutionSpeed::freamsParSec_);
+	ImGui::Text("exec speed / frame: %.6f", ExecutionSpeed::freamsParSec_);
+	ImGui::SameLine();
 	ImGui::Text("FPS: %.1f", 1.0f / ExecutionSpeed::freamsParSec_);
 
 	ImGui::End();
