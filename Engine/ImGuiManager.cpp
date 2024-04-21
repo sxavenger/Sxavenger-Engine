@@ -42,10 +42,14 @@ void ImGuiManager::Init(WinApp* winApp, DirectXCommon* dxCommon) {
 
 	// imguiの設定
 	ImGuiIO& io = ImGui::GetIO();
-	(void)io;
-
-	io.ConfigFlags |= ImGuiConfigFlags_::ImGuiConfigFlags_DockingEnable;
+	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 	// imgui dockingブランチを参照...
+
+	// imguiデザイン設定
+	ImGuiStyle& style = ImGui::GetStyle();
+	style.ScrollbarRounding = 0;
+	style.DockingSeparatorSize = 0;
+	style.TabRounding = 0;
 
 }
 

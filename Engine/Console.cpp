@@ -124,8 +124,7 @@ void Console::OutputHierarchy() {
 	static bool isOpenWindow = true;
 	ImGui::Begin("Hierarchy", &isOpenWindow, ImGuiWindowFlags_NoCollapse);
 
-	// TODO: 重複参照対策
-
+	// TODO: 名前の重複参照の対策
 	
 	for (const auto& object : hierarchys_) {
 		bool isSelect = (object == selectedHierarchy_);
