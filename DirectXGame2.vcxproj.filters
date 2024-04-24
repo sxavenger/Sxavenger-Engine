@@ -259,7 +259,7 @@
     <ClCompile Include="Engine\Console.cpp">
       <Filter>Engine\source</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Hierarchy.cpp">
+    <ClCompile Include="Engine\Outliner.cpp">
       <Filter>Engine\source</Filter>
     </ClCompile>
   </ItemGroup>
@@ -432,7 +432,7 @@
     <ClInclude Include="Engine\Console.h">
       <Filter>Engine\include</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Hierarchy.h">
+    <ClInclude Include="Engine\Outliner.h">
       <Filter>Engine\include</Filter>
     </ClInclude>
   </ItemGroup>

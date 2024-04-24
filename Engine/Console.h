@@ -14,7 +14,7 @@
 //-----------------------------------------------------------------------------------------
 // forward
 //-----------------------------------------------------------------------------------------
-class Hierarchy;
+class Outliner;
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Console class
@@ -44,8 +44,8 @@ public:
 	//! @param[in] color 文字の色
 	void SetLog(const std::string& log, const Vector4f& color = {1.0f, 1.0f, 1.0f, 1.0f});
 
-	void SetHierarchy(Hierarchy* obj) {
-		hierarchys_.push_back(obj);
+	void SetOutliner(Outliner* obj) {
+		Outliners_.push_back(obj);
 	}
 
 private:
@@ -70,9 +70,9 @@ private:
 	static const int32_t kMaxLogData_ = 10;
 	std::deque<LogData> logDatas_;
 
-	// hierarchys
-	std::list<Hierarchy*> hierarchys_;
-	Hierarchy* selectedHierarchy_;
+	// Outliners
+	std::list<Outliner*> Outliners_;
+	Outliner* selectedOutliner_;
 
 	//=========================================================================================
 	// private methods
@@ -81,9 +81,9 @@ private:
 	//! @brief 終了処理
 	void Term();
 
-	void OutputConsole();
+	void OutputScene();
 	void OutputLog();
 	void OutputPerformance();
-	void OutputHierarchy();
+	void OutputOutliner();
 
 };

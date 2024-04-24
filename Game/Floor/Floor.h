@@ -14,13 +14,13 @@
 
 #include <Model.h>
 
-#include <Hierarchy.h>
+#include <Outliner.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Floor class
 ////////////////////////////////////////////////////////////////////////////////////////////
 class Floor
-	: public Hierarchy {
+	: public Outliner {
 public:
 
 	//=========================================================================================
@@ -43,7 +43,7 @@ public:
 
 	void SetOnImGui();
 
-	void SetHierarchyImGui() override;
+	void SetOutlinerImGui() override;
 
 private:
 

@@ -7,17 +7,17 @@
 #include <string>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// Hierarchy base class
+// Outliner base class
 ////////////////////////////////////////////////////////////////////////////////////////////
-class Hierarchy {
+class Outliner {
 public:
 
 	//=========================================================================================
 	// public methods
 	//=========================================================================================
 
-	//! @brief ヒエラルキーで選択された際のImGui更新処理
-	virtual void SetHierarchyImGui() = 0;
+	//! @brief Outlinerで選択された際のImGui更新処理
+	virtual void SetOutlinerImGui() = 0;
 
 	const std::string& GetName() const { return name_; }
 

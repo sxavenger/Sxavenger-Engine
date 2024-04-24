@@ -4132,7 +4132,7 @@ bool ImGui::IsItemHovered(ImGuiHoveredFlags flags)
         if (flags & ImGuiHoveredFlags_ForTooltip)
             flags = ApplyHoverFlagsForTooltip(flags, g.Style.HoverFlagsForTooltipMouse);
 
-        IM_ASSERT((flags & (ImGuiHoveredFlags_AnyWindow | ImGuiHoveredFlags_RootWindow | ImGuiHoveredFlags_ChildWindows | ImGuiHoveredFlags_NoPopupHierarchy | ImGuiHoveredFlags_DockHierarchy)) == 0);   // Flags not supported by this function
+        IM_ASSERT((flags & (ImGuiHoveredFlags_AnyWindow | ImGuiHoveredFlags_RootWindow | ImGuiHoveredFlags_ChildWindows | ImGuiHoveredFlags_NoPopupOutliner | ImGuiHoveredFlags_DockOutliner)) == 0);   // Flags not supported by this function
 
         // Done with rectangle culling so we can perform heavier checks now
         // Test if we are hovering the right window (our window could be behind another window)
@@ -4500,8 +4500,8 @@ void ImGui::StartMouseMovingWindowOrNode(ImGuiWindow* window, ImGuiDockNode* nod
     if (undock && node != NULL && node->VisibleWindow && (node->VisibleWindow->Flags & ImGuiWindowFlags_NoMove) == 0 && (node->MergedFlags & ImGuiDockNodeFlags_NoUndocking) == 0)
     {
         // Can undock if:
-        // - part of a hierarchy with more than one visible node (if only one is visible, we'll just move the root window)
-        // - part of a dockspace node hierarchy: so we can undock the last single visible node too (trivia: undocking from a fixed/central node will create a new node and copy windows)
+        // - part of a Outliner with more than one visible node (if only one is visible, we'll just move the root window)
+        // - part of a dockspace node Outliner: so we can undock the last single visible node too (trivia: undocking from a fixed/central node will create a new node and copy windows)
         ImGuiDockNode* root_node = DockNodeGetRootNode(node);
         if (root_node->OnlyNodeWithWindows != node || root_node->CentralNode != NULL)   // -V1051 PVS-Studio thinks node should be root_node and is wrong about that.
             can_undock_node = true;
@@ -7999,24 +7999,24 @@ void ImGui::PopTextWrapPos()
     window->DC.TextWrapPosStack.pop_back();
 }
 
-static ImGuiWindow* GetCombinedRootWindow(ImGuiWindow* window, bool popup_hierarchy, bool dock_hierarchy)
+static ImGuiWindow* GetCombinedRootWindow(ImGuiWindow* window, bool popup_Outliner, bool dock_Outliner)
 {
     ImGuiWindow* last_window = NULL;
     while (last_window != window)
     {
         last_window = window;
         window = window->RootWindow;
-        if (popup_hierarchy)
+        if (popup_Outliner)
             window = window->RootWindowPopupTree;
-		if (dock_hierarchy)
+		if (dock_Outliner)
 			window = window->RootWindowDockTree;
 	}
     return window;
 }
 
-bool ImGui::IsWindowChildOf(ImGuiWindow* window, ImGuiWindow* potential_parent, bool popup_hierarchy, bool dock_hierarchy)
+bool ImGui::IsWindowChildOf(ImGuiWindow* window, ImGuiWindow* potential_parent, bool popup_Outliner, bool dock_Outliner)
 {
-    ImGuiWindow* window_root = GetCombinedRootWindow(window, popup_hierarchy, dock_hierarchy);
+    ImGuiWindow* window_root = GetCombinedRootWindow(window, popup_Outliner, dock_Outliner);
     if (window_root == potential_parent)
         return true;
     while (window != NULL)
@@ -8080,14 +8080,14 @@ bool ImGui::IsWindowHovered(ImGuiHoveredFlags flags)
     if ((flags & ImGuiHoveredFlags_AnyWindow) == 0)
     {
         IM_ASSERT(cur_window); // Not inside a Begin()/End()
-        const bool popup_hierarchy = (flags & ImGuiHoveredFlags_NoPopupHierarchy) == 0;
-        const bool dock_hierarchy = (flags & ImGuiHoveredFlags_DockHierarchy) != 0;
+        const bool popup_Outliner = (flags & ImGuiHoveredFlags_NoPopupOutliner) == 0;
+        const bool dock_Outliner = (flags & ImGuiHoveredFlags_DockOutliner) != 0;
         if (flags & ImGuiHoveredFlags_RootWindow)
-            cur_window = GetCombinedRootWindow(cur_window, popup_hierarchy, dock_hierarchy);
+            cur_window = GetCombinedRootWindow(cur_window, popup_Outliner, dock_Outliner);
 
         bool result;
         if (flags & ImGuiHoveredFlags_ChildWindows)
-            result = IsWindowChildOf(ref_window, cur_window, popup_hierarchy, dock_hierarchy);
+            result = IsWindowChildOf(ref_window, cur_window, popup_Outliner, dock_Outliner);
         else
             result = (ref_window == cur_window);
         if (!result)
@@ -8103,7 +8103,7 @@ bool ImGui::IsWindowHovered(ImGuiHoveredFlags flags)
     // When changing hovered window we requires a bit of stationary delay before activating hover timer.
     // FIXME: We don't support delay other than stationary one for now, other delay would need a way
     // to fullfill the possibility that multiple IsWindowHovered() with varying flag could return true
-    // for different windows of the hierarchy. Possibly need a Hash(Current+Flags) ==> (Timer) cache.
+    // for different windows of the Outliner. Possibly need a Hash(Current+Flags) ==> (Timer) cache.
     // We can implement this for _Stationary because the data is linked to HoveredWindow rather than CurrentWindow.
     if (flags & ImGuiHoveredFlags_ForTooltip)
         flags = ApplyHoverFlagsForTooltip(flags, g.Style.HoverFlagsForTooltipMouse);
@@ -8125,13 +8125,13 @@ bool ImGui::IsWindowFocused(ImGuiFocusedFlags flags)
         return true;
 
     IM_ASSERT(cur_window); // Not inside a Begin()/End()
-    const bool popup_hierarchy = (flags & ImGuiFocusedFlags_NoPopupHierarchy) == 0;
-    const bool dock_hierarchy = (flags & ImGuiFocusedFlags_DockHierarchy) != 0;
+    const bool popup_Outliner = (flags & ImGuiFocusedFlags_NoPopupOutliner) == 0;
+    const bool dock_Outliner = (flags & ImGuiFocusedFlags_DockOutliner) != 0;
     if (flags & ImGuiHoveredFlags_RootWindow)
-        cur_window = GetCombinedRootWindow(cur_window, popup_hierarchy, dock_hierarchy);
+        cur_window = GetCombinedRootWindow(cur_window, popup_Outliner, dock_Outliner);
 
     if (flags & ImGuiHoveredFlags_ChildWindows)
-        return IsWindowChildOf(ref_window, cur_window, popup_hierarchy, dock_hierarchy);
+        return IsWindowChildOf(ref_window, cur_window, popup_Outliner, dock_Outliner);
     else
         return (ref_window == cur_window);
 }
@@ -9694,7 +9694,7 @@ static void LockWheelingWindow(ImGuiWindow* window, float wheel_amount)
 
 static ImGuiWindow* FindBestWheelingWindow(const ImVec2& wheel)
 {
-    // For each axis, find window in the hierarchy that may want to use scrolling
+    // For each axis, find window in the Outliner that may want to use scrolling
     ImGuiContext& g = *GImGui;
     ImGuiWindow* windows[2] = { NULL, NULL };
     for (int axis = 0; axis < 2; axis++)
@@ -11444,7 +11444,7 @@ void ImGui::OpenPopup(ImGuiID id, ImGuiPopupFlags popup_flags)
 // Mark popup as open (toggle toward open state).
 // Popups are closed when user click outside, or activate a pressable item, or CloseCurrentPopup() is called within a BeginPopup()/EndPopup() block.
 // Popup identifiers are relative to the current ID-stack (so OpenPopup and BeginPopup needs to be at the same level).
-// One open popup per level of the popup hierarchy (NB: when assigning we reset the Window member of ImGuiPopupRef to NULL)
+// One open popup per level of the popup Outliner (NB: when assigning we reset the Window member of ImGuiPopupRef to NULL)
 void ImGui::OpenPopupEx(ImGuiID id, ImGuiPopupFlags popup_flags)
 {
     ImGuiContext& g = *GImGui;
@@ -16798,7 +16798,7 @@ static void ImGui::DockNodeUpdateForRootNode(ImGuiDockNode* node)
     DockNodeUpdateFlagsAndCollapse(node);
 
     // - Setup central node pointers
-    // - Find if there's only a single visible window in the hierarchy (in which case we need to display a regular title bar -> FIXME-DOCK: that last part is not done yet!)
+    // - Find if there's only a single visible window in the Outliner (in which case we need to display a regular title bar -> FIXME-DOCK: that last part is not done yet!)
     // Cannot merge this with DockNodeUpdateFlagsAndCollapse() because FirstNodeWithWindows is found after window removal and child collapsing
     ImGuiDockNodeTreeInfo info;
     DockNodeFindInfo(node, &info);
@@ -17236,7 +17236,7 @@ void ImGui::DockNodeEndAmendTabBar()
 
 static bool IsDockNodeTitleBarHighlighted(ImGuiDockNode* node, ImGuiDockNode* root_node)
 {
-    // CTRL+Tab highlight (only highlighting leaf node, not whole hierarchy)
+    // CTRL+Tab highlight (only highlighting leaf node, not whole Outliner)
     ImGuiContext& g = *GImGui;
     if (g.NavWindowingTarget)
         return (g.NavWindowingTarget->DockNode == node);
@@ -18030,7 +18030,7 @@ void ImGui::DockNodeTreeMerge(ImGuiContext* ctx, ImGuiDockNode* parent_node, ImG
     }
 }
 
-// Update Pos/Size for a node hierarchy (don't affect child Windows yet)
+// Update Pos/Size for a node Outliner (don't affect child Windows yet)
 // (Depth-first, Pre-Order)
 void ImGui::DockNodeTreeUpdatePosSize(ImGuiDockNode* node, ImVec2 pos, ImVec2 size, ImGuiDockNode* only_write_to_single_node)
 {
@@ -18052,8 +18052,8 @@ void ImGui::DockNodeTreeUpdatePosSize(ImGuiDockNode* node, ImVec2 pos, ImVec2 si
     ImVec2 child_0_pos = pos, child_1_pos = pos;
     ImVec2 child_0_size = size, child_1_size = size;
 
-    const bool child_0_is_toward_single_node = (only_write_to_single_node != NULL && DockNodeIsInHierarchyOf(only_write_to_single_node, child_0));
-    const bool child_1_is_toward_single_node = (only_write_to_single_node != NULL && DockNodeIsInHierarchyOf(only_write_to_single_node, child_1));
+    const bool child_0_is_toward_single_node = (only_write_to_single_node != NULL && DockNodeIsInOutlinerOf(only_write_to_single_node, child_0));
+    const bool child_1_is_toward_single_node = (only_write_to_single_node != NULL && DockNodeIsInOutlinerOf(only_write_to_single_node, child_1));
     const bool child_0_is_or_will_be_visible = child_0->IsVisible || child_0_is_toward_single_node;
     const bool child_1_is_or_will_be_visible = child_1->IsVisible || child_1_is_toward_single_node;
 
@@ -18660,7 +18660,7 @@ void ImGui::DockBuilderRemoveNodeChildNodes(ImGuiID root_id)
                     break;
                 }
 
-    // Not really efficient, but easier to destroy a whole hierarchy considering DockContextRemoveNode is attempting to merge nodes
+    // Not really efficient, but easier to destroy a whole Outliner considering DockContextRemoveNode is attempting to merge nodes
     if (nodes_to_remove.Size > 1)
         ImQsort(nodes_to_remove.Data, nodes_to_remove.Size, sizeof(ImGuiDockNode*), DockNodeComparerDepthMostFirst);
     for (int n = 0; n < nodes_to_remove.Size; n++)
@@ -18842,7 +18842,7 @@ void ImGui::DockBuilderCopyDockSpace(ImGuiID src_dockspace_id, ImGuiID dst_docks
     ImVector<ImGuiID> node_remap_pairs;
     DockBuilderCopyNode(src_dockspace_id, dst_dockspace_id, &node_remap_pairs);
 
-    // Attempt to transition all the upcoming windows associated to dst_dockspace_id into the newly created hierarchy of dock nodes
+    // Attempt to transition all the upcoming windows associated to dst_dockspace_id into the newly created Outliner of dock nodes
     // (The windows associated to src_dockspace_id are staying in place)
     ImVector<ImGuiID> src_windows;
     for (int remap_window_n = 0; remap_window_n < in_window_remap_pairs->Size; remap_window_n += 2)
@@ -18869,7 +18869,7 @@ void ImGui::DockBuilderCopyDockSpace(ImGuiID src_dockspace_id, ImGuiID dst_docks
 
         if (dst_dock_id != 0)
         {
-            // Docked windows gets redocked into the new node hierarchy.
+            // Docked windows gets redocked into the new node Outliner.
             IMGUI_DEBUG_LOG_DOCKING("[docking] Remap live window '%s' 0x%08X -> '%s' 0x%08X\n", src_window_name, src_dock_id, dst_window_name, dst_dock_id);
             DockBuilderDockWindow(dst_window_name, dst_dock_id);
         }
@@ -18898,7 +18898,7 @@ void ImGui::DockBuilderCopyDockSpace(ImGuiID src_dockspace_id, ImGuiID dst_docks
                 if (src_windows.contains(window->ID))
                     continue;
 
-                // Docked windows gets redocked into the new node hierarchy.
+                // Docked windows gets redocked into the new node Outliner.
                 IMGUI_DEBUG_LOG_DOCKING("[docking] Remap window '%s' %08X -> %08X\n", window->Name, src_dock_id, dst_dock_id);
                 dock_remaining_windows.push_back(DockRemainingWindowTask(window, dst_dock_id));
             }
@@ -18956,7 +18956,7 @@ static ImGuiDockNode* ImGui::DockContextBindNodeToWindow(ImGuiContext* ctx, ImGu
         node->LastFrameAlive = g.FrameCount;
     }
 
-    // If the node just turned visible and is part of a hierarchy, it doesn't have a Size assigned by DockNodeTreeUpdatePosSize() yet,
+    // If the node just turned visible and is part of a Outliner, it doesn't have a Size assigned by DockNodeTreeUpdatePosSize() yet,
     // so we're forcing a Pos/Size update from the first ancestor that is already visible (often it will be the root node).
     // If we don't do this, the window will be assigned a zero-size on its first frame, which won't ideally warm up the layout.
     // This is a little wonky because we don't normally update the Pos/Size of visible node mid-frame.
@@ -20045,7 +20045,7 @@ void ImGui::ShowMetricsWindow(bool* p_open)
         DebugNodeWindowsList(&g.WindowsFocusOrder, "By focus order (root windows)");
         if (TreeNode("By submission order (begin stack)"))
         {
-            // Here we display windows in their submitted order/hierarchy, however note that the Begin stack doesn't constitute a Parent<>Child relationship!
+            // Here we display windows in their submitted order/Outliner, however note that the Begin stack doesn't constitute a Parent<>Child relationship!
             ImVector<ImGuiWindow*>& temp_buffer = g.WindowsTempSortBuffer;
             temp_buffer.resize(0);
             for (ImGuiWindow* window : g.Windows)

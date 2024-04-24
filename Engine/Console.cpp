@@ -8,7 +8,7 @@
 #include "Environment.h"
 #include "ExecutionSpeed.h"
 
-#include <Hierarchy.h>
+#include <Outliner.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Console class methods
@@ -33,10 +33,10 @@ void Console::Term() {
 
 void Console::Update() {
 	ImGui::ShowDemoWindow();
-	OutputConsole();
+	OutputScene();
 	OutputLog();
 	OutputPerformance();
-	OutputHierarchy();
+	OutputOutliner();
 }
 
 void Console::SetLog(const std::string& log, const Vector4f& color) {
@@ -51,10 +51,10 @@ void Console::SetLog(const std::string& log, const Vector4f& color) {
 // private methods
 //=========================================================================================
 
-void Console::OutputConsole() {
+void Console::OutputScene() {
 	//! 開いておく
 	static bool isOpenWindow = true;
-	ImGui::Begin("Console", &isOpenWindow, ImGuiWindowFlags_NoCollapse);
+	ImGui::Begin("Scene", &isOpenWindow, ImGuiWindowFlags_NoCollapse);
 
 	//タブ等を除いたウィンドウのサイズを取得(計算)
 	ImVec2 cntRegionMax = ImGui::GetWindowContentRegionMax();
@@ -119,20 +119,20 @@ void Console::OutputPerformance() {
 	ImGui::End();
 }
 
-void Console::OutputHierarchy() {
+void Console::OutputOutliner() {
 	// Inspectorの選択window
 	static bool isOpenWindow = true;
-	ImGui::Begin("Hierarchy", &isOpenWindow, ImGuiWindowFlags_NoCollapse);
+	ImGui::Begin("Outliner", &isOpenWindow, ImGuiWindowFlags_NoCollapse);
 
 	// TODO: 名前の重複参照の対策
 	
-	for (const auto& object : hierarchys_) {
-		bool isSelect = (object == selectedHierarchy_);
+	for (const auto& object : Outliners_) {
+		bool isSelect = (object == selectedOutliner_);
 
 		std::string name = object->GetName();
 
 		if (ImGui::Selectable(name.c_str(), isSelect)) {
-			selectedHierarchy_ = object;
+			selectedOutliner_ = object;
 		}
 	}
 
@@ -140,9 +140,9 @@ void Console::OutputHierarchy() {
 
 	// inspector
 	ImGui::Begin("Inspector", &isOpenWindow, ImGuiWindowFlags_NoCollapse);
-	if (selectedHierarchy_ != nullptr) {
-		ImGui::TextColored({1.0f, 1.0f, 1.0f, 1.0f}, selectedHierarchy_->GetName().c_str());
-		selectedHierarchy_->SetHierarchyImGui();
+	if (selectedOutliner_ != nullptr) {
+		ImGui::TextColored({1.0f, 1.0f, 1.0f, 1.0f}, selectedOutliner_->GetName().c_str());
+		selectedOutliner_->SetOutlinerImGui();
 	}
 	ImGui::End();
 }

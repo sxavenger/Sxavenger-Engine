@@ -117,11 +117,11 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\DxrObject\DxrFence.cpp" />
     <ClCompile Include="Engine\DxrObject\DxrObjectMethods.cpp" />
     <ClCompile Include="Engine\DxrObject\DxrSwapChain.cpp" />
-    <ClCompile Include="Engine\Hierarchy.cpp" />
     <ClCompile Include="Engine\ImGuiManager.cpp" />
     <ClCompile Include="Engine\Logger.cpp" />
     <ClCompile Include="Engine\Model.cpp" />
     <ClCompile Include="Engine\MyEngine.cpp" />
+    <ClCompile Include="Engine\Outliner.cpp" />
     <ClCompile Include="Engine\TextureManager.cpp" />
     <ClCompile Include="Engine\WinApp.cpp" />
     <ClCompile Include="externals\imgui\imgui.cpp" />
@@ -176,11 +176,11 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\DxrObject\DxrFence.h" />
     <ClInclude Include="Engine\DxrObject\DxrObjectMethods.h" />
     <ClInclude Include="Engine\DxrObject\DxrSwapChain.h" />
-    <ClInclude Include="Engine\Hierarchy.h" />
     <ClInclude Include="Engine\ImGuiManager.h" />
     <ClInclude Include="Engine\Logger.h" />
     <ClInclude Include="Engine\Model.h" />
     <ClInclude Include="Engine\MyEngine.h" />
+    <ClInclude Include="Engine\Outliner.h" />
     <ClInclude Include="Engine\TextureManager.h" />
     <ClInclude Include="Engine\WinApp.h" />
     <ClInclude Include="externals\imgui\imconfig.h" />

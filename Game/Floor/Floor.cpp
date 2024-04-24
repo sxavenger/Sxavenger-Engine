@@ -14,7 +14,7 @@ void Floor::Init() {
 
 	// hierarcy base object
 	name_ = "Floor";
-	Console::GetInstance()->SetHierarchy(this);
+	Console::GetInstance()->SetOutliner(this);
 
 	// vertices
 	vertices_[LEFTBOTTOM].position = { -floorSize_.x / 2.0f, 0.0f, -floorSize_.y / 2.0f };
@@ -123,7 +123,7 @@ void Floor::SetOnImGui() {
 	Update();
 }
 
-void Floor::SetHierarchyImGui() {
+void Floor::SetOutlinerImGui() {
 	ImGui::DragFloat2("size", &floorSize_.x, 0.01f);
 	ImGui::DragFloat("tileScale", &tileScale, 0.01f, 0.0f, 1000.0f);
 
