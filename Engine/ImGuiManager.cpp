@@ -48,7 +48,7 @@ void ImGuiManager::Init(WinApp* winApp, DirectXCommon* dxCommon) {
 	// imguiデザイン設定
 	ImGuiStyle& style = ImGui::GetStyle();
 	style.ScrollbarRounding = 0;
-	style.DockingSeparatorSize = 0;
+	style.DockingSeparatorSize = 1;
 	style.TabRounding = 0;
 
 }

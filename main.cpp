@@ -62,7 +62,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		++frame;
 
 		if (frame % 60 == 0) {
-			Console::GetInstance()->SetLog(std::format("[debug] frame: {}, speed: {}", frame / 60, ExecutionSpeed::freamsParSec_), {0.0f, 0.5f, 0.0f, 1.0f});
+			Console::GetInstance()->SetLog(std::format("[debug] frame: {}, speed: {}", frame / 60, ExecutionSpeed::freamsParSec_), {0.0f, 0.55f, 0.0f, 1.0f});
 		}
 
 		Console::GetInstance()->Update();
@@ -70,6 +70,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		floor->Update();
 
 		MyEngine::BeginOffScreen();
+		// forでscene分回す。
 
 		//=========================================================================================
 		// オフスクリーン描画処理

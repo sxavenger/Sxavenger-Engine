@@ -33,7 +33,10 @@ void Console::Term() {
 
 void Console::Update() {
 	ImGui::ShowDemoWindow();
+
+	// game window
 	OutputScene();
+
 	OutputLog();
 	OutputPerformance();
 	OutputOutliner();
@@ -52,9 +55,7 @@ void Console::SetLog(const std::string& log, const Vector4f& color) {
 //=========================================================================================
 
 void Console::OutputScene() {
-	//! 開いておく
-	static bool isOpenWindow = true;
-	ImGui::Begin("Scene", &isOpenWindow, ImGuiWindowFlags_NoCollapse);
+	ImGui::Begin("Scene", &isOpenDebugScene_, ImGuiWindowFlags_NoCollapse);
 
 	//タブ等を除いたウィンドウのサイズを取得(計算)
 	ImVec2 cntRegionMax = ImGui::GetWindowContentRegionMax();
