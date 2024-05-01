@@ -1,13 +1,12 @@
-#include "TextureManager.h"
+#include <TextureManager.h>
 
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
 #include <windows.h>
 #include <Logger.h>
-
-#include <MyEngine.h>
 #include <DirectXCommon.h>
+#include <Console.h>
 
 //-----------------------------------------------------------------------------------------
 // using
@@ -25,15 +24,15 @@ void Texture::Load(const std::string& filePath, DirectXCommon* dxCommon) {
 
 	// デバイス, CommandListの取り出し
 	ID3D12Device* device = dxCommon_->GetDeviceObj()->GetDevice();
-	ID3D12GraphicsCommandList* commandList = dxCommon->GetCommandList();
+	ID3D12GraphicsCommandList* commandList = dxCommon_->GetCommandList();
 
 	DirectX::ScratchImage mipImage = TextureMethod::LoadTexture(filePath);
 	const DirectX::TexMetadata metadata = mipImage.GetMetadata();
 
-	textureResource_ = TextureMethod::CreateTextureResource(device, metadata);
-	ComPtr<ID3D12Resource> intermediateResouce = TextureMethod::UploadTextureData(textureResource_.Get(), mipImage, device, commandList);
+	resource_ = TextureMethod::CreateTextureResource(device, metadata);
+	ComPtr<ID3D12Resource> intermediateResouce = TextureMethod::UploadTextureData(resource_.Get(), mipImage, device, commandList);
 
-	dxCommon->Sent();
+	dxCommon_->Sent();
 
 	intermediateResouce->Release();
 
@@ -46,47 +45,41 @@ void Texture::Load(const std::string& filePath, DirectXCommon* dxCommon) {
 		desc.Texture2D.MipLevels     = UINT(metadata.mipLevels);
 
 		// SRVを生成するDescriptorHeapの場所を決める
-		descriptorIndex_ = dxCommon_->GetDescriptorsObj()->GetDescriptorCurrentIndex(DxObject::DescriptorType::SRV);
+		descriptorSRV_ = dxCommon_->GetDescriptorsObj()->GetCurrentDescriptor(DxObject::DescriptorType::SRV);
 
 		// SRVの生成
 		device->CreateShaderResourceView(
-			textureResource_.Get(),
+			resource_.Get(),
 			&desc,
-			dxCommon_->GetDescriptorsObj()->GetCPUDescriptorHandle(DxObject::DescriptorType::SRV, descriptorIndex_)
+			descriptorSRV_.handleCPU
 		);
-
-		handleGPU_ = dxCommon_->GetDescriptorsObj()->GetGPUDescriptorHandle(DxObject::DescriptorType::SRV, descriptorIndex_);
 	}
 }
 
-void Texture::Unload() {
-	dxCommon_->GetDescriptorsObj()->Erase(DxObject::DescriptorType::SRV, descriptorIndex_);
-}
-
-void Texture::CreateDummy(int32_t width, int32_t height) {
+void Texture::CreateDummy(int32_t width, int32_t height, DirectXCommon* dxCommon) {
 
 	// dxCommonの保存
-	dxCommon_ = MyEngine::GetDxCommon(); // hack:
+	dxCommon_ = dxCommon;
 
 
 	auto device = dxCommon_->GetDeviceObj()->GetDevice();
 
 	{
 		D3D12_RESOURCE_DESC desc = {};
-		desc.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
-		desc.Width = width;
-		desc.Height = height;
-		desc.MipLevels = 1;
-		desc.Format = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
-		desc.Flags = D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET;
+		desc.Dimension        = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
+		desc.Width            = width;
+		desc.Height           = height;
+		desc.MipLevels        = 1;
+		desc.Format           = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
+		desc.Flags            = D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET;
 		desc.SampleDesc.Count = 1;
 		desc.DepthOrArraySize = 1;
 
 		D3D12_HEAP_PROPERTIES prop = {};
-		prop.Type = D3D12_HEAP_TYPE_DEFAULT; // hack: 
+		prop.Type = D3D12_HEAP_TYPE_DEFAULT;
 
 		D3D12_CLEAR_VALUE clearValue = {};
-		clearValue.Format = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
+		clearValue.Format   = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
 		clearValue.Color[0] = 0.1f;
 		clearValue.Color[1] = 0.25f;
 		clearValue.Color[2] = 0.5f;
@@ -98,43 +91,46 @@ void Texture::CreateDummy(int32_t width, int32_t height) {
 			&desc,
 			D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE,
 			&clearValue,
-			IID_PPV_ARGS(&textureResource_)
+			IID_PPV_ARGS(&resource_)
 		);
 	}
 
 	// SRV - shaderResourceViewの生成
 	{
 		D3D12_SHADER_RESOURCE_VIEW_DESC desc = {};
-		desc.Format = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
+		desc.Format                  = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
 		desc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
-		desc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
-		desc.Texture2D.MipLevels = 1;
+		desc.ViewDimension           = D3D12_SRV_DIMENSION_TEXTURE2D;
+		desc.Texture2D.MipLevels     = 1;
 
 		// SRVを生成するDescriptorHeapの場所を決める
-		descriptorIndex_ = dxCommon_->GetDescriptorsObj()->GetDescriptorCurrentIndex(DxObject::DescriptorType::SRV);
+		descriptorSRV_ = dxCommon_->GetDescriptorsObj()->GetCurrentDescriptor(DxObject::DescriptorType::SRV);
 
 		// SRVの生成
 		device->CreateShaderResourceView(
-			textureResource_.Get(),
+			resource_.Get(),
 			&desc,
-			dxCommon_->GetDescriptorsObj()->GetCPUDescriptorHandle(DxObject::DescriptorType::SRV, descriptorIndex_)
+			descriptorSRV_.handleCPU
 		);
-
-		handleGPU_ = dxCommon_->GetDescriptorsObj()->GetGPUDescriptorHandle(DxObject::DescriptorType::SRV, descriptorIndex_);
 	}
 
 	// RTV
 	{
-
-		rtv_ = dxCommon_->GetDescriptorsObj()->GetCurrentDescriptor(DescriptorType::RTV);
+		descriptorRTV_ = dxCommon_->GetDescriptorsObj()->GetCurrentDescriptor(DescriptorType::RTV);
 
 		device->CreateRenderTargetView(
-			textureResource_.Get(),
+			resource_.Get(),
 			nullptr,
-			rtv_.handleCPU
+			descriptorRTV_.handleCPU
 		);
 	}
 
+}
+
+void Texture::Unload() {
+	dxCommon_->GetDescriptorsObj()->Erase(descriptorSRV_);
+	dxCommon_->GetDescriptorsObj()->Erase(descriptorRTV_);
+	dxCommon_ = nullptr;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -158,7 +154,6 @@ void TextureManager::Init(DirectXCommon* dxCommon) {
 }
 
 void TextureManager::Term() {
-
 	textures_.clear();
 	dxCommon_ = nullptr;
 }
@@ -176,6 +171,17 @@ void TextureManager::LoadTexture(const std::string& filePath) {
 	textures_[filePath].referenceNum = 1;
 }
 
+void TextureManager::CreateDummyTexture(int32_t width, int32_t height, std::string key) {
+	auto it = textures_.find(key);
+	if (it != textures_.end()) {
+		Log("TextureManager::CreateDummyTexture \n if (it != textures_.end()) { \n return; \n} ");
+		Console::GetInstance()->SetLog("warning: dummyTexture already made. key:" + key, Console::warningColor);
+		return;
+	}
+
+	textures_[key].texture = std::make_unique<Texture>(width, height, dxCommon_);
+}
+
 void TextureManager::UnloadTexture(const std::string& filePath) {
 	auto it = textures_.find(filePath);
 	assert(it != textures_.end()); //!< 同一keyが見つからなかった
@@ -189,16 +195,6 @@ void TextureManager::UnloadTexture(const std::string& filePath) {
 	}
 }
 
-void TextureManager::CreateDummyTexture(int32_t width, int32_t height, std::string key) {
-	auto it = textures_.find(key);
-	if (it != textures_.end()) {
-		Log("TextureManager::CreateDummyTexture \n if (it != textures_.end()) { \n return; \n} ");
-		return;
-	}
-
-	textures_[key].texture = std::make_unique<Texture>(width, height);
-}
-
 
 //=========================================================================================
 // static methods
@@ -208,8 +204,17 @@ TextureManager* TextureManager::GetInstance() {
 	return &instance;
 }
 
+std::unordered_map<std::string, TextureManager::TextureData>::const_iterator TextureManager::FindKey(const std::string& key) const {
+	auto it = textures_.find(key);
+	if (it == textures_.end()) {
+		assert(false);
+	}
+
+	return it;
+}
+
 ////////////////////////////////////////////////////////////////////////////////////////////
-// TextureMethod namespace
+// TextureMethod namespace methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 DirectX::ScratchImage TextureMethod::LoadTexture(const std::string& filePath) {

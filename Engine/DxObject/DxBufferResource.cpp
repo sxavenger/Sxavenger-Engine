@@ -1,27 +1,23 @@
-#include <DxBufferResource.h>
+#include "DxBufferResource.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// BufferIndex class
+// BufferResourceBase class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-void DxObject::BufferIndex::Init(uint32_t indexSize) {
-	// indexSizeの確認
-	if (indexSize <= 0) {
-		assert(false); //!< indexが0以下は配列にできない
-		return;
-	}
+void DxObject::BaseBufferResource::Init(uint32_t indexSize, size_t structureSize) {
+	assert((indexSize > 0) || (structureSize > 0)); //!< 引数の確認
 
-	// indexSizeの保存
-	indexSize_ = indexSize;
+	indexSize_     = indexSize;
+	structureSize_ = static_cast<UINT>(structureSize);
 }
 
-void DxObject::BufferIndex::Term() {
-	indexSize_ = NULL;
+void DxObject::BaseBufferResource::Term() {
+	indexSize_     = NULL;
+	structureSize_ = NULL;
 }
 
-bool DxObject::BufferIndex::CheckIndex(uint32_t index) {
-	if (index > indexSize_ - 1) {
-		assert(false); //!< indexがsize以上
+bool DxObject::BaseBufferResource::CheckElementCount(uint32_t elementCount) {
+	if (elementCount >= indexSize_) {
 		return false;
 	}
 
@@ -32,26 +28,7 @@ bool DxObject::BufferIndex::CheckIndex(uint32_t index) {
 // IndexBufferResource methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-DxObject::IndexBufferResource::IndexBufferResource(DxObject::Devices* devices, const BufferIndex* vertexBuffer)
-	: DxObject::BufferIndex() {
-
-	if (vertexBuffer->GetSize() < 3) {
-		assert(false); //!< 三角形に必要なindexSize以下
-	}
-
-	indexSize_ = (vertexBuffer->GetSize() - 2) * 3;
-	
-	Init(devices);
-}
-
 void DxObject::IndexBufferResource::Init(DxObject::Devices* devices) {
-
-	// kMaxTrinagleCountの確認
-	if (indexSize_ % 3 != 0) {
-		assert(false); // 三角形index分ではない
-	}
-
-	kMaxTriangleCount_ = indexSize_ / 3;
 
 	// deviceを取り出す
 	ID3D12Device* device = devices->GetDevice();
@@ -59,7 +36,7 @@ void DxObject::IndexBufferResource::Init(DxObject::Devices* devices) {
 	// 配列分のBufferResourceを生成
 	resource_ = DxObjectMethod::CreateBufferResource(
 		device,
-		sizeof(uint32_t) * indexSize_
+		structureSize_ * indexSize_
 	);
 
 	// resourceをマッピング
@@ -67,5 +44,5 @@ void DxObject::IndexBufferResource::Init(DxObject::Devices* devices) {
 }
 
 void DxObject::IndexBufferResource::Term() {
-	resource_->Release();
 }
+

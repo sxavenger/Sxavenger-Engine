@@ -1,5 +1,9 @@
 #pragma once
 
+//*****************************************************************************************
+// todo: imguiのスタイル変更, gameSceneのwindowの追加
+//*****************************************************************************************
+
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
@@ -14,14 +18,13 @@
 //-----------------------------------------------------------------------------------------
 // forward
 //-----------------------------------------------------------------------------------------
-class Outliner;
+class Attribute;
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Console class
 ////////////////////////////////////////////////////////////////////////////////////////////
 class Console {
 public:
-
 
 	//=========================================================================================
 	// public methods
@@ -45,9 +48,17 @@ public:
 	//! @param[in] color 文字の色
 	void SetLog(const std::string& log, const Vector4f& color = {1.0f, 1.0f, 1.0f, 1.0f});
 
-	void SetOutliner(Outliner* obj) {
-		Outliners_.push_back(obj);
+	void SetAttribute(Attribute* obj) {
+		Outliner_.push_back(obj);
 	}
+
+	//=========================================================================================
+	// public variables
+	//=========================================================================================
+
+	static const Vector4f commentOutColor;
+	static const Vector4f errorColor;
+	static const Vector4f warningColor;
 
 private:
 
@@ -68,12 +79,12 @@ private:
 	bool isOpenGameScene_  = true;
 
 	// logs
-	static const int32_t kMaxLogData_ = 10;
+	static const int32_t kMaxLogData_ = 30;
 	std::deque<LogData> logDatas_;
 
-	// Outliners
-	std::list<Outliner*> Outliners_;
-	Outliner* selectedOutliner_;
+	// Attribute
+	std::list<Attribute*> Outliner_;
+	Attribute* selectedAttribute_;
 
 	//=========================================================================================
 	// private methods

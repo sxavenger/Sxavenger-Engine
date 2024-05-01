@@ -89,14 +89,14 @@ void DxObject::PipelineManager::SetPipeline() {
 	commandList->SetGraphicsRootSignature(pipelineMenbers_[pipelineType_].rootSignature->GetRootSignature());
 	commandList->SetPipelineState(pipelines_[pipelineType_].pipeline->GetPipelineState());
 
-	commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	/*commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);*/
 }
 
 void DxObject::PipelineManager::CreatePipelineTable() {
 
 	{
 		// rootSignatureDescsの初期化
-		DxObject::RootSignatureDescs desc(3, 1);
+		DxObject::RootSignatureDescs desc(5, 1);
 
 		// rangeの設定
 		D3D12_DESCRIPTOR_RANGE range[1] = {};
@@ -108,7 +108,7 @@ void DxObject::PipelineManager::CreatePipelineTable() {
 		// parameterの設定
 		//!< FloorForGPU
 		desc.param[0].ParameterType             = D3D12_ROOT_PARAMETER_TYPE_CBV;
-		desc.param[0].ShaderVisibility          = D3D12_SHADER_VISIBILITY_VERTEX;
+		desc.param[0].ShaderVisibility          = D3D12_SHADER_VISIBILITY_MESH;
 		desc.param[0].Descriptor.ShaderRegister = 0;
 		
 		//!< Material
@@ -121,6 +121,20 @@ void DxObject::PipelineManager::CreatePipelineTable() {
 		desc.param[2].ShaderVisibility                    = D3D12_SHADER_VISIBILITY_PIXEL;
 		desc.param[2].DescriptorTable.pDescriptorRanges   = range;
 		desc.param[2].DescriptorTable.NumDescriptorRanges = _countof(range);
+
+		/// mesh shader param
+		//!< vertices
+		desc.param[3].ParameterType = D3D12_ROOT_PARAMETER_TYPE_SRV;
+		desc.param[3].ShaderVisibility = D3D12_SHADER_VISIBILITY_MESH;
+		desc.param[3].Descriptor.ShaderRegister = 0;
+		desc.param[3].Descriptor.RegisterSpace = 0;
+
+		//!< indices
+		desc.param[4].ParameterType = D3D12_ROOT_PARAMETER_TYPE_SRV;
+		desc.param[4].ShaderVisibility = D3D12_SHADER_VISIBILITY_MESH;
+		desc.param[4].Descriptor.ShaderRegister = 1;
+		desc.param[4].Descriptor.RegisterSpace = 0;
+
 
 		// samplerの設定
 		desc.sampler[0].Filter           = D3D12_FILTER_MIN_MAG_MIP_LINEAR;
@@ -135,58 +149,58 @@ void DxObject::PipelineManager::CreatePipelineTable() {
 		pipelineMenbers_[PipelineType::FLOOR].rootSignature = std::make_unique<DxObject::RootSignature>(devices_, desc);
 
 		pipelineMenbers_[PipelineType::FLOOR].shaderBlob = std::make_unique<DxObject::ShaderBlob>(
-			L"Floor.VS.hlsl", L"Floor.GS.hlsl", L"Floor.PS.hlsl"
+			L"Floor.MS.hlsl", L"Floor.PS.hlsl"
 		);
 
 	}
 
-	{
-		// rootSignatureDescsの初期化
-		DxObject::RootSignatureDescs desc(3, 1);
+	//{
+	//	// rootSignatureDescsの初期化
+	//	DxObject::RootSignatureDescs desc(3, 1);
 
-		// rangeの設定
-		D3D12_DESCRIPTOR_RANGE range[1] = {};
-		range[0].BaseShaderRegister                = 0;
-		range[0].NumDescriptors                    = 1;
-		range[0].RangeType                         = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
-		range[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
+	//	// rangeの設定
+	//	D3D12_DESCRIPTOR_RANGE range[1] = {};
+	//	range[0].BaseShaderRegister                = 0;
+	//	range[0].NumDescriptors                    = 1;
+	//	range[0].RangeType                         = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
+	//	range[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
 
-		D3D12_DESCRIPTOR_RANGE rangeInstanceing[1] = {};
-		rangeInstanceing[0].BaseShaderRegister                = 0;
-		rangeInstanceing[0].NumDescriptors                    = 1;
-		rangeInstanceing[0].RangeType                         = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
-		rangeInstanceing[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
+	//	D3D12_DESCRIPTOR_RANGE rangeInstanceing[1] = {};
+	//	rangeInstanceing[0].BaseShaderRegister                = 0;
+	//	rangeInstanceing[0].NumDescriptors                    = 1;
+	//	rangeInstanceing[0].RangeType                         = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
+	//	rangeInstanceing[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
 
-		// parameterの設定
-		desc.param[0].ParameterType             = D3D12_ROOT_PARAMETER_TYPE_CBV;
-		desc.param[0].ShaderVisibility          = D3D12_SHADER_VISIBILITY_PIXEL;
-		desc.param[0].Descriptor.ShaderRegister = 0;
+	//	// parameterの設定
+	//	desc.param[0].ParameterType             = D3D12_ROOT_PARAMETER_TYPE_CBV;
+	//	desc.param[0].ShaderVisibility          = D3D12_SHADER_VISIBILITY_PIXEL;
+	//	desc.param[0].Descriptor.ShaderRegister = 0;
 
-		desc.param[1].ParameterType                       = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
-		desc.param[1].ShaderVisibility                    = D3D12_SHADER_VISIBILITY_VERTEX;
-		desc.param[1].DescriptorTable.pDescriptorRanges   = rangeInstanceing;
-		desc.param[1].DescriptorTable.NumDescriptorRanges = _countof(rangeInstanceing);
+	//	desc.param[1].ParameterType                       = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
+	//	desc.param[1].ShaderVisibility                    = D3D12_SHADER_VISIBILITY_VERTEX;
+	//	desc.param[1].DescriptorTable.pDescriptorRanges   = rangeInstanceing;
+	//	desc.param[1].DescriptorTable.NumDescriptorRanges = _countof(rangeInstanceing);
 
-		desc.param[2].ParameterType                       = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
-		desc.param[2].ShaderVisibility                    = D3D12_SHADER_VISIBILITY_PIXEL;
-		desc.param[2].DescriptorTable.pDescriptorRanges   = range;
-		desc.param[2].DescriptorTable.NumDescriptorRanges = _countof(range);
+	//	desc.param[2].ParameterType                       = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
+	//	desc.param[2].ShaderVisibility                    = D3D12_SHADER_VISIBILITY_PIXEL;
+	//	desc.param[2].DescriptorTable.pDescriptorRanges   = range;
+	//	desc.param[2].DescriptorTable.NumDescriptorRanges = _countof(range);
 
-		// samplerの設定
-		desc.sampler[0].Filter           = D3D12_FILTER_MIN_MAG_MIP_LINEAR;
-		desc.sampler[0].AddressU         = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
-		desc.sampler[0].AddressV         = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
-		desc.sampler[0].AddressW         = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
-		desc.sampler[0].ComparisonFunc   = D3D12_COMPARISON_FUNC_NEVER;
-		desc.sampler[0].MaxLOD           = D3D12_FLOAT32_MAX;
-		desc.sampler[0].ShaderRegister   = 0;
-		desc.sampler[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
+	//	// samplerの設定
+	//	desc.sampler[0].Filter           = D3D12_FILTER_MIN_MAG_MIP_LINEAR;
+	//	desc.sampler[0].AddressU         = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
+	//	desc.sampler[0].AddressV         = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
+	//	desc.sampler[0].AddressW         = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
+	//	desc.sampler[0].ComparisonFunc   = D3D12_COMPARISON_FUNC_NEVER;
+	//	desc.sampler[0].MaxLOD           = D3D12_FLOAT32_MAX;
+	//	desc.sampler[0].ShaderRegister   = 0;
+	//	desc.sampler[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
 
-		pipelineMenbers_[PipelineType::PARTICLE].rootSignature = std::make_unique<DxObject::RootSignature>(devices_, desc);
+	//	pipelineMenbers_[PipelineType::PARTICLE].rootSignature = std::make_unique<DxObject::RootSignature>(devices_, desc);
 
-		pipelineMenbers_[PipelineType::PARTICLE].shaderBlob = std::make_unique<DxObject::ShaderBlob>(
-			L"Particle.VS.hlsl", L"Particle.GS.hlsl", L"Particle.PS.hlsl"
-		);
-	}
+	//	pipelineMenbers_[PipelineType::PARTICLE].shaderBlob = std::make_unique<DxObject::ShaderBlob>(
+	//		L"Particle.VS.hlsl", L"Particle.GS.hlsl", L"Particle.PS.hlsl"
+	//	);
+	//}
 
 }

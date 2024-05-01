@@ -36,8 +36,7 @@ void DxObject::DepthStencil::Init(
 		);
 
 		// handleの取得
-		descriptorIndex_ = descriptorHeaps->GetDescriptorCurrentIndex(DescriptorType::DSV);
-		handleCPU_DSV_ = descriptorHeaps->GetCPUDescriptorHandle(DescriptorType::DSV, descriptorIndex_);
+		descriptorDSV_ = descriptorHeaps->GetCurrentDescriptor(DescriptorType::DSV);
 
 		// descの設定
 		D3D12_DEPTH_STENCIL_VIEW_DESC desc = {};
@@ -47,7 +46,7 @@ void DxObject::DepthStencil::Init(
 		device->CreateDepthStencilView(
 			depthStencilResource_.Get(),
 			&desc,
-			handleCPU_DSV_
+			descriptorDSV_.handleCPU
 		);
 	}
 }

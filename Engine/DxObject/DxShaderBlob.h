@@ -49,17 +49,8 @@ namespace DxObject {
 		//! 
 		//! @param[in] vsFileName directory_ + vsfileName
 		//! @param[in] psFileName directory_ + psfileName
-		ShaderBlob(const std::wstring& vsFileName, const std::wstring& psFileName) {
-			Init(vsFileName, psFileName);
-		}
-
-		//! @brief コンストラクタ
-		//! 
-		//! @param[in] vsFileName directory_ + vsfileName
-		//! @param[in] gsFileName directory_ + gsfileName
-		//! @param[in] psFileName directory_ + psfileName
-		ShaderBlob(const std::wstring& vsFileName, const std::wstring& gsFileName, const std::wstring& psFileName) {
-			Init(vsFileName, gsFileName, psFileName);
+		ShaderBlob(const std::wstring& msFileName, const std::wstring& psFileName) {
+			Init(msFileName, psFileName);
 		}
 
 		//! @brief デストラクタ
@@ -69,32 +60,20 @@ namespace DxObject {
 		//! 
 		//! @param[in] vsFileName vsファイルパス
 		//! @param[in] psFileName psファイルパス
-		void Init(const std::wstring& vsFileName, const std::wstring& psFileName);
-
-		//! @brief 初期化処理
-		//! 
-		//! @param[in] vsFileName vsファイルパス
-		//! @param[in] gsFileName gsファイルパス
-		//! @param[in] psFileName psファイルパス
-		void Init(const std::wstring& vsFileName, const std::wstring& gsFileName, const std::wstring& psFileName);
+		void Init(const std::wstring& msFileName, const std::wstring& psFileName);
 
 		//! @brief 終了処理
 		void Term();
 
-		//! @brief shaderBlob_VSを取得
+		//! @brief shaderBlob_MSを取得
 		//! 
-		//! @return shaderBlob_VSを返却
-		IDxcBlob* GetShaderBlob_VS() const { return shaderBlob_VS_; }
+		//! @return shaderBlob_MSを返却
+		IDxcBlob* GetShaderBlob_MS() const { return shaderBlob_MS_; }
 
 		//! @brief shaderBlob_PSを取得
 		//! 
 		//! @return shaderBlob_PSを返却
 		IDxcBlob* GetShaderBlob_PS() const { return shaderBlob_PS_; }
-
-		//! @brief shaderBlob_GSを取得
-		//! 
-		//! @return shaderBlob_GSを返却
-		IDxcBlob* GetShaderBlob_GS() const { return shaderBlob_GS_; }
 
 		//! @brief shaderTableを設定
 		//! 
@@ -109,8 +88,7 @@ namespace DxObject {
 
 		static ShaderTable* shaderTable_;
 
-		IDxcBlob* shaderBlob_VS_;
-		IDxcBlob* shaderBlob_GS_;
+		IDxcBlob* shaderBlob_MS_;
 		IDxcBlob* shaderBlob_PS_;
 
 	};

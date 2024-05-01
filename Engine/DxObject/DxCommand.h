@@ -66,7 +66,7 @@ namespace DxObject {
 		//! @brief コマンドリストを取得
 		//! 
 		//! @return コマンドリストを返却
-		ID3D12GraphicsCommandList* GetCommandList() const { return commandList_.Get(); }
+		auto GetCommandList() const { return commandList_.Get(); }
 
 		//! @brief コマンドキューを取得
 		//! 
@@ -86,7 +86,7 @@ namespace DxObject {
 
 		ComPtr<ID3D12CommandQueue>        commandQueue_;
 		ComPtr<ID3D12CommandAllocator>    commandAllocator_;
-		ComPtr<ID3D12GraphicsCommandList> commandList_;
+		ComPtr<ID3D12GraphicsCommandList6> commandList_;
 
 	};
 }

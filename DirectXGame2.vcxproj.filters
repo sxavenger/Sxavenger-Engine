@@ -82,20 +82,8 @@
     <Filter Include="Resource\hlsl">
       <UniqueIdentifier>{4a0a5389-70df-42d6-a5fc-9ee50eebc35f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Resource\hlsl\Particle">
-      <UniqueIdentifier>{5e8f90bf-919d-4dc8-a78c-0c02bd22b8f5}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Resource\hlsl\Floor">
       <UniqueIdentifier>{caff2c69-010b-4713-a983-b786b400b167}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Engine\DxrObject">
-      <UniqueIdentifier>{749f3f9b-184f-4b27-8ed8-a2d3be3e8c31}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Engine\DxrObject\include">
-      <UniqueIdentifier>{fde2c75f-50b7-4e77-b4bb-a31ab440be0a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Engine\DxrObject\source">
-      <UniqueIdentifier>{d4e808f0-59d0-4f07-bc11-d0e972703443}</UniqueIdentifier>
     </Filter>
     <Filter Include="Game">
       <UniqueIdentifier>{7b9b6874-d5f0-4a58-83d4-1b0e8b12f30a}</UniqueIdentifier>
@@ -229,38 +217,17 @@
     <ClCompile Include="Engine\DxObject\DxPipelineState.cpp">
       <Filter>Engine\DxObject\source</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\DxrObject\DxrDevices.cpp">
-      <Filter>Engine\DxrObject\source</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\DxrCommon.cpp">
-      <Filter>Engine\source</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\DxrObject\DxrCommand.cpp">
-      <Filter>Engine\DxrObject\source</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\DxrObject\DxrSwapChain.cpp">
-      <Filter>Engine\DxrObject\source</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\DxrObject\DxrDescriptorHeaps.cpp">
-      <Filter>Engine\DxrObject\source</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\DxrObject\DxrFence.cpp">
-      <Filter>Engine\DxrObject\source</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\DxrObject\DxrAccelerationStructure.cpp">
-      <Filter>Engine\DxrObject\source</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\DxrObject\DxrObjectMethods.cpp">
-      <Filter>Engine\DxrObject\source</Filter>
-    </ClCompile>
     <ClCompile Include="Game\Floor\Floor.cpp">
       <Filter>Game</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Console.cpp">
       <Filter>Engine\source</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Outliner.cpp">
+    <ClCompile Include="Engine\Attribute.cpp">
       <Filter>Engine\source</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\DxObject\DxStructuredBuffer.cpp">
+      <Filter>Engine\DxObject\source</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -399,32 +366,8 @@
     <ClInclude Include="Engine\DxObject\DxPipelineState.h">
       <Filter>Engine\DxObject\include</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\DxrObject\DxrDevices.h">
-      <Filter>Engine\DxrObject\include</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\DxrCommon.h">
-      <Filter>Engine\include</Filter>
-    </ClInclude>
     <ClInclude Include="Lib\ObjectStructure.h">
       <Filter>Lib</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\DxrObject\DxrCommand.h">
-      <Filter>Engine\DxrObject\include</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\DxrObject\DxrSwapChain.h">
-      <Filter>Engine\DxrObject\include</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\DxrObject\DxrDescriptorHeaps.h">
-      <Filter>Engine\DxrObject\include</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\DxrObject\DxrFence.h">
-      <Filter>Engine\DxrObject\include</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\DxrObject\DxrAccelerationStructure.h">
-      <Filter>Engine\DxrObject\include</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\DxrObject\DxrObjectMethods.h">
-      <Filter>Engine\DxrObject\include</Filter>
     </ClInclude>
     <ClInclude Include="Game\Floor\Floor.h">
       <Filter>Game</Filter>
@@ -432,15 +375,15 @@
     <ClInclude Include="Engine\Console.h">
       <Filter>Engine\include</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Outliner.h">
+    <ClInclude Include="Engine\Attribute.h">
       <Filter>Engine\include</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\DxObject\DxStructuredBuffer.h">
+      <Filter>Engine\DxObject\include</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />
-    <None Include="Resources\hlsl\Particle.hlsli">
-      <Filter>Resource\hlsl\Particle</Filter>
-    </None>
     <None Include="Resources\hlsl\Floor.hlsli">
       <Filter>Resource\hlsl\Floor</Filter>
     </None>
@@ -451,19 +394,7 @@
     </Text>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="Resources\hlsl\Particle.VS.hlsl">
-      <Filter>Resource\hlsl\Particle</Filter>
-    </FxCompile>
-    <FxCompile Include="Resources\hlsl\Particle.GS.hlsl">
-      <Filter>Resource\hlsl\Particle</Filter>
-    </FxCompile>
-    <FxCompile Include="Resources\hlsl\Particle.PS.hlsl">
-      <Filter>Resource\hlsl\Particle</Filter>
-    </FxCompile>
-    <FxCompile Include="Resources\hlsl\Floor.VS.hlsl">
-      <Filter>Resource\hlsl\Floor</Filter>
-    </FxCompile>
-    <FxCompile Include="Resources\hlsl\Floor.GS.hlsl">
+    <FxCompile Include="Resources\hlsl\Floor.MS.hlsl">
       <Filter>Resource\hlsl\Floor</Filter>
     </FxCompile>
     <FxCompile Include="Resources\hlsl\Floor.PS.hlsl">

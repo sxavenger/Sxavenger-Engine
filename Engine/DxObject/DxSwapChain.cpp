@@ -77,13 +77,10 @@ void DxObject::SwapChain::Init(
 		assert(descriptorHeaps->GetIndexSize(DescriptorType::RTV) >= kBufferCount_);
 
 		for (uint32_t i = 0; i < kBufferCount_; ++i) {
-			uint32_t descriptorIndex = descriptorHeaps->GetDescriptorCurrentIndex(DescriptorType::RTV);
-
-			handleCPU_RTV_[i]
-				= descriptorHeaps->GetCPUDescriptorHandle(DescriptorType::RTV, descriptorIndex);
+			descriptorRTV_[i] = descriptorHeaps->GetCurrentDescriptor(DescriptorType::RTV);
 
 			device->CreateRenderTargetView(
-				swapChainResource_[i].Get(), &desc, handleCPU_RTV_[i]
+				swapChainResource_[i].Get(), &desc, descriptorRTV_[i].handleCPU
 			);
 		}
 	}

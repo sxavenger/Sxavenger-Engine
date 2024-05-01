@@ -72,7 +72,7 @@ namespace DxObject {
 		//! @brief 終了処理
 		void Term();
 
-		const D3D12_CPU_DESCRIPTOR_HANDLE& GetHandle() const { return handleCPU_DSV_; }
+		const D3D12_CPU_DESCRIPTOR_HANDLE& GetHandle() const { return descriptorDSV_.handleCPU; }
 
 	private:
 
@@ -82,8 +82,7 @@ namespace DxObject {
 
 		ComPtr<ID3D12Resource> depthStencilResource_;
 
-		D3D12_CPU_DESCRIPTOR_HANDLE handleCPU_DSV_;
-		uint32_t descriptorIndex_;
+		DxObject::Descriptor descriptorDSV_;
 
 	};
 

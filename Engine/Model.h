@@ -91,7 +91,7 @@ public:
 	}
 
 	void DrawCall(ID3D12GraphicsCommandList* commandList, uint32_t index, uint32_t instanceCount) {
-		commandList->DrawIndexedInstanced(modelData_.meshs[index].indexResource->GetSize(), instanceCount, 0, 0, 0);
+		commandList->DrawIndexedInstanced(modelData_.meshs[index].indexResource->GetIndexSize(), instanceCount, 0, 0, 0);
 	}
 
 	const MeshData& GetMeshData(uint32_t index) const {

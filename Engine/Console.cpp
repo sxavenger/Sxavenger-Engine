@@ -8,7 +8,14 @@
 #include "Environment.h"
 #include "ExecutionSpeed.h"
 
-#include <Outliner.h>
+#include <Attribute.h>
+
+//=========================================================================================
+// static variables
+//=========================================================================================
+const Vector4f Console::commentOutColor = { 0.0f, 0.55f, 0.0f, 1.0f };
+const Vector4f Console::errorColor      = { 0.8f, 0.0f, 0.0f, 1.0f };
+const Vector4f Console::warningColor    = { 0.8f, 0.8f, 0.0f, 1.0f };
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Console class methods
@@ -24,7 +31,6 @@ Console* Console::GetInstance() {
 }
 
 void Console::Init() {
-	logDatas_.resize(kMaxLogData_);
 }
 
 void Console::Term() {
@@ -38,16 +44,18 @@ void Console::Update() {
 	OutputScene();
 
 	OutputLog();
-	OutputPerformance();
 	OutputOutliner();
+	OutputPerformance();
 }
 
 void Console::SetLog(const std::string& log, const Vector4f& color) {
 	// logの追加
 	logDatas_.push_front({log, color});
 
-	// 一番古いログの削除
-	logDatas_.pop_back();
+	if (logDatas_.size() >= kMaxLogData_) {
+		// 一番古いログの削除
+		logDatas_.pop_back();
+	}
 }
 
 //=========================================================================================
@@ -97,7 +105,7 @@ void Console::OutputLog() {
 	ImVec2 wndSize = { cntRegionMax.x - cntRegionMin.x, cntRegionMax.y - cntRegionMin.y };
 
 	{
-		ImGui::BeginChild(ImGui::GetID((void*)0), wndSize, ImGuiWindowFlags_NoTitleBar);
+		ImGui::BeginChild(ImGui::GetID((void*)0), wndSize, ImGuiChildFlags_Border, ImGuiWindowFlags_AlwaysHorizontalScrollbar | ImGuiWindowFlags_AlwaysVerticalScrollbar);
 
 		for (auto& log : logDatas_) {
 			ImGui::TextColored({log.color.r, log.color.g, log.color.b, log.color.a}, log.log.c_str());
@@ -125,25 +133,46 @@ void Console::OutputOutliner() {
 	static bool isOpenWindow = true;
 	ImGui::Begin("Outliner", &isOpenWindow, ImGuiWindowFlags_NoCollapse);
 
+	static std::string name;
+
 	// TODO: 名前の重複参照の対策
 	
-	for (const auto& object : Outliners_) {
-		bool isSelect = (object == selectedOutliner_);
+	for (const auto& object : Outliner_) {
+		bool isSelect = (object == selectedAttribute_);
 
-		std::string name = object->GetName();
-
-		if (ImGui::Selectable(name.c_str(), isSelect)) {
-			selectedOutliner_ = object;
+		if (ImGui::Selectable(object->GetName().c_str(), isSelect)) {
+			selectedAttribute_ = object;
+			name = selectedAttribute_->GetName();
 		}
 	}
 
 	ImGui::End();
 
-	// inspector
-	ImGui::Begin("Inspector", &isOpenWindow, ImGuiWindowFlags_NoCollapse);
-	if (selectedOutliner_ != nullptr) {
-		ImGui::TextColored({1.0f, 1.0f, 1.0f, 1.0f}, selectedOutliner_->GetName().c_str());
-		selectedOutliner_->SetOutlinerImGui();
+	// attribute
+	ImGui::Begin("Attribute", &isOpenWindow, ImGuiWindowFlags_NoCollapse);
+	if (selectedAttribute_ != nullptr) {
+
+		ImGui::Text(selectedAttribute_->GetName().c_str());
+		
+		//ImGui::InputText("name", name.data(), 20);
+		//// HACK: 文字数0にすると止まる
+		//// std::stringのsize以上に入力するとsize以上が表示されない
+
+		//if (ImGui::Button("set")) {
+		//	if (name.empty()) { //!< nameが空だった場合
+		//		name = selectedAttribute_->GetName(); //!< 元に戻す
+		//		SetLog("name can't set empty", errorColor);
+
+		//	} else {
+		//		selectedAttribute_->SetName(name.data());
+		//	}
+		//}
+		
+		ImGui::Spacing();
+		ImGui::Spacing();
+		ImGui::Separator();
+
+		selectedAttribute_->SetAttributeImGui();
 	}
 	ImGui::End();
 }

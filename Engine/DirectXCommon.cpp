@@ -54,11 +54,11 @@ void DirectXCommon::BeginOffscreen() {
 	auto commandList = command_->GetCommandList();
 
 	D3D12_RESOURCE_BARRIER barrier = {};
-	barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
-	barrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
+	barrier.Type                   = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+	barrier.Flags                  = D3D12_RESOURCE_BARRIER_FLAG_NONE;
 	barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
-	barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_RENDER_TARGET;
-	barrier.Transition.pResource = TextureManager::GetInstance()->GetTexture("offscreen")->GetResource();
+	barrier.Transition.StateAfter  = D3D12_RESOURCE_STATE_RENDER_TARGET;
+	barrier.Transition.pResource   = TextureManager::GetInstance()->GetTexture("offscreen")->GetResource();
 
 	commandList->ResourceBarrier(
 		1,

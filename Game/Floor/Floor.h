@@ -5,6 +5,7 @@
 //-----------------------------------------------------------------------------------------
 // DxObject
 #include <DxBufferResource.h>
+#include <DxStructuredBuffer.h>
 
 // c++
 #include <cstdint>
@@ -14,13 +15,13 @@
 
 #include <Model.h>
 
-#include <Outliner.h>
+#include <Attribute.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Floor class
 ////////////////////////////////////////////////////////////////////////////////////////////
 class Floor
-	: public Outliner {
+	: public Attribute {
 public:
 
 	//=========================================================================================
@@ -43,7 +44,7 @@ public:
 
 	void SetOnImGui();
 
-	void SetOutlinerImGui() override;
+	void SetAttributeImGui() override;
 
 private:
 
@@ -73,9 +74,11 @@ private:
 	// vertexResource
 	std::unique_ptr<DxObject::BufferPtrResource<VertexData>> vertexResource_;
 	VertexData vertices_[kCountOfVertexType];
+	std::unique_ptr<DxObject::StructuredBuffer> vertexStructuredBuffer_;
 
 	// indexResource
 	std::unique_ptr<DxObject::IndexBufferResource> indexResource_;
+	std::unique_ptr<DxObject::StructuredBuffer> indexStructuredBuffer_;
 
 	// materialResource
 	std::unique_ptr<DxObject::BufferPtrResource<FloorMaterial>> materialResource_;

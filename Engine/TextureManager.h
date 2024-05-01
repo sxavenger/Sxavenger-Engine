@@ -34,12 +34,15 @@ public:
 	// public methods
 	//=========================================================================================
 
-	//! @brief コンストラクタ
-	Texture(const std::string& filePath, DirectXCommon* dxCommon) { Load(filePath, dxCommon); }
+	//! @brief texture用コンストラクタ
+	Texture(const std::string& filePath, DirectXCommon* dxCommon) {
+		Load(filePath, dxCommon);
+	}
 
-	//! @brief コンストラクタ
-	//! @brief ダミーテクスチャ用
-	Texture(int32_t width, int32_t height) { CreateDummy(width, height); }
+	//! @brief dummyTexture用コンストラクタ
+	Texture(int32_t width, int32_t height, DirectXCommon* dxCommon) {
+		CreateDummy(width, height, dxCommon);
+	}
 
 	//! @brief デストラクタ
 	~Texture() { Unload(); }
@@ -48,30 +51,32 @@ public:
 	//! 
 	//! @param[in] filePath ファイルパス
 	void Load(const std::string& filePath, DirectXCommon* dxCommon);
-	
+
+	//! @brief ダミーテクスチャの生成
+	void CreateDummy(int32_t width, int32_t height, DirectXCommon* dxCommon);
+
 	//! @brief テクスチャの解放
 	void Unload();
 
-	void CreateDummy(int32_t width, int32_t height);
+	const D3D12_GPU_DESCRIPTOR_HANDLE& GetSRVHandleGPU() const { return descriptorSRV_.handleGPU; }
 
-	//! @brief テクスチャのGPUハンドルを取得
-	//! 
-	//! @return テクスチャのGPUハンドルを返却
-	const D3D12_GPU_DESCRIPTOR_HANDLE& GetHandle() const { return handleGPU_; }
+	const D3D12_CPU_DESCRIPTOR_HANDLE& GetRTVHandleCPU() const { return descriptorRTV_.handleCPU; }
 
-	const D3D12_CPU_DESCRIPTOR_HANDLE& GetRTVHandleCPU() const { return rtv_.handleCPU; }
-
-	ID3D12Resource* GetResource() const { return textureResource_.Get(); }
+	ID3D12Resource* GetResource() const { return resource_.Get(); }
 
 private:
 
-	ComPtr<ID3D12Resource>      textureResource_;
-	D3D12_GPU_DESCRIPTOR_HANDLE handleGPU_;
-	uint32_t                    descriptorIndex_;
+	//=========================================================================================
+	// private variables
+	//=========================================================================================
 
-	DxObject::Descriptor rtv_;
+	DirectXCommon* dxCommon_ = nullptr;
 
-	DirectXCommon* dxCommon_;
+	ComPtr<ID3D12Resource> resource_;
+
+	DxObject::Descriptor descriptorSRV_;
+	DxObject::Descriptor descriptorRTV_; //!< ダミーテクスチャ用
+
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -84,37 +89,32 @@ public:
 	// public methods
 	//=========================================================================================
 
-	//! @brief コンストラクタ
-	TextureManager() {}
-
-	//! @brief デストラクタ
-	~TextureManager() {}
-
 	//! @brief 初期化処理
 	void Init(DirectXCommon* dxCommon);
 
 	//! @brief 終了処理
 	void Term();
 
-	const D3D12_GPU_DESCRIPTOR_HANDLE& GetHandleGPU(const std::string& filePath) const {
-		auto it = textures_.find(filePath);
-		assert(it != textures_.end());
+	//! @brief テクスチャのロード
+	void LoadTexture(const std::string& filePath);
 
-		return it->second.texture->GetHandle();
+	//! @brief ダミーテクスチャの設定
+	void CreateDummyTexture(int32_t width, int32_t height, std::string key);
+
+	//! @brief テクスチャのアンロード
+	void UnloadTexture(const std::string& key);
+
+	const D3D12_GPU_DESCRIPTOR_HANDLE& GetHandleGPU(const std::string& key) const {
+		auto it = FindKey(key);
+
+		return it->second.texture->GetSRVHandleGPU();
 	}
 
 	const Texture* GetTexture(const std::string& key) const {
-		auto it = textures_.find(key);
-		assert(it != textures_.end());
+		auto it = FindKey(key);
 
 		return it->second.texture.get();
 	}
-
-	void LoadTexture(const std::string& filePath);
-
-	void UnloadTexture(const std::string& filePath);
-
-	void CreateDummyTexture(int32_t width, int32_t height, std::string key);
 
 	static TextureManager* GetInstance();
 
@@ -136,6 +136,13 @@ private:
 	//!< key = filePath, value = texture
 
 	DirectXCommon* dxCommon_ = nullptr;
+
+	//=========================================================================================
+	// private methods
+	//=========================================================================================
+
+	std::unordered_map<std::string, TextureManager::TextureData>::const_iterator FindKey(const std::string& key) const;
+
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////

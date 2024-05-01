@@ -4,7 +4,15 @@
 // include
 //-----------------------------------------------------------------------------------------
 #include "MyEngine.h"
+#include "DirectXCommon.h"
 #include "Console.h"
+
+// test include
+
+//-----------------------------------------------------------------------------------------
+// using
+//-----------------------------------------------------------------------------------------
+using namespace DxObject;
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Floor class methods
@@ -12,18 +20,18 @@
 
 void Floor::Init() {
 
-	// hierarcy base object
+	// attribute base object
 	name_ = "Floor";
-	Console::GetInstance()->SetOutliner(this);
+	Console::GetInstance()->SetAttribute(this);
 
 	// vertices
-	vertices_[LEFTBOTTOM].position = { -floorSize_.x / 2.0f, 0.0f, -floorSize_.y / 2.0f };
-	vertices_[LEFTTOP].position = { -floorSize_.x / 2.0f, 0.0f, floorSize_.y / 2.0f };
-	vertices_[RIGHTTOP].position = { floorSize_.x / 2.0f, 0.0f, floorSize_.y / 2.0f };
+	vertices_[LEFTBOTTOM].position  = { -floorSize_.x / 2.0f, 0.0f, -floorSize_.y / 2.0f };
+	vertices_[LEFTTOP].position     = { -floorSize_.x / 2.0f, 0.0f, floorSize_.y / 2.0f };
+	vertices_[RIGHTTOP].position    = { floorSize_.x / 2.0f, 0.0f, floorSize_.y / 2.0f };
 	vertices_[RIGHTBOTTOM].position = { floorSize_.x / 2.0f, 0.0f, -floorSize_.y / 2.0f };
 
 	for (uint32_t i = 0; i < kCountOfVertexType; ++i) {
-		vertices_[i].normal = { 0.0f, 1.0f, 0.0f };
+		vertices_[i].normal   = { 0.0f, 1.0f, 0.0f };
 		vertices_[i].texcoord = { vertices_[i].position.x * tileScale, vertices_[i].position.z * tileScale };
 	}
 
@@ -34,6 +42,8 @@ void Floor::Init() {
 		vertexResource_->SetPtr(i, &vertices_[i]);
 	}
 
+	vertexStructuredBuffer_ = std::make_unique<DxObject::StructuredBuffer>(vertexResource_.get());
+
 	// indexResource
 	indexResource_ = std::make_unique<DxObject::IndexBufferResource>(MyEngine::GetDevicesObj(), 6);
 	indexResource_->operator[](0) = 0;
@@ -43,6 +53,8 @@ void Floor::Init() {
 	indexResource_->operator[](3) = 1;
 	indexResource_->operator[](4) = 3;
 	indexResource_->operator[](5) = 2;
+
+	indexStructuredBuffer_ = std::make_unique<DxObject::StructuredBuffer>(indexResource_.get());
 
 	// material
 	material_.color = { 1.0f, 1.0f, 1.0f, 1.0f };
@@ -56,6 +68,8 @@ void Floor::Init() {
 	matrixResource_->operator[](0).world = Matrix4x4::MakeIdentity();
 	matrixResource_->operator[](0).wvp = Matrix4x4::MakeIdentity();
 	matrixResource_->operator[](0).worldInverseTranspose = Matrix4x4::MakeIdentity();
+
+	Console::GetInstance()->SetLog("Floor complate cleate");
 }
 
 void Floor::Update() {
@@ -86,26 +100,37 @@ void Floor::Draw() {
 	MyEngine::SetPipelineState();
 
 	// commandListの取り出し
-	ID3D12GraphicsCommandList* commandList = MyEngine::GetCommandList();
+	auto commandList = MyEngine::GetCommandList();
 
-	D3D12_VERTEX_BUFFER_VIEW vertexBufferView = vertexResource_->GetVertexBufferView();
+	/*D3D12_VERTEX_BUFFER_VIEW vertexBufferView = vertexResource_->GetVertexBufferView();
 	D3D12_INDEX_BUFFER_VIEW indexBufferView = indexResource_->GetIndexBufferView();
 
 	commandList->IASetVertexBuffers(0, 1, &vertexBufferView);
-	commandList->IASetIndexBuffer(&indexBufferView);
+	commandList->IASetIndexBuffer(&indexBufferView);*/
+	ID3D12DescriptorHeap* srv[] = { MyEngine::GetDxCommon()->GetDescriptorsObj()->GetDescriptorHeap(SRV) };
+	commandList->SetDescriptorHeaps(1, srv);
 
 	// ParamBuffers
 	commandList->SetGraphicsRootConstantBufferView(0, matrixResource_->GetGPUVirtualAddress());
 	commandList->SetGraphicsRootConstantBufferView(1, materialResource_->GetGPUVirtualAddress());
 	commandList->SetGraphicsRootDescriptorTable(2, MyEngine::GetTextureHandleGPU("resources/tile_black.png"));
 
-	commandList->DrawIndexedInstanced(indexResource_->GetSize(), 1, 0, 0, 0);
+	
+	// mesh param
+	commandList->SetGraphicsRootShaderResourceView(3, vertexResource_->GetGPUVirtualAddress());
+	commandList->SetGraphicsRootShaderResourceView(4, indexResource_->GetGPUVirtualAddress());
+
+	/*commandList->DrawIndexedInstanced(indexResource_->GetSize(), 1, 0, 0, 0);*/
+	commandList->DispatchMesh(2, 1, 1);
 
 }
 
 void Floor::Term() {
 	vertexResource_.reset();
+	vertexStructuredBuffer_.reset();
 	indexResource_.reset();
+	indexStructuredBuffer_.reset();
+
 	materialResource_.reset();
 	matrixResource_.reset();
 }
@@ -123,7 +148,7 @@ void Floor::SetOnImGui() {
 	Update();
 }
 
-void Floor::SetOutlinerImGui() {
+void Floor::SetAttributeImGui() {
 	ImGui::DragFloat2("size", &floorSize_.x, 0.01f);
 	ImGui::DragFloat("tileScale", &tileScale, 0.01f, 0.0f, 1000.0f);
 

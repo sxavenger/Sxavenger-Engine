@@ -7,6 +7,8 @@
 #include <d3d12.h>
 #include <dxgi1_6.h>
 
+#include <DxObjectMethod.h>
+
 // c++
 #include <cstdint>
 #include <cassert>
@@ -104,7 +106,7 @@ namespace DxObject {
 		//! @param[in] backBufferIndex 
 		//! 
 		//! @return handleCPU_RTVを返却
-		const D3D12_CPU_DESCRIPTOR_HANDLE& GetHandleCPU_RTV(UINT backBufferIndex) const { return handleCPU_RTV_[backBufferIndex]; }
+		const D3D12_CPU_DESCRIPTOR_HANDLE& GetHandleCPU_RTV(UINT backBufferIndex) const { return descriptorRTV_[backBufferIndex].handleCPU; }
 
 		static const uint32_t GetBufferCount() { return kBufferCount_; }
 
@@ -118,7 +120,7 @@ namespace DxObject {
 		ComPtr<IDXGISwapChain4> swapChain_;
 		ComPtr<ID3D12Resource>  swapChainResource_[kBufferCount_];
 
-		D3D12_CPU_DESCRIPTOR_HANDLE handleCPU_RTV_[kBufferCount_];
+		DxObject::Descriptor descriptorRTV_[kBufferCount_];
 
 		D3D12_RESOURCE_BARRIER barrier_;
 	};

@@ -78,7 +78,7 @@ public:
 	static DirectXCommon* GetInstance();
 
 	// TODO: コマンドリストを外に出したくない...
-	ID3D12GraphicsCommandList* GetCommandList() const { return command_->GetCommandList(); }
+	auto GetCommandList() const { return command_->GetCommandList(); }
 
 	DxObject::Devices* GetDeviceObj() const { return devices_.get(); }
 	DxObject::DescriptorHeaps* GetDescriptorsObj() const { return descriptorHeaps_.get(); }

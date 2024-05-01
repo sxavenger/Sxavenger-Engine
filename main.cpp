@@ -39,13 +39,14 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	// 初期化
 	//=========================================================================================
 	MyEngine::Initialize(kWindowWidth, kWindowHeight, kWindowTitle);
+	Console::GetInstance()->Init();
 
 	Floor* floor = new Floor();
 	
 	std::unique_ptr<Camera3D> camera = std::make_unique<Camera3D>();
 	MyEngine::camera3D_ = camera.get();
 
-	Console::GetInstance()->Init();
+	
 
 	////////////////////////////////////////////////////////////////////////////////////////////
 	// メインループ
@@ -62,7 +63,10 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		++frame;
 
 		if (frame % 60 == 0) {
-			Console::GetInstance()->SetLog(std::format("[debug] frame: {}, speed: {}", frame / 60, ExecutionSpeed::freamsParSec_), {0.0f, 0.55f, 0.0f, 1.0f});
+			Console::GetInstance()->SetLog(
+				std::format("[debug] frame: {}, speed: {}", frame / 60, ExecutionSpeed::freamsParSec_),
+				Console::commentOutColor
+			);
 		}
 
 		Console::GetInstance()->Update();

@@ -18,12 +18,11 @@
 //=========================================================================================
 
 static const wchar_t* shaderTypeStr[kCountOfShaderType] = {
-	L"vs_6_0", L"gs_6_0", L"ps_6_0"
+	L"ms_6_5", L"ps_6_5"
 };
 
 static D3D12_SHADER_VISIBILITY shaderTypeVisibility[kCountOfShaderType] = {
-	D3D12_SHADER_VISIBILITY_VERTEX,
-	D3D12_SHADER_VISIBILITY_GEOMETRY,
+	D3D12_SHADER_VISIBILITY_MESH,
 	D3D12_SHADER_VISIBILITY_PIXEL
 };
 

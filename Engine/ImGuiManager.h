@@ -8,9 +8,14 @@
 #include "externals/imgui/imgui_impl_dx12.h"
 #include "externals/imgui/imgui_impl_win32.h"
 
+#include <DxObjectMethod.h>
+
 // c++
 #include <cstdint>
 #include <cassert>
+
+// Geometry
+#include <Vector4.h>
 
 //-----------------------------------------------------------------------------------------
 // forward
@@ -53,8 +58,23 @@ public:
 
 private:
 
+	//=========================================================================================
+	// private variables
+	//=========================================================================================
+
 	DirectXCommon* dxCommon_;
 
 	ID3D12DescriptorHeap* descriptorHeap_SRV_;
-	uint32_t descriptorIndex_;
+	
+	DxObject::Descriptor descriptor_;
+
+	//=========================================================================================
+	// private methods
+	//=========================================================================================
+
+	void InitImGuiStyle();
+	void SettingImGui();
+
+	static ImVec4 ToImVec4(const Vector4i& color);
+
 };

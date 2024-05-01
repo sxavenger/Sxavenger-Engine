@@ -23,7 +23,7 @@ void DxObject::Devices::Init() {
 			// GPU側も有効化
 			debugController_->SetEnableGPUBasedValidation(TRUE);
 
-			Log("[dxObject.Devices]: debugController_ << Complete Create \n");
+			Log("[DxObject::Devices]: debugController_ << Complete Create \n");
 		}
 	}
 #endif // _DEBUG
@@ -33,7 +33,7 @@ void DxObject::Devices::Init() {
 		auto hr = CreateDXGIFactory(IID_PPV_ARGS(&dxgiFactory_));
 		assert(SUCCEEDED(hr));
 
-		Log("[dxObject.Devices]: dxgiFactory_ << Complete Create \n");
+		Log("[DxObject::Devices]: dxgiFactory_ << Complete Create \n");
 	}
 
 	// アダプタの生成
@@ -60,7 +60,7 @@ void DxObject::Devices::Init() {
 			}
 
 			assert(useAdapter_ != nullptr);
-			Log("[dxObject.Devices]: useAdapter_ << Complete Create \n");
+			Log("[DxObject::Devices]: useAdapter_ << Complete Create \n");
 		}
 	}
 
@@ -86,7 +86,29 @@ void DxObject::Devices::Init() {
 
 		assert(device_ != nullptr);
 
-		Log("[dxObject.Devices]: device_ << Complete Create \n");
+		Log("[DxObject::Devices]: device_ << Complete Create \n");
+	}
+
+	// シェーダーモデルをチェック
+	{
+		D3D12_FEATURE_DATA_SHADER_MODEL shaderModel = { D3D_SHADER_MODEL_6_5 };
+		auto hr = device_->CheckFeatureSupport(D3D12_FEATURE_SHADER_MODEL, &shaderModel, sizeof(shaderModel));
+
+		if (FAILED(hr) || (shaderModel.HighestShaderModel < D3D_SHADER_MODEL_6_5)) {
+			Log("Error : Shader Model 6.5 is not supported.");
+			assert(false);
+		}
+	}
+
+	// メッシュシェーダーのサポートをチェック
+	{
+		D3D12_FEATURE_DATA_D3D12_OPTIONS7 features = {};
+		auto hr = device_->CheckFeatureSupport(D3D12_FEATURE_D3D12_OPTIONS7, &features, sizeof(features));
+
+		if (FAILED(hr) || (features.MeshShaderTier == D3D12_MESH_SHADER_TIER_NOT_SUPPORTED)) {
+			Log("Error : Mesh Shaders aren't supported.");
+			assert(false);
+		}
 	}
 
 #ifdef _DEBUG

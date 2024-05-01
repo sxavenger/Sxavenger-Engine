@@ -7,19 +7,23 @@
 #include <string>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// Outliner base class
+// Attribute base class
 ////////////////////////////////////////////////////////////////////////////////////////////
-class Outliner {
+class Attribute {
 public:
 
 	//=========================================================================================
 	// public methods
 	//=========================================================================================
 
-	//! @brief Outlinerで選択された際のImGui更新処理
-	virtual void SetOutlinerImGui() = 0;
+	//! @brief Attributeで選択された際のImGui更新処理
+	virtual void SetAttributeImGui() = 0;
 
 	const std::string& GetName() const { return name_; }
+
+	/*char* GetNameData() { return name_.data(); }*/
+
+	void SetName(const char* name) { name_ = name; }
 
 protected:
 
@@ -28,6 +32,5 @@ protected:
 	//=========================================================================================
 
 	std::string name_;
-
 
 };

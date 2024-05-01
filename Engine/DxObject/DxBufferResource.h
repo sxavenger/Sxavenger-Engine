@@ -11,6 +11,7 @@
 #include <cstdint>
 #include <cassert>
 #include <vector>
+#include <memory>
 
 // DxObject
 #include <DxObjectMethod.h>
@@ -31,9 +32,9 @@
 namespace DxObject {
 
 	////////////////////////////////////////////////////////////////////////////////////////////
-	// BufferIndex class
+	// BaseBufferResource class
 	////////////////////////////////////////////////////////////////////////////////////////////
-	class BufferIndex {
+	class BaseBufferResource { //!< Baseクラスなのでこのクラス単体では使わない
 	public:
 
 		//=========================================================================================
@@ -41,23 +42,40 @@ namespace DxObject {
 		//=========================================================================================
 
 		//! @breif コンストラクタ
-		//! 
-		//! @param[in] indexSize 配列サイズ
-		BufferIndex(uint32_t indexSize) { Init(indexSize); }
+		//!
+		//! @param[in] indexSize     配列のサイズ
+		//! @param[in] structureSize 構造体のサイズ
+		BaseBufferResource(uint32_t indexSize, size_t structureSize) {
+			Init(indexSize, structureSize);
+		}
 
 		//! @brief デストラクタ
-		~BufferIndex() { Term(); }
+		~BaseBufferResource() { Term(); }
 
-		//! @brief 初期化処理
+		//! @breif 初期化処理
 		//! 
-		//! @param[in] indexSize 配列サイズ
-		void Init(uint32_t indexSize);
+		//! @param[in] indexSize     配列のサイズ
+		//! @param[in] structureSize 構造体のサイズ
+		void Init(uint32_t indexSize, size_t structureSize);
 
 		//! @breif 終了処理
 		void Term();
 
-		//! @breif 配列のサイズを獲得
-		const uint32_t GetSize() const { return indexSize_; }
+		//! @breif 配列のサイズを取得
+		const uint32_t GetIndexSize() const { return indexSize_; }
+
+		//! @breif 構造体のサイズを取得
+		const UINT GetStructureSize() const { return structureSize_; }
+
+		//! @brief GPUAddressを取得
+		//! 
+		//! @return GPUAddressを返却
+		virtual const D3D12_GPU_VIRTUAL_ADDRESS GetGPUVirtualAddress() {
+			return resource_->GetGPUVirtualAddress();
+		}
+
+		//! @brief Resourceの取得
+		virtual ID3D12Resource* GetResource() { return resource_.Get(); }
 
 	protected:
 
@@ -67,31 +85,27 @@ namespace DxObject {
 
 		ComPtr<ID3D12Resource> resource_;
 
-		uint32_t indexSize_;
+		uint32_t indexSize_;     //!< 配列のサイズ
+		UINT     structureSize_; //!< 構造体のサイズ
 
 		//=========================================================================================
 		// protected methods
 		//=========================================================================================
-		
-		//! @brief indexSizeより小さいか
-		//! 
-		//! @param[in] index
-		//! 
-		//! @retval true  正常終了
-		//! @retval false indexSizeを超過
-		bool CheckIndex(uint32_t index);
 
-		BufferIndex() { indexSize_ = NULL; }
+		//! @brief 要素数がindexSize以上でないかの確認
+		//! 
+		//! @retval true  配列サイズ以下
+		//! @retval false 配列サイズ以上
+		bool CheckElementCount(uint32_t elementCount);
 
 	};
-
 
 	////////////////////////////////////////////////////////////////////////////////////////////
 	// BufferResource class
 	////////////////////////////////////////////////////////////////////////////////////////////
 	template <typename T>
 	class BufferResource
-		: public BufferIndex {
+		: public BaseBufferResource {
 	public:
 
 		//=========================================================================================
@@ -102,8 +116,10 @@ namespace DxObject {
 		//! 
 		//! @param[in] devices   DxObject::Devices
 		//! @param[in] indexSize 配列サイズ
-		BufferResource(DxObject::Devices* devices, uint32_t indexSize)
-			: BufferIndex(indexSize) { Init(devices); }
+		BufferResource(Devices* devices, uint32_t indexSize)
+			: BaseBufferResource(indexSize, sizeof(T)) {
+			Init(devices);
+		}
 
 		//! @brief デストラクタ
 		~BufferResource() { Term(); }
@@ -111,49 +127,35 @@ namespace DxObject {
 		//! @brief 初期化処理
 		//! 
 		//! @param[in] devices DxObject::Devices
-		void Init(DxObject::Devices* devices);
+		void Init(Devices* devices);
 
 		//! @brief 終了処理
 		void Term();
 
-		//! @brief BufferResourceを取得
-		//! 
-		//! @return BufferResourceを返却
-		ID3D12Resource* GetResource() const {
-			return resource_.Get();
-		}
-
-		//! @brief GPUAddressを取得
-		//! 
-		//! @return GPUAddressを返却
-		const D3D12_GPU_VIRTUAL_ADDRESS GetGPUVirtualAddress() const {
-			return resource_->GetGPUVirtualAddress();
-		}
-
 		//! @brief VertexBufferを取得
 		//! 
 		//! @return VertexBufferを返却
-		const D3D12_VERTEX_BUFFER_VIEW GetVertexBufferView() const {
+		const D3D12_VERTEX_BUFFER_VIEW GetVertexBufferView() {
 			D3D12_VERTEX_BUFFER_VIEW result = {};
-			result.BufferLocation = resource_->GetGPUVirtualAddress();
-			result.SizeInBytes    = sizeof(T) * indexSize_;
-			result.StrideInBytes  = sizeof(T);
+			result.BufferLocation = GetGPUVirtualAddress();
+			result.SizeInBytes    = structureSize_ * indexSize_;
+			result.StrideInBytes  = structureSize_;
 
 			return result;
 		}
 
 		void Memcpy(const T* value) {
-			memcpy(dataArray_, value, sizeof(T) * indexSize_);
+			memcpy(dataArray_, value, structureSize_ * indexSize_);
 		}
 
 		//=========================================================================================
 		// operator
 		//=========================================================================================
 
-		T& operator[](uint32_t index) {
-			CheckIndex(index);
+		T& operator[](uint32_t element) {
+			CheckElementCount(element);
 
-			return dataArray_[index];
+			return dataArray_[element];
 		}
 
 	private:
@@ -162,7 +164,7 @@ namespace DxObject {
 		// private variables
 		//=========================================================================================
 
-		T* dataArray_;
+		T* dataArray_; //!< mappingするデータ
 
 	};
 
@@ -171,7 +173,7 @@ namespace DxObject {
 	////////////////////////////////////////////////////////////////////////////////////////////
 	template <typename T>
 	class BufferPtrResource
-		: public BufferIndex {
+		: public BaseBufferResource {
 	public:
 
 		//=========================================================================================
@@ -182,8 +184,10 @@ namespace DxObject {
 		//! 
 		//! @param[in] devices   DxObject::Devices
 		//! @param[in] indexSize 配列サイズ
-		BufferPtrResource(DxObject::Devices* devices, uint32_t indexSize)
-			: BufferIndex(indexSize) { Init(devices); }
+		BufferPtrResource(Devices* devices, uint32_t indexSize)
+			: BaseBufferResource(indexSize, sizeof(T)) {
+			Init(devices);
+		}
 
 		//! @brief デストラクタ
 		~BufferPtrResource() { Term(); }
@@ -191,15 +195,24 @@ namespace DxObject {
 		//! @brief 初期化処理
 		//! 
 		//! @param[in] devices DxObject::Devices
-		void Init(DxObject::Devices* devices);
+		void Init(Devices* devices);
 
 		//! @brief 終了処理
 		void Term();
 
-		//! @brief GPUAddressを取得
+		//! @brief dataPtrArrayにvalueを設定
 		//! 
-		//! @return GPUAddressを返却
-		const D3D12_GPU_VIRTUAL_ADDRESS GetGPUVirtualAddress() {
+		//! @param[in] element 要素数
+		//! @param[in] value データ
+		void SetPtr(uint32_t element, T* value) {
+			if (!CheckElementCount(element)) {
+				return;
+			}
+
+			dataPtrArray_.at(element) = value;
+		}
+
+		const D3D12_GPU_VIRTUAL_ADDRESS GetGPUVirtualAddress() override {
 			LoadPtrData();
 			return resource_->GetGPUVirtualAddress();
 		}
@@ -208,26 +221,18 @@ namespace DxObject {
 		//! 
 		//! @return VertexBufferを返却
 		const D3D12_VERTEX_BUFFER_VIEW GetVertexBufferView() {
-			LoadPtrData();
-
 			D3D12_VERTEX_BUFFER_VIEW result = {};
-			result.BufferLocation = resource_->GetGPUVirtualAddress();
-			result.SizeInBytes    = sizeof(T) * indexSize_;
-			result.StrideInBytes  = sizeof(T);
+			result.BufferLocation = GetGPUVirtualAddress();
+			result.SizeInBytes    = structureSize_ * indexSize_;
+			result.StrideInBytes  = structureSize_;
 
 			return result;
 		}
 
-		//! @brief dataPtrArrayにvalueを設定
-		//! 
-		//! @param[in] index 要素数
-		//! @param[in] value データ
-		void SetPtr(uint32_t index, T* value) {
-			if (!CheckIndex(index)) {
-				return;
-			}
-
-			dataPtrArray_[index] = value;
+		//! @brief Resourceの取得
+		virtual ID3D12Resource* GetResource() override {
+			LoadPtrData();
+			return resource_.Get();
 		}
 
 	private:
@@ -236,7 +241,7 @@ namespace DxObject {
 		// private variables
 		//=========================================================================================
 
-		T* dataArray_;
+		T*              dataArray_;
 		std::vector<T*> dataPtrArray_;
 
 		//=========================================================================================
@@ -244,14 +249,14 @@ namespace DxObject {
 		//=========================================================================================
 
 		void LoadPtrData();
+
 	};
 
-	
 	////////////////////////////////////////////////////////////////////////////////////////////
 	// IndexBufferResource class
 	////////////////////////////////////////////////////////////////////////////////////////////
 	class IndexBufferResource
-		: public BufferIndex {
+		: public BaseBufferResource {
 	public:
 
 		//=========================================================================================
@@ -260,16 +265,12 @@ namespace DxObject {
 
 		//! @breif コンストラクタ
 		//! 
-		//! @param[in] devices      DxObject::Devices
-		//! @param[in] vertexBuffer DxObject::BufferResource || DxObject::BufferPtrResorce の vertexBuffer
-		IndexBufferResource(DxObject::Devices* devices, const BufferIndex* vertexBuffer);
-
-		//! @breif コンストラクタ
-		//! 
 		//! @param[in] devices   DxObject::Devices
 		//! @param[in] indexSize 配列サイズ
-		IndexBufferResource(DxObject::Devices* devices, uint32_t indexSize)
-			: BufferIndex(indexSize) { Init(devices); }
+		IndexBufferResource(Devices* devices, uint32_t indexSize)
+			: BaseBufferResource(indexSize, sizeof(uint32_t)) {
+			Init(devices);
+		}
 
 		//! @brief デストラクタ
 		~IndexBufferResource() { Term(); }
@@ -277,7 +278,7 @@ namespace DxObject {
 		//! @brief 初期化処理
 		//! 
 		//! @param[in] devices DxObject::Devices
-		void Init(DxObject::Devices* devices);
+		void Init(Devices* devices);
 
 		//! @brief 終了処理
 		void Term();
@@ -288,22 +289,10 @@ namespace DxObject {
 		const D3D12_INDEX_BUFFER_VIEW GetIndexBufferView() const {
 			D3D12_INDEX_BUFFER_VIEW result = {};
 			result.BufferLocation = resource_->GetGPUVirtualAddress();
-			result.SizeInBytes    = sizeof(uint32_t) * indexSize_;
+			result.SizeInBytes    = structureSize_ * indexSize_;
 			result.Format         = DXGI_FORMAT_R32_UINT;
 
 			return result;
-		}
-
-		//! @brief dataArrayにvalueを設定
-		//! 
-		//! @param[in] index 要素数
-		//! @param[in] value データ
-		void Set(uint32_t index, uint32_t value) {
-			if (!CheckIndex(index)) {
-				return;
-			}
-
-			dataArray_[index] = value;
 		}
 
 		void Memcpy(const uint32_t* value) {
@@ -314,10 +303,10 @@ namespace DxObject {
 		// operator
 		//=========================================================================================
 
-		uint32_t& operator[](uint32_t index) {
-			CheckIndex(index);
+		uint32_t& operator[](uint32_t element) {
+			CheckElementCount(element);
 
-			return dataArray_[index];
+			return dataArray_[element];
 		}
 
 	private:
@@ -328,7 +317,6 @@ namespace DxObject {
 
 		uint32_t* dataArray_;
 
-		uint32_t kMaxTriangleCount_;
 	};
 
 }
@@ -338,7 +326,7 @@ namespace DxObject {
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 template<typename T>
-void DxObject::BufferResource<T>::Init(DxObject::Devices* devices) {
+void DxObject::BufferResource<T>::Init(Devices* devices) {
 
 	// deviceを取り出す
 	ID3D12Device* device = devices->GetDevice();
@@ -346,7 +334,7 @@ void DxObject::BufferResource<T>::Init(DxObject::Devices* devices) {
 	// 配列分のBufferResourceを生成
 	resource_ = DxObjectMethod::CreateBufferResource(
 		device,
-		sizeof(T) * indexSize_
+		structureSize_ * indexSize_
 	);
 
 	// resourceをマッピング
@@ -355,7 +343,6 @@ void DxObject::BufferResource<T>::Init(DxObject::Devices* devices) {
 
 template<typename T>
 void DxObject::BufferResource<T>::Term() {
-	resource_->Release();
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -363,30 +350,29 @@ void DxObject::BufferResource<T>::Term() {
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 template<typename T>
-void DxObject::BufferPtrResource<T>::Init(DxObject::Devices* devices) {
+void DxObject::BufferPtrResource<T>::Init(Devices* devices) {
+
 	// deviceを取り出す
 	ID3D12Device* device = devices->GetDevice();
+
+	dataPtrArray_.resize(indexSize_);
 
 	// 配列分のBufferResourceを生成
 	resource_ = DxObjectMethod::CreateBufferResource(
 		device,
-		sizeof(T) * indexSize_
+		structureSize_ * indexSize_
 	);
 
 	// resourceをマッピング
 	resource_->Map(0, nullptr, reinterpret_cast<void**>(&dataArray_));
-
-	// ptrArrayの配列数を動的生成
-	dataPtrArray_.resize(indexSize_);
 }
 
 template<typename T>
 void DxObject::BufferPtrResource<T>::Term() {
-	resource_->Release();
 	dataPtrArray_.clear();
 }
 
 template<typename T>
 void DxObject::BufferPtrResource<T>::LoadPtrData() {
-	memcpy(dataArray_, *dataPtrArray_.data(), sizeof(T) * indexSize_);
+	memcpy(dataArray_, *dataPtrArray_.data(), structureSize_ * indexSize_);
 }

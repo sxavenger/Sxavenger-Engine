@@ -52,12 +52,12 @@ namespace DxObject {
 		//! @brief デバイスを取得
 		//! 
 		//! @return デバイスを返却
-		ID3D12Device* GetDevice() const { return device_.Get(); }
+		auto GetDevice() const { return device_.Get(); }
 
 		//! @brief DXGIファクトリーを取得
 		//! 
 		//! @return DXGIファクトリーを返却
-		IDXGIFactory7* GetFactory() const { return dxgiFactory_.Get(); }
+		auto GetFactory() const { return dxgiFactory_.Get(); }
 
 	private:
 
@@ -88,6 +88,6 @@ namespace DxObject {
 		ComPtr<IDXGIFactory7> dxgiFactory_;
 		ComPtr<IDXGIAdapter4> useAdapter_;
 
-		ComPtr<ID3D12Device> device_;
+		ComPtr<ID3D12Device8> device_;
 	};
 }
