@@ -7,8 +7,15 @@
 #include "MyEngine.h"
 #include "Environment.h"
 #include "ExecutionSpeed.h"
+#include "DirectXCommon.h"
+#include "TextureManager.h"
 
 #include <Attribute.h>
+
+//-----------------------------------------------------------------------------------------
+// using namespace
+//-----------------------------------------------------------------------------------------
+using namespace DxObject;
 
 //=========================================================================================
 // static variables
@@ -31,6 +38,15 @@ Console* Console::GetInstance() {
 }
 
 void Console::Init() {
+	dxCommon_ = MyEngine::GetDxCommon();
+
+	debugCamera_ = std::make_unique<Camera3D>();
+	debugCamera_->SetName("debugCamera");
+
+	MyEngine::GetTextureManager()->CreateDummyTexture(kWindowWidth, kWindowHeight, "scene");
+	sceneTexture_ = MyEngine::GetTexture("scene");
+
+	MyEngine::SetWriteTexture(sceneTexture_, { debugCamera_.get() });
 }
 
 void Console::Term() {
@@ -42,10 +58,12 @@ void Console::Update() {
 
 	// game window
 	OutputScene();
+	OutputGame();
 
 	OutputLog();
 	OutputOutliner();
 	OutputPerformance();
+	OutputSystem();
 }
 
 void Console::SetLog(const std::string& log, const Vector4f& color) {
@@ -63,34 +81,23 @@ void Console::SetLog(const std::string& log, const Vector4f& color) {
 //=========================================================================================
 
 void Console::OutputScene() {
-	ImGui::Begin("Scene", &isOpenDebugScene_, ImGuiWindowFlags_NoCollapse);
+	static bool isOpenWindow = true;
+	ImGui::Begin("Scene", &isOpenWindow, ImGuiWindowFlags_NoCollapse);
+	// this->windowがフォーカスされてるかどうか
+	isFocusDebugScene_ = ImGui::IsWindowFocused();
 
-	//タブ等を除いたウィンドウのサイズを取得(計算)
-	ImVec2 cntRegionMax = ImGui::GetWindowContentRegionMax();
-	ImVec2 cntRegionMin = ImGui::GetWindowContentRegionMin();
-	ImVec2 wndSize = { cntRegionMax.x - cntRegionMin.x, cntRegionMax.y - cntRegionMin.y };
+	SetTextureImGui(sceneTexture_->GetSRVHandleGPU());
 
-	//元のアス比とImGuiウィンドウのアス比を比較
-	float outerWindowAspectRatio = static_cast<float>(kWindowWidth) / static_cast<float>(kWindowHeight);
-	float innerWindowAspectRatio = wndSize.x / wndSize.y;
-	ImVec2 finalWndSize = wndSize;
+	ImGui::End();
+}
 
-	//横幅が大きかったら縦基準で画像サイズを決定
-	if (outerWindowAspectRatio <= innerWindowAspectRatio) {
-		finalWndSize.x *= outerWindowAspectRatio / innerWindowAspectRatio;
-	}
-	//縦幅が大きかったら横基準で画像サイズを決定
-	else {
-		finalWndSize.y *= innerWindowAspectRatio / outerWindowAspectRatio;
-	}
+void Console::OutputGame() {
+	static bool isOpenWindow = true;
+	ImGui::Begin("Game", &isOpenWindow, ImGuiWindowFlags_NoCollapse);
+	// this->windowがフォーカスされてるかどうか
+	isFocusGameScene_ = ImGui::IsWindowFocused();
 
-	//画像を中央に持ってくる
-	ImVec2 topLeft = { (wndSize.x - finalWndSize.x) * 0.5f + cntRegionMin.x,
-						(wndSize.y - finalWndSize.y) * 0.5f + cntRegionMin.y };
-	ImGui::SetCursorPos(topLeft);
-
-	D3D12_GPU_DESCRIPTOR_HANDLE handle = MyEngine::GetTextureHandleGPU("offscreen");
-	ImGui::Image((ImTextureID)handle.ptr, finalWndSize);
+	SetTextureImGui(MyEngine::GetTextureHandleGPU("offscreen"));
 
 	ImGui::End();
 }
@@ -119,7 +126,7 @@ void Console::OutputLog() {
 
 void Console::OutputPerformance() {
 	static bool isOpenWindow = true;
-	ImGui::Begin("Performance", &isOpenWindow, ImGuiWindowFlags_NoTitleBar);
+	ImGui::Begin("Performance", &isOpenWindow, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoScrollbar);
 
 	ImGui::Text("exec speed / frame: %.6f", ExecutionSpeed::freamsParSec_);
 	ImGui::SameLine();
@@ -175,6 +182,80 @@ void Console::OutputOutliner() {
 		selectedAttribute_->SetAttributeImGui();
 	}
 	ImGui::End();
+}
+
+void Console::OutputSystem() {
+	static bool isOpenWindow = true;
+	ImGui::Begin("System", &isOpenWindow);
+
+	if (ImGui::CollapsingHeader("DescriptorHeaps")) {
+		auto descriptorHeaps = dxCommon_->GetDescriptorsObj();
+		
+		if (ImGui::TreeNode("RTV")) {
+			ImGui::Text(
+				"used: %d / max: %d",
+				descriptorHeaps->GetIndexCount(RTV) - descriptorHeaps->GetDescriptorVacantQueue(RTV).size(),
+				descriptorHeaps->GetIndexSize(RTV)
+			);
+
+			ImGui::TreePop();
+		}
+
+		if (ImGui::TreeNode("SRV")) {
+
+			ImGui::Text(
+				"used: %d / max: %d",
+				descriptorHeaps->GetIndexCount(SRV) - descriptorHeaps->GetDescriptorVacantQueue(SRV).size(),
+				descriptorHeaps->GetIndexSize(SRV)
+			);
+
+			ImGui::TreePop();
+		}
+
+		if (ImGui::TreeNode("DSV")) {
+
+			ImGui::Text(
+				"used: %d / max: %d",
+				descriptorHeaps->GetIndexCount(DSV) - descriptorHeaps->GetDescriptorVacantQueue(DSV).size(),
+				descriptorHeaps->GetIndexSize(DSV)
+			);
+
+			ImGui::TreePop();
+		}
+
+	}
+
+	ImGui::End();
+}
+
+void Console::SetTextureImGui(const D3D12_GPU_DESCRIPTOR_HANDLE& texture) {
+	{
+		//タブ等を除いたウィンドウのサイズを取得(計算)
+		ImVec2 cntRegionMax = ImGui::GetWindowContentRegionMax();
+		ImVec2 cntRegionMin = ImGui::GetWindowContentRegionMin();
+		ImVec2 wndSize = { cntRegionMax.x - cntRegionMin.x, cntRegionMax.y - cntRegionMin.y };
+
+		//元のアス比とImGuiウィンドウのアス比を比較
+		float outerWindowAspectRatio = static_cast<float>(kWindowWidth) / static_cast<float>(kWindowHeight);
+		float innerWindowAspectRatio = wndSize.x / wndSize.y;
+		ImVec2 finalWndSize = wndSize;
+
+		//横幅が大きかったら縦基準で画像サイズを決定
+		if (outerWindowAspectRatio <= innerWindowAspectRatio) {
+			finalWndSize.x *= outerWindowAspectRatio / innerWindowAspectRatio;
+		}
+		//縦幅が大きかったら横基準で画像サイズを決定
+		else {
+			finalWndSize.y *= innerWindowAspectRatio / outerWindowAspectRatio;
+		}
+
+		//画像を中央に持ってくる
+		ImVec2 topLeft = { (wndSize.x - finalWndSize.x) * 0.5f + cntRegionMin.x,
+							(wndSize.y - finalWndSize.y) * 0.5f + cntRegionMin.y };
+		ImGui::SetCursorPos(topLeft);
+
+		ImGui::Image((ImTextureID)texture.ptr, finalWndSize);
+	}
 }
 
 

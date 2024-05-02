@@ -77,9 +77,8 @@ void Floor::Update() {
 	// matrix
 	Matrix4x4 world = Matrix::MakeAffine(transform_.scale, transform_.rotate, transform_.translate);
 
-
 	matrixResource_->operator[](0).world = world;
-	matrixResource_->operator[](0).wvp = world * MyEngine::camera3D_->GetViewProjectionMatrix();
+	matrixResource_->operator[](0).wvp = world * MyEngine::offscreenInfo_->camera3D->GetViewProjectionMatrix();
 	matrixResource_->operator[](0).worldInverseTranspose = world;
 
 	// vertices
@@ -93,7 +92,7 @@ void Floor::Update() {
 	}
 }
 
-void Floor::Draw() {
+void Floor::Draw() { //!< param[3], [4]をdescriptorTableにするとvertex関係が変わらない。
 
 	MyEngine::SetBlendMode();
 	MyEngine::SetPipelineType(FLOOR);
@@ -114,7 +113,6 @@ void Floor::Draw() {
 	commandList->SetGraphicsRootConstantBufferView(0, matrixResource_->GetGPUVirtualAddress());
 	commandList->SetGraphicsRootConstantBufferView(1, materialResource_->GetGPUVirtualAddress());
 	commandList->SetGraphicsRootDescriptorTable(2, MyEngine::GetTextureHandleGPU("resources/tile_black.png"));
-
 	
 	// mesh param
 	commandList->SetGraphicsRootShaderResourceView(3, vertexResource_->GetGPUVirtualAddress());

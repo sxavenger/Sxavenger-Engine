@@ -92,7 +92,7 @@ void ImGuiManager::InitImGuiStyle() {
 	style.DockingSeparatorSize = 1;
 
 	/* borderSize */
-	style.FrameBorderSize = 1.0f;
+	style.FrameBorderSize = 0.0f;
 
 	/* color */
 	// text
@@ -155,7 +155,7 @@ void ImGuiManager::InitImGuiStyle() {
 
 	// tab
 	style.Colors[ImGuiCol_Tab]                = ToImVec4({ 6, 6, 6, 255 });
-	style.Colors[ImGuiCol_TabHovered]         = ToImVec4({ 10, 10, 10, 255 });
+	style.Colors[ImGuiCol_TabHovered]         = ToImVec4({ 75, 75, 75, 255 });
 	style.Colors[ImGuiCol_TabActive]          = ToImVec4({ 32, 32, 32, 255 });
 	style.Colors[ImGuiCol_TabUnfocused]       = ToImVec4({ 6, 6, 6, 255 });
 	style.Colors[ImGuiCol_TabUnfocusedActive] = ToImVec4({ 15, 15, 15, 255 });

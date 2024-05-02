@@ -14,6 +14,7 @@
 #include <ComPtr.h>
 
 #include <ExecutionSpeed.h>
+#include <Console.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // namespace -anonymouse-
@@ -27,8 +28,6 @@ namespace {
 	DirectXCommon* sDirectXCommon = nullptr;   //!< DirectX12 system
 	ImGuiManager* sImGuiManager = nullptr;     //!< ImGui system
 	TextureManager* sTextureManager = nullptr; //!< TextureManager system
-
-	
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -40,6 +39,9 @@ namespace {
 //-----------------------------------------------------------------------------------------
 Camera3D* MyEngine::camera3D_ = nullptr;
 Camera2D* MyEngine::camera2D_ = nullptr;
+
+std::unordered_map<Texture*, TextureWriteInfo> MyEngine::writeTextures_;
+const TextureWriteInfo* MyEngine::offscreenInfo_;
 
 //-----------------------------------------------------------------------------------------
 // method
@@ -91,6 +93,8 @@ void MyEngine::Finalize() {
 	sWinApp->Term();
 	sWinApp = nullptr;
 
+	writeTextures_.clear();
+
 	CoUninitialize();
 }
 
@@ -103,8 +107,8 @@ void MyEngine::BeginDraw() {
 	sDirectXCommon->BeginFrame();
 }
 
-void MyEngine::BeginOffScreen() {
-	sDirectXCommon->BeginOffscreen();
+void MyEngine::BeginOffScreen(Texture* offscreenDummyTexture) {
+	sDirectXCommon->BeginOffscreen(offscreenDummyTexture);
 }
 
 void MyEngine::EndOffScreen() {
@@ -112,8 +116,6 @@ void MyEngine::EndOffScreen() {
 }
 
 void MyEngine::EndFrame() {
-	sDirectXCommon->GetDescriptorsObj()->Debug();
-
 	sImGuiManager->End();
 	sDirectXCommon->EndFrame();
 	ExecutionSpeed::End();
@@ -145,6 +147,36 @@ void MyEngine::EraseDescriptor(DxObject::Descriptor& descriptor) {
 	sDirectXCommon->GetDescriptorsObj()->Erase(descriptor);
 }
 
+void MyEngine::SetWriteTexture(Texture* writeTexture, const TextureWriteInfo& info) {
+	auto it = writeTextures_.find(writeTexture);
+	if (it != writeTextures_.end()) { //!< すでにある
+		Console::GetInstance()->SetLog(
+			std::format("warning: writeTexture already set. Texture*: 0x{:x}", std::uintptr_t(writeTexture)),
+			Console::warningColor
+		);
+		return;
+	}
+
+	writeTextures_[writeTexture] = info;
+}
+
+void MyEngine::EraseWriteTexture(Texture* writeTexture) {
+	auto it = writeTextures_.find(writeTexture);
+	if (it == writeTextures_.end()) { //!< mapにない
+		Console::GetInstance()->SetLog(
+			std::format("warning: couldn't erase it. Texture*: 0x{:x}", std::uintptr_t(writeTexture)),
+			Console::warningColor
+		);
+		return;
+	}
+
+	writeTextures_.erase(writeTexture);
+}
+
+const std::unordered_map<Texture*, TextureWriteInfo>& MyEngine::GetWriteTextures() {
+	return writeTextures_;
+}
+
 ID3D12GraphicsCommandList6* MyEngine::GetCommandList() {
 	assert(sDirectXCommon != nullptr);
 	return sDirectXCommon->GetCommandList();
@@ -168,4 +200,9 @@ TextureManager* MyEngine::GetTextureManager() {
 const D3D12_GPU_DESCRIPTOR_HANDLE& MyEngine::GetTextureHandleGPU(const std::string& textureKey) {
 	assert(sTextureManager != nullptr);
 	return sTextureManager->GetHandleGPU(textureKey);
+}
+
+Texture* MyEngine::GetTexture(const std::string& textureKey) {
+	assert(sTextureManager != nullptr);
+	return sTextureManager->GetTexture(textureKey);
 }

@@ -7,18 +7,26 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
+// D3D12
+#include <d3d12.h>
+
 // c++
 #include <deque>
 #include <string>
 #include <list>
+#include <memory>
 
 // geometry
 #include <Vector4.h>
+
+#include <Camera3D.h>
 
 //-----------------------------------------------------------------------------------------
 // forward
 //-----------------------------------------------------------------------------------------
 class Attribute;
+class DirectXCommon;
+class Texture;
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Console class
@@ -74,16 +82,22 @@ private:
 	// private variables
 	//=========================================================================================
 
+	DirectXCommon* dxCommon_;
+
 	// scenes
-	bool isOpenDebugScene_ = true;
-	bool isOpenGameScene_  = true;
+	bool isFocusDebugScene_ = false;
+	bool isFocusGameScene_  = false;
+
+	std::unique_ptr<Camera3D> debugCamera_;
+
+	Texture* sceneTexture_;
 
 	// logs
 	static const int32_t kMaxLogData_ = 30;
 	std::deque<LogData> logDatas_;
 
 	// Attribute
-	std::list<Attribute*> Outliner_;
+	std::list<Attribute*> Outliner_; //!< attributes
 	Attribute* selectedAttribute_;
 
 	//=========================================================================================
@@ -94,8 +108,15 @@ private:
 	void Term();
 
 	void OutputScene();
+	void OutputGame();
+
 	void OutputLog();
 	void OutputPerformance();
 	void OutputOutliner();
+
+	// test made
+	void OutputSystem();
+
+	void SetTextureImGui(const D3D12_GPU_DESCRIPTOR_HANDLE& texture);
 
 };

@@ -110,7 +110,7 @@ public:
 		return it->second.texture->GetSRVHandleGPU();
 	}
 
-	const Texture* GetTexture(const std::string& key) const {
+	Texture* GetTexture(const std::string& key) const {
 		auto it = FindKey(key);
 
 		return it->second.texture.get();

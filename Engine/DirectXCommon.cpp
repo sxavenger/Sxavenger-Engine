@@ -47,8 +47,10 @@ void DirectXCommon::Term() {
 	devices_.reset();
 }
 
-void DirectXCommon::BeginOffscreen() {
+void DirectXCommon::BeginOffscreen(Texture* dummyTexture) {
+	assert(dummyTexture != nullptr && offscreenDummyTexture_ == nullptr);
 	
+	offscreenDummyTexture_ = dummyTexture;
 	
 	// コマンドリストの取得
 	auto commandList = command_->GetCommandList();
@@ -58,14 +60,14 @@ void DirectXCommon::BeginOffscreen() {
 	barrier.Flags                  = D3D12_RESOURCE_BARRIER_FLAG_NONE;
 	barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
 	barrier.Transition.StateAfter  = D3D12_RESOURCE_STATE_RENDER_TARGET;
-	barrier.Transition.pResource   = TextureManager::GetInstance()->GetTexture("offscreen")->GetResource();
+	barrier.Transition.pResource   = offscreenDummyTexture_->GetResource();
 
 	commandList->ResourceBarrier(
 		1,
 		&barrier
 	);
 
-	D3D12_CPU_DESCRIPTOR_HANDLE handle_RTV = TextureManager::GetInstance()->GetTexture("offscreen")->GetRTVHandleCPU();
+	D3D12_CPU_DESCRIPTOR_HANDLE handle_RTV = offscreenDummyTexture_->GetRTVHandleCPU();
 
 	commandList->OMSetRenderTargets(
 		1,
@@ -92,6 +94,8 @@ void DirectXCommon::BeginOffscreen() {
 }
 
 void DirectXCommon::EndOffscreen() {
+	assert(offscreenDummyTexture_ != nullptr);
+
 	// コマンドリストの取得
 	auto commandList = command_->GetCommandList();
 
@@ -100,12 +104,14 @@ void DirectXCommon::EndOffscreen() {
 	barrier.Flags                  = D3D12_RESOURCE_BARRIER_FLAG_NONE;
 	barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_RENDER_TARGET;
 	barrier.Transition.StateAfter  = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
-	barrier.Transition.pResource   = TextureManager::GetInstance()->GetTexture("offscreen")->GetResource();
+	barrier.Transition.pResource   = offscreenDummyTexture_->GetResource();
 
 	commandList->ResourceBarrier(
 		1,
 		&barrier
 	);
+
+	offscreenDummyTexture_ = nullptr;
 }
 
 void DirectXCommon::BeginFrame() {

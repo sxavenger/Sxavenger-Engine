@@ -123,17 +123,18 @@ void DxObject::PipelineManager::CreatePipelineTable() {
 		desc.param[2].DescriptorTable.NumDescriptorRanges = _countof(range);
 
 		/// mesh shader param
+
 		//!< vertices
-		desc.param[3].ParameterType = D3D12_ROOT_PARAMETER_TYPE_SRV;
-		desc.param[3].ShaderVisibility = D3D12_SHADER_VISIBILITY_MESH;
+		desc.param[3].ParameterType             = D3D12_ROOT_PARAMETER_TYPE_SRV;
+		desc.param[3].ShaderVisibility          = D3D12_SHADER_VISIBILITY_MESH;
 		desc.param[3].Descriptor.ShaderRegister = 0;
-		desc.param[3].Descriptor.RegisterSpace = 0;
+		desc.param[3].Descriptor.RegisterSpace  = 0;
 
 		//!< indices
-		desc.param[4].ParameterType = D3D12_ROOT_PARAMETER_TYPE_SRV;
-		desc.param[4].ShaderVisibility = D3D12_SHADER_VISIBILITY_MESH;
+		desc.param[4].ParameterType             = D3D12_ROOT_PARAMETER_TYPE_SRV;
+		desc.param[4].ShaderVisibility          = D3D12_SHADER_VISIBILITY_MESH;
 		desc.param[4].Descriptor.ShaderRegister = 1;
-		desc.param[4].Descriptor.RegisterSpace = 0;
+		desc.param[4].Descriptor.RegisterSpace  = 0;
 
 
 		// samplerの設定

@@ -174,12 +174,13 @@ void TextureManager::LoadTexture(const std::string& filePath) {
 void TextureManager::CreateDummyTexture(int32_t width, int32_t height, std::string key) {
 	auto it = textures_.find(key);
 	if (it != textures_.end()) {
-		Log("TextureManager::CreateDummyTexture \n if (it != textures_.end()) { \n return; \n} ");
-		Console::GetInstance()->SetLog("warning: dummyTexture already made. key:" + key, Console::warningColor);
+		Log("TextureManager::CreateDummyTexture \n if (it != textures_.end()) { \n return; \n} \n");
+		Console::GetInstance()->SetLog("warning: dummyTexture already made. [key]: " + key, Console::warningColor);
 		return;
 	}
 
 	textures_[key].texture = std::make_unique<Texture>(width, height, dxCommon_);
+	textures_[key].referenceNum = 1;
 }
 
 void TextureManager::UnloadTexture(const std::string& filePath) {

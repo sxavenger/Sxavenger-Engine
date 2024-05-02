@@ -93,7 +93,16 @@ namespace DxObject {
 			return descriptorHeaps_[type].Get();
 		}
 
-		void Debug();
+		// use debug
+		const uint32_t GetIndexCount(DescriptorType type) {
+			assert(type < DescriptorType::kDescriptorHeapCount);
+			return descriptorIndexCount_[type];
+		}
+
+		const std::deque<uint32_t>& GetDescriptorVacantQueue(DescriptorType type) {
+			assert(type < DescriptorType::kDescriptorHeapCount);
+			return descriptorVacantIndexs_[type];
+		}
 
 	private:
 

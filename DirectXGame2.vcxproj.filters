@@ -229,6 +229,9 @@
     <ClCompile Include="Engine\DxObject\DxStructuredBuffer.cpp">
       <Filter>Engine\DxObject\source</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\ResMesh.cpp">
+      <Filter>Engine\source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\MyEngine.h">
@@ -380,6 +383,12 @@
     </ClInclude>
     <ClInclude Include="Engine\DxObject\DxStructuredBuffer.h">
       <Filter>Engine\DxObject\include</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\ResMesh.h">
+      <Filter>Engine\include</Filter>
+    </ClInclude>
+    <ClInclude Include="Lib\Geometry\VectorComparison.h">
+      <Filter>Lib\Geometry\include</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

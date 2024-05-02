@@ -38,7 +38,9 @@ void DxObject::RootSignature::Init(Devices* devices, const RootSignatureDescs& d
 	);
 
 	if (FAILED(hr)) {
+		Log("//----------------------------------------------------------------------------------------- \n");
 		Log(reinterpret_cast<char*>(signatureErrorBlob_->GetBufferPointer()));
+		Log("//----------------------------------------------------------------------------------------- \n");
 		assert(false);
 	}
 

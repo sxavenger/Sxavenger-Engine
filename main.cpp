@@ -21,14 +21,12 @@
 #include <list>
 #include <memory>
 
-// Game
 #include <Logger.h>
-
-//
-#include "externals/imgui/imgui_internal.h"
 
 // Game
 #include "Game/Floor/Floor.h"
+
+#include <VectorComparison.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // メイン関数
@@ -41,12 +39,12 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	MyEngine::Initialize(kWindowWidth, kWindowHeight, kWindowTitle);
 	Console::GetInstance()->Init();
 
-	Floor* floor = new Floor();
+	std::unique_ptr<Floor> floor = std::make_unique<Floor>();
 	
 	std::unique_ptr<Camera3D> camera = std::make_unique<Camera3D>();
 	MyEngine::camera3D_ = camera.get();
 
-	
+	MyEngine::SetWriteTexture(MyEngine::GetTexture("offscreen"), { camera.get() });
 
 	////////////////////////////////////////////////////////////////////////////////////////////
 	// メインループ
@@ -71,30 +69,37 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 		Console::GetInstance()->Update();
 
-		floor->Update();
-
-		MyEngine::BeginOffScreen();
-		// forでscene分回す。
+		
 
 		//=========================================================================================
 		// オフスクリーン描画処理
 		//=========================================================================================
-		
-		floor->Draw();
 
-		MyEngine::EndOffScreen();
+		// MyEngineに登録されているdummyTexture分回す
+		for (auto& info : MyEngine::GetWriteTextures()) {
+			MyEngine::BeginOffScreen(info.first);
+			MyEngine::offscreenInfo_ = &info.second;
 
-		MyEngine::BeginDraw();
+			floor->Update(); // HACK: Updateを二回行うことになる.
+
+			floor->Draw();
+
+			MyEngine::EndOffScreen();
+		}
 
 		//=========================================================================================
 		// スクリーン描画処理
 		//=========================================================================================
-		
+
+		MyEngine::BeginDraw();
+
+
+
 		MyEngine::EndFrame();
 
 	}
 
-	delete floor;
+	floor.reset();
 	MyEngine::Finalize();
 	
 	return 0;

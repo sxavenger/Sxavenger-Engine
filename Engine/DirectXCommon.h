@@ -25,6 +25,7 @@
 // forward
 //-----------------------------------------------------------------------------------------
 class WinApp;
+class Texture;
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // DirectXCommon class
@@ -48,7 +49,7 @@ public:
 	//! @brief DirectXの終了
 	void Term();
 
-	void BeginOffscreen();
+	void BeginOffscreen(Texture* dummyTexture);
 	void EndOffscreen();
 
 	//! @brief フレームの開始処理
@@ -104,6 +105,8 @@ private:
 	std::unique_ptr<DxObject::PipelineManager> pipelineManager_;
 
 	UINT backBufferIndex_;
+
+	Texture* offscreenDummyTexture_ = nullptr;
 
 	//=========================================================================================
 	// private methods

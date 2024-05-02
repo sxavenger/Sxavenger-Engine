@@ -115,6 +115,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\Logger.cpp" />
     <ClCompile Include="Engine\Model.cpp" />
     <ClCompile Include="Engine\MyEngine.cpp" />
+    <ClCompile Include="Engine\ResMesh.cpp" />
     <ClCompile Include="Engine\TextureManager.cpp" />
     <ClCompile Include="Engine\WinApp.cpp" />
     <ClCompile Include="externals\imgui\imgui.cpp" />
@@ -167,6 +168,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\Logger.h" />
     <ClInclude Include="Engine\Model.h" />
     <ClInclude Include="Engine\MyEngine.h" />
+    <ClInclude Include="Engine\ResMesh.h" />
     <ClInclude Include="Engine\TextureManager.h" />
     <ClInclude Include="Engine\WinApp.h" />
     <ClInclude Include="externals\imgui\imconfig.h" />
@@ -191,6 +193,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Lib\Geometry\Vector2.h" />
     <ClInclude Include="Lib\Geometry\Vector3.h" />
     <ClInclude Include="Lib\Geometry\Vector4.h" />
+    <ClInclude Include="Lib\Geometry\VectorComparison.h" />
     <ClInclude Include="Lib\Light\Light.h" />
     <ClInclude Include="Lib\ObjectStructure.h" />
   </ItemGroup>

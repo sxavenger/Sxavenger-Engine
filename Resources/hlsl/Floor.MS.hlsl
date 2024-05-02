@@ -37,20 +37,23 @@ ConstantBuffer<FloorForGPU> gFloor : register(b0);
 [outputtopology("triangle")]
 void main(
 	uint groupIndex : SV_GroupIndex,
-	out vertices MSOutput verts[3],
-	out indices uint3 tris[1]) {
+	out vertices MSOutput verts[64],
+	out indices uint3 tris[126]) {
+	
+	const uint vertexCount = 4;    //!< 出力する頂点数
+	const uint primitiveCount = 2; //!< 三角形の数...?
 	
 	// スレットグループの頂点とプリミティブの数を設定
-	SetMeshOutputCounts(3, 1);
+	SetMeshOutputCounts(vertexCount, primitiveCount);
 	
 	// 頂点番号を設定
-	if (groupIndex < 1) {
+	if (groupIndex < primitiveCount) {
 		tris[groupIndex] = indices[groupIndex];
 		//prims[groupIndex].Index = groupIndex;
 	}
 	
 	// 頂点データを設定
-	if (groupIndex < 3) {
+	if (groupIndex < vertexCount) {
 		
 		MSOutput output;
 		

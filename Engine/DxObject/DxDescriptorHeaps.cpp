@@ -8,7 +8,6 @@
 #include "DxSwapChain.h"
 
 #include <Logger.h>
-#include "externals/imgui/imgui.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // DescriptorHeaps class
@@ -149,28 +148,4 @@ DxObject::Descriptor DxObject::DescriptorHeaps::GetCurrentDescriptor(DescriptorT
 	result.type = type;
 
 	return result;
-}
-
-void DxObject::DescriptorHeaps::Debug() {
-	ImGui::Begin("[DxObject]:DescriptorHeaps - debacker");
-
-	if (ImGui::CollapsingHeader("type - SRV")) {
-
-		if (ImGui::TreeNode("VacantIndexs - deque")) {
-			if (descriptorVacantIndexs_[SRV].empty()) {
-				ImGui::Text("> empty...");
-
-			} else {
-				int i = 0;
-				for (const auto& it : descriptorVacantIndexs_[SRV]) {
-					ImGui::Text("VacantIndexs[%d]: %d", i, it);
-					i++;
-				}
-			}
-
-			ImGui::TreePop();
-		}
-	}
-
-	ImGui::End();
 }
