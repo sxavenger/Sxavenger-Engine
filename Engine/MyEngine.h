@@ -83,7 +83,7 @@ public:
 
 	static void SetPipelineType(PipelineType pipelineType);
 
-	static void SetBlendMode(BlendMode mode = DefaultBlendMode);
+	static void SetBlendMode(BlendMode mode);
 
 	static void SetPipelineState();
 

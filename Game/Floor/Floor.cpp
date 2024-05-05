@@ -94,7 +94,7 @@ void Floor::Update() {
 
 void Floor::Draw() { //!< param[3], [4]をdescriptorTableにするとvertex関係が変わらない。
 
-	MyEngine::SetBlendMode();
+	MyEngine::SetBlendMode(kBlendModeNormal);
 	MyEngine::SetPipelineType(FLOOR);
 	MyEngine::SetPipelineState();
 
@@ -106,8 +106,9 @@ void Floor::Draw() { //!< param[3], [4]をdescriptorTableにするとvertex関�
 
 	commandList->IASetVertexBuffers(0, 1, &vertexBufferView);
 	commandList->IASetIndexBuffer(&indexBufferView);*/
+
 	ID3D12DescriptorHeap* srv[] = { MyEngine::GetDxCommon()->GetDescriptorsObj()->GetDescriptorHeap(SRV) };
-	commandList->SetDescriptorHeaps(1, srv);
+	commandList->SetDescriptorHeaps(1, srv); // hack:
 
 	// ParamBuffers
 	commandList->SetGraphicsRootConstantBufferView(0, matrixResource_->GetGPUVirtualAddress());
