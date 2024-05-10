@@ -55,6 +55,9 @@ void DirectXCommon::BeginOffscreen(Texture* dummyTexture) {
 	// コマンドリストの取得
 	auto commandList = command_->GetCommandList();
 
+	ID3D12DescriptorHeap* srv[] = { descriptorHeaps_->GetDescriptorHeap(DxObject::SRV) };
+	commandList->SetDescriptorHeaps(_countof(srv), srv); // hack:
+
 	D3D12_RESOURCE_BARRIER barrier = {};
 	barrier.Type                   = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
 	barrier.Flags                  = D3D12_RESOURCE_BARRIER_FLAG_NONE;

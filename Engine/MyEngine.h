@@ -103,12 +103,6 @@ public:
 
 	// ---- offscreen関係 ---- //
 
-	static void SetWriteTexture(Texture* writeTexture, const TextureWriteInfo& info);
-
-	static void EraseWriteTexture(Texture* writeTexture);
-
-	static const std::unordered_map<Texture*, TextureWriteInfo>& GetWriteTextures();
-
 	// TODO: あんましたくない
 	static ID3D12GraphicsCommandList6* GetCommandList();
 
@@ -124,15 +118,5 @@ public:
 	static Camera3D* camera3D_;
 	static Camera2D* camera2D_;
 
-	static const TextureWriteInfo* offscreenInfo_;
-
 private:
-
-	//=========================================================================================
-	// private varibales
-	//=========================================================================================
-
-	static std::unordered_map<Texture*, TextureWriteInfo> writeTextures_;
-	//!< key = 書き込むテクスチャのptr, value = 書き込みに必要な構造体
-
 };

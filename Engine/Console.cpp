@@ -6,7 +6,7 @@
 #include "externals/imgui/imgui.h"
 #include "MyEngine.h"
 #include "Environment.h"
-#include "ExecutionSpeed.h"
+#include "Performance.h"
 #include "DirectXCommon.h"
 #include "TextureManager.h"
 
@@ -23,6 +23,7 @@ using namespace DxObject;
 const Vector4f Console::commentOutColor = { 0.0f, 0.55f, 0.0f, 1.0f };
 const Vector4f Console::errorColor      = { 0.8f, 0.0f, 0.0f, 1.0f };
 const Vector4f Console::warningColor    = { 0.8f, 0.8f, 0.0f, 1.0f };
+const Vector4f Console::defaultColor    = { 0.98f, 0.98f, 0.98f, 1.0f };
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Console class methods
@@ -39,14 +40,6 @@ Console* Console::GetInstance() {
 
 void Console::Init() {
 	dxCommon_ = MyEngine::GetDxCommon();
-
-	debugCamera_ = std::make_unique<Camera3D>();
-	debugCamera_->SetName("debugCamera");
-
-	MyEngine::GetTextureManager()->CreateDummyTexture(kWindowWidth, kWindowHeight, "scene");
-	sceneTexture_ = MyEngine::GetTexture("scene");
-
-	MyEngine::SetWriteTexture(sceneTexture_, { debugCamera_.get() });
 }
 
 void Console::Term() {
@@ -70,7 +63,7 @@ void Console::SetLog(const std::string& log, const Vector4f& color) {
 	// logの追加
 	logDatas_.push_front({log, color});
 
-	if (logDatas_.size() >= kMaxLogData_) {
+	while (logDatas_.size() >= kMaxLogData_) {
 		// 一番古いログの削除
 		logDatas_.pop_back();
 	}
@@ -83,10 +76,11 @@ void Console::SetLog(const std::string& log, const Vector4f& color) {
 void Console::OutputScene() {
 	static bool isOpenWindow = true;
 	ImGui::Begin("Scene", &isOpenWindow, ImGuiWindowFlags_NoCollapse);
-	// this->windowがフォーカスされてるかどうか
-	isFocusDebugScene_ = ImGui::IsWindowFocused();
+	// todo: window開かれてる状態を保存させる. foucusとは違う
+	isFocusDebugScene_; //!< 名前もfoucusからいい感じに変更させる
 
-	SetTextureImGui(sceneTexture_->GetSRVHandleGPU());
+	SetTextureImGui(MyEngine::GetTextureHandleGPU("offscreen"));
+	// todo: debugTextureに変更する
 
 	ImGui::End();
 }
@@ -128,9 +122,11 @@ void Console::OutputPerformance() {
 	static bool isOpenWindow = true;
 	ImGui::Begin("Performance", &isOpenWindow, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoScrollbar);
 
-	ImGui::Text("exec speed / frame: %.6f", ExecutionSpeed::freamsParSec_);
+	float framesPerSec = Performance::GetFramesPerformance(SecondsUnit::s);
+
+	ImGui::Text("exec speed / frame: %.6f", framesPerSec);
 	ImGui::SameLine();
-	ImGui::Text("FPS: %.1f", 1.0f / ExecutionSpeed::freamsParSec_);
+	ImGui::Text("FPS: %.1f", 1.0f / framesPerSec);
 
 	ImGui::End();
 }

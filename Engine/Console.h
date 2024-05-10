@@ -67,6 +67,7 @@ public:
 	static const Vector4f commentOutColor;
 	static const Vector4f errorColor;
 	static const Vector4f warningColor;
+	static const Vector4f defaultColor;
 
 private:
 

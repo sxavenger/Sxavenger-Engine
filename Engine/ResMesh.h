@@ -12,8 +12,8 @@
 // Mesh structure
 ////////////////////////////////////////////////////////////////////////////////////////////
 struct ResMeshlet {
-	uint32_t vertexOffset; //!< 頂点番号のオフセット
-	uint32_t vertexCount;  //!< 頂点数
+	uint32_t vertexOffset;    //!< 頂点番号のオフセット
+	uint32_t vertexCount;     //!< 頂点数
 	uint32_t primitiveOffset; //!< プリミティブ番号のオフセット
 	uint32_t primitiveCount;  //!< プリミティブオフセット
 };
@@ -27,11 +27,11 @@ struct ResPrimitiveIndex {
 
 struct ResMesh {
 	std::vector<VertexData> vertices;
-	std::vector<uint32_t> index;
-	uint32_t materialId;
+	std::vector<uint32_t>   indices;
+	uint32_t                materialId;
 
-	std::vector<ResMeshlet> meshlet;
-	std::vector<uint32_t> uniqueVertexIndices;
+	std::vector<ResMeshlet>        meshlets;
+	std::vector<uint32_t>          uniqueVertexIndices;
 	std::vector<ResPrimitiveIndex> primitiveIndices;
 };
 

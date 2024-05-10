@@ -74,13 +74,6 @@ void Floor::Init() {
 
 void Floor::Update() {
 
-	// matrix
-	Matrix4x4 world = Matrix::MakeAffine(transform_.scale, transform_.rotate, transform_.translate);
-
-	matrixResource_->operator[](0).world = world;
-	matrixResource_->operator[](0).wvp = world * MyEngine::offscreenInfo_->camera3D->GetViewProjectionMatrix();
-	matrixResource_->operator[](0).worldInverseTranspose = world;
-
 	// vertices
 	vertices_[LEFTBOTTOM].position = { -floorSize_.x / 2.0f, 0.0f, -floorSize_.y / 2.0f };
 	vertices_[LEFTTOP].position = { -floorSize_.x / 2.0f, 0.0f, floorSize_.y / 2.0f };
@@ -98,29 +91,29 @@ void Floor::Draw() { //!< param[3], [4]をdescriptorTableにするとvertex関�
 	MyEngine::SetPipelineType(FLOOR);
 	MyEngine::SetPipelineState();
 
+	// matrix
+	Matrix4x4 world = Matrix::MakeAffine(transform_.scale, transform_.rotate, transform_.translate);
+
+	matrixResource_->operator[](0).world = world;
+	matrixResource_->operator[](0).wvp = world * MyEngine::camera3D_->GetViewProjectionMatrix();
+	matrixResource_->operator[](0).worldInverseTranspose = world;
+	// hack:
+
 	// commandListの取り出し
 	auto commandList = MyEngine::GetCommandList();
-
-	/*D3D12_VERTEX_BUFFER_VIEW vertexBufferView = vertexResource_->GetVertexBufferView();
-	D3D12_INDEX_BUFFER_VIEW indexBufferView = indexResource_->GetIndexBufferView();
-
-	commandList->IASetVertexBuffers(0, 1, &vertexBufferView);
-	commandList->IASetIndexBuffer(&indexBufferView);*/
-
-	ID3D12DescriptorHeap* srv[] = { MyEngine::GetDxCommon()->GetDescriptorsObj()->GetDescriptorHeap(SRV) };
-	commandList->SetDescriptorHeaps(1, srv); // hack:
 
 	// ParamBuffers
 	commandList->SetGraphicsRootConstantBufferView(0, matrixResource_->GetGPUVirtualAddress());
 	commandList->SetGraphicsRootConstantBufferView(1, materialResource_->GetGPUVirtualAddress());
+	
 	commandList->SetGraphicsRootDescriptorTable(2, MyEngine::GetTextureHandleGPU("resources/tile_black.png"));
+	
 	
 	// mesh param
 	commandList->SetGraphicsRootShaderResourceView(3, vertexResource_->GetGPUVirtualAddress());
 	commandList->SetGraphicsRootShaderResourceView(4, indexResource_->GetGPUVirtualAddress());
 
-	/*commandList->DrawIndexedInstanced(indexResource_->GetSize(), 1, 0, 0, 0);*/
-	commandList->DispatchMesh(2, 1, 1);
+	commandList->DispatchMesh(1, 1, 1);
 
 }
 
@@ -132,19 +125,6 @@ void Floor::Term() {
 
 	materialResource_.reset();
 	matrixResource_.reset();
-}
-
-void Floor::SetOnImGui() {
-	if (ImGui::TreeNode("Floor")) {
-		ImGui::DragFloat2("size", &floorSize_.x, 0.01f);
-		ImGui::DragFloat("tileScale", &tileScale, 0.01f, 0.0f, 1000.0f);
-
-		ImGui::DragFloat3("translate", &transform_.translate.x, 0.1f);
-
-		ImGui::TreePop();
-	}
-
-	Update();
 }
 
 void Floor::SetAttributeImGui() {

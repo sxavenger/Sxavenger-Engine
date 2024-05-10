@@ -21,12 +21,12 @@ StructuredBuffer<uint3> indices : register(t1);
 //=========================================================================================
 // FloorForGPU structure
 //=========================================================================================
-struct FloorForGPU {
+struct TransformationMatrix {
 	float4x4 wvp;
 	float4x4 world;
 	float4x4 worldInverseTranspose;
 };
-ConstantBuffer<FloorForGPU> gFloor : register(b0);
+ConstantBuffer<TransformationMatrix> gFloor : register(b0);
 
 // todo: 非均一スケールの対応
 
@@ -40,7 +40,7 @@ void main(
 	out vertices MSOutput verts[64],
 	out indices uint3 tris[126]) {
 	
-	const uint vertexCount = 4;    //!< 出力する頂点数
+	const uint vertexCount    = 4; //!< 出力する頂点数
 	const uint primitiveCount = 2; //!< 三角形の数...?
 	
 	// スレットグループの頂点とプリミティブの数を設定

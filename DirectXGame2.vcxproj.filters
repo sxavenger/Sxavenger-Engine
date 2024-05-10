@@ -61,9 +61,6 @@
     <Filter Include="Lib\Adapter\Random">
       <UniqueIdentifier>{c32eefb0-dc42-4eb8-9cb7-5edcfecb4c74}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Lib\Adapter\ExecutionSpeed">
-      <UniqueIdentifier>{5422f44a-4902-4946-941c-d8ed7deab608}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Lib\Collider">
       <UniqueIdentifier>{c313588c-2f0a-4766-84df-e98f062882d9}</UniqueIdentifier>
     </Filter>
@@ -87,6 +84,12 @@
     </Filter>
     <Filter Include="Game">
       <UniqueIdentifier>{7b9b6874-d5f0-4a58-83d4-1b0e8b12f30a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Lib\Adapter\Parformance">
+      <UniqueIdentifier>{ac3efd8f-c3b2-4063-8a08-73409f8a7c9f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="externals\meshoptimizer">
+      <UniqueIdentifier>{f24df899-454d-4f15-99bb-f5eb440d67e3}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -172,9 +175,6 @@
     <ClCompile Include="Lib\Adapter\Random\Random.cpp">
       <Filter>Lib\Adapter\Random</Filter>
     </ClCompile>
-    <ClCompile Include="Lib\Adapter\ExecutionSpeed\ExecutionSpeed.cpp">
-      <Filter>Lib\Adapter\ExecutionSpeed</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\DxObject\DxPipelineManager.cpp">
       <Filter>Engine\DxObject\source</Filter>
     </ClCompile>
@@ -231,6 +231,57 @@
     </ClCompile>
     <ClCompile Include="Engine\ResMesh.cpp">
       <Filter>Engine\source</Filter>
+    </ClCompile>
+    <ClCompile Include="Lib\Adapter\Performance\Performance.cpp">
+      <Filter>Lib\Adapter\Parformance</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Plane\Plane.cpp">
+      <Filter>Game</Filter>
+    </ClCompile>
+    <ClCompile Include="externals\meshoptimizer\allocator.cpp">
+      <Filter>externals\meshoptimizer</Filter>
+    </ClCompile>
+    <ClCompile Include="externals\meshoptimizer\clusterizer.cpp">
+      <Filter>externals\meshoptimizer</Filter>
+    </ClCompile>
+    <ClCompile Include="externals\meshoptimizer\indexcodec.cpp">
+      <Filter>externals\meshoptimizer</Filter>
+    </ClCompile>
+    <ClCompile Include="externals\meshoptimizer\indexgenerator.cpp">
+      <Filter>externals\meshoptimizer</Filter>
+    </ClCompile>
+    <ClCompile Include="externals\meshoptimizer\overdrawanalyzer.cpp">
+      <Filter>externals\meshoptimizer</Filter>
+    </ClCompile>
+    <ClCompile Include="externals\meshoptimizer\overdrawoptimizer.cpp">
+      <Filter>externals\meshoptimizer</Filter>
+    </ClCompile>
+    <ClCompile Include="externals\meshoptimizer\simplifier.cpp">
+      <Filter>externals\meshoptimizer</Filter>
+    </ClCompile>
+    <ClCompile Include="externals\meshoptimizer\spatialorder.cpp">
+      <Filter>externals\meshoptimizer</Filter>
+    </ClCompile>
+    <ClCompile Include="externals\meshoptimizer\stripifier.cpp">
+      <Filter>externals\meshoptimizer</Filter>
+    </ClCompile>
+    <ClCompile Include="externals\meshoptimizer\vcacheanalyzer.cpp">
+      <Filter>externals\meshoptimizer</Filter>
+    </ClCompile>
+    <ClCompile Include="externals\meshoptimizer\vcacheoptimizer.cpp">
+      <Filter>externals\meshoptimizer</Filter>
+    </ClCompile>
+    <ClCompile Include="externals\meshoptimizer\vertexcodec.cpp">
+      <Filter>externals\meshoptimizer</Filter>
+    </ClCompile>
+    <ClCompile Include="externals\meshoptimizer\vertexfilter.cpp">
+      <Filter>externals\meshoptimizer</Filter>
+    </ClCompile>
+    <ClCompile Include="externals\meshoptimizer\vfetchanalyzer.cpp">
+      <Filter>externals\meshoptimizer</Filter>
+    </ClCompile>
+    <ClCompile Include="externals\meshoptimizer\vfetchoptimizer.cpp">
+      <Filter>externals\meshoptimizer</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -324,9 +375,6 @@
     <ClInclude Include="Lib\Adapter\Random\Random.h">
       <Filter>Lib\Adapter\Random</Filter>
     </ClInclude>
-    <ClInclude Include="Lib\Adapter\ExecutionSpeed\ExecutionSpeed.h">
-      <Filter>Lib\Adapter\ExecutionSpeed</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\DxObject\DxPipelineManager.h">
       <Filter>Engine\DxObject\include</Filter>
     </ClInclude>
@@ -389,6 +437,15 @@
     </ClInclude>
     <ClInclude Include="Lib\Geometry\VectorComparison.h">
       <Filter>Lib\Geometry\include</Filter>
+    </ClInclude>
+    <ClInclude Include="Lib\Adapter\Performance\Performance.h">
+      <Filter>Lib\Adapter\Parformance</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Plane\Plane.h">
+      <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="externals\meshoptimizer\meshoptimizer.h">
+      <Filter>externals\meshoptimizer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

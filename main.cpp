@@ -8,7 +8,7 @@
 #include <Console.h>
 /// lib
 #include <Environment.h>
-#include <ExecutionSpeed.h>
+#include <Performance.h>
 // Geometry
 #include <Vector4.h>
 #include <Matrix4x4.h>
@@ -20,13 +20,13 @@
 // c++
 #include <list>
 #include <memory>
+#include <array>
 
 #include <Logger.h>
 
 // Game
 #include "Game/Floor/Floor.h"
-
-#include <VectorComparison.h>
+#include "Game/Plane/Plane.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // メイン関数
@@ -40,11 +40,10 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	Console::GetInstance()->Init();
 
 	std::unique_ptr<Floor> floor = std::make_unique<Floor>();
+	std::unique_ptr<Plane> plane = std::make_unique<Plane>();
 	
 	std::unique_ptr<Camera3D> camera = std::make_unique<Camera3D>();
 	MyEngine::camera3D_ = camera.get();
-
-	MyEngine::SetWriteTexture(MyEngine::GetTexture("offscreen"), { camera.get() });
 
 	////////////////////////////////////////////////////////////////////////////////////////////
 	// メインループ
@@ -62,30 +61,28 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 		if (frame % 60 == 0) {
 			Console::GetInstance()->SetLog(
-				std::format("[debug] frame: {}, speed: {}", frame / 60, ExecutionSpeed::freamsParSec_),
+				std::format("[debug] frame: {}, speed(ms): {}", frame / 60, Performance::GetFramesPerformance(SecondsUnit::ms)),
 				Console::commentOutColor
 			);
 		}
 
 		Console::GetInstance()->Update();
 
-		
+		floor->Update(); // HACK: Updateを二回行うことになる.
+		plane->Update();
 
 		//=========================================================================================
 		// オフスクリーン描画処理
 		//=========================================================================================
 
-		// MyEngineに登録されているdummyTexture分回す
-		for (auto& info : MyEngine::GetWriteTextures()) {
-			MyEngine::BeginOffScreen(info.first);
-			MyEngine::offscreenInfo_ = &info.second;
+		// todo: 複数へのtexture書き込みをさせる.
+		MyEngine::BeginOffScreen(MyEngine::GetTexture("offscreen"));
 
-			floor->Update(); // HACK: Updateを二回行うことになる.
+		plane->Draw();
+		floor->Draw();
 
-			floor->Draw();
-
-			MyEngine::EndOffScreen();
-		}
+		MyEngine::EndOffScreen();
+		
 
 		//=========================================================================================
 		// スクリーン描画処理
@@ -100,6 +97,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	}
 
 	floor.reset();
+	plane.reset();
 	MyEngine::Finalize();
 	
 	return 0;

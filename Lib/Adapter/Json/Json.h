@@ -4,7 +4,7 @@
 // Include
 //-----------------------------------------------------------------------------------------
 // externals
-#include <nlohmann/json.hpp>
+#include <json.hpp>
 
 // c++
 #include <fstream>

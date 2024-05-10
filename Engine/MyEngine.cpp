@@ -13,7 +13,7 @@
 
 #include <ComPtr.h>
 
-#include <ExecutionSpeed.h>
+#include <Performance.h>
 #include <Console.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -39,9 +39,6 @@ namespace {
 //-----------------------------------------------------------------------------------------
 Camera3D* MyEngine::camera3D_ = nullptr;
 Camera2D* MyEngine::camera2D_ = nullptr;
-
-std::unordered_map<Texture*, TextureWriteInfo> MyEngine::writeTextures_;
-const TextureWriteInfo* MyEngine::offscreenInfo_;
 
 //-----------------------------------------------------------------------------------------
 // method
@@ -93,13 +90,11 @@ void MyEngine::Finalize() {
 	sWinApp->Term();
 	sWinApp = nullptr;
 
-	writeTextures_.clear();
-
 	CoUninitialize();
 }
 
 void MyEngine::BeginFrame() {
-	ExecutionSpeed::Begin();
+	Performance::BeginFrame();
 	sImGuiManager->Begin();
 }
 
@@ -118,7 +113,7 @@ void MyEngine::EndOffScreen() {
 void MyEngine::EndFrame() {
 	sImGuiManager->End();
 	sDirectXCommon->EndFrame();
-	ExecutionSpeed::End();
+	Performance::EndFrame();
 }
 
 int MyEngine::ProcessMessage() {
@@ -145,36 +140,6 @@ DxObject::Descriptor MyEngine::GetCurrentDescripor(DxObject::DescriptorType type
 void MyEngine::EraseDescriptor(DxObject::Descriptor& descriptor) {
 	assert(sDirectXCommon != nullptr);
 	sDirectXCommon->GetDescriptorsObj()->Erase(descriptor);
-}
-
-void MyEngine::SetWriteTexture(Texture* writeTexture, const TextureWriteInfo& info) {
-	auto it = writeTextures_.find(writeTexture);
-	if (it != writeTextures_.end()) { //!< すでにある
-		Console::GetInstance()->SetLog(
-			std::format("warning: writeTexture already set. Texture*: 0x{:x}", std::uintptr_t(writeTexture)),
-			Console::warningColor
-		);
-		return;
-	}
-
-	writeTextures_[writeTexture] = info;
-}
-
-void MyEngine::EraseWriteTexture(Texture* writeTexture) {
-	auto it = writeTextures_.find(writeTexture);
-	if (it == writeTextures_.end()) { //!< mapにない
-		Console::GetInstance()->SetLog(
-			std::format("warning: couldn't erase it. Texture*: 0x{:x}", std::uintptr_t(writeTexture)),
-			Console::warningColor
-		);
-		return;
-	}
-
-	writeTextures_.erase(writeTexture);
-}
-
-const std::unordered_map<Texture*, TextureWriteInfo>& MyEngine::GetWriteTextures() {
-	return writeTextures_;
 }
 
 ID3D12GraphicsCommandList6* MyEngine::GetCommandList() {

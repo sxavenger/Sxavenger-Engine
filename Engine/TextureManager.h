@@ -5,8 +5,8 @@
 //-----------------------------------------------------------------------------------------
 // DirectX12
 #include <d3d12.h>
-#include "externals/DirectXTex/DirectXTex.h"
-#include "externals/DirectXTex/d3dx12.h"
+#include "DirectXTex.h"
+#include "d3dx12.h"
 
 #include <DxDescriptorHeaps.h>
 

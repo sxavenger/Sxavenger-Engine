@@ -1,4 +1,11 @@
 #pragma once
+//*****************************************************************************************
+// BaseBufferResource:                don't use
+// BufferResource, BufferPtrResource: ConstantBuffer, IASetVertexBuffer
+// IndexBufferResouruce:              IASetIndexBuffer
+// 
+// buffers is use DxObject::StructuredBuffer
+//*****************************************************************************************
 
 //-----------------------------------------------------------------------------------------
 // include
@@ -112,6 +119,8 @@ namespace DxObject {
 		// public methods
 		//=========================================================================================
 
+		BufferResource() = default; //!< test
+
 		//! @breif コンストラクタ
 		//! 
 		//! @param[in] devices   DxObject::Devices
@@ -206,6 +215,7 @@ namespace DxObject {
 		//! @param[in] value データ
 		void SetPtr(uint32_t element, T* value) {
 			if (!CheckElementCount(element)) {
+				assert(false); //!< 範囲外参照
 				return;
 			}
 
@@ -233,6 +243,15 @@ namespace DxObject {
 		virtual ID3D12Resource* GetResource() override {
 			LoadPtrData();
 			return resource_.Get();
+		}
+
+		//
+		// Test functions
+		//
+
+		const T* GetDataArray() {
+			LoadPtrData();
+			return dataArray_;
 		}
 
 	private:
@@ -309,6 +328,14 @@ namespace DxObject {
 			return dataArray_[element];
 		}
 
+		//
+		// Test funcitons
+		//
+
+		uint32_t* GetDataArray() const {
+			return dataArray_;
+		}
+
 	private:
 
 		//=========================================================================================
@@ -326,7 +353,7 @@ namespace DxObject {
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 template<typename T>
-void DxObject::BufferResource<T>::Init(Devices* devices) {
+inline void DxObject::BufferResource<T>::Init(Devices* devices) {
 
 	// deviceを取り出す
 	ID3D12Device* device = devices->GetDevice();
@@ -342,7 +369,7 @@ void DxObject::BufferResource<T>::Init(Devices* devices) {
 }
 
 template<typename T>
-void DxObject::BufferResource<T>::Term() {
+inline void DxObject::BufferResource<T>::Term() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -350,7 +377,7 @@ void DxObject::BufferResource<T>::Term() {
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 template<typename T>
-void DxObject::BufferPtrResource<T>::Init(Devices* devices) {
+inline void DxObject::BufferPtrResource<T>::Init(Devices* devices) {
 
 	// deviceを取り出す
 	ID3D12Device* device = devices->GetDevice();
@@ -368,11 +395,11 @@ void DxObject::BufferPtrResource<T>::Init(Devices* devices) {
 }
 
 template<typename T>
-void DxObject::BufferPtrResource<T>::Term() {
+inline void DxObject::BufferPtrResource<T>::Term() {
 	dataPtrArray_.clear();
 }
 
 template<typename T>
-void DxObject::BufferPtrResource<T>::LoadPtrData() {
+inline void DxObject::BufferPtrResource<T>::LoadPtrData() {
 	memcpy(dataArray_, *dataPtrArray_.data(), structureSize_ * indexSize_);
 }

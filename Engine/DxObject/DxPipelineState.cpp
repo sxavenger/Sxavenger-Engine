@@ -78,12 +78,12 @@ void DxObject::PipelineState::Init(
 		desc.RasterizerState    = descRS;
 		desc.BlendState         = blendDesc;
 		desc.DepthStencilState  = descDS;
+		desc.DSVFormat          = DXGI_FORMAT_D24_UNORM_S8_UINT;
 		desc.SampleMask         = UINT_MAX;
 		desc.SampleDesc.Quality = 0;
 		desc.SampleDesc.Count   = 1;
 		desc.NumRenderTargets   = 1;
 		desc.RTVFormats[0]      = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
-		desc.DSVFormat          = DXGI_FORMAT_UNKNOWN;
 		desc.Flags              = D3D12_PIPELINE_STATE_FLAG_NONE;
 
 		CD3DX12_PIPELINE_MESH_STATE_STREAM psoStream = CD3DX12_PIPELINE_MESH_STATE_STREAM(desc);

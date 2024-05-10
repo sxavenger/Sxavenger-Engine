@@ -90,9 +90,6 @@ void DxObject::SwapChain::Init(
 		barrier_.Type  = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
 		barrier_.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
 	}
-
-
-
 }
 
 void DxObject::SwapChain::Term() {
