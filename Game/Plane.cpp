@@ -85,4 +85,5 @@ void Plane::SetAttributeImGui() {
 	ImGui::DragFloat3("scale",     &transform_.scale.x,     0.01f);
 	ImGui::DragFloat3("rotate",    &transform_.rotate.x,    0.01f);
 	ImGui::DragFloat3("translate", &transform_.translate.x, 0.01f);
+	ImGui::ColorEdit4("color", &material_.color.r);
 }

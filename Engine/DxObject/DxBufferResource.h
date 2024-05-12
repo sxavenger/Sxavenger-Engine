@@ -167,6 +167,14 @@ namespace DxObject {
 			return dataArray_[element];
 		}
 
+		//
+		// test functions
+		//
+
+		T* GetDataArray() const {
+			return dataArray_;
+		}
+
 	private:
 
 		//=========================================================================================

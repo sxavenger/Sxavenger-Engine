@@ -35,5 +35,5 @@ struct DrawData {
 namespace DrawMethods {
 
 	DrawData Sphere(float radius, uint32_t kSubdivision);
-
+	DrawData Plane(const Vector2f& size);
 };

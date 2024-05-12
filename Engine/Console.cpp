@@ -49,6 +49,9 @@ void Console::Term() {
 void Console::Update() {
 	ImGui::ShowDemoWindow();
 
+	ImGui::Begin("Sxavenger Engine");
+	ImGui::End();
+
 	// game window
 	OutputScene();
 	OutputGame();

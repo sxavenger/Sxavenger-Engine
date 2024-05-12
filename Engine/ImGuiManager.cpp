@@ -20,6 +20,8 @@ void ImGuiManager::Init(WinApp* winApp, DirectXCommon* dxCommon) {
 
 	dxCommon_ = dxCommon;
 
+	
+
 	// SRVの取り出し
 	descriptorHeap_SRV_ = dxCommon_->GetDescriptorsObj()->GetDescriptorHeap(DxObject::DescriptorType::SRV);
 
@@ -29,6 +31,7 @@ void ImGuiManager::Init(WinApp* winApp, DirectXCommon* dxCommon) {
 	// ImGuiの初期化
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
+	SettingImGui();
 	ImGui::StyleColorsDark();
 	ImGui_ImplWin32_Init(winApp->GetHwnd());
 	ImGui_ImplDX12_Init(
@@ -40,7 +43,6 @@ void ImGuiManager::Init(WinApp* winApp, DirectXCommon* dxCommon) {
 		descriptor_.handleGPU
 	);
 
-	SettingImGui();
 	InitImGuiStyle();
 
 }
@@ -170,6 +172,7 @@ void ImGuiManager::SettingImGui() {
 	// imguiの設定
 	ImGuiIO& io = ImGui::GetIO();
 	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+	/*io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;*/
 	// imgui dockingブランチを参照...
 
 	// fontの変更

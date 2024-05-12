@@ -60,6 +60,7 @@ private:
 	std::unique_ptr<DxObject::BufferPtrResource<PlaneMaterial>> materialResource_;
 	PlaneMaterial material_;
 
+	// matrixResource
 	std::unique_ptr<DxObject::BufferResource<TransformationMatrix>> matrixResource_;
 	Transform transform_;
 

@@ -4,6 +4,7 @@
 // include
 //-----------------------------------------------------------------------------------------
 #include <TextureManager.h>
+#include <imgui.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // DirectXCommon class
@@ -162,6 +163,12 @@ void DirectXCommon::EndFrame() {
 	);
 
 	command_->Close();
+
+	ImGuiIO& io = ImGui::GetIO();
+	if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable) {
+		ImGui::UpdatePlatformWindows();
+		ImGui::RenderPlatformWindowsDefault(nullptr, (void*)command_->GetCommandList());
+	}
 
 	swapChains_->Present(1, 0);
 

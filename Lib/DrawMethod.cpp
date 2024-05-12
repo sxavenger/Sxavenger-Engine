@@ -1,5 +1,14 @@
 #include "DrawMethod.h"
 
+//-----------------------------------------------------------------------------------------
+// using
+//-----------------------------------------------------------------------------------------
+using namespace DxObject;
+
+////////////////////////////////////////////////////////////////////////////////////////////
+// DrawMethod namespace methods
+////////////////////////////////////////////////////////////////////////////////////////////
+
 DrawData DrawMethods::Sphere(float radius, uint32_t kSubdivision) {
 	DrawData result;
 	float M_PI = std::numbers::pi_v<float>;
@@ -60,6 +69,35 @@ DrawData DrawMethods::Sphere(float radius, uint32_t kSubdivision) {
 			result.index->operator[](currentIndex + 5) = (startVertexIndex + 1);                      // pointC
 		}
 	}
+
+	return result;
+}
+
+DrawData DrawMethods::Plane(const Vector2f& size) {
+	DrawData result;
+
+	result.vertex = std::make_unique<BufferResource<VertexData>>(MyEngine::GetDevicesObj(), 4);
+	result.vertex->operator[](0).position = { -size.x, -size.x, 0.0f };
+	result.vertex->operator[](0).texcoord = { 0.0f, 1.0f };
+	result.vertex->operator[](1).position = { size.x, -size.x, 0.0f };
+	result.vertex->operator[](1).texcoord = { 1.0f, 1.0f };
+	result.vertex->operator[](2).position = { size.x, size.x, 0.0f };
+	result.vertex->operator[](2).texcoord = { 1.0f, 0.0f };
+	result.vertex->operator[](3).position = { -size.x, size.x, 0.0f };
+	result.vertex->operator[](3).texcoord = { 0.0f, 0.0f };
+
+
+	for (uint32_t i = 0; i < result.vertex->GetIndexSize(); ++i) {
+		result.vertex->operator[](i).normal = { 0.0f, 0.0f, 1.0f };
+	}
+
+	result.index = std::make_unique<IndexBufferResource>(MyEngine::GetDevicesObj(), 6);
+	result.index->operator[](0) = 0;
+	result.index->operator[](1) = 3;
+	result.index->operator[](2) = 1;
+	result.index->operator[](3) = 3;
+	result.index->operator[](4) = 2;
+	result.index->operator[](5) = 1;
 
 	return result;
 }

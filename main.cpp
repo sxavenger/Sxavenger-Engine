@@ -25,8 +25,9 @@
 #include <Logger.h>
 
 // Game
-#include "Game/Floor/Floor.h"
-#include "Game/Plane/Plane.h"
+#include "Floor.h"
+#include "Plane.h"
+#include "Sphere.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // メイン関数
@@ -41,6 +42,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 	std::unique_ptr<Floor> floor = std::make_unique<Floor>();
 	std::unique_ptr<Plane> plane = std::make_unique<Plane>();
+	std::unique_ptr<Sphere> sphere = std::make_unique<Sphere>();
 	
 	std::unique_ptr<Camera3D> camera = std::make_unique<Camera3D>();
 	MyEngine::camera3D_ = camera.get();
@@ -68,8 +70,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 		Console::GetInstance()->Update();
 
-		floor->Update(); // HACK: Updateを二回行うことになる.
+		floor->Update();
 		plane->Update();
+		sphere->Update();
 
 		//=========================================================================================
 		// オフスクリーン描画処理
@@ -78,8 +81,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		// todo: 複数へのtexture書き込みをさせる.
 		MyEngine::BeginOffScreen(MyEngine::GetTexture("offscreen"));
 
-		plane->Draw();
+		/*plane->Draw();*/
 		floor->Draw();
+		sphere->Draw();
 
 		MyEngine::EndOffScreen();
 		
@@ -98,6 +102,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 	floor.reset();
 	plane.reset();
+	sphere.reset();
 	MyEngine::Finalize();
 	
 	return 0;

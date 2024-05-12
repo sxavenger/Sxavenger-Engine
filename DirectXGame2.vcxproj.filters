@@ -91,6 +91,9 @@
     <Filter Include="externals\meshoptimizer">
       <UniqueIdentifier>{f24df899-454d-4f15-99bb-f5eb440d67e3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resource\hlsl\Default">
+      <UniqueIdentifier>{43f40c99-2249-424f-952c-dd0519a4b296}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
@@ -217,9 +220,6 @@
     <ClCompile Include="Engine\DxObject\DxPipelineState.cpp">
       <Filter>Engine\DxObject\source</Filter>
     </ClCompile>
-    <ClCompile Include="Game\Floor\Floor.cpp">
-      <Filter>Game</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\Console.cpp">
       <Filter>Engine\source</Filter>
     </ClCompile>
@@ -229,14 +229,8 @@
     <ClCompile Include="Engine\DxObject\DxStructuredBuffer.cpp">
       <Filter>Engine\DxObject\source</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\ResMesh.cpp">
-      <Filter>Engine\source</Filter>
-    </ClCompile>
     <ClCompile Include="Lib\Adapter\Performance\Performance.cpp">
       <Filter>Lib\Adapter\Parformance</Filter>
-    </ClCompile>
-    <ClCompile Include="Game\Plane\Plane.cpp">
-      <Filter>Game</Filter>
     </ClCompile>
     <ClCompile Include="externals\meshoptimizer\allocator.cpp">
       <Filter>externals\meshoptimizer</Filter>
@@ -282,6 +276,21 @@
     </ClCompile>
     <ClCompile Include="externals\meshoptimizer\vfetchoptimizer.cpp">
       <Filter>externals\meshoptimizer</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\PrimitiveDrawer.cpp">
+      <Filter>Engine\source</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\DxObject\DxMesh.cpp">
+      <Filter>Engine\DxObject\source</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Floor.cpp">
+      <Filter>Game</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Plane.cpp">
+      <Filter>Game</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Sphere.cpp">
+      <Filter>Game</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -420,9 +429,6 @@
     <ClInclude Include="Lib\ObjectStructure.h">
       <Filter>Lib</Filter>
     </ClInclude>
-    <ClInclude Include="Game\Floor\Floor.h">
-      <Filter>Game</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\Console.h">
       <Filter>Engine\include</Filter>
     </ClInclude>
@@ -432,20 +438,29 @@
     <ClInclude Include="Engine\DxObject\DxStructuredBuffer.h">
       <Filter>Engine\DxObject\include</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\ResMesh.h">
-      <Filter>Engine\include</Filter>
-    </ClInclude>
     <ClInclude Include="Lib\Geometry\VectorComparison.h">
       <Filter>Lib\Geometry\include</Filter>
     </ClInclude>
     <ClInclude Include="Lib\Adapter\Performance\Performance.h">
       <Filter>Lib\Adapter\Parformance</Filter>
     </ClInclude>
-    <ClInclude Include="Game\Plane\Plane.h">
-      <Filter>Game</Filter>
-    </ClInclude>
     <ClInclude Include="externals\meshoptimizer\meshoptimizer.h">
       <Filter>externals\meshoptimizer</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\PrimitiveDrawer.h">
+      <Filter>Engine\include</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\DxObject\DxMesh.h">
+      <Filter>Engine\DxObject\include</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Floor.h">
+      <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Plane.h">
+      <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Sphere.h">
+      <Filter>Game</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -455,6 +470,9 @@
     </None>
     <None Include="Resources\hlsl\Lighting.hlsli">
       <Filter>Resource\hlsl</Filter>
+    </None>
+    <None Include="Resources\hlsl\Default.hlsli">
+      <Filter>Resource\hlsl\Default</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -468,6 +486,12 @@
     </FxCompile>
     <FxCompile Include="Resources\hlsl\Floor.PS.hlsl">
       <Filter>Resource\hlsl\Floor</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\hlsl\Default.MS.hlsl">
+      <Filter>Resource\hlsl\Default</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\hlsl\Default.PS.hlsl">
+      <Filter>Resource\hlsl\Default</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

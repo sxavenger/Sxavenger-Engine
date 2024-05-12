@@ -68,8 +68,6 @@ void Floor::Init() {
 	matrixResource_->operator[](0).world = Matrix4x4::MakeIdentity();
 	matrixResource_->operator[](0).wvp = Matrix4x4::MakeIdentity();
 	matrixResource_->operator[](0).worldInverseTranspose = Matrix4x4::MakeIdentity();
-
-	Console::GetInstance()->SetLog("Floor complate cleate");
 }
 
 void Floor::Update() {
@@ -83,13 +81,6 @@ void Floor::Update() {
 	for (uint32_t i = 0; i < kCountOfVertexType; ++i) {
 		vertices_[i].texcoord = { vertices_[i].position.x * tileScale, -vertices_[i].position.z * tileScale };
 	}
-}
-
-void Floor::Draw() { //!< param[3], [4]をdescriptorTableにするとvertex関係が変わらない。
-
-	MyEngine::SetBlendMode(kBlendModeNormal);
-	MyEngine::SetPipelineType(FLOOR);
-	MyEngine::SetPipelineState();
 
 	// matrix
 	Matrix4x4 world = Matrix::MakeAffine(transform_.scale, transform_.rotate, transform_.translate);
@@ -97,7 +88,13 @@ void Floor::Draw() { //!< param[3], [4]をdescriptorTableにするとvertex関�
 	matrixResource_->operator[](0).world = world;
 	matrixResource_->operator[](0).wvp = world * MyEngine::camera3D_->GetViewProjectionMatrix();
 	matrixResource_->operator[](0).worldInverseTranspose = world;
-	// hack:
+}
+
+void Floor::Draw() { //!< param[3], [4]をdescriptorTableにするとvertex関係が変わらない。
+
+	MyEngine::SetBlendMode(kBlendModeNormal);
+	MyEngine::SetPipelineType(FLOOR);
+	MyEngine::SetPipelineState();
 
 	// commandListの取り出し
 	auto commandList = MyEngine::GetCommandList();

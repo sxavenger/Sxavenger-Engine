@@ -19,7 +19,7 @@ StructuredBuffer<MSInput> vertices : register(t0);
 StructuredBuffer<uint3> indices : register(t1);
 
 //=========================================================================================
-// FloorForGPU structure
+// TransformationMatrix structure buffer
 //=========================================================================================
 struct TransformationMatrix {
 	float4x4 wvp;
@@ -28,10 +28,8 @@ struct TransformationMatrix {
 };
 ConstantBuffer<TransformationMatrix> gFloor : register(b0);
 
-// todo: 非均一スケールの対応
-
 ////////////////////////////////////////////////////////////////////////////////////////////
-// Main
+// main
 ////////////////////////////////////////////////////////////////////////////////////////////
 [numthreads(64, 1, 1)] //!< numthreads(x, y, z)の場合, x * y * z <= 128 である必要がある。
 [outputtopology("triangle")]
