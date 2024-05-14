@@ -40,12 +40,11 @@ public:
 
 	static Console* GetInstance();
 
-	Console() {}
-
-	~Console() { Term(); }
-
 	//! @brief 初期化処理
 	void Init();
+
+	//! @brief 終了処理
+	void Term();
 
 	//! @brief 更新処理
 	void Update();
@@ -59,6 +58,10 @@ public:
 	void SetAttribute(Attribute* obj) {
 		Outliner_.push_back(obj);
 	}
+
+	Texture* GetSceneTexture() const { return sceneTexture_; }
+
+	Camera3D* GetDebugCamera() const { return debugCamera_.get(); }
 
 	//=========================================================================================
 	// public variables
@@ -90,7 +93,6 @@ private:
 	bool isFocusGameScene_  = false;
 
 	std::unique_ptr<Camera3D> debugCamera_;
-
 	Texture* sceneTexture_;
 
 	// logs
@@ -104,9 +106,6 @@ private:
 	//=========================================================================================
 	// private methods
 	//=========================================================================================
-
-	//! @brief 終了処理
-	void Term();
 
 	void OutputScene();
 	void OutputGame();

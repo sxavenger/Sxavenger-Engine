@@ -60,7 +60,7 @@ void DxObject::ShaderTable::CreateShaderBlob(const std::wstring& filePath, Shade
 	shaderBlobs_[filePath] = blob;
 
 	// logの出力
-	std::wstring logstr = L"[DxObject::ShaderTable]: " + filePath + L" << Complete Create \n";
+	std::wstring logstr = L"[DxObject::ShaderTable]: " + filePath + L" << Complete Create";
 	Log(logstr);
 
 }
@@ -171,7 +171,7 @@ void DxObject::ShaderTable_test::CreateShaderElement(const std::wstring& key, Sh
 	// mapにelementを構築
 	shaderDatas_[key] = element;
 
-	std::wstring logstr = L"[DxObject::ShaderTable_test]: " + key + L" << Complete Create \n";
+	std::wstring logstr = L"[DxObject::ShaderTable_test]: " + key + L" << Complete Create";
 	Log(logstr);
 }
 

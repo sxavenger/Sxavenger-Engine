@@ -40,10 +40,17 @@ Console* Console::GetInstance() {
 
 void Console::Init() {
 	dxCommon_ = MyEngine::GetDxCommon();
+
+	MyEngine::GetTextureManager()->CreateDummyTexture(kWindowWidth, kWindowHeight, "sceneTexture");
+	sceneTexture_ = MyEngine::GetTexture("sceneTexture");
+
+	debugCamera_ = std::make_unique<Camera3D>();
+	debugCamera_->SetName("debugCamera");
 }
 
 void Console::Term() {
 	logDatas_.clear();
+	debugCamera_.reset();
 }
 
 void Console::Update() {
@@ -82,7 +89,7 @@ void Console::OutputScene() {
 	// todo: window開かれてる状態を保存させる. foucusとは違う
 	isFocusDebugScene_; //!< 名前もfoucusからいい感じに変更させる
 
-	SetTextureImGui(MyEngine::GetTextureHandleGPU("offscreen"));
+	SetTextureImGui(sceneTexture_->GetSRVHandleGPU());
 	// todo: debugTextureに変更する
 
 	ImGui::End();

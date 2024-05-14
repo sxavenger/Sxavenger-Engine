@@ -33,7 +33,7 @@ void DxObject::Command::Init(Devices* devices) {
 		);
 
 		assert(SUCCEEDED(hr));
-		Log("[DxObject.Command]: commandQueue_ << Complete Create \n");
+		Log("[DxObject.Command]: commandQueue_ << Complete Create");
 	}
 
 	// コマンドアロケーターを生成
@@ -44,7 +44,7 @@ void DxObject::Command::Init(Devices* devices) {
 		);
 
 		assert(SUCCEEDED(hr));
-		Log("[DxObject.Command]: commandAllocator_ << Complete Create \n");
+		Log("[DxObject.Command]: commandAllocator_ << Complete Create");
 	}
 
 	// コマンドリストを生成
@@ -58,7 +58,7 @@ void DxObject::Command::Init(Devices* devices) {
 		);
 
 		assert(SUCCEEDED(hr));
-		Log("[DxObject.Command]: commandList_ << Complete Create \n");
+		Log("[DxObject.Command]: commandList_ << Complete Create");
 	}
 }
 

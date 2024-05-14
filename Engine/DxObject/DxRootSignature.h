@@ -79,8 +79,6 @@ namespace DxObject {
 
 		void SetSRV(uint32_t index, ShaderStage stage, UINT shaderRegister);
 
-		void SetTexture2D(uint32_t index, ShaderStage stage, UINT shaderRegister);
-
 		void SetSampler(uint32_t index, TextureMode mode, ShaderStage stage, UINT shaderRegister);
 
 		//=========================================================================================

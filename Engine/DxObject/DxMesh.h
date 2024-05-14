@@ -125,7 +125,7 @@ namespace DxObject {
 
 		void Term();
 
-		void Dispatch(UINT verticesParam, UINT uinqueVertexIndicesParam, UINT primitiveIndices, UINT meshletsParam);
+		void Dispatch(UINT verticesParam, UINT uinqueVertexIndicesParam, UINT meshletsParam, UINT primitiveIndices);
 
 
 	private:

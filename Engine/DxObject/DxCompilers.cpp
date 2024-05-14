@@ -22,7 +22,7 @@ void DxObject::Compilers::Init() {
 		);
 
 		assert(SUCCEEDED(hr));
-		Log("[DxObject.Compilers]: dxcUtils_ << Complete Create \n");
+		Log("[DxObject.Compilers]: dxcUtils_ << Complete Create");
 
 
 		hr = DxcCreateInstance(
@@ -30,7 +30,7 @@ void DxObject::Compilers::Init() {
 		);
 
 		assert(SUCCEEDED(hr));
-		Log("[DxObject.Compilers]: dxcCompiler_ << Complete Create \n");
+		Log("[DxObject.Compilers]: dxcCompiler_ << Complete Create");
 	}
 
 	// includeHandleの初期化
@@ -38,7 +38,7 @@ void DxObject::Compilers::Init() {
 		auto hr = dxcUtils_->CreateDefaultIncludeHandler(&includeHandler_);
 
 		assert(SUCCEEDED(hr));
-		Log("[DxObject.Compilers]: includeHandler_ << Complete Create \n");
+		Log("[DxObject.Compilers]: includeHandler_ << Complete Create");
 	}
 
 	// shaderBlobに設定

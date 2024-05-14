@@ -292,6 +292,9 @@
     <ClCompile Include="Game\Sphere.cpp">
       <Filter>Game</Filter>
     </ClCompile>
+    <ClCompile Include="Game\Cube.cpp">
+      <Filter>Game</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\MyEngine.h">
@@ -462,6 +465,9 @@
     <ClInclude Include="Game\Sphere.h">
       <Filter>Game</Filter>
     </ClInclude>
+    <ClInclude Include="Game\Cube.h">
+      <Filter>Game</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />
@@ -473,6 +479,9 @@
     </None>
     <None Include="Resources\hlsl\Default.hlsli">
       <Filter>Resource\hlsl\Default</Filter>
+    </None>
+    <None Include="Resources\hlsl\Camera.hlsli">
+      <Filter>Resource\hlsl</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>

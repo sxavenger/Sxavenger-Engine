@@ -41,7 +41,7 @@ void DxObject::DescriptorHeaps::Init(Devices* devices) {
 			false
 		);
 
-		Log("[DxObject.DescriptorHeaps]: descriptorHeaps_[RTV] << Complete Create \n");
+		Log("[DxObject.DescriptorHeaps]: descriptorHeaps_[RTV] << Complete Create");
 	}
 
 	// ディスクリプターヒープ[SRV]の生成
@@ -53,7 +53,7 @@ void DxObject::DescriptorHeaps::Init(Devices* devices) {
 			true
 		);
 
-		Log("[DxObject.DescriptorHeaps]: descriptorHeaps_[SRV] << Complete Create \n");
+		Log("[DxObject.DescriptorHeaps]: descriptorHeaps_[SRV] << Complete Create");
 	}
 
 	// ディスクリプターヒープ[DSV]の生成
@@ -65,7 +65,7 @@ void DxObject::DescriptorHeaps::Init(Devices* devices) {
 			false
 		);
 
-		Log("[DxObject.DescriptorHeaps]: descriptorHeaps_[DSV] << Complete Create \n");
+		Log("[DxObject.DescriptorHeaps]: descriptorHeaps_[DSV] << Complete Create");
 	}
 
 	// descriptorのサイズを取得

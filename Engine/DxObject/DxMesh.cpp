@@ -289,8 +289,8 @@ void DxObject::MeshLoader::PerseMesh(
 
 			for (auto i = 0; i < meshlet.triangle_count; ++i) {
 				ResPrimitiveIndex tris = {};
-				tris.index1 = meshlet.indices[i][0];
-				tris.index0 = meshlet.indices[i][1];
+				tris.index0 = meshlet.indices[i][0];
+				tris.index1 = meshlet.indices[i][1];
 				tris.index2 = meshlet.indices[i][2];
 				dstMesh.primitiveIndices.push_back(tris);
 			}
@@ -367,20 +367,15 @@ void DxObject::Mesh::Term() {
 	meshlets_.Reset();
 }
 
-void DxObject::Mesh::Dispatch(UINT verticesParam, UINT uinqueVertexIndicesParam, UINT primitiveIndices, UINT meshletsParam) {
+void DxObject::Mesh::Dispatch(UINT verticesParam, UINT uinqueVertexIndicesParam, UINT meshletsParam, UINT primitiveIndices) {
 	// commandListの取得
 	auto commandList = MyEngine::GetCommandList();
 
 	// descriptorの設定
 	commandList->SetGraphicsRootDescriptorTable(verticesParam, vertices_.structuredBuffer->GetGPUHandle());
 	commandList->SetGraphicsRootDescriptorTable(uinqueVertexIndicesParam, uniqueVertexIndices_.structuredBuffer->GetGPUHandle());
-	commandList->SetGraphicsRootDescriptorTable(primitiveIndices, primitiveIndices_.structuredBuffer->GetGPUHandle());
 	commandList->SetGraphicsRootDescriptorTable(meshletsParam, meshlets_.structuredBuffer->GetGPUHandle());
-	
-	/*commandList->SetGraphicsRootShaderResourceView(verticesParam, vertices_.resource->GetGPUVirtualAddress());
-	commandList->SetGraphicsRootShaderResourceView(uinqueVertexIndicesParam, uniqueVertexIndices_.resource->GetGPUVirtualAddress());
-	commandList->SetGraphicsRootShaderResourceView(primitiveIndices, primitiveIndices_.resource->GetGPUVirtualAddress());
-	commandList->SetGraphicsRootShaderResourceView(meshletsParam, meshlets_.resource->GetGPUVirtualAddress());*/
+	commandList->SetGraphicsRootDescriptorTable(primitiveIndices, primitiveIndices_.structuredBuffer->GetGPUHandle());
 
 	commandList->DispatchMesh(static_cast<UINT>(meshlets_.resource->GetIndexSize()), 1, 1);
 }

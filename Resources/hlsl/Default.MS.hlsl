@@ -2,6 +2,7 @@
 // include
 //-----------------------------------------------------------------------------------------
 #include "Default.hlsli"
+#include "Camera.hlsli"
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Mesh structure
@@ -32,7 +33,6 @@ StructuredBuffer<uint>    sPrimitives : register(t3);
 // TransformationMatrix structure buffer
 //=========================================================================================
 struct TransformationMatrix {
-	float4x4 wvp;
 	float4x4 world;
 	float4x4 worldInverseTranspose;
 };
@@ -67,16 +67,17 @@ void main(
 	
 	if (groupThreadId < m.primitiveCount) {
 		uint packedIndex = sPrimitives[m.primitiveOffset + groupThreadId];
-		polys[groupThreadId] = UnpackPrimitiveIndex(packedIndex);
+		uint3 debug = UnpackPrimitiveIndex(packedIndex);
+		polys[groupThreadId] = debug;
 
 	}
 	
 	if (groupThreadId < m.vertexCount) {
-		uint index = sIndices[m.vertexCount + groupThreadId];
+		uint index = sIndices[m.vertexOffset + groupThreadId];
 		MSInput input = sVertices[index];
 		MSOutput output;
 		
-		output.position = mul(input.position, gTransform.wvp);
+		output.position = mul(input.position, mul(gTransform.world, gCamera.viewProj));
 		output.worldPos = mul(input.position, gTransform.world);
 		output.texcoord = input.texcoord;
 		output.normal   = normalize(mul(input.normal, (float3x3)gTransform.world));

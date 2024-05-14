@@ -177,7 +177,7 @@ void ImGuiManager::SettingImGui() {
 
 	// fontの変更
 	{
-		std::string filePath = "externals/imgui/FiraMono-Regular.ttf";
+		std::string filePath = "Resources/font/FiraMono-Regular.ttf";
 
 		io.Fonts->AddFontFromFileTTF(filePath.c_str(), 14.0f);
 	}

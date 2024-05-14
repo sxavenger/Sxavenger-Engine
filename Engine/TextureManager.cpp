@@ -17,6 +17,10 @@ using namespace DxObject;
 // Texture class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
+Texture::Texture(const std::string& filePath, DirectXCommon* dxCommon) {
+	Load(filePath, dxCommon);
+}
+
 void Texture::Load(const std::string& filePath, DirectXCommon* dxCommon) {
 
 	// dxCommonの保存
@@ -33,8 +37,6 @@ void Texture::Load(const std::string& filePath, DirectXCommon* dxCommon) {
 	ComPtr<ID3D12Resource> intermediateResouce = TextureMethod::UploadTextureData(resource_.Get(), mipImage, device, commandList);
 
 	dxCommon_->Sent();
-
-	intermediateResouce->Release();
 
 	// SRV - shaderResourceViewの生成
 	{
@@ -150,6 +152,7 @@ void TextureManager::Init(DirectXCommon* dxCommon) {
 	for (auto& pair : textures_) {
 		pair.second.texture = std::make_unique<Texture>(pair.first, dxCommon_);
 		pair.second.referenceNum = 1;
+		ExternalLogger::Write("	complete create texture filePath: " + pair.first);
 	}
 }
 
@@ -234,6 +237,7 @@ DirectX::ScratchImage TextureMethod::LoadTexture(const std::string& filePath) {
 		errorLog
 			= "[Texture Not Found] \n filePath: " + filePath;
 
+		ExternalLogger::Write(errorLog);
 		Assert(false, errorLog, "Error: LoadTexture");
 	}
 

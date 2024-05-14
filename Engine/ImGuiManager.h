@@ -56,6 +56,8 @@ public:
 	//! @return インスタンスを返却
 	static ImGuiManager* GetInstaince();
 
+	static ImVec4 ToImVec4(const Vector4i& color);
+
 private:
 
 	//=========================================================================================
@@ -65,7 +67,7 @@ private:
 	DirectXCommon* dxCommon_;
 
 	ID3D12DescriptorHeap* descriptorHeap_SRV_;
-	
+
 	DxObject::Descriptor descriptor_;
 
 	//=========================================================================================
@@ -74,7 +76,5 @@ private:
 
 	void InitImGuiStyle();
 	void SettingImGui();
-
-	static ImVec4 ToImVec4(const Vector4i& color);
 
 };

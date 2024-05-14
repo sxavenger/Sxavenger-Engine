@@ -42,7 +42,7 @@ ComPtr<IDxcBlob> DxObjectMethod::CompileShader(
 	
 	if (FAILED(hr)) {
 		std::wstring outputLog = L"Error : HLSL Not Found. filePath: ";
-		Log(outputLog + filePath + L"\n");
+		Log(outputLog + filePath);
 
 		std::string	errorLog;
 		errorLog
@@ -84,9 +84,9 @@ ComPtr<IDxcBlob> DxObjectMethod::CompileShader(
 
 	if (shaderError != nullptr && shaderError->GetStringLength() != 0) {
 
-		Log("//----------------------------------------------------------------------------------------- \n");
+		Log("//-----------------------------------------------------------------------------------------");
 		Log(shaderError->GetStringPointer()); //!< shaderの構文error
-		Log("//----------------------------------------------------------------------------------------- \n");
+		Log("//-----------------------------------------------------------------------------------------");
 
 		// hlslのerrorをwindowで出力
 		std::string	errorLog;

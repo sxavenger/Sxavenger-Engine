@@ -24,13 +24,13 @@ void DxObject::ShaderBlob::Init(const std::wstring& vsFileName, const std::wstri
 	shaderBlob_MS_ = shaderTable_->GetShaderBlob(vsFileName, ShaderType::Mesh);
 
 	assert(shaderBlob_MS_ != nullptr);
-	Log("[DxObject::ShaderBlob]: shaderBlob_MS_ << Complete Create \n");
+	Log("[DxObject::ShaderBlob]: shaderBlob_MS_ << Complete Create");
 
 	// PS
 	shaderBlob_PS_ = shaderTable_->GetShaderBlob(psFileName, ShaderType::Pixel);
 
 	assert(shaderBlob_PS_ != nullptr);
-	Log("[DxObject.ShaderBlob]: shaderBlob_PS_ << Complete Create \n");
+	Log("[DxObject.ShaderBlob]: shaderBlob_PS_ << Complete Create");
 
 }
 

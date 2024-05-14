@@ -45,6 +45,7 @@ Camera2D* MyEngine::camera2D_ = nullptr;
 //-----------------------------------------------------------------------------------------
 
 void MyEngine::Initialize(int32_t kWindowWidth, int32_t kWindowHeight, const char* kWindowTitle) {
+	ExternalLogger::Open();
 	CoInitializeEx(0, COINIT_MULTITHREADED);
 
 	// ウィンドウの生成
@@ -52,29 +53,42 @@ void MyEngine::Initialize(int32_t kWindowWidth, int32_t kWindowHeight, const cha
 		sWinApp = WinApp::GetInstance();
 
 		std::wstring titleString = ToWstring(kWindowTitle);
+
+		std::string title = kWindowTitle;
+		ExternalLogger::Write("[windowName]: " + title);
+
 		sWinApp->CreateGameWindow(kWindowWidth, kWindowHeight, titleString.c_str());
+		ExternalLogger::Write("Complete Initialize: sWinApp");
 	}
 
 	// DirectX12 の初期化
 	{
 		sDirectXCommon = DirectXCommon::GetInstance();
 		sDirectXCommon->Init(sWinApp, kWindowWidth, kWindowHeight);
+		ExternalLogger::Write("Complete Initialize: sDirectXCommon");
+
 	}
 
+	
 	// ImGuiManager の初期化
 	{
 		sImGuiManager = ImGuiManager::GetInstaince();
 		sImGuiManager->Init(sWinApp, sDirectXCommon);
+		ExternalLogger::Write("Complete Initialize: sImGuiManager");
 	}
+	
 
 	// TextureManager の初期化
 	{
 		sTextureManager = TextureManager::GetInstance();
 		sTextureManager->Init(sDirectXCommon);
+		ExternalLogger::Write("Complete Initialize: sTextureManager");
 
 		// オフスク用のテクスチャの生成 todo: consoleに移動
 		sTextureManager->CreateDummyTexture(kWindowWidth, kWindowHeight, "offscreen");
 	}
+
+	ExternalLogger::Close();
 }
 
 void MyEngine::Finalize() {

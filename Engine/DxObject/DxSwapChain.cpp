@@ -52,7 +52,7 @@ void DxObject::SwapChain::Init(
 		);
 
 		assert(SUCCEEDED(hr));
-		Log("[DxObject.SwapChain]: swapChain_ << Complete Create \n");
+		Log("[DxObject.SwapChain]: swapChain_ << Complete Create");
 	}
 
 	// SwapChainからResourceを引っ張ってくる
@@ -65,7 +65,7 @@ void DxObject::SwapChain::Init(
 			assert(SUCCEEDED(hr));
 		}
 
-		Log("[DxObject.SwapChain]: swapChainResource_[..] << Complete Create \n");
+		Log("[DxObject.SwapChain]: swapChainResource_[..] << Complete Create");
 	}
 
 	// RTVの設定

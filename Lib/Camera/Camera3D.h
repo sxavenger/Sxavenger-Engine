@@ -81,6 +81,14 @@ public:
 
 private:
 
+	////////////////////////////////////////////////////////////////////////////////////////////
+	// CameraData structure
+	////////////////////////////////////////////////////////////////////////////////////////////
+	struct CameraForGPU {
+		Vector4f position;
+		Matrix4x4 viewProjMatrix = Matrix4x4::MakeIdentity();
+	};
+
 	//=========================================================================================
 	// private variables
 	//=========================================================================================
@@ -90,8 +98,8 @@ private:
 	Matrix4x4 viewMatrix_;
 	Matrix4x4 projectionMatrix_;
 
-	std::unique_ptr<DxObject::BufferPtrResource<Vector4f>> resource_;
-	Vector4f position;
+	std::unique_ptr<DxObject::BufferPtrResource<CameraForGPU>> resource_;
+	CameraForGPU cameraForGPU_;
 
 	//=========================================================================================
 	// private methods

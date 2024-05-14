@@ -23,7 +23,7 @@ void DxObject::Devices::Init() {
 			// GPU側も有効化
 			debugController_->SetEnableGPUBasedValidation(TRUE);
 
-			Log("[DxObject::Devices]: debugController_ << Complete Create \n");
+			Log("[DxObject::Devices]: debugController_ << Complete Create");
 		}
 	}
 #endif // _DEBUG
@@ -33,7 +33,7 @@ void DxObject::Devices::Init() {
 		auto hr = CreateDXGIFactory(IID_PPV_ARGS(&dxgiFactory_));
 		assert(SUCCEEDED(hr));
 
-		Log("[DxObject::Devices]: dxgiFactory_ << Complete Create \n");
+		Log("[DxObject::Devices]: dxgiFactory_ << Complete Create");
 	}
 
 	// アダプタの生成
@@ -51,7 +51,7 @@ void DxObject::Devices::Init() {
 
 				// ソフトウェアアダプタじゃない場合, 成功
 				if (!(desc.Flags & DXGI_ADAPTER_FLAG3_SOFTWARE)) {
-					Log(std::format(L" -- Use Adapter: {}\n", desc.Description));
+					Log(std::format(L" -- Use Adapter: {}", desc.Description));
 					break;
 				}
 
@@ -60,7 +60,7 @@ void DxObject::Devices::Init() {
 			}
 
 			assert(useAdapter_ != nullptr);
-			Log("[DxObject::Devices]: useAdapter_ << Complete Create \n");
+			Log("[DxObject::Devices]: useAdapter_ << Complete Create");
 		}
 	}
 
@@ -79,14 +79,14 @@ void DxObject::Devices::Init() {
 			auto hr = D3D12CreateDevice(useAdapter_.Get(), featureLevels[i], IID_PPV_ARGS(&device_));
 			if (SUCCEEDED(hr)) {
 				// 生成できたのでログ出力してループを抜ける
-				Log(std::format(" -- FeatureLevel: {}\n", featureLevelStrings[i]));
+				Log(std::format(" -- FeatureLevel: {}", featureLevelStrings[i]));
 				break;
 			}
 		}
 
 		assert(device_ != nullptr);
 
-		Log("[DxObject::Devices]: device_ << Complete Create \n");
+		Log("[DxObject::Devices]: device_ << Complete Create");
 	}
 
 	// シェーダーモデルをチェック
@@ -142,7 +142,7 @@ void DxObject::Devices::Init() {
 			// 解放
 			infoQueue->Release();
 
-			Log("// Complete Path >> infoQueue_ \n");
+			Log("// Complete Path >> infoQueue_");
 		}
 	}
 #endif // _DEBUG

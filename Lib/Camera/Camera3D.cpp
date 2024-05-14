@@ -25,8 +25,8 @@ Camera3D::Camera3D(const std::string& filePath) {
 	ReadJsonCameraData(filePath);
 	SetProjection(0.45f, static_cast<float>(kWindowWidth) / static_cast<float>(kWindowHeight), 0.1f, 100.0f);
 
-	resource_ = std::make_unique<DxObject::BufferPtrResource<Vector4f>>(MyEngine::GetDevicesObj(), 1);
-	resource_->SetPtr(0, &position);
+	resource_ = std::make_unique<DxObject::BufferPtrResource<CameraForGPU>>(MyEngine::GetDevicesObj(), 1);
+	resource_->SetPtr(0, &cameraForGPU_);
 }
 
 Camera3D::~Camera3D() { Term(); }
@@ -38,6 +38,10 @@ void Camera3D::Init() {
 	// attribute
 	name_ = "camera";
 	Console::GetInstance()->SetAttribute(this);
+
+	resource_ = std::make_unique<DxObject::BufferPtrResource<CameraForGPU>>(MyEngine::GetDevicesObj(), 1);
+	resource_->SetPtr(0, &cameraForGPU_);
+	cameraForGPU_.viewProjMatrix = viewMatrix_ * projectionMatrix_;
 }
 
 void Camera3D::Term() {
@@ -50,7 +54,7 @@ void Camera3D::SetCamera(const Vector3f& scale, const Vector3f& rotate, const Ve
 	Matrix4x4 cameraMatrix = Matrix::MakeAffine(camera_.scale, camera_.rotate, camera_.translate);
 	viewMatrix_ = Matrix::Inverse(cameraMatrix);
 
-	position = { camera_.translate.x, camera_.translate.y, camera_.translate.z, 1.0f };
+	cameraForGPU_.position = { camera_.translate.x, camera_.translate.y, camera_.translate.z, 1.0f };
 }
 
 void Camera3D::SetProjection(float fovY, float aspectRatio, float nearClip, float farClip) {
@@ -174,5 +178,6 @@ void Camera3D::RecalculateCamera() {
 	Matrix4x4 cameraMatrix = Matrix::MakeAffine(camera_.scale, camera_.rotate, camera_.translate);
 	viewMatrix_ = Matrix::Inverse(cameraMatrix);
 
-	position = { camera_.translate.x, camera_.translate.y, camera_.translate.z, 1.0f };
+	cameraForGPU_.position = { camera_.translate.x, camera_.translate.y, camera_.translate.z, 1.0f };
+	cameraForGPU_.viewProjMatrix = viewMatrix_ * projectionMatrix_;
 }

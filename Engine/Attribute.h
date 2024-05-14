@@ -5,6 +5,7 @@
 //-----------------------------------------------------------------------------------------
 // c++
 #include <string>
+#include <imgui.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Attribute base class
@@ -17,7 +18,7 @@ public:
 	//=========================================================================================
 
 	//! @brief Attributeで選択された際のImGui更新処理
-	virtual void SetAttributeImGui() = 0;
+	virtual void SetAttributeImGui();
 
 	const std::string& GetName() const { return name_; }
 

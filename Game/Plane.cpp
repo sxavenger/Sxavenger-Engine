@@ -38,7 +38,6 @@ void Plane::Init() {
 
 	matrixResource_ = std::make_unique<BufferResource<TransformationMatrix>>(MyEngine::GetDevicesObj(), 1);
 	matrixResource_->operator[](0).world = Matrix4x4::MakeIdentity();
-	matrixResource_->operator[](0).wvp   = Matrix4x4::MakeIdentity();
 	matrixResource_->operator[](0).worldInverseTranspose = Matrix4x4::MakeIdentity();
 
 }
@@ -55,7 +54,6 @@ void Plane::Update() {
 	Matrix4x4 world = Matrix::MakeAffine(transform_.scale, transform_.rotate, transform_.translate);
 
 	matrixResource_->operator[](0).world = world;
-	matrixResource_->operator[](0).wvp = world * MyEngine::camera3D_->GetViewProjectionMatrix();
 	matrixResource_->operator[](0).worldInverseTranspose = world;
 }
 
@@ -69,14 +67,15 @@ void Plane::Draw() {
 
 	// ParamBuffers
 	commandList->SetGraphicsRootConstantBufferView(0, matrixResource_->GetGPUVirtualAddress());
-	commandList->SetGraphicsRootConstantBufferView(1, materialResource_->GetGPUVirtualAddress());
+	commandList->SetGraphicsRootConstantBufferView(1, MyEngine::camera3D_->GetGPUVirtualAddress());
+	commandList->SetGraphicsRootConstantBufferView(2, materialResource_->GetGPUVirtualAddress());
 
-	commandList->SetGraphicsRootDescriptorTable(2, MyEngine::GetTextureHandleGPU("resources/uvChecker.png"));
+	commandList->SetGraphicsRootDescriptorTable(3, MyEngine::GetTextureHandleGPU("resources/uvChecker.png"));
 
 
 	// mesh param
-	commandList->SetGraphicsRootShaderResourceView(3, vertexResource_->GetGPUVirtualAddress());
-	commandList->SetGraphicsRootShaderResourceView(4, indexResource_->GetGPUVirtualAddress());
+	commandList->SetGraphicsRootShaderResourceView(4, vertexResource_->GetGPUVirtualAddress());
+	commandList->SetGraphicsRootShaderResourceView(5, indexResource_->GetGPUVirtualAddress());
 
 	commandList->DispatchMesh(1, 1, 1);
 }

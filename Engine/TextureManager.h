@@ -35,10 +35,8 @@ public:
 	//=========================================================================================
 
 	//! @brief texture用コンストラクタ
-	Texture(const std::string& filePath, DirectXCommon* dxCommon) {
-		Load(filePath, dxCommon);
-	}
-
+	Texture(const std::string& filePath, DirectXCommon* dxCommon);
+	
 	//! @brief dummyTexture用コンストラクタ
 	Texture(int32_t width, int32_t height, DirectXCommon* dxCommon) {
 		CreateDummy(width, height, dxCommon);

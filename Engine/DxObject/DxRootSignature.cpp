@@ -47,18 +47,6 @@ void DxObject::RootSignatureDesc::SetSRV(uint32_t index, ShaderStage stage, UINT
 	params[index].DescriptorTable.NumDescriptorRanges = 1;
 }
 
-void DxObject::RootSignatureDesc::SetTexture2D(uint32_t index, ShaderStage stage, UINT shaderRegister) {
-	ranges[index].BaseShaderRegister                = shaderRegister;
-	ranges[index].NumDescriptors                    = 1;
-	ranges[index].RangeType                         = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
-	ranges[index].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
-
-	params[index].ParameterType                       = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
-	params[index].ShaderVisibility                    = static_cast<D3D12_SHADER_VISIBILITY>(stage);
-	params[index].DescriptorTable.pDescriptorRanges   = &ranges[index];
-	params[index].DescriptorTable.NumDescriptorRanges = 1;
-}
-
 void DxObject::RootSignatureDesc::SetSampler(uint32_t index, TextureMode mode, ShaderStage stage, UINT shaderRegiste) {
 	samplers[index].Filter           = D3D12_FILTER_MIN_MAG_MIP_LINEAR;
 	samplers[index].AddressU         = static_cast<D3D12_TEXTURE_ADDRESS_MODE>(mode);
@@ -101,10 +89,10 @@ void DxObject::RootSignature::Init(Devices* devices, const RootSignatureDesc& de
 	);
 
 	if (FAILED(hr)) {
-		Log("//----------------------------------------------------------------------------------------- \n");
-		Log("Failed: Create RootSignatuer\n");
+		Log("//-----------------------------------------------------------------------------------------");
+		Log("Failed: Create RootSignatuer");
 		Log(reinterpret_cast<char*>(signatureErrorBlob_->GetBufferPointer()));
-		Log("//----------------------------------------------------------------------------------------- \n");
+		Log("//-----------------------------------------------------------------------------------------");
 		assert(false);
 	}
 
@@ -117,7 +105,7 @@ void DxObject::RootSignature::Init(Devices* devices, const RootSignatureDesc& de
 
 	assert(SUCCEEDED(hr));
 
-	Log("[DxObject.RootSignature]: rootSignature_ << Complete Create \n");
+	Log("[DxObject.RootSignature]: rootSignature_ << Complete Create");
 }
 
 void DxObject::RootSignature::Term() {

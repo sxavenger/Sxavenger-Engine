@@ -28,6 +28,7 @@
 #include "Floor.h"
 #include "Plane.h"
 #include "Sphere.h"
+#include "Cube.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // メイン関数
@@ -38,18 +39,21 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	// 初期化
 	//=========================================================================================
 	MyEngine::Initialize(kWindowWidth, kWindowHeight, kWindowTitle);
-	Console::GetInstance()->Init();
+
+	std::unique_ptr<Camera3D> camera = std::make_unique<Camera3D>();
+	MyEngine::camera3D_ = camera.get();
+
+	auto console = Console::GetInstance();
+	console->Init();
 
 	std::unique_ptr<Floor> floor = std::make_unique<Floor>();
 	std::unique_ptr<Plane> plane = std::make_unique<Plane>();
 	std::unique_ptr<Sphere> sphere = std::make_unique<Sphere>();
-	
-	std::unique_ptr<Camera3D> camera = std::make_unique<Camera3D>();
-	MyEngine::camera3D_ = camera.get();
+	std::unique_ptr<Cube> cube = std::make_unique<Cube>();
 
-	////////////////////////////////////////////////////////////////////////////////////////////
-	// メインループ
-	////////////////////////////////////////////////////////////////////////////////////////////
+	//////////////////////////////////////////////////////////////////////////////////////////////
+	//// メインループ
+	//////////////////////////////////////////////////////////////////////////////////////////////
 	while (MyEngine::ProcessMessage() == 0) {
 
 		MyEngine::BeginFrame();
@@ -62,17 +66,18 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		++frame;
 
 		if (frame % 60 == 0) {
-			Console::GetInstance()->SetLog(
+			console->SetLog(
 				std::format("[debug] frame: {}, speed(ms): {}", frame / 60, Performance::GetFramesPerformance(SecondsUnit::ms)),
 				Console::commentOutColor
 			);
 		}
 
-		Console::GetInstance()->Update();
+		console->Update();
 
 		floor->Update();
 		plane->Update();
 		sphere->Update();
+		cube->Update();
 
 		//=========================================================================================
 		// オフスクリーン描画処理
@@ -80,10 +85,22 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 		// todo: 複数へのtexture書き込みをさせる.
 		MyEngine::BeginOffScreen(MyEngine::GetTexture("offscreen"));
+		MyEngine::camera3D_ = camera.get();
 
-		/*plane->Draw();*/
+		plane->Draw();
 		floor->Draw();
 		sphere->Draw();
+		cube->Draw();
+
+		MyEngine::EndOffScreen();
+
+		MyEngine::BeginOffScreen(console->GetSceneTexture());
+		MyEngine::camera3D_ = console->GetDebugCamera();
+
+		plane->Draw();
+		floor->Draw();
+		sphere->Draw();
+		cube->Draw();
 
 		MyEngine::EndOffScreen();
 		
@@ -100,9 +117,14 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 	}
 
+	console->Term();
+	camera.reset();
+
 	floor.reset();
 	plane.reset();
 	sphere.reset();
+	cube.reset();
+
 	MyEngine::Finalize();
 	
 	return 0;

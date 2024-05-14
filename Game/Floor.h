@@ -42,8 +42,6 @@ public:
 
 	void Term();
 
-	void SetOnImGui();
-
 	void SetAttributeImGui() override;
 
 private:

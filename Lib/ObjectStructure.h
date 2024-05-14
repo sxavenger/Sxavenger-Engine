@@ -10,7 +10,7 @@
 #include <Matrix4x4.h>
 
 // imgui
-#include <externals/imgui/imgui.h>
+#include <imgui.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // structure
@@ -41,7 +41,7 @@ struct Transform {
 };
 
 struct TransformationMatrix {
-	Matrix4x4 wvp;
+
 	Matrix4x4 world;
 	Matrix4x4 worldInverseTranspose;
 

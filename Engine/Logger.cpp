@@ -41,12 +41,13 @@ std::string ToString(const std::wstring& str) {
 }
 
 void Log(const std::string& log) {
-	OutputDebugStringA(log.c_str());
+	std::string output = log + "\n";
+	OutputDebugStringA(output.c_str());
+	ExternalLogger::Write(log);
 }
 
 void Log(const std::wstring& logW) {
 	std::string str = ToString(logW);
-
 	Log(str);
 }
 
@@ -64,4 +65,35 @@ void Assert(bool isSuccess, const std::string& errorLog, const std::string& text
 		assert(isSuccess);
 		exit(1);
 	}
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////
+// ExternalLogger class
+////////////////////////////////////////////////////////////////////////////////////////////
+
+bool ExternalLogger::isOutput_ = true;
+
+const std::string ExternalLogger::filename_ = "EngineLog";
+std::ofstream ExternalLogger::file_;
+
+void ExternalLogger::Open() {
+	if (!isOutput_) {
+		return;
+	}
+
+	std::string label = filename_ + ".md"; // markdown形式で書き込み 
+	file_.open(label);
+}
+
+void ExternalLogger::Close() {
+	file_.close();
+}
+
+void ExternalLogger::Write(const std::string& log) {
+	if (!isOutput_) {
+		return;
+	}
+
+	file_ << log + "\n";
+	file_.flush();
 }

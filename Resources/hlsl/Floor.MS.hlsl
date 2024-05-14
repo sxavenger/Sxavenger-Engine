@@ -2,6 +2,7 @@
 // include
 //-----------------------------------------------------------------------------------------
 #include "Floor.hlsli"
+#include "Camera.hlsli"
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // MSInput structure
@@ -22,7 +23,6 @@ StructuredBuffer<uint3> indices : register(t1);
 // TransformationMatrix structure buffer
 //=========================================================================================
 struct TransformationMatrix {
-	float4x4 wvp;
 	float4x4 world;
 	float4x4 worldInverseTranspose;
 };
@@ -55,7 +55,7 @@ void main(
 		
 		MSOutput output;
 		
-		output.position = mul(vertices[groupIndex].position, gFloor.wvp);
+		output.position = mul(vertices[groupIndex].position, mul(gFloor.world, gCamera.viewProj));
 		output.worldPos = mul(vertices[groupIndex].position, gFloor.world);
 		output.texcoord = vertices[groupIndex].texcoord;
 		output.normal   = normalize(mul(vertices[groupIndex].normal, (float3x3)gFloor.world));

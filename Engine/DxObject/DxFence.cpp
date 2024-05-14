@@ -31,7 +31,7 @@ void DxObject::Fence::Init(Devices* devices) {
 		);
 
 		assert(SUCCEEDED(hr));
-		Log("[DxObject.Fence]: fence_ << Complete Create \n");
+		Log("[DxObject.Fence]: fence_ << Complete Create");
 	}
 
 	// Fenceのシグナルを待つためのイベントを作成
