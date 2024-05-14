@@ -107,11 +107,16 @@ private:
 	// private methods
 	//=========================================================================================
 
+	void OutputMain();
+
 	void OutputScene();
 	void OutputGame();
 
 	void OutputLog();
+	void OutputPrintf();
+
 	void OutputPerformance();
+
 	void OutputOutliner();
 
 	// test made

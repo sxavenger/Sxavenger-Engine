@@ -25,6 +25,16 @@
 ////////////////////////////////////////////////////////////////////////////////////////////
 namespace DxObject {
 
+	////////////////////////////////////////////////////////////////////////////////////////////
+	// CommandAllocatorType enum
+	////////////////////////////////////////////////////////////////////////////////////////////
+	enum CommandAllocatorType {
+		TYPE_RENDER,
+		TYPE_TEXTURE,
+
+		kCountOfComnmandAllocatorType
+	};
+
 	//-----------------------------------------------------------------------------------------
 	// DxObject forward
 	//-----------------------------------------------------------------------------------------
@@ -60,8 +70,10 @@ namespace DxObject {
 		//! @brief commandListをクローズし, Queueで実行
 		void Close();
 
-		//! @brief commandAllocator, commandListをリセット
-		void Reset();
+		//! @brief commandAllocatorのすべてをリセット, commandListをリセット
+		void Reset(CommandAllocatorType useAllocator);
+
+		void ResetCommandList(CommandAllocatorType useAllocator);
 
 		//! @brief コマンドリストを取得
 		//! 
@@ -84,8 +96,8 @@ namespace DxObject {
 		// private variables
 		//=========================================================================================
 
-		ComPtr<ID3D12CommandQueue>        commandQueue_;
-		ComPtr<ID3D12CommandAllocator>    commandAllocator_;
+		ComPtr<ID3D12CommandQueue>         commandQueue_;
+		ComPtr<ID3D12CommandAllocator>     commandAllocator_[kCountOfComnmandAllocatorType];
 		ComPtr<ID3D12GraphicsCommandList6> commandList_;
 
 	};

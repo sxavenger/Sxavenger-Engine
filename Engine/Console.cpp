@@ -56,14 +56,14 @@ void Console::Term() {
 void Console::Update() {
 	ImGui::ShowDemoWindow();
 
-	ImGui::Begin("Sxavenger Engine");
-	ImGui::End();
-
+	OutputMain();
+	
 	// game window
 	OutputScene();
 	OutputGame();
 
 	OutputLog();
+	OutputPrintf();
 	OutputOutliner();
 	OutputPerformance();
 	OutputSystem();
@@ -82,6 +82,11 @@ void Console::SetLog(const std::string& log, const Vector4f& color) {
 //=========================================================================================
 // private methods
 //=========================================================================================
+
+void Console::OutputMain() {
+	ImGui::Begin("Sxavenger Engine");
+	ImGui::End();
+}
 
 void Console::OutputScene() {
 	static bool isOpenWindow = true;
@@ -125,6 +130,11 @@ void Console::OutputLog() {
 		ImGui::EndChild();
 	}
 
+	ImGui::End();
+}
+
+void Console::OutputPrintf() {
+	ImGui::Begin("Printf");
 	ImGui::End();
 }
 

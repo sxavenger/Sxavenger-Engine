@@ -1,4 +1,4 @@
-#include <TextureManager.h>
+#include "TextureManager.h"
 
 //-----------------------------------------------------------------------------------------
 // include
@@ -14,12 +14,8 @@
 using namespace DxObject;
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// Texture class methods
+// Texture class
 ////////////////////////////////////////////////////////////////////////////////////////////
-
-Texture::Texture(const std::string& filePath, DirectXCommon* dxCommon) {
-	Load(filePath, dxCommon);
-}
 
 void Texture::Load(const std::string& filePath, DirectXCommon* dxCommon) {
 
@@ -34,9 +30,7 @@ void Texture::Load(const std::string& filePath, DirectXCommon* dxCommon) {
 	const DirectX::TexMetadata metadata = mipImage.GetMetadata();
 
 	resource_ = TextureMethod::CreateTextureResource(device, metadata);
-	ComPtr<ID3D12Resource> intermediateResouce = TextureMethod::UploadTextureData(resource_.Get(), mipImage, device, commandList);
-
-	dxCommon_->Sent();
+	intermediateResouce_ = TextureMethod::UploadTextureData(resource_.Get(), mipImage, device, commandList);
 
 	// SRV - shaderResourceViewの生成
 	{
@@ -58,14 +52,23 @@ void Texture::Load(const std::string& filePath, DirectXCommon* dxCommon) {
 	}
 }
 
-void Texture::CreateDummy(int32_t width, int32_t height, DirectXCommon* dxCommon) {
+void Texture::Unload() {
+	dxCommon_->GetDescriptorsObj()->Erase(descriptorSRV_);
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////
+// DummyTexture class methods
+////////////////////////////////////////////////////////////////////////////////////////////
+
+void DummyTexture::Create(int32_t width, int32_t height, DirectXCommon* dxCommon) {
 
 	// dxCommonの保存
 	dxCommon_ = dxCommon;
 
-
+	// deviceの取り出し
 	auto device = dxCommon_->GetDeviceObj()->GetDevice();
 
+	// resourceの生成
 	{
 		D3D12_RESOURCE_DESC desc = {};
 		desc.Dimension        = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
@@ -116,7 +119,7 @@ void Texture::CreateDummy(int32_t width, int32_t height, DirectXCommon* dxCommon
 		);
 	}
 
-	// RTV
+	// RTV - RenderTargetViewの生成
 	{
 		descriptorRTV_ = dxCommon_->GetDescriptorsObj()->GetCurrentDescriptor(DescriptorType::RTV);
 
@@ -129,10 +132,8 @@ void Texture::CreateDummy(int32_t width, int32_t height, DirectXCommon* dxCommon
 
 }
 
-void Texture::Unload() {
-	dxCommon_->GetDescriptorsObj()->Erase(descriptorSRV_);
+void DummyTexture::Unload() {
 	dxCommon_->GetDescriptorsObj()->Erase(descriptorRTV_);
-	dxCommon_ = nullptr;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -140,20 +141,13 @@ void Texture::Unload() {
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 void TextureManager::Init(DirectXCommon* dxCommon) {
+
 	// dxCommonの保存
 	dxCommon_ = dxCommon;
 
-	// 初期texture
-	textures_["resources/uvChecker.png"];
+	LoadTexture("resources/uvChecker.png");
+	LoadTexture("resources/tile_black.png");
 
-	// Floor
-	textures_["resources/tile_black.png"];
-
-	for (auto& pair : textures_) {
-		pair.second.texture = std::make_unique<Texture>(pair.first, dxCommon_);
-		pair.second.referenceNum = 1;
-		ExternalLogger::Write("	complete create texture filePath: " + pair.first);
-	}
 }
 
 void TextureManager::Term() {
@@ -161,60 +155,107 @@ void TextureManager::Term() {
 	dxCommon_ = nullptr;
 }
 
+void TextureManager::TextureOK() {
+	for (auto& textureData : textures_) {
+		if (textureData.second.isTextureEnabled) {
+			continue;
+		}
+
+		textureData.second.isTextureEnabled = true;
+		Console::GetInstance()->SetLog(
+			"[Send Texture] filePath: " + textureData.first
+		);
+	}
+}
+
 void TextureManager::LoadTexture(const std::string& filePath) {
 	auto it = textures_.find(filePath);
 	if (it != textures_.end()) { //!< 同一keyが見つかった場合
 		// 参照数にインクリメント
-		textures_[filePath].referenceNum++;
+		textures_[filePath].referenceCount++;
 		return;
 	}
 
 	// textureの登録
-	textures_[filePath].texture = std::make_unique<Texture>(filePath, dxCommon_);
-	textures_[filePath].referenceNum = 1;
+	textures_[filePath].texture          = std::make_unique<Texture>();
+	textures_[filePath].texture->Load(filePath, dxCommon_);
+	textures_[filePath].referenceCount   = 1;
+	textures_[filePath].isTextureEnabled = false; // commandListに積んだだけなのでまだ使えない
+
+	Console::GetInstance()->SetLog(
+		"[Load Texture] filePath: " + filePath
+	);
 }
 
-void TextureManager::CreateDummyTexture(int32_t width, int32_t height, std::string key) {
-	auto it = textures_.find(key);
-	if (it != textures_.end()) {
+void TextureManager::CreateDummyTexture(int32_t width, int32_t height, const std::string& key) {
+	if (FindKey(key)) {
 		Log("TextureManager::CreateDummyTexture \n if (it != textures_.end()) { \n return; \n} \n");
-		Console::GetInstance()->SetLog("warning: dummyTexture already made. [key]: " + key, Console::warningColor);
+		Console::GetInstance()->SetLog("warning: texture already made. [key]: " + key, Console::warningColor);
 		return;
 	}
 
-	textures_[key].texture = std::make_unique<Texture>(width, height, dxCommon_);
-	textures_[key].referenceNum = 1;
+	auto dummyTexture = std::make_unique<DummyTexture>();
+	dummyTexture->Create(width, height, dxCommon_);
+
+	textures_[key].texture = std::move(dummyTexture);
+	textures_[key].referenceCount = 1;
+	textures_[key].isTextureEnabled = true;
+
+	Console::GetInstance()->SetLog(
+		"[Create DummyTexture] key: " + key
+	);
 }
 
-void TextureManager::UnloadTexture(const std::string& filePath) {
-	auto it = textures_.find(filePath);
-	assert(it != textures_.end()); //!< 同一keyが見つからなかった
+void TextureManager::UnloadTexture(const std::string& key) {
+	assert(FindKey(key)); //!< 同一keyが見つからなかった
+	//assert(textures_[key].isTextureEnabled); //!< SRVが作られてないのに削除使用としてる
 
 	// 参照先が消える
-	textures_[filePath].referenceNum--;
+	textures_[key].referenceCount--;
 
-	if (textures_[filePath].referenceNum == 0) { //!< 参照先がない場合
-		textures_[filePath].texture.reset();
-		textures_.erase(filePath);
+	if (textures_[key].referenceCount == 0) { //!< 参照先がない場合
+		textures_[key].texture.reset();
+		textures_.erase(key);
 	}
 }
 
+void TextureManager::DeleteTexture(const std::string& key) {
+	assert(FindKey(key)); //!< 同一keyが見つからなかった
+	assert(textures_[key].isTextureEnabled); //!< SRVが作られてないのに削除使用として
 
-//=========================================================================================
-// static methods
-//=========================================================================================
+	textures_[key].texture.reset();
+	textures_.erase(key);
+
+	Console::GetInstance()->SetLog(
+		"[Delete Texture] key: " + key
+	);
+}
+
 TextureManager* TextureManager::GetInstance() {
 	static TextureManager instance;
 	return &instance;
 }
 
-std::unordered_map<std::string, TextureManager::TextureData>::const_iterator TextureManager::FindKey(const std::string& key) const {
+//=========================================================================================
+// private methods
+//=========================================================================================
+
+std::unordered_map<std::string, TextureManager::TextureData>::const_iterator TextureManager::GetKey(const std::string& key) const {
 	auto it = textures_.find(key);
 	if (it == textures_.end()) {
 		assert(false);
 	}
 
 	return it;
+}
+
+bool TextureManager::FindKey(const std::string& key) const {
+	auto it = textures_.find(key);
+	if (it == textures_.end()) {
+		return false;
+	}
+
+	return true;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -315,3 +356,4 @@ ComPtr<ID3D12Resource> TextureMethod::UploadTextureData(
 
 	return intermediateResource;
 }
+

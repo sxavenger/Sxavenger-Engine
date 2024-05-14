@@ -6,6 +6,11 @@
 #include <TextureManager.h>
 #include <imgui.h>
 
+//-----------------------------------------------------------------------------------------
+// using
+//-----------------------------------------------------------------------------------------
+using namespace DxObject;
+
 ////////////////////////////////////////////////////////////////////////////////////////////
 // DirectXCommon class
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -162,6 +167,8 @@ void DirectXCommon::EndFrame() {
 		swapChains_->GetTransitionBarrier(backBufferIndex_, D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT)
 	);
 
+	fences_->WaitGPU(); // texture分のWAIT
+
 	command_->Close();
 
 	ImGuiIO& io = ImGui::GetIO();
@@ -179,10 +186,10 @@ void DirectXCommon::EndFrame() {
 
 	fences_->WaitGPU();
 
-	command_->Reset();
+	command_->Reset(TYPE_TEXTURE);
 }
 
-void DirectXCommon::Sent() {
+void DirectXCommon::SentTexture() {
 	command_->Close();
 
 	// GPUにシグナルを送る
@@ -190,9 +197,9 @@ void DirectXCommon::Sent() {
 
 	command_->Signal(fences_.get());
 
-	fences_->WaitGPU();
+	// waitは描画前
 
-	command_->Reset();
+	command_->ResetCommandList(TYPE_RENDER);
 }
 
 DirectXCommon* DirectXCommon::GetInstance() {

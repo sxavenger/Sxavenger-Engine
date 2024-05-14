@@ -62,15 +62,15 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		// 更新処理
 		//=========================================================================================
 
-		static int frame = 0;
-		++frame;
+		/*static int frame = 0;
+		++frame;*/
 
-		if (frame % 60 == 0) {
+		/*if (frame % 60 == 0) {
 			console->SetLog(
 				std::format("[debug] frame: {}, speed(ms): {}", frame / 60, Performance::GetFramesPerformance(SecondsUnit::ms)),
 				Console::commentOutColor
 			);
-		}
+		}*/
 
 		console->Update();
 
@@ -78,6 +78,11 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		plane->Update();
 		sphere->Update();
 		cube->Update();
+
+		{ // todo:
+			MyEngine::GetDxCommon()->SentTexture();
+			MyEngine::GetTextureManager()->TextureOK();
+		}
 
 		//=========================================================================================
 		// オフスクリーン描画処理

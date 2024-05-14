@@ -176,6 +176,11 @@ TextureManager* MyEngine::GetTextureManager() {
 	return sTextureManager;
 }
 
+void MyEngine::LoadTexture(const std::string& filePath) {
+	assert(sTextureManager != nullptr);
+	sTextureManager->LoadTexture(filePath);
+}
+
 const D3D12_GPU_DESCRIPTOR_HANDLE& MyEngine::GetTextureHandleGPU(const std::string& textureKey) {
 	assert(sTextureManager != nullptr);
 	return sTextureManager->GetHandleGPU(textureKey);

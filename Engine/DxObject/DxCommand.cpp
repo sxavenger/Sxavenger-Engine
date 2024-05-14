@@ -38,12 +38,15 @@ void DxObject::Command::Init(Devices* devices) {
 
 	// コマンドアロケーターを生成
 	{
-		auto hr = device->CreateCommandAllocator(
-			D3D12_COMMAND_LIST_TYPE_DIRECT,
-			IID_PPV_ARGS(&commandAllocator_)
-		);
+		for (int i = 0; i < kCountOfComnmandAllocatorType; ++i) {
+			auto hr = device->CreateCommandAllocator(
+				D3D12_COMMAND_LIST_TYPE_DIRECT,
+				IID_PPV_ARGS(&commandAllocator_[i])
+			);
 
-		assert(SUCCEEDED(hr));
+			assert(SUCCEEDED(hr));
+		}
+		
 		Log("[DxObject.Command]: commandAllocator_ << Complete Create");
 	}
 
@@ -52,7 +55,7 @@ void DxObject::Command::Init(Devices* devices) {
 		auto hr = device->CreateCommandList(
 			0,
 			D3D12_COMMAND_LIST_TYPE_DIRECT,
-			commandAllocator_.Get(),
+			commandAllocator_[TYPE_TEXTURE].Get(), // 先textureで使うため
 			nullptr,
 			IID_PPV_ARGS(&commandList_)
 		);
@@ -73,11 +76,19 @@ void DxObject::Command::Close() {
 	commandQueue_->ExecuteCommandLists(1, commandLists);
 }
 
-void DxObject::Command::Reset() {
-	auto hr = commandAllocator_->Reset();
-	assert(SUCCEEDED(hr));
+void DxObject::Command::Reset(CommandAllocatorType useAllocator) {
+	for (int i = 0; i < kCountOfComnmandAllocatorType; ++i) {
+		auto hr = commandAllocator_[i]->Reset();
+		assert(SUCCEEDED(hr));
+	}
+	
 
-	hr = commandList_->Reset(commandAllocator_.Get(), nullptr);
+	auto hr = commandList_->Reset(commandAllocator_[useAllocator].Get(), nullptr);
+	assert(SUCCEEDED(hr));
+}
+
+void DxObject::Command::ResetCommandList(CommandAllocatorType useAllocator) {
+	auto hr = commandList_->Reset(commandAllocator_[useAllocator].Get(), nullptr);
 	assert(SUCCEEDED(hr));
 }
 

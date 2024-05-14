@@ -58,8 +58,7 @@ public:
 	//! @brief フレームの終了処理
 	void EndFrame();
 
-	//!
-	void Sent();
+	void SentTexture();
 
 	// ---- pipeline関係 ---- //
 

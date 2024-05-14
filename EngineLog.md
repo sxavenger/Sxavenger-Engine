@@ -31,6 +31,4 @@ Complete Initialize: sWinApp
 [DxObject.ShaderBlob]: shaderBlob_PS_ << Complete Create
 Complete Initialize: sDirectXCommon
 Complete Initialize: sImGuiManager
-	complete create texture filePath: resources/tile_black.png
-	complete create texture filePath: resources/uvChecker.png
 Complete Initialize: sTextureManager

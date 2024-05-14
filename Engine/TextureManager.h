@@ -34,33 +34,37 @@ public:
 	// public methods
 	//=========================================================================================
 
-	//! @brief texture用コンストラクタ
-	Texture(const std::string& filePath, DirectXCommon* dxCommon);
-	
-	//! @brief dummyTexture用コンストラクタ
-	Texture(int32_t width, int32_t height, DirectXCommon* dxCommon) {
-		CreateDummy(width, height, dxCommon);
-	}
+	//! @brief コンストラクタ
+	Texture() {}
 
 	//! @brief デストラクタ
 	~Texture() { Unload(); }
 
 	//! @brief テクスチャのロード
-	//! 
-	//! @param[in] filePath ファイルパス
 	void Load(const std::string& filePath, DirectXCommon* dxCommon);
 
-	//! @brief ダミーテクスチャの生成
-	void CreateDummy(int32_t width, int32_t height, DirectXCommon* dxCommon);
-
-	//! @brief テクスチャの解放
+	//! @brief テクスチャの開放
 	void Unload();
 
 	const D3D12_GPU_DESCRIPTOR_HANDLE& GetSRVHandleGPU() const { return descriptorSRV_.handleGPU; }
 
-	const D3D12_CPU_DESCRIPTOR_HANDLE& GetRTVHandleCPU() const { return descriptorRTV_.handleCPU; }
+	virtual const D3D12_CPU_DESCRIPTOR_HANDLE& GetRTVHandleCPU() const {
+		assert(false); //!< dummyTextureではないのでRTVを持ってない
+		return errorHandle_;
+	}
 
 	ID3D12Resource* GetResource() const { return resource_.Get(); }
+
+protected:
+
+	//=========================================================================================
+	// protected variables
+	//=========================================================================================
+
+	DirectXCommon* dxCommon_ = nullptr;
+
+	ComPtr<ID3D12Resource> resource_;
+	DxObject::Descriptor descriptorSRV_;
 
 private:
 
@@ -68,12 +72,45 @@ private:
 	// private variables
 	//=========================================================================================
 
-	DirectXCommon* dxCommon_ = nullptr;
+	D3D12_CPU_DESCRIPTOR_HANDLE errorHandle_;
+	ComPtr<ID3D12Resource> intermediateResouce_;
 
-	ComPtr<ID3D12Resource> resource_;
+};
 
-	DxObject::Descriptor descriptorSRV_;
-	DxObject::Descriptor descriptorRTV_; //!< ダミーテクスチャ用
+////////////////////////////////////////////////////////////////////////////////////////////
+// DummyTexture class
+////////////////////////////////////////////////////////////////////////////////////////////
+class DummyTexture
+	: public Texture {
+public:
+
+	//=========================================================================================
+	// public methods
+	//=========================================================================================
+
+	//! @brief コンストラクタ
+	DummyTexture() {}
+
+	//! @brief デストラクタ
+	~DummyTexture() { Unload(); }
+
+	//! @brief ダミーテクスチャの作成
+	void Create(int32_t width, int32_t height, DirectXCommon* dxCommon);
+
+	//! @brief テクスチャの解放
+	void Unload();
+
+	const D3D12_CPU_DESCRIPTOR_HANDLE& GetRTVHandleCPU() const override {
+		return descriptorRTV_.handleCPU;
+	}
+
+private:
+
+	//=========================================================================================
+	// private variables
+	//=========================================================================================
+
+	DxObject::Descriptor descriptorRTV_;
 
 };
 
@@ -93,23 +130,32 @@ public:
 	//! @brief 終了処理
 	void Term();
 
-	//! @brief テクスチャのロード
+	void TextureOK();
+
+	//! @brief テクスチャの読み込み
 	void LoadTexture(const std::string& filePath);
 
-	//! @brief ダミーテクスチャの設定
-	void CreateDummyTexture(int32_t width, int32_t height, std::string key);
+	//! @brief ダミーテクスチャの生成
+	void CreateDummyTexture(int32_t width, int32_t height, const std::string& key);
 
-	//! @brief テクスチャのアンロード
+	//! @brief テクスチャの削除
 	void UnloadTexture(const std::string& key);
 
+	//! @brief テクスチャの削除 (参照カウントを無視)
+	void DeleteTexture(const std::string& key);
+
 	const D3D12_GPU_DESCRIPTOR_HANDLE& GetHandleGPU(const std::string& key) const {
-		auto it = FindKey(key);
+		auto it = GetKey(key);
+
+		if (!it->second.isTextureEnabled) {
+			assert(false); //!< textureがGPUに送られてない
+		}
 
 		return it->second.texture->GetSRVHandleGPU();
 	}
 
 	Texture* GetTexture(const std::string& key) const {
-		auto it = FindKey(key);
+		auto it = GetKey(key);
 
 		return it->second.texture.get();
 	}
@@ -119,11 +165,14 @@ public:
 private:
 
 	////////////////////////////////////////////////////////////////////////////////////////////
-	// TextureData structure
+	// TextureData enum
 	////////////////////////////////////////////////////////////////////////////////////////////
 	struct TextureData {
 		std::unique_ptr<Texture> texture;
-		uint32_t referenceNum = 0;
+
+		// info //
+		uint32_t referenceCount = 0;
+		bool isTextureEnabled   = false;
 	};
 
 	//=========================================================================================
@@ -131,15 +180,23 @@ private:
 	//=========================================================================================
 
 	std::unordered_map<std::string, TextureData> textures_;
-	//!< key = filePath, value = texture
-
+	//!< key = filePath, value = textureData
+	
 	DirectXCommon* dxCommon_ = nullptr;
 
 	//=========================================================================================
 	// private methods
 	//=========================================================================================
 
-	std::unordered_map<std::string, TextureManager::TextureData>::const_iterator FindKey(const std::string& key) const;
+	//! @brief keyの要素を取得
+	std::unordered_map<std::string, TextureManager::TextureData>::const_iterator GetKey(const std::string& key) const;
+
+	//! @brief keyが存在するかどうか
+	//! 
+	//! @retval true  存在する
+	//! @retval false 存在しない
+	bool FindKey(const std::string& key) const;
+
 
 };
 

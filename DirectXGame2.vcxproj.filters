@@ -127,9 +127,6 @@
     <ClCompile Include="Engine\ImGuiManager.cpp">
       <Filter>Engine\source</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\TextureManager.cpp">
-      <Filter>Engine\source</Filter>
-    </ClCompile>
     <ClCompile Include="Lib\Camera\Camera2D.cpp">
       <Filter>Lib\Camera\source</Filter>
     </ClCompile>
@@ -295,6 +292,9 @@
     <ClCompile Include="Game\Cube.cpp">
       <Filter>Game</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\TextureManager.cpp">
+      <Filter>Engine\source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\MyEngine.h">
@@ -328,9 +328,6 @@
       <Filter>Lib\Adapter\Json</Filter>
     </ClInclude>
     <ClInclude Include="Engine\ImGuiManager.h">
-      <Filter>Engine\include</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\TextureManager.h">
       <Filter>Engine\include</Filter>
     </ClInclude>
     <ClInclude Include="Lib\Camera\Camera2D.h">
@@ -467,6 +464,9 @@
     </ClInclude>
     <ClInclude Include="Game\Cube.h">
       <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\TextureManager.h">
+      <Filter>Engine\include</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
