@@ -59,22 +59,29 @@ void DxObject::PipelineState::Init(
 	descRS.CullMode = D3D12_CULL_MODE_BACK;
 	descRS.FillMode = D3D12_FILL_MODE_SOLID;
 
-	// shaderBlobの取り出し
-	IDxcBlob* blob_MS = shaderBlob->GetShaderBlob_MS();
-	IDxcBlob* blob_PS = shaderBlob->GetShaderBlob_PS();
-
 	// DepthStensilStateの設定 TODO: depthStencil class
 	D3D12_DEPTH_STENCIL_DESC descDS = {};
 	descDS.DepthEnable    = true;
 	descDS.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ALL;
 	descDS.DepthFunc      = D3D12_COMPARISON_FUNC_LESS_EQUAL;
 
+	// shaderBlobの取り出し
+
+	IDxcBlob* blob[ShaderType::kCountOfShaderType];
+
+	for (int i = 0; i < ShaderType::kCountOfShaderType; ++i) {
+		blob[i] = shaderBlob->GetShaderBlob(static_cast<ShaderType>(i));
+	}
+
+	// 必須なshaderがコンパイルされているかの確認
+	assert(blob[ShaderType::PIXEL] != nullptr);
+
 	// PipelineStateの生成
 	{
 		D3DX12_MESH_SHADER_PIPELINE_STATE_DESC desc = {};
 		desc.pRootSignature     = rootSignature->GetRootSignature();
-		desc.MS                 = { blob_MS->GetBufferPointer(), blob_MS->GetBufferSize() };
-		desc.PS                 = { blob_PS->GetBufferPointer(), blob_PS->GetBufferSize() };
+		desc.MS                 = { blob[ShaderType::MESH]->GetBufferPointer(), blob[ShaderType::MESH]->GetBufferSize()};
+		desc.PS                 = { blob[ShaderType::PIXEL]->GetBufferPointer(), blob[ShaderType::PIXEL]->GetBufferSize() };
 		desc.RasterizerState    = descRS;
 		desc.BlendState         = blendDesc;
 		desc.DepthStencilState  = descDS;
@@ -98,6 +105,7 @@ void DxObject::PipelineState::Init(
 		);
 
 		assert(SUCCEEDED(hr));
+
 	}
 }
 

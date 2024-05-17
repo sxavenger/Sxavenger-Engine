@@ -18,23 +18,16 @@ DxObject::ShaderTable* DxObject::ShaderBlob::shaderTable_ = nullptr;
 // ShaderBlob class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-void DxObject::ShaderBlob::Init(const std::wstring& vsFileName, const std::wstring& psFileName) {
+void DxObject::ShaderBlob::Create(const std::wstring& fileName, ShaderType type) {
 
-	// VS
-	shaderBlob_MS_ = shaderTable_->GetShaderBlob(vsFileName, ShaderType::Mesh);
-
-	assert(shaderBlob_MS_ != nullptr);
-	Log("[DxObject::ShaderBlob]: shaderBlob_MS_ << Complete Create");
-
-	// PS
-	shaderBlob_PS_ = shaderTable_->GetShaderBlob(psFileName, ShaderType::Pixel);
-
-	assert(shaderBlob_PS_ != nullptr);
-	Log("[DxObject.ShaderBlob]: shaderBlob_PS_ << Complete Create");
-
+	shaderBlob_[type] = shaderTable_->GetShaderBlob(fileName, type);
+	
+	assert(shaderBlob_[type] != nullptr);
+	Log(std::format("[DxObject.ShaderBlob]: shaderBlob_[{}] << Complete Create", static_cast<int>(type)));
 }
 
 void DxObject::ShaderBlob::Term() {
-	shaderBlob_MS_ = nullptr;
-	shaderBlob_PS_ = nullptr;
+	for (int i = 0; i < ShaderType::kCountOfShaderType; ++i) {
+		shaderBlob_[i] = nullptr;
+	}
 }

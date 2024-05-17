@@ -30,6 +30,8 @@
 #include "Sphere.h"
 #include "Cube.h"
 
+#include <Input.h>
+
 ////////////////////////////////////////////////////////////////////////////////////////////
 // メイン関数
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -79,10 +81,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		sphere->Update();
 		cube->Update();
 
-		{ // todo:
-			MyEngine::GetDxCommon()->SentTexture();
-			MyEngine::GetTextureManager()->TextureOK();
-		}
+		MyEngine::BeginDraw();
 
 		//=========================================================================================
 		// オフスクリーン描画処理
@@ -114,7 +113,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		// スクリーン描画処理
 		//=========================================================================================
 
-		MyEngine::BeginDraw();
+		MyEngine::BeginScreenDraw();
 
 
 

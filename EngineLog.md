@@ -21,14 +21,15 @@ Complete Initialize: sWinApp
 [DxObject.Compilers]: includeHandler_ << Complete Create
 [DxObject.RootSignature]: rootSignature_ << Complete Create
 [DxObject::ShaderTable]: Floor.MS.hlsl << Complete Create
-[DxObject::ShaderBlob]: shaderBlob_MS_ << Complete Create
+[DxObject.ShaderBlob]: shaderBlob_[0] << Complete Create
 [DxObject::ShaderTable]: Floor.PS.hlsl << Complete Create
-[DxObject.ShaderBlob]: shaderBlob_PS_ << Complete Create
+[DxObject.ShaderBlob]: shaderBlob_[1] << Complete Create
 [DxObject.RootSignature]: rootSignature_ << Complete Create
 [DxObject::ShaderTable]: Default.MS.hlsl << Complete Create
-[DxObject::ShaderBlob]: shaderBlob_MS_ << Complete Create
+[DxObject.ShaderBlob]: shaderBlob_[0] << Complete Create
 [DxObject::ShaderTable]: Default.PS.hlsl << Complete Create
-[DxObject.ShaderBlob]: shaderBlob_PS_ << Complete Create
+[DxObject.ShaderBlob]: shaderBlob_[1] << Complete Create
 Complete Initialize: sDirectXCommon
 Complete Initialize: sImGuiManager
 Complete Initialize: sTextureManager
+Complete Initialize: sInput

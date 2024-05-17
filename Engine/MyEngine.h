@@ -4,6 +4,7 @@
 // include
 //-----------------------------------------------------------------------------------------
 #include <windows.h>
+#include <Input.h>
 
 // c++
 #include <cstdint>
@@ -58,6 +59,9 @@ public:
 	//! @brief 描画処理の開始
 	static void BeginDraw();
 
+	//! @brief スクリーン描画処理の開始
+	static void BeginScreenDraw();
+
 	//! @brief オフスク描画処理の開始
 	//! 
 	//! @param[in] offscreenDummyTexture 書き込む用のdummyTexture
@@ -72,7 +76,9 @@ public:
 	//! @retval 0 ゲーム継続
 	static int ProcessMessage();
 
-	// ---- pipeline関係 ---- //
+	//-----------------------------------------------------------------------------------------
+	// pipeline関係
+	//-----------------------------------------------------------------------------------------
 
 	static void SetPipelineType(PipelineType pipelineType);
 
@@ -80,15 +86,21 @@ public:
 
 	static void SetPipelineState();
 
-	// ---- descriptor関係 ---- //
+	//-----------------------------------------------------------------------------------------
+	// descriptor関係
+	//-----------------------------------------------------------------------------------------
 
 	static DxObject::Descriptor GetCurrentDescripor(DxObject::DescriptorType type);
 
 	static void EraseDescriptor(DxObject::Descriptor& descriptor);
 
-	// ---- texture関係 ---- //
+	//-----------------------------------------------------------------------------------------
+	// texture関係
+	//-----------------------------------------------------------------------------------------
 
 	static TextureManager* GetTextureManager();
+
+	static Texture* CreateDummyTexture(int32_t width, int32_t height, const std::string& key);
 
 	static void LoadTexture(const std::string& filePath);
 
@@ -96,7 +108,15 @@ public:
 
 	static Texture* GetTexture(const std::string& textureKey);
 
-	// ---- offscreen関係 ---- //
+	//-----------------------------------------------------------------------------------------
+	// Input関係
+	//-----------------------------------------------------------------------------------------
+
+	static bool IsPressKey(uint8_t dik);
+
+	static bool IsTriggerKey(uint8_t dik);
+
+	static bool IsReleaseKey(uint8_t dik);
 
 	// TODO: あんましたくない
 	static ID3D12GraphicsCommandList6* GetCommandList();

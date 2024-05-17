@@ -10,6 +10,7 @@
 #include <DirectXCommon.h>
 #include <ImGuiManager.h>
 #include <TextureManager.h>
+#include <Input.h>
 
 #include <ComPtr.h>
 
@@ -28,6 +29,7 @@ namespace {
 	DirectXCommon* sDirectXCommon = nullptr;   //!< DirectX12 system
 	ImGuiManager* sImGuiManager = nullptr;     //!< ImGui system
 	TextureManager* sTextureManager = nullptr; //!< TextureManager system
+	Input* sInput = nullptr;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -88,6 +90,13 @@ void MyEngine::Initialize(int32_t kWindowWidth, int32_t kWindowHeight, const cha
 		sTextureManager->CreateDummyTexture(kWindowWidth, kWindowHeight, "offscreen");
 	}
 
+	// Inputの初期化
+	{
+		sInput = Input::GetInstance();
+		sInput->Init(sWinApp->GetHinst(), sWinApp->GetHwnd());
+		ExternalLogger::Write("Complete Initialize: sInput");
+	}
+
 	ExternalLogger::Close();
 }
 
@@ -109,10 +118,11 @@ void MyEngine::Finalize() {
 
 void MyEngine::BeginFrame() {
 	Performance::BeginFrame();
+	sInput->Update();
 	sImGuiManager->Begin();
 }
 
-void MyEngine::BeginDraw() {
+void MyEngine::BeginScreenDraw() {
 	sDirectXCommon->BeginFrame();
 }
 
@@ -128,6 +138,11 @@ void MyEngine::EndFrame() {
 	sImGuiManager->End();
 	sDirectXCommon->EndFrame();
 	Performance::EndFrame();
+}
+
+void MyEngine::BeginDraw() {
+	sDirectXCommon->SentTexture();
+	sTextureManager->EnableTexture();
 }
 
 int MyEngine::ProcessMessage() {
@@ -176,6 +191,11 @@ TextureManager* MyEngine::GetTextureManager() {
 	return sTextureManager;
 }
 
+Texture* MyEngine::CreateDummyTexture(int32_t width, int32_t height, const std::string& key) {
+	sTextureManager->CreateDummyTexture(width, height, key);
+	return sTextureManager->GetTexture(key);
+}
+
 void MyEngine::LoadTexture(const std::string& filePath) {
 	assert(sTextureManager != nullptr);
 	sTextureManager->LoadTexture(filePath);
@@ -189,4 +209,19 @@ const D3D12_GPU_DESCRIPTOR_HANDLE& MyEngine::GetTextureHandleGPU(const std::stri
 Texture* MyEngine::GetTexture(const std::string& textureKey) {
 	assert(sTextureManager != nullptr);
 	return sTextureManager->GetTexture(textureKey);
+}
+
+bool MyEngine::IsPressKey(uint8_t dik) {
+	assert(sInput != nullptr);
+	return sInput->IsPressKey(dik);
+}
+
+bool MyEngine::IsTriggerKey(uint8_t dik) {
+	assert(sInput != nullptr);
+	return sInput->IsTriggerKey(dik);
+}
+
+bool MyEngine::IsReleaseKey(uint8_t dik) {
+	assert(sInput != nullptr);
+	return sInput->IsReleaseKey(dik);
 }

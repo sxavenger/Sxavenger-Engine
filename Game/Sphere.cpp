@@ -54,6 +54,27 @@ void Sphere::Term() {
 }
 
 void Sphere::Update() {
+
+	Vector3f velocity = { 0.0f };
+
+	if (MyEngine::IsPressKey(DIK_W)) {
+		velocity.y += 0.2f;
+	}
+
+	if (MyEngine::IsPressKey(DIK_S)) {
+		velocity.y -= 0.2f;
+	}
+
+	if (MyEngine::IsPressKey(DIK_A)) {
+		velocity.x -= 0.2f;
+	}
+
+	if (MyEngine::IsPressKey(DIK_D)) {
+		velocity.x += 0.2f;
+	}
+
+	transform_.translate += velocity;
+
 	// matrix
 	Matrix4x4 world = Matrix::MakeAffine(transform_.scale, transform_.rotate, transform_.translate);
 

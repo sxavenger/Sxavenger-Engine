@@ -46,6 +46,8 @@ public:
 
 	const HWND& GetHwnd() const { return hWnd_; }
 
+	const HINSTANCE& GetHinst() const { return hInst_; }
+
 private:
 
 	//=========================================================================================

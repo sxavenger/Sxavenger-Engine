@@ -20,6 +20,7 @@
 enum PipelineType {
 	FLOOR,
 	DEFAULT,
+	PRIMITIVE,
 
 	kCountOfPipeline
 };

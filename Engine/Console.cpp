@@ -41,8 +41,7 @@ Console* Console::GetInstance() {
 void Console::Init() {
 	dxCommon_ = MyEngine::GetDxCommon();
 
-	MyEngine::GetTextureManager()->CreateDummyTexture(kWindowWidth, kWindowHeight, "sceneTexture");
-	sceneTexture_ = MyEngine::GetTexture("sceneTexture");
+	sceneTexture_ = MyEngine::CreateDummyTexture(kWindowWidth, kWindowHeight, "sceneTexture");
 
 	debugCamera_ = std::make_unique<Camera3D>();
 	debugCamera_->SetName("debugCamera");

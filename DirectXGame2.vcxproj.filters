@@ -94,6 +94,9 @@
     <Filter Include="Resource\hlsl\Default">
       <UniqueIdentifier>{43f40c99-2249-424f-952c-dd0519a4b296}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resource\hlsl\Primitive">
+      <UniqueIdentifier>{4b0c10ec-ddc5-41b7-9768-6ddf54f9b465}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
@@ -295,6 +298,9 @@
     <ClCompile Include="Engine\TextureManager.cpp">
       <Filter>Engine\source</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\Input.cpp">
+      <Filter>Engine\source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\MyEngine.h">
@@ -468,6 +474,9 @@
     <ClInclude Include="Engine\TextureManager.h">
       <Filter>Engine\include</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\Input.h">
+      <Filter>Engine\include</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />
@@ -482,6 +491,9 @@
     </None>
     <None Include="Resources\hlsl\Camera.hlsli">
       <Filter>Resource\hlsl</Filter>
+    </None>
+    <None Include="Resources\hlsl\Primitive.hlsli">
+      <Filter>Resource\hlsl\Primitive</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -501,6 +513,12 @@
     </FxCompile>
     <FxCompile Include="Resources\hlsl\Default.PS.hlsl">
       <Filter>Resource\hlsl\Default</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\hlsl\Primitive.PS.hlsl">
+      <Filter>Resource\hlsl\Primitive</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\hlsl\Primitive.VS.hlsl">
+      <Filter>Resource\hlsl\Primitive</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

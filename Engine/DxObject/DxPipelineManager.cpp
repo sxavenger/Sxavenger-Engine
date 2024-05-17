@@ -95,8 +95,8 @@ void DxObject::PipelineManager::SetPipeline() {
 void DxObject::PipelineManager::CreatePipelineTable() {
 
 	{
-		// rootSignatureDescsの初期化
-		DxObject::RootSignatureDesc desc;
+		// rootSignatureDescの初期化
+		RootSignatureDesc desc;
 		desc.Resize(6, 1);
 
 		// rangeの設定
@@ -152,17 +152,19 @@ void DxObject::PipelineManager::CreatePipelineTable() {
 		desc.samplers[0].ShaderRegister   = 0;
 		desc.samplers[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
 
-		pipelineMenbers_[PipelineType::FLOOR].rootSignature = std::make_unique<DxObject::RootSignature>(devices_, desc);
+		pipelineMenbers_[PipelineType::FLOOR].rootSignature = std::make_unique<RootSignature>(devices_, desc);
 
-		pipelineMenbers_[PipelineType::FLOOR].shaderBlob = std::make_unique<DxObject::ShaderBlob>(
-			L"Floor.MS.hlsl", L"Floor.PS.hlsl"
-		);
+		pipelineMenbers_[PipelineType::FLOOR].shaderBlob = std::make_unique<ShaderBlob>();
+
+		auto blob = pipelineMenbers_[PipelineType::FLOOR].shaderBlob.get();
+		blob->Create(L"Floor.MS.hlsl", MESH);
+		blob->Create(L"Floor.PS.hlsl", PIXEL);
 
 	}
 
 	{
-		// rootSignatureDescsの初期化
-		DxObject::RootSignatureDesc desc;
+		// rootSignatureDescの初期化
+		RootSignatureDesc desc;
 		desc.Resize(8, 1);
 
 		// mesh
@@ -194,9 +196,15 @@ void DxObject::PipelineManager::CreatePipelineTable() {
 
 		pipelineMenbers_[PipelineType::DEFAULT].rootSignature = std::make_unique<DxObject::RootSignature>(devices_, desc);
 
-		pipelineMenbers_[PipelineType::DEFAULT].shaderBlob = std::make_unique<DxObject::ShaderBlob>(
-			L"Default.MS.hlsl", L"Default.PS.hlsl"
-		);
+		pipelineMenbers_[PipelineType::DEFAULT].shaderBlob = std::make_unique<DxObject::ShaderBlob>();
+		auto blob = pipelineMenbers_[PipelineType::DEFAULT].shaderBlob.get();
+		blob->Create(L"Default.MS.hlsl", MESH);
+		blob->Create(L"Default.PS.hlsl", PIXEL);
 	}
 
+	{
+		// rootSignatureDesc
+		RootSignatureDesc desc;
+
+	}
 }

@@ -155,7 +155,7 @@ void TextureManager::Term() {
 	dxCommon_ = nullptr;
 }
 
-void TextureManager::TextureOK() {
+void TextureManager::EnableTexture() {
 	for (auto& textureData : textures_) {
 		if (textureData.second.isTextureEnabled) {
 			continue;

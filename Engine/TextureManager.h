@@ -130,7 +130,9 @@ public:
 	//! @brief 終了処理
 	void Term();
 
-	void TextureOK();
+	//! @brief Textureが使えるようになる
+	//! @brief HACK: commandAllocator[texture]を送信してから関数を呼び出すこと
+	void EnableTexture();
 
 	//! @brief テクスチャの読み込み
 	void LoadTexture(const std::string& filePath);
