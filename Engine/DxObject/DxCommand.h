@@ -25,16 +25,6 @@
 ////////////////////////////////////////////////////////////////////////////////////////////
 namespace DxObject {
 
-	////////////////////////////////////////////////////////////////////////////////////////////
-	// CommandAllocatorType enum
-	////////////////////////////////////////////////////////////////////////////////////////////
-	enum CommandAllocatorType {
-		TYPE_RENDER,
-		TYPE_TEXTURE,
-
-		kCountOfComnmandAllocatorType
-	};
-
 	//-----------------------------------------------------------------------------------------
 	// DxObject forward
 	//-----------------------------------------------------------------------------------------
@@ -71,9 +61,10 @@ namespace DxObject {
 		void Close();
 
 		//! @brief commandAllocatorのすべてをリセット, commandListをリセット
-		void Reset(CommandAllocatorType useAllocator);
+		void ResetAll();
 
-		void ResetCommandList(CommandAllocatorType useAllocator);
+		//! @brief backAllocatorの更新 & commandListをbackAllocatorにリセット
+		void ResetBackAllocator();
 
 		//! @brief コマンドリストを取得
 		//! 
@@ -96,9 +87,18 @@ namespace DxObject {
 		// private variables
 		//=========================================================================================
 
+		static const uint32_t kAllocatorCount = 2;
+
 		ComPtr<ID3D12CommandQueue>         commandQueue_;
-		ComPtr<ID3D12CommandAllocator>     commandAllocator_[kCountOfComnmandAllocatorType];
+		ComPtr<ID3D12CommandAllocator>     commandAllocator_[kAllocatorCount];
 		ComPtr<ID3D12GraphicsCommandList6> commandList_;
+
+		uint32_t backAllocatorIndex_ = 0;
+
+		/*
+			backAllocator  -> commandListを積んでるAllocator
+			frontAllocator -> 実行中のallocator
+		*/
 
 	};
 }

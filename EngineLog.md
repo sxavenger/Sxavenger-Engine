@@ -21,15 +21,22 @@ Complete Initialize: sWinApp
 [DxObject.Compilers]: includeHandler_ << Complete Create
 [DxObject.RootSignature]: rootSignature_ << Complete Create
 [DxObject::ShaderTable]: Floor.MS.hlsl << Complete Create
-[DxObject.ShaderBlob]: shaderBlob_[0] << Complete Create
+[DxObject.ShaderBlob]: shaderBlob_[2] << Complete Create
 [DxObject::ShaderTable]: Floor.PS.hlsl << Complete Create
 [DxObject.ShaderBlob]: shaderBlob_[1] << Complete Create
 [DxObject.RootSignature]: rootSignature_ << Complete Create
 [DxObject::ShaderTable]: Default.MS.hlsl << Complete Create
-[DxObject.ShaderBlob]: shaderBlob_[0] << Complete Create
+[DxObject.ShaderBlob]: shaderBlob_[2] << Complete Create
 [DxObject::ShaderTable]: Default.PS.hlsl << Complete Create
 [DxObject.ShaderBlob]: shaderBlob_[1] << Complete Create
-Complete Initialize: sDirectXCommon
-Complete Initialize: sImGuiManager
-Complete Initialize: sTextureManager
-Complete Initialize: sInput
+[DxObject.RootSignature]: rootSignature_ << Complete Create
+[DxObject::ShaderTable]: Primitive.VS.hlsl << Complete Create
+[DxObject.ShaderBlob]: shaderBlob_[0] << Complete Create
+[DxObject::ShaderTable]: Primitive.PS.hlsl << Complete Create
+[DxObject.ShaderBlob]: shaderBlob_[1] << Complete Create
+[DxrObject::RootSignature]: rootSignature_ << Complete Create
+[DxrObject::LoaclRootSignature]: rootSignature_ << Complete Create
+[DxrObject::LoaclRootSignature]: rootSignature_ << Complete Create
+[DxrObject::ShaderManager]: ./resources/raytracingShader/raytracing.hlsl << Complete Create
+Error: パラメーターが間違っています。
+Error code: 0x80070057

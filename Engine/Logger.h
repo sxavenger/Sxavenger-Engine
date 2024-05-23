@@ -3,10 +3,10 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
-
 #include <string>
 #include <format>
 #include <fstream>
+#include <Windows.h>
 
 //-----------------------------------------------------------------------------------------
 // Convert to string || wstring
@@ -28,6 +28,7 @@ void Log(const std::wstring& logW);
 
 void Assert(bool isSuccess, const std::string& errorLog);
 void Assert(bool isSuccess, const std::string& errorLog, const std::string& textTitle);
+void AssertHRESULT(const HRESULT& hr);
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // ExternalLogger class

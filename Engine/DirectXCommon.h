@@ -49,16 +49,18 @@ public:
 	//! @brief DirectXの終了
 	void Term();
 
-	void BeginOffscreen(Texture* dummyTexture);
-	void EndOffscreen();
-
 	//! @brief フレームの開始処理
 	void BeginFrame();
 
 	//! @brief フレームの終了処理
 	void EndFrame();
 
-	void SentTexture();
+	void BeginOffscreen(Texture* dummyTexture);
+	void EndOffscreen();
+
+	void BeginScreenDraw();
+
+	void TransitionProcess();
 
 	// ---- pipeline関係 ---- //
 
@@ -84,10 +86,10 @@ public:
 	DxObject::DescriptorHeaps* GetDescriptorsObj() const { return descriptorHeaps_.get(); }
 	DxObject::SwapChain* GetSwapChainObj() const { return swapChains_.get(); } //!< ImGuiManagerで使う kBufferCount
 
-private:
+protected:
 
 	//=========================================================================================
-	// private variables
+	// protected variables
 	//=========================================================================================
 
 	std::unique_ptr<DxObject::Devices>         devices_;

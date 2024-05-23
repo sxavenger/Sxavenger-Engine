@@ -78,6 +78,15 @@ void Console::SetLog(const std::string& log, const Vector4f& color) {
 	}
 }
 
+void Console::OutputRayTracingResult(const D3D12_GPU_DESCRIPTOR_HANDLE& srvHandleGPU) {
+	static bool isOpenWindow = true;
+	ImGui::Begin("RayTracing", &isOpenWindow, ImGuiWindowFlags_NoCollapse);
+
+	SetTextureImGui(srvHandleGPU);
+
+	ImGui::End();
+}
+
 //=========================================================================================
 // private methods
 //=========================================================================================
@@ -94,7 +103,6 @@ void Console::OutputScene() {
 	isFocusDebugScene_; //!< 名前もfoucusからいい感じに変更させる
 
 	SetTextureImGui(sceneTexture_->GetSRVHandleGPU());
-	// todo: debugTextureに変更する
 
 	ImGui::End();
 }

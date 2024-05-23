@@ -38,7 +38,7 @@ void DxObject::Command::Init(Devices* devices) {
 
 	// コマンドアロケーターを生成
 	{
-		for (int i = 0; i < kCountOfComnmandAllocatorType; ++i) {
+		for (int i = 0; i < kAllocatorCount; ++i) {
 			auto hr = device->CreateCommandAllocator(
 				D3D12_COMMAND_LIST_TYPE_DIRECT,
 				IID_PPV_ARGS(&commandAllocator_[i])
@@ -55,7 +55,7 @@ void DxObject::Command::Init(Devices* devices) {
 		auto hr = device->CreateCommandList(
 			0,
 			D3D12_COMMAND_LIST_TYPE_DIRECT,
-			commandAllocator_[TYPE_TEXTURE].Get(), // 先textureで使うため
+			commandAllocator_[backAllocatorIndex_].Get(),
 			nullptr,
 			IID_PPV_ARGS(&commandList_)
 		);
@@ -76,19 +76,28 @@ void DxObject::Command::Close() {
 	commandQueue_->ExecuteCommandLists(1, commandLists);
 }
 
-void DxObject::Command::Reset(CommandAllocatorType useAllocator) {
-	for (int i = 0; i < kCountOfComnmandAllocatorType; ++i) {
+void DxObject::Command::ResetAll() {
+	for (int i = 0; i < kAllocatorCount; ++i) {
 		auto hr = commandAllocator_[i]->Reset();
 		assert(SUCCEEDED(hr));
 	}
 	
-
-	auto hr = commandList_->Reset(commandAllocator_[useAllocator].Get(), nullptr);
+	// 全リセットしたのでそのままAllocatorを使う
+	auto hr = commandList_->Reset(commandAllocator_[backAllocatorIndex_].Get(), nullptr);
 	assert(SUCCEEDED(hr));
 }
 
-void DxObject::Command::ResetCommandList(CommandAllocatorType useAllocator) {
-	auto hr = commandList_->Reset(commandAllocator_[useAllocator].Get(), nullptr);
+void DxObject::Command::ResetBackAllocator() {
+	// backAllocatorIndexの更新
+	backAllocatorIndex_++;
+	backAllocatorIndex_ %= kAllocatorCount;
+
+	// backAllocatorとして動かすのでリセット
+	auto hr = commandAllocator_[backAllocatorIndex_]->Reset();
+	assert(SUCCEEDED(hr));
+
+	// backAllocatorをセット
+	hr = commandList_->Reset(commandAllocator_[backAllocatorIndex_].Get(), nullptr);
 	assert(SUCCEEDED(hr));
 }
 

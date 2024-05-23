@@ -6,12 +6,15 @@
 // directX
 #include <d3d12.h>
 #include <dxgi1_6.h>
+#include <dxcapi.h>
 
 // c++
 #include <cstdint>
 #include <cassert>
+#include <string>
+#include <unordered_map>
 
-// ComPtr
+// com
 #include <ComPtr.h>
 
 //-----------------------------------------------------------------------------------------
@@ -19,57 +22,32 @@
 //-----------------------------------------------------------------------------------------
 #pragma comment(lib, "d3d12.lib")
 #pragma comment(lib, "dxgi.lib")
+#pragma comment(lib, "dxcompiler.lib")
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// DxObject namespace
+// DxrObject namespace
 ////////////////////////////////////////////////////////////////////////////////////////////
-namespace DxObject {
-
-	//-----------------------------------------------------------------------------------------
-	// DxObject forward
-	//-----------------------------------------------------------------------------------------
-	class Devices;
-	class Command;
-	class ShaderBlob;
-	class RootSignature;
+namespace DxrObject {
 
 	////////////////////////////////////////////////////////////////////////////////////////////
-	// PipelineState class
+	// ShaderTable class
 	////////////////////////////////////////////////////////////////////////////////////////////
-	class PipelineState {
+	class ShaderManager {
 	public:
 
 		//=========================================================================================
 		// public methods
 		//=========================================================================================
 
-		//! @brief コンストラクタ
-		//! 
-		//! @param[in] devices      DxObject::Device
-		//! @param[in] shaderBlob   DxObject::Shader
-		//! @param[in] clientWidth  クライアント領域横幅
-		//! @param[in] clientHeight クライアント領域縦幅
-		PipelineState(
-			Devices* devices, ShaderBlob* shaderBlob, RootSignature* rootSignature, const D3D12_BLEND_DESC& blendDesc
-		);
+		ShaderManager() { Init(); }
 
-		//! @brief デストラクタ
-		~PipelineState();
+		~ShaderManager() { Term(); }
 
-		//! @brief 初期化処理
-		//! 
-		//! @param[in] devices      DxObject::Device
-		//! @param[in] shaderBlob   DxObject::Shader
-		void Init(
-			Devices* devices, ShaderBlob* shaderBlob, RootSignature* rootSignature, const D3D12_BLEND_DESC& blendDesc
-		);
+		void Init();
 
-		//! @brief 終了処理
 		void Term();
 
-		ID3D12PipelineState* GetPipelineState() const { return graphicsPipelineState_.Get(); }
-
-		bool IsUseDefaultPipeline() const { return isUseDefaultPipeline_; }
+		IDxcBlob* GetShaderBlob(const std::wstring& filePath);
 
 	private:
 
@@ -77,8 +55,23 @@ namespace DxObject {
 		// private variables
 		//=========================================================================================
 
-		ComPtr<ID3D12PipelineState> graphicsPipelineState_;
-		bool isUseDefaultPipeline_ = false;
+		// table
+
+		std::unordered_map<std::wstring, ComPtr<IDxcBlob>> blobs_;
+
+		// compilers
+
+		ComPtr<IDxcLibrary>  library_;
+		ComPtr<IDxcCompiler> compiler_;
+
+		static const std::wstring shaderModel_;
+		static const std::wstring directory_;
+
+		//=========================================================================================
+		// private methods
+		//=========================================================================================
+
+		ComPtr<IDxcBlob> CompileShader(const std::wstring& filePath);
 
 	};
 

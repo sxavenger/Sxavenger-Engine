@@ -26,6 +26,7 @@ namespace Sxavenger {
 //-----------------------------------------------------------------------------------------
 // forward
 //-----------------------------------------------------------------------------------------
+class DirectXRCommon;
 class DirectXCommon;
 class Texture;
 class TextureManager;
@@ -69,6 +70,10 @@ public:
 
 	//! @brief オフスク描画処理の開始
 	static void EndOffScreen();
+
+	static void TransitionProcess();
+
+
 
 	//! @brief プロセスメッセージを取得
 	//! 
@@ -118,6 +123,12 @@ public:
 
 	static bool IsReleaseKey(uint8_t dik);
 
+	//-----------------------------------------------------------------------------------------
+	// DxSystem関係
+	//-----------------------------------------------------------------------------------------
+
+	static ID3D12Device8* GetDevice();
+
 	// TODO: あんましたくない
 	static ID3D12GraphicsCommandList6* GetCommandList();
 
@@ -132,6 +143,22 @@ public:
 	
 	static Camera3D* camera3D_;
 	static Camera2D* camera2D_;
+
+private:
+};
+
+////////////////////////////////////////////////////////////////////////////////////////////
+// RayTracingEngine class
+////////////////////////////////////////////////////////////////////////////////////////////
+class RayTracingEngine
+	: public MyEngine {
+public:
+
+	//=========================================================================================
+	// public methods
+	//=========================================================================================
+
+	static DirectXRCommon* GetDxrCommon();
 
 private:
 };

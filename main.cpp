@@ -32,6 +32,8 @@
 
 #include <Input.h>
 
+#include "DirectXRCommon.h"
+
 ////////////////////////////////////////////////////////////////////////////////////////////
 // メイン関数
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -48,14 +50,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	auto console = Console::GetInstance();
 	console->Init();
 
-	std::unique_ptr<Floor> floor = std::make_unique<Floor>();
-	std::unique_ptr<Plane> plane = std::make_unique<Plane>();
-	std::unique_ptr<Sphere> sphere = std::make_unique<Sphere>();
-	std::unique_ptr<Cube> cube = std::make_unique<Cube>();
-
-	//////////////////////////////////////////////////////////////////////////////////////////////
-	//// メインループ
-	//////////////////////////////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////////////////////////////
+	// メインループ
+	////////////////////////////////////////////////////////////////////////////////////////////
 	while (MyEngine::ProcessMessage() == 0) {
 
 		MyEngine::BeginFrame();
@@ -64,58 +61,71 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		// 更新処理
 		//=========================================================================================
 
-		/*static int frame = 0;
-		++frame;*/
+		{
+			/*static int frame = 0;
+			++frame;*/
 
-		/*if (frame % 60 == 0) {
-			console->SetLog(
-				std::format("[debug] frame: {}, speed(ms): {}", frame / 60, Performance::GetFramesPerformance(SecondsUnit::ms)),
-				Console::commentOutColor
-			);
-		}*/
+			/*if (frame % 60 == 0) {
+				console->SetLog(
+					std::format("[debug] frame: {}, speed(ms): {}", frame / 60, Performance::GetFramesPerformance(SecondsUnit::ms)),
+					Console::commentOutColor
+				);
+			}*/
 
-		console->Update();
+			console->Update();
 
-		floor->Update();
-		plane->Update();
-		sphere->Update();
-		cube->Update();
+		}
 
+		MyEngine::TransitionProcess();
 		MyEngine::BeginDraw();
+
+		//=========================================================================================
+		// レイトレーシング描画処理
+		//=========================================================================================
+
+		{
+			RayTracingEngine::GetDxrCommon()->DrawRayTracing();
+		}
+		MyEngine::TransitionProcess();
+		console->OutputRayTracingResult(RayTracingEngine::GetDxrCommon()->GetResultBufferTexture());
+
 
 		//=========================================================================================
 		// オフスクリーン描画処理
 		//=========================================================================================
-
-		// todo: 複数へのtexture書き込みをさせる.
-		MyEngine::BeginOffScreen(MyEngine::GetTexture("offscreen"));
-		MyEngine::camera3D_ = camera.get();
-
-		plane->Draw();
-		floor->Draw();
-		sphere->Draw();
-		cube->Draw();
-
-		MyEngine::EndOffScreen();
-
-		MyEngine::BeginOffScreen(console->GetSceneTexture());
-		MyEngine::camera3D_ = console->GetDebugCamera();
-
-		plane->Draw();
-		floor->Draw();
-		sphere->Draw();
-		cube->Draw();
-
-		MyEngine::EndOffScreen();
 		
+		{
+			// todo: 複数へのtexture書き込みをさせる.
+			MyEngine::BeginOffScreen(console->GetSceneTexture());
+			MyEngine::camera3D_ = console->GetDebugCamera();
+
+			RayTracingEngine::GetDxrCommon()->DrawRasterlize();
+
+			MyEngine::EndOffScreen();
+
+			MyEngine::BeginOffScreen(MyEngine::GetTexture("offscreen"));
+			MyEngine::camera3D_ = camera.get();
+
+
+
+			MyEngine::EndOffScreen();
+
+			
+		}
+
+		MyEngine::TransitionProcess();
 
 		//=========================================================================================
 		// スクリーン描画処理
 		//=========================================================================================
 
-		MyEngine::BeginScreenDraw();
+		{
+			MyEngine::BeginScreenDraw();
 
-
+			/*
+				ImGuiの関係上、スクリーン描画は最後にする
+			*/
+		}
 
 		MyEngine::EndFrame();
 
@@ -123,11 +133,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 	console->Term();
 	camera.reset();
-
-	floor.reset();
-	plane.reset();
-	sphere.reset();
-	cube.reset();
 
 	MyEngine::Finalize();
 	

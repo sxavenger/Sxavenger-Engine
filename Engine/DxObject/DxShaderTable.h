@@ -10,8 +10,8 @@
 
 // c++
 #include <cstdint>
-#include <string>
 #include <cassert>
+#include <string>
 #include <unordered_map>
 
 // com
@@ -31,8 +31,9 @@
 // ShaderType enum
 ////////////////////////////////////////////////////////////////////////////////////////////
 enum ShaderType {
-	MESH,
+	VERTEX,
 	PIXEL,
+	MESH,
 
 	kCountOfShaderType,
 };

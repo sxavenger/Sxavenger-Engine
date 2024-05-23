@@ -62,7 +62,7 @@ void ImGuiManager::Begin() {
 	ImGui::NewFrame();
 
 	ID3D12DescriptorHeap* descriptorHeaps[] = { descriptorHeap_SRV_ };
-	dxCommon_->GetCommandList()->SetDescriptorHeaps(descriptor_.index + 1, descriptorHeaps);
+	dxCommon_->GetCommandList()->SetDescriptorHeaps(1, descriptorHeaps);
 }
 
 void ImGuiManager::End() {

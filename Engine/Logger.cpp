@@ -3,8 +3,10 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
-#include <windows.h>
+#include <comdef.h>
 #include <assert.h>
+#include <sstream>
+#include <iomanip>
 
 //-----------------------------------------------------------------------------------------
 // methods
@@ -67,11 +69,31 @@ void Assert(bool isSuccess, const std::string& errorLog, const std::string& text
 	}
 }
 
+void AssertHRESULT(const HRESULT& hr) {
+	if (FAILED(hr)) {
+		// error mes の出力 
+		_com_error err(hr);
+		LPCTSTR errMsg = err.ErrorMessage();
+
+		std::wstring wErrMsg(errMsg);
+
+		ExternalLogger::Write("Error: " + ToString(wErrMsg));
+
+		// error codeの出力
+		std::ostringstream oss;
+		oss << "Error code: 0x" << std::hex << hr;
+
+		ExternalLogger::Write(oss.str());
+
+		assert(false);
+	}
+}
+
 ////////////////////////////////////////////////////////////////////////////////////////////
 // ExternalLogger class
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-bool ExternalLogger::isOutput_ = false;
+bool ExternalLogger::isOutput_ = true;
 
 const std::string ExternalLogger::filename_ = "EngineLog";
 std::ofstream ExternalLogger::file_;

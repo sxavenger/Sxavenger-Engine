@@ -18,12 +18,9 @@
 //=========================================================================================
 
 static const wchar_t* shaderTypeStr[kCountOfShaderType] = {
-	L"ms_6_5", L"ps_6_5"
-};
-
-static D3D12_SHADER_VISIBILITY shaderTypeVisibility[kCountOfShaderType] = {
-	D3D12_SHADER_VISIBILITY_MESH,
-	D3D12_SHADER_VISIBILITY_PIXEL
+	L"vs_6_5", // vs
+	L"ps_6_5", // pixel
+	L"ms_6_5", // ms
 };
 
 //=========================================================================================

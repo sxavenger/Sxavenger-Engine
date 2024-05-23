@@ -70,8 +70,7 @@ void main(
 	
 	if (groupThreadId < m.primitiveCount) {
 		uint packedIndex = sPrimitives[m.primitiveOffset + groupThreadId];
-		uint3 debug = UnpackPrimitiveIndex(packedIndex);
-		polys[groupThreadId] = debug;
+		polys[groupThreadId] = UnpackPrimitiveIndex(packedIndex);
 
 	}
 	

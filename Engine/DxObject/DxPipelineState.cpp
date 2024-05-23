@@ -12,29 +12,7 @@
 
 #include <Logger.h>
 
-#include "externals/DirectXTex/d3dx12.h"
-
-namespace {
-	struct MeshShaderPipelineStateDesc {
-		ID3D12RootSignature* pRootSignature;
-
-		D3D12_SHADER_BYTECODE as;
-		D3D12_SHADER_BYTECODE ms;
-		D3D12_SHADER_BYTECODE ps;
-
-		D3D12_BLEND_DESC         blend;
-		D3D12_RASTERIZER_DESC    rasterizer;
-		D3D12_DEPTH_STENCIL_DESC depth;
-
-		UINT             sampleMask;
-		DXGI_SAMPLE_DESC sampleDesc;
-
-		D3D12_RT_FORMAT_ARRAY rtFormats;
-		DXGI_FORMAT           dsFormat;
-
-		D3D12_PIPELINE_STATE_FLAGS flags;
-	};
-}
+#include "d3dx12.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // PipelineState methods
@@ -53,6 +31,25 @@ void DxObject::PipelineState::Init(
 
 	// deviceの取り出し
 	auto device = devices->GetDevice();
+
+	// inputLayout
+	D3D12_INPUT_ELEMENT_DESC descIE[3] = {};
+	descIE[0].SemanticName      = "POSITION";
+	descIE[0].SemanticIndex     = 0;
+	descIE[0].Format            = DXGI_FORMAT_R32G32B32A32_FLOAT;
+	descIE[0].AlignedByteOffset = D3D12_APPEND_ALIGNED_ELEMENT;
+	descIE[1].SemanticName      = "TEXCOORD";
+	descIE[1].SemanticIndex     = 0;
+	descIE[1].Format            = DXGI_FORMAT_R32G32_FLOAT;
+	descIE[1].AlignedByteOffset = D3D12_APPEND_ALIGNED_ELEMENT;
+	descIE[2].SemanticName      = "NORMAL";
+	descIE[2].SemanticIndex     = 0;
+	descIE[2].Format            = DXGI_FORMAT_R32G32B32_FLOAT;
+	descIE[2].AlignedByteOffset = D3D12_APPEND_ALIGNED_ELEMENT;
+
+	D3D12_INPUT_LAYOUT_DESC descIL = {};
+	descIL.pInputElementDescs = descIE;
+	descIL.NumElements        = _countof(descIE);
 
 	// RasterizerStateの設定 TODO: rastarizer state class
 	D3D12_RASTERIZER_DESC descRS = {};
@@ -77,7 +74,8 @@ void DxObject::PipelineState::Init(
 	assert(blob[ShaderType::PIXEL] != nullptr);
 
 	// PipelineStateの生成
-	{
+	if (shaderBlob->IsUseMeshShaders()) { //!< mesh shader pipelineの使用
+
 		D3DX12_MESH_SHADER_PIPELINE_STATE_DESC desc = {};
 		desc.pRootSignature     = rootSignature->GetRootSignature();
 		desc.MS                 = { blob[ShaderType::MESH]->GetBufferPointer(), blob[ShaderType::MESH]->GetBufferSize()};
@@ -105,7 +103,37 @@ void DxObject::PipelineState::Init(
 		);
 
 		assert(SUCCEEDED(hr));
+		isUseDefaultPipeline_ = false;
+		return;
 
+	} else { //!< default pipelineの使用
+
+		// default pipelineに必須なshaderがコンパイルされているかの確認
+		assert(blob[ShaderType::VERTEX] != nullptr);
+
+		D3D12_GRAPHICS_PIPELINE_STATE_DESC desc = {};
+		desc.pRootSignature        = rootSignature->GetRootSignature();
+		desc.InputLayout           = descIL;
+		desc.VS                    = { blob[VERTEX]->GetBufferPointer(), blob[VERTEX]->GetBufferSize() };
+		desc.PS                    = { blob[PIXEL]->GetBufferPointer(), blob[PIXEL]->GetBufferSize() };
+		desc.BlendState            = blendDesc;
+		desc.RasterizerState       = descRS;
+		desc.NumRenderTargets      = 1;
+		desc.RTVFormats[0]         = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
+		desc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
+		desc.SampleDesc.Count      = 1;
+		desc.SampleMask            = D3D12_DEFAULT_SAMPLE_MASK;
+		desc.DepthStencilState     = descDS;
+		desc.DSVFormat             = DXGI_FORMAT_D24_UNORM_S8_UINT;
+
+		auto hr = device->CreateGraphicsPipelineState(
+			&desc,
+			IID_PPV_ARGS(&graphicsPipelineState_)
+		);
+
+		assert(SUCCEEDED(hr));
+		isUseDefaultPipeline_ = true;
+		return;
 	}
 }
 

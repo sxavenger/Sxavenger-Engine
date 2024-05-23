@@ -10,8 +10,6 @@
 
 // DxObject
 #include <DxBufferResource.h>
-// MyEngine
-#include "MyEngine.h" //!< デバイス取り出し
 
 // structure
 #include <ObjectStructure.h>

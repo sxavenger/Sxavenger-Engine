@@ -8,6 +8,7 @@
 // origin
 #include <WinApp.h>
 #include <DirectXCommon.h>
+#include <DirectXRCommon.h>
 #include <ImGuiManager.h>
 #include <TextureManager.h>
 #include <Input.h>
@@ -26,7 +27,7 @@ namespace {
 	// 汎用機能
 	//-----------------------------------------------------------------------------------------
 	WinApp* sWinApp = nullptr;                 //!< WindowApp system
-	DirectXCommon* sDirectXCommon = nullptr;   //!< DirectX12 system
+	DirectXRCommon* sDirectXRCommon = nullptr;   //!< DirectX12 system
 	ImGuiManager* sImGuiManager = nullptr;     //!< ImGui system
 	TextureManager* sTextureManager = nullptr; //!< TextureManager system
 	Input* sInput = nullptr;
@@ -65,9 +66,10 @@ void MyEngine::Initialize(int32_t kWindowWidth, int32_t kWindowHeight, const cha
 
 	// DirectX12 の初期化
 	{
-		sDirectXCommon = DirectXCommon::GetInstance();
-		sDirectXCommon->Init(sWinApp, kWindowWidth, kWindowHeight);
-		ExternalLogger::Write("Complete Initialize: sDirectXCommon");
+		sDirectXRCommon = DirectXRCommon::GetInstance();
+		sDirectXRCommon->Init(sWinApp, kWindowWidth, kWindowHeight);
+		sDirectXRCommon->InitRayTracing(kWindowWidth, kWindowHeight);
+		ExternalLogger::Write("Complete Initialize: sDirectXRCommon");
 
 	}
 
@@ -75,7 +77,7 @@ void MyEngine::Initialize(int32_t kWindowWidth, int32_t kWindowHeight, const cha
 	// ImGuiManager の初期化
 	{
 		sImGuiManager = ImGuiManager::GetInstaince();
-		sImGuiManager->Init(sWinApp, sDirectXCommon);
+		sImGuiManager->Init(sWinApp, sDirectXRCommon);
 		ExternalLogger::Write("Complete Initialize: sImGuiManager");
 	}
 	
@@ -83,7 +85,7 @@ void MyEngine::Initialize(int32_t kWindowWidth, int32_t kWindowHeight, const cha
 	// TextureManager の初期化
 	{
 		sTextureManager = TextureManager::GetInstance();
-		sTextureManager->Init(sDirectXCommon);
+		sTextureManager->Init(sDirectXRCommon);
 		ExternalLogger::Write("Complete Initialize: sTextureManager");
 
 		// オフスク用のテクスチャの生成 todo: consoleに移動
@@ -107,8 +109,9 @@ void MyEngine::Finalize() {
 	sImGuiManager->Term();
 	sImGuiManager = nullptr;
 
-	sDirectXCommon->Term();
-	sDirectXCommon = nullptr;
+	sDirectXRCommon->TermRayTracing();
+	sDirectXRCommon->Term();
+	sDirectXRCommon = nullptr;
 
 	sWinApp->Term();
 	sWinApp = nullptr;
@@ -123,25 +126,29 @@ void MyEngine::BeginFrame() {
 }
 
 void MyEngine::BeginScreenDraw() {
-	sDirectXCommon->BeginFrame();
+	/*sDirectXRCommon->BeginFrame();*/
+	sDirectXRCommon->BeginScreenDraw();
 }
 
 void MyEngine::BeginOffScreen(Texture* offscreenDummyTexture) {
-	sDirectXCommon->BeginOffscreen(offscreenDummyTexture);
+	sDirectXRCommon->BeginOffscreen(offscreenDummyTexture);
 }
 
 void MyEngine::EndOffScreen() {
-	sDirectXCommon->EndOffscreen();
+	sDirectXRCommon->EndOffscreen();
+}
+
+void MyEngine::TransitionProcess() {
+	sDirectXRCommon->TransitionProcess();
 }
 
 void MyEngine::EndFrame() {
 	sImGuiManager->End();
-	sDirectXCommon->EndFrame();
+	sDirectXRCommon->EndFrame();
 	Performance::EndFrame();
 }
 
 void MyEngine::BeginDraw() {
-	sDirectXCommon->SentTexture();
 	sTextureManager->EnableTexture();
 }
 
@@ -150,40 +157,45 @@ int MyEngine::ProcessMessage() {
 }
 
 void MyEngine::SetPipelineType(PipelineType pipelineType) {
-	sDirectXCommon->SetPipelineType(pipelineType);
+	sDirectXRCommon->SetPipelineType(pipelineType);
 }
 
 void MyEngine::SetBlendMode(BlendMode mode) {
-	sDirectXCommon->SetBlendMode(mode);
+	sDirectXRCommon->SetBlendMode(mode);
 }
 
 void MyEngine::SetPipelineState() {
-	sDirectXCommon->SetPipelineState();
+	sDirectXRCommon->SetPipelineState();
 }
 
 DxObject::Descriptor MyEngine::GetCurrentDescripor(DxObject::DescriptorType type) {
-	assert(sDirectXCommon != nullptr);
-	return sDirectXCommon->GetDescriptorsObj()->GetCurrentDescriptor(type);
+	assert(sDirectXRCommon != nullptr);
+	return sDirectXRCommon->GetDescriptorsObj()->GetCurrentDescriptor(type);
 }
 
 void MyEngine::EraseDescriptor(DxObject::Descriptor& descriptor) {
-	assert(sDirectXCommon != nullptr);
-	sDirectXCommon->GetDescriptorsObj()->Erase(descriptor);
+	assert(sDirectXRCommon != nullptr);
+	sDirectXRCommon->GetDescriptorsObj()->Erase(descriptor);
+}
+
+ID3D12Device8* MyEngine::GetDevice() {
+	assert(sDirectXRCommon != nullptr);
+	return sDirectXRCommon->GetDeviceObj()->GetDevice();
 }
 
 ID3D12GraphicsCommandList6* MyEngine::GetCommandList() {
-	assert(sDirectXCommon != nullptr);
-	return sDirectXCommon->GetCommandList();
+	assert(sDirectXRCommon != nullptr);
+	return sDirectXRCommon->GetCommandList();
 }
 
 DxObject::Devices* MyEngine::GetDevicesObj() {
-	assert(sDirectXCommon != nullptr);
-	return sDirectXCommon->GetDeviceObj();
+	assert(sDirectXRCommon != nullptr);
+	return sDirectXRCommon->GetDeviceObj();
 }
 
 DirectXCommon* MyEngine::GetDxCommon() {
-	assert(sDirectXCommon != nullptr);
-	return sDirectXCommon;
+	assert(sDirectXRCommon != nullptr);
+	return sDirectXRCommon;
 }
 
 TextureManager* MyEngine::GetTextureManager() {
@@ -224,4 +236,9 @@ bool MyEngine::IsTriggerKey(uint8_t dik) {
 bool MyEngine::IsReleaseKey(uint8_t dik) {
 	assert(sInput != nullptr);
 	return sInput->IsReleaseKey(dik);
+}
+
+DirectXRCommon* RayTracingEngine::GetDxrCommon() {
+	assert(sDirectXRCommon != nullptr);
+	return sDirectXRCommon;
 }

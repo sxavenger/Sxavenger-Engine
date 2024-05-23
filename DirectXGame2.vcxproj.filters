@@ -97,6 +97,12 @@
     <Filter Include="Resource\hlsl\Primitive">
       <UniqueIdentifier>{4b0c10ec-ddc5-41b7-9768-6ddf54f9b465}</UniqueIdentifier>
     </Filter>
+    <Filter Include="DirectXRayTracing">
+      <UniqueIdentifier>{c71529ff-b2a0-4372-933e-2eead61dba4d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource\RayTracingShader">
+      <UniqueIdentifier>{ab2302f9-42e3-4fa1-bf97-9df91a3d6a46}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
@@ -301,6 +307,36 @@
     <ClCompile Include="Engine\Input.cpp">
       <Filter>Engine\source</Filter>
     </ClCompile>
+    <ClCompile Include="DirectXRayTracing\DirectXRCommon.cpp">
+      <Filter>DirectXRayTracing</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectXRayTracing\DxrAccelerationStructure.cpp">
+      <Filter>DirectXRayTracing</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectXRayTracing\DxrRootSignature.cpp">
+      <Filter>DirectXRayTracing</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectXRayTracing\DxrShaderTable.cpp">
+      <Filter>DirectXRayTracing</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectXRayTracing\DxrStateObject.cpp">
+      <Filter>DirectXRayTracing</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectXRayTracing\DxrShaderBlob.cpp">
+      <Filter>DirectXRayTracing</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectXRayTracing\DxrResultBuffer.cpp">
+      <Filter>DirectXRayTracing</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectXRayTracing\DxrShaderManager.cpp">
+      <Filter>DirectXRayTracing</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectXRayTracing\DxrMethod.cpp">
+      <Filter>DirectXRayTracing</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectXRayTracing\RayTracingCamera.cpp">
+      <Filter>DirectXRayTracing</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\MyEngine.h">
@@ -477,6 +513,36 @@
     <ClInclude Include="Engine\Input.h">
       <Filter>Engine\include</Filter>
     </ClInclude>
+    <ClInclude Include="DirectXRayTracing\DirectXRCommon.h">
+      <Filter>DirectXRayTracing</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectXRayTracing\DxrAccelerationStructure.h">
+      <Filter>DirectXRayTracing</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectXRayTracing\DxrRootSignature.h">
+      <Filter>DirectXRayTracing</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectXRayTracing\DxrShaderTable.h">
+      <Filter>DirectXRayTracing</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectXRayTracing\DxrStateObject.h">
+      <Filter>DirectXRayTracing</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectXRayTracing\DxrShaderBlob.h">
+      <Filter>DirectXRayTracing</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectXRayTracing\DxrResultBuffer.h">
+      <Filter>DirectXRayTracing</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectXRayTracing\DxrShaderManager.h">
+      <Filter>DirectXRayTracing</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectXRayTracing\DxrMethod.h">
+      <Filter>DirectXRayTracing</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectXRayTracing\RayTracingCamera.h">
+      <Filter>DirectXRayTracing</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />
@@ -494,6 +560,9 @@
     </None>
     <None Include="Resources\hlsl\Primitive.hlsli">
       <Filter>Resource\hlsl\Primitive</Filter>
+    </None>
+    <None Include="Resources\hlsl\ToonShading.hlsli">
+      <Filter>Resource\hlsl</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -519,6 +588,9 @@
     </FxCompile>
     <FxCompile Include="Resources\hlsl\Primitive.VS.hlsl">
       <Filter>Resource\hlsl\Primitive</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\RayTracingShader\raytracing.hlsl">
+      <Filter>Resource\RayTracingShader</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

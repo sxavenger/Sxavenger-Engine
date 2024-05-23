@@ -125,7 +125,10 @@ namespace DxObject {
 		DSV, //!< DepthStencilView
 
 		kDescriptorHeapCount,
-		NotUseDescriptor
+		NotUseDescriptor,
+
+		// other //
+		UAV = SRV,
 	};
 
 	////////////////////////////////////////////////////////////////////////////////////////////

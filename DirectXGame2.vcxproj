@@ -52,7 +52,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)\Game;$(ProjectDir)\Lib\Adapter\Performance;$(ProjectDir)\Lib\Adapter\Random;$(ProjectDir)\Lib\Adapter\Json;$(ProjectDir)\Lib\Collider;$(ProjectDir)\Lib\Light;$(ProjectDir)\Lib\Camera;$(ProjectDir)\Lib\Geometry;$(ProjectDir)\Lib;$(ProjectDir)\externals\meshoptimizer;$(ProjectDir)\externals\assimp\include;$(ProjectDir)\externals\nlohmann;$(ProjectDir)\externals\DirectXTex;$(ProjectDir)\externals\imgui;$(ProjectDir)\Engine\DxrObject;$(ProjectDir)\Engine\DxObject;$(ProjectDir)\Engine;$(ProjectDir)\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)\Game;$(ProjectDir)\Lib\Adapter\Performance;$(ProjectDir)\Lib\Adapter\Random;$(ProjectDir)\Lib\Adapter\Json;$(ProjectDir)\Lib\Collider;$(ProjectDir)\Lib\Light;$(ProjectDir)\Lib\Camera;$(ProjectDir)\Lib\Geometry;$(ProjectDir)\Lib;$(ProjectDir)\externals\meshoptimizer;$(ProjectDir)\externals\assimp\include;$(ProjectDir)\externals\nlohmann;$(ProjectDir)\externals\DirectXTex;$(ProjectDir)\externals\imgui;$(ProjectDir)\Engine\DxObject;$(ProjectDir)\Engine;$(ProjectDir)\DirectXRayTracing;$(ProjectDir)\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
@@ -96,6 +96,16 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="DirectXRayTracing\DirectXRCommon.cpp" />
+    <ClCompile Include="DirectXRayTracing\DxrAccelerationStructure.cpp" />
+    <ClCompile Include="DirectXRayTracing\DxrMethod.cpp" />
+    <ClCompile Include="DirectXRayTracing\DxrResultBuffer.cpp" />
+    <ClCompile Include="DirectXRayTracing\DxrRootSignature.cpp" />
+    <ClCompile Include="DirectXRayTracing\DxrShaderBlob.cpp" />
+    <ClCompile Include="DirectXRayTracing\DxrShaderManager.cpp" />
+    <ClCompile Include="DirectXRayTracing\DxrShaderTable.cpp" />
+    <ClCompile Include="DirectXRayTracing\DxrStateObject.cpp" />
+    <ClCompile Include="DirectXRayTracing\RayTracingCamera.cpp" />
     <ClCompile Include="Engine\Attribute.cpp" />
     <ClCompile Include="Engine\Console.cpp" />
     <ClCompile Include="Engine\DirectXCommon.cpp" />
@@ -168,6 +178,16 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="DirectXRayTracing\DirectXRCommon.h" />
+    <ClInclude Include="DirectXRayTracing\DxrAccelerationStructure.h" />
+    <ClInclude Include="DirectXRayTracing\DxrMethod.h" />
+    <ClInclude Include="DirectXRayTracing\DxrResultBuffer.h" />
+    <ClInclude Include="DirectXRayTracing\DxrRootSignature.h" />
+    <ClInclude Include="DirectXRayTracing\DxrShaderBlob.h" />
+    <ClInclude Include="DirectXRayTracing\DxrShaderManager.h" />
+    <ClInclude Include="DirectXRayTracing\DxrShaderTable.h" />
+    <ClInclude Include="DirectXRayTracing\DxrStateObject.h" />
+    <ClInclude Include="DirectXRayTracing\RayTracingCamera.h" />
     <ClInclude Include="Engine\Attribute.h" />
     <ClInclude Include="Engine\ComPtr.h" />
     <ClInclude Include="Engine\Console.h" />
@@ -234,6 +254,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <None Include="Resources\hlsl\Floor.hlsli" />
     <None Include="Resources\hlsl\Lighting.hlsli" />
     <None Include="Resources\hlsl\Primitive.hlsli" />
+    <None Include="Resources\hlsl\ToonShading.hlsli" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="externals\DirectXTex\DirectXTex_Desktop_2022_Win10.vcxproj">
@@ -264,6 +285,9 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </FxCompile>
     <FxCompile Include="Resources\hlsl\Primitive.VS.hlsl">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="Resources\RayTracingShader\raytracing.hlsl">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </FxCompile>
   </ItemGroup>

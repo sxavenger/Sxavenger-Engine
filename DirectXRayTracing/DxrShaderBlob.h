@@ -6,12 +6,13 @@
 // directX
 #include <d3d12.h>
 #include <dxgi1_6.h>
+#include <dxcapi.h>
 
 // c++
 #include <cstdint>
-#include <cassert>
+#include <string>
 
-// ComPtr
+// com
 #include <ComPtr.h>
 
 //-----------------------------------------------------------------------------------------
@@ -19,57 +20,59 @@
 //-----------------------------------------------------------------------------------------
 #pragma comment(lib, "d3d12.lib")
 #pragma comment(lib, "dxgi.lib")
+#pragma comment(lib, "dxcompiler.lib")
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// DxObject namespace
+// DxrObject namespace
 ////////////////////////////////////////////////////////////////////////////////////////////
-namespace DxObject {
-
-	//-----------------------------------------------------------------------------------------
-	// DxObject forward
-	//-----------------------------------------------------------------------------------------
-	class Devices;
-	class Command;
-	class ShaderBlob;
-	class RootSignature;
+namespace DxrObject {
 
 	////////////////////////////////////////////////////////////////////////////////////////////
-	// PipelineState class
+	// ShaderType enum
 	////////////////////////////////////////////////////////////////////////////////////////////
-	class PipelineState {
+	enum ShaderType {
+		RAYGENERATION_SHAEAR,
+		CLOSESTHIT_SHADER,
+		MISS_SHADER,
+
+		kCountOfShaderType
+	};
+
+	//-----------------------------------------------------------------------------------------
+	// forward
+	//-----------------------------------------------------------------------------------------
+	class ShaderManager;
+
+	////////////////////////////////////////////////////////////////////////////////////////////
+	// ShaderBlob class
+	////////////////////////////////////////////////////////////////////////////////////////////
+	class ShaderBlob {
 	public:
 
 		//=========================================================================================
 		// public methods
 		//=========================================================================================
 
-		//! @brief コンストラクタ
-		//! 
-		//! @param[in] devices      DxObject::Device
-		//! @param[in] shaderBlob   DxObject::Shader
-		//! @param[in] clientWidth  クライアント領域横幅
-		//! @param[in] clientHeight クライアント領域縦幅
-		PipelineState(
-			Devices* devices, ShaderBlob* shaderBlob, RootSignature* rootSignature, const D3D12_BLEND_DESC& blendDesc
-		);
+		~ShaderBlob() { Term(); }
 
-		//! @brief デストラクタ
-		~PipelineState();
-
-		//! @brief 初期化処理
+		//! @brief stateObjectに送るためのshaderDataの設定
 		//! 
-		//! @param[in] devices      DxObject::Device
-		//! @param[in] shaderBlob   DxObject::Shader
+		//! @param[in] filePath      shaderTable::directory_ からの相対パス
+		//! @param[in] raygeneration raygenerationシェーダーのメイン関数名
+		//! @param[in] closesthit    closesthitシェーダーのメイン関数名
+		//! @param[in] miss          missシェーダーのメイン関数名
 		void Init(
-			Devices* devices, ShaderBlob* shaderBlob, RootSignature* rootSignature, const D3D12_BLEND_DESC& blendDesc
+			const std::wstring& filePath,
+			const std::wstring& raygeneration, const std::wstring& closesthit, const std::wstring& miss //!< mainFunctionName
 		);
 
-		//! @brief 終了処理
 		void Term();
 
-		ID3D12PipelineState* GetPipelineState() const { return graphicsPipelineState_.Get(); }
+		IDxcBlob* GetShaderBlob() const { return blob_; }
 
-		bool IsUseDefaultPipeline() const { return isUseDefaultPipeline_; }
+		const std::wstring& GetMainFunctionName(ShaderType type) { return mainFuncionName_[type]; }
+
+		static void SetShaderManager(ShaderManager* manager) { manager_ = manager; }
 
 	private:
 
@@ -77,8 +80,13 @@ namespace DxObject {
 		// private variables
 		//=========================================================================================
 
-		ComPtr<ID3D12PipelineState> graphicsPipelineState_;
-		bool isUseDefaultPipeline_ = false;
+		static ShaderManager* manager_;
+
+		// blob
+		IDxcBlob* blob_;
+
+		// name
+		std::wstring mainFuncionName_[kCountOfShaderType];
 
 	};
 

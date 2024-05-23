@@ -89,7 +89,10 @@ void DxObject::PipelineManager::SetPipeline() {
 	commandList->SetGraphicsRootSignature(pipelineMenbers_[pipelineType_].rootSignature->GetRootSignature());
 	commandList->SetPipelineState(pipelines_[pipelineType_].pipeline->GetPipelineState());
 
-	/*commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);*/
+	if (pipelines_[pipelineType_].pipeline->IsUseDefaultPipeline()) {
+		// default pipeline のときIAが必要になるので
+		commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	}
 }
 
 void DxObject::PipelineManager::CreatePipelineTable() {
@@ -205,6 +208,20 @@ void DxObject::PipelineManager::CreatePipelineTable() {
 	{
 		// rootSignatureDesc
 		RootSignatureDesc desc;
+		desc.Resize(2, 0);
+
+		//!< camera
+		desc.SetCBV(0, SHADER_VERTEX, 0);
+
+		//!< material
+		desc.SetCBV(1, SHADER_PIXEL, 0);
+
+		pipelineMenbers_[PipelineType::PRIMITIVE].rootSignature = std::make_unique<DxObject::RootSignature>(devices_, desc);
+
+		pipelineMenbers_[PipelineType::PRIMITIVE].shaderBlob = std::make_unique<DxObject::ShaderBlob>();
+		auto blob = pipelineMenbers_[PipelineType::PRIMITIVE].shaderBlob.get();
+		blob->Create(L"Primitive.VS.hlsl", VERTEX);
+		blob->Create(L"Primitive.PS.hlsl", PIXEL);
 
 	}
 }

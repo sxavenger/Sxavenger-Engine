@@ -7,12 +7,8 @@
 #include <d3d12.h>
 #include <dxgi1_6.h>
 
-// methods
-#include <DxObjectMethod.h>
-
 // c++
 #include <cstdint>
-#include <cassert>
 #include <vector>
 
 // ComPtr
@@ -24,29 +20,17 @@
 #pragma comment(lib, "d3d12.lib")
 #pragma comment(lib, "dxgi.lib")
 
-////////////////////////////////////////////////////////////////////////////////////////////
-// DxObject namespace
-////////////////////////////////////////////////////////////////////////////////////////////
+//-----------------------------------------------------------------------------------------
+// forward
+//-----------------------------------------------------------------------------------------
 namespace DxObject {
-
-	//-----------------------------------------------------------------------------------------
-	// forward
-	//-----------------------------------------------------------------------------------------
 	class Devices;
+}
 
-	////////////////////////////////////////////////////////////////////////////////////////////
-	// ShaderStage enum
-	////////////////////////////////////////////////////////////////////////////////////////////
-	enum ShaderStage {
-		SHADER_ALL           = D3D12_SHADER_VISIBILITY_ALL,
-		SHADER_VERTEX        = D3D12_SHADER_VISIBILITY_VERTEX,
-		SHADER_HULL          = D3D12_SHADER_VISIBILITY_HULL,
-		SHADER_DOMAIN        = D3D12_SHADER_VISIBILITY_DOMAIN,
-		SHADER_GEOMETRY      = D3D12_SHADER_VISIBILITY_GEOMETRY,
-		SHADER_PIXEL         = D3D12_SHADER_VISIBILITY_PIXEL,
-		SHADER_AMPLIFICATION = D3D12_SHADER_VISIBILITY_AMPLIFICATION,
-		SHADER_MESH          = D3D12_SHADER_VISIBILITY_MESH
-	};
+////////////////////////////////////////////////////////////////////////////////////////////
+// DxrObject namespace
+////////////////////////////////////////////////////////////////////////////////////////////
+namespace DxrObject {
 
 	////////////////////////////////////////////////////////////////////////////////////////////
 	// TextureMode enum
@@ -75,11 +59,13 @@ namespace DxObject {
 
 		void Clear();
 
-		void SetCBV(uint32_t index, ShaderStage stage, UINT shaderRegister);
+		void SetCBV(uint32_t index, UINT shaderRegister);
 
-		void SetSRV(uint32_t index, ShaderStage stage, UINT shaderRegister);
+		void SetSRV(uint32_t index, UINT shaderRegister);
 
-		void SetSampler(uint32_t index, TextureMode mode, ShaderStage stage, UINT shaderRegister);
+		void SetUAV(uint32_t index, UINT shaderRegister);
+
+		void SetSampler(uint32_t index, TextureMode mode, UINT shaderRegiste);
 
 		//=========================================================================================
 		// public variables
@@ -91,13 +77,12 @@ namespace DxObject {
 	private:
 
 		//=========================================================================================
-		// private varibles
+		// private variables
 		//=========================================================================================
 
 		std::vector<D3D12_DESCRIPTOR_RANGE> ranges;
 
 	};
-
 
 	////////////////////////////////////////////////////////////////////////////////////////////
 	// RootSignature class
@@ -109,26 +94,38 @@ namespace DxObject {
 		// public methods
 		//=========================================================================================
 
-		RootSignature(Devices* devices, const RootSignatureDesc& descs) {
-			Init(devices, descs);
-		}
-
 		~RootSignature() { Term(); }
 
-		void Init(Devices* devices, const RootSignatureDesc& descs);
+		virtual void Init(DxObject::Devices* devices, const RootSignatureDesc& desc);
 
 		void Term();
 
 		ID3D12RootSignature* GetRootSignature() const { return rootSignature_.Get(); }
 
-	private:
+	protected:
 
 		//=========================================================================================
-		// private variables
+		// protected variables
 		//=========================================================================================
 
 		ComPtr<ID3D12RootSignature> rootSignature_;
 
+	};
+
+	////////////////////////////////////////////////////////////////////////////////////////////
+	// LocalRootSignature class
+	////////////////////////////////////////////////////////////////////////////////////////////
+	class LocalRootSignature
+		: public RootSignature {
+	public:
+
+		//=========================================================================================
+		// public methods
+		//=========================================================================================
+
+		void Init(DxObject::Devices* devices, const RootSignatureDesc& desc) override;
+
+	private:
 	};
 
 }

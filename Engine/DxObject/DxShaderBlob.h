@@ -63,6 +63,9 @@ namespace DxObject {
 		//! @return shaderBlobを返却
 		IDxcBlob* GetShaderBlob(ShaderType shaderType) const { return shaderBlob_[shaderType]; }
 
+		//! @brief mesh shader pipelineを使うかどうか
+		bool IsUseMeshShaders() const { return isUseMeshShaders_; }
+
 		//! @brief shaderTableを設定
 		//! 
 		//! @param[in] shaderTable DxObject::ShaderTable
@@ -77,6 +80,7 @@ namespace DxObject {
 		static ShaderTable* shaderTable_;
 
 		IDxcBlob* shaderBlob_[ShaderType::kCountOfShaderType];
+		bool isUseMeshShaders_ = false;
 
 	};
 

@@ -34,8 +34,6 @@ void DirectXCommon::Init(WinApp* winApp, int32_t clientWidth, int32_t clientHeig
 	depthStencil_ = std::make_unique<DxObject::DepthStencil>(devices_.get(), descriptorHeaps_.get(), clientWidth, clientHeight);
 
 	pipelineManager_ = std::make_unique<DxObject::PipelineManager>(devices_.get(), command_.get(), blendState_.get(), clientWidth, clientHeight);
-
-	
 }
 
 void DirectXCommon::Term() {
@@ -53,6 +51,68 @@ void DirectXCommon::Term() {
 	devices_.reset();
 }
 
+void DirectXCommon::BeginFrame() {
+	// コマンドリストの取得
+	ID3D12GraphicsCommandList* commandList = command_->GetCommandList();
+
+	// 書き込みバックバッファのインデックスを取得
+	backBufferIndex_ = swapChains_->GetSwapChain()->GetCurrentBackBufferIndex();
+
+	commandList->ResourceBarrier(
+		1,
+		swapChains_->GetTransitionBarrier(backBufferIndex_, D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET)
+	);
+
+	D3D12_CPU_DESCRIPTOR_HANDLE handle_RTV = swapChains_->GetHandleCPU_RTV(backBufferIndex_); 
+
+	commandList->OMSetRenderTargets(
+		1,
+		&handle_RTV,
+		false,
+		&depthStencil_->GetHandle()
+	);
+
+	// 画面のクリア
+	float clearColor[] = { 0.1f, 0.25f, 0.5f, 1.0f };
+	commandList->ClearRenderTargetView(
+		handle_RTV,
+		clearColor,
+		0, nullptr
+	);
+
+	// 深度をクリア
+	commandList->ClearDepthStencilView(
+		depthStencil_->GetHandle(),
+		D3D12_CLEAR_FLAG_DEPTH,
+		1.0f,
+		0, 0, nullptr
+	);
+}
+
+void DirectXCommon::EndFrame() {
+
+	command_->GetCommandList()->ResourceBarrier(
+		1,
+		swapChains_->GetTransitionBarrier(backBufferIndex_, D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT)
+	);
+
+	fences_->WaitGPU(); // frontAllocatorの完了待ち
+
+	command_->Close();
+
+	swapChains_->Present(1, 0);
+
+	// GPUにシグナルを送る
+	fences_->AddFenceValue();
+
+	command_->Signal(fences_.get());
+
+	fences_->WaitGPU();
+
+	command_->ResetAll();
+
+}
+
 void DirectXCommon::BeginOffscreen(Texture* dummyTexture) {
 	assert(dummyTexture != nullptr && offscreenDummyTexture_ == nullptr);
 	
@@ -60,9 +120,6 @@ void DirectXCommon::BeginOffscreen(Texture* dummyTexture) {
 	
 	// コマンドリストの取得
 	auto commandList = command_->GetCommandList();
-
-	ID3D12DescriptorHeap* srv[] = { descriptorHeaps_->GetDescriptorHeap(DxObject::SRV) };
-	commandList->SetDescriptorHeaps(_countof(srv), srv); // hack:
 
 	D3D12_RESOURCE_BARRIER barrier = {};
 	barrier.Type                   = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
@@ -123,7 +180,7 @@ void DirectXCommon::EndOffscreen() {
 	offscreenDummyTexture_ = nullptr;
 }
 
-void DirectXCommon::BeginFrame() {
+void DirectXCommon::BeginScreenDraw() {
 	// コマンドリストの取得
 	ID3D12GraphicsCommandList* commandList = command_->GetCommandList();
 
@@ -135,7 +192,7 @@ void DirectXCommon::BeginFrame() {
 		swapChains_->GetTransitionBarrier(backBufferIndex_, D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET)
 	);
 
-	D3D12_CPU_DESCRIPTOR_HANDLE handle_RTV = swapChains_->GetHandleCPU_RTV(backBufferIndex_); 
+	D3D12_CPU_DESCRIPTOR_HANDLE handle_RTV = swapChains_->GetHandleCPU_RTV(backBufferIndex_);
 
 	commandList->OMSetRenderTargets(
 		1,
@@ -161,35 +218,10 @@ void DirectXCommon::BeginFrame() {
 	);
 }
 
-void DirectXCommon::EndFrame() {
-	command_->GetCommandList()->ResourceBarrier(
-		1,
-		swapChains_->GetTransitionBarrier(backBufferIndex_, D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT)
-	);
+void DirectXCommon::TransitionProcess() {
 
-	fences_->WaitGPU(); // texture分のWAIT
+	fences_->WaitGPU(); // frontAllocatorの完了待ち
 
-	command_->Close();
-
-	ImGuiIO& io = ImGui::GetIO();
-	if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable) {
-		ImGui::UpdatePlatformWindows();
-		ImGui::RenderPlatformWindowsDefault(nullptr, (void*)command_->GetCommandList());
-	}
-
-	swapChains_->Present(1, 0);
-
-	// GPUにシグナルを送る
-	fences_->AddFenceValue();
-
-	command_->Signal(fences_.get());
-
-	fences_->WaitGPU();
-
-	command_->Reset(TYPE_TEXTURE);
-}
-
-void DirectXCommon::SentTexture() {
 	command_->Close();
 
 	// GPUにシグナルを送る
@@ -197,9 +229,11 @@ void DirectXCommon::SentTexture() {
 
 	command_->Signal(fences_.get());
 
-	// waitは描画前
+	command_->ResetBackAllocator();
 
-	command_->ResetCommandList(TYPE_RENDER);
+	ID3D12DescriptorHeap* srv[] = { descriptorHeaps_->GetDescriptorHeap(DxObject::SRV) };
+	command_->GetCommandList()->SetDescriptorHeaps(_countof(srv), srv);
+
 }
 
 DirectXCommon* DirectXCommon::GetInstance() {

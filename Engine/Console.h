@@ -63,6 +63,12 @@ public:
 
 	Camera3D* GetDebugCamera() const { return debugCamera_.get(); }
 
+	//
+	// test function
+	//
+
+	void OutputRayTracingResult(const D3D12_GPU_DESCRIPTOR_HANDLE& srvHandleGPU);
+
 	//=========================================================================================
 	// public variables
 	//=========================================================================================

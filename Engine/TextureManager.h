@@ -50,7 +50,7 @@ public:
 
 	virtual const D3D12_CPU_DESCRIPTOR_HANDLE& GetRTVHandleCPU() const {
 		assert(false); //!< dummyTextureではないのでRTVを持ってない
-		return errorHandle_;
+		return descriptorSRV_.handleCPU; // 絶対に返すな
 	}
 
 	ID3D12Resource* GetResource() const { return resource_.Get(); }
@@ -72,7 +72,6 @@ private:
 	// private variables
 	//=========================================================================================
 
-	D3D12_CPU_DESCRIPTOR_HANDLE errorHandle_;
 	ComPtr<ID3D12Resource> intermediateResouce_;
 
 };
