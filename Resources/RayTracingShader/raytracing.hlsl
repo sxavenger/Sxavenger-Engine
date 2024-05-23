@@ -2,7 +2,7 @@
 // Vertex structure
 ////////////////////////////////////////////////////////////////////////////////////////////
 struct Vertex {
-	float4 position;
+	float3 position;
 	float2 texcoord;
 	float3 normal;
 };
@@ -20,6 +20,13 @@ struct Camera {
 	float4x4 projInv;
 };
 ConstantBuffer<Camera> gCamera : register(b0); // global
+
+struct DirectionalLigth {
+	float4 color;
+	float3 direction;
+	float intensity;
+};
+ConstantBuffer<DirectionalLigth> gLight : register(b1);
 
 //=========================================================================================
 // Buffers
@@ -123,7 +130,7 @@ void mainRayGen() {
 [shader("miss")]
 void mainMS(inout Payload payload) {
 	//payload.color = float3(0.1f, 0.25f, 0.5f); // default color
-	payload.color = float3(0.0f, 0.15f, 0.4f); // test color
+	payload.color = float3(0.0f, 0.15f, 0.4f);   // test color
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -132,5 +139,11 @@ void mainMS(inout Payload payload) {
 [shader("closesthit")]
 void mainCHS(inout Payload payload, in MyAttribute attrib) {
 	Vertex vtx = GetHitVertex(attrib);
-	payload.color = float3(1.0f, 0.2f, 0.2f);
+	
+	float3 defaultColor = float3(1.0f, 1.0f, 1.0f);
+	
+	float NdotL = dot(mul(vtx.normal, (float3x3)ObjectToWorld4x3()), -gLight.direction);
+	float cos = pow(NdotL * 0.5f + 0.5f, 2);
+	
+	payload.color = defaultColor * cos;
 }

@@ -17,9 +17,11 @@
 #include "DrawMethod.h"
 #include "DxrAccelerationStructure.h"
 #include "RayTracingCamera.h"
+#include "RayTracingLight.h"
 
 #include "DxBufferResource.h"
 #include "Vector4.h"
+#include "Model.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // DirectXRCommon class
@@ -62,6 +64,7 @@ private:
 
 	// world //
 	DrawData data_;
+	std::unique_ptr<Model> room_;
 	std::unique_ptr<DxrObject::BottomLevelAS> blas_;
 	std::unique_ptr<DxrObject::TopLevelAS>    tlas_;
 
@@ -70,6 +73,7 @@ private:
 
 	// constantBuffer //
 	std::unique_ptr<RayTracingCamera> camera_;
+	std::unique_ptr<RayTracingLight> light_;
 
 	//=========================================================================================
 	// private methods

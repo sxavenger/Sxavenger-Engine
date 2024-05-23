@@ -55,10 +55,10 @@ void DxrObject::ShaderTable::Init(
 	// 各テーブルの開始位置にアライメント調整
 	UINT raygenerationRegion = Alignment(raygenerationSize, kTableAlignment_);
 	UINT missRegion          = Alignment(missSize, kTableAlignment_);
-	UINT hitgruopRegion      = Alignment(hitgroupSize, kTableAlignment_);
+	UINT hitgroupRegion      = Alignment(hitgroupSize, kTableAlignment_);
 
 	// resourceの生成
-	UINT tableSize = raygenerationRegion + missRegion + hitgruopRegion;
+	UINT tableSize = raygenerationRegion + missRegion + hitgroupRegion;
 	
 	table_ = CreateBuffer(
 		D3D12_HEAP_TYPE_UPLOAD,
@@ -143,7 +143,7 @@ void DxrObject::ShaderTable::Init(
 	dispatchRayDesc_.HitGroupTable.StartAddress  = startAddress;
 	dispatchRayDesc_.HitGroupTable.SizeInBytes   = hitgroupSize;
 	dispatchRayDesc_.HitGroupTable.StrideInBytes = hitgroupRecordSize;
-	startAddress += hitgroupSize;
+	startAddress += hitgroupRegion;
 
 	dispatchRayDesc_.Width  = clientWidth;
 	dispatchRayDesc_.Height = clientHeight;
@@ -186,6 +186,7 @@ uint8_t* DxrMethod::WriteShaderRecord(
 		assert(false);
 	}
 
+	dst += WriteShaderIdentifier(dst, id);
 	dst += WriteGPUDescriptor(dst, blas->GetIndicesDescriptor()); // t1
 	dst += WriteGPUDescriptor(dst, blas->GetVerticesDescriptor()); // t2
 

@@ -2,8 +2,8 @@
 // ToonShading methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-float4 ToonShading(float4 color, float tone) {
-	float4 result;
+float3 ToonShading(float3 color, float tone) {
+	float3 result;
 	result = round(color * tone) / tone;
 	return result;
 }

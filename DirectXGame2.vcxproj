@@ -106,6 +106,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="DirectXRayTracing\DxrShaderTable.cpp" />
     <ClCompile Include="DirectXRayTracing\DxrStateObject.cpp" />
     <ClCompile Include="DirectXRayTracing\RayTracingCamera.cpp" />
+    <ClCompile Include="DirectXRayTracing\RayTracingLight.cpp" />
     <ClCompile Include="Engine\Attribute.cpp" />
     <ClCompile Include="Engine\Console.cpp" />
     <ClCompile Include="Engine\DirectXCommon.cpp" />
@@ -188,6 +189,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="DirectXRayTracing\DxrShaderTable.h" />
     <ClInclude Include="DirectXRayTracing\DxrStateObject.h" />
     <ClInclude Include="DirectXRayTracing\RayTracingCamera.h" />
+    <ClInclude Include="DirectXRayTracing\RayTracingLight.h" />
     <ClInclude Include="Engine\Attribute.h" />
     <ClInclude Include="Engine\ComPtr.h" />
     <ClInclude Include="Engine\Console.h" />

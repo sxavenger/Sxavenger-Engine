@@ -30,6 +30,7 @@ VSOutput main(VSInput input) {
 	VSOutput output;
 	
 	output.position = mul(input.position, gCamera.viewProj);
+	output.normal = normalize(input.normal);
 	
 	return output;
 	

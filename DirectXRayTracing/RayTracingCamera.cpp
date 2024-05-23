@@ -13,7 +13,7 @@
 
 void RayTracingCamera::Init() {
 
-	SetTransform(unitVector, origin, {0.0f, 0.0f, 10.0f});
+	SetTransform(unitVector, origin, {0.0f, 0.0f, -10.0f});
 	SetProjection(0.45f, static_cast<float>(kWindowWidth) / static_cast<float>(kWindowHeight), 0.1f, 100.0f);
 
 	constantBuffer_ = std::make_unique<DxObject::BufferPtrResource<CameraForGPU>>(MyEngine::GetDevicesObj(), 1);

@@ -28,17 +28,19 @@ void DirectXRCommon::InitRayTracing(int32_t clientWidth, int32_t clientHeight) {
 	CreateStateObject(clientWidth, clientHeight);
 
 	camera_ = std::make_unique<RayTracingCamera>();
-
+	light_ = std::make_unique<RayTracingLight>();
 }
 
 void DirectXRCommon::TermRayTracing() {
 	camera_.reset();
+	light_.reset();
 
 	material_.reset();
 
 	tlas_.reset();
 	blas_.reset();
 	data_.Reset();
+	room_.reset();
 
 	shaderTable_.reset();
 	stateObject_.reset();
@@ -70,6 +72,7 @@ void DirectXRCommon::DrawRayTracing() { // HACK: ユーザーが使えるよう�
 	commandList->SetComputeRootSignature(globalRootSignature_->GetRootSignature());
 	commandList->SetComputeRootDescriptorTable(0, tlas_->GetGPUDescriptorHandle());
 	commandList->SetComputeRootConstantBufferView(1, camera_->GetGPUVirtualAddress());
+	commandList->SetComputeRootConstantBufferView(2, light_->GetGPUVirtualAddress());
 
 	commandList->SetPipelineState1(stateObject_->GetStateObject());
 	commandList->DispatchRays(shaderTable_->GetDispatchRayDesc());
@@ -103,8 +106,17 @@ void DirectXRCommon::DrawRasterlize() {
 
 	commandList->SetGraphicsRootConstantBufferView(0, MyEngine::camera3D_->GetGPUVirtualAddress());
 	commandList->SetGraphicsRootConstantBufferView(1, material_->GetGPUVirtualAddress());
+	commandList->SetGraphicsRootConstantBufferView(2, light_->GetGPUVirtualAddress());
 
 	commandList->DrawIndexedInstanced(data_.index->GetIndexSize(), 1, 0, 0, 0);
+
+	/*room_->SetBuffers(commandList, 0);
+
+	commandList->SetGraphicsRootConstantBufferView(0, MyEngine::camera3D_->GetGPUVirtualAddress());
+	commandList->SetGraphicsRootConstantBufferView(1, material_->GetGPUVirtualAddress());
+	commandList->SetGraphicsRootConstantBufferView(2, light_->GetGPUVirtualAddress());
+
+	room_->DrawCall(commandList, 0, 1);*/
 
 }
 
@@ -120,13 +132,16 @@ void DirectXRCommon::CreateStateObject(int32_t clientWidth, int32_t clientHeight
 	// GloabalRootSignatiureの設定
 	{
 		RootSignatureDesc desc = {};
-		desc.Resize(2, 0);
+		desc.Resize(3, 0);
 
 		//!< tlas(t0)
 		desc.SetSRV(0, 0);
 
 		//!< Camera(b0)
 		desc.SetCBV(1, 0);
+
+		//!< light(b1)
+		desc.SetCBV(2, 1);
 
 		globalRootSignature_ = std::make_unique<RootSignature>();
 		globalRootSignature_->Init(devices_.get(), desc);
@@ -181,9 +196,12 @@ void DirectXRCommon::CreateStateObject(int32_t clientWidth, int32_t clientHeight
 
 void DirectXRCommon::CreateAccelerationStructure() {
 
-	data_ = DrawMethods::Plane({2.0f, 2.0f});
+	data_ = DrawMethods::Sphere(2.0f, 16);
+
+	room_ = std::make_unique<Model>("./Resources/model", "room.obj");
 
 	blas_ = std::make_unique<DxrObject::BottomLevelAS>();
+	/*blas_->Create(room_->GetMeshData(0).vertexResource.get(), room_->GetMeshData(0).indexResource.get());*/
 	blas_->Create(data_.vertex.get(), data_.index.get());
 
 	InstanceDesc desc = {};

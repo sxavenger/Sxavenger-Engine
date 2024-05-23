@@ -208,13 +208,16 @@ void DxObject::PipelineManager::CreatePipelineTable() {
 	{
 		// rootSignatureDesc
 		RootSignatureDesc desc;
-		desc.Resize(2, 0);
+		desc.Resize(3, 0);
 
 		//!< camera
 		desc.SetCBV(0, SHADER_VERTEX, 0);
 
 		//!< material
 		desc.SetCBV(1, SHADER_PIXEL, 0);
+
+		//!< light
+		desc.SetCBV(2, SHADER_PIXEL, 1);
 
 		pipelineMenbers_[PipelineType::PRIMITIVE].rootSignature = std::make_unique<DxObject::RootSignature>(devices_, desc);
 

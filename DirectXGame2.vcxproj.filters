@@ -337,6 +337,9 @@
     <ClCompile Include="DirectXRayTracing\RayTracingCamera.cpp">
       <Filter>DirectXRayTracing</Filter>
     </ClCompile>
+    <ClCompile Include="DirectXRayTracing\RayTracingLight.cpp">
+      <Filter>DirectXRayTracing</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\MyEngine.h">
@@ -541,6 +544,9 @@
       <Filter>DirectXRayTracing</Filter>
     </ClInclude>
     <ClInclude Include="DirectXRayTracing\RayTracingCamera.h">
+      <Filter>DirectXRayTracing</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectXRayTracing\RayTracingLight.h">
       <Filter>DirectXRayTracing</Filter>
     </ClInclude>
   </ItemGroup>
