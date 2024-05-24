@@ -46,8 +46,8 @@ namespace DxrObject {
 
 		const D3D12_GPU_VIRTUAL_ADDRESS GetGPUVirtualAddress() const { return buffers_.asbuffer->GetGPUVirtualAddress(); }
 
-		const DxObject::Descriptor GetIndicesDescriptor() const { return indicesDescriptor_; }
-		const DxObject::Descriptor GetVerticesDescriptor() const { return verticesDescriptor_; }
+		const DxObject::Descriptor GetIndicesDescriptor() const { return indicesStrucuturedBuffer_->GetDescriptor(); }
+		const DxObject::Descriptor GetVerticesDescriptor() const { return verticesStrucuturedBuffer_->GetDescriptor(); }
 
 		const std::wstring& GetHitgruop() const { return hitgroup_; }
 
@@ -59,8 +59,9 @@ namespace DxrObject {
 
 		AccelerationStructuredBuffers buffers_;
 
-		DxObject::Descriptor verticesDescriptor_;
-		DxObject::Descriptor indicesDescriptor_;
+		// HACK: vertices indices とわかれてしまっている
+		std::unique_ptr<DxObject::StructuredBuffer> verticesStrucuturedBuffer_;
+		std::unique_ptr<DxObject::StructuredBuffer> indicesStrucuturedBuffer_;
 
 		std::wstring hitgroup_ = L"hitGroup"; // 仮
 

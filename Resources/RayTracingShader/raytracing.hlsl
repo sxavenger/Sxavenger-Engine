@@ -2,7 +2,7 @@
 // Vertex structure
 ////////////////////////////////////////////////////////////////////////////////////////////
 struct Vertex {
-	float3 position;
+	float4 position;
 	float2 texcoord;
 	float3 normal;
 };
@@ -41,6 +41,8 @@ StructuredBuffer<Vertex> sVertexBuffer : register(t2); // local (for HitGroup)
 ////////////////////////////////////////////////////////////////////////////////////////////
 struct Payload {
 	float3 color;
+	int isLightRay;
+	int isCollision; //!< use Lighting 
 };
 
 struct MyAttribute {
@@ -95,7 +97,7 @@ void mainRayGen() {
 	RayDesc rayDesc;
 	rayDesc.Origin = mul(gCamera.world, float4(0, 0, 0, 1)).xyz;
 	
-	float4 target     = mul(gCamera.projInv, float4(d.x, d.y, 1, 1));
+	float4 target     = mul(gCamera.projInv, float4(d.x, -d.y, 1, 1));
 	rayDesc.Direction = mul(gCamera.world, float4(target.xyz, 0)).xyz;
 	
 	rayDesc.TMin = 0;
@@ -103,6 +105,8 @@ void mainRayGen() {
 	
 	Payload payload;
 	payload.color = float3(0, 0, 0);
+	payload.isLightRay = false;
+	payload.isCollision = false;
 	
 	RAY_FLAG flags = RAY_FLAG_NONE;
 	uint rayMask = 0xFF;
@@ -131,6 +135,7 @@ void mainRayGen() {
 void mainMS(inout Payload payload) {
 	//payload.color = float3(0.1f, 0.25f, 0.5f); // default color
 	payload.color = float3(0.0f, 0.15f, 0.4f);   // test color
+	payload.isCollision = false;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -138,12 +143,53 @@ void mainMS(inout Payload payload) {
 ////////////////////////////////////////////////////////////////////////////////////////////
 [shader("closesthit")]
 void mainCHS(inout Payload payload, in MyAttribute attrib) {
+	
+	if (payload.isLightRay) {
+		payload.isCollision = true;
+		return;
+	}
+	
 	Vertex vtx = GetHitVertex(attrib);
 	
+	// lightRay
+	RayDesc rayDesc;
+	rayDesc.Origin    = mul(vtx.position.xyz, (float3x3)ObjectToWorld4x3()) + (-gLight.direction * 0.0001f);
+	rayDesc.Direction = -gLight.direction;
+	rayDesc.TMin      = 0;
+	rayDesc.TMax      = 100000;
+	
+	payload.isLightRay = true;
+	payload.isCollision = false;
+	
+	RAY_FLAG flags = RAY_FLAG_NONE;
+	uint rayMask = 0xFF;
+	
+	TraceRay(
+		gRtScene,
+		flags,
+		rayMask,
+		0, // rayIndex
+		1,
+		0,
+		rayDesc,
+		payload
+	);
+	
 	float3 defaultColor = float3(1.0f, 1.0f, 1.0f);
+	if (InstanceID() == 1) {
+		defaultColor = float3(1.0f, 1.0f, 1.0f);
+	}
 	
 	float NdotL = dot(mul(vtx.normal, (float3x3)ObjectToWorld4x3()), -gLight.direction);
 	float cos = pow(NdotL * 0.5f + 0.5f, 2);
+	float3 normalColor = defaultColor * cos * gLight.color.rgb;
 	
-	payload.color = defaultColor * cos;
+	float3 resultColor = normalColor;
+	
+	if (payload.isCollision) {
+		resultColor -= float3(0.4f, 0.4f, 0.4f);
+		resultColor = saturate(resultColor);
+	}
+	
+	payload.color = resultColor;
 }

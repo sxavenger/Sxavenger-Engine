@@ -59,7 +59,7 @@ namespace DxObject {
 		//! @return DXGIファクトリーを返却
 		auto GetFactory() const { return dxgiFactory_.Get(); }
 
-	private:
+	public:
 
 		////////////////////////////////////////////////////////////////////////////////////////////
 		// DxLeakChecker class
@@ -78,11 +78,12 @@ namespace DxObject {
 			}
 		};
 
+	private:
+
 		//=========================================================================================
 		// private variables
 		//=========================================================================================
 
-		DxLeakChecker debugLeak;
 		ComPtr<ID3D12Debug1> debugController_;
 
 		ComPtr<IDXGIFactory7> dxgiFactory_;

@@ -26,12 +26,9 @@ void RayTracingLight::Term() {
 void RayTracingLight::SetAttributeImGui() {
 
 	ImGui::ColorEdit4("color", &data_.color.r);
-	ImGui::DragFloat3("rotate", &rotate_.x, 0.02f);
+	ImGui::DragFloat3("direction", &data_.direction.x, 0.02f);
 
-	// rotateからdirectionを算出
-	data_.direction = Matrix::Transform({ 0.0f, 0.0f, 1.0f }, Matrix::MakeRotate(rotate_));
-
-	ImGui::Text("[direction] x: %.3f, y: %.3f, z: %.3f", data_.direction.x, data_.direction.y, data_.direction.z);
+	data_.direction = Vector::Normalize(data_.direction);
 
 }
 

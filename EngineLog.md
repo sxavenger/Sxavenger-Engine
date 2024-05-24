@@ -38,7 +38,5 @@ Complete Initialize: sWinApp
 [DxrObject::LoaclRootSignature]: rootSignature_ << Complete Create
 [DxrObject::LoaclRootSignature]: rootSignature_ << Complete Create
 [DxrObject::ShaderManager]: ./resources/raytracingShader/raytracing.hlsl << Complete Create
-Complete Initialize: sDirectXRCommon
-Complete Initialize: sImGuiManager
-Complete Initialize: sTextureManager
-Complete Initialize: sInput
+Error: パラメーターが間違っています。
+Error code: 0x80070057

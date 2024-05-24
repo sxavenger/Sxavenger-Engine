@@ -38,8 +38,11 @@ void DirectXRCommon::TermRayTracing() {
 	material_.reset();
 
 	tlas_.reset();
-	blas_.reset();
-	data_.Reset();
+
+	teapot_.reset();
+	teapotBlas_.reset();
+
+	roomBlas_.reset();
 	room_.reset();
 
 	shaderTable_.reset();
@@ -98,25 +101,15 @@ void DirectXRCommon::DrawRasterlize() {
 
 	auto commandList = command_->GetCommandList();
 
-	D3D12_VERTEX_BUFFER_VIEW vertexBufferView = data_.vertex->GetVertexBufferView();
-	D3D12_INDEX_BUFFER_VIEW indexBufferView   = data_.index->GetIndexBufferView();
+	{
+		room_->SetBuffers(commandList, 0);
 
-	commandList->IASetVertexBuffers(0, 1, &vertexBufferView);
-	commandList->IASetIndexBuffer(&indexBufferView);
+		commandList->SetGraphicsRootConstantBufferView(0, MyEngine::camera3D_->GetGPUVirtualAddress());
+		commandList->SetGraphicsRootConstantBufferView(1, material_->GetGPUVirtualAddress());
+		commandList->SetGraphicsRootConstantBufferView(2, light_->GetGPUVirtualAddress());
 
-	commandList->SetGraphicsRootConstantBufferView(0, MyEngine::camera3D_->GetGPUVirtualAddress());
-	commandList->SetGraphicsRootConstantBufferView(1, material_->GetGPUVirtualAddress());
-	commandList->SetGraphicsRootConstantBufferView(2, light_->GetGPUVirtualAddress());
-
-	commandList->DrawIndexedInstanced(data_.index->GetIndexSize(), 1, 0, 0, 0);
-
-	/*room_->SetBuffers(commandList, 0);
-
-	commandList->SetGraphicsRootConstantBufferView(0, MyEngine::camera3D_->GetGPUVirtualAddress());
-	commandList->SetGraphicsRootConstantBufferView(1, material_->GetGPUVirtualAddress());
-	commandList->SetGraphicsRootConstantBufferView(2, light_->GetGPUVirtualAddress());
-
-	room_->DrawCall(commandList, 0, 1);*/
+		room_->DrawCall(commandList, 0, 1);
+	}
 
 }
 
@@ -196,24 +189,28 @@ void DirectXRCommon::CreateStateObject(int32_t clientWidth, int32_t clientHeight
 
 void DirectXRCommon::CreateAccelerationStructure() {
 
-	data_ = DrawMethods::Sphere(2.0f, 16);
-
 	room_ = std::make_unique<Model>("./Resources/model", "room.obj");
 
-	blas_ = std::make_unique<DxrObject::BottomLevelAS>();
-	/*blas_->Create(room_->GetMeshData(0).vertexResource.get(), room_->GetMeshData(0).indexResource.get());*/
-	blas_->Create(data_.vertex.get(), data_.index.get());
+	roomBlas_ = std::make_unique<DxrObject::BottomLevelAS>();
+	roomBlas_->Create(room_->GetMeshData(0).vertexResource.get(), room_->GetMeshData(0).indexResource.get());
+
+	teapot_ = std::make_unique<Model>("./Resources/model", "teapot.obj");
+
+	teapotBlas_ = std::make_unique<DxrObject::BottomLevelAS>();
+	teapotBlas_->Create(teapot_->GetMeshData(0).vertexResource.get(), teapot_->GetMeshData(0).indexResource.get());
 
 	InstanceDesc desc = {};
-	desc.Resize(1);
+	desc.Resize(2);
 
-	desc.Set(0, blas_.get(), Matrix4x4::MakeIdentity(), 0, 0);
+	desc.Set(0, roomBlas_.get(), Matrix4x4::MakeIdentity(), 0, 0);
+
+	desc.Set(1, teapotBlas_.get(), Matrix4x4::MakeIdentity(), 1, 0);
 
 	tlas_ = std::make_unique<DxrObject::TopLevelAS>();
 	tlas_->Create(desc);
 
 	material_ = std::make_unique<DxObject::BufferResource<Vector4f>>(devices_.get(), 1);
-	material_->operator[](0) = {0.6f, 0.6f, 0.6f, 1.0f};
+	material_->operator[](0) = {1.0f, 1.0f, 1.0f, 1.0f};
 
 }
 

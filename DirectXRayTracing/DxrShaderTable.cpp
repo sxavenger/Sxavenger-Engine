@@ -30,7 +30,6 @@ void DxrObject::ShaderTable::Init(
 	TopLevelAS* tlas, StateObject* stateObject, ResultBuffer* resultBuffer) {
 	clientWidth; clientHeight;
 
-	descs;
 	// TODO: descから取れるようにしておくこと
 
 	// raygeneration
@@ -50,7 +49,7 @@ void DxrObject::ShaderTable::Init(
 	// 使用する各シェーダーの個数より、シェーダーテーブルのサイズを求める.
 	UINT raygenerationSize = 1 * raygenerationRecordSize;
 	UINT missSize          = 1 * missRecordSize;
-	UINT hitgroupSize      = 1 * hitgroupRecordSize;
+	UINT hitgroupSize      = 2 * hitgroupRecordSize;
 
 	// 各テーブルの開始位置にアライメント調整
 	UINT raygenerationRegion = Alignment(raygenerationSize, kTableAlignment_);

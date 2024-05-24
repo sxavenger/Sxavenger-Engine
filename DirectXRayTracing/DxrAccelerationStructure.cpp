@@ -37,8 +37,8 @@ void DxrObject::BottomLevelAS::Create(DxObject::BufferResource<VertexData>* vert
 	buildASDesc.Inputs.NumDescs       = 1;
 	buildASDesc.Inputs.pGeometryDescs = &geomDesc;
 
-	verticesDescriptor_ = MyEngine::GetCurrentDescripor(SRV);
-	indicesDescriptor_  = MyEngine::GetCurrentDescripor(SRV);
+	verticesStrucuturedBuffer_ = std::make_unique<DxObject::StructuredBuffer>(vertices);
+	indicesStrucuturedBuffer_ = std::make_unique<DxObject::StructuredBuffer>(indices);
 
 	buffers_ = CreateAccelerationStructure(
 		buildASDesc
@@ -65,8 +65,8 @@ void DxrObject::BottomLevelAS::Create(DxObject::BufferResource<VertexData>* vert
 }
 
 void DxrObject::BottomLevelAS::Term() {
-	MyEngine::EraseDescriptor(verticesDescriptor_);
-	MyEngine::EraseDescriptor(indicesDescriptor_);
+	verticesStrucuturedBuffer_.reset();
+	indicesStrucuturedBuffer_.reset();
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -158,7 +158,7 @@ void DxrObject::TopLevelAS::Create(const InstanceDesc& instanceDesc) {
 		);
 	}
 
-	blasPtrs_ = std::move(instanceDesc.blasPtrs_);
+	blasPtrs_.assign(instanceDesc.blasPtrs_.begin(), instanceDesc.blasPtrs_.end());
 
 }
 

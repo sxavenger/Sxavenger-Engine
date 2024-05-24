@@ -63,9 +63,12 @@ private:
 	std::unique_ptr<DxrObject::ShaderTable>   shaderTable_;
 
 	// world //
-	DrawData data_;
+	std::unique_ptr<Model> teapot_;
+	std::unique_ptr<DxrObject::BottomLevelAS> teapotBlas_;
+
 	std::unique_ptr<Model> room_;
-	std::unique_ptr<DxrObject::BottomLevelAS> blas_;
+	std::unique_ptr<DxrObject::BottomLevelAS> roomBlas_;
+
 	std::unique_ptr<DxrObject::TopLevelAS>    tlas_;
 
 	// primitive constantBuffer

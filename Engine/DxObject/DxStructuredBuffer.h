@@ -51,6 +51,8 @@ namespace DxObject {
 
 		const D3D12_GPU_DESCRIPTOR_HANDLE& GetGPUHandle() const { return descriptor_.handleGPU; }
 
+		const Descriptor& GetDescriptor() const { return descriptor_; }
+
 	private:
 
 		//=========================================================================================

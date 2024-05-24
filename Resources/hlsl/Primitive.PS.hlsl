@@ -3,6 +3,7 @@
 //-----------------------------------------------------------------------------------------
 #include "Primitive.hlsli"
 #include "Lighting.hlsli"
+#include "ToonShading.hlsli"
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // PSOutput structure
@@ -35,6 +36,7 @@ PSOutput main(VSOutput input) {
 	
 	output.color = gMaterial.color;
 	output.color.rgb *= HalfLambertReflection(input.normal, gLight.direction);
+	output.color.rgb = ToonShading(output.color.rgb, 10);
 	
 	return output;
 	

@@ -92,6 +92,8 @@ protected:
 	// protected variables
 	//=========================================================================================
 
+	DxObject::Devices::DxLeakChecker leakChecher_;
+
 	std::unique_ptr<DxObject::Devices>         devices_;
 	std::unique_ptr<DxObject::Command>         command_;
 	std::unique_ptr<DxObject::DescriptorHeaps> descriptorHeaps_;

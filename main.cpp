@@ -103,14 +103,13 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 			MyEngine::EndOffScreen();
 
+
 			MyEngine::BeginOffScreen(MyEngine::GetTexture("offscreen"));
 			MyEngine::camera3D_ = camera.get();
 
 
 
 			MyEngine::EndOffScreen();
-
-			
 		}
 
 		MyEngine::TransitionProcess();
@@ -132,10 +131,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	}
 
 	console->Term();
-	camera.reset();
 
 	MyEngine::Finalize();
-	
 	return 0;
 
 }

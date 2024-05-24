@@ -59,7 +59,4 @@ private:
 	std::unique_ptr<DxObject::BufferPtrResource<DirectionalLight>> resource_;
 	DirectionalLight data_;
 
-	// parameter //
-	Vector3f rotate_;
-
 };
