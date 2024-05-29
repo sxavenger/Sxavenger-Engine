@@ -105,6 +105,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="DirectXRayTracing\DxrShaderManager.cpp" />
     <ClCompile Include="DirectXRayTracing\DxrShaderTable.cpp" />
     <ClCompile Include="DirectXRayTracing\DxrStateObject.cpp" />
+    <ClCompile Include="DirectXRayTracing\RayTracingAO.cpp" />
     <ClCompile Include="DirectXRayTracing\RayTracingCamera.cpp" />
     <ClCompile Include="DirectXRayTracing\RayTracingLight.cpp" />
     <ClCompile Include="Engine\Attribute.cpp" />
@@ -174,6 +175,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Lib\Geometry\Vector3.cpp" />
     <ClCompile Include="Lib\Geometry\Vector4.cpp" />
     <ClCompile Include="Lib\Light\Light.cpp" />
+    <ClCompile Include="Lib\PostEffect\GaussianBlur.cpp" />
     <ClCompile Include="main.cpp">
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(ProjectDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
@@ -188,6 +190,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="DirectXRayTracing\DxrShaderManager.h" />
     <ClInclude Include="DirectXRayTracing\DxrShaderTable.h" />
     <ClInclude Include="DirectXRayTracing\DxrStateObject.h" />
+    <ClInclude Include="DirectXRayTracing\RayTracingAO.h" />
     <ClInclude Include="DirectXRayTracing\RayTracingCamera.h" />
     <ClInclude Include="DirectXRayTracing\RayTracingLight.h" />
     <ClInclude Include="Engine\Attribute.h" />
@@ -248,12 +251,15 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Lib\Geometry\VectorComparison.h" />
     <ClInclude Include="Lib\Light\Light.h" />
     <ClInclude Include="Lib\ObjectStructure.h" />
+    <ClInclude Include="Lib\PostEffect\GaussianBlur.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />
+    <None Include="Resources\hlsl\BlasRender.hlsli" />
     <None Include="Resources\hlsl\Camera.hlsli" />
     <None Include="Resources\hlsl\Default.hlsli" />
     <None Include="Resources\hlsl\Floor.hlsli" />
+    <None Include="Resources\hlsl\GaussianBlur.hlsli" />
     <None Include="Resources\hlsl\Lighting.hlsli" />
     <None Include="Resources\hlsl\Primitive.hlsli" />
     <None Include="Resources\hlsl\ToonShading.hlsli" />
@@ -267,6 +273,12 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <Text Include="externals\imgui\LICENSE.txt" />
   </ItemGroup>
   <ItemGroup>
+    <FxCompile Include="Resources\hlsl\BlasRender.PS.hlsl">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="Resources\hlsl\BlasRender.VS.hlsl">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </FxCompile>
     <FxCompile Include="Resources\hlsl\Default.MS.hlsl">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">6.4</ShaderModel>
@@ -283,6 +295,12 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">6.4</ShaderModel>
     </FxCompile>
+    <FxCompile Include="Resources\hlsl\GaussianBlur.PS.hlsl">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="Resources\hlsl\GaussianBlur.VS.hlsl">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </FxCompile>
     <FxCompile Include="Resources\hlsl\Primitive.PS.hlsl">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </FxCompile>
@@ -291,6 +309,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     </FxCompile>
     <FxCompile Include="Resources\RayTracingShader\raytracing.hlsl">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">6.4</ShaderModel>
     </FxCompile>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

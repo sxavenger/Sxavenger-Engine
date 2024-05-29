@@ -33,6 +33,7 @@
 #include <Input.h>
 
 #include "DirectXRCommon.h"
+#include "Lib/PostEffect/GaussianBlur.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // メイン関数
@@ -49,6 +50,11 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 	auto console = Console::GetInstance();
 	console->Init();
+
+	MyEngine::TransitionProcessSingle();
+	MyEngine::EnableTextures();
+
+	std::unique_ptr<GaussianBlur> blur = std::make_unique<GaussianBlur>();
 
 	////////////////////////////////////////////////////////////////////////////////////////////
 	// メインループ
@@ -89,6 +95,15 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		MyEngine::TransitionProcess();
 		console->OutputRayTracingResult(RayTracingEngine::GetDxrCommon()->GetResultBufferTexture());
 
+		//-----------------------------------------------------------------------------------------
+		// postEffect test
+		//-----------------------------------------------------------------------------------------
+
+		{
+			blur->CreateBlurTexture(kWindowWidth, kWindowHeight, RayTracingEngine::GetDxrCommon()->GetResultBufferTexture());
+		}
+		MyEngine::TransitionProcess();
+		console->OutputTexture("blur", blur->GetTexture());
 
 		//=========================================================================================
 		// オフスクリーン描画処理
@@ -131,6 +146,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	}
 
 	console->Term();
+	blur.reset();
 
 	MyEngine::Finalize();
 	return 0;

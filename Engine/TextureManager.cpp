@@ -57,10 +57,10 @@ void Texture::Unload() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// DummyTexture class methods
+// RenderTexture class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-void DummyTexture::Create(int32_t width, int32_t height, DirectXCommon* dxCommon) {
+void RenderTexture::Create(int32_t width, int32_t height, DirectXCommon* dxCommon) {
 
 	// dxCommonの保存
 	dxCommon_ = dxCommon;
@@ -132,7 +132,7 @@ void DummyTexture::Create(int32_t width, int32_t height, DirectXCommon* dxCommon
 
 }
 
-void DummyTexture::Unload() {
+void RenderTexture::Unload() {
 	dxCommon_->GetDescriptorsObj()->Erase(descriptorRTV_);
 }
 
@@ -187,22 +187,22 @@ void TextureManager::LoadTexture(const std::string& filePath) {
 	);
 }
 
-void TextureManager::CreateDummyTexture(int32_t width, int32_t height, const std::string& key) {
+void TextureManager::CreateRenderTexture(int32_t width, int32_t height, const std::string& key) {
 	if (FindKey(key)) {
-		Log("TextureManager::CreateDummyTexture \n if (it != textures_.end()) { \n return; \n} \n");
+		Log("TextureManager::CreateRenderTexture \n if (it != textures_.end()) { \n return; \n} \n");
 		Console::GetInstance()->SetLog("warning: texture already made. [key]: " + key, Console::warningColor);
 		return;
 	}
 
-	auto dummyTexture = std::make_unique<DummyTexture>();
-	dummyTexture->Create(width, height, dxCommon_);
+	auto renderTexture = std::make_unique<RenderTexture>();
+	renderTexture->Create(width, height, dxCommon_);
 
-	textures_[key].texture = std::move(dummyTexture);
+	textures_[key].texture = std::move(renderTexture);
 	textures_[key].referenceCount = 1;
 	textures_[key].isTextureEnabled = true;
 
 	Console::GetInstance()->SetLog(
-		"[Create DummyTexture] key: " + key
+		"[Create RenderTexture] key: " + key
 	);
 }
 

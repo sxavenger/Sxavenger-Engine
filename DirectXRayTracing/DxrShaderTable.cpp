@@ -49,7 +49,7 @@ void DxrObject::ShaderTable::Init(
 	// 使用する各シェーダーの個数より、シェーダーテーブルのサイズを求める.
 	UINT raygenerationSize = 1 * raygenerationRecordSize;
 	UINT missSize          = 1 * missRecordSize;
-	UINT hitgroupSize      = 2 * hitgroupRecordSize;
+	UINT hitgroupSize      = 1 * hitgroupRecordSize;
 
 	// 各テーブルの開始位置にアライメント調整
 	UINT raygenerationRegion = Alignment(raygenerationSize, kTableAlignment_);
@@ -118,7 +118,7 @@ void DxrObject::ShaderTable::Init(
 		auto hitgroupStart = pStart + raygenerationRegion + missRegion;
 		uint8_t* pRecord = hitgroupStart;
 
-		for (const auto& blas : tlas->GetBLASPtrArray()) {
+		for (auto& blas : tlas->GetBLASPtrArray()) {
 			pRecord = WriteShaderRecord(pRecord, blas, hitgroupSize, properties.Get());
 		}
 	}

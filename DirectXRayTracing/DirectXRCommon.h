@@ -18,6 +18,7 @@
 #include "DxrAccelerationStructure.h"
 #include "RayTracingCamera.h"
 #include "RayTracingLight.h"
+#include "RayTracingAO.h"
 
 #include "DxBufferResource.h"
 #include "Vector4.h"
@@ -63,6 +64,7 @@ private:
 	std::unique_ptr<DxrObject::ShaderTable>   shaderTable_;
 
 	// world //
+
 	std::unique_ptr<Model> teapot_;
 	std::unique_ptr<DxrObject::BottomLevelAS> teapotBlas_;
 
@@ -77,6 +79,7 @@ private:
 	// constantBuffer //
 	std::unique_ptr<RayTracingCamera> camera_;
 	std::unique_ptr<RayTracingLight> light_;
+	std::unique_ptr<RayTracingAO> ambientOcclusion_;
 
 	//=========================================================================================
 	// private methods

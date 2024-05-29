@@ -236,6 +236,24 @@ void DirectXCommon::TransitionProcess() {
 
 }
 
+void DirectXCommon::TransitionSingleAllocator() {
+	fences_->WaitGPU(); // frontAllocatorの完了待ち
+	//!< todo: frontAllocatorは使わないのでこのwaitをなしにする
+	
+	command_->Close();
+
+	fences_->AddFenceValue();
+
+	command_->Signal(fences_.get());
+
+	fences_->WaitGPU();
+
+	command_->ResetSingleAllocator();
+
+	ID3D12DescriptorHeap* srv[] = { descriptorHeaps_->GetDescriptorHeap(DxObject::SRV) };
+	command_->GetCommandList()->SetDescriptorHeaps(_countof(srv), srv);
+}
+
 DirectXCommon* DirectXCommon::GetInstance() {
 	static DirectXCommon instance;
 	return &instance;

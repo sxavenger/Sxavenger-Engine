@@ -21,6 +21,8 @@ enum PipelineType {
 	FLOOR,
 	DEFAULT,
 	PRIMITIVE,
+	BLASRENDER,
+	GAUSSIANBLUR,
 
 	kCountOfPipeline
 };

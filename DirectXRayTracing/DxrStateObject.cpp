@@ -55,7 +55,7 @@ namespace {
 	////////////////////////////////////////////////////////////////////////////////////////////
 	struct Payload {
 		Vector3f color;
-		int isLightRay;
+		int isCollisionRay; // rayが当たったかどうかだけ取るRay
 		int isCollision;
 	};
 

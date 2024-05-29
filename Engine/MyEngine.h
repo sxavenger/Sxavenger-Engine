@@ -65,15 +65,17 @@ public:
 
 	//! @brief オフスク描画処理の開始
 	//! 
-	//! @param[in] offscreenDummyTexture 書き込む用のdummyTexture
-	static void BeginOffScreen(Texture* offscreenDummyTexture);
+	//! @param[in] offscreenRenderTexture 書き込む用のdummyTexture
+	static void BeginOffScreen(Texture* offscreenRenderTexture);
 
 	//! @brief オフスク描画処理の開始
 	static void EndOffScreen();
 
 	static void TransitionProcess();
 
+	static void TransitionProcessSingle();
 
+	static void EnableTextures();
 
 	//! @brief プロセスメッセージを取得
 	//! 
@@ -105,7 +107,7 @@ public:
 
 	static TextureManager* GetTextureManager();
 
-	static Texture* CreateDummyTexture(int32_t width, int32_t height, const std::string& key);
+	static Texture* CreateRenderTexture(int32_t width, int32_t height, const std::string& key);
 
 	static void LoadTexture(const std::string& filePath);
 

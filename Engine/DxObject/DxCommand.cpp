@@ -101,6 +101,17 @@ void DxObject::Command::ResetBackAllocator() {
 	assert(SUCCEEDED(hr));
 }
 
+void DxObject::Command::ResetSingleAllocator() {
+	// backAllocatorそのまま使用
+
+	auto hr = commandAllocator_[backAllocatorIndex_]->Reset();
+	assert(SUCCEEDED(hr));
+
+	// backAllocatorをセット
+	hr = commandList_->Reset(commandAllocator_[backAllocatorIndex_].Get(), nullptr);
+	assert(SUCCEEDED(hr));
+}
+
 void DxObject::Command::Signal(Fence* fences) {
 	commandQueue_->Signal(fences->GetFence(), fences->GetFenceValue());
 }

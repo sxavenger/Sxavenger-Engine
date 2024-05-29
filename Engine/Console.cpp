@@ -41,7 +41,7 @@ Console* Console::GetInstance() {
 void Console::Init() {
 	dxCommon_ = MyEngine::GetDxCommon();
 
-	sceneTexture_ = MyEngine::CreateDummyTexture(kWindowWidth, kWindowHeight, "sceneTexture");
+	sceneTexture_ = MyEngine::CreateRenderTexture(kWindowWidth, kWindowHeight, "sceneTexture");
 
 	debugCamera_ = std::make_unique<Camera3D>();
 	debugCamera_->SetName("debugCamera");
@@ -53,19 +53,21 @@ void Console::Term() {
 }
 
 void Console::Update() {
-	ImGui::ShowDemoWindow();
+	if (isOutputEngineUI_) {
+		windowFlags = ImGuiWindowFlags_NoCollapse;
 
-	OutputMain();
-	
-	// game window
-	OutputScene();
-	OutputGame();
+		OutputMain();
 
-	OutputLog();
-	OutputPrintf();
-	OutputOutliner();
-	OutputPerformance();
-	OutputSystem();
+		// game window
+		OutputScene();
+		OutputGame();
+
+		OutputLog();
+		OutputPrintf();
+		OutputOutliner();
+		OutputPerformance();
+		OutputSystem();
+	}
 }
 
 void Console::SetLog(const std::string& log, const Vector4f& color) {
@@ -79,12 +81,25 @@ void Console::SetLog(const std::string& log, const Vector4f& color) {
 }
 
 void Console::OutputRayTracingResult(const D3D12_GPU_DESCRIPTOR_HANDLE& srvHandleGPU) {
-	static bool isOpenWindow = true;
-	ImGui::Begin("RayTracing", &isOpenWindow, ImGuiWindowFlags_NoCollapse);
+	if (isOutputEngineUI_) {
+		static bool isOpenWindow = true;
+		ImGui::Begin("RayTracing", &isOpenWindow, windowFlags);
 
-	SetTextureImGui(srvHandleGPU);
+		SetTextureImGui(srvHandleGPU);
 
-	ImGui::End();
+		ImGui::End();
+	}
+}
+
+void Console::OutputTexture(const std::string& name, const D3D12_GPU_DESCRIPTOR_HANDLE& srvHandleGPU) {
+	if (isOutputEngineUI_) {
+		static bool isOpenWindow = true;
+		ImGui::Begin(name.c_str(), &isOpenWindow, windowFlags);
+
+		SetTextureImGui(srvHandleGPU);
+
+		ImGui::End();
+	}
 }
 
 //=========================================================================================
@@ -92,13 +107,37 @@ void Console::OutputRayTracingResult(const D3D12_GPU_DESCRIPTOR_HANDLE& srvHandl
 //=========================================================================================
 
 void Console::OutputMain() {
-	ImGui::Begin("Sxavenger Engine");
+	static bool isOpenWindow = true;
+	ImGui::Begin("Sxavenger Engine", &isOpenWindow, windowFlags | ImGuiWindowFlags_MenuBar);
+
+	if (ImGui::BeginMenuBar()) {
+
+		if (ImGui::BeginMenu("Settings")) {
+
+			ImGui::Checkbox("DisplayeUI", &isOutputEngineUI_);
+
+			// windowFlags
+			ImGui::Checkbox("Fix(lock size and move)", &isFix_);
+
+
+			ImGui::EndMenu();
+		}
+
+		ImGui::EndMenuBar();
+	}
+
+	if (isFix_) {
+		windowFlags |= ImGuiWindowFlags_NoMove;
+		windowFlags |= ImGuiWindowFlags_NoResize;
+	}
+
+
 	ImGui::End();
 }
 
 void Console::OutputScene() {
 	static bool isOpenWindow = true;
-	ImGui::Begin("Scene", &isOpenWindow, ImGuiWindowFlags_NoCollapse);
+	ImGui::Begin("Scene", &isOpenWindow, windowFlags);
 	// todo: window開かれてる状態を保存させる. foucusとは違う
 	isFocusDebugScene_; //!< 名前もfoucusからいい感じに変更させる
 
@@ -109,7 +148,7 @@ void Console::OutputScene() {
 
 void Console::OutputGame() {
 	static bool isOpenWindow = true;
-	ImGui::Begin("Game", &isOpenWindow, ImGuiWindowFlags_NoCollapse);
+	ImGui::Begin("Game", &isOpenWindow, windowFlags);
 	// this->windowがフォーカスされてるかどうか
 	isFocusGameScene_ = ImGui::IsWindowFocused();
 
@@ -121,7 +160,7 @@ void Console::OutputGame() {
 void Console::OutputLog() {
 	//! 開いておく
 	static bool isOpenWindow = true;
-	ImGui::Begin("Log", &isOpenWindow);
+	ImGui::Begin("Log", &isOpenWindow, windowFlags);
 
 	ImVec2 cntRegionMax = ImGui::GetWindowContentRegionMax();
 	ImVec2 cntRegionMin = ImGui::GetWindowContentRegionMin();
@@ -141,13 +180,14 @@ void Console::OutputLog() {
 }
 
 void Console::OutputPrintf() {
-	ImGui::Begin("Printf");
+	static bool isOpenWindow = true;
+	ImGui::Begin("Printf", &isOpenWindow, windowFlags);
 	ImGui::End();
 }
 
 void Console::OutputPerformance() {
 	static bool isOpenWindow = true;
-	ImGui::Begin("Performance", &isOpenWindow, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoScrollbar);
+	ImGui::Begin("Performance", &isOpenWindow, windowFlags | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoScrollbar);
 
 	float framesPerSec = Performance::GetFramesPerformance(SecondsUnit::s);
 
@@ -161,7 +201,7 @@ void Console::OutputPerformance() {
 void Console::OutputOutliner() {
 	// Inspectorの選択window
 	static bool isOpenWindow = true;
-	ImGui::Begin("Outliner", &isOpenWindow, ImGuiWindowFlags_NoCollapse);
+	ImGui::Begin("Outliner", &isOpenWindow, windowFlags);
 
 	static std::string name;
 
@@ -179,7 +219,7 @@ void Console::OutputOutliner() {
 	ImGui::End();
 
 	// attribute
-	ImGui::Begin("Attribute", &isOpenWindow, ImGuiWindowFlags_NoCollapse);
+	ImGui::Begin("Attribute", &isOpenWindow, windowFlags);
 	if (selectedAttribute_ != nullptr) {
 
 		ImGui::Text(selectedAttribute_->GetName().c_str());
@@ -209,7 +249,7 @@ void Console::OutputOutliner() {
 
 void Console::OutputSystem() {
 	static bool isOpenWindow = true;
-	ImGui::Begin("System", &isOpenWindow);
+	ImGui::Begin("System", &isOpenWindow, windowFlags);
 
 	if (ImGui::CollapsingHeader("DescriptorHeaps")) {
 		auto descriptorHeaps = dxCommon_->GetDescriptorsObj();

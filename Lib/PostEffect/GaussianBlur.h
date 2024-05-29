@@ -6,20 +6,22 @@
 // DxObject
 #include <DxBufferResource.h>
 
-// Geometry
-#include <Vector4.h>
-#include <Vector3.h>
+// engine
+#include <TextureManager.h>
 
-// c++
+// Geometry
+#include <Vector2.h>
+#include <ObjectStructure.h>
+
+// memory
 #include <memory>
 
-// attribute
 #include <Attribute.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// RayTracingLight class
+// GaussianBlur class
 ////////////////////////////////////////////////////////////////////////////////////////////
-class RayTracingLight
+class GaussianBlur
 	: public Attribute {
 public:
 
@@ -27,42 +29,53 @@ public:
 	// public methods
 	//=========================================================================================
 
-	RayTracingLight() { Init(); }
+	GaussianBlur() { Init(); }
 
-	~RayTracingLight() { Term(); }
+	~GaussianBlur() { Term(); }
 
 	void Init();
 
 	void Term();
 
-	void SetAttributeImGui() override;
+	void CreateBlurTexture(
+		int32_t width, int32_t height, const D3D12_GPU_DESCRIPTOR_HANDLE& texture
+	);
 
-	const D3D12_GPU_VIRTUAL_ADDRESS GetGPUVirtualAddress() const {
-		return resource_->GetGPUVirtualAddress();
+	void CreateBlurTexture(
+		Texture* outputTexture,
+		int32_t width, int32_t height, const D3D12_GPU_DESCRIPTOR_HANDLE& texture
+	);
+
+	const D3D12_GPU_DESCRIPTOR_HANDLE& GetTexture() {
+		return outputTexture_->GetSRVHandleGPU();
 	}
+
+	void SetAttributeImGui() override;
 
 private:
 
 	////////////////////////////////////////////////////////////////////////////////////////////
-	// DirectionalLight structure
+	// BlurParameter structure
 	////////////////////////////////////////////////////////////////////////////////////////////
-	struct DirectionalLight {
-		Vector4f color     = { 1.0f, 1.0f, 1.0f, 1.0f };
-		Vector4f position  = { 0.0f, 0.0f, 0.0f, 1.0f };
-		Vector3f direction = { 0.0f, 0.0f, 1.0f };
-		float intensity    = 1.0f;
-		float range        = 0.0f;
-		float decay        = 1.0f;
-
-		int isLightingEnable = true;
-		int isShadowEnable   = true;
+	struct BlurParameter {
+		Vector2f renderSize;    // renderTextureサイズ
+		int isHolizontalEnable; // x軸方向へのブラーが有効か
+		int isVerticlaEnable;   // y軸方向へのブラーが有効か
 	};
 
 	//=========================================================================================
 	// private variables
 	//=========================================================================================
 
-	std::unique_ptr<DxObject::BufferPtrResource<DirectionalLight>> resource_;
-	DirectionalLight data_;
+	// IA
+	std::unique_ptr<DxObject::BufferResource<VertexData>> vertex_;
+	std::unique_ptr<DxObject::IndexBufferResource>        index_;
+
+	// constantBuffer
+	std::unique_ptr<DxObject::BufferResource<Matrix4x4>>     matrix_;
+	std::unique_ptr<DxObject::BufferResource<BlurParameter>> param_;
+
+	std::unique_ptr<RenderTexture> outputTexture_;
+
 
 };

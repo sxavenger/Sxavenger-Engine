@@ -49,7 +49,7 @@ public:
 	const D3D12_GPU_DESCRIPTOR_HANDLE& GetSRVHandleGPU() const { return descriptorSRV_.handleGPU; }
 
 	virtual const D3D12_CPU_DESCRIPTOR_HANDLE& GetRTVHandleCPU() const {
-		assert(false); //!< dummyTextureではないのでRTVを持ってない
+		assert(false); //!< RenderTextureではないのでRTVを持ってない
 		return descriptorSRV_.handleCPU; // 絶対に返すな
 	}
 
@@ -77,9 +77,9 @@ private:
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// DummyTexture class
+// RenderTexture class
 ////////////////////////////////////////////////////////////////////////////////////////////
-class DummyTexture
+class RenderTexture
 	: public Texture {
 public:
 
@@ -88,10 +88,10 @@ public:
 	//=========================================================================================
 
 	//! @brief コンストラクタ
-	DummyTexture() {}
+	RenderTexture() {}
 
 	//! @brief デストラクタ
-	~DummyTexture() { Unload(); }
+	~RenderTexture() { Unload(); }
 
 	//! @brief ダミーテクスチャの作成
 	void Create(int32_t width, int32_t height, DirectXCommon* dxCommon);
@@ -137,7 +137,7 @@ public:
 	void LoadTexture(const std::string& filePath);
 
 	//! @brief ダミーテクスチャの生成
-	void CreateDummyTexture(int32_t width, int32_t height, const std::string& key);
+	void CreateRenderTexture(int32_t width, int32_t height, const std::string& key);
 
 	//! @brief テクスチャの削除
 	void UnloadTexture(const std::string& key);

@@ -208,6 +208,25 @@ void DxObject::PipelineManager::CreatePipelineTable() {
 	{
 		// rootSignatureDesc
 		RootSignatureDesc desc;
+		desc.Resize(2, 0);
+
+		//!< camera
+		desc.SetCBV(0, SHADER_VERTEX, 0);
+
+		//!< material
+		desc.SetCBV(1, SHADER_PIXEL, 0);
+
+		pipelineMenbers_[PipelineType::PRIMITIVE].rootSignature = std::make_unique<DxObject::RootSignature>(devices_, desc);
+
+		pipelineMenbers_[PipelineType::PRIMITIVE].shaderBlob = std::make_unique<DxObject::ShaderBlob>();
+		auto blob = pipelineMenbers_[PipelineType::PRIMITIVE].shaderBlob.get();
+		blob->Create(L"Primitive.VS.hlsl", VERTEX);
+		blob->Create(L"Primitive.PS.hlsl", PIXEL);
+	}
+
+	{
+		// rootSignatureDesc
+		RootSignatureDesc desc;
 		desc.Resize(3, 0);
 
 		//!< camera
@@ -219,12 +238,34 @@ void DxObject::PipelineManager::CreatePipelineTable() {
 		//!< light
 		desc.SetCBV(2, SHADER_PIXEL, 1);
 
-		pipelineMenbers_[PipelineType::PRIMITIVE].rootSignature = std::make_unique<DxObject::RootSignature>(devices_, desc);
+		pipelineMenbers_[PipelineType::BLASRENDER].rootSignature = std::make_unique<DxObject::RootSignature>(devices_, desc);
 
-		pipelineMenbers_[PipelineType::PRIMITIVE].shaderBlob = std::make_unique<DxObject::ShaderBlob>();
-		auto blob = pipelineMenbers_[PipelineType::PRIMITIVE].shaderBlob.get();
-		blob->Create(L"Primitive.VS.hlsl", VERTEX);
-		blob->Create(L"Primitive.PS.hlsl", PIXEL);
+		pipelineMenbers_[PipelineType::BLASRENDER].shaderBlob = std::make_unique<DxObject::ShaderBlob>();
+		auto blob = pipelineMenbers_[PipelineType::BLASRENDER].shaderBlob.get();
+		blob->Create(L"BlasRender.VS.hlsl", VERTEX);
+		blob->Create(L"BlasRender.PS.hlsl", PIXEL);
+	}
 
+	{
+		// rootSignatureDesc
+		RootSignatureDesc desc;
+		desc.Resize(3, 1);
+
+		//!< camera2D
+		desc.SetCBV(0, SHADER_VERTEX, 0);
+
+		//!< blurParam
+		desc.SetCBV(1, SHADER_PIXEL, 0);
+
+		//!< textureBuffer
+		desc.SetSRV(2, SHADER_PIXEL, 0);
+		desc.SetSampler(0, MODE_WRAP, SHADER_PIXEL, 0);
+
+		pipelineMenbers_[PipelineType::GAUSSIANBLUR].rootSignature = std::make_unique<DxObject::RootSignature>(devices_, desc);
+
+		pipelineMenbers_[PipelineType::GAUSSIANBLUR].shaderBlob = std::make_unique<DxObject::ShaderBlob>();
+		auto blob = pipelineMenbers_[PipelineType::GAUSSIANBLUR].shaderBlob.get();
+		blob->Create(L"GaussianBlur.VS.hlsl", VERTEX);
+		blob->Create(L"GaussianBlur.PS.hlsl", PIXEL);
 	}
 }

@@ -1,31 +1,36 @@
+//*****************************************************************************************
+// MS, PS パイプラインに変更
+//*****************************************************************************************
+
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
-#include "Primitive.hlsli"
+#include "BlasRender.hlsli"
+#include "Camera.hlsli"
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// PSOutput structure
+// VSInput sturucture
 ////////////////////////////////////////////////////////////////////////////////////////////
-struct PSOutput {
-	float4 color : SV_TARGET0;
+struct VSInput {
+	float4 position : POSITION0;
+	float2 texcoord : TEXCOORD0;
+	float3 normal : NORMAL0;
 };
 
 //=========================================================================================
 // Buffers
 //=========================================================================================
-struct Material {
-	float4 color;
-};
-ConstantBuffer<Material> gMaterial : register(b0);
+ConstantBuffer<Camera> gCamera : register(b0);
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // main
 ////////////////////////////////////////////////////////////////////////////////////////////
-PSOutput main(VSOutput input) {
+VSOutput main(VSInput input) {
 	
-	PSOutput output;
+	VSOutput output;
 	
-	output.color = gMaterial.color;
+	output.position = mul(input.position, gCamera.viewProj);
+	output.normal = normalize(input.normal);
 	
 	return output;
 	

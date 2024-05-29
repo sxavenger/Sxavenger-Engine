@@ -103,6 +103,15 @@
     <Filter Include="Resource\RayTracingShader">
       <UniqueIdentifier>{ab2302f9-42e3-4fa1-bf97-9df91a3d6a46}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resource\hlsl\BlasRender">
+      <UniqueIdentifier>{493de114-0486-44af-8509-87b6ab7f978a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Lib\PostEffect">
+      <UniqueIdentifier>{fba6485d-fc7b-43d5-a1d6-524a0d3df4b3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource\hlsl\GaussianBlur">
+      <UniqueIdentifier>{2a3acfe4-9639-4664-9867-300858a34429}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
@@ -340,6 +349,12 @@
     <ClCompile Include="DirectXRayTracing\RayTracingLight.cpp">
       <Filter>DirectXRayTracing</Filter>
     </ClCompile>
+    <ClCompile Include="DirectXRayTracing\RayTracingAO.cpp">
+      <Filter>DirectXRayTracing</Filter>
+    </ClCompile>
+    <ClCompile Include="Lib\PostEffect\GaussianBlur.cpp">
+      <Filter>Lib\PostEffect</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\MyEngine.h">
@@ -549,6 +564,12 @@
     <ClInclude Include="DirectXRayTracing\RayTracingLight.h">
       <Filter>DirectXRayTracing</Filter>
     </ClInclude>
+    <ClInclude Include="DirectXRayTracing\RayTracingAO.h">
+      <Filter>DirectXRayTracing</Filter>
+    </ClInclude>
+    <ClInclude Include="Lib\PostEffect\GaussianBlur.h">
+      <Filter>Lib\PostEffect</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />
@@ -569,6 +590,12 @@
     </None>
     <None Include="Resources\hlsl\ToonShading.hlsli">
       <Filter>Resource\hlsl</Filter>
+    </None>
+    <None Include="Resources\hlsl\BlasRender.hlsli">
+      <Filter>Resource\hlsl\BlasRender</Filter>
+    </None>
+    <None Include="Resources\hlsl\GaussianBlur.hlsli">
+      <Filter>Resource\hlsl\GaussianBlur</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -597,6 +624,18 @@
     </FxCompile>
     <FxCompile Include="Resources\RayTracingShader\raytracing.hlsl">
       <Filter>Resource\RayTracingShader</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\hlsl\BlasRender.PS.hlsl">
+      <Filter>Resource\hlsl\BlasRender</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\hlsl\BlasRender.VS.hlsl">
+      <Filter>Resource\hlsl\BlasRender</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\hlsl\GaussianBlur.PS.hlsl">
+      <Filter>Resource\hlsl\GaussianBlur</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\hlsl\GaussianBlur.VS.hlsl">
+      <Filter>Resource\hlsl\GaussianBlur</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

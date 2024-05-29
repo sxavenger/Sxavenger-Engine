@@ -69,6 +69,8 @@ public:
 
 	void OutputRayTracingResult(const D3D12_GPU_DESCRIPTOR_HANDLE& srvHandleGPU);
 
+	void OutputTexture(const std::string& name, const D3D12_GPU_DESCRIPTOR_HANDLE& srvHandleGPU);
+
 	//=========================================================================================
 	// public variables
 	//=========================================================================================
@@ -93,6 +95,12 @@ private:
 	//=========================================================================================
 
 	DirectXCommon* dxCommon_;
+
+	// 
+	bool isOutputEngineUI_ = true;
+	bool isFix_ = true;
+
+	int windowFlags = 0;
 
 	// scenes
 	bool isFocusDebugScene_ = false;

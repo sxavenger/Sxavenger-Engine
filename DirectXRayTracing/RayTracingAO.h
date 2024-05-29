@@ -1,4 +1,7 @@
 #pragma once
+/*
+ レイトレでの ambient occlusion の制御バッファのクラス
+*/
 
 //-----------------------------------------------------------------------------------------
 // include
@@ -7,8 +10,6 @@
 #include <DxBufferResource.h>
 
 // Geometry
-#include <Vector4.h>
-#include <Vector3.h>
 
 // c++
 #include <memory>
@@ -16,10 +17,11 @@
 // attribute
 #include <Attribute.h>
 
+
 ////////////////////////////////////////////////////////////////////////////////////////////
-// RayTracingLight class
+// RayTracingAO class
 ////////////////////////////////////////////////////////////////////////////////////////////
-class RayTracingLight
+class RayTracingAO
 	: public Attribute {
 public:
 
@@ -27,9 +29,9 @@ public:
 	// public methods
 	//=========================================================================================
 
-	RayTracingLight() { Init(); }
+	RayTracingAO() { Init(); }
 
-	~RayTracingLight() { Term(); }
+	~RayTracingAO() { Term(); }
 
 	void Init();
 
@@ -37,32 +39,27 @@ public:
 
 	void SetAttributeImGui() override;
 
-	const D3D12_GPU_VIRTUAL_ADDRESS GetGPUVirtualAddress() const {
+	const D3D12_GPU_VIRTUAL_ADDRESS GetGPUVirtualAddress() {
 		return resource_->GetGPUVirtualAddress();
 	}
 
 private:
 
 	////////////////////////////////////////////////////////////////////////////////////////////
-	// DirectionalLight structure
+	// AOParameter Structure
 	////////////////////////////////////////////////////////////////////////////////////////////
-	struct DirectionalLight {
-		Vector4f color     = { 1.0f, 1.0f, 1.0f, 1.0f };
-		Vector4f position  = { 0.0f, 0.0f, 0.0f, 1.0f };
-		Vector3f direction = { 0.0f, 0.0f, 1.0f };
-		float intensity    = 1.0f;
-		float range        = 0.0f;
-		float decay        = 1.0f;
+	struct AOParameter {
+		int isAmbientOcclusionEnable = false;
 
-		int isLightingEnable = true;
-		int isShadowEnable   = true;
+		float aoRadius = 0.2f;
+		uint32_t subdivision = 10;
 	};
 
 	//=========================================================================================
 	// private variables
 	//=========================================================================================
 
-	std::unique_ptr<DxObject::BufferPtrResource<DirectionalLight>> resource_;
-	DirectionalLight data_;
+	std::unique_ptr<DxObject::BufferPtrResource<AOParameter>> resource_;
+	AOParameter parameter_;
 
 };

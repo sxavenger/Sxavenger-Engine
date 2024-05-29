@@ -89,7 +89,7 @@ void MyEngine::Initialize(int32_t kWindowWidth, int32_t kWindowHeight, const cha
 		ExternalLogger::Write("Complete Initialize: sTextureManager");
 
 		// オフスク用のテクスチャの生成 todo: consoleに移動
-		sTextureManager->CreateDummyTexture(kWindowWidth, kWindowHeight, "offscreen");
+		sTextureManager->CreateRenderTexture(kWindowWidth, kWindowHeight, "offscreen");
 	}
 
 	// Inputの初期化
@@ -130,8 +130,8 @@ void MyEngine::BeginScreenDraw() {
 	sDirectXRCommon->BeginScreenDraw();
 }
 
-void MyEngine::BeginOffScreen(Texture* offscreenDummyTexture) {
-	sDirectXRCommon->BeginOffscreen(offscreenDummyTexture);
+void MyEngine::BeginOffScreen(Texture* offscreenRenderTexture) {
+	sDirectXRCommon->BeginOffscreen(offscreenRenderTexture);
 }
 
 void MyEngine::EndOffScreen() {
@@ -142,6 +142,14 @@ void MyEngine::TransitionProcess() {
 	sDirectXRCommon->TransitionProcess();
 }
 
+void MyEngine::TransitionProcessSingle() {
+	sDirectXRCommon->TransitionSingleAllocator();
+}
+
+void MyEngine::EnableTextures() {
+	sTextureManager->EnableTexture();
+}
+
 void MyEngine::EndFrame() {
 	sImGuiManager->End();
 	sDirectXRCommon->EndFrame();
@@ -149,7 +157,7 @@ void MyEngine::EndFrame() {
 }
 
 void MyEngine::BeginDraw() {
-	sTextureManager->EnableTexture();
+	EnableTextures();
 }
 
 int MyEngine::ProcessMessage() {
@@ -203,8 +211,8 @@ TextureManager* MyEngine::GetTextureManager() {
 	return sTextureManager;
 }
 
-Texture* MyEngine::CreateDummyTexture(int32_t width, int32_t height, const std::string& key) {
-	sTextureManager->CreateDummyTexture(width, height, key);
+Texture* MyEngine::CreateRenderTexture(int32_t width, int32_t height, const std::string& key) {
+	sTextureManager->CreateRenderTexture(width, height, key);
 	return sTextureManager->GetTexture(key);
 }
 

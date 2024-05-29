@@ -11,15 +11,8 @@
 
 void PrimitiveDrawer::Init() {
 	// DrawType line の初期化
-	drawDatas_[Line].vertices_
-		= std::make_unique<DxObject::BufferResource<Vector4f>>(MyEngine::GetDevicesObj(), kMaxLine * 2 /* ラインの頂点数 */);
-	drawDatas_[Line].indices_
-		= std::make_unique<DxObject::IndexBufferResource>(MyEngine::GetDevicesObj(), kMaxLine * 2 /* ラインの頂点数 */);
-	drawDatas_[Line].materials_
-		= std::make_unique<DxObject::BufferResource<PrimitiveMaterial>>(MyEngine::GetDevicesObj(), kMaxLine);
-
-	// HACK: make_uniqueする関数を作成
-
+	drawDatas_[Line].Create(kMaxLineNum_, 2);
+	drawDatas_[Triangle].Create(kMaxTriangleNum_, 3);
 }
 
 void PrimitiveDrawer::Term() {
@@ -33,6 +26,11 @@ void PrimitiveDrawer::AllDraw() {
 
 
 }
+
+//void PrimitiveDrawer::DrawTriangle(const Vector3f& w1, const Vector3f& w2, const Vector3f& w3, uint32_t color) {
+//	// drawDetaに登録
+//
+//}
 
 PrimitiveDrawer* PrimitiveDrawer::GetInstance() {
 	static PrimitiveDrawer instance;

@@ -62,6 +62,8 @@ public:
 
 	void TransitionProcess();
 
+	void TransitionSingleAllocator();
+
 	// ---- pipeline関係 ---- //
 
 	void SetPipelineType(PipelineType type) {

@@ -1,31 +1,34 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
-#include "Primitive.hlsli"
+#include "GaussianBlur.hlsli"
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// PSOutput structure
+// VSInput sturucture
 ////////////////////////////////////////////////////////////////////////////////////////////
-struct PSOutput {
-	float4 color : SV_TARGET0;
+struct VSInput {
+	float4 position : POSITION0;
+	float2 texcoord : TEXCOORD0;
+	float3 normal : NORMAL0;
 };
 
 //=========================================================================================
 // Buffers
 //=========================================================================================
-struct Material {
-	float4 color;
+struct Camera2D {
+	float4x4 proj;
 };
-ConstantBuffer<Material> gMaterial : register(b0);
+ConstantBuffer<Camera2D> gCamera2D : register(b0);
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // main
 ////////////////////////////////////////////////////////////////////////////////////////////
-PSOutput main(VSOutput input) {
+VSOutput main(VSInput input) {
 	
-	PSOutput output;
+	VSOutput output;
 	
-	output.color = gMaterial.color;
+	output.position = mul(input.position, gCamera2D.proj);
+	output.texcoord = input.texcoord;
 	
 	return output;
 	
