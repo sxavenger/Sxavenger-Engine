@@ -30,5 +30,12 @@ void DxrObject::ShaderBlob::Init(
 	mainFuncionName_[MISS_SHADER]          = miss;
 }
 
+void DxrObject::ShaderBlob::Create(const std::wstring& filePath) {
+	blob_ = manager_->GetShaderBlob(filePath);
+}
+
+void DxrObject::ShaderBlob::SetShader(const std::wstring& mainFunctionName, ShaderType type) {
+}
+
 void DxrObject::ShaderBlob::Term() {
 }

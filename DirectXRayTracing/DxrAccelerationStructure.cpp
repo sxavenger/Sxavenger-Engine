@@ -17,7 +17,10 @@ using namespace DxrMethod;
 // BottomLevelAS class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-void DxrObject::BottomLevelAS::Create(DxObject::BufferResource<VertexData>* vertices, DxObject::IndexBufferResource* indices) {
+void DxrObject::BottomLevelAS::Create(
+	DxObject::BufferResource<VertexData>* vertices, DxObject::IndexBufferResource* indices,
+	const std::wstring& hitgroup
+) {
 	
 	D3D12_RAYTRACING_GEOMETRY_DESC geomDesc = {};
 	geomDesc.Type                                 = D3D12_RAYTRACING_GEOMETRY_TYPE_TRIANGLES;
@@ -62,6 +65,9 @@ void DxrObject::BottomLevelAS::Create(DxObject::BufferResource<VertexData>* vert
 	barrier.UAV.pResource = buffers_.asbuffer.Get();
 
 	commandList->ResourceBarrier(1, &barrier);
+
+	// hitgroupの登録
+	hitgroup_ = hitgroup;
 }
 
 void DxrObject::BottomLevelAS::Term() {
@@ -92,7 +98,7 @@ void DxrObject::InstanceDesc::Set(
 	descs[index].AccelerationStructure               = blas->GetGPUVirtualAddress();
 	descs[index].InstanceContributionToHitGroupIndex = hitGroupIndex;
 	descs[index].InstanceID                          = instanceId;
-
+	
 	blasPtrs_[index] = blas;
 }
 
@@ -109,7 +115,6 @@ void DxrObject::TopLevelAS::Create(const InstanceDesc& instanceDesc) {
 	// resourceの生成
 	instanceDescBuffer_ = std::make_unique<DxObject::BufferResource<D3D12_RAYTRACING_INSTANCE_DESC>>(MyEngine::GetDevicesObj(), static_cast<uint32_t>(instanceDesc.descs.size()));
 	instanceDescBuffer_->Memcpy(instanceDesc.descs.data());
-	// unmapがいるかも
 
 	D3D12_BUILD_RAYTRACING_ACCELERATION_STRUCTURE_DESC buildASDesc = {};
 	buildASDesc.Inputs.Type          = D3D12_RAYTRACING_ACCELERATION_STRUCTURE_TYPE_TOP_LEVEL;

@@ -40,7 +40,10 @@ namespace DxrObject {
 		// public methods
 		//=========================================================================================
 
-		void Create(DxObject::BufferResource<VertexData>* vertices, DxObject::IndexBufferResource* indices);
+		void Create(
+			DxObject::BufferResource<VertexData>* vertices, DxObject::IndexBufferResource* indices,
+			const std::wstring& hitgroup
+		);
 
 		void Term();
 
@@ -93,7 +96,7 @@ namespace DxrObject {
 
 		std::vector<D3D12_RAYTRACING_INSTANCE_DESC> descs;
 
-		std::vector<BottomLevelAS*> blasPtrs_; //!< HitGruopごとに分ける
+		std::vector<BottomLevelAS*> blasPtrs_; //!< hitgruopごとに分ける
 
 	};
 

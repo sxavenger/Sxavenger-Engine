@@ -11,6 +11,7 @@
 // c++
 #include <cstdint>
 #include <string>
+#include <vector>
 
 // com
 #include <ComPtr.h>
@@ -66,15 +67,24 @@ namespace DxrObject {
 			const std::wstring& raygeneration, const std::wstring& closesthit, const std::wstring& miss //!< mainFunctionName
 		);
 
+		void Create(const std::wstring& filePath);
+
+		void SetShader(const std::wstring& mainFunctionName, ShaderType type);
+
 		void Term();
 
 		IDxcBlob* GetShaderBlob() const { return blob_; }
 
-		const std::wstring& GetMainFunctionName(ShaderType type) { return mainFuncionName_[type]; }
+		/*const std::wstring& GetMainFunctionName(ShaderType type) { return mainFuncionName_[type]; }*/
 
 		static void SetShaderManager(ShaderManager* manager) { manager_ = manager; }
 
 	private:
+
+		////////////////////////////////////////////////////////////////////////////////////////////
+		// shader
+		////////////////////////////////////////////////////////////////////////////////////////////
+
 
 		//=========================================================================================
 		// private variables
@@ -86,7 +96,7 @@ namespace DxrObject {
 		IDxcBlob* blob_;
 
 		// name
-		std::wstring mainFuncionName_[kCountOfShaderType];
+		/*std::wstring mainFuncionName_[kCountOfShaderType];*/
 
 	};
 
