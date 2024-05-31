@@ -181,7 +181,7 @@ uint8_t* DxrMethod::WriteShaderRecord(
 	auto id = prop->GetShaderIdentifier(blas->GetHitgruop().c_str());
 
 	if (id == nullptr) {
-		// Not found raygeneration identifier
+		// Not found hitgroup identifier
 		assert(false);
 	}
 

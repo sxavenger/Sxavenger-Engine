@@ -203,10 +203,10 @@ void DirectXRCommon::CreateStateObject(int32_t clientWidth, int32_t clientHeight
 	// shaderBlobの生成
 	{
 		stateDesc.CreateShadeBlob();
-		stateDesc.blob->Init(
+		/*stateDesc.blob->Init(
 			L"raytracing.hlsl",
 			L"mainRayGen", L"mainCHS", L"mainMS"
-		);
+		);*/
 	}
 
 	stateObject_ = std::make_unique<DxrObject::StateObject>();

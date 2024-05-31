@@ -69,6 +69,15 @@ namespace {
 	/*
 		hlslでのPayload, Attributeの構造体サイズを合わせること
 	*/
+
+	////////////////////////////////////////////////////////////////////////////////////////////
+	// ShaderHitGroup structure
+	////////////////////////////////////////////////////////////////////////////////////////////
+	struct ShaderHitGroup {
+		std::wstring closestHit;
+		std::wstring intersection;
+		std::wstring anyHit;
+	};
 }
 
 
@@ -80,7 +89,8 @@ void DxrObject::StateObject::Init(DxObject::Devices* devices, const StateObjectD
 
 	CD3DX12_STATE_OBJECT_DESC desc{ D3D12_STATE_OBJECT_TYPE_RAYTRACING_PIPELINE };
 
-	const LPCWSTR kHitGroup = L"hitGroup";
+	// hitgroupの管理
+	std::unordered_map<std::wstring, ShaderHitGroup> hitgroups;
 
 	// shaderの設定
 	{
@@ -93,31 +103,48 @@ void DxrObject::StateObject::Init(DxObject::Devices* devices, const StateObjectD
 		libdxil.BytecodeLength  = blob->GetBufferSize();
 		libdxil.pShaderBytecode = blob->GetBufferPointer();
 
-		// TODO: raygeneration, closestHit... のメイン関数が別シェーダーにある場合でも動作するようにする
-		LPCWSTR exports[] = {
-			descs.blob->GetMainFunctionName(RAYGENERATION_SHAEAR).c_str(),
-			descs.blob->GetMainFunctionName(CLOSESTHIT_SHADER).c_str(),
-			descs.blob->GetMainFunctionName(MISS_SHADER).c_str(),
-		};
+		std::vector<LPCWSTR> exports;
 
-		dxilLibrarySubobject->DefineExports(exports);
+		for (const auto& data : descs.blob->GetDatas()) {
+			exports.push_back(data.mainFunctionName.c_str());
+
+			// 取り出しついでにhitgroupの管理
+			// todo: anyhit intersection も追加
+			if (data.shaderType == ShaderType::CLOSESTHIT_SHADER) {
+				assert(hitgroups[data.hitgroup].closestHit.empty()); //!< すでにhitgroupに登録されている
+				hitgroups[data.hitgroup].closestHit = data.mainFunctionName;
+			}
+		}
+
+		dxilLibrarySubobject->DefineExports(exports.data(), exports.size());
 		dxilLibrarySubobject->SetDXILLibrary(&libdxil);
 
 	}
 
 	// hitGroupの生成
 	{
-		// HACK: hitgroupの生成がユーザー側である程度できるように改良
+		for (const auto& hitgroup : hitgroups) {
+			auto hitGroupSubobject
+				= desc.CreateSubobject<CD3DX12_HIT_GROUP_SUBOBJECT>();
 
-		auto hitGroupSubobject
-			= desc.CreateSubobject<CD3DX12_HIT_GROUP_SUBOBJECT>();
+			if (!hitgroup.second.closestHit.empty()) {
+				hitGroupSubobject->SetClosestHitShaderImport(hitgroup.second.closestHit.c_str());
+			}
 
-		hitGroupSubobject->SetClosestHitShaderImport(descs.blob->GetMainFunctionName(CLOSESTHIT_SHADER).c_str());
-		hitGroupSubobject->SetHitGroupExport(kHitGroup);
-		hitGroupSubobject->SetHitGroupType(D3D12_HIT_GROUP_TYPE_TRIANGLES);
-		/*
-			処置として送られてきたhitGroupに関係あるshaderを一つのgroupにまとめておく
-		*/
+			if (!hitgroup.second.intersection.empty()) {
+				hitGroupSubobject->SetIntersectionShaderImport(hitgroup.second.intersection.c_str());
+			}
+
+			if (!hitgroup.second.anyHit.empty()) {
+				hitGroupSubobject->SetAnyHitShaderImport(hitgroup.second.anyHit.c_str());
+			}
+
+			hitGroupSubobject->SetHitGroupExport(hitgroup.first.c_str());
+			hitGroupSubobject->SetHitGroupType(D3D12_HIT_GROUP_TYPE_TRIANGLES);
+			// todo: hitgrouptypeも選択できるように
+		}
+
+		hitgroups.clear(); //!< 使わなくなったのでクリア
 	}
 
 	// shaderConfigの設定

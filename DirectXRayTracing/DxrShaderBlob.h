@@ -45,6 +45,16 @@ namespace DxrObject {
 	class ShaderManager;
 
 	////////////////////////////////////////////////////////////////////////////////////////////
+	// ShaderData structure
+	////////////////////////////////////////////////////////////////////////////////////////////
+	struct ShaderData {
+		std::wstring mainFunctionName;
+		ShaderType   shaderType;
+
+		std::wstring hitgroup = L""; //!< closest, any... に必須
+	};
+
+	////////////////////////////////////////////////////////////////////////////////////////////
 	// ShaderBlob class
 	////////////////////////////////////////////////////////////////////////////////////////////
 	class ShaderBlob {
@@ -62,28 +72,26 @@ namespace DxrObject {
 		//! @param[in] raygeneration raygenerationシェーダーのメイン関数名
 		//! @param[in] closesthit    closesthitシェーダーのメイン関数名
 		//! @param[in] miss          missシェーダーのメイン関数名
-		void Init(
-			const std::wstring& filePath,
-			const std::wstring& raygeneration, const std::wstring& closesthit, const std::wstring& miss //!< mainFunctionName
-		);
+		//void Init(
+		//	const std::wstring& filePath,
+		//	const std::wstring& raygeneration, const std::wstring& closesthit, const std::wstring& miss //!< mainFunctionName
+		//);
 
 		void Create(const std::wstring& filePath);
 
-		void SetShader(const std::wstring& mainFunctionName, ShaderType type);
+		void SetShader(const std::wstring& mainFunctionName, ShaderType type, const std::wstring hitgroup = L"");
 
 		void Term();
 
 		IDxcBlob* GetShaderBlob() const { return blob_; }
 
-		/*const std::wstring& GetMainFunctionName(ShaderType type) { return mainFuncionName_[type]; }*/
+		const std::vector<ShaderData>& GetDatas() const { return datas_; }
 
 		static void SetShaderManager(ShaderManager* manager) { manager_ = manager; }
 
 	private:
 
-		////////////////////////////////////////////////////////////////////////////////////////////
-		// shader
-		////////////////////////////////////////////////////////////////////////////////////////////
+		
 
 
 		//=========================================================================================
@@ -95,8 +103,9 @@ namespace DxrObject {
 		// blob
 		IDxcBlob* blob_;
 
-		// name
-		/*std::wstring mainFuncionName_[kCountOfShaderType];*/
+		// datas_
+		std::vector<ShaderData> datas_;
+		//!< shaderに含まれるraygeneration等々のshader情報
 
 	};
 
