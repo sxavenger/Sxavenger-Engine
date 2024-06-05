@@ -13,7 +13,7 @@
 
 void RayTracingCamera::Init() {
 
-	SetTransform(unitVector, origin, {0.0f, 0.0f, -10.0f});
+	SetTransform(unitVector, {0.5f, 0.0f, 0.0f}, {0.0f, 20.0f, -50.0f});
 	SetProjection(0.45f, static_cast<float>(kWindowWidth) / static_cast<float>(kWindowHeight), 0.1f, 100.0f);
 
 	constantBuffer_ = std::make_unique<DxObject::BufferPtrResource<CameraForGPU>>(MyEngine::GetDevicesObj(), 1);
@@ -26,10 +26,25 @@ void RayTracingCamera::Term() {
 	constantBuffer_.reset();
 }
 
+void RayTracingCamera::Update(const Matrix4x4& viewerWorldMatrix) {
+
+	if (isViewCamera_) {
+		cameraForGpu_.world = viewerWorldMatrix;
+	}
+}
+
 void RayTracingCamera::SetAttributeImGui() {
-	ImGui::DragFloat3("scale",     &transform_.scale.x,     0.01f);
-	ImGui::DragFloat3("rotate",    &transform_.rotate.x,    0.01f);
-	ImGui::DragFloat3("translate", &transform_.translate.x, 0.01f);
+
+	ImGui::Checkbox("isPlayerView", &isViewCamera_);
+
+	if (isViewCamera_) {
+		ImGui::Text("player view...");
+
+	} else {
+		ImGui::DragFloat3("scale",     &transform_.scale.x,     0.01f);
+		ImGui::DragFloat3("rotate",    &transform_.rotate.x,    0.01f);
+		ImGui::DragFloat3("translate", &transform_.translate.x, 0.01f);
+	}
 
 	RecalculateCamera();
 }

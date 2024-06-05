@@ -10,6 +10,7 @@
 // c++
 #include <cstdint>
 #include <vector>
+#include <string>
 
 // ComPtr
 #include <ComPtr.h>
@@ -44,6 +45,16 @@ namespace DxrObject {
 	};
 
 	////////////////////////////////////////////////////////////////////////////////////////////
+	// ExportType enum
+	////////////////////////////////////////////////////////////////////////////////////////////
+	enum ExportType {
+		RAYGENERATION,
+		HITGROUP,
+
+		kNotSelectExport
+	};
+
+	////////////////////////////////////////////////////////////////////////////////////////////
 	// RootSignatureDesc class
 	////////////////////////////////////////////////////////////////////////////////////////////
 	class RootSignatureDesc {
@@ -67,12 +78,26 @@ namespace DxrObject {
 
 		void SetSampler(uint32_t index, TextureMode mode, UINT shaderRegiste);
 
+		void SetLocalRootSignature(ExportType type, const std::wstring& exportStr);
+
 		//=========================================================================================
 		// public variables
 		//=========================================================================================
 
 		std::vector<D3D12_ROOT_PARAMETER>      params;
 		std::vector<D3D12_STATIC_SAMPLER_DESC> samplers;
+
+
+		// ローカルルートシグネイチャ用の設定
+
+		ExportType exportType   = kNotSelectExport;
+		std::wstring exportName = L"";
+
+		/*
+		 ローカルルートシグネイチャで使用
+		 raygenerationのローカルルートシグネイチャだった場合, main関数名
+		 closest, anyhit, intersection の場合, hitgroup名
+		*/
 
 	private:
 
@@ -125,7 +150,19 @@ namespace DxrObject {
 
 		void Init(DxObject::Devices* devices, const RootSignatureDesc& desc) override;
 
+		ExportType GetExportType() const { return exportType_; }
+
+		const std::wstring& GetExportName() const { return exportName_; }
+
 	private:
+
+		//=========================================================================================
+		// private variables
+		//=========================================================================================
+
+		ExportType exportType_;
+		std::wstring exportName_;
+
 	};
 
 }

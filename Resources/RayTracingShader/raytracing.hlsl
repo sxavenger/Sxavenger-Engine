@@ -323,3 +323,15 @@ void mainCHS(inout Payload payload, in MyAttribute attrib) {
 	// result
 	payload.color = resultColor;
 }
+
+[shader("closesthit")]
+void mainTestCHS(inout Payload payload, in MyAttribute attrib) {
+	
+	if (payload.isCollisionRay) {
+		payload.isCollision = true;
+		return;
+	}
+	
+	payload.color = float3(1.0f, 0.0f, 0.0f);
+
+}

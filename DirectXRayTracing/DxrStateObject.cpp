@@ -12,6 +12,7 @@
 #include <d3dx12.h>
 
 // Geometry
+#include <Vector4.h>
 #include <Vector3.h>
 #include <Vector2.h>
 
@@ -54,9 +55,11 @@ namespace {
 	// Payload structure
 	////////////////////////////////////////////////////////////////////////////////////////////
 	struct Payload {
-		Vector3f color;
-		int isCollisionRay; // rayが当たったかどうかだけ取るRay
+		int rayType = 0;
+		uint32_t reflectionCount;
+		Vector4f color;
 		int isCollision;
+		float length;
 	};
 
 	////////////////////////////////////////////////////////////////////////////////////////////
@@ -116,7 +119,7 @@ void DxrObject::StateObject::Init(DxObject::Devices* devices, const StateObjectD
 			}
 		}
 
-		dxilLibrarySubobject->DefineExports(exports.data(), exports.size());
+		dxilLibrarySubobject->DefineExports(exports.data(), static_cast<UINT>(exports.size()));
 		dxilLibrarySubobject->SetDXILLibrary(&libdxil);
 
 	}
@@ -144,6 +147,7 @@ void DxrObject::StateObject::Init(DxObject::Devices* devices, const StateObjectD
 			// todo: hitgrouptypeも選択できるように
 		}
 
+		hitgroupCount_ = static_cast<uint32_t>(hitgroups.size()); //!< hitgroupの数の保存
 		hitgroups.clear(); //!< 使わなくなったのでクリア
 	}
 
@@ -170,7 +174,7 @@ void DxrObject::StateObject::Init(DxObject::Devices* devices, const StateObjectD
 	}
 
 	// LoaclRootSignatureの設定
-	{
+	/*{
 		// XXX: 自動的にに割り振れるようにしておく
 
 		// raygeneration rootSignature
@@ -203,6 +207,24 @@ void DxrObject::StateObject::Init(DxObject::Devices* devices, const StateObjectD
 		hitGroupSymbolSubobject->AddExport(kHitGroup);
 		hitGroupSymbolSubobject->SetSubobjectToAssociate(*closestHitSubobject);
 
+	}*/
+
+	// localRootSignatureの設定
+	{
+		for (const auto& local : descs.localRootSignatures) {
+			assert(local->GetExportType() != ExportType::kNotSelectExport); //!< localRootSignatureに設定できない
+
+			auto localRootSigantureSubobject
+				= desc.CreateSubobject<CD3DX12_LOCAL_ROOT_SIGNATURE_SUBOBJECT>();
+
+			localRootSigantureSubobject->SetRootSignature(local->GetRootSignature());
+
+			auto exportSubobject
+				= desc.CreateSubobject<CD3DX12_SUBOBJECT_TO_EXPORTS_ASSOCIATION_SUBOBJECT>();
+
+			exportSubobject->AddExport(local->GetExportName().c_str());
+			exportSubobject->SetSubobjectToAssociate(*localRootSigantureSubobject);
+		}
 	}
 
 	// pipelineConfigの設定
@@ -222,6 +244,8 @@ void DxrObject::StateObject::Init(DxObject::Devices* devices, const StateObjectD
 
 	/*assert(SUCCEEDED(hr));*/
 	AssertHRESULT(hr);
+
+	stateObject_.As(&properties_);
 }
 
 void DxrObject::StateObject::Term() {

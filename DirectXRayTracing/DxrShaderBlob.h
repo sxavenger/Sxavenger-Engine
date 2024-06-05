@@ -32,7 +32,7 @@ namespace DxrObject {
 	// ShaderType enum
 	////////////////////////////////////////////////////////////////////////////////////////////
 	enum ShaderType {
-		RAYGENERATION_SHAEAR,
+		RAYGENERATION_SHADER,
 		CLOSESTHIT_SHADER,
 		MISS_SHADER,
 
@@ -65,17 +65,6 @@ namespace DxrObject {
 		//=========================================================================================
 
 		~ShaderBlob() { Term(); }
-
-		//! @brief stateObjectに送るためのshaderDataの設定
-		//! 
-		//! @param[in] filePath      shaderTable::directory_ からの相対パス
-		//! @param[in] raygeneration raygenerationシェーダーのメイン関数名
-		//! @param[in] closesthit    closesthitシェーダーのメイン関数名
-		//! @param[in] miss          missシェーダーのメイン関数名
-		//void Init(
-		//	const std::wstring& filePath,
-		//	const std::wstring& raygeneration, const std::wstring& closesthit, const std::wstring& miss //!< mainFunctionName
-		//);
 
 		void Create(const std::wstring& filePath);
 

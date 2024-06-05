@@ -14,16 +14,6 @@
 #include <DxrResultBuffer.h>
 #include <DxrShaderTable.h>
 
-#include "DrawMethod.h"
-#include "DxrAccelerationStructure.h"
-#include "RayTracingCamera.h"
-#include "RayTracingLight.h"
-#include "RayTracingAO.h"
-
-#include "DxBufferResource.h"
-#include "Vector4.h"
-#include "Model.h"
-
 ////////////////////////////////////////////////////////////////////////////////////////////
 // DirectXRCommon class
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -39,9 +29,14 @@ public:
 
 	void TermRayTracing();
 
-	void DrawRayTracing();
+	void CreateStateObject(
+		int32_t clientWidth, int32_t clientHeight,
+		DxrObject::TopLevelAS* tlas
+	);
 
-	void DrawRasterlize();
+	void BeginRayTracing();
+
+	void EndRayTracing();
 
 	const D3D12_GPU_DESCRIPTOR_HANDLE& GetResultBufferTexture() const {
 		return resultBuffer_->GetSRVHandleGPU();
@@ -62,31 +57,5 @@ private:
 	std::unique_ptr<DxrObject::RootSignature> globalRootSignature_;
 	std::unique_ptr<DxrObject::StateObject>   stateObject_;
 	std::unique_ptr<DxrObject::ShaderTable>   shaderTable_;
-
-	// world //
-
-	std::unique_ptr<Model> teapot_;
-	std::unique_ptr<DxrObject::BottomLevelAS> teapotBlas_;
-
-	std::unique_ptr<Model> room_;
-	std::unique_ptr<DxrObject::BottomLevelAS> roomBlas_;
-
-	std::unique_ptr<DxrObject::TopLevelAS>    tlas_;
-
-	// primitive constantBuffer
-	std::unique_ptr<DxObject::BufferResource<Vector4f>> material_;
-
-	// constantBuffer //
-	std::unique_ptr<RayTracingCamera> camera_;
-	std::unique_ptr<RayTracingLight> light_;
-	std::unique_ptr<RayTracingAO> ambientOcclusion_;
-
-	//=========================================================================================
-	// private methods
-	//=========================================================================================
-
-	void CreateStateObject(int32_t clientWidth, int32_t clientHeight);
-
-	void CreateAccelerationStructure();
 
 };

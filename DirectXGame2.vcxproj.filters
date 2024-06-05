@@ -112,6 +112,12 @@
     <Filter Include="Resource\hlsl\GaussianBlur">
       <UniqueIdentifier>{2a3acfe4-9639-4664-9867-300858a34429}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Game\Scene">
+      <UniqueIdentifier>{076e467d-c5d2-458d-b260-b7c3b32a0072}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\RayTracingWorld">
+      <UniqueIdentifier>{990f6103-dba4-48e8-b867-27f980181591}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
@@ -304,9 +310,6 @@
     <ClCompile Include="Game\Plane.cpp">
       <Filter>Game</Filter>
     </ClCompile>
-    <ClCompile Include="Game\Sphere.cpp">
-      <Filter>Game</Filter>
-    </ClCompile>
     <ClCompile Include="Game\Cube.cpp">
       <Filter>Game</Filter>
     </ClCompile>
@@ -354,6 +357,30 @@
     </ClCompile>
     <ClCompile Include="Lib\PostEffect\GaussianBlur.cpp">
       <Filter>Lib\PostEffect</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Scene\GameScene.cpp">
+      <Filter>Game\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\RayTracingWorld\Ground.cpp">
+      <Filter>Game\RayTracingWorld</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\RayTracingWorld\RayTracingObject.cpp">
+      <Filter>Game\RayTracingWorld</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\RayTracingWorld\Teapot.cpp">
+      <Filter>Game\RayTracingWorld</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\RayTracingWorld\Glass.cpp">
+      <Filter>Game\RayTracingWorld</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\RayTracingWorld\Bunny.cpp">
+      <Filter>Game\RayTracingWorld</Filter>
+    </ClCompile>
+    <ClCompile Include="Lib\Geometry\MathLib.cpp">
+      <Filter>Lib\Geometry\source</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\RayTracingWorld\Player.cpp">
+      <Filter>Game\RayTracingWorld</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -519,9 +546,6 @@
     <ClInclude Include="Game\Plane.h">
       <Filter>Game</Filter>
     </ClInclude>
-    <ClInclude Include="Game\Sphere.h">
-      <Filter>Game</Filter>
-    </ClInclude>
     <ClInclude Include="Game\Cube.h">
       <Filter>Game</Filter>
     </ClInclude>
@@ -569,6 +593,30 @@
     </ClInclude>
     <ClInclude Include="Lib\PostEffect\GaussianBlur.h">
       <Filter>Lib\PostEffect</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Scene\GameScene.h">
+      <Filter>Game\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\RayTracingWorld\Ground.h">
+      <Filter>Game\RayTracingWorld</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\RayTracingWorld\RayTracingObject.h">
+      <Filter>Game\RayTracingWorld</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\RayTracingWorld\Teapot.h">
+      <Filter>Game\RayTracingWorld</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\RayTracingWorld\Glass.h">
+      <Filter>Game\RayTracingWorld</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\RayTracingWorld\Bunny.h">
+      <Filter>Game\RayTracingWorld</Filter>
+    </ClInclude>
+    <ClInclude Include="Lib\Geometry\MathLib.h">
+      <Filter>Lib\Geometry\include</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\RayTracingWorld\Player.h">
+      <Filter>Game\RayTracingWorld</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -636,6 +684,12 @@
     </FxCompile>
     <FxCompile Include="Resources\hlsl\GaussianBlur.VS.hlsl">
       <Filter>Resource\hlsl\GaussianBlur</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\RayTracingShader\glassRoom.hlsl">
+      <Filter>Resource\RayTracingShader</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\RayTracingShader\RayTracingWorld.hlsl">
+      <Filter>Resource\RayTracingShader</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

@@ -47,6 +47,8 @@ public:
 
 	void Term();
 
+	void Update(const Matrix4x4& viewerWorldMatrix);
+
 	void SetAttributeImGui() override;
 
 	const D3D12_GPU_VIRTUAL_ADDRESS GetGPUVirtualAddress() {
@@ -74,6 +76,9 @@ private:
 	// ConstantBuffer //
 	std::unique_ptr<DxObject::BufferPtrResource<CameraForGPU>> constantBuffer_;
 	CameraForGPU cameraForGpu_;
+
+	// parameter //
+	bool isViewCamera_ = false;
 
 	//=========================================================================================
 	// private methods

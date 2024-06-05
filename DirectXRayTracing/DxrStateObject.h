@@ -82,9 +82,11 @@ namespace DxrObject {
 
 		void Term();
 
-		const ComPtr<ID3D12StateObject>& GetComPtrStateObject() { return stateObject_; }
-
 		ID3D12StateObject* GetStateObject() const { return stateObject_.Get(); }
+
+		ID3D12StateObjectProperties* GetProperties() const { return properties_.Get(); }
+
+		const uint32_t GetHitgroupCount() const { return hitgroupCount_; }
 
 	private:
 
@@ -94,11 +96,12 @@ namespace DxrObject {
 
 		// stateObject //
 
-		ComPtr<ID3D12StateObject> stateObject_;
+		ComPtr<ID3D12StateObject>           stateObject_;
+		ComPtr<ID3D12StateObjectProperties> properties_;
 
 		// shaderTable //
 
-
+		uint32_t hitgroupCount_;
 
 	};
 

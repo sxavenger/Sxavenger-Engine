@@ -33,36 +33,18 @@ void DirectXRCommon::InitRayTracing(int32_t clientWidth, int32_t clientHeight) {
 		Log("-- DXR version is compatible.");
 	}
 
+	// shaderManagerの生成
 	shaderManager_ = std::make_unique<DxrObject::ShaderManager>();
 	
+	// resultBufferの生成
 	resultBuffer_ = std::make_unique<DxrObject::ResultBuffer>();
 	resultBuffer_->Init(
 		devices_.get(), descriptorHeaps_.get(),
 		clientWidth, clientHeight
 	);
-
-	CreateAccelerationStructure();
-	CreateStateObject(clientWidth, clientHeight);
-
-	camera_ = std::make_unique<RayTracingCamera>();
-	light_ = std::make_unique<RayTracingLight>();
-	ambientOcclusion_ = std::make_unique<RayTracingAO>();
 }
 
 void DirectXRCommon::TermRayTracing() {
-	camera_.reset();
-	light_.reset();
-	ambientOcclusion_.reset();
-
-	material_.reset();
-
-	tlas_.reset();
-
-	teapot_.reset();
-	teapotBlas_.reset();
-
-	roomBlas_.reset();
-	room_.reset();
 
 	shaderTable_.reset();
 	stateObject_.reset();
@@ -71,91 +53,15 @@ void DirectXRCommon::TermRayTracing() {
 	shaderManager_.reset();
 }
 
-
-
-void DirectXRCommon::DrawRayTracing() { // HACK: ユーザーが使えるようにする
-
-	auto commandList = command_->GetCommandList();
-
-	// begin
-	{
-		// texture状態からuav状態に変更
-		D3D12_RESOURCE_BARRIER barrier = {};
-		barrier.Type                   = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
-		barrier.Flags                  = D3D12_RESOURCE_BARRIER_FLAG_NONE;
-		barrier.Transition.pResource   = resultBuffer_->GetResource();
-		barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
-		barrier.Transition.StateAfter  = D3D12_RESOURCE_STATE_UNORDERED_ACCESS;
-
-		commandList->ResourceBarrier(1, &barrier);
-	}
-
-	// process
-	commandList->SetComputeRootSignature(globalRootSignature_->GetRootSignature());
-	commandList->SetComputeRootDescriptorTable(0, tlas_->GetGPUDescriptorHandle());
-	commandList->SetComputeRootConstantBufferView(1, camera_->GetGPUVirtualAddress());
-	commandList->SetComputeRootConstantBufferView(2, light_->GetGPUVirtualAddress());
-	commandList->SetComputeRootConstantBufferView(3, ambientOcclusion_->GetGPUVirtualAddress());
-
-	commandList->SetPipelineState1(stateObject_->GetStateObject());
-	commandList->DispatchRays(shaderTable_->GetDispatchRayDesc());
-
-	// end
-	{
-		// uav結果をTextureとして使える状態にする
-		D3D12_RESOURCE_BARRIER barrier = {};
-		barrier.Type                   = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
-		barrier.Flags                  = D3D12_RESOURCE_BARRIER_FLAG_NONE;
-		barrier.Transition.pResource   = resultBuffer_->GetResource();
-		barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_UNORDERED_ACCESS;
-		barrier.Transition.StateAfter  = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
-
-		commandList->ResourceBarrier(1, &barrier);
-	}
-}
-
-void DirectXRCommon::DrawRasterlize() {
-	MyEngine::SetBlendMode(kBlendModeNormal);
-	MyEngine::SetPipelineType(BLASRENDER);
-	MyEngine::SetPipelineState();
-
-	auto commandList = command_->GetCommandList();
-
-	{
-		room_->SetBuffers(commandList, 0);
-
-		commandList->SetGraphicsRootConstantBufferView(0, MyEngine::camera3D_->GetGPUVirtualAddress());
-		commandList->SetGraphicsRootConstantBufferView(1, material_->GetGPUVirtualAddress());
-		commandList->SetGraphicsRootConstantBufferView(2, light_->GetGPUVirtualAddress());
-
-		room_->DrawCall(commandList, 0, 1);
-	}
-
-	{
-		teapot_->SetBuffers(commandList, 0);
-
-		commandList->SetGraphicsRootConstantBufferView(0, MyEngine::camera3D_->GetGPUVirtualAddress());
-		commandList->SetGraphicsRootConstantBufferView(1, material_->GetGPUVirtualAddress());
-		commandList->SetGraphicsRootConstantBufferView(2, light_->GetGPUVirtualAddress());
-
-		teapot_->DrawCall(commandList, 0, 1);
-	}
-
-}
-
-DirectXRCommon* DirectXRCommon::GetInstance() {
-	static DirectXRCommon instance;
-	return &instance;
-}
-
-void DirectXRCommon::CreateStateObject(int32_t clientWidth, int32_t clientHeight) {
-
+void DirectXRCommon::CreateStateObject(
+	int32_t clientWidth, int32_t clientHeight, DxrObject::TopLevelAS* tlas) {
+	
 	StateObjectDesc stateDesc = {};
 
 	// GloabalRootSignatiureの設定
 	{
 		RootSignatureDesc desc = {};
-		desc.Resize(4, 0);
+		desc.Resize(5, 1);
 
 		//!< tlas(t0)
 		desc.SetSRV(0, 0);
@@ -166,8 +72,15 @@ void DirectXRCommon::CreateStateObject(int32_t clientWidth, int32_t clientHeight
 		//!< light(b1)
 		desc.SetCBV(2, 1);
 
-		//!< AO(b2)
-		desc.SetCBV(3, 2);
+		//!< glassMaterial(t3)
+		desc.SetSRV(3, 3);
+
+		//!< groundTexture(t4)
+		//!< sampler(s0)
+		desc.SetSRV(4, 4);
+		desc.SetSampler(0, TextureMode::MODE_MIRROR, 0);
+
+		
 
 		globalRootSignature_ = std::make_unique<RootSignature>();
 		globalRootSignature_->Init(devices_.get(), desc);
@@ -175,11 +88,12 @@ void DirectXRCommon::CreateStateObject(int32_t clientWidth, int32_t clientHeight
 	}
 
 	// loaclRootSignatureの設定
-	stateDesc.CreateLocalRootSignature(2);
+	stateDesc.CreateLocalRootSignature(6);
 
 	{
 		RootSignatureDesc raygenDesc = {};
 		raygenDesc.Resize(1, 0);
+		raygenDesc.SetLocalRootSignature(RAYGENERATION, L"mainRayGen");
 
 		//!< output(u0)
 		raygenDesc.SetUAV(0, 0);
@@ -190,6 +104,7 @@ void DirectXRCommon::CreateStateObject(int32_t clientWidth, int32_t clientHeight
 	{
 		RootSignatureDesc closestHitDesc = {};
 		closestHitDesc.Resize(2, 0);
+		closestHitDesc.SetLocalRootSignature(HITGROUP, L"ground");
 
 		//!< vertex(t1)
 		closestHitDesc.SetSRV(0, 1);
@@ -200,50 +115,196 @@ void DirectXRCommon::CreateStateObject(int32_t clientWidth, int32_t clientHeight
 		stateDesc.SetLocalRootSignatureDesc(1, devices_.get(), closestHitDesc);
 	}
 
+	{
+		RootSignatureDesc closestHitDesc = {};
+		closestHitDesc.Resize(2, 0);
+		closestHitDesc.SetLocalRootSignature(HITGROUP, L"teapot");
+
+		//!< vertex(t1)
+		closestHitDesc.SetSRV(0, 1);
+
+		//!< index(t2)
+		closestHitDesc.SetSRV(1, 2);
+
+		stateDesc.SetLocalRootSignatureDesc(2, devices_.get(), closestHitDesc);
+	}
+
+	{
+		RootSignatureDesc closestHitDesc = {};
+		closestHitDesc.Resize(2, 0);
+		closestHitDesc.SetLocalRootSignature(HITGROUP, L"glass");
+
+		//!< vertex(t1)
+		closestHitDesc.SetSRV(0, 1);
+
+		//!< index(t2)
+		closestHitDesc.SetSRV(1, 2);
+
+		stateDesc.SetLocalRootSignatureDesc(3, devices_.get(), closestHitDesc);
+	}
+
+	{
+		RootSignatureDesc closestHitDesc = {};
+		closestHitDesc.Resize(2, 0);
+		closestHitDesc.SetLocalRootSignature(HITGROUP, L"bunny");
+
+		//!< vertex(t1)
+		closestHitDesc.SetSRV(0, 1);
+
+		//!< index(t2)
+		closestHitDesc.SetSRV(1, 2);
+
+		stateDesc.SetLocalRootSignatureDesc(4, devices_.get(), closestHitDesc);
+	}
+
+	{
+		RootSignatureDesc closestHitDesc = {};
+		closestHitDesc.Resize(2, 0);
+		closestHitDesc.SetLocalRootSignature(HITGROUP, L"player");
+
+		//!< vertex(t1)
+		closestHitDesc.SetSRV(0, 1);
+
+		//!< index(t2)
+		closestHitDesc.SetSRV(1, 2);
+
+		stateDesc.SetLocalRootSignatureDesc(5, devices_.get(), closestHitDesc);
+	}
+
 	// shaderBlobの生成
 	{
 		stateDesc.CreateShadeBlob();
-		/*stateDesc.blob->Init(
-			L"raytracing.hlsl",
-			L"mainRayGen", L"mainCHS", L"mainMS"
-		);*/
+		
+		stateDesc.blob->Create(L"RayTracingWorld.hlsl");
+		stateDesc.blob->SetShader(L"mainRayGen", DxrObject::ShaderType::RAYGENERATION_SHADER);
+		stateDesc.blob->SetShader(L"mainMS", DxrObject::ShaderType::MISS_SHADER);
+
+		stateDesc.blob->SetShader(L"mainGroundCHS", DxrObject::ShaderType::CLOSESTHIT_SHADER, L"ground");
+		stateDesc.blob->SetShader(L"mainTeapotCHS", DxrObject::ShaderType::CLOSESTHIT_SHADER, L"teapot");
+		stateDesc.blob->SetShader(L"mainGlassCHS", DxrObject::ShaderType::CLOSESTHIT_SHADER, L"glass");
+		stateDesc.blob->SetShader(L"mainBunnyCHS", DxrObject::ShaderType::CLOSESTHIT_SHADER, L"bunny");
+		stateDesc.blob->SetShader(L"mainPlayerCHS", DxrObject::ShaderType::CLOSESTHIT_SHADER, L"player");
 	}
 
 	stateObject_ = std::make_unique<DxrObject::StateObject>();
 	stateObject_->Init(devices_.get(), stateDesc);
 
 	shaderTable_ = std::make_unique<DxrObject::ShaderTable>(); // stateDescを使いたいのでここに入れとく
-	shaderTable_->Init(
+	shaderTable_->Init(// XXX: 一番危険
 		clientWidth, clientHeight,
-		stateDesc, tlas_.get(), stateObject_.get(), resultBuffer_.get()
+		stateDesc, tlas, stateObject_.get(), resultBuffer_.get()
 	);
 
 }
 
-void DirectXRCommon::CreateAccelerationStructure() {
 
-	room_ = std::make_unique<Model>("./Resources/model", "ChurchOfTheLight.obj");
 
-	roomBlas_ = std::make_unique<DxrObject::BottomLevelAS>();
-	roomBlas_->Create(room_->GetMeshData(0).vertexResource.get(), room_->GetMeshData(0).indexResource.get());
+//void DirectXRCommon::DrawRayTracing() { // HACK: ユーザーが使えるようにする
+//
+//	auto commandList = command_->GetCommandList();
+//
+//	BeginRayTracing();
+//
+//	// process
+//	commandList->SetComputeRootSignature(globalRootSignature_->GetRootSignature());
+//	commandList->SetComputeRootDescriptorTable(0, tlas_->GetGPUDescriptorHandle());
+//	commandList->SetComputeRootConstantBufferView(1, camera_->GetGPUVirtualAddress());
+//	commandList->SetComputeRootDescriptorTable(2, materialStructuredBuffer_->GetGPUHandle());
+//	commandList->SetComputeRootConstantBufferView(3, light_->GetGPUVirtualAddress());
+//	/*commandList->SetComputeRootConstantBufferView(3, ambientOcclusion_->GetGPUVirtualAddress());*/
+//
+//	commandList->SetPipelineState1(stateObject_->GetStateObject());
+//	commandList->DispatchRays(shaderTable_->GetDispatchRayDesc());
+//
+//	EndRayTracing();
+//
+//}
 
-	teapot_ = std::make_unique<Model>("./Resources/model", "teapot.obj");
+void DirectXRCommon::BeginRayTracing() {
 
-	teapotBlas_ = std::make_unique<DxrObject::BottomLevelAS>();
-	teapotBlas_->Create(teapot_->GetMeshData(0).vertexResource.get(), teapot_->GetMeshData(0).indexResource.get());
+	auto commandList = command_->GetCommandList();
 
-	InstanceDesc desc = {};
-	desc.Resize(2);
+	// texture状態からuav状態に変更
+	D3D12_RESOURCE_BARRIER barrier = {};
+	barrier.Type                   = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+	barrier.Flags                  = D3D12_RESOURCE_BARRIER_FLAG_NONE;
+	barrier.Transition.pResource   = resultBuffer_->GetResource();
+	barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
+	barrier.Transition.StateAfter  = D3D12_RESOURCE_STATE_UNORDERED_ACCESS;
 
-	desc.Set(0, roomBlas_.get(), Matrix4x4::MakeIdentity(), 0, 0);
+	commandList->ResourceBarrier(1, &barrier);
 
-	desc.Set(1, teapotBlas_.get(), Matrix4x4::MakeIdentity(), 1, 1);
+	// rootSignatureの設定
+	commandList->SetComputeRootSignature(globalRootSignature_->GetRootSignature());
+}
 
-	tlas_ = std::make_unique<DxrObject::TopLevelAS>();
-	tlas_->Create(desc);
+void DirectXRCommon::EndRayTracing() {
 
-	material_ = std::make_unique<DxObject::BufferResource<Vector4f>>(devices_.get(), 1);
-	material_->operator[](0) = {1.0f, 1.0f, 1.0f, 1.0f};
+	auto commandList = command_->GetCommandList();
+
+	// stateObjectの設定とDispatchRays
+	commandList->SetPipelineState1(stateObject_->GetStateObject());
+	commandList->DispatchRays(shaderTable_->GetDispatchRayDesc());
+
+	// uav結果をTextureとして使える状態にする
+	D3D12_RESOURCE_BARRIER barrier = {};
+	barrier.Type                   = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+	barrier.Flags                  = D3D12_RESOURCE_BARRIER_FLAG_NONE;
+	barrier.Transition.pResource   = resultBuffer_->GetResource();
+	barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_UNORDERED_ACCESS;
+	barrier.Transition.StateAfter  = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
+
+	commandList->ResourceBarrier(1, &barrier);
 
 }
 
+DirectXRCommon* DirectXRCommon::GetInstance() {
+	static DirectXRCommon instance;
+	return &instance;
+}
+
+//void DirectXRCommon::CreateAccelerationStructure() {
+//
+//	// モデルの生成
+//	glassRoom_ = std::make_unique<Model>("./Resources/model", "glassRoom.obj");
+//	uint32_t modelSize = glassRoom_->GetSize();
+//
+//	// blasの生成
+//	glassRoomBlas_.resize(modelSize);
+//
+//	//!< 0番目だけhitgroupが違うので手動設定
+//	glassRoomBlas_[0] = std::make_unique<DxrObject::BottomLevelAS>();
+//	glassRoomBlas_[0]->Create(
+//		glassRoom_->GetMeshData(0).vertexResource.get(), glassRoom_->GetMeshData(0).indexResource.get(),
+//		kRoomHitGroup_
+//	);
+//
+//	//!< 他は同じhitgroupなので自動設定
+//	for (uint32_t i = 1; i < modelSize; ++i) {
+//		glassRoomBlas_[i] = std::make_unique<DxrObject::BottomLevelAS>();
+//		glassRoomBlas_[i]->Create(
+//			glassRoom_->GetMeshData(i).vertexResource.get(), glassRoom_->GetMeshData(i).indexResource.get(),
+//			kGlassHitGroup_
+//		);
+//	}
+//
+//	// TLASの生成
+//	InstanceDesc desc = {};
+//	desc.Resize(modelSize);
+//
+//	for (uint32_t i = 0; i < modelSize; ++i) {
+//		uint32_t instanceId = i;
+//
+//		if (instanceId > 0) {
+//			instanceId--;
+//
+//			// glassのmaterialをstructuredBufferとして送るので
+//		}
+//
+//		desc.Set(i, glassRoomBlas_[i].get(), Matrix4x4::MakeIdentity(), i, instanceId);
+//	}
+//
+//	tlas_ = std::make_unique<DxrObject::TopLevelAS>();
+//	tlas_->Create(desc);
+//
+//}

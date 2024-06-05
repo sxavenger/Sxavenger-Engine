@@ -28,9 +28,6 @@ void DxrObject::ShaderTable::Init(
 	int32_t clientWidth, int32_t clientHeight,
 	const StateObjectDesc& descs,
 	TopLevelAS* tlas, StateObject* stateObject, ResultBuffer* resultBuffer) {
-	clientWidth; clientHeight;
-
-	// TODO: descから取れるようにしておくこと
 
 	// raygeneration
 	UINT raygenerationRecordSize = kDefaultShaderRecordSize_;
@@ -49,7 +46,7 @@ void DxrObject::ShaderTable::Init(
 	// 使用する各シェーダーの個数より、シェーダーテーブルのサイズを求める.
 	UINT raygenerationSize = 1 * raygenerationRecordSize;
 	UINT missSize          = 1 * missRecordSize;
-	UINT hitgroupSize      = 1 * hitgroupRecordSize;
+	UINT hitgroupSize      = stateObject->GetHitgroupCount() * hitgroupRecordSize;
 
 	// 各テーブルの開始位置にアライメント調整
 	UINT raygenerationRegion = Alignment(raygenerationSize, kTableAlignment_);
@@ -67,32 +64,40 @@ void DxrObject::ShaderTable::Init(
 	);
 
 	// クエリ
-	ComPtr<ID3D12StateObjectProperties> properties;
-	stateObject->GetComPtrStateObject().As(&properties);
+	auto properties = stateObject->GetProperties();
 
 	// resourceにshaderRecordを書き込み
 	void* mapped = nullptr;
 	table_->Map(0, nullptr, &mapped);
 	uint8_t* pStart = static_cast<uint8_t*>(mapped);
 
+	// XXX: シェーダー書き込みを自動化
+
 	// raygenerationのシェーダーレコード書き込み
 	{
 		auto reygenerationStart = pStart;
 		uint8_t* p = reygenerationStart;
 
-		auto id = properties->GetShaderIdentifier(
-			descs.blob->GetMainFunctionName(RAYGENERATION_SHAEAR).c_str()
-		);
+		// HACK: forを全回ししてるので遅い
+		for (const auto& data : descs.blob->GetDatas()) {
+			if (data.shaderType != ShaderType::RAYGENERATION_SHADER) {
+				continue; //!< raygenerationではないので
+			}
 
-		if (id == nullptr) {
-			// Not found raygeneration identifier
-			assert(false);
+			auto id = properties->GetShaderIdentifier(
+				data.mainFunctionName.c_str()
+			);
+
+			if (id == nullptr) {
+				// Not found raygeneration identifier
+				assert(false);
+			}
+
+			p += WriteShaderIdentifier(p, id);
+
+			// ローカルルートシグネイチャで u0 (出力先) を設定してるため, 対応してるDescriptorに書き込み
+			p += WriteGPUDescriptor(p, resultBuffer->GetDescriptorUAV());
 		}
-
-		p += WriteShaderIdentifier(p, id);
-
-		// ローカルルートシグネイチャで u0 (出力先) を設定してるため, 対応してるDescriptorに書き込み
-		p += WriteGPUDescriptor(p, resultBuffer->GetDescriptorUAV());
 	}
 
 	// missのシェーダーレコード書き込み
@@ -100,26 +105,31 @@ void DxrObject::ShaderTable::Init(
 		auto missStart = pStart + raygenerationRegion;
 		uint8_t* p = missStart;
 
-		auto id = properties->GetShaderIdentifier(
-			descs.blob->GetMainFunctionName(MISS_SHADER).c_str()
-		);
+		for (const auto& data : descs.blob->GetDatas()) {
+			if (data.shaderType != ShaderType::MISS_SHADER) {
+				continue; //!< missではないので
+			}
 
-		if (id == nullptr) {
-			// Not found miss identifier
-			assert(false);
+			auto id = properties->GetShaderIdentifier(
+				data.mainFunctionName.c_str()
+			);
+
+			if (id == nullptr) {
+				// Not found miss identifier
+				assert(false);
+			}
+
+			p += WriteShaderIdentifier(p, id);
 		}
-
-		p += WriteShaderIdentifier(p, id);
 	}
 
 	// hitgroupのシェーダーレコード書き込み
 	{
-		// XXX: hitgroupが一つしかない
 		auto hitgroupStart = pStart + raygenerationRegion + missRegion;
 		uint8_t* pRecord = hitgroupStart;
 
 		for (auto& blas : tlas->GetBLASPtrArray()) {
-			pRecord = WriteShaderRecord(pRecord, blas, hitgroupSize, properties.Get());
+			pRecord = WriteShaderRecord(pRecord, blas, hitgroupRecordSize, properties);
 		}
 	}
 
@@ -186,7 +196,7 @@ uint8_t* DxrMethod::WriteShaderRecord(
 	}
 
 	dst += WriteShaderIdentifier(dst, id);
-	dst += WriteGPUDescriptor(dst, blas->GetIndicesDescriptor()); // t1
+	dst += WriteGPUDescriptor(dst, blas->GetIndicesDescriptor());  // t1
 	dst += WriteGPUDescriptor(dst, blas->GetVerticesDescriptor()); // t2
 
 	dst = entry + recordSize;

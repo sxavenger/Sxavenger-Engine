@@ -15,6 +15,9 @@
 #include <DxBlendState.h>
 #include <DxPipelineManager.h>
 
+// DxrObject
+#include <DxrAccelerationStructure.h>
+
 // Camera
 #include <Camera3D.h>
 #include <Camera2D.h>
@@ -159,6 +162,15 @@ public:
 	//=========================================================================================
 	// public methods
 	//=========================================================================================
+
+	static void BeginRayTracing();
+
+	static void EndRayTracing();
+
+	static void CreateStateObject(
+		int32_t kWindowWidth, int32_t kWindowHeight,
+		DxrObject::TopLevelAS* tlas
+	);
 
 	static DirectXRCommon* GetDxrCommon();
 

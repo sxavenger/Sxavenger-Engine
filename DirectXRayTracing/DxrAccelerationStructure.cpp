@@ -102,6 +102,24 @@ void DxrObject::InstanceDesc::Set(
 	blasPtrs_[index] = blas;
 }
 
+void DxrObject::InstanceDesc::Set(
+	uint32_t index,
+	BottomLevelAS* blas, const Matrix4x4& worldMatrix, uint32_t instanceId) {
+
+	descs[index].Flags        = D3D12_RAYTRACING_INSTANCE_FLAG_NONE;
+	descs[index].InstanceMask = 0xFF;
+	
+	// matrixを4x4から3x4に修正
+	Matrix4x4 mat = Matrix::Transpose(worldMatrix);
+	memcpy(descs[index].Transform, &mat, sizeof(descs[index].Transform));
+
+	descs[index].AccelerationStructure               = blas->GetGPUVirtualAddress();
+	descs[index].InstanceContributionToHitGroupIndex = index;
+	descs[index].InstanceID                          = instanceId;
+	
+	blasPtrs_[index] = blas;
+}
+
 void DxrObject::InstanceDesc::Clear() {
 	descs.clear();
 	descs.shrink_to_fit();
@@ -119,7 +137,7 @@ void DxrObject::TopLevelAS::Create(const InstanceDesc& instanceDesc) {
 	D3D12_BUILD_RAYTRACING_ACCELERATION_STRUCTURE_DESC buildASDesc = {};
 	buildASDesc.Inputs.Type          = D3D12_RAYTRACING_ACCELERATION_STRUCTURE_TYPE_TOP_LEVEL;
 	buildASDesc.Inputs.DescsLayout   = D3D12_ELEMENTS_LAYOUT_ARRAY;
-	buildASDesc.Inputs.Flags         = D3D12_RAYTRACING_ACCELERATION_STRUCTURE_BUILD_FLAG_NONE;
+	buildASDesc.Inputs.Flags         = D3D12_RAYTRACING_ACCELERATION_STRUCTURE_BUILD_FLAG_ALLOW_UPDATE;
 	buildASDesc.Inputs.NumDescs      = instanceDescBuffer_->GetIndexSize();
 	buildASDesc.Inputs.InstanceDescs = instanceDescBuffer_->GetGPUVirtualAddress();
 
@@ -143,9 +161,7 @@ void DxrObject::TopLevelAS::Create(const InstanceDesc& instanceDesc) {
 	barrier.Flags         = D3D12_RESOURCE_BARRIER_FLAG_NONE;
 	barrier.UAV.pResource = buffers_.asbuffer.Get();
 
-	commandList->ResourceBarrier(1, &barrier); // サンプルではいらなかった...
-
-	/*resource_ = accelerationStructure.asbuffer;*/
+	commandList->ResourceBarrier(1, &barrier);
 
 	// StructredBufferの設定
 	{
@@ -171,6 +187,46 @@ void DxrObject::TopLevelAS::Term() {
 	MyEngine::EraseDescriptor(descriptor_);
 
 	instanceDescBuffer_.reset();
+}
+
+void DxrObject::TopLevelAS::Update(const InstanceDesc& instanceDesc) {
+
+	assert(instanceDesc.descs.size() <= instanceDescBuffer_->GetIndexSize()); //!< 初期化で使ったdescより配列のオーバー
+	
+	// instanceDescの更新
+	instanceDescBuffer_->Memcpy(instanceDesc.descs.data());
+	// HACK: 初期化で作った配列サイズを超えた分は反映されない
+	// -> 動的な配列に対応したBufferResourceクラスの生成
+	
+	D3D12_BUILD_RAYTRACING_ACCELERATION_STRUCTURE_DESC buildASDesc = {};
+	buildASDesc.Inputs.Type          = D3D12_RAYTRACING_ACCELERATION_STRUCTURE_TYPE_TOP_LEVEL;
+	buildASDesc.Inputs.DescsLayout   = D3D12_ELEMENTS_LAYOUT_ARRAY;
+	buildASDesc.Inputs.NumDescs      = instanceDescBuffer_->GetIndexSize();
+	buildASDesc.Inputs.InstanceDescs = instanceDescBuffer_->GetGPUVirtualAddress();
+	buildASDesc.Inputs.Flags
+		= D3D12_RAYTRACING_ACCELERATION_STRUCTURE_BUILD_FLAG_ALLOW_UPDATE
+		| D3D12_RAYTRACING_ACCELERATION_STRUCTURE_BUILD_FLAG_PERFORM_UPDATE;
+
+	// インプレース更新
+	buildASDesc.SourceAccelerationStructureData  = buffers_.asbuffer->GetGPUVirtualAddress();
+	buildASDesc.DestAccelerationStructureData    = buffers_.asbuffer->GetGPUVirtualAddress();
+	buildASDesc.ScratchAccelerationStructureData = buffers_.update->GetGPUVirtualAddress();
+	
+	// コマンドに積む
+	auto commandList = MyEngine::GetCommandList();
+
+	commandList->BuildRaytracingAccelerationStructure(
+		&buildASDesc, 0, nullptr
+	);
+
+	// バリアの設定
+	D3D12_RESOURCE_BARRIER barrier = {};
+	barrier.Type          = D3D12_RESOURCE_BARRIER_TYPE_UAV;
+	barrier.Flags         = D3D12_RESOURCE_BARRIER_FLAG_NONE;
+	barrier.UAV.pResource = buffers_.asbuffer.Get();
+
+	commandList->ResourceBarrier(1, &barrier);
+
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -217,7 +273,7 @@ DxrObject::AccelerationStructuredBuffers DxrMethod::CreateAccelerationStructure(
 				D3D12_HEAP_TYPE_DEFAULT,
 				info.UpdateScratchDataSizeInBytes,
 				D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS,
-				D3D12_RESOURCE_STATE_UNORDERED_ACCESS
+				D3D12_RESOURCE_STATE_COMMON // before: STATE_UNORDERED_ACCESS
 			);
 
 			if (result.update == nullptr) {

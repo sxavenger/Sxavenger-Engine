@@ -80,7 +80,7 @@ ComPtr<IDxcBlob> DxrObject::ShaderManager::CompileShader(const std::wstring& fil
 		nullptr, 0, nullptr, 0, nullptr,
 		&compileResult
 	);
-	assert(SUCCEEDED(hr));
+	assert(SUCCEEDED(hr)); //!< raytracingシェーダー内での日本語の使用
 
 	// エラーの出力
 	ComPtr<IDxcBlobEncoding> errorBlob;

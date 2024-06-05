@@ -1,32 +1,40 @@
-#include <MyEngine.h> // sxavenger engine
-#include <Environment.h>
+#pragma once
 
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
-// GameScene
-#include <GameScene.h>
+// object
+#include <RayTracingObject.h>
 
-// c++
-#include <memory>
+// model
+#include <Model.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// メイン関数
+// Teapot class
 ////////////////////////////////////////////////////////////////////////////////////////////
-int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
+class Teapot
+	: public RayTracingObject {
+public:
 
 	//=========================================================================================
-	// 初期化
+	// public methods
 	//=========================================================================================
-	MyEngine::Initialize(kWindowWidth, kWindowHeight, kWindowTitle);
 
-	std::unique_ptr<GameScene> gameScene = std::make_unique<GameScene>();
-	
-	gameScene->Run();
+	Teapot() { Init(); }
 
-	gameScene.reset();
+	~Teapot() { Term(); }
 
-	MyEngine::Finalize();
-	return 0;
+	void Init();
 
-}
+	void Term();
+
+private:
+
+	//=========================================================================================
+	// private variables
+	//=========================================================================================
+
+	// IA
+	std::unique_ptr<Model> model_;
+
+};

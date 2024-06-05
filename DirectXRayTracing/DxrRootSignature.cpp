@@ -74,6 +74,15 @@ void DxrObject::RootSignatureDesc::SetSampler(uint32_t index, TextureMode mode, 
 	samplers[index].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;
 }
 
+void DxrObject::RootSignatureDesc::SetLocalRootSignature(ExportType type, const std::wstring& exportStr) {
+
+	assert(type != ExportType::kNotSelectExport); //!< localRootSignatureに設定できない
+	assert(!exportStr.empty());                   //!< 未入力
+
+	exportType = type;
+	exportName = exportStr;
+}
+
 ////////////////////////////////////////////////////////////////////////////////////////////
 // RootSignature class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -179,5 +188,11 @@ void DxrObject::LocalRootSignature::Init(DxObject::Devices* devices, const RootS
 	assert(SUCCEEDED(hr));
 
 	Log("[DxrObject::LoaclRootSignature]: rootSignature_ << Complete Create");
+
+	// 引数不足
+	assert(!descs.exportName.empty() || descs.exportType != kNotSelectExport);
+
+	exportType_ = descs.exportType;
+	exportName_ = descs.exportName;
 
 }

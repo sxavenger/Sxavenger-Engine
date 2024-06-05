@@ -1,32 +1,44 @@
-#include <MyEngine.h> // sxavenger engine
-#include <Environment.h>
+#pragma once
 
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
-// GameScene
-#include <GameScene.h>
+// object
+#include <RayTracingObject.h>
 
-// c++
-#include <memory>
+// model
+#include <Model.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// メイン関数
+// Player class
 ////////////////////////////////////////////////////////////////////////////////////////////
-int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
+class Player
+	: public RayTracingObject
+	, public Attribute {
+public:
 
 	//=========================================================================================
-	// 初期化
+	// public methods
 	//=========================================================================================
-	MyEngine::Initialize(kWindowWidth, kWindowHeight, kWindowTitle);
 
-	std::unique_ptr<GameScene> gameScene = std::make_unique<GameScene>();
-	
-	gameScene->Run();
+	Player() { Init(); }
 
-	gameScene.reset();
+	~Player() { Term(); }
 
-	MyEngine::Finalize();
-	return 0;
+	void Init();
 
-}
+	void Term();
+
+	void Update();
+
+	void SetAttributeImGui() override;
+
+private:
+
+	//=========================================================================================
+	// private variables
+	//=========================================================================================
+
+	std::unique_ptr<Model> model_;
+
+};

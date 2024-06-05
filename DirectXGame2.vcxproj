@@ -52,7 +52,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)\Game;$(ProjectDir)\Lib\Adapter\Performance;$(ProjectDir)\Lib\Adapter\Random;$(ProjectDir)\Lib\Adapter\Json;$(ProjectDir)\Lib\Collider;$(ProjectDir)\Lib\Light;$(ProjectDir)\Lib\Camera;$(ProjectDir)\Lib\Geometry;$(ProjectDir)\Lib;$(ProjectDir)\externals\meshoptimizer;$(ProjectDir)\externals\assimp\include;$(ProjectDir)\externals\nlohmann;$(ProjectDir)\externals\DirectXTex;$(ProjectDir)\externals\imgui;$(ProjectDir)\Engine\DxObject;$(ProjectDir)\Engine;$(ProjectDir)\DirectXRayTracing;$(ProjectDir)\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)\Game\RayTracingWorld;$(ProjectDir)\Game\Scene;$(ProjectDir)\Game;$(ProjectDir)\Lib\Adapter\Performance;$(ProjectDir)\Lib\Adapter\Random;$(ProjectDir)\Lib\Adapter\Json;$(ProjectDir)\Lib\Collider;$(ProjectDir)\Lib\Light;$(ProjectDir)\Lib\Camera;$(ProjectDir)\Lib\Geometry;$(ProjectDir)\Lib;$(ProjectDir)\externals\meshoptimizer;$(ProjectDir)\externals\assimp\include;$(ProjectDir)\externals\nlohmann;$(ProjectDir)\externals\DirectXTex;$(ProjectDir)\externals\imgui;$(ProjectDir)\Engine\DxObject;$(ProjectDir)\Engine;$(ProjectDir)\DirectXRayTracing;$(ProjectDir)\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
@@ -161,7 +161,13 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Game\Cube.cpp" />
     <ClCompile Include="Game\Floor.cpp" />
     <ClCompile Include="Game\Plane.cpp" />
-    <ClCompile Include="Game\Sphere.cpp" />
+    <ClCompile Include="Game\RayTracingWorld\Bunny.cpp" />
+    <ClCompile Include="Game\RayTracingWorld\Glass.cpp" />
+    <ClCompile Include="Game\RayTracingWorld\Ground.cpp" />
+    <ClCompile Include="Game\RayTracingWorld\Player.cpp" />
+    <ClCompile Include="Game\RayTracingWorld\RayTracingObject.cpp" />
+    <ClCompile Include="Game\RayTracingWorld\Teapot.cpp" />
+    <ClCompile Include="Game\Scene\GameScene.cpp" />
     <ClCompile Include="Lib\Adapter\Json\Json.cpp" />
     <ClCompile Include="Lib\Adapter\Performance\Performance.cpp" />
     <ClCompile Include="Lib\Adapter\Random\Random.cpp" />
@@ -169,6 +175,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Lib\Camera\Camera3D.cpp" />
     <ClCompile Include="Lib\Collider\Collider.cpp" />
     <ClCompile Include="Lib\DrawMethod.cpp" />
+    <ClCompile Include="Lib\Geometry\MathLib.cpp" />
     <ClCompile Include="Lib\Geometry\Matrix3x3.cpp" />
     <ClCompile Include="Lib\Geometry\Matrix4x4.cpp" />
     <ClCompile Include="Lib\Geometry\Vector2.cpp" />
@@ -234,7 +241,13 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Game\Cube.h" />
     <ClInclude Include="Game\Floor.h" />
     <ClInclude Include="Game\Plane.h" />
-    <ClInclude Include="Game\Sphere.h" />
+    <ClInclude Include="Game\RayTracingWorld\Bunny.h" />
+    <ClInclude Include="Game\RayTracingWorld\Glass.h" />
+    <ClInclude Include="Game\RayTracingWorld\Ground.h" />
+    <ClInclude Include="Game\RayTracingWorld\Player.h" />
+    <ClInclude Include="Game\RayTracingWorld\RayTracingObject.h" />
+    <ClInclude Include="Game\RayTracingWorld\Teapot.h" />
+    <ClInclude Include="Game\Scene\GameScene.h" />
     <ClInclude Include="Lib\Adapter\Json\Json.h" />
     <ClInclude Include="Lib\Adapter\Performance\Performance.h" />
     <ClInclude Include="Lib\Adapter\Random\Random.h" />
@@ -243,6 +256,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Lib\Collider\Collider.h" />
     <ClInclude Include="Lib\DrawMethod.h" />
     <ClInclude Include="Lib\Environment.h" />
+    <ClInclude Include="Lib\Geometry\MathLib.h" />
     <ClInclude Include="Lib\Geometry\Matrix3x3.h" />
     <ClInclude Include="Lib\Geometry\Matrix4x4.h" />
     <ClInclude Include="Lib\Geometry\Vector2.h" />
@@ -307,9 +321,15 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <FxCompile Include="Resources\hlsl\Primitive.VS.hlsl">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </FxCompile>
+    <FxCompile Include="Resources\RayTracingShader\glassRoom.hlsl">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </FxCompile>
     <FxCompile Include="Resources\RayTracingShader\raytracing.hlsl">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">6.4</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="Resources\RayTracingShader\RayTracingWorld.hlsl">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </FxCompile>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

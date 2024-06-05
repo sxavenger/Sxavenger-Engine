@@ -88,6 +88,11 @@ namespace DxrObject {
 			BottomLevelAS* blas, const Matrix4x4& worldMatrix, uint32_t hitGroupIndex, uint32_t instanceId
 		);
 
+		void Set(
+			uint32_t index,
+			BottomLevelAS* blas, const Matrix4x4& worldMatrix, uint32_t instanceId
+		);
+
 		void Clear();
 
 		//=========================================================================================
@@ -113,6 +118,8 @@ namespace DxrObject {
 		void Create(const InstanceDesc& instanceDesc);
 
 		void Term();
+
+		void Update(const InstanceDesc& instanceDesc);
 
 		const D3D12_GPU_DESCRIPTOR_HANDLE& GetGPUDescriptorHandle() const { return descriptor_.handleGPU; }
 

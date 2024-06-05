@@ -53,17 +53,23 @@ void Console::Term() {
 }
 
 void Console::Update() {
+
+	OutputMenu();
+
 	if (isOutputEngineUI_) {
+
 		windowFlags = ImGuiWindowFlags_NoCollapse;
 
-		OutputMain();
+		if (isFix_) {
+			windowFlags |= ImGuiWindowFlags_NoMove;
+			windowFlags |= ImGuiWindowFlags_NoResize;
+		}
 
 		// game window
 		OutputScene();
 		OutputGame();
 
 		OutputLog();
-		OutputPrintf();
 		OutputOutliner();
 		OutputPerformance();
 		OutputSystem();
@@ -106,15 +112,11 @@ void Console::OutputTexture(const std::string& name, const D3D12_GPU_DESCRIPTOR_
 // private methods
 //=========================================================================================
 
-void Console::OutputMain() {
-	static bool isOpenWindow = true;
-	ImGui::Begin("Sxavenger Engine", &isOpenWindow, windowFlags | ImGuiWindowFlags_MenuBar);
-
-	if (ImGui::BeginMenuBar()) {
-
+void Console::OutputMenu() {
+	if (ImGui::BeginMainMenuBar()) {
 		if (ImGui::BeginMenu("Settings")) {
 
-			ImGui::Checkbox("DisplayeUI", &isOutputEngineUI_);
+			ImGui::Checkbox("DisplayUI", &isOutputEngineUI_);
 
 			// windowFlags
 			ImGui::Checkbox("Fix(lock size and move)", &isFix_);
@@ -123,16 +125,8 @@ void Console::OutputMain() {
 			ImGui::EndMenu();
 		}
 
-		ImGui::EndMenuBar();
+		ImGui::EndMainMenuBar();
 	}
-
-	if (isFix_) {
-		windowFlags |= ImGuiWindowFlags_NoMove;
-		windowFlags |= ImGuiWindowFlags_NoResize;
-	}
-
-
-	ImGui::End();
 }
 
 void Console::OutputScene() {
@@ -162,26 +156,32 @@ void Console::OutputLog() {
 	static bool isOpenWindow = true;
 	ImGui::Begin("Log", &isOpenWindow, windowFlags);
 
-	ImVec2 cntRegionMax = ImGui::GetWindowContentRegionMax();
-	ImVec2 cntRegionMin = ImGui::GetWindowContentRegionMin();
-	ImVec2 wndSize = { cntRegionMax.x - cntRegionMin.x, cntRegionMax.y - cntRegionMin.y };
+	if (ImGui::BeginTabBar("LogTab")) {
 
-	{
-		ImGui::BeginChild(ImGui::GetID((void*)0), wndSize, ImGuiChildFlags_Border, ImGuiWindowFlags_AlwaysHorizontalScrollbar | ImGuiWindowFlags_AlwaysVerticalScrollbar);
+		if (ImGui::BeginTabItem("Console")) {
 
-		for (auto& log : logDatas_) {
-			ImGui::TextColored({log.color.r, log.color.g, log.color.b, log.color.a}, log.log.c_str());
+			ImVec2 cntRegionMax = ImGui::GetWindowContentRegionMax();
+			ImVec2 cntRegionMin = ImGui::GetWindowContentRegionMin();
+			ImVec2 wndSize = { cntRegionMax.x - cntRegionMin.x, cntRegionMax.y - cntRegionMin.y };
+
+			
+			ImGui::BeginChild(ImGui::GetID((void*)0), wndSize, ImGuiChildFlags_Border, ImGuiWindowFlags_AlwaysHorizontalScrollbar | ImGuiWindowFlags_AlwaysVerticalScrollbar);
+			for (auto& log : logDatas_) {
+				ImGui::TextColored({ log.color.r, log.color.g, log.color.b, log.color.a }, log.log.c_str());
+			}
+			ImGui::EndChild();
+			
+
+			ImGui::EndTabItem();
 		}
 
-		ImGui::EndChild();
+		if (ImGui::BeginTabItem("Printf")) {
+			ImGui::EndTabItem();
+		}
+
+		ImGui::EndTabBar();
 	}
 
-	ImGui::End();
-}
-
-void Console::OutputPrintf() {
-	static bool isOpenWindow = true;
-	ImGui::Begin("Printf", &isOpenWindow, windowFlags);
 	ImGui::End();
 }
 
@@ -222,7 +222,7 @@ void Console::OutputOutliner() {
 	ImGui::Begin("Attribute", &isOpenWindow, windowFlags);
 	if (selectedAttribute_ != nullptr) {
 
-		ImGui::Text(selectedAttribute_->GetName().c_str());
+		ImGui::SeparatorText(selectedAttribute_->GetName().c_str());
 		
 		//ImGui::InputText("name", name.data(), 20);
 		//// HACK: 文字数0にすると止まる
@@ -237,10 +237,6 @@ void Console::OutputOutliner() {
 		//		selectedAttribute_->SetName(name.data());
 		//	}
 		//}
-		
-		ImGui::Spacing();
-		ImGui::Spacing();
-		ImGui::Separator();
 
 		selectedAttribute_->SetAttributeImGui();
 	}

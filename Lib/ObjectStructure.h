@@ -38,6 +38,10 @@ struct Transform {
 		ImGui::DragFloat3("rotate", &rotate.x, granularity);
 		ImGui::DragFloat3("translate", &translate.x, granularity);
 	}
+
+	Matrix4x4 SetMatrix() const {
+		return Matrix::MakeAffine(scale, rotate, translate);
+	}
 };
 
 struct TransformationMatrix {

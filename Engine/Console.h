@@ -121,13 +121,12 @@ private:
 	// private methods
 	//=========================================================================================
 
-	void OutputMain();
+	void OutputMenu();
 
 	void OutputScene();
 	void OutputGame();
 
 	void OutputLog();
-	void OutputPrintf();
 
 	void OutputPerformance();
 
