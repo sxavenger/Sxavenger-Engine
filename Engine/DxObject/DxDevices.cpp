@@ -38,30 +38,27 @@ void DxObject::Devices::Init() {
 
 	// アダプタの生成
 	{
-		// アダプタの読み込み
-		{
-			for (UINT i = 0;
-				dxgiFactory_->EnumAdapterByGpuPreference(i, DXGI_GPU_PREFERENCE_HIGH_PERFORMANCE, IID_PPV_ARGS(&useAdapter_)) != DXGI_ERROR_NOT_FOUND;
-				++i) {
+		for (UINT i = 0;
+			dxgiFactory_->EnumAdapterByGpuPreference(i, DXGI_GPU_PREFERENCE_HIGH_PERFORMANCE, IID_PPV_ARGS(&useAdapter_)) != DXGI_ERROR_NOT_FOUND;
+			++i) {
 
-				// アダプタ情報を取得
-				DXGI_ADAPTER_DESC3 desc = {};
-				auto hr = useAdapter_->GetDesc3(&desc);
-				assert(SUCCEEDED(hr));
+			// アダプタ情報を取得
+			DXGI_ADAPTER_DESC3 desc = {};
+			auto hr = useAdapter_->GetDesc3(&desc);
+			assert(SUCCEEDED(hr));
 
-				// ソフトウェアアダプタじゃない場合, 成功
-				if (!(desc.Flags & DXGI_ADAPTER_FLAG3_SOFTWARE)) {
-					Log(std::format(L" -- Use Adapter: {}", desc.Description));
-					break;
-				}
-
-				// ソフトウェアアダプタの場合, nullptrを代入
-				useAdapter_ = nullptr;
+			// ソフトウェアアダプタじゃない場合, 成功
+			if (!(desc.Flags & DXGI_ADAPTER_FLAG3_SOFTWARE)) {
+				Log(std::format(L" -- Use Adapter: {}", desc.Description));
+				break;
 			}
 
-			assert(useAdapter_ != nullptr);
-			Log("[DxObject::Devices]: useAdapter_ << Complete Create");
+			// ソフトウェアアダプタの場合, nullptrを代入
+			useAdapter_ = nullptr;
 		}
+
+		assert(useAdapter_ != nullptr);
+		Log("[DxObject::Devices]: useAdapter_ << Complete Create");
 	}
 
 	// デバイスを生成

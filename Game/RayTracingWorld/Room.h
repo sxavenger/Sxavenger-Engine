@@ -10,26 +10,23 @@
 #include <Model.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// Teapot class
+// Room class
 ////////////////////////////////////////////////////////////////////////////////////////////
-class Teapot
-	: public RayTracingObject
-	, public Attribute {
+class Room
+	: public RayTracingObject {
 public:
 
 	//=========================================================================================
 	// public methods
 	//=========================================================================================
 
-	Teapot() { Init(); }
+	Room() { Init(); }
 
-	~Teapot() { Term(); }
+	~Room() { Term(); }
 
 	void Init();
 
 	void Term();
-
-	void SetAttributeImGui() override;
 
 private:
 

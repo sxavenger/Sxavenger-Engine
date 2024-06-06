@@ -88,7 +88,7 @@ void DirectXRCommon::CreateStateObject(
 	}
 
 	// loaclRootSignatureの設定
-	stateDesc.CreateLocalRootSignature(6);
+	stateDesc.CreateLocalRootSignature(8);
 
 	{
 		RootSignatureDesc raygenDesc = {};
@@ -171,6 +171,34 @@ void DirectXRCommon::CreateStateObject(
 		stateDesc.SetLocalRootSignatureDesc(5, devices_.get(), closestHitDesc);
 	}
 
+	{
+		RootSignatureDesc closestHitDesc = {};
+		closestHitDesc.Resize(2, 0);
+		closestHitDesc.SetLocalRootSignature(HITGROUP, L"room");
+
+		//!< vertex(t1)
+		closestHitDesc.SetSRV(0, 1);
+
+		//!< index(t2)
+		closestHitDesc.SetSRV(1, 2);
+
+		stateDesc.SetLocalRootSignatureDesc(6, devices_.get(), closestHitDesc);
+	}
+
+	{
+		RootSignatureDesc closestHitDesc = {};
+		closestHitDesc.Resize(2, 0);
+		closestHitDesc.SetLocalRootSignature(HITGROUP, L"ocean");
+
+		//!< vertex(t1)
+		closestHitDesc.SetSRV(0, 1);
+
+		//!< index(t2)
+		closestHitDesc.SetSRV(1, 2);
+
+		stateDesc.SetLocalRootSignatureDesc(7, devices_.get(), closestHitDesc);
+	}
+
 	// shaderBlobの生成
 	{
 		stateDesc.CreateShadeBlob();
@@ -184,6 +212,8 @@ void DirectXRCommon::CreateStateObject(
 		stateDesc.blob->SetShader(L"mainGlassCHS", DxrObject::ShaderType::CLOSESTHIT_SHADER, L"glass");
 		stateDesc.blob->SetShader(L"mainBunnyCHS", DxrObject::ShaderType::CLOSESTHIT_SHADER, L"bunny");
 		stateDesc.blob->SetShader(L"mainPlayerCHS", DxrObject::ShaderType::CLOSESTHIT_SHADER, L"player");
+		stateDesc.blob->SetShader(L"mainRoomCHS", DxrObject::ShaderType::CLOSESTHIT_SHADER, L"room");
+		stateDesc.blob->SetShader(L"mainOceanCHS", DxrObject::ShaderType::CLOSESTHIT_SHADER, L"ocean");
 	}
 
 	stateObject_ = std::make_unique<DxrObject::StateObject>();

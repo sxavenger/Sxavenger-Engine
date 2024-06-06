@@ -118,6 +118,9 @@
     <Filter Include="Game\RayTracingWorld">
       <UniqueIdentifier>{990f6103-dba4-48e8-b867-27f980181591}</UniqueIdentifier>
     </Filter>
+    <Filter Include="TEST">
+      <UniqueIdentifier>{374284a3-4b07-4401-81f4-8b59b30da35a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
@@ -382,6 +385,15 @@
     <ClCompile Include="Game\RayTracingWorld\Player.cpp">
       <Filter>Game\RayTracingWorld</Filter>
     </ClCompile>
+    <ClCompile Include="Game\RayTracingWorld\Room.cpp">
+      <Filter>Game\RayTracingWorld</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\RayTracingWorld\Ocean.cpp">
+      <Filter>Game\RayTracingWorld</Filter>
+    </ClCompile>
+    <ClCompile Include="test\DxrRecordBuffers.cpp">
+      <Filter>TEST</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\MyEngine.h">
@@ -618,6 +630,15 @@
     <ClInclude Include="Game\RayTracingWorld\Player.h">
       <Filter>Game\RayTracingWorld</Filter>
     </ClInclude>
+    <ClInclude Include="Game\RayTracingWorld\Room.h">
+      <Filter>Game\RayTracingWorld</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\RayTracingWorld\Ocean.h">
+      <Filter>Game\RayTracingWorld</Filter>
+    </ClInclude>
+    <ClInclude Include="test\DxrRecordBuffers.h">
+      <Filter>TEST</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />
@@ -644,6 +665,12 @@
     </None>
     <None Include="Resources\hlsl\GaussianBlur.hlsli">
       <Filter>Resource\hlsl\GaussianBlur</Filter>
+    </None>
+    <None Include="Resources\RayTracingShader\Lighting.hlsli">
+      <Filter>Resource\RayTracingShader</Filter>
+    </None>
+    <None Include="Resources\RayTracingShader\RayTracingConfig.hlsli">
+      <Filter>Resource\RayTracingShader</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>

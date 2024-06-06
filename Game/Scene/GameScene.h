@@ -17,6 +17,8 @@
 #include <Glass.h>
 #include <Bunny.h>
 #include <Player.h>
+#include <Room.h>
+#include <Ocean.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // GameScene class
@@ -57,6 +59,8 @@ private:
 	std::unique_ptr<Glass>  glass_;
 	std::unique_ptr<Bunny>  bunny_;
 	std::unique_ptr<Player> player_;
+	std::unique_ptr<Room>   room_;
+	std::unique_ptr<Ocean>  ocean_;
 
 	// constantBuffer //
 

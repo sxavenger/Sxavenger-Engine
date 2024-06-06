@@ -31,6 +31,16 @@ void DxrObject::ShaderManager::Init() {
 			CLSID_DxcCompiler, IID_PPV_ARGS(&compiler_)
 		);
 		assert(SUCCEEDED(hr));
+
+		// includerHandleの生成
+		ComPtr<IDxcUtils> utils;
+		hr = DxcCreateInstance(
+			CLSID_DxcUtils, IID_PPV_ARGS(&utils)
+		);
+		assert(SUCCEEDED(hr));
+
+		hr = utils->CreateDefaultIncludeHandler(&includeHandler_);
+		assert(SUCCEEDED(hr));
 	}
 
 	// tableをblobに設定
@@ -77,7 +87,11 @@ ComPtr<IDxcBlob> DxrObject::ShaderManager::CompileShader(const std::wstring& fil
 		filePath.c_str(),
 		L"",
 		shaderModel_.c_str(), //!< shaderModel
-		nullptr, 0, nullptr, 0, nullptr,
+		nullptr,
+		0,
+		nullptr,
+		0,
+		includeHandler_.Get(),
 		&compileResult
 	);
 	assert(SUCCEEDED(hr)); //!< raytracingシェーダー内での日本語の使用

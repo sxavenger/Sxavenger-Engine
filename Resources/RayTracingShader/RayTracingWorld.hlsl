@@ -1,29 +1,14 @@
-////////////////////////////////////////////////////////////////////////////////////////////
-// config structure
-////////////////////////////////////////////////////////////////////////////////////////////
-struct Payload {
-	int rayType;
-	uint reflectionCount;
-	float4 color;
-	int isCollision;
-	float length; // origin to hit position
-};
+//-----------------------------------------------------------------------------------------
+// include
+//-----------------------------------------------------------------------------------------
+#include "RayTracingConfig.hlsli"
+#include "Lighting.hlsli"
 
-namespace RAYTYPE {
-	static int VIEW       = 0;
-	static int REFLECTION = 1;
-	static int COLLISION  = 2;
-}
+//=========================================================================================
+// static variables
+//=========================================================================================
 
-struct MyAttribute {
-	float2 barys;
-};
-
-// raysettings //
-static const RAY_FLAG flags = RAY_FLAG_CULL_BACK_FACING_TRIANGLES; // culling back
-static const uint rayMask = 0xFF;
-
-static const float kTMin = 0.0001f;
+static const float pi_v = 3.14159265358979323846;
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // RaytracingAccelerationStructure
@@ -85,15 +70,6 @@ StructuredBuffer<GlassMaterial> sMaterials : register(t3);
 Texture2D<float4> gGroundTexture : register(t4);
 SamplerState gSampler : register(s0);
 
-////////////////////////////////////////////////////////////////////////////////////////////
-// Vertex structure
-////////////////////////////////////////////////////////////////////////////////////////////
-struct Vertex {
-	float4 position;
-	float2 texcoord;
-	float3 normal;
-};
-
 //=========================================================================================
 // local Buffers
 //=========================================================================================
@@ -102,23 +78,9 @@ RWTexture2D<float4> gOutput : register(u0); // raygeneration
 StructuredBuffer<uint> sIndexBuffer : register(t1);
 StructuredBuffer<Vertex> sVertexBuffer : register(t2); // Hitgroups
 
-//=========================================================================================
-// static const variables
-//=========================================================================================
-
-static const uint kLimitReflectionCount = 10;
-
 ////////////////////////////////////////////////////////////////////////////////////////////
 // hitgroup methods
 ////////////////////////////////////////////////////////////////////////////////////////////
-
-inline float3 CalcBarycentrics(float2 barys) {
-	return float3(
-		1.0f - barys.x - barys.y,
-		barys.x,
-		barys.y
-	);
-}
 
 Vertex GetHitVertex(MyAttribute attrib) {
 	
@@ -136,13 +98,12 @@ Vertex GetHitVertex(MyAttribute attrib) {
 		
 		result.position += sVertexBuffer[index].position * w;
 		result.texcoord += sVertexBuffer[index].texcoord * w;
-		result.normal   += sVertexBuffer[index].normal * w;
+		result.normal += sVertexBuffer[index].normal * w;
 	}
 	
 	result.normal = normalize(result.normal);
 	
 	return result;
-	
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -198,25 +159,6 @@ float4 AlphaBlend(float4 base, float4 add) {
 // Lighting methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-float HalfLambertReflection(float3 normal, float3 lightDirection, float exponent = 2.0f) {
-
-	float NdotL = dot(normal, -lightDirection);
-	float result = pow(NdotL * 0.5f + 0.5f, exponent);
-	
-	return result;
-
-}
-
-float3 BlinnPhong(float3 worldPos, float3 normal, float3 lightDirection, float specPow, float4 specColor = float4(1, 1, 1, 1)) {
-	
-	float3 halfVector = normalize(-lightDirection - WorldRayDirection());
-	float NdotH = max(0, dot(normal, halfVector));
-	float spec = pow(NdotH, specPow);
-	
-	return specColor.rgb * spec;
-	
-}
-
 float4 CalculateLightColor(float4 defaultColor, float3 worldPos, float3 worldNormal, bool isUseBlinnPhong = false) {
 	
 	float4 result = defaultColor;
@@ -243,7 +185,7 @@ float4 CalculateLightColor(float4 defaultColor, float3 worldPos, float3 worldNor
 	}
 	
 	return result;
-} 
+}
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Ray methods
@@ -293,6 +235,114 @@ float4 TraceShadowRay(float4 currentColor, float3 worldPos, uint reflectionCount
 	
 	return result;
 	
+}
+
+float4 TraceCutoffRay(float4 currentColor, float3 worldPos, float3 worldNormal, uint reflectionCount) {
+	
+	// world to light direction
+	// direction
+	float3 direction = -gLight.direction;
+	float tMax = 10000;
+	
+	if (gLight.type == LIGHT::POINT) {
+		// point
+		direction = normalize(gLight.position.xyz - worldPos);
+		tMax = length(gLight.position.xyz - worldPos);
+	}
+	
+	Payload cutoffRay;
+	cutoffRay.rayType         = RAYTYPE::COLLISION;
+	cutoffRay.color           = float4(0, 0, 0, 0);
+	cutoffRay.isCollision     = false;
+	cutoffRay.length          = 0;
+	cutoffRay.reflectionCount = reflectionCount;
+	
+	RayDesc desc;
+	desc.Origin    = worldPos - WorldRayDirection() * kTMin;
+	desc.Direction = direction;
+	desc.TMin      = kTMin;
+	desc.TMax      = tMax;
+	
+	TraceRay(
+		desc, cutoffRay
+	);
+	
+	float4 resultColor;
+	
+	if (cutoffRay.isCollision) {
+		resultColor = float4(0, 0, 0, 1);
+
+	} else {
+		// not hit other object -> path light
+		resultColor = CalculateLightColor(currentColor, worldPos, worldNormal);
+	}
+	
+	return resultColor;
+}
+
+float4 TraceAmbientOcclusionRay(float4 currentCulor, float3 worldPos, float3 worldNormal, uint subdivision, float range, uint reflectionCount) {
+	
+	if (all(currentCulor.rgba == 0.0f)) {
+		return currentCulor;
+	}
+	
+	float3 u;
+	
+	if (all(worldNormal.xy == 0.0f)) {
+		u = float3(1.0f, 0.0f, 0.0f);
+			
+	} else {
+		u = normalize(float3(-worldNormal.y, worldNormal.x, 0.0f));
+	}
+	
+	float3 v = normalize(cross(worldNormal, u));
+	
+	uint hitCount = 0;
+	
+	// ambient occlusion ray
+	for (uint lat = 0; lat < subdivision; ++lat) {
+		float theta = (lat / float(subdivision)) * (pi_v / 2.0f);
+			
+		for (uint lon = 0; lon < subdivision; ++lon) {
+			float phi = (lon / float(subdivision)) * (2 * pi_v);
+			
+			float x = sin(theta) * cos(phi);
+			float y = sin(theta) * sin(phi);
+			float z = cos(theta);
+			
+			float3 direction = u * x + v * y + worldNormal * z;
+			
+			// raysetting
+			Payload aoRay;
+			aoRay.rayType         = RAYTYPE::COLLISION;
+			aoRay.color           = float4(0, 0, 0, 0);
+			aoRay.isCollision     = false;
+			aoRay.length          = 0;
+			aoRay.reflectionCount = reflectionCount;
+			
+			RayDesc desc;
+			desc.Origin    = worldPos + worldNormal * kTMin;
+			desc.Direction = direction;
+			desc.TMin      = kTMin;
+			desc.TMax      = range;
+			
+			TraceRay(
+				desc, aoRay
+			);
+			
+			if (aoRay.isCollision) {
+				hitCount++;
+			}
+
+		}
+	}
+	
+	// setting color
+	float4 ambientColor = float4(0, 0, 0, 0);
+	ambientColor.a = saturate(float(hitCount) / (float(subdivision * subdivision) / 1.2f)); // HACK: user select ambient power
+	
+	float4 result = AlphaBlend(ambientColor, currentCulor);
+	return result;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -373,7 +423,7 @@ void mainGroundCHS(inout Payload payload, in MyAttribute attrib) {
 	// lighting
 	resultColor = CalculateLightColor(resultColor, worldPosition, worldNormal);
 	
-	if (payload.rayType == RAYTYPE::COLLISION) {
+	if (payload.rayType == RAYTYPE::REFLECTION) {
 		payload.color  = resultColor;
 		payload.length = RayTCurrent();
 		return;
@@ -412,6 +462,7 @@ void mainGroundCHS(inout Payload payload, in MyAttribute attrib) {
 	resultColor = TraceShadowRay(resultColor, worldPosition, payload.reflectionCount);
 	
 	payload.color = resultColor;
+	payload.length = RayTCurrent();
 }
 
 //-----------------------------------------------------------------------------------------
@@ -554,6 +605,111 @@ void mainPlayerCHS(inout Payload payload, in MyAttribute attrib) {
 	
 	// lighting
 	resultColor = CalculateLightColor(resultColor, worldPosition, worldNormal);
+	
+	payload.color = resultColor;
+	payload.length = RayTCurrent();
+	return;
+}
+
+//-----------------------------------------------------------------------------------------
+// room
+//-----------------------------------------------------------------------------------------
+[shader("closesthit")]
+void mainRoomCHS(inout Payload payload, in MyAttribute attrib) {
+	
+	if (CheckReflection(payload)) {
+		return;
+	}
+	
+	float4 resultColor = float4(1.0f, 1.0f, 1.0f, 1.0f);
+	
+	Vertex vtx = GetHitVertex(attrib);
+	float3 worldPosition = mul(vtx.position, ObjectToWorld4x3());
+	float3 worldNormal = normalize(mul(vtx.normal, (float3x3)ObjectToWorld4x3()));
+	
+	resultColor = TraceCutoffRay(resultColor, worldPosition, worldNormal, payload.reflectionCount);
+	resultColor = TraceAmbientOcclusionRay(resultColor, worldPosition, worldNormal, 10, 0.5f, payload.reflectionCount);
+	
+	payload.color = resultColor;
+	payload.length = RayTCurrent();
+	return;
+}
+
+//-----------------------------------------------------------------------------------------
+// ocean
+//-----------------------------------------------------------------------------------------
+[shader("closesthit")]
+void mainOceanCHS(inout Payload payload, in MyAttribute attrib) {
+	
+	if (CheckReflection(payload)) {
+		return;
+	}
+	
+	float4 resultColor = float4(0.1f, 1.0f, 1.0f, 0.0f);
+	resultColor.a = pow(saturate(RayTCurrent() / 100.0f), 2.0f);
+	
+	Vertex vtx = GetHitVertex(attrib);
+	float3 worldPosition = mul(vtx.position, ObjectToWorld4x3());
+	float3 worldNormal = normalize(mul(vtx.normal, (float3x3)ObjectToWorld4x3()));
+	
+	// collisionRay
+	{
+		float3 arbitraryVec = (abs(worldNormal.x) > abs(worldNormal.y)) ? float3(0, 1, 0) : float3(1, 0, 0);
+		float3 u = normalize(cross(worldNormal, arbitraryVec));
+		float3 v = normalize(cross(worldNormal, u));
+		
+		for (uint i = 0; i < 10 /*ksundivision*/; ++i) {
+			float theta = (2.0f * pi_v / 10.0f) * i;
+			
+			float3 direction = u * cos(theta) + v * sin(theta);
+
+			Payload collisionRay;
+			collisionRay.rayType         = RAYTYPE::COLLISION;
+			collisionRay.color           = float4(0, 0, 0, 0);
+			collisionRay.length          = 0;
+			collisionRay.reflectionCount = payload.reflectionCount;
+			collisionRay.isCollision     = false;
+			
+			RayDesc desc;
+			desc.Origin    = worldPosition;
+			desc.Direction = direction;
+			desc.TMin      = kTMin;
+			desc.TMax      = 0.2f;
+		
+			TraceRay(
+				desc, collisionRay
+			);
+			
+			if (collisionRay.isCollision) {
+				resultColor = float4(1.0f, 1.0f, 1.0f, max(0.5f, saturate(resultColor.a * 2.0f)));
+				break;
+			}
+			
+		}
+
+	}
+	
+	// alpha ray
+	{
+		Payload alphaRay;
+		alphaRay.rayType         = RAYTYPE::REFLECTION;
+		alphaRay.color           = float4(0, 0, 0, 0);
+		alphaRay.isCollision     = false;
+		alphaRay.length          = 0;
+		alphaRay.reflectionCount = payload.reflectionCount;
+		
+		RayDesc desc;
+		desc.Origin    = worldPosition;
+		desc.Direction = WorldRayDirection();
+		desc.TMin      = kTMin;
+		desc.TMax      = 10000;
+		
+		TraceRay(
+			desc, alphaRay
+		);
+		
+		resultColor = AlphaBlend(resultColor, alphaRay.color);
+	}
 	
 	payload.color = resultColor;
 	payload.length = RayTCurrent();

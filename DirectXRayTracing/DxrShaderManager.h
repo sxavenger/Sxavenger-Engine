@@ -61,8 +61,9 @@ namespace DxrObject {
 
 		// compilers
 
-		ComPtr<IDxcLibrary>  library_;
-		ComPtr<IDxcCompiler> compiler_;
+		ComPtr<IDxcLibrary>        library_;
+		ComPtr<IDxcCompiler>       compiler_;
+		ComPtr<IDxcIncludeHandler> includeHandler_;
 
 		static const std::wstring shaderModel_;
 		static const std::wstring directory_;

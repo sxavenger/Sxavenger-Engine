@@ -164,8 +164,10 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Game\RayTracingWorld\Bunny.cpp" />
     <ClCompile Include="Game\RayTracingWorld\Glass.cpp" />
     <ClCompile Include="Game\RayTracingWorld\Ground.cpp" />
+    <ClCompile Include="Game\RayTracingWorld\Ocean.cpp" />
     <ClCompile Include="Game\RayTracingWorld\Player.cpp" />
     <ClCompile Include="Game\RayTracingWorld\RayTracingObject.cpp" />
+    <ClCompile Include="Game\RayTracingWorld\Room.cpp" />
     <ClCompile Include="Game\RayTracingWorld\Teapot.cpp" />
     <ClCompile Include="Game\Scene\GameScene.cpp" />
     <ClCompile Include="Lib\Adapter\Json\Json.cpp" />
@@ -186,6 +188,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="main.cpp">
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(ProjectDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
+    <ClCompile Include="test\DxrRecordBuffers.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DirectXRayTracing\DirectXRCommon.h" />
@@ -244,8 +247,10 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Game\RayTracingWorld\Bunny.h" />
     <ClInclude Include="Game\RayTracingWorld\Glass.h" />
     <ClInclude Include="Game\RayTracingWorld\Ground.h" />
+    <ClInclude Include="Game\RayTracingWorld\Ocean.h" />
     <ClInclude Include="Game\RayTracingWorld\Player.h" />
     <ClInclude Include="Game\RayTracingWorld\RayTracingObject.h" />
+    <ClInclude Include="Game\RayTracingWorld\Room.h" />
     <ClInclude Include="Game\RayTracingWorld\Teapot.h" />
     <ClInclude Include="Game\Scene\GameScene.h" />
     <ClInclude Include="Lib\Adapter\Json\Json.h" />
@@ -266,6 +271,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Lib\Light\Light.h" />
     <ClInclude Include="Lib\ObjectStructure.h" />
     <ClInclude Include="Lib\PostEffect\GaussianBlur.h" />
+    <ClInclude Include="test\DxrRecordBuffers.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />
@@ -277,6 +283,8 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <None Include="Resources\hlsl\Lighting.hlsli" />
     <None Include="Resources\hlsl\Primitive.hlsli" />
     <None Include="Resources\hlsl\ToonShading.hlsli" />
+    <None Include="Resources\RayTracingShader\Lighting.hlsli" />
+    <None Include="Resources\RayTracingShader\RayTracingConfig.hlsli" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="externals\DirectXTex\DirectXTex_Desktop_2022_Win10.vcxproj">

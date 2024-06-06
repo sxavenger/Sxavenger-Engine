@@ -26,19 +26,22 @@ void RayTracingLight::Term() {
 
 void RayTracingLight::SetAttributeImGui() {
 
-	ImGui::ColorEdit4("color",     &data_.color.r);
-	ImGui::DragFloat3("position",  &data_.position.x, 0.02f);
-	ImGui::DragFloat3("direction", &data_.direction.x, 0.02f);
-	data_.direction = Normalize(data_.direction);
-
+	ImGui::ColorEdit4("color",      &data_.color.r);
 	ImGui::SliderFloat("intensity", &data_.intensity, 0.0f, 1.0f);
-	ImGui::DragFloat("range",       &data_.range, 0.02f, 0.0f, 100.0f);
-	ImGui::DragFloat("decay",       &data_.decay, 0.02f, 0.0f, 100.0f);
 
 	ImGui::RadioButton("directionLight", &data_.type, LIGHT_DIRECTION);
 	ImGui::SameLine();
-	ImGui::RadioButton("pointLight",     &data_.type, LIGHT_POINT);
+	ImGui::RadioButton("pointLight", &data_.type, LIGHT_POINT);
 
+	if (data_.type == LIGHT_DIRECTION) {
+		ImGui::DragFloat3("direction", &data_.direction.x, 0.02f);
+		data_.direction = Normalize(data_.direction);
+
+	} else if (data_.type == LIGHT_POINT) {
+		ImGui::DragFloat3("position", &data_.position.x, 0.02f);
+		ImGui::DragFloat("range",     &data_.range, 0.02f, 0.0f, 100.0f);
+		ImGui::DragFloat("decay",     &data_.decay, 0.02f, 0.0f, 100.0f);
+	}
 }
 
 
