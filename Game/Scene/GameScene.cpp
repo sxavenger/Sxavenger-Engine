@@ -77,23 +77,19 @@ void GameScene::Run() {
 
 void GameScene::Init() {
 
-	// constantBuffer //
-
+	// constantBuffer
 	camera_ = std::make_unique<RayTracingCamera>();
 	light_  = std::make_unique<RayTracingLight>();
 
 	// Game
-
 	ground_ = std::make_unique<Ground>();
 	player_ = std::make_unique<Player>();
 	teapot_ = std::make_unique<Teapot>();
 
 
-	// TLASにBLASの設定
+	// TLAS 
 	tlas_ = std::make_unique<TopLevelAS>();
-	tlas_->SetBLAS(player_->GetBlas(), player_->GetWorldMatrixPtr(), 0);
-	tlas_->SetBLAS(ground_->GetBlas(), ground_->GetWorldMatrixPtr(), 0);
-	tlas_->Init();
+
 }
 
 void GameScene::Term() {
@@ -101,35 +97,18 @@ void GameScene::Term() {
 
 void GameScene::Update() {
 
+
 	player_->Update();
 	camera_->Update(player_->GetWorldMatrix());
 
-	static int frame = 0;
-	frame++;
+	// TLASへの書き込み
+	tlas_->StartBlasSetup();
 
-	if (frame == 60 * 5) {
-		//tlas_->EraseBLAS(player_->GetBlas());
-		//tlas_->EraseBLAS(ground_->GetBlas());
-		tlas_->SetBLAS(teapot_->GetBlas(), teapot_->GetWorldMatrixPtr(), 0);
+	tlas_->SetBLAS(ground_->GetBlas(), ground_->GetWorldMatrix(), 0);
+	tlas_->SetBLAS(player_->GetBlas(), player_->GetWorldMatrix(), 0);
+	tlas_->SetBLAS(teapot_->GetBlas(), teapot_->GetWorldMatrix(), 0);
 
-		console->SetLog(
-			"- point1 path",
-			Console::commentOutColor
-		);
-	}
-
-	if (frame == 60 * 10) {
-		tlas_->EraseBLAS(player_->GetBlas());
-		tlas_->EraseBLAS(ground_->GetBlas());
-
-		console->SetLog(
-			"- point2 path",
-			Console::commentOutColor
-		);
-	}
-
-	// TLASの更新
-	tlas_->Update();
+	tlas_->EndBlasSetup();
 }
 
 void GameScene::Draw() {

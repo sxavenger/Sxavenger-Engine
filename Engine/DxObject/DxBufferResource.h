@@ -512,6 +512,7 @@ inline void DxObject::DynamicBufferResource<T>::Init(Devices* devices) {
 	// resourceをマッピング
 	resource_->Map(0, nullptr, reinterpret_cast<void**>(&dataArray_));
 
+	Clear();
 }
 
 template<typename T>

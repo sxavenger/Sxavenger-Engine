@@ -92,8 +92,11 @@ void DxrObject::ShaderTable::Record(
 		auto hitgroupStart = pStart + raygenerationRegion + missRegion;
 		uint8_t* pRecord = hitgroupStart;
 
+		isBlasAlive_ = false;
+
 		for (auto& blas : tlas->GetInstances()) { //!< HACK: hitgroupIndexを手動設定する場合, ここを変える必要があるかも
-			pRecord = WriteShaderRecord(pRecord, blas.first->GetRecordBuffer(), hitgroupRecordSize, properties);
+			pRecord = WriteShaderRecord(pRecord, blas.blas->GetRecordBuffer(), hitgroupRecordSize, properties);
+			isBlasAlive_ = true; //!< BLASが存在してる
 		}
 	}
 
@@ -113,10 +116,12 @@ void DxrObject::ShaderTable::Record(
 	startAddress += missRegion;
 
 	// hitgroup desc
-	dispatchRayDesc_.HitGroupTable.StartAddress  = startAddress;
-	dispatchRayDesc_.HitGroupTable.SizeInBytes   = hitgroupSize;
-	dispatchRayDesc_.HitGroupTable.StrideInBytes = hitgroupRecordSize;
-	startAddress += hitgroupRegion;
+	if (isBlasAlive_) { //!< blasが存在しているのでdescに書き込み
+		dispatchRayDesc_.HitGroupTable.StartAddress  = startAddress;
+		dispatchRayDesc_.HitGroupTable.SizeInBytes   = hitgroupSize;
+		dispatchRayDesc_.HitGroupTable.StrideInBytes = hitgroupRecordSize;
+		startAddress += hitgroupRegion;
+	}
 }
 
 void DxrObject::ShaderTable::Term() {

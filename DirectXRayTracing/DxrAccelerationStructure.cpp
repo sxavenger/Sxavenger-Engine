@@ -14,25 +14,6 @@
 using namespace DxObject;
 using namespace DxrMethod;
 
-//-----------------------------------------------------------------------------------------
-// anonymous
-//-----------------------------------------------------------------------------------------
-namespace {
-
-	//! @retval true  見つけた
-	//! @retval false 見つけられなかった
-	template <typename T, typename U>
-	bool FindMap(const std::unordered_map<T, U>& map, const T& target) {
-		
-		if (map.find(target) == map.end()) {
-			return false;
-		}
-
-		return true;
-	}
-
-}
-
 ////////////////////////////////////////////////////////////////////////////////////////////
 // BottomLevelAS class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -142,8 +123,8 @@ void DxrObject::InstanceBuffer::Clear() {
 
 void DxrObject::TopLevelAS::Init() {
 
-	// instanceDescの更新
-	SetInstanceBuffer();
+	// instanceBufferの初期化
+	instanceBuffer_ = std::make_unique<InstanceBuffer>();
 
 	// asBufferの生成
 	D3D12_BUILD_RAYTRACING_ACCELERATION_STRUCTURE_DESC buildASDesc = {};
@@ -192,18 +173,17 @@ void DxrObject::TopLevelAS::Init() {
 	}
 }
 
-void DxrObject::TopLevelAS::Create() {
-	// instanceBufferの初期化
-	instanceBuffer_ = std::make_unique<InstanceBuffer>();
-}
-
 void DxrObject::TopLevelAS::Term() {
 	MyEngine::EraseDescriptor(descriptor_);
 
 	instanceBuffer_.reset();
 }
 
-void DxrObject::TopLevelAS::Update() {
+void DxrObject::TopLevelAS::StartBlasSetup() {
+	instances_.clear(); //!< 再度TLASへの登録が始まるため要素の削除
+}
+
+void DxrObject::TopLevelAS::EndBlasSetup() {
 	
 	// instanceDescの更新
 	SetInstanceBuffer();
@@ -239,24 +219,9 @@ void DxrObject::TopLevelAS::Update() {
 }
 
 void DxrObject::TopLevelAS::SetBLAS(
-	BottomLevelAS* blas, Matrix4x4* worldMatrix, uint32_t instanceId) {
+	BottomLevelAS* blas, const Matrix4x4& worldMatrix, uint32_t instanceId) {
 
-	// blas設定
-	instances_[blas] = { worldMatrix, instanceId };
-}
-
-void DxrObject::TopLevelAS::EraseBLAS(BottomLevelAS* blas) {
-	
-	if (!FindMap(instances_, blas)) { //!< ptrが見つからなかった.
-		console->SetLog(
-			std::format("tlas erase warning: don't match blas. [blas]: {:p}", reinterpret_cast<void*>(blas)),
-			Console::warningColor
-		);
-
-		return;
-	}
-
-	instances_.erase(blas);
+	instances_.push_back({ blas, worldMatrix, instanceId });
 }
 
 void DxrObject::TopLevelAS::SetInstanceBuffer() {
@@ -270,11 +235,11 @@ void DxrObject::TopLevelAS::SetInstanceBuffer() {
 	// instances配列をbufferに設定
 	for (const auto& instance : instances_) {
 		instanceBuffer_->SetInstance(
-			index, instance.first, *instance.second.worldMatrix, instance.second.instanceId
+			index, instance.blas, instance.worldMatrix, instance.instanceId
 		);
 
 		// recordサイズの更新
-		topRecordSize_ = (std::max)(topRecordSize_, instance.first->GetRecordSize());
+		topRecordSize_ = (std::max)(topRecordSize_, instance.blas->GetRecordSize());
 
 		index++;
 	}

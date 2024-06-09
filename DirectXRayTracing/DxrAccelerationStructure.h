@@ -144,8 +144,9 @@ namespace DxrObject {
 		// InstanceData structure
 		////////////////////////////////////////////////////////////////////////////////////////////
 		struct InstanceData {
-			Matrix4x4* worldMatrix;
-			uint32_t instanceId;
+			BottomLevelAS* blas;
+			Matrix4x4      worldMatrix;
+			uint32_t       instanceId;
 			// uint32_t hitgroupIndex
 		};
 
@@ -155,27 +156,25 @@ namespace DxrObject {
 		// public methods
 		//=========================================================================================
 
-		TopLevelAS() { Create(); }
+		TopLevelAS() { Init(); }
 
 		~TopLevelAS() { Term(); }
 
 		void Init();
 
-		void Create();
-
 		void Term();
+		
+		void StartBlasSetup();
 
-		void Update();
+		void EndBlasSetup();
 
 		void SetBLAS(
-			BottomLevelAS* blas, Matrix4x4* worldMatrix, uint32_t instanceId
+			BottomLevelAS* blas, const Matrix4x4& worldMatrix, uint32_t instanceId
 		);
-
-		void EraseBLAS(BottomLevelAS* blas);
 
 		const D3D12_GPU_DESCRIPTOR_HANDLE& GetGPUDescriptorHandle() const { return descriptor_.handleGPU; }
 
-		const std::unordered_map<BottomLevelAS*, InstanceData>& GetInstances() const { return instances_; }
+		const std::vector<InstanceData>& GetInstances() const { return instances_; }
 
 		const size_t GetTopRecordSize() const { return topRecordSize_; }
 
@@ -191,10 +190,10 @@ namespace DxrObject {
 		AccelerationStructuredBuffers buffers_;
 		DxObject::Descriptor descriptor_;
 
-		std::unordered_map<BottomLevelAS*, InstanceData> instances_;
-		std::unique_ptr<InstanceBuffer>                  instanceBuffer_;
+		std::vector<InstanceData>       instances_;
+		std::unique_ptr<InstanceBuffer> instanceBuffer_;
 
-		size_t topRecordSize_;
+		size_t topRecordSize_ = 0;
 
 		//=========================================================================================
 		// private methods
