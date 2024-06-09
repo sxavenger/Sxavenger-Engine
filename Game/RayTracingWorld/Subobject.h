@@ -6,13 +6,14 @@
 // object
 #include <RayTracingObject.h>
 
-// model
-#include <Model.h>
+// DxObject
+#include <DxBufferResource.h>
+#include <DxStructuredBuffer.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// Room class
+// Subobject base class
 ////////////////////////////////////////////////////////////////////////////////////////////
-class Room
+class Subobject
 	: public RayTracingObject {
 public:
 
@@ -20,21 +21,26 @@ public:
 	// public methods
 	//=========================================================================================
 
-	Room() { Init(); }
+	Subobject() {}
 
-	~Room() { Term(); }
+	virtual ~Subobject() = default;
 
-	void Init();
+	virtual void Init(
+		DxObject::BufferResource<VertexData>* vertices, DxObject::IndexBufferResource* indices,
+		DxObject::StructuredBuffer* verticesStructuredBuffer, DxObject::StructuredBuffer* indicesStructuredBuffer) = 0;
 
-	void Term();
+	virtual void SetOnImGui(int id) = 0;
 
-private:
+	void SetOnTLAS(DxrObject::TopLevelAS* tlas);
+
+	bool IsDelete() const { return isDelete_; }
+
+protected:
 
 	//=========================================================================================
-	// private variables
+	// protected variables
 	//=========================================================================================
 
-	// IA
-	std::unique_ptr<Model> model_;
+	bool isDelete_ = false;
 
 };

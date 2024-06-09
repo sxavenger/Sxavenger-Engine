@@ -47,8 +47,16 @@ namespace DxrObject {
 
 		~BottomLevelAS() { Term(); }
 
+		//! @brief BLASの生成(StructuredBufferが内部保持される)
 		void Create(
 			DxObject::BufferResource<VertexData>* vertices, DxObject::IndexBufferResource* indices,
+			const std::wstring& hitgroup
+		);
+
+		//! @brief BLASの生成(外部参照)
+		void Create(
+			DxObject::BufferResource<VertexData>* vertices, DxObject::IndexBufferResource* indices,
+			DxObject::StructuredBuffer* verticesStructuredBuffer, DxObject::StructuredBuffer* indicesStructuredBuffer,
 			const std::wstring& hitgroup
 		);
 
@@ -66,9 +74,6 @@ namespace DxrObject {
 
 		const D3D12_GPU_VIRTUAL_ADDRESS GetGPUVirtualAddress() const { return buffers_.asbuffer->GetGPUVirtualAddress(); }
 
-		const DxObject::Descriptor& GetIndicesDescriptor() const { return indicesStrucuturedBuffer_->GetDescriptor(); }
-		const DxObject::Descriptor& GetVerticesDescriptor() const { return verticesStrucuturedBuffer_->GetDescriptor(); }
-
 		const std::wstring& GetHitgruop() const { return hitgroup_; }
 
 		const size_t GetRecordSize() const { return recordBuffer_->GetRecordSize(); }
@@ -83,7 +88,7 @@ namespace DxrObject {
 
 		AccelerationStructuredBuffers buffers_;
 
-		// HACK: vertices indices とわかれてしまっている
+		//!< structuredBufferが外部参照されている場合はempty
 		std::unique_ptr<DxObject::StructuredBuffer> verticesStrucuturedBuffer_;
 		std::unique_ptr<DxObject::StructuredBuffer> indicesStrucuturedBuffer_;
 

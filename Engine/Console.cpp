@@ -289,28 +289,28 @@ void Console::OutputSystem() {
 
 void Console::SetTextureImGui(const D3D12_GPU_DESCRIPTOR_HANDLE& texture) {
 	{
-		//タブ等を除いたウィンドウのサイズを取得(計算)
+		// タブ等を除いたウィンドウのサイズを取得(計算)
 		ImVec2 cntRegionMax = ImGui::GetWindowContentRegionMax();
 		ImVec2 cntRegionMin = ImGui::GetWindowContentRegionMin();
 		ImVec2 wndSize = { cntRegionMax.x - cntRegionMin.x, cntRegionMax.y - cntRegionMin.y };
 
-		//元のアス比とImGuiウィンドウのアス比を比較
+		// 元のアス比とImGuiウィンドウのアス比を比較
 		float outerWindowAspectRatio = static_cast<float>(kWindowWidth) / static_cast<float>(kWindowHeight);
 		float innerWindowAspectRatio = wndSize.x / wndSize.y;
 		ImVec2 finalWndSize = wndSize;
-
-		//横幅が大きかったら縦基準で画像サイズを決定
-		if (outerWindowAspectRatio <= innerWindowAspectRatio) {
+		
+		if (outerWindowAspectRatio <= innerWindowAspectRatio) { // 横幅が大きかったら縦基準で画像サイズを決定
 			finalWndSize.x *= outerWindowAspectRatio / innerWindowAspectRatio;
-		}
-		//縦幅が大きかったら横基準で画像サイズを決定
-		else {
+
+		} else { //縦幅が大きかったら横基準で画像サイズを決定
 			finalWndSize.y *= innerWindowAspectRatio / outerWindowAspectRatio;
 		}
 
-		//画像を中央に持ってくる
-		ImVec2 topLeft = { (wndSize.x - finalWndSize.x) * 0.5f + cntRegionMin.x,
-							(wndSize.y - finalWndSize.y) * 0.5f + cntRegionMin.y };
+		// 画像を中央に持ってくる
+		ImVec2 topLeft = { 
+			(wndSize.x - finalWndSize.x) * 0.5f + cntRegionMin.x,
+			(wndSize.y - finalWndSize.y) * 0.5f + cntRegionMin.y
+		};
 		ImGui::SetCursorPos(topLeft);
 
 		ImGui::Image((ImTextureID)texture.ptr, finalWndSize);

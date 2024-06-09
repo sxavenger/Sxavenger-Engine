@@ -3,39 +3,38 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
-// object
-#include <RayTracingObject.h>
+// subobject
+#include <Subobject.h>
 
 // model
 #include <Model.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// Bunny class
+// Cube class
 ////////////////////////////////////////////////////////////////////////////////////////////
-class Bunny
-	: public RayTracingObject {
+class Cube
+	: public Subobject {
 public:
 
 	//=========================================================================================
 	// public methods
 	//=========================================================================================
 
-	Bunny() { Init(); }
+	Cube() {};
 
-	~Bunny() { Term(); }
+	~Cube() override = default;
 
-	void Init();
+	void Init(
+		DxObject::BufferResource<VertexData>* vertices, DxObject::IndexBufferResource* indices,
+		DxObject::StructuredBuffer* verticesStructuredBuffer, DxObject::StructuredBuffer* indicesStructuredBuffer
+	) override;
 
-	void Term();
-
-	void Update();
+	void SetOnImGui(int id) override;
 
 private:
 
 	//=========================================================================================
-	// private methods
+	// private variables
 	//=========================================================================================
-
-	std::unique_ptr<Model> model_;
 
 };

@@ -77,6 +77,9 @@ void GameScene::Run() {
 
 void GameScene::Init() {
 
+	// TLAS 
+	tlas_ = std::make_unique<TopLevelAS>();
+
 	// constantBuffer
 	camera_ = std::make_unique<RayTracingCamera>();
 	light_  = std::make_unique<RayTracingLight>();
@@ -86,9 +89,7 @@ void GameScene::Init() {
 	player_ = std::make_unique<Player>();
 	teapot_ = std::make_unique<Teapot>();
 
-
-	// TLAS 
-	tlas_ = std::make_unique<TopLevelAS>();
+	subobjectManager_ = std::make_unique<SubobjectManager>();
 
 }
 
@@ -107,6 +108,8 @@ void GameScene::Update() {
 	tlas_->SetBLAS(ground_->GetBlas(), ground_->GetWorldMatrix(), 0);
 	tlas_->SetBLAS(player_->GetBlas(), player_->GetWorldMatrix(), 0);
 	tlas_->SetBLAS(teapot_->GetBlas(), teapot_->GetWorldMatrix(), 0);
+
+	subobjectManager_->SetBlases(tlas_.get());
 
 	tlas_->EndBlasSetup();
 }

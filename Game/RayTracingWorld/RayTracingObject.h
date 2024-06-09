@@ -23,8 +23,6 @@ public:
 
 	const Matrix4x4& GetWorldMatrix() const { return worldMatrix_; }
 
-	Matrix4x4* GetWorldMatrixPtr() { return &worldMatrix_; }
-
 protected:
 
 	//=========================================================================================

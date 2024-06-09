@@ -121,6 +121,11 @@ void DxrObject::ShaderTable::Record(
 		dispatchRayDesc_.HitGroupTable.SizeInBytes   = hitgroupSize;
 		dispatchRayDesc_.HitGroupTable.StrideInBytes = hitgroupRecordSize;
 		startAddress += hitgroupRegion;
+
+	} else {
+		dispatchRayDesc_.HitGroupTable.StartAddress  = 0;
+		dispatchRayDesc_.HitGroupTable.SizeInBytes   = 0;
+		dispatchRayDesc_.HitGroupTable.StrideInBytes = 0;
 	}
 }
 

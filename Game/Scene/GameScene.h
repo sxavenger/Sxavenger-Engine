@@ -14,11 +14,9 @@
 #include <RayTracingLight.h>
 #include <Ground.h>
 #include <Teapot.h>
-#include <Glass.h>
-#include <Bunny.h>
 #include <Player.h>
-#include <Room.h>
-#include <Ocean.h>
+
+#include <SubobjectManager.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // GameScene class
@@ -51,6 +49,8 @@ private:
 	std::unique_ptr<Ground> ground_;
 	std::unique_ptr<Player> player_;
 	std::unique_ptr<Teapot> teapot_;
+
+	std::unique_ptr<SubobjectManager> subobjectManager_;
 
 	// constantBuffer //
 

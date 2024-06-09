@@ -118,6 +118,9 @@
     <Filter Include="Game\RayTracingWorld">
       <UniqueIdentifier>{990f6103-dba4-48e8-b867-27f980181591}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Game\RayTracingWorld\Subobject">
+      <UniqueIdentifier>{1983da16-361d-4fa8-af68-3ad948d69e89}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
@@ -310,9 +313,6 @@
     <ClCompile Include="Game\Plane.cpp">
       <Filter>Game</Filter>
     </ClCompile>
-    <ClCompile Include="Game\Cube.cpp">
-      <Filter>Game</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\TextureManager.cpp">
       <Filter>Engine\source</Filter>
     </ClCompile>
@@ -370,26 +370,23 @@
     <ClCompile Include="Game\RayTracingWorld\Teapot.cpp">
       <Filter>Game\RayTracingWorld</Filter>
     </ClCompile>
-    <ClCompile Include="Game\RayTracingWorld\Glass.cpp">
-      <Filter>Game\RayTracingWorld</Filter>
-    </ClCompile>
-    <ClCompile Include="Game\RayTracingWorld\Bunny.cpp">
-      <Filter>Game\RayTracingWorld</Filter>
-    </ClCompile>
     <ClCompile Include="Lib\Geometry\MathLib.cpp">
       <Filter>Lib\Geometry\source</Filter>
     </ClCompile>
     <ClCompile Include="Game\RayTracingWorld\Player.cpp">
       <Filter>Game\RayTracingWorld</Filter>
     </ClCompile>
-    <ClCompile Include="Game\RayTracingWorld\Room.cpp">
-      <Filter>Game\RayTracingWorld</Filter>
-    </ClCompile>
-    <ClCompile Include="Game\RayTracingWorld\Ocean.cpp">
-      <Filter>Game\RayTracingWorld</Filter>
-    </ClCompile>
     <ClCompile Include="DirectXRayTracing\DxrRecordBuffer.cpp">
       <Filter>DirectXRayTracing</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\RayTracingWorld\Subobject.cpp">
+      <Filter>Game\RayTracingWorld\Subobject</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\RayTracingWorld\Cube.cpp">
+      <Filter>Game\RayTracingWorld\Subobject</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\RayTracingWorld\SubobjectManager.cpp">
+      <Filter>Game\RayTracingWorld\Subobject</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -555,9 +552,6 @@
     <ClInclude Include="Game\Plane.h">
       <Filter>Game</Filter>
     </ClInclude>
-    <ClInclude Include="Game\Cube.h">
-      <Filter>Game</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\TextureManager.h">
       <Filter>Engine\include</Filter>
     </ClInclude>
@@ -615,26 +609,23 @@
     <ClInclude Include="Game\RayTracingWorld\Teapot.h">
       <Filter>Game\RayTracingWorld</Filter>
     </ClInclude>
-    <ClInclude Include="Game\RayTracingWorld\Glass.h">
-      <Filter>Game\RayTracingWorld</Filter>
-    </ClInclude>
-    <ClInclude Include="Game\RayTracingWorld\Bunny.h">
-      <Filter>Game\RayTracingWorld</Filter>
-    </ClInclude>
     <ClInclude Include="Lib\Geometry\MathLib.h">
       <Filter>Lib\Geometry\include</Filter>
     </ClInclude>
     <ClInclude Include="Game\RayTracingWorld\Player.h">
       <Filter>Game\RayTracingWorld</Filter>
     </ClInclude>
-    <ClInclude Include="Game\RayTracingWorld\Room.h">
-      <Filter>Game\RayTracingWorld</Filter>
-    </ClInclude>
-    <ClInclude Include="Game\RayTracingWorld\Ocean.h">
-      <Filter>Game\RayTracingWorld</Filter>
-    </ClInclude>
     <ClInclude Include="DirectXRayTracing\DxrRecordBuffer.h">
       <Filter>DirectXRayTracing</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\RayTracingWorld\Subobject.h">
+      <Filter>Game\RayTracingWorld\Subobject</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\RayTracingWorld\Cube.h">
+      <Filter>Game\RayTracingWorld\Subobject</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\RayTracingWorld\SubobjectManager.h">
+      <Filter>Game\RayTracingWorld\Subobject</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

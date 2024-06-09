@@ -195,6 +195,20 @@ void DirectXRCommon::CreateStateObject(int32_t clientWidth, int32_t clientHeight
 		stateDesc.SetLocalRootSignatureDesc(3, devices_.get(), closestHitDesc);
 	}
 
+	{
+		RootSignatureDesc closestHitDesc = {};
+		closestHitDesc.Resize(2, 0);
+		closestHitDesc.SetLocalRootSignature(HITGROUP, L"teapot");
+
+		//!< index(t1)
+		closestHitDesc.SetSRV(0, 1);
+
+		//!< vertex(t2)
+		closestHitDesc.SetSRV(1, 2);
+
+		stateDesc.SetLocalRootSignatureDesc(4, devices_.get(), closestHitDesc);
+	}
+
 	// shaderBlobの生成
 	{
 		stateDesc.CreateShadeBlob();
@@ -206,6 +220,7 @@ void DirectXRCommon::CreateStateObject(int32_t clientWidth, int32_t clientHeight
 		stateDesc.blob->SetShader(L"mainGroundCHS", DxrObject::ShaderType::CLOSESTHIT_SHADER, L"ground");
 		stateDesc.blob->SetShader(L"mainPlayerCHS", DxrObject::ShaderType::CLOSESTHIT_SHADER, L"player");
 		stateDesc.blob->SetShader(L"mainTeapotCHS", DxrObject::ShaderType::CLOSESTHIT_SHADER, L"teapot");
+		stateDesc.blob->SetShader(L"mainCubeCHS", DxrObject::ShaderType::CLOSESTHIT_SHADER, L"cube");
 	}
 
 	stateObject_ = std::make_unique<DxrObject::StateObject>();

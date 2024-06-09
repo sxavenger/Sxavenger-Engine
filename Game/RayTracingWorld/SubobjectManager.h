@@ -3,31 +3,33 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
-// DxObject
-#include <DxBufferResource.h>
-
-// Geometry
-#include <Vector4.h>
-#include <Vector3.h>
-
-// c++
-#include <memory>
+// subobject
+#include <Subobject.h>
 
 // attribute
 #include <Attribute.h>
 
+// c++
+#include <list>
+#include <memory>
+#include <array>
+
+// model
+#include <Model.h>
+
 ////////////////////////////////////////////////////////////////////////////////////////////
-// LightType enum
+// SubobjectType enum
 ////////////////////////////////////////////////////////////////////////////////////////////
-enum LightType {
-	LIGHT_DIRECTION,
-	LIGHT_POINT,
+enum SubobjectType {
+	TYPE_CUBE,
+
+	kCountOfSubobjectType
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// RayTracingLight class
+// SubobjectManager class
 ////////////////////////////////////////////////////////////////////////////////////////////
-class RayTracingLight
+class SubobjectManager
 	: public Attribute {
 public:
 
@@ -35,41 +37,42 @@ public:
 	// public methods
 	//=========================================================================================
 
-	RayTracingLight() { Init(); }
+	SubobjectManager() { Init(); }
 
-	~RayTracingLight() { Term(); }
+	~SubobjectManager() { Term(); }
 
 	void Init();
 
 	void Term();
 
-	void SetAttributeImGui() override;
+	void SetBlases(DxrObject::TopLevelAS* tlas);
 
-	const D3D12_GPU_VIRTUAL_ADDRESS GetGPUVirtualAddress() const {
-		return resource_->GetGPUVirtualAddress();
-	}
+	void SetAttributeImGui() override;
 
 private:
 
 	////////////////////////////////////////////////////////////////////////////////////////////
-	// DirectionalLight structure
+	// MeshStructuredBuffer structure
 	////////////////////////////////////////////////////////////////////////////////////////////
-	struct DirectionalLight {
-		Vector4f color     = { 1.0f, 1.0f, 1.0f, 1.0f };
-		Vector4f position  = { 0.0f, 0.0f, 0.0f, 1.0f };
-		Vector3f direction = { 0.0f, -1.0f, 0.0f };
-		float intensity    = 1.0f;
-		float range        = 0.0f;
-		float decay        = 1.0f;
+	struct MeshStructuredBuffer {
+		std::unique_ptr<DxObject::StructuredBuffer> index;
+		std::unique_ptr<DxObject::StructuredBuffer> vertex;
 
-		int type = LIGHT_DIRECTION;
+		void Create(Model* model) {
+			index  = std::make_unique<DxObject::StructuredBuffer>(model->GetMeshData(0).indexResource.get());
+			vertex = std::make_unique<DxObject::StructuredBuffer>(model->GetMeshData(0).vertexResource.get());
+		}
 	};
 
 	//=========================================================================================
 	// private variables
 	//=========================================================================================
 
-	std::unique_ptr<DxObject::BufferPtrResource<DirectionalLight>> resource_;
-	DirectionalLight data_;
+	std::list<std::unique_ptr<Subobject>> subobjects_;
+
+	static const std::string filePaths_[SubobjectType::kCountOfSubobjectType];
+
+	std::array<std::unique_ptr<Model>, SubobjectType::kCountOfSubobjectType> models_;
+	std::array<MeshStructuredBuffer,   SubobjectType::kCountOfSubobjectType> meshStructuredBuffers_;
 
 };
