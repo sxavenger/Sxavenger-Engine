@@ -64,5 +64,4 @@ void Player::SetAttributeImGui() {
 
 	ImGui::Text("// todo: key config");
 
-
 }

@@ -39,12 +39,6 @@ private:
 	//=========================================================================================
 
 	//-----------------------------------------------------------------------------------------
-	// system
-	//-----------------------------------------------------------------------------------------
-
-	Console* console_ = Console::GetInstance();
-
-	//-----------------------------------------------------------------------------------------
 	// raytracing world
 	//-----------------------------------------------------------------------------------------
 
@@ -54,13 +48,9 @@ private:
 
 	// object //
 
-	std::unique_ptr<Ground> ground_; 
-	std::unique_ptr<Teapot> teapot_;
-	std::unique_ptr<Glass>  glass_;
-	std::unique_ptr<Bunny>  bunny_;
+	std::unique_ptr<Ground> ground_;
 	std::unique_ptr<Player> player_;
-	std::unique_ptr<Room>   room_;
-	std::unique_ptr<Ocean>  ocean_;
+	std::unique_ptr<Teapot> teapot_;
 
 	// constantBuffer //
 

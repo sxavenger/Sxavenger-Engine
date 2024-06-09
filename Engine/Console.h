@@ -138,3 +138,5 @@ private:
 	void SetTextureImGui(const D3D12_GPU_DESCRIPTOR_HANDLE& texture);
 
 };
+
+static Console* console = Console::GetInstance();

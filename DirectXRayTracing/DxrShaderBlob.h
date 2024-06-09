@@ -13,8 +13,11 @@
 #include <string>
 #include <vector>
 
-// com
+// comptr
 #include <ComPtr.h>
+
+// DxrObject
+#include <DxrMethod.h>
 
 //-----------------------------------------------------------------------------------------
 // comment

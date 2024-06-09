@@ -26,7 +26,7 @@ void GameScene::Run() {
 	// 初期化処理
 	//=========================================================================================
 
-	console_->Init();
+	console->Init();
 	Init();
 
 	/*std::unique_ptr<Camera3D> camera = std::make_unique<Camera3D>();
@@ -46,7 +46,7 @@ void GameScene::Run() {
 		// 更新処理
 		//=========================================================================================
 
-		console_->Update();
+		console->Update();
 		Update();
 
 		//=========================================================================================
@@ -67,7 +67,7 @@ void GameScene::Run() {
 	//=========================================================================================
 
 	Term();
-	console_->Term();
+	console->Term();
 
 }
 
@@ -85,81 +85,51 @@ void GameScene::Init() {
 	// Game
 
 	ground_ = std::make_unique<Ground>();
-	teapot_ = std::make_unique<Teapot>();
-	glass_  = std::make_unique<Glass>();
-	bunny_ = std::make_unique<Bunny>();
 	player_ = std::make_unique<Player>();
-	room_ = std::make_unique<Room>();
-	ocean_ = std::make_unique<Ocean>();
+	teapot_ = std::make_unique<Teapot>();
 
 
-	// TLASの生成
-	{ // todo: worldMatrixが変わるので関数にしておく
-
-		uint32_t baseDescIndex = 6;
-
-		InstanceDesc desc = {};
-		desc.Resize(baseDescIndex + glass_->GetModelSize());
-
-		desc.Set(0, ground_->GetBlas(), ground_->GetWorldMatrix(), 0);
-		desc.Set(1, teapot_->GetBlas(), teapot_->GetWorldMatrix(), 0);
-		desc.Set(2, bunny_->GetBlas(), bunny_->GetWorldMatrix(), 0);
-		desc.Set(3, player_->GetBlas(), player_->GetWorldMatrix(), 0);
-		desc.Set(4, room_->GetBlas(), room_->GetWorldMatrix(), 0);
-		desc.Set(5, ocean_->GetBlas(), ocean_->GetWorldMatrix(), 0);
-		
-		for (uint32_t i = 0; i < glass_->GetModelSize(); ++i) {
-
-			uint32_t descIndex = baseDescIndex + i;
-
-			desc.Set(
-				descIndex, glass_->GetBlas(i), glass_->GetWorldMatrix(), i
-			);
-		}
-		
-		tlas_ = std::make_unique<TopLevelAS>();
-		tlas_->Create(desc);
-	}
-
-	RayTracingEngine::CreateStateObject(
-		kWindowWidth, kWindowHeight,
-		tlas_.get()
-	);
+	// TLASにBLASの設定
+	tlas_ = std::make_unique<TopLevelAS>();
+	tlas_->SetBLAS(player_->GetBlas(), player_->GetWorldMatrixPtr(), 0);
+	tlas_->SetBLAS(ground_->GetBlas(), ground_->GetWorldMatrixPtr(), 0);
+	tlas_->Init();
 }
 
 void GameScene::Term() {
 }
 
 void GameScene::Update() {
+
 	player_->Update();
 	camera_->Update(player_->GetWorldMatrix());
-	bunny_->Update();
+
+	static int frame = 0;
+	frame++;
+
+	if (frame == 60 * 5) {
+		//tlas_->EraseBLAS(player_->GetBlas());
+		//tlas_->EraseBLAS(ground_->GetBlas());
+		tlas_->SetBLAS(teapot_->GetBlas(), teapot_->GetWorldMatrixPtr(), 0);
+
+		console->SetLog(
+			"- point1 path",
+			Console::commentOutColor
+		);
+	}
+
+	if (frame == 60 * 10) {
+		tlas_->EraseBLAS(player_->GetBlas());
+		tlas_->EraseBLAS(ground_->GetBlas());
+
+		console->SetLog(
+			"- point2 path",
+			Console::commentOutColor
+		);
+	}
 
 	// TLASの更新
-	{
-		uint32_t baseDescIndex = 6;
-
-		InstanceDesc desc = {};
-		desc.Resize(baseDescIndex + glass_->GetModelSize());
-
-		desc.Set(0, ground_->GetBlas(), ground_->GetWorldMatrix(), 0);
-		desc.Set(1, teapot_->GetBlas(), teapot_->GetWorldMatrix(), 0);
-		desc.Set(2, bunny_->GetBlas(), bunny_->GetWorldMatrix(), 0);
-		desc.Set(3, player_->GetBlas(), player_->GetWorldMatrix(), 0);
-		desc.Set(4, room_->GetBlas(), room_->GetWorldMatrix(), 0);
-		desc.Set(5, ocean_->GetBlas(), ocean_->GetWorldMatrix(), 0);
-
-		for (uint32_t i = 0; i < glass_->GetModelSize(); ++i) {
-
-			uint32_t descIndex = baseDescIndex + i;
-
-			desc.Set(
-				descIndex, glass_->GetBlas(i), glass_->GetWorldMatrix(), i
-			);
-		}
-
-		tlas_->Update(desc);
-	}
+	tlas_->Update();
 }
 
 void GameScene::Draw() {
@@ -171,19 +141,17 @@ void GameScene::Draw() {
 	//=========================================================================================
 
 	{
-		RayTracingEngine::BeginRayTracing();
+		RayTracingEngine::BeginRayTracing(tlas_.get());
 
 		commandList->SetComputeRootDescriptorTable(0, tlas_->GetGPUDescriptorHandle());
 		commandList->SetComputeRootConstantBufferView(1, camera_->GetGPUVirtualAddress());
 		commandList->SetComputeRootConstantBufferView(2, light_->GetGPUVirtualAddress());
-		commandList->SetComputeRootDescriptorTable(3, glass_->GetGPUHandle());
-		commandList->SetComputeRootDescriptorTable(4, MyEngine::GetTextureHandleGPU("resources/tile_black.png"));
 
 		RayTracingEngine::EndRayTracing();
 	}
 
 	MyEngine::TransitionProcess();
-	console_->OutputRayTracingResult(RayTracingEngine::GetDxrCommon()->GetResultBufferTexture());
+	console->OutputRayTracingResult(RayTracingEngine::GetDxrCommon()->GetResultBufferTexture());
 
 	/*//-----------------------------------------------------------------------------------------
 	// postEffect test

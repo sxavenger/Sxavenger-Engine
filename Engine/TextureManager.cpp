@@ -147,24 +147,28 @@ void TextureManager::Init(DirectXCommon* dxCommon) {
 
 	LoadTexture("resources/uvChecker.png");
 	LoadTexture("resources/tile_black.png");
+	LoadTexture("resources/tile_white.png");
 
 }
 
 void TextureManager::Term() {
 	textures_.clear();
+	waitTextureQueue_.clear();
+
 	dxCommon_ = nullptr;
 }
 
 void TextureManager::EnableTexture() {
-	for (auto& textureData : textures_) {
-		if (textureData.second.isTextureEnabled) {
-			continue;
-		}
+	// 送信が完了した場合
+	while (!waitTextureQueue_.empty()) { //!< queueに入ってるすべてのtextureを使える状態に
+		textures_.at(waitTextureQueue_.front()).isTextureEnabled = true;
 
-		textureData.second.isTextureEnabled = true;
-		Console::GetInstance()->SetLog(
-			"[Send Texture] filePath: " + textureData.first
+		console->SetLog(
+			"[Enabled Texture] filePath: " + waitTextureQueue_.front(),
+			Console::commentOutColor
 		);
+
+		waitTextureQueue_.pop_front();
 	}
 }
 
@@ -182,7 +186,10 @@ void TextureManager::LoadTexture(const std::string& filePath) {
 	textures_[filePath].referenceCount   = 1;
 	textures_[filePath].isTextureEnabled = false; // commandListに積んだだけなのでまだ使えない
 
-	Console::GetInstance()->SetLog(
+	// 送信待ちtextureのqueueに追加
+	waitTextureQueue_.push_back(filePath);
+
+	console->SetLog(
 		"[Load Texture] filePath: " + filePath
 	);
 }
@@ -190,7 +197,7 @@ void TextureManager::LoadTexture(const std::string& filePath) {
 void TextureManager::CreateRenderTexture(int32_t width, int32_t height, const std::string& key) {
 	if (FindKey(key)) {
 		Log("TextureManager::CreateRenderTexture \n if (it != textures_.end()) { \n return; \n} \n");
-		Console::GetInstance()->SetLog("warning: texture already made. [key]: " + key, Console::warningColor);
+		console->SetLog("warning: texture already made. [key]: " + key, Console::warningColor);
 		return;
 	}
 
@@ -201,7 +208,7 @@ void TextureManager::CreateRenderTexture(int32_t width, int32_t height, const st
 	textures_[key].referenceCount = 1;
 	textures_[key].isTextureEnabled = true;
 
-	Console::GetInstance()->SetLog(
+	console->SetLog(
 		"[Create RenderTexture] key: " + key
 	);
 }
@@ -226,7 +233,7 @@ void TextureManager::DeleteTexture(const std::string& key) {
 	textures_[key].texture.reset();
 	textures_.erase(key);
 
-	Console::GetInstance()->SetLog(
+	console->SetLog(
 		"[Delete Texture] key: " + key
 	);
 }

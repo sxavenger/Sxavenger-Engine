@@ -28,22 +28,31 @@ void DxrObject::StateObjectDesc::Clear() {
 	blob.reset();
 }
 
-void DxrObject::StateObjectDesc::CreateLocalRootSignature(uint32_t size) {
-	localRootSignatures.resize(size);
-
-	for (uint32_t i = 0; i < size; ++i) {
-		localRootSignatures[i] = std::make_unique<LocalRootSignature>();
-	}
-}
-
 void DxrObject::StateObjectDesc::SetLocalRootSignatureDesc(
 	uint32_t index, DxObject::Devices* device, const RootSignatureDesc& desc) {
+
+	AutoCreateLocalRootSignature(index);
 
 	localRootSignatures[index]->Init(device, desc);
 }
 
 void DxrObject::StateObjectDesc::CreateShadeBlob() {
 	blob = std::make_unique<ShaderBlob>();
+}
+
+void DxrObject::StateObjectDesc::AutoCreateLocalRootSignature(uint32_t index) {
+	if (index < localRootSignatures.size()) {
+		return; //!< index分の配列がすでに作られている
+	}
+
+	uint32_t beforeIndex = static_cast<uint32_t>(localRootSignatures.size());
+	localRootSignatures.resize(index + 1);
+
+	// localRootSignatureのunique_ptrの生成
+	for (uint32_t i = beforeIndex; i <= index; ++i) {
+		localRootSignatures[i] = std::make_unique<LocalRootSignature>();
+	}
+
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -111,11 +120,27 @@ void DxrObject::StateObject::Init(DxObject::Devices* devices, const StateObjectD
 		for (const auto& data : descs.blob->GetDatas()) {
 			exports.push_back(data.mainFunctionName.c_str());
 
-			// 取り出しついでにhitgroupの管理
-			// todo: anyhit intersection も追加
-			if (data.shaderType == ShaderType::CLOSESTHIT_SHADER) {
-				assert(hitgroups[data.hitgroup].closestHit.empty()); //!< すでにhitgroupに登録されている
-				hitgroups[data.hitgroup].closestHit = data.mainFunctionName;
+			// export名を raygeneration, miss, higtroupの三種類に保存
+			switch (data.shaderType) {
+				case ShaderType::RAYGENERATION_SHADER:
+					exports_[ExportType::RAYGENERATION].insert(data.mainFunctionName);
+					break;
+
+				case ShaderType::MISS_SHADER:
+					exports_[ExportType::MISS].insert(data.mainFunctionName);
+					break;
+
+				default: // othre hitgroup shaders
+					exports_[ExportType::HITGROUP].insert(data.mainFunctionName);
+
+					// hitgroup から closest, any, intersectionの3つに分類
+					// todo: any, intersection
+					if (data.shaderType == ShaderType::CLOSESTHIT_SHADER) {
+						assert(hitgroups[data.hitgroup].closestHit.empty()); //!< すでにhitgroupに登録されている
+						hitgroups[data.hitgroup].closestHit = data.mainFunctionName;
+					}
+
+					break;
 			}
 		}
 

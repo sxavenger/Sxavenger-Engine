@@ -12,6 +12,7 @@
 #include <memory>
 #include <vector>
 #include <unordered_map>
+#include <unordered_set>
 
 // ComPtr
 #include <ComPtr.h>
@@ -19,6 +20,7 @@
 // DxrObject
 #include <DxrRootSignature.h>
 #include <DxrShaderBlob.h>
+#include <DxrMethod.h>
 
 //-----------------------------------------------------------------------------------------
 // comment
@@ -51,7 +53,6 @@ namespace DxrObject {
 
 		void Clear();
 
-		void CreateLocalRootSignature(uint32_t size);
 		void SetLocalRootSignatureDesc(uint32_t index, DxObject::Devices* device, const RootSignatureDesc& desc);
 
 		void CreateShadeBlob();
@@ -61,10 +62,19 @@ namespace DxrObject {
 		//=========================================================================================
 
 		// rootSignature
-		RootSignature* globalRootSignature; // ユーザー側が管理しとく必要がある
+		RootSignature* globalRootSignature; //!< 描画で使用するのでユーザー側が管理しとく必要がある
+
 		std::vector<std::unique_ptr<LocalRootSignature>> localRootSignatures;
 
-		std::unique_ptr<ShaderBlob> blob;
+		std::unique_ptr<ShaderBlob> blob; // FIXME: shaderが別々であっても機能するように
+
+	private:
+
+		//=========================================================================================
+		// private methods
+		//=========================================================================================
+
+		void AutoCreateLocalRootSignature(uint32_t index);
 
 	};
 
@@ -88,6 +98,8 @@ namespace DxrObject {
 
 		const uint32_t GetHitgroupCount() const { return hitgroupCount_; }
 
+		const std::unordered_set<std::wstring>& GetExports(ExportType type) const { return exports_[type]; }
+
 	private:
 
 		//=========================================================================================
@@ -102,6 +114,8 @@ namespace DxrObject {
 		// shaderTable //
 
 		uint32_t hitgroupCount_;
+
+		std::unordered_set<std::wstring> exports_[kNotSelectExport];
 
 	};
 

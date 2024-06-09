@@ -118,9 +118,6 @@
     <Filter Include="Game\RayTracingWorld">
       <UniqueIdentifier>{990f6103-dba4-48e8-b867-27f980181591}</UniqueIdentifier>
     </Filter>
-    <Filter Include="TEST">
-      <UniqueIdentifier>{374284a3-4b07-4401-81f4-8b59b30da35a}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
@@ -391,8 +388,8 @@
     <ClCompile Include="Game\RayTracingWorld\Ocean.cpp">
       <Filter>Game\RayTracingWorld</Filter>
     </ClCompile>
-    <ClCompile Include="test\DxrRecordBuffers.cpp">
-      <Filter>TEST</Filter>
+    <ClCompile Include="DirectXRayTracing\DxrRecordBuffer.cpp">
+      <Filter>DirectXRayTracing</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -636,8 +633,8 @@
     <ClInclude Include="Game\RayTracingWorld\Ocean.h">
       <Filter>Game\RayTracingWorld</Filter>
     </ClInclude>
-    <ClInclude Include="test\DxrRecordBuffers.h">
-      <Filter>TEST</Filter>
+    <ClInclude Include="DirectXRayTracing\DxrRecordBuffer.h">
+      <Filter>DirectXRayTracing</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

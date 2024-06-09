@@ -9,9 +9,14 @@
 #include <DxStructuredBuffer.h>
 #include <DxrMethod.h>
 
+// DxrObject
+#include <DxrRecordBuffer.h>
+
 // c++
 #include <vector>
 #include <memory>
+#include <variant>
+#include <unordered_map>
 
 // object
 #include <ObjectStructure.h>
@@ -40,6 +45,8 @@ namespace DxrObject {
 		// public methods
 		//=========================================================================================
 
+		~BottomLevelAS() { Term(); }
+
 		void Create(
 			DxObject::BufferResource<VertexData>* vertices, DxObject::IndexBufferResource* indices,
 			const std::wstring& hitgroup
@@ -47,12 +54,26 @@ namespace DxrObject {
 
 		void Term();
 
+		void SetBuffer(
+			uint32_t index, const D3D12_GPU_DESCRIPTOR_HANDLE& handleGPU) {
+			recordBuffer_->SetBuffer(index, handleGPU);
+		}
+
+		void SetBuffer(
+			uint32_t index, const D3D12_GPU_VIRTUAL_ADDRESS& address) {
+			recordBuffer_->SetBuffer(index, address);
+		}
+
 		const D3D12_GPU_VIRTUAL_ADDRESS GetGPUVirtualAddress() const { return buffers_.asbuffer->GetGPUVirtualAddress(); }
 
-		const DxObject::Descriptor GetIndicesDescriptor() const { return indicesStrucuturedBuffer_->GetDescriptor(); }
-		const DxObject::Descriptor GetVerticesDescriptor() const { return verticesStrucuturedBuffer_->GetDescriptor(); }
+		const DxObject::Descriptor& GetIndicesDescriptor() const { return indicesStrucuturedBuffer_->GetDescriptor(); }
+		const DxObject::Descriptor& GetVerticesDescriptor() const { return verticesStrucuturedBuffer_->GetDescriptor(); }
 
 		const std::wstring& GetHitgruop() const { return hitgroup_; }
+
+		const size_t GetRecordSize() const { return recordBuffer_->GetRecordSize(); }
+
+		RecordBuffer* GetRecordBuffer() const { return recordBuffer_.get(); }
 
 	private:
 
@@ -66,42 +87,50 @@ namespace DxrObject {
 		std::unique_ptr<DxObject::StructuredBuffer> verticesStrucuturedBuffer_;
 		std::unique_ptr<DxObject::StructuredBuffer> indicesStrucuturedBuffer_;
 
-		std::wstring hitgroup_ = L"hitGroup"; // 仮
+		std::wstring hitgroup_ = L"";
+		
+		// recordBuffer
+		std::unique_ptr<RecordBuffer> recordBuffer_;
 
 	};
 
 	////////////////////////////////////////////////////////////////////////////////////////////
-	// InstanceDesc structure
+	// InstanceBuffer structure
 	////////////////////////////////////////////////////////////////////////////////////////////
-	struct InstanceDesc {
+	struct InstanceBuffer {
 
 		//=========================================================================================
 		// methods
 		//=========================================================================================
 
-		~InstanceDesc() { Clear(); }
+		InstanceBuffer() { Init(); }
 
-		void Resize(uint32_t size);
+		~InstanceBuffer() { Term(); }
 
-		void Set( // HACK: name
-			uint32_t index,
-			BottomLevelAS* blas, const Matrix4x4& worldMatrix, uint32_t hitGroupIndex, uint32_t instanceId
-		);
+		void Init();
 
-		void Set(
+		void Term();
+
+		void SetInstance(
 			uint32_t index,
 			BottomLevelAS* blas, const Matrix4x4& worldMatrix, uint32_t instanceId
 		);
 
 		void Clear();
 
+		const D3D12_GPU_VIRTUAL_ADDRESS GetGPUVirtualAddress() const {
+			return descBuffer_->GetGPUVirtualAddress();
+		}
+
+		const uint32_t GetCurrentIndexSize() const { return descBuffer_->GetCurrentIndexSize(); }
+
+		const uint32_t GetMaxIndexSize() const { return descBuffer_->GetIndexSize(); }
+
 		//=========================================================================================
 		// variables
 		//=========================================================================================
 
-		std::vector<D3D12_RAYTRACING_INSTANCE_DESC> descs;
-
-		std::vector<BottomLevelAS*> blasPtrs_; //!< hitgruopごとに分ける
+		std::unique_ptr<DxObject::DynamicBufferResource<D3D12_RAYTRACING_INSTANCE_DESC>> descBuffer_;
 
 	};
 
@@ -109,21 +138,48 @@ namespace DxrObject {
 	// TopLevelAS class
 	////////////////////////////////////////////////////////////////////////////////////////////
 	class TopLevelAS {
+	private:
+
+		////////////////////////////////////////////////////////////////////////////////////////////
+		// InstanceData structure
+		////////////////////////////////////////////////////////////////////////////////////////////
+		struct InstanceData {
+			Matrix4x4* worldMatrix;
+			uint32_t instanceId;
+			// uint32_t hitgroupIndex
+		};
+
 	public:
 
 		//=========================================================================================
 		// public methods
 		//=========================================================================================
 
-		void Create(const InstanceDesc& instanceDesc);
+		TopLevelAS() { Create(); }
+
+		~TopLevelAS() { Term(); }
+
+		void Init();
+
+		void Create();
 
 		void Term();
 
-		void Update(const InstanceDesc& instanceDesc);
+		void Update();
+
+		void SetBLAS(
+			BottomLevelAS* blas, Matrix4x4* worldMatrix, uint32_t instanceId
+		);
+
+		void EraseBLAS(BottomLevelAS* blas);
 
 		const D3D12_GPU_DESCRIPTOR_HANDLE& GetGPUDescriptorHandle() const { return descriptor_.handleGPU; }
 
-		const std::vector<BottomLevelAS*>& GetBLASPtrArray() const { return blasPtrs_; }
+		const std::unordered_map<BottomLevelAS*, InstanceData>& GetInstances() const { return instances_; }
+
+		const size_t GetTopRecordSize() const { return topRecordSize_; }
+
+		const uint32_t GetObjectSize() const { return static_cast<uint32_t>(instances_.size()); }
 
 	private:
 
@@ -135,9 +191,16 @@ namespace DxrObject {
 		AccelerationStructuredBuffers buffers_;
 		DxObject::Descriptor descriptor_;
 
-		std::unique_ptr<DxObject::BufferResource<D3D12_RAYTRACING_INSTANCE_DESC>> instanceDescBuffer_;
+		std::unordered_map<BottomLevelAS*, InstanceData> instances_;
+		std::unique_ptr<InstanceBuffer>                  instanceBuffer_;
 
-		std::vector<BottomLevelAS*> blasPtrs_;
+		size_t topRecordSize_;
+
+		//=========================================================================================
+		// private methods
+		//=========================================================================================
+
+		void SetInstanceBuffer();
 
 	};
 

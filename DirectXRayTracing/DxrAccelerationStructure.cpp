@@ -5,6 +5,7 @@
 //-----------------------------------------------------------------------------------------
 #include <MyEngine.h>
 #include <Logger.h>
+#include <Console.h>
 #include <d3dx12.h>
 
 //-----------------------------------------------------------------------------------------
@@ -13,14 +14,32 @@
 using namespace DxObject;
 using namespace DxrMethod;
 
+//-----------------------------------------------------------------------------------------
+// anonymous
+//-----------------------------------------------------------------------------------------
+namespace {
+
+	//! @retval true  見つけた
+	//! @retval false 見つけられなかった
+	template <typename T, typename U>
+	bool FindMap(const std::unordered_map<T, U>& map, const T& target) {
+		
+		if (map.find(target) == map.end()) {
+			return false;
+		}
+
+		return true;
+	}
+
+}
+
 ////////////////////////////////////////////////////////////////////////////////////////////
 // BottomLevelAS class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 void DxrObject::BottomLevelAS::Create(
 	DxObject::BufferResource<VertexData>* vertices, DxObject::IndexBufferResource* indices,
-	const std::wstring& hitgroup
-) {
+	const std::wstring& hitgroup ) {
 	
 	D3D12_RAYTRACING_GEOMETRY_DESC geomDesc = {};
 	geomDesc.Type                                 = D3D12_RAYTRACING_GEOMETRY_TYPE_TRIANGLES;
@@ -68,78 +87,71 @@ void DxrObject::BottomLevelAS::Create(
 
 	// hitgroupの登録
 	hitgroup_ = hitgroup;
+
+	// recordBufferの初期化
+	recordBuffer_ = std::make_unique<RecordBuffer>();
+	recordBuffer_->SetExport(HITGROUP, hitgroup);
+
+	// bufferを設定しておく
+	recordBuffer_->SetBuffer(0, indicesStrucuturedBuffer_->GetGPUHandle());
+	recordBuffer_->SetBuffer(1, verticesStrucuturedBuffer_->GetGPUHandle());
 }
 
 void DxrObject::BottomLevelAS::Term() {
 	verticesStrucuturedBuffer_.reset();
 	indicesStrucuturedBuffer_.reset();
+	recordBuffer_.reset();
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// InstanceDesc structure methods
+// InstanceBuffer structure methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-void DxrObject::InstanceDesc::Resize(uint32_t size) {
-	descs.resize(size);
-	blasPtrs_.resize(size);
+void DxrObject::InstanceBuffer::Init() {
+	// buffer
+	descBuffer_ = std::make_unique<DxObject::DynamicBufferResource<D3D12_RAYTRACING_INSTANCE_DESC>>(MyEngine::GetDevicesObj());
 }
 
-void DxrObject::InstanceDesc::Set(
-	uint32_t index,
-	BottomLevelAS* blas, const Matrix4x4& worldMatrix, uint32_t hitGroupIndex, uint32_t instanceId) {
-
-	descs[index].Flags        = D3D12_RAYTRACING_INSTANCE_FLAG_NONE;
-	descs[index].InstanceMask = 0xFF;
-	
-	// matrixを4x4から3x4に修正
-	Matrix4x4 mat = Matrix::Transpose(worldMatrix);
-	memcpy(descs[index].Transform, &mat, sizeof(descs[index].Transform));
-
-	descs[index].AccelerationStructure               = blas->GetGPUVirtualAddress();
-	descs[index].InstanceContributionToHitGroupIndex = hitGroupIndex;
-	descs[index].InstanceID                          = instanceId;
-	
-	blasPtrs_[index] = blas;
+void DxrObject::InstanceBuffer::Term() {
 }
 
-void DxrObject::InstanceDesc::Set(
+void DxrObject::InstanceBuffer::SetInstance(
 	uint32_t index,
 	BottomLevelAS* blas, const Matrix4x4& worldMatrix, uint32_t instanceId) {
 
-	descs[index].Flags        = D3D12_RAYTRACING_INSTANCE_FLAG_NONE;
-	descs[index].InstanceMask = 0xFF;
+	descBuffer_->operator[](index).Flags        = D3D12_RAYTRACING_INSTANCE_FLAG_NONE;
+	descBuffer_->operator[](index).InstanceMask = 0xFF;
 	
 	// matrixを4x4から3x4に修正
 	Matrix4x4 mat = Matrix::Transpose(worldMatrix);
-	memcpy(descs[index].Transform, &mat, sizeof(descs[index].Transform));
+	memcpy(descBuffer_->operator[](index).Transform, &mat, sizeof(descBuffer_->operator[](index).Transform));
 
-	descs[index].AccelerationStructure               = blas->GetGPUVirtualAddress();
-	descs[index].InstanceContributionToHitGroupIndex = index;
-	descs[index].InstanceID                          = instanceId;
-	
-	blasPtrs_[index] = blas;
+	descBuffer_->operator[](index).AccelerationStructure               = blas->GetGPUVirtualAddress();
+	descBuffer_->operator[](index).InstanceContributionToHitGroupIndex = index; // hack
+	descBuffer_->operator[](index).InstanceID                          = instanceId;
+
 }
 
-void DxrObject::InstanceDesc::Clear() {
-	descs.clear();
-	descs.shrink_to_fit();
+void DxrObject::InstanceBuffer::Clear() {
+	descBuffer_->Clear();
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // TopLevelAS class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-void DxrObject::TopLevelAS::Create(const InstanceDesc& instanceDesc) {
-	// resourceの生成
-	instanceDescBuffer_ = std::make_unique<DxObject::BufferResource<D3D12_RAYTRACING_INSTANCE_DESC>>(MyEngine::GetDevicesObj(), static_cast<uint32_t>(instanceDesc.descs.size()));
-	instanceDescBuffer_->Memcpy(instanceDesc.descs.data());
+void DxrObject::TopLevelAS::Init() {
 
+	// instanceDescの更新
+	SetInstanceBuffer();
+
+	// asBufferの生成
 	D3D12_BUILD_RAYTRACING_ACCELERATION_STRUCTURE_DESC buildASDesc = {};
 	buildASDesc.Inputs.Type          = D3D12_RAYTRACING_ACCELERATION_STRUCTURE_TYPE_TOP_LEVEL;
 	buildASDesc.Inputs.DescsLayout   = D3D12_ELEMENTS_LAYOUT_ARRAY;
 	buildASDesc.Inputs.Flags         = D3D12_RAYTRACING_ACCELERATION_STRUCTURE_BUILD_FLAG_ALLOW_UPDATE;
-	buildASDesc.Inputs.NumDescs      = instanceDescBuffer_->GetIndexSize();
-	buildASDesc.Inputs.InstanceDescs = instanceDescBuffer_->GetGPUVirtualAddress();
+	buildASDesc.Inputs.NumDescs      = instanceBuffer_->GetMaxIndexSize();
+	buildASDesc.Inputs.InstanceDescs = instanceBuffer_->GetGPUVirtualAddress();
 
 	buffers_ = CreateAccelerationStructure(
 		buildASDesc
@@ -178,31 +190,29 @@ void DxrObject::TopLevelAS::Create(const InstanceDesc& instanceDesc) {
 			nullptr, &desc, descriptor_.handleCPU
 		);
 	}
+}
 
-	blasPtrs_.assign(instanceDesc.blasPtrs_.begin(), instanceDesc.blasPtrs_.end());
-
+void DxrObject::TopLevelAS::Create() {
+	// instanceBufferの初期化
+	instanceBuffer_ = std::make_unique<InstanceBuffer>();
 }
 
 void DxrObject::TopLevelAS::Term() {
 	MyEngine::EraseDescriptor(descriptor_);
 
-	instanceDescBuffer_.reset();
+	instanceBuffer_.reset();
 }
 
-void DxrObject::TopLevelAS::Update(const InstanceDesc& instanceDesc) {
-
-	assert(instanceDesc.descs.size() <= instanceDescBuffer_->GetIndexSize()); //!< 初期化で使ったdescより配列のオーバー
+void DxrObject::TopLevelAS::Update() {
 	
 	// instanceDescの更新
-	instanceDescBuffer_->Memcpy(instanceDesc.descs.data());
-	// HACK: 初期化で作った配列サイズを超えた分は反映されない
-	// -> 動的な配列に対応したBufferResourceクラスの生成
+	SetInstanceBuffer();
 	
 	D3D12_BUILD_RAYTRACING_ACCELERATION_STRUCTURE_DESC buildASDesc = {};
 	buildASDesc.Inputs.Type          = D3D12_RAYTRACING_ACCELERATION_STRUCTURE_TYPE_TOP_LEVEL;
 	buildASDesc.Inputs.DescsLayout   = D3D12_ELEMENTS_LAYOUT_ARRAY;
-	buildASDesc.Inputs.NumDescs      = instanceDescBuffer_->GetIndexSize();
-	buildASDesc.Inputs.InstanceDescs = instanceDescBuffer_->GetGPUVirtualAddress();
+	buildASDesc.Inputs.NumDescs      = instanceBuffer_->GetMaxIndexSize();
+	buildASDesc.Inputs.InstanceDescs = instanceBuffer_->GetGPUVirtualAddress();
 	buildASDesc.Inputs.Flags
 		= D3D12_RAYTRACING_ACCELERATION_STRUCTURE_BUILD_FLAG_ALLOW_UPDATE
 		| D3D12_RAYTRACING_ACCELERATION_STRUCTURE_BUILD_FLAG_PERFORM_UPDATE;
@@ -226,7 +236,48 @@ void DxrObject::TopLevelAS::Update(const InstanceDesc& instanceDesc) {
 	barrier.UAV.pResource = buffers_.asbuffer.Get();
 
 	commandList->ResourceBarrier(1, &barrier);
+}
 
+void DxrObject::TopLevelAS::SetBLAS(
+	BottomLevelAS* blas, Matrix4x4* worldMatrix, uint32_t instanceId) {
+
+	// blas設定
+	instances_[blas] = { worldMatrix, instanceId };
+}
+
+void DxrObject::TopLevelAS::EraseBLAS(BottomLevelAS* blas) {
+	
+	if (!FindMap(instances_, blas)) { //!< ptrが見つからなかった.
+		console->SetLog(
+			std::format("tlas erase warning: don't match blas. [blas]: {:p}", reinterpret_cast<void*>(blas)),
+			Console::warningColor
+		);
+
+		return;
+	}
+
+	instances_.erase(blas);
+}
+
+void DxrObject::TopLevelAS::SetInstanceBuffer() {
+
+	// 前の分のbufferの削除
+	instanceBuffer_->Clear();
+	topRecordSize_ = 0;
+
+	uint32_t index = 0;
+	
+	// instances配列をbufferに設定
+	for (const auto& instance : instances_) {
+		instanceBuffer_->SetInstance(
+			index, instance.first, *instance.second.worldMatrix, instance.second.instanceId
+		);
+
+		// recordサイズの更新
+		topRecordSize_ = (std::max)(topRecordSize_, instance.first->GetRecordSize());
+
+		index++;
+	}
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -273,7 +324,7 @@ DxrObject::AccelerationStructuredBuffers DxrMethod::CreateAccelerationStructure(
 				D3D12_HEAP_TYPE_DEFAULT,
 				info.UpdateScratchDataSizeInBytes,
 				D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS,
-				D3D12_RESOURCE_STATE_COMMON // before: STATE_UNORDERED_ACCESS
+				D3D12_RESOURCE_STATE_COMMON // before: D3D12_RESOURCE_STATE_UNORDERED_ACCESS
 			);
 
 			if (result.update == nullptr) {

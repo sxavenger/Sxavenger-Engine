@@ -250,19 +250,14 @@ bool MyEngine::IsReleaseKey(uint8_t dik) {
 // RayTracingEngine class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-void RayTracingEngine::BeginRayTracing() {
+void RayTracingEngine::BeginRayTracing(DxrObject::TopLevelAS* tlas) {
 	assert(sDirectXRCommon != nullptr);
-	sDirectXRCommon->BeginRayTracing();
+	sDirectXRCommon->BeginRayTracing(tlas);
 }
 
 void RayTracingEngine::EndRayTracing() {
 	assert(sDirectXRCommon != nullptr);
 	sDirectXRCommon->EndRayTracing();
-}
-
-void RayTracingEngine::CreateStateObject(int32_t kWindowWidth, int32_t kWindowHeight, DxrObject::TopLevelAS* tlas) {
-	assert(sDirectXRCommon != nullptr);
-	sDirectXRCommon->CreateStateObject(kWindowWidth, kWindowHeight, tlas);
 }
 
 DirectXRCommon* RayTracingEngine::GetDxrCommon() {

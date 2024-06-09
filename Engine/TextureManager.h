@@ -13,6 +13,7 @@
 // c++
 #include <string>
 #include <unordered_map>
+#include <deque>
 #include <vector>
 #include <memory>
 
@@ -180,10 +181,12 @@ private:
 	// private variables
 	//=========================================================================================
 
+	DirectXCommon* dxCommon_ = nullptr;
+
 	std::unordered_map<std::string, TextureData> textures_;
 	//!< key = filePath, value = textureData
 	
-	DirectXCommon* dxCommon_ = nullptr;
+	std::deque<std::string> waitTextureQueue_; //!< commandList送信待ちtextureのコンテナ
 
 	//=========================================================================================
 	// private methods

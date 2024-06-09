@@ -1,5 +1,13 @@
 #include "Ground.h"
 
+//=========================================================================================
+// static variables
+//=========================================================================================
+
+static const std::string tiles_[2] = {
+	"black", "white"
+};
+
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Ground class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -14,7 +22,29 @@ void Ground::Init() {
 		L"ground"
 	);
 
+	// 仮で設定
+	blas_->SetBuffer(2, MyEngine::GetTexture("resources/tile_" + tiles_[tileType_] + ".png")->GetSRVHandleGPU());
+
+	SetThisAttribute("ground");
+
 }
 
 void Ground::Term() {
+}
+
+void Ground::SetAttributeImGui() {
+	
+	if (ImGui::BeginCombo("tile", tiles_[tileType_].c_str())) {
+		for (int i = 0; i < 2; ++i) {
+			bool isSelect = (i == tileType_);
+
+			if (ImGui::Selectable(tiles_[i].c_str(), isSelect)) {
+				tileType_ = static_cast<TileType>(i);
+			}
+		}
+		ImGui::EndCombo();
+	}
+
+	blas_->SetBuffer(2, MyEngine::GetTextureHandleGPU("resources/tile_" + tiles_[tileType_] + ".png"));
+
 }

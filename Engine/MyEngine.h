@@ -163,14 +163,9 @@ public:
 	// public methods
 	//=========================================================================================
 
-	static void BeginRayTracing();
+	static void BeginRayTracing(DxrObject::TopLevelAS* tlas);
 
 	static void EndRayTracing();
-
-	static void CreateStateObject(
-		int32_t kWindowWidth, int32_t kWindowHeight,
-		DxrObject::TopLevelAS* tlas
-	);
 
 	static DirectXRCommon* GetDxrCommon();
 

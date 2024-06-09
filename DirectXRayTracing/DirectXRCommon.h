@@ -13,6 +13,7 @@
 #include <DxrStateObject.h>
 #include <DxrResultBuffer.h>
 #include <DxrShaderTable.h>
+#include <DxrAccelerationStructure.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // DirectXRCommon class
@@ -29,12 +30,7 @@ public:
 
 	void TermRayTracing();
 
-	void CreateStateObject(
-		int32_t clientWidth, int32_t clientHeight,
-		DxrObject::TopLevelAS* tlas
-	);
-
-	void BeginRayTracing();
+	void BeginRayTracing(DxrObject::TopLevelAS* tlas);
 
 	void EndRayTracing();
 
@@ -57,5 +53,19 @@ private:
 	std::unique_ptr<DxrObject::RootSignature> globalRootSignature_;
 	std::unique_ptr<DxrObject::StateObject>   stateObject_;
 	std::unique_ptr<DxrObject::ShaderTable>   shaderTable_;
+
+	// recordBuffer
+	std::unique_ptr<DxrObject::RecordBuffer> raygenerationRecordBuffer_;
+	std::unique_ptr<DxrObject::RecordBuffer> missRecordBuffer_;
+
+	//=========================================================================================
+	// private methods
+	//=========================================================================================
+
+	void CreateStateObject(
+		int32_t clientWidth, int32_t clientHeight
+	);
+
+	void CreateRecordBuffer();
 
 };

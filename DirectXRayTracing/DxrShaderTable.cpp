@@ -4,6 +4,7 @@
 // include
 //-----------------------------------------------------------------------------------------
 #include <cassert>
+#include <Logger.h>
 #include <DxrAccelerationStructure.h>
 
 //-----------------------------------------------------------------------------------------
@@ -11,51 +12,49 @@
 //-----------------------------------------------------------------------------------------
 using namespace DxrMethod;
 
-//=========================================================================================
-// static variables
-//=========================================================================================
-
-const UINT DxrObject::ShaderTable::kShaderRecordAlignment_     = D3D12_RAYTRACING_SHADER_RECORD_BYTE_ALIGNMENT;
-const UINT DxrObject::ShaderTable::kDefaultShaderRecordSize_   = D3D12_SHADER_IDENTIFIER_SIZE_IN_BYTES;
-const size_t DxrObject::ShaderTable::kDescriptorGPUHandleSize_ = sizeof(D3D12_GPU_DESCRIPTOR_HANDLE);
-const UINT DxrObject::ShaderTable::kTableAlignment_            = D3D12_RAYTRACING_SHADER_TABLE_BYTE_ALIGNMENT;
-
 ////////////////////////////////////////////////////////////////////////////////////////////
 // ShaderTable class method
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-void DxrObject::ShaderTable::Init(
-	int32_t clientWidth, int32_t clientHeight,
-	const StateObjectDesc& descs,
-	TopLevelAS* tlas, StateObject* stateObject, ResultBuffer* resultBuffer) {
+void DxrObject::ShaderTable::Init(int32_t clientWidth, int32_t clientHeight) {
+
+	dispatchRayDesc_.Width  = clientWidth;
+	dispatchRayDesc_.Height = clientHeight;
+	dispatchRayDesc_.Depth  = 1;
+}
+
+void DxrObject::ShaderTable::Record(
+	TopLevelAS* tlas, StateObject* stateObject,
+	RecordBuffer* raygenearation, RecordBuffer* miss) {
 
 	// raygeneration
-	UINT raygenerationRecordSize = kDefaultShaderRecordSize_;
-	raygenerationRecordSize += kDescriptorGPUHandleSize_; //!< u0
-	raygenerationRecordSize = Alignment(raygenerationRecordSize, kShaderRecordAlignment_);
+	UINT raygenerationRecordSize = kDefaultShaderRecordSize;
+	raygenerationRecordSize     += kGPUDescriptorHandle; // todo: raygenerationの最大size
+	raygenerationRecordSize      = Alignment(raygenerationRecordSize, kShaderRecordAlignment);
 
 	// hitgroup
-	UINT hitgroupRecordSize = kDefaultShaderRecordSize_;
-	hitgroupRecordSize += kDescriptorGPUHandleSize_ * 2; //!< t1, t2
-	hitgroupRecordSize = Alignment(hitgroupRecordSize, kShaderRecordAlignment_);
+	UINT hitgroupRecordSize = kDefaultShaderRecordSize;
+	hitgroupRecordSize     += static_cast<UINT>(tlas->GetTopRecordSize()); // 登録されている中での最大sizeをrecord
+	hitgroupRecordSize      = Alignment(hitgroupRecordSize, kShaderRecordAlignment);
 
 	// miss
-	UINT missRecordSize = kDefaultShaderRecordSize_;
-	missRecordSize = Alignment(missRecordSize, kShaderRecordAlignment_);
+	UINT missRecordSize = kDefaultShaderRecordSize;
+	missRecordSize      = Alignment(missRecordSize, kShaderRecordAlignment);
 
 	// 使用する各シェーダーの個数より、シェーダーテーブルのサイズを求める.
 	UINT raygenerationSize = 1 * raygenerationRecordSize;
 	UINT missSize          = 1 * missRecordSize;
-	UINT hitgroupSize      = stateObject->GetHitgroupCount() * hitgroupRecordSize;
+	UINT hitgroupSize      = tlas->GetObjectSize() * hitgroupRecordSize; // hack
 
 	// 各テーブルの開始位置にアライメント調整
-	UINT raygenerationRegion = Alignment(raygenerationSize, kTableAlignment_);
-	UINT missRegion          = Alignment(missSize, kTableAlignment_);
-	UINT hitgroupRegion      = Alignment(hitgroupSize, kTableAlignment_);
+	UINT raygenerationRegion = Alignment(raygenerationSize, kTableAlignment);
+	UINT missRegion          = Alignment(missSize, kTableAlignment);
+	UINT hitgroupRegion      = Alignment(hitgroupSize, kTableAlignment);
+
+	// テーブル制限の確認
+	UINT tableSize = raygenerationRegion + missRegion + hitgroupRegion;
 
 	// resourceの生成
-	UINT tableSize = raygenerationRegion + missRegion + hitgroupRegion;
-	
 	table_ = CreateBuffer(
 		D3D12_HEAP_TYPE_UPLOAD,
 		tableSize,
@@ -71,56 +70,21 @@ void DxrObject::ShaderTable::Init(
 	table_->Map(0, nullptr, &mapped);
 	uint8_t* pStart = static_cast<uint8_t*>(mapped);
 
-	// XXX: シェーダー書き込みを自動化
-
 	// raygenerationのシェーダーレコード書き込み
 	{
 		auto reygenerationStart = pStart;
-		uint8_t* p = reygenerationStart;
+		uint8_t* pRecord = reygenerationStart;
 
-		// HACK: forを全回ししてるので遅い
-		for (const auto& data : descs.blob->GetDatas()) {
-			if (data.shaderType != ShaderType::RAYGENERATION_SHADER) {
-				continue; //!< raygenerationではないので
-			}
-
-			auto id = properties->GetShaderIdentifier(
-				data.mainFunctionName.c_str()
-			);
-
-			if (id == nullptr) {
-				// Not found raygeneration identifier
-				assert(false);
-			}
-
-			p += WriteShaderIdentifier(p, id);
-
-			// ローカルルートシグネイチャで u0 (出力先) を設定してるため, 対応してるDescriptorに書き込み
-			p += WriteGPUDescriptor(p, resultBuffer->GetDescriptorUAV());
-		}
+		// HACK: raygenerationが複数あってもいいように改良
+		pRecord = WriteShaderRecord(pRecord, raygenearation, raygenerationRecordSize, properties);
 	}
 
 	// missのシェーダーレコード書き込み
 	{
 		auto missStart = pStart + raygenerationRegion;
-		uint8_t* p = missStart;
+		uint8_t* pRecord = missStart;
 
-		for (const auto& data : descs.blob->GetDatas()) {
-			if (data.shaderType != ShaderType::MISS_SHADER) {
-				continue; //!< missではないので
-			}
-
-			auto id = properties->GetShaderIdentifier(
-				data.mainFunctionName.c_str()
-			);
-
-			if (id == nullptr) {
-				// Not found miss identifier
-				assert(false);
-			}
-
-			p += WriteShaderIdentifier(p, id);
-		}
+		pRecord = WriteShaderRecord(pRecord, miss, missRecordSize, properties);
 	}
 
 	// hitgroupのシェーダーレコード書き込み
@@ -128,8 +92,8 @@ void DxrObject::ShaderTable::Init(
 		auto hitgroupStart = pStart + raygenerationRegion + missRegion;
 		uint8_t* pRecord = hitgroupStart;
 
-		for (auto& blas : tlas->GetBLASPtrArray()) {
-			pRecord = WriteShaderRecord(pRecord, blas, hitgroupRecordSize, properties);
+		for (auto& blas : tlas->GetInstances()) { //!< HACK: hitgroupIndexを手動設定する場合, ここを変える必要があるかも
+			pRecord = WriteShaderRecord(pRecord, blas.first->GetRecordBuffer(), hitgroupRecordSize, properties);
 		}
 	}
 
@@ -153,11 +117,6 @@ void DxrObject::ShaderTable::Init(
 	dispatchRayDesc_.HitGroupTable.SizeInBytes   = hitgroupSize;
 	dispatchRayDesc_.HitGroupTable.StrideInBytes = hitgroupRecordSize;
 	startAddress += hitgroupRegion;
-
-	dispatchRayDesc_.Width  = clientWidth;
-	dispatchRayDesc_.Height = clientHeight;
-	dispatchRayDesc_.Depth  = 1;
-
 }
 
 void DxrObject::ShaderTable::Term() {
@@ -172,32 +131,57 @@ UINT DxrMethod::Alignment(size_t size, UINT align) {
 }
 
 UINT DxrMethod::WriteShaderIdentifier(void* dst, const void* shaderId) {
-	memcpy(dst, shaderId, D3D12_SHADER_IDENTIFIER_SIZE_IN_BYTES);
-	return D3D12_SHADER_IDENTIFIER_SIZE_IN_BYTES;
+	memcpy(dst, shaderId, DxrObject::kDefaultShaderRecordSize);
+	return DxrObject::kDefaultShaderRecordSize;
 }
 
-UINT DxrMethod::WriteGPUDescriptor(void* dst, const DxObject::Descriptor& descriptor) {
-	auto handle = descriptor.handleGPU;
+UINT DxrMethod::WriteGPUDescriptor(void* dst, const D3D12_GPU_DESCRIPTOR_HANDLE& handle) {
 	memcpy(dst, &handle, sizeof(handle));
 	return UINT(sizeof(handle));
 }
 
+UINT DxrMethod::WriteGPUVirtualAddress(void* dst, const D3D12_GPU_VIRTUAL_ADDRESS& address) {
+	memcpy(dst, &address, sizeof(address));
+	return UINT(sizeof(address));
+}
+
 uint8_t* DxrMethod::WriteShaderRecord(
 	uint8_t* dst,
-	DxrObject::BottomLevelAS* blas, UINT recordSize,
+	DxrObject::RecordBuffer* buffer, UINT recordSize,
 	ID3D12StateObjectProperties* prop) {
 
 	auto entry = dst;
-	auto id = prop->GetShaderIdentifier(blas->GetHitgruop().c_str());
+
+	auto id = prop->GetShaderIdentifier(buffer->GetExport().c_str());
 
 	if (id == nullptr) {
-		// Not found hitgroup identifier
+		Log(L"WriteShaderRecord Error: not found export identifier. [export]: " + buffer->GetExport());
 		assert(false);
 	}
 
+	// id分の書き込み
 	dst += WriteShaderIdentifier(dst, id);
-	dst += WriteGPUDescriptor(dst, blas->GetIndicesDescriptor());  // t1
-	dst += WriteGPUDescriptor(dst, blas->GetVerticesDescriptor()); // t2
+
+	if (buffer->GetRecordOrder().empty()) { //!< 書き込むBufferがないので早期return
+		dst = entry + recordSize;
+		return dst;
+	}
+
+	// recordOrderの順に書き込み
+	for (const auto& record : buffer->GetRecordOrder()) {
+		// 型の判別
+		// TODO: localRootSignatureと整合性が取れているかの確認
+		if (std::holds_alternative<D3D12_GPU_DESCRIPTOR_HANDLE>(record)) {
+			dst += WriteGPUDescriptor(dst, std::get<D3D12_GPU_DESCRIPTOR_HANDLE>(record));
+			continue;
+
+		} else if (std::holds_alternative<D3D12_GPU_VIRTUAL_ADDRESS>(record)) {
+			dst += WriteGPUVirtualAddress(dst, std::get<D3D12_GPU_VIRTUAL_ADDRESS>(record));
+			continue;
+		}
+
+		assert(false); //!< 書き込み型の判別未定義
+	}
 
 	dst = entry + recordSize;
 	return dst;

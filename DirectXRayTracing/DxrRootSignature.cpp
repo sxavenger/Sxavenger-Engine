@@ -14,9 +14,6 @@ void DxrObject::RootSignatureDesc::Resize(uint32_t paramSize, uint32_t samplerSi
 	params.resize(paramSize);
 	ranges.resize(paramSize);
 	samplers.resize(samplerSize);
-
-	memset(params.data(), 0, sizeof(D3D12_ROOT_PARAMETER) * params.size());
-	memset(samplers.data(), 0, sizeof(D3D12_STATIC_SAMPLER_DESC) * samplers.size());
 }
 
 void DxrObject::RootSignatureDesc::Clear() {
@@ -29,6 +26,7 @@ void DxrObject::RootSignatureDesc::Clear() {
 }
 
 void DxrObject::RootSignatureDesc::SetCBV(uint32_t index, UINT shaderRegister) {
+
 	// paramの設定
 	params[index].ParameterType             = D3D12_ROOT_PARAMETER_TYPE_CBV;
 	params[index].ShaderVisibility          = D3D12_SHADER_VISIBILITY_ALL;
@@ -36,6 +34,7 @@ void DxrObject::RootSignatureDesc::SetCBV(uint32_t index, UINT shaderRegister) {
 }
 
 void DxrObject::RootSignatureDesc::SetSRV(uint32_t index, UINT shaderRegister) {
+
 	// rangeの設定
 	ranges[index].BaseShaderRegister                = shaderRegister;
 	ranges[index].NumDescriptors                    = 1;
@@ -50,6 +49,7 @@ void DxrObject::RootSignatureDesc::SetSRV(uint32_t index, UINT shaderRegister) {
 }
 
 void DxrObject::RootSignatureDesc::SetUAV(uint32_t index, UINT shaderRegister) {
+
 	// rangeの設定
 	ranges[index].BaseShaderRegister                = shaderRegister;
 	ranges[index].NumDescriptors                    = 1;
@@ -64,6 +64,7 @@ void DxrObject::RootSignatureDesc::SetUAV(uint32_t index, UINT shaderRegister) {
 }
 
 void DxrObject::RootSignatureDesc::SetSampler(uint32_t index, TextureMode mode, UINT shaderRegiste) {
+
 	samplers[index].Filter           = D3D12_FILTER_MIN_MAG_MIP_LINEAR;
 	samplers[index].AddressU         = static_cast<D3D12_TEXTURE_ADDRESS_MODE>(mode);
 	samplers[index].AddressV         = static_cast<D3D12_TEXTURE_ADDRESS_MODE>(mode);

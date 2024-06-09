@@ -6,6 +6,7 @@
 // DxrObject
 #include <DxrStateObject.h>
 #include <DxrResultBuffer.h>
+#include <DxrRecordBuffer.h>
 #include <DxrMethod.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -31,10 +32,12 @@ namespace DxrObject {
 
 		~ShaderTable() { Term(); }
 
-		void Init(
-			int32_t clientWidth, int32_t clientHeight,
-			const StateObjectDesc& descs,
-			TopLevelAS* tlas, StateObject* stateObject, ResultBuffer* resultBuffer);
+		void Init(int32_t clientWidth, int32_t clientHeight);
+
+		void Record(
+			TopLevelAS* tlas, StateObject* stateObject,
+			RecordBuffer* raygenearation, RecordBuffer* miss // HACK:
+		);
 
 		void Term();
 
@@ -50,14 +53,17 @@ namespace DxrObject {
 
 		D3D12_DISPATCH_RAYS_DESC dispatchRayDesc_;
 
-		// record parameter //
-
-		static const UINT   kShaderRecordAlignment_;
-		static const UINT   kDefaultShaderRecordSize_;
-		static const size_t kDescriptorGPUHandleSize_;
-		static const UINT   kTableAlignment_;
+		// parameter //
 
 	};
+
+	////////////////////////////////////////////////////////////////////////////////////////////
+	// constexpr
+	////////////////////////////////////////////////////////////////////////////////////////////
+
+	constexpr const UINT kShaderRecordAlignment   = D3D12_RAYTRACING_SHADER_RECORD_BYTE_ALIGNMENT;
+	constexpr const UINT kDefaultShaderRecordSize = D3D12_SHADER_IDENTIFIER_SIZE_IN_BYTES;
+	constexpr const UINT kTableAlignment          = D3D12_RAYTRACING_SHADER_TABLE_BYTE_ALIGNMENT;
 
 }
 
@@ -70,11 +76,13 @@ namespace DxrMethod {
 
 	UINT WriteShaderIdentifier(void* dst, const void* shaderId);
 
-	UINT WriteGPUDescriptor(void* dst, const DxObject::Descriptor& descriptor);
+	UINT WriteGPUDescriptor(void* dst, const D3D12_GPU_DESCRIPTOR_HANDLE& handle);
+
+	UINT WriteGPUVirtualAddress(void* dst, const D3D12_GPU_VIRTUAL_ADDRESS& address);
 
 	uint8_t* WriteShaderRecord(
 		uint8_t* dst,
-		DxrObject::BottomLevelAS* blas , UINT recordSize,
+		DxrObject::RecordBuffer* buffer, UINT recordSize,
 		ID3D12StateObjectProperties* prop
 	);
 

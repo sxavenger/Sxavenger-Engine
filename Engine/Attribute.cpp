@@ -9,5 +9,5 @@ void Attribute::SetAttributeImGui() {
 
 void Attribute::SetThisAttribute(const std::string& name) {
 	name_ = name;
-	Console::GetInstance()->SetAttribute(this);
+	console->SetAttribute(this);
 }

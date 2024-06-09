@@ -99,6 +99,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="DirectXRayTracing\DirectXRCommon.cpp" />
     <ClCompile Include="DirectXRayTracing\DxrAccelerationStructure.cpp" />
     <ClCompile Include="DirectXRayTracing\DxrMethod.cpp" />
+    <ClCompile Include="DirectXRayTracing\DxrRecordBuffer.cpp" />
     <ClCompile Include="DirectXRayTracing\DxrResultBuffer.cpp" />
     <ClCompile Include="DirectXRayTracing\DxrRootSignature.cpp" />
     <ClCompile Include="DirectXRayTracing\DxrShaderBlob.cpp" />
@@ -188,12 +189,12 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="main.cpp">
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(ProjectDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
-    <ClCompile Include="test\DxrRecordBuffers.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DirectXRayTracing\DirectXRCommon.h" />
     <ClInclude Include="DirectXRayTracing\DxrAccelerationStructure.h" />
     <ClInclude Include="DirectXRayTracing\DxrMethod.h" />
+    <ClInclude Include="DirectXRayTracing\DxrRecordBuffer.h" />
     <ClInclude Include="DirectXRayTracing\DxrResultBuffer.h" />
     <ClInclude Include="DirectXRayTracing\DxrRootSignature.h" />
     <ClInclude Include="DirectXRayTracing\DxrShaderBlob.h" />
@@ -271,7 +272,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Lib\Light\Light.h" />
     <ClInclude Include="Lib\ObjectStructure.h" />
     <ClInclude Include="Lib\PostEffect\GaussianBlur.h" />
-    <ClInclude Include="test\DxrRecordBuffers.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

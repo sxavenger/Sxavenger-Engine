@@ -110,6 +110,8 @@ ComPtr<IDxcBlob> DxObjectMethod::CompileShader(
 ComPtr<ID3D12Resource> DxObjectMethod::CreateBufferResource(
 	ID3D12Device* device, size_t sizeInBytes) {
 
+	assert(sizeInBytes != 0);
+
 	ComPtr<ID3D12Resource> result;
 
 	// 頂点リソース用のヒープの設定

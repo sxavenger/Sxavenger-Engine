@@ -69,7 +69,7 @@ namespace DxObject {
 		void Term();
 
 		//! @breif 配列のサイズを取得
-		const uint32_t GetIndexSize() const { return indexSize_; }
+		virtual const uint32_t GetIndexSize() const { return indexSize_; }
 
 		//! @breif 構造体のサイズを取得
 		const UINT GetStructureSize() const { return structureSize_; }
@@ -103,7 +103,7 @@ namespace DxObject {
 		//! 
 		//! @retval true  配列サイズ以下
 		//! @retval false 配列サイズ以上
-		bool CheckElementCount(uint32_t elementCount);
+		virtual bool CheckElementCount(uint32_t elementCount);
 
 	};
 
@@ -118,8 +118,6 @@ namespace DxObject {
 		//=========================================================================================
 		// public methods
 		//=========================================================================================
-
-		BufferResource() = default; //!< test
 
 		//! @breif コンストラクタ
 		//! 
@@ -354,6 +352,89 @@ namespace DxObject {
 
 	};
 
+	////////////////////////////////////////////////////////////////////////////////////////////
+	// DynamicBufferResource class
+	////////////////////////////////////////////////////////////////////////////////////////////
+	template <typename T>
+	class DynamicBufferResource
+		: public BaseBufferResource { //!< テスト段階なのでstructuredBufferなどとして使わないように
+	public:
+
+		//=========================================================================================
+		// public methods
+		//=========================================================================================
+
+		//! @breif コンストラクタ
+		//! 
+		//! @param[in] devices   DxObject::Devices
+		//! @param[in] indexSize 配列サイズ
+		DynamicBufferResource(Devices* devices)
+			: BaseBufferResource(0, sizeof(T)) {
+			Init(devices);
+		}
+
+		//! @brief デストラクタ
+		~DynamicBufferResource() { Term(); }
+
+		//! @brief 初期化処理
+		//! 
+		//! @param[in] devices DxObject::Devices
+		void Init(Devices* devices);
+
+		//! @brief 終了処理
+		void Term();
+
+		//! @brief 要素の全削除
+		void Clear();
+
+		//! @brief 配列の最大数を返却
+		const uint32_t GetIndexSize() const override { return kMaxIndexSize_; }
+
+		const uint32_t GetCurrentIndexSize() const { return indexSize_; }
+
+		void Memcpy(const T* value, uint32_t indexSize) {
+			CheckElementCount(indexSize);
+			memcpy(dataArray_, value, structureSize_ * indexSize);
+		}
+
+		//=========================================================================================
+		// operator
+		//=========================================================================================
+
+		T& operator[](uint32_t element) {
+			CheckElementCount(element);
+
+			return dataArray_[element];
+		}
+
+	private:
+
+		//=========================================================================================
+		// private variables
+		//=========================================================================================
+
+		static const uint32_t kMaxIndexSize_ = 200; //!< 不足した場合, 増やす
+
+		T* dataArray_;
+
+		/* 用途の変更
+		 indexSize -> 現在のindexの最大値
+		*/
+
+		ID3D12Device* device_;
+
+		//=========================================================================================
+		// protected methods
+		//=========================================================================================
+
+		//! @brief 要素数がindexSize以上でないかの確認
+		//! 
+		//! @retval true  配列サイズ以下
+		//! @retval false 配列サイズ以上
+		bool CheckElementCount(uint32_t elementCount) override;
+
+	};
+
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -410,4 +491,50 @@ inline void DxObject::BufferPtrResource<T>::Term() {
 template<typename T>
 inline void DxObject::BufferPtrResource<T>::LoadPtrData() {
 	memcpy(dataArray_, *dataPtrArray_.data(), structureSize_ * indexSize_);
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////
+// DynamicBufferResource class methods
+////////////////////////////////////////////////////////////////////////////////////////////
+
+template<typename T>
+inline void DxObject::DynamicBufferResource<T>::Init(Devices* devices) {
+
+	// deviceを取り出す
+	device_ = devices->GetDevice();
+
+	// 配列分のBufferResourceを生成
+	resource_ = DxObjectMethod::CreateBufferResource(
+		device_,
+		structureSize_ * kMaxIndexSize_
+	);
+
+	// resourceをマッピング
+	resource_->Map(0, nullptr, reinterpret_cast<void**>(&dataArray_));
+
+}
+
+template<typename T>
+inline void DxObject::DynamicBufferResource<T>::Term() {
+}
+
+template<typename T>
+inline void DxObject::DynamicBufferResource<T>::Clear() {
+	T t;
+	std::fill(dataArray_, dataArray_ + kMaxIndexSize_, t);
+	indexSize_ = 0;
+}
+
+template<typename T>
+inline bool DxObject::DynamicBufferResource<T>::CheckElementCount(uint32_t elementCount) {
+	if (elementCount >= kMaxIndexSize_) {
+		return false;
+	}
+
+	// 最大数の更新
+	if (elementCount >= indexSize_) {
+		indexSize_ = elementCount + 1;
+	}
+
+	return true;
 }

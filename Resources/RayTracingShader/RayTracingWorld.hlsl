@@ -60,12 +60,6 @@ namespace LIGHT {
 	static const int POINT     = 1;
 }
 
-// glassMaterial
-struct GlassMaterial {
-	float4 color;
-};
-StructuredBuffer<GlassMaterial> sMaterials : register(t3);
-
 // groundTexture
 Texture2D<float4> gGroundTexture : register(t4);
 SamplerState gSampler : register(s0);
@@ -486,106 +480,106 @@ void mainTeapotCHS(inout Payload payload, in MyAttribute attrib) {
 	// lighting
 	resultColor = CalculateLightColor(resultColor, worldPosition, worldNormal);
 
-	payload.color  = resultColor;
-	payload.length = RayTCurrent();
-}
-
-//-----------------------------------------------------------------------------------------
-// glass
-//-----------------------------------------------------------------------------------------
-[shader("closesthit")]
-void mainGlassCHS(inout Payload payload, in MyAttribute attrib) {
-	
-	float4 resultColor = sMaterials[InstanceID()].color;
-	
-	if (CheckReflection(payload, resultColor)) {
-		return;
-	}
-	
-	// hit vertex
-	Vertex vtx = GetHitVertex(attrib);
-	float3 worldPosition = mul(vtx.position, ObjectToWorld4x3());
-	float3 worldNormal = normalize(mul(vtx.normal, (float3x3)ObjectToWorld4x3()));
-	
-	if (payload.rayType == RAYTYPE::REFLECTION) {
-		payload.color  = resultColor;
-		payload.length = RayTCurrent();
-		return;
-	}
-
-	if (payload.color.a != 1.0f) {
-		
-		// payload init
-		Payload alphaPayload;
-		alphaPayload.rayType         = RAYTYPE::REFLECTION;
-		alphaPayload.color           = float4(0, 0, 0, 0);
-		alphaPayload.reflectionCount = payload.reflectionCount;
-		
-		// desc
-		RayDesc desc;
-		desc.Origin    = worldPosition;
-		desc.Direction = WorldRayDirection();
-		desc.TMin      = kTMin;
-		desc.TMax      = 10000;
-	
-		TraceRay(
-			desc,
-			alphaPayload
-		);
-		
-		resultColor = AlphaBlend(resultColor, alphaPayload.color);
-	}
-	
 	payload.color = resultColor;
+	payload.length = RayTCurrent();
 }
 
-//-----------------------------------------------------------------------------------------
-// bunny
-//-----------------------------------------------------------------------------------------
-[shader("closesthit")]
-void mainBunnyCHS(inout Payload payload, in MyAttribute attrib) {
+////-----------------------------------------------------------------------------------------
+//// glass
+////-----------------------------------------------------------------------------------------
+//[shader("closesthit")]
+//void mainGlassCHS(inout Payload payload, in MyAttribute attrib) {
 	
-	if (CheckReflection(payload)) {
-		return;
-	}
+//	float4 resultColor = float4(0, 0, 0, 0);
 	
-	Vertex vtx = GetHitVertex(attrib);
-	float3 worldPosition = mul(vtx.position, ObjectToWorld4x3());
-	float3 worldNormal = normalize(mul(vtx.normal, (float3x3)ObjectToWorld4x3()));
+//	if (CheckReflection(payload, resultColor)) {
+//		return;
+//	}
 	
-	float4 resultColor = float4(1.0f, 1.0f, 1.0f, 0.1f);
+//	// hit vertex
+//	Vertex vtx = GetHitVertex(attrib);
+//	float3 worldPosition = mul(vtx.position, ObjectToWorld4x3());
+//	float3 worldNormal = normalize(mul(vtx.normal, (float3x3)ObjectToWorld4x3()));
 	
-	{
-		Payload reflectionRay;
-		reflectionRay.rayType         = RAYTYPE::REFLECTION;
-		reflectionRay.color           = float4(0, 0, 0, 0);
-		reflectionRay.isCollision     = false;
-		reflectionRay.reflectionCount = payload.reflectionCount;
+//	if (payload.rayType == RAYTYPE::REFLECTION) {
+//		payload.color  = resultColor;
+//		payload.length = RayTCurrent();
+//		return;
+//	}
+
+//	if (payload.color.a != 1.0f) {
 		
-		const float tMax = 5.0f;
+//		// payload init
+//		Payload alphaPayload;
+//		alphaPayload.rayType         = RAYTYPE::REFLECTION;
+//		alphaPayload.color           = float4(0, 0, 0, 0);
+//		alphaPayload.reflectionCount = payload.reflectionCount;
 		
-		RayDesc desc;
-		desc.Origin    = worldPosition;
-		desc.Direction = reflect(WorldRayDirection(), worldNormal);
-		desc.TMin      = kTMin;
-		desc.TMax      = tMax;
+//		// desc
+//		RayDesc desc;
+//		desc.Origin    = worldPosition;
+//		desc.Direction = WorldRayDirection();
+//		desc.TMin      = kTMin;
+//		desc.TMax      = 10000;
+	
+//		TraceRay(
+//			desc,
+//			alphaPayload
+//		);
 		
-		TraceRay(
-			desc,
-			reflectionRay
-		);
+//		resultColor = AlphaBlend(resultColor, alphaPayload.color);
+//	}
+	
+//	payload.color = resultColor;
+//}
+
+////-----------------------------------------------------------------------------------------
+//// bunny
+////-----------------------------------------------------------------------------------------
+//[shader("closesthit")]
+//void mainBunnyCHS(inout Payload payload, in MyAttribute attrib) {
+	
+//	if (CheckReflection(payload)) {
+//		return;
+//	}
+	
+//	Vertex vtx = GetHitVertex(attrib);
+//	float3 worldPosition = mul(vtx.position, ObjectToWorld4x3());
+//	float3 worldNormal = normalize(mul(vtx.normal, (float3x3)ObjectToWorld4x3()));
+	
+//	float4 resultColor = float4(1.0f, 1.0f, 1.0f, 0.1f);
+	
+//	{
+//		Payload reflectionRay;
+//		reflectionRay.rayType         = RAYTYPE::REFLECTION;
+//		reflectionRay.color           = float4(0, 0, 0, 0);
+//		reflectionRay.isCollision     = false;
+//		reflectionRay.reflectionCount = payload.reflectionCount;
 		
-		resultColor = AlphaBlend(resultColor, reflectionRay.color);
-	}
+//		const float tMax = 5.0f;
+		
+//		RayDesc desc;
+//		desc.Origin    = worldPosition;
+//		desc.Direction = reflect(WorldRayDirection(), worldNormal);
+//		desc.TMin      = kTMin;
+//		desc.TMax      = tMax;
+		
+//		TraceRay(
+//			desc,
+//			reflectionRay
+//		);
+		
+//		resultColor = AlphaBlend(resultColor, reflectionRay.color);
+//	}
 	
 	
-	// lighting
-	resultColor = CalculateLightColor(resultColor, worldPosition, worldNormal, true);
+//	// lighting
+//	resultColor = CalculateLightColor(resultColor, worldPosition, worldNormal, true);
 	
-	payload.color  = saturate(resultColor);
-	payload.length = RayTCurrent();
-	return;
-}
+//	payload.color  = saturate(resultColor);
+//	payload.length = RayTCurrent();
+//	return;
+//}
 
 //-----------------------------------------------------------------------------------------
 // player
@@ -611,107 +605,107 @@ void mainPlayerCHS(inout Payload payload, in MyAttribute attrib) {
 	return;
 }
 
-//-----------------------------------------------------------------------------------------
-// room
-//-----------------------------------------------------------------------------------------
-[shader("closesthit")]
-void mainRoomCHS(inout Payload payload, in MyAttribute attrib) {
+////-----------------------------------------------------------------------------------------
+//// room
+////-----------------------------------------------------------------------------------------
+//[shader("closesthit")]
+//void mainRoomCHS(inout Payload payload, in MyAttribute attrib) {
 	
-	if (CheckReflection(payload)) {
-		return;
-	}
+//	if (CheckReflection(payload)) {
+//		return;
+//	}
 	
-	float4 resultColor = float4(1.0f, 1.0f, 1.0f, 1.0f);
+//	float4 resultColor = float4(1.0f, 1.0f, 1.0f, 1.0f);
 	
-	Vertex vtx = GetHitVertex(attrib);
-	float3 worldPosition = mul(vtx.position, ObjectToWorld4x3());
-	float3 worldNormal = normalize(mul(vtx.normal, (float3x3)ObjectToWorld4x3()));
+//	Vertex vtx = GetHitVertex(attrib);
+//	float3 worldPosition = mul(vtx.position, ObjectToWorld4x3());
+//	float3 worldNormal = normalize(mul(vtx.normal, (float3x3)ObjectToWorld4x3()));
 	
-	resultColor = TraceCutoffRay(resultColor, worldPosition, worldNormal, payload.reflectionCount);
-	resultColor = TraceAmbientOcclusionRay(resultColor, worldPosition, worldNormal, 10, 0.5f, payload.reflectionCount);
+//	resultColor = TraceCutoffRay(resultColor, worldPosition, worldNormal, payload.reflectionCount);
+//	resultColor = TraceAmbientOcclusionRay(resultColor, worldPosition, worldNormal, 10, 0.5f, payload.reflectionCount);
 	
-	payload.color = resultColor;
-	payload.length = RayTCurrent();
-	return;
-}
+//	payload.color = resultColor;
+//	payload.length = RayTCurrent();
+//	return;
+//}
 
-//-----------------------------------------------------------------------------------------
-// ocean
-//-----------------------------------------------------------------------------------------
-[shader("closesthit")]
-void mainOceanCHS(inout Payload payload, in MyAttribute attrib) {
+////-----------------------------------------------------------------------------------------
+//// ocean
+////-----------------------------------------------------------------------------------------
+//[shader("closesthit")]
+//void mainOceanCHS(inout Payload payload, in MyAttribute attrib) {
 	
-	if (CheckReflection(payload)) {
-		return;
-	}
+//	if (CheckReflection(payload)) {
+//		return;
+//	}
 	
-	float4 resultColor = float4(0.1f, 1.0f, 1.0f, 0.0f);
-	resultColor.a = pow(saturate(RayTCurrent() / 100.0f), 2.0f);
+//	float4 resultColor = float4(0.1f, 1.0f, 1.0f, 0.0f);
+//	resultColor.a = pow(saturate(RayTCurrent() / 100.0f), 2.0f);
 	
-	Vertex vtx = GetHitVertex(attrib);
-	float3 worldPosition = mul(vtx.position, ObjectToWorld4x3());
-	float3 worldNormal = normalize(mul(vtx.normal, (float3x3)ObjectToWorld4x3()));
+//	Vertex vtx = GetHitVertex(attrib);
+//	float3 worldPosition = mul(vtx.position, ObjectToWorld4x3());
+//	float3 worldNormal = normalize(mul(vtx.normal, (float3x3)ObjectToWorld4x3()));
 	
-	// collisionRay
-	{
-		float3 arbitraryVec = (abs(worldNormal.x) > abs(worldNormal.y)) ? float3(0, 1, 0) : float3(1, 0, 0);
-		float3 u = normalize(cross(worldNormal, arbitraryVec));
-		float3 v = normalize(cross(worldNormal, u));
+//	// collisionRay
+//	{
+//		float3 arbitraryVec = (abs(worldNormal.x) > abs(worldNormal.y)) ? float3(0, 1, 0) : float3(1, 0, 0);
+//		float3 u = normalize(cross(worldNormal, arbitraryVec));
+//		float3 v = normalize(cross(worldNormal, u));
 		
-		for (uint i = 0; i < 10 /*ksundivision*/; ++i) {
-			float theta = (2.0f * pi_v / 10.0f) * i;
+//		for (uint i = 0; i < 10 /*ksundivision*/; ++i) {
+//			float theta = (2.0f * pi_v / 10.0f) * i;
 			
-			float3 direction = u * cos(theta) + v * sin(theta);
+//			float3 direction = u * cos(theta) + v * sin(theta);
 
-			Payload collisionRay;
-			collisionRay.rayType         = RAYTYPE::COLLISION;
-			collisionRay.color           = float4(0, 0, 0, 0);
-			collisionRay.length          = 0;
-			collisionRay.reflectionCount = payload.reflectionCount;
-			collisionRay.isCollision     = false;
+//			Payload collisionRay;
+//			collisionRay.rayType         = RAYTYPE::COLLISION;
+//			collisionRay.color           = float4(0, 0, 0, 0);
+//			collisionRay.length          = 0;
+//			collisionRay.reflectionCount = payload.reflectionCount;
+//			collisionRay.isCollision     = false;
 			
-			RayDesc desc;
-			desc.Origin    = worldPosition;
-			desc.Direction = direction;
-			desc.TMin      = kTMin;
-			desc.TMax      = 0.2f;
+//			RayDesc desc;
+//			desc.Origin    = worldPosition;
+//			desc.Direction = direction;
+//			desc.TMin      = kTMin;
+//			desc.TMax      = 0.2f;
 		
-			TraceRay(
-				desc, collisionRay
-			);
+//			TraceRay(
+//				desc, collisionRay
+//			);
 			
-			if (collisionRay.isCollision) {
-				resultColor = float4(1.0f, 1.0f, 1.0f, max(0.5f, saturate(resultColor.a * 2.0f)));
-				break;
-			}
+//			if (collisionRay.isCollision) {
+//				resultColor = float4(1.0f, 1.0f, 1.0f, max(0.5f, saturate(resultColor.a * 2.0f)));
+//				break;
+//			}
 			
-		}
+//		}
 
-	}
+//	}
 	
-	// alpha ray
-	{
-		Payload alphaRay;
-		alphaRay.rayType         = RAYTYPE::REFLECTION;
-		alphaRay.color           = float4(0, 0, 0, 0);
-		alphaRay.isCollision     = false;
-		alphaRay.length          = 0;
-		alphaRay.reflectionCount = payload.reflectionCount;
+//	// alpha ray
+//	{
+//		Payload alphaRay;
+//		alphaRay.rayType         = RAYTYPE::REFLECTION;
+//		alphaRay.color           = float4(0, 0, 0, 0);
+//		alphaRay.isCollision     = false;
+//		alphaRay.length          = 0;
+//		alphaRay.reflectionCount = payload.reflectionCount;
 		
-		RayDesc desc;
-		desc.Origin    = worldPosition;
-		desc.Direction = WorldRayDirection();
-		desc.TMin      = kTMin;
-		desc.TMax      = 10000;
+//		RayDesc desc;
+//		desc.Origin    = worldPosition;
+//		desc.Direction = WorldRayDirection();
+//		desc.TMin      = kTMin;
+//		desc.TMax      = 10000;
 		
-		TraceRay(
-			desc, alphaRay
-		);
+//		TraceRay(
+//			desc, alphaRay
+//		);
 		
-		resultColor = AlphaBlend(resultColor, alphaRay.color);
-	}
+//		resultColor = AlphaBlend(resultColor, alphaRay.color);
+//	}
 	
-	payload.color = resultColor;
-	payload.length = RayTCurrent();
-	return;
-}
+//	payload.color = resultColor;
+//	payload.length = RayTCurrent();
+//	return;
+//}
