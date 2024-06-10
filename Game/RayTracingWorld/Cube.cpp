@@ -16,6 +16,8 @@ void Cube::Init(
 		L"cube"
 	);
 
+	InitMaterial();
+
 }
 
 void Cube::SetOnImGui(int id) {
@@ -24,8 +26,16 @@ void Cube::SetOnImGui(int id) {
 
 	if (ImGui::TreeNode(label.c_str())) {
 
+		// transformの更新
+		ImGui::Text("transform");
 		transform_.SetImGuiCommand();
 		worldMatrix_ = transform_.SetMatrix();
+
+		// materialの更新
+		ImGui::Text("material");
+		ImGui::ColorEdit4("color", &material_.color.r);
+
+		blas_->SetBuffer(3, materialBuffer_->GetGPUVirtualAddress()); //!< HACK: 本来の機能の役目を果たしてない
 
 		if (ImGui::Button("Delete")) {
 			isDelete_ = true;

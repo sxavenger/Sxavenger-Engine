@@ -197,14 +197,17 @@ void DirectXRCommon::CreateStateObject(int32_t clientWidth, int32_t clientHeight
 
 	{
 		RootSignatureDesc closestHitDesc = {};
-		closestHitDesc.Resize(2, 0);
-		closestHitDesc.SetLocalRootSignature(HITGROUP, L"teapot");
+		closestHitDesc.Resize(3, 0);
+		closestHitDesc.SetLocalRootSignature(HITGROUP, L"cube");
 
 		//!< index(t1)
 		closestHitDesc.SetSRV(0, 1);
 
 		//!< vertex(t2)
 		closestHitDesc.SetSRV(1, 2);
+
+		//!< material(b2)
+		closestHitDesc.SetCBV(2, 2);
 
 		stateDesc.SetLocalRootSignatureDesc(4, devices_.get(), closestHitDesc);
 	}

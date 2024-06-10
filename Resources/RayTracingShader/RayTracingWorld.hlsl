@@ -71,6 +71,11 @@ StructuredBuffer<Vertex> sVertexBuffer : register(t2); // Hitgroups
 Texture2D<float4> gGroundTexture : register(t4); // Hitgroup(ground)
 SamplerState gSampler : register(s0);
 
+struct SubobjectMaterial {
+	float4 color;
+};
+ConstantBuffer<SubobjectMaterial> gSubobjectMaterial : register(b2);
+
 ////////////////////////////////////////////////////////////////////////////////////////////
 // hitgroup methods
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -517,7 +522,7 @@ void mainCubeCHS(inout Payload payload, in MyAttribute attrib) {
 		return;
 	}
 	
-	float4 resultColor = float4(1.0f, 0.0f, 0.0f, 1.0f);
+	float4 resultColor = gSubobjectMaterial.color;
 	
 	payload.color = resultColor;
 	payload.length = RayTCurrent();
