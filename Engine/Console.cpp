@@ -56,7 +56,7 @@ void Console::Update() {
 
 	OutputMenu();
 
-	if (isOutputEngineUI_) {
+	if (isOutputConsole_) {
 
 		windowFlags = ImGuiWindowFlags_NoCollapse;
 
@@ -87,7 +87,7 @@ void Console::SetLog(const std::string& log, const Vector4f& color) {
 }
 
 void Console::OutputRayTracingResult(const D3D12_GPU_DESCRIPTOR_HANDLE& srvHandleGPU) {
-	if (isOutputEngineUI_) {
+	if (isOutputConsole_) {
 		static bool isOpenWindow = true;
 		ImGui::Begin("RayTracing", &isOpenWindow, windowFlags);
 
@@ -98,7 +98,7 @@ void Console::OutputRayTracingResult(const D3D12_GPU_DESCRIPTOR_HANDLE& srvHandl
 }
 
 void Console::OutputTexture(const std::string& name, const D3D12_GPU_DESCRIPTOR_HANDLE& srvHandleGPU) {
-	if (isOutputEngineUI_) {
+	if (isOutputConsole_) {
 		static bool isOpenWindow = true;
 		ImGui::Begin(name.c_str(), &isOpenWindow, windowFlags);
 
@@ -116,7 +116,7 @@ void Console::OutputMenu() {
 	if (ImGui::BeginMainMenuBar()) {
 		if (ImGui::BeginMenu("Settings")) {
 
-			ImGui::Checkbox("DisplayUI", &isOutputEngineUI_);
+			ImGui::Checkbox("DisplayConsole", &isOutputConsole_);
 
 			// windowFlags
 			ImGui::Checkbox("Fix(lock size and move)", &isFix_);

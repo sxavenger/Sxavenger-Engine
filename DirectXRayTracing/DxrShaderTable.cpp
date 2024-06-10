@@ -7,6 +7,8 @@
 #include <Logger.h>
 #include <DxrAccelerationStructure.h>
 
+#include <DxBufferResource.h>
+
 //-----------------------------------------------------------------------------------------
 // using
 //-----------------------------------------------------------------------------------------
@@ -181,13 +183,34 @@ uint8_t* DxrMethod::WriteShaderRecord(
 	for (const auto& record : buffer->GetRecordOrder()) {
 		// 型の判別
 		// TODO: localRootSignatureと整合性が取れているかの確認
-		if (std::holds_alternative<D3D12_GPU_DESCRIPTOR_HANDLE>(record)) {
+		/*if (std::holds_alternative<D3D12_GPU_DESCRIPTOR_HANDLE>(record)) {
 			dst += WriteGPUDescriptor(dst, std::get<D3D12_GPU_DESCRIPTOR_HANDLE>(record));
 			continue;
 
 		} else if (std::holds_alternative<D3D12_GPU_VIRTUAL_ADDRESS>(record)) {
 			dst += WriteGPUVirtualAddress(dst, std::get<D3D12_GPU_VIRTUAL_ADDRESS>(record));
 			continue;
+
+		} else if (std::holds_alternative<DxObject::BaseBufferResource*>(record)) {
+			dst += WriteGPUVirtualAddress(dst, std::get<DxObject::BaseBufferResource*>(record)->GetGPUVirtualAddress());
+			continue;
+		}*/
+
+		if (std::holds_alternative<DxrObject::GPUHandle>(record)) { //!< Handle型
+			dst += WriteGPUDescriptor(dst, std::get<D3D12_GPU_DESCRIPTOR_HANDLE>(record));
+			continue;
+
+		} else if (std::holds_alternative<DxrObject::GPUVirtualAddress>(record)) { //!< virtualAddress型
+			const auto& virtualAddress = std::get<DxrObject::GPUVirtualAddress>(record);
+
+			if (std::holds_alternative<D3D12_GPU_VIRTUAL_ADDRESS>(virtualAddress)) { //!< virtualAddressそのもの
+				dst += WriteGPUVirtualAddress(dst, std::get<D3D12_GPU_VIRTUAL_ADDRESS>(virtualAddress));
+				continue;
+
+			} else if (std::holds_alternative<DxObject::BaseBufferResource*>(virtualAddress)) { //!< DxObject::BufferResource
+				dst += WriteGPUVirtualAddress(dst, std::get<DxObject::BaseBufferResource*>(virtualAddress)->GetGPUVirtualAddress());
+				continue;
+			}
 		}
 
 		assert(false); //!< 書き込み型の判別未定義

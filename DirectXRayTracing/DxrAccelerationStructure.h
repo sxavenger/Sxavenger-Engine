@@ -62,14 +62,14 @@ namespace DxrObject {
 
 		void Term();
 
-		void SetBuffer(
-			uint32_t index, const D3D12_GPU_DESCRIPTOR_HANDLE& handleGPU) {
-			recordBuffer_->SetBuffer(index, handleGPU);
+		void SetHandle(
+			uint32_t index, const GPUHandle& handle) {
+			recordBuffer_->SetHandle(index, handle);
 		}
 
-		void SetBuffer(
-			uint32_t index, const D3D12_GPU_VIRTUAL_ADDRESS& address) {
-			recordBuffer_->SetBuffer(index, address);
+		void SetAddress(
+			uint32_t index, const GPUVirtualAddress& address) {
+			recordBuffer_->SetAddress(index, address);
 		}
 
 		const D3D12_GPU_VIRTUAL_ADDRESS GetGPUVirtualAddress() const { return buffers_.asbuffer->GetGPUVirtualAddress(); }

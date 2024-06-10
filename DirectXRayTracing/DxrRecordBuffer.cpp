@@ -12,19 +12,17 @@ void DxrObject::RecordBuffer::Term() {
 	recordOrder_.shrink_to_fit();
 }
 
-void DxrObject::RecordBuffer::SetBuffer(
-	uint32_t index,
-	const D3D12_GPU_DESCRIPTOR_HANDLE& handleGPU) {
+void DxrObject::RecordBuffer::SetHandle(
+	uint32_t index, const GPUHandle& handle) {
 
 	AutoResize(index);
 
-	recordOrder_[index] = handleGPU;
+	recordOrder_[index] = handle;
 	recordSizes_[index] = kGPUDescriptorHandle;
 }
 
-void DxrObject::RecordBuffer::SetBuffer(
-	uint32_t index,
-	const D3D12_GPU_VIRTUAL_ADDRESS& address) {
+void DxrObject::RecordBuffer::SetAddress(
+	uint32_t index, const GPUVirtualAddress& address) {
 
 	AutoResize(index);
 

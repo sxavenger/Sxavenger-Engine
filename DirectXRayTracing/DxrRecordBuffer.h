@@ -20,6 +20,9 @@
 // dxrObject
 #include <DxrMethod.h>
 
+// dxObject
+#include <DxBufferResource.h>
+
 //-----------------------------------------------------------------------------------------
 // comment
 //-----------------------------------------------------------------------------------------
@@ -30,6 +33,13 @@
 // DxrObject nemapspace
 ////////////////////////////////////////////////////////////////////////////////////////////
 namespace DxrObject {
+
+	//-----------------------------------------------------------------------------------------
+	// using GPUBuffer
+	//-----------------------------------------------------------------------------------------
+	using GPUHandle         = D3D12_GPU_DESCRIPTOR_HANDLE;                                            //!< handle型
+	using GPUVirtualAddress = std::variant<D3D12_GPU_VIRTUAL_ADDRESS, DxObject::BaseBufferResource*>; //!< virtualAddress型
+	using GPUBuffer         = std::variant<GPUHandle, GPUVirtualAddress>;                             //!< buffer型
 
 	////////////////////////////////////////////////////////////////////////////////////////////
 	// RecordBuffer class
@@ -45,14 +55,14 @@ namespace DxrObject {
 
 		void Term();
 
-		void SetBuffer(
+		void SetHandle(
 			uint32_t index,
-			const D3D12_GPU_DESCRIPTOR_HANDLE& handleGPU
+			const GPUHandle& handle
 		);
 
-		void SetBuffer(
+		void SetAddress(
 			uint32_t index,
-			const D3D12_GPU_VIRTUAL_ADDRESS& address
+			const GPUVirtualAddress& address
 		);
 
 		void SetExport(
@@ -65,7 +75,7 @@ namespace DxrObject {
 
 		const std::wstring& GetExport() const { return export_; }
 
-		const std::vector<std::variant<D3D12_GPU_DESCRIPTOR_HANDLE, D3D12_GPU_VIRTUAL_ADDRESS>>& GetRecordOrder() const { return recordOrder_; }
+		const std::vector<GPUBuffer>& GetRecordOrder() const { return recordOrder_; }
 
 	private:
 
@@ -81,8 +91,8 @@ namespace DxrObject {
 		*/
 
 		// localRootSignatureの順番で保存
-		std::vector<std::variant<D3D12_GPU_DESCRIPTOR_HANDLE, D3D12_GPU_VIRTUAL_ADDRESS>> recordOrder_;
-		std::vector<size_t>                                                               recordSizes_;
+		std::vector<GPUBuffer> recordOrder_;
+		std::vector<size_t>    recordSizes_;
 
 		//=========================================================================================
 		// private methods

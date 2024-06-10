@@ -96,8 +96,8 @@ private:
 
 	DirectXCommon* dxCommon_;
 
-	// 
-	bool isOutputEngineUI_ = true;
+	// settings
+	bool isOutputConsole_ = true;
 	bool isFix_ = true;
 
 	int windowFlags = 0;

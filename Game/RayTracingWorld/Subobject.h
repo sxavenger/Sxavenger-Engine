@@ -59,4 +59,6 @@ protected:
 
 	void InitMaterial();
 
+	void SetImGuiCommand();
+
 };

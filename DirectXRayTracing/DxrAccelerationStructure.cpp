@@ -74,8 +74,8 @@ void DxrObject::BottomLevelAS::Create(
 	recordBuffer_->SetExport(HITGROUP, hitgroup);
 
 	// bufferを設定しておく
-	recordBuffer_->SetBuffer(0, indicesStrucuturedBuffer_->GetGPUHandle());
-	recordBuffer_->SetBuffer(1, verticesStrucuturedBuffer_->GetGPUHandle());
+	SetHandle(0, indicesStrucuturedBuffer_->GetGPUHandle());
+	SetHandle(1, verticesStrucuturedBuffer_->GetGPUHandle());
 }
 
 void DxrObject::BottomLevelAS::Create(
@@ -132,8 +132,8 @@ void DxrObject::BottomLevelAS::Create(
 	recordBuffer_->SetExport(HITGROUP, hitgroup);
 
 	// bufferを設定しておく
-	recordBuffer_->SetBuffer(0, indicesStructuredBuffer->GetGPUHandle());
-	recordBuffer_->SetBuffer(1, verticesStructuredBuffer->GetGPUHandle());
+	SetHandle(0, indicesStructuredBuffer->GetGPUHandle());
+	SetHandle(1, verticesStructuredBuffer->GetGPUHandle());
 
 }
 

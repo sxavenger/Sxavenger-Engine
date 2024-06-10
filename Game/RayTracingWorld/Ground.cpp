@@ -23,7 +23,7 @@ void Ground::Init() {
 	);
 
 	// 仮で設定
-	blas_->SetBuffer(2, MyEngine::GetTexture("resources/tile_" + tiles_[tileType_] + ".png")->GetSRVHandleGPU());
+	blas_->SetHandle(2, MyEngine::GetTexture("resources/tile_" + tiles_[tileType_] + ".png")->GetSRVHandleGPU());
 
 	SetThisAttribute("ground");
 
@@ -45,6 +45,6 @@ void Ground::SetAttributeImGui() {
 		ImGui::EndCombo();
 	}
 
-	blas_->SetBuffer(2, MyEngine::GetTextureHandleGPU("resources/tile_" + tiles_[tileType_] + ".png"));
+	blas_->SetHandle(2, MyEngine::GetTextureHandleGPU("resources/tile_" + tiles_[tileType_] + ".png"));
 
 }
