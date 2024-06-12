@@ -104,6 +104,11 @@ namespace DxObject {
 			return descriptorVacantIndexs_[type];
 		}
 
+		const uint32_t GetUsedDescriptor(DescriptorType type) {
+			assert(type < DescriptorType::kDescriptorHeapCount);
+			return static_cast<uint32_t>(descriptorIndexCount_[type] - descriptorVacantIndexs_[type].size());
+		}
+
 	private:
 
 		//=========================================================================================

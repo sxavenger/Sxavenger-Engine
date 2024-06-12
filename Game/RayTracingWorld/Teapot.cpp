@@ -16,7 +16,7 @@ void Teapot::Init() {
 
 	// Transform
 	transform_.scale     *= 2.0f;
-	transform_.translate = { 0.0f, 1.6f, 0.0f };
+	transform_.translate = { 0.0f, 1.6f, 8.0f };
 
 	worldMatrix_ = transform_.SetMatrix();
 

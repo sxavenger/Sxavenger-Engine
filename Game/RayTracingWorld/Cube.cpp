@@ -4,30 +4,31 @@
 // Cube class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-void Cube::Init(
+void Cube::Init(SubobjectManager* subobjectManager) {
 
-	DxObject::BufferResource<VertexData>* vertices, DxObject::IndexBufferResource* indices,
-	DxObject::StructuredBuffer* verticesStructuredBuffer, DxObject::StructuredBuffer* indicesStructuredBuffer) {
-
+	// blas 
 	blas_ = std::make_unique<DxrObject::BottomLevelAS>();
-	blas_->Create(
-		vertices, indices,
-		verticesStructuredBuffer, indicesStructuredBuffer,
-		L"cube"
-	);
+	subobjectManager->GetBlasModelData(blas_.get(), L"cube", TYPE_CUBE);
 
-	InitMaterial();
+	// texture
+	MyEngine::LoadTexture("resources/bricks/bricks_color.png");
+	MyEngine::LoadTexture("resources/bricks/bricks_normaldx.png");
+	MyEngine::LoadTexture("resources/bricks/bricks_ambientOcclusion.png");
+
+	blas_->SetHandle(2, MyEngine::GetTexture("resources/bricks/bricks_color.png")->GetSRVHandleGPU());
+	blas_->SetHandle(3, MyEngine::GetTexture("resources/bricks/bricks_normaldx.png")->GetSRVHandleGPU());
+	blas_->SetHandle(4, MyEngine::GetTexture("resources/bricks/bricks_ambientOcclusion.png")->GetSRVHandleGPU());
+
+	SetThisAttribute("mappingCube");
 
 }
 
-void Cube::SetOnImGui(int id) {
+void Cube::Term() {
+}
 
-	std::string label = "cube##" + std::to_string(id);
+void Cube::SetAttributeImGui() {
 
-	if (ImGui::TreeNode(label.c_str())) {
+	transform_.SetImGuiCommand();
+	worldMatrix_ = transform_.SetMatrix();
 
-		SetImGuiCommand();
-
-		ImGui::TreePop();
-	}
 }

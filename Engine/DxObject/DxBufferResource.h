@@ -393,7 +393,7 @@ namespace DxObject {
 		const uint32_t GetCurrentIndexSize() const { return indexSize_; }
 
 		void Memcpy(const T* value, uint32_t indexSize) {
-			CheckElementCount(indexSize);
+			assert(CheckElementCount(indexSize));
 			memcpy(dataArray_, value, structureSize_ * indexSize);
 		}
 
@@ -402,8 +402,7 @@ namespace DxObject {
 		//=========================================================================================
 
 		T& operator[](uint32_t element) {
-			CheckElementCount(element);
-
+			assert(CheckElementCount(element));
 			return dataArray_[element];
 		}
 
@@ -421,7 +420,7 @@ namespace DxObject {
 		 indexSize -> 現在のindexの最大値
 		*/
 
-		ID3D12Device* device_;
+		ID3D12Device* device_; //!< 完全な動的bufferにする場合, 必須
 
 		//=========================================================================================
 		// protected methods

@@ -382,11 +382,11 @@
     <ClCompile Include="Game\RayTracingWorld\Subobject.cpp">
       <Filter>Game\RayTracingWorld\Subobject</Filter>
     </ClCompile>
-    <ClCompile Include="Game\RayTracingWorld\Cube.cpp">
-      <Filter>Game\RayTracingWorld\Subobject</Filter>
-    </ClCompile>
     <ClCompile Include="Game\RayTracingWorld\SubobjectManager.cpp">
       <Filter>Game\RayTracingWorld\Subobject</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\RayTracingWorld\Cube.cpp">
+      <Filter>Game\RayTracingWorld</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -621,11 +621,11 @@
     <ClInclude Include="Game\RayTracingWorld\Subobject.h">
       <Filter>Game\RayTracingWorld\Subobject</Filter>
     </ClInclude>
-    <ClInclude Include="Game\RayTracingWorld\Cube.h">
-      <Filter>Game\RayTracingWorld\Subobject</Filter>
-    </ClInclude>
     <ClInclude Include="Game\RayTracingWorld\SubobjectManager.h">
       <Filter>Game\RayTracingWorld\Subobject</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\RayTracingWorld\Cube.h">
+      <Filter>Game\RayTracingWorld</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

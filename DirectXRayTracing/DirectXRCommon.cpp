@@ -197,8 +197,34 @@ void DirectXRCommon::CreateStateObject(int32_t clientWidth, int32_t clientHeight
 
 	{
 		RootSignatureDesc closestHitDesc = {};
-		closestHitDesc.Resize(3, 0);
+		closestHitDesc.Resize(5, 1);
 		closestHitDesc.SetLocalRootSignature(HITGROUP, L"cube");
+
+		//!< index(t1)
+		closestHitDesc.SetSRV(0, 1);
+
+		//!< vertex(t2)
+		closestHitDesc.SetSRV(1, 2);
+
+		//!< texture(t4)
+		closestHitDesc.SetSRV(2, 4);
+
+		//!< normalMap(t5)
+		closestHitDesc.SetSRV(3, 5);
+
+		//!< ambientOcclusionMap(t5)
+		closestHitDesc.SetSRV(4, 6);
+
+		//!< sampler(s0)
+		closestHitDesc.SetSampler(0, TextureMode::MODE_MIRROR, 0);
+
+		stateDesc.SetLocalRootSignatureDesc(4, devices_.get(), closestHitDesc);
+	}
+
+	{
+		RootSignatureDesc closestHitDesc = {};
+		closestHitDesc.Resize(3, 0);
+		closestHitDesc.SetLocalRootSignature(HITGROUP, L"subobject");
 
 		//!< index(t1)
 		closestHitDesc.SetSRV(0, 1);
@@ -209,7 +235,7 @@ void DirectXRCommon::CreateStateObject(int32_t clientWidth, int32_t clientHeight
 		//!< material(b2)
 		closestHitDesc.SetCBV(2, 2);
 
-		stateDesc.SetLocalRootSignatureDesc(4, devices_.get(), closestHitDesc);
+		stateDesc.SetLocalRootSignatureDesc(5, devices_.get(), closestHitDesc);
 	}
 
 	// shaderBlobの生成
@@ -221,9 +247,10 @@ void DirectXRCommon::CreateStateObject(int32_t clientWidth, int32_t clientHeight
 		stateDesc.blob->SetShader(L"mainMS", DxrObject::ShaderType::MISS_SHADER);
 
 		stateDesc.blob->SetShader(L"mainGroundCHS", DxrObject::ShaderType::CLOSESTHIT_SHADER, L"ground");
-		stateDesc.blob->SetShader(L"mainPlayerCHS", DxrObject::ShaderType::CLOSESTHIT_SHADER, L"player");
 		stateDesc.blob->SetShader(L"mainTeapotCHS", DxrObject::ShaderType::CLOSESTHIT_SHADER, L"teapot");
+		stateDesc.blob->SetShader(L"mainPlayerCHS", DxrObject::ShaderType::CLOSESTHIT_SHADER, L"player");
 		stateDesc.blob->SetShader(L"mainCubeCHS", DxrObject::ShaderType::CLOSESTHIT_SHADER, L"cube");
+		stateDesc.blob->SetShader(L"mainSubobjectCHS", DxrObject::ShaderType::CLOSESTHIT_SHADER, L"subobject");
 	}
 
 	stateObject_ = std::make_unique<DxrObject::StateObject>();

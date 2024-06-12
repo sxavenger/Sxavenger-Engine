@@ -15,6 +15,7 @@
 #include <string>
 #include <list>
 #include <memory>
+#include <unordered_map>
 
 // geometry
 #include <Vector4.h>
@@ -56,12 +57,14 @@ public:
 	void SetLog(const std::string& log, const Vector4f& color = {1.0f, 1.0f, 1.0f, 1.0f});
 
 	void SetAttribute(Attribute* obj) {
-		Outliner_.push_back(obj);
+		attributes_.push_back(obj);
 	}
 
 	Texture* GetSceneTexture() const { return sceneTexture_; }
 
 	Camera3D* GetDebugCamera() const { return debugCamera_.get(); }
+
+	void CheckEraseAttribute(Attribute* obj);
 
 	//
 	// test function
@@ -114,8 +117,9 @@ private:
 	std::deque<LogData> logDatas_;
 
 	// Attribute
-	std::list<Attribute*> Outliner_; //!< attributes
+	std::list<Attribute*> attributes_;
 	Attribute* selectedAttribute_;
+	std::unordered_map<std::string, uint32_t> stackId_; //!< attribute名前重複対策
 
 	//=========================================================================================
 	// private methods
@@ -132,10 +136,13 @@ private:
 
 	void OutputOutliner();
 
-	// test made
 	void OutputSystem();
 
 	void SetTextureImGui(const D3D12_GPU_DESCRIPTOR_HANDLE& texture);
+
+	// methods 
+
+	void OutlinerAttribute(Attribute* attribute);
 
 };
 

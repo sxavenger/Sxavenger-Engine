@@ -11,6 +11,7 @@
 #include "TextureManager.h"
 
 #include <Attribute.h>
+#include <format>
 
 //-----------------------------------------------------------------------------------------
 // using namespace
@@ -44,7 +45,7 @@ void Console::Init() {
 	sceneTexture_ = MyEngine::CreateRenderTexture(kWindowWidth, kWindowHeight, "sceneTexture");
 
 	debugCamera_ = std::make_unique<Camera3D>();
-	debugCamera_->SetName("debugCamera");
+	debugCamera_->SetAttributeName("debugCamera");
 }
 
 void Console::Term() {
@@ -83,6 +84,12 @@ void Console::SetLog(const std::string& log, const Vector4f& color) {
 	while (logDatas_.size() >= kMaxLogData_) {
 		// 一番古いログの削除
 		logDatas_.pop_back();
+	}
+}
+
+void Console::CheckEraseAttribute(Attribute* obj) {
+	if (obj == selectedAttribute_) { //!< 削除するattributeが今選択されてるattributeだった場合
+		selectedAttribute_ = nullptr;
 	}
 }
 
@@ -203,17 +210,11 @@ void Console::OutputOutliner() {
 	static bool isOpenWindow = true;
 	ImGui::Begin("Outliner", &isOpenWindow, windowFlags);
 
-	static std::string name;
-
 	// TODO: 名前の重複参照の対策
+	stackId_.clear();
 	
-	for (const auto& object : Outliner_) {
-		bool isSelect = (object == selectedAttribute_);
-
-		if (ImGui::Selectable(object->GetName().c_str(), isSelect)) {
-			selectedAttribute_ = object;
-			name = selectedAttribute_->GetName();
-		}
+	for (const auto& object : attributes_) {
+		OutlinerAttribute(object);
 	}
 
 	ImGui::End();
@@ -223,7 +224,7 @@ void Console::OutputOutliner() {
 	if (selectedAttribute_ != nullptr) {
 
 		ImGui::SeparatorText(selectedAttribute_->GetName().c_str());
-		
+
 		//ImGui::InputText("name", name.data(), 20);
 		//// HACK: 文字数0にすると止まる
 		//// std::stringのsize以上に入力するとsize以上が表示されない
@@ -239,7 +240,9 @@ void Console::OutputOutliner() {
 		//}
 
 		selectedAttribute_->SetAttributeImGui();
+
 	}
+
 	ImGui::End();
 }
 
@@ -253,7 +256,7 @@ void Console::OutputSystem() {
 		if (ImGui::TreeNode("RTV")) {
 			ImGui::Text(
 				"used: %d / max: %d",
-				descriptorHeaps->GetIndexCount(RTV) - descriptorHeaps->GetDescriptorVacantQueue(RTV).size(),
+				descriptorHeaps->GetUsedDescriptor(RTV),
 				descriptorHeaps->GetIndexSize(RTV)
 			);
 
@@ -264,7 +267,7 @@ void Console::OutputSystem() {
 
 			ImGui::Text(
 				"used: %d / max: %d",
-				descriptorHeaps->GetIndexCount(SRV) - descriptorHeaps->GetDescriptorVacantQueue(SRV).size(),
+				descriptorHeaps->GetUsedDescriptor(SRV),
 				descriptorHeaps->GetIndexSize(SRV)
 			);
 
@@ -275,7 +278,7 @@ void Console::OutputSystem() {
 
 			ImGui::Text(
 				"used: %d / max: %d",
-				descriptorHeaps->GetIndexCount(DSV) - descriptorHeaps->GetDescriptorVacantQueue(DSV).size(),
+				descriptorHeaps->GetUsedDescriptor(DSV),
 				descriptorHeaps->GetIndexSize(DSV)
 			);
 
@@ -317,4 +320,43 @@ void Console::SetTextureImGui(const D3D12_GPU_DESCRIPTOR_HANDLE& texture) {
 	}
 }
 
+void Console::OutlinerAttribute(Attribute* attribute) {
+
+	// attributeが選択されてるか
+	bool isSelect = (attribute == selectedAttribute_);
+
+	// selectableに表示される名前
+	std::string label = attribute->GetName();
+
+	// 重複対策, ptrの値をstackIdとする
+	label += "##" + std::format("{:p}", reinterpret_cast<void*>(attribute));
+
+	if (attribute->GetNode().empty()) { //!< node構築がされてない場合
+		if (ImGui::Selectable(label.c_str(), isSelect)) { //!< selectされた場合
+			selectedAttribute_ = attribute;
+		}
+
+	} else {
+
+		ImGuiTreeNodeFlags flags
+			= ImGuiTreeNodeFlags_OpenOnDoubleClick
+			| ImGuiTreeNodeFlags_OpenOnArrow;
+
+		if (isSelect) {
+			flags |= ImGuiTreeNodeFlags_Selected;
+		}
+
+		if (ImGui::TreeNodeEx(label.c_str(), flags)) {
+			if (ImGui::IsItemClicked() && !ImGui::IsItemToggledOpen()) { //!< selectされた場合
+				selectedAttribute_ = attribute;
+			}
+
+			for (const auto& node : attribute->GetNode()) {
+				OutlinerAttribute(node);
+			}
+
+			ImGui::TreePop();
+		}
+	}
+}
 

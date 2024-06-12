@@ -66,15 +66,37 @@ namespace LIGHT {
 RWTexture2D<float4> gOutput : register(u0); // raygeneration
 
 StructuredBuffer<uint> sIndexBuffer : register(t1);
-StructuredBuffer<Vertex> sVertexBuffer : register(t2); // Hitgroups
+StructuredBuffer<Vertex> sVertexBuffer : register(t2); // Hitgroups all use
 
-Texture2D<float4> gGroundTexture : register(t4); // Hitgroup(ground)
+Texture2D<float4> gTexture : register(t4); // Hitgroup(ground, cube)
+Texture2D<float4> gNormalMap : register(t5); // Hitgroup(cube)
+Texture2D<float4> gAmbientOcclusionMap : register(t6); // Hitgroup(cube)
 SamplerState gSampler : register(s0);
 
 struct SubobjectMaterial {
 	float4 color;
+	float4 shadowColor;
+	float4 aoColor;
+	int flags;
+	int alphaRayType;
+	float aoRange;
+	float aoLimit;
 };
-ConstantBuffer<SubobjectMaterial> gSubobjectMaterial : register(b2);
+ConstantBuffer<SubobjectMaterial> gSubobjectMaterial : register(b2); // subobject hitgroup
+
+namespace SUBOBJECTFLAG {
+	static const int LAMBERT      = 1 << 0,
+	                 ALPHARAY     = 1 << 1,
+	                 ALPHALAMBERT = 1 << 2,
+	                 PHONG        = 1 << 3,
+	                 SHADOW       = 1 << 4,
+	                 AO           = 1 << 5;
+}
+
+namespace ALPHARAY {
+	static const int PENETRATION = 0,
+	                 REFLECTION  = 1;
+}
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // hitgroup methods
@@ -112,9 +134,10 @@ Vertex GetHitVertex(MyAttribute attrib) {
 //!
 //! @retval true  faild: collisionRay || reflection count limit count over
 //! @retval false ok
-bool CheckReflection(inout Payload payload, in float4 collisionColor = float4(0, 0, 0, 1)) {
+bool CheckReflection(inout Payload payload, float4 collisionColor = float4(0, 0, 0, 1)) {
 	
 	payload.isCollision = true;
+	payload.length      = RayTCurrent();
 	
 	if (payload.rayType == RAYTYPE::COLLISION) {
 		payload.color = collisionColor;
@@ -163,10 +186,10 @@ float4 CalculateLightColor(float4 defaultColor, float3 worldPos, float3 worldNor
 	
 	if (gLight.type == LIGHT::DIRECTION) {
 		
-		result.rgb *= HalfLambertReflection(worldNormal, gLight.direction) * gLight.color.rgb * gLight.intensity;
+		result.rgb *= HalfLambertReflection(worldNormal, -gLight.direction) * gLight.color.rgb * gLight.intensity;
 		
 		if (isUseBlinnPhong) {
-			result.rgb += BlinnPhong(worldPos, worldNormal, gLight.direction, 50.0f);
+			result.rgb += BlinnPhong(worldPos, worldNormal, -gLight.direction, 50.0f);
 		}
 		
 	} else if (gLight.type == LIGHT::POINT) {
@@ -175,10 +198,10 @@ float4 CalculateLightColor(float4 defaultColor, float3 worldPos, float3 worldNor
 		float distance = length(worldPos.xyz - gLight.position.xyz);
 		float factor = pow(saturate(-distance / gLight.range + 1.0f), gLight.decay);
 		
-		result.rgb *= HalfLambertReflection(worldNormal, direction) * gLight.color.rgb * gLight.intensity * factor;
+		result.rgb *= HalfLambertReflection(worldNormal, -direction) * gLight.color.rgb * gLight.intensity * factor;
 		
 		if (isUseBlinnPhong) {
-			result.rgb += BlinnPhong(worldPos, worldNormal, direction, 50.0f) * factor;
+			result.rgb += BlinnPhong(worldPos, worldNormal, -direction, 50.0f) * factor;
 		}
 	}
 	
@@ -232,7 +255,6 @@ float4 TraceShadowRay(float4 currentColor, float3 worldPos, uint reflectionCount
 	}
 	
 	return result;
-	
 }
 
 float4 TraceCutoffRay(float4 currentColor, float3 worldPos, float3 worldNormal, uint reflectionCount) {
@@ -344,6 +366,17 @@ float4 TraceAmbientOcclusionRay(float4 currentCulor, float3 worldPos, float3 wor
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
+// Texture methods
+////////////////////////////////////////////////////////////////////////////////////////////
+
+float3 GetNormalFormTexture(float2 texcoord) {
+	
+	float3 normalSample = gNormalMap.SampleLevel(gSampler, texcoord, 0.0f).rgb;
+	return normalize(normalSample * 2.0f - 1.0f);
+	
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////
 // raygeneration shader
 ////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -388,11 +421,13 @@ void mainRayGen() {
 [shader("miss")]
 void mainMS(inout Payload payload) {
 	
-	if (payload.rayType != RAYTYPE::VIEW) {
-		payload.color       = float4(0.0f, 0.0f, 0.0f, 0.0f);
-		payload.length      = 0.0f;
-		payload.isCollision = false;
-	}
+	payload.length      = 0.0f;
+	payload.isCollision = false;
+	
+	//if (payload.rayType != RAYTYPE::VIEW) {
+	//	payload.color = float4(0, 0, 0, 0);
+	//	return;
+	//}
 	
 	// clearValue
 	payload.color = float4(0.0f, 0.15f, 0.4f, 1.0f);
@@ -416,7 +451,7 @@ void mainGroundCHS(inout Payload payload, in MyAttribute attrib) {
 	float3 worldPosition = mul(vtx.position, ObjectToWorld4x3());
 	float3 worldNormal = normalize(mul(vtx.normal, (float3x3)ObjectToWorld4x3()));
 	
-	float4 resultColor = gGroundTexture.SampleLevel(gSampler, vtx.texcoord * 40.0f, 0.0f);
+	float4 resultColor = gTexture.SampleLevel(gSampler, vtx.texcoord * 40.0f, 0.0f);
 	
 	// lighting
 	resultColor = CalculateLightColor(resultColor, worldPosition, worldNormal);
@@ -485,7 +520,6 @@ void mainTeapotCHS(inout Payload payload, in MyAttribute attrib) {
 	resultColor = CalculateLightColor(resultColor, worldPosition, worldNormal);
 
 	payload.color = resultColor;
-	payload.length = RayTCurrent();
 }
 
 //-----------------------------------------------------------------------------------------
@@ -508,7 +542,6 @@ void mainPlayerCHS(inout Payload payload, in MyAttribute attrib) {
 	resultColor = CalculateLightColor(resultColor, worldPosition, worldNormal);
 	
 	payload.color = resultColor;
-	payload.length = RayTCurrent();
 	return;
 }
 
@@ -522,9 +555,255 @@ void mainCubeCHS(inout Payload payload, in MyAttribute attrib) {
 		return;
 	}
 	
-	float4 resultColor = gSubobjectMaterial.color;
+	// hit vertex
+	Vertex vtx = GetHitVertex(attrib);
+	float3 worldPosition = mul(vtx.position, ObjectToWorld4x3());
+	float3 worldNormal = normalize(mul(vtx.normal, (float3x3)ObjectToWorld4x3()));
+	
+	float4 resultColor = float4(1, 1, 1, 1);
+	
+	// textures sampling
+	resultColor = gTexture.SampleLevel(gSampler, vtx.texcoord, 0.0f);
+	float3 texNormal = normalize(gNormalMap.SampleLevel(gSampler, vtx.texcoord, 0.0f).rgb * 2.0f - 1.0f);
+	float ambientOcclusion = gAmbientOcclusionMap.SampleLevel(gSampler, vtx.texcoord, 0.0f).r;
+		
+	// directional light parameter
+	float3 toLightDirection = -gLight.direction;
+	float factor            = 1.0f;
+	
+	if (gLight.type == LIGHT::POINT) { //!< fixed lighting parameter
+		
+		// direction
+		toLightDirection = normalize(gLight.position.xyz - worldPosition.xyz);
+		
+		// factor
+		float distance = length(worldPosition.xyz - gLight.position.xyz);
+		factor = pow(saturate(-distance / gLight.range + 1.0f), gLight.decay);
+	}
+	
+	resultColor.rgb *= HalfLambertReflection(texNormal, toLightDirection) * gLight.color.rgb * gLight.intensity * factor;
+	resultColor.rgb *= ambientOcclusion;
 	
 	payload.color = resultColor;
-	payload.length = RayTCurrent();
+}
+
+//-----------------------------------------------------------------------------------------
+// subobject
+//-----------------------------------------------------------------------------------------
+[shader("closesthit")]
+void mainSubobjectCHS(inout Payload payload, in MyAttribute attrib) {
+	
+	if (CheckReflection(payload)) {
+		return;
+	}
+	
+	float4 resultColor = gSubobjectMaterial.color;
+	
+	// coordinate: barycentrics -> local -> world
+	Vertex vtx           = GetHitVertex(attrib);
+	float3 worldPosition = mul(vtx.position, ObjectToWorld4x3());
+	float3 worldNormal   = normalize(mul(vtx.normal, (float3x3)ObjectToWorld4x3()));
+	
+	// lambert
+	if (gSubobjectMaterial.flags & SUBOBJECTFLAG::LAMBERT) {
+		
+		// directional light parameter
+		float3 toLightDirection = -gLight.direction;
+		float factor            = 1.0f;
+		
+		if (gLight.type == LIGHT::POINT) { //!< fixed lighting parameter
+			
+			// direction
+			toLightDirection = normalize(gLight.position.xyz - worldPosition.xyz);
+			
+			// factor
+			float distance = length(worldPosition.xyz - gLight.position.xyz);
+			factor = pow(saturate(-distance / gLight.range + 1.0f), gLight.decay);
+		}
+		
+		resultColor.rgb *= HalfLambertReflection(worldNormal, toLightDirection) * gLight.color.rgb * gLight.intensity * factor;
+	}
+	
+	// alphaRay
+	// FIXME: anyhit shader (.a == 0.0f)
+	if ((gSubobjectMaterial.flags & SUBOBJECTFLAG::ALPHARAY) && (resultColor.a != 1.0f)) {
+		
+		// penetration ray direction
+		float3 direction = WorldRayDirection();
+		
+		if (gSubobjectMaterial.alphaRayType == ALPHARAY::REFLECTION) {
+			// reflection ray direction
+			direction = reflect(WorldRayDirection(), worldNormal);
+		}
+		
+		Payload reflectionRay;
+		reflectionRay.rayType         = RAYTYPE::REFLECTION;
+		reflectionRay.color           = float4(0, 0, 0, 0);
+		reflectionRay.reflectionCount = payload.reflectionCount;
+		reflectionRay.isCollision     = false;
+		reflectionRay.length          = 0;
+		
+		RayDesc desc;
+		desc.Origin    = worldPosition;
+		desc.Direction = direction;
+		desc.TMin      = kTMin;
+		desc.TMax      = 10000;
+		
+		TraceRay(
+			desc, reflectionRay
+		);
+		
+		resultColor = AlphaBlend(resultColor, reflectionRay.color);
+		
+	}
+	
+	// alpha ray after lambert
+	if (gSubobjectMaterial.flags & SUBOBJECTFLAG::ALPHALAMBERT) {
+		
+		// directional light parameter
+		float3 toLightDirection = -gLight.direction;
+		float factor            = 1.0f;
+		
+		if (gLight.type == LIGHT::POINT) { //!< fixed lighting parameter
+			
+			// direction
+			toLightDirection = normalize(gLight.position.xyz - worldPosition.xyz);
+			
+			// factor
+			float distance = length(worldPosition.xyz - gLight.position.xyz);
+			factor = pow(saturate(-distance / gLight.range + 1.0f), gLight.decay);
+		}
+		
+		resultColor.rgb *= HalfLambertReflection(worldNormal, toLightDirection) * gLight.color.rgb * gLight.intensity * factor;
+	}
+	
+	// phong
+	if (gSubobjectMaterial.flags & SUBOBJECTFLAG::PHONG) {
+		
+		// directional light parameter
+		float3 toLightDirection = -gLight.direction;
+		float factor = 1.0f;
+		
+		if (gLight.type == LIGHT::POINT) { //!< fixed lighting parameter
+			
+			// direction
+			toLightDirection = normalize(gLight.position.xyz - worldPosition.xyz);
+			
+			// factor
+			float distance = length(worldPosition.xyz - gLight.position.xyz);
+			factor = pow(saturate(-distance / gLight.range + 1.0f), gLight.decay);
+		}
+		
+		resultColor.rgb += BlinnPhong(worldPosition, worldNormal, toLightDirection, 50.0f) * factor;
+		resultColor.rgb = saturate(resultColor.rgb); //!< clamp 0.0f ~ 1.0f
+	}
+	
+	// shadow
+	if (gSubobjectMaterial.flags & SUBOBJECTFLAG::SHADOW) {
+		
+		// setting parameter //
+		// directionalLight
+		float3 toLightDirection = -gLight.direction;
+		float  toLightLength     = 10000;
+		
+		if (gLight.type == LIGHT::POINT) { //!< fix point light parameter
+			toLightDirection = normalize(gLight.position.xyz - worldPosition.xyz);
+			toLightLength    = length(worldPosition.xyz - gLight.position.xyz);
+		}
+		
+		Payload collisionRay;
+		collisionRay.rayType         = RAYTYPE::COLLISION;
+		collisionRay.color           = float4(0, 0, 0, 0);
+		collisionRay.length          = 0;
+		collisionRay.isCollision     = false;
+		collisionRay.reflectionCount = payload.reflectionCount;
+		
+		RayDesc desc;
+		desc.Origin    = worldPosition;
+		desc.Direction = toLightDirection;
+		desc.TMin      = kTMin;
+		desc.TMax      = toLightLength;
+		
+		TraceRay(
+			desc, collisionRay
+		);
+		
+		if (collisionRay.isCollision) {
+			resultColor = AlphaBlend(gSubobjectMaterial.shadowColor, resultColor);
+		}
+	}
+	
+	// return to payload in reflection ray
+	if (payload.rayType == RAYTYPE::REFLECTION) {
+		payload.color = resultColor;
+		return;
+	}
+	
+	// ambientOcclusion
+	if (gSubobjectMaterial.flags & SUBOBJECTFLAG::AO) {
+		
+		// normal base vector
+		float3 u;
+		float3 v;
+	
+		if (all(worldNormal.xy == 0.0f)) {
+			u = float3(1.0f, 0.0f, 0.0f);
+			
+		} else {
+			u = normalize(float3(-worldNormal.y, worldNormal.x, 0.0f));
+		}
+	
+		v = normalize(cross(worldNormal, u));
+		
+		// parameter //
+		const uint kSubdivision = 8;
+		const float range       = gSubobjectMaterial.aoRange;
+		
+		uint hitRayCount = 0;
+	
+		// ambient occlusion ray
+		for (uint lat = 0; lat < kSubdivision; ++lat) {
+			float theta = (lat / float(kSubdivision)) * (pi_v / 2.0f);
+				
+			for (uint lon = 0; lon < kSubdivision; ++lon) {
+				float phi = (lon / float(kSubdivision)) * (2 * pi_v);
+				
+				float x = sin(theta) * cos(phi);
+				float y = sin(theta) * sin(phi);
+				float z = cos(theta);
+				
+				float3 direction = u * x + v * y + worldNormal * z;
+				
+				// raysetting
+				Payload aoRay;
+				aoRay.rayType         = RAYTYPE::COLLISION;
+				aoRay.color           = float4(0, 0, 0, 0);
+				aoRay.isCollision     = false;
+				aoRay.length          = 0;
+				aoRay.reflectionCount = payload.reflectionCount;
+				
+				RayDesc desc;
+				desc.Origin    = worldPosition + worldNormal * kTMin;
+				desc.Direction = direction;
+				desc.TMin      = kTMin;
+				desc.TMax      = range;
+				
+				TraceRay(
+					desc, aoRay
+				);
+				
+				if (aoRay.isCollision) {
+					hitRayCount++;
+				}
+			}
+		}
+		
+		float4 aoColor = gSubobjectMaterial.aoColor;
+		aoColor.a = saturate(float(hitRayCount) / gSubobjectMaterial.aoLimit) * aoColor.a;
+		
+		resultColor = AlphaBlend(aoColor, resultColor);
+	}
+	
+	payload.color = resultColor;
 	return;
 }

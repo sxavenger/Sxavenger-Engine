@@ -52,7 +52,7 @@ void WinApp::CreateGameWindow(int32_t clientWidth, int32_t clientHeight, const w
 	hWnd_ = CreateWindow(
 		wc.lpszClassName,
 		windowTitle,
-		WS_OVERLAPPEDWINDOW,
+		WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX, //!< windowのサイズの固定
 		CW_USEDEFAULT,
 		CW_USEDEFAULT,
 		rc.right - rc.left,

@@ -3,35 +3,36 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
-// subobject
-#include <Subobject.h>
+// object
+#include <RayTracingObject.h>
 
-// model
-#include <Model.h>
+// subobjectManager
+#include <SubobjectManager.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Cube class
 ////////////////////////////////////////////////////////////////////////////////////////////
 class Cube
-	: public Subobject {
+	: public RayTracingObject
+	, public Attribute {
 public:
 
 	//=========================================================================================
 	// public methods
 	//=========================================================================================
 
-	Cube() {};
+	Cube() { }
 
-	~Cube() override = default;
+	~Cube() { Term(); }
 
-	void Init(
-		DxObject::BufferResource<VertexData>* vertices, DxObject::IndexBufferResource* indices,
-		DxObject::StructuredBuffer* verticesStructuredBuffer, DxObject::StructuredBuffer* indicesStructuredBuffer
-	) override;
+	void Init(SubobjectManager* subobjectManager); //!< cubeのモデルデータの取り出し
 
-	void SetOnImGui(int id) override;
+	void Term();
+
+	void SetAttributeImGui() override;
 
 private:
+
 
 	//=========================================================================================
 	// private variables

@@ -3,7 +3,7 @@
 void Player::Init() {
 
 	// transform
-	transform_.translate = { 0.0f, 3.0f, -30.0f };
+	transform_.translate = { 0.0f, 3.0f, -12.0f };
 	transform_.rotate = { 0.06f, 0.0f, 0.0f };
 
 	worldMatrix_ = transform_.SetMatrix();

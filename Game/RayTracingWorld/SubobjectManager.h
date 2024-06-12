@@ -22,6 +22,8 @@
 ////////////////////////////////////////////////////////////////////////////////////////////
 enum SubobjectType {
 	TYPE_CUBE,
+	TYPE_TEAPOT,
+	TYPE_PLANE,
 
 	kCountOfSubobjectType
 };
@@ -45,9 +47,13 @@ public:
 
 	void Term();
 
+	void Update();
+
 	void SetBlases(DxrObject::TopLevelAS* tlas);
 
 	void SetAttributeImGui() override;
+
+	void GetBlasModelData(DxrObject::BottomLevelAS* dst, const std::wstring& hitgroupName, SubobjectType type);
 
 private:
 
@@ -70,9 +76,11 @@ private:
 
 	std::list<std::unique_ptr<Subobject>> subobjects_;
 
-	static const std::string filePaths_[SubobjectType::kCountOfSubobjectType];
+	static const std::string objectName_[SubobjectType::kCountOfSubobjectType];
 
 	std::array<std::unique_ptr<Model>, SubobjectType::kCountOfSubobjectType> models_;
 	std::array<MeshStructuredBuffer,   SubobjectType::kCountOfSubobjectType> meshStructuredBuffers_;
+
+	SubobjectType selectedType_ = TYPE_CUBE;
 
 };

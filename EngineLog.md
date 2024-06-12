@@ -51,6 +51,7 @@ Complete Initialize: sWinApp
 [DxrObject::LoaclRootSignature]: rootSignature_ << Complete Create
 [DxrObject::LoaclRootSignature]: rootSignature_ << Complete Create
 [DxrObject::LoaclRootSignature]: rootSignature_ << Complete Create
+[DxrObject::LoaclRootSignature]: rootSignature_ << Complete Create
 [DxrObject::ShaderManager]: ./resources/raytracingShader/RayTracingWorld.hlsl << Complete Create
 Complete Initialize: sDirectXRCommon
 Complete Initialize: sImGuiManager

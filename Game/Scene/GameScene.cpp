@@ -91,6 +91,9 @@ void GameScene::Init() {
 
 	subobjectManager_ = std::make_unique<SubobjectManager>();
 
+	cube_ = std::make_unique<Cube>();
+	cube_->Init(subobjectManager_.get());
+
 }
 
 void GameScene::Term() {
@@ -101,6 +104,7 @@ void GameScene::Update() {
 
 	player_->Update();
 	camera_->Update(player_->GetWorldMatrix());
+	subobjectManager_->Update();
 
 	// TLASへの書き込み
 	tlas_->StartBlasSetup();
@@ -108,6 +112,7 @@ void GameScene::Update() {
 	tlas_->SetBLAS(ground_->GetBlas(), ground_->GetWorldMatrix(), 0);
 	tlas_->SetBLAS(player_->GetBlas(), player_->GetWorldMatrix(), 0);
 	tlas_->SetBLAS(teapot_->GetBlas(), teapot_->GetWorldMatrix(), 0);
+	tlas_->SetBLAS(cube_->GetBlas(), cube_->GetWorldMatrix(), 0);
 
 	subobjectManager_->SetBlases(tlas_.get());
 

@@ -15,6 +15,7 @@
 #include <Ground.h>
 #include <Teapot.h>
 #include <Player.h>
+#include <Cube.h>
 
 #include <SubobjectManager.h>
 
@@ -49,6 +50,7 @@ private:
 	std::unique_ptr<Ground> ground_;
 	std::unique_ptr<Player> player_;
 	std::unique_ptr<Teapot> teapot_;
+	std::unique_ptr<Cube>   cube_;
 
 	std::unique_ptr<SubobjectManager> subobjectManager_;
 
