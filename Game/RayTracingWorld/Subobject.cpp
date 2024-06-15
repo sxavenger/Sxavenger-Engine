@@ -64,7 +64,7 @@ void Subobject::SetImGuiCommand() {
 	{
 		ImVec2 regionMax = ImGui::GetWindowContentRegionMax();
 		ImVec2 regionMin = ImGui::GetWindowContentRegionMin();
-		ImVec2 childSize = { regionMax.x - regionMax.x, 300.0f };
+		ImVec2 childSize = { regionMax.x - regionMax.x, 200.0f };
 		ImGui::BeginChild(ImGui::GetID((void*)0), childSize, ImGuiChildFlags_Border, ImGuiWindowFlags_AlwaysHorizontalScrollbar | ImGuiWindowFlags_AlwaysVerticalScrollbar);
 
 		ImGui::Checkbox("halfLambert", &flags_[FLAG_LAMBERT]);

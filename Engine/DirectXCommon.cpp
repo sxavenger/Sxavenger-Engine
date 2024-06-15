@@ -56,7 +56,7 @@ void DirectXCommon::BeginFrame() {
 	ID3D12GraphicsCommandList* commandList = command_->GetCommandList();
 
 	// 書き込みバックバッファのインデックスを取得
-	backBufferIndex_ = swapChains_->GetSwapChain()->GetCurrentBackBufferIndex();
+	backBufferIndex_ = swapChains_->GetCurrentBackBufferIndex();
 
 	commandList->ResourceBarrier(
 		1,
@@ -252,6 +252,63 @@ void DirectXCommon::TransitionSingleAllocator() {
 
 	ID3D12DescriptorHeap* srv[] = { descriptorHeaps_->GetDescriptorHeap(DxObject::SRV) };
 	command_->GetCommandList()->SetDescriptorHeaps(_countof(srv), srv);
+}
+
+void DirectXCommon::CopyResource(
+	ID3D12Resource* dst, D3D12_RESOURCE_STATES dstState,
+	ID3D12Resource* src, D3D12_RESOURCE_STATES srcState) {
+
+	// commandListの取得
+	auto commandList = command_->GetCommandList();
+
+	// copyするため, 各Resourceのstateの変更
+	{
+		// dst
+		D3D12_RESOURCE_BARRIER barrier = {};
+		barrier.Type                   = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+		barrier.Transition.pResource   = dst;
+		barrier.Transition.StateBefore = dstState;
+		barrier.Transition.StateAfter  = D3D12_RESOURCE_STATE_COPY_DEST;
+		
+		commandList->ResourceBarrier(1, &barrier);
+	}
+
+	{
+		// src
+		D3D12_RESOURCE_BARRIER barrier = {};
+		barrier.Type                   = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+		barrier.Transition.pResource   = src;
+		barrier.Transition.StateBefore = srcState;
+		barrier.Transition.StateAfter  = D3D12_RESOURCE_STATE_COPY_SOURCE;
+
+		commandList->ResourceBarrier(1, &barrier);
+	}
+
+	// copyの実行
+	commandList->CopyResource(dst, src);
+
+	// 元のstate状態に戻す
+	{
+		// dst
+		D3D12_RESOURCE_BARRIER barrier = {};
+		barrier.Type                   = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+		barrier.Transition.pResource   = dst;
+		barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_COPY_DEST;
+		barrier.Transition.StateAfter  = dstState;
+		
+		commandList->ResourceBarrier(1, &barrier);
+	}
+
+	{
+		// src
+		D3D12_RESOURCE_BARRIER barrier = {};
+		barrier.Type                   = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+		barrier.Transition.pResource   = src;
+		barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_COPY_SOURCE;
+		barrier.Transition.StateAfter  = srcState;
+
+		commandList->ResourceBarrier(1, &barrier);
+	}
 }
 
 DirectXCommon* DirectXCommon::GetInstance() {

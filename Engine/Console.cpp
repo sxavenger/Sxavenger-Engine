@@ -183,6 +183,8 @@ void Console::OutputLog() {
 		}
 
 		if (ImGui::BeginTabItem("Printf")) {
+
+
 			ImGui::EndTabItem();
 		}
 
@@ -263,7 +265,7 @@ void Console::OutputSystem() {
 			ImGui::TreePop();
 		}
 
-		if (ImGui::TreeNode("SRV")) {
+		if (ImGui::TreeNode("SRV & UAV")) {
 
 			ImGui::Text(
 				"used: %d / max: %d",

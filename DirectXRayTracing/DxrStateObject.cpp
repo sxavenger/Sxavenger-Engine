@@ -99,7 +99,8 @@ namespace {
 
 void DxrObject::StateObject::Init(DxObject::Devices* devices, const StateObjectDesc& descs) {
 
-	CD3DX12_STATE_OBJECT_DESC desc{ D3D12_STATE_OBJECT_TYPE_RAYTRACING_PIPELINE };
+	CD3DX12_STATE_OBJECT_DESC desc;
+	desc.SetStateObjectType(D3D12_STATE_OBJECT_TYPE_RAYTRACING_PIPELINE);
 
 	// hitgroupの管理
 	std::unordered_map<std::wstring, ShaderHitGroup> hitgroups;
@@ -144,8 +145,8 @@ void DxrObject::StateObject::Init(DxObject::Devices* devices, const StateObjectD
 			}
 		}
 
-		dxilLibrarySubobject->DefineExports(exports.data(), static_cast<UINT>(exports.size()));
 		dxilLibrarySubobject->SetDXILLibrary(&libdxil);
+		dxilLibrarySubobject->DefineExports(exports.data(), static_cast<UINT>(exports.size()));
 
 	}
 
@@ -154,6 +155,8 @@ void DxrObject::StateObject::Init(DxObject::Devices* devices, const StateObjectD
 		for (const auto& hitgroup : hitgroups) {
 			auto hitGroupSubobject
 				= desc.CreateSubobject<CD3DX12_HIT_GROUP_SUBOBJECT>();
+
+			hitGroupSubobject->SetHitGroupType(D3D12_HIT_GROUP_TYPE_TRIANGLES);
 
 			if (!hitgroup.second.closestHit.empty()) {
 				hitGroupSubobject->SetClosestHitShaderImport(hitgroup.second.closestHit.c_str());
@@ -168,25 +171,11 @@ void DxrObject::StateObject::Init(DxObject::Devices* devices, const StateObjectD
 			}
 
 			hitGroupSubobject->SetHitGroupExport(hitgroup.first.c_str());
-			hitGroupSubobject->SetHitGroupType(D3D12_HIT_GROUP_TYPE_TRIANGLES);
 			// todo: hitgrouptypeも選択できるように
 		}
 
 		hitgroupCount_ = static_cast<uint32_t>(hitgroups.size()); //!< hitgroupの数の保存
 		hitgroups.clear(); //!< 使わなくなったのでクリア
-	}
-
-	// shaderConfigの設定
-	{
-		// TODO: sizeがstateObjectごとに違う場合でも設定可能にしておく
-
-		auto shaderConfig
-			= desc.CreateSubobject<CD3DX12_RAYTRACING_SHADER_CONFIG_SUBOBJECT>();
-
-		UINT payloadSize   = sizeof(Payload);
-		UINT attributeSize = sizeof(Attribute);
-
-		shaderConfig->Config(payloadSize, attributeSize);
 	}
 
 
@@ -197,42 +186,6 @@ void DxrObject::StateObject::Init(DxObject::Devices* devices, const StateObjectD
 
 		globalRootSignatureSubobject->SetRootSignature(descs.globalRootSignature->GetRootSignature());
 	}
-
-	// LoaclRootSignatureの設定
-	/*{
-		// XXX: 自動的にに割り振れるようにしておく
-
-		// raygeneration rootSignature
-		auto raygenerationSubobject
-			= desc.CreateSubobject<CD3DX12_LOCAL_ROOT_SIGNATURE_SUBOBJECT>();
-
-		raygenerationSubobject->SetRootSignature(descs.localRootSignatures[0]->GetRootSignature());
-
-		// raygeneration symbol の設定
-		auto raygenerationSymbolSubobject
-			= desc.CreateSubobject<CD3DX12_SUBOBJECT_TO_EXPORTS_ASSOCIATION_SUBOBJECT>();
-
-		LPCWSTR symbols[] = {
-			descs.blob->GetMainFunctionName(RAYGENERATION_SHAEAR).c_str()
-		};
-
-		raygenerationSymbolSubobject->AddExports(symbols);
-		raygenerationSymbolSubobject->SetSubobjectToAssociate(*raygenerationSubobject);
-
-
-		// closestHit local rootSignature
-		auto closestHitSubobject
-			= desc.CreateSubobject<CD3DX12_LOCAL_ROOT_SIGNATURE_SUBOBJECT>();
-
-		closestHitSubobject->SetRootSignature(descs.localRootSignatures[1]->GetRootSignature());
-
-		auto hitGroupSymbolSubobject
-			= desc.CreateSubobject<CD3DX12_SUBOBJECT_TO_EXPORTS_ASSOCIATION_SUBOBJECT>();
-
-		hitGroupSymbolSubobject->AddExport(kHitGroup);
-		hitGroupSymbolSubobject->SetSubobjectToAssociate(*closestHitSubobject);
-
-	}*/
 
 	// localRootSignatureの設定
 	{
@@ -262,13 +215,26 @@ void DxrObject::StateObject::Init(DxObject::Devices* devices, const StateObjectD
 		pipelineConfigSubobject->Config(maxRecursionDepth);
 	}
 
+	// shaderConfigの設定
+	{
+		// TODO: sizeがstateObjectごとに違う場合でも設定可能にしておく
+
+		auto shaderConfig
+			= desc.CreateSubobject<CD3DX12_RAYTRACING_SHADER_CONFIG_SUBOBJECT>();
+
+		UINT payloadSize   = sizeof(Payload);
+		UINT attributeSize = sizeof(Attribute);
+
+		shaderConfig->Config(payloadSize, attributeSize);
+	}
+
 	auto hr = devices->GetDevice()->CreateStateObject(
 		desc,
 		IID_PPV_ARGS(&stateObject_)
 	);
 
-	/*assert(SUCCEEDED(hr));*/
-	AssertHRESULT(hr);
+	assert(SUCCEEDED(hr));
+	/*AssertHRESULT(hr);*/
 
 	stateObject_.As(&properties_);
 }

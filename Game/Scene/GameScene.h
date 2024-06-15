@@ -19,6 +19,8 @@
 
 #include <SubobjectManager.h>
 
+#include <FullScreen.h>
+
 ////////////////////////////////////////////////////////////////////////////////////////////
 // GameScene class
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -58,6 +60,9 @@ private:
 
 	std::unique_ptr<RayTracingCamera> camera_;
 	std::unique_ptr<RayTracingLight>  light_;
+
+	// drawer //
+	std::unique_ptr<FullScreen> fullscreen_;
 
 	//=========================================================================================
 	// private methods

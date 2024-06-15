@@ -23,6 +23,7 @@ enum PipelineType {
 	PRIMITIVE,
 	BLASRENDER,
 	GAUSSIANBLUR,
+	FULLSCREEN,
 
 	kCountOfPipeline
 };

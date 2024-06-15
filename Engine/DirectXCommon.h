@@ -79,6 +79,13 @@ public:
 		pipelineManager_->SetPipeline();
 	}
 
+	// ---- resource関係 ---- //
+
+	void CopyResource(
+		ID3D12Resource* dst, D3D12_RESOURCE_STATES dstState,
+		ID3D12Resource* src, D3D12_RESOURCE_STATES srcState
+	);
+
 	static DirectXCommon* GetInstance();
 
 	// TODO: コマンドリストを外に出したくない...

@@ -268,4 +268,24 @@ void DxObject::PipelineManager::CreatePipelineTable() {
 		blob->Create(L"GaussianBlur.VS.hlsl", VERTEX);
 		blob->Create(L"GaussianBlur.PS.hlsl", PIXEL);
 	}
+
+	{
+		// rootSignatureDesc
+		RootSignatureDesc desc;
+		desc.Resize(2, 1);
+
+		//!< camera2D
+		desc.SetCBV(0, SHADER_VERTEX, 0);
+
+		//!< textureBuffer
+		desc.SetSRV(1, SHADER_PIXEL, 0);
+		desc.SetSampler(0, MODE_CLAMP, SHADER_PIXEL, 0);
+
+		pipelineMenbers_[PipelineType::FULLSCREEN].rootSignature = std::make_unique<DxObject::RootSignature>(devices_, desc);
+
+		pipelineMenbers_[PipelineType::FULLSCREEN].shaderBlob = std::make_unique<DxObject::ShaderBlob>();
+		auto blob = pipelineMenbers_[PipelineType::FULLSCREEN].shaderBlob.get();
+		blob->Create(L"FullScreen.VS.hlsl", VERTEX);
+		blob->Create(L"FullScreen.PS.hlsl", PIXEL);
+	}
 }

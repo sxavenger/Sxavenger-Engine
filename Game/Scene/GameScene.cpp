@@ -94,6 +94,9 @@ void GameScene::Init() {
 	cube_ = std::make_unique<Cube>();
 	cube_->Init(subobjectManager_.get());
 
+	// drawer
+	fullscreen_ = std::make_unique<FullScreen>();
+
 }
 
 void GameScene::Term() {
@@ -109,12 +112,12 @@ void GameScene::Update() {
 	// TLASへの書き込み
 	tlas_->StartBlasSetup();
 
-	tlas_->SetBLAS(ground_->GetBlas(), ground_->GetWorldMatrix(), 0);
-	tlas_->SetBLAS(player_->GetBlas(), player_->GetWorldMatrix(), 0);
-	tlas_->SetBLAS(teapot_->GetBlas(), teapot_->GetWorldMatrix(), 0);
-	tlas_->SetBLAS(cube_->GetBlas(), cube_->GetWorldMatrix(), 0);
+	//tlas_->SetBLAS(ground_->GetBlas(), ground_->GetWorldMatrix(), 0);
+	//tlas_->SetBLAS(player_->GetBlas(), player_->GetWorldMatrix(), 0);
+	//tlas_->SetBLAS(teapot_->GetBlas(), teapot_->GetWorldMatrix(), 0);
+	//tlas_->SetBLAS(cube_->GetBlas(), cube_->GetWorldMatrix(), 0);
 
-	subobjectManager_->SetBlases(tlas_.get());
+	//subobjectManager_->SetBlases(tlas_.get());
 
 	tlas_->EndBlasSetup();
 }
@@ -180,6 +183,8 @@ void GameScene::Draw() {
 
 	{
 		MyEngine::BeginScreenDraw();
+
+		fullscreen_->DrawTexture(RayTracingEngine::GetDxrCommon()->GetResultBufferTexture());
 
 		/*
 			ImGuiの関係上、スクリーン描画は最後にする

@@ -121,6 +121,9 @@
     <Filter Include="Game\RayTracingWorld\Subobject">
       <UniqueIdentifier>{1983da16-361d-4fa8-af68-3ad948d69e89}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resource\hlsl\FullScreen">
+      <UniqueIdentifier>{413bdfbe-c42f-4b9b-9a6e-c6b7d51c3eb8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
@@ -388,6 +391,9 @@
     <ClCompile Include="Game\RayTracingWorld\Cube.cpp">
       <Filter>Game\RayTracingWorld</Filter>
     </ClCompile>
+    <ClCompile Include="Lib\PostEffect\FullScreen.cpp">
+      <Filter>Lib\PostEffect</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\MyEngine.h">
@@ -627,6 +633,9 @@
     <ClInclude Include="Game\RayTracingWorld\Cube.h">
       <Filter>Game\RayTracingWorld</Filter>
     </ClInclude>
+    <ClInclude Include="Lib\PostEffect\FullScreen.h">
+      <Filter>Lib\PostEffect</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />
@@ -659,6 +668,9 @@
     </None>
     <None Include="Resources\RayTracingShader\RayTracingConfig.hlsli">
       <Filter>Resource\RayTracingShader</Filter>
+    </None>
+    <None Include="Resources\hlsl\FullScreen.hlsli">
+      <Filter>Resource\hlsl\FullScreen</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -705,6 +717,12 @@
     </FxCompile>
     <FxCompile Include="Resources\RayTracingShader\RayTracingWorld.hlsl">
       <Filter>Resource\RayTracingShader</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\hlsl\FullScreen.PS.hlsl">
+      <Filter>Resource\hlsl\FullScreen</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\hlsl\FullScreen.VS.hlsl">
+      <Filter>Resource\hlsl\FullScreen</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>
