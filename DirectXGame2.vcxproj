@@ -116,6 +116,8 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\DxObject\DxBufferResource.cpp" />
     <ClCompile Include="Engine\DxObject\DxCommand.cpp" />
     <ClCompile Include="Engine\DxObject\DxCompilers.cpp" />
+    <ClCompile Include="Engine\DxObject\DxCSBlob.cpp" />
+    <ClCompile Include="Engine\DxObject\DxCSPipelineState.cpp" />
     <ClCompile Include="Engine\DxObject\DxDepthStencil.cpp" />
     <ClCompile Include="Engine\DxObject\DxDescriptorHeaps.cpp" />
     <ClCompile Include="Engine\DxObject\DxDevices.cpp" />
@@ -211,6 +213,8 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\DxObject\DxBufferResource.h" />
     <ClInclude Include="Engine\DxObject\DxCommand.h" />
     <ClInclude Include="Engine\DxObject\DxCompilers.h" />
+    <ClInclude Include="Engine\DxObject\DxCSBlob.h" />
+    <ClInclude Include="Engine\DxObject\DxCSPipelineState.h" />
     <ClInclude Include="Engine\DxObject\DxDepthStencil.h" />
     <ClInclude Include="Engine\DxObject\DxDescriptorHeaps.h" />
     <ClInclude Include="Engine\DxObject\DxDevices.h" />
@@ -334,12 +338,8 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <FxCompile Include="Resources\hlsl\Primitive.VS.hlsl">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </FxCompile>
-    <FxCompile Include="Resources\RayTracingShader\glassRoom.hlsl">
+    <FxCompile Include="Resources\hlsl\test.CS.hlsl">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-    </FxCompile>
-    <FxCompile Include="Resources\RayTracingShader\raytracing.hlsl">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">6.4</ShaderModel>
     </FxCompile>
     <FxCompile Include="Resources\RayTracingShader\RayTracingWorld.hlsl">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>

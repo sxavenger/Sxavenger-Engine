@@ -14,7 +14,7 @@
 //=========================================================================================
 
 const std::string SubobjectManager::objectName_[SubobjectType::kCountOfSubobjectType] = {
-	"cube", "teapot", "plane"
+	"cube", "teapot", "plane", "sphere", "squarePyramid"
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////

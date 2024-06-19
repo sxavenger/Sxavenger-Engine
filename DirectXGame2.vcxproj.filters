@@ -124,6 +124,12 @@
     <Filter Include="Resource\hlsl\FullScreen">
       <UniqueIdentifier>{413bdfbe-c42f-4b9b-9a6e-c6b7d51c3eb8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Engine\DxrObject">
+      <UniqueIdentifier>{78ce40ef-f1af-445c-a1f6-4e179adbbf0f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource\hlsl\test">
+      <UniqueIdentifier>{6ec66c81-04cd-4b81-b5a6-8998ca20868c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
@@ -394,6 +400,12 @@
     <ClCompile Include="Lib\PostEffect\FullScreen.cpp">
       <Filter>Lib\PostEffect</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\DxObject\DxCSBlob.cpp">
+      <Filter>Engine\DxObject\source</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\DxObject\DxCSPipelineState.cpp">
+      <Filter>Engine\DxObject\source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\MyEngine.h">
@@ -636,6 +648,12 @@
     <ClInclude Include="Lib\PostEffect\FullScreen.h">
       <Filter>Lib\PostEffect</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\DxObject\DxCSBlob.h">
+      <Filter>Engine\DxObject\include</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\DxObject\DxCSPipelineState.h">
+      <Filter>Engine\DxObject\include</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />
@@ -697,9 +715,6 @@
     <FxCompile Include="Resources\hlsl\Primitive.VS.hlsl">
       <Filter>Resource\hlsl\Primitive</Filter>
     </FxCompile>
-    <FxCompile Include="Resources\RayTracingShader\raytracing.hlsl">
-      <Filter>Resource\RayTracingShader</Filter>
-    </FxCompile>
     <FxCompile Include="Resources\hlsl\BlasRender.PS.hlsl">
       <Filter>Resource\hlsl\BlasRender</Filter>
     </FxCompile>
@@ -712,9 +727,6 @@
     <FxCompile Include="Resources\hlsl\GaussianBlur.VS.hlsl">
       <Filter>Resource\hlsl\GaussianBlur</Filter>
     </FxCompile>
-    <FxCompile Include="Resources\RayTracingShader\glassRoom.hlsl">
-      <Filter>Resource\RayTracingShader</Filter>
-    </FxCompile>
     <FxCompile Include="Resources\RayTracingShader\RayTracingWorld.hlsl">
       <Filter>Resource\RayTracingShader</Filter>
     </FxCompile>
@@ -723,6 +735,9 @@
     </FxCompile>
     <FxCompile Include="Resources\hlsl\FullScreen.VS.hlsl">
       <Filter>Resource\hlsl\FullScreen</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\hlsl\test.CS.hlsl">
+      <Filter>Resource\hlsl\test</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

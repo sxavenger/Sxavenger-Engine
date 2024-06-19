@@ -7,9 +7,6 @@
 #include <d3d12.h>
 #include <dxgi1_6.h>
 
-// methods
-#include <DxObjectMethod.h>
-
 // c++
 #include <cstdint>
 #include <cassert>
@@ -17,6 +14,9 @@
 
 // ComPtr
 #include <ComPtr.h>
+
+// DxObject
+#include <DxObjectMethod.h>
 
 //-----------------------------------------------------------------------------------------
 // comment
@@ -27,48 +27,30 @@
 ////////////////////////////////////////////////////////////////////////////////////////////
 // DxObject namespace
 ////////////////////////////////////////////////////////////////////////////////////////////
-namespace DxObject {
-
-	//-----------------------------------------------------------------------------------------
-	// forward
-	//-----------------------------------------------------------------------------------------
-	class Devices;
+namespace DxObject { //!< DxSource
 
 	////////////////////////////////////////////////////////////////////////////////////////////
-	// ShaderStage enum
+	// CSRootSignatureDesc class
 	////////////////////////////////////////////////////////////////////////////////////////////
-	enum ShaderStage {
-		SHADER_ALL           = D3D12_SHADER_VISIBILITY_ALL,
-		SHADER_VERTEX        = D3D12_SHADER_VISIBILITY_VERTEX,
-		SHADER_HULL          = D3D12_SHADER_VISIBILITY_HULL,
-		SHADER_DOMAIN        = D3D12_SHADER_VISIBILITY_DOMAIN,
-		SHADER_GEOMETRY      = D3D12_SHADER_VISIBILITY_GEOMETRY,
-		SHADER_PIXEL         = D3D12_SHADER_VISIBILITY_PIXEL,
-		SHADER_AMPLIFICATION = D3D12_SHADER_VISIBILITY_AMPLIFICATION,
-		SHADER_MESH          = D3D12_SHADER_VISIBILITY_MESH
-	};
-
-	////////////////////////////////////////////////////////////////////////////////////////////
-	// RootSignatureDesc class
-	////////////////////////////////////////////////////////////////////////////////////////////
-	class RootSignatureDesc {
-	public:
+	class CSRootSignatureDesc {
 
 		//=========================================================================================
 		// public methods
 		//=========================================================================================
 
-		~RootSignatureDesc() { Clear(); }
+		~CSRootSignatureDesc() { Clear(); }
 
 		void Resize(uint32_t paramSize, uint32_t samplerSize);
 
 		void Clear();
 
-		void SetCBV(uint32_t index, ShaderStage stage, UINT shaderRegister);
+		void SetCBV(uint32_t index, UINT shaderRegister);
 
-		void SetSRV(uint32_t index, ShaderStage stage, UINT shaderRegister);
+		void SetSRV(uint32_t index, UINT shaderRegister);
 
-		void SetSampler(uint32_t index, TextureMode mode, ShaderStage stage, UINT shaderRegister);
+		void SetUAV(uint32_t index, UINT shaderRegister);
+
+		void SetSampler(uint32_t index, TextureMode mode, UINT shaderRegister);
 
 		//=========================================================================================
 		// public variables
@@ -87,36 +69,34 @@ namespace DxObject {
 
 	};
 
-
 	////////////////////////////////////////////////////////////////////////////////////////////
-	// RootSignature class
+	// CSStateObject class
 	////////////////////////////////////////////////////////////////////////////////////////////
-	class RootSignature {
+	class CSPipelineState {
 	public:
 
 		//=========================================================================================
 		// public methods
 		//=========================================================================================
 
-		RootSignature(Devices* devices, const RootSignatureDesc& descs) {
-			Init(devices, descs);
-		}
+		CSPipelineState() {}
 
-		~RootSignature() { Term(); }
+		~CSPipelineState() { Term(); }
 
-		void Init(Devices* devices, const RootSignatureDesc& descs);
+		void Init();
 
 		void Term();
 
-		ID3D12RootSignature* GetRootSignature() const { return rootSignature_.Get(); }
+
 
 	private:
 
 		//=========================================================================================
-		// private variables
+		// private varibles
 		//=========================================================================================
 
 		ComPtr<ID3D12RootSignature> rootSignature_;
+		ComPtr<ID3D12PipelineState> pipelineState_;
 
 	};
 

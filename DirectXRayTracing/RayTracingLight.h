@@ -10,6 +10,9 @@
 #include <Vector4.h>
 #include <Vector3.h>
 
+// lib
+#include <MathLib.h>
+
 // c++
 #include <memory>
 
@@ -22,6 +25,7 @@
 enum LightType {
 	LIGHT_DIRECTION,
 	LIGHT_POINT,
+	LIGHT_SPOT
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -61,6 +65,7 @@ private:
 		float intensity    = 1.0f;
 		float range        = 0.0f;
 		float decay        = 1.0f;
+		float angle        = std::cos(pi_v / 3.0f);
 
 		int type = LIGHT_DIRECTION;
 	};

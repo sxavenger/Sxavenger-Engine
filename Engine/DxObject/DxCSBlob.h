@@ -10,15 +10,14 @@
 
 // c++
 #include <cstdint>
-#include <cassert>
 #include <string>
-#include <unordered_map>
+#include <cassert>
 
-// com
 #include <ComPtr.h>
 
 // DxObject
 #include <DxObjectMethod.h>
+#include <DxShaderTable.h>
 
 //-----------------------------------------------------------------------------------------
 // comment
@@ -28,60 +27,32 @@
 #pragma comment(lib, "dxcompiler.lib")
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// ShaderType enum
+// DxObject namespace
 ////////////////////////////////////////////////////////////////////////////////////////////
-enum ShaderType {
-	// rendering shaders
-	VERTEX,
-	PIXEL,
-	MESH,
-
-	// compute shaders
-	COMPUTE,
-
-	kCountOfShaderType,
-};
-
-////////////////////////////////////////////////////////////////////////////////////////////
-// namespace DxObject
-////////////////////////////////////////////////////////////////////////////////////////////
-namespace DxObject {
-
-	//-----------------------------------------------------------------------------------------
-	// forward
-	//-----------------------------------------------------------------------------------------
-	class Compilers;
-
+namespace DxObject { //!< DxSource
+	
 	////////////////////////////////////////////////////////////////////////////////////////////
-	// class ShaderTable
+	// CSBlob class
 	////////////////////////////////////////////////////////////////////////////////////////////
-	class ShaderTable {
+	class CSBlob {
 	public:
 
 		//=========================================================================================
 		// public methods
 		//=========================================================================================
 
-		//! @brief コンストラクタ
-		ShaderTable() { Init(); }
+		CSBlob() {}
 
-		//! @brief デストラクタ
-		~ShaderTable() { Term(); }
+		~CSBlob() { Term(); }
 
 		//! @brief 初期化処理
-		void Init();
+		void Init(const std::wstring& fileName);
 
 		//! @brief 終了処理
 		void Term();
 
-		IDxcBlob* GetShaderBlob(const std::wstring& filePath, ShaderType type);
-
-		//! @brief Compilersの設定
-		//! 
-		//! @param[in] compilers DxObject::Compilers
-		static void SetCompilers(Compilers* compilers) {
-			compilers_ = compilers;
-		}
+		//! @brief shaderTableの設定
+		static void SetShaderTable(ShaderTable* shaderTable) { shaderTable_ = shaderTable; }
 
 	private:
 
@@ -89,16 +60,10 @@ namespace DxObject {
 		// private variables
 		//=========================================================================================
 
-		static Compilers* compilers_;
-		static const std::wstring directory_;
+		static ShaderTable* shaderTable_;
 
-		std::unordered_map<std::wstring, ComPtr<IDxcBlob>> shaderBlobs_;
-
-		//=========================================================================================
-		// private methods
-		//=========================================================================================
-
-		void CreateShaderBlob(const std::wstring& filePath, ShaderType type);
+		IDxcBlob* csBlob_ = nullptr;
 
 	};
+
 }

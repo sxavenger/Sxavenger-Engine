@@ -10,6 +10,7 @@
 // DxObject
 #include <DxCompilers.h>
 #include <DxShaderBlob.h>
+#include <DxCSBlob.h>
 
 #include <Logger.h>
 
@@ -21,6 +22,8 @@ static const wchar_t* shaderTypeStr[kCountOfShaderType] = {
 	L"vs_6_5", // vs
 	L"ps_6_5", // pixel
 	L"ms_6_5", // ms
+
+	L"cs_6_5", // cs
 };
 
 //=========================================================================================
@@ -35,10 +38,22 @@ const std::wstring DxObject::ShaderTable::directory_ = L"./resources/hlsl/";
 
 void DxObject::ShaderTable::Init() {
 	ShaderBlob::SetShaderTable(this);
+	CSBlob::SetShaderTable(this);
 }
 
 void DxObject::ShaderTable::Term() {
 	shaderBlobs_.clear();
+}
+
+IDxcBlob* DxObject::ShaderTable::GetShaderBlob(const std::wstring& filePath, ShaderType type) {
+	// mapにshaderDataがあるか確認
+	if (shaderBlobs_.find(filePath) != shaderBlobs_.end()) {
+		return shaderBlobs_.at(filePath).Get();
+	
+	} else {
+		CreateShaderBlob(filePath, type);
+		return shaderBlobs_.at(filePath).Get();
+	}
 }
 
 void DxObject::ShaderTable::CreateShaderBlob(const std::wstring& filePath, ShaderType type) {
@@ -47,7 +62,8 @@ void DxObject::ShaderTable::CreateShaderBlob(const std::wstring& filePath, Shade
 
 	// blobの生成
 	blob = DxObjectMethod::CompileShader(
-		directory_ + filePath, shaderTypeStr[type],
+		directory_ + filePath,
+		shaderTypeStr[type],
 		compilers_->GetDxcUtils(), compilers_->GetDxcCompilder(), compilers_->GetIncluderHandler()
 	);
 

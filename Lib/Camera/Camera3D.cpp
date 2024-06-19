@@ -35,10 +35,6 @@ void Camera3D::Init() {
 	SetCamera(unitVector, origin, {0.0f, 0.0f, -10.0f});
 	SetProjection(0.45f, static_cast<float>(kWindowWidth) / static_cast<float>(kWindowHeight), 0.1f, 100.0f);
 
-	// attribute
-	name_ = "camera";
-	Console::GetInstance()->SetAttribute(this);
-
 	resource_ = std::make_unique<DxObject::BufferPtrResource<CameraForGPU>>(MyEngine::GetDevicesObj(), 1);
 	resource_->SetPtr(0, &cameraForGPU_);
 	cameraForGPU_.viewProjMatrix = viewMatrix_ * projectionMatrix_;

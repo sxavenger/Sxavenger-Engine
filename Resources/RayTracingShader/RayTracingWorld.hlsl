@@ -50,14 +50,16 @@ struct Light {
 	float intensity;
 	float range;
 	float decay;
+	float angle;
 	
-	int type; // lightType direction = 0, point = 1
+	int type; // lightType direction = 0, point = 1, spot = 2
 };
 ConstantBuffer<Light> gLight : register(b1);
 
 namespace LIGHT {
-	static const int DIRECTION = 0;
-	static const int POINT     = 1;
+	static const int DIRECTION = 0,
+	                 POINT     = 1,
+	                 SPOT      = 2;
 }
 
 //=========================================================================================
@@ -203,6 +205,25 @@ float4 CalculateLightColor(float4 defaultColor, float3 worldPos, float3 worldNor
 		if (isUseBlinnPhong) {
 			result.rgb += BlinnPhong(worldPos, worldNormal, -direction, 50.0f) * factor;
 		}
+		
+	} else if (gLight.type == LIGHT::SPOT) {
+	
+		// angle
+		float3 direction = normalize(worldPos.xyz - gLight.position.xyz);
+		float angle = dot(direction, gLight.direction);
+		float falloffFactor = saturate((angle - gLight.angle) / (1.0f - gLight.angle));
+		
+		// length
+		float distance = length(worldPos.xyz - gLight.position.xyz);
+		float attenuationFactor = pow(saturate(-distance / gLight.range + 1.0f), gLight.decay);
+		
+		float factor = attenuationFactor * falloffFactor;
+		
+		result.rgb *= HalfLambertReflection(worldNormal, -direction) * gLight.color.rgb * gLight.intensity * factor;
+		
+		if (isUseBlinnPhong) {
+			result.rgb += BlinnPhong(worldPos, worldNormal, -direction, 50.0f) * factor;
+		}
 	}
 	
 	return result;
@@ -220,7 +241,7 @@ float4 TraceShadowRay(float4 currentColor, float3 worldPos, uint reflectionCount
 	float3 direction = -gLight.direction;
 	float tMax = 10000;
 	
-	if (gLight.type == LIGHT::POINT) {
+	if (gLight.type != LIGHT::DIRECTION) {
 		direction = normalize(gLight.position.xyz - worldPos);
 		tMax      = length(gLight.position.xyz - worldPos);
 	}
@@ -410,6 +431,8 @@ void mainRayGen() {
 		payload
 	);
 	
+	//payload.color.rgb = round(payload.color.rgb * 12.0f) / 12.0f;
+	
 	gOutput[launchIndex.xy] = payload.color;
 	
 }
@@ -579,6 +602,21 @@ void mainCubeCHS(inout Payload payload, in MyAttribute attrib) {
 		// factor
 		float distance = length(worldPosition.xyz - gLight.position.xyz);
 		factor = pow(saturate(-distance / gLight.range + 1.0f), gLight.decay);
+		
+	} else if (gLight.type == LIGHT::SPOT) {
+		
+		// direction
+		toLightDirection = normalize(gLight.position.xyz - worldPosition.xyz);
+		
+		// angle
+		float angle = dot(-toLightDirection, gLight.direction);
+		float falloffFactor = saturate((angle - gLight.angle) / (1.0f - gLight.angle));
+		
+		// factor
+		float distance = length(worldPosition.xyz - gLight.position.xyz);
+		float attenuationFactor = pow(saturate(-distance / gLight.range + 1.0f), gLight.decay);
+		
+		factor = attenuationFactor * falloffFactor;
 	}
 	
 	resultColor.rgb *= HalfLambertReflection(texNormal, toLightDirection) * gLight.color.rgb * gLight.intensity * factor;
@@ -619,6 +657,22 @@ void mainSubobjectCHS(inout Payload payload, in MyAttribute attrib) {
 			// factor
 			float distance = length(worldPosition.xyz - gLight.position.xyz);
 			factor = pow(saturate(-distance / gLight.range + 1.0f), gLight.decay);
+			
+		} else if (gLight.type == LIGHT::SPOT) {
+
+			// direction
+			toLightDirection = normalize(gLight.position.xyz - worldPosition.xyz);
+			
+			// factor
+			// angle
+			float angle = dot(-toLightDirection, gLight.direction);
+			float falloffFactor = saturate((angle - gLight.angle) / (1.0f - gLight.angle));
+		
+			// length
+			float distance = length(worldPosition.xyz - gLight.position.xyz);
+			float attenuationFactor = pow(saturate(-distance / gLight.range + 1.0f), gLight.decay);
+		
+			factor = attenuationFactor * falloffFactor;
 		}
 		
 		resultColor.rgb *= HalfLambertReflection(worldNormal, toLightDirection) * gLight.color.rgb * gLight.intensity * factor;
@@ -664,7 +718,7 @@ void mainSubobjectCHS(inout Payload payload, in MyAttribute attrib) {
 		float3 toLightDirection = -gLight.direction;
 		float factor            = 1.0f;
 		
-		if (gLight.type == LIGHT::POINT) { //!< fixed lighting parameter
+		if (gLight.type != LIGHT::DIRECTION) { //!< fixed lighting parameter
 			
 			// direction
 			toLightDirection = normalize(gLight.position.xyz - worldPosition.xyz);
@@ -706,7 +760,7 @@ void mainSubobjectCHS(inout Payload payload, in MyAttribute attrib) {
 		float3 toLightDirection = -gLight.direction;
 		float  toLightLength     = 10000;
 		
-		if (gLight.type == LIGHT::POINT) { //!< fix point light parameter
+		if (gLight.type == LIGHT::POINT || LIGHT::SPOT) { //!< fix point light parameter
 			toLightDirection = normalize(gLight.position.xyz - worldPosition.xyz);
 			toLightLength    = length(worldPosition.xyz - gLight.position.xyz);
 		}

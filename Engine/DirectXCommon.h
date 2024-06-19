@@ -18,6 +18,9 @@
 #include <DxPipelineState.h>
 #include <DxPipelineManager.h>
 
+// DxSource
+#include <DxCSBlob.h>
+
 // c++
 #include <memory>
 

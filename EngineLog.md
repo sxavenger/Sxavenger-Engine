@@ -1,4 +1,4 @@
-[windowName]: MyEngine
+[windowName]: Sxavenger Engine
 Complete Initialize: sWinApp
 [DxObject::Devices]: debugController_ << Complete Create
 [DxObject::Devices]: dxgiFactory_ << Complete Create
@@ -58,3 +58,7 @@ Complete Initialize: sWinApp
 [DxrObject::LoaclRootSignature]: rootSignature_ << Complete Create
 [DxrObject::LoaclRootSignature]: rootSignature_ << Complete Create
 [DxrObject::ShaderManager]: ./resources/raytracingShader/RayTracingWorld.hlsl << Complete Create
+Complete Initialize: sDirectXRCommon
+Complete Initialize: sImGuiManager
+Complete Initialize: sTextureManager
+Complete Initialize: sInput

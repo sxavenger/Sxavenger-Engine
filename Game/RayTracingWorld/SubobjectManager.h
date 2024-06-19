@@ -24,6 +24,8 @@ enum SubobjectType {
 	TYPE_CUBE,
 	TYPE_TEAPOT,
 	TYPE_PLANE,
+	TYPE_SPHERE,
+	TYPE_SQUARE_PYRAMID,
 
 	kCountOfSubobjectType
 };

@@ -32,6 +32,8 @@ void RayTracingLight::SetAttributeImGui() {
 	ImGui::RadioButton("directionLight", &data_.type, LIGHT_DIRECTION);
 	ImGui::SameLine();
 	ImGui::RadioButton("pointLight", &data_.type, LIGHT_POINT);
+	ImGui::SameLine();
+	ImGui::RadioButton("spotLight", &data_.type, LIGHT_SPOT);
 
 	if (data_.type == LIGHT_DIRECTION) {
 		ImGui::DragFloat3("direction", &data_.direction.x, 0.02f);
@@ -41,6 +43,16 @@ void RayTracingLight::SetAttributeImGui() {
 		ImGui::DragFloat3("position", &data_.position.x, 0.02f);
 		ImGui::DragFloat("range",     &data_.range, 0.02f, 0.0f, 100.0f);
 		ImGui::DragFloat("decay",     &data_.decay, 0.02f, 0.0f, 100.0f);
+
+	} else if (data_.type == LIGHT_SPOT) {
+		ImGui::DragFloat3("direction", &data_.direction.x, 0.02f);
+		data_.direction = Normalize(data_.direction);
+
+		ImGui::DragFloat3("position", &data_.position.x, 0.02f);
+		ImGui::DragFloat("range", &data_.range, 0.02f, 0.0f, 100.0f);
+		ImGui::DragFloat("decay", &data_.decay, 0.02f, 0.0f, 100.0f);
+
+		ImGui::DragFloat("angle", &data_.angle, 0.01f, -1.0f, 1.0f);
 	}
 }
 

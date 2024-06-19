@@ -97,6 +97,11 @@ void GameScene::Init() {
 	// drawer
 	fullscreen_ = std::make_unique<FullScreen>();
 
+	// cs
+	cs_ = std::make_unique<DxObject::CSBlob>();
+	cs_->Init(L"test.CS.hlsl");
+
+
 }
 
 void GameScene::Term() {
@@ -112,12 +117,12 @@ void GameScene::Update() {
 	// TLASへの書き込み
 	tlas_->StartBlasSetup();
 
-	//tlas_->SetBLAS(ground_->GetBlas(), ground_->GetWorldMatrix(), 0);
-	//tlas_->SetBLAS(player_->GetBlas(), player_->GetWorldMatrix(), 0);
-	//tlas_->SetBLAS(teapot_->GetBlas(), teapot_->GetWorldMatrix(), 0);
-	//tlas_->SetBLAS(cube_->GetBlas(), cube_->GetWorldMatrix(), 0);
+	tlas_->SetBLAS(ground_->GetBlas(), ground_->GetWorldMatrix(), 0);
+	tlas_->SetBLAS(player_->GetBlas(), player_->GetWorldMatrix(), 0);
+	tlas_->SetBLAS(teapot_->GetBlas(), teapot_->GetWorldMatrix(), 0);
+	tlas_->SetBLAS(cube_->GetBlas(), cube_->GetWorldMatrix(), 0);
 
-	//subobjectManager_->SetBlases(tlas_.get());
+	subobjectManager_->SetBlases(tlas_.get());
 
 	tlas_->EndBlasSetup();
 }

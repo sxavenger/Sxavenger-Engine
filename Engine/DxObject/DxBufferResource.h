@@ -3,6 +3,7 @@
 // BaseBufferResource:                don't use
 // BufferResource, BufferPtrResource: ConstantBuffer, IASetVertexBuffer
 // IndexBufferResouruce:              IASetIndexBuffer
+// DynamicBufferResource:             test using
 // 
 // buffers is use DxObject::StructuredBuffer
 //*****************************************************************************************

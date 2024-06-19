@@ -51,9 +51,28 @@ namespace DxObjectMethod {
 	//! @param[in] dxcCompiler    IDxcCompiler3*
 	//! @param[in] includeHandler IDxcIncludeHandler*
 	//! 
+	//! @return shaderBlobを返却
+	ComPtr<IDxcBlob> CompileShader(
+		const std::wstring& filePath,
+		const wchar_t* profile,
+		IDxcUtils* dxcUtils,
+		IDxcCompiler3* dxcCompiler,
+		IDxcIncludeHandler* includeHandler
+	);
+
+	//! @brief シェーダーのコンパイル
+	//! 
+	//! @param[in] filePath       shaderファイルパス
+	//! @param[in] entryPoint     main関数名
+	//! @param[in] profile        Compilerに使用するProfile
+	//! @param[in] dxcUtils       IDxcUtils*
+	//! @param[in] dxcCompiler    IDxcCompiler3*
+	//! @param[in] includeHandler IDxcIncludeHandler*
+	//! 
 	//! @return shaderBlopを返却
 	ComPtr<IDxcBlob> CompileShader(
 		const std::wstring& filePath,
+		const std::wstring& entryPoint,
 		const wchar_t* profile,
 		IDxcUtils* dxcUtils,
 		IDxcCompiler3* dxcCompiler,
@@ -145,6 +164,17 @@ namespace DxObject {
 			index = NULL;
 			type = NotUseDescriptor;
 		}
+	};
+
+	////////////////////////////////////////////////////////////////////////////////////////////
+	// TextureMode enum
+	////////////////////////////////////////////////////////////////////////////////////////////
+	enum TextureMode {
+		MODE_WRAP        = 1,
+		MODE_MIRROR      = 2,
+		MODE_CLAMP       = 3,
+		MODE_BORDER      = 4,
+		MODE_MIRROR_ONCE = 5
 	};
 
 }

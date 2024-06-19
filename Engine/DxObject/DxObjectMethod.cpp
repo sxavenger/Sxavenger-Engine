@@ -33,13 +33,11 @@ ComPtr<IDxcBlob> DxObjectMethod::CompileShader(
 	IDxcCompiler3* dxcCompiler,
 	IDxcIncludeHandler* includeHandler) {
 
-
 	// hlslファイルを読み込む
-	IDxcBlobEncoding* shaderSource = nullptr;
+	ComPtr<IDxcBlobEncoding> shaderSource;
 	auto hr = dxcUtils->LoadFile(filePath.c_str(), nullptr, &shaderSource);
+
 	// 読めなかったら止める
-	/*assert(SUCCEEDED(hr));*/
-	
 	if (FAILED(hr)) {
 		std::wstring outputLog = L"Error : HLSL Not Found. filePath: ";
 		Log(outputLog + filePath);
@@ -67,7 +65,7 @@ ComPtr<IDxcBlob> DxObjectMethod::CompileShader(
 	};
 
 	// ShaderCompile
-	IDxcResult* shaderResult = nullptr;
+	ComPtr<IDxcResult> shaderResult;
 	hr = dxcCompiler->Compile(
 		&shaderSourceBuffer,
 		arguments,
@@ -79,8 +77,8 @@ ComPtr<IDxcBlob> DxObjectMethod::CompileShader(
 	assert(SUCCEEDED(hr));
 
 	// 警告エラーだった場合, プログラムの停止
-	IDxcBlobUtf8* shaderError = nullptr;
-	shaderResult->GetOutput(DXC_OUT_ERRORS, IID_PPV_ARGS(&shaderError), nullptr);
+	ComPtr<IDxcBlobUtf8> shaderError;
+	hr = shaderResult->GetOutput(DXC_OUT_ERRORS, IID_PPV_ARGS(&shaderError), nullptr);
 
 	if (shaderError != nullptr && shaderError->GetStringLength() != 0) {
 
@@ -100,9 +98,82 @@ ComPtr<IDxcBlob> DxObjectMethod::CompileShader(
 	hr = shaderResult->GetOutput(DXC_OUT_OBJECT, IID_PPV_ARGS(&shaderBlob), nullptr);
 	assert(SUCCEEDED(hr));
 
-	shaderSource->Release();
-	shaderResult->Release();
-	shaderError->Release();
+	return shaderBlob;
+}
+
+ComPtr<IDxcBlob> DxObjectMethod::CompileShader(
+	const std::wstring& filePath,
+	const std::wstring& entryPoint,
+	const wchar_t* profile,
+	IDxcUtils* dxcUtils,
+	IDxcCompiler3* dxcCompiler,
+	IDxcIncludeHandler* includeHandler) {
+
+
+	// hlslファイルを読み込む
+	ComPtr<IDxcBlobEncoding> shaderSource;
+	auto hr = dxcUtils->LoadFile(filePath.c_str(), nullptr, &shaderSource);
+
+	// 読めなかったら止める
+	if (FAILED(hr)) {
+		std::wstring outputLog = L"Error : HLSL Not Found. filePath: ";
+		Log(outputLog + filePath);
+
+		std::string	errorLog;
+		errorLog
+			= "[HLSL Not Found] \n filePath: " + ToString(filePath);
+
+		Assert(false, errorLog, "Error: CompileShader");
+	}
+
+	// 読み込んだファイルの内容を設定する
+	DxcBuffer shaderSourceBuffer;
+	shaderSourceBuffer.Ptr      = shaderSource->GetBufferPointer();
+	shaderSourceBuffer.Size     = shaderSource->GetBufferSize();
+	shaderSourceBuffer.Encoding = DXC_CP_UTF8;
+
+	LPCWSTR arguments[] = {
+		filePath.c_str(),          //!< コンパイル対象のhlslファイルパス
+		L"-E", entryPoint.c_str(), //!< エントリーポイントの指定
+		L"-T", profile,            //!< ShaderProfileの設定
+		L"-Zi", L"-Qembed_debug",  //!< デバッグ用情報を埋め込む
+		L"-Od",                    //!< 最適化を外しておく
+		L"-Zpr"                    //!< メモリレイアウトは行優先
+	};
+
+	// ShaderCompile
+	ComPtr<IDxcResult> shaderResult;
+	hr = dxcCompiler->Compile(
+		&shaderSourceBuffer,
+		arguments,
+		_countof(arguments),
+		includeHandler,
+		IID_PPV_ARGS(&shaderResult)
+	);
+
+	assert(SUCCEEDED(hr));
+
+	// 警告エラーだった場合, プログラムの停止
+	ComPtr<IDxcBlobUtf8> shaderError;
+	hr = shaderResult->GetOutput(DXC_OUT_ERRORS, IID_PPV_ARGS(&shaderError), nullptr);
+
+	if (shaderError != nullptr && shaderError->GetStringLength() != 0) {
+
+		Log("//-----------------------------------------------------------------------------------------");
+		Log(shaderError->GetStringPointer()); //!< shaderの構文error
+		Log("//-----------------------------------------------------------------------------------------");
+
+		// hlslのerrorをwindowで出力
+		std::string	errorLog;
+		errorLog
+			= "[HLSL Error] \n filePath: " + ToString(filePath);
+
+		Assert(false, errorLog, "Error: CompileShader");
+	}
+
+	IDxcBlob* shaderBlob = nullptr;
+	hr = shaderResult->GetOutput(DXC_OUT_OBJECT, IID_PPV_ARGS(&shaderBlob), nullptr);
+	assert(SUCCEEDED(hr));
 
 	return shaderBlob;
 }
