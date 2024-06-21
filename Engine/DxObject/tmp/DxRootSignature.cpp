@@ -14,9 +14,6 @@ void DxObject::RootSignatureDesc::Resize(uint32_t paramSize, uint32_t samplerSiz
 	params.resize(paramSize);
 	ranges.resize(paramSize);
 	samplers.resize(samplerSize);
-
-	/*memset(params.data(), 0, sizeof(D3D12_ROOT_PARAMETER) * params.size());
-	memset(samplers.data(), 0, sizeof(D3D12_STATIC_SAMPLER_DESC) * samplers.size());*/
 }
 
 void DxObject::RootSignatureDesc::Clear() {

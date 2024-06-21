@@ -8,7 +8,8 @@
 #include "DirectXTex.h"
 #include "d3dx12.h"
 
-#include <DxDescriptorHeaps.h>
+// DxCommon
+#include <DirectXCommon.h>
 
 // c++
 #include <string>
@@ -20,10 +21,8 @@
 // ComPtr
 #include <ComPtr.h>
 
-//-----------------------------------------------------------------------------------------
-// forward
-//-----------------------------------------------------------------------------------------
-class DirectXCommon;
+// Geometry
+#include <Vector4.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Texture class
@@ -52,6 +51,11 @@ public:
 	virtual const D3D12_CPU_DESCRIPTOR_HANDLE& GetRTVHandleCPU() const {
 		assert(false); //!< RenderTextureではないのでRTVを持ってない
 		return descriptorSRV_.handleCPU; // 絶対に返すな
+	}
+
+	virtual const Vector4f& GetClearColor() const {
+		assert(false); //!< RenderTextureではないのでclearColorを持ってない
+		return defaultClearColor; // 絶対返すな
 	}
 
 	ID3D12Resource* GetResource() const { return resource_.Get(); }
@@ -95,13 +99,17 @@ public:
 	~RenderTexture() { Unload(); }
 
 	//! @brief ダミーテクスチャの作成
-	void Create(int32_t width, int32_t height, DirectXCommon* dxCommon);
+	void Create(int32_t width, int32_t height, DirectXCommon* dxCommon, const Vector4f& clearColor = defaultClearColor);
 
 	//! @brief テクスチャの解放
 	void Unload();
 
 	const D3D12_CPU_DESCRIPTOR_HANDLE& GetRTVHandleCPU() const override {
 		return descriptorRTV_.handleCPU;
+	}
+
+	const Vector4f& GetClearColor() const override {
+		return clearColor_;
 	}
 
 private:
@@ -111,6 +119,7 @@ private:
 	//=========================================================================================
 
 	DxObject::Descriptor descriptorRTV_;
+	Vector4f clearColor_;
 
 };
 
@@ -138,7 +147,7 @@ public:
 	void LoadTexture(const std::string& filePath);
 
 	//! @brief ダミーテクスチャの生成
-	void CreateRenderTexture(int32_t width, int32_t height, const std::string& key);
+	void CreateRenderTexture(int32_t width, int32_t height, const std::string& key, Vector4f clearColor = defaultClearColor);
 
 	//! @brief テクスチャの削除
 	void UnloadTexture(const std::string& key);

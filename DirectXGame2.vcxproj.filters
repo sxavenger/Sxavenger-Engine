@@ -187,9 +187,6 @@
     <ClCompile Include="Engine\DxObject\DxObjectMethod.cpp">
       <Filter>Engine\DxObject\source</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\DxObject\DxShaderBlob.cpp">
-      <Filter>Engine\DxObject\source</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\DxObject\DxSwapChain.cpp">
       <Filter>Engine\DxObject\source</Filter>
     </ClCompile>
@@ -199,9 +196,6 @@
     <ClCompile Include="Engine\Model.cpp">
       <Filter>Engine\source</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\DxObject\DxRootSignature.cpp">
-      <Filter>Engine\DxObject\source</Filter>
-    </ClCompile>
     <ClCompile Include="Lib\Light\Light.cpp">
       <Filter>Lib\Light\source</Filter>
     </ClCompile>
@@ -210,9 +204,6 @@
     </ClCompile>
     <ClCompile Include="Lib\Adapter\Random\Random.cpp">
       <Filter>Lib\Adapter\Random</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\DxObject\DxPipelineManager.cpp">
-      <Filter>Engine\DxObject\source</Filter>
     </ClCompile>
     <ClCompile Include="Lib\Collider\Collider.cpp">
       <Filter>Lib\Collider\source</Filter>
@@ -243,15 +234,6 @@
     </ClCompile>
     <ClCompile Include="externals\imgui\imgui_widgets.cpp">
       <Filter>externals\imgui</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\DxObject\DxCompilers.cpp">
-      <Filter>Engine\DxObject\source</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\DxObject\DxShaderTable.cpp">
-      <Filter>Engine\DxObject\source</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\DxObject\DxPipelineState.cpp">
-      <Filter>Engine\DxObject\source</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Console.cpp">
       <Filter>Engine\source</Filter>
@@ -316,12 +298,6 @@
     <ClCompile Include="Engine\DxObject\DxMesh.cpp">
       <Filter>Engine\DxObject\source</Filter>
     </ClCompile>
-    <ClCompile Include="Game\Floor.cpp">
-      <Filter>Game</Filter>
-    </ClCompile>
-    <ClCompile Include="Game\Plane.cpp">
-      <Filter>Game</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\TextureManager.cpp">
       <Filter>Engine\source</Filter>
     </ClCompile>
@@ -359,9 +335,6 @@
       <Filter>DirectXRayTracing</Filter>
     </ClCompile>
     <ClCompile Include="DirectXRayTracing\RayTracingLight.cpp">
-      <Filter>DirectXRayTracing</Filter>
-    </ClCompile>
-    <ClCompile Include="DirectXRayTracing\RayTracingAO.cpp">
       <Filter>DirectXRayTracing</Filter>
     </ClCompile>
     <ClCompile Include="Lib\PostEffect\GaussianBlur.cpp">
@@ -404,6 +377,18 @@
       <Filter>Engine\DxObject\source</Filter>
     </ClCompile>
     <ClCompile Include="Engine\DxObject\DxCSPipelineState.cpp">
+      <Filter>Engine\DxObject\source</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\DxObject\DxCSBufferResource.cpp">
+      <Filter>Engine\DxObject\source</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\DxObject\DxGraphicsBlob.cpp">
+      <Filter>Engine\DxObject\source</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\DxObject\DxShaderManager.cpp">
+      <Filter>Engine\DxObject\source</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\DxObject\DxGraphicsPipeline.cpp">
       <Filter>Engine\DxObject\source</Filter>
     </ClCompile>
   </ItemGroup>
@@ -468,9 +453,6 @@
     <ClInclude Include="Engine\DxObject\DxObjectMethod.h">
       <Filter>Engine\DxObject\include</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\DxObject\DxShaderBlob.h">
-      <Filter>Engine\DxObject\include</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\DxObject\DxSwapChain.h">
       <Filter>Engine\DxObject\include</Filter>
     </ClInclude>
@@ -483,9 +465,6 @@
     <ClInclude Include="Engine\ComPtr.h">
       <Filter>Engine\include</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\DxObject\DxRootSignature.h">
-      <Filter>Engine\DxObject\include</Filter>
-    </ClInclude>
     <ClInclude Include="Lib\Light\Light.h">
       <Filter>Lib\Light\include</Filter>
     </ClInclude>
@@ -494,9 +473,6 @@
     </ClInclude>
     <ClInclude Include="Lib\Adapter\Random\Random.h">
       <Filter>Lib\Adapter\Random</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\DxObject\DxPipelineManager.h">
-      <Filter>Engine\DxObject\include</Filter>
     </ClInclude>
     <ClInclude Include="Lib\Collider\Collider.h">
       <Filter>Lib\Collider\include</Filter>
@@ -528,15 +504,6 @@
     <ClInclude Include="externals\imgui\imstb_truetype.h">
       <Filter>externals\imgui</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\DxObject\DxCompilers.h">
-      <Filter>Engine\DxObject\include</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\DxObject\DxShaderTable.h">
-      <Filter>Engine\DxObject\include</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\DxObject\DxPipelineState.h">
-      <Filter>Engine\DxObject\include</Filter>
-    </ClInclude>
     <ClInclude Include="Lib\ObjectStructure.h">
       <Filter>Lib</Filter>
     </ClInclude>
@@ -563,12 +530,6 @@
     </ClInclude>
     <ClInclude Include="Engine\DxObject\DxMesh.h">
       <Filter>Engine\DxObject\include</Filter>
-    </ClInclude>
-    <ClInclude Include="Game\Floor.h">
-      <Filter>Game</Filter>
-    </ClInclude>
-    <ClInclude Include="Game\Plane.h">
-      <Filter>Game</Filter>
     </ClInclude>
     <ClInclude Include="Engine\TextureManager.h">
       <Filter>Engine\include</Filter>
@@ -607,9 +568,6 @@
       <Filter>DirectXRayTracing</Filter>
     </ClInclude>
     <ClInclude Include="DirectXRayTracing\RayTracingLight.h">
-      <Filter>DirectXRayTracing</Filter>
-    </ClInclude>
-    <ClInclude Include="DirectXRayTracing\RayTracingAO.h">
       <Filter>DirectXRayTracing</Filter>
     </ClInclude>
     <ClInclude Include="Lib\PostEffect\GaussianBlur.h">
@@ -652,6 +610,18 @@
       <Filter>Engine\DxObject\include</Filter>
     </ClInclude>
     <ClInclude Include="Engine\DxObject\DxCSPipelineState.h">
+      <Filter>Engine\DxObject\include</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\DxObject\DxCSBufferResource.h">
+      <Filter>Engine\DxObject\include</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\DxObject\DxGraphicsBlob.h">
+      <Filter>Engine\DxObject\include</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\DxObject\DxShaderManager.h">
+      <Filter>Engine\DxObject\include</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\DxObject\DxGraphicsPipeline.h">
       <Filter>Engine\DxObject\include</Filter>
     </ClInclude>
   </ItemGroup>

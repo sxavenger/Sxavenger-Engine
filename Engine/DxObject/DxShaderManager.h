@@ -11,13 +11,13 @@
 // c++
 #include <cstdint>
 #include <string>
-#include <cassert>
+#include <unordered_map>
 
+// ComPtr
 #include <ComPtr.h>
 
 // DxObject
 #include <DxObjectMethod.h>
-#include <DxShaderManager.h>
 
 //-----------------------------------------------------------------------------------------
 // comment
@@ -29,31 +29,52 @@
 ////////////////////////////////////////////////////////////////////////////////////////////
 // DxObject namespace
 ////////////////////////////////////////////////////////////////////////////////////////////
-namespace DxObject { //!< DxSource
-	
+namespace DxObject {
+
 	////////////////////////////////////////////////////////////////////////////////////////////
-	// CSBlob class
+	// ShaderType enum
 	////////////////////////////////////////////////////////////////////////////////////////////
-	class CSBlob {
+	enum ShaderType {
+		// rendering pipeline
+		// vertex pipeline
+		VERTEX,
+		GEOMETRY,
+
+		// mesh pipeline
+		MESH,
+		// AMP
+
+		PIXEL,
+
+		// compute pipeline
+		COMPUTE,
+
+		kCountOfShaderType
+	};
+
+	////////////////////////////////////////////////////////////////////////////////////////////
+	// shaderManager class
+	////////////////////////////////////////////////////////////////////////////////////////////
+	class ShaderManager {
 	public:
 
 		//=========================================================================================
 		// public methods
 		//=========================================================================================
 
-		CSBlob() {}
+		//! @brief コンストラクタ
+		ShaderManager() { Init(); }
 
-		~CSBlob() { Term(); }
+		//! @brief デストラクタ
+		~ShaderManager() { Term(); }
 
 		//! @brief 初期化処理
-		void Init(const std::wstring& fileName);
+		void Init();
 
 		//! @brief 終了処理
 		void Term();
 
-		IDxcBlob* GetBlob() const { return csBlob_; }
-
-		static void SetShaderManager(ShaderManager* manager) { manager_ = manager; }
+		IDxcBlob* GetBlob(const std::wstring& filePath, ShaderType type);
 
 	private:
 
@@ -61,10 +82,29 @@ namespace DxObject { //!< DxSource
 		// private variables
 		//=========================================================================================
 
-		/* static manager */
-		static ShaderManager* manager_;
+		/* dxc compiler */
 
-		IDxcBlob* csBlob_ = nullptr;
+		ComPtr<IDxcUtils>          dxcUtils_;
+		ComPtr<IDxcCompiler3>      dxcCompiler_;
+		ComPtr<IDxcIncludeHandler> includeHandler_;
+
+		static const LPCWSTR compileModel_[kCountOfShaderType];
+
+		/* blob container */
+
+		std::unordered_map<std::wstring, ComPtr<IDxcBlob>> blobs_; 
+
+		/* parameter */
+
+		static const std::wstring directoryPath_;
+
+		//=========================================================================================
+		// private methods
+		//=========================================================================================
+
+		void InitDxcCompiler();
+
+		ComPtr<IDxcBlob> CreateBlob(const std::wstring& filePath, ShaderType type);
 
 	};
 

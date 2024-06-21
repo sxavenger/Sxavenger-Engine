@@ -11,6 +11,8 @@
 
 // DxObject
 #include <DxCSBlob.h>
+#include <DxCSPipelineState.h>
+#include <DxCSBufferResource.h>
 
 // Game
 #include <RayTracingCamera.h>
@@ -41,9 +43,6 @@ private:
 	//=========================================================================================
 	// private methods
 	//=========================================================================================
-
-	// Compute Shader
-	std::unique_ptr<DxObject::CSBlob> cs_;
 
 	//-----------------------------------------------------------------------------------------
 	// raytracing world

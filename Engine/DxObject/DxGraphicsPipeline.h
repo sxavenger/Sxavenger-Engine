@@ -7,6 +7,11 @@
 #include <d3d12.h>
 #include <dxgi1_6.h>
 
+// methods
+#include <DxObjectMethod.h>
+#include <DxGraphicsBlob.h>
+#include <DxBlendState.h>
+
 // c++
 #include <cstdint>
 #include <cassert>
@@ -15,9 +20,8 @@
 // ComPtr
 #include <ComPtr.h>
 
-// DxObject
-#include <DxObjectMethod.h>
-#include <DxCSBlob.h>
+// lib
+#include <Environment.h>
 
 //-----------------------------------------------------------------------------------------
 // comment
@@ -28,33 +32,48 @@
 ////////////////////////////////////////////////////////////////////////////////////////////
 // DxObject namespace
 ////////////////////////////////////////////////////////////////////////////////////////////
-namespace DxObject { //!< DxSource
+namespace DxObject {
+
+	//-----------------------------------------------------------------------------------------
+	// forward
+	//-----------------------------------------------------------------------------------------
+	class Devices;
 
 	////////////////////////////////////////////////////////////////////////////////////////////
-	// CSRootSignatureDesc class
+	// ShaderStage enum
 	////////////////////////////////////////////////////////////////////////////////////////////
-	class CSRootSignatureDesc {
+	enum ShaderStage {
+		SHADER_ALL           = D3D12_SHADER_VISIBILITY_ALL,
+		SHADER_VERTEX        = D3D12_SHADER_VISIBILITY_VERTEX,
+		SHADER_HULL          = D3D12_SHADER_VISIBILITY_HULL,
+		SHADER_DOMAIN        = D3D12_SHADER_VISIBILITY_DOMAIN,
+		SHADER_GEOMETRY      = D3D12_SHADER_VISIBILITY_GEOMETRY,
+		SHADER_PIXEL         = D3D12_SHADER_VISIBILITY_PIXEL,
+		SHADER_AMPLIFICATION = D3D12_SHADER_VISIBILITY_AMPLIFICATION,
+		SHADER_MESH          = D3D12_SHADER_VISIBILITY_MESH
+	};
+
+	////////////////////////////////////////////////////////////////////////////////////////////
+	// GraphicsRootSignatureDesc class
+	////////////////////////////////////////////////////////////////////////////////////////////
+	class GraphicRootSignatureDesc {
 	public:
 
 		//=========================================================================================
 		// public methods
 		//=========================================================================================
 
-		~CSRootSignatureDesc() { Clear(); }
+		~GraphicRootSignatureDesc() { Clear(); }
 
 		void Resize(uint32_t paramSize, uint32_t samplerSize);
 
 		void Clear();
 
-		void SetCBV(uint32_t index, UINT shaderRegister);
+		void SetCBV(uint32_t index, ShaderStage stage, UINT shaderRegister);
 
-		void SetSRV(uint32_t index, UINT shaderRegister);
+		void SetSRV(uint32_t index, ShaderStage stage, UINT shaderRegister);
 
-		void SetUAV(uint32_t index, UINT shaderRegister);
-
-		void SetVirtualUAV(uint32_t index, UINT shaderRegister);
-
-		void SetSampler(uint32_t index, TextureMode mode, UINT shaderRegister);
+		void SetSampler(uint32_t index, TextureMode mode, ShaderStage stage, UINT shaderRegister);
 
 		//=========================================================================================
 		// public variables
@@ -74,44 +93,52 @@ namespace DxObject { //!< DxSource
 	};
 
 	////////////////////////////////////////////////////////////////////////////////////////////
-	// CSStateObject class
+	// GraphicsPipeline class
 	////////////////////////////////////////////////////////////////////////////////////////////
-	class CSPipelineState {
+	class GraphicsPipeline {
 	public:
 
 		//=========================================================================================
 		// public methods
 		//=========================================================================================
 
-		CSPipelineState() {}
+		GraphicsPipeline() { CreateViewports(); }
 
-		~CSPipelineState() { Term(); }
+		void CreateRootSiganture(Devices* devices, const GraphicRootSignatureDesc& descs);
 
-		void Init(const CSRootSignatureDesc& desc, CSBlob* blob);
+		void CreatePipeline(Devices* devices, GraphicsBlob* graphicBlob, BlendMode blendMode);
 
-		void Term();
+		void SetPipeline(ID3D12GraphicsCommandList* commandList);
 
-		void SetCSPipeline();
-
-		void Dispatch(UINT threadGroupX, UINT threadGroupY, UINT threadGroupZ);
+		static void SetBlendState(BlendState* blendState) { blendState_ = blendState; }
 
 	private:
 
 		//=========================================================================================
-		// private varibles
+		// private variables
 		//=========================================================================================
 
+		/* statics */
+		static BlendState* blendState_;
+
+		/* rootSignature */
 		ComPtr<ID3D12RootSignature> rootSignature_;
-		ComPtr<ID3D12PipelineState> pipelineState_;
+
+		/* pipeline */
+		ComPtr<ID3D12PipelineState> pipeline_;
+
+		/* parameter */
+		GraphicsBlob* blob_;
+
+		/* viewports */
+		D3D12_VIEWPORT viewport_;
+		D3D12_RECT     scissorRect_;
 
 		//=========================================================================================
 		// private methods
 		//=========================================================================================
 
-		void CreateRootSignature(const CSRootSignatureDesc& desc);
-
-		void CreateStateObject(CSBlob* blob);
+		void CreateViewports(int32_t clientWidth = kWindowWidth, int32_t clientHeight = kWindowHeight);
 
 	};
-
 }

@@ -90,6 +90,11 @@ namespace DxObjectMethod {
 		size_t sizeInBytes
 	);
 
+	ComPtr<ID3D12RootSignature> CreateRootSignature(
+		ID3D12Device* device,
+		const D3D12_ROOT_SIGNATURE_DESC& desc
+	);
+
 	//! @brief 深度バッファを作成
 	//! 
 	//! @param[in] device デバイス

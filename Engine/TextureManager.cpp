@@ -60,10 +60,13 @@ void Texture::Unload() {
 // RenderTexture class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-void RenderTexture::Create(int32_t width, int32_t height, DirectXCommon* dxCommon) {
+void RenderTexture::Create(int32_t width, int32_t height, DirectXCommon* dxCommon, const Vector4f& clearColor) {
 
 	// dxCommonの保存
 	dxCommon_ = dxCommon;
+
+	// clearColorの保存
+	clearColor_ = clearColor;
 
 	// deviceの取り出し
 	auto device = dxCommon_->GetDeviceObj()->GetDevice();
@@ -85,10 +88,10 @@ void RenderTexture::Create(int32_t width, int32_t height, DirectXCommon* dxCommo
 
 		D3D12_CLEAR_VALUE clearValue = {};
 		clearValue.Format   = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
-		clearValue.Color[0] = 0.1f;
-		clearValue.Color[1] = 0.25f;
-		clearValue.Color[2] = 0.5f;
-		clearValue.Color[3] = 1.0f;
+		clearValue.Color[0] = clearColor_.r;
+		clearValue.Color[1] = clearColor_.g;
+		clearValue.Color[2] = clearColor_.b;
+		clearValue.Color[3] = clearColor_.a;
 
 		device->CreateCommittedResource(
 			&prop,
@@ -159,6 +162,10 @@ void TextureManager::Term() {
 }
 
 void TextureManager::EnableTexture() {
+	if (waitTextureQueue_.empty()) { //!< queueに何も入ってないので
+		return;
+	}
+
 	// 送信が完了した場合
 	while (!waitTextureQueue_.empty()) { //!< queueに入ってるすべてのtextureを使える状態に
 		textures_.at(waitTextureQueue_.front()).isTextureEnabled = true;
@@ -183,6 +190,7 @@ void TextureManager::LoadTexture(const std::string& filePath) {
 	// textureの登録
 	textures_[filePath].texture          = std::make_unique<Texture>();
 	textures_[filePath].texture->Load(filePath, dxCommon_);
+
 	textures_[filePath].referenceCount   = 1;
 	textures_[filePath].isTextureEnabled = false; // commandListに積んだだけなのでまだ使えない
 
@@ -194,7 +202,7 @@ void TextureManager::LoadTexture(const std::string& filePath) {
 	);
 }
 
-void TextureManager::CreateRenderTexture(int32_t width, int32_t height, const std::string& key) {
+void TextureManager::CreateRenderTexture(int32_t width, int32_t height, const std::string& key, Vector4f clearColor) {
 	if (FindKey(key)) {
 		Log("TextureManager::CreateRenderTexture \n if (it != textures_.end()) { \n return; \n} \n");
 		console->SetLog("warning: texture already made. [key]: " + key, Console::warningColor);
@@ -202,7 +210,7 @@ void TextureManager::CreateRenderTexture(int32_t width, int32_t height, const st
 	}
 
 	auto renderTexture = std::make_unique<RenderTexture>();
-	renderTexture->Create(width, height, dxCommon_);
+	renderTexture->Create(width, height, dxCommon_, clearColor);
 
 	textures_[key].texture = std::move(renderTexture);
 	textures_[key].referenceCount = 1;
@@ -253,7 +261,7 @@ std::unordered_map<std::string, TextureManager::TextureData>::const_iterator Tex
 		assert(false);
 	}
 
-	return it;
+	return textures_.find(key);
 }
 
 bool TextureManager::FindKey(const std::string& key) const {

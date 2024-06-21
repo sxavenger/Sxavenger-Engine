@@ -96,19 +96,12 @@ void GameScene::Init() {
 
 	// drawer
 	fullscreen_ = std::make_unique<FullScreen>();
-
-	// cs
-	cs_ = std::make_unique<DxObject::CSBlob>();
-	cs_->Init(L"test.CS.hlsl");
-
-
 }
 
 void GameScene::Term() {
 }
 
 void GameScene::Update() {
-
 
 	player_->Update();
 	camera_->Update(player_->GetWorldMatrix());
@@ -158,29 +151,27 @@ void GameScene::Draw() {
 	MyEngine::TransitionProcess();
 	console->OutputTexture("blur", blur->GetTexture());*/
 
-	/*//=========================================================================================
+	//=========================================================================================
 	// オフスクリーン描画処理
 	//=========================================================================================
 
 	{
 		// todo: 複数へのtexture書き込みをさせる.
-		MyEngine::BeginOffScreen(console_->GetSceneTexture());
-		MyEngine::camera3D_ = console_->GetDebugCamera();
-
-		RayTracingEngine::GetDxrCommon()->DrawRasterlize();
+		MyEngine::BeginOffScreen(console->GetSceneTexture());
+		MyEngine::camera3D_ = console->GetDebugCamera();
 
 		MyEngine::EndOffScreen();
 
 
-		MyEngine::BeginOffScreen(MyEngine::GetTexture("offscreen"));
+		/*MyEngine::BeginOffScreen(MyEngine::GetTexture("offscreen"));
 		MyEngine::camera3D_ = camera.get();
 
 
 
-		MyEngine::EndOffScreen();
+		MyEngine::EndOffScreen();*/
 	}
 
-	MyEngine::TransitionProcess();*/
+	MyEngine::TransitionProcess();
 
 	//=========================================================================================
 	// スクリーン描画処理

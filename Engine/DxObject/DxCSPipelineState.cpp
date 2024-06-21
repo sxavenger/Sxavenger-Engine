@@ -1,5 +1,11 @@
 #include "DxCSPipelineState.h"
 
+//-----------------------------------------------------------------------------------------
+// include
+//-----------------------------------------------------------------------------------------
+#include <Logger.h>
+#include <MyEngine.h>
+
 ////////////////////////////////////////////////////////////////////////////////////////////
 // CSRootSignatureDesc class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -49,6 +55,12 @@ void DxObject::CSRootSignatureDesc::SetUAV(uint32_t index, UINT shaderRegister) 
 	params[index].DescriptorTable.NumDescriptorRanges = 1;
 }
 
+void DxObject::CSRootSignatureDesc::SetVirtualUAV(uint32_t index, UINT shaderRegister) {
+	params[index].ParameterType             = D3D12_ROOT_PARAMETER_TYPE_UAV;
+	params[index].ShaderVisibility          = D3D12_SHADER_VISIBILITY_ALL;
+	params[index].Descriptor.ShaderRegister = shaderRegister;
+}
+
 void DxObject::CSRootSignatureDesc::SetSampler(uint32_t index, TextureMode mode, UINT shaderRegister) {
 	samplers[index].Filter           = D3D12_FILTER_MIN_MAG_MIP_LINEAR;
 	samplers[index].AddressU         = static_cast<D3D12_TEXTURE_ADDRESS_MODE>(mode);
@@ -64,8 +76,66 @@ void DxObject::CSRootSignatureDesc::SetSampler(uint32_t index, TextureMode mode,
 // CSStateObject class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-void DxObject::CSPipelineState::Init() {
+void DxObject::CSPipelineState::Init(const CSRootSignatureDesc& desc, CSBlob* blob) {
+
+	CreateRootSignature(desc);
+	CreateStateObject(blob);
 }
 
 void DxObject::CSPipelineState::Term() {
+}
+
+void DxObject::CSPipelineState::SetCSPipeline() {
+
+	// commandListの取り出し
+	auto commandList = MyEngine::GetCommandList();
+
+	commandList->SetPipelineState(pipelineState_.Get());
+	commandList->SetComputeRootSignature(rootSignature_.Get());
+}
+
+void DxObject::CSPipelineState::Dispatch(UINT threadGroupX, UINT threadGroupY, UINT threadGroupZ) {
+	// commandListの取り出し
+	auto commandList = MyEngine::GetCommandList();
+
+	commandList->Dispatch(threadGroupX, threadGroupY, threadGroupZ);
+}
+
+void DxObject::CSPipelineState::CreateRootSignature(const CSRootSignatureDesc& csDesc) {
+
+	D3D12_ROOT_SIGNATURE_DESC desc = {};
+	desc.Flags = D3D12_ROOT_SIGNATURE_FLAG_NONE;
+
+	if (!csDesc.params.empty()) {
+		desc.pParameters   = csDesc.params.data();
+		desc.NumParameters = static_cast<UINT>(csDesc.params.size());
+	}
+
+	if (!csDesc.samplers.empty()) {
+		desc.pStaticSamplers   = csDesc.samplers.data();
+		desc.NumStaticSamplers = static_cast<UINT>(csDesc.samplers.size());
+	}
+
+	rootSignature_ = DxObjectMethod::CreateRootSignature(
+		MyEngine::GetDevice(),
+		desc
+	);
+
+}
+
+void DxObject::CSPipelineState::CreateStateObject(CSBlob* csBlob) {
+
+	auto blob = csBlob->GetBlob();
+
+	D3D12_COMPUTE_PIPELINE_STATE_DESC desc = {};
+	desc.pRootSignature = rootSignature_.Get();
+	desc.CS             = { blob->GetBufferPointer(), blob->GetBufferSize() };
+
+	auto hr = MyEngine::GetDevice()->CreateComputePipelineState(
+		&desc,
+		IID_PPV_ARGS(&pipelineState_)
+	);
+
+	assert(SUCCEEDED(hr));
+
 }

@@ -37,6 +37,26 @@ void FullScreen::Init() {
 
 	matrix_ = std::make_unique<BufferResource<Matrix4x4>>(MyEngine::GetDevicesObj(), 1);
 	matrix_->operator[](0) = Matrix::MakeOrthographic(0.0f, 0.0f, static_cast<float>(kWindowWidth), static_cast<float>(kWindowHeight), 0.0f, 100.0f);
+
+
+	// create pipeline
+	blob_ = std::make_unique<GraphicsBlob>();
+	blob_->Create(L"FullScreen.VS.hlsl", GRAPHICS_VERTEX);
+	blob_->Create(L"FullScreen.PS.hlsl", GRAPHICS_PIXEL);
+
+	GraphicRootSignatureDesc desc = {};
+	desc.Resize(2, 1);
+
+	//!< camera2D
+	desc.SetCBV(0, SHADER_VERTEX, 0);
+
+	//!< textureBuffer
+	desc.SetSRV(1, SHADER_PIXEL, 0);
+	desc.SetSampler(0, MODE_CLAMP, SHADER_PIXEL, 0);
+
+	pipeline_ = std::make_unique<GraphicsPipeline>();
+	pipeline_->CreateRootSiganture(MyEngine::GetDevicesObj(), desc);
+	pipeline_->CreatePipeline(MyEngine::GetDevicesObj(), blob_.get(), kBlendModeNormal);
 }
 
 void FullScreen::Term() {
@@ -44,14 +64,12 @@ void FullScreen::Term() {
 
 void FullScreen::DrawTexture(const D3D12_GPU_DESCRIPTOR_HANDLE& texture) {
 
-	MyEngine::SetPipelineType(FULLSCREEN);
-	MyEngine::SetBlendMode(kBlendModeNormal);
-	MyEngine::SetPipelineState();
-
 	auto commandList = MyEngine::GetCommandList();
 
+	pipeline_->SetPipeline(commandList);
+
 	D3D12_VERTEX_BUFFER_VIEW vertexBufferView = vertex_->GetVertexBufferView();
-	D3D12_INDEX_BUFFER_VIEW  indexBufferView = index_->GetIndexBufferView();
+	D3D12_INDEX_BUFFER_VIEW  indexBufferView  = index_->GetIndexBufferView();
 
 	// IA
 	commandList->IASetVertexBuffers(0, 1, &vertexBufferView);

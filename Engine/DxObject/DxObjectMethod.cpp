@@ -213,6 +213,41 @@ ComPtr<ID3D12Resource> DxObjectMethod::CreateBufferResource(
 	return result;
 }
 
+ComPtr<ID3D12RootSignature> DxObjectMethod::CreateRootSignature(
+	ID3D12Device* device, const D3D12_ROOT_SIGNATURE_DESC& desc) {
+	
+	ComPtr<ID3D12RootSignature> result;
+
+	ComPtr<ID3DBlob> signatureBlob;
+	ComPtr<ID3DBlob> signatureErrorBlob;
+
+	auto hr = D3D12SerializeRootSignature(
+		&desc,
+		D3D_ROOT_SIGNATURE_VERSION_1,
+		&signatureBlob,
+		&signatureErrorBlob
+	);
+
+	if (FAILED(hr)) {
+		Log("//-----------------------------------------------------------------------------------------");
+		Log("Failed: Create RootSignatuer");
+		Log(reinterpret_cast<char*>(signatureErrorBlob->GetBufferPointer()));
+		Log("//-----------------------------------------------------------------------------------------");
+		assert(false);
+	}
+
+	hr = device->CreateRootSignature(
+		0,
+		signatureBlob->GetBufferPointer(),
+		signatureBlob->GetBufferSize(),
+		IID_PPV_ARGS(&result)
+	);
+
+	assert(SUCCEEDED(hr));
+
+	return result;
+}
+
 ComPtr<ID3D12Resource> DxObjectMethod::CreateDepthStencilTextureResource(
 	ID3D12Device* device, int32_t width, int32_t height) {
 

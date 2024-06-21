@@ -6,8 +6,10 @@
 // c++
 #include <memory>
 
-// dxObject
+// DxObject
 #include <DxBufferResource.h>
+#include <DxGraphicsBlob.h>
+#include <DxGraphicsPipeline.h>
 
 // object
 #include <ObjectStructure.h>
@@ -37,6 +39,10 @@ private:
 	//=========================================================================================
 	// private variables
 	//=========================================================================================
+
+	// pipeline
+	std::unique_ptr<DxObject::GraphicsBlob>     blob_;
+	std::unique_ptr<DxObject::GraphicsPipeline> pipeline_;
 
 	// IA
 	std::unique_ptr<DxObject::BufferResource<VertexData>> vertex_;

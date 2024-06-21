@@ -164,18 +164,6 @@ int MyEngine::ProcessMessage() {
 	return sWinApp->ProcessMessage() ? 1 : 0;
 }
 
-void MyEngine::SetPipelineType(PipelineType pipelineType) {
-	sDirectXRCommon->SetPipelineType(pipelineType);
-}
-
-void MyEngine::SetBlendMode(BlendMode mode) {
-	sDirectXRCommon->SetBlendMode(mode);
-}
-
-void MyEngine::SetPipelineState() {
-	sDirectXRCommon->SetPipelineState();
-}
-
 DxObject::Descriptor MyEngine::GetCurrentDescripor(DxObject::DescriptorType type) {
 	assert(sDirectXRCommon != nullptr);
 	return sDirectXRCommon->GetDescriptorsObj()->GetCurrentDescriptor(type);
@@ -211,8 +199,8 @@ TextureManager* MyEngine::GetTextureManager() {
 	return sTextureManager;
 }
 
-Texture* MyEngine::CreateRenderTexture(int32_t width, int32_t height, const std::string& key) {
-	sTextureManager->CreateRenderTexture(width, height, key);
+Texture* MyEngine::CreateRenderTexture(int32_t width, int32_t height, const std::string& key, const Vector4f& clearColor) {
+	sTextureManager->CreateRenderTexture(width, height, key, clearColor);
 	return sTextureManager->GetTexture(key);
 }
 

@@ -38,7 +38,6 @@ const std::wstring DxObject::ShaderTable::directory_ = L"./resources/hlsl/";
 
 void DxObject::ShaderTable::Init() {
 	ShaderBlob::SetShaderTable(this);
-	CSBlob::SetShaderTable(this);
 }
 
 void DxObject::ShaderTable::Term() {

@@ -3,17 +3,18 @@
 //=========================================================================================
 // static variables
 //=========================================================================================
-DxObject::ShaderTable* DxObject::CSBlob::shaderTable_ = nullptr;
+
+DxObject::ShaderManager* DxObject::CSBlob::manager_ = nullptr;
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // CSBlob class
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 void DxObject::CSBlob::Init(const std::wstring& fileName) {
-	assert(shaderTable_ != nullptr); //!< シェーダーテーブルの未設定
+	assert(manager_ != nullptr); //!< シェーダーテーブルの未設定
 
 	// get shader blob
-	csBlob_ = shaderTable_->GetShaderBlob(fileName, COMPUTE);
+	csBlob_ = manager_->GetBlob(fileName, COMPUTE);
 	assert(csBlob_ != nullptr);
 }
 

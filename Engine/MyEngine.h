@@ -11,12 +11,8 @@
 #include <string>
 #include <unordered_map>
 
-// DxObject
-#include <DxBlendState.h>
-#include <DxPipelineManager.h>
-
-// DxrObject
-#include <DxrAccelerationStructure.h>
+// DirectXCommon
+#include <DirectXRCommon.h>
 
 // Camera
 #include <Camera3D.h>
@@ -90,11 +86,7 @@ public:
 	// pipeline関係
 	//-----------------------------------------------------------------------------------------
 
-	static void SetPipelineType(PipelineType pipelineType);
 
-	static void SetBlendMode(BlendMode mode);
-
-	static void SetPipelineState();
 
 	//-----------------------------------------------------------------------------------------
 	// descriptor関係
@@ -110,7 +102,7 @@ public:
 
 	static TextureManager* GetTextureManager();
 
-	static Texture* CreateRenderTexture(int32_t width, int32_t height, const std::string& key);
+	static Texture* CreateRenderTexture(int32_t width, int32_t height, const std::string& key, const Vector4f& clearColor = defaultClearColor);
 
 	static void LoadTexture(const std::string& filePath);
 

@@ -17,7 +17,7 @@
 
 // DxObject
 #include <DxObjectMethod.h>
-#include <DxShaderManager.h>
+#include <DxShaderTable.h>
 
 //-----------------------------------------------------------------------------------------
 // comment
@@ -29,31 +29,42 @@
 ////////////////////////////////////////////////////////////////////////////////////////////
 // DxObject namespace
 ////////////////////////////////////////////////////////////////////////////////////////////
-namespace DxObject { //!< DxSource
-	
+namespace DxObject {
+
 	////////////////////////////////////////////////////////////////////////////////////////////
-	// CSBlob class
+	// ShaderBlob class
 	////////////////////////////////////////////////////////////////////////////////////////////
-	class CSBlob {
+	class ShaderBlob {
 	public:
 
 		//=========================================================================================
 		// public methods
 		//=========================================================================================
 
-		CSBlob() {}
+		//! @brief コンストラクタ
+		ShaderBlob() {}
 
-		~CSBlob() { Term(); }
+		//! @brief デストラクタ
+		~ShaderBlob() { Term(); }
 
-		//! @brief 初期化処理
-		void Init(const std::wstring& fileName);
+		//! @brief shaderBlobの生成
+		void Create(const std::wstring& fileName, ShaderType type);
 
 		//! @brief 終了処理
 		void Term();
 
-		IDxcBlob* GetBlob() const { return csBlob_; }
+		//! @brief shaderBlobを取得
+		//! 
+		//! @return shaderBlobを返却
+		IDxcBlob* GetShaderBlob(ShaderType shaderType) const { return shaderBlob_[shaderType]; }
 
-		static void SetShaderManager(ShaderManager* manager) { manager_ = manager; }
+		//! @brief mesh shader pipelineを使うかどうか
+		bool IsUseMeshShaders() const { return isUseMeshShaders_; }
+
+		//! @brief shaderTableを設定
+		//! 
+		//! @param[in] shaderTable DxObject::ShaderTable
+		static void SetShaderTable(ShaderTable* shaderTable) { shaderTable_ = shaderTable; }
 
 	private:
 
@@ -61,10 +72,10 @@ namespace DxObject { //!< DxSource
 		// private variables
 		//=========================================================================================
 
-		/* static manager */
-		static ShaderManager* manager_;
+		static ShaderTable* shaderTable_;
 
-		IDxcBlob* csBlob_ = nullptr;
+		IDxcBlob* shaderBlob_[ShaderType::kCountOfShaderType];
+		bool isUseMeshShaders_ = false;
 
 	};
 

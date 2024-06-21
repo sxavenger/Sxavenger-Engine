@@ -11,13 +11,13 @@
 // c++
 #include <cstdint>
 #include <string>
-#include <cassert>
+#include <array>
 
 #include <ComPtr.h>
 
 // DxObject
 #include <DxObjectMethod.h>
-#include <DxShaderTable.h>
+#include <DxShaderManager.h>
 
 //-----------------------------------------------------------------------------------------
 // comment
@@ -31,45 +31,42 @@
 ////////////////////////////////////////////////////////////////////////////////////////////
 namespace DxObject {
 
-	//-----------------------------------------------------------------------------------------
-	// forward
-	//-----------------------------------------------------------------------------------------
-	class ShaderTable;
+	////////////////////////////////////////////////////////////////////////////////////////////
+	// GraphicShaderType enum
+	////////////////////////////////////////////////////////////////////////////////////////////
+	enum GraphicShaderType { //!< DxShaderManagerのShaderTypeと合わせること
+		GRAPHICS_VERTEX,
+		GRAPHICS_GEOMETRY,
+		GRAPHICS_MESH,
+
+		GRAPHICS_PIXEL,
+
+		kCountOfGraphicShaderType
+	};
 
 	////////////////////////////////////////////////////////////////////////////////////////////
-	// ShaderBlob class
+	// GraphicBlob class 
 	////////////////////////////////////////////////////////////////////////////////////////////
-	class ShaderBlob {
+	class GraphicsBlob {
 	public:
 
 		//=========================================================================================
 		// public methods
 		//=========================================================================================
 
-		//! @brief コンストラクタ
-		ShaderBlob() {}
+		GraphicsBlob() = default;
 
-		//! @brief デストラクタ
-		~ShaderBlob() { Term(); }
+		~GraphicsBlob() { Term(); }
 
-		//! @brief shaderBlobの生成
-		void Create(const std::wstring& fileName, ShaderType type);
+		void Create(const std::wstring& fileName, GraphicShaderType type);
 
-		//! @brief 終了処理
 		void Term();
 
-		//! @brief shaderBlobを取得
-		//! 
-		//! @return shaderBlobを返却
-		IDxcBlob* GetShaderBlob(ShaderType shaderType) const { return shaderBlob_[shaderType]; }
+		const std::array<IDxcBlob*, kCountOfGraphicShaderType>& GetGraphicsBlobs() const { return graphicsBlobs_; }
 
-		//! @brief mesh shader pipelineを使うかどうか
-		bool IsUseMeshShaders() const { return isUseMeshShaders_; }
+		bool IsUseMeshPipeline() const { return isUseMeshPipeline_; }
 
-		//! @brief shaderTableを設定
-		//! 
-		//! @param[in] shaderTable DxObject::ShaderTable
-		static void SetShaderTable(ShaderTable* shaderTable) { shaderTable_ = shaderTable; }
+		static void SetShaderManager(ShaderManager* manager) { manager_ = manager; }
 
 	private:
 
@@ -77,10 +74,14 @@ namespace DxObject {
 		// private variables
 		//=========================================================================================
 
-		static ShaderTable* shaderTable_;
+		/* shaderManager */
+		static ShaderManager* manager_;
 
-		IDxcBlob* shaderBlob_[ShaderType::kCountOfShaderType];
-		bool isUseMeshShaders_ = false;
+		/* blob container */
+		std::array<IDxcBlob*, kCountOfGraphicShaderType> graphicsBlobs_ = { nullptr };
+
+		/* parameter */
+		bool isUseMeshPipeline_ = false; //!< mesh shader, amp shaderを使う際はpipelineが変わるのでtrueになる。
 
 	};
 

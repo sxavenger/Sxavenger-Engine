@@ -10,19 +10,14 @@
 #include <DxSwapChain.h>
 #include <DxFence.h>
 #include <DxBlendState.h>
-#include <DxCompilers.h>
-#include <DxShaderBlob.h>
-#include <DxShaderTable.h>
 #include <DxDepthStencil.h>
-#include <DxRootSignature.h>
-#include <DxPipelineState.h>
-#include <DxPipelineManager.h>
-
-// DxSource
-#include <DxCSBlob.h>
+#include <DxShaderManager.h>
 
 // c++
 #include <memory>
+
+// Geometry
+#include <Vector4.h>
 
 //-----------------------------------------------------------------------------------------
 // forward
@@ -52,9 +47,6 @@ public:
 	//! @brief DirectXの終了
 	void Term();
 
-	//! @brief フレームの開始処理
-	void BeginFrame();
-
 	//! @brief フレームの終了処理
 	void EndFrame();
 
@@ -69,18 +61,7 @@ public:
 
 	// ---- pipeline関係 ---- //
 
-	void SetPipelineType(PipelineType type) {
-		pipelineManager_->SetPipelineType(type);
-	}
-
-	void SetBlendMode(BlendMode mode) {
-		pipelineManager_->SetBlendMode(mode);
-	}
-
-	void SetPipelineState() {
-		pipelineManager_->CreatePipeline();
-		pipelineManager_->SetPipeline();
-	}
+	// use method
 
 	// ---- resource関係 ---- //
 
@@ -111,13 +92,9 @@ protected:
 	std::unique_ptr<DxObject::DescriptorHeaps> descriptorHeaps_;
 	std::unique_ptr<DxObject::SwapChain>       swapChains_;
 	std::unique_ptr<DxObject::Fence>           fences_;
-	std::unique_ptr<DxObject::Compilers>       compilers_;
-	std::unique_ptr<DxObject::ShaderTable>     shaderTable_;
-
+	std::unique_ptr<DxObject::ShaderManager>   shaderManager_;
 	std::unique_ptr<DxObject::BlendState> blendState_;
 	std::unique_ptr<DxObject::DepthStencil>  depthStencil_; //!< depthStencilは共通
-
-	std::unique_ptr<DxObject::PipelineManager> pipelineManager_;
 
 	UINT backBufferIndex_;
 
@@ -127,3 +104,9 @@ protected:
 	// private methods
 	//=========================================================================================
 };
+
+////////////////////////////////////////////////////////////////////////////////////////////
+// static variables
+////////////////////////////////////////////////////////////////////////////////////////////
+
+static const Vector4f defaultClearColor = { 0.1f, 0.25f, 0.5f, 1.0f };

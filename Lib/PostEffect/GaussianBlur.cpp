@@ -49,6 +49,26 @@ void GaussianBlur::Init() {
 
 	SetThisAttribute("GaussianBlur");
 
+	// create pipeline
+	blob_ = std::make_unique<GraphicsBlob>();
+	blob_->Create(L"GaussianBlur.VS.hlsl", GRAPHICS_VERTEX);
+	blob_->Create(L"GaussianBlur.PS.hlsl", GRAPHICS_PIXEL);
+
+	GraphicRootSignatureDesc desc = {};
+	desc.Resize(3, 1);
+
+	//!< camera2D
+	desc.SetCBV(0, SHADER_VERTEX, 0);
+
+	//!< blurParam
+	desc.SetCBV(1, SHADER_PIXEL, 0);
+
+	//!< textureBuffer
+	desc.SetSRV(2, SHADER_PIXEL, 0);
+	desc.SetSampler(0, MODE_WRAP, SHADER_PIXEL, 0);
+
+	pipeline_ = std::make_unique<GraphicsPipeline>();
+	pipeline_->CreatePipeline(MyEngine::GetDevicesObj(), blob_.get(), kBlendModeNormal);
 }
 
 void GaussianBlur::Term() {
@@ -62,11 +82,9 @@ void GaussianBlur::CreateBlurTexture(int32_t width, int32_t height, const D3D12_
 	{
 		MyEngine::BeginOffScreen(outputTexture_.get());
 
-		MyEngine::SetBlendMode(kBlendModeNormal);
-		MyEngine::SetPipelineType(GAUSSIANBLUR);
-		MyEngine::SetPipelineState();
-
 		auto commandList = MyEngine::GetCommandList();
+
+		pipeline_->SetPipeline(commandList);
 
 		D3D12_VERTEX_BUFFER_VIEW vertexBufferView = vertex_->GetVertexBufferView();
 		D3D12_INDEX_BUFFER_VIEW  indexBufferView  = index_->GetIndexBufferView();
@@ -98,11 +116,9 @@ void GaussianBlur::CreateBlurTexture(
 	{
 		MyEngine::BeginOffScreen(outputTexture);
 
-		MyEngine::SetBlendMode(kBlendModeNormal);
-		MyEngine::SetPipelineType(GAUSSIANBLUR);
-		MyEngine::SetPipelineState();
-
 		auto commandList = MyEngine::GetCommandList();
+
+		pipeline_->SetPipeline(commandList);
 
 		D3D12_VERTEX_BUFFER_VIEW vertexBufferView = vertex_->GetVertexBufferView();
 		D3D12_INDEX_BUFFER_VIEW  indexBufferView  = index_->GetIndexBufferView();
