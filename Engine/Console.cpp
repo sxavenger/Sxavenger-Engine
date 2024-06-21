@@ -46,6 +46,8 @@ void Console::Init() {
 
 	debugCamera_ = std::make_unique<Camera3D>();
 	/*debugCamera_->SetAttributeName("debugCamera");*/
+
+
 }
 
 void Console::Term() {

@@ -20,8 +20,6 @@ void ImGuiManager::Init(WinApp* winApp, DirectXCommon* dxCommon) {
 
 	dxCommon_ = dxCommon;
 
-	
-
 	// SRVの取り出し
 	descriptorHeap_SRV_ = dxCommon_->GetDescriptorsObj()->GetDescriptorHeap(DxObject::DescriptorType::SRV);
 
@@ -36,7 +34,7 @@ void ImGuiManager::Init(WinApp* winApp, DirectXCommon* dxCommon) {
 	ImGui_ImplWin32_Init(winApp->GetHwnd());
 	ImGui_ImplDX12_Init(
 		dxCommon_->GetDeviceObj()->GetDevice(),
-		dxCommon_->GetSwapChainObj()->GetBufferCount(),
+		DxObject::SwapChain::GetBufferCount(),
 		DXGI_FORMAT_R8G8B8A8_UNORM_SRGB, //!< RTV -> desc.Format
 		descriptorHeap_SRV_,
 		descriptor_.handleCPU,

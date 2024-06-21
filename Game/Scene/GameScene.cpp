@@ -160,6 +160,8 @@ void GameScene::Draw() {
 		MyEngine::BeginOffScreen(console->GetSceneTexture());
 		MyEngine::camera3D_ = console->GetDebugCamera();
 
+
+
 		MyEngine::EndOffScreen();
 
 
