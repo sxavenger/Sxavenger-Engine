@@ -116,6 +116,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\DxObject\DxCommand.cpp" />
     <ClCompile Include="Engine\DxObject\DxCSBlob.cpp" />
     <ClCompile Include="Engine\DxObject\DxCSBufferResource.cpp" />
+    <ClCompile Include="Engine\DxObject\DxCSDimensionBuffer.cpp" />
     <ClCompile Include="Engine\DxObject\DxCSPipelineState.cpp" />
     <ClCompile Include="Engine\DxObject\DxDepthStencil.cpp" />
     <ClCompile Include="Engine\DxObject\DxDescriptorHeaps.cpp" />
@@ -158,6 +159,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="externals\meshoptimizer\vertexfilter.cpp" />
     <ClCompile Include="externals\meshoptimizer\vfetchanalyzer.cpp" />
     <ClCompile Include="externals\meshoptimizer\vfetchoptimizer.cpp" />
+    <ClCompile Include="Game\Particle.cpp" />
     <ClCompile Include="Game\RayTracingWorld\Cube.cpp" />
     <ClCompile Include="Game\RayTracingWorld\Ground.cpp" />
     <ClCompile Include="Game\RayTracingWorld\Player.cpp" />
@@ -208,6 +210,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\DxObject\DxCommand.h" />
     <ClInclude Include="Engine\DxObject\DxCSBlob.h" />
     <ClInclude Include="Engine\DxObject\DxCSBufferResource.h" />
+    <ClInclude Include="Engine\DxObject\DxCSDimensionBuffer.h" />
     <ClInclude Include="Engine\DxObject\DxCSPipelineState.h" />
     <ClInclude Include="Engine\DxObject\DxDepthStencil.h" />
     <ClInclude Include="Engine\DxObject\DxDescriptorHeaps.h" />
@@ -237,6 +240,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="externals\imgui\imstb_textedit.h" />
     <ClInclude Include="externals\imgui\imstb_truetype.h" />
     <ClInclude Include="externals\meshoptimizer\meshoptimizer.h" />
+    <ClInclude Include="Game\Particle.h" />
     <ClInclude Include="Game\RayTracingWorld\Cube.h" />
     <ClInclude Include="Game\RayTracingWorld\Ground.h" />
     <ClInclude Include="Game\RayTracingWorld\Player.h" />
@@ -274,6 +278,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <None Include="Resources\hlsl\FullScreen.hlsli" />
     <None Include="Resources\hlsl\GaussianBlur.hlsli" />
     <None Include="Resources\hlsl\Lighting.hlsli" />
+    <None Include="Resources\hlsl\Particle.hlsli" />
     <None Include="Resources\hlsl\Primitive.hlsli" />
     <None Include="Resources\hlsl\ToonShading.hlsli" />
     <None Include="Resources\RayTracingShader\Lighting.hlsli" />
@@ -322,13 +327,19 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <FxCompile Include="Resources\hlsl\GaussianBlur.VS.hlsl">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </FxCompile>
+    <FxCompile Include="Resources\hlsl\Particle.CS.hlsl">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="Resources\hlsl\Particle.PS.hlsl">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="Resources\hlsl\Particle.VS.hlsl">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </FxCompile>
     <FxCompile Include="Resources\hlsl\Primitive.PS.hlsl">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </FxCompile>
     <FxCompile Include="Resources\hlsl\Primitive.VS.hlsl">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-    </FxCompile>
-    <FxCompile Include="Resources\hlsl\test.CS.hlsl">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </FxCompile>
     <FxCompile Include="Resources\RayTracingShader\RayTracingWorld.hlsl">

@@ -48,11 +48,11 @@ void FullScreen::Init() {
 	desc.Resize(2, 1);
 
 	//!< camera2D
-	desc.SetCBV(0, SHADER_VERTEX, 0);
+	desc.SetCBV(0, VISIBILITY_VERTEX, 0);
 
 	//!< textureBuffer
-	desc.SetSRV(1, SHADER_PIXEL, 0);
-	desc.SetSampler(0, MODE_CLAMP, SHADER_PIXEL, 0);
+	desc.SetSRV(1, VISIBILITY_PIXEL, 0);
+	desc.SetSampler(0, MODE_CLAMP, VISIBILITY_PIXEL, 0);
 
 	pipeline_ = std::make_unique<GraphicsPipeline>();
 	pipeline_->CreateRootSiganture(MyEngine::GetDevicesObj(), desc);

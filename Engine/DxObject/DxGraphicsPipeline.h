@@ -40,17 +40,17 @@ namespace DxObject {
 	class Devices;
 
 	////////////////////////////////////////////////////////////////////////////////////////////
-	// ShaderStage enum
+	// ShaderVisibility enum
 	////////////////////////////////////////////////////////////////////////////////////////////
-	enum ShaderStage {
-		SHADER_ALL           = D3D12_SHADER_VISIBILITY_ALL,
-		SHADER_VERTEX        = D3D12_SHADER_VISIBILITY_VERTEX,
-		SHADER_HULL          = D3D12_SHADER_VISIBILITY_HULL,
-		SHADER_DOMAIN        = D3D12_SHADER_VISIBILITY_DOMAIN,
-		SHADER_GEOMETRY      = D3D12_SHADER_VISIBILITY_GEOMETRY,
-		SHADER_PIXEL         = D3D12_SHADER_VISIBILITY_PIXEL,
-		SHADER_AMPLIFICATION = D3D12_SHADER_VISIBILITY_AMPLIFICATION,
-		SHADER_MESH          = D3D12_SHADER_VISIBILITY_MESH
+	enum ShaderVisibility {
+		VISIBILITY_ALL           = D3D12_SHADER_VISIBILITY_ALL,
+		VISIBILITY_VERTEX        = D3D12_SHADER_VISIBILITY_VERTEX,
+		VISIBILITY_HULL          = D3D12_SHADER_VISIBILITY_HULL,
+		VISIBILITY_DOMAIN        = D3D12_SHADER_VISIBILITY_DOMAIN,
+		VISIBILITY_GEOMETRY      = D3D12_SHADER_VISIBILITY_GEOMETRY,
+		VISIBILITY_PIXEL         = D3D12_SHADER_VISIBILITY_PIXEL,
+		VISIBILITY_AMPLIFICATION = D3D12_SHADER_VISIBILITY_AMPLIFICATION,
+		VISIBILITY_MESH          = D3D12_SHADER_VISIBILITY_MESH
 	};
 
 	////////////////////////////////////////////////////////////////////////////////////////////
@@ -69,11 +69,17 @@ namespace DxObject {
 
 		void Clear();
 
-		void SetCBV(uint32_t index, ShaderStage stage, UINT shaderRegister);
+		/* virtualAddress */
 
-		void SetSRV(uint32_t index, ShaderStage stage, UINT shaderRegister);
+		void SetCBV(uint32_t index, ShaderVisibility stage, UINT shaderRegister);
 
-		void SetSampler(uint32_t index, TextureMode mode, ShaderStage stage, UINT shaderRegister);
+		void SetVirtualSRV(uint32_t index, ShaderVisibility stage, UINT shaderRegister);
+
+		/* handle */
+
+		void SetSRV(uint32_t index, ShaderVisibility stage, UINT shaderRegister);
+
+		void SetSampler(uint32_t index, TextureMode mode, ShaderVisibility stage, UINT shaderRegister);
 
 		//=========================================================================================
 		// public variables

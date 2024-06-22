@@ -9,11 +9,6 @@
 // c++
 #include <memory>
 
-// DxObject
-#include <DxCSBlob.h>
-#include <DxCSPipelineState.h>
-#include <DxCSBufferResource.h>
-
 // Game
 #include <RayTracingCamera.h>
 #include <RayTracingLight.h>
@@ -25,6 +20,8 @@
 #include <SubobjectManager.h>
 
 #include <FullScreen.h>
+
+#include <Particle.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // GameScene class
@@ -43,6 +40,9 @@ private:
 	//=========================================================================================
 	// private methods
 	//=========================================================================================
+
+	// particle
+	std::unique_ptr<Particle> particle_;
 
 	//-----------------------------------------------------------------------------------------
 	// raytracing world
@@ -67,6 +67,7 @@ private:
 	std::unique_ptr<RayTracingLight>  light_;
 
 	// drawer //
+
 	std::unique_ptr<FullScreen> fullscreen_;
 
 	//=========================================================================================

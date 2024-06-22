@@ -5,8 +5,8 @@
 //-----------------------------------------------------------------------------------------
 // DirectX12
 #include <d3d12.h>
-#include "DirectXTex.h"
-#include "d3dx12.h"
+#include <DirectXTex.h>
+#include <d3dx12.h>
 
 // DxCommon
 #include <DirectXCommon.h>
@@ -24,6 +24,8 @@
 // Geometry
 #include <Vector4.h>
 
+// TODO: variantで適切な型が取得できる用に改良
+
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Texture class
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -34,31 +36,43 @@ public:
 	// public methods
 	//=========================================================================================
 
-	//! @brief コンストラクタ
-	Texture() {}
+	Texture() = default;
 
-	//! @brief デストラクタ
 	~Texture() { Unload(); }
 
-	//! @brief テクスチャのロード
-	void Load(const std::string& filePath, DirectXCommon* dxCommon);
+	//! @brief テクスチャの読み込み
+	void Load(DirectXCommon* dxCommon, const std::string& filePath);
 
 	//! @brief テクスチャの開放
 	void Unload();
 
-	const D3D12_GPU_DESCRIPTOR_HANDLE& GetSRVHandleGPU() const { return descriptorSRV_.handleGPU; }
+	//! @brief Resourceの返却
+	ID3D12Resource* GetResource() const {
+		return resource_.Get();
+	}
 
-	virtual const D3D12_CPU_DESCRIPTOR_HANDLE& GetRTVHandleCPU() const {
-		assert(false); //!< RenderTextureではないのでRTVを持ってない
-		return descriptorSRV_.handleCPU; // 絶対に返すな
+	//! @brief GPUHandle(SRV)の返却
+	const D3D12_GPU_DESCRIPTOR_HANDLE& GetGPUHandleSRV() const {
+		return descriptorSRV_.handleGPU;
+	}
+
+	/* 継承先関数 */
+	//!< 継承先で定義されるのでこのクラスで呼び出された場合, エラーとなる
+
+	virtual const D3D12_CPU_DESCRIPTOR_HANDLE& GetCPUHandleRTV() const {
+		assert(false);
+		return descriptorSRV_.handleCPU; // 絶対に返さない
 	}
 
 	virtual const Vector4f& GetClearColor() const {
-		assert(false); //!< RenderTextureではないのでclearColorを持ってない
-		return defaultClearColor; // 絶対返すな
+		assert(false);
+		return defaultClearColor; // 絶対に返さない
 	}
 
-	ID3D12Resource* GetResource() const { return resource_.Get(); }
+	virtual const D3D12_GPU_DESCRIPTOR_HANDLE& GetGPUHandleUAV() const {
+		assert(false);
+		return descriptorSRV_.handleGPU; // 絶対に返さない
+	}
 
 protected:
 
@@ -66,10 +80,13 @@ protected:
 	// protected variables
 	//=========================================================================================
 
+	/* ptr parameter */
 	DirectXCommon* dxCommon_ = nullptr;
 
+	/* menbers */
+	
 	ComPtr<ID3D12Resource> resource_;
-	DxObject::Descriptor descriptorSRV_;
+	DxObject::Descriptor   descriptorSRV_;
 
 private:
 
@@ -85,29 +102,29 @@ private:
 // RenderTexture class
 ////////////////////////////////////////////////////////////////////////////////////////////
 class RenderTexture
-	: public Texture {
+	: public Texture { //!< RenderTarget texture
 public:
 
 	//=========================================================================================
 	// public methods
 	//=========================================================================================
 
-	//! @brief コンストラクタ
-	RenderTexture() {}
+	RenderTexture() = default;
 
-	//! @brief デストラクタ
-	~RenderTexture() { Unload(); }
+	~RenderTexture() { Term(); }
 
-	//! @brief ダミーテクスチャの作成
-	void Create(int32_t width, int32_t height, DirectXCommon* dxCommon, const Vector4f& clearColor = defaultClearColor);
+	//! @brief RenderTextureの生成
+	void Create(DirectXCommon* dxCommon, int32_t textureWidth, int32_t textureHeight, const Vector4f& clearColor = defaultClearColor);
 
-	//! @brief テクスチャの解放
-	void Unload();
+	//! @brief 終了処理
+	void Term();
 
-	const D3D12_CPU_DESCRIPTOR_HANDLE& GetRTVHandleCPU() const override {
+	//! @brief CPUHandle(RTV)の返却
+	const D3D12_CPU_DESCRIPTOR_HANDLE& GetCPUHandleRTV() const override {
 		return descriptorRTV_.handleCPU;
 	}
 
+	//! @brief クリアカラーの返却
 	const Vector4f& GetClearColor() const override {
 		return clearColor_;
 	}
@@ -119,7 +136,45 @@ private:
 	//=========================================================================================
 
 	DxObject::Descriptor descriptorRTV_;
+
+	/* parameter */
 	Vector4f clearColor_;
+
+};
+
+////////////////////////////////////////////////////////////////////////////////////////////
+// DummyTexture class
+////////////////////////////////////////////////////////////////////////////////////////////
+class DummyTexture
+	: public Texture { //!< UnorderedAccess texture
+public:
+
+	//=========================================================================================
+	// public methods
+	//=========================================================================================
+
+	DummyTexture() = default;
+
+	~DummyTexture() { Term(); }
+
+	//! @brief DummyTextureの生成
+	void Create(DirectXCommon* dxCommon, int32_t textureWidth, int32_t textureHeight);
+
+	//! @brief 終了処理
+	void Term();
+
+	//! @brief GPUHandle(UAV)の返却
+	const D3D12_GPU_DESCRIPTOR_HANDLE& GetGPUHandleUAV() const override {
+		return descriptorUAV_.handleGPU;
+	}
+
+private:
+
+	//=========================================================================================
+	// private variables
+	//=========================================================================================
+
+	DxObject::Descriptor descriptorUAV_;
 
 };
 
@@ -133,83 +188,76 @@ public:
 	// public methods
 	//=========================================================================================
 
+	TextureManager() = default;
+	~TextureManager() = default;
+
 	//! @brief 初期化処理
 	void Init(DirectXCommon* dxCommon);
 
 	//! @brief 終了処理
 	void Term();
 
-	//! @brief Textureが使えるようになる
-	//! @brief HACK: commandAllocator[texture]を送信してから関数を呼び出すこと
-	void EnableTexture();
+	/* Textureの生成 */
 
 	//! @brief テクスチャの読み込み
-	void LoadTexture(const std::string& filePath);
+	Texture* LoadTexture(const std::string& filePath);
 
-	//! @brief ダミーテクスチャの生成
-	void CreateRenderTexture(int32_t width, int32_t height, const std::string& key, Vector4f clearColor = defaultClearColor);
+	//! @brief RenderTextureの生成
+	Texture* CreateRenderTexture(const std::string& key, int32_t textureWidth, int32_t textureHeight, const Vector4f& clearColor = defaultClearColor);
 
-	//! @brief テクスチャの削除
-	void UnloadTexture(const std::string& key);
+	//! @brief DummyTextureの生成
+	Texture* CreateDummyTexture(const std::string& key, int32_t textureWidth, int32_t textureHeight);
 
-	//! @brief テクスチャの削除 (参照カウントを無視)
+	/* container関係 */
+
+	//! @brief containerからTextureの取得
+	Texture* GetTexture(const std::string& key) const;
+
+	//! @brief containerからGPUHandleの取得
+	const D3D12_GPU_DESCRIPTOR_HANDLE& GetGPUHandle(const std::string& key) const;
+
+	//! @brief textureの解放
+	void ReleaseTexture(const std::string& key);
+
+	//! @brief textureの削除
 	void DeleteTexture(const std::string& key);
 
-	const D3D12_GPU_DESCRIPTOR_HANDLE& GetHandleGPU(const std::string& key) const {
-		auto it = GetKey(key);
-
-		if (!it->second.isTextureEnabled) {
-			assert(false); //!< textureがGPUに送られてない
-		}
-
-		return it->second.texture->GetSRVHandleGPU();
-	}
-
-	Texture* GetTexture(const std::string& key) const {
-		auto it = GetKey(key);
-
-		return it->second.texture.get();
-	}
+	/* statics */
 
 	static TextureManager* GetInstance();
 
 private:
 
 	////////////////////////////////////////////////////////////////////////////////////////////
-	// TextureData enum
+	// TextureElement structure
 	////////////////////////////////////////////////////////////////////////////////////////////
-	struct TextureData {
+	struct TextureElement {
+		// texture
 		std::unique_ptr<Texture> texture;
 
-		// info //
-		uint32_t referenceCount = 0;
-		bool isTextureEnabled   = false;
+		// parameter
+		uint32_t refernceCount = 1;
 	};
 
 	//=========================================================================================
 	// private variables
 	//=========================================================================================
 
+	/* static parameter */
 	DirectXCommon* dxCommon_ = nullptr;
 
-	std::unordered_map<std::string, TextureData> textures_;
-	//!< key = filePath, value = textureData
-	
-	std::deque<std::string> waitTextureQueue_; //!< commandList送信待ちtextureのコンテナ
+	/* container */
+	std::unordered_map<std::string, TextureElement> textureContainer_;
 
 	//=========================================================================================
 	// private methods
 	//=========================================================================================
-
-	//! @brief keyの要素を取得
-	std::unordered_map<std::string, TextureManager::TextureData>::const_iterator GetKey(const std::string& key) const;
 
 	//! @brief keyが存在するかどうか
 	//! 
 	//! @retval true  存在する
 	//! @retval false 存在しない
 	bool FindKey(const std::string& key) const;
-
 
 };
 

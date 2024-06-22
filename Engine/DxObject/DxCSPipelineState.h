@@ -46,13 +46,13 @@ namespace DxObject { //!< DxSource
 
 		void Clear();
 
-		void SetCBV(uint32_t index, UINT shaderRegister);
+		void SetCBV(uint32_t index, UINT shaderRegister); // virtualAddress
 
 		void SetSRV(uint32_t index, UINT shaderRegister);
 
 		void SetUAV(uint32_t index, UINT shaderRegister);
 
-		void SetVirtualUAV(uint32_t index, UINT shaderRegister);
+		void SetVirtualUAV(uint32_t index, UINT shaderRegister); // virtualAddress
 
 		void SetSampler(uint32_t index, TextureMode mode, UINT shaderRegister);
 

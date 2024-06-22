@@ -31,7 +31,7 @@ void Model::Term() {
 
 		// materialDataの終了処理
 		if (modelData_.materials[i].isUseTexture) {
-			MyEngine::GetTextureManager()->UnloadTexture(modelData_.materials[i].textureFilePath);
+			MyEngine::GetTextureManager()->ReleaseTexture(modelData_.materials[i].textureFilePath);
 		}
 	}
 

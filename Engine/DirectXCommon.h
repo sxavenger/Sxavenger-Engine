@@ -50,10 +50,21 @@ public:
 	//! @brief フレームの終了処理
 	void EndFrame();
 
-	void BeginOffscreen(Texture* dummyTexture);
+	/* offscreen */
+
+	void BeginOffscreen(Texture* renderTexture);
+
 	void EndOffscreen();
 
+	/* screen */
+
 	void BeginScreenDraw();
+
+	/* UnorderedAccess */
+
+	void BeginUnorderedAccess(Texture* dummyTexture);
+
+	void EndUnorderedAccess(Texture* dummyTexture);
 
 	void TransitionProcess();
 

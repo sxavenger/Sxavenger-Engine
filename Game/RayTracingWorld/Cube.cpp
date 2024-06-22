@@ -15,9 +15,9 @@ void Cube::Init(SubobjectManager* subobjectManager) {
 	MyEngine::LoadTexture("resources/bricks/bricks_normaldx.png");
 	MyEngine::LoadTexture("resources/bricks/bricks_ambientOcclusion.png");
 
-	blas_->SetHandle(2, MyEngine::GetTexture("resources/bricks/bricks_color.png")->GetSRVHandleGPU());
-	blas_->SetHandle(3, MyEngine::GetTexture("resources/bricks/bricks_normaldx.png")->GetSRVHandleGPU());
-	blas_->SetHandle(4, MyEngine::GetTexture("resources/bricks/bricks_ambientOcclusion.png")->GetSRVHandleGPU());
+	blas_->SetHandle(2, MyEngine::GetTexture("resources/bricks/bricks_color.png")->GetGPUHandleSRV());
+	blas_->SetHandle(3, MyEngine::GetTexture("resources/bricks/bricks_normaldx.png")->GetGPUHandleSRV());
+	blas_->SetHandle(4, MyEngine::GetTexture("resources/bricks/bricks_ambientOcclusion.png")->GetGPUHandleSRV());
 
 	SetThisAttribute("mappingCube");
 

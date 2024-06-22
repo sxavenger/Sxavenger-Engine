@@ -3,9 +3,8 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
-#include <windows.h>
 #include <Logger.h>
-#include <DirectXCommon.h>
+#include <cassert>
 #include <Console.h>
 
 //-----------------------------------------------------------------------------------------
@@ -14,16 +13,16 @@
 using namespace DxObject;
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// Texture class
+// Texture class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-void Texture::Load(const std::string& filePath, DirectXCommon* dxCommon) {
+void Texture::Load(DirectXCommon* dxCommon, const std::string& filePath) {
 
-	// dxCommonの保存
+	// 引数の保存
 	dxCommon_ = dxCommon;
 
 	// デバイス, CommandListの取り出し
-	ID3D12Device* device = dxCommon_->GetDeviceObj()->GetDevice();
+	ID3D12Device* device                   = dxCommon_->GetDeviceObj()->GetDevice();
 	ID3D12GraphicsCommandList* commandList = dxCommon_->GetCommandList();
 
 	DirectX::ScratchImage mipImage = TextureMethod::LoadTexture(filePath);
@@ -41,7 +40,7 @@ void Texture::Load(const std::string& filePath, DirectXCommon* dxCommon) {
 		desc.Texture2D.MipLevels     = UINT(metadata.mipLevels);
 
 		// SRVを生成するDescriptorHeapの場所を決める
-		descriptorSRV_ = dxCommon_->GetDescriptorsObj()->GetCurrentDescriptor(DxObject::DescriptorType::SRV);
+		descriptorSRV_ = dxCommon_->GetDescriptorsObj()->GetCurrentDescriptor(SRV);
 
 		// SRVの生成
 		device->CreateShaderResourceView(
@@ -60,12 +59,9 @@ void Texture::Unload() {
 // RenderTexture class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-void RenderTexture::Create(int32_t width, int32_t height, DirectXCommon* dxCommon, const Vector4f& clearColor) {
-
-	// dxCommonの保存
-	dxCommon_ = dxCommon;
-
-	// clearColorの保存
+void RenderTexture::Create(DirectXCommon* dxCommon, int32_t textureWidth, int32_t textureHeight, const Vector4f& clearColor) {
+	// 引数の保存
+	dxCommon_   = dxCommon;
 	clearColor_ = clearColor;
 
 	// deviceの取り出し
@@ -75,8 +71,8 @@ void RenderTexture::Create(int32_t width, int32_t height, DirectXCommon* dxCommo
 	{
 		D3D12_RESOURCE_DESC desc = {};
 		desc.Dimension        = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
-		desc.Width            = width;
-		desc.Height           = height;
+		desc.Width            = textureWidth;
+		desc.Height           = textureHeight;
 		desc.MipLevels        = 1;
 		desc.Format           = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
 		desc.Flags            = D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET;
@@ -112,7 +108,7 @@ void RenderTexture::Create(int32_t width, int32_t height, DirectXCommon* dxCommo
 		desc.Texture2D.MipLevels     = 1;
 
 		// SRVを生成するDescriptorHeapの場所を決める
-		descriptorSRV_ = dxCommon_->GetDescriptorsObj()->GetCurrentDescriptor(DxObject::DescriptorType::SRV);
+		descriptorSRV_ = dxCommon_->GetDescriptorsObj()->GetCurrentDescriptor(SRV);
 
 		// SRVの生成
 		device->CreateShaderResourceView(
@@ -124,7 +120,7 @@ void RenderTexture::Create(int32_t width, int32_t height, DirectXCommon* dxCommo
 
 	// RTV - RenderTargetViewの生成
 	{
-		descriptorRTV_ = dxCommon_->GetDescriptorsObj()->GetCurrentDescriptor(DescriptorType::RTV);
+		descriptorRTV_ = dxCommon_->GetDescriptorsObj()->GetCurrentDescriptor(RTV);
 
 		device->CreateRenderTargetView(
 			resource_.Get(),
@@ -132,11 +128,88 @@ void RenderTexture::Create(int32_t width, int32_t height, DirectXCommon* dxCommo
 			descriptorRTV_.handleCPU
 		);
 	}
-
 }
 
-void RenderTexture::Unload() {
+void RenderTexture::Term() {
 	dxCommon_->GetDescriptorsObj()->Erase(descriptorRTV_);
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////
+// DummyTexture class methods
+////////////////////////////////////////////////////////////////////////////////////////////
+
+void DummyTexture::Create(DirectXCommon* dxCommon, int32_t textureWidth, int32_t textureHeight) {
+	// 引数の保存
+	dxCommon_ = dxCommon;
+
+	// deviceの取り出し
+	auto device = dxCommon_->GetDeviceObj()->GetDevice();
+
+	// resourceの生成
+	{
+		D3D12_HEAP_PROPERTIES prop = {};
+		prop.Type = D3D12_HEAP_TYPE_DEFAULT;
+
+		D3D12_RESOURCE_DESC desc = {};
+		desc.Dimension        = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
+		desc.Width            = textureWidth;
+		desc.Height           = textureHeight;
+		desc.DepthOrArraySize = 1;
+		desc.SampleDesc.Count = 1;
+		desc.MipLevels        = 1;
+		desc.Format           = DXGI_FORMAT_R8G8B8A8_UNORM; //!< SRGBが多分使えない
+		desc.Flags            = D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS;
+		
+
+		device->CreateCommittedResource(
+			&prop,
+			D3D12_HEAP_FLAG_NONE,
+			&desc,
+			D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE,
+			nullptr,
+			IID_PPV_ARGS(&resource_)
+		);
+	}
+
+	// SRV - shaderResourceViewの生成
+	{
+		D3D12_SHADER_RESOURCE_VIEW_DESC desc = {};
+		desc.Format                  = DXGI_FORMAT_R8G8B8A8_UNORM;
+		desc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
+		desc.ViewDimension           = D3D12_SRV_DIMENSION_TEXTURE2D;
+		desc.Texture2D.MipLevels     = 1;
+
+		// SRVを生成するDescriptorHeapの場所を決める
+		descriptorSRV_ = dxCommon_->GetDescriptorsObj()->GetCurrentDescriptor(SRV);
+
+		// SRVの生成
+		device->CreateShaderResourceView(
+			resource_.Get(),
+			&desc,
+			descriptorSRV_.handleCPU
+		);
+	}
+
+	// UAV - unorderedAccessViewの生成
+	{
+		D3D12_UNORDERED_ACCESS_VIEW_DESC desc = {};
+		desc.ViewDimension      = D3D12_UAV_DIMENSION_TEXTURE2D;
+		desc.Format             = DXGI_FORMAT_R8G8B8A8_UNORM;
+
+		// UAVDescriptorの取得
+		descriptorUAV_ = dxCommon_->GetDescriptorsObj()->GetCurrentDescriptor(UAV);
+		
+		device->CreateUnorderedAccessView(
+			resource_.Get(),
+			nullptr,
+			&desc,
+			descriptorUAV_.handleCPU
+		);
+	}
+}
+
+void DummyTexture::Term() {
+	dxCommon_->GetDescriptorsObj()->Erase(descriptorUAV_);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -148,102 +221,127 @@ void TextureManager::Init(DirectXCommon* dxCommon) {
 	// dxCommonの保存
 	dxCommon_ = dxCommon;
 
+	// 初期textureのload
 	LoadTexture("resources/uvChecker.png");
 	LoadTexture("resources/tile_black.png");
 	LoadTexture("resources/tile_white.png");
-
 }
 
 void TextureManager::Term() {
-	textures_.clear();
-	waitTextureQueue_.clear();
+	// containerの削除
+	textureContainer_.clear();
 
+	// dxCommonの参照解除
 	dxCommon_ = nullptr;
 }
 
-void TextureManager::EnableTexture() {
-	if (waitTextureQueue_.empty()) { //!< queueに何も入ってないので
-		return;
+Texture* TextureManager::LoadTexture(const std::string& filePath) {
+	if (FindKey(filePath)) { //!< 同一keyが存在する場合
+		// すでにあるtextureの返却
+		textureContainer_.at(filePath).refernceCount++;
+		return textureContainer_.at(filePath).texture.get();
 	}
 
-	// 送信が完了した場合
-	while (!waitTextureQueue_.empty()) { //!< queueに入ってるすべてのtextureを使える状態に
-		textures_.at(waitTextureQueue_.front()).isTextureEnabled = true;
+	// textureの生成
+	std::unique_ptr<Texture> newTexture = std::make_unique<Texture>();
+	newTexture->Load(dxCommon_, filePath);
 
+	// containerに代入
+	textureContainer_[filePath] = { std::move(newTexture) };
+	return textureContainer_[filePath].texture.get();
+}
+
+Texture* TextureManager::CreateRenderTexture(const std::string& key, int32_t textureWidth, int32_t textureHeight, const Vector4f& clearColor) {
+	if (FindKey(key)) { //!< 同一keyが存在する場合
+		// すでにあるtextureの返却
+		textureContainer_.at(key).refernceCount++;
+		return textureContainer_.at(key).texture.get();
+	}
+
+	// renderTextureの生成
+	std::unique_ptr<RenderTexture> newRenderTexture = std::make_unique<RenderTexture>();
+	newRenderTexture->Create(dxCommon_, textureWidth, textureHeight, clearColor);
+
+	// containerに代入
+	textureContainer_[key] = { std::move(newRenderTexture) };
+	return textureContainer_[key].texture.get();
+}
+
+Texture* TextureManager::CreateDummyTexture(const std::string& key, int32_t textureWidth, int32_t textureHeight) {
+	if (FindKey(key)) { //!< 同一keyが存在する場合
+		// すでにあるtextureの返却
+		textureContainer_.at(key).refernceCount++;
+		return textureContainer_.at(key).texture.get();
+	}
+
+	// renderTextureの生成
+	std::unique_ptr<DummyTexture> newDummyTexture = std::make_unique<DummyTexture>();
+	newDummyTexture->Create(dxCommon_, textureWidth, textureHeight);
+
+	// containerに代入
+	textureContainer_[key] = { std::move(newDummyTexture) };
+	return textureContainer_[key].texture.get();
+}
+
+Texture* TextureManager::GetTexture(const std::string& key) const {
+	assert(FindKey(key)); //!< 同一keyが見つからない
+	
+	return textureContainer_.at(key).texture.get();
+}
+
+const D3D12_GPU_DESCRIPTOR_HANDLE& TextureManager::GetGPUHandle(const std::string& key) const {
+	assert(FindKey(key));
+
+	return textureContainer_.at(key).texture->GetGPUHandleSRV();
+}
+
+void TextureManager::ReleaseTexture(const std::string& key) {
+	if (!FindKey(key)) { //!< keyが見つからなかった場合
+
+		std::string text = "[TextureManager](method: ReleaseTexture): not found key. key: " + key;
 		console->SetLog(
-			"[Enabled Texture] filePath: " + waitTextureQueue_.front(),
-			Console::commentOutColor
+			text,
+			Console::warningColor
 		);
 
-		waitTextureQueue_.pop_front();
-	}
-}
-
-void TextureManager::LoadTexture(const std::string& filePath) {
-	auto it = textures_.find(filePath);
-	if (it != textures_.end()) { //!< 同一keyが見つかった場合
-		// 参照数にインクリメント
-		textures_[filePath].referenceCount++;
 		return;
 	}
 
-	// textureの登録
-	textures_[filePath].texture          = std::make_unique<Texture>();
-	textures_[filePath].texture->Load(filePath, dxCommon_);
+	// keyの参照カウントを減らす
+	textureContainer_.at(key).refernceCount--;
 
-	textures_[filePath].referenceCount   = 1;
-	textures_[filePath].isTextureEnabled = false; // commandListに積んだだけなのでまだ使えない
+	if (textureContainer_.at(key).refernceCount == 0) { //!< 参照カウントが0の場合
+		textureContainer_.erase(key); //!< containerからの削除
 
-	// 送信待ちtextureのqueueに追加
-	waitTextureQueue_.push_back(filePath);
-
-	console->SetLog(
-		"[Load Texture] filePath: " + filePath
-	);
-}
-
-void TextureManager::CreateRenderTexture(int32_t width, int32_t height, const std::string& key, Vector4f clearColor) {
-	if (FindKey(key)) {
-		Log("TextureManager::CreateRenderTexture \n if (it != textures_.end()) { \n return; \n} \n");
-		console->SetLog("warning: texture already made. [key]: " + key, Console::warningColor);
-		return;
-	}
-
-	auto renderTexture = std::make_unique<RenderTexture>();
-	renderTexture->Create(width, height, dxCommon_, clearColor);
-
-	textures_[key].texture = std::move(renderTexture);
-	textures_[key].referenceCount = 1;
-	textures_[key].isTextureEnabled = true;
-
-	console->SetLog(
-		"[Create RenderTexture] key: " + key
-	);
-}
-
-void TextureManager::UnloadTexture(const std::string& key) {
-	assert(FindKey(key)); //!< 同一keyが見つからなかった
-	//assert(textures_[key].isTextureEnabled); //!< SRVが作られてないのに削除使用としてる
-
-	// 参照先が消える
-	textures_[key].referenceCount--;
-
-	if (textures_[key].referenceCount == 0) { //!< 参照先がない場合
-		textures_[key].texture.reset();
-		textures_.erase(key);
+		// logで通知
+		std::string text = "[TextureManager](method: ReleaseTexture): delete texture. key: " + key;
+		console->SetLog(
+			text,
+			Console::commentOutColor
+		);
 	}
 }
 
 void TextureManager::DeleteTexture(const std::string& key) {
-	assert(FindKey(key)); //!< 同一keyが見つからなかった
-	assert(textures_[key].isTextureEnabled); //!< SRVが作られてないのに削除使用として
+	if (!FindKey(key)) { //!< keyが見つからなかった場合
 
-	textures_[key].texture.reset();
-	textures_.erase(key);
+		// logで通知
+		console->SetLog(
+			"[TextureManager](method: DeleteTexture): not found key. key: " + key,
+			Console::warningColor
+		);
 
+		return;
+	}
+
+	textureContainer_.erase(key); //!< containerからの削除
+
+	// logで通知
 	console->SetLog(
-		"[Delete Texture] key: " + key
+		"[TextureManager](method: DeleteTexture): delete texture. key: " + key,
+		Console::commentOutColor
 	);
+
 }
 
 TextureManager* TextureManager::GetInstance() {
@@ -255,18 +353,9 @@ TextureManager* TextureManager::GetInstance() {
 // private methods
 //=========================================================================================
 
-std::unordered_map<std::string, TextureManager::TextureData>::const_iterator TextureManager::GetKey(const std::string& key) const {
-	auto it = textures_.find(key);
-	if (it == textures_.end()) {
-		assert(false);
-	}
-
-	return textures_.find(key);
-}
-
 bool TextureManager::FindKey(const std::string& key) const {
-	auto it = textures_.find(key);
-	if (it == textures_.end()) {
+	auto it = textureContainer_.find(key);
+	if (it == textureContainer_.end()) {
 		return false;
 	}
 
@@ -317,13 +406,13 @@ DirectX::ScratchImage TextureMethod::LoadTexture(const std::string& filePath) {
 ComPtr<ID3D12Resource> TextureMethod::CreateTextureResource(ID3D12Device* device, const DirectX::TexMetadata& metadata) {
 	// デスクの設定
 	D3D12_RESOURCE_DESC desc = {};
-	desc.Width            = UINT(metadata.width);
-	desc.Height           = UINT(metadata.height);
-	desc.MipLevels        = UINT16(metadata.mipLevels);
+	desc.Width = UINT(metadata.width);
+	desc.Height = UINT(metadata.height);
+	desc.MipLevels = UINT16(metadata.mipLevels);
 	desc.DepthOrArraySize = UINT16(metadata.arraySize);
-	desc.Format           = metadata.format;
+	desc.Format = metadata.format;
 	desc.SampleDesc.Count = 1;
-	desc.Dimension        = D3D12_RESOURCE_DIMENSION(metadata.dimension);
+	desc.Dimension = D3D12_RESOURCE_DIMENSION(metadata.dimension);
 
 	// ヒーププロパティの設定
 	D3D12_HEAP_PROPERTIES prop = {};
@@ -360,15 +449,14 @@ ComPtr<ID3D12Resource> TextureMethod::UploadTextureData(
 
 	// 転送後は利用できるように D3D12_RESOUCE_STATE_COPY_DESC -> D3D12_RESOUCE_STATE_GENETIC_READ へ変更
 	D3D12_RESOURCE_BARRIER barrier = {};
-	barrier.Type                   = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
-	barrier.Flags                  = D3D12_RESOURCE_BARRIER_FLAG_NONE;
-	barrier.Transition.pResource   = texture;
+	barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+	barrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
+	barrier.Transition.pResource = texture;
 	barrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
 	barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_COPY_DEST;
-	barrier.Transition.StateAfter  = D3D12_RESOURCE_STATE_GENERIC_READ;
+	barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_GENERIC_READ;
 
 	commandList->ResourceBarrier(1, &barrier);
 
 	return intermediateResource;
 }
-

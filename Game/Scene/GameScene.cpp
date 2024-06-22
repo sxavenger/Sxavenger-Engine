@@ -33,7 +33,6 @@ void GameScene::Run() {
 	MyEngine::camera3D_ = camera.get();*/
 
 	MyEngine::TransitionProcessSingle();
-	MyEngine::EnableTextures();
 
 	////////////////////////////////////////////////////////////////////////////////////////////
 	// メインループ
@@ -77,6 +76,9 @@ void GameScene::Run() {
 
 void GameScene::Init() {
 
+	// particle
+	particle_ = std::make_unique<Particle>();
+
 	// TLAS 
 	tlas_ = std::make_unique<TopLevelAS>();
 
@@ -118,17 +120,19 @@ void GameScene::Update() {
 	subobjectManager_->SetBlases(tlas_.get());
 
 	tlas_->EndBlasSetup();
+
+	particle_->Update();
 }
 
 void GameScene::Draw() {
 
-	auto commandList = MyEngine::GetCommandList();
+	/*auto commandList = MyEngine::GetCommandList();*/
 
 	//=========================================================================================
 	// レイトレーシング描画処理
 	//=========================================================================================
 
-	{
+	/*{
 		RayTracingEngine::BeginRayTracing(tlas_.get());
 
 		commandList->SetComputeRootDescriptorTable(0, tlas_->GetGPUDescriptorHandle());
@@ -139,7 +143,7 @@ void GameScene::Draw() {
 	}
 
 	MyEngine::TransitionProcess();
-	console->OutputRayTracingResult(RayTracingEngine::GetDxrCommon()->GetResultBufferTexture());
+	console->OutputRayTracingResult(RayTracingEngine::GetDxrCommon()->GetResultBufferTexture());*/
 
 	/*//-----------------------------------------------------------------------------------------
 	// postEffect test
@@ -160,6 +164,7 @@ void GameScene::Draw() {
 		MyEngine::BeginOffScreen(console->GetSceneTexture());
 		MyEngine::camera3D_ = console->GetDebugCamera();
 
+		particle_->Draw();
 
 
 		MyEngine::EndOffScreen();
@@ -182,7 +187,10 @@ void GameScene::Draw() {
 	{
 		MyEngine::BeginScreenDraw();
 
-		fullscreen_->DrawTexture(RayTracingEngine::GetDxrCommon()->GetResultBufferTexture());
+		MyEngine::GetDxCommon()->CopyResource(
+			MyEngine::GetDxCommon()->GetSwapChainObj()->GetResource(MyEngine::GetDxCommon()->GetSwapChainObj()->GetCurrentBackBufferIndex()), D3D12_RESOURCE_STATE_RENDER_TARGET,
+			console->GetSceneTexture()->GetResource(), D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE
+		);
 
 		/*
 			ImGuiの関係上、スクリーン描画は最後にする

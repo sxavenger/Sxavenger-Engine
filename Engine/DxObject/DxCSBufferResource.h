@@ -53,10 +53,13 @@ namespace DxObject { //!< DxSource, use Compute Shader
 
 		void Term();
 
-		//! @brief 現在のuavResourceをreadBackResourceにコピー
-		void CopyReadBack(ID3D12GraphicsCommandList* commandList);
+		//! @brief writeResourceをuavResourceにコピー
+		void Write(ID3D12GraphicsCommandList* commandList);
 
-		const D3D12_GPU_VIRTUAL_ADDRESS GetGPUVirtualAddressUAV() const {
+		//! @brief uavResourceをreadBackResourceにコピー
+		void ReadBack(ID3D12GraphicsCommandList* commandList);
+
+		const D3D12_GPU_VIRTUAL_ADDRESS GetGPUVirtualAddress() const {
 			return uavResource_->GetGPUVirtualAddress();
 		}
 
@@ -72,8 +75,9 @@ namespace DxObject { //!< DxSource, use Compute Shader
 
 		/* resources */
 
-		ComPtr<ID3D12Resource> uavResource_;
-		ComPtr<ID3D12Resource> readBackResource_;
+		ComPtr<ID3D12Resource> uavResource_;       //!< RW用のResource
+		ComPtr<ID3D12Resource> writeResource_;     //!< 書き込み用のResource
+		ComPtr<ID3D12Resource> readBackResource_;  //!< 読み取り用のResource
 
 		/* parameter */
 
@@ -101,12 +105,17 @@ namespace DxObject { //!< DxSource, use Compute Shader
 
 		void Init();
 
-		const T& GetData(uint32_t index) {
+		/* data関係 */
+
+		void SetWriteData(uint32_t index, const T& value) {
+			assert(index < indexSize_);
+			writeDataArray_[index] = value;
+		}
+
+		const T& GetReadBackData(uint32_t index) {
 			assert(index < indexSize_);
 			return readBackDataArray_[index];
 		}
-
-		T* GetDataArray() const { return readBackDataArray_; }
 
 	private:
 
@@ -114,8 +123,10 @@ namespace DxObject { //!< DxSource, use Compute Shader
 		// private variables
 		//=========================================================================================
 
+		T* writeDataArray_;
 		T* readBackDataArray_;
-
+		//!< のちに一つにするかも
+		
 	};
 
 }
@@ -143,5 +154,6 @@ namespace DxMethods {
 template<typename T>
 inline void DxObject::CSBufferResource<T>::Init() {
 	// mapping処理の記述
+	writeResource_->Map(0, nullptr, reinterpret_cast<void**>(&writeDataArray_));
 	readBackResource_->Map(0, nullptr, reinterpret_cast<void**>(&readBackDataArray_));
 }

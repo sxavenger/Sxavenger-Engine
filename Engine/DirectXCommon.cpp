@@ -64,10 +64,10 @@ void DirectXCommon::EndFrame() {
 
 }
 
-void DirectXCommon::BeginOffscreen(Texture* dummyTexture) {
-	assert(dummyTexture != nullptr && offscreenDummyTexture_ == nullptr);
+void DirectXCommon::BeginOffscreen(Texture* renderTexture) {
+	assert(renderTexture != nullptr && offscreenDummyTexture_ == nullptr);
 	
-	offscreenDummyTexture_ = dummyTexture;
+	offscreenDummyTexture_ = renderTexture;
 	
 	// コマンドリストの取得
 	auto commandList = command_->GetCommandList();
@@ -83,7 +83,7 @@ void DirectXCommon::BeginOffscreen(Texture* dummyTexture) {
 		&barrier
 	);
 
-	D3D12_CPU_DESCRIPTOR_HANDLE handle_RTV = offscreenDummyTexture_->GetRTVHandleCPU();
+	D3D12_CPU_DESCRIPTOR_HANDLE handle_RTV = offscreenDummyTexture_->GetCPUHandleRTV();
 
 	commandList->OMSetRenderTargets(
 		1,
@@ -163,6 +163,40 @@ void DirectXCommon::BeginScreenDraw() {
 		1.0f,
 		0, 0, nullptr
 	);
+}
+
+void DirectXCommon::BeginUnorderedAccess(Texture* dummyTexture) {
+
+	// コマンドリストの取得
+	ID3D12GraphicsCommandList* commandList = command_->GetCommandList();
+
+	// dummyTextureを書き込み状態に遷移
+	{
+		D3D12_RESOURCE_BARRIER barrier = {};
+		barrier.Type                   = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+		barrier.Transition.pResource   = dummyTexture->GetResource();
+		barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
+		barrier.Transition.StateAfter  = D3D12_RESOURCE_STATE_UNORDERED_ACCESS;
+
+		commandList->ResourceBarrier(1, &barrier);
+	}
+}
+
+void DirectXCommon::EndUnorderedAccess(Texture* dummyTexture) {
+
+	// コマンドリストの取得
+	ID3D12GraphicsCommandList* commandList = command_->GetCommandList();
+
+	// dummyTextureを読み込み状態に遷移
+	{
+		D3D12_RESOURCE_BARRIER barrier = {};
+		barrier.Type                   = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+		barrier.Transition.pResource   = dummyTexture->GetResource();
+		barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_UNORDERED_ACCESS;
+		barrier.Transition.StateAfter  = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
+
+		commandList->ResourceBarrier(1, &barrier);
+	}
 }
 
 void DirectXCommon::TransitionProcess() {

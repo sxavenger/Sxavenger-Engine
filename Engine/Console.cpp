@@ -42,11 +42,11 @@ Console* Console::GetInstance() {
 void Console::Init() {
 	dxCommon_ = MyEngine::GetDxCommon();
 
-	sceneTexture_ = MyEngine::CreateRenderTexture(kWindowWidth, kWindowHeight, "sceneTexture");
+	sceneTexture_ = MyEngine::CreateRenderTexture("sceneTexture", kWindowWidth, kWindowHeight);
 
 	debugCamera_ = std::make_unique<Camera3D>();
-	/*debugCamera_->SetAttributeName("debugCamera");*/
-
+	debugCamera_->SetAttributeName("sceneCamera");
+	SetAttribute(debugCamera_.get());
 
 }
 
@@ -144,7 +144,7 @@ void Console::OutputScene() {
 	// todo: window開かれてる状態を保存させる. foucusとは違う
 	isFocusDebugScene_; //!< 名前もfoucusからいい感じに変更させる
 
-	SetTextureImGui(sceneTexture_->GetSRVHandleGPU());
+	SetTextureImGui(sceneTexture_->GetGPUHandleSRV());
 
 	ImGui::End();
 }

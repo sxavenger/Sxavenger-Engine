@@ -85,7 +85,7 @@ private:
 	// CameraData structure
 	////////////////////////////////////////////////////////////////////////////////////////////
 	struct CameraForGPU {
-		Vector4f position;
+		Vector4f  position;
 		Matrix4x4 viewProjMatrix = Matrix4x4::MakeIdentity();
 	};
 

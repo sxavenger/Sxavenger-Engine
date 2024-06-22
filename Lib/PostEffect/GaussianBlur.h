@@ -49,7 +49,7 @@ public:
 	);
 
 	const D3D12_GPU_DESCRIPTOR_HANDLE& GetTexture() {
-		return outputTexture_->GetSRVHandleGPU();
+		return outputTexture_->GetGPUHandleSRV();
 	}
 
 	void SetAttributeImGui() override;

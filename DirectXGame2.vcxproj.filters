@@ -127,8 +127,8 @@
     <Filter Include="Engine\DxrObject">
       <UniqueIdentifier>{78ce40ef-f1af-445c-a1f6-4e179adbbf0f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Resource\hlsl\test">
-      <UniqueIdentifier>{6ec66c81-04cd-4b81-b5a6-8998ca20868c}</UniqueIdentifier>
+    <Filter Include="Resource\hlsl\Particle">
+      <UniqueIdentifier>{6929084b-93e2-465d-b712-ccd475f37a97}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -391,6 +391,12 @@
     <ClCompile Include="Engine\DxObject\DxGraphicsPipeline.cpp">
       <Filter>Engine\DxObject\source</Filter>
     </ClCompile>
+    <ClCompile Include="Game\Particle.cpp">
+      <Filter>Game</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\DxObject\DxCSDimensionBuffer.cpp">
+      <Filter>Engine\DxObject\source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\MyEngine.h">
@@ -624,6 +630,12 @@
     <ClInclude Include="Engine\DxObject\DxGraphicsPipeline.h">
       <Filter>Engine\DxObject\include</Filter>
     </ClInclude>
+    <ClInclude Include="Game\Particle.h">
+      <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\DxObject\DxCSDimensionBuffer.h">
+      <Filter>Engine\DxObject\include</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />
@@ -659,6 +671,9 @@
     </None>
     <None Include="Resources\hlsl\FullScreen.hlsli">
       <Filter>Resource\hlsl\FullScreen</Filter>
+    </None>
+    <None Include="Resources\hlsl\Particle.hlsli">
+      <Filter>Resource\hlsl\Particle</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -706,8 +721,14 @@
     <FxCompile Include="Resources\hlsl\FullScreen.VS.hlsl">
       <Filter>Resource\hlsl\FullScreen</Filter>
     </FxCompile>
-    <FxCompile Include="Resources\hlsl\test.CS.hlsl">
-      <Filter>Resource\hlsl\test</Filter>
+    <FxCompile Include="Resources\hlsl\Particle.CS.hlsl">
+      <Filter>Resource\hlsl\Particle</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\hlsl\Particle.PS.hlsl">
+      <Filter>Resource\hlsl\Particle</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\hlsl\Particle.VS.hlsl">
+      <Filter>Resource\hlsl\Particle</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

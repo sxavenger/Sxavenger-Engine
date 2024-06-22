@@ -74,8 +74,6 @@ public:
 
 	static void TransitionProcessSingle();
 
-	static void EnableTextures();
-
 	//! @brief プロセスメッセージを取得
 	//! 
 	//! @retval 1 ゲーム終了
@@ -102,13 +100,14 @@ public:
 
 	static TextureManager* GetTextureManager();
 
-	static Texture* CreateRenderTexture(int32_t width, int32_t height, const std::string& key, const Vector4f& clearColor = defaultClearColor);
+	static Texture* CreateRenderTexture(const std::string& key, int32_t textureWidth, int32_t textureHeight, const Vector4f& clearColor = defaultClearColor);
 
-	static void LoadTexture(const std::string& filePath);
+	static Texture* LoadTexture(const std::string& filePath);
+
+	static Texture* GetTexture(const std::string& textureKey);
 
 	static const D3D12_GPU_DESCRIPTOR_HANDLE& GetTextureHandleGPU(const std::string& textureKey);
 
-	static Texture* GetTexture(const std::string& textureKey);
 
 	//-----------------------------------------------------------------------------------------
 	// Input関係

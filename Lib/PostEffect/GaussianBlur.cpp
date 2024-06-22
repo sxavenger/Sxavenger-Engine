@@ -45,7 +45,7 @@ void GaussianBlur::Init() {
 	matrix_->operator[](0) = Matrix::MakeOrthographic(0.0f, 0.0f, static_cast<float>(kWindowWidth), static_cast<float>(kWindowHeight), 0.0f, 100.0f);
 
 	outputTexture_ = std::make_unique<RenderTexture>();
-	outputTexture_->Create(kWindowWidth, kWindowHeight, MyEngine::GetDxCommon());
+	outputTexture_->Create(MyEngine::GetDxCommon(), kWindowWidth, kWindowHeight);
 
 	SetThisAttribute("GaussianBlur");
 
@@ -58,14 +58,14 @@ void GaussianBlur::Init() {
 	desc.Resize(3, 1);
 
 	//!< camera2D
-	desc.SetCBV(0, SHADER_VERTEX, 0);
+	desc.SetCBV(0, VISIBILITY_VERTEX, 0);
 
 	//!< blurParam
-	desc.SetCBV(1, SHADER_PIXEL, 0);
+	desc.SetCBV(1, VISIBILITY_PIXEL, 0);
 
 	//!< textureBuffer
-	desc.SetSRV(2, SHADER_PIXEL, 0);
-	desc.SetSampler(0, MODE_WRAP, SHADER_PIXEL, 0);
+	desc.SetSRV(2, VISIBILITY_PIXEL, 0);
+	desc.SetSampler(0, MODE_WRAP, VISIBILITY_PIXEL, 0);
 
 	pipeline_ = std::make_unique<GraphicsPipeline>();
 	pipeline_->CreatePipeline(MyEngine::GetDevicesObj(), blob_.get(), kBlendModeNormal);

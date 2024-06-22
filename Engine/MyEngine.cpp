@@ -68,7 +68,7 @@ void MyEngine::Initialize(int32_t kWindowWidth, int32_t kWindowHeight, const cha
 	{
 		sDirectXRCommon = DirectXRCommon::GetInstance();
 		sDirectXRCommon->Init(sWinApp, kWindowWidth, kWindowHeight);
-		sDirectXRCommon->InitRayTracing(kWindowWidth, kWindowHeight);
+		/*sDirectXRCommon->InitRayTracing(kWindowWidth, kWindowHeight);*/
 		ExternalLogger::Write("Complete Initialize: sDirectXRCommon");
 
 	}
@@ -89,7 +89,7 @@ void MyEngine::Initialize(int32_t kWindowWidth, int32_t kWindowHeight, const cha
 		ExternalLogger::Write("Complete Initialize: sTextureManager");
 
 		// オフスク用のテクスチャの生成 todo: consoleに移動
-		sTextureManager->CreateRenderTexture(kWindowWidth, kWindowHeight, "offscreen");
+		sTextureManager->CreateRenderTexture("offscreen", kWindowWidth, kWindowHeight);
 	}
 
 	// Inputの初期化
@@ -146,10 +146,6 @@ void MyEngine::TransitionProcessSingle() {
 	sDirectXRCommon->TransitionSingleAllocator();
 }
 
-void MyEngine::EnableTextures() {
-	sTextureManager->EnableTexture();
-}
-
 void MyEngine::EndFrame() {
 	sImGuiManager->End();
 	sDirectXRCommon->EndFrame();
@@ -157,7 +153,6 @@ void MyEngine::EndFrame() {
 }
 
 void MyEngine::BeginDraw() {
-	EnableTextures();
 }
 
 int MyEngine::ProcessMessage() {
@@ -199,19 +194,19 @@ TextureManager* MyEngine::GetTextureManager() {
 	return sTextureManager;
 }
 
-Texture* MyEngine::CreateRenderTexture(int32_t width, int32_t height, const std::string& key, const Vector4f& clearColor) {
-	sTextureManager->CreateRenderTexture(width, height, key, clearColor);
-	return sTextureManager->GetTexture(key);
+Texture* MyEngine::CreateRenderTexture(const std::string& key, int32_t textureWidth, int32_t textureHeight, const Vector4f& clearColor) {
+	assert(sTextureManager != nullptr);
+	return sTextureManager->CreateRenderTexture(key, textureWidth, textureHeight, clearColor);
 }
 
-void MyEngine::LoadTexture(const std::string& filePath) {
+Texture* MyEngine::LoadTexture(const std::string& filePath) {
 	assert(sTextureManager != nullptr);
-	sTextureManager->LoadTexture(filePath);
+	return sTextureManager->LoadTexture(filePath);
 }
 
 const D3D12_GPU_DESCRIPTOR_HANDLE& MyEngine::GetTextureHandleGPU(const std::string& textureKey) {
 	assert(sTextureManager != nullptr);
-	return sTextureManager->GetHandleGPU(textureKey);
+	return sTextureManager->GetGPUHandle(textureKey);
 }
 
 Texture* MyEngine::GetTexture(const std::string& textureKey) {
