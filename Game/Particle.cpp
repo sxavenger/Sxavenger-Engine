@@ -60,19 +60,16 @@ void Particle::Term() {
 
 void Particle::Update() {
 
-	if (isUpdate) {
+	auto commadList = MyEngine::GetCommandList();
 
-		auto commadList = MyEngine::GetCommandList();
+	// update cs
+	csPipelineState_->SetCSPipeline();
 
-		// update cs
-		csPipelineState_->SetCSPipeline();
+	commadList->SetComputeRootUnorderedAccessView(0, csBuffer_->GetGPUVirtualAddress());
 
-		commadList->SetComputeRootUnorderedAccessView(0, csBuffer_->GetGPUVirtualAddress());
+	csPipelineState_->Dispatch(2, 2, 2);
 
-		csPipelineState_->Dispatch(2, 2, 2);
-
-		/*isUpdate = false;*/
-	}
+	/*isUpdate = false;*/
 }
 
 void Particle::Draw() {
@@ -91,7 +88,4 @@ void Particle::Draw() {
 }
 
 void Particle::SetAttributeImGui() {
-	if (ImGui::Button("isUpdate")) {
-		isUpdate = true;
-	}
 }

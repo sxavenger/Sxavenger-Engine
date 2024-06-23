@@ -63,6 +63,36 @@ void DxObject::GraphicRootSignatureDesc::SetSampler(uint32_t index, TextureMode 
 	samplers[index].ShaderVisibility = static_cast<D3D12_SHADER_VISIBILITY>(stage);
 }
 
+////////////////////////////////////////////////////////////////////////////////////////////
+// GraphicsInputLayoutDesc structure
+////////////////////////////////////////////////////////////////////////////////////////////
+
+void DxObject::GraphicsInputLayoutDesc::Clear() {
+	elements.clear();
+	elements.shrink_to_fit();
+}
+
+void DxObject::GraphicsInputLayoutDesc::SetElement(const std::string& semanticName, uint32_t semanticIndex, DXGI_FORMAT format) {
+
+	D3D12_INPUT_ELEMENT_DESC element = {};
+	element.SemanticName      = semanticName.c_str();
+	element.SemanticIndex     = semanticIndex;
+	element.Format            = format;
+	element.AlignedByteOffset = D3D12_APPEND_ALIGNED_ELEMENT;
+
+	elements.push_back(element);
+
+}
+
+D3D12_INPUT_LAYOUT_DESC DxObject::GraphicsInputLayoutDesc::GetInputLayout() const {
+
+	D3D12_INPUT_LAYOUT_DESC result = {};
+	result.pInputElementDescs = elements.data();
+	result.NumElements        = static_cast<UINT>(elements.size());
+
+	return result;
+}
+
 //=========================================================================================
 // static variables
 //=========================================================================================
@@ -110,8 +140,7 @@ void DxObject::GraphicsPipeline::CreatePipeline(Devices* devices, GraphicsBlob* 
 	assert(blob_ != nullptr);
 	assert(rootSignature_ != nullptr);
 
-	// inputLayoutの設定
-	// TODO: InputLayout structure
+	// inputLayoutの設定 default
 	D3D12_INPUT_ELEMENT_DESC descInputElement[3] = {};
 	descInputElement[0].SemanticName      = "POSITION";
 	descInputElement[0].SemanticIndex     = 0;
@@ -130,92 +159,56 @@ void DxObject::GraphicsPipeline::CreatePipeline(Devices* devices, GraphicsBlob* 
 	descInputLayout.pInputElementDescs = descInputElement;
 	descInputLayout.NumElements        = _countof(descInputElement);
 
-	// rasterizerの設定
+	// rasterizerの設定 default
 	// TODO: Rasterizer structure
 	D3D12_RASTERIZER_DESC descRasterizer = {};
 	descRasterizer.CullMode = D3D12_CULL_MODE_BACK;
 	descRasterizer.FillMode = D3D12_FILL_MODE_SOLID;
 
-	// DepthStensilStateの設定
+	// DepthStensilStateの設定 default
 	// TODO: depthStencil structure
 	D3D12_DEPTH_STENCIL_DESC descDepthStencil = {};
 	descDepthStencil.DepthEnable    = true;
 	descDepthStencil.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ALL;
 	descDepthStencil.DepthFunc      = D3D12_COMPARISON_FUNC_LESS_EQUAL;
 
-	// deviceの取り出し
-	auto device = devices->GetDevice();
+	CreatePipelineState(
+		devices->GetDevice(),
+		descInputLayout, descRasterizer, descDepthStencil,
+		blendMode
+	);
+}
 
-	// blobsの取り出し
-	auto& blobs = blob_->GetGraphicsBlobs();
+void DxObject::GraphicsPipeline::CreatePipeline(
+	Devices* devices,
+	GraphicsBlob* graphicBlob, const GraphicsInputLayoutDesc& layout, BlendMode blendMode) {
 
-	// Pipelineの設定
-	if (blob_->IsUseMeshPipeline()) {
-		//!< mesh piplineの設定
-		D3DX12_MESH_SHADER_PIPELINE_STATE_DESC desc = {};
-		desc.pRootSignature     = rootSignature_.Get();
-		desc.RasterizerState    = descRasterizer;
-		desc.BlendState         = blendState_->operator[](blendMode);
-		desc.DepthStencilState  = descDepthStencil;
-		desc.DSVFormat          = DXGI_FORMAT_D24_UNORM_S8_UINT;
-		desc.SampleMask         = UINT_MAX;
-		desc.SampleDesc.Quality = 0;
-		desc.SampleDesc.Count   = 1;
-		desc.NumRenderTargets   = 1;
-		desc.RTVFormats[0]      = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
-		desc.Flags              = D3D12_PIPELINE_STATE_FLAG_NONE;
 
-		// blobの設定
-		desc.MS = { blobs[GraphicShaderType::GRAPHICS_MESH]->GetBufferPointer(), blobs[GraphicShaderType::GRAPHICS_MESH]->GetBufferSize() };
-		desc.PS = { blobs[GraphicShaderType::GRAPHICS_PIXEL]->GetBufferPointer(), blobs[GraphicShaderType::GRAPHICS_PIXEL]->GetBufferSize() };
-
-		// create
-		CD3DX12_PIPELINE_MESH_STATE_STREAM psoStream = CD3DX12_PIPELINE_MESH_STATE_STREAM(desc);
-
-		D3D12_PIPELINE_STATE_STREAM_DESC descStream = {};
-		descStream.pPipelineStateSubobjectStream = &psoStream;
-		descStream.SizeInBytes                   = sizeof(psoStream);
-
-		auto hr = device->CreatePipelineState(
-			&descStream,
-			IID_PPV_ARGS(&pipeline_)
-		);
-
-		assert(SUCCEEDED(hr));
-		return;
-
-	} else {
-		//!< vertex pipeline設定
-		D3D12_GRAPHICS_PIPELINE_STATE_DESC desc = {};
-		desc.pRootSignature        = rootSignature_.Get();
-		desc.InputLayout           = descInputLayout;
-		desc.BlendState            = blendState_->operator[](blendMode);
-		desc.RasterizerState       = descRasterizer;
-		desc.NumRenderTargets      = 1;
-		desc.RTVFormats[0]         = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
-		desc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
-		desc.SampleDesc.Count      = 1;
-		desc.SampleMask            = D3D12_DEFAULT_SAMPLE_MASK;
-		desc.DepthStencilState     = descDepthStencil;
-		desc.DSVFormat             = DXGI_FORMAT_D24_UNORM_S8_UINT;
-
-		// blobの設定
-		desc.VS = { blobs[GraphicShaderType::GRAPHICS_VERTEX]->GetBufferPointer(), blobs[GraphicShaderType::GRAPHICS_VERTEX]->GetBufferSize() };
-		desc.PS = { blobs[GraphicShaderType::GRAPHICS_PIXEL]->GetBufferPointer(), blobs[GraphicShaderType::GRAPHICS_PIXEL]->GetBufferSize() };
-
-		if (blobs[GraphicShaderType::GRAPHICS_GEOMETRY] != nullptr) {
-			desc.GS = { blobs[GraphicShaderType::GRAPHICS_GEOMETRY]->GetBufferPointer(), blobs[GraphicShaderType::GRAPHICS_GEOMETRY]->GetBufferSize() };
-		}
-
-		// create
-		auto hr = device->CreateGraphicsPipelineState(
-			&desc,
-			IID_PPV_ARGS(&pipeline_)
-		);
-
-		assert(SUCCEEDED(hr));
-		return;
+	if (graphicBlob != nullptr) {
+		// 引数の保存
+		blob_ = graphicBlob;
 	}
+
+	// menberの確認
+	assert(blob_ != nullptr);
+	assert(rootSignature_ != nullptr);
+
+	// rasterizerの設定
+	D3D12_RASTERIZER_DESC descRasterizer = {};
+	descRasterizer.CullMode = D3D12_CULL_MODE_BACK;
+	descRasterizer.FillMode = D3D12_FILL_MODE_SOLID;
+
+	// DepthStensilStateの設定
+	D3D12_DEPTH_STENCIL_DESC descDepthStencil = {};
+	descDepthStencil.DepthEnable    = true;
+	descDepthStencil.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ALL;
+	descDepthStencil.DepthFunc      = D3D12_COMPARISON_FUNC_LESS_EQUAL;
+
+	CreatePipelineState(
+		devices->GetDevice(),
+		layout.GetInputLayout(), descRasterizer, descDepthStencil,
+		blendMode
+	);
 }
 
 void DxObject::GraphicsPipeline::SetPipeline(ID3D12GraphicsCommandList* commandList) {
@@ -249,5 +242,84 @@ void DxObject::GraphicsPipeline::CreateViewports(int32_t clientWidth, int32_t cl
 		scissorRect_.right  = clientWidth;
 		scissorRect_.top    = 0;
 		scissorRect_.bottom = clientHeight;
+	}
+}
+
+void DxObject::GraphicsPipeline::CreatePipelineState(
+	ID3D12Device8* device,
+	const D3D12_INPUT_LAYOUT_DESC& inputLayout, const D3D12_RASTERIZER_DESC& rasterizer, const D3D12_DEPTH_STENCIL_DESC& depthStencil,
+	BlendMode blendMode) {
+
+	// blobsの取り出し
+	auto& blobs = blob_->GetGraphicsBlobs();
+
+	// Pipelineの設定
+	if (blob_->IsUseMeshPipeline()) {
+
+		//!< mesh piplineの設定
+		D3DX12_MESH_SHADER_PIPELINE_STATE_DESC desc = {};
+		desc.pRootSignature     = rootSignature_.Get();
+		desc.RasterizerState    = rasterizer;
+		desc.BlendState         = blendState_->operator[](blendMode);
+		desc.DepthStencilState  = depthStencil;
+		desc.DSVFormat          = DXGI_FORMAT_D24_UNORM_S8_UINT;
+		desc.SampleMask         = UINT_MAX;
+		desc.SampleDesc.Quality = 0;
+		desc.SampleDesc.Count   = 1;
+		desc.NumRenderTargets   = 1;
+		desc.RTVFormats[0]      = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
+		desc.Flags              = D3D12_PIPELINE_STATE_FLAG_NONE;
+
+		// blobの設定
+		desc.MS = { blobs[GraphicShaderType::GRAPHICS_MESH]->GetBufferPointer(), blobs[GraphicShaderType::GRAPHICS_MESH]->GetBufferSize() };
+		desc.PS = { blobs[GraphicShaderType::GRAPHICS_PIXEL]->GetBufferPointer(), blobs[GraphicShaderType::GRAPHICS_PIXEL]->GetBufferSize() };
+
+		// create
+		CD3DX12_PIPELINE_MESH_STATE_STREAM psoStream = CD3DX12_PIPELINE_MESH_STATE_STREAM(desc);
+
+		D3D12_PIPELINE_STATE_STREAM_DESC descStream = {};
+		descStream.pPipelineStateSubobjectStream = &psoStream;
+		descStream.SizeInBytes                   = sizeof(psoStream);
+
+		auto hr = device->CreatePipelineState(
+			&descStream,
+			IID_PPV_ARGS(&pipeline_)
+		);
+
+		assert(SUCCEEDED(hr));
+		return;
+
+	} else {
+
+		//!< vertex pipeline設定
+		D3D12_GRAPHICS_PIPELINE_STATE_DESC desc = {};
+		desc.pRootSignature        = rootSignature_.Get();
+		desc.InputLayout           = inputLayout;
+		desc.BlendState            = blendState_->operator[](blendMode);
+		desc.RasterizerState       = rasterizer;
+		desc.NumRenderTargets      = 1;
+		desc.RTVFormats[0]         = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
+		desc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
+		desc.SampleDesc.Count      = 1;
+		desc.SampleMask            = D3D12_DEFAULT_SAMPLE_MASK;
+		desc.DepthStencilState     = depthStencil;
+		desc.DSVFormat             = DXGI_FORMAT_D24_UNORM_S8_UINT;
+
+		// blobの設定
+		desc.VS = { blobs[GraphicShaderType::GRAPHICS_VERTEX]->GetBufferPointer(), blobs[GraphicShaderType::GRAPHICS_VERTEX]->GetBufferSize() };
+		desc.PS = { blobs[GraphicShaderType::GRAPHICS_PIXEL]->GetBufferPointer(), blobs[GraphicShaderType::GRAPHICS_PIXEL]->GetBufferSize() };
+
+		if (blobs[GraphicShaderType::GRAPHICS_GEOMETRY] != nullptr) {
+			desc.GS = { blobs[GraphicShaderType::GRAPHICS_GEOMETRY]->GetBufferPointer(), blobs[GraphicShaderType::GRAPHICS_GEOMETRY]->GetBufferSize() };
+		}
+
+		// create
+		auto hr = device->CreateGraphicsPipelineState(
+			&desc,
+			IID_PPV_ARGS(&pipeline_)
+		);
+
+		assert(SUCCEEDED(hr));
+		return;
 	}
 }

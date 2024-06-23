@@ -61,6 +61,12 @@ void DxObject::CSRootSignatureDesc::SetVirtualUAV(uint32_t index, UINT shaderReg
 	params[index].Descriptor.ShaderRegister = shaderRegister;
 }
 
+void DxObject::CSRootSignatureDesc::SetVirtualSRV(uint32_t index, UINT shaderRegister) {
+	params[index].ParameterType             = D3D12_ROOT_PARAMETER_TYPE_SRV;
+	params[index].ShaderVisibility          = D3D12_SHADER_VISIBILITY_ALL;
+	params[index].Descriptor.ShaderRegister = shaderRegister;
+}
+
 void DxObject::CSRootSignatureDesc::SetSampler(uint32_t index, TextureMode mode, UINT shaderRegister) {
 	samplers[index].Filter           = D3D12_FILTER_MIN_MAG_MIP_LINEAR;
 	samplers[index].AddressU         = static_cast<D3D12_TEXTURE_ADDRESS_MODE>(mode);

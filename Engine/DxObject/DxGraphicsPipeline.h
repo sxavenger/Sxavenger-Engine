@@ -54,9 +54,9 @@ namespace DxObject {
 	};
 
 	////////////////////////////////////////////////////////////////////////////////////////////
-	// GraphicsRootSignatureDesc class
+	// GraphicsRootSignatureDesc structure
 	////////////////////////////////////////////////////////////////////////////////////////////
-	class GraphicRootSignatureDesc {
+	struct GraphicRootSignatureDesc {
 	public:
 
 		//=========================================================================================
@@ -99,6 +99,32 @@ namespace DxObject {
 	};
 
 	////////////////////////////////////////////////////////////////////////////////////////////
+	// GraphicsInputLayoutDesc structure
+	////////////////////////////////////////////////////////////////////////////////////////////
+	struct GraphicsInputLayoutDesc {
+	public:
+
+		//=========================================================================================
+		// public methods
+		//=========================================================================================
+
+		~GraphicsInputLayoutDesc() { Clear(); }
+
+		void Clear();
+
+		void SetElement(const std::string& semanticName, uint32_t semanticIndex, DXGI_FORMAT format);
+
+		D3D12_INPUT_LAYOUT_DESC GetInputLayout() const;
+
+		//=========================================================================================
+		// public variables
+		//=========================================================================================
+
+		std::vector<D3D12_INPUT_ELEMENT_DESC> elements;
+
+	};
+
+	////////////////////////////////////////////////////////////////////////////////////////////
 	// GraphicsPipeline class
 	////////////////////////////////////////////////////////////////////////////////////////////
 	class GraphicsPipeline {
@@ -110,9 +136,23 @@ namespace DxObject {
 
 		GraphicsPipeline() { CreateViewports(); }
 
+		/* CreateRootSignature */
+
 		void CreateRootSiganture(Devices* devices, const GraphicRootSignatureDesc& descs);
 
-		void CreatePipeline(Devices* devices, GraphicsBlob* graphicBlob, BlendMode blendMode);
+		/* CreatePipeline */
+
+		void CreatePipeline(
+			Devices* devices,
+			GraphicsBlob* graphicBlob, BlendMode blendMode
+		);
+
+		void CreatePipeline(
+			Devices* devices,
+			GraphicsBlob* graphicBlob, const GraphicsInputLayoutDesc& layout, BlendMode blendMode
+		);
+
+		/* setter */
 
 		void SetPipeline(ID3D12GraphicsCommandList* commandList);
 
@@ -145,6 +185,13 @@ namespace DxObject {
 		//=========================================================================================
 
 		void CreateViewports(int32_t clientWidth = kWindowWidth, int32_t clientHeight = kWindowHeight);
+
+		//! @brief pipeline_の生成
+		void CreatePipelineState(
+			ID3D12Device8* device,
+			const D3D12_INPUT_LAYOUT_DESC& inputLayout, const D3D12_RASTERIZER_DESC& rasterizer, const D3D12_DEPTH_STENCIL_DESC& depthStencil,
+			BlendMode blendMode
+		);
 
 	};
 }

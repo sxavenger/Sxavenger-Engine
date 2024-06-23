@@ -31,9 +31,9 @@
 namespace DxObject { //!< DxSource
 
 	////////////////////////////////////////////////////////////////////////////////////////////
-	// CSRootSignatureDesc class
+	// CSRootSignatureDesc structure
 	////////////////////////////////////////////////////////////////////////////////////////////
-	class CSRootSignatureDesc {
+	struct CSRootSignatureDesc {
 	public:
 
 		//=========================================================================================
@@ -53,6 +53,8 @@ namespace DxObject { //!< DxSource
 		void SetUAV(uint32_t index, UINT shaderRegister);
 
 		void SetVirtualUAV(uint32_t index, UINT shaderRegister); // virtualAddress
+
+		void SetVirtualSRV(uint32_t index, UINT shaderRegister); // virtualAddress
 
 		void SetSampler(uint32_t index, TextureMode mode, UINT shaderRegister);
 

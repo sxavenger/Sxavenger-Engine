@@ -76,6 +76,4 @@ private:
 	// IA
 	std::unique_ptr<Model> model_;
 
-	bool isUpdate = true;
-
 };
