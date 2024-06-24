@@ -130,12 +130,20 @@ void MyEngine::BeginScreenDraw() {
 	sDirectXRCommon->BeginScreenDraw();
 }
 
-void MyEngine::BeginOffScreen(Texture* offscreenRenderTexture) {
-	sDirectXRCommon->BeginOffscreen(offscreenRenderTexture);
+void MyEngine::BeginOffscreen(Texture* renderTexture) {
+	sDirectXRCommon->BeginOffscreen(renderTexture);
 }
 
-void MyEngine::EndOffScreen() {
-	sDirectXRCommon->EndOffscreen();
+void MyEngine::EndOffscreen(Texture* renderTexture) {
+	sDirectXRCommon->EndOffscreen(renderTexture);
+}
+
+void MyEngine::BeginOffscreens(Texture* renderTextures[D3D12_SIMULTANEOUS_RENDER_TARGET_COUNT]) {
+	sDirectXRCommon->BeginOffscreens(renderTextures);
+}
+
+void MyEngine::EndOffscreens(Texture* renderTextures[D3D12_SIMULTANEOUS_RENDER_TARGET_COUNT]) {
+	sDirectXRCommon->EndOffscreens(renderTextures);
 }
 
 void MyEngine::TransitionProcess() {

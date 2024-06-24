@@ -130,6 +130,12 @@
     <Filter Include="Resource\hlsl\Particle">
       <UniqueIdentifier>{6929084b-93e2-465d-b712-ccd475f37a97}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Lib\Rendering">
+      <UniqueIdentifier>{fe5fa48c-178a-4ebd-840d-13c94cf4c103}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource\hlsl\DefferedRendering">
+      <UniqueIdentifier>{79a07257-cb9c-4b6c-90ae-ebf3d70be071}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
@@ -397,6 +403,12 @@
     <ClCompile Include="Engine\DxObject\DxCSDimensionBuffer.cpp">
       <Filter>Engine\DxObject\source</Filter>
     </ClCompile>
+    <ClCompile Include="Lib\PostEffect\Bloom.cpp">
+      <Filter>Lib\PostEffect</Filter>
+    </ClCompile>
+    <ClCompile Include="Lib\Rendering\DefferedRendering.cpp">
+      <Filter>Lib\Rendering</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\MyEngine.h">
@@ -635,6 +647,12 @@
     </ClInclude>
     <ClInclude Include="Engine\DxObject\DxCSDimensionBuffer.h">
       <Filter>Engine\DxObject\include</Filter>
+    </ClInclude>
+    <ClInclude Include="Lib\PostEffect\Bloom.h">
+      <Filter>Lib\PostEffect</Filter>
+    </ClInclude>
+    <ClInclude Include="Lib\Rendering\DefferedRendering.h">
+      <Filter>Lib\Rendering</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

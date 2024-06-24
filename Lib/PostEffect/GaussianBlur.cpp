@@ -80,7 +80,7 @@ void GaussianBlur::CreateBlurTexture(int32_t width, int32_t height, const D3D12_
 	param_->operator[](0).renderSize = { static_cast<float>(width), static_cast<float>(height) };
 
 	{
-		MyEngine::BeginOffScreen(outputTexture_.get());
+		MyEngine::BeginOffscreen(outputTexture_.get());
 
 		auto commandList = MyEngine::GetCommandList();
 
@@ -102,7 +102,7 @@ void GaussianBlur::CreateBlurTexture(int32_t width, int32_t height, const D3D12_
 		// drawCall
 		commandList->DrawIndexedInstanced(index_->GetIndexSize(), 1, 0, 0, 0);
 
-		MyEngine::EndOffScreen();
+		MyEngine::EndOffscreen(outputTexture_.get());
 	}
 
 }
@@ -114,7 +114,7 @@ void GaussianBlur::CreateBlurTexture(
 	param_->operator[](0).renderSize = { static_cast<float>(width), static_cast<float>(height) };
 
 	{
-		MyEngine::BeginOffScreen(outputTexture);
+		MyEngine::BeginOffscreen(outputTexture);
 
 		auto commandList = MyEngine::GetCommandList();
 
@@ -136,7 +136,7 @@ void GaussianBlur::CreateBlurTexture(
 		// drawCall
 		commandList->DrawIndexedInstanced(index_->GetIndexSize(), 1, 0, 0, 0);
 
-		MyEngine::EndOffScreen();
+		MyEngine::EndOffscreen(outputTexture);
 	}
 }
 

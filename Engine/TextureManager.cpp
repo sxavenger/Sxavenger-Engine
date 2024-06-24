@@ -59,7 +59,9 @@ void Texture::Unload() {
 // RenderTexture class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-void RenderTexture::Create(DirectXCommon* dxCommon, int32_t textureWidth, int32_t textureHeight, const Vector4f& clearColor) {
+void RenderTexture::Create(
+	DirectXCommon* dxCommon,
+	int32_t textureWidth, int32_t textureHeight, const Vector4f& clearColor, DXGI_FORMAT format) {
 	// 引数の保存
 	dxCommon_   = dxCommon;
 	clearColor_ = clearColor;
@@ -74,7 +76,7 @@ void RenderTexture::Create(DirectXCommon* dxCommon, int32_t textureWidth, int32_
 		desc.Width            = textureWidth;
 		desc.Height           = textureHeight;
 		desc.MipLevels        = 1;
-		desc.Format           = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
+		desc.Format           = format;
 		desc.Flags            = D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET;
 		desc.SampleDesc.Count = 1;
 		desc.DepthOrArraySize = 1;
@@ -83,7 +85,7 @@ void RenderTexture::Create(DirectXCommon* dxCommon, int32_t textureWidth, int32_
 		prop.Type = D3D12_HEAP_TYPE_DEFAULT;
 
 		D3D12_CLEAR_VALUE clearValue = {};
-		clearValue.Format   = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
+		clearValue.Format   = format;
 		clearValue.Color[0] = clearColor_.r;
 		clearValue.Color[1] = clearColor_.g;
 		clearValue.Color[2] = clearColor_.b;
@@ -102,7 +104,7 @@ void RenderTexture::Create(DirectXCommon* dxCommon, int32_t textureWidth, int32_
 	// SRV - shaderResourceViewの生成
 	{
 		D3D12_SHADER_RESOURCE_VIEW_DESC desc = {};
-		desc.Format                  = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
+		desc.Format                  = format;
 		desc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
 		desc.ViewDimension           = D3D12_SRV_DIMENSION_TEXTURE2D;
 		desc.Texture2D.MipLevels     = 1;
@@ -138,7 +140,7 @@ void RenderTexture::Term() {
 // DummyTexture class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-void DummyTexture::Create(DirectXCommon* dxCommon, int32_t textureWidth, int32_t textureHeight) {
+void DummyTexture::Create(DirectXCommon* dxCommon, int32_t textureWidth, int32_t textureHeight, DXGI_FORMAT format) {
 	// 引数の保存
 	dxCommon_ = dxCommon;
 
@@ -157,7 +159,7 @@ void DummyTexture::Create(DirectXCommon* dxCommon, int32_t textureWidth, int32_t
 		desc.DepthOrArraySize = 1;
 		desc.SampleDesc.Count = 1;
 		desc.MipLevels        = 1;
-		desc.Format           = DXGI_FORMAT_R8G8B8A8_UNORM; //!< SRGBが多分使えない
+		desc.Format           = format;
 		desc.Flags            = D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS;
 		
 
@@ -174,7 +176,7 @@ void DummyTexture::Create(DirectXCommon* dxCommon, int32_t textureWidth, int32_t
 	// SRV - shaderResourceViewの生成
 	{
 		D3D12_SHADER_RESOURCE_VIEW_DESC desc = {};
-		desc.Format                  = DXGI_FORMAT_R8G8B8A8_UNORM;
+		desc.Format                  = format;
 		desc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
 		desc.ViewDimension           = D3D12_SRV_DIMENSION_TEXTURE2D;
 		desc.Texture2D.MipLevels     = 1;
@@ -194,7 +196,7 @@ void DummyTexture::Create(DirectXCommon* dxCommon, int32_t textureWidth, int32_t
 	{
 		D3D12_UNORDERED_ACCESS_VIEW_DESC desc = {};
 		desc.ViewDimension      = D3D12_UAV_DIMENSION_TEXTURE2D;
-		desc.Format             = DXGI_FORMAT_R8G8B8A8_UNORM;
+		desc.Format             = format;
 
 		// UAVDescriptorの取得
 		descriptorUAV_ = dxCommon_->GetDescriptorsObj()->GetCurrentDescriptor(UAV);
@@ -247,7 +249,7 @@ Texture* TextureManager::LoadTexture(const std::string& filePath) {
 	newTexture->Load(dxCommon_, filePath);
 
 	// containerに代入
-	textureContainer_[filePath] = { std::move(newTexture) };
+	textureContainer_.emplace(filePath, std::move(newTexture));
 	return textureContainer_[filePath].texture.get();
 }
 
@@ -263,7 +265,7 @@ Texture* TextureManager::CreateRenderTexture(const std::string& key, int32_t tex
 	newRenderTexture->Create(dxCommon_, textureWidth, textureHeight, clearColor);
 
 	// containerに代入
-	textureContainer_[key] = { std::move(newRenderTexture) };
+	textureContainer_.emplace(key, std::move(newRenderTexture));
 	return textureContainer_[key].texture.get();
 }
 
@@ -279,7 +281,7 @@ Texture* TextureManager::CreateDummyTexture(const std::string& key, int32_t text
 	newDummyTexture->Create(dxCommon_, textureWidth, textureHeight);
 
 	// containerに代入
-	textureContainer_[key] = { std::move(newDummyTexture) };
+	textureContainer_.emplace(key, std::move(newDummyTexture));
 	return textureContainer_[key].texture.get();
 }
 

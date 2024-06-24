@@ -54,7 +54,11 @@ public:
 
 	void BeginOffscreen(Texture* renderTexture);
 
-	void EndOffscreen();
+	void EndOffscreen(Texture* renderTexture);
+
+	void BeginOffscreens(Texture* renderTextures[D3D12_SIMULTANEOUS_RENDER_TARGET_COUNT]);
+
+	void EndOffscreens(Texture* renderTextures[D3D12_SIMULTANEOUS_RENDER_TARGET_COUNT]);
 
 	/* screen */
 
@@ -65,6 +69,8 @@ public:
 	void BeginUnorderedAccess(Texture* dummyTexture);
 
 	void EndUnorderedAccess(Texture* dummyTexture);
+
+	/* double allocator system */
 
 	void TransitionProcess();
 
@@ -109,11 +115,17 @@ protected:
 
 	UINT backBufferIndex_;
 
-	Texture* offscreenDummyTexture_ = nullptr;
+	/* parameters */
+
+	bool isRendering_ = false; //!< rendering中かどうかの確認用
 
 	//=========================================================================================
 	// private methods
 	//=========================================================================================
+
+	void BeginRendering();
+
+	void EndRendering();
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////

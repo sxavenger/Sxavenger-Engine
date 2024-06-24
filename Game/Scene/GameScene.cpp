@@ -161,13 +161,13 @@ void GameScene::Draw() {
 
 	{
 		// todo: 複数へのtexture書き込みをさせる.
-		MyEngine::BeginOffScreen(console->GetSceneTexture());
+		MyEngine::BeginOffscreen(console->GetSceneTexture());
 		MyEngine::camera3D_ = console->GetDebugCamera();
 
 		particle_->Draw();
 
+		MyEngine::EndOffscreen(console->GetSceneTexture());
 
-		MyEngine::EndOffScreen();
 
 
 		/*MyEngine::BeginOffScreen(MyEngine::GetTexture("offscreen"));

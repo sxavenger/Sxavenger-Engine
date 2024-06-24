@@ -65,10 +65,14 @@ public:
 	//! @brief オフスク描画処理の開始
 	//! 
 	//! @param[in] offscreenRenderTexture 書き込む用のdummyTexture
-	static void BeginOffScreen(Texture* offscreenRenderTexture);
+	static void BeginOffscreen(Texture* renderTexture);
 
 	//! @brief オフスク描画処理の開始
-	static void EndOffScreen();
+	static void EndOffscreen(Texture* renderTexture);
+
+	static void BeginOffscreens(Texture* renderTextures[D3D12_SIMULTANEOUS_RENDER_TARGET_COUNT]);
+
+	static void EndOffscreens(Texture* renderTextures[D3D12_SIMULTANEOUS_RENDER_TARGET_COUNT]);
 
 	static void TransitionProcess();
 

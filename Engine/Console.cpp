@@ -95,17 +95,6 @@ void Console::CheckEraseAttribute(Attribute* obj) {
 	}
 }
 
-void Console::OutputRayTracingResult(const D3D12_GPU_DESCRIPTOR_HANDLE& srvHandleGPU) {
-	if (isOutputConsole_) {
-		static bool isOpenWindow = true;
-		ImGui::Begin("RayTracing", &isOpenWindow, windowFlags);
-
-		SetTextureImGui(srvHandleGPU);
-
-		ImGui::End();
-	}
-}
-
 void Console::OutputTexture(const std::string& name, const D3D12_GPU_DESCRIPTOR_HANDLE& srvHandleGPU) {
 	if (isOutputConsole_) {
 		static bool isOpenWindow = true;

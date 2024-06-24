@@ -23,6 +23,7 @@
 
 // Geometry
 #include <Vector4.h>
+#include <Vector2.h>
 
 // TODO: variantで適切な型が取得できる用に改良
 
@@ -114,7 +115,10 @@ public:
 	~RenderTexture() { Term(); }
 
 	//! @brief RenderTextureの生成
-	void Create(DirectXCommon* dxCommon, int32_t textureWidth, int32_t textureHeight, const Vector4f& clearColor = defaultClearColor);
+	void Create(
+		DirectXCommon* dxCommon,
+		int32_t textureWidth, int32_t textureHeight, const Vector4f& clearColor = defaultClearColor, DXGI_FORMAT format = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB
+	);
 
 	//! @brief 終了処理
 	void Term();
@@ -158,7 +162,7 @@ public:
 	~DummyTexture() { Term(); }
 
 	//! @brief DummyTextureの生成
-	void Create(DirectXCommon* dxCommon, int32_t textureWidth, int32_t textureHeight);
+	void Create(DirectXCommon* dxCommon, int32_t textureWidth, int32_t textureHeight, DXGI_FORMAT format = DXGI_FORMAT_R8G8B8A8_UNORM);
 
 	//! @brief 終了処理
 	void Term();

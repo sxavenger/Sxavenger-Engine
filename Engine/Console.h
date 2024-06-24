@@ -70,8 +70,6 @@ public:
 	// test function
 	//
 
-	void OutputRayTracingResult(const D3D12_GPU_DESCRIPTOR_HANDLE& srvHandleGPU);
-
 	void OutputTexture(const std::string& name, const D3D12_GPU_DESCRIPTOR_HANDLE& srvHandleGPU);
 
 	//=========================================================================================

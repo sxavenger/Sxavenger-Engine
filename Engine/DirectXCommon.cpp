@@ -42,6 +42,8 @@ void DirectXCommon::Term() {
 
 void DirectXCommon::EndFrame() {
 
+	EndRendering();
+
 	command_->GetCommandList()->ResourceBarrier(
 		1,
 		swapChains_->GetTransitionBarrier(backBufferIndex_, D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT)
@@ -65,9 +67,10 @@ void DirectXCommon::EndFrame() {
 }
 
 void DirectXCommon::BeginOffscreen(Texture* renderTexture) {
-	assert(renderTexture != nullptr && offscreenDummyTexture_ == nullptr);
-	
-	offscreenDummyTexture_ = renderTexture;
+
+	assert(renderTexture != nullptr);
+
+	BeginRendering();
 	
 	// コマンドリストの取得
 	auto commandList = command_->GetCommandList();
@@ -76,14 +79,14 @@ void DirectXCommon::BeginOffscreen(Texture* renderTexture) {
 	barrier.Type                   = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
 	barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
 	barrier.Transition.StateAfter  = D3D12_RESOURCE_STATE_RENDER_TARGET;
-	barrier.Transition.pResource   = offscreenDummyTexture_->GetResource();
+	barrier.Transition.pResource   = renderTexture->GetResource();
 
 	commandList->ResourceBarrier(
 		1,
 		&barrier
 	);
 
-	D3D12_CPU_DESCRIPTOR_HANDLE handle_RTV = offscreenDummyTexture_->GetCPUHandleRTV();
+	D3D12_CPU_DESCRIPTOR_HANDLE handle_RTV = renderTexture->GetCPUHandleRTV();
 
 	commandList->OMSetRenderTargets(
 		1,
@@ -95,7 +98,7 @@ void DirectXCommon::BeginOffscreen(Texture* renderTexture) {
 	// 画面のクリア
 	commandList->ClearRenderTargetView(
 		handle_RTV,
-		&offscreenDummyTexture_->GetClearColor().r,
+		&renderTexture->GetClearColor().r,
 		0, nullptr
 	);
 
@@ -108,8 +111,9 @@ void DirectXCommon::BeginOffscreen(Texture* renderTexture) {
 	);
 }
 
-void DirectXCommon::EndOffscreen() {
-	assert(offscreenDummyTexture_ != nullptr);
+void DirectXCommon::EndOffscreen(Texture* renderTexture) {
+
+	EndRendering();
 
 	// コマンドリストの取得
 	auto commandList = command_->GetCommandList();
@@ -118,17 +122,108 @@ void DirectXCommon::EndOffscreen() {
 	barrier.Type                   = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
 	barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_RENDER_TARGET;
 	barrier.Transition.StateAfter  = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
-	barrier.Transition.pResource   = offscreenDummyTexture_->GetResource();
+	barrier.Transition.pResource   = renderTexture->GetResource();
 
 	commandList->ResourceBarrier(
-		1,
-		&barrier
+		1, &barrier
+	);
+}
+
+void DirectXCommon::BeginOffscreens(Texture* renderTextures[D3D12_SIMULTANEOUS_RENDER_TARGET_COUNT]) {
+
+	BeginRendering();
+
+	// コマンドリストの取得
+	auto commandList = command_->GetCommandList();
+	
+	std::vector<D3D12_RESOURCE_BARRIER>      barriers;                //!< barrierの配列
+	std::vector<D3D12_CPU_DESCRIPTOR_HANDLE> renderTargetDescriptors; //!< RTVのCPUHandle配列
+	
+	for (int i = 0; i < D3D12_SIMULTANEOUS_RENDER_TARGET_COUNT; ++i) {
+
+		//!< renderTextureがこれ以上存在しない場合
+		if (renderTextures[i] == nullptr) { break; }
+
+		// barrierの設定
+		D3D12_RESOURCE_BARRIER barrier = {};
+		barrier.Type                   = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+		barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
+		barrier.Transition.StateAfter  = D3D12_RESOURCE_STATE_RENDER_TARGET;
+		barrier.Transition.pResource   = renderTextures[i]->GetResource();
+
+		barriers.push_back(barrier);
+
+		// CPUHandleの保存
+		renderTargetDescriptors.push_back(renderTextures[i]->GetCPUHandleRTV());
+	}
+
+	assert(barriers.size() != 0); //!< renderingするtextureが存在しない
+
+	// renderTexturesの遷移
+	commandList->ResourceBarrier(
+		static_cast<UINT>(barriers.size()), barriers.data()
 	);
 
-	offscreenDummyTexture_ = nullptr;
+	// renderTexturesをRenderTargetに設定
+	commandList->OMSetRenderTargets(
+		static_cast<UINT>(renderTargetDescriptors.size()), renderTargetDescriptors.data(),
+		false,
+		&depthStencil_->GetHandle()
+	);
+
+	// 画面のクリア
+	for (uint32_t i = 0; i < static_cast<uint32_t>(renderTargetDescriptors.size()); ++i) {
+
+		commandList->ClearRenderTargetView(
+			renderTargetDescriptors[i],
+			&renderTextures[i]->GetClearColor().r,
+			0, nullptr
+		);
+	}
+
+	// 深度をクリア
+	commandList->ClearDepthStencilView(
+		depthStencil_->GetHandle(),
+		D3D12_CLEAR_FLAG_DEPTH,
+		1.0f,
+		0, 0, nullptr
+	);
+}
+
+void DirectXCommon::EndOffscreens(Texture* renderTextures[D3D12_SIMULTANEOUS_RENDER_TARGET_COUNT]) {
+
+	EndRendering();
+
+	// コマンドリストの取得
+	auto commandList = command_->GetCommandList();
+
+	std::vector<D3D12_RESOURCE_BARRIER> barriers; //!< barrierの配列
+	
+	for (int i = 0; i < D3D12_SIMULTANEOUS_RENDER_TARGET_COUNT; ++i) {
+
+		//!< renderTextureがこれ以上存在しない場合
+		if (renderTextures[i] == nullptr) { break; }
+
+		// barrierの設定
+		D3D12_RESOURCE_BARRIER barrier = {};
+		barrier.Type                   = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+		barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_RENDER_TARGET;
+		barrier.Transition.StateAfter  = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
+		barrier.Transition.pResource   = renderTextures[i]->GetResource();
+
+		barriers.push_back(barrier);
+	}
+
+	// renderTexturesの遷移
+	commandList->ResourceBarrier(
+		static_cast<UINT>(barriers.size()), barriers.data()
+	);
 }
 
 void DirectXCommon::BeginScreenDraw() {
+
+	BeginRendering();
+
 	// コマンドリストの取得
 	ID3D12GraphicsCommandList* commandList = command_->GetCommandList();
 
@@ -295,4 +390,13 @@ void DirectXCommon::CopyResource(
 DirectXCommon* DirectXCommon::GetInstance() {
 	static DirectXCommon instance;
 	return &instance;
+}
+
+void DirectXCommon::BeginRendering() {
+	assert(!isRendering_); //!< 他がrendering中
+	isRendering_ = true;
+}
+
+void DirectXCommon::EndRendering() {
+	isRendering_ = false;
 }

@@ -65,6 +65,7 @@
       <AdditionalOptions>/ignore:4049 %(AdditionalOptions)</AdditionalOptions>
       <TreatLinkerWarningAsErrors>true</TreatLinkerWarningAsErrors>
       <AdditionalLibraryDirectories>$(ProjecxtDir)externals\assimp\lib\debug</AdditionalLibraryDirectories>
+      <AdditionalDependencies>assimp-vc143-mtd.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxcompiler.dll" "$(TargetDir)dxcompiler.dll"
@@ -182,8 +183,10 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Lib\Geometry\Vector3.cpp" />
     <ClCompile Include="Lib\Geometry\Vector4.cpp" />
     <ClCompile Include="Lib\Light\Light.cpp" />
+    <ClCompile Include="Lib\PostEffect\Bloom.cpp" />
     <ClCompile Include="Lib\PostEffect\FullScreen.cpp" />
     <ClCompile Include="Lib\PostEffect\GaussianBlur.cpp" />
+    <ClCompile Include="Lib\Rendering\DefferedRendering.cpp" />
     <ClCompile Include="main.cpp">
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(ProjectDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
@@ -266,8 +269,10 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Lib\Geometry\VectorComparison.h" />
     <ClInclude Include="Lib\Light\Light.h" />
     <ClInclude Include="Lib\ObjectStructure.h" />
+    <ClInclude Include="Lib\PostEffect\Bloom.h" />
     <ClInclude Include="Lib\PostEffect\FullScreen.h" />
     <ClInclude Include="Lib\PostEffect\GaussianBlur.h" />
+    <ClInclude Include="Lib\Rendering\DefferedRendering.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />
