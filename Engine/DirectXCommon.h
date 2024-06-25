@@ -24,6 +24,7 @@
 //-----------------------------------------------------------------------------------------
 class WinApp;
 class Texture;
+class RenderTexture;
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // DirectXCommon class
@@ -56,9 +57,9 @@ public:
 
 	void EndOffscreen(Texture* renderTexture);
 
-	void BeginOffscreens(Texture* renderTextures[D3D12_SIMULTANEOUS_RENDER_TARGET_COUNT]);
+	void BeginOffscreens(uint32_t textureNum, RenderTexture* renderTextures[D3D12_SIMULTANEOUS_RENDER_TARGET_COUNT]);
 
-	void EndOffscreens(Texture* renderTextures[D3D12_SIMULTANEOUS_RENDER_TARGET_COUNT]);
+	void EndOffscreens(uint32_t textureNum, RenderTexture* renderTextures[D3D12_SIMULTANEOUS_RENDER_TARGET_COUNT]);
 
 	/* screen */
 

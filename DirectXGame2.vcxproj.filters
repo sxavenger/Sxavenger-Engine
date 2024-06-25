@@ -693,6 +693,10 @@
     <None Include="Resources\hlsl\Particle.hlsli">
       <Filter>Resource\hlsl\Particle</Filter>
     </None>
+    <None Include="Resources\hlsl\DefferedRendering.hlsli">
+      <Filter>Resource\hlsl\DefferedRendering</Filter>
+    </None>
+    <None Include="cpp.hint" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="externals\imgui\LICENSE.txt">
@@ -747,6 +751,15 @@
     </FxCompile>
     <FxCompile Include="Resources\hlsl\Particle.VS.hlsl">
       <Filter>Resource\hlsl\Particle</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\hlsl\ParticleDeffered.PS.hlsl">
+      <Filter>Resource\hlsl\Particle</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\hlsl\DefferedRendering.VS.hlsl">
+      <Filter>Resource\hlsl\DefferedRendering</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\hlsl\DefferedRendering.PS.hlsl">
+      <Filter>Resource\hlsl\DefferedRendering</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

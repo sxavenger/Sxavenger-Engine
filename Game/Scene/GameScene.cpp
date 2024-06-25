@@ -76,28 +76,31 @@ void GameScene::Run() {
 
 void GameScene::Init() {
 
+	defferedRendering_ = std::make_unique<DefferedRendering>();
+
 	// particle
 	particle_ = std::make_unique<Particle>();
+	particle_->Init(defferedRendering_.get());
 
-	// TLAS 
-	tlas_ = std::make_unique<TopLevelAS>();
+	//// TLAS 
+	//tlas_ = std::make_unique<TopLevelAS>();
 
-	// constantBuffer
-	camera_ = std::make_unique<RayTracingCamera>();
-	light_  = std::make_unique<RayTracingLight>();
+	//// constantBuffer
+	//camera_ = std::make_unique<RayTracingCamera>();
+	//light_  = std::make_unique<RayTracingLight>();
 
-	// Game
-	ground_ = std::make_unique<Ground>();
-	player_ = std::make_unique<Player>();
-	teapot_ = std::make_unique<Teapot>();
+	//// Game
+	//ground_ = std::make_unique<Ground>();
+	//player_ = std::make_unique<Player>();
+	//teapot_ = std::make_unique<Teapot>();
 
-	subobjectManager_ = std::make_unique<SubobjectManager>();
+	//subobjectManager_ = std::make_unique<SubobjectManager>();
 
-	cube_ = std::make_unique<Cube>();
-	cube_->Init(subobjectManager_.get());
+	//cube_ = std::make_unique<Cube>();
+	//cube_->Init(subobjectManager_.get());
 
-	// drawer
-	fullscreen_ = std::make_unique<FullScreen>();
+	//// drawer
+	//fullscreen_ = std::make_unique<FullScreen>();
 }
 
 void GameScene::Term() {
@@ -105,21 +108,21 @@ void GameScene::Term() {
 
 void GameScene::Update() {
 
-	player_->Update();
-	camera_->Update(player_->GetWorldMatrix());
-	subobjectManager_->Update();
+	//player_->Update();
+	//camera_->Update(player_->GetWorldMatrix());
+	//subobjectManager_->Update();
 
-	// TLASへの書き込み
-	tlas_->StartBlasSetup();
+	//// TLASへの書き込み
+	//tlas_->StartBlasSetup();
 
-	tlas_->SetBLAS(ground_->GetBlas(), ground_->GetWorldMatrix(), 0);
-	tlas_->SetBLAS(player_->GetBlas(), player_->GetWorldMatrix(), 0);
-	tlas_->SetBLAS(teapot_->GetBlas(), teapot_->GetWorldMatrix(), 0);
-	tlas_->SetBLAS(cube_->GetBlas(), cube_->GetWorldMatrix(), 0);
+	//tlas_->SetBLAS(ground_->GetBlas(), ground_->GetWorldMatrix(), 0);
+	//tlas_->SetBLAS(player_->GetBlas(), player_->GetWorldMatrix(), 0);
+	//tlas_->SetBLAS(teapot_->GetBlas(), teapot_->GetWorldMatrix(), 0);
+	//tlas_->SetBLAS(cube_->GetBlas(), cube_->GetWorldMatrix(), 0);
 
-	subobjectManager_->SetBlases(tlas_.get());
+	//subobjectManager_->SetBlases(tlas_.get());
 
-	tlas_->EndBlasSetup();
+	//tlas_->EndBlasSetup();
 
 	particle_->Update();
 }
@@ -164,18 +167,25 @@ void GameScene::Draw() {
 		MyEngine::BeginOffscreen(console->GetSceneTexture());
 		MyEngine::camera3D_ = console->GetDebugCamera();
 
-		particle_->Draw();
+		/*particle_->Draw();*/
 
 		MyEngine::EndOffscreen(console->GetSceneTexture());
 
+		MyEngine::BeginOffscreens(kCountOfDefferedRenderingType, defferedRendering_->GetTexturePtrs());
+
+		particle_->Draw();
+
+		MyEngine::EndOffscreens(kCountOfDefferedRenderingType, defferedRendering_->GetTexturePtrs());
+
+		console->OutputDefferedTextures("Deffered", DefferedRenderingType::kCountOfDefferedRenderingType, defferedRendering_->GetTextureHandles());
+
+		MyEngine::BeginOffscreen(MyEngine::GetTexture("offscreen"));
+		/*MyEngine::camera3D_ = camera.get();*/
+
+		defferedRendering_->Draw();
 
 
-		/*MyEngine::BeginOffScreen(MyEngine::GetTexture("offscreen"));
-		MyEngine::camera3D_ = camera.get();
-
-
-
-		MyEngine::EndOffScreen();*/
+		MyEngine::EndOffscreen(MyEngine::GetTexture("offscreen"));
 	}
 
 	MyEngine::TransitionProcess();
@@ -189,7 +199,7 @@ void GameScene::Draw() {
 
 		MyEngine::GetDxCommon()->CopyResource(
 			MyEngine::GetDxCommon()->GetSwapChainObj()->GetResource(MyEngine::GetDxCommon()->GetSwapChainObj()->GetCurrentBackBufferIndex()), D3D12_RESOURCE_STATE_RENDER_TARGET,
-			console->GetSceneTexture()->GetResource(), D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE
+			MyEngine::GetTexture("offscreen")->GetResource(), D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE
 		);
 
 		/*

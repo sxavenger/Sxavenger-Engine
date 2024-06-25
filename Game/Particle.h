@@ -25,6 +25,9 @@
 #include <Vector3.h>
 #include <Matrix4x4.h>
 
+// rendering
+#include <DefferedRendering.h>
+
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Particle class
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -36,11 +39,13 @@ public:
 	// public methods
 	//=========================================================================================
 
-	Particle() { Init(); }
+	Particle() { }
 
 	~Particle() { Term(); }
 
 	void Init();
+
+	void Init(DefferedRendering* defferdRendering);
 
 	void Term();
 

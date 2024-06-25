@@ -33,6 +33,8 @@ VSOutput main(VSInput input, uint instanceId : SV_InstanceID) {
 	
 	output.position = mul(input.position, mul(gParticleData[instanceId].mat, gCamera.viewProj));
 	output.color    = gParticleData[instanceId].color;
+	output.worldPos = mul(input.position, gParticleData[instanceId].mat).xyz;
+	output.normal   = normalize(mul(input.normal, (float3x3)gParticleData[instanceId].mat));
 	
 	return output;
 }

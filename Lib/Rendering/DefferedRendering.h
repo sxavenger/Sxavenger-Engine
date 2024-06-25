@@ -6,6 +6,13 @@
 // Texture
 #include <TextureManager.h>
 
+// DxObject
+#include <DxBufferResource.h>
+#include <DxGraphicsBlob.h>
+#include <DxGraphicsPipeline.h>
+
+#include <ObjectStructure.h>
+
 // c++
 #include <array>
 #include <memory>
@@ -41,11 +48,15 @@ public:
 
 	void Init();
 
+	void Draw();
+
 	void Term();
 
-	static const DXGI_FORMAT* GetFormats() { return formats_; }
+	static const DXGI_FORMAT* GetFormats() { return formats_.data(); }
 
-	RenderTexture** GetPtrs() { return texturePtrs_.data(); }
+	RenderTexture** GetTexturePtrs() { return texturePtrs_.data(); }
+
+	D3D12_GPU_DESCRIPTOR_HANDLE* GetTextureHandles() { return textureHandles_.data(); }
 
 private:
 
@@ -53,9 +64,20 @@ private:
 	// private methods
 	//=========================================================================================
 
-	static const DXGI_FORMAT formats_[DefferedRenderingType::kCountOfDefferedRenderingType];
+	static const std::array<DXGI_FORMAT, DefferedRenderingType::kCountOfDefferedRenderingType> formats_;
 	
+	/* deffered gBuffers */
 	std::array<std::unique_ptr<RenderTexture>, DefferedRenderingType::kCountOfDefferedRenderingType> defferedTextures_;
-	std::array<RenderTexture*, DefferedRenderingType::kCountOfDefferedRenderingType>                 texturePtrs_; //!< 外部参照用
+
+	std::array<RenderTexture*, DefferedRenderingType::kCountOfDefferedRenderingType>              texturePtrs_; //!< 外部参照用
+	std::array<D3D12_GPU_DESCRIPTOR_HANDLE, DefferedRenderingType::kCountOfDefferedRenderingType> textureHandles_;
+
+	/* graphics rendering */
+	// IA
+	std::unique_ptr<DxObject::BufferResource<VertexData>> vertexBuffer_;
+	std::unique_ptr<DxObject::IndexBufferResource>        indexBuffer_;
+
+	std::unique_ptr<DxObject::GraphicsBlob>     blob_;
+	std::unique_ptr<DxObject::GraphicsPipeline> pipeline_;
 
 };

@@ -23,6 +23,8 @@
 
 #include <Particle.h>
 
+#include <DefferedRendering.h>
+
 ////////////////////////////////////////////////////////////////////////////////////////////
 // GameScene class
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -44,31 +46,34 @@ private:
 	// particle
 	std::unique_ptr<Particle> particle_;
 
+	// defferedRendering
+	std::unique_ptr<DefferedRendering> defferedRendering_;
+
 	//-----------------------------------------------------------------------------------------
 	// raytracing world
 	//-----------------------------------------------------------------------------------------
 
-	// tlas //
+	//// tlas //
 
-	std::unique_ptr<DxrObject::TopLevelAS> tlas_;
+	//std::unique_ptr<DxrObject::TopLevelAS> tlas_;
 
-	// object //
+	//// object //
 
-	std::unique_ptr<Ground> ground_;
-	std::unique_ptr<Player> player_;
-	std::unique_ptr<Teapot> teapot_;
-	std::unique_ptr<Cube>   cube_;
+	//std::unique_ptr<Ground> ground_;
+	//std::unique_ptr<Player> player_;
+	//std::unique_ptr<Teapot> teapot_;
+	//std::unique_ptr<Cube>   cube_;
 
-	std::unique_ptr<SubobjectManager> subobjectManager_;
+	//std::unique_ptr<SubobjectManager> subobjectManager_;
 
-	// constantBuffer //
+	//// constantBuffer //
 
-	std::unique_ptr<RayTracingCamera> camera_;
-	std::unique_ptr<RayTracingLight>  light_;
+	//std::unique_ptr<RayTracingCamera> camera_;
+	//std::unique_ptr<RayTracingLight>  light_;
 
-	// drawer //
+	//// drawer //
 
-	std::unique_ptr<FullScreen> fullscreen_;
+	//std::unique_ptr<FullScreen> fullscreen_;
 
 	//=========================================================================================
 	// private methods

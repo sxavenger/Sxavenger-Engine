@@ -70,9 +70,9 @@ public:
 	//! @brief オフスク描画処理の開始
 	static void EndOffscreen(Texture* renderTexture);
 
-	static void BeginOffscreens(Texture* renderTextures[D3D12_SIMULTANEOUS_RENDER_TARGET_COUNT]);
+	static void BeginOffscreens(uint32_t textureNum, RenderTexture* renderTextures[D3D12_SIMULTANEOUS_RENDER_TARGET_COUNT]);
 
-	static void EndOffscreens(Texture* renderTextures[D3D12_SIMULTANEOUS_RENDER_TARGET_COUNT]);
+	static void EndOffscreens(uint32_t textureNum, RenderTexture* renderTextures[D3D12_SIMULTANEOUS_RENDER_TARGET_COUNT]);
 
 	static void TransitionProcess();
 

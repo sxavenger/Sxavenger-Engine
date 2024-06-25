@@ -106,6 +106,67 @@ void Console::OutputTexture(const std::string& name, const D3D12_GPU_DESCRIPTOR_
 	}
 }
 
+void Console::OutputDefferedTextures(const std::string& name, uint32_t indexSize, const D3D12_GPU_DESCRIPTOR_HANDLE textureHandles[8]) {
+
+	if (!isOutputConsole_) { return; }
+	if (indexSize == 0) { return; }
+
+	static bool isOpenWindow = true;
+	ImGui::Begin(name.c_str(), &isOpenWindow, windowFlags);
+
+	// タブ等を排除した全体のwindowSize計算
+	ImVec2 regionMax  = ImGui::GetWindowContentRegionMax();
+	ImVec2 regionMin  = ImGui::GetWindowContentRegionMin();
+	ImVec2 windowSize = { regionMax.x - regionMin.x, regionMax.y - regionMin.y };
+
+	// windowの分割数の設定
+	const uint32_t kSubdivisionWidth  = 2;
+	const uint32_t kSubdivisionHeight = (indexSize / kSubdivisionWidth) + (indexSize % kSubdivisionWidth);
+
+	// windowを分割したsizeの計算
+	ImVec2 windowDivisionSize = { windowSize.x / kSubdivisionWidth, windowSize.y / kSubdivisionHeight };
+
+	for (uint32_t h = 0; h < kSubdivisionHeight; ++h) {
+		for (uint32_t w = 0; w < kSubdivisionWidth; ++w) {
+
+			uint32_t index = w + h * kSubdivisionWidth;
+
+			//!< 配列を超える場合, 終了
+			if (index >= indexSize) { break; }
+
+			// 画像アス比と分割したWindowアス比の計算
+			float textureAspectRatio = static_cast<float>(kWindowWidth) / static_cast<float>(kWindowHeight);
+			float windowAspectRatio  = windowDivisionSize.x / windowDivisionSize.y;
+
+			// 出力する画像サイズの設定
+			ImVec2 displayTextureSize = windowDivisionSize;
+
+			// 画像サイズの調整
+			if (textureAspectRatio <= windowAspectRatio) {
+				displayTextureSize.x *= textureAspectRatio / windowAspectRatio;
+
+			} else {
+				displayTextureSize.y *= windowAspectRatio / textureAspectRatio;
+			}
+
+			// 出力場所の調整
+			ImVec2 topLeft = {
+				(windowDivisionSize.x - displayTextureSize.x) * 0.5f + regionMin.x + displayTextureSize.x * w,
+				(windowDivisionSize.y - displayTextureSize.y) * 0.5f + regionMin.y + displayTextureSize.y * h,
+			};
+
+
+			ImGui::SetCursorPos(topLeft);
+
+			ImGui::Image((ImTextureID)textureHandles[index].ptr, displayTextureSize);
+
+		}
+	}
+
+	ImGui::End();
+	
+}
+
 //=========================================================================================
 // private methods
 //=========================================================================================

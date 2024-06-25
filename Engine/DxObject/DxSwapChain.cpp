@@ -71,7 +71,7 @@ void DxObject::SwapChain::Init(
 	// RTVの設定
 	{
 		D3D12_RENDER_TARGET_VIEW_DESC desc = {};
-		desc.Format        = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
+		desc.Format        = defaultFormat;
 		desc.ViewDimension = D3D12_RTV_DIMENSION_TEXTURE2D;
 
 		assert(descriptorHeaps->GetIndexSize(DescriptorType::RTV) >= kBufferCount_);

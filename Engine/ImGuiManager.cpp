@@ -35,7 +35,7 @@ void ImGuiManager::Init(WinApp* winApp, DirectXCommon* dxCommon) {
 	ImGui_ImplDX12_Init(
 		dxCommon_->GetDeviceObj()->GetDevice(),
 		DxObject::SwapChain::GetBufferCount(),
-		DXGI_FORMAT_R8G8B8A8_UNORM_SRGB, //!< RTV -> desc.Format
+		DxObject::defaultFormat,
 		descriptorHeap_SRV_,
 		descriptor_.handleCPU,
 		descriptor_.handleGPU

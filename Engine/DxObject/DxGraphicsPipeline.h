@@ -152,6 +152,12 @@ namespace DxObject {
 			GraphicsBlob* graphicBlob, const GraphicsInputLayoutDesc& layout, BlendMode blendMode
 		);
 
+		void CreatePipeline(
+			Devices* devices,
+			GraphicsBlob* graphicBlob, BlendMode blendMode,
+			uint32_t formatSize, const DXGI_FORMAT formats[D3D12_SIMULTANEOUS_RENDER_TARGET_COUNT]
+		);
+
 		/* setter */
 
 		void SetPipeline(ID3D12GraphicsCommandList* commandList);
@@ -190,8 +196,8 @@ namespace DxObject {
 		void CreatePipelineState(
 			ID3D12Device8* device,
 			const D3D12_INPUT_LAYOUT_DESC& inputLayout, const D3D12_RASTERIZER_DESC& rasterizer, const D3D12_DEPTH_STENCIL_DESC& depthStencil,
-			BlendMode blendMode
+			BlendMode blendMode,
+			uint32_t formatSize = 1, const DXGI_FORMAT formats[D3D12_SIMULTANEOUS_RENDER_TARGET_COUNT] = &defaultFormat
 		);
-
 	};
 }

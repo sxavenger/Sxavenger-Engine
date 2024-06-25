@@ -11,6 +11,10 @@ public:
 	// public variables
 	//=========================================================================================
 
+	Vector4() = default;
+	Vector4(T _x, T _y, T _z) : x(_x), y(_y), z(_z) {}
+	Vector4(T _r, T _g, T _b, T _a) : r(_r), g(_g), b(_b), a(_a) {}
+
 	union {
 		T x, r;
 	};

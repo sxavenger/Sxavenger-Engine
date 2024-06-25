@@ -211,6 +211,60 @@ void DxObject::GraphicsPipeline::CreatePipeline(
 	);
 }
 
+void DxObject::GraphicsPipeline::CreatePipeline(
+	Devices* devices,
+	GraphicsBlob* graphicBlob, BlendMode blendMode,
+	uint32_t formatSize, const DXGI_FORMAT formats[D3D12_SIMULTANEOUS_RENDER_TARGET_COUNT]) {
+
+	if (graphicBlob != nullptr) {
+		// 引数の保存
+		blob_ = graphicBlob;
+	}
+
+	// menberの確認
+	assert(blob_ != nullptr);
+	assert(rootSignature_ != nullptr);
+
+	// inputLayoutの設定 default
+	D3D12_INPUT_ELEMENT_DESC descInputElement[3] = {};
+	descInputElement[0].SemanticName      = "POSITION";
+	descInputElement[0].SemanticIndex     = 0;
+	descInputElement[0].Format            = DXGI_FORMAT_R32G32B32A32_FLOAT;
+	descInputElement[0].AlignedByteOffset = D3D12_APPEND_ALIGNED_ELEMENT;
+	descInputElement[1].SemanticName      = "TEXCOORD";
+	descInputElement[1].SemanticIndex     = 0;
+	descInputElement[1].Format            = DXGI_FORMAT_R32G32_FLOAT;
+	descInputElement[1].AlignedByteOffset = D3D12_APPEND_ALIGNED_ELEMENT;
+	descInputElement[2].SemanticName      = "NORMAL";
+	descInputElement[2].SemanticIndex     = 0;
+	descInputElement[2].Format            = DXGI_FORMAT_R32G32B32_FLOAT;
+	descInputElement[2].AlignedByteOffset = D3D12_APPEND_ALIGNED_ELEMENT;
+
+	D3D12_INPUT_LAYOUT_DESC descInputLayout = {};
+	descInputLayout.pInputElementDescs = descInputElement;
+	descInputLayout.NumElements        = _countof(descInputElement);
+
+	// rasterizerの設定 default
+	// TODO: Rasterizer structure
+	D3D12_RASTERIZER_DESC descRasterizer = {};
+	descRasterizer.CullMode = D3D12_CULL_MODE_BACK;
+	descRasterizer.FillMode = D3D12_FILL_MODE_SOLID;
+
+	// DepthStensilStateの設定 default
+	// TODO: depthStencil structure
+	D3D12_DEPTH_STENCIL_DESC descDepthStencil = {};
+	descDepthStencil.DepthEnable    = true;
+	descDepthStencil.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ALL;
+	descDepthStencil.DepthFunc      = D3D12_COMPARISON_FUNC_LESS_EQUAL;
+
+	CreatePipelineState(
+		devices->GetDevice(),
+		descInputLayout, descRasterizer, descDepthStencil,
+		blendMode,
+		formatSize, formats
+	);
+}
+
 void DxObject::GraphicsPipeline::SetPipeline(ID3D12GraphicsCommandList* commandList) {
 	
 	commandList->RSSetViewports(1, &viewport_);
@@ -248,7 +302,8 @@ void DxObject::GraphicsPipeline::CreateViewports(int32_t clientWidth, int32_t cl
 void DxObject::GraphicsPipeline::CreatePipelineState(
 	ID3D12Device8* device,
 	const D3D12_INPUT_LAYOUT_DESC& inputLayout, const D3D12_RASTERIZER_DESC& rasterizer, const D3D12_DEPTH_STENCIL_DESC& depthStencil,
-	BlendMode blendMode) {
+	BlendMode blendMode,
+	uint32_t formatSize, const DXGI_FORMAT formats[D3D12_SIMULTANEOUS_RENDER_TARGET_COUNT]) {
 
 	// blobsの取り出し
 	auto& blobs = blob_->GetGraphicsBlobs();
@@ -266,9 +321,14 @@ void DxObject::GraphicsPipeline::CreatePipelineState(
 		desc.SampleMask         = UINT_MAX;
 		desc.SampleDesc.Quality = 0;
 		desc.SampleDesc.Count   = 1;
-		desc.NumRenderTargets   = 1;
-		desc.RTVFormats[0]      = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
 		desc.Flags              = D3D12_PIPELINE_STATE_FLAG_NONE;
+
+		// rtv formatの設定
+		desc.NumRenderTargets = formatSize;
+
+		for (uint32_t i = 0; i < formatSize; ++i) {
+			desc.RTVFormats[i] = formats[i];
+		}
 
 		// blobの設定
 		desc.MS = { blobs[GraphicShaderType::GRAPHICS_MESH]->GetBufferPointer(), blobs[GraphicShaderType::GRAPHICS_MESH]->GetBufferSize() };
@@ -297,13 +357,18 @@ void DxObject::GraphicsPipeline::CreatePipelineState(
 		desc.InputLayout           = inputLayout;
 		desc.BlendState            = blendState_->operator[](blendMode);
 		desc.RasterizerState       = rasterizer;
-		desc.NumRenderTargets      = 1;
-		desc.RTVFormats[0]         = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
 		desc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
 		desc.SampleDesc.Count      = 1;
 		desc.SampleMask            = D3D12_DEFAULT_SAMPLE_MASK;
 		desc.DepthStencilState     = depthStencil;
 		desc.DSVFormat             = DXGI_FORMAT_D24_UNORM_S8_UINT;
+
+		// rtv formatの設定
+		desc.NumRenderTargets = formatSize;
+
+		for (uint32_t i = 0; i < formatSize; ++i) {
+			desc.RTVFormats[i] = formats[i];
+		}
 
 		// blobの設定
 		desc.VS = { blobs[GraphicShaderType::GRAPHICS_VERTEX]->GetBufferPointer(), blobs[GraphicShaderType::GRAPHICS_VERTEX]->GetBufferSize() };

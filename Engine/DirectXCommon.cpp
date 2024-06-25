@@ -129,7 +129,7 @@ void DirectXCommon::EndOffscreen(Texture* renderTexture) {
 	);
 }
 
-void DirectXCommon::BeginOffscreens(Texture* renderTextures[D3D12_SIMULTANEOUS_RENDER_TARGET_COUNT]) {
+void DirectXCommon::BeginOffscreens(uint32_t textureNum, RenderTexture* renderTextures[D3D12_SIMULTANEOUS_RENDER_TARGET_COUNT]) {
 
 	BeginRendering();
 
@@ -139,10 +139,7 @@ void DirectXCommon::BeginOffscreens(Texture* renderTextures[D3D12_SIMULTANEOUS_R
 	std::vector<D3D12_RESOURCE_BARRIER>      barriers;                //!< barrierの配列
 	std::vector<D3D12_CPU_DESCRIPTOR_HANDLE> renderTargetDescriptors; //!< RTVのCPUHandle配列
 	
-	for (int i = 0; i < D3D12_SIMULTANEOUS_RENDER_TARGET_COUNT; ++i) {
-
-		//!< renderTextureがこれ以上存在しない場合
-		if (renderTextures[i] == nullptr) { break; }
+	for (uint32_t i = 0; i < textureNum; ++i) {
 
 		// barrierの設定
 		D3D12_RESOURCE_BARRIER barrier = {};
@@ -190,7 +187,7 @@ void DirectXCommon::BeginOffscreens(Texture* renderTextures[D3D12_SIMULTANEOUS_R
 	);
 }
 
-void DirectXCommon::EndOffscreens(Texture* renderTextures[D3D12_SIMULTANEOUS_RENDER_TARGET_COUNT]) {
+void DirectXCommon::EndOffscreens(uint32_t textureNum, RenderTexture* renderTextures[D3D12_SIMULTANEOUS_RENDER_TARGET_COUNT]) {
 
 	EndRendering();
 
@@ -199,10 +196,7 @@ void DirectXCommon::EndOffscreens(Texture* renderTextures[D3D12_SIMULTANEOUS_REN
 
 	std::vector<D3D12_RESOURCE_BARRIER> barriers; //!< barrierの配列
 	
-	for (int i = 0; i < D3D12_SIMULTANEOUS_RENDER_TARGET_COUNT; ++i) {
-
-		//!< renderTextureがこれ以上存在しない場合
-		if (renderTextures[i] == nullptr) { break; }
+	for (uint32_t i = 0; i < textureNum; ++i) {
 
 		// barrierの設定
 		D3D12_RESOURCE_BARRIER barrier = {};

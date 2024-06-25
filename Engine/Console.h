@@ -72,6 +72,8 @@ public:
 
 	void OutputTexture(const std::string& name, const D3D12_GPU_DESCRIPTOR_HANDLE& srvHandleGPU);
 
+	void OutputDefferedTextures(const std::string& name, uint32_t indexSize, const D3D12_GPU_DESCRIPTOR_HANDLE textureHandles[8]);
+
 	//=========================================================================================
 	// public variables
 	//=========================================================================================

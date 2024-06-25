@@ -68,7 +68,7 @@ void MyEngine::Initialize(int32_t kWindowWidth, int32_t kWindowHeight, const cha
 	{
 		sDirectXRCommon = DirectXRCommon::GetInstance();
 		sDirectXRCommon->Init(sWinApp, kWindowWidth, kWindowHeight);
-		/*sDirectXRCommon->InitRayTracing(kWindowWidth, kWindowHeight);*/
+		//sDirectXRCommon->InitRayTracing(kWindowWidth, kWindowHeight);
 		ExternalLogger::Write("Complete Initialize: sDirectXRCommon");
 
 	}
@@ -138,12 +138,12 @@ void MyEngine::EndOffscreen(Texture* renderTexture) {
 	sDirectXRCommon->EndOffscreen(renderTexture);
 }
 
-void MyEngine::BeginOffscreens(Texture* renderTextures[D3D12_SIMULTANEOUS_RENDER_TARGET_COUNT]) {
-	sDirectXRCommon->BeginOffscreens(renderTextures);
+void MyEngine::BeginOffscreens(uint32_t textureNum, RenderTexture* renderTextures[D3D12_SIMULTANEOUS_RENDER_TARGET_COUNT]) {
+	sDirectXRCommon->BeginOffscreens(textureNum, renderTextures);
 }
 
-void MyEngine::EndOffscreens(Texture* renderTextures[D3D12_SIMULTANEOUS_RENDER_TARGET_COUNT]) {
-	sDirectXRCommon->EndOffscreens(renderTextures);
+void MyEngine::EndOffscreens(uint32_t textureNum, RenderTexture* renderTextures[D3D12_SIMULTANEOUS_RENDER_TARGET_COUNT]) {
+	sDirectXRCommon->EndOffscreens(textureNum, renderTextures);
 }
 
 void MyEngine::TransitionProcess() {
