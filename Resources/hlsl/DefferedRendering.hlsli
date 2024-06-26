@@ -41,6 +41,15 @@ namespace Deffered {
 		return result;
 	}
 	
+	float4 ToWorldPosColor(float3 worldPos) {
+		float4 result;
+		
+		result.rgb = worldPos;
+		result.a = 1.0f;
+		
+		return result;
+	}
+	
 	/* to data */
 	float4 GetTextureColor(float2 texcoord, Texture2D texture, SamplerState sample) {
 		return texture.Sample(sample, texcoord);

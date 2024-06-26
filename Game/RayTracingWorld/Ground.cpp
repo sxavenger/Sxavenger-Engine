@@ -1,5 +1,10 @@
 #include "Ground.h"
 
+//-----------------------------------------------------------------------------------------
+// include
+//-----------------------------------------------------------------------------------------
+#include <MyEngine.h>
+
 //=========================================================================================
 // static variables
 //=========================================================================================
@@ -18,7 +23,7 @@ void Ground::Init() {
 
 	blas_ = std::make_unique<DxrObject::BottomLevelAS>();
 	blas_->Create(
-		model_->GetMeshData(0).vertexResource.get(), model_->GetMeshData(0).indexResource.get(),
+		model_->GetMesh(0).vertexResource.get(), model_->GetMesh(0).indexResource.get(),
 		L"ground"
 	);
 

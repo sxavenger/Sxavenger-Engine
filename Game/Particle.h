@@ -8,7 +8,6 @@
 #include <DxCSBlob.h>
 #include <DxCSPipelineState.h>
 #include <DxCSBufferResource.h>
-#include <DxCSDimensionBuffer.h>
 
 // Graphics
 #include <DxGraphicsBlob.h>
@@ -27,6 +26,9 @@
 
 // rendering
 #include <DefferedRendering.h>
+
+// attribtue
+#include <Attribute.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Particle class

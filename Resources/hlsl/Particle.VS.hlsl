@@ -35,6 +35,7 @@ VSOutput main(VSInput input, uint instanceId : SV_InstanceID) {
 	output.color    = gParticleData[instanceId].color;
 	output.worldPos = mul(input.position, gParticleData[instanceId].mat).xyz;
 	output.normal   = normalize(mul(input.normal, (float3x3)gParticleData[instanceId].mat));
+	output.texcoord = input.texcoord;
 	
 	return output;
 }

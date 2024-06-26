@@ -108,6 +108,8 @@ public:
 
 	static Texture* LoadTexture(const std::string& filePath);
 
+	static void ReleaseTexture(const std::string& key);
+
 	static Texture* GetTexture(const std::string& textureKey);
 
 	static const D3D12_GPU_DESCRIPTOR_HANDLE& GetTextureHandleGPU(const std::string& textureKey);

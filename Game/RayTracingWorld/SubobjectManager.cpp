@@ -73,7 +73,7 @@ void SubobjectManager::SetAttributeImGui() {
 
 		std::unique_ptr<Subobject> newObject = std::make_unique<Subobject>();
 		newObject->Init(
-			models_[selectedType_]->GetMeshData(0).vertexResource.get(), models_[selectedType_]->GetMeshData(0).indexResource.get(),
+			models_[selectedType_]->GetMesh(0).vertexResource.get(), models_[selectedType_]->GetMesh(0).indexResource.get(),
 			meshStructuredBuffers_[selectedType_].vertex.get(), meshStructuredBuffers_[selectedType_].index.get()
 		);
 
@@ -97,7 +97,7 @@ void SubobjectManager::SetAttributeImGui() {
 
 void SubobjectManager::GetBlasModelData(DxrObject::BottomLevelAS* dst, const std::wstring& hitgroupName, SubobjectType type) {
 	dst->Create(
-		models_[type]->GetMeshData(0).vertexResource.get(), models_[type]->GetMeshData(0).indexResource.get(),
+		models_[type]->GetMesh(0).vertexResource.get(), models_[type]->GetMesh(0).indexResource.get(),
 		meshStructuredBuffers_[type].vertex.get(), meshStructuredBuffers_[type].index.get(),
 		hitgroupName
 	);

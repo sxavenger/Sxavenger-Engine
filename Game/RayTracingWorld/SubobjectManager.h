@@ -67,8 +67,8 @@ private:
 		std::unique_ptr<DxObject::StructuredBuffer> vertex;
 
 		void Create(Model* model) {
-			index  = std::make_unique<DxObject::StructuredBuffer>(model->GetMeshData(0).indexResource.get());
-			vertex = std::make_unique<DxObject::StructuredBuffer>(model->GetMeshData(0).vertexResource.get());
+			index  = std::make_unique<DxObject::StructuredBuffer>(model->GetMesh(0).indexResource.get());
+			vertex = std::make_unique<DxObject::StructuredBuffer>(model->GetMesh(0).vertexResource.get());
 		}
 	};
 

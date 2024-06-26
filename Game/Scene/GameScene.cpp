@@ -101,6 +101,8 @@ void GameScene::Init() {
 
 	//// drawer
 	//fullscreen_ = std::make_unique<FullScreen>();
+
+
 }
 
 void GameScene::Term() {
@@ -179,12 +181,10 @@ void GameScene::Draw() {
 
 		console->OutputDefferedTextures("Deffered", DefferedRenderingType::kCountOfDefferedRenderingType, defferedRendering_->GetTextureHandles());
 
+		/* main screen */
 		MyEngine::BeginOffscreen(MyEngine::GetTexture("offscreen"));
 		/*MyEngine::camera3D_ = camera.get();*/
-
 		defferedRendering_->Draw();
-
-
 		MyEngine::EndOffscreen(MyEngine::GetTexture("offscreen"));
 	}
 

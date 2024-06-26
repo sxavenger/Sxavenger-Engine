@@ -153,7 +153,7 @@ namespace DxObject {
 		}
 
 		void Memcpy(const T* value) {
-			memcpy(dataArray_, value, structureSize_ * indexSize_);
+			std::memcpy(dataArray_, value, structureSize_ * indexSize_);
 		}
 
 		//=========================================================================================
@@ -322,7 +322,7 @@ namespace DxObject {
 		}
 
 		void Memcpy(const uint32_t* value) {
-			memcpy(dataArray_, value, sizeof(uint32_t) * indexSize_);
+			std::memcpy(dataArray_, value, sizeof(uint32_t) * indexSize_);
 		}
 
 		//=========================================================================================
@@ -395,7 +395,7 @@ namespace DxObject {
 
 		void Memcpy(const T* value, uint32_t indexSize) {
 			assert(CheckElementCount(indexSize));
-			memcpy(dataArray_, value, structureSize_ * indexSize);
+			std::memcpy(dataArray_, value, structureSize_ * indexSize);
 		}
 
 		//=========================================================================================

@@ -212,6 +212,11 @@ Texture* MyEngine::LoadTexture(const std::string& filePath) {
 	return sTextureManager->LoadTexture(filePath);
 }
 
+void MyEngine::ReleaseTexture(const std::string& key) {
+	assert(sTextureManager != nullptr);
+	sTextureManager->ReleaseTexture(key);
+}
+
 const D3D12_GPU_DESCRIPTOR_HANDLE& MyEngine::GetTextureHandleGPU(const std::string& textureKey) {
 	assert(sTextureManager != nullptr);
 	return sTextureManager->GetGPUHandle(textureKey);

@@ -3,351 +3,205 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
+// MyEngine
+#include <MyEngine.h>
+
+// logger
 #include <Logger.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// Model Methods
+// Model class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 void Model::Init(const std::string& directoryPath, const std::string& filename) {
-	modelData_ = ModelMethods::LoadObjFile(directoryPath, filename);
 
-	size_ = static_cast<uint32_t>(modelData_.meshs.size());
+	// modelDataの取得
+	modelData_ = ModelMethods::LoadModelFile(directoryPath, filename);
 
-	// textureManagerでモデルで使うloadTextureを呼び出し
-	for (auto& it : modelData_.materials) {
-		if (it.isUseTexture) {
-			MyEngine::GetTextureManager()->LoadTexture(it.textureFilePath);
-		}
+	// modelIndexSizeの保存
+	modelIndexSize_ = static_cast<uint32_t>(modelData_.meshes.size());
+
+	// modelで使うtextureの呼び出し
+	for (auto& material : modelData_.materials) {
+		//!< textureを使わないため
+		if (!material.isUseTexture) { break; } 
+
+		MyEngine::LoadTexture(material.textureFilePath);
 	}
+
 }
 
 void Model::Term() {
 
-	for (uint32_t i = 0; i < size_; ++i) {
-		// meshDataのdelete
-		modelData_.meshs[i].vertexResource.reset();
-		modelData_.meshs[i].indexResource.reset();
+	// modelで使ったtextureの解放
+	for (auto& material : modelData_.materials) {
+		//!< textureを使わないため
+		if (!material.isUseTexture) { break; }
 
-		// materialDataの終了処理
-		if (modelData_.materials[i].isUseTexture) {
-			MyEngine::GetTextureManager()->ReleaseTexture(modelData_.materials[i].textureFilePath);
-		}
+		MyEngine::ReleaseTexture(material.textureFilePath);
 	}
 
-	// modelDataの削除
-	modelData_.meshs.clear();
-	modelData_.materials.clear();
+	// modelの解放
+	modelData_.Clear();
+	modelIndexSize_ = 0;
+
 }
 
-ModelData ModelMethods::LoadObjFile(const std::string& directoryPath, const std::string& filename) {
+void Model::SetBuffers(ID3D12GraphicsCommandList* commandList, uint32_t modelIndex) {
+
+	if (modelIndex >= modelIndexSize_) {
+		assert(false); //!< 配列以上のmodelDataの呼び出し
+	}
+
+	D3D12_VERTEX_BUFFER_VIEW vertexBufferView = modelData_.meshes[modelIndex].vertexResource->GetVertexBufferView();
+	D3D12_INDEX_BUFFER_VIEW indexBufferView = modelData_.meshes[modelIndex].indexResource->GetIndexBufferView();
+
+	commandList->IASetVertexBuffers(0, 1, &vertexBufferView);
+	commandList->IASetIndexBuffer(&indexBufferView);
+}
+
+void Model::SetGraphicsTextureHandle(ID3D12GraphicsCommandList* commandList, UINT parameterNum, uint32_t modelIndex) {
+
+	if (!modelData_.materials[modelIndex].isUseTexture) { return; } //!< textureを使ってないので
+
+	commandList->SetGraphicsRootDescriptorTable(parameterNum, MyEngine::GetTextureHandleGPU(modelData_.materials[modelIndex].textureFilePath));
+}
+
+void Model::DrawCall(ID3D12GraphicsCommandList* commandList, uint32_t modelIndex, uint32_t instanceCount) {
+	commandList->DrawIndexedInstanced(modelData_.meshes[modelIndex].indexResource->GetIndexSize(), instanceCount, 0, 0, 0);
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////
+// ModelMethods namespace methods
+////////////////////////////////////////////////////////////////////////////////////////////
+
+ModelData ModelMethods::LoadModelFile(const std::string& directoryPath, const std::string& filename) {
+
 	ModelData result;
 
-	std::string mtlFilename;
-	MaterialData materialData;
+	Assimp::Importer importer;
+	std::string filePath = directoryPath + "/" + filename;
 
-	std::string line;
+	uint32_t option = 0;
+	option |= aiProcess_FlipWindingOrder;
+	option |= aiProcess_FlipUVs;
+	option |= aiProcess_JoinIdenticalVertices;
+	option |= aiProcess_Triangulate;
 
-	
-	// VertexDataの一時保存
-	std::vector<Vector4f> positions;
-	std::vector<Vector2f> texcoords;
-	std::vector<Vector3f> normals;
+	const aiScene* scene
+		= importer.ReadFile(filePath.c_str(), option);
 
-	std::vector<VertexData> vertexDatas; // vertexResourceに書き込み
+	assert(scene->HasMeshes()); //!< メッシュナシは未対応
 
-	// faceの一時保存
-	enum FaceType {
-		v, vt, vn,
+	// ModelDataの要素数の指定
+	result.meshes.resize(scene->mNumMeshes);
+	result.materials.resize(scene->mNumMaterials);
 
-		kFaceTypeCount
-	};
+	// meshesの解析
+	for (uint32_t meshIndex = 0; meshIndex < scene->mNumMeshes; ++meshIndex) {
 
-	// vertexdata
-	uint32_t vertexDataIndexCount = 0;
-	std::unordered_map<std::string, uint32_t> faces; // key: f "1/2/3", value: vertexDataの配列数
+		// meshの取得
+		aiMesh* mesh = scene->mMeshes[meshIndex];
 
-	// vertexDataIndexの調整
-	uint32_t currentIndex[kFaceTypeCount] = { 0, 0, 0 };
-	uint32_t startIndex[kFaceTypeCount] = { 1, 1, 1 };
+		//assert(mesh->HasNormals());        //!< 法線がない場合は未対応
+		//assert(mesh->HasTextureCoords(0)); //!< Texcoordがない場合は未対応 todo...
 
-	// indexdata
-	std::vector<uint32_t> indexDatas; // indexResourceに書き込み用
-	
+		// 保存の確保
+		result.meshes[meshIndex].Create(MyEngine::GetDevicesObj(), mesh->mNumVertices, mesh->mNumFaces * 3);
+		auto& meshData = result.meshes[meshIndex];
 
-	// Objファイルを開く
-	std::ifstream file(directoryPath + "/" + filename);
-	
-	if (!file.is_open()) { //!< fileが見つからなかった.
-		std::string errorLog;
-		errorLog = "[Model Not Found] \n filePath: " + directoryPath + "/" + filename;
+		// verticesの解析
+		for (uint32_t element = 0; element < mesh->mNumVertices; ++element) {
 
-		Assert(false, errorLog, "Error: LoadObjFile");
-	}
+			// 自前の構造体に保存
+			VertexData vtx;
+			vtx.Init();
 
-	while (std::getline(file, line)) { // fileから一列ずつ読み込み
-		std::string identifire; // 識別子
-		std::istringstream s(line);
-		s >> identifire;
+			aiVector3D& position = mesh->mVertices[element];
+			vtx.position = { position.x, position.y, position.z };
 
-		if (identifire == "mtllib") { //!< マテリアルファイル名
-			s >> mtlFilename; // ファイルnameの保存
-
-		} else if (identifire == "o") {
-			if (!positions.empty()) { //!< 二回目以降の"o"の場合
-				// mesh一つ分の書き込みが終わったので保存
-				MeshData meshData;
-				meshData.vertexResource
-					= std::make_unique<DxObject::BufferResource<VertexData>>(MyEngine::GetDevicesObj(), static_cast<uint32_t>(vertexDatas.size()));
-				meshData.vertexResource->Memcpy(vertexDatas.data());
-
-				meshData.indexResource
-					= std::make_unique<DxObject::IndexBufferResource>(MyEngine::GetDevicesObj(), static_cast<uint32_t>(indexDatas.size()));
-				meshData.indexResource->Memcpy(indexDatas.data());
-
-				// meshとmaterialをmodelDataに格納
-				result.meshs.push_back(std::move(meshData));
-				result.materials.push_back(std::move(materialData));
-
-				// 書き込みが終了したのでデータ初期化
-				for (int i = 0; i < kFaceTypeCount; ++i) {
-					// startIndexの更新
-					startIndex[i] += currentIndex[i];
-					currentIndex[i] = 0;
-				}
-
-				// データの初期化
-				positions.clear();
-				texcoords.clear();
-				normals.clear();
-
-				indexDatas.clear();
-				vertexDatas.clear();
-
-				faces.clear();
-				vertexDataIndexCount = 0;
+			if (mesh->HasNormals()) {
+				aiVector3D& normal = mesh->mNormals[element];
+				vtx.normal = { normal.x, normal.y, normal.z };
 			}
 
-		} else if (identifire == "v") { //!< vertex
-			currentIndex[v]++;
+			if (mesh->HasTextureCoords(0)) {
+				aiVector3D& texcoord = mesh->mTextureCoords[0][element];
+				vtx.texcoord = { texcoord.x, texcoord.y };
+			}
 
-			// positionに書き込み
-			Vector4f position;
-			s >> position.x >> position.y >> position.z;
-			position.w = 1.0f;
+			// 左手座標系に変換
+			vtx.position.z *= -1.0f;
+			vtx.normal.z   *= -1.0f;
 
-			// 左手座標に変換
-			position.z *= -1;
+			// データの保存
+			meshData.vertexResource->operator[](element) = vtx;
 
-			// vectorに保存
-			positions.push_back(position);
+		}
+
+		// faceの解析
+		for (uint32_t faceIndex = 0; faceIndex < mesh->mNumFaces; ++faceIndex) {
+
+			// faceの取得
+			aiFace& face = mesh->mFaces[faceIndex];
+
+			assert(face.mNumIndices == 3); //!< 三角形のみの対応
+
+			for (uint32_t element = 0; element < face.mNumIndices; ++element) {
+				// データの保存
+				meshData.indexResource->operator[](faceIndex * 3 + element) = face.mIndices[element];
+			}
+		}
+	}
+
+	// materialsの解析
+	for (uint32_t materialIndex = 0; materialIndex < scene->mNumMaterials; ++materialIndex) {
+
+		// materialの取得
+		aiMaterial* material = scene->mMaterials[materialIndex];
+
+		// materialデータの保存場所の指定
+		auto& materialData = result.materials[materialIndex];
+
+		// diffuse textureの取得
+		if (material->GetTextureCount(aiTextureType_DIFFUSE) != 0) {
+			aiString textureFilePath;
+			material->GetTexture(aiTextureType_DIFFUSE, 0, &textureFilePath);
 			
-		} else if (identifire == "vt") { //!< texcoord
-			currentIndex[vt]++;
-
-			// texcoordに書き込み
-			Vector2f texcoord;
-			s >> texcoord.x >> texcoord.y;
-
-			// 左手座標に変換
-			texcoord.y = 1.0f - texcoord.y;
-
-			// vectorに保存
-			texcoords.push_back(texcoord);
-
-		} else if (identifire == "vn") { //!< normal
-			currentIndex[vn]++;
-
-			// normalに書き込み
-			Vector3f normal;
-			s >> normal.x >> normal.y >> normal.z;
-
-			// 左手座標に変換
-			normal.z *= -1;
-
-			// vectorに保存
-			normals.push_back(normal);
-
-		} else if (identifire == "usemtl") { //!< materialの使用名
-			std::string usemtl;
-			s >> usemtl;
-
-			materialData = ModelMethods::LoadMaterailFile(directoryPath, mtlFilename, usemtl);
-
-		} else if (identifire == "f") { //!< face 四角形ポリゴンに対応
-			// (f) "1/2/3", "4/5/6", "7/8/9" ... と読み込む
-			std::string faceStrings[4];
-			s >> faceStrings[0] >> faceStrings[1] >> faceStrings[2] >> faceStrings[3];
-
-			// vertexdata
-			int vertexNum = 0;
-
-			for (uint32_t i = 0; i < 4; ++i) {
-				if (faceStrings[i] == "") { // 三角形ポリゴンなので i = 2 に break
-					break;
-				}
-
-				// 頂点数を増加
-				vertexNum++;
-
-				// facesにすでにvertexdataがあるか確認
-				auto it = faces.find(faceStrings[i]);
-				if (it == faces.end()) { // ない場合, vertexdataの生成
-
-					// faceStringからface番号を取得
-					uint32_t faceNum[3] = { NULL, NULL, NULL };
-
-					std::istringstream indexs(faceStrings[i]);
-
-					for (int fi = 0; fi < 3; ++fi) {
-						std::string index;
-						std::getline(indexs, index, '/');
-
-						if (index != "") {
-							faceNum[fi] = std::stoi(index);
-						}
-					}
-
-					// 各データの取り出し
-					Vector4f position;
-					position = positions.at(faceNum[v] - startIndex[v]);
-
-					Vector2f texcoord = { 0.0f, 0.0f };
-					if (faceNum[vt] != NULL) {
-						texcoord = texcoords.at(faceNum[vt] - startIndex[vt]);
-					}
-
-					Vector3f normal;
-					normal = normals.at(faceNum[vn] - startIndex[vn]);
-
-					// vertexdataの生成
-					VertexData vertexData = {
-						position,
-						texcoord,
-						normal,
-					};
-
-					vertexDatas.push_back(vertexData);
-
-					// facesにindex数の保存
-					faces[faceStrings[i]] = vertexDataIndexCount;
-					vertexDataIndexCount++;
-				}
-			}
-
-			// indexdataの作成
-			if (vertexNum == 3) { //!< 三角形ポリゴンの場合
-				// 逆順にfacesでvertexIndexを問い合わせながらindexDetasに代入
-				for (uint32_t i = vertexNum; i > 0; --i) {
-					indexDatas.push_back(faces[faceStrings[i - 1]]);
-				}
-
-			} else if (vertexNum == 4) { //!< 四角形ポリゴンの場合
-				// 三角形ポリゴンに変換
-				// polygonA
-				indexDatas.push_back(faces[faceStrings[0]]);
-				indexDatas.push_back(faces[faceStrings[3]]);
-				indexDatas.push_back(faces[faceStrings[1]]);
-
-				// polygonB
-				indexDatas.push_back(faces[faceStrings[3]]);
-				indexDatas.push_back(faces[faceStrings[2]]);
-				indexDatas.push_back(faces[faceStrings[1]]);
-
-			} else {
-				assert(false); //!< ポリゴンの頂点数の不足
-			}
-		}
-	}
-
-	file.close();
-
-	// fileが終わったので最後のやつを初期化
-	if (!positions.empty()) {
-		// mesh一つ分の書き込みが終わったので保存
-		MeshData meshData;
-		meshData.vertexResource
-			= std::make_unique<DxObject::BufferResource<VertexData>>(MyEngine::GetDevicesObj(), static_cast<uint32_t>(vertexDatas.size()));
-		meshData.vertexResource->Memcpy(vertexDatas.data());
-
-		meshData.indexResource
-			= std::make_unique<DxObject::IndexBufferResource>(MyEngine::GetDevicesObj(), static_cast<uint32_t>(indexDatas.size()));
-		meshData.indexResource->Memcpy(indexDatas.data());
-		
-		// meshとmaterialをmodelDataに格納
-		result.meshs.push_back(std::move(meshData));
-		result.materials.push_back(std::move(materialData));
-
-		// 書き込みが終了したのでデータ初期化
-		for (int i = 0; i < kFaceTypeCount; ++i) {
-			// startIndexの更新
-			startIndex[i] += currentIndex[i];
-			currentIndex[i] = 0;
+			// データの保存
+			materialData.isUseTexture    = true;
+			materialData.textureFilePath = directoryPath + "/" + textureFilePath.C_Str();
 		}
 
-		// 書き込みが終了したのでデータを終了処理
-		positions.clear();
-		texcoords.clear();
-		normals.clear();
-
-		indexDatas.clear();
-		vertexDatas.clear();
-
-		faces.clear();
 	}
 
+	// nodeの取得
+	result.rootNode = ReadNode(scene->mRootNode);
+	
 	return result;
 }
 
-MaterialData ModelMethods::LoadMaterailFile(const std::string& directoryPath, const std::string& filename, const std::string& usemtl) {
-	MaterialData result;
-	result.isUseTexture = false;
+Node ModelMethods::ReadNode(aiNode* node) {
+	Node result;
 
-	std::string line;
-	bool isMatchUsemtl = false;
+	// nodeのlocalmatの取得
+	aiMatrix4x4 aiLocalMatrix = node->mTransformation;
+	aiLocalMatrix.Transpose();
 
-	// ファイルを開く
-	std::ifstream file(directoryPath + "/" + filename);
-	assert(file.is_open()); //!< ファイルが開けない
+	// resultにcopy
+	std::memcpy(&result.localMatrix, &aiLocalMatrix, sizeof(Matrix4x4));
 
-	while (std::getline(file, line)) {
-		std::string identifier;
-		std::istringstream s(line);
-		s >> identifier;
+	// ノード名を格納
+	result.name = node->mName.C_Str();
 
-		// identifierに応じた処理
-		if (identifier == "newmtl") { //!< usemtl name
-			// usemtlと一致してるかの確認
-			std::string newmtl;
-			s >> newmtl;
+	// 子の数だけの要素の格納
+	result.children.resize(node->mNumChildren);
 
-			if (isMatchUsemtl) { //!< 見つかっていた場合
-				break;
-				
-			} else { 
-				if (usemtl == newmtl) { //!< 一致していた場合
-					isMatchUsemtl = true;
-				}
-			}
-		}
-
-		if (!isMatchUsemtl) { // 使いたいマテリアルではないので飛ばす.
-			continue;
-		}
-
-		// materail情報
-		// identifierに応じた処理
-		if (identifier == "map_Kd") { //!< 使うtextureの名前
-			std::string textureFilename;
-			s >> textureFilename;
-			// 連結してファイルパスに変換
-			result.textureFilePath = directoryPath + "/" + textureFilename;
-			result.isUseTexture = true;
-			break;
-		}
+	// 子のノード情報の取得
+	for (uint32_t childIndex = 0; childIndex < node->mNumChildren; ++childIndex) {
+		result.children[childIndex] = ReadNode(node->mChildren[childIndex]);
 	}
 
-	file.close();
-
 	return result;
+
 }

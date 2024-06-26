@@ -3,24 +3,26 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
-// assimp
-#include <assimp/Importer.hpp>
-#include <assimp/scene.h>
-#include <assimp/postprocess.h>
+// c++
+#include <vector>
+#include <unordered_map>
+#include <string>
+#include <fstream>
+#include <sstream>
+#include <cassert>
+#include <memory>
+
+#include "MyEngine.h" //!< devices, TextureManagerの取り出し
+#include <TextureManager.h>
 
 // DxObject
 #include <DxBufferResource.h>
-
-// c++
-#include <string>
-#include <memory>
 
 // Geometry
 #include <Vector4.h>
 #include <Vector3.h>
 #include <Vector2.h>
 
-// Object
 #include <ObjectStructure.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -32,7 +34,7 @@ struct MeshData {
 
 	void Create(DxObject::Devices* devices, uint32_t vertexSize, uint32_t indexSize) {
 		vertexResource = std::make_unique<DxObject::BufferResource<VertexData>>(devices, vertexSize);
-		indexResource = std::make_unique<DxObject::IndexBufferResource>(devices, indexSize);
+		indexResource  = std::make_unique<DxObject::IndexBufferResource>(devices, indexSize);
 	}
 };
 
@@ -45,27 +47,12 @@ struct MaterialData {
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// NodeData structure
-////////////////////////////////////////////////////////////////////////////////////////////
-struct Node {
-	Matrix4x4 localMatrix;
-	std::string name;
-	std::vector<Node> children;
-};
-
-////////////////////////////////////////////////////////////////////////////////////////////
 // ModelData structure
 ////////////////////////////////////////////////////////////////////////////////////////////
 struct ModelData {
 	std::vector<MeshData>     meshes;
 	std::vector<MaterialData> materials;
-	Node                      rootNode;
-	//!< meshsとmaterials, nodeのsizeは同じ
-	
-	void Clear() {
-		meshes.clear();
-		materials.clear();
-	}
+	// meshsとmaterialsのsizeは同じ
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -73,13 +60,11 @@ struct ModelData {
 ////////////////////////////////////////////////////////////////////////////////////////////
 class Model {
 public:
-	
-	//=========================================================================================
-	// public methods
-	//=========================================================================================
 
 	//! @brief コンストラクタ
-	Model(const std::string& directoryPath, const std::string& filename) { Init(directoryPath, filename); }
+	Model(const std::string& directoryPath, const std::string& filename) {
+		Init(directoryPath, filename);
+	}
 
 	//! @brief デストラクタ
 	~Model() { Term(); }
@@ -87,22 +72,36 @@ public:
 	//! @brief 初期化処理
 	void Init(const std::string& directoryPath, const std::string& filename);
 
-	//! @brief 終了処理
 	void Term();
 
-	/* draw methods */
+	const uint32_t GetSize() const { return size_; }
+	
+	// Draw
+	void SetBuffers(ID3D12GraphicsCommandList* commandList, uint32_t index) {
+		if (index >= size_) {
+			assert(false); //!< 配列以上のmodelDataの呼び出し
+		}
 
-	void SetBuffers(ID3D12GraphicsCommandList* commandList, uint32_t modelIndex);
+		D3D12_VERTEX_BUFFER_VIEW vertexBufferView = modelData_.meshes[index].vertexResource->GetVertexBufferView();
+		D3D12_INDEX_BUFFER_VIEW indexBufferView = modelData_.meshes[index].indexResource->GetIndexBufferView();
 
-	void SetGraphicsTextureHandle(ID3D12GraphicsCommandList* commandList, UINT parameterNum, uint32_t modelIndex);
+		commandList->IASetVertexBuffers(0, 1, &vertexBufferView);
+		commandList->IASetIndexBuffer(&indexBufferView);
+	}
 
-	void DrawCall(ID3D12GraphicsCommandList* commandList, uint32_t modelIndex, uint32_t instanceCount);
+	void SetTexture(UINT parameterNum, ID3D12GraphicsCommandList* commandList, uint32_t index) {
+		if (modelData_.materials[index].isUseTexture) {
+			commandList->SetGraphicsRootDescriptorTable(parameterNum, MyEngine::GetTextureHandleGPU(modelData_.materials[index].textureFilePath));
+		}
+	}
 
-	/* gertter */
+	void DrawCall(ID3D12GraphicsCommandList* commandList, uint32_t index, uint32_t instanceCount) {
+		commandList->DrawIndexedInstanced(modelData_.meshes[index].indexResource->GetIndexSize(), instanceCount, 0, 0, 0);
+	}
 
-	const uint32_t GetModelIndexSize() const { return modelIndexSize_; }
-
-	const MeshData& GetMesh(uint32_t modelIndexSize) const { return modelData_.meshes[modelIndexSize]; }
+	const MeshData& GetMeshData(uint32_t index) const {
+		return modelData_.meshes[index];
+	}
 
 private:
 
@@ -111,17 +110,18 @@ private:
 	//=========================================================================================
 
 	ModelData modelData_;
-	uint32_t  modelIndexSize_;
-
+	uint32_t  size_;
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// ModelMethods namespace
+// ModelMethod namespace
 ////////////////////////////////////////////////////////////////////////////////////////////
 namespace ModelMethods {
 
-	ModelData LoadModelFile(const std::string& directoryPath, const std::string& filename);
+	ModelData LoadObjFile(const std::string& directoryPath, const std::string& filename);
 
-	Node ReadNode(aiNode* node);
+	MaterialData LoadMaterailFile(const std::string& directoryPath, const std::string& filename, const std::string& usemtl);
+
+	void LoadObjFileAssimp(const std::string& directoryPath, const std::string& filename);
 
 }
