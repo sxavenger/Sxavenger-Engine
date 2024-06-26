@@ -24,6 +24,16 @@
 #include <ObjectStructure.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
+// TextureType enum
+////////////////////////////////////////////////////////////////////////////////////////////
+enum TextureType {
+	TEXTURE_DIFFUSE,
+	TEXTURE_NORMAL,
+
+	kCountOfTextureType
+};
+
+////////////////////////////////////////////////////////////////////////////////////////////
 // MeshData structure
 ////////////////////////////////////////////////////////////////////////////////////////////
 struct MeshData {
@@ -40,8 +50,7 @@ struct MeshData {
 // MaterialData structure
 ////////////////////////////////////////////////////////////////////////////////////////////
 struct MaterialData {
-	std::string textureFilePath;
-	bool        isUseTexture = false;
+	std::string textureFilePaths[kCountOfTextureType];
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -94,15 +103,17 @@ public:
 
 	void SetBuffers(ID3D12GraphicsCommandList* commandList, uint32_t modelIndex);
 
-	void SetGraphicsTextureHandle(ID3D12GraphicsCommandList* commandList, UINT parameterNum, uint32_t modelIndex);
+	void SetGraphicsTextureHandle(ID3D12GraphicsCommandList* commandList, uint32_t modelIndex, UINT parameterNum, TextureType type = TEXTURE_DIFFUSE);
 
-	void DrawCall(ID3D12GraphicsCommandList* commandList, uint32_t modelIndex, uint32_t instanceCount);
+	void DrawCall(ID3D12GraphicsCommandList* commandList, uint32_t modelIndex, uint32_t instanceCount = 1);
 
 	/* gertter */
 
 	const uint32_t GetModelIndexSize() const { return modelIndexSize_; }
 
 	const MeshData& GetMesh(uint32_t modelIndexSize) const { return modelData_.meshes[modelIndexSize]; }
+
+	const Node& GetNode() const { return modelData_.rootNode; }
 
 private:
 

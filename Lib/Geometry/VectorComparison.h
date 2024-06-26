@@ -26,11 +26,13 @@ using Flag3 = Vector3<bool>;
 // a == b
 //-----------------------------------------------------------------------------------------
 
-inline Flag4 operator==(const Vector4f& a, const Vector4f& b) {
+template <typename T>
+inline Flag4 operator==(const Vector4<T>& a, const Vector4<T>& b) {
 	return { a.x == b.x, a.y == b.y, a.z == b.z, a.w == b.w };
 }
 
-inline Flag3 operator==(const Vector3f& a, const Vector3f& b) {
+template <typename T>
+inline Flag3 operator==(const Vector3<T>& a, const Vector3<T>& b) {
 	return { a.x == b.x, a.y == b.y, a.z == b.z };
 }
 
@@ -38,11 +40,13 @@ inline Flag3 operator==(const Vector3f& a, const Vector3f& b) {
 // a != b
 //-----------------------------------------------------------------------------------------
 
-inline Flag4 operator!=(const Vector4f& a, const Vector4f& b) {
+template <typename T>
+inline Flag4 operator!=(const Vector4<T>& a, const Vector4<T>& b) {
 	return { a.x != b.x, a.y != b.y, a.z != b.z, a.w != b.w };
 }
 
-inline Flag3 operator!=(const Vector3f& a, const Vector3f& b) {
+template <typename T>
+inline Flag3 operator!=(const Vector3<T>& a, const Vector3<T>& b) {
 	return { a.x != b.x, a.y != b.y, a.z != b.z };
 }
 
@@ -50,11 +54,13 @@ inline Flag3 operator!=(const Vector3f& a, const Vector3f& b) {
 // a >= b
 //-----------------------------------------------------------------------------------------
 
-inline Flag4 operator>=(const Vector4f& a, const Vector4f& b) {
+template <typename T>
+inline Flag4 operator>=(const Vector4<T>& a, const Vector4<T>& b) {
 	return { a.x >= b.x, a.y >= b.y, a.z >= b.z, a.w >= b.w };
 }
 
-inline Flag3 operator>=(const Vector3f& a, const Vector3f& b) {
+template <typename T>
+inline Flag3 operator>=(const Vector3<T>& a, const Vector3<T>& b) {
 	return { a.x >= b.x, a.y >= b.y, a.z >= b.z };
 }
 
@@ -62,11 +68,13 @@ inline Flag3 operator>=(const Vector3f& a, const Vector3f& b) {
 // a > b
 //-----------------------------------------------------------------------------------------
 
-inline Flag4 operator>(const Vector4f& a, const Vector4f& b) {
+template <typename T>
+inline Flag4 operator>(const Vector4<T>& a, const Vector4<T>& b) {
 	return { a.x > b.x, a.y > b.y, a.z > b.z, a.w > b.w };
 }
 
-inline Flag3 operator>(const Vector3f& a, const Vector3f& b) {
+template <typename T>
+inline Flag3 operator>(const Vector3<T>& a, const Vector3<T>& b) {
 	return { a.x > b.x, a.y > b.y, a.z > b.z };
 }
 
@@ -74,11 +82,13 @@ inline Flag3 operator>(const Vector3f& a, const Vector3f& b) {
 // a <= b
 //-----------------------------------------------------------------------------------------
 
-inline Flag4 operator<=(const Vector4f& a, const Vector4f& b) {
+template <typename T>
+inline Flag4 operator<=(const Vector4<T>& a, const Vector4<T>& b) {
 	return { a.x <= b.x, a.y <= b.y, a.z <= b.z, a.w <= b.w };
 }
 
-inline Flag3 operator<=(const Vector3f& a, const Vector3f& b) {
+template <typename T>
+inline Flag3 operator<=(const Vector3<T>& a, const Vector3<T>& b) {
 	return { a.x <= b.x, a.y <= b.y, a.z <= b.z };
 }
 
@@ -86,11 +96,13 @@ inline Flag3 operator<=(const Vector3f& a, const Vector3f& b) {
 // a < b
 //-----------------------------------------------------------------------------------------
 
-inline Flag4 operator<(const Vector4f& a, const Vector4f& b) {
+template <typename T>
+inline Flag4 operator<(const Vector4<T>& a, const Vector4<T>& b) {
 	return { a.x < b.x, a.y < b.y, a.z < b.z, a.w < b.w };
 }
 
-inline Flag3 operator<(const Vector3f& a, const Vector3f& b) {
+template <typename T>
+inline Flag3 operator<(const Vector3<T>& a, const Vector3<T>& b) {
 	return { a.x < b.x, a.y < b.y, a.z < b.z };
 }
 

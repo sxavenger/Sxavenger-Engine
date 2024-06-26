@@ -3,37 +3,28 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
-// DxObject
-// CS
-#include <DxCSBlob.h>
-#include <DxCSPipelineState.h>
-#include <DxCSBufferResource.h>
-
 // Graphics
 #include <DxGraphicsBlob.h>
 #include <DxGraphicsPipeline.h>
 
-// Model
-#include <Model.h>
-
 // c++
 #include <memory>
+#include <vector>
+#include <string>
 
-// Geometry
-#include <Vector4.h>
-#include <Vector3.h>
-#include <Matrix4x4.h>
+// model
+#include <Model.h>
 
-// rendering
+// Deffered
 #include <DefferedRendering.h>
 
-// attribtue
+// attritbute
 #include <Attribute.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// Particle class
+// NodeModel class
 ////////////////////////////////////////////////////////////////////////////////////////////
-class Particle
+class NodeModel
 	: public Attribute {
 public:
 
@@ -41,11 +32,11 @@ public:
 	// public methods
 	//=========================================================================================
 
-	Particle() = default;
+	NodeModel() = default;
 
-	~Particle() { Term(); }
+	~NodeModel() { Term(); }
 
-	void Init(DefferedRendering* defferdRendering);
+	void Init(DefferedRendering* deffered);
 
 	void Term();
 
@@ -58,33 +49,37 @@ public:
 private:
 
 	////////////////////////////////////////////////////////////////////////////////////////////
-	// ParticleData structure
+	// NodeModelType enum
 	////////////////////////////////////////////////////////////////////////////////////////////
-	struct ParticleData {
-		Matrix4x4 worldMatrix = Matrix4x4::MakeIdentity();
-		Vector4f  color;
+	enum NodeModelType {
+		NODE_MODEL_01,
+		NODE_MODEL_02,
+		NODE_MODEL_03,
+		NODE_MODEL_08,
+
+		kCountOfNodeModelType
 	};
+
 
 	//=========================================================================================
 	// private variables
 	//=========================================================================================
 
-	// CS
-	std::unique_ptr<DxObject::CSBlob>                         csBlob_;
-	std::unique_ptr<DxObject::CSPipelineState>                csPipelineState_;
-	std::unique_ptr<DxObject::CSBufferResource<ParticleData>> csBuffer_;
-
 	// Graphics
-	std::unique_ptr<DxObject::GraphicsBlob>     graphicsBlob_;
-	std::unique_ptr<DxObject::GraphicsPipeline> graphicsPipeline_;
+	std::unique_ptr<DxObject::GraphicsBlob>     blob_;
+	std::unique_ptr<DxObject::GraphicsPipeline> pipeline_;
 
 	// IA
 	std::unique_ptr<Model> model_;
 
-	DefferedRendering* deffered_;
+	// ConstantBuffer
+	std::vector<std::unique_ptr<DxObject::BufferResource<Matrix4x4>>> matrixBuffers_;
 
-	// blendMode
-	BlendMode mode_ = kBlendModeNormal;
-	static const std::string blendModeNames_[kCountOfBlendMode];
+	Matrix4x4 worldMatrix_ = Matrix4x4::MakeIdentity();
+	Transform transform_;
+
+	// modelType
+	NodeModelType type_ = NODE_MODEL_03;
+	static const std::string modelNames_[kCountOfNodeModelType];
 
 };

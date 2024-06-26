@@ -79,7 +79,7 @@ namespace DxObject {
 
 		void SetSRV(uint32_t index, ShaderVisibility stage, UINT shaderRegister);
 
-		void SetSampler(uint32_t index, TextureMode mode, ShaderVisibility stage, UINT shaderRegister);
+		void SetSampler(uint32_t sampleIndex, TextureMode mode, ShaderVisibility stage, UINT shaderRegister);
 
 		//=========================================================================================
 		// public variables

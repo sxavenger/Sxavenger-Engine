@@ -82,6 +82,9 @@ void GameScene::Init() {
 	particle_ = std::make_unique<Particle>();
 	particle_->Init(defferedRendering_.get());
 
+	nodeModel_ = std::make_unique<NodeModel>();
+	nodeModel_->Init(defferedRendering_.get());
+
 	//// TLAS 
 	//tlas_ = std::make_unique<TopLevelAS>();
 
@@ -127,6 +130,7 @@ void GameScene::Update() {
 	//tlas_->EndBlasSetup();
 
 	particle_->Update();
+	nodeModel_->Update();
 }
 
 void GameScene::Draw() {
@@ -176,6 +180,7 @@ void GameScene::Draw() {
 		MyEngine::BeginOffscreens(kCountOfDefferedRenderingType, defferedRendering_->GetTexturePtrs());
 
 		particle_->Draw();
+		nodeModel_->Draw();
 
 		MyEngine::EndOffscreens(kCountOfDefferedRenderingType, defferedRendering_->GetTexturePtrs());
 

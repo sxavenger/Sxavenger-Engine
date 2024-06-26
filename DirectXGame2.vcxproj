@@ -73,6 +73,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     </PostBuildEvent>
     <FxCompile>
       <ShaderModel>6.4</ShaderModel>
+      <AdditionalIncludeDirectories>$(ProjectDir)\resources\hlsl;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </FxCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -160,6 +161,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="externals\meshoptimizer\vertexfilter.cpp" />
     <ClCompile Include="externals\meshoptimizer\vfetchanalyzer.cpp" />
     <ClCompile Include="externals\meshoptimizer\vfetchoptimizer.cpp" />
+    <ClCompile Include="Game\NodeModel.cpp" />
     <ClCompile Include="Game\Particle.cpp" />
     <ClCompile Include="Game\RayTracingWorld\Cube.cpp" />
     <ClCompile Include="Game\RayTracingWorld\Ground.cpp" />
@@ -243,6 +245,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="externals\imgui\imstb_textedit.h" />
     <ClInclude Include="externals\imgui\imstb_truetype.h" />
     <ClInclude Include="externals\meshoptimizer\meshoptimizer.h" />
+    <ClInclude Include="Game\NodeModel.h" />
     <ClInclude Include="Game\Particle.h" />
     <ClInclude Include="Game\RayTracingWorld\Cube.h" />
     <ClInclude Include="Game\RayTracingWorld\Ground.h" />
@@ -285,6 +288,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <None Include="Resources\hlsl\FullScreen.hlsli" />
     <None Include="Resources\hlsl\GaussianBlur.hlsli" />
     <None Include="Resources\hlsl\Lighting.hlsli" />
+    <None Include="Resources\hlsl\Object3d\Object3d.hlsli" />
     <None Include="Resources\hlsl\Particle.hlsli" />
     <None Include="Resources\hlsl\Primitive.hlsli" />
     <None Include="Resources\hlsl\ToonShading.hlsli" />
@@ -338,6 +342,12 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </FxCompile>
     <FxCompile Include="Resources\hlsl\GaussianBlur.VS.hlsl">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="Resources\hlsl\Object3d\Object3dDeffered.PS.hlsl">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="Resources\hlsl\Object3d\Object3d.VS.hlsl">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </FxCompile>
     <FxCompile Include="Resources\hlsl\Particle.CS.hlsl">

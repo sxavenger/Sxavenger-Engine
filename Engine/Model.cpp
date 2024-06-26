@@ -23,10 +23,13 @@ void Model::Init(const std::string& directoryPath, const std::string& filename) 
 
 	// modelで使うtextureの呼び出し
 	for (auto& material : modelData_.materials) {
-		//!< textureを使わないため
-		if (!material.isUseTexture) { break; } 
+		//!< textureの読み込み
+		for (int i = 0; i < kCountOfTextureType; ++i) {
+			//!< textureを使わないので
+			if (material.textureFilePaths[i].empty()) { continue; }
 
-		MyEngine::LoadTexture(material.textureFilePath);
+			MyEngine::LoadTexture(material.textureFilePaths[i]);
+		}
 	}
 
 }
@@ -35,10 +38,13 @@ void Model::Term() {
 
 	// modelで使ったtextureの解放
 	for (auto& material : modelData_.materials) {
-		//!< textureを使わないため
-		if (!material.isUseTexture) { break; }
+		//!< texture解放
+		for (int i = 0; i < kCountOfTextureType; ++i) {
+			//!< textureを使わないので
+			if (material.textureFilePaths[i].empty()) { continue; }
 
-		MyEngine::ReleaseTexture(material.textureFilePath);
+			MyEngine::ReleaseTexture(material.textureFilePaths[i]);
+		}
 	}
 
 	// modelの解放
@@ -60,11 +66,11 @@ void Model::SetBuffers(ID3D12GraphicsCommandList* commandList, uint32_t modelInd
 	commandList->IASetIndexBuffer(&indexBufferView);
 }
 
-void Model::SetGraphicsTextureHandle(ID3D12GraphicsCommandList* commandList, UINT parameterNum, uint32_t modelIndex) {
+void Model::SetGraphicsTextureHandle(ID3D12GraphicsCommandList* commandList, uint32_t modelIndex, UINT parameterNum, TextureType type) {
 
-	if (!modelData_.materials[modelIndex].isUseTexture) { return; } //!< textureを使ってないので
+	if (modelData_.materials[modelIndex].textureFilePaths[type].empty()) { return; } //!< textureを使ってないので
 
-	commandList->SetGraphicsRootDescriptorTable(parameterNum, MyEngine::GetTextureHandleGPU(modelData_.materials[modelIndex].textureFilePath));
+	commandList->SetGraphicsRootDescriptorTable(parameterNum, MyEngine::GetTextureHandleGPU(modelData_.materials[modelIndex].textureFilePaths[type]));
 }
 
 void Model::DrawCall(ID3D12GraphicsCommandList* commandList, uint32_t modelIndex, uint32_t instanceCount) {
@@ -169,10 +175,17 @@ ModelData ModelMethods::LoadModelFile(const std::string& directoryPath, const st
 			material->GetTexture(aiTextureType_DIFFUSE, 0, &textureFilePath);
 			
 			// データの保存
-			materialData.isUseTexture    = true;
-			materialData.textureFilePath = directoryPath + "/" + textureFilePath.C_Str();
+			materialData.textureFilePaths[TEXTURE_DIFFUSE] = directoryPath + "/" + textureFilePath.C_Str();
 		}
 
+		// normal textureの取得
+		if (material->GetTextureCount(aiTextureType_NORMALS) != 0) {
+			aiString textureFilePath;
+			material->GetTexture(aiTextureType_NORMALS, 0, &textureFilePath);
+
+			// データの保存
+			materialData.textureFilePaths[TEXTURE_NORMAL] = directoryPath + "/" + textureFilePath.C_Str();
+		}
 	}
 
 	// nodeの取得

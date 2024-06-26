@@ -136,6 +136,9 @@
     <Filter Include="Resource\hlsl\DefferedRendering">
       <UniqueIdentifier>{79a07257-cb9c-4b6c-90ae-ebf3d70be071}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resource\hlsl\Object3d">
+      <UniqueIdentifier>{ca9702fb-b955-447c-8975-9a46c268e694}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
@@ -409,6 +412,9 @@
     <ClCompile Include="Lib\Rendering\DefferedRendering.cpp">
       <Filter>Lib\Rendering</Filter>
     </ClCompile>
+    <ClCompile Include="Game\NodeModel.cpp">
+      <Filter>Game</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\MyEngine.h">
@@ -654,6 +660,9 @@
     <ClInclude Include="Lib\Rendering\DefferedRendering.h">
       <Filter>Lib\Rendering</Filter>
     </ClInclude>
+    <ClInclude Include="Game\NodeModel.h">
+      <Filter>Game</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />
@@ -697,6 +706,9 @@
       <Filter>Resource\hlsl\DefferedRendering</Filter>
     </None>
     <None Include="cpp.hint" />
+    <None Include="Resources\hlsl\Object3d\Object3d.hlsli">
+      <Filter>Resource\hlsl\Object3d</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Text Include="externals\imgui\LICENSE.txt">
@@ -760,6 +772,12 @@
     </FxCompile>
     <FxCompile Include="Resources\hlsl\DefferedRendering.PS.hlsl">
       <Filter>Resource\hlsl\DefferedRendering</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\hlsl\Object3d\Object3dDeffered.PS.hlsl">
+      <Filter>Resource\hlsl\Object3d</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\hlsl\Object3d\Object3d.VS.hlsl">
+      <Filter>Resource\hlsl\Object3d</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

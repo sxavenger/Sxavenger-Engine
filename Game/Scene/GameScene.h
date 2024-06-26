@@ -25,6 +25,8 @@
 
 #include <DefferedRendering.h>
 
+#include <NodeModel.h>
+
 ////////////////////////////////////////////////////////////////////////////////////////////
 // GameScene class
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -48,6 +50,9 @@ private:
 
 	// defferedRendering
 	std::unique_ptr<DefferedRendering> defferedRendering_;
+
+	// 
+	std::unique_ptr<NodeModel> nodeModel_;
 
 	//-----------------------------------------------------------------------------------------
 	// raytracing world
