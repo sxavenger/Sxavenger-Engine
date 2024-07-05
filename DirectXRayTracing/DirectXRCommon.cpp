@@ -18,21 +18,6 @@ using namespace DxrObject;
 
 void DirectXRCommon::InitRayTracing(int32_t clientWidth, int32_t clientHeight) {
 
-	// dxr対応かどうか確認
-	{
-		D3D12_FEATURE_DATA_D3D12_OPTIONS5 option = {};
-
-		auto hr = devices_->GetDevice()->CheckFeatureSupport(
-			D3D12_FEATURE_D3D12_OPTIONS5,
-			&option, sizeof(option)
-		);
-
-		assert(SUCCEEDED(hr));
-		assert(option.RaytracingTier >= D3D12_RAYTRACING_TIER_1_0);
-
-		Log("-- DXR version is compatible.");
-	}
-
 	// shaderManagerの生成
 	shaderManager_ = std::make_unique<DxrObject::ShaderManager>();
 	

@@ -55,7 +55,7 @@ void FullScreen::Init() {
 	desc.SetSampler(0, MODE_CLAMP, VISIBILITY_PIXEL, 0);
 
 	pipeline_ = std::make_unique<GraphicsPipeline>();
-	pipeline_->CreateRootSiganture(MyEngine::GetDevicesObj(), desc);
+	pipeline_->CreateRootSignature(MyEngine::GetDevicesObj(), desc);
 	pipeline_->CreatePipeline(MyEngine::GetDevicesObj(), blob_.get(), kBlendModeNormal);
 }
 

@@ -415,6 +415,12 @@
     <ClCompile Include="Game\NodeModel.cpp">
       <Filter>Game</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\DxObject\DxShaderReflection.cpp">
+      <Filter>Engine\DxObject</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\MeshBunny.cpp">
+      <Filter>Game</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\MyEngine.h">
@@ -663,6 +669,12 @@
     <ClInclude Include="Game\NodeModel.h">
       <Filter>Game</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\DxObject\DxShaderReflection.h">
+      <Filter>Engine\DxObject</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\MeshBunny.h">
+      <Filter>Game</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />
@@ -677,9 +689,6 @@
     </None>
     <None Include="Resources\hlsl\Camera.hlsli">
       <Filter>Resource\hlsl</Filter>
-    </None>
-    <None Include="Resources\hlsl\Primitive.hlsli">
-      <Filter>Resource\hlsl\Primitive</Filter>
     </None>
     <None Include="Resources\hlsl\ToonShading.hlsli">
       <Filter>Resource\hlsl</Filter>
@@ -705,9 +714,17 @@
     <None Include="Resources\hlsl\DefferedRendering.hlsli">
       <Filter>Resource\hlsl\DefferedRendering</Filter>
     </None>
-    <None Include="cpp.hint" />
     <None Include="Resources\hlsl\Object3d\Object3d.hlsli">
       <Filter>Resource\hlsl\Object3d</Filter>
+    </None>
+    <None Include="Resources\hlsl\Matrix.hlsli">
+      <Filter>Resource\hlsl</Filter>
+    </None>
+    <None Include="Resources\hlsl\DefaultMesh.hlsli">
+      <Filter>Resource\hlsl\Default</Filter>
+    </None>
+    <None Include="Resources\hlsl\Primitive\Primitive.hlsli">
+      <Filter>Resource\hlsl\Primitive</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -727,12 +744,6 @@
     </FxCompile>
     <FxCompile Include="Resources\hlsl\Default.PS.hlsl">
       <Filter>Resource\hlsl\Default</Filter>
-    </FxCompile>
-    <FxCompile Include="Resources\hlsl\Primitive.PS.hlsl">
-      <Filter>Resource\hlsl\Primitive</Filter>
-    </FxCompile>
-    <FxCompile Include="Resources\hlsl\Primitive.VS.hlsl">
-      <Filter>Resource\hlsl\Primitive</Filter>
     </FxCompile>
     <FxCompile Include="Resources\hlsl\BlasRender.PS.hlsl">
       <Filter>Resource\hlsl\BlasRender</Filter>
@@ -778,6 +789,15 @@
     </FxCompile>
     <FxCompile Include="Resources\hlsl\Object3d\Object3d.VS.hlsl">
       <Filter>Resource\hlsl\Object3d</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\hlsl\Default.AS.hlsl">
+      <Filter>Resource\hlsl\Default</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\hlsl\Primitive\Primitive.VS.hlsl">
+      <Filter>Resource\hlsl\Primitive</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\hlsl\Primitive\Primitive.PS.hlsl">
+      <Filter>Resource\hlsl\Primitive</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

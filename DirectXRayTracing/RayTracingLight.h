@@ -19,14 +19,7 @@
 // attribute
 #include <Attribute.h>
 
-////////////////////////////////////////////////////////////////////////////////////////////
-// LightType enum
-////////////////////////////////////////////////////////////////////////////////////////////
-enum LightType {
-	LIGHT_DIRECTION,
-	LIGHT_POINT,
-	LIGHT_SPOT
-};
+#include <Light.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // RayTracingLight class
@@ -67,7 +60,7 @@ private:
 		float decay        = 1.0f;
 		float angle        = std::cos(pi_v / 3.0f);
 
-		int type = LIGHT_DIRECTION;
+		int type = LIGHT_DIRECTIONAL;
 	};
 
 	//=========================================================================================

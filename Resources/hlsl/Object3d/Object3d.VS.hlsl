@@ -17,6 +17,7 @@ struct VSInput {
 // Buffer
 //=========================================================================================
 ConstantBuffer<Camera> gCamera : register(b0);
+static const float4x4 viewProj = mul(gCamera.viewMatrix, gCamera.projMatrix);
 
 struct TransformationMatrix {
 	float4x4 world;
@@ -30,7 +31,7 @@ VSOutput main(VSInput input) {
 	
 	VSOutput output;
 	
-	output.position = mul(input.position, mul(gTransform.world, gCamera.viewProj));
+	output.position = mul(input.position, mul(gTransform.world, viewProj));
 	output.texcoord = input.texcoord;
 	output.normal   = mul(input.normal, (float3x3)gTransform.world);
 	output.worldPos = mul(input.position, gTransform.world).xyz;

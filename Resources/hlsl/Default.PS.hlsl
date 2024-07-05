@@ -13,7 +13,7 @@ struct PSOutput {
 //-----------------------------------------------------------------------------------------
 // TextureBuffers
 //-----------------------------------------------------------------------------------------
-Texture2D<float4> gTexture : register(t0);
+Texture2D<float4> gTexture : register(t5);
 SamplerState gSampler : register(s0);
 
 //=========================================================================================
@@ -22,7 +22,7 @@ SamplerState gSampler : register(s0);
 struct Material {
 	float4 color;
 };
-ConstantBuffer<Material> gMaterial : register(b0);
+ConstantBuffer<Material> gMaterial : register(b4);
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // main
@@ -38,6 +38,8 @@ PSOutput main(MSOutput input) {
 	if (output.color.a == 0.0f) { //!< 透明度0の場合はpixel破棄
 		discard;
 	}
+	
+	output.color = input.color; //!< debug meshlet color
 	
 	return output;
 }

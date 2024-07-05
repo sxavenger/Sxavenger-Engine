@@ -12,6 +12,7 @@
 #include <ImGuiManager.h>
 #include <TextureManager.h>
 #include <Input.h>
+#include <PrimitiveDrawer.h>
 
 #include <ComPtr.h>
 
@@ -31,6 +32,8 @@ namespace {
 	ImGuiManager* sImGuiManager = nullptr;     //!< ImGui system
 	TextureManager* sTextureManager = nullptr; //!< TextureManager system
 	Input* sInput = nullptr;
+
+	PrimitiveDrawer* sPrimitive = nullptr;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -47,7 +50,7 @@ Camera2D* MyEngine::camera2D_ = nullptr;
 // method
 //-----------------------------------------------------------------------------------------
 
-void MyEngine::Initialize(int32_t kWindowWidth, int32_t kWindowHeight, const char* kWindowTitle) {
+void MyEngine::Initialize(int32_t windowWidth, int32_t windowHeight, const char* windowTitle) {
 	ExternalLogger::Open();
 	CoInitializeEx(0, COINIT_MULTITHREADED);
 
@@ -55,19 +58,19 @@ void MyEngine::Initialize(int32_t kWindowWidth, int32_t kWindowHeight, const cha
 	{
 		sWinApp = WinApp::GetInstance();
 
-		std::wstring titleString = ToWstring(kWindowTitle);
+		std::wstring titleString = ToWstring(windowTitle);
 
-		std::string title = kWindowTitle;
+		std::string title = windowTitle;
 		ExternalLogger::Write("[windowName]: " + title);
 
-		sWinApp->CreateGameWindow(kWindowWidth, kWindowHeight, titleString.c_str());
+		sWinApp->CreateGameWindow(windowWidth, windowHeight, titleString.c_str());
 		ExternalLogger::Write("Complete Initialize: sWinApp");
 	}
 
 	// DirectX12 の初期化
 	{
 		sDirectXRCommon = DirectXRCommon::GetInstance();
-		sDirectXRCommon->Init(sWinApp, kWindowWidth, kWindowHeight);
+		sDirectXRCommon->Init(sWinApp, windowWidth, windowHeight);
 		//sDirectXRCommon->InitRayTracing(kWindowWidth, kWindowHeight);
 		ExternalLogger::Write("Complete Initialize: sDirectXRCommon");
 
@@ -89,7 +92,7 @@ void MyEngine::Initialize(int32_t kWindowWidth, int32_t kWindowHeight, const cha
 		ExternalLogger::Write("Complete Initialize: sTextureManager");
 
 		// オフスク用のテクスチャの生成 todo: consoleに移動
-		sTextureManager->CreateRenderTexture("offscreen", kWindowWidth, kWindowHeight);
+		sTextureManager->CreateRenderTexture("offscreen", windowWidth, windowHeight);
 	}
 
 	// Inputの初期化
@@ -97,6 +100,13 @@ void MyEngine::Initialize(int32_t kWindowWidth, int32_t kWindowHeight, const cha
 		sInput = Input::GetInstance();
 		sInput->Init(sWinApp->GetHinst(), sWinApp->GetHwnd());
 		ExternalLogger::Write("Complete Initialize: sInput");
+	}
+
+	// PrimitiveDrawerの初期化
+	{
+		sPrimitive = PrimitiveDrawer::GetInstance();
+		sPrimitive->Init();
+		ExternalLogger::Write("Complete Initialize: sPrimitive");
 	}
 
 	ExternalLogger::Close();

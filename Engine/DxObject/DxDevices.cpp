@@ -86,28 +86,6 @@ void DxObject::Devices::Init() {
 		Log("[DxObject::Devices]: device_ << Complete Create");
 	}
 
-	// シェーダーモデルをチェック
-	{
-		D3D12_FEATURE_DATA_SHADER_MODEL shaderModel = { D3D_SHADER_MODEL_6_5 };
-		auto hr = device_->CheckFeatureSupport(D3D12_FEATURE_SHADER_MODEL, &shaderModel, sizeof(shaderModel));
-
-		if (FAILED(hr) || (shaderModel.HighestShaderModel < D3D_SHADER_MODEL_6_5)) {
-			Log("Error : Shader Model 6.5 is not supported.");
-			assert(false);
-		}
-	}
-
-	// メッシュシェーダーのサポートをチェック
-	{
-		D3D12_FEATURE_DATA_D3D12_OPTIONS7 features = {};
-		auto hr = device_->CheckFeatureSupport(D3D12_FEATURE_D3D12_OPTIONS7, &features, sizeof(features));
-
-		if (FAILED(hr) || (features.MeshShaderTier == D3D12_MESH_SHADER_TIER_NOT_SUPPORTED)) {
-			Log("Error : Mesh Shaders aren't supported.");
-			assert(false);
-		}
-	}
-
 #ifdef _DEBUG
 	// プログラムを停止する機能
 	{
@@ -143,7 +121,59 @@ void DxObject::Devices::Init() {
 		}
 	}
 #endif // _DEBUG
+
+	// サポートの確認
+	isRayTracingEnabled_ = CheckRayTracingEnable();
+	isMeshShaderEnabled_ = CheckMeshShaderEnable();
+
+	// 仮でassertを出しておく
+	assert(isRayTracingEnabled_);
+	assert(isMeshShaderEnabled_);
+
 }
 
 void DxObject::Devices::Term() {
+}
+
+bool DxObject::Devices::CheckRayTracingEnable() {
+
+	// RayTracingのサポートのチェック
+	{
+		D3D12_FEATURE_DATA_D3D12_OPTIONS5 option = {};
+		auto hr = device_->CheckFeatureSupport(D3D12_FEATURE_D3D12_OPTIONS5, &option, sizeof(option));
+
+		if (FAILED(hr) || option.RaytracingTier < D3D12_RAYTRACING_TIER_1_0) {
+			Log("Error : RayTracing is not supported.");
+			return false; //!< RayTracingがサポートされていない
+		}
+	}
+
+	return true;
+}
+
+bool DxObject::Devices::CheckMeshShaderEnable() {
+
+	// シェーダーモデルをチェック
+	{ //!< mesh shader の shader model が 6.5 以上である必要がある
+		D3D12_FEATURE_DATA_SHADER_MODEL shaderModel = { D3D_SHADER_MODEL_6_5 };
+		auto hr = device_->CheckFeatureSupport(D3D12_FEATURE_SHADER_MODEL, &shaderModel, sizeof(shaderModel));
+
+		if (FAILED(hr) || (shaderModel.HighestShaderModel < D3D_SHADER_MODEL_6_5)) {
+			Log("Error : Shader Model 6.5 is not supported.");
+			return false; //!< shader modelが6.5以下しかサポートされてない
+		}
+	}
+
+	// メッシュシェーダーのサポートをチェック
+	{
+		D3D12_FEATURE_DATA_D3D12_OPTIONS7 features = {};
+		auto hr = device_->CheckFeatureSupport(D3D12_FEATURE_D3D12_OPTIONS7, &features, sizeof(features));
+
+		if (FAILED(hr) || (features.MeshShaderTier == D3D12_MESH_SHADER_TIER_NOT_SUPPORTED)) {
+			Log("Error : Mesh Shaders aren't supported.");
+			return false; //!< mesh shaderがサポートされてない
+		}
+	}
+
+	return true;
 }

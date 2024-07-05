@@ -35,9 +35,13 @@ namespace DxObject {
 	// GraphicShaderType enum
 	////////////////////////////////////////////////////////////////////////////////////////////
 	enum GraphicShaderType { //!< DxShaderManagerのShaderTypeと合わせること
+		// vertex pipeline
 		GRAPHICS_VERTEX,
 		GRAPHICS_GEOMETRY,
+
+		// mesh pipeline
 		GRAPHICS_MESH,
+		GRAPHICS_AMPLIFICATION,
 
 		GRAPHICS_PIXEL,
 

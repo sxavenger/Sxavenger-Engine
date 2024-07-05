@@ -45,6 +45,8 @@ public:
 
 	void SetIsOpenNode(bool isOpenNode) { isOpenNode_ = isOpenNode; }
 
+	void SetThisAttribute(const std::string& name);
+
 protected:
 
 	//=========================================================================================
@@ -59,7 +61,5 @@ protected:
 	//=========================================================================================
 	// protected methods
 	//=========================================================================================
-
-	void SetThisAttribute(const std::string& name);
 
 };

@@ -25,7 +25,6 @@ public:
 	void Init();
 
 	void Term();
-
 	
 
 private:

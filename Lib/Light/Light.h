@@ -17,14 +17,15 @@
 #include <Matrix4x4.h>
 
 #include <ObjectStructure.h>
+#include <Attribute.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // LightType enum
 ////////////////////////////////////////////////////////////////////////////////////////////
 enum LightType {
-	TYPE_DIRECTIONAL,
-	TYPE_POINT,
-	TYPE_SPOT,
+	LIGHT_DIRECTIONAL,
+	LIGHT_POINT,
+	LIGHT_SPOT,
 
 	kLightTypeCount
 };
@@ -32,7 +33,8 @@ enum LightType {
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Light class
 ////////////////////////////////////////////////////////////////////////////////////////////
-class Light {
+class Light
+	: public Attribute {
 public:
 
 	//=========================================================================================
@@ -45,13 +47,13 @@ public:
 
 	void Init(DxObject::Devices* device);
 
-	void UpdateImGui(const char* windowName = "light editor", const char* treeName = "light");
-
 	void Term();
 
 	const D3D12_GPU_VIRTUAL_ADDRESS GetGPUVirtualAddress() {
 		return resource_->GetGPUVirtualAddress();
 	}
+
+	void SetAttributeImGui() override;
 
 private:
 
@@ -80,7 +82,7 @@ private:
 			angle        = std::cos(std::numbers::pi_v<float> / 3.0f);
 			falloffAngle = std::cos(std::numbers::pi_v<float> / 4.0f);
 
-			lightType = TYPE_DIRECTIONAL;
+			lightType = LIGHT_DIRECTIONAL;
 		}
 	};
 

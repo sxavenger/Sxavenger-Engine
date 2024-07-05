@@ -10,6 +10,8 @@
 #include <DxGraphicsBlob.h>
 #include <DxCSBlob.h>
 
+#include <DxShaderReflection.h>
+
 //=========================================================================================
 // static variables
 //=========================================================================================
@@ -22,7 +24,7 @@ const LPCWSTR DxObject::ShaderManager::compileModel_[kCountOfShaderType] = {
 
 	// mesh pipeline
 	L"ms_6_5", //!< ms
-	// AMP
+	L"as_6_5", //!< as
 
 	L"ps_6_5", //!< pixel
 
@@ -44,6 +46,8 @@ void DxObject::ShaderManager::Init() {
 	// managerのstatic設定
 	GraphicsBlob::SetShaderManager(this);
 	CSBlob::SetShaderManager(this);
+
+	ShaderReflection::SetShaderManager(this);
 }
 
 void DxObject::ShaderManager::Term() {
@@ -66,7 +70,6 @@ IDxcBlob* DxObject::ShaderManager::GetBlob(const std::wstring& filePath, ShaderT
 		return blob.Get();
 	}
 }
-
 
 void DxObject::ShaderManager::InitDxcCompiler() {
 

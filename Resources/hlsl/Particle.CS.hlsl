@@ -45,10 +45,8 @@ void main(uint3 dispatchThreadId : SV_DispatchThreadID) {
 	output.color
 		= float4(float3(dispatchThreadId.xyz) / (8 * dispatch.xyz), 1.0f);
 	
-	//output.color = float4(1.0f, 1.0f, 1.0f, 1.0f);
-	
 	output.mat
-		= mul(MakeScale(float3(0.1f, 0.1f, 0.1f)), MakeTranslate(float3(dispatchThreadId.xyz)));
+		= mul(MakeScale(float3(0.2f, 0.2f, 0.2f)), MakeTranslate(float3(dispatchThreadId.xyz)));
 	
 	
 	// to 1coordinate thread and dispatchs

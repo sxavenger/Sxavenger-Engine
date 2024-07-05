@@ -30,6 +30,7 @@ ConstantBuffer<TransformationMatrix> gFloor : register(b0);
 
 // camera
 ConstantBuffer<Camera> gCamera : register(b1);
+static const float4x4 viewProj = mul(gCamera.viewMatrix, gCamera.projMatrix);
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // main
@@ -58,7 +59,7 @@ void main(
 		
 		MSOutput output;
 		
-		output.position = mul(vertices[groupIndex].position, mul(gFloor.world, gCamera.viewProj));
+		output.position = mul(vertices[groupIndex].position, mul(gFloor.world, viewProj));
 		output.worldPos = mul(vertices[groupIndex].position, gFloor.world);
 		output.texcoord = vertices[groupIndex].texcoord;
 		output.normal   = normalize(mul(vertices[groupIndex].normal, (float3x3)gFloor.world));

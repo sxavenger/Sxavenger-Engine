@@ -45,7 +45,7 @@ struct Transform {
 		ImGui::DragFloat3("translate", &translate.x, granularity);
 	}
 
-	Matrix4x4 SetMatrix() const {
+	Matrix4x4 GetMatrix() const {
 		return Matrix::MakeAffine(scale, rotate, translate);
 	}
 };

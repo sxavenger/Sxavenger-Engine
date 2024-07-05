@@ -85,6 +85,10 @@ void GameScene::Init() {
 	nodeModel_ = std::make_unique<NodeModel>();
 	nodeModel_->Init(defferedRendering_.get());
 
+	light_ = std::make_unique<Light>(MyEngine::GetDevicesObj());
+
+	bunny_ = std::make_unique<MeshBunny>();
+
 	//// TLAS 
 	//tlas_ = std::make_unique<TopLevelAS>();
 
@@ -173,6 +177,7 @@ void GameScene::Draw() {
 		MyEngine::BeginOffscreen(console->GetSceneTexture());
 		MyEngine::camera3D_ = console->GetDebugCamera();
 
+		bunny_->Draw();
 		/*particle_->Draw();*/
 
 		MyEngine::EndOffscreen(console->GetSceneTexture());
@@ -189,7 +194,7 @@ void GameScene::Draw() {
 		/* main screen */
 		MyEngine::BeginOffscreen(MyEngine::GetTexture("offscreen"));
 		/*MyEngine::camera3D_ = camera.get();*/
-		defferedRendering_->Draw();
+		defferedRendering_->Draw(MyEngine::camera3D_->GetGPUVirtualAddress(), light_->GetGPUVirtualAddress());
 		MyEngine::EndOffscreen(MyEngine::GetTexture("offscreen"));
 	}
 

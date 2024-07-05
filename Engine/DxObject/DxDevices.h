@@ -90,5 +90,16 @@ namespace DxObject {
 		ComPtr<IDXGIAdapter4> useAdapter_;
 
 		ComPtr<ID3D12Device8> device_;
+
+		bool isMeshShaderEnabled_ = false;
+		bool isRayTracingEnabled_ = false;
+
+		//=========================================================================================
+		// private methods
+		//=========================================================================================
+
+		bool CheckRayTracingEnable();
+		bool CheckMeshShaderEnable();
+
 	};
 }

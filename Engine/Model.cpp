@@ -68,7 +68,7 @@ void Model::SetBuffers(ID3D12GraphicsCommandList* commandList, uint32_t modelInd
 
 void Model::SetGraphicsTextureHandle(ID3D12GraphicsCommandList* commandList, uint32_t modelIndex, UINT parameterNum, TextureType type) {
 
-	if (modelData_.materials[modelIndex].textureFilePaths[type].empty()) { return; } //!< textureを使ってないので
+	if (modelData_.materials[modelIndex].textureFilePaths[type].empty()) { assert(false); } //!< textureを使ってないので
 
 	commandList->SetGraphicsRootDescriptorTable(parameterNum, MyEngine::GetTextureHandleGPU(modelData_.materials[modelIndex].textureFilePaths[type]));
 }

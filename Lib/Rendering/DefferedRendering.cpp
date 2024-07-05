@@ -5,6 +5,7 @@
 //-----------------------------------------------------------------------------------------
 #include <MyEngine.h>
 #include <Environment.h>
+#include "DxShaderReflection.h"
 
 //-----------------------------------------------------------------------------------------
 // using
@@ -72,20 +73,26 @@ void DefferedRendering::Init() {
 	blob_->Create(L"defferedRendering.PS.hlsl", GRAPHICS_PIXEL);
 
 	GraphicRootSignatureDesc desc;
-	desc.Resize(4, 1);
+	desc.Resize(6, 1);
 	desc.SetSRV(0, VISIBILITY_PIXEL, 0);
 	desc.SetSRV(1, VISIBILITY_PIXEL, 1);
 	desc.SetSRV(2, VISIBILITY_PIXEL, 2);
 	desc.SetSRV(3, VISIBILITY_PIXEL, 3);
 	desc.SetSampler(0, MODE_CLAMP, VISIBILITY_PIXEL, 0);
+	// other buffers
+	desc.SetCBV(4, VISIBILITY_PIXEL, 0); //!< camera
+	desc.SetCBV(5, VISIBILITY_PIXEL, 1); //!< light
 
 	pipeline_ = std::make_unique<GraphicsPipeline>();
-	pipeline_->CreateRootSiganture(MyEngine::GetDevicesObj(), desc);
+	pipeline_->CreateRootSignature(MyEngine::GetDevicesObj(), desc);
 	pipeline_->CreatePipeline(MyEngine::GetDevicesObj(), blob_.get(), kBlendModeNormal);
+
+	auto reflection = std::make_unique<ShaderReflection>();
+	reflection->Init(blob_->GetGraphicsBlobs()[GRAPHICS_PIXEL]);
 
 }
 
-void DefferedRendering::Draw() {
+void DefferedRendering::Draw(const D3D12_GPU_VIRTUAL_ADDRESS& cameraAddress, const D3D12_GPU_VIRTUAL_ADDRESS& lightAddress) {
 
 	auto commandList = MyEngine::GetCommandList();
 	
@@ -100,6 +107,9 @@ void DefferedRendering::Draw() {
 	for (int i = 0; i < DefferedRenderingType::kCountOfDefferedRenderingType; ++i) {
 		commandList->SetGraphicsRootDescriptorTable(i, textureHandles_[i]);
 	}
+
+	commandList->SetGraphicsRootConstantBufferView(4, cameraAddress);
+	commandList->SetGraphicsRootConstantBufferView(5, lightAddress);
 
 	commandList->DrawIndexedInstanced(indexBuffer_->GetIndexSize(), 1, 0, 0, 0);
 }

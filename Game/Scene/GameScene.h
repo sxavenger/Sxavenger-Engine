@@ -27,6 +27,10 @@
 
 #include <NodeModel.h>
 
+#include <Light.h>
+
+#include <MeshBunny.h>
+
 ////////////////////////////////////////////////////////////////////////////////////////////
 // GameScene class
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -53,6 +57,10 @@ private:
 
 	// 
 	std::unique_ptr<NodeModel> nodeModel_;
+
+	std::unique_ptr<Light> light_;
+
+	std::unique_ptr<MeshBunny> bunny_;
 
 	//-----------------------------------------------------------------------------------------
 	// raytracing world

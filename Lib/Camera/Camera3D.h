@@ -42,8 +42,6 @@ public:
 	//! @brief コンストラクタ
 	Camera3D();
 
-	Camera3D(const std::string& filePath);
-
 	//! @brief デストラクタ
 	~Camera3D();
 
@@ -51,6 +49,8 @@ public:
 	void Init();
 
 	void Term();
+
+	void DrawFrustum(const Vector4f& color);
 
 	//! @brief カメラ情報を設定
 	//! 
@@ -60,12 +60,6 @@ public:
 	void SetCamera(const Vector3f& scale, const Vector3f& rotate, const Vector3f& transform);
 
 	void SetProjection(float fovY, float aspectRatio, float nearClip, float farClip);
-
-	void UpdateImGui(const char* title = "camera editor", const char* cameraName = "camera");
-
-	void ReadJsonCameraData(const std::string& filePath);
-
-	void WriteJsonCameraData(const std::string& filePath);
 
 	const Matrix4x4 GetViewProjectionMatrix() const { return viewMatrix_ * projectionMatrix_; }
 
@@ -86,7 +80,8 @@ private:
 	////////////////////////////////////////////////////////////////////////////////////////////
 	struct CameraForGPU {
 		Vector4f  position;
-		Matrix4x4 viewProjMatrix = Matrix4x4::MakeIdentity();
+		Matrix4x4 viewMatrix = Matrix4x4::MakeIdentity();
+		Matrix4x4 projMatrix = Matrix4x4::MakeIdentity();
 	};
 
 	//=========================================================================================

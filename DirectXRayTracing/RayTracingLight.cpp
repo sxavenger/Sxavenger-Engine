@@ -29,13 +29,13 @@ void RayTracingLight::SetAttributeImGui() {
 	ImGui::ColorEdit4("color",      &data_.color.r);
 	ImGui::SliderFloat("intensity", &data_.intensity, 0.0f, 1.0f);
 
-	ImGui::RadioButton("directionLight", &data_.type, LIGHT_DIRECTION);
+	ImGui::RadioButton("directionLight", &data_.type, LIGHT_DIRECTIONAL);
 	ImGui::SameLine();
 	ImGui::RadioButton("pointLight", &data_.type, LIGHT_POINT);
 	ImGui::SameLine();
 	ImGui::RadioButton("spotLight", &data_.type, LIGHT_SPOT);
 
-	if (data_.type == LIGHT_DIRECTION) {
+	if (data_.type == LIGHT_DIRECTIONAL) {
 		ImGui::DragFloat3("direction", &data_.direction.x, 0.02f);
 		data_.direction = Normalize(data_.direction);
 

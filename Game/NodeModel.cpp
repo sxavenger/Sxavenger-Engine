@@ -40,7 +40,7 @@ void NodeModel::Init(DefferedRendering* deffered) {
 	desc.SetSampler(0, MODE_WRAP, VISIBILITY_PIXEL, 0);
 
 	pipeline_ = std::make_unique<GraphicsPipeline>();
-	pipeline_->CreateRootSiganture(MyEngine::GetDevicesObj(), desc);
+	pipeline_->CreateRootSignature(MyEngine::GetDevicesObj(), desc);
 	pipeline_->CreatePipeline(MyEngine::GetDevicesObj(), blob_.get(), kBlendModeNormal, DefferedRenderingType::kCountOfDefferedRenderingType, deffered->GetFormats());
 
 	// IA
@@ -92,7 +92,7 @@ void NodeModel::Draw() {
 void NodeModel::SetAttributeImGui() {
 	
 	transform_.SetImGuiCommand();
-	worldMatrix_ = transform_.SetMatrix();
+	worldMatrix_ = transform_.GetMatrix();
 
 	if (ImGui::BeginCombo("modelType", modelNames_[type_].c_str())) {
 

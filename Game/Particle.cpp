@@ -4,6 +4,7 @@
 // include
 //-----------------------------------------------------------------------------------------
 #include <MyEngine.h>
+#include "DxShaderReflection.h"
 
 //-----------------------------------------------------------------------------------------
 // using
@@ -59,10 +60,13 @@ void Particle::Init(DefferedRendering* defferdRendering) {
 		desc.SetVirtualSRV(1, VISIBILITY_VERTEX, 0);
 
 		graphicsPipeline_ = std::make_unique<GraphicsPipeline>();
-		graphicsPipeline_->CreateRootSiganture(MyEngine::GetDevicesObj(), desc);
+		graphicsPipeline_->CreateRootSignature(MyEngine::GetDevicesObj(), desc);
 		graphicsPipeline_->CreatePipeline(MyEngine::GetDevicesObj(), graphicsBlob_.get(), mode_, kCountOfDefferedRenderingType, deffered_->GetFormats());
 
 	}
+
+	auto reflection = std::make_unique<ShaderReflection>();
+	reflection->Init(graphicsBlob_->GetGraphicsBlobs()[GRAPHICS_VERTEX]);
 
 	// IA
 	model_ = std::make_unique<Model>("./Resources/model", "sphere.obj");

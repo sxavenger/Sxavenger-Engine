@@ -81,6 +81,8 @@ namespace DxObject {
 
 		void SetSampler(uint32_t sampleIndex, TextureMode mode, ShaderVisibility stage, UINT shaderRegister);
 
+		void SetAnisotropicSampler(uint32_t sampleIndex, TextureMode mode, ShaderVisibility stage, UINT shaderRegister, uint32_t anisotropic);
+
 		//=========================================================================================
 		// public variables
 		//=========================================================================================
@@ -112,7 +114,7 @@ namespace DxObject {
 
 		void Clear();
 
-		void SetElement(const std::string& semanticName, uint32_t semanticIndex, DXGI_FORMAT format);
+		void SetElement(const LPCSTR& semanticName, uint32_t semanticIndex, DXGI_FORMAT format);
 
 		D3D12_INPUT_LAYOUT_DESC GetInputLayout() const;
 
@@ -138,7 +140,7 @@ namespace DxObject {
 
 		/* CreateRootSignature */
 
-		void CreateRootSiganture(Devices* devices, const GraphicRootSignatureDesc& descs);
+		void CreateRootSignature(Devices* devices, const GraphicRootSignatureDesc& descs);
 
 		/* CreatePipeline */
 
@@ -149,7 +151,7 @@ namespace DxObject {
 
 		void CreatePipeline(
 			Devices* devices,
-			GraphicsBlob* graphicBlob, const GraphicsInputLayoutDesc& layout, BlendMode blendMode
+			GraphicsBlob* graphicBlob, const GraphicsInputLayoutDesc& layout, BlendMode blendMode, D3D12_PRIMITIVE_TOPOLOGY_TYPE type = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE
 		);
 
 		void CreatePipeline(
@@ -181,6 +183,7 @@ namespace DxObject {
 
 		/* parameter */
 		GraphicsBlob* blob_;
+		D3D_PRIMITIVE_TOPOLOGY primitiveType_ = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
 
 		/* viewports */
 		D3D12_VIEWPORT viewport_;
@@ -197,6 +200,7 @@ namespace DxObject {
 			ID3D12Device8* device,
 			const D3D12_INPUT_LAYOUT_DESC& inputLayout, const D3D12_RASTERIZER_DESC& rasterizer, const D3D12_DEPTH_STENCIL_DESC& depthStencil,
 			BlendMode blendMode,
+			D3D12_PRIMITIVE_TOPOLOGY_TYPE type = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE,
 			uint32_t formatSize = 1, const DXGI_FORMAT formats[D3D12_SIMULTANEOUS_RENDER_TARGET_COUNT] = &defaultFormat
 		);
 	};

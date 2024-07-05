@@ -7,6 +7,7 @@
 #include <d3d12.h>
 #include <dxgi1_6.h>
 #include <dxcapi.h>
+#include <d3d12shader.h>
 
 // c++
 #include <cstdint>
@@ -42,7 +43,7 @@ namespace DxObject {
 
 		// mesh pipeline
 		MESH,
-		// AMP
+		AMPLIFICATION,
 
 		PIXEL,
 
@@ -75,6 +76,8 @@ namespace DxObject {
 		void Term();
 
 		IDxcBlob* GetBlob(const std::wstring& filePath, ShaderType type);
+
+		IDxcUtils* GetUtils() const { return dxcUtils_.Get(); }
 
 	private:
 

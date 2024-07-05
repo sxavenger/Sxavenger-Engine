@@ -52,7 +52,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)\Game\RayTracingWorld;$(ProjectDir)\Game\Scene;$(ProjectDir)\Game;$(ProjectDir)\Lib\Adapter\Performance;$(ProjectDir)\Lib\Adapter\Random;$(ProjectDir)\Lib\Adapter\Json;$(ProjectDir)\Lib\Rendering;$(ProjectDir)\Lib\PostEffect;$(ProjectDir)\Lib\Collider;$(ProjectDir)\Lib\Light;$(ProjectDir)\Lib\Camera;$(ProjectDir)\Lib\Geometry;$(ProjectDir)\Lib;$(ProjectDir)\externals\meshoptimizer;$(ProjectDir)\externals\assimp\include;$(ProjectDir)\externals\nlohmann;$(ProjectDir)\externals\DirectXTex;$(ProjectDir)\externals\imgui;$(ProjectDir)\Engine\DxObject;$(ProjectDir)\Engine;$(ProjectDir)\DirectXRayTracing;$(ProjectDir)\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)\Game\RayTracingWorld;$(ProjectDir)\Game\Scene;$(ProjectDir)\Game;$(ProjectDir)\Lib\Adapter\Performance;$(ProjectDir)\Lib\Adapter\Random;$(ProjectDir)\Lib\Adapter\Json;$(ProjectDir)\Lib\Rendering;$(ProjectDir)\Lib\PostEffect;$(ProjectDir)\Lib\Collider;$(ProjectDir)\Lib\Light;$(ProjectDir)\Lib\Camera;$(ProjectDir)\Lib\Geometry;$(ProjectDir)\Lib;$(ProjectDir)\externals\meshoptimizer;$(ProjectDir)\externals\assimp\include;$(ProjectDir)\externals\nlohmann;$(ProjectDir)\externals\DirectXMesh;$(ProjectDir)\externals\DirectXTex;$(ProjectDir)\externals\imgui;$(ProjectDir)\Engine\DxObject;$(ProjectDir)\Engine;$(ProjectDir)\DirectXRayTracing;$(ProjectDir)\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
@@ -72,7 +72,7 @@
 copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dxil.dll"</Command>
     </PostBuildEvent>
     <FxCompile>
-      <ShaderModel>6.4</ShaderModel>
+      <ShaderModel>6.5</ShaderModel>
       <AdditionalIncludeDirectories>$(ProjectDir)\resources\hlsl;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </FxCompile>
   </ItemDefinitionGroup>
@@ -129,6 +129,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\DxObject\DxMesh.cpp" />
     <ClCompile Include="Engine\DxObject\DxObjectMethod.cpp" />
     <ClCompile Include="Engine\DxObject\DxShaderManager.cpp" />
+    <ClCompile Include="Engine\DxObject\DxShaderReflection.cpp" />
     <ClCompile Include="Engine\DxObject\DxStructuredBuffer.cpp" />
     <ClCompile Include="Engine\DxObject\DxSwapChain.cpp" />
     <ClCompile Include="Engine\ImGuiManager.cpp" />
@@ -161,6 +162,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="externals\meshoptimizer\vertexfilter.cpp" />
     <ClCompile Include="externals\meshoptimizer\vfetchanalyzer.cpp" />
     <ClCompile Include="externals\meshoptimizer\vfetchoptimizer.cpp" />
+    <ClCompile Include="Game\MeshBunny.cpp" />
     <ClCompile Include="Game\NodeModel.cpp" />
     <ClCompile Include="Game\Particle.cpp" />
     <ClCompile Include="Game\RayTracingWorld\Cube.cpp" />
@@ -226,6 +228,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\DxObject\DxMesh.h" />
     <ClInclude Include="Engine\DxObject\DxObjectMethod.h" />
     <ClInclude Include="Engine\DxObject\DxShaderManager.h" />
+    <ClInclude Include="Engine\DxObject\DxShaderReflection.h" />
     <ClInclude Include="Engine\DxObject\DxStructuredBuffer.h" />
     <ClInclude Include="Engine\DxObject\DxSwapChain.h" />
     <ClInclude Include="Engine\ImGuiManager.h" />
@@ -245,6 +248,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="externals\imgui\imstb_textedit.h" />
     <ClInclude Include="externals\imgui\imstb_truetype.h" />
     <ClInclude Include="externals\meshoptimizer\meshoptimizer.h" />
+    <ClInclude Include="Game\MeshBunny.h" />
     <ClInclude Include="Game\NodeModel.h" />
     <ClInclude Include="Game\Particle.h" />
     <ClInclude Include="Game\RayTracingWorld\Cube.h" />
@@ -279,23 +283,27 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />
-    <None Include="cpp.hint" />
     <None Include="Resources\hlsl\BlasRender.hlsli" />
     <None Include="Resources\hlsl\Camera.hlsli" />
     <None Include="Resources\hlsl\Default.hlsli" />
+    <None Include="Resources\hlsl\DefaultMesh.hlsli" />
     <None Include="Resources\hlsl\DefferedRendering.hlsli" />
     <None Include="Resources\hlsl\Floor.hlsli" />
     <None Include="Resources\hlsl\FullScreen.hlsli" />
     <None Include="Resources\hlsl\GaussianBlur.hlsli" />
     <None Include="Resources\hlsl\Lighting.hlsli" />
+    <None Include="Resources\hlsl\Matrix.hlsli" />
     <None Include="Resources\hlsl\Object3d\Object3d.hlsli" />
     <None Include="Resources\hlsl\Particle.hlsli" />
-    <None Include="Resources\hlsl\Primitive.hlsli" />
+    <None Include="Resources\hlsl\Primitive\Primitive.hlsli" />
     <None Include="Resources\hlsl\ToonShading.hlsli" />
     <None Include="Resources\RayTracingShader\Lighting.hlsli" />
     <None Include="Resources\RayTracingShader\RayTracingConfig.hlsli" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="externals\DirectXMesh\DirectXMesh_Desktop_2022_Win10.vcxproj">
+      <Project>{6857f086-f6fe-4150-9ed7-7446f1c1c220}</Project>
+    </ProjectReference>
     <ProjectReference Include="externals\DirectXTex\DirectXTex_Desktop_2022_Win10.vcxproj">
       <Project>{371b9fa9-4c90-4ac6-a123-aced756d6c77}</Project>
     </ProjectReference>
@@ -308,6 +316,9 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </FxCompile>
     <FxCompile Include="Resources\hlsl\BlasRender.VS.hlsl">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="Resources\hlsl\Default.AS.hlsl">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </FxCompile>
     <FxCompile Include="Resources\hlsl\Default.MS.hlsl">
@@ -362,10 +373,10 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <FxCompile Include="Resources\hlsl\ParticleDeffered.PS.hlsl">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </FxCompile>
-    <FxCompile Include="Resources\hlsl\Primitive.PS.hlsl">
+    <FxCompile Include="Resources\hlsl\Primitive\Primitive.PS.hlsl">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </FxCompile>
-    <FxCompile Include="Resources\hlsl\Primitive.VS.hlsl">
+    <FxCompile Include="Resources\hlsl\Primitive\Primitive.VS.hlsl">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </FxCompile>
     <FxCompile Include="Resources\RayTracingShader\RayTracingWorld.hlsl">

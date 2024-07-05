@@ -51,8 +51,20 @@ namespace Deffered {
 	}
 	
 	/* to data */
-	float4 GetTextureColor(float2 texcoord, Texture2D texture, SamplerState sample) {
+	float4 GetTextureAlbed(float2 texcoord, Texture2D texture, SamplerState sample) {
 		return texture.Sample(sample, texcoord);
+	}
+	
+	float3 GetTextureNormal(float2 texcoord, Texture2D texture, SamplerState sample) {
+		float3 result = texture.Sample(sample, texcoord).xyz;
+		
+		result = (result * 2.0f) - 1.0f;
+		
+		return normalize(result);
+	}
+	
+	float3 GetTextureWorldPos(float2 texcoord, Texture2D texture, SamplerState sample) {
+		return texture.Sample(sample, texcoord).xyz;
 	}
 	
 }

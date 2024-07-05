@@ -48,7 +48,7 @@ public:
 
 	void Init();
 
-	void Draw();
+	void Draw(const D3D12_GPU_VIRTUAL_ADDRESS& cameraAddress, const D3D12_GPU_VIRTUAL_ADDRESS& lightAddress);
 
 	void Term();
 

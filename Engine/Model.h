@@ -87,6 +87,8 @@ public:
 	// public methods
 	//=========================================================================================
 
+	Model() = delete;
+
 	//! @brief コンストラクタ
 	Model(const std::string& directoryPath, const std::string& filename) { Init(directoryPath, filename); }
 

@@ -18,7 +18,7 @@ void Teapot::Init() {
 	transform_.scale     *= 2.0f;
 	transform_.translate = { 0.0f, 1.6f, 8.0f };
 
-	worldMatrix_ = transform_.SetMatrix();
+	worldMatrix_ = transform_.GetMatrix();
 
 	SetThisAttribute("teapot");
 
@@ -33,6 +33,6 @@ void Teapot::SetAttributeImGui() {
 	ImGui::DragFloat3("rotate",    &transform_.rotate.x, 0.01f);
 	ImGui::DragFloat3("translate", &transform_.translate.x, 0.01f);
 
-	worldMatrix_ = transform_.SetMatrix();
+	worldMatrix_ = transform_.GetMatrix();
 
 }

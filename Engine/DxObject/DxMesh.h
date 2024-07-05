@@ -3,6 +3,11 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
+// DirectX
+#include <d3d12.h>
+#include <DirectXMesh.h>
+#include <DirectXMath.h>
+
 // c++
 #include <cstdint>
 #include <vector>
@@ -15,39 +20,25 @@
 #include <DxBufferResource.h>
 #include <DxStructuredBuffer.h>
 
-
-//-----------------------------------------------------------------------------------------
-// include
-//-----------------------------------------------------------------------------------------
-
-
 ////////////////////////////////////////////////////////////////////////////////////////////
-// Mesh structure
+// ResMesh structure
 ////////////////////////////////////////////////////////////////////////////////////////////
-struct ResMeshlet {
-	uint32_t vertexOffset;    //!< 頂点番号のオフセット
-	uint32_t vertexCount;     //!< 頂点数
-	uint32_t primitiveOffset; //!< プリミティブ番号のオフセット
-	uint32_t primitiveCount;  //!< プリミティブオフセット
-};
-
-struct ResPrimitiveIndex {
-	uint32_t index0 : 10;
-	uint32_t index1 : 10;
-	uint32_t index2 : 10;
-	uint32_t reserved : 2;
-};
-
 struct ResMesh {
 	std::vector<VertexData> vertices;
 	std::vector<uint32_t>   indices;
 	uint32_t                materialId;
 
-	std::vector<ResMeshlet>        meshlets;
-	std::vector<uint32_t>          uniqueVertexIndices;
-	std::vector<ResPrimitiveIndex> primitiveIndices;
+	std::vector<DirectX::Meshlet>         meshlets;
+	std::vector<uint32_t>                 uniqueVertexIndices;
+	std::vector<DirectX::MeshletTriangle> primitiveIndices;
 
-	void Term() {
+	std::vector<DirectX::CullData> cullDatas;
+
+	ResMesh() = default;
+
+	~ResMesh() { Clear(); }
+
+	void Clear() {
 		vertices.clear();
 		vertices.shrink_to_fit();
 		indices.clear();
@@ -60,15 +51,17 @@ struct ResMesh {
 		uniqueVertexIndices.shrink_to_fit();
 		primitiveIndices.clear();
 		primitiveIndices.shrink_to_fit();
+
+		cullDatas.clear();
+		cullDatas.shrink_to_fit();
 	}
+
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // DxObject namespace
 ////////////////////////////////////////////////////////////////////////////////////////////
 namespace DxObject {
-
-
 
 	////////////////////////////////////////////////////////////////////////////////////////////
 	// MeshLoader class
@@ -80,10 +73,11 @@ namespace DxObject {
 		// public methods
 		//=========================================================================================
 
-		static void PerseMesh( // test publics
+		static void PerseMesh(
 			DxObject::BufferResource<VertexData>* verticesBuffer, DxObject::IndexBufferResource* indicesBuffer,
 			ResMesh& dstMesh //!< param[out]
 		);
+		
 
 	private:
 
@@ -98,11 +92,6 @@ namespace DxObject {
 		// private methods
 		//=========================================================================================
 
-		static void PerseMesh(
-			DxObject::BufferPtrResource<VertexData>* verticesBuffer, DxObject::IndexBufferResource* indicesBuffer,
-			ResMesh& dstMesh //!< param[out]
-		);
-
 	};
 
 	////////////////////////////////////////////////////////////////////////////////////////////
@@ -115,11 +104,13 @@ namespace DxObject {
 		// public methods
 		//=========================================================================================
 
+		Mesh() = delete;
+
 		Mesh(BufferResource<VertexData>* vertexResource, IndexBufferResource* indexResource) {
 			Init(vertexResource, indexResource);
 		}
 
-		virtual ~Mesh() { Term(); }
+		~Mesh() { Term(); }
 
 		void Init(BufferResource<VertexData>* vertexResource, IndexBufferResource* indexResource);
 
@@ -127,32 +118,41 @@ namespace DxObject {
 
 		void Dispatch(UINT verticesParam, UINT uinqueVertexIndicesParam, UINT meshletsParam, UINT primitiveIndices);
 
+		void Dispatch(UINT verticesParam, UINT uinqueVertexIndicesParam, UINT meshletsParam, UINT primitiveIndices, UINT cullDataParam, UINT infoParam);
+
 
 	private:
 
 		////////////////////////////////////////////////////////////////////////////////////////////
-		// Buffer structure
+		// MeshInfo structure
 		////////////////////////////////////////////////////////////////////////////////////////////
-		template <typename T>
-		struct Buffer {
-			std::unique_ptr<BufferResource<T>> resource;
-			std::unique_ptr<StructuredBuffer>  structuredBuffer;
-
-			void Reset() {
-				resource.reset();
-				structuredBuffer.reset();
-			}
+		struct MeshInfo {
+			uint32_t meshletCount;
 		};
 
 		//=========================================================================================
 		// private variables
 		//=========================================================================================
 
-		// structuredBuffers
-		Buffer<VertexData> vertices_;
-		Buffer<uint32_t> uniqueVertexIndices_;
-		Buffer<ResPrimitiveIndex> primitiveIndices_;
-		Buffer<ResMeshlet> meshlets_;
+		// buffers
+		std::unique_ptr<DxObject::BufferResource<VertexData>>               vertices_;
+		std::unique_ptr<DxObject::BufferResource<uint32_t>>                 uniqueVertexIndices_;
+		std::unique_ptr<DxObject::BufferResource<DirectX::MeshletTriangle>> primitiveIndices_;
+		std::unique_ptr<DxObject::BufferResource<DirectX::Meshlet>>         meshlets_;
+		std::unique_ptr<DxObject::BufferResource<DirectX::CullData>>        cullDatas_;
+		//!< SRV節約のためVirtualAddressでの設定
+		
+		std::unique_ptr<DxObject::BufferResource<MeshInfo>> info_;
+
+		// config
+		static const UINT kAmplificationRound_ = 32; //<! numthreadが32で作られてるため
+
+		//=========================================================================================
+		// private methods
+		//=========================================================================================
+
+		static UINT DivRoundUp(UINT meshletCount);
+		
 	};
 
 }

@@ -52,15 +52,29 @@ void DxObject::GraphicRootSignatureDesc::SetSRV(uint32_t index, ShaderVisibility
 	params[index].DescriptorTable.NumDescriptorRanges = 1;
 }
 
-void DxObject::GraphicRootSignatureDesc::SetSampler(uint32_t index, TextureMode mode, ShaderVisibility stage, UINT shaderRegister) {
-	samplers[index].Filter           = D3D12_FILTER_MIN_MAG_MIP_LINEAR;
-	samplers[index].AddressU         = static_cast<D3D12_TEXTURE_ADDRESS_MODE>(mode);
-	samplers[index].AddressV         = static_cast<D3D12_TEXTURE_ADDRESS_MODE>(mode);
-	samplers[index].AddressW         = static_cast<D3D12_TEXTURE_ADDRESS_MODE>(mode);
-	samplers[index].ComparisonFunc   = D3D12_COMPARISON_FUNC_NEVER;
-	samplers[index].MaxLOD           = D3D12_FLOAT32_MAX;
-	samplers[index].ShaderRegister   = shaderRegister;
-	samplers[index].ShaderVisibility = static_cast<D3D12_SHADER_VISIBILITY>(stage);
+void DxObject::GraphicRootSignatureDesc::SetSampler(uint32_t sampleIndex, TextureMode mode, ShaderVisibility stage, UINT shaderRegister) {
+	samplers[sampleIndex].Filter           = D3D12_FILTER_MIN_MAG_MIP_LINEAR;
+	samplers[sampleIndex].AddressU         = static_cast<D3D12_TEXTURE_ADDRESS_MODE>(mode);
+	samplers[sampleIndex].AddressV         = static_cast<D3D12_TEXTURE_ADDRESS_MODE>(mode);
+	samplers[sampleIndex].AddressW         = static_cast<D3D12_TEXTURE_ADDRESS_MODE>(mode);
+	samplers[sampleIndex].ComparisonFunc   = D3D12_COMPARISON_FUNC_NEVER;
+	samplers[sampleIndex].MaxLOD           = D3D12_FLOAT32_MAX;
+	samplers[sampleIndex].ShaderRegister   = shaderRegister;
+	samplers[sampleIndex].ShaderVisibility = static_cast<D3D12_SHADER_VISIBILITY>(stage);
+}
+
+void DxObject::GraphicRootSignatureDesc::SetAnisotropicSampler(
+	uint32_t sampleIndex, TextureMode mode, ShaderVisibility stage, UINT shaderRegister, uint32_t anisotropic) {
+
+	samplers[sampleIndex].Filter           = D3D12_FILTER_ANISOTROPIC;
+	samplers[sampleIndex].MaxAnisotropy    = anisotropic; //!< 異方性フィルタリングパラメーター
+	samplers[sampleIndex].AddressU         = static_cast<D3D12_TEXTURE_ADDRESS_MODE>(mode);
+	samplers[sampleIndex].AddressV         = static_cast<D3D12_TEXTURE_ADDRESS_MODE>(mode);
+	samplers[sampleIndex].AddressW         = static_cast<D3D12_TEXTURE_ADDRESS_MODE>(mode);
+	samplers[sampleIndex].ComparisonFunc   = D3D12_COMPARISON_FUNC_NEVER;
+	samplers[sampleIndex].MaxLOD           = D3D12_FLOAT32_MAX;
+	samplers[sampleIndex].ShaderRegister   = shaderRegister;
+	samplers[sampleIndex].ShaderVisibility = static_cast<D3D12_SHADER_VISIBILITY>(stage);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -72,10 +86,10 @@ void DxObject::GraphicsInputLayoutDesc::Clear() {
 	elements.shrink_to_fit();
 }
 
-void DxObject::GraphicsInputLayoutDesc::SetElement(const std::string& semanticName, uint32_t semanticIndex, DXGI_FORMAT format) {
+void DxObject::GraphicsInputLayoutDesc::SetElement(const LPCSTR& semanticName, uint32_t semanticIndex, DXGI_FORMAT format) {
 
 	D3D12_INPUT_ELEMENT_DESC element = {};
-	element.SemanticName      = semanticName.c_str();
+	element.SemanticName      = semanticName;
 	element.SemanticIndex     = semanticIndex;
 	element.Format            = format;
 	element.AlignedByteOffset = D3D12_APPEND_ALIGNED_ELEMENT;
@@ -103,7 +117,7 @@ DxObject::BlendState* DxObject::GraphicsPipeline::blendState_ = nullptr;
 // GraphicsPipeline class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-void DxObject::GraphicsPipeline::CreateRootSiganture(Devices* devices, const GraphicRootSignatureDesc& descs) {
+void DxObject::GraphicsPipeline::CreateRootSignature(Devices* devices, const GraphicRootSignatureDesc& descs) {
 
 	// deviceの取り出し
 	auto device = devices->GetDevice();
@@ -181,7 +195,7 @@ void DxObject::GraphicsPipeline::CreatePipeline(Devices* devices, GraphicsBlob* 
 
 void DxObject::GraphicsPipeline::CreatePipeline(
 	Devices* devices,
-	GraphicsBlob* graphicBlob, const GraphicsInputLayoutDesc& layout, BlendMode blendMode) {
+	GraphicsBlob* graphicBlob, const GraphicsInputLayoutDesc& layout, BlendMode blendMode, D3D12_PRIMITIVE_TOPOLOGY_TYPE type) {
 
 
 	if (graphicBlob != nullptr) {
@@ -207,7 +221,8 @@ void DxObject::GraphicsPipeline::CreatePipeline(
 	CreatePipelineState(
 		devices->GetDevice(),
 		layout.GetInputLayout(), descRasterizer, descDepthStencil,
-		blendMode
+		blendMode,
+		type
 	);
 }
 
@@ -261,6 +276,7 @@ void DxObject::GraphicsPipeline::CreatePipeline(
 		devices->GetDevice(),
 		descInputLayout, descRasterizer, descDepthStencil,
 		blendMode,
+		D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE,
 		formatSize, formats
 	);
 }
@@ -275,7 +291,7 @@ void DxObject::GraphicsPipeline::SetPipeline(ID3D12GraphicsCommandList* commandL
 
 	if (!blob_->IsUseMeshPipeline()) {
 		//!< vertex pipeline のときIAPrimitiveが必要になるので
-		commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST); //!< line描画の時の調整
+		commandList->IASetPrimitiveTopology(primitiveType_); //!< line描画の時の調整
 	}
 }
 
@@ -303,6 +319,7 @@ void DxObject::GraphicsPipeline::CreatePipelineState(
 	ID3D12Device8* device,
 	const D3D12_INPUT_LAYOUT_DESC& inputLayout, const D3D12_RASTERIZER_DESC& rasterizer, const D3D12_DEPTH_STENCIL_DESC& depthStencil,
 	BlendMode blendMode,
+	D3D12_PRIMITIVE_TOPOLOGY_TYPE type,
 	uint32_t formatSize, const DXGI_FORMAT formats[D3D12_SIMULTANEOUS_RENDER_TARGET_COUNT]) {
 
 	// blobsの取り出し
@@ -334,6 +351,10 @@ void DxObject::GraphicsPipeline::CreatePipelineState(
 		desc.MS = { blobs[GraphicShaderType::GRAPHICS_MESH]->GetBufferPointer(), blobs[GraphicShaderType::GRAPHICS_MESH]->GetBufferSize() };
 		desc.PS = { blobs[GraphicShaderType::GRAPHICS_PIXEL]->GetBufferPointer(), blobs[GraphicShaderType::GRAPHICS_PIXEL]->GetBufferSize() };
 
+		if (blobs[GraphicShaderType::GRAPHICS_AMPLIFICATION] != nullptr) {
+			desc.AS = { blobs[GraphicShaderType::GRAPHICS_AMPLIFICATION]->GetBufferPointer(), blobs[GraphicShaderType::GRAPHICS_AMPLIFICATION]->GetBufferSize() };
+		}
+
 		// create
 		CD3DX12_PIPELINE_MESH_STATE_STREAM psoStream = CD3DX12_PIPELINE_MESH_STATE_STREAM(desc);
 
@@ -357,11 +378,17 @@ void DxObject::GraphicsPipeline::CreatePipelineState(
 		desc.InputLayout           = inputLayout;
 		desc.BlendState            = blendState_->operator[](blendMode);
 		desc.RasterizerState       = rasterizer;
-		desc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
 		desc.SampleDesc.Count      = 1;
 		desc.SampleMask            = D3D12_DEFAULT_SAMPLE_MASK;
 		desc.DepthStencilState     = depthStencil;
 		desc.DSVFormat             = DXGI_FORMAT_D24_UNORM_S8_UINT;
+
+		// primitiveの設定
+		desc.PrimitiveTopologyType = type;
+
+		if (type == D3D12_PRIMITIVE_TOPOLOGY_TYPE_LINE) {
+			primitiveType_ = D3D_PRIMITIVE_TOPOLOGY_LINELIST;
+		}
 
 		// rtv formatの設定
 		desc.NumRenderTargets = formatSize;
