@@ -8,3 +8,21 @@ struct VSOutput {
 	float3 worldPos : POSITION0;
 	float2 texcoord : TEXCOORD0;
 };
+
+////////////////////////////////////////////////////////////////////////////////////////////
+// ParticleData sturucture
+////////////////////////////////////////////////////////////////////////////////////////////
+struct ParticleData {
+	float4x4 mat;
+	float4 color;
+	
+	float3 translate;
+	float3 velocity;
+	float3 acceleration;
+	float mass;
+	
+	float3 rotate;
+	float3 addRotate;
+	
+	int isUpdate;
+};

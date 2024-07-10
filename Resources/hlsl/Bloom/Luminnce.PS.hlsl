@@ -1,25 +1,25 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
-#include "Particle.hlsli"
-#include "DefferedRendering.hlsli"
-#include "Camera.hlsli"
+#include "../Sprite.hlsli"
 
 //=========================================================================================
 // Buffer
 //=========================================================================================
+Texture2D<float4> gTexture : register(t0);
+SamplerState gSampler : register(s0);
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // main
 ////////////////////////////////////////////////////////////////////////////////////////////
-DefferedOutput main(VSOutput input) {
-
-	DefferedOutput output;
+PSOutput main(VSOutput input) {
 	
-	output.albed    = input.color;
-	output.depth    = Deffered::ToDepthColor(input.position);
-	output.normal   = Deffered::ToNormalColor(input.normal);
-	output.worldPos = Deffered::ToWorldPosColor(input.worldPos);
+	PSOutput output;
 	
+	output.color = gTexture.Sample(gSampler, input.texcoord);
+	float t = dot(output.color.rgb, float3(0.2125f, 0.7154f, 0.0721f)); //!< Sample
+	
+	clip(t - 1.0f); //!< tが1.0f以下の場合, pixelの破棄
 	return output;
+	
 }

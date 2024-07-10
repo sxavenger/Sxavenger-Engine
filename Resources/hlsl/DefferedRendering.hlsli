@@ -35,8 +35,8 @@ namespace Deffered {
 	float4 ToDepthColor(float4 position) {
 		float4 result;
 		
-		result.rgb = position.w / 100.0f;
-		result.a   = 1.0f;
+		result.rgb = position.z; //!< HACK: 
+		result.a = 1.0f;
 		
 		return result;
 	}

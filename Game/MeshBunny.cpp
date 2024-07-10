@@ -32,7 +32,7 @@ void MeshBunny::Init() {
 	blob_->Create(L"Default.MS.hlsl", GRAPHICS_MESH);
 	blob_->Create(L"Default.PS.hlsl", GRAPHICS_PIXEL);
 
-	GraphicRootSignatureDesc desc;
+	GraphicsRootSignatureDesc desc;
 	desc.Resize(11, 1);
 	desc.SetVirtualSRV(0, VISIBILITY_ALL, 0); //!< vertices
 	desc.SetVirtualSRV(1, VISIBILITY_ALL, 1); //!< uniqueVertexIndices

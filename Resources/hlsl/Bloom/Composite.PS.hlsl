@@ -1,34 +1,22 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
-#include "GaussianBlur.hlsli"
-
-////////////////////////////////////////////////////////////////////////////////////////////
-// VSInput sturucture
-////////////////////////////////////////////////////////////////////////////////////////////
-struct VSInput {
-	float4 position : POSITION0;
-	float2 texcoord : TEXCOORD0;
-	float3 normal : NORMAL0;
-};
+#include "../Sprite.hlsli"
 
 //=========================================================================================
-// Buffers
+// Buffer
 //=========================================================================================
-struct Camera2D {
-	float4x4 proj;
-};
-ConstantBuffer<Camera2D> gCamera2D : register(b0);
+Texture2D<float4> gTexture : register(t0);
+SamplerState gSampler : register(s0);
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // main
 ////////////////////////////////////////////////////////////////////////////////////////////
-VSOutput main(VSInput input) {
+PSOutput main(VSOutput input) {
 	
-	VSOutput output;
+	PSOutput output;
 	
-	output.position = mul(input.position, gCamera2D.proj);
-	output.texcoord = input.texcoord;
+	output.color = gTexture.Sample(gSampler, input.texcoord);
 	
 	return output;
 	

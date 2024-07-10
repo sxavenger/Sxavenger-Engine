@@ -34,17 +34,20 @@ void PrimitiveTriangle::Init() {
 	grahicsBlob_->Create(directoryPath_ + L"Primitive.VS.hlsl", GRAPHICS_VERTEX);
 	grahicsBlob_->Create(directoryPath_ + L"Primitive.PS.hlsl", GRAPHICS_PIXEL);
 
-	GraphicRootSignatureDesc desc;
+	GraphicsRootSignatureDesc desc;
 	desc.Resize(1, 0);
 	desc.SetCBV(0, VISIBILITY_VERTEX, 0);
 
-	GraphicsInputLayoutDesc inputDesc;
-	inputDesc.SetElement("POSITION", 0, DXGI_FORMAT_R32G32B32A32_FLOAT);
-	inputDesc.SetElement("COLOR",    0, DXGI_FORMAT_R32G32B32A32_FLOAT);
+	GraphicsPipelineDesc pipelineDesc;
+	pipelineDesc.CreateDefaultDesc();
+
+	pipelineDesc.elements.clear(); //!< elementの代入し直し
+	pipelineDesc.SetElement("POSITION", 0, DXGI_FORMAT_R32G32B32A32_FLOAT);
+	pipelineDesc.SetElement("COLOR",    0, DXGI_FORMAT_R32G32B32A32_FLOAT);
 
 	graphicsPipeline_ = std::make_unique<GraphicsPipeline>();
 	graphicsPipeline_->CreateRootSignature(MyEngine::GetDevicesObj(), desc);
-	graphicsPipeline_->CreatePipeline(MyEngine::GetDevicesObj(), grahicsBlob_.get(), inputDesc, kBlendModeNormal);
+	graphicsPipeline_->CreatePipeline(MyEngine::GetDevicesObj(), grahicsBlob_.get(), pipelineDesc);
 
 	/* buffer */
 	objectBuffer_ = std::make_unique<DxObject::BufferResource<PrimitiveInput>>(MyEngine::GetDevicesObj(), kMaxObjectNum_ * 3);
@@ -94,17 +97,22 @@ void PrimitiveLine::Init() {
 	grahicsBlob_->Create(directoryPath_ + L"Primitive.VS.hlsl", GRAPHICS_VERTEX);
 	grahicsBlob_->Create(directoryPath_ + L"Primitive.PS.hlsl", GRAPHICS_PIXEL);
 
-	GraphicRootSignatureDesc desc;
+	GraphicsRootSignatureDesc desc;
 	desc.Resize(1, 0);
 	desc.SetCBV(0, VISIBILITY_VERTEX, 0);
 
-	GraphicsInputLayoutDesc inputDesc;
-	inputDesc.SetElement("POSITION", 0, DXGI_FORMAT_R32G32B32A32_FLOAT);
-	inputDesc.SetElement("COLOR",    0, DXGI_FORMAT_R32G32B32A32_FLOAT);
+	GraphicsPipelineDesc pipelineDesc;
+	pipelineDesc.CreateDefaultDesc();
+
+	pipelineDesc.elements.clear(); //!< elementの代入し直し
+	pipelineDesc.SetElement("POSITION", 0, DXGI_FORMAT_R32G32B32A32_FLOAT);
+	pipelineDesc.SetElement("COLOR",    0, DXGI_FORMAT_R32G32B32A32_FLOAT);
+
+	pipelineDesc.SetPrimitive(PRIMITIVE_LINE);
 
 	graphicsPipeline_ = std::make_unique<GraphicsPipeline>();
 	graphicsPipeline_->CreateRootSignature(MyEngine::GetDevicesObj(), desc);
-	graphicsPipeline_->CreatePipeline(MyEngine::GetDevicesObj(), grahicsBlob_.get(), inputDesc, kBlendModeNormal, D3D12_PRIMITIVE_TOPOLOGY_TYPE_LINE);
+	graphicsPipeline_->CreatePipeline(MyEngine::GetDevicesObj(), grahicsBlob_.get(), pipelineDesc);
 
 	/* buffer */
 	objectBuffer_ = std::make_unique<DxObject::BufferResource<PrimitiveInput>>(MyEngine::GetDevicesObj(), kMaxObjectNum_ * 2);

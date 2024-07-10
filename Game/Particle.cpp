@@ -39,8 +39,9 @@ void Particle::Init(DefferedRendering* defferdRendering) {
 		csBlob_->Init(L"particle.CS.hlsl");
 
 		CSRootSignatureDesc desc;
-		desc.Resize(1, 0);
+		desc.Resize(2, 0);
 		desc.SetVirtualUAV(0, 0);
+		desc.SetCBV(1, 0);
 
 		csPipelineState_ = std::make_unique<CSPipelineState>();
 		csPipelineState_->Init(desc, csBlob_.get());
@@ -48,20 +49,28 @@ void Particle::Init(DefferedRendering* defferdRendering) {
 		csBuffer_ = std::make_unique<CSBufferResource<ParticleData>>(MyEngine::GetDevicesObj(), 16 * 16 * 16);
 	}
 
+	boolBuffer_ = std::make_unique<BufferPtrResource<int>>(MyEngine::GetDevicesObj(), 1);
+	boolBuffer_->SetPtr(0, &isInit_);
+
 	// graphics
 	{
 		graphicsBlob_ = std::make_unique<GraphicsBlob>();
 		graphicsBlob_->Create(L"particle.VS.hlsl", GRAPHICS_VERTEX);
 		graphicsBlob_->Create(L"particleDeffered.PS.hlsl", GRAPHICS_PIXEL);
 
-		GraphicRootSignatureDesc desc;
+		GraphicsRootSignatureDesc desc;
 		desc.Resize(2, 0);
 		desc.SetCBV(0, VISIBILITY_VERTEX, 0);
 		desc.SetVirtualSRV(1, VISIBILITY_VERTEX, 0);
 
+		pipelineDesc_.CreateDefaultDesc();
+
+		pipelineDesc_.rtvFormats.clear(); //!< RTVFormatの代入し直し
+		pipelineDesc_.SetRTVFormats(DefferedRenderingType::kCountOfDefferedRenderingType, deffered_->GetFormats());
+
 		graphicsPipeline_ = std::make_unique<GraphicsPipeline>();
 		graphicsPipeline_->CreateRootSignature(MyEngine::GetDevicesObj(), desc);
-		graphicsPipeline_->CreatePipeline(MyEngine::GetDevicesObj(), graphicsBlob_.get(), mode_, kCountOfDefferedRenderingType, deffered_->GetFormats());
+		graphicsPipeline_->CreatePipeline(MyEngine::GetDevicesObj(), graphicsBlob_.get(), pipelineDesc_);
 
 	}
 
@@ -69,7 +78,7 @@ void Particle::Init(DefferedRendering* defferdRendering) {
 	reflection->Init(graphicsBlob_->GetGraphicsBlobs()[GRAPHICS_VERTEX]);
 
 	// IA
-	model_ = std::make_unique<Model>("./Resources/model", "sphere.obj");
+	model_ = std::make_unique<Model>("./Resources/model", "plane.obj");
 
 	SetThisAttribute("particle");
 }
@@ -85,6 +94,7 @@ void Particle::Update() {
 	csPipelineState_->SetCSPipeline();
 
 	commandList->SetComputeRootUnorderedAccessView(0, csBuffer_->GetGPUVirtualAddress());
+	commandList->SetComputeRootConstantBufferView(1, boolBuffer_->GetGPUVirtualAddress());
 
 	csPipelineState_->Dispatch(2, 2, 2);
 
@@ -108,21 +118,25 @@ void Particle::Draw() {
 
 void Particle::SetAttributeImGui() {
 
-	if (ImGui::BeginCombo("blendMode", blendModeNames_[mode_].c_str())) {
+	if (ImGui::BeginCombo("blendMode", blendModeNames_[pipelineDesc_.blendMode].c_str())) {
 
 		for (int i = 0; i < kCountOfBlendMode; ++i) {
-			bool isSelect = (i == mode_);
+			bool isSelect = (i == pipelineDesc_.blendMode);
 
 			if (ImGui::Selectable(blendModeNames_[i].c_str(), isSelect)) {
-				mode_ = static_cast<BlendMode>(i);
+				pipelineDesc_.blendMode = static_cast<BlendMode>(i);
 
 				if (!isSelect) { //!< 選択されていなかったやつが選択されたので
-					graphicsPipeline_->CreatePipeline(MyEngine::GetDevicesObj(), graphicsBlob_.get(), mode_, kCountOfDefferedRenderingType, deffered_->GetFormats());
+					graphicsPipeline_->CreatePipeline(MyEngine::GetDevicesObj(), graphicsBlob_.get(), pipelineDesc_);
 				}
 			}
 		}
 
 		ImGui::EndCombo();
 	}
+
+	static bool tmp = isInit_;
+	ImGui::Checkbox("init", &tmp);
+	isInit_ = tmp;
 
 }

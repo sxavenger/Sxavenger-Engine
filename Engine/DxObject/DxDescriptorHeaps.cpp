@@ -23,7 +23,7 @@ void DxObject::DescriptorHeaps::Init(Devices* devices) {
 	ID3D12Device* device = devices->GetDevice();
 
 	// descriptorの要素数を決定
-	descriptorIndexSize_[RTV] = 10;
+	descriptorIndexSize_[RTV] = 12;
 	descriptorIndexSize_[SRV] = 128;
 	descriptorIndexSize_[DSV] = 1;
 

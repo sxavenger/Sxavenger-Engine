@@ -76,6 +76,7 @@ void Console::Update() {
 		OutputOutliner();
 		OutputPerformance();
 		OutputSystem();
+		OutputAssets();
 	}
 }
 
@@ -342,6 +343,16 @@ void Console::OutputSystem() {
 	}
 
 	ImGui::End();
+}
+
+void Console::OutputAssets() {
+
+	ImGui::Begin("Asserts");
+
+
+
+	ImGui::End();
+
 }
 
 void Console::SetTextureImGui(const D3D12_GPU_DESCRIPTOR_HANDLE& texture) {

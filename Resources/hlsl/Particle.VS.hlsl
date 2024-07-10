@@ -19,10 +19,6 @@ struct VSInput {
 ConstantBuffer<Camera> gCamera : register(b0);
 static const float4x4 viewProj = mul(gCamera.viewMatrix, gCamera.projMatrix);
 
-struct ParticleData {
-	float4x4 mat;
-	float4   color;
-};
 StructuredBuffer<ParticleData> gParticleData : register(t0);
 
 ////////////////////////////////////////////////////////////////////////////////////////////

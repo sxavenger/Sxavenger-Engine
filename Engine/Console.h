@@ -138,6 +138,8 @@ private:
 
 	void OutputSystem();
 
+	void OutputAssets();
+
 	void SetTextureImGui(const D3D12_GPU_DESCRIPTOR_HANDLE& texture);
 
 	// methods 

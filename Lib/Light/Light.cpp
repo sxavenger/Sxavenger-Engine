@@ -29,7 +29,7 @@ void Light::SetAttributeImGui() {
 
 	ImGui::ColorEdit4("color", &lightData_.color.x);
 	ImGui::DragFloat3("position", &lightData_.position.x, 0.01f);
-	ImGui::SliderFloat("intensity", &lightData_.intensity, 0.0f, 1.0f);
+	ImGui::DragFloat("intensity", &lightData_.intensity, 0.01f);
 
 	if (ImGui::BeginCombo("lightType", item[lightData_.lightType])) {
 

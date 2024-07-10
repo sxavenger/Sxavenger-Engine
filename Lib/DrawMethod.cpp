@@ -107,3 +107,30 @@ DrawData DrawMethods::Plane(const Vector2f& size) {
 
 	return result;
 }
+
+DrawData DrawMethods::Plane2D() {
+	DrawData result;
+
+	result.vertex = std::make_unique<DxObject::BufferResource<VertexData>>(MyEngine::GetDevicesObj(), 4);
+	result.vertex->operator[](0).position = { -1.0f, -1.0f, 0.0f };
+	result.vertex->operator[](0).texcoord = { 0.0f, 1.0f };
+
+	result.vertex->operator[](1).position = { -1.0f, 1.0f, 0.0f };
+	result.vertex->operator[](1).texcoord = { 0.0f, 0.0f };
+
+	result.vertex->operator[](2).position = { 1.0f, -1.0f, 0.0f };
+	result.vertex->operator[](2).texcoord = { 1.0f, 1.0f };
+
+	result.vertex->operator[](3).position = { 1.0f, 1.0f, 0.0f };
+	result.vertex->operator[](3).texcoord = { 1.0f, 0.0f };
+
+	result.index = std::make_unique<DxObject::IndexBufferResource>(MyEngine::GetDevicesObj(), 6);
+	result.index->operator[](0) = 0;
+	result.index->operator[](1) = 1;
+	result.index->operator[](2) = 2;
+	result.index->operator[](3) = 1;
+	result.index->operator[](4) = 3;
+	result.index->operator[](5) = 2;
+
+	return result;
+}

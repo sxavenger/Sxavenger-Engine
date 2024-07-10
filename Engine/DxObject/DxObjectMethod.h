@@ -187,6 +187,4 @@ namespace DxObject {
 	////////////////////////////////////////////////////////////////////////////////////////////
 	static const DXGI_FORMAT defaultFormat = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
 
-	static const DXGI_FORMAT defFor[1] = { DXGI_FORMAT_R8G8B8A8_UNORM_SRGB };
-
 }

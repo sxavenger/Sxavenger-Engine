@@ -8,36 +8,51 @@
 #include <DxGraphicsBlob.h>
 #include <DxGraphicsPipeline.h>
 
-// c++
-#include <memory>
-
-// DrawMethods
-#include <DrawMethod.h>
-
 // engine
 #include <TextureManager.h>
+
+// Geometry
+#include <Vector2.h>
+#include <ObjectStructure.h>
+
+// memory
+#include <memory>
+
+#include <Attribute.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // GaussianBlur class
 ////////////////////////////////////////////////////////////////////////////////////////////
-class GaussianBlur {
+class GaussianBlur
+	: public Attribute {
 public:
 
 	//=========================================================================================
 	// public methods
 	//=========================================================================================
 
-	GaussianBlur(DXGI_FORMAT format = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB) { Init(format); }
+	GaussianBlur() { Init(); }
 
 	~GaussianBlur() { Term(); }
 
-	void Init(DXGI_FORMAT format);
+	void Init();
 
 	void Term();
 
 	void CreateBlurTexture(
-		Texture* texture, Vector2ui textureSize, Vector2ui strength, float sigma
+		int32_t width, int32_t height, const D3D12_GPU_DESCRIPTOR_HANDLE& texture
 	);
+
+	void CreateBlurTexture(
+		Texture* outputTexture,
+		int32_t width, int32_t height, const D3D12_GPU_DESCRIPTOR_HANDLE& texture
+	);
+
+	const D3D12_GPU_DESCRIPTOR_HANDLE& GetTexture() {
+		return outputTexture_->GetGPUHandleSRV();
+	}
+
+	void SetAttributeImGui() override;
 
 private:
 
@@ -45,24 +60,28 @@ private:
 	// BlurParameter structure
 	////////////////////////////////////////////////////////////////////////////////////////////
 	struct BlurParameter {
-		Vector2ui textureSize;
-		Vector2ui strength;
-		float sigma;
+		Vector2f renderSize;    // renderTextureサイズ
+		int isHolizontalEnable; // x軸方向へのブラーが有効か
+		int isVerticlaEnable;   // y軸方向へのブラーが有効か
 	};
 
 	//=========================================================================================
 	// private variables
 	//=========================================================================================
 
-	// Graphics
+	// graphics
 	std::unique_ptr<DxObject::GraphicsBlob>     blob_;
 	std::unique_ptr<DxObject::GraphicsPipeline> pipeline_;
 
 	// IA
-	DrawData sprite_;
-	//!< hack: ここまではクラスでの共有値として使用する
+	std::unique_ptr<DxObject::BufferResource<VertexData>> vertex_;
+	std::unique_ptr<DxObject::IndexBufferResource>        index_;
 
-	// Buffers
+	// constantBuffer
+	std::unique_ptr<DxObject::BufferResource<Matrix4x4>>     matrix_;
 	std::unique_ptr<DxObject::BufferResource<BlurParameter>> param_;
+
+	std::unique_ptr<RenderTexture> outputTexture_;
+
 
 };

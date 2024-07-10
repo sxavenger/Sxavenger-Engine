@@ -61,8 +61,18 @@ private:
 	// ParticleData structure
 	////////////////////////////////////////////////////////////////////////////////////////////
 	struct ParticleData {
-		Matrix4x4 worldMatrix = Matrix4x4::MakeIdentity();
 		Vector4f  color;
+		Matrix4x4 worldMatrix = Matrix4x4::MakeIdentity();
+
+		Vector3f tranlate;
+		Vector3f velocity;
+		Vector3f acceleration;
+		float mass;
+
+		Vector3f rotate;
+		Vector3f addRotate;
+
+		int isUpdate;
 	};
 
 	//=========================================================================================
@@ -74,8 +84,12 @@ private:
 	std::unique_ptr<DxObject::CSPipelineState>                csPipelineState_;
 	std::unique_ptr<DxObject::CSBufferResource<ParticleData>> csBuffer_;
 
+	std::unique_ptr<DxObject::BufferPtrResource<int>> boolBuffer_; //!< 仮
+
 	// Graphics
 	std::unique_ptr<DxObject::GraphicsBlob>     graphicsBlob_;
+
+	DxObject::GraphicsPipelineDesc pipelineDesc_;
 	std::unique_ptr<DxObject::GraphicsPipeline> graphicsPipeline_;
 
 	// IA
@@ -84,7 +98,8 @@ private:
 	DefferedRendering* deffered_;
 
 	// blendMode
-	BlendMode mode_ = kBlendModeNormal;
 	static const std::string blendModeNames_[kCountOfBlendMode];
+
+	int isInit_ = true;
 
 };

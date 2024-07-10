@@ -87,7 +87,7 @@ DefferedPSOutput main(DefferedVSOutput input) {
 	float3 directionToCamera = normalize(gCamera.position.xyz - worldPos.xyz);
 	
 	output.color.rgb += BlinnPhong(worldPos, normal, directionToLight, directionToCamera, 100.0f) * gLight.intensity * factor;
-	output.color.rgb = saturate(output.color.rgb);
+	//output.color.rgb = saturate(output.color.rgb);
 	
 	return output;
 }

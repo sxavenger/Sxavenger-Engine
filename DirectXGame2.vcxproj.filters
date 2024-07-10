@@ -139,6 +139,12 @@
     <Filter Include="Resource\hlsl\Object3d">
       <UniqueIdentifier>{ca9702fb-b955-447c-8975-9a46c268e694}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resource\hlsl\DefaultMesh">
+      <UniqueIdentifier>{e0293554-f8b0-42a6-a31d-398444467970}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource\hlsl\Bloom">
+      <UniqueIdentifier>{479222ed-99dd-4009-aa38-6555d03793c1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
@@ -696,9 +702,6 @@
     <None Include="Resources\hlsl\BlasRender.hlsli">
       <Filter>Resource\hlsl\BlasRender</Filter>
     </None>
-    <None Include="Resources\hlsl\GaussianBlur.hlsli">
-      <Filter>Resource\hlsl\GaussianBlur</Filter>
-    </None>
     <None Include="Resources\RayTracingShader\Lighting.hlsli">
       <Filter>Resource\RayTracingShader</Filter>
     </None>
@@ -726,6 +729,12 @@
     <None Include="Resources\hlsl\Primitive\Primitive.hlsli">
       <Filter>Resource\hlsl\Primitive</Filter>
     </None>
+    <None Include="Resources\hlsl\MeshCommon.hlsli">
+      <Filter>Resource\hlsl</Filter>
+    </None>
+    <None Include="Resources\hlsl\Sprite.hlsli">
+      <Filter>Resource\hlsl</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Text Include="externals\imgui\LICENSE.txt">
@@ -750,12 +759,6 @@
     </FxCompile>
     <FxCompile Include="Resources\hlsl\BlasRender.VS.hlsl">
       <Filter>Resource\hlsl\BlasRender</Filter>
-    </FxCompile>
-    <FxCompile Include="Resources\hlsl\GaussianBlur.PS.hlsl">
-      <Filter>Resource\hlsl\GaussianBlur</Filter>
-    </FxCompile>
-    <FxCompile Include="Resources\hlsl\GaussianBlur.VS.hlsl">
-      <Filter>Resource\hlsl\GaussianBlur</Filter>
     </FxCompile>
     <FxCompile Include="Resources\RayTracingShader\RayTracingWorld.hlsl">
       <Filter>Resource\RayTracingShader</Filter>
@@ -798,6 +801,21 @@
     </FxCompile>
     <FxCompile Include="Resources\hlsl\Primitive\Primitive.PS.hlsl">
       <Filter>Resource\hlsl\Primitive</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\hlsl\Bloom\Luminnce.PS.hlsl">
+      <Filter>Resource\hlsl\Bloom</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\hlsl\Bloom\LuminnceBlur.PS.hlsl">
+      <Filter>Resource\hlsl\Bloom</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\hlsl\Bloom\Composite.PS.hlsl">
+      <Filter>Resource\hlsl\Bloom</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\hlsl\Sprite.VS.hlsl">
+      <Filter>Resource\hlsl</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\hlsl\GaussianBlur\GaussianBlur.PS.hlsl">
+      <Filter>Resource\hlsl\GaussianBlur</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

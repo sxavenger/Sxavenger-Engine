@@ -89,25 +89,7 @@ void GameScene::Init() {
 
 	bunny_ = std::make_unique<MeshBunny>();
 
-	//// TLAS 
-	//tlas_ = std::make_unique<TopLevelAS>();
-
-	//// constantBuffer
-	//camera_ = std::make_unique<RayTracingCamera>();
-	//light_  = std::make_unique<RayTracingLight>();
-
-	//// Game
-	//ground_ = std::make_unique<Ground>();
-	//player_ = std::make_unique<Player>();
-	//teapot_ = std::make_unique<Teapot>();
-
-	//subobjectManager_ = std::make_unique<SubobjectManager>();
-
-	//cube_ = std::make_unique<Cube>();
-	//cube_->Init(subobjectManager_.get());
-
-	//// drawer
-	//fullscreen_ = std::make_unique<FullScreen>();
+	bloom_ = std::make_unique<Bloom>();
 
 
 }
@@ -116,22 +98,6 @@ void GameScene::Term() {
 }
 
 void GameScene::Update() {
-
-	//player_->Update();
-	//camera_->Update(player_->GetWorldMatrix());
-	//subobjectManager_->Update();
-
-	//// TLASへの書き込み
-	//tlas_->StartBlasSetup();
-
-	//tlas_->SetBLAS(ground_->GetBlas(), ground_->GetWorldMatrix(), 0);
-	//tlas_->SetBLAS(player_->GetBlas(), player_->GetWorldMatrix(), 0);
-	//tlas_->SetBLAS(teapot_->GetBlas(), teapot_->GetWorldMatrix(), 0);
-	//tlas_->SetBLAS(cube_->GetBlas(), cube_->GetWorldMatrix(), 0);
-
-	//subobjectManager_->SetBlases(tlas_.get());
-
-	//tlas_->EndBlasSetup();
 
 	particle_->Update();
 	nodeModel_->Update();
@@ -158,22 +124,12 @@ void GameScene::Draw() {
 	MyEngine::TransitionProcess();
 	console->OutputRayTracingResult(RayTracingEngine::GetDxrCommon()->GetResultBufferTexture());*/
 
-	/*//-----------------------------------------------------------------------------------------
-	// postEffect test
-	//-----------------------------------------------------------------------------------------
-
-	{
-		blur->CreateBlurTexture(kWindowWidth, kWindowHeight, RayTracingEngine::GetDxrCommon()->GetResultBufferTexture());
-	}
-	MyEngine::TransitionProcess();
-	console->OutputTexture("blur", blur->GetTexture());*/
-
 	//=========================================================================================
 	// オフスクリーン描画処理
 	//=========================================================================================
 
 	{
-		// todo: 複数へのtexture書き込みをさせる.
+		/* debugScreen */
 		MyEngine::BeginOffscreen(console->GetSceneTexture());
 		MyEngine::camera3D_ = console->GetDebugCamera();
 
@@ -181,20 +137,32 @@ void GameScene::Draw() {
 		/*particle_->Draw();*/
 
 		MyEngine::EndOffscreen(console->GetSceneTexture());
+		MyEngine::TransitionProcess();
 
+		/* defferedRendering */
 		MyEngine::BeginOffscreens(kCountOfDefferedRenderingType, defferedRendering_->GetTexturePtrs());
 
 		particle_->Draw();
 		nodeModel_->Draw();
 
 		MyEngine::EndOffscreens(kCountOfDefferedRenderingType, defferedRendering_->GetTexturePtrs());
-
+		MyEngine::TransitionProcess();
 		console->OutputDefferedTextures("Deffered", DefferedRenderingType::kCountOfDefferedRenderingType, defferedRendering_->GetTextureHandles());
+
+		/* BloomRendering */
+		MyEngine::BeginOffscreen(bloom_->GetRenderTargetTexture());
+
+		defferedRendering_->Draw(MyEngine::camera3D_->GetGPUVirtualAddress(), light_->GetGPUVirtualAddress());
+
+		MyEngine::EndOffscreen(bloom_->GetRenderTargetTexture());
+		MyEngine::TransitionProcess();
+		console->OutputTexture("bloom:renderTarget", bloom_->GetRenderTargetTexture()->GetGPUHandleSRV());
+
+		bloom_->CreateBloom();
 
 		/* main screen */
 		MyEngine::BeginOffscreen(MyEngine::GetTexture("offscreen"));
-		/*MyEngine::camera3D_ = camera.get();*/
-		defferedRendering_->Draw(MyEngine::camera3D_->GetGPUVirtualAddress(), light_->GetGPUVirtualAddress());
+		bloom_->Draw();
 		MyEngine::EndOffscreen(MyEngine::GetTexture("offscreen"));
 	}
 

@@ -44,7 +44,7 @@ void FullScreen::Init() {
 	blob_->Create(L"FullScreen.VS.hlsl", GRAPHICS_VERTEX);
 	blob_->Create(L"FullScreen.PS.hlsl", GRAPHICS_PIXEL);
 
-	GraphicRootSignatureDesc desc = {};
+	GraphicsRootSignatureDesc desc;
 	desc.Resize(2, 1);
 
 	//!< camera2D

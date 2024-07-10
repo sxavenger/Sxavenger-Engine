@@ -56,14 +56,14 @@ namespace DxObject {
 	////////////////////////////////////////////////////////////////////////////////////////////
 	// GraphicsRootSignatureDesc structure
 	////////////////////////////////////////////////////////////////////////////////////////////
-	struct GraphicRootSignatureDesc {
+	struct GraphicsRootSignatureDesc {
 	public:
 
 		//=========================================================================================
 		// public methods
 		//=========================================================================================
 
-		~GraphicRootSignatureDesc() { Clear(); }
+		~GraphicsRootSignatureDesc() { Clear(); }
 
 		void Resize(uint32_t paramSize, uint32_t samplerSize);
 
@@ -101,28 +101,71 @@ namespace DxObject {
 	};
 
 	////////////////////////////////////////////////////////////////////////////////////////////
-	// GraphicsInputLayoutDesc structure
+	// PrimitiveType enum
 	////////////////////////////////////////////////////////////////////////////////////////////
-	struct GraphicsInputLayoutDesc {
+	enum PrimitiveType {
+		PRIMITIVE_LINE,
+		PRIMITIVE_TRIANGLE,
+	};
+
+	////////////////////////////////////////////////////////////////////////////////////////////
+	// GraphicsPipelineDesc structure
+	////////////////////////////////////////////////////////////////////////////////////////////
+	struct GraphicsPipelineDesc {
 	public:
 
 		//=========================================================================================
 		// public methods
 		//=========================================================================================
 
-		~GraphicsInputLayoutDesc() { Clear(); }
+		GraphicsPipelineDesc() { Init(); }
+
+		~GraphicsPipelineDesc() { Clear(); }
+
+		void Init();
 
 		void Clear();
 
+		void CreateDefaultDesc();
+
+		/* setters */
+
 		void SetElement(const LPCSTR& semanticName, uint32_t semanticIndex, DXGI_FORMAT format);
 
+		void SetRasterizer(D3D12_CULL_MODE cullMode, D3D12_FILL_MODE fillMode);
+
+		void SetDepthStencil(bool depthEnable);
+
+		void SetBlendMode(BlendMode blendMode);
+
+		void SetPrimitive(PrimitiveType type);
+
+		void SetRTVFormat(DXGI_FORMAT format);
+		void SetRTVFormats(uint32_t size, const DXGI_FORMAT formats[]);
+
+		/* getter */
+
 		D3D12_INPUT_LAYOUT_DESC GetInputLayout() const;
+
 
 		//=========================================================================================
 		// public variables
 		//=========================================================================================
 
-		std::vector<D3D12_INPUT_ELEMENT_DESC> elements;
+		/* descs */
+
+		std::vector<D3D12_INPUT_ELEMENT_DESC> elements;         //!< InputLayoutDesc
+		D3D12_RASTERIZER_DESC                 rasterizerDesc;   //!< RasterizerDesc
+		D3D12_DEPTH_STENCIL_DESC              depthStencilDesc; //!< DepthStencilDesc
+
+		/* param */
+
+		BlendMode blendMode;
+
+		D3D12_PRIMITIVE_TOPOLOGY_TYPE primitiveTopologyType;
+		D3D_PRIMITIVE_TOPOLOGY        primitiveTopology;
+
+		std::vector<DXGI_FORMAT> rtvFormats;
 
 	};
 
@@ -140,24 +183,16 @@ namespace DxObject {
 
 		/* CreateRootSignature */
 
-		void CreateRootSignature(Devices* devices, const GraphicRootSignatureDesc& descs);
+		void CreateRootSignature(Devices* devices, const GraphicsRootSignatureDesc& descs);
 
 		/* CreatePipeline */
 
 		void CreatePipeline(
-			Devices* devices,
-			GraphicsBlob* graphicBlob, BlendMode blendMode
+			Devices* devices, GraphicsBlob* graphicBlob, BlendMode blendMode
 		);
 
 		void CreatePipeline(
-			Devices* devices,
-			GraphicsBlob* graphicBlob, const GraphicsInputLayoutDesc& layout, BlendMode blendMode, D3D12_PRIMITIVE_TOPOLOGY_TYPE type = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE
-		);
-
-		void CreatePipeline(
-			Devices* devices,
-			GraphicsBlob* graphicBlob, BlendMode blendMode,
-			uint32_t formatSize, const DXGI_FORMAT formats[D3D12_SIMULTANEOUS_RENDER_TARGET_COUNT]
+			Devices* devices, GraphicsBlob* graphicsBlob, const GraphicsPipelineDesc& descs
 		);
 
 		/* setter */
@@ -182,8 +217,8 @@ namespace DxObject {
 		ComPtr<ID3D12PipelineState> pipeline_;
 
 		/* parameter */
-		GraphicsBlob* blob_;
-		D3D_PRIMITIVE_TOPOLOGY primitiveType_ = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+		bool                   isUseMeshPipeline_;
+		D3D_PRIMITIVE_TOPOLOGY primitiveTopology_;
 
 		/* viewports */
 		D3D12_VIEWPORT viewport_;
@@ -195,13 +230,5 @@ namespace DxObject {
 
 		void CreateViewports(int32_t clientWidth = kWindowWidth, int32_t clientHeight = kWindowHeight);
 
-		//! @brief pipeline_の生成
-		void CreatePipelineState(
-			ID3D12Device8* device,
-			const D3D12_INPUT_LAYOUT_DESC& inputLayout, const D3D12_RASTERIZER_DESC& rasterizer, const D3D12_DEPTH_STENCIL_DESC& depthStencil,
-			BlendMode blendMode,
-			D3D12_PRIMITIVE_TOPOLOGY_TYPE type = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE,
-			uint32_t formatSize = 1, const DXGI_FORMAT formats[D3D12_SIMULTANEOUS_RENDER_TARGET_COUNT] = &defaultFormat
-		);
 	};
 }

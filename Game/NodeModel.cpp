@@ -32,16 +32,23 @@ void NodeModel::Init(DefferedRendering* deffered) {
 	blob_->Create(L"object3d/object3d.VS.hlsl", GRAPHICS_VERTEX);
 	blob_->Create(L"object3d/object3dDeffered.PS.hlsl", GRAPHICS_PIXEL);
 
-	GraphicRootSignatureDesc desc;
+	GraphicsRootSignatureDesc desc;
 	desc.Resize(3, 1);
 	desc.SetCBV(0, VISIBILITY_VERTEX, 0);
 	desc.SetCBV(1, VISIBILITY_VERTEX, 1);
 	desc.SetSRV(2, VISIBILITY_PIXEL, 0);
 	desc.SetSampler(0, MODE_WRAP, VISIBILITY_PIXEL, 0);
 
+	GraphicsPipelineDesc pipelineDesc;
+	pipelineDesc.CreateDefaultDesc();
+
+	pipelineDesc.rtvFormats.clear(); //!< RTVFormatの代入し直し
+	pipelineDesc.SetRTVFormats(DefferedRenderingType::kCountOfDefferedRenderingType, deffered->GetFormats());
+
+
 	pipeline_ = std::make_unique<GraphicsPipeline>();
 	pipeline_->CreateRootSignature(MyEngine::GetDevicesObj(), desc);
-	pipeline_->CreatePipeline(MyEngine::GetDevicesObj(), blob_.get(), kBlendModeNormal, DefferedRenderingType::kCountOfDefferedRenderingType, deffered->GetFormats());
+	pipeline_->CreatePipeline(MyEngine::GetDevicesObj(), blob_.get(), pipelineDesc);
 
 	// IA
 	model_ = std::make_unique<Model>("./Resources/model/node_model", modelNames_[type_]);

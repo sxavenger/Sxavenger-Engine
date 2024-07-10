@@ -9,27 +9,24 @@
 // c++
 #include <memory>
 
-// Game
+// RayTracing
 #include <RayTracingCamera.h>
 #include <RayTracingLight.h>
 #include <Ground.h>
 #include <Teapot.h>
 #include <Player.h>
 #include <Cube.h>
-
 #include <SubobjectManager.h>
-
+//!< UNORM to SRGB
 #include <FullScreen.h>
 
 #include <Particle.h>
-
 #include <DefferedRendering.h>
-
 #include <NodeModel.h>
-
 #include <Light.h>
-
 #include <MeshBunny.h>
+
+#include <Bloom.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // GameScene class
@@ -61,6 +58,9 @@ private:
 	std::unique_ptr<Light> light_;
 
 	std::unique_ptr<MeshBunny> bunny_;
+
+	// bloomTexture
+	std::unique_ptr<Bloom> bloom_;
 
 	//-----------------------------------------------------------------------------------------
 	// raytracing world

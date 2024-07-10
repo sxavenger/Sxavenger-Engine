@@ -72,7 +72,7 @@ void DefferedRendering::Init() {
 	blob_->Create(L"defferedRendering.VS.hlsl", GRAPHICS_VERTEX);
 	blob_->Create(L"defferedRendering.PS.hlsl", GRAPHICS_PIXEL);
 
-	GraphicRootSignatureDesc desc;
+	GraphicsRootSignatureDesc desc;
 	desc.Resize(6, 1);
 	desc.SetSRV(0, VISIBILITY_PIXEL, 0);
 	desc.SetSRV(1, VISIBILITY_PIXEL, 1);
@@ -83,9 +83,14 @@ void DefferedRendering::Init() {
 	desc.SetCBV(4, VISIBILITY_PIXEL, 0); //!< camera
 	desc.SetCBV(5, VISIBILITY_PIXEL, 1); //!< light
 
+	GraphicsPipelineDesc pipelineDesc;
+	pipelineDesc.CreateDefaultDesc();
+	pipelineDesc.rtvFormats.clear();
+	pipelineDesc.SetRTVFormat(DXGI_FORMAT_R32G32B32A32_FLOAT);
+
 	pipeline_ = std::make_unique<GraphicsPipeline>();
 	pipeline_->CreateRootSignature(MyEngine::GetDevicesObj(), desc);
-	pipeline_->CreatePipeline(MyEngine::GetDevicesObj(), blob_.get(), kBlendModeNormal);
+	pipeline_->CreatePipeline(MyEngine::GetDevicesObj(), blob_.get(), pipelineDesc);
 
 	auto reflection = std::make_unique<ShaderReflection>();
 	reflection->Init(blob_->GetGraphicsBlobs()[GRAPHICS_PIXEL]);
