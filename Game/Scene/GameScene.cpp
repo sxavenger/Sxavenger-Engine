@@ -11,6 +11,8 @@
 // DxrObject
 #include <DxrAccelerationStructure.h>
 
+#include <DxShaderReflection.h>
+
 //-----------------------------------------------------------------------------------------
 // using
 //-----------------------------------------------------------------------------------------
@@ -75,6 +77,12 @@ void GameScene::Run() {
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 void GameScene::Init() {
+
+	auto blob = std::make_unique<DxObject::GraphicsBlob>();
+	blob->Create(L"GaussianBlur/GaussianBlur.PS.hlsl", DxObject::GRAPHICS_PIXEL);
+
+	auto reflection = std::make_unique<DxObject::ShaderReflection>();
+	reflection->Init(blob->GetGraphicsBlobs()[DxObject::GRAPHICS_PIXEL]);
 
 	defferedRendering_ = std::make_unique<DefferedRendering>();
 

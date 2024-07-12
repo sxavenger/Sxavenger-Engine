@@ -92,9 +92,6 @@ void DefferedRendering::Init() {
 	pipeline_->CreateRootSignature(MyEngine::GetDevicesObj(), desc);
 	pipeline_->CreatePipeline(MyEngine::GetDevicesObj(), blob_.get(), pipelineDesc);
 
-	auto reflection = std::make_unique<ShaderReflection>();
-	reflection->Init(blob_->GetGraphicsBlobs()[GRAPHICS_PIXEL]);
-
 }
 
 void DefferedRendering::Draw(const D3D12_GPU_VIRTUAL_ADDRESS& cameraAddress, const D3D12_GPU_VIRTUAL_ADDRESS& lightAddress) {

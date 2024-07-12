@@ -5,6 +5,32 @@
 //-----------------------------------------------------------------------------------------
 #include <DxShaderManager.h>
 
+#include "MyEngine.h" //!< hack include
+
+////////////////////////////////////////////////////////////////////////////////////////////
+// VoidBufferResource class methods
+////////////////////////////////////////////////////////////////////////////////////////////
+
+void DxObject::VoidBufferResouce::Init(uint32_t indexSize, uint32_t bufferSize) {
+
+	indexSize_ = indexSize;
+	
+	// deviceの取り出し
+	auto device = MyEngine::GetDevice();
+
+	// 配列分のBufferResourceを生成
+	resource_ = DxObjectMethod::CreateBufferResource(
+		device,
+		indexSize * bufferSize
+	);
+
+	// resourceをマッピング
+	resource_->Map(0, nullptr, map_);
+}
+
+void DxObject::VoidBufferResouce::Term() {
+}
+
 //=========================================================================================
 // static variables
 //=========================================================================================

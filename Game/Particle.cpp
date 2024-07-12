@@ -74,9 +74,6 @@ void Particle::Init(DefferedRendering* defferdRendering) {
 
 	}
 
-	auto reflection = std::make_unique<ShaderReflection>();
-	reflection->Init(graphicsBlob_->GetGraphicsBlobs()[GRAPHICS_VERTEX]);
-
 	// IA
 	model_ = std::make_unique<Model>("./Resources/model", "plane.obj");
 

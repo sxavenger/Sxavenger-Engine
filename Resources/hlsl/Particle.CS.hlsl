@@ -20,13 +20,13 @@ ConstantBuffer<Flag> gFlug : register(b0);
 #define NUMTHREAD_Y 8
 #define NUMTHREAD_Z 8
 
+static const uint3 dispatch = uint3(2, 2, 2);
+
 ////////////////////////////////////////////////////////////////////////////////////////////
 // main
 ////////////////////////////////////////////////////////////////////////////////////////////
 [numthreads(NUMTHREAD_X, NUMTHREAD_Y, NUMTHREAD_Z)]
 void main(uint3 dispatchThreadId : SV_DispatchThreadID) {
-	
-	uint3 dispatch = uint3(2, 2, 2);
 	
 	// to 1coordinate thread and dispatchs
 	uint index

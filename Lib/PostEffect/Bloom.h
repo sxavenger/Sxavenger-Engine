@@ -79,7 +79,7 @@ private:
 
 	std::unique_ptr<GaussianBlur> blur_;
 
-	Vector2ui blurStrength_ = { 10, 10 };
+	Vector2ui blurStrength_ = { 24, 8 };
 	float sigma_ = 12.0f;
 
 };
