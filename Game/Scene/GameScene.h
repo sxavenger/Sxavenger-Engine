@@ -46,21 +46,8 @@ private:
 	// private methods
 	//=========================================================================================
 
-	// particle
-	std::unique_ptr<Particle> particle_;
-
 	// defferedRendering
-	std::unique_ptr<DefferedRendering> defferedRendering_;
-
-	// 
-	std::unique_ptr<NodeModel> nodeModel_;
-
 	std::unique_ptr<Light> light_;
-
-	std::unique_ptr<MeshBunny> bunny_;
-
-	// bloomTexture
-	std::unique_ptr<Bloom> bloom_;
 
 	//-----------------------------------------------------------------------------------------
 	// raytracing world

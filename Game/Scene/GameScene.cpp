@@ -86,18 +86,7 @@ void GameScene::Init() {
 
 	defferedRendering_ = std::make_unique<DefferedRendering>();
 
-	// particle
-	particle_ = std::make_unique<Particle>();
-	particle_->Init(defferedRendering_.get());
-
-	nodeModel_ = std::make_unique<NodeModel>();
-	nodeModel_->Init(defferedRendering_.get());
-
 	light_ = std::make_unique<Light>(MyEngine::GetDevicesObj());
-
-	bunny_ = std::make_unique<MeshBunny>();
-
-	bloom_ = std::make_unique<Bloom>();
 
 
 }
@@ -106,9 +95,6 @@ void GameScene::Term() {
 }
 
 void GameScene::Update() {
-
-	particle_->Update();
-	nodeModel_->Update();
 }
 
 void GameScene::Draw() {
@@ -141,36 +127,11 @@ void GameScene::Draw() {
 		MyEngine::BeginOffscreen(console->GetSceneTexture());
 		MyEngine::camera3D_ = console->GetDebugCamera();
 
-		bunny_->Draw();
-		/*particle_->Draw();*/
-
 		MyEngine::EndOffscreen(console->GetSceneTexture());
 		MyEngine::TransitionProcess();
 
-		/* defferedRendering */
-		MyEngine::BeginOffscreens(kCountOfDefferedRenderingType, defferedRendering_->GetTexturePtrs());
-
-		particle_->Draw();
-		nodeModel_->Draw();
-
-		MyEngine::EndOffscreens(kCountOfDefferedRenderingType, defferedRendering_->GetTexturePtrs());
-		MyEngine::TransitionProcess();
-		console->OutputDefferedTextures("Deffered", DefferedRenderingType::kCountOfDefferedRenderingType, defferedRendering_->GetTextureHandles());
-
-		/* BloomRendering */
-		MyEngine::BeginOffscreen(bloom_->GetRenderTargetTexture());
-
-		defferedRendering_->Draw(MyEngine::camera3D_->GetGPUVirtualAddress(), light_->GetGPUVirtualAddress());
-
-		MyEngine::EndOffscreen(bloom_->GetRenderTargetTexture());
-		MyEngine::TransitionProcess();
-		console->OutputTexture("bloom:renderTarget", bloom_->GetRenderTargetTexture()->GetGPUHandleSRV());
-
-		bloom_->CreateBloom();
-
 		/* main screen */
 		MyEngine::BeginOffscreen(MyEngine::GetTexture("offscreen"));
-		bloom_->Draw();
 		MyEngine::EndOffscreen(MyEngine::GetTexture("offscreen"));
 	}
 
