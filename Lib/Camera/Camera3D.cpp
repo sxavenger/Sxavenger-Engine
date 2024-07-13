@@ -39,13 +39,13 @@ void Camera3D::Term() {
 void Camera3D::DrawFrustum(const Vector4f& color) {
 
 	Vector3f frustumPoint[4];
-	Matrix4x4 clipMatrix = Matrix::Inverse(projectionMatrix_);
-	Matrix4x4 worldMatrix = Matrix::Inverse(viewMatrix_);
+	Matrix4x4 clipMatrix = projectionMatrix_.Inverse();
+	Matrix4x4 worldMatrix = viewMatrix_.Inverse();
 
-	frustumPoint[0] = Matrix::Transform(Matrix::Transform({-1.0f, -1.0f, 1.0f}, clipMatrix), worldMatrix);
-	frustumPoint[1] = Matrix::Transform(Matrix::Transform({-1.0f, 1.0f, 1.0f}, clipMatrix), worldMatrix);
-	frustumPoint[2] = Matrix::Transform(Matrix::Transform({1.0f, 1.0f, 1.0f}, clipMatrix), worldMatrix);
-	frustumPoint[3] = Matrix::Transform(Matrix::Transform({1.0f, -1.0f, 1.0f}, clipMatrix), worldMatrix);
+	frustumPoint[0] = Matrix::EulerTransform(Matrix::EulerTransform({-1.0f, -1.0f, 1.0f}, clipMatrix), worldMatrix);
+	frustumPoint[1] = Matrix::EulerTransform(Matrix::EulerTransform({-1.0f, 1.0f, 1.0f}, clipMatrix), worldMatrix);
+	frustumPoint[2] = Matrix::EulerTransform(Matrix::EulerTransform({1.0f, 1.0f, 1.0f}, clipMatrix), worldMatrix);
+	frustumPoint[3] = Matrix::EulerTransform(Matrix::EulerTransform({1.0f, -1.0f, 1.0f}, clipMatrix), worldMatrix);
 
 	// drawerの取得
 	auto drawer = PrimitiveDrawer::GetInstance();
@@ -68,7 +68,7 @@ void Camera3D::SetCamera(const Vector3f& scale, const Vector3f& rotate, const Ve
 	camera_ = { scale, rotate, transform };
 
 	Matrix4x4 cameraMatrix = Matrix::MakeAffine(camera_.scale, camera_.rotate, camera_.translate);
-	viewMatrix_ = Matrix::Inverse(cameraMatrix);
+	viewMatrix_ = cameraMatrix.Inverse();
 
 	cameraForGPU_.viewMatrix = viewMatrix_;
 	cameraForGPU_.position = { camera_.translate.x, camera_.translate.y, camera_.translate.z, 1.0f };
@@ -90,7 +90,7 @@ void Camera3D::SetAttributeImGui() {
 
 void Camera3D::RecalculateCamera() {
 	Matrix4x4 cameraMatrix = Matrix::MakeAffine(camera_.scale, camera_.rotate, camera_.translate);
-	viewMatrix_ = Matrix::Inverse(cameraMatrix);
+	viewMatrix_ = cameraMatrix.Inverse();
 
 	cameraForGPU_.position = { camera_.translate.x, camera_.translate.y, camera_.translate.z, 1.0f };
 	cameraForGPU_.viewMatrix = viewMatrix_;

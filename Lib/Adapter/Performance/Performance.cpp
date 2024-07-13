@@ -3,7 +3,7 @@
 //=========================================================================================
 // static variables
 //=========================================================================================
-float Performance::framesPerMicroSec_ = 0.0f; //!< 初期値は60fps = 0.016...秒と設定
+float Performance::deltaTime_ = 0.0f; //!< 初期値は60fps = 0.016...秒と設定
 
 std::chrono::system_clock::time_point Performance::startFrame_, Performance::endFrame_;
 
@@ -22,5 +22,5 @@ void Performance::BeginFrame() {
 void Performance::EndFrame() {
 	endFrame_ = std::chrono::system_clock::now();
 
-	framesPerMicroSec_ = static_cast<float>(std::chrono::duration_cast<std::chrono::microseconds>(endFrame_ - startFrame_).count());
+	deltaTime_ = static_cast<float>(std::chrono::duration_cast<std::chrono::microseconds>(endFrame_ - startFrame_).count());
 }

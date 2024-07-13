@@ -21,10 +21,10 @@ using namespace DxObject;
 //=========================================================================================
 // static variables
 //=========================================================================================
-const Vector4f Console::commentOutColor = { 0.0f, 0.55f, 0.0f, 1.0f };
-const Vector4f Console::errorColor      = { 0.8f, 0.0f, 0.0f, 1.0f };
-const Vector4f Console::warningColor    = { 0.8f, 0.8f, 0.0f, 1.0f };
-const Vector4f Console::defaultColor    = { 0.98f, 0.98f, 0.98f, 1.0f };
+const Color4f Console::commentOutColor = { 0.0f, 0.55f, 0.0f, 1.0f };
+const Color4f Console::errorColor      = { 0.8f, 0.0f, 0.0f, 1.0f };
+const Color4f Console::warningColor    = { 0.8f, 0.8f, 0.0f, 1.0f };
+const Color4f Console::defaultColor    = { 0.98f, 0.98f, 0.98f, 1.0f };
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Console class methods
@@ -80,7 +80,7 @@ void Console::Update() {
 	}
 }
 
-void Console::SetLog(const std::string& log, const Vector4f& color) {
+void Console::SetLog(const std::string& log, const Color4f& color) {
 	// logの追加
 	logDatas_.push_front({log, color});
 
@@ -251,7 +251,7 @@ void Console::OutputPerformance() {
 	static bool isOpenWindow = true;
 	ImGui::Begin("Performance", &isOpenWindow, windowFlags | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoScrollbar);
 
-	float framesPerSec = Performance::GetFramesPerformance(SecondsUnit::s);
+	float framesPerSec = Performance::GetDeltaTime(SecondsUnit::s);
 
 	ImGui::Text("exec speed / frame: %.6f", framesPerSec);
 	ImGui::SameLine();
@@ -356,33 +356,36 @@ void Console::OutputAssets() {
 }
 
 void Console::SetTextureImGui(const D3D12_GPU_DESCRIPTOR_HANDLE& texture) {
-	{
-		// タブ等を除いたウィンドウのサイズを取得(計算)
-		ImVec2 cntRegionMax = ImGui::GetWindowContentRegionMax();
-		ImVec2 cntRegionMin = ImGui::GetWindowContentRegionMin();
-		ImVec2 wndSize = { cntRegionMax.x - cntRegionMin.x, cntRegionMax.y - cntRegionMin.y };
-
-		// 元のアス比とImGuiウィンドウのアス比を比較
-		float outerWindowAspectRatio = static_cast<float>(kWindowWidth) / static_cast<float>(kWindowHeight);
-		float innerWindowAspectRatio = wndSize.x / wndSize.y;
-		ImVec2 finalWndSize = wndSize;
-		
-		if (outerWindowAspectRatio <= innerWindowAspectRatio) { // 横幅が大きかったら縦基準で画像サイズを決定
-			finalWndSize.x *= outerWindowAspectRatio / innerWindowAspectRatio;
-
-		} else { //縦幅が大きかったら横基準で画像サイズを決定
-			finalWndSize.y *= innerWindowAspectRatio / outerWindowAspectRatio;
-		}
-
-		// 画像を中央に持ってくる
-		ImVec2 topLeft = { 
-			(wndSize.x - finalWndSize.x) * 0.5f + cntRegionMin.x,
-			(wndSize.y - finalWndSize.y) * 0.5f + cntRegionMin.y
-		};
-		ImGui::SetCursorPos(topLeft);
-
-		ImGui::Image((ImTextureID)texture.ptr, finalWndSize);
+	
+	// タブ等を排除した全体のwindowSize計算
+	ImVec2 regionMax  = ImGui::GetWindowContentRegionMax();
+	ImVec2 regionMin  = ImGui::GetWindowContentRegionMin();
+	ImVec2 windowSize = { regionMax.x - regionMin.x, regionMax.y - regionMin.y };
+	
+	// 画像アス比と分割したWindowアス比の計算
+	float textureAspectRatio = static_cast<float>(kWindowWidth) / static_cast<float>(kWindowHeight);
+	float windowAspectRatio  = windowSize.x / windowSize.y;
+	
+	// 出力する画像サイズの設定
+	ImVec2 displayTextureSize = windowSize;
+	
+	// 画像サイズの調整
+	if (textureAspectRatio <= windowAspectRatio) {
+		displayTextureSize.x *= textureAspectRatio / windowAspectRatio;
+	
+	} else {
+		displayTextureSize.y *= windowAspectRatio / textureAspectRatio;
 	}
+	
+	// 出力場所の調整
+	ImVec2 leftTop = {
+		(windowSize.x - displayTextureSize.x) * 0.5f + regionMin.x,
+		(windowSize.y - displayTextureSize.y) * 0.5f + regionMin.y,
+	};
+	
+	ImGui::SetCursorPos(leftTop);
+	ImGui::Image((ImTextureID)texture.ptr, displayTextureSize);
+	
 }
 
 void Console::OutlinerAttribute(Attribute* attribute) {

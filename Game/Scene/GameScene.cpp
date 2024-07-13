@@ -78,16 +78,15 @@ void GameScene::Run() {
 
 void GameScene::Init() {
 
-	auto blob = std::make_unique<DxObject::GraphicsBlob>();
+	/*auto blob = std::make_unique<DxObject::GraphicsBlob>();
 	blob->Create(L"GaussianBlur/GaussianBlur.PS.hlsl", DxObject::GRAPHICS_PIXEL);
 
 	auto reflection = std::make_unique<DxObject::ShaderReflection>();
-	reflection->Init(blob->GetGraphicsBlobs()[DxObject::GRAPHICS_PIXEL]);
-
-	defferedRendering_ = std::make_unique<DefferedRendering>();
+	reflection->Init(blob->GetGraphicsBlobs()[DxObject::GRAPHICS_PIXEL]);*/
 
 	light_ = std::make_unique<Light>(MyEngine::GetDevicesObj());
 
+	cube_ = std::make_unique<AnimationCube>();
 
 }
 
@@ -95,43 +94,24 @@ void GameScene::Term() {
 }
 
 void GameScene::Update() {
+	cube_->Update();
 }
 
 void GameScene::Draw() {
 
-	/*auto commandList = MyEngine::GetCommandList();*/
-
-	//=========================================================================================
-	// レイトレーシング描画処理
-	//=========================================================================================
-
-	/*{
-		RayTracingEngine::BeginRayTracing(tlas_.get());
-
-		commandList->SetComputeRootDescriptorTable(0, tlas_->GetGPUDescriptorHandle());
-		commandList->SetComputeRootConstantBufferView(1, camera_->GetGPUVirtualAddress());
-		commandList->SetComputeRootConstantBufferView(2, light_->GetGPUVirtualAddress());
-
-		RayTracingEngine::EndRayTracing();
-	}
-
-	MyEngine::TransitionProcess();
-	console->OutputRayTracingResult(RayTracingEngine::GetDxrCommon()->GetResultBufferTexture());*/
-
-	//=========================================================================================
-	// オフスクリーン描画処理
-	//=========================================================================================
-
 	{
-		/* debugScreen */
+		//* debugScreen *//
 		MyEngine::BeginOffscreen(console->GetSceneTexture());
 		MyEngine::camera3D_ = console->GetDebugCamera();
 
 		MyEngine::EndOffscreen(console->GetSceneTexture());
 		MyEngine::TransitionProcess();
 
-		/* main screen */
+		//* main screen *//
 		MyEngine::BeginOffscreen(MyEngine::GetTexture("offscreen"));
+
+		cube_->Draw();
+
 		MyEngine::EndOffscreen(MyEngine::GetTexture("offscreen"));
 	}
 

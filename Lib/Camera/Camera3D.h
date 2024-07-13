@@ -27,7 +27,7 @@ private:
 	////////////////////////////////////////////////////////////////////////////////////////////
 	// Camera structure
 	////////////////////////////////////////////////////////////////////////////////////////////
-	struct Camera { //!< Transform
+	struct Camera { //!< EulerTransform
 		Vector3f scale;
 		Vector3f rotate;
 		Vector3f translate;
@@ -80,8 +80,8 @@ private:
 	////////////////////////////////////////////////////////////////////////////////////////////
 	struct CameraForGPU {
 		Vector4f  position;
-		Matrix4x4 viewMatrix = Matrix4x4::MakeIdentity();
-		Matrix4x4 projMatrix = Matrix4x4::MakeIdentity();
+		Matrix4x4 viewMatrix = Matrix4x4::Identity();
+		Matrix4x4 projMatrix = Matrix4x4::Identity();
 	};
 
 	//=========================================================================================

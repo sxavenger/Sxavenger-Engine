@@ -14,7 +14,7 @@ void Teapot::Init() {
 		L"teapot"
 	);
 
-	// Transform
+	// EulerTransform
 	transform_.scale     *= 2.0f;
 	transform_.translate = { 0.0f, 1.6f, 8.0f };
 

@@ -61,7 +61,7 @@ void Texture::Unload() {
 
 void RenderTexture::Create(
 	DirectXCommon* dxCommon,
-	int32_t textureWidth, int32_t textureHeight, const Vector4f& clearColor, DXGI_FORMAT format) {
+	int32_t textureWidth, int32_t textureHeight, const Color4f& clearColor, DXGI_FORMAT format) {
 	// 引数の保存
 	dxCommon_   = dxCommon;
 	clearColor_ = clearColor;
@@ -254,7 +254,7 @@ Texture* TextureManager::LoadTexture(const std::string& filePath) {
 	return textureContainer_[filePath].texture.get();
 }
 
-Texture* TextureManager::CreateRenderTexture(const std::string& key, int32_t textureWidth, int32_t textureHeight, const Vector4f& clearColor) {
+Texture* TextureManager::CreateRenderTexture(const std::string& key, int32_t textureWidth, int32_t textureHeight, const Color4f& clearColor) {
 	if (FindKey(key)) { //!< 同一keyが存在する場合
 		// すでにあるtextureの返却
 		textureContainer_.at(key).refernceCount++;

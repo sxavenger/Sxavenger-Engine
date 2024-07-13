@@ -35,12 +35,12 @@ public:
 	//! @brief ...前1フレームの計測した数値を返却
 	//! 
 	//! @param[in] uint 秒単位
-	static float GetFramesPerformance(SecondsUnit unit) {
+	static float GetDeltaTime(SecondsUnit unit) {
 		if (unit == kCountOfSecondsUnit) {
 			return 0.0f; //!< 例外処理
 		}
 
-		return framesPerMicroSec_ * secondsConversions_[unit];
+		return deltaTime_ * secondsConversions_[unit];
 	}
 
 private:
@@ -50,7 +50,7 @@ private:
 	//=========================================================================================
 
 	static std::chrono::system_clock::time_point startFrame_, endFrame_;
-	static float framesPerMicroSec_;
+	static float deltaTime_;
 
 	static float secondsConversions_[SecondsUnit::kCountOfSecondsUnit]; //!< 秒数単位変換表 micro * this[...]
 

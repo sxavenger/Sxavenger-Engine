@@ -1,5 +1,10 @@
 #include "Model.h"
 
+/* 右手座標から左手座標系への変換
+ position = x, y, -z;
+ normal   = x, y, -z;
+*/
+
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
@@ -124,21 +129,17 @@ ModelData ModelMethods::LoadModelFile(const std::string& directoryPath, const st
 			vtx.Init();
 
 			aiVector3D& position = mesh->mVertices[element];
-			vtx.position = { position.x, position.y, position.z };
+			vtx.position = { position.x, position.y, -position.z }; //!< 左手座標系に変換
 
 			if (mesh->HasNormals()) {
 				aiVector3D& normal = mesh->mNormals[element];
-				vtx.normal = { normal.x, normal.y, normal.z };
+				vtx.normal = { normal.x, normal.y, -normal.z }; //!< 左手座標系に変換
 			}
 
 			if (mesh->HasTextureCoords(0)) {
 				aiVector3D& texcoord = mesh->mTextureCoords[0][element];
 				vtx.texcoord = { texcoord.x, texcoord.y };
 			}
-
-			// 左手座標系に変換
-			vtx.position.z *= -1.0f;
-			vtx.normal.z   *= -1.0f;
 
 			// データの保存
 			meshData.vertexResource->operator[](element) = vtx;
@@ -195,9 +196,21 @@ ModelData ModelMethods::LoadModelFile(const std::string& directoryPath, const st
 }
 
 Node ModelMethods::ReadNode(aiNode* node) {
+
 	Node result;
 
-	// nodeのlocalmatの取得
+	// transformの取得
+	aiVector3D scale, translate;
+	aiQuaternion rotate;
+
+	node->mTransformation.Decompose(scale, rotate, translate);
+
+	// resultに代入
+	result.transform.scale     = { scale.x, scale.y, scale.z };
+	result.transform.rotate    = { rotate.x, -rotate.y, -rotate.z, rotate.w }; //!< 右手 -> 左手座標系に変換
+	result.transform.translate = { translate.x, translate.y, -translate.z };   //!< 右手 -> 左手座標系に変換
+
+	// nodeのlocalMatの取得
 	aiMatrix4x4 aiLocalMatrix = node->mTransformation;
 	aiLocalMatrix.Transpose();
 
@@ -217,4 +230,116 @@ Node ModelMethods::ReadNode(aiNode* node) {
 
 	return result;
 
+}
+
+Animation ModelMethods::LoadAnimationFile(const std::string& directoryPath, const std::string& filename) {
+	// todo: LoadOBJFileを使う場合, modelを二回読み込んでることになるので統合する
+	Animation result;
+
+	Assimp::Importer importer;
+	std::string filePath = directoryPath + "/" + filename;
+	//* 同じimporter, sceneを使うからクラスにしてもいい
+
+	// filePathからsceneの読み込み
+	const aiScene* scene = importer.ReadFile(filePath.c_str(), 0);
+
+	assert(scene->mAnimations != 0); //!< animationがない
+
+	aiAnimation* animationAi = scene->mAnimations[0];
+	// todo: 複数に対応する
+
+	result.duration = static_cast<float>(animationAi->mDuration / animationAi->mTicksPerSecond); //!< 時間の単位を秒に変更
+
+	// channelを回してNodeAnimationを取得
+	for (uint32_t channelIndex = 0; channelIndex < animationAi->mNumChannels; ++channelIndex) {
+
+		// assimpではchannelがnodeAnimationを所持しているので取得
+		aiNodeAnim* nodeAnimationAi = animationAi->mChannels[channelIndex];
+
+		// NodeAnimationの参照を取得
+		NodeAnimation& nodeAnimation = result.nodeAnimations[nodeAnimationAi->mNodeName.C_Str()];
+
+		// positionKeyの取得
+		for (uint32_t keyIndex = 0; keyIndex < nodeAnimationAi->mNumPositionKeys; ++keyIndex) {
+
+			// keyの取得
+			aiVectorKey& keyAi = nodeAnimationAi->mPositionKeys[keyIndex];
+
+			// 結果代入先
+			KeyframeVector3 keyframe;
+			keyframe.time  = static_cast<float>(keyAi.mTime / animationAi->mTicksPerSecond); //!< 秒に変更
+			keyframe.value = { keyAi.mValue.x, keyAi.mValue.y, -keyAi.mValue.z };            //!< 左手座標系に変換
+
+			// keyframeをnodeAnimationに代入
+			nodeAnimation.translate.push_back(keyframe);
+		}
+
+		// rotate
+		for (uint32_t keyIndex = 0; keyIndex < nodeAnimationAi->mNumRotationKeys; ++keyIndex) {
+
+			// keyの取得
+			aiQuatKey& keyAi = nodeAnimationAi->mRotationKeys[keyIndex];
+
+			// 結果代入先
+			KeyframeQuaternion keyframe;
+			keyframe.time  = static_cast<float>(keyAi.mTime / animationAi->mTicksPerSecond);       //!< 秒に変更
+			keyframe.value = { keyAi.mValue.x, -keyAi.mValue.y, -keyAi.mValue.z, keyAi.mValue.w }; //!< 左手座標系に変換
+
+			// keyframeをnodeAnimationに代入
+			nodeAnimation.rotate.push_back(keyframe);
+		}
+
+		// scale
+		for (uint32_t keyIndex = 0; keyIndex < nodeAnimationAi->mNumScalingKeys; ++keyIndex) {
+
+			// keyの取得
+			aiVectorKey& keyAi = nodeAnimationAi->mScalingKeys[keyIndex];
+
+			// 結果代入先
+			KeyframeVector3 keyframe;
+			keyframe.time  = static_cast<float>(keyAi.mTime / animationAi->mTicksPerSecond); //!< 秒に変更
+			keyframe.value = { keyAi.mValue.x, keyAi.mValue.y, keyAi.mValue.z };             //!< valueを代入
+
+			// keyframeをnodeAnimationに代入
+			nodeAnimation.scale.push_back(keyframe);
+		}
+	}
+
+	return result;
+}
+
+int32_t ModelMethods::CreateJoint(const Node& node, const std::optional<int32_t>& parent, std::vector<Joint>& joints) {
+
+	// jointの構築
+	Joint joint;
+	joint.name                = node.name;
+	joint.localMatrix         = node.localMatrix;
+	joint.skeletonSpaceMatrix = Matrix4x4::Identity();
+	joint.transform           = node.transform;
+	joint.index               = static_cast<int32_t>(joints.size()); //!< 現在登録されてるindexに
+	joint.parent              = parent;
+
+	joints.push_back(joint); //!< skeletonのjoin列に追加
+
+	for (auto& child : node.children) {
+		// 子のJointを作成し, そのindexを登録
+		int32_t childIndex = CreateJoint(child, joint.index, joints);
+		joints[joint.index].children.push_back(childIndex);
+	}
+
+	// 自身のindexを返す
+	return joint.index;
+}
+
+Skeleton ModelMethods::CreateSkeleton(const Node& rootNode) {
+
+	Skeleton skelton;
+	skelton.root = CreateJoint(rootNode, {}, skelton.joints);
+
+	// 名前とindexのmapingを行いアクセスしやすいように
+	for (auto& joint : skelton.joints) {
+		skelton.jointMap.emplace(joint.name, joint.index);
+	}
+
+	return skelton;
 }

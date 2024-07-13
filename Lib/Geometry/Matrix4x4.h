@@ -6,6 +6,7 @@
 #include <cmath>
 #include <cassert>
 #include <Vector3.h>
+#include <Quaternion.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Matrix4x4 class
@@ -13,9 +14,15 @@
 class Matrix4x4 {
 public:
 
-	float m[4][4];
+	//=========================================================================================
+	// methods
+	//=========================================================================================
 
-	static Matrix4x4 MakeIdentity();
+	static Matrix4x4 Identity();
+
+	Matrix4x4 Inverse() const;
+
+	Matrix4x4 Transpose() const;
 
 	//=========================================================================================
 	// compound assignment operator
@@ -59,11 +66,14 @@ public:
 		return *this;
 	}
 
+	//=========================================================================================
+	// variables
+	//=========================================================================================
+
+	float m[4][4];
+
 };
 
-////////////////////////////////////////////////////////////////////////////////////////////
-// operators
-////////////////////////////////////////////////////////////////////////////////////////////
 //=========================================================================================
 // binary operator
 //=========================================================================================
@@ -110,40 +120,32 @@ inline Matrix4x4 operator*(const Matrix4x4& m1, const Matrix4x4& m2) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// enum RotateType
-////////////////////////////////////////////////////////////////////////////////////////////
-enum RotateType {
-	kRotateBaseX,
-	kRotateBaseY,
-	kRotateBaseZ,
-};
-
-////////////////////////////////////////////////////////////////////////////////////////////
-// Matrix methods
+// Matrix4x4 methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 namespace Matrix {
-	
+
+	//* make *//
+
 	Matrix4x4 MakeScale(const Vector3f& scale);
 
-	Matrix4x4 MakeRotate(float radian, RotateType type);
+	Matrix4x4 MakeRotateX(float radian);
+	Matrix4x4 MakeRotateY(float radian);
+	Matrix4x4 MakeRotateZ(float radian);
 	Matrix4x4 MakeRotate(const Vector3f& rotate);
-
-	Matrix4x4 MakeRotateEuler(float radian, RotateType type);
-	Matrix4x4 MakeRotateEuler(const Vector3f& rotate);
+	Matrix4x4 MakeRotate(const Quaternion& q);
 
 	Matrix4x4 MakeTranslate(const Vector3f& translate);
 
 	Matrix4x4 MakeAffine(const Vector3f& scale, const Vector3f& rotate, const Vector3f& translate);
+	Matrix4x4 MakeAffine(const Vector3f& scale, const Quaternion& rotate, const Vector3f& translate);
 
-	Matrix4x4 Inverse(const Matrix4x4& m);
-
-	Matrix4x4 Transpose(const Matrix4x4& m);
-
-	// graphics matrix //
 	Matrix4x4 MakePerspectiveFov(float fovY, float aspectRatio, float nearClip, float farClip);
+
 	Matrix4x4 MakeOrthographic(float left, float top, float right, float bottom, float nearZ, float farZ);
 
 	Matrix4x4 MakeViewport(float left, float top, float width, float height, float minDepth, float maxDepth);
 
-	Vector3f Transform(const Vector3f& vector, const Matrix4x4& matrix);
+	//* transform *//
+
+	Vector3f EulerTransform(const Vector3f& v, const Matrix4x4& m);
 }

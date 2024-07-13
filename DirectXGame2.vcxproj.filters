@@ -145,6 +145,9 @@
     <Filter Include="Resource\hlsl\Bloom">
       <UniqueIdentifier>{479222ed-99dd-4009-aa38-6555d03793c1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Lib\Animation">
+      <UniqueIdentifier>{bc61da55-6b98-464b-b7a2-8c69cf843dad}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
@@ -427,6 +430,15 @@
     <ClCompile Include="Game\MeshBunny.cpp">
       <Filter>Game</Filter>
     </ClCompile>
+    <ClCompile Include="Lib\Animation\Animation.cpp">
+      <Filter>Lib\Animation</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\AnimationCube.cpp">
+      <Filter>Game</Filter>
+    </ClCompile>
+    <ClCompile Include="Lib\Geometry\Quaternion.cpp">
+      <Filter>Lib\Geometry\source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\MyEngine.h">
@@ -681,6 +693,15 @@
     <ClInclude Include="Game\MeshBunny.h">
       <Filter>Game</Filter>
     </ClInclude>
+    <ClInclude Include="Lib\Animation\Animation.h">
+      <Filter>Lib\Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\AnimationCube.h">
+      <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Lib\Geometry\Quaternion.h">
+      <Filter>Lib\Geometry\include</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />
@@ -816,6 +837,9 @@
     </FxCompile>
     <FxCompile Include="Resources\hlsl\GaussianBlur\GaussianBlur.PS.hlsl">
       <Filter>Resource\hlsl\GaussianBlur</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\hlsl\Object3d\Object3d.PS.hlsl">
+      <Filter>Resource\hlsl\Object3d</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

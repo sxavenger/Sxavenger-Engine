@@ -62,7 +62,7 @@ private:
 	std::unique_ptr<DxObject::BufferResource<Vector4f>>             material_;
 
 	std::unique_ptr<DxObject::BufferResource<TransformationMatrix>> matrix_;
-	Transform transform_;
+	EulerTransform transform_;
 
 	std::unique_ptr<Camera3D> cullingCamera_;
 

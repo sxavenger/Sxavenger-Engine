@@ -104,7 +104,7 @@ public:
 
 	static TextureManager* GetTextureManager();
 
-	static Texture* CreateRenderTexture(const std::string& key, int32_t textureWidth, int32_t textureHeight, const Vector4f& clearColor = defaultClearColor);
+	static Texture* CreateRenderTexture(const std::string& key, int32_t textureWidth, int32_t textureHeight, const Color4f& clearColor = defaultClearColor);
 
 	static Texture* LoadTexture(const std::string& filePath);
 

@@ -54,7 +54,7 @@ public:
 	//! 
 	//! @param[in] log   出力したいログ
 	//! @param[in] color 文字の色
-	void SetLog(const std::string& log, const Vector4f& color = {1.0f, 1.0f, 1.0f, 1.0f});
+	void SetLog(const std::string& log, const Color4f& color = {1.0f, 1.0f, 1.0f, 1.0f});
 
 	void SetAttribute(Attribute* obj) {
 		attributes_.push_back(obj);
@@ -78,10 +78,10 @@ public:
 	// public variables
 	//=========================================================================================
 
-	static const Vector4f commentOutColor;
-	static const Vector4f errorColor;
-	static const Vector4f warningColor;
-	static const Vector4f defaultColor;
+	static const Color4f commentOutColor;
+	static const Color4f errorColor;
+	static const Color4f warningColor;
+	static const Color4f defaultColor;
 
 private:
 
@@ -90,7 +90,7 @@ private:
 	////////////////////////////////////////////////////////////////////////////////////////////
 	struct LogData {
 		std::string log;
-		Vector4f color;
+		Color4f color;
 	};
 
 	//=========================================================================================

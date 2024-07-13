@@ -52,7 +52,7 @@ private:
 	// DirectionalLight structure
 	////////////////////////////////////////////////////////////////////////////////////////////
 	struct DirectionalLight {
-		Vector4f color     = { 1.0f, 1.0f, 1.0f, 1.0f };
+		Color4f color     = { 1.0f, 1.0f, 1.0f, 1.0f };
 		Vector4f position  = { 0.0f, 0.0f, 0.0f, 1.0f };
 		Vector3f direction = { 0.0f, -1.0f, 0.0f };
 		float intensity    = 1.0f;

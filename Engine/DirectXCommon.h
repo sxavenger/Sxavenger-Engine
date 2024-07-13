@@ -133,4 +133,4 @@ protected:
 // static variables
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-static const Vector4f defaultClearColor = { 0.1f, 0.25f, 0.5f, 1.0f };
+static const Color4f defaultClearColor = { 0.1f, 0.25f, 0.5f, 1.0f };

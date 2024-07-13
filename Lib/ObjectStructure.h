@@ -7,6 +7,7 @@
 #include <Vector2.h>
 #include <Vector3.h>
 #include <Vector4.h>
+#include <Quaternion.h>
 #include <Matrix4x4.h>
 
 // imgui
@@ -28,16 +29,13 @@ struct VertexData {
 	}
 };
 
-struct Transform {
+struct EulerTransform {
 	Vector3f scale;
 	Vector3f rotate;
 	Vector3f translate;
 
-	Transform() :
-		scale(unitVector),
-		rotate(origin),
-		translate(origin) {
-	}
+	EulerTransform()
+		: scale(unitVector), rotate(origin), translate(origin) {}
 
 	void SetImGuiCommand(float granularity = 0.01f) {
 		ImGui::DragFloat3("scale", &scale.x, granularity);
@@ -50,12 +48,28 @@ struct Transform {
 	}
 };
 
+struct QuaternionTransform {
+	Vector3f   scale;
+	Quaternion rotate;
+	Vector3f   translate;
+
+	QuaternionTransform()
+		: scale(unitVector), rotate({ 0.0f, 0.0f, 0.0f, 0.0f }), translate(origin) { }
+
+	// todo: SetImGuiCommand()
+
+	Matrix4x4 GetMatrix() const {
+		return Matrix::MakeAffine(scale, rotate, translate);
+	}
+
+};
+
 struct TransformationMatrix {
 
 	Matrix4x4 world;
 	Matrix4x4 worldInverseTranspose;
 
-	/*void SetTransform(const Transform& transform, const Matrix4x4& viewProjMatrix) {
+	/*void SetTransform(const EulerTransform& transform, const Matrix4x4& viewProjMatrix) {
 		world = Matrix::MakeAffine(transform.scale, transform.rotate, transform.translate);
 		worldInverseTranspose = Matrix::Transpose(Matrix::Inverse(world));
 		wvp = world * viewProjMatrix;
@@ -84,8 +98,8 @@ static const char* phongItems_[PhongType::kPhongTypeCount]
 	= { "Phong", "BlinnPhong", "None" };
 
 struct Material {
-	Vector4f color = { 1.0f, 1.0f, 1.0f, 1.0f };
-	Matrix4x4 uvTransform = Matrix4x4::MakeIdentity();
+	Color4f color = { 1.0f, 1.0f, 1.0f, 1.0f };
+	Matrix4x4 uvTransform = Matrix4x4::Identity();
 	int lambertType; //!< LambertType参照
 	int phongType;   //!< phongType参照
 	float specPow;

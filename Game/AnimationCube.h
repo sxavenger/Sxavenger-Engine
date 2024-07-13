@@ -3,46 +3,69 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
-// DxrObject
-#include <DxrAccelerationStructure.h>
-
 // DxObject
+#include <DxGraphicsBlob.h>
+#include <DxGraphicsPipeline.h>
 #include <DxBufferResource.h>
 
 // c++
 #include <memory>
 
+// model
+#include <Model.h>
+
+// attribute
+#include <Attribute.h>
+
 ////////////////////////////////////////////////////////////////////////////////////////////
-// RayTracingObject base class
+// AnimationCube class
 ////////////////////////////////////////////////////////////////////////////////////////////
-class RayTracingObject {
+class AnimationCube
+	: public Attribute {
 public:
 
 	//=========================================================================================
 	// public methods
 	//=========================================================================================
 
-	RayTracingObject() { Init(); }
+	AnimationCube() { Init(); }
+	
+	~AnimationCube() { Term(); }
 
 	void Init();
 
-	DxrObject::BottomLevelAS* GetBlas() const { return blas_.get(); };
+	void Term();
 
-	const Matrix4x4& GetWorldMatrix() const { return worldMatrix_; }
+	void Update();
 
-	const D3D12_GPU_VIRTUAL_ADDRESS& GetGPUVirtualAddress() const { return matrixBuffer_->GetGPUVirtualAddress(); }
+	void Draw();
 
-protected:
+	void SetAttributeImGui() override;
+
+private:
 
 	//=========================================================================================
-	// protected variables
+	// private variables
 	//=========================================================================================
 
-	std::unique_ptr<DxrObject::BottomLevelAS> blas_;
+	//* Graphics *//
+	std::unique_ptr<DxObject::GraphicsBlob>     blob_;
+	std::unique_ptr<DxObject::GraphicsPipeline> pipeline_;
 
-	EulerTransform transform_;
-	Matrix4x4 worldMatrix_ = Matrix4x4::Identity();
+	//* IA *//
+	std::unique_ptr<Model> model_;
 
-	std::unique_ptr<DxObject::BufferPtrResource<Matrix4x4>> matrixBuffer_;
+	Animation animation_;
+	// FIXME: modelクラスに統合させること
+
+	//* buffer *//
+	std::unique_ptr<DxObject::BufferResource<Matrix4x4>> matrixBuffer_;
+
+	EulerTransform worldTransform_;
+	QuaternionTransform animationTransform_;
+
+	//* member *//
+
+	float animationTime_ = 0.0f;
 
 };

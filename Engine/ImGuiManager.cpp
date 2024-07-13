@@ -182,7 +182,7 @@ void ImGuiManager::SettingImGui() {
 
 }
 
-ImVec4 ImGuiManager::ToImVec4(const Vector4i& color) {
+ImVec4 ImGuiManager::ToImVec4(const Color4i& color) {
 	ImVec4 result;
 	result = { color.r / 255.0f, color.g / 255.0f, color.b / 255.0f, color.a / 255.0f };
 	return result;

@@ -35,7 +35,7 @@ void Player::Term() {
 
 void Player::Update() {
 
-	Vector3f direction = { 0.0f };
+	Vector3f direction = {  };
 	const float speed = 0.04f;
 
 	if (MyEngine::IsPressKey(DIK_W)) {
@@ -58,7 +58,7 @@ void Player::Update() {
 		direction *= 2.0f;
 	}
 
-	Vector3f velocity = Matrix::Transform(direction, Matrix::MakeRotate(transform_.rotate.y, kRotateBaseY));
+	Vector3f velocity = Matrix::EulerTransform(direction, Matrix::MakeRotateY(transform_.rotate.y));
 	transform_.translate += velocity;
 
 	worldMatrix_ = transform_.GetMatrix();

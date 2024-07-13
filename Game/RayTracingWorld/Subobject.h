@@ -68,13 +68,13 @@ protected:
 	// SubobjectMaterial structure
 	////////////////////////////////////////////////////////////////////////////////////////////
 	struct SubobjectMaterial {
-		Vector4f color       = { 0.0f, 1.0f, 0.0f, 1.0f };
-		Vector4f shadowColor = { 0.0f, 0.0f, 0.0f, 0.5f };
-		Vector4f aoColor     = {0.0f, 0.0f, 0.0f, 1.0f };
-		int flags            = 0;
-		int alphaRayType     = ALPHARAY_PENETRATION;
-		float aoRange        = 1.0f;
-		float aoLimit        = 8 * 8;
+		Color4f color       = { 0.0f, 1.0f, 0.0f, 1.0f };
+		Color4f shadowColor = { 0.0f, 0.0f, 0.0f, 0.5f };
+		Color4f aoColor     = {0.0f, 0.0f, 0.0f, 1.0f };
+		int flags           = 0;
+		int alphaRayType    = ALPHARAY_PENETRATION;
+		float aoRange       = 1.0f;
+		float aoLimit       = 8 * 8;
 	};
 
 	//=========================================================================================

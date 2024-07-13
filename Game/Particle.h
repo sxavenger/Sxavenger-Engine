@@ -62,7 +62,7 @@ private:
 	////////////////////////////////////////////////////////////////////////////////////////////
 	struct ParticleData {
 		Vector4f  color;
-		Matrix4x4 worldMatrix = Matrix4x4::MakeIdentity();
+		Matrix4x4 worldMatrix = Matrix4x4::Identity();
 
 		Vector3f tranlate;
 		Vector3f velocity;

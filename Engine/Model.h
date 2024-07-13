@@ -20,6 +20,9 @@
 #include <Vector3.h>
 #include <Vector2.h>
 
+// Animation
+#include <Animation.h>
+
 // Object
 #include <ObjectStructure.h>
 
@@ -57,7 +60,9 @@ struct MaterialData {
 // NodeData structure
 ////////////////////////////////////////////////////////////////////////////////////////////
 struct Node {
-	Matrix4x4 localMatrix;
+	QuaternionTransform transform;
+	Matrix4x4           localMatrix;
+
 	std::string name;
 	std::vector<Node> children;
 };
@@ -115,7 +120,7 @@ public:
 
 	const MeshData& GetMesh(uint32_t modelIndexSize) const { return modelData_.meshes[modelIndexSize]; }
 
-	const Node& GetNode() const { return modelData_.rootNode; }
+	const Node& GetRootNode() const { return modelData_.rootNode; }
 
 private:
 
@@ -131,10 +136,16 @@ private:
 ////////////////////////////////////////////////////////////////////////////////////////////
 // ModelMethods namespace
 ////////////////////////////////////////////////////////////////////////////////////////////
-namespace ModelMethods {
+namespace ModelMethods { //!< modelLoaderクラスを作ってもいいかも...
 
 	ModelData LoadModelFile(const std::string& directoryPath, const std::string& filename);
 
 	Node ReadNode(aiNode* node);
+
+	Animation LoadAnimationFile(const std::string& directoryPath, const std::string& filename);
+
+	int32_t CreateJoint(const Node& node, const std::optional<int32_t>& parent, std::vector<Joint>& joints);
+
+	Skeleton CreateSkeleton(const Node& rootNode);
 
 }

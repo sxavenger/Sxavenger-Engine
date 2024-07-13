@@ -75,8 +75,8 @@ private:
 	// ConstantBuffer
 	std::vector<std::unique_ptr<DxObject::BufferResource<Matrix4x4>>> matrixBuffers_;
 
-	Matrix4x4 worldMatrix_ = Matrix4x4::MakeIdentity();
-	Transform transform_;
+	Matrix4x4 worldMatrix_ = Matrix4x4::Identity();
+	EulerTransform transform_;
 
 	// modelType
 	NodeModelType type_ = NODE_MODEL_03;

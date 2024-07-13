@@ -868,7 +868,7 @@ HRESULT DirectX::LoadFromHDRMemory(const void* pSource, size_t size, TexMetadata
         destPtr += img->rowPitch;
     }
 
-    // Transform values
+    // EulerTransform values
     {
         auto fdata = reinterpret_cast<float*>(image.GetPixels());
 

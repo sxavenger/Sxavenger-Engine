@@ -212,7 +212,7 @@ TextureManager* MyEngine::GetTextureManager() {
 	return sTextureManager;
 }
 
-Texture* MyEngine::CreateRenderTexture(const std::string& key, int32_t textureWidth, int32_t textureHeight, const Vector4f& clearColor) {
+Texture* MyEngine::CreateRenderTexture(const std::string& key, int32_t textureWidth, int32_t textureHeight, const Color4f& clearColor) {
 	assert(sTextureManager != nullptr);
 	return sTextureManager->CreateRenderTexture(key, textureWidth, textureHeight, clearColor);
 }

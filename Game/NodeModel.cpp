@@ -58,7 +58,7 @@ void NodeModel::Init(DefferedRendering* deffered) {
 
 	for (uint32_t i = 0; i < model_->GetModelIndexSize(); ++i) {
 		matrixBuffers_[i] = std::make_unique<BufferResource<Matrix4x4>>(MyEngine::GetDevicesObj(), 1);
-		matrixBuffers_[i]->operator[](0) = Matrix4x4::MakeIdentity();
+		matrixBuffers_[i]->operator[](0) = Matrix4x4::Identity();
 	}
 
 	SetThisAttribute("nodeModel");
@@ -70,8 +70,8 @@ void NodeModel::Term() {
 
 void NodeModel::Update() {
 
-	matrixBuffers_[0]->operator[](0) = model_->GetNode().localMatrix * worldMatrix_;
-	matrixBuffers_[1]->operator[](0) = model_->GetNode().children[0].localMatrix * worldMatrix_;
+	matrixBuffers_[0]->operator[](0) = model_->GetRootNode().localMatrix * worldMatrix_;
+	matrixBuffers_[1]->operator[](0) = model_->GetRootNode().children[0].localMatrix * worldMatrix_;
 
 }
 

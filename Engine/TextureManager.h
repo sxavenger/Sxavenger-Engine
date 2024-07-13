@@ -65,7 +65,7 @@ public:
 		return descriptorSRV_.handleCPU; // 絶対に返さない
 	}
 
-	virtual const Vector4f& GetClearColor() const {
+	virtual const Color4f& GetClearColor() const {
 		assert(false);
 		return defaultClearColor; // 絶対に返さない
 	}
@@ -117,7 +117,7 @@ public:
 	//! @brief RenderTextureの生成
 	void Create(
 		DirectXCommon* dxCommon,
-		int32_t textureWidth, int32_t textureHeight, const Vector4f& clearColor = defaultClearColor, DXGI_FORMAT format = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB
+		int32_t textureWidth, int32_t textureHeight, const Color4f& clearColor = defaultClearColor, DXGI_FORMAT format = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB
 	);
 
 	//! @brief 終了処理
@@ -129,7 +129,7 @@ public:
 	}
 
 	//! @brief クリアカラーの返却
-	const Vector4f& GetClearColor() const override {
+	const Color4f& GetClearColor() const override {
 		return clearColor_;
 	}
 
@@ -142,7 +142,7 @@ private:
 	DxObject::Descriptor descriptorRTV_;
 
 	/* parameter */
-	Vector4f clearColor_;
+	Color4f clearColor_;
 
 };
 
@@ -207,7 +207,7 @@ public:
 	Texture* LoadTexture(const std::string& filePath);
 
 	//! @brief RenderTextureの生成
-	Texture* CreateRenderTexture(const std::string& key, int32_t textureWidth, int32_t textureHeight, const Vector4f& clearColor = defaultClearColor);
+	Texture* CreateRenderTexture(const std::string& key, int32_t textureWidth, int32_t textureHeight, const Color4f& clearColor = defaultClearColor);
 
 	//! @brief DummyTextureの生成
 	Texture* CreateDummyTexture(const std::string& key, int32_t textureWidth, int32_t textureHeight);

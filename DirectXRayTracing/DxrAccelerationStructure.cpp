@@ -163,8 +163,8 @@ void DxrObject::InstanceBuffer::SetInstance(
 	descBuffer_->operator[](index).InstanceMask = 0xFF;
 	
 	// matrixを4x4から3x4に修正
-	Matrix4x4 mat = Matrix::Transpose(worldMatrix);
-	memcpy(descBuffer_->operator[](index).Transform, &mat, sizeof(descBuffer_->operator[](index).Transform));
+	Matrix4x4 mat = worldMatrix.Transpose();
+	std::memcpy(descBuffer_->operator[](index).Transform, &mat, sizeof(descBuffer_->operator[](index).Transform));
 
 	descBuffer_->operator[](index).AccelerationStructure               = blas->GetGPUVirtualAddress();
 	descBuffer_->operator[](index).InstanceContributionToHitGroupIndex = index; // hack

@@ -61,7 +61,7 @@ void RayTracingCamera::SetProjection(float fovY, float aspectRatio, float nearCl
 	projectionMatrix_ = Matrix::MakePerspectiveFov(fovY, aspectRatio, nearClip, farClip);
 
 	cameraForGpu_.projInverse
-		= Matrix::Inverse(projectionMatrix_);
+		= projectionMatrix_.Inverse();
 }
 
 void RayTracingCamera::RecalculateCamera() {

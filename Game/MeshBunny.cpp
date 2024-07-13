@@ -59,8 +59,8 @@ void MeshBunny::Init() {
 
 	// matrixResources
 	matrix_ = std::make_unique<DxObject::BufferResource<TransformationMatrix>>(MyEngine::GetDevicesObj(), 1);
-	matrix_->operator[](0).world                 = Matrix4x4::MakeIdentity();
-	matrix_->operator[](0).worldInverseTranspose = Matrix4x4::MakeIdentity();
+	matrix_->operator[](0).world                 = Matrix4x4::Identity();
+	matrix_->operator[](0).worldInverseTranspose = Matrix4x4::Identity();
 
 	cullingCamera_ = std::make_unique<Camera3D>();
 	cullingCamera_->SetThisAttribute("cullingCamera");

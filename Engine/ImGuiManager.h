@@ -56,7 +56,7 @@ public:
 	//! @return インスタンスを返却
 	static ImGuiManager* GetInstaince();
 
-	static ImVec4 ToImVec4(const Vector4i& color);
+	static ImVec4 ToImVec4(const Color4i& color);
 
 private:
 
