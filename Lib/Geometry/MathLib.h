@@ -11,6 +11,9 @@
 // matrix
 #include <Matrix4x4.h>
 
+// com
+#include <VectorComparison.h>
+
 // c++
 #include <cmath>
 #include <numbers>
@@ -20,6 +23,9 @@
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 Vector4f Lerp(const Vector4f& x, const Vector4f& y, float s);
+
+bool IsNan(const Vector3f& v);
+bool IsNan(const Quaternion& q);
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////

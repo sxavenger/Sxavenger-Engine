@@ -53,7 +53,7 @@ void Light::SetAttributeImGui() {
 
 			ImGui::DragFloat3("rotate", &rotate_.x, 0.01f);
 			// rotateからdirectionの計算
-			lightData_.direction = Matrix::EulerTransform({ 0.0f, 0.0f, 1.0f }, Matrix::MakeRotate(rotate_));
+			lightData_.direction = Matrix::Transform({ 0.0f, 0.0f, 1.0f }, Matrix::MakeRotate(rotate_));
 			ImGui::Text("> [direction] x: %.3f y: %.3f z: %.3f", lightData_.direction.x, lightData_.direction.y, lightData_.direction.z);
 
 			break;
@@ -69,7 +69,7 @@ void Light::SetAttributeImGui() {
 
 			ImGui::DragFloat3("rotate", &rotate_.x, 0.01f);
 			// rotateからdirectionの計算
-			lightData_.direction = Matrix::EulerTransform({ 0.0f, 0.0f, 1.0f }, Matrix::MakeRotate(rotate_));
+			lightData_.direction = Matrix::Transform({ 0.0f, 0.0f, 1.0f }, Matrix::MakeRotate(rotate_));
 			ImGui::Text("> [direction] x: %.3f y: %.3f z: %.3f", lightData_.direction.x, lightData_.direction.y, lightData_.direction.z);
 
 			ImGui::DragFloat("range", &lightData_.range, 0.1f, 0.0f, 100.0f);

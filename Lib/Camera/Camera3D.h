@@ -50,7 +50,7 @@ public:
 
 	void Term();
 
-	void DrawFrustum(const Vector4f& color);
+	void DrawFrustum(const Color4f& color);
 
 	//! @brief カメラ情報を設定
 	//! 

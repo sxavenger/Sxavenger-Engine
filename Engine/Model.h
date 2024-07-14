@@ -14,6 +14,7 @@
 // c++
 #include <string>
 #include <memory>
+#include <map>
 
 // Geometry
 #include <Vector4.h>
@@ -75,6 +76,9 @@ struct ModelData {
 	std::vector<MaterialData> materials;
 	Node                      rootNode;
 	//!< meshsとmaterials, nodeのsizeは同じ
+	
+	std::map<std::string, JointWeightData> skinCkusterData;
+	//!< hash mapにするかも
 	
 	void Clear() {
 		meshes.clear();

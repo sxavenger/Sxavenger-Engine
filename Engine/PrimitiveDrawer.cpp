@@ -54,7 +54,7 @@ void PrimitiveTriangle::Init() {
 
 }
 
-void PrimitiveTriangle::DrawTriangle(const Vector3f& v0, const Vector3f& v1, const Vector3f& v2, const Vector4f& color) {
+void PrimitiveTriangle::DrawTriangle(const Vector3f& v0, const Vector3f& v1, const Vector3f& v2, const Color4f& color) {
 
 	assert(objectCount_ < kMaxObjectNum_); //!< 描画限界
 
@@ -108,6 +108,8 @@ void PrimitiveLine::Init() {
 	pipelineDesc.SetElement("POSITION", 0, DXGI_FORMAT_R32G32B32A32_FLOAT);
 	pipelineDesc.SetElement("COLOR",    0, DXGI_FORMAT_R32G32B32A32_FLOAT);
 
+	pipelineDesc.SetRasterizer(D3D12_CULL_MODE_NONE, D3D12_FILL_MODE_SOLID);
+
 	pipelineDesc.SetPrimitive(PRIMITIVE_LINE);
 
 	graphicsPipeline_ = std::make_unique<GraphicsPipeline>();
@@ -136,7 +138,7 @@ void PrimitiveLine::DrawAll(const D3D12_GPU_VIRTUAL_ADDRESS& camera) {
 
 }
 
-void PrimitiveLine::DrawLine(const Vector3f& v0, const Vector3f& v1, const Vector4f& color) {
+void PrimitiveLine::DrawLine(const Vector3f& v0, const Vector3f& v1, const Color4f& color) {
 
 	assert(objectCount_ < kMaxObjectNum_); //!< 描画限界
 
@@ -167,12 +169,52 @@ PrimitiveDrawer* PrimitiveDrawer::GetInstance() {
 	return &instance;
 }
 
-void PrimitiveDrawer::DrawTriangle(const Vector3f& v0, const Vector3f& v1, const Vector3f& v2, const Vector4f& color) {
+void PrimitiveDrawer::DrawTriangle(const Vector3f& v0, const Vector3f& v1, const Vector3f& v2, const Color4f& color) {
 	triangle_->DrawTriangle(v0, v1, v2, color);
 }
 
-void PrimitiveDrawer::DrawLine(const Vector3f& v0, const Vector3f& v1, const Vector4f& color) {
+void PrimitiveDrawer::DrawLine(const Vector3f& v0, const Vector3f& v1, const Color4f& color) {
 	line_->DrawLine(v0, v1, color);
+}
+
+void PrimitiveDrawer::DrawSphere(const Vector3f& center, float radius, const uint32_t kSubdivision, const Color4f& color) {
+	const float kLatEvery = (std::numbers::pi_v<float> * 2.0f) / static_cast<float>(kSubdivision); // horizontal
+	const float kLonEvery = std::numbers::pi_v<float> / static_cast<float>(kSubdivision); // vertical
+
+	enum PointName {
+		A, B, C,
+	};
+
+	for (uint32_t latIndex = 0; latIndex < kSubdivision; ++latIndex) {
+		float lat = -std::numbers::pi_v<float> / 2.0f + kLatEvery * latIndex;
+
+		for (uint32_t lonIndex = 0; lonIndex < kSubdivision; ++lonIndex) {
+			float lon = lonIndex * kLonEvery;
+
+			Vector3f point[3];
+
+			point[A] = { std::cos(lat) * std::cos(lon), std::sin(lat), std::cos(lat) * std::sin(lon) };
+			point[A] *= radius;
+
+			point[B] = {
+				std::cos(lat + kLatEvery) * std::cos(lon),
+				std::sin(lat + kLatEvery),
+				std::cos(lat + kLatEvery) * std::sin(lon)
+			};
+			point[B] *= radius;
+
+			point[C] = {
+				std::cos(lat) * std::cos(lon + kLonEvery),
+				std::sin(lat),
+				std::cos(lat) * std::sin(lon + kLonEvery),
+			};
+			point[C] *= radius;
+
+			DrawLine(point[A] + center, point[B] + center, color);
+			DrawLine(point[A] + center, point[C] + center, color);
+
+		}
+	}
 }
 
 void PrimitiveDrawer::DrawAll3D() {

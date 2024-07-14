@@ -49,7 +49,7 @@ private:
 	// private variables
 	//=========================================================================================
 
-	static std::chrono::system_clock::time_point startFrame_, endFrame_;
+	static std::chrono::steady_clock::time_point startFrame_, endFrame_;
 	static float deltaTime_;
 
 	static float secondsConversions_[SecondsUnit::kCountOfSecondsUnit]; //!< 秒数単位変換表 micro * this[...]

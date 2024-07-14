@@ -13,3 +13,11 @@ Vector4f Lerp(const Vector4f& x, const Vector4f& y, float s) {
 	};
 }
 
+bool IsNan(const Vector3f& v) {
+	return Any(Flag3{std::isnan(v.x), std::isnan(v.y), std::isnan(v.z)});
+}
+
+bool IsNan(const Quaternion& q) {
+	return Any(Flag4{ std::isnan(q.x), std::isnan(q.y), std::isnan(q.z), std::isnan(q.w)});
+}
+

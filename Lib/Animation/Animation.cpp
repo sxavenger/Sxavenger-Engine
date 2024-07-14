@@ -60,25 +60,14 @@ Quaternion AnimationMethods::CalculateValue(const std::vector<KeyframeQuaternion
 
 }
 
-void AnimationMethods::ApplyAnimation(Skeleton& skeleton, const Animation& animation, float time) {
-
-	for (auto& joint : skeleton.joints) {
-		// 対象のJointのAnimationがあれば, 値の適応
-		if (auto it = animation.nodeAnimations.find(joint.name); it != animation.nodeAnimations.end()) { //!< animationに対象のJointがある場合
-			// animationの参照取得
-			const NodeAnimation& nodeAnimation = (*it).second;
-
-			// 値の適応
-			joint.transform.scale     = CalculateValue(nodeAnimation.scale, time);
-			joint.transform.rotate    = CalculateValue(nodeAnimation.rotate, time);
-			joint.transform.translate = CalculateValue(nodeAnimation.translate, time);
-		}
-	}
-}
-
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Skeleton structure methods
 ////////////////////////////////////////////////////////////////////////////////////////////
+
+void Skeleton::Update(const Animation& animation, float time) {
+	ApplyAnimation(animation, time);
+	UpdateMatrix();
+}
 
 void Skeleton::UpdateMatrix() {
 	// すべてのJointの更新. 親が若いので(indexが子より親の方が小さいので)通常ループで処理可能
@@ -95,4 +84,21 @@ void Skeleton::UpdateMatrix() {
 			joint.skeletonSpaceMatrix = joint.localMatrix;
 		}
 	}
+}
+
+void Skeleton::ApplyAnimation(const Animation& animation, float time) {
+
+	for (auto& joint : joints) {
+		// 対象のJointのAnimationがあれば, 値の適応
+		if (auto it = animation.nodeAnimations.find(joint.name); it != animation.nodeAnimations.end()) { //!< animationに対象のJointがある場合
+			// animationの参照取得
+			const NodeAnimation& nodeAnimation = (*it).second;
+
+			// 値の適応
+			joint.transform.scale     = AnimationMethods::CalculateValue(nodeAnimation.scale, time);
+			joint.transform.rotate    = AnimationMethods::CalculateValue(nodeAnimation.rotate, time);
+			joint.transform.translate = AnimationMethods::CalculateValue(nodeAnimation.translate, time);
+		}
+	}
+
 }

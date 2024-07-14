@@ -341,5 +341,7 @@ Skeleton ModelMethods::CreateSkeleton(const Node& rootNode) {
 		skelton.jointMap.emplace(joint.name, joint.index);
 	}
 
+	skelton.UpdateMatrix(); //!< localMatrixに初期値を入れておく
+
 	return skelton;
 }

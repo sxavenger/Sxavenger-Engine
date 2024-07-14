@@ -87,6 +87,7 @@ void GameScene::Init() {
 	light_ = std::make_unique<Light>(MyEngine::GetDevicesObj());
 
 	cube_ = std::make_unique<AnimationCube>();
+	human_ = std::make_unique<AnimationHuman>();
 
 }
 
@@ -95,6 +96,7 @@ void GameScene::Term() {
 
 void GameScene::Update() {
 	cube_->Update();
+	human_->Update();
 }
 
 void GameScene::Draw() {
@@ -111,6 +113,7 @@ void GameScene::Draw() {
 		MyEngine::BeginOffscreen(MyEngine::GetTexture("offscreen"));
 
 		cube_->Draw();
+		human_->Draw();
 
 		MyEngine::EndOffscreen(MyEngine::GetTexture("offscreen"));
 	}

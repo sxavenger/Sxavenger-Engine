@@ -39,7 +39,7 @@ protected:
 	////////////////////////////////////////////////////////////////////////////////////////////
 	struct PrimitiveInput {
 		Vector4f position;
-		Vector4f color;
+		Color4f color;
 	};
 
 	//=========================================================================================
@@ -53,7 +53,7 @@ protected:
 	std::unique_ptr<DxObject::GraphicsPipeline> graphicsPipeline_;
 
 	/* config */
-	static const uint32_t kMaxObjectNum_ = 100;
+	static const uint32_t kMaxObjectNum_ = 10000;
 	uint32_t              objectCount_   = 0;
 
 	/* buffer */
@@ -78,7 +78,7 @@ public:
 
 	void DrawAll(const D3D12_GPU_VIRTUAL_ADDRESS& camera) override;
 
-	void DrawTriangle(const Vector3f& v0, const Vector3f& v1, const Vector3f& v2, const Vector4f& color);
+	void DrawTriangle(const Vector3f& v0, const Vector3f& v1, const Vector3f& v2, const Color4f& color);
 
 private:
 
@@ -105,7 +105,7 @@ public:
 
 	void DrawAll(const D3D12_GPU_VIRTUAL_ADDRESS& camera) override;
 
-	void DrawLine(const Vector3f& v0, const Vector3f& v1, const Vector4f& color);
+	void DrawLine(const Vector3f& v0, const Vector3f& v1, const Color4f& color);
 
 private:
 
@@ -135,9 +135,11 @@ public:
 
 	/* draw methods */
 
-	void DrawTriangle(const Vector3f& v0, const Vector3f& v1, const Vector3f& v2, const Vector4f& color);
+	void DrawTriangle(const Vector3f& v0, const Vector3f& v1, const Vector3f& v2, const Color4f& color);
 
-	void DrawLine(const Vector3f& v0, const Vector3f& v1, const Vector4f& color);
+	void DrawLine(const Vector3f& v0, const Vector3f& v1, const Color4f& color);
+
+	void DrawSphere(const Vector3f& center, float radius, const uint32_t kSubdivision, const Color4f& color);
 
 	void DrawAll3D();
 

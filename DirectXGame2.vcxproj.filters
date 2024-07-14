@@ -148,6 +148,9 @@
     <Filter Include="Lib\Animation">
       <UniqueIdentifier>{bc61da55-6b98-464b-b7a2-8c69cf843dad}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Game\AnimationObject">
+      <UniqueIdentifier>{809d4846-f8cb-494a-a48f-15da2d9f2892}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
@@ -433,11 +436,17 @@
     <ClCompile Include="Lib\Animation\Animation.cpp">
       <Filter>Lib\Animation</Filter>
     </ClCompile>
-    <ClCompile Include="Game\AnimationCube.cpp">
-      <Filter>Game</Filter>
-    </ClCompile>
     <ClCompile Include="Lib\Geometry\Quaternion.cpp">
       <Filter>Lib\Geometry\source</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\AnimationObject\AnimationCube.cpp">
+      <Filter>Game\AnimationObject</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\AnimationObject\AnimationObject.cpp">
+      <Filter>Game\AnimationObject</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\AnimationObject\AnimationHuman.cpp">
+      <Filter>Game\AnimationObject</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -696,11 +705,17 @@
     <ClInclude Include="Lib\Animation\Animation.h">
       <Filter>Lib\Animation</Filter>
     </ClInclude>
-    <ClInclude Include="Game\AnimationCube.h">
-      <Filter>Game</Filter>
-    </ClInclude>
     <ClInclude Include="Lib\Geometry\Quaternion.h">
       <Filter>Lib\Geometry\include</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\AnimationObject\AnimationCube.h">
+      <Filter>Game\AnimationObject</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\AnimationObject\AnimationObject.h">
+      <Filter>Game\AnimationObject</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\AnimationObject\AnimationHuman.h">
+      <Filter>Game\AnimationObject</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -184,7 +184,7 @@ Matrix4x4 Matrix::MakeViewport(float left, float top, float width, float height,
 	};
 }
 
-Vector3f Matrix::EulerTransform(const Vector3f& vector, const Matrix4x4& matrix) {
+Vector3f Matrix::Transform(const Vector3f& vector, const Matrix4x4& matrix) {
 	Vector3f result;
 	float w;
 	

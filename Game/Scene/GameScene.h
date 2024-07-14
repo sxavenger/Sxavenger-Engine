@@ -26,6 +26,7 @@
 #include <Light.h>
 
 #include <AnimationCube.h>
+#include <AnimationHuman.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // GameScene class
@@ -48,6 +49,7 @@ private:
 	std::unique_ptr<Light> light_;
 	
 	std::unique_ptr<AnimationCube> cube_;
+	std::unique_ptr<AnimationHuman> human_;
 
 	//=========================================================================================
 	// private methods

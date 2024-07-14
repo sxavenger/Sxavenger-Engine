@@ -14,7 +14,7 @@
 
 // c++
 #include <vector>
-#include <map>
+#include <unordered_map>
 #include <string>
 #include <optional>
 
@@ -51,9 +51,8 @@ struct NodeAnimation {
 };
 
 struct Animation {
-	float duration;                                      //!< アニメーション全体の尺 sec
-	std::map<std::string, NodeAnimation> nodeAnimations; //!< key: node名, value: NodeAnimation
-	// hash mapにしてもいいかも...
+	float duration;                                                //!< アニメーション全体の尺 sec
+	std::unordered_map<std::string, NodeAnimation> nodeAnimations; //!< key: node名, value: NodeAnimation
 };
 
 //!< 仮置きしておく
@@ -75,13 +74,19 @@ struct Joint {
 // Skeleton structure
 ////////////////////////////////////////////////////////////////////////////////////////////
 struct Skeleton {
-	int32_t root; //!< rootJointのindex
-	std::map<std::string, int32_t> jointMap; //!< key: joint名, value: index
-	//!< hash mapでもいいかも...?
-	std::vector<Joint> joints; //!< 所属してるJoint
+	int32_t root;                                      //!< rootJointのindex
+	std::unordered_map<std::string, int32_t> jointMap; //!< key: joint名, value: index
+	std::vector<Joint> joints;                         //!< 所属してるJoint
 
-	//! @brief 自身のjointの更新処理
+	//! @brief animationの適用し, matrixの更新
+	void Update(const Animation& animation, float time);
+
+	//! @brief 自身がもってるjointのmatrixの更新処理
 	void UpdateMatrix();
+
+	//! @brief 自身にアニメーションを適応
+	void ApplyAnimation(const Animation& animation, float time);
+
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -93,7 +98,19 @@ namespace AnimationMethods {
 
 	Quaternion CalculateValue(const std::vector<KeyframeQuaternion>& keyframes, float time);
 
-	//!< どこかの構造体に突っ込んでもいいかも...((多分, Skelton構造体に入れる
-	void ApplyAnimation(Skeleton& skeleton, const Animation& animation, float time);
-
 }
+
+//!< 仮置き
+////////////////////////////////////////////////////////////////////////////////////////////
+// Weight structure
+////////////////////////////////////////////////////////////////////////////////////////////
+
+struct VertexWeightData {
+	float weight;
+	uint32_t vertexIndex;
+};
+
+struct JointWeightData {
+	Matrix4x4 inverseBindPoseMatrix;
+	std::vector<VertexWeightData> vertexWeights;
+};

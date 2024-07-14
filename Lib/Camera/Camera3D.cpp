@@ -36,16 +36,16 @@ void Camera3D::Term() {
 	resource_.reset();
 }
 
-void Camera3D::DrawFrustum(const Vector4f& color) {
+void Camera3D::DrawFrustum(const Color4f& color) {
 
 	Vector3f frustumPoint[4];
 	Matrix4x4 clipMatrix = projectionMatrix_.Inverse();
 	Matrix4x4 worldMatrix = viewMatrix_.Inverse();
 
-	frustumPoint[0] = Matrix::EulerTransform(Matrix::EulerTransform({-1.0f, -1.0f, 1.0f}, clipMatrix), worldMatrix);
-	frustumPoint[1] = Matrix::EulerTransform(Matrix::EulerTransform({-1.0f, 1.0f, 1.0f}, clipMatrix), worldMatrix);
-	frustumPoint[2] = Matrix::EulerTransform(Matrix::EulerTransform({1.0f, 1.0f, 1.0f}, clipMatrix), worldMatrix);
-	frustumPoint[3] = Matrix::EulerTransform(Matrix::EulerTransform({1.0f, -1.0f, 1.0f}, clipMatrix), worldMatrix);
+	frustumPoint[0] = Matrix::Transform(Matrix::Transform({-1.0f, -1.0f, 1.0f}, clipMatrix), worldMatrix);
+	frustumPoint[1] = Matrix::Transform(Matrix::Transform({-1.0f, 1.0f, 1.0f}, clipMatrix), worldMatrix);
+	frustumPoint[2] = Matrix::Transform(Matrix::Transform({1.0f, 1.0f, 1.0f}, clipMatrix), worldMatrix);
+	frustumPoint[3] = Matrix::Transform(Matrix::Transform({1.0f, -1.0f, 1.0f}, clipMatrix), worldMatrix);
 
 	// drawerの取得
 	auto drawer = PrimitiveDrawer::GetInstance();
