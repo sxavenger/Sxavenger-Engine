@@ -151,6 +151,9 @@
     <Filter Include="Game\AnimationObject">
       <UniqueIdentifier>{809d4846-f8cb-494a-a48f-15da2d9f2892}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resource\hlsl\Animation">
+      <UniqueIdentifier>{fb4d5206-328c-46bf-8f54-5289616533c9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
@@ -448,6 +451,9 @@
     <ClCompile Include="Game\AnimationObject\AnimationHuman.cpp">
       <Filter>Game\AnimationObject</Filter>
     </ClCompile>
+    <ClCompile Include="Game\Skybox.cpp">
+      <Filter>Game</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\MyEngine.h">
@@ -717,6 +723,9 @@
     <ClInclude Include="Game\AnimationObject\AnimationHuman.h">
       <Filter>Game\AnimationObject</Filter>
     </ClInclude>
+    <ClInclude Include="Game\Skybox.h">
+      <Filter>Game</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />
@@ -770,6 +779,9 @@
     </None>
     <None Include="Resources\hlsl\Sprite.hlsli">
       <Filter>Resource\hlsl</Filter>
+    </None>
+    <None Include="Resources\hlsl\Animation\Animation.hlsli">
+      <Filter>Resource\hlsl\Animation</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -855,6 +867,12 @@
     </FxCompile>
     <FxCompile Include="Resources\hlsl\Object3d\Object3d.PS.hlsl">
       <Filter>Resource\hlsl\Object3d</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\hlsl\Animation\Animation.PS.hlsl">
+      <Filter>Resource\hlsl\Animation</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\hlsl\Animation\Animation.VS.hlsl">
+      <Filter>Resource\hlsl\Animation</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

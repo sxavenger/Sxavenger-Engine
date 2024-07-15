@@ -32,7 +32,7 @@ namespace DxrObject{
 
 		ID3D12Resource* GetResource() const { return resource_.Get(); }
 
-		const D3D12_GPU_DESCRIPTOR_HANDLE& GetSRVHandleGPU() const { return descriptorSRV_.handleGPU; }
+		const D3D12_GPU_DESCRIPTOR_HANDLE& GetSRVHandleGPU() const { return descriptorSRV_.GetGPUHandle(); }
 
 	private:
 

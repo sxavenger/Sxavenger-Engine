@@ -17,6 +17,18 @@
 #include <unordered_map>
 #include <string>
 #include <optional>
+#include <span>
+#include <array>
+
+// DirectX12
+#include <d3d12.h>
+
+// DxObject
+#include <DxObjectMethod.h>
+#include <DxBufferResource.h>
+
+// ComPtr
+#include <ComPtr.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // keyframe structure
@@ -113,4 +125,34 @@ struct VertexWeightData {
 struct JointWeightData {
 	Matrix4x4 inverseBindPoseMatrix;
 	std::vector<VertexWeightData> vertexWeights;
+};
+
+//!< 仮置き
+////////////////////////////////////////////////////////////////////////////////////////////
+// SkinCluster structure
+////////////////////////////////////////////////////////////////////////////////////////////
+
+const uint32_t kNumMaxInfluence = 4;
+struct VertexInfluence {
+	std::array<float,   kNumMaxInfluence> weights;
+	std::array<int32_t, kNumMaxInfluence> jointIndices;
+};
+
+struct WellForGPU {
+	Matrix4x4 skeletonSpaceMatrix;                 //!< position用
+	Matrix4x4 skeletonSpaceInverseTransposeMatrix; //!< normal用
+};
+
+struct SkinCluster {
+	std::vector<Matrix4x4> inverseBindPoseMatrices;
+
+	// influence resource
+	std::unique_ptr<DxObject::BufferResource<VertexInfluence>> influenceResource;
+
+	// palette resource
+	std::unique_ptr<DxObject::BufferResource<WellForGPU>> paletteResource;
+	/*DxObject::Descriptor paletteDescriptorSRV;*/
+
+	void Update(const Skeleton& skeleton);
+
 };

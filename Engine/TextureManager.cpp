@@ -36,8 +36,18 @@ void Texture::Load(DirectXCommon* dxCommon, const std::string& filePath) {
 		D3D12_SHADER_RESOURCE_VIEW_DESC desc = {};
 		desc.Format                  = metadata.format;
 		desc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
-		desc.ViewDimension           = D3D12_SRV_DIMENSION_TEXTURE2D;
-		desc.Texture2D.MipLevels     = UINT(metadata.mipLevels);
+
+		if (metadata.IsCubemap()) { //!< mipImageがcubeMapの場合
+			desc.ViewDimension                   = D3D12_SRV_DIMENSION_TEXTURECUBE;
+			desc.TextureCube.MostDetailedMip     = 0;
+			desc.TextureCube.MipLevels           = UINT_MAX;
+			desc.TextureCube.ResourceMinLODClamp = 0.0f;
+
+		} else {
+			// それ以外はTexture2D扱い
+			desc.ViewDimension       = D3D12_SRV_DIMENSION_TEXTURE2D;
+			desc.Texture2D.MipLevels = UINT(metadata.mipLevels);
+		}
 
 		// SRVを生成するDescriptorHeapの場所を決める
 		descriptorSRV_ = dxCommon_->GetDescriptorsObj()->GetCurrentDescriptor(SRV);
@@ -46,7 +56,7 @@ void Texture::Load(DirectXCommon* dxCommon, const std::string& filePath) {
 		device->CreateShaderResourceView(
 			resource_.Get(),
 			&desc,
-			descriptorSRV_.handleCPU
+			descriptorSRV_.GetCPUHandle()
 		);
 	}
 }
@@ -116,7 +126,7 @@ void RenderTexture::Create(
 		device->CreateShaderResourceView(
 			resource_.Get(),
 			&desc,
-			descriptorSRV_.handleCPU
+			descriptorSRV_.GetCPUHandle()
 		);
 	}
 
@@ -127,7 +137,7 @@ void RenderTexture::Create(
 		device->CreateRenderTargetView(
 			resource_.Get(),
 			nullptr,
-			descriptorRTV_.handleCPU
+			descriptorRTV_.GetCPUHandle()
 		);
 	}
 }
@@ -188,7 +198,7 @@ void DummyTexture::Create(DirectXCommon* dxCommon, int32_t textureWidth, int32_t
 		device->CreateShaderResourceView(
 			resource_.Get(),
 			&desc,
-			descriptorSRV_.handleCPU
+			descriptorSRV_.GetCPUHandle()
 		);
 	}
 
@@ -205,7 +215,7 @@ void DummyTexture::Create(DirectXCommon* dxCommon, int32_t textureWidth, int32_t
 			resource_.Get(),
 			nullptr,
 			&desc,
-			descriptorUAV_.handleCPU
+			descriptorUAV_.GetCPUHandle()
 		);
 	}
 }
@@ -373,12 +383,25 @@ DirectX::ScratchImage TextureMethod::LoadTexture(const std::string& filePath) {
 	DirectX::ScratchImage image = {};
 	std::wstring filePathW = ToWstring(filePath); //!< wstringに変換
 
-	auto hr = DirectX::LoadFromWICFile(
-		filePathW.c_str(),
-		DirectX::WIC_FLAGS_FORCE_SRGB,
-		nullptr,
-		image
-	);
+	HRESULT hr;
+
+	if (filePathW.ends_with(L".dds")) { //!< .ddsでpathが終わっている場合
+		// DDSファイルとして読み込み
+		hr = DirectX::LoadFromDDSFile(
+			filePathW.c_str(),
+			DirectX::DDS_FLAGS_NONE,
+			nullptr,
+			image
+		);
+
+	} else {
+		hr = DirectX::LoadFromWICFile(
+			filePathW.c_str(),
+			DirectX::WIC_FLAGS_FORCE_SRGB,
+			nullptr,
+			image
+		);
+	}
 
 	if (FAILED(hr)) {
 		std::string errorLog;
@@ -392,16 +415,22 @@ DirectX::ScratchImage TextureMethod::LoadTexture(const std::string& filePath) {
 	// MipMapsの生成
 	DirectX::ScratchImage mipImage = {};
 
-	hr = DirectX::GenerateMipMaps(
-		image.GetImages(),
-		image.GetImageCount(),
-		image.GetMetadata(),
-		DirectX::TEX_FILTER_SRGB,
-		0,
-		mipImage
-	);
+	if (DirectX::IsCompressed(image.GetMetadata().format)) { //!< 圧縮formatかどうか調べる
+		// 圧縮formatならそのまま使う
+		mipImage = std::move(image);
 
-	assert(SUCCEEDED(hr));
+	} else {
+		hr = DirectX::GenerateMipMaps(
+			image.GetImages(),
+			image.GetImageCount(),
+			image.GetMetadata(),
+			DirectX::TEX_FILTER_SRGB,
+			0,
+			mipImage
+		);
+
+		assert(SUCCEEDED(hr));
+	}
 
 	return mipImage;
 }
@@ -452,12 +481,12 @@ ComPtr<ID3D12Resource> TextureMethod::UploadTextureData(
 
 	// 転送後は利用できるように D3D12_RESOUCE_STATE_COPY_DESC -> D3D12_RESOUCE_STATE_GENETIC_READ へ変更
 	D3D12_RESOURCE_BARRIER barrier = {};
-	barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
-	barrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
-	barrier.Transition.pResource = texture;
+	barrier.Type                   = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+	barrier.Flags                  = D3D12_RESOURCE_BARRIER_FLAG_NONE;
+	barrier.Transition.pResource   = texture;
 	barrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
 	barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_COPY_DEST;
-	barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_GENERIC_READ;
+	barrier.Transition.StateAfter  = D3D12_RESOURCE_STATE_GENERIC_READ;
 
 	commandList->ResourceBarrier(1, &barrier);
 

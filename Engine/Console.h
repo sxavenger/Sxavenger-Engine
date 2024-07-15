@@ -103,7 +103,7 @@ private:
 	bool isOutputConsole_ = true;
 	bool isFix_ = true;
 
-	int windowFlags = 0;
+	int windowFlags_ = 0;
 
 	// scenes
 	bool isFocusDebugScene_ = false;

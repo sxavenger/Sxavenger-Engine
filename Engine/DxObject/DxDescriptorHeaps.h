@@ -70,12 +70,6 @@ namespace DxObject {
 			return descriptorIndexSize_[type];
 		}
 
-		////! @brief indexのDescrpitorの削除
-		////! 
-		////! @param[in] type  DescriptorType
-		////! @param[in] index 削除するindex
-		//void Erase(DescriptorType type, uint32_t index);
-
 		//! @brief indexのDescrpitorの削除
 		//!
 		//! @param[in, out] descriptor
@@ -140,15 +134,7 @@ namespace DxObject {
 		//! @param[in] index
 		//! 
 		//! @return CPUDescriptorHandleの返却
-		D3D12_CPU_DESCRIPTOR_HANDLE GetCPUDescriptorHandle(DescriptorType type, uint32_t index) const {
-			assert(type < DescriptorType::kDescriptorHeapCount);
-
-			return DxObjectMethod::GetCPUDescriptorHandle(
-				descriptorHeaps_[type].Get(),
-				descriptorSize_[type],
-				index
-			);
-		}
+		D3D12_CPU_DESCRIPTOR_HANDLE GetCPUDescriptorHandle(DescriptorType type, uint32_t index) const;
 
 		//! @brief GPUDescriptorHandleの取得
 		//! 
@@ -156,15 +142,7 @@ namespace DxObject {
 		//! @param[in] index
 		//! 
 		//! @return GPUDescriptorHandleの返却
-		D3D12_GPU_DESCRIPTOR_HANDLE GetGPUDescriptorHandle(DescriptorType type, uint32_t index) const {
-			assert(type < DescriptorType::kDescriptorHeapCount);
-
-			return DxObjectMethod::GetGPUDescriptorHandle(
-				descriptorHeaps_[type].Get(),
-				descriptorSize_[type],
-				index
-			);
-		}
+		D3D12_GPU_DESCRIPTOR_HANDLE GetGPUDescriptorHandle(DescriptorType type, uint32_t index) const;
 	};
 
 }

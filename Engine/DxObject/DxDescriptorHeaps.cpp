@@ -112,16 +112,25 @@ const uint32_t DxObject::DescriptorHeaps::GetDescriptorCurrentIndex(DescriptorTy
 	return result;
 }
 
-//void DxObject::DescriptorHeaps::Erase(DescriptorType type, uint32_t index) {
-//
-//	assert(type < DescriptorType::kDescriptorHeapCount); //!< descrptorHeaps配列のオーバー
-//
-//	// DescriptorTypeのindexを取得
-//	uint32_t typeIndex = static_cast<uint32_t>(type);
-//
-//	// 空き配列に挿入
-//	descriptorVacantIndexs_[typeIndex].push_back(index);
-//}
+D3D12_CPU_DESCRIPTOR_HANDLE DxObject::DescriptorHeaps::GetCPUDescriptorHandle(DescriptorType type, uint32_t index) const {
+	assert(type < DescriptorType::kDescriptorHeapCount);
+
+	return DxObjectMethod::GetCPUDescriptorHandle(
+		descriptorHeaps_[type].Get(),
+		descriptorSize_[type],
+		index
+	);
+}
+
+D3D12_GPU_DESCRIPTOR_HANDLE DxObject::DescriptorHeaps::GetGPUDescriptorHandle(DescriptorType type, uint32_t index) const {
+	assert(type < DescriptorType::kDescriptorHeapCount);
+
+	return DxObjectMethod::GetGPUDescriptorHandle(
+		descriptorHeaps_[type].Get(),
+		descriptorSize_[type],
+		index
+	);
+}
 
 void DxObject::DescriptorHeaps::Erase(Descriptor& descriptor) {
 	if (descriptor.type >= DescriptorType::kDescriptorHeapCount) {
@@ -136,13 +145,16 @@ void DxObject::DescriptorHeaps::Erase(Descriptor& descriptor) {
 }
 
 DxObject::Descriptor DxObject::DescriptorHeaps::GetCurrentDescriptor(DescriptorType type) {
+
+	assert(type < DescriptorType::kDescriptorHeapCount); //!< descrptorHeaps配列のオーバー
 	Descriptor result;
 
-	result.index = GetDescriptorCurrentIndex(type);
-	result.handleCPU = GetCPUDescriptorHandle(type, result.index);
+	result.index          = GetDescriptorCurrentIndex(type);
+	result.handles.first  = GetCPUDescriptorHandle(type, result.index);
+	result.handles.second = std::nullopt;
 
 	if (type == DescriptorType::SRV) {
-		result.handleGPU = GetGPUDescriptorHandle(type, result.index);
+		result.handles.second = GetGPUDescriptorHandle(type, result.index);
 	}
 
 	result.type = type;

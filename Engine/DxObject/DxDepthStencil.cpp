@@ -46,7 +46,7 @@ void DxObject::DepthStencil::Init(
 		device->CreateDepthStencilView(
 			depthStencilResource_.Get(),
 			&desc,
-			descriptorDSV_.handleCPU
+			descriptorDSV_.GetCPUHandle()
 		);
 	}
 }

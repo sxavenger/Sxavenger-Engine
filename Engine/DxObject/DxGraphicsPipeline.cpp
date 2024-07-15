@@ -113,12 +113,13 @@ void DxObject::GraphicsPipelineDesc::CreateDefaultDesc() {
 	SetRTVFormat(defaultFormat);
 }
 
-void DxObject::GraphicsPipelineDesc::SetElement(const LPCSTR& semanticName, uint32_t semanticIndex, DXGI_FORMAT format) {
+void DxObject::GraphicsPipelineDesc::SetElement(const LPCSTR& semanticName, UINT semanticIndex, DXGI_FORMAT format, UINT inputSlot) {
 
 	D3D12_INPUT_ELEMENT_DESC element = {};
 	element.SemanticName      = semanticName;
 	element.SemanticIndex     = semanticIndex;
 	element.Format            = format;
+	element.InputSlot         = inputSlot;
 	element.AlignedByteOffset = D3D12_APPEND_ALIGNED_ELEMENT;
 
 	elements.push_back(element);

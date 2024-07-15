@@ -59,7 +59,7 @@ void DxrObject::ResultBuffer::Init(
 			resource_.Get(),
 			nullptr,
 			&desc,
-			descriptorUAV_.handleCPU
+			descriptorUAV_.GetCPUHandle()
 		);
 	}
 
@@ -78,7 +78,7 @@ void DxrObject::ResultBuffer::Init(
 		device->CreateShaderResourceView(
 			resource_.Get(),
 			&desc,
-			descriptorSRV_.handleCPU
+			descriptorSRV_.GetCPUHandle()
 		);
 	}
 }

@@ -72,7 +72,7 @@ namespace DxObject {
 		//! @brief 終了処理
 		void Term();
 
-		const D3D12_CPU_DESCRIPTOR_HANDLE& GetHandle() const { return descriptorDSV_.handleCPU; }
+		const D3D12_CPU_DESCRIPTOR_HANDLE& GetHandle() const { return descriptorDSV_.GetCPUHandle(); }
 
 	private:
 

@@ -251,7 +251,7 @@ void DirectXRCommon::CreateRecordBuffer() {
 	raygenerationRecordBuffer_ = std::make_unique<RecordBuffer>();
 
 	raygenerationRecordBuffer_->SetExport(ExportType::RAYGENERATION, L"mainRayGen");
-	raygenerationRecordBuffer_->SetHandle(0, resultBuffer_->GetDescriptorUAV().handleGPU);
+	raygenerationRecordBuffer_->SetHandle(0, resultBuffer_->GetDescriptorUAV().GetGPUHandle());
 
 	// miss
 	missRecordBuffer_ = std::make_unique<RecordBuffer>();

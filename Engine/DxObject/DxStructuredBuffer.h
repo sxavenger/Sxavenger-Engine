@@ -49,7 +49,7 @@ namespace DxObject {
 
 		void Term();
 
-		const D3D12_GPU_DESCRIPTOR_HANDLE& GetGPUHandle() const { return descriptor_.handleGPU; }
+		const D3D12_GPU_DESCRIPTOR_HANDLE& GetGPUHandle() const { return descriptor_.GetGPUHandle(); }
 
 		const Descriptor& GetDescriptor() const { return descriptor_; }
 

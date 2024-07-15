@@ -20,6 +20,7 @@
 #include <cassert>
 #include <vector>
 #include <memory>
+#include <span>
 
 // DxObject
 #include <DxObjectMethod.h>
@@ -155,7 +156,7 @@ namespace DxObject {
 		}
 
 		void Memcpy(const T* value) {
-			std::memcpy(dataArray_, value, structureSize_ * indexSize_);
+			std::memcpy(mappedDatas_.data(), value, structureSize_ * indexSize_);
 		}
 
 		//=========================================================================================
@@ -165,15 +166,19 @@ namespace DxObject {
 		T& operator[](uint32_t element) {
 			CheckElementCount(element);
 
-			return dataArray_[element];
+			return mappedDatas_[element];
 		}
 
 		//
 		// test functions
 		//
 
-		T* GetDataArray() const {
-			return dataArray_;
+		T* GetData() const {
+			return mappedDatas_.data();
+		}
+
+		const std::span<T>& GetMappedDatas() const {
+			return mappedDatas_;
 		}
 
 	private:
@@ -182,7 +187,7 @@ namespace DxObject {
 		// private variables
 		//=========================================================================================
 
-		T* dataArray_; //!< mappingするデータ
+		std::span<T> mappedDatas_;
 
 	};
 
@@ -260,9 +265,9 @@ namespace DxObject {
 		// Test functions
 		//
 
-		const T* GetDataArray() {
+		const T* GetData() {
 			LoadPtrData();
-			return dataArray_;
+			return mappedDatas_.data();
 		}
 
 	private:
@@ -271,7 +276,7 @@ namespace DxObject {
 		// private variables
 		//=========================================================================================
 
-		T*              dataArray_;
+		std::span<T>    mappedDatas_;
 		std::vector<T*> dataPtrArray_;
 
 		//=========================================================================================
@@ -328,7 +333,7 @@ namespace DxObject {
 		}
 
 		void Memcpy(const uint32_t* value) {
-			std::memcpy(dataArray_, value, sizeof(uint32_t) * indexSize_);
+			std::memcpy(mappedDatas_.data(), value, sizeof(uint32_t) * indexSize_);
 		}
 
 		//=========================================================================================
@@ -338,15 +343,15 @@ namespace DxObject {
 		uint32_t& operator[](uint32_t element) {
 			CheckElementCount(element);
 
-			return dataArray_[element];
+			return mappedDatas_[element];
 		}
 
 		//
 		// Test funcitons
 		//
 
-		uint32_t* GetDataArray() const {
-			return dataArray_;
+		uint32_t* GetData() const {
+			return mappedDatas_.data();
 		}
 
 	private:
@@ -355,7 +360,7 @@ namespace DxObject {
 		// private variables
 		//=========================================================================================
 
-		uint32_t* dataArray_;
+		std::span<uint32_t> mappedDatas_;
 
 	};
 
@@ -460,9 +465,13 @@ inline void DxObject::BufferResource<T>::Init(Devices* devices) {
 		device,
 		structureSize_ * indexSize_
 	);
+	
+	T* mappingTarget = nullptr;
 
 	// resourceをマッピング
-	resource_->Map(0, nullptr, reinterpret_cast<void**>(&dataArray_));
+	resource_->Map(0, nullptr, reinterpret_cast<void**>(&mappingTarget));
+
+	mappedDatas_ = { mappingTarget, indexSize_ };
 }
 
 template<typename T>
@@ -487,8 +496,12 @@ inline void DxObject::BufferPtrResource<T>::Init(Devices* devices) {
 		structureSize_ * indexSize_
 	);
 
+	T* mappingTarget = nullptr;
+
 	// resourceをマッピング
-	resource_->Map(0, nullptr, reinterpret_cast<void**>(&dataArray_));
+	resource_->Map(0, nullptr, reinterpret_cast<void**>(&mappingTarget));
+
+	mappedDatas_ = { mappingTarget, indexSize_ };
 }
 
 template<typename T>
@@ -498,7 +511,7 @@ inline void DxObject::BufferPtrResource<T>::Term() {
 
 template<typename T>
 inline void DxObject::BufferPtrResource<T>::LoadPtrData() {
-	memcpy(dataArray_, *dataPtrArray_.data(), structureSize_ * indexSize_);
+	memcpy(mappedDatas_.data(), *dataPtrArray_.data(), structureSize_ * indexSize_);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////

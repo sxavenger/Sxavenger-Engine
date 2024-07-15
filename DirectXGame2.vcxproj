@@ -176,6 +176,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Game\RayTracingWorld\SubobjectManager.cpp" />
     <ClCompile Include="Game\RayTracingWorld\Teapot.cpp" />
     <ClCompile Include="Game\Scene\GameScene.cpp" />
+    <ClCompile Include="Game\Skybox.cpp" />
     <ClCompile Include="Lib\Adapter\Json\Json.cpp" />
     <ClCompile Include="Lib\Adapter\Performance\Performance.cpp" />
     <ClCompile Include="Lib\Adapter\Random\Random.cpp" />
@@ -267,6 +268,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Game\RayTracingWorld\SubobjectManager.h" />
     <ClInclude Include="Game\RayTracingWorld\Teapot.h" />
     <ClInclude Include="Game\Scene\GameScene.h" />
+    <ClInclude Include="Game\Skybox.h" />
     <ClInclude Include="Lib\Adapter\Json\Json.h" />
     <ClInclude Include="Lib\Adapter\Performance\Performance.h" />
     <ClInclude Include="Lib\Adapter\Random\Random.h" />
@@ -293,6 +295,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />
+    <None Include="Resources\hlsl\Animation\Animation.hlsli" />
     <None Include="Resources\hlsl\BlasRender.hlsli" />
     <None Include="Resources\hlsl\Camera.hlsli" />
     <None Include="Resources\hlsl\Default.hlsli" />
@@ -323,6 +326,12 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <Text Include="externals\imgui\LICENSE.txt" />
   </ItemGroup>
   <ItemGroup>
+    <FxCompile Include="Resources\hlsl\Animation\Animation.PS.hlsl">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="Resources\hlsl\Animation\Animation.VS.hlsl">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </FxCompile>
     <FxCompile Include="Resources\hlsl\BlasRender.PS.hlsl">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </FxCompile>

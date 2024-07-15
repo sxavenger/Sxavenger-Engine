@@ -1,8 +1,12 @@
 #include "Model.h"
 
-/* 右手座標から左手座標系への変換
+/* 右手座標から左手座標系への変換 -zを採用
+* Vector3
  position = x, y, -z;
  normal   = x, y, -z;
+
+* Vector4
+ Quarternion = -x, -y, z, w;
 */
 
 //-----------------------------------------------------------------------------------------
@@ -154,9 +158,37 @@ ModelData ModelMethods::LoadModelFile(const std::string& directoryPath, const st
 
 			assert(face.mNumIndices == 3); //!< 三角形のみの対応
 
+			// indexの解析
 			for (uint32_t element = 0; element < face.mNumIndices; ++element) {
 				// データの保存
 				meshData.indexResource->operator[](faceIndex * 3 + element) = face.mIndices[element];
+			}
+		}
+
+		// skinClusterの解析
+		for (uint32_t boneIndex = 0; boneIndex < mesh->mNumBones; ++boneIndex) {
+			// jointごとの格納領域を作る
+			aiBone* bone = mesh->mBones[boneIndex];
+			std::string jointName = bone->mName.C_Str();
+			JointWeightData& jointWeightData = result.skinCkusterData[jointName];
+
+			// inverseBindPoseMatrixの抽出
+			aiMatrix4x4 bindPoseMatrixAi = bone->mOffsetMatrix.Inverse();
+			aiVector3D scale, translate;
+			aiQuaternion rotate;
+			bindPoseMatrixAi.Decompose(scale, rotate, translate); //!< 成分を抽出
+
+			// 左手系のBindPoseMatrixを作る
+			Matrix4x4 bindPoseMatrix = Matrix::MakeAffine(
+				{ scale.x, scale.y, scale.z }, { -rotate.x, -rotate.y, rotate.z, rotate.w }, { translate.x, translate.y, -translate.z }
+			);
+
+			// inverseBindOiseMatrixにする
+			jointWeightData.inverseBindPoseMatrix = bindPoseMatrix.Inverse();
+
+			// weight情報を取り出し
+			for (uint32_t weightIndex = 0; weightIndex < bone->mNumWeights; ++weightIndex) {
+				jointWeightData.vertexWeights.push_back({ bone->mWeights[weightIndex].mWeight, bone->mWeights[weightIndex].mVertexId });
 			}
 		}
 	}
@@ -207,7 +239,7 @@ Node ModelMethods::ReadNode(aiNode* node) {
 
 	// resultに代入
 	result.transform.scale     = { scale.x, scale.y, scale.z };
-	result.transform.rotate    = { rotate.x, -rotate.y, -rotate.z, rotate.w }; //!< 右手 -> 左手座標系に変換
+	result.transform.rotate    = { -rotate.x, -rotate.y, rotate.z, rotate.w }; //!< 右手 -> 左手座標系に変換
 	result.transform.translate = { translate.x, translate.y, -translate.z };   //!< 右手 -> 左手座標系に変換
 
 	// nodeのlocalMatの取得
@@ -283,7 +315,7 @@ Animation ModelMethods::LoadAnimationFile(const std::string& directoryPath, cons
 			// 結果代入先
 			KeyframeQuaternion keyframe;
 			keyframe.time  = static_cast<float>(keyAi.mTime / animationAi->mTicksPerSecond);       //!< 秒に変更
-			keyframe.value = { keyAi.mValue.x, -keyAi.mValue.y, -keyAi.mValue.z, keyAi.mValue.w }; //!< 左手座標系に変換
+			keyframe.value = { -keyAi.mValue.x, -keyAi.mValue.y, keyAi.mValue.z, keyAi.mValue.w }; //!< 左手座標系に変換
 
 			// keyframeをnodeAnimationに代入
 			nodeAnimation.rotate.push_back(keyframe);
@@ -344,4 +376,72 @@ Skeleton ModelMethods::CreateSkeleton(const Node& rootNode) {
 	skelton.UpdateMatrix(); //!< localMatrixに初期値を入れておく
 
 	return skelton;
+}
+
+SkinCluster ModelMethods::CreateSkinCluster(const Skeleton& skeleton, const ModelData& modelData) {
+
+	SkinCluster result;
+
+	// influenceResourceの生成
+	result.influenceResource
+		= std::make_unique<DxObject::BufferResource<VertexInfluence>>(MyEngine::GetDevicesObj(), static_cast<uint32_t>(modelData.meshes[0].vertexResource->GetIndexSize()));
+	//!< 仮で0番目のmeshから生成
+	
+	std::memset(result.influenceResource->GetData(), 0, result.influenceResource->GetStructureSize() * result.influenceResource->GetIndexSize()); //!< 0で埋めておく
+
+	// paletteResourceの生成
+	result.paletteResource
+		= std::make_unique<DxObject::BufferResource<WellForGPU>>(MyEngine::GetDevicesObj(), static_cast<uint32_t>(skeleton.joints.size()));
+
+	// descriptorの取得
+	/*result.paletteDescriptorSRV = MyEngine::GetCurrentDescripor(DxObject::SRV);*/
+
+	//// SRVの生成
+	//{
+	//	D3D12_SHADER_RESOURCE_VIEW_DESC desc = {};
+	//	desc.Format                     = DXGI_FORMAT_UNKNOWN;
+	//	desc.Shader4ComponentMapping    = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
+	//	desc.ViewDimension              = D3D12_SRV_DIMENSION_BUFFER;
+	//	desc.Buffer.NumElements         = result.paletteResource->GetIndexSize();
+	//	desc.Buffer.StructureByteStride = result.paletteResource->GetStructureSize();
+
+	//	MyEngine::GetDevice()->CreateShaderResourceView(
+	//		result.paletteResource->GetResource(),
+	//		&desc,
+	//		result.paletteDescriptorSRV.GetCPUHandle()
+	//	);
+	//}
+	
+	// InverseBindMatrixを格納する場所作成し, 単位行列で埋める
+	result.inverseBindPoseMatrices.resize(skeleton.joints.size());
+	std::generate(result.inverseBindPoseMatrices.begin(), result.inverseBindPoseMatrices.end(), Matrix4x4::Identity);
+
+	// ModelのSkinClusterの情報解析
+	for (const auto& jointWeight : modelData.skinCkusterData) {
+		auto it = skeleton.jointMap.find(jointWeight.first);
+
+		if (it == skeleton.jointMap.end()) { //!< この名前のJointは存在しないので
+			continue;
+		}
+
+		// 該当するindexのinverseBindPoseMatrixを代入
+		result.inverseBindPoseMatrices[(*it).second] = jointWeight.second.inverseBindPoseMatrix;
+
+		// 
+		for (const auto& vertexWeight : jointWeight.second.vertexWeights) {
+			// 該当のvertexIndexのinfluence情報の参照
+			auto& currentInfluence = result.influenceResource->operator[](vertexWeight.vertexIndex);
+
+			// 空いてるところに入れる
+			for (uint32_t i = 0; i < kNumMaxInfluence; ++i) {
+				if (currentInfluence.weights[i] == 0.0f) { //!< weightが空いてる場合
+					currentInfluence.weights[i]      = vertexWeight.weight;
+					currentInfluence.jointIndices[i] = (*it).second;
+					break;
+				}
+			}
+		}
+	}
+
+	return result;
 }

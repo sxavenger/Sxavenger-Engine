@@ -14,7 +14,6 @@
 // c++
 #include <string>
 #include <memory>
-#include <map>
 
 // Geometry
 #include <Vector4.h>
@@ -77,8 +76,7 @@ struct ModelData {
 	Node                      rootNode;
 	//!< meshsとmaterials, nodeのsizeは同じ
 	
-	std::map<std::string, JointWeightData> skinCkusterData;
-	//!< hash mapにするかも
+	std::unordered_map<std::string, JointWeightData> skinCkusterData;
 	
 	void Clear() {
 		meshes.clear();
@@ -126,6 +124,8 @@ public:
 
 	const Node& GetRootNode() const { return modelData_.rootNode; }
 
+	const ModelData& GetModelData() const { return modelData_; }
+
 private:
 
 	//=========================================================================================
@@ -151,5 +151,7 @@ namespace ModelMethods { //!< modelLoaderクラスを作ってもいいかも...
 	int32_t CreateJoint(const Node& node, const std::optional<int32_t>& parent, std::vector<Joint>& joints);
 
 	Skeleton CreateSkeleton(const Node& rootNode);
+
+	SkinCluster CreateSkinCluster(const Skeleton& skeleton, const ModelData& modelData);
 
 }

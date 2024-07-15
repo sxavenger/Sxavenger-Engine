@@ -227,7 +227,7 @@ void DxrObject::TopLevelAS::Init() {
 		auto device = MyEngine::GetDevice();
 
 		device->CreateShaderResourceView(
-			nullptr, &desc, descriptor_.handleCPU
+			nullptr, &desc, descriptor_.GetCPUHandle()
 		);
 	}
 }

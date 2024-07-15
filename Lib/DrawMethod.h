@@ -47,5 +47,7 @@ namespace DrawMethods {
 	DrawData Sphere(float radius, uint32_t kSubdivision);
 	DrawData Plane(const Vector2f& size);
 
+	DrawData SkyBox(const Vector3f& size);
+
 	DrawData Plane2D();
 };

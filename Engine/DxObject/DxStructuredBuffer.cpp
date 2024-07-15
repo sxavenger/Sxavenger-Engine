@@ -24,7 +24,7 @@ void DxObject::StructuredBuffer::Init(BaseBufferResource* bufferResource) {
 	MyEngine::GetDevicesObj()->GetDevice()->CreateShaderResourceView(
 		bufferResource->GetResource(),
 		&desc,
-		descriptor_.handleCPU
+		descriptor_.GetCPUHandle()
 	);
 }
 

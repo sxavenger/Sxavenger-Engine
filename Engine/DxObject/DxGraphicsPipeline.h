@@ -130,7 +130,7 @@ namespace DxObject {
 
 		/* setters */
 
-		void SetElement(const LPCSTR& semanticName, uint32_t semanticIndex, DXGI_FORMAT format);
+		void SetElement(const LPCSTR& semanticName, UINT semanticIndex, DXGI_FORMAT format, UINT inputSlot = 0);
 
 		void SetRasterizer(D3D12_CULL_MODE cullMode, D3D12_FILL_MODE fillMode);
 

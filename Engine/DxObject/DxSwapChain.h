@@ -106,7 +106,7 @@ namespace DxObject {
 		//! @param[in] backBufferIndex 
 		//! 
 		//! @return handleCPU_RTVを返却
-		const D3D12_CPU_DESCRIPTOR_HANDLE& GetHandleCPU_RTV(UINT backBufferIndex) const { return descriptorRTV_[backBufferIndex].handleCPU; }
+		const D3D12_CPU_DESCRIPTOR_HANDLE& GetHandleCPU_RTV(UINT backBufferIndex) const { return descriptorRTV_[backBufferIndex].GetCPUHandle(); }
 
 		ID3D12Resource* GetResource(UINT backBufferIndex) const { return swapChainResource_[backBufferIndex].Get(); }
 

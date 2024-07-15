@@ -177,7 +177,7 @@ namespace DxrObject {
 			BottomLevelAS* blas, const Matrix4x4& worldMatrix, uint32_t instanceId
 		);
 
-		const D3D12_GPU_DESCRIPTOR_HANDLE& GetGPUDescriptorHandle() const { return descriptor_.handleGPU; }
+		const D3D12_GPU_DESCRIPTOR_HANDLE& GetGPUDescriptorHandle() const { return descriptor_.GetGPUHandle(); }
 
 		const std::vector<InstanceData>& GetInstances() const { return instances_; }
 

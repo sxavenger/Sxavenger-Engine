@@ -80,7 +80,7 @@ void DxObject::SwapChain::Init(
 			descriptorRTV_[i] = descriptorHeaps->GetCurrentDescriptor(DescriptorType::RTV);
 
 			device->CreateRenderTargetView(
-				swapChainResource_[i].Get(), &desc, descriptorRTV_[i].handleCPU
+				swapChainResource_[i].Get(), &desc, descriptorRTV_[i].GetCPUHandle()
 			);
 		}
 	}

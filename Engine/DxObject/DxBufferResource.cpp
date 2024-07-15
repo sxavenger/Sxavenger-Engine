@@ -40,7 +40,12 @@ void DxObject::IndexBufferResource::Init(DxObject::Devices* devices) {
 	);
 
 	// resourceをマッピング
-	resource_->Map(0, nullptr, reinterpret_cast<void**>(&dataArray_));
+	uint32_t* mappingTarget = nullptr;
+
+	// resourceをマッピング
+	resource_->Map(0, nullptr, reinterpret_cast<void**>(&mappingTarget));
+
+	mappedDatas_ = { mappingTarget, indexSize_ };
 }
 
 void DxObject::IndexBufferResource::Term() {

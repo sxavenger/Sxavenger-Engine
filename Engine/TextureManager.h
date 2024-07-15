@@ -54,7 +54,7 @@ public:
 
 	//! @brief GPUHandle(SRV)の返却
 	const D3D12_GPU_DESCRIPTOR_HANDLE& GetGPUHandleSRV() const {
-		return descriptorSRV_.handleGPU;
+		return descriptorSRV_.GetGPUHandle();
 	}
 
 	/* 継承先関数 */
@@ -62,7 +62,7 @@ public:
 
 	virtual const D3D12_CPU_DESCRIPTOR_HANDLE& GetCPUHandleRTV() const {
 		assert(false);
-		return descriptorSRV_.handleCPU; // 絶対に返さない
+		return descriptorSRV_.GetCPUHandle(); // 絶対に返さない
 	}
 
 	virtual const Color4f& GetClearColor() const {
@@ -72,7 +72,7 @@ public:
 
 	virtual const D3D12_GPU_DESCRIPTOR_HANDLE& GetGPUHandleUAV() const {
 		assert(false);
-		return descriptorSRV_.handleGPU; // 絶対に返さない
+		return descriptorSRV_.GetGPUHandle(); // 絶対に返さない
 	}
 
 protected:
@@ -125,7 +125,7 @@ public:
 
 	//! @brief CPUHandle(RTV)の返却
 	const D3D12_CPU_DESCRIPTOR_HANDLE& GetCPUHandleRTV() const override {
-		return descriptorRTV_.handleCPU;
+		return descriptorRTV_.GetCPUHandle();
 	}
 
 	//! @brief クリアカラーの返却
@@ -169,7 +169,7 @@ public:
 
 	//! @brief GPUHandle(UAV)の返却
 	const D3D12_GPU_DESCRIPTOR_HANDLE& GetGPUHandleUAV() const override {
-		return descriptorUAV_.handleGPU;
+		return descriptorUAV_.GetGPUHandle();
 	}
 
 private:

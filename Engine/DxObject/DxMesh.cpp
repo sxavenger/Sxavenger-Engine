@@ -24,13 +24,13 @@ void DxObject::MeshLoader::PerseMesh(
 	dstMesh.vertices.resize(verticesBuffer->GetIndexSize());
 
 	// 頂点データのcopy
-	memcpy(dstMesh.vertices.data(), verticesBuffer->GetDataArray(), verticesBuffer->GetIndexSize() * verticesBuffer->GetStructureSize());
+	memcpy(dstMesh.vertices.data(), verticesBuffer->GetData(), verticesBuffer->GetIndexSize() * verticesBuffer->GetStructureSize());
 
 	// 頂点インデックスのメモリの確保
 	dstMesh.indices.resize(indicesBuffer->GetIndexSize());
 
 	// 頂点インデックスのメモリ確保
-	memcpy(dstMesh.indices.data(), indicesBuffer->GetDataArray(), indicesBuffer->GetIndexSize() * indicesBuffer->GetStructureSize());
+	memcpy(dstMesh.indices.data(), indicesBuffer->GetData(), indicesBuffer->GetIndexSize() * indicesBuffer->GetStructureSize());
 
 	// 最適化
 	{

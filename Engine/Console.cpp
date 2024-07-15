@@ -61,11 +61,11 @@ void Console::Update() {
 
 	if (isOutputConsole_) {
 
-		windowFlags = ImGuiWindowFlags_NoCollapse;
+		windowFlags_ = ImGuiWindowFlags_NoCollapse;
 
 		if (isFix_) {
-			windowFlags |= ImGuiWindowFlags_NoMove;
-			windowFlags |= ImGuiWindowFlags_NoResize;
+			windowFlags_ |= ImGuiWindowFlags_NoMove;
+			windowFlags_ |= ImGuiWindowFlags_NoResize;
 		}
 
 		// game window
@@ -99,7 +99,7 @@ void Console::CheckEraseAttribute(Attribute* obj) {
 void Console::OutputTexture(const std::string& name, const D3D12_GPU_DESCRIPTOR_HANDLE& srvHandleGPU) {
 	if (isOutputConsole_) {
 		static bool isOpenWindow = true;
-		ImGui::Begin(name.c_str(), &isOpenWindow, windowFlags);
+		ImGui::Begin(name.c_str(), &isOpenWindow, windowFlags_);
 
 		SetTextureImGui(srvHandleGPU);
 
@@ -113,7 +113,7 @@ void Console::OutputDefferedTextures(const std::string& name, uint32_t indexSize
 	if (indexSize == 0) { return; }
 
 	static bool isOpenWindow = true;
-	ImGui::Begin(name.c_str(), &isOpenWindow, windowFlags);
+	ImGui::Begin(name.c_str(), &isOpenWindow, windowFlags_);
 
 	// タブ等を排除した全体のwindowSize計算
 	ImVec2 regionMax  = ImGui::GetWindowContentRegionMax();
@@ -178,7 +178,7 @@ void Console::OutputMenu() {
 
 			ImGui::Checkbox("DisplayConsole", &isOutputConsole_);
 
-			// windowFlags
+			// windowFlags_
 			ImGui::Checkbox("Fix(lock size and move)", &isFix_);
 
 
@@ -191,7 +191,7 @@ void Console::OutputMenu() {
 
 void Console::OutputScene() {
 	static bool isOpenWindow = true;
-	ImGui::Begin("Scene", &isOpenWindow, windowFlags);
+	ImGui::Begin("Scene", &isOpenWindow, windowFlags_);
 	// todo: window開かれてる状態を保存させる. foucusとは違う
 	isFocusDebugScene_; //!< 名前もfoucusからいい感じに変更させる
 
@@ -202,7 +202,7 @@ void Console::OutputScene() {
 
 void Console::OutputGame() {
 	static bool isOpenWindow = true;
-	ImGui::Begin("Game", &isOpenWindow, windowFlags);
+	ImGui::Begin("Game", &isOpenWindow, windowFlags_);
 	// this->windowがフォーカスされてるかどうか
 	isFocusGameScene_ = ImGui::IsWindowFocused();
 
@@ -214,7 +214,7 @@ void Console::OutputGame() {
 void Console::OutputLog() {
 	//! 開いておく
 	static bool isOpenWindow = true;
-	ImGui::Begin("Log", &isOpenWindow, windowFlags);
+	ImGui::Begin("Log", &isOpenWindow, windowFlags_);
 
 	if (ImGui::BeginTabBar("LogTab")) {
 
@@ -249,7 +249,7 @@ void Console::OutputLog() {
 
 void Console::OutputPerformance() {
 	static bool isOpenWindow = true;
-	ImGui::Begin("Performance", &isOpenWindow, windowFlags | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoScrollbar);
+	ImGui::Begin("Performance", &isOpenWindow, windowFlags_ | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoScrollbar);
 
 	float framesPerSec = Performance::GetDeltaTime(SecondsUnit::s);
 
@@ -263,7 +263,7 @@ void Console::OutputPerformance() {
 void Console::OutputOutliner() {
 	// Inspectorの選択window
 	static bool isOpenWindow = true;
-	ImGui::Begin("Outliner", &isOpenWindow, windowFlags);
+	ImGui::Begin("Outliner", &isOpenWindow, windowFlags_);
 
 	// TODO: 名前の重複参照の対策
 	stackId_.clear();
@@ -275,7 +275,7 @@ void Console::OutputOutliner() {
 	ImGui::End();
 
 	// attribute
-	ImGui::Begin("Attribute", &isOpenWindow, windowFlags);
+	ImGui::Begin("Attribute", &isOpenWindow, windowFlags_);
 	if (selectedAttribute_ != nullptr) {
 
 		ImGui::SeparatorText(selectedAttribute_->GetName().c_str());
@@ -303,7 +303,7 @@ void Console::OutputOutliner() {
 
 void Console::OutputSystem() {
 	static bool isOpenWindow = true;
-	ImGui::Begin("System", &isOpenWindow, windowFlags);
+	ImGui::Begin("System", &isOpenWindow, windowFlags_);
 
 	if (ImGui::CollapsingHeader("DescriptorHeaps")) {
 		auto descriptorHeaps = dxCommon_->GetDescriptorsObj();
@@ -346,8 +346,7 @@ void Console::OutputSystem() {
 }
 
 void Console::OutputAssets() {
-
-	ImGui::Begin("Asserts");
+	ImGui::Begin("Asserts", nullptr, windowFlags_);
 
 
 

@@ -102,3 +102,19 @@ void Skeleton::ApplyAnimation(const Animation& animation, float time) {
 	}
 
 }
+
+////////////////////////////////////////////////////////////////////////////////////////////
+// SkinCluster structure
+////////////////////////////////////////////////////////////////////////////////////////////
+
+void SkinCluster::Update(const Skeleton& skeleton) {
+	for (size_t jointIndex = 0; jointIndex < skeleton.joints.size(); ++jointIndex) {
+		assert(jointIndex < inverseBindPoseMatrices.size());
+
+		Matrix4x4 mat = inverseBindPoseMatrices[jointIndex] * skeleton.joints[jointIndex].skeletonSpaceMatrix;
+
+		paletteResource->operator[](static_cast<uint32_t>(jointIndex)).skeletonSpaceMatrix                 = mat;
+		paletteResource->operator[](static_cast<uint32_t>(jointIndex)).skeletonSpaceInverseTransposeMatrix = mat.Inverse().Transpose();
+	}
+	
+}

@@ -88,6 +88,7 @@ void GameScene::Init() {
 
 	cube_ = std::make_unique<AnimationCube>();
 	human_ = std::make_unique<AnimationHuman>();
+	skybox_ = std::make_unique<Skybox>();
 
 }
 

@@ -3,57 +3,45 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
-// base
-#include <AnimationObject.h>
+// DxObject
+#include <DxGraphicsBlob.h>
+#include <DxGraphicsPipeline.h>
 
-// model
-#include <Model.h>
+// DrawMethod
+#include <DrawMethod.h>
+
+// c++
+#include <memory>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// AnimationHuman class
+// Skybox class
 ////////////////////////////////////////////////////////////////////////////////////////////
-class AnimationHuman
-	: public AnimationObject {
+class Skybox {
 public:
 
 	//=========================================================================================
 	// public methods
 	//=========================================================================================
 
-	AnimationHuman() { Init(); }
+	Skybox() { Init(); }
 
-	~AnimationHuman() { Term(); }
+	~Skybox() { Term(); }
 
 	void Init();
 
 	void Term();
-
-	void Update();
-
-	void Draw();
-
-	void SetAttributeImGui() override;
 
 private:
 
 	//=========================================================================================
 	// private variables
 	//=========================================================================================
-	
+
+	//* Graphics *//
+	std::unique_ptr<DxObject::GraphicsBlob>     blob_;
+	std::unique_ptr<DxObject::GraphicsPipeline> pipeline_;
+
 	//* IA *//
-	std::unique_ptr<Model> model_;
-
-	Animation   animation_;
-	Skeleton    skeleton_;
-	SkinCluster skinCluster_;
-	// FIXME: modelクラスに統合させること
-	
-	float animationTime_ = 0.0f;
-
-	//* member *//
-	EulerTransform transform_;
-	std::unique_ptr<DxObject::BufferResource<Matrix4x4>> matrixBuffer_;
-
-	//* debug *//
+	DrawData skybox_;
 
 };

@@ -108,6 +108,64 @@ DrawData DrawMethods::Plane(const Vector2f& size) {
 	return result;
 }
 
+DrawData DrawMethods::SkyBox(const Vector3f& size) {
+
+	DrawData result;
+
+	result.vertex = std::make_unique<BufferResource<VertexData>>(MyEngine::GetDevicesObj(), 8);
+
+	Vector3f halfSize = size / 2.0f;
+
+	(*result.vertex)[0].position = { -halfSize.x, -halfSize.y, -halfSize.z, };
+	(*result.vertex)[1].position = { -halfSize.x, halfSize.y, -halfSize.z, };
+	(*result.vertex)[2].position = { -halfSize.x, -halfSize.y, halfSize.z, };
+	(*result.vertex)[3].position = { -halfSize.x, halfSize.y, halfSize.z, };
+	(*result.vertex)[4].position = { halfSize.x, -halfSize.y, -halfSize.z, };
+	(*result.vertex)[5].position = { halfSize.x, halfSize.y, -halfSize.z, };
+	(*result.vertex)[6].position = { halfSize.x, -halfSize.y, halfSize.z, };
+	(*result.vertex)[6].position = { halfSize.x, halfSize.y, halfSize.z, };
+
+	result.index = std::make_unique<IndexBufferResource>(MyEngine::GetDevicesObj(), 12 * 3);
+	(*result.index)[0] = 2;
+	(*result.index)[1] = 1;
+	(*result.index)[2] = 0; 
+	(*result.index)[3] = 6;
+	(*result.index)[4] = 3;
+	(*result.index)[5] = 2;
+	(*result.index)[6] = 4;
+	(*result.index)[7] = 7;
+	(*result.index)[8] = 6;
+	(*result.index)[9] = 0;
+	(*result.index)[10] = 5;
+	(*result.index)[11] = 4;
+	(*result.index)[12] = 0;
+	(*result.index)[13] = 6;
+	(*result.index)[14] = 2;
+	(*result.index)[15] = 5;
+	(*result.index)[16] = 3;
+	(*result.index)[17] = 7;
+	(*result.index)[18] = 2;
+	(*result.index)[19] = 3;
+	(*result.index)[20] = 1;
+	(*result.index)[21] = 6;
+	(*result.index)[22] = 7;
+	(*result.index)[23] = 3;
+	(*result.index)[24] = 4;
+	(*result.index)[25] = 5;
+	(*result.index)[26] = 7;
+	(*result.index)[27] = 0;
+	(*result.index)[28] = 1;
+	(*result.index)[29] = 5;
+	(*result.index)[30] = 0;
+	(*result.index)[31] = 4;
+	(*result.index)[32] = 6;
+	(*result.index)[33] = 5;
+	(*result.index)[34] = 1;
+	(*result.index)[35] = 3;
+
+	return result;
+}
+
 DrawData DrawMethods::Plane2D() {
 	DrawData result;
 

@@ -139,7 +139,7 @@ void DxMethods::CreateDimensionUnorderedAccessView(
 	}
 
 	device->CreateUnorderedAccessView(
-		resource, nullptr, &desc, descriptor.handleCPU
+		resource, nullptr, &desc, descriptor.GetCPUHandle()
 	);
 }
 
@@ -178,6 +178,6 @@ void DxMethods::CreateDimensionShaderResourceView(
 	}
 
 	device->CreateShaderResourceView(
-		resource, &desc, descriptor.handleCPU
+		resource, &desc, descriptor.GetCPUHandle()
 	);
 }

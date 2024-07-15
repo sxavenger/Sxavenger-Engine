@@ -37,8 +37,8 @@ void ImGuiManager::Init(WinApp* winApp, DirectXCommon* dxCommon) {
 		DxObject::SwapChain::GetBufferCount(),
 		DxObject::defaultFormat,
 		descriptorHeap_SRV_,
-		descriptor_.handleCPU,
-		descriptor_.handleGPU
+		descriptor_.GetCPUHandle(),
+		descriptor_.GetGPUHandle()
 	);
 
 	InitImGuiStyle();

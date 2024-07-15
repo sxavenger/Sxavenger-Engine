@@ -12,6 +12,7 @@
 #include <cstdint>
 #include <string>
 #include <cassert>
+#include <optional>
 
 // ComPtr
 #include <ComPtr.h>
@@ -108,13 +109,13 @@ namespace DxObjectMethod {
 		int32_t height
 	);
 
-	//! @brief descriptorHeapのindex数のhandleCPUを取得
+	//! @brief descriptorHeapのindex数のGetCPUHandle()を取得
 	//! 
 	//! @param[in] descriptorHeap
 	//! @param[in] descriptorSize
 	//! @param[in] index
 	//! 
-	//! @return descriptorHeapのindex数のhandleCPUを返却
+	//! @return descriptorHeapのindex数のGetCPUHandle()を返却
 	D3D12_CPU_DESCRIPTOR_HANDLE GetCPUDescriptorHandle(
 		ID3D12DescriptorHeap* descriptorHeap,
 		uint32_t descriptorSize,
@@ -159,15 +160,22 @@ namespace DxObject {
 	// Descriptor structrure
 	////////////////////////////////////////////////////////////////////////////////////////////
 	struct Descriptor {
-		uint32_t index;
+		uint32_t       index;
 		DescriptorType type = NotUseDescriptor;
 
-		D3D12_CPU_DESCRIPTOR_HANDLE handleCPU;
-		D3D12_GPU_DESCRIPTOR_HANDLE handleGPU;
+		std::pair<D3D12_CPU_DESCRIPTOR_HANDLE, std::optional<D3D12_GPU_DESCRIPTOR_HANDLE>> handles;
 
 		void Term() {
-			index = NULL;
-			type = NotUseDescriptor;
+			type = NotUseDescriptor; //!< 再度使用を防ぐ
+		}
+
+		const D3D12_CPU_DESCRIPTOR_HANDLE& GetCPUHandle() const {
+			return handles.first;
+		}
+
+		const D3D12_GPU_DESCRIPTOR_HANDLE& GetGPUHandle() const {
+			assert(handles.second); //!< GPUDescriptorを持っていないので
+			return handles.second.value();
 		}
 	};
 
