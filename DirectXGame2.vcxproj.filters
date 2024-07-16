@@ -886,5 +886,8 @@
     <FxCompile Include="Resources\hlsl\Skybox\Skybox.PS.hlsl">
       <Filter>Resource\hlsl\Skybox</Filter>
     </FxCompile>
+    <FxCompile Include="Resources\hlsl\Animation\Skinning.CS.hlsl">
+      <Filter>Resource\hlsl\Animation</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

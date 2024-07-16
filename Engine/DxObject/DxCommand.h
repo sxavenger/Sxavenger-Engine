@@ -66,6 +66,7 @@ namespace DxObject {
 		//! @brief backAllocatorの更新 & commandListをbackAllocatorにリセット
 		void ResetBackAllocator();
 
+		
 		void ResetSingleAllocator();
 
 		//! @brief コマンドリストを取得

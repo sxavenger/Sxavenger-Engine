@@ -195,4 +195,8 @@ namespace DxObject {
 	////////////////////////////////////////////////////////////////////////////////////////////
 	static const DXGI_FORMAT defaultFormat = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
 
+
+	//!< 仮置きしておく
+	UINT RoundUp(UINT round, UINT thread);
+
 }

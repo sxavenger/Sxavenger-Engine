@@ -100,11 +100,11 @@ void DxObject::CSPipelineState::SetCSPipeline() {
 	commandList->SetComputeRootSignature(rootSignature_.Get());
 }
 
-void DxObject::CSPipelineState::Dispatch(UINT threadGroupX, UINT threadGroupY, UINT threadGroupZ) {
+void DxObject::CSPipelineState::Dispatch(UINT threadGroupCountX, UINT threadGroupCountY, UINT threadGroupCountZ) {
 	// commandListの取り出し
 	auto commandList = MyEngine::GetCommandList();
 
-	commandList->Dispatch(threadGroupX, threadGroupY, threadGroupZ);
+	commandList->Dispatch(threadGroupCountX, threadGroupCountY, threadGroupCountZ);
 }
 
 void DxObject::CSPipelineState::CreateRootSignature(const CSRootSignatureDesc& csDesc) {

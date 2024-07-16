@@ -41,7 +41,7 @@ namespace DxObject { //!< DxSource
 		// public methods
 		//=========================================================================================
 
-		CSBlob() {}
+		CSBlob() = default;
 
 		~CSBlob() { Term(); }
 

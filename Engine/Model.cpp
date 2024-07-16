@@ -382,9 +382,17 @@ SkinCluster ModelMethods::CreateSkinCluster(const Skeleton& skeleton, const Mode
 
 	SkinCluster result;
 
+	// 頂点数の出力
+	uint32_t vertexNum = static_cast<uint32_t>(modelData.meshes[0].vertexResource->GetIndexSize());
+
+	// informationResorceの生成
+	result.informationResource
+		= std::make_unique<DxObject::BufferResource<uint32_t>>(MyEngine::GetDevicesObj(), 1);
+	(*result.informationResource)[0] = vertexNum; //!< vertexNum
+
 	// influenceResourceの生成
 	result.influenceResource
-		= std::make_unique<DxObject::BufferResource<VertexInfluence>>(MyEngine::GetDevicesObj(), static_cast<uint32_t>(modelData.meshes[0].vertexResource->GetIndexSize()));
+		= std::make_unique<DxObject::BufferResource<VertexInfluence>>(MyEngine::GetDevicesObj(), vertexNum);
 	//!< 仮で0番目のmeshから生成
 	
 	std::memset(result.influenceResource->GetData(), 0, result.influenceResource->GetStructureSize() * result.influenceResource->GetIndexSize()); //!< 0で埋めておく

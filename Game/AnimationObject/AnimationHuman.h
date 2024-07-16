@@ -6,6 +6,11 @@
 // base
 #include <AnimationObject.h>
 
+// DxObject
+#include <DxCSBlob.h>
+#include <DxCSPipelineState.h>
+#include <DxCSBufferResource.h>
+
 // model
 #include <Model.h>
 
@@ -39,6 +44,10 @@ private:
 	//=========================================================================================
 	// private variables
 	//=========================================================================================
+
+	//* Compute *//
+	std::unique_ptr<DxObject::CSBlob>          csBlob_;
+	std::unique_ptr<DxObject::CSPipelineState> csPipeline_;
 	
 	//* IA *//
 	std::unique_ptr<Model> model_;
@@ -47,10 +56,13 @@ private:
 	Skeleton    skeleton_;
 	SkinCluster skinCluster_;
 	// FIXME: modelクラスに統合させること
-	
-	float animationTime_ = 0.0f;
+
+	// uavBuffer
+	std::unique_ptr<DxObject::CSBufferResource<VertexData>> skinnedBuffer_;
 
 	//* member *//
+	float animationTime_ = 0.0f;
+
 	EulerTransform transform_;
 	std::unique_ptr<DxObject::BufferResource<Matrix4x4>> matrixBuffer_;
 

@@ -95,7 +95,7 @@ namespace DxObject { //!< DxSource
 
 		void SetCSPipeline();
 
-		void Dispatch(UINT threadGroupX, UINT threadGroupY, UINT threadGroupZ);
+		void Dispatch(UINT threadGroupCountX, UINT threadGroupCountY, UINT threadGroupCountZ);
 
 	private:
 

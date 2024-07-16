@@ -153,6 +153,9 @@ struct SkinCluster {
 	std::unique_ptr<DxObject::BufferResource<WellForGPU>> paletteResource;
 	/*DxObject::Descriptor paletteDescriptorSRV;*/
 
+	// infomation resource
+	std::unique_ptr<DxObject::BufferResource<uint32_t>> informationResource;
+
 	void Update(const Skeleton& skeleton);
 
 };

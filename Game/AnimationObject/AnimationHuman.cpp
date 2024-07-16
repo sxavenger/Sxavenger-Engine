@@ -48,6 +48,22 @@ void AnimationHuman::Init() {
 
 	pipeline_->CreatePipeline(MyEngine::GetDevicesObj(), blob_.get(), pipelineDesc);
 
+	//* Compute *//
+	csBlob_ = std::make_unique<DxObject::CSBlob>();
+	csBlob_->Init(L"animation/skinning.CS.hlsl");
+
+	csPipeline_ = std::make_unique<DxObject::CSPipelineState>();
+
+	CSRootSignatureDesc csDesc;
+	csDesc.Resize(5, 0);
+	csDesc.SetVirtualSRV(0, 0);
+	csDesc.SetVirtualSRV(1, 1);
+	csDesc.SetVirtualSRV(2, 2);
+	csDesc.SetCBV(3, 0);
+	csDesc.SetVirtualUAV(4, 0);
+
+	csPipeline_->Init(csDesc, csBlob_.get());
+
 	/*
 	 simpleSkin: "./Resources/model/simpleSkin", "simpleSkin.gltf"
 	 human:      "./resources/model/human", "walk.gltf"
@@ -57,6 +73,8 @@ void AnimationHuman::Init() {
 	animation_ = ModelMethods::LoadAnimationFile("./resources/model/human", "walk.gltf");
 	skeleton_ = ModelMethods::CreateSkeleton(model_->GetRootNode());
 	skinCluster_ = ModelMethods::CreateSkinCluster(skeleton_, model_->GetModelData());
+
+	skinnedBuffer_ = std::make_unique<DxObject::CSBufferResource<VertexData>>(MyEngine::GetDevicesObj(), (*skinCluster_.informationResource)[0]);
 	
 	matrixBuffer_ = std::make_unique<DxObject::BufferResource<Matrix4x4>>(MyEngine::GetDevicesObj(), 1);
 	(*matrixBuffer_)[0] = Matrix4x4::Identity();
@@ -86,16 +104,33 @@ void AnimationHuman::Draw() {
 	// commandListの取得
 	auto commandList = MyEngine::GetCommandList();
 
+	//* Compute *//
+	csPipeline_->SetCSPipeline();
+
+	commandList->SetComputeRootShaderResourceView(0, skinCluster_.paletteResource->GetGPUVirtualAddress());
+	commandList->SetComputeRootShaderResourceView(1, model_->GetMesh(0).vertexResource->GetGPUVirtualAddress());
+	commandList->SetComputeRootShaderResourceView(2, skinCluster_.influenceResource->GetGPUVirtualAddress());
+	commandList->SetComputeRootConstantBufferView(3, skinCluster_.informationResource->GetGPUVirtualAddress());
+	commandList->SetComputeRootUnorderedAccessView(4, skinnedBuffer_->GetGPUVirtualAddress());
+
+	csPipeline_->Dispatch(RoundUp((*skinCluster_.informationResource)[0], 1024), 1, 1);
+
+	// vertexとして使うためのbarrier
+	D3D12_RESOURCE_BARRIER barrier = {};
+	barrier.Type                   = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+	barrier.Transition.pResource   = skinnedBuffer_->GetResource();
+	barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_UNORDERED_ACCESS;
+	barrier.Transition.StateAfter  = D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER;
+
+	commandList->ResourceBarrier(1, &barrier);
+
+	//* Graphics *//
 	pipeline_->SetPipeline(commandList);
 
-	D3D12_VERTEX_BUFFER_VIEW vbvs[2] = {
-		model_->GetMesh(0).vertexResource->GetVertexBufferView(),
-		skinCluster_.influenceResource->GetVertexBufferView()
-	};
-
-	D3D12_INDEX_BUFFER_VIEW ibv = model_->GetMesh(0).indexResource->GetIndexBufferView();
+	D3D12_VERTEX_BUFFER_VIEW vbv = skinnedBuffer_->GetVertexBufferView();
+	D3D12_INDEX_BUFFER_VIEW ibv  = model_->GetMesh(0).indexResource->GetIndexBufferView();
 	
-	commandList->IASetVertexBuffers(0, _countof(vbvs), vbvs);
+	commandList->IASetVertexBuffers(0, 1, &vbv);
 	commandList->IASetIndexBuffer(&ibv);
 
 	commandList->SetGraphicsRootConstantBufferView(0, MyEngine::camera3D_->GetGPUVirtualAddress());
@@ -105,20 +140,6 @@ void AnimationHuman::Draw() {
 	commandList->SetGraphicsRootDescriptorTable(4, MyEngine::GetTextureHandleGPU("./resources/rostock_laage_airport_4k.dds"));
 
 	model_->DrawCall(commandList, 0);
-
-
-
-	/*auto drawer = PrimitiveDrawer::GetInstance();
-
-	const float radius = 0.2f;
-
-	for (auto& joint : skeleton_.joints) {
-		Vector3f pos = Matrix::Transform({0.0f, 0.0f, 0.0f}, joint.localMatrix);
-
-		drawer->DrawSphere(pos, radius, 8, {0.0f, 1.0f, 0.0f, 1.0f});
-	}
-
-	drawer->DrawAll3D();*/
 
 }
 

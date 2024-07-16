@@ -63,9 +63,23 @@ namespace DxObject { //!< DxSource, use Compute Shader
 			return uavResource_->GetGPUVirtualAddress();
 		}
 
+		//! @brief VertexBufferを取得
+		//! 
+		//! @return VertexBufferを返却
+		virtual const D3D12_VERTEX_BUFFER_VIEW GetVertexBufferView() const {
+			D3D12_VERTEX_BUFFER_VIEW result = {};
+			result.BufferLocation = GetGPUVirtualAddress();
+			result.SizeInBytes    = structureSize_ * indexSize_;
+			result.StrideInBytes  = structureSize_;
+
+			return result;
+		}
+
 		const uint32_t GetIndexSize() const { return indexSize_; }
 
 		const UINT GetStructureSize() const { return structureSize_; }
+
+		ID3D12Resource* GetResource() const { return uavResource_.Get(); }
 
 	protected:
 
@@ -98,6 +112,8 @@ namespace DxObject { //!< DxSource, use Compute Shader
 		// public methods
 		//=========================================================================================
 
+		CSBufferResource() = delete;
+
 		CSBufferResource(Devices* devices, uint32_t indexSize)
 			: CSBaseBufferResource(devices, indexSize, sizeof(T)) {
 			Init();
@@ -126,7 +142,7 @@ namespace DxObject { //!< DxSource, use Compute Shader
 		T* writeDataArray_;
 		T* readBackDataArray_;
 		//!< のちに一つにするかも
-		
+		// todo: std::spanを利用する
 	};
 
 }

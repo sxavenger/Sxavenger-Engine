@@ -307,3 +307,8 @@ D3D12_GPU_DESCRIPTOR_HANDLE DxObjectMethod::GetGPUDescriptorHandle(
 	result.ptr += (descriptorSize * index);
 	return result;
 }
+
+UINT DxObject::RoundUp(UINT round, UINT thread) {
+	assert(thread > 0);
+	return (round + thread - 1) / thread;
+}
