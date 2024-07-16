@@ -13,10 +13,14 @@
 // c++
 #include <memory>
 
+// Attribute
+#include <Attribute.h>
+
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Skybox class
 ////////////////////////////////////////////////////////////////////////////////////////////
-class Skybox {
+class Skybox
+	: public Attribute {
 public:
 
 	//=========================================================================================
@@ -31,6 +35,10 @@ public:
 
 	void Term();
 
+	void Draw();
+
+	void SetAttributeImGui() override;
+
 private:
 
 	//=========================================================================================
@@ -43,5 +51,10 @@ private:
 
 	//* IA *//
 	DrawData skybox_;
+
+	//* Buffer *//
+	std::unique_ptr<DxObject::BufferResource<Matrix4x4>> matrixBuffer_;
+	std::unique_ptr<DxObject::BufferPtrResource<float>> vignetteBuffer_;
+	float strength_ = 1.0f;
 
 };

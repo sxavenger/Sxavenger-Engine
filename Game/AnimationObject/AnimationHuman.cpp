@@ -29,11 +29,12 @@ void AnimationHuman::Init() {
 	pipeline_ = std::make_unique<GraphicsPipeline>();
 
 	GraphicsRootSignatureDesc rootDesc;
-	rootDesc.Resize(4, 1);
-	rootDesc.SetCBV(0, VISIBILITY_VERTEX, 0);
+	rootDesc.Resize(5, 1);
+	rootDesc.SetCBV(0, VISIBILITY_ALL, 0);
 	rootDesc.SetCBV(1, VISIBILITY_VERTEX, 1);
 	rootDesc.SetVirtualSRV(2, VISIBILITY_VERTEX, 0);
 	rootDesc.SetSRV(3, VISIBILITY_PIXEL, 0);
+	rootDesc.SetSRV(4, VISIBILITY_PIXEL, 1);
 	rootDesc.SetSampler(0, MODE_WRAP, VISIBILITY_PIXEL, 0);
 
 	pipeline_->CreateRootSignature(MyEngine::GetDevicesObj(), rootDesc);
@@ -61,6 +62,9 @@ void AnimationHuman::Init() {
 	(*matrixBuffer_)[0] = Matrix4x4::Identity();
 
 	SetThisAttribute("human");
+
+	// 反射用環境テクスチャ
+	MyEngine::LoadTexture("./resources/rostock_laage_airport_4k.dds");
 
 }
 
@@ -98,6 +102,7 @@ void AnimationHuman::Draw() {
 	commandList->SetGraphicsRootConstantBufferView(1, matrixBuffer_->GetGPUVirtualAddress());
 	commandList->SetGraphicsRootShaderResourceView(2, skinCluster_.paletteResource->GetGPUVirtualAddress()); //!< dimentionBufferなのでvirtualSet
 	model_->SetGraphicsTextureHandle(commandList, 0, 3);
+	commandList->SetGraphicsRootDescriptorTable(4, MyEngine::GetTextureHandleGPU("./resources/rostock_laage_airport_4k.dds"));
 
 	model_->DrawCall(commandList, 0);
 

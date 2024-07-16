@@ -2,7 +2,6 @@
 // include
 //-----------------------------------------------------------------------------------------
 #include "Animation.hlsli"
-#include "../camera.hlsli"
 
 //=========================================================================================
 // Input
@@ -18,8 +17,8 @@ struct VSInput {
 //=========================================================================================
 // Buffer
 //=========================================================================================
-ConstantBuffer<Camera> gCamera : register(b0);
-static const float4x4 viewProj = mul(gCamera.viewMatrix, gCamera.projMatrix);
+//ConstantBuffer<Camera> gCamera : register(b0);
+//static const float4x4 viewProj = mul(gCamera.viewMatrix, gCamera.projMatrix); // visibirity_allに
 
 struct TransformationMatrix {
 	float4x4 world;

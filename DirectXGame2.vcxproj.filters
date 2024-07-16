@@ -154,6 +154,9 @@
     <Filter Include="Resource\hlsl\Animation">
       <UniqueIdentifier>{fb4d5206-328c-46bf-8f54-5289616533c9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resource\hlsl\Skybox">
+      <UniqueIdentifier>{bedc3d65-9a22-484b-9ab7-cd69d9309fbd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
@@ -783,6 +786,9 @@
     <None Include="Resources\hlsl\Animation\Animation.hlsli">
       <Filter>Resource\hlsl\Animation</Filter>
     </None>
+    <None Include="Resources\hlsl\Skybox\Skybox.hlsli">
+      <Filter>Resource\hlsl\Skybox</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Text Include="externals\imgui\LICENSE.txt">
@@ -873,6 +879,12 @@
     </FxCompile>
     <FxCompile Include="Resources\hlsl\Animation\Animation.VS.hlsl">
       <Filter>Resource\hlsl\Animation</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\hlsl\Skybox\Skybox.VS.hlsl">
+      <Filter>Resource\hlsl\Skybox</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\hlsl\Skybox\Skybox.PS.hlsl">
+      <Filter>Resource\hlsl\Skybox</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

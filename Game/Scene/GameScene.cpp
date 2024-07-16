@@ -115,6 +115,7 @@ void GameScene::Draw() {
 
 		cube_->Draw();
 		human_->Draw();
+		skybox_->Draw();
 
 		MyEngine::EndOffscreen(MyEngine::GetTexture("offscreen"));
 	}
