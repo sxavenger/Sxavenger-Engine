@@ -21,6 +21,9 @@
 // ComPtr
 #include <ComPtr.h>
 
+// geometry
+#include <Vector2.h>
+
 //-----------------------------------------------------------------------------------------
 // comment
 //-----------------------------------------------------------------------------------------
@@ -30,6 +33,20 @@
 
 // xinput
 #pragma comment(lib, "Xinput.lib")
+
+//-----------------------------------------------------------------------------------------
+// using
+//-----------------------------------------------------------------------------------------
+//* InputState *//
+//! [pair]
+//! first:  現在frameのInput状態
+//! second: 前frameのInput状態
+template <typename T>
+using InputState = std::pair<T, T>;
+
+//* KeyData *//
+constexpr const uint32_t kKeyNum = 256;
+using KeyData = std::array<BYTE, kKeyNum>;
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // KeyboardInput class
@@ -43,7 +60,7 @@ public:
 
 	KeyboardInput() = default;
 
-	void Init(const HINSTANCE& hInst, const HWND& hWnd);
+	void Init(IDirectInput8* dInput, const HWND& hWnd);
 
 	void Update();
 
@@ -61,32 +78,67 @@ private:
 	// private variables
 	//=========================================================================================
 
-	//* dinput *//
+	//* input device *//
 
-	ComPtr<IDirectInput8>       directInput_;
-	ComPtr<IDirectInputDevice8> keyboard_;
+	ComPtr<IDirectInputDevice8> keyboardDevice_;
 
 	//* member *//
 
-	static const uint32_t kKeyboradButtonNum_ = 256;
-	BYTE    keys_[kKeyboradButtonNum_] = {};
-	BYTE preKeys_[kKeyboradButtonNum_] = {};
+	InputState<KeyData> keys_;
 
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// GamePadInput class
+// MouseInput class
 ////////////////////////////////////////////////////////////////////////////////////////////
-class GamePadInput {
+class MouseInput {
 public:
 
 	//=========================================================================================
 	// public methods
 	//=========================================================================================
 
-	GamePadInput() = default;
+	MouseInput() = default;
 
-	void Init(uint32_t gamePadNumber);
+	void Init(IDirectInput8* dInput, const HWND& hWnd);
+
+	void Update();
+
+	//* Mouse input methods *//
+
+	Vector2i GetMousePos();
+
+	Vector2i GetDeltaMousePos();
+
+private:
+
+	//=========================================================================================
+	// private variables
+	//=========================================================================================
+
+	//* input device *//
+
+	ComPtr<IDirectInputDevice8> mouseDevice_;
+
+	//* member *//
+
+	InputState<DIMOUSESTATE> mouse_;
+
+};
+
+////////////////////////////////////////////////////////////////////////////////////////////
+// GamePadInput class
+////////////////////////////////////////////////////////////////////////////////////////////
+class GamepadInput {
+public:
+
+	//=========================================================================================
+	// public methods
+	//=========================================================================================
+
+	GamepadInput() = default;
+
+	void Init(uint32_t gamepadNumber);
 
 	void Update();
 
@@ -97,11 +149,11 @@ public:
 	//* GamePad input methods *//
 	//* 仮でuint32_t
 
-	bool IsPressButton(uint32_t xInputGamePad) const;
+	bool IsPressButton(uint32_t xInputGamepad) const;
 
-	bool IsTriggerButton(uint32_t xInputGamePad) const;
+	bool IsTriggerButton(uint32_t xInputGamepad) const;
 
-	bool IsReleaseButton(uint32_t xInputGamePad) const;
+	bool IsReleaseButton(uint32_t xInputGamepad) const;
 
 private:
 
@@ -111,16 +163,13 @@ private:
 
 	//* external *//
 
-	uint32_t gamePadNumber_;
+	uint32_t gamepadNumber_;
 
 	//* member *//
 
 	bool isConnect_ = false;
 
-	//* [pair]
-	//* first:  現在frameのinput状態
-	//* second: 1frame前のstate状態
-	std::pair<XINPUT_STATE, XINPUT_STATE> state_;
+	InputState<XINPUT_STATE> gamepad_;
 	
 };
 
@@ -148,19 +197,23 @@ public:
 
 	bool IsReleaseKey(uint8_t dik) const;
 
-	KeyboardInput* GetKeyboardInput() const { return keyboardInput_.get(); }
+	const KeyboardInput* GetKeyboardInput() const { return keyboardInput_.get(); }
+
+	//* mouse inputs *//
+
+	const MouseInput* GetMouseInput() const { return mouseInput_.get(); }
 
 	//* GamePad inputs *//
 
-	bool IsConnectGamePad(uint32_t gamePadNum) const;
+	bool IsConnectGamePad(uint32_t gamepadNum) const;
 
-	bool IsPressButton(uint32_t gamePadNum, uint32_t xInputGamePad) const;
+	bool IsPressButton(uint32_t gamepadNum, uint32_t xInputGamepad) const;
 
-	bool IsTriggerButton(uint32_t gamePadNum, uint32_t xInputGamePad) const;
+	bool IsTriggerButton(uint32_t gamepadNum, uint32_t xInputGamepad) const;
 
-	bool IsReleaseButton(uint32_t gamePadNum, uint32_t xInputGamePad) const;
+	bool IsReleaseButton(uint32_t gamepadNum, uint32_t xInputGamepad) const;
 
-	GamePadInput* GetGamePadInput(uint32_t gamePadNum) { return gamePadInputs_[gamePadNum].get(); }
+	const GamepadInput* GetGamepadInput(uint32_t gamepadNum) const { return gamepadInputs_[gamepadNum].get(); }
 
 	//* Singleton *//
 
@@ -172,13 +225,27 @@ private:
 	// private variables
 	//=========================================================================================
 
-	//* KeyInput *//
+	//* directInput *//
+
+	ComPtr<IDirectInput8> directInput_;
+
+	//* KeyboardInput *//
 
 	std::unique_ptr<KeyboardInput> keyboardInput_;
 
+	//* MouseInput *//
+	
+	std::unique_ptr<MouseInput> mouseInput_;
+
 	//* GamePadInput *//
 
-	static const uint32_t kGamePadNum_ = 1; //!< 使用するGamePadの個数
-	std::array<std::unique_ptr<GamePadInput>, kGamePadNum_> gamePadInputs_;
+	static const uint32_t kGamepadNum_ = 1; //!< 使用するGamePadの個数
+	std::array<std::unique_ptr<GamepadInput>, kGamepadNum_> gamepadInputs_;
+
+	//=========================================================================================
+	// private methods
+	//=========================================================================================
+
+	void CreateDirectInput(const HINSTANCE& hInst);
 
 };

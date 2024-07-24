@@ -9,108 +9,154 @@
 // KeyboardInput class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-void KeyboardInput::Init(const HINSTANCE& hInst, const HWND& hWnd) {
-	// DirectInputの初期化
-	{
-		auto hr = DirectInput8Create(
-			hInst, DIRECTINPUT_VERSION, IID_IDirectInput8,
-			(void**)&directInput_, nullptr
-		);
+void KeyboardInput::Init(IDirectInput8* dInput, const HWND& hWnd) {
+	
+	// キーボードデバイスの生成
+	auto hr = dInput->CreateDevice(
+		GUID_SysKeyboard, &keyboardDevice_, NULL
+	);
+	assert(SUCCEEDED(hr));
 
-		assert(SUCCEEDED(hr));
-	}
+	// 入力データ形式のセット
+	hr = keyboardDevice_->SetDataFormat(
+		&c_dfDIKeyboard // 標準形式
+	);
+	assert(SUCCEEDED(hr));
 
-	// キーボードデバイス
-	{
-		// キーボードデバイスの生成
-		auto hr = directInput_->CreateDevice(
-			GUID_SysKeyboard, &keyboard_, NULL
-		);
-		assert(SUCCEEDED(hr));
+	// flagの設定
+	DWORD flags = 0;
+	flags |= DISCL_FOREGROUND;
+	flags |= DISCL_NONEXCLUSIVE;
+	/*flags |= DISCL_NOWINKEY;*/
 
-		// 入力データ形式のセット
-		hr = keyboard_->SetDataFormat(
-			&c_dfDIKeyboard // 標準形式
-		);
-		assert(SUCCEEDED(hr));
+	/*
+		DISCL_FOREGROUND   -> 画面が手前にある場合のみ入力を受け付け
+		DISCL_NONEXCLUSIVE -> デバイスをこのアプリで占有しない
+		DISCL_NOWINKEY     -> Windowsキーの無効化
+	*/
 
-		// flagの設定
-		DWORD flags = 0;
-		flags |= DISCL_FOREGROUND;
-		flags |= DISCL_NONEXCLUSIVE;
-		flags |= DISCL_NOWINKEY;
-
-		/*
-			DISCL_FOREGROUND   -> 画面が手前にある場合のみ入力を受け付け
-			DISCL_NONEXCLUSIVE -> デバイスをこのアプリで占有しない
-			DISCL_NOWINKEY     -> Windowsキーの無効化
-		*/
-
-		// 排他制御レベルのセット
-		hr = keyboard_->SetCooperativeLevel(
-			hWnd,
-			flags
-		);
-		assert(SUCCEEDED(hr));
-	}
+	// 排他制御レベルのセット
+	hr = keyboardDevice_->SetCooperativeLevel(
+		hWnd,
+		flags
+	);
+	assert(SUCCEEDED(hr));
+	
 }
 
 void KeyboardInput::Update() {
 
-	// preKeyに保存
-	memcpy(preKeys_, keys_, kKeyboradButtonNum_); //!< sizeof(BYTE, unsigned) = 1 なので省略
+	// 前frameのkey状態の保存
+	keys_.second = keys_.first;
 
 	// キーボード情報の取得開始
-	keyboard_->Acquire();
+	keyboardDevice_->Acquire();
 
 	// キーボードの入力状態を取得
-	keyboard_->GetDeviceState(sizeof(keys_), keys_);
+	keyboardDevice_->GetDeviceState(sizeof(keys_.first), keys_.first.data());
 
 }
 
 bool KeyboardInput::IsPressKey(uint8_t dik) const {
-	return keys_[dik];
+	return keys_.first[dik];
 }
 
 bool KeyboardInput::IsTriggerKey(uint8_t dik) const {
-	return keys_[dik] && !preKeys_[dik];
+	return keys_.first[dik] && !keys_.second[dik];
 }
 
 bool KeyboardInput::IsReleaseKey(uint8_t dik) const {
-	return !keys_[dik] && preKeys_[dik];
+	return !keys_.first[dik] && keys_.second[dik];
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// GamePadInput class methods
+// MouseInput class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
-void GamePadInput::Init(uint32_t gamePadNumber) {
+
+void MouseInput::Init(IDirectInput8* dInput, const HWND& hWnd) {
+
+	// デバイスの生成
+	auto hr = dInput->CreateDevice(
+		GUID_SysMouse, &mouseDevice_, NULL
+	);
+	assert(SUCCEEDED(hr));
+
+	// 入力データ形式のセット
+	hr = mouseDevice_->SetDataFormat(
+		&c_dfDIMouse // 標準形式
+	);
+	assert(SUCCEEDED(hr));
+
+	// flagの設定
+	DWORD flags = 0;
+	flags |= DISCL_FOREGROUND;
+	flags |= DISCL_NONEXCLUSIVE;
+
+	/*
+		DISCL_FOREGROUND   -> 画面が手前にある場合のみ入力を受け付け
+		DISCL_NONEXCLUSIVE -> デバイスをこのアプリで占有しない
+	*/
+
+	// 排他制御レベルのセット
+	hr = mouseDevice_->SetCooperativeLevel(
+		hWnd,
+		flags
+	);
+	assert(SUCCEEDED(hr));
+}
+
+void MouseInput::Update() {
+
+	// 前frameのmouse状態の保存
+	mouse_.second = mouse_.first;
+
+	// マウス情報の取得開始
+	mouseDevice_->Acquire();
+
+	// マウスの入力状態を取得
+	mouseDevice_->GetDeviceState(sizeof(mouse_.first), &mouse_.first);
+
+}
+
+Vector2i MouseInput::GetMousePos() {
+	return { mouse_.first.lX, mouse_.first.lY };
+}
+
+Vector2i MouseInput::GetDeltaMousePos() {
+	return { mouse_.first.lX - mouse_.second.lX, mouse_.first.lY - mouse_.second.lY };
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////
+// GamepadInput class methods
+////////////////////////////////////////////////////////////////////////////////////////////
+void GamepadInput::Init(uint32_t gamepadNumber) {
 	// numberの保存
-	gamePadNumber_ = gamePadNumber;
+	gamepadNumber_ = gamepadNumber;
 }
 
-void GamePadInput::Update() {
+void GamepadInput::Update() {
 
 	// 1frame前のコントローラー状態の保存
-	state_.second = state_.first;
+	gamepad_.second = gamepad_.first;
 
 	// 現在のコントローラー状態の取得
-	auto dr = XInputGetState(gamePadNumber_, &state_.first);
+	auto dr = XInputGetState(gamepadNumber_, &gamepad_.first);
 
 	isConnect_ = (dr == ERROR_SUCCESS); //!< 接続されてるかの確認
 	// [retval] true: 接続されてる, false: 接続されてない
 
 }
 
-bool GamePadInput::IsPressButton(uint32_t xInputGamePad) const {
-	return state_.first.Gamepad.wButtons & xInputGamePad;
+bool GamepadInput::IsPressButton(uint32_t xInputGamepad) const {
+	return gamepad_.first.Gamepad.wButtons & xInputGamepad;
 }
 
-bool GamePadInput::IsTriggerButton(uint32_t xInputGamePad) const {
-	return (state_.first.Gamepad.wButtons & xInputGamePad) && !(state_.second.Gamepad.wButtons & xInputGamePad);
+bool GamepadInput::IsTriggerButton(uint32_t xInputGamepad) const {
+	return (gamepad_.first.Gamepad.wButtons & xInputGamepad) && !(gamepad_.second.Gamepad.wButtons & xInputGamepad);
 }
 
-bool GamePadInput::IsReleaseButton(uint32_t xInputGamePad) const {
-	return !(state_.first.Gamepad.wButtons & xInputGamePad) && (state_.second.Gamepad.wButtons & xInputGamePad);
+bool GamepadInput::IsReleaseButton(uint32_t xInputGamepad) const {
+	return !(gamepad_.first.Gamepad.wButtons & xInputGamepad) && (gamepad_.second.Gamepad.wButtons & xInputGamepad);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -119,14 +165,20 @@ bool GamePadInput::IsReleaseButton(uint32_t xInputGamePad) const {
 
 void Input::Init(const HINSTANCE& hInst, const HWND& hWnd) {
 
+	CreateDirectInput(hInst);
+
 	// keyboardInput
 	keyboardInput_ = std::make_unique<KeyboardInput>();
-	keyboardInput_->Init(hInst, hWnd);
+	keyboardInput_->Init(directInput_.Get(), hWnd);
+
+	// mouseInput
+	mouseInput_ = std::make_unique<MouseInput>();
+	mouseInput_->Init(directInput_.Get(), hWnd);
 
 	// gamePadInput
-	for (uint32_t i = 0; i < kGamePadNum_; ++i) {
-		gamePadInputs_[i] = std::make_unique<GamePadInput>();
-		gamePadInputs_[i]->Init(i);
+	for (uint32_t i = 0; i < kGamepadNum_; ++i) {
+		gamepadInputs_[i] = std::make_unique<GamepadInput>();
+		gamepadInputs_[i]->Init(i);
 	}
 
 
@@ -136,9 +188,12 @@ void Input::Update() {
 
 	// keyboardInput
 	keyboardInput_->Update();
+
+	// mouseInput
+	mouseInput_->Update();
 	
 	// gamePadInput
-	for (auto& gamePad : gamePadInputs_) {
+	for (auto& gamePad : gamepadInputs_) {
 		gamePad->Update();
 	}
 }
@@ -155,23 +210,33 @@ bool Input::IsReleaseKey(uint8_t dik) const {
 	return keyboardInput_->IsReleaseKey(dik);
 }
 
-bool Input::IsConnectGamePad(uint32_t gamePadNum) const {
-	return gamePadInputs_[gamePadNum]->IsConnect();
+bool Input::IsConnectGamePad(uint32_t gamepadNum) const {
+	return gamepadInputs_[gamepadNum]->IsConnect();
 }
 
-bool Input::IsPressButton(uint32_t gamePadNum, uint32_t xInputGamePad) const {
-	return gamePadInputs_[gamePadNum]->IsPressButton(xInputGamePad);
+bool Input::IsPressButton(uint32_t gamepadNum, uint32_t xInputGamepad) const {
+	return gamepadInputs_[gamepadNum]->IsPressButton(xInputGamepad);
 }
 
-bool Input::IsTriggerButton(uint32_t gamePadNum, uint32_t xInputGamePad) const {
-	return gamePadInputs_[gamePadNum]->IsTriggerButton(xInputGamePad);
+bool Input::IsTriggerButton(uint32_t gamepadNum, uint32_t xInputGamepad) const {
+	return gamepadInputs_[gamepadNum]->IsTriggerButton(xInputGamepad);
 }
 
-bool Input::IsReleaseButton(uint32_t gamePadNum, uint32_t xInputGamePad) const {
-	return gamePadInputs_[gamePadNum]->IsReleaseButton(xInputGamePad);
+bool Input::IsReleaseButton(uint32_t gamepadNum, uint32_t xInputGamepad) const {
+	return gamepadInputs_[gamepadNum]->IsReleaseButton(xInputGamepad);
 }
 
 Input* Input::GetInstance() {
 	static Input instance;
 	return &instance;
+}
+
+void Input::CreateDirectInput(const HINSTANCE& hInst) {
+
+	auto hr = DirectInput8Create(
+		hInst, DIRECTINPUT_VERSION, IID_IDirectInput8,
+		(void**)&directInput_, nullptr
+	);
+
+	assert(SUCCEEDED(hr));
 }
