@@ -90,6 +90,9 @@ void GameScene::Init() {
 	human_ = std::make_unique<AnimationHuman>();
 	skybox_ = std::make_unique<Skybox>();
 
+	particle_ = std::make_unique<Particle>();
+	particle_->Init();
+
 }
 
 void GameScene::Term() {
@@ -98,6 +101,7 @@ void GameScene::Term() {
 void GameScene::Update() {
 	cube_->Update();
 	human_->Update();
+	particle_->Update();
 }
 
 void GameScene::Draw() {
@@ -116,6 +120,7 @@ void GameScene::Draw() {
 		cube_->Draw();
 		human_->Draw();
 		skybox_->Draw();
+		particle_->Draw();
 
 		MyEngine::EndOffscreen(MyEngine::GetTexture("offscreen"));
 	}

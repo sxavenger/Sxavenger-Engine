@@ -438,13 +438,13 @@ DirectX::ScratchImage TextureMethod::LoadTexture(const std::string& filePath) {
 ComPtr<ID3D12Resource> TextureMethod::CreateTextureResource(ID3D12Device* device, const DirectX::TexMetadata& metadata) {
 	// デスクの設定
 	D3D12_RESOURCE_DESC desc = {};
-	desc.Width = UINT(metadata.width);
-	desc.Height = UINT(metadata.height);
-	desc.MipLevels = UINT16(metadata.mipLevels);
+	desc.Width            = UINT(metadata.width);
+	desc.Height           = UINT(metadata.height);
+	desc.MipLevels        = UINT16(metadata.mipLevels);
 	desc.DepthOrArraySize = UINT16(metadata.arraySize);
-	desc.Format = metadata.format;
+	desc.Format           = metadata.format;
 	desc.SampleDesc.Count = 1;
-	desc.Dimension = D3D12_RESOURCE_DIMENSION(metadata.dimension);
+	desc.Dimension        = D3D12_RESOURCE_DIMENSION(metadata.dimension);
 
 	// ヒーププロパティの設定
 	D3D12_HEAP_PROPERTIES prop = {};

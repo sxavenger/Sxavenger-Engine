@@ -13,8 +13,9 @@
 #include <DxGraphicsBlob.h>
 #include <DxGraphicsPipeline.h>
 
-// Model
+// IA
 #include <Model.h>
+#include <DrawMethod.h>
 
 // c++
 #include <memory>
@@ -26,6 +27,7 @@
 
 // rendering
 #include <DefferedRendering.h>
+
 
 // attribtue
 #include <Attribute.h>
@@ -45,7 +47,7 @@ public:
 
 	~Particle() { Term(); }
 
-	void Init(DefferedRendering* defferdRendering);
+	void Init();
 
 	void Term();
 
@@ -58,48 +60,53 @@ public:
 private:
 
 	////////////////////////////////////////////////////////////////////////////////////////////
-	// ParticleData structure
+	// ParticleCS structure
 	////////////////////////////////////////////////////////////////////////////////////////////
-	struct ParticleData {
-		Vector4f  color;
-		Matrix4x4 worldMatrix = Matrix4x4::Identity();
-
-		Vector3f tranlate;
+	struct ParticleCS {
+		Color4f color;
+		Vector3f scale;
+		Vector3f translate;
 		Vector3f velocity;
-		Vector3f acceleration;
-		float mass;
+		float currentTime;
+		float lifeTime;
+	};
 
-		Vector3f rotate;
-		Vector3f addRotate;
-
-		int isUpdate;
+	////////////////////////////////////////////////////////////////////////////////////////////
+	// EmitterSphere structure
+	////////////////////////////////////////////////////////////////////////////////////////////
+	struct EmitterSphere {
+		Vector3f position;   //!< 位置
+		float radius;        //!< 射出半径
+		uint32_t count;      //!< 発射数
+		float frequency;     //!< 発射間隔
+		float frequencyTime; //!< 発射間隔調整用時間
+		int isEmit;          //!< 発射許可(bool)
 	};
 
 	//=========================================================================================
 	// private variables
 	//=========================================================================================
 
-	// CS
-	std::unique_ptr<DxObject::CSBlob>                         csBlob_;
-	std::unique_ptr<DxObject::CSPipelineState>                csPipelineState_;
-	std::unique_ptr<DxObject::CSBufferResource<ParticleData>> csBuffer_;
+	//* CS *//
+	std::unique_ptr<DxObject::CSBlob>          csInitBlob_;
+	std::unique_ptr<DxObject::CSPipelineState> csInitPipeline_;
 
-	std::unique_ptr<DxObject::BufferPtrResource<int>> boolBuffer_; //!< 仮
+	std::unique_ptr<DxObject::CSBlob>          csBlob_;
+	std::unique_ptr<DxObject::CSPipelineState> csPipeline_;
 
-	// Graphics
-	std::unique_ptr<DxObject::GraphicsBlob>     graphicsBlob_;
+	//* buffers *//
+	static const uint32_t kParticleNum = 1024;
 
-	DxObject::GraphicsPipelineDesc pipelineDesc_;
-	std::unique_ptr<DxObject::GraphicsPipeline> graphicsPipeline_;
+	std::unique_ptr<DxObject::CSBufferResource<ParticleCS>> particleBuffer_;
+	std::unique_ptr<DxObject::BufferResource<uint32_t>>     informationBuffer_;
 
-	// IA
-	std::unique_ptr<Model> model_;
+	std::unique_ptr<DxObject::BufferResource<EmitterSphere>> emitterBuffer_;
 
-	DefferedRendering* deffered_;
+	//* Graphics *//
+	std::unique_ptr<DxObject::GraphicsBlob>     blob_;
+	std::unique_ptr<DxObject::GraphicsPipeline> pipeline_;
 
-	// blendMode
-	static const std::string blendModeNames_[kCountOfBlendMode];
-
-	int isInit_ = true;
+	//* IA *//
+	DrawData plane_;
 
 };

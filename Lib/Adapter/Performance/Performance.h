@@ -1,9 +1,17 @@
 #pragma once
+/* todo:
+ 60fpsの固定
+*/
 
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
+// c++
 #include <chrono>
+#include <memory>
+
+// DxObject
+#include <DxBufferResource.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // SecondsUnit enum
@@ -43,14 +51,37 @@ public:
 		return deltaTime_ * secondsConversions_[unit];
 	}
 
+	//* gpu buffer *//
+
+	//! @brief bufferの生成
+	static void CreateBuffer();
+
+	//! @brief bufferの終了処理
+	static void TermBuffer();
+
+	//! @brief BufferのGPUAddressの取得
+	static const D3D12_GPU_VIRTUAL_ADDRESS GetGPUVirtualAddress();
+
 private:
+
+	////////////////////////////////////////////////////////////////////////////////////////////
+	// Perframe class
+	////////////////////////////////////////////////////////////////////////////////////////////
+	struct PerFrame {
+		float time;
+		float deltaTime;
+	};
 
 	//=========================================================================================
 	// private variables
 	//=========================================================================================
 
+	//* chrono *//
 	static std::chrono::steady_clock::time_point startFrame_, endFrame_;
 	static float deltaTime_;
+
+	//* buffer *//
+	static std::unique_ptr<DxObject::BufferResource<PerFrame>> perFrameBuffer_;
 
 	static float secondsConversions_[SecondsUnit::kCountOfSecondsUnit]; //!< 秒数単位変換表 micro * this[...]
 

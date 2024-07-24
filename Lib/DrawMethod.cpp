@@ -83,13 +83,13 @@ DrawData DrawMethods::Plane(const Vector2f& size) {
 	DrawData result;
 
 	result.vertex = std::make_unique<BufferResource<VertexData>>(MyEngine::GetDevicesObj(), 4);
-	result.vertex->operator[](0).position = { -size.x / 2.0f, -size.x / 2.0f, 0.0f };
+	result.vertex->operator[](0).position = { -size.x / 2.0f, -size.y / 2.0f, 0.0f };
 	result.vertex->operator[](0).texcoord = { 0.0f, 1.0f };
-	result.vertex->operator[](1).position = { size.x / 2.0f, -size.x / 2.0f, 0.0f };
+	result.vertex->operator[](1).position = { size.x / 2.0f, -size.y / 2.0f, 0.0f };
 	result.vertex->operator[](1).texcoord = { 1.0f, 1.0f };
-	result.vertex->operator[](2).position = { size.x / 2.0f, size.x / 2.0f, 0.0f };
+	result.vertex->operator[](2).position = { size.x / 2.0f, size.y / 2.0f, 0.0f };
 	result.vertex->operator[](2).texcoord = { 1.0f, 0.0f };
-	result.vertex->operator[](3).position = { -size.x / 2.0f, size.x / 2.0f, 0.0f };
+	result.vertex->operator[](3).position = { -size.x / 2.0f, size.y / 2.0f, 0.0f };
 	result.vertex->operator[](3).texcoord = { 0.0f, 0.0f };
 
 

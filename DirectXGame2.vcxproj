@@ -307,8 +307,9 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <None Include="Resources\hlsl\Matrix.hlsli" />
     <None Include="Resources\hlsl\MeshCommon.hlsli" />
     <None Include="Resources\hlsl\Object3d\Object3d.hlsli" />
-    <None Include="Resources\hlsl\Particle.hlsli" />
+    <None Include="Resources\hlsl\Particle\Particle.hlsli" />
     <None Include="Resources\hlsl\Primitive\Primitive.hlsli" />
+    <None Include="Resources\hlsl\Random.hlsli" />
     <None Include="Resources\hlsl\Skybox\Skybox.hlsli" />
     <None Include="Resources\hlsl\Sprite.hlsli" />
     <None Include="Resources\hlsl\ToonShading.hlsli" />
@@ -394,16 +395,19 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <FxCompile Include="Resources\hlsl\Object3d\Object3d.VS.hlsl">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </FxCompile>
-    <FxCompile Include="Resources\hlsl\Particle.CS.hlsl">
+    <FxCompile Include="Resources\hlsl\Particle\Particle.CS.hlsl">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </FxCompile>
-    <FxCompile Include="Resources\hlsl\Particle.PS.hlsl">
+    <FxCompile Include="Resources\hlsl\Particle\Particle.PS.hlsl">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </FxCompile>
-    <FxCompile Include="Resources\hlsl\Particle.VS.hlsl">
+    <FxCompile Include="Resources\hlsl\Particle\Particle.VS.hlsl">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </FxCompile>
-    <FxCompile Include="Resources\hlsl\ParticleDeffered.PS.hlsl">
+    <FxCompile Include="Resources\hlsl\Particle\ParticleDeffered.PS.hlsl">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="Resources\hlsl\Particle\ParticleInit.CS.hlsl">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </FxCompile>
     <FxCompile Include="Resources\hlsl\Primitive\Primitive.PS.hlsl">

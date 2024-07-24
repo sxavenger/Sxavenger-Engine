@@ -34,8 +34,8 @@ struct DrawData {
 		commandList->IASetIndexBuffer(&indexBuffer);
 	}
 
-	void DrawCall(ID3D12GraphicsCommandList* commandList) const {
-		commandList->DrawIndexedInstanced(index->GetIndexSize(), 1, 0, 0, 0);
+	void DrawCall(ID3D12GraphicsCommandList* commandList, UINT instanceCount = 1) const {
+		commandList->DrawIndexedInstanced(index->GetIndexSize(), instanceCount, 0, 0, 0);
 	}
 };
 

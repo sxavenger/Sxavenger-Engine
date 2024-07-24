@@ -109,10 +109,18 @@ void MyEngine::Initialize(int32_t windowWidth, int32_t windowHeight, const char*
 		ExternalLogger::Write("Complete Initialize: sPrimitive");
 	}
 
+	// PerformanceのBufferの生成
+	{
+		Performance::CreateBuffer();
+	}
+
 	ExternalLogger::Close();
 }
 
 void MyEngine::Finalize() {
+
+	Performance::TermBuffer();
+
 	sTextureManager->Term();
 	sTextureManager = nullptr;
 

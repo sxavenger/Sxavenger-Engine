@@ -255,7 +255,7 @@ void Console::OutputPerformance() {
 
 	ImGui::Text("exec speed / frame: %.6f", framesPerSec);
 	ImGui::SameLine();
-	ImGui::Text("FPS: %.1f", 1.0f / framesPerSec);
+	ImGui::Text("FPS: %.0f", 1.0f / framesPerSec);
 
 	ImGui::End();
 }

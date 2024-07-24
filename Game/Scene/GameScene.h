@@ -29,6 +29,8 @@
 #include <AnimationHuman.h>
 #include <Skybox.h>
 
+#include <Particle.h>
+
 ////////////////////////////////////////////////////////////////////////////////////////////
 // GameScene class
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -52,6 +54,8 @@ private:
 	std::unique_ptr<AnimationCube> cube_;
 	std::unique_ptr<AnimationHuman> human_;
 	std::unique_ptr<Skybox> skybox_;
+
+	std::unique_ptr<Particle> particle_;
 
 	//=========================================================================================
 	// private methods

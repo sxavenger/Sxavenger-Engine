@@ -759,9 +759,6 @@
     <None Include="Resources\hlsl\FullScreen.hlsli">
       <Filter>Resource\hlsl\FullScreen</Filter>
     </None>
-    <None Include="Resources\hlsl\Particle.hlsli">
-      <Filter>Resource\hlsl\Particle</Filter>
-    </None>
     <None Include="Resources\hlsl\DefferedRendering.hlsli">
       <Filter>Resource\hlsl\DefferedRendering</Filter>
     </None>
@@ -788,6 +785,12 @@
     </None>
     <None Include="Resources\hlsl\Skybox\Skybox.hlsli">
       <Filter>Resource\hlsl\Skybox</Filter>
+    </None>
+    <None Include="Resources\hlsl\Particle\Particle.hlsli">
+      <Filter>Resource\hlsl\Particle</Filter>
+    </None>
+    <None Include="Resources\hlsl\Random.hlsli">
+      <Filter>Resource\hlsl</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -822,18 +825,6 @@
     </FxCompile>
     <FxCompile Include="Resources\hlsl\FullScreen.VS.hlsl">
       <Filter>Resource\hlsl\FullScreen</Filter>
-    </FxCompile>
-    <FxCompile Include="Resources\hlsl\Particle.CS.hlsl">
-      <Filter>Resource\hlsl\Particle</Filter>
-    </FxCompile>
-    <FxCompile Include="Resources\hlsl\Particle.PS.hlsl">
-      <Filter>Resource\hlsl\Particle</Filter>
-    </FxCompile>
-    <FxCompile Include="Resources\hlsl\Particle.VS.hlsl">
-      <Filter>Resource\hlsl\Particle</Filter>
-    </FxCompile>
-    <FxCompile Include="Resources\hlsl\ParticleDeffered.PS.hlsl">
-      <Filter>Resource\hlsl\Particle</Filter>
     </FxCompile>
     <FxCompile Include="Resources\hlsl\DefferedRendering.VS.hlsl">
       <Filter>Resource\hlsl\DefferedRendering</Filter>
@@ -888,6 +879,21 @@
     </FxCompile>
     <FxCompile Include="Resources\hlsl\Animation\Skinning.CS.hlsl">
       <Filter>Resource\hlsl\Animation</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\hlsl\Particle\ParticleInit.CS.hlsl">
+      <Filter>Resource\hlsl\Particle</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\hlsl\Particle\Particle.CS.hlsl">
+      <Filter>Resource\hlsl\Particle</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\hlsl\Particle\Particle.PS.hlsl">
+      <Filter>Resource\hlsl\Particle</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\hlsl\Particle\Particle.VS.hlsl">
+      <Filter>Resource\hlsl\Particle</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\hlsl\Particle\ParticleDeffered.PS.hlsl">
+      <Filter>Resource\hlsl\Particle</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

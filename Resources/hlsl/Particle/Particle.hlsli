@@ -10,19 +10,13 @@ struct VSOutput {
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// ParticleData sturucture
+// Particle structure
 ////////////////////////////////////////////////////////////////////////////////////////////
-struct ParticleData {
-	float4x4 mat;
+struct Particle {
 	float4 color;
-	
+	float3 scale;
 	float3 translate;
 	float3 velocity;
-	float3 acceleration;
-	float mass;
-	
-	float3 rotate;
-	float3 addRotate;
-	
-	int isUpdate;
+	float currentTime;
+	float lifeTime;
 };

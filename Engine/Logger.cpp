@@ -89,6 +89,19 @@ void AssertHRESULT(const HRESULT& hr) {
 	}
 }
 
+void Assert(bool isSuccess, bool isUseRuntimeError) {
+	if (isSuccess) { //!< 成功してる場合
+		return;
+	}
+
+	if (isUseRuntimeError) {
+		throw std::runtime_error("assert");
+		return;
+	}
+
+	assert(false);
+}
+
 ////////////////////////////////////////////////////////////////////////////////////////////
 // ExternalLogger class
 ////////////////////////////////////////////////////////////////////////////////////////////

@@ -30,6 +30,8 @@ void Assert(bool isSuccess, const std::string& errorLog);
 void Assert(bool isSuccess, const std::string& errorLog, const std::string& textTitle);
 void AssertHRESULT(const HRESULT& hr);
 
+void Assert(bool isSuccess, bool isUseRuntimeError = false);
+
 ////////////////////////////////////////////////////////////////////////////////////////////
 // ExternalLogger class
 ////////////////////////////////////////////////////////////////////////////////////////////

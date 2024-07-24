@@ -100,8 +100,8 @@ ModelData ModelMethods::LoadModelFile(const std::string& directoryPath, const st
 	uint32_t option = 0;
 	option |= aiProcess_FlipWindingOrder;
 	option |= aiProcess_FlipUVs;
-	option |= aiProcess_JoinIdenticalVertices;
 	option |= aiProcess_Triangulate;
+	option |= aiProcess_JoinIdenticalVertices;
 
 	const aiScene* scene
 		= importer.ReadFile(filePath.c_str(), option);

@@ -59,3 +59,13 @@ float4x4 MakeTranslate(float3 translate) {
 float4x4 MakeAffine(float3 scale, float3 rotate, float3 translate) {
 	return mul(mul(MakeScale(scale), MakeRotate(rotate)), MakeTranslate(translate));
 }
+
+//=========================================================================================
+// static const variables
+//=========================================================================================
+static const float4x4 kIdentity = float4x4(
+	1.0f, 0.0f, 0.0f, 0.0f,
+	0.0f, 1.0f, 0.0f, 0.0f,
+	0.0f, 0.0f, 1.0f, 0.0f,
+	0.0f, 0.0f, 0.0f, 1.0f
+);
