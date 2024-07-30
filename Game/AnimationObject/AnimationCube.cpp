@@ -48,7 +48,7 @@ void AnimationCube::Update() {
 	animationTransform_.translate = AnimationMethods::CalculateValue(rootNodeAnimation.translate, animationTime_);
 	
 	// bufferに書き込み
-	matrixBuffer_->operator[](0) = animationTransform_.GetMatrix() * worldTransform_.GetMatrix();
+	matrixBuffer_->operator[](0) = animationTransform_.ToMatrix() * worldTransform_.ToMatrix();
 
 }
 

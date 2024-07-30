@@ -380,8 +380,7 @@ namespace DxObject {
 
 		//! @breif コンストラクタ
 		//! 
-		//! @param[in] devices   DxObject::Devices
-		//! @param[in] indexSize 配列サイズ
+		//! @param[in] devices DxObject::Devices
 		DynamicBufferResource(Devices* devices)
 			: BaseBufferResource(0, sizeof(T)) {
 			Init(devices);
@@ -437,7 +436,7 @@ namespace DxObject {
 		ID3D12Device* device_; //!< 完全な動的bufferにする場合, 必須
 
 		//=========================================================================================
-		// protected methods
+		// private methods
 		//=========================================================================================
 
 		//! @brief 要素数がindexSize以上でないかの確認
@@ -447,6 +446,60 @@ namespace DxObject {
 		bool CheckElementCount(uint32_t elementCount) override;
 
 	};
+
+	////////////////////////////////////////////////////////////////////////////////////////////
+	// OffsetBufferResource class
+	////////////////////////////////////////////////////////////////////////////////////////////
+	class OffsetBufferResource
+		: public BaseBufferResource {
+	public:
+
+		//=========================================================================================
+		// public methods
+		//=========================================================================================
+
+		OffsetBufferResource() = delete;
+
+		//! @breif コンストラクタ
+		//! 
+		//! @param[in] devices DxObject::Devices
+		OffsetBufferResource(Devices* devices, UINT structureSize)
+			: BaseBufferResource(0, structureSize) {
+			Init(devices);
+		}
+
+		~OffsetBufferResource() { Term(); }
+
+		//! @brief 初期化処理
+		//! 
+		//! @param[in] devices DxObject::Devices
+		void Init(Devices* devices);
+
+		//! @brief 終了処理
+		void Term();
+
+		//* setter *//
+
+		template <typename T>
+		void SetValue(UINT offset, const T& value);
+
+		template <typename T>
+		const T& GetValue(UINT offset);
+
+		/*template <typename T>
+		T& AccessValue(UINT offset);*/
+
+	private:
+
+		//=========================================================================================
+		// private variables
+		//=========================================================================================
+
+		BYTE* mappedDatas_ = nullptr; //!< byte数で考えるのでBYTEを使用
+
+	};
+
+	
 
 }
 
@@ -559,4 +612,22 @@ inline bool DxObject::DynamicBufferResource<T>::CheckElementCount(uint32_t eleme
 	}
 
 	return true;
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////
+// OffsetBufferResource class
+////////////////////////////////////////////////////////////////////////////////////////////
+
+template<typename T>
+void DxObject::OffsetBufferResource::SetValue(UINT offset, const T& value) {
+	assert(offset + static_cast<UINT>(sizeof(T)) <= structureSize_); //!< 範囲外への書き込み
+
+	*reinterpret_cast<T*>(mappedDatas_ + offset) = value;
+}
+
+template<typename T>
+inline const T& DxObject::OffsetBufferResource::GetValue(UINT offset) {
+	assert(offset + static_cast<UINT>(sizeof(T)) <= structureSize_); //!< 範囲外への書き込み
+
+	return *reinterpret_cast<T*>(mappedDatas_ + offset);
 }

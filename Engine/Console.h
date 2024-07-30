@@ -54,7 +54,7 @@ public:
 	//! 
 	//! @param[in] log   出力したいログ
 	//! @param[in] color 文字の色
-	void SetLog(const std::string& log, const Color4f& color = {1.0f, 1.0f, 1.0f, 1.0f});
+	void Log(const std::string& log, const Color4f& color = {1.0f, 1.0f, 1.0f, 1.0f});
 
 	void SetAttribute(Attribute* obj) {
 		attributes_.push_back(obj);
@@ -119,7 +119,6 @@ private:
 	// Attribute
 	std::list<Attribute*> attributes_;
 	Attribute* selectedAttribute_;
-	std::unordered_map<std::string, uint32_t> stackId_; //!< attribute名前重複対策
 
 	//=========================================================================================
 	// private methods

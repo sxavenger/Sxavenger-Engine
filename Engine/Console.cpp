@@ -80,7 +80,7 @@ void Console::Update() {
 	}
 }
 
-void Console::SetLog(const std::string& log, const Color4f& color) {
+void Console::Log(const std::string& log, const Color4f& color) {
 	// logの追加
 	logDatas_.push_front({log, color});
 
@@ -237,7 +237,6 @@ void Console::OutputLog() {
 
 		if (ImGui::BeginTabItem("Printf")) {
 
-
 			ImGui::EndTabItem();
 		}
 
@@ -264,9 +263,6 @@ void Console::OutputOutliner() {
 	// Inspectorの選択window
 	static bool isOpenWindow = true;
 	ImGui::Begin("Outliner", &isOpenWindow, windowFlags_);
-
-	// TODO: 名前の重複参照の対策
-	stackId_.clear();
 	
 	for (const auto& object : attributes_) {
 		OutlinerAttribute(object);
@@ -305,6 +301,7 @@ void Console::OutputSystem() {
 	static bool isOpenWindow = true;
 	ImGui::Begin("System", &isOpenWindow, windowFlags_);
 
+	//!< descriptorの使用済みの数, 最大数の確認
 	if (ImGui::CollapsingHeader("DescriptorHeaps")) {
 		auto descriptorHeaps = dxCommon_->GetDescriptorsObj();
 		
@@ -340,6 +337,27 @@ void Console::OutputSystem() {
 			ImGui::TreePop();
 		}
 
+	}
+
+	//!< Inputが機能してるかの確認
+	if (ImGui::CollapsingHeader("Input")) {
+
+		/*if (ImGui::TreeNode("Keyboard")) {
+
+			auto keyboard = Input::GetInstance()->GetKeyboardInput();
+
+			ImGui::TreePop();
+		}*/
+
+		if (ImGui::TreeNode("Mouse")) {
+
+			auto mouse = Input::GetInstance()->GetMouseInput();
+
+			ImGui::Text("[position] x: %d, y: %d", mouse->GetMousePos().x, mouse->GetMousePos().y);
+			ImGui::Text("[delta]    x: %d, y: %d", mouse->GetDeltaMousePos().x, mouse->GetDeltaMousePos().y);
+
+			ImGui::TreePop();
+		}
 	}
 
 	ImGui::End();

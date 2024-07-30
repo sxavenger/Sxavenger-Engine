@@ -99,7 +99,7 @@ void NodeModel::Draw() {
 void NodeModel::SetAttributeImGui() {
 	
 	transform_.SetImGuiCommand();
-	worldMatrix_ = transform_.GetMatrix();
+	worldMatrix_ = transform_.ToMatrix();
 
 	if (ImGui::BeginCombo("modelType", modelNames_[type_].c_str())) {
 

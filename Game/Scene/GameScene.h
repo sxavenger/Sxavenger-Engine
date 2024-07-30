@@ -31,6 +31,8 @@
 
 #include <Particle.h>
 
+#include <DebugCamera3D.h>
+
 ////////////////////////////////////////////////////////////////////////////////////////////
 // GameScene class
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -56,6 +58,8 @@ private:
 	std::unique_ptr<Skybox> skybox_;
 
 	std::unique_ptr<Particle> particle_;
+
+	std::unique_ptr<DebugCamera3D> testCamera_;
 
 	//=========================================================================================
 	// private methods

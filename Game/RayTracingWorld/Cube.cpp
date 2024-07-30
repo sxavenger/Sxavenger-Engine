@@ -35,6 +35,6 @@ void Cube::Term() {
 void Cube::SetAttributeImGui() {
 
 	transform_.SetImGuiCommand();
-	worldMatrix_ = transform_.GetMatrix();
+	worldMatrix_ = transform_.ToMatrix();
 
 }

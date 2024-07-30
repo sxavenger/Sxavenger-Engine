@@ -74,7 +74,7 @@ void MeshBunny::Term() {
 
 void MeshBunny::Draw() {
 
-	cullingCamera_->DrawFrustum({1.0f, 1.0f, 0.0f, 1.0f});
+	/*cullingCamera_->DrawFrustum({1.0f, 1.0f, 0.0f, 1.0f});*/
 
 	auto commandList = MyEngine::GetCommandList();
 
@@ -95,5 +95,5 @@ void MeshBunny::SetAttributeImGui() {
 
 	transform_.SetImGuiCommand();
 
-	matrix_->operator[](0).world = transform_.GetMatrix();
+	matrix_->operator[](0).world = transform_.ToMatrix();
 }

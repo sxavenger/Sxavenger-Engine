@@ -22,12 +22,14 @@ void Skybox::Init() {
 
 	pipeline_ = std::make_unique<GraphicsPipeline>();
 	GraphicsRootSignatureDesc rootDesc;
-	rootDesc.Resize(4, 1);
+	rootDesc.Resize(5, 1);
 	rootDesc.SetCBV(0, VISIBILITY_VERTEX, 0);
 	rootDesc.SetCBV(1, VISIBILITY_VERTEX, 1);
 	rootDesc.SetSRV(2, VISIBILITY_PIXEL, 0);
 	rootDesc.SetCBV(3, VISIBILITY_PIXEL, 0);
 	rootDesc.SetSampler(0, MODE_WRAP, VISIBILITY_PIXEL, 0);
+
+	rootDesc.SetCBV(4, VISIBILITY_PIXEL, 1);
 
 	pipeline_->CreateRootSignature(MyEngine::GetDevicesObj(), rootDesc);
 

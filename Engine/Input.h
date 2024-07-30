@@ -106,9 +106,9 @@ public:
 
 	//* Mouse input methods *//
 
-	Vector2i GetMousePos();
+	const Vector2i& GetMousePos() const;
 
-	Vector2i GetDeltaMousePos();
+	Vector2i GetDeltaMousePos() const;
 
 private:
 
@@ -120,9 +120,20 @@ private:
 
 	ComPtr<IDirectInputDevice8> mouseDevice_;
 
+	//* external *//
+
+	const HWND* hWnd_;
+
 	//* member *//
 
 	InputState<DIMOUSESTATE> mouse_;
+	Vector2i mousePos_;
+
+	//=========================================================================================
+	// private methods
+	//=========================================================================================
+
+	void CalculteMousePos();
 
 };
 
@@ -200,6 +211,8 @@ public:
 	const KeyboardInput* GetKeyboardInput() const { return keyboardInput_.get(); }
 
 	//* mouse inputs *//
+
+	Vector2i GetDeltaMousePos() const;
 
 	const MouseInput* GetMouseInput() const { return mouseInput_.get(); }
 

@@ -457,6 +457,12 @@
     <ClCompile Include="Game\Skybox.cpp">
       <Filter>Game</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\Audio.cpp">
+      <Filter>Engine\source</Filter>
+    </ClCompile>
+    <ClCompile Include="Lib\Camera\DebugCamera3D.cpp">
+      <Filter>Lib\Camera\source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\MyEngine.h">
@@ -728,6 +734,12 @@
     </ClInclude>
     <ClInclude Include="Game\Skybox.h">
       <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Audio.h">
+      <Filter>Engine\include</Filter>
+    </ClInclude>
+    <ClInclude Include="Lib\Camera\DebugCamera3D.h">
+      <Filter>Lib\Camera\include</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

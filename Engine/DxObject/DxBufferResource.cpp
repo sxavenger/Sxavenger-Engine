@@ -51,3 +51,23 @@ void DxObject::IndexBufferResource::Init(DxObject::Devices* devices) {
 void DxObject::IndexBufferResource::Term() {
 }
 
+////////////////////////////////////////////////////////////////////////////////////////////
+// OffsetBufferResource class methods
+////////////////////////////////////////////////////////////////////////////////////////////
+
+void DxObject::OffsetBufferResource::Init(Devices* devices) {
+
+	// deviceを取り出す
+	ID3D12Device* device = devices->GetDevice();
+
+	// 配列分のBufferResourceを生成
+	resource_ = DxObjectMethod::CreateBufferResource(
+		device,
+		structureSize_
+	);
+
+	resource_->Map(0, nullptr, reinterpret_cast<void**>(&mappedDatas_));
+}
+
+void DxObject::OffsetBufferResource::Term() {
+}

@@ -2,8 +2,8 @@
 // include
 //-----------------------------------------------------------------------------------------
 #include "Particle.hlsli"
-#include "DefferedRendering.hlsli"
-#include "Camera.hlsli"
+#include "../DefferedRendering.hlsli"
+#include "../Camera.hlsli"
 
 //=========================================================================================
 // Buffer

@@ -103,6 +103,12 @@ void MouseInput::Init(IDirectInput8* dInput, const HWND& hWnd) {
 		flags
 	);
 	assert(SUCCEEDED(hr));
+
+	// hwndの保存
+	hWnd_ = &hWnd;
+
+	// mouseの初期位置の設定
+	CalculteMousePos();
 }
 
 void MouseInput::Update() {
@@ -116,14 +122,25 @@ void MouseInput::Update() {
 	// マウスの入力状態を取得
 	mouseDevice_->GetDeviceState(sizeof(mouse_.first), &mouse_.first);
 
+	// マウス座標の更新
+	CalculteMousePos();
+
 }
 
-Vector2i MouseInput::GetMousePos() {
+const Vector2i& MouseInput::GetMousePos() const {
+	return mousePos_;
+}
+
+Vector2i MouseInput::GetDeltaMousePos() const {
 	return { mouse_.first.lX, mouse_.first.lY };
 }
 
-Vector2i MouseInput::GetDeltaMousePos() {
-	return { mouse_.first.lX - mouse_.second.lX, mouse_.first.lY - mouse_.second.lY };
+void MouseInput::CalculteMousePos() {
+	POINT point;
+	GetCursorPos(&point);
+	ScreenToClient(*hWnd_, &point);
+
+	mousePos_ = { point.x, point.y };
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -208,6 +225,10 @@ bool Input::IsTriggerKey(uint8_t dik) const {
 
 bool Input::IsReleaseKey(uint8_t dik) const {
 	return keyboardInput_->IsReleaseKey(dik);
+}
+
+Vector2i Input::GetDeltaMousePos() const {
+	return mouseInput_->GetDeltaMousePos();
 }
 
 bool Input::IsConnectGamePad(uint32_t gamepadNum) const {

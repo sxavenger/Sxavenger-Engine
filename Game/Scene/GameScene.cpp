@@ -10,8 +10,9 @@
 
 // DxrObject
 #include <DxrAccelerationStructure.h>
-
 #include <DxShaderReflection.h>
+
+#include <format>
 
 //-----------------------------------------------------------------------------------------
 // using
@@ -93,6 +94,8 @@ void GameScene::Init() {
 	particle_ = std::make_unique<Particle>();
 	particle_->Init();
 
+	testCamera_ = std::make_unique<DebugCamera3D>();
+
 }
 
 void GameScene::Term() {
@@ -102,6 +105,8 @@ void GameScene::Update() {
 	cube_->Update();
 	human_->Update();
 	particle_->Update();
+
+	testCamera_->Update();
 }
 
 void GameScene::Draw() {
@@ -109,13 +114,16 @@ void GameScene::Draw() {
 	{
 		//* debugScreen *//
 		MyEngine::BeginOffscreen(console->GetSceneTexture());
-		MyEngine::camera3D_ = console->GetDebugCamera();
+		MyEngine::camera3D_ = testCamera_.get();
+
+		human_->Draw();
 
 		MyEngine::EndOffscreen(console->GetSceneTexture());
 		MyEngine::TransitionProcess();
 
 		//* main screen *//
 		MyEngine::BeginOffscreen(MyEngine::GetTexture("offscreen"));
+		MyEngine::camera3D_ = console->GetDebugCamera();
 
 		cube_->Draw();
 		human_->Draw();

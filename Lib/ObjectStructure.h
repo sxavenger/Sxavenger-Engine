@@ -43,7 +43,7 @@ struct EulerTransform {
 		ImGui::DragFloat3("translate", &translate.x, granularity);
 	}
 
-	Matrix4x4 GetMatrix() const {
+	Matrix4x4 ToMatrix() const {
 		return Matrix::MakeAffine(scale, rotate, translate);
 	}
 };
@@ -58,7 +58,7 @@ struct QuaternionTransform {
 
 	// todo: SetImGuiCommand()
 
-	Matrix4x4 GetMatrix() const {
+	Matrix4x4 ToMatrix() const {
 		return Matrix::MakeAffine(scale, rotate, translate);
 	}
 

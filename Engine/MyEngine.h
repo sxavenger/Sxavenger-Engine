@@ -11,24 +11,21 @@
 #include <string>
 #include <unordered_map>
 
-// DirectXCommon
+// origine
+#include <WinApp.h>
+#include <DirectXCommon.h>
 #include <DirectXRCommon.h>
+#include <ImGuiManager.h>
+#include <TextureManager.h>
+#include <Input.h>
+#include <Audio.h>
+#include <PrimitiveDrawer.h>
 
 // Camera
 #include <Camera3D.h>
 #include <Camera2D.h>
 
-namespace Sxavenger {
-
-}
-
-//-----------------------------------------------------------------------------------------
-// forward
-//-----------------------------------------------------------------------------------------
-class DirectXRCommon;
-class DirectXCommon;
-class Texture;
-class TextureManager;
+namespace Sxavenger {};
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // MyEngine class
@@ -124,6 +121,12 @@ public:
 	static bool IsTriggerKey(uint8_t dik);
 
 	static bool IsReleaseKey(uint8_t dik);
+
+	//-----------------------------------------------------------------------------------------
+	// Audio関係
+	//-----------------------------------------------------------------------------------------
+
+	static AudioManager* GetAudioManager();
 
 	//-----------------------------------------------------------------------------------------
 	// DxSystem関係

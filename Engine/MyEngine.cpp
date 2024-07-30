@@ -5,15 +5,7 @@
 //-----------------------------------------------------------------------------------------
 #include <Logger.h>
 
-// origin
-#include <WinApp.h>
-#include <DirectXCommon.h>
-#include <DirectXRCommon.h>
-#include <ImGuiManager.h>
-#include <TextureManager.h>
-#include <Input.h>
-#include <PrimitiveDrawer.h>
-
+// ComPtr
 #include <ComPtr.h>
 
 #include <Performance.h>
@@ -27,11 +19,12 @@ namespace {
 	//-----------------------------------------------------------------------------------------
 	// 汎用機能
 	//-----------------------------------------------------------------------------------------
-	WinApp* sWinApp = nullptr;                 //!< WindowApp system
-	DirectXRCommon* sDirectXRCommon = nullptr;   //!< DirectX12 system
-	ImGuiManager* sImGuiManager = nullptr;     //!< ImGui system
-	TextureManager* sTextureManager = nullptr; //!< TextureManager system
-	Input* sInput = nullptr;
+	WinApp*         sWinApp         = nullptr; //!< WindowApp system
+	DirectXRCommon* sDirectXRCommon = nullptr; //!< DirectX12 system
+	ImGuiManager*   sImGuiManager   = nullptr; //!< ImGui system
+	TextureManager* sTextureManager = nullptr; //!< Texture system
+	Input*          sInput          = nullptr; //!< Input system
+	AudioManager*   sAudioManager   = nullptr; //!< Audio system
 
 	PrimitiveDrawer* sPrimitive = nullptr;
 }
@@ -102,6 +95,13 @@ void MyEngine::Initialize(int32_t windowWidth, int32_t windowHeight, const char*
 		ExternalLogger::Write("Complete Initialize: sInput");
 	}
 
+	// Audioの初期化
+	{
+		sAudioManager = AudioManager::GetInstance();
+		sAudioManager->Init();
+		ExternalLogger::Write("Complete Initialize: sAudioManager");
+	}
+
 	// PrimitiveDrawerの初期化
 	{
 		sPrimitive = PrimitiveDrawer::GetInstance();
@@ -120,6 +120,9 @@ void MyEngine::Initialize(int32_t windowWidth, int32_t windowHeight, const char*
 void MyEngine::Finalize() {
 
 	Performance::TermBuffer();
+
+	sAudioManager->Term();
+	sAudioManager = nullptr;
 
 	sTextureManager->Term();
 	sTextureManager = nullptr;
@@ -258,6 +261,11 @@ bool MyEngine::IsTriggerKey(uint8_t dik) {
 bool MyEngine::IsReleaseKey(uint8_t dik) {
 	assert(sInput != nullptr);
 	return sInput->IsReleaseKey(dik);
+}
+
+AudioManager* MyEngine::GetAudioManager() {
+	assert(sAudioManager != nullptr);
+	return sAudioManager;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////

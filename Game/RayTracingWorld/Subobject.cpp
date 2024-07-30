@@ -21,7 +21,7 @@ void Subobject::Init (
 	);
 
 	transform_.translate = { 0.0f, 2.0f, 0.0f };
-	worldMatrix_ = transform_.GetMatrix();
+	worldMatrix_ = transform_.ToMatrix();
 
 	InitMaterial();
 }
@@ -48,7 +48,7 @@ void Subobject::SetImGuiCommand() {
 	// transformの更新
 	ImGui::Text("transform");
 	transform_.SetImGuiCommand();
-	worldMatrix_ = transform_.GetMatrix();
+	worldMatrix_ = transform_.ToMatrix();
 
 	ImGui::Spacing();
 

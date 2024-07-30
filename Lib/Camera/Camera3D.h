@@ -3,18 +3,21 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
-// Geometry
-#include <Matrix4x4.h>
+// geometry
 #include <Vector4.h>
+#include <Matrix4x4.h>
 
 // c++
-#include <string>
 #include <memory>
 #include <numbers>
 
 // DxObject
 #include <DxBufferResource.h>
 
+// object
+#include <ObjectStructure.h>
+
+// attribute
 #include <Attribute.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -22,17 +25,6 @@
 ////////////////////////////////////////////////////////////////////////////////////////////
 class Camera3D
 	: public Attribute {
-private:
-
-	////////////////////////////////////////////////////////////////////////////////////////////
-	// Camera structure
-	////////////////////////////////////////////////////////////////////////////////////////////
-	struct Camera { //!< EulerTransform
-		Vector3f scale;
-		Vector3f rotate;
-		Vector3f translate;
-	};
-
 public:
 
 	//=========================================================================================
@@ -40,65 +32,61 @@ public:
 	//=========================================================================================
 
 	//! @brief コンストラクタ
-	Camera3D();
+	Camera3D() { Init(); }
 
 	//! @brief デストラクタ
-	~Camera3D();
+	~Camera3D() { Term(); }
 
-	//! @brief 初期化処理
 	void Init();
 
 	void Term();
 
-	void DrawFrustum(const Color4f& color);
+	//* camera setter *//
 
-	//! @brief カメラ情報を設定
-	//! 
-	//! @param[in] scale
-	//! @param[in] rotate
-	//! @param[in] translate
-	void SetCamera(const Vector3f& scale, const Vector3f& rotate, const Vector3f& transform);
+	void SetTransform(const Vector3f& scale, const Vector3f& rotate, const Vector3f& translate);
 
 	void SetProjection(float fovY, float aspectRatio, float nearClip, float farClip);
 
-	const Matrix4x4 GetViewProjectionMatrix() const { return viewMatrix_ * projectionMatrix_; }
+	//* camera getter *//
 
-	const D3D12_GPU_VIRTUAL_ADDRESS GetGPUVirtualAddress() {
-		return resource_->GetGPUVirtualAddress();
-	}
+	const Matrix4x4 GetViewProjMatrix() const { return (*buffer_)[0].viewMatrix * (*buffer_)[0].projMatrix; }
 
-	const Camera& GetCamera() const {
-		return camera_;
-	}
+	//* buffer address *//
 
-	void SetAttributeImGui() override;
+	const D3D12_GPU_VIRTUAL_ADDRESS GetGPUVirtualAddress() const { return buffer_->GetGPUVirtualAddress(); }
 
-private:
+	//* attribute *//
+
+	virtual void SetAttributeImGui();
+
+protected:
 
 	////////////////////////////////////////////////////////////////////////////////////////////
-	// CameraData structure
+	// CameraForGPU structure
 	////////////////////////////////////////////////////////////////////////////////////////////
 	struct CameraForGPU {
-		Vector4f  position;
+		Vector4f position;
 		Matrix4x4 viewMatrix = Matrix4x4::Identity();
 		Matrix4x4 projMatrix = Matrix4x4::Identity();
 	};
 
-	//=========================================================================================
-	// private variables
-	//=========================================================================================
-
-	Camera camera_;
-
-	Matrix4x4 viewMatrix_;
-	Matrix4x4 projectionMatrix_;
-
-	std::unique_ptr<DxObject::BufferPtrResource<CameraForGPU>> resource_;
-	CameraForGPU cameraForGPU_;
 
 	//=========================================================================================
-	// private methods
+	// protected variables
 	//=========================================================================================
 
-	void RecalculateCamera();
+	//* camera transform *//
+
+	EulerTransform transform_;
+
+	//* buffer *//
+
+	std::unique_ptr<DxObject::BufferResource<CameraForGPU>> buffer_;
+
+	//=========================================================================================
+	// protected methods
+	//=========================================================================================
+
+	void CalculateView();
+
 };

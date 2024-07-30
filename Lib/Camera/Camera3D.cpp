@@ -4,94 +4,62 @@
 // include
 //-----------------------------------------------------------------------------------------
 // Lib
-#include "Environment.h" // HACK:
-#include "MyEngine.h"
-#include "PrimitiveDrawer.h"
+#include "Environment.h"
 
-// imgui
-#include <externals/imgui/imgui.h>
+// engine
+#include <MyEngine.h>
 
-// Adapter
-#include <Json.h>
-
-#include "Console.h"
+//-----------------------------------------------------------------------------------------
+// using
+//-----------------------------------------------------------------------------------------
+using namespace DxObject;
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// Camera3D method
+// Camera3D class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
-
-Camera3D::Camera3D() { Init(); }
-
-Camera3D::~Camera3D() { Term(); }
 
 void Camera3D::Init() {
-	SetCamera(unitVector, origin, {0.0f, 0.0f, -10.0f});
+
+	// bufferの設定
+	buffer_ = std::make_unique<BufferResource<CameraForGPU>>(MyEngine::GetDevicesObj(), 1);
+
+	// cameraの設定
+	SetTransform(unitVector, origin, {0.0f, 0.0f, -10.0f});
 	SetProjection(0.45f, static_cast<float>(kWindowWidth) / static_cast<float>(kWindowHeight), 0.1f, 100.0f);
 
-	resource_ = std::make_unique<DxObject::BufferPtrResource<CameraForGPU>>(MyEngine::GetDevicesObj(), 1);
-	resource_->SetPtr(0, &cameraForGPU_);
 }
 
 void Camera3D::Term() {
-	resource_.reset();
 }
 
-void Camera3D::DrawFrustum(const Color4f& color) {
+void Camera3D::SetTransform(const Vector3f& scale, const Vector3f& rotate, const Vector3f& translate) {
 
-	Vector3f frustumPoint[4];
-	Matrix4x4 clipMatrix = projectionMatrix_.Inverse();
-	Matrix4x4 worldMatrix = viewMatrix_.Inverse();
+	transform_.scale     = scale;
+	transform_.rotate    = rotate;
+	transform_.translate = translate;
 
-	frustumPoint[0] = Matrix::Transform(Matrix::Transform({-1.0f, -1.0f, 1.0f}, clipMatrix), worldMatrix);
-	frustumPoint[1] = Matrix::Transform(Matrix::Transform({-1.0f, 1.0f, 1.0f}, clipMatrix), worldMatrix);
-	frustumPoint[2] = Matrix::Transform(Matrix::Transform({1.0f, 1.0f, 1.0f}, clipMatrix), worldMatrix);
-	frustumPoint[3] = Matrix::Transform(Matrix::Transform({1.0f, -1.0f, 1.0f}, clipMatrix), worldMatrix);
-
-	// drawerの取得
-	auto drawer = PrimitiveDrawer::GetInstance();
-
-	for (int i = 0; i < 4; ++i) {
-		drawer->DrawLine(
-			frustumPoint[i], frustumPoint[(i + 1) % 4], color
-		);
-
-		drawer->DrawLine(
-			frustumPoint[i], camera_.translate, color
-		);
-	}
-
-	drawer->DrawAll3D();
-
-}
-
-void Camera3D::SetCamera(const Vector3f& scale, const Vector3f& rotate, const Vector3f& transform) {
-	camera_ = { scale, rotate, transform };
-
-	Matrix4x4 cameraMatrix = Matrix::MakeAffine(camera_.scale, camera_.rotate, camera_.translate);
-	viewMatrix_ = cameraMatrix.Inverse();
-
-	cameraForGPU_.viewMatrix = viewMatrix_;
-	cameraForGPU_.position = { camera_.translate.x, camera_.translate.y, camera_.translate.z, 1.0f };
+	CalculateView();
 }
 
 void Camera3D::SetProjection(float fovY, float aspectRatio, float nearClip, float farClip) {
-	projectionMatrix_ = Matrix::MakePerspectiveFov(fovY, aspectRatio, nearClip, farClip);
-
-	cameraForGPU_.projMatrix = projectionMatrix_;
+	(*buffer_)[0].projMatrix = Matrix::MakePerspectiveFov(fovY, aspectRatio, nearClip, farClip);
 }
 
 void Camera3D::SetAttributeImGui() {
-	ImGui::DragFloat3("scale", &camera_.scale.x, 0.01f);
-	ImGui::DragFloat3("rotate", &camera_.rotate.x, 0.01f);
-	ImGui::DragFloat3("translate", &camera_.translate.x, 0.01f);
 
-	RecalculateCamera();
+	ImGui::DragFloat3("scale",     &transform_.scale.x, 0.01f);
+	ImGui::DragFloat3("rotate",    &transform_.rotate.x, 0.01f);
+	ImGui::DragFloat3("translate", &transform_.translate.x, 0.01f);
+
+	CalculateView();
 }
 
-void Camera3D::RecalculateCamera() {
-	Matrix4x4 cameraMatrix = Matrix::MakeAffine(camera_.scale, camera_.rotate, camera_.translate);
-	viewMatrix_ = cameraMatrix.Inverse();
+void Camera3D::CalculateView() {
 
-	cameraForGPU_.position = { camera_.translate.x, camera_.translate.y, camera_.translate.z, 1.0f };
-	cameraForGPU_.viewMatrix = viewMatrix_;
+	// positionの代入
+	(*buffer_)[0].position = { transform_.translate.x, transform_.translate.y, transform_.translate.z };
+
+	// viewMatrixの代入
+	(*buffer_)[0].viewMatrix = transform_.ToMatrix().Inverse();
+
 }

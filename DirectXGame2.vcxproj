@@ -111,6 +111,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="DirectXRayTracing\RayTracingCamera.cpp" />
     <ClCompile Include="DirectXRayTracing\RayTracingLight.cpp" />
     <ClCompile Include="Engine\Attribute.cpp" />
+    <ClCompile Include="Engine\Audio.cpp" />
     <ClCompile Include="Engine\Console.cpp" />
     <ClCompile Include="Engine\DirectXCommon.cpp" />
     <ClCompile Include="Engine\DxObject\DxBlendState.cpp" />
@@ -183,6 +184,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Lib\Animation\Animation.cpp" />
     <ClCompile Include="Lib\Camera\Camera2D.cpp" />
     <ClCompile Include="Lib\Camera\Camera3D.cpp" />
+    <ClCompile Include="Lib\Camera\DebugCamera3D.cpp" />
     <ClCompile Include="Lib\Collider\Collider.cpp" />
     <ClCompile Include="Lib\DrawMethod.cpp" />
     <ClCompile Include="Lib\Geometry\MathLib.cpp" />
@@ -215,6 +217,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="DirectXRayTracing\RayTracingCamera.h" />
     <ClInclude Include="DirectXRayTracing\RayTracingLight.h" />
     <ClInclude Include="Engine\Attribute.h" />
+    <ClInclude Include="Engine\Audio.h" />
     <ClInclude Include="Engine\ComPtr.h" />
     <ClInclude Include="Engine\Console.h" />
     <ClInclude Include="Engine\DirectXCommon.h" />
@@ -275,6 +278,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Lib\Animation\Animation.h" />
     <ClInclude Include="Lib\Camera\Camera2D.h" />
     <ClInclude Include="Lib\Camera\Camera3D.h" />
+    <ClInclude Include="Lib\Camera\DebugCamera3D.h" />
     <ClInclude Include="Lib\Collider\Collider.h" />
     <ClInclude Include="Lib\DrawMethod.h" />
     <ClInclude Include="Lib\Environment.h" />

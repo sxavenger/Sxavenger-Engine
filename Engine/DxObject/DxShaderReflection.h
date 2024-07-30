@@ -30,42 +30,6 @@
 ////////////////////////////////////////////////////////////////////////////////////////////
 namespace DxObject { //!< test obejct
 
-	////////////////////////////////////////////////////////////////////////////////////////////
-	// VoidBufferResouce class
-	////////////////////////////////////////////////////////////////////////////////////////////
-	class VoidBufferResouce { //!< test resource
-	public:
-
-		VoidBufferResouce(uint32_t indexSize, uint32_t bufferSize) {
-			Init(indexSize, bufferSize);
-		}
-
-		~VoidBufferResouce() { Term(); }
-
-		void Init(uint32_t indexSize, uint32_t bufferSize);
-
-		void Term();
-
-		template <typename T>
-		void SetValue(uint32_t index, uint32_t offset, const T& value);
-
-	private:
-
-		ComPtr<ID3D12Resource> resource_;
-		void** map_ = nullptr;
-
-		uint32_t indexSize_;
-
-	};
-
-	template<typename T>
-	inline void VoidBufferResouce::SetValue(uint32_t index, uint32_t offset, const T& value) {
-
-		assert(index < indexSize_);
-
-		reinterpret_cast<float*>(reinterpret_cast<char*>(map_[index]) + offset) = value;
-	}
-
 	//-----------------------------------------------------------------------------------------
 	// forward
 	//-----------------------------------------------------------------------------------------

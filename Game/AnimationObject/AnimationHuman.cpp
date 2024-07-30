@@ -146,6 +146,6 @@ void AnimationHuman::Draw() {
 void AnimationHuman::SetAttributeImGui() {
 
 	transform_.SetImGuiCommand();
-	matrixBuffer_->operator[](0) = transform_.GetMatrix();
+	matrixBuffer_->operator[](0) = transform_.ToMatrix();
 
 }

@@ -15,7 +15,7 @@ void Player::Init() {
 	transform_.translate = { 0.0f, 3.0f, -12.0f };
 	transform_.rotate = { 0.06f, 0.0f, 0.0f };
 
-	worldMatrix_ = transform_.GetMatrix();
+	worldMatrix_ = transform_.ToMatrix();
 
 	// IA
 	model_ = std::make_unique<Model>("./Resources/model", "player.obj");
@@ -61,7 +61,7 @@ void Player::Update() {
 	Vector3f velocity = Matrix::Transform(direction, Matrix::MakeRotateY(transform_.rotate.y));
 	transform_.translate += velocity;
 
-	worldMatrix_ = transform_.GetMatrix();
+	worldMatrix_ = transform_.ToMatrix();
 
 }
 

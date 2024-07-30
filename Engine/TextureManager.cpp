@@ -312,7 +312,7 @@ void TextureManager::ReleaseTexture(const std::string& key) {
 	if (!FindKey(key)) { //!< keyが見つからなかった場合
 
 		std::string text = "[TextureManager](method: ReleaseTexture): not found key. key: " + key;
-		console->SetLog(
+		console->Log(
 			text,
 			Console::warningColor
 		);
@@ -328,7 +328,7 @@ void TextureManager::ReleaseTexture(const std::string& key) {
 
 		// logで通知
 		std::string text = "[TextureManager](method: ReleaseTexture): delete texture. key: " + key;
-		console->SetLog(
+		console->Log(
 			text,
 			Console::commentOutColor
 		);
@@ -339,7 +339,7 @@ void TextureManager::DeleteTexture(const std::string& key) {
 	if (!FindKey(key)) { //!< keyが見つからなかった場合
 
 		// logで通知
-		console->SetLog(
+		console->Log(
 			"[TextureManager](method: DeleteTexture): not found key. key: " + key,
 			Console::warningColor
 		);
@@ -350,7 +350,7 @@ void TextureManager::DeleteTexture(const std::string& key) {
 	textureContainer_.erase(key); //!< containerからの削除
 
 	// logで通知
-	console->SetLog(
+	console->Log(
 		"[TextureManager](method: DeleteTexture): delete texture. key: " + key,
 		Console::commentOutColor
 	);
