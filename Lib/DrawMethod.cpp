@@ -57,7 +57,7 @@ DrawData DrawMethods::Sphere(float radius, uint32_t kSubdivision) {
 	}
 
 	// indexResourceの作成
-	uint32_t indexSize = (kSubdivision) * (kSubdivision + 1) * 6;
+	uint32_t indexSize = (kSubdivision + 1) * (kSubdivision + 1) * 6;
 	result.index = std::make_unique<DxObject::IndexBufferResource>(MyEngine::GetDevicesObj(), indexSize);
 
 	for (uint32_t latIndex = 0; latIndex <= kSubdivision; ++latIndex) {

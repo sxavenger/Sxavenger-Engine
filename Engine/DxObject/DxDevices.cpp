@@ -143,7 +143,7 @@ bool DxObject::Devices::CheckRayTracingEnable() {
 		auto hr = device_->CheckFeatureSupport(D3D12_FEATURE_D3D12_OPTIONS5, &option, sizeof(option));
 
 		if (FAILED(hr) || option.RaytracingTier < D3D12_RAYTRACING_TIER_1_0) {
-			Log("Error : RayTracing is not supported.");
+			Log("Warning : RayTracing is not supported.");
 			return false; //!< RayTracingがサポートされていない
 		}
 	}
@@ -159,7 +159,7 @@ bool DxObject::Devices::CheckMeshShaderEnable() {
 		auto hr = device_->CheckFeatureSupport(D3D12_FEATURE_SHADER_MODEL, &shaderModel, sizeof(shaderModel));
 
 		if (FAILED(hr) || (shaderModel.HighestShaderModel < D3D_SHADER_MODEL_6_5)) {
-			Log("Error : Shader Model 6.5 is not supported.");
+			Log("Warning : Shader Model 6.5 is not supported.");
 			return false; //!< shader modelが6.5以下しかサポートされてない
 		}
 	}
@@ -170,7 +170,7 @@ bool DxObject::Devices::CheckMeshShaderEnable() {
 		auto hr = device_->CheckFeatureSupport(D3D12_FEATURE_D3D12_OPTIONS7, &features, sizeof(features));
 
 		if (FAILED(hr) || (features.MeshShaderTier == D3D12_MESH_SHADER_TIER_NOT_SUPPORTED)) {
-			Log("Error : Mesh Shaders aren't supported.");
+			Log("Warning : Mesh Shaders aren't supported.");
 			return false; //!< mesh shaderがサポートされてない
 		}
 	}

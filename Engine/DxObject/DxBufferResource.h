@@ -70,6 +70,8 @@ namespace DxObject {
 		//! @breif 終了処理
 		void Term();
 
+		//* Getters *//
+
 		//! @breif 配列のサイズを取得
 		virtual const uint32_t GetIndexSize() const { return indexSize_; }
 
@@ -101,11 +103,11 @@ namespace DxObject {
 		// protected methods
 		//=========================================================================================
 
-		//! @brief 要素数がindexSize以上でないかの確認
+		//! @brief 要素数が配列外参照でないかの確認
 		//! 
-		//! @retval true  配列サイズ以下
-		//! @retval false 配列サイズ以上
-		virtual bool CheckElementCount(uint32_t elementCount);
+		//! @retval true  ok
+		//! @retval false 配列外参照する要素数
+		virtual bool CheckElementCount(uint32_t elementCount) const;
 
 	};
 
@@ -443,7 +445,7 @@ namespace DxObject {
 		//! 
 		//! @retval true  配列サイズ以下
 		//! @retval false 配列サイズ以上
-		bool CheckElementCount(uint32_t elementCount) override;
+		bool CheckElementCount(uint32_t elementCount) ;
 
 	};
 

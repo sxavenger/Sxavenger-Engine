@@ -16,7 +16,7 @@ void DxObject::BaseBufferResource::Term() {
 	structureSize_ = NULL;
 }
 
-bool DxObject::BaseBufferResource::CheckElementCount(uint32_t elementCount) {
+bool DxObject::BaseBufferResource::CheckElementCount(uint32_t elementCount) const {
 	if (elementCount >= indexSize_) {
 		return false;
 	}

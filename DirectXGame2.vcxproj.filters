@@ -115,12 +115,6 @@
     <Filter Include="Game\Scene">
       <UniqueIdentifier>{076e467d-c5d2-458d-b260-b7c3b32a0072}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Game\RayTracingWorld">
-      <UniqueIdentifier>{990f6103-dba4-48e8-b867-27f980181591}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Game\RayTracingWorld\Subobject">
-      <UniqueIdentifier>{1983da16-361d-4fa8-af68-3ad948d69e89}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Resource\hlsl\FullScreen">
       <UniqueIdentifier>{413bdfbe-c42f-4b9b-9a6e-c6b7d51c3eb8}</UniqueIdentifier>
     </Filter>
@@ -156,6 +150,15 @@
     </Filter>
     <Filter Include="Resource\hlsl\Skybox">
       <UniqueIdentifier>{bedc3d65-9a22-484b-9ab7-cd69d9309fbd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\Subobject">
+      <UniqueIdentifier>{b3ebaa06-63a9-421e-8214-c05566b6fb31}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource\hlsl\Subobject">
+      <UniqueIdentifier>{e5d7987b-210c-41b7-b3bd-ea6d551e44a2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource\hlsl\Sprite">
+      <UniqueIdentifier>{8c13a9e1-e87f-45ff-9f26-31f9be580df6}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -370,32 +373,11 @@
     <ClCompile Include="Game\Scene\GameScene.cpp">
       <Filter>Game\Scene</Filter>
     </ClCompile>
-    <ClCompile Include="Game\RayTracingWorld\Ground.cpp">
-      <Filter>Game\RayTracingWorld</Filter>
-    </ClCompile>
-    <ClCompile Include="Game\RayTracingWorld\RayTracingObject.cpp">
-      <Filter>Game\RayTracingWorld</Filter>
-    </ClCompile>
-    <ClCompile Include="Game\RayTracingWorld\Teapot.cpp">
-      <Filter>Game\RayTracingWorld</Filter>
-    </ClCompile>
     <ClCompile Include="Lib\Geometry\MathLib.cpp">
       <Filter>Lib\Geometry\source</Filter>
     </ClCompile>
-    <ClCompile Include="Game\RayTracingWorld\Player.cpp">
-      <Filter>Game\RayTracingWorld</Filter>
-    </ClCompile>
     <ClCompile Include="DirectXRayTracing\DxrRecordBuffer.cpp">
       <Filter>DirectXRayTracing</Filter>
-    </ClCompile>
-    <ClCompile Include="Game\RayTracingWorld\Subobject.cpp">
-      <Filter>Game\RayTracingWorld\Subobject</Filter>
-    </ClCompile>
-    <ClCompile Include="Game\RayTracingWorld\SubobjectManager.cpp">
-      <Filter>Game\RayTracingWorld\Subobject</Filter>
-    </ClCompile>
-    <ClCompile Include="Game\RayTracingWorld\Cube.cpp">
-      <Filter>Game\RayTracingWorld</Filter>
     </ClCompile>
     <ClCompile Include="Lib\PostEffect\FullScreen.cpp">
       <Filter>Lib\PostEffect</Filter>
@@ -462,6 +444,15 @@
     </ClCompile>
     <ClCompile Include="Lib\Camera\DebugCamera3D.cpp">
       <Filter>Lib\Camera\source</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Subobject\Subobject.cpp">
+      <Filter>Game\Subobject</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Subobject\SubobjectManager.cpp">
+      <Filter>Game\Subobject</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Sprite.cpp">
+      <Filter>Engine\source</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -648,32 +639,11 @@
     <ClInclude Include="Game\Scene\GameScene.h">
       <Filter>Game\Scene</Filter>
     </ClInclude>
-    <ClInclude Include="Game\RayTracingWorld\Ground.h">
-      <Filter>Game\RayTracingWorld</Filter>
-    </ClInclude>
-    <ClInclude Include="Game\RayTracingWorld\RayTracingObject.h">
-      <Filter>Game\RayTracingWorld</Filter>
-    </ClInclude>
-    <ClInclude Include="Game\RayTracingWorld\Teapot.h">
-      <Filter>Game\RayTracingWorld</Filter>
-    </ClInclude>
     <ClInclude Include="Lib\Geometry\MathLib.h">
       <Filter>Lib\Geometry\include</Filter>
     </ClInclude>
-    <ClInclude Include="Game\RayTracingWorld\Player.h">
-      <Filter>Game\RayTracingWorld</Filter>
-    </ClInclude>
     <ClInclude Include="DirectXRayTracing\DxrRecordBuffer.h">
       <Filter>DirectXRayTracing</Filter>
-    </ClInclude>
-    <ClInclude Include="Game\RayTracingWorld\Subobject.h">
-      <Filter>Game\RayTracingWorld\Subobject</Filter>
-    </ClInclude>
-    <ClInclude Include="Game\RayTracingWorld\SubobjectManager.h">
-      <Filter>Game\RayTracingWorld\Subobject</Filter>
-    </ClInclude>
-    <ClInclude Include="Game\RayTracingWorld\Cube.h">
-      <Filter>Game\RayTracingWorld</Filter>
     </ClInclude>
     <ClInclude Include="Lib\PostEffect\FullScreen.h">
       <Filter>Lib\PostEffect</Filter>
@@ -741,6 +711,15 @@
     <ClInclude Include="Lib\Camera\DebugCamera3D.h">
       <Filter>Lib\Camera\include</Filter>
     </ClInclude>
+    <ClInclude Include="Game\Subobject\Subobject.h">
+      <Filter>Game\Subobject</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Subobject\SubobjectManager.h">
+      <Filter>Game\Subobject</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Sprite.h">
+      <Filter>Engine\include</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />
@@ -803,6 +782,24 @@
     </None>
     <None Include="Resources\hlsl\Random.hlsli">
       <Filter>Resource\hlsl</Filter>
+    </None>
+    <None Include="Resources\hlsl\Subobject\Subobject.hlsli">
+      <Filter>Resource\hlsl\Subobject</Filter>
+    </None>
+    <None Include="Resources\hlsl\Subobject\Subobject.MS.hlsl">
+      <Filter>Resource\hlsl\Subobject</Filter>
+    </None>
+    <None Include="Resources\hlsl\Subobject\Subobject.AS.hlsl">
+      <Filter>Resource\hlsl\Subobject</Filter>
+    </None>
+    <None Include="Resources\hlsl\Subobject\SubobjectMesh.hlsli">
+      <Filter>Resource\hlsl\Subobject</Filter>
+    </None>
+    <None Include="Resources\hlsl\Subobject\SubobjectLighting.hlsli">
+      <Filter>Resource\hlsl\Subobject</Filter>
+    </None>
+    <None Include="Resources\hlsl\Sprite\Sprite.hlsli">
+      <Filter>Resource\hlsl\Sprite</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -906,6 +903,18 @@
     </FxCompile>
     <FxCompile Include="Resources\hlsl\Particle\ParticleDeffered.PS.hlsl">
       <Filter>Resource\hlsl\Particle</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\hlsl\Subobject\SubobjectTexture.PS.hlsl">
+      <Filter>Resource\hlsl\Subobject</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\hlsl\Subobject\SubobjectPolygon.PS.hlsl">
+      <Filter>Resource\hlsl\Subobject</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\hlsl\Sprite\Sprite.VS.hlsl">
+      <Filter>Resource\hlsl\Sprite</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\hlsl\Sprite\Sprite.PS.hlsl">
+      <Filter>Resource\hlsl\Sprite</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

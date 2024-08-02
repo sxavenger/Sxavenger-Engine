@@ -140,7 +140,7 @@ void Particle::Draw() {
 	pipeline_->SetPipeline(commandList);
 	plane_.SetBuffer(commandList);
 
-	commandList->SetGraphicsRootConstantBufferView(0, MyEngine::camera3D_->GetGPUVirtualAddress());
+	commandList->SetGraphicsRootConstantBufferView(0, MyEngine::camera3D->GetGPUVirtualAddress());
 	commandList->SetGraphicsRootShaderResourceView(1, particleBuffer_->GetGPUVirtualAddress());
 
 	plane_.DrawCall(commandList, (*emitterBuffer_)[0].count);

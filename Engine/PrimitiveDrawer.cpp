@@ -218,6 +218,6 @@ void PrimitiveDrawer::DrawSphere(const Vector3f& center, float radius, const uin
 }
 
 void PrimitiveDrawer::DrawAll3D() {
-	triangle_->DrawAll(MyEngine::camera3D_->GetGPUVirtualAddress());
-	line_->DrawAll(MyEngine::camera3D_->GetGPUVirtualAddress());
+	triangle_->DrawAll(MyEngine::camera3D->GetGPUVirtualAddress());
+	line_->DrawAll(MyEngine::camera3D->GetGPUVirtualAddress());
 }

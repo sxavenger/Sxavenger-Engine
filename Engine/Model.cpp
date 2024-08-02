@@ -110,7 +110,8 @@ ModelData ModelMethods::LoadModelFile(const std::string& directoryPath, const st
 
 	// ModelDataの要素数の指定
 	result.meshes.resize(scene->mNumMeshes);
-	result.materials.resize(scene->mNumMaterials);
+	//result.materials.resize(scene->mNumMaterials);
+	result.materials.resize(scene->mNumMeshes);
 
 	// meshesの解析
 	for (uint32_t meshIndex = 0; meshIndex < scene->mNumMeshes; ++meshIndex) {
@@ -191,35 +192,70 @@ ModelData ModelMethods::LoadModelFile(const std::string& directoryPath, const st
 				jointWeightData.vertexWeights.push_back({ bone->mWeights[weightIndex].mWeight, bone->mWeights[weightIndex].mVertexId });
 			}
 		}
+
+		// meshに対応するmaterialの解析
+		if (mesh->mMaterialIndex < scene->mNumMaterials) { //!< meshに対応しているmaterialがあるか確認
+			// todo: material番号からアクセスするtypeに変更
+
+			uint32_t materialIndex = mesh->mMaterialIndex;
+
+			// materialの取得
+			aiMaterial* material = scene->mMaterials[materialIndex];
+
+			// materialデータの保存場所の指定
+			auto& materialData = result.materials[meshIndex];
+			//* meshとmaterialの対応する要素数は同じなので
+
+			// diffuse textureの取得
+			if (material->GetTextureCount(aiTextureType_DIFFUSE) != 0) {
+				aiString textureFilePath;
+				material->GetTexture(aiTextureType_DIFFUSE, 0, &textureFilePath);
+				
+				// データの保存
+				materialData.textureFilePaths[TEXTURE_DIFFUSE] = directoryPath + "/" + textureFilePath.C_Str();
+			}
+
+			// normal textureの取得
+			if (material->GetTextureCount(aiTextureType_NORMALS) != 0) {
+				aiString textureFilePath;
+				material->GetTexture(aiTextureType_NORMALS, 0, &textureFilePath);
+
+				// データの保存
+				materialData.textureFilePaths[TEXTURE_NORMAL] = directoryPath + "/" + textureFilePath.C_Str();
+			}
+		}
+
 	}
 
 	// materialsの解析
-	for (uint32_t materialIndex = 0; materialIndex < scene->mNumMaterials; ++materialIndex) {
+	//for (uint32_t materialIndex = 1; materialIndex < scene->mNumMaterials; ++materialIndex) {
+	//	// XXX: 0番のmaterialのTextureNameが入らないので0番目を飛ばす
+	//
 
-		// materialの取得
-		aiMaterial* material = scene->mMaterials[materialIndex];
+	//	// materialの取得
+	//	aiMaterial* material = scene->mMaterials[materialIndex];
 
-		// materialデータの保存場所の指定
-		auto& materialData = result.materials[materialIndex];
+	//	// materialデータの保存場所の指定
+	//	auto& materialData = result.materials[materialIndex - 1];
 
-		// diffuse textureの取得
-		if (material->GetTextureCount(aiTextureType_DIFFUSE) != 0) {
-			aiString textureFilePath;
-			material->GetTexture(aiTextureType_DIFFUSE, 0, &textureFilePath);
-			
-			// データの保存
-			materialData.textureFilePaths[TEXTURE_DIFFUSE] = directoryPath + "/" + textureFilePath.C_Str();
-		}
+	//	// diffuse textureの取得
+	//	if (material->GetTextureCount(aiTextureType_DIFFUSE) != 0) {
+	//		aiString textureFilePath;
+	//		material->GetTexture(aiTextureType_DIFFUSE, 0, &textureFilePath);
+	//		
+	//		// データの保存
+	//		materialData.textureFilePaths[TEXTURE_DIFFUSE] = directoryPath + "/" + textureFilePath.C_Str();
+	//	}
 
-		// normal textureの取得
-		if (material->GetTextureCount(aiTextureType_NORMALS) != 0) {
-			aiString textureFilePath;
-			material->GetTexture(aiTextureType_NORMALS, 0, &textureFilePath);
+	//	// normal textureの取得
+	//	if (material->GetTextureCount(aiTextureType_NORMALS) != 0) {
+	//		aiString textureFilePath;
+	//		material->GetTexture(aiTextureType_NORMALS, 0, &textureFilePath);
 
-			// データの保存
-			materialData.textureFilePaths[TEXTURE_NORMAL] = directoryPath + "/" + textureFilePath.C_Str();
-		}
-	}
+	//		// データの保存
+	//		materialData.textureFilePaths[TEXTURE_NORMAL] = directoryPath + "/" + textureFilePath.C_Str();
+	//	}
+	//}
 
 	// nodeの取得
 	result.rootNode = ReadNode(scene->mRootNode);

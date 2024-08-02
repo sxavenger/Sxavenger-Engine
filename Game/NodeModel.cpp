@@ -86,7 +86,7 @@ void NodeModel::Draw() {
 
 		model_->SetBuffers(commandList, i);
 
-		commandList->SetGraphicsRootConstantBufferView(0, MyEngine::camera3D_->GetGPUVirtualAddress());
+		commandList->SetGraphicsRootConstantBufferView(0, MyEngine::camera3D->GetGPUVirtualAddress());
 		commandList->SetGraphicsRootConstantBufferView(1, matrixBuffers_[i]->GetGPUVirtualAddress());
 		model_->SetGraphicsTextureHandle(commandList, i, 2, TEXTURE_DIFFUSE);
 

@@ -100,7 +100,7 @@ public:
 
 	static AudioManager* GetInstance();
 
-	AudioManager() = default;
+	AudioManager()  = default;
 	~AudioManager() = default;
 
 private:

@@ -8,11 +8,6 @@
 #include <DirectXRCommon.h>
 #include <Environment.h>
 
-// DxrObject
-#include <DxrAccelerationStructure.h>
-#include <DxShaderReflection.h>
-
-#include <format>
 
 //-----------------------------------------------------------------------------------------
 // using
@@ -33,7 +28,7 @@ void GameScene::Run() {
 	Init();
 
 	/*std::unique_ptr<Camera3D> camera = std::make_unique<Camera3D>();
-	MyEngine::camera3D_ = camera.get();*/
+	MyEngine::camera3D = camera.get();*/
 
 	MyEngine::TransitionProcessSingle();
 
@@ -79,22 +74,15 @@ void GameScene::Run() {
 
 void GameScene::Init() {
 
-	/*auto blob = std::make_unique<DxObject::GraphicsBlob>();
-	blob->Create(L"GaussianBlur/GaussianBlur.PS.hlsl", DxObject::GRAPHICS_PIXEL);
+	gameCamera_ = std::make_unique<Camera3D>();
+	gameCamera_->SetThisAttribute("GameCamera");
+	gameCamera_->SetProjection(0.45f, static_cast<float>(kWindowWidth) / static_cast<float>(kWindowHeight), 0.01f, 16.0f);
+	gameCamera_->SetTransform(unitVector, origin, {0.0f, 0.0f, -4.0f});
 
-	auto reflection = std::make_unique<DxObject::ShaderReflection>();
-	reflection->Init(blob->GetGraphicsBlobs()[DxObject::GRAPHICS_PIXEL]);*/
+	subobjectManager_ = std::make_unique<SubobjectManager>();
+	subobjectManager_->Init(gameCamera_.get());
 
-	light_ = std::make_unique<Light>(MyEngine::GetDevicesObj());
-
-	cube_ = std::make_unique<AnimationCube>();
-	human_ = std::make_unique<AnimationHuman>();
-	skybox_ = std::make_unique<Skybox>();
-
-	particle_ = std::make_unique<Particle>();
-	particle_->Init();
-
-	testCamera_ = std::make_unique<DebugCamera3D>();
+	AudioManager::GetInstance()->LoadAudio("resources/sounds/fanfare.wav");
 
 }
 
@@ -102,11 +90,13 @@ void GameScene::Term() {
 }
 
 void GameScene::Update() {
-	cube_->Update();
-	human_->Update();
-	particle_->Update();
+	subobjectManager_->Update();
 
-	testCamera_->Update();
+	auto input = Input::GetInstance();
+
+	if (input->IsTriggerButton(0, XINPUT_GAMEPAD_A)) {
+		AudioManager::GetInstance()->PlayAudio("resources/sounds/fanfare.wav");
+	}
 }
 
 void GameScene::Draw() {
@@ -114,21 +104,18 @@ void GameScene::Draw() {
 	{
 		//* debugScreen *//
 		MyEngine::BeginOffscreen(console->GetSceneTexture());
-		MyEngine::camera3D_ = testCamera_.get();
+		MyEngine::camera3D = console->GetDebugCamera();
 
-		human_->Draw();
+		subobjectManager_->Draw();
 
 		MyEngine::EndOffscreen(console->GetSceneTexture());
 		MyEngine::TransitionProcess();
 
 		//* main screen *//
 		MyEngine::BeginOffscreen(MyEngine::GetTexture("offscreen"));
-		MyEngine::camera3D_ = console->GetDebugCamera();
+		MyEngine::camera3D = gameCamera_.get();
 
-		cube_->Draw();
-		human_->Draw();
-		skybox_->Draw();
-		particle_->Draw();
+		subobjectManager_->Draw();
 
 		MyEngine::EndOffscreen(MyEngine::GetTexture("offscreen"));
 	}
@@ -141,7 +128,8 @@ void GameScene::Draw() {
 
 	{
 		MyEngine::BeginScreenDraw();
-
+		
+		// "offscreen"をフルスクリーンにする
 		MyEngine::GetDxCommon()->CopyResource(
 			MyEngine::GetDxCommon()->GetSwapChainObj()->GetResource(MyEngine::GetDxCommon()->GetSwapChainObj()->GetCurrentBackBufferIndex()), D3D12_RESOURCE_STATE_RENDER_TARGET,
 			MyEngine::GetTexture("offscreen")->GetResource(), D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE

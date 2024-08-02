@@ -231,14 +231,14 @@ void DxObject::Mesh::Init(BufferResource<VertexData>* vertexResource, IndexBuffe
 void DxObject::Mesh::Term() {
 }
 
-void DxObject::Mesh::Dispatch(UINT verticesParam, UINT uinqueVertexIndicesParam, UINT meshletsParam, UINT primitiveIndices) {
+void DxObject::Mesh::Dispatch(UINT verticesParam, UINT uniqueVertexIndicesParam, UINT meshletsParam, UINT primitiveIndices) {
 
 	// commandListの取得
 	auto commandList = MyEngine::GetCommandList();
 
 	// descriptorの設定
 	commandList->SetGraphicsRootShaderResourceView(verticesParam, vertices_->GetGPUVirtualAddress());
-	commandList->SetGraphicsRootShaderResourceView(uinqueVertexIndicesParam, uniqueVertexIndices_->GetGPUVirtualAddress());
+	commandList->SetGraphicsRootShaderResourceView(uniqueVertexIndicesParam, uniqueVertexIndices_->GetGPUVirtualAddress());
 	commandList->SetGraphicsRootShaderResourceView(meshletsParam, meshlets_->GetGPUVirtualAddress());
 	commandList->SetGraphicsRootShaderResourceView(primitiveIndices, primitiveIndices_->GetGPUVirtualAddress());
 
@@ -246,14 +246,14 @@ void DxObject::Mesh::Dispatch(UINT verticesParam, UINT uinqueVertexIndicesParam,
 
 }
 
-void DxObject::Mesh::Dispatch(UINT verticesParam, UINT uinqueVertexIndicesParam, UINT meshletsParam, UINT primitiveIndices, UINT cullDataParam, UINT infoParam) {
+void DxObject::Mesh::Dispatch(UINT verticesParam, UINT uniqueVertexIndicesParam, UINT meshletsParam, UINT primitiveIndices, UINT cullDataParam, UINT infoParam) {
 
 	// commandListの取得
 	auto commandList = MyEngine::GetCommandList();
 
 	// descriptorの設定
 	commandList->SetGraphicsRootShaderResourceView(verticesParam, vertices_->GetGPUVirtualAddress());
-	commandList->SetGraphicsRootShaderResourceView(uinqueVertexIndicesParam, uniqueVertexIndices_->GetGPUVirtualAddress());
+	commandList->SetGraphicsRootShaderResourceView(uniqueVertexIndicesParam, uniqueVertexIndices_->GetGPUVirtualAddress());
 	commandList->SetGraphicsRootShaderResourceView(meshletsParam, meshlets_->GetGPUVirtualAddress());
 	commandList->SetGraphicsRootShaderResourceView(primitiveIndices, primitiveIndices_->GetGPUVirtualAddress());
 	commandList->SetGraphicsRootShaderResourceView(cullDataParam, cullDatas_->GetGPUVirtualAddress());

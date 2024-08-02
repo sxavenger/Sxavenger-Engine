@@ -59,6 +59,10 @@ public:
 
 	virtual void SetAttributeImGui();
 
+	//* debug drawer *//
+
+	void DrawFrustum(const Color4f& color) const;
+
 protected:
 
 	////////////////////////////////////////////////////////////////////////////////////////////
@@ -69,7 +73,6 @@ protected:
 		Matrix4x4 viewMatrix = Matrix4x4::Identity();
 		Matrix4x4 projMatrix = Matrix4x4::Identity();
 	};
-
 
 	//=========================================================================================
 	// protected variables

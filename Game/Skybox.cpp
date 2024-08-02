@@ -65,7 +65,7 @@ void Skybox::Draw() {
 
 	skybox_.SetBuffer(commandList);
 
-	commandList->SetGraphicsRootConstantBufferView(0, MyEngine::camera3D_->GetGPUVirtualAddress());
+	commandList->SetGraphicsRootConstantBufferView(0, MyEngine::camera3D->GetGPUVirtualAddress());
 	commandList->SetGraphicsRootConstantBufferView(1, matrixBuffer_->GetGPUVirtualAddress());
 	commandList->SetGraphicsRootDescriptorTable(2, MyEngine::GetTextureHandleGPU("./resources/rostock_laage_airport_4k.dds"));
 	commandList->SetGraphicsRootConstantBufferView(3, vignetteBuffer_->GetGPUVirtualAddress());

@@ -133,7 +133,7 @@ void AnimationHuman::Draw() {
 	commandList->IASetVertexBuffers(0, 1, &vbv);
 	commandList->IASetIndexBuffer(&ibv);
 
-	commandList->SetGraphicsRootConstantBufferView(0, MyEngine::camera3D_->GetGPUVirtualAddress());
+	commandList->SetGraphicsRootConstantBufferView(0, MyEngine::camera3D->GetGPUVirtualAddress());
 	commandList->SetGraphicsRootConstantBufferView(1, matrixBuffer_->GetGPUVirtualAddress());
 	commandList->SetGraphicsRootShaderResourceView(2, skinCluster_.paletteResource->GetGPUVirtualAddress()); //!< dimentionBufferなのでvirtualSet
 	model_->SetGraphicsTextureHandle(commandList, 0, 3);

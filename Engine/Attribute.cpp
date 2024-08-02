@@ -12,6 +12,7 @@
 
 void Attribute::Term() {
 	nodes_.clear();
+	console->CheckEraseAttribute(this);
 }
 
 void Attribute::SetAttributeImGui() {

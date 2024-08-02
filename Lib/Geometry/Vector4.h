@@ -43,8 +43,7 @@ concept ColorT = std::same_as<T, int> || std::same_as<T, float>;
 //!< intまたはfloatのみを使用
 
 template <ColorT T>
-class Color4
-	: public Vector4<T> {
+class Color4 { //!< Vector4の継承でやりたい
 public:
 
 	Color4() = default;

@@ -108,7 +108,7 @@ public:
 	//! @brief 終了処理
 	void Term();
 
-	/* draw methods */
+	//* draw methods *//
 
 	void SetBuffers(ID3D12GraphicsCommandList* commandList, uint32_t modelIndex);
 
@@ -116,7 +116,7 @@ public:
 
 	void DrawCall(ID3D12GraphicsCommandList* commandList, uint32_t modelIndex, uint32_t instanceCount = 1);
 
-	/* gertter */
+	//* gertter *//
 
 	const uint32_t GetModelIndexSize() const { return modelIndexSize_; }
 

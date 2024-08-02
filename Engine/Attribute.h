@@ -34,6 +34,8 @@ public:
 
 	void SetAttributeName(const char* name) { name_ = name; }
 
+	void SetAttributeName(const std::string& name) { name_ = name; }
+
 	// テスト機能 //
 	void SetAttributeNode(Attribute* other);
 

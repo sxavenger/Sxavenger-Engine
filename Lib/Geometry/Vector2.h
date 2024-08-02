@@ -115,6 +115,6 @@ Vector2<T> operator-(const Vector2<T> v) {
 // using
 //-----------------------------------------------------------------------------------------
 
-using Vector2f = Vector2<float>;
-using Vector2i = Vector2<int>;
+using Vector2f  = Vector2<float>;
+using Vector2i  = Vector2<int32_t>;
 using Vector2ui = Vector2<uint32_t>;

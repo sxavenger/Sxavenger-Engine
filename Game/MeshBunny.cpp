@@ -81,7 +81,7 @@ void MeshBunny::Draw() {
 	pipeline_->SetPipeline(commandList);
 
 	// ParamBuffers
-	commandList->SetGraphicsRootConstantBufferView(6, MyEngine::camera3D_->GetGPUVirtualAddress());
+	commandList->SetGraphicsRootConstantBufferView(6, MyEngine::camera3D->GetGPUVirtualAddress());
 	commandList->SetGraphicsRootConstantBufferView(7, matrix_->GetGPUVirtualAddress());
 	commandList->SetGraphicsRootConstantBufferView(8, cullingCamera_->GetGPUVirtualAddress());
 	commandList->SetGraphicsRootConstantBufferView(9, material_->GetGPUVirtualAddress());

@@ -41,6 +41,8 @@ public:
 	// public methods
 	//=========================================================================================
 
+	Light() = delete;
+
 	Light(DxObject::Devices* device) { Init(device); }
 
 	~Light() { Term(); }

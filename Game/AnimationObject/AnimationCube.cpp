@@ -60,7 +60,7 @@ void AnimationCube::Draw() {
 
 	model_->SetBuffers(commandList, 0);
 
-	commandList->SetGraphicsRootConstantBufferView(0, MyEngine::camera3D_->GetGPUVirtualAddress());
+	commandList->SetGraphicsRootConstantBufferView(0, MyEngine::camera3D->GetGPUVirtualAddress());
 	commandList->SetGraphicsRootConstantBufferView(1, matrixBuffer_->GetGPUVirtualAddress());
 	model_->SetGraphicsTextureHandle(commandList, 0, 2, TEXTURE_DIFFUSE);
 

@@ -36,8 +36,8 @@ namespace {
 //-----------------------------------------------------------------------------------------
 // static variables
 //-----------------------------------------------------------------------------------------
-Camera3D* MyEngine::camera3D_ = nullptr;
-Camera2D* MyEngine::camera2D_ = nullptr;
+Camera3D* MyEngine::camera3D = nullptr;
+Camera2D* MyEngine::camera2D = nullptr;
 
 //-----------------------------------------------------------------------------------------
 // method

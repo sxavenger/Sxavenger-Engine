@@ -41,12 +41,21 @@ float HalfLambertReflection(float3 normal, float3 directionToLight, float expone
 	return result;
 }
 
-float3 BlinnPhong(float3 worldPos, float3 normal, float3 directionToLight, float3 directionToCamera, float specPow, float4 specColor = float4(1, 1, 1, 1)) {
+float BlinnPhongReflection(float3 worldPos, float3 normal, float3 directionToLight, float3 directionToCamera, float specPow) {
 	
 	float3 halfVector = normalize(directionToLight + directionToCamera);
 	float NdotH = max(0, dot(normal, halfVector));
 	float spec = pow(NdotH, specPow);
 	
-	return specColor.rgb * spec;
+	return spec;
 	
+}
+
+float PhongReflection(float3 worldPos, float3 normal, float3 directionToLight, float3 directionToCamera, float specPow) {
+	
+	float3 reflection = reflect(directionToLight, normal);
+	float RdotE = dot(reflection, directionToCamera);
+	float spec = pow(saturate(RdotE), specPow);
+
+	return spec;
 }
