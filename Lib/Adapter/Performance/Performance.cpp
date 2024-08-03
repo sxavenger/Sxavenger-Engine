@@ -4,6 +4,7 @@
 // include
 //-----------------------------------------------------------------------------------------
 #include <MyEngine.h>
+#include <Console.h>
 
 //-----------------------------------------------------------------------------------------
 // using
@@ -29,10 +30,18 @@ float Performance::secondsConversions_[SecondsUnit::kCountOfSecondsUnit] = {
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 void Performance::BeginFrame() {
+	if (!console->IsUpdateRequired()) {
+		return;
+	}
+
 	startFrame_ = std::chrono::steady_clock::now();
 }
 
 void Performance::EndFrame() {
+	if (!console->IsUpdateRequired()) {
+		return;
+	}
+
 	endFrame_ = std::chrono::steady_clock::now();
 
 	deltaTime_ = static_cast<float>(std::chrono::duration_cast<std::chrono::microseconds>(endFrame_ - startFrame_).count());

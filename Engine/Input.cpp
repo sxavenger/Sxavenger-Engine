@@ -135,6 +135,23 @@ Vector2i MouseInput::GetDeltaMousePos() const {
 	return { mouse_.first.lX, mouse_.first.lY };
 }
 
+bool MouseInput::IsPressMouse(uint8_t buttonNum) const {
+	assert(buttonNum < 4); //!< DIMOUSESTATE構造体
+	return mouse_.first.rgbButtons[buttonNum];
+}
+
+int32_t MouseInput::GetDeltaWheel() const {
+	return mouse_.first.lZ / WHEEL_DELTA; //!< wheelの最大値でnormalize
+}
+
+bool MouseInput::IsWheelUp() const {
+	return mouse_.first.lZ > 0;
+}
+
+bool MouseInput::IsWheelDown() const {
+	return mouse_.first.lZ < 0;
+}
+
 void MouseInput::CalculteMousePos() {
 	POINT point;
 	GetCursorPos(&point);
@@ -243,8 +260,28 @@ bool Input::IsReleaseKey(uint8_t dik) const {
 	return keyboardInput_->IsReleaseKey(dik);
 }
 
+const Vector2i& Input::GetMousePos() const {
+	return mouseInput_->GetMousePos();
+}
+
 Vector2i Input::GetDeltaMousePos() const {
 	return mouseInput_->GetDeltaMousePos();
+}
+
+bool Input::IsPressMouse(uint8_t buttonNum) const {
+	return mouseInput_->IsPressMouse(buttonNum);
+}
+
+int32_t Input::GetDeltaWheel() const {
+	return mouseInput_->GetDeltaWheel();
+}
+
+bool Input::IsWheelUp() const {
+	return mouseInput_->IsWheelUp();
+}
+
+bool Input::IsWheelDown() const {
+	return mouseInput_->IsWheelDown();
 }
 
 bool Input::IsConnectGamepad(uint32_t gamepadNum) const {

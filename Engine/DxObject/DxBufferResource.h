@@ -59,7 +59,7 @@ namespace DxObject {
 		}
 
 		//! @brief デストラクタ
-		~BaseBufferResource() { Term(); }
+		virtual ~BaseBufferResource() {}
 
 		//! @breif 初期化処理
 		//! 
@@ -135,7 +135,7 @@ namespace DxObject {
 		}
 
 		//! @brief デストラクタ
-		~BufferResource() { Term(); }
+		~BufferResource() override { Term(); }
 
 		//! @brief 初期化処理
 		//! 
@@ -217,7 +217,7 @@ namespace DxObject {
 		}
 
 		//! @brief デストラクタ
-		~BufferPtrResource() { Term(); }
+		~BufferPtrResource() override { Term(); }
 
 		//! @brief 初期化処理
 		//! 
@@ -312,7 +312,7 @@ namespace DxObject {
 		}
 
 		//! @brief デストラクタ
-		~IndexBufferResource() { Term(); }
+		~IndexBufferResource() override { Term(); }
 
 		//! @brief 初期化処理
 		//! 
@@ -389,7 +389,7 @@ namespace DxObject {
 		}
 
 		//! @brief デストラクタ
-		~DynamicBufferResource() { Term(); }
+		~DynamicBufferResource() override { Term(); }
 
 		//! @brief 初期化処理
 		//! 
@@ -470,7 +470,7 @@ namespace DxObject {
 			Init(devices);
 		}
 
-		~OffsetBufferResource() { Term(); }
+		~OffsetBufferResource() override { Term(); }
 
 		//! @brief 初期化処理
 		//! 

@@ -65,15 +65,8 @@ struct QuaternionTransform {
 };
 
 struct TransformationMatrix {
-
 	Matrix4x4 world;
 	Matrix4x4 worldInverseTranspose;
-
-	/*void SetTransform(const EulerTransform& transform, const Matrix4x4& viewProjMatrix) {
-		world = Matrix::MakeAffine(transform.scale, transform.rotate, transform.translate);
-		worldInverseTranspose = Matrix::Transpose(Matrix::Inverse(world));
-		wvp = world * viewProjMatrix;
-	}*/
 };
 
 struct UVTransform {

@@ -8,7 +8,6 @@
 #include <DirectXRCommon.h>
 #include <Environment.h>
 
-
 //-----------------------------------------------------------------------------------------
 // using
 //-----------------------------------------------------------------------------------------
@@ -27,9 +26,6 @@ void GameScene::Run() {
 	console->Init();
 	Init();
 
-	/*std::unique_ptr<Camera3D> camera = std::make_unique<Camera3D>();
-	MyEngine::camera3D = camera.get();*/
-
 	MyEngine::TransitionProcessSingle();
 
 	////////////////////////////////////////////////////////////////////////////////////////////
@@ -44,7 +40,10 @@ void GameScene::Run() {
 		//=========================================================================================
 
 		console->Update();
-		Update();
+
+		if (console->IsUpdateRequired()) {
+			Update();
+		}
 
 		//=========================================================================================
 		// 描画処理
@@ -74,7 +73,7 @@ void GameScene::Run() {
 
 void GameScene::Init() {
 
-	gameCamera_ = std::make_unique<Camera3D>();
+	gameCamera_ = std::make_unique<DebugCamera3D>();
 	gameCamera_->SetThisAttribute("GameCamera");
 	gameCamera_->SetProjection(0.45f, static_cast<float>(kWindowWidth) / static_cast<float>(kWindowHeight), 0.01f, 16.0f);
 	gameCamera_->SetTransform(unitVector, origin, {0.0f, 0.0f, -4.0f});
@@ -83,20 +82,14 @@ void GameScene::Init() {
 	subobjectManager_->Init(gameCamera_.get());
 
 	AudioManager::GetInstance()->LoadAudio("resources/sounds/fanfare.wav");
-
 }
 
 void GameScene::Term() {
 }
 
 void GameScene::Update() {
+	gameCamera_->Update();
 	subobjectManager_->Update();
-
-	auto input = Input::GetInstance();
-
-	if (input->IsTriggerButton(0, XINPUT_GAMEPAD_A)) {
-		AudioManager::GetInstance()->PlayAudio("resources/sounds/fanfare.wav");
-	}
 }
 
 void GameScene::Draw() {

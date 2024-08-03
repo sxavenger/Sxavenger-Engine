@@ -66,6 +66,8 @@ public:
 
 	void CheckEraseAttribute(Attribute* obj);
 
+	bool IsUpdateRequired() const { return isUpdateRequired_; }
+
 	//
 	// test function
 	//
@@ -103,7 +105,7 @@ private:
 	bool isOutputConsole_ = true;
 	bool isFix_ = true;
 
-	int windowFlags_ = 0;
+	ImGuiWindowFlags windowFlags_ = 0;
 
 	// scenes
 	bool isFocusDebugScene_ = false;
@@ -119,6 +121,10 @@ private:
 	// Attribute
 	std::list<Attribute*> attributes_;
 	Attribute* selectedAttribute_;
+
+	//* process *//
+
+	bool isUpdateRequired_ = true;
 
 	//=========================================================================================
 	// private methods

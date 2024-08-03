@@ -8,6 +8,7 @@
 
 // c++
 #include <memory>
+#include <format>
 
 #include <Light.h>
 
@@ -23,6 +24,7 @@
 #include <SubobjectManager.h>
 
 #include <Sprite.h>
+#include <Transform.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // GameScene class
@@ -42,7 +44,7 @@ private:
 	// private methods
 	//=========================================================================================
 
-	std::unique_ptr<Camera3D> gameCamera_;
+	std::unique_ptr<DebugCamera3D> gameCamera_;
 
 	std::unique_ptr<SubobjectManager> subobjectManager_;
 

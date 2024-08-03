@@ -106,9 +106,23 @@ public:
 
 	//* Mouse input methods *//
 
+	//* position *//
+
 	const Vector2i& GetMousePos() const;
 
 	Vector2i GetDeltaMousePos() const;
+
+	//* button *//
+
+	bool IsPressMouse(uint8_t buttonNum) const;
+
+	//* wheel *//
+
+	int32_t GetDeltaWheel() const;
+
+	bool IsWheelUp() const;
+
+	bool IsWheelDown() const;
 
 private:
 
@@ -216,7 +230,17 @@ public:
 
 	//* mouse inputs *//
 
+	const Vector2i& GetMousePos() const;
+
 	Vector2i GetDeltaMousePos() const;
+
+	bool IsPressMouse(uint8_t buttonNum) const;
+
+	int32_t GetDeltaWheel() const;
+
+	bool IsWheelUp() const;
+
+	bool IsWheelDown() const;
 
 	const MouseInput* GetMouseInput() const { return mouseInput_.get(); }
 

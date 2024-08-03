@@ -20,6 +20,7 @@ public:
 
 	static Matrix4x4 Identity();
 
+	// todo: DirectXMathのinverseに変更
 	Matrix4x4 Inverse() const;
 
 	Matrix4x4 Transpose() const;

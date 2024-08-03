@@ -42,14 +42,15 @@ private:
 
 	//* parameter *//
 
-	float deltaMove   = 0.01f;
-	float deltaRotate = 0.01f;
+	float deltaMove_     = 0.01f;
+	float deltaRotate_   = 0.01f;
+	float deltaDistance_ = 0.5f;
 
 	//* member *//
 
 	Vector3f pivot_ = {};
 	float lon_, lat_;
-	float distance_;
+	float distance_ = 10.0f;
 
 	//=========================================================================================
 	// private methods

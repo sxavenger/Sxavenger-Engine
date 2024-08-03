@@ -3,7 +3,7 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
-#include "externals/imgui/imgui.h"
+#include "imgui.h"
 #include "MyEngine.h"
 #include "Environment.h"
 #include "Performance.h"
@@ -247,6 +247,16 @@ void Console::OutputLog() {
 }
 
 void Console::OutputPerformance() {
+
+	// systemの状態によってstyleを変える
+	ImGuiStyle& style = ImGui::GetStyle();
+	ImVec4 defaultWindowColor = style.Colors[ImGuiCol_WindowBg]; //!< 後で元に戻すので保存
+
+	if (isUpdateRequired_) {
+		// windowの色を変更
+		style.Colors[ImGuiCol_WindowBg] = ImGuiManager::ToImVec4({ 45, 5, 8, 255 });
+	}
+
 	static bool isOpenWindow = true;
 	ImGui::Begin("Performance", &isOpenWindow, windowFlags_ | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoScrollbar);
 
@@ -257,6 +267,8 @@ void Console::OutputPerformance() {
 	ImGui::Text("FPS: %.0f", 1.0f / framesPerSec);
 
 	ImGui::End();
+
+	style.Colors[ImGuiCol_WindowBg] = defaultWindowColor;
 }
 
 void Console::OutputOutliner() {
@@ -301,10 +313,48 @@ void Console::OutputSystem() {
 	static bool isOpenWindow = true;
 	ImGui::Begin("System", &isOpenWindow, windowFlags_);
 
+	//!< 更新処理関係
+	if (ImGui::CollapsingHeader("Process")) {
+		if (isUpdateRequired_) { //!< 更新処理が有効な時
+			if (ImGui::Button("stop")) {
+				isUpdateRequired_ = false;
+			}
+
+		} else {
+			if (ImGui::Button("start")) {
+				isUpdateRequired_ = true;
+			}
+
+		}
+
+		ImGui::Spacing();
+	}
+
+	//!< Inputが機能してるかの確認
+	if (ImGui::CollapsingHeader("Input")) {
+
+		/*if (ImGui::TreeNode("Keyboard")) {
+
+			auto keyboard = Input::GetInstance()->GetKeyboardInput();
+
+			ImGui::TreePop();
+		}*/
+
+		if (ImGui::TreeNode("Mouse")) {
+
+			auto mouse = Input::GetInstance()->GetMouseInput();
+
+			ImGui::Text("[position] x: %d, y: %d", mouse->GetMousePos().x, mouse->GetMousePos().y);
+			ImGui::Text("[delta]    x: %d, y: %d", mouse->GetDeltaMousePos().x, mouse->GetDeltaMousePos().y);
+
+			ImGui::TreePop();
+		}
+	}
+
 	//!< descriptorの使用済みの数, 最大数の確認
 	if (ImGui::CollapsingHeader("DescriptorHeaps")) {
 		auto descriptorHeaps = dxCommon_->GetDescriptorsObj();
-		
+
 		if (ImGui::TreeNode("RTV")) {
 			ImGui::Text(
 				"used: %d / max: %d",
@@ -337,27 +387,6 @@ void Console::OutputSystem() {
 			ImGui::TreePop();
 		}
 
-	}
-
-	//!< Inputが機能してるかの確認
-	if (ImGui::CollapsingHeader("Input")) {
-
-		/*if (ImGui::TreeNode("Keyboard")) {
-
-			auto keyboard = Input::GetInstance()->GetKeyboardInput();
-
-			ImGui::TreePop();
-		}*/
-
-		if (ImGui::TreeNode("Mouse")) {
-
-			auto mouse = Input::GetInstance()->GetMouseInput();
-
-			ImGui::Text("[position] x: %d, y: %d", mouse->GetMousePos().x, mouse->GetMousePos().y);
-			ImGui::Text("[delta]    x: %d, y: %d", mouse->GetDeltaMousePos().x, mouse->GetDeltaMousePos().y);
-
-			ImGui::TreePop();
-		}
 	}
 
 	ImGui::End();

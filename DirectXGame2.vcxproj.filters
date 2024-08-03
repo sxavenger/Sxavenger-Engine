@@ -160,6 +160,15 @@
     <Filter Include="Resource\hlsl\Sprite">
       <UniqueIdentifier>{8c13a9e1-e87f-45ff-9f26-31f9be580df6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="GameEngine">
+      <UniqueIdentifier>{380193af-54d7-4eff-8bee-58af1a82dd93}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameEngine\include">
+      <UniqueIdentifier>{546aa3bd-7c0d-440c-94f4-d0d61bb3584f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameEngine\source">
+      <UniqueIdentifier>{0b7f6289-fa86-4284-9926-5e7f2a0f06f8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
@@ -454,6 +463,9 @@
     <ClCompile Include="Engine\Sprite.cpp">
       <Filter>Engine\source</Filter>
     </ClCompile>
+    <ClCompile Include="GameEngine\Transform.cpp">
+      <Filter>GameEngine\source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\MyEngine.h">
@@ -719,6 +731,9 @@
     </ClInclude>
     <ClInclude Include="Engine\Sprite.h">
       <Filter>Engine\include</Filter>
+    </ClInclude>
+    <ClInclude Include="GameEngine\Transform.h">
+      <Filter>GameEngine\include</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
