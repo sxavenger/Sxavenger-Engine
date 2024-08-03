@@ -158,13 +158,19 @@ public:
 	bool IsConnect() const { return isConnect_; }
 
 	//* GamePad input methods *//
-	//* 仮でuint32_t
-
+	
+	//! 仮でxInputGamepadをuint32_t 
 	bool IsPressButton(uint32_t xInputGamepad) const;
 
 	bool IsTriggerButton(uint32_t xInputGamepad) const;
 
 	bool IsReleaseButton(uint32_t xInputGamepad) const;
+
+	Vector2i GetLStick() const;
+	Vector2f GetLStickNormalize() const;
+
+	Vector2i GetRStick() const;
+	Vector2f GetRStickNormalize() const;
 
 private:
 
@@ -194,8 +200,6 @@ public:
 	// public methods
 	//=========================================================================================
 
-	Input() = default;
-
 	void Init(const HINSTANCE& hInst, const HWND& hWnd);
 
 	void Update();
@@ -218,7 +222,7 @@ public:
 
 	//* GamePad inputs *//
 
-	bool IsConnectGamePad(uint32_t gamepadNum) const;
+	bool IsConnectGamepad(uint32_t gamepadNum) const;
 
 	bool IsPressButton(uint32_t gamepadNum, uint32_t xInputGamepad) const;
 
@@ -231,6 +235,9 @@ public:
 	//* Singleton *//
 
 	static Input* GetInstance();
+
+	Input()  = default;
+	~Input() = default;
 
 private:
 

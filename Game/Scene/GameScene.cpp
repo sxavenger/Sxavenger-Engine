@@ -118,9 +118,8 @@ void GameScene::Draw() {
 		subobjectManager_->Draw();
 
 		MyEngine::EndOffscreen(MyEngine::GetTexture("offscreen"));
+		MyEngine::TransitionProcess();
 	}
-
-	MyEngine::TransitionProcess();
 
 	//=========================================================================================
 	// スクリーン描画処理

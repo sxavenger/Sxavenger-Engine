@@ -176,6 +176,22 @@ bool GamepadInput::IsReleaseButton(uint32_t xInputGamepad) const {
 	return !(gamepad_.first.Gamepad.wButtons & xInputGamepad) && (gamepad_.second.Gamepad.wButtons & xInputGamepad);
 }
 
+Vector2i GamepadInput::GetLStick() const {
+	return { gamepad_.first.Gamepad.sThumbLX, gamepad_.first.Gamepad.sThumbLY };
+}
+
+Vector2f GamepadInput::GetLStickNormalize() const {
+	return { static_cast<float>(gamepad_.first.Gamepad.sThumbLX) / SHRT_MAX, static_cast<float>(gamepad_.first.Gamepad.sThumbLY) / SHRT_MAX };
+}
+
+Vector2i GamepadInput::GetRStick() const {
+	return { gamepad_.first.Gamepad.sThumbRX, gamepad_.first.Gamepad.sThumbRY };
+}
+
+Vector2f GamepadInput::GetRStickNormalize() const {
+	return { static_cast<float>(gamepad_.first.Gamepad.sThumbRX) / SHRT_MAX, static_cast<float>(gamepad_.first.Gamepad.sThumbRY) / SHRT_MAX };
+}
+
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Input class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -231,7 +247,7 @@ Vector2i Input::GetDeltaMousePos() const {
 	return mouseInput_->GetDeltaMousePos();
 }
 
-bool Input::IsConnectGamePad(uint32_t gamepadNum) const {
+bool Input::IsConnectGamepad(uint32_t gamepadNum) const {
 	return gamepadInputs_[gamepadNum]->IsConnect();
 }
 
