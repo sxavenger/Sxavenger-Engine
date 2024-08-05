@@ -62,6 +62,10 @@ void Console::Term() {
 
 void Console::Update() {
 
+	/*ImGui::Begin("test window");
+	ImGui::ShowStyleEditor();
+	ImGui::End();*/
+
 	DisplayMenu();
 
 	if (isDisplayConsole_) {
@@ -131,7 +135,7 @@ void Console::DisplayMenu() {
 		//* console config *//
 		ImGui::SeparatorText("console config");
 		ImGui::Checkbox("Display Console", &isDisplayConsole_);
-		ImGui::Checkbox("Output imgui.ini", &isOutputImGuiFile_);
+		ImGui::Checkbox("Output imgui layout", &isOutputImGuiFile_);
 
 		//* window config *//
 		ImGui::SeparatorText("window config");
