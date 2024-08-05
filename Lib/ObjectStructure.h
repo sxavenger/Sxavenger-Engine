@@ -29,46 +29,6 @@ struct VertexData {
 	}
 };
 
-struct EulerTransform {
-	Vector3f scale;
-	Vector3f rotate;
-	Vector3f translate;
-
-	EulerTransform()
-		: scale(unitVector), rotate(origin), translate(origin) {}
-
-	void SetImGuiCommand(float granularity = 0.01f) {
-		ImGui::DragFloat3("scale", &scale.x, granularity);
-		ImGui::DragFloat3("rotate", &rotate.x, granularity);
-		ImGui::DragFloat3("translate", &translate.x, granularity);
-	}
-
-	Matrix4x4 ToMatrix() const {
-		return Matrix::MakeAffine(scale, rotate, translate);
-	}
-};
-
-struct QuaternionTransform {
-	Vector3f   scale;
-	Quaternion rotate;
-	Vector3f   translate;
-
-	QuaternionTransform()
-		: scale(unitVector), rotate({ 0.0f, 0.0f, 0.0f, 0.0f }), translate(origin) { }
-
-	// todo: SetImGuiCommand()
-
-	Matrix4x4 ToMatrix() const {
-		return Matrix::MakeAffine(scale, rotate, translate);
-	}
-
-};
-
-struct TransformationMatrix {
-	Matrix4x4 world;
-	Matrix4x4 worldInverseTranspose;
-};
-
 struct UVTransform {
 	Vector2f scale;
 	float    rotate;

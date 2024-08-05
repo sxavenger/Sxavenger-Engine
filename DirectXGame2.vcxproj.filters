@@ -466,6 +466,9 @@
     <ClCompile Include="GameEngine\Transform.cpp">
       <Filter>GameEngine\source</Filter>
     </ClCompile>
+    <ClCompile Include="GameEngine\InputAssembler.cpp">
+      <Filter>GameEngine\source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\MyEngine.h">
@@ -733,6 +736,9 @@
       <Filter>Engine\include</Filter>
     </ClInclude>
     <ClInclude Include="GameEngine\Transform.h">
+      <Filter>GameEngine\include</Filter>
+    </ClInclude>
+    <ClInclude Include="GameEngine\InputAssembler.h">
       <Filter>GameEngine\include</Filter>
     </ClInclude>
   </ItemGroup>

@@ -1,33 +1,34 @@
 #pragma once
 
-/*
- ImGuiID id = ImGui::GetID("str);
- ImGui::SetNextDocking();
-*/
+//*****************************************************************************************
+// todo: imguiのスタイル変更, gameSceneのwindowの追加
+//*****************************************************************************************
 
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
-// DirectX12
+// D3D12
 #include <d3d12.h>
 
 // c++
+#include <deque>
+#include <string>
 #include <list>
 #include <memory>
-#include <string>
-#include <deque>
+#include <unordered_map>
 
-// imgui
-#include <imgui.h>
+// geometry
+#include <Vector4.h>
 
-// camera
+#include <Camera3D.h>
 #include <DebugCamera3D.h>
 
 //-----------------------------------------------------------------------------------------
 // forward
 //-----------------------------------------------------------------------------------------
 class Attribute;
-class RenderTexture;
+class DirectXCommon;
+class Texture;
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Console class
@@ -39,6 +40,8 @@ public:
 	// public methods
 	//=========================================================================================
 
+	static Console* GetInstance();
+
 	//! @brief 初期化処理
 	void Init();
 
@@ -48,31 +51,31 @@ public:
 	//! @brief 更新処理
 	void Update();
 
-	//* console item *//
+	//! @brief ログをセット
+	//! 
+	//! @param[in] log   出力したいログ
+	//! @param[in] color 文字の色
+	void Log(const std::string& log, const Color4f& color = {1.0f, 1.0f, 1.0f, 1.0f});
 
-	//! @brief 現在のwindowをconsoleにdockingする
-	void DockingConsole() const;
-	
-	void SetAttribute(Attribute* attribute);
+	void SetAttribute(Attribute* obj) {
+		attributes_.push_back(obj);
+	}
 
-	void CheckEraseAttribute(Attribute* obj);
-
-	void Log(const std::string& log, const Color4f& color = defaultColor);
-
-	//* getter *//
-
-	RenderTexture* GetSceneTexture() const { return sceneTexture_.get(); }
+	Texture* GetSceneTexture() const { return sceneTexture_; }
 
 	Camera3D* GetDebugCamera() const { return debugCamera_.get(); }
 
+	void CheckEraseAttribute(Attribute* obj);
+
 	bool IsUpdateRequired() const { return isUpdateRequired_; }
 
-	//* singleton *//
+	//
+	// test function
+	//
 
-	static Console* GetInstance();
+	void OutputTexture(const std::string& name, const D3D12_GPU_DESCRIPTOR_HANDLE& srvHandleGPU);
 
-	Console() = default;
-	~Console() = default;
+	void OutputDefferedTextures(const std::string& name, uint32_t indexSize, const D3D12_GPU_DESCRIPTOR_HANDLE textureHandles[8]);
 
 	//=========================================================================================
 	// public variables
@@ -97,61 +100,57 @@ private:
 	// private variables
 	//=========================================================================================
 
-	//* parameter *//
+	DirectXCommon* dxCommon_;
 
-	static const std::string kConsoleName_;
+	// settings
+	bool isOutputConsole_ = true;
+	bool isFix_ = true;
 
-	//* ImGui configs *//
-
-	ImGuiID          dockingID_   = 0;
 	ImGuiWindowFlags windowFlags_ = 0;
 
-	//* attribute *//
+	// scenes
+	bool isFocusDebugScene_ = false;
+	bool isFocusGameScene_  = false;
 
-	std::list<Attribute*> attributes_;
-	Attribute*            selectedAttribute_ = nullptr;
-
-	//* log *//
-
-	const uint32_t      kMaxLog_ = 30;
-	std::deque<LogData> logs_;
-
-	//* process & config *//
-	//* config
-	bool isDisplayConsole_  = true;
-	bool isOutputImGuiFile_ = false;
-
-	//* process
-	bool isUpdateRequired_ = true;
-
-	//* scene *//
-
-	std::unique_ptr<RenderTexture> sceneTexture_;
 	std::unique_ptr<DebugCamera3D> debugCamera_;
+	Texture* sceneTexture_;
+
+	// logs
+	static const int32_t kMaxLogData_ = 30;
+	std::deque<LogData> logDatas_;
+
+	// Attribute
+	std::list<Attribute*> attributes_;
+	Attribute* selectedAttribute_;
+
+	//* process *//
+
+	bool isUpdateRequired_ = true;
 
 	//=========================================================================================
 	// private methods
 	//=========================================================================================
 
-	//* display console methods *//
+	void OutputMenu();
 
-	void DisplayMenu();
+	void OutputScene();
+	void OutputGame();
 
-	void DisplayScene();
-	void DisplayGame();
+	void OutputLog();
 
-	void DisplayOutliner();
-	void DisplayAttribute();
+	void OutputPerformance();
 
-	void DisplayLogs();
+	void OutputOutliner();
 
-	void DisplaySystem();
-	void DisplayPerformance();
+	void OutputSystem();
 
-	//* methods *//
+	void OutputAssets();
 
-	void DisplayTextureImGuiWindow(const D3D12_GPU_DESCRIPTOR_HANDLE texture);
-	void SelectableAttribute(Attribute* attribute);
+	void SetTextureImGui(const D3D12_GPU_DESCRIPTOR_HANDLE& texture);
+
+	// methods 
+
+	void OutlinerAttribute(Attribute* attribute);
 
 };
 

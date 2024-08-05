@@ -164,6 +164,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="externals\meshoptimizer\vertexfilter.cpp" />
     <ClCompile Include="externals\meshoptimizer\vfetchanalyzer.cpp" />
     <ClCompile Include="externals\meshoptimizer\vfetchoptimizer.cpp" />
+    <ClCompile Include="GameEngine\InputAssembler.cpp" />
     <ClCompile Include="GameEngine\Transform.cpp" />
     <ClCompile Include="Game\AnimationObject\AnimationCube.cpp" />
     <ClCompile Include="Game\AnimationObject\AnimationHuman.cpp" />
@@ -255,6 +256,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="externals\imgui\imstb_textedit.h" />
     <ClInclude Include="externals\imgui\imstb_truetype.h" />
     <ClInclude Include="externals\meshoptimizer\meshoptimizer.h" />
+    <ClInclude Include="GameEngine\InputAssembler.h" />
     <ClInclude Include="GameEngine\Transform.h" />
     <ClInclude Include="Game\AnimationObject\AnimationCube.h" />
     <ClInclude Include="Game\AnimationObject\AnimationHuman.h" />

@@ -15,25 +15,25 @@ using namespace DxObject;
 // BaseTransform base class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-void BaseTransform::Init() {
+void BaseTransformBuffer::Init() {
 	// GPUBufferの生成
-	buffer_ = std::make_unique<BufferResource<TransformationMat>>(MyEngine::GetDevicesObj(), 1);
-	(*buffer_)[0].Init();
+	buffer_ = std::make_unique<BufferResource<TransformationMatrix>>(MyEngine::GetDevicesObj(), 1);
+	(*buffer_)[0].Init(); //!< 単位行列で初期化
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// TransformEuler class methods
+// EulerTransformBuffer class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-void TransformEuler::Init() {
-	BaseTransform::Init();
+void EulerTransformBuffer::Init() {
+	BaseTransformBuffer::Init();
 }
 
-void TransformEuler::Term() {
+void EulerTransformBuffer::Term() {
 }
 
-void TransformEuler::UpdateMatrix() {
-	(*buffer_)[0].worldMatrix = Matrix::MakeAffine(scale, rotation, translation);
+void EulerTransformBuffer::UpdateMatrix() {
+	(*buffer_)[0].worldMatrix = transform.ToMatrix();
 
 	if (parent_ != nullptr) {
 		(*buffer_)[0].worldMatrix *= parent_->GetWorldMatrix();
@@ -43,18 +43,18 @@ void TransformEuler::UpdateMatrix() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// TransformEuler class methods
+// QuaternionTransformBuffer class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-void TransformQuaternion::Init() {
-	BaseTransform::Init();
+void QuaternionTransformBuffer::Init() {
+	BaseTransformBuffer::Init();
 }
 
-void TransformQuaternion::Term() {
+void QuaternionTransformBuffer::Term() {
 }
 
-void TransformQuaternion::UpdateMatrix() {
-	(*buffer_)[0].worldMatrix = Matrix::MakeAffine(scale, quaternion, translation);
+void QuaternionTransformBuffer::UpdateMatrix() {
+	(*buffer_)[0].worldMatrix = transform.ToMatrix();
 
 	if (parent_ != nullptr) {
 		(*buffer_)[0].worldMatrix *= parent_->GetWorldMatrix();

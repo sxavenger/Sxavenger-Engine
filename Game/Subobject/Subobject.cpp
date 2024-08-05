@@ -63,8 +63,8 @@ void Subobjects::Plane::Init(const SubobjectManager* manager) {
 
 void Subobjects::Plane::Update() {
 
-	(*matBuffer_)[0].world      = transform_.ToMatrix();
-	(*material_)[0].uvTransform = uvTransform_.ToMatrix();
+	(*matBuffer_)[0].worldMatrix = transform_.ToMatrix();
+	(*material_)[0].uvTransform  = uvTransform_.ToMatrix();
 
 }
 
@@ -136,7 +136,7 @@ void Subobjects::Sphere::Init(const SubobjectManager* manager) {
 
 void Subobjects::Sphere::Update() {
 
-	(*matBuffer_)[0].world = transform_.ToMatrix();
+	(*matBuffer_)[0].worldMatrix = transform_.ToMatrix();
 	(*material_)[0].uvTransform = uvTransform_.ToMatrix();
 
 }
@@ -209,7 +209,7 @@ void Subobjects::Teapot::Init(const SubobjectManager* manager) {
 
 void Subobjects::Teapot::Update() {
 
-	(*matBuffer_)[0].world = transform_.ToMatrix();
+	(*matBuffer_)[0].worldMatrix = transform_.ToMatrix();
 	(*material_)[0].uvTransform = uvTransform_.ToMatrix();
 
 }
@@ -282,7 +282,7 @@ void Subobjects::Bunny::Init(const SubobjectManager* manager) {
 
 void Subobjects::Bunny::Update() {
 
-	(*matBuffer_)[0].world = transform_.ToMatrix();
+	(*matBuffer_)[0].worldMatrix = transform_.ToMatrix();
 	(*material_)[0].uvTransform = uvTransform_.ToMatrix();
 
 }
@@ -363,7 +363,7 @@ void Subobjects::MultiMesh::Init(const SubobjectManager* manager) {
 
 void Subobjects::MultiMesh::Update() {
 
-	(*matBuffer_)[0].world = transform_.ToMatrix();
+	(*matBuffer_)[0].worldMatrix = transform_.ToMatrix();
 	(*material_)[0].uvTransform = uvTransform_.ToMatrix();
 
 }
@@ -459,7 +459,7 @@ void Subobjects::MultiMaterial::Init(const SubobjectManager* manager) {
 
 void Subobjects::MultiMaterial::Update() {
 
-	(*matBuffer_)[0].world = transform_.ToMatrix();
+	(*matBuffer_)[0].worldMatrix = transform_.ToMatrix();
 
 	for (uint32_t i = 0; i < meshNum_; ++i) {
 		(*materials_[i])[0].uvTransform = uvTransforms_.at(i).ToMatrix();
@@ -543,7 +543,7 @@ void Subobjects::Suzanne::Init(const SubobjectManager* manager) {
 
 void Subobjects::Suzanne::Update() {
 
-	(*matBuffer_)[0].world = transform_.ToMatrix();
+	(*matBuffer_)[0].worldMatrix = transform_.ToMatrix();
 
 }
 

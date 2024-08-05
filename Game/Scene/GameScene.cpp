@@ -73,7 +73,7 @@ void GameScene::Run() {
 
 void GameScene::Init() {
 
-	gameCamera_ = std::make_unique<DebugCamera3D>();
+	gameCamera_ = std::make_unique<Camera3D>();
 	gameCamera_->SetThisAttribute("GameCamera");
 	gameCamera_->SetProjection(0.45f, static_cast<float>(kWindowWidth) / static_cast<float>(kWindowHeight), 0.01f, 16.0f);
 	gameCamera_->SetTransform(unitVector, origin, {0.0f, 0.0f, -4.0f});
@@ -88,7 +88,6 @@ void GameScene::Term() {
 }
 
 void GameScene::Update() {
-	gameCamera_->Update();
 	subobjectManager_->Update();
 }
 

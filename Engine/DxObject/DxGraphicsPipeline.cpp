@@ -122,7 +122,7 @@ void DxObject::GraphicsPipelineDesc::SetElement(const LPCSTR& semanticName, UINT
 	element.InputSlot         = inputSlot;
 	element.AlignedByteOffset = D3D12_APPEND_ALIGNED_ELEMENT;
 
-	elements.push_back(element);
+	elements.emplace_back(element);
 }
 
 void DxObject::GraphicsPipelineDesc::SetRasterizer(D3D12_CULL_MODE cullMode, D3D12_FILL_MODE fillMode) {

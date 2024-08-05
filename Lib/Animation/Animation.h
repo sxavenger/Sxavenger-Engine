@@ -9,8 +9,8 @@
 #include <Quaternion.h>
 #include <Matrix4x4.h>
 
-// object
-#include <ObjectStructure.h>
+// engine
+#include <Transform.h>
 
 // c++
 #include <vector>

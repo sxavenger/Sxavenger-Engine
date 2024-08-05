@@ -16,10 +16,56 @@
 // c++
 #include <memory>
 
+// imgui
+#include <imgui.h>
+
+////////////////////////////////////////////////////////////////////////////////////////////
+// EulerTransform structure
+////////////////////////////////////////////////////////////////////////////////////////////
+struct EulerTransform {
+	Vector3f scale;
+	Vector3f rotate;
+	Vector3f translate;
+
+	EulerTransform()
+		: scale(unitVector), rotate(origin), translate(origin) {
+	}
+
+	void SetImGuiCommand(float granularity = 0.01f) {
+		ImGui::DragFloat3("scale", &scale.x, granularity);
+		ImGui::DragFloat3("rotate", &rotate.x, granularity);
+		ImGui::DragFloat3("translate", &translate.x, granularity);
+	}
+
+	Matrix4x4 ToMatrix() const {
+		return Matrix::MakeAffine(scale, rotate, translate);
+	}
+};
+
+////////////////////////////////////////////////////////////////////////////////////////////
+// QuaternionTransform structure
+////////////////////////////////////////////////////////////////////////////////////////////
+struct QuaternionTransform {
+	Vector3f   scale;
+	Quaternion rotate;
+	Vector3f   translate;
+
+	QuaternionTransform()
+		: scale(unitVector), rotate({}), translate(origin) {
+	}
+
+	// todo: SetImGuiCommand()
+
+	Matrix4x4 ToMatrix() const {
+		return Matrix::MakeAffine(scale, rotate, translate);
+	}
+
+};
+
 ////////////////////////////////////////////////////////////////////////////////////////////
 // TransformationMatrix structure
 ////////////////////////////////////////////////////////////////////////////////////////////
-struct TransformationMat { //!< TransformationMatrix structureと名前がかぶるため仮でこの名前
+struct TransformationMatrix {
 	//!< member書き換え不可
 	Matrix4x4 worldMatrix;
 	Matrix4x4 worldInverceTranspose; //! 非均一スケール用
@@ -33,7 +79,7 @@ struct TransformationMat { //!< TransformationMatrix structureと名前がかぶ
 ////////////////////////////////////////////////////////////////////////////////////////////
 // BaseTransform base class
 ////////////////////////////////////////////////////////////////////////////////////////////
-class BaseTransform {
+class BaseTransformBuffer {
 	//!< このクラス単体では使わない
 public:
 
@@ -41,8 +87,8 @@ public:
 	// public methods
 	//=========================================================================================
 
-	BaseTransform() = default;
-	virtual ~BaseTransform() {}
+	BaseTransformBuffer() = default;
+	virtual ~BaseTransformBuffer() {}
 
 	void Init();
 
@@ -58,7 +104,7 @@ public:
 
 	//* Setter *//
 
-	void SetParent(const BaseTransform* parent) { parent_ = parent; }
+	void SetParent(const BaseTransformBuffer* parent) { parent_ = parent; }
 
 protected:
 
@@ -67,18 +113,18 @@ protected:
 	//=========================================================================================
 
 	//* GPUbuffer *//
-	std::unique_ptr<DxObject::BufferResource<TransformationMat>> buffer_;
+	std::unique_ptr<DxObject::BufferResource<TransformationMatrix>> buffer_;
 
 	//* parent *//
-	const BaseTransform* parent_ = nullptr;
+	const BaseTransformBuffer* parent_ = nullptr;
 
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// TransformEuler class
+// EulerTransformBuffer class
 ////////////////////////////////////////////////////////////////////////////////////////////
-class TransformEuler
-	: public BaseTransform {
+class EulerTransformBuffer
+	: public BaseTransformBuffer {
 	//!< EulerTransform structureがなくなった場合, 名前を変更
 public:
 
@@ -86,8 +132,8 @@ public:
 	// public methods
 	//=========================================================================================
 
-	TransformEuler() = default;
-	~TransformEuler() override { Term(); }
+	EulerTransformBuffer() = default;
+	~EulerTransformBuffer() override { Term(); }
 
 	void Init();
 
@@ -101,9 +147,7 @@ public:
 
 	//* transforms *//
 
-	Vector3f scale       = unitVector;
-	Vector3f rotation    = origin;
-	Vector3f translation = origin;
+	EulerTransform transform;
 
 private:
 
@@ -114,10 +158,10 @@ private:
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// TransformQuaternion class
+// QuaternionTransformBuffer class
 ////////////////////////////////////////////////////////////////////////////////////////////
-class TransformQuaternion
-	: public BaseTransform {
+class QuaternionTransformBuffer
+	: public BaseTransformBuffer {
 	//!< QuaternionTransform structureがなくなった場合, 名前を変更
 public:
 
@@ -125,8 +169,8 @@ public:
 	// public methods
 	//=========================================================================================
 
-	TransformQuaternion() = default;
-	~TransformQuaternion() override { Term(); }
+	QuaternionTransformBuffer() = default;
+	~QuaternionTransformBuffer() override { Term(); }
 
 	void Init();
 
@@ -140,9 +184,7 @@ public:
 
 	//* transforms *//
 
-	Vector3f   scale       = unitVector;
-	Quaternion quaternion  = {};
-	Vector3f   translation = origin;
+	QuaternionTransform transform;
 
 private:
 

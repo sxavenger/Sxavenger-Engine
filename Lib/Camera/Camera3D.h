@@ -14,8 +14,8 @@
 // DxObject
 #include <DxBufferResource.h>
 
-// object
-#include <ObjectStructure.h>
+// engine
+#include <Transform.h>
 
 // attribute
 #include <Attribute.h>

@@ -44,7 +44,7 @@ private:
 	// private methods
 	//=========================================================================================
 
-	std::unique_ptr<DebugCamera3D> gameCamera_;
+	std::unique_ptr<Camera3D> gameCamera_;
 
 	std::unique_ptr<SubobjectManager> subobjectManager_;
 
