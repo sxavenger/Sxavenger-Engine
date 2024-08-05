@@ -16,6 +16,7 @@
 #include <memory>
 #include <string>
 #include <deque>
+#include <optional>
 
 // imgui
 #include <imgui.h>
@@ -122,7 +123,12 @@ private:
 	bool isOutputImGuiFile_ = false;
 
 	//* process
-	bool isUpdateRequired_ = true;
+	bool isUpdateRequired_ = true; //!< 最終的なプロセス管理
+
+	//! [optional]
+	//! nullopt:  通常状態(制限なく更新処理をする)
+	//! in_value: 何回更新処理をするか<frame>(0の場合は更新処理を止める)
+	std::optional<uint32_t> updateLimit_ = std::nullopt;
 
 	//* scene *//
 
@@ -155,4 +161,4 @@ private:
 
 };
 
-static Console* console = Console::GetInstance();
+static Console* const console = Console::GetInstance();

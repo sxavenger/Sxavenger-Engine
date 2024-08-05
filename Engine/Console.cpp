@@ -44,6 +44,7 @@ void Console::Init() {
 	// windowFlagの初期化
 	windowFlags_ = 0;
 	windowFlags_ |= ImGuiWindowFlags_NoCollapse;
+	windowFlags_ |= ImGuiWindowFlags_NoBringToFrontOnFocus;
 	windowFlags_ |= ImGuiWindowFlags_NoMove;
 	windowFlags_ |= ImGuiWindowFlags_NoResize;
 }
@@ -110,7 +111,7 @@ void Console::CheckEraseAttribute(Attribute* obj) {
 
 void Console::Log(const std::string& log, const Color4f& color) {
 	// logの追加
-	logs_.push_back({log, color});
+	logs_.emplace_front(LogData{log, color});
 
 	while (logs_.size() >= kMaxLog_) {
 		logs_.pop_back(); //!< 一番古いログの削除
@@ -147,6 +148,14 @@ void Console::DisplayMenu() {
 		lockWindow |= ImGuiWindowFlags_NoMove;
 		lockWindow |= ImGuiWindowFlags_NoResize;
 		ImGui::CheckboxFlags("lock window position & size", &windowFlags_, lockWindow);
+
+		ImGui::EndMenu();
+	}
+
+	if (ImGui::BeginMenu("Layout")) {
+
+		//!< ImGui公式のstyleに関するeditor
+		ImGui::ShowStyleEditor();
 
 		ImGui::EndMenu();
 	}
@@ -240,16 +249,64 @@ void Console::DisplaySystem() {
 
 	//!< 更新処理関係
 	if (ImGui::CollapsingHeader("Process")) {
-		if (isUpdateRequired_) { //!< 更新処理が有効な時
+		if (updateLimit_ == std::nullopt) { //!< 更新処理の制限がない場合
 			if (ImGui::Button("stop")) {
-				isUpdateRequired_ = false;
+				updateLimit_ = 0; //!< 制限の代入
 			}
 
 		} else {
 			if (ImGui::Button("start")) {
-				isUpdateRequired_ = true;
+				updateLimit_ = std::nullopt; //!< 制限なし
 			}
 
+			ImGui::SameLine();
+
+			if (ImGui::Button("next frame")) {
+				updateLimit_ = 1; //!< 次にframeまで実行
+			}
+			
+			// 何フレーム更新するかの決定処理
+			static uint32_t count = 0;
+
+			ImGui::PushItemFlag(ImGuiItemFlags_ButtonRepeat, true); //!< 長押しで更新できるようにflagを設定
+
+			if (ImGui::ArrowButton("##left console", ImGuiDir_Left)) {
+				if (count != 0) { count--; }
+			}
+
+			ImGui::SameLine();
+
+			if (ImGui::ArrowButton("##right console", ImGuiDir_Right)) {
+				count++;
+			}
+
+			ImGui::PopItemFlag();
+			ImGui::SameLine();
+
+			ImGui::Text("update count <frame>: %u", count);
+
+			ImGui::SameLine();
+
+			if (ImGui::Button("execute")) {
+				updateLimit_ = count;
+				count = 0;
+			}
+
+			if (updateLimit_) {
+				ImGui::Text("update count remaining <frame>: %u", updateLimit_.value());
+			}
+		}
+
+		// 最終的に更新処理をするかの確定
+		isUpdateRequired_ = true;
+
+		if (updateLimit_) { //!< updateLimitがある場合
+			if (updateLimit_.value() == 0) { //!< 更新処理の回数が0の時
+				isUpdateRequired_ = false; //!< 更新処理のstop
+
+			} else {
+				updateLimit_.value() -= 1;
+			}
 		}
 
 		ImGui::Spacing();
