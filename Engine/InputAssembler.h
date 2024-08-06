@@ -12,6 +12,9 @@
 // c++
 #include <memory>
 
+// objectStructure
+#include <ObjectStructure.h>
+
 ////////////////////////////////////////////////////////////////////////////////////////////
 // InputAssembler class
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -32,7 +35,15 @@ public:
 
 	void SetBuffer();
 
-	void DrawCall();
+	void DrawCall(UINT instanceCount = 1);
+
+	//* Getter *//
+
+	DxObject::BufferResource<T>* GetVertexBuffer() const { return vertices_.get(); }
+
+	DxObject::IndexBufferResource* GetIndexBuffer() const { return indices_.get(); }
+
+	//* operator *//
 
 private:
 
@@ -75,5 +86,15 @@ void InputAssembler<T>::SetBuffer() {
 
 	commandList_->IASetVertexBuffers(0, 1, &vbv);
 	commandList_->IASetIndexBuffer(&ibv);
-
 }
+
+template<typename T>
+inline void InputAssembler<T>::DrawCall(UINT instanceCount) {
+	commandList_->DrawIndexedInstanced(indices_->GetIndexSize(), instanceCount, 0, 0, 0);
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////
+// using
+////////////////////////////////////////////////////////////////////////////////////////////
+
+using DefaultInputAssembler = InputAssembler<VertexData>;

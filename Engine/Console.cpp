@@ -259,7 +259,7 @@ void Console::DisplaySystem() {
 				updateLimit_ = std::nullopt; //!< 制限なし
 			}
 
-			ImGui::SameLine();
+			ImGui::Spacing();
 
 			if (ImGui::Button("next frame")) {
 				updateLimit_ = 1; //!< 次にframeまで実行
@@ -283,7 +283,8 @@ void Console::DisplaySystem() {
 			ImGui::PopItemFlag();
 			ImGui::SameLine();
 
-			ImGui::Text("update count <frame>: %u", count);
+			ImGui::Text("update count : %u <frame>", count);
+			// todo: inputTextの追加
 
 			ImGui::SameLine();
 
@@ -293,7 +294,7 @@ void Console::DisplaySystem() {
 			}
 
 			if (updateLimit_) {
-				ImGui::Text("update count remaining <frame>: %u", updateLimit_.value());
+				ImGui::Text("update count remaining : %u <frame>", updateLimit_.value());
 			}
 		}
 
