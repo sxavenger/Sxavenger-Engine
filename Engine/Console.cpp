@@ -229,8 +229,20 @@ void Console::DisplayLogs() {
 				ImGui::TextColored({ log.color.r, log.color.g, log.color.b, log.color.a }, log.log.c_str());
 			}
 			ImGui::EndChild();
+
+			if (ImGui::Button("clear")) {
+				logs_.clear();
+			}
+
+			ImGui::SameLine();
+
+			if (ImGui::Button("line")) {
+				Log("--------------------------------------------------------", commentOutColor);
+			}
+
 			ImGui::EndTabItem();
 		}
+
 
 		if (ImGui::BeginTabItem("Printf")) {
 			ImGui::EndTabItem();

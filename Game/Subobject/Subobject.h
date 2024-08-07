@@ -24,6 +24,9 @@
 #include <MyEngine.h>
 #include <Sprite.h>
 
+// collision
+#include <Collider.h>
+
 //-----------------------------------------------------------------------------------------
 // forward
 //-----------------------------------------------------------------------------------------
@@ -196,7 +199,8 @@ namespace Subobjects {
 	// Sphere class
 	////////////////////////////////////////////////////////////////////////////////////////////
 	class Sphere
-		: public Subobject {
+		: public Subobject
+		, public Collider {
 	public:
 
 		//=========================================================================================
@@ -210,6 +214,12 @@ namespace Subobjects {
 		void Draw(Camera3D* mainCamera) override;
 
 		void SetAttributeImGui() override;
+
+		const Vector3f& GetColliderPosition() const override { return transform_.translate; }
+
+		void OnCollisionEnter(MAYBE_UNUSED Collider* const other) override;
+
+		void OnCollisionExit(MAYBE_UNUSED Collider* const other) override;
 
 	private:
 

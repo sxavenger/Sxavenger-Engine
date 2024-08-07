@@ -8,6 +8,8 @@
 #include <DirectXRCommon.h>
 #include <Environment.h>
 
+#include "ColliderManager.h"
+
 //-----------------------------------------------------------------------------------------
 // using
 //-----------------------------------------------------------------------------------------
@@ -89,6 +91,14 @@ void GameScene::Term() {
 
 void GameScene::Update() {
 	subobjectManager_->Update();
+
+	auto input = Input::GetInstance();
+
+	if (input->IsTriggerKey(DIK_SPACE)) {
+		console->Log("-------------------------------------------", Console::commentOutColor);
+	}
+
+	ColliderManager::GetInstance()->Update();
 }
 
 void GameScene::Draw() {

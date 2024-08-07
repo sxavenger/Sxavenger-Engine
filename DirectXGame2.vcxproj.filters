@@ -169,6 +169,12 @@
     <Filter Include="GameEngine\source">
       <UniqueIdentifier>{0b7f6289-fa86-4284-9926-5e7f2a0f06f8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Game\DebugObject">
+      <UniqueIdentifier>{d557568e-4b49-4ac7-adc8-e1e94693c2b1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource\hlsl\DebugObject">
+      <UniqueIdentifier>{f4f000fc-4fc8-4ab5-967b-925c0bc68b80}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
@@ -243,9 +249,6 @@
     </ClCompile>
     <ClCompile Include="Lib\Adapter\Random\Random.cpp">
       <Filter>Lib\Adapter\Random</Filter>
-    </ClCompile>
-    <ClCompile Include="Lib\Collider\Collider.cpp">
-      <Filter>Lib\Collider\source</Filter>
     </ClCompile>
     <ClCompile Include="Lib\DrawMethod.cpp">
       <Filter>Lib</Filter>
@@ -469,8 +472,20 @@
     <ClCompile Include="Engine\InputAssembler.cpp">
       <Filter>Engine\source</Filter>
     </ClCompile>
-    <ClCompile Include="GameEngine\Rigidbody.cpp">
+    <ClCompile Include="GameEngine\Collider.cpp">
       <Filter>GameEngine\source</Filter>
+    </ClCompile>
+    <ClCompile Include="GameEngine\ColliderManager.cpp">
+      <Filter>GameEngine\source</Filter>
+    </ClCompile>
+    <ClCompile Include="GameEngine\CollisionDetection.cpp">
+      <Filter>GameEngine\source</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\DebugObject\DebugObject.cpp">
+      <Filter>Game\DebugObject</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\DebugObject\DebugObjectManager.cpp">
+      <Filter>Game\DebugObject</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -554,9 +569,6 @@
     </ClInclude>
     <ClInclude Include="Lib\Adapter\Random\Random.h">
       <Filter>Lib\Adapter\Random</Filter>
-    </ClInclude>
-    <ClInclude Include="Lib\Collider\Collider.h">
-      <Filter>Lib\Collider\include</Filter>
     </ClInclude>
     <ClInclude Include="Lib\DrawMethod.h">
       <Filter>Lib</Filter>
@@ -744,8 +756,20 @@
     <ClInclude Include="Engine\InputAssembler.h">
       <Filter>Engine\include</Filter>
     </ClInclude>
-    <ClInclude Include="GameEngine\Rigidbody.h">
+    <ClInclude Include="GameEngine\Collider.h">
       <Filter>GameEngine\include</Filter>
+    </ClInclude>
+    <ClInclude Include="GameEngine\ColliderManager.h">
+      <Filter>GameEngine\include</Filter>
+    </ClInclude>
+    <ClInclude Include="GameEngine\CollisionDetection.h">
+      <Filter>GameEngine\include</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\DebugObject\DebugObject.h">
+      <Filter>Game\DebugObject</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\DebugObject\DebugObjectManager.h">
+      <Filter>Game\DebugObject</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -827,6 +851,9 @@
     </None>
     <None Include="Resources\hlsl\Sprite\Sprite.hlsli">
       <Filter>Resource\hlsl\Sprite</Filter>
+    </None>
+    <None Include="Resources\hlsl\DebugObject\DebugObject.hlsli">
+      <Filter>Resource\hlsl\DebugObject</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -942,6 +969,12 @@
     </FxCompile>
     <FxCompile Include="Resources\hlsl\Sprite\Sprite.PS.hlsl">
       <Filter>Resource\hlsl\Sprite</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\hlsl\DebugObject\DebugObject.PS.hlsl">
+      <Filter>Resource\hlsl\DebugObject</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\hlsl\DebugObject\DebugObject.VS.hlsl">
+      <Filter>Resource\hlsl\DebugObject</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>
