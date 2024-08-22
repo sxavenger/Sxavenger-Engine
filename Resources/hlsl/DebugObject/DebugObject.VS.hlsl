@@ -20,7 +20,7 @@ VSOutput main(VSInput input) {
 	VSOutput output;
 	
 	output.position = mul(input.position, mul(gTransform.worldMatrix, viewProj));
-	output.worldPos = mul(input.position, gTransform.worldMatrix);
+	output.worldPos = mul(input.position, gTransform.worldMatrix).xyz;
 	output.texcoord = input.texcoord;
 	output.normal   = mul(input.normal, (float3x3)gTransform.worldMatrix);
 	// fixed: gTransform use worldInverseTranspose

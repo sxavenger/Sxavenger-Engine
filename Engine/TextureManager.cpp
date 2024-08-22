@@ -50,7 +50,7 @@ void Texture::Load(DirectXCommon* dxCommon, const std::string& filePath) {
 		}
 
 		// SRVを生成するDescriptorHeapの場所を決める
-		descriptorSRV_ = dxCommon_->GetDescriptorsObj()->GetCurrentDescriptor(SRV);
+		descriptorSRV_ = dxCommon_->GetDescriptorsObj()->GetDescriptor(CBV_SRV_UAV);
 
 		// SRVの生成
 		device->CreateShaderResourceView(
@@ -62,7 +62,7 @@ void Texture::Load(DirectXCommon* dxCommon, const std::string& filePath) {
 }
 
 void Texture::Unload() {
-	dxCommon_->GetDescriptorsObj()->Erase(descriptorSRV_);
+	dxCommon_->GetDescriptorsObj()->DeleteDescriptor(descriptorSRV_);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -120,7 +120,7 @@ void RenderTexture::Create(
 		desc.Texture2D.MipLevels     = 1;
 
 		// SRVを生成するDescriptorHeapの場所を決める
-		descriptorSRV_ = dxCommon_->GetDescriptorsObj()->GetCurrentDescriptor(SRV);
+		descriptorSRV_ = dxCommon_->GetDescriptorsObj()->GetDescriptor(CBV_SRV_UAV);
 
 		// SRVの生成
 		device->CreateShaderResourceView(
@@ -132,7 +132,7 @@ void RenderTexture::Create(
 
 	// RTV - RenderTargetViewの生成
 	{
-		descriptorRTV_ = dxCommon_->GetDescriptorsObj()->GetCurrentDescriptor(RTV);
+		descriptorRTV_ = dxCommon_->GetDescriptorsObj()->GetDescriptor(RTV);
 
 		device->CreateRenderTargetView(
 			resource_.Get(),
@@ -143,7 +143,7 @@ void RenderTexture::Create(
 }
 
 void RenderTexture::Term() {
-	dxCommon_->GetDescriptorsObj()->Erase(descriptorRTV_);
+	dxCommon_->GetDescriptorsObj()->DeleteDescriptor(descriptorRTV_);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -192,7 +192,7 @@ void DummyTexture::Create(DirectXCommon* dxCommon, int32_t textureWidth, int32_t
 		desc.Texture2D.MipLevels     = 1;
 
 		// SRVを生成するDescriptorHeapの場所を決める
-		descriptorSRV_ = dxCommon_->GetDescriptorsObj()->GetCurrentDescriptor(SRV);
+		descriptorSRV_ = dxCommon_->GetDescriptorsObj()->GetDescriptor(SRV);
 
 		// SRVの生成
 		device->CreateShaderResourceView(
@@ -209,7 +209,7 @@ void DummyTexture::Create(DirectXCommon* dxCommon, int32_t textureWidth, int32_t
 		desc.Format             = format;
 
 		// UAVDescriptorの取得
-		descriptorUAV_ = dxCommon_->GetDescriptorsObj()->GetCurrentDescriptor(UAV);
+		descriptorUAV_ = dxCommon_->GetDescriptorsObj()->GetDescriptor(UAV);
 		
 		device->CreateUnorderedAccessView(
 			resource_.Get(),
@@ -221,7 +221,7 @@ void DummyTexture::Create(DirectXCommon* dxCommon, int32_t textureWidth, int32_t
 }
 
 void DummyTexture::Term() {
-	dxCommon_->GetDescriptorsObj()->Erase(descriptorUAV_);
+	dxCommon_->GetDescriptorsObj()->DeleteDescriptor(descriptorUAV_);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -467,8 +467,7 @@ ComPtr<ID3D12Resource> TextureMethod::CreateTextureResource(ID3D12Device* device
 	return result;
 }
 
-[[nodiscard]]
-ComPtr<ID3D12Resource> TextureMethod::UploadTextureData(
+_NODISCARD ComPtr<ID3D12Resource> TextureMethod::UploadTextureData(
 	ID3D12Resource* texture, const DirectX::ScratchImage& mipImages,
 	ID3D12Device* device, ID3D12GraphicsCommandList* commandList) {
 
@@ -476,7 +475,7 @@ ComPtr<ID3D12Resource> TextureMethod::UploadTextureData(
 	DirectX::PrepareUpload(device, mipImages.GetImages(), mipImages.GetImageCount(), mipImages.GetMetadata(), subresource);
 
 	uint64_t intermediateSize = GetRequiredIntermediateSize(texture, 0, UINT(subresource.size()));
-	ComPtr<ID3D12Resource> intermediateResource = DxObjectMethod::CreateBufferResource(device, intermediateSize);
+	ComPtr<ID3D12Resource> intermediateResource = CreateBufferResource(device, intermediateSize);
 	UpdateSubresources(commandList, texture, intermediateResource.Get(), 0, 0, UINT(subresource.size()), subresource.data());
 
 	// 転送後は利用できるように D3D12_RESOUCE_STATE_COPY_DESC -> D3D12_RESOUCE_STATE_GENETIC_READ へ変更

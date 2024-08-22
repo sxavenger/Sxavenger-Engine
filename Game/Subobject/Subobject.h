@@ -13,7 +13,7 @@
 
 // DxObject
 #include <DxMesh.h>
-#include <DxGraphicsBlob.h>
+#include <DxShaderBlob.h>
 #include <DxGraphicsPipeline.h>
 
 // IA
@@ -217,9 +217,9 @@ namespace Subobjects {
 
 		const Vector3f& GetColliderPosition() const override { return transform_.translate; }
 
-		void OnCollisionEnter(MAYBE_UNUSED Collider* const other) override;
+		void OnCollisionEnter(_MAYBE_UNUSED Collider* const other) override;
 
-		void OnCollisionExit(MAYBE_UNUSED Collider* const other) override;
+		void OnCollisionExit(_MAYBE_UNUSED Collider* const other) override;
 
 	private:
 

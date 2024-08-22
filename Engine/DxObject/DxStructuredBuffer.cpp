@@ -11,7 +11,7 @@
 
 void DxObject::StructuredBuffer::Init(BaseBufferResource* bufferResource) {
 	// descriptorの取得
-	descriptor_ = MyEngine::GetCurrentDescripor(DescriptorType::SRV);
+	descriptor_ = MyEngine::GetCurrentDescripor(DescriptorType::CBV_SRV_UAV);
 
 	D3D12_SHADER_RESOURCE_VIEW_DESC desc = {};
 	desc.ViewDimension              = D3D12_SRV_DIMENSION_BUFFER;
@@ -29,5 +29,5 @@ void DxObject::StructuredBuffer::Init(BaseBufferResource* bufferResource) {
 }
 
 void DxObject::StructuredBuffer::Term() {
-	MyEngine::EraseDescriptor(descriptor_);
+	MyEngine::DeleteDescriptor(descriptor_);
 }

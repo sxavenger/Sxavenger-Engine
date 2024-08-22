@@ -9,7 +9,7 @@
 //-----------------------------------------------------------------------------------------
 // using
 //-----------------------------------------------------------------------------------------
-using namespace DxObject;
+_DXOBJECT_USING
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // DirectXCommon class
@@ -30,7 +30,7 @@ void DirectXCommon::Init(WinApp* winApp, int32_t clientWidth, int32_t clientHeig
 	fences_          = std::make_unique<DxObject::Fence>(devices_.get());
 	
 	// new Graphics pipeline menbers
-	shaderManager_ = std::make_unique<DxObject::ShaderManager>();
+	shaderManager_ = std::make_unique<DxObject::ShaderBlobManager>();
 
 	blendState_   = std::make_unique<DxObject::BlendState>();
 	depthStencil_ = std::make_unique<DxObject::DepthStencil>(devices_.get(), descriptorHeaps_.get(), clientWidth, clientHeight);
@@ -46,7 +46,7 @@ void DirectXCommon::EndFrame() {
 
 	command_->GetCommandList()->ResourceBarrier(
 		1,
-		swapChains_->GetTransitionBarrier(backBufferIndex_, D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT)
+		swapChains_->GetBackBufferTransitionBarrier(D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT)
 	);
 
 	fences_->WaitGPU(); // frontAllocatorの完了待ち
@@ -222,14 +222,14 @@ void DirectXCommon::BeginScreenDraw() {
 	ID3D12GraphicsCommandList* commandList = command_->GetCommandList();
 
 	// 書き込みバックバッファのインデックスを取得
-	backBufferIndex_ = swapChains_->GetSwapChain()->GetCurrentBackBufferIndex();
+	swapChains_->ObtainCurrentBackBufferIndex();
 
 	commandList->ResourceBarrier(
 		1,
-		swapChains_->GetTransitionBarrier(backBufferIndex_, D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET)
+		swapChains_->GetBackBufferTransitionBarrier(D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET)
 	);
 
-	D3D12_CPU_DESCRIPTOR_HANDLE handle_RTV = swapChains_->GetHandleCPU_RTV(backBufferIndex_);
+	D3D12_CPU_DESCRIPTOR_HANDLE handle_RTV = swapChains_->GetRTVHandleCPU();
 
 	commandList->OMSetRenderTargets(
 		1,
@@ -301,7 +301,7 @@ void DirectXCommon::TransitionProcess() {
 
 	command_->ResetBackAllocator();
 
-	ID3D12DescriptorHeap* srv[] = { descriptorHeaps_->GetDescriptorHeap(DxObject::SRV) };
+	ID3D12DescriptorHeap* srv[] = { descriptorHeaps_->GetDescriptorHeap(CBV_SRV_UAV) };
 	command_->GetCommandList()->SetDescriptorHeaps(_countof(srv), srv);
 
 }
@@ -320,7 +320,7 @@ void DirectXCommon::TransitionSingleAllocator() {
 
 	command_->ResetSingleAllocator();
 
-	ID3D12DescriptorHeap* srv[] = { descriptorHeaps_->GetDescriptorHeap(DxObject::SRV) };
+	ID3D12DescriptorHeap* srv[] = { descriptorHeaps_->GetDescriptorHeap(CBV_SRV_UAV) };
 	command_->GetCommandList()->SetDescriptorHeaps(_countof(srv), srv);
 }
 

@@ -12,10 +12,6 @@
 // Fence class
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-DxObject::Fence::Fence(Devices* devices) { Init(devices); }
-
-DxObject::Fence::~Fence() { Term(); }
-
 void DxObject::Fence::Init(Devices* devices) {
 
 	ID3D12Device* device = devices->GetDevice();

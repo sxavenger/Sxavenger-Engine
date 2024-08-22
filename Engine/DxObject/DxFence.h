@@ -3,90 +3,71 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
-// directX
-#include <d3d12.h>
-#include <dxgi1_6.h>
+//* DxObjectCommon
+#include <DxObjectCommon.h>
 
-// c++
-#include <cstdint>
-#include <cassert>
-
-// ComPtr
-#include <ComPtr.h>
-
-//-----------------------------------------------------------------------------------------
-// comment
-//-----------------------------------------------------------------------------------------
-#pragma comment(lib, "d3d12.lib")
-#pragma comment(lib, "dxgi.lib")
+////////////////////////////////////////////////////////////////////////////////////////////
+// DxObject
+////////////////////////////////////////////////////////////////////////////////////////////
+_DXOBJECT_NAMESPACE_BEGIN
 
 //-----------------------------------------------------------------------------------------
 // forward
 //-----------------------------------------------------------------------------------------
-class WinApp;
+class Devices;
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// DxObject namespace
+// Fence class
 ////////////////////////////////////////////////////////////////////////////////////////////
-namespace DxObject {
+class Fence {
+public:
 
-	//-----------------------------------------------------------------------------------------
-	// DxObject forward
-	//-----------------------------------------------------------------------------------------
-	class Devices;
+	//=========================================================================================
+	// public methods
+	//=========================================================================================
 
-	////////////////////////////////////////////////////////////////////////////////////////////
-	// Fence class
-	////////////////////////////////////////////////////////////////////////////////////////////
-	class Fence {
-	public:
+	//! @brief コンストラクタ
+	//! 
+	//! @param[in] devices DxObject::Devices
+	Fence(Devices* devices) { Init(devices); }
 
-		//=========================================================================================
-		// public methods
-		//=========================================================================================
+	//! @brief デストラクタ
+	~Fence() { Term(); }
 
-		//! @brief コンストラクタ
-		//! 
-		//! @param[in] devices DxObject::Devices
-		Fence(Devices* devices);
+	//! @brief 初期化処理/
+	//! 
+	//! @param[in] devices DxObject::Devices
+	void Init(Devices* devices);
 
-		//! @brief デストラクタ
-		~Fence();
+	//! @brief 終了処理
+	void Term();
 
-		//! @brief 初期化処理/
-		//! 
-		//! @param[in] devices DxObject::Devices
-		void Init(Devices* devices);
+	//! @brief fenceValueをインクリメント
+	void AddFenceValue();
 
-		//! @brief 終了処理
-		void Term();
+	//! @brief GPUのイベントを待つ
+	void WaitGPU();
 
-		//! @brief fenceValueをインクリメント
-		void AddFenceValue();
+	//! @brief フェンスを取得
+	//! 
+	//! @return フェンスを返却
+	ID3D12Fence* const GetFence() const { return fence_.Get(); }
 
-		//! @brief GPUのイベントを待つ
-		void WaitGPU();
+	//! @brief fenceValueを取得
+	//! 
+	//! @return fenceValueを返却
+	uint64_t GetFenceValue() const { return fenceValue_; }
 
-		//! @brief フェンスを取得
-		//! 
-		//! @return フェンスを返却
-		ID3D12Fence* GetFence() const { return fence_.Get(); }
+private:
 
-		//! @brief fenceValueを取得
-		//! 
-		//! @return fenceValueを返却
-		uint64_t GetFenceValue() const { return fenceValue_; }
+	//=========================================================================================
+	// private variables
+	//=========================================================================================
 
-	private:
+	ComPtr<ID3D12Fence> fence_;
 
-		//=========================================================================================
-		// private variables
-		//=========================================================================================
+	uint64_t fenceValue_;
+	HANDLE   fenceEvent_;
+};
 
-		ComPtr<ID3D12Fence> fence_;
-
-		uint64_t fenceValue_;
-		HANDLE   fenceEvent_;
-	};
-
-}
+_DXOBJECT_NAMESPACE_END

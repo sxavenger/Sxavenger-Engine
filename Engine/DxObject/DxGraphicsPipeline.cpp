@@ -6,83 +6,15 @@
 // DxObject
 #include <DxDevices.h>
 
-// DirectxX12
+// DirectXHelper
 #include <d3dx12.h>
-
-////////////////////////////////////////////////////////////////////////////////////////////
-// GraphicsRootSignatureDesc structure methods
-////////////////////////////////////////////////////////////////////////////////////////////
-
-void DxObject::GraphicsRootSignatureDesc::Resize(uint32_t paramSize, uint32_t samplerSize) {
-	params.resize(paramSize);
-	ranges.resize(paramSize);
-	samplers.resize(samplerSize);
-}
-
-void DxObject::GraphicsRootSignatureDesc::Clear() {
-	params.clear();
-	params.shrink_to_fit();
-	samplers.clear();
-	samplers.shrink_to_fit();
-	ranges.clear();
-	ranges.shrink_to_fit();
-}
-
-void DxObject::GraphicsRootSignatureDesc::SetCBV(uint32_t index, ShaderVisibility stage, UINT shaderRegister) {
-	params[index].ParameterType             = D3D12_ROOT_PARAMETER_TYPE_CBV;
-	params[index].ShaderVisibility          = static_cast<D3D12_SHADER_VISIBILITY>(stage);
-	params[index].Descriptor.ShaderRegister = shaderRegister;
-}
-
-void DxObject::GraphicsRootSignatureDesc::SetVirtualSRV(uint32_t index, ShaderVisibility stage, UINT shaderRegister) {
-	params[index].ParameterType             = D3D12_ROOT_PARAMETER_TYPE_SRV;
-	params[index].ShaderVisibility          = static_cast<D3D12_SHADER_VISIBILITY>(stage);
-	params[index].Descriptor.ShaderRegister = shaderRegister;
-}
-
-void DxObject::GraphicsRootSignatureDesc::SetSRV(uint32_t index, ShaderVisibility stage, UINT shaderRegister) {
-	ranges[index].BaseShaderRegister                = shaderRegister;
-	ranges[index].NumDescriptors                    = 1;
-	ranges[index].RangeType                         = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
-	ranges[index].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
-
-	params[index].ParameterType                       = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
-	params[index].ShaderVisibility                    = static_cast<D3D12_SHADER_VISIBILITY>(stage);
-	params[index].DescriptorTable.pDescriptorRanges   = &ranges[index];
-	params[index].DescriptorTable.NumDescriptorRanges = 1;
-}
-
-void DxObject::GraphicsRootSignatureDesc::SetSampler(uint32_t sampleIndex, TextureMode mode, ShaderVisibility stage, UINT shaderRegister) {
-	samplers[sampleIndex].Filter           = D3D12_FILTER_MIN_MAG_MIP_LINEAR;
-	samplers[sampleIndex].AddressU         = static_cast<D3D12_TEXTURE_ADDRESS_MODE>(mode);
-	samplers[sampleIndex].AddressV         = static_cast<D3D12_TEXTURE_ADDRESS_MODE>(mode);
-	samplers[sampleIndex].AddressW         = static_cast<D3D12_TEXTURE_ADDRESS_MODE>(mode);
-	samplers[sampleIndex].ComparisonFunc   = D3D12_COMPARISON_FUNC_NEVER;
-	samplers[sampleIndex].MaxLOD           = D3D12_FLOAT32_MAX;
-	samplers[sampleIndex].ShaderRegister   = shaderRegister;
-	samplers[sampleIndex].ShaderVisibility = static_cast<D3D12_SHADER_VISIBILITY>(stage);
-}
-
-void DxObject::GraphicsRootSignatureDesc::SetAnisotropicSampler(
-	uint32_t sampleIndex, TextureMode mode, ShaderVisibility stage, UINT shaderRegister, uint32_t anisotropic) {
-
-	samplers[sampleIndex].Filter           = D3D12_FILTER_ANISOTROPIC;
-	samplers[sampleIndex].MaxAnisotropy    = anisotropic; //!< 異方性フィルタリングパラメーター
-	samplers[sampleIndex].AddressU         = static_cast<D3D12_TEXTURE_ADDRESS_MODE>(mode);
-	samplers[sampleIndex].AddressV         = static_cast<D3D12_TEXTURE_ADDRESS_MODE>(mode);
-	samplers[sampleIndex].AddressW         = static_cast<D3D12_TEXTURE_ADDRESS_MODE>(mode);
-	samplers[sampleIndex].ComparisonFunc   = D3D12_COMPARISON_FUNC_NEVER;
-	samplers[sampleIndex].MaxLOD           = D3D12_FLOAT32_MAX;
-	samplers[sampleIndex].ShaderRegister   = shaderRegister;
-	samplers[sampleIndex].ShaderVisibility = static_cast<D3D12_SHADER_VISIBILITY>(stage);
-}
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // GraphicsPipelineDesc structure methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 void DxObject::GraphicsPipelineDesc::Init() {
-	rasterizerDesc = {};
+	rasterizerDesc   = {};
 	depthStencilDesc = {};
 }
 
@@ -110,7 +42,7 @@ void DxObject::GraphicsPipelineDesc::CreateDefaultDesc() {
 	SetPrimitive(PRIMITIVE_TRIANGLE);
 
 	/* rtvFormat */
-	SetRTVFormat(defaultFormat);
+	SetRTVFormat(forwardFormat);
 }
 
 void DxObject::GraphicsPipelineDesc::SetElement(const LPCSTR& semanticName, UINT semanticIndex, DXGI_FORMAT format, UINT inputSlot) {
@@ -188,30 +120,32 @@ DxObject::BlendState* DxObject::GraphicsPipeline::blendState_ = nullptr;
 // GraphicsPipeline class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
+void DxObject::GraphicsPipeline::CreateViewports(int32_t clientWidth, int32_t clientHeight) {
+	// viewportの設定
+	{
+		viewport_.Width = static_cast<float>(clientWidth);
+		viewport_.Height = static_cast<float>(clientHeight);
+		viewport_.TopLeftX = 0;
+		viewport_.TopLeftY = 0;
+		viewport_.MinDepth = 0.0f;
+		viewport_.MaxDepth = 1.0f;
+	}
+
+	// シザー矩形の設定
+	{
+		scissorRect_.left = 0;
+		scissorRect_.right = clientWidth;
+		scissorRect_.top = 0;
+		scissorRect_.bottom = clientHeight;
+	}
+}
+
 void DxObject::GraphicsPipeline::CreateRootSignature(Devices* devices, const GraphicsRootSignatureDesc& descs) {
 
 	// deviceの取り出し
 	auto device = devices->GetDevice();
 
-	// descの設定
-	D3D12_ROOT_SIGNATURE_DESC desc = {};
-	desc.Flags = D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT;
-
-	if (!descs.params.empty()) {
-		desc.pParameters   = descs.params.data();
-		desc.NumParameters = static_cast<UINT>(descs.params.size());
-	}
-
-	if (!descs.samplers.empty()) {
-		desc.pStaticSamplers   = descs.samplers.data();
-		desc.NumStaticSamplers = static_cast<UINT>(descs.samplers.size());
-	}
-
-	rootSignature_ = DxObjectMethod::CreateRootSignature(
-		device,
-		desc
-	);
-
+	rootSignature_ = descs.CreateRootSignature(device);
 }
 
 void DxObject::GraphicsPipeline::CreatePipeline(Devices* devices, GraphicsBlob* graphicBlob, BlendMode blendMode) {
@@ -222,10 +156,7 @@ void DxObject::GraphicsPipeline::CreatePipeline(Devices* devices, GraphicsBlob* 
 
 	desc.blendMode = blendMode;
 
-	CreatePipeline(
-		devices, graphicBlob, desc
-	);
-
+	CreatePipeline(devices, graphicBlob, desc);
 }
 
 void DxObject::GraphicsPipeline::CreatePipeline(
@@ -319,12 +250,11 @@ void DxObject::GraphicsPipeline::CreatePipeline(
 
 		assert(SUCCEEDED(hr));
 		return;
-
 	}
 }
 
-void DxObject::GraphicsPipeline::SetPipeline(ID3D12GraphicsCommandList* commandList) {
-	
+void DxObject::GraphicsPipeline::SetPipeline(ID3D12GraphicsCommandList* commandList) const {
+
 	commandList->RSSetViewports(1, &viewport_);
 	commandList->RSSetScissorRects(1, &scissorRect_);
 
@@ -333,26 +263,6 @@ void DxObject::GraphicsPipeline::SetPipeline(ID3D12GraphicsCommandList* commandL
 
 	if (!isUseMeshPipeline_) {
 		//!< vertex pipeline のときIAPrimitiveが必要になるので
-		commandList->IASetPrimitiveTopology(primitiveTopology_); //!< line描画の時の調整
-	}
-}
-
-void DxObject::GraphicsPipeline::CreateViewports(int32_t clientWidth, int32_t clientHeight) {
-	// viewportの設定
-	{
-		viewport_.Width    = static_cast<float>(clientWidth);
-		viewport_.Height   = static_cast<float>(clientHeight);
-		viewport_.TopLeftX = 0;
-		viewport_.TopLeftY = 0;
-		viewport_.MinDepth = 0.0f;
-		viewport_.MaxDepth = 1.0f;
-	}
-
-	// シザー矩形の設定
-	{
-		scissorRect_.left   = 0;
-		scissorRect_.right  = clientWidth;
-		scissorRect_.top    = 0;
-		scissorRect_.bottom = clientHeight;
+		commandList->IASetPrimitiveTopology(primitiveTopology_);
 	}
 }

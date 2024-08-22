@@ -7,7 +7,7 @@
 #include <TextureManager.h>
 
 // DxObject
-#include <DxGraphicsBlob.h>
+#include <DxShaderBlob.h>
 #include <DxGraphicsPipeline.h>
 
 // DrawMethods

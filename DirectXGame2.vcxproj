@@ -117,22 +117,21 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\DxObject\DxBlendState.cpp" />
     <ClCompile Include="Engine\DxObject\DxBufferResource.cpp" />
     <ClCompile Include="Engine\DxObject\DxCommand.cpp" />
-    <ClCompile Include="Engine\DxObject\DxCSBlob.cpp" />
-    <ClCompile Include="Engine\DxObject\DxCSBufferResource.cpp" />
-    <ClCompile Include="Engine\DxObject\DxCSDimensionBuffer.cpp" />
-    <ClCompile Include="Engine\DxObject\DxCSPipelineState.cpp" />
+    <ClCompile Include="Engine\DxObject\DxCSPipeline.cpp" />
     <ClCompile Include="Engine\DxObject\DxDepthStencil.cpp" />
     <ClCompile Include="Engine\DxObject\DxDescriptorHeaps.cpp" />
     <ClCompile Include="Engine\DxObject\DxDevices.cpp" />
     <ClCompile Include="Engine\DxObject\DxFence.cpp" />
-    <ClCompile Include="Engine\DxObject\DxGraphicsBlob.cpp" />
     <ClCompile Include="Engine\DxObject\DxGraphicsPipeline.cpp" />
     <ClCompile Include="Engine\DxObject\DxMesh.cpp" />
-    <ClCompile Include="Engine\DxObject\DxObjectMethod.cpp" />
-    <ClCompile Include="Engine\DxObject\DxShaderManager.cpp" />
+    <ClCompile Include="Engine\DxObject\DxObjectCommon.cpp" />
+    <ClCompile Include="Engine\DxObject\DxRootSignatureDesc.cpp" />
+    <ClCompile Include="Engine\DxObject\DxShaderBlob.cpp" />
+    <ClCompile Include="Engine\DxObject\DxShaderBlobManager.cpp" />
     <ClCompile Include="Engine\DxObject\DxShaderReflection.cpp" />
     <ClCompile Include="Engine\DxObject\DxStructuredBuffer.cpp" />
     <ClCompile Include="Engine\DxObject\DxSwapChain.cpp" />
+    <ClCompile Include="Engine\DxObject\DxUnorderedBufferResource.cpp" />
     <ClCompile Include="Engine\ImGuiManager.cpp" />
     <ClCompile Include="Engine\Input.cpp" />
     <ClCompile Include="Engine\InputAssembler.cpp" />
@@ -226,22 +225,21 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\DxObject\DxBlendState.h" />
     <ClInclude Include="Engine\DxObject\DxBufferResource.h" />
     <ClInclude Include="Engine\DxObject\DxCommand.h" />
-    <ClInclude Include="Engine\DxObject\DxCSBlob.h" />
-    <ClInclude Include="Engine\DxObject\DxCSBufferResource.h" />
-    <ClInclude Include="Engine\DxObject\DxCSDimensionBuffer.h" />
-    <ClInclude Include="Engine\DxObject\DxCSPipelineState.h" />
+    <ClInclude Include="Engine\DxObject\DxCSPipeline.h" />
     <ClInclude Include="Engine\DxObject\DxDepthStencil.h" />
     <ClInclude Include="Engine\DxObject\DxDescriptorHeaps.h" />
     <ClInclude Include="Engine\DxObject\DxDevices.h" />
     <ClInclude Include="Engine\DxObject\DxFence.h" />
-    <ClInclude Include="Engine\DxObject\DxGraphicsBlob.h" />
     <ClInclude Include="Engine\DxObject\DxGraphicsPipeline.h" />
     <ClInclude Include="Engine\DxObject\DxMesh.h" />
-    <ClInclude Include="Engine\DxObject\DxObjectMethod.h" />
-    <ClInclude Include="Engine\DxObject\DxShaderManager.h" />
+    <ClInclude Include="Engine\DxObject\DxObjectCommon.h" />
+    <ClInclude Include="Engine\DxObject\DxRootSignatureDesc.h" />
+    <ClInclude Include="Engine\DxObject\DxShaderBlob.h" />
+    <ClInclude Include="Engine\DxObject\DxShaderBlobManager.h" />
     <ClInclude Include="Engine\DxObject\DxShaderReflection.h" />
     <ClInclude Include="Engine\DxObject\DxStructuredBuffer.h" />
     <ClInclude Include="Engine\DxObject\DxSwapChain.h" />
+    <ClInclude Include="Engine\DxObject\DxUnorderedBufferResource.h" />
     <ClInclude Include="Engine\ImGuiManager.h" />
     <ClInclude Include="Engine\Input.h" />
     <ClInclude Include="Engine\InputAssembler.h" />
@@ -284,6 +282,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Lib\Camera\Camera2D.h" />
     <ClInclude Include="Lib\Camera\Camera3D.h" />
     <ClInclude Include="Lib\Camera\DebugCamera3D.h" />
+    <ClInclude Include="Lib\DefineConfigs.h" />
     <ClInclude Include="Lib\DrawMethod.h" />
     <ClInclude Include="Lib\Environment.h" />
     <ClInclude Include="Lib\Geometry\MathLib.h" />
@@ -420,9 +419,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <FxCompile Include="Resources\hlsl\Object3d\Object3d.VS.hlsl">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </FxCompile>
-    <FxCompile Include="Resources\hlsl\Particle\Particle.CS.hlsl">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-    </FxCompile>
     <FxCompile Include="Resources\hlsl\Particle\Particle.PS.hlsl">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </FxCompile>
@@ -432,7 +428,13 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <FxCompile Include="Resources\hlsl\Particle\ParticleDeffered.PS.hlsl">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </FxCompile>
+    <FxCompile Include="Resources\hlsl\Particle\ParticleEmit.CS.hlsl">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </FxCompile>
     <FxCompile Include="Resources\hlsl\Particle\ParticleInit.CS.hlsl">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="Resources\hlsl\Particle\ParticleUpdate.CS.hlsl">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </FxCompile>
     <FxCompile Include="Resources\hlsl\Primitive\Primitive.PS.hlsl">

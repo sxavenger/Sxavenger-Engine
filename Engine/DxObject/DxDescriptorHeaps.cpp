@@ -4,160 +4,160 @@
 // include
 //-----------------------------------------------------------------------------------------
 // DxObject
-#include "DxDevices.h"
-#include "DxSwapChain.h"
-
-#include <Logger.h>
+#include <DxDevices.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// DescriptorHeaps class
+// DescriptorPool class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-DxObject::DescriptorHeaps::DescriptorHeaps(Devices* devices) { Init(devices); }
+DxObject::DescriptorPool::DescriptorPool(Devices* devices, D3D12_DESCRIPTOR_HEAP_TYPE descriptorHeapType, uint32_t descriptorMaxCount) {
+	Init(devices, descriptorHeapType, descriptorMaxCount);
+}
 
-DxObject::DescriptorHeaps::~DescriptorHeaps() { Term(); }
+void DxObject::DescriptorPool::Init(
+	Devices* devices,
+	D3D12_DESCRIPTOR_HEAP_TYPE descriptorHeapType, uint32_t descriptorMaxCount) {
 
-void DxObject::DescriptorHeaps::Init(Devices* devices) {
-
-	// デバイスの取り出し
+	// deviceの取り出し
 	ID3D12Device* device = devices->GetDevice();
 
-	// descriptorの要素数を決定
-	descriptorIndexSize_[RTV] = 12;
-	descriptorIndexSize_[SRV] = 128;
-	descriptorIndexSize_[DSV] = 1;
+	// parameterの保存
+	descriptorHeapType_ = descriptorHeapType;
+	descriptorMaxCount_ = descriptorMaxCount;
 
-	// 添え字の初期化
-	for (int i = 0; i < DescriptorType::kDescriptorHeapCount; ++i) {
-		descriptorIndexCount_[i] = 0;
-	}
+	CreateDescriptorHeap(device);
 
-	// ディスクリプターヒープ[RTV]の生成
-	{
-		descriptorHeaps_[RTV] = DxObjectMethod::CreateDescriptorHeap(
-			device,
-			D3D12_DESCRIPTOR_HEAP_TYPE_RTV,
-			descriptorIndexSize_[RTV],
-			false
-		);
-
-		Log("[DxObject.DescriptorHeaps]: descriptorHeaps_[RTV] << Complete Create");
-	}
-
-	// ディスクリプターヒープ[SRV]の生成
-	{
-		descriptorHeaps_[SRV] = DxObjectMethod::CreateDescriptorHeap(
-			device,
-			D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV,
-			descriptorIndexSize_[SRV],
-			true
-		);
-
-		Log("[DxObject.DescriptorHeaps]: descriptorHeaps_[SRV] << Complete Create");
-	}
-
-	// ディスクリプターヒープ[DSV]の生成
-	{
-		descriptorHeaps_[DSV] = DxObjectMethod::CreateDescriptorHeap(
-			device,
-			D3D12_DESCRIPTOR_HEAP_TYPE_DSV,
-			descriptorIndexSize_[DSV],
-			false
-		);
-
-		Log("[DxObject.DescriptorHeaps]: descriptorHeaps_[DSV] << Complete Create");
-	}
-
-	// descriptorのサイズを取得
-	descriptorSize_[RTV] = device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
-	descriptorSize_[SRV] = device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
-	descriptorSize_[DSV] = device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_DSV);
+	// handleSizeを取得
+	descriptorHandleSize_ = device->GetDescriptorHandleIncrementSize(descriptorHeapType_);
 }
 
-void DxObject::DescriptorHeaps::Term() {
-	for (int i = 0; i < kDescriptorHeapCount; ++i) {
-		/*descriptorHeaps_[i]->Release();*/
-		descriptorSize_[i] = 0;
-
-		descriptorIndexSize_[i] = 0;
-		descriptorIndexCount_[i] = 0;
-
-		descriptorVacantIndexs_[i].clear();
-	}
+void DxObject::DescriptorPool::Term() {
 }
 
-const uint32_t DxObject::DescriptorHeaps::GetDescriptorCurrentIndex(DescriptorType type) {
+DxObject::Descriptor DxObject::DescriptorPool::GetDescriptor() {
 
-	assert(type < DescriptorType::kDescriptorHeapCount); //!< descrptorHeaps配列のオーバー
+	Descriptor result;
 
-	// DescriptorTypeのindexを取得
-	uint32_t typeIndex = static_cast<uint32_t>(type);
+	// indexの取得
+	result.index = GetCurrentDescriptorIndex();
 
-	if (!descriptorVacantIndexs_[typeIndex].empty()) { //!< 空きindexがある場合
-		// 先頭の空きindexを返却
-		uint32_t result = descriptorVacantIndexs_[typeIndex].front(); 
-		// 先頭の空きインデックスを渡すので先頭をpop
-		descriptorVacantIndexs_[typeIndex].pop_front(); 
-		return result;
+	// handleの取得
+	result.handles.first  = GetCPUDescriptorHandle(result.index);
+	result.handles.second = std::nullopt;
+
+	if (descriptorHeapType_ == D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV) {
+		result.handles.second = GetGPUDescriptorHandle(result.index);
 	}
-
-	assert(descriptorIndexCount_[typeIndex] < descriptorIndexSize_[typeIndex]); //!< 作成した分の配列サイズを超えている
-
-	// 現在のindexCountを返却
-	uint32_t result = descriptorIndexCount_[typeIndex];
-
-	// 取得するのでインクリメント
-	descriptorIndexCount_[typeIndex]++;
 
 	return result;
 }
 
-D3D12_CPU_DESCRIPTOR_HANDLE DxObject::DescriptorHeaps::GetCPUDescriptorHandle(DescriptorType type, uint32_t index) const {
-	assert(type < DescriptorType::kDescriptorHeapCount);
-
-	return DxObjectMethod::GetCPUDescriptorHandle(
-		descriptorHeaps_[type].Get(),
-		descriptorSize_[type],
-		index
-	);
-}
-
-D3D12_GPU_DESCRIPTOR_HANDLE DxObject::DescriptorHeaps::GetGPUDescriptorHandle(DescriptorType type, uint32_t index) const {
-	assert(type < DescriptorType::kDescriptorHeapCount);
-
-	return DxObjectMethod::GetGPUDescriptorHandle(
-		descriptorHeaps_[type].Get(),
-		descriptorSize_[type],
-		index
-	);
-}
-
-void DxObject::DescriptorHeaps::Erase(Descriptor& descriptor) {
-	if (descriptor.type >= DescriptorType::kDescriptorHeapCount) {
-		return;
-	}
+void DxObject::DescriptorPool::DeleteDescriptor(Descriptor& descriptor) {
 
 	//!< 空き配列に挿入
-	descriptorVacantIndexs_[descriptor.type].push_back(descriptor.index);
+	descriptorDeletedIndices_.push_back(descriptor.index);
 
 	// 消したのでdescriptorの要素削除
 	descriptor.Term();
 }
 
-DxObject::Descriptor DxObject::DescriptorHeaps::GetCurrentDescriptor(DescriptorType type) {
+void DxObject::DescriptorPool::CreateDescriptorHeap(ID3D12Device* device) {
 
-	assert(type < DescriptorType::kDescriptorHeapCount); //!< descrptorHeaps配列のオーバー
-	Descriptor result;
+	bool shaderVisible = (descriptorHeapType_ == D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV); //!< 仮でCBV_SRV_UAVの場合はshaderで使うとする
 
-	result.index          = GetDescriptorCurrentIndex(type);
-	result.handles.first  = GetCPUDescriptorHandle(type, result.index);
-	result.handles.second = std::nullopt;
+	D3D12_DESCRIPTOR_HEAP_DESC desc = {};
+	desc.Type           = descriptorHeapType_;
+	desc.NumDescriptors = descriptorMaxCount_;
+	desc.Flags          = shaderVisible
+		? D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE : D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
 
-	if (type == DescriptorType::SRV) {
-		result.handles.second = GetGPUDescriptorHandle(type, result.index);
+	auto hr = device->CreateDescriptorHeap(
+		&desc, IID_PPV_ARGS(&descriptorHeap_)
+	);
+
+	assert(SUCCEEDED(hr));
+
+}
+
+uint32_t DxObject::DescriptorPool::GetCurrentDescriptorIndex() {
+	
+	uint32_t result = 0;
+
+	if (!descriptorDeletedIndices_.empty()) {  //!< 空きindexがある場合
+
+		// 先頭の空きindexの取得
+		result = descriptorDeletedIndices_.front(); 
+
+		// 先頭の空きindexを渡すので先頭をpop
+		descriptorDeletedIndices_.pop_front();
+
+		return result;
 	}
 
+	assert(descriptorIndexCount_ < descriptorMaxCount_);  //!< 作成した分のDescriptorの要素数を超えている
+
+	// 現在のindexCountを返却
+	result = descriptorIndexCount_;
+
+	// 取得するのでインクリメント
+	descriptorIndexCount_++;
+
+	return result;
+}
+
+D3D12_CPU_DESCRIPTOR_HANDLE DxObject::DescriptorPool::GetCPUDescriptorHandle(uint32_t index) {
+	D3D12_CPU_DESCRIPTOR_HANDLE result = descriptorHeap_->GetCPUDescriptorHandleForHeapStart();
+	result.ptr += (descriptorHandleSize_ * index);
+	return result;
+}
+
+D3D12_GPU_DESCRIPTOR_HANDLE DxObject::DescriptorPool::GetGPUDescriptorHandle(uint32_t index) {
+	D3D12_GPU_DESCRIPTOR_HANDLE result = descriptorHeap_->GetGPUDescriptorHandleForHeapStart();
+	result.ptr += (descriptorHandleSize_ * index);
+	return result;
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////
+// DescriptorHeaps class methods
+////////////////////////////////////////////////////////////////////////////////////////////
+
+void DxObject::DescriptorHeaps::Init(Devices* devices) {
+
+	pools_[DescriptorType::RTV]
+		= std::make_unique<DescriptorPool>(devices, D3D12_DESCRIPTOR_HEAP_TYPE_RTV, 12);
+
+	pools_[DescriptorType::DSV]
+		= std::make_unique<DescriptorPool>(devices, D3D12_DESCRIPTOR_HEAP_TYPE_DSV, 1);
+
+	pools_[DescriptorType::CBV_SRV_UAV]
+		= std::make_unique<DescriptorPool>(devices, D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, 128);
+
+}
+
+void DxObject::DescriptorHeaps::Term() {
+}
+
+DxObject::Descriptor DxObject::DescriptorHeaps::GetDescriptor(DescriptorType type) {
+	assert(type < DescriptorType::kDescriptorHeapCount); //!< 範囲外参照
+
+	Descriptor result = pools_.at(type)->GetDescriptor();
 	result.type = type;
 
 	return result;
+}
+
+void DxObject::DescriptorHeaps::DeleteDescriptor(Descriptor& descriptor) {
+	if (descriptor.type == DescriptorType::kDescriptorHeapCount) { //!< 無効値
+		return;
+	}
+
+	pools_.at(descriptor.type)->DeleteDescriptor(descriptor);
+}
+
+const uint32_t DxObject::DescriptorHeaps::GetDescriptorMaxCount(DescriptorType type) const {
+	return pools_.at(type)->GetDescriptorMaxCount();
+}
+
+ID3D12DescriptorHeap* const DxObject::DescriptorHeaps::GetDescriptorHeap(DescriptorType type) const {
+	return pools_.at(type)->GetDescriptorHeap();
 }

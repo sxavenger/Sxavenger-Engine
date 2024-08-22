@@ -59,7 +59,7 @@ void DxObject::SwapChain::Init(
 	{
 		for (uint32_t i = 0; i < kBufferCount_; ++i) {
 			auto hr = swapChain_->GetBuffer(
-				i, IID_PPV_ARGS(&swapChainResource_[i])
+				i, IID_PPV_ARGS(&resource_[i])
 			);
 
 			assert(SUCCEEDED(hr));
@@ -71,16 +71,16 @@ void DxObject::SwapChain::Init(
 	// RTVの設定
 	{
 		D3D12_RENDER_TARGET_VIEW_DESC desc = {};
-		desc.Format        = defaultFormat;
+		desc.Format        = forwardFormat;
 		desc.ViewDimension = D3D12_RTV_DIMENSION_TEXTURE2D;
 
-		assert(descriptorHeaps->GetIndexSize(DescriptorType::RTV) >= kBufferCount_);
+		assert(descriptorHeaps->GetDescriptorMaxCount(DescriptorType::RTV) >= kBufferCount_);
 
 		for (uint32_t i = 0; i < kBufferCount_; ++i) {
-			descriptorRTV_[i] = descriptorHeaps->GetCurrentDescriptor(DescriptorType::RTV);
+			descriptorRTV_[i] = descriptorHeaps->GetDescriptor(DescriptorType::RTV);
 
 			device->CreateRenderTargetView(
-				swapChainResource_[i].Get(), &desc, descriptorRTV_[i].GetCPUHandle()
+				resource_[i].Get(), &desc, descriptorRTV_[i].GetCPUHandle()
 			);
 		}
 	}
@@ -99,12 +99,15 @@ void DxObject::SwapChain::Present(UINT SyncInterval, UINT Flags) {
 	swapChain_->Present(SyncInterval, Flags);
 }
 
-D3D12_RESOURCE_BARRIER* DxObject::SwapChain::GetTransitionBarrier(
-	UINT backBufferIndex,
+void DxObject::SwapChain::ObtainCurrentBackBufferIndex() {
+	currentBackBufferIndex_ = swapChain_->GetCurrentBackBufferIndex();
+}
+
+D3D12_RESOURCE_BARRIER* DxObject::SwapChain::GetBackBufferTransitionBarrier(
 	D3D12_RESOURCE_STATES stateBefore, D3D12_RESOURCE_STATES stateAfter) {
 
 	// transitionの設定
-	barrier_.Transition.pResource   = swapChainResource_[backBufferIndex].Get();
+	barrier_.Transition.pResource   = resource_[currentBackBufferIndex_].Get();
 	barrier_.Transition.StateBefore = stateBefore;
 	barrier_.Transition.StateAfter  = stateAfter;
 

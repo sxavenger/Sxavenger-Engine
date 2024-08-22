@@ -229,9 +229,6 @@
     <ClCompile Include="Engine\DxObject\DxDevices.cpp">
       <Filter>Engine\DxObject\source</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\DxObject\DxObjectMethod.cpp">
-      <Filter>Engine\DxObject\source</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\DxObject\DxSwapChain.cpp">
       <Filter>Engine\DxObject\source</Filter>
     </ClCompile>
@@ -282,9 +279,6 @@
     </ClCompile>
     <ClCompile Include="Engine\Attribute.cpp">
       <Filter>Engine\source</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\DxObject\DxStructuredBuffer.cpp">
-      <Filter>Engine\DxObject\source</Filter>
     </ClCompile>
     <ClCompile Include="Lib\Adapter\Performance\Performance.cpp">
       <Filter>Lib\Adapter\Parformance</Filter>
@@ -394,29 +388,11 @@
     <ClCompile Include="Lib\PostEffect\FullScreen.cpp">
       <Filter>Lib\PostEffect</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\DxObject\DxCSBlob.cpp">
-      <Filter>Engine\DxObject\source</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\DxObject\DxCSPipelineState.cpp">
-      <Filter>Engine\DxObject\source</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\DxObject\DxCSBufferResource.cpp">
-      <Filter>Engine\DxObject\source</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\DxObject\DxGraphicsBlob.cpp">
-      <Filter>Engine\DxObject\source</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\DxObject\DxShaderManager.cpp">
-      <Filter>Engine\DxObject\source</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\DxObject\DxGraphicsPipeline.cpp">
       <Filter>Engine\DxObject\source</Filter>
     </ClCompile>
     <ClCompile Include="Game\Particle.cpp">
       <Filter>Game</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\DxObject\DxCSDimensionBuffer.cpp">
-      <Filter>Engine\DxObject\source</Filter>
     </ClCompile>
     <ClCompile Include="Lib\PostEffect\Bloom.cpp">
       <Filter>Lib\PostEffect</Filter>
@@ -426,9 +402,6 @@
     </ClCompile>
     <ClCompile Include="Game\NodeModel.cpp">
       <Filter>Game</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\DxObject\DxShaderReflection.cpp">
-      <Filter>Engine\DxObject</Filter>
     </ClCompile>
     <ClCompile Include="Game\MeshBunny.cpp">
       <Filter>Game</Filter>
@@ -486,6 +459,30 @@
     </ClCompile>
     <ClCompile Include="Game\DebugObject\DebugObjectManager.cpp">
       <Filter>Game\DebugObject</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\DxObject\DxShaderBlob.cpp">
+      <Filter>Engine\DxObject\source</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\DxObject\DxShaderBlobManager.cpp">
+      <Filter>Engine\DxObject\source</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\DxObject\DxRootSignatureDesc.cpp">
+      <Filter>Engine\DxObject\source</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\DxObject\DxCSPipeline.cpp">
+      <Filter>Engine\DxObject\source</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\DxObject\DxObjectCommon.cpp">
+      <Filter>Engine\DxObject\source</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\DxObject\DxUnorderedBufferResource.cpp">
+      <Filter>Engine\DxObject\source</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\DxObject\DxStructuredBuffer.cpp">
+      <Filter>Engine\DxObject\source</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\DxObject\DxShaderReflection.cpp">
+      <Filter>Engine\DxObject\source</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -546,9 +543,6 @@
     <ClInclude Include="Engine\DxObject\DxFence.h">
       <Filter>Engine\DxObject\include</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\DxObject\DxObjectMethod.h">
-      <Filter>Engine\DxObject\include</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\DxObject\DxSwapChain.h">
       <Filter>Engine\DxObject\include</Filter>
     </ClInclude>
@@ -605,9 +599,6 @@
     </ClInclude>
     <ClInclude Include="Engine\Attribute.h">
       <Filter>Engine\include</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\DxObject\DxStructuredBuffer.h">
-      <Filter>Engine\DxObject\include</Filter>
     </ClInclude>
     <ClInclude Include="Lib\Geometry\VectorComparison.h">
       <Filter>Lib\Geometry\include</Filter>
@@ -678,29 +669,11 @@
     <ClInclude Include="Lib\PostEffect\FullScreen.h">
       <Filter>Lib\PostEffect</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\DxObject\DxCSBlob.h">
-      <Filter>Engine\DxObject\include</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\DxObject\DxCSPipelineState.h">
-      <Filter>Engine\DxObject\include</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\DxObject\DxCSBufferResource.h">
-      <Filter>Engine\DxObject\include</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\DxObject\DxGraphicsBlob.h">
-      <Filter>Engine\DxObject\include</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\DxObject\DxShaderManager.h">
-      <Filter>Engine\DxObject\include</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\DxObject\DxGraphicsPipeline.h">
       <Filter>Engine\DxObject\include</Filter>
     </ClInclude>
     <ClInclude Include="Game\Particle.h">
       <Filter>Game</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\DxObject\DxCSDimensionBuffer.h">
-      <Filter>Engine\DxObject\include</Filter>
     </ClInclude>
     <ClInclude Include="Lib\PostEffect\Bloom.h">
       <Filter>Lib\PostEffect</Filter>
@@ -710,9 +683,6 @@
     </ClInclude>
     <ClInclude Include="Game\NodeModel.h">
       <Filter>Game</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\DxObject\DxShaderReflection.h">
-      <Filter>Engine\DxObject</Filter>
     </ClInclude>
     <ClInclude Include="Game\MeshBunny.h">
       <Filter>Game</Filter>
@@ -770,6 +740,33 @@
     </ClInclude>
     <ClInclude Include="Game\DebugObject\DebugObjectManager.h">
       <Filter>Game\DebugObject</Filter>
+    </ClInclude>
+    <ClInclude Include="Lib\DefineConfigs.h">
+      <Filter>Lib</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\DxObject\DxObjectCommon.h">
+      <Filter>Engine\DxObject\include</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\DxObject\DxShaderBlob.h">
+      <Filter>Engine\DxObject\include</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\DxObject\DxShaderBlobManager.h">
+      <Filter>Engine\DxObject\include</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\DxObject\DxRootSignatureDesc.h">
+      <Filter>Engine\DxObject\include</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\DxObject\DxCSPipeline.h">
+      <Filter>Engine\DxObject\include</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\DxObject\DxUnorderedBufferResource.h">
+      <Filter>Engine\DxObject\include</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\DxObject\DxStructuredBuffer.h">
+      <Filter>Engine\DxObject\include</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\DxObject\DxShaderReflection.h">
+      <Filter>Engine\DxObject\include</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -946,9 +943,6 @@
     <FxCompile Include="Resources\hlsl\Particle\ParticleInit.CS.hlsl">
       <Filter>Resource\hlsl\Particle</Filter>
     </FxCompile>
-    <FxCompile Include="Resources\hlsl\Particle\Particle.CS.hlsl">
-      <Filter>Resource\hlsl\Particle</Filter>
-    </FxCompile>
     <FxCompile Include="Resources\hlsl\Particle\Particle.PS.hlsl">
       <Filter>Resource\hlsl\Particle</Filter>
     </FxCompile>
@@ -975,6 +969,12 @@
     </FxCompile>
     <FxCompile Include="Resources\hlsl\DebugObject\DebugObject.VS.hlsl">
       <Filter>Resource\hlsl\DebugObject</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\hlsl\Particle\ParticleEmit.CS.hlsl">
+      <Filter>Resource\hlsl\Particle</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\hlsl\Particle\ParticleUpdate.CS.hlsl">
+      <Filter>Resource\hlsl\Particle</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

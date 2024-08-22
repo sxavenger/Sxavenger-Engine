@@ -134,8 +134,6 @@ void Subobjects::Sphere::Init(const SubobjectManager* manager) {
 
 	(*material_)[0].Init();
 
-	Collider::TEST_Init();
-
 }
 
 void Subobjects::Sphere::Update() {
@@ -190,14 +188,14 @@ void Subobjects::Sphere::SetAttributeImGui() {
 
 }
 
-void Subobjects::Sphere::OnCollisionEnter(MAYBE_UNUSED Collider* const other) {
+void Subobjects::Sphere::OnCollisionEnter(_MAYBE_UNUSED Collider* const other) {
 	(*material_)[0].color = { 1.0f, 0.0f, 0.0f, 1.0f };
 
 	std::string log = std::format("OnCollision Enter ptr: {}", reinterpret_cast<void*>(this));
 	console->Log(log.c_str());
 }
 
-void Subobjects::Sphere::OnCollisionExit(MAYBE_UNUSED Collider* const other) {
+void Subobjects::Sphere::OnCollisionExit(_MAYBE_UNUSED Collider* const other) {
 	(*material_)[0].color = { 1.0f, 1.0f, 1.0f, 1.0f };
 
 	std::string log = std::format("OnCollision Exit ptr: {}", reinterpret_cast<void*>(this));

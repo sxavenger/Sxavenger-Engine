@@ -4,15 +4,16 @@
 // include
 //-----------------------------------------------------------------------------------------
 // imgui
-#include "imgui.h"
-#include "imgui_impl_dx12.h"
-#include "imgui_impl_win32.h"
-
-#include <DxObjectMethod.h>
+#include <imgui.h>
+#include <imgui_impl_dx12.h>
+#include <imgui_impl_win32.h>
 
 // c++
 #include <cstdint>
 #include <cassert>
+
+// DxObject
+#include <DxObjectCommon.h>
 
 // Geometry
 #include <Vector4.h>
@@ -34,10 +35,10 @@ public:
 	//=========================================================================================
 
 	//! @brief コンストラクタ
-	ImGuiManager();
+	ImGuiManager() = default;
 
 	//! @brief デストラクタ
-	~ImGuiManager();
+	~ImGuiManager() = default;
 
 	//! @brief 初期化処理
 	void Init(WinApp* winApp, DirectXCommon* dxCommon);

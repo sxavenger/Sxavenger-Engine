@@ -3,6 +3,7 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
+#define NOMINMAX
 #include <windows.h>
 #include <Input.h>
 
@@ -93,7 +94,7 @@ public:
 
 	static DxObject::Descriptor GetCurrentDescripor(DxObject::DescriptorType type);
 
-	static void EraseDescriptor(DxObject::Descriptor& descriptor);
+	static void DeleteDescriptor(DxObject::Descriptor& descriptor);
 
 	//-----------------------------------------------------------------------------------------
 	// texture関係

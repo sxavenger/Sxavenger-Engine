@@ -7,9 +7,9 @@
 #include <AnimationObject.h>
 
 // DxObject
-#include <DxCSBlob.h>
-#include <DxCSPipelineState.h>
-#include <DxCSBufferResource.h>
+#include <DxShaderBlob.h>
+#include <DxCSPipeline.h>
+#include <DxUnorderedBufferResource.h>
 
 // model
 #include <Model.h>
@@ -46,8 +46,8 @@ private:
 	//=========================================================================================
 
 	//* Compute *//
-	std::unique_ptr<DxObject::CSBlob>          csBlob_;
-	std::unique_ptr<DxObject::CSPipelineState> csPipeline_;
+	std::unique_ptr<DxObject::CSBlob>     csBlob_;
+	std::unique_ptr<DxObject::CSPipeline> csPipeline_;
 	
 	//* IA *//
 	std::unique_ptr<Model> model_;
@@ -58,7 +58,7 @@ private:
 	// FIXME: modelクラスに統合させること
 
 	// uavBuffer
-	std::unique_ptr<DxObject::CSBufferResource<VertexData>> skinnedBuffer_;
+	std::unique_ptr<DxObject::UnorderedBufferResource<VertexData>> skinnedBuffer_;
 
 	//* member *//
 	float animationTime_ = 0.0f;

@@ -5,7 +5,7 @@
 //-----------------------------------------------------------------------------------------
 // DxObject
 // Graphics
-#include <DxGraphicsBlob.h>
+#include <DxShaderBlob.h>
 #include <DxGraphicsPipeline.h>
 
 // Buffer

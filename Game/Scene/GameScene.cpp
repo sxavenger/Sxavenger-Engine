@@ -10,6 +10,8 @@
 
 #include "ColliderManager.h"
 
+#include <DxShaderReflection.h>
+
 //-----------------------------------------------------------------------------------------
 // using
 //-----------------------------------------------------------------------------------------
@@ -80,23 +82,29 @@ void GameScene::Init() {
 	gameCamera_->SetProjection(0.45f, static_cast<float>(kWindowWidth) / static_cast<float>(kWindowHeight), 0.01f, 16.0f);
 	gameCamera_->SetTransform(unitVector, origin, {0.0f, 0.0f, -4.0f});
 
-	subobjectManager_ = std::make_unique<SubobjectManager>();
-	subobjectManager_->Init(gameCamera_.get());
+	debugObjectManager_ = std::make_unique<DebugObjectManager>();
+	debugObjectManager_->Init();
 
-	AudioManager::GetInstance()->LoadAudio("resources/sounds/fanfare.wav");
+	particle_ = std::make_unique<Particle>();
+	particle_->Init();
+
+	std::unique_ptr<DxObject::GraphicsBlob> blob = std::make_unique<DxObject::GraphicsBlob>();
+	//blob->Create(L"object3d/object3d.vs.hlsl", DxObject::GRAPHICS_VERTEX);
+	blob->Create(L"object3d/object3d.vs.hlsl", DxObject::GRAPHICS_VERTEX);
+	blob->Create(L"object3d/object3d.ps.hlsl", DxObject::GRAPHICS_PIXEL);
+
+	std::unique_ptr<DxObject::ReflectionPipeline> reflection = std::make_unique<DxObject::ReflectionPipeline>();
+	reflection->CreatePipeline(blob.get());
 }
 
 void GameScene::Term() {
 }
 
 void GameScene::Update() {
-	subobjectManager_->Update();
 
-	auto input = Input::GetInstance();
+	debugObjectManager_->Update();
 
-	if (input->IsTriggerKey(DIK_SPACE)) {
-		console->Log("-------------------------------------------", Console::commentOutColor);
-	}
+	particle_->Update();
 
 	ColliderManager::GetInstance()->Update();
 }
@@ -108,7 +116,10 @@ void GameScene::Draw() {
 		MyEngine::BeginOffscreen(console->GetSceneTexture());
 		MyEngine::camera3D = console->GetDebugCamera();
 
-		subobjectManager_->Draw();
+		debugObjectManager_->Draw();
+		particle_->Draw();
+
+		ColliderManager::GetInstance()->DrawColliders();
 
 		MyEngine::EndOffscreen(console->GetSceneTexture());
 		MyEngine::TransitionProcess();
@@ -117,7 +128,7 @@ void GameScene::Draw() {
 		MyEngine::BeginOffscreen(MyEngine::GetTexture("offscreen"));
 		MyEngine::camera3D = gameCamera_.get();
 
-		subobjectManager_->Draw();
+		debugObjectManager_->Draw();
 
 		MyEngine::EndOffscreen(MyEngine::GetTexture("offscreen"));
 		MyEngine::TransitionProcess();
@@ -132,7 +143,7 @@ void GameScene::Draw() {
 		
 		// "offscreen"をフルスクリーンにする
 		MyEngine::GetDxCommon()->CopyResource(
-			MyEngine::GetDxCommon()->GetSwapChainObj()->GetResource(MyEngine::GetDxCommon()->GetSwapChainObj()->GetCurrentBackBufferIndex()), D3D12_RESOURCE_STATE_RENDER_TARGET,
+			MyEngine::GetDxCommon()->GetSwapChainObj()->GetBackBufferResource(), D3D12_RESOURCE_STATE_RENDER_TARGET,
 			MyEngine::GetTexture("offscreen")->GetResource(), D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE
 		);
 

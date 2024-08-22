@@ -11,11 +11,11 @@
 #include <memory>
 
 // Graphics
-#include <DxGraphicsBlob.h>
+#include <DxShaderBlob.h>
 #include <DxGraphicsPipeline.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// DebugObject base class
+// DebugObjectManager class
 ////////////////////////////////////////////////////////////////////////////////////////////
 class DebugObjectManager
 	: public Attribute {
@@ -38,6 +38,16 @@ public:
 
 private:
 
+	////////////////////////////////////////////////////////////////////////////////////////////
+	// DebugObjectType enum
+	////////////////////////////////////////////////////////////////////////////////////////////
+	enum DebugObjectType : uint32_t {
+		kSphere,
+		kBox,
+
+		kCountOfDebugObjectType
+	};
+
 	//=========================================================================================
 	// private variables
 	//=========================================================================================
@@ -45,6 +55,8 @@ private:
 	//* member *//
 
 	std::list<std::unique_ptr<DebugObject>> debugObjects_;
+	DebugObjectType selectedObjectType_ = DebugObjectType::kSphere;
+	static const LPCSTR kObjectNames_[DebugObjectType::kCountOfDebugObjectType];
 
 	//* Graphics *//
 
@@ -56,5 +68,7 @@ private:
 	//=========================================================================================
 
 	void CreatePipeline();
+
+	void CreateObject();
 
 };

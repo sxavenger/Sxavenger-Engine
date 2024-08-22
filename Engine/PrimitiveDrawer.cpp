@@ -23,6 +23,10 @@ const std::wstring BasePrimitivePipeline::directoryPath_ = L"Primitive/";
 void BasePrimitivePipeline::Term() {
 }
 
+void BasePrimitivePipeline::ResetObjectCount() {
+	objectCount_ = 0;
+}
+
 ////////////////////////////////////////////////////////////////////////////////////////////
 // PrimitiveTriangle class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -82,8 +86,6 @@ void PrimitiveTriangle::DrawAll(const D3D12_GPU_VIRTUAL_ADDRESS& camera) {
 
 	commandList->DrawInstanced(objectCount_ * 3, 1, 0, 0);
 
-	objectCount_ = 0;
-
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -133,8 +135,6 @@ void PrimitiveLine::DrawAll(const D3D12_GPU_VIRTUAL_ADDRESS& camera) {
 	commandList->SetGraphicsRootConstantBufferView(0, camera);
 
 	commandList->DrawInstanced(objectCount_ * 2, 1, 0, 0);
-
-	objectCount_ = 0;
 
 }
 
@@ -220,4 +220,9 @@ void PrimitiveDrawer::DrawSphere(const Vector3f& center, float radius, const uin
 void PrimitiveDrawer::DrawAll3D() {
 	triangle_->DrawAll(MyEngine::camera3D->GetGPUVirtualAddress());
 	line_->DrawAll(MyEngine::camera3D->GetGPUVirtualAddress());
+}
+
+void PrimitiveDrawer::ResetObjectCount() {
+	triangle_->ResetObjectCount();
+	line_->ResetObjectCount();
 }

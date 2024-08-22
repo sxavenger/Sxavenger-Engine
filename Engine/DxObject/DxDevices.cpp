@@ -9,10 +9,6 @@
 // Devices methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-DxObject::Devices::Devices() { Init(); }
-
-DxObject::Devices::~Devices() { Term(); }
-
 void DxObject::Devices::Init() {
 #ifdef _DEBUG
 	// デバックレイヤーの生成

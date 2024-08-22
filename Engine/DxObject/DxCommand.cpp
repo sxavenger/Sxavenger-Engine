@@ -13,10 +13,6 @@
 // Command methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-DxObject::Command::Command(Devices* devices) { Init(devices); }
-
-DxObject::Command::~Command() { Term(); }
-
 void DxObject::Command::Init(Devices* devices) {
 
 	// デバイスの取り出し
@@ -38,7 +34,7 @@ void DxObject::Command::Init(Devices* devices) {
 
 	// コマンドアロケーターを生成
 	{
-		for (int i = 0; i < kAllocatorCount; ++i) {
+		for (int i = 0; i < kAllocatorCount_; ++i) {
 			auto hr = device->CreateCommandAllocator(
 				D3D12_COMMAND_LIST_TYPE_DIRECT,
 				IID_PPV_ARGS(&commandAllocator_[i])
@@ -77,7 +73,7 @@ void DxObject::Command::Close() {
 }
 
 void DxObject::Command::ResetAll() {
-	for (int i = 0; i < kAllocatorCount; ++i) {
+	for (int i = 0; i < kAllocatorCount_; ++i) {
 		auto hr = commandAllocator_[i]->Reset();
 		assert(SUCCEEDED(hr));
 	}
@@ -90,7 +86,7 @@ void DxObject::Command::ResetAll() {
 void DxObject::Command::ResetBackAllocator() {
 	// backAllocatorIndexの更新
 	backAllocatorIndex_++;
-	backAllocatorIndex_ %= kAllocatorCount;
+	backAllocatorIndex_ %= kAllocatorCount_;
 
 	// backAllocatorとして動かすのでリセット
 	auto hr = commandAllocator_[backAllocatorIndex_]->Reset();

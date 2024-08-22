@@ -84,7 +84,7 @@ void Bloom::Init() {
 		// HACK: このくらいspriteのクラス作れ。
 
 		pipelineDesc.rtvFormats.clear();
-		pipelineDesc.SetRTVFormat(defaultFormat);
+		pipelineDesc.SetRTVFormat(forwardFormat);
 
 		pipeline_[RESULT] = std::make_unique<GraphicsPipeline>();
 		pipeline_[RESULT]->CreateRootSignature(MyEngine::GetDevicesObj(), rootDesc);

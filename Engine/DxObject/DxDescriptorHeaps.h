@@ -3,146 +3,145 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
-// directX
-#include <d3d12.h>
-#include <dxgi1_6.h>
+//* DxObjectCommon
+#include <DxObjectCommon.h>
 
 // c++
-#include <cstdint>
-#include <cassert>
 #include <deque>
-
-// c++
-#include <DxObjectMethod.h>
-
-// ComPtr
-#include <ComPtr.h>
-
-//-----------------------------------------------------------------------------------------
-// comment
-//-----------------------------------------------------------------------------------------
-#pragma comment(lib, "d3d12.lib")
-#pragma comment(lib, "dxgi.lib")
+#include <memory>
+#include <array>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// DxObject namespace
+// DxObject
 ////////////////////////////////////////////////////////////////////////////////////////////
-namespace DxObject {
+_DXOBJECT_NAMESPACE_BEGIN
 
-	//-----------------------------------------------------------------------------------------
-	// DxObject forward
-	//-----------------------------------------------------------------------------------------
-	class Devices;
+//-----------------------------------------------------------------------------------------
+// forward
+//-----------------------------------------------------------------------------------------
+class Devices;
+class Command;
 
-	////////////////////////////////////////////////////////////////////////////////////////////
-	// DescriptorHeaps class
-	////////////////////////////////////////////////////////////////////////////////////////////
-	class DescriptorHeaps {
-	public:
+////////////////////////////////////////////////////////////////////////////////////////////
+// DescriptorPool class
+////////////////////////////////////////////////////////////////////////////////////////////
+class DescriptorPool {
+public:
 
-		//=========================================================================================
-		// public methods
-		//=========================================================================================
+	//=========================================================================================
+	// public methods
+	//=========================================================================================
 
-		//! @brief コンストラクタ
-		//! 
-		//! @param[in] devices DxObject::Devices
-		DescriptorHeaps(Devices* devices);
+	DescriptorPool() = delete;
 
-		//! @brief デストラクタ
-		~DescriptorHeaps();
+	DescriptorPool(
+		Devices* devices,
+		D3D12_DESCRIPTOR_HEAP_TYPE descriptorHeapType, uint32_t descriptorMaxCount
+	);
 
-		//! @brief 初期化処理
-		//! 
-		//! @param[in] devices DxObject::Devices
-		void Init(Devices* devices);
+	~DescriptorPool() { Term(); }
 
-		//! @brief 終了処理
-		void Term();
+	void Init(
+		Devices* devices,
+		D3D12_DESCRIPTOR_HEAP_TYPE descriptorHeapType, uint32_t descriptorMaxCount
+	);
 
-		//! @brief 要素サイズを取得
-		//! 
-		//! @param[in] type  DescriptorType
-		//! 
-		//! @return 要素サイズを返却
-		const uint32_t GetIndexSize(DescriptorType type) const {
-			assert(type < DescriptorType::kDescriptorHeapCount);
-			return descriptorIndexSize_[type];
-		}
+	void Term();
 
-		//! @brief indexのDescrpitorの削除
-		//!
-		//! @param[in, out] descriptor
-		void Erase(Descriptor& descriptor);
+	//* descriptor option *//
 
-		Descriptor GetCurrentDescriptor(DescriptorType type);
+	Descriptor GetDescriptor();
 
-		//! @brief DescriptorHeapを取得
-		//! 
-		//! @param[in] type  DescriptorType
-		//! 
-		//! @return DescriptorHeapを返却
-		ID3D12DescriptorHeap* GetDescriptorHeap(DescriptorType type) const {
-			assert(type < DescriptorType::kDescriptorHeapCount);
-			return descriptorHeaps_[type].Get();
-		}
+	void DeleteDescriptor(Descriptor& descriptor);
 
-		// use debug
-		const uint32_t GetIndexCount(DescriptorType type) {
-			assert(type < DescriptorType::kDescriptorHeapCount);
-			return descriptorIndexCount_[type];
-		}
+	//* getter *//
 
-		const std::deque<uint32_t>& GetDescriptorVacantQueue(DescriptorType type) {
-			assert(type < DescriptorType::kDescriptorHeapCount);
-			return descriptorVacantIndexs_[type];
-		}
+	ID3D12DescriptorHeap* const GetDescriptorHeap() const { return descriptorHeap_.Get(); }
 
-		const uint32_t GetUsedDescriptor(DescriptorType type) {
-			assert(type < DescriptorType::kDescriptorHeapCount);
-			return static_cast<uint32_t>(descriptorIndexCount_[type] - descriptorVacantIndexs_[type].size());
-		}
+	const uint32_t GetDescriptorMaxCount() const {
+		return descriptorMaxCount_;
+	}
 
-	private:
+	const uint32_t GetUsedDescriptorsCount() const {
+		return static_cast<uint32_t>(descriptorIndexCount_ - descriptorDeletedIndices_.size());
+	}
 
-		//=========================================================================================
-		// private variables
-		//=========================================================================================
+private:
 
-		ComPtr<ID3D12DescriptorHeap> descriptorHeaps_[DescriptorType::kDescriptorHeapCount];
-		uint32_t                     descriptorSize_[DescriptorType::kDescriptorHeapCount]; // constにしたい
+	//=========================================================================================
+	// private variables
+	//=========================================================================================
 
-		uint32_t descriptorIndexSize_[DescriptorType::kDescriptorHeapCount];
-		uint32_t descriptorIndexCount_[DescriptorType::kDescriptorHeapCount];
+	//* descriptorHeap *//
 
-		std::deque<uint32_t> descriptorVacantIndexs_[DescriptorType::kDescriptorHeapCount]; //!< 動的テクスチャの隙間を埋めるため
+	ComPtr<ID3D12DescriptorHeap> descriptorHeap_;
+	D3D12_DESCRIPTOR_HEAP_TYPE   descriptorHeapType_;
+	UINT                         descriptorHandleSize_;
 
-		//=========================================================================================
-		// private methods
-		//=========================================================================================
+	//* descriptorPool *//
 
-		//! @breif 使用できるDescriptorsのindexを取得
-		//! 
-		//! @param[in] type DescriptorType
-		//! 
-		//! @return 使用できるDescriptorsのindexを返却
-		const uint32_t GetDescriptorCurrentIndex(DescriptorType type);
+	uint32_t descriptorMaxCount_;   //!< descriptorの最大数
+	uint32_t descriptorIndexCount_ = 0;
+	
+	std::deque<uint32_t> descriptorDeletedIndices_; //!< 動的に消されたDescriptorのIndexの格納先
 
-		//! @brief CPUDescriptorHandleの取得
-		//! 
-		//! @param[in] type  DescriptorType
-		//! @param[in] index
-		//! 
-		//! @return CPUDescriptorHandleの返却
-		D3D12_CPU_DESCRIPTOR_HANDLE GetCPUDescriptorHandle(DescriptorType type, uint32_t index) const;
+	//* config *//
 
-		//! @brief GPUDescriptorHandleの取得
-		//! 
-		//! @param[in] type  DescriptorType
-		//! @param[in] index
-		//! 
-		//! @return GPUDescriptorHandleの返却
-		D3D12_GPU_DESCRIPTOR_HANDLE GetGPUDescriptorHandle(DescriptorType type, uint32_t index) const;
-	};
+	//=========================================================================================
+	// private methods
+	//=========================================================================================
 
-}
+	void CreateDescriptorHeap(ID3D12Device* device);
+
+	uint32_t GetCurrentDescriptorIndex();
+
+	D3D12_CPU_DESCRIPTOR_HANDLE GetCPUDescriptorHandle(uint32_t index);
+	D3D12_GPU_DESCRIPTOR_HANDLE GetGPUDescriptorHandle(uint32_t index);
+
+};
+
+////////////////////////////////////////////////////////////////////////////////////////////
+// DescriptorHeaps class
+////////////////////////////////////////////////////////////////////////////////////////////
+class DescriptorHeaps {
+public:
+
+	//=========================================================================================
+	// public methods
+	//=========================================================================================
+
+	DescriptorHeaps(Devices* device) { Init(device); }
+
+	~DescriptorHeaps() { Term(); }
+
+	void Init(Devices* device);
+
+	void Term();
+
+	//* descriptor option *//
+
+	Descriptor GetDescriptor(DescriptorType type);
+
+	void DeleteDescriptor(Descriptor& descriptor);
+
+	//* getter *//
+
+	const uint32_t GetDescriptorMaxCount(DescriptorType type) const;
+
+	ID3D12DescriptorHeap* const GetDescriptorHeap(DescriptorType type) const;
+
+	DescriptorPool* const GetDescriptorPool(DescriptorType type) const { return pools_.at(type).get(); }
+
+private:
+
+	//=========================================================================================
+	// private variables
+	//=========================================================================================
+
+	std::array<std::unique_ptr<DescriptorPool>, DescriptorType::kDescriptorHeapCount> pools_;
+
+
+
+};
+
+_DXOBJECT_NAMESPACE_END

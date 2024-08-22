@@ -50,9 +50,9 @@ void AnimationHuman::Init() {
 
 	//* Compute *//
 	csBlob_ = std::make_unique<DxObject::CSBlob>();
-	csBlob_->Init(L"animation/skinning.CS.hlsl");
+	csBlob_->Create(L"animation/skinning.CS.hlsl");
 
-	csPipeline_ = std::make_unique<DxObject::CSPipelineState>();
+	csPipeline_ = std::make_unique<DxObject::CSPipeline>();
 
 	CSRootSignatureDesc csDesc;
 	csDesc.Resize(5, 0);
@@ -62,7 +62,7 @@ void AnimationHuman::Init() {
 	csDesc.SetCBV(3, 0);
 	csDesc.SetVirtualUAV(4, 0);
 
-	csPipeline_->Init(csDesc, csBlob_.get());
+	csPipeline_->CreatePipeline(csDesc, csBlob_.get());
 
 	/*
 	 simpleSkin: "./Resources/model/simpleSkin", "simpleSkin.gltf"
@@ -74,7 +74,7 @@ void AnimationHuman::Init() {
 	skeleton_ = ModelMethods::CreateSkeleton(model_->GetRootNode());
 	skinCluster_ = ModelMethods::CreateSkinCluster(skeleton_, model_->GetModelData());
 
-	skinnedBuffer_ = std::make_unique<DxObject::CSBufferResource<VertexData>>(MyEngine::GetDevicesObj(), (*skinCluster_.informationResource)[0]);
+	skinnedBuffer_ = std::make_unique<DxObject::UnorderedBufferResource<VertexData>>(MyEngine::GetDevicesObj(), (*skinCluster_.informationResource)[0]);
 	
 	matrixBuffer_ = std::make_unique<DxObject::BufferResource<Matrix4x4>>(MyEngine::GetDevicesObj(), 1);
 	(*matrixBuffer_)[0] = Matrix4x4::Identity();
@@ -105,7 +105,7 @@ void AnimationHuman::Draw() {
 	auto commandList = MyEngine::GetCommandList();
 
 	//* Compute *//
-	csPipeline_->SetCSPipeline();
+	csPipeline_->SetPipeline();
 
 	commandList->SetComputeRootShaderResourceView(0, skinCluster_.paletteResource->GetGPUVirtualAddress());
 	commandList->SetComputeRootShaderResourceView(1, model_->GetMesh(0).vertexResource->GetGPUVirtualAddress());

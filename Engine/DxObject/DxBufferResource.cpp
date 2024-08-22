@@ -34,7 +34,7 @@ void DxObject::IndexBufferResource::Init(DxObject::Devices* devices) {
 	ID3D12Device* device = devices->GetDevice();
 
 	// 配列分のBufferResourceを生成
-	resource_ = DxObjectMethod::CreateBufferResource(
+	resource_ = CreateBufferResource(
 		device,
 		structureSize_ * indexSize_
 	);
@@ -61,7 +61,7 @@ void DxObject::OffsetBufferResource::Init(Devices* devices) {
 	ID3D12Device* device = devices->GetDevice();
 
 	// 配列分のBufferResourceを生成
-	resource_ = DxObjectMethod::CreateBufferResource(
+	resource_ = CreateBufferResource(
 		device,
 		structureSize_
 	);

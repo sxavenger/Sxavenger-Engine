@@ -58,8 +58,8 @@ private:
 
 	HINSTANCE hInst_;
 	HWND      hWnd_;
-	int32_t   clientWidth_;
-	int32_t   clientHeight_;
+	int32_t   clientWidth_ = 0;
+	int32_t   clientHeight_ = 0;
 
 	//=========================================================================================
 	// private methods

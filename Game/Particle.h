@@ -4,13 +4,13 @@
 // include
 //-----------------------------------------------------------------------------------------
 // DxObject
+#include <DxShaderBlob.h>
+
 // CS
-#include <DxCSBlob.h>
-#include <DxCSPipelineState.h>
-#include <DxCSBufferResource.h>
+#include <DxCSPipeline.h>
+#include <DxUnorderedBufferResource.h>
 
 // Graphics
-#include <DxGraphicsBlob.h>
 #include <DxGraphicsPipeline.h>
 
 // IA
@@ -89,16 +89,20 @@ private:
 
 	//* CS *//
 	std::unique_ptr<DxObject::CSBlob>          csInitBlob_;
-	std::unique_ptr<DxObject::CSPipelineState> csInitPipeline_;
+	std::unique_ptr<DxObject::CSPipeline> csInitPipeline_;
 
 	std::unique_ptr<DxObject::CSBlob>          csBlob_;
-	std::unique_ptr<DxObject::CSPipelineState> csPipeline_;
+	std::unique_ptr<DxObject::CSPipeline> csPipeline_;
+
+	std::unique_ptr<DxObject::CSBlob>          csUpdateBlob_;
+	std::unique_ptr<DxObject::CSPipeline> csUpdatePipeline_;
 
 	//* buffers *//
 	static const uint32_t kParticleNum = 1024;
 
-	std::unique_ptr<DxObject::CSBufferResource<ParticleCS>> particleBuffer_;
+	std::unique_ptr<DxObject::UnorderedBufferResource<ParticleCS>> particleBuffer_;
 	std::unique_ptr<DxObject::BufferResource<uint32_t>>     informationBuffer_;
+	std::unique_ptr<DxObject::UnorderedBufferResource<int32_t>>    counterBuffer_;
 
 	std::unique_ptr<DxObject::BufferResource<EmitterSphere>> emitterBuffer_;
 

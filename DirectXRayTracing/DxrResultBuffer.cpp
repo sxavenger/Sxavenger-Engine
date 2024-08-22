@@ -49,7 +49,7 @@ void DxrObject::ResultBuffer::Init(
 
 	// UAVの生成
 	{
-		descriptorUAV_ = descriptorHeaps_->GetCurrentDescriptor(UAV);
+		descriptorUAV_ = descriptorHeaps_->GetDescriptor(CBV_SRV_UAV);
 
 		D3D12_UNORDERED_ACCESS_VIEW_DESC desc = {};
 		desc.ViewDimension = D3D12_UAV_DIMENSION_TEXTURE2D;
@@ -72,7 +72,7 @@ void DxrObject::ResultBuffer::Init(
 		desc.Texture2D.MipLevels     = 1;
 
 		// SRVを生成するDescriptorHeapの場所を決める
-		descriptorSRV_ = descriptorHeaps_->GetCurrentDescriptor(SRV);
+		descriptorSRV_ = descriptorHeaps_->GetDescriptor(CBV_SRV_UAV);
 
 		// SRVの生成
 		device->CreateShaderResourceView(
@@ -84,7 +84,7 @@ void DxrObject::ResultBuffer::Init(
 }
 
 void DxrObject::ResultBuffer::Term() {
-	descriptorHeaps_->Erase(descriptorUAV_);
-	descriptorHeaps_->Erase(descriptorSRV_);
+	descriptorHeaps_->DeleteDescriptor(descriptorUAV_);
+	descriptorHeaps_->DeleteDescriptor(descriptorSRV_);
 	descriptorHeaps_ = nullptr;
 }

@@ -12,7 +12,7 @@
 
 // DxObject
 #include <DxMesh.h>
-#include <DxGraphicsBlob.h>
+#include <DxShaderBlob.h>
 #include <DxGraphicsPipeline.h>
 
 // IA

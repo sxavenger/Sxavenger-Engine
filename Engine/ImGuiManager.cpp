@@ -6,14 +6,14 @@
 #include <WinApp.h>
 #include <DirectXCommon.h>
 
+//-----------------------------------------------------------------------------------------
+// using
+//-----------------------------------------------------------------------------------------
+_DXOBJECT_USING
+
 ////////////////////////////////////////////////////////////////////////////////////////////
 // ImGuiManager methods
 ////////////////////////////////////////////////////////////////////////////////////////////
-ImGuiManager::ImGuiManager() {
-}
-
-ImGuiManager::~ImGuiManager() {
-}
 
 void ImGuiManager::Init(WinApp* winApp, DirectXCommon* dxCommon) {
 	assert(winApp != nullptr && dxCommon != nullptr);
@@ -21,10 +21,10 @@ void ImGuiManager::Init(WinApp* winApp, DirectXCommon* dxCommon) {
 	dxCommon_ = dxCommon;
 
 	// SRVの取り出し
-	descriptorHeap_SRV_ = dxCommon_->GetDescriptorsObj()->GetDescriptorHeap(DxObject::DescriptorType::SRV);
+	descriptorHeap_SRV_ = dxCommon_->GetDescriptorsObj()->GetDescriptorHeap(DescriptorType::CBV_SRV_UAV);
 
 	// handleの取得
-	descriptor_ = dxCommon->GetDescriptorsObj()->GetCurrentDescriptor(DxObject::DescriptorType::SRV);
+	descriptor_ = dxCommon->GetDescriptorsObj()->GetDescriptor(DescriptorType::CBV_SRV_UAV);
 
 	// ImGuiの初期化
 	IMGUI_CHECKVERSION();
@@ -35,7 +35,7 @@ void ImGuiManager::Init(WinApp* winApp, DirectXCommon* dxCommon) {
 	ImGui_ImplDX12_Init(
 		dxCommon_->GetDeviceObj()->GetDevice(),
 		DxObject::SwapChain::GetBufferCount(),
-		DxObject::defaultFormat,
+		DxObject::forwardFormat,
 		descriptorHeap_SRV_,
 		descriptor_.GetCPUHandle(),
 		descriptor_.GetGPUHandle()

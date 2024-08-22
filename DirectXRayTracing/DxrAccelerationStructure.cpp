@@ -233,7 +233,7 @@ void DxrObject::TopLevelAS::Init() {
 }
 
 void DxrObject::TopLevelAS::Term() {
-	MyEngine::EraseDescriptor(descriptor_);
+	MyEngine::DeleteDescriptor(descriptor_);
 
 	instanceBuffer_.reset();
 }

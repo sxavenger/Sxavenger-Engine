@@ -24,7 +24,6 @@
 #include <d3d12.h>
 
 // DxObject
-#include <DxObjectMethod.h>
 #include <DxBufferResource.h>
 
 // ComPtr

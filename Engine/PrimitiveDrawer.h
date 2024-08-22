@@ -4,7 +4,7 @@
 // include
 //-----------------------------------------------------------------------------------------
 // DxObject
-#include <DxGraphicsBlob.h>
+#include <DxShaderBlob.h>
 #include <DxGraphicsPipeline.h>
 #include <DxBufferResource.h>
 
@@ -31,6 +31,8 @@ public:
 	virtual void Term();
 
 	virtual void DrawAll(const D3D12_GPU_VIRTUAL_ADDRESS& camera) = 0;
+
+	void ResetObjectCount();
 
 protected:
 
@@ -143,6 +145,7 @@ public:
 
 	void DrawAll3D();
 
+	void ResetObjectCount();
 
 private:
 

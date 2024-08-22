@@ -11,7 +11,6 @@
 #include <cstdint>
 
 // DxObject
-#include <DxObjectMethod.h>
 #include <DxDevices.h>
 #include <DxBufferResource.h>
 

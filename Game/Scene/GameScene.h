@@ -22,9 +22,7 @@
 
 //* Game
 #include <SubobjectManager.h>
-
-#include <Sprite.h>
-#include <Transform.h>
+#include <DebugObjectManager.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // GameScene class
@@ -45,8 +43,9 @@ private:
 	//=========================================================================================
 
 	std::unique_ptr<Camera3D> gameCamera_;
+	std::unique_ptr<DebugObjectManager> debugObjectManager_;
 
-	std::unique_ptr<SubobjectManager> subobjectManager_;
+	std::unique_ptr<Particle> particle_;
 
 	//=========================================================================================
 	// private methods

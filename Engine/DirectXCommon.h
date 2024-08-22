@@ -11,7 +11,7 @@
 #include <DxFence.h>
 #include <DxBlendState.h>
 #include <DxDepthStencil.h>
-#include <DxShaderManager.h>
+#include <DxShaderBlobManager.h>
 
 // c++
 #include <memory>
@@ -105,16 +105,14 @@ protected:
 
 	DxObject::Devices::DxLeakChecker leakChecher_;
 
-	std::unique_ptr<DxObject::Devices>         devices_;
-	std::unique_ptr<DxObject::Command>         command_;
-	std::unique_ptr<DxObject::DescriptorHeaps> descriptorHeaps_;
-	std::unique_ptr<DxObject::SwapChain>       swapChains_;
-	std::unique_ptr<DxObject::Fence>           fences_;
-	std::unique_ptr<DxObject::ShaderManager>   shaderManager_;
-	std::unique_ptr<DxObject::BlendState> blendState_;
-	std::unique_ptr<DxObject::DepthStencil>  depthStencil_; //!< depthStencilは共通
-
-	UINT backBufferIndex_;
+	std::unique_ptr<DxObject::Devices>          devices_;
+	std::unique_ptr<DxObject::Command>          command_;
+	std::unique_ptr<DxObject::DescriptorHeaps>  descriptorHeaps_;
+	std::unique_ptr<DxObject::SwapChain>        swapChains_;
+	std::unique_ptr<DxObject::Fence>            fences_;
+	std::unique_ptr<DxObject::ShaderBlobManager> shaderManager_;
+	std::unique_ptr<DxObject::BlendState>        blendState_;
+	std::unique_ptr<DxObject::DepthStencil>      depthStencil_; //!< depthStencilは共通
 
 	/* parameters */
 

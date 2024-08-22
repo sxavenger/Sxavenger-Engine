@@ -21,22 +21,40 @@ void Particle::Init() {
 	//* CS *//
 	// initialize用のpipelineの生成
 	csInitBlob_ = std::make_unique<CSBlob>();
-	csInitBlob_->Init(L"particle/ParticleInit.CS.hlsl");
+	csInitBlob_->Create(L"particle/ParticleInit.CS.hlsl");
 
 	{
 		CSRootSignatureDesc desc;
-		desc.Resize(2, 0);
+		desc.Resize(3, 0);
 		desc.SetCBV(0, 0);
 		desc.SetVirtualUAV(1, 0);
+		desc.SetVirtualUAV(2, 1);
 
-		csInitPipeline_ = std::make_unique<CSPipelineState>();
-		csInitPipeline_->Init(desc, csInitBlob_.get());
+		csInitPipeline_ = std::make_unique<CSPipeline>();
+		csInitPipeline_->CreatePipeline(desc, csInitBlob_.get());
+	}
+
+	// Emit用のpipelineの生成
+	csBlob_ = std::make_unique<CSBlob>();
+	csBlob_->Create(L"particle/ParticleEmit.CS.hlsl");
+
+	{
+		CSRootSignatureDesc desc;
+		desc.Resize(5, 0);
+		desc.SetCBV(0, 0);
+		desc.SetCBV(1, 1);
+		desc.SetVirtualUAV(2, 0);
+		desc.SetCBV(3, 2);
+		desc.SetVirtualUAV(4, 1);
+
+		csPipeline_ = std::make_unique<CSPipeline>();
+		csPipeline_->CreatePipeline(desc, csBlob_.get());
 	}
 
 	// Update用のpipelineの生成
-	csBlob_ = std::make_unique<CSBlob>();
-	csBlob_->Init(L"particle/Particle.CS.hlsl");
-
+	csUpdateBlob_ = std::make_unique<CSBlob>();
+	csUpdateBlob_->Create(L"particle/ParticleUpdate.CS.hlsl");
+	
 	{
 		CSRootSignatureDesc desc;
 		desc.Resize(3, 0);
@@ -44,15 +62,17 @@ void Particle::Init() {
 		desc.SetCBV(1, 1);
 		desc.SetVirtualUAV(2, 0);
 
-		csPipeline_ = std::make_unique<CSPipelineState>();
-		csPipeline_->Init(desc, csBlob_.get());
+		csUpdatePipeline_ = std::make_unique<CSPipeline>();
+		csUpdatePipeline_->CreatePipeline(desc, csUpdateBlob_.get());
 	}
 
 	//* buffers *//
-	particleBuffer_ = std::make_unique<CSBufferResource<ParticleCS>>(MyEngine::GetDevicesObj(), kParticleNum);
+	particleBuffer_ = std::make_unique<UnorderedBufferResource<ParticleCS>>(MyEngine::GetDevicesObj(), kParticleNum);
 
 	informationBuffer_ = std::make_unique<BufferResource<uint32_t>>(MyEngine::GetDevicesObj(), 1);
 	(*informationBuffer_)[0] = kParticleNum;
+
+	counterBuffer_ = std::make_unique<UnorderedBufferResource<int32_t>>(MyEngine::GetDevicesObj(), 1);
 
 	emitterBuffer_ = std::make_unique<BufferResource<EmitterSphere>>(MyEngine::GetDevicesObj(), 1);
 	(*emitterBuffer_)[0].count         = 10;
@@ -66,10 +86,11 @@ void Particle::Init() {
 	{
 		auto commandList = MyEngine::GetCommandList();
 
-		csInitPipeline_->SetCSPipeline();
+		csInitPipeline_->SetPipeline();
 
 		commandList->SetComputeRootConstantBufferView(0, informationBuffer_->GetGPUVirtualAddress());
 		commandList->SetComputeRootUnorderedAccessView(1, particleBuffer_->GetGPUVirtualAddress());
+		commandList->SetComputeRootUnorderedAccessView(2, counterBuffer_->GetGPUVirtualAddress());
 
 		csInitPipeline_->Dispatch(RoundUp(kParticleNum, 1024), 1, 1);
 	}
@@ -123,13 +144,31 @@ void Particle::Update() {
 	// csの更新処理
 	auto commandList = MyEngine::GetCommandList();
 
-	csPipeline_->SetCSPipeline();
+	csPipeline_->SetPipeline();
 
 	commandList->SetComputeRootConstantBufferView(0, emitterBuffer_->GetGPUVirtualAddress());
 	commandList->SetComputeRootConstantBufferView(1, Performance::GetGPUVirtualAddress());
 	commandList->SetComputeRootUnorderedAccessView(2, particleBuffer_->GetGPUVirtualAddress());
+	commandList->SetComputeRootConstantBufferView(3, informationBuffer_->GetGPUVirtualAddress());
+	commandList->SetComputeRootUnorderedAccessView(4, counterBuffer_->GetGPUVirtualAddress());
 
 	csPipeline_->Dispatch(1, 1, 1);
+
+	// barrier
+	D3D12_RESOURCE_BARRIER barrier = {};
+	barrier.Type          = D3D12_RESOURCE_BARRIER_TYPE_UAV;
+	barrier.UAV.pResource = particleBuffer_->GetResource();
+
+	commandList->ResourceBarrier(1, &barrier);
+
+
+	csUpdatePipeline_->SetPipeline();
+
+	commandList->SetComputeRootConstantBufferView(0, informationBuffer_->GetGPUVirtualAddress());
+	commandList->SetComputeRootConstantBufferView(1, Performance::GetGPUVirtualAddress());
+	commandList->SetComputeRootUnorderedAccessView(2, particleBuffer_->GetGPUVirtualAddress());
+
+	csUpdatePipeline_->Dispatch(1, 1, 1);
 
 }
 
@@ -143,7 +182,7 @@ void Particle::Draw() {
 	commandList->SetGraphicsRootConstantBufferView(0, MyEngine::camera3D->GetGPUVirtualAddress());
 	commandList->SetGraphicsRootShaderResourceView(1, particleBuffer_->GetGPUVirtualAddress());
 
-	plane_.DrawCall(commandList, (*emitterBuffer_)[0].count);
+	plane_.DrawCall(commandList, kParticleNum);
 }
 
 void Particle::SetAttributeImGui() {

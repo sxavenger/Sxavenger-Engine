@@ -1,13 +1,11 @@
 #pragma once
 
 //-----------------------------------------------------------------------------------------
-// defines
-//-----------------------------------------------------------------------------------------
-#define MAYBE_UNUSED [[maybe_unused]]
-
-//-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
+// defines
+#include <DefineConfigs.h>
+
 // Geometry
 #include <Vector3.h>
 
@@ -15,6 +13,7 @@
 #include <utility>
 #include <string>
 #include <unordered_map>
+#include <optional>
 
 // collisionDetection
 #include <CollisionDetection.h>
@@ -29,10 +28,18 @@ public:
 	// public methods
 	//=========================================================================================
 
-	Collider();
-	virtual ~Collider();
+	Collider() { Init(); }
+	virtual ~Collider() { Term(); }
 
-	void TEST_Init();
+	void Init();
+
+	void Term();
+
+	//* bounding setter *//
+
+	void SetColliderBoundingSphere(const CollisionBoundings::Sphere& sphere = {.radius = 1.0f});
+
+	void SetColliderBoundingAABB(const CollisionBoundings::AABB& aabb = {.localMin = {-0.5f, -0.5f, -0.5f}, .localMax = {0.5f, 0.5f, 0.5f}});
 
 	//* collision states *//
 
@@ -46,11 +53,29 @@ public:
 
 	const CollisionBoundings::Boundings& GetBounding() const { return bounding_; }
 
+	//! @brief targetと相手のIdを比較して当たり判定が必要かどうか確認
+	bool ShouldCheckForCollision(const Collider* const other) const;
+
+	//* collision setter *//
+
+	//! @brief CollisionStateの変更
+	//! @param[in] collider 判定対象のptr
+	//! @param[in] isHit    現フレームの当たり判定を引数の値に変更(std::nulloptの場合は現在の値を変更しない)
+	//! @param[in] isPreHit 前フレームの当たり判定を引数の値に変更(std::nulloptの場合は現在の値を変更しない)
+	void SetCollisionState(
+		Collider* const collider,
+		const std::optional<bool>& isHit = std::nullopt, const std::optional<bool>& isPreHit = std::nullopt
+	);
+
 	//* collision methods *//
 
-	virtual void OnCollisionEnter(MAYBE_UNUSED Collider* const other) {}
+	virtual void OnCollisionEnter(_MAYBE_UNUSED Collider* const other) {}
 
-	virtual void OnCollisionExit(MAYBE_UNUSED Collider* const other) {}
+	virtual void OnCollisionExit(_MAYBE_UNUSED Collider* const other) {}
+
+	//* imgui *//
+
+	void SetColliderImGuiCommand();
 
 protected:
 
@@ -58,12 +83,16 @@ protected:
 	// protected variables
 	//=========================================================================================
 	
-	std::string collisionTag_ = "";
+	std::string colliderTag_ = "";
 
 	Vector3f position_ = {}; //!< ユーザー定義のpositionでもok
 
 	//! 当たり判定の判定情報
 	CollisionBoundings::Boundings bounding_;
+
+	//!< filter情報
+	uint32_t typeId_       = 0; //!< 自分のid
+	uint32_t targetTypeId_ = 0; //!< 判定対象とするtype
 
 private:
 
@@ -82,7 +111,6 @@ private:
 	//! key:   対象のcollider
 	//! value: 当たり判定結果
 	std::unordered_map<Collider*, CollisionState> states_;
-
 
 	//!< すり抜け等の管理flagが欲しい
 	//!< 判定しないのflagが欲しい

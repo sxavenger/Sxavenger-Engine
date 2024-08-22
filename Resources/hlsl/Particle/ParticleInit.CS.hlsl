@@ -3,6 +3,7 @@
 //-----------------------------------------------------------------------------------------
 #include "Particle.hlsli"
 
+
 //=========================================================================================
 // Buffers
 //=========================================================================================
@@ -15,6 +16,7 @@ ConstantBuffer<Information> gInfo : register(b0);
 // Output
 //=========================================================================================
 RWStructuredBuffer<Particle> gOutput : register(u0);
+RWStructuredBuffer<int>      gCounter : register(u1);
 
 //=========================================================================================
 // configs
@@ -31,6 +33,10 @@ void main(uint3 dispatchThreadId : SV_DispatchThreadID) {
 	
 	if (dispatchThreadId.x >= gInfo.kParticleNum) { //!< paritlceの最大数を超えていた場合
 		return;
+	}
+	
+	if (dispatchThreadId.x == 0) { //!< counterの初期化
+		gCounter[0] = 0;
 	}
 	
 	Particle particle = (Particle)0;

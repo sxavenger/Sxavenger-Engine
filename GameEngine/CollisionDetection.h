@@ -50,6 +50,15 @@ namespace CollisionBoundings {
 	//=========================================================================================
 	using Boundings = std::variant<Sphere, AABB, OBB>;
 
+	//=========================================================================================
+	// BoundingsType enum
+	//=========================================================================================
+	enum BoundingsType : size_t { //!< boundingsのvariant indexに合わせる
+		kSphere,
+		kAABB,
+		kOBB
+	};
+
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -78,6 +87,11 @@ private:
 	static bool SphereTo(
 		const Vector3f& posisionA, const CollisionBoundings::Sphere& sphereA,
 		const Vector3f& posisionB, const CollisionBoundings::Sphere& sphereB
+	);
+
+	static bool SphereToAABB(
+		const Vector3f& posisionA, const CollisionBoundings::Sphere& sphereA,
+		const Vector3f& posisionB, const CollisionBoundings::AABB& aabbB
 	);
 
 	//* AABB to *//

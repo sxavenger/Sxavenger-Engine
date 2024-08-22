@@ -3,24 +3,8 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
-// directX
-#include <d3d12.h>
-#include <dxgi1_6.h>
-
-#include <DxObjectMethod.h>
-
-// c++
-#include <cstdint>
-#include <cassert>
-
-// ComPtr
-#include <ComPtr.h>
-
-//-----------------------------------------------------------------------------------------
-// comment
-//-----------------------------------------------------------------------------------------
-#pragma comment(lib, "d3d12.lib")
-#pragma comment(lib, "dxgi.lib")
+//* DxObjectCommon
+#include <DxObjectCommon.h>
 
 //-----------------------------------------------------------------------------------------
 // forward
@@ -28,104 +12,110 @@
 class WinApp;
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// DxObject namespace
+// DxObject
 ////////////////////////////////////////////////////////////////////////////////////////////
-namespace DxObject {
+_DXOBJECT_NAMESPACE_BEGIN
 
-	//-----------------------------------------------------------------------------------------
-	// DxObject forward
-	//-----------------------------------------------------------------------------------------
-	class Devices;
-	class Command;
-	class DescriptorHeaps;
+//-----------------------------------------------------------------------------------------
+// forward
+//-----------------------------------------------------------------------------------------
+class Devices;
+class Command;
+class DescriptorHeaps;
 
-	////////////////////////////////////////////////////////////////////////////////////////////
-	// SwapChain class
-	////////////////////////////////////////////////////////////////////////////////////////////
-	class SwapChain {
-	public:
+////////////////////////////////////////////////////////////////////////////////////////////
+// SwapChain class
+////////////////////////////////////////////////////////////////////////////////////////////
+class SwapChain {
+public:
 
-		//=========================================================================================
-		// public methods
-		//=========================================================================================
+	//=========================================================================================
+	// public methods
+	//=========================================================================================
 
-		//! @brief 初期化
-		//! 
-		//! @param[in] devices         DxObject::Devices
-		//! @param[in] command         DxObject::Command
-		//! @param[in] descriptorHeaps DxObject::DescriptorHeaps
-		//! @param[in] winApp          WinApp
-		//! @param[in] clientWidth     クライアント横幅
-		//! @param[in] clientHeight    クライアント縦幅
-		SwapChain(
-			Devices* devices, Command* command, DescriptorHeaps* descriptorHeaps,
-			WinApp* winApp, int32_t clientWidth, int32_t clientHeight
-		);
+	//! @brief 初期化
+	//! 
+	//! @param[in] devices         DxObject::Devices
+	//! @param[in] command         DxObject::Command
+	//! @param[in] descriptorHeaps DxObject::DescriptorHeaps
+	//! @param[in] winApp          WinApp
+	//! @param[in] clientWidth     クライアント横幅
+	//! @param[in] clientHeight    クライアント縦幅
+	SwapChain(
+		Devices* devices, Command* command, DescriptorHeaps* descriptorHeaps,
+		WinApp* winApp, int32_t clientWidth, int32_t clientHeight
+	);
 
-		//! @brief デストラクタ
-		~SwapChain();
+	//! @brief デストラクタ
+	~SwapChain();
 
-		//! @brief 初期化
-		//! 
-		//! @param[in] devices         DxObject::Devices
-		//! @param[in] command         DxObject::Command
-		//! @param[in] descriptorHeaps DxObject::DescriptorHeaps
-		//! @param[in] winApp          WinApp
-		//! @param[in] clientWidth     クライアント横幅
-		//! @param[in] clientHeight    クライアント縦幅
-		void Init(
-			Devices* devices, Command* command, DescriptorHeaps* descriptorHeaps,
-			WinApp* winApp, int32_t clientWidth, int32_t clientHeight
-		);
+	//! @brief 初期化
+	//! 
+	//! @param[in] devices         DxObject::Devices
+	//! @param[in] command         DxObject::Command
+	//! @param[in] descriptorHeaps DxObject::DescriptorHeaps
+	//! @param[in] winApp          WinApp
+	//! @param[in] clientWidth     クライアント横幅
+	//! @param[in] clientHeight    クライアント縦幅
+	void Init(
+		Devices* devices, Command* command, DescriptorHeaps* descriptorHeaps,
+		WinApp* winApp, int32_t clientWidth, int32_t clientHeight
+	);
 
-		//! @brief 終了処理
-		void Term();
+	//! @brief 終了処理
+	void Term();
 
-		//! @brief Presentを実行
-		void Present(UINT SyncInterval, UINT Flags);
+	//! @brief Presentを実行
+	void Present(UINT SyncInterval, UINT Flags);
 
-		//! @brief スワップチェインを取得
-		//! 
-		//! @return スワップチェインを返却
-		IDXGISwapChain4* GetSwapChain() const { return swapChain_.Get(); }
+	void ObtainCurrentBackBufferIndex();
 
-		//! @brief トランジションバリアを取得
-		//! 
-		//! @param[in] backBufferIndex
-		//! @param[in] stateBefore
-		//! @param[in] stateAfter
-		//! 
-		//! @return トランジションバリアを返却
-		D3D12_RESOURCE_BARRIER* GetTransitionBarrier(
-			UINT backBufferIndex,
-			D3D12_RESOURCE_STATES stateBefore, D3D12_RESOURCE_STATES stateAfter
-		);
+	//* getter *//
 
-		//! @brief handleCPU_RTVを取得
-		//! 
-		//! @param[in] backBufferIndex 
-		//! 
-		//! @return handleCPU_RTVを返却
-		const D3D12_CPU_DESCRIPTOR_HANDLE& GetHandleCPU_RTV(UINT backBufferIndex) const { return descriptorRTV_[backBufferIndex].GetCPUHandle(); }
+	//! @brief スワップチェインを取得
+	//! 
+	//! @return スワップチェインを返却
+	IDXGISwapChain4* GetSwapChain() const { return swapChain_.Get(); }
 
-		ID3D12Resource* GetResource(UINT backBufferIndex) const { return swapChainResource_[backBufferIndex].Get(); }
+	//! @brief トランジションバリアを取得
+	//! 
+	//! @param[in] backBufferIndex
+	//! @param[in] stateBefore
+	//! @param[in] stateAfter
+	//! 
+	//! @return トランジションバリアを返却
+	D3D12_RESOURCE_BARRIER* GetBackBufferTransitionBarrier(
+		D3D12_RESOURCE_STATES stateBefore, D3D12_RESOURCE_STATES stateAfter
+	);
 
-		UINT GetCurrentBackBufferIndex() const { return swapChain_->GetCurrentBackBufferIndex(); }
+	static const uint32_t GetBufferCount() { return kBufferCount_; }
 
-		static const uint32_t GetBufferCount() { return kBufferCount_; }
+	UINT GetCurrentBackBufferIndex() const { return currentBackBufferIndex_; }
 
-	private:
+	//! @brief handleCPU_RTVを取得
+	const D3D12_CPU_DESCRIPTOR_HANDLE& GetRTVHandleCPU() const { return descriptorRTV_[currentBackBufferIndex_].GetCPUHandle(); }
 
-		//=========================================================================================
-		// private variables
-		//=========================================================================================
-		static const uint32_t kBufferCount_ = 2;
+	ID3D12Resource* const GetBackBufferResource() const { return resource_[currentBackBufferIndex_].Get(); }
 
-		ComPtr<IDXGISwapChain4> swapChain_;
-		ComPtr<ID3D12Resource>  swapChainResource_[kBufferCount_];
+private:
 
-		DxObject::Descriptor descriptorRTV_[kBufferCount_];
+	//=========================================================================================
+	// private variables
+	//=========================================================================================
 
-		D3D12_RESOURCE_BARRIER barrier_;
-	};
-}
+	ComPtr<IDXGISwapChain4> swapChain_;
+
+	//* buffers *//
+
+	static const UINT      kBufferCount_ = 2;
+	ComPtr<ID3D12Resource> resource_[kBufferCount_];
+	DxObject::Descriptor   descriptorRTV_[kBufferCount_];
+
+	UINT                   currentBackBufferIndex_;
+
+	//* barrier *//
+
+	D3D12_RESOURCE_BARRIER barrier_; 
+};
+
+_DXOBJECT_NAMESPACE_END

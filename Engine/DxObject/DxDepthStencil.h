@@ -3,87 +3,70 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
-// directX
-#include <d3d12.h>
-#include <dxgi1_6.h>
-
-// c++
-#include <cstdint>
-#include <cassert>
-
-// c++
-#include <DxObjectMethod.h>
-
-// ComPtr
-#include <ComPtr.h>
-
-//-----------------------------------------------------------------------------------------
-// comment
-//-----------------------------------------------------------------------------------------
-#pragma comment(lib, "d3d12.lib")
-#pragma comment(lib, "dxgi.lib")
+//* DxObjectCommon
+#include <DxObjectCommon.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// DxObject namespace
+// DxObject
 ////////////////////////////////////////////////////////////////////////////////////////////
-namespace DxObject {
+_DXOBJECT_NAMESPACE_BEGIN
 
-	//-----------------------------------------------------------------------------------------
-	// DxObject forward
-	//-----------------------------------------------------------------------------------------
-	class Devices;
-	class DescriptorHeaps;
-	
-	////////////////////////////////////////////////////////////////////////////////////////////
-	// DepthStencil class
-	////////////////////////////////////////////////////////////////////////////////////////////
-	class DepthStencil {
-	public:
+//-----------------------------------------------------------------------------------------
+// DxObject forward
+//-----------------------------------------------------------------------------------------
+class Devices;
+class DescriptorHeaps;
 
-		//=========================================================================================
-		// public methods
-		//=========================================================================================
+////////////////////////////////////////////////////////////////////////////////////////////
+// DepthStencil class
+////////////////////////////////////////////////////////////////////////////////////////////
+class DepthStencil {
+public:
 
-		//! @brief コンストラクタ
-		//! 
-		//! @param[in] devices         DxObject::Devices
-		//! @param[in] descriptorHeaps DxObject::DescriptorHeaps
-		//! @param[in] clientWidth     クライアント領域横幅
-		//! @param[in] clientHeight    クライアント領域縦幅
-		DepthStencil(
-			Devices* devices, DescriptorHeaps* descriptorHeaps,
-			int32_t clientWidth, int32_t clientHeight
-		);
+	//=========================================================================================
+	// public methods
+	//=========================================================================================
 
-		//! @brief デストラクタ
-		~DepthStencil();
+	//! @brief コンストラクタ
+	//! 
+	//! @param[in] devices         DxObject::Devices
+	//! @param[in] descriptorHeaps DxObject::DescriptorHeaps
+	//! @param[in] clientWidth     クライアント領域横幅
+	//! @param[in] clientHeight    クライアント領域縦幅
+	DepthStencil(
+		Devices* devices, DescriptorHeaps* descriptorHeaps,
+		int32_t clientWidth, int32_t clientHeight
+	);
 
-		//! @brief 初期化処理
-		//! 
-		//! @param[in] devices         DxObject::Devices
-		//! @param[in] descriptorHeaps DxObject::DescriptorHeaps
-		//! @param[in] clientWidth     クライアント領域横幅
-		//! @param[in] clientHeight    クライアント領域縦幅
-		void Init(
-			Devices* devices, DescriptorHeaps* descriptorHeaps,
-			int32_t clientWidth, int32_t clientHeight
-		);
+	//! @brief デストラクタ
+	~DepthStencil();
 
-		//! @brief 終了処理
-		void Term();
+	//! @brief 初期化処理
+	//! 
+	//! @param[in] devices         DxObject::Devices
+	//! @param[in] descriptorHeaps DxObject::DescriptorHeaps
+	//! @param[in] clientWidth     クライアント領域横幅
+	//! @param[in] clientHeight    クライアント領域縦幅
+	void Init(
+		Devices* devices, DescriptorHeaps* descriptorHeaps,
+		int32_t clientWidth, int32_t clientHeight
+	);
 
-		const D3D12_CPU_DESCRIPTOR_HANDLE& GetHandle() const { return descriptorDSV_.GetCPUHandle(); }
+	//! @brief 終了処理
+	void Term();
 
-	private:
+	const D3D12_CPU_DESCRIPTOR_HANDLE& GetHandle() const { return descriptorDSV_.GetCPUHandle(); }
 
-		//=========================================================================================
-		// private variables
-		//=========================================================================================
+private:
 
-		ComPtr<ID3D12Resource> depthStencilResource_;
+	//=========================================================================================
+	// private variables
+	//=========================================================================================
 
-		DxObject::Descriptor descriptorDSV_;
+	ComPtr<ID3D12Resource> resource_;
 
-	};
+	DxObject::Descriptor descriptorDSV_;
 
-}
+};
+
+_DXOBJECT_NAMESPACE_END

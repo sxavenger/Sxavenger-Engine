@@ -178,6 +178,7 @@ void MyEngine::TransitionProcessSingle() {
 void MyEngine::EndFrame() {
 	sImGuiManager->End();
 	sDirectXRCommon->EndFrame();
+	sPrimitive->ResetObjectCount();
 	Performance::EndFrame();
 }
 
@@ -190,12 +191,12 @@ int MyEngine::ProcessMessage() {
 
 DxObject::Descriptor MyEngine::GetCurrentDescripor(DxObject::DescriptorType type) {
 	assert(sDirectXRCommon != nullptr);
-	return sDirectXRCommon->GetDescriptorsObj()->GetCurrentDescriptor(type);
+	return sDirectXRCommon->GetDescriptorsObj()->GetDescriptor(type);
 }
 
-void MyEngine::EraseDescriptor(DxObject::Descriptor& descriptor) {
+void MyEngine::DeleteDescriptor(DxObject::Descriptor& descriptor) {
 	assert(sDirectXRCommon != nullptr);
-	sDirectXRCommon->GetDescriptorsObj()->Erase(descriptor);
+	sDirectXRCommon->GetDescriptorsObj()->DeleteDescriptor(descriptor);
 }
 
 ID3D12Device8* MyEngine::GetDevice() {

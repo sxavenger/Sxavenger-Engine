@@ -1,17 +1,19 @@
 #pragma once
 /*
-* todo: PerseMeshとModelとの相性が悪いので修正
+* todo: PerseMesh, Modelとの相性が悪いので修正
 */
 
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
-// DirectX
-#include <d3d12.h>
+//* DxObjectCommon
+#include <DxObjectCommon.h>
+
+//* DirectX
 #include <DirectXMesh.h>
 #include <DirectXMath.h>
 
-// c++
+//* c++
 #include <cstdint>
 #include <vector>
 #include <memory>
@@ -19,9 +21,8 @@
 // object
 #include <ObjectStructure.h>
 
-// DxObject
+//* DxObject
 #include <DxBufferResource.h>
-#include <DxStructuredBuffer.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // ResMesh structure
@@ -62,100 +63,100 @@ struct ResMesh {
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// DxObject namespace
+// DxObject
 ////////////////////////////////////////////////////////////////////////////////////////////
-namespace DxObject {
+_DXOBJECT_NAMESPACE_BEGIN
+
+////////////////////////////////////////////////////////////////////////////////////////////
+// MeshLoader class
+////////////////////////////////////////////////////////////////////////////////////////////
+class MeshLoader {
+public:
+
+	//=========================================================================================
+	// public methods
+	//=========================================================================================
+
+	static void PerseMesh(
+		DxObject::BufferResource<VertexData>* verticesBuffer, DxObject::IndexBufferResource* indicesBuffer,
+		ResMesh& dstMesh //!< param[out]
+	);
+	
+
+private:
+
+	//=========================================================================================
+	// private variables
+	//=========================================================================================
+	
+	static const uint32_t kMaxVertices   = 64;
+	static const uint32_t kMaxPrimitives = 126;
+
+	//=========================================================================================
+	// private methods
+	//=========================================================================================
+
+};
+
+////////////////////////////////////////////////////////////////////////////////////////////
+// Mesh class
+////////////////////////////////////////////////////////////////////////////////////////////
+class Mesh {
+public:
+
+	//=========================================================================================
+	// public methods
+	//=========================================================================================
+
+	Mesh() = delete;
+
+	Mesh(BufferResource<VertexData>* vertexResource, IndexBufferResource* indexResource) {
+		Init(vertexResource, indexResource);
+	}
+
+	~Mesh() { Term(); }
+
+	void Init(BufferResource<VertexData>* vertexResource, IndexBufferResource* indexResource);
+
+	void Term();
+
+	void Dispatch(UINT verticesParam, UINT uniqueVertexIndicesParam, UINT meshletsParam, UINT primitiveIndices);
+
+	void Dispatch(UINT verticesParam, UINT uniqueVertexIndicesParam, UINT meshletsParam, UINT primitiveIndices, UINT cullDataParam, UINT infoParam);
+
+
+private:
 
 	////////////////////////////////////////////////////////////////////////////////////////////
-	// MeshLoader class
+	// MeshInfo structure
 	////////////////////////////////////////////////////////////////////////////////////////////
-	class MeshLoader {
-	public:
-
-		//=========================================================================================
-		// public methods
-		//=========================================================================================
-
-		static void PerseMesh(
-			DxObject::BufferResource<VertexData>* verticesBuffer, DxObject::IndexBufferResource* indicesBuffer,
-			ResMesh& dstMesh //!< param[out]
-		);
-		
-
-	private:
-
-		//=========================================================================================
-		// private variables
-		//=========================================================================================
-		
-		static const uint32_t kMaxVertices   = 64;
-		static const uint32_t kMaxPrimitives = 126;
-
-		//=========================================================================================
-		// private methods
-		//=========================================================================================
-
+	struct MeshInfo {
+		uint32_t meshletCount;
 	};
 
-	////////////////////////////////////////////////////////////////////////////////////////////
-	// Mesh class
-	////////////////////////////////////////////////////////////////////////////////////////////
-	class Mesh {
-	public:
+	//=========================================================================================
+	// private variables
+	//=========================================================================================
 
-		//=========================================================================================
-		// public methods
-		//=========================================================================================
+	// buffers
+	std::unique_ptr<DxObject::BufferResource<VertexData>>               vertices_;
+	std::unique_ptr<DxObject::BufferResource<uint32_t>>                 uniqueVertexIndices_;
+	std::unique_ptr<DxObject::BufferResource<DirectX::MeshletTriangle>> primitiveIndices_;
+	std::unique_ptr<DxObject::BufferResource<DirectX::Meshlet>>         meshlets_;
+	std::unique_ptr<DxObject::BufferResource<DirectX::CullData>>        cullDatas_;
+	//!< SRV節約のためVirtualAddressでの設定
+	
+	std::unique_ptr<DxObject::BufferResource<MeshInfo>> info_;
 
-		Mesh() = delete;
+	// config
+	static const UINT kAmplificationRound_ = 32; //<! numthreadが32で作られてるため
 
-		Mesh(BufferResource<VertexData>* vertexResource, IndexBufferResource* indexResource) {
-			Init(vertexResource, indexResource);
-		}
+	//=========================================================================================
+	// private methods
+	//=========================================================================================
 
-		~Mesh() { Term(); }
+	static UINT DivRoundUp(UINT meshletCount);
+	
+};
 
-		void Init(BufferResource<VertexData>* vertexResource, IndexBufferResource* indexResource);
-
-		void Term();
-
-		void Dispatch(UINT verticesParam, UINT uniqueVertexIndicesParam, UINT meshletsParam, UINT primitiveIndices);
-
-		void Dispatch(UINT verticesParam, UINT uniqueVertexIndicesParam, UINT meshletsParam, UINT primitiveIndices, UINT cullDataParam, UINT infoParam);
-
-
-	private:
-
-		////////////////////////////////////////////////////////////////////////////////////////////
-		// MeshInfo structure
-		////////////////////////////////////////////////////////////////////////////////////////////
-		struct MeshInfo {
-			uint32_t meshletCount;
-		};
-
-		//=========================================================================================
-		// private variables
-		//=========================================================================================
-
-		// buffers
-		std::unique_ptr<DxObject::BufferResource<VertexData>>               vertices_;
-		std::unique_ptr<DxObject::BufferResource<uint32_t>>                 uniqueVertexIndices_;
-		std::unique_ptr<DxObject::BufferResource<DirectX::MeshletTriangle>> primitiveIndices_;
-		std::unique_ptr<DxObject::BufferResource<DirectX::Meshlet>>         meshlets_;
-		std::unique_ptr<DxObject::BufferResource<DirectX::CullData>>        cullDatas_;
-		//!< SRV節約のためVirtualAddressでの設定
-		
-		std::unique_ptr<DxObject::BufferResource<MeshInfo>> info_;
-
-		// config
-		static const UINT kAmplificationRound_ = 32; //<! numthreadが32で作られてるため
-
-		//=========================================================================================
-		// private methods
-		//=========================================================================================
-
-		static UINT DivRoundUp(UINT meshletCount);
-		
-	};
-
-}
+_DXOBJECT_NAMESPACE_END

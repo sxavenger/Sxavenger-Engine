@@ -4,6 +4,7 @@
 // include
 //-----------------------------------------------------------------------------------------
 #include <cmath>
+#include <algorithm>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Vector3 methods
@@ -46,5 +47,13 @@ Vector3f Lerp(const Vector3f& x, const Vector3f& y, float s) {
 		x.x + s * (y.x - x.x),
 		x.y + s * (y.y - x.y),
 		x.z + s * (y.z - x.z)
+	};
+}
+
+Vector3f Clamp(const Vector3f& v, const Vector3f& min, const Vector3f& max) {
+	return {
+		std::clamp(v.x, min.x, max.x),
+		std::clamp(v.y, min.y, max.y),
+		std::clamp(v.z, min.z, max.z),
 	};
 }

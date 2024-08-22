@@ -9,6 +9,12 @@
 // c++
 #include <memory>
 
+// IAs
+#include <DrawMethod.h>
+
+// engine
+#include <Transform.h>
+
 // Attribute
 #include <Attribute.h>
 
@@ -36,6 +42,17 @@ public:
 
 protected:
 
+	////////////////////////////////////////////////////////////////////////////////////////////
+	// Material structure
+	////////////////////////////////////////////////////////////////////////////////////////////
+	struct Material {
+		Color4f color;
+
+		void Init() {
+			color = { 0.0f, 1.0f, 1.0f, 0.5f };
+		}
+	};
+
 	//=========================================================================================
 	// protected variables
 	//=========================================================================================
@@ -45,8 +62,11 @@ protected:
 	bool isDelete_ = false;
 
 	//* IA
+	DrawData ia_;
 
-	
+	//* Buffer
+	EulerTransformBuffer transform_;
+	std::unique_ptr<DxObject::BufferResource<Material>> material_;
 
 };
 
@@ -78,13 +98,19 @@ namespace DebugObjects {
 
 		void Draw() override;
 
+		void SetAttributeImGui() override;
+
+		const Vector3f& GetColliderPosition() const override { return transform_.transform.translate; }
+
+		void OnCollisionEnter(_MAYBE_UNUSED Collider* const other) override;
+
+		void OnCollisionExit(_MAYBE_UNUSED Collider* const other) override;
+
 	private:
 
 		//=========================================================================================
 		// private variables
 		//=========================================================================================
-
-
 
 	};
 
@@ -96,8 +122,35 @@ namespace DebugObjects {
 		, public Collider {
 	public:
 
+		//=========================================================================================
+		// public methods
+		//=========================================================================================
+
+		void Init() override;
+
+		void Term();
+
+		void Update() override;
+
+		void Draw() override;
+
+		void SetAttributeImGui() override;
+
+		const Vector3f& GetColliderPosition() const override { return transform_.transform.translate; }
+
+		void OnCollisionEnter(_MAYBE_UNUSED Collider* const other) override;
+
+		void OnCollisionExit(_MAYBE_UNUSED Collider* const other) override;
+
 	private:
 
+		//=========================================================================================
+		// private variables
+		//=========================================================================================
+
+		QuaternionTransformBuffer qt_;
+		Vector3f v = { 1.0f, 0.0f, 0.0 };
+		float angle = 3.141592f / 2.0f;
 
 	};
 

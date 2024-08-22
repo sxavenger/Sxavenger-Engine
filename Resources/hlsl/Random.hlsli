@@ -1,3 +1,5 @@
+#pragma once
+
 /* external methods 
  links: https://docs.google.com/presentation/d/13TmxDYfUVLArIQwcMlGfGERHEav_YLUqKLtvSaTPWe0/edit#slide=id.g2dc12a0812f_0_32
 */

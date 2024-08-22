@@ -3,6 +3,9 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
+// defines
+#include <DefineConfigs.h>
+
 // DirectX12
 #include <d3d12.h>
 #include <DirectXTex.h>
@@ -274,8 +277,7 @@ namespace TextureMethod {
 
 	ComPtr<ID3D12Resource> CreateTextureResource(ID3D12Device* device, const DirectX::TexMetadata& metadata);
 
-	[[nodiscard]]
-	ComPtr<ID3D12Resource> UploadTextureData(
+	_NODISCARD ComPtr<ID3D12Resource> UploadTextureData(
 		ID3D12Resource* texture, const DirectX::ScratchImage& mipImages,
 		ID3D12Device* device, ID3D12GraphicsCommandList* commandList
 	);

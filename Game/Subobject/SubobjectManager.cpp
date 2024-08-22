@@ -68,9 +68,9 @@ void SubobjectManager::Draw() {
 		it->Draw(mainCamera_);
 	}
 
-	if (MyEngine::camera3D != mainCamera_) { //!< debugCameraかどうかの確認
-		mainCamera_->DrawFrustum({1.0f, 1.0f, 0.0f, 1.0f});
-	}
+	//if (MyEngine::camera3D != mainCamera_) { //!< debugCameraかどうかの確認
+	//	mainCamera_->DrawFrustum({1.0f, 1.0f, 0.0f, 1.0f});
+	//}
 }
 
 void SubobjectManager::SetAttributeImGui() {

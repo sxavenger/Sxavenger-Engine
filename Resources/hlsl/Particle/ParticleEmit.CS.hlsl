@@ -18,10 +18,16 @@ struct Emitter {
 ConstantBuffer<Emitter> gEmitter : register(b0);
 ConstantBuffer<PerFrame> gPerFrame : register(b1);
 
+struct Information {
+	uint kParticleNum;
+};
+ConstantBuffer<Information> gInfo : register(b2);
+
 //=========================================================================================
 // RWBuffers
 //=========================================================================================
 RWStructuredBuffer<Particle> gParticle : register(u0);
+RWStructuredBuffer<int> gCounter       : register(u1);
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // main
@@ -37,10 +43,18 @@ void main(uint3 dispatchThreadId : SV_DispatchThreadID) {
 	generater.seed = (dispatchThreadId + gPerFrame.deltaTime) * gPerFrame.deltaTime;
 	
 	for (uint i = 0; i < gEmitter.count; ++i) {
-		gParticle[i].scale     = generater.Generate3d();
-		gParticle[i].translate = generater.Generate3d();
-		gParticle[i].color.rgb = generater.Generate3d();
-		gParticle[i].color.a   = 1.0f;
+		
+		int particleIndex;
+		InterlockedAdd(gCounter[0], 1, particleIndex);
+		
+		if (particleIndex < gInfo.kParticleNum) {
+			gParticle[particleIndex].scale     = generater.Generate3d();
+			gParticle[particleIndex].translate = generater.Generate3d();
+			gParticle[particleIndex].velocity = generater.Generate3d();
+			gParticle[particleIndex].lifeTime  = 10.0f;
+			gParticle[particleIndex].color.rgb = generater.Generate3d();
+			gParticle[particleIndex].color.a   = 1.0f;
+		}
 
 	}
 }

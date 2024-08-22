@@ -3,232 +3,149 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
-// directX
-#include <d3d12.h>
-#include <dxgi1_6.h>
+//* DxObjectCommon
+#include <DxObjectCommon.h>
 
-// methods
-#include <DxObjectMethod.h>
-#include <DxGraphicsBlob.h>
+//* DxObject
 #include <DxBlendState.h>
+#include <DxShaderBlob.h>
+#include <DxRootSignatureDesc.h>
 
-// c++
-#include <cstdint>
-#include <cassert>
-#include <vector>
-
-// ComPtr
-#include <ComPtr.h>
-
-// lib
+//* Lib
 #include <Environment.h>
 
+////////////////////////////////////////////////////////////////////////////////////////////
+// DxObject
+////////////////////////////////////////////////////////////////////////////////////////////
+_DXOBJECT_NAMESPACE_BEGIN
+
 //-----------------------------------------------------------------------------------------
-// comment
+// forward
 //-----------------------------------------------------------------------------------------
-#pragma comment(lib, "d3d12.lib")
-#pragma comment(lib, "dxgi.lib")
+class Devices;
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// DxObject namespace
+// PrimitiveType enum
 ////////////////////////////////////////////////////////////////////////////////////////////
-namespace DxObject {
+enum PrimitiveType {
+	PRIMITIVE_LINE,
+	PRIMITIVE_TRIANGLE,
+};
 
-	//-----------------------------------------------------------------------------------------
-	// forward
-	//-----------------------------------------------------------------------------------------
-	class Devices;
+////////////////////////////////////////////////////////////////////////////////////////////
+// GraphicsPipelineDesc structure
+////////////////////////////////////////////////////////////////////////////////////////////
+struct GraphicsPipelineDesc {
+public:
 
-	////////////////////////////////////////////////////////////////////////////////////////////
-	// ShaderVisibility enum
-	////////////////////////////////////////////////////////////////////////////////////////////
-	enum ShaderVisibility {
-		VISIBILITY_ALL           = D3D12_SHADER_VISIBILITY_ALL,
-		VISIBILITY_VERTEX        = D3D12_SHADER_VISIBILITY_VERTEX,
-		VISIBILITY_HULL          = D3D12_SHADER_VISIBILITY_HULL,
-		VISIBILITY_DOMAIN        = D3D12_SHADER_VISIBILITY_DOMAIN,
-		VISIBILITY_GEOMETRY      = D3D12_SHADER_VISIBILITY_GEOMETRY,
-		VISIBILITY_PIXEL         = D3D12_SHADER_VISIBILITY_PIXEL,
-		VISIBILITY_AMPLIFICATION = D3D12_SHADER_VISIBILITY_AMPLIFICATION,
-		VISIBILITY_MESH          = D3D12_SHADER_VISIBILITY_MESH
-	};
+	//=========================================================================================
+	// public methods
+	//=========================================================================================
 
-	////////////////////////////////////////////////////////////////////////////////////////////
-	// GraphicsRootSignatureDesc structure
-	////////////////////////////////////////////////////////////////////////////////////////////
-	struct GraphicsRootSignatureDesc {
-	public:
+	GraphicsPipelineDesc() { Init(); }
 
-		//=========================================================================================
-		// public methods
-		//=========================================================================================
+	~GraphicsPipelineDesc() { Clear(); }
 
-		~GraphicsRootSignatureDesc() { Clear(); }
+	void Init();
 
-		void Resize(uint32_t paramSize, uint32_t samplerSize);
+	void Clear();
 
-		void Clear();
+	void CreateDefaultDesc();
 
-		/* virtualAddress */
+	/* setters */
 
-		void SetCBV(uint32_t index, ShaderVisibility stage, UINT shaderRegister);
+	void SetElement(const LPCSTR& semanticName, UINT semanticIndex, DXGI_FORMAT format, UINT inputSlot = 0);
 
-		void SetVirtualSRV(uint32_t index, ShaderVisibility stage, UINT shaderRegister);
+	void SetRasterizer(D3D12_CULL_MODE cullMode, D3D12_FILL_MODE fillMode);
 
-		/* handle */
+	void SetDepthStencil(bool depthEnable);
 
-		void SetSRV(uint32_t index, ShaderVisibility stage, UINT shaderRegister);
+	void SetBlendMode(BlendMode blendMode);
 
-		void SetSampler(uint32_t sampleIndex, TextureMode mode, ShaderVisibility stage, UINT shaderRegister);
+	void SetPrimitive(PrimitiveType type);
 
-		void SetAnisotropicSampler(uint32_t sampleIndex, TextureMode mode, ShaderVisibility stage, UINT shaderRegister, uint32_t anisotropic);
+	void SetRTVFormat(DXGI_FORMAT format);
+	void SetRTVFormats(uint32_t size, const DXGI_FORMAT formats[]);
 
-		//=========================================================================================
-		// public variables
-		//=========================================================================================
+	/* getter */
 
-		std::vector<D3D12_ROOT_PARAMETER>      params;
-		std::vector<D3D12_STATIC_SAMPLER_DESC> samplers;
+	D3D12_INPUT_LAYOUT_DESC GetInputLayout() const;
 
-	private:
 
-		//=========================================================================================
-		// private varibles
-		//=========================================================================================
+	//=========================================================================================
+	// public variables
+	//=========================================================================================
 
-		std::vector<D3D12_DESCRIPTOR_RANGE> ranges;
+	/* descs */
 
-	};
+	std::vector<D3D12_INPUT_ELEMENT_DESC> elements;         //!< InputLayoutDesc
+	D3D12_RASTERIZER_DESC                 rasterizerDesc;   //!< RasterizerDesc
+	D3D12_DEPTH_STENCIL_DESC              depthStencilDesc; //!< DepthStencilDesc
 
-	////////////////////////////////////////////////////////////////////////////////////////////
-	// PrimitiveType enum
-	////////////////////////////////////////////////////////////////////////////////////////////
-	enum PrimitiveType {
-		PRIMITIVE_LINE,
-		PRIMITIVE_TRIANGLE,
-	};
+	/* param */
 
-	////////////////////////////////////////////////////////////////////////////////////////////
-	// GraphicsPipelineDesc structure
-	////////////////////////////////////////////////////////////////////////////////////////////
-	struct GraphicsPipelineDesc {
-	public:
+	BlendMode blendMode;
 
-		//=========================================================================================
-		// public methods
-		//=========================================================================================
+	D3D12_PRIMITIVE_TOPOLOGY_TYPE primitiveTopologyType;
+	D3D_PRIMITIVE_TOPOLOGY        primitiveTopology;
 
-		GraphicsPipelineDesc() { Init(); }
+	std::vector<DXGI_FORMAT> rtvFormats;
 
-		~GraphicsPipelineDesc() { Clear(); }
+};
 
-		void Init();
+////////////////////////////////////////////////////////////////////////////////////////////
+// GraphicsPipeline class
+////////////////////////////////////////////////////////////////////////////////////////////
+class GraphicsPipeline {
+public:
 
-		void Clear();
+	//=========================================================================================
+	// public methods
+	//=========================================================================================
 
-		void CreateDefaultDesc();
+	GraphicsPipeline() { CreateViewports(); }
+	~GraphicsPipeline() = default;
 
-		/* setters */
+	//* Create Pipelines *//
 
-		void SetElement(const LPCSTR& semanticName, UINT semanticIndex, DXGI_FORMAT format, UINT inputSlot = 0);
+	void CreateViewports(int32_t clientWidth = kWindowWidth, int32_t clientHeight = kWindowHeight);
 
-		void SetRasterizer(D3D12_CULL_MODE cullMode, D3D12_FILL_MODE fillMode);
+	void CreateRootSignature(Devices* devices, const GraphicsRootSignatureDesc& graphicsDesc);
 
-		void SetDepthStencil(bool depthEnable);
+	void CreatePipeline(Devices* devices, GraphicsBlob* graphicsBlob, BlendMode blendMode); //!< use default desc
+	void CreatePipeline(Devices* devices, GraphicsBlob* graphicsBlob, const GraphicsPipelineDesc& descs);
 
-		void SetBlendMode(BlendMode blendMode);
+	//* set *//
 
-		void SetPrimitive(PrimitiveType type);
+	void SetPipeline(ID3D12GraphicsCommandList* commandList) const;
 
-		void SetRTVFormat(DXGI_FORMAT format);
-		void SetRTVFormats(uint32_t size, const DXGI_FORMAT formats[]);
+	static void SetBlendState(BlendState* blendState) { blendState_ = blendState; }
 
-		/* getter */
+private:
 
-		D3D12_INPUT_LAYOUT_DESC GetInputLayout() const;
+	//=========================================================================================
+	// private variables
+	//=========================================================================================
 
+	//* external *//
 
-		//=========================================================================================
-		// public variables
-		//=========================================================================================
+	static BlendState* blendState_;
 
-		/* descs */
+	//* ID3D12 *//
 
-		std::vector<D3D12_INPUT_ELEMENT_DESC> elements;         //!< InputLayoutDesc
-		D3D12_RASTERIZER_DESC                 rasterizerDesc;   //!< RasterizerDesc
-		D3D12_DEPTH_STENCIL_DESC              depthStencilDesc; //!< DepthStencilDesc
+	ComPtr<ID3D12RootSignature> rootSignature_;
+	ComPtr<ID3D12PipelineState> pipeline_;
 
-		/* param */
+	//* parameter *//
 
-		BlendMode blendMode;
+	bool                   isUseMeshPipeline_;
+	D3D_PRIMITIVE_TOPOLOGY primitiveTopology_;
 
-		D3D12_PRIMITIVE_TOPOLOGY_TYPE primitiveTopologyType;
-		D3D_PRIMITIVE_TOPOLOGY        primitiveTopology;
+	//* viewports *//
 
-		std::vector<DXGI_FORMAT> rtvFormats;
+	D3D12_VIEWPORT viewport_;
+	D3D12_RECT     scissorRect_;
 
-	};
+};
 
-	////////////////////////////////////////////////////////////////////////////////////////////
-	// GraphicsPipeline class
-	////////////////////////////////////////////////////////////////////////////////////////////
-	class GraphicsPipeline {
-	public:
-
-		//=========================================================================================
-		// public methods
-		//=========================================================================================
-
-		GraphicsPipeline() { CreateViewports(); }
-
-		/* CreateRootSignature */
-
-		void CreateRootSignature(Devices* devices, const GraphicsRootSignatureDesc& descs);
-
-		/* CreatePipeline */
-
-		void CreatePipeline(
-			Devices* devices, GraphicsBlob* graphicBlob, BlendMode blendMode
-		);
-
-		void CreatePipeline(
-			Devices* devices, GraphicsBlob* graphicsBlob, const GraphicsPipelineDesc& descs
-		);
-
-		/* setter */
-
-		void SetPipeline(ID3D12GraphicsCommandList* commandList);
-
-		static void SetBlendState(BlendState* blendState) { blendState_ = blendState; }
-
-	private:
-
-		//=========================================================================================
-		// private variables
-		//=========================================================================================
-
-		/* statics */
-		static BlendState* blendState_;
-
-		/* rootSignature */
-		ComPtr<ID3D12RootSignature> rootSignature_;
-
-		/* pipeline */
-		ComPtr<ID3D12PipelineState> pipeline_;
-
-		/* parameter */
-		bool                   isUseMeshPipeline_;
-		D3D_PRIMITIVE_TOPOLOGY primitiveTopology_;
-
-		/* viewports */
-		D3D12_VIEWPORT viewport_;
-		D3D12_RECT     scissorRect_;
-
-		//=========================================================================================
-		// private methods
-		//=========================================================================================
-
-		void CreateViewports(int32_t clientWidth = kWindowWidth, int32_t clientHeight = kWindowHeight);
-
-	};
-}
+_DXOBJECT_NAMESPACE_END

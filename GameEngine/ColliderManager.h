@@ -31,6 +31,8 @@ public:
 
 	void Update();
 
+	void DrawColliders();
+
 	//* collders container *//
 
 	void SetCollider(Collider* collider) { colliders_.emplace(collider); }
@@ -48,6 +50,8 @@ private:
 	std::unordered_set<Collider*> colliders_;
 	// todo: layerを追加して当たり判定にfilterをかける
 
+	Color4f color_ = { 1.0f, 1.0f, 0.0f, 1.0f };
+
 	//=========================================================================================
 	// private methods
 	//=========================================================================================
@@ -55,5 +59,10 @@ private:
 	void CheckAllCollision();
 
 	void CheckCollisionPair(Collider* colliderA, Collider* colliderB);
+
+	void DrawCollider(const Collider* const collider) const;
+	// todo: primitiveに移動
+	void DrawSphereCollider(const Vector3f& position, const CollisionBoundings::Sphere& sphere) const;
+	void DrawAABBCollider(const Vector3f& position, const CollisionBoundings::AABB& aabb) const;
 
 };

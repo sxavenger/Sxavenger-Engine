@@ -354,8 +354,8 @@ void Console::DisplaySystem() {
 		if (ImGui::TreeNode("RTV")) {
 			ImGui::Text(
 				"used: %d / max: %d",
-				descriptorHeaps->GetUsedDescriptor(RTV),
-				descriptorHeaps->GetIndexSize(RTV)
+				descriptorHeaps->GetDescriptorPool(RTV)->GetUsedDescriptorsCount(),
+				descriptorHeaps->GetDescriptorPool(RTV)->GetDescriptorMaxCount()
 			);
 
 			ImGui::TreePop();
@@ -365,8 +365,8 @@ void Console::DisplaySystem() {
 
 			ImGui::Text(
 				"used: %d / max: %d",
-				descriptorHeaps->GetUsedDescriptor(SRV),
-				descriptorHeaps->GetIndexSize(SRV)
+				descriptorHeaps->GetDescriptorPool(CBV_SRV_UAV)->GetUsedDescriptorsCount(),
+				descriptorHeaps->GetDescriptorPool(CBV_SRV_UAV)->GetDescriptorMaxCount()
 			);
 
 			ImGui::TreePop();
@@ -376,8 +376,8 @@ void Console::DisplaySystem() {
 
 			ImGui::Text(
 				"used: %d / max: %d",
-				descriptorHeaps->GetUsedDescriptor(DSV),
-				descriptorHeaps->GetIndexSize(DSV)
+				descriptorHeaps->GetDescriptorPool(DSV)->GetUsedDescriptorsCount(),
+				descriptorHeaps->GetDescriptorPool(DSV)->GetDescriptorMaxCount()
 			);
 
 			ImGui::TreePop();

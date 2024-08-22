@@ -3,105 +3,87 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
-// directX
-#include <d3d12.h>
-#include <dxgi1_6.h>
-
-// c++
-#include <cstdint>
-#include <cassert>
-
-// ComPtr
-#include <ComPtr.h>
-
-//-----------------------------------------------------------------------------------------
-// comment
-//-----------------------------------------------------------------------------------------
-#pragma comment(lib, "d3d12.lib")
-#pragma comment(lib, "dxgi.lib")
+//* DxObjectCommon
+#include <DxObjectCommon.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// DxObject namespace
+// DxObject
 ////////////////////////////////////////////////////////////////////////////////////////////
-namespace DxObject {
+_DXOBJECT_NAMESPACE_BEGIN
 
-	//-----------------------------------------------------------------------------------------
-	// DxObject forward
-	//-----------------------------------------------------------------------------------------
-	class Devices;
-	class Fence;
+//-----------------------------------------------------------------------------------------
+// forward
+//-----------------------------------------------------------------------------------------
+class Devices;
+class Fence;
 
-	////////////////////////////////////////////////////////////////////////////////////////////
-	// Command class
-	////////////////////////////////////////////////////////////////////////////////////////////
-	class Command {
-	public:
+////////////////////////////////////////////////////////////////////////////////////////////
+// Command class
+////////////////////////////////////////////////////////////////////////////////////////////
+class Command {
+public:
 
-		//=========================================================================================
-		// public methods
-		//=========================================================================================
+	//=========================================================================================
+	// public methods
+	//=========================================================================================
 
-		//! @brief コンストラクタ
-		//! 
-		//! @param[in] devices DxObject::Devices
-		Command(Devices* device);
+	//! @brief コンストラクタ
+	//! 
+	//! @param[in] devices DxObject::Devices
+	Command(Devices* device) { Init(device); }
 
-		//! @brief デストラクタ
-		~Command();
+	//! @brief デストラクタ
+	~Command() { Term(); }
 
-		//! @brief 初期化
-		//! 
-		//! @param[in] devices DxObject::Devices
-		void Init(Devices* device);
+	//! @brief 初期化
+	//! 
+	//! @param[in] devices DxObject::Devices
+	void Init(Devices* device);
 
-		//! @brief 終了処理
-		void Term();
+	//! @brief 終了処理
+	void Term();
 
-		//! @brief commandListをクローズし, Queueで実行
-		void Close();
+	//! @brief commandListをクローズし, Queueで実行
+	void Close();
 
-		//! @brief commandAllocatorのすべてをリセット, commandListをリセット
-		void ResetAll();
+	//! @brief commandAllocatorのすべてをリセット, commandListをリセット
+	void ResetAll();
 
-		//! @brief backAllocatorの更新 & commandListをbackAllocatorにリセット
-		void ResetBackAllocator();
+	//! @brief backAllocatorの更新 & commandListをbackAllocatorにリセット
+	void ResetBackAllocator();
 
-		
-		void ResetSingleAllocator();
+	void ResetSingleAllocator();
 
-		//! @brief コマンドリストを取得
-		//! 
-		//! @return コマンドリストを返却
-		auto GetCommandList() const { return commandList_.Get(); }
+	//* Getter *//
 
-		//! @brief コマンドキューを取得
-		//! 
-		//! @return コマンドキューを返却
-		ID3D12CommandQueue* GetCommandQueue() const { return commandQueue_.Get(); }
+	//! @brief コマンドリストを取得
+	auto GetCommandList() const { return commandList_.Get(); }
 
-		//! @brief Signalを実行
-		//! 
-		//! @param[in] fences DxObject::Fence
-		void Signal(Fence* fences);
+	//! @brief コマンドキューを取得
+	ID3D12CommandQueue* const GetCommandQueue() const { return commandQueue_.Get(); }
 
-	private:
+	//! @brief Signalを実行
+	void Signal(Fence* fences);
 
-		//=========================================================================================
-		// private variables
-		//=========================================================================================
+private:
 
-		static const uint32_t kAllocatorCount = 2;
+	//=========================================================================================
+	// private variables
+	//=========================================================================================
 
-		ComPtr<ID3D12CommandQueue>         commandQueue_;
-		ComPtr<ID3D12CommandAllocator>     commandAllocator_[kAllocatorCount];
-		ComPtr<ID3D12GraphicsCommandList6> commandList_;
+	static const uint32_t kAllocatorCount_ = 2;
 
-		uint32_t backAllocatorIndex_ = 0;
+	ComPtr<ID3D12CommandQueue>         commandQueue_;
+	ComPtr<ID3D12CommandAllocator>     commandAllocator_[kAllocatorCount_];
+	ComPtr<ID3D12GraphicsCommandList6> commandList_;
 
-		/*
-			backAllocator  -> commandListを積んでるAllocator
-			frontAllocator -> 実行中のallocator
-		*/
+	uint32_t backAllocatorIndex_ = 0;
 
-	};
-}
+	/*
+		backAllocator  -> commandListを積んでるAllocator
+		frontAllocator -> 実行中のallocator
+	*/
+
+};
+
+_DXOBJECT_NAMESPACE_END
