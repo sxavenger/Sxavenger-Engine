@@ -4,8 +4,9 @@
 // include
 //-----------------------------------------------------------------------------------------
 #include <MyEngine.h>
-#include "DxShaderReflection.h"
 #include <Performance.h>
+
+
 
 //-----------------------------------------------------------------------------------------
 // using
@@ -100,15 +101,17 @@ void Particle::Init() {
 	blob_->Create(L"particle/particle.VS.hlsl", GRAPHICS_VERTEX);
 	blob_->Create(L"particle/particle.PS.hlsl", GRAPHICS_PIXEL);
 
+	reflection_ = std::make_unique<ShaderReflectionTable>();
+	reflection_->Create(blob_->GetGraphicsBlobs()[GRAPHICS_VERTEX], VISIBILITY_VERTEX);
+	reflection_->Create(blob_->GetGraphicsBlobs()[GRAPHICS_PIXEL], VISIBILITY_PIXEL);
+
+	reflection_->Bind("gCamera", MyEngine::camera3D->GetGPUVirtualAddress());
+	reflection_->Bind("gParticle", particleBuffer_->GetGPUVirtualAddress());
+
 	{
 		pipeline_ = std::make_unique<GraphicsPipeline>();
 
-		GraphicsRootSignatureDesc rootDesc;
-		rootDesc.Resize(2, 0);
-		rootDesc.SetCBV(0, VISIBILITY_VERTEX, 0);
-		rootDesc.SetVirtualSRV(1, VISIBILITY_VERTEX, 0);
-
-		pipeline_->CreateRootSignature(MyEngine::GetDevicesObj(), rootDesc);
+		pipeline_->CreateRootSignature(MyEngine::GetDevicesObj(), reflection_->CreateRootSignatureDesc());
 
 		GraphicsPipelineDesc pipelineDesc;
 		pipelineDesc.CreateDefaultDesc();
@@ -179,8 +182,8 @@ void Particle::Draw() {
 	pipeline_->SetPipeline(commandList);
 	plane_.SetBuffer(commandList);
 
-	commandList->SetGraphicsRootConstantBufferView(0, MyEngine::camera3D->GetGPUVirtualAddress());
-	commandList->SetGraphicsRootShaderResourceView(1, particleBuffer_->GetGPUVirtualAddress());
+	reflection_->Bind("gCamera", MyEngine::camera3D->GetGPUVirtualAddress()); //!< camera3Dは呼び出されるたび変わるので
+	reflection_->BindGraphicsParameter(commandList);
 
 	plane_.DrawCall(commandList, kParticleNum);
 }

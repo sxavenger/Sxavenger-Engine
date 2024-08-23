@@ -99,7 +99,6 @@ void DxObject::ShaderBlobManager::InitDxcCompiler() {
 
 void DxObject::ShaderBlobManager::SetExternal(ShaderBlobManager* manager) {
 	BaseShaderBlob::SetShaderBlobManager(manager);
-	ShaderReflection::SetShaderBlobManager(manager);
 }
 
 ComPtr<IDxcBlob> DxObject::ShaderBlobManager::CreateShaderBlob(const std::wstring& filePath, ShaderType type) {
@@ -117,7 +116,7 @@ ComPtr<IDxcBlob> DxObject::ShaderBlobManager::CreateShaderBlob(const std::wstrin
 		errorLog
 			= "[HLSL Not Found] \n filePath: " + ToString(filePath);
 
-		Assert(false, errorLog, "Error: CompileShader");
+		AssertMesseage(false, errorLog, "Error: CompileShader");
 	}
 
 	// 読み込んだファイルの内容を設定する
@@ -162,7 +161,7 @@ ComPtr<IDxcBlob> DxObject::ShaderBlobManager::CreateShaderBlob(const std::wstrin
 		errorLog
 			= "[HLSL Error] \n filePath: " + ToString(filePath);
 
-		Assert(false, errorLog, "Error: CompileShader");
+		AssertMesseage(false, errorLog, "Error: CompileShader");
 	}
 
 	IDxcBlob* shaderBlob = nullptr;

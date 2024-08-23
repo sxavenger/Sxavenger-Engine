@@ -26,11 +26,10 @@ void Log(const std::wstring& logW);
 // Assertion
 //-----------------------------------------------------------------------------------------
 
-void Assert(bool isSuccess, const std::string& errorLog);
-void Assert(bool isSuccess, const std::string& errorLog, const std::string& textTitle);
-void AssertHRESULT(const HRESULT& hr);
+void AssertMesseage(bool isSuccess, const std::string& errorLog);
+void AssertMesseage(bool isSuccess, const std::string& errorLog, const std::string& textTitle);
 
-void Assert(bool isSuccess, bool isUseRuntimeError = false);
+void AssertLog(bool expression, const std::string& log = "");
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // ExternalLogger class

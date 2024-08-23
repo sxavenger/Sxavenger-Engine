@@ -10,8 +10,6 @@
 
 #include "ColliderManager.h"
 
-#include <DxShaderReflection.h>
-
 //-----------------------------------------------------------------------------------------
 // using
 //-----------------------------------------------------------------------------------------
@@ -82,19 +80,33 @@ void GameScene::Init() {
 	gameCamera_->SetProjection(0.45f, static_cast<float>(kWindowWidth) / static_cast<float>(kWindowHeight), 0.01f, 16.0f);
 	gameCamera_->SetTransform(unitVector, origin, {0.0f, 0.0f, -4.0f});
 
+	MyEngine::camera3D = gameCamera_.get();
+
 	debugObjectManager_ = std::make_unique<DebugObjectManager>();
 	debugObjectManager_->Init();
 
 	particle_ = std::make_unique<Particle>();
 	particle_->Init();
 
-	std::unique_ptr<DxObject::GraphicsBlob> blob = std::make_unique<DxObject::GraphicsBlob>();
-	//blob->Create(L"object3d/object3d.vs.hlsl", DxObject::GRAPHICS_VERTEX);
-	blob->Create(L"object3d/object3d.vs.hlsl", DxObject::GRAPHICS_VERTEX);
-	blob->Create(L"object3d/object3d.ps.hlsl", DxObject::GRAPHICS_PIXEL);
+	/*{ //!< test
+		std::unique_ptr<DxObject::GraphicsBlob> blob = std::make_unique<DxObject::GraphicsBlob>();
+		blob->Create(L"object3d/object3d.vs.hlsl", DxObject::GRAPHICS_VERTEX);
+		blob->Create(L"object3d/object3d.ps.hlsl", DxObject::GRAPHICS_PIXEL);
 
-	std::unique_ptr<DxObject::ReflectionPipeline> reflection = std::make_unique<DxObject::ReflectionPipeline>();
-	reflection->CreatePipeline(blob.get());
+		std::unique_ptr<DxObject::ShaderReflectionTable> reflection1
+			= std::make_unique<DxObject::ShaderReflectionTable>();
+
+		std::unique_ptr<DxObject::ShaderReflectionTable> reflection2
+			= std::make_unique<DxObject::ShaderReflectionTable>();
+
+		reflection1->Create(blob->GetGraphicsBlobs()[DxObject::GRAPHICS_PIXEL], DxObject::VISIBILITY_PIXEL);
+		reflection2->Create(blob->GetGraphicsBlobs()[DxObject::GRAPHICS_VERTEX], DxObject::VISIBILITY_VERTEX);
+
+		reflection1->Marge(reflection2.get());
+
+		reflection1->Bind("gTexture", MyEngine::GetTextureHandleGPU("resources/uvChecker.png"));
+	}*/
+
 }
 
 void GameScene::Term() {

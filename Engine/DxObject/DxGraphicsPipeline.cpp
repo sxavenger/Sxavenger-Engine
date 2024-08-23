@@ -140,7 +140,7 @@ void DxObject::GraphicsPipeline::CreateViewports(int32_t clientWidth, int32_t cl
 	}
 }
 
-void DxObject::GraphicsPipeline::CreateRootSignature(Devices* devices, const GraphicsRootSignatureDesc& descs) {
+void DxObject::GraphicsPipeline::CreateRootSignature(Devices* devices, const BaseRootSignatureDesc& descs) {
 
 	// deviceの取り出し
 	auto device = devices->GetDevice();

@@ -32,6 +32,27 @@ void DxObject::GraphicsBlob::Term() {
 	isUseMeshPipeline_ = false;
 }
 
+void DxObject::GraphicsBlob::Merge(GraphicsBlob* other) {
+
+	auto& otherBlobs = other->GetGraphicsBlobs();
+
+	for (uint32_t i = 0; i < GraphicShaderType::kCountOfGraphicShaderType; ++i) {
+		if (otherBlobs[i] == nullptr) {
+			continue; //!< ここのblobは存在してない
+		}
+
+		if (graphicsBlobs_[i] == nullptr) {
+			// otherからのblobの登録
+			graphicsBlobs_[i] = otherBlobs[i];
+			continue;
+		}
+
+		assert(false); //!< blob同士の衝突
+	}
+
+	// todo: mesh pipelineのbool値での安全性の向上
+}
+
 ////////////////////////////////////////////////////////////////////////////////////////////
 // CSBlob class methods
 ////////////////////////////////////////////////////////////////////////////////////////////

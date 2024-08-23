@@ -484,6 +484,12 @@
     <ClCompile Include="Engine\DxObject\DxShaderReflection.cpp">
       <Filter>Engine\DxObject\source</Filter>
     </ClCompile>
+    <ClCompile Include="GameEngine\RenderObject3D.cpp">
+      <Filter>GameEngine\source</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\DxObject\DxShaderNode.cpp">
+      <Filter>Engine\DxObject\source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\MyEngine.h">
@@ -766,6 +772,12 @@
       <Filter>Engine\DxObject\include</Filter>
     </ClInclude>
     <ClInclude Include="Engine\DxObject\DxShaderReflection.h">
+      <Filter>Engine\DxObject\include</Filter>
+    </ClInclude>
+    <ClInclude Include="GameEngine\RenderObject3D.h">
+      <Filter>GameEngine\include</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\DxObject\DxShaderNode.h">
       <Filter>Engine\DxObject\include</Filter>
     </ClInclude>
   </ItemGroup>

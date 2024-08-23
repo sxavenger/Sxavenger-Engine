@@ -53,7 +53,7 @@ void Log(const std::wstring& logW) {
 	Log(str);
 }
 
-void Assert(bool isSuccess, const std::string& errorLog) {
+void AssertMesseage(bool isSuccess, const std::string& errorLog) {
 	if (!isSuccess) {
 		MessageBoxW(nullptr, ToWstring(errorLog).c_str(), L"Error Message", 0);
 		assert(isSuccess);
@@ -61,7 +61,7 @@ void Assert(bool isSuccess, const std::string& errorLog) {
 	}
 }
 
-void Assert(bool isSuccess, const std::string& errorLog, const std::string& textTitle) {
+void AssertMesseage(bool isSuccess, const std::string& errorLog, const std::string& textTitle) {
 	if (!isSuccess) {
 		MessageBoxW(nullptr, ToWstring(errorLog).c_str(), ToWstring(textTitle).c_str(), 0);
 		assert(isSuccess);
@@ -69,37 +69,13 @@ void Assert(bool isSuccess, const std::string& errorLog, const std::string& text
 	}
 }
 
-void AssertHRESULT(const HRESULT& hr) {
-	if (FAILED(hr)) {
-		// error mes の出力 
-		_com_error err(hr);
-		LPCTSTR errMsg = err.ErrorMessage();
-
-		std::wstring wErrMsg(errMsg);
-
-		ExternalLogger::Write("Error: " + ToString(wErrMsg));
-
-		// error codeの出力
-		std::ostringstream oss;
-		oss << "Error code: 0x" << std::hex << hr;
-
-		ExternalLogger::Write(oss.str());
-
-		assert(false);
-	}
-}
-
-void Assert(bool isSuccess, bool isUseRuntimeError) {
-	if (isSuccess) { //!< 成功してる場合
+void AssertLog(bool expression, const std::string& log) {
+	if (expression) { //!< expressionが成功(TRUE)してる場合, 
 		return;
 	}
 
-	if (isUseRuntimeError) {
-		throw std::runtime_error("assert");
-		return;
-	}
-
-	assert(false);
+	Log(log);
+	assert(expression);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////

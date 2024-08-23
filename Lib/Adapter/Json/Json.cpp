@@ -4,7 +4,7 @@
 // static variables
 //=========================================================================================
 
-const std::string JsonAdapter::directory_ = "./Resources/Json/";
+const std::string JsonAdapter::directory_ = "./resources/Json/";
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // JsonAdapter methods
@@ -26,7 +26,7 @@ Json JsonAdapter::ReadJson(const std::string& path) {
 
 	ifs.close();
 
-	return result;
+	return std::move(result);
 }
 
 void JsonAdapter::WriteJson(const std::string& path, const Json& data) {

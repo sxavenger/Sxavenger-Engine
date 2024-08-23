@@ -89,6 +89,8 @@ public:
 
 	void Term();
 
+	void Merge(GraphicsBlob* other);
+
 	//* Getter *//
 
 	const std::array<IDxcBlob*, GraphicShaderType::kCountOfGraphicShaderType>& GetGraphicsBlobs() const { return graphicsBlobs_; }

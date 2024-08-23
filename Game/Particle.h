@@ -12,6 +12,7 @@
 
 // Graphics
 #include <DxGraphicsPipeline.h>
+#include <DxShaderReflection.h>
 
 // IA
 #include <Model.h>
@@ -107,8 +108,9 @@ private:
 	std::unique_ptr<DxObject::BufferResource<EmitterSphere>> emitterBuffer_;
 
 	//* Graphics *//
-	std::unique_ptr<DxObject::GraphicsBlob>     blob_;
-	std::unique_ptr<DxObject::GraphicsPipeline> pipeline_;
+	std::unique_ptr<DxObject::GraphicsBlob>          blob_;
+	std::unique_ptr<DxObject::ShaderReflectionTable> reflection_;
+	std::unique_ptr<DxObject::GraphicsPipeline>      pipeline_;
 
 	//* IA *//
 	DrawData plane_;

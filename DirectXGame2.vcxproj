@@ -128,6 +128,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\DxObject\DxRootSignatureDesc.cpp" />
     <ClCompile Include="Engine\DxObject\DxShaderBlob.cpp" />
     <ClCompile Include="Engine\DxObject\DxShaderBlobManager.cpp" />
+    <ClCompile Include="Engine\DxObject\DxShaderNode.cpp" />
     <ClCompile Include="Engine\DxObject\DxShaderReflection.cpp" />
     <ClCompile Include="Engine\DxObject\DxStructuredBuffer.cpp" />
     <ClCompile Include="Engine\DxObject\DxSwapChain.cpp" />
@@ -167,6 +168,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="GameEngine\Collider.cpp" />
     <ClCompile Include="GameEngine\ColliderManager.cpp" />
     <ClCompile Include="GameEngine\CollisionDetection.cpp" />
+    <ClCompile Include="GameEngine\RenderObject3D.cpp" />
     <ClCompile Include="GameEngine\Transform.cpp" />
     <ClCompile Include="Game\AnimationObject\AnimationCube.cpp" />
     <ClCompile Include="Game\AnimationObject\AnimationHuman.cpp" />
@@ -236,6 +238,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\DxObject\DxRootSignatureDesc.h" />
     <ClInclude Include="Engine\DxObject\DxShaderBlob.h" />
     <ClInclude Include="Engine\DxObject\DxShaderBlobManager.h" />
+    <ClInclude Include="Engine\DxObject\DxShaderNode.h" />
     <ClInclude Include="Engine\DxObject\DxShaderReflection.h" />
     <ClInclude Include="Engine\DxObject\DxStructuredBuffer.h" />
     <ClInclude Include="Engine\DxObject\DxSwapChain.h" />
@@ -262,6 +265,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="GameEngine\Collider.h" />
     <ClInclude Include="GameEngine\ColliderManager.h" />
     <ClInclude Include="GameEngine\CollisionDetection.h" />
+    <ClInclude Include="GameEngine\RenderObject3D.h" />
     <ClInclude Include="GameEngine\Transform.h" />
     <ClInclude Include="Game\AnimationObject\AnimationCube.h" />
     <ClInclude Include="Game\AnimationObject\AnimationHuman.h" />

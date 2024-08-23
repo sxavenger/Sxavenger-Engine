@@ -110,7 +110,7 @@ public:
 
 	void CreateViewports(int32_t clientWidth = kWindowWidth, int32_t clientHeight = kWindowHeight);
 
-	void CreateRootSignature(Devices* devices, const GraphicsRootSignatureDesc& graphicsDesc);
+	void CreateRootSignature(Devices* devices, const BaseRootSignatureDesc& graphicsDesc);
 
 	void CreatePipeline(Devices* devices, GraphicsBlob* graphicsBlob, BlendMode blendMode); //!< use default desc
 	void CreatePipeline(Devices* devices, GraphicsBlob* graphicsBlob, const GraphicsPipelineDesc& descs);

@@ -409,7 +409,7 @@ DirectX::ScratchImage TextureMethod::LoadTexture(const std::string& filePath) {
 			= "[Texture Not Found] \n filePath: " + filePath;
 
 		ExternalLogger::Write(errorLog);
-		Assert(false, errorLog, "Error: LoadTexture");
+		AssertMesseage(false, errorLog, "Error: LoadTexture");
 	}
 
 	// MipMapsの生成

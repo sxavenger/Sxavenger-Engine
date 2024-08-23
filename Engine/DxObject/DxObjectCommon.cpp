@@ -81,4 +81,3 @@ UINT DxObject::RoundUp(UINT round, UINT thread) {
 	assert(thread > 0);
 	return (round + thread - 1) / thread;
 }
-
