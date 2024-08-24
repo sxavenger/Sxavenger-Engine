@@ -22,7 +22,7 @@
 // Model class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-void Model::Init(const std::string& directoryPath, const std::string& filename) {
+void Model::Load(const std::string& directoryPath, const std::string& filename) {
 
 	// modelDataの取得
 	modelData_ = ModelMethods::LoadModelFile(directoryPath, filename);
@@ -62,14 +62,23 @@ void Model::Term() {
 
 }
 
+void Model::SetBuffers(uint32_t modelIndex) {
+
+	if (modelIndex >= modelIndexSize_) {
+		assert(false); //!< 配列以上のmodelDataの呼び出し
+	}
+
+	modelData_.meshes[modelIndex].SetBuffer();
+}
+
 void Model::SetBuffers(ID3D12GraphicsCommandList* commandList, uint32_t modelIndex) {
 
 	if (modelIndex >= modelIndexSize_) {
 		assert(false); //!< 配列以上のmodelDataの呼び出し
 	}
 
-	D3D12_VERTEX_BUFFER_VIEW vertexBufferView = modelData_.meshes[modelIndex].vertexResource->GetVertexBufferView();
-	D3D12_INDEX_BUFFER_VIEW indexBufferView = modelData_.meshes[modelIndex].indexResource->GetIndexBufferView();
+	D3D12_VERTEX_BUFFER_VIEW vertexBufferView = modelData_.meshes[modelIndex].GetVertexBuffer()->GetVertexBufferView();
+	D3D12_INDEX_BUFFER_VIEW indexBufferView   = modelData_.meshes[modelIndex].GetIndexBuffer()->GetIndexBufferView();
 
 	commandList->IASetVertexBuffers(0, 1, &vertexBufferView);
 	commandList->IASetIndexBuffer(&indexBufferView);
@@ -82,8 +91,19 @@ void Model::SetGraphicsTextureHandle(ID3D12GraphicsCommandList* commandList, uin
 	commandList->SetGraphicsRootDescriptorTable(parameterNum, MyEngine::GetTextureHandleGPU(modelData_.materials[modelIndex].textureFilePaths[type]));
 }
 
+const D3D12_GPU_DESCRIPTOR_HANDLE Model::GetTextureHandle(uint32_t modelIndex, TextureType type) {
+
+	if (modelData_.materials[modelIndex].textureFilePaths[type].empty()) { assert(false); } //!< textureを使ってないので
+
+	return MyEngine::GetTextureHandleGPU(modelData_.materials[modelIndex].textureFilePaths[type]);
+}
+
 void Model::DrawCall(ID3D12GraphicsCommandList* commandList, uint32_t modelIndex, uint32_t instanceCount) {
-	commandList->DrawIndexedInstanced(modelData_.meshes[modelIndex].indexResource->GetIndexSize(), instanceCount, 0, 0, 0);
+	commandList->DrawIndexedInstanced(modelData_.meshes[modelIndex].GetIndexBuffer()->GetIndexSize(), instanceCount, 0, 0, 0);
+}
+
+void Model::DrawCall(uint32_t modelIndex, uint32_t instanceCount) {
+	modelData_.meshes[modelIndex].DrawCall(instanceCount);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -123,7 +143,7 @@ ModelData ModelMethods::LoadModelFile(const std::string& directoryPath, const st
 		//assert(mesh->HasTextureCoords(0)); //!< Texcoordがない場合は未対応 todo...
 
 		// 保存の確保
-		result.meshes[meshIndex].Create(MyEngine::GetDevicesObj(), mesh->mNumVertices, mesh->mNumFaces * 3);
+		result.meshes[meshIndex].Create(mesh->mNumVertices, mesh->mNumFaces * 3);
 		auto& meshData = result.meshes[meshIndex];
 
 		// verticesの解析
@@ -147,7 +167,7 @@ ModelData ModelMethods::LoadModelFile(const std::string& directoryPath, const st
 			}
 
 			// データの保存
-			meshData.vertexResource->operator[](element) = vtx;
+			meshData.GetVertexBuffer()->operator[](element) = vtx;
 
 		}
 
@@ -162,7 +182,7 @@ ModelData ModelMethods::LoadModelFile(const std::string& directoryPath, const st
 			// indexの解析
 			for (uint32_t element = 0; element < face.mNumIndices; ++element) {
 				// データの保存
-				meshData.indexResource->operator[](faceIndex * 3 + element) = face.mIndices[element];
+				meshData.GetIndexBuffer()->operator[](faceIndex * 3 + element) = face.mIndices[element];
 			}
 		}
 
@@ -419,7 +439,7 @@ SkinCluster ModelMethods::CreateSkinCluster(const Skeleton& skeleton, const Mode
 	SkinCluster result;
 
 	// 頂点数の出力
-	uint32_t vertexNum = static_cast<uint32_t>(modelData.meshes[0].vertexResource->GetIndexSize());
+	uint32_t vertexNum = static_cast<uint32_t>(modelData.meshes[0].GetVertexBuffer()->GetIndexSize());
 
 	// informationResorceの生成
 	result.informationResource

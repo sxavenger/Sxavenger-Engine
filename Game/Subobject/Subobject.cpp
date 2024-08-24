@@ -54,7 +54,7 @@ void Subobjects::Plane::Init(const SubobjectManager* manager) {
 
 	//* IA
 	model_ = std::make_unique<Model>(manager_->GetModelDirectory(), "Plane.obj");
-	mesh_  = std::make_unique<Mesh>(model_->GetMesh(0).vertexResource.get(), model_->GetMesh(0).indexResource.get());
+	mesh_  = std::make_unique<Mesh>(model_->GetMesh(0).GetVertexBuffer(), model_->GetMesh(0).GetIndexBuffer());
 
 	//* buffer
 	matBuffer_ = std::make_unique<BufferResource<TransformationMatrix>>(MyEngine::GetDevicesObj(), 1);
@@ -126,7 +126,7 @@ void Subobjects::Sphere::Init(const SubobjectManager* manager) {
 
 	//* IA
 	model_ = std::make_unique<Model>(manager_->GetModelDirectory(), "Sphere.obj");
-	mesh_ = std::make_unique<Mesh>(model_->GetMesh(0).vertexResource.get(), model_->GetMesh(0).indexResource.get());
+	mesh_ = std::make_unique<Mesh>(model_->GetMesh(0).GetVertexBuffer(), model_->GetMesh(0).GetIndexBuffer());
 
 	//* buffer
 	matBuffer_ = std::make_unique<BufferResource<TransformationMatrix>>(MyEngine::GetDevicesObj(), 1);
@@ -213,7 +213,7 @@ void Subobjects::Teapot::Init(const SubobjectManager* manager) {
 
 	//* IA
 	model_ = std::make_unique<Model>(manager_->GetModelDirectory(), "teapot.obj");
-	mesh_ = std::make_unique<Mesh>(model_->GetMesh(0).vertexResource.get(), model_->GetMesh(0).indexResource.get());
+		mesh_  = std::make_unique<Mesh>(model_->GetMesh(0).GetVertexBuffer(), model_->GetMesh(0).GetIndexBuffer());
 
 	//* buffer
 	matBuffer_ = std::make_unique<BufferResource<TransformationMatrix>>(MyEngine::GetDevicesObj(), 1);
@@ -286,7 +286,7 @@ void Subobjects::Bunny::Init(const SubobjectManager* manager) {
 
 	//* IA
 	model_ = std::make_unique<Model>(manager_->GetModelDirectory(), "bunny.obj");
-	mesh_ = std::make_unique<Mesh>(model_->GetMesh(0).vertexResource.get(), model_->GetMesh(0).indexResource.get());
+		mesh_  = std::make_unique<Mesh>(model_->GetMesh(0).GetVertexBuffer(), model_->GetMesh(0).GetIndexBuffer());
 
 	//* buffer
 	matBuffer_ = std::make_unique<BufferResource<TransformationMatrix>>(MyEngine::GetDevicesObj(), 1);
@@ -366,7 +366,7 @@ void Subobjects::MultiMesh::Init(const SubobjectManager* manager) {
 
 	for (uint32_t i = 0; i < model_->GetModelIndexSize(); ++i) {
 		meshes_.at(i)
-			= std::make_unique<Mesh>(model_->GetMesh(i).vertexResource.get(), model_->GetMesh(i).indexResource.get());
+			= std::make_unique<Mesh>(model_->GetMesh(i).GetVertexBuffer(), model_->GetMesh(i).GetIndexBuffer());
 	}
 
 	//* buffer
@@ -463,7 +463,7 @@ void Subobjects::MultiMaterial::Init(const SubobjectManager* manager) {
 
 		// mesh
 		meshes_.at(i)
-			= std::make_unique<Mesh>(model_->GetMesh(i).vertexResource.get(), model_->GetMesh(i).indexResource.get());
+			= std::make_unique<Mesh>(model_->GetMesh(i).GetVertexBuffer(), model_->GetMesh(i).GetIndexBuffer());
 
 		// material
 		materials_[i]
@@ -548,7 +548,7 @@ void Subobjects::Suzanne::Init(const SubobjectManager* manager) {
 
 	//* IA
 	model_ = std::make_unique<Model>(manager_->GetModelDirectory(), "Suzanne.obj");
-	mesh_ = std::make_unique<Mesh>(model_->GetMesh(0).vertexResource.get(), model_->GetMesh(0).indexResource.get());
+		mesh_  = std::make_unique<Mesh>(model_->GetMesh(0).GetVertexBuffer(), model_->GetMesh(0).GetIndexBuffer());
 
 	//* buffer
 	matBuffer_ = std::make_unique<BufferResource<TransformationMatrix>>(MyEngine::GetDevicesObj(), 1);

@@ -79,11 +79,13 @@ public:
 
 	void Bind(const std::string& bufferName, const BindBuffer& buffer);
 
+	void BindGraphicsParameter(ID3D12GraphicsCommandList* commandList);
+
 	//* getter *//
 
-	BaseRootSignatureDesc CreateRootSignatureDesc();
+	GraphicsRootSignatureDesc CreateRootSignatureDesc();
 
-	void BindGraphicsParameter(ID3D12GraphicsCommandList* commandList);
+	const std::vector<D3D12_INPUT_ELEMENT_DESC>& GetElement() const { return elements_; }
 
 private:
 
@@ -91,12 +93,19 @@ private:
 	// private variables
 	//=========================================================================================
 	
+	//* buffer table *//
+
 	//! [unordered_map]
 	//! key:   bindされてるbufferの名前
 	//! value: buffer情報, buffer自体
 	std::unordered_map<std::string, BufferTable> table_;
 
 	uint32_t samplerCount_ = 0;
+
+	//* input element *//
+
+	std::vector<D3D12_INPUT_ELEMENT_DESC> elements_;
+	std::list<std::string>                elementNameStr_; //!< stringの延命
 
 	//=========================================================================================
 	// private methods
@@ -106,8 +115,10 @@ private:
 
 	ComPtr<ID3D12ShaderReflection> CreateReflection(IDxcBlob* blob);
 
-	void Reflect(ID3D12ShaderReflection* reflection, ShaderVisibility visibility);
+	void ReflectBuffer(ID3D12ShaderReflection* reflection, ShaderVisibility visibility);
+	void ReflectInput(ID3D12ShaderReflection* reflection, ShaderVisibility visibility);
 
+	DXGI_FORMAT GetFormat(D3D_REGISTER_COMPONENT_TYPE type, BYTE mask) const;
 };
 
 _DXOBJECT_NAMESPACE_END

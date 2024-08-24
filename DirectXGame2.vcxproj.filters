@@ -10,44 +10,8 @@
     <Filter Include="Engine\source">
       <UniqueIdentifier>{b5e92c7c-2603-4853-bd7b-292422ff40ae}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Lib">
-      <UniqueIdentifier>{45df3929-c511-410b-bd2a-b6aa3bc53b67}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Lib\Geometry">
-      <UniqueIdentifier>{dfd979bd-d7a3-40c5-8ec4-96c583d2f4e5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Lib\Geometry\include">
-      <UniqueIdentifier>{5be19ec7-f08a-4ebe-8c6b-b47efd48ed36}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Lib\Geometry\source">
-      <UniqueIdentifier>{6aa58b37-6f09-482f-a957-cf3a1c7d634c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Lib\Camera">
-      <UniqueIdentifier>{1cec2518-b6a2-4388-a79e-a81634453929}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Lib\Adapter">
-      <UniqueIdentifier>{fd1c7892-a3f0-4d8d-a390-322ed6841943}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Lib\Adapter\Json">
-      <UniqueIdentifier>{82b37c62-4bb1-4253-84ab-492a9766b2ba}</UniqueIdentifier>
-    </Filter>
     <Filter Include="externals">
       <UniqueIdentifier>{43c05318-9472-48f0-850c-d2d184687826}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Lib\Camera\include">
-      <UniqueIdentifier>{01188340-a3d9-456e-96bd-81ff0a16b3c6}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Lib\Camera\source">
-      <UniqueIdentifier>{824a63e6-4cdb-480c-9b3e-f95a47a866f1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Lib\Light">
-      <UniqueIdentifier>{2c42579f-e13b-474d-ae0f-b7783684b9a9}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Lib\Light\include">
-      <UniqueIdentifier>{ca54dbac-2860-43dc-ad55-a8e8e489a890}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Lib\Light\source">
-      <UniqueIdentifier>{d97f1fc1-4986-414d-926d-075d74cb2615}</UniqueIdentifier>
     </Filter>
     <Filter Include="Engine\DxObject">
       <UniqueIdentifier>{bb272065-9b14-4aa9-9f12-26a0a7c3c884}</UniqueIdentifier>
@@ -57,18 +21,6 @@
     </Filter>
     <Filter Include="Engine\DxObject\source">
       <UniqueIdentifier>{10c19859-4678-4b5e-b5c5-28df2213ff6d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Lib\Adapter\Random">
-      <UniqueIdentifier>{c32eefb0-dc42-4eb8-9cb7-5edcfecb4c74}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Lib\Collider">
-      <UniqueIdentifier>{c313588c-2f0a-4766-84df-e98f062882d9}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Lib\Collider\include">
-      <UniqueIdentifier>{cd73d38c-c8f5-4435-9c3f-e90223ec75a6}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Lib\Collider\source">
-      <UniqueIdentifier>{cf8abcbb-54a4-49f0-b300-24452291069a}</UniqueIdentifier>
     </Filter>
     <Filter Include="externals\imgui">
       <UniqueIdentifier>{7ed608b7-008b-4b29-af56-0edd4f20a9c3}</UniqueIdentifier>
@@ -84,9 +36,6 @@
     </Filter>
     <Filter Include="Game">
       <UniqueIdentifier>{7b9b6874-d5f0-4a58-83d4-1b0e8b12f30a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Lib\Adapter\Parformance">
-      <UniqueIdentifier>{ac3efd8f-c3b2-4063-8a08-73409f8a7c9f}</UniqueIdentifier>
     </Filter>
     <Filter Include="externals\meshoptimizer">
       <UniqueIdentifier>{f24df899-454d-4f15-99bb-f5eb440d67e3}</UniqueIdentifier>
@@ -106,9 +55,6 @@
     <Filter Include="Resource\hlsl\BlasRender">
       <UniqueIdentifier>{493de114-0486-44af-8509-87b6ab7f978a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Lib\PostEffect">
-      <UniqueIdentifier>{fba6485d-fc7b-43d5-a1d6-524a0d3df4b3}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Resource\hlsl\GaussianBlur">
       <UniqueIdentifier>{2a3acfe4-9639-4664-9867-300858a34429}</UniqueIdentifier>
     </Filter>
@@ -124,9 +70,6 @@
     <Filter Include="Resource\hlsl\Particle">
       <UniqueIdentifier>{6929084b-93e2-465d-b712-ccd475f37a97}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Lib\Rendering">
-      <UniqueIdentifier>{fe5fa48c-178a-4ebd-840d-13c94cf4c103}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Resource\hlsl\DefferedRendering">
       <UniqueIdentifier>{79a07257-cb9c-4b6c-90ae-ebf3d70be071}</UniqueIdentifier>
     </Filter>
@@ -138,9 +81,6 @@
     </Filter>
     <Filter Include="Resource\hlsl\Bloom">
       <UniqueIdentifier>{479222ed-99dd-4009-aa38-6555d03793c1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Lib\Animation">
-      <UniqueIdentifier>{bc61da55-6b98-464b-b7a2-8c69cf843dad}</UniqueIdentifier>
     </Filter>
     <Filter Include="Game\AnimationObject">
       <UniqueIdentifier>{809d4846-f8cb-494a-a48f-15da2d9f2892}</UniqueIdentifier>
@@ -174,6 +114,69 @@
     </Filter>
     <Filter Include="Resource\hlsl\DebugObject">
       <UniqueIdentifier>{f4f000fc-4fc8-4ab5-967b-925c0bc68b80}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource\hlsl\SxavengerShader">
+      <UniqueIdentifier>{a89c4819-16ff-48d2-b4eb-1428da48914a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Lib">
+      <UniqueIdentifier>{45df3929-c511-410b-bd2a-b6aa3bc53b67}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Lib\Geometry">
+      <UniqueIdentifier>{dfd979bd-d7a3-40c5-8ec4-96c583d2f4e5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Lib\Geometry\include">
+      <UniqueIdentifier>{5be19ec7-f08a-4ebe-8c6b-b47efd48ed36}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Lib\Geometry\source">
+      <UniqueIdentifier>{6aa58b37-6f09-482f-a957-cf3a1c7d634c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Lib\Camera">
+      <UniqueIdentifier>{1cec2518-b6a2-4388-a79e-a81634453929}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Lib\Camera\include">
+      <UniqueIdentifier>{01188340-a3d9-456e-96bd-81ff0a16b3c6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Lib\Camera\source">
+      <UniqueIdentifier>{824a63e6-4cdb-480c-9b3e-f95a47a866f1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Lib\Adapter">
+      <UniqueIdentifier>{fd1c7892-a3f0-4d8d-a390-322ed6841943}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Lib\Adapter\Json">
+      <UniqueIdentifier>{82b37c62-4bb1-4253-84ab-492a9766b2ba}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Lib\Adapter\Random">
+      <UniqueIdentifier>{c32eefb0-dc42-4eb8-9cb7-5edcfecb4c74}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Lib\Adapter\Parformance">
+      <UniqueIdentifier>{ac3efd8f-c3b2-4063-8a08-73409f8a7c9f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Lib\Light">
+      <UniqueIdentifier>{2c42579f-e13b-474d-ae0f-b7783684b9a9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Lib\Light\include">
+      <UniqueIdentifier>{ca54dbac-2860-43dc-ad55-a8e8e489a890}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Lib\Light\source">
+      <UniqueIdentifier>{d97f1fc1-4986-414d-926d-075d74cb2615}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Lib\Collider">
+      <UniqueIdentifier>{c313588c-2f0a-4766-84df-e98f062882d9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Lib\Collider\include">
+      <UniqueIdentifier>{cd73d38c-c8f5-4435-9c3f-e90223ec75a6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Lib\Collider\source">
+      <UniqueIdentifier>{cf8abcbb-54a4-49f0-b300-24452291069a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Lib\PostEffect">
+      <UniqueIdentifier>{fba6485d-fc7b-43d5-a1d6-524a0d3df4b3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Lib\Rendering">
+      <UniqueIdentifier>{fe5fa48c-178a-4ebd-840d-13c94cf4c103}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Lib\Animation">
+      <UniqueIdentifier>{bc61da55-6b98-464b-b7a2-8c69cf843dad}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -490,6 +493,12 @@
     <ClCompile Include="Engine\DxObject\DxShaderNode.cpp">
       <Filter>Engine\DxObject\source</Filter>
     </ClCompile>
+    <ClCompile Include="GameEngine\GraphicsRender.cpp">
+      <Filter>GameEngine\source</Filter>
+    </ClCompile>
+    <ClCompile Include="GameEngine\Material.cpp">
+      <Filter>GameEngine\source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\MyEngine.h">
@@ -780,6 +789,12 @@
     <ClInclude Include="Engine\DxObject\DxShaderNode.h">
       <Filter>Engine\DxObject\include</Filter>
     </ClInclude>
+    <ClInclude Include="GameEngine\GraphicsRender.h">
+      <Filter>GameEngine\include</Filter>
+    </ClInclude>
+    <ClInclude Include="GameEngine\Material.h">
+      <Filter>GameEngine\include</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />
@@ -837,9 +852,6 @@
     <None Include="Resources\hlsl\Skybox\Skybox.hlsli">
       <Filter>Resource\hlsl\Skybox</Filter>
     </None>
-    <None Include="Resources\hlsl\Particle\Particle.hlsli">
-      <Filter>Resource\hlsl\Particle</Filter>
-    </None>
     <None Include="Resources\hlsl\Random.hlsli">
       <Filter>Resource\hlsl</Filter>
     </None>
@@ -863,6 +875,12 @@
     </None>
     <None Include="Resources\hlsl\DebugObject\DebugObject.hlsli">
       <Filter>Resource\hlsl\DebugObject</Filter>
+    </None>
+    <None Include="Resources\hlsl\Particle\Particle.hlsli">
+      <Filter>Resource\hlsl\Object3d</Filter>
+    </None>
+    <None Include="Resources\hlsl\SxavengerShader\SxavengerCommon.hlsli">
+      <Filter>Resource\hlsl\SxavengerShader</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -987,6 +1005,15 @@
     </FxCompile>
     <FxCompile Include="Resources\hlsl\Particle\ParticleUpdate.CS.hlsl">
       <Filter>Resource\hlsl\Particle</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\hlsl\SxavengerShader\Default.VS.hlsl">
+      <Filter>Resource\hlsl\SxavengerShader</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\hlsl\SxavengerShader\DefaultTexture.PS.hlsl">
+      <Filter>Resource\hlsl\SxavengerShader</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\hlsl\SxavengerShader\SampleLightingTexture.PS.hlsl">
+      <Filter>Resource\hlsl\SxavengerShader</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

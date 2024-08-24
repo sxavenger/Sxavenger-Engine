@@ -20,6 +20,7 @@
 
 // lib
 #include <ObjectStructure.h>
+#include <Material.h>
 
 // Attribute
 #include <Attribute.h>

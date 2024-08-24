@@ -108,7 +108,7 @@ void AnimationHuman::Draw() {
 	csPipeline_->SetPipeline();
 
 	commandList->SetComputeRootShaderResourceView(0, skinCluster_.paletteResource->GetGPUVirtualAddress());
-	commandList->SetComputeRootShaderResourceView(1, model_->GetMesh(0).vertexResource->GetGPUVirtualAddress());
+	commandList->SetComputeRootShaderResourceView(1, model_->GetMesh(0).GetVertexBuffer()->GetGPUVirtualAddress());
 	commandList->SetComputeRootShaderResourceView(2, skinCluster_.influenceResource->GetGPUVirtualAddress());
 	commandList->SetComputeRootConstantBufferView(3, skinCluster_.informationResource->GetGPUVirtualAddress());
 	commandList->SetComputeRootUnorderedAccessView(4, skinnedBuffer_->GetGPUVirtualAddress());
@@ -128,7 +128,7 @@ void AnimationHuman::Draw() {
 	pipeline_->SetPipeline(commandList);
 
 	D3D12_VERTEX_BUFFER_VIEW vbv = skinnedBuffer_->GetVertexBufferView();
-	D3D12_INDEX_BUFFER_VIEW ibv  = model_->GetMesh(0).indexResource->GetIndexBufferView();
+	D3D12_INDEX_BUFFER_VIEW ibv  = model_->GetMesh(0).GetIndexBuffer()->GetIndexBufferView();
 	
 	commandList->IASetVertexBuffers(0, 1, &vbv);
 	commandList->IASetIndexBuffer(&ibv);

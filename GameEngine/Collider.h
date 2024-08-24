@@ -19,6 +19,13 @@
 #include <CollisionDetection.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
+// ColliderType enum
+////////////////////////////////////////////////////////////////////////////////////////////
+enum ColliderType {
+	ColliderType_NONE = 0,
+};
+
+////////////////////////////////////////////////////////////////////////////////////////////
 // Collider base class
 ////////////////////////////////////////////////////////////////////////////////////////////
 class Collider {
@@ -49,7 +56,7 @@ public:
 	
 	//* collision getter *//
 
-	virtual const Vector3f& GetColliderPosition() const { return position_; }
+	virtual const Vector3f& GetColliderPosition() const = 0;
 
 	const CollisionBoundings::Boundings& GetBounding() const { return bounding_; }
 
@@ -84,8 +91,6 @@ protected:
 	//=========================================================================================
 	
 	std::string colliderTag_ = "";
-
-	Vector3f position_ = {}; //!< ユーザー定義のpositionでもok
 
 	//! 当たり判定の判定情報
 	CollisionBoundings::Boundings bounding_;

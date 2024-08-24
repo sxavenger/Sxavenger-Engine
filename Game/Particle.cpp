@@ -97,28 +97,16 @@ void Particle::Init() {
 	}
 
 	//* Graphics *//
-	blob_ = std::make_unique<GraphicsBlob>();
-	blob_->Create(L"particle/particle.VS.hlsl", GRAPHICS_VERTEX);
-	blob_->Create(L"particle/particle.PS.hlsl", GRAPHICS_PIXEL);
+	render_.Init();
+	render_.CreateBlob(L"particle/particle.VS.hlsl", GRAPHICS_VERTEX);
+	render_.CreateBlob(L"particle/particle.PS.hlsl", GRAPHICS_PIXEL);
 
-	reflection_ = std::make_unique<ShaderReflectionTable>();
-	reflection_->Create(blob_->GetGraphicsBlobs()[GRAPHICS_VERTEX], VISIBILITY_VERTEX);
-	reflection_->Create(blob_->GetGraphicsBlobs()[GRAPHICS_PIXEL], VISIBILITY_PIXEL);
+	render_.CreateTable();
 
-	reflection_->Bind("gCamera", MyEngine::camera3D->GetGPUVirtualAddress());
-	reflection_->Bind("gParticle", particleBuffer_->GetGPUVirtualAddress());
+	render_.BindBuffer("gCamera", MyEngine::camera3D->GetGPUVirtualAddress());
+	render_.BindBuffer("gParticle", particleBuffer_->GetGPUVirtualAddress());
 
-	{
-		pipeline_ = std::make_unique<GraphicsPipeline>();
-
-		pipeline_->CreateRootSignature(MyEngine::GetDevicesObj(), reflection_->CreateRootSignatureDesc());
-
-		GraphicsPipelineDesc pipelineDesc;
-		pipelineDesc.CreateDefaultDesc();
-		pipelineDesc.blendMode = kBlendModeAdd;
-
-		pipeline_->CreatePipeline(MyEngine::GetDevicesObj(), blob_.get(), pipelineDesc);
-	}
+	render_.CreatePipeline(kBlendModeAdd);
 
 	//* IA *//
 	plane_ = DrawMethods::Plane({1.0f, 1.0f});
@@ -179,11 +167,11 @@ void Particle::Draw() {
 
 	auto commandList = MyEngine::GetCommandList();
 
-	pipeline_->SetPipeline(commandList);
+	render_.SetPipeline(commandList);
 	plane_.SetBuffer(commandList);
 
-	reflection_->Bind("gCamera", MyEngine::camera3D->GetGPUVirtualAddress()); //!< camera3Dは呼び出されるたび変わるので
-	reflection_->BindGraphicsParameter(commandList);
+	render_.BindBuffer("gCamera", MyEngine::camera3D->GetGPUVirtualAddress()); //!< camera3Dは呼び出されるたび変わるので
+	render_.BindGraphicsParameter(commandList);
 
 	plane_.DrawCall(commandList, kParticleNum);
 }

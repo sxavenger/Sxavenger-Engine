@@ -168,6 +168,8 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="GameEngine\Collider.cpp" />
     <ClCompile Include="GameEngine\ColliderManager.cpp" />
     <ClCompile Include="GameEngine\CollisionDetection.cpp" />
+    <ClCompile Include="GameEngine\GraphicsRender.cpp" />
+    <ClCompile Include="GameEngine\Material.cpp" />
     <ClCompile Include="GameEngine\RenderObject3D.cpp" />
     <ClCompile Include="GameEngine\Transform.cpp" />
     <ClCompile Include="Game\AnimationObject\AnimationCube.cpp" />
@@ -265,6 +267,8 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="GameEngine\Collider.h" />
     <ClInclude Include="GameEngine\ColliderManager.h" />
     <ClInclude Include="GameEngine\CollisionDetection.h" />
+    <ClInclude Include="GameEngine\GraphicsRender.h" />
+    <ClInclude Include="GameEngine\Material.h" />
     <ClInclude Include="GameEngine\RenderObject3D.h" />
     <ClInclude Include="GameEngine\Transform.h" />
     <ClInclude Include="Game\AnimationObject\AnimationCube.h" />
@@ -334,6 +338,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     </None>
     <None Include="Resources\hlsl\Subobject\SubobjectLighting.hlsli" />
     <None Include="Resources\hlsl\Subobject\SubobjectMesh.hlsli" />
+    <None Include="Resources\hlsl\SxavengerShader\SxavengerCommon.hlsli" />
     <None Include="Resources\hlsl\ToonShading.hlsli" />
     <None Include="Resources\RayTracingShader\Lighting.hlsli" />
     <None Include="Resources\RayTracingShader\RayTracingConfig.hlsli" />
@@ -466,6 +471,15 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </FxCompile>
     <FxCompile Include="Resources\hlsl\Subobject\SubobjectTexture.PS.hlsl">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="Resources\hlsl\SxavengerShader\Default.VS.hlsl">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="Resources\hlsl\SxavengerShader\DefaultTexture.PS.hlsl">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="Resources\hlsl\SxavengerShader\SampleLightingTexture.PS.hlsl">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </FxCompile>
     <FxCompile Include="Resources\RayTracingShader\RayTracingWorld.hlsl">

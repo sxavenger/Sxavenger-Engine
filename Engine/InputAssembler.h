@@ -12,9 +12,6 @@
 // c++
 #include <memory>
 
-// objectStructure
-#include <ObjectStructure.h>
-
 ////////////////////////////////////////////////////////////////////////////////////////////
 // InputAssembler class
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -29,7 +26,7 @@ public:
 	InputAssembler() = default;
 	~InputAssembler() { Term(); }
 
-	void Init(uint32_t vertexSize, uint32_t indexSize);
+	void Create(uint32_t vertexSize, uint32_t indexSize);
 
 	void Term();
 
@@ -44,6 +41,10 @@ public:
 	DxObject::IndexBufferResource* GetIndexBuffer() const { return indices_.get(); }
 
 	//* operator *//
+
+	// ムーブの扱い
+	InputAssembler(InputAssembler&& other) noexcept            = default;
+	InputAssembler& operator=(InputAssembler&& other) noexcept = default;
 
 private:
 
@@ -69,7 +70,7 @@ private:
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 template<typename T>
-void InputAssembler<T>::Init(uint32_t vertexSize, uint32_t indexSize) {
+void InputAssembler<T>::Create(uint32_t vertexSize, uint32_t indexSize) {
 	vertices_ = std::make_unique<DxObject::BufferResource<T>>(MyEngine::GetDevicesObj(), vertexSize);
 	indices_  = std::make_unique<DxObject::IndexBufferResource>(MyEngine::GetDevicesObj(), indexSize);
 }
@@ -92,9 +93,3 @@ template<typename T>
 inline void InputAssembler<T>::DrawCall(UINT instanceCount) {
 	commandList_->DrawIndexedInstanced(indices_->GetIndexSize(), instanceCount, 0, 0, 0);
 }
-
-////////////////////////////////////////////////////////////////////////////////////////////
-// using
-////////////////////////////////////////////////////////////////////////////////////////////
-
-using DefaultInputAssembler = InputAssembler<VertexData>;

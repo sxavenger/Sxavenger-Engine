@@ -13,7 +13,8 @@ void DxObject::ShaderReflectionTable::Create(IDxcBlob* blob, ShaderVisibility vi
 
 	ComPtr<ID3D12ShaderReflection> reflection = CreateReflection(blob);
 
-	Reflect(reflection.Get(), visibility);
+	ReflectBuffer(reflection.Get(), visibility);
+	ReflectInput(reflection.Get(), visibility);
 
 }
 
@@ -24,6 +25,14 @@ void DxObject::ShaderReflectionTable::Marge(ShaderReflectionTable* other) {
 		MargeBufferInfo(it.first, it.second.info);
 	}
 
+	// input elementのマージ
+	if (!other->elements_.empty()) { //!< otherにelement情報がある場合
+		if (!this->elements_.empty()) { //!< thisにもある場合
+			assert(false);
+		}
+
+		elements_ = other->elements_;
+	}
 }
 
 void DxObject::ShaderReflectionTable::Bind(const std::string& bufferName, const BindBuffer& buffer) {
@@ -34,8 +43,58 @@ void DxObject::ShaderReflectionTable::Bind(const std::string& bufferName, const 
 	it->second.buffer = buffer;
 }
 
-DxObject::BaseRootSignatureDesc DxObject::ShaderReflectionTable::CreateRootSignatureDesc() {
-	
+void DxObject::ShaderReflectionTable::BindGraphicsParameter(ID3D12GraphicsCommandList* commandList) {
+
+	for (const auto& it : table_) {
+
+		// buffer情報の参照取得
+		const auto& info   = it.second.info;
+		const auto& buffer = it.second.buffer;
+		const auto& index  = it.second.paramIndex;
+
+		if (info.bufferType == D3D_SHADER_INPUT_TYPE::D3D_SIT_SAMPLER) { //!< samplerの設定はしない
+			continue;
+		}
+
+		assert(buffer.has_value()); //!< bufferを持ってないといけない
+
+		if (std::holds_alternative<D3D12_GPU_VIRTUAL_ADDRESS>(buffer.value())) {
+
+			// vartualAddressの取得
+			const D3D12_GPU_VIRTUAL_ADDRESS& address = std::get<D3D12_GPU_VIRTUAL_ADDRESS>(buffer.value());
+
+			switch (info.bufferType) {
+				case D3D_SHADER_INPUT_TYPE::D3D_SIT_CBUFFER: //!< CBV
+					commandList->SetGraphicsRootConstantBufferView(index.value(), address);
+					break;
+
+				case D3D_SHADER_INPUT_TYPE::D3D_SIT_STRUCTURED: //!< SRV
+					commandList->SetGraphicsRootShaderResourceView(index.value(), address);
+					break;
+
+				case D3D_SHADER_INPUT_TYPE::D3D_SIT_UAV_RWSTRUCTURED: //!< UAV
+					commandList->SetGraphicsRootUnorderedAccessView(index.value(), address);
+					break;
+
+				default:
+					assert(false); //!< 例外
+					break;
+			}
+
+		} else if (std::holds_alternative<D3D12_GPU_DESCRIPTOR_HANDLE>(buffer.value())) {
+
+			// handleの取得
+			const D3D12_GPU_DESCRIPTOR_HANDLE& handle = std::get<D3D12_GPU_DESCRIPTOR_HANDLE>(buffer.value());
+
+			commandList->SetGraphicsRootDescriptorTable(index.value(), handle);
+
+		}
+	}
+
+}
+
+DxObject::GraphicsRootSignatureDesc DxObject::ShaderReflectionTable::CreateRootSignatureDesc() {
+
 	GraphicsRootSignatureDesc result = {};
 	result.Resize(static_cast<uint32_t>(table_.size()) - samplerCount_, samplerCount_);
 
@@ -112,56 +171,6 @@ DxObject::BaseRootSignatureDesc DxObject::ShaderReflectionTable::CreateRootSigna
 	return result;
 }
 
-void DxObject::ShaderReflectionTable::BindGraphicsParameter(ID3D12GraphicsCommandList* commandList) {
-
-	for (const auto& it : table_) {
-
-		// buffer情報の参照取得
-		const auto& info   = it.second.info;
-		const auto& buffer = it.second.buffer;
-		const auto& index  = it.second.paramIndex;
-
-		if (info.bufferType == D3D_SHADER_INPUT_TYPE::D3D_SIT_SAMPLER) { //!< samplerの設定はしない
-			continue;
-		}
-
-		assert(buffer.has_value()); //!< bufferを持ってないといけない
-
-		if (std::holds_alternative<D3D12_GPU_VIRTUAL_ADDRESS>(buffer.value())) {
-
-			// vartualAddressの取得
-			const D3D12_GPU_VIRTUAL_ADDRESS& address = std::get<D3D12_GPU_VIRTUAL_ADDRESS>(buffer.value());
-
-			switch (info.bufferType) {
-				case D3D_SHADER_INPUT_TYPE::D3D_SIT_CBUFFER: //!< CBV
-					commandList->SetGraphicsRootConstantBufferView(index.value(), address);
-					break;
-
-				case D3D_SHADER_INPUT_TYPE::D3D_SIT_STRUCTURED: //!< SRV
-					commandList->SetGraphicsRootShaderResourceView(index.value(), address);
-					break;
-
-				case D3D_SHADER_INPUT_TYPE::D3D_SIT_UAV_RWSTRUCTURED: //!< UAV
-					commandList->SetGraphicsRootUnorderedAccessView(index.value(), address);
-					break;
-
-				default:
-					assert(false); //!< 例外
-					break;
-			}
-
-		} else if (std::holds_alternative<D3D12_GPU_DESCRIPTOR_HANDLE>(buffer.value())) {
-
-			// handleの取得
-			const D3D12_GPU_DESCRIPTOR_HANDLE& handle = std::get<D3D12_GPU_DESCRIPTOR_HANDLE>(buffer.value());
-
-			commandList->SetGraphicsRootDescriptorTable(index.value(), handle);
-
-		}
-	}
-
-}
-
 void DxObject::ShaderReflectionTable::MargeBufferInfo(const std::string& key, const BufferInfo& value) {
 
 	auto it = table_.find(key);
@@ -212,7 +221,7 @@ ComPtr<ID3D12ShaderReflection> DxObject::ShaderReflectionTable::CreateReflection
 	return result;
 }
 
-void DxObject::ShaderReflectionTable::Reflect(ID3D12ShaderReflection* reflection, ShaderVisibility visibility) {
+void DxObject::ShaderReflectionTable::ReflectBuffer(ID3D12ShaderReflection* reflection, ShaderVisibility visibility) {
 
 	D3D12_SHADER_DESC mainDesc = {}; //!< shaderの外見情報
 	reflection->GetDesc(&mainDesc);
@@ -228,4 +237,75 @@ void DxObject::ShaderReflectionTable::Reflect(ID3D12ShaderReflection* reflection
 		MargeBufferInfo(bindDesc.Name, { bindDesc.Type, bindDesc.BindPoint, visibility });
 	}
 
+}
+
+void DxObject::ShaderReflectionTable::ReflectInput(ID3D12ShaderReflection* reflection, ShaderVisibility visibility) {
+
+	if (visibility != ShaderVisibility::VISIBILITY_VERTEX) { //!< input情報はvertex shaderのみ
+		return;
+	}
+
+	D3D12_SHADER_DESC mainDesc = {}; //!< shaderの外見情報
+	reflection->GetDesc(&mainDesc);
+
+	// InputElementの生成
+	for (UINT i = 0; i < mainDesc.InputParameters; ++i) {
+		// parameterの取得
+		D3D12_SIGNATURE_PARAMETER_DESC param = {};
+		reflection->GetInputParameterDesc(i, &param);
+
+		if (param.SystemValueType != D3D_NAME::D3D_NAME_UNDEFINED) { //!< SVではないので
+			continue; 
+		}
+
+		elementNameStr_.emplace_back(param.SemanticName);
+
+		D3D12_INPUT_ELEMENT_DESC element = {};
+		element.SemanticName      = elementNameStr_.back().c_str();
+		element.SemanticIndex     = param.SemanticIndex;
+		element.Format            = GetFormat(param.ComponentType, param.Mask);
+		element.InputSlot         = 0;
+		element.AlignedByteOffset = D3D12_APPEND_ALIGNED_ELEMENT;
+
+		elements_.emplace_back(std::move(element));
+	}
+
+	
+}
+
+DXGI_FORMAT DxObject::ShaderReflectionTable::GetFormat(D3D_REGISTER_COMPONENT_TYPE type, BYTE mask) const {
+
+	switch (type) {
+		case D3D_REGISTER_COMPONENT_TYPE::D3D_REGISTER_COMPONENT_UINT32:
+			// int
+			if (mask == 0b0001)      return DXGI_FORMAT_R32_UINT;
+			else if (mask == 0b0011) return DXGI_FORMAT_R32G32_UINT;
+			else if (mask == 0b0111) return DXGI_FORMAT_R32G32B32_UINT;
+			else if (mask == 0b1111) return DXGI_FORMAT_R32G32B32A32_UINT;
+			break;
+
+		case D3D_REGISTER_COMPONENT_TYPE::D3D_REGISTER_COMPONENT_SINT32:
+			// int
+			if (mask == 0b0001)      return DXGI_FORMAT_R32_SINT;
+			else if (mask == 0b0011) return DXGI_FORMAT_R32G32_SINT;
+			else if (mask == 0b0111) return DXGI_FORMAT_R32G32B32_SINT;
+			else if (mask == 0b1111) return DXGI_FORMAT_R32G32B32A32_SINT;
+
+			break;
+
+		case D3D_REGISTER_COMPONENT_TYPE::D3D_REGISTER_COMPONENT_FLOAT32:
+			// float
+			if (mask == 0b0001)      return DXGI_FORMAT_R32_FLOAT;
+			else if (mask == 0b0011) return DXGI_FORMAT_R32G32_FLOAT;
+			else if (mask == 0b0111) return DXGI_FORMAT_R32G32B32_FLOAT;
+			else if (mask == 0b1111) return DXGI_FORMAT_R32G32B32A32_FLOAT;
+
+			break;
+
+		default:
+			assert(false);
+			break;
+	}
+
+	return DXGI_FORMAT_UNKNOWN;
 }

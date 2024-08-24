@@ -26,6 +26,9 @@
 // Object
 #include <ObjectStructure.h>
 
+// InputAssembler
+#include <InputAssembler.h>
+
 ////////////////////////////////////////////////////////////////////////////////////////////
 // TextureType enum
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -34,19 +37,6 @@ enum TextureType {
 	TEXTURE_NORMAL,
 
 	kCountOfTextureType
-};
-
-////////////////////////////////////////////////////////////////////////////////////////////
-// MeshData structure
-////////////////////////////////////////////////////////////////////////////////////////////
-struct MeshData {
-	std::unique_ptr<DxObject::BufferResource<VertexData>> vertexResource;
-	std::unique_ptr<DxObject::IndexBufferResource>        indexResource;
-
-	void Create(DxObject::Devices* devices, uint32_t vertexSize, uint32_t indexSize) {
-		vertexResource = std::make_unique<DxObject::BufferResource<VertexData>>(devices, vertexSize);
-		indexResource = std::make_unique<DxObject::IndexBufferResource>(devices, indexSize);
-	}
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -71,9 +61,9 @@ struct Node {
 // ModelData structure
 ////////////////////////////////////////////////////////////////////////////////////////////
 struct ModelData {
-	std::vector<MeshData>     meshes;
-	std::vector<MaterialData> materials;
-	Node                      rootNode;
+	std::vector<InputAssembler<VertexData>> meshes;
+	std::vector<MaterialData>               materials;
+	Node                                    rootNode;
 	//!< meshsとmaterials, nodeのsizeは同じ
 	
 	std::unordered_map<std::string, JointWeightData> skinCkusterData;
@@ -97,30 +87,34 @@ public:
 	Model() = delete;
 
 	//! @brief コンストラクタ
-	Model(const std::string& directoryPath, const std::string& filename) { Init(directoryPath, filename); }
+	Model(const std::string& directoryPath, const std::string& filename) { Load(directoryPath, filename); }
 
 	//! @brief デストラクタ
 	~Model() { Term(); }
 
 	//! @brief 初期化処理
-	void Init(const std::string& directoryPath, const std::string& filename);
+	void Load(const std::string& directoryPath, const std::string& filename);
 
 	//! @brief 終了処理
 	void Term();
 
 	//* draw methods *//
 
+	void SetBuffers(uint32_t modelIndex);
 	void SetBuffers(ID3D12GraphicsCommandList* commandList, uint32_t modelIndex);
 
 	void SetGraphicsTextureHandle(ID3D12GraphicsCommandList* commandList, uint32_t modelIndex, UINT parameterNum, TextureType type = TEXTURE_DIFFUSE);
 
+	const D3D12_GPU_DESCRIPTOR_HANDLE GetTextureHandle(uint32_t modelIndex, TextureType type = TEXTURE_DIFFUSE);
+
 	void DrawCall(ID3D12GraphicsCommandList* commandList, uint32_t modelIndex, uint32_t instanceCount = 1);
+	void DrawCall(uint32_t modelIndex, uint32_t instanceCount = 1);
 
 	//* gertter *//
 
 	const uint32_t GetModelIndexSize() const { return modelIndexSize_; }
 
-	const MeshData& GetMesh(uint32_t modelIndexSize) const { return modelData_.meshes[modelIndexSize]; }
+	const InputAssembler<VertexData>& GetMesh(uint32_t modelIndexSize) const { return modelData_.meshes[modelIndexSize]; }
 
 	const Node& GetRootNode() const { return modelData_.rootNode; }
 

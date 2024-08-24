@@ -23,7 +23,7 @@ void MeshBunny::Init() {
 		model_ = std::make_unique<Model>("resources/model", "bunny.obj");
 
 		// meshに書き込み
-		mesh_ = std::make_unique<Mesh>(model_->GetMesh(0).vertexResource.get(), model_->GetMesh(0).indexResource.get());
+		mesh_ = std::make_unique<Mesh>(model_->GetMesh(0).GetVertexBuffer(), model_->GetMesh(0).GetIndexBuffer());
 	}
 
 	// Graphics

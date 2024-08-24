@@ -84,7 +84,7 @@ void NodeModel::Draw() {
 
 	for (uint32_t i = 0; i < model_->GetModelIndexSize(); ++i) {
 
-		model_->SetBuffers(commandList, i);
+		model_->SetBuffers(i);
 
 		commandList->SetGraphicsRootConstantBufferView(0, MyEngine::camera3D->GetGPUVirtualAddress());
 		commandList->SetGraphicsRootConstantBufferView(1, matrixBuffers_[i]->GetGPUVirtualAddress());

@@ -10,6 +10,8 @@
 
 #include "ColliderManager.h"
 
+#include "GraphicsRender.h"
+
 //-----------------------------------------------------------------------------------------
 // using
 //-----------------------------------------------------------------------------------------
@@ -87,25 +89,6 @@ void GameScene::Init() {
 
 	particle_ = std::make_unique<Particle>();
 	particle_->Init();
-
-	/*{ //!< test
-		std::unique_ptr<DxObject::GraphicsBlob> blob = std::make_unique<DxObject::GraphicsBlob>();
-		blob->Create(L"object3d/object3d.vs.hlsl", DxObject::GRAPHICS_VERTEX);
-		blob->Create(L"object3d/object3d.ps.hlsl", DxObject::GRAPHICS_PIXEL);
-
-		std::unique_ptr<DxObject::ShaderReflectionTable> reflection1
-			= std::make_unique<DxObject::ShaderReflectionTable>();
-
-		std::unique_ptr<DxObject::ShaderReflectionTable> reflection2
-			= std::make_unique<DxObject::ShaderReflectionTable>();
-
-		reflection1->Create(blob->GetGraphicsBlobs()[DxObject::GRAPHICS_PIXEL], DxObject::VISIBILITY_PIXEL);
-		reflection2->Create(blob->GetGraphicsBlobs()[DxObject::GRAPHICS_VERTEX], DxObject::VISIBILITY_VERTEX);
-
-		reflection1->Marge(reflection2.get());
-
-		reflection1->Bind("gTexture", MyEngine::GetTextureHandleGPU("resources/uvChecker.png"));
-	}*/
 
 }
 
