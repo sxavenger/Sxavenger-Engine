@@ -5,7 +5,7 @@
 //-----------------------------------------------------------------------------------------
 // engine
 #include <Performance.h>
-#include <MyEngine.h>
+#include <Sxavenger.h>
 
 // primitive
 #include <PrimitiveDrawer.h>
@@ -29,7 +29,6 @@ void AnimationHuman::Init() {
 	pipeline_ = std::make_unique<GraphicsPipeline>();
 
 	GraphicsRootSignatureDesc rootDesc;
-	rootDesc.Resize(5, 1);
 	rootDesc.SetCBV(0, VISIBILITY_ALL, 0);
 	rootDesc.SetCBV(1, VISIBILITY_VERTEX, 1);
 	rootDesc.SetVirtualSRV(2, VISIBILITY_VERTEX, 0);
@@ -37,7 +36,7 @@ void AnimationHuman::Init() {
 	rootDesc.SetSRV(4, VISIBILITY_PIXEL, 1);
 	rootDesc.SetSampler(0, MODE_WRAP, VISIBILITY_PIXEL, 0);
 
-	pipeline_->CreateRootSignature(MyEngine::GetDevicesObj(), rootDesc);
+	pipeline_->CreateRootSignature(Sxavenger::GetDevicesObj(), rootDesc);
 
 	GraphicsPipelineDesc pipelineDesc;
 	pipelineDesc.CreateDefaultDesc();
@@ -46,7 +45,7 @@ void AnimationHuman::Init() {
 	pipelineDesc.SetElement("WEIGHT", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 1);
 	pipelineDesc.SetElement("INDEX",  0, DXGI_FORMAT_R32G32B32A32_SINT,  1);
 
-	pipeline_->CreatePipeline(MyEngine::GetDevicesObj(), blob_.get(), pipelineDesc);
+	pipeline_->CreatePipeline(Sxavenger::GetDevicesObj(), blob_.get(), pipelineDesc);
 
 	//* Compute *//
 	csBlob_ = std::make_unique<DxObject::CSBlob>();
@@ -55,7 +54,6 @@ void AnimationHuman::Init() {
 	csPipeline_ = std::make_unique<DxObject::CSPipeline>();
 
 	CSRootSignatureDesc csDesc;
-	csDesc.Resize(5, 0);
 	csDesc.SetVirtualSRV(0, 0);
 	csDesc.SetVirtualSRV(1, 1);
 	csDesc.SetVirtualSRV(2, 2);
@@ -74,15 +72,15 @@ void AnimationHuman::Init() {
 	skeleton_ = ModelMethods::CreateSkeleton(model_->GetRootNode());
 	skinCluster_ = ModelMethods::CreateSkinCluster(skeleton_, model_->GetModelData());
 
-	skinnedBuffer_ = std::make_unique<DxObject::UnorderedBufferResource<VertexData>>(MyEngine::GetDevicesObj(), (*skinCluster_.informationResource)[0]);
+	skinnedBuffer_ = std::make_unique<DxObject::UnorderedBufferResource<VertexData>>(Sxavenger::GetDevicesObj(), (*skinCluster_.informationResource)[0]);
 	
-	matrixBuffer_ = std::make_unique<DxObject::BufferResource<Matrix4x4>>(MyEngine::GetDevicesObj(), 1);
+	matrixBuffer_ = std::make_unique<DxObject::BufferResource<Matrix4x4>>(Sxavenger::GetDevicesObj(), 1);
 	(*matrixBuffer_)[0] = Matrix4x4::Identity();
 
 	SetThisAttribute("human");
 
 	// 反射用環境テクスチャ
-	MyEngine::LoadTexture("./resources/rostock_laage_airport_4k.dds");
+	Sxavenger::LoadTexture("./resources/rostock_laage_airport_4k.dds");
 
 }
 
@@ -102,7 +100,7 @@ void AnimationHuman::Update() {
 void AnimationHuman::Draw() {
 
 	// commandListの取得
-	auto commandList = MyEngine::GetCommandList();
+	auto commandList = Sxavenger::GetCommandList();
 
 	//* Compute *//
 	csPipeline_->SetPipeline();
@@ -133,11 +131,11 @@ void AnimationHuman::Draw() {
 	commandList->IASetVertexBuffers(0, 1, &vbv);
 	commandList->IASetIndexBuffer(&ibv);
 
-	commandList->SetGraphicsRootConstantBufferView(0, MyEngine::camera3D->GetGPUVirtualAddress());
+	commandList->SetGraphicsRootConstantBufferView(0, Sxavenger::camera3D->GetGPUVirtualAddress());
 	commandList->SetGraphicsRootConstantBufferView(1, matrixBuffer_->GetGPUVirtualAddress());
 	commandList->SetGraphicsRootShaderResourceView(2, skinCluster_.paletteResource->GetGPUVirtualAddress()); //!< dimentionBufferなのでvirtualSet
 	model_->SetGraphicsTextureHandle(commandList, 0, 3);
-	commandList->SetGraphicsRootDescriptorTable(4, MyEngine::GetTextureHandleGPU("./resources/rostock_laage_airport_4k.dds"));
+	commandList->SetGraphicsRootDescriptorTable(4, Sxavenger::GetTextureHandleGPU("./resources/rostock_laage_airport_4k.dds"));
 
 	model_->DrawCall(commandList, 0);
 

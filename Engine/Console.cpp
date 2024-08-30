@@ -7,7 +7,7 @@
 #include <Attribute.h>
 
 // engine
-#include <MyEngine.h>
+#include <Sxavenger.h>
 #include <Environment.h>
 #include <Performance.h>
 
@@ -35,7 +35,7 @@ const std::string Console::kConsoleName_ = "Sxavenger EngineConsole";
 void Console::Init() {
 
 	sceneTexture_ = std::make_unique<RenderTexture>();
-	sceneTexture_->Create(MyEngine::GetDxCommon(), kWindowWidth, kWindowHeight);
+	sceneTexture_->Create(Sxavenger::GetDxCommon(), kWindowWidth, kWindowHeight);
 
 	debugCamera_ = std::make_unique<DebugCamera3D>();
 	debugCamera_->SetAttributeName("sceneCamera");
@@ -123,6 +123,17 @@ Console* Console::GetInstance() {
 	return &instance;
 }
 
+void Console::DisplayTextureForConsole(const std::string& title, const D3D12_GPU_DESCRIPTOR_HANDLE handle) {
+	if (!isDisplayConsole_) {
+		return;
+	}
+	DockingConsole();
+	static bool isOpenWindow = true;
+
+	ImGui::Begin(title.c_str(), &isOpenWindow, windowFlags_);
+	DisplayTextureImGuiWindow(handle);
+	ImGui::End();
+}
 
 //=========================================================================================
 // display consoles methods
@@ -180,7 +191,7 @@ void Console::DisplayGame() {
 	ImGui::Begin("Game", &isOpenWindow, windowFlags_);
 	// this->windowがフォーカスされてるかどうか
 
-	DisplayTextureImGuiWindow(MyEngine::GetTextureHandleGPU("offscreen"));
+	DisplayTextureImGuiWindow(Sxavenger::GetTextureHandleGPU("offscreen"));
 
 	ImGui::End();
 }
@@ -348,7 +359,7 @@ void Console::DisplaySystem() {
 
 	//!< descriptorの使用済みの数, 最大数の確認
 	if (ImGui::CollapsingHeader("DescriptorHeaps")) {
-		auto dxCommon = MyEngine::GetDxCommon();
+		auto dxCommon = Sxavenger::GetDxCommon();
 		auto descriptorHeaps = dxCommon->GetDescriptorsObj();
 
 		if (ImGui::TreeNode("RTV")) {

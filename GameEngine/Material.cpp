@@ -3,7 +3,7 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
-#include <MyEngine.h>
+#include <Sxavenger.h>
 
 //-----------------------------------------------------------------------------------------
 // using
@@ -15,7 +15,7 @@ _DXOBJECT_USING
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 void ObjectMaterialBuffer::Init() {
-	buffer_ = std::make_unique<BufferResource<ObjectMaterial>>(MyEngine::GetDevicesObj(), 1);
+	buffer_ = std::make_unique<BufferResource<ObjectMaterial>>(Sxavenger::GetDevicesObj(), 1);
 	(*buffer_)[0].Init();
 }
 

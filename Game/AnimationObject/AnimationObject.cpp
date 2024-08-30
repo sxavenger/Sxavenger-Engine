@@ -4,7 +4,7 @@
 // include
 //-----------------------------------------------------------------------------------------
 // engine
-#include <MyEngine.h>
+#include <Sxavenger.h>
 
 //-----------------------------------------------------------------------------------------
 // using
@@ -29,21 +29,20 @@ void AnimationObject::CreateGraphicsPipeline() {
 	pipeline_ = std::make_unique<GraphicsPipeline>();
 
 	GraphicsRootSignatureDesc rootDesc;
-	rootDesc.Resize(3, 1);
 	rootDesc.SetCBV(0, VISIBILITY_VERTEX, 0);
 	rootDesc.SetCBV(1, VISIBILITY_VERTEX, 1);
 	rootDesc.SetSRV(2, VISIBILITY_PIXEL, 0);
 	rootDesc.SetSampler(0, MODE_WRAP, VISIBILITY_PIXEL, 0);
 
-	pipeline_->CreateRootSignature(MyEngine::GetDevicesObj(), rootDesc);
+	pipeline_->CreateRootSignature(Sxavenger::GetDevicesObj(), rootDesc);
 
 	GraphicsPipelineDesc pipelineDesc;
 	pipelineDesc.CreateDefaultDesc();
 
-	pipeline_->CreatePipeline(MyEngine::GetDevicesObj(), blob_.get(), pipelineDesc);
+	pipeline_->CreatePipeline(Sxavenger::GetDevicesObj(), blob_.get(), pipelineDesc);
 
 }
 
 void AnimationObject::SetPipeline() {
-	pipeline_->SetPipeline(MyEngine::GetCommandList());
+	pipeline_->SetPipeline(Sxavenger::GetCommandList());
 }

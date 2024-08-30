@@ -3,7 +3,7 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
-#include <MyEngine.h>
+#include <Sxavenger.h>
 #include <Logger.h>
 #include <Console.h>
 #include <d3dx12.h>
@@ -52,7 +52,7 @@ void DxrObject::BottomLevelAS::Create(
 	buildASDesc.DestAccelerationStructureData    = buffers_.asbuffer->GetGPUVirtualAddress();
 
 	// コマンドリストに積む
-	auto commandList = MyEngine::GetCommandList();
+	auto commandList = Sxavenger::GetCommandList();
 
 	commandList->BuildRaytracingAccelerationStructure(
 		&buildASDesc, 0, nullptr
@@ -110,7 +110,7 @@ void DxrObject::BottomLevelAS::Create(
 	buildASDesc.DestAccelerationStructureData    = buffers_.asbuffer->GetGPUVirtualAddress();
 
 	// コマンドリストに積む
-	auto commandList = MyEngine::GetCommandList();
+	auto commandList = Sxavenger::GetCommandList();
 
 	commandList->BuildRaytracingAccelerationStructure(
 		&buildASDesc, 0, nullptr
@@ -149,7 +149,7 @@ void DxrObject::BottomLevelAS::Term() {
 
 void DxrObject::InstanceBuffer::Init() {
 	// buffer
-	descBuffer_ = std::make_unique<DxObject::DynamicBufferResource<D3D12_RAYTRACING_INSTANCE_DESC>>(MyEngine::GetDevicesObj());
+	descBuffer_ = std::make_unique<DxObject::DynamicBufferResource<D3D12_RAYTRACING_INSTANCE_DESC>>(Sxavenger::GetDevicesObj());
 }
 
 void DxrObject::InstanceBuffer::Term() {
@@ -201,7 +201,7 @@ void DxrObject::TopLevelAS::Init() {
 	buildASDesc.DestAccelerationStructureData    = buffers_.asbuffer->GetGPUVirtualAddress();
 
 	// コマンドに積む
-	auto commandList = MyEngine::GetCommandList();
+	auto commandList = Sxavenger::GetCommandList();
 
 	commandList->BuildRaytracingAccelerationStructure(
 		&buildASDesc, 0, nullptr
@@ -217,14 +217,14 @@ void DxrObject::TopLevelAS::Init() {
 
 	// StructredBufferの設定
 	{
-		descriptor_ = MyEngine::GetCurrentDescripor(SRV);
+		descriptor_ = Sxavenger::GetCurrentDescripor(SRV);
 		
 		D3D12_SHADER_RESOURCE_VIEW_DESC desc = {};
 		desc.ViewDimension                            = D3D12_SRV_DIMENSION_RAYTRACING_ACCELERATION_STRUCTURE;
 		desc.Shader4ComponentMapping                  = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
 		desc.RaytracingAccelerationStructure.Location = buffers_.asbuffer->GetGPUVirtualAddress();
 
-		auto device = MyEngine::GetDevice();
+		auto device = Sxavenger::GetDevice();
 
 		device->CreateShaderResourceView(
 			nullptr, &desc, descriptor_.GetCPUHandle()
@@ -233,7 +233,7 @@ void DxrObject::TopLevelAS::Init() {
 }
 
 void DxrObject::TopLevelAS::Term() {
-	MyEngine::DeleteDescriptor(descriptor_);
+	Sxavenger::DeleteDescriptor(descriptor_);
 
 	instanceBuffer_.reset();
 }
@@ -262,7 +262,7 @@ void DxrObject::TopLevelAS::EndBlasSetup() {
 	buildASDesc.ScratchAccelerationStructureData = buffers_.update->GetGPUVirtualAddress();
 	
 	// コマンドに積む
-	auto commandList = MyEngine::GetCommandList();
+	auto commandList = Sxavenger::GetCommandList();
 
 	commandList->BuildRaytracingAccelerationStructure(
 		&buildASDesc, 0, nullptr
@@ -311,7 +311,7 @@ void DxrObject::TopLevelAS::SetInstanceBuffer() {
 DxrObject::AccelerationStructuredBuffers DxrMethod::CreateAccelerationStructure(
 	const D3D12_BUILD_RAYTRACING_ACCELERATION_STRUCTURE_DESC& desc) {
 
-	auto device = MyEngine::GetDevice();
+	auto device = Sxavenger::GetDevice();
 
 	DxrObject::AccelerationStructuredBuffers result = {};
 

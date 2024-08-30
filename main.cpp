@@ -1,4 +1,5 @@
-#include <MyEngine.h> // sxavenger engine
+#define NOMINMAX
+#include <Sxavenger.h>
 #include <Environment.h>
 
 //-----------------------------------------------------------------------------------------
@@ -18,7 +19,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	//=========================================================================================
 	// 初期化
 	//=========================================================================================
-	MyEngine::Initialize(kWindowWidth, kWindowHeight, kWindowTitle);
+	Sxavenger::Init(kWindowWidth, kWindowHeight, kWindowTitle);
 
 	std::unique_ptr<GameScene> gameScene = std::make_unique<GameScene>();
 	
@@ -26,7 +27,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 	gameScene.reset();
 
-	MyEngine::Finalize();
+	Sxavenger::Term();
 	return 0;
-
 }

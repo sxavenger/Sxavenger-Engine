@@ -60,6 +60,8 @@ public:
 		return descriptorSRV_.GetGPUHandle();
 	}
 
+	const Vector2ui& GetTextureSize() const { return textureSize_; }
+
 	/* 継承先関数 */
 	//!< 継承先で定義されるのでこのクラスで呼び出された場合, エラーとなる
 
@@ -91,6 +93,10 @@ protected:
 	
 	ComPtr<ID3D12Resource> resource_;
 	DxObject::Descriptor   descriptorSRV_;
+
+	//* parameters *//
+
+	Vector2ui textureSize_;
 
 private:
 

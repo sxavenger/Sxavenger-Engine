@@ -3,7 +3,7 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
-#include <MyEngine.h>
+#include <Sxavenger.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // StructuredBuffer class methods
@@ -11,7 +11,7 @@
 
 void DxObject::StructuredBuffer::Init(BaseBufferResource* bufferResource) {
 	// descriptorの取得
-	descriptor_ = MyEngine::GetCurrentDescripor(DescriptorType::CBV_SRV_UAV);
+	descriptor_ = Sxavenger::GetCurrentDescriptor(DescriptorType::CBV_SRV_UAV);
 
 	D3D12_SHADER_RESOURCE_VIEW_DESC desc = {};
 	desc.ViewDimension              = D3D12_SRV_DIMENSION_BUFFER;
@@ -21,7 +21,7 @@ void DxObject::StructuredBuffer::Init(BaseBufferResource* bufferResource) {
 	desc.Buffer.StructureByteStride = bufferResource->GetStructureSize();
 	desc.Shader4ComponentMapping    = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
 
-	MyEngine::GetDevicesObj()->GetDevice()->CreateShaderResourceView(
+	Sxavenger::GetDevice()->CreateShaderResourceView(
 		bufferResource->GetResource(),
 		&desc,
 		descriptor_.GetCPUHandle()
@@ -29,5 +29,5 @@ void DxObject::StructuredBuffer::Init(BaseBufferResource* bufferResource) {
 }
 
 void DxObject::StructuredBuffer::Term() {
-	MyEngine::DeleteDescriptor(descriptor_);
+	Sxavenger::DeleteDescriptor(descriptor_);
 }

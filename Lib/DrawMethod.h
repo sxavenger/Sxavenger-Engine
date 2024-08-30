@@ -10,6 +10,7 @@
 
 // DxObject
 #include <DxBufferResource.h>
+#include <InputAssembler.h>
 
 // structure
 #include <ObjectStructure.h>
@@ -50,4 +51,6 @@ namespace DrawMethods {
 	DrawData SkyBox(const Vector3f& size);
 
 	DrawData Plane2D();
+
+	InputAssembler<VertexData> Test(const Vector2f& size);
 };

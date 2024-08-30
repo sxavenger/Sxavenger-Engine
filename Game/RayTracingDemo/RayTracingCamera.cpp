@@ -4,7 +4,7 @@
 // include
 //-----------------------------------------------------------------------------------------
 #include <Environment.h>
-#include <MyEngine.h>
+#include <Sxavenger.h>
 #include <Console.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -16,7 +16,7 @@ void RayTracingCamera::Init() {
 	SetTransform(unitVector, {0.5f, 0.0f, 0.0f}, {0.0f, 20.0f, -40.0f});
 	SetProjection(0.45f, static_cast<float>(kWindowWidth) / static_cast<float>(kWindowHeight), 0.1f, 100.0f);
 
-	constantBuffer_ = std::make_unique<DxObject::BufferPtrResource<CameraForGPU>>(MyEngine::GetDevicesObj(), 1);
+	constantBuffer_ = std::make_unique<DxObject::BufferPtrResource<CameraForGPU>>(Sxavenger::GetDevicesObj(), 1);
 	constantBuffer_->SetPtr(0, &cameraForGpu_);
 
 	SetThisAttribute("raytracingCamera");

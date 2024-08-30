@@ -46,9 +46,6 @@
     <Filter Include="Resource\hlsl\Primitive">
       <UniqueIdentifier>{4b0c10ec-ddc5-41b7-9768-6ddf54f9b465}</UniqueIdentifier>
     </Filter>
-    <Filter Include="DirectXRayTracing">
-      <UniqueIdentifier>{c71529ff-b2a0-4372-933e-2eead61dba4d}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Resource\RayTracingShader">
       <UniqueIdentifier>{ab2302f9-42e3-4fa1-bf97-9df91a3d6a46}</UniqueIdentifier>
     </Filter>
@@ -178,12 +175,17 @@
     <Filter Include="Lib\Animation">
       <UniqueIdentifier>{bc61da55-6b98-464b-b7a2-8c69cf843dad}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Engine\DxrObject\include">
+      <UniqueIdentifier>{d0e53322-b171-44a9-9981-8a8bc83f34b3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\DxrObject\source">
+      <UniqueIdentifier>{9aa52608-fa42-4c15-947c-4782cd3a7a4b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\RayTracingDemo">
+      <UniqueIdentifier>{a488bd70-8794-4075-98eb-8e2961ea3033}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp" />
-    <ClCompile Include="Engine\MyEngine.cpp">
-      <Filter>Engine\source</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\DirectXCommon.cpp">
       <Filter>Engine\source</Filter>
     </ClCompile>
@@ -343,39 +345,6 @@
     <ClCompile Include="Engine\Input.cpp">
       <Filter>Engine\source</Filter>
     </ClCompile>
-    <ClCompile Include="DirectXRayTracing\DirectXRCommon.cpp">
-      <Filter>DirectXRayTracing</Filter>
-    </ClCompile>
-    <ClCompile Include="DirectXRayTracing\DxrAccelerationStructure.cpp">
-      <Filter>DirectXRayTracing</Filter>
-    </ClCompile>
-    <ClCompile Include="DirectXRayTracing\DxrRootSignature.cpp">
-      <Filter>DirectXRayTracing</Filter>
-    </ClCompile>
-    <ClCompile Include="DirectXRayTracing\DxrShaderTable.cpp">
-      <Filter>DirectXRayTracing</Filter>
-    </ClCompile>
-    <ClCompile Include="DirectXRayTracing\DxrStateObject.cpp">
-      <Filter>DirectXRayTracing</Filter>
-    </ClCompile>
-    <ClCompile Include="DirectXRayTracing\DxrShaderBlob.cpp">
-      <Filter>DirectXRayTracing</Filter>
-    </ClCompile>
-    <ClCompile Include="DirectXRayTracing\DxrResultBuffer.cpp">
-      <Filter>DirectXRayTracing</Filter>
-    </ClCompile>
-    <ClCompile Include="DirectXRayTracing\DxrShaderManager.cpp">
-      <Filter>DirectXRayTracing</Filter>
-    </ClCompile>
-    <ClCompile Include="DirectXRayTracing\DxrMethod.cpp">
-      <Filter>DirectXRayTracing</Filter>
-    </ClCompile>
-    <ClCompile Include="DirectXRayTracing\RayTracingCamera.cpp">
-      <Filter>DirectXRayTracing</Filter>
-    </ClCompile>
-    <ClCompile Include="DirectXRayTracing\RayTracingLight.cpp">
-      <Filter>DirectXRayTracing</Filter>
-    </ClCompile>
     <ClCompile Include="Lib\PostEffect\GaussianBlur.cpp">
       <Filter>Lib\PostEffect</Filter>
     </ClCompile>
@@ -384,9 +353,6 @@
     </ClCompile>
     <ClCompile Include="Lib\Geometry\MathLib.cpp">
       <Filter>Lib\Geometry\source</Filter>
-    </ClCompile>
-    <ClCompile Include="DirectXRayTracing\DxrRecordBuffer.cpp">
-      <Filter>DirectXRayTracing</Filter>
     </ClCompile>
     <ClCompile Include="Lib\PostEffect\FullScreen.cpp">
       <Filter>Lib\PostEffect</Filter>
@@ -499,11 +465,42 @@
     <ClCompile Include="GameEngine\Material.cpp">
       <Filter>GameEngine\source</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\DxrObject\DxrAccelerationStructure.cpp">
+      <Filter>Engine\DxrObject\source</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\DxrObject\DxrBufferRecord.cpp">
+      <Filter>Engine\DxrObject\source</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\DxrObject\DxrExportGroup.cpp">
+      <Filter>Engine\DxrObject\source</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\DxrObject\DxrRootSignature.cpp">
+      <Filter>Engine\DxrObject\source</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\DxrObject\DxrShaderBlob.cpp">
+      <Filter>Engine\DxrObject\source</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\DxrObject\DxrShaderBlobManager.cpp">
+      <Filter>Engine\DxrObject\source</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\DxrObject\DxrStateObject.cpp">
+      <Filter>Engine\DxrObject\source</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\DxrObject\DxrShaderTable.cpp">
+      <Filter>Engine\DxrObject\source</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\RayTracingDemo\RayTracingDemo.cpp">
+      <Filter>Game\RayTracingDemo</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\RayTracingDemo\RayTracingCamera.cpp">
+      <Filter>Game\RayTracingDemo</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Sxavenger.cpp">
+      <Filter>Engine\source</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Engine\MyEngine.h">
-      <Filter>Engine\include</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\DirectXCommon.h">
       <Filter>Engine\include</Filter>
     </ClInclude>
@@ -636,39 +633,6 @@
     <ClInclude Include="Engine\Input.h">
       <Filter>Engine\include</Filter>
     </ClInclude>
-    <ClInclude Include="DirectXRayTracing\DirectXRCommon.h">
-      <Filter>DirectXRayTracing</Filter>
-    </ClInclude>
-    <ClInclude Include="DirectXRayTracing\DxrAccelerationStructure.h">
-      <Filter>DirectXRayTracing</Filter>
-    </ClInclude>
-    <ClInclude Include="DirectXRayTracing\DxrRootSignature.h">
-      <Filter>DirectXRayTracing</Filter>
-    </ClInclude>
-    <ClInclude Include="DirectXRayTracing\DxrShaderTable.h">
-      <Filter>DirectXRayTracing</Filter>
-    </ClInclude>
-    <ClInclude Include="DirectXRayTracing\DxrStateObject.h">
-      <Filter>DirectXRayTracing</Filter>
-    </ClInclude>
-    <ClInclude Include="DirectXRayTracing\DxrShaderBlob.h">
-      <Filter>DirectXRayTracing</Filter>
-    </ClInclude>
-    <ClInclude Include="DirectXRayTracing\DxrResultBuffer.h">
-      <Filter>DirectXRayTracing</Filter>
-    </ClInclude>
-    <ClInclude Include="DirectXRayTracing\DxrShaderManager.h">
-      <Filter>DirectXRayTracing</Filter>
-    </ClInclude>
-    <ClInclude Include="DirectXRayTracing\DxrMethod.h">
-      <Filter>DirectXRayTracing</Filter>
-    </ClInclude>
-    <ClInclude Include="DirectXRayTracing\RayTracingCamera.h">
-      <Filter>DirectXRayTracing</Filter>
-    </ClInclude>
-    <ClInclude Include="DirectXRayTracing\RayTracingLight.h">
-      <Filter>DirectXRayTracing</Filter>
-    </ClInclude>
     <ClInclude Include="Lib\PostEffect\GaussianBlur.h">
       <Filter>Lib\PostEffect</Filter>
     </ClInclude>
@@ -677,9 +641,6 @@
     </ClInclude>
     <ClInclude Include="Lib\Geometry\MathLib.h">
       <Filter>Lib\Geometry\include</Filter>
-    </ClInclude>
-    <ClInclude Include="DirectXRayTracing\DxrRecordBuffer.h">
-      <Filter>DirectXRayTracing</Filter>
     </ClInclude>
     <ClInclude Include="Lib\PostEffect\FullScreen.h">
       <Filter>Lib\PostEffect</Filter>
@@ -794,6 +755,42 @@
     </ClInclude>
     <ClInclude Include="GameEngine\Material.h">
       <Filter>GameEngine\include</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\DxrObject\DxrObjectCommon.h">
+      <Filter>Engine\DxrObject\include</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\DxrObject\DxrAccelerationStructure.h">
+      <Filter>Engine\DxrObject\include</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\DxrObject\DxrBufferRecord.h">
+      <Filter>Engine\DxrObject\include</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\DxrObject\DxrExportGroup.h">
+      <Filter>Engine\DxrObject\include</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\DxrObject\DxrRootSignature.h">
+      <Filter>Engine\DxrObject\include</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\DxrObject\DxrShaderBlob.h">
+      <Filter>Engine\DxrObject\include</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\DxrObject\DxrShaderBlobManager.h">
+      <Filter>Engine\DxrObject\include</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\DxrObject\DxrStateObject.h">
+      <Filter>Engine\DxrObject\include</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\DxrObject\DxrShaderTable.h">
+      <Filter>Engine\DxrObject\include</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\RayTracingDemo\RayTracingDemo.h">
+      <Filter>Game\RayTracingDemo</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\RayTracingDemo\RayTracingCamera.h">
+      <Filter>Game\RayTracingDemo</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Sxavenger.h">
+      <Filter>Engine\include</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1014,6 +1011,9 @@
     </FxCompile>
     <FxCompile Include="Resources\hlsl\SxavengerShader\SampleLightingTexture.PS.hlsl">
       <Filter>Resource\hlsl\SxavengerShader</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\RayTracingShader\RayTracingTest.hlsl">
+      <Filter>Resource\RayTracingShader</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

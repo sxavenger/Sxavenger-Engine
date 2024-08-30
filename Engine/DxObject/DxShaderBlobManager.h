@@ -108,7 +108,7 @@ private:
 	void SetExternal(ShaderBlobManager* manager);
 
 	ComPtr<IDxcBlob> CreateShaderBlob(const std::wstring& filePath, ShaderType type);
-
+	std::wstring ToLower(const std::wstring& string);
 };
 
 _DXOBJECT_NAMESPACE_END

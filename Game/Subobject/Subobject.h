@@ -21,7 +21,7 @@
 #include <DrawMethod.h>
 
 // engine
-#include <MyEngine.h>
+#include <Sxavenger.h>
 #include <Sprite.h>
 
 // collision

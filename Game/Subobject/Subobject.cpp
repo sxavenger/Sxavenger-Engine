@@ -57,8 +57,8 @@ void Subobjects::Plane::Init(const SubobjectManager* manager) {
 	mesh_  = std::make_unique<Mesh>(model_->GetMesh(0).GetVertexBuffer(), model_->GetMesh(0).GetIndexBuffer());
 
 	//* buffer
-	matBuffer_ = std::make_unique<BufferResource<TransformationMatrix>>(MyEngine::GetDevicesObj(), 1);
-	material_  = std::make_unique<BufferResource<Material>>(MyEngine::GetDevicesObj(), 1);
+	matBuffer_ = std::make_unique<BufferResource<TransformationMatrix>>(Sxavenger::GetDevicesObj(), 1);
+	material_  = std::make_unique<BufferResource<Material>>(Sxavenger::GetDevicesObj(), 1);
 
 	(*material_)[0].Init();
 }
@@ -73,7 +73,7 @@ void Subobjects::Plane::Update() {
 void Subobjects::Plane::Draw(Camera3D* mainCamera) {
 
 	// commandListの取り出し
-	auto commandList = MyEngine::GetCommandList();
+	auto commandList = Sxavenger::GetCommandList();
 
 	// textureを使うpipelineに設定
 	manager_->GetPipeline(kTextureMesh)->SetPipeline(commandList);
@@ -82,7 +82,7 @@ void Subobjects::Plane::Draw(Camera3D* mainCamera) {
 	commandList->SetGraphicsRootConstantBufferView(6, mainCamera->GetGPUVirtualAddress());
 
 	// ParamBuffers
-	commandList->SetGraphicsRootConstantBufferView(7, MyEngine::camera3D->GetGPUVirtualAddress());
+	commandList->SetGraphicsRootConstantBufferView(7, Sxavenger::camera3D->GetGPUVirtualAddress());
 	commandList->SetGraphicsRootConstantBufferView(8, matBuffer_->GetGPUVirtualAddress());
 	model_->SetGraphicsTextureHandle(commandList, 0, 9);
 	commandList->SetGraphicsRootConstantBufferView(10, material_->GetGPUVirtualAddress());
@@ -129,8 +129,8 @@ void Subobjects::Sphere::Init(const SubobjectManager* manager) {
 	mesh_ = std::make_unique<Mesh>(model_->GetMesh(0).GetVertexBuffer(), model_->GetMesh(0).GetIndexBuffer());
 
 	//* buffer
-	matBuffer_ = std::make_unique<BufferResource<TransformationMatrix>>(MyEngine::GetDevicesObj(), 1);
-	material_ = std::make_unique<BufferResource<Material>>(MyEngine::GetDevicesObj(), 1);
+	matBuffer_ = std::make_unique<BufferResource<TransformationMatrix>>(Sxavenger::GetDevicesObj(), 1);
+	material_ = std::make_unique<BufferResource<Material>>(Sxavenger::GetDevicesObj(), 1);
 
 	(*material_)[0].Init();
 
@@ -146,7 +146,7 @@ void Subobjects::Sphere::Update() {
 void Subobjects::Sphere::Draw(Camera3D* mainCamera) {
 
 	// commandListの取り出し
-	auto commandList = MyEngine::GetCommandList();
+	auto commandList = Sxavenger::GetCommandList();
 
 	// textureを使うpipelineに設定
 	manager_->GetPipeline(kTextureMesh)->SetPipeline(commandList);
@@ -155,9 +155,9 @@ void Subobjects::Sphere::Draw(Camera3D* mainCamera) {
 	commandList->SetGraphicsRootConstantBufferView(6, mainCamera->GetGPUVirtualAddress());
 
 	// ParamBuffers
-	commandList->SetGraphicsRootConstantBufferView(7, MyEngine::camera3D->GetGPUVirtualAddress());
+	commandList->SetGraphicsRootConstantBufferView(7, Sxavenger::camera3D->GetGPUVirtualAddress());
 	commandList->SetGraphicsRootConstantBufferView(8, matBuffer_->GetGPUVirtualAddress());
-	commandList->SetGraphicsRootDescriptorTable(9, MyEngine::GetTextureHandleGPU("resources/uvChecker.png"));
+	commandList->SetGraphicsRootDescriptorTable(9, Sxavenger::GetTextureHandleGPU("resources/uvChecker.png"));
 	commandList->SetGraphicsRootConstantBufferView(10, material_->GetGPUVirtualAddress());
 	commandList->SetGraphicsRootConstantBufferView(11, manager_->GetLight()->GetGPUVirtualAddress());
 
@@ -216,8 +216,8 @@ void Subobjects::Teapot::Init(const SubobjectManager* manager) {
 		mesh_  = std::make_unique<Mesh>(model_->GetMesh(0).GetVertexBuffer(), model_->GetMesh(0).GetIndexBuffer());
 
 	//* buffer
-	matBuffer_ = std::make_unique<BufferResource<TransformationMatrix>>(MyEngine::GetDevicesObj(), 1);
-	material_ = std::make_unique<BufferResource<Material>>(MyEngine::GetDevicesObj(), 1);
+	matBuffer_ = std::make_unique<BufferResource<TransformationMatrix>>(Sxavenger::GetDevicesObj(), 1);
+	material_ = std::make_unique<BufferResource<Material>>(Sxavenger::GetDevicesObj(), 1);
 
 	(*material_)[0].Init();
 
@@ -233,7 +233,7 @@ void Subobjects::Teapot::Update() {
 void Subobjects::Teapot::Draw(Camera3D* mainCamera) {
 
 	// commandListの取り出し
-	auto commandList = MyEngine::GetCommandList();
+	auto commandList = Sxavenger::GetCommandList();
 
 	// textureを使うpipelineに設定
 	manager_->GetPipeline(kTextureMesh)->SetPipeline(commandList);
@@ -242,7 +242,7 @@ void Subobjects::Teapot::Draw(Camera3D* mainCamera) {
 	commandList->SetGraphicsRootConstantBufferView(6, mainCamera->GetGPUVirtualAddress());
 
 	// ParamBuffers
-	commandList->SetGraphicsRootConstantBufferView(7, MyEngine::camera3D->GetGPUVirtualAddress());
+	commandList->SetGraphicsRootConstantBufferView(7, Sxavenger::camera3D->GetGPUVirtualAddress());
 	commandList->SetGraphicsRootConstantBufferView(8, matBuffer_->GetGPUVirtualAddress());
 	model_->SetGraphicsTextureHandle(commandList, 0, 9);
 	commandList->SetGraphicsRootConstantBufferView(10, material_->GetGPUVirtualAddress());
@@ -289,8 +289,8 @@ void Subobjects::Bunny::Init(const SubobjectManager* manager) {
 		mesh_  = std::make_unique<Mesh>(model_->GetMesh(0).GetVertexBuffer(), model_->GetMesh(0).GetIndexBuffer());
 
 	//* buffer
-	matBuffer_ = std::make_unique<BufferResource<TransformationMatrix>>(MyEngine::GetDevicesObj(), 1);
-	material_ = std::make_unique<BufferResource<Material>>(MyEngine::GetDevicesObj(), 1);
+	matBuffer_ = std::make_unique<BufferResource<TransformationMatrix>>(Sxavenger::GetDevicesObj(), 1);
+	material_ = std::make_unique<BufferResource<Material>>(Sxavenger::GetDevicesObj(), 1);
 
 	(*material_)[0].Init();
 
@@ -306,7 +306,7 @@ void Subobjects::Bunny::Update() {
 void Subobjects::Bunny::Draw(Camera3D* mainCamera) {
 
 	// commandListの取り出し
-	auto commandList = MyEngine::GetCommandList();
+	auto commandList = Sxavenger::GetCommandList();
 
 	// textureを使うpipelineに設定
 	manager_->GetPipeline(kTextureMesh)->SetPipeline(commandList);
@@ -315,7 +315,7 @@ void Subobjects::Bunny::Draw(Camera3D* mainCamera) {
 	commandList->SetGraphicsRootConstantBufferView(6, mainCamera->GetGPUVirtualAddress());
 
 	// ParamBuffers
-	commandList->SetGraphicsRootConstantBufferView(7, MyEngine::camera3D->GetGPUVirtualAddress());
+	commandList->SetGraphicsRootConstantBufferView(7, Sxavenger::camera3D->GetGPUVirtualAddress());
 	commandList->SetGraphicsRootConstantBufferView(8, matBuffer_->GetGPUVirtualAddress());
 	model_->SetGraphicsTextureHandle(commandList, 0, 9);
 	commandList->SetGraphicsRootConstantBufferView(10, material_->GetGPUVirtualAddress());
@@ -370,8 +370,8 @@ void Subobjects::MultiMesh::Init(const SubobjectManager* manager) {
 	}
 
 	//* buffer
-	matBuffer_ = std::make_unique<BufferResource<TransformationMatrix>>(MyEngine::GetDevicesObj(), 1);
-	material_  = std::make_unique<BufferResource<Material>>(MyEngine::GetDevicesObj(), 2);
+	matBuffer_ = std::make_unique<BufferResource<TransformationMatrix>>(Sxavenger::GetDevicesObj(), 1);
+	material_  = std::make_unique<BufferResource<Material>>(Sxavenger::GetDevicesObj(), 2);
 
 	(*material_)[0].Init();
 
@@ -387,7 +387,7 @@ void Subobjects::MultiMesh::Update() {
 void Subobjects::MultiMesh::Draw(Camera3D* mainCamera) {
 
 	// commandListの取り出し
-	auto commandList = MyEngine::GetCommandList();
+	auto commandList = Sxavenger::GetCommandList();
 
 	// textureを使うpipelineに設定
 	manager_->GetPipeline(kTextureMesh)->SetPipeline(commandList);
@@ -397,7 +397,7 @@ void Subobjects::MultiMesh::Draw(Camera3D* mainCamera) {
 		commandList->SetGraphicsRootConstantBufferView(6, mainCamera->GetGPUVirtualAddress());
 
 		// ParamBuffers
-		commandList->SetGraphicsRootConstantBufferView(7, MyEngine::camera3D->GetGPUVirtualAddress());
+		commandList->SetGraphicsRootConstantBufferView(7, Sxavenger::camera3D->GetGPUVirtualAddress());
 		commandList->SetGraphicsRootConstantBufferView(8, matBuffer_->GetGPUVirtualAddress());
 		model_->SetGraphicsTextureHandle(commandList, 0, 9);
 		commandList->SetGraphicsRootConstantBufferView(10, material_->GetGPUVirtualAddress());
@@ -445,7 +445,7 @@ void Subobjects::MultiMaterial::Init(const SubobjectManager* manager) {
 	model_ = std::make_unique<Model>(manager_->GetModelDirectory(), "multiMaterial.obj");
 
 	//* buffer
-	matBuffer_ = std::make_unique<BufferResource<TransformationMatrix>>(MyEngine::GetDevicesObj(), 1);
+	matBuffer_ = std::make_unique<BufferResource<TransformationMatrix>>(Sxavenger::GetDevicesObj(), 1);
 
 	//* meshs & materials
 	// mesh数の取得
@@ -467,7 +467,7 @@ void Subobjects::MultiMaterial::Init(const SubobjectManager* manager) {
 
 		// material
 		materials_[i]
-			= std::make_unique<BufferResource<Material>>(MyEngine::GetDevicesObj(), 1);
+			= std::make_unique<BufferResource<Material>>(Sxavenger::GetDevicesObj(), 1);
 
 		(*materials_[i])[0].Init();
 	}
@@ -486,7 +486,7 @@ void Subobjects::MultiMaterial::Update() {
 void Subobjects::MultiMaterial::Draw(Camera3D* mainCamera) {
 
 	// commandListの取り出し
-	auto commandList = MyEngine::GetCommandList();
+	auto commandList = Sxavenger::GetCommandList();
 
 	// textureを使うpipelineに設定
 	manager_->GetPipeline(kTextureMesh)->SetPipeline(commandList);
@@ -496,7 +496,7 @@ void Subobjects::MultiMaterial::Draw(Camera3D* mainCamera) {
 		commandList->SetGraphicsRootConstantBufferView(6, mainCamera->GetGPUVirtualAddress());
 
 		// ParamBuffers
-		commandList->SetGraphicsRootConstantBufferView(7, MyEngine::camera3D->GetGPUVirtualAddress());
+		commandList->SetGraphicsRootConstantBufferView(7, Sxavenger::camera3D->GetGPUVirtualAddress());
 		commandList->SetGraphicsRootConstantBufferView(8, matBuffer_->GetGPUVirtualAddress());
 		model_->SetGraphicsTextureHandle(commandList, i, 9);
 		commandList->SetGraphicsRootConstantBufferView(10, materials_[i]->GetGPUVirtualAddress());
@@ -551,8 +551,8 @@ void Subobjects::Suzanne::Init(const SubobjectManager* manager) {
 		mesh_  = std::make_unique<Mesh>(model_->GetMesh(0).GetVertexBuffer(), model_->GetMesh(0).GetIndexBuffer());
 
 	//* buffer
-	matBuffer_ = std::make_unique<BufferResource<TransformationMatrix>>(MyEngine::GetDevicesObj(), 1);
-	material_ = std::make_unique<BufferResource<Material>>(MyEngine::GetDevicesObj(), 1);
+	matBuffer_ = std::make_unique<BufferResource<TransformationMatrix>>(Sxavenger::GetDevicesObj(), 1);
+	material_ = std::make_unique<BufferResource<Material>>(Sxavenger::GetDevicesObj(), 1);
 
 	(*material_)[0].Init();
 }
@@ -566,7 +566,7 @@ void Subobjects::Suzanne::Update() {
 void Subobjects::Suzanne::Draw(Camera3D* mainCamera) {
 
 	// commandListの取り出し
-	auto commandList = MyEngine::GetCommandList();
+	auto commandList = Sxavenger::GetCommandList();
 
 	// textureを使うpipelineに設定
 	manager_->GetPipeline(kNotTextureMesh)->SetPipeline(commandList);
@@ -575,7 +575,7 @@ void Subobjects::Suzanne::Draw(Camera3D* mainCamera) {
 	commandList->SetGraphicsRootConstantBufferView(6, mainCamera->GetGPUVirtualAddress());
 
 	// ParamBuffers
-	commandList->SetGraphicsRootConstantBufferView(7, MyEngine::camera3D->GetGPUVirtualAddress());
+	commandList->SetGraphicsRootConstantBufferView(7, Sxavenger::camera3D->GetGPUVirtualAddress());
 	commandList->SetGraphicsRootConstantBufferView(8, matBuffer_->GetGPUVirtualAddress());
 	commandList->SetGraphicsRootConstantBufferView(9, material_->GetGPUVirtualAddress());
 	commandList->SetGraphicsRootConstantBufferView(10, manager_->GetLight()->GetGPUVirtualAddress());

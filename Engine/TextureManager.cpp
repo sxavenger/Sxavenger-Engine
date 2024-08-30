@@ -59,6 +59,8 @@ void Texture::Load(DirectXCommon* dxCommon, const std::string& filePath) {
 			descriptorSRV_.GetCPUHandle()
 		);
 	}
+
+	textureSize_ = { static_cast<uint32_t>(metadata.width), static_cast<uint32_t>(metadata.height) };
 }
 
 void Texture::Unload() {
@@ -140,6 +142,8 @@ void RenderTexture::Create(
 			descriptorRTV_.GetCPUHandle()
 		);
 	}
+
+	textureSize_ = { static_cast<uint32_t>(textureWidth), static_cast<uint32_t>(textureHeight) };
 }
 
 void RenderTexture::Term() {
@@ -218,6 +222,8 @@ void DummyTexture::Create(DirectXCommon* dxCommon, int32_t textureWidth, int32_t
 			descriptorUAV_.GetCPUHandle()
 		);
 	}
+
+	textureSize_ = { static_cast<uint32_t>(textureWidth), static_cast<uint32_t>(textureHeight) };
 }
 
 void DummyTexture::Term() {

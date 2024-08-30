@@ -53,10 +53,14 @@ public:
 
 	//! @brief 現在のwindowをconsoleにdockingする
 	void DockingConsole() const;
+
+	//* attribute methods *//
 	
 	void SetAttribute(Attribute* attribute);
 
 	void CheckEraseAttribute(Attribute* obj);
+
+	//* console methods *//
 
 	void Log(const std::string& log, const Color4f& color = defaultColor);
 
@@ -74,6 +78,10 @@ public:
 
 	Console() = default;
 	~Console() = default;
+
+	// test //
+
+	void DisplayTextureForConsole(const std::string& title, const D3D12_GPU_DESCRIPTOR_HANDLE handle);
 
 	//=========================================================================================
 	// public variables

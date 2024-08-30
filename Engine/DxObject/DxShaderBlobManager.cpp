@@ -49,11 +49,7 @@ void DxObject::ShaderBlobManager::Term() {
 IDxcBlob* const DxObject::ShaderBlobManager::GetBlob(const std::wstring& filePath, ShaderType type) {
 
 	// 一度すべて小文字に変換
-	std::wstring lowerFilePath;
-	lowerFilePath.resize(filePath.size()); //!< 文字数を予約
-
-	std::transform(filePath.begin(), filePath.end(), lowerFilePath.begin(),
-		[](wchar_t c) { return std::towlower(c); });
+	std::wstring lowerFilePath = ToLower(filePath);
 
 	auto it = blobs_.find(lowerFilePath);
 
@@ -170,4 +166,16 @@ ComPtr<IDxcBlob> DxObject::ShaderBlobManager::CreateShaderBlob(const std::wstrin
 
 	return shaderBlob;
 	
+}
+
+std::wstring DxObject::ShaderBlobManager::ToLower(const std::wstring& string) {
+
+	std::wstring result;
+	result.resize(string.size());
+
+	std::transform(string.begin(), string.end(), result.begin(),
+		[](wchar_t c) { return std::towlower(c); });
+
+	return result;
+
 }

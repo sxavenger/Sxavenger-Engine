@@ -3,7 +3,7 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
-#include <MyEngine.h>
+#include <Sxavenger.h>
 
 //-----------------------------------------------------------------------------------------
 // using
@@ -39,7 +39,6 @@ void PrimitiveTriangle::Init() {
 	grahicsBlob_->Create(directoryPath_ + L"Primitive.PS.hlsl", GRAPHICS_PIXEL);
 
 	GraphicsRootSignatureDesc desc;
-	desc.Resize(1, 0);
 	desc.SetCBV(0, VISIBILITY_VERTEX, 0);
 
 	GraphicsPipelineDesc pipelineDesc;
@@ -50,11 +49,11 @@ void PrimitiveTriangle::Init() {
 	pipelineDesc.SetElement("COLOR",    0, DXGI_FORMAT_R32G32B32A32_FLOAT);
 
 	graphicsPipeline_ = std::make_unique<GraphicsPipeline>();
-	graphicsPipeline_->CreateRootSignature(MyEngine::GetDevicesObj(), desc);
-	graphicsPipeline_->CreatePipeline(MyEngine::GetDevicesObj(), grahicsBlob_.get(), pipelineDesc);
+	graphicsPipeline_->CreateRootSignature(Sxavenger::GetDevicesObj(), desc);
+	graphicsPipeline_->CreatePipeline(Sxavenger::GetDevicesObj(), grahicsBlob_.get(), pipelineDesc);
 
 	/* buffer */
-	objectBuffer_ = std::make_unique<DxObject::BufferResource<PrimitiveInput>>(MyEngine::GetDevicesObj(), kMaxObjectNum_ * 3);
+	objectBuffer_ = std::make_unique<DxObject::BufferResource<PrimitiveInput>>(Sxavenger::GetDevicesObj(), kMaxObjectNum_ * 3);
 
 }
 
@@ -76,7 +75,7 @@ void PrimitiveTriangle::DrawTriangle(const Vector3f& v0, const Vector3f& v1, con
 void PrimitiveTriangle::DrawAll(const D3D12_GPU_VIRTUAL_ADDRESS& camera) {
 
 	// commandListの取得
-	auto commandList = MyEngine::GetCommandList();
+	auto commandList = Sxavenger::GetCommandList();
 
 	graphicsPipeline_->SetPipeline(commandList);
 
@@ -100,7 +99,6 @@ void PrimitiveLine::Init() {
 	grahicsBlob_->Create(directoryPath_ + L"Primitive.PS.hlsl", GRAPHICS_PIXEL);
 
 	GraphicsRootSignatureDesc desc;
-	desc.Resize(1, 0);
 	desc.SetCBV(0, VISIBILITY_VERTEX, 0);
 
 	GraphicsPipelineDesc pipelineDesc;
@@ -115,18 +113,18 @@ void PrimitiveLine::Init() {
 	pipelineDesc.SetPrimitive(PRIMITIVE_LINE);
 
 	graphicsPipeline_ = std::make_unique<GraphicsPipeline>();
-	graphicsPipeline_->CreateRootSignature(MyEngine::GetDevicesObj(), desc);
-	graphicsPipeline_->CreatePipeline(MyEngine::GetDevicesObj(), grahicsBlob_.get(), pipelineDesc);
+	graphicsPipeline_->CreateRootSignature(Sxavenger::GetDevicesObj(), desc);
+	graphicsPipeline_->CreatePipeline(Sxavenger::GetDevicesObj(), grahicsBlob_.get(), pipelineDesc);
 
 	/* buffer */
-	objectBuffer_ = std::make_unique<DxObject::BufferResource<PrimitiveInput>>(MyEngine::GetDevicesObj(), kMaxObjectNum_ * 2);
+	objectBuffer_ = std::make_unique<DxObject::BufferResource<PrimitiveInput>>(Sxavenger::GetDevicesObj(), kMaxObjectNum_ * 2);
 
 }
 
 void PrimitiveLine::DrawAll(const D3D12_GPU_VIRTUAL_ADDRESS& camera) {
 
 	// commandListの取得
-	auto commandList = MyEngine::GetCommandList();
+	auto commandList = Sxavenger::GetCommandList();
 
 	graphicsPipeline_->SetPipeline(commandList);
 
@@ -218,8 +216,8 @@ void PrimitiveDrawer::DrawSphere(const Vector3f& center, float radius, const uin
 }
 
 void PrimitiveDrawer::DrawAll3D() {
-	triangle_->DrawAll(MyEngine::camera3D->GetGPUVirtualAddress());
-	line_->DrawAll(MyEngine::camera3D->GetGPUVirtualAddress());
+	triangle_->DrawAll(Sxavenger::camera3D->GetGPUVirtualAddress());
+	line_->DrawAll(Sxavenger::camera3D->GetGPUVirtualAddress());
 }
 
 void PrimitiveDrawer::ResetObjectCount() {

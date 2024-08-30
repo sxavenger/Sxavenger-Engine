@@ -23,7 +23,7 @@
 #include <Attribute.h>
 
 // engine
-#include <MyEngine.h>
+#include <Sxavenger.h>
 
 // light
 #include <Light.h>
@@ -101,7 +101,7 @@ private:
 		}
 
 		void CreatePipeline() const {
-			pipeline->CreatePipeline(MyEngine::GetDevicesObj(), blob.get(), kBlendModeNormal);
+			pipeline->CreatePipeline(Sxavenger::GetDevicesObj(), blob.get(), kBlendModeNormal);
 		}
 	};
 	

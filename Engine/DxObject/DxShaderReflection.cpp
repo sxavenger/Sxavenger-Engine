@@ -96,7 +96,6 @@ void DxObject::ShaderReflectionTable::BindGraphicsParameter(ID3D12GraphicsComman
 DxObject::GraphicsRootSignatureDesc DxObject::ShaderReflectionTable::CreateRootSignatureDesc() {
 
 	GraphicsRootSignatureDesc result = {};
-	result.Resize(static_cast<uint32_t>(table_.size()) - samplerCount_, samplerCount_);
 
 	uint32_t samplerIndex = 0;
 	uint32_t paramIndex   = 0;

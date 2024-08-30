@@ -3,7 +3,7 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
-#include <MyEngine.h>
+#include <Sxavenger.h>
 #include <Console.h>
 
 //-----------------------------------------------------------------------------------------
@@ -52,7 +52,7 @@ void Performance::EndFrame() {
 }
 
 void Performance::CreateBuffer() {
-	perFrameBuffer_ = std::make_unique<BufferResource<PerFrame>>(MyEngine::GetDevicesObj(), 1);
+	perFrameBuffer_ = std::make_unique<BufferResource<PerFrame>>(Sxavenger::GetDevicesObj(), 1);
 
 	// 現在の時間をBufferに書き込み
 	auto now = std::chrono::high_resolution_clock::now();

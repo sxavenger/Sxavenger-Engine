@@ -3,7 +3,7 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
-#include <MyEngine.h>
+#include <Sxavenger.h>
 #include <Console.h>
 #include <format>
 
@@ -21,7 +21,7 @@ void DebugObjects::Sphere::Init() {
 
 	transform_.Init();
 
-	material_ = std::make_unique<BufferResource<Material>>(MyEngine::GetDevicesObj(), 1);
+	material_ = std::make_unique<BufferResource<Material>>(Sxavenger::GetDevicesObj(), 1);
 	(*material_)[0].Init();
 
 	SetAttributeName("Sphere");
@@ -41,11 +41,11 @@ void DebugObjects::Sphere::Update() {
 
 void DebugObjects::Sphere::Draw() {
 
-	auto commandList = MyEngine::GetCommandList();
+	auto commandList = Sxavenger::GetCommandList();
 
 	ia_.SetBuffer(commandList);
 
-	commandList->SetGraphicsRootConstantBufferView(0, MyEngine::camera3D->GetGPUVirtualAddress());
+	commandList->SetGraphicsRootConstantBufferView(0, Sxavenger::camera3D->GetGPUVirtualAddress());
 	commandList->SetGraphicsRootConstantBufferView(1, transform_.GetGPUVirtualAddress());
 	commandList->SetGraphicsRootConstantBufferView(2, material_->GetGPUVirtualAddress());
 
@@ -93,7 +93,7 @@ void DebugObjects::Box::Init() {
 	transform_.Init();
 	qt_.Init();
 
-	material_ = std::make_unique<BufferResource<Material>>(MyEngine::GetDevicesObj(), 1);
+	material_ = std::make_unique<BufferResource<Material>>(Sxavenger::GetDevicesObj(), 1);
 	(*material_)[0].Init();
 
 	SetAttributeName("Box");
@@ -116,11 +116,11 @@ void DebugObjects::Box::Update() {
 
 void DebugObjects::Box::Draw() {
 
-	auto commandList = MyEngine::GetCommandList();
+	auto commandList = Sxavenger::GetCommandList();
 
 	ia_.SetBuffer(commandList);
 
-	commandList->SetGraphicsRootConstantBufferView(0, MyEngine::camera3D->GetGPUVirtualAddress());
+	commandList->SetGraphicsRootConstantBufferView(0, Sxavenger::camera3D->GetGPUVirtualAddress());
 	commandList->SetGraphicsRootConstantBufferView(1, qt_.GetGPUVirtualAddress());
 	commandList->SetGraphicsRootConstantBufferView(2, material_->GetGPUVirtualAddress());
 

@@ -4,7 +4,7 @@
 // include
 //-----------------------------------------------------------------------------------------
 // engine
-#include <MyEngine.h>
+#include <Sxavenger.h>
 
 //-----------------------------------------------------------------------------------------
 // using
@@ -17,7 +17,7 @@ using namespace DxObject;
 
 void BaseTransformBuffer::Init() {
 	// GPUBufferの生成
-	buffer_ = std::make_unique<BufferResource<TransformationMatrix>>(MyEngine::GetDevicesObj(), 1);
+	buffer_ = std::make_unique<BufferResource<TransformationMatrix>>(Sxavenger::GetDevicesObj(), 1);
 	(*buffer_)[0].Init(); //!< 単位行列で初期化
 }
 

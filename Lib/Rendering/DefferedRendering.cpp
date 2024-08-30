@@ -3,7 +3,7 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
-#include <MyEngine.h>
+#include <Sxavenger.h>
 #include <Environment.h>
 #include "DxShaderReflection.h"
 
@@ -34,7 +34,7 @@ void DefferedRendering::Init() {
 		// deffered用 renderTextureの生成
 		defferedTextures_[i] = std::make_unique<RenderTexture>();
 		defferedTextures_[i]->Create(
-			MyEngine::GetDxCommon(),
+			Sxavenger::GetDxCommon(),
 			kWindowWidth, kWindowHeight, { 0.0f, 0.0f, 0.0f, 0.0f }, formats_[i]
 		);
 
@@ -46,7 +46,7 @@ void DefferedRendering::Init() {
 	/* rendering */
 
 	// IA
-	vertexBuffer_ = std::make_unique<DxObject::BufferResource<VertexData>>(MyEngine::GetDevicesObj(), 4);
+	vertexBuffer_ = std::make_unique<DxObject::BufferResource<VertexData>>(Sxavenger::GetDevicesObj(), 4);
 	vertexBuffer_->operator[](0).position = { -1.0f, -1.0f, 0.0f };
 	vertexBuffer_->operator[](0).texcoord = { 0.0f, 1.0f };
 
@@ -59,7 +59,7 @@ void DefferedRendering::Init() {
 	vertexBuffer_->operator[](3).position = { 1.0f, 1.0f, 0.0f };
 	vertexBuffer_->operator[](3).texcoord = { 1.0f, 0.0f };
 
-	indexBuffer_  = std::make_unique<DxObject::IndexBufferResource>(MyEngine::GetDevicesObj(), 6);
+	indexBuffer_  = std::make_unique<DxObject::IndexBufferResource>(Sxavenger::GetDevicesObj(), 6);
 	indexBuffer_->operator[](0) = 0;
 	indexBuffer_->operator[](1) = 1;
 	indexBuffer_->operator[](2) = 2;
@@ -73,7 +73,6 @@ void DefferedRendering::Init() {
 	blob_->Create(L"defferedRendering.PS.hlsl", GRAPHICS_PIXEL);
 
 	GraphicsRootSignatureDesc desc;
-	desc.Resize(6, 1);
 	desc.SetSRV(0, VISIBILITY_PIXEL, 0);
 	desc.SetSRV(1, VISIBILITY_PIXEL, 1);
 	desc.SetSRV(2, VISIBILITY_PIXEL, 2);
@@ -89,14 +88,14 @@ void DefferedRendering::Init() {
 	pipelineDesc.SetRTVFormat(DXGI_FORMAT_R32G32B32A32_FLOAT);
 
 	pipeline_ = std::make_unique<GraphicsPipeline>();
-	pipeline_->CreateRootSignature(MyEngine::GetDevicesObj(), desc);
-	pipeline_->CreatePipeline(MyEngine::GetDevicesObj(), blob_.get(), pipelineDesc);
+	pipeline_->CreateRootSignature(Sxavenger::GetDevicesObj(), desc);
+	pipeline_->CreatePipeline(Sxavenger::GetDevicesObj(), blob_.get(), pipelineDesc);
 
 }
 
 void DefferedRendering::Draw(const D3D12_GPU_VIRTUAL_ADDRESS& cameraAddress, const D3D12_GPU_VIRTUAL_ADDRESS& lightAddress) {
 
-	auto commandList = MyEngine::GetCommandList();
+	auto commandList = Sxavenger::GetCommandList();
 	
 	pipeline_->SetPipeline(commandList);
 

@@ -6,8 +6,8 @@
 // meshoptimizer
 #include <meshoptimizer.h>
 
-// MyEngine
-#include <MyEngine.h>
+// Sxavenger
+#include <Sxavenger.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // MeshLoader class methods
@@ -199,7 +199,7 @@ void DxObject::Mesh::Init(BufferResource<VertexData>* vertexResource, IndexBuffe
 	ResMesh resource;
 	MeshLoader::PerseMesh(vertexResource, indexResource, resource); // vertexResource, indexResourceからmeshの生成
 
-	auto deviceObj = MyEngine::GetDevicesObj();
+	auto deviceObj = Sxavenger::GetDevicesObj();
 
 	// verticesの初期化
 	vertices_ = std::make_unique<BufferResource<VertexData>>(deviceObj, static_cast<uint32_t>(resource.vertices.size()));
@@ -224,7 +224,7 @@ void DxObject::Mesh::Init(BufferResource<VertexData>* vertexResource, IndexBuffe
 	cullDatas_ = std::make_unique<BufferResource<DirectX::CullData>>(deviceObj, static_cast<uint32_t>(resource.cullDatas.size()));
 	cullDatas_->Memcpy(resource.cullDatas.data());
 
-	info_ = std::make_unique<BufferResource<MeshInfo>>(MyEngine::GetDevicesObj(), 1);
+	info_ = std::make_unique<BufferResource<MeshInfo>>(Sxavenger::GetDevicesObj(), 1);
 	info_->operator[](0).meshletCount = static_cast<uint32_t>(resource.meshlets.size());
 }
 
@@ -234,7 +234,7 @@ void DxObject::Mesh::Term() {
 void DxObject::Mesh::Dispatch(UINT verticesParam, UINT uniqueVertexIndicesParam, UINT meshletsParam, UINT primitiveIndices) {
 
 	// commandListの取得
-	auto commandList = MyEngine::GetCommandList();
+	auto commandList = Sxavenger::GetCommandList();
 
 	// descriptorの設定
 	commandList->SetGraphicsRootShaderResourceView(verticesParam, vertices_->GetGPUVirtualAddress());
@@ -249,7 +249,7 @@ void DxObject::Mesh::Dispatch(UINT verticesParam, UINT uniqueVertexIndicesParam,
 void DxObject::Mesh::Dispatch(UINT verticesParam, UINT uniqueVertexIndicesParam, UINT meshletsParam, UINT primitiveIndices, UINT cullDataParam, UINT infoParam) {
 
 	// commandListの取得
-	auto commandList = MyEngine::GetCommandList();
+	auto commandList = Sxavenger::GetCommandList();
 
 	// descriptorの設定
 	commandList->SetGraphicsRootShaderResourceView(verticesParam, vertices_->GetGPUVirtualAddress());

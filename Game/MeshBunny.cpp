@@ -3,7 +3,7 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
-#include <MyEngine.h>
+#include <Sxavenger.h>
 #include <PrimitiveDrawer.h>
 
 //-----------------------------------------------------------------------------------------
@@ -33,7 +33,6 @@ void MeshBunny::Init() {
 	blob_->Create(L"Default.PS.hlsl", GRAPHICS_PIXEL);
 
 	GraphicsRootSignatureDesc desc;
-	desc.Resize(11, 1);
 	desc.SetVirtualSRV(0, VISIBILITY_ALL, 0); //!< vertices
 	desc.SetVirtualSRV(1, VISIBILITY_ALL, 1); //!< uniqueVertexIndices
 	desc.SetVirtualSRV(2, VISIBILITY_ALL, 2); //!< meshlets
@@ -50,15 +49,15 @@ void MeshBunny::Init() {
 	desc.SetSampler(0, MODE_WRAP, VISIBILITY_PIXEL, 0);
 
 	pipeline_ = std::make_unique<GraphicsPipeline>();
-	pipeline_->CreateRootSignature(MyEngine::GetDevicesObj(), desc);
-	pipeline_->CreatePipeline(MyEngine::GetDevicesObj(), blob_.get(), kBlendModeNormal);
+	pipeline_->CreateRootSignature(Sxavenger::GetDevicesObj(), desc);
+	pipeline_->CreatePipeline(Sxavenger::GetDevicesObj(), blob_.get(), kBlendModeNormal);
 
 	// materialResource
-	material_ = std::make_unique<DxObject::BufferResource<Vector4f>>(MyEngine::GetDevicesObj(), 1);
+	material_ = std::make_unique<DxObject::BufferResource<Vector4f>>(Sxavenger::GetDevicesObj(), 1);
 	material_->operator[](0) = { 1.0f, 1.0f, 1.0f, 1.0f };
 
 	// matrixResources
-	matrix_ = std::make_unique<DxObject::BufferResource<TransformationMatrix>>(MyEngine::GetDevicesObj(), 1);
+	matrix_ = std::make_unique<DxObject::BufferResource<TransformationMatrix>>(Sxavenger::GetDevicesObj(), 1);
 	matrix_->operator[](0).Init();
 
 	cullingCamera_ = std::make_unique<Camera3D>();
@@ -75,16 +74,16 @@ void MeshBunny::Draw() {
 
 	/*cullingCamera_->DrawFrustum({1.0f, 1.0f, 0.0f, 1.0f});*/
 
-	auto commandList = MyEngine::GetCommandList();
+	auto commandList = Sxavenger::GetCommandList();
 
 	pipeline_->SetPipeline(commandList);
 
 	// ParamBuffers
-	commandList->SetGraphicsRootConstantBufferView(6, MyEngine::camera3D->GetGPUVirtualAddress());
+	commandList->SetGraphicsRootConstantBufferView(6, Sxavenger::camera3D->GetGPUVirtualAddress());
 	commandList->SetGraphicsRootConstantBufferView(7, matrix_->GetGPUVirtualAddress());
 	commandList->SetGraphicsRootConstantBufferView(8, cullingCamera_->GetGPUVirtualAddress());
 	commandList->SetGraphicsRootConstantBufferView(9, material_->GetGPUVirtualAddress());
-	commandList->SetGraphicsRootDescriptorTable(10, MyEngine::GetTextureHandleGPU("resources/uvChecker.png"));
+	commandList->SetGraphicsRootDescriptorTable(10, Sxavenger::GetTextureHandleGPU("resources/uvChecker.png"));
 
 	mesh_->Dispatch(0, 1, 2, 3, 4, 5);
 

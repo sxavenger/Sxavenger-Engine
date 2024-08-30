@@ -3,8 +3,8 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
-// MyEngine
-#include "MyEngine.h" //!< デバイス取り出し
+// Sxavenger
+#include "Sxavenger.h" //!< デバイス取り出し
 
 //-----------------------------------------------------------------------------------------
 // using
@@ -21,7 +21,7 @@ DrawData DrawMethods::Sphere(float radius, uint32_t kSubdivision) {
 
 	// vertexResourceの作成
 	uint32_t vertexSize = (kSubdivision + 1) * (kSubdivision + 1);
-	result.vertex = std::make_unique<DxObject::BufferResource<VertexData>>(MyEngine::GetDevicesObj(), vertexSize);
+	result.vertex = std::make_unique<DxObject::BufferResource<VertexData>>(Sxavenger::GetDevicesObj(), vertexSize);
 
 	const float kLatEvery = M_PI / static_cast<float>(kSubdivision);
 	const float kLonEvery = (M_PI * 2.0f) / static_cast<float>(kSubdivision);
@@ -58,7 +58,7 @@ DrawData DrawMethods::Sphere(float radius, uint32_t kSubdivision) {
 
 	// indexResourceの作成
 	uint32_t indexSize = (kSubdivision + 1) * (kSubdivision + 1) * 6;
-	result.index = std::make_unique<DxObject::IndexBufferResource>(MyEngine::GetDevicesObj(), indexSize);
+	result.index = std::make_unique<DxObject::IndexBufferResource>(Sxavenger::GetDevicesObj(), indexSize);
 
 	for (uint32_t latIndex = 0; latIndex <= kSubdivision; ++latIndex) {
 		for (uint32_t lonIndex = 0; lonIndex < kSubdivision; ++lonIndex) {
@@ -82,7 +82,7 @@ DrawData DrawMethods::Sphere(float radius, uint32_t kSubdivision) {
 DrawData DrawMethods::Plane(const Vector2f& size) {
 	DrawData result;
 
-	result.vertex = std::make_unique<BufferResource<VertexData>>(MyEngine::GetDevicesObj(), 4);
+	result.vertex = std::make_unique<BufferResource<VertexData>>(Sxavenger::GetDevicesObj(), 4);
 	result.vertex->operator[](0).position = { -size.x / 2.0f, -size.y / 2.0f, 0.0f };
 	result.vertex->operator[](0).texcoord = { 0.0f, 1.0f };
 	result.vertex->operator[](1).position = { size.x / 2.0f, -size.y / 2.0f, 0.0f };
@@ -97,7 +97,7 @@ DrawData DrawMethods::Plane(const Vector2f& size) {
 		result.vertex->operator[](i).normal = { 0.0f, 0.0f, 1.0f };
 	}
 
-	result.index = std::make_unique<IndexBufferResource>(MyEngine::GetDevicesObj(), 6);
+	result.index = std::make_unique<IndexBufferResource>(Sxavenger::GetDevicesObj(), 6);
 	result.index->operator[](0) = 0;
 	result.index->operator[](1) = 3;
 	result.index->operator[](2) = 1;
@@ -112,7 +112,7 @@ DrawData DrawMethods::SkyBox(const Vector3f& size) {
 
 	DrawData result;
 
-	result.vertex = std::make_unique<BufferResource<VertexData>>(MyEngine::GetDevicesObj(), 8);
+	result.vertex = std::make_unique<BufferResource<VertexData>>(Sxavenger::GetDevicesObj(), 8);
 
 	Vector3f halfSize = size / 2.0f;
 
@@ -125,7 +125,7 @@ DrawData DrawMethods::SkyBox(const Vector3f& size) {
 	(*result.vertex)[6].position = { halfSize.x, -halfSize.y, halfSize.z, };
 	(*result.vertex)[7].position = { halfSize.x, halfSize.y, halfSize.z, };
 
-	result.index = std::make_unique<IndexBufferResource>(MyEngine::GetDevicesObj(), 12 * 3);
+	result.index = std::make_unique<IndexBufferResource>(Sxavenger::GetDevicesObj(), 12 * 3);
 	(*result.index)[0] = 2; (*result.index)[1] = 0; (*result.index)[2] = 1;
 	(*result.index)[3] = 6; (*result.index)[4] = 2; (*result.index)[5] = 3;
 	(*result.index)[6] = 4; (*result.index)[7] = 6; (*result.index)[8] = 7;
@@ -145,7 +145,7 @@ DrawData DrawMethods::SkyBox(const Vector3f& size) {
 DrawData DrawMethods::Plane2D() {
 	DrawData result;
 
-	result.vertex = std::make_unique<DxObject::BufferResource<VertexData>>(MyEngine::GetDevicesObj(), 4);
+	result.vertex = std::make_unique<DxObject::BufferResource<VertexData>>(Sxavenger::GetDevicesObj(), 4);
 	result.vertex->operator[](0).position = { -1.0f, -1.0f, 0.0f };
 	result.vertex->operator[](0).texcoord = { 0.0f, 1.0f };
 
@@ -158,13 +158,45 @@ DrawData DrawMethods::Plane2D() {
 	result.vertex->operator[](3).position = { 1.0f, 1.0f, 0.0f };
 	result.vertex->operator[](3).texcoord = { 1.0f, 0.0f };
 
-	result.index = std::make_unique<DxObject::IndexBufferResource>(MyEngine::GetDevicesObj(), 6);
+	result.index = std::make_unique<DxObject::IndexBufferResource>(Sxavenger::GetDevicesObj(), 6);
 	result.index->operator[](0) = 0;
 	result.index->operator[](1) = 1;
 	result.index->operator[](2) = 2;
 	result.index->operator[](3) = 1;
 	result.index->operator[](4) = 3;
 	result.index->operator[](5) = 2;
+
+	return result;
+}
+
+InputAssembler<VertexData> DrawMethods::Test(const Vector2f& size) {
+
+	InputAssembler<VertexData> result;
+	result.Create(4, 6);
+
+	auto vertex = result.GetVertexBuffer();
+	auto index  = result.GetIndexBuffer();
+
+	vertex->operator[](0).position = { -size.x / 2.0f, -size.y / 2.0f, 0.0f };
+	vertex->operator[](0).texcoord = { 0.0f, 1.0f };
+	vertex->operator[](1).position = { size.x / 2.0f, -size.y / 2.0f, 0.0f };
+	vertex->operator[](1).texcoord = { 1.0f, 1.0f };
+	vertex->operator[](2).position = { size.x / 2.0f, size.y / 2.0f, 0.0f };
+	vertex->operator[](2).texcoord = { 1.0f, 0.0f };
+	vertex->operator[](3).position = { -size.x / 2.0f, size.y / 2.0f, 0.0f };
+	vertex->operator[](3).texcoord = { 0.0f, 0.0f };
+
+
+	for (uint32_t i = 0; i < vertex->GetIndexSize(); ++i) {
+		vertex->operator[](i).normal = { 0.0f, 0.0f, 1.0f };
+	}
+
+	index->operator[](0) = 0;
+	index->operator[](1) = 3;
+	index->operator[](2) = 1;
+	index->operator[](3) = 3;
+	index->operator[](4) = 2;
+	index->operator[](5) = 1;
 
 	return result;
 }

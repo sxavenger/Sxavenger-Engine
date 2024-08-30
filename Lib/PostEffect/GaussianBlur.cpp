@@ -3,7 +3,7 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
-#include <MyEngine.h>
+#include <Sxavenger.h>
 
 //-----------------------------------------------------------------------------------------
 // using
@@ -23,7 +23,6 @@ void GaussianBlur::Init(DXGI_FORMAT format) {
 	pipeline_ = std::make_unique<GraphicsPipeline>();
 
 	GraphicsRootSignatureDesc rootDesc;
-	rootDesc.Resize(2, 1);
 	rootDesc.SetCBV(0, VISIBILITY_PIXEL, 0);
 	rootDesc.SetSRV(1, VISIBILITY_PIXEL, 0);
 	rootDesc.SetSampler(0, MODE_CLAMP, VISIBILITY_PIXEL, 0);
@@ -34,10 +33,10 @@ void GaussianBlur::Init(DXGI_FORMAT format) {
 	pipelineDesc.rtvFormats.clear();
 	pipelineDesc.SetRTVFormat(format);
 
-	pipeline_->CreateRootSignature(MyEngine::GetDevicesObj(), rootDesc);
-	pipeline_->CreatePipeline(MyEngine::GetDevicesObj(), blob_.get(), pipelineDesc);
+	pipeline_->CreateRootSignature(Sxavenger::GetDevicesObj(), rootDesc);
+	pipeline_->CreatePipeline(Sxavenger::GetDevicesObj(), blob_.get(), pipelineDesc);
 
-	param_ = std::make_unique<BufferResource<BlurParameter>>(MyEngine::GetDevicesObj(), 1);
+	param_ = std::make_unique<BufferResource<BlurParameter>>(Sxavenger::GetDevicesObj(), 1);
 
 	sprite_ = DrawMethods::Plane2D();
 
@@ -53,7 +52,7 @@ void GaussianBlur::CreateBlurTexture(
 	param_->operator[](0).strength = strength;
 	param_->operator[](0).sigma = sigma;
 
-	auto commandList = MyEngine::GetCommandList();
+	auto commandList = Sxavenger::GetCommandList();
 
 	pipeline_->SetPipeline(commandList);
 

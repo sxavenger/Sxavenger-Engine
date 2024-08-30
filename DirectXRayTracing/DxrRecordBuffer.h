@@ -34,13 +34,6 @@
 ////////////////////////////////////////////////////////////////////////////////////////////
 namespace DxrObject {
 
-	//-----------------------------------------------------------------------------------------
-	// using GPUBuffer
-	//-----------------------------------------------------------------------------------------
-	using GPUHandle         = D3D12_GPU_DESCRIPTOR_HANDLE;                                            //!< handle型
-	using GPUVirtualAddress = std::variant<D3D12_GPU_VIRTUAL_ADDRESS, DxObject::BaseBufferResource*>; //!< virtualAddress型
-	using GPUBuffer         = std::variant<GPUHandle, GPUVirtualAddress>;                             //!< buffer型
-
 	////////////////////////////////////////////////////////////////////////////////////////////
 	// RecordBuffer class
 	////////////////////////////////////////////////////////////////////////////////////////////

@@ -4,18 +4,11 @@
 // include
 //-----------------------------------------------------------------------------------------
 // sxavenger engine
-#include <MyEngine.h>
-#include <DirectXRCommon.h>
+#include <Sxavenger.h>
 #include <Environment.h>
+#include <ColliderManager.h>
 
-#include "ColliderManager.h"
 
-#include "GraphicsRender.h"
-
-//-----------------------------------------------------------------------------------------
-// using
-//-----------------------------------------------------------------------------------------
-using namespace DxrObject;
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // GameScene class methods
@@ -30,14 +23,14 @@ void GameScene::Run() {
 	console->Init();
 	Init();
 
-	MyEngine::TransitionProcessSingle();
+	Sxavenger::TransitionProcessSingle();
 
 	////////////////////////////////////////////////////////////////////////////////////////////
 	// メインループ
 	////////////////////////////////////////////////////////////////////////////////////////////
-	while (MyEngine::ProcessMessage() == 0) {
+	while (Sxavenger::ProcessMessage() == 0) {
 
-		MyEngine::BeginFrame();
+		Sxavenger::BeginFrame();
 
 		//=========================================================================================
 		// 更新処理
@@ -53,13 +46,11 @@ void GameScene::Run() {
 		// 描画処理
 		//=========================================================================================
 
-		MyEngine::TransitionProcess();
-		MyEngine::BeginDraw();
+		Sxavenger::TransitionProcess();
 
 		Draw();
 
-		MyEngine::EndFrame();
-
+		Sxavenger::EndFrame();
 	}
 
 	//=========================================================================================
@@ -82,7 +73,7 @@ void GameScene::Init() {
 	gameCamera_->SetProjection(0.45f, static_cast<float>(kWindowWidth) / static_cast<float>(kWindowHeight), 0.01f, 16.0f);
 	gameCamera_->SetTransform(unitVector, origin, {0.0f, 0.0f, -4.0f});
 
-	MyEngine::camera3D = gameCamera_.get();
+	Sxavenger::camera3D = gameCamera_.get();
 
 	debugObjectManager_ = std::make_unique<DebugObjectManager>();
 	debugObjectManager_->Init();
@@ -90,12 +81,17 @@ void GameScene::Init() {
 	particle_ = std::make_unique<Particle>();
 	particle_->Init();
 
+	demo_ = std::make_unique<RayTracingDemo>();
+	demo_->Init();
+
 }
 
 void GameScene::Term() {
 }
 
 void GameScene::Update() {
+
+	demo_->Update();
 
 	debugObjectManager_->Update();
 
@@ -106,27 +102,30 @@ void GameScene::Update() {
 
 void GameScene::Draw() {
 
+	demo_->Draw();
+
 	{
+
 		//* debugScreen *//
-		MyEngine::BeginOffscreen(console->GetSceneTexture());
-		MyEngine::camera3D = console->GetDebugCamera();
+		Sxavenger::BeginOffscreen(console->GetSceneTexture());
+		Sxavenger::camera3D = console->GetDebugCamera();
 
 		debugObjectManager_->Draw();
 		particle_->Draw();
 
 		ColliderManager::GetInstance()->DrawColliders();
 
-		MyEngine::EndOffscreen(console->GetSceneTexture());
-		MyEngine::TransitionProcess();
+		Sxavenger::EndOffscreen(console->GetSceneTexture());
+		Sxavenger::TransitionProcess();
 
 		//* main screen *//
-		MyEngine::BeginOffscreen(MyEngine::GetTexture("offscreen"));
-		MyEngine::camera3D = gameCamera_.get();
+		Sxavenger::BeginOffscreen(Sxavenger::GetTexture("offscreen"));
+		Sxavenger::camera3D = gameCamera_.get();
 
 		debugObjectManager_->Draw();
 
-		MyEngine::EndOffscreen(MyEngine::GetTexture("offscreen"));
-		MyEngine::TransitionProcess();
+		Sxavenger::EndOffscreen(Sxavenger::GetTexture("offscreen"));
+		Sxavenger::TransitionProcess();
 	}
 
 	//=========================================================================================
@@ -134,12 +133,12 @@ void GameScene::Draw() {
 	//=========================================================================================
 
 	{
-		MyEngine::BeginScreenDraw();
+		Sxavenger::BeginScreenDraw();
 		
 		// "offscreen"をフルスクリーンにする
-		MyEngine::GetDxCommon()->CopyResource(
-			MyEngine::GetDxCommon()->GetSwapChainObj()->GetBackBufferResource(), D3D12_RESOURCE_STATE_RENDER_TARGET,
-			MyEngine::GetTexture("offscreen")->GetResource(), D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE
+		Sxavenger::GetDxCommon()->CopyResource(
+			Sxavenger::GetDxCommon()->GetSwapChainObj()->GetBackBufferResource(), D3D12_RESOURCE_STATE_RENDER_TARGET,
+			Sxavenger::GetTexture("offscreen")->GetResource(), D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE
 		);
 
 		/*

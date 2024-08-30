@@ -1,13 +1,9 @@
-#include "MyEngine.h"
+#include "Sxavenger.h"
 
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
 #include <Logger.h>
-
-// ComPtr
-#include <ComPtr.h>
-
 #include <Performance.h>
 #include <Console.h>
 
@@ -15,12 +11,8 @@
 // namespace -anonymouse-
 ////////////////////////////////////////////////////////////////////////////////////////////
 namespace {
-
-	//-----------------------------------------------------------------------------------------
-	// 汎用機能
-	//-----------------------------------------------------------------------------------------
-	WinApp*         sWinApp         = nullptr; //!< WindowApp system
-	DirectXRCommon* sDirectXRCommon = nullptr; //!< DirectX12 system
+	WinApp*         sWinApp         = nullptr; //!< WindowsApp system
+	DirectXCommon*  sDirectXRCommon = nullptr; //!< DirectX12 system
 	ImGuiManager*   sImGuiManager   = nullptr; //!< ImGui system
 	TextureManager* sTextureManager = nullptr; //!< Texture system
 	Input*          sInput          = nullptr; //!< Input system
@@ -30,20 +22,20 @@ namespace {
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// MyEngine class
+// Sxavenger class
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 //-----------------------------------------------------------------------------------------
 // static variables
 //-----------------------------------------------------------------------------------------
-Camera3D* MyEngine::camera3D = nullptr;
-Camera2D* MyEngine::camera2D = nullptr;
+Camera3D* Sxavenger::camera3D = nullptr;
+Camera2D* Sxavenger::camera2D = nullptr;
 
 //-----------------------------------------------------------------------------------------
-// method
+// methods
 //-----------------------------------------------------------------------------------------
 
-void MyEngine::Initialize(int32_t windowWidth, int32_t windowHeight, const char* windowTitle) {
+void SxavengerEngine::Init(int32_t windowWidth, int32_t windowHeight, const char* windowTitle) {
 	ExternalLogger::Open();
 	CoInitializeEx(0, COINIT_MULTITHREADED);
 
@@ -62,21 +54,21 @@ void MyEngine::Initialize(int32_t windowWidth, int32_t windowHeight, const char*
 
 	// DirectX12 の初期化
 	{
-		sDirectXRCommon = DirectXRCommon::GetInstance();
+		sDirectXRCommon = DirectXCommon::GetInstance();
 		sDirectXRCommon->Init(sWinApp, windowWidth, windowHeight);
 		//sDirectXRCommon->InitRayTracing(kWindowWidth, kWindowHeight);
 		ExternalLogger::Write("Complete Initialize: sDirectXRCommon");
 
 	}
 
-	
+
 	// ImGuiManager の初期化
 	{
 		sImGuiManager = ImGuiManager::GetInstaince();
 		sImGuiManager->Init(sWinApp, sDirectXRCommon);
 		ExternalLogger::Write("Complete Initialize: sImGuiManager");
 	}
-	
+
 
 	// TextureManager の初期化
 	{
@@ -117,8 +109,7 @@ void MyEngine::Initialize(int32_t windowWidth, int32_t windowHeight, const char*
 	ExternalLogger::Close();
 }
 
-void MyEngine::Finalize() {
-
+void SxavengerEngine::Term() {
 	Performance::TermBuffer();
 
 	sAudioManager->Term();
@@ -130,7 +121,7 @@ void MyEngine::Finalize() {
 	sImGuiManager->Term();
 	sImGuiManager = nullptr;
 
-	sDirectXRCommon->TermRayTracing();
+	// sDirectXRCommon->TermRayTracing();
 	sDirectXRCommon->Term();
 	sDirectXRCommon = nullptr;
 
@@ -140,150 +131,115 @@ void MyEngine::Finalize() {
 	CoUninitialize();
 }
 
-void MyEngine::BeginFrame() {
+void SxavengerEngine::BeginFrame() {
 	Performance::BeginFrame();
 	sInput->Update();
 	sImGuiManager->Begin();
 }
 
-void MyEngine::BeginScreenDraw() {
-	/*sDirectXRCommon->BeginFrame();*/
-	sDirectXRCommon->BeginScreenDraw();
-}
-
-void MyEngine::BeginOffscreen(Texture* renderTexture) {
-	sDirectXRCommon->BeginOffscreen(renderTexture);
-}
-
-void MyEngine::EndOffscreen(Texture* renderTexture) {
-	sDirectXRCommon->EndOffscreen(renderTexture);
-}
-
-void MyEngine::BeginOffscreens(uint32_t textureNum, RenderTexture* renderTextures[D3D12_SIMULTANEOUS_RENDER_TARGET_COUNT]) {
-	sDirectXRCommon->BeginOffscreens(textureNum, renderTextures);
-}
-
-void MyEngine::EndOffscreens(uint32_t textureNum, RenderTexture* renderTextures[D3D12_SIMULTANEOUS_RENDER_TARGET_COUNT]) {
-	sDirectXRCommon->EndOffscreens(textureNum, renderTextures);
-}
-
-void MyEngine::TransitionProcess() {
-	sDirectXRCommon->TransitionProcess();
-}
-
-void MyEngine::TransitionProcessSingle() {
-	sDirectXRCommon->TransitionSingleAllocator();
-}
-
-void MyEngine::EndFrame() {
+void SxavengerEngine::EndFrame() {
 	sImGuiManager->End();
 	sDirectXRCommon->EndFrame();
 	sPrimitive->ResetObjectCount();
 	Performance::EndFrame();
 }
 
-void MyEngine::BeginDraw() {
-}
-
-int MyEngine::ProcessMessage() {
+int SxavengerEngine::ProcessMessage() {
 	return sWinApp->ProcessMessage() ? 1 : 0;
 }
 
-DxObject::Descriptor MyEngine::GetCurrentDescripor(DxObject::DescriptorType type) {
-	assert(sDirectXRCommon != nullptr);
+void SxavengerEngine::BeginScreenDraw() {
+	sDirectXRCommon->BeginScreenDraw();
+}
+
+void SxavengerEngine::BeginOffscreen(Texture* renderTexture) {
+	sDirectXRCommon->BeginOffscreen(renderTexture);
+}
+
+void SxavengerEngine::EndOffscreen(Texture* renderTexture) {
+	sDirectXRCommon->EndOffscreen(renderTexture);
+}
+
+void SxavengerEngine::BeginOffscreens(uint32_t textureNum, RenderTexture* renderTextures[D3D12_SIMULTANEOUS_RENDER_TARGET_COUNT]) {
+	sDirectXRCommon->BeginOffscreens(textureNum, renderTextures);
+}
+
+void SxavengerEngine::EndOffscreens(uint32_t textureNum, RenderTexture* renderTextures[D3D12_SIMULTANEOUS_RENDER_TARGET_COUNT]) {
+	sDirectXRCommon->EndOffscreens(textureNum, renderTextures);
+}
+
+void SxavengerEngine::TransitionProcess() {
+	sDirectXRCommon->TransitionProcess();
+}
+
+void SxavengerEngine::TransitionProcessSingle() {
+	sDirectXRCommon->TransitionSingleAllocator();
+}
+
+_DXOBJECT Descriptor SxavengerEngine::GetCurrentDescriptor(_DXOBJECT DescriptorType type) {
 	return sDirectXRCommon->GetDescriptorsObj()->GetDescriptor(type);
 }
 
-void MyEngine::DeleteDescriptor(DxObject::Descriptor& descriptor) {
-	assert(sDirectXRCommon != nullptr);
+void SxavengerEngine::DeleteDescriptor(_DXOBJECT Descriptor& descriptor) {
 	sDirectXRCommon->GetDescriptorsObj()->DeleteDescriptor(descriptor);
 }
 
-ID3D12Device8* MyEngine::GetDevice() {
-	assert(sDirectXRCommon != nullptr);
+ID3D12Device8* SxavengerEngine::GetDevice() {
 	return sDirectXRCommon->GetDeviceObj()->GetDevice();
 }
 
-ID3D12GraphicsCommandList6* MyEngine::GetCommandList() {
-	assert(sDirectXRCommon != nullptr);
+ID3D12GraphicsCommandList6* SxavengerEngine::GetCommandList() {
 	return sDirectXRCommon->GetCommandList();
 }
 
-DxObject::Devices* MyEngine::GetDevicesObj() {
-	assert(sDirectXRCommon != nullptr);
+_DXOBJECT Devices* SxavengerEngine::GetDevicesObj() {
 	return sDirectXRCommon->GetDeviceObj();
 }
 
-DirectXCommon* MyEngine::GetDxCommon() {
-	assert(sDirectXRCommon != nullptr);
+DirectXCommon* SxavengerEngine::GetDxCommon() {
 	return sDirectXRCommon;
 }
 
-TextureManager* MyEngine::GetTextureManager() {
-	assert(sTextureManager != nullptr);
-	return sTextureManager;
-}
-
-Texture* MyEngine::CreateRenderTexture(const std::string& key, int32_t textureWidth, int32_t textureHeight, const Color4f& clearColor) {
-	assert(sTextureManager != nullptr);
+Texture* SxavengerEngine::CreateRenderTexture(const std::string& key, int32_t textureWidth, int32_t textureHeight, const Color4f& clearColor) {
 	return sTextureManager->CreateRenderTexture(key, textureWidth, textureHeight, clearColor);
 }
 
-Texture* MyEngine::LoadTexture(const std::string& filePath) {
-	assert(sTextureManager != nullptr);
+Texture* SxavengerEngine::LoadTexture(const std::string& filePath) {
 	return sTextureManager->LoadTexture(filePath);
 }
 
-void MyEngine::ReleaseTexture(const std::string& key) {
-	assert(sTextureManager != nullptr);
+void SxavengerEngine::ReleaseTexture(const std::string& key) {
 	sTextureManager->ReleaseTexture(key);
 }
 
-const D3D12_GPU_DESCRIPTOR_HANDLE& MyEngine::GetTextureHandleGPU(const std::string& textureKey) {
-	assert(sTextureManager != nullptr);
-	return sTextureManager->GetGPUHandle(textureKey);
-}
-
-Texture* MyEngine::GetTexture(const std::string& textureKey) {
-	assert(sTextureManager != nullptr);
+Texture* SxavengerEngine::GetTexture(const std::string& textureKey) {
 	return sTextureManager->GetTexture(textureKey);
 }
 
-bool MyEngine::IsPressKey(uint8_t dik) {
-	assert(sInput != nullptr);
+const D3D12_GPU_DESCRIPTOR_HANDLE& SxavengerEngine::GetTextureHandleGPU(const std::string& textureKey) {
+	return sTextureManager->GetGPUHandle(textureKey);
+}
+
+TextureManager* SxavengerEngine::GetTextureManager() {
+	return sTextureManager;
+}
+
+bool SxavengerEngine::IsPressKey(uint8_t dik) {
 	return sInput->IsPressKey(dik);
 }
 
-bool MyEngine::IsTriggerKey(uint8_t dik) {
-	assert(sInput != nullptr);
+bool SxavengerEngine::IsTriggerKey(uint8_t dik) {
 	return sInput->IsTriggerKey(dik);
 }
 
-bool MyEngine::IsReleaseKey(uint8_t dik) {
-	assert(sInput != nullptr);
+bool SxavengerEngine::IsReleaseKey(uint8_t dik) {
 	return sInput->IsReleaseKey(dik);
 }
 
-AudioManager* MyEngine::GetAudioManager() {
-	assert(sAudioManager != nullptr);
+Input* SxavengerEngine::GetInput() {
+	return sInput;
+}
+
+AudioManager* SxavengerEngine::GetAudioManager() {
 	return sAudioManager;
-}
-
-////////////////////////////////////////////////////////////////////////////////////////////
-// RayTracingEngine class methods
-////////////////////////////////////////////////////////////////////////////////////////////
-
-void RayTracingEngine::BeginRayTracing(DxrObject::TopLevelAS* tlas) {
-	assert(sDirectXRCommon != nullptr);
-	sDirectXRCommon->BeginRayTracing(tlas);
-}
-
-void RayTracingEngine::EndRayTracing() {
-	assert(sDirectXRCommon != nullptr);
-	sDirectXRCommon->EndRayTracing();
-}
-
-DirectXRCommon* RayTracingEngine::GetDxrCommon() {
-	assert(sDirectXRCommon != nullptr);
-	return sDirectXRCommon;
 }

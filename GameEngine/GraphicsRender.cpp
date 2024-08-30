@@ -3,7 +3,7 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
-#include <MyEngine.h>
+#include <Sxavenger.h>
 
 //-----------------------------------------------------------------------------------------
 // using
@@ -60,7 +60,7 @@ void GraphicsRender::BindBuffer(const std::string& bufferName, const ShaderRefle
 
 void GraphicsRender::CreatePipeline(BlendMode mode) {
 
-	pipeline_->CreateRootSignature(MyEngine::GetDevicesObj(), table_->CreateRootSignatureDesc());
+	pipeline_->CreateRootSignature(Sxavenger::GetDevicesObj(), table_->CreateRootSignatureDesc());
 
 	GraphicsPipelineDesc desc = {};
 	desc.CreateDefaultDesc();
@@ -72,7 +72,7 @@ void GraphicsRender::CreatePipeline(BlendMode mode) {
 
 	desc.blendMode = mode;
 
-	pipeline_->CreatePipeline(MyEngine::GetDevicesObj(), blob_.get(), desc);
+	pipeline_->CreatePipeline(Sxavenger::GetDevicesObj(), blob_.get(), desc);
 }
 
 void GraphicsRender::SetPipeline(ID3D12GraphicsCommandList* commandList) {

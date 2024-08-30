@@ -7,7 +7,7 @@
 #include <DxBufferResource.h>
 
 // engine
-#include <MyEngine.h>
+#include <Sxavenger.h>
 
 // c++
 #include <memory>
@@ -54,7 +54,7 @@ private:
 
 	//* external *//
 
-	ID3D12GraphicsCommandList* commandList_ = MyEngine::GetCommandList();
+	ID3D12GraphicsCommandList* commandList_ = Sxavenger::GetCommandList();
 	//!< static化してもいい
 
 	//* buffer *//
@@ -71,8 +71,8 @@ private:
 
 template<typename T>
 void InputAssembler<T>::Create(uint32_t vertexSize, uint32_t indexSize) {
-	vertices_ = std::make_unique<DxObject::BufferResource<T>>(MyEngine::GetDevicesObj(), vertexSize);
-	indices_  = std::make_unique<DxObject::IndexBufferResource>(MyEngine::GetDevicesObj(), indexSize);
+	vertices_ = std::make_unique<DxObject::BufferResource<T>>(Sxavenger::GetDevicesObj(), vertexSize);
+	indices_  = std::make_unique<DxObject::IndexBufferResource>(Sxavenger::GetDevicesObj(), indexSize);
 }
 
 template<typename T>

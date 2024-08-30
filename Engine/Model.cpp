@@ -12,8 +12,8 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
-// MyEngine
-#include <MyEngine.h>
+// Sxavenger
+#include <Sxavenger.h>
 
 // logger
 #include <Logger.h>
@@ -37,7 +37,7 @@ void Model::Load(const std::string& directoryPath, const std::string& filename) 
 			//!< textureを使わないので
 			if (material.textureFilePaths[i].empty()) { continue; }
 
-			MyEngine::LoadTexture(material.textureFilePaths[i]);
+			Sxavenger::LoadTexture(material.textureFilePaths[i]);
 		}
 	}
 
@@ -52,7 +52,7 @@ void Model::Term() {
 			//!< textureを使わないので
 			if (material.textureFilePaths[i].empty()) { continue; }
 
-			MyEngine::ReleaseTexture(material.textureFilePaths[i]);
+			Sxavenger::ReleaseTexture(material.textureFilePaths[i]);
 		}
 	}
 
@@ -88,14 +88,14 @@ void Model::SetGraphicsTextureHandle(ID3D12GraphicsCommandList* commandList, uin
 
 	if (modelData_.materials[modelIndex].textureFilePaths[type].empty()) { assert(false); } //!< textureを使ってないので
 
-	commandList->SetGraphicsRootDescriptorTable(parameterNum, MyEngine::GetTextureHandleGPU(modelData_.materials[modelIndex].textureFilePaths[type]));
+	commandList->SetGraphicsRootDescriptorTable(parameterNum, Sxavenger::GetTextureHandleGPU(modelData_.materials[modelIndex].textureFilePaths[type]));
 }
 
 const D3D12_GPU_DESCRIPTOR_HANDLE Model::GetTextureHandle(uint32_t modelIndex, TextureType type) {
 
 	if (modelData_.materials[modelIndex].textureFilePaths[type].empty()) { assert(false); } //!< textureを使ってないので
 
-	return MyEngine::GetTextureHandleGPU(modelData_.materials[modelIndex].textureFilePaths[type]);
+	return Sxavenger::GetTextureHandleGPU(modelData_.materials[modelIndex].textureFilePaths[type]);
 }
 
 void Model::DrawCall(ID3D12GraphicsCommandList* commandList, uint32_t modelIndex, uint32_t instanceCount) {
@@ -443,22 +443,22 @@ SkinCluster ModelMethods::CreateSkinCluster(const Skeleton& skeleton, const Mode
 
 	// informationResorceの生成
 	result.informationResource
-		= std::make_unique<DxObject::BufferResource<uint32_t>>(MyEngine::GetDevicesObj(), 1);
+		= std::make_unique<DxObject::BufferResource<uint32_t>>(Sxavenger::GetDevicesObj(), 1);
 	(*result.informationResource)[0] = vertexNum; //!< vertexNum
 
 	// influenceResourceの生成
 	result.influenceResource
-		= std::make_unique<DxObject::BufferResource<VertexInfluence>>(MyEngine::GetDevicesObj(), vertexNum);
+		= std::make_unique<DxObject::BufferResource<VertexInfluence>>(Sxavenger::GetDevicesObj(), vertexNum);
 	//!< 仮で0番目のmeshから生成
 	
 	std::memset(result.influenceResource->GetData(), 0, result.influenceResource->GetStructureSize() * result.influenceResource->GetIndexSize()); //!< 0で埋めておく
 
 	// paletteResourceの生成
 	result.paletteResource
-		= std::make_unique<DxObject::BufferResource<WellForGPU>>(MyEngine::GetDevicesObj(), static_cast<uint32_t>(skeleton.joints.size()));
+		= std::make_unique<DxObject::BufferResource<WellForGPU>>(Sxavenger::GetDevicesObj(), static_cast<uint32_t>(skeleton.joints.size()));
 
 	// descriptorの取得
-	/*result.paletteDescriptorSRV = MyEngine::GetCurrentDescripor(DxObject::SRV);*/
+	/*result.paletteDescriptorSRV = Sxavenger::GetCurrentDescripor(DxObject::SRV);*/
 
 	//// SRVの生成
 	//{
@@ -469,7 +469,7 @@ SkinCluster ModelMethods::CreateSkinCluster(const Skeleton& skeleton, const Mode
 	//	desc.Buffer.NumElements         = result.paletteResource->GetIndexSize();
 	//	desc.Buffer.StructureByteStride = result.paletteResource->GetStructureSize();
 
-	//	MyEngine::GetDevice()->CreateShaderResourceView(
+	//	Sxavenger::GetDevice()->CreateShaderResourceView(
 	//		result.paletteResource->GetResource(),
 	//		&desc,
 	//		result.paletteDescriptorSRV.GetCPUHandle()

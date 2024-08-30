@@ -3,35 +3,31 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
+//* windows
 #define NOMINMAX
 #include <windows.h>
-#include <Input.h>
 
-// c++
+//* c++
 #include <cstdint>
-#include <string>
-#include <unordered_map>
 
-// origine
+//* origin
 #include <WinApp.h>
 #include <DirectXCommon.h>
-#include <DirectXRCommon.h>
+//#include <DirectXRCommon.h>
 #include <ImGuiManager.h>
 #include <TextureManager.h>
 #include <Input.h>
 #include <Audio.h>
 #include <PrimitiveDrawer.h>
 
-// Camera
+//* camera
 #include <Camera3D.h>
 #include <Camera2D.h>
 
-namespace Sxavenger {};
-
 ////////////////////////////////////////////////////////////////////////////////////////////
-// MyEngine class
+// SxavengerEngine class
 ////////////////////////////////////////////////////////////////////////////////////////////
-class MyEngine {
+class SxavengerEngine {
 public:
 
 	//=========================================================================================
@@ -39,14 +35,14 @@ public:
 	//=========================================================================================
 
 	//! @brief 初期化処理
-	//! 
-	//! @param[in] width        ウィンドウ横幅
-	//! @param[in] height       ウィンドウ縦幅
-	//! @param[in] kWindowTitle ウィンドウタイトル
-	static void Initialize(int32_t kWindowWidth, int32_t kWindowHeight, const char* kWindowTitle);
+	static void Init(int32_t windowWidth, int32_t windowHeight, const char* windowTitle);
 
 	//! @brief 終了処理
-	static void Finalize();
+	static void Term();
+
+	//-----------------------------------------------------------------------------------------
+	// frame option
+	//-----------------------------------------------------------------------------------------
 
 	//! @brief フレームの開始
 	static void BeginFrame();
@@ -54,14 +50,19 @@ public:
 	//! @brief フレームの終了
 	static void EndFrame();
 
-	//! @brief 描画処理の開始
-	static void BeginDraw();
+	//! @brief プロセスメッセージを取得
+	//! @retval 1 ゲーム終了
+	//! @retval 0 ゲーム継続
+	static int ProcessMessage();
+
+	//-----------------------------------------------------------------------------------------
+	// draw canvas option
+	//-----------------------------------------------------------------------------------------
 
 	//! @brief スクリーン描画処理の開始
 	static void BeginScreenDraw();
-
-	//! @brief オフスク描画処理の開始
-	//! 
+	//!< EndはEndFrameに入ってる
+	
 	//! @param[in] offscreenRenderTexture 書き込む用のdummyTexture
 	static void BeginOffscreen(Texture* renderTexture);
 
@@ -69,38 +70,39 @@ public:
 	static void EndOffscreen(Texture* renderTexture);
 
 	static void BeginOffscreens(uint32_t textureNum, RenderTexture* renderTextures[D3D12_SIMULTANEOUS_RENDER_TARGET_COUNT]);
+	// FIXME: 安全性がない, 引数が多い, 名前がわかりにくい
 
 	static void EndOffscreens(uint32_t textureNum, RenderTexture* renderTextures[D3D12_SIMULTANEOUS_RENDER_TARGET_COUNT]);
+
+	//-----------------------------------------------------------------------------------------
+	// original system option
+	//-----------------------------------------------------------------------------------------
 
 	static void TransitionProcess();
 
 	static void TransitionProcessSingle();
-
-	//! @brief プロセスメッセージを取得
-	//! 
-	//! @retval 1 ゲーム終了
-	//! @retval 0 ゲーム継続
-	static int ProcessMessage();
+	// FIXME: 名前と機能内容が違う
 
 	//-----------------------------------------------------------------------------------------
-	// pipeline関係
+	// DirectX12, _DXOBJECT option
 	//-----------------------------------------------------------------------------------------
 
+	static _DXOBJECT Descriptor GetCurrentDescriptor(_DXOBJECT DescriptorType type);
 
+	static void DeleteDescriptor(_DXOBJECT Descriptor& descriptor);
+
+	static ID3D12Device8* GetDevice();
+	
+	static ID3D12GraphicsCommandList6* GetCommandList();
+	// FIXME: あんましたくない
+
+	static _DXOBJECT Devices* GetDevicesObj();
+
+	static DirectXCommon* GetDxCommon();
 
 	//-----------------------------------------------------------------------------------------
-	// descriptor関係
+	// texture option
 	//-----------------------------------------------------------------------------------------
-
-	static DxObject::Descriptor GetCurrentDescripor(DxObject::DescriptorType type);
-
-	static void DeleteDescriptor(DxObject::Descriptor& descriptor);
-
-	//-----------------------------------------------------------------------------------------
-	// texture関係
-	//-----------------------------------------------------------------------------------------
-
-	static TextureManager* GetTextureManager();
 
 	static Texture* CreateRenderTexture(const std::string& key, int32_t textureWidth, int32_t textureHeight, const Color4f& clearColor = defaultClearColor);
 
@@ -112,9 +114,10 @@ public:
 
 	static const D3D12_GPU_DESCRIPTOR_HANDLE& GetTextureHandleGPU(const std::string& textureKey);
 
+	static TextureManager* GetTextureManager();
 
 	//-----------------------------------------------------------------------------------------
-	// Input関係
+	// Input option
 	//-----------------------------------------------------------------------------------------
 
 	static bool IsPressKey(uint8_t dik);
@@ -123,30 +126,18 @@ public:
 
 	static bool IsReleaseKey(uint8_t dik);
 
+	static Input* GetInput();
+
 	//-----------------------------------------------------------------------------------------
-	// Audio関係
+	// Audio option
 	//-----------------------------------------------------------------------------------------
 
 	static AudioManager* GetAudioManager();
 
-	//-----------------------------------------------------------------------------------------
-	// DxSystem関係
-	//-----------------------------------------------------------------------------------------
-
-	static ID3D12Device8* GetDevice();
-
-	// TODO: あんましたくない
-	static ID3D12GraphicsCommandList6* GetCommandList();
-
-	static DxObject::Devices* GetDevicesObj();
-	static DirectXCommon* GetDxCommon();
-
-	
-
 	//=========================================================================================
 	// public variables
 	//=========================================================================================
-	
+
 	static Camera3D* camera3D;
 	static Camera2D* camera2D;
 
@@ -154,21 +145,7 @@ private:
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// RayTracingEngine class
+// using
 ////////////////////////////////////////////////////////////////////////////////////////////
-class RayTracingEngine
-	: public MyEngine {
-public:
 
-	//=========================================================================================
-	// public methods
-	//=========================================================================================
-
-	static void BeginRayTracing(DxrObject::TopLevelAS* tlas);
-
-	static void EndRayTracing();
-
-	static DirectXRCommon* GetDxrCommon();
-
-private:
-};
+using Sxavenger = SxavengerEngine;

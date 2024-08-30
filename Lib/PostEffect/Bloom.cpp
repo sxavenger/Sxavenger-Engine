@@ -3,7 +3,7 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
-#include <MyEngine.h>
+#include <Sxavenger.h>
 #include <Environment.h>
 
 //-----------------------------------------------------------------------------------------
@@ -20,19 +20,18 @@ void Bloom::Init() {
 	SetThisAttribute("Bloom");
 
 	renderTargetTexture_ = std::make_unique<RenderTexture>();
-	renderTargetTexture_->Create(MyEngine::GetDxCommon(), kWindowWidth, kWindowHeight, { 0.0f, 0.0f, 0.0f, 1.0f }, DXGI_FORMAT_R32G32B32A32_FLOAT);
+	renderTargetTexture_->Create(Sxavenger::GetDxCommon(), kWindowWidth, kWindowHeight, { 0.0f, 0.0f, 0.0f, 1.0f }, DXGI_FORMAT_R32G32B32A32_FLOAT);
 
 	luminnceTexture_ = std::make_unique<RenderTexture>();
-	luminnceTexture_->Create(MyEngine::GetDxCommon(), kWindowWidth, kWindowHeight, { 0.0f, 0.0f, 0.0f, 1.0f }, DXGI_FORMAT_R32G32B32A32_FLOAT);
+	luminnceTexture_->Create(Sxavenger::GetDxCommon(), kWindowWidth, kWindowHeight, { 0.0f, 0.0f, 0.0f, 1.0f }, DXGI_FORMAT_R32G32B32A32_FLOAT);
 
 	luminnceBlurTexture_ = std::make_unique<RenderTexture>();
-	luminnceBlurTexture_->Create(MyEngine::GetDxCommon(), kWindowWidth, kWindowHeight, { 0.0f, 0.0f, 0.0f, 1.0f }, DXGI_FORMAT_R32G32B32A32_FLOAT);
+	luminnceBlurTexture_->Create(Sxavenger::GetDxCommon(), kWindowWidth, kWindowHeight, { 0.0f, 0.0f, 0.0f, 1.0f }, DXGI_FORMAT_R32G32B32A32_FLOAT);
 
 	sprite_ = DrawMethods::Plane2D();
 
 	//!< grahics
 	GraphicsRootSignatureDesc rootDesc;
-	rootDesc.Resize(1, 1);
 	rootDesc.SetSRV(0, VISIBILITY_PIXEL, 0);
 	rootDesc.SetSampler(0, MODE_CLAMP, VISIBILITY_PIXEL, 0);
 
@@ -48,8 +47,8 @@ void Bloom::Init() {
 		blob_[LUMINNCE]->Create(L"bloom/Luminnce.PS.hlsl", GRAPHICS_PIXEL);
 
 		pipeline_[LUMINNCE] = std::make_unique<GraphicsPipeline>();
-		pipeline_[LUMINNCE]->CreateRootSignature(MyEngine::GetDevicesObj(), rootDesc);
-		pipeline_[LUMINNCE]->CreatePipeline(MyEngine::GetDevicesObj(), blob_[LUMINNCE].get(), pipelineDesc);
+		pipeline_[LUMINNCE]->CreateRootSignature(Sxavenger::GetDevicesObj(), rootDesc);
+		pipeline_[LUMINNCE]->CreatePipeline(Sxavenger::GetDevicesObj(), blob_[LUMINNCE].get(), pipelineDesc);
 	}
 
 	//{ //!< ブラー用 todo: blurクラスを使ってblurする
@@ -58,8 +57,8 @@ void Bloom::Init() {
 	//	blob_[BLUR]->Create(L"bloom/LuminnceBlur.PS.hlsl", GRAPHICS_PIXEL);
 
 	//	pipeline_[BLUR] = std::make_unique<GraphicsPipeline>();
-	//	pipeline_[BLUR]->CreateRootSignature(MyEngine::GetDevicesObj(), rootDesc);
-	//	pipeline_[BLUR]->CreatePipeline(MyEngine::GetDevicesObj(), blob_[BLUR].get(), pipelineDesc);
+	//	pipeline_[BLUR]->CreateRootSignature(Sxavenger::GetDevicesObj(), rootDesc);
+	//	pipeline_[BLUR]->CreatePipeline(Sxavenger::GetDevicesObj(), blob_[BLUR].get(), pipelineDesc);
 	//}
 
 	blur_ = std::make_unique<GaussianBlur>(DXGI_FORMAT_R32G32B32A32_FLOAT);
@@ -70,14 +69,14 @@ void Bloom::Init() {
 		blob_[COMPOSITE]->Create(L"bloom/Composite.PS.hlsl", GRAPHICS_PIXEL);
 
 		pipeline_[COMPOSITE] = std::make_unique<GraphicsPipeline>();
-		pipeline_[COMPOSITE]->CreateRootSignature(MyEngine::GetDevicesObj(), rootDesc);
-		pipeline_[COMPOSITE]->CreatePipeline(MyEngine::GetDevicesObj(), blob_[COMPOSITE].get(), pipelineDesc);
+		pipeline_[COMPOSITE]->CreateRootSignature(Sxavenger::GetDevicesObj(), rootDesc);
+		pipeline_[COMPOSITE]->CreatePipeline(Sxavenger::GetDevicesObj(), blob_[COMPOSITE].get(), pipelineDesc);
 		
 		pipelineDesc.SetBlendMode(kBlendModeAdd);
 
 		pipeline_[COMPOSITE_ADD] = std::make_unique<GraphicsPipeline>();
-		pipeline_[COMPOSITE_ADD]->CreateRootSignature(MyEngine::GetDevicesObj(), rootDesc);
-		pipeline_[COMPOSITE_ADD]->CreatePipeline(MyEngine::GetDevicesObj(), blob_[COMPOSITE].get(), pipelineDesc);
+		pipeline_[COMPOSITE_ADD]->CreateRootSignature(Sxavenger::GetDevicesObj(), rootDesc);
+		pipeline_[COMPOSITE_ADD]->CreatePipeline(Sxavenger::GetDevicesObj(), blob_[COMPOSITE].get(), pipelineDesc);
 
 		pipelineDesc.SetBlendMode(kBlendModeNormal);
 
@@ -87,8 +86,8 @@ void Bloom::Init() {
 		pipelineDesc.SetRTVFormat(forwardFormat);
 
 		pipeline_[RESULT] = std::make_unique<GraphicsPipeline>();
-		pipeline_[RESULT]->CreateRootSignature(MyEngine::GetDevicesObj(), rootDesc);
-		pipeline_[RESULT]->CreatePipeline(MyEngine::GetDevicesObj(), blob_[COMPOSITE].get(), pipelineDesc);
+		pipeline_[RESULT]->CreateRootSignature(Sxavenger::GetDevicesObj(), rootDesc);
+		pipeline_[RESULT]->CreatePipeline(Sxavenger::GetDevicesObj(), blob_[COMPOSITE].get(), pipelineDesc);
 	}
 }
 
@@ -98,13 +97,13 @@ void Bloom::Term() {
 void Bloom::CreateBloom() { //!< 名前がなんか気に入らない
 
 	// コマンドリストの取り出し
-	auto commandList = MyEngine::GetCommandList();
+	auto commandList = Sxavenger::GetCommandList();
 
 	D3D12_VERTEX_BUFFER_VIEW vertexBuffer = sprite_.vertex->GetVertexBufferView();
 	D3D12_INDEX_BUFFER_VIEW indexBuffer = sprite_.index->GetIndexBufferView();
 
 	{ //!< 輝度の取得
-		MyEngine::BeginOffscreen(luminnceTexture_.get());
+		Sxavenger::BeginOffscreen(luminnceTexture_.get());
 
 		pipeline_[LUMINNCE]->SetPipeline(commandList);
 
@@ -115,11 +114,11 @@ void Bloom::CreateBloom() { //!< 名前がなんか気に入らない
 
 		commandList->DrawIndexedInstanced(sprite_.index->GetIndexSize(), 1, 0, 0, 0);
 
-		MyEngine::EndOffscreen(luminnceTexture_.get());
+		Sxavenger::EndOffscreen(luminnceTexture_.get());
 	}
 
 	{
-		MyEngine::BeginOffscreen(luminnceBlurTexture_.get());
+		Sxavenger::BeginOffscreen(luminnceBlurTexture_.get());
 
 		/*pipeline_[BLUR]->SetPipeline(commandList);
 
@@ -134,11 +133,11 @@ void Bloom::CreateBloom() { //!< 名前がなんか気に入らない
 			luminnceTexture_.get(), { kWindowWidth, kWindowHeight }, blurStrength_, sigma_
 		);
 
-		MyEngine::EndOffscreen(luminnceBlurTexture_.get());
+		Sxavenger::EndOffscreen(luminnceBlurTexture_.get());
 	}
 
 	{
-		MyEngine::BeginOffscreen(luminnceTexture_.get()); //!< 輝度Textureを最終Textureに指定
+		Sxavenger::BeginOffscreen(luminnceTexture_.get()); //!< 輝度Textureを最終Textureに指定
 
 		//!< 下レイヤー
 		pipeline_[COMPOSITE]->SetPipeline(commandList);
@@ -160,14 +159,14 @@ void Bloom::CreateBloom() { //!< 名前がなんか気に入らない
 
 		commandList->DrawIndexedInstanced(sprite_.index->GetIndexSize(), 1, 0, 0, 0);
 
-		MyEngine::EndOffscreen(luminnceTexture_.get());
+		Sxavenger::EndOffscreen(luminnceTexture_.get());
 	}
 }
 
 void Bloom::Draw() {
 
 	// コマンドリストの取り出し
-	auto commandList = MyEngine::GetCommandList();
+	auto commandList = Sxavenger::GetCommandList();
 
 	D3D12_VERTEX_BUFFER_VIEW vertexBuffer = sprite_.vertex->GetVertexBufferView();
 	D3D12_INDEX_BUFFER_VIEW indexBuffer = sprite_.index->GetIndexBufferView();

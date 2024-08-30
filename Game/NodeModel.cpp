@@ -3,7 +3,7 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
-#include <MyEngine.h>
+#include <Sxavenger.h>
 
 //-----------------------------------------------------------------------------------------
 // using
@@ -33,7 +33,6 @@ void NodeModel::Init(DefferedRendering* deffered) {
 	blob_->Create(L"object3d/object3dDeffered.PS.hlsl", GRAPHICS_PIXEL);
 
 	GraphicsRootSignatureDesc desc;
-	desc.Resize(3, 1);
 	desc.SetCBV(0, VISIBILITY_VERTEX, 0);
 	desc.SetCBV(1, VISIBILITY_VERTEX, 1);
 	desc.SetSRV(2, VISIBILITY_PIXEL, 0);
@@ -47,8 +46,8 @@ void NodeModel::Init(DefferedRendering* deffered) {
 
 
 	pipeline_ = std::make_unique<GraphicsPipeline>();
-	pipeline_->CreateRootSignature(MyEngine::GetDevicesObj(), desc);
-	pipeline_->CreatePipeline(MyEngine::GetDevicesObj(), blob_.get(), pipelineDesc);
+	pipeline_->CreateRootSignature(Sxavenger::GetDevicesObj(), desc);
+	pipeline_->CreatePipeline(Sxavenger::GetDevicesObj(), blob_.get(), pipelineDesc);
 
 	// IA
 	model_ = std::make_unique<Model>("./Resources/model/node_model", modelNames_[type_]);
@@ -57,7 +56,7 @@ void NodeModel::Init(DefferedRendering* deffered) {
 	matrixBuffers_.resize(model_->GetModelIndexSize());
 
 	for (uint32_t i = 0; i < model_->GetModelIndexSize(); ++i) {
-		matrixBuffers_[i] = std::make_unique<BufferResource<Matrix4x4>>(MyEngine::GetDevicesObj(), 1);
+		matrixBuffers_[i] = std::make_unique<BufferResource<Matrix4x4>>(Sxavenger::GetDevicesObj(), 1);
 		matrixBuffers_[i]->operator[](0) = Matrix4x4::Identity();
 	}
 
@@ -78,7 +77,7 @@ void NodeModel::Update() {
 void NodeModel::Draw() {
 
 	// commandListの取得
-	auto commandList = MyEngine::GetCommandList();
+	auto commandList = Sxavenger::GetCommandList();
 
 	pipeline_->SetPipeline(commandList);
 
@@ -86,7 +85,7 @@ void NodeModel::Draw() {
 
 		model_->SetBuffers(i);
 
-		commandList->SetGraphicsRootConstantBufferView(0, MyEngine::camera3D->GetGPUVirtualAddress());
+		commandList->SetGraphicsRootConstantBufferView(0, Sxavenger::camera3D->GetGPUVirtualAddress());
 		commandList->SetGraphicsRootConstantBufferView(1, matrixBuffers_[i]->GetGPUVirtualAddress());
 		model_->SetGraphicsTextureHandle(commandList, i, 2, TEXTURE_DIFFUSE);
 

@@ -4,7 +4,7 @@
 // include
 //-----------------------------------------------------------------------------------------
 // engine
-#include <MyEngine.h>
+#include <Sxavenger.h>
 #include <Performance.h>
 
 //-----------------------------------------------------------------------------------------
@@ -25,7 +25,7 @@ void AnimationCube::Init() {
 	animation_ = ModelMethods::LoadAnimationFile("./Resources/model/animatedCube", "animatedCube.gltf");
 
 	// Buffer
-	matrixBuffer_ = std::make_unique<BufferResource<Matrix4x4>>(MyEngine::GetDevicesObj(), 1);
+	matrixBuffer_ = std::make_unique<BufferResource<Matrix4x4>>(Sxavenger::GetDevicesObj(), 1);
 	matrixBuffer_->operator[](0) = Matrix4x4::Identity();
 
 	SetThisAttribute("animationCube");
@@ -54,13 +54,13 @@ void AnimationCube::Update() {
 
 void AnimationCube::Draw() {
 
-	auto commandList = MyEngine::GetCommandList();
+	auto commandList = Sxavenger::GetCommandList();
 
 	pipeline_->SetPipeline(commandList);
 
 	model_->SetBuffers(commandList, 0);
 
-	commandList->SetGraphicsRootConstantBufferView(0, MyEngine::camera3D->GetGPUVirtualAddress());
+	commandList->SetGraphicsRootConstantBufferView(0, Sxavenger::camera3D->GetGPUVirtualAddress());
 	commandList->SetGraphicsRootConstantBufferView(1, matrixBuffer_->GetGPUVirtualAddress());
 	model_->SetGraphicsTextureHandle(commandList, 0, 2, TEXTURE_DIFFUSE);
 

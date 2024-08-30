@@ -4,7 +4,7 @@
 // include
 //-----------------------------------------------------------------------------------------
 // engine
-#include <MyEngine.h>
+#include <Sxavenger.h>
 
 //-----------------------------------------------------------------------------------------
 // using
@@ -46,7 +46,7 @@ void DebugObjectManager::Update() {
 
 void DebugObjectManager::Draw() {
 
-	auto commandList = MyEngine::GetCommandList();
+	auto commandList = Sxavenger::GetCommandList();
 
 	pipeline_->SetPipeline(commandList);
 
@@ -85,15 +85,14 @@ void DebugObjectManager::CreatePipeline() {
 
 	{
 		GraphicsRootSignatureDesc desc;
-		desc.Resize(3, 0);
 		desc.SetCBV(0, VISIBILITY_ALL, 0);
 		desc.SetCBV(1, VISIBILITY_VERTEX, 1);
 		desc.SetCBV(2, VISIBILITY_PIXEL, 1);
 
-		pipeline_->CreateRootSignature(MyEngine::GetDevicesObj(), desc);
+		pipeline_->CreateRootSignature(Sxavenger::GetDevicesObj(), desc);
 	}
 
-	pipeline_->CreatePipeline(MyEngine::GetDevicesObj(), blob_.get(), kBlendModeNormal);
+	pipeline_->CreatePipeline(Sxavenger::GetDevicesObj(), blob_.get(), kBlendModeNormal);
 
 }
 

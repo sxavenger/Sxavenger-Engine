@@ -29,9 +29,9 @@
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 //* DxObject namespace
-#define _DXOBJECT DxObject::
 #define _DXOBJECT_NAMESPACE_BEGIN namespace DxObject {
 #define _DXOBJECT_NAMESPACE_END   }
+#define _DXOBJECT                 DxObject::
 #define _DXOBJECT_USING           using namespace DxObject;
 
 

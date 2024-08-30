@@ -37,7 +37,7 @@ void SubobjectManager::Init(Camera3D* mainCamera) {
 
 	mainCamera_ = mainCamera;
 
-	light_ = std::make_unique<Light>(MyEngine::GetDevicesObj());
+	light_ = std::make_unique<Light>(Sxavenger::GetDevicesObj());
 
 	SetThisAttribute("subobjectManager");
 
@@ -68,7 +68,7 @@ void SubobjectManager::Draw() {
 		it->Draw(mainCamera_);
 	}
 
-	//if (MyEngine::camera3D != mainCamera_) { //!< debugCameraかどうかの確認
+	//if (Sxavenger::camera3D != mainCamera_) { //!< debugCameraかどうかの確認
 	//	mainCamera_->DrawFrustum({1.0f, 1.0f, 0.0f, 1.0f});
 	//}
 }
@@ -205,7 +205,6 @@ void SubobjectManager::CreatePipeline() {
 		pipelines_[SubobjectPipeline::kTextureMesh].blob->Create(L"Subobject/SubobjectTexture.PS.hlsl", GRAPHICS_PIXEL);
 		
 		GraphicsRootSignatureDesc desc;
-		desc.Resize(12, 1);
 		//* meshlet
 		desc.SetVirtualSRV(0, VISIBILITY_ALL, 0); //!< vertices
 		desc.SetVirtualSRV(1, VISIBILITY_ALL, 1); //!< uniqueVertexIndices
@@ -227,7 +226,7 @@ void SubobjectManager::CreatePipeline() {
 		desc.SetCBV(10, VISIBILITY_PIXEL, 4); //!< material
 		desc.SetCBV(11, VISIBILITY_PIXEL, 5); //!< light
 
-		pipelines_[SubobjectPipeline::kTextureMesh].pipeline->CreateRootSignature(MyEngine::GetDevicesObj(), desc);
+		pipelines_[SubobjectPipeline::kTextureMesh].pipeline->CreateRootSignature(Sxavenger::GetDevicesObj(), desc);
 		pipelines_[SubobjectPipeline::kTextureMesh].CreatePipeline();
 		
 
@@ -240,7 +239,6 @@ void SubobjectManager::CreatePipeline() {
 		pipelines_[SubobjectPipeline::kNotTextureMesh].blob->Create(L"Subobject/SubobjectPolygon.PS.hlsl", GRAPHICS_PIXEL);
 
 		GraphicsRootSignatureDesc desc;
-		desc.Resize(11, 0);
 		//* meshlet
 		desc.SetVirtualSRV(0, VISIBILITY_ALL, 0); //!< vertices
 		desc.SetVirtualSRV(1, VISIBILITY_ALL, 1); //!< uniqueVertexIndices
@@ -259,7 +257,7 @@ void SubobjectManager::CreatePipeline() {
 		desc.SetCBV(9, VISIBILITY_PIXEL, 4); //!< material
 		desc.SetCBV(10, VISIBILITY_PIXEL, 5); //!< light
 
-		pipelines_[SubobjectPipeline::kNotTextureMesh].pipeline->CreateRootSignature(MyEngine::GetDevicesObj(), desc);
+		pipelines_[SubobjectPipeline::kNotTextureMesh].pipeline->CreateRootSignature(Sxavenger::GetDevicesObj(), desc);
 		pipelines_[SubobjectPipeline::kNotTextureMesh].CreatePipeline();
 
 	}

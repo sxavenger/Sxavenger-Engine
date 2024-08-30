@@ -7,7 +7,7 @@
 #include "Environment.h"
 
 // engine
-#include <MyEngine.h>
+#include <Sxavenger.h>
 
 //-----------------------------------------------------------------------------------------
 // using
@@ -21,7 +21,7 @@ using namespace DxObject;
 void Camera3D::Init() {
 
 	// bufferの設定
-	buffer_ = std::make_unique<BufferResource<CameraForGPU>>(MyEngine::GetDevicesObj(), 1);
+	buffer_ = std::make_unique<BufferResource<CameraForGPU>>(Sxavenger::GetDevicesObj(), 1);
 
 	// cameraの設定
 	SetTransform(unitVector, origin, {0.0f, 0.0f, -10.0f});

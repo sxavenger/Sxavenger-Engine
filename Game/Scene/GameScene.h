@@ -24,6 +24,8 @@
 #include <SubobjectManager.h>
 #include <DebugObjectManager.h>
 
+#include "RayTracingDemo/RayTracingDemo.h"
+
 ////////////////////////////////////////////////////////////////////////////////////////////
 // GameScene class
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -46,6 +48,8 @@ private:
 	std::unique_ptr<DebugObjectManager> debugObjectManager_;
 
 	std::unique_ptr<Particle> particle_;
+
+	std::unique_ptr<RayTracingDemo> demo_;
 
 	//=========================================================================================
 	// private methods

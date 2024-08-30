@@ -4,7 +4,7 @@
 // include
 //-----------------------------------------------------------------------------------------
 // engine
-#include <MyEngine.h>
+#include <Sxavenger.h>
 
 // enviormant
 #include <Environment.h>
@@ -32,12 +32,12 @@ void Sprite::Init(const std::string& texturefilePath, const Vector2i& pos, const
 	ia_.CalculateVertex(pos_, size_);
 
 	//* buffer
-	material_ = std::make_unique<BufferResource<SpriteMaterial>>(MyEngine::GetDevicesObj(), 1);
+	material_ = std::make_unique<BufferResource<SpriteMaterial>>(Sxavenger::GetDevicesObj(), 1);
 	(*material_)[0].Init();
 
 	//* texture
 	filePath_ = texturefilePath;
-	texture_ = MyEngine::LoadTexture(filePath_);
+	texture_ = Sxavenger::LoadTexture(filePath_);
 
 	//* attribute
 	SetAttributeName("sprite");
@@ -45,13 +45,13 @@ void Sprite::Init(const std::string& texturefilePath, const Vector2i& pos, const
 }
 
 void Sprite::Term() {
-	MyEngine::ReleaseTexture(filePath_);
+	Sxavenger::ReleaseTexture(filePath_);
 }
 
 void Sprite::Draw() {
 
 	// commandListの取り出し
-	auto commandList = MyEngine::GetCommandList();
+	auto commandList = Sxavenger::GetCommandList();
 
 	pipeline_->SetPipeline(commandList);
 	ia_.SetIABuffer();
@@ -100,17 +100,16 @@ void Sprite::CreatePipeline() {
 
 	{
 		GraphicsRootSignatureDesc desc;
-		desc.Resize(2, 1);
 		desc.SetCBV(0, VISIBILITY_PIXEL, 0); //!< material
 
 		desc.SetSRV(1, VISIBILITY_PIXEL, 0); //!< texture
 		desc.SetSampler(0, MODE_WRAP, VISIBILITY_PIXEL, 0);
 
-		pipeline_->CreateRootSignature(MyEngine::GetDevicesObj(), desc);
+		pipeline_->CreateRootSignature(Sxavenger::GetDevicesObj(), desc);
 	}
 
 	{
-		pipeline_->CreatePipeline(MyEngine::GetDevicesObj(), blob_.get(), kBlendModeNormal);
+		pipeline_->CreatePipeline(Sxavenger::GetDevicesObj(), blob_.get(), kBlendModeNormal);
 	}
 
 }
@@ -121,8 +120,8 @@ void Sprite::CreatePipeline() {
 
 void Sprite::SpriteIA::Create() {
 
-	vertex = std::make_unique<BufferResource<VertexData>>(MyEngine::GetDevicesObj(), 4/*vertexNum*/);
-	index  = std::make_unique<IndexBufferResource>(MyEngine::GetDevicesObj(), 3/* triangleVertexNum */ * 2/* triangleCount */);
+	vertex = std::make_unique<BufferResource<VertexData>>(Sxavenger::GetDevicesObj(), 4/*vertexNum*/);
+	index  = std::make_unique<IndexBufferResource>(Sxavenger::GetDevicesObj(), 3/* triangleVertexNum */ * 2/* triangleCount */);
 
 	// indexは固定なので設定
 	(*index)[0] = LEFTBOTTOM;
@@ -158,14 +157,14 @@ void Sprite::SpriteIA::SetIABuffer() {
 	D3D12_VERTEX_BUFFER_VIEW vertexBuffer = vertex->GetVertexBufferView();
 	D3D12_INDEX_BUFFER_VIEW indexBuffer   = index->GetIndexBufferView();
 
-	auto commandList = MyEngine::GetCommandList();
+	auto commandList = Sxavenger::GetCommandList();
 
 	commandList->IASetVertexBuffers(0, 1, &vertexBuffer);
 	commandList->IASetIndexBuffer(&indexBuffer);
 }
 
 void Sprite::SpriteIA::DrawCall() {
-	auto commandList = MyEngine::GetCommandList();
+	auto commandList = Sxavenger::GetCommandList();
 	commandList->DrawIndexedInstanced(index->GetIndexSize(), 1, 0, 0, 0);
 }
 

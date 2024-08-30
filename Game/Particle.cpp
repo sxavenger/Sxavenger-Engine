@@ -3,7 +3,7 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
-#include <MyEngine.h>
+#include <Sxavenger.h>
 #include <Performance.h>
 
 
@@ -26,7 +26,6 @@ void Particle::Init() {
 
 	{
 		CSRootSignatureDesc desc;
-		desc.Resize(3, 0);
 		desc.SetCBV(0, 0);
 		desc.SetVirtualUAV(1, 0);
 		desc.SetVirtualUAV(2, 1);
@@ -41,7 +40,6 @@ void Particle::Init() {
 
 	{
 		CSRootSignatureDesc desc;
-		desc.Resize(5, 0);
 		desc.SetCBV(0, 0);
 		desc.SetCBV(1, 1);
 		desc.SetVirtualUAV(2, 0);
@@ -58,7 +56,6 @@ void Particle::Init() {
 	
 	{
 		CSRootSignatureDesc desc;
-		desc.Resize(3, 0);
 		desc.SetCBV(0, 0);
 		desc.SetCBV(1, 1);
 		desc.SetVirtualUAV(2, 0);
@@ -68,14 +65,14 @@ void Particle::Init() {
 	}
 
 	//* buffers *//
-	particleBuffer_ = std::make_unique<UnorderedBufferResource<ParticleCS>>(MyEngine::GetDevicesObj(), kParticleNum);
+	particleBuffer_ = std::make_unique<UnorderedBufferResource<ParticleCS>>(Sxavenger::GetDevicesObj(), kParticleNum);
 
-	informationBuffer_ = std::make_unique<BufferResource<uint32_t>>(MyEngine::GetDevicesObj(), 1);
+	informationBuffer_ = std::make_unique<BufferResource<uint32_t>>(Sxavenger::GetDevicesObj(), 1);
 	(*informationBuffer_)[0] = kParticleNum;
 
-	counterBuffer_ = std::make_unique<UnorderedBufferResource<int32_t>>(MyEngine::GetDevicesObj(), 1);
+	counterBuffer_ = std::make_unique<UnorderedBufferResource<int32_t>>(Sxavenger::GetDevicesObj(), 1);
 
-	emitterBuffer_ = std::make_unique<BufferResource<EmitterSphere>>(MyEngine::GetDevicesObj(), 1);
+	emitterBuffer_ = std::make_unique<BufferResource<EmitterSphere>>(Sxavenger::GetDevicesObj(), 1);
 	(*emitterBuffer_)[0].count         = 10;
 	(*emitterBuffer_)[0].frequency     = 1.0f;
 	(*emitterBuffer_)[0].frequencyTime = 0.0f;
@@ -85,7 +82,7 @@ void Particle::Init() {
 
 	// initCSの実行
 	{
-		auto commandList = MyEngine::GetCommandList();
+		auto commandList = Sxavenger::GetCommandList();
 
 		csInitPipeline_->SetPipeline();
 
@@ -103,7 +100,7 @@ void Particle::Init() {
 
 	render_.CreateTable();
 
-	render_.BindBuffer("gCamera", MyEngine::camera3D->GetGPUVirtualAddress());
+	render_.BindBuffer("gCamera", Sxavenger::camera3D->GetGPUVirtualAddress());
 	render_.BindBuffer("gParticle", particleBuffer_->GetGPUVirtualAddress());
 
 	render_.CreatePipeline(kBlendModeAdd);
@@ -133,7 +130,7 @@ void Particle::Update() {
 	}
 
 	// csの更新処理
-	auto commandList = MyEngine::GetCommandList();
+	auto commandList = Sxavenger::GetCommandList();
 
 	csPipeline_->SetPipeline();
 
@@ -165,12 +162,12 @@ void Particle::Update() {
 
 void Particle::Draw() {
 
-	auto commandList = MyEngine::GetCommandList();
+	auto commandList = Sxavenger::GetCommandList();
 
 	render_.SetPipeline(commandList);
 	plane_.SetBuffer(commandList);
 
-	render_.BindBuffer("gCamera", MyEngine::camera3D->GetGPUVirtualAddress()); //!< camera3Dは呼び出されるたび変わるので
+	render_.BindBuffer("gCamera", Sxavenger::camera3D->GetGPUVirtualAddress()); //!< camera3Dは呼び出されるたび変わるので
 	render_.BindGraphicsParameter(commandList);
 
 	plane_.DrawCall(commandList, kParticleNum);

@@ -4,19 +4,10 @@
 // BaseRootSignatureDesc base structure methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-void DxObject::BaseRootSignatureDesc::Resize(uint32_t paramSize, uint32_t samplerSize) {
-	params.resize(paramSize);
-	samplers.resize(samplerSize);
-	ranges_.resize(paramSize);
-}
-
 void DxObject::BaseRootSignatureDesc::Clear() {
 	params.clear();
-	params.shrink_to_fit();
 	samplers.clear();
-	samplers.shrink_to_fit();
 	ranges_.clear();
-	ranges_.shrink_to_fit();
 }
 
 ComPtr<ID3D12RootSignature> DxObject::BaseRootSignatureDesc::CreateRootSignature(ID3D12Device* device) const {
@@ -66,73 +57,107 @@ ComPtr<ID3D12RootSignature> DxObject::BaseRootSignatureDesc::CreateRootSignature
 	return result;
 }
 
+void DxObject::BaseRootSignatureDesc::AutoResizeParam(uint32_t index) {
+	assert(index < kMaxParamReserve_); //!< reserve分を超えてないか確認
+
+	if (index < params.size()) { //!< indexがsize以下ならresizeしない
+		return;
+	}
+
+	params.resize(index + 1);
+	ranges_.resize(index + 1);
+}
+
+void DxObject::BaseRootSignatureDesc::AutoResizeSampler(uint32_t index) {
+	assert(index < kMaxSamplerReserve_);
+
+	if (index < samplers.size()) { //!< indexがsize以下ならresizeしない
+		return;
+	}
+
+	samplers.resize(index);
+}
+
+void DxObject::BaseRootSignatureDesc::Reserve() {
+	params.reserve(kMaxParamReserve_);
+	samplers.reserve(kMaxSamplerReserve_);
+	ranges_.reserve(kMaxParamReserve_);
+}
+
 ////////////////////////////////////////////////////////////////////////////////////////////
 // GraphicsRootSignatureDesc structure methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 void DxObject::GraphicsRootSignatureDesc::SetCBV(uint32_t index, ShaderVisibility stage, uint32_t shaderRegister) {
-	params[index].ParameterType             = D3D12_ROOT_PARAMETER_TYPE_CBV;
-	params[index].ShaderVisibility          = static_cast<D3D12_SHADER_VISIBILITY>(stage);
-	params[index].Descriptor.ShaderRegister = shaderRegister;
+	AutoResizeParam(index);
+	params.at(index).ParameterType             = D3D12_ROOT_PARAMETER_TYPE_CBV;
+	params.at(index).ShaderVisibility          = static_cast<D3D12_SHADER_VISIBILITY>(stage);
+	params.at(index).Descriptor.ShaderRegister = shaderRegister;
 }
 
 void DxObject::GraphicsRootSignatureDesc::SetVirtualSRV(uint32_t index, ShaderVisibility stage, uint32_t shaderRegister) {
-	params[index].ParameterType             = D3D12_ROOT_PARAMETER_TYPE_SRV;
-	params[index].ShaderVisibility          = static_cast<D3D12_SHADER_VISIBILITY>(stage);
-	params[index].Descriptor.ShaderRegister = shaderRegister;
+	AutoResizeParam(index);
+	params.at(index).ParameterType             = D3D12_ROOT_PARAMETER_TYPE_SRV;
+	params.at(index).ShaderVisibility          = static_cast<D3D12_SHADER_VISIBILITY>(stage);
+	params.at(index).Descriptor.ShaderRegister = shaderRegister;
 }
 
 void DxObject::GraphicsRootSignatureDesc::SetVirtualUAV(uint32_t index, ShaderVisibility stage, uint32_t shaderRegister) {
-	params[index].ParameterType             = D3D12_ROOT_PARAMETER_TYPE_UAV;
-	params[index].ShaderVisibility          = static_cast<D3D12_SHADER_VISIBILITY>(stage);
-	params[index].Descriptor.ShaderRegister = shaderRegister;
+	AutoResizeParam(index);
+	params.at(index).ParameterType             = D3D12_ROOT_PARAMETER_TYPE_UAV;
+	params.at(index).ShaderVisibility          = static_cast<D3D12_SHADER_VISIBILITY>(stage);
+	params.at(index).Descriptor.ShaderRegister = shaderRegister;
 }
 
 void DxObject::GraphicsRootSignatureDesc::SetSRV(uint32_t index, ShaderVisibility stage, uint32_t shaderRegister) {
-	ranges_[index].BaseShaderRegister                = shaderRegister;
-	ranges_[index].NumDescriptors                    = 1;
-	ranges_[index].RangeType                         = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
-	ranges_[index].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
+	AutoResizeParam(index);
+	ranges_.at(index).BaseShaderRegister                = shaderRegister;
+	ranges_.at(index).NumDescriptors                    = 1;
+	ranges_.at(index).RangeType                         = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
+	ranges_.at(index).OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
 
-	params[index].ParameterType                       = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
-	params[index].ShaderVisibility                    = static_cast<D3D12_SHADER_VISIBILITY>(stage);
-	params[index].DescriptorTable.pDescriptorRanges   = &ranges_[index];
-	params[index].DescriptorTable.NumDescriptorRanges = 1;
+	params.at(index).ParameterType                       = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
+	params.at(index).ShaderVisibility                    = static_cast<D3D12_SHADER_VISIBILITY>(stage);
+	params.at(index).DescriptorTable.pDescriptorRanges   = &ranges_.at(index);
+	params.at(index).DescriptorTable.NumDescriptorRanges = 1;
 }
 
 void DxObject::GraphicsRootSignatureDesc::SetUAV(uint32_t index, ShaderVisibility stage, uint32_t shaderRegister) {
-	ranges_[index].BaseShaderRegister                = shaderRegister;
-	ranges_[index].NumDescriptors                    = 1;
-	ranges_[index].RangeType                         = D3D12_DESCRIPTOR_RANGE_TYPE_UAV;
-	ranges_[index].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
+	AutoResizeParam(index);
+	ranges_.at(index).BaseShaderRegister                = shaderRegister;
+	ranges_.at(index).NumDescriptors                    = 1;
+	ranges_.at(index).RangeType                         = D3D12_DESCRIPTOR_RANGE_TYPE_UAV;
+	ranges_.at(index).OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
 
-	params[index].ParameterType                       = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
-	params[index].ShaderVisibility                    = static_cast<D3D12_SHADER_VISIBILITY>(stage);
-	params[index].DescriptorTable.pDescriptorRanges   = &ranges_[index];
-	params[index].DescriptorTable.NumDescriptorRanges = 1;
+	params.at(index).ParameterType                       = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
+	params.at(index).ShaderVisibility                    = static_cast<D3D12_SHADER_VISIBILITY>(stage);
+	params.at(index).DescriptorTable.pDescriptorRanges   = &ranges_.at(index);
+	params.at(index).DescriptorTable.NumDescriptorRanges = 1;
 }
 
 void DxObject::GraphicsRootSignatureDesc::SetSampler(uint32_t sampleIndex, SamplerMode mode, ShaderVisibility stage, UINT shaderRegister) {
-	samplers[sampleIndex].Filter           = D3D12_FILTER_MIN_MAG_MIP_LINEAR;
-	samplers[sampleIndex].AddressU         = static_cast<D3D12_TEXTURE_ADDRESS_MODE>(mode);
-	samplers[sampleIndex].AddressV         = static_cast<D3D12_TEXTURE_ADDRESS_MODE>(mode);
-	samplers[sampleIndex].AddressW         = static_cast<D3D12_TEXTURE_ADDRESS_MODE>(mode);
-	samplers[sampleIndex].ComparisonFunc   = D3D12_COMPARISON_FUNC_NEVER;
-	samplers[sampleIndex].MaxLOD           = D3D12_FLOAT32_MAX;
-	samplers[sampleIndex].ShaderRegister   = shaderRegister;
-	samplers[sampleIndex].ShaderVisibility = static_cast<D3D12_SHADER_VISIBILITY>(stage);
+	AutoResizeSampler(sampleIndex);
+	samplers.at(sampleIndex).Filter           = D3D12_FILTER_MIN_MAG_MIP_LINEAR;
+	samplers.at(sampleIndex).AddressU         = static_cast<D3D12_TEXTURE_ADDRESS_MODE>(mode);
+	samplers.at(sampleIndex).AddressV         = static_cast<D3D12_TEXTURE_ADDRESS_MODE>(mode);
+	samplers.at(sampleIndex).AddressW         = static_cast<D3D12_TEXTURE_ADDRESS_MODE>(mode);
+	samplers.at(sampleIndex).ComparisonFunc   = D3D12_COMPARISON_FUNC_NEVER;
+	samplers.at(sampleIndex).MaxLOD           = D3D12_FLOAT32_MAX;
+	samplers.at(sampleIndex).ShaderRegister   = shaderRegister;
+	samplers.at(sampleIndex).ShaderVisibility = static_cast<D3D12_SHADER_VISIBILITY>(stage);
 }
 
 void DxObject::GraphicsRootSignatureDesc::SetSamplerAnisotropic(uint32_t sampleIndex, SamplerMode mode, ShaderVisibility stage, UINT shaderRegister, uint32_t anisotropic) {
-	samplers[sampleIndex].Filter           = D3D12_FILTER_ANISOTROPIC;
-	samplers[sampleIndex].MaxAnisotropy    = anisotropic; //!< 異方性フィルタリングパラメーター
-	samplers[sampleIndex].AddressU         = static_cast<D3D12_TEXTURE_ADDRESS_MODE>(mode);
-	samplers[sampleIndex].AddressV         = static_cast<D3D12_TEXTURE_ADDRESS_MODE>(mode);
-	samplers[sampleIndex].AddressW         = static_cast<D3D12_TEXTURE_ADDRESS_MODE>(mode);
-	samplers[sampleIndex].ComparisonFunc   = D3D12_COMPARISON_FUNC_NEVER;
-	samplers[sampleIndex].MaxLOD           = D3D12_FLOAT32_MAX;
-	samplers[sampleIndex].ShaderRegister   = shaderRegister;
-	samplers[sampleIndex].ShaderVisibility = static_cast<D3D12_SHADER_VISIBILITY>(stage);
+	AutoResizeSampler(sampleIndex);
+	samplers.at(sampleIndex).Filter           = D3D12_FILTER_ANISOTROPIC;
+	samplers.at(sampleIndex).MaxAnisotropy    = anisotropic; //!< 異方性フィルタリングパラメーター
+	samplers.at(sampleIndex).AddressU         = static_cast<D3D12_TEXTURE_ADDRESS_MODE>(mode);
+	samplers.at(sampleIndex).AddressV         = static_cast<D3D12_TEXTURE_ADDRESS_MODE>(mode);
+	samplers.at(sampleIndex).AddressW         = static_cast<D3D12_TEXTURE_ADDRESS_MODE>(mode);
+	samplers.at(sampleIndex).ComparisonFunc   = D3D12_COMPARISON_FUNC_NEVER;
+	samplers.at(sampleIndex).MaxLOD           = D3D12_FLOAT32_MAX;
+	samplers.at(sampleIndex).ShaderRegister   = shaderRegister;
+	samplers.at(sampleIndex).ShaderVisibility = static_cast<D3D12_SHADER_VISIBILITY>(stage);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -140,66 +165,73 @@ void DxObject::GraphicsRootSignatureDesc::SetSamplerAnisotropic(uint32_t sampleI
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 void DxObject::CSRootSignatureDesc::SetCBV(uint32_t index, uint32_t shaderRegister) {
-	params[index].ParameterType             = D3D12_ROOT_PARAMETER_TYPE_CBV;
-	params[index].ShaderVisibility          = D3D12_SHADER_VISIBILITY_ALL;
-	params[index].Descriptor.ShaderRegister = shaderRegister;
+	AutoResizeParam(index);
+	params.at(index).ParameterType             = D3D12_ROOT_PARAMETER_TYPE_CBV;
+	params.at(index).ShaderVisibility          = D3D12_SHADER_VISIBILITY_ALL;
+	params.at(index).Descriptor.ShaderRegister = shaderRegister;
 }
 
 void DxObject::CSRootSignatureDesc::SetVirtualSRV(uint32_t index, uint32_t shaderRegister) {
-	params[index].ParameterType             = D3D12_ROOT_PARAMETER_TYPE_SRV;
-	params[index].ShaderVisibility          = D3D12_SHADER_VISIBILITY_ALL;
-	params[index].Descriptor.ShaderRegister = shaderRegister;
+	AutoResizeParam(index);
+	params.at(index).ParameterType             = D3D12_ROOT_PARAMETER_TYPE_SRV;
+	params.at(index).ShaderVisibility          = D3D12_SHADER_VISIBILITY_ALL;
+	params.at(index).Descriptor.ShaderRegister = shaderRegister;
 }
 
 void DxObject::CSRootSignatureDesc::SetVirtualUAV(uint32_t index, uint32_t shaderRegister) {
-	params[index].ParameterType             = D3D12_ROOT_PARAMETER_TYPE_UAV;
-	params[index].ShaderVisibility          = D3D12_SHADER_VISIBILITY_ALL;
-	params[index].Descriptor.ShaderRegister = shaderRegister;
+	AutoResizeParam(index);
+	params.at(index).ParameterType             = D3D12_ROOT_PARAMETER_TYPE_UAV;
+	params.at(index).ShaderVisibility          = D3D12_SHADER_VISIBILITY_ALL;
+	params.at(index).Descriptor.ShaderRegister = shaderRegister;
 }
 
 void DxObject::CSRootSignatureDesc::SetSRV(uint32_t index, uint32_t shaderRegister) {
-	ranges_[index].BaseShaderRegister                = shaderRegister;
-	ranges_[index].NumDescriptors                    = 1;
-	ranges_[index].RangeType                         = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
-	ranges_[index].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
+	AutoResizeParam(index);
+	ranges_.at(index).BaseShaderRegister                = shaderRegister;
+	ranges_.at(index).NumDescriptors                    = 1;
+	ranges_.at(index).RangeType                         = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
+	ranges_.at(index).OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
 
-	params[index].ParameterType                       = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
-	params[index].ShaderVisibility                    = D3D12_SHADER_VISIBILITY_ALL;
-	params[index].DescriptorTable.pDescriptorRanges   = &ranges_[index];
-	params[index].DescriptorTable.NumDescriptorRanges = 1;
+	params.at(index).ParameterType                       = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
+	params.at(index).ShaderVisibility                    = D3D12_SHADER_VISIBILITY_ALL;
+	params.at(index).DescriptorTable.pDescriptorRanges   = &ranges_.at(index);
+	params.at(index).DescriptorTable.NumDescriptorRanges = 1;
 }
 
 void DxObject::CSRootSignatureDesc::SetUAV(uint32_t index, uint32_t shaderRegister) {
-	ranges_[index].BaseShaderRegister                = shaderRegister;
-	ranges_[index].NumDescriptors                    = 1;
-	ranges_[index].RangeType                         = D3D12_DESCRIPTOR_RANGE_TYPE_UAV;
-	ranges_[index].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
+	AutoResizeParam(index);
+	ranges_.at(index).BaseShaderRegister                = shaderRegister;
+	ranges_.at(index).NumDescriptors                    = 1;
+	ranges_.at(index).RangeType                         = D3D12_DESCRIPTOR_RANGE_TYPE_UAV;
+	ranges_.at(index).OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
 
-	params[index].ParameterType                       = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
-	params[index].ShaderVisibility                    = D3D12_SHADER_VISIBILITY_ALL;
-	params[index].DescriptorTable.pDescriptorRanges   = &ranges_[index];
-	params[index].DescriptorTable.NumDescriptorRanges = 1;
+	params.at(index).ParameterType                       = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
+	params.at(index).ShaderVisibility                    = D3D12_SHADER_VISIBILITY_ALL;
+	params.at(index).DescriptorTable.pDescriptorRanges   = &ranges_.at(index);
+	params.at(index).DescriptorTable.NumDescriptorRanges = 1;
 }
 
 void DxObject::CSRootSignatureDesc::SetSampler(uint32_t sampleIndex, SamplerMode mode, UINT shaderRegister) {
-	samplers[sampleIndex].Filter           = D3D12_FILTER_MIN_MAG_MIP_LINEAR;
-	samplers[sampleIndex].AddressU         = static_cast<D3D12_TEXTURE_ADDRESS_MODE>(mode);
-	samplers[sampleIndex].AddressV         = static_cast<D3D12_TEXTURE_ADDRESS_MODE>(mode);
-	samplers[sampleIndex].AddressW         = static_cast<D3D12_TEXTURE_ADDRESS_MODE>(mode);
-	samplers[sampleIndex].ComparisonFunc   = D3D12_COMPARISON_FUNC_NEVER;
-	samplers[sampleIndex].MaxLOD           = D3D12_FLOAT32_MAX;
-	samplers[sampleIndex].ShaderRegister   = shaderRegister;
-	samplers[sampleIndex].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;
+	AutoResizeSampler(sampleIndex);
+	samplers.at(sampleIndex).Filter           = D3D12_FILTER_MIN_MAG_MIP_LINEAR;
+	samplers.at(sampleIndex).AddressU         = static_cast<D3D12_TEXTURE_ADDRESS_MODE>(mode);
+	samplers.at(sampleIndex).AddressV         = static_cast<D3D12_TEXTURE_ADDRESS_MODE>(mode);
+	samplers.at(sampleIndex).AddressW         = static_cast<D3D12_TEXTURE_ADDRESS_MODE>(mode);
+	samplers.at(sampleIndex).ComparisonFunc   = D3D12_COMPARISON_FUNC_NEVER;
+	samplers.at(sampleIndex).MaxLOD           = D3D12_FLOAT32_MAX;
+	samplers.at(sampleIndex).ShaderRegister   = shaderRegister;
+	samplers.at(sampleIndex).ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;
 }
 
 void DxObject::CSRootSignatureDesc::SetSamplerAnisotropic(uint32_t sampleIndex, SamplerMode mode, UINT shaderRegister, uint32_t anisotropic) {
-	samplers[sampleIndex].Filter           = D3D12_FILTER_ANISOTROPIC;
-	samplers[sampleIndex].MaxAnisotropy    = anisotropic; //!< 異方性フィルタリングパラメーター
-	samplers[sampleIndex].AddressU         = static_cast<D3D12_TEXTURE_ADDRESS_MODE>(mode);
-	samplers[sampleIndex].AddressV         = static_cast<D3D12_TEXTURE_ADDRESS_MODE>(mode);
-	samplers[sampleIndex].AddressW         = static_cast<D3D12_TEXTURE_ADDRESS_MODE>(mode);
-	samplers[sampleIndex].ComparisonFunc   = D3D12_COMPARISON_FUNC_NEVER;
-	samplers[sampleIndex].MaxLOD           = D3D12_FLOAT32_MAX;
-	samplers[sampleIndex].ShaderRegister   = shaderRegister;
-	samplers[sampleIndex].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;
+	AutoResizeSampler(sampleIndex);
+	samplers.at(sampleIndex).Filter           = D3D12_FILTER_ANISOTROPIC;
+	samplers.at(sampleIndex).MaxAnisotropy    = anisotropic; //!< 異方性フィルタリングパラメーター
+	samplers.at(sampleIndex).AddressU         = static_cast<D3D12_TEXTURE_ADDRESS_MODE>(mode);
+	samplers.at(sampleIndex).AddressV         = static_cast<D3D12_TEXTURE_ADDRESS_MODE>(mode);
+	samplers.at(sampleIndex).AddressW         = static_cast<D3D12_TEXTURE_ADDRESS_MODE>(mode);
+	samplers.at(sampleIndex).ComparisonFunc   = D3D12_COMPARISON_FUNC_NEVER;
+	samplers.at(sampleIndex).MaxLOD           = D3D12_FLOAT32_MAX;
+	samplers.at(sampleIndex).ShaderRegister   = shaderRegister;
+	samplers.at(sampleIndex).ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;
 }
