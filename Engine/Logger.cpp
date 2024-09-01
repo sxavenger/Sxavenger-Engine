@@ -84,7 +84,7 @@ void Assert(bool expresion, const std::string& detail, const std::source_locatio
 		"Sxavenger Engine assertion",
 		MB_TASKMODAL | MB_ICONHAND
 	);
-	
+
 	__debugbreak();
 }
 

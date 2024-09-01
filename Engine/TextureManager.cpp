@@ -411,7 +411,7 @@ DirectX::ScratchImage TextureMethod::LoadTexture(const std::string& filePath) {
 	if (FAILED(hr)) {
 		std::string errorLog;
 		errorLog
-			= "[Texture Not Found] \n filePath: " + filePath;
+			= "Texture not found. \n filePath: " + filePath;
 
 		ExternalLogger::Write(errorLog);
 		Assert(false, errorLog);
