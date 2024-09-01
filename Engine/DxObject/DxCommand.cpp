@@ -28,7 +28,7 @@ void DxObject::Command::Init(Devices* devices) {
 			IID_PPV_ARGS(&commandQueue_)
 		);
 
-		assert(SUCCEEDED(hr));
+		Assert(SUCCEEDED(hr));
 		Log("[DxObject.Command]: commandQueue_ << Complete Create");
 	}
 
@@ -40,7 +40,7 @@ void DxObject::Command::Init(Devices* devices) {
 				IID_PPV_ARGS(&commandAllocator_[i])
 			);
 
-			assert(SUCCEEDED(hr));
+			Assert(SUCCEEDED(hr));
 		}
 		
 		Log("[DxObject.Command]: commandAllocator_ << Complete Create");
@@ -56,7 +56,7 @@ void DxObject::Command::Init(Devices* devices) {
 			IID_PPV_ARGS(&commandList_)
 		);
 
-		assert(SUCCEEDED(hr));
+		Assert(SUCCEEDED(hr));
 		Log("[DxObject.Command]: commandList_ << Complete Create");
 	}
 }
@@ -66,7 +66,7 @@ void DxObject::Command::Term() {
 
 void DxObject::Command::Close() {
 	auto hr = commandList_->Close();
-	assert(SUCCEEDED(hr));
+	Assert(SUCCEEDED(hr));
 
 	ID3D12CommandList* commandLists[] = { commandList_.Get() };
 	commandQueue_->ExecuteCommandLists(1, commandLists);
@@ -75,12 +75,12 @@ void DxObject::Command::Close() {
 void DxObject::Command::ResetAll() {
 	for (int i = 0; i < kAllocatorCount_; ++i) {
 		auto hr = commandAllocator_[i]->Reset();
-		assert(SUCCEEDED(hr));
+		Assert(SUCCEEDED(hr));
 	}
 	
 	// 全リセットしたのでそのままAllocatorを使う
 	auto hr = commandList_->Reset(commandAllocator_[backAllocatorIndex_].Get(), nullptr);
-	assert(SUCCEEDED(hr));
+	Assert(SUCCEEDED(hr));
 }
 
 void DxObject::Command::ResetBackAllocator() {
@@ -90,22 +90,22 @@ void DxObject::Command::ResetBackAllocator() {
 
 	// backAllocatorとして動かすのでリセット
 	auto hr = commandAllocator_[backAllocatorIndex_]->Reset();
-	assert(SUCCEEDED(hr));
+	Assert(SUCCEEDED(hr));
 
 	// backAllocatorをセット
 	hr = commandList_->Reset(commandAllocator_[backAllocatorIndex_].Get(), nullptr);
-	assert(SUCCEEDED(hr));
+	Assert(SUCCEEDED(hr));
 }
 
 void DxObject::Command::ResetSingleAllocator() {
 	// backAllocatorそのまま使用
 
 	auto hr = commandAllocator_[backAllocatorIndex_]->Reset();
-	assert(SUCCEEDED(hr));
+	Assert(SUCCEEDED(hr));
 
 	// backAllocatorをセット
 	hr = commandList_->Reset(commandAllocator_[backAllocatorIndex_].Get(), nullptr);
-	assert(SUCCEEDED(hr));
+	Assert(SUCCEEDED(hr));
 }
 
 void DxObject::Command::Signal(Fence* fences) {

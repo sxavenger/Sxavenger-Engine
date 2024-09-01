@@ -10,7 +10,7 @@ ComPtr<ID3D12Resource> DxObject::CreateBufferResource(
 	size_t sizeInBytes,
 	D3D12_RESOURCE_FLAGS flags, D3D12_RESOURCE_STATES state) {
 
-	assert(sizeInBytes != 0);
+	Assert(sizeInBytes != 0);
 
 	ComPtr<ID3D12Resource> result;
 
@@ -36,7 +36,7 @@ ComPtr<ID3D12Resource> DxObject::CreateBufferResource(
 		IID_PPV_ARGS(&result)
 	);
 
-	assert(SUCCEEDED(hr));
+	Assert(SUCCEEDED(hr));
 
 	return result;
 }
@@ -44,7 +44,7 @@ ComPtr<ID3D12Resource> DxObject::CreateBufferResource(
 ComPtr<ID3D12Resource> DxObject::CreateBufferResource(
 	ID3D12Device* device, size_t sizeInBytes) {
 
-	assert(sizeInBytes != 0);
+	Assert(sizeInBytes != 0);
 
 	ComPtr<ID3D12Resource> result;
 
@@ -71,13 +71,13 @@ ComPtr<ID3D12Resource> DxObject::CreateBufferResource(
 		IID_PPV_ARGS(&result)
 	);
 
-	assert(SUCCEEDED(hr));
+	Assert(SUCCEEDED(hr));
 
 	return result;
 
 }
 
 UINT DxObject::RoundUp(UINT round, UINT thread) {
-	assert(thread > 0);
+	Assert(thread > 0);
 	return (round + thread - 1) / thread;
 }

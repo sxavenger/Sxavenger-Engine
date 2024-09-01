@@ -65,7 +65,7 @@ void Model::Term() {
 void Model::SetBuffers(uint32_t modelIndex) {
 
 	if (modelIndex >= modelIndexSize_) {
-		assert(false); //!< 配列以上のmodelDataの呼び出し
+		Assert(false); //!< 配列以上のmodelDataの呼び出し
 	}
 
 	modelData_.meshes[modelIndex].SetBuffer();
@@ -74,7 +74,7 @@ void Model::SetBuffers(uint32_t modelIndex) {
 void Model::SetBuffers(ID3D12GraphicsCommandList* commandList, uint32_t modelIndex) {
 
 	if (modelIndex >= modelIndexSize_) {
-		assert(false); //!< 配列以上のmodelDataの呼び出し
+		Assert(false); //!< 配列以上のmodelDataの呼び出し
 	}
 
 	D3D12_VERTEX_BUFFER_VIEW vertexBufferView = modelData_.meshes[modelIndex].GetVertexBuffer()->GetVertexBufferView();
@@ -86,14 +86,14 @@ void Model::SetBuffers(ID3D12GraphicsCommandList* commandList, uint32_t modelInd
 
 void Model::SetGraphicsTextureHandle(ID3D12GraphicsCommandList* commandList, uint32_t modelIndex, UINT parameterNum, TextureType type) {
 
-	if (modelData_.materials[modelIndex].textureFilePaths[type].empty()) { assert(false); } //!< textureを使ってないので
+	if (modelData_.materials[modelIndex].textureFilePaths[type].empty()) { Assert(false); } //!< textureを使ってないので
 
 	commandList->SetGraphicsRootDescriptorTable(parameterNum, Sxavenger::GetTextureHandleGPU(modelData_.materials[modelIndex].textureFilePaths[type]));
 }
 
 const D3D12_GPU_DESCRIPTOR_HANDLE Model::GetTextureHandle(uint32_t modelIndex, TextureType type) {
 
-	if (modelData_.materials[modelIndex].textureFilePaths[type].empty()) { assert(false); } //!< textureを使ってないので
+	if (modelData_.materials[modelIndex].textureFilePaths[type].empty()) { Assert(false); } //!< textureを使ってないので
 
 	return Sxavenger::GetTextureHandleGPU(modelData_.materials[modelIndex].textureFilePaths[type]);
 }
@@ -126,7 +126,7 @@ ModelData ModelMethods::LoadModelFile(const std::string& directoryPath, const st
 	const aiScene* scene
 		= importer.ReadFile(filePath.c_str(), option);
 
-	assert(scene->HasMeshes()); //!< メッシュナシは未対応
+	Assert(scene->HasMeshes()); //!< メッシュナシは未対応
 
 	// ModelDataの要素数の指定
 	result.meshes.resize(scene->mNumMeshes);
@@ -139,8 +139,8 @@ ModelData ModelMethods::LoadModelFile(const std::string& directoryPath, const st
 		// meshの取得
 		aiMesh* mesh = scene->mMeshes[meshIndex];
 
-		//assert(mesh->HasNormals());        //!< 法線がない場合は未対応
-		//assert(mesh->HasTextureCoords(0)); //!< Texcoordがない場合は未対応 todo...
+		//Assert(mesh->HasNormals());        //!< 法線がない場合は未対応
+		//Assert(mesh->HasTextureCoords(0)); //!< Texcoordがない場合は未対応 todo...
 
 		// 保存の確保
 		result.meshes[meshIndex].Create(mesh->mNumVertices, mesh->mNumFaces * 3);
@@ -177,7 +177,7 @@ ModelData ModelMethods::LoadModelFile(const std::string& directoryPath, const st
 			// faceの取得
 			aiFace& face = mesh->mFaces[faceIndex];
 
-			assert(face.mNumIndices == 3); //!< 三角形のみの対応
+			Assert(face.mNumIndices == 3); //!< 三角形のみの対応
 
 			// indexの解析
 			for (uint32_t element = 0; element < face.mNumIndices; ++element) {
@@ -331,7 +331,7 @@ Animation ModelMethods::LoadAnimationFile(const std::string& directoryPath, cons
 	// filePathからsceneの読み込み
 	const aiScene* scene = importer.ReadFile(filePath.c_str(), 0);
 
-	assert(scene->mAnimations != 0); //!< animationがない
+	Assert(scene->mAnimations != 0); //!< animationがない
 
 	aiAnimation* animationAi = scene->mAnimations[0];
 	// todo: 複数に対応する

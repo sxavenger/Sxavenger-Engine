@@ -4,6 +4,7 @@
 // include
 //-----------------------------------------------------------------------------------------
 #include <cassert>
+#include <Logger.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Audio class methods
@@ -15,7 +16,7 @@ void Audio::SoundLoadWave(const std::string& filename) {
 	std::ifstream file;
 	file.open(filename, std::ios_base::binary); //!< .wavをバイナリ形式で開く
 
-	assert(file.is_open()); //!< ファイルが開けなかった
+	Assert(file.is_open()); //!< ファイルが開けなかった
 
 	// riffヘッダーの読み込み
 	RiffHeader riff = {};
@@ -23,12 +24,12 @@ void Audio::SoundLoadWave(const std::string& filename) {
 
 	// ファイルがriffか確認
 	if (strncmp(riff.chunk.id, "RIFF", 4) != 0) {
-		assert(false);
+		Assert(false);
 	}
 
 	// タイプがwaveか確認
 	if (strncmp(riff.type, "WAVE", 4) != 0) {
-		assert(false);
+		Assert(false);
 	}
 
 	FormatChunk format = {};
@@ -37,11 +38,11 @@ void Audio::SoundLoadWave(const std::string& filename) {
 	file.read((char*)&format, sizeof(ChunkHeader));
 
 	if (strncmp(format.chunk.id, "fmt ", 4) != 0) {
-		assert(false);
+		Assert(false);
 	}
 
 	// チャンク本体の書き込み
-	assert(format.chunk.size <= sizeof(WAVEFORMATEX));
+	Assert(format.chunk.size <= sizeof(WAVEFORMATEX));
 	file.read((char*)&format.format, format.chunk.size);
 
 	// dataチャンクの読み込み
@@ -58,7 +59,7 @@ void Audio::SoundLoadWave(const std::string& filename) {
 	}
 
 	if (strncmp(data.id, "data", 4) != 0) {
-		assert(false);
+		Assert(false);
 	}
 
 	// Dataチャンクのデータ部(波形データ)の読み込み
@@ -91,10 +92,10 @@ void Audio::SoundUnload() {
 void AudioManager::Init() {
 
 	auto hr = XAudio2Create(&xAudio2_, 0, XAUDIO2_DEFAULT_PROCESSOR);
-	assert(SUCCEEDED(hr));
+	Assert(SUCCEEDED(hr));
 
 	hr = xAudio2_->CreateMasteringVoice(&masterVoice_);
-	assert(SUCCEEDED(hr));
+	Assert(SUCCEEDED(hr));
 
 }
 
@@ -133,7 +134,7 @@ void AudioManager::PlayAudio(const Audio* audio) {
 	IXAudio2SourceVoice* pSourceVoice = nullptr;
 
 	auto hr = xAudio2_->CreateSourceVoice(&pSourceVoice, &audio->GetFormat());
-	assert(SUCCEEDED(hr));
+	Assert(SUCCEEDED(hr));
 
 	// 再生する波形データの設定
 	XAUDIO2_BUFFER buf = {};
@@ -143,10 +144,10 @@ void AudioManager::PlayAudio(const Audio* audio) {
 
 	// 波形データの再生
 	hr = pSourceVoice->SubmitSourceBuffer(&buf);
-	assert(SUCCEEDED(hr));
+	Assert(SUCCEEDED(hr));
 
 	hr = pSourceVoice->Start();
-	assert(SUCCEEDED(hr));
+	Assert(SUCCEEDED(hr));
 
 }
 
@@ -155,7 +156,7 @@ void AudioManager::PlayAudio(const std::string& filename) {
 	// containerにAudioが登録されているかの確認
 	auto it = audios_.find(filename);
 	if (it == audios_.end()) { //!< audioが見つからなかった
-		assert(false);
+		Assert(false);
 		return;
 	}
 

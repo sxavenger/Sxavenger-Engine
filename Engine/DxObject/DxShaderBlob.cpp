@@ -19,7 +19,7 @@ DxObject::ShaderBlobManager* DxObject::BaseShaderBlob::manager_ = nullptr;
 
 void DxObject::GraphicsBlob::Create(const std::wstring& filename, GraphicShaderType type) {
 	// typeの確認
-	assert(type < GraphicShaderType::kCountOfGraphicShaderType);
+	Assert(type < GraphicShaderType::kCountOfGraphicShaderType);
 
 	graphicsBlobs_[type] = manager_->GetBlob(filename, static_cast<ShaderType>(type));
 
@@ -47,7 +47,7 @@ void DxObject::GraphicsBlob::Merge(GraphicsBlob* other) {
 			continue;
 		}
 
-		assert(false); //!< blob同士の衝突
+		Assert(false); //!< blob同士の衝突
 	}
 
 	// todo: mesh pipelineのbool値での安全性の向上
@@ -58,7 +58,7 @@ void DxObject::GraphicsBlob::Merge(GraphicsBlob* other) {
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 void DxObject::CSBlob::Create(const std::wstring& filename) {
-	assert(blob_ == nullptr); //!< blobがある状態でもう一度取得しようとしてる
+	Assert(blob_ == nullptr); //!< blobがある状態でもう一度取得しようとしてる
 
 	blob_ = manager_->GetBlob(filename, COMPUTE);
 }

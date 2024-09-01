@@ -6,6 +6,8 @@
 #include "externals/imgui/imgui_impl_win32.h"
 extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
+#include "Logger.h"
+
 ////////////////////////////////////////////////////////////////////////////////////////////
 // WinApp methods
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -22,7 +24,7 @@ WinApp::~WinApp() {
 void WinApp::CreateGameWindow(int32_t clientWidth, int32_t clientHeight, const wchar_t* windowTitle) {
 	// インスタンスハンドルを取得
 	auto hInst = GetModuleHandle(nullptr);
-	assert(hInst != nullptr);
+	Assert(hInst != nullptr);
 
 	hInst_ = hInst;
 
@@ -34,7 +36,7 @@ void WinApp::CreateGameWindow(int32_t clientWidth, int32_t clientHeight, const w
 	wc.hCursor       = LoadCursor(nullptr, IDC_ARROW);
 
 	if (!RegisterClass(&wc)) {
-		assert(false);
+		Assert(false);
 	}
 
 	// ウィンドウサイズの設定
@@ -64,7 +66,7 @@ void WinApp::CreateGameWindow(int32_t clientWidth, int32_t clientHeight, const w
 	);
 
 	if (hWnd_ == nullptr) {
-		assert(false);
+		Assert(false);
 	}
 
 	// ウィンドウを表示

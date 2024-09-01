@@ -5,7 +5,7 @@
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 void DxObject::BaseBufferResource::Init(uint32_t indexSize, size_t structureSize) {
-	assert((structureSize > 0)); //!< 引数の確認
+	Assert((structureSize > 0)); //!< 引数の確認
 
 	indexSize_     = indexSize;
 	structureSize_ = static_cast<UINT>(structureSize);

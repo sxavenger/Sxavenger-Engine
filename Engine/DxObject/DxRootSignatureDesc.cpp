@@ -40,7 +40,7 @@ ComPtr<ID3D12RootSignature> DxObject::BaseRootSignatureDesc::CreateRootSignature
 		Log("Failed: Create RootSignatuer");
 		Log(reinterpret_cast<char*>(signatureErrorBlob->GetBufferPointer()));
 		Log("//-----------------------------------------------------------------------------------------");
-		assert(false);
+		Assert(false);
 	}
 
 	ComPtr<ID3D12RootSignature> result;
@@ -52,13 +52,13 @@ ComPtr<ID3D12RootSignature> DxObject::BaseRootSignatureDesc::CreateRootSignature
 		IID_PPV_ARGS(&result)
 	);
 
-	assert(SUCCEEDED(hr));
+	Assert(SUCCEEDED(hr));
 
 	return result;
 }
 
 void DxObject::BaseRootSignatureDesc::AutoResizeParam(uint32_t index) {
-	assert(index < kMaxParamReserve_); //!< reserve分を超えてないか確認
+	Assert(index < kMaxParamReserve_); //!< reserve分を超えてないか確認
 
 	if (index < params.size()) { //!< indexがsize以下ならresizeしない
 		return;
@@ -69,7 +69,7 @@ void DxObject::BaseRootSignatureDesc::AutoResizeParam(uint32_t index) {
 }
 
 void DxObject::BaseRootSignatureDesc::AutoResizeSampler(uint32_t index) {
-	assert(index < kMaxSamplerReserve_);
+	Assert(index < kMaxSamplerReserve_);
 
 	if (index < samplers.size()) { //!< indexがsize以下ならresizeしない
 		return;

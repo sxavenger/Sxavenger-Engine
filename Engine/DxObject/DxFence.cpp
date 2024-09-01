@@ -26,7 +26,7 @@ void DxObject::Fence::Init(Devices* devices) {
 			IID_PPV_ARGS(&fence_)
 		);
 
-		assert(SUCCEEDED(hr));
+		Assert(SUCCEEDED(hr));
 		Log("[DxObject.Fence]: fence_ << Complete Create");
 	}
 
@@ -36,7 +36,7 @@ void DxObject::Fence::Init(Devices* devices) {
 			NULL, FALSE, FALSE, NULL
 		);
 
-		assert(fenceEvent_ != nullptr);
+		Assert(fenceEvent_ != nullptr);
 	}
 }
 

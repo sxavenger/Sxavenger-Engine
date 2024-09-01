@@ -48,15 +48,15 @@ void ShaderBlobManager::InitCompilers() {
 	auto hr = DxcCreateInstance(
 		CLSID_DxcLibrary, IID_PPV_ARGS(&library_)
 	);
-	assert(SUCCEEDED(hr));
+	Assert(SUCCEEDED(hr));
 
 	hr = DxcCreateInstance(
 		CLSID_DxcCompiler, IID_PPV_ARGS(&compiler_)
 	);
-	assert(SUCCEEDED(hr));
+	Assert(SUCCEEDED(hr));
 
 	hr = library_->CreateIncludeHandler(&includeHandler_);
-	assert(SUCCEEDED(hr));
+	Assert(SUCCEEDED(hr));
 }
 
 void ShaderBlobManager::SetExternal(ShaderBlobManager* manager) {
@@ -73,8 +73,7 @@ ComPtr<IDxcBlob> ShaderBlobManager::CreateShaderBlob(const std::wstring& filepat
 	
 	if (FAILED(hr)) {
 		std::wstring outputLog = L"RayTracing Error : HLSL Not Found. filePath: ";
-		Log(outputLog + filepath);
-		assert(false);
+		AssertW(false, L"hlsl not found. filepath: " + filepath);
 	}
 
 	LPCWSTR arguments[] = { // test
@@ -109,10 +108,7 @@ ComPtr<IDxcBlob> ShaderBlobManager::CreateShaderBlob(const std::wstring& filepat
 	if (SUCCEEDED(hr)) {
 		if (errorBlob != nullptr && errorBlob->GetBufferSize() != 0) {
 			// エラーメッセージの出力
-			Log("//-----------------------------------------------------------------------------------------");
-			Log(reinterpret_cast<const char*>(errorBlob->GetBufferPointer()));
-			Log("//-----------------------------------------------------------------------------------------");
-			assert(false);
+			Assert(false, reinterpret_cast<const char*>(errorBlob->GetBufferPointer()));
 		}
 	}
 

@@ -59,7 +59,7 @@ void PrimitiveTriangle::Init() {
 
 void PrimitiveTriangle::DrawTriangle(const Vector3f& v0, const Vector3f& v1, const Vector3f& v2, const Color4f& color) {
 
-	assert(objectCount_ < kMaxObjectNum_); //!< 描画限界
+	Assert(objectCount_ < kMaxObjectNum_); //!< 描画限界
 
 	objectBuffer_->operator[](objectCount_ + 0).position = Vector4f(v0.x, v0.y, v0.z);
 	objectBuffer_->operator[](objectCount_ + 0).color    = color;
@@ -138,7 +138,7 @@ void PrimitiveLine::DrawAll(const D3D12_GPU_VIRTUAL_ADDRESS& camera) {
 
 void PrimitiveLine::DrawLine(const Vector3f& v0, const Vector3f& v1, const Color4f& color) {
 
-	assert(objectCount_ < kMaxObjectNum_); //!< 描画限界
+	Assert(objectCount_ < kMaxObjectNum_); //!< 描画限界
 
 	objectBuffer_->operator[](objectCount_ * 2 + 0).position = Vector4f(v0.x, v0.y, v0.z);
 	objectBuffer_->operator[](objectCount_ * 2 + 0).color = color;

@@ -75,7 +75,7 @@ void DxObject::DescriptorPool::CreateDescriptorHeap(ID3D12Device* device) {
 		&desc, IID_PPV_ARGS(&descriptorHeap_)
 	);
 
-	assert(SUCCEEDED(hr));
+	Assert(SUCCEEDED(hr));
 
 }
 
@@ -94,7 +94,7 @@ uint32_t DxObject::DescriptorPool::GetCurrentDescriptorIndex() {
 		return result;
 	}
 
-	assert(descriptorIndexCount_ < descriptorMaxCount_);  //!< 作成した分のDescriptorの要素数を超えている
+	Assert(descriptorIndexCount_ < descriptorMaxCount_);  //!< 作成した分のDescriptorの要素数を超えている
 
 	// 現在のindexCountを返却
 	result = descriptorIndexCount_;
@@ -138,7 +138,7 @@ void DxObject::DescriptorHeaps::Term() {
 }
 
 DxObject::Descriptor DxObject::DescriptorHeaps::GetDescriptor(DescriptorType type) {
-	assert(type < DescriptorType::kDescriptorHeapCount); //!< 範囲外参照
+	Assert(type < DescriptorType::kDescriptorHeapCount); //!< 範囲外参照
 
 	Descriptor result = pools_.at(type)->GetDescriptor();
 	result.type = type;

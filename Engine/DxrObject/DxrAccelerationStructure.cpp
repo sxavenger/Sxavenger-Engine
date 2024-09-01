@@ -28,7 +28,7 @@ void BottomLevelAS::Create(const InputAssembler<VertexData>& ia, const ExportGro
 	BuildBLAS(geomDesc);
 
 	// bufferRecorderが必要
-	assert(exportGroup->GetExportGroupType() == kExport_Hitgroup); //!< hitgroup以外のexport
+	Assert(exportGroup->GetExportGroupType() == kExport_Hitgroup); //!< hitgroup以外のexport
 	recorder_ = std::make_unique<BufferRecord>(exportGroup);
 
 }
@@ -195,7 +195,7 @@ void TopLevelAS::SetInstanceBuffer() {
 	instanceBuffer_->ClearData();
 
 	for (uint32_t index = 0; const auto& instance : instance_) {
-		assert(index < kMaxInstanceNum_); //!< instance数の超過
+		Assert(index < kMaxInstanceNum_); //!< instance数の超過
 
 		// bufferにinstance情報を設定
 		auto& desc = (*instanceBuffer_)[index];
@@ -266,7 +266,7 @@ ComPtr<ID3D12Resource> DxrObject::CreateBuffer(
 	D3D12_RESOURCE_FLAGS flags,
 	D3D12_RESOURCE_STATES initState) {
 
-	assert(heapType != D3D12_HEAP_TYPE_READBACK && heapType != D3D12_HEAP_TYPE_CUSTOM); //!< 例外
+	Assert(heapType != D3D12_HEAP_TYPE_READBACK && heapType != D3D12_HEAP_TYPE_CUSTOM); //!< 例外
 	
 	// ヒーププロパティの設定
 	D3D12_HEAP_PROPERTIES prop = {};
@@ -299,7 +299,7 @@ ComPtr<ID3D12Resource> DxrObject::CreateBuffer(
 		IID_PPV_ARGS(&result)
 	);
 
-	assert(SUCCEEDED(hr));
+	Assert(SUCCEEDED(hr));
 
 	return result;
 }

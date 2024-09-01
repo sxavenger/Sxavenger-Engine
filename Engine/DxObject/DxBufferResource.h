@@ -225,7 +225,7 @@ public:
 	//! @param[in] value データ
 	void SetPtr(uint32_t element, T* value) {
 		if (!CheckElementCount(element)) {
-			assert(false); //!< 範囲外参照
+			Assert(false); //!< 範囲外参照
 			return;
 		}
 
@@ -482,14 +482,14 @@ inline void DxObject::BufferPtrResource<T>::LoadPtrData() {
 
 template<typename T>
 void DxObject::OffsetBufferResource::SetValue(UINT offset, const T& value) {
-	assert(offset + static_cast<UINT>(sizeof(T)) <= structureSize_); //!< 範囲外への書き込み
+	Assert(offset + static_cast<UINT>(sizeof(T)) <= structureSize_); //!< 範囲外への書き込み
 
 	*reinterpret_cast<T*>(mappedDatas_ + offset) = value;
 }
 
 template<typename T>
 inline const T& DxObject::OffsetBufferResource::GetValue(UINT offset) {
-	assert(offset + static_cast<UINT>(sizeof(T)) <= structureSize_); //!< 範囲外への書き込み
+	Assert(offset + static_cast<UINT>(sizeof(T)) <= structureSize_); //!< 範囲外への書き込み
 
 	return *reinterpret_cast<T*>(mappedDatas_ + offset);
 }

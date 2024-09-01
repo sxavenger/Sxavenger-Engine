@@ -64,6 +64,6 @@ void Performance::TermBuffer() {
 }
 
 const D3D12_GPU_VIRTUAL_ADDRESS Performance::GetGPUVirtualAddress() {
-	assert(perFrameBuffer_); //!< bufferが存在しない場合, 値を返せない
+	Assert(perFrameBuffer_ != nullptr); //!< bufferが存在しない場合, 値を返せない
 	return perFrameBuffer_->GetGPUVirtualAddress();
 }

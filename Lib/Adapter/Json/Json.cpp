@@ -36,7 +36,7 @@ void JsonAdapter::WriteJson(const std::string& path, const Json& data) {
 	std::ofstream ofs;
 	ofs.open(filePath);
 
-	/*assert(!ofs.fail());*/
+	/*Assert(!ofs.fail());*/
 
 	ofs << std::setw(4) << data << std::endl;
 	ofs.close();

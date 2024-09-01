@@ -46,7 +46,7 @@ void StateObject::CreateStateObject(const ShaderBlob* blobs) {
 						// raygenerationのentryPointを取得
 						const auto& raygenerationEntryPoint = expt->GetName();
 
-						assert(!raygenerationEntryPoint.empty());
+						Assert(!raygenerationEntryPoint.empty());
 						entryPoints.emplace_back(raygenerationEntryPoint.c_str());
 					}
 					break;
@@ -55,7 +55,7 @@ void StateObject::CreateStateObject(const ShaderBlob* blobs) {
 						// raygenerationのentryPointを取得
 						const auto& missEntryPoint = expt->GetName();
 
-						assert(!missEntryPoint.empty());
+						Assert(!missEntryPoint.empty());
 						entryPoints.emplace_back(missEntryPoint.c_str());
 					}
 					break;
@@ -65,7 +65,7 @@ void StateObject::CreateStateObject(const ShaderBlob* blobs) {
 						const auto& hitgroupEntryPoints = expt->GetExportHitgroupEntryPoints();
 
 						// closesthit
-						assert(!hitgroupEntryPoints.closesthit.empty());
+						Assert(!hitgroupEntryPoints.closesthit.empty());
 						entryPoints.emplace_back(hitgroupEntryPoints.closesthit.c_str());
 
 						// anyhit
@@ -81,7 +81,7 @@ void StateObject::CreateStateObject(const ShaderBlob* blobs) {
 					break;
 
 				default:
-					assert(false); //!< exportType未設定
+					Assert(false); //!< exportType未設定
 					break;
 			}
 
@@ -120,7 +120,7 @@ void StateObject::CreateStateObject(const ShaderBlob* blobs) {
 					const auto& hitgroupEntryPoints = expt->GetExportHitgroupEntryPoints();
 
 					// closesthit
-					assert(!hitgroupEntryPoints.closesthit.empty());
+					Assert(!hitgroupEntryPoints.closesthit.empty());
 					hitgroupSubobject->SetClosestHitShaderImport(hitgroupEntryPoints.closesthit.c_str());
 
 					// anyhit
@@ -184,7 +184,7 @@ void StateObject::CreateStateObject(const ShaderBlob* blobs) {
 		desc,
 		IID_PPV_ARGS(&stateObject_)
 	);
-	assert(SUCCEEDED(hr));
+	Assert(SUCCEEDED(hr));
 
 	stateObject_.As(&properties_);
 }

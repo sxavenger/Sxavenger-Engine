@@ -7,8 +7,8 @@ _DXROBJECT_USING
 
 void ExportGroup::Create(const std::wstring& name, ExportGroupType type) {
 	// 引数の確認
-	assert(!name.empty());
-	assert(type != kCountOfExportGroupType);
+	Assert(!name.empty());
+	Assert(type != kCountOfExportGroupType);
 
 	// parameterの保存
 	name_ = name;
@@ -21,7 +21,7 @@ void ExportGroup::CreateRootSignature(const LocalRootSignatureDesc& desc) {
 
 void ExportGroup::SetEntryPointHitgroup(const std::wstring& closesthit, const std::wstring& anyhit, const std::wstring& intersection) {
 	
-	assert(type_ == kExport_Hitgroup);
+	Assert(type_ == kExport_Hitgroup);
 
 	// entryPointの登録
 	entryPoint_ = ExportEntryPointHitgroup{
@@ -32,10 +32,10 @@ void ExportGroup::SetEntryPointHitgroup(const std::wstring& closesthit, const st
 }
 
 const ExportGroup::ExportEntryPointHitgroup& ExportGroup::GetExportHitgroupEntryPoints() const {
-	assert(type_ == ExportGroupType::kExport_Hitgroup);
+	Assert(type_ == ExportGroupType::kExport_Hitgroup);
 
 	if (!std::holds_alternative<ExportEntryPointHitgroup>(entryPoint_)) {
-		assert(false); //!< entryPoint未登録
+		Assert(false); //!< entryPoint未登録
 	}
 
 	return std::get<ExportEntryPointHitgroup>(entryPoint_);

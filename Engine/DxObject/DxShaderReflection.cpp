@@ -28,7 +28,7 @@ void DxObject::ShaderReflectionTable::Marge(ShaderReflectionTable* other) {
 	// input elementのマージ
 	if (!other->elements_.empty()) { //!< otherにelement情報がある場合
 		if (!this->elements_.empty()) { //!< thisにもある場合
-			assert(false);
+			Assert(false);
 		}
 
 		elements_ = other->elements_;
@@ -38,7 +38,7 @@ void DxObject::ShaderReflectionTable::Marge(ShaderReflectionTable* other) {
 void DxObject::ShaderReflectionTable::Bind(const std::string& bufferName, const BindBuffer& buffer) {
 
 	auto it = table_.find(bufferName);
-	assert(it != table_.end()); //!< bufferNameが見つからなかった
+	Assert(it != table_.end()); //!< bufferNameが見つからなかった
 
 	it->second.buffer = buffer;
 }
@@ -56,7 +56,7 @@ void DxObject::ShaderReflectionTable::BindGraphicsParameter(ID3D12GraphicsComman
 			continue;
 		}
 
-		assert(buffer.has_value()); //!< bufferを持ってないといけない
+		Assert(buffer.has_value()); //!< bufferを持ってないといけない
 
 		if (std::holds_alternative<D3D12_GPU_VIRTUAL_ADDRESS>(buffer.value())) {
 
@@ -77,7 +77,7 @@ void DxObject::ShaderReflectionTable::BindGraphicsParameter(ID3D12GraphicsComman
 					break;
 
 				default:
-					assert(false); //!< 例外
+					Assert(false); //!< 例外
 					break;
 			}
 
@@ -115,7 +115,7 @@ DxObject::GraphicsRootSignatureDesc DxObject::ShaderReflectionTable::CreateRootS
 		} else {
 
 			// ここの時点でBufferが入ってる必要がある
-			assert(buffer.has_value());
+			Assert(buffer.has_value());
 
 			// paramの設定
 			switch (info.bufferType) {
@@ -124,13 +124,13 @@ DxObject::GraphicsRootSignatureDesc DxObject::ShaderReflectionTable::CreateRootS
 						result.SetCBV(paramIndex, info.visibility, info.registerNum);
 
 					} else if (std::holds_alternative<D3D12_GPU_DESCRIPTOR_HANDLE>(buffer.value())) {
-						assert(false); //!< handleでの設定は不可
+						Assert(false); //!< handleでの設定は不可
 					}
 					break;
 
 				case D3D_SHADER_INPUT_TYPE::D3D_SIT_TEXTURE: //!< Texture dimension
 					if (std::holds_alternative<D3D12_GPU_VIRTUAL_ADDRESS>(buffer.value())) {
-						assert(false); //!< virtualでの設定は不可
+						Assert(false); //!< virtualでの設定は不可
 
 					} else if (std::holds_alternative<D3D12_GPU_DESCRIPTOR_HANDLE>(buffer.value())) {
 						result.SetSRV(paramIndex, info.visibility, info.registerNum);
@@ -156,7 +156,7 @@ DxObject::GraphicsRootSignatureDesc DxObject::ShaderReflectionTable::CreateRootS
 					break;
 
 				default:
-					assert(false); //!< 例外のbufferType
+					Assert(false); //!< 例外のbufferType
 					break;
 			}
 
@@ -187,10 +187,10 @@ void DxObject::ShaderReflectionTable::MargeBufferInfo(const std::string& key, co
 		//* コンフリクトの確認
 		//* ここに入った場合, visibilityがallにできるか確認
 		// buffer種類の確認
-		assert(value.bufferType != it->second.info.bufferType); //!< 同じ名前なのに違うbufferの種類である
+		Assert(value.bufferType != it->second.info.bufferType); //!< 同じ名前なのに違うbufferの種類である
 
 		// register番号の確認
-		assert(value.registerNum != it->second.info.registerNum); //!< register番号が一致しない
+		Assert(value.registerNum != it->second.info.registerNum); //!< register番号が一致しない
 
 		// visibilityをallに変更
 		it->second.info.visibility = VISIBILITY_ALL;
@@ -208,14 +208,14 @@ ComPtr<ID3D12ShaderReflection> DxObject::ShaderReflectionTable::CreateReflection
 		//!< encordingは設定しない
 	};
 
-	assert(manager_ != nullptr); //!< managerが設定されてない
+	Assert(manager_ != nullptr); //!< managerが設定されてない
 
 	auto hr = manager_->GetUtils()->CreateReflection(
 		&buffer,
 		IID_PPV_ARGS(&result)
 	);
 
-	assert(SUCCEEDED(hr));
+	Assert(SUCCEEDED(hr));
 
 	return result;
 }
@@ -302,7 +302,7 @@ DXGI_FORMAT DxObject::ShaderReflectionTable::GetFormat(D3D_REGISTER_COMPONENT_TY
 			break;
 
 		default:
-			assert(false);
+			Assert(false);
 			break;
 	}
 

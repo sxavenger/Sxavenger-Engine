@@ -58,7 +58,7 @@ void DxObject::DepthStencil::Init(
 			IID_PPV_ARGS(&resource_)
 		);
 
-		assert(SUCCEEDED(hr));
+		Assert(SUCCEEDED(hr));
 	}
 
 	// depthStensilViewの生成

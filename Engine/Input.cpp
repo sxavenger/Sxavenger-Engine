@@ -4,6 +4,7 @@
 // include
 //-----------------------------------------------------------------------------------------
 #include <cassert>
+#include <Logger.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // KeyboardInput class methods
@@ -15,13 +16,13 @@ void KeyboardInput::Init(IDirectInput8* dInput, const HWND& hWnd) {
 	auto hr = dInput->CreateDevice(
 		GUID_SysKeyboard, &keyboardDevice_, NULL
 	);
-	assert(SUCCEEDED(hr));
+	Assert(SUCCEEDED(hr));
 
 	// 入力データ形式のセット
 	hr = keyboardDevice_->SetDataFormat(
 		&c_dfDIKeyboard // 標準形式
 	);
-	assert(SUCCEEDED(hr));
+	Assert(SUCCEEDED(hr));
 
 	// flagの設定
 	DWORD flags = 0;
@@ -40,7 +41,7 @@ void KeyboardInput::Init(IDirectInput8* dInput, const HWND& hWnd) {
 		hWnd,
 		flags
 	);
-	assert(SUCCEEDED(hr));
+	Assert(SUCCEEDED(hr));
 	
 }
 
@@ -79,13 +80,13 @@ void MouseInput::Init(IDirectInput8* dInput, const HWND& hWnd) {
 	auto hr = dInput->CreateDevice(
 		GUID_SysMouse, &mouseDevice_, NULL
 	);
-	assert(SUCCEEDED(hr));
+	Assert(SUCCEEDED(hr));
 
 	// 入力データ形式のセット
 	hr = mouseDevice_->SetDataFormat(
 		&c_dfDIMouse // 標準形式
 	);
-	assert(SUCCEEDED(hr));
+	Assert(SUCCEEDED(hr));
 
 	// flagの設定
 	DWORD flags = 0;
@@ -102,7 +103,7 @@ void MouseInput::Init(IDirectInput8* dInput, const HWND& hWnd) {
 		hWnd,
 		flags
 	);
-	assert(SUCCEEDED(hr));
+	Assert(SUCCEEDED(hr));
 
 	// hwndの保存
 	hWnd_ = &hWnd;
@@ -136,7 +137,7 @@ Vector2i MouseInput::GetDeltaMousePos() const {
 }
 
 bool MouseInput::IsPressMouse(uint8_t buttonNum) const {
-	assert(buttonNum < 4); //!< DIMOUSESTATE構造体
+	Assert(buttonNum < 4); //!< DIMOUSESTATE構造体
 	return mouse_.first.rgbButtons[buttonNum];
 }
 
@@ -312,5 +313,5 @@ void Input::CreateDirectInput(const HINSTANCE& hInst) {
 		(void**)&directInput_, nullptr
 	);
 
-	assert(SUCCEEDED(hr));
+	Assert(SUCCEEDED(hr));
 }

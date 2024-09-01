@@ -68,7 +68,7 @@ void DirectXCommon::EndFrame() {
 
 void DirectXCommon::BeginOffscreen(Texture* renderTexture) {
 
-	assert(renderTexture != nullptr);
+	Assert(renderTexture != nullptr);
 
 	BeginRendering();
 	
@@ -154,7 +154,7 @@ void DirectXCommon::BeginOffscreens(uint32_t textureNum, RenderTexture* renderTe
 		renderTargetDescriptors.push_back(renderTextures[i]->GetCPUHandleRTV());
 	}
 
-	assert(barriers.size() != 0); //!< renderingするtextureが存在しない
+	Assert(barriers.size() != 0); //!< renderingするtextureが存在しない
 
 	// renderTexturesの遷移
 	commandList->ResourceBarrier(
@@ -387,7 +387,7 @@ DirectXCommon* DirectXCommon::GetInstance() {
 }
 
 void DirectXCommon::BeginRendering() {
-	assert(!isRendering_); //!< 他がrendering中
+	Assert(!isRendering_); //!< 他がrendering中
 	isRendering_ = true;
 }
 

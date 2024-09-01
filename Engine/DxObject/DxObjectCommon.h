@@ -105,7 +105,7 @@ struct Descriptor {
 	}
 
 	const D3D12_GPU_DESCRIPTOR_HANDLE& GetGPUHandle() const {
-		assert(handles.second); //!< GPUDescriptorを持っていないので
+		Assert(handles.second.has_value()); //!< GPUDescriptorを持っていないので
 		return handles.second.value();
 	}
 

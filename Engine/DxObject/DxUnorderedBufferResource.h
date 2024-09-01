@@ -114,12 +114,12 @@ public:
 	/* data関係 */
 
 	/*void SetWriteData(uint32_t index, const T& value) {
-		assert(index < indexSize_);
+		Assert(index < indexSize_);
 		writeDataArray_[index] = value;
 	}
 
 	const T& GetReadBackData(uint32_t index) {
-		assert(index < indexSize_);
+		Assert(index < indexSize_);
 		return readBackDataArray_[index];
 	}*/
 

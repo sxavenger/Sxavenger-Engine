@@ -84,6 +84,8 @@ void GameScene::Init() {
 	demo_ = std::make_unique<RayTracingDemo>();
 	demo_->Init();
 
+	Assert(false, "test");
+
 }
 
 void GameScene::Term() {

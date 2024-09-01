@@ -13,7 +13,7 @@
 void DxObject::GraphicsShaderNode::Create(const std::wstring& filename, GraphicShaderType type) {
 
 	// typeの確認
-	assert(type < GraphicShaderType::kCountOfGraphicShaderType);
+	Assert(type < GraphicShaderType::kCountOfGraphicShaderType);
 
 	// nodeの取得
 	nodes_[type] = manager_->GetBlob(filename, static_cast<ShaderType>(type));

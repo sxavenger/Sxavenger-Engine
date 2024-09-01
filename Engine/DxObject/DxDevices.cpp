@@ -27,7 +27,7 @@ void DxObject::Devices::Init() {
 	// DXGIファクトリーの生成
 	{
 		auto hr = CreateDXGIFactory(IID_PPV_ARGS(&dxgiFactory_));
-		assert(SUCCEEDED(hr));
+		Assert(SUCCEEDED(hr));
 
 		Log("[DxObject::Devices]: dxgiFactory_ << Complete Create");
 	}
@@ -41,7 +41,7 @@ void DxObject::Devices::Init() {
 			// アダプタ情報を取得
 			DXGI_ADAPTER_DESC3 desc = {};
 			auto hr = useAdapter_->GetDesc3(&desc);
-			assert(SUCCEEDED(hr));
+			Assert(SUCCEEDED(hr));
 
 			// ソフトウェアアダプタじゃない場合, 成功
 			if (!(desc.Flags & DXGI_ADAPTER_FLAG3_SOFTWARE)) {
@@ -53,7 +53,7 @@ void DxObject::Devices::Init() {
 			useAdapter_ = nullptr;
 		}
 
-		assert(useAdapter_ != nullptr);
+		Assert(useAdapter_ != nullptr);
 		Log("[DxObject::Devices]: useAdapter_ << Complete Create");
 	}
 
@@ -77,7 +77,7 @@ void DxObject::Devices::Init() {
 			}
 		}
 
-		assert(device_ != nullptr);
+		Assert(device_ != nullptr);
 
 		Log("[DxObject::Devices]: device_ << Complete Create");
 	}
@@ -122,9 +122,9 @@ void DxObject::Devices::Init() {
 	isRayTracingEnabled_ = CheckRayTracingEnable();
 	isMeshShaderEnabled_ = CheckMeshShaderEnable();
 
-	// 仮でassertを出しておく
-	assert(isRayTracingEnabled_);
-	assert(isMeshShaderEnabled_);
+	// 仮でAssertを出しておく
+	Assert(isRayTracingEnabled_, "raytracing version failed.");
+	Assert(isMeshShaderEnabled_, "mesh shader version failed.");
 
 }
 

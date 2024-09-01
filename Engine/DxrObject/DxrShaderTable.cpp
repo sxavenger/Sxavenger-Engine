@@ -23,7 +23,7 @@ void ShaderTable::Create(const StateObject* stateObject, const TopLevelAS* tlas,
 	hitgroupRecordSize     += static_cast<UINT>(stateObject->GetMaxTotalBufferSize(kExport_Hitgroup));
 	hitgroupRecordSize      = Alignment(hitgroupRecordSize, kShaderRecordAlignment);
 
-	assert(stateObject->GetExportSize(kExport_Raygeneration) == 1);
+	Assert(stateObject->GetExportSize(kExport_Raygeneration) == 1);
 	//!< raygenerationは1つしか使えない
 
 	// 使用する各シェーダーの個数より、シェーダーテーブルのサイズを求める.
@@ -143,7 +143,7 @@ uint8_t* ShaderTable::WriteShaderRecord(uint8_t* dst, const BufferRecord* record
 
 	if (id == nullptr) {
 		Log(L"[RayTracing Error] ShaderTable: not found export identifier. export name: " + recorder->GetExportGroup()->GetName());
-		assert(false);
+		Assert(false);
 	}
 
 	// id分の書き込み
@@ -157,7 +157,7 @@ uint8_t* ShaderTable::WriteShaderRecord(uint8_t* dst, const BufferRecord* record
 			if (std::holds_alternative<GPUAddress>(buffer)) { //!< Addressの場合
 				// Addressの参照取得
 				const auto& address = std::get<GPUAddress>(buffer);
-				assert(address.has_value()); //!< addressがbindされていない
+				Assert(address.has_value()); //!< addressがbindされていない
 
 				// Addressの書き込み
 				dst += WriteGPUAddress(dst, address.value());
@@ -166,14 +166,14 @@ uint8_t* ShaderTable::WriteShaderRecord(uint8_t* dst, const BufferRecord* record
 			} else if (std::holds_alternative<GPUHandle>(buffer)) {
 				// handleの参照取得
 				const auto& handle = std::get<GPUHandle>(buffer);
-				assert(handle.has_value()); //!< handleがbindされてない
+				Assert(handle.has_value()); //!< handleがbindされてない
 
 				// handleの書き込み
 				dst += WriteGPUHandle(dst, handle.value());
 				continue;
 			}
 
-			assert(false); //!< 例外の型が書き込まれてる
+			Assert(false); //!< 例外の型が書き込まれてる
 		}
 	}
 

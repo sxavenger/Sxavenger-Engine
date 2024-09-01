@@ -15,7 +15,7 @@
 
 Vector3f AnimationMethods::CalculateValue(const std::vector<KeyframeVector3>& keyframes, float time) {
 
-	assert(!keyframes.empty()); //!< keyframeが登録されてない
+	Assert(!keyframes.empty()); //!< keyframeが登録されてない
 
 	if (keyframes.size() == 1 || time <= keyframes[0].time) { //!< keyframeが1つ || 現在の時刻がキーフレーム前の場合
 		return keyframes[0].value;
@@ -38,7 +38,7 @@ Vector3f AnimationMethods::CalculateValue(const std::vector<KeyframeVector3>& ke
 
 Quaternion AnimationMethods::CalculateValue(const std::vector<KeyframeQuaternion>& keyframes, float time) {
 
-	assert(!keyframes.empty()); //!< keyframeが登録されてない
+	Assert(!keyframes.empty()); //!< keyframeが登録されてない
 
 	if (keyframes.size() == 1 || time <= keyframes[0].time) { //!< keyframeが1つ || 現在の時刻がキーフレーム前の場合
 		return keyframes[0].value;
@@ -109,7 +109,7 @@ void Skeleton::ApplyAnimation(const Animation& animation, float time) {
 
 void SkinCluster::Update(const Skeleton& skeleton) {
 	for (size_t jointIndex = 0; jointIndex < skeleton.joints.size(); ++jointIndex) {
-		assert(jointIndex < inverseBindPoseMatrices.size());
+		Assert(jointIndex < inverseBindPoseMatrices.size());
 
 		Matrix4x4 mat = inverseBindPoseMatrices[jointIndex] * skeleton.joints[jointIndex].skeletonSpaceMatrix;
 

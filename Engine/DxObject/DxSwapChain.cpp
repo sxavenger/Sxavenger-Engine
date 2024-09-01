@@ -51,7 +51,7 @@ void DxObject::SwapChain::Init(
 			reinterpret_cast<IDXGISwapChain1**>(swapChain_.GetAddressOf())
 		);
 
-		assert(SUCCEEDED(hr));
+		Assert(SUCCEEDED(hr));
 		Log("[DxObject.SwapChain]: swapChain_ << Complete Create");
 	}
 
@@ -62,7 +62,7 @@ void DxObject::SwapChain::Init(
 				i, IID_PPV_ARGS(&resource_[i])
 			);
 
-			assert(SUCCEEDED(hr));
+			Assert(SUCCEEDED(hr));
 		}
 
 		Log("[DxObject.SwapChain]: swapChainResource_[..] << Complete Create");
@@ -74,7 +74,7 @@ void DxObject::SwapChain::Init(
 		desc.Format        = forwardFormat;
 		desc.ViewDimension = D3D12_RTV_DIMENSION_TEXTURE2D;
 
-		assert(descriptorHeaps->GetDescriptorMaxCount(DescriptorType::RTV) >= kBufferCount_);
+		Assert(descriptorHeaps->GetDescriptorMaxCount(DescriptorType::RTV) >= kBufferCount_);
 
 		for (uint32_t i = 0; i < kBufferCount_; ++i) {
 			descriptorRTV_[i] = descriptorHeaps->GetDescriptor(DescriptorType::RTV);

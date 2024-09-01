@@ -243,7 +243,6 @@ void TextureManager::Init(DirectXCommon* dxCommon) {
 	LoadTexture("resources/uvChecker.png");
 	LoadTexture("resources/tile_black.png");
 	LoadTexture("resources/tile_white.png");
-
 }
 
 void TextureManager::Term() {
@@ -303,13 +302,13 @@ Texture* TextureManager::CreateDummyTexture(const std::string& key, int32_t text
 }
 
 Texture* TextureManager::GetTexture(const std::string& key) const {
-	assert(FindKey(key)); //!< 同一keyが見つからない
+	Assert(FindKey(key)); //!< 同一keyが見つからない
 	
 	return textureContainer_.at(key).texture.get();
 }
 
 const D3D12_GPU_DESCRIPTOR_HANDLE& TextureManager::GetGPUHandle(const std::string& key) const {
-	assert(FindKey(key));
+	Assert(FindKey(key));
 
 	return textureContainer_.at(key).texture->GetGPUHandleSRV();
 }
@@ -415,7 +414,7 @@ DirectX::ScratchImage TextureMethod::LoadTexture(const std::string& filePath) {
 			= "[Texture Not Found] \n filePath: " + filePath;
 
 		ExternalLogger::Write(errorLog);
-		AssertMesseage(false, errorLog, "Error: LoadTexture");
+		Assert(false, errorLog);
 	}
 
 	// MipMapsの生成
@@ -435,7 +434,7 @@ DirectX::ScratchImage TextureMethod::LoadTexture(const std::string& filePath) {
 			mipImage
 		);
 
-		assert(SUCCEEDED(hr));
+		Assert(SUCCEEDED(hr));
 	}
 
 	return mipImage;
@@ -468,7 +467,7 @@ ComPtr<ID3D12Resource> TextureMethod::CreateTextureResource(ID3D12Device* device
 		IID_PPV_ARGS(&result)
 	);
 
-	assert(SUCCEEDED(hr));
+	Assert(SUCCEEDED(hr));
 
 	return result;
 }

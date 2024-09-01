@@ -3,10 +3,11 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
+//* c++
 #include <string>
 #include <format>
 #include <fstream>
-#include <Windows.h>
+#include <source_location>
 
 //-----------------------------------------------------------------------------------------
 // Convert to string || wstring
@@ -26,10 +27,8 @@ void Log(const std::wstring& logW);
 // Assertion
 //-----------------------------------------------------------------------------------------
 
-void AssertMesseage(bool isSuccess, const std::string& errorLog);
-void AssertMesseage(bool isSuccess, const std::string& errorLog, const std::string& textTitle);
-
-void AssertLog(bool expression, const std::string& log = "");
+void Assert(bool expresion, const std::string& detail = "", const std::source_location& location = std::source_location::current());
+void AssertW(bool expresion, const std::wstring& detail = L"", const std::source_location& location = std::source_location::current());
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // ExternalLogger class

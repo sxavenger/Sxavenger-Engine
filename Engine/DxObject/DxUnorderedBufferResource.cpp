@@ -6,7 +6,7 @@
 
 void DxObject::BaseUnorderedBufferResource::Init(Devices* devices, uint32_t indexSize, size_t structureSize) {
 	// 引数の確認
-	assert(structureSize != 0 || indexSize != 0);
+	Assert(structureSize != 0 || indexSize != 0);
 
 	// sizeの保存
 	indexSize_     = indexSize;

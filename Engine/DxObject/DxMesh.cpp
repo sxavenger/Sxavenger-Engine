@@ -186,7 +186,7 @@ void DxObject::MeshLoader::PerseMesh(
 			dstMesh.cullDatas.data()
 		);
 
-		assert(SUCCEEDED(hr));
+		Assert(SUCCEEDED(hr));
 	}
 }
 

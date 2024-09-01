@@ -16,7 +16,7 @@ _DXOBJECT_USING
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 void ImGuiManager::Init(WinApp* winApp, DirectXCommon* dxCommon) {
-	assert(winApp != nullptr && dxCommon != nullptr);
+	Assert(winApp != nullptr && dxCommon != nullptr);
 
 	dxCommon_ = dxCommon;
 

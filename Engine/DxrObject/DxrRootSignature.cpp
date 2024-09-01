@@ -46,7 +46,7 @@ ComPtr<ID3D12RootSignature> LocalRootSignatureDesc::CreateRootSignature(ID3D12De
 		Log("Failed: Create RootSignatuer");
 		Log(reinterpret_cast<char*>(signatureErrorBlob->GetBufferPointer()));
 		Log("//-----------------------------------------------------------------------------------------");
-		assert(false);
+		Assert(false);
 	}
 
 	ComPtr<ID3D12RootSignature> result;
@@ -58,7 +58,7 @@ ComPtr<ID3D12RootSignature> LocalRootSignatureDesc::CreateRootSignature(ID3D12De
 		IID_PPV_ARGS(&result)
 	);
 
-	assert(SUCCEEDED(hr));
+	Assert(SUCCEEDED(hr));
 
 	return result;
 }
@@ -104,7 +104,7 @@ void LocalRootSignatureDesc::Reserve() {
 }
 
 void LocalRootSignatureDesc::AutoTableResize(uint32_t index) {
-	assert(index < kMaxParamReserve_);
+	Assert(index < kMaxParamReserve_);
 
 	if (index < table_.size()) {
 		return;

@@ -86,19 +86,19 @@ void DxObject::GraphicsPipelineDesc::SetPrimitive(PrimitiveType type) {
 		return;
 	}
 
-	assert(false); //!< 未定義のtype
+	Assert(false); //!< 未定義のtype
 }
 
 void DxObject::GraphicsPipelineDesc::SetRTVFormat(DXGI_FORMAT format) {
 	rtvFormats.emplace_back(format);
 
-	assert(rtvFormats.size() < D3D12_SIMULTANEOUS_RENDER_TARGET_COUNT); //!< RTVの設定限界
+	Assert(rtvFormats.size() < D3D12_SIMULTANEOUS_RENDER_TARGET_COUNT); //!< RTVの設定限界
 }
 
 void DxObject::GraphicsPipelineDesc::SetRTVFormats(uint32_t size, const DXGI_FORMAT formats[]) {
 	rtvFormats.insert(rtvFormats.end(), formats, formats + size);
 
-	assert(rtvFormats.size() < D3D12_SIMULTANEOUS_RENDER_TARGET_COUNT); //!< RTVの設定限界
+	Assert(rtvFormats.size() < D3D12_SIMULTANEOUS_RENDER_TARGET_COUNT); //!< RTVの設定限界
 }
 
 D3D12_INPUT_LAYOUT_DESC DxObject::GraphicsPipelineDesc::GetInputLayout() const {
@@ -162,7 +162,7 @@ void DxObject::GraphicsPipeline::CreatePipeline(Devices* devices, GraphicsBlob* 
 void DxObject::GraphicsPipeline::CreatePipeline(
 	Devices* devices, GraphicsBlob* graphicsBlob, const GraphicsPipelineDesc& descs) {
 
-	assert((devices != nullptr) && (graphicsBlob != nullptr));
+	Assert((devices != nullptr) && (graphicsBlob != nullptr));
 
 	// 引数を受け渡し
 	isUseMeshPipeline_ = graphicsBlob->IsUseMeshPipeline();
@@ -213,7 +213,7 @@ void DxObject::GraphicsPipeline::CreatePipeline(
 			IID_PPV_ARGS(&pipeline_)
 		);
 
-		assert(SUCCEEDED(hr));
+		Assert(SUCCEEDED(hr));
 		return;
 
 	} else {
@@ -248,7 +248,7 @@ void DxObject::GraphicsPipeline::CreatePipeline(
 			IID_PPV_ARGS(&pipeline_)
 		);
 
-		assert(SUCCEEDED(hr));
+		Assert(SUCCEEDED(hr));
 		return;
 	}
 }

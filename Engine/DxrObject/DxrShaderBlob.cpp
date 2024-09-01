@@ -22,6 +22,6 @@ void ShaderBlob::Create(const std::wstring& filename) {
 }
 
 void ShaderBlob::SetEntryPointExport(const ExportGroup* exportGroup) {
-	assert(exportGroup != nullptr);
+	Assert(exportGroup != nullptr);
 	exports_.emplace_back(exportGroup);
 }

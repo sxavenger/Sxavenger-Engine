@@ -4,6 +4,7 @@
 // include
 //-----------------------------------------------------------------------------------------
 #include <cmath>
+#include <Logger.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // CollisionDetection class methods
@@ -43,7 +44,7 @@ bool CollisionDetection::CheckCollision(
 						break;
 
 					default:
-						assert(false);
+						Assert(false);
 						break;
 				}
 
@@ -78,7 +79,7 @@ bool CollisionDetection::CheckCollision(
 						break;
 
 					default:
-						assert(false);
+						Assert(false);
 						break;
 				}
 			}
@@ -89,7 +90,7 @@ bool CollisionDetection::CheckCollision(
 			break;
 
 		default:
-			assert(false); //!< indexの例外
+			Assert(false); //!< indexの例外
 			break;
 	}
 

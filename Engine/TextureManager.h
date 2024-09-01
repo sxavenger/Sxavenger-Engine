@@ -66,17 +66,17 @@ public:
 	//!< 継承先で定義されるのでこのクラスで呼び出された場合, エラーとなる
 
 	virtual const D3D12_CPU_DESCRIPTOR_HANDLE& GetCPUHandleRTV() const {
-		assert(false);
+		Assert(false);
 		return descriptorSRV_.GetCPUHandle(); // 絶対に返さない
 	}
 
 	virtual const Color4f& GetClearColor() const {
-		assert(false);
+		Assert(false);
 		return defaultClearColor; // 絶対に返さない
 	}
 
 	virtual const D3D12_GPU_DESCRIPTOR_HANDLE& GetGPUHandleUAV() const {
-		assert(false);
+		Assert(false);
 		return descriptorSRV_.GetGPUHandle(); // 絶対に返さない
 	}
 

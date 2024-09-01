@@ -45,6 +45,6 @@ void DxObject::CSPipeline::CreatePipeline(CSBlob* csBlob) {
 		IID_PPV_ARGS(&pipeline_)
 	);
 
-	assert(SUCCEEDED(hr));
+	Assert(SUCCEEDED(hr));
 
 }

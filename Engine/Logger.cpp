@@ -4,9 +4,14 @@
 // include
 //-----------------------------------------------------------------------------------------
 #include <comdef.h>
-#include <assert.h>
+#include <cassert>
 #include <sstream>
 #include <iomanip>
+
+//* windows
+#define NOMINMAX
+#include <windows.h>
+
 
 //-----------------------------------------------------------------------------------------
 // methods
@@ -53,29 +58,64 @@ void Log(const std::wstring& logW) {
 	Log(str);
 }
 
-void AssertMesseage(bool isSuccess, const std::string& errorLog) {
-	if (!isSuccess) {
-		MessageBoxW(nullptr, ToWstring(errorLog).c_str(), L"Error Message", 0);
-		assert(isSuccess);
-		exit(1);
-	}
-}
-
-void AssertMesseage(bool isSuccess, const std::string& errorLog, const std::string& textTitle) {
-	if (!isSuccess) {
-		MessageBoxW(nullptr, ToWstring(errorLog).c_str(), ToWstring(textTitle).c_str(), 0);
-		assert(isSuccess);
-		exit(1);
-	}
-}
-
-void AssertLog(bool expression, const std::string& log) {
-	if (expression) { //!< expressionが成功(TRUE)してる場合, 
+void Assert(bool expresion, const std::string& detail, const std::source_location& location) {
+	if (expresion) {
 		return;
 	}
 
-	Log(log);
-	assert(expression);
+	std::ostringstream message;
+	message << "[location]\n";
+	message << " filename: " << location.file_name() << "\n";
+	message << " function: " << location.function_name() << "\n";
+	message << " line:     " << location.line() << "\n";
+
+	if (!detail.empty()) {
+		message << "\n[details]\n";
+		message << " " << detail << "\n";
+	}
+
+	OutputDebugStringA(
+		std::string("\nError: Sxavenger Engine assertion\n\n" + message.str() + "\n").c_str()
+	);
+
+	MessageBoxA(
+		NULL,
+		message.str().c_str(),
+		"Sxavenger Engine assertion",
+		MB_TASKMODAL | MB_ICONHAND
+	);
+	
+	__debugbreak();
+}
+
+void AssertW(bool expresion, const std::wstring& detail, const std::source_location& location) {
+	if (expresion) {
+		return;
+	}
+
+	std::wostringstream message;
+	message << "[location]\n";
+	message << " filename: " << location.file_name() << "\n";
+	message << " function: " << location.function_name() << "\n";
+	message << " line:     " << location.line() << "\n";
+
+	if (!detail.empty()) {
+		message << "\n[details]\n";
+		message << " " << detail << "\n";
+	}
+
+	OutputDebugStringW(
+		std::wstring(L"\nError: Sxavenger Engine assertion\n\n" + message.str() + L"\n").c_str()
+	);
+
+	MessageBoxW(
+		NULL,
+		message.str().c_str(),
+		L"Sxavenger Engine assertion",
+		MB_TASKMODAL | MB_ICONHAND
+	);
+
+	__debugbreak();
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
