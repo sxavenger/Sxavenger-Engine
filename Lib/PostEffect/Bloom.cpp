@@ -20,13 +20,13 @@ void Bloom::Init() {
 	SetThisAttribute("Bloom");
 
 	renderTargetTexture_ = std::make_unique<RenderTexture>();
-	renderTargetTexture_->Create(Sxavenger::GetDxCommon(), kWindowWidth, kWindowHeight, { 0.0f, 0.0f, 0.0f, 1.0f }, DXGI_FORMAT_R32G32B32A32_FLOAT);
+	renderTargetTexture_->Create(Sxavenger::GetDxCommon(), { kWindowWidth, kWindowHeight }, { 0.0f, 0.0f, 0.0f, 1.0f }, DXGI_FORMAT_R32G32B32A32_FLOAT);
 
 	luminnceTexture_ = std::make_unique<RenderTexture>();
-	luminnceTexture_->Create(Sxavenger::GetDxCommon(), kWindowWidth, kWindowHeight, { 0.0f, 0.0f, 0.0f, 1.0f }, DXGI_FORMAT_R32G32B32A32_FLOAT);
+	luminnceTexture_->Create(Sxavenger::GetDxCommon(), { kWindowWidth, kWindowHeight }, { 0.0f, 0.0f, 0.0f, 1.0f }, DXGI_FORMAT_R32G32B32A32_FLOAT);
 
 	luminnceBlurTexture_ = std::make_unique<RenderTexture>();
-	luminnceBlurTexture_->Create(Sxavenger::GetDxCommon(), kWindowWidth, kWindowHeight, { 0.0f, 0.0f, 0.0f, 1.0f }, DXGI_FORMAT_R32G32B32A32_FLOAT);
+	luminnceBlurTexture_->Create(Sxavenger::GetDxCommon(), { kWindowWidth, kWindowHeight }, { 0.0f, 0.0f, 0.0f, 1.0f }, DXGI_FORMAT_R32G32B32A32_FLOAT);
 
 	sprite_ = DrawMethods::Plane2D();
 

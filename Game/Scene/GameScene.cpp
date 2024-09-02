@@ -83,7 +83,7 @@ void GameScene::Init() {
 
 	demo_ = std::make_unique<RayTracingDemo>();
 	demo_->Init();
-
+	
 }
 
 void GameScene::Term() {
@@ -119,12 +119,12 @@ void GameScene::Draw() {
 		Sxavenger::TransitionProcess();
 
 		//* main screen *//
-		Sxavenger::BeginOffscreen(Sxavenger::GetTexture("offscreen"));
+		Sxavenger::BeginOffscreen(Sxavenger::GetTexture<RenderTexture>("offscreen"));
 		Sxavenger::camera3D = gameCamera_.get();
 
 		debugObjectManager_->Draw();
 
-		Sxavenger::EndOffscreen(Sxavenger::GetTexture("offscreen"));
+		Sxavenger::EndOffscreen(Sxavenger::GetTexture<RenderTexture>("offscreen"));
 		Sxavenger::TransitionProcess();
 	}
 
@@ -138,7 +138,7 @@ void GameScene::Draw() {
 		// "offscreen"をフルスクリーンにする
 		Sxavenger::GetDxCommon()->CopyResource(
 			Sxavenger::GetDxCommon()->GetSwapChainObj()->GetBackBufferResource(), D3D12_RESOURCE_STATE_RENDER_TARGET,
-			Sxavenger::GetTexture("offscreen")->GetResource(), D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE
+			Sxavenger::GetTexture<RenderTexture>("offscreen")->GetResource(), D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE
 		);
 
 		/*

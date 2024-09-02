@@ -229,7 +229,7 @@ public:
 	//! @brief containerからGPUHandleの取得
 	const D3D12_GPU_DESCRIPTOR_HANDLE& GetGPUHandle(const std::string& key) const;
 
-	//! @brief textureの解放
+	//! @brief 参照カウントを込みでのtextureの解放
 	void ReleaseTexture(const std::string& key);
 
 	//! @brief textureの削除

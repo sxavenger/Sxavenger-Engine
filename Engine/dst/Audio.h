@@ -3,15 +3,15 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
-//* xaudio2
+// xaudio
 #include <xaudio2.h>
 
-//* c++
+// c++
 #include <fstream>
 #include <unordered_map>
 #include <memory>
 
-//* ComPtr
+// ComPtr
 #include <ComPtr.h>
 
 //-----------------------------------------------------------------------------------------
@@ -20,24 +20,22 @@
 #pragma comment(lib, "xaudio2.lib")
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// AudioBuffer class
+// Audio class
 ////////////////////////////////////////////////////////////////////////////////////////////
-class AudioBuffer {
+class Audio {
 public:
 
 	//=========================================================================================
 	// public methods
 	//=========================================================================================
 
-	AudioBuffer() = default;
+	Audio() = default;
 
-	~AudioBuffer() { Unload(); }
+	~Audio() { SoundUnload(); }
 
-	void Load(const std::string& filename);
+	void SoundLoadWave(const std::string& filename);
 
-	void Unload();
-
-	//* Getter *//
+	void SoundUnload();
 
 	const WAVEFORMATEX& GetFormat() const { return format_; }
 
@@ -77,53 +75,6 @@ private:
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// Audio class
-////////////////////////////////////////////////////////////////////////////////////////////
-class Audio {
-public:
-
-	//=========================================================================================
-	// public methods
-	//=========================================================================================
-
-	Audio() = default;
-
-	~Audio() { Term(); }
-
-	void Create(const AudioBuffer* buffer, bool isLoop = false);
-
-	void Term();
-
-	//* source option *//
-
-	void PlayAudio();
-
-	void StopAudio();
-
-	void SetVolume(float volume);
-
-	void ResetAudio();
-
-private:
-
-	//=========================================================================================
-	// private variables
-	//=========================================================================================
-
-	//* xaudio *//
-
-	IXAudio2SourceVoice* source_ = nullptr;
-
-	//* parameter *//
-
-	const AudioBuffer* buffer_ = nullptr;
-	bool               isLoop_ = false;
-	float              volume_ = 1.0f;
-
-
-};
-
-////////////////////////////////////////////////////////////////////////////////////////////
 // AudioManager class
 ////////////////////////////////////////////////////////////////////////////////////////////
 class AudioManager {
@@ -133,31 +84,23 @@ public:
 	// public methods
 	//=========================================================================================
 
+	//! @brief 初期化処理(シングルトンなので呼び出し必須)
 	void Init();
 
+	//! @brief 終了処理(シングルトンなので呼び出し必須)
 	void Term();
 
-	//* buffers *//
+	//! @brief Audioの読み込み
+	const Audio* LoadAudio(const std::string& filename);
 
-	void LoadAudioBuffer(const std::string& filename);
-
-	const AudioBuffer* GetAudioBuffer(const std::string& filename);
-
-	//* audio option *//
-
-	void PlayOneShot(const std::string& filename, float volume);
-
-	std::unique_ptr<Audio> GetAudio(const std::string& filename, bool isLoop);
-
-	//* Getter *//
-
-	IXAudio2* GetXAudio2() const { return xAudio2_.Get(); }
+	void PlayAudio(const Audio* audio);
+	void PlayAudio(const std::string& filename);
 
 	//* singleton *//
 
-	static AudioManager* GetInstance(); //!< あんまりよろしくない...
+	static AudioManager* GetInstance();
 
-	AudioManager() = default;
+	AudioManager()  = default;
 	~AudioManager() = default;
 
 private:
@@ -169,26 +112,10 @@ private:
 	//* xaudio *//
 
 	ComPtr<IXAudio2>        xAudio2_;
-	IXAudio2MasteringVoice* master_ = nullptr;
+	IXAudio2MasteringVoice* masterVoice_ = nullptr;
 
-	//* container *//
+	//* audio container *//
 
-	std::unordered_map<std::string, std::unique_ptr<AudioBuffer>> buffers_;
-
-	//* parameter *//
-
-	const float kMasterVolume_ = 1.0f;
-
-	static const std::string directory_;
-
-	//=========================================================================================
-	// private methods
-	//=========================================================================================
-
-	static std::string ToLower(const std::string& str);
-
-	void InitXAudio2();
-
-
+	std::unordered_map<std::string, std::unique_ptr<Audio>> audios_;
 
 };

@@ -3,15 +3,17 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
-#include <cassert>
 #include <Logger.h>
 
+//* c++
+#include <algorithm>
+#include <cwctype>
+
 ////////////////////////////////////////////////////////////////////////////////////////////
-// Audio class methods
+// AudioBuffer class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-void Audio::SoundLoadWave(const std::string& filename) {
-
+void AudioBuffer::Load(const std::string& filename) {
 	// .wavファイルを開く
 	std::ifstream file;
 	file.open(filename, std::ios_base::binary); //!< .wavをバイナリ形式で開く
@@ -75,7 +77,7 @@ void Audio::SoundLoadWave(const std::string& filename) {
 
 }
 
-void Audio::SoundUnload() {
+void AudioBuffer::Unload() {
 
 	delete[] pBuffer_;
 
@@ -86,17 +88,90 @@ void Audio::SoundUnload() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
+// Audio class
+////////////////////////////////////////////////////////////////////////////////////////////
+
+void Audio::Create(const AudioBuffer* buffer, bool isLoop) {
+
+	// 引数の保存
+	buffer_ = buffer;
+	isLoop_ = isLoop;
+
+	auto manager = AudioManager::GetInstance();
+
+	// 波形formatを基にSourceVoiceの生成
+	auto hr = manager->GetXAudio2()->CreateSourceVoice(
+		&source_,
+		&buffer_->GetFormat()
+	);
+
+	Assert(SUCCEEDED(hr));
+
+	// 再生する波形データの設定
+	XAUDIO2_BUFFER buf = {};
+	buf.pAudioData = buffer_->GetBuffer();
+	buf.AudioBytes = buffer_->GetBufferSize();
+	buf.Flags      = XAUDIO2_END_OF_STREAM;
+	buf.LoopCount  = isLoop_ ? XAUDIO2_LOOP_INFINITE : 0;
+
+	// 波形データの再生
+	hr = source_->SubmitSourceBuffer(&buf);
+	Assert(SUCCEEDED(hr));
+
+}
+
+void Audio::Term() {
+	if (source_ != nullptr) {
+		source_->Stop(); //!< 再生の停止
+		source_->DestroyVoice();
+
+		source_ = nullptr;
+	}
+}
+
+void Audio::PlayAudio() {
+	auto hr = source_->Start();
+	Assert(SUCCEEDED(hr));
+}
+
+void Audio::StopAudio() {
+	auto hr = source_->Stop();
+	Assert(SUCCEEDED(hr));
+}
+
+void Audio::SetVolume(float volume) {
+	volume_ = volume;
+	source_->SetVolume(volume_);
+}
+
+void Audio::ResetAudio() {
+
+	source_->Stop();
+
+	source_->FlushSourceBuffers();
+
+	// 再生する波形データの設定
+	XAUDIO2_BUFFER buf = {};
+	buf.pAudioData = buffer_->GetBuffer();
+	buf.AudioBytes = buffer_->GetBufferSize();
+	buf.Flags      = XAUDIO2_END_OF_STREAM;
+	buf.LoopCount   = isLoop_ ? XAUDIO2_LOOP_INFINITE : 0;
+
+	// 波形データの再生
+	auto hr = source_->SubmitSourceBuffer(&buf);
+	Assert(SUCCEEDED(hr));
+
+	source_->SetVolume(volume_);
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////
 // AudioManager class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
+const std::string AudioManager::directory_ = "resources/sounds/";
+
 void AudioManager::Init() {
-
-	auto hr = XAudio2Create(&xAudio2_, 0, XAUDIO2_DEFAULT_PROCESSOR);
-	Assert(SUCCEEDED(hr));
-
-	hr = xAudio2_->CreateMasteringVoice(&masterVoice_);
-	Assert(SUCCEEDED(hr));
-
+	InitXAudio2();
 }
 
 void AudioManager::Term() {
@@ -105,67 +180,104 @@ void AudioManager::Term() {
 	xAudio2_.Reset();
 
 	// 音声データの解放
-	audios_.clear();
+	buffers_.clear();
 }
 
-const Audio* AudioManager::LoadAudio(const std::string& filename) {
-	
-	// containerにすでにあるかに確認
-	auto it = audios_.find(filename);
-	if (it != audios_.end()) { //!< containerにaudioがある場合
-		return it->second.get();
+void AudioManager::LoadAudioBuffer(const std::string& filename) {
+
+	std::string lower = ToLower(filename);
+
+	auto it = buffers_.find(lower);
+	if (it != buffers_.end()) {
+		return; //!< すでにbufferが存在している
 	}
 
-	// ない場合は新しく作成
-	std::unique_ptr<Audio> audio = std::make_unique<Audio>();
-	audio->SoundLoadWave(filename);
+	// bufferの生成
+	std::unique_ptr<AudioBuffer> newBuffer = std::make_unique<AudioBuffer>();
+	newBuffer->Load(directory_ + filename);
 
-	Audio* result = audio.get();
+	// bufferの保存
+	buffers_.emplace(lower, std::move(newBuffer));
 
-	audios_.emplace(filename, std::move(audio));
-
-	return result;
 
 }
 
-void AudioManager::PlayAudio(const Audio* audio) {
+const AudioBuffer* AudioManager::GetAudioBuffer(const std::string& filename) {
+
+	std::string lower = ToLower(filename);
+
+	auto it = buffers_.find(lower);
+	if (it == buffers_.end()) { //!< bufferが存在しない場合
+		LoadAudioBuffer(lower);
+	}
+
+	return buffers_.at(lower).get();
+
+}
+
+void AudioManager::PlayOneShot(const std::string& filename, float volume) {
+
+	auto buffer = GetAudioBuffer(filename);
+
+	IXAudio2SourceVoice* source = nullptr;
 
 	// 波形formatを基にSourceVoiceの生成
-	IXAudio2SourceVoice* pSourceVoice = nullptr;
+	auto hr = xAudio2_->CreateSourceVoice(
+		&source,
+		&buffer->GetFormat()
+	);
 
-	auto hr = xAudio2_->CreateSourceVoice(&pSourceVoice, &audio->GetFormat());
 	Assert(SUCCEEDED(hr));
 
 	// 再生する波形データの設定
 	XAUDIO2_BUFFER buf = {};
-	buf.pAudioData = audio->GetBuffer();
-	buf.AudioBytes = audio->GetBufferSize();
+	buf.pAudioData = buffer->GetBuffer();
+	buf.AudioBytes = buffer->GetBufferSize();
 	buf.Flags      = XAUDIO2_END_OF_STREAM;
 
 	// 波形データの再生
-	hr = pSourceVoice->SubmitSourceBuffer(&buf);
+	hr = source->SubmitSourceBuffer(&buf);
 	Assert(SUCCEEDED(hr));
 
-	hr = pSourceVoice->Start();
+	source->SetVolume(volume);
+
+	hr = source->Start();
 	Assert(SUCCEEDED(hr));
 
 }
 
-void AudioManager::PlayAudio(const std::string& filename) {
+std::unique_ptr<Audio> AudioManager::GetAudio(const std::string& filename, bool isLoop) {
 
-	// containerにAudioが登録されているかの確認
-	auto it = audios_.find(filename);
-	if (it == audios_.end()) { //!< audioが見つからなかった
-		Assert(false);
-		return;
-	}
-
-	PlayAudio(it->second.get());
+	std::unique_ptr<Audio> audio = std::make_unique<Audio>();
+	audio->Create(GetAudioBuffer(filename), isLoop);
+	
+	return std::move(audio);
 }
-
-
 
 AudioManager* AudioManager::GetInstance() {
 	static AudioManager instance;
 	return &instance;
+}
+
+std::string AudioManager::ToLower(const std::string& str) {
+	std::string result;
+	result.resize(str.size());
+
+	std::transform(str.begin(), str.end(), result.begin(), [](unsigned char c) {
+		return static_cast<char>(std::tolower(c));
+	});
+
+	return result;
+}
+
+void AudioManager::InitXAudio2() {
+
+	auto hr = XAudio2Create(&xAudio2_, 0, XAUDIO2_DEFAULT_PROCESSOR);
+	Assert(SUCCEEDED(hr));
+
+	hr = xAudio2_->CreateMasteringVoice(&master_);
+	Assert(SUCCEEDED(hr));
+
+	// パラメーターの設定
+	master_->SetVolume(kMasterVolume_);
 }

@@ -25,7 +25,7 @@ void RayTracingDemo::Init() {
 		raygen_->CreateRootSignature(descRaygen);
 
 		output_ = std::make_unique<DummyTexture>();
-		output_->Create(Sxavenger::GetDxCommon(), kWindowWidth, kWindowHeight);
+		output_->Create(Sxavenger::GetDxCommon(), { kWindowWidth, kWindowHeight });
 
 		raygenRecord_ = std::make_unique<BufferRecord>(raygen_.get());
 		raygenRecord_->BindHandle(0, output_->GetGPUHandleUAV());
@@ -65,11 +65,11 @@ void RayTracingDemo::Init() {
 
 		blas_ = std::make_unique<BottomLevelAS>();
 		blas_->Create(model_->GetMesh(0), hitgroup_.get());
-		//blas_->BindAddress(0, missColor_->GetGPUVirtualAddress()); // test
 
 		//tlas_->BeginSetupInstance();
-		tlas_->SetInstance(blas_.get(), transform_.ToMatrix(), 0);
-		tlas_->EndSetupInstance();
+		//tlas_->SetInstance(blas_.get(), transform_.ToMatrix(), 0);
+		//tlas_->EndSetupInstance();
+
 	}
 
 	blob_->SetEntryPointExport(raygen_.get());
@@ -94,8 +94,13 @@ void RayTracingDemo::Term() {
 void RayTracingDemo::Update() {
 
 	tlas_->BeginSetupInstance();
-	tlas_->SetInstance(blas_.get(), transform_.ToMatrix(), 0);
+
+	for (int i = 0; i < instanceNum_; ++i) {
+		tlas_->SetInstance(blas_.get(), transform_.ToMatrix() * Matrix::MakeTranslate({static_cast<float>(i), 0.0f, 0.0f}), 0);
+	}
+
 	tlas_->EndSetupInstance();
+
 
 }
 
@@ -122,4 +127,6 @@ void RayTracingDemo::Draw() {
 void RayTracingDemo::SetAttributeImGui() {
 	ImGui::ColorEdit4("miss color", &(*missColor_)[0].r);
 	transform_.SetImGuiCommand();
+
+	ImGui::InputInt("instance", &instanceNum_);
 }

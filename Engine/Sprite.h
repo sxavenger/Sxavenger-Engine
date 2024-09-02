@@ -13,7 +13,7 @@
 #include <string>
 
 // engine
-#include <TextureManager.h>
+#include <Texture.h>
 
 // geometry
 #include <Vector2.h>

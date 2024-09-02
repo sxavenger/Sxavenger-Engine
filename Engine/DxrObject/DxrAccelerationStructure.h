@@ -105,7 +105,11 @@ public:
 
 	TopLevelAS() { Init(); }
 
+	~TopLevelAS() { Term(); }
+
 	void Init();
+
+	void Term();
 
 	//* instance option *//
 

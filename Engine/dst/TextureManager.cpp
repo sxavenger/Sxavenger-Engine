@@ -1,4 +1,6 @@
 #include "TextureManager.h"
+#include "TextureManager.h"
+#include "TextureManager.h"
 
 //-----------------------------------------------------------------------------------------
 // include
@@ -225,6 +227,8 @@ void DummyTexture::Create(DirectXCommon* dxCommon, int32_t textureWidth, int32_t
 
 	textureSize_ = { static_cast<uint32_t>(textureWidth), static_cast<uint32_t>(textureHeight) };
 }
+
+
 
 void DummyTexture::Term() {
 	dxCommon_->GetDescriptorsObj()->DeleteDescriptor(descriptorUAV_);

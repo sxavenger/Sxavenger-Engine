@@ -15,7 +15,7 @@
 #include <DirectXCommon.h>
 //#include <DirectXRCommon.h>
 #include <ImGuiManager.h>
-#include <TextureManager.h>
+#include <Texture.h>
 #include <Input.h>
 #include <Audio.h>
 #include <PrimitiveDrawer.h>
@@ -64,10 +64,10 @@ public:
 	//!< EndはEndFrameに入ってる
 	
 	//! @param[in] offscreenRenderTexture 書き込む用のdummyTexture
-	static void BeginOffscreen(Texture* renderTexture);
+	static void BeginOffscreen(RenderTexture* renderTexture);
 
 	//! @brief オフスク描画処理の開始
-	static void EndOffscreen(Texture* renderTexture);
+	static void EndOffscreen(RenderTexture* renderTexture);
 
 	static void BeginOffscreens(uint32_t textureNum, RenderTexture* renderTextures[D3D12_SIMULTANEOUS_RENDER_TARGET_COUNT]);
 	// FIXME: 安全性がない, 引数が多い, 名前がわかりにくい
@@ -104,13 +104,16 @@ public:
 	// texture option
 	//-----------------------------------------------------------------------------------------
 
-	static Texture* CreateRenderTexture(const std::string& key, int32_t textureWidth, int32_t textureHeight, const Color4f& clearColor = defaultClearColor);
+	static RenderTexture* CreateRenderTexture(const std::string& key, const Vector2ui& textureSize, const Color4f& clearColor = defaultClearColor);
 
 	static Texture* LoadTexture(const std::string& filePath);
 
 	static void ReleaseTexture(const std::string& key);
 
-	static Texture* GetTexture(const std::string& textureKey);
+	template <DerivedFormBaseTexture T>
+	static T* GetTexture(const std::string& textureKey);
+
+	static BaseTexture* GetBaseTexture(const std::string& textureKey);
 
 	static const D3D12_GPU_DESCRIPTOR_HANDLE& GetTextureHandleGPU(const std::string& textureKey);
 
@@ -132,6 +135,10 @@ public:
 	// Audio option
 	//-----------------------------------------------------------------------------------------
 
+	static std::unique_ptr<Audio> GetAudio(const std::string& filename, bool isLoop = false);
+
+	static void PlayAudioOneShot(const std::string& filename, float volume = 1.0f);
+
 	static AudioManager* GetAudioManager();
 
 	//=========================================================================================
@@ -149,3 +156,12 @@ private:
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 using Sxavenger = SxavengerEngine;
+
+////////////////////////////////////////////////////////////////////////////////////////////
+// SxavengerEngine class template methods
+////////////////////////////////////////////////////////////////////////////////////////////
+
+template<DerivedFormBaseTexture T>
+inline T* SxavengerEngine::GetTexture(const std::string& textureKey) {
+	return GetTextureManager()->GetTexture<T>(textureKey);
+}

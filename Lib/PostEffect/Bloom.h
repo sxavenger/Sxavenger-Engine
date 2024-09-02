@@ -41,7 +41,7 @@ public:
 
 	void Draw();
 	
-	Texture* GetRenderTargetTexture() const { return renderTargetTexture_.get(); }
+	RenderTexture* GetRenderTargetTexture() const { return renderTargetTexture_.get(); }
 
 	void SetAttributeImGui() override;
 

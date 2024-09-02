@@ -3,7 +3,7 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
-#include <TextureManager.h>
+#include <Texture.h>
 #include <imgui.h>
 
 //-----------------------------------------------------------------------------------------
@@ -66,7 +66,7 @@ void DirectXCommon::EndFrame() {
 
 }
 
-void DirectXCommon::BeginOffscreen(Texture* renderTexture) {
+void DirectXCommon::BeginOffscreen(RenderTexture* renderTexture) {
 
 	Assert(renderTexture != nullptr);
 
@@ -111,7 +111,7 @@ void DirectXCommon::BeginOffscreen(Texture* renderTexture) {
 	);
 }
 
-void DirectXCommon::EndOffscreen(Texture* renderTexture) {
+void DirectXCommon::EndOffscreen(RenderTexture* renderTexture) {
 
 	EndRendering();
 
@@ -254,7 +254,7 @@ void DirectXCommon::BeginScreenDraw() {
 	);
 }
 
-void DirectXCommon::BeginUnorderedAccess(Texture* dummyTexture) {
+void DirectXCommon::BeginUnorderedAccess(DummyTexture* dummyTexture) {
 
 	// コマンドリストの取得
 	ID3D12GraphicsCommandList* commandList = command_->GetCommandList();
@@ -271,7 +271,7 @@ void DirectXCommon::BeginUnorderedAccess(Texture* dummyTexture) {
 	}
 }
 
-void DirectXCommon::EndUnorderedAccess(Texture* dummyTexture) {
+void DirectXCommon::EndUnorderedAccess(DummyTexture* dummyTexture) {
 
 	// コマンドリストの取得
 	ID3D12GraphicsCommandList* commandList = command_->GetCommandList();

@@ -35,7 +35,7 @@ const std::string Console::kConsoleName_ = "Sxavenger EngineConsole";
 void Console::Init() {
 
 	sceneTexture_ = std::make_unique<RenderTexture>();
-	sceneTexture_->Create(Sxavenger::GetDxCommon(), kWindowWidth, kWindowHeight);
+	sceneTexture_->Create(Sxavenger::GetDxCommon(), { kWindowWidth, kWindowHeight });
 
 	debugCamera_ = std::make_unique<DebugCamera3D>();
 	debugCamera_->SetAttributeName("sceneCamera");
@@ -47,6 +47,10 @@ void Console::Init() {
 	windowFlags_ |= ImGuiWindowFlags_NoBringToFrontOnFocus;
 	windowFlags_ |= ImGuiWindowFlags_NoMove;
 	windowFlags_ |= ImGuiWindowFlags_NoResize;
+
+#ifndef _DEBUG
+	isDisplayConsole_ = false;
+#endif // _DEBUG
 }
 
 void Console::Term() {
@@ -62,6 +66,9 @@ void Console::Term() {
 }
 
 void Console::Update() {
+#ifndef _DEBUG
+	return;
+#endif // _DEBUG
 
 	/*ImGui::Begin("test window");
 	ImGui::ShowStyleEditor();

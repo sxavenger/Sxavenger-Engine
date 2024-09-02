@@ -35,7 +35,7 @@ void DefferedRendering::Init() {
 		defferedTextures_[i] = std::make_unique<RenderTexture>();
 		defferedTextures_[i]->Create(
 			Sxavenger::GetDxCommon(),
-			kWindowWidth, kWindowHeight, { 0.0f, 0.0f, 0.0f, 0.0f }, formats_[i]
+			{ kWindowWidth, kWindowHeight }, { 0.0f, 0.0f, 0.0f, 0.0f }, formats_[i]
 		);
 
 		// 外部参照用のptr配列の設定

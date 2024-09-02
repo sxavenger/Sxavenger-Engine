@@ -46,7 +46,7 @@ void GaussianBlur::Term() {
 }
 
 void GaussianBlur::CreateBlurTexture(
-	Texture* texture, Vector2ui textureSize, Vector2ui strength, float sigma) {
+	BaseTexture* texture, Vector2ui textureSize, Vector2ui strength, float sigma) {
 
 	param_->operator[](0).textureSize = textureSize;
 	param_->operator[](0).strength = strength;

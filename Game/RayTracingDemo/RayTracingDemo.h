@@ -75,6 +75,8 @@ private:
 	std::unique_ptr<_DXROBJECT BottomLevelAS> blas_;
 	EulerTransform transform_;
 
+	int instanceNum_ = 0;
+
 	std::unique_ptr<RayTracingCamera> camera_;
 
 };

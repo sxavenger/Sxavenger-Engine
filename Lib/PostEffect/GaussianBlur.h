@@ -15,7 +15,7 @@
 #include <DrawMethod.h>
 
 // engine
-#include <TextureManager.h>
+#include <Texture.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // GaussianBlur class
@@ -36,7 +36,7 @@ public:
 	void Term();
 
 	void CreateBlurTexture(
-		Texture* texture, Vector2ui textureSize, Vector2ui strength, float sigma
+		BaseTexture* texture, Vector2ui textureSize, Vector2ui strength, float sigma
 	);
 
 private:

@@ -67,9 +67,6 @@
     <Filter Include="Resource\hlsl\Particle">
       <UniqueIdentifier>{6929084b-93e2-465d-b712-ccd475f37a97}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Resource\hlsl\DefferedRendering">
-      <UniqueIdentifier>{79a07257-cb9c-4b6c-90ae-ebf3d70be071}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Resource\hlsl\Object3d">
       <UniqueIdentifier>{ca9702fb-b955-447c-8975-9a46c268e694}</UniqueIdentifier>
     </Filter>
@@ -183,6 +180,9 @@
     </Filter>
     <Filter Include="Game\RayTracingDemo">
       <UniqueIdentifier>{a488bd70-8794-4075-98eb-8e2961ea3033}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource\hlsl\DefaultMesh\DefferedRendering">
+      <UniqueIdentifier>{79a07257-cb9c-4b6c-90ae-ebf3d70be071}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -338,9 +338,6 @@
     </ClCompile>
     <ClCompile Include="Engine\DxObject\DxMesh.cpp">
       <Filter>Engine\DxObject\source</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\TextureManager.cpp">
-      <Filter>Engine\source</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Input.cpp">
       <Filter>Engine\source</Filter>
@@ -499,6 +496,9 @@
       <Filter>Engine\source</Filter>
     </ClCompile>
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Engine\Texture.cpp">
+      <Filter>Engine\source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\DirectXCommon.h">
@@ -626,9 +626,6 @@
     </ClInclude>
     <ClInclude Include="Engine\DxObject\DxMesh.h">
       <Filter>Engine\DxObject\include</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\TextureManager.h">
-      <Filter>Engine\include</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Input.h">
       <Filter>Engine\include</Filter>
@@ -792,6 +789,9 @@
     <ClInclude Include="Engine\Sxavenger.h">
       <Filter>Engine\include</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\Texture.h">
+      <Filter>Engine\include</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />
@@ -823,7 +823,7 @@
       <Filter>Resource\hlsl\FullScreen</Filter>
     </None>
     <None Include="Resources\hlsl\DefferedRendering.hlsli">
-      <Filter>Resource\hlsl\DefferedRendering</Filter>
+      <Filter>Resource\hlsl\DefaultMesh\DefferedRendering</Filter>
     </None>
     <None Include="Resources\hlsl\Object3d\Object3d.hlsli">
       <Filter>Resource\hlsl\Object3d</Filter>
@@ -914,10 +914,10 @@
       <Filter>Resource\hlsl\FullScreen</Filter>
     </FxCompile>
     <FxCompile Include="Resources\hlsl\DefferedRendering.VS.hlsl">
-      <Filter>Resource\hlsl\DefferedRendering</Filter>
+      <Filter>Resource\hlsl\DefaultMesh\DefferedRendering</Filter>
     </FxCompile>
     <FxCompile Include="Resources\hlsl\DefferedRendering.PS.hlsl">
-      <Filter>Resource\hlsl\DefferedRendering</Filter>
+      <Filter>Resource\hlsl\DefaultMesh\DefferedRendering</Filter>
     </FxCompile>
     <FxCompile Include="Resources\hlsl\Object3d\Object3dDeffered.PS.hlsl">
       <Filter>Resource\hlsl\Object3d</Filter>

@@ -85,6 +85,8 @@ void ShaderTable::Create(const StateObject* stateObject, const TopLevelAS* tlas,
 	// 情報をもとにDESCに設定
 	auto address = table_->GetGPUVirtualAddress();
 
+	dispathRayDesc_ = {};
+
 	// raygenerationの設定
 	dispathRayDesc_.RayGenerationShaderRecord.StartAddress = address;
 	dispathRayDesc_.RayGenerationShaderRecord.SizeInBytes  = raygenerationSize;

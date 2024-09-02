@@ -25,6 +25,7 @@
 class WinApp;
 class Texture;
 class RenderTexture;
+class DummyTexture;
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // DirectXCommon class
@@ -53,9 +54,9 @@ public:
 
 	/* offscreen */
 
-	void BeginOffscreen(Texture* renderTexture);
+	void BeginOffscreen(RenderTexture* renderTexture);
 
-	void EndOffscreen(Texture* renderTexture);
+	void EndOffscreen(RenderTexture* renderTexture);
 
 	void BeginOffscreens(uint32_t textureNum, RenderTexture* renderTextures[D3D12_SIMULTANEOUS_RENDER_TARGET_COUNT]);
 
@@ -67,9 +68,9 @@ public:
 
 	/* UnorderedAccess */
 
-	void BeginUnorderedAccess(Texture* dummyTexture);
+	void BeginUnorderedAccess(DummyTexture* dummyTexture);
 
-	void EndUnorderedAccess(Texture* dummyTexture);
+	void EndUnorderedAccess(DummyTexture* dummyTexture);
 
 	/* double allocator system */
 

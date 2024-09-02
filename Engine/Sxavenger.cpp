@@ -77,7 +77,7 @@ void SxavengerEngine::Init(int32_t windowWidth, int32_t windowHeight, const char
 		ExternalLogger::Write("Complete Initialize: sTextureManager");
 
 		// オフスク用のテクスチャの生成 todo: consoleに移動
-		sTextureManager->CreateRenderTexture("offscreen", windowWidth, windowHeight);
+		sTextureManager->CreateRenderTexture("offscreen", { static_cast<uint32_t>(windowWidth), static_cast<uint32_t>(windowHeight) });
 	}
 
 	// Inputの初期化
@@ -152,11 +152,11 @@ void SxavengerEngine::BeginScreenDraw() {
 	sDirectXRCommon->BeginScreenDraw();
 }
 
-void SxavengerEngine::BeginOffscreen(Texture* renderTexture) {
+void SxavengerEngine::BeginOffscreen(RenderTexture* renderTexture) {
 	sDirectXRCommon->BeginOffscreen(renderTexture);
 }
 
-void SxavengerEngine::EndOffscreen(Texture* renderTexture) {
+void SxavengerEngine::EndOffscreen(RenderTexture* renderTexture) {
 	sDirectXRCommon->EndOffscreen(renderTexture);
 }
 
@@ -200,8 +200,8 @@ DirectXCommon* SxavengerEngine::GetDxCommon() {
 	return sDirectXRCommon;
 }
 
-Texture* SxavengerEngine::CreateRenderTexture(const std::string& key, int32_t textureWidth, int32_t textureHeight, const Color4f& clearColor) {
-	return sTextureManager->CreateRenderTexture(key, textureWidth, textureHeight, clearColor);
+RenderTexture* SxavengerEngine::CreateRenderTexture(const std::string& key, const Vector2ui& textureSize, const Color4f& clearColor) {
+	return sTextureManager->CreateRenderTexture(key, textureSize, clearColor);
 }
 
 Texture* SxavengerEngine::LoadTexture(const std::string& filePath) {
@@ -212,12 +212,12 @@ void SxavengerEngine::ReleaseTexture(const std::string& key) {
 	sTextureManager->ReleaseTexture(key);
 }
 
-Texture* SxavengerEngine::GetTexture(const std::string& textureKey) {
-	return sTextureManager->GetTexture(textureKey);
+BaseTexture* SxavengerEngine::GetBaseTexture(const std::string& textureKey) {
+	return sTextureManager->GetBaseTexture(textureKey);
 }
 
 const D3D12_GPU_DESCRIPTOR_HANDLE& SxavengerEngine::GetTextureHandleGPU(const std::string& textureKey) {
-	return sTextureManager->GetGPUHandle(textureKey);
+	return sTextureManager->GetGPUHandleSRV(textureKey);
 }
 
 TextureManager* SxavengerEngine::GetTextureManager() {
@@ -238,6 +238,14 @@ bool SxavengerEngine::IsReleaseKey(uint8_t dik) {
 
 Input* SxavengerEngine::GetInput() {
 	return sInput;
+}
+
+std::unique_ptr<Audio> SxavengerEngine::GetAudio(const std::string& filename, bool isLoop) {
+	return sAudioManager->GetAudio(filename, isLoop);
+}
+
+void SxavengerEngine::PlayAudioOneShot(const std::string& filename, float volume) {
+	sAudioManager->PlayOneShot(filename, volume);
 }
 
 AudioManager* SxavengerEngine::GetAudioManager() {

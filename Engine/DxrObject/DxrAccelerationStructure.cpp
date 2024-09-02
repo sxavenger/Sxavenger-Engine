@@ -108,6 +108,10 @@ void TopLevelAS::Init() {
 
 }
 
+void DxrObject::TopLevelAS::Term() {
+	Sxavenger::DeleteDescriptor(descriptor_);
+}
+
 void TopLevelAS::BeginSetupInstance() {
 	instance_.clear(); // 新しく設定するのでclearしておく
 }
@@ -117,7 +121,21 @@ void TopLevelAS::EndSetupInstance() {
 	SetInstanceBuffer();
 
 	// 更新
-	UpdateTLAS();
+	BuildTLAS();
+
+	// RayTracingSRVの生成
+	{
+		D3D12_SHADER_RESOURCE_VIEW_DESC desc = {};
+		desc.ViewDimension                            = D3D12_SRV_DIMENSION_RAYTRACING_ACCELERATION_STRUCTURE;
+		desc.Shader4ComponentMapping                  = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
+		desc.RaytracingAccelerationStructure.Location = buffers_.asbuffer->GetGPUVirtualAddress();
+
+		auto device = Sxavenger::GetDevice();
+
+		device->CreateShaderResourceView(
+			nullptr, &desc, descriptor_.GetCPUHandle()
+		);
+	}
 }
 
 void TopLevelAS::SetInstance(BottomLevelAS* blas, const Matrix4x4& worldMatrix, UINT instanceId) {
@@ -162,7 +180,7 @@ void TopLevelAS::UpdateTLAS() {
 	D3D12_BUILD_RAYTRACING_ACCELERATION_STRUCTURE_DESC buildASDesc = {};
 	buildASDesc.Inputs.Type          = D3D12_RAYTRACING_ACCELERATION_STRUCTURE_TYPE_TOP_LEVEL;
 	buildASDesc.Inputs.DescsLayout   = D3D12_ELEMENTS_LAYOUT_ARRAY;
-	buildASDesc.Inputs.NumDescs      = kMaxInstanceNum_;
+	buildASDesc.Inputs.NumDescs      = static_cast<UINT>(instance_.size());
 	buildASDesc.Inputs.InstanceDescs = instanceBuffer_->GetGPUVirtualAddress();
 	buildASDesc.Inputs.Flags
 		= D3D12_RAYTRACING_ACCELERATION_STRUCTURE_BUILD_FLAG_ALLOW_UPDATE
