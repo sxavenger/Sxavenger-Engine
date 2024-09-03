@@ -75,7 +75,7 @@ void DxObject::BaseRootSignatureDesc::AutoResizeSampler(uint32_t index) {
 		return;
 	}
 
-	samplers.resize(index);
+	samplers.resize(index + 1);
 }
 
 void DxObject::BaseRootSignatureDesc::Reserve() {

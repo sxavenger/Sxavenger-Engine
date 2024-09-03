@@ -17,7 +17,7 @@
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Input, Output structure
 ////////////////////////////////////////////////////////////////////////////////////////////
-struct VSInput {
+struct VSInput { //!< VertexData structure
 	float4 position : POSITION0;
 	float2 texcoord : TEXCOORD0;
 	float3 normal   : NORMAL0;
@@ -37,20 +37,22 @@ struct PSOutput {
 ////////////////////////////////////////////////////////////////////////////////////////////
 // other buffer structure
 ////////////////////////////////////////////////////////////////////////////////////////////
-struct TransformationMatrix { //!< Transform.h/.cpp
+struct TransformationMatrix { //!< Transform.h /.cpp
 	//* members *//
 	float4x4 world;
 	float4x4 worldInverseTranspose;
 };
 
-struct ObjectMaterial { //!< ... todo: create class
+struct ObjectMaterial { //!< Material.h / .cpp
 	//* members *//
-	float4   color;
+	
+	float4 color;
 	float4x4 uvTransform;
 	
 	//* methods *//
+	
 	float4 GetAlbed(float2 texcoord, Texture2D<float4> albed, SamplerState state) {
-		float2 transformedUV = mul(float4(texcoord.xy, 0.0f, 1.0f), uvTransform);
+		float2 transformedUV = mul(float4(texcoord.xy, 0.0f, 1.0f), uvTransform).xy;
 		return albed.Sample(state, transformedUV);
 	}
 };

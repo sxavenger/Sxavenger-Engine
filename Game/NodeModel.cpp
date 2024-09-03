@@ -4,6 +4,7 @@
 // include
 //-----------------------------------------------------------------------------------------
 #include <Sxavenger.h>
+#include <SxavengerGraphics.h>
 
 //-----------------------------------------------------------------------------------------
 // using
@@ -85,7 +86,7 @@ void NodeModel::Draw() {
 
 		model_->SetBuffers(i);
 
-		commandList->SetGraphicsRootConstantBufferView(0, Sxavenger::camera3D->GetGPUVirtualAddress());
+		commandList->SetGraphicsRootConstantBufferView(0, SxavengerGraphics::camera3D->GetGPUVirtualAddress());
 		commandList->SetGraphicsRootConstantBufferView(1, matrixBuffers_[i]->GetGPUVirtualAddress());
 		model_->SetGraphicsTextureHandle(commandList, i, 2, TEXTURE_DIFFUSE);
 

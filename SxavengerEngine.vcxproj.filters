@@ -85,9 +85,6 @@
     <Filter Include="Resource\hlsl\Skybox">
       <UniqueIdentifier>{bedc3d65-9a22-484b-9ab7-cd69d9309fbd}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Game\Subobject">
-      <UniqueIdentifier>{b3ebaa06-63a9-421e-8214-c05566b6fb31}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Resource\hlsl\Subobject">
       <UniqueIdentifier>{e5d7987b-210c-41b7-b3bd-ea6d551e44a2}</UniqueIdentifier>
     </Filter>
@@ -145,24 +142,6 @@
     <Filter Include="Lib\Adapter\Parformance">
       <UniqueIdentifier>{ac3efd8f-c3b2-4063-8a08-73409f8a7c9f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Lib\Light">
-      <UniqueIdentifier>{2c42579f-e13b-474d-ae0f-b7783684b9a9}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Lib\Light\include">
-      <UniqueIdentifier>{ca54dbac-2860-43dc-ad55-a8e8e489a890}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Lib\Light\source">
-      <UniqueIdentifier>{d97f1fc1-4986-414d-926d-075d74cb2615}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Lib\Collider">
-      <UniqueIdentifier>{c313588c-2f0a-4766-84df-e98f062882d9}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Lib\Collider\include">
-      <UniqueIdentifier>{cd73d38c-c8f5-4435-9c3f-e90223ec75a6}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Lib\Collider\source">
-      <UniqueIdentifier>{cf8abcbb-54a4-49f0-b300-24452291069a}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Lib\PostEffect">
       <UniqueIdentifier>{fba6485d-fc7b-43d5-a1d6-524a0d3df4b3}</UniqueIdentifier>
     </Filter>
@@ -183,6 +162,9 @@
     </Filter>
     <Filter Include="Resource\hlsl\DefaultMesh\DefferedRendering">
       <UniqueIdentifier>{79a07257-cb9c-4b6c-90ae-ebf3d70be071}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\ObjectDemo">
+      <UniqueIdentifier>{da45aab1-c960-4c48-85b3-218cbb3e4f57}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -242,9 +224,6 @@
     </ClCompile>
     <ClCompile Include="Engine\Model.cpp">
       <Filter>Engine\source</Filter>
-    </ClCompile>
-    <ClCompile Include="Lib\Light\Light.cpp">
-      <Filter>Lib\Light\source</Filter>
     </ClCompile>
     <ClCompile Include="Engine\DxObject\DxBlendState.cpp">
       <Filter>Engine\DxObject\source</Filter>
@@ -396,12 +375,6 @@
     <ClCompile Include="Lib\Camera\DebugCamera3D.cpp">
       <Filter>Lib\Camera\source</Filter>
     </ClCompile>
-    <ClCompile Include="Game\Subobject\Subobject.cpp">
-      <Filter>Game\Subobject</Filter>
-    </ClCompile>
-    <ClCompile Include="Game\Subobject\SubobjectManager.cpp">
-      <Filter>Game\Subobject</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\Sprite.cpp">
       <Filter>Engine\source</Filter>
     </ClCompile>
@@ -450,9 +423,6 @@
     <ClCompile Include="Engine\DxObject\DxShaderReflection.cpp">
       <Filter>Engine\DxObject\source</Filter>
     </ClCompile>
-    <ClCompile Include="GameEngine\RenderObject3D.cpp">
-      <Filter>GameEngine\source</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\DxObject\DxShaderNode.cpp">
       <Filter>Engine\DxObject\source</Filter>
     </ClCompile>
@@ -498,6 +468,18 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Engine\Texture.cpp">
       <Filter>Engine\source</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\ObjectDemo\ObjectDemo.cpp">
+      <Filter>Game\ObjectDemo</Filter>
+    </ClCompile>
+    <ClCompile Include="GameEngine\Light.cpp">
+      <Filter>GameEngine\source</Filter>
+    </ClCompile>
+    <ClCompile Include="GameEngine\SxavengerGraphics.cpp">
+      <Filter>GameEngine\source</Filter>
+    </ClCompile>
+    <ClCompile Include="GameEngine\DefaultGraphics.cpp">
+      <Filter>GameEngine\source</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -566,9 +548,6 @@
     </ClInclude>
     <ClInclude Include="Engine\ComPtr.h">
       <Filter>Engine\include</Filter>
-    </ClInclude>
-    <ClInclude Include="Lib\Light\Light.h">
-      <Filter>Lib\Light\include</Filter>
     </ClInclude>
     <ClInclude Include="Engine\DxObject\DxBlendState.h">
       <Filter>Engine\DxObject\include</Filter>
@@ -684,12 +663,6 @@
     <ClInclude Include="Lib\Camera\DebugCamera3D.h">
       <Filter>Lib\Camera\include</Filter>
     </ClInclude>
-    <ClInclude Include="Game\Subobject\Subobject.h">
-      <Filter>Game\Subobject</Filter>
-    </ClInclude>
-    <ClInclude Include="Game\Subobject\SubobjectManager.h">
-      <Filter>Game\Subobject</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\Sprite.h">
       <Filter>Engine\include</Filter>
     </ClInclude>
@@ -741,9 +714,6 @@
     <ClInclude Include="Engine\DxObject\DxShaderReflection.h">
       <Filter>Engine\DxObject\include</Filter>
     </ClInclude>
-    <ClInclude Include="GameEngine\RenderObject3D.h">
-      <Filter>GameEngine\include</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\DxObject\DxShaderNode.h">
       <Filter>Engine\DxObject\include</Filter>
     </ClInclude>
@@ -791,6 +761,18 @@
     </ClInclude>
     <ClInclude Include="Engine\Texture.h">
       <Filter>Engine\include</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\ObjectDemo\ObjectDemo.h">
+      <Filter>Game\ObjectDemo</Filter>
+    </ClInclude>
+    <ClInclude Include="GameEngine\Light.h">
+      <Filter>GameEngine\include</Filter>
+    </ClInclude>
+    <ClInclude Include="GameEngine\SxavengerGraphics.h">
+      <Filter>GameEngine\include</Filter>
+    </ClInclude>
+    <ClInclude Include="GameEngine\DefaultGraphics.h">
+      <Filter>GameEngine\include</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

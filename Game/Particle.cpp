@@ -4,6 +4,7 @@
 // include
 //-----------------------------------------------------------------------------------------
 #include <Sxavenger.h>
+#include <SxavengerGraphics.h>
 #include <Performance.h>
 
 
@@ -100,7 +101,7 @@ void Particle::Init() {
 
 	render_.CreateTable();
 
-	render_.BindBuffer("gCamera", Sxavenger::camera3D->GetGPUVirtualAddress());
+	render_.BindBuffer("gCamera", SxavengerGraphics::camera3D->GetGPUVirtualAddress());
 	render_.BindBuffer("gParticle", particleBuffer_->GetGPUVirtualAddress());
 
 	render_.CreatePipeline(kBlendModeAdd);
@@ -167,7 +168,7 @@ void Particle::Draw() {
 	render_.SetPipeline(commandList);
 	plane_.SetBuffer(commandList);
 
-	render_.BindBuffer("gCamera", Sxavenger::camera3D->GetGPUVirtualAddress()); //!< camera3Dは呼び出されるたび変わるので
+	render_.BindBuffer("gCamera", SxavengerGraphics::camera3D->GetGPUVirtualAddress()); //!< camera3Dは呼び出されるたび変わるので
 	render_.BindGraphicsParameter(commandList);
 
 	plane_.DrawCall(commandList, kParticleNum);

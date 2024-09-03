@@ -30,9 +30,9 @@ public:
 
 	void Term();
 
-	void SetBuffer();
+	void SetBuffer() const;
 
-	void DrawCall(UINT instanceCount = 1);
+	void DrawCall(UINT instanceCount = 1) const;
 
 	//* Getter *//
 
@@ -54,8 +54,7 @@ private:
 
 	//* external *//
 
-	ID3D12GraphicsCommandList* commandList_ = Sxavenger::GetCommandList();
-	//!< static化してもいい
+	ID3D12GraphicsCommandList* commandList_ = Sxavenger::GetCommandList();;
 
 	//* buffer *//
 
@@ -80,7 +79,7 @@ void InputAssembler<T>::Term() {
 }
 
 template<typename T>
-void InputAssembler<T>::SetBuffer() {
+void InputAssembler<T>::SetBuffer() const {
 
 	D3D12_VERTEX_BUFFER_VIEW vbv = vertices_->GetVertexBufferView();
 	D3D12_INDEX_BUFFER_VIEW  ibv = indices_->GetIndexBufferView();
@@ -90,6 +89,6 @@ void InputAssembler<T>::SetBuffer() {
 }
 
 template<typename T>
-inline void InputAssembler<T>::DrawCall(UINT instanceCount) {
+inline void InputAssembler<T>::DrawCall(UINT instanceCount) const {
 	commandList_->DrawIndexedInstanced(indices_->GetIndexSize(), instanceCount, 0, 0, 0);
 }

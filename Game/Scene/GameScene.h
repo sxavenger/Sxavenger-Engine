@@ -21,10 +21,10 @@
 #include <DebugCamera3D.h>
 
 //* Game
-#include <SubobjectManager.h>
 #include <DebugObjectManager.h>
 
 #include "RayTracingDemo/RayTracingDemo.h"
+#include "ObjectDemo/ObjectDemo.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // GameScene class
@@ -50,6 +50,7 @@ private:
 	std::unique_ptr<Particle> particle_;
 
 	std::unique_ptr<RayTracingDemo> demo_;
+	std::unique_ptr<ObjectDemo> objectDemo_;
 
 	//=========================================================================================
 	// private methods

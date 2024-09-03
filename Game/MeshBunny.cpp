@@ -4,6 +4,7 @@
 // include
 //-----------------------------------------------------------------------------------------
 #include <Sxavenger.h>
+#include <SxavengerGraphics.h>
 #include <PrimitiveDrawer.h>
 
 //-----------------------------------------------------------------------------------------
@@ -79,7 +80,7 @@ void MeshBunny::Draw() {
 	pipeline_->SetPipeline(commandList);
 
 	// ParamBuffers
-	commandList->SetGraphicsRootConstantBufferView(6, Sxavenger::camera3D->GetGPUVirtualAddress());
+	commandList->SetGraphicsRootConstantBufferView(6, SxavengerGraphics::camera3D->GetGPUVirtualAddress());
 	commandList->SetGraphicsRootConstantBufferView(7, matrix_->GetGPUVirtualAddress());
 	commandList->SetGraphicsRootConstantBufferView(8, cullingCamera_->GetGPUVirtualAddress());
 	commandList->SetGraphicsRootConstantBufferView(9, material_->GetGPUVirtualAddress());

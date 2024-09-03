@@ -4,6 +4,7 @@
 // include
 //-----------------------------------------------------------------------------------------
 #include <Sxavenger.h>
+#include <SxavengerGraphics.h>
 #include <Console.h>
 #include <format>
 
@@ -45,7 +46,7 @@ void DebugObjects::Sphere::Draw() {
 
 	ia_.SetBuffer(commandList);
 
-	commandList->SetGraphicsRootConstantBufferView(0, Sxavenger::camera3D->GetGPUVirtualAddress());
+	commandList->SetGraphicsRootConstantBufferView(0, SxavengerGraphics::camera3D->GetGPUVirtualAddress());
 	commandList->SetGraphicsRootConstantBufferView(1, transform_.GetGPUVirtualAddress());
 	commandList->SetGraphicsRootConstantBufferView(2, material_->GetGPUVirtualAddress());
 
@@ -120,7 +121,7 @@ void DebugObjects::Box::Draw() {
 
 	ia_.SetBuffer(commandList);
 
-	commandList->SetGraphicsRootConstantBufferView(0, Sxavenger::camera3D->GetGPUVirtualAddress());
+	commandList->SetGraphicsRootConstantBufferView(0, SxavengerGraphics::camera3D->GetGPUVirtualAddress());
 	commandList->SetGraphicsRootConstantBufferView(1, qt_.GetGPUVirtualAddress());
 	commandList->SetGraphicsRootConstantBufferView(2, material_->GetGPUVirtualAddress());
 

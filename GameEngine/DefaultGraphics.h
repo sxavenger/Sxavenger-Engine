@@ -3,44 +3,51 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
-// object
-#include <RayTracingObject.h>
+//* engine
+#include <GraphicsRender.h>
+#include <InputAssembler.h>
+#include <Transform.h>
+#include <Material.h>
 
-// Model
-#include <Model.h>
-
-// Attribute
-#include <Attribute.h>
+//* object
+#include <ObjectStructure.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// TileType enum
+// DefaultGraphics enum
 ////////////////////////////////////////////////////////////////////////////////////////////
-enum TileType {
-	TILE_BLACK,
-	TILE_WHITE
+enum DefaultGraphicsType {
+	kDefault_Texture,
+
+	kCountOfDefaultGraphicsType
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// Ground class
+// DefaultGraphics class
 ////////////////////////////////////////////////////////////////////////////////////////////
-class Ground
-	: public RayTracingObject
-	, public Attribute {
+class DefaultGraphics {
 public:
 
 	//=========================================================================================
 	// public methods
 	//=========================================================================================
 
-	Ground() { Init(); }
-
-	~Ground() { Term(); }
-
 	void Init();
 
 	void Term();
 
-	void SetAttributeImGui() override;
+	//* graphics option *//
+
+	void DrawDefaultTexture(
+		const InputAssembler<VertexData>& ia,
+		const BaseTransformBuffer& transform, const ObjectMaterialBuffer& material,
+		const D3D12_GPU_DESCRIPTOR_HANDLE& texture
+	);
+
+	//* singleton *//
+
+	static DefaultGraphics* GetInstance();
+	DefaultGraphics()  = default;
+	~DefaultGraphics() = default;
 
 private:
 
@@ -48,9 +55,6 @@ private:
 	// private variables
 	//=========================================================================================
 
-	// IA
-	std::unique_ptr<Model> model_;
-
-	TileType tileType_ = TILE_BLACK;
+	GraphicsRender renders_[kCountOfDefaultGraphicsType];
 
 };

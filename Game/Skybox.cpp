@@ -4,6 +4,7 @@
 // include
 //-----------------------------------------------------------------------------------------
 #include <Sxavenger.h>
+#include <SxavengerGraphics.h>
 
 //-----------------------------------------------------------------------------------------
 // using
@@ -64,7 +65,7 @@ void Skybox::Draw() {
 
 	skybox_.SetBuffer(commandList);
 
-	commandList->SetGraphicsRootConstantBufferView(0, Sxavenger::camera3D->GetGPUVirtualAddress());
+	commandList->SetGraphicsRootConstantBufferView(0, SxavengerGraphics::camera3D->GetGPUVirtualAddress());
 	commandList->SetGraphicsRootConstantBufferView(1, matrixBuffer_->GetGPUVirtualAddress());
 	commandList->SetGraphicsRootDescriptorTable(2, Sxavenger::GetTextureHandleGPU("./resources/rostock_laage_airport_4k.dds"));
 	commandList->SetGraphicsRootConstantBufferView(3, vignetteBuffer_->GetGPUVirtualAddress());

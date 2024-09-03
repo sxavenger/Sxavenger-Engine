@@ -108,7 +108,7 @@ DxObject::GraphicsRootSignatureDesc DxObject::ShaderReflectionTable::CreateRootS
 
 		if (info.bufferType == D3D_SHADER_INPUT_TYPE::D3D_SIT_SAMPLER) {
 			// samplerの設定
-			result.SetSampler(samplerIndex, MODE_WRAP, info.visibility,	info.registerNum);
+			result.SetSampler(samplerIndex, MODE_WRAP, info.visibility, info.registerNum);
 
 			samplerIndex++;
 

@@ -4,7 +4,7 @@
 // include
 //-----------------------------------------------------------------------------------------
 // Texture
-#include <TextureManager.h>
+#include <Texture.h>
 
 // DxObject
 #include <DxShaderBlob.h>

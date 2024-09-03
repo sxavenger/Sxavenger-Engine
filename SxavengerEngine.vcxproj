@@ -13,7 +13,7 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{52b98506-9a42-4ad3-8d95-aa84ab446b5c}</ProjectGuid>
+    <ProjectGuid>{D12DBC4D-E27E-4404-AC98-B010DABF1BCC}</ProjectGuid>
     <RootNamespace>DirectXGame2</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
@@ -175,9 +175,11 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="GameEngine\Collider.cpp" />
     <ClCompile Include="GameEngine\ColliderManager.cpp" />
     <ClCompile Include="GameEngine\CollisionDetection.cpp" />
+    <ClCompile Include="GameEngine\DefaultGraphics.cpp" />
     <ClCompile Include="GameEngine\GraphicsRender.cpp" />
+    <ClCompile Include="GameEngine\Light.cpp" />
     <ClCompile Include="GameEngine\Material.cpp" />
-    <ClCompile Include="GameEngine\RenderObject3D.cpp" />
+    <ClCompile Include="GameEngine\SxavengerGraphics.cpp" />
     <ClCompile Include="GameEngine\Transform.cpp" />
     <ClCompile Include="Game\AnimationObject\AnimationCube.cpp" />
     <ClCompile Include="Game\AnimationObject\AnimationHuman.cpp" />
@@ -186,13 +188,12 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Game\DebugObject\DebugObjectManager.cpp" />
     <ClCompile Include="Game\MeshBunny.cpp" />
     <ClCompile Include="Game\NodeModel.cpp" />
+    <ClCompile Include="Game\ObjectDemo\ObjectDemo.cpp" />
     <ClCompile Include="Game\Particle.cpp" />
     <ClCompile Include="Game\RayTracingDemo\RayTracingCamera.cpp" />
     <ClCompile Include="Game\RayTracingDemo\RayTracingDemo.cpp" />
     <ClCompile Include="Game\Scene\GameScene.cpp" />
     <ClCompile Include="Game\Skybox.cpp" />
-    <ClCompile Include="Game\Subobject\Subobject.cpp" />
-    <ClCompile Include="Game\Subobject\SubobjectManager.cpp" />
     <ClCompile Include="Lib\Adapter\Json\Json.cpp" />
     <ClCompile Include="Lib\Adapter\Performance\Performance.cpp" />
     <ClCompile Include="Lib\Adapter\Random\Random.cpp" />
@@ -208,7 +209,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Lib\Geometry\Vector2.cpp" />
     <ClCompile Include="Lib\Geometry\Vector3.cpp" />
     <ClCompile Include="Lib\Geometry\Vector4.cpp" />
-    <ClCompile Include="Lib\Light\Light.cpp" />
     <ClCompile Include="Lib\PostEffect\Bloom.cpp" />
     <ClCompile Include="Lib\PostEffect\FullScreen.cpp" />
     <ClCompile Include="Lib\PostEffect\GaussianBlur.cpp" />
@@ -271,9 +271,11 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="GameEngine\Collider.h" />
     <ClInclude Include="GameEngine\ColliderManager.h" />
     <ClInclude Include="GameEngine\CollisionDetection.h" />
+    <ClInclude Include="GameEngine\DefaultGraphics.h" />
     <ClInclude Include="GameEngine\GraphicsRender.h" />
+    <ClInclude Include="GameEngine\Light.h" />
     <ClInclude Include="GameEngine\Material.h" />
-    <ClInclude Include="GameEngine\RenderObject3D.h" />
+    <ClInclude Include="GameEngine\SxavengerGraphics.h" />
     <ClInclude Include="GameEngine\Transform.h" />
     <ClInclude Include="Game\AnimationObject\AnimationCube.h" />
     <ClInclude Include="Game\AnimationObject\AnimationHuman.h" />
@@ -282,13 +284,12 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Game\DebugObject\DebugObjectManager.h" />
     <ClInclude Include="Game\MeshBunny.h" />
     <ClInclude Include="Game\NodeModel.h" />
+    <ClInclude Include="Game\ObjectDemo\ObjectDemo.h" />
     <ClInclude Include="Game\Particle.h" />
     <ClInclude Include="Game\RayTracingDemo\RayTracingCamera.h" />
     <ClInclude Include="Game\RayTracingDemo\RayTracingDemo.h" />
     <ClInclude Include="Game\Scene\GameScene.h" />
     <ClInclude Include="Game\Skybox.h" />
-    <ClInclude Include="Game\Subobject\Subobject.h" />
-    <ClInclude Include="Game\Subobject\SubobjectManager.h" />
     <ClInclude Include="Lib\Adapter\Json\Json.h" />
     <ClInclude Include="Lib\Adapter\Performance\Performance.h" />
     <ClInclude Include="Lib\Adapter\Random\Random.h" />
@@ -307,7 +308,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Lib\Geometry\Vector3.h" />
     <ClInclude Include="Lib\Geometry\Vector4.h" />
     <ClInclude Include="Lib\Geometry\VectorComparison.h" />
-    <ClInclude Include="Lib\Light\Light.h" />
     <ClInclude Include="Lib\ObjectStructure.h" />
     <ClInclude Include="Lib\PostEffect\Bloom.h" />
     <ClInclude Include="Lib\PostEffect\FullScreen.h" />

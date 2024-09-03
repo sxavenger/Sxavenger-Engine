@@ -5,9 +5,9 @@
 //-----------------------------------------------------------------------------------------
 // sxavenger engine
 #include <Sxavenger.h>
+#include <SxavengerGraphics.h>
 #include <Environment.h>
 #include <ColliderManager.h>
-
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -68,12 +68,14 @@ void GameScene::Run() {
 
 void GameScene::Init() {
 
+
+
 	gameCamera_ = std::make_unique<Camera3D>();
 	gameCamera_->SetThisAttribute("GameCamera");
 	gameCamera_->SetProjection(0.45f, static_cast<float>(kWindowWidth) / static_cast<float>(kWindowHeight), 0.01f, 16.0f);
 	gameCamera_->SetTransform(unitVector, origin, {0.0f, 0.0f, -4.0f});
 
-	Sxavenger::camera3D = gameCamera_.get();
+	SxavengerGraphics::camera3D = gameCamera_.get();
 
 	debugObjectManager_ = std::make_unique<DebugObjectManager>();
 	debugObjectManager_->Init();
@@ -81,8 +83,11 @@ void GameScene::Init() {
 	particle_ = std::make_unique<Particle>();
 	particle_->Init();
 
-	demo_ = std::make_unique<RayTracingDemo>();
-	demo_->Init();
+	/*demo_ = std::make_unique<RayTracingDemo>();
+	demo_->Init();*/
+
+	objectDemo_ = std::make_unique<ObjectDemo>();
+	objectDemo_->Init();
 	
 }
 
@@ -91,7 +96,7 @@ void GameScene::Term() {
 
 void GameScene::Update() {
 
-	demo_->Update();
+	/*demo_->Update();*/
 
 	debugObjectManager_->Update();
 
@@ -102,16 +107,16 @@ void GameScene::Update() {
 
 void GameScene::Draw() {
 
-	demo_->Draw();
+	/*demo_->Draw();*/
 
 	{
 
 		//* debugScreen *//
 		Sxavenger::BeginOffscreen(console->GetSceneTexture());
-		Sxavenger::camera3D = console->GetDebugCamera();
+		SxavengerGraphics::camera3D = console->GetDebugCamera();
 
 		debugObjectManager_->Draw();
-		particle_->Draw();
+		objectDemo_->Draw();
 
 		ColliderManager::GetInstance()->DrawColliders();
 
@@ -120,9 +125,10 @@ void GameScene::Draw() {
 
 		//* main screen *//
 		Sxavenger::BeginOffscreen(Sxavenger::GetTexture<RenderTexture>("offscreen"));
-		Sxavenger::camera3D = gameCamera_.get();
+		SxavengerGraphics::camera3D = gameCamera_.get();
 
 		debugObjectManager_->Draw();
+		objectDemo_->Draw();
 
 		Sxavenger::EndOffscreen(Sxavenger::GetTexture<RenderTexture>("offscreen"));
 		Sxavenger::TransitionProcess();

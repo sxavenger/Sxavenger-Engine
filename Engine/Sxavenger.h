@@ -20,10 +20,6 @@
 #include <Audio.h>
 #include <PrimitiveDrawer.h>
 
-//* camera
-#include <Camera3D.h>
-#include <Camera2D.h>
-
 ////////////////////////////////////////////////////////////////////////////////////////////
 // SxavengerEngine class
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -140,13 +136,6 @@ public:
 	static void PlayAudioOneShot(const std::string& filename, float volume = 1.0f);
 
 	static AudioManager* GetAudioManager();
-
-	//=========================================================================================
-	// public variables
-	//=========================================================================================
-
-	static Camera3D* camera3D;
-	static Camera2D* camera2D;
 
 private:
 };

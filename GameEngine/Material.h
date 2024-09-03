@@ -64,7 +64,7 @@ public:
 	// public variables
 	//=========================================================================================
 
-	Color4f     color;
+	Color4f     color = { 1.0f, 1.0f, 1.0f, 1.0f };
 	UVTransform uvTransform;
 
 private:
@@ -77,7 +77,7 @@ private:
 		Matrix4x4 uvTransform;
 
 		void Init() {
-			color       = {};
+			color       = {1.0f, 1.0f, 1.0f, 1.0f};
 			uvTransform = Matrix4x4::Identity();
 		}
 	};

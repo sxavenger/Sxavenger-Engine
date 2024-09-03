@@ -19,21 +19,13 @@ namespace {
 	AudioManager*   sAudioManager   = nullptr; //!< Audio system
 
 	PrimitiveDrawer* sPrimitive = nullptr;
+
+
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// Sxavenger class
+// Sxavenger class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
-
-//-----------------------------------------------------------------------------------------
-// static variables
-//-----------------------------------------------------------------------------------------
-Camera3D* Sxavenger::camera3D = nullptr;
-Camera2D* Sxavenger::camera2D = nullptr;
-
-//-----------------------------------------------------------------------------------------
-// methods
-//-----------------------------------------------------------------------------------------
 
 void SxavengerEngine::Init(int32_t windowWidth, int32_t windowHeight, const char* windowTitle) {
 	ExternalLogger::Open();

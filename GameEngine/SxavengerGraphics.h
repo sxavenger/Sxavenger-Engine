@@ -3,46 +3,38 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
-// DxrObject
-#include <DxrAccelerationStructure.h>
+//* Graphics
+#include <DefaultGraphics.h>
 
-// DxObject
-#include <DxBufferResource.h>
-
-// c++
-#include <memory>
+//* Camera
+#include <Camera3D.h>
+#include <Camera2D.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// RayTracingObject base class
+// SxavengerGraphics class
 ////////////////////////////////////////////////////////////////////////////////////////////
-class RayTracingObject {
+class SxavengerGraphics {
 public:
 
 	//=========================================================================================
 	// public methods
 	//=========================================================================================
 
-	RayTracingObject() { Init(); }
+	static void Init();
 
-	void Init();
+	static void Term();
 
-	DxrObject::BottomLevelAS* GetBlas() const { return blas_.get(); };
+	//-----------------------------------------------------------------------------------------
+	// rendering option
+	//-----------------------------------------------------------------------------------------
 
-	const Matrix4x4& GetWorldMatrix() const { return worldMatrix_; }
-
-	const D3D12_GPU_VIRTUAL_ADDRESS& GetGPUVirtualAddress() const { return matrixBuffer_->GetGPUVirtualAddress(); }
-
-protected:
+	static DefaultGraphics* GetDefaultGraphics();
 
 	//=========================================================================================
-	// protected variables
+	// public variables
 	//=========================================================================================
 
-	std::unique_ptr<DxrObject::BottomLevelAS> blas_;
+	static Camera3D* camera3D;
 
-	EulerTransform transform_;
-	Matrix4x4 worldMatrix_ = Matrix4x4::Identity();
-
-	std::unique_ptr<DxObject::BufferPtrResource<Matrix4x4>> matrixBuffer_;
-
+private:
 };

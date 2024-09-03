@@ -4,6 +4,7 @@
 // include
 //-----------------------------------------------------------------------------------------
 #include <Sxavenger.h>
+#include <SxavengerGraphics.h>
 
 //-----------------------------------------------------------------------------------------
 // using
@@ -216,8 +217,8 @@ void PrimitiveDrawer::DrawSphere(const Vector3f& center, float radius, const uin
 }
 
 void PrimitiveDrawer::DrawAll3D() {
-	triangle_->DrawAll(Sxavenger::camera3D->GetGPUVirtualAddress());
-	line_->DrawAll(Sxavenger::camera3D->GetGPUVirtualAddress());
+	triangle_->DrawAll(SxavengerGraphics::camera3D->GetGPUVirtualAddress());
+	line_->DrawAll(SxavengerGraphics::camera3D->GetGPUVirtualAddress());
 }
 
 void PrimitiveDrawer::ResetObjectCount() {
