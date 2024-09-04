@@ -17,10 +17,6 @@ namespace {
 	TextureManager* sTextureManager = nullptr; //!< Texture system
 	Input*          sInput          = nullptr; //!< Input system
 	AudioManager*   sAudioManager   = nullptr; //!< Audio system
-
-	PrimitiveDrawer* sPrimitive = nullptr;
-
-
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -86,13 +82,6 @@ void SxavengerEngine::Init(int32_t windowWidth, int32_t windowHeight, const char
 		ExternalLogger::Write("Complete Initialize: sAudioManager");
 	}
 
-	// PrimitiveDrawerの初期化
-	{
-		sPrimitive = PrimitiveDrawer::GetInstance();
-		sPrimitive->Init();
-		ExternalLogger::Write("Complete Initialize: sPrimitive");
-	}
-
 	// PerformanceのBufferの生成
 	{
 		Performance::CreateBuffer();
@@ -132,7 +121,6 @@ void SxavengerEngine::BeginFrame() {
 void SxavengerEngine::EndFrame() {
 	sImGuiManager->End();
 	sDirectXRCommon->EndFrame();
-	sPrimitive->ResetObjectCount();
 	Performance::EndFrame();
 }
 

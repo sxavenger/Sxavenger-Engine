@@ -1,7 +1,7 @@
 #include "ObjectDemo.h"
 
 #include <Sxavenger.h>
-#include <DefaultGraphics.h>
+#include <SxavengerGraphics.h>
 
 void ObjectDemo::Init() {
 
@@ -23,19 +23,18 @@ void ObjectDemo::Init() {
 
 void ObjectDemo::Draw() {
 
-	DefaultGraphics::GetInstance()->DrawDefaultTexture(
+	SxavengerGraphics::DrawDefaultLightingTexture(
 		model_->GetMesh(0),
-		transform_[0], material_, model_->GetTextureHandle(TEXTURE_DIFFUSE)
+		transform_[0], material_,
+		model_->GetTextureHandle(TEXTURE_DIFFUSE)
 	);
-
-	
 
 }
 
 void ObjectDemo::SetAttributeImGui() {
 	
 	if (ImGui::TreeNode("transform[0]")) {
-		transform_[0].transform.SetImGuiCommand();
+		transform_[0].SetImGuiCommand();
 		ImGui::TreePop();
 	}
 
@@ -45,7 +44,7 @@ void ObjectDemo::SetAttributeImGui() {
 	}
 	
 	if (ImGui::TreeNode("material")) {
-		material_.uvTransform.SetImGuiCommand();
+		material_.SetImGuiCommand();
 		ImGui::TreePop();
 	}
 	

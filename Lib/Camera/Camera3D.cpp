@@ -8,6 +8,7 @@
 
 // engine
 #include <Sxavenger.h>
+#include <SxavengerGraphics.h>
 
 //-----------------------------------------------------------------------------------------
 // using
@@ -68,20 +69,15 @@ void Camera3D::DrawFrustum(const Color4f& color) const {
 	frustumPoint[2] = Matrix::Transform(Matrix::Transform({ 1.0f, 1.0f, 1.0f }, clipMatrix), worldMatrix);
 	frustumPoint[3] = Matrix::Transform(Matrix::Transform({ 1.0f, -1.0f, 1.0f }, clipMatrix), worldMatrix);
 
-	// drawerの取得
-	auto drawer = PrimitiveDrawer::GetInstance();
-
 	for (int i = 0; i < 4; ++i) {
-		drawer->DrawLine(
+		SxavengerGraphics::DrawLine(
 			frustumPoint[i], frustumPoint[(i + 1) % 4], color
 		);
 
-		drawer->DrawLine(
+		SxavengerGraphics::DrawLine(
 			frustumPoint[i], transform_.translate, color
 		);
 	}
-
-	drawer->DrawAll3D();
 }
 
 void Camera3D::CalculateView() {

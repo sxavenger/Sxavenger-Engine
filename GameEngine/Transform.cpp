@@ -42,6 +42,12 @@ void EulerTransformBuffer::UpdateMatrix() {
 	(*buffer_)[0].worldInverceTranspose = (*buffer_)[0].worldMatrix.Inverse().Transpose();
 }
 
+void EulerTransformBuffer::SetImGuiCommand() {
+	transform.SetImGuiCommand();
+
+	UpdateMatrix();
+}
+
 ////////////////////////////////////////////////////////////////////////////////////////////
 // QuaternionTransformBuffer class methods
 ////////////////////////////////////////////////////////////////////////////////////////////

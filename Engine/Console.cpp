@@ -106,6 +106,7 @@ void Console::DockingConsole() const {
 }
 
 void Console::SetAttribute(Attribute* attribute) {
+	Assert(!attribute->GetName().empty());
 	attributes_.emplace_back(attribute);
 }
 

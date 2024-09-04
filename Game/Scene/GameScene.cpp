@@ -8,6 +8,7 @@
 #include <SxavengerGraphics.h>
 #include <Environment.h>
 #include <ColliderManager.h>
+#include <MathLib.h>
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -50,6 +51,7 @@ void GameScene::Run() {
 
 		Draw();
 
+		SxavengerGraphics::ResetPrimitives();
 		Sxavenger::EndFrame();
 	}
 
@@ -120,6 +122,25 @@ void GameScene::Draw() {
 
 		ColliderManager::GetInstance()->DrawColliders();
 
+		for (int i = 0; i < 100; ++i) {
+			float theta = pi_v * 2.0f / 100 * i;
+
+			SxavengerGraphics::DrawLine(
+				{ std::sin(theta), 0.0f, std::cos(theta)  },
+				{ -std::sin(theta), 0.0f, -std::cos(theta) },
+				ToColor4f(0xFAFA00FF)
+			);
+		}
+
+		SxavengerGraphics::DrawTriangle(
+			{ 1.0f, 1.0f, 1.0f },
+			{ -1.0f, 0.0f, 0.0f },
+			{ 1.0f, 0.0f, 0.0f },
+			ToColor4f(0xFAFAFAFF)
+		);
+
+		SxavengerGraphics::DrawAll3D();
+
 		Sxavenger::EndOffscreen(console->GetSceneTexture());
 		Sxavenger::TransitionProcess();
 
@@ -129,6 +150,18 @@ void GameScene::Draw() {
 
 		debugObjectManager_->Draw();
 		objectDemo_->Draw();
+
+		for (int i = 0; i < 20; ++i) {
+			float theta = pi_v * 2.0f / 20 * i;
+
+			SxavengerGraphics::DrawLine(
+				{ std::sin(theta),  std::cos(theta), 0.0f },
+				{ -std::sin(theta), -std::cos(theta), 0.0f },
+				ToColor4f(0xFA0000FF)
+			);
+		}
+
+		SxavengerGraphics::DrawAll3D();
 
 		Sxavenger::EndOffscreen(Sxavenger::GetTexture<RenderTexture>("offscreen"));
 		Sxavenger::TransitionProcess();

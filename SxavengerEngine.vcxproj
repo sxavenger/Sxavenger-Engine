@@ -145,7 +145,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\InputAssembler.cpp" />
     <ClCompile Include="Engine\Logger.cpp" />
     <ClCompile Include="Engine\Model.cpp" />
-    <ClCompile Include="Engine\PrimitiveDrawer.cpp" />
     <ClCompile Include="Engine\Sprite.cpp" />
     <ClCompile Include="Engine\Sxavenger.cpp" />
     <ClCompile Include="Engine\Texture.cpp" />
@@ -179,6 +178,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="GameEngine\GraphicsRender.cpp" />
     <ClCompile Include="GameEngine\Light.cpp" />
     <ClCompile Include="GameEngine\Material.cpp" />
+    <ClCompile Include="GameEngine\PrimitiveDrawer.cpp" />
     <ClCompile Include="GameEngine\SxavengerGraphics.cpp" />
     <ClCompile Include="GameEngine\Transform.cpp" />
     <ClCompile Include="Game\AnimationObject\AnimationCube.cpp" />
@@ -254,7 +254,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\InputAssembler.h" />
     <ClInclude Include="Engine\Logger.h" />
     <ClInclude Include="Engine\Model.h" />
-    <ClInclude Include="Engine\PrimitiveDrawer.h" />
     <ClInclude Include="Engine\Sprite.h" />
     <ClInclude Include="Engine\Sxavenger.h" />
     <ClInclude Include="Engine\Texture.h" />
@@ -275,6 +274,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="GameEngine\GraphicsRender.h" />
     <ClInclude Include="GameEngine\Light.h" />
     <ClInclude Include="GameEngine\Material.h" />
+    <ClInclude Include="GameEngine\PrimitiveDrawer.h" />
     <ClInclude Include="GameEngine\SxavengerGraphics.h" />
     <ClInclude Include="GameEngine\Transform.h" />
     <ClInclude Include="Game\AnimationObject\AnimationCube.h" />
@@ -365,7 +365,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
       </ExcludedFromBuild>
     </None>
-    <None Include="Resources\hlsl\Lighting.hlsli" />
+    <None Include="Resources\hlsl\Light.hlsli" />
     <None Include="Resources\hlsl\Matrix.hlsli" />
     <None Include="Resources\hlsl\MeshCommon.hlsli" />
     <None Include="Resources\hlsl\Object3d\Object3d.hlsli">
@@ -557,7 +557,11 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </FxCompile>
-    <FxCompile Include="Resources\hlsl\Primitive\Primitive.VS.hlsl">
+    <FxCompile Include="Resources\hlsl\Primitive\Primitive2D.VS.hlsl">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="Resources\hlsl\Primitive\Primitive3D.VS.hlsl">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </FxCompile>
@@ -597,7 +601,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </FxCompile>
-    <FxCompile Include="Resources\hlsl\SxavengerShader\SampleLightingTexture.PS.hlsl">
+    <FxCompile Include="Resources\hlsl\SxavengerShader\LightingTexture.PS.hlsl">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </FxCompile>

@@ -7,7 +7,6 @@
 //=========================================================================================
 // buffers
 //=========================================================================================
-
 ConstantBuffer<Camera> gCamera : register(b0);
 static const float4x4 viewProj = mul(gCamera.viewMatrix, gCamera.projMatrix);
 
@@ -19,6 +18,7 @@ VSOutput main(VSInput input) {
 	VSOutput output;
 	
 	output.position = mul(input.position, viewProj);
+	output.texcoord = input.texcoord;
 	output.color    = input.color;
 	
 	return output;

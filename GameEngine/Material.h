@@ -40,6 +40,32 @@ struct UVTransform {
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////
+// enum
+////////////////////////////////////////////////////////////////////////////////////////////
+
+enum LambertType : int32_t {
+	TYPE_LAMBERT_NONE,
+	TYPE_LAMBERT,
+	TYPE_HALF_LAMBERT,
+
+	kLambertTypeCount
+};
+
+static const char* lambertItems_[LambertType::kLambertTypeCount]
+	= { "None", "Lambert", "HalfLambert" };
+
+enum PhongType : int32_t {
+	TYPE_PHONG_NONE,
+	TYPE_PHONG,
+	TYPE_BLINN_PHONG,
+
+	kPhongTypeCount
+};
+
+static const char* phongItems_[PhongType::kPhongTypeCount]
+	= { "None", "Phong", "BlinnPhong" };
+
+////////////////////////////////////////////////////////////////////////////////////////////
 // ObjectMaterial class
 ////////////////////////////////////////////////////////////////////////////////////////////
 class ObjectMaterialBuffer {
@@ -60,12 +86,18 @@ public:
 		return buffer_->GetGPUVirtualAddress();
 	}
 
+	//* imgui command *//
+
+	void SetImGuiCommand();
+
 	//=========================================================================================
 	// public variables
 	//=========================================================================================
 
 	Color4f     color = { 1.0f, 1.0f, 1.0f, 1.0f };
 	UVTransform uvTransform;
+	LambertType lambertType = TYPE_HALF_LAMBERT;
+	PhongType   phongType;
 
 private:
 
@@ -73,12 +105,16 @@ private:
 	// ObjectMaterialGPU structure
 	////////////////////////////////////////////////////////////////////////////////////////////
 	struct ObjectMaterial {
-		Color4f   color;
-		Matrix4x4 uvTransform;
+		Color4f     color;
+		Matrix4x4   uvTransform;
+		LambertType lambertType;
+		PhongType   phongType;
 
 		void Init() {
 			color       = {1.0f, 1.0f, 1.0f, 1.0f};
 			uvTransform = Matrix4x4::Identity();
+			lambertType = TYPE_HALF_LAMBERT;
+			phongType   = TYPE_PHONG_NONE;
 		}
 	};
 

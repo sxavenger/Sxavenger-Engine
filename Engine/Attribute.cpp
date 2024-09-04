@@ -32,6 +32,10 @@ void Attribute::EraseAttributeNode(Attribute* other) {
 	console->CheckEraseAttribute(other);
 }
 
+void Attribute::SetThisAttribute() {
+	console->SetAttribute(this);
+}
+
 void Attribute::SetThisAttribute(const std::string& name) {
 	name_ = name;
 	console->SetAttribute(this);

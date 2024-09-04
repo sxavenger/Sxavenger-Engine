@@ -106,16 +106,27 @@ DirectX::ScratchImage Texture::LoadTexture(const std::string& filePath) {
 		mipImage = std::move(image);
 
 	} else {
-		hr = DirectX::GenerateMipMaps(
-			image.GetImages(),
-			image.GetImageCount(),
-			image.GetMetadata(),
-			DirectX::TEX_FILTER_SRGB,
-			0,
-			mipImage
-		);
 
-		Assert(SUCCEEDED(hr));
+		auto metadata = image.GetMetadata();
+
+		if (metadata.width == 1 && metadata.height == 1) {
+
+			//!< 1x1ならMipMapの生成をスキップ
+			mipImage = std::move(image);
+
+		} else {
+
+			hr = DirectX::GenerateMipMaps(
+				image.GetImages(),
+				image.GetImageCount(),
+				image.GetMetadata(),
+				DirectX::TEX_FILTER_SRGB,
+				0,
+				mipImage
+			);
+
+			Assert(SUCCEEDED(hr));
+		}
 	}
 
 	return mipImage;

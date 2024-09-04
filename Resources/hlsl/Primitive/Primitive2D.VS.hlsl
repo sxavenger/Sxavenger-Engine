@@ -1,20 +1,20 @@
-#pragma once
-
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
-// Geometry
-#include <Vector3.h>
+#include "Primitive.hlsli"
+#include "../Camera.hlsli"
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// Rigidbody base class
+// main
 ////////////////////////////////////////////////////////////////////////////////////////////
-class Rigidbody {
-public:
-
-
-
-private:
-
-
-};
+VSOutput main(VSInput input) {
+	
+	VSOutput output;
+	
+	output.position = input.position;
+	output.texcoord = input.texcoord;
+	output.color    = input.color;
+	
+	return output;
+	
+}

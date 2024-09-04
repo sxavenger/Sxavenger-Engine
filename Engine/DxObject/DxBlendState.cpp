@@ -12,8 +12,6 @@
 
 void DxObject::BlendState::Init() {
 
-	GraphicsPipeline::SetBlendState(this);
-
 	// none
 	{
 		D3D12_BLEND_DESC desc = {};
@@ -103,6 +101,7 @@ void DxObject::BlendState::Init() {
 	}
 
 	// setting ptr
+	GraphicsPipeline::SetBlendState(this);
 
 }
 

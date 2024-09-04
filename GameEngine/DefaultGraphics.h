@@ -17,6 +17,7 @@
 ////////////////////////////////////////////////////////////////////////////////////////////
 enum DefaultGraphicsType {
 	kDefault_Texture,
+	kDefault_LightingTexture,
 
 	kCountOfDefaultGraphicsType
 };
@@ -38,6 +39,12 @@ public:
 	//* graphics option *//
 
 	void DrawDefaultTexture(
+		const InputAssembler<VertexData>& ia,
+		const BaseTransformBuffer& transform, const ObjectMaterialBuffer& material,
+		const D3D12_GPU_DESCRIPTOR_HANDLE& texture
+	);
+
+	void DrawDefaultLightingTexture(
 		const InputAssembler<VertexData>& ia,
 		const BaseTransformBuffer& transform, const ObjectMaterialBuffer& material,
 		const D3D12_GPU_DESCRIPTOR_HANDLE& texture

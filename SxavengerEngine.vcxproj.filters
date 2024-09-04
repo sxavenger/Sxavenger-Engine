@@ -312,9 +312,6 @@
     <ClCompile Include="externals\meshoptimizer\vfetchoptimizer.cpp">
       <Filter>externals\meshoptimizer</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\PrimitiveDrawer.cpp">
-      <Filter>Engine\source</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\DxObject\DxMesh.cpp">
       <Filter>Engine\DxObject\source</Filter>
     </ClCompile>
@@ -481,6 +478,9 @@
     <ClCompile Include="GameEngine\DefaultGraphics.cpp">
       <Filter>GameEngine\source</Filter>
     </ClCompile>
+    <ClCompile Include="GameEngine\PrimitiveDrawer.cpp">
+      <Filter>GameEngine\source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\DirectXCommon.h">
@@ -599,9 +599,6 @@
     </ClInclude>
     <ClInclude Include="externals\meshoptimizer\meshoptimizer.h">
       <Filter>externals\meshoptimizer</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\PrimitiveDrawer.h">
-      <Filter>Engine\include</Filter>
     </ClInclude>
     <ClInclude Include="Engine\DxObject\DxMesh.h">
       <Filter>Engine\DxObject\include</Filter>
@@ -774,14 +771,14 @@
     <ClInclude Include="GameEngine\DefaultGraphics.h">
       <Filter>GameEngine\include</Filter>
     </ClInclude>
+    <ClInclude Include="GameEngine\PrimitiveDrawer.h">
+      <Filter>GameEngine\include</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />
     <None Include="Resources\hlsl\Floor.hlsli">
       <Filter>Resource\hlsl\Floor</Filter>
-    </None>
-    <None Include="Resources\hlsl\Lighting.hlsli">
-      <Filter>Resource\hlsl</Filter>
     </None>
     <None Include="Resources\hlsl\Default.hlsli">
       <Filter>Resource\hlsl\Default</Filter>
@@ -861,6 +858,9 @@
     <None Include="Resources\hlsl\SxavengerShader\SxavengerCommon.hlsli">
       <Filter>Resource\hlsl\SxavengerShader</Filter>
     </None>
+    <None Include="Resources\hlsl\Light.hlsli">
+      <Filter>Resource\hlsl</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Text Include="externals\imgui\LICENSE.txt">
@@ -909,12 +909,6 @@
     </FxCompile>
     <FxCompile Include="Resources\hlsl\Default.AS.hlsl">
       <Filter>Resource\hlsl\Default</Filter>
-    </FxCompile>
-    <FxCompile Include="Resources\hlsl\Primitive\Primitive.VS.hlsl">
-      <Filter>Resource\hlsl\Primitive</Filter>
-    </FxCompile>
-    <FxCompile Include="Resources\hlsl\Primitive\Primitive.PS.hlsl">
-      <Filter>Resource\hlsl\Primitive</Filter>
     </FxCompile>
     <FxCompile Include="Resources\hlsl\Bloom\Luminnce.PS.hlsl">
       <Filter>Resource\hlsl\Bloom</Filter>
@@ -991,11 +985,20 @@
     <FxCompile Include="Resources\hlsl\SxavengerShader\DefaultTexture.PS.hlsl">
       <Filter>Resource\hlsl\SxavengerShader</Filter>
     </FxCompile>
-    <FxCompile Include="Resources\hlsl\SxavengerShader\SampleLightingTexture.PS.hlsl">
-      <Filter>Resource\hlsl\SxavengerShader</Filter>
-    </FxCompile>
     <FxCompile Include="Resources\RayTracingShader\RayTracingTest.hlsl">
       <Filter>Resource\RayTracingShader</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\hlsl\SxavengerShader\LightingTexture.PS.hlsl">
+      <Filter>Resource\hlsl\SxavengerShader</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\hlsl\Primitive\Primitive3D.VS.hlsl">
+      <Filter>Resource\hlsl\Primitive</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\hlsl\Primitive\Primitive.PS.hlsl">
+      <Filter>Resource\hlsl\Primitive</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\hlsl\Primitive\Primitive2D.VS.hlsl">
+      <Filter>Resource\hlsl\Primitive</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

@@ -78,5 +78,6 @@ using Color4i = Color4<int>;
 // methods
 //-----------------------------------------------------------------------------------------
 
-Color4i ToColor4(const Color4f& color);
-Color4f ToColor4(const Color4i& color);
+Color4i ToColor4i(const Color4f& color);
+Color4f ToColor4f(const Color4i& color);
+Color4f ToColor4f(uint32_t colorCode);

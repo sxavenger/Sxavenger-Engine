@@ -38,7 +38,7 @@ void Light::SetImGuiCommand() {
 		case LightType::LIGHT_DIRECTIONAL:
 
 			ImGui::DragFloat3("direction", &direction.x, 0.01f);
-			if (ImGui::IsItemHovered()) {
+			if (ImGui::IsItemFocused()) {
 				direction = Normalize(direction);
 			}
 
@@ -54,7 +54,7 @@ void Light::SetImGuiCommand() {
 		case LightType::LIGHT_SPOT:
 
 			ImGui::DragFloat3("direction", &direction.x, 0.01f);
-			if (ImGui::IsItemHovered()) {
+			if (ImGui::IsItemFocused()) {
 				direction = Normalize(direction);
 			}
 
@@ -91,9 +91,36 @@ void LightBuffer::Init() {
 	(*buffer_)[0].color     = {1.0f, 1.0f, 1.0f, 1.0f};
 	(*buffer_)[0].direction = { 0.0f, -1.0f, 0.0f };
 
+	Attribute::SetAttributeName("light buffer");
 }
 
 void LightBuffer::Term() {
+}
+
+void LightBuffer::SetDirectionalLight(uint32_t index, const DirectionalLight& directional) {
+	(*buffer_)[index].color     = directional.color;
+	(*buffer_)[index].position  = directional.position;
+	(*buffer_)[index].direction = directional.direction;
+	(*buffer_)[index].type      = LIGHT_DIRECTIONAL;
+}
+
+void LightBuffer::SetPointLight(uint32_t index, const PointLight& point) {
+	(*buffer_)[index].color     = point.color;
+	(*buffer_)[index].position  = point.position;
+	(*buffer_)[index].range     = point.range;
+	(*buffer_)[index].decay     = point.decay;
+	(*buffer_)[index].type      = LIGHT_POINT;
+}
+
+void LightBuffer::SetSpotLight(uint32_t index, const SpotLight& spot) {
+	(*buffer_)[index].color        = spot.color;
+	(*buffer_)[index].position     = spot.position;
+	(*buffer_)[index].direction    = spot.direction;
+	(*buffer_)[index].range        = spot.range;
+	(*buffer_)[index].decay        = spot.decay;
+	(*buffer_)[index].angle        = spot.angle;
+	(*buffer_)[index].falloffAngle = spot.falloffAngle;
+	(*buffer_)[index].type         = LIGHT_POINT;
 }
 
 void LightBuffer::SetAttributeImGui() {

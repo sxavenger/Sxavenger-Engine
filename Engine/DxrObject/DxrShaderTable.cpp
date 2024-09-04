@@ -1,6 +1,11 @@
 #include "DxrShaderTable.h"
 _DXROBJECT_USING
 
+//-----------------------------------------------------------------------------------------
+// include
+//-----------------------------------------------------------------------------------------
+#include "Environment.h"
+
 ////////////////////////////////////////////////////////////////////////////////////////////
 // ShaderTable class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -111,9 +116,10 @@ void ShaderTable::Create(const StateObject* stateObject, const TopLevelAS* tlas,
 
 	address += hitgroupRegion;
 
-	dispathRayDesc_.Width = kWindowWidth;
+	// FIXME: 描画Textureからsizeを持ってくる
+	dispathRayDesc_.Width  = kWindowWidth;
 	dispathRayDesc_.Height = kWindowHeight;
-	dispathRayDesc_.Depth = 1; // test
+	dispathRayDesc_.Depth  = 1;
 }
 
 UINT ShaderTable::Alignment(size_t size, UINT align) {

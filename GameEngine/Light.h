@@ -28,6 +28,7 @@ enum LightType : int32_t {
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Light structure
 ////////////////////////////////////////////////////////////////////////////////////////////
+
 struct Light {
 	Color4f  color; //!< rgb: color, a: intensity
 	Vector4f position;
@@ -40,6 +41,29 @@ struct Light {
 	LightType type;
 
 	void SetImGuiCommand();
+};
+
+struct DirectionalLight {
+	Color4f  color;
+	Vector4f position;
+	Vector3f direction;
+};
+
+struct PointLight {
+	Color4f  color;
+	Vector4f position;
+	float    range;
+	float    decay;
+};
+
+struct SpotLight {
+	Color4f  color;
+	Vector4f position;
+	Vector3f direction;
+	float    range;
+	float    decay;
+	float    angle;
+	float    falloffAngle;
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -58,6 +82,20 @@ public:
 	void Init();
 
 	void Term();
+
+	//* light option *//
+
+	void SetDirectionalLight(uint32_t index, const DirectionalLight& directional);
+
+	void SetPointLight(uint32_t index, const PointLight& point);
+
+	void SetSpotLight(uint32_t index, const SpotLight& spot);
+
+	//* buffer *//
+
+	const D3D12_GPU_VIRTUAL_ADDRESS GetGPUVirtualAddress() const { return buffer_->GetGPUVirtualAddress(); }
+
+	//* Attribute *//
 
 	void SetAttributeImGui() override;
 

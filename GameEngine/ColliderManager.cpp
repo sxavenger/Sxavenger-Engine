@@ -5,6 +5,7 @@
 //-----------------------------------------------------------------------------------------
 // engine
 #include <Sxavenger.h>
+#include <SxavengerGraphics.h>
 
 // math
 #include <MathLib.h>
@@ -31,8 +32,6 @@ void ColliderManager::DrawColliders() {
 	for (const auto& collider : colliders_) {
 		DrawCollider(collider);
 	}
-
-	PrimitiveDrawer::GetInstance()->DrawAll3D();
 }
 
 ColliderManager* ColliderManager::GetInstance() {
@@ -102,8 +101,6 @@ void ColliderManager::DrawCollider(const Collider* const collider) const {
 
 void ColliderManager::DrawSphereCollider(const Vector3f& position, const CollisionBoundings::Sphere& sphere) const {
 
-	auto drawer = PrimitiveDrawer::GetInstance();
-
 	const uint32_t kSubdivision = 24; //!< parameter
 	const float kRoundEvery = pi_v * 2.0f / kSubdivision; //!< 1周 / 分割数
 
@@ -128,7 +125,7 @@ void ColliderManager::DrawSphereCollider(const Vector3f& position, const Collisi
 		start *= sphere.radius;
 		end   *= sphere.radius;
 
-		drawer->DrawLine(start + position, end + position, color_);
+		SxavengerGraphics::DrawLine(start + position, end + position, color_);
 	}
 
 	// xy軸の円
@@ -152,7 +149,7 @@ void ColliderManager::DrawSphereCollider(const Vector3f& position, const Collisi
 		start *= sphere.radius;
 		end *= sphere.radius;
 
-		drawer->DrawLine(start + position, end + position, color_);
+		SxavengerGraphics::DrawLine(start + position, end + position, color_);
 	}
 
 	// yz軸の円
@@ -176,13 +173,11 @@ void ColliderManager::DrawSphereCollider(const Vector3f& position, const Collisi
 		start *= sphere.radius;
 		end *= sphere.radius;
 
-		drawer->DrawLine(start + position, end + position, color_);
+		SxavengerGraphics::DrawLine(start + position, end + position, color_);
 	}
 }
 
 void ColliderManager::DrawAABBCollider(const Vector3f& position, const CollisionBoundings::AABB& aabb) const {
-
-	auto drawer = PrimitiveDrawer::GetInstance();
 
 	Vector3f pos[8] = {};
 
@@ -208,8 +203,8 @@ void ColliderManager::DrawAABBCollider(const Vector3f& position, const Collision
 
 	for (int i = 0; i < 4; ++i) {
 		int next = (i + 1) % 4;
-		drawer->DrawLine(pos[i] + position, pos[next] + position, color_);
-		drawer->DrawLine(pos[i + 4] + position, pos[next + 4] + position, color_);
-		drawer->DrawLine(pos[i] + position, pos[i + 4] + position, color_);
+		SxavengerGraphics::DrawLine(pos[i] + position, pos[next] + position, color_);
+		SxavengerGraphics::DrawLine(pos[i + 4] + position, pos[next + 4] + position, color_);
+		SxavengerGraphics::DrawLine(pos[i] + position, pos[i + 4] + position, color_);
 	}
 }
