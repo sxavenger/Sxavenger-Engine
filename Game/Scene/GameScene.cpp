@@ -51,6 +51,7 @@ void GameScene::Run() {
 
 		Draw();
 
+		Sxavenger::EndImGuiAndDrawCall();
 		SxavengerGraphics::ResetPrimitives();
 		Sxavenger::EndFrame();
 	}
@@ -70,8 +71,6 @@ void GameScene::Run() {
 
 void GameScene::Init() {
 
-
-
 	gameCamera_ = std::make_unique<Camera3D>();
 	gameCamera_->SetThisAttribute("GameCamera");
 	gameCamera_->SetProjection(0.45f, static_cast<float>(kWindowWidth) / static_cast<float>(kWindowHeight), 0.01f, 16.0f);
@@ -90,13 +89,16 @@ void GameScene::Init() {
 
 	objectDemo_ = std::make_unique<ObjectDemo>();
 	objectDemo_->Init();
-	
+
+	SxavengerProcess::GetInstance()->Init();
 }
 
 void GameScene::Term() {
 }
 
 void GameScene::Update() {
+
+	
 
 	/*demo_->Update();*/
 
@@ -105,6 +107,8 @@ void GameScene::Update() {
 	particle_->Update();
 
 	ColliderManager::GetInstance()->Update();
+
+	SxavengerProcess::GetInstance()->Update();
 }
 
 void GameScene::Draw() {
@@ -180,8 +184,6 @@ void GameScene::Draw() {
 			Sxavenger::GetTexture<RenderTexture>("offscreen")->GetResource(), D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE
 		);
 
-		/*
-			ImGuiの関係上、スクリーン描画は最後にする
-		*/
+		
 	}
 }

@@ -68,7 +68,7 @@ ComPtr<ID3D12Resource> DxObject::CreateBufferResource(
 		&desc,
 		D3D12_RESOURCE_STATE_GENERIC_READ,
 		nullptr,
-		IID_PPV_ARGS(&result)
+		IID_PPV_ARGS(result.GetAddressOf())
 	);
 
 	Assert(SUCCEEDED(hr));

@@ -372,9 +372,6 @@
     <ClCompile Include="Lib\Camera\DebugCamera3D.cpp">
       <Filter>Lib\Camera\source</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Sprite.cpp">
-      <Filter>Engine\source</Filter>
-    </ClCompile>
     <ClCompile Include="GameEngine\Transform.cpp">
       <Filter>GameEngine\source</Filter>
     </ClCompile>
@@ -479,6 +476,9 @@
       <Filter>GameEngine\source</Filter>
     </ClCompile>
     <ClCompile Include="GameEngine\PrimitiveDrawer.cpp">
+      <Filter>GameEngine\source</Filter>
+    </ClCompile>
+    <ClCompile Include="GameEngine\SxavengerProcess.cpp">
       <Filter>GameEngine\source</Filter>
     </ClCompile>
   </ItemGroup>
@@ -588,9 +588,6 @@
     <ClInclude Include="Engine\Console.h">
       <Filter>Engine\include</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Attribute.h">
-      <Filter>Engine\include</Filter>
-    </ClInclude>
     <ClInclude Include="Lib\Geometry\VectorComparison.h">
       <Filter>Lib\Geometry\include</Filter>
     </ClInclude>
@@ -659,9 +656,6 @@
     </ClInclude>
     <ClInclude Include="Lib\Camera\DebugCamera3D.h">
       <Filter>Lib\Camera\include</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Sprite.h">
-      <Filter>Engine\include</Filter>
     </ClInclude>
     <ClInclude Include="GameEngine\Transform.h">
       <Filter>GameEngine\include</Filter>
@@ -772,6 +766,12 @@
       <Filter>GameEngine\include</Filter>
     </ClInclude>
     <ClInclude Include="GameEngine\PrimitiveDrawer.h">
+      <Filter>GameEngine\include</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Attribute.h">
+      <Filter>Engine\include</Filter>
+    </ClInclude>
+    <ClInclude Include="GameEngine\SxavengerProcess.h">
       <Filter>GameEngine\include</Filter>
     </ClInclude>
   </ItemGroup>

@@ -119,7 +119,6 @@ void SxavengerEngine::BeginFrame() {
 }
 
 void SxavengerEngine::EndFrame() {
-	sImGuiManager->End();
 	sDirectXRCommon->EndFrame();
 	Performance::EndFrame();
 }
@@ -230,4 +229,8 @@ void SxavengerEngine::PlayAudioOneShot(const std::string& filename, float volume
 
 AudioManager* SxavengerEngine::GetAudioManager() {
 	return sAudioManager;
+}
+
+void SxavengerEngine::EndImGuiAndDrawCall() {
+	sImGuiManager->End();
 }

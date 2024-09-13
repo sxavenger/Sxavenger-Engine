@@ -127,7 +127,7 @@ private:
 
 	//* process & config *//
 	//* config
-	bool isDisplayConsole_  = true;
+	bool isDisplayConsole_  = false;
 	bool isOutputImGuiFile_ = false;
 
 	//* process
