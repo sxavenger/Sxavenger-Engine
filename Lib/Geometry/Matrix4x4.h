@@ -5,8 +5,10 @@
 //-----------------------------------------------------------------------------------------
 #include <algorithm>
 #include <cassert>
-#include <Vector3.h>
-#include <Quaternion.h>
+
+//* Geomtery
+#include "Vector3.h"
+#include "Quaternion.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Matrix4x4 class

@@ -16,9 +16,9 @@ public:
 	// constructor
 	//=========================================================================================
 
-	Vector4() = default;
-	Vector4(T _x, T _y, T _z) : x(_x), y(_y), z(_z), w(1) {}
-	Vector4(T _x, T _y, T _z, T _w) : x(_x), y(_y), z(_z), w(_w) {}
+	constexpr Vector4() = default;
+	constexpr Vector4(T _x, T _y, T _z) : x(_x), y(_y), z(_z), w(1) {}
+	constexpr Vector4(T _x, T _y, T _z, T _w) : x(_x), y(_y), z(_z), w(_w) {}
 
 	//=========================================================================================
 	// variables
@@ -46,8 +46,8 @@ template <ColorT T>
 class Color4 { //!< Vector4の継承でやりたい
 public:
 
-	Color4() = default;
-	Color4(T _r, T _g, T _b, T _a) : r(_r), g(_g), b(_b), a(_a) {}
+	constexpr Color4() = default;
+	constexpr Color4(T _r, T _g, T _b, T _a) : r(_r), g(_g), b(_b), a(_a) {}
 	
 	union {
 		T x, r;
@@ -78,6 +78,6 @@ using Color4i = Color4<int>;
 // methods
 //-----------------------------------------------------------------------------------------
 
-Color4i ToColor4i(const Color4f& color);
-Color4f ToColor4f(const Color4i& color);
-Color4f ToColor4f(uint32_t colorCode);
+constexpr Color4i ToColor4i(const Color4f& color);
+constexpr Color4f ToColor4f(const Color4i& color);
+constexpr Color4f ToColor4f(uint32_t colorCode);

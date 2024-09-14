@@ -5,6 +5,9 @@
 //-----------------------------------------------------------------------------------------
 // c++
 #include <cmath>
+#include <algorithm>
+#include "MathLib.h"
+#include "VectorComparison.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // anonymose namespacae
@@ -150,4 +153,36 @@ Quaternion Slerp(const Quaternion& q0, const Quaternion& q1, float t) {
 
 	return scaler0 * q + scaler1 * q1;
 
+}
+
+Quaternion ToQuaternion(const Vector3f& euler) {
+	// 半角に変換
+	float cy = cos(euler.y * 0.5f);
+	float sy = sin(euler.y * 0.5f);
+	float cp = cos(euler.x * 0.5f);
+	float sp = sin(euler.x * 0.5f);
+	float cr = cos(euler.z * 0.5f);
+	float sr = sin(euler.z * 0.5f);
+
+	Quaternion q = {
+		cr * sp * cy + sr * cp * sy, // x
+		cr * cp * sy - sr * sp * cy, // y
+		sr * cp * cy - cr * sp * sy,   // z
+		cr * cp * cy + sr * sp * sy  // w
+	};
+
+	return q;
+}
+
+Quaternion LookAt(const Vector3f& u, const Vector3f& v) {
+	
+	Vector3f up = Normalize(Cross(u, v));
+
+	if (All(up == kOrigin3)) {
+		up = { 0.0f, 1.0f, 0.0f };
+	}
+
+	float theta = std::acos(Dot(u, v));
+
+	return MakeRotateAxisAngleQuaternion(up, theta);
 }

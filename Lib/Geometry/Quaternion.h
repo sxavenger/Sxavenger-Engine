@@ -3,7 +3,7 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
-#include <Vector3.h>
+#include "Vector3.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Quaternion class
@@ -80,3 +80,8 @@ Quaternion MakeRotateAxisAngleQuaternion(const Vector3f& axis, float angle);
 Vector3f RotateVector(const Vector3f& v, const Quaternion& q);
 
 Quaternion Slerp(const Quaternion& q0, const Quaternion& q1, float t);
+
+Quaternion ToQuaternion(const Vector3f& euler);
+
+Quaternion LookAt(const Vector3f& u, const Vector3f& v);
+

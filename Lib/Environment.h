@@ -1,5 +1,14 @@
 #pragma once
 
-static const int kWindowWidth    = 1280;
-static const int kWindowHeight   = 720;
-static const char kWindowTitle[] = "Sxavenger Engine";
+//-----------------------------------------------------------------------------------------
+// include
+//-----------------------------------------------------------------------------------------
+//* Geotery
+#include <Lib/Geometry/Vector2.h>
+
+//-----------------------------------------------------------------------------------------
+// Enviornments
+//-----------------------------------------------------------------------------------------
+
+static const Vector2ui kWindowSize = { 1280, 720 };
+static const char kWindowTitle[]   = "Sxavenger Engine";

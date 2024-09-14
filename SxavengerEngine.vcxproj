@@ -52,7 +52,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)Game\DebugObject;$(ProjectDir)Game\Subobject;$(ProjectDir)Game\AnimationObject;$(ProjectDir)Game\Scene;$(ProjectDir)Game;$(ProjectDir)Lib\Adapter\Performance;$(ProjectDir)Lib\Adapter\Random;$(ProjectDir)Lib\Adapter\Json;$(ProjectDir)Lib\Animation;$(ProjectDir)Lib\Rendering;$(ProjectDir)Lib\PostEffect;$(ProjectDir)Lib\Light;$(ProjectDir)Lib\Camera;$(ProjectDir)Lib\Geometry;$(ProjectDir)Lib;$(ProjectDir)externals\meshoptimizer;$(ProjectDir)externals\assimp\include;$(ProjectDir)externals\nlohmann;$(ProjectDir)externals\DirectXMesh;$(ProjectDir)externals\DirectXTex;$(ProjectDir)externals\imgui;$(ProjectDir)GameEngine;$(ProjectDir)Engine\DxrObject;$(ProjectDir)Engine\DxObject;$(ProjectDir)Engine;$(ProjectDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)externals\nlohmann;$(ProjectDir)externals\meshoptimizer;$(ProjectDir)externals\imgui;$(ProjectDir)externals\DirectXTex;$(ProjectDir)externals\DirectXMesh;$(ProjectDir)externals\assimp\include;$(ProjectDir)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
@@ -64,8 +64,10 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalOptions>/ignore:4049 %(AdditionalOptions)</AdditionalOptions>
       <TreatLinkerWarningAsErrors>true</TreatLinkerWarningAsErrors>
-      <AdditionalLibraryDirectories>$(ProjectDir)externals\assimp\lib\debug</AdditionalLibraryDirectories>
-      <AdditionalDependencies>assimp-vc143-mtd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(ProjectDir)externals\assimp\lib\$(Configuration)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>assimp-vc143-mtd.lib</AdditionalDependencies>
+      <DelayLoadDLLs>
+      </DelayLoadDLLs>
     </Link>
     <PostBuildEvent>
       <Command>copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxcompiler.dll" "$(TargetDir)dxcompiler.dll"
@@ -88,7 +90,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
-      <AdditionalIncludeDirectories>$(ProjectDir)\Game\DebugObject;$(ProjectDir)\Game\Subobject;$(ProjectDir)\Game\AnimationObject;$(ProjectDir)\Game\Scene;$(ProjectDir)\Game;$(ProjectDir)\Lib\Adapter\Performance;$(ProjectDir)\Lib\Adapter\Random;$(ProjectDir)\Lib\Adapter\Json;$(ProjectDir)\Lib\Animation;$(ProjectDir)\Lib\Rendering;$(ProjectDir)\Lib\PostEffect;$(ProjectDir)\Lib\Light;$(ProjectDir)\Lib\Camera;$(ProjectDir)\Lib\Geometry;$(ProjectDir)\Lib;$(ProjectDir)\externals\meshoptimizer;$(ProjectDir)\externals\assimp\include;$(ProjectDir)\externals\nlohmann;$(ProjectDir)\externals\DirectXMesh;$(ProjectDir)\externals\DirectXTex;$(ProjectDir)\externals\imgui;$(ProjectDir)\GameEngine;$(ProjectDir)\Engine\DxrObject;$(ProjectDir)\Engine\DxObject;$(ProjectDir)\Engine;$(ProjectDir)\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)externals\nlohmann;$(ProjectDir)externals\meshoptimizer;$(ProjectDir)externals\imgui;$(ProjectDir)externals\DirectXTex;$(ProjectDir)externals\DirectXMesh;$(ProjectDir)externals\assimp\include;$(ProjectDir)</AdditionalIncludeDirectories>
       <TreatWarningAsError>true</TreatWarningAsError>
     </ClCompile>
     <Link>
@@ -97,8 +99,8 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <TreatLinkerWarningAsErrors>true</TreatLinkerWarningAsErrors>
-      <AdditionalLibraryDirectories>$(ProjecxtDir)externals\assimp\lib\release</AdditionalLibraryDirectories>
-      <AdditionalDependencies>assimp-vc143-mt.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>externals\assimp\build\lib\$(Configuration)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>assimp-vc143-mt.dll;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <FxCompile>
       <ShaderModel>6.4</ShaderModel>
@@ -109,45 +111,38 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Engine\Attribute.cpp" />
-    <ClCompile Include="Engine\Audio.cpp" />
-    <ClCompile Include="Engine\Console.cpp" />
-    <ClCompile Include="Engine\DirectXCommon.cpp" />
-    <ClCompile Include="Engine\DxObject\DxBlendState.cpp" />
-    <ClCompile Include="Engine\DxObject\DxBufferResource.cpp" />
-    <ClCompile Include="Engine\DxObject\DxCommand.cpp" />
-    <ClCompile Include="Engine\DxObject\DxCSPipeline.cpp" />
-    <ClCompile Include="Engine\DxObject\DxDepthStencil.cpp" />
-    <ClCompile Include="Engine\DxObject\DxDescriptorHeaps.cpp" />
-    <ClCompile Include="Engine\DxObject\DxDevices.cpp" />
-    <ClCompile Include="Engine\DxObject\DxFence.cpp" />
-    <ClCompile Include="Engine\DxObject\DxGraphicsPipeline.cpp" />
-    <ClCompile Include="Engine\DxObject\DxMesh.cpp" />
-    <ClCompile Include="Engine\DxObject\DxObjectCommon.cpp" />
-    <ClCompile Include="Engine\DxObject\DxRootSignatureDesc.cpp" />
-    <ClCompile Include="Engine\DxObject\DxShaderBlob.cpp" />
-    <ClCompile Include="Engine\DxObject\DxShaderBlobManager.cpp" />
-    <ClCompile Include="Engine\DxObject\DxShaderNode.cpp" />
-    <ClCompile Include="Engine\DxObject\DxShaderReflection.cpp" />
-    <ClCompile Include="Engine\DxObject\DxStructuredBuffer.cpp" />
-    <ClCompile Include="Engine\DxObject\DxSwapChain.cpp" />
-    <ClCompile Include="Engine\DxObject\DxUnorderedBufferResource.cpp" />
-    <ClCompile Include="Engine\DxrObject\DxrAccelerationStructure.cpp" />
-    <ClCompile Include="Engine\DxrObject\DxrBufferRecord.cpp" />
-    <ClCompile Include="Engine\DxrObject\DxrExportGroup.cpp" />
-    <ClCompile Include="Engine\DxrObject\DxrRootSignature.cpp" />
-    <ClCompile Include="Engine\DxrObject\DxrShaderBlob.cpp" />
-    <ClCompile Include="Engine\DxrObject\DxrShaderBlobManager.cpp" />
-    <ClCompile Include="Engine\DxrObject\DxrShaderTable.cpp" />
-    <ClCompile Include="Engine\DxrObject\DxrStateObject.cpp" />
-    <ClCompile Include="Engine\ImGuiManager.cpp" />
-    <ClCompile Include="Engine\Input.cpp" />
-    <ClCompile Include="Engine\InputAssembler.cpp" />
-    <ClCompile Include="Engine\Logger.cpp" />
-    <ClCompile Include="Engine\Model.cpp" />
-    <ClCompile Include="Engine\Sxavenger.cpp" />
-    <ClCompile Include="Engine\Texture.cpp" />
-    <ClCompile Include="Engine\WinApp.cpp" />
+    <ClCompile Include="Engine\Game\Camera3D.cpp" />
+    <ClCompile Include="Engine\Game\DebugCamera3D.cpp" />
+    <ClCompile Include="Engine\Game\GameScene.cpp" />
+    <ClCompile Include="Engine\Game\Transform.cpp" />
+    <ClCompile Include="Engine\System\Attribute.cpp" />
+    <ClCompile Include="Engine\System\Audio.cpp" />
+    <ClCompile Include="Engine\System\Console.cpp" />
+    <ClCompile Include="Engine\System\DirectXCommon.cpp" />
+    <ClCompile Include="Engine\System\DxObject\DxBlendState.cpp" />
+    <ClCompile Include="Engine\System\DxObject\DxBufferResource.cpp" />
+    <ClCompile Include="Engine\System\DxObject\DxCommand.cpp" />
+    <ClCompile Include="Engine\System\DxObject\DxCSPipeline.cpp" />
+    <ClCompile Include="Engine\System\DxObject\DxDepthStencil.cpp" />
+    <ClCompile Include="Engine\System\DxObject\DxDescriptorHeaps.cpp" />
+    <ClCompile Include="Engine\System\DxObject\DxDevices.cpp" />
+    <ClCompile Include="Engine\System\DxObject\DxFence.cpp" />
+    <ClCompile Include="Engine\System\DxObject\DxGraphicsPipeline.cpp" />
+    <ClCompile Include="Engine\System\DxObject\DxMesh.cpp" />
+    <ClCompile Include="Engine\System\DxObject\DxObjectCommon.cpp" />
+    <ClCompile Include="Engine\System\DxObject\DxRootSignatureDesc.cpp" />
+    <ClCompile Include="Engine\System\DxObject\DxShaderBlob.cpp" />
+    <ClCompile Include="Engine\System\DxObject\DxShaderBlobManager.cpp" />
+    <ClCompile Include="Engine\System\DxObject\DxShaderReflection.cpp" />
+    <ClCompile Include="Engine\System\DxObject\DxSwapChain.cpp" />
+    <ClCompile Include="Engine\System\DxObject\DxUnorderedBufferResource.cpp" />
+    <ClCompile Include="Engine\System\ImGuiManager.cpp" />
+    <ClCompile Include="Engine\System\Input.cpp" />
+    <ClCompile Include="Engine\System\Logger.cpp" />
+    <ClCompile Include="Engine\System\Performance.cpp" />
+    <ClCompile Include="Engine\System\Sxavenger.cpp" />
+    <ClCompile Include="Engine\System\Texture.cpp" />
+    <ClCompile Include="Engine\System\WinApp.cpp" />
     <ClCompile Include="externals\imgui\imgui.cpp" />
     <ClCompile Include="externals\imgui\imgui_demo.cpp" />
     <ClCompile Include="externals\imgui\imgui_draw.cpp" />
@@ -170,93 +165,48 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="externals\meshoptimizer\vertexfilter.cpp" />
     <ClCompile Include="externals\meshoptimizer\vfetchanalyzer.cpp" />
     <ClCompile Include="externals\meshoptimizer\vfetchoptimizer.cpp" />
-    <ClCompile Include="GameEngine\Collider.cpp" />
-    <ClCompile Include="GameEngine\ColliderManager.cpp" />
-    <ClCompile Include="GameEngine\CollisionDetection.cpp" />
-    <ClCompile Include="GameEngine\DefaultGraphics.cpp" />
-    <ClCompile Include="GameEngine\GraphicsRender.cpp" />
-    <ClCompile Include="GameEngine\Light.cpp" />
-    <ClCompile Include="GameEngine\Material.cpp" />
-    <ClCompile Include="GameEngine\PrimitiveDrawer.cpp" />
-    <ClCompile Include="GameEngine\SxavengerGraphics.cpp" />
-    <ClCompile Include="GameEngine\SxavengerProcess.cpp" />
-    <ClCompile Include="GameEngine\Transform.cpp" />
-    <ClCompile Include="Game\AnimationObject\AnimationCube.cpp" />
-    <ClCompile Include="Game\AnimationObject\AnimationHuman.cpp" />
-    <ClCompile Include="Game\AnimationObject\AnimationObject.cpp" />
-    <ClCompile Include="Game\DebugObject\DebugObject.cpp" />
-    <ClCompile Include="Game\DebugObject\DebugObjectManager.cpp" />
-    <ClCompile Include="Game\MeshBunny.cpp" />
-    <ClCompile Include="Game\NodeModel.cpp" />
-    <ClCompile Include="Game\ObjectDemo\ObjectDemo.cpp" />
-    <ClCompile Include="Game\Particle.cpp" />
-    <ClCompile Include="Game\RayTracingDemo\RayTracingCamera.cpp" />
-    <ClCompile Include="Game\RayTracingDemo\RayTracingDemo.cpp" />
-    <ClCompile Include="Game\Scene\GameScene.cpp" />
-    <ClCompile Include="Game\Skybox.cpp" />
-    <ClCompile Include="Lib\Adapter\Json\Json.cpp" />
-    <ClCompile Include="Lib\Adapter\Performance\Performance.cpp" />
-    <ClCompile Include="Lib\Adapter\Random\Random.cpp" />
-    <ClCompile Include="Lib\Animation\Animation.cpp" />
-    <ClCompile Include="Lib\Camera\Camera2D.cpp" />
-    <ClCompile Include="Lib\Camera\Camera3D.cpp" />
-    <ClCompile Include="Lib\Camera\DebugCamera3D.cpp" />
-    <ClCompile Include="Lib\DrawMethod.cpp" />
     <ClCompile Include="Lib\Geometry\MathLib.cpp" />
-    <ClCompile Include="Lib\Geometry\Matrix3x3.cpp" />
     <ClCompile Include="Lib\Geometry\Matrix4x4.cpp" />
     <ClCompile Include="Lib\Geometry\Quaternion.cpp" />
     <ClCompile Include="Lib\Geometry\Vector2.cpp" />
     <ClCompile Include="Lib\Geometry\Vector3.cpp" />
     <ClCompile Include="Lib\Geometry\Vector4.cpp" />
-    <ClCompile Include="Lib\PostEffect\Bloom.cpp" />
-    <ClCompile Include="Lib\PostEffect\FullScreen.cpp" />
-    <ClCompile Include="Lib\PostEffect\GaussianBlur.cpp" />
-    <ClCompile Include="Lib\Rendering\DefferedRendering.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Engine\Attribute.h" />
-    <ClInclude Include="Engine\Audio.h" />
-    <ClInclude Include="Engine\ComPtr.h" />
-    <ClInclude Include="Engine\Console.h" />
-    <ClInclude Include="Engine\DirectXCommon.h" />
-    <ClInclude Include="Engine\DxObject\DxBlendState.h" />
-    <ClInclude Include="Engine\DxObject\DxBufferResource.h" />
-    <ClInclude Include="Engine\DxObject\DxCommand.h" />
-    <ClInclude Include="Engine\DxObject\DxCSPipeline.h" />
-    <ClInclude Include="Engine\DxObject\DxDepthStencil.h" />
-    <ClInclude Include="Engine\DxObject\DxDescriptorHeaps.h" />
-    <ClInclude Include="Engine\DxObject\DxDevices.h" />
-    <ClInclude Include="Engine\DxObject\DxFence.h" />
-    <ClInclude Include="Engine\DxObject\DxGraphicsPipeline.h" />
-    <ClInclude Include="Engine\DxObject\DxMesh.h" />
-    <ClInclude Include="Engine\DxObject\DxObjectCommon.h" />
-    <ClInclude Include="Engine\DxObject\DxRootSignatureDesc.h" />
-    <ClInclude Include="Engine\DxObject\DxShaderBlob.h" />
-    <ClInclude Include="Engine\DxObject\DxShaderBlobManager.h" />
-    <ClInclude Include="Engine\DxObject\DxShaderNode.h" />
-    <ClInclude Include="Engine\DxObject\DxShaderReflection.h" />
-    <ClInclude Include="Engine\DxObject\DxStructuredBuffer.h" />
-    <ClInclude Include="Engine\DxObject\DxSwapChain.h" />
-    <ClInclude Include="Engine\DxObject\DxUnorderedBufferResource.h" />
-    <ClInclude Include="Engine\DxrObject\DxrAccelerationStructure.h" />
-    <ClInclude Include="Engine\DxrObject\DxrBufferRecord.h" />
-    <ClInclude Include="Engine\DxrObject\DxrExportGroup.h" />
-    <ClInclude Include="Engine\DxrObject\DxrObjectCommon.h" />
-    <ClInclude Include="Engine\DxrObject\DxrRootSignature.h" />
-    <ClInclude Include="Engine\DxrObject\DxrShaderBlob.h" />
-    <ClInclude Include="Engine\DxrObject\DxrShaderBlobManager.h" />
-    <ClInclude Include="Engine\DxrObject\DxrShaderTable.h" />
-    <ClInclude Include="Engine\DxrObject\DxrStateObject.h" />
-    <ClInclude Include="Engine\ImGuiManager.h" />
-    <ClInclude Include="Engine\Input.h" />
-    <ClInclude Include="Engine\InputAssembler.h" />
-    <ClInclude Include="Engine\Logger.h" />
-    <ClInclude Include="Engine\Model.h" />
-    <ClInclude Include="Engine\Sxavenger.h" />
-    <ClInclude Include="Engine\Texture.h" />
-    <ClInclude Include="Engine\WinApp.h" />
+    <ClInclude Include="Engine\Game\Camera3D.h" />
+    <ClInclude Include="Engine\Game\DebugCamera3D.h" />
+    <ClInclude Include="Engine\Game\GameScene.h" />
+    <ClInclude Include="Engine\Game\Transform.h" />
+    <ClInclude Include="Engine\System\Attribute.h" />
+    <ClInclude Include="Engine\System\Audio.h" />
+    <ClInclude Include="Engine\System\ComPtr.h" />
+    <ClInclude Include="Engine\System\Console.h" />
+    <ClInclude Include="Engine\System\DirectXCommon.h" />
+    <ClInclude Include="Engine\System\DxObject\DxBlendState.h" />
+    <ClInclude Include="Engine\System\DxObject\DxBufferResource.h" />
+    <ClInclude Include="Engine\System\DxObject\DxCommand.h" />
+    <ClInclude Include="Engine\System\DxObject\DxCSPipeline.h" />
+    <ClInclude Include="Engine\System\DxObject\DxDepthStencil.h" />
+    <ClInclude Include="Engine\System\DxObject\DxDescriptorHeaps.h" />
+    <ClInclude Include="Engine\System\DxObject\DxDevices.h" />
+    <ClInclude Include="Engine\System\DxObject\DxFence.h" />
+    <ClInclude Include="Engine\System\DxObject\DxGraphicsPipeline.h" />
+    <ClInclude Include="Engine\System\DxObject\DxMesh.h" />
+    <ClInclude Include="Engine\System\DxObject\DxObjectCommon.h" />
+    <ClInclude Include="Engine\System\DxObject\DxRootSignatureDesc.h" />
+    <ClInclude Include="Engine\System\DxObject\DxShaderBlob.h" />
+    <ClInclude Include="Engine\System\DxObject\DxShaderBlobManager.h" />
+    <ClInclude Include="Engine\System\DxObject\DxShaderReflection.h" />
+    <ClInclude Include="Engine\System\DxObject\DxSwapChain.h" />
+    <ClInclude Include="Engine\System\DxObject\DxUnorderedBufferResource.h" />
+    <ClInclude Include="Engine\System\ImGuiManager.h" />
+    <ClInclude Include="Engine\System\Input.h" />
+    <ClInclude Include="Engine\System\Logger.h" />
+    <ClInclude Include="Engine\System\Performance.h" />
+    <ClInclude Include="Engine\System\Sxavenger.h" />
+    <ClInclude Include="Engine\System\Texture.h" />
+    <ClInclude Include="Engine\System\WinApp.h" />
     <ClInclude Include="externals\imgui\imconfig.h" />
     <ClInclude Include="externals\imgui\imgui.h" />
     <ClInclude Include="externals\imgui\imgui_impl_dx12.h" />
@@ -266,42 +216,9 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="externals\imgui\imstb_textedit.h" />
     <ClInclude Include="externals\imgui\imstb_truetype.h" />
     <ClInclude Include="externals\meshoptimizer\meshoptimizer.h" />
-    <ClInclude Include="GameEngine\Collider.h" />
-    <ClInclude Include="GameEngine\ColliderManager.h" />
-    <ClInclude Include="GameEngine\CollisionDetection.h" />
-    <ClInclude Include="GameEngine\DefaultGraphics.h" />
-    <ClInclude Include="GameEngine\GraphicsRender.h" />
-    <ClInclude Include="GameEngine\Light.h" />
-    <ClInclude Include="GameEngine\Material.h" />
-    <ClInclude Include="GameEngine\PrimitiveDrawer.h" />
-    <ClInclude Include="GameEngine\SxavengerGraphics.h" />
-    <ClInclude Include="GameEngine\SxavengerProcess.h" />
-    <ClInclude Include="GameEngine\Transform.h" />
-    <ClInclude Include="Game\AnimationObject\AnimationCube.h" />
-    <ClInclude Include="Game\AnimationObject\AnimationHuman.h" />
-    <ClInclude Include="Game\AnimationObject\AnimationObject.h" />
-    <ClInclude Include="Game\DebugObject\DebugObject.h" />
-    <ClInclude Include="Game\DebugObject\DebugObjectManager.h" />
-    <ClInclude Include="Game\MeshBunny.h" />
-    <ClInclude Include="Game\NodeModel.h" />
-    <ClInclude Include="Game\ObjectDemo\ObjectDemo.h" />
-    <ClInclude Include="Game\Particle.h" />
-    <ClInclude Include="Game\RayTracingDemo\RayTracingCamera.h" />
-    <ClInclude Include="Game\RayTracingDemo\RayTracingDemo.h" />
-    <ClInclude Include="Game\Scene\GameScene.h" />
-    <ClInclude Include="Game\Skybox.h" />
-    <ClInclude Include="Lib\Adapter\Json\Json.h" />
-    <ClInclude Include="Lib\Adapter\Performance\Performance.h" />
-    <ClInclude Include="Lib\Adapter\Random\Random.h" />
-    <ClInclude Include="Lib\Animation\Animation.h" />
-    <ClInclude Include="Lib\Camera\Camera2D.h" />
-    <ClInclude Include="Lib\Camera\Camera3D.h" />
-    <ClInclude Include="Lib\Camera\DebugCamera3D.h" />
-    <ClInclude Include="Lib\DefineConfigs.h" />
-    <ClInclude Include="Lib\DrawMethod.h" />
+    <ClInclude Include="Lib\CXXAttributeConfig.h" />
     <ClInclude Include="Lib\Environment.h" />
     <ClInclude Include="Lib\Geometry\MathLib.h" />
-    <ClInclude Include="Lib\Geometry\Matrix3x3.h" />
     <ClInclude Include="Lib\Geometry\Matrix4x4.h" />
     <ClInclude Include="Lib\Geometry\Quaternion.h" />
     <ClInclude Include="Lib\Geometry\Vector2.h" />
@@ -309,117 +226,9 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Lib\Geometry\Vector4.h" />
     <ClInclude Include="Lib\Geometry\VectorComparison.h" />
     <ClInclude Include="Lib\ObjectStructure.h" />
-    <ClInclude Include="Lib\PostEffect\Bloom.h" />
-    <ClInclude Include="Lib\PostEffect\FullScreen.h" />
-    <ClInclude Include="Lib\PostEffect\GaussianBlur.h" />
-    <ClInclude Include="Lib\Rendering\DefferedRendering.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />
-    <None Include="Resources\hlsl\Animation\Animation.hlsli">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-      </ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-      </ExcludedFromBuild>
-    </None>
-    <None Include="Resources\hlsl\BlasRender.hlsli">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-      </ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-      </ExcludedFromBuild>
-    </None>
-    <None Include="Resources\hlsl\Camera.hlsli" />
-    <None Include="Resources\hlsl\DebugObject\DebugObject.hlsli">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-      </ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-      </ExcludedFromBuild>
-    </None>
-    <None Include="Resources\hlsl\Default.hlsli">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-      </ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-      </ExcludedFromBuild>
-    </None>
-    <None Include="Resources\hlsl\DefaultMesh.hlsli">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-      </ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-      </ExcludedFromBuild>
-    </None>
-    <None Include="Resources\hlsl\DefferedRendering.hlsli">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-      </ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-      </ExcludedFromBuild>
-    </None>
-    <None Include="Resources\hlsl\Floor.hlsli">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-      </ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-      </ExcludedFromBuild>
-    </None>
-    <None Include="Resources\hlsl\FullScreen.hlsli">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-      </ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-      </ExcludedFromBuild>
-    </None>
-    <None Include="Resources\hlsl\Light.hlsli" />
-    <None Include="Resources\hlsl\Matrix.hlsli" />
-    <None Include="Resources\hlsl\MeshCommon.hlsli" />
-    <None Include="Resources\hlsl\Object3d\Object3d.hlsli">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-      </ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-      </ExcludedFromBuild>
-    </None>
-    <None Include="Resources\hlsl\Particle\Particle.hlsli">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-      </ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-      </ExcludedFromBuild>
-    </None>
-    <None Include="Resources\hlsl\Primitive\Primitive.hlsli">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-      </ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-      </ExcludedFromBuild>
-    </None>
-    <None Include="Resources\hlsl\Random.hlsli" />
-    <None Include="Resources\hlsl\Skybox\Skybox.hlsli">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-      </ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-      </ExcludedFromBuild>
-    </None>
-    <None Include="Resources\hlsl\Sprite.hlsli" />
-    <None Include="Resources\hlsl\Sprite\Sprite.hlsli">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-      </ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-      </ExcludedFromBuild>
-    </None>
-    <None Include="Resources\hlsl\Subobject\Subobject.AS.hlsl">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </None>
-    <None Include="Resources\hlsl\Subobject\Subobject.hlsli" />
-    <None Include="Resources\hlsl\Subobject\Subobject.MS.hlsl">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </None>
-    <None Include="Resources\hlsl\Subobject\SubobjectLighting.hlsli" />
-    <None Include="Resources\hlsl\Subobject\SubobjectMesh.hlsli" />
-    <None Include="Resources\hlsl\SxavengerShader\SxavengerCommon.hlsli">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-      </ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-      </ExcludedFromBuild>
-    </None>
-    <None Include="Resources\hlsl\ToonShading.hlsli" />
-    <None Include="Resources\RayTracingShader\Lighting.hlsli" />
-    <None Include="Resources\RayTracingShader\RayTracingConfig.hlsli" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="externals\DirectXMesh\DirectXMesh_Desktop_2022_Win10.vcxproj">
@@ -431,189 +240,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
   </ItemGroup>
   <ItemGroup>
     <Text Include="externals\imgui\LICENSE.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <FxCompile Include="Resources\hlsl\Animation\Animation.PS.hlsl">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </FxCompile>
-    <FxCompile Include="Resources\hlsl\Animation\Animation.VS.hlsl">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </FxCompile>
-    <FxCompile Include="Resources\hlsl\Animation\Skinning.CS.hlsl">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </FxCompile>
-    <FxCompile Include="Resources\hlsl\BlasRender.PS.hlsl">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </FxCompile>
-    <FxCompile Include="Resources\hlsl\BlasRender.VS.hlsl">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </FxCompile>
-    <FxCompile Include="Resources\hlsl\Bloom\Composite.PS.hlsl">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </FxCompile>
-    <FxCompile Include="Resources\hlsl\Bloom\Luminnce.PS.hlsl">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </FxCompile>
-    <FxCompile Include="Resources\hlsl\Bloom\LuminnceBlur.PS.hlsl">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </FxCompile>
-    <FxCompile Include="Resources\hlsl\DebugObject\DebugObject.PS.hlsl">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </FxCompile>
-    <FxCompile Include="Resources\hlsl\DebugObject\DebugObject.VS.hlsl">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </FxCompile>
-    <FxCompile Include="Resources\hlsl\Default.AS.hlsl">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </FxCompile>
-    <FxCompile Include="Resources\hlsl\Default.MS.hlsl">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">6.4</ShaderModel>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </FxCompile>
-    <FxCompile Include="Resources\hlsl\Default.PS.hlsl">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">6.4</ShaderModel>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </FxCompile>
-    <FxCompile Include="Resources\hlsl\DefferedRendering.PS.hlsl">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </FxCompile>
-    <FxCompile Include="Resources\hlsl\DefferedRendering.VS.hlsl">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </FxCompile>
-    <FxCompile Include="Resources\hlsl\Floor.MS.hlsl">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">6.4</ShaderModel>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </FxCompile>
-    <FxCompile Include="Resources\hlsl\Floor.PS.hlsl">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">6.4</ShaderModel>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </FxCompile>
-    <FxCompile Include="Resources\hlsl\FullScreen.PS.hlsl">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </FxCompile>
-    <FxCompile Include="Resources\hlsl\FullScreen.VS.hlsl">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </FxCompile>
-    <FxCompile Include="Resources\hlsl\GaussianBlur\GaussianBlur.PS.hlsl">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </FxCompile>
-    <FxCompile Include="Resources\hlsl\Object3d\Object3d.PS.hlsl">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </FxCompile>
-    <FxCompile Include="Resources\hlsl\Object3d\Object3dDeffered.PS.hlsl">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </FxCompile>
-    <FxCompile Include="Resources\hlsl\Object3d\Object3d.VS.hlsl">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </FxCompile>
-    <FxCompile Include="Resources\hlsl\Particle\Particle.PS.hlsl">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </FxCompile>
-    <FxCompile Include="Resources\hlsl\Particle\Particle.VS.hlsl">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </FxCompile>
-    <FxCompile Include="Resources\hlsl\Particle\ParticleDeffered.PS.hlsl">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </FxCompile>
-    <FxCompile Include="Resources\hlsl\Particle\ParticleEmit.CS.hlsl">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </FxCompile>
-    <FxCompile Include="Resources\hlsl\Particle\ParticleInit.CS.hlsl">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </FxCompile>
-    <FxCompile Include="Resources\hlsl\Particle\ParticleUpdate.CS.hlsl">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </FxCompile>
-    <FxCompile Include="Resources\hlsl\Primitive\Primitive.PS.hlsl">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </FxCompile>
-    <FxCompile Include="Resources\hlsl\Primitive\Primitive2D.VS.hlsl">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </FxCompile>
-    <FxCompile Include="Resources\hlsl\Primitive\Primitive3D.VS.hlsl">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </FxCompile>
-    <FxCompile Include="Resources\hlsl\Skybox\Skybox.PS.hlsl">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </FxCompile>
-    <FxCompile Include="Resources\hlsl\Skybox\Skybox.VS.hlsl">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </FxCompile>
-    <FxCompile Include="Resources\hlsl\Sprite.VS.hlsl">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </FxCompile>
-    <FxCompile Include="Resources\hlsl\Sprite\Sprite.PS.hlsl">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </FxCompile>
-    <FxCompile Include="Resources\hlsl\Sprite\Sprite.VS.hlsl">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </FxCompile>
-    <FxCompile Include="Resources\hlsl\Subobject\SubobjectPolygon.PS.hlsl">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </FxCompile>
-    <FxCompile Include="Resources\hlsl\Subobject\SubobjectTexture.PS.hlsl">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </FxCompile>
-    <FxCompile Include="Resources\hlsl\SxavengerShader\Default.VS.hlsl">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </FxCompile>
-    <FxCompile Include="Resources\hlsl\SxavengerShader\DefaultTexture.PS.hlsl">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </FxCompile>
-    <FxCompile Include="Resources\hlsl\SxavengerShader\LightingTexture.PS.hlsl">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </FxCompile>
-    <FxCompile Include="Resources\RayTracingShader\RayTracingTest.hlsl">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Library</ShaderType>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </FxCompile>
-    <FxCompile Include="Resources\RayTracingShader\RayTracingWorld.hlsl">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </FxCompile>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

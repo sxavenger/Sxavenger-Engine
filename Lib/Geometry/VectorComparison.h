@@ -7,9 +7,9 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
-#include <Vector4.h> 
-#include <Vector3.h>
-#include <Vector2.h>
+#include "Vector4.h"
+#include "Vector3.h"
+#include "Vector2.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // using
@@ -27,12 +27,12 @@ using Flag3 = Vector3<bool>;
 //-----------------------------------------------------------------------------------------
 
 template <typename T>
-inline Flag4 operator==(const Vector4<T>& a, const Vector4<T>& b) {
+constexpr inline Flag4 operator==(const Vector4<T>& a, const Vector4<T>& b) {
 	return { a.x == b.x, a.y == b.y, a.z == b.z, a.w == b.w };
 }
 
 template <typename T>
-inline Flag3 operator==(const Vector3<T>& a, const Vector3<T>& b) {
+constexpr inline Flag3 operator==(const Vector3<T>& a, const Vector3<T>& b) {
 	return { a.x == b.x, a.y == b.y, a.z == b.z };
 }
 
@@ -41,12 +41,12 @@ inline Flag3 operator==(const Vector3<T>& a, const Vector3<T>& b) {
 //-----------------------------------------------------------------------------------------
 
 template <typename T>
-inline Flag4 operator!=(const Vector4<T>& a, const Vector4<T>& b) {
+constexpr inline Flag4 operator!=(const Vector4<T>& a, const Vector4<T>& b) {
 	return { a.x != b.x, a.y != b.y, a.z != b.z, a.w != b.w };
 }
 
 template <typename T>
-inline Flag3 operator!=(const Vector3<T>& a, const Vector3<T>& b) {
+constexpr inline Flag3 operator!=(const Vector3<T>& a, const Vector3<T>& b) {
 	return { a.x != b.x, a.y != b.y, a.z != b.z };
 }
 
@@ -55,12 +55,12 @@ inline Flag3 operator!=(const Vector3<T>& a, const Vector3<T>& b) {
 //-----------------------------------------------------------------------------------------
 
 template <typename T>
-inline Flag4 operator>=(const Vector4<T>& a, const Vector4<T>& b) {
+constexpr inline Flag4 operator>=(const Vector4<T>& a, const Vector4<T>& b) {
 	return { a.x >= b.x, a.y >= b.y, a.z >= b.z, a.w >= b.w };
 }
 
 template <typename T>
-inline Flag3 operator>=(const Vector3<T>& a, const Vector3<T>& b) {
+constexpr inline Flag3 operator>=(const Vector3<T>& a, const Vector3<T>& b) {
 	return { a.x >= b.x, a.y >= b.y, a.z >= b.z };
 }
 
@@ -69,12 +69,12 @@ inline Flag3 operator>=(const Vector3<T>& a, const Vector3<T>& b) {
 //-----------------------------------------------------------------------------------------
 
 template <typename T>
-inline Flag4 operator>(const Vector4<T>& a, const Vector4<T>& b) {
+constexpr inline Flag4 operator>(const Vector4<T>& a, const Vector4<T>& b) {
 	return { a.x > b.x, a.y > b.y, a.z > b.z, a.w > b.w };
 }
 
 template <typename T>
-inline Flag3 operator>(const Vector3<T>& a, const Vector3<T>& b) {
+constexpr inline Flag3 operator>(const Vector3<T>& a, const Vector3<T>& b) {
 	return { a.x > b.x, a.y > b.y, a.z > b.z };
 }
 
@@ -83,12 +83,12 @@ inline Flag3 operator>(const Vector3<T>& a, const Vector3<T>& b) {
 //-----------------------------------------------------------------------------------------
 
 template <typename T>
-inline Flag4 operator<=(const Vector4<T>& a, const Vector4<T>& b) {
+constexpr inline Flag4 operator<=(const Vector4<T>& a, const Vector4<T>& b) {
 	return { a.x <= b.x, a.y <= b.y, a.z <= b.z, a.w <= b.w };
 }
 
 template <typename T>
-inline Flag3 operator<=(const Vector3<T>& a, const Vector3<T>& b) {
+constexpr inline Flag3 operator<=(const Vector3<T>& a, const Vector3<T>& b) {
 	return { a.x <= b.x, a.y <= b.y, a.z <= b.z };
 }
 
@@ -97,12 +97,12 @@ inline Flag3 operator<=(const Vector3<T>& a, const Vector3<T>& b) {
 //-----------------------------------------------------------------------------------------
 
 template <typename T>
-inline Flag4 operator<(const Vector4<T>& a, const Vector4<T>& b) {
+constexpr inline Flag4 operator<(const Vector4<T>& a, const Vector4<T>& b) {
 	return { a.x < b.x, a.y < b.y, a.z < b.z, a.w < b.w };
 }
 
 template <typename T>
-inline Flag3 operator<(const Vector3<T>& a, const Vector3<T>& b) {
+constexpr inline Flag3 operator<(const Vector3<T>& a, const Vector3<T>& b) {
 	return { a.x < b.x, a.y < b.y, a.z < b.z };
 }
 
@@ -112,20 +112,20 @@ inline Flag3 operator<(const Vector3<T>& a, const Vector3<T>& b) {
 
 /* All */
 
-inline bool All(const Flag4& f) {
+constexpr inline bool All(const Flag4& f) {
 	return f.x && f.y && f.z && f.w;
 }
 
-inline bool All(const Flag3& f) {
+constexpr inline bool All(const Flag3& f) {
 	return f.x && f.y && f.z;
 }
 
 /* Any */
 
-inline bool Any(const Flag4& f) {
+constexpr inline bool Any(const Flag4& f) {
 	return f.x || f.y || f.z || f.w;
 }
 
-inline bool Any(const Flag3& f) {
+constexpr inline bool Any(const Flag3& f) {
 	return f.x || f.y || f.z;
 }

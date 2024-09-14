@@ -20,28 +20,31 @@ public:
 	constexpr Vector3(T _x, T _y, T _z) : x(_x), y(_y), z(_z) {}
 
 	//=========================================================================================
-	// methods
-	//=========================================================================================
-
-	
-
-	//=========================================================================================
 	// compound assignment operator
 	//=========================================================================================
 
 	/* Add */
-	Vector3& operator+=(const Vector3& v) { x += v.x; y += v.y; z += v.z; return *this; }
+	constexpr Vector3& operator+=(const Vector3& v) { x += v.x; y += v.y; z += v.z; return *this; }
 
 	/* Subtract */
-	Vector3& operator-=(const Vector3& v) { x -= v.x; y -= v.y; z -= v.z; return *this; }
+	constexpr Vector3& operator-=(const Vector3& v) { x -= v.x; y -= v.y; z -= v.z; return *this; }
 
 	/* Multiply */
-	Vector3& operator*=(const Vector3& v) { x *= v.x; y *= v.y; z *= v.z; return *this; }
-	Vector3& operator*=(T s) { x *= s; y *= s; z *= s; return *this; }
+	constexpr Vector3& operator*=(const Vector3& v) { x *= v.x; y *= v.y; z *= v.z; return *this; }
+	constexpr Vector3& operator*=(T s) { x *= s; y *= s; z *= s; return *this; }
 
 	/* Division */
-	Vector3& operator/=(const Vector3& v) { x /= v.x; y /= v.y; z /= v.z; return *this; }
-	Vector3& operator/=(T s) { x /= s; y /= s; z /= s; return *this; }
+	constexpr Vector3& operator/=(const Vector3& v) { x /= v.x; y /= v.y; z /= v.z; return *this; }
+	constexpr Vector3& operator/=(T s) { x /= s; y /= s; z /= s; return *this; }
+
+	//=========================================================================================
+	// cast opraotor
+	//=========================================================================================
+
+	template <typename U>
+	constexpr operator Vector3<U>() const {
+		return { static_cast<U>(x), static_cast<U>(y), static_cast<U>(z) };
+	}
 
 	//=========================================================================================
 	// variables
@@ -57,40 +60,40 @@ public:
 
 /* Add */
 template <typename T>
-Vector3<T> operator+(const Vector3<T>& v1, const Vector3<T>& v2) {
+constexpr Vector3<T> operator+(const Vector3<T>& v1, const Vector3<T>& v2) {
 	return { v1.x + v2.x, v1.y + v2.y, v1.z + v2.z };
 }
 
 /* Subtract */
 template <typename T>
-Vector3<T> operator-(const Vector3<T>& v1, const Vector3<T>& v2) {
+constexpr Vector3<T> operator-(const Vector3<T>& v1, const Vector3<T>& v2) {
 	return { v1.x - v2.x, v1.y - v2.y, v1.z - v2.z };
 }
 
 /* Multiply */
 template <typename T>
-Vector3<T> operator*(const Vector3<T>& v1, const Vector3<T>& v2) {
+constexpr Vector3<T> operator*(const Vector3<T>& v1, const Vector3<T>& v2) {
 	return { v1.x * v2.x, v1.y * v2.y, v1.z * v2.z };
 }
 
 template <typename T>
-Vector3<T> operator*(const Vector3<T>& v, T s) {
+constexpr Vector3<T> operator*(const Vector3<T>& v, T s) {
 	return { v.x * s, v.y * s, v.z * s };
 }
 
 template <typename T>
-Vector3<T> operator*(T s, const Vector3<T>& v) {
+constexpr Vector3<T> operator*(T s, const Vector3<T>& v) {
 	return { s * v.x, s * v.y, s * v.z };
 }
 
 /* Division */
 template <typename T>
-Vector3<T> operator/(const Vector3<T>& v1, const Vector3<T>& v2) {
+constexpr Vector3<T> operator/(const Vector3<T>& v1, const Vector3<T>& v2) {
 	return { v1.x / v2.x, v1.y / v2.y, v1.z / v2.z };
 }
 
 template <typename T>
-Vector3<T> operator/(const Vector3<T>& v, T s) {
+constexpr Vector3<T> operator/(const Vector3<T>& v, T s) {
 	return { v.x / s, v.y / s, v.z / s };
 }
 
@@ -99,12 +102,12 @@ Vector3<T> operator/(const Vector3<T>& v, T s) {
 //=========================================================================================
 
 template <typename T>
-Vector3<T> operator+(const Vector3<T>& v) {
+constexpr Vector3<T> operator+(const Vector3<T>& v) {
 	return v;
 }
 
 template <typename T>
-Vector3<T> operator-(const Vector3<T>& v) {
+constexpr Vector3<T> operator-(const Vector3<T>& v) {
 	return { -v.x, -v.y, -v.z };
 }
 
@@ -119,8 +122,8 @@ using Vector3ui = Vector3<uint32_t>;
 // constexpr
 //-----------------------------------------------------------------------------------------
 
-constexpr const Vector3f origin     = { 0.0f, 0.0f, 0.0f };
-constexpr const Vector3f unitVector = { 1.0f, 1.0f, 1.0f };
+constexpr const Vector3f kOrigin3 = { 0.0f, 0.0f, 0.0f };
+constexpr const Vector3f kUnit3   = { 1.0f, 1.0f, 1.0f };
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Vector3 methods
