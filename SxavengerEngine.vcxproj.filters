@@ -52,6 +52,21 @@
     <Filter Include="Engine\Game\source">
       <UniqueIdentifier>{626aeeef-27f6-4e96-b381-43308de5c54f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Engine\Beta">
+      <UniqueIdentifier>{5040f4fa-0be7-4ccb-89f0-bfca9d3e7da5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resources">
+      <UniqueIdentifier>{5946d453-0807-4b01-ae7b-2eb74d590ea7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resources\hlsl">
+      <UniqueIdentifier>{952261b5-97ea-4f49-92d7-29356a245389}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resources\hlsl\MonoBehavior">
+      <UniqueIdentifier>{1a1a580d-d022-4df3-9593-4c741fc4e0ba}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game">
+      <UniqueIdentifier>{c17d010e-3917-4a11-8473-75506cfbee82}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="externals\imgui\imgui.cpp">
@@ -235,6 +250,24 @@
     <ClCompile Include="Lib\Geometry\MathLib.cpp">
       <Filter>Lib\Geometry\source</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\Game\Model.cpp">
+      <Filter>Engine\Game\source</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Game\Animation.cpp">
+      <Filter>Engine\Game\source</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Game\InputAssembler.cpp">
+      <Filter>Engine\Game\source</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Beta\MonoBehavior.cpp">
+      <Filter>Engine\Beta</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Beta\BetaConsole.cpp">
+      <Filter>Engine\Beta</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Teapot.cpp">
+      <Filter>Game</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="externals\imgui\imconfig.h">
@@ -393,13 +426,57 @@
     <ClInclude Include="Lib\ObjectStructure.h">
       <Filter>Lib</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\Game\Model.h">
+      <Filter>Engine\Game\include</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Game\Animation.h">
+      <Filter>Engine\Game\include</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Game\InputAssembler.h">
+      <Filter>Engine\Game\include</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Beta\MonoBehavior.h">
+      <Filter>Engine\Beta</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Beta\BetaConsole.h">
+      <Filter>Engine\Beta</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Teapot.h">
+      <Filter>Game</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />
+    <None Include="Resources\hlsl\MonoBehavior\MonoBehavior.hlsli">
+      <Filter>Resources\hlsl\MonoBehavior</Filter>
+    </None>
+    <None Include="Resources\hlsl\Transform.hlsli">
+      <Filter>Resources\hlsl</Filter>
+    </None>
+    <None Include="Resources\hlsl\Camera.hlsli">
+      <Filter>Resources\hlsl</Filter>
+    </None>
+    <None Include="Resources\hlsl\Matrix.hlsli">
+      <Filter>Resources\hlsl</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Text Include="externals\imgui\LICENSE.txt">
       <Filter>externals\imgui</Filter>
     </Text>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="Resources\hlsl\MonoBehavior\Default.VS.hlsl">
+      <Filter>Resources\hlsl\MonoBehavior</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\hlsl\MonoBehavior\ConsoleLocal.PS.hlsl">
+      <Filter>Resources\hlsl\MonoBehavior</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\hlsl\MonoBehavior\Diffuse.PS.hlsl">
+      <Filter>Resources\hlsl\MonoBehavior</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\hlsl\MonoBehavior\ConsoleLocal.VS.hlsl">
+      <Filter>Resources\hlsl\MonoBehavior</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

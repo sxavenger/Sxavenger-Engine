@@ -3,9 +3,6 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
-//* c++
-#include <cstdint>
-
 //* origin
 #include "WinApp.h"
 #include "DirectXCommon.h"
@@ -72,7 +69,7 @@ public:
 	// DirectX12, _DXOBJECT option
 	//-----------------------------------------------------------------------------------------
 
-	static _DXOBJECT Descriptor GetCurrentDescriptor(_DXOBJECT DescriptorType type);
+	static _DXOBJECT Descriptor GetDescriptor(_DXOBJECT DescriptorType type);
 
 	static void DeleteDescriptor(_DXOBJECT Descriptor& descriptor);
 

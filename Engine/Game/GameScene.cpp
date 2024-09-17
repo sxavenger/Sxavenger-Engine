@@ -7,11 +7,6 @@
 #include <Engine/System/Sxavenger.h>
 //#include <SxavengerGraphics.h>
 #include <Lib/Environment.h>
-//#include <ColliderManager.h>
-//#include <MathLib.h>
-
-
-
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // GameScene class methods
@@ -23,7 +18,7 @@ void GameScene::Run() {
 	// 初期化処理
 	//=========================================================================================
 
-	console->Init();
+	sBetaConsole->Init();
 	Init();
 
 	Sxavenger::ResetBackAllocator();
@@ -39,9 +34,9 @@ void GameScene::Run() {
 		// 更新処理
 		//=========================================================================================
 
-		console->Update();
+		sBetaConsole->Update();
 
-		if (console->IsUpdateRequired()) {
+		if (sBetaConsole->IsUpdateRequired()) {
 			Update();
 		}
 
@@ -51,6 +46,7 @@ void GameScene::Run() {
 
 		Sxavenger::TranstionAllocator();
 
+		sBetaConsole->Draw();
 		Draw();
 
 		Sxavenger::EndImGuiAndDrawCall();
@@ -62,7 +58,7 @@ void GameScene::Run() {
 	//=========================================================================================
 
 	Term();
-	console->Term();
+	sBetaConsole->Term();
 
 }
 
@@ -72,12 +68,9 @@ void GameScene::Run() {
 
 void GameScene::Init() {
 
-	gameCamera_ = std::make_unique<Camera3D>();
-	gameCamera_->SetThisAttribute("GameCamera");
-	gameCamera_->SetProjection(0.45f, static_cast<float>(kWindowSize.x) / static_cast<float>(kWindowSize.y), 0.01f, 16.0f);
-	gameCamera_->SetTransform(kUnit3, kOrigin3, {0.0f, 0.0f, -4.0f});
+	teapot_ = std::make_unique<Teapot>();
+	teapot_->Init();
 
-	//SxavengerGraphics::camera3D = gameCamera_.get();
 }
 
 void GameScene::Term() {
@@ -88,15 +81,7 @@ void GameScene::Update() {
 
 void GameScene::Draw() {
 
-	/*demo_->Draw();*/
-
 	{
-
-		//* debugScreen *//
-		Sxavenger::BeginOffscreen(console->GetSceneTexture());
-
-		Sxavenger::EndOffscreen(console->GetSceneTexture());
-		Sxavenger::TranstionAllocator();
 
 		//* main screen *//
 		Sxavenger::BeginOffscreen(Sxavenger::GetTexture<RenderTexture>("main"));

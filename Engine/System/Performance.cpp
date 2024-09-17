@@ -15,7 +15,7 @@ _DXOBJECT_USING
 std::chrono::steady_clock::time_point Performance::reference_;
 
 //* chrono *//
-float Performance::deltaTime_ = 1.0f / 60.0f; //!< 初期値は60fps = 0.016...秒と設定
+float Performance::deltaTime_ = 0.0f;
 
 //* buffer *//
 std::unique_ptr<BufferResource<Performance::PerFrame>> Performance::perFrameBuffer_;
@@ -46,16 +46,21 @@ void Performance::EndFrame() {
 	deltaTime_ = static_cast<float>(std::chrono::duration_cast<std::chrono::microseconds>(now - reference_).count());
 
 	if (perFrameBuffer_ != nullptr) { //!< bufferが存在する場合
-		(*perFrameBuffer_)[0].deltaTime = GetDeltaTime(s); //!< 秒でのdeltaTimeをBufferに書き込み
+		(*perFrameBuffer_)[0].deltaTime = GetDeltaTime(s).time; //!< 秒でのdeltaTimeをBufferに書き込み
 	}
 }
 
-float Performance::GetDeltaTime(SecondsUnit unit) {
+DeltaTimePoint Performance::GetDeltaTime(SecondsUnit unit) {
+
+	DeltaTimePoint result;
+
 	if (unit == kCountOfSecondsUnit) {
-		return 0.0f; //!< 例外処理
+		result.time = 0.0f;
+		return result; //!< 例外処理
 	}
 
-	return deltaTime_ * secondsConversions_[unit];
+	result.time = deltaTime_ * secondsConversions_[unit];
+	return result;
 }
 
 void Performance::CreateBuffer() {

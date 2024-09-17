@@ -26,9 +26,7 @@ public:
 
 	void Update();
 
-	//* attribute *//
-
-	void SetAttributeImGui() override;
+	void Reset();
 
 private:
 

@@ -125,7 +125,7 @@ public:
 
 	void Create(
 		DirectXCommon* dxCommon,
-		const Vector2ui& size, const Color4f& clearColor = defaultClearColor, DXGI_FORMAT format = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB
+		const Vector2ui& size, const Color4f& clearColor = defaultClearColor, DXGI_FORMAT format = DxObject::forwardFormat
 	);
 
 	void Term();

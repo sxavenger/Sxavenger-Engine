@@ -35,8 +35,8 @@ void Console::Init() {
 
 	debugCamera_ = std::make_unique<DebugCamera3D>();
 	debugCamera_->SetProjection(0.05f, static_cast<float>(kWindowSize.x) / static_cast<float>(kWindowSize.y), 0.1f, 10000.0f);
-	debugCamera_->SetAttributeName("sceneCamera");
-	SetAttribute(debugCamera_.get());
+	//debugCamera_->SetAttributeName("sceneCamera");
+	//SetAttribute(debugCamera_.get());
 
 	// windowFlagの初期化
 	windowFlags_ = 0;
@@ -472,11 +472,11 @@ void Console::DisplayPerformance() {
 	static bool isOpenWindow = true;
 	ImGui::Begin("Performance", &isOpenWindow, windowFlags_ | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoScrollbar);
 
-	float framesPerSec = Performance::GetDeltaTime(SecondsUnit::s);
+	DeltaTimePoint framesPerSec = Performance::GetDeltaTime(SecondsUnit::s);
 
-	ImGui::Text("exec speed / frame: %.6f", framesPerSec);
+	ImGui::Text("exec speed / frame: %.6f", framesPerSec.time);
 	ImGui::SameLine();
-	ImGui::Text("FPS: %.0f", 1.0f / framesPerSec);
+	ImGui::Text("FPS: %.0f", 1.0f / framesPerSec.time);
 
 	ImGui::End();
 

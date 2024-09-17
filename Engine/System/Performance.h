@@ -10,6 +10,11 @@
 // DxObject
 #include <Engine/System/DxObject/DxBufferResource.h>
 
+//-----------------------------------------------------------------------------------------
+// forward
+//-----------------------------------------------------------------------------------------
+class DeltaTimePoint;
+
 ////////////////////////////////////////////////////////////////////////////////////////////
 // SecondsUnit enum
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -26,6 +31,7 @@ enum SecondsUnit {
 ////////////////////////////////////////////////////////////////////////////////////////////
 class Performance {
 public:
+
 	//=========================================================================================
 	// public methods
 	//=========================================================================================
@@ -40,7 +46,7 @@ public:
 	//! @brief ...前1フレームの計測した数値を返却
 	//! 
 	//! @param[in] uint 秒単位
-	static float GetDeltaTime(SecondsUnit unit);
+	static DeltaTimePoint GetDeltaTime(SecondsUnit unit);
 
 	//* gpu buffer *//
 
@@ -87,4 +93,65 @@ private:
 
 	static void WaitForFPS(float fps);
 
+};
+
+////////////////////////////////////////////////////////////////////////////////////////////
+// DeltaTimePoint class
+////////////////////////////////////////////////////////////////////////////////////////////
+class DeltaTimePoint { //!< frameとdeltaTimeを区別するために作成
+public:
+
+	//=========================================================================================
+	// public operator
+	//=========================================================================================
+
+	void operator=(const DeltaTimePoint& other) {
+		time = other.time;
+	}
+
+	DeltaTimePoint& operator+=(DeltaTimePoint other) {
+		time += other.time;
+		return *this;
+	}
+
+	DeltaTimePoint& operator-=(DeltaTimePoint other) {
+		time -= other.time;
+		return *this;
+	}
+
+	void operator++() {
+		*this += Performance::GetDeltaTime(s);
+	}
+
+	void operator--() {
+		*this -= Performance::GetDeltaTime(s);
+	}
+
+	bool operator==(DeltaTimePoint other) const {
+		return time == other.time;
+	}
+
+	bool operator<(DeltaTimePoint other) const {
+		return time < other.time;
+	}
+
+	bool operator<=(DeltaTimePoint other) const {
+		return time <= other.time;
+	}
+
+	bool operator>(DeltaTimePoint other) const {
+		return time > other.time;
+	}
+
+	bool operator>=(DeltaTimePoint other) const {
+		return time >= other.time;
+	}
+
+	//=========================================================================================
+	// public member
+	//=========================================================================================
+
+	float time;
+
+private:
 };

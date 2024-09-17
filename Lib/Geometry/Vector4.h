@@ -17,7 +17,7 @@ public:
 	//=========================================================================================
 
 	constexpr Vector4() = default;
-	constexpr Vector4(T _x, T _y, T _z) : x(_x), y(_y), z(_z), w(1) {}
+	constexpr Vector4(T _x, T _y, T _z) : x(_x), y(_y), z(_z), w(1.0f) {}
 	constexpr Vector4(T _x, T _y, T _z, T _w) : x(_x), y(_y), z(_z), w(_w) {}
 
 	//=========================================================================================
@@ -80,4 +80,4 @@ using Color4i = Color4<int>;
 
 constexpr Color4i ToColor4i(const Color4f& color);
 constexpr Color4f ToColor4f(const Color4i& color);
-constexpr Color4f ToColor4f(uint32_t colorCode);
+Color4f ToColor4f(uint32_t colorCode); //!< constexprに変換

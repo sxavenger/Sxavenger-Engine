@@ -45,18 +45,11 @@ void DebugCamera3D::Update() {
 
 }
 
-void DebugCamera3D::SetAttributeImGui() {
-
-	ImGui::DragFloat3("pivot",   &pivot_.x, 0.02f);
-	ImGui::DragFloat("lon",      &lon_, 0.02f);
-	ImGui::DragFloat("lat",      &lat_, 0.02f);
-	ImGui::DragFloat("distance", &distance_, 0.02f);
-
-	ImGui::Spacing();
-
-	ImGui::DragFloat("delta move",     &deltaMove_, 0.02f);
-	ImGui::DragFloat("delta rotate",   &deltaRotate_, 0.02f);
-	ImGui::DragFloat("delta distance", &deltaDistance_, 0.02f);
+void DebugCamera3D::Reset() {
+	pivot_ = {};
+	lon_ = 0.0f;
+	lat_ = 0.0f;
+	distance_ = 10.0f;
 
 	CalculateView();
 }

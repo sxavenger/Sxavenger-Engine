@@ -42,18 +42,6 @@ void Camera3D::SetProjection(float fovY, float aspectRatio, float nearClip, floa
 	(*buffer_)[0].projMatrix = Matrix::MakePerspectiveFov(fovY, aspectRatio, nearClip, farClip);
 }
 
-void Camera3D::SetAttributeImGui() {
-
-	ImGui::Text("translate");
-	ImGui::DragFloat3("scale",     &transform_.scale.x, 0.01f);
-	ImGui::DragFloat3("rotate",    &transform_.rotate.x, 0.01f);
-	ImGui::DragFloat3("translate", &transform_.translate.x, 0.01f);
-
-	ImGui::Text("projection");
-
-	CalculateView();
-}
-
 void Camera3D::DrawFrustum(const Color4f& color) const {
 
 	Vector3f frustumPoint[4] = {};

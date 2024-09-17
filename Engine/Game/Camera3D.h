@@ -23,8 +23,7 @@
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Camera3D class
 ////////////////////////////////////////////////////////////////////////////////////////////
-class Camera3D
-	: public Attribute {
+class Camera3D {
 public:
 
 	//=========================================================================================
@@ -54,10 +53,6 @@ public:
 	//* buffer address *//
 
 	const D3D12_GPU_VIRTUAL_ADDRESS GetGPUVirtualAddress() const { return buffer_->GetGPUVirtualAddress(); }
-
-	//* attribute *//
-
-	virtual void SetAttributeImGui();
 
 	//* debug drawer *//
 

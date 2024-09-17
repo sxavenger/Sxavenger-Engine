@@ -5,10 +5,14 @@
 //-----------------------------------------------------------------------------------------
 // console
 #include <Engine/System/Console.h>
+#include <Engine/Beta/BetaConsole.h>
 
 // c++
 #include <memory>
 #include <format>
+
+//* Game
+#include <Game/Teapot.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // GameScene class
@@ -28,7 +32,9 @@ private:
 	// private methods
 	//=========================================================================================
 
-	std::unique_ptr<Camera3D> gameCamera_;
+	//* TEST *//
+
+	std::unique_ptr<Teapot> teapot_;
 
 	//=========================================================================================
 	// private methods

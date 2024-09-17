@@ -12,7 +12,7 @@ constexpr Color4f ToColor4f(const Color4i& color) {
 	return { color.r / 255.0f, color.g / 255.0f, color.b / 255.0f, color.a / 255.0f };
 }
 
-constexpr Color4f ToColor4f(uint32_t colorCode) {
+Color4f ToColor4f(uint32_t colorCode) {
 	Color4f result = {};
 
 	result.r = ((colorCode >> (8 * 3)) & 0xFF) / 255.0f;

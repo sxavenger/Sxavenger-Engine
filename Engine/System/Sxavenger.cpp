@@ -138,7 +138,7 @@ void SxavengerEngine::ResetBackAllocator() {
 	sDirectXCommon->ResetBackAllocator();
 }
 
-_DXOBJECT Descriptor SxavengerEngine::GetCurrentDescriptor(_DXOBJECT DescriptorType type) {
+_DXOBJECT Descriptor SxavengerEngine::GetDescriptor(_DXOBJECT DescriptorType type) {
 	return sDirectXCommon->GetDescriptorsObj()->GetDescriptor(type);
 }
 
