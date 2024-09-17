@@ -36,7 +36,7 @@ void MonoBehavior::MonoBehaviorImGui() {
 			ImVec2 regionMin = ImGui::GetWindowContentRegionMin();
 			ImVec2 windowSize = { regionMax.x - regionMin.x - windowPadding.x * 4.0f, regionMax.y - regionMin.y};
 
-			Vector2f textureSize = sBetaConsole->GetLocalRenderTexture()->GetSize();
+			Vector2f textureSize = sBetaConsole->GetLocalRenderTarget()->GetSize();
 
 			// 画像アス比と分割したWindowアス比の計算
 			float textureAspectRatio = textureSize.x / textureSize.y;
@@ -53,7 +53,7 @@ void MonoBehavior::MonoBehaviorImGui() {
 				displayTextureSize.y *= windowAspectRatio / textureAspectRatio;
 			}
 
-			ImGui::Image((ImTextureID)sBetaConsole->GetLocalRenderTexture()->GetGPUHandleSRV().ptr, displayTextureSize);
+			ImGui::Image((ImTextureID)sBetaConsole->GetLocalRenderTarget()->GetGPUHandleSRV().ptr, displayTextureSize);
 
 			ImGui::TreePop();
 		}

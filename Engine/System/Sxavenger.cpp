@@ -130,6 +130,14 @@ void SxavengerEngine::EndOffscreen(RenderTexture* renderTexture) {
 	sDirectXCommon->EndOffscreen(renderTexture);
 }
 
+void SxavengerEngine::BeginOffscreen(DepthRenderTarget* depthRenderTarget, bool isClearRenderTarget) {
+	sDirectXCommon->BeginOffScreen(depthRenderTarget, isClearRenderTarget);
+}
+
+void SxavengerEngine::EndOffscreen(DepthRenderTarget* depthRenderTarget) {
+	sDirectXCommon->EndOffScreen(depthRenderTarget);
+}
+
 void SxavengerEngine::TranstionAllocator() {
 	sDirectXCommon->TranstionAllocator();
 }

@@ -112,6 +112,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Engine\Beta\BetaConsole.cpp" />
+    <ClCompile Include="Engine\Beta\DepthRenderTarget.cpp" />
     <ClCompile Include="Engine\Beta\MonoBehavior.cpp" />
     <ClCompile Include="Engine\Game\Animation.cpp" />
     <ClCompile Include="Engine\Game\Camera3D.cpp" />
@@ -181,6 +182,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Beta\BetaConsole.h" />
+    <ClInclude Include="Engine\Beta\DepthRenderTarget.h" />
     <ClInclude Include="Engine\Beta\MonoBehavior.h" />
     <ClInclude Include="Engine\Game\Animation.h" />
     <ClInclude Include="Engine\Game\Camera3D.h" />

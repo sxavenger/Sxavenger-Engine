@@ -23,9 +23,14 @@
 // forward
 //-----------------------------------------------------------------------------------------
 class WinApp;
+
+//* Texture
 class Texture;
 class RenderTexture;
 class DummyTexture;
+
+//* DepthRender
+class DepthRenderTarget;
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // DirectXCommon class
@@ -54,6 +59,8 @@ public:
 
 	/* offscreen */
 
+	//* RenderTexture
+
 	void BeginOffscreen(RenderTexture* renderTexture);
 
 	void EndOffscreen(RenderTexture* renderTexture);
@@ -61,6 +68,13 @@ public:
 	void BeginOffscreens(uint32_t textureNum, RenderTexture* renderTextures[D3D12_SIMULTANEOUS_RENDER_TARGET_COUNT]);
 
 	void EndOffscreens(uint32_t textureNum, RenderTexture* renderTextures[D3D12_SIMULTANEOUS_RENDER_TARGET_COUNT]);
+
+	//* DepthRenderTarget
+
+	void BeginOffScreen(DepthRenderTarget* depthRenderTarget, bool isClearRenderTarget = false);
+
+	void EndOffScreen(DepthRenderTarget* depthRenderTarget);
+
 
 	/* screen */
 

@@ -128,7 +128,7 @@ void DescriptorHeaps::Init(Devices* devices) {
 		= std::make_unique<DescriptorPool>(devices, D3D12_DESCRIPTOR_HEAP_TYPE_RTV, 12);
 
 	pools_[DescriptorType::DSV]
-		= std::make_unique<DescriptorPool>(devices, D3D12_DESCRIPTOR_HEAP_TYPE_DSV, 1);
+		= std::make_unique<DescriptorPool>(devices, D3D12_DESCRIPTOR_HEAP_TYPE_DSV, 8);
 
 	pools_[DescriptorType::CBV_SRV_UAV]
 		= std::make_unique<DescriptorPool>(devices, D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, 128);

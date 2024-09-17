@@ -12,6 +12,9 @@
 #include "Input.h"
 #include "Audio.h"
 
+//* beta
+#include <Engine/Beta/DepthRenderTarget.h>
+
 ////////////////////////////////////////////////////////////////////////////////////////////
 // SxavengerEngine class
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -56,6 +59,10 @@ public:
 
 	//! @brief オフスク描画処理の開始
 	static void EndOffscreen(RenderTexture* renderTexture);
+
+	static void BeginOffscreen(DepthRenderTarget* depthRenderTarget, bool isClearRenderTarget = false);
+
+	static void EndOffscreen(DepthRenderTarget* depthRenderTarget);
 
 	//-----------------------------------------------------------------------------------------
 	// original system option

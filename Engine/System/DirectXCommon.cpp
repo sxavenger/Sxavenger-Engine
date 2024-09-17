@@ -3,8 +3,11 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
-#include "Texture.h"
 #include <imgui.h>
+
+//* forward
+#include "Texture.h"
+#include <Engine/Beta/DepthRenderTarget.h>
 
 //-----------------------------------------------------------------------------------------
 // using
@@ -81,18 +84,16 @@ void DirectXCommon::BeginOffscreen(RenderTexture* renderTexture) {
 		&barrier
 	);
 
-	D3D12_CPU_DESCRIPTOR_HANDLE handle_RTV = renderTexture->GetCPUHandleRTV();
-
 	commandList->OMSetRenderTargets(
 		1,
-		&handle_RTV,
+		&renderTexture->GetCPUHandleRTV(),
 		false,
 		&depthStencil_->GetHandle()
 	);
 
 	// 画面のクリア
 	commandList->ClearRenderTargetView(
-		handle_RTV,
+		renderTexture->GetCPUHandleRTV(),
 		&renderTexture->GetClearColor().r,
 		0, nullptr
 	);
@@ -209,6 +210,70 @@ void DirectXCommon::EndOffscreens(uint32_t textureNum, RenderTexture* renderText
 	);
 }
 
+void DirectXCommon::BeginOffScreen(DepthRenderTarget* depthRenderTarget, bool isClearRenderTarget) {
+
+	BeginRendering();
+
+	// コマンドリストの取得
+	auto commandList = command_->GetCommandList();
+
+	// RTVにbarrier
+	D3D12_RESOURCE_BARRIER barrier = {};
+	barrier.Type                   = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+	barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
+	barrier.Transition.StateAfter  = D3D12_RESOURCE_STATE_RENDER_TARGET;
+	barrier.Transition.pResource   = depthRenderTarget->GetResource();
+
+	commandList->ResourceBarrier(
+		1, &barrier
+	);
+
+	// RTVの設定
+	commandList->OMSetRenderTargets(
+		1,
+		&depthRenderTarget->GetCPUHandleRTV(),
+		false,
+		&depthRenderTarget->GetCPUHandleDSV()
+	);
+
+	if (isClearRenderTarget) {
+
+		// 画面のクリア
+		commandList->ClearRenderTargetView(
+			depthRenderTarget->GetCPUHandleRTV(),
+			&depthRenderTarget->GetClearColor().r,
+			0, nullptr
+		);
+
+		// 深度をクリア
+		commandList->ClearDepthStencilView(
+			depthRenderTarget->GetCPUHandleDSV(),
+			D3D12_CLEAR_FLAG_DEPTH,
+			1.0f,
+			0, 0, nullptr
+		);
+
+	}
+}
+
+void DirectXCommon::EndOffScreen(DepthRenderTarget* depthRenderTarget) {
+
+	EndRendering();
+
+	// コマンドリストの取得
+	auto commandList = command_->GetCommandList();
+
+	D3D12_RESOURCE_BARRIER barrier = {};
+	barrier.Type                   = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+	barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_RENDER_TARGET;
+	barrier.Transition.StateAfter  = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
+	barrier.Transition.pResource   = depthRenderTarget->GetResource();
+
+	commandList->ResourceBarrier(
+		1, &barrier
+	);
+}
+
 void DirectXCommon::BeginScreenDraw() {
 
 	BeginRendering();
@@ -224,18 +289,16 @@ void DirectXCommon::BeginScreenDraw() {
 		swapChains_->GetBackBufferTransitionBarrier(D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET)
 	);
 
-	D3D12_CPU_DESCRIPTOR_HANDLE handle_RTV = swapChains_->GetRTVHandleCPU();
-
 	commandList->OMSetRenderTargets(
 		1,
-		&handle_RTV,
+		&swapChains_->GetRTVHandleCPU(),
 		false,
 		&depthStencil_->GetHandle()
 	);
 
 	// 画面のクリア
 	commandList->ClearRenderTargetView(
-		handle_RTV,
+		swapChains_->GetRTVHandleCPU(),
 		&defaultClearColor.r,
 		0, nullptr
 	);

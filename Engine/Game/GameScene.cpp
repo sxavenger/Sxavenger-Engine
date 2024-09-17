@@ -82,11 +82,10 @@ void GameScene::Update() {
 void GameScene::Draw() {
 
 	{
-
 		//* main screen *//
-		Sxavenger::BeginOffscreen(Sxavenger::GetTexture<RenderTexture>("main"));
+		Sxavenger::BeginOffscreen(sBetaConsole->GetGameRenderTarget());
 
-		Sxavenger::EndOffscreen(Sxavenger::GetTexture<RenderTexture>("main"));
+		Sxavenger::EndOffscreen(sBetaConsole->GetGameRenderTarget());
 		Sxavenger::TranstionAllocator();
 	}
 
@@ -100,7 +99,7 @@ void GameScene::Draw() {
 		// "offscreen"をフルスクリーンにする
 		Sxavenger::GetDxCommon()->CopyResource(
 			Sxavenger::GetDxCommon()->GetSwapChainObj()->GetBackBufferResource(), D3D12_RESOURCE_STATE_RENDER_TARGET,
-			Sxavenger::GetTexture<RenderTexture>("main")->GetResource(), D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE
+			sBetaConsole->GetGameRenderTarget()->GetResource(), D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE
 		);
 
 		

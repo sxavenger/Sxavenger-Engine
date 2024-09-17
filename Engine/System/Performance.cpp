@@ -8,6 +8,8 @@ _DXOBJECT_USING
 #include "Console.h"
 #include <thread>
 
+#include <Engine/Beta/BetaConsole.h>
+
 //=========================================================================================
 // static variables
 //=========================================================================================
@@ -34,9 +36,9 @@ void Performance::BeginFrame() {
 
 void Performance::EndFrame() {
 
-	WaitForFPS(60);
+	WaitForFPS(120);
 
-	if (!console->IsUpdateRequired()) {
+	if (!sBetaConsole->IsUpdateRequired()) {
 		return;
 	}
 

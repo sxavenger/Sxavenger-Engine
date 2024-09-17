@@ -143,7 +143,7 @@ void BetaConsole::Update() {
 void BetaConsole::Draw() {
 
 	{
-		Sxavenger::BeginOffscreen(localRenderTexture_.get());
+		Sxavenger::BeginOffscreen(localRenderTarget_.get(), true);
 
 		if (selectedBehavior_.has_value()) {
 			auto behavior = (*selectedBehavior_.value());
@@ -161,11 +161,11 @@ void BetaConsole::Draw() {
 			}
 		}
 
-		Sxavenger::EndOffscreen(localRenderTexture_.get());
+		Sxavenger::EndOffscreen(localRenderTarget_.get());
 	}
 	
 	{
-		Sxavenger::BeginOffscreen(sceneRenderTexture_.get());
+		Sxavenger::BeginOffscreen(sceneRenderTarget_.get(), true);
 
 		for (auto& behavior : behaviors_) {
 			
@@ -184,11 +184,11 @@ void BetaConsole::Draw() {
 			}
 		}
 
-		Sxavenger::EndOffscreen(sceneRenderTexture_.get());
+		Sxavenger::EndOffscreen(sceneRenderTarget_.get());
 	}
 
 	{
-		Sxavenger::BeginOffscreen(gameRenderTexture_.get());
+		Sxavenger::BeginOffscreen(gameRenderTarget_.get(), true);
 
 		for (auto& behavior : behaviors_) {
 
@@ -207,7 +207,7 @@ void BetaConsole::Draw() {
 			}
 		}
 
-		Sxavenger::EndOffscreen(gameRenderTexture_.get());
+		Sxavenger::EndOffscreen(gameRenderTarget_.get());
 	}
 
 }
@@ -280,7 +280,7 @@ void BetaConsole::DisplayGame() {
 	static bool isOpenWindow = true;
 	ImGui::Begin("Game ## Beta", &isOpenWindow, windowFlags_);
 
-	DisplayTextureImGuiFullWindow(gameRenderTexture_.get());
+	DisplayTextureImGuiFullWindow(gameRenderTarget_.get());
 
 	ImGui::End();
 }
@@ -291,7 +291,7 @@ void BetaConsole::DisplayScene() {
 
 	ImGui::Begin("Scene ## Beta", &isOpenWindow, windowFlags_);
 
-	DisplayTextureImGuiFullWindow(sceneRenderTexture_.get());
+	DisplayTextureImGuiFullWindow(sceneRenderTarget_.get());
 
 	if (ImGui::IsWindowFocused()) {
 		sceneCamera_->Update();
@@ -554,33 +554,33 @@ void BetaConsole::InitConfig() {
 }
 
 void BetaConsole::InitRenderTarget() {
-	gameRenderTexture_ = std::make_unique<RenderTexture>();
-	gameRenderTexture_->Create(Sxavenger::GetDxCommon(), kWindowSize);
+	gameRenderTarget_ = std::make_unique<DepthRenderTarget>();
+	gameRenderTarget_->Create(kWindowSize);
 
 	gameCamera_ = std::make_unique<Camera3D>();
 	gameCamera_->Init();
 
-	sceneRenderTexture_ = std::make_unique<RenderTexture>();
-	sceneRenderTexture_->Create(Sxavenger::GetDxCommon(), kWindowSize);
+	sceneRenderTarget_ = std::make_unique<DepthRenderTarget>();
+	sceneRenderTarget_->Create(kWindowSize);
 
 	sceneCamera_ = std::make_unique<DebugCamera3D>();
 	sceneCamera_->Init();
 
-	localRenderTexture_ = std::make_unique<RenderTexture>();
-	localRenderTexture_->Create(Sxavenger::GetDxCommon(), kWindowSize, ToColor4f(0x303030FF)); //!< 固定サイズにしてもいいかも
+	localRenderTarget_ = std::make_unique<DepthRenderTarget>();
+	localRenderTarget_->Create(kWindowSize, ToColor4f(0x303030FF)); //!< 固定サイズにしてもいいかも
 
 	localCamera_ = std::make_unique<DebugCamera3D>();
 	localCamera_->Init();
 }
 
 void BetaConsole::TermRenderTarget() {
-	gameRenderTexture_.reset();
+	gameRenderTarget_.reset();
 	gameCamera_.reset();
 
-	sceneRenderTexture_.reset();
+	sceneRenderTarget_.reset();
 	sceneCamera_.reset();
 
-	localRenderTexture_.reset();
+	localRenderTarget_.reset();
 	localCamera_.reset();
 }
 
@@ -617,6 +617,39 @@ void BetaConsole::DisplayTextureImGuiFullWindow(const BaseTexture* texture) {
 	ImGui::SetCursorPos(leftTop);
 	ImGui::Image((ImTextureID)texture->GetGPUHandleSRV().ptr, displayTextureSize);
 
+}
+
+void BetaConsole::DisplayTextureImGuiFullWindow(const DepthRenderTarget* texture) {
+	// タブ等を排除した全体のwindowSize計算
+	ImVec2 regionMax  = ImGui::GetWindowContentRegionMax();
+	ImVec2 regionMin  = ImGui::GetWindowContentRegionMin();
+	ImVec2 windowSize = { regionMax.x - regionMin.x, regionMax.y - regionMin.y };
+
+	Vector2f textureSize = texture->GetSize();
+	
+	// 画像アス比と分割したWindowアス比の計算
+	float textureAspectRatio = textureSize.x / textureSize.y;
+	float windowAspectRatio  = windowSize.x / windowSize.y;
+	
+	// 出力する画像サイズの設定
+	ImVec2 displayTextureSize = windowSize;
+	
+	// 画像サイズの調整
+	if (textureAspectRatio <= windowAspectRatio) {
+		displayTextureSize.x *= textureAspectRatio / windowAspectRatio;
+	
+	} else {
+		displayTextureSize.y *= windowAspectRatio / textureAspectRatio;
+	}
+	
+	// 出力場所の調整
+	ImVec2 leftTop = {
+		(windowSize.x - displayTextureSize.x) * 0.5f + regionMin.x,
+		(windowSize.y - displayTextureSize.y) * 0.5f + regionMin.y,
+	};
+	
+	ImGui::SetCursorPos(leftTop);
+	ImGui::Image((ImTextureID)texture->GetGPUHandleSRV().ptr, displayTextureSize);
 }
 
 bool BetaConsole::IsSelectedBehavior(MonoBehavior* behavior) {

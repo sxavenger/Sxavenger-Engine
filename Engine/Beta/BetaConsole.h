@@ -23,6 +23,9 @@
 #include <Engine/Game/Camera3D.h>
 #include <Engine/Game/DebugCamera3D.h>
 
+//* Beta
+#include "DepthRenderTarget.h"
+
 //-----------------------------------------------------------------------------------------
 // forward
 //-----------------------------------------------------------------------------------------
@@ -109,7 +112,10 @@ public:
 
 	bool IsUpdateRequired() const { return isUpdateRequired_; }
 
-	RenderTexture* GetLocalRenderTexture() const { return localRenderTexture_.get(); }
+	DepthRenderTarget* GetLocalRenderTarget() const { return localRenderTarget_.get(); }
+	DepthRenderTarget* GetSceneRenderTarget() const { return sceneRenderTarget_.get(); }
+	DepthRenderTarget* GetGameRenderTarget() const { return gameRenderTarget_.get(); }
+
 
 	//* singleton *//
 
@@ -157,15 +163,15 @@ private:
 
 	//* Rendering *//
 	//* screen
-	std::unique_ptr<RenderTexture> gameRenderTexture_;
-	std::unique_ptr<Camera3D>      gameCamera_;
+	std::unique_ptr<DepthRenderTarget> gameRenderTarget_;
+	std::unique_ptr<Camera3D>          gameCamera_;
 
-	std::unique_ptr<RenderTexture> sceneRenderTexture_;
-	std::unique_ptr<DebugCamera3D> sceneCamera_;
+	std::unique_ptr<DepthRenderTarget> sceneRenderTarget_;
+	std::unique_ptr<DebugCamera3D>     sceneCamera_;
 
 	//* local
-	std::unique_ptr<RenderTexture> localRenderTexture_;
-	std::unique_ptr<DebugCamera3D> localCamera_;
+	std::unique_ptr<DepthRenderTarget> localRenderTarget_;
+	std::unique_ptr<DebugCamera3D>     localCamera_;
 
 	// TODO: cameraの実装
 
@@ -219,7 +225,8 @@ private:
 
 	//* assistance methods *//
 
-	void DisplayTextureImGuiFullWindow(const BaseTexture* texture);
+	void DisplayTextureImGuiFullWindow(const BaseTexture*       texture);
+	void DisplayTextureImGuiFullWindow(const DepthRenderTarget* texture);
 
 	bool IsSelectedBehavior(MonoBehavior* behavior);
 	void SelectableMonoBehavior(const std::list<MonoBehavior*>::iterator& behaviorIt);
