@@ -13,12 +13,6 @@ void Kipfel::Init() {
 	model_->ApplyMeshShader();
 
 	SetToConsole("kipfel");
-
-	meshes_.resize(model_->GetMeshSize());
-	
-	for (uint32_t i = 0; i < model_->GetMeshSize(); ++i) {
-		meshes_[i] = std::make_unique<Mesh>(model_->GetMesh(i).GetVertexBuffer(), model_->GetMesh(i).GetIndexBuffer());
-	}
 }
 
 void Kipfel::Term() {

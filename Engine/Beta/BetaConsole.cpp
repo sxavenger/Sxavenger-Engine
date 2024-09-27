@@ -18,6 +18,8 @@ _DXOBJECT_USING
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 void BetaConsolePipeline::Init() {
+
+	auto deviceObj = Sxavenger::GetDevicesObj();
 	
 	{
 		blobs_[kConsoleLocal] = std::make_unique<GraphicsBlob>();
@@ -31,12 +33,12 @@ void BetaConsolePipeline::Init() {
 		descRoot.SetSRV(1, VISIBILITY_PIXEL, 0);  //!< Diffuse
 		descRoot.SetSampler(0, MODE_WRAP, VISIBILITY_PIXEL, 0);
 
-		pipelines_[kConsoleLocal]->CreateRootSignature(Sxavenger::GetDevicesObj(), descRoot);
+		pipelines_[kConsoleLocal]->CreateRootSignature(deviceObj, descRoot);
 
 		GraphicsPipelineDesc desc;
 		desc.CreateDefaultDesc();
 
-		pipelines_[kConsoleLocal]->CreatePipeline(Sxavenger::GetDevicesObj(), blobs_[kConsoleLocal].get(), desc);
+		pipelines_[kConsoleLocal]->CreatePipeline(deviceObj, blobs_[kConsoleLocal].get(), desc);
 	}
 
 	{
@@ -52,14 +54,41 @@ void BetaConsolePipeline::Init() {
 		descRoot.SetSRV(2, VISIBILITY_PIXEL, 0);  //!< Diffuse
 		descRoot.SetSampler(0, MODE_WRAP, VISIBILITY_PIXEL, 0);
 
-		pipelines_[kDefault_Diffuse]->CreateRootSignature(Sxavenger::GetDevicesObj(), descRoot);
+		pipelines_[kDefault_Diffuse]->CreateRootSignature(deviceObj, descRoot);
 
 		GraphicsPipelineDesc desc;
 		desc.CreateDefaultDesc();
 
-		pipelines_[kDefault_Diffuse]->CreatePipeline(Sxavenger::GetDevicesObj(), blobs_[kDefault_Diffuse].get(), desc);
+		pipelines_[kDefault_Diffuse]->CreatePipeline(deviceObj, blobs_[kDefault_Diffuse].get(), desc);
 	}
 
+	{
+		blobs_[kDefaultMesh_Diffuse] = std::make_unique<GraphicsBlob>();
+		blobs_[kDefaultMesh_Diffuse]->Create(L"monobehavior/default.as.hlsl", GRAPHICS_AMPLIFICATION);
+		blobs_[kDefaultMesh_Diffuse]->Create(L"monobehavior/default.ms.hlsl", GRAPHICS_MESH);
+		blobs_[kDefaultMesh_Diffuse]->Create(L"monobehavior/diffuse.ps.hlsl", GRAPHICS_PIXEL);
+
+		pipelines_[kDefaultMesh_Diffuse] = std::make_unique<GraphicsPipeline>();
+
+		GraphicsRootSignatureDesc descRoot;
+		descRoot.SetVirtualSRV(0, VISIBILITY_ALL, 10); //!< vertices
+		descRoot.SetVirtualSRV(1, VISIBILITY_ALL, 11); //!< indices
+		descRoot.SetVirtualSRV(2, VISIBILITY_ALL, 12); //!< meshlets
+		descRoot.SetVirtualSRV(3, VISIBILITY_ALL, 13); //!< primitives
+		descRoot.SetVirtualSRV(4, VISIBILITY_ALL, 14); //!< cullData
+		descRoot.SetCBV(5, VISIBILITY_ALL, 10);        //!< camera
+		descRoot.SetCBV(6, VISIBILITY_ALL, 11);        //!< meshInfo
+		descRoot.SetCBV(7, VISIBILITY_ALL, 12);        //!< transform
+		descRoot.SetSRV(8, VISIBILITY_PIXEL, 0);        //!< diffuse texture
+		descRoot.SetSampler(0, MODE_WRAP, VISIBILITY_PIXEL, 0);
+
+		pipelines_[kDefaultMesh_Diffuse]->CreateRootSignature(deviceObj, descRoot);
+
+		GraphicsPipelineDesc desc;
+		desc.CreateDefaultDesc();
+
+		pipelines_[kDefaultMesh_Diffuse]->CreatePipeline(deviceObj, blobs_[kDefaultMesh_Diffuse].get(), desc);
+	}
 }
 
 void BetaConsolePipeline::Term() {

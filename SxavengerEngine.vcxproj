@@ -138,7 +138,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\System\DxObject\DxDevices.cpp" />
     <ClCompile Include="Engine\System\DxObject\DxFence.cpp" />
     <ClCompile Include="Engine\System\DxObject\DxGraphicsPipeline.cpp" />
-    <ClCompile Include="Engine\System\DxObject\DxMesh.cpp" />
     <ClCompile Include="Engine\System\DxObject\DxObjectCommon.cpp" />
     <ClCompile Include="Engine\System\DxObject\DxRootSignatureDesc.cpp" />
     <ClCompile Include="Engine\System\DxObject\DxShaderBlob.cpp" />
@@ -214,7 +213,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\System\DxObject\DxDevices.h" />
     <ClInclude Include="Engine\System\DxObject\DxFence.h" />
     <ClInclude Include="Engine\System\DxObject\DxGraphicsPipeline.h" />
-    <ClInclude Include="Engine\System\DxObject\DxMesh.h" />
     <ClInclude Include="Engine\System\DxObject\DxObjectCommon.h" />
     <ClInclude Include="Engine\System\DxObject\DxRootSignatureDesc.h" />
     <ClInclude Include="Engine\System\DxObject\DxShaderBlob.h" />
@@ -255,6 +253,8 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <None Include=".editorconfig" />
     <None Include="Resources\hlsl\Camera.hlsli" />
     <None Include="Resources\hlsl\Matrix.hlsli" />
+    <None Include="Resources\hlsl\MeshCommon.hlsli" />
+    <None Include="Resources\hlsl\MonoBehavior\DefaultMesh.hlsli" />
     <None Include="Resources\hlsl\MonoBehavior\MonoBehavior.hlsli" />
     <None Include="Resources\hlsl\Transform.hlsli" />
   </ItemGroup>
@@ -275,6 +275,14 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </FxCompile>
     <FxCompile Include="Resources\hlsl\MonoBehavior\ConsoleLocal.VS.hlsl">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="Resources\hlsl\MonoBehavior\Default.AS.hlsl">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="Resources\hlsl\MonoBehavior\Default.MS.hlsl">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </FxCompile>

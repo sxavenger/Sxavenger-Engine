@@ -7,9 +7,6 @@
     <Filter Include="externals\imgui">
       <UniqueIdentifier>{7ed608b7-008b-4b29-af56-0edd4f20a9c3}</UniqueIdentifier>
     </Filter>
-    <Filter Include="externals\meshoptimizer">
-      <UniqueIdentifier>{f24df899-454d-4f15-99bb-f5eb440d67e3}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Engine">
       <UniqueIdentifier>{9cc9e171-589d-41a2-919b-4c9bde2bee0d}</UniqueIdentifier>
     </Filter>
@@ -67,6 +64,9 @@
     <Filter Include="Game">
       <UniqueIdentifier>{c17d010e-3917-4a11-8473-75506cfbee82}</UniqueIdentifier>
     </Filter>
+    <Filter Include="externals\meshoptimizer">
+      <UniqueIdentifier>{ae980c19-97cc-4f02-bdd8-c40295778d34}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="externals\imgui\imgui.cpp">
@@ -89,51 +89,6 @@
     </ClCompile>
     <ClCompile Include="externals\imgui\imgui_widgets.cpp">
       <Filter>externals\imgui</Filter>
-    </ClCompile>
-    <ClCompile Include="externals\meshoptimizer\allocator.cpp">
-      <Filter>externals\meshoptimizer</Filter>
-    </ClCompile>
-    <ClCompile Include="externals\meshoptimizer\clusterizer.cpp">
-      <Filter>externals\meshoptimizer</Filter>
-    </ClCompile>
-    <ClCompile Include="externals\meshoptimizer\indexcodec.cpp">
-      <Filter>externals\meshoptimizer</Filter>
-    </ClCompile>
-    <ClCompile Include="externals\meshoptimizer\indexgenerator.cpp">
-      <Filter>externals\meshoptimizer</Filter>
-    </ClCompile>
-    <ClCompile Include="externals\meshoptimizer\overdrawanalyzer.cpp">
-      <Filter>externals\meshoptimizer</Filter>
-    </ClCompile>
-    <ClCompile Include="externals\meshoptimizer\overdrawoptimizer.cpp">
-      <Filter>externals\meshoptimizer</Filter>
-    </ClCompile>
-    <ClCompile Include="externals\meshoptimizer\simplifier.cpp">
-      <Filter>externals\meshoptimizer</Filter>
-    </ClCompile>
-    <ClCompile Include="externals\meshoptimizer\spatialorder.cpp">
-      <Filter>externals\meshoptimizer</Filter>
-    </ClCompile>
-    <ClCompile Include="externals\meshoptimizer\stripifier.cpp">
-      <Filter>externals\meshoptimizer</Filter>
-    </ClCompile>
-    <ClCompile Include="externals\meshoptimizer\vcacheanalyzer.cpp">
-      <Filter>externals\meshoptimizer</Filter>
-    </ClCompile>
-    <ClCompile Include="externals\meshoptimizer\vcacheoptimizer.cpp">
-      <Filter>externals\meshoptimizer</Filter>
-    </ClCompile>
-    <ClCompile Include="externals\meshoptimizer\vertexcodec.cpp">
-      <Filter>externals\meshoptimizer</Filter>
-    </ClCompile>
-    <ClCompile Include="externals\meshoptimizer\vertexfilter.cpp">
-      <Filter>externals\meshoptimizer</Filter>
-    </ClCompile>
-    <ClCompile Include="externals\meshoptimizer\vfetchanalyzer.cpp">
-      <Filter>externals\meshoptimizer</Filter>
-    </ClCompile>
-    <ClCompile Include="externals\meshoptimizer\vfetchoptimizer.cpp">
-      <Filter>externals\meshoptimizer</Filter>
     </ClCompile>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Engine\System\DxObject\DxDevices.cpp">
@@ -274,9 +229,6 @@
     <ClCompile Include="Engine\Beta\ModelBehavior.cpp">
       <Filter>Engine\Beta</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\System\DxObject\DxMesh.cpp">
-      <Filter>Engine\System\DxObject\source</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\Beta\GraphicsEditor.cpp">
       <Filter>Engine\Beta</Filter>
     </ClCompile>
@@ -285,6 +237,51 @@
     </ClCompile>
     <ClCompile Include="Engine\Game\InputMesh.cpp">
       <Filter>Engine\Game\source</Filter>
+    </ClCompile>
+    <ClCompile Include="externals\meshoptimizer\vfetchanalyzer.cpp">
+      <Filter>externals\meshoptimizer</Filter>
+    </ClCompile>
+    <ClCompile Include="externals\meshoptimizer\vfetchoptimizer.cpp">
+      <Filter>externals\meshoptimizer</Filter>
+    </ClCompile>
+    <ClCompile Include="externals\meshoptimizer\allocator.cpp">
+      <Filter>externals\meshoptimizer</Filter>
+    </ClCompile>
+    <ClCompile Include="externals\meshoptimizer\clusterizer.cpp">
+      <Filter>externals\meshoptimizer</Filter>
+    </ClCompile>
+    <ClCompile Include="externals\meshoptimizer\indexcodec.cpp">
+      <Filter>externals\meshoptimizer</Filter>
+    </ClCompile>
+    <ClCompile Include="externals\meshoptimizer\indexgenerator.cpp">
+      <Filter>externals\meshoptimizer</Filter>
+    </ClCompile>
+    <ClCompile Include="externals\meshoptimizer\overdrawanalyzer.cpp">
+      <Filter>externals\meshoptimizer</Filter>
+    </ClCompile>
+    <ClCompile Include="externals\meshoptimizer\overdrawoptimizer.cpp">
+      <Filter>externals\meshoptimizer</Filter>
+    </ClCompile>
+    <ClCompile Include="externals\meshoptimizer\simplifier.cpp">
+      <Filter>externals\meshoptimizer</Filter>
+    </ClCompile>
+    <ClCompile Include="externals\meshoptimizer\spatialorder.cpp">
+      <Filter>externals\meshoptimizer</Filter>
+    </ClCompile>
+    <ClCompile Include="externals\meshoptimizer\stripifier.cpp">
+      <Filter>externals\meshoptimizer</Filter>
+    </ClCompile>
+    <ClCompile Include="externals\meshoptimizer\vcacheanalyzer.cpp">
+      <Filter>externals\meshoptimizer</Filter>
+    </ClCompile>
+    <ClCompile Include="externals\meshoptimizer\vcacheoptimizer.cpp">
+      <Filter>externals\meshoptimizer</Filter>
+    </ClCompile>
+    <ClCompile Include="externals\meshoptimizer\vertexcodec.cpp">
+      <Filter>externals\meshoptimizer</Filter>
+    </ClCompile>
+    <ClCompile Include="externals\meshoptimizer\vertexfilter.cpp">
+      <Filter>externals\meshoptimizer</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -311,9 +308,6 @@
     </ClInclude>
     <ClInclude Include="externals\imgui\imstb_truetype.h">
       <Filter>externals\imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="externals\meshoptimizer\meshoptimizer.h">
-      <Filter>externals\meshoptimizer</Filter>
     </ClInclude>
     <ClInclude Include="Engine\System\DxObject\DxDevices.h">
       <Filter>Engine\System\DxObject\include</Filter>
@@ -468,9 +462,6 @@
     <ClInclude Include="Engine\Beta\ModelBehavior.h">
       <Filter>Engine\Beta</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\System\DxObject\DxMesh.h">
-      <Filter>Engine\System\DxObject\include</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\Beta\GraphicsEditor.h">
       <Filter>Engine\Beta</Filter>
     </ClInclude>
@@ -479,6 +470,9 @@
     </ClInclude>
     <ClInclude Include="Engine\Game\InputMesh.h">
       <Filter>Engine\Game\include</Filter>
+    </ClInclude>
+    <ClInclude Include="externals\meshoptimizer\meshoptimizer.h">
+      <Filter>externals\meshoptimizer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -494,6 +488,12 @@
     </None>
     <None Include="Resources\hlsl\Matrix.hlsli">
       <Filter>Resources\hlsl</Filter>
+    </None>
+    <None Include="Resources\hlsl\MeshCommon.hlsli">
+      <Filter>Resources\hlsl</Filter>
+    </None>
+    <None Include="Resources\hlsl\MonoBehavior\DefaultMesh.hlsli">
+      <Filter>Resources\hlsl\MonoBehavior</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -512,6 +512,12 @@
       <Filter>Resources\hlsl\MonoBehavior</Filter>
     </FxCompile>
     <FxCompile Include="Resources\hlsl\MonoBehavior\ConsoleLocal.VS.hlsl">
+      <Filter>Resources\hlsl\MonoBehavior</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\hlsl\MonoBehavior\Default.AS.hlsl">
+      <Filter>Resources\hlsl\MonoBehavior</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\hlsl\MonoBehavior\Default.MS.hlsl">
       <Filter>Resources\hlsl\MonoBehavior</Filter>
     </FxCompile>
   </ItemGroup>

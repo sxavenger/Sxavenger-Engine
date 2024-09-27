@@ -11,9 +11,9 @@ ConstantBuffer<TransformationMatrix> gTransform : register(b0);
 ////////////////////////////////////////////////////////////////////////////////////////////
 // main
 ////////////////////////////////////////////////////////////////////////////////////////////
-VSOutput main(VSInput input) {
+PSInput main(VertexInput input) {
 	
-	VSOutput output;
+	PSInput output;
 	
 	output.position = mul(input.position, mul(gTransform.world, viewProj));
 	output.texcoord = input.texcoord;

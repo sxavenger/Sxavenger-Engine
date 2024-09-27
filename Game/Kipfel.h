@@ -37,6 +37,5 @@ private:
 	//=========================================================================================
 
 	std::unique_ptr<Model> model_;
-	std::vector<std::unique_ptr<_DXOBJECT Mesh>> meshes_;
 
 };

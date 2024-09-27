@@ -29,8 +29,9 @@ public:
 	//* mesh shader option *//
 
 	void CreateMeshlet();
+	void CreateMeshlet2();
 
-	void Dispatch(UINT verticesParam, UINT uniqueVertexIndicesParam, UINT meshletsParam, UINT primitiveIndices, UINT cullDataParam, UINT infoParam);
+	void Dispatch(UINT verticesParam, UINT uniqueVertexIndicesParam, UINT meshletsParam, UINT primitiveIndices, UINT cullDataParam, UINT meshInfoParam);
 
 	//* raytracing option *//
 
@@ -64,7 +65,7 @@ private:
 
 	//* configs
 	static const uint32_t kMaxVertices_        = 64;
-	static const uint32_t kMaxPrimitives_      = 126;
+	static const uint32_t kMaxPrimitives_      = 128;
 	static const UINT kAmplificationNumthread_ = 32;
 
 	//* raytracing *//
