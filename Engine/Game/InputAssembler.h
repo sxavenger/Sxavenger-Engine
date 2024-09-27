@@ -45,10 +45,10 @@ public:
 	InputAssembler(InputAssembler&& other) noexcept            = default;
 	InputAssembler& operator=(InputAssembler&& other) noexcept = default;
 
-private:
+protected:
 
 	//=========================================================================================
-	// private variables
+	// protected variables
 	//=========================================================================================
 
 	//* buffer *//

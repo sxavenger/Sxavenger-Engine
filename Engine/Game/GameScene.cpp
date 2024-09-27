@@ -71,6 +71,9 @@ void GameScene::Init() {
 	teapot_ = std::make_unique<Teapot>();
 	teapot_->Init();
 
+	kipfel_ = std::make_unique<Kipfel>();
+	kipfel_->Init();
+
 }
 
 void GameScene::Term() {

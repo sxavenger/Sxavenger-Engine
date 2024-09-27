@@ -70,6 +70,12 @@ void Model::DrawCall(uint32_t meshIndex, uint32_t instanceCount) {
 	meshes_[meshIndex].mesh.DrawCall(instanceCount);
 }
 
+void Model::ApplyMeshShader() {
+	for (auto& mesh : meshes_) {
+		mesh.mesh.CreateMeshlet();
+	}
+}
+
 void Model::LoadModelFile(const std::string& directoryPath, const std::string& filename, bool smooth) {
 
 	std::string filepath = directoryPath + "/" + filename;

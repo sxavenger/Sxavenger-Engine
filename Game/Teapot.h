@@ -4,7 +4,7 @@
 // include
 //-----------------------------------------------------------------------------------------
 //* engine
-#include <Engine/Beta/MonoBehavior.h>
+#include <Engine/Beta/ModelBehavior.h>
 
 //* c++
 #include <memory>
@@ -13,7 +13,7 @@
 // Teapot class
 ////////////////////////////////////////////////////////////////////////////////////////////
 class Teapot
-	: public MonoBehavior {
+	: public ModelBehavior {
 public:
 
 	//=========================================================================================
@@ -22,7 +22,7 @@ public:
 
 	void Init();
 
-	void SetMonoBehaviorImGui() override;
+	void SetAttributeImGui() override;
 
 private:
 
@@ -31,5 +31,6 @@ private:
 	//=========================================================================================
 
 	std::unique_ptr<Model> model_;
+	EulerTransformBuffer transform_;
 
 };

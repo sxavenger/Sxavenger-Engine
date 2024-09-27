@@ -5,7 +5,7 @@ _DXOBJECT_USING
 // include
 //-----------------------------------------------------------------------------------------
 //* MonoBehavior
-#include "MonoBehavior.h"
+#include "BaseBehavior.h"
 
 //* engine
 #include <Engine/System/Performance.h>
@@ -69,7 +69,7 @@ void BetaConsolePipeline::Term() {
 	}
 }
 
-void BetaConsolePipeline::SetPipeline(PipelineType type) {
+void BetaConsolePipeline::SetPipeline(BetaConsolePipelineType type) {
 	auto commandList = Sxavenger::GetCommandList();
 	pipelines_[type]->SetPipeline(commandList);
 }
@@ -137,6 +137,9 @@ void BetaConsole::Update() {
 		//* Performance
 		DisplayPerformance();
 
+		//* Asset
+		DisplayAsset();
+
 	}
 }
 
@@ -147,18 +150,7 @@ void BetaConsole::Draw() {
 
 		if (selectedBehavior_.has_value()) {
 			auto behavior = (*selectedBehavior_.value());
-			pipeline_.SetPipeline(BetaConsolePipeline::kConsoleLocal);
-
-			auto commandList = Sxavenger::GetCommandList();
-
-			for (uint32_t i = 0; i < behavior->GetIA()->GetMeshSize(); ++i) {
-				behavior->GetIA()->SetBuffers(i);
-
-				commandList->SetGraphicsRootConstantBufferView(0, localCamera_->GetGPUVirtualAddress());
-				commandList->SetGraphicsRootDescriptorTable(1, behavior->GetIA()->GetTextureHandle(i));
-
-				behavior->GetIA()->DrawCall(i);
-			}
+			behavior->SystemDrawLocalMesh();
 		}
 
 		Sxavenger::EndOffscreen(localRenderTarget_.get());
@@ -166,22 +158,11 @@ void BetaConsole::Draw() {
 	
 	{
 		Sxavenger::BeginOffscreen(sceneRenderTarget_.get(), true);
+		displayCamera_ = sceneCamera_.get();
 
-		for (auto& behavior : behaviors_) {
-			
-			pipeline_.SetPipeline(BetaConsolePipeline::kDefault_Diffuse);
-
-			auto commandList = Sxavenger::GetCommandList();
-
-			for (uint32_t i = 0; i < behavior->GetIA()->GetMeshSize(); ++i) {
-				behavior->GetIA()->SetBuffers(i);
-
-				commandList->SetGraphicsRootConstantBufferView(0, sceneCamera_->GetGPUVirtualAddress());
-				commandList->SetGraphicsRootConstantBufferView(1, behavior->GetTransform().GetGPUVirtualAddress());
-				commandList->SetGraphicsRootDescriptorTable(2, behavior->GetIA()->GetTextureHandle(i));
-
-				behavior->GetIA()->DrawCall(i);
-			}
+		for (auto behavior : behaviors_) {
+			behavior->SystemDraw();
+			behavior->Draw();
 		}
 
 		Sxavenger::EndOffscreen(sceneRenderTarget_.get());
@@ -189,22 +170,11 @@ void BetaConsole::Draw() {
 
 	{
 		Sxavenger::BeginOffscreen(gameRenderTarget_.get(), true);
+		displayCamera_ = gameCamera_.get();
 
 		for (auto& behavior : behaviors_) {
-
-			pipeline_.SetPipeline(BetaConsolePipeline::kDefault_Diffuse);
-
-			auto commandList = Sxavenger::GetCommandList();
-
-			for (uint32_t i = 0; i < behavior->GetIA()->GetMeshSize(); ++i) {
-				behavior->GetIA()->SetBuffers(i);
-
-				commandList->SetGraphicsRootConstantBufferView(0, gameCamera_->GetGPUVirtualAddress());
-				commandList->SetGraphicsRootConstantBufferView(1, behavior->GetTransform().GetGPUVirtualAddress());
-				commandList->SetGraphicsRootDescriptorTable(2, behavior->GetIA()->GetTextureHandle(i));
-
-				behavior->GetIA()->DrawCall(i);
-			}
+			behavior->SystemDraw();
+			behavior->Draw();
 		}
 
 		Sxavenger::EndOffscreen(gameRenderTarget_.get());
@@ -216,11 +186,11 @@ void BetaConsole::DockingConsole() const {
 	ImGui::SetNextWindowDockID(dockingID_, ImGuiCond_FirstUseEver);
 }
 
-void BetaConsole::SetMonoBehavior(MonoBehavior* behavior) {
+void BetaConsole::SetBehavior(BaseBehavior* behavior) {
 	behaviors_.emplace_back(behavior);
 }
 
-void BetaConsole::RemoveMonoBehavior(MonoBehavior* behavior) {
+void BetaConsole::RemoveBehavior(BaseBehavior* behavior) {
 	if (selectedBehavior_.has_value()) {
 		if (behavior == (*selectedBehavior_.value())) {
 			selectedBehavior_ = std::nullopt;
@@ -238,6 +208,10 @@ void BetaConsole::Log(const std::string& log, const Color4f& color) {
 	while (logDatas_.size() >= kMaxLog_) {
 		logDatas_.pop_back(); //!< 一番古いログの削除
 	}
+}
+
+void BetaConsole::SetPipeline(BetaConsolePipelineType type) {
+	pipeline_.SetPipeline(type);
 }
 
 BetaConsole* BetaConsole::GetInstance() {
@@ -306,7 +280,7 @@ void BetaConsole::DisplayOutliner() {
 	ImGui::Begin("Outliner ## Beta", &isOpenWindow, windowFlags_);
 
 	for (auto behaviorIt = behaviors_.begin(); behaviorIt != behaviors_.end(); ++behaviorIt) {
-		SelectableMonoBehavior(behaviorIt);
+		SelectableBehavior(behaviorIt);
 	}
 
 	ImGui::End();
@@ -315,16 +289,16 @@ void BetaConsole::DisplayOutliner() {
 void BetaConsole::DisplayAttribute() {
 	DockingConsole();
 	static bool isOpenWindow = true;
-	ImGui::Begin("Attribute ## Beta", &isOpenWindow, windowFlags_);
+	ImGui::Begin("Attribute ## Beta", &isOpenWindow, windowFlags_ | ImGuiWindowFlags_AlwaysVerticalScrollbar);
 
 	if (selectedBehavior_.has_value()) {
 		auto behavior = (*selectedBehavior_.value());
 
 		ImGui::SeparatorText(behavior->GetName().c_str());
 
-		behavior->MonoBehaviorImGui();    //!< systemのimgui
+		behavior->SystemAttributeImGui();
 		ImGui::Spacing();
-		behavior->SetMonoBehaviorImGui(); //!< userのimgui
+		behavior->SetAttributeImGui();
 
 		if (ImGui::IsWindowFocused()) {
 			localCamera_->Update();
@@ -545,6 +519,22 @@ void BetaConsole::DisplayPerformance() {
 	style.Colors[ImGuiCol_WindowBg] = defaultWindowColor;
 }
 
+void BetaConsole::DisplayAsset() {
+	DockingConsole();
+	static bool isOpenWindow = true;
+	ImGui::Begin("Asset ## Beta", &isOpenWindow, windowFlags_);
+
+	static float test = 100.0f;
+	ImGui::DragFloat("test", &test, 1.0f);
+
+	DisplayTextureImGui(Sxavenger::GetTexture<BaseTexture>("resources/uvChecker.png"), { test, test });
+	ImGui::Text("Text");
+	DisplayTextureImGui(Sxavenger::GetTexture<BaseTexture>("resources/uvChecker.png"), { test, test });
+	DisplayTextureImGui(sceneRenderTarget_.get(), { test, test });
+
+	ImGui::End();
+}
+
 void BetaConsole::InitConfig() {
 	windowFlags_ = 0;
 	windowFlags_ |= ImGuiWindowFlags_NoCollapse;
@@ -557,7 +547,7 @@ void BetaConsole::InitRenderTarget() {
 	gameRenderTarget_ = std::make_unique<DepthRenderTarget>();
 	gameRenderTarget_->Create(kWindowSize);
 
-	gameCamera_ = std::make_unique<Camera3D>();
+	gameCamera_ = std::make_unique<CineCamera>();
 	gameCamera_->Init();
 
 	sceneRenderTarget_ = std::make_unique<DepthRenderTarget>();
@@ -652,7 +642,82 @@ void BetaConsole::DisplayTextureImGuiFullWindow(const DepthRenderTarget* texture
 	ImGui::Image((ImTextureID)texture->GetGPUHandleSRV().ptr, displayTextureSize);
 }
 
-bool BetaConsole::IsSelectedBehavior(MonoBehavior* behavior) {
+void BetaConsole::DisplayTextureImGui(const BaseTexture* texture, const Vector2f& displaySize) {
+
+	ImVec2 windowSize    = { displaySize.x, displaySize.y };
+	Vector2f textureSize = texture->GetSize();
+
+	// 画像アス比と分割したWindowアス比の計算
+	float textureAspectRatio = textureSize.x / textureSize.y;
+	float windowAspectRatio = windowSize.x / windowSize.y;
+
+	// 出力する画像サイズの設定
+	ImVec2 displayTextureSize = windowSize;
+
+	// 画像サイズの調整
+	if (textureAspectRatio <= windowAspectRatio) {
+		displayTextureSize.x *= textureAspectRatio / windowAspectRatio;
+
+	} else {
+		displayTextureSize.y *= windowAspectRatio / textureAspectRatio;
+	}
+
+	ImGui::Image((ImTextureID)texture->GetGPUHandleSRV().ptr, displayTextureSize);
+
+}
+
+void BetaConsole::DisplayTextureImGui(const DepthRenderTarget* texture, const Vector2f& displaySize) {
+	ImVec2 windowSize    = { displaySize.x, displaySize.y };
+	Vector2f textureSize = texture->GetSize();
+
+	// 画像アス比と分割したWindowアス比の計算
+	float textureAspectRatio = textureSize.x / textureSize.y;
+	float windowAspectRatio = windowSize.x / windowSize.y;
+
+	// 出力する画像サイズの設定
+	ImVec2 displayTextureSize = windowSize;
+
+	// 画像サイズの調整
+	if (textureAspectRatio <= windowAspectRatio) {
+		displayTextureSize.x *= textureAspectRatio / windowAspectRatio;
+
+	} else {
+		displayTextureSize.y *= windowAspectRatio / textureAspectRatio;
+	}
+
+	ImGui::Image((ImTextureID)texture->GetGPUHandleSRV().ptr, displayTextureSize);
+}
+
+void BetaConsole::DisplayLocalRenderTarget(uint32_t indentNum) {
+
+	float indent = ImGui::GetStyle().IndentSpacing;
+
+	// タブ等を排除した全体のwindowSize計算
+	ImVec2 regionMax  = ImGui::GetWindowContentRegionMax();
+	ImVec2 regionMin  = ImGui::GetWindowContentRegionMin();
+	ImVec2 windowSize = { regionMax.x - regionMin.x - indent * indentNum, regionMax.y - regionMin.y };
+
+	Vector2f textureSize = localRenderTarget_->GetSize();
+	
+	// 画像アス比と分割したWindowアス比の計算
+	float textureAspectRatio = textureSize.x / textureSize.y;
+	float windowAspectRatio  = windowSize.x / windowSize.y;
+	
+	// 出力する画像サイズの設定
+	ImVec2 displayTextureSize = windowSize;
+	
+	// 画像サイズの調整
+	if (textureAspectRatio <= windowAspectRatio) {
+		displayTextureSize.x *= textureAspectRatio / windowAspectRatio;
+	
+	} else {
+		displayTextureSize.y *= windowAspectRatio / textureAspectRatio;
+	}
+	
+	ImGui::Image((ImTextureID)localRenderTarget_->GetGPUHandleSRV().ptr, displayTextureSize);
+}
+
+bool BetaConsole::IsSelectedBehavior(BaseBehavior* behavior) {
 	if (selectedBehavior_.has_value()) {
 		return behavior == (*selectedBehavior_.value());
 	}
@@ -660,7 +725,7 @@ bool BetaConsole::IsSelectedBehavior(MonoBehavior* behavior) {
 	return false;
 }
 
-void BetaConsole::SelectableMonoBehavior(const std::list<MonoBehavior*>::iterator& behaviorIt) {
+void BetaConsole::SelectableBehavior(const std::list<BaseBehavior*>::const_iterator& behaviorIt) {
 	
 	// iteratorの中身の取得
 	auto behavior = (*behaviorIt);
@@ -671,9 +736,33 @@ void BetaConsole::SelectableMonoBehavior(const std::list<MonoBehavior*>::iterato
 	// selectableに表示される名前の設定
 	std::string label = behavior->GetName() + std::format("##{:p}", reinterpret_cast<void*>(behavior)); //!< 名前重複対策
 
-	// TODO: Node解決
-	if (ImGui::Selectable(label.c_str(), isSelected)) {
-		selectedBehavior_ = behaviorIt;
-		localCamera_->Reset();
+	if (behavior->GetChildren().empty()) { //!< 子がいない場合
+		if (ImGui::Selectable(label.c_str(), isSelected)) {
+			selectedBehavior_ = behaviorIt;
+			localCamera_->Reset();
+		}
+
+	} else { //!< 子がいる場合
+
+		ImGuiTreeNodeFlags flags
+			= ImGuiTreeNodeFlags_OpenOnDoubleClick
+			| ImGuiTreeNodeFlags_OpenOnArrow;
+
+		if (isSelected) {
+			flags |= ImGuiTreeNodeFlags_Selected;
+		}
+
+		if (ImGui::TreeNodeEx(label.c_str(), flags)) {
+			if (ImGui::IsItemClicked() && !ImGui::IsItemToggledOpen()) { //!< selectされた場合
+				selectedBehavior_ = behaviorIt;
+				localCamera_->Reset();
+			}
+
+			for (auto childIt = behavior->GetChildren().begin(); childIt != behavior->GetChildren().end(); ++childIt) {
+				SelectableBehavior(childIt);
+			}
+
+			ImGui::TreePop();
+		}
 	}
 }

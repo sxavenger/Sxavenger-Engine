@@ -14,7 +14,7 @@
 #include <assimp/postprocess.h>
 
 //* ia
-#include "InputAssembler.h"
+#include "InputMesh.h"
 
 //* transform
 #include "Transform.h"
@@ -40,7 +40,7 @@ struct JointWeightData {
 // MeshData structure
 ////////////////////////////////////////////////////////////////////////////////////////////
 struct MeshData {
-	InputAssembler<VertexData>                       mesh;
+	InputMesh                                        mesh;
 	std::optional<uint32_t>                          materialIndex;
 	std::unordered_map<std::string, JointWeightData> skinCluster;
 };
@@ -101,6 +101,8 @@ public:
 	void DrawCall(uint32_t meshIndex, uint32_t instanceCount = 1);
 
 	uint32_t GetMeshSize() const { return static_cast<uint32_t>(meshes_.size()); }
+
+	void ApplyMeshShader();
 
 	//* member getter *//
 

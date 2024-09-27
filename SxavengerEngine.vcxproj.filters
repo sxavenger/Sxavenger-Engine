@@ -181,9 +181,6 @@
     <ClCompile Include="Engine\System\DxObject\DxSwapChain.cpp">
       <Filter>Engine\System\DxObject\source</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\System\DxObject\DxMesh.cpp">
-      <Filter>Engine\System\DxObject\source</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\System\DxObject\DxBufferResource.cpp">
       <Filter>Engine\System\DxObject\source</Filter>
     </ClCompile>
@@ -259,9 +256,6 @@
     <ClCompile Include="Engine\Game\InputAssembler.cpp">
       <Filter>Engine\Game\source</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Beta\MonoBehavior.cpp">
-      <Filter>Engine\Beta</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\Beta\BetaConsole.cpp">
       <Filter>Engine\Beta</Filter>
     </ClCompile>
@@ -270,6 +264,27 @@
     </ClCompile>
     <ClCompile Include="Engine\Beta\DepthRenderTarget.cpp">
       <Filter>Engine\Beta</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Beta\CineCamera.cpp">
+      <Filter>Engine\Beta</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Beta\BaseBehavior.cpp">
+      <Filter>Engine\Beta</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Beta\ModelBehavior.cpp">
+      <Filter>Engine\Beta</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\System\DxObject\DxMesh.cpp">
+      <Filter>Engine\System\DxObject\source</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Beta\GraphicsEditor.cpp">
+      <Filter>Engine\Beta</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Kipfel.cpp">
+      <Filter>Game</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Game\InputMesh.cpp">
+      <Filter>Engine\Game\source</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -346,9 +361,6 @@
       <Filter>Engine\System\DxObject\include</Filter>
     </ClInclude>
     <ClInclude Include="Engine\System\DxObject\DxSwapChain.h">
-      <Filter>Engine\System\DxObject\include</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\System\DxObject\DxMesh.h">
       <Filter>Engine\System\DxObject\include</Filter>
     </ClInclude>
     <ClInclude Include="Engine\System\DxObject\DxBufferResource.h">
@@ -438,9 +450,6 @@
     <ClInclude Include="Engine\Game\InputAssembler.h">
       <Filter>Engine\Game\include</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Beta\MonoBehavior.h">
-      <Filter>Engine\Beta</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\Beta\BetaConsole.h">
       <Filter>Engine\Beta</Filter>
     </ClInclude>
@@ -449,6 +458,27 @@
     </ClInclude>
     <ClInclude Include="Engine\Beta\DepthRenderTarget.h">
       <Filter>Engine\Beta</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Beta\CineCamera.h">
+      <Filter>Engine\Beta</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Beta\BaseBehavior.h">
+      <Filter>Engine\Beta</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Beta\ModelBehavior.h">
+      <Filter>Engine\Beta</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\System\DxObject\DxMesh.h">
+      <Filter>Engine\System\DxObject\include</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Beta\GraphicsEditor.h">
+      <Filter>Engine\Beta</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Kipfel.h">
+      <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Game\InputMesh.h">
+      <Filter>Engine\Game\include</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

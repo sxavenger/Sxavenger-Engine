@@ -25,25 +25,27 @@
 
 //* Beta
 #include "DepthRenderTarget.h"
+#include "CineCamera.h"
 
 //-----------------------------------------------------------------------------------------
 // forward
 //-----------------------------------------------------------------------------------------
-class MonoBehavior;
+class BaseBehavior;
+
+////////////////////////////////////////////////////////////////////////////////////////////
+// BetaConsolePipelineType enum
+////////////////////////////////////////////////////////////////////////////////////////////
+enum BetaConsolePipelineType {
+	kConsoleLocal,
+	kDefault_Diffuse,
+
+	kCountOfPipelineType
+};
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // BetaConsolePipeline class
 ////////////////////////////////////////////////////////////////////////////////////////////
 class BetaConsolePipeline {
-public:
-
-	enum PipelineType {
-		kConsoleLocal,
-		kDefault_Diffuse,
-
-		kCountOfPipelineType
-	};
-
 public:
 
 	//=========================================================================================
@@ -54,7 +56,7 @@ public:
 
 	void Term();
 
-	void SetPipeline(PipelineType type);
+	void SetPipeline(BetaConsolePipelineType type);
 
 private:
 
@@ -100,9 +102,8 @@ public:
 
 	//* MonoBehavior option *//
 
-	void SetMonoBehavior(MonoBehavior* behavior);
-
-	void RemoveMonoBehavior(MonoBehavior* behavior);
+	void SetBehavior(BaseBehavior* behavior);
+	void RemoveBehavior(BaseBehavior* behavior);
 
 	//* console option *//
 
@@ -116,6 +117,14 @@ public:
 	DepthRenderTarget* GetSceneRenderTarget() const { return sceneRenderTarget_.get(); }
 	DepthRenderTarget* GetGameRenderTarget() const { return gameRenderTarget_.get(); }
 
+	Camera3D* GetLocalCamera() const { return localCamera_.get(); }
+	Camera3D* GetDisplayCamera() const { return displayCamera_; }
+
+	//* console rendering pipeline accessor *//
+
+	void SetPipeline(BetaConsolePipelineType type);
+
+	void DisplayLocalRenderTarget(uint32_t indentNum);
 
 	//* singleton *//
 
@@ -149,8 +158,8 @@ private:
 
 	//* MonoBehavior *//
 
-	std::list<MonoBehavior*>                          behaviors_;
-	std::optional<std::list<MonoBehavior*>::iterator> selectedBehavior_ = std::nullopt;
+	std::list<BaseBehavior*>                                behaviors_;
+	std::optional<std::list<BaseBehavior*>::const_iterator> selectedBehavior_ = std::nullopt;
 
 	//* config *//
 	//* Console config
@@ -164,7 +173,7 @@ private:
 	//* Rendering *//
 	//* screen
 	std::unique_ptr<DepthRenderTarget> gameRenderTarget_;
-	std::unique_ptr<Camera3D>          gameCamera_;
+	std::unique_ptr<CineCamera>        gameCamera_;
 
 	std::unique_ptr<DepthRenderTarget> sceneRenderTarget_;
 	std::unique_ptr<DebugCamera3D>     sceneCamera_;
@@ -173,7 +182,7 @@ private:
 	std::unique_ptr<DepthRenderTarget> localRenderTarget_;
 	std::unique_ptr<DebugCamera3D>     localCamera_;
 
-	// TODO: cameraの実装
+	Camera3D* displayCamera_ = nullptr; //!< scene cameraまたはgame cameraが入る
 
 	BetaConsolePipeline pipeline_;
 
@@ -216,6 +225,8 @@ private:
 
 	void DisplayPerformance();
 
+	void DisplayAsset();
+
 	//* console option methods *//
 
 	void InitConfig();
@@ -227,9 +238,11 @@ private:
 
 	void DisplayTextureImGuiFullWindow(const BaseTexture*       texture);
 	void DisplayTextureImGuiFullWindow(const DepthRenderTarget* texture);
+	void DisplayTextureImGui(const BaseTexture* texture,       const Vector2f& displaySize);
+	void DisplayTextureImGui(const DepthRenderTarget* texture, const Vector2f& displaySize);
 
-	bool IsSelectedBehavior(MonoBehavior* behavior);
-	void SelectableMonoBehavior(const std::list<MonoBehavior*>::iterator& behaviorIt);
+	bool IsSelectedBehavior(BaseBehavior* behavior);
+	void SelectableBehavior(const std::list<BaseBehavior*>::const_iterator& behaviorIt);
 
 };
 

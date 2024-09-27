@@ -13,6 +13,7 @@
 
 //* Game
 #include <Game/Teapot.h>
+#include <Game/Kipfel.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // GameScene class
@@ -35,6 +36,7 @@ private:
 	//* TEST *//
 
 	std::unique_ptr<Teapot> teapot_;
+	std::unique_ptr<Kipfel> kipfel_;
 
 	//=========================================================================================
 	// private methods

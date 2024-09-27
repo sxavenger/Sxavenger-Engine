@@ -1,0 +1,76 @@
+#pragma once
+
+//-----------------------------------------------------------------------------------------
+// include
+//-----------------------------------------------------------------------------------------
+//* base
+#include "InputAssembler.h"
+
+//* DirectX
+#include <DirectXMesh.h>
+
+//* object
+#include <Lib/ObjectStructure.h>
+
+////////////////////////////////////////////////////////////////////////////////////////////
+// InputMesh class
+////////////////////////////////////////////////////////////////////////////////////////////
+class InputMesh
+	: public InputAssembler<VertexData> { //!< 新しくInputAssemblerをこれにするかどうか
+public:
+
+	//=========================================================================================
+	// public methods
+	//=========================================================================================
+
+	InputMesh()  = default;
+	~InputMesh() = default;
+
+	//* mesh shader option *//
+
+	void CreateMeshlet();
+
+	void Dispatch(UINT verticesParam, UINT uniqueVertexIndicesParam, UINT meshletsParam, UINT primitiveIndices, UINT cullDataParam, UINT infoParam);
+
+	//* raytracing option *//
+
+	void CreateBLAS();
+
+	//* operator *//
+
+	InputMesh(InputMesh&& other) noexcept = default;
+	InputMesh& operator=(InputMesh&& other) noexcept = default;
+
+private:
+
+	////////////////////////////////////////////////////////////////////////////////////////////
+	// MeshInfo structure
+	////////////////////////////////////////////////////////////////////////////////////////////
+	struct MeshInfo {
+		uint32_t meshletCount;
+	};
+
+	//=========================================================================================
+	// private variables
+	//=========================================================================================
+
+	//* mesh shader *//
+	//* buffers
+	std::unique_ptr<DxObject::BufferResource<uint32_t>>                 uniqueVertexIndices_;
+	std::unique_ptr<DxObject::BufferResource<DirectX::MeshletTriangle>> primitiveIndices_;
+	std::unique_ptr<DxObject::BufferResource<DirectX::Meshlet>>         meshlets_;
+	std::unique_ptr<DxObject::BufferResource<DirectX::CullData>>        cullDatas_;
+	std::unique_ptr<DxObject::BufferResource<MeshInfo>>                 meshInfo_;
+
+	//* configs
+	static const uint32_t kMaxVertices_        = 64;
+	static const uint32_t kMaxPrimitives_      = 126;
+	static const UINT kAmplificationNumthread_ = 32;
+
+	//* raytracing *//
+
+	
+	//* info *//
+
+	bool isCreateMeshlet_ = false;
+};

@@ -54,7 +54,7 @@ void Performance::EndFrame() {
 
 DeltaTimePoint Performance::GetDeltaTime(SecondsUnit unit) {
 
-	DeltaTimePoint result;
+	DeltaTimePoint result = {};
 
 	if (unit == kCountOfSecondsUnit) {
 		result.time = 0.0f;
