@@ -115,7 +115,7 @@ void InputMesh::CreateMeshlet() {
 	isCreateMeshlet_ = true;
 }
 
-//void InputMesh::CreateMeshlet2() {
+//void InputMesh::CreateMeshlet() {
 //
 //	//!< 最適化は除外
 //	//!< bufferが増えるので
@@ -250,7 +250,7 @@ void InputMesh::CreateMeshlet() {
 //	isCreateMeshlet_ = true;
 //}
 
-void InputMesh::Dispatch(UINT verticesParam, UINT uniqueVertexIndicesParam, UINT meshletsParam, UINT primitiveIndices, UINT cullDataParam, UINT meshInfoParam) {
+void InputMesh::Dispatch(UINT verticesParam, UINT uniqueVertexIndicesParam, UINT meshletsParam, UINT primitiveIndices, UINT cullDataParam, UINT meshInfoParam) const {
 
 	Assert(isCreateMeshlet_, "Not create meshlets.");
 

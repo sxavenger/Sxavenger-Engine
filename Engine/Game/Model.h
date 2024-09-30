@@ -108,7 +108,7 @@ public:
 
 	const std::vector<MeshData>& GetMeshes() const { return meshes_; }
 
-	const InputAssembler<VertexData>& GetMesh(uint32_t meshIndex) const { return meshes_.at(meshIndex).mesh; }
+	const InputMesh& GetMesh(uint32_t meshIndex) const { return meshes_.at(meshIndex).mesh; }
 
 	const std::unordered_map<std::string, JointWeightData>& GetSkinCluster(uint32_t meshIndex) const { return meshes_.at(meshIndex).skinCluster; }
 

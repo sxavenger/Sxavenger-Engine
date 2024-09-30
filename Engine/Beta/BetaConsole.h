@@ -69,7 +69,7 @@ private:
 	std::unique_ptr<DxObject::GraphicsPipeline> pipelines_[kCountOfPipelineType];
 
 	//=========================================================================================
-	// private variables
+	// private methods
 	//=========================================================================================
 
 };

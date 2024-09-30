@@ -29,9 +29,10 @@ public:
 	//* mesh shader option *//
 
 	void CreateMeshlet();
-	void CreateMeshlet2();
 
-	void Dispatch(UINT verticesParam, UINT uniqueVertexIndicesParam, UINT meshletsParam, UINT primitiveIndices, UINT cullDataParam, UINT meshInfoParam);
+	void Dispatch(UINT verticesParam, UINT uniqueVertexIndicesParam, UINT meshletsParam, UINT primitiveIndices, UINT cullDataParam, UINT meshInfoParam) const;
+
+	bool IsCreateMeshlet() const { return isCreateMeshlet_; }
 
 	//* raytracing option *//
 

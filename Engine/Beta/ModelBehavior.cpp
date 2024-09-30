@@ -36,18 +36,33 @@ void ModelBehavior::SystemDraw() {
 		return;
 	}
 
-	sBetaConsole->SetPipeline(BetaConsolePipelineType::kDefault_Diffuse);
-
 	auto commandList = Sxavenger::GetCommandList();
 
 	for (uint32_t i = 0; i < model_->GetMeshSize(); ++i) {
-		model_->GetMesh(i).SetBuffer();
+		if (model_->GetMesh(i).IsCreateMeshlet()) {
 
-		commandList->SetGraphicsRootConstantBufferView(0, sBetaConsole->GetDisplayCamera()->GetGPUVirtualAddress());
-		commandList->SetGraphicsRootConstantBufferView(1, transform_.GetGPUVirtualAddress());
-		commandList->SetGraphicsRootDescriptorTable(2, model_->GetTextureHandle(i));
+			//* mesh shader draw *//
+			sBetaConsole->SetPipeline(BetaConsolePipelineType::kDefaultMesh_Diffuse);
 
-		model_->GetMesh(i).DrawCall();
+			commandList->SetGraphicsRootConstantBufferView(5, sBetaConsole->GetDisplayCamera()->GetGPUVirtualAddress());
+			commandList->SetGraphicsRootConstantBufferView(7, transform_.GetGPUVirtualAddress());
+			commandList->SetGraphicsRootDescriptorTable(8, model_->GetTextureHandle(i));
+
+			model_->GetMesh(i).Dispatch(0, 1, 2, 3, 4, 6);
+
+		} else {
+
+			//* vertex shader draw *//
+			sBetaConsole->SetPipeline(BetaConsolePipelineType::kDefault_Diffuse);
+
+			model_->GetMesh(i).SetBuffer();
+
+			commandList->SetGraphicsRootConstantBufferView(0, sBetaConsole->GetDisplayCamera()->GetGPUVirtualAddress());
+			commandList->SetGraphicsRootConstantBufferView(1, transform_.GetGPUVirtualAddress());
+			commandList->SetGraphicsRootDescriptorTable(2, model_->GetTextureHandle(i));
+
+			model_->GetMesh(i).DrawCall();
+		}
 	}
 }
 

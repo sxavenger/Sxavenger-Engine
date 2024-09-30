@@ -5,10 +5,6 @@
 //-----------------------------------------------------------------------------------------
 //* base
 #include <Engine/Beta/ModelBehavior.h>
-#include <Engine/Game/Animation.h>
-
-//* DxObject
-#include <Engine/System/DxObject/DxMesh.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Kipfel class

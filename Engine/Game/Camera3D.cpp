@@ -75,3 +75,9 @@ void Camera3D::CalculateView() {
 	(*buffer_)[0].viewMatrix = transform_.ToMatrix().Inverse();
 
 }
+
+
+void Camera3D::SetAttributeImGui() {
+	transform_.SetImGuiCommand();
+	CalculateView();
+}

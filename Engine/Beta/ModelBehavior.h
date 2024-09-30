@@ -41,6 +41,15 @@ public:
 	//* LocalMesh
 	virtual void SystemDrawLocalMesh() override;
 
+	//* setter *//
+
+	void SetModel(Model* model) { model_ = model; }
+
+	void SetTransform(const Vector3f& position) {
+		transform_.transform.translate = position;
+		transform_.UpdateMatrix();
+	}
+
 protected:
 
 	//=========================================================================================

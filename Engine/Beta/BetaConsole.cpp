@@ -578,12 +578,14 @@ void BetaConsole::InitRenderTarget() {
 
 	gameCamera_ = std::make_unique<CineCamera>();
 	gameCamera_->Init();
+	gameCamera_->SetToConsole("gameCamera");
 
 	sceneRenderTarget_ = std::make_unique<DepthRenderTarget>();
 	sceneRenderTarget_->Create(kWindowSize);
 
 	sceneCamera_ = std::make_unique<DebugCamera3D>();
 	sceneCamera_->Init();
+	sceneCamera_->SetToConsole("sceneCamera");
 
 	localRenderTarget_ = std::make_unique<DepthRenderTarget>();
 	localRenderTarget_->Create(kWindowSize, ToColor4f(0x303030FF)); //!< 固定サイズにしてもいいかも

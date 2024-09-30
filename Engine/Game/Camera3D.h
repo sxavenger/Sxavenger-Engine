@@ -14,13 +14,17 @@
 // DxObject
 #include <Engine/System/DxObject/DxBufferResource.h>
 
+// Behavior
+#include <Engine/Beta/BaseBehavior.h>
+
 // engine
 #include "Transform.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Camera3D class
 ////////////////////////////////////////////////////////////////////////////////////////////
-class Camera3D {
+class Camera3D
+	: public BaseBehavior {
 public:
 
 	//=========================================================================================
@@ -54,6 +58,10 @@ public:
 	//* debug drawer *//
 
 	void DrawFrustum(const Color4f& color) const;
+
+	//* behavior *//
+
+	virtual void SetAttributeImGui() override;
 
 protected:
 

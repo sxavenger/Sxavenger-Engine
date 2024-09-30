@@ -32,7 +32,7 @@ public:
 
 	void SetProjection(const Vector2f& sensorSize, float focalLength, float nearClip, float farClip);
 
-	void SetImGuiCommand();
+	void SetAttributeImGui() override;
 
 private:
 
