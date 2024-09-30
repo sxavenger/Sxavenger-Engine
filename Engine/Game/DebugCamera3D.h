@@ -20,10 +20,6 @@ public:
 	// public methods
 	//=========================================================================================
 
-	/*DebugCamera3D() = default;
-
-	~DebugCamera3D() { Term(); }*/
-
 	void Update();
 
 	void Reset();

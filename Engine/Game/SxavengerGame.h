@@ -5,6 +5,7 @@
 //-----------------------------------------------------------------------------------------
 //* origin
 #include "Model.h"
+#include "DebugPrimitive.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // SxavengerGame class
@@ -31,6 +32,20 @@ public:
 	static void DeleteModel(const std::string& directoryPath, const std::string& filename);
 
 	static ModelManager* GetModelManager();
+
+	//-----------------------------------------------------------------------------------------
+	// debug primitive option
+	//-----------------------------------------------------------------------------------------
+
+	static void DrawToScene(const Camera3D* camera);
+
+	static void CountPrimitiveBufferOffset();
+
+	static void ResetPrimitive();
+
+	static void DrawLine(const Vector3f& v1, const Vector3f& v2, const Color4f& color);
+
+	static DebugPrimitive* GetDebugPrimitive();
 
 private:
 };

@@ -9,6 +9,7 @@ _DXOBJECT_USING
 
 //* engine
 #include <Engine/System/Performance.h>
+#include <Engine/Game/SxavengerGame.h>
 
 //* Lib
 #include <Lib/Environment.h>
@@ -182,6 +183,7 @@ void BetaConsole::Draw() {
 				behavior->SystemDrawLocalMesh();
 			}
 
+			SxavengerGame::DrawToScene(localCamera_.get());
 			Sxavenger::EndOffscreen(localRenderTarget_.get());
 		}
 
@@ -194,9 +196,14 @@ void BetaConsole::Draw() {
 				behavior->Draw();
 			}
 
+			gameCamera_->DrawFrustum(ToColor4f(0xFAFA00FF), 4.0f);
+
+			SxavengerGame::DrawToScene(sceneCamera_.get());
 			Sxavenger::EndOffscreen(sceneRenderTarget_.get());
 		}
 	}
+
+	SxavengerGame::CountPrimitiveBufferOffset();
 
 	{
 		Sxavenger::BeginOffscreen(gameRenderTarget_.get(), true);
@@ -207,6 +214,7 @@ void BetaConsole::Draw() {
 			behavior->Draw();
 		}
 
+		SxavengerGame::DrawToScene(gameCamera_.get());
 		Sxavenger::EndOffscreen(gameRenderTarget_.get());
 	}
 

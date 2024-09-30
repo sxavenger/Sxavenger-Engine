@@ -5,7 +5,7 @@
 //-----------------------------------------------------------------------------------------
 // sxavenger engine
 #include <Engine/System/Sxavenger.h>
-//#include <SxavengerGraphics.h>
+#include <Engine/Game/SxavengerGame.h>
 #include <Lib/Environment.h>
 
 #include "Lib/Adapter/Random/Random.h"
@@ -53,6 +53,8 @@ void GameScene::Run() {
 
 		Sxavenger::EndImGuiAndDrawCall();
 		Sxavenger::EndFrame();
+
+		SxavengerGame::ResetPrimitive();
 	}
 
 	//=========================================================================================

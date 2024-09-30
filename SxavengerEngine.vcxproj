@@ -120,6 +120,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\Game\Animation.cpp" />
     <ClCompile Include="Engine\Game\Camera3D.cpp" />
     <ClCompile Include="Engine\Game\DebugCamera3D.cpp" />
+    <ClCompile Include="Engine\Game\DebugPrimitive.cpp" />
     <ClCompile Include="Engine\Game\GameScene.cpp" />
     <ClCompile Include="Engine\Game\InputAssembler.cpp" />
     <ClCompile Include="Engine\Game\InputMesh.cpp" />
@@ -197,6 +198,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\Game\Animation.h" />
     <ClInclude Include="Engine\Game\Camera3D.h" />
     <ClInclude Include="Engine\Game\DebugCamera3D.h" />
+    <ClInclude Include="Engine\Game\DebugPrimitive.h" />
     <ClInclude Include="Engine\Game\GameScene.h" />
     <ClInclude Include="Engine\Game\InputAssembler.h" />
     <ClInclude Include="Engine\Game\InputMesh.h" />
@@ -262,6 +264,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <None Include="Resources\hlsl\MeshCommon.hlsli" />
     <None Include="Resources\hlsl\MonoBehavior\DefaultMesh.hlsli" />
     <None Include="Resources\hlsl\MonoBehavior\MonoBehavior.hlsli" />
+    <None Include="Resources\hlsl\Primitive\DebugPrimitive.hlsli" />
     <None Include="Resources\hlsl\Transform.hlsli" />
   </ItemGroup>
   <ItemGroup>
@@ -297,6 +300,14 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </FxCompile>
     <FxCompile Include="Resources\hlsl\MonoBehavior\Diffuse.PS.hlsl">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="Resources\hlsl\Primitive\DebugPrimitive.PS.hlsl">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="Resources\hlsl\Primitive\DebugPrimitive.VS.hlsl">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </FxCompile>
