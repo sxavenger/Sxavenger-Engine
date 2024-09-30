@@ -301,7 +301,6 @@ T* TextureManager::ToDerivedTexture(BaseTexture* base) {
 
 	// 継承先のclassの取得
 	T* result = dynamic_cast<T*>(base);
-
 	Assert(result != nullptr); //!< 型の不一致
 
 	return result;

@@ -8,6 +8,8 @@
 //#include <SxavengerGraphics.h>
 #include <Lib/Environment.h>
 
+#include "Lib/Adapter/Random/Random.h"
+
 ////////////////////////////////////////////////////////////////////////////////////////////
 // GameScene class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -73,7 +75,6 @@ void GameScene::Init() {
 
 	kipfel_ = std::make_unique<Kipfel>();
 	kipfel_->Init();
-
 }
 
 void GameScene::Term() {

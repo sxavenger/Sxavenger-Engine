@@ -124,6 +124,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\Game\InputAssembler.cpp" />
     <ClCompile Include="Engine\Game\InputMesh.cpp" />
     <ClCompile Include="Engine\Game\Model.cpp" />
+    <ClCompile Include="Engine\Game\SxavengerGame.cpp" />
     <ClCompile Include="Engine\Game\Transform.cpp" />
     <ClCompile Include="Engine\System\Attribute.cpp" />
     <ClCompile Include="Engine\System\Audio.cpp" />
@@ -176,6 +177,8 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="externals\meshoptimizer\vfetchoptimizer.cpp" />
     <ClCompile Include="Game\Kipfel.cpp" />
     <ClCompile Include="Game\Teapot.cpp" />
+    <ClCompile Include="Lib\Adapter\Json\Json.cpp" />
+    <ClCompile Include="Lib\Adapter\Random\Random.cpp" />
     <ClCompile Include="Lib\Geometry\MathLib.cpp" />
     <ClCompile Include="Lib\Geometry\Matrix4x4.cpp" />
     <ClCompile Include="Lib\Geometry\Quaternion.cpp" />
@@ -198,6 +201,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\Game\InputAssembler.h" />
     <ClInclude Include="Engine\Game\InputMesh.h" />
     <ClInclude Include="Engine\Game\Model.h" />
+    <ClInclude Include="Engine\Game\SxavengerGame.h" />
     <ClInclude Include="Engine\Game\Transform.h" />
     <ClInclude Include="Engine\System\Attribute.h" />
     <ClInclude Include="Engine\System\Audio.h" />
@@ -238,6 +242,8 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="externals\meshoptimizer\meshoptimizer.h" />
     <ClInclude Include="Game\Kipfel.h" />
     <ClInclude Include="Game\Teapot.h" />
+    <ClInclude Include="Lib\Adapter\Json\Json.h" />
+    <ClInclude Include="Lib\Adapter\Random\Random.h" />
     <ClInclude Include="Lib\CXXAttributeConfig.h" />
     <ClInclude Include="Lib\Environment.h" />
     <ClInclude Include="Lib\Geometry\MathLib.h" />

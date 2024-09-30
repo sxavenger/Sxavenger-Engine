@@ -83,7 +83,7 @@ public:
 	// public methods
 	//=========================================================================================
 
-	Model() = delete;
+	Model() = default;
 	Model(const std::string& directoryPath, const std::string& filename, bool smooth = false) { Load(directoryPath, filename, smooth); }
 
 	~Model() { Term(); }
@@ -144,4 +144,46 @@ private:
 	void LoadMaterial(const std::string& directoryPath);
 
 	static Node ReadNode(aiNode* node);
+
 };
+
+////////////////////////////////////////////////////////////////////////////////////////////
+// ModelManager class
+////////////////////////////////////////////////////////////////////////////////////////////
+class ModelManager {
+public:
+
+	//=========================================================================================
+	// public methods
+	//=========================================================================================
+
+	ModelManager()  = default;
+	~ModelManager() = default;
+
+	void Init();
+
+	void Term();
+
+	Model* Load(const std::string& directoryPath, const std::string& filename, bool smooth = false);
+
+	void Delete(const std::string& directoryPath, const std::string& filename);
+
+private:
+
+	//=========================================================================================
+	// private variables
+	//=========================================================================================
+
+	//! [unordered_map<unordered_map>]
+	//! key:   filepath
+	//! value: モデル情報
+	std::unordered_map<std::string, std::unique_ptr<Model>> models_;
+
+	//=========================================================================================
+	// private methods
+	//=========================================================================================
+
+	static std::string ToLower(const std::string& str);
+
+};
+

@@ -56,7 +56,7 @@ protected:
 	// protected variables
 	//=========================================================================================
 
-	//* external *//
+	//* member *//
 
 	Model*                    model_;
 	QuaternionTransformBuffer transform_;

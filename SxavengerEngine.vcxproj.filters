@@ -67,6 +67,15 @@
     <Filter Include="externals\meshoptimizer">
       <UniqueIdentifier>{ae980c19-97cc-4f02-bdd8-c40295778d34}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Lib\Adapter">
+      <UniqueIdentifier>{8f18edf0-c06d-4409-811f-6f8cdf511960}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Lib\Adapter\Json">
+      <UniqueIdentifier>{0c75171d-9c6c-49df-a588-d682a79e472b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Lib\Adapter\Random">
+      <UniqueIdentifier>{ed65917c-b5b7-4ffb-a532-e56ca2e5c423}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="externals\imgui\imgui.cpp">
@@ -283,6 +292,15 @@
     <ClCompile Include="externals\meshoptimizer\vertexfilter.cpp">
       <Filter>externals\meshoptimizer</Filter>
     </ClCompile>
+    <ClCompile Include="Lib\Adapter\Json\Json.cpp">
+      <Filter>Lib\Adapter\Json</Filter>
+    </ClCompile>
+    <ClCompile Include="Lib\Adapter\Random\Random.cpp">
+      <Filter>Lib\Adapter\Random</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Game\SxavengerGame.cpp">
+      <Filter>Engine\Game\source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="externals\imgui\imconfig.h">
@@ -473,6 +491,15 @@
     </ClInclude>
     <ClInclude Include="externals\meshoptimizer\meshoptimizer.h">
       <Filter>externals\meshoptimizer</Filter>
+    </ClInclude>
+    <ClInclude Include="Lib\Adapter\Json\Json.h">
+      <Filter>Lib\Adapter\Json</Filter>
+    </ClInclude>
+    <ClInclude Include="Lib\Adapter\Random\Random.h">
+      <Filter>Lib\Adapter\Random</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Game\SxavengerGame.h">
+      <Filter>Engine\Game\include</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

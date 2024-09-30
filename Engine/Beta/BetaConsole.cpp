@@ -173,28 +173,29 @@ void BetaConsole::Update() {
 }
 
 void BetaConsole::Draw() {
+	if (isDisplayConsole_) { //!< Consoleが表示されてる場合のみ
+		{
+			Sxavenger::BeginOffscreen(localRenderTarget_.get(), true);
 
-	{
-		Sxavenger::BeginOffscreen(localRenderTarget_.get(), true);
+			if (selectedBehavior_.has_value()) {
+				auto behavior = (*selectedBehavior_.value());
+				behavior->SystemDrawLocalMesh();
+			}
 
-		if (selectedBehavior_.has_value()) {
-			auto behavior = (*selectedBehavior_.value());
-			behavior->SystemDrawLocalMesh();
+			Sxavenger::EndOffscreen(localRenderTarget_.get());
 		}
 
-		Sxavenger::EndOffscreen(localRenderTarget_.get());
-	}
-	
-	{
-		Sxavenger::BeginOffscreen(sceneRenderTarget_.get(), true);
-		displayCamera_ = sceneCamera_.get();
+		{
+			Sxavenger::BeginOffscreen(sceneRenderTarget_.get(), true);
+			displayCamera_ = sceneCamera_.get();
 
-		for (auto behavior : behaviors_) {
-			behavior->SystemDraw();
-			behavior->Draw();
+			for (auto behavior : behaviors_) {
+				behavior->SystemDraw();
+				behavior->Draw();
+			}
+
+			Sxavenger::EndOffscreen(sceneRenderTarget_.get());
 		}
-
-		Sxavenger::EndOffscreen(sceneRenderTarget_.get());
 	}
 
 	{
