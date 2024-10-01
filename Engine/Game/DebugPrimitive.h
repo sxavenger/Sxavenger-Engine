@@ -54,7 +54,7 @@ protected:
 
 	//* member *//
 
-	uint32_t inputCount_  = 0;  //!< 描画数
+	uint32_t inputCount_  = 0; //!< 描画数
 	uint32_t inputOffset_ = 0; //!< 前sceneに描画した分
 
 	//=========================================================================================
@@ -121,9 +121,13 @@ public:
 
 	void ResetPrimitive();
 
-	void CountBufferOffset();
-
 	void DrawLine(const Vector3f& v1, const Vector3f& v2, const Color4f& color);
+
+	//* drawer options *//
+
+	void DrawGrid();
+
+	void DrawAxis(const Vector3f& center, float length);
 
 private:
 

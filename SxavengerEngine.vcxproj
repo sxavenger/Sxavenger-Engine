@@ -99,8 +99,8 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <TreatLinkerWarningAsErrors>true</TreatLinkerWarningAsErrors>
-      <AdditionalLibraryDirectories>externals\assimp\build\lib\$(Configuration)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>assimp-vc143-mt.dll;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(ProjectDir)externals\assimp\lib\Release</AdditionalLibraryDirectories>
+      <AdditionalDependencies>assimp-vc143-mt.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <FxCompile>
       <ShaderModel>6.4</ShaderModel>
@@ -119,6 +119,9 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\Beta\ModelBehavior.cpp" />
     <ClCompile Include="Engine\Game\Animation.cpp" />
     <ClCompile Include="Engine\Game\Camera3D.cpp" />
+    <ClCompile Include="Engine\Game\Collider.cpp" />
+    <ClCompile Include="Engine\Game\ColliderManager.cpp" />
+    <ClCompile Include="Engine\Game\CollisionDetection.cpp" />
     <ClCompile Include="Engine\Game\DebugCamera3D.cpp" />
     <ClCompile Include="Engine\Game\DebugPrimitive.cpp" />
     <ClCompile Include="Engine\Game\GameScene.cpp" />
@@ -127,9 +130,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\Game\Model.cpp" />
     <ClCompile Include="Engine\Game\SxavengerGame.cpp" />
     <ClCompile Include="Engine\Game\Transform.cpp" />
-    <ClCompile Include="Engine\System\Attribute.cpp" />
     <ClCompile Include="Engine\System\Audio.cpp" />
-    <ClCompile Include="Engine\System\Console.cpp" />
     <ClCompile Include="Engine\System\DirectXCommon.cpp" />
     <ClCompile Include="Engine\System\DxObject\DxBlendState.cpp" />
     <ClCompile Include="Engine\System\DxObject\DxBufferResource.cpp" />
@@ -197,6 +198,9 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\Beta\ModelBehavior.h" />
     <ClInclude Include="Engine\Game\Animation.h" />
     <ClInclude Include="Engine\Game\Camera3D.h" />
+    <ClInclude Include="Engine\Game\Collider.h" />
+    <ClInclude Include="Engine\Game\ColliderManager.h" />
+    <ClInclude Include="Engine\Game\CollisionDetection.h" />
     <ClInclude Include="Engine\Game\DebugCamera3D.h" />
     <ClInclude Include="Engine\Game\DebugPrimitive.h" />
     <ClInclude Include="Engine\Game\GameScene.h" />
@@ -205,10 +209,8 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\Game\Model.h" />
     <ClInclude Include="Engine\Game\SxavengerGame.h" />
     <ClInclude Include="Engine\Game\Transform.h" />
-    <ClInclude Include="Engine\System\Attribute.h" />
     <ClInclude Include="Engine\System\Audio.h" />
     <ClInclude Include="Engine\System\ComPtr.h" />
-    <ClInclude Include="Engine\System\Console.h" />
     <ClInclude Include="Engine\System\DirectXCommon.h" />
     <ClInclude Include="Engine\System\DxObject\DxBlendState.h" />
     <ClInclude Include="Engine\System\DxObject\DxBufferResource.h" />

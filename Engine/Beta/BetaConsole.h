@@ -164,7 +164,7 @@ private:
 
 	//* config *//
 	//* Console config
-	bool isDisplayConsole_ = _DEBUG;
+	bool isDisplayConsole_ = true;
 	bool isOutputImGuiIni_ = false;
 
 	//* ImGui config

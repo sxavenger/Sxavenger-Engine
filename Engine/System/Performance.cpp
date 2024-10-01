@@ -5,7 +5,6 @@ _DXOBJECT_USING
 // include
 //-----------------------------------------------------------------------------------------
 #include "Sxavenger.h"
-#include "Console.h"
 #include <thread>
 
 #include <Engine/Beta/BetaConsole.h>

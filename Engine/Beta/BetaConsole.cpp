@@ -130,6 +130,10 @@ void BetaConsole::Init() {
 	ImGuiIO& io    = ImGui::GetIO();
 	io.IniFilename = NULL;
 	ImGui::LoadIniSettingsFromDisk(kImGuiIniFilepath_.c_str());
+
+#ifndef _DEBUG
+	isDisplayConsole_ = false; //!< releaseの時はconsoleは出さない
+#endif
 }
 
 void BetaConsole::Term() {
@@ -177,11 +181,14 @@ void BetaConsole::Draw() {
 	if (isDisplayConsole_) { //!< Consoleが表示されてる場合のみ
 		{
 			Sxavenger::BeginOffscreen(localRenderTarget_.get(), true);
+			
 
 			if (selectedBehavior_.has_value()) {
 				auto behavior = (*selectedBehavior_.value());
 				behavior->SystemDrawLocalMesh();
 			}
+
+			SxavengerGame::DrawAxis(kOrigin3, 4.0f);
 
 			SxavengerGame::DrawToScene(localCamera_.get());
 			Sxavenger::EndOffscreen(localRenderTarget_.get());
@@ -196,14 +203,12 @@ void BetaConsole::Draw() {
 				behavior->Draw();
 			}
 
-			gameCamera_->DrawFrustum(ToColor4f(0xFAFA00FF), 4.0f);
+			gameCamera_->DrawFrustum(ToColor4f(0xFAFAFAFF), 4.0f);
 
 			SxavengerGame::DrawToScene(sceneCamera_.get());
 			Sxavenger::EndOffscreen(sceneRenderTarget_.get());
 		}
 	}
-
-	SxavengerGame::CountPrimitiveBufferOffset();
 
 	{
 		Sxavenger::BeginOffscreen(gameRenderTarget_.get(), true);

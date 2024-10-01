@@ -4,11 +4,8 @@
 // include
 //-----------------------------------------------------------------------------------------
 // engine
-#include <Sxavenger.h>
-#include <SxavengerGraphics.h>
-
-// math
-#include <MathLib.h>
+#include <Engine/System/Sxavenger.h>
+#include <Engine/Game/SxavengerGame.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // ColliderManager class methods
@@ -32,11 +29,6 @@ void ColliderManager::DrawColliders() {
 	for (const auto& collider : colliders_) {
 		DrawCollider(collider);
 	}
-}
-
-ColliderManager* ColliderManager::GetInstance() {
-	static ColliderManager instance;
-	return &instance;
 }
 
 void ColliderManager::CheckAllCollision() {
@@ -125,7 +117,7 @@ void ColliderManager::DrawSphereCollider(const Vector3f& position, const Collisi
 		start *= sphere.radius;
 		end   *= sphere.radius;
 
-		SxavengerGraphics::DrawLine(start + position, end + position, color_);
+		SxavengerGame::DrawLine(start + position, end + position, color_);
 	}
 
 	// xy軸の円
@@ -149,7 +141,7 @@ void ColliderManager::DrawSphereCollider(const Vector3f& position, const Collisi
 		start *= sphere.radius;
 		end *= sphere.radius;
 
-		SxavengerGraphics::DrawLine(start + position, end + position, color_);
+		SxavengerGame::DrawLine(start + position, end + position, color_);
 	}
 
 	// yz軸の円
@@ -173,7 +165,7 @@ void ColliderManager::DrawSphereCollider(const Vector3f& position, const Collisi
 		start *= sphere.radius;
 		end *= sphere.radius;
 
-		SxavengerGraphics::DrawLine(start + position, end + position, color_);
+		SxavengerGame::DrawLine(start + position, end + position, color_);
 	}
 }
 
@@ -203,8 +195,8 @@ void ColliderManager::DrawAABBCollider(const Vector3f& position, const Collision
 
 	for (int i = 0; i < 4; ++i) {
 		int next = (i + 1) % 4;
-		SxavengerGraphics::DrawLine(pos[i] + position, pos[next] + position, color_);
-		SxavengerGraphics::DrawLine(pos[i + 4] + position, pos[next + 4] + position, color_);
-		SxavengerGraphics::DrawLine(pos[i] + position, pos[i + 4] + position, color_);
+		SxavengerGame::DrawLine(pos[i] + position, pos[next] + position, color_);
+		SxavengerGame::DrawLine(pos[i + 4] + position, pos[next + 4] + position, color_);
+		SxavengerGame::DrawLine(pos[i] + position, pos[i + 4] + position, color_);
 	}
 }

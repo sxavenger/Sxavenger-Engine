@@ -193,9 +193,6 @@
     <ClCompile Include="Engine\System\Performance.cpp">
       <Filter>Engine\System\source</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\System\Console.cpp">
-      <Filter>Engine\System\source</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\Game\GameScene.cpp">
       <Filter>Engine\Game\source</Filter>
     </ClCompile>
@@ -204,9 +201,6 @@
     </ClCompile>
     <ClCompile Include="Engine\Game\DebugCamera3D.cpp">
       <Filter>Engine\Game\source</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\System\Attribute.cpp">
-      <Filter>Engine\System\source</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Game\Transform.cpp">
       <Filter>Engine\Game\source</Filter>
@@ -305,6 +299,15 @@
       <Filter>Engine\Game\source</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Game\DebugPrimitive.cpp">
+      <Filter>Engine\Game\source</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Game\CollisionDetection.cpp">
+      <Filter>Engine\Game\source</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Game\ColliderManager.cpp">
+      <Filter>Engine\Game\source</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Game\Collider.cpp">
       <Filter>Engine\Game\source</Filter>
     </ClCompile>
   </ItemGroup>
@@ -435,9 +438,6 @@
     <ClInclude Include="Engine\System\Performance.h">
       <Filter>Engine\System\include</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\System\Console.h">
-      <Filter>Engine\System\include</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\Game\GameScene.h">
       <Filter>Engine\Game\include</Filter>
     </ClInclude>
@@ -446,9 +446,6 @@
     </ClInclude>
     <ClInclude Include="Engine\Game\Camera3D.h">
       <Filter>Engine\Game\include</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\System\Attribute.h">
-      <Filter>Engine\System\include</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Game\Transform.h">
       <Filter>Engine\Game\include</Filter>
@@ -508,6 +505,15 @@
       <Filter>Engine\Game\include</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Game\DebugPrimitive.h">
+      <Filter>Engine\Game\include</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Game\CollisionDetection.h">
+      <Filter>Engine\Game\include</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Game\Collider.h">
+      <Filter>Engine\Game\include</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Game\ColliderManager.h">
       <Filter>Engine\Game\include</Filter>
     </ClInclude>
   </ItemGroup>

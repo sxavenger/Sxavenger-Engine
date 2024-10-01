@@ -4,10 +4,10 @@
 // include
 //-----------------------------------------------------------------------------------------
 // collider base
-#include <Collider.h>
+#include "Collider.h"
 
 // collisionDetection
-#include <CollisionDetection.h>
+#include "CollisionDetection.h"
 
 // c++
 #include <unordered_set>
@@ -22,8 +22,8 @@ public:
 	// public methods
 	//=========================================================================================
 
-	ColliderManager()  = default; //!< gameすべての当たり判定管理する場合, シングルトンでいいかも
-	~ColliderManager() { Term(); }
+	ColliderManager()  = default;
+	~ColliderManager() = default;
 
 	void Init();
 
@@ -39,7 +39,7 @@ public:
 
 	void EraseCollider(Collider* collider) { colliders_.erase(collider); }
 
-	static ColliderManager* GetInstance(); // test
+	void ClearColliders() { colliders_.clear(); }
 
 private:
 
