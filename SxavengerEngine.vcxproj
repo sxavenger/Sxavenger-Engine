@@ -117,6 +117,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\Beta\DepthRenderTarget.cpp" />
     <ClCompile Include="Engine\Beta\GraphicsEditor.cpp" />
     <ClCompile Include="Engine\Beta\ModelBehavior.cpp" />
+    <ClCompile Include="Engine\Beta\SceneRenderTarget.cpp" />
     <ClCompile Include="Engine\Game\Animation.cpp" />
     <ClCompile Include="Engine\Game\Camera3D.cpp" />
     <ClCompile Include="Engine\Game\Collider.cpp" />
@@ -196,6 +197,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\Beta\DepthRenderTarget.h" />
     <ClInclude Include="Engine\Beta\GraphicsEditor.h" />
     <ClInclude Include="Engine\Beta\ModelBehavior.h" />
+    <ClInclude Include="Engine\Beta\SceneRenderTarget.h" />
     <ClInclude Include="Engine\Game\Animation.h" />
     <ClInclude Include="Engine\Game\Camera3D.h" />
     <ClInclude Include="Engine\Game\Collider.h" />

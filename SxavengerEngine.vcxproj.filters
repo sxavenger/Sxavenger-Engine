@@ -310,6 +310,9 @@
     <ClCompile Include="Engine\Game\Collider.cpp">
       <Filter>Engine\Game\source</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\Beta\SceneRenderTarget.cpp">
+      <Filter>Engine\Beta</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="externals\imgui\imconfig.h">
@@ -515,6 +518,9 @@
     </ClInclude>
     <ClInclude Include="Engine\Game\ColliderManager.h">
       <Filter>Engine\Game\include</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Beta\SceneRenderTarget.h">
+      <Filter>Engine\Beta</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

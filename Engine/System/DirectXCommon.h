@@ -22,6 +22,7 @@
 //-----------------------------------------------------------------------------------------
 // forward
 //-----------------------------------------------------------------------------------------
+//* WinApp
 class WinApp;
 
 //* Texture
@@ -31,6 +32,9 @@ class DummyTexture;
 
 //* DepthRender
 class DepthRenderTarget;
+
+//* SceneRenderTarget
+class SceneRenderTarget;
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // DirectXCommon class
@@ -75,6 +79,11 @@ public:
 
 	void EndOffScreen(DepthRenderTarget* depthRenderTarget);
 
+	//* SceneRenderTarget
+
+	void BeginOffScreen(SceneRenderTarget* sceneRenderTarget, bool isClearRenderTarget = false);
+
+	void EndOffScreen(SceneRenderTarget* sceneRenderTarget);
 
 	/* screen */
 
