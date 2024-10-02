@@ -283,6 +283,9 @@
     <ClCompile Include="externals\meshoptimizer\vertexfilter.cpp">
       <Filter>externals\meshoptimizer</Filter>
     </ClCompile>
+    <ClCompile Include="Game\Rail.cpp">
+      <Filter>Game</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="externals\imgui\imconfig.h">
@@ -473,6 +476,9 @@
     </ClInclude>
     <ClInclude Include="externals\meshoptimizer\meshoptimizer.h">
       <Filter>externals\meshoptimizer</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Rail.h">
+      <Filter>Game</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
