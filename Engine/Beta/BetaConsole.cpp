@@ -203,7 +203,7 @@ void BetaConsole::Draw() {
 				behavior->Draw();
 			}
 
-			gameCamera_->DrawFrustum(ToColor4f(0xFAFAFAFF), 4.0f);
+			gameCamera_->DrawFrustum(ToColor4f(0xFAFA00FF), 4.0f);
 
 			SxavengerGame::DrawToScene(sceneCamera_.get());
 			Sxavenger::EndOffscreen(sceneRenderTarget_.get());

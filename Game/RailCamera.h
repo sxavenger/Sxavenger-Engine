@@ -1,43 +1,68 @@
 #pragma once
+#define NOMINMAX
 
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
-//* sxavenger
-#include <Sxavenger.h>
-#include <SxavengerGraphics.h>
+//* base
+#include <Engine/Beta/BaseBehavior.h>
+#include <Engine/Beta/ModelBehavior.h>
+
+//* engine
+#include <Engine/Beta/CineCamera.h>
+
+//* lib
+#include <Lib/Geometry/Vector3.h>
 
 //* c++
-#include <list>
-#include <string>
-#include <format>
+#include <vector>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// SxavengerProcess class
+// Rail class
 ////////////////////////////////////////////////////////////////////////////////////////////
-class SxavengerProcess { //!< test class
+class RailCamera
+	: public ModelBehavior {
 public:
 
 	//=========================================================================================
 	// public methods
 	//=========================================================================================
 
+	RailCamera()  = default;
+	~RailCamera() = default;
+
 	void Init();
+
+	void Term();
 
 	void Update();
 
-	//* singleton *//
+	void Draw();
 
-	static SxavengerProcess* GetInstance();
-	SxavengerProcess()  = default;
-	~SxavengerProcess() = default;
+	void SetAttributeImGui() override;
 
 private:
 
 	//=========================================================================================
-	// private varaibles
+	// private variables
 	//=========================================================================================
 
-	std::list<int> layers_;
+	//* external *//
+
+	CineCamera* camera_ = nullptr;
+
+	//* member *//
+
+	float t_ = 0.0f;
+
+	//* parameter *//
+
+	std::vector<Vector3f> points_;
+
+	//=========================================================================================
+	// private methods
+	//=========================================================================================
+
+	void DrawCatmullrom(uint32_t kSubdivision);
 
 };

@@ -119,6 +119,8 @@ public:
 	DepthRenderTarget* GetGameRenderTarget() const { return gameRenderTarget_.get(); }
 
 	Camera3D* GetLocalCamera() const { return localCamera_.get(); }
+	CineCamera* GetGameCamera() const { return gameCamera_.get(); }
+
 	Camera3D* GetDisplayCamera() const { return displayCamera_; }
 
 	//* console rendering pipeline accessor *//

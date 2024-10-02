@@ -67,7 +67,9 @@ Matrix4x4 Matrix4x4::Inverse() const {
 		- (m[0][1] * m[1][2] * m[2][3] * m[3][0]) - (m[0][2] * m[1][3] * m[2][1] * m[3][0]) - (m[0][3] * m[1][1] * m[2][2] * m[3][0])
 		+ (m[0][3] * m[1][2] * m[2][1] * m[3][0]) + (m[0][2] * m[1][1] * m[2][3] * m[3][0]) + (m[0][1] * m[1][3] * m[2][2] * m[3][0]);
 
-	assert(denominator != 0);
+	if (denominator == 0) { //!< 0除算対策
+		return {};
+	};
 
 	for (int row = 0; row < 4; row++) {
 		for (int column = 0; column < 4; column++) {

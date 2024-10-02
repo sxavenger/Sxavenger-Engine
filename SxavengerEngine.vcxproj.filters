@@ -313,7 +313,10 @@
     <ClCompile Include="Engine\Beta\SceneRenderTarget.cpp">
       <Filter>Engine\Beta</Filter>
     </ClCompile>
-    <ClCompile Include="Game\Rail.cpp">
+    <ClCompile Include="Lib\MyMath.cpp">
+      <Filter>Lib</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\RailCamera.cpp">
       <Filter>Game</Filter>
     </ClCompile>
   </ItemGroup>
@@ -525,7 +528,10 @@
     <ClInclude Include="Engine\Beta\SceneRenderTarget.h">
       <Filter>Engine\Beta</Filter>
     </ClInclude>
-    <ClInclude Include="Game\Rail.h">
+    <ClInclude Include="Lib\MyMath.h">
+      <Filter>Lib</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\RailCamera.h">
       <Filter>Game</Filter>
     </ClInclude>
   </ItemGroup>

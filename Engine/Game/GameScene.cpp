@@ -72,17 +72,16 @@ void GameScene::Run() {
 
 void GameScene::Init() {
 
-	teapot_ = std::make_unique<Teapot>();
-	teapot_->Init();
+	railCamera_ = std::make_unique<RailCamera>();
+	railCamera_->Init();
 
-	kipfel_ = std::make_unique<Kipfel>();
-	kipfel_->Init();
 }
 
 void GameScene::Term() {
 }
 
 void GameScene::Update() {
+	railCamera_->Update();
 }
 
 void GameScene::Draw() {
@@ -91,7 +90,7 @@ void GameScene::Draw() {
 		//* main screen *//
 		Sxavenger::BeginOffscreen(sBetaConsole->GetGameRenderTarget());
 
-		Sxavenger
+		SxavengerGame::DrawToScene(sBetaConsole->GetGameCamera());
 		Sxavenger::EndOffscreen(sBetaConsole->GetGameRenderTarget());
 		Sxavenger::TranstionAllocator();
 	}

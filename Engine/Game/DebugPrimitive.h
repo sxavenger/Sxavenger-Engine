@@ -95,7 +95,7 @@ private:
 
 	//* config *//
 
-	static const uint32_t kMaxLineNum_ = 128;
+	static const uint32_t kMaxLineNum_ = 1024;
 	static const uint32_t kVertexNum_  = 2; //!< lineなので2頂点
 
 };
