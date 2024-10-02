@@ -67,6 +67,18 @@
     <Filter Include="externals\meshoptimizer">
       <UniqueIdentifier>{ae980c19-97cc-4f02-bdd8-c40295778d34}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Lib\Adapter">
+      <UniqueIdentifier>{8f18edf0-c06d-4409-811f-6f8cdf511960}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Lib\Adapter\Json">
+      <UniqueIdentifier>{0c75171d-9c6c-49df-a588-d682a79e472b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Lib\Adapter\Random">
+      <UniqueIdentifier>{ed65917c-b5b7-4ffb-a532-e56ca2e5c423}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resources\hlsl\Primitive">
+      <UniqueIdentifier>{6bbb4878-a0f1-4de5-9c0b-40d04e9f197c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="externals\imgui\imgui.cpp">
@@ -181,9 +193,6 @@
     <ClCompile Include="Engine\System\Performance.cpp">
       <Filter>Engine\System\source</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\System\Console.cpp">
-      <Filter>Engine\System\source</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\Game\GameScene.cpp">
       <Filter>Engine\Game\source</Filter>
     </ClCompile>
@@ -192,9 +201,6 @@
     </ClCompile>
     <ClCompile Include="Engine\Game\DebugCamera3D.cpp">
       <Filter>Engine\Game\source</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\System\Attribute.cpp">
-      <Filter>Engine\System\source</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Game\Transform.cpp">
       <Filter>Engine\Game\source</Filter>
@@ -282,6 +288,30 @@
     </ClCompile>
     <ClCompile Include="externals\meshoptimizer\vertexfilter.cpp">
       <Filter>externals\meshoptimizer</Filter>
+    </ClCompile>
+    <ClCompile Include="Lib\Adapter\Json\Json.cpp">
+      <Filter>Lib\Adapter\Json</Filter>
+    </ClCompile>
+    <ClCompile Include="Lib\Adapter\Random\Random.cpp">
+      <Filter>Lib\Adapter\Random</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Game\SxavengerGame.cpp">
+      <Filter>Engine\Game\source</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Game\DebugPrimitive.cpp">
+      <Filter>Engine\Game\source</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Game\CollisionDetection.cpp">
+      <Filter>Engine\Game\source</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Game\ColliderManager.cpp">
+      <Filter>Engine\Game\source</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Game\Collider.cpp">
+      <Filter>Engine\Game\source</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Beta\SceneRenderTarget.cpp">
+      <Filter>Engine\Beta</Filter>
     </ClCompile>
     <ClCompile Include="Game\Rail.cpp">
       <Filter>Game</Filter>
@@ -414,9 +444,6 @@
     <ClInclude Include="Engine\System\Performance.h">
       <Filter>Engine\System\include</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\System\Console.h">
-      <Filter>Engine\System\include</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\Game\GameScene.h">
       <Filter>Engine\Game\include</Filter>
     </ClInclude>
@@ -425,9 +452,6 @@
     </ClInclude>
     <ClInclude Include="Engine\Game\Camera3D.h">
       <Filter>Engine\Game\include</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\System\Attribute.h">
-      <Filter>Engine\System\include</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Game\Transform.h">
       <Filter>Engine\Game\include</Filter>
@@ -477,6 +501,30 @@
     <ClInclude Include="externals\meshoptimizer\meshoptimizer.h">
       <Filter>externals\meshoptimizer</Filter>
     </ClInclude>
+    <ClInclude Include="Lib\Adapter\Json\Json.h">
+      <Filter>Lib\Adapter\Json</Filter>
+    </ClInclude>
+    <ClInclude Include="Lib\Adapter\Random\Random.h">
+      <Filter>Lib\Adapter\Random</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Game\SxavengerGame.h">
+      <Filter>Engine\Game\include</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Game\DebugPrimitive.h">
+      <Filter>Engine\Game\include</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Game\CollisionDetection.h">
+      <Filter>Engine\Game\include</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Game\Collider.h">
+      <Filter>Engine\Game\include</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Game\ColliderManager.h">
+      <Filter>Engine\Game\include</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Beta\SceneRenderTarget.h">
+      <Filter>Engine\Beta</Filter>
+    </ClInclude>
     <ClInclude Include="Game\Rail.h">
       <Filter>Game</Filter>
     </ClInclude>
@@ -500,6 +548,9 @@
     </None>
     <None Include="Resources\hlsl\MonoBehavior\DefaultMesh.hlsli">
       <Filter>Resources\hlsl\MonoBehavior</Filter>
+    </None>
+    <None Include="Resources\hlsl\Primitive\DebugPrimitive.hlsli">
+      <Filter>Resources\hlsl\Primitive</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -525,6 +576,12 @@
     </FxCompile>
     <FxCompile Include="Resources\hlsl\MonoBehavior\Default.MS.hlsl">
       <Filter>Resources\hlsl\MonoBehavior</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\hlsl\Primitive\DebugPrimitive.VS.hlsl">
+      <Filter>Resources\hlsl\Primitive</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\hlsl\Primitive\DebugPrimitive.PS.hlsl">
+      <Filter>Resources\hlsl\Primitive</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

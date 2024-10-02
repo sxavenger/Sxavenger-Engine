@@ -45,6 +45,8 @@ public:
 
 	void SetTransform(const Vector3f& scale, const Vector3f& rotate, const Vector3f& translate);
 
+	void UpdateTranslate();
+
 	void SetProjection(float fovY, float aspectRatio, float nearClip, float farClip);
 
 	//* camera getter *//
@@ -57,7 +59,7 @@ public:
 
 	//* debug drawer *//
 
-	void DrawFrustum(const Color4f& color) const;
+	void DrawFrustum(const Color4f& color, float length = 0.0f) const;
 
 	//* behavior *//
 
@@ -80,7 +82,7 @@ protected:
 
 	//* camera transform *//
 
-	EulerTransform transform_;
+	EulerTransformBuffer transform_;
 
 	//* buffer *//
 
@@ -91,5 +93,6 @@ protected:
 	//=========================================================================================
 
 	void CalculateView();
+	void CalculateMatrixToView();
 
 };

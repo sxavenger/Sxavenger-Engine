@@ -4,7 +4,7 @@ _DXOBJECT_USING
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
-#include "Console.h"
+#include <Engine/Beta/BetaConsole.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // BaseTexture base class
@@ -465,9 +465,9 @@ void TextureManager::ReleaseTexture(const std::string& key) {
 	if (!FindKey(lower)) { //!< keyが見つからなかった場合
 
 		std::string text = "[TextureManager](method: ReleaseTexture): not found key. key: " + lower;
-		console->Log(
+		sBetaConsole->Log(
 			text,
-			Console::warningColor
+			BetaConsole::kWarningColor
 		);
 
 		return;
@@ -481,9 +481,9 @@ void TextureManager::ReleaseTexture(const std::string& key) {
 
 		// logで通知
 		std::string text = "[TextureManager](method: ReleaseTexture): delete texture. key: " + key;
-		console->Log(
+		sBetaConsole->Log(
 			text,
-			Console::commentOutColor
+			BetaConsole::kCommentOutColor
 		);
 	}
 }
@@ -495,9 +495,9 @@ void TextureManager::DeleteTexture(const std::string& key) {
 	if (!FindKey(lower)) { //!< keyが見つからなかった場合
 
 		// logで通知
-		console->Log(
+		sBetaConsole->Log(
 			"[TextureManager](method: DeleteTexture): not found key. key: " + lower,
-			Console::warningColor
+			BetaConsole::kWarningColor
 		);
 
 		return;
@@ -506,9 +506,9 @@ void TextureManager::DeleteTexture(const std::string& key) {
 	textures_.erase(lower); //!< containerからの削除
 
 	// logで通知
-	console->Log(
+	sBetaConsole->Log(
 		"[TextureManager](method: DeleteTexture): delete texture. key: " + lower,
-		Console::commentOutColor
+		BetaConsole::kCommentOutColor
 	);
 
 }

@@ -3,8 +3,8 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
-// managers
-#include <ColliderManager.h>
+//* engine
+#include "SxavengerGame.h"
 
 // imgui
 #include <imgui.h>
@@ -14,11 +14,11 @@
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 void Collider::Init() {
-	ColliderManager::GetInstance()->SetCollider(this);
+	SxavengerGame::SetCollider(this);
 }
 
 void Collider::Term() {
-	ColliderManager::GetInstance()->EraseCollider(this);
+	SxavengerGame::EraseCollider(this);
 }
 
 void Collider::SetColliderBoundingSphere(const CollisionBoundings::Sphere& sphere) {

@@ -3,20 +3,18 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
-// defines
-#include <DefineConfigs.h>
+//* lib
+#include <Lib/CXXAttributeConfig.h>
+#include <Lib/Geometry/Vector3.h>
 
-// Geometry
-#include <Vector3.h>
-
-// c++
+//* c++
 #include <utility>
 #include <string>
 #include <unordered_map>
 #include <optional>
 
 // collisionDetection
-#include <CollisionDetection.h>
+#include "CollisionDetection.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // ColliderType enum
@@ -74,7 +72,7 @@ public:
 		const std::optional<bool>& isHit = std::nullopt, const std::optional<bool>& isPreHit = std::nullopt
 	);
 
-	//* collision methods *//
+	//* user collision methods *//
 
 	virtual void OnCollisionEnter(_MAYBE_UNUSED Collider* const other) {}
 

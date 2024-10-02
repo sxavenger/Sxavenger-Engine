@@ -4,12 +4,12 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
-// Geometry
-#include <Vector3.h>
-#include <Matrix4x4.h>
-#include <VectorComparison.h>
+//* lib
+#include <Lib/Geometry/Vector3.h>
+#include <Lib/Geometry/Matrix4x4.h>
+#include <Lib/Geometry/VectorComparison.h>
 
-// c++
+//* c++
 #include <variant>
 
 ////////////////////////////////////////////////////////////////////////////////////////////

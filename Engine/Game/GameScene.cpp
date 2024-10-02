@@ -8,6 +8,8 @@
 #include <Engine/Game/SxavengerGame.h>
 #include <Lib/Environment.h>
 
+#include "Lib/Adapter/Random/Random.h"
+
 ////////////////////////////////////////////////////////////////////////////////////////////
 // GameScene class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -51,6 +53,8 @@ void GameScene::Run() {
 
 		Sxavenger::EndImGuiAndDrawCall();
 		Sxavenger::EndFrame();
+
+		SxavengerGame::ResetPrimitive();
 	}
 
 	//=========================================================================================
@@ -73,7 +77,6 @@ void GameScene::Init() {
 
 	kipfel_ = std::make_unique<Kipfel>();
 	kipfel_->Init();
-
 }
 
 void GameScene::Term() {

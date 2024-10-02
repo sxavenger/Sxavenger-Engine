@@ -9,6 +9,7 @@ _DXOBJECT_USING
 
 //* engine
 #include <Engine/System/Performance.h>
+#include <Engine/Game/SxavengerGame.h>
 
 //* Lib
 #include <Lib/Environment.h>
@@ -129,6 +130,10 @@ void BetaConsole::Init() {
 	ImGuiIO& io    = ImGui::GetIO();
 	io.IniFilename = NULL;
 	ImGui::LoadIniSettingsFromDisk(kImGuiIniFilepath_.c_str());
+
+#ifndef _DEBUG
+	isDisplayConsole_ = false; //!< releaseの時はconsoleは出さない
+#endif
 }
 
 void BetaConsole::Term() {
@@ -173,28 +178,36 @@ void BetaConsole::Update() {
 }
 
 void BetaConsole::Draw() {
+	if (isDisplayConsole_) { //!< Consoleが表示されてる場合のみ
+		{
+			Sxavenger::BeginOffscreen(localRenderTarget_.get(), true);
+			
 
-	{
-		Sxavenger::BeginOffscreen(localRenderTarget_.get(), true);
+			if (selectedBehavior_.has_value()) {
+				auto behavior = (*selectedBehavior_.value());
+				behavior->SystemDrawLocalMesh();
+			}
 
-		if (selectedBehavior_.has_value()) {
-			auto behavior = (*selectedBehavior_.value());
-			behavior->SystemDrawLocalMesh();
+			SxavengerGame::DrawAxis(kOrigin3, 4.0f);
+
+			SxavengerGame::DrawToScene(localCamera_.get());
+			Sxavenger::EndOffscreen(localRenderTarget_.get());
 		}
 
-		Sxavenger::EndOffscreen(localRenderTarget_.get());
-	}
-	
-	{
-		Sxavenger::BeginOffscreen(sceneRenderTarget_.get(), true);
-		displayCamera_ = sceneCamera_.get();
+		{
+			Sxavenger::BeginOffscreen(sceneRenderTarget_.get(), true);
+			displayCamera_ = sceneCamera_.get();
 
-		for (auto behavior : behaviors_) {
-			behavior->SystemDraw();
-			behavior->Draw();
+			for (auto behavior : behaviors_) {
+				behavior->SystemDraw();
+				behavior->Draw();
+			}
+
+			gameCamera_->DrawFrustum(ToColor4f(0xFAFAFAFF), 4.0f);
+
+			SxavengerGame::DrawToScene(sceneCamera_.get());
+			Sxavenger::EndOffscreen(sceneRenderTarget_.get());
 		}
-
-		Sxavenger::EndOffscreen(sceneRenderTarget_.get());
 	}
 
 	{
@@ -206,6 +219,7 @@ void BetaConsole::Draw() {
 			behavior->Draw();
 		}
 
+		SxavengerGame::DrawToScene(gameCamera_.get());
 		Sxavenger::EndOffscreen(gameRenderTarget_.get());
 	}
 
