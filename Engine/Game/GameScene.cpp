@@ -5,7 +5,7 @@
 //-----------------------------------------------------------------------------------------
 // sxavenger engine
 #include <Engine/System/Sxavenger.h>
-//#include <SxavengerGraphics.h>
+#include <Engine/Game/SxavengerGame.h>
 #include <Lib/Environment.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -88,6 +88,7 @@ void GameScene::Draw() {
 		//* main screen *//
 		Sxavenger::BeginOffscreen(sBetaConsole->GetGameRenderTarget());
 
+		Sxavenger
 		Sxavenger::EndOffscreen(sBetaConsole->GetGameRenderTarget());
 		Sxavenger::TranstionAllocator();
 	}
