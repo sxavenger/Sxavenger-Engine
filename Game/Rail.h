@@ -34,6 +34,10 @@ public:
 
 	void SetAttributeImGui() override;
 
+	//* getter *//
+
+	const std::vector<Vector3f>& GetPoints() const { return points_; }
+
 private:
 
 	//=========================================================================================

@@ -104,6 +104,7 @@ public:
 	//* MonoBehavior option *//
 
 	void SetBehavior(BaseBehavior* behavior);
+	void RemoveSelectedBehavior(BaseBehavior* behavior);
 	void RemoveBehavior(BaseBehavior* behavior);
 
 	//* console option *//
@@ -236,6 +237,8 @@ private:
 
 	void InitRenderTarget();
 	void TermRenderTarget();
+
+	void DrawBehavior(BaseBehavior* behavior);
 
 	//* assistance methods *//
 

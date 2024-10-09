@@ -319,6 +319,9 @@
     <ClCompile Include="Game\RailCamera.cpp">
       <Filter>Game</Filter>
     </ClCompile>
+    <ClCompile Include="Game\Rail.cpp">
+      <Filter>Game</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="externals\imgui\imconfig.h">
@@ -532,6 +535,9 @@
       <Filter>Lib</Filter>
     </ClInclude>
     <ClInclude Include="Game\RailCamera.h">
+      <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Rail.h">
       <Filter>Game</Filter>
     </ClInclude>
   </ItemGroup>

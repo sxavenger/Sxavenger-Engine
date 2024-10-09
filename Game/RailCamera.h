@@ -11,11 +11,9 @@
 //* engine
 #include <Engine/Beta/CineCamera.h>
 
-//* lib
-#include <Lib/Geometry/Vector3.h>
+//* Game
+#include "Rail.h"
 
-//* c++
-#include <vector>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Rail class
@@ -53,16 +51,12 @@ private:
 
 	//* member *//
 
+	std::unique_ptr<Rail> rail_;
+
 	float t_ = 0.0f;
-
-	//* parameter *//
-
-	std::vector<Vector3f> points_;
 
 	//=========================================================================================
 	// private methods
 	//=========================================================================================
-
-	void DrawCatmullrom(uint32_t kSubdivision);
 
 };

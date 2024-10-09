@@ -18,14 +18,11 @@
 void RailCamera::Init() {
 	camera_ = sBetaConsole->GetGameCamera();
 
-	points_ = {
-		kOrigin3,
-		kUnit3,
-		{0.0f, 2.0f, 1.0f},
-		{3.0f, 2.0f, 0.0f}
-	};
+	rail_ = std::make_unique<Rail>();
+	rail_->Init();
 
 	SetToConsole("rail camera");
+	SetChild(rail_.get());
 
 	ModelBehavior::model_ = SxavengerGame::LoadModel("resources/model/CG2", "axis.obj");
 
@@ -43,45 +40,21 @@ void RailCamera::Update() {
 		t_ = std::min(t_, 1.0f);
 	}
 
-	Vector3f position = CatmullRomPosition(points_, t_);
+	Vector3f position = CatmullRomPosition(rail_->GetPoints(), t_);
 
-	// TODO: レールの先に向かせたい
 	float nextT = t_ + 0.1f * Performance::GetDeltaTime(s).time; //!< 次のframeでのt
-	Vector3f direction = Normalize(CatmullRomPosition(points_, nextT) - position);
+	Vector3f direction = Normalize(CatmullRomPosition(rail_->GetPoints(), nextT) - position);
 
 	camera_->SetTransform(kUnit3, CalculateEuler(direction), position);
+
+	// TODO: レールの上向きに合わせてカメラを回転
 }
 
 void RailCamera::Draw() {
-	DrawCatmullrom(100);
 }
 
 void RailCamera::SetAttributeImGui() {
 
-	ImGui::Text("member");
-	ImGui::Separator();
-
 	ImGui::SliderFloat("t", &t_, 0.0f, 1.0f);
 
-	ImGui::Text("parameter");
-	ImGui::Separator();
-
-	for (uint32_t i = 0; i < points_.size(); ++i) {
-		std::string label = "position ##" + std::format("{:p}", reinterpret_cast<void*>(&points_[i]));
-		ImGui::DragFloat3(label.c_str(), &points_[i].x, 0.01f);
-	}
-}
-
-void RailCamera::DrawCatmullrom(uint32_t kSubdivision) {
-	for (uint32_t i = 0; i < kSubdivision; ++i) {
-
-		float t = static_cast<float>(i) / kSubdivision;
-		float nextT = static_cast<float>(i + 1) / kSubdivision;
-
-		SxavengerGame::DrawLine(
-			CatmullRomPosition(points_, t),
-			CatmullRomPosition(points_, nextT),
-			ToColor4f(0xFA0000FF)
-		);
-	}
 }

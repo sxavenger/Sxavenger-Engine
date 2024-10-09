@@ -179,6 +179,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="externals\meshoptimizer\vfetchanalyzer.cpp" />
     <ClCompile Include="externals\meshoptimizer\vfetchoptimizer.cpp" />
     <ClCompile Include="Game\Kipfel.cpp" />
+    <ClCompile Include="Game\Rail.cpp" />
     <ClCompile Include="Game\RailCamera.cpp" />
     <ClCompile Include="Game\Teapot.cpp" />
     <ClCompile Include="Lib\Adapter\Json\Json.cpp" />
@@ -249,6 +250,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="externals\imgui\imstb_truetype.h" />
     <ClInclude Include="externals\meshoptimizer\meshoptimizer.h" />
     <ClInclude Include="Game\Kipfel.h" />
+    <ClInclude Include="Game\Rail.h" />
     <ClInclude Include="Game\RailCamera.h" />
     <ClInclude Include="Game\Teapot.h" />
     <ClInclude Include="Lib\Adapter\Json\Json.h" />

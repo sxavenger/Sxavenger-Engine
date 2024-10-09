@@ -199,8 +199,7 @@ void BetaConsole::Draw() {
 			displayCamera_ = sceneCamera_.get();
 
 			for (auto behavior : behaviors_) {
-				behavior->SystemDraw();
-				behavior->Draw();
+				DrawBehavior(behavior);
 			}
 
 			gameCamera_->DrawFrustum(ToColor4f(0xFAFA00FF), 4.0f);
@@ -215,8 +214,7 @@ void BetaConsole::Draw() {
 		displayCamera_ = gameCamera_.get();
 
 		for (auto& behavior : behaviors_) {
-			behavior->SystemDraw();
-			behavior->Draw();
+			DrawBehavior(behavior);
 		}
 
 		SxavengerGame::DrawToScene(gameCamera_.get());
@@ -233,14 +231,17 @@ void BetaConsole::SetBehavior(BaseBehavior* behavior) {
 	behaviors_.emplace_back(behavior);
 }
 
-void BetaConsole::RemoveBehavior(BaseBehavior* behavior) {
+void BetaConsole::RemoveSelectedBehavior(BaseBehavior* behavior) {
 	if (selectedBehavior_.has_value()) {
 		if (behavior == (*selectedBehavior_.value())) {
 			selectedBehavior_ = std::nullopt;
 			// todo: prevに移動
 		}
 	}
+}
 
+void BetaConsole::RemoveBehavior(BaseBehavior* behavior) {
+	RemoveSelectedBehavior(behavior);
 	behaviors_.remove(behavior);
 }
 
@@ -617,6 +618,15 @@ void BetaConsole::TermRenderTarget() {
 
 	localRenderTarget_.reset();
 	localCamera_.reset();
+}
+
+void BetaConsole::DrawBehavior(BaseBehavior* behavior) {
+	behavior->SystemDraw();
+	behavior->Draw();
+
+	for (auto child : behavior->GetChildren()) {
+		DrawBehavior(child);
+	}
 }
 
 void BetaConsole::DisplayTextureImGuiFullWindow(const BaseTexture* texture) {
