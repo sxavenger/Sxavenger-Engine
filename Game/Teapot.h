@@ -3,8 +3,11 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
-//* engine
+//* base
 #include <Engine/Beta/ModelBehavior.h>
+
+//* engine
+#include <Engine/Game/SxavengerGame.h>
 
 //* c++
 #include <memory>
@@ -25,12 +28,4 @@ public:
 	void SetAttributeImGui() override;
 
 private:
-
-	//=========================================================================================
-	// private variables
-	//=========================================================================================
-
-	std::unique_ptr<Model> model_;
-	EulerTransformBuffer transform_;
-
 };

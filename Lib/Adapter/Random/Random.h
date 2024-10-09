@@ -3,26 +3,27 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
-// lib
-#include "Camera3D.h"
+//* c++
+#include <random>
 
-// Input
-#include <Engine/System/Sxavenger.h>
+//* engine
+#include <Engine/System/Logger.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// DebugCamera3D class
+// Random class
 ////////////////////////////////////////////////////////////////////////////////////////////
-class DebugCamera3D
-	: public Camera3D {
+class Random {
 public:
 
 	//=========================================================================================
 	// public methods
 	//=========================================================================================
 
-	void Update();
+	template <std::floating_point T>
+	static T Generate(T min, T max);
 
-	void Reset();
+	template <std::integral T>
+	static T Generate(T min, T max);
 
 private:
 
@@ -30,26 +31,17 @@ private:
 	// private variables
 	//=========================================================================================
 
-	//* external *//
-
-	Input* input_ = Sxavenger::GetInput();
-
-	//* parameter *//
-
-	float deltaMove_     = 0.01f;
-	float deltaRotate_   = 0.01f;
-	float deltaDistance_ = 0.5f;
-
-	//* member *//
-
-	Vector3f pivot_ = {};
-	float lon_, lat_;
-	float distance_ = 10.0f;
-
-	//=========================================================================================
-	// private methods
-	//=========================================================================================
-
-	void CalculateView();
-
+	static std::mt19937 seed_;
 };
+
+template <std::floating_point T>
+inline T Random::Generate(T min, T max) {
+	std::uniform_real_distribution<T> dist(min, max);
+	return dist(seed_);
+}
+
+template <std::integral T>
+inline T Random::Generate(T min, T max) {
+	std::uniform_int_distribution<T> dist(min, max);
+	return dist(seed_);
+}

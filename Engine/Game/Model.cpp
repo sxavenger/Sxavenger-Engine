@@ -92,7 +92,7 @@ void Model::LoadModelFile(const std::string& directoryPath, const std::string& f
 	sceneAi_ = importer_.ReadFile(filepath.c_str(), option);
 
 	Assert(sceneAi_ != nullptr, "model file not found. filepath: " + filepath);
-	Assert(sceneAi_->HasMaterials()); //!< メッシュナシは未対応
+	Assert(sceneAi_->HasMeshes()); //!< メッシュナシは未対応
 
 	// 各objectの取得
 	LoadMesh();
@@ -265,4 +265,46 @@ Node Model::ReadNode(aiNode* node) {
 
 	return result;
 
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////
+// ModelManager class methods
+////////////////////////////////////////////////////////////////////////////////////////////
+
+void ModelManager::Init() {
+}
+
+void ModelManager::Term() {
+	models_.clear();
+}
+
+Model* ModelManager::Load(const std::string& directoryPath, const std::string& filename, bool smooth) {
+
+	std::string lowerFilepath = ToLower(directoryPath + "/" + filename);
+
+	auto it = models_.find(lowerFilepath);
+	if (it == models_.end()) { //!< モデルが読み込まれていない場合
+		// モデルの読み込みして登録
+		std::unique_ptr<Model> newModel = std::make_unique<Model>(directoryPath, filename, smooth);
+		models_.emplace(lowerFilepath, std::move(newModel));
+	}
+
+	return models_.at(lowerFilepath).get();
+}
+
+void ModelManager::Delete(const std::string& directoryPath, const std::string& filename) {
+
+	std::string lowerFilepath = ToLower(directoryPath + "/" + filename);
+	models_.erase(lowerFilepath);
+}
+
+std::string ModelManager::ToLower(const std::string& str) {
+	std::string result;
+	result.resize(str.size());
+
+	std::transform(str.begin(), str.end(), result.begin(), [](unsigned char c) {
+		return static_cast<char>(std::tolower(c));
+	});
+
+	return result;
 }

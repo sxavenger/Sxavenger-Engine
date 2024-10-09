@@ -1,28 +1,43 @@
 #pragma once
+#define NOMINMAX
 
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
-// lib
-#include "Camera3D.h"
+//* base
+#include <Engine/Beta/BaseBehavior.h>
+#include <Engine/Beta/ModelBehavior.h>
 
-// Input
-#include <Engine/System/Sxavenger.h>
+//* engine
+#include <Engine/Beta/CineCamera.h>
+
+//* Game
+#include "Rail.h"
+
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// DebugCamera3D class
+// Rail class
 ////////////////////////////////////////////////////////////////////////////////////////////
-class DebugCamera3D
-	: public Camera3D {
+class RailCamera
+	: public ModelBehavior {
 public:
 
 	//=========================================================================================
 	// public methods
 	//=========================================================================================
 
+	RailCamera()  = default;
+	~RailCamera() = default;
+
+	void Init();
+
+	void Term();
+
 	void Update();
 
-	void Reset();
+	void Draw();
+
+	void SetAttributeImGui() override;
 
 private:
 
@@ -32,24 +47,16 @@ private:
 
 	//* external *//
 
-	Input* input_ = Sxavenger::GetInput();
-
-	//* parameter *//
-
-	float deltaMove_     = 0.01f;
-	float deltaRotate_   = 0.01f;
-	float deltaDistance_ = 0.5f;
+	CineCamera* camera_ = nullptr;
 
 	//* member *//
 
-	Vector3f pivot_ = {};
-	float lon_, lat_;
-	float distance_ = 10.0f;
+	std::unique_ptr<Rail> rail_;
+
+	float t_ = 0.0f;
 
 	//=========================================================================================
 	// private methods
 	//=========================================================================================
-
-	void CalculateView();
 
 };

@@ -9,7 +9,7 @@ _DXOBJECT_USING
 
 // engine
 #include <Engine/System/Sxavenger.h>
-//#include <SxavengerGraphics.h>
+#include <Engine/Game/SxavengerGame.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Camera3D class methods
@@ -31,10 +31,15 @@ void Camera3D::Term() {
 
 void Camera3D::SetTransform(const Vector3f& scale, const Vector3f& rotate, const Vector3f& translate) {
 
-	transform_.scale     = scale;
-	transform_.rotate    = rotate;
-	transform_.translate = translate;
+	transform_.transform.scale     = scale;
+	transform_.transform.rotate    = rotate;
+	transform_.transform.translate = translate;
 
+	UpdateTranslate();
+}
+
+void Camera3D::UpdateTranslate() {
+	transform_.UpdateMatrix();
 	CalculateView();
 }
 
@@ -42,7 +47,7 @@ void Camera3D::SetProjection(float fovY, float aspectRatio, float nearClip, floa
 	(*buffer_)[0].projMatrix = Matrix::MakePerspectiveFov(fovY, aspectRatio, nearClip, farClip);
 }
 
-void Camera3D::DrawFrustum(const Color4f& color) const {
+void Camera3D::DrawFrustum(const Color4f& color, float length) const {
 
 	Vector3f frustumPoint[4] = {};
 	Matrix4x4 clipMatrix  = (*buffer_)[0].projMatrix.Inverse();
@@ -53,29 +58,30 @@ void Camera3D::DrawFrustum(const Color4f& color) const {
 	frustumPoint[2] = Matrix::Transform(Matrix::Transform({ 1.0f, 1.0f, 1.0f }, clipMatrix), worldMatrix);
 	frustumPoint[3] = Matrix::Transform(Matrix::Transform({ 1.0f, -1.0f, 1.0f }, clipMatrix), worldMatrix);
 
+	// 視錐台の長さの指定がある場合, その長さに合わせる
+	if (length != 0.0f) {
+		for (int i = 0; i < 4; ++i) {
+			Vector3f direction = frustumPoint[i] - transform_.GetWorldPosition();
+			frustumPoint[i]    = transform_.GetWorldPosition() + Normalize(direction) * length;
+		}
+	}
+
 	for (int i = 0; i < 4; ++i) {
-		/*SxavengerGraphics::DrawLine(
+		SxavengerGame::DrawLine(
 			frustumPoint[i], frustumPoint[(i + 1) % 4], color
 		);
 
-		SxavengerGraphics::DrawLine(
-			frustumPoint[i], transform_.translate, color
-		);*/
-
-		color;
+		SxavengerGame::DrawLine(
+			frustumPoint[i], transform_.transform.translate, color
+		);
 	}
 }
 
 void Camera3D::CalculateView() {
-
-	// positionの代入
-	(*buffer_)[0].position = { transform_.translate.x, transform_.translate.y, transform_.translate.z };
-
-	// viewMatrixの代入
-	(*buffer_)[0].viewMatrix = transform_.ToMatrix().Inverse();
-
+	Vector3f position = transform_.GetWorldPosition();
+	(*buffer_)[0].position = { position.x, position.y, position.z };
+	(*buffer_)[0].viewMatrix = transform_.GetWorldMatrix().Inverse();
 }
-
 
 void Camera3D::SetAttributeImGui() {
 	transform_.SetImGuiCommand();

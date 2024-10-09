@@ -104,6 +104,7 @@ public:
 	//* MonoBehavior option *//
 
 	void SetBehavior(BaseBehavior* behavior);
+	void RemoveSelectedBehavior(BaseBehavior* behavior);
 	void RemoveBehavior(BaseBehavior* behavior);
 
 	//* console option *//
@@ -119,6 +120,8 @@ public:
 	DepthRenderTarget* GetGameRenderTarget() const { return gameRenderTarget_.get(); }
 
 	Camera3D* GetLocalCamera() const { return localCamera_.get(); }
+	CineCamera* GetGameCamera() const { return gameCamera_.get(); }
+
 	Camera3D* GetDisplayCamera() const { return displayCamera_; }
 
 	//* console rendering pipeline accessor *//
@@ -164,7 +167,7 @@ private:
 
 	//* config *//
 	//* Console config
-	bool isDisplayConsole_ = _DEBUG;
+	bool isDisplayConsole_ = true;
 	bool isOutputImGuiIni_ = false;
 
 	//* ImGui config
@@ -234,6 +237,8 @@ private:
 
 	void InitRenderTarget();
 	void TermRenderTarget();
+
+	void DrawBehavior(BaseBehavior* behavior);
 
 	//* assistance methods *//
 

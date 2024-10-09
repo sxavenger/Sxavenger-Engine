@@ -23,7 +23,7 @@ void DebugCamera3D::Update() {
 			Vector2f move = static_cast<Vector2f>(delta) * deltaMove_;
 
 			// 現在のカメラ基準でのrotateからmouseの移動量分を加算
-			pivot_ += Matrix::Transform({ -move.x, move.y, 0.0f }, Matrix::MakeRotate(transform_.rotate));
+			pivot_ += Matrix::Transform({ -move.x, move.y, 0.0f }, Matrix::MakeRotate(transform_.transform.rotate));
 			// HACK: move.xをマイナスしなければいけない原因を解明
 
 		} else {
@@ -65,12 +65,12 @@ void DebugCamera3D::CalculateView() {
 
 	point *= distance_;
 
-	transform_.translate = point + pivot_;
+	transform_.transform.translate = point + pivot_;
 
 	// rotate
-	transform_.rotate.x = lat_;
-	transform_.rotate.y = lon_;
+	transform_.transform.rotate.x = lat_;
+	transform_.transform.rotate.y = lon_;
 
-	Camera3D::CalculateView();
+	Camera3D::UpdateTranslate();
 	
 }

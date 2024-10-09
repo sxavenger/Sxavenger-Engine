@@ -4,7 +4,6 @@
 // include
 //-----------------------------------------------------------------------------------------
 // console
-#include <Engine/System/Console.h>
 #include <Engine/Beta/BetaConsole.h>
 
 // c++
@@ -12,8 +11,7 @@
 #include <format>
 
 //* Game
-#include <Game/Teapot.h>
-#include <Game/Kipfel.h>
+#include <Game/RailCamera.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // GameScene class
@@ -33,10 +31,9 @@ private:
 	// private methods
 	//=========================================================================================
 
-	//* TEST *//
+	//* rail shooting *//
 
-	std::unique_ptr<Teapot> teapot_;
-	std::unique_ptr<Kipfel> kipfel_;
+	std::unique_ptr<RailCamera> railCamera_;
 
 	//=========================================================================================
 	// private methods

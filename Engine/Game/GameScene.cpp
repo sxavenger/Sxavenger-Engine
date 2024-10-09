@@ -5,8 +5,10 @@
 //-----------------------------------------------------------------------------------------
 // sxavenger engine
 #include <Engine/System/Sxavenger.h>
-//#include <SxavengerGraphics.h>
+#include <Engine/Game/SxavengerGame.h>
 #include <Lib/Environment.h>
+
+#include "Lib/Adapter/Random/Random.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // GameScene class methods
@@ -51,6 +53,8 @@ void GameScene::Run() {
 
 		Sxavenger::EndImGuiAndDrawCall();
 		Sxavenger::EndFrame();
+
+		SxavengerGame::ResetPrimitive();
 	}
 
 	//=========================================================================================
@@ -68,11 +72,8 @@ void GameScene::Run() {
 
 void GameScene::Init() {
 
-	teapot_ = std::make_unique<Teapot>();
-	teapot_->Init();
-
-	kipfel_ = std::make_unique<Kipfel>();
-	kipfel_->Init();
+	railCamera_ = std::make_unique<RailCamera>();
+	railCamera_->Init();
 
 }
 
@@ -80,6 +81,7 @@ void GameScene::Term() {
 }
 
 void GameScene::Update() {
+	railCamera_->Update();
 }
 
 void GameScene::Draw() {
@@ -88,6 +90,7 @@ void GameScene::Draw() {
 		//* main screen *//
 		Sxavenger::BeginOffscreen(sBetaConsole->GetGameRenderTarget());
 
+		SxavengerGame::DrawToScene(sBetaConsole->GetGameCamera());
 		Sxavenger::EndOffscreen(sBetaConsole->GetGameRenderTarget());
 		Sxavenger::TranstionAllocator();
 	}

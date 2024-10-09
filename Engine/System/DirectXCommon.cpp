@@ -8,6 +8,7 @@
 //* forward
 #include "Texture.h"
 #include <Engine/Beta/DepthRenderTarget.h>
+#include <Engine/Beta/SceneRenderTarget.h>
 
 //-----------------------------------------------------------------------------------------
 // using
@@ -236,28 +237,27 @@ void DirectXCommon::BeginOffScreen(DepthRenderTarget* depthRenderTarget, bool is
 		&depthRenderTarget->GetCPUHandleDSV()
 	);
 
-	if (isClearRenderTarget) {
-
-		// 画面のクリア
-		commandList->ClearRenderTargetView(
-			depthRenderTarget->GetCPUHandleRTV(),
-			&depthRenderTarget->GetClearColor().r,
-			0, nullptr
-		);
-
-		// 深度をクリア
-		commandList->ClearDepthStencilView(
-			depthRenderTarget->GetCPUHandleDSV(),
-			D3D12_CLEAR_FLAG_DEPTH,
-			1.0f,
-			0, 0, nullptr
-		);
-
+	if (!isClearRenderTarget) {
+		return; //!< 画面のクリアは行われないのでreturn
 	}
+
+	// 画面のクリア
+	commandList->ClearRenderTargetView(
+		depthRenderTarget->GetCPUHandleRTV(),
+		&depthRenderTarget->GetClearColor().r,
+		0, nullptr
+	);
+
+	// 深度をクリア
+	commandList->ClearDepthStencilView(
+		depthRenderTarget->GetCPUHandleDSV(),
+		D3D12_CLEAR_FLAG_DEPTH,
+		1.0f,
+		0, 0, nullptr
+	);
 }
 
 void DirectXCommon::EndOffScreen(DepthRenderTarget* depthRenderTarget) {
-
 	EndRendering();
 
 	// コマンドリストの取得
@@ -271,6 +271,87 @@ void DirectXCommon::EndOffScreen(DepthRenderTarget* depthRenderTarget) {
 
 	commandList->ResourceBarrier(
 		1, &barrier
+	);
+}
+
+void DirectXCommon::BeginOffScreen(SceneRenderTarget* sceneRenderTarget, bool isClearRenderTarget) {
+	BeginRendering();
+
+	// コマンドリストの取得
+	auto commandList = command_->GetCommandList();
+
+	D3D12_RESOURCE_BARRIER      barriers[SceneRenderTarget::GBuffer::kCountOfGBuffer] = {};
+	D3D12_CPU_DESCRIPTOR_HANDLE handles[SceneRenderTarget::GBuffer::kCountOfGBuffer]  = {};
+
+	const auto& gBuffers = sceneRenderTarget->GetGBuffers();
+	
+	for (uint32_t i = 0; i < SceneRenderTarget::GBuffer::kCountOfGBuffer; ++i) {
+
+		// barrierの設定
+		barriers[i].Type                   = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+		barriers[i].Transition.StateBefore = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
+		barriers[i].Transition.StateAfter  = D3D12_RESOURCE_STATE_RENDER_TARGET;
+		barriers[i].Transition.pResource   = gBuffers[i]->GetResource();
+
+		// handleの取得
+		handles[i] = gBuffers[i]->GetCPUHandleRTV();
+	}
+
+	// target状態に遷移
+	commandList->ResourceBarrier(
+		SceneRenderTarget::GBuffer::kCountOfGBuffer, barriers
+	);
+
+	// RTVに設定
+	commandList->OMSetRenderTargets(
+		SceneRenderTarget::GBuffer::kCountOfGBuffer, handles,
+		false,
+		&sceneRenderTarget->GetCPUHandleDSV()
+	);
+
+	if (!isClearRenderTarget) {
+		return; //!< 画面のクリアは行われないのでreturn
+	}
+
+	// 画面のクリア
+	for (uint32_t i = 0; i < SceneRenderTarget::GBuffer::kCountOfGBuffer; ++i) {
+		commandList->ClearRenderTargetView(
+			handles[i],
+			&gBuffers[i]->GetClearColor().r,
+			0, nullptr
+		);
+	}
+
+	// 深度をクリア
+	commandList->ClearDepthStencilView(
+		sceneRenderTarget->GetCPUHandleDSV(),
+		D3D12_CLEAR_FLAG_DEPTH,
+		1.0f,
+		0, 0, nullptr
+	);
+}
+
+void DirectXCommon::EndOffScreen(SceneRenderTarget* sceneRenderTarget) {
+	EndRendering();
+
+	// コマンドリストの取得
+	auto commandList = command_->GetCommandList();
+
+	D3D12_RESOURCE_BARRIER      barriers[SceneRenderTarget::GBuffer::kCountOfGBuffer] = {};
+
+	const auto& gBuffers = sceneRenderTarget->GetGBuffers();
+
+	// barrierの設定
+	for (uint32_t i = 0; i < SceneRenderTarget::GBuffer::kCountOfGBuffer; ++i) {
+		barriers[i].Type                   = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+		barriers[i].Transition.StateBefore = D3D12_RESOURCE_STATE_RENDER_TARGET;
+		barriers[i].Transition.StateAfter  = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
+		barriers[i].Transition.pResource   = gBuffers[i]->GetResource();
+	}
+
+	// target状態に遷移
+	commandList->ResourceBarrier(
+		SceneRenderTarget::GBuffer::kCountOfGBuffer, barriers
 	);
 }
 
