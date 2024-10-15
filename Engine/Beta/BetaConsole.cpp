@@ -254,6 +254,20 @@ void BetaConsole::Log(const std::string& log, const Color4f& color) {
 	}
 }
 
+void BetaConsole::BreakPoint(const std::source_location& location) {
+	// 更新処理の停止
+	updateLimit_      = 0;
+	isUpdateRequired_ = false;
+
+	// logへの出力
+	std::ostringstream message;
+	message << "[break point location]\n";
+	message << " filename: " << location.file_name()     << "\n";
+	message << " function: " << location.function_name() << "\n";
+	message << " line:     " << location.line()          << "\n";
+	Log(message.str(), kCommentOutColor);
+}
+
 void BetaConsole::SetPipeline(BetaConsolePipelineType type) {
 	pipeline_.SetPipeline(type);
 }
@@ -361,7 +375,7 @@ void BetaConsole::DisplayLog() {
 	ImVec2 cntRegionMin = ImGui::GetWindowContentRegionMin();
 	ImVec2 wndSize = { cntRegionMax.x - cntRegionMin.x, cntRegionMax.y - cntRegionMin.y };
 
-	ImGui::BeginChild(ImGui::GetID((void*)0), wndSize, ImGuiChildFlags_Border, ImGuiWindowFlags_AlwaysVerticalScrollbar);
+	ImGui::BeginChild(ImGui::GetID((void*)0), wndSize, ImGuiChildFlags_Border, ImGuiWindowFlags_AlwaysVerticalScrollbar | ImGuiWindowFlags_AlwaysHorizontalScrollbar);
 
 	for (auto& log : logDatas_) {
 		ImGui::TextColored(

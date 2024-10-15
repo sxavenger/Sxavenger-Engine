@@ -111,6 +111,8 @@ public:
 
 	void Log(const std::string& log, const Color4f& color = kDefaultColor);
 
+	void BreakPoint(const std::source_location& location = std::source_location::current());
+
 	//* console accsessor *//
 
 	bool IsUpdateRequired() const { return isUpdateRequired_; }

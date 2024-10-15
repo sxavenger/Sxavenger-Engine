@@ -65,9 +65,9 @@ void Assert(bool expresion, const std::string& detail, const std::source_locatio
 
 	std::ostringstream message;
 	message << "[location]\n";
-	message << " filename: " << location.file_name() << "\n";
+	message << " filename: " << location.file_name()     << "\n";
 	message << " function: " << location.function_name() << "\n";
-	message << " line:     " << location.line() << "\n";
+	message << " line:     " << location.line()          << "\n";
 
 	if (!detail.empty()) {
 		message << "\n[details]\n";

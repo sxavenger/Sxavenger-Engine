@@ -53,10 +53,17 @@ private:
 
 	std::unique_ptr<Rail> rail_;
 
+	Quaternion rotate_ = Quaternion::Identity();
+
+	Vector3f upVector_;
+
 	float t_ = 0.0f;
 
 	//=========================================================================================
 	// private methods
 	//=========================================================================================
+
+	const Vector3f CalculateUpVector();
+
 
 };
