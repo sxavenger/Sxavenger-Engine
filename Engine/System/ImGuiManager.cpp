@@ -29,7 +29,7 @@ void ImGuiManager::Init(WinApp* winApp, DirectXCommon* dxCommon) {
 	ImGui_ImplDX12_Init(
 		dxCommon->GetDeviceObj()->GetDevice(),
 		DxObject::SwapChain::GetBufferCount(),
-		DxObject::forwardFormat,
+		DxObject::kScreenFormat,
 		dxCommon->GetDescriptorsObj()->GetDescriptorHeap(DescriptorType::CBV_SRV_UAV),
 		descriptor_.GetCPUHandle(),
 		descriptor_.GetGPUHandle()

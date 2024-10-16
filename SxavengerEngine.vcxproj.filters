@@ -322,6 +322,11 @@
     <ClCompile Include="Game\Rail.cpp">
       <Filter>Game</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\Console\SystemConsole.cpp" />
+    <ClCompile Include="Engine\Console\ProcessConsole.cpp" />
+    <ClCompile Include="Engine\Console\RenderingConsole.cpp" />
+    <ClCompile Include="Engine\Game\SxavengerPipeline\SxavengerFrame.cpp" />
+    <ClCompile Include="Engine\Game\SxavengerPipeline\MultiViewTexture.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="externals\imgui\imconfig.h">
@@ -540,6 +545,11 @@
     <ClInclude Include="Game\Rail.h">
       <Filter>Game</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\Console\SystemConsole.h" />
+    <ClInclude Include="Engine\Console\RenderingConsole.h" />
+    <ClInclude Include="Engine\Console\ProcessConsole.h" />
+    <ClInclude Include="Engine\Game\SxavengerPipeline\SxavengerFrame.h" />
+    <ClInclude Include="Engine\Game\SxavengerPipeline\MultiViewTexture.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

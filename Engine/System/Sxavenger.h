@@ -93,7 +93,7 @@ public:
 	// texture option
 	//-----------------------------------------------------------------------------------------
 
-	static RenderTexture* CreateRenderTexture(const std::string& key, const Vector2ui& textureSize, const Color4f& clearColor = defaultClearColor);
+	static RenderTexture* CreateRenderTexture(const std::string& key, const Vector2ui& textureSize, const Color4f& clearColor = kDefaultClearColor);
 
 	static Texture* LoadTexture(const std::string& filePath);
 

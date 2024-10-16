@@ -380,7 +380,7 @@ void DirectXCommon::BeginScreenDraw() {
 	// 画面のクリア
 	commandList->ClearRenderTargetView(
 		swapChains_->GetRTVHandleCPU(),
-		&defaultClearColor.r,
+		&kDefaultClearColor.r,
 		0, nullptr
 	);
 

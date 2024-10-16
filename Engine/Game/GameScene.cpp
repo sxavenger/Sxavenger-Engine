@@ -6,6 +6,7 @@
 // sxavenger engine
 #include <Engine/System/Sxavenger.h>
 #include <Engine/Game/SxavengerGame.h>
+#include <Engine/Console/SystemConsole.h>
 #include <Lib/Environment.h>
 
 #include "Lib/Adapter/Random/Random.h"
@@ -21,6 +22,7 @@ void GameScene::Run() {
 	//=========================================================================================
 
 	sBetaConsole->Init();
+	//sSystemConsole->Init();
 	Init();
 
 	Sxavenger::ResetBackAllocator();
@@ -37,6 +39,7 @@ void GameScene::Run() {
 		//=========================================================================================
 
 		sBetaConsole->Update();
+		//sSystemConsole->UpdateConsole();
 
 		if (sBetaConsole->IsUpdateRequired()) {
 			Update();

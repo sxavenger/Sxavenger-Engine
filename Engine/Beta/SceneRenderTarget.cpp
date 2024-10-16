@@ -26,7 +26,7 @@ void SceneRenderTarget::Term() {
 void SceneRenderTarget::CreateGBuffer() {
 
 	// formatの定義
-	formats_[GBUFFER_ALBEDO]   = DxObject::forwardFormat;
+	formats_[GBUFFER_ALBEDO]   = DxObject::kScreenFormat;
 	formats_[GBUFFER_NORMAL]   = DXGI_FORMAT_R32G32B32A32_FLOAT;
 	formats_[GBUFFER_POSITION] = DXGI_FORMAT_R32G32B32A32_FLOAT;
 

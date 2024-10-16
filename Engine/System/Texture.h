@@ -125,7 +125,7 @@ public:
 
 	void Create(
 		DirectXCommon* dxCommon,
-		const Vector2ui& size, const Color4f& clearColor = defaultClearColor, DXGI_FORMAT format = DxObject::forwardFormat
+		const Vector2ui& size, const Color4f& clearColor = kDefaultClearColor, DXGI_FORMAT format = DxObject::kScreenFormat
 	);
 
 	void Term();
@@ -222,7 +222,7 @@ public:
 
 	Texture* LoadTexture(const std::string& filePath);
 
-	RenderTexture* CreateRenderTexture(const std::string& key, const Vector2ui& textureSize, const Color4f& clearColor = defaultClearColor);
+	RenderTexture* CreateRenderTexture(const std::string& key, const Vector2ui& textureSize, const Color4f& clearColor = kDefaultClearColor);
 
 	DummyTexture* CreateDummyTexture(const std::string& key, const Vector2ui& textureSize);
 

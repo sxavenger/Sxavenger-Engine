@@ -43,7 +43,7 @@ void GraphicsPipelineDesc::CreateDefaultDesc() {
 	SetPrimitive(PRIMITIVE_TRIANGLE);
 
 	/* rtvFormat */
-	SetRTVFormat(forwardFormat);
+	SetRTVFormat(kScreenFormat); // FIXME: sxavenger pipelineが完成したらoffscreen formatに変更
 }
 
 void GraphicsPipelineDesc::SetElement(const LPCSTR& semanticName, UINT semanticIndex, DXGI_FORMAT format, UINT inputSlot) {

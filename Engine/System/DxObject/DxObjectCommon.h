@@ -131,7 +131,7 @@ UINT RoundUp(UINT round, UINT thread);
 // Configs
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-//!< 最終的な画面に映るformat
-static const DXGI_FORMAT forwardFormat = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
+static const DXGI_FORMAT kScreenFormat    = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB; //!< 最終的なスクリーン画面のformat
+static const DXGI_FORMAT kOffscreenFormat = DXGI_FORMAT_R8G8B8A8_UNORM;      //!< offscreenで使われるformat
 
 _DXOBJECT_NAMESPACE_END

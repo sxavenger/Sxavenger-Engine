@@ -25,7 +25,7 @@ public:
 	~DepthRenderTarget() { Term(); }
 
 	void Create(
-		const Vector2ui& size, const Color4f& clearColor = defaultClearColor, DXGI_FORMAT format = DxObject::forwardFormat
+		const Vector2ui& size, const Color4f& clearColor = kDefaultClearColor, DXGI_FORMAT format = DxObject::kScreenFormat
 	);
 
 	void Term();

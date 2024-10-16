@@ -65,7 +65,7 @@ void SwapChain::Init(
 	// RTVの設定
 	{
 		D3D12_RENDER_TARGET_VIEW_DESC desc = {};
-		desc.Format        = forwardFormat;
+		desc.Format        = kScreenFormat;
 		desc.ViewDimension = D3D12_RTV_DIMENSION_TEXTURE2D;
 
 		Assert(descriptorHeaps->GetDescriptorMaxCount(DescriptorType::RTV) >= kBufferCount_);
