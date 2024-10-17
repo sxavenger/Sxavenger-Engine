@@ -40,16 +40,15 @@ void RailCamera::Term() {
 void RailCamera::Update() {
 
 	
-
 	if (t_ < 1.0f) {
 		t_ += 0.02f * Performance::GetDeltaTime(s).time;
-		t_ = std::min(t_, 1.0f);
+		t_ = std::fmod(t_, 1.0f);
 	}
 
-	Vector3f position = CatmullRomPosition(rail_->GetPoints(), t_);
+	Vector3f position = rail_->LoopCatmullRomPosition(t_);
 
-	float nextT = t_ + 0.01f; //!< 次のframeでのt
-	Vector3f nextPosition = CatmullRomPosition(rail_->GetPoints(), nextT);
+	float nextT = std::fmod(t_ + 0.01f, 1.0f); //!< 次のframeでのt
+	Vector3f nextPosition = rail_->LoopCatmullRomPosition(nextT);
 
 	Vector3f direction = Normalize(nextPosition - position);
 

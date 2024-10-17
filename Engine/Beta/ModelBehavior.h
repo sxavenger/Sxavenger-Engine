@@ -61,4 +61,6 @@ protected:
 	Model*                    model_;
 	QuaternionTransformBuffer transform_;
 
+	bool isVisible_ = true;
+
 };

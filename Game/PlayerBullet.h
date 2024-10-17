@@ -5,36 +5,29 @@
 //-----------------------------------------------------------------------------------------
 //* base
 #include <Engine/Beta/BaseBehavior.h>
-#include <Engine/Beta/ModelBehavior.h>
 
-//* engine
-#include <Engine/Beta/CineCamera.h>
-
-//* Game
-#include "Rail.h"
-
+//* lib
+#include <Lib/Geometry/Vector3.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// Rail class
+// PlayerBullet class
 ////////////////////////////////////////////////////////////////////////////////////////////
-class RailCamera
-	: public ModelBehavior {
+class PlayerBullet //!< レーザーを想定
+	: public BaseBehavior {
 public:
 
 	//=========================================================================================
 	// public methods
 	//=========================================================================================
 
-	RailCamera()  = default;
-	~RailCamera() = default;
+	PlayerBullet()  = default;
+	~PlayerBullet() { Term(); }
 
 	void Init();
 
 	void Term();
 
 	void Update();
-
-	void Draw();
 
 	void SetAttributeImGui() override;
 
@@ -44,25 +37,13 @@ private:
 	// private variables
 	//=========================================================================================
 
-	//* external *//
+	//* parameter *//
 
-	CineCamera* camera_ = nullptr;
+	Vector3f direction_ = { 0.0f, 0.0f, 1.0f };
 
-	//* member *//
-
-	std::unique_ptr<Rail> rail_;
-
-	Quaternion rotate_ = Quaternion::Identity();
-
-	Vector3f upVector_;
-
-	float t_ = 0.0f;
-
-	//=========================================================================================
-	// private methods
-	//=========================================================================================
-
-	const Vector3f CalculateUpVector();
-
+	float maxEnergy_          = 1.0f;       //!< エネルギーの最大数
+	float energyLossRate_     = 0.1f;       //!< エネルギーの減少量(1秒間での)
+	float energyRecoveryRate_ = 0.1f;       //!< エネルギーの増加量(1秒間での)
+	float energy_             = maxEnergy_; //!< 計測用
 
 };

@@ -4,65 +4,56 @@
 // include
 //-----------------------------------------------------------------------------------------
 //* base
-#include <Engine/Beta/BaseBehavior.h>
-#include <Engine/Beta/ModelBehavior.h>
+#include "BaseBehavior.h"
 
 //* engine
-#include <Engine/Beta/CineCamera.h>
-
-//* Game
-#include "Rail.h"
-
+#include <Engine/Game/Model.h>
+#include <Engine/Game/Transform.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// Rail class
+// ModelInstanceBehavior class
 ////////////////////////////////////////////////////////////////////////////////////////////
-class RailCamera
-	: public ModelBehavior {
+class ModelInstanceBehavior
+	: public BaseBehavior {
 public:
 
 	//=========================================================================================
 	// public methods
 	//=========================================================================================
 
-	RailCamera()  = default;
-	~RailCamera() = default;
+	ModelInstanceBehavior() { Init(); }
+
+	~ModelInstanceBehavior() { Term(); }
 
 	void Init();
 
 	void Term();
 
-	void Update();
+	//* derivative behavior methods *//
+	//* ImGui Commands
+	virtual void SystemAttributeImGui() override;
+	virtual void SetAttributeImGui() override {} //!< user define
 
-	void Draw();
+	//* Draw
+	virtual void SystemDraw() override;
+	virtual void Draw() override {} //!< user define
 
-	void SetAttributeImGui() override;
+	//* LocalMesh
+	virtual void SystemDrawLocalMesh() override;
 
-private:
+	//* option *//
+
+	void CreateInstance(uint32_t instanceSize); //!< user側の呼び出し必須
+
+protected:
 
 	//=========================================================================================
-	// private variables
+	// protected variables
 	//=========================================================================================
-
-	//* external *//
-
-	CineCamera* camera_ = nullptr;
 
 	//* member *//
 
-	std::unique_ptr<Rail> rail_;
-
-	Quaternion rotate_ = Quaternion::Identity();
-
-	Vector3f upVector_;
-
-	float t_ = 0.0f;
-
-	//=========================================================================================
-	// private methods
-	//=========================================================================================
-
-	const Vector3f CalculateUpVector();
-
+	Model* model_ = nullptr;
+	std::unique_ptr<DxObject::BufferResource<TransformationMatrix>> instanceBuffer_;
 
 };

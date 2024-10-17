@@ -74,9 +74,16 @@ void GameScene::Run() {
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 void GameScene::Init() {
+	
 
-	railCamera_ = std::make_unique<RailCamera>();
-	railCamera_->Init();
+	rail_ = std::make_unique<Rail>();
+	rail_->Init();
+	rail_->SetToConsole();
+
+	player_ = std::make_unique<Player>();
+	player_->Init();
+	player_->SetToConsole();
+	player_->SetRail(rail_.get());
 
 }
 
@@ -84,7 +91,7 @@ void GameScene::Term() {
 }
 
 void GameScene::Update() {
-	railCamera_->Update();
+	player_->Update();
 }
 
 void GameScene::Draw() {

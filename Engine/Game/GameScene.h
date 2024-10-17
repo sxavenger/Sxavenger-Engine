@@ -11,7 +11,8 @@
 #include <format>
 
 //* Game
-#include <Game/RailCamera.h>
+#include <Game/Rail.h>
+#include <Game/Player.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // GameScene class
@@ -32,8 +33,11 @@ private:
 	//=========================================================================================
 
 	//* rail shooting *//
+	//* https://youtu.be/BY0g9Pw0rWU?si=I1Dvv9s7kjjNr3yW&t=54
 
-	std::unique_ptr<RailCamera> railCamera_;
+	std::unique_ptr<Rail> rail_;
+
+	std::unique_ptr<Player> player_;
 
 	//=========================================================================================
 	// private methods

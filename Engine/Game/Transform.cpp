@@ -24,8 +24,7 @@ void BaseTransformBuffer::Transfer() {
 	}
 
 	if (buffer_ != nullptr) {
-		(*buffer_)[0].worldMatrix           = mat_;
-		(*buffer_)[0].worldInverceTranspose = mat_.Inverse().Transpose();
+		(*buffer_)[0].Transfer(mat_);
 	}
 }
 

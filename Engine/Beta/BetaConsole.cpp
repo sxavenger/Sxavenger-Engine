@@ -64,6 +64,27 @@ void BetaConsolePipeline::Init() {
 	}
 
 	{
+		blobs_[kDefaultInstance_Diffuse] = std::make_unique<GraphicsBlob>();
+		blobs_[kDefaultInstance_Diffuse]->Create(L"monobehavior/defaultInstance.vs.hlsl", GRAPHICS_VERTEX);
+		blobs_[kDefaultInstance_Diffuse]->Create(L"monobehavior/diffuse.ps.hlsl",         GRAPHICS_PIXEL);
+
+		pipelines_[kDefaultInstance_Diffuse] = std::make_unique<GraphicsPipeline>();
+
+		GraphicsRootSignatureDesc descRoot;
+		descRoot.SetCBV(0, VISIBILITY_ALL, 10);          //!< camera
+		descRoot.SetVirtualSRV(1, VISIBILITY_VERTEX, 0); //!< Transform
+		descRoot.SetSRV(2, VISIBILITY_PIXEL, 0);         //!< Diffuse
+		descRoot.SetSampler(0, MODE_WRAP, VISIBILITY_PIXEL, 0);
+
+		pipelines_[kDefaultInstance_Diffuse]->CreateRootSignature(deviceObj, descRoot);
+
+		GraphicsPipelineDesc desc;
+		desc.CreateDefaultDesc();
+
+		pipelines_[kDefaultInstance_Diffuse]->CreatePipeline(deviceObj, blobs_[kDefaultInstance_Diffuse].get(), desc);
+	}
+
+	{
 		blobs_[kDefaultMesh_Diffuse] = std::make_unique<GraphicsBlob>();
 		blobs_[kDefaultMesh_Diffuse]->Create(L"monobehavior/default.as.hlsl", GRAPHICS_AMPLIFICATION);
 		blobs_[kDefaultMesh_Diffuse]->Create(L"monobehavior/default.ms.hlsl", GRAPHICS_MESH);

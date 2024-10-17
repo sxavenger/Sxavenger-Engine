@@ -90,6 +90,11 @@ struct TransformationMatrix {
 		worldMatrix           = Matrix4x4::Identity();
 		worldInverceTranspose = Matrix4x4::Identity();
 	}
+
+	void Transfer(const Matrix4x4& world) {
+		worldMatrix           = world;
+		worldInverceTranspose = world.Inverse().Transpose();
+	}
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////

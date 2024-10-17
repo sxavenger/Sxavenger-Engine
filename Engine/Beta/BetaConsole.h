@@ -38,6 +38,7 @@ class BaseBehavior;
 enum BetaConsolePipelineType {
 	kConsoleLocal,
 	kDefault_Diffuse,
+	kDefaultInstance_Diffuse,
 	kDefaultMesh_Diffuse,
 
 	kCountOfPipelineType

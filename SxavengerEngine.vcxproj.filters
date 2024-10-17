@@ -327,6 +327,9 @@
     <ClCompile Include="Engine\Console\RenderingConsole.cpp" />
     <ClCompile Include="Engine\Game\SxavengerPipeline\SxavengerFrame.cpp" />
     <ClCompile Include="Engine\Game\SxavengerPipeline\MultiViewTexture.cpp" />
+    <ClCompile Include="Engine\Beta\ModelInstanceBehavior.cpp" />
+    <ClCompile Include="Game\Player.cpp" />
+    <ClCompile Include="Game\PlayerBullet.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="externals\imgui\imconfig.h">
@@ -550,6 +553,9 @@
     <ClInclude Include="Engine\Console\ProcessConsole.h" />
     <ClInclude Include="Engine\Game\SxavengerPipeline\SxavengerFrame.h" />
     <ClInclude Include="Engine\Game\SxavengerPipeline\MultiViewTexture.h" />
+    <ClInclude Include="Engine\Beta\ModelInstanceBehavior.h" />
+    <ClInclude Include="Game\Player.h" />
+    <ClInclude Include="Game\PlayerBullet.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

@@ -4,20 +4,23 @@
 // include
 //-----------------------------------------------------------------------------------------
 //* base
-#include <Engine/Beta/BaseBehavior.h>
 #include <Engine/Beta/ModelBehavior.h>
 
 //* engine
+#include <Engine/System/Performance.h>
 #include <Engine/Beta/CineCamera.h>
 
 //* Game
-#include "Rail.h"
+#include <Game/Rail.h>
+#include <Game/PlayerBullet.h>
 
+//* c++
+#include <memory>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// Rail class
+// Player class
 ////////////////////////////////////////////////////////////////////////////////////////////
-class RailCamera
+class Player
 	: public ModelBehavior {
 public:
 
@@ -25,8 +28,8 @@ public:
 	// public methods
 	//=========================================================================================
 
-	RailCamera()  = default;
-	~RailCamera() = default;
+	Player()  = default;
+	~Player() { Term(); }
 
 	void Init();
 
@@ -34,9 +37,11 @@ public:
 
 	void Update();
 
-	void Draw();
-
 	void SetAttributeImGui() override;
+
+	//* setter *//
+
+	void SetRail(Rail* rail) { rail_ = rail; }
 
 private:
 
@@ -44,25 +49,24 @@ private:
 	// private variables
 	//=========================================================================================
 
-	//* external *//
+	//* externals *//
 
 	CineCamera* camera_ = nullptr;
+	Rail* rail_         = nullptr;
 
-	//* member *//
+	//* parameter *//
+	
+	DeltaTimePoint loopTime_  = { 24.0f }; //!< 1周の時間
+	DeltaTimePoint loopTimer_;             //!< 計測用
 
-	std::unique_ptr<Rail> rail_;
+	//* bullet *//
 
-	Quaternion rotate_ = Quaternion::Identity();
-
-	Vector3f upVector_;
-
-	float t_ = 0.0f;
+	std::unique_ptr<PlayerBullet> bullet_;
 
 	//=========================================================================================
 	// private methods
 	//=========================================================================================
 
-	const Vector3f CalculateUpVector();
-
+	void Move();
 
 };

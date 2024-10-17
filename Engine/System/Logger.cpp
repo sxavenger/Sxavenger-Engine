@@ -9,7 +9,6 @@
 #include <iomanip>
 
 //* windows
-#define NOMINMAX
 #include <windows.h>
 
 

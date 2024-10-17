@@ -50,7 +50,7 @@
     <ClCompile>
       <WarningLevel>Level4</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NOMINMAX;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(ProjectDir)externals\nlohmann;$(ProjectDir)externals\meshoptimizer;$(ProjectDir)externals\imgui;$(ProjectDir)externals\DirectXTex;$(ProjectDir)externals\DirectXMesh;$(ProjectDir)externals\assimp\include;$(ProjectDir)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
@@ -84,7 +84,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NOMINMAX;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
@@ -117,6 +117,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\Beta\DepthRenderTarget.cpp" />
     <ClCompile Include="Engine\Beta\GraphicsEditor.cpp" />
     <ClCompile Include="Engine\Beta\ModelBehavior.cpp" />
+    <ClCompile Include="Engine\Beta\ModelInstanceBehavior.cpp" />
     <ClCompile Include="Engine\Beta\SceneRenderTarget.cpp" />
     <ClCompile Include="Engine\Console\ProcessConsole.cpp" />
     <ClCompile Include="Engine\Console\RenderingConsole.cpp" />
@@ -184,6 +185,8 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="externals\meshoptimizer\vfetchanalyzer.cpp" />
     <ClCompile Include="externals\meshoptimizer\vfetchoptimizer.cpp" />
     <ClCompile Include="Game\Kipfel.cpp" />
+    <ClCompile Include="Game\Player.cpp" />
+    <ClCompile Include="Game\PlayerBullet.cpp" />
     <ClCompile Include="Game\Rail.cpp" />
     <ClCompile Include="Game\RailCamera.cpp" />
     <ClCompile Include="Game\Teapot.cpp" />
@@ -205,6 +208,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\Beta\DepthRenderTarget.h" />
     <ClInclude Include="Engine\Beta\GraphicsEditor.h" />
     <ClInclude Include="Engine\Beta\ModelBehavior.h" />
+    <ClInclude Include="Engine\Beta\ModelInstanceBehavior.h" />
     <ClInclude Include="Engine\Beta\SceneRenderTarget.h" />
     <ClInclude Include="Engine\Console\ProcessConsole.h" />
     <ClInclude Include="Engine\Console\RenderingConsole.h" />
@@ -260,6 +264,8 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="externals\imgui\imstb_truetype.h" />
     <ClInclude Include="externals\meshoptimizer\meshoptimizer.h" />
     <ClInclude Include="Game\Kipfel.h" />
+    <ClInclude Include="Game\Player.h" />
+    <ClInclude Include="Game\PlayerBullet.h" />
     <ClInclude Include="Game\Rail.h" />
     <ClInclude Include="Game\RailCamera.h" />
     <ClInclude Include="Game\Teapot.h" />

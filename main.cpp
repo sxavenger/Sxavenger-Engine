@@ -1,4 +1,3 @@
-#define NOMINMAX
 #include <Engine/System/Sxavenger.h>
 #include <Engine/Game/SxavengerGame.h>
 #include <Lib/Environment.h>

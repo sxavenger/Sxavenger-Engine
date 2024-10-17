@@ -5,6 +5,7 @@
 //-----------------------------------------------------------------------------------------
 //* base
 #include <Engine/Beta/BaseBehavior.h>
+#include <Engine/Beta/ModelInstanceBehavior.h>
 
 //* lib
 #include <Lib/Geometry/Vector3.h>
@@ -16,7 +17,7 @@
 // Rail class
 ////////////////////////////////////////////////////////////////////////////////////////////
 class Rail
-	: public BaseBehavior {
+	: public ModelInstanceBehavior {
 public:
 
 	//=========================================================================================
@@ -36,7 +37,7 @@ public:
 
 	//* getter *//
 
-	const std::vector<Vector3f>& GetPoints() const { return points_; }
+	Vector3f LoopCatmullRomPosition(float t);
 
 private:
 
@@ -44,14 +45,19 @@ private:
 	// private variables
 	//=========================================================================================
 
-	//* member *//
+	//* rail *//
 
 	std::vector<Vector3f> points_;
+
+	//* behavior *//
+
+	static const uint32_t kInstanceSize_ = 128;
 
 	//=========================================================================================
 	// private methods
 	//=========================================================================================
 
 	void DrawCatmullrom(uint32_t kSubdivision);
+
 
 };

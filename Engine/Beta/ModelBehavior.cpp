@@ -36,6 +36,10 @@ void ModelBehavior::SystemDraw() {
 		return;
 	}
 
+	if (!isVisible_) {
+		return;
+	}
+
 	auto commandList = Sxavenger::GetCommandList();
 
 	for (uint32_t i = 0; i < model_->GetMeshSize(); ++i) {
