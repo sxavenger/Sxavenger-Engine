@@ -102,12 +102,9 @@ void GameScene::Draw() {
 	{
 		Sxavenger::BeginScreenDraw();
 		
-		// "offscreen"をフルスクリーンにする
-		/*Sxavenger::GetDxCommon()->CopyResource(
-			Sxavenger::GetDxCommon()->GetSwapChainObj()->GetBackBufferResource(), D3D12_RESOURCE_STATE_RENDER_TARGET,
-			sBetaConsole->GetGameRenderTarget()->GetResource(), D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE
-		);*/
-
+		// screenにframeを描画
+		//!< screenに描画する画面は [MainMenu > Config] から設定
+		sSystemConsole->PresentToScreen();
 		
 	}
 }

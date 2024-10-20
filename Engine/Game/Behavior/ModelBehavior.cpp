@@ -32,7 +32,7 @@ void ModelBehavior::DrawSystematic(_MAYBE_UNUSED const Camera3D* camera) {
 	auto commandList = Sxavenger::GetCommandList();
 
 	// TODO: mesh shaderへの対応
-	sSystemConsole->GetRenderingConsole()->SetPipeline(kDefaultVS_AlbedoPS_Deferred);
+	sSystemConsole->SetRenderingPipeline(kDefaultVS_AlbedoPS_Deferred);
 
 	for (uint32_t i = 0; i < model_->GetMeshSize(); ++i) {
 		model_->GetMesh(i).BindIABuffer();

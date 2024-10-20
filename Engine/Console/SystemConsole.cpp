@@ -38,6 +38,7 @@ void SystemConsole::Term() {
 }
 
 void SystemConsole::UpdateConsole() {
+
 	DisplayMainMenu();
 
 	if (isDisplayConsole_) {
@@ -49,24 +50,23 @@ void SystemConsole::UpdateConsole() {
 		DisplayLog();
 		DisplayGame();
 		DisplayScene();
-
-		if (isDisplayRenderingConsole_) {
-			renderingConsole_->UpdateConsole();
-		}
+		
+		RenderingConsole::UpdateConsole();
+		ProcessConsole::UpdateConsole();
 	}
 }
 
 void SystemConsole::Draw() {
-	renderingConsole_->RenderSystematic(gameFrame_.get());
-	renderingConsole_->RenderSystematic(sceneFrame_.get());
+	RenderingConsole::RenderSystematic(gameFrame_.get());
+	RenderingConsole::RenderSystematic(sceneFrame_.get());
 
 	gameFrame_->TransitionSystematicToXclipse();
 	sceneFrame_->TransitionSystematicToXclipse();
 
 	Sxavenger::TranstionAllocator();
 
-	processConsole_->ProcessXclipse(gameFrame_.get());
-	processConsole_->ProcessXclipse(sceneFrame_.get());
+	ProcessConsole::ProcessXclipse(gameFrame_.get());
+	ProcessConsole::ProcessXclipse(sceneFrame_.get());
 
 	gameFrame_->TransitionXclipseToAdaptive();
 	sceneFrame_->TransitionXclipseToAdaptive();
@@ -85,6 +85,10 @@ void SystemConsole::Log(const std::string& log, const std::optional<Color4f>& co
 	while (logs_.size() >= limitLog_) {
 		logs_.pop_back(); //!< 一番古いログの削除
 	}
+}
+
+void SystemConsole::PresentToScreen() {
+	gameFrame_->PresentAdaptiveToScreen();
 }
 
 SystemConsole* const SystemConsole::GetInstance() {
@@ -107,16 +111,13 @@ void SystemConsole::InitImGuiConfig() {
 }
 
 void SystemConsole::InitConsole() {
-	renderingConsole_ = std::make_unique<RenderingConsole>();
-	renderingConsole_->Init();
-
-	processConsole_ = std::make_unique<ProcessConsole>();
-	processConsole_->Init();
+	RenderingConsole::Init();
+	ProcessConsole::Init();
 }
 
 void SystemConsole::TermConsole() {
-	renderingConsole_.reset();
-	processConsole_.reset();
+	RenderingConsole::Term();
+	ProcessConsole::Term();
 }
 
 void SystemConsole::InitFrame() {
@@ -178,8 +179,8 @@ void SystemConsole::DisplayMainMenu() {
 	}
 
 	if (ImGui::BeginMenu("Window")) {
-		ImGui::Checkbox("display rendering console", &isDisplayRenderingConsole_);
-		ImGui::Checkbox("display process console",   &isDisplayProcessConsole_);
+		ImGui::Checkbox("display rendering console", &(RenderingConsole::isDisplayRenderingConsole_));
+		ImGui::Checkbox("display process console",   &(ProcessConsole::isDisplayProcessConsole_));
 		ImGui::EndMenu();
 	}
 
@@ -249,7 +250,7 @@ void SystemConsole::DisplayLog() {
 
 void SystemConsole::DisplayGame() {
 	DockingConsole();
-	ImGui::Begin("Game ## System Console", nullptr, windowFlag_ | ImGuiWindowFlags_NoScrollbar);
+	ImGui::Begin("Game ## System Console", nullptr, windowFlag_ | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
 
 	DisplayTextureImGuiFullWindow(Sxavenger::GetTexture<BaseTexture>("resources/checker_white.png"), { 0.2f, 0.2f, 0.2f, 1.0f }); //< HACK
 	DisplayTextureImGuiFullWindow(gameFrame_->GetAdaptiveTexture());
@@ -259,10 +260,14 @@ void SystemConsole::DisplayGame() {
 
 void SystemConsole::DisplayScene() {
 	DockingConsole();
-	ImGui::Begin("Scene ## System Console", nullptr, windowFlag_ | ImGuiWindowFlags_NoScrollbar);
+	ImGui::Begin("Scene ## System Console", nullptr, windowFlag_ | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
 
 	DisplayTextureImGuiFullWindow(Sxavenger::GetTexture<BaseTexture>("resources/checker_white.png"), { 0.2f, 0.2f, 0.2f, 1.0f }); //< HACK
 	DisplayTextureImGuiFullWindow(sceneFrame_->GetAdaptiveTexture());
+
+	if (ImGui::IsWindowFocused()) {
+		sceneCamera_->Update();
+	}
 
 	ImGui::End();
 }

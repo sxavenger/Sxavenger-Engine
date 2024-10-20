@@ -18,7 +18,7 @@ public:
 	//=========================================================================================
 
 	ProcessConsole()  = default;
-	~ProcessConsole() { Term(); }
+	~ProcessConsole() = default;
 
 	void Init();
 
@@ -31,10 +31,19 @@ public:
 
 	//* pipeline option *//
 
-	void SetPipeline(ProcessPipelineType type);
+	void SetProcessPipeline(ProcessPipelineType type);
 
 	void Dispatch(const Vector2ui& size);
 
+protected:
+
+	//=========================================================================================
+	// protected variables
+	//=========================================================================================
+
+	//* config *//
+
+	bool isDisplayProcessConsole_ = true;
 
 private:
 
@@ -44,6 +53,6 @@ private:
 
 	//* pipeline *//
 
-	ProcessPipeline pipeline_;
+	std::unique_ptr<ProcessPipeline> processPipeline_;
 
 };

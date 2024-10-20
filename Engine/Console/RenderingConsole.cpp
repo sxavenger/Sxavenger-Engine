@@ -17,15 +17,19 @@
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 void RenderingConsole::Init() {
-	pipeline_.Init();
+	renderingPipeline_ = std::make_unique<RenderingPipeline>();
+	renderingPipeline_->Init();
 }
 
 void RenderingConsole::Term() {
+	renderingPipeline_.reset();
 }
 
 void RenderingConsole::UpdateConsole() {
-	DisplayOutliner();
-	DisplayAttribute();
+	if (isDisplayRenderingConsole_) {
+		DisplayOutliner();
+		DisplayAttribute();
+	}
 }
 
 void RenderingConsole::RenderSystematic(SxavengerFrame* frame) {
@@ -68,8 +72,8 @@ void RenderingConsole::RemoveBehavior(BaseBehavior* behavior) {
 	behaviors_.remove(behavior);
 }
 
-void RenderingConsole::SetPipeline(RenderingPipelineType type) const {
-	pipeline_.SetPipeline(type);
+void RenderingConsole::SetRenderingPipeline(RenderingPipelineType type) const {
+	renderingPipeline_->SetPipeline(type);
 }
 
 void RenderingConsole::DisplayOutliner() {

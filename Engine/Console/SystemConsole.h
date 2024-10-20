@@ -24,7 +24,8 @@
 ////////////////////////////////////////////////////////////////////////////////////////////
 // SystemConsole class
 ////////////////////////////////////////////////////////////////////////////////////////////
-class SystemConsole final {
+class SystemConsole final
+	: public RenderingConsole, public ProcessConsole {
 public:
 
 	//=========================================================================================
@@ -47,6 +48,8 @@ public:
 
 	void Log(const std::string& log, const std::optional<Color4f>& color = std::nullopt);
 
+	void PresentToScreen();
+
 	//* config getter *//
 
 	const ImGuiWindowFlags GetWindowFlag() const { return windowFlag_; }
@@ -54,9 +57,6 @@ public:
 	bool IsUpdateRequired() const { return isUpdateRequired_; }
 
 	//* other console getter *//
-
-	RenderingConsole* GetRenderingConsole() const { return renderingConsole_.get(); }
-	ProcessConsole* GetProcessConsole() const { return processConsole_.get(); }
 
 	//!< singleton
 	// TODO: SxavengerEngineの関数として入れてもいいかも
@@ -120,13 +120,6 @@ private:
 
 	//* checker board render target *//
 
-	//* othre console *//
-
-	bool isDisplayRenderingConsole_ = true; //!< TEST
-	std::unique_ptr<RenderingConsole> renderingConsole_;
-
-	bool isDisplayProcessConsole_ = true;
-	std::unique_ptr<ProcessConsole> processConsole_;
 
 	//=========================================================================================
 	// private methods

@@ -14,7 +14,7 @@
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 void BaseBehavior::SetToConsole() {
-	sSystemConsole->GetRenderingConsole()->SetBehavior(this);
+	sSystemConsole->SetBehavior(this);
 }
 
 void BaseBehavior::SetToConsole(const std::string& name) {
@@ -35,11 +35,11 @@ void BaseBehavior::Term() {
 	Assert(children_.empty(), "behavior children is not empty."); //!< 親(this)を消す場合, 子をdeleteまたはclearしてなければならない
 
 	// selectからの削除
-	sSystemConsole->GetRenderingConsole()->RemoveSelectedBehavior(this);
+	sSystemConsole->RemoveSelectedBehavior(this);
 
 	if (parent_ == nullptr) { //!< root(親がいない)場合
 		// consoleから削除
-		sSystemConsole->GetRenderingConsole()->RemoveBehavior(this);
+		sSystemConsole->RemoveBehavior(this);
 
 	} else { //!< 親がいる場合
 		// 親から自分を削除

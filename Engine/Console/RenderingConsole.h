@@ -19,8 +19,7 @@ class BaseBehavior;
 ////////////////////////////////////////////////////////////////////////////////////////////
 // RenderingConsole class
 ////////////////////////////////////////////////////////////////////////////////////////////
-class RenderingConsole final {
-	//!< system console で unique_ptrとして保持させる予定
+class RenderingConsole {
 public:
 
 	//=========================================================================================
@@ -28,7 +27,7 @@ public:
 	//=========================================================================================
 
 	RenderingConsole()  = default;
-	~RenderingConsole() { Term(); }
+	~RenderingConsole() = default;
 
 	void Init();
 
@@ -49,7 +48,17 @@ public:
 
 	//* pipeline option *//
 
-	void SetPipeline(RenderingPipelineType type) const;
+	void SetRenderingPipeline(RenderingPipelineType type) const;
+
+protected:
+
+	//=========================================================================================
+	// protected variables
+	//=========================================================================================
+
+	//* window *//
+
+	bool isDisplayRenderingConsole_ = true;
 
 private:
 
@@ -67,7 +76,7 @@ private:
 
 	//* pipeline *//
 
-	RenderingPipeline pipeline_;
+	std::unique_ptr<RenderingPipeline> renderingPipeline_;
 
 	//=========================================================================================
 	// private methods

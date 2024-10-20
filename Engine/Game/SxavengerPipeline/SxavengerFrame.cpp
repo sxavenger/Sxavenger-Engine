@@ -150,6 +150,39 @@ const D3D12_GPU_DESCRIPTOR_HANDLE& VisualProcessFrame::GetReferenceTextureHandle
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
+// ScreenPresenter class methods
+////////////////////////////////////////////////////////////////////////////////////////////
+
+void ScreenPresenter::Init() {
+	ia_ = std::make_unique<BufferResource<ScreenPresentIA>>(Sxavenger::GetDevicesObj(), 3);
+	(*ia_)[0].position = { -1.0f, 1.0f, 1.0f };
+	(*ia_)[0].texcoord = { 0.0f, 0.0f };
+
+	(*ia_)[1].position = { 3.0f, 1.0f, 1.0f };
+	(*ia_)[1].texcoord = { 2.0f, 0.0f };
+
+	(*ia_)[2].position = { -1.0f, -3.0f, 1.0f };
+	(*ia_)[2].texcoord = { 0.0f, 2.0f };
+}
+
+void ScreenPresenter::Term() {
+}
+
+void ScreenPresenter::Present(const D3D12_GPU_DESCRIPTOR_HANDLE& handle) {
+
+	auto commandList = Sxavenger::GetCommandList();
+
+	sSystemConsole->SetRenderingPipeline(kPresentToScreen);
+
+	D3D12_VERTEX_BUFFER_VIEW vbv = ia_->GetVertexBufferView();
+
+	commandList->IASetVertexBuffers(0, 1, &vbv);
+	commandList->SetGraphicsRootDescriptorTable(0, handle);
+
+	commandList->DrawInstanced(ia_->GetIndexSize(), 1, 0, 0);
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////
 // SxavengerFrame class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -169,7 +202,7 @@ void SxavengerFrame::Create(const Vector2ui& size) {
 	visual_ = std::make_unique<VisualProcessFrame>();
 	visual_->Create(size);
 
-	//* depth texture *//
+	//* depth texture
 
 	depthStencilTexture_ = std::make_unique<DepthStencilTexture>();
 	depthStencilTexture_->Create(size);
@@ -178,6 +211,11 @@ void SxavengerFrame::Create(const Vector2ui& size) {
 
 	config_ = std::make_unique<BufferResource<SxavengerFrameConfig>>(Sxavenger::GetDevicesObj(), 1);
 	(*config_)[0].size = size;
+
+	//* presenter
+
+	presenter_ = std::make_unique<ScreenPresenter>();
+	presenter_->Init();
 }
 
 void SxavengerFrame::Term() {
@@ -215,35 +253,73 @@ void SxavengerFrame::TransitionSystematicToXclipse() {
 
 	xclipse_->BeginUnorderedAccess();
 
-	sSystemConsole->GetProcessConsole()->SetPipeline(kTransition_SampleLighting);
+	sSystemConsole->SetProcessPipeline(kTransition_SampleLighting);
 
-	commandList->SetComputeRootDescriptorTable(0, systematic_->GetBuffer(SystematicRenderingFrame::GBUFFER_ALBEDO)->GetGPUHandleSRV());
-	commandList->SetComputeRootDescriptorTable(1, systematic_->GetBuffer(SystematicRenderingFrame::GBUFFER_NORMAL)->GetGPUHandleSRV());
-	commandList->SetComputeRootDescriptorTable(2, systematic_->GetBuffer(SystematicRenderingFrame::GBUFFER_POSITION)->GetGPUHandleSRV());
+	commandList->SetComputeRootDescriptorTable(0, systematic_->GetTexture(SystematicRenderingFrame::GBUFFER_ALBEDO)->GetGPUHandleSRV());
+	commandList->SetComputeRootDescriptorTable(1, systematic_->GetTexture(SystematicRenderingFrame::GBUFFER_NORMAL)->GetGPUHandleSRV());
+	commandList->SetComputeRootDescriptorTable(2, systematic_->GetTexture(SystematicRenderingFrame::GBUFFER_POSITION)->GetGPUHandleSRV());
 	commandList->SetComputeRootConstantBufferView(3, config_->GetGPUVirtualAddress());
-	commandList->SetComputeRootDescriptorTable(4, xclipse_->GetBuffer()->GetGPUHandleUAV());
+	commandList->SetComputeRootDescriptorTable(4, xclipse_->GetTexture()->GetGPUHandleUAV());
 
-	sSystemConsole->GetProcessConsole()->Dispatch((*config_)[0].size);
+	sSystemConsole->Dispatch((*config_)[0].size);
 
 	xclipse_->EndUnorderedAccess();
 }
 
 void SxavengerFrame::TransitionXclipseToAdaptive() {
-
-	auto commandList = Sxavenger::GetCommandList();
-
-
-
+	CopyTexture(adaptive_->GetTexture(), xclipse_->GetTexture());
 }
 
 void SxavengerFrame::TransitionAdaptiveToVisual() {
+
+	//auto commandList = Sxavenger::GetCommandList();
+
+
 }
 
 void SxavengerFrame::TransitionVisualToAdaptive() {
 }
 
 void SxavengerFrame::PresentAdaptiveToScreen() {
+	presenter_->Present(adaptive_->GetTexture()->GetGPUHandleSRV());
 }
 
-void SxavengerFrame::PresentVisualToScreen() {
+void SxavengerFrame::CopyTexture(const MultiViewTexture* dst, const MultiViewTexture* src) {
+
+	auto commandList = Sxavenger::GetCommandList();
+
+	ID3D12Resource* const resourceSrc = src->GetResource();
+	ID3D12Resource* const resourceDst = dst->GetResource();
+
+	//* 共通情報の設定
+	D3D12_RESOURCE_BARRIER barriers[2] = {};
+	barriers[0].Type                 = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+	barriers[0].Transition.pResource = resourceSrc;
+	barriers[1].Type                 = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+	barriers[1].Transition.pResource = resourceDst;
+
+	//* copy可能状態に遷移
+	// src
+	barriers[0].Transition.StateBefore = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
+	barriers[0].Transition.StateAfter  = D3D12_RESOURCE_STATE_COPY_SOURCE;
+
+	// dst
+	barriers[1].Transition.StateBefore = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
+	barriers[1].Transition.StateAfter  = D3D12_RESOURCE_STATE_COPY_DEST;
+	
+
+	commandList->ResourceBarrier(_countof(barriers), barriers);
+
+	commandList->CopyResource(resourceDst, resourceSrc);
+
+	//* 元の状態に遷移
+	// src
+	barriers[0].Transition.StateBefore = D3D12_RESOURCE_STATE_COPY_SOURCE;
+	barriers[0].Transition.StateAfter  = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
+
+	// dst
+	barriers[1].Transition.StateBefore = D3D12_RESOURCE_STATE_COPY_DEST;
+	barriers[1].Transition.StateAfter  = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
+
+	commandList->ResourceBarrier(_countof(barriers), barriers);
 }

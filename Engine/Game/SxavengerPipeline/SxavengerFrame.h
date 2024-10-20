@@ -60,7 +60,7 @@ public:
 	//* getter *//
 
 	const GBufferArray<std::unique_ptr<MultiViewTexture>>& GetBuffers() const { return buffers_; }
-	MultiViewTexture* GetBuffer(GBuffer type) const { return buffers_.at(type).get(); }
+	MultiViewTexture* GetTexture(GBuffer type) const { return buffers_.at(type).get(); }
 
 	//=========================================================================================
 	// public variables
@@ -102,7 +102,7 @@ public:
 
 	//* getter *//
 
-	MultiViewTexture* GetBuffer() const { return buffer_.get(); }
+	MultiViewTexture* GetTexture() const { return buffer_.get(); }
 
 private:
 
@@ -189,6 +189,43 @@ private:
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////
+// ScreenPresenter class
+////////////////////////////////////////////////////////////////////////////////////////////
+class ScreenPresenter {
+public:
+
+	//=========================================================================================
+	// public methods
+	//=========================================================================================
+
+	ScreenPresenter()  = default;
+	~ScreenPresenter() { Term(); }
+
+	void Init();
+
+	void Term();
+
+	void Present(const D3D12_GPU_DESCRIPTOR_HANDLE& handle);
+
+private:
+
+	////////////////////////////////////////////////////////////////////////////////////////////
+	// ScreenPresentIA structure
+	////////////////////////////////////////////////////////////////////////////////////////////
+	struct ScreenPresentIA {
+		Vector4f position;
+		Vector2f texcoord;
+	};
+
+	//=========================================================================================
+	// public methods
+	//=========================================================================================
+
+	std::unique_ptr<DxObject::BufferResource<ScreenPresentIA>> ia_;
+
+};
+
+////////////////////////////////////////////////////////////////////////////////////////////
 // SxavengerFrame class
 ////////////////////////////////////////////////////////////////////////////////////////////
 class SxavengerFrame {
@@ -220,7 +257,6 @@ public:
 	//* present methods *//
 
 	void PresentAdaptiveToScreen();
-	void PresentVisualToScreen();
 
 	//* getter *//
 
@@ -263,6 +299,16 @@ private:
 	//* config buffer *//
 
 	std::unique_ptr<DxObject::BufferResource<SxavengerFrameConfig>> config_;
+
+	//* presenter *//
+
+	std::unique_ptr<ScreenPresenter> presenter_;
+
+	//=========================================================================================
+	// private methods
+	//=========================================================================================
+
+	void CopyTexture(const MultiViewTexture* dst, const MultiViewTexture* src);
 
 };
 
