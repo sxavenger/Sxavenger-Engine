@@ -3,11 +3,18 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
-//* external
-#include <imgui.h>
+//* engine
+#include <Engine/Console/RenderingConsole.h>
+#include <Engine/Console/ProcessConsole.h>
+#include <Engine/Game/Camera/CineCamera.h>
+#include <Engine/Game/Camera/DebugCamera3D.h>
+#include <Engine/Game/SxavengerPipeline/SxavengerFrame.h>
 
 //* lib
 #include <Lib/Geometry/Vector4.h>
+
+//* external
+#include <imgui.h>
 
 //* c++
 #include <optional>
@@ -30,6 +37,8 @@ public:
 
 	void UpdateConsole();
 
+	void Draw();
+
 	//* console docking *//
 
 	void DockingConsole() const;
@@ -42,15 +51,26 @@ public:
 
 	const ImGuiWindowFlags GetWindowFlag() const { return windowFlag_; }
 
+	bool IsUpdateRequired() const { return isUpdateRequired_; }
+
 	//* other console getter *//
 
-		
+	RenderingConsole* GetRenderingConsole() const { return renderingConsole_.get(); }
+	ProcessConsole* GetProcessConsole() const { return processConsole_.get(); }
 
 	//!< singleton
 	// TODO: SxavengerEngineの関数として入れてもいいかも
 	static SystemConsole* const GetInstance();
 	SystemConsole()  = default;
 	~SystemConsole() = default;
+
+	//=========================================================================================
+	// public variables
+	//=========================================================================================
+
+	static const Color4f kCommentOutColor;
+	static const Color4f kErrorColor;
+	static const Color4f kWarningColor;
 
 private:
 
@@ -90,19 +110,54 @@ private:
 	std::deque<std::pair<std::string, std::optional<Color4f>>> logs_;
 	uint32_t limitLog_ = 32;
 
+	//* sxavenger frame *//
+
+	std::unique_ptr<SxavengerFrame> gameFrame_;
+	std::unique_ptr<CineCamera> gameCamera_;
+
+	std::unique_ptr<SxavengerFrame> sceneFrame_;
+	std::unique_ptr<DebugCamera3D> sceneCamera_;
+
+	//* checker board render target *//
+
+	//* othre console *//
+
+	bool isDisplayRenderingConsole_ = true; //!< TEST
+	std::unique_ptr<RenderingConsole> renderingConsole_;
+
+	bool isDisplayProcessConsole_ = true;
+	std::unique_ptr<ProcessConsole> processConsole_;
+
 	//=========================================================================================
 	// private methods
 	//=========================================================================================
 
 	void InitImGuiConfig();
 
+	void InitConsole();
+	void TermConsole();
+
+	void InitFrame();
+	void TermFrame();
+
+	void InitCheckerBoard();
+	void TermCheckerBoard();
+	void DrawCheckerBoard();
+
 	//* display console methods *//
 
 	void DisplayMainMenu();
 	void DisplayPerformance();
 	void DisplayLog();
+	void DisplayGame();
+	void DisplayScene();
 
 	void DisplaySystemMenu();
+
+	//* assistance methods *//
+
+	void DisplayTextureImGuiFullWindow(const MultiViewTexture* texture) const;
+	void DisplayTextureImGuiFullWindow(const BaseTexture* texture, const ImVec4& boarderColor = {}) const;
 };
 
 SystemConsole* const sSystemConsole = SystemConsole::GetInstance();

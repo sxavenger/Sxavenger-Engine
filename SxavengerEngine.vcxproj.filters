@@ -196,12 +196,6 @@
     <ClCompile Include="Engine\Game\GameScene.cpp">
       <Filter>Engine\Game\source</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Game\Camera3D.cpp">
-      <Filter>Engine\Game\source</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\Game\DebugCamera3D.cpp">
-      <Filter>Engine\Game\source</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\Game\Transform.cpp">
       <Filter>Engine\Game\source</Filter>
     </ClCompile>
@@ -217,22 +211,10 @@
     <ClCompile Include="Engine\Game\InputAssembler.cpp">
       <Filter>Engine\Game\source</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Beta\BetaConsole.cpp">
-      <Filter>Engine\Beta</Filter>
-    </ClCompile>
     <ClCompile Include="Game\Teapot.cpp">
       <Filter>Game</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Beta\DepthRenderTarget.cpp">
-      <Filter>Engine\Beta</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\Beta\CineCamera.cpp">
-      <Filter>Engine\Beta</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\Beta\BaseBehavior.cpp">
-      <Filter>Engine\Beta</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\Beta\ModelBehavior.cpp">
       <Filter>Engine\Beta</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Beta\GraphicsEditor.cpp">
@@ -301,35 +283,28 @@
     <ClCompile Include="Engine\Game\DebugPrimitive.cpp">
       <Filter>Engine\Game\source</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Game\CollisionDetection.cpp">
-      <Filter>Engine\Game\source</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\Game\ColliderManager.cpp">
-      <Filter>Engine\Game\source</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\Game\Collider.cpp">
-      <Filter>Engine\Game\source</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\Beta\SceneRenderTarget.cpp">
       <Filter>Engine\Beta</Filter>
     </ClCompile>
     <ClCompile Include="Lib\MyMath.cpp">
       <Filter>Lib</Filter>
     </ClCompile>
-    <ClCompile Include="Game\RailCamera.cpp">
-      <Filter>Game</Filter>
-    </ClCompile>
-    <ClCompile Include="Game\Rail.cpp">
-      <Filter>Game</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\Console\SystemConsole.cpp" />
     <ClCompile Include="Engine\Console\ProcessConsole.cpp" />
     <ClCompile Include="Engine\Console\RenderingConsole.cpp" />
     <ClCompile Include="Engine\Game\SxavengerPipeline\SxavengerFrame.cpp" />
     <ClCompile Include="Engine\Game\SxavengerPipeline\MultiViewTexture.cpp" />
-    <ClCompile Include="Engine\Beta\ModelInstanceBehavior.cpp" />
-    <ClCompile Include="Game\Player.cpp" />
-    <ClCompile Include="Game\PlayerBullet.cpp" />
+    <ClCompile Include="Engine\Game\Collider\Collider.cpp" />
+    <ClCompile Include="Engine\Game\Collider\ColliderManager.cpp" />
+    <ClCompile Include="Engine\Game\Collider\CollisionDetection.cpp" />
+    <ClCompile Include="Engine\Game\Behavior\BaseBehavior.cpp" />
+    <ClCompile Include="Engine\Game\Behavior\ModelBehavior.cpp" />
+    <ClCompile Include="Engine\Game\SxavengerPipeline\RenderingPipeline.cpp" />
+    <ClCompile Include="Engine\Game\SxavengerPipeline\DepthStencilTexture.cpp" />
+    <ClCompile Include="Engine\Game\Camera\Camera3D.cpp" />
+    <ClCompile Include="Engine\Game\Camera\DebugCamera3D.cpp" />
+    <ClCompile Include="Engine\Game\Camera\CineCamera.cpp" />
+    <ClCompile Include="Engine\Game\SxavengerPipeline\ProcessPipeline.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="externals\imgui\imconfig.h">
@@ -461,12 +436,6 @@
     <ClInclude Include="Engine\Game\GameScene.h">
       <Filter>Engine\Game\include</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Game\DebugCamera3D.h">
-      <Filter>Engine\Game\include</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Game\Camera3D.h">
-      <Filter>Engine\Game\include</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\Game\Transform.h">
       <Filter>Engine\Game\include</Filter>
     </ClInclude>
@@ -485,22 +454,10 @@
     <ClInclude Include="Engine\Game\InputAssembler.h">
       <Filter>Engine\Game\include</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Beta\BetaConsole.h">
-      <Filter>Engine\Beta</Filter>
-    </ClInclude>
     <ClInclude Include="Game\Teapot.h">
       <Filter>Game</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Beta\DepthRenderTarget.h">
-      <Filter>Engine\Beta</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Beta\CineCamera.h">
-      <Filter>Engine\Beta</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Beta\BaseBehavior.h">
-      <Filter>Engine\Beta</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Beta\ModelBehavior.h">
       <Filter>Engine\Beta</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Beta\GraphicsEditor.h">
@@ -527,56 +484,31 @@
     <ClInclude Include="Engine\Game\DebugPrimitive.h">
       <Filter>Engine\Game\include</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Game\CollisionDetection.h">
-      <Filter>Engine\Game\include</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Game\Collider.h">
-      <Filter>Engine\Game\include</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Game\ColliderManager.h">
-      <Filter>Engine\Game\include</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\Beta\SceneRenderTarget.h">
       <Filter>Engine\Beta</Filter>
     </ClInclude>
     <ClInclude Include="Lib\MyMath.h">
       <Filter>Lib</Filter>
     </ClInclude>
-    <ClInclude Include="Game\RailCamera.h">
-      <Filter>Game</Filter>
-    </ClInclude>
-    <ClInclude Include="Game\Rail.h">
-      <Filter>Game</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\Console\SystemConsole.h" />
     <ClInclude Include="Engine\Console\RenderingConsole.h" />
     <ClInclude Include="Engine\Console\ProcessConsole.h" />
     <ClInclude Include="Engine\Game\SxavengerPipeline\SxavengerFrame.h" />
     <ClInclude Include="Engine\Game\SxavengerPipeline\MultiViewTexture.h" />
-    <ClInclude Include="Engine\Beta\ModelInstanceBehavior.h" />
-    <ClInclude Include="Game\Player.h" />
-    <ClInclude Include="Game\PlayerBullet.h" />
+    <ClInclude Include="Engine\Game\Collider\CollisionDetection.h" />
+    <ClInclude Include="Engine\Game\Collider\Collider.h" />
+    <ClInclude Include="Engine\Game\Collider\ColliderManager.h" />
+    <ClInclude Include="Engine\Game\Behavior\BaseBehavior.h" />
+    <ClInclude Include="Engine\Game\Behavior\ModelBehavior.h" />
+    <ClInclude Include="Engine\Game\SxavengerPipeline\RenderingPipeline.h" />
+    <ClInclude Include="Engine\Game\SxavengerPipeline\DepthStencilTexture.h" />
+    <ClInclude Include="Engine\Game\Camera\Camera3D.h" />
+    <ClInclude Include="Engine\Game\Camera\DebugCamera3D.h" />
+    <ClInclude Include="Engine\Game\Camera\CineCamera.h" />
+    <ClInclude Include="Engine\Game\SxavengerPipeline\ProcessPipeline.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />
-    <None Include="Resources\hlsl\MonoBehavior\MonoBehavior.hlsli">
-      <Filter>Resources\hlsl\MonoBehavior</Filter>
-    </None>
-    <None Include="Resources\hlsl\Transform.hlsli">
-      <Filter>Resources\hlsl</Filter>
-    </None>
-    <None Include="Resources\hlsl\Camera.hlsli">
-      <Filter>Resources\hlsl</Filter>
-    </None>
-    <None Include="Resources\hlsl\Matrix.hlsli">
-      <Filter>Resources\hlsl</Filter>
-    </None>
-    <None Include="Resources\hlsl\MeshCommon.hlsli">
-      <Filter>Resources\hlsl</Filter>
-    </None>
-    <None Include="Resources\hlsl\MonoBehavior\DefaultMesh.hlsli">
-      <Filter>Resources\hlsl\MonoBehavior</Filter>
-    </None>
     <None Include="Resources\hlsl\Primitive\DebugPrimitive.hlsli">
       <Filter>Resources\hlsl\Primitive</Filter>
     </None>
@@ -587,24 +519,6 @@
     </Text>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="Resources\hlsl\MonoBehavior\Default.VS.hlsl">
-      <Filter>Resources\hlsl\MonoBehavior</Filter>
-    </FxCompile>
-    <FxCompile Include="Resources\hlsl\MonoBehavior\ConsoleLocal.PS.hlsl">
-      <Filter>Resources\hlsl\MonoBehavior</Filter>
-    </FxCompile>
-    <FxCompile Include="Resources\hlsl\MonoBehavior\Diffuse.PS.hlsl">
-      <Filter>Resources\hlsl\MonoBehavior</Filter>
-    </FxCompile>
-    <FxCompile Include="Resources\hlsl\MonoBehavior\ConsoleLocal.VS.hlsl">
-      <Filter>Resources\hlsl\MonoBehavior</Filter>
-    </FxCompile>
-    <FxCompile Include="Resources\hlsl\MonoBehavior\Default.AS.hlsl">
-      <Filter>Resources\hlsl\MonoBehavior</Filter>
-    </FxCompile>
-    <FxCompile Include="Resources\hlsl\MonoBehavior\Default.MS.hlsl">
-      <Filter>Resources\hlsl\MonoBehavior</Filter>
-    </FxCompile>
     <FxCompile Include="Resources\hlsl\Primitive\DebugPrimitive.VS.hlsl">
       <Filter>Resources\hlsl\Primitive</Filter>
     </FxCompile>

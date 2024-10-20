@@ -4,7 +4,7 @@
 // include
 //-----------------------------------------------------------------------------------------
 //* forward
-#include <Engine/Beta/BaseBehavior.h>
+#include <Engine/Game/Behavior/BaseBehavior.h>
 
 //* console
 #include "SystemConsole.h"
@@ -17,6 +17,7 @@
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 void RenderingConsole::Init() {
+	pipeline_.Init();
 }
 
 void RenderingConsole::Term() {
@@ -25,6 +26,20 @@ void RenderingConsole::Term() {
 void RenderingConsole::UpdateConsole() {
 	DisplayOutliner();
 	DisplayAttribute();
+}
+
+void RenderingConsole::RenderSystematic(SxavengerFrame* frame) {
+	frame->BeginSystematic(true, true);
+
+	for (auto behavior : behaviors_) {
+		DrawSystematicBehavior(behavior, frame);
+	}
+
+	frame->EndSystematic();
+}
+
+void RenderingConsole::RenderAdaptive(SxavengerFrame* frame) {
+	frame;
 }
 
 void RenderingConsole::SetBehavior(BaseBehavior* behavior) {
@@ -51,6 +66,10 @@ void RenderingConsole::RemoveSelectedBehavior(BaseBehavior* behavior) {
 void RenderingConsole::RemoveBehavior(BaseBehavior* behavior) {
 	RemoveSelectedBehavior(behavior);
 	behaviors_.remove(behavior);
+}
+
+void RenderingConsole::SetPipeline(RenderingPipelineType type) const {
+	pipeline_.SetPipeline(type);
 }
 
 void RenderingConsole::DisplayOutliner() {
@@ -137,5 +156,21 @@ void RenderingConsole::SelectableBehavior(const std::list<BaseBehavior*>::const_
 
 			ImGui::TreePop();
 		}
+	}
+}
+
+void RenderingConsole::DrawSystematicBehavior(BaseBehavior* behavior, SxavengerFrame* frame) {
+	behavior->DrawSystematic(frame->GetCamera());
+
+	for (auto child : behavior->GetChildren()) {
+		DrawSystematicBehavior(child, frame);
+	}
+}
+
+void RenderingConsole::DrawAdaptiveBehavior(BaseBehavior* behavior, SxavengerFrame* frame) {
+	behavior->DrawAdaptive(frame->GetCamera());
+
+	for (auto child : behavior->GetChildren()) {
+		DrawAdaptiveBehavior(child, frame);
 	}
 }

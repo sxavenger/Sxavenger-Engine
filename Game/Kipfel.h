@@ -4,7 +4,7 @@
 // include
 //-----------------------------------------------------------------------------------------
 //* base
-#include <Engine/Beta/ModelBehavior.h>
+#include <Engine/Game/Behavior/ModelBehavior.h>
 
 //* engine
 #include <Engine/Game/SxavengerGame.h>

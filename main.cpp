@@ -1,12 +1,14 @@
-#include <Engine/System/Sxavenger.h>
-#include <Engine/Game/SxavengerGame.h>
-#include <Lib/Environment.h>
-
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
-// GameScene
+//* engine
+#include <Engine/System/Sxavenger.h>
+#include <Engine/Game/SxavengerGame.h>
 #include <Engine/Game/GameScene.h>
+#include <Engine/Console/SystemConsole.h>
+
+//* lib
+#include <Lib/Environment.h>
 
 // c++
 #include <memory>
@@ -16,17 +18,17 @@
 ////////////////////////////////////////////////////////////////////////////////////////////
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
-	//=========================================================================================
-	// 初期化
-	//=========================================================================================
 	Sxavenger::Init(kWindowSize, kWindowTitle);
 	SxavengerGame::Init();
 
+	sSystemConsole->Init();
+
 	std::unique_ptr<GameScene> gameScene = std::make_unique<GameScene>();
-	
 	gameScene->Run();
 
 	gameScene.reset();
+
+	sSystemConsole->Term();
 
 	SxavengerGame::Term();
 	Sxavenger::Term();

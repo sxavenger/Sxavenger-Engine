@@ -25,7 +25,7 @@ const LPCWSTR ShaderBlobManager::compilerModels_[ShaderType::kCountOfShaderType]
 	L"ps_6_5", //!< pixel
 
 	//* compute pipeline *//
-	L"cs_6_5", //!< cs
+	L"cs_6_6", //!< cs
 };
 
 

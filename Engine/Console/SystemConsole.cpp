@@ -6,13 +6,16 @@
 //* engine
 #include <Engine/System/Sxavenger.h>
 #include <Engine/System/Performance.h>
+#include <Engine/Game/Behavior/BaseBehavior.h>
 _DXOBJECT_USING
 
 //=========================================================================================
 // SystemConsole // static variables
 //=========================================================================================
 
-
+const Color4f SystemConsole::kCommentOutColor = { 0.0f, 0.55f, 0.0f, 1.0f };
+const Color4f SystemConsole::kErrorColor      = { 0.8f, 0.0f, 0.0f, 1.0f };
+const Color4f SystemConsole::kWarningColor    = { 0.8f, 0.8f, 0.0f, 1.0f };
 
 const std::string SystemConsole::kConsoleName_      = "Sxavenger Engine Console";
 const std::string SystemConsole::kImGuiIniFilepath_ = "imgui.ini";
@@ -23,18 +26,52 @@ const std::string SystemConsole::kImGuiIniFilepath_ = "imgui.ini";
 
 void SystemConsole::Init() {
 	InitImGuiConfig();
+	InitConsole();
+	InitFrame();
+
+	Sxavenger::LoadTexture("resources/checker_white.png");
 }
 
 void SystemConsole::Term() {
+	TermFrame();
+	TermConsole();
 }
 
 void SystemConsole::UpdateConsole() {
 	DisplayMainMenu();
 
 	if (isDisplayConsole_) {
+
+		//!< docking用IDを取得
+		dockingId_ = ImGui::GetID(kConsoleName_.c_str());
+
 		DisplayPerformance();
 		DisplayLog();
+		DisplayGame();
+		DisplayScene();
+
+		if (isDisplayRenderingConsole_) {
+			renderingConsole_->UpdateConsole();
+		}
 	}
+}
+
+void SystemConsole::Draw() {
+	renderingConsole_->RenderSystematic(gameFrame_.get());
+	renderingConsole_->RenderSystematic(sceneFrame_.get());
+
+	gameFrame_->TransitionSystematicToXclipse();
+	sceneFrame_->TransitionSystematicToXclipse();
+
+	Sxavenger::TranstionAllocator();
+
+	processConsole_->ProcessXclipse(gameFrame_.get());
+	processConsole_->ProcessXclipse(sceneFrame_.get());
+
+	gameFrame_->TransitionXclipseToAdaptive();
+	sceneFrame_->TransitionXclipseToAdaptive();
+
+	Sxavenger::TranstionAllocator();
 }
 
 void SystemConsole::DockingConsole() const {
@@ -69,6 +106,41 @@ void SystemConsole::InitImGuiConfig() {
 	windowFlag_ |= ImGuiWindowFlags_NoResize;
 }
 
+void SystemConsole::InitConsole() {
+	renderingConsole_ = std::make_unique<RenderingConsole>();
+	renderingConsole_->Init();
+
+	processConsole_ = std::make_unique<ProcessConsole>();
+	processConsole_->Init();
+}
+
+void SystemConsole::TermConsole() {
+	renderingConsole_.reset();
+	processConsole_.reset();
+}
+
+void SystemConsole::InitFrame() {
+	gameCamera_ = std::make_unique<CineCamera>();
+
+	gameFrame_ = std::make_unique<SxavengerFrame>();
+	gameFrame_->Create(kWindowSize);
+	gameFrame_->SetCamera(gameCamera_.get());
+
+	sceneCamera_ = std::make_unique<DebugCamera3D>();
+
+	sceneFrame_ = std::make_unique<SxavengerFrame>();
+	sceneFrame_->Create(kWindowSize);
+	sceneFrame_->SetCamera(sceneCamera_.get());
+}
+
+void SystemConsole::TermFrame() {
+	gameFrame_.reset();
+	gameCamera_.reset();
+	sceneFrame_.reset();
+	sceneCamera_.reset();
+}
+
+
 void SystemConsole::DisplayMainMenu() {
 	ImGui::BeginMainMenuBar();
 
@@ -83,12 +155,6 @@ void SystemConsole::DisplayMainMenu() {
 		// .ini layout
 		if (ImGui::Button("output layout")) {
 			ImGui::SaveIniSettingsToDisk(kImGuiIniFilepath_.c_str());
-		}
-
-		ImGui::SameLine();
-
-		if (ImGui::Button("load layout")) {
-			ImGui::LoadIniSettingsFromDisk(kImGuiIniFilepath_.c_str());
 		}
 
 		// windowflag
@@ -106,10 +172,14 @@ void SystemConsole::DisplayMainMenu() {
 		ImGui::EndMenu();
 	}
 
-	//! VIEW
-
 	if (ImGui::BeginMenu("System")) {
 		DisplaySystemMenu();
+		ImGui::EndMenu();
+	}
+
+	if (ImGui::BeginMenu("Window")) {
+		ImGui::Checkbox("display rendering console", &isDisplayRenderingConsole_);
+		ImGui::Checkbox("display process console",   &isDisplayProcessConsole_);
 		ImGui::EndMenu();
 	}
 
@@ -173,6 +243,26 @@ void SystemConsole::DisplayLog() {
 	}
 
 	ImGui::SliderInt("limit log", (int*)&limitLog_, 0, 128);
+
+	ImGui::End();
+}
+
+void SystemConsole::DisplayGame() {
+	DockingConsole();
+	ImGui::Begin("Game ## System Console", nullptr, windowFlag_ | ImGuiWindowFlags_NoScrollbar);
+
+	DisplayTextureImGuiFullWindow(Sxavenger::GetTexture<BaseTexture>("resources/checker_white.png"), { 0.2f, 0.2f, 0.2f, 1.0f }); //< HACK
+	DisplayTextureImGuiFullWindow(gameFrame_->GetAdaptiveTexture());
+
+	ImGui::End();
+}
+
+void SystemConsole::DisplayScene() {
+	DockingConsole();
+	ImGui::Begin("Scene ## System Console", nullptr, windowFlag_ | ImGuiWindowFlags_NoScrollbar);
+
+	DisplayTextureImGuiFullWindow(Sxavenger::GetTexture<BaseTexture>("resources/checker_white.png"), { 0.2f, 0.2f, 0.2f, 1.0f }); //< HACK
+	DisplayTextureImGuiFullWindow(sceneFrame_->GetAdaptiveTexture());
 
 	ImGui::End();
 }
@@ -329,4 +419,70 @@ void SystemConsole::DisplaySystemMenu() {
 
 	}
 
+}
+
+void SystemConsole::DisplayTextureImGuiFullWindow(const MultiViewTexture* texture) const {
+	// タブ等を排除した全体のwindowSize計算
+	ImVec2 regionMax  = ImGui::GetWindowContentRegionMax();
+	ImVec2 regionMin  = ImGui::GetWindowContentRegionMin();
+	ImVec2 windowSize = { regionMax.x - regionMin.x, regionMax.y - regionMin.y };
+
+	Vector2f textureSize = texture->GetSize();
+	
+	// 画像アス比と分割したWindowアス比の計算
+	float textureAspectRatio = textureSize.x / textureSize.y;
+	float windowAspectRatio  = windowSize.x / windowSize.y;
+	
+	// 出力する画像サイズの設定
+	ImVec2 displayTextureSize = windowSize;
+	
+	// 画像サイズの調整
+	if (textureAspectRatio <= windowAspectRatio) {
+		displayTextureSize.x *= textureAspectRatio / windowAspectRatio;
+	
+	} else {
+		displayTextureSize.y *= windowAspectRatio / textureAspectRatio;
+	}
+	
+	// 出力場所の調整
+	ImVec2 leftTop = {
+		(windowSize.x - displayTextureSize.x) * 0.5f + regionMin.x,
+		(windowSize.y - displayTextureSize.y) * 0.5f + regionMin.y,
+	};
+	
+	ImGui::SetCursorPos(leftTop);
+	ImGui::Image(texture->GetGPUHandleSRV().ptr, displayTextureSize);
+}
+
+void SystemConsole::DisplayTextureImGuiFullWindow(const BaseTexture* texture, const ImVec4& boarderColor) const {
+	// タブ等を排除した全体のwindowSize計算
+	ImVec2 regionMax  = ImGui::GetWindowContentRegionMax();
+	ImVec2 regionMin  = ImGui::GetWindowContentRegionMin();
+	ImVec2 windowSize = { regionMax.x - regionMin.x, regionMax.y - regionMin.y };
+
+	Vector2f textureSize = texture->GetSize();
+	
+	// 画像アス比と分割したWindowアス比の計算
+	float textureAspectRatio = textureSize.x / textureSize.y;
+	float windowAspectRatio  = windowSize.x / windowSize.y;
+	
+	// 出力する画像サイズの設定
+	ImVec2 displayTextureSize = windowSize;
+	
+	// 画像サイズの調整
+	if (textureAspectRatio <= windowAspectRatio) {
+		displayTextureSize.x *= textureAspectRatio / windowAspectRatio;
+	
+	} else {
+		displayTextureSize.y *= windowAspectRatio / textureAspectRatio;
+	}
+	
+	// 出力場所の調整
+	ImVec2 leftTop = {
+		(windowSize.x - displayTextureSize.x) * 0.5f + regionMin.x,
+		(windowSize.y - displayTextureSize.y) * 0.5f + regionMin.y,
+	};
+	
+	ImGui::SetCursorPos(leftTop);
+	ImGui::Image(texture->GetGPUHandleSRV().ptr, displayTextureSize, { 0.0f, 0.0f }, { 1.0f, 1.0f }, { 1.0f, 1.0f, 1.0f, 1.0f }, boarderColor);
 }

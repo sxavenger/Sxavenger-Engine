@@ -4,15 +4,14 @@
 // include
 //-----------------------------------------------------------------------------------------
 // console
-#include <Engine/Beta/BetaConsole.h>
+#include <Engine/Console/SystemConsole.h>
 
 // c++
 #include <memory>
 #include <format>
 
 //* Game
-#include <Game/Rail.h>
-#include <Game/Player.h>
+#include <Game/Teapot.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // GameScene class
@@ -32,12 +31,7 @@ private:
 	// private methods
 	//=========================================================================================
 
-	//* rail shooting *//
-	//* https://youtu.be/BY0g9Pw0rWU?si=I1Dvv9s7kjjNr3yW&t=54
-
-	std::unique_ptr<Rail> rail_;
-
-	std::unique_ptr<Player> player_;
+	std::unique_ptr<Teapot> teapot_;
 
 	//=========================================================================================
 	// private methods

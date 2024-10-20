@@ -7,7 +7,7 @@
 #include <Engine/System/DxObject/DxBufferResource.h>
 #include <Engine/System/DxObject/DxShaderBlob.h>
 #include <Engine/System/DxObject/DxGraphicsPipeline.h>
-#include <Engine/Game/Camera3D.h>
+#include <Engine/Game/Camera/Camera3D.h>
 
 //* lib
 #include <Lib/Geometry/Vector4.h>

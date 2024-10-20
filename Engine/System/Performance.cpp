@@ -4,10 +4,12 @@ _DXOBJECT_USING
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
-#include "Sxavenger.h"
-#include <thread>
+//* engine
+#include <Engine/System/Sxavenger.h>
+#include <Engine/Console/SystemConsole.h>
 
-#include <Engine/Beta/BetaConsole.h>
+//* c++
+#include <thread>
 
 //=========================================================================================
 // static variables
@@ -37,7 +39,7 @@ void Performance::EndFrame() {
 
 	WaitForFPS(120);
 
-	if (!sBetaConsole->IsUpdateRequired()) {
+	if (!sSystemConsole->IsUpdateRequired()) {
 		return;
 	}
 

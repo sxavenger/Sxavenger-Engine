@@ -66,7 +66,9 @@ void ImGuiManager::InitImGuiStyle() {
 	ImGuiStyle& style = ImGui::GetStyle();
 	/* size */
 	// main
-	style.GrabMinSize = 10;
+	style.FramePadding.y = 2;
+	style.ItemSpacing.y  = 4;
+	style.GrabMinSize    = 8;
 
 	// rounding
 	style.WindowRounding    = 3;

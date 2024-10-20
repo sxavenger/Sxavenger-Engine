@@ -94,7 +94,7 @@ public:
 
 	//* opiton *//
 
-	void SetBuffers(uint32_t meshIndex);
+	void SetIABuffer(uint32_t meshIndex);
 
 	const D3D12_GPU_DESCRIPTOR_HANDLE GetTextureHandle(uint32_t meshIndex, TextureType type = TEXTURE_DIFFUSE);
 
@@ -125,7 +125,8 @@ private:
 	//* members *//
 
 	std::vector<MeshData>     meshes_;
-	std::vector<MaterialData> materials_; //!< 余分な配列ができてる
+	std::vector<MaterialData> materials_;
+	// FIXME: 余分な配列ができてる
 
 	//* node
 	Node rootNode_;

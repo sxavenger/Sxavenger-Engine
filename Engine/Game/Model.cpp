@@ -46,13 +46,13 @@ void Model::Term() {
 	}
 }
 
-void Model::SetBuffers(uint32_t meshIndex) {
+void Model::SetIABuffer(uint32_t meshIndex) {
 
 	if (meshIndex >= meshes_.size()) {
 		Assert(false); //!< 配列以上のmodelDataの呼び出し
 	}
 
-	meshes_.at(meshIndex).mesh.SetBuffer();
+	meshes_.at(meshIndex).mesh.BindIABuffer();
 }
 
 const D3D12_GPU_DESCRIPTOR_HANDLE Model::GetTextureHandle(uint32_t meshIndex, TextureType type) {

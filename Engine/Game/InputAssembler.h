@@ -30,7 +30,7 @@ public:
 
 	void Term();
 
-	void SetBuffer() const;
+	void BindIABuffer() const;
 
 	void DrawCall(UINT instanceCount = 1) const;
 
@@ -74,7 +74,7 @@ void InputAssembler<T>::Term() {
 }
 
 template<typename T>
-void InputAssembler<T>::SetBuffer() const {
+void InputAssembler<T>::BindIABuffer() const {
 
 	auto commandList = Sxavenger::GetCommandList();
 

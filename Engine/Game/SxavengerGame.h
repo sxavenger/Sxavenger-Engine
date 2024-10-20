@@ -6,7 +6,7 @@
 //* origin
 #include "Model.h"
 #include "DebugPrimitive.h"
-#include "ColliderManager.h"
+#include <Engine/Game/Collider/ColliderManager.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // SxavengerGame class

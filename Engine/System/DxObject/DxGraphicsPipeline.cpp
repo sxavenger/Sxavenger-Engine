@@ -17,6 +17,8 @@ _DXOBJECT_USING
 void GraphicsPipelineDesc::Init() {
 	rasterizerDesc   = {};
 	depthStencilDesc = {};
+
+	rtvFormats.reserve(D3D12_SIMULTANEOUS_RENDER_TARGET_COUNT);
 }
 
 void GraphicsPipelineDesc::Clear() {

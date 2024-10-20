@@ -91,6 +91,7 @@ public:
 	//* sampler *//
 
 	virtual void SetSampler(uint32_t sampleIndex, SamplerMode mode, ShaderVisibility stage, UINT shaderRegister);
+	virtual void SetSampler(SamplerMode mode, ShaderVisibility stage, UINT shaderRegister);
 
 	virtual void SetSamplerAnisotropic(uint32_t sampleIndex, SamplerMode mode, ShaderVisibility stage, UINT shaderRegister, uint32_t anisotropic);
 

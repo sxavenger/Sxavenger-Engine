@@ -21,8 +21,6 @@ void GameScene::Run() {
 	// 初期化処理
 	//=========================================================================================
 
-	sBetaConsole->Init();
-	//sSystemConsole->Init();
 	Init();
 
 	Sxavenger::ResetBackAllocator();
@@ -38,10 +36,9 @@ void GameScene::Run() {
 		// 更新処理
 		//=========================================================================================
 
-		sBetaConsole->Update();
-		//sSystemConsole->UpdateConsole();
+		sSystemConsole->UpdateConsole();
 
-		if (sBetaConsole->IsUpdateRequired()) {
+		if (sSystemConsole->IsUpdateRequired()) {
 			Update();
 		}
 
@@ -51,7 +48,7 @@ void GameScene::Run() {
 
 		Sxavenger::TranstionAllocator();
 
-		sBetaConsole->Draw();
+		sSystemConsole->Draw();
 		Draw();
 
 		Sxavenger::EndImGuiAndDrawCall();
@@ -65,7 +62,6 @@ void GameScene::Run() {
 	//=========================================================================================
 
 	Term();
-	sBetaConsole->Term();
 
 }
 
@@ -76,14 +72,9 @@ void GameScene::Run() {
 void GameScene::Init() {
 	
 
-	rail_ = std::make_unique<Rail>();
-	rail_->Init();
-	rail_->SetToConsole();
-
-	player_ = std::make_unique<Player>();
-	player_->Init();
-	player_->SetToConsole();
-	player_->SetRail(rail_.get());
+	teapot_ = std::make_unique<Teapot>();
+	teapot_->Init();
+	teapot_->SetToConsole();
 
 }
 
@@ -91,18 +82,17 @@ void GameScene::Term() {
 }
 
 void GameScene::Update() {
-	player_->Update();
 }
 
 void GameScene::Draw() {
 
 	{
 		//* main screen *//
-		Sxavenger::BeginOffscreen(sBetaConsole->GetGameRenderTarget());
+		/*Sxavenger::BeginOffscreen(sBetaConsole->GetGameRenderTarget());
 
 		SxavengerGame::DrawToScene(sBetaConsole->GetGameCamera());
 		Sxavenger::EndOffscreen(sBetaConsole->GetGameRenderTarget());
-		Sxavenger::TranstionAllocator();
+		Sxavenger::TranstionAllocator();*/
 	}
 
 	//=========================================================================================
@@ -113,10 +103,10 @@ void GameScene::Draw() {
 		Sxavenger::BeginScreenDraw();
 		
 		// "offscreen"をフルスクリーンにする
-		Sxavenger::GetDxCommon()->CopyResource(
+		/*Sxavenger::GetDxCommon()->CopyResource(
 			Sxavenger::GetDxCommon()->GetSwapChainObj()->GetBackBufferResource(), D3D12_RESOURCE_STATE_RENDER_TARGET,
 			sBetaConsole->GetGameRenderTarget()->GetResource(), D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE
-		);
+		);*/
 
 		
 	}

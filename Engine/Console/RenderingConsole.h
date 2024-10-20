@@ -3,8 +3,9 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
-//* external
-#include <imgui.h>
+//* engine
+#include <Engine/Game/SxavengerPipeline/RenderingPipeline.h>
+#include <Engine/Game/SxavengerPipeline/SxavengerFrame.h>
 
 //* c++
 #include <list>
@@ -27,13 +28,16 @@ public:
 	//=========================================================================================
 
 	RenderingConsole()  = default;
-	~RenderingConsole() = default;
+	~RenderingConsole() { Term(); }
 
 	void Init();
 
 	void Term();
 
 	void UpdateConsole();
+
+	void RenderSystematic(SxavengerFrame* frame);
+	void RenderAdaptive(SxavengerFrame* frame);
 
 	//* behavior option *//
 
@@ -43,6 +47,9 @@ public:
 
 	void RemoveBehavior(BaseBehavior* behavior);
 
+	//* pipeline option *//
+
+	void SetPipeline(RenderingPipelineType type) const;
 
 private:
 
@@ -52,13 +59,15 @@ private:
 
 	//* behavior *//
 	//* container
-	std::list<BaseBehavior*>                                behaviors_;
+	std::list<BaseBehavior*> behaviors_;
 
 	//* selected
 	const std::list<BaseBehavior*>*                         selectedBehaviorTable_ = nullptr;      //!< selectされてるbahevior container
 	std::optional<std::list<BaseBehavior*>::const_iterator> selectedBehavior_      = std::nullopt; //!< selectされているbehavior
 
+	//* pipeline *//
 
+	RenderingPipeline pipeline_;
 
 	//=========================================================================================
 	// private methods
@@ -73,5 +82,8 @@ private:
 
 	bool IsSelectedBehavior(BaseBehavior* behavior);
 	void SelectableBehavior(const std::list<BaseBehavior*>::const_iterator& it, const std::list<BaseBehavior*>& table);
+
+	void DrawSystematicBehavior(BaseBehavior* behavior, SxavengerFrame* frame);
+	void DrawAdaptiveBehavior(BaseBehavior* behavior, SxavengerFrame* frame);
 
 };

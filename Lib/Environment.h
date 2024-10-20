@@ -11,4 +11,4 @@
 //-----------------------------------------------------------------------------------------
 
 static const Vector2ui kWindowSize = { 1280, 720 };
-static const char kWindowTitle[]   = "Sxavenger Engine";
+static const char kWindowTitle[]   = "Sxavenger Engine 2.1";
