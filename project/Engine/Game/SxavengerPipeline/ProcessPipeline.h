@@ -20,6 +20,8 @@
 enum ProcessPipelineType : uint32_t {
 	kTransition_SampleLighting,
 
+	kVisual_Glayscale,
+
 	kCountOfProcessPipelineType
 };
 
@@ -72,5 +74,6 @@ private:
 	//=========================================================================================
 
 	void CreateTransition();
+	void CreateVisual();
 
 };

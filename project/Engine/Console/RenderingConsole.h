@@ -62,17 +62,22 @@ protected:
 
 private:
 
+	////////////////////////////////////////////////////////////////////////////////////////////
+	// behavior container using
+	////////////////////////////////////////////////////////////////////////////////////////////
+	using BehaviorContainer = std::list<BaseBehavior*>;
+
 	//=========================================================================================
 	// private variables
 	//=========================================================================================
 
 	//* behavior *//
 	//* container
-	std::list<BaseBehavior*> behaviors_;
+	BehaviorContainer behaviors_;
 
 	//* selected
-	const std::list<BaseBehavior*>*                         selectedBehaviorTable_ = nullptr;      //!< selectされてるbahevior container
-	std::optional<std::list<BaseBehavior*>::const_iterator> selectedBehavior_      = std::nullopt; //!< selectされているbehavior
+	const BehaviorContainer*                         selectedBehaviorTable_ = nullptr;      //!< selectされてるbahevior container
+	std::optional<BehaviorContainer::const_iterator> selectedBehavior_      = std::nullopt; //!< selectされているbehavior
 
 	//* pipeline *//
 
@@ -90,7 +95,7 @@ private:
 	//* behavior methods *//
 
 	bool IsSelectedBehavior(BaseBehavior* behavior);
-	void SelectableBehavior(const std::list<BaseBehavior*>::const_iterator& it, const std::list<BaseBehavior*>& table);
+	void SelectableBehavior(const BehaviorContainer::const_iterator& it, const BehaviorContainer& table);
 
 	void DrawSystematicBehavior(BaseBehavior* behavior, SxavengerFrame* frame);
 	void DrawAdaptiveBehavior(BaseBehavior* behavior, SxavengerFrame* frame);

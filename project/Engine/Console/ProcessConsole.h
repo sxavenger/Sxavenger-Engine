@@ -7,6 +7,10 @@
 #include <Engine/Game/SxavengerPipeline/ProcessPipeline.h>
 #include <Engine/Game/SxavengerPipeline/SxavengerFrame.h>
 
+//* c++
+#include <list>
+#include <string>
+
 ////////////////////////////////////////////////////////////////////////////////////////////
 // ProcessConsole class
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -47,9 +51,18 @@ protected:
 
 private:
 
+	////////////////////////////////////////////////////////////////////////////////////////////
+	// layer container using
+	////////////////////////////////////////////////////////////////////////////////////////////
+	using LayerContainer = std::list<std::string>;
+
 	//=========================================================================================
 	// private variables
 	//=========================================================================================
+
+	//* layers *//
+
+	LayerContainer layers_;
 
 	//* pipeline *//
 
@@ -59,6 +72,17 @@ private:
 	// private methods
 	//=========================================================================================
 
-	void VisualProcess();
+	//* display console methods *//
+
+	void DisplayCanvas();
+	void DisplayLayer();
+
+	//* layer methods *//
+
+	void SelectableLayer(const LayerContainer::const_iterator& it);
+
+	//* visual process methods *// //!< HACK
+
+	void VisualGlayscale(SxavengerFrame* frame);
 
 };

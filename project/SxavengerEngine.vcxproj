@@ -144,6 +144,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="Engine\Game\SxavengerPipeline\RenderingPipeline.cpp" />
     <ClCompile Include="Engine\Game\SxavengerPipeline\SxavengerFrame.cpp" />
     <ClCompile Include="Engine\Game\SxavengerGame.cpp" />
+    <ClCompile Include="Engine\Game\SxavengerPipeline\VisualProcessLayer.cpp" />
     <ClCompile Include="Engine\Game\Transform.cpp" />
     <ClCompile Include="Engine\System\Audio.cpp" />
     <ClCompile Include="Engine\System\DirectXCommon.cpp" />
@@ -232,6 +233,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Engine\Game\SxavengerPipeline\RenderingPipeline.h" />
     <ClInclude Include="Engine\Game\SxavengerPipeline\SxavengerFrame.h" />
     <ClInclude Include="Engine\Game\SxavengerGame.h" />
+    <ClInclude Include="Engine\Game\SxavengerPipeline\VisualProcessLayer.h" />
     <ClInclude Include="Engine\Game\Transform.h" />
     <ClInclude Include="Engine\System\Audio.h" />
     <ClInclude Include="Engine\System\ComPtr.h" />

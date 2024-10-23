@@ -161,14 +161,46 @@ void AdaptiveRenderingFrame::EndRenderingBuffer() {
 void VisualProcessFrame::Create(const Vector2ui& size) {
 	for (uint32_t i = 0; i < kProcessBufferNum_; ++i) {
 		buffers_[i] = std::make_unique<MultiViewTexture>();
-		buffers_[i]->Create(VIEWFLAG_UAV, size, {}, kOffscreenFormat);
+		buffers_[i]->Create(VIEWFLAG_UAV | VIEWFLAG_SRV, size, {}, kOffscreenFormat);
 	}
 }
 
 void VisualProcessFrame::Term() {
 }
 
-void VisualProcessFrame::AdvanceResultBufferIndex() {
+void VisualProcessFrame::BeginProcess() {
+
+	auto commandList = Sxavenger::GetCommandList();
+
+	std::array<D3D12_RESOURCE_BARRIER, kProcessBufferNum_> barrires = {};
+
+	for (uint32_t i = 0; i < kProcessBufferNum_; ++i) {
+		barrires[i].Type                   = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+		barrires[i].Transition.StateBefore = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
+		barrires[i].Transition.StateAfter  = D3D12_RESOURCE_STATE_UNORDERED_ACCESS;
+		barrires[i].Transition.pResource   = buffers_[i]->GetResource();
+	}
+
+	commandList->ResourceBarrier(kProcessBufferNum_, barrires.data());
+}
+
+void VisualProcessFrame::EndProcess() {
+
+	auto commandList = Sxavenger::GetCommandList();
+
+	std::array<D3D12_RESOURCE_BARRIER, kProcessBufferNum_> barrires = {};
+
+	for (uint32_t i = 0; i < kProcessBufferNum_; ++i) {
+		barrires[i].Type                   = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+		barrires[i].Transition.StateBefore = D3D12_RESOURCE_STATE_UNORDERED_ACCESS;
+		barrires[i].Transition.StateAfter  = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
+		barrires[i].Transition.pResource   = buffers_[i]->GetResource();
+	}
+
+	commandList->ResourceBarrier(kProcessBufferNum_, barrires.data());
+}
+
+void VisualProcessFrame::NextResultBufferIndex() {
 	resultBufferIndex_++;
 	resultBufferIndex_ %= kProcessBufferNum_;
 }
@@ -177,11 +209,11 @@ void VisualProcessFrame::ResetResultBufferIndex() {
 	resultBufferIndex_ = 0;
 }
 
-const D3D12_GPU_DESCRIPTOR_HANDLE& VisualProcessFrame::GetReferenceTextureHandle(uint32_t prevIndex) {
-	Assert(prevIndex >= kProcessBufferNum_, "prevIndex must not over process buffer num");
+MultiViewTexture* VisualProcessFrame::GetPrevBuffer(uint32_t prev) const {
+	Assert(prev < kProcessBufferNum_, "visual: prev over process buffer.");
 
-	uint32_t index = (resultBufferIndex_ + kProcessBufferNum_ - prevIndex) % kProcessBufferNum_;
-	return buffers_.at(index)->GetGPUHandleSRV();
+	uint32_t index = (resultBufferIndex_ + kProcessBufferNum_ - prev) % kProcessBufferNum_;
+	return buffers_.at(index).get();
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -301,6 +333,14 @@ void SxavengerFrame::EndAdaptive() {
 	adaptive_->EndRenderingBuffer();
 }
 
+void SxavengerFrame::BeginVisual() {
+	visual_->BeginProcess();
+}
+
+void SxavengerFrame::EndVisual() {
+	visual_->EndProcess();
+}
+
 void SxavengerFrame::TransitionSystematicToXclipse() {
 
 	auto commandList = Sxavenger::GetCommandList();
@@ -330,6 +370,7 @@ void SxavengerFrame::TransitionAdaptiveToVisual() {
 }
 
 void SxavengerFrame::TransitionVisualToAdaptive() {
+	CopyTexture(adaptive_->GetTexture(), visual_->GetResultBuffer());
 }
 
 void SxavengerFrame::PresentAdaptiveToScreen() {

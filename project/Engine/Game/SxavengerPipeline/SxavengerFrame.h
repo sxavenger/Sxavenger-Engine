@@ -167,15 +167,22 @@ public:
 
 	void Term();
 
+	//* option *//
+
+	void BeginProcess();
+	void EndProcess();
+
 	//* index option *//
 
-	void AdvanceResultBufferIndex();
+	void NextResultBufferIndex();
 
 	void ResetResultBufferIndex();
 
 	//* getter *//
 
 	MultiViewTexture* GetResultBuffer() const { return buffers_.at(resultBufferIndex_).get(); }
+
+	MultiViewTexture* GetPrevBuffer(uint32_t prev) const;
 
 private:
 
@@ -195,8 +202,6 @@ private:
 	//=========================================================================================
 	// private methods
 	//=========================================================================================
-
-	const D3D12_GPU_DESCRIPTOR_HANDLE& GetReferenceTextureHandle(uint32_t prevIndex);
 
 private:
 	static_assert(kProcessBufferNum_ >= 2, "Process Texture must be at least 2.");
@@ -265,6 +270,11 @@ public:
 	void BeginAdaptive(bool isDepthClear = false);
 	void EndAdaptive();
 
+	//* process option *//
+
+	void BeginVisual();
+	void EndVisual();
+
 	//* transition methods *//
 	
 	void TransitionSystematicToXclipse();
@@ -278,9 +288,17 @@ public:
 
 	//* getter *//
 
-	const MultiViewTexture* GetAdaptiveTexture() const { return adaptive_->GetTexture(); }
+	AdaptiveRenderingFrame* GetAdaptive() const { return adaptive_.get(); }
+
+	VisualProcessFrame* GetVisual() const { return visual_.get(); }
 
 	const Camera3D* GetCamera() const { return camera_; }
+
+	const Vector2ui& GetSize() const { return (*config_)[0].size; }
+
+	//* address getter *//
+
+	const D3D12_GPU_VIRTUAL_ADDRESS GetConfigVirtualAddress() const { return config_->GetGPUVirtualAddress(); }
 
 	//* setter *//
 

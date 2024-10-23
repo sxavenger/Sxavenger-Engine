@@ -116,7 +116,7 @@ bool RenderingConsole::IsSelectedBehavior(BaseBehavior* behavior) {
 	return false;
 }
 
-void RenderingConsole::SelectableBehavior(const std::list<BaseBehavior*>::const_iterator& it, const std::list<BaseBehavior*>& table) {
+void RenderingConsole::SelectableBehavior(const BehaviorContainer::const_iterator& it, const BehaviorContainer& table) {
 	// todo: list内どうしの要素入れ替え
 
 	// iteratorの中身の取得

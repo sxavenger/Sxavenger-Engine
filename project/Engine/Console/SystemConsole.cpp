@@ -58,6 +58,7 @@ void SystemConsole::UpdateConsole() {
 }
 
 void SystemConsole::Draw() {
+	
 	RenderingConsole::RenderSystematic(gameFrame_.get());
 	RenderingConsole::RenderSystematic(sceneFrame_.get());
 
@@ -74,6 +75,19 @@ void SystemConsole::Draw() {
 
 	Sxavenger::TranstionAllocator();
 
+	gameFrame_->TransitionAdaptiveToVisual();
+	sceneFrame_->TransitionAdaptiveToVisual();
+
+	Sxavenger::TranstionAllocator();
+
+	ProcessConsole::ProcessVisual(gameFrame_.get());
+	ProcessConsole::ProcessVisual(sceneFrame_.get());
+
+	gameFrame_->TransitionVisualToAdaptive();
+	sceneFrame_->TransitionVisualToAdaptive();
+
+	Sxavenger::TranstionAllocator();
+
 	{
 		sceneFrame_->BeginAdaptive();
 
@@ -82,9 +96,6 @@ void SystemConsole::Draw() {
 
 		sceneFrame_->EndAdaptive();
 	}
-
-	gameFrame_->TransitionAdaptiveToVisual();
-	sceneFrame_->TransitionAdaptiveToVisual();
 
 	Sxavenger::TranstionAllocator();
 }
@@ -302,7 +313,7 @@ void SystemConsole::DisplayGame() {
 	ImGui::Begin("Game ## System Console", nullptr, windowFlag_ | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
 
 	DisplayTextureImGuiFullWindow(Sxavenger::GetTexture<BaseTexture>("resources/checker_black.png")); //< HACK
-	DisplayTextureImGuiFullWindow(gameFrame_->GetAdaptiveTexture());
+	DisplayTextureImGuiFullWindow(gameFrame_->GetAdaptive()->GetTexture());
 
 	ImGui::End();
 }
@@ -312,7 +323,7 @@ void SystemConsole::DisplayScene() {
 	ImGui::Begin("Scene ## System Console", nullptr, windowFlag_ | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
 
 	DisplayTextureImGuiFullWindow(Sxavenger::GetTexture<BaseTexture>("resources/checker_black.png")); //< HACK
-	DisplayTextureImGuiFullWindow(sceneFrame_->GetAdaptiveTexture());
+	DisplayTextureImGuiFullWindow(sceneFrame_->GetAdaptive()->GetTexture());
 
 	if (ImGui::IsWindowFocused()) {
 		sceneCamera_->Update();

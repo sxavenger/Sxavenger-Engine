@@ -13,6 +13,7 @@ _DXOBJECT_USING
 
 void ProcessPipeline::Init() {
 	CreateTransition();
+	CreateVisual();
 }
 
 void ProcessPipeline::Term() {
@@ -44,4 +45,22 @@ void ProcessPipeline::CreateTransition() {
 
 		pipelines_[kTransition_SampleLighting]->CreatePipeline(desc, blobs_[kTransition_SampleLighting].get());
 	}
+}
+
+void ProcessPipeline::CreateVisual() {
+
+	{
+		blobs_[kVisual_Glayscale] = std::make_unique<CSBlob>();
+		blobs_[kVisual_Glayscale]->Create(L"sxavenger/visual/visualGlayscale.cs.hlsl");
+
+		pipelines_[kVisual_Glayscale] = std::make_unique<CSPipeline>();
+
+		CSRootSignatureDesc desc = {};
+		desc.SetCBV(0, 10); //!< Config
+		desc.SetSRV(1, 0);  //!< Input
+		desc.SetUAV(2, 0);  //!< Output
+
+		pipelines_[kVisual_Glayscale]->CreatePipeline(desc, blobs_[kVisual_Glayscale].get());
+	}
+
 }
