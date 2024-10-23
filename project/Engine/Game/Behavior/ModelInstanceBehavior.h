@@ -1,48 +1,49 @@
-#pragma once
-
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
-// console
-#include <Engine/Console/SystemConsole.h>
+//* base
+#include "BaseBehavior.h"
 
-// c++
-#include <memory>
-#include <format>
-
-//* Game
-#include <Game/Player.h>
+//* engine
+#include <Engine/Game/Model.h>
+#include <Engine/Game/Transform.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// GameScene class
+// ModelInstanceBehavior class
 ////////////////////////////////////////////////////////////////////////////////////////////
-class GameScene {
+class ModelInstanceBehavior
+	: public BaseBehavior {
 public:
 
 	//=========================================================================================
 	// public methods
 	//=========================================================================================
 
-	void Run();
+	ModelInstanceBehavior() { Init(); }
 
-private:
-
-	//=========================================================================================
-	// private methods
-	//=========================================================================================
-
-	std::unique_ptr<Player> player_;
-
-	//=========================================================================================
-	// private methods
-	//=========================================================================================
+	~ModelInstanceBehavior() { Term(); }
 
 	void Init();
 
 	void Term();
 
-	void Update();
+	virtual void DrawSystematic(_MAYBE_UNUSED const Camera3D* camera);
 
-	void Draw();
+protected:
+
+	//=========================================================================================
+	// protected variables
+	//=========================================================================================
+
+	//* member *//
+
+	Model* model_ = nullptr;
+	std::unique_ptr<DxObject::BufferResource<TransformationMatrix>> instanceBuffer_;
+
+	//=========================================================================================
+	// protected methods
+	//=========================================================================================
+
+	void CreateInstance(uint32_t instanceSize);
 
 };

@@ -127,6 +127,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="Engine\Game\Behavior\BaseBehavior.cpp" />
     <ClCompile Include="Engine\Game\Behavior\ModelBehavior.cpp" />
     <ClCompile Include="Engine\Console\SystemConsole.cpp" />
+    <ClCompile Include="Engine\Game\Behavior\ModelInstanceBehavior.cpp" />
     <ClCompile Include="Engine\Game\Camera\Camera3D.cpp" />
     <ClCompile Include="Engine\Game\Camera\CineCamera.cpp" />
     <ClCompile Include="Engine\Game\Camera\DebugCamera3D.cpp" />
@@ -193,7 +194,11 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="externals\meshoptimizer\vertexfilter.cpp" />
     <ClCompile Include="externals\meshoptimizer\vfetchanalyzer.cpp" />
     <ClCompile Include="externals\meshoptimizer\vfetchoptimizer.cpp" />
+    <ClCompile Include="Game\Enemy.cpp" />
     <ClCompile Include="Game\Kipfel.cpp" />
+    <ClCompile Include="Game\Player.cpp" />
+    <ClCompile Include="Game\Rail.cpp" />
+    <ClCompile Include="Game\RailCamera.cpp" />
     <ClCompile Include="Game\Teapot.cpp" />
     <ClCompile Include="Lib\Adapter\Json\Json.cpp" />
     <ClCompile Include="Lib\Adapter\Random\Random.cpp" />
@@ -216,6 +221,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Engine\Game\Behavior\BaseBehavior.h" />
     <ClInclude Include="Engine\Game\Behavior\ModelBehavior.h" />
     <ClInclude Include="Engine\Console\SystemConsole.h" />
+    <ClInclude Include="Engine\Game\Behavior\ModelInstanceBehavior.h" />
     <ClInclude Include="Engine\Game\Camera\Camera3D.h" />
     <ClInclude Include="Engine\Game\Camera\CineCamera.h" />
     <ClInclude Include="Engine\Game\Camera\DebugCamera3D.h" />
@@ -270,7 +276,11 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="externals\imgui\imstb_textedit.h" />
     <ClInclude Include="externals\imgui\imstb_truetype.h" />
     <ClInclude Include="externals\meshoptimizer\meshoptimizer.h" />
+    <ClInclude Include="Game\Enemy.h" />
     <ClInclude Include="Game\Kipfel.h" />
+    <ClInclude Include="Game\Player.h" />
+    <ClInclude Include="Game\Rail.h" />
+    <ClInclude Include="Game\RailCamera.h" />
     <ClInclude Include="Game\Teapot.h" />
     <ClInclude Include="Lib\Adapter\Json\Json.h" />
     <ClInclude Include="Lib\Adapter\Random\Random.h" />

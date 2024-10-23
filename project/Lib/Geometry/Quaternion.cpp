@@ -111,8 +111,7 @@ float Dot(const Quaternion& q, const Quaternion& r) {
 	return q.x * r.x + q.y * r.y + q.z * r.z + q.w * r.w;
 }
 
-Quaternion MakeRotateAxisAngleQuaternion(const Vector3f& axis, float angle) {
-
+Quaternion MakeAxisAngle(const Vector3f& axis, float angle) {
 	Quaternion result;
 
 	result.x = axis.x * std::sin(angle / 2.0f);

@@ -47,7 +47,7 @@ protected:
 
 	//* config *//
 
-	bool isDisplayProcessConsole_ = true;
+	bool isDisplayProcessConsole_ = false;
 
 private:
 

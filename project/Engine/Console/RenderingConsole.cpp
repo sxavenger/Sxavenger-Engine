@@ -43,7 +43,13 @@ void RenderingConsole::RenderSystematic(SxavengerFrame* frame) {
 }
 
 void RenderingConsole::RenderAdaptive(SxavengerFrame* frame) {
-	frame;
+	frame->BeginAdaptive();
+
+	for (auto behavior : behaviors_) {
+		DrawAdaptiveBehavior(behavior, frame);
+	}
+
+	frame->EndAdaptive();
 }
 
 void RenderingConsole::SetBehavior(BaseBehavior* behavior) {

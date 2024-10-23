@@ -75,6 +75,9 @@ void SystemConsole::Draw() {
 
 	Sxavenger::TranstionAllocator();
 
+	RenderingConsole::RenderAdaptive(gameFrame_.get());
+	RenderingConsole::RenderAdaptive(sceneFrame_.get());
+
 	gameFrame_->TransitionAdaptiveToVisual();
 	sceneFrame_->TransitionAdaptiveToVisual();
 

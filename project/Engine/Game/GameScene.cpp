@@ -70,30 +70,20 @@ void GameScene::Run() {
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 void GameScene::Init() {
-	
 
-	teapot_ = std::make_unique<Teapot>();
-	teapot_->Init();
-	teapot_->SetToConsole();
-
+	player_ = std::make_unique<Player>();
+	player_->Init();
+	player_->SetToConsole();
 }
 
 void GameScene::Term() {
 }
 
 void GameScene::Update() {
+	player_->Update();
 }
 
 void GameScene::Draw() {
-
-	{
-		//* main screen *//
-		/*Sxavenger::BeginOffscreen(sBetaConsole->GetGameRenderTarget());
-
-		SxavengerGame::DrawToScene(sBetaConsole->GetGameCamera());
-		Sxavenger::EndOffscreen(sBetaConsole->GetGameRenderTarget());
-		Sxavenger::TranstionAllocator();*/
-	}
 
 	//=========================================================================================
 	// スクリーン描画処理

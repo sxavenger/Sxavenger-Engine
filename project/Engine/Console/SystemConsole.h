@@ -56,7 +56,9 @@ public:
 
 	bool IsUpdateRequired() const { return isUpdateRequired_; }
 
-	//* other console getter *//
+	//* getter *//
+
+	CineCamera* GetGameCamera() const { return gameCamera_.get(); }
 
 	//!< singleton
 	// TODO: SxavengerEngineの関数として入れてもいいかも

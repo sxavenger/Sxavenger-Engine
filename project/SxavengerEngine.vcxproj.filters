@@ -306,6 +306,11 @@
     <ClCompile Include="Engine\Game\Camera\CineCamera.cpp" />
     <ClCompile Include="Engine\Game\SxavengerPipeline\ProcessPipeline.cpp" />
     <ClCompile Include="Engine\Game\SxavengerPipeline\VisualProcessLayer.cpp" />
+    <ClCompile Include="Game\Player.cpp" />
+    <ClCompile Include="Game\Rail.cpp" />
+    <ClCompile Include="Engine\Game\Behavior\ModelInstanceBehavior.cpp" />
+    <ClCompile Include="Game\RailCamera.cpp" />
+    <ClCompile Include="Game\Enemy.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="externals\imgui\imconfig.h">
@@ -508,6 +513,11 @@
     <ClInclude Include="Engine\Game\Camera\CineCamera.h" />
     <ClInclude Include="Engine\Game\SxavengerPipeline\ProcessPipeline.h" />
     <ClInclude Include="Engine\Game\SxavengerPipeline\VisualProcessLayer.h" />
+    <ClInclude Include="Game\Player.h" />
+    <ClInclude Include="Game\Rail.h" />
+    <ClInclude Include="Engine\Game\Behavior\ModelInstanceBehavior.h" />
+    <ClInclude Include="Game\RailCamera.h" />
+    <ClInclude Include="Game\Enemy.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

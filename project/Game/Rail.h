@@ -3,46 +3,61 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
-// console
-#include <Engine/Console/SystemConsole.h>
+//* base
+#include <Engine/Game/Behavior/ModelInstanceBehavior.h>
+//#include <Engine/Game/Behavior/BaseBehavior.h>
 
-// c++
-#include <memory>
-#include <format>
+//* lib
+#include <Lib/Geometry/Vector3.h>
 
-//* Game
-#include <Game/Player.h>
+//* c++
+#include <vector>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// GameScene class
+// Rail class
 ////////////////////////////////////////////////////////////////////////////////////////////
-class GameScene {
+class Rail
+	: public ModelInstanceBehavior {
 public:
 
 	//=========================================================================================
 	// public methods
 	//=========================================================================================
 
-	void Run();
-
-private:
-
-	//=========================================================================================
-	// private methods
-	//=========================================================================================
-
-	std::unique_ptr<Player> player_;
-
-	//=========================================================================================
-	// private methods
-	//=========================================================================================
+	Rail() = default;
+	~Rail() = default;
 
 	void Init();
 
 	void Term();
 
-	void Update();
+	void DrawAdaptive(_MAYBE_UNUSED const Camera3D* camera) override;
 
-	void Draw();
+	void SetAttributeImGui() override;
+
+	//* getter *//
+
+	Vector3f LoopCatmullRomPosition(float t);
+
+private:
+
+	//=========================================================================================
+	// private variables
+	//=========================================================================================
+
+	//* rail *//
+
+	std::vector<Vector3f> points_;
+
+	//* behavior *//
+
+	static const uint32_t kInstanceSize_ = 128;
+
+	//=========================================================================================
+	// private methods
+	//=========================================================================================
+
+	void DrawCatmullrom(uint32_t kSubdivision);
+
 
 };

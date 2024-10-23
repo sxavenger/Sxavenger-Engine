@@ -36,7 +36,7 @@ void ProcessConsole::ProcessXclipse(SxavengerFrame* frame) {
 void ProcessConsole::ProcessVisual(SxavengerFrame* frame) {
 	frame->BeginVisual();
 
-	VisualGlayscale(frame);
+	//VisualGlayscale(frame);
 
 	frame->EndVisual();
 }
