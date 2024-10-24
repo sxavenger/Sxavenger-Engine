@@ -9,6 +9,9 @@
 //* console
 #include "SystemConsole.h"
 
+//* engine
+#include <Engine/Game/SxavengerGame.h>
+
 //* c++
 #include <format>
 
@@ -49,6 +52,7 @@ void RenderingConsole::RenderAdaptive(SxavengerFrame* frame) {
 		DrawAdaptiveBehavior(behavior, frame);
 	}
 
+	SxavengerGame::DrawToScene(frame->GetCamera());
 	frame->EndAdaptive();
 }
 

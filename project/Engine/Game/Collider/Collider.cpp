@@ -57,6 +57,11 @@ void Collider::OnCollision(Collider* other) {
 	states_[other].isHit = true; //!< 現在frameで当たった
 }
 
+const Vector3f& Collider::GetColliderPosition() const {
+	Assert(position_.has_value(), "Collider is not set position or not override method.");
+	return position_.value();
+}
+
 bool Collider::ShouldCheckForCollision(const Collider* const other) const {
 	return other->typeId_ & this->targetTypeId_;
 }
@@ -82,29 +87,38 @@ void Collider::SetCollisionState(
 
 void Collider::SetColliderImGuiCommand() {
 
-	// boundingの型の判定
-	if (std::holds_alternative<CollisionBoundings::Sphere>(bounding_)) { //!< sphereの場合
-		auto& sphere = std::get<CollisionBoundings::Sphere>(bounding_);
+	if (ImGui::TreeNode("collider")) {
+		if (bounding_.has_value()) {
+			// boundingの型の判定
+			if (std::holds_alternative<CollisionBoundings::Sphere>(bounding_.value())) { //!< sphereの場合
+				auto& sphere = std::get<CollisionBoundings::Sphere>(bounding_.value());
 
-		ImGui::Text("Boundings: Sphere");
-		ImGui::DragFloat("radius", &sphere.radius, 0.01f);
+				ImGui::Text("Boundings: Sphere");
+				ImGui::DragFloat("radius", &sphere.radius, 0.01f);
 
-	} else if (std::holds_alternative<CollisionBoundings::AABB>(bounding_)) { //!< AABBの場合
-		auto& aabb = std::get<CollisionBoundings::AABB>(bounding_);
+			} else if (std::holds_alternative<CollisionBoundings::AABB>(bounding_.value())) { //!< AABBの場合
+				auto& aabb = std::get<CollisionBoundings::AABB>(bounding_.value());
 
-		ImGui::Text("Boundings: AABB");
-		ImGui::DragFloat3("max", &aabb.localMax.x, 0.01f);
-		ImGui::DragFloat3("min", &aabb.localMin.x, 0.01f);
+				ImGui::Text("Boundings: AABB");
+				ImGui::DragFloat3("max", &aabb.localMax.x, 0.01f);
+				ImGui::DragFloat3("min", &aabb.localMin.x, 0.01f);
 
-		// minがmaxを上回らないようclamp
-		aabb.localMin.x = (std::min)(aabb.localMin.x, aabb.localMax.x);
-		aabb.localMax.x = (std::max)(aabb.localMin.x, aabb.localMax.x);
+				// minがmaxを上回らないようclamp
+				aabb.localMin.x = (std::min)(aabb.localMin.x, aabb.localMax.x);
+				aabb.localMax.x = (std::max)(aabb.localMin.x, aabb.localMax.x);
 
-		aabb.localMin.y = (std::min)(aabb.localMin.y, aabb.localMax.y);
-		aabb.localMax.y = (std::max)(aabb.localMin.y, aabb.localMax.y);
+				aabb.localMin.y = (std::min)(aabb.localMin.y, aabb.localMax.y);
+				aabb.localMax.y = (std::max)(aabb.localMin.y, aabb.localMax.y);
 
-		aabb.localMin.z = (std::min)(aabb.localMin.z, aabb.localMax.z);
-		aabb.localMax.z = (std::max)(aabb.localMin.z, aabb.localMax.z);
+				aabb.localMin.z = (std::min)(aabb.localMin.z, aabb.localMax.z);
+				aabb.localMax.z = (std::max)(aabb.localMin.z, aabb.localMax.z);
+			}
+
+		} else {
+			ImGui::Text("Not set boundings");
+
+		}
+
+		ImGui::TreePop();
 	}
-
 }

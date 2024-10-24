@@ -39,6 +39,7 @@ void SystemConsole::Term() {
 }
 
 void SystemConsole::UpdateConsole() {
+	UpdateKeyAction();
 
 	DisplayMainMenu();
 
@@ -55,6 +56,7 @@ void SystemConsole::UpdateConsole() {
 		RenderingConsole::UpdateConsole();
 		ProcessConsole::UpdateConsole();
 	}
+
 }
 
 void SystemConsole::Draw() {
@@ -94,7 +96,12 @@ void SystemConsole::Draw() {
 	{
 		sceneFrame_->BeginAdaptive();
 
+		// 視錐台描画
 		gameCamera_->DrawFrustum(ToColor4f(0xFAFA00FF), 8.0f);
+
+		// colliderの描画
+		SxavengerGame::DrawColliders();
+
 		SxavengerGame::DrawToScene(sceneCamera_.get());
 
 		sceneFrame_->EndAdaptive();
@@ -471,6 +478,15 @@ void SystemConsole::DisplaySystemMenu() {
 
 	}
 
+}
+
+void SystemConsole::UpdateKeyAction() {
+
+	//* alt(left || right) + f: フルスクリーンモード切り替え
+	if ((Sxavenger::IsPressKey(DIK_LALT) || Sxavenger::IsPressKey(DIK_RALT))
+		&& Sxavenger::IsTriggerKey(DIK_F)) {
+		isDisplayConsole_ = !isDisplayConsole_;
+	}
 }
 
 void SystemConsole::DisplayTextureImGuiFullWindow(const MultiViewTexture* texture) const {

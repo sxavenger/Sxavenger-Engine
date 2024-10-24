@@ -23,14 +23,15 @@ void Player::Init() {
 	transform_.UpdateMatrix();
 
 	camera_ = sSystemConsole->GetGameCamera();
+	camera_->SetProjection({ 16.0f, 9.0f }, 12.9f, 0.01f, 1000.0f);
 
 	rail_ = std::make_unique<Rail>();
 	rail_->Init();
 	SetChild(rail_.get());
 
-	/*bullet_ = std::make_unique<PlayerBullet>();
+	bullet_ = std::make_unique<PlayerBullet>();
 	bullet_->Init();
-	SetChild(bullet_.get());*/
+	SetChild(bullet_.get());
 }
 
 void Player::Term() {
@@ -40,8 +41,8 @@ void Player::Update() {
 	Move();
 	transform_.UpdateMatrix();
 
-	//bullet_->Update();
-
+	bullet_->Update();
+	bullet_->Shoot(Sxavenger::IsPressKey(DIK_SPACE), transform_.GetWorldPosition(), direction_);
 }
 
 void Player::SetAttributeImGui() {
@@ -53,9 +54,9 @@ void Player::Move() {
 	Assert(rail_ != nullptr, "rail is nullptr.");
 
 	// timeからrailの上の座標を取得
-	++loopTimer_; //!< deltaTimeの加算
-	//loopTimer_.time = std::fmod(loopTimer_.time, loopTime_.time); //!< ループする場合
-	loopTimer_.time = std::min(loopTimer_.time, loopTime_.time);    //!< しない場合
+	loopTimer_.AddDeltaTime();
+	loopTimer_.time = std::fmod(loopTimer_.time, loopTime_.time); //!< ループする場合
+	//loopTimer_.time = std::min(loopTimer_.time, loopTime_.time);    //!< しない場合
 
 	float t = loopTimer_.time / loopTime_.time;
 	t = std::fmod(t, 1.0f);
@@ -68,8 +69,8 @@ void Player::Move() {
 
 	Vector3f nextPosition = rail_->LoopCatmullRomPosition(nextT);
 
-	Vector3f direction = Normalize(nextPosition - transform_.transform.translate);
-	Vector3f rotate = CalculateEuler(direction);
+	direction_ = Normalize(nextPosition - transform_.transform.translate);
+	Vector3f rotate = CalculateEuler(direction_);
 
 	transform_.transform.rotate = ToQuaternion(rotate);
 

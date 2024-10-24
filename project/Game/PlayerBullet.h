@@ -4,32 +4,25 @@
 // include
 //-----------------------------------------------------------------------------------------
 //* base
+#include <Engine/Game/Behavior/BaseBehavior.h>
 #include <Engine/Game/Behavior/ModelBehavior.h>
 
 //* engine
 #include <Engine/System/Performance.h>
-#include <Engine/Game/Camera/CineCamera.h>
-
-//* Game
-#include <Game/Rail.h>
-#include <Game/PlayerBullet.h>
-
-//* c++
-#include <memory>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// Player class
+// PlayerBullet class
 ////////////////////////////////////////////////////////////////////////////////////////////
-class Player
-	: public ModelBehavior {
+class PlayerBullet //!< razerが近い
+	: public BaseBehavior {
 public:
 
 	//=========================================================================================
 	// public methods
 	//=========================================================================================
 
-	Player() = default;
-	~Player() { Term(); }
+	PlayerBullet()  = default;
+	~PlayerBullet() { Term(); }
 
 	void Init();
 
@@ -37,7 +30,13 @@ public:
 
 	void Update();
 
+	void Shoot(bool isShot, const Vector3f& position, const Vector3f& direction);
+
+	void CheckCollision();
+
 	void SetAttributeImGui() override;
+
+	void DrawAdaptive(_MAYBE_UNUSED const Camera3D* camera) override;
 
 private:
 
@@ -45,27 +44,17 @@ private:
 	// private variables
 	//=========================================================================================
 
-	//* externals *//
-
-	CineCamera* camera_ = nullptr;
-
 	//* member *//
 
-	std::unique_ptr<Rail>         rail_;
-	std::unique_ptr<PlayerBullet> bullet_;
+	bool     isShot_ = false;
+	Vector3f direction_;
+	Vector3f position_;
 
 	//* parameter *//
 
-	DeltaTimePoint loopTime_ = { 24.0f }; //!< 1周の時間
-	DeltaTimePoint loopTimer_;            //!< 計測用
-
-	Vector3f direction_;
-
-
-	//=========================================================================================
-	// private methods
-	//=========================================================================================
-
-	void Move();
-
+	float maxEnergy_      = 4.0f;      //!< 最大エネルギー量
+	float energy_         = maxEnergy_;
+	float energyDecay_    = 1.0f; //!< 発射時の減る量        * deltaTime
+	float energyRecovery_ = 1.0f; //!< 発射してない時の回復量 * deltaTime
+	
 };

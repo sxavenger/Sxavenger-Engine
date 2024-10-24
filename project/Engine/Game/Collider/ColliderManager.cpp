@@ -56,14 +56,18 @@ void ColliderManager::CheckCollisionPair(Collider* colliderA, Collider* collider
 	bool isBTargetingA = colliderB->ShouldCheckForCollision(colliderA);
 
 	// このペアの当たり判定が必要かの確認
+	// どちらか片方が当たり判定を必要としてた場合, 当たり判定を行う
 	if (!(isATargetingB || isBTargetingA)) { //!< どちらも必要ではない場合
 		return;
 	}
 
-	// どちらか片方が当たり判定を必要としてた場合
+	if (!(colliderA->GetBounding().has_value() && colliderB->GetBounding().has_value())) { //!< 当たり判定を取る場合, どちらもbounding設定が必須
+		return;
+	}
+
 	bool isCollision = CollisionDetection::CheckCollision(
-		colliderA->GetColliderPosition(), colliderA->GetBounding(),
-		colliderB->GetColliderPosition(), colliderB->GetBounding()
+		colliderA->GetColliderPosition(), colliderA->GetBounding().value(),
+		colliderB->GetColliderPosition(), colliderB->GetBounding().value()
 	);
 
 	if (isCollision) { //!< 衝突してた場合
@@ -79,7 +83,11 @@ void ColliderManager::CheckCollisionPair(Collider* colliderA, Collider* collider
 
 void ColliderManager::DrawCollider(const Collider* const collider) const {
 
-	const auto& bounding = collider->GetBounding();
+	if (!collider->GetBounding().has_value()) {
+		return;
+	}
+
+	const auto& bounding = collider->GetBounding().value();
 
 	//!< boundingの型の取得
 	if (std::holds_alternative<CollisionBoundings::Sphere>(bounding)) {

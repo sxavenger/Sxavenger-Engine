@@ -159,6 +159,10 @@ private:
 
 	void DisplaySystemMenu();
 
+	//* other update methods *//
+
+	void UpdateKeyAction();
+
 	//* assistance methods *//
 
 	void DisplayTextureImGuiFullWindow(const MultiViewTexture* texture) const;

@@ -14,87 +14,67 @@ bool CollisionDetection::CheckCollision(
 	const Vector3f& posisionA, const CollisionBoundings::Boundings& boundingA,
 	const Vector3f& posisionB, const CollisionBoundings::Boundings& boundingB) {
 
-	switch (boundingA.index()) {
-		case CollisionBoundings::BoundingsType::kSphere:
-			{
-				//!< sphereのboundingの取得
-				const auto& sphereA = std::get<CollisionBoundings::Sphere>(boundingA);
+	 // boundingA の種類に応じて処理を分岐
+	if (auto* sphereA = std::get_if<CollisionBoundings::Sphere>(&boundingA)) {
+		return HandleSphereCollision(posisionA, *sphereA, posisionB, boundingB);
 
-				switch (boundingB.index()) {
-					case CollisionBoundings::BoundingsType::kSphere:
-						{
-							//!< sphereのboundingの取得
-							const auto& sphereB = std::get<CollisionBoundings::Sphere>(boundingB);
+	} else if (auto* aabbA = std::get_if<CollisionBoundings::AABB>(&boundingA)) {
+		return HandleAABBCollision(posisionA, *aabbA, posisionB, boundingB);
 
-							return SphereTo(posisionA, sphereA, posisionB, sphereB);
-						}
-						break;
-
-					case CollisionBoundings::BoundingsType::kAABB:
-						{
-							//!< aabbのboundingの取得
-							const auto& aabbB = std::get<CollisionBoundings::AABB>(boundingB);
-
-							return SphereToAABB(posisionA, sphereA, posisionB, aabbB);
-						}
-						break;
-
-					case CollisionBoundings::BoundingsType::kOBB:
-						return false;
-						break;
-
-					default:
-						Assert(false);
-						break;
-				}
-
-			}
-			break;
-
-		case CollisionBoundings::BoundingsType::kAABB:
-			{
-				const auto& aabbA = std::get<CollisionBoundings::AABB>(boundingA);
-
-				switch (boundingB.index()) {
-					case CollisionBoundings::BoundingsType::kSphere:
-						{
-							//!< sphereのboundingの取得
-							const auto& sphereB = std::get<CollisionBoundings::Sphere>(boundingB);
-
-							return SphereToAABB(posisionB, sphereB, posisionA, aabbA);
-						}
-						break;
-
-					case CollisionBoundings::BoundingsType::kAABB:
-						{
-							//!< aabbのboundingの取得
-							const auto& aabbB = std::get<CollisionBoundings::AABB>(boundingB);
-
-							return AABBTo(posisionA, aabbA, posisionB, aabbB);
-						}
-						break;
-
-					case CollisionBoundings::BoundingsType::kOBB:
-						return false;
-						break;
-
-					default:
-						Assert(false);
-						break;
-				}
-			}
-			break;
-		
-		case CollisionBoundings::BoundingsType::kOBB:
-			return false; //!< todo: OBBの当たり判定の追加
-			break;
-
-		default:
-			Assert(false); //!< indexの例外
-			break;
+	} else if (auto* obbA = std::get_if<CollisionBoundings::OBB>(&boundingA)) {
+		return HandleOBBCollision(posisionA, *obbA, posisionB, boundingB); // OBBの処理は未実装
 	}
 
-	return false; //!< todo: 当たり判定の追加
+	Assert(false); // 無効な型
+	return false;
+}
+
+bool CollisionDetection::HandleSphereCollision(
+	const Vector3f& posisionA, const CollisionBoundings::Sphere& sphereA,
+	const Vector3f& posisionB, const CollisionBoundings::Boundings& boundingB) {
+
+	if (auto* sphereB = std::get_if<CollisionBoundings::Sphere>(&boundingB)) {
+		return SphereTo(posisionA, sphereA, posisionB, *sphereB);
+
+	} else if (auto* aabbB = std::get_if<CollisionBoundings::AABB>(&boundingB)) {
+		return SphereToAABB(posisionA, sphereA, posisionB, *aabbB);
+
+	} else if (auto* obbB = std::get_if<CollisionBoundings::OBB>(&boundingB)) {
+		// OBBとの当たり判定は未実装
+		return false;
+	}
+		 
+	Assert(false); //!< 無効な型
+	return false;
+}
+
+bool CollisionDetection::HandleAABBCollision(
+	const Vector3f& posisionA, const CollisionBoundings::AABB&      aabbA,
+	const Vector3f& posisionB, const CollisionBoundings::Boundings& boundingB) {
+
+
+	if (auto* sphereB = std::get_if<CollisionBoundings::Sphere>(&boundingB)) {
+		return SphereToAABB(posisionB, *sphereB, posisionA, aabbA);
+
+	} else if (auto* aabbB = std::get_if<CollisionBoundings::AABB>(&boundingB)) {
+		return AABBTo(posisionA, aabbA, posisionB, *aabbB);
+
+	} else if (auto* obbB = std::get_if<CollisionBoundings::OBB>(&boundingB)) {
+		// OBBとの当たり判定は未実装
+		return false;
+	}
+
+	Assert(false); //!< 無効な型
+	return false;
+}
+
+bool CollisionDetection::HandleOBBCollision(
+	const Vector3f& posisionA, const CollisionBoundings::OBB& obbA,
+	const Vector3f& posisionB, const CollisionBoundings::Boundings& boundingB) {
+
+	posisionA, obbA, posisionB, boundingB;
+
+	return false; //!< 未実装
 }
 
 bool CollisionDetection::SphereTo(

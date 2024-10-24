@@ -56,7 +56,6 @@ void Rail::Term() {
 
 void Rail::DrawAdaptive(_MAYBE_UNUSED const Camera3D* camera) {
 	DrawCatmullrom(128);
-	SxavengerGame::DrawToScene(camera);
 }
 
 void Rail::SetAttributeImGui() {

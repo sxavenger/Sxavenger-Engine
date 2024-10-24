@@ -33,7 +33,6 @@ namespace CollisionBoundings {
 	struct AABB {
 		Vector3f localMin;
 		Vector3f localMax;
-
 		//!< 外部のtranslationを使ってworldに変換する
 	};
 
@@ -79,7 +78,26 @@ public:
 private:
 
 	//=========================================================================================
-	// private methods
+	// private handle methods
+	//=========================================================================================
+
+	static bool HandleSphereCollision(
+		const Vector3f& posisionA, const CollisionBoundings::Sphere&    sphereA,
+		const Vector3f& posisionB, const CollisionBoundings::Boundings& boundingB
+	);
+
+	static bool HandleAABBCollision(
+		const Vector3f& posisionA, const CollisionBoundings::AABB&      aabbA,
+		const Vector3f& posisionB, const CollisionBoundings::Boundings& boundingB
+	);
+
+	static bool HandleOBBCollision(
+		const Vector3f& posisionA, const CollisionBoundings::OBB&       obbA,
+		const Vector3f& posisionB, const CollisionBoundings::Boundings& boundingB
+	);
+
+	//=========================================================================================
+	// private collision detection methods
 	//=========================================================================================
 
 	//* sphere to *//

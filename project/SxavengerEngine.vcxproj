@@ -197,6 +197,8 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="Game\Enemy.cpp" />
     <ClCompile Include="Game\Kipfel.cpp" />
     <ClCompile Include="Game\Player.cpp" />
+    <ClCompile Include="Game\PlayerBullet.cpp" />
+    <ClCompile Include="Game\PlayerBulletCollisionManager.cpp" />
     <ClCompile Include="Game\Rail.cpp" />
     <ClCompile Include="Game\RailCamera.cpp" />
     <ClCompile Include="Game\Teapot.cpp" />
@@ -279,6 +281,8 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Game\Enemy.h" />
     <ClInclude Include="Game\Kipfel.h" />
     <ClInclude Include="Game\Player.h" />
+    <ClInclude Include="Game\PlayerBullet.h" />
+    <ClInclude Include="Game\PlayerBulletCollisionManager.h" />
     <ClInclude Include="Game\Rail.h" />
     <ClInclude Include="Game\RailCamera.h" />
     <ClInclude Include="Game\Teapot.h" />

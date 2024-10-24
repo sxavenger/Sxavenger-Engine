@@ -74,6 +74,10 @@ void GameScene::Init() {
 	player_ = std::make_unique<Player>();
 	player_->Init();
 	player_->SetToConsole();
+
+	enemyCollection_ = std::make_unique<EnemyCollection>();
+	enemyCollection_->Init();
+	enemyCollection_->SetToConsole();
 }
 
 void GameScene::Term() {
@@ -81,6 +85,7 @@ void GameScene::Term() {
 
 void GameScene::Update() {
 	player_->Update();
+	enemyCollection_->Update();
 }
 
 void GameScene::Draw() {

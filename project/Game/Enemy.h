@@ -6,12 +6,13 @@
 //* base
 #include <Engine/Game/Behavior/BaseBehavior.h>
 #include <Engine/Game/Behavior/ModelBehavior.h>
+#include <Engine/Game/Collider/Collider.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Enemy class
 ////////////////////////////////////////////////////////////////////////////////////////////
 class Enemy
-	: public ModelBehavior {
+	: public ModelBehavior, public Collider {
 public:
 
 	//=========================================================================================
@@ -26,6 +27,8 @@ public:
 	void Term();
 
 	void Update();
+
+	void SetAttributeImGui() override;
 
 	//* getter *//
 

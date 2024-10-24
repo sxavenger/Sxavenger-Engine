@@ -1,5 +1,11 @@
 #include "Enemy.h"
 
+//-----------------------------------------------------------------------------------------
+// include
+//-----------------------------------------------------------------------------------------
+//* engine
+#include <Engine/Game/SxavengerGame.h>
+
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Enemy class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -10,8 +16,12 @@ void Enemy::Init(Model* model, const Vector3f& position) {
 
 	model_ = model;
 
+	transform_.transform.scale     = { 0.2f, 0.2f, 0.2f };
 	transform_.transform.translate = position;
 	transform_.UpdateMatrix();
+
+	SetColliderBoundingSphere({0.4f});
+	Collider::position_ = transform_.GetWorldPosition();
 }
 
 void Enemy::Term() {
@@ -22,6 +32,15 @@ void Enemy::Update() {
 	transform_.transform.rotate *= MakeAxisAngle({ 0.0f, 1.0f, 0.0f }, 0.02f);
 	transform_.UpdateMatrix();
 
+	Collider::position_ = transform_.GetWorldPosition();
+
+}
+
+void Enemy::SetAttributeImGui() {
+
+	if (ImGui::Button("delete")) {
+		isDelete_ = true;
+	}
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -32,7 +51,7 @@ void EnemyCollection::Init() {
 
 	SetName("enemy collection");
 
-
+	enemyModel_ = SxavengerGame::LoadModel("resources/model", "enemy.obj");
 }
 
 void EnemyCollection::Term() {
@@ -52,7 +71,9 @@ void EnemyCollection::Update() {
 
 void EnemyCollection::SetAttributeImGui() {
 
-
+	if (ImGui::Button("create")) {
+		CreateEnemy({});
+	}
 
 }
 
@@ -60,5 +81,6 @@ void EnemyCollection::CreateEnemy(const Vector3f& position) {
 	std::unique_ptr<Enemy> newEnemy = std::make_unique<Enemy>();
 	newEnemy->Init(enemyModel_, position);
 
+	SetChild(newEnemy.get());
 	enemies_.emplace_back(std::move(newEnemy));
 }

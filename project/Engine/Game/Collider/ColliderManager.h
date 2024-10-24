@@ -41,6 +41,10 @@ public:
 
 	void ClearColliders() { colliders_.clear(); }
 
+	//* getter *//
+
+	const std::unordered_set<Collider*>& GetColliders() const { return colliders_; }
+
 private:
 
 	//=========================================================================================

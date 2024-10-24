@@ -311,6 +311,8 @@
     <ClCompile Include="Engine\Game\Behavior\ModelInstanceBehavior.cpp" />
     <ClCompile Include="Game\RailCamera.cpp" />
     <ClCompile Include="Game\Enemy.cpp" />
+    <ClCompile Include="Game\PlayerBullet.cpp" />
+    <ClCompile Include="Game\PlayerBulletCollisionManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="externals\imgui\imconfig.h">
@@ -518,6 +520,8 @@
     <ClInclude Include="Engine\Game\Behavior\ModelInstanceBehavior.h" />
     <ClInclude Include="Game\RailCamera.h" />
     <ClInclude Include="Game\Enemy.h" />
+    <ClInclude Include="Game\PlayerBullet.h" />
+    <ClInclude Include="Game\PlayerBulletCollisionManager.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

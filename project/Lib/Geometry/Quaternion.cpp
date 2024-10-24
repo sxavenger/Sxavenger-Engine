@@ -183,5 +183,5 @@ Quaternion LookAt(const Vector3f& u, const Vector3f& v) {
 
 	float theta = std::acos(Dot(u, v));
 
-	return MakeRotateAxisAngleQuaternion(up, theta);
+	return MakeAxisAngle(up, theta);
 }

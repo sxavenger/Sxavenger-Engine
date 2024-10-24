@@ -20,7 +20,8 @@
 // ColliderType enum
 ////////////////////////////////////////////////////////////////////////////////////////////
 enum ColliderType {
-	ColliderType_NONE = 0,
+	ColliderType_NONE  = 0,
+	ColliderType_Enemy = 1 << 0,
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -54,9 +55,9 @@ public:
 	
 	//* collision getter *//
 
-	virtual const Vector3f& GetColliderPosition() const = 0;
+	virtual const Vector3f& GetColliderPosition() const;
 
-	const CollisionBoundings::Boundings& GetBounding() const { return bounding_; }
+	const std::optional<CollisionBoundings::Boundings>& GetBounding() const { return bounding_; }
 
 	//! @brief targetと相手のIdを比較して当たり判定が必要かどうか確認
 	bool ShouldCheckForCollision(const Collider* const other) const;
@@ -91,7 +92,10 @@ protected:
 	std::string colliderTag_ = "";
 
 	//! 当たり判定の判定情報
-	CollisionBoundings::Boundings bounding_;
+	std::optional<CollisionBoundings::Boundings> bounding_ = std::nullopt;
+
+	//! 座標情報
+	std::optional<Vector3f> position_ = std::nullopt;
 
 	//!< filter情報
 	uint32_t typeId_       = 0; //!< 自分のid
