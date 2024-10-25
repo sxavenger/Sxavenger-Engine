@@ -97,8 +97,8 @@ public:
 
 	//* option *//
 
-	void BeginUnorderedAccess();
-	void EndUnorderedAccess();
+	void BeginProcess();
+	void EndProcess();
 
 	//* getter *//
 
@@ -272,6 +272,9 @@ public:
 
 	//* process option *//
 
+	void BeginXclipse();
+	void EndXclipse();
+
 	void BeginVisual();
 	void EndVisual();
 
@@ -287,6 +290,8 @@ public:
 	void PresentAdaptiveToScreen();
 
 	//* getter *//
+
+	XclipseProcessFrame* GetXclipse() const { return xclipse_.get(); }
 
 	AdaptiveRenderingFrame* GetAdaptive() const { return adaptive_.get(); }
 

@@ -90,7 +90,7 @@ void XclipseProcessFrame::Create(const Vector2ui& size) {
 void XclipseProcessFrame::Term() {
 }
 
-void XclipseProcessFrame::BeginUnorderedAccess() {
+void XclipseProcessFrame::BeginProcess() {
 
 	auto commandList = Sxavenger::GetCommandList();
 
@@ -103,7 +103,7 @@ void XclipseProcessFrame::BeginUnorderedAccess() {
 	commandList->ResourceBarrier(1, &barrier);
 }
 
-void XclipseProcessFrame::EndUnorderedAccess() {
+void XclipseProcessFrame::EndProcess() {
 
 	auto commandList = Sxavenger::GetCommandList();
 
@@ -333,6 +333,14 @@ void SxavengerFrame::EndAdaptive() {
 	adaptive_->EndRenderingBuffer();
 }
 
+void SxavengerFrame::BeginXclipse() {
+	xclipse_->BeginProcess();
+}
+
+void SxavengerFrame::EndXclipse() {
+	xclipse_->EndProcess();
+}
+
 void SxavengerFrame::BeginVisual() {
 	visual_->BeginProcess();
 }
@@ -345,7 +353,7 @@ void SxavengerFrame::TransitionSystematicToXclipse() {
 
 	auto commandList = Sxavenger::GetCommandList();
 
-	xclipse_->BeginUnorderedAccess();
+	xclipse_->BeginProcess();
 
 	sSystemConsole->SetProcessPipeline(kTransition_SampleLighting);
 
@@ -357,7 +365,7 @@ void SxavengerFrame::TransitionSystematicToXclipse() {
 
 	sSystemConsole->Dispatch((*config_)[0].size);
 
-	xclipse_->EndUnorderedAccess();
+	xclipse_->EndProcess();
 }
 
 void SxavengerFrame::TransitionXclipseToAdaptive() {

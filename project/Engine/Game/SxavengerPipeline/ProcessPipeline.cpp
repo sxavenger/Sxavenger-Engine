@@ -13,6 +13,7 @@ _DXOBJECT_USING
 
 void ProcessPipeline::Init() {
 	CreateTransition();
+	CreateXclipse();
 	CreateVisual();
 }
 
@@ -45,6 +46,24 @@ void ProcessPipeline::CreateTransition() {
 
 		pipelines_[kTransition_SampleLighting]->CreatePipeline(desc, blobs_[kTransition_SampleLighting].get());
 	}
+}
+
+void ProcessPipeline::CreateXclipse() {
+
+	{
+		blobs_[kXclipse_AtmoSphericScattering] = std::make_unique<CSBlob>();
+		blobs_[kXclipse_AtmoSphericScattering]->Create(L"sxavenger/xclipse/xclipseAtmoSphericScattering.cs.hlsl");
+
+		pipelines_[kXclipse_AtmoSphericScattering] = std::make_unique<CSPipeline>();
+
+		CSRootSignatureDesc desc = {};
+		desc.SetCBV(0, 10); //!< Config
+		desc.SetCBV(1, 0);  //!< Camera
+		desc.SetUAV(2, 0);  //!< Output
+
+		pipelines_[kXclipse_AtmoSphericScattering]->CreatePipeline(desc, blobs_[kXclipse_AtmoSphericScattering].get());
+	}
+
 }
 
 void ProcessPipeline::CreateVisual() {

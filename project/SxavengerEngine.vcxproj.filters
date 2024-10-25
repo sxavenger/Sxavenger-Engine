@@ -306,6 +306,8 @@
     <ClCompile Include="Engine\Game\Camera\CineCamera.cpp" />
     <ClCompile Include="Engine\Game\SxavengerPipeline\ProcessPipeline.cpp" />
     <ClCompile Include="Engine\Game\SxavengerPipeline\VisualProcessLayer.cpp" />
+    <ClCompile Include="Engine\System\DxrObject\DxrObjectCommon.cpp" />
+    <ClCompile Include="Engine\System\DxrObject\DxrExportGroup.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="externals\imgui\imconfig.h">
@@ -508,6 +510,8 @@
     <ClInclude Include="Engine\Game\Camera\CineCamera.h" />
     <ClInclude Include="Engine\Game\SxavengerPipeline\ProcessPipeline.h" />
     <ClInclude Include="Engine\Game\SxavengerPipeline\VisualProcessLayer.h" />
+    <ClInclude Include="Engine\System\DxrObject\DxrObjectCommon.h" />
+    <ClInclude Include="Engine\System\DxrObject\DxrExportGroup.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

@@ -30,13 +30,17 @@ void ProcessConsole::UpdateConsole() {
 }
 
 void ProcessConsole::ProcessXclipse(SxavengerFrame* frame) {
-	frame;
+	frame->BeginXclipse();
+
+	XclipseAtmoSphericScattering(frame);
+
+	frame->EndXclipse();
 }
 
 void ProcessConsole::ProcessVisual(SxavengerFrame* frame) {
 	frame->BeginVisual();
 
-	VisualGlayscale(frame);
+	//VisualGlayscale(frame);
 
 	frame->EndVisual();
 }
@@ -72,6 +76,21 @@ void ProcessConsole::SelectableLayer(const LayerContainer::const_iterator& it) {
 	if (ImGui::TreeNodeEx((*it).c_str(), flags)) {
 		ImGui::TreePop();
 	}
+
+}
+
+void ProcessConsole::XclipseAtmoSphericScattering(SxavengerFrame* frame) {
+
+	auto commandList = Sxavenger::GetCommandList();
+
+	processPipeline_->SetPipeline(kXclipse_AtmoSphericScattering);
+
+	commandList->SetComputeRootConstantBufferView(0, frame->GetConfigVirtualAddress());
+	commandList->SetComputeRootConstantBufferView(1, frame->GetCamera()->GetGPUVirtualAddress());
+	commandList->SetComputeRootDescriptorTable(2, frame->GetXclipse()->GetTexture()->GetGPUHandleUAV());
+
+
+	Dispatch(frame->GetSize());
 
 }
 

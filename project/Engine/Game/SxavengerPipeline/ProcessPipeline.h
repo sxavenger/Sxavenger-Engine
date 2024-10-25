@@ -18,8 +18,13 @@
 // ProcessPipelineType enum
 ////////////////////////////////////////////////////////////////////////////////////////////
 enum ProcessPipelineType : uint32_t {
+	//* transition
 	kTransition_SampleLighting,
 
+	//* xclipse
+	kXclipse_AtmoSphericScattering,
+
+	//* visual
 	kVisual_Glayscale,
 
 	kCountOfProcessPipelineType
@@ -74,6 +79,7 @@ private:
 	//=========================================================================================
 
 	void CreateTransition();
+	void CreateXclipse();
 	void CreateVisual();
 
 };

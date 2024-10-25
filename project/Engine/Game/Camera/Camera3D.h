@@ -71,8 +71,10 @@ protected:
 	////////////////////////////////////////////////////////////////////////////////////////////
 	struct CameraForGPU {
 		Vector4f position;
-		Matrix4x4 viewMatrix = Matrix4x4::Identity();
-		Matrix4x4 projMatrix = Matrix4x4::Identity();
+		Matrix4x4 viewMatrix        = Matrix4x4::Identity();
+		Matrix4x4 worldMatrix       = Matrix4x4::Identity();
+		Matrix4x4 projMatrix        = Matrix4x4::Identity();
+		Matrix4x4 projInverseMatrix = Matrix4x4::Identity();
 	};
 
 	//=========================================================================================
