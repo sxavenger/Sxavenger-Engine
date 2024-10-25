@@ -53,8 +53,8 @@ void Log(const std::string& log) {
 }
 
 void Log(const std::wstring& logW) {
-	std::string str = ToString(logW);
-	Log(str);
+	std::wstring output = logW + L"\n";
+	OutputDebugStringW(output.c_str());
 }
 
 void Assert(bool expresion, const std::string& detail, const std::source_location& location) {
@@ -62,26 +62,28 @@ void Assert(bool expresion, const std::string& detail, const std::source_locatio
 		return;
 	}
 
-	std::ostringstream message;
-	message << "[location]\n";
-	message << " filename: " << location.file_name()     << "\n";
-	message << " function: " << location.function_name() << "\n";
-	message << " line:     " << location.line()          << "\n";
+	std::ostringstream locationMes;
+	locationMes << "[location]\n";
+	locationMes << " filename: " << location.file_name()     << "\n";
+	locationMes << " function: " << location.function_name() << "\n";
+	locationMes << " line:     " << location.line()          << "\n";
+
+	Log(std::string("\nError: Sxavenger Engine assertion\n\n" + locationMes.str()).c_str());
+	ExternalLogger::Write(locationMes.str());
+
+	std::ostringstream detailMes;
 
 	if (!detail.empty()) {
-		message << "\n[details]\n";
-		message << " " << detail << "\n";
+		detailMes << "[details]\n";
+		detailMes << " " << detail << "\n";
+
+		Log(detailMes.str());
+		ExternalLogger::Write(detailMes.str());
 	}
-
-	ExternalLogger::Write(message.str());
-
-	OutputDebugStringA(
-		std::string("\nError: Sxavenger Engine assertion\n\n" + message.str() + "\n").c_str()
-	);
 
 	MessageBoxA(
 		NULL,
-		message.str().c_str(),
+		(locationMes.str() + detailMes.str()).c_str(),
 		"Sxavenger Engine assertion",
 		MB_TASKMODAL | MB_ICONHAND
 	);

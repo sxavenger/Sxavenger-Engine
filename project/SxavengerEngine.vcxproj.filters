@@ -308,6 +308,7 @@
     <ClCompile Include="Engine\Game\SxavengerPipeline\VisualProcessLayer.cpp" />
     <ClCompile Include="Engine\System\DxrObject\DxrObjectCommon.cpp" />
     <ClCompile Include="Engine\System\DxrObject\DxrExportGroup.cpp" />
+    <ClCompile Include="Engine\System\DxrObject\DxrRootSignature.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="externals\imgui\imconfig.h">
@@ -512,6 +513,7 @@
     <ClInclude Include="Engine\Game\SxavengerPipeline\VisualProcessLayer.h" />
     <ClInclude Include="Engine\System\DxrObject\DxrObjectCommon.h" />
     <ClInclude Include="Engine\System\DxrObject\DxrExportGroup.h" />
+    <ClInclude Include="Engine\System\DxrObject\DxrRootSignature.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />
