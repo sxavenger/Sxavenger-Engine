@@ -11,7 +11,7 @@ _DXROBJECT_USING;
 // static variables
 //=========================================================================================
 
-const LPCWSTR RaytracingShaderBlobManager::compilerModel_      = L"lib_6_4";
+const LPCWSTR RaytracingShaderBlobManager::compilerModel_      = L"lib_6_6";
 const std::wstring RaytracingShaderBlobManager::directoryPath_ = L"./resources/hlsl/raytracing/";
 
 ////////////////////////////////////////////////////////////////////////////////////////////
