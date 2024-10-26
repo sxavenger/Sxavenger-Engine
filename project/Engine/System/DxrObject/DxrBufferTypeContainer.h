@@ -3,51 +3,56 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
-// console
-#include <Engine/Console/SystemConsole.h>
+//* DXROBJECT
+#include <Engine/System/DxrObject/DxrObjectCommon.h>
 
-// c++
-#include <memory>
-#include <format>
-
-//* Game
-#include <Game/Teapot.h>
-
-// TEST
-#include <Engine/System/DxrObject/DxrExportGroup.h>
-#include <Engine/System/DxrObject/DxrRaytracingShaderBlob.h>
-#include <Engine/System/DxrObject/DxrStateObject.h>
+//* c++
+#include <vector>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// GameScene class
+// DXROBJECT namespace
 ////////////////////////////////////////////////////////////////////////////////////////////
-class GameScene {
+_DXROBJECT_NAMESPACE_BEGIN
+
+////////////////////////////////////////////////////////////////////////////////////////////
+// BufferTypeContainer structure
+////////////////////////////////////////////////////////////////////////////////////////////
+struct BufferTypeContainer {
 public:
 
 	//=========================================================================================
 	// public methods
 	//=========================================================================================
 
-	void Run();
+	BufferTypeContainer() { Reserve(); }
+
+	void Clear();
+
+	void BindAddress(uint32_t index);
+
+	void BindHandle(uint32_t index);
+
+	//* getter *//
+
+	const std::vector<GPUBuffer>& GetContainer() const { return container_; }
 
 private:
 
 	//=========================================================================================
+	// private variables
+	//=========================================================================================
+
+	std::vector<GPUBuffer> container_;
+	//!< 型情報しか入らない
+
+	//=========================================================================================
 	// private methods
 	//=========================================================================================
 
-	std::unique_ptr<Teapot> teapot_;
+	void Reserve();
 
-	//=========================================================================================
-	// private methods
-	//=========================================================================================
-
-	void Init();
-
-	void Term();
-
-	void Update();
-
-	void Draw();
+	void AutoResize(uint32_t index);
 
 };
+
+_DXROBJECT_NAMESPACE_END

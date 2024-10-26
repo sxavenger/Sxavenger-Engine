@@ -3,24 +3,24 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
-//* DxrObjectCommon
-#include <DxrObjectCommon.h>
+//* DXROBJECT
+#include <Engine/System/DxrObject/DxrObjectCommon.h>
+#include <Engine/System/DxrObject/DxrRootSignature.h>
+#include <Engine/System/DxrObject/DxrExportGroup.h>
+#include <Engine/System/DxrObject/DxrRaytracingShaderBlob.h>
 
-//* DxrObject
-#include <DxrRootSignature.h>
-#include <DxrShaderBlob.h>
-#include <DxrExportGroup.h>
+//* lib
+#include <Lib/Geometry/Vector2.h>
+#include <Lib/Geometry/Vector4.h>
+
+//* DirectX12
+#include <d3dx12.h>
 
 //* c++
-#include <unordered_set>
 #include <array>
 
-//* Geometry
-#include <Vector2.h>
-#include <Vector4.h>
-
 ////////////////////////////////////////////////////////////////////////////////////////////
-// DxrObject
+// DXROBJECT namespace
 ////////////////////////////////////////////////////////////////////////////////////////////
 _DXROBJECT_NAMESPACE_BEGIN
 
@@ -34,26 +34,33 @@ public:
 	// public methods
 	//=========================================================================================
 
-	StateObject() = default;
+	StateObject()  = default;
+	~StateObject() { Term(); }
+
+	void Term();
 
 	void CreateRootSignature(const GlobalRootSignatureDesc& desc);
-	
-	void CreateStateObject(const ShaderBlob* blobs);
 
-	//* Pipeline *//
+	void CreateStateObject(const RaytracingShaderBlobGroup* blobGroup);
 
-	void SetPipeline(ID3D12GraphicsCommandList6* commandList);
+	void SetStateObject();
 
 	//* getter *//
 
 	ID3D12StateObjectProperties* GetProperties() const { return properties_.Get(); }
 
-	const size_t GetExportSize(ExportGroupType type) const { return exports_[type].size(); }
+	size_t GetMaxBufferSize(ExportGroupType type) const { return maxBufferSizes_[static_cast<uint32_t>(type)]; }
 
-	const size_t GetMaxTotalBufferSize(ExportGroupType type) const { return maxTotalBufferSize_[type]; }
+	uint32_t GetExportCount(ExportGroupType type) const { return exportCounts_[static_cast<uint32_t>(type)]; }
 
 private:
 
+	////////////////////////////////////////////////////////////////////////////////////////////
+	// using
+	////////////////////////////////////////////////////////////////////////////////////////////
+
+	template <class T>
+	using ExportTypeArray = std::array<T, static_cast<uint32_t>(ExportGroupType::kCountOfExportGroupType)>;
 
 	//=========================================================================================
 	// private variables
@@ -65,12 +72,26 @@ private:
 	ComPtr<ID3D12StateObject>           stateObject_;
 	ComPtr<ID3D12StateObjectProperties> properties_;
 
-	//* exports container *//
+	//* parameter *//
 
-	std::array<std::unordered_set<const ExportGroup*>, kCountOfExportGroupType> exports_;
-	std::array<size_t, kCountOfExportGroupType>                                 maxTotalBufferSize_;
+	ExportTypeArray<size_t>   maxBufferSizes_;
+	ExportTypeArray<uint32_t> exportCounts_;
 
-private: //* config *//
+
+	//=========================================================================================
+	// private methods
+	//=========================================================================================
+
+	void CreateDxilLibrary(CD3DX12_STATE_OBJECT_DESC& desc, const RaytracingShaderBlobGroup* blobGroup);
+	void CreateGlobalRootSignature(CD3DX12_STATE_OBJECT_DESC& desc);
+	void CreateLocalRootSignature(CD3DX12_STATE_OBJECT_DESC& desc, const RaytracingShaderBlobGroup* blobGroup);
+	void CreateShaderConfig(CD3DX12_STATE_OBJECT_DESC& desc);
+	void CreatePipelineConfig(CD3DX12_STATE_OBJECT_DESC& desc);
+
+	void AddExportCount(ExportGroupType type);
+	void ReplaceMaxBufferSize(ExportGroupType type, LocalRootSignature* rootSignature);
+
+private:
 
 	////////////////////////////////////////////////////////////////////////////////////////////
 	// RayTracingPayload structure
@@ -91,7 +112,8 @@ private: //* config *//
 		kMaxRecursionDepth <= D3D12_RAYTRACING_MAX_DECLARABLE_TRACE_RECURSION_DEPTH,
 		"[RayTracing Error]: _DXROBJECT StateObject\n [UINT kMaxRecursionDepth] over D3D12_RAYTRACING_MAX_DECLARABLE_TRACE_RECURSION_DEPTH" //!< 最大31回であることの保障
 	);
-	
+
 };
+
 
 _DXROBJECT_NAMESPACE_END

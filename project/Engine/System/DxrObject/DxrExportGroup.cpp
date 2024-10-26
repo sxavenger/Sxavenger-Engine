@@ -1,11 +1,9 @@
 #include "DxrExportGroup.h"
-
-_DXROBJECT_NAMESPACE_BEGIN
+_DXROBJECT_USING
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // ExportGroup class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
-
 
 void ExportGroup::CreateRaygeneration(const std::wstring& entryPoint) {
 	Assert(!entryPoint.empty(), "ExportGroup: entry point is empty.");
@@ -35,7 +33,14 @@ void ExportGroup::CreateHitgroup(
 	};
 }
 
+void ExportGroup::CreateRootSignature(const LocalRootSignatureDesc& desc) {
+	rootSignature_ = std::make_unique<LocalRootSignature>();
+	rootSignature_->Create(desc);
+}
 
+const ExportGroup::HitgroupEntryPoints& ExportGroup::GetExportHitgroupEntryPoint() const {
+	Assert(type_ == ExportGroupType::kExportGroup_Hitgroup, "ExportGroup is not hitgroup.");
+	Assert(entryPoints_.has_value(), "Hitgroup Entry points is not set.");
 
-
-_DXROBJECT_NAMESPACE_END
+	return entryPoints_.value();
+}

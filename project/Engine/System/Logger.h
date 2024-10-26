@@ -30,6 +30,12 @@ void Log(const std::wstring& logW);
 void Assert(bool expresion, const std::string& detail = "", const std::source_location& location = std::source_location::current());
 void AssertW(bool expresion, const std::wstring& detail = L"", const std::source_location& location = std::source_location::current());
 
+//-----------------------------------------------------------------------------------------
+// Output
+//-----------------------------------------------------------------------------------------
+
+void OutputLog(const std::string& log, const std::string& filepath);
+
 ////////////////////////////////////////////////////////////////////////////////////////////
 // ExternalLogger class
 ////////////////////////////////////////////////////////////////////////////////////////////

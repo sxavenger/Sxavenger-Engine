@@ -70,6 +70,10 @@ void SystemConsole::Draw() {
 	ProcessConsole::ProcessXclipse(gameFrame_.get());
 	ProcessConsole::ProcessXclipse(sceneFrame_.get());
 
+	RenderingConsole::SetupRaytracing();
+	//RenderingConsole::RenderRaytracing(gameFrame_.get());  //!< test
+	RenderingConsole::RenderRaytracing(sceneFrame_.get()); //!< test
+
 	gameFrame_->TransitionXclipseToAdaptive();
 	sceneFrame_->TransitionXclipseToAdaptive();
 

@@ -6,7 +6,12 @@
 
 void Teapot::Init() {
 	SetName("teapot");
+
 	ModelBehavior::model_ = SxavengerGame::LoadModel("resources/model/CG2", "teapot.obj");
+	model_->ApplyRaytracing();
+	CreateRaytracingRecorder();
+
+	renderingFlag_ = kBehaviorRender_Raytracing | kBehaviorRender_Systematic;
 }
 
 void Teapot::SetAttributeImGui() {

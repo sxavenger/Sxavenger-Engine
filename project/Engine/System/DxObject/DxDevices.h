@@ -77,14 +77,21 @@ private:
 	//=========================================================================================
 
 	ComPtr<ID3D12Debug1> debugController_;
+	ComPtr<ID3D12InfoQueue> infoQueue_;
 
 	ComPtr<IDXGIFactory7> dxgiFactory_;
 	ComPtr<IDXGIAdapter4> useAdapter_;
 
 	ComPtr<ID3D12Device8> device_;
 
-	bool isMeshShaderEnabled_ = false;
-	bool isRayTracingEnabled_ = false;
+	//* member *//
+
+	bool isMeshShaderEnabled_;
+	bool isRayTracingEnabled_;
+
+	//* config *//
+
+	bool useDebugLayer_ = true; //!< release時はfalseに設定される
 
 	//=========================================================================================
 	// private methods

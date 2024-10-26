@@ -115,8 +115,8 @@ void StateObject::CreateStateObject(const ShaderBlob* blobs) {
 
 					hitgroupSubobject->SetHitGroupType(D3D12_HIT_GROUP_TYPE_TRIANGLES);
 					// todo: AABBへの対応
-
-					// entryPointの取り出し
+// entryPointの取り出し
+					
 					const auto& hitgroupEntryPoints = expt->GetExportHitgroupEntryPoints();
 
 					// closesthit

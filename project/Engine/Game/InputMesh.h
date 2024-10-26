@@ -6,6 +6,9 @@
 //* base
 #include "InputAssembler.h"
 
+//* DXROBJECT
+#include <Engine/System/DxrObject/DxrAccelerationStructure.h>
+
 //* DirectX
 #include <DirectXMesh.h>
 
@@ -37,6 +40,8 @@ public:
 	//* raytracing option *//
 
 	void CreateBLAS();
+
+	DxrObject::BottomLevelAS* GetBLAS() const;
 
 	//* operator *//
 
@@ -71,8 +76,10 @@ private:
 
 	//* raytracing *//
 
+	std::unique_ptr<DxrObject::BottomLevelAS> blas_;
 	
 	//* info *//
 
 	bool isCreateMeshlet_ = false;
+	bool isCreateBLAS_    = false;
 };

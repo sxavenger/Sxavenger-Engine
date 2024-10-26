@@ -1,4 +1,6 @@
 #include "DirectXCommon.h"
+_DXOBJECT_USING
+_DXROBJECT_USING
 
 //-----------------------------------------------------------------------------------------
 // include
@@ -10,10 +12,6 @@
 #include <Engine/Beta/DepthRenderTarget.h>
 #include <Engine/Beta/SceneRenderTarget.h>
 
-//-----------------------------------------------------------------------------------------
-// using
-//-----------------------------------------------------------------------------------------
-_DXOBJECT_USING
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // DirectXCommon class
@@ -22,17 +20,17 @@ _DXOBJECT_USING
 void DirectXCommon::Init(WinApp* winApp) {
 	// DirectXObjectの初期化
 	// system menbers
-	devices_         = std::make_unique<DxObject::Devices>();
-	command_         = std::make_unique<DxObject::Command>(devices_.get());
-	descriptorHeaps_ = std::make_unique<DxObject::DescriptorHeaps>(devices_.get());
-	swapChains_      = std::make_unique<DxObject::SwapChain>(devices_.get(), command_.get(), descriptorHeaps_.get(), winApp);
-	fences_          = std::make_unique<DxObject::Fence>(devices_.get());
-	
-	// new Graphics pipeline menbers
-	shaderManager_ = std::make_unique<DxObject::ShaderBlobManager>();
+	devices_         = std::make_unique<Devices>();
+	command_         = std::make_unique<Command>(devices_.get());
+	descriptorHeaps_ = std::make_unique<DescriptorHeaps>(devices_.get());
+	swapChains_      = std::make_unique<SwapChain>(devices_.get(), command_.get(), descriptorHeaps_.get(), winApp);
+	fences_          = std::make_unique<Fence>(devices_.get());
+	shaderManager_   = std::make_unique<ShaderBlobManager>();
+	blendState_      = std::make_unique<BlendState>();
+	depthStencil_    = std::make_unique<DepthStencil>(devices_.get(), descriptorHeaps_.get(), winApp);
 
-	blendState_   = std::make_unique<DxObject::BlendState>();
-	depthStencil_ = std::make_unique<DxObject::DepthStencil>(devices_.get(), descriptorHeaps_.get(), winApp);
+	raytracingShaderManager_ = std::make_unique<RaytracingShaderBlobManager>();
+
 }
 
 void DirectXCommon::Term() {

@@ -102,13 +102,19 @@ public:
 
 	uint32_t GetMeshSize() const { return static_cast<uint32_t>(meshes_.size()); }
 
+	uint32_t GetMaterialSize() const { return static_cast<uint32_t>(materials_.size()); }
+
 	void ApplyMeshShader();
+
+	void ApplyRaytracing();
 
 	//* member getter *//
 
 	const std::vector<MeshData>& GetMeshes() const { return meshes_; }
 
 	const InputMesh& GetMesh(uint32_t meshIndex) const { return meshes_.at(meshIndex).mesh; }
+
+	const std::vector<MaterialData> GetMaterials() const { return materials_; }
 
 	const std::unordered_map<std::string, JointWeightData>& GetSkinCluster(uint32_t meshIndex) const { return meshes_.at(meshIndex).skinCluster; }
 

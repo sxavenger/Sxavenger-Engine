@@ -142,7 +142,7 @@ void main(uint3 dispatchThreadId : SV_DispatchThreadID) {
 	// TEST VALUE
 	
 	float exposure = 1.0f;
-	float3 v3LightDir = normalize(float3(0.0f, 1.0f, 0.0f));
+	float3 v3LightDir = normalize(float3(0.0f, -1.0f, 0.0f));
 
 	// rayを求める
 

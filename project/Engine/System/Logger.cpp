@@ -123,11 +123,20 @@ void AssertW(bool expresion, const std::wstring& detail, const std::source_locat
 	__debugbreak();
 }
 
+void OutputLog(const std::string& log, const std::string& filepath) {
+	std::ofstream file;
+	file.open(filepath);
+
+	file << log;
+
+	file.close();
+}
+
 ////////////////////////////////////////////////////////////////////////////////////////////
 // ExternalLogger class
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-bool ExternalLogger::isOutput_ = false;
+bool ExternalLogger::isOutput_ = true;
 
 const std::string ExternalLogger::filename_ = "SxavengerEngineLog";
 std::ofstream ExternalLogger::file_;

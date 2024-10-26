@@ -6,6 +6,8 @@
 //* engine
 #include <Engine/Game/SxavengerPipeline/RenderingPipeline.h>
 #include <Engine/Game/SxavengerPipeline/SxavengerFrame.h>
+#include <Engine/Game/RaytracingScene.h>
+#include <Engine/Game/SxavengerPipeline/RaytracingPipeline.h>
 
 //* c++
 #include <list>
@@ -38,6 +40,9 @@ public:
 	void RenderSystematic(SxavengerFrame* frame);
 	void RenderAdaptive(SxavengerFrame* frame);
 
+	void SetupRaytracing();
+	void RenderRaytracing(SxavengerFrame* frame);
+
 	//* behavior option *//
 
 	void SetBehavior(BaseBehavior* behavior);
@@ -49,6 +54,10 @@ public:
 	//* pipeline option *//
 
 	void SetRenderingPipeline(RenderingPipelineType type) const;
+
+	//* getter *//
+
+	RaytracingPipeline* GetRaytracingPipeline() const { return raytracingPipeline_.get(); }
 
 protected:
 
@@ -83,9 +92,20 @@ private:
 
 	std::unique_ptr<RenderingPipeline> renderingPipeline_;
 
+	//* raytracing *//
+
+	std::unique_ptr<RaytracingPipeline> raytracingPipeline_;
+	std::unique_ptr<RaytracingScene> raytracingScene_;
+
+	std::unique_ptr<DxrObject::BufferRecoreder> raygenerationRecorder_;
+	std::unique_ptr<DxrObject::BufferRecoreder> missRecorder_;
+
 	//=========================================================================================
 	// private methods
 	//=========================================================================================
+
+	void InitRaytracing();
+	void TermRaytracing();
 
 	//* display methods *//
 
@@ -99,5 +119,6 @@ private:
 
 	void DrawSystematicBehavior(BaseBehavior* behavior, SxavengerFrame* frame);
 	void DrawAdaptiveBehavior(BaseBehavior* behavior, SxavengerFrame* frame);
+	void DrawRaytracingBehavior(BaseBehavior* behavior);
 
 };

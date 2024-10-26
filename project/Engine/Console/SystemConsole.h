@@ -56,8 +56,6 @@ public:
 
 	bool IsUpdateRequired() const { return isUpdateRequired_; }
 
-	//* other console getter *//
-
 	//!< singleton
 	// TODO: SxavengerEngineの関数として入れてもいいかも
 	static SystemConsole* const GetInstance();

@@ -5,6 +5,7 @@
 //-----------------------------------------------------------------------------------------
 //* DXROBJECT
 #include <Engine/System/DxrObject/DxrObjectCommon.h>
+#include <Engine/System/DxrObject/DxrRootSignature.h>
 
 //* c++
 #include <string>
@@ -49,6 +50,8 @@ public:
 	ExportGroup()  = default;
 	~ExportGroup() = default;
 
+	//* Create Exports *//
+
 	void CreateRaygeneration(const std::wstring& entryPoint);
 
 	void CreateMiss(const std::wstring& entryPoint);
@@ -57,6 +60,20 @@ public:
 		const std::wstring& subobjectName,
 		const std::wstring& closestHit, const std::wstring& anyhit = L"", const std::wstring& intersection = L""
 	);
+
+	//* Create RootSignature *//
+
+	void CreateRootSignature(const LocalRootSignatureDesc& desc);
+
+	//* getter *//
+
+	const ExportGroupType GetExportType() const { return type_; }
+
+	const std::wstring& GetName() const { return name_; }
+
+	const HitgroupEntryPoints& GetExportHitgroupEntryPoint() const;
+
+	LocalRootSignature* GetLocalRootSignature() const { return rootSignature_.get(); }
 
 private:
 
@@ -73,8 +90,7 @@ private:
 
 	//* member *//
 
-	//std::unique_ptr<LocalRootSignature>    rootSignature_;
-	// TODO
+	std::unique_ptr<LocalRootSignature> rootSignature_;
 
 };
 

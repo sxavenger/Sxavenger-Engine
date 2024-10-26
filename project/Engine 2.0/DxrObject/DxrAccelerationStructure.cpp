@@ -1,4 +1,5 @@
 #include "DxrAccelerationStructure.h"
+#include "DxrAccelerationStructure.h"
 _DXROBJECT_USING
 
 //-----------------------------------------------------------------------------------------

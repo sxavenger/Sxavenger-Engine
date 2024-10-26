@@ -34,7 +34,7 @@ public:
 
 	//* creates *//
 
-	ComPtr<ID3D12RootSignature> CreateRootSignature(ID3D12Device* device) const;
+	virtual ComPtr<ID3D12RootSignature> CreateRootSignature(ID3D12Device* device) const;
 
 	//=========================================================================================
 	// members
@@ -125,6 +125,7 @@ public:
 	//* sampler *//
 
 	void SetSampler(uint32_t sampleIndex, SamplerMode mode, UINT shaderRegister);
+	void SetSampler(SamplerMode mode, UINT shaderRegister);
 
 	void SetSamplerAnisotropic(uint32_t sampleIndex, SamplerMode mode, UINT shaderRegister, uint32_t anisotropic);
 
