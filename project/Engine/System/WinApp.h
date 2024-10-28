@@ -46,6 +46,8 @@ public:
 	//! @retval false 継続
 	bool ProcessMessage();
 
+	//* getter *//
+
 	const HWND& GetHwnd() const { return hWnd_; }
 
 	const HINSTANCE& GetHinst() const { return hInst_; }
