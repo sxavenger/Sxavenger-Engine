@@ -1,14 +1,11 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
-#include "RaytracingCommon.hlsli"
+#include "ClosesthitCommon.hlsli"
 
 //=========================================================================================
 // LocalBuffer
 //=========================================================================================
-
-StructuredBuffer<Vertex> gVertices : register(t0);
-StructuredBuffer<uint>   gIndices : register(t1);
 
 Texture2D<float4> gAlbedo : register(t2);
 SamplerState     gSampler : register(s0);
@@ -17,28 +14,17 @@ SamplerState     gSampler : register(s0);
 // methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-Vertex GetHitVertex(Attribute attribute) {
+float4 AlphaBlend(float4 base, float4 add) {
+	float4 result;
 	
-	Vertex result = (Vertex)0;
-	float3 barycentrics = CalcBarycentrics(attribute.barys);
-	uint vertexId       = PrimitiveIndex() * 3;
+	// alpha
+	result.a = base.a + add.a * (1.0f - base.a);
 	
-	float weights[3] = {
-		barycentrics.x, barycentrics.y, barycentrics.z
-	};
-	
-	for (int i = 0; i < 3; ++i) {
-		uint index = gIndices[vertexId + i];
-		float w    = weights[i];
-		
-		result.position += gVertices[index].position * w;
-		result.texcoord += gVertices[index].texcoord * w;
-		result.normal   += gVertices[index].normal * w;
-	}
-	
-	result.normal = normalize(result.normal);
+	// color
+	result.rgb = (base.rgb * base.a + add.rgb * add.a * (1.0f - base.a)) / result.a;
 	
 	return result;
+	
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -47,9 +33,25 @@ Vertex GetHitVertex(Attribute attribute) {
 [shader("closesthit")]
 void mainClosesthit(inout Payload payload, Attribute attribute) {
 
-	Vertex vertex = GetHitVertex(attribute);
+	if (payload.Update()) {
+		return;
+	}
+
+	Vertex vertex = GetHitWorldVertex(attribute);
 
 	float4 color = gAlbedo.SampleLevel(gSampler, vertex.texcoord, 0.0f);
+
+	RayDesc desc;
+	desc.Origin    = vertex.position.xyz;
+	desc.Direction = reflect(WorldRayDirection(), vertex.normal);
+	desc.TMin      = kTmin;
+	desc.TMax      = kTmax;
+
+	TraceRay(
+		payload, desc
+	);
+
+	color = AlphaBlend(float4(payload.color.rgb, 0.4f), color);
 	
 	payload.color = color;
 

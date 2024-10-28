@@ -126,7 +126,7 @@ void RenderingConsole::InitRaytracing() {
 
 	raytracingScene_->SetBlob(raytracingPipeline_->GetBlob(kRaygeneration_Default));
 	raytracingScene_->SetBlob(raytracingPipeline_->GetBlob(kMiss_Default));
-	raytracingScene_->SetBlob(raytracingPipeline_->GetBlob(kHitgroup_Test));
+	raytracingScene_->SetBlob(raytracingPipeline_->GetBlob(kHitgroup_Behavior));
 
 	GlobalRootSignatureDesc desc = {};
 	desc.SetVirtualSRV(0, 10); //!< Scene

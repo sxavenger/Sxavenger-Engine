@@ -74,8 +74,6 @@ void BottomLevelAS::BuildBLAS(const D3D12_RAYTRACING_GEOMETRY_DESC& geomDesc) {
 void TopLevelAS::Create() {
 
 	CreateInstance();
-
-	// 更新
 	BuildTLAS();
 }
 
@@ -89,6 +87,10 @@ void TopLevelAS::BeginSetupInstance() {
 void TopLevelAS::EndSetupInstance() {
 	// bufferの更新
 	SetInstanceBuffer();
+
+	buffers_.asbuffer.Reset();
+	buffers_.update.Reset();
+	buffers_.scratch.Reset();
 
 	// 更新
 	BuildTLAS();
@@ -161,6 +163,36 @@ void TopLevelAS::BuildTLAS() {
 
 	commandList->ResourceBarrier(1, &barrier);
 
+}
+
+void TopLevelAS::UpdateTLAS() {
+
+	D3D12_BUILD_RAYTRACING_ACCELERATION_STRUCTURE_DESC buildASDesc = {};
+	buildASDesc.Inputs.Type          = D3D12_RAYTRACING_ACCELERATION_STRUCTURE_TYPE_TOP_LEVEL;
+	buildASDesc.Inputs.DescsLayout   = D3D12_ELEMENTS_LAYOUT_ARRAY;
+	buildASDesc.Inputs.NumDescs      = kMaxInstanceNum_;
+	buildASDesc.Inputs.InstanceDescs = instanceBuffer_->GetGPUVirtualAddress();
+	buildASDesc.Inputs.Flags         = D3D12_RAYTRACING_ACCELERATION_STRUCTURE_BUILD_FLAG_PERFORM_UPDATE;
+
+	buildASDesc.SourceAccelerationStructureData  = buffers_.update->GetGPUVirtualAddress();
+	buildASDesc.DestAccelerationStructureData    = buffers_.asbuffer->GetGPUVirtualAddress();
+	buildASDesc.ScratchAccelerationStructureData = buffers_.asbuffer->GetGPUVirtualAddress();
+
+	// コマンドに積む
+	auto commandList = Sxavenger::GetCommandList();
+
+	commandList->BuildRaytracingAccelerationStructure(
+		&buildASDesc, 0, nullptr
+	);
+
+	Sxavenger::TranstionAllocator();
+
+	// バリアの設定
+	D3D12_RESOURCE_BARRIER barrier = {};
+	barrier.Type          = D3D12_RESOURCE_BARRIER_TYPE_UAV;
+	barrier.UAV.pResource = buffers_.asbuffer.Get();
+
+	commandList->ResourceBarrier(1, &barrier);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////

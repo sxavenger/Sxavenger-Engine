@@ -77,6 +77,13 @@ void GameScene::Init() {
 	teapot_->Init();
 	teapot_->SetToConsole();
 
+	plane_ = std::make_unique<Plane>();
+	plane_->Init();
+	plane_->SetToConsole();
+
+	atmosphericScattering_ = std::make_unique<AtmosphericScattering>();
+	atmosphericScattering_->Init();
+	atmosphericScattering_->SetToConsole();
 }
 
 void GameScene::Term() {

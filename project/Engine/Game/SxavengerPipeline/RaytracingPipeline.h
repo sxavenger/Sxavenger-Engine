@@ -24,6 +24,7 @@ enum RaytracingPipelineType {
 
 	//* hitgroup *//
 	kHitgroup_Test,
+	kHitgroup_Behavior,
 
 	kCountOfRaytracingPipeline
 };

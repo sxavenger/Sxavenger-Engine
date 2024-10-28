@@ -454,7 +454,7 @@ const D3D12_GPU_DESCRIPTOR_HANDLE& TextureManager::GetGPUHandleSRV(const std::st
 
 	std::string lower = ToLower(key);
 
-	Assert(FindKey(lower));
+	Assert(FindKey(lower), "Not found to texture contaienr.");
 
 	return textures_.at(lower).texture->GetGPUHandleSRV();
 }

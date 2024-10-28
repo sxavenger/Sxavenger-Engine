@@ -59,6 +59,8 @@ public:
 
 	RaytracingPipeline* GetRaytracingPipeline() const { return raytracingPipeline_.get(); }
 
+	DxrObject::BufferRecoreder* GetMissRecorder() const { return missRecorder_.get(); }
+
 protected:
 
 	//=========================================================================================
@@ -68,6 +70,10 @@ protected:
 	//* window *//
 
 	bool isDisplayRenderingConsole_ = true;
+
+	//* rendering config *//
+
+	bool isRaytracingEnabled_ = true;
 
 private:
 

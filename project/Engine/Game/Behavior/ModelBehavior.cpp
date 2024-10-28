@@ -25,7 +25,7 @@ void ModelBehavior::CreateRaytracingRecorder() {
 
 	for (uint32_t i = 0; i < model_->GetMeshSize(); ++i) {
 		recorders_[i] = std::make_unique<BufferRecoreder>();
-		recorders_[i]->Create(sSystemConsole->GetRaytracingPipeline()->GetExport(kHitgroup_Test, 0));
+		recorders_[i]->Create(sSystemConsole->GetRaytracingPipeline()->GetExport(kHitgroup_Behavior, 0));
 
 		recorders_[i]->SetAddress(0, model_->GetMesh(i).GetVertexBuffer()->GetGPUVirtualAddress()); //!< Vertices
 		recorders_[i]->SetAddress(1, model_->GetMesh(i).GetIndexBuffer()->GetGPUVirtualAddress()); //!< Indices

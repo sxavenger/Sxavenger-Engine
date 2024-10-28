@@ -23,13 +23,10 @@ void mainRaygeneration() {
 	desc.TMin = kTmin;
 	desc.TMax = kTmax;
 
-	Payload payload;
+	Payload payload = (Payload)0;
 	payload.color = float4(0.0f, 0.0f, 0.0f, 0.0f);
 
-	TraceRay(
-		payload,
-		desc
-	);
+	TraceRay(payload, desc);
 
 	gOutput[launchIndex.xy] = payload.color;
 }

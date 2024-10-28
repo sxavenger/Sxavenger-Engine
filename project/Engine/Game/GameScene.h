@@ -12,11 +12,8 @@
 
 //* Game
 #include <Game/Teapot.h>
-
-// TEST
-#include <Engine/System/DxrObject/DxrExportGroup.h>
-#include <Engine/System/DxrObject/DxrRaytracingShaderBlob.h>
-#include <Engine/System/DxrObject/DxrStateObject.h>
+#include <Game/Plane.h>
+#include <Game/AtmosphericScattering.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // GameScene class
@@ -37,6 +34,9 @@ private:
 	//=========================================================================================
 
 	std::unique_ptr<Teapot> teapot_;
+	std::unique_ptr<Plane> plane_;
+
+	std::unique_ptr<AtmosphericScattering> atmosphericScattering_;
 
 	//=========================================================================================
 	// private methods

@@ -318,6 +318,8 @@
     <ClCompile Include="Engine\System\DxrObject\DxrBufferTypeContainer.cpp" />
     <ClCompile Include="Engine\Game\SxavengerPipeline\RaytracingPipeline.cpp" />
     <ClCompile Include="Engine\Game\RaytracingScene.cpp" />
+    <ClCompile Include="Game\AtmosphericScattering.cpp" />
+    <ClCompile Include="Game\Plane.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="externals\imgui\imconfig.h">
@@ -532,6 +534,8 @@
     <ClInclude Include="Engine\System\DxrObject\DxrBufferTypeContainer.h" />
     <ClInclude Include="Engine\Game\SxavengerPipeline\RaytracingPipeline.h" />
     <ClInclude Include="Engine\Game\RaytracingScene.h" />
+    <ClInclude Include="Game\AtmosphericScattering.h" />
+    <ClInclude Include="Game\Plane.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

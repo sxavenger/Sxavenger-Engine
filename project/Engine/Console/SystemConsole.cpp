@@ -70,9 +70,13 @@ void SystemConsole::Draw() {
 	ProcessConsole::ProcessXclipse(gameFrame_.get());
 	ProcessConsole::ProcessXclipse(sceneFrame_.get());
 
-	RenderingConsole::SetupRaytracing();
-	//RenderingConsole::RenderRaytracing(gameFrame_.get());  //!< test
-	RenderingConsole::RenderRaytracing(sceneFrame_.get()); //!< test
+
+	if (RenderingConsole::isRaytracingEnabled_) {
+		RenderingConsole::SetupRaytracing();
+		RenderingConsole::RenderRaytracing(sceneFrame_.get()); //!< test
+		// HACK: raytracingが1frame分しか使えない
+	}
+	
 
 	gameFrame_->TransitionXclipseToAdaptive();
 	sceneFrame_->TransitionXclipseToAdaptive();
@@ -245,6 +249,11 @@ void SystemConsole::DisplayMainMenu() {
 		ImGui::Dummy({ 200.0f, 0.0f });
 		ImGui::Checkbox("display rendering console", &(RenderingConsole::isDisplayRenderingConsole_));
 		ImGui::Checkbox("display process console",   &(ProcessConsole::isDisplayProcessConsole_));
+		ImGui::EndMenu();
+	}
+
+	if (ImGui::BeginMenu("Rendering")) {
+		ImGui::Checkbox("raytracing enabled", &(RenderingConsole::isRaytracingEnabled_));
 		ImGui::EndMenu();
 	}
 
