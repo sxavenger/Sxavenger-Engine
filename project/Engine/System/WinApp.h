@@ -58,15 +58,20 @@ private:
 	// private variables
 	//=========================================================================================
 
-	const wchar_t* kWindowClassName_ = L"Sxavenger Engine";
-
 	HINSTANCE hInst_;
 	HWND      hWnd_;
 	Vector2ui clientSize_;
+
+	//* config *//
+
+	static const LPCWSTR kWindowClassName_;
+	static const LPCSTR kIconFilepath_;
 
 	//=========================================================================================
 	// private methods
 	//=========================================================================================
 
 	static LRESULT CALLBACK WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam);
+
+	void SetIcon();
 };
