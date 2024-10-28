@@ -47,5 +47,5 @@ void AtmosphericScattering::SetAttributeImGui() {
 		v.Reset();
 	}
 
-	
+
 }
