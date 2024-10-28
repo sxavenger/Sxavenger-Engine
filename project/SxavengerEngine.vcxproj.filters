@@ -320,6 +320,8 @@
     <ClCompile Include="Engine\Game\RaytracingScene.cpp" />
     <ClCompile Include="Game\AtmosphericScattering.cpp" />
     <ClCompile Include="Game\Plane.cpp" />
+    <ClCompile Include="Engine\Game\Sprite.cpp" />
+    <ClCompile Include="Engine\Game\Material.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="externals\imgui\imconfig.h">
@@ -536,6 +538,8 @@
     <ClInclude Include="Engine\Game\RaytracingScene.h" />
     <ClInclude Include="Game\AtmosphericScattering.h" />
     <ClInclude Include="Game\Plane.h" />
+    <ClInclude Include="Engine\Game\Sprite.h" />
+    <ClInclude Include="Engine\Game\Material.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

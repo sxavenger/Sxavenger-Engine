@@ -55,7 +55,7 @@ void GameScene::Run() {
 		Sxavenger::EndImGuiAndDrawCall();
 		Sxavenger::EndFrame();
 
-		SxavengerGame::ResetPrimitive();
+		SxavengerGame::Reset();
 	}
 
 	//=========================================================================================

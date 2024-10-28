@@ -4,9 +4,10 @@
 // include
 //-----------------------------------------------------------------------------------------
 //* origin
-#include "Model.h"
-#include "DebugPrimitive.h"
+#include <Engine/Game/Model.h>
+#include <Engine/Game/DebugPrimitive.h>
 #include <Engine/Game/Collider/ColliderManager.h>
+#include <Engine/Game/Sprite.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // SxavengerGame class
@@ -23,6 +24,8 @@ public:
 
 	//! @brief 終了処理
 	static void Term();
+
+	static void Reset();
 
 	//-----------------------------------------------------------------------------------------
 	// model option
@@ -63,6 +66,20 @@ public:
 	static void DrawColliders();
 
 	static ColliderManager* GetColliderManager();
+
+	//-----------------------------------------------------------------------------------------
+	// sprite common option
+	//-----------------------------------------------------------------------------------------
+
+	static void DrawSprite(
+		const Vector2f& pos, const Vector2f& size, const D3D12_GPU_DESCRIPTOR_HANDLE& handle, const Color4f& color = { 1.0f, 1.0f, 1.0f, 1.0f }
+	);
+
+	static void DrawSprite(
+		const Vector2f& pos, const Vector2f& size, float rotate, const D3D12_GPU_DESCRIPTOR_HANDLE& handle, const Color4f& color = { 1.0f, 1.0f, 1.0f, 1.0f }
+	);
+
+	static SpriteCommon* GetSpriteCommon();
 
 private:
 };
