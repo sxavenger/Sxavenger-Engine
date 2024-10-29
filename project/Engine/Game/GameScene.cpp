@@ -76,21 +76,10 @@ void GameScene::Init() {
 	player_->Init();
 	player_->SetToConsole();
 
-	teapot_ = std::make_unique<Teapot>();
-	teapot_->Init();
-	teapot_->SetToConsole();
-
-	plane_ = std::make_unique<Plane>();
-	plane_->Init();
-	plane_->SetToConsole();
-
 	atmosphericScattering_ = std::make_unique<AtmosphericScattering>();
 	atmosphericScattering_->Init();
 	atmosphericScattering_->SetToConsole();
 
-	particleCollection_ = std::make_unique<ParitcleCollection>();
-	particleCollection_->Init();
-	particleCollection_->SetToConsole();
 	enemyCollection_ = std::make_unique<EnemyCollection>();
 	enemyCollection_->Init();
 	enemyCollection_->SetToConsole();
