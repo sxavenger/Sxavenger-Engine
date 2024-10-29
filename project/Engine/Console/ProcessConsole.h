@@ -83,6 +83,10 @@ private:
 
 	//* visual process methods *// //!< HACK
 
+	void XclipseAtmoSphericScattering(SxavengerFrame* frame);
+
+	//* visual process methods *// //!< HACK
+
 	void VisualGlayscale(SxavengerFrame* frame);
 
 };

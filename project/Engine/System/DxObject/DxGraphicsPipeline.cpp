@@ -66,10 +66,10 @@ void GraphicsPipelineDesc::SetRasterizer(D3D12_CULL_MODE cullMode, D3D12_FILL_MO
 	rasterizerDesc.FillMode = fillMode;
 }
 
-void GraphicsPipelineDesc::SetDepthStencil(bool depthEnable) {
+void GraphicsPipelineDesc::SetDepthStencil(bool depthEnable, D3D12_DEPTH_WRITE_MASK writeMask) {
 
 	depthStencilDesc.DepthEnable    = depthEnable;
-	depthStencilDesc.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ALL;
+	depthStencilDesc.DepthWriteMask = writeMask;
 	depthStencilDesc.DepthFunc      = D3D12_COMPARISON_FUNC_LESS_EQUAL;
 }
 

@@ -313,6 +313,23 @@
     <ClCompile Include="Game\Enemy.cpp" />
     <ClCompile Include="Game\PlayerBullet.cpp" />
     <ClCompile Include="Game\PlayerBulletCollisionManager.cpp" />
+    <ClCompile Include="Engine\System\DxrObject\DxrObjectCommon.cpp" />
+    <ClCompile Include="Engine\System\DxrObject\DxrExportGroup.cpp" />
+    <ClCompile Include="Engine\System\DxrObject\DxrRootSignature.cpp" />
+    <ClCompile Include="Engine\System\DxrObject\DxrAccelerationStructure.cpp" />
+    <ClCompile Include="Engine\System\DxrObject\DxrRaytracingShaderBlob.cpp" />
+    <ClCompile Include="Engine\System\DxrObject\DxrRaytracingShaderBlobManager.cpp" />
+    <ClCompile Include="Engine\System\DxrObject\DxrStateObject.cpp" />
+    <ClCompile Include="Engine\System\DxrObject\DxrShaderTable.cpp" />
+    <ClCompile Include="Engine\System\DxrObject\DxrBufferRecorder.cpp" />
+    <ClCompile Include="Engine\System\DxrObject\DxrBufferTypeContainer.cpp" />
+    <ClCompile Include="Engine\Game\SxavengerPipeline\RaytracingPipeline.cpp" />
+    <ClCompile Include="Engine\Game\RaytracingScene.cpp" />
+    <ClCompile Include="Game\AtmosphericScattering.cpp" />
+    <ClCompile Include="Game\Plane.cpp" />
+    <ClCompile Include="Engine\Game\Sprite.cpp" />
+    <ClCompile Include="Engine\Game\Material.cpp" />
+    <ClCompile Include="Game\Particle.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="externals\imgui\imconfig.h">
@@ -522,6 +539,23 @@
     <ClInclude Include="Game\Enemy.h" />
     <ClInclude Include="Game\PlayerBullet.h" />
     <ClInclude Include="Game\PlayerBulletCollisionManager.h" />
+    <ClInclude Include="Engine\System\DxrObject\DxrObjectCommon.h" />
+    <ClInclude Include="Engine\System\DxrObject\DxrExportGroup.h" />
+    <ClInclude Include="Engine\System\DxrObject\DxrRootSignature.h" />
+    <ClInclude Include="Engine\System\DxrObject\DxrAccelerationStructure.h" />
+    <ClInclude Include="Engine\System\DxrObject\DxrRaytracingShaderBlob.h" />
+    <ClInclude Include="Engine\System\DxrObject\DxrRaytracingShaderBlobManager.h" />
+    <ClInclude Include="Engine\System\DxrObject\DxrStateObject.h" />
+    <ClInclude Include="Engine\System\DxrObject\DxrShaderTable.h" />
+    <ClInclude Include="Engine\System\DxrObject\DxrBufferRecorder.h" />
+    <ClInclude Include="Engine\System\DxrObject\DxrBufferTypeContainer.h" />
+    <ClInclude Include="Engine\Game\SxavengerPipeline\RaytracingPipeline.h" />
+    <ClInclude Include="Engine\Game\RaytracingScene.h" />
+    <ClInclude Include="Game\AtmosphericScattering.h" />
+    <ClInclude Include="Game\Plane.h" />
+    <ClInclude Include="Engine\Game\Sprite.h" />
+    <ClInclude Include="Engine\Game\Material.h" />
+    <ClInclude Include="Game\Particle.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

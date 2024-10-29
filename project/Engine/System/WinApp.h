@@ -46,6 +46,8 @@ public:
 	//! @retval false 継続
 	bool ProcessMessage();
 
+	//* getter *//
+
 	const HWND& GetHwnd() const { return hWnd_; }
 
 	const HINSTANCE& GetHinst() const { return hInst_; }
@@ -58,15 +60,20 @@ private:
 	// private variables
 	//=========================================================================================
 
-	const wchar_t* kWindowClassName_ = L"Sxavenger Engine";
-
 	HINSTANCE hInst_;
 	HWND      hWnd_;
 	Vector2ui clientSize_;
+
+	//* config *//
+
+	static const LPCWSTR kWindowClassName_;
+	static const LPCSTR kIconFilepath_;
 
 	//=========================================================================================
 	// private methods
 	//=========================================================================================
 
 	static LRESULT CALLBACK WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam);
+
+	void SetIcon();
 };

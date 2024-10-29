@@ -44,7 +44,8 @@ void Camera3D::UpdateTranslate() {
 }
 
 void Camera3D::SetProjection(float fovY, float aspectRatio, float nearClip, float farClip) {
-	(*buffer_)[0].projMatrix = Matrix::MakePerspectiveFov(fovY, aspectRatio, nearClip, farClip);
+	(*buffer_)[0].projMatrix        = Matrix::MakePerspectiveFov(fovY, aspectRatio, nearClip, farClip);
+	(*buffer_)[0].projInverseMatrix = Matrix::MakePerspectiveFov(fovY, aspectRatio, nearClip, farClip).Inverse();
 }
 
 void Camera3D::DrawFrustum(const Color4f& color, float length) const {
@@ -79,8 +80,9 @@ void Camera3D::DrawFrustum(const Color4f& color, float length) const {
 
 void Camera3D::CalculateView() {
 	Vector3f position = transform_.GetWorldPosition();
-	(*buffer_)[0].position = { position.x, position.y, position.z };
-	(*buffer_)[0].viewMatrix = transform_.GetWorldMatrix().Inverse();
+	(*buffer_)[0].position    = { position.x, position.y, position.z };
+	(*buffer_)[0].worldMatrix = transform_.GetWorldMatrix();
+	(*buffer_)[0].viewMatrix  = transform_.GetWorldMatrix().Inverse();
 }
 
 void Camera3D::SetAttributeImGui() {

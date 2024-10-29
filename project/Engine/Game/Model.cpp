@@ -76,6 +76,12 @@ void Model::ApplyMeshShader() {
 	}
 }
 
+void Model::ApplyRaytracing() {
+	for (auto& mesh : meshes_) {
+		mesh.mesh.CreateBLAS();
+	}
+}
+
 void Model::LoadModelFile(const std::string& directoryPath, const std::string& filename, bool smooth) {
 
 	std::string filepath = directoryPath + "/" + filename;

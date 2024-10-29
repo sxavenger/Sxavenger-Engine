@@ -51,6 +51,5 @@ void CineCamera::CalculateProjection() {
 	float aspectRaito = sensorSize_.x / sensorSize_.y;
 	float fovY        = 2.0f * std::atan(sensorSize_.y / (2.0f * focalLength_));
 
-	(*buffer_)[0].projMatrix = Matrix::MakePerspectiveFov(fovY, aspectRaito, nearClip_, farClip_);
-
+	Camera3D::SetProjection(fovY, aspectRaito, nearClip_, farClip_);
 }

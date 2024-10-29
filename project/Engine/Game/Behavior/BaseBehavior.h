@@ -3,6 +3,9 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
+//* engine
+#include <Engine/System/DxrObject/DxrAccelerationStructure.h>
+
 //* lib
 #include <Lib/CXXAttributeConfig.h>
 
@@ -14,6 +17,16 @@
 // Forward
 //-----------------------------------------------------------------------------------------
 class Camera3D;
+
+////////////////////////////////////////////////////////////////////////////////////////////
+// BehaviorRenderingType enum
+////////////////////////////////////////////////////////////////////////////////////////////
+enum BehaviorRenderingFlag : uint32_t {
+	kBehaviorRender_None       = 0,
+	kBehaviorRender_Systematic = 1 << 0,
+	kBehaviorRender_Adaptive   = 1 << 1,
+	kBehaviorRender_Raytracing = 1 << 2,
+};
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // BaseBehavior class
@@ -46,11 +59,14 @@ public:
 	//* draw
 	virtual void DrawSystematic(_MAYBE_UNUSED const Camera3D* camera) {}
 	virtual void DrawAdaptive(_MAYBE_UNUSED const Camera3D* camera) {}
+	virtual void DrawRaytracing(_MAYBE_UNUSED DxrObject::TopLevelAS* tlas) {}
 	virtual void DrawLocal() {} //!< local sceneへの描画用
 
 	//* behavior getter *//
 
 	const std::string& GetName() const { return name_; }
+
+	const uint32_t GetRenderingFlag() const { return renderingFlag_; }
 
 	const std::list<BaseBehavior*>& GetChildren() const { return children_; }
 
@@ -63,6 +79,8 @@ protected:
 	//* behavior parameter *//
 
 	std::string name_ = "new behavior";
+
+	uint32_t renderingFlag_ = kBehaviorRender_None;
 
 private:
 

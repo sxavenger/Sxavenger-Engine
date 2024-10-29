@@ -3,7 +3,7 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
-// DxObject
+//* DXOBJECT
 #include <Engine/System/DxObject/DxDevices.h>
 #include <Engine/System/DxObject/DxCommand.h>
 #include <Engine/System/DxObject/DxDescriptorHeaps.h>
@@ -12,6 +12,9 @@
 #include <Engine/System/DxObject/DxBlendState.h>
 #include <Engine/System/DxObject/DxDepthStencil.h>
 #include <Engine/System/DxObject/DxShaderBlobManager.h>
+
+//* DXROBJECT
+#include <Engine/System/DxrObject/DxrRaytracingShaderBlobManager.h>
 
 // c++
 #include <memory>
@@ -127,16 +130,22 @@ protected:
 	// protected variables
 	//=========================================================================================
 
+	//* DXOBJECT
+
 	DxObject::Devices::DxLeakChecker leakChecher_;
 
-	std::unique_ptr<DxObject::Devices>          devices_;
-	std::unique_ptr<DxObject::Command>          command_;
-	std::unique_ptr<DxObject::DescriptorHeaps>  descriptorHeaps_;
-	std::unique_ptr<DxObject::SwapChain>        swapChains_;
-	std::unique_ptr<DxObject::Fence>            fences_;
+	std::unique_ptr<DxObject::Devices>           devices_;
+	std::unique_ptr<DxObject::Command>           command_;
+	std::unique_ptr<DxObject::DescriptorHeaps>   descriptorHeaps_;
+	std::unique_ptr<DxObject::SwapChain>         swapChains_;
+	std::unique_ptr<DxObject::Fence>             fences_;
 	std::unique_ptr<DxObject::ShaderBlobManager> shaderManager_;
 	std::unique_ptr<DxObject::BlendState>        blendState_;
 	std::unique_ptr<DxObject::DepthStencil>      depthStencil_; //!< depthStencilは共通
+
+	//* DXROBJECT
+
+	std::unique_ptr<DxrObject::RaytracingShaderBlobManager> raytracingShaderManager_;
 
 	/* parameters */
 

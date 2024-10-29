@@ -7,6 +7,7 @@ namespace {
 	std::unique_ptr<ModelManager> sModelManager       = nullptr;
 	std::unique_ptr<DebugPrimitive> sDebugPrimitive   = nullptr;
 	std::unique_ptr<ColliderManager> sColliderManager = nullptr;
+	std::unique_ptr<SpriteCommon> sSpriteCommon       = nullptr;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -14,7 +15,6 @@ namespace {
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 void SxavengerGameEngine::Init() {
-
 	sModelManager = std::make_unique<ModelManager>();
 	sModelManager->Init();
 
@@ -23,9 +23,15 @@ void SxavengerGameEngine::Init() {
 
 	sColliderManager = std::make_unique<ColliderManager>();
 	sColliderManager->Init();
+
+	sSpriteCommon = std::make_unique<SpriteCommon>();
+	sSpriteCommon->Init();
 }
 
 void SxavengerGameEngine::Term() {
+	sSpriteCommon->Term();
+	sSpriteCommon.reset();
+
 	sColliderManager->Term();
 	sColliderManager.reset();
 
@@ -34,6 +40,11 @@ void SxavengerGameEngine::Term() {
 
 	sModelManager->Term();
 	sModelManager.reset();
+}
+
+void SxavengerGameEngine::Reset() {
+	sDebugPrimitive->ResetPrimitive();
+	sSpriteCommon->Reset();
 }
 
 Model* SxavengerGameEngine::LoadModel(const std::string& directoryPath, const std::string& filename, bool smooth) {
@@ -90,4 +101,16 @@ void SxavengerGameEngine::DrawColliders() {
 
 ColliderManager* SxavengerGameEngine::GetColliderManager() {
 	return sColliderManager.get();
+}
+
+void SxavengerGameEngine::DrawSprite(const Vector2f& pos, const Vector2f& size, const D3D12_GPU_DESCRIPTOR_HANDLE& handle, const Color4f& color) {
+	sSpriteCommon->DrawSprite(pos, size, handle, color);
+}
+
+void SxavengerGameEngine::DrawSprite(const Vector2f& pos, const Vector2f& size, float rotate, const D3D12_GPU_DESCRIPTOR_HANDLE& handle, const Color4f& color) {
+	sSpriteCommon->DrawSprite(pos, size, rotate, handle, color);
+}
+
+SpriteCommon* SxavengerGameEngine::GetSpriteCommon() {
+	return sSpriteCommon.get();
 }

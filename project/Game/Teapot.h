@@ -6,12 +6,6 @@
 //* base
 #include <Engine/Game/Behavior/ModelBehavior.h>
 
-//* engine
-#include <Engine/Game/SxavengerGame.h>
-
-//* c++
-#include <memory>
-
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Teapot class
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -27,5 +21,16 @@ public:
 
 	void SetAttributeImGui() override;
 
+	void DrawAdaptive(_MAYBE_UNUSED const Camera3D* camera) override;
+
 private:
+
+	//=========================================================================================
+	// private varibles
+	//=========================================================================================
+
+	Vector2f pos_ = { 0.0f, 0.0f };
+	Vector2f size_ = { 128.0f, 128.0f };
+	float rotate_ = 0.0f;
+
 };

@@ -41,6 +41,8 @@ void SystemConsole::Term() {
 void SystemConsole::UpdateConsole() {
 	UpdateKeyAction();
 
+	UpdateConsoleShortcut();
+
 	DisplayMainMenu();
 
 	if (isDisplayConsole_) {
@@ -72,6 +74,14 @@ void SystemConsole::Draw() {
 	ProcessConsole::ProcessXclipse(gameFrame_.get());
 	ProcessConsole::ProcessXclipse(sceneFrame_.get());
 
+
+	if (RenderingConsole::isRaytracingEnabled_) {
+		RenderingConsole::SetupRaytracing();
+		RenderingConsole::RenderRaytracing(sceneFrame_.get()); //!< test
+		// HACK: raytracingが1frame分しか使えない
+	}
+	
+
 	gameFrame_->TransitionXclipseToAdaptive();
 	sceneFrame_->TransitionXclipseToAdaptive();
 
@@ -92,6 +102,8 @@ void SystemConsole::Draw() {
 	sceneFrame_->TransitionVisualToAdaptive();
 
 	Sxavenger::TranstionAllocator();
+
+	RenderingConsole::RenderAdaptive(gameFrame_.get());
 
 	{
 		sceneFrame_->BeginAdaptive();
@@ -185,6 +197,14 @@ void SystemConsole::TermFrame() {
 }
 
 
+void SystemConsole::UpdateConsoleShortcut() {
+
+	if ((Sxavenger::IsPressKey(DIK_LALT) || Sxavenger::IsPressKey(DIK_RALT))
+		&& Sxavenger::IsTriggerKey(DIK_F)) {
+		isDisplayConsole_ = !isDisplayConsole_;
+	}
+}
+
 void SystemConsole::DisplayMainMenu() {
 	ImGui::BeginMainMenuBar();
 
@@ -194,6 +214,11 @@ void SystemConsole::DisplayMainMenu() {
 		//* console config
 		ImGui::SeparatorText("console config");
 		ImGui::Checkbox("display console", &isDisplayConsole_);
+
+		ImGui::SameLine();
+		ImGui::Dummy({ 8.0f, 0.0f });
+		ImGui::SameLine();
+		ImGui::TextDisabled("ALT+F");
 
 		{
 			ImGui::SeparatorText("present to screen type");
@@ -251,6 +276,11 @@ void SystemConsole::DisplayMainMenu() {
 		ImGui::Dummy({ 200.0f, 0.0f });
 		ImGui::Checkbox("display rendering console", &(RenderingConsole::isDisplayRenderingConsole_));
 		ImGui::Checkbox("display process console",   &(ProcessConsole::isDisplayProcessConsole_));
+		ImGui::EndMenu();
+	}
+
+	if (ImGui::BeginMenu("Rendering")) {
+		ImGui::Checkbox("raytracing enabled", &(RenderingConsole::isRaytracingEnabled_));
 		ImGui::EndMenu();
 	}
 

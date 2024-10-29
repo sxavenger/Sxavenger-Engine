@@ -18,10 +18,7 @@ PSOutput main(VSOutput input) {
 	PSOutput output = (PSOutput)0;
 
 	output.color = gTexture.Sample(gSampler, input.texcoord);
-
-	if (output.color.a == 0.0f) {
-		discard;
-	}
+	output.color.a = 1.0f;
 	
 	return output;
 }

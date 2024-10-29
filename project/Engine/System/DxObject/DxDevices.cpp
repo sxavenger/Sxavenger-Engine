@@ -10,10 +10,12 @@ void Devices::Init() {
 	// デバックレイヤーの生成
 	{
 		if (SUCCEEDED(D3D12GetDebugInterface(IID_PPV_ARGS(&debugController_)))) {
-			// デバックレイヤーの有効化
-			debugController_->EnableDebugLayer();
-			// GPU側も有効化
-			debugController_->SetEnableGPUBasedValidation(TRUE);
+			if (useDebugLayer_) {
+				// デバックレイヤーの有効化
+				debugController_->EnableDebugLayer();
+				// GPU側も有効化
+				debugController_->SetEnableGPUBasedValidation(TRUE);
+			}
 		}
 	}
 #endif // _DEBUG
@@ -74,13 +76,11 @@ void Devices::Init() {
 #ifdef _DEBUG
 	// プログラムを停止する機能
 	{
-		ID3D12InfoQueue* infoQueue = nullptr;
-
-		if (SUCCEEDED(device_->QueryInterface(IID_PPV_ARGS(&infoQueue)))) {
+		if (SUCCEEDED(device_->QueryInterface(IID_PPV_ARGS(&infoQueue_)))) {
 			// プログラムを停止する種類
-			infoQueue->SetBreakOnSeverity(D3D12_MESSAGE_SEVERITY_CORRUPTION, true);
-			infoQueue->SetBreakOnSeverity(D3D12_MESSAGE_SEVERITY_ERROR, true);
-			/*infoQueue->SetBreakOnSeverity(D3D12_MESSAGE_SEVERITY_WARNING, true);*/
+			infoQueue_->SetBreakOnSeverity(D3D12_MESSAGE_SEVERITY_CORRUPTION, true);
+			infoQueue_->SetBreakOnSeverity(D3D12_MESSAGE_SEVERITY_ERROR, true);
+			//infoQueue_->SetBreakOnSeverity(D3D12_MESSAGE_SEVERITY_WARNING, true);
 
 			// 抑制するメッセージのID
 			D3D12_MESSAGE_ID denyIds[] = {
@@ -97,10 +97,7 @@ void Devices::Init() {
 			filter.DenyList.pSeverityList = serverities;
 
 			// 指定したメッセージの抑制
-			infoQueue->PushStorageFilter(&filter);
-
-			// 解放
-			infoQueue->Release();
+			infoQueue_->PushStorageFilter(&filter);
 		}
 	}
 #endif // _DEBUG

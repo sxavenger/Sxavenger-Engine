@@ -52,7 +52,7 @@ public:
 
 	//* config getter *//
 
-	const ImGuiWindowFlags GetWindowFlag() const { return windowFlag_; }
+	const ImGuiWindowFlags GetWindowFlag() const { return windowFlag_; } //!< HACK
 
 	bool IsUpdateRequired() const { return isUpdateRequired_; }
 
@@ -148,6 +148,8 @@ private:
 	void InitCheckerBoard();
 	void TermCheckerBoard();
 	void DrawCheckerBoard();
+
+	void UpdateConsoleShortcut();
 
 	//* display console methods *//
 

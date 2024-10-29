@@ -17,6 +17,7 @@
 enum RenderingPipelineType {
 	//* behavior
 	kDefaultVS_AlbedoPS_Deferred,
+	kDefaultVS_AlbedoPS,
 
 	kPresentToScreen,
 	kCountOfRenderingPipelineType
@@ -63,6 +64,7 @@ private:
 	//* graphics descs *//
 
 	DxObject::GraphicsPipelineDesc deferredPiplineDesc_ = {};
+	DxObject::GraphicsPipelineDesc forwardPipelineDesc_ = {};
 
 	//=========================================================================================
 	// private methods
