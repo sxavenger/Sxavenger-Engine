@@ -39,6 +39,8 @@ public:
 
 	void SetAttributeImGui() override;
 
+	PlayerBullet* GetBullet() const { return bullet_.get(); }
+
 private:
 
 	//=========================================================================================
@@ -67,5 +69,6 @@ private:
 	//=========================================================================================
 
 	void Move();
+	void Shot();
 
 };

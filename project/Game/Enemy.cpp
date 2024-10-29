@@ -52,6 +52,10 @@ void EnemyCollection::Init() {
 	SetName("enemy collection");
 
 	enemyModel_ = SxavengerGame::LoadModel("resources/model", "enemy.obj");
+
+	CreateEnemy({2.0f, 2.0f, 2.0f});
+	CreateEnemy({4.0f, 1.0f, 4.0f});
+	CreateEnemy({-2.0f, 1.0f, 1.0f});
 }
 
 void EnemyCollection::Term() {

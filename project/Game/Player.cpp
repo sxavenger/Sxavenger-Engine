@@ -32,6 +32,8 @@ void Player::Init() {
 	bullet_ = std::make_unique<PlayerBullet>();
 	bullet_->Init();
 	SetChild(bullet_.get());
+
+	
 }
 
 void Player::Term() {
@@ -41,8 +43,7 @@ void Player::Update() {
 	Move();
 	transform_.UpdateMatrix();
 
-	bullet_->Update();
-	bullet_->Shoot(Sxavenger::IsPressKey(DIK_SPACE), transform_.GetWorldPosition(), direction_);
+	Shot();
 }
 
 void Player::SetAttributeImGui() {
@@ -80,4 +81,24 @@ void Player::Move() {
 	const Vector3f offset = { 0.0f, 0.2f, -1.0f };
 
 	camera_->SetTransform(kUnit3, rotate, transform_.transform.translate + Matrix::Transform(offset, Matrix::MakeRotate(rotate)));
+}
+
+void Player::Shot() {
+
+	Matrix4x4 invViewProj = sSystemConsole->GetGameCamera()->GetViewProjMatrix().Inverse();
+
+	Vector2f mouse = Sxavenger::GetInput()->GetMousePos();
+	mouse = {
+		mouse.x / kWindowSize.x * 2.0f - 1.0f,
+		mouse.y / kWindowSize.y * 2.0f - 1.0f,
+	};
+
+	Vector3f direction = Matrix::Transform({ mouse.x, -mouse.y, 1.0f }, invViewProj);
+
+	bullet_->Update();
+	bullet_->Shoot(Sxavenger::IsPressKey(DIK_SPACE), transform_.GetWorldPosition(), direction);
+
+
+
+
 }

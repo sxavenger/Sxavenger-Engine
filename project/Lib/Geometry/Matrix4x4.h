@@ -151,4 +151,5 @@ namespace Matrix {
 	//* transform *//
 
 	Vector3f Transform(const Vector3f& v, const Matrix4x4& m);
+	Vector3f TransformNormal(const Vector3f& v, const Matrix4x4& m);
 }
