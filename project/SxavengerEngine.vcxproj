@@ -209,6 +209,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="externals\meshoptimizer\vfetchoptimizer.cpp" />
     <ClCompile Include="Game\AtmosphericScattering.cpp" />
     <ClCompile Include="Game\Kipfel.cpp" />
+    <ClCompile Include="Game\Particle.cpp" />
     <ClCompile Include="Game\Plane.cpp" />
     <ClCompile Include="Game\Teapot.cpp" />
     <ClCompile Include="Lib\Adapter\Json\Json.cpp" />
@@ -302,6 +303,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="externals\meshoptimizer\meshoptimizer.h" />
     <ClInclude Include="Game\AtmosphericScattering.h" />
     <ClInclude Include="Game\Kipfel.h" />
+    <ClInclude Include="Game\Particle.h" />
     <ClInclude Include="Game\Plane.h" />
     <ClInclude Include="Game\Teapot.h" />
     <ClInclude Include="Lib\Adapter\Json\Json.h" />

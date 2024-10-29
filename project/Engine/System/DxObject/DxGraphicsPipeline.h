@@ -58,7 +58,7 @@ public:
 
 	void SetRasterizer(D3D12_CULL_MODE cullMode, D3D12_FILL_MODE fillMode);
 
-	void SetDepthStencil(bool depthEnable);
+	void SetDepthStencil(bool depthEnable, D3D12_DEPTH_WRITE_MASK writeMask = D3D12_DEPTH_WRITE_MASK_ALL);
 
 	void SetBlendMode(BlendMode blendMode);
 

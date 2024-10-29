@@ -34,7 +34,9 @@ public:
 	//* derivative behaivor methods *//
 
 	virtual void SystemAttributeImGui() override;
+
 	virtual void DrawSystematic(_MAYBE_UNUSED const Camera3D* camera) override;
+	virtual void DrawAdaptive(_MAYBE_UNUSED const Camera3D* camera) override;
 	virtual void DrawRaytracing(_MAYBE_UNUSED DxrObject::TopLevelAS* tlas) override;
 
 protected:

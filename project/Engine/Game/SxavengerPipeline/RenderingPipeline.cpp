@@ -27,14 +27,37 @@ void RenderingPipeline::SetPipeline(RenderingPipelineType type) const {
 }
 
 void RenderingPipeline::CreateDesc() {
+
 	deferredPiplineDesc_ = {};
 	deferredPiplineDesc_.CreateDefaultDesc();
 
 	deferredPiplineDesc_.rtvFormats.clear();
 	deferredPiplineDesc_.SetRTVFormats(SystematicRenderingFrame::kCountOfGBuffer, SystematicRenderingFrame::formats_.data());
+
+	forwardPipelineDesc_ = {};
+	forwardPipelineDesc_.CreateDefaultDesc();
 }
 
 void RenderingPipeline::CreateForward() {
+
+	auto deviceObj = Sxavenger::GetDevicesObj();
+
+	{
+		blobs_[kDefaultVS_AlbedoPS] = std::make_unique<GraphicsBlob>();
+		blobs_[kDefaultVS_AlbedoPS]->Create(L"behavior/default.vs.hlsl", GRAPHICS_VERTEX);
+		blobs_[kDefaultVS_AlbedoPS]->Create(L"behavior/albedo.ps.hlsl",  GRAPHICS_PIXEL);
+
+		pipelines_[kDefaultVS_AlbedoPS] = std::make_unique<GraphicsPipeline>();
+
+		GraphicsRootSignatureDesc desc = {};
+		desc.SetCBV(0, VISIBILITY_ALL, 10);          //!< Camera
+		desc.SetVirtualSRV(1, VISIBILITY_VERTEX, 0); //!< Transform
+		desc.SetSRV(2, VISIBILITY_PIXEL, 0);         //!< Albedo
+		desc.SetSampler(MODE_WRAP, VISIBILITY_PIXEL, 0);
+
+		pipelines_[kDefaultVS_AlbedoPS]->CreateRootSignature(deviceObj, desc);
+		pipelines_[kDefaultVS_AlbedoPS]->CreatePipeline(deviceObj, blobs_[kDefaultVS_AlbedoPS].get(), forwardPipelineDesc_);
+	}
 }
 
 void RenderingPipeline::CreateDeferred() {

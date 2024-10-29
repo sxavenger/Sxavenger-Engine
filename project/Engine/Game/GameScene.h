@@ -13,6 +13,7 @@
 //* Game
 #include <Game/Teapot.h>
 #include <Game/Plane.h>
+#include <Game/Particle.h>
 #include <Game/AtmosphericScattering.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -37,6 +38,8 @@ private:
 	std::unique_ptr<Plane> plane_;
 
 	std::unique_ptr<AtmosphericScattering> atmosphericScattering_;
+
+	std::unique_ptr<ParitcleCollection> particleCollection_;
 
 	//=========================================================================================
 	// private methods

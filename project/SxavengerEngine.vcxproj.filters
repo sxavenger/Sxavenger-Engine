@@ -322,6 +322,7 @@
     <ClCompile Include="Game\Plane.cpp" />
     <ClCompile Include="Engine\Game\Sprite.cpp" />
     <ClCompile Include="Engine\Game\Material.cpp" />
+    <ClCompile Include="Game\Particle.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="externals\imgui\imconfig.h">
@@ -540,6 +541,7 @@
     <ClInclude Include="Game\Plane.h" />
     <ClInclude Include="Engine\Game\Sprite.h" />
     <ClInclude Include="Engine\Game\Material.h" />
+    <ClInclude Include="Game\Particle.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

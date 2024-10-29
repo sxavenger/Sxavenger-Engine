@@ -80,7 +80,7 @@ void Devices::Init() {
 			// プログラムを停止する種類
 			infoQueue_->SetBreakOnSeverity(D3D12_MESSAGE_SEVERITY_CORRUPTION, true);
 			infoQueue_->SetBreakOnSeverity(D3D12_MESSAGE_SEVERITY_ERROR, true);
-			infoQueue_->SetBreakOnSeverity(D3D12_MESSAGE_SEVERITY_WARNING, true);
+			//infoQueue_->SetBreakOnSeverity(D3D12_MESSAGE_SEVERITY_WARNING, true);
 
 			// 抑制するメッセージのID
 			D3D12_MESSAGE_ID denyIds[] = {

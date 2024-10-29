@@ -84,6 +84,10 @@ void GameScene::Init() {
 	atmosphericScattering_ = std::make_unique<AtmosphericScattering>();
 	atmosphericScattering_->Init();
 	atmosphericScattering_->SetToConsole();
+
+	particleCollection_ = std::make_unique<ParitcleCollection>();
+	particleCollection_->Init();
+	particleCollection_->SetToConsole();
 }
 
 void GameScene::Term() {
