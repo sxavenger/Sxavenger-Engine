@@ -28,6 +28,37 @@ void ParitcleCollection::Init() {
 void ParitcleCollection::Term() {
 }
 
+void ParitcleCollection::Update() {
+
+	instanceCount_ = 0;
+
+	CineCamera* camera = sSystemConsole->GetGameCamera();
+
+	for (auto element = elements_.begin(); element != elements_.end();) {
+
+		// 秒数を超えていたら削除
+		if (element->currentTime >= element->leftTime) {
+			element = elements_.erase(element);
+			continue;
+		}
+
+		element->currentTime.AddDeltaTime();
+
+		element->transform.translate += element->velocity * Performance::GetDeltaTime(s).time;
+		element->transform.rotate = ToQuaternion(camera->GetTransform().rotate) * MakeAxisAngle({ 0.0f, 1.0f, 0.0f }, pi_v * 2.0f);
+
+		// bufferに登録
+		if (instanceCount_ < kMaxInstanceCount_) {
+			(*transformBuffer_)[instanceCount_].Transfer(element->transform.ToMatrix());
+			(*infoBuffer_)[instanceCount_].color = element->color;
+			instanceCount_++;
+		}
+
+		element++;
+	}
+
+}
+
 void ParitcleCollection::DrawAdaptive(_MAYBE_UNUSED const Camera3D* camera) {
 
 	auto commandList = Sxavenger::GetCommandList();
@@ -41,7 +72,14 @@ void ParitcleCollection::DrawAdaptive(_MAYBE_UNUSED const Camera3D* camera) {
 	commandList->SetGraphicsRootShaderResourceView(2, infoBuffer_->GetGPUVirtualAddress());
 	commandList->SetGraphicsRootDescriptorTable(3, Sxavenger::GetTextureHandleGPU("resources/particleDemo.png"));
 
-	model_->DrawCall(0, kInstanceCount_);
+	model_->DrawCall(0, instanceCount_);
+}
+
+void ParitcleCollection::SetAttributeImGui() {
+
+	if (ImGui::Button("emit")) {
+		MakeParticle();
+	}
 }
 
 void ParitcleCollection::CreatePipeline() {
@@ -74,19 +112,28 @@ void ParitcleCollection::CreatePipeline() {
 void ParitcleCollection::CreateBuffer() {
 
 	transformBuffer_
-		= std::make_unique<BufferResource<TransformationMatrix>>(Sxavenger::GetDevicesObj(), kInstanceCount_);
+		= std::make_unique<BufferResource<TransformationMatrix>>(Sxavenger::GetDevicesObj(), kMaxInstanceCount_);
 
 	infoBuffer_
-		= std::make_unique<BufferResource<ParticleInfo>>(Sxavenger::GetDevicesObj(), kInstanceCount_);
+		= std::make_unique<BufferResource<ParticleInfo>>(Sxavenger::GetDevicesObj(), kMaxInstanceCount_);
 
-	for (uint32_t i = 0; i < kInstanceCount_; ++i) {
+	for (uint32_t i = 0; i < kMaxInstanceCount_; ++i) {
 		(*infoBuffer_)[i].color = { 1.0f, 1.0f, 1.0f, 1.0f };
 
 		EulerTransform transform = {};
-		transform.translate.x = i * 1.0f;
-		transform.translate.y = i * 1.0f;
+		transform.translate.x = i * 0.2f;
+		transform.translate.y = i * 0.2f;
 
 		(*transformBuffer_)[i].Transfer(transform.ToMatrix());
 	}
+
+}
+
+void ParitcleCollection::MakeParticle() {
+
+	ParticleElement element = {};
+	element.Init();
+
+	elements_.emplace_back(element);
 
 }

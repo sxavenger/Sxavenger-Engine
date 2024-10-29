@@ -111,7 +111,7 @@ float Dot(const Quaternion& q, const Quaternion& r) {
 	return q.x * r.x + q.y * r.y + q.z * r.z + q.w * r.w;
 }
 
-Quaternion MakeRotateAxisAngleQuaternion(const Vector3f& axis, float angle) {
+Quaternion MakeAxisAngle(const Vector3f& axis, float angle) {
 
 	Quaternion result;
 
@@ -184,5 +184,5 @@ Quaternion LookAt(const Vector3f& u, const Vector3f& v) {
 
 	float theta = std::acos(Dot(u, v));
 
-	return MakeRotateAxisAngleQuaternion(up, theta);
+	return MakeAxisAngle(up, theta);
 }

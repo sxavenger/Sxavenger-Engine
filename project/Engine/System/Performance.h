@@ -102,6 +102,18 @@ class DeltaTimePoint { //!< frameとdeltaTimeを区別するために作成
 public:
 
 	//=========================================================================================
+	// public methods
+	//=========================================================================================
+
+	void AddDeltaTime() {
+		*this += Performance::GetDeltaTime(s);
+	}
+
+	void SubtractDeltaTime() {
+		*this -= Performance::GetDeltaTime(s);
+	}
+
+	//=========================================================================================
 	// public operator
 	//=========================================================================================
 
@@ -117,14 +129,6 @@ public:
 	DeltaTimePoint& operator-=(DeltaTimePoint other) {
 		time -= other.time;
 		return *this;
-	}
-
-	void operator++() {
-		*this += Performance::GetDeltaTime(s);
-	}
-
-	void operator--() {
-		*this -= Performance::GetDeltaTime(s);
 	}
 
 	bool operator==(DeltaTimePoint other) const {

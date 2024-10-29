@@ -75,7 +75,7 @@ inline Quaternion operator-(const Quaternion& q) {
 
 float Dot(const Quaternion& q, const Quaternion& r);
 
-Quaternion MakeRotateAxisAngleQuaternion(const Vector3f& axis, float angle);
+Quaternion MakeAxisAngle(const Vector3f& axis, float angle);
 
 Vector3f RotateVector(const Vector3f& v, const Quaternion& q);
 

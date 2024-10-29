@@ -94,6 +94,7 @@ void GameScene::Term() {
 }
 
 void GameScene::Update() {
+	particleCollection_->Update();
 }
 
 void GameScene::Draw() {

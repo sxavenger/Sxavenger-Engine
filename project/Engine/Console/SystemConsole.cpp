@@ -40,6 +40,8 @@ void SystemConsole::Term() {
 
 void SystemConsole::UpdateConsole() {
 
+	UpdateConsoleShortcut();
+
 	DisplayMainMenu();
 
 	if (isDisplayConsole_) {
@@ -185,6 +187,14 @@ void SystemConsole::TermFrame() {
 }
 
 
+void SystemConsole::UpdateConsoleShortcut() {
+
+	if ((Sxavenger::IsPressKey(DIK_LALT) || Sxavenger::IsPressKey(DIK_RALT))
+		&& Sxavenger::IsTriggerKey(DIK_F)) {
+		isDisplayConsole_ = !isDisplayConsole_;
+	}
+}
+
 void SystemConsole::DisplayMainMenu() {
 	ImGui::BeginMainMenuBar();
 
@@ -194,6 +204,11 @@ void SystemConsole::DisplayMainMenu() {
 		//* console config
 		ImGui::SeparatorText("console config");
 		ImGui::Checkbox("display console", &isDisplayConsole_);
+
+		ImGui::SameLine();
+		ImGui::Dummy({ 8.0f, 0.0f });
+		ImGui::SameLine();
+		ImGui::TextDisabled("ALT+F");
 
 		{
 			ImGui::SeparatorText("present to screen type");

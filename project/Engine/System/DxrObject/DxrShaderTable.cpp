@@ -50,6 +50,8 @@ void ShaderTable::Create(
 	// 合計したtableのサイズ
 	UINT tableSize = raygenerationRegion + missRegion + hitgroupRegion;
 
+	table_.Reset();
+
 	// tableのresourceの生成
 	table_ = DxObject::CreateBufferResource(
 		Sxavenger::GetDevice(),

@@ -48,6 +48,8 @@ public:
 
 	const Vector3f GetWorldPosition() { return transform_.GetWorldPosition(); }
 
+	const EulerTransform& GetTransform() const { return transform_.transform; }
+
 	//* camera getter *//
 
 	const Matrix4x4 GetViewProjMatrix() const { return (*buffer_)[0].viewMatrix * (*buffer_)[0].projMatrix; }
