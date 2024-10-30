@@ -16,15 +16,7 @@
 //* lib
 #include <Lib/Geometry/Vector4.h>
 #include <Lib/Adapter/Random/Random.h>
-
-////////////////////////////////////////////////////////////////////////////////////////////
-// Emitter class
-////////////////////////////////////////////////////////////////////////////////////////////
-class Emitter {
-public:
-
-private:
-};
+#include <Lib/Geometry/VectorComparison.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // ParitcleCollection class
@@ -64,14 +56,34 @@ private:
 		Vector3f velocity;
 		Color4f color;
 
-		DeltaTimePoint leftTime;
+		DeltaTimePoint lifeTime;
 		DeltaTimePoint currentTime;
+	};
 
-		void Init() {
-			velocity = { Random::Generate(-1.0f, 1.0f), Random::Generate(-1.0f, 1.0f), Random::Generate(-1.0f, 1.0f) };
-			color    = { Random::Generate(0.0f, 1.0f), Random::Generate(0.0f, 1.0f), Random::Generate(0.0f, 1.0f), 1.0f };
+	////////////////////////////////////////////////////////////////////////////////////////////
+	// Emitter structure
+	////////////////////////////////////////////////////////////////////////////////////////////
+	struct Emitter {
+		EulerTransform transform;
+		uint32_t count;
+		DeltaTimePoint freqency;
+		DeltaTimePoint freqencyTimer;
+	};
 
-			leftTime = { Random::Generate(2.0f, 4.0f) };
+	////////////////////////////////////////////////////////////////////////////////////////////
+	// AccelerationField structure
+	////////////////////////////////////////////////////////////////////////////////////////////
+	struct AccelerationField {
+		Vector3f acceleration;
+		Vector3f min;
+		Vector3f max;
+
+		bool IsCollision(const Vector3f& point) {
+			if (All(point >= min) && All(point <= max)) {
+				return true;
+			}
+
+			return false;
 		}
 	};
 
@@ -98,6 +110,16 @@ private:
 
 	Color4f color_ = { 1.0f, 1.0f, 1.0f, 1.0f };
 
+	//* emitter *//
+
+	Emitter emitter_ = {};
+
+	//* field *//
+
+	AccelerationField field_ = {};
+
+	bool isApplyField_ = true;
+
 	//=========================================================================================
 	// private methods
 	//=========================================================================================
@@ -105,6 +127,9 @@ private:
 	void CreatePipeline();
 	void CreateBuffer();
 
-	void MakeParticle();
+	void UpdateParticle();
+	void UpdateEmitter();
 
+	void MakeParticle(const Vector3f& transform);
+	void Emit();
 };
