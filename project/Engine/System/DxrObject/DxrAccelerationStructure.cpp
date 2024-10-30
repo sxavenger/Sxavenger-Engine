@@ -81,19 +81,27 @@ void TopLevelAS::Term() {
 }
 
 void TopLevelAS::BeginSetupInstance() {
+	preInstanceCount_ = static_cast<uint32_t>(instances_.size());
 	instances_.clear(); // 新しく設定するのでclearしておく
 }
 
 void TopLevelAS::EndSetupInstance() {
+
 	// bufferの更新
 	SetInstanceBuffer();
 
-	buffers_.asbuffer.Reset();
-	buffers_.update.Reset();
-	buffers_.scratch.Reset();
+	if (instances_.size() == preInstanceCount_) {
+		// 更新
+		UpdateTLAS();
 
-	// 更新
-	BuildTLAS();
+	} else {
+		// 再度build
+		buffers_.asbuffer.Reset();
+		buffers_.update.Reset();
+		buffers_.scratch.Reset();
+
+		BuildTLAS();
+	}
 }
 
 void TopLevelAS::SetInstance(const BottomLevelAS* blas, const Matrix4x4& worldMatrix, const BufferRecoreder* recorder, UINT instanceId) {
@@ -172,11 +180,13 @@ void TopLevelAS::UpdateTLAS() {
 	buildASDesc.Inputs.DescsLayout   = D3D12_ELEMENTS_LAYOUT_ARRAY;
 	buildASDesc.Inputs.NumDescs      = kMaxInstanceNum_;
 	buildASDesc.Inputs.InstanceDescs = instanceBuffer_->GetGPUVirtualAddress();
-	buildASDesc.Inputs.Flags         = D3D12_RAYTRACING_ACCELERATION_STRUCTURE_BUILD_FLAG_PERFORM_UPDATE;
+	buildASDesc.Inputs.Flags
+		= D3D12_RAYTRACING_ACCELERATION_STRUCTURE_BUILD_FLAG_ALLOW_UPDATE
+		| D3D12_RAYTRACING_ACCELERATION_STRUCTURE_BUILD_FLAG_PERFORM_UPDATE;
 
-	buildASDesc.SourceAccelerationStructureData  = buffers_.update->GetGPUVirtualAddress();
+	buildASDesc.SourceAccelerationStructureData  = buffers_.asbuffer->GetGPUVirtualAddress();
 	buildASDesc.DestAccelerationStructureData    = buffers_.asbuffer->GetGPUVirtualAddress();
-	buildASDesc.ScratchAccelerationStructureData = buffers_.asbuffer->GetGPUVirtualAddress();
+	buildASDesc.ScratchAccelerationStructureData = buffers_.update->GetGPUVirtualAddress();
 
 	// コマンドに積む
 	auto commandList = Sxavenger::GetCommandList();

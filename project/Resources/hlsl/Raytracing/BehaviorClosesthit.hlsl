@@ -55,7 +55,7 @@ void ClosesthitBehavior(inout Payload payload, Attribute attribute) {
 	shadowDesc.TMax      = kTmax;
 
 	TraceRay(
-		shadowPayload, shadowDesc, RAY_FLAG_NONE
+		shadowPayload, shadowDesc
 	);
 
 	// shadowがヒットしてた場合
