@@ -211,16 +211,16 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="Game\AtmosphericScattering.cpp" />
     <ClCompile Include="Game\Enemy.cpp" />
     <ClCompile Include="Game\Kipfel.cpp" />
-    <ClCompile Include="Game\Particle.cpp" />
     <ClCompile Include="Game\Plane.cpp" />
     <ClCompile Include="Game\Player.cpp" />
     <ClCompile Include="Game\PlayerBullet.cpp" />
     <ClCompile Include="Game\PlayerBulletCollisionManager.cpp" />
     <ClCompile Include="Game\Rail.cpp" />
     <ClCompile Include="Game\RailCamera.cpp" />
+    <ClCompile Include="Game\Score.cpp" />
     <ClCompile Include="Game\Teapot.cpp" />
-    <ClCompile Include="Lib\Adapter\Json\Json.cpp" />
-    <ClCompile Include="Lib\Adapter\Random\Random.cpp" />
+    <ClCompile Include="Lib\Adapter\Json.cpp" />
+    <ClCompile Include="Lib\Adapter\Random.cpp" />
     <ClCompile Include="Lib\Geometry\MathLib.cpp" />
     <ClCompile Include="Lib\Geometry\Matrix4x4.cpp" />
     <ClCompile Include="Lib\Geometry\Quaternion.cpp" />
@@ -317,11 +317,11 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Game\PlayerBulletCollisionManager.h" />
     <ClInclude Include="Game\Rail.h" />
     <ClInclude Include="Game\RailCamera.h" />
-    <ClInclude Include="Game\Particle.h" />
     <ClInclude Include="Game\Plane.h" />
+    <ClInclude Include="Game\Score.h" />
     <ClInclude Include="Game\Teapot.h" />
-    <ClInclude Include="Lib\Adapter\Json\Json.h" />
-    <ClInclude Include="Lib\Adapter\Random\Random.h" />
+    <ClInclude Include="Lib\Adapter\Json.h" />
+    <ClInclude Include="Lib\Adapter\Random.h" />
     <ClInclude Include="Lib\CXXAttributeConfig.h" />
     <ClInclude Include="Lib\Environment.h" />
     <ClInclude Include="Lib\Geometry\MathLib.h" />
@@ -336,7 +336,6 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />
-    <None Include="Resources\hlsl\Primitive\DebugPrimitive.hlsli" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="externals\DirectXMesh\DirectXMesh_Desktop_2022_Win10.vcxproj">
@@ -348,16 +347,6 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
   </ItemGroup>
   <ItemGroup>
     <Text Include="externals\imgui\LICENSE.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <FxCompile Include="Resources\hlsl\Primitive\DebugPrimitive.PS.hlsl">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </FxCompile>
-    <FxCompile Include="Resources\hlsl\Primitive\DebugPrimitive.VS.hlsl">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </FxCompile>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

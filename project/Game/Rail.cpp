@@ -49,6 +49,8 @@ void Rail::Init() {
 
 		(*instanceBuffer_)[i].Transfer(transform.ToMatrix());
 	}
+
+	ModelInstanceBehavior::renderingFlag_ = kBehaviorRender_Systematic | kBehaviorRender_Adaptive;
 }
 
 void Rail::Term() {

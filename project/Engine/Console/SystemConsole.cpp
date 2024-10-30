@@ -39,8 +39,6 @@ void SystemConsole::Term() {
 }
 
 void SystemConsole::UpdateConsole() {
-	UpdateKeyAction();
-
 	UpdateConsoleShortcut();
 
 	DisplayMainMenu();
@@ -104,6 +102,7 @@ void SystemConsole::Draw() {
 	Sxavenger::TranstionAllocator();
 
 	RenderingConsole::RenderAdaptive(gameFrame_.get());
+	RenderingConsole::RenderAdaptive(sceneFrame_.get());
 
 	{
 		sceneFrame_->BeginAdaptive();
@@ -508,15 +507,6 @@ void SystemConsole::DisplaySystemMenu() {
 
 	}
 
-}
-
-void SystemConsole::UpdateKeyAction() {
-
-	//* alt(left || right) + f: フルスクリーンモード切り替え
-	if ((Sxavenger::IsPressKey(DIK_LALT) || Sxavenger::IsPressKey(DIK_RALT))
-		&& Sxavenger::IsTriggerKey(DIK_F)) {
-		isDisplayConsole_ = !isDisplayConsole_;
-	}
 }
 
 void SystemConsole::DisplayTextureImGuiFullWindow(const MultiViewTexture* texture) const {

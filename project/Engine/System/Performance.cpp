@@ -53,7 +53,7 @@ void Performance::EndFrame() {
 	}
 }
 
-DeltaTimePoint Performance::GetDeltaTime(SecondsUnit unit) {
+const DeltaTimePoint Performance::GetDeltaTime(SecondsUnit unit) {
 
 	DeltaTimePoint result = {};
 

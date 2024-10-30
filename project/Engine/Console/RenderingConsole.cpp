@@ -57,6 +57,7 @@ void RenderingConsole::RenderAdaptive(SxavengerFrame* frame) {
 		DrawAdaptiveBehavior(behavior, frame);
 	}
 
+	SxavengerGame::DrawToScene(frame->GetCamera());
 	frame->EndAdaptive();
 }
 

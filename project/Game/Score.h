@@ -4,75 +4,45 @@
 // include
 //-----------------------------------------------------------------------------------------
 //* base
-#include <Engine/Game/Behavior/ModelBehavior.h>
-
-//* engine
-#include <Engine/System/Performance.h>
-#include <Engine/Game/Camera/CineCamera.h>
-
-//* Game
-#include <Game/Rail.h>
-#include <Game/PlayerBullet.h>
-#include <Game/Score.h>
+#include <Engine/Game/Behavior/BaseBehavior.h>
+#include <Engine/System/Texture.h>
 
 //* c++
-#include <memory>
+#include <cstdint>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// Player class
+// Score class
 ////////////////////////////////////////////////////////////////////////////////////////////
-class Player
-	: public ModelBehavior {
+class Score
+	: public BaseBehavior {
 public:
 
 	//=========================================================================================
 	// public methods
 	//=========================================================================================
 
-	Player() = default;
-	~Player() { Term(); }
-
 	void Init();
 
 	void Term();
 
-	void Update();
-
 	void SetAttributeImGui() override;
 
-	PlayerBullet* GetBullet() const { return bullet_.get(); }
+	void DrawAdaptive(_MAYBE_UNUSED const Camera3D* camera);
 
+	//=========================================================================================
+	// public variables
+	//=========================================================================================
+
+	uint32_t score = 0;
+	
 private:
-
-	//=========================================================================================
-	// private variables
-	//=========================================================================================
-
-	//* externals *//
-
-	CineCamera* camera_ = nullptr;
-
-	//* member *//
-
-	std::unique_ptr<Rail>         rail_;
-	std::unique_ptr<Score>        score_;
-	std::unique_ptr<PlayerBullet> bullet_;
-
-	//* parameter *//
-
-	DeltaTimePoint loopTime_ = { 24.0f }; //!< 1周の時間
-	DeltaTimePoint loopTimer_;            //!< 計測用
-
-	Vector3f cameraOffset_ = { 0.0f, 0.2f, -1.0f };
-
-	Vector3f direction_;
-
 
 	//=========================================================================================
 	// private methods
 	//=========================================================================================
 
-	void Move();
-	void Shot();
+	Texture* texture_;
+
+	Vector2f margin_ = { 24.0f, 24.0f };
 
 };

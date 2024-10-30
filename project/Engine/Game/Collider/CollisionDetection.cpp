@@ -22,7 +22,10 @@ bool CollisionDetection::CheckCollision(
 		return HandleAABBCollision(posisionA, *aabbA, posisionB, boundingB);
 
 	} else if (auto* obbA = std::get_if<CollisionBoundings::OBB>(&boundingA)) {
-		return HandleOBBCollision(posisionA, *obbA, posisionB, boundingB); // OBBの処理は未実装
+		return HandleOBBCollision(posisionA, *obbA, posisionB, boundingB);
+
+	} else if (auto* rayA = std::get_if<CollisionBoundings::Ray>(&boundingA)) {
+		return HandleRayCollision(posisionA, *rayA, posisionB, boundingB);
 	}
 
 	Assert(false); // 無効な型
@@ -42,6 +45,9 @@ bool CollisionDetection::HandleSphereCollision(
 	} else if (auto* obbB = std::get_if<CollisionBoundings::OBB>(&boundingB)) {
 		// OBBとの当たり判定は未実装
 		return false;
+
+	} else if (auto* rayB = std::get_if<CollisionBoundings::Ray>(&boundingB)) {
+		return SphereToRay(posisionA, sphereA, posisionB, *rayB);
 	}
 		 
 	Assert(false); //!< 無効な型
@@ -77,6 +83,25 @@ bool CollisionDetection::HandleOBBCollision(
 	return false; //!< 未実装
 }
 
+bool CollisionDetection::HandleRayCollision(
+	const Vector3f& posisionA, const CollisionBoundings::Ray& rayA,
+	const Vector3f& posisionB, const CollisionBoundings::Boundings& boundingB) {
+
+	if (auto* sphereB = std::get_if<CollisionBoundings::Sphere>(&boundingB)) {
+		return SphereToRay(posisionB, *sphereB, posisionA, rayA);
+
+	} else if (auto* aabbB = std::get_if<CollisionBoundings::AABB>(&boundingB)) {
+		return false;
+
+	} else if (auto* obbB = std::get_if<CollisionBoundings::OBB>(&boundingB)) {
+		// OBBとの当たり判定は未実装
+		return false;
+	}
+
+	Assert(false); //!< 無効な型
+	return false;
+}
+
 bool CollisionDetection::SphereTo(
 	const Vector3f& positionA, const CollisionBoundings::Sphere& sphereA,
 	const Vector3f& positionB, const CollisionBoundings::Sphere& sphereB) {
@@ -99,6 +124,26 @@ bool CollisionDetection::SphereToAABB(
 	float distance = Length(closestPoint - posisionA);
 
 	if (distance <= sphereA.radius) {
+		return true;
+	}
+
+	return false;
+}
+
+bool CollisionDetection::SphereToRay(
+	const Vector3f& posisionA, const CollisionBoundings::Sphere& sphereA,
+	const Vector3f& posisionB, const CollisionBoundings::Ray& rayB) {
+
+	Vector3f a2b = posisionA - posisionB;
+
+	float t = Dot(a2b, rayB.diff) / Dot(rayB.diff, rayB.diff);
+	t = std::max(t, 0.0f);
+
+	Vector3f closestPoint = posisionB + rayB.diff * t;
+
+	float distance = Length(closestPoint - posisionA);
+
+	if (distance <= sphereA.radius * sphereA.radius) {
 		return true;
 	}
 

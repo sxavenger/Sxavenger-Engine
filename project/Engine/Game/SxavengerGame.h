@@ -79,6 +79,10 @@ public:
 		const Vector2f& pos, const Vector2f& size, float rotate, const D3D12_GPU_DESCRIPTOR_HANDLE& handle, const Color4f& color = { 1.0f, 1.0f, 1.0f, 1.0f }
 	);
 
+	static void DrawSpriteClip(
+		const Vector2f& pos, const Vector2f& size, const Vector2f& leftTopUV, const Vector2f& sizeUV, const D3D12_GPU_DESCRIPTOR_HANDLE& handle, const Color4f& color = { 1.0f, 1.0f, 1.0f, 1.0f }
+	);
+
 	static SpriteCommon* GetSpriteCommon();
 
 private:

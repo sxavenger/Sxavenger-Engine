@@ -91,7 +91,7 @@ private:
 
 	//* config *//
 
-	bool useDebugLayer_ = true; //!< release時はfalseに設定される
+	bool useDebugLayer_ = true; //!< release時はfalseとして扱う
 
 	//=========================================================================================
 	// private methods

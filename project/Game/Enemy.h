@@ -8,6 +8,9 @@
 #include <Engine/Game/Behavior/ModelBehavior.h>
 #include <Engine/Game/Collider/Collider.h>
 
+//* engine
+#include <Engine/System/Performance.h>
+
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Enemy class
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -22,13 +25,15 @@ public:
 	Enemy()  = default;
 	~Enemy() { Term(); }
 
-	void Init(Model* model, const Vector3f& position);
+	void Init(Model* model, const Vector3f& position, const Vector3f& velocity = {});
 
 	void Term();
 
 	void Update();
 
 	void SetAttributeImGui() override;
+
+	void OnCollisionEnter(_MAYBE_UNUSED Collider* const other) override;
 
 	//* getter *//
 
@@ -43,6 +48,9 @@ private:
 	//* element parameter *//
 
 	bool isDelete_ = false;
+
+	Vector3f velocity_;
+	// HACK: 敵1体にrailがありそれを使って動かす
 
 };
 
@@ -70,6 +78,15 @@ public:
 
 private:
 
+	////////////////////////////////////////////////////////////////////////////////////////////
+	// EnemyPopCommand structure
+	////////////////////////////////////////////////////////////////////////////////////////////
+	struct EnemyPopCommand {
+		DeltaTimePoint popTime;
+		Vector3f velocity;
+		Vector3f position;
+	};
+	
 	//=========================================================================================
 	// private variables
 	//=========================================================================================
@@ -77,6 +94,11 @@ private:
 	//* container *//
 
 	std::list<std::unique_ptr<Enemy>> enemies_;
+
+	//* command *//
+
+	std::list<EnemyPopCommand> commands_;
+	DeltaTimePoint popTimer_;
 
 	//* element parameter *//
 
@@ -86,6 +108,8 @@ private:
 	// private methods
 	//=========================================================================================
 
-	void CreateEnemy(const Vector3f& position);
+	void CreateEnemy(const Vector3f& position, const Vector3f& velocity = {});
+
+	void CreateEnemyPopCommand(DeltaTimePoint popTime, const Vector3f& position, const Vector3f& velocity = {});
 
 };

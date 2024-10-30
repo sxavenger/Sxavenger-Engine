@@ -73,7 +73,7 @@ protected:
 
 	//* rendering config *//
 
-	bool isRaytracingEnabled_ = true;
+	bool isRaytracingEnabled_ = false;
 
 private:
 

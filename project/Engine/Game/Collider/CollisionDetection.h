@@ -19,6 +19,13 @@ namespace CollisionBoundings {
 	//!< 外部のtransformがあるのでtransform系はない
 
 	////////////////////////////////////////////////////////////////////////////////////////////
+	// Ray structure
+	////////////////////////////////////////////////////////////////////////////////////////////
+	struct Ray {
+		Vector3f diff;
+	};
+
+	////////////////////////////////////////////////////////////////////////////////////////////
 	// Sphere structure
 	////////////////////////////////////////////////////////////////////////////////////////////
 	struct Sphere {
@@ -47,7 +54,7 @@ namespace CollisionBoundings {
 	//=========================================================================================
 	// using
 	//=========================================================================================
-	using Boundings = std::variant<Sphere, AABB, OBB>;
+	using Boundings = std::variant<Sphere, AABB, OBB, Ray>;
 
 	//=========================================================================================
 	// BoundingsType enum
@@ -96,6 +103,11 @@ private:
 		const Vector3f& posisionB, const CollisionBoundings::Boundings& boundingB
 	);
 
+	static bool HandleRayCollision(
+		const Vector3f& posisionA, const CollisionBoundings::Ray&       rayA,
+		const Vector3f& posisionB, const CollisionBoundings::Boundings& boundingB
+	);
+
 	//=========================================================================================
 	// private collision detection methods
 	//=========================================================================================
@@ -112,11 +124,20 @@ private:
 		const Vector3f& posisionB, const CollisionBoundings::AABB& aabbB
 	);
 
+	static bool SphereToRay(
+		const Vector3f& posisionA, const CollisionBoundings::Sphere& sphereA,
+		const Vector3f& posisionB, const CollisionBoundings::Ray& rayB
+	);
+
 	//* AABB to *//
 
 	static bool AABBTo(
 		const Vector3f& posisionA, const CollisionBoundings::AABB& aabbA,
 		const Vector3f& posisionB, const CollisionBoundings::AABB& aabbB
 	);
+
+	//=========================================================================================
+	// private assistant methods
+	//=========================================================================================
 
 };

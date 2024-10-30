@@ -4,17 +4,17 @@
 // include
 //-----------------------------------------------------------------------------------------
 //* base
-#include <Engine/Game/Behavior/BaseBehavior.h>
 #include <Engine/Game/Behavior/ModelBehavior.h>
+#include <Engine/Game/Collider/Collider.h>
 
-//* engine
-#include <Engine/System/Performance.h>
+//* Game
+#include <Game/Score.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // PlayerBullet class
 ////////////////////////////////////////////////////////////////////////////////////////////
 class PlayerBullet //!< razerが近い
-	: public BaseBehavior {
+	: public ModelBehavior, public Collider {
 public:
 
 	//=========================================================================================
@@ -32,11 +32,16 @@ public:
 
 	void Shoot(bool isShot, const Vector3f& position, const Vector3f& direction);
 
-	void CheckCollision();
-
 	void SetAttributeImGui() override;
 
 	void DrawAdaptive(_MAYBE_UNUSED const Camera3D* camera) override;
+	void DrawSystematic(_MAYBE_UNUSED const Camera3D* camera) override;
+
+	virtual void OnCollisionEnter(_MAYBE_UNUSED Collider* const other);
+
+	//* setter *//
+
+	void SetScore(Score* score) { score_ = score; }
 
 private:
 
@@ -44,6 +49,10 @@ private:
 	// private variables
 	//=========================================================================================
 
+	//* external *//
+
+	Score* score_ = nullptr;
+	
 	//* member *//
 
 	bool     isShot_ = false;

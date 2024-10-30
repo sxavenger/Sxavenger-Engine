@@ -18,6 +18,8 @@ void Player::Init() {
 	SetName("player");
 
 	model_ = SxavengerGame::LoadModel("resources/model/CG2", "axis.obj");
+	model_->ApplyRaytracing();
+	CreateRaytracingRecorder();
 
 	transform_.transform.scale = { 0.1f, 0.1f, 0.1f };
 	transform_.UpdateMatrix();
@@ -29,11 +31,16 @@ void Player::Init() {
 	rail_->Init();
 	SetChild(rail_.get());
 
+	score_ = std::make_unique<Score>();
+	score_->Init();
+	SetChild(score_.get());
+
 	bullet_ = std::make_unique<PlayerBullet>();
 	bullet_->Init();
+	bullet_->SetScore(score_.get());
 	SetChild(bullet_.get());
 
-	
+	ModelBehavior::renderingFlag_ = kBehaviorRender_Raytracing | kBehaviorRender_Systematic;
 }
 
 void Player::Term() {
@@ -47,8 +54,13 @@ void Player::Update() {
 }
 
 void Player::SetAttributeImGui() {
+
+	ImGui::CheckboxFlags("isVisible", &(ModelBehavior::renderingFlag_), kBehaviorRender_Raytracing | kBehaviorRender_Systematic);
+
 	ImGui::DragFloat("loop time", &loopTime_.time, 0.01f, 0.0f, 128.0f);
 	ImGui::SliderFloat("loop timer", &loopTimer_.time, 0.0f, loopTime_.time);
+
+	ImGui::DragFloat3("camera offset", &cameraOffset_.x, 0.01f);
 }
 
 void Player::Move() {
@@ -77,10 +89,7 @@ void Player::Move() {
 
 	// 1人称視点なのでcameraも同じように更新
 
-	// 同じ視点だとモデルにかぶるので調整
-	const Vector3f offset = { 0.0f, 0.2f, -1.0f };
-
-	camera_->SetTransform(kUnit3, rotate, transform_.transform.translate + Matrix::Transform(offset, Matrix::MakeRotate(rotate)));
+	camera_->SetTransform(kUnit3, rotate, transform_.transform.translate + Matrix::Transform(cameraOffset_, Matrix::MakeRotate(rotate)));
 }
 
 void Player::Shot() {

@@ -28,7 +28,7 @@ static const float3 kInvWavelength = 1.0f / pow(kWavelength, 4.0f);
 
 
 static const float kInnerRadius  = 8.0f;          //!< 内側の（惑星の）半径（地球半径6371km）
-static const float kOuterRadius  = kInnerRadius + 20.0f; //!< 外側の（大気の）半径（地球半径6371km + 大気の厚さ100km）
+static const float kOuterRadius  = kInnerRadius + 14.0f; //!< 外側の（大気の）半径（地球半径6371km + 大気の厚さ100km）
 static const float kInnerRadiusPow2 = pow(kInnerRadius, 2.0f);
 static const float kOuterRadiusPow2 = pow(kOuterRadius, 2.0f);
 
@@ -39,14 +39,14 @@ static const float kScaleOverScaleDepth = kScale / kScaleDepth;
 //* enviorment 
 static const float kKr   = 0.0025f; //!< レイリー散乱係数
 static const float kKm   = 0.001f; //!< ミー散乱係数
-static const float kESun = 100.0f;   //!< 太陽の強さ
+static const float kESun = 128.0f;   //!< 太陽の強さ
 
 static const float kKrESun = kKr * kESun;
 static const float kKmESun = kKm * kESun;
 static const float kKr4pi  = kKr * pi_v * 4.0f;
 static const float kKm4pi  = kKm * pi_v * 4.0f;
 
-static const float kG = -0.70f; //!< ミー散乱の位相関数のパラメーター
+static const float kG = -0.95f; //!< ミー散乱の位相関数のパラメーター
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // methods
@@ -67,7 +67,7 @@ float3 IntersectionPos(float3 rayPos, float3 rayDir, float sphereRadius) { //!< 
 
 float IntegralApproximation(float fCos) { //!< 散乱の積分を近似する関数
 	float x = 1.0 - fCos;
-	return kScaleDepth * exp(-0.00287 + x * (0.459 + x * (3.83 + x * (-6.8 + x * 5.25))));
+	return kScaleDepth * exp(-0.00287 + x * (0.459 + x * (3.83 + x * (-6.80 + x * 5.25))));
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -146,18 +146,19 @@ void main(uint3 dispatchThreadId : SV_DispatchThreadID) {
 
 	// rayを求める
 
-	float4 viewPos = mul(float4(-uv.x, uv.y, 1.0f, 1.0f), camera.projInverseMatrix);
+	float4 viewPos = mul(float4(uv.x, -uv.y, 1.0f, 1.0f), camera.projInverseMatrix);
 	//viewPos /= viewPos.w; // 透視除算
 
 	// ビュー空間からワールド空間に変換して最終位置を得る
-	float3 ray = mul(float4(viewPos.xyz, 0.0f), camera.worldMatrix).xyz; // 行行列なので左側に掛ける
+	float3 ray = mul(float4(viewPos.xyz, 0.0f), camera.worldMatrix).xyz;
 
 	//float3 nor = (ray + 1.0f) / 2.0f;
 	//gOutput[currentIndex] = float4(nor, 1.0f);
 	//return;
 	
 
-	float3 cameraPos = camera.position.xyz;
+	float3 cameraPos = float3(-0.083f, -12.984f, 0.634f);
+	//float3 cameraPos = camera.position.xyz;
 	float3 skyPos = IntersectionPos(cameraPos, ray, kOuterRadius);
 
 	if (skyPos.x == 0.0f) {

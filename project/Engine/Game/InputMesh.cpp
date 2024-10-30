@@ -137,6 +137,10 @@ void InputMesh::Dispatch(UINT verticesParam, UINT uniqueVertexIndicesParam, UINT
 
 void InputMesh::CreateBLAS() {
 
+	if (isCreateBLAS_) {
+		return;
+	}
+
 	blas_ = std::make_unique<BottomLevelAS>();
 	blas_->Create(*this);
 

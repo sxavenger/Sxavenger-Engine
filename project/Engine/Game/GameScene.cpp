@@ -10,8 +10,6 @@ _DXROBJECT_USING
 #include <Engine/Console/SystemConsole.h>
 #include <Lib/Environment.h>
 
-#include "Lib/Adapter/Random/Random.h"
-
 ////////////////////////////////////////////////////////////////////////////////////////////
 // GameScene class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -91,6 +89,8 @@ void GameScene::Term() {
 void GameScene::Update() {
 	player_->Update();
 	enemyCollection_->Update();
+
+	SxavengerGame::UpdateColliders();
 }
 
 void GameScene::Draw() {

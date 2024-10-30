@@ -46,7 +46,7 @@ public:
 	//! @brief ...前1フレームの計測した数値を返却
 	//! 
 	//! @param[in] uint 秒単位
-	static DeltaTimePoint GetDeltaTime(SecondsUnit unit);
+	static const DeltaTimePoint GetDeltaTime(SecondsUnit unit);
 
 	//* gpu buffer *//
 
