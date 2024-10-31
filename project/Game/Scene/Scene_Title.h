@@ -43,5 +43,4 @@ private:
 	std::unique_ptr<Teapot> teapot_;
 	std::unique_ptr<Plane> plane_;
 
-
 };
