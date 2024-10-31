@@ -8,12 +8,12 @@
 //=========================================================================================
 // LocalBuffer
 //=========================================================================================
-//!< t0, t1 は face情報で使用
+//!< t0, t1 は face情報で使用. b0はUVで使用
 
 Texture2D<float4> gAlbedo : register(t2);
 SamplerState     gSampler : register(s0);
 
-ConstantBuffer<PBRMaterial> gPBRMaterial : register(b0);
+ConstantBuffer<PBRMaterial> gPBRMaterial : register(b1);
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // static variables

@@ -13,6 +13,7 @@ _DXROBJECT_USING
 
 void ModelBehavior::Init() {
 	transform_.Create();
+	uvTransform_.Create();
 	material_.Create();
 }
 
@@ -28,8 +29,9 @@ void ModelBehavior::CreateRaytracingRecorder() {
 
 		recorders_[i]->SetAddress(0, model_->GetMesh(i).GetVertexBuffer()->GetGPUVirtualAddress()); //!< Vertices
 		recorders_[i]->SetAddress(1, model_->GetMesh(i).GetIndexBuffer()->GetGPUVirtualAddress());  //!< Indices
-		recorders_[i]->SetHandle(2, model_->GetTextureHandle(i));                                   //!< Albedo
-		recorders_[i]->SetAddress(3, material_.GetGPUVirtualAddress());                             //!< PBRMaterial
+		recorders_[i]->SetAddress(2, uvTransform_.GetVirtualAddress());                             //!< UVTransform
+		recorders_[i]->SetHandle(3, model_->GetTextureHandle(i));                                   //!< Albedo
+		recorders_[i]->SetAddress(4, material_.GetGPUVirtualAddress());                             //!< PBRMaterial
 	}
 }
 
@@ -41,6 +43,11 @@ void ModelBehavior::SystemAttributeImGui() {
 
 	if (ImGui::TreeNode("material")) {
 		material_.SetImGuiCommand();
+		ImGui::TreePop();
+	}
+
+	if (ImGui::TreeNode("UV transform")) {
+		uvTransform_.SetImGuiCommand();
 		ImGui::TreePop();
 	}
 }
@@ -60,7 +67,8 @@ void ModelBehavior::DrawSystematic(_MAYBE_UNUSED const Camera3D* camera) {
 
 		commandList->SetGraphicsRootConstantBufferView(0, camera->GetGPUVirtualAddress());
 		commandList->SetGraphicsRootShaderResourceView(1, transform_.GetGPUVirtualAddress());
-		commandList->SetGraphicsRootDescriptorTable(2, model_->GetTextureHandle(i));
+		commandList->SetGraphicsRootConstantBufferView(2, uvTransform_.GetVirtualAddress());
+		commandList->SetGraphicsRootDescriptorTable(3, model_->GetTextureHandle(i));
 
 		model_->GetMesh(i).DrawCall();
 	}
@@ -81,7 +89,8 @@ void ModelBehavior::DrawAdaptive(_MAYBE_UNUSED const Camera3D* camera) {
 
 		commandList->SetGraphicsRootConstantBufferView(0, camera->GetGPUVirtualAddress());
 		commandList->SetGraphicsRootShaderResourceView(1, transform_.GetGPUVirtualAddress());
-		commandList->SetGraphicsRootDescriptorTable(2, model_->GetTextureHandle(i));
+		commandList->SetGraphicsRootConstantBufferView(2, uvTransform_.GetVirtualAddress());
+		commandList->SetGraphicsRootDescriptorTable(3, model_->GetTextureHandle(i));
 
 		model_->GetMesh(i).DrawCall();
 	}

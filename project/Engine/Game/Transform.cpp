@@ -72,3 +72,20 @@ void QuaternionTransformBuffer::SetImGuiCommand() {
 	UpdateMatrix();
 }
 
+////////////////////////////////////////////////////////////////////////////////////////////
+// UVTransformBuffer class methods
+////////////////////////////////////////////////////////////////////////////////////////////
+
+void UVTransformBuffer::Create() {
+	buffer_ = std::make_unique<BufferResource<UVTransformationMatrix>>(Sxavenger::GetDevicesObj(), 1);
+	(*buffer_)[0].mat = Matrix4x4::Identity();
+}
+
+void UVTransformBuffer::Transfer() {
+	(*buffer_)[0].mat = transform.ToMatrix();
+}
+
+void UVTransformBuffer::SetImGuiCommand() {
+	transform.SetImGuiCommand();
+	Transfer();
+}

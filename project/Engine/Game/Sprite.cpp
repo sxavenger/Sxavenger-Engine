@@ -6,7 +6,7 @@ _DXOBJECT_USING
 //-----------------------------------------------------------------------------------------
 //* engine
 #include <Engine/System/Sxavenger.h>
-#include <Engine/Game/Material.h>
+#include <Engine/Game/Transform.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // SpriteManager class methods
