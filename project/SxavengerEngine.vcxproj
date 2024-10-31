@@ -73,6 +73,7 @@
       <AdditionalDependencies>assimp-vc143-mtd.lib</AdditionalDependencies>
       <DelayLoadDLLs>
       </DelayLoadDLLs>
+      <ProgramDatabaseFile>$(SolutionDir)..\Generated\obj\$(ProjectName)\$(Configuration)\$(TargetName).pdb</ProgramDatabaseFile>
     </Link>
     <PostBuildEvent>
       <Command>copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxcompiler.dll" "$(TargetDir)dxcompiler.dll"
@@ -107,6 +108,7 @@ copy "$(SolutionDir)externals\assimp\lib\Debug\assimp-vc143-mtd.dll" "$(TargetDi
       <TreatLinkerWarningAsErrors>true</TreatLinkerWarningAsErrors>
       <AdditionalLibraryDirectories>$(ProjectDir)externals\assimp\lib\Release</AdditionalLibraryDirectories>
       <AdditionalDependencies>assimp-vc143-mt.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <ProgramDatabaseFile>$(SolutionDir)..\Generated\obj\$(ProjectName)\$(Configuration)\$(TargetName).pdb</ProgramDatabaseFile>
     </Link>
     <FxCompile>
       <ShaderModel>6.4</ShaderModel>
@@ -209,6 +211,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="externals\meshoptimizer\vfetchoptimizer.cpp" />
     <ClCompile Include="Game\AtmosphericScattering.cpp" />
     <ClCompile Include="Game\ChessBoard.cpp" />
+    <ClCompile Include="Game\Curve.cpp" />
     <ClCompile Include="Game\Kipfel.cpp" />
     <ClCompile Include="Game\Particle.cpp" />
     <ClCompile Include="Game\Plane.cpp" />
@@ -308,6 +311,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="externals\meshoptimizer\meshoptimizer.h" />
     <ClInclude Include="Game\AtmosphericScattering.h" />
     <ClInclude Include="Game\ChessBoard.h" />
+    <ClInclude Include="Game\Curve.h" />
     <ClInclude Include="Game\Kipfel.h" />
     <ClInclude Include="Game\Particle.h" />
     <ClInclude Include="Game\Plane.h" />
