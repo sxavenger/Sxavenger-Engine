@@ -211,7 +211,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="externals\meshoptimizer\vfetchoptimizer.cpp" />
     <ClCompile Include="Game\AtmosphericScattering.cpp" />
     <ClCompile Include="Game\ChessBoard.cpp" />
-    <ClCompile Include="Game\Curve.cpp" />
+    <ClCompile Include="Engine\Beta\Curve.cpp" />
     <ClCompile Include="Game\Kipfel.cpp" />
     <ClCompile Include="Game\Particle.cpp" />
     <ClCompile Include="Game\Plane.cpp" />
@@ -311,7 +311,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="externals\meshoptimizer\meshoptimizer.h" />
     <ClInclude Include="Game\AtmosphericScattering.h" />
     <ClInclude Include="Game\ChessBoard.h" />
-    <ClInclude Include="Game\Curve.h" />
+    <ClInclude Include="Engine\Beta\Curve.h" />
     <ClInclude Include="Game\Kipfel.h" />
     <ClInclude Include="Game\Particle.h" />
     <ClInclude Include="Game\Plane.h" />

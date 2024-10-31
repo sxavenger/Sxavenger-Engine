@@ -328,7 +328,7 @@
     <ClCompile Include="Game\Scene\SceneManager.cpp" />
     <ClCompile Include="Game\Scene\Scene_Title.cpp" />
     <ClCompile Include="Game\Scene\Scene_Game.cpp" />
-    <ClCompile Include="Game\Curve.cpp" />
+    <ClCompile Include="Engine\Beta\Curve.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="externals\imgui\imconfig.h">
@@ -553,7 +553,7 @@
     <ClInclude Include="Game\Scene\SceneManager.h" />
     <ClInclude Include="Game\Scene\Scene_Title.h" />
     <ClInclude Include="Game\Scene\Scene_Game.h" />
-    <ClInclude Include="Game\Curve.h" />
+    <ClInclude Include="Engine\Beta\Curve.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />
