@@ -43,6 +43,8 @@ public:
 
 	DxrObject::BottomLevelAS* GetBLAS() const;
 
+	bool IsCreateBLAS() const { return isCreateBLAS_; }
+
 	//* operator *//
 
 	InputMesh(InputMesh&& other) noexcept = default;

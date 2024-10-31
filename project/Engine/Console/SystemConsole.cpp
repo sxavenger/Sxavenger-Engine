@@ -235,16 +235,16 @@ void SystemConsole::DisplayMainMenu() {
 		//* imgui config
 		ImGui::SeparatorText("imgui config");
 
-		// .ini layout
-		if (ImGui::Button("output layout")) {
-			ImGui::SaveIniSettingsToDisk(kImGuiIniFilepath_.c_str());
-		}
-
 		// windowflag
 		ImGuiWindowFlags lockWindow = 0;
 		lockWindow |= ImGuiWindowFlags_NoMove;
 		lockWindow |= ImGuiWindowFlags_NoResize;
 		ImGui::CheckboxFlags("lock console imgui", &windowFlag_, lockWindow);
+
+		// .ini layout
+		if (ImGui::Button("output layout")) {
+			ImGui::SaveIniSettingsToDisk(kImGuiIniFilepath_.c_str());
+		}
 
 		ImGui::EndMenu();
 	}

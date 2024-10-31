@@ -61,7 +61,9 @@ const D3D12_GPU_DESCRIPTOR_HANDLE Model::GetTextureHandle(uint32_t meshIndex, Te
 	uint32_t materialIndex = meshes_.at(meshIndex).materialIndex.value();
 	Assert(materialIndex < materials_.size()); //!< materialサイズ以上のindex
 
-	Assert(!materials_.at(materialIndex).textureFilepaths[type].empty()); //!< textureが使われてない
+	if (materials_.at(materialIndex).textureFilepaths[type].empty()) {
+		return Sxavenger::GetTextureHandleGPU("resources/white1x1.png"); //!< HACK
+	}
 
 	return Sxavenger::GetTextureHandleGPU(materials_.at(materialIndex).textureFilepaths[type]);
 }

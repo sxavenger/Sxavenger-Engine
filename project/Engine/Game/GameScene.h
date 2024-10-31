@@ -3,18 +3,14 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
-// console
-#include <Engine/Console/SystemConsole.h>
-
-// c++
+//* c++
 #include <memory>
-#include <format>
 
 //* Game
-#include <Game/Teapot.h>
-#include <Game/Plane.h>
 #include <Game/AtmosphericScattering.h>
-#include <Game/Kipfel.h>
+
+//* Scene
+#include <Game/Scene/SceneManager.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // GameScene class
@@ -34,8 +30,8 @@ private:
 	// private methods
 	//=========================================================================================
 
-	std::unique_ptr<Teapot> teapot_;
-	std::unique_ptr<Plane> plane_;
+
+	std::unique_ptr<SceneManager> manager_;
 
 	std::unique_ptr<AtmosphericScattering> atmosphericScattering_;
 

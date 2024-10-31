@@ -2,6 +2,7 @@
 // include
 //-----------------------------------------------------------------------------------------
 #include "RaytracingCommon.hlsli"
+#include "../MathLib.hlsli"
 //* test atmosphric scattering
 
 //=========================================================================================
@@ -25,9 +26,6 @@ ConstantBuffer<AtmosphericScattering> gAtmosphetic : register(b0);
 //=========================================================================================
 // static variables
 //=========================================================================================
-
-//* math
-static const float pi_v = 3.14159265f;
 
 static const float3 kInvWavelength = 1.0f / pow(gAtmosphetic.waveLength.rgb, 4.0f);
 
@@ -73,7 +71,7 @@ float IntegralApproximation(float fCos) {
 void mainMiss(inout Payload payload) {
 	//payload.color = float4(0.227f, 0.313f, 0.294f, 1.0f);
 
-	if (payload.rayType == RayType::kRayType_Shadow) {
+	if (payload.rayType == RayType::kRayType_Intersection) {
 		payload.isIntersection = false;
 		return;
 	}

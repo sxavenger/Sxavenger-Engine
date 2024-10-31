@@ -1,5 +1,4 @@
 #include "GameScene.h"
-_DXROBJECT_USING
 
 //-----------------------------------------------------------------------------------------
 // include
@@ -8,9 +7,9 @@ _DXROBJECT_USING
 #include <Engine/System/Sxavenger.h>
 #include <Engine/Game/SxavengerGame.h>
 #include <Engine/Console/SystemConsole.h>
-#include <Lib/Environment.h>
 
-#include "Lib/Adapter/Random/Random.h"
+//* other scene
+#include <Game/Scene/Scene_Title.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // GameScene class methods
@@ -56,6 +55,8 @@ void GameScene::Run() {
 		Sxavenger::EndFrame();
 
 		SxavengerGame::Reset();
+
+		manager_->ChangeScene();
 	}
 
 	//=========================================================================================
@@ -71,37 +72,25 @@ void GameScene::Run() {
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 void GameScene::Init() {
-	
 
-	teapot_ = std::make_unique<Teapot>();
-	teapot_->Init();
-	teapot_->SetToConsole();
-
-	plane_ = std::make_unique<Plane>();
-	plane_->Init();
-	plane_->SetToConsole();
+	manager_ = std::make_unique<SceneManager>();
+	manager_->Init<Scene_Title>(); //!< startするsceneの設定
 
 	atmosphericScattering_ = std::make_unique<AtmosphericScattering>();
 	atmosphericScattering_->Init();
 	atmosphericScattering_->SetToConsole();
+
 }
 
 void GameScene::Term() {
 }
 
 void GameScene::Update() {
+	manager_->Update();
 }
 
 void GameScene::Draw() {
-
-	{
-		//* main screen *//
-		/*Sxavenger::BeginOffscreen(sBetaConsole->GetGameRenderTarget());
-
-		SxavengerGame::DrawToScene(sBetaConsole->GetGameCamera());
-		Sxavenger::EndOffscreen(sBetaConsole->GetGameRenderTarget());
-		Sxavenger::TranstionAllocator();*/
-	}
+	manager_->Draw();
 
 	//=========================================================================================
 	// スクリーン描画処理

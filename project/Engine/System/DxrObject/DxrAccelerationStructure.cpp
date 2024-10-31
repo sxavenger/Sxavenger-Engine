@@ -105,6 +105,7 @@ void TopLevelAS::EndSetupInstance() {
 }
 
 void TopLevelAS::SetInstance(const BottomLevelAS* blas, const Matrix4x4& worldMatrix, const BufferRecoreder* recorder, UINT instanceId) {
+	Assert(instances_.size() < kMaxInstanceNum_, "instance buffer is over");
 	instances_.emplace_back(blas, worldMatrix, instanceId, recorder);
 }
 

@@ -17,7 +17,7 @@ void Teapot::Init() {
 	model_->ApplyRaytracing();
 	CreateRaytracingRecorder();
 
-	renderingFlag_ = kBehaviorRender_Raytracing | kBehaviorRender_Systematic | kBehaviorRender_Adaptive;
+	renderingFlag_ = kBehaviorRender_Raytracing | kBehaviorRender_Systematic;
 }
 
 void Teapot::SetAttributeImGui() {

@@ -83,7 +83,7 @@ void Assert(bool expresion, const std::string& detail, const std::source_locatio
 
 	MessageBoxA(
 		NULL,
-		(locationMes.str() + detailMes.str()).c_str(),
+		(locationMes.str() + "\n" + detailMes.str()).c_str(),
 		"Sxavenger Engine assertion",
 		MB_TASKMODAL | MB_ICONHAND
 	);

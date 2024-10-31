@@ -323,6 +323,11 @@
     <ClCompile Include="Engine\Game\Sprite.cpp" />
     <ClCompile Include="Engine\Game\Material.cpp" />
     <ClCompile Include="Game\Particle.cpp" />
+    <ClCompile Include="Game\ChessBoard.cpp" />
+    <ClCompile Include="Game\Scene\IScene.cpp" />
+    <ClCompile Include="Game\Scene\SceneManager.cpp" />
+    <ClCompile Include="Game\Scene\Scene_Title.cpp" />
+    <ClCompile Include="Game\Scene\Scene_Game.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="externals\imgui\imconfig.h">
@@ -542,6 +547,11 @@
     <ClInclude Include="Engine\Game\Sprite.h" />
     <ClInclude Include="Engine\Game\Material.h" />
     <ClInclude Include="Game\Particle.h" />
+    <ClInclude Include="Game\ChessBoard.h" />
+    <ClInclude Include="Game\Scene\IScene.h" />
+    <ClInclude Include="Game\Scene\SceneManager.h" />
+    <ClInclude Include="Game\Scene\Scene_Title.h" />
+    <ClInclude Include="Game\Scene\Scene_Game.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

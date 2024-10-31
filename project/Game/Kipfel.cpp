@@ -8,9 +8,13 @@ _DXOBJECT_USING
 void Kipfel::Init() {
 
 	ModelBehavior::model_ = SxavengerGame::LoadModel("resources/model/kipfel", "kipfel.fbx");
-	ModelBehavior::model_->ApplyMeshShader();
+	//ModelBehavior::model_->ApplyMeshShader();
+	model_->ApplyRaytracing();
 
-	SetToConsole("kipfel");
+	renderingFlag_ = kBehaviorRender_Raytracing;
+	CreateRaytracingRecorder();
+
+	SetName("kipfel");
 }
 
 void Kipfel::Term() {

@@ -85,6 +85,7 @@ void RaytracingPipeline::CreateHitgroup() {
 		desc.SetVirtualSRV(1, 1); //!< Indices
 		desc.SetSRV(2, 2);        //!< Albedo
 		desc.SetSampler(MODE_WRAP, 0);
+		desc.SetCBV(3, 0);        //!< PBRMaterial
 
 		pipeline.exports[0]->CreateRootSignature(desc);
 

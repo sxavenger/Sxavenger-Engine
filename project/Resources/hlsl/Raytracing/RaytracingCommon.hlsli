@@ -19,8 +19,8 @@ static const uint kLimitIntersectionCount = 4;
 //=========================================================================================
 
 namespace RayType {
-	static const uint kRayType_Default = 0,
-	                  kRayType_Shadow  = 1;
+	static const uint kRayType_Default      = 0,
+	                  kRayType_Intersection = 1;
 }
 
 struct Payload {
@@ -30,15 +30,23 @@ struct Payload {
 
 	//* intersections *//
 	uint intersectionCount;
-	uint isIntersection;
+	uint isIntersection; //!< using bool
 	float intersectionT;
 
 	//* methods *//
 
-	void SetIntersection(bool _isIntersection) {
+	void Init(uint _intersectionCount, uint _rayType = RayType::kRayType_Default) {
+		rayType           = _rayType;
+		intersectionCount = _intersectionCount;
 		
+		color          = (float4)0;
+		isIntersection = false;
+		intersectionT  = 0;
+	}
+
+	void SetIntersection(bool _isIntersection) {
 		isIntersection = _isIntersection;
-		intersectionT  = 0.0f;
+		intersectionT  = kTmax;
 		
 		if (_isIntersection) {
 			intersectionT  = RayTCurrent();
@@ -49,10 +57,26 @@ struct Payload {
 	//! @retval true  is return true.
 	//! @retval false is return false.
 	bool Update() {
-		
 		if (intersectionCount >= kLimitIntersectionCount) {
 			color = (float4)0;
 			SetIntersection(false);
+			return true;
+		}
+
+		intersectionCount++;
+		return false;
+	}
+
+	bool UpdateIntersection(bool _isIntersection) {
+		if (intersectionCount >= kLimitIntersectionCount) {
+			color = (float4)0;
+			SetIntersection(false);
+			return true;
+		}
+
+		SetIntersection(_isIntersection);
+
+		if (rayType == RayType::kRayType_Intersection) {
 			return true;
 		}
 

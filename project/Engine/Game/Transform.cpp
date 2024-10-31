@@ -11,7 +11,7 @@ _DXOBJECT_USING
 // BaseTransform base class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-void BaseTransformBuffer::Init() {
+void BaseTransformBuffer::Create() {
 	// GPUBufferの生成
 	buffer_ = std::make_unique<BufferResource<TransformationMatrix>>(Sxavenger::GetDevicesObj(), 1);
 	(*buffer_)[0].Init(); //!< 単位行列で初期化
@@ -47,13 +47,6 @@ const Vector3f BaseTransformBuffer::GetWorldPosition() const {
 // EulerTransformBuffer class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-void EulerTransformBuffer::Init() {
-	BaseTransformBuffer::Init();
-}
-
-void EulerTransformBuffer::Term() {
-}
-
 void EulerTransformBuffer::UpdateMatrix() {
 	mat_ = transform.ToMatrix();
 	Transfer();
@@ -68,14 +61,6 @@ void EulerTransformBuffer::SetImGuiCommand() {
 ////////////////////////////////////////////////////////////////////////////////////////////
 // QuaternionTransformBuffer class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
-
-void QuaternionTransformBuffer::Init() {
-	BaseTransformBuffer::Init();
-	transform.rotate = Quaternion::Identity();
-}
-
-void QuaternionTransformBuffer::Term() {
-}
 
 void QuaternionTransformBuffer::UpdateMatrix() {
 	mat_ = transform.ToMatrix();

@@ -368,7 +368,7 @@ void TextureManager::Init(DirectXCommon* dxCommon) {
 	LoadTexture("resources/tile_black.png");
 	LoadTexture("resources/tile_white.png");*/
 
-	LoadTexture("resources/uvChecker.png");
+	LoadTexture("resources/white1x1.png");
 }
 
 void TextureManager::Term() {

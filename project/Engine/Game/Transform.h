@@ -111,7 +111,7 @@ public:
 	BaseTransformBuffer() = default;
 	virtual ~BaseTransformBuffer() {}
 
-	void Init();
+	void Create();
 
 	void Transfer();
 
@@ -160,11 +160,7 @@ public:
 	//=========================================================================================
 
 	EulerTransformBuffer() = default;
-	~EulerTransformBuffer() override { Term(); }
-
-	void Init();
-
-	void Term();
+	~EulerTransformBuffer() override = default;
 
 	void UpdateMatrix();
 
@@ -199,11 +195,7 @@ public:
 	//=========================================================================================
 
 	QuaternionTransformBuffer() = default;
-	~QuaternionTransformBuffer() override { Term(); }
-
-	void Init();
-
-	void Term();
+	~QuaternionTransformBuffer() override = default;
 
 	void UpdateMatrix();
 
