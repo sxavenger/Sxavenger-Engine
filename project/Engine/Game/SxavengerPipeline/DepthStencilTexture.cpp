@@ -115,7 +115,7 @@ void DepthStencilTexture::CreateDSV() {
 
 	// descの設定
 	D3D12_DEPTH_STENCIL_VIEW_DESC desc = {};
-	desc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+	desc.Format        = DXGI_FORMAT_D24_UNORM_S8_UINT;
 	desc.ViewDimension = D3D12_DSV_DIMENSION_TEXTURE2D;
 
 	// DSVの生成

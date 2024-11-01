@@ -54,6 +54,7 @@ private:
 
 	DxObject::Descriptor descriptorDSV_;
 	DxObject::Descriptor descriptorSRV_;
+	DxObject::Descriptor descriptorUAV_;
 
 	//* parameter *//
 

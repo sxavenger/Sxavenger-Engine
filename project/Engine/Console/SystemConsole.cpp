@@ -464,36 +464,53 @@ void SystemConsole::DisplaySystemMenu() {
 		auto dxCommon = Sxavenger::GetDxCommon();
 		auto descriptorHeaps = dxCommon->GetDescriptorsObj();
 
-		if (ImGui::TreeNode("RTV")) {
-			ImGui::Text(
-				"used: %d / max: %d",
-				descriptorHeaps->GetDescriptorPool(RTV)->GetUsedDescriptorsCount(),
-				descriptorHeaps->GetDescriptorPool(RTV)->GetDescriptorMaxCount()
-			);
+		{
+			float usage
+				= static_cast<float>(descriptorHeaps->GetDescriptorPool(RTV)->GetUsedDescriptorsCount()) / descriptorHeaps->GetDescriptorPool(RTV)->GetDescriptorMaxCount();
 
-			ImGui::TreePop();
+			std::string overlay = std::format(
+					"use: {} / max: {}",
+					descriptorHeaps->GetDescriptorPool(RTV)->GetUsedDescriptorsCount(),
+					descriptorHeaps->GetDescriptorPool(RTV)->GetDescriptorMaxCount()
+				);
+
+			ImGui::ProgressBar(usage, {}, overlay.c_str());
+			ImGui::SameLine();
+			ImGui::Text("RTV");
 		}
 
-		if (ImGui::TreeNode("CBV_SRV_UAV")) {
+		{
 
-			ImGui::Text(
-				"used: %d / max: %d",
-				descriptorHeaps->GetDescriptorPool(CBV_SRV_UAV)->GetUsedDescriptorsCount(),
-				descriptorHeaps->GetDescriptorPool(CBV_SRV_UAV)->GetDescriptorMaxCount()
-			);
+			float usage
+				= static_cast<float>(descriptorHeaps->GetDescriptorPool(CBV_SRV_UAV)->GetUsedDescriptorsCount()) / descriptorHeaps->GetDescriptorPool(CBV_SRV_UAV)->GetDescriptorMaxCount();
 
-			ImGui::TreePop();
+			std::string overlay
+				= std::format(
+					"use: {} / max: {}",
+					descriptorHeaps->GetDescriptorPool(CBV_SRV_UAV)->GetUsedDescriptorsCount(),
+					descriptorHeaps->GetDescriptorPool(CBV_SRV_UAV)->GetDescriptorMaxCount()
+				);
+
+			ImGui::ProgressBar(usage, {}, overlay.c_str());
+			ImGui::SameLine();
+			ImGui::Text("SRV_CBV_UAV");
 		}
 
-		if (ImGui::TreeNode("DSV")) {
+		{
 
-			ImGui::Text(
-				"used: %d / max: %d",
-				descriptorHeaps->GetDescriptorPool(DSV)->GetUsedDescriptorsCount(),
-				descriptorHeaps->GetDescriptorPool(DSV)->GetDescriptorMaxCount()
-			);
+			float usage
+				= static_cast<float>(descriptorHeaps->GetDescriptorPool(DSV)->GetUsedDescriptorsCount()) / descriptorHeaps->GetDescriptorPool(DSV)->GetDescriptorMaxCount();
 
-			ImGui::TreePop();
+			std::string overlay
+				= std::format(
+					"use: {} / max: {}",
+					descriptorHeaps->GetDescriptorPool(DSV)->GetUsedDescriptorsCount(),
+					descriptorHeaps->GetDescriptorPool(DSV)->GetDescriptorMaxCount()
+				);
+
+			ImGui::ProgressBar(usage, {}, overlay.c_str());
+			ImGui::SameLine();
+			ImGui::Text("DSV");
 		}
 
 	}

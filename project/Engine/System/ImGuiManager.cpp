@@ -151,6 +151,11 @@ void ImGuiManager::InitImGuiStyle() {
 	style.Colors[ImGuiCol_TabSelectedOverline]       = ToImVec4({ 51, 51, 51, 255 });
 	style.Colors[ImGuiCol_TabDimmedSelectedOverline] = ToImVec4({ 15, 15, 15, 0 });
 
+	// plot
+	style.Colors[ImGuiCol_PlotLines]     = ToImVec4({ 152, 152, 152, 255 });
+	style.Colors[ImGuiCol_PlotHistogram] = ToImVec4({ 48, 48, 48, 255 });
+
+
 	// docking
 	style.Colors[ImGuiCol_DockingPreview] = ToImVec4({ 125, 125, 125, 200 });
 
