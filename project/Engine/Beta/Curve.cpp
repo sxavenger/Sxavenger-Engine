@@ -78,42 +78,72 @@ float Curve::GetOutput(float inputT) {
 
 void Curve::SetImGuiCommand() {
 
-	static int offset = 0;
-
-	ImGui::DragInt("offset", &offset, 1.0f);
-
 	float (*func)(void*, int) = [](void* data, int index) {
 		Curve* self = static_cast<Curve*>(data);
 		return self->GetOutput(index / 124.0f);
 	};
 
-	ImGui::PlotLines("plot", func, this, 124, offset, "", 0.0f, 1.0f, { 0.0f, 128.0f});
+	ImGui::PlotLines("plot", func, this, 124, 0, "", 0.0f, 1.0f, { 0.0f, 128.0f});
 
 	if (ImGui::TreeNode("points")) {
 
 		for (size_t i = 0; i < points_.size(); ++i) {
 
 			std::string label = std::format("point {:p}", reinterpret_cast<const void*>(&points_[i]));
-			ImGui::DragFloat2(label.c_str(), &points_[i].input, 0.01f);
+			if (ImGui::DragFloat2(label.c_str(), &points_[i].input, 0.01f)) {
+				std::sort(
+					points_.begin(), points_.end(),
+					[](const CurvePoint& a, const CurvePoint& b) { return a.input < b.input; }
+				);
+			}
 		}
 
-		std::sort(
-			points_.begin(), points_.end(),
-			[](const CurvePoint& a, const CurvePoint& b) { return a.input < b.input; }
-		);
-
 		ImGui::TreePop();
+	}
+
+	ImGui::InputText("filename", buf_, _countof(buf_));
+
+	if (ImGui::Button("output json")) {
+		OutputJson(buf_);
+	}
+
+	if (ImGui::Button("load json")) {
+		LoadJson(buf_);
 	}
 
 }
 
 void Curve::OutputJson(const std::string& filename) {
-	filename;
 
 	Json root = Json::object();
 
-	root["points"];
+	auto& points = root["points"] = Json::array();
 
+	for (size_t i = 0; i < points_.size(); ++i) {
+		points.push_back({
+			{ "input",  points_[i].input },
+			{ "output", points_[i].output }
+		});
+	}
+
+	JsonAdapter::WriteJson(directory_ + filename, root);
+}
+
+void Curve::LoadJson(const std::string& filename) {
+
+	points_.clear();
+
+	Json root = JsonAdapter::LoadJson(directory_ + filename);
+
+	for (const auto& item : root["points"]) {
+
+		CurvePoint point = {
+			.input  = item["input"],
+			.output = item["output"]
+		};
+
+		points_.emplace_back(point);
+	}
 }
 
 float Curve::CatmullRomInterpolation(float p0, float p1, float p2, float p3, float t) {

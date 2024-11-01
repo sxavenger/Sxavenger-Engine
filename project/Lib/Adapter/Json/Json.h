@@ -36,7 +36,7 @@ public:
 	//! @param[in] path ファイルパス. directory_ + path
 	//! 
 	//! @return Json型を返却
-	static Json ReadJson(const std::string& path);
+	static Json LoadJson(const std::string& path);
 
 	//! @brief Jsonファイル書き込み
 	//! 

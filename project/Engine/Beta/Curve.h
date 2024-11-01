@@ -30,6 +30,7 @@ public:
 	void SetImGuiCommand();
 
 	void OutputJson(const std::string& filename);
+	void LoadJson(const std::string& filename);
 
 private:
 
@@ -46,6 +47,13 @@ private:
 
 	std::vector<CurvePoint> points_;
 	//* pointはinputTで昇順sortされる.
+
+	char buf_[128] = "test.json"; //!< 書き込み用buffer
+	const std::string directory_ = "curve/";
+
+	//=========================================================================================
+	// private methods
+	//=========================================================================================
 
 	static float CatmullRomInterpolation(float p0, float p1, float p2, float p3, float t);
 
