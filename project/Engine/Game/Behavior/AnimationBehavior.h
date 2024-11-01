@@ -4,44 +4,52 @@
 // include
 //-----------------------------------------------------------------------------------------
 //* base
-#include "IScene.h"
+#include "ModelBehavior.h"
 
-//* Game
-#include <Game/Teapot.h>
-#include <Game/Plane.h>
-#include <Game/AnimationPlayer.h>
+//* engine
+#include <Engine/Game/Animation.h>
+#include <Engine/System/Performance.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// Scene_Title class
+// AnimationBehavior class
 ////////////////////////////////////////////////////////////////////////////////////////////
-class Scene_Title
-	: public IScene {
+class AnimationBehavior
+	: public ModelBehavior {
 public:
 
 	//=========================================================================================
 	// public methods
 	//=========================================================================================
 
-	Scene_Title()           = default;
-	~Scene_Title() override { Term(); }
+	AnimationBehavior() { Init(); }
+	~AnimationBehavior() { Term(); }
 
-	void Init() override;
+	void Init();
 
-	void Term() override;
+	void Term();
 
-	void Update() override;
+	//* animation option *//
 
-	void Draw() override;
+	void CreateAnimation();
 
-private:
+	void UpdateAnimator(uint32_t animaitonIndex = 0, bool isLoop = false);
+
+	//void CreateRaytracingRecorder()
+	// TODO: raytracingへの対応
+
+	//* derivative behaivor methods *//
+
+	void SystemAttributeImGui() override;
+
+	virtual void DrawSystematic(_MAYBE_UNUSED const Camera3D* camera) override;
+
+protected:
 
 	//=========================================================================================
-	// private methods
+	// protected variables
 	//=========================================================================================
 
-	std::unique_ptr<Teapot> teapot_;
-	std::unique_ptr<Plane> plane_;
-
-	std::unique_ptr<AnimationPlayer> animationTest_;
+	std::unique_ptr<Animator> animator_;
+	DeltaTimePoint animationTime_ = {};
 
 };

@@ -126,6 +126,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="Engine\Console\ProcessConsole.cpp" />
     <ClCompile Include="Engine\Console\RenderingConsole.cpp" />
     <ClCompile Include="Engine\Game\Animation.cpp" />
+    <ClCompile Include="Engine\Game\Behavior\AnimationBehavior.cpp" />
     <ClCompile Include="Engine\Game\Behavior\BaseBehavior.cpp" />
     <ClCompile Include="Engine\Game\Behavior\ModelBehavior.cpp" />
     <ClCompile Include="Engine\Console\SystemConsole.cpp" />
@@ -209,6 +210,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="externals\meshoptimizer\vertexfilter.cpp" />
     <ClCompile Include="externals\meshoptimizer\vfetchanalyzer.cpp" />
     <ClCompile Include="externals\meshoptimizer\vfetchoptimizer.cpp" />
+    <ClCompile Include="Game\AnimationPlayer.cpp" />
     <ClCompile Include="Game\AtmosphericScattering.cpp" />
     <ClCompile Include="Game\ChessBoard.cpp" />
     <ClCompile Include="Engine\Beta\Curve.cpp" />
@@ -238,6 +240,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Engine\Console\ProcessConsole.h" />
     <ClInclude Include="Engine\Console\RenderingConsole.h" />
     <ClInclude Include="Engine\Game\Animation.h" />
+    <ClInclude Include="Engine\Game\Behavior\AnimationBehavior.h" />
     <ClInclude Include="Engine\Game\Behavior\BaseBehavior.h" />
     <ClInclude Include="Engine\Game\Behavior\ModelBehavior.h" />
     <ClInclude Include="Engine\Console\SystemConsole.h" />
@@ -309,6 +312,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="externals\imgui\imstb_textedit.h" />
     <ClInclude Include="externals\imgui\imstb_truetype.h" />
     <ClInclude Include="externals\meshoptimizer\meshoptimizer.h" />
+    <ClInclude Include="Game\AnimationPlayer.h" />
     <ClInclude Include="Game\AtmosphericScattering.h" />
     <ClInclude Include="Game\ChessBoard.h" />
     <ClInclude Include="Engine\Beta\Curve.h" />

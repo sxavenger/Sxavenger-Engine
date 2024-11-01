@@ -4,7 +4,8 @@ _DXOBJECT_USING
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
-
+//* engine
+#include <Engine/Game/SxavengerGame.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Skeleton structure methods
@@ -122,13 +123,13 @@ void Animator::Create(const Model* model) {
 	CreateSkinnedBuffer();
 }
 
-void Animator::Update(float animationTime, uint32_t animationIndex, bool loop) {
-	Assert(animationIndex < animations_.size());
+void Animator::Update(DeltaTimePoint animationTime, uint32_t animationIndex, bool loop) {
+	Assert(animationIndex < animations_.size(), "animation index is over.");
 
-	float time = animationTime;
+	float time = animationTime.time;
 
 	if (loop) {
-		time = std::fmod(animationTime, animations_[animationIndex].duration);
+		time = std::fmod(animationTime.time, animations_[animationIndex].duration);
 	}
 
 	skeleton_.Update(animations_[animationIndex], time);
@@ -139,10 +140,9 @@ void Animator::Update(float animationTime, uint32_t animationIndex, bool loop) {
 
 		//* skinning
 		auto commandList = Sxavenger::GetCommandList();
-		auto pipeline    = SkinningPipeline::GetInstance()->GetPipeline();
 
 		//* スキニング *//
-		pipeline->SetPipeline();
+		SxavengerGame::SetSkinningPipeline();
 
 		commandList->SetComputeRootShaderResourceView(0, skinClusters_.at(index).paletteResource->GetGPUVirtualAddress());
 		commandList->SetComputeRootShaderResourceView(1, model_->GetMesh(index).GetVertexBuffer()->GetGPUVirtualAddress());
@@ -150,8 +150,20 @@ void Animator::Update(float animationTime, uint32_t animationIndex, bool loop) {
 		commandList->SetComputeRootConstantBufferView(3, skinClusters_.at(index).informationResource->GetGPUVirtualAddress());
 		commandList->SetComputeRootUnorderedAccessView(4, skinnedBuffers_.at(index)->GetGPUVirtualAddress());
 
-		pipeline->Dispatch(RoundUp((*skinClusters_.at(index).informationResource)[0], 1024), 1, 1);
+		commandList->Dispatch(RoundUp((*skinClusters_.at(index).informationResource)[0], 1024), 1, 1);
 	}
+}
+
+void Animator::BindIABuffer(uint32_t meshIndex) {
+
+	auto commandList = Sxavenger::GetCommandList();
+
+	// animatorの
+	D3D12_VERTEX_BUFFER_VIEW vbv = skinnedBuffers_[meshIndex]->GetVertexBufferView();
+	D3D12_INDEX_BUFFER_VIEW  ibv = model_->GetMesh(meshIndex).GetIndexBuffer()->GetIndexBufferView();
+
+	commandList->IASetVertexBuffers(0, 1, &vbv);
+	commandList->IASetIndexBuffer(&ibv);
 }
 
 float Animator::GetAnimationDuration(uint32_t animationIndex) const {
@@ -368,9 +380,4 @@ void SkinningPipeline::Init() {
 
 void SkinningPipeline::Term() {
 	skinningCS_.reset();
-}
-
-SkinningPipeline* SkinningPipeline::GetInstance() {
-	static SkinningPipeline instance;
-	return &instance;
 }

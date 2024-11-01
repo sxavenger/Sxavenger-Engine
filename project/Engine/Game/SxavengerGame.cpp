@@ -4,10 +4,11 @@
 // namespace -anonymouse-
 ////////////////////////////////////////////////////////////////////////////////////////////
 namespace {
-	std::unique_ptr<ModelManager> sModelManager       = nullptr;
-	std::unique_ptr<DebugPrimitive> sDebugPrimitive   = nullptr;
-	std::unique_ptr<ColliderManager> sColliderManager = nullptr;
-	std::unique_ptr<SpriteCommon> sSpriteCommon       = nullptr;
+	std::unique_ptr<ModelManager> sModelManager         = nullptr;
+	std::unique_ptr<DebugPrimitive> sDebugPrimitive     = nullptr;
+	std::unique_ptr<ColliderManager> sColliderManager   = nullptr;
+	std::unique_ptr<SpriteCommon> sSpriteCommon         = nullptr;
+	std::unique_ptr<SkinningPipeline> sSkinningPipeline = nullptr;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -26,9 +27,15 @@ void SxavengerGameEngine::Init() {
 
 	sSpriteCommon = std::make_unique<SpriteCommon>();
 	sSpriteCommon->Init();
+
+	sSkinningPipeline = std::make_unique<SkinningPipeline>();
+	sSkinningPipeline->Init();
 }
 
 void SxavengerGameEngine::Term() {
+	sSkinningPipeline->Term();
+	sSkinningPipeline.reset();
+
 	sSpriteCommon->Term();
 	sSpriteCommon.reset();
 
@@ -113,4 +120,12 @@ void SxavengerGameEngine::DrawSprite(const Vector2f& pos, const Vector2f& size, 
 
 SpriteCommon* SxavengerGameEngine::GetSpriteCommon() {
 	return sSpriteCommon.get();
+}
+
+void SxavengerGameEngine::SetSkinningPipeline() {
+	sSkinningPipeline->SetPipeline();
+}
+
+SkinningPipeline* SxavengerGameEngine::GetSkinningPipeline() {
+	return sSkinningPipeline.get();
 }

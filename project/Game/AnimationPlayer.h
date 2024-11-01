@@ -4,44 +4,39 @@
 // include
 //-----------------------------------------------------------------------------------------
 //* base
-#include "IScene.h"
+#include <Engine/Game/Behavior/AnimationBehavior.h>
 
-//* Game
-#include <Game/Teapot.h>
-#include <Game/Plane.h>
-#include <Game/AnimationPlayer.h>
+//* engine
+#include <Engine/Beta/Curve.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// Scene_Title class
+// AnimationPlayer class
 ////////////////////////////////////////////////////////////////////////////////////////////
-class Scene_Title
-	: public IScene {
+class AnimationPlayer
+	: public AnimationBehavior {
 public:
 
 	//=========================================================================================
 	// public methods
 	//=========================================================================================
 
-	Scene_Title()           = default;
-	~Scene_Title() override { Term(); }
+	AnimationPlayer()  = default;
+	~AnimationPlayer() = default;
 
-	void Init() override;
+	void Init();
 
-	void Term() override;
+	void Term();
 
-	void Update() override;
+	void Update();
 
-	void Draw() override;
+	void SetAttributeImGui() override;
 
 private:
 
 	//=========================================================================================
-	// private methods
+	// private varibales
 	//=========================================================================================
 
-	std::unique_ptr<Teapot> teapot_;
-	std::unique_ptr<Plane> plane_;
-
-	std::unique_ptr<AnimationPlayer> animationTest_;
+	Curve test_curve;
 
 };

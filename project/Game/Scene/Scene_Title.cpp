@@ -20,6 +20,10 @@ void Scene_Title::Init() {
 	plane_->Init();
 	plane_->SetToConsole();
 
+	animationTest_ = std::make_unique<AnimationPlayer>();
+	animationTest_->Init();
+	animationTest_->SetToConsole();
+
 }
 
 void Scene_Title::Term() {
@@ -29,6 +33,8 @@ void Scene_Title::Update() {
 	if (Sxavenger::IsTriggerKey(DIK_SPACE)) {
 		SetNextScene<Scene_Game>();
 	}
+
+	animationTest_->Update();
 }
 
 void Scene_Title::Draw() {

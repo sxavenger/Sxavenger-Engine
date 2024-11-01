@@ -290,8 +290,7 @@ Model* ModelManager::Load(const std::string& directoryPath, const std::string& f
 
 	std::string lowerFilepath = ToLower(directoryPath + "/" + filename);
 
-	auto it = models_.find(lowerFilepath);
-	if (it == models_.end()) { //!< モデルが読み込まれていない場合
+	if (!models_.contains(lowerFilepath)) { //!< モデルが読み込まれていない場合
 		// モデルの読み込みして登録
 		std::unique_ptr<Model> newModel = std::make_unique<Model>(directoryPath, filename, smooth);
 		models_.emplace(lowerFilepath, std::move(newModel));

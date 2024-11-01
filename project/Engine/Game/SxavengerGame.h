@@ -8,6 +8,7 @@
 #include <Engine/Game/DebugPrimitive.h>
 #include <Engine/Game/Collider/ColliderManager.h>
 #include <Engine/Game/Sprite.h>
+#include <Engine/Game/Animation.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // SxavengerGame class
@@ -80,6 +81,14 @@ public:
 	);
 
 	static SpriteCommon* GetSpriteCommon();
+
+	//-----------------------------------------------------------------------------------------
+	// skinning pipeline option
+	//-----------------------------------------------------------------------------------------
+
+	static void SetSkinningPipeline();
+
+	static SkinningPipeline* GetSkinningPipeline();
 
 private:
 };

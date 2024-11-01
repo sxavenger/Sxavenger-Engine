@@ -30,7 +30,7 @@ public:
 
 	void Term();
 
-	void CreateRaytracingRecorder();
+	virtual void CreateRaytracingRecorder();
 
 	//* derivative behaivor methods *//
 

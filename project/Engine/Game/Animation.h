@@ -23,6 +23,9 @@
 #include <Engine/System/DxObject/DxCSPipeline.h>
 #include <Engine/System/DxObject/DxUnorderedBufferResource.h>
 
+//* engine
+#include <Engine/System/Performance.h>
+
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Keyframe structure
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -134,7 +137,9 @@ public:
 
 	void Create(const Model* model);
 
-	void Update(float animationTime, uint32_t animationIndex, bool loop = true);
+	void Update(DeltaTimePoint animationTime, uint32_t animationIndex, bool loop = true);
+
+	void BindIABuffer(uint32_t meshIndex);
 
 	//* getter *//
 
@@ -190,11 +195,12 @@ public:
 
 	void Term();
 
+	void SetPipeline() const { skinningCS_->SetPipeline(); }
+
 	DxObject::CSPipeline* GetPipeline() const { return skinningCS_.get(); }
 
 	//* singleton *//
 
-	static SkinningPipeline* GetInstance();
 	SkinningPipeline()  = default;
 	~SkinningPipeline() = default;
 
