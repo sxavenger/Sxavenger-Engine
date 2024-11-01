@@ -40,7 +40,7 @@ void ShaderTable::Create(
 	// 使用する各シェーダーの個数より、シェーダーテーブルのサイズを求める.
 	UINT raygenerationSize = 1 * raygenerationRecordSize;
 	UINT missSize          = static_cast<UINT>(stateObject->GetExportCount(ExportGroupType::kExportGroup_Miss)) * missRecordSize;
-	UINT hitgroupSize      = static_cast<UINT>(tlas->GetInstances().size()) * hitgroupRecordSize; // FIXME: instance数に変更
+	UINT hitgroupSize      = static_cast<UINT>(tlas->GetInstances().size()) * hitgroupRecordSize;
 
 	// 各テーブル開始位置にアライメント調整
 	UINT raygenerationRegion = Alignment(raygenerationSize, kShaderTableAlignment);
