@@ -108,6 +108,7 @@ void Curve::SetImGuiCommand() {
 }
 
 void Curve::OutputJson(const std::string& filename) {
+	filename;
 
 	Json root = Json::object();
 
