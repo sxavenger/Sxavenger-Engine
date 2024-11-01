@@ -17,6 +17,8 @@ void Teapot::Init() {
 	model_->ApplyRaytracing();
 	CreateRaytracingRecorder();
 
+	model_->ApplyMeshShader();
+
 	renderingFlag_ = kBehaviorRender_Raytracing | kBehaviorRender_Systematic;
 }
 

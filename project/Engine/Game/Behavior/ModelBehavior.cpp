@@ -59,18 +59,32 @@ void ModelBehavior::DrawSystematic(_MAYBE_UNUSED const Camera3D* camera) {
 
 	auto commandList = Sxavenger::GetCommandList();
 
-	// TODO: mesh shaderへの対応
-	sSystemConsole->SetRenderingPipeline(kDefaultVS_AlbedoPS_Deferred);
-
 	for (uint32_t i = 0; i < model_->GetMeshSize(); ++i) {
-		model_->GetMesh(i).BindIABuffer();
+		if (model_->GetMesh(i).IsCreateMeshlet()) {
 
-		commandList->SetGraphicsRootConstantBufferView(0, camera->GetGPUVirtualAddress());
-		commandList->SetGraphicsRootShaderResourceView(1, transform_.GetGPUVirtualAddress());
-		commandList->SetGraphicsRootConstantBufferView(2, uvTransform_.GetVirtualAddress());
-		commandList->SetGraphicsRootDescriptorTable(3, model_->GetTextureHandle(i));
+			sSystemConsole->SetRenderingPipeline(kDefaultMS_AlbedoPS_Deferred);
+			//!< meshlet生成がされているのでmesh shaderで描画
 
-		model_->GetMesh(i).DrawCall();
+			commandList->SetGraphicsRootConstantBufferView(5, camera->GetGPUVirtualAddress());
+			commandList->SetGraphicsRootShaderResourceView(7, transform_.GetGPUVirtualAddress());
+			commandList->SetGraphicsRootDescriptorTable(8, model_->GetTextureHandle(i));
+
+			model_->GetMesh(i).Dispatch(0, 1, 2, 3, 4, 6);
+
+		} else {
+			
+			sSystemConsole->SetRenderingPipeline(kDefaultVS_AlbedoPS_Deferred);
+			//!< vertex shaderで描画
+
+			model_->GetMesh(i).BindIABuffer();
+
+			commandList->SetGraphicsRootConstantBufferView(0, camera->GetGPUVirtualAddress());
+			commandList->SetGraphicsRootShaderResourceView(1, transform_.GetGPUVirtualAddress());
+			commandList->SetGraphicsRootConstantBufferView(2, uvTransform_.GetVirtualAddress());
+			commandList->SetGraphicsRootDescriptorTable(3, model_->GetTextureHandle(i));
+
+			model_->GetMesh(i).DrawCall();
+		}
 	}
 }
 

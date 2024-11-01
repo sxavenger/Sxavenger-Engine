@@ -17,7 +17,9 @@
 enum RenderingPipelineType {
 	//* behavior
 	kDefaultVS_AlbedoPS_Deferred,
+	kDefaultMS_AlbedoPS_Deferred,
 	kDefaultVS_AlbedoPS,
+	kDefaultMS_AlbedoPS,
 
 	kPresentToScreen,
 	kCountOfRenderingPipelineType

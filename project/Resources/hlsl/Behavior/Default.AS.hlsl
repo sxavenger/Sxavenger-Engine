@@ -10,11 +10,12 @@ groupshared Payload payload;
 ////////////////////////////////////////////////////////////////////////////////////////////
 [numthreads(_AMPLIFICATION_NUMTHREAD, 1, 1)]
 void main(uint3 dispatchThreadId : SV_DispatchThreadID) {
+	//* dispatchThreadId.yはinstaceのindex
 	
 	bool isVisible = false;
 	
 	if (dispatchThreadId.x < gMeshInfo.meshletCount) {
-		isVisible = IsVisible(planes, gCullData[dispatchThreadId.x], gTransform.world, gCamera.position);
+		isVisible = IsVisible(planes, gCullData[dispatchThreadId.x], gTransform[dispatchThreadId.y].world, gCamera.position);
 	}
 	
 	if (isVisible) {
