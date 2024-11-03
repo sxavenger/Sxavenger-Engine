@@ -34,8 +34,12 @@ void RenderingPipeline::CreateDesc() {
 	deferredPiplineDesc_.rtvFormats.clear();
 	deferredPiplineDesc_.SetRTVFormats(SystematicRenderingFrame::kCountOfGBuffer, SystematicRenderingFrame::formats_.data());
 
+	deferredPiplineDesc_.SetDSVFormat(DXGI_FORMAT_D32_FLOAT_S8X24_UINT);
+
 	forwardPipelineDesc_ = {};
 	forwardPipelineDesc_.CreateDefaultDesc();
+
+	forwardPipelineDesc_.SetDSVFormat(DXGI_FORMAT_D32_FLOAT_S8X24_UINT);
 }
 
 void RenderingPipeline::CreateForward() {

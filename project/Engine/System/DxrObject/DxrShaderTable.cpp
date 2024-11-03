@@ -44,8 +44,8 @@ void ShaderTable::Create(
 
 	// 各テーブル開始位置にアライメント調整
 	UINT raygenerationRegion = Alignment(raygenerationSize, kShaderTableAlignment);
-	UINT missRegion          = Alignment(missSize, kShaderTableAlignment);
-	UINT hitgroupRegion      = Alignment(hitgroupSize, kShaderTableAlignment);
+	UINT missRegion          = Alignment(missSize,          kShaderTableAlignment);
+	UINT hitgroupRegion      = Alignment(hitgroupSize,      kShaderTableAlignment);
 
 	// 合計したtableのサイズ
 	UINT tableSize = raygenerationRegion + missRegion + hitgroupRegion;

@@ -6,6 +6,23 @@
 #include "../Camera.hlsli"
 
 //=========================================================================================
+// TLAS Buffer
+//=========================================================================================
+
+RaytracingAccelerationStructure gScene : register(t10);
+
+//=========================================================================================
+// Global buffer
+//=========================================================================================
+
+ConstantBuffer<Camera> gCamera : register(b10);
+static const float4x4 kViewProj = mul(gCamera.viewMatrix, gCamera.projMatrix);
+
+//* output
+RWTexture2D<float4> gOutput : register(u10);
+RWTexture2D<float>  gDepth  : register(u11);
+
+//=========================================================================================
 // Config variables
 //=========================================================================================
 
@@ -26,6 +43,8 @@ namespace RayType {
 struct Payload {
 	
 	float4 color;
+	float depth;
+	
 	uint rayType;
 
 	//* intersections *//
@@ -33,15 +52,20 @@ struct Payload {
 	uint isIntersection; //!< using bool
 	float intersectionT;
 
+	//* depth *//
+
+
 	//* methods *//
 
 	void Init(uint _intersectionCount, uint _rayType = RayType::kRayType_Default) {
-		rayType           = _rayType;
-		intersectionCount = _intersectionCount;
-		
 		color          = (float4)0;
-		isIntersection = false;
-		intersectionT  = 0;
+		depth          = 1.0f;
+		
+		rayType        = _rayType;
+		
+		intersectionCount = _intersectionCount;
+		isIntersection    = false;
+		intersectionT     = 0;
 	}
 
 	void SetIntersection(bool _isIntersection) {
@@ -83,6 +107,11 @@ struct Payload {
 		intersectionCount++;
 		return false;
 	}
+
+	void SetDepth(float4 position) {
+		float4 clip = mul(position, kViewProj);
+		depth = clip.z / clip.w;
+	}
 };
 
 struct Attribute {
@@ -94,21 +123,6 @@ struct Vertex {
 	float2 texcoord;
 	float3 normal;
 };
-
-//=========================================================================================
-// TLAS Buffer
-//=========================================================================================
-
-RaytracingAccelerationStructure gScene : register(t10);
-
-//=========================================================================================
-// Global buffer
-//=========================================================================================
-
-ConstantBuffer<Camera> gCamera : register(b10);
-
-//* output
-RWTexture2D<float4> gOutput : register(u10);
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // common methods

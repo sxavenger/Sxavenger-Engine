@@ -25,6 +25,8 @@ void DepthStencilTexture::Create(const Vector2ui& size) {
 }
 
 void DepthStencilTexture::Term() {
+	descriptorHeaps_->DeleteDescriptor(descriptorDSV_);
+	descriptorHeaps_->DeleteDescriptor(descriptorSRV_);
 }
 
 void DepthStencilTexture::BeginDepthWrite(bool isClearDepth) {
@@ -141,7 +143,7 @@ void DepthStencilTexture::CreateSRV() {
 	desc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
 	desc.Texture2D.MipLevels     = 1;
 
-	//SRVの生成
+	// SRVの生成
 	device->CreateShaderResourceView(
 		resource_.Get(),
 		&desc,

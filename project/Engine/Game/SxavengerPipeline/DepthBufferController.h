@@ -10,33 +10,40 @@
 #include <Lib/Geometry/Vector2.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// DepthStencilTexture class
+// DepthBufferController class
 ////////////////////////////////////////////////////////////////////////////////////////////
-class DepthStencilTexture {
+class DepthBufferContoller {
 public:
 
 	//=========================================================================================
-	// public methods
+	// private variables
 	//=========================================================================================
 
-	DepthStencilTexture() = default;
-	~DepthStencilTexture() { Term(); }
+	DepthBufferContoller()  = default;
+	~DepthBufferContoller() { Term(); }
 
 	void Create(const Vector2ui& size);
 
 	void Term();
 
-	//* option *//
+	//* depth buffer option *//
 
-	void BeginDepthWrite(bool isClearDepth = false);
+	void BeginRaytracingDepthWrite();
 
-	void EndDepthWrite();
+	void EndRaytracingDepthWrite();
+
+	void TransferRaytracingToRasterize();
+	//* rasterize, raytracing どちらも depthWrite状態じゃないことが条件
+
+	void BeginRasterizeDepthWrite(bool isClearDepth = false);
+
+	void EndRasterizeDepthWrite();
 
 	//* getter *//
 
 	const D3D12_CPU_DESCRIPTOR_HANDLE& GetCPUHandleDSV() const { return descriptorDSV_.GetCPUHandle(); }
 
-	const D3D12_GPU_DESCRIPTOR_HANDLE& GetGPUHandleSRV() const { return descriptorSRV_.GetGPUHandle(); }
+	const D3D12_GPU_DESCRIPTOR_HANDLE& GetGPUHandleUAV() const { return descriptorUAV_.GetGPUHandle(); }
 
 private:
 
@@ -48,23 +55,28 @@ private:
 
 	DxObject::DescriptorHeaps* descriptorHeaps_ = nullptr;
 
-	//* resource *//
+	//* rasterize *//
 
-	ComPtr<ID3D12Resource> resource_;
+	ComPtr<ID3D12Resource> rasterizeDepthBuffer_;
 
 	DxObject::Descriptor descriptorDSV_;
 	DxObject::Descriptor descriptorSRV_;
+
+	//* raytracing *//
+
+	ComPtr<ID3D12Resource> raytracingDepthBuffer_;
+
+	DxObject::Descriptor descriptorUAV_;
 
 	//* parameter *//
 
 	Vector2ui size_;
 
 	//=========================================================================================
-	// private variables
+	// private methods
 	//=========================================================================================
 
-	void CreateResource();
-	void CreateDSV();
-	void CreateSRV();
+	void CreateRasterizeDepthBuffer();
+	void CreateRaytracingDepthBuffer();
 
 };

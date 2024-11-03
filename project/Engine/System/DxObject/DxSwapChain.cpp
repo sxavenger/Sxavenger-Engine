@@ -85,7 +85,7 @@ void SwapChain::Init(
 		barrier_.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
 	}
 
-	Log("[_DXOBJECT]::SwapChain complete init.");
+	EngineLog("[_DXOBJECT]::SwapChain complete init.");
 }
 
 void SwapChain::Term() {

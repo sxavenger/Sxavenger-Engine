@@ -98,6 +98,8 @@ void ClosesthitBehavior(inout Payload payload, Attribute attribute) {
 		color.rgb = AlphaBlend(float4(0.0f, 0.0f, 0.0f, 0.5f), float4(color.rgb, 1.0f)).rgb;
 	}
 
+	payload.SetDepth(vertex.position);
+	
 	payload.color = color;
 	
 }

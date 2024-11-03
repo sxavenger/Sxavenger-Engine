@@ -15,8 +15,14 @@ void ProcessConsole::Init() {
 	processPipeline_ = std::make_unique<ProcessPipeline>();
 	processPipeline_->Init();
 
-	layers_.emplace_back("test1");
-	layers_.emplace_back("test2");
+	layer1_ = std::make_unique<BaseProcessLayer>();
+	layer1_->SetToConsole("aaa");
+
+	layer2_ = std::make_unique<BaseProcessLayer>();
+	layer2_->SetToConsole("bbb");
+
+	layer3_ = std::make_unique<BaseProcessLayer>();
+	layer3_->SetToConsole("ccc");
 }
 
 void ProcessConsole::Term() {
@@ -45,6 +51,10 @@ void ProcessConsole::ProcessVisual(SxavengerFrame* frame) {
 	frame->EndVisual();
 }
 
+void ProcessConsole::SetLayer(BaseProcessLayer* layer) {
+	layers_.emplace_back(layer);
+}
+
 void ProcessConsole::SetProcessPipeline(ProcessPipelineType type) {
 	processPipeline_->SetPipeline(type);
 }
@@ -69,14 +79,39 @@ void ProcessConsole::DisplayLayer() {
 
 void ProcessConsole::SelectableLayer(const LayerContainer::const_iterator& it) {
 
-	ImGuiTreeNodeFlags flags
-		= ImGuiTreeNodeFlags_OpenOnDoubleClick
-		| ImGuiTreeNodeFlags_OpenOnArrow;
+	bool isSelected = false;
 
-	if (ImGui::TreeNodeEx((*it).c_str(), flags)) {
-		ImGui::TreePop();
+	if (selectedLayer_.has_value()) {
+		isSelected = (it == selectedLayer_.value());
 	}
 
+	if (ImGui::Selectable((*it)->GetName().c_str(), isSelected)) {
+		selectedLayer_ = it;
+	}
+
+	// drag and dropの処理
+	if (ImGui::IsItemActive() && !ImGui::IsItemHovered()) {
+
+		ImVec2 delta = ImGui::GetMouseDragDelta(0);
+
+		if (delta.y > 0.0f) {
+			 // 下方向へのドラッグ
+			auto nextIt = std::next(it);
+
+			if (nextIt != layers_.end()) {
+				std::iter_swap(*it, *nextIt);  // it と nextIt を交換
+			}
+
+		} else if (delta.y < 0.0f) {
+			 // 上方向へのドラッグ
+			if (it != layers_.begin()) {
+				auto prevIt = std::prev(it);
+				std::iter_swap(*it, *prevIt);  // it と prevIt を交換
+			}
+		}
+
+		ImGui::ResetMouseDragDelta();
+	}
 }
 
 void ProcessConsole::XclipseAtmoSphericScattering(SxavengerFrame* frame) {

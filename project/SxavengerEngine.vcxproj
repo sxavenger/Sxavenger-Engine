@@ -144,8 +144,10 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="Engine\Game\Model.cpp" />
     <ClCompile Include="Engine\Game\RaytracingScene.cpp" />
     <ClCompile Include="Engine\Game\Sprite.cpp" />
+    <ClCompile Include="Engine\Game\SxavengerPipeline\DepthBufferController.cpp" />
     <ClCompile Include="Engine\Game\SxavengerPipeline\DepthStencilTexture.cpp" />
     <ClCompile Include="Engine\Game\SxavengerPipeline\MultiViewTexture.cpp" />
+    <ClCompile Include="Engine\Game\SxavengerPipeline\ProcessLayer.cpp" />
     <ClCompile Include="Engine\Game\SxavengerPipeline\ProcessPipeline.cpp" />
     <ClCompile Include="Engine\Game\SxavengerPipeline\RaytracingPipeline.cpp" />
     <ClCompile Include="Engine\Game\SxavengerPipeline\RenderingPipeline.cpp" />
@@ -258,8 +260,10 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Engine\Game\Model.h" />
     <ClInclude Include="Engine\Game\RaytracingScene.h" />
     <ClInclude Include="Engine\Game\Sprite.h" />
+    <ClInclude Include="Engine\Game\SxavengerPipeline\DepthBufferController.h" />
     <ClInclude Include="Engine\Game\SxavengerPipeline\DepthStencilTexture.h" />
     <ClInclude Include="Engine\Game\SxavengerPipeline\MultiViewTexture.h" />
+    <ClInclude Include="Engine\Game\SxavengerPipeline\ProcessLayer.h" />
     <ClInclude Include="Engine\Game\SxavengerPipeline\ProcessPipeline.h" />
     <ClInclude Include="Engine\Game\SxavengerPipeline\RaytracingPipeline.h" />
     <ClInclude Include="Engine\Game\SxavengerPipeline\RenderingPipeline.h" />

@@ -67,6 +67,8 @@ public:
 	void SetRTVFormat(DXGI_FORMAT format);
 	void SetRTVFormats(uint32_t size, const DXGI_FORMAT formats[]);
 
+	void SetDSVFormat(DXGI_FORMAT format = DXGI_FORMAT_D24_UNORM_S8_UINT);
+
 	/* getter */
 
 	D3D12_INPUT_LAYOUT_DESC GetInputLayout() const;
@@ -90,6 +92,7 @@ public:
 	D3D_PRIMITIVE_TOPOLOGY        primitiveTopology;
 
 	std::vector<DXGI_FORMAT> rtvFormats;
+	DXGI_FORMAT              dsvFormat;
 
 };
 

@@ -24,9 +24,10 @@ void mainRaygeneration() {
 	desc.TMax = kTmax;
 
 	Payload payload = (Payload)0;
-	payload.color = float4(0.0f, 0.0f, 0.0f, 0.0f);
+	payload.Init(0, RayType::kRayType_Default);
 
 	TraceRay(payload, desc);
 
 	gOutput[launchIndex.xy] = payload.color;
+	gDepth[launchIndex.xy]  = payload.depth;
 }

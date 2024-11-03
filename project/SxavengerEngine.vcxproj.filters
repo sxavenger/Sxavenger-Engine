@@ -331,6 +331,8 @@
     <ClCompile Include="Engine\Beta\Curve.cpp" />
     <ClCompile Include="Engine\Game\Behavior\AnimationBehavior.cpp" />
     <ClCompile Include="Game\AnimationPlayer.cpp" />
+    <ClCompile Include="Engine\Game\SxavengerPipeline\DepthBufferController.cpp" />
+    <ClCompile Include="Engine\Game\SxavengerPipeline\ProcessLayer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="externals\imgui\imconfig.h">
@@ -558,6 +560,8 @@
     <ClInclude Include="Engine\Beta\Curve.h" />
     <ClInclude Include="Engine\Game\Behavior\AnimationBehavior.h" />
     <ClInclude Include="Game\AnimationPlayer.h" />
+    <ClInclude Include="Engine\Game\SxavengerPipeline\DepthBufferController.h" />
+    <ClInclude Include="Engine\Game\SxavengerPipeline\ProcessLayer.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

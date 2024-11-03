@@ -57,6 +57,18 @@ void Log(const std::wstring& logW) {
 	OutputDebugStringW(output.c_str());
 }
 
+void EngineLog(const std::string& log) {
+	std::string tag = "## [Sxavenger Engine] : ";
+	OutputDebugStringA(tag.c_str());
+	Log(log);
+}
+
+void EngineLog(const std::wstring& log) {
+	std::string tag = "## [Sxavenger Engine] : ";
+	OutputDebugStringA(tag.c_str());
+	Log(log);
+}
+
 void Assert(bool expresion, const std::string& detail, const std::source_location& location) {
 	if (expresion) {
 		return;

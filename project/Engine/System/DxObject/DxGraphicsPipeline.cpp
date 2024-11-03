@@ -46,6 +46,9 @@ void GraphicsPipelineDesc::CreateDefaultDesc() {
 
 	/* rtvFormat */
 	SetRTVFormat(kOffscreenFormat);
+
+	/* dsvFormat */
+	SetDSVFormat(DXGI_FORMAT_D24_UNORM_S8_UINT);
 }
 
 void GraphicsPipelineDesc::SetElement(const LPCSTR& semanticName, UINT semanticIndex, DXGI_FORMAT format, UINT inputSlot) {
@@ -71,6 +74,7 @@ void GraphicsPipelineDesc::SetDepthStencil(bool depthEnable, D3D12_DEPTH_WRITE_M
 	depthStencilDesc.DepthEnable    = depthEnable;
 	depthStencilDesc.DepthWriteMask = writeMask;
 	depthStencilDesc.DepthFunc      = D3D12_COMPARISON_FUNC_LESS_EQUAL;
+
 }
 
 void GraphicsPipelineDesc::SetBlendMode(BlendMode mode) {
@@ -102,6 +106,10 @@ void GraphicsPipelineDesc::SetRTVFormats(uint32_t size, const DXGI_FORMAT format
 	rtvFormats.insert(rtvFormats.end(), formats, formats + size);
 
 	Assert(rtvFormats.size() < D3D12_SIMULTANEOUS_RENDER_TARGET_COUNT); //!< RTVの設定限界
+}
+
+void GraphicsPipelineDesc::SetDSVFormat(DXGI_FORMAT format) {
+	dsvFormat = format;
 }
 
 D3D12_INPUT_LAYOUT_DESC GraphicsPipelineDesc::GetInputLayout() const {
@@ -186,7 +194,7 @@ void GraphicsPipeline::CreatePipeline(
 		desc.RasterizerState    = descs.rasterizerDesc;
 		desc.BlendState         = blendState_->operator[](descs.blendMode);
 		desc.DepthStencilState  = descs.depthStencilDesc;
-		desc.DSVFormat          = DXGI_FORMAT_D24_UNORM_S8_UINT;
+		desc.DSVFormat          = descs.dsvFormat;
 		desc.SampleMask         = UINT_MAX;
 		desc.SampleDesc.Quality = 0;
 		desc.SampleDesc.Count   = 1;
@@ -230,7 +238,7 @@ void GraphicsPipeline::CreatePipeline(
 		desc.SampleDesc.Count      = 1;
 		desc.SampleMask            = D3D12_DEFAULT_SAMPLE_MASK;
 		desc.DepthStencilState     = descs.depthStencilDesc;
-		desc.DSVFormat             = DXGI_FORMAT_D24_UNORM_S8_UINT;
+		desc.DSVFormat             = descs.dsvFormat;
 		desc.PrimitiveTopologyType = descs.primitiveTopologyType; //!< primitiveTopologyは引数の受け渡し部分で渡した
 
 		// RTVformatの設定
