@@ -14,6 +14,9 @@ void Scene_Game::Init() {
 	chessBorad_->Init();
 	chessBorad_->SetToConsole();
 
+	sponza_ = std::make_unique<Sponza>();
+	//sponza_->Init();
+	//sponza_->SetToConsole();
 }
 
 void Scene_Game::Term() {

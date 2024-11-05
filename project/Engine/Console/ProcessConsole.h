@@ -6,6 +6,8 @@
 //* engine
 #include <Engine/Game/SxavengerPipeline/ProcessPipeline.h>
 #include <Engine/Game/SxavengerPipeline/SxavengerFrame.h>
+#include <Engine/Game/SxavengerPipeline/VisualProcessLayer.h>
+
 #include <Engine/Game/SxavengerPipeline/ProcessLayer.h>
 
 //* c++
@@ -38,10 +40,6 @@ public:
 	void ProcessXclipse(SxavengerFrame* frame);
 	void ProcessVisual(SxavengerFrame* frame);
 
-	//* layer option *//
-
-	void SetLayer(BaseProcessLayer* layer);
-
 	//* pipeline option *//
 
 	void SetProcessPipeline(ProcessPipelineType type);
@@ -63,22 +61,14 @@ private:
 	////////////////////////////////////////////////////////////////////////////////////////////
 	// layer container using
 	////////////////////////////////////////////////////////////////////////////////////////////
-	using LayerContainer = std::list<BaseProcessLayer*>;
+	using VisualLayerContainer = std::list<std::unique_ptr<BaseVisualProcessLayer>>;
 
 	//=========================================================================================
 	// private variables
 	//=========================================================================================
 
-	//* layers *//
-
-	LayerContainer                                layers_;
-	std::optional<LayerContainer::const_iterator> selectedLayer_ = std::nullopt;
-
-	//* test layer *//
-
-	std::unique_ptr<BaseProcessLayer> layer1_;
-	std::unique_ptr<BaseProcessLayer> layer2_;
-	std::unique_ptr<BaseProcessLayer> layer3_;
+	VisualLayerContainer                                visualProcessLayer_;
+	std::optional<VisualLayerContainer::const_iterator> selectedVisualProcess_ = std::nullopt;
 
 	//* pipeline *//
 
@@ -95,7 +85,7 @@ private:
 
 	//* layer methods *//
 
-	void SelectableLayer(const LayerContainer::const_iterator& it);
+	void SelectableVisualLayer(const VisualLayerContainer::iterator& it);
 
 	//* xclipse process methods *// //!< HACK
 
@@ -104,5 +94,6 @@ private:
 	//* visual process methods *// //!< HACK
 
 	void VisualGlayscale(SxavengerFrame* frame);
+	void VisualLUT(SxavengerFrame* frame);
 
 };

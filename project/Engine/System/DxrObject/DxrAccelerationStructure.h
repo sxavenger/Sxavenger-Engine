@@ -130,7 +130,7 @@ private:
 
 	//* instanceBuffer *//
 
-	static const uint32_t kMaxInstanceNum_ = 256;
+	static const uint32_t kMaxInstanceNum_ = 1024;
 
 	std::vector<InstanceElements>                                             instances_;
 	std::unique_ptr<DxObject::BufferResource<D3D12_RAYTRACING_INSTANCE_DESC>> instanceBuffer_;

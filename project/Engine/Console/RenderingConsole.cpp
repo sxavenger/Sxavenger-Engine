@@ -79,7 +79,7 @@ void RenderingConsole::RenderRaytracing(SxavengerFrame* frame) {
 	commandList->SetComputeRootShaderResourceView(0, raytracingScene_->GetTLAS()->GetGPUVirtualAddress());
 	commandList->SetComputeRootConstantBufferView(1, frame->GetCamera()->GetGPUVirtualAddress());
 	commandList->SetComputeRootDescriptorTable(2, frame->GetXclipse()->GetTexture()->GetGPUHandleUAV());
-	commandList->SetComputeRootDescriptorTable(3, frame->GetDepthBufferController()->GetGPUHandleUAV());
+	commandList->SetComputeRootDescriptorTable(3, frame->GetDepthBufferController()->GetRaytracingGPUHandleUAV());
 
 	raytracingScene_->DispatchRays();
 

@@ -71,6 +71,8 @@ float IntegralApproximation(float fCos) {
 void mainMiss(inout Payload payload) {
 	//payload.color = float4(0.227f, 0.313f, 0.294f, 1.0f);
 
+	payload.SetIntersection(false);
+
 	if (payload.rayType == RayType::kRayType_Intersection) {
 		payload.isIntersection = false;
 		return;

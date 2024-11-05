@@ -41,9 +41,11 @@ public:
 
 	//* getter *//
 
-	const D3D12_CPU_DESCRIPTOR_HANDLE& GetCPUHandleDSV() const { return descriptorDSV_.GetCPUHandle(); }
+	const D3D12_CPU_DESCRIPTOR_HANDLE& GetRasterizeCPUHandleDSV() const { return descriptorDSV_.GetCPUHandle(); }
 
-	const D3D12_GPU_DESCRIPTOR_HANDLE& GetGPUHandleUAV() const { return descriptorUAV_.GetGPUHandle(); }
+	const D3D12_GPU_DESCRIPTOR_HANDLE& GetRaytracingGPUHandleUAV() const { return descriptorUAV_.GetGPUHandle(); }
+
+	const D3D12_GPU_DESCRIPTOR_HANDLE& GetRasterizeGPUHandleSRV() const { return descriptorSRV_.GetGPUHandle(); }
 
 private:
 

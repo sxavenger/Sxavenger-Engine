@@ -28,6 +28,12 @@ void mainRaygeneration() {
 
 	TraceRay(payload, desc);
 
-	gOutput[launchIndex.xy] = payload.color;
+	float density = 0.01f;
+	float factor  = exp(-density * payload.intersectionT);
+
+	float4 output = payload.color;
+	//output.rgb = lerp(payload.color.rgb, float3(0.76f, 0.79f, 0.82f), 1.0f - factor);
+
+	gOutput[launchIndex.xy] = output;
 	gDepth[launchIndex.xy]  = payload.depth;
 }

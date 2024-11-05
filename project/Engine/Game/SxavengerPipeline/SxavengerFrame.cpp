@@ -305,7 +305,7 @@ void SxavengerFrame::BeginSystematic(bool isDepthClear, bool isRenderTargetClear
 	commandList->OMSetRenderTargets(
 		SystematicRenderingFrame::GBuffer::kCountOfGBuffer, handles.data(),
 		false,
-		&depthBuffer_->GetCPUHandleDSV()
+		&depthBuffer_->GetRasterizeCPUHandleDSV()
 	);
 }
 
@@ -324,7 +324,7 @@ void SxavengerFrame::BeginAdaptive(bool isDepthClear) {
 	commandList->OMSetRenderTargets(
 		1, &adaptive_->GetTexture()->GetCPUHandleRTV(),
 		false,
-		&depthBuffer_->GetCPUHandleDSV()
+		&depthBuffer_->GetRasterizeCPUHandleDSV()
 	);
 }
 

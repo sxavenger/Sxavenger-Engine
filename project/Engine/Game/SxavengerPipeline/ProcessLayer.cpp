@@ -17,7 +17,7 @@ void BaseProcessLayer::Term() {
 }
 
 void BaseProcessLayer::SetToConsole() {
-	sSystemConsole->SetLayer(this);
+	//sSystemConsole->SetLayer(this);
 }
 
 void BaseProcessLayer::SetToConsole(const std::string& name) {

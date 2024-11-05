@@ -4,6 +4,7 @@
 #include "ClosesthitCommon.hlsli"
 #include "../Light.hlsli"
 #include "RaytracingPBRLib.hlsli"
+#include "../ColorUtils.hlsli"
 
 //=========================================================================================
 // LocalBuffer
@@ -21,20 +22,6 @@ ConstantBuffer<PBRMaterial> gPBRMaterial : register(b1);
 
 static const float3 kSampleLightDirection = normalize(float3(0.0f, -1.0f, 1.0f));
 // HACK: light containerを使用する
-
-//!< TEST USING METHODS
-float4 AlphaBlend(float4 base, float4 add) {
-	float4 result;
-	
-	// alpha
-	result.a = base.a + add.a * (1.0f - base.a);
-	
-	// color
-	result.rgb = (base.rgb * base.a + add.rgb * add.a * (1.0f - base.a)) / result.a;
-	
-	return result;
-	
-}
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // entry point
@@ -100,6 +87,6 @@ void ClosesthitBehavior(inout Payload payload, Attribute attribute) {
 
 	payload.SetDepth(vertex.position);
 	
-	payload.color = color;
+	payload.color = max(color, 0.0f);
 	
 }

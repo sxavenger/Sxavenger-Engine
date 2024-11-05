@@ -4,42 +4,23 @@
 // include
 //-----------------------------------------------------------------------------------------
 //* base
-#include "IScene.h"
-
-//* Game
-#include <Game/ChessBoard.h>
-#include <Game/Sponza.h>
+#include <Engine/Game/Behavior/ModelBehavior.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// Scene_Game class
+// Sponza class
 ////////////////////////////////////////////////////////////////////////////////////////////
-class Scene_Game
-	: public IScene {
+class Sponza
+	: public ModelBehavior {
 public:
 
 	//=========================================================================================
 	// public methods
 	//=========================================================================================
 
-	Scene_Game() = default;
-	~Scene_Game() override { Term(); }
+	void Init();
 
-	void Init() override;
+	void SetAttributeImGui() override;
 
-	void Term() override;
-
-	void Update() override;
-
-	void Draw() override;
 
 private:
-
-	//=========================================================================================
-	// private methods
-	//=========================================================================================
-
-	//std::unique_ptr<Kipfel> kipfel_;
-	std::unique_ptr<ChessBoard> chessBorad_;
-	std::unique_ptr<Sponza> sponza_;
-
 };

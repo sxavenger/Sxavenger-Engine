@@ -15,14 +15,11 @@ void ProcessConsole::Init() {
 	processPipeline_ = std::make_unique<ProcessPipeline>();
 	processPipeline_->Init();
 
-	layer1_ = std::make_unique<BaseProcessLayer>();
-	layer1_->SetToConsole("aaa");
+	std::unique_ptr<VisualProcessDoF> dof = std::make_unique<VisualProcessDoF>();
+	dof->Init();
+	dof->SetName("dof");
 
-	layer2_ = std::make_unique<BaseProcessLayer>();
-	layer2_->SetToConsole("bbb");
-
-	layer3_ = std::make_unique<BaseProcessLayer>();
-	layer3_->SetToConsole("ccc");
+	visualProcessLayer_.emplace_back(std::move(dof));
 }
 
 void ProcessConsole::Term() {
@@ -32,13 +29,14 @@ void ProcessConsole::Term() {
 void ProcessConsole::UpdateConsole() {
 	if (isDisplayProcessConsole_) {
 		DisplayCanvas();
+		DisplayLayer();
 	}
 }
 
 void ProcessConsole::ProcessXclipse(SxavengerFrame* frame) {
 	frame->BeginXclipse();
 
-	XclipseAtmoSphericScattering(frame);
+	//XclipseAtmoSphericScattering(frame);
 
 	frame->EndXclipse();
 }
@@ -47,12 +45,14 @@ void ProcessConsole::ProcessVisual(SxavengerFrame* frame) {
 	frame->BeginVisual();
 
 	//VisualGlayscale(frame);
+	//VisualLUT(frame);
+	//VisualDoF(frame);
+
+	for (auto& layer : visualProcessLayer_) {
+		layer->Process(frame);
+	}
 
 	frame->EndVisual();
-}
-
-void ProcessConsole::SetLayer(BaseProcessLayer* layer) {
-	layers_.emplace_back(layer);
 }
 
 void ProcessConsole::SetProcessPipeline(ProcessPipelineType type) {
@@ -67,26 +67,34 @@ void ProcessConsole::DisplayCanvas() {
 	sSystemConsole->DockingConsole();
 	ImGui::Begin("Canvas ## Process Console", nullptr, sSystemConsole->GetWindowFlag());
 
-	for (auto it = layers_.begin(); it != layers_.end(); ++it) {
-		SelectableLayer(it);
+	for (auto it = visualProcessLayer_.begin(); it != visualProcessLayer_.end(); ++it) {
+		SelectableVisualLayer(it);
 	}
 
 	ImGui::End();
 }
 
 void ProcessConsole::DisplayLayer() {
+	sSystemConsole->DockingConsole();
+	ImGui::Begin("Layer ## Process Console", nullptr, sSystemConsole->GetWindowFlag());
+
+	if (selectedVisualProcess_.has_value()) {
+		(*selectedVisualProcess_.value())->SetLayerImGui();
+	}
+
+	ImGui::End();
 }
 
-void ProcessConsole::SelectableLayer(const LayerContainer::const_iterator& it) {
+void ProcessConsole::SelectableVisualLayer(const VisualLayerContainer::iterator& it) {
 
 	bool isSelected = false;
 
-	if (selectedLayer_.has_value()) {
-		isSelected = (it == selectedLayer_.value());
+	if (selectedVisualProcess_.has_value()) {
+		isSelected = (it == selectedVisualProcess_.value());
 	}
 
 	if (ImGui::Selectable((*it)->GetName().c_str(), isSelected)) {
-		selectedLayer_ = it;
+		selectedVisualProcess_ = it;
 	}
 
 	// drag and dropの処理
@@ -98,15 +106,15 @@ void ProcessConsole::SelectableLayer(const LayerContainer::const_iterator& it) {
 			 // 下方向へのドラッグ
 			auto nextIt = std::next(it);
 
-			if (nextIt != layers_.end()) {
-				std::iter_swap(*it, *nextIt);  // it と nextIt を交換
+			if (nextIt != visualProcessLayer_.end()) {
+				std::iter_swap(it, nextIt);  // it と nextIt を交換
 			}
 
 		} else if (delta.y < 0.0f) {
 			 // 上方向へのドラッグ
-			if (it != layers_.begin()) {
+			if (it != visualProcessLayer_.begin()) {
 				auto prevIt = std::prev(it);
-				std::iter_swap(*it, *prevIt);  // it と prevIt を交換
+				std::iter_swap(it, prevIt);  // it と prevIt を交換
 			}
 		}
 
@@ -142,4 +150,19 @@ void ProcessConsole::VisualGlayscale(SxavengerFrame* frame) {
 
 	Dispatch(frame->GetSize());
 	
+}
+
+void ProcessConsole::VisualLUT(SxavengerFrame* frame) {
+	frame->GetVisual()->NextResultBufferIndex();
+
+	auto commandList = Sxavenger::GetCommandList();
+
+	processPipeline_->SetPipeline(kVisual_LUT);
+
+	commandList->SetComputeRootConstantBufferView(0, frame->GetConfigVirtualAddress());
+	commandList->SetComputeRootDescriptorTable(1, frame->GetVisual()->GetPrevBuffer(1)->GetGPUHandleSRV());
+	commandList->SetComputeRootDescriptorTable(2, frame->GetVisual()->GetResultBuffer()->GetGPUHandleUAV());
+
+	Dispatch(frame->GetSize());
+
 }

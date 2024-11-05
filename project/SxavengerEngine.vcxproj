@@ -223,6 +223,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="Game\Scene\SceneManager.cpp" />
     <ClCompile Include="Game\Scene\Scene_Game.cpp" />
     <ClCompile Include="Game\Scene\Scene_Title.cpp" />
+    <ClCompile Include="Game\Sponza.cpp" />
     <ClCompile Include="Game\Teapot.cpp" />
     <ClCompile Include="Lib\Adapter\Json\Json.cpp" />
     <ClCompile Include="Lib\Adapter\Random\Random.cpp" />
@@ -327,6 +328,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Game\Scene\SceneManager.h" />
     <ClInclude Include="Game\Scene\Scene_Game.h" />
     <ClInclude Include="Game\Scene\Scene_Title.h" />
+    <ClInclude Include="Game\Sponza.h" />
     <ClInclude Include="Game\Teapot.h" />
     <ClInclude Include="Lib\Adapter\Json\Json.h" />
     <ClInclude Include="Lib\Adapter\Random\Random.h" />
