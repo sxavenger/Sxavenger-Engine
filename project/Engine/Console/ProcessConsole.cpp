@@ -24,6 +24,7 @@ void ProcessConsole::Init() {
 
 void ProcessConsole::Term() {
 	processPipeline_.reset();
+	visualProcessLayer_.clear();
 }
 
 void ProcessConsole::UpdateConsole() {

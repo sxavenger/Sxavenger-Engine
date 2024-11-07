@@ -116,8 +116,6 @@ void Devices::Init() {
 }
 
 void Devices::Term() {
-	int a;
-	a;
 }
 
 bool Devices::CheckRayTracingEnable() {

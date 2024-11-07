@@ -35,7 +35,6 @@ void DirectXCommon::Init(WinApp* winApp) {
 
 void DirectXCommon::Term() {
 	// DxObjectの解放
-	devices_.reset();
 }
 
 void DirectXCommon::EndFrame() {
