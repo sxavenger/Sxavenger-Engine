@@ -33,7 +33,8 @@ void ModelInstanceBehavior::DrawSystematic(_MAYBE_UNUSED const Camera3D* camera)
 
 		commandList->SetGraphicsRootConstantBufferView(0, camera->GetGPUVirtualAddress());
 		commandList->SetGraphicsRootShaderResourceView(1, instanceBuffer_->GetGPUVirtualAddress());
-		commandList->SetGraphicsRootDescriptorTable(2, model_->GetTextureHandle(i));
+		commandList->SetGraphicsRootConstantBufferView(2, uvTransform_.GetVirtualAddress());
+		commandList->SetGraphicsRootDescriptorTable(3, model_->GetTextureHandle(i));
 
 		model_->GetMesh(i).DrawCall(instanceBuffer_->GetIndexSize());
 	}

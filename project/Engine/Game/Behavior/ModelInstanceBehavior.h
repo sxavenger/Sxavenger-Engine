@@ -2,7 +2,7 @@
 // include
 //-----------------------------------------------------------------------------------------
 //* base
-#include "BaseBehavior.h"
+#include "ModelBehavior.h"
 
 //* engine
 #include <Engine/Game/Model.h>
@@ -12,7 +12,7 @@
 // ModelInstanceBehavior class
 ////////////////////////////////////////////////////////////////////////////////////////////
 class ModelInstanceBehavior
-	: public BaseBehavior {
+	: public ModelBehavior {
 public:
 
 	//=========================================================================================

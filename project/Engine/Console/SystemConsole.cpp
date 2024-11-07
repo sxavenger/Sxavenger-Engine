@@ -62,15 +62,15 @@ void SystemConsole::UpdateConsole() {
 void SystemConsole::Draw() {
 	
 	RenderingConsole::RenderSystematic(gameFrame_.get());
-	//RenderingConsole::RenderSystematic(sceneFrame_.get());
+	RenderingConsole::RenderSystematic(sceneFrame_.get());
 
 	gameFrame_->TransitionSystematicToXclipse();
-	//sceneFrame_->TransitionSystematicToXclipse();
+	sceneFrame_->TransitionSystematicToXclipse();
 
 	Sxavenger::TranstionAllocator();
 
 	ProcessConsole::ProcessXclipse(gameFrame_.get());
-	//ProcessConsole::ProcessXclipse(sceneFrame_.get());
+	ProcessConsole::ProcessXclipse(sceneFrame_.get());
 
 
 	if (RenderingConsole::isRaytracingEnabled_) {

@@ -227,7 +227,6 @@ public:
 	void Term();
 
 	void Present(const D3D12_GPU_DESCRIPTOR_HANDLE& handle);
-	void TransitionDepth();
 
 private:
 
