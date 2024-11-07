@@ -1,5 +1,4 @@
 #include "GameScene.h"
-_DXROBJECT_USING
 
 //-----------------------------------------------------------------------------------------
 // include
@@ -8,7 +7,9 @@ _DXROBJECT_USING
 #include <Engine/System/Sxavenger.h>
 #include <Engine/Game/SxavengerGame.h>
 #include <Engine/Console/SystemConsole.h>
-#include <Lib/Environment.h>
+
+//* other scene
+#include <Game/Scene/Scene_Title.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // GameScene class methods

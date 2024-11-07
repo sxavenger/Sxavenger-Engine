@@ -86,7 +86,7 @@ void ShaderBlobManager::InitDxcCompiler() {
 		Assert(SUCCEEDED(hr));
 	}
 
-	Log("[_DXOBJECT]::ShaderBlobManager complete init.");
+	EngineLog("[_DXOBJECT]::ShaderBlobManager complete init.");
 }
 
 void ShaderBlobManager::SetExternal(ShaderBlobManager* manager) {

@@ -8,6 +8,7 @@
 #include <Engine/Game/Camera/Camera3D.h>
 #include <Engine/Game/SxavengerPipeline/MultiViewTexture.h>
 #include <Engine/Game/SxavengerPipeline/DepthStencilTexture.h>
+#include <Engine/Game/SxavengerPipeline/DepthBufferController.h>
 
 //* lib
 #include <Lib/Geometry/Vector2.h>
@@ -226,6 +227,7 @@ public:
 	void Term();
 
 	void Present(const D3D12_GPU_DESCRIPTOR_HANDLE& handle);
+	void TransitionDepth();
 
 private:
 
@@ -270,6 +272,9 @@ public:
 	void BeginAdaptive(bool isDepthClear = false);
 	void EndAdaptive();
 
+	void BeginRaytracing();
+	void EndRaytracing();
+
 	//* process option *//
 
 	void BeginXclipse();
@@ -285,6 +290,8 @@ public:
 	void TransitionAdaptiveToVisual();
 	void TransitionVisualToAdaptive();
 
+	void TransitionRaytracingToRasterize();
+
 	//* present methods *//
 
 	void PresentAdaptiveToScreen();
@@ -296,6 +303,8 @@ public:
 	AdaptiveRenderingFrame* GetAdaptive() const { return adaptive_.get(); }
 
 	VisualProcessFrame* GetVisual() const { return visual_.get(); }
+
+	DepthBufferContoller* GetDepthBufferController() const { return depthBuffer_.get(); }
 
 	const Camera3D* GetCamera() const { return camera_; }
 
@@ -333,9 +342,9 @@ private:
 	std::unique_ptr<AdaptiveRenderingFrame>   adaptive_;   //!< forward rendering
 	std::unique_ptr<VisualProcessFrame>       visual_;     //!< visual frame process
 
-	//* depth texture *//
+	//* depth buffer *//
 
-	std::unique_ptr<DepthStencilTexture> depthStencilTexture_;
+	std::unique_ptr<DepthBufferContoller> depthBuffer_;
 
 	//* config buffer *//
 

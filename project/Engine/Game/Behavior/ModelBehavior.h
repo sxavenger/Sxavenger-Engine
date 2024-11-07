@@ -10,6 +10,7 @@
 #include <Engine/System/DxrObject/DxrBufferRecorder.h>
 #include <Engine/Game/Model.h>
 #include <Engine/Game/Transform.h>
+#include <Engine/Game/Material.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // ModelBehavior class
@@ -29,7 +30,7 @@ public:
 
 	void Term();
 
-	void CreateRaytracingRecorder();
+	virtual void CreateRaytracingRecorder();
 
 	//* derivative behaivor methods *//
 
@@ -42,7 +43,7 @@ public:
 protected:
 
 	//=========================================================================================
-	// private variables
+	// protected variables
 	//=========================================================================================
 
 	//* IA
@@ -50,6 +51,8 @@ protected:
 
 	//* Buffer
 	QuaternionTransformBuffer transform_;
+	PBRMaterialBuffer material_;
+	UVTransformBuffer uvTransform_;
 
 	//* raytracing
 	std::vector<std::unique_ptr<DxrObject::BufferRecoreder>> recorders_;

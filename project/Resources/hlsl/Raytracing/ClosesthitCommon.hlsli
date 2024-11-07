@@ -4,13 +4,16 @@
 // include
 //-----------------------------------------------------------------------------------------
 #include "RaytracingCommon.hlsli"
+#include "../Transform.hlsli"
 
 //=========================================================================================
 // LocalBuffer
 //=========================================================================================
 
 StructuredBuffer<Vertex> gVertices : register(t0);
-StructuredBuffer<uint>   gIndices : register(t1);
+StructuredBuffer<uint>   gIndices  : register(t1);
+
+ConstantBuffer<UVTransformationMatrix> gUVTransform : register(b0);
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // common methods
@@ -35,8 +38,9 @@ Vertex GetHitLocalVertex(Attribute attribute) {
 		result.texcoord += gVertices[index].texcoord * w;
 		result.normal   += gVertices[index].normal * w;
 	}
-	
-	result.normal = normalize(result.normal);
+
+	result.texcoord = mul(float4(result.texcoord, 0.0f, 1.0f), gUVTransform.mat).xy;
+	result.normal   = normalize(result.normal);
 	
 	return result;
 }

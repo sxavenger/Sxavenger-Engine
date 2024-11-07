@@ -62,15 +62,15 @@ void SystemConsole::UpdateConsole() {
 void SystemConsole::Draw() {
 	
 	RenderingConsole::RenderSystematic(gameFrame_.get());
-	RenderingConsole::RenderSystematic(sceneFrame_.get());
+	//RenderingConsole::RenderSystematic(sceneFrame_.get());
 
 	gameFrame_->TransitionSystematicToXclipse();
-	sceneFrame_->TransitionSystematicToXclipse();
+	//sceneFrame_->TransitionSystematicToXclipse();
 
 	Sxavenger::TranstionAllocator();
 
 	ProcessConsole::ProcessXclipse(gameFrame_.get());
-	ProcessConsole::ProcessXclipse(sceneFrame_.get());
+	//ProcessConsole::ProcessXclipse(sceneFrame_.get());
 
 
 	if (RenderingConsole::isRaytracingEnabled_) {
@@ -244,16 +244,16 @@ void SystemConsole::DisplayMainMenu() {
 		//* imgui config
 		ImGui::SeparatorText("imgui config");
 
-		// .ini layout
-		if (ImGui::Button("output layout")) {
-			ImGui::SaveIniSettingsToDisk(kImGuiIniFilepath_.c_str());
-		}
-
 		// windowflag
 		ImGuiWindowFlags lockWindow = 0;
 		lockWindow |= ImGuiWindowFlags_NoMove;
 		lockWindow |= ImGuiWindowFlags_NoResize;
 		ImGui::CheckboxFlags("lock console imgui", &windowFlag_, lockWindow);
+
+		// .ini layout
+		if (ImGui::Button("output layout")) {
+			ImGui::SaveIniSettingsToDisk(kImGuiIniFilepath_.c_str());
+		}
 
 		ImGui::EndMenu();
 	}
@@ -473,36 +473,53 @@ void SystemConsole::DisplaySystemMenu() {
 		auto dxCommon = Sxavenger::GetDxCommon();
 		auto descriptorHeaps = dxCommon->GetDescriptorsObj();
 
-		if (ImGui::TreeNode("RTV")) {
-			ImGui::Text(
-				"used: %d / max: %d",
-				descriptorHeaps->GetDescriptorPool(RTV)->GetUsedDescriptorsCount(),
-				descriptorHeaps->GetDescriptorPool(RTV)->GetDescriptorMaxCount()
-			);
+		{
+			float usage
+				= static_cast<float>(descriptorHeaps->GetDescriptorPool(RTV)->GetUsedDescriptorsCount()) / descriptorHeaps->GetDescriptorPool(RTV)->GetDescriptorMaxCount();
 
-			ImGui::TreePop();
+			std::string overlay = std::format(
+					"use: {} / max: {}",
+					descriptorHeaps->GetDescriptorPool(RTV)->GetUsedDescriptorsCount(),
+					descriptorHeaps->GetDescriptorPool(RTV)->GetDescriptorMaxCount()
+				);
+
+			ImGui::ProgressBar(usage, {}, overlay.c_str());
+			ImGui::SameLine();
+			ImGui::Text("RTV");
 		}
 
-		if (ImGui::TreeNode("CBV_SRV_UAV")) {
+		{
 
-			ImGui::Text(
-				"used: %d / max: %d",
-				descriptorHeaps->GetDescriptorPool(CBV_SRV_UAV)->GetUsedDescriptorsCount(),
-				descriptorHeaps->GetDescriptorPool(CBV_SRV_UAV)->GetDescriptorMaxCount()
-			);
+			float usage
+				= static_cast<float>(descriptorHeaps->GetDescriptorPool(CBV_SRV_UAV)->GetUsedDescriptorsCount()) / descriptorHeaps->GetDescriptorPool(CBV_SRV_UAV)->GetDescriptorMaxCount();
 
-			ImGui::TreePop();
+			std::string overlay
+				= std::format(
+					"use: {} / max: {}",
+					descriptorHeaps->GetDescriptorPool(CBV_SRV_UAV)->GetUsedDescriptorsCount(),
+					descriptorHeaps->GetDescriptorPool(CBV_SRV_UAV)->GetDescriptorMaxCount()
+				);
+
+			ImGui::ProgressBar(usage, {}, overlay.c_str());
+			ImGui::SameLine();
+			ImGui::Text("SRV_CBV_UAV");
 		}
 
-		if (ImGui::TreeNode("DSV")) {
+		{
 
-			ImGui::Text(
-				"used: %d / max: %d",
-				descriptorHeaps->GetDescriptorPool(DSV)->GetUsedDescriptorsCount(),
-				descriptorHeaps->GetDescriptorPool(DSV)->GetDescriptorMaxCount()
-			);
+			float usage
+				= static_cast<float>(descriptorHeaps->GetDescriptorPool(DSV)->GetUsedDescriptorsCount()) / descriptorHeaps->GetDescriptorPool(DSV)->GetDescriptorMaxCount();
 
-			ImGui::TreePop();
+			std::string overlay
+				= std::format(
+					"use: {} / max: {}",
+					descriptorHeaps->GetDescriptorPool(DSV)->GetUsedDescriptorsCount(),
+					descriptorHeaps->GetDescriptorPool(DSV)->GetDescriptorMaxCount()
+				);
+
+			ImGui::ProgressBar(usage, {}, overlay.c_str());
+			ImGui::SameLine();
+			ImGui::Text("DSV");
 		}
 
 	}

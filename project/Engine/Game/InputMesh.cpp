@@ -116,7 +116,9 @@ void InputMesh::CreateMeshlet() {
 	isCreateMeshlet_ = true;
 }
 
-void InputMesh::Dispatch(UINT verticesParam, UINT uniqueVertexIndicesParam, UINT meshletsParam, UINT primitiveIndices, UINT cullDataParam, UINT meshInfoParam) const {
+void InputMesh::Dispatch(
+	UINT verticesParam, UINT uniqueVertexIndicesParam, UINT meshletsParam, UINT primitiveIndices, UINT cullDataParam, UINT meshInfoParam,
+	UINT instanceCount) const {
 
 	Assert(isCreateMeshlet_, "Not create meshlets.");
 
@@ -131,8 +133,7 @@ void InputMesh::Dispatch(UINT verticesParam, UINT uniqueVertexIndicesParam, UINT
 	commandList->SetGraphicsRootShaderResourceView(cullDataParam, cullDatas_->GetGPUVirtualAddress());
 	commandList->SetGraphicsRootConstantBufferView(meshInfoParam, meshInfo_->GetGPUVirtualAddress());
 
-	commandList->DispatchMesh(RoundUp(static_cast<UINT>(meshlets_->GetIndexSize()), kAmplificationNumthread_), 1, 1);
-
+	commandList->DispatchMesh(RoundUp(static_cast<UINT>(meshlets_->GetIndexSize()), kAmplificationNumthread_), instanceCount, 1);
 }
 
 void InputMesh::CreateBLAS() {

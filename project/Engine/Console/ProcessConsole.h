@@ -6,10 +6,17 @@
 //* engine
 #include <Engine/Game/SxavengerPipeline/ProcessPipeline.h>
 #include <Engine/Game/SxavengerPipeline/SxavengerFrame.h>
+#include <Engine/Game/SxavengerPipeline/VisualProcessLayer.h>
+
+#include <Engine/Game/SxavengerPipeline/ProcessLayer.h>
 
 //* c++
 #include <list>
-#include <string>
+
+//-----------------------------------------------------------------------------------------
+// forward
+//-----------------------------------------------------------------------------------------
+class BaseProcessLayer;
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // ProcessConsole class
@@ -54,15 +61,14 @@ private:
 	////////////////////////////////////////////////////////////////////////////////////////////
 	// layer container using
 	////////////////////////////////////////////////////////////////////////////////////////////
-	using LayerContainer = std::list<std::string>;
+	using VisualLayerContainer = std::list<std::unique_ptr<BaseVisualProcessLayer>>;
 
 	//=========================================================================================
 	// private variables
 	//=========================================================================================
 
-	//* layers *//
-
-	LayerContainer layers_;
+	VisualLayerContainer                                visualProcessLayer_;
+	std::optional<VisualLayerContainer::const_iterator> selectedVisualProcess_ = std::nullopt;
 
 	//* pipeline *//
 
@@ -79,14 +85,15 @@ private:
 
 	//* layer methods *//
 
-	void SelectableLayer(const LayerContainer::const_iterator& it);
+	void SelectableVisualLayer(const VisualLayerContainer::iterator& it);
 
-	//* visual process methods *// //!< HACK
+	//* xclipse process methods *// //!< HACK
 
 	void XclipseAtmoSphericScattering(SxavengerFrame* frame);
 
 	//* visual process methods *// //!< HACK
 
 	void VisualGlayscale(SxavengerFrame* frame);
+	void VisualLUT(SxavengerFrame* frame);
 
 };

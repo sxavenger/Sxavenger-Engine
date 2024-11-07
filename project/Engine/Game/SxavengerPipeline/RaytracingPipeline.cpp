@@ -62,7 +62,8 @@ void RaytracingPipeline::CreateHitgroup() {
 		LocalRootSignatureDesc desc = {};
 		desc.SetVirtualSRV(0, 0); //!< Vertices
 		desc.SetVirtualSRV(1, 1); //!< Indices
-		desc.SetSRV(2, 2);        //!< Albedo
+		desc.SetCBV(2, 0);        //!< UVTransform
+		desc.SetSRV(3, 2);        //!< Albedo
 		desc.SetSampler(MODE_WRAP, 0);
 
 		pipeline.exports[0]->CreateRootSignature(desc);
@@ -83,8 +84,10 @@ void RaytracingPipeline::CreateHitgroup() {
 		LocalRootSignatureDesc desc = {};
 		desc.SetVirtualSRV(0, 0); //!< Vertices
 		desc.SetVirtualSRV(1, 1); //!< Indices
-		desc.SetSRV(2, 2);        //!< Albedo
+		desc.SetCBV(2, 0);        //!< UVTransform
+		desc.SetSRV(3, 2);        //!< Albedo
 		desc.SetSampler(MODE_WRAP, 0);
+		desc.SetCBV(4, 1);        //!< PBRMaterial
 
 		pipeline.exports[0]->CreateRootSignature(desc);
 

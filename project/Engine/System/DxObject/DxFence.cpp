@@ -37,7 +37,7 @@ void Fence::Init(Devices* devices) {
 		Assert(fenceEvent_ != nullptr);
 	}
 
-	Log("[_DXOBJECT]::Fence complete init.");
+	EngineLog("[_DXOBJECT]::Fence complete init.");
 }
 
 void Fence::Term() {

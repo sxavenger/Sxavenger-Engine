@@ -137,6 +137,8 @@ void DebugPrimitive::CreatePipeline() {
 	desc.SetRasterizer(D3D12_CULL_MODE_NONE, D3D12_FILL_MODE_SOLID);
 	desc.SetPrimitive(PRIMITIVE_LINE);
 
+	desc.SetDSVFormat(DXGI_FORMAT_D32_FLOAT_S8X24_UINT);
+
 	pipeline_->CreatePipeline(Sxavenger::GetDevicesObj(), blob_.get(), desc);
 
 }

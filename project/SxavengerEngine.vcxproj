@@ -73,6 +73,7 @@
       <AdditionalDependencies>assimp-vc143-mtd.lib</AdditionalDependencies>
       <DelayLoadDLLs>
       </DelayLoadDLLs>
+      <ProgramDatabaseFile>$(SolutionDir)..\Generated\obj\$(ProjectName)\$(Configuration)\$(TargetName).pdb</ProgramDatabaseFile>
     </Link>
     <PostBuildEvent>
       <Command>copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxcompiler.dll" "$(TargetDir)dxcompiler.dll"
@@ -107,6 +108,7 @@ copy "$(SolutionDir)externals\assimp\lib\Debug\assimp-vc143-mtd.dll" "$(TargetDi
       <TreatLinkerWarningAsErrors>true</TreatLinkerWarningAsErrors>
       <AdditionalLibraryDirectories>$(ProjectDir)externals\assimp\lib\Release</AdditionalLibraryDirectories>
       <AdditionalDependencies>assimp-vc143-mt.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <ProgramDatabaseFile>$(SolutionDir)..\Generated\obj\$(ProjectName)\$(Configuration)\$(TargetName).pdb</ProgramDatabaseFile>
     </Link>
     <FxCompile>
       <ShaderModel>6.4</ShaderModel>
@@ -124,6 +126,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="Engine\Console\ProcessConsole.cpp" />
     <ClCompile Include="Engine\Console\RenderingConsole.cpp" />
     <ClCompile Include="Engine\Game\Animation.cpp" />
+    <ClCompile Include="Engine\Game\Behavior\AnimationBehavior.cpp" />
     <ClCompile Include="Engine\Game\Behavior\BaseBehavior.cpp" />
     <ClCompile Include="Engine\Game\Behavior\ModelBehavior.cpp" />
     <ClCompile Include="Engine\Console\SystemConsole.cpp" />
@@ -142,8 +145,10 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="Engine\Game\Model.cpp" />
     <ClCompile Include="Engine\Game\RaytracingScene.cpp" />
     <ClCompile Include="Engine\Game\Sprite.cpp" />
+    <ClCompile Include="Engine\Game\SxavengerPipeline\DepthBufferController.cpp" />
     <ClCompile Include="Engine\Game\SxavengerPipeline\DepthStencilTexture.cpp" />
     <ClCompile Include="Engine\Game\SxavengerPipeline\MultiViewTexture.cpp" />
+    <ClCompile Include="Engine\Game\SxavengerPipeline\ProcessLayer.cpp" />
     <ClCompile Include="Engine\Game\SxavengerPipeline\ProcessPipeline.cpp" />
     <ClCompile Include="Engine\Game\SxavengerPipeline\RaytracingPipeline.cpp" />
     <ClCompile Include="Engine\Game\SxavengerPipeline\RenderingPipeline.cpp" />
@@ -208,10 +213,18 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="externals\meshoptimizer\vertexfilter.cpp" />
     <ClCompile Include="externals\meshoptimizer\vfetchanalyzer.cpp" />
     <ClCompile Include="externals\meshoptimizer\vfetchoptimizer.cpp" />
+    <ClCompile Include="Game\AnimationPlayer.cpp" />
     <ClCompile Include="Game\AtmosphericScattering.cpp" />
     <ClCompile Include="Game\Enemy.cpp" />
+    <ClCompile Include="Game\ChessBoard.cpp" />
+    <ClCompile Include="Engine\Beta\Curve.cpp" />
     <ClCompile Include="Game\Kipfel.cpp" />
     <ClCompile Include="Game\Plane.cpp" />
+    <ClCompile Include="Game\Scene\IScene.cpp" />
+    <ClCompile Include="Game\Scene\SceneManager.cpp" />
+    <ClCompile Include="Game\Scene\Scene_Game.cpp" />
+    <ClCompile Include="Game\Scene\Scene_Title.cpp" />
+    <ClCompile Include="Game\Sponza.cpp" />
     <ClCompile Include="Game\Player.cpp" />
     <ClCompile Include="Game\PlayerBullet.cpp" />
     <ClCompile Include="Game\PlayerBulletCollisionManager.cpp" />
@@ -237,6 +250,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Engine\Console\ProcessConsole.h" />
     <ClInclude Include="Engine\Console\RenderingConsole.h" />
     <ClInclude Include="Engine\Game\Animation.h" />
+    <ClInclude Include="Engine\Game\Behavior\AnimationBehavior.h" />
     <ClInclude Include="Engine\Game\Behavior\BaseBehavior.h" />
     <ClInclude Include="Engine\Game\Behavior\ModelBehavior.h" />
     <ClInclude Include="Engine\Console\SystemConsole.h" />
@@ -255,8 +269,10 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Engine\Game\Model.h" />
     <ClInclude Include="Engine\Game\RaytracingScene.h" />
     <ClInclude Include="Engine\Game\Sprite.h" />
+    <ClInclude Include="Engine\Game\SxavengerPipeline\DepthBufferController.h" />
     <ClInclude Include="Engine\Game\SxavengerPipeline\DepthStencilTexture.h" />
     <ClInclude Include="Engine\Game\SxavengerPipeline\MultiViewTexture.h" />
+    <ClInclude Include="Engine\Game\SxavengerPipeline\ProcessLayer.h" />
     <ClInclude Include="Engine\Game\SxavengerPipeline\ProcessPipeline.h" />
     <ClInclude Include="Engine\Game\SxavengerPipeline\RaytracingPipeline.h" />
     <ClInclude Include="Engine\Game\SxavengerPipeline\RenderingPipeline.h" />
@@ -310,7 +326,10 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="externals\imgui\imstb_truetype.h" />
     <ClInclude Include="externals\meshoptimizer\meshoptimizer.h" />
     <ClInclude Include="Game\Enemy.h" />
+    <ClInclude Include="Game\AnimationPlayer.h" />
     <ClInclude Include="Game\AtmosphericScattering.h" />
+    <ClInclude Include="Game\ChessBoard.h" />
+    <ClInclude Include="Engine\Beta\Curve.h" />
     <ClInclude Include="Game\Kipfel.h" />
     <ClInclude Include="Game\Player.h" />
     <ClInclude Include="Game\PlayerBullet.h" />
@@ -318,6 +337,11 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Game\Rail.h" />
     <ClInclude Include="Game\RailCamera.h" />
     <ClInclude Include="Game\Plane.h" />
+    <ClInclude Include="Game\Scene\IScene.h" />
+    <ClInclude Include="Game\Scene\SceneManager.h" />
+    <ClInclude Include="Game\Scene\Scene_Game.h" />
+    <ClInclude Include="Game\Scene\Scene_Title.h" />
+    <ClInclude Include="Game\Sponza.h" />
     <ClInclude Include="Game\Score.h" />
     <ClInclude Include="Game\Teapot.h" />
     <ClInclude Include="Lib\Adapter\Json.h" />

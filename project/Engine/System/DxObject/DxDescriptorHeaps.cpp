@@ -133,7 +133,7 @@ void DescriptorHeaps::Init(Devices* devices) {
 	pools_[DescriptorType::CBV_SRV_UAV]
 		= std::make_unique<DescriptorPool>(devices, D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, 128);
 	
-	Log("[_DXOBJECT]::DescriptorHeaps complete init.");
+	EngineLog("[_DXOBJECT]::DescriptorHeaps complete init.");
 }
 
 void DescriptorHeaps::Term() {

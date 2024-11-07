@@ -6,6 +6,23 @@
 #include "../Camera.hlsli"
 
 //=========================================================================================
+// TLAS Buffer
+//=========================================================================================
+
+RaytracingAccelerationStructure gScene : register(t10);
+
+//=========================================================================================
+// Global buffer
+//=========================================================================================
+
+ConstantBuffer<Camera> gCamera : register(b10);
+static const float4x4 kViewProj = mul(gCamera.viewMatrix, gCamera.projMatrix);
+
+//* output
+RWTexture2D<float4> gOutput : register(u10);
+RWTexture2D<float>  gDepth  : register(u11);
+
+//=========================================================================================
 // Config variables
 //=========================================================================================
 
@@ -19,26 +36,41 @@ static const uint kLimitIntersectionCount = 4;
 //=========================================================================================
 
 namespace RayType {
-	static const uint kRayType_Default = 0,
-	                  kRayType_Shadow  = 1;
+	static const uint kRayType_Default      = 0,
+	                  kRayType_Intersection = 1;
 }
 
 struct Payload {
 	
 	float4 color;
+	float depth;
+	
 	uint rayType;
 
 	//* intersections *//
 	uint intersectionCount;
-	uint isIntersection;
+	uint isIntersection; //!< using bool
 	float intersectionT;
+
+	//* depth *//
+
 
 	//* methods *//
 
-	void SetIntersection(bool _isIntersection) {
+	void Init(uint _intersectionCount, uint _rayType = RayType::kRayType_Default) {
+		color          = (float4)0;
+		depth          = 1.0f;
 		
+		rayType        = _rayType;
+		
+		intersectionCount = _intersectionCount;
+		isIntersection    = false;
+		intersectionT     = 0;
+	}
+
+	void SetIntersection(bool _isIntersection) {
 		isIntersection = _isIntersection;
-		intersectionT  = 0.0f;
+		intersectionT  = kTmax;
 		
 		if (_isIntersection) {
 			intersectionT  = RayTCurrent();
@@ -49,7 +81,6 @@ struct Payload {
 	//! @retval true  is return true.
 	//! @retval false is return false.
 	bool Update() {
-		
 		if (intersectionCount >= kLimitIntersectionCount) {
 			color = (float4)0;
 			SetIntersection(false);
@@ -58,6 +89,28 @@ struct Payload {
 
 		intersectionCount++;
 		return false;
+	}
+
+	bool UpdateIntersection(bool _isIntersection) {
+		if (intersectionCount >= kLimitIntersectionCount) {
+			color = (float4)0;
+			SetIntersection(false);
+			return true;
+		}
+
+		SetIntersection(_isIntersection);
+
+		if (rayType == RayType::kRayType_Intersection) {
+			return true;
+		}
+
+		intersectionCount++;
+		return false;
+	}
+
+	void SetDepth(float4 position) {
+		float4 clip = mul(position, kViewProj);
+		depth = clip.z / clip.w;
 	}
 };
 
@@ -70,21 +123,6 @@ struct Vertex {
 	float2 texcoord;
 	float3 normal;
 };
-
-//=========================================================================================
-// TLAS Buffer
-//=========================================================================================
-
-RaytracingAccelerationStructure gScene : register(t10);
-
-//=========================================================================================
-// Global buffer
-//=========================================================================================
-
-ConstantBuffer<Camera> gCamera : register(b10);
-
-//* output
-RWTexture2D<float4> gOutput : register(u10);
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // common methods

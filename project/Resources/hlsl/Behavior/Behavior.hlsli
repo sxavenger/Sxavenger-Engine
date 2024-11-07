@@ -33,7 +33,7 @@ struct AdaptiveOutput {
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 void CheckDiscard(float4 color) {
-	if (color.a == 0.0f) {
+	if (color.a <= 0.0f) {
 		discard;
 	}
 }

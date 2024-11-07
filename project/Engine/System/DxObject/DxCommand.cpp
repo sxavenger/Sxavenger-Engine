@@ -55,7 +55,7 @@ void Command::Init(Devices* devices) {
 		Assert(SUCCEEDED(hr));
 	}
 
-	Log("[_DXOBJECT]::Command complete init.");
+	EngineLog("[_DXOBJECT]::Command complete init.");
 }
 
 void Command::Term() {

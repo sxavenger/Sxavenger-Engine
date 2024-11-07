@@ -23,6 +23,9 @@ std::string ToString(const std::wstring& str);
 void Log(const std::string& log);
 void Log(const std::wstring& logW);
 
+void EngineLog(const std::string& log);
+void EngineLog(const std::wstring& log);
+
 //-----------------------------------------------------------------------------------------
 // Assertion
 //-----------------------------------------------------------------------------------------

@@ -6,7 +6,6 @@
 //-----------------------------------------------------------------------------------------
 // Geometry
 #include <Lib/Geometry/Vector3.h>
-#include <Lib/Geometry/Vector4.h>
 #include <Lib/Geometry/Quaternion.h>
 #include <Lib/Geometry/Matrix4x4.h>
 #include <Lib/Geometry/MathLib.h>
@@ -111,7 +110,7 @@ public:
 	BaseTransformBuffer() = default;
 	virtual ~BaseTransformBuffer() {}
 
-	void Init();
+	void Create();
 
 	void Transfer();
 
@@ -160,11 +159,7 @@ public:
 	//=========================================================================================
 
 	EulerTransformBuffer() = default;
-	~EulerTransformBuffer() override { Term(); }
-
-	void Init();
-
-	void Term();
+	~EulerTransformBuffer() override = default;
 
 	void UpdateMatrix();
 
@@ -199,11 +194,7 @@ public:
 	//=========================================================================================
 
 	QuaternionTransformBuffer() = default;
-	~QuaternionTransformBuffer() override { Term(); }
-
-	void Init();
-
-	void Term();
+	~QuaternionTransformBuffer() override = default;
 
 	void UpdateMatrix();
 
@@ -222,5 +213,80 @@ private:
 	//=========================================================================================
 	// private variables
 	//=========================================================================================
+
+};
+
+////////////////////////////////////////////////////////////////////////////////////////////
+// UVTransform structure
+////////////////////////////////////////////////////////////////////////////////////////////
+struct UVTransform {
+
+	//=========================================================================================
+	// member
+	//=========================================================================================
+
+	Vector2f scale;
+	float    rotate;
+	Vector2f translate;
+
+	//=========================================================================================
+	// methods
+	//=========================================================================================
+
+	UVTransform()
+		: scale({ 1.0f, 1.0f }), rotate(0.0f), translate({ 0.0f, 0.0f }) {
+	}
+
+	Matrix4x4 ToMatrix() const {
+		return Matrix::MakeAffine({ scale.x, scale.y, 1.0f }, { 0.0f, 0.0f, rotate }, { translate.x, translate.y, 0.0f });
+	}
+
+	void SetImGuiCommand() {
+		ImGui::DragFloat2("scale", &scale.x, 0.01f);
+		ImGui::SliderAngle("rotate", &rotate);
+		ImGui::DragFloat2("translate", &translate.x, 0.01f);
+	}
+};
+
+////////////////////////////////////////////////////////////////////////////////////////////
+// UVTransformationMatrix structure
+////////////////////////////////////////////////////////////////////////////////////////////
+struct UVTransformationMatrix {
+	Matrix4x4 mat;
+};
+
+////////////////////////////////////////////////////////////////////////////////////////////
+// UVTransformBuffer class
+////////////////////////////////////////////////////////////////////////////////////////////
+class UVTransformBuffer {
+public:
+
+	//=========================================================================================
+	// public methods
+	//=========================================================================================
+
+	void Create();
+
+	void Transfer();
+
+	void SetImGuiCommand();
+
+	//* getter *//
+
+	const D3D12_GPU_VIRTUAL_ADDRESS GetVirtualAddress() const { return buffer_->GetGPUVirtualAddress(); }
+
+	//=========================================================================================
+	// public variables
+	//=========================================================================================
+
+	UVTransform transform;
+
+private:
+
+	//=========================================================================================
+	// public methods
+	//=========================================================================================
+
+	std::unique_ptr<DxObject::BufferResource<UVTransformationMatrix>> buffer_;
 
 };

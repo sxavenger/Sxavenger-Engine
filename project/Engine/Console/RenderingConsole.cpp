@@ -76,17 +76,19 @@ void RenderingConsole::RenderRaytracing(SxavengerFrame* frame) {
 
 	auto commandList = Sxavenger::GetCommandList();
 
-	frame->BeginXclipse();
+	frame->BeginRaytracing();
 
 	raytracingScene_->SetStateObject();
 
 	commandList->SetComputeRootShaderResourceView(0, raytracingScene_->GetTLAS()->GetGPUVirtualAddress());
 	commandList->SetComputeRootConstantBufferView(1, frame->GetCamera()->GetGPUVirtualAddress());
 	commandList->SetComputeRootDescriptorTable(2, frame->GetXclipse()->GetTexture()->GetGPUHandleUAV());
+	commandList->SetComputeRootDescriptorTable(3, frame->GetDepthBufferController()->GetRaytracingGPUHandleUAV());
 
 	raytracingScene_->DispatchRays();
 
-	frame->EndXclipse();
+	frame->EndRaytracing();
+	frame->TransitionRaytracingToRasterize();
 }
 
 void RenderingConsole::SetBehavior(BaseBehavior* behavior) {
@@ -136,6 +138,7 @@ void RenderingConsole::InitRaytracing() {
 	desc.SetVirtualSRV(0, 10); //!< Scene
 	desc.SetCBV(1, 10); //!< Camera
 	desc.SetUAV(2, 10); //!< Output
+	desc.SetUAV(3, 11); //!< Depth
 
 	raytracingScene_->CreateStateObject(desc);
 	raytracingScene_->CreateTable();

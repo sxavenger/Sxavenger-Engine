@@ -33,7 +33,9 @@ public:
 
 	void CreateMeshlet();
 
-	void Dispatch(UINT verticesParam, UINT uniqueVertexIndicesParam, UINT meshletsParam, UINT primitiveIndices, UINT cullDataParam, UINT meshInfoParam) const;
+	void Dispatch(
+		UINT verticesParam, UINT uniqueVertexIndicesParam, UINT meshletsParam, UINT primitiveIndices, UINT cullDataParam, UINT meshInfoParam,
+		UINT instanceCount = 1) const;
 
 	bool IsCreateMeshlet() const { return isCreateMeshlet_; }
 
@@ -42,6 +44,8 @@ public:
 	void CreateBLAS();
 
 	DxrObject::BottomLevelAS* GetBLAS() const;
+
+	bool IsCreateBLAS() const { return isCreateBLAS_; }
 
 	//* operator *//
 

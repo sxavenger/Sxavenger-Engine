@@ -82,4 +82,35 @@ void ProcessPipeline::CreateVisual() {
 		pipelines_[kVisual_Glayscale]->CreatePipeline(desc, blobs_[kVisual_Glayscale].get());
 	}
 
+	{
+		blobs_[kVisual_LUT] = std::make_unique<CSBlob>();
+		blobs_[kVisual_LUT]->Create(L"sxavenger/visual/visualLUT.cs.hlsl");
+
+		pipelines_[kVisual_LUT] = std::make_unique<CSPipeline>();
+
+		CSRootSignatureDesc desc = {};
+		desc.SetCBV(0, 10); //!< Config
+		desc.SetSRV(1, 0);  //!< Input
+		desc.SetUAV(2, 0);  //!< Output
+
+		pipelines_[kVisual_LUT]->CreatePipeline(desc, blobs_[kVisual_LUT].get());
+	}
+
+	{
+		blobs_[kVisual_DoF] = std::make_unique<CSBlob>();
+		blobs_[kVisual_DoF]->Create(L"sxavenger/visual/visualDoF.cs.hlsl");
+
+		pipelines_[kVisual_DoF] = std::make_unique<CSPipeline>();
+
+		CSRootSignatureDesc desc = {};
+		desc.SetCBV(0, 10); //!< Config
+		desc.SetSRV(1, 0);  //!< Input
+		desc.SetSRV(2, 1);  //!< Depth
+		desc.SetCBV(3, 0);  //!< Camera
+		desc.SetCBV(4, 1);  //!< Parameter
+		desc.SetUAV(5, 0);  //!< Output
+
+		pipelines_[kVisual_DoF]->CreatePipeline(desc, blobs_[kVisual_DoF].get());
+	}
+
 }

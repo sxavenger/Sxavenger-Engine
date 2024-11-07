@@ -6,7 +6,7 @@ _DXOBJECT_USING
 //-----------------------------------------------------------------------------------------
 //* engine
 #include <Engine/System/Sxavenger.h>
-#include <Engine/Game/Material.h>
+#include <Engine/Game/Transform.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // SpriteManager class methods
@@ -88,6 +88,8 @@ void SpriteCommon::CreatePipeline() {
 	desc.SetElement("COLOR",    0, DXGI_FORMAT_R32G32B32A32_FLOAT);
 
 	desc.SetRasterizer(D3D12_CULL_MODE_NONE, D3D12_FILL_MODE_SOLID);
+
+	desc.SetDSVFormat(DXGI_FORMAT_D32_FLOAT_S8X24_UINT);
 
 	pipeline_->CreatePipeline(Sxavenger::GetDevicesObj(), blob.get(), desc);
 }

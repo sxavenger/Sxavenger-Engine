@@ -16,6 +16,8 @@ void Devices::Init() {
 				// GPU側も有効化
 				debugController_->SetEnableGPUBasedValidation(TRUE);
 			}
+
+			EngineLog(std::format("[_DXOBEJCT] Debug Layer : {}", useDebugLayer_));
 		}
 	}
 #endif // _DEBUG
@@ -39,7 +41,7 @@ void Devices::Init() {
 
 			// ソフトウェアアダプタじゃない場合, 成功
 			if (!(desc.Flags & DXGI_ADAPTER_FLAG3_SOFTWARE)) {
-				Log(std::format(L" -- Use Adapter: {}", desc.Description));
+				EngineLog(std::format(L"[_DXOBEJCT] Use Adapter: {}", desc.Description));
 				break;
 			}
 
@@ -65,7 +67,7 @@ void Devices::Init() {
 			auto hr = D3D12CreateDevice(useAdapter_.Get(), featureLevels[i], IID_PPV_ARGS(&device_));
 			if (SUCCEEDED(hr)) {
 				// 生成できたのでログ出力してループを抜ける
-				Log(std::format("[_DXOBEJCT] D3D_FEATURE_LEVEL: {}", featureLevelStrings[i]));
+				EngineLog(std::format("[_DXOBEJCT] D3D_FEATURE_LEVEL: {}", featureLevelStrings[i]));
 				break;
 			}
 		}
@@ -110,7 +112,7 @@ void Devices::Init() {
 	Assert(isRayTracingEnabled_, "raytracing version failed.");
 	Assert(isMeshShaderEnabled_, "mesh shader version failed.");
 
-	Log("[_DXOBJECT]::Device complete init.");
+	EngineLog("[_DXOBJECT]::Device complete init.");
 }
 
 void Devices::Term() {
@@ -124,7 +126,7 @@ bool Devices::CheckRayTracingEnable() {
 		auto hr = device_->CheckFeatureSupport(D3D12_FEATURE_D3D12_OPTIONS5, &option, sizeof(option));
 
 		if (FAILED(hr) || option.RaytracingTier < D3D12_RAYTRACING_TIER_1_0) {
-			Log("Warning : RayTracing is not supported.");
+			EngineLog("Warning : RayTracing is not supported.");
 			return false; //!< RayTracingがサポートされていない
 		}
 	}
@@ -140,7 +142,7 @@ bool Devices::CheckMeshShaderEnable() {
 		auto hr = device_->CheckFeatureSupport(D3D12_FEATURE_SHADER_MODEL, &shaderModel, sizeof(shaderModel));
 
 		if (FAILED(hr) || (shaderModel.HighestShaderModel < D3D_SHADER_MODEL_6_5)) {
-			Log("Warning : Shader Model 6.5 is not supported.");
+			EngineLog("Warning : Shader Model 6.5 is not supported.");
 			return false; //!< shader modelが6.5以下しかサポートされてない
 		}
 	}
@@ -151,7 +153,7 @@ bool Devices::CheckMeshShaderEnable() {
 		auto hr = device_->CheckFeatureSupport(D3D12_FEATURE_D3D12_OPTIONS7, &features, sizeof(features));
 
 		if (FAILED(hr) || (features.MeshShaderTier == D3D12_MESH_SHADER_TIER_NOT_SUPPORTED)) {
-			Log("Warning : Mesh Shaders aren't supported.");
+			EngineLog("Warning : Mesh Shaders aren't supported.");
 			return false; //!< mesh shaderがサポートされてない
 		}
 	}

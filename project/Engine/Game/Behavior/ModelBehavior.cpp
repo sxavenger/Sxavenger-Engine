@@ -12,9 +12,9 @@ _DXROBJECT_USING
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 void ModelBehavior::Init() {
-	transform_.Init();
-
-	renderingFlag_ = kBehaviorRender_Systematic;
+	transform_.Create();
+	uvTransform_.Create();
+	material_.Create();
 }
 
 void ModelBehavior::Term() {
@@ -28,14 +28,26 @@ void ModelBehavior::CreateRaytracingRecorder() {
 		recorders_[i]->Create(sSystemConsole->GetRaytracingPipeline()->GetExport(kHitgroup_Behavior, 0));
 
 		recorders_[i]->SetAddress(0, model_->GetMesh(i).GetVertexBuffer()->GetGPUVirtualAddress()); //!< Vertices
-		recorders_[i]->SetAddress(1, model_->GetMesh(i).GetIndexBuffer()->GetGPUVirtualAddress()); //!< Indices
-		recorders_[i]->SetHandle(2, model_->GetTextureHandle(i));
+		recorders_[i]->SetAddress(1, model_->GetMesh(i).GetIndexBuffer()->GetGPUVirtualAddress());  //!< Indices
+		recorders_[i]->SetAddress(2, uvTransform_.GetVirtualAddress());                             //!< UVTransform
+		recorders_[i]->SetHandle(3, model_->GetTextureHandle(i));                                   //!< Albedo
+		recorders_[i]->SetAddress(4, material_.GetGPUVirtualAddress());                             //!< PBRMaterial
 	}
 }
 
 void ModelBehavior::SystemAttributeImGui() {
 	if (ImGui::TreeNode("transform")) {
 		transform_.SetImGuiCommand();
+		ImGui::TreePop();
+	}
+
+	if (ImGui::TreeNode("material")) {
+		material_.SetImGuiCommand();
+		ImGui::TreePop();
+	}
+
+	if (ImGui::TreeNode("UV transform")) {
+		uvTransform_.SetImGuiCommand();
 		ImGui::TreePop();
 	}
 }
@@ -47,40 +59,93 @@ void ModelBehavior::DrawSystematic(_MAYBE_UNUSED const Camera3D* camera) {
 
 	auto commandList = Sxavenger::GetCommandList();
 
-	// TODO: mesh shaderへの対応
-	sSystemConsole->SetRenderingPipeline(kDefaultVS_AlbedoPS_Deferred);
-
 	for (uint32_t i = 0; i < model_->GetMeshSize(); ++i) {
-		model_->GetMesh(i).BindIABuffer();
+		if (model_->GetMesh(i).IsCreateMeshlet()) {
 
-		commandList->SetGraphicsRootConstantBufferView(0, camera->GetGPUVirtualAddress());
-		commandList->SetGraphicsRootShaderResourceView(1, transform_.GetGPUVirtualAddress());
-		commandList->SetGraphicsRootDescriptorTable(2, model_->GetTextureHandle(i));
+			sSystemConsole->SetRenderingPipeline(kDefaultMS_AlbedoPS_Deferred);
+			//!< meshlet生成がされているのでmesh shaderで描画
 
-		model_->GetMesh(i).DrawCall();
+			commandList->SetGraphicsRootConstantBufferView(5, camera->GetGPUVirtualAddress());
+			commandList->SetGraphicsRootShaderResourceView(7, transform_.GetGPUVirtualAddress());
+			commandList->SetGraphicsRootDescriptorTable(8, model_->GetTextureHandle(i));
+
+			model_->GetMesh(i).Dispatch(0, 1, 2, 3, 4, 6);
+
+		} else {
+			
+			sSystemConsole->SetRenderingPipeline(kDefaultVS_AlbedoPS_Deferred);
+			//!< vertex shaderで描画
+
+			model_->GetMesh(i).BindIABuffer();
+
+			commandList->SetGraphicsRootConstantBufferView(0, camera->GetGPUVirtualAddress());
+			commandList->SetGraphicsRootShaderResourceView(1, transform_.GetGPUVirtualAddress());
+			commandList->SetGraphicsRootConstantBufferView(2, uvTransform_.GetVirtualAddress());
+			commandList->SetGraphicsRootDescriptorTable(3, model_->GetTextureHandle(i));
+
+			model_->GetMesh(i).DrawCall();
+		}
 	}
 }
 
 void ModelBehavior::DrawAdaptive(_MAYBE_UNUSED const Camera3D* camera) {
+
 	if (model_ == nullptr) {
 		return; //!< modelが設定されていない
 	}
 
 	auto commandList = Sxavenger::GetCommandList();
 
-	// TODO: mesh shaderへの対応
-	sSystemConsole->SetRenderingPipeline(kDefaultVS_AlbedoPS);
-
 	for (uint32_t i = 0; i < model_->GetMeshSize(); ++i) {
-		model_->GetMesh(i).BindIABuffer();
+		if (model_->GetMesh(i).IsCreateMeshlet()) {
 
-		commandList->SetGraphicsRootConstantBufferView(0, camera->GetGPUVirtualAddress());
-		commandList->SetGraphicsRootShaderResourceView(1, transform_.GetGPUVirtualAddress());
-		commandList->SetGraphicsRootDescriptorTable(2, model_->GetTextureHandle(i));
+			sSystemConsole->SetRenderingPipeline(kDefaultMS_AlbedoPS);
+			//!< meshlet生成がされているのでmesh shaderで描画
 
-		model_->GetMesh(i).DrawCall();
+			commandList->SetGraphicsRootConstantBufferView(5, camera->GetGPUVirtualAddress());
+			commandList->SetGraphicsRootShaderResourceView(7, transform_.GetGPUVirtualAddress());
+			commandList->SetGraphicsRootDescriptorTable(8, model_->GetTextureHandle(i));
+
+			model_->GetMesh(i).Dispatch(0, 1, 2, 3, 4, 6);
+
+		} else {
+			
+			sSystemConsole->SetRenderingPipeline(kDefaultVS_AlbedoPS);
+			//!< vertex shaderで描画
+
+			model_->GetMesh(i).BindIABuffer();
+
+			commandList->SetGraphicsRootConstantBufferView(0, camera->GetGPUVirtualAddress());
+			commandList->SetGraphicsRootShaderResourceView(1, transform_.GetGPUVirtualAddress());
+			commandList->SetGraphicsRootConstantBufferView(2, uvTransform_.GetVirtualAddress());
+			commandList->SetGraphicsRootDescriptorTable(3, model_->GetTextureHandle(i));
+
+			model_->GetMesh(i).DrawCall();
+		}
 	}
 }
+
+//void ModelBehavior::DrawAdaptive(_MAYBE_UNUSED const Camera3D* camera) {
+//	if (model_ == nullptr) {
+//		return; //!< modelが設定されていない
+//	}
+//
+//	auto commandList = Sxavenger::GetCommandList();
+//
+//	// TODO: mesh shaderへの対応
+//	sSystemConsole->SetRenderingPipeline(kDefaultVS_AlbedoPS);
+//
+//	for (uint32_t i = 0; i < model_->GetMeshSize(); ++i) {
+//		model_->GetMesh(i).BindIABuffer();
+//
+//		commandList->SetGraphicsRootConstantBufferView(0, camera->GetGPUVirtualAddress());
+//		commandList->SetGraphicsRootShaderResourceView(1, transform_.GetGPUVirtualAddress());
+//		commandList->SetGraphicsRootConstantBufferView(2, uvTransform_.GetVirtualAddress());
+//		commandList->SetGraphicsRootDescriptorTable(3, model_->GetTextureHandle(i));
+//
+//		model_->GetMesh(i).DrawCall();
+//	}
+//}
 
 void ModelBehavior::DrawRaytracing(_MAYBE_UNUSED DxrObject::TopLevelAS* tlas) {
 	if (model_ == nullptr) {
@@ -89,7 +154,9 @@ void ModelBehavior::DrawRaytracing(_MAYBE_UNUSED DxrObject::TopLevelAS* tlas) {
 
 	Matrix4x4 mat = transform_.GetWorldMatrix();
 
+	Assert(model_->GetMeshSize() <= recorders_.size(), "raytracing recorder not created.");
+
 	for (uint32_t i = 0; i < model_->GetMeshSize(); ++i) {
-		tlas->SetInstance(model_->GetMesh(i).GetBLAS(), mat, recorders_[i].get(), 0);
+		tlas->SetInstance(model_->GetMesh(i).GetBLAS(), mat, recorders_.at(i).get(), 0);
 	}
 }

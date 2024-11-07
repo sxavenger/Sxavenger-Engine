@@ -85,5 +85,9 @@ system color...
 	- SelectedOverline               = 51, -, -, 255
 	- SelectedDimmedSelectedOverline = 15, -, -, 0
 
+> Plot
+	- PlotLines     = 152, -, -, 255
+	- PlotHistogram = 48, -, -, 255
+
 > Docking
 	- PreView = 125, -, -, 200

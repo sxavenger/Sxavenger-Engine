@@ -364,11 +364,7 @@ void TextureManager::Init(DirectXCommon* dxCommon) {
 	dxCommon_ = dxCommon;
 
 	// 初期textureのload
-	/*LoadTexture("resources/uvChecker.png");
-	LoadTexture("resources/tile_black.png");
-	LoadTexture("resources/tile_white.png");*/
-
-	LoadTexture("resources/uvChecker.png");
+	LoadTexture("resources/white1x1.png");
 }
 
 void TextureManager::Term() {
@@ -526,11 +522,5 @@ std::string TextureManager::ToLower(const std::string& str) {
 }
 
 bool TextureManager::FindKey(const std::string& key) const {
-
-	auto it = textures_.find(key);
-	if (it == textures_.end()) {
-		return false;
-	}
-
-	return true;
+	return textures_.contains(key);
 }

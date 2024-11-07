@@ -61,7 +61,9 @@ const D3D12_GPU_DESCRIPTOR_HANDLE Model::GetTextureHandle(uint32_t meshIndex, Te
 	uint32_t materialIndex = meshes_.at(meshIndex).materialIndex.value();
 	Assert(materialIndex < materials_.size()); //!< materialサイズ以上のindex
 
-	Assert(!materials_.at(materialIndex).textureFilepaths[type].empty()); //!< textureが使われてない
+	if (materials_.at(materialIndex).textureFilepaths[type].empty()) {
+		return Sxavenger::GetTextureHandleGPU("resources/white1x1.png"); //!< HACK
+	}
 
 	return Sxavenger::GetTextureHandleGPU(materials_.at(materialIndex).textureFilepaths[type]);
 }
@@ -288,8 +290,7 @@ Model* ModelManager::Load(const std::string& directoryPath, const std::string& f
 
 	std::string lowerFilepath = ToLower(directoryPath + "/" + filename);
 
-	auto it = models_.find(lowerFilepath);
-	if (it == models_.end()) { //!< モデルが読み込まれていない場合
+	if (!models_.contains(lowerFilepath)) { //!< モデルが読み込まれていない場合
 		// モデルの読み込みして登録
 		std::unique_ptr<Model> newModel = std::make_unique<Model>(directoryPath, filename, smooth);
 		models_.emplace(lowerFilepath, std::move(newModel));

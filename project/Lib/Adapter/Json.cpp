@@ -10,7 +10,7 @@ const std::string JsonAdapter::directory_ = "./resources/Json/";
 // JsonAdapter methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-Json JsonAdapter::ReadJson(const std::string& path) {
+Json JsonAdapter::LoadJson(const std::string& path) {
 	Json result;
 
 	// ファイルパスの生成

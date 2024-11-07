@@ -98,6 +98,8 @@ private:
 	////////////////////////////////////////////////////////////////////////////////////////////
 	struct RayTracingPayload { //!< raytracing shaderと同じ構造体
 		Color4f color;
+		float depth;
+
 		uint32_t rayType;
 
 		uint32_t intersectionCount;

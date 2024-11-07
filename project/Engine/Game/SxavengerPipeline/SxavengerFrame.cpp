@@ -269,10 +269,10 @@ void SxavengerFrame::Create(const Vector2ui& size) {
 	visual_ = std::make_unique<VisualProcessFrame>();
 	visual_->Create(size);
 
-	//* depth texture
+	//* depth buffer
 
-	depthStencilTexture_ = std::make_unique<DepthStencilTexture>();
-	depthStencilTexture_->Create(size);
+	depthBuffer_ = std::make_unique<DepthBufferContoller>();
+	depthBuffer_->Create(size);
 
 	//* config buffer
 
@@ -289,7 +289,7 @@ void SxavengerFrame::Term() {
 }
 
 void SxavengerFrame::BeginSystematic(bool isDepthClear, bool isRenderTargetClear) {
-	depthStencilTexture_->BeginDepthWrite(isDepthClear);
+	depthBuffer_->BeginRasterizeDepthWrite(isDepthClear);
 	systematic_->BeginRenderingBuffer(isRenderTargetClear);
 
 	// commandListの取得
@@ -305,17 +305,17 @@ void SxavengerFrame::BeginSystematic(bool isDepthClear, bool isRenderTargetClear
 	commandList->OMSetRenderTargets(
 		SystematicRenderingFrame::GBuffer::kCountOfGBuffer, handles.data(),
 		false,
-		&depthStencilTexture_->GetCPUHandleDSV()
+		&depthBuffer_->GetRasterizeCPUHandleDSV()
 	);
 }
 
 void SxavengerFrame::EndSystematic() {
-	depthStencilTexture_->EndDepthWrite();
+	depthBuffer_->EndRasterizeDepthWrite();
 	systematic_->EndRenderingBuffer();
 }
 
 void SxavengerFrame::BeginAdaptive(bool isDepthClear) {
-	depthStencilTexture_->BeginDepthWrite(isDepthClear);
+	depthBuffer_->BeginRasterizeDepthWrite(isDepthClear);
 	adaptive_->BeginRenderingBuffer();
 
 	// commandListの取得
@@ -324,13 +324,23 @@ void SxavengerFrame::BeginAdaptive(bool isDepthClear) {
 	commandList->OMSetRenderTargets(
 		1, &adaptive_->GetTexture()->GetCPUHandleRTV(),
 		false,
-		&depthStencilTexture_->GetCPUHandleDSV()
+		&depthBuffer_->GetRasterizeCPUHandleDSV()
 	);
 }
 
 void SxavengerFrame::EndAdaptive() {
-	depthStencilTexture_->EndDepthWrite();
+	depthBuffer_->EndRasterizeDepthWrite();
 	adaptive_->EndRenderingBuffer();
+}
+
+void SxavengerFrame::BeginRaytracing() {
+	depthBuffer_->BeginRaytracingDepthWrite();
+	xclipse_->BeginProcess();
+}
+
+void SxavengerFrame::EndRaytracing() {
+	depthBuffer_->EndRaytracingDepthWrite();
+	xclipse_->EndProcess();
 }
 
 void SxavengerFrame::BeginXclipse() {
@@ -379,6 +389,10 @@ void SxavengerFrame::TransitionAdaptiveToVisual() {
 
 void SxavengerFrame::TransitionVisualToAdaptive() {
 	CopyTexture(adaptive_->GetTexture(), visual_->GetResultBuffer());
+}
+
+void SxavengerFrame::TransitionRaytracingToRasterize() {
+	depthBuffer_->TransferRaytracingToRasterize();
 }
 
 void SxavengerFrame::PresentAdaptiveToScreen() {
