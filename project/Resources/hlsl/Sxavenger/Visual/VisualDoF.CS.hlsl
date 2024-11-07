@@ -79,8 +79,6 @@ void main(uint3 dispatchThreadId : SV_DispatchThreadID) {
 	float blurRadius = coc * (gParam.focusLength / gParam.f);
 	float distanceFactor = saturate(abs(depth - gParam.focusLength) / gParam.focusLength);
 	blurRadius *= lerp(1.0, 24.0f, pow(distanceFactor, 2.0)); // 距離に応じてぼかしを増幅
-	
-	//float fixedBlurRadius = saturate(blurRadius) * 10.0; // 最大ぼかし半径を制限
 
 	float4 color = (float4)0;
 	float weightSum = 0;
