@@ -25,7 +25,7 @@ public:
 	Enemy()  = default;
 	~Enemy() { Term(); }
 
-	void Init(Model* model, const Vector3f& position, const Vector3f& velocity = {});
+	void Init(Model* model, const Vector3f& position, const Vector3f& velocity = {}, int32_t point = 30);
 
 	void Term();
 
@@ -38,6 +38,10 @@ public:
 	//* getter *//
 
 	bool IsDelete() const { return isDelete_; }
+
+	int32_t GetPoint() const { return point_; }
+
+	Model* GetModel() const { return model_; }
 
 private:
 
@@ -52,6 +56,7 @@ private:
 	Vector3f velocity_;
 	// HACK: 敵1体にrailがありそれを使って動かす
 
+	int32_t point_;
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////

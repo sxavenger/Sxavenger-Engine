@@ -10,6 +10,9 @@
 //* lib
 #include <Lib/MyMath.h>
 
+//* Game
+#include <Game/Enemy.h>
+
 ////////////////////////////////////////////////////////////////////////////////////////////
 // PlayerBullet class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -59,6 +62,8 @@ void PlayerBullet::Shoot(bool isShot, const Vector3f& position, const Vector3f& 
 
 	ModelBehavior::transform_.transform.translate = position_;
 	ModelBehavior::transform_.transform.rotate    = ToQuaternion(CalculateEuler(direction_));
+	rotate_                                       *= MakeAxisAngle({0.0f, 0.0f, 1.0f}, 0.02f);
+	ModelBehavior::transform_.transform.rotate    *= rotate_;
 	ModelBehavior::transform_.UpdateMatrix();
 
 	if (isShot_) {
@@ -102,7 +107,8 @@ void PlayerBullet::DrawSystematic(_MAYBE_UNUSED const Camera3D* camera) {
 
 void PlayerBullet::OnCollisionEnter(_MAYBE_UNUSED Collider* const other) {
 	if (score_ != nullptr) {
-		score_->score += 24;
+		auto enemy = dynamic_cast<Enemy*>(other);
+		score_->AddScore(enemy->GetPoint(), enemy->GetModel());
 	}
 
 }

@@ -59,6 +59,8 @@ private:
 	Vector3f direction_;
 	Vector3f position_;
 
+	Quaternion rotate_ = Quaternion::Identity();
+
 	//* parameter *//
 
 	float maxEnergy_      = 4.0f;      //!< 最大エネルギー量

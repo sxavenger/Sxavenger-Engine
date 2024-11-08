@@ -11,9 +11,6 @@
 #include <Game/Enemy.h>
 #include <Game/AtmosphericScattering.h>
 
-//* Scene
-#include <Game/Scene/SceneManager.h>
-
 ////////////////////////////////////////////////////////////////////////////////////////////
 // GameScene class
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -38,8 +35,6 @@ private:
 	std::unique_ptr<Player> player_;
 
 	std::unique_ptr<EnemyCollection> enemyCollection_;
-
-	std::unique_ptr<SceneManager> manager_;
 
 	std::unique_ptr<AtmosphericScattering> atmosphericScattering_;
 

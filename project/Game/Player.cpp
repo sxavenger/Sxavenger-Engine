@@ -51,6 +51,8 @@ void Player::Update() {
 	transform_.UpdateMatrix();
 
 	Shot();
+
+	score_->Update();
 }
 
 void Player::SetAttributeImGui() {

@@ -13,7 +13,7 @@
 // Enemy class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-void Enemy::Init(Model* model, const Vector3f& position, const Vector3f& velocity) {
+void Enemy::Init(Model* model, const Vector3f& position, const Vector3f& velocity, int32_t point) {
 
 	SetName(std::format("enemy {:p}", reinterpret_cast<void*>(this)));
 
@@ -26,6 +26,7 @@ void Enemy::Init(Model* model, const Vector3f& position, const Vector3f& velocit
 	transform_.UpdateMatrix();
 
 	velocity_ = velocity;
+	point_    = point;
 
 	SetColliderBoundingSphere({0.4f});
 	Collider::position_ = transform_.GetWorldPosition();
