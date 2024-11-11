@@ -15,9 +15,8 @@ void Score::Init() {
 
 	BaseBehavior::renderingFlag_ = kBehaviorRender_Adaptive;
 
-	texture_ = Sxavenger::LoadTexture("resources/textures/score_numbres.png");
-
-	Sxavenger::LoadTexture("resources/white1x1.png");
+	texture_      = Sxavenger::LoadTexture("resources/textures/score_numbres.png");
+	boardTexture_ = Sxavenger::LoadTexture("resources/textures/score.png");
 }
 
 void Score::Term() {
@@ -49,12 +48,15 @@ void Score::SetAttributeImGui() {
 	ImGui::Text("score: %d", score);
 
 	static float step = 8.0f;
-	
-	ImGui::InputScalarN("margin", ImGuiDataType_Float, &margin_.x, 2, &step);
+	ImGui::InputScalarN("margin", ImGuiDataType_Float, &position_.x, 2, &step);
 }
 
 void Score::DrawAdaptive(_MAYBE_UNUSED const Camera3D* camera) {
 	ModelBehavior::DrawAdaptive(camera);
+
+	SxavengerGame::DrawSprite(
+		position_, boardTexture_->GetSize(), boardTexture_->GetGPUHandleSRV()
+	);
 
 	uint32_t displayScore = std::min<uint32_t>(score, 9999);
 	std::string str = std::to_string(displayScore);
@@ -66,16 +68,12 @@ void Score::DrawAdaptive(_MAYBE_UNUSED const Camera3D* camera) {
 		size.x /= 10.0f;
 
 		Vector2f position = {};
-		position.x = size.x * i;
+		position.x = size.x * i * 0.8f;
 
 		SxavengerGame::DrawSpriteClip(
-			margin_ + position, size, { 0.1f * n, 0.0f }, { -0.9f, 0.0f }, texture_->GetGPUHandleSRV()
+			position_ + position + Vector2f{ 160.0f, 8.0f }, size, { 0.1f * n, 0.0f }, { -0.9f, 0.0f }, texture_->GetGPUHandleSRV()
 		);
 	}
-
-	/*SxavengerGame::DrawSprite(
-		margin_, { 240, 80 }, Sxavenger::GetTextureHandleGPU("resources/white1x1.png")
-	);*/
 	
 }
 

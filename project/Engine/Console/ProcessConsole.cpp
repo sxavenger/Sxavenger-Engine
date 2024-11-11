@@ -19,7 +19,7 @@ void ProcessConsole::Init() {
 	dof->Init();
 	dof->SetName("dof");
 
-	visualProcessLayer_.emplace_back(std::move(dof));
+	//visualProcessLayer_.emplace_back(std::move(dof));
 }
 
 void ProcessConsole::Term() {

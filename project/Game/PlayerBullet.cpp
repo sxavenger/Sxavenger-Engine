@@ -19,13 +19,16 @@
 
 void PlayerBullet::Init() {
 	SetName("player bullet");
-	ModelBehavior::renderingFlag_ = kBehaviorRender_Systematic;
+	ModelBehavior::renderingFlag_ = kBehaviorRender_Systematic | kBehaviorRender_Adaptive;
 
 	ModelBehavior::model_ = SxavengerGame::LoadModel("resources/model", "beam.obj");
 	ModelBehavior::transform_.transform.scale = { 0.1f, 0.1f, 128.0f };
 
 	Collider::typeId_       = kColliderType_NONE;
 	Collider::targetTypeId_ = kColliderType_Enemy;
+
+	Sxavenger::LoadTexture("resources/textures/energy.png");
+	Sxavenger::LoadTexture("resources/textures/energyGauge.png");
 }
 
 void PlayerBullet::Term() {
@@ -82,18 +85,22 @@ void PlayerBullet::SetAttributeImGui() {
 	ImGui::DragFloat("energy decay",    &energyDecay_, 0.01f, 0.0f, 64.0f);
 	ImGui::DragFloat("energy recovery", &energyRecovery_, 0.01f, 0.0f, 64.0f);
 
+	static float step = 8.0f;
+	ImGui::InputScalarN("margin", ImGuiDataType_Float, &guagePosition_.x, 2, &step);
 }
 
 void PlayerBullet::DrawAdaptive(_MAYBE_UNUSED const Camera3D* camera) {
 
-	if (!isShot_) {
-		return;
-	}
-
-	SxavengerGame::DrawLine(
-		position_, position_ + direction_ * 12.0f, ToColor4f(0x00FAFAFF)
+	SxavengerGame::DrawSpriteClip(
+		guagePosition_, { 24.0f, std::lerp(0.0f, -280.0f, energy_ / maxEnergy_) },
+		{ 0.0f, 0.0f }, { 1.0f, std::lerp(-1.0f, 0.0f, energy_ / maxEnergy_) },
+		Sxavenger::GetTextureHandleGPU("resources/textures/energy.png")
 	);
 
+	SxavengerGame::DrawSprite(
+		guagePosition_, { 24.0f, -280.0f },
+		Sxavenger::GetTextureHandleGPU("resources/textures/energyGauge.png")
+	);
 }
 
 void PlayerBullet::DrawSystematic(_MAYBE_UNUSED const Camera3D* camera) {

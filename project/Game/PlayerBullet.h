@@ -67,5 +67,9 @@ private:
 	float energy_         = maxEnergy_;
 	float energyDecay_    = 1.0f; //!< 発射時の減る量        * deltaTime
 	float energyRecovery_ = 1.0f; //!< 発射してない時の回復量 * deltaTime
+
+	//* UI *//
+
+	Vector2f guagePosition_ = { 400.0f, 600.0f };
 	
 };

@@ -52,10 +52,12 @@ private:
 	uint32_t score = 0;
 
 	Texture* texture_;
-	Vector2f margin_ = { 24.0f, 24.0f };
+	Vector2f position_ = { 800.0f, 480.0f };
 
 	DeltaTimePoint destroyTimer_;
 	Vector2ui displayDestroyModelPos_ = { 100, 100 };
+
+	Texture* boardTexture_;
 
 	//=========================================================================================
 	// private methods
