@@ -149,6 +149,11 @@ private:
 
 	void UpdateConsoleShortcut();
 
+	//* draw process *//
+
+	void DrawGame();
+	void DrawScene();
+
 	//* display console methods *//
 
 	void DisplayMainMenu();

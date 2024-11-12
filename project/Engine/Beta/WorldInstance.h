@@ -19,8 +19,8 @@ public:
 	WorldInstance()  = default;
 	~WorldInstance() = default;
 
-	const QuaternionTransform& GetTransform() const { return transform_.transform; }
-	QuaternionTransform& GetTransform() { return transform_.transform; }
+	const QuaternionTransformBuffer& GetTransformBuffer() const { return transform_; }
+	QuaternionTransformBuffer& GetTransformBuffer() { return transform_; }
 
 protected:
 

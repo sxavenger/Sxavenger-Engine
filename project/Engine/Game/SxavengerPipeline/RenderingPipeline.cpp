@@ -81,7 +81,8 @@ void RenderingPipeline::CreateForward() {
 		desc.SetCBV(5, VISIBILITY_ALL, 10);        //!< camera
 		desc.SetCBV(6, VISIBILITY_ALL, 11);        //!< meshInfo
 		desc.SetVirtualSRV(7, VISIBILITY_ALL, 15); //!< transform
-		desc.SetSRV(8, VISIBILITY_PIXEL, 0);       //!< Albedo
+		desc.SetCBV(8, VISIBILITY_MESH, 0);        //!< uvTransform
+		desc.SetSRV(9, VISIBILITY_PIXEL, 0);       //!< Albedo
 		desc.SetSampler(MODE_WRAP, VISIBILITY_PIXEL, 0);
 
 		pipelines_[kDefaultMS_AlbedoPS]->CreateRootSignature(deviceObj, desc);
@@ -128,7 +129,8 @@ void RenderingPipeline::CreateDeferred() {
 		desc.SetCBV(5, VISIBILITY_ALL, 10);        //!< camera
 		desc.SetCBV(6, VISIBILITY_ALL, 11);        //!< meshInfo
 		desc.SetVirtualSRV(7, VISIBILITY_ALL, 15); //!< transform
-		desc.SetSRV(8, VISIBILITY_PIXEL, 0);       //!< Albedo
+		desc.SetCBV(8, VISIBILITY_MESH, 0);        //!< uvTransform
+		desc.SetSRV(9, VISIBILITY_PIXEL, 0);       //!< Albedo
 		desc.SetSampler(MODE_WRAP, VISIBILITY_PIXEL, 0);
 
 		pipelines_[kDefaultMS_AlbedoPS_Deferred]->CreateRootSignature(deviceObj, desc);

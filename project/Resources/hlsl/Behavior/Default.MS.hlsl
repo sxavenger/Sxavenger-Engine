@@ -3,6 +3,12 @@
 //-----------------------------------------------------------------------------------------
 #include "DefaultMesh.hlsli"
 
+//=========================================================================================
+// Buffer
+//=========================================================================================
+
+ConstantBuffer<UVTransformationMatrix> gUVTransform : register(b0);
+
 ////////////////////////////////////////////////////////////////////////////////////////////
 // main
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -39,7 +45,7 @@ void main(
 		
 		output.position = mul(input.position, mul(gTransform[instanceIndex].world, viewProj));
 		output.worldPos = mul(input.position, gTransform[instanceIndex].world).xyz;
-		output.texcoord = input.texcoord;
+		output.texcoord = mul(float4(input.texcoord, 0.0f, 1.0f), gUVTransform.mat).xy;
 		output.normal   = normalize(mul(input.normal, (float3x3)gTransform[instanceIndex].world));
 
 		verts[groupThreadId] = output;

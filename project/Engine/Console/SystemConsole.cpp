@@ -60,55 +60,15 @@ void SystemConsole::UpdateConsole() {
 }
 
 void SystemConsole::Draw() {
-	
-	RenderingConsole::RenderSystematic(gameFrame_.get());
-	//RenderingConsole::RenderSystematic(sceneFrame_.get());
-
-	gameFrame_->TransitionSystematicToXclipse();
-	//sceneFrame_->TransitionSystematicToXclipse();
-
-	Sxavenger::TranstionAllocator();
-
-	ProcessConsole::ProcessXclipse(gameFrame_.get());
-	//ProcessConsole::ProcessXclipse(sceneFrame_.get());
-
 
 	if (RenderingConsole::isRaytracingEnabled_) {
 		RenderingConsole::SetupRaytracing();
-		RenderingConsole::RenderRaytracing(sceneFrame_.get()); //!< test
-		// HACK: raytracingが1frame分しか使えない
-	}
-	
-
-	gameFrame_->TransitionXclipseToAdaptive();
-	sceneFrame_->TransitionXclipseToAdaptive();
-
-	Sxavenger::TranstionAllocator();
-
-	gameFrame_->TransitionAdaptiveToVisual();
-	sceneFrame_->TransitionAdaptiveToVisual();
-
-	Sxavenger::TranstionAllocator();
-
-	ProcessConsole::ProcessVisual(gameFrame_.get());
-	ProcessConsole::ProcessVisual(sceneFrame_.get());
-
-	gameFrame_->TransitionVisualToAdaptive();
-	sceneFrame_->TransitionVisualToAdaptive();
-
-	Sxavenger::TranstionAllocator();
-
-	RenderingConsole::RenderAdaptive(gameFrame_.get());
-
-	{
-		sceneFrame_->BeginAdaptive();
-
-		gameCamera_->DrawFrustum(ToColor4f(0xFAFA00FF), 8.0f);
-		SxavengerGame::DrawToScene(sceneCamera_.get());
-
-		sceneFrame_->EndAdaptive();
 	}
 
+	DrawScene();
+	Sxavenger::TranstionAllocator();
+
+	DrawGame();
 	Sxavenger::TranstionAllocator();
 }
 
@@ -192,6 +152,80 @@ void SystemConsole::UpdateConsoleShortcut() {
 	if ((Sxavenger::IsPressKey(DIK_LALT) || Sxavenger::IsPressKey(DIK_RALT))
 		&& Sxavenger::IsTriggerKey(DIK_F)) {
 		isDisplayConsole_ = !isDisplayConsole_;
+	}
+}
+
+void SystemConsole::DrawGame() {
+
+	//!< TODO: raytracingのhackの解消
+	if (RenderingConsole::isRaytracingEnabled_) {
+
+		//* raytracing (xclipse)
+		RenderingConsole::RenderRaytracing(gameFrame_.get());
+
+	} else {
+
+		//* systematic
+		RenderingConsole::RenderSystematic(gameFrame_.get());
+		gameFrame_->TransitionSystematicToXclipse(); //!< Transition
+
+		//* xclipse
+		ProcessConsole::ProcessXclipse(gameFrame_.get());
+	}
+	
+
+	gameFrame_->TransitionXclipseToAdaptive(); //!< Transition
+
+	//* adaptive
+	// TODO: Adaptive rendering
+	gameFrame_->TransitionAdaptiveToVisual(); //!< Transition
+
+	//* visual
+	ProcessConsole::ProcessVisual(gameFrame_.get());
+	gameFrame_->TransitionVisualToAdaptive(); //!< Transition
+
+	//* late adaptive
+	RenderingConsole::RenderAdaptive(gameFrame_.get());
+}
+
+void SystemConsole::DrawScene() {
+
+	if (RenderingConsole::isRaytracingEnabled_) {
+
+		//* raytracing (xclipse)
+		RenderingConsole::RenderRaytracing(sceneFrame_.get());
+		// HACK: raytracingが1frame分しか使えない
+
+	} else {
+
+		//* systematic
+		RenderingConsole::RenderSystematic(sceneFrame_.get());
+		sceneFrame_->TransitionSystematicToXclipse(); //!< Transition
+
+		//* xclipse
+		ProcessConsole::ProcessXclipse(sceneFrame_.get());
+	}
+
+	sceneFrame_->TransitionXclipseToAdaptive(); //!< Transition
+
+	//* adaptive
+	// TODO: Adaptive rendering
+	sceneFrame_->TransitionAdaptiveToVisual(); //!< Transition
+
+	//* visual
+	ProcessConsole::ProcessVisual(sceneFrame_.get());
+	sceneFrame_->TransitionVisualToAdaptive(); //!< Transition
+
+	//* late adaptive
+	RenderingConsole::RenderAdaptive(sceneFrame_.get());
+
+	{
+		sceneFrame_->BeginAdaptive();
+
+		gameCamera_->DrawFrustum(ToColor4f(0xFAFA00FF), 8.0f);
+		SxavengerGame::DrawToScene(sceneCamera_.get());
+
+		sceneFrame_->EndAdaptive();
 	}
 }
 
