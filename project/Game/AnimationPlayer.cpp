@@ -14,7 +14,7 @@
 void AnimationPlayer::Init() {
 	SetName("animation player");
 
-	model_ = SxavengerGame::LoadModel("resources/model", "player_move_bone.fbx");
+	model_ = SxavengerGame::LoadModel("resources/model", "player_jump.gltf");
 	CreateAnimation();
 
 	AnimationBehavior::renderingFlag_ = kBehaviorRender_Systematic;

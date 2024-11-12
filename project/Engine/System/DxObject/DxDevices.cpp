@@ -70,7 +70,7 @@ void Devices::Init() {
 			D3D_FEATURE_LEVEL_12_2, D3D_FEATURE_LEVEL_12_1, D3D_FEATURE_LEVEL_12_0
 		};
 
-		const char* featureLevelStrings[] = { "12.2", "12.1", "12.0" };
+		const LPCSTR featureLevelStrings[] = { "12.2", "12.1", "12.0" };
 
 		// 高い順に生成できるか確認
 		for (size_t i = 0; i < _countof(featureLevels); ++i) {

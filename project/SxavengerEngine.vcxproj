@@ -123,6 +123,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="Engine\Beta\DepthRenderTarget.cpp" />
     <ClCompile Include="Engine\Beta\GraphicsEditor.cpp" />
     <ClCompile Include="Engine\Beta\SceneRenderTarget.cpp" />
+    <ClCompile Include="Engine\Beta\WorldInstance.cpp" />
     <ClCompile Include="Engine\Console\ProcessConsole.cpp" />
     <ClCompile Include="Engine\Console\RenderingConsole.cpp" />
     <ClCompile Include="Engine\Game\Animation.cpp" />
@@ -240,6 +241,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Engine\Beta\DepthRenderTarget.h" />
     <ClInclude Include="Engine\Beta\GraphicsEditor.h" />
     <ClInclude Include="Engine\Beta\SceneRenderTarget.h" />
+    <ClInclude Include="Engine\Beta\WorldInstance.h" />
     <ClInclude Include="Engine\Console\ProcessConsole.h" />
     <ClInclude Include="Engine\Console\RenderingConsole.h" />
     <ClInclude Include="Engine\Game\Animation.h" />

@@ -334,6 +334,7 @@
     <ClCompile Include="Engine\Game\SxavengerPipeline\DepthBufferController.cpp" />
     <ClCompile Include="Engine\Game\SxavengerPipeline\ProcessLayer.cpp" />
     <ClCompile Include="Game\Sponza.cpp" />
+    <ClCompile Include="Engine\Beta\WorldInstance.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="externals\imgui\imconfig.h">
@@ -564,6 +565,7 @@
     <ClInclude Include="Engine\Game\SxavengerPipeline\DepthBufferController.h" />
     <ClInclude Include="Engine\Game\SxavengerPipeline\ProcessLayer.h" />
     <ClInclude Include="Game\Sponza.h" />
+    <ClInclude Include="Engine\Beta\WorldInstance.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />
