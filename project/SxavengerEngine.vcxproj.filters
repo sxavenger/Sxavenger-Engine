@@ -312,6 +312,10 @@
     <ClCompile Include="Lib\Adapter\Random.cpp" />
     <ClCompile Include="Game\Plane.cpp" />
     <ClCompile Include="Game\Field.cpp" />
+    <ClCompile Include="Game\Scene\IScene.cpp" />
+    <ClCompile Include="Game\Scene\Scene_Game.cpp" />
+    <ClCompile Include="Game\Scene\Scene_Title.cpp" />
+    <ClCompile Include="Game\Scene\SceneManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="externals\imgui\imconfig.h">
@@ -538,6 +542,10 @@
     <ClInclude Include="Engine\Game\SxavengerPipeline\ProcessLayer.h" />
     <ClInclude Include="Game\Sponza.h" />
     <ClInclude Include="Game\Field.h" />
+    <ClInclude Include="Game\Scene\SceneManager.h" />
+    <ClInclude Include="Game\Scene\IScene.h" />
+    <ClInclude Include="Game\Scene\Scene_Game.h" />
+    <ClInclude Include="Game\Scene\Scene_Title.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

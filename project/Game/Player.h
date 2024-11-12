@@ -46,6 +46,12 @@ public:
 
 	DeltaTimePoint GetPoint() const { return loopTimer_; }
 
+	bool IsEnd() const { return loopTimer_ >= loopTime_; }
+
+	Rail* GetRail() const { return rail_.get(); }
+
+	Vector3f CatmullRomPosition(DeltaTimePoint point) { return rail_->LoopCatmullRomPosition(point.time / loopTime_.time); }
+
 private:
 
 	//=========================================================================================
@@ -64,7 +70,7 @@ private:
 
 	//* parameter *//
 
-	DeltaTimePoint loopTime_ = { 60.0f }; //!< 1周の時間
+	DeltaTimePoint loopTime_ = { 40.0f }; //!< 1周の時間
 	DeltaTimePoint loopTimer_;            //!< 計測用
 
 	Vector3f cameraOffset_ = { 0.0f, 0.1f, -0.1f };

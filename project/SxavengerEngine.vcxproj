@@ -219,6 +219,10 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="Engine\Beta\Curve.cpp" />
     <ClCompile Include="Game\Field.cpp" />
     <ClCompile Include="Game\Plane.cpp" />
+    <ClCompile Include="Game\Scene\IScene.cpp" />
+    <ClCompile Include="Game\Scene\SceneManager.cpp" />
+    <ClCompile Include="Game\Scene\Scene_Game.cpp" />
+    <ClCompile Include="Game\Scene\Scene_Title.cpp" />
     <ClCompile Include="Game\Sponza.cpp" />
     <ClCompile Include="Game\Player.cpp" />
     <ClCompile Include="Game\PlayerBullet.cpp" />
@@ -331,6 +335,10 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Game\Rail.h" />
     <ClInclude Include="Game\RailCamera.h" />
     <ClInclude Include="Game\Plane.h" />
+    <ClInclude Include="Game\Scene\IScene.h" />
+    <ClInclude Include="Game\Scene\SceneManager.h" />
+    <ClInclude Include="Game\Scene\Scene_Game.h" />
+    <ClInclude Include="Game\Scene\Scene_Title.h" />
     <ClInclude Include="Game\Sponza.h" />
     <ClInclude Include="Game\Score.h" />
     <ClInclude Include="Game\Teapot.h" />

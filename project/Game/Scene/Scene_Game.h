@@ -3,48 +3,47 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
-//* c++
-#include <memory>
+//* base
+#include "IScene.h"
 
 //* Game
-#include <Game/AtmosphericScattering.h>
-#include <Game/Scene/SceneManager.h>
+#include <Game/Player.h>
+#include <Game/Enemy.h>
+
+#include <Game/Field.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// GameScene class
+// Scene_Game class
 ////////////////////////////////////////////////////////////////////////////////////////////
-class GameScene {
+class Scene_Game
+	: public IScene {
 public:
 
 	//=========================================================================================
 	// public methods
 	//=========================================================================================
 
-	void Run();
+	Scene_Game() = default;
+	~Scene_Game() override { Term(); }
+
+	void Init() override;
+
+	void Term() override;
+
+	void Update() override;
+
+	void Draw() override;
 
 private:
 
-	//* sample game
-	//* 
-
 	//=========================================================================================
 	// private methods
 	//=========================================================================================
 
-	std::unique_ptr<AtmosphericScattering> atmosphericScattering_;
+	std::unique_ptr<Player> player_;
 
-	std::unique_ptr<SceneManager> manager_;
+	std::unique_ptr<EnemyCollection> enemyCollection_;
 
-	//=========================================================================================
-	// private methods
-	//=========================================================================================
-
-	void Init();
-
-	void Term();
-
-	void Update();
-
-	void Draw();
+	std::unique_ptr<Field> field_;
 
 };

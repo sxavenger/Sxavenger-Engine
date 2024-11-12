@@ -26,6 +26,7 @@ enum EnemyType {
 	kEnemyType_Star,
 	kEnemyType_Cube,
 	kEnemyType_Rocket,
+	kEnemyType_Ballun,
 
 	kCountOfEnemyType
 };
@@ -76,6 +77,9 @@ private:
 	// HACK: 敵1体にrailがありそれを使って動かす
 
 	int32_t point_;
+
+	DeltaTimePoint deleteTime_;
+	DeltaTimePoint deleteTimer_ = { 8.0f };
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -111,7 +115,7 @@ private:
 		DeltaTimePoint point;
 		EnemyType type;
 		Vector3f velocity;
-		Vector3f position;
+		Vector3f offset;
 	};
 
 	struct CompalePopCommand {
@@ -146,6 +150,10 @@ private:
 
 	void CreateEnemy(EnemyType type, const Vector3f& position, const Vector3f& velocity = {});
 
-	void CreateEnemyPopCommand(DeltaTimePoint popTime, EnemyType type, const Vector3f& position, const Vector3f& velocity = {});
+	void CreateEnemy(const EnemyPopCommand& command);
+
+	void CreateEnemyPopCommand(DeltaTimePoint popTime, EnemyType type, const Vector3f& offset, const Vector3f& velocity = {});
+
+	void PushCommand();
 
 };

@@ -8,6 +8,9 @@
 #include <Engine/Game/SxavengerGame.h>
 #include <Engine/Console/SystemConsole.h>
 
+//* othre scene
+#include <Game/Scene/Scene_Title.h>
+
 ////////////////////////////////////////////////////////////////////////////////////////////
 // GameScene class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -52,6 +55,7 @@ void GameScene::Run() {
 		Sxavenger::EndFrame();
 
 		SxavengerGame::Reset();
+		manager_->ChangeScene();
 	}
 
 	//=========================================================================================
@@ -68,35 +72,24 @@ void GameScene::Run() {
 
 void GameScene::Init() {
 
-	player_ = std::make_unique<Player>();
-	player_->Init();
-	player_->SetToConsole();
-
 	atmosphericScattering_ = std::make_unique<AtmosphericScattering>();
 	atmosphericScattering_->Init();
 	atmosphericScattering_->SetToConsole();
 
-	enemyCollection_ = std::make_unique<EnemyCollection>();
-	enemyCollection_->Init();
-	enemyCollection_->SetToConsole();
-	enemyCollection_->SetPlayer(player_.get());
-
-	field_ = std::make_unique<Field>();
-	field_->Init();
-	field_->SetToConsole();
+	manager_ = std::make_unique<SceneManager>();
+	manager_->Init<Scene_Title>();
 }
 
 void GameScene::Term() {
 }
 
 void GameScene::Update() {
-	player_->Update();
-	enemyCollection_->Update();
-
-	SxavengerGame::UpdateColliders();
+	manager_->Update();
 }
 
 void GameScene::Draw() {
+
+	manager_->Draw();
 
 	//=========================================================================================
 	// スクリーン描画処理

@@ -23,6 +23,11 @@ void Field::Init() {
 
 	ModelBehavior::uvTransform_.transform.scale = { 4.0f, 4.0f };
 	ModelBehavior::uvTransform_.Transfer();
+
+	ModelBehavior::material_.material.roughness = 0.8f;
+	ModelBehavior::material_.material.metallic  = 0.2f;
+	ModelBehavior::material_.Transfer();
+
 }
 
 void Field::Term() {

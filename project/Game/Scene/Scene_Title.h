@@ -3,48 +3,39 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
-//* c++
-#include <memory>
+//* base
+#include "IScene.h"
 
-//* Game
-#include <Game/AtmosphericScattering.h>
-#include <Game/Scene/SceneManager.h>
+
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// GameScene class
+// Scene_Title class
 ////////////////////////////////////////////////////////////////////////////////////////////
-class GameScene {
+class Scene_Title
+	: public IScene {
 public:
 
 	//=========================================================================================
 	// public methods
 	//=========================================================================================
 
-	void Run();
+	Scene_Title()           = default;
+	~Scene_Title() override { Term(); }
+
+	void Init() override;
+
+	void Term() override;
+
+	void Update() override;
+
+	void Draw() override;
 
 private:
 
-	//* sample game
-	//* 
-
 	//=========================================================================================
 	// private methods
 	//=========================================================================================
 
-	std::unique_ptr<AtmosphericScattering> atmosphericScattering_;
-
-	std::unique_ptr<SceneManager> manager_;
-
-	//=========================================================================================
-	// private methods
-	//=========================================================================================
-
-	void Init();
-
-	void Term();
-
-	void Update();
-
-	void Draw();
+	
 
 };

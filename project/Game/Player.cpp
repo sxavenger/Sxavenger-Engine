@@ -17,9 +17,9 @@
 void Player::Init() {
 	SetName("player");
 
-	//model_ = SxavengerGame::LoadModel("resources/model/CG2", "axis.obj");
-	//model_->ApplyRaytracing();
-	//CreateRaytracingRecorder();
+	model_ = SxavengerGame::LoadModel("resources/model", "trolley.obj");
+	model_->ApplyRaytracing();
+	CreateRaytracingRecorder();
 
 	transform_.transform.scale = { 0.1f, 0.1f, 0.1f };
 	transform_.UpdateMatrix();
@@ -40,7 +40,7 @@ void Player::Init() {
 	bullet_->SetScore(score_.get());
 	SetChild(bullet_.get());
 
-	ModelBehavior::renderingFlag_ = kBehaviorRender_Adaptive;
+	ModelBehavior::renderingFlag_ = kBehaviorRender_Adaptive | kBehaviorRender_Systematic | kBehaviorRender_Raytracing;
 
 	Sxavenger::LoadTexture("resources/textures/reticle.png");
 }
@@ -81,8 +81,8 @@ void Player::Move() {
 
 	// timeからrailの上の座標を取得
 	loopTimer_.AddDeltaTime();
-	loopTimer_.time = std::fmod(loopTimer_.time, loopTime_.time); //!< ループする場合
-	//loopTimer_.time = std::min(loopTimer_.time, loopTime_.time);    //!< しない場合
+	//loopTimer_.time = std::fmod(loopTimer_.time, loopTime_.time); //!< ループする場合
+	loopTimer_.time = std::min(loopTimer_.time, loopTime_.time);    //!< しない場合
 
 	float t = loopTimer_.time / loopTime_.time;
 	t = std::fmod(t, 1.0f);
