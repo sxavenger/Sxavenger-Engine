@@ -3,8 +3,11 @@
 //-----------------------------------------------------------------------------------------
 // Include
 //-----------------------------------------------------------------------------------------
-// externals
+//* externals
 #include <json.hpp>
+
+//* lib
+#include <Lib/Geometry/Vector3.h>
 
 // c++
 #include <fstream>
@@ -32,22 +35,31 @@ public:
 	//=========================================================================================
 
 	//! @brief Jsonファイル読み込み
-	//! 
 	//! @param[in] path ファイルパス. directory_ + path
-	//! 
 	//! @return Json型を返却
 	static Json LoadJson(const std::string& path);
 
+	//! @brief Jsonファイル読み込み
+	//! @param[in]  path ファイルパス. directory_ + path
+	//! @param[out] Json data
+	//! @retval true  成功
+	//! @retval false 失敗
+	static bool LoadJson(const std::string& path, Json& data);
+
 	//! @brief Jsonファイル書き込み
-	//! 
 	//! @param[in] path ファイルパス. directory_ + path
 	//! @param[in] data Jsonデータ
 	static void WriteJson(const std::string& path, const Json& data);
 
 	//! @brief Jsonファイル上書き
-	//! 
 	//! @param[in] path ファイルパス. directory_ + path
 	//! @param[in] data Jsonデータ
 	static void OverwriteJson(const std::string& path, const Json& data);
+
+	//* convert option *//
+
+	static Json ToJson(const Vector3f& v);
+
+	static Vector3f ToVector3(const Json& data);
 
 };

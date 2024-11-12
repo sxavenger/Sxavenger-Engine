@@ -10,6 +10,7 @@
 #include <Game/Player.h>
 #include <Game/Enemy.h>
 #include <Game/AtmosphericScattering.h>
+#include <Game/Field.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // GameScene class
@@ -37,6 +38,8 @@ private:
 	std::unique_ptr<EnemyCollection> enemyCollection_;
 
 	std::unique_ptr<AtmosphericScattering> atmosphericScattering_;
+
+	std::unique_ptr<Field> field_;
 
 	//=========================================================================================
 	// private methods

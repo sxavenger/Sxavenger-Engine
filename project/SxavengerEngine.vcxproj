@@ -217,6 +217,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="Game\Enemy.cpp" />
     <ClCompile Include="Game\ChessBoard.cpp" />
     <ClCompile Include="Engine\Beta\Curve.cpp" />
+    <ClCompile Include="Game\Field.cpp" />
     <ClCompile Include="Game\Plane.cpp" />
     <ClCompile Include="Game\Sponza.cpp" />
     <ClCompile Include="Game\Player.cpp" />
@@ -323,6 +324,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Game\AtmosphericScattering.h" />
     <ClInclude Include="Game\ChessBoard.h" />
     <ClInclude Include="Engine\Beta\Curve.h" />
+    <ClInclude Include="Game\Field.h" />
     <ClInclude Include="Game\Player.h" />
     <ClInclude Include="Game\PlayerBullet.h" />
     <ClInclude Include="Game\PlayerBulletCollisionManager.h" />

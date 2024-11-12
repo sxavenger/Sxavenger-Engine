@@ -52,7 +52,7 @@ void Score::SetAttributeImGui() {
 }
 
 void Score::DrawAdaptive(_MAYBE_UNUSED const Camera3D* camera) {
-	ModelBehavior::DrawAdaptive(camera);
+	//ModelBehavior::DrawAdaptive(camera);
 
 	SxavengerGame::DrawSprite(
 		position_, boardTexture_->GetSize(), boardTexture_->GetGPUHandleSRV()

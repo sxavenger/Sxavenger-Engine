@@ -75,8 +75,8 @@ void SystemConsole::Draw() {
 
 	if (RenderingConsole::isRaytracingEnabled_) {
 		RenderingConsole::SetupRaytracing();
-		RenderingConsole::RenderRaytracing(sceneFrame_.get()); //!< test
-		// HACK: raytracingが1frame分しか使えない
+		//RenderingConsole::RenderRaytracing(sceneFrame_.get()); //!< test
+		RenderingConsole::RenderRaytracing(gameFrame_.get()); //!< test
 	}
 	
 

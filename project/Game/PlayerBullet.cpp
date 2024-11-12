@@ -69,6 +69,8 @@ void PlayerBullet::Shoot(bool isShot, const Vector3f& position, const Vector3f& 
 	ModelBehavior::transform_.transform.rotate    *= rotate_;
 	ModelBehavior::transform_.UpdateMatrix();
 
+
+
 	if (isShot_) {
 		Collider::typeId_ = kColliderType_PlayerBullet;
 

@@ -59,7 +59,10 @@ public:
 	//* draw
 	virtual void DrawSystematic(_MAYBE_UNUSED const Camera3D* camera) {}
 	virtual void DrawAdaptive(_MAYBE_UNUSED const Camera3D* camera) {}
+	//virtual void DrawLateAdaptive(_MAYBE_UNUSED const Camera3D* camera) {}
 	virtual void DrawRaytracing(_MAYBE_UNUSED DxrObject::TopLevelAS* tlas) {}
+
+
 	virtual void DrawLocal() {} //!< local sceneへの描画用
 
 	//* behavior getter *//

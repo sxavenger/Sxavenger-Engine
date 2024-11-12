@@ -1,11 +1,23 @@
 #include "DxDevices.h"
 _DXOBJECT_USING
 
+//-----------------------------------------------------------------------------------------
+// include
+//-----------------------------------------------------------------------------------------
+#include <Windows.h>
+#include <Psapi.h>
+
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Devices methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 void Devices::Init() {
+
+	// PIXからの起動の場合, debugLayerをoffに変更
+	if (CheckRunningPIX()) {
+		useDebugLayer_ = false;
+	}
+
 #ifdef _DEBUG
 	// デバックレイヤーの生成
 	{
@@ -116,6 +128,33 @@ void Devices::Init() {
 }
 
 void Devices::Term() {
+}
+
+bool Devices::CheckRunningPIX() {
+	 // 確認したいDLL名
+	const wchar_t* pixDllName = L"WinPixGpuCapturer.dll";
+
+	// 現在のプロセスのハンドルを取得
+	HANDLE processHandle = GetCurrentProcess();
+
+	// プロセスに読み込まれているモジュールのリストを取得
+	HMODULE modules[1024];
+	DWORD cbNeeded;
+
+	if (EnumProcessModules(processHandle, modules, sizeof(modules), &cbNeeded)) {
+		int moduleCount = cbNeeded / sizeof(HMODULE);
+		for (int i = 0; i < moduleCount; ++i) {
+			wchar_t moduleName[MAX_PATH];
+			// 各モジュールの名前を取得
+			if (GetModuleBaseNameW(processHandle, modules[i], moduleName, sizeof(moduleName) / sizeof(wchar_t))) {
+				if (wcscmp(moduleName, pixDllName) == 0) {
+					return true; // PIXのDLLが見つかった場合
+				}
+			}
+		}
+	}
+
+	return false; // PIXのDLLが見つからなかった場合
 }
 
 bool Devices::CheckRayTracingEnable() {

@@ -218,7 +218,7 @@ public:
 	//! @brief IndexBufferを取得
 	//! 
 	//! @return IndexBufferを返却
-	const D3D12_INDEX_BUFFER_VIEW GetIndexBufferView() const {
+	D3D12_INDEX_BUFFER_VIEW GetIndexBufferView() const {
 		D3D12_INDEX_BUFFER_VIEW result = {};
 		result.BufferLocation = resource_->GetGPUVirtualAddress();
 		result.SizeInBytes    = structureSize_ * indexSize_;

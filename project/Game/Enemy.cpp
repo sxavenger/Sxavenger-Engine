@@ -69,12 +69,13 @@ void EnemyCollection::Init() {
 
 	SetName("enemy collection");
 
-	enemyModel_ = SxavengerGame::LoadModel("resources/model", "enemy.obj");
+	enemyModel_[kEnemyType_Cube] = SxavengerGame::LoadModel("resources/model", "enemy.obj");
+	enemyModel_[kEnemyType_Star] = SxavengerGame::LoadModel("resources/model", "enemy_star.obj");
 
-	CreateEnemyPopCommand({ 2.0f }, { 2.0f, 2.0f, 2.0f }, { 0.0f, -0.2f, 0.0f });
-	CreateEnemyPopCommand({ 4.0f }, { 0.0f, 3.0f, 10.0f }, { 0.2f, 0.0f, 0.0f });
-	CreateEnemyPopCommand({ 8.0f }, { -2.0f, 1.0f, 1.0f }, { 0.0f, 0.0f, 0.2f });
-	CreateEnemyPopCommand({ 16.0f }, { 0.0f, 2.0f, 10.0f }, { -0.2f, 0.0f, 0.0f });
+	CreateEnemyPopCommand({ 2.0f }, kEnemyType_Star,{ 2.0f, 2.0f, 2.0f }, { 0.0f, -0.2f, 0.0f });
+	CreateEnemyPopCommand({ 4.0f }, kEnemyType_Cube, { 0.0f, 3.0f, 10.0f }, { 0.2f, 0.0f, 0.0f });
+	CreateEnemyPopCommand({ 8.0f }, kEnemyType_Star, { -2.0f, 1.0f, 1.0f }, { 0.0f, 0.0f, 0.2f });
+	CreateEnemyPopCommand({ 16.0f }, kEnemyType_Cube, { 0.0f, 2.0f, 10.0f }, { -0.2f, 0.0f, 0.0f });
 
 	Json root = Json::object();
 
@@ -101,9 +102,11 @@ void EnemyCollection::Update() {
 
 	for (auto commandIt = commands_.begin(); commandIt != commands_.end();) {
 
-		if ((*commandIt).popTime <= popTimer_) {
+		const auto& command = (*commandIt);
 
-			CreateEnemy((*commandIt).position, (*commandIt).velocity);
+		if (command.popTime <= popTimer_) {
+
+			CreateEnemy(command.type, command.position, command.velocity);
 
 			// commandから削除
 			commandIt = commands_.erase(commandIt);
@@ -118,29 +121,30 @@ void EnemyCollection::Update() {
 void EnemyCollection::SetAttributeImGui() {
 
 	if (ImGui::Button("create")) {
-		CreateEnemy({});
+		CreateEnemy(kEnemyType_Cube, {});
 	}
 
 	if (ImGui::Button("repop")) {
-		CreateEnemyPopCommand({ 2.0f }, { 2.0f, 2.0f, 2.0f }, { 0.0f, -0.2f, 0.0f });
-		CreateEnemyPopCommand({ 4.0f }, { 0.0f, 3.0f, 10.0f }, { 0.2f, 0.0f, 0.0f });
-		CreateEnemyPopCommand({ 8.0f }, { -2.0f, 1.0f, 1.0f }, { 0.0f, 0.0f, 0.2f });
-		CreateEnemyPopCommand({ 16.0f }, { 0.0f, 2.0f, 10.0f }, { -0.2f, 0.0f, 0.0f });
+		CreateEnemyPopCommand({ 2.0f }, kEnemyType_Star, { 2.0f, 2.0f, 2.0f }, { 0.0f, -0.2f, 0.0f });
+		CreateEnemyPopCommand({ 4.0f }, kEnemyType_Star, { 0.0f, 3.0f, 10.0f }, { 0.2f, 0.0f, 0.0f });
+		CreateEnemyPopCommand({ 8.0f }, kEnemyType_Star, { -2.0f, 1.0f, 1.0f }, { 0.0f, 0.0f, 0.2f });
+		CreateEnemyPopCommand({ 16.0f }, kEnemyType_Star, { 0.0f, 2.0f, 10.0f }, { -0.2f, 0.0f, 0.0f });
 	}
 }
 
-void EnemyCollection::CreateEnemy(const Vector3f& position, const Vector3f& velocity) {
+void EnemyCollection::CreateEnemy(EnemyType type, const Vector3f& position, const Vector3f& velocity) {
 	std::unique_ptr<Enemy> newEnemy = std::make_unique<Enemy>();
-	newEnemy->Init(enemyModel_, position, velocity);
+	newEnemy->Init(enemyModel_[type], position, velocity);
 
 	SetChild(newEnemy.get());
 	enemies_.emplace_back(std::move(newEnemy));
 }
 
-void EnemyCollection::CreateEnemyPopCommand(DeltaTimePoint popTime, const Vector3f& position, const Vector3f& velocity) {
+void EnemyCollection::CreateEnemyPopCommand(DeltaTimePoint popTime, EnemyType type, const Vector3f& position, const Vector3f& velocity) {
 
 	EnemyPopCommand command = {};
 	command.popTime  = popTime;
+	command.type     = type;
 	command.velocity = velocity;
 	command.position = position;
 

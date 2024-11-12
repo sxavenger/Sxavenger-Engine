@@ -118,6 +118,10 @@ void SxavengerGameEngine::DrawSprite(const Vector2f& pos, const Vector2f& size, 
 	sSpriteCommon->DrawSprite(pos, size, rotate, handle, color);
 }
 
+void SxavengerGameEngine::DrawSprite(const Vector2f& pos, const Vector2f& size, const Vector2f& anchor, const D3D12_GPU_DESCRIPTOR_HANDLE& handle, const Color4f& color) {
+	sSpriteCommon->DrawSprite(pos, size, anchor, handle, color);
+}
+
 void SxavengerGameEngine::DrawSpriteClip(const Vector2f& pos, const Vector2f& size, const Vector2f& leftTopUV, const Vector2f& sizeUV, const D3D12_GPU_DESCRIPTOR_HANDLE& handle, const Color4f& color) {
 	sSpriteCommon->DrawSpriteClip(pos, size, leftTopUV, sizeUV, handle, color);
 }

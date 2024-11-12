@@ -311,6 +311,7 @@
     <ClCompile Include="Lib\Adapter\Json.cpp" />
     <ClCompile Include="Lib\Adapter\Random.cpp" />
     <ClCompile Include="Game\Plane.cpp" />
+    <ClCompile Include="Game\Field.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="externals\imgui\imconfig.h">
@@ -536,6 +537,7 @@
     <ClInclude Include="Engine\Game\SxavengerPipeline\DepthBufferController.h" />
     <ClInclude Include="Engine\Game\SxavengerPipeline\ProcessLayer.h" />
     <ClInclude Include="Game\Sponza.h" />
+    <ClInclude Include="Game\Field.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

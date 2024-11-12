@@ -17,9 +17,9 @@
 void Player::Init() {
 	SetName("player");
 
-	model_ = SxavengerGame::LoadModel("resources/model/CG2", "axis.obj");
-	model_->ApplyRaytracing();
-	CreateRaytracingRecorder();
+	//model_ = SxavengerGame::LoadModel("resources/model/CG2", "axis.obj");
+	//model_->ApplyRaytracing();
+	//CreateRaytracingRecorder();
 
 	transform_.transform.scale = { 0.1f, 0.1f, 0.1f };
 	transform_.UpdateMatrix();
@@ -40,7 +40,9 @@ void Player::Init() {
 	bullet_->SetScore(score_.get());
 	SetChild(bullet_.get());
 
-	ModelBehavior::renderingFlag_ = kBehaviorRender_Raytracing | kBehaviorRender_Systematic;
+	ModelBehavior::renderingFlag_ = kBehaviorRender_Adaptive;
+
+	Sxavenger::LoadTexture("resources/textures/reticle.png");
 }
 
 void Player::Term() {
@@ -53,6 +55,7 @@ void Player::Update() {
 	Shot();
 
 	score_->Update();
+	rail_->Update();
 }
 
 void Player::SetAttributeImGui() {
@@ -63,6 +66,14 @@ void Player::SetAttributeImGui() {
 	ImGui::SliderFloat("loop timer", &loopTimer_.time, 0.0f, loopTime_.time);
 
 	ImGui::DragFloat3("camera offset", &cameraOffset_.x, 0.01f);
+}
+
+void Player::DrawAdaptive(_MAYBE_UNUSED const Camera3D* camera) {
+	Vector2f mouse = Sxavenger::GetInput()->GetMousePos();
+
+	SxavengerGame::DrawSprite(
+		mouse, { 80.0f, 80.0f }, { 0.5f, 0.5f }, Sxavenger::GetTextureHandleGPU("resources/textures/reticle.png")
+	);
 }
 
 void Player::Move() {
@@ -84,14 +95,14 @@ void Player::Move() {
 
 	Vector3f nextPosition = rail_->LoopCatmullRomPosition(nextT);
 
-	direction_ = Normalize(nextPosition - transform_.transform.translate);
-	Vector3f rotate = CalculateEuler(direction_);
+	Vector3f zAxis = Normalize(nextPosition - transform_.transform.translate);
 
-	transform_.transform.rotate = ToQuaternion(rotate);
+	transform_.transform.rotate = ToQuaternion(CalculateEuler(zAxis));
+	//transform_.transform.rotate = rail_->SlerpQuaterion(t);
 
 	// 1人称視点なのでcameraも同じように更新
 
-	camera_->SetTransform(kUnit3, rotate, transform_.transform.translate + Matrix::Transform(cameraOffset_, Matrix::MakeRotate(rotate)));
+	camera_->SetTransform(kUnit3, CalculateEuler(zAxis), transform_.transform.translate + Matrix::Transform(cameraOffset_, Matrix::MakeRotate(CalculateEuler(zAxis))));
 }
 
 void Player::Shot() {

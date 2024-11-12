@@ -50,6 +50,19 @@ void SpriteCommon::DrawSprite(
 	elementIndex_++;
 }
 
+void SpriteCommon::DrawSprite(
+	const Vector2f& pos, const Vector2f& size, const Vector2f& anchor, const D3D12_GPU_DESCRIPTOR_HANDLE& handle, const Color4f& color) {
+
+	SetVertex(elementIndex_, anchor);
+	SetTexcoord(elementIndex_);
+	SetColor(elementIndex_, color);
+	SetTransform2d(elementIndex_, size, 0.0f, pos);
+	SetHandle(elementIndex_, handle);
+
+	DrawCall(elementIndex_);
+	elementIndex_++;
+}
+
 void SpriteCommon::DrawSpriteClip(
 	const Vector2f& pos, const Vector2f& size, const Vector2f& leftTopUV, const Vector2f& sizeUV, const D3D12_GPU_DESCRIPTOR_HANDLE& handle, const Color4f& color) {
 

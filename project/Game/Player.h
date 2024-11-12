@@ -40,6 +40,8 @@ public:
 
 	void SetAttributeImGui() override;
 
+	virtual void DrawAdaptive(_MAYBE_UNUSED const Camera3D* camera) override;
+
 	PlayerBullet* GetBullet() const { return bullet_.get(); }
 
 private:
@@ -60,10 +62,10 @@ private:
 
 	//* parameter *//
 
-	DeltaTimePoint loopTime_ = { 24.0f }; //!< 1周の時間
+	DeltaTimePoint loopTime_ = { 60.0f }; //!< 1周の時間
 	DeltaTimePoint loopTimer_;            //!< 計測用
 
-	Vector3f cameraOffset_ = { 0.0f, 0.2f, -1.0f };
+	Vector3f cameraOffset_ = { 0.0f, 0.1f, -0.1f };
 
 	Vector3f direction_;
 

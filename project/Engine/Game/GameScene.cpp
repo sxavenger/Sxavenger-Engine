@@ -79,6 +79,10 @@ void GameScene::Init() {
 	enemyCollection_ = std::make_unique<EnemyCollection>();
 	enemyCollection_->Init();
 	enemyCollection_->SetToConsole();
+
+	field_ = std::make_unique<Field>();
+	field_->Init();
+	field_->SetToConsole();
 }
 
 void GameScene::Term() {

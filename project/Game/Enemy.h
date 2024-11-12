@@ -12,6 +12,16 @@
 #include <Engine/System/Performance.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
+// EnemyType enum class
+////////////////////////////////////////////////////////////////////////////////////////////
+enum EnemyType {
+	kEnemyType_Star,
+	kEnemyType_Cube,
+
+	kCountOfEnemyType
+};
+
+////////////////////////////////////////////////////////////////////////////////////////////
 // Enemy class
 ////////////////////////////////////////////////////////////////////////////////////////////
 class Enemy
@@ -88,6 +98,7 @@ private:
 	////////////////////////////////////////////////////////////////////////////////////////////
 	struct EnemyPopCommand {
 		DeltaTimePoint popTime;
+		EnemyType type;
 		Vector3f velocity;
 		Vector3f position;
 	};
@@ -107,14 +118,14 @@ private:
 
 	//* element parameter *//
 
-	Model* enemyModel_ = nullptr;
+	Model* enemyModel_[kCountOfEnemyType] = { nullptr };
 
 	//=========================================================================================
 	// private methods
 	//=========================================================================================
 
-	void CreateEnemy(const Vector3f& position, const Vector3f& velocity = {});
+	void CreateEnemy(EnemyType type, const Vector3f& position, const Vector3f& velocity = {});
 
-	void CreateEnemyPopCommand(DeltaTimePoint popTime, const Vector3f& position, const Vector3f& velocity = {});
+	void CreateEnemyPopCommand(DeltaTimePoint popTime, EnemyType type, const Vector3f& position, const Vector3f& velocity = {});
 
 };
