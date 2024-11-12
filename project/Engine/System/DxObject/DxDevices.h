@@ -91,11 +91,15 @@ private:
 
 	//* config *//
 
-	bool useDebugLayer_ = false; //!< release時はfalseに設定される
+	bool useDebugLayer_ = true;
+	//!< debug時のみ有効
+	//!< PIXからの起動時は無効
 
 	//=========================================================================================
 	// private methods
 	//=========================================================================================
+
+	bool CheckRunningPIX();
 
 	bool CheckRayTracingEnable();
 	bool CheckMeshShaderEnable();
