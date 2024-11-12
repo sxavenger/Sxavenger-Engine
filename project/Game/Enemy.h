@@ -11,12 +11,21 @@
 //* engine
 #include <Engine/System/Performance.h>
 
+//* c++
+#include <queue>
+
+//-----------------------------------------------------------------------------------------
+// forward
+//-----------------------------------------------------------------------------------------
+class Player;
+
 ////////////////////////////////////////////////////////////////////////////////////////////
 // EnemyType enum class
 ////////////////////////////////////////////////////////////////////////////////////////////
 enum EnemyType {
 	kEnemyType_Star,
 	kEnemyType_Cube,
+	kEnemyType_Rocket,
 
 	kCountOfEnemyType
 };
@@ -91,21 +100,33 @@ public:
 
 	void SetAttributeImGui() override;
 
+	void SetPlayer(Player* player) { player_ = player; }
+
 private:
 
 	////////////////////////////////////////////////////////////////////////////////////////////
 	// EnemyPopCommand structure
 	////////////////////////////////////////////////////////////////////////////////////////////
 	struct EnemyPopCommand {
-		DeltaTimePoint popTime;
+		DeltaTimePoint point;
 		EnemyType type;
 		Vector3f velocity;
 		Vector3f position;
+	};
+
+	struct CompalePopCommand {
+		bool operator()(const EnemyPopCommand& a, const EnemyPopCommand& b) {
+			return a.point > b.point;  // t が小さい方が優先されるようにする
+		}
 	};
 	
 	//=========================================================================================
 	// private variables
 	//=========================================================================================
+
+	//* external *//
+
+	Player* player_ = nullptr;
 
 	//* container *//
 
@@ -113,8 +134,7 @@ private:
 
 	//* command *//
 
-	std::list<EnemyPopCommand> commands_;
-	DeltaTimePoint popTimer_;
+	std::priority_queue<EnemyPopCommand, std::vector<EnemyPopCommand>, CompalePopCommand> commands_;
 
 	//* element parameter *//
 

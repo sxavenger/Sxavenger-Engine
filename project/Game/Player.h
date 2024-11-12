@@ -44,6 +44,8 @@ public:
 
 	PlayerBullet* GetBullet() const { return bullet_.get(); }
 
+	DeltaTimePoint GetPoint() const { return loopTimer_; }
+
 private:
 
 	//=========================================================================================

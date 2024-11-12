@@ -9,6 +9,9 @@
 //* Lib
 #include <Lib/Adapter/Json.h>
 
+//* Game
+#include <Game/Player.h>
+
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Enemy class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -71,11 +74,16 @@ void EnemyCollection::Init() {
 
 	enemyModel_[kEnemyType_Cube] = SxavengerGame::LoadModel("resources/model", "enemy.obj");
 	enemyModel_[kEnemyType_Star] = SxavengerGame::LoadModel("resources/model", "enemy_star.obj");
+	enemyModel_[kEnemyType_Rocket] = SxavengerGame::LoadModel("resources/model", "enemy_rocket.obj");
 
-	CreateEnemyPopCommand({ 2.0f }, kEnemyType_Star,{ 2.0f, 2.0f, 2.0f }, { 0.0f, -0.2f, 0.0f });
-	CreateEnemyPopCommand({ 4.0f }, kEnemyType_Cube, { 0.0f, 3.0f, 10.0f }, { 0.2f, 0.0f, 0.0f });
-	CreateEnemyPopCommand({ 8.0f }, kEnemyType_Star, { -2.0f, 1.0f, 1.0f }, { 0.0f, 0.0f, 0.2f });
-	CreateEnemyPopCommand({ 16.0f }, kEnemyType_Cube, { 0.0f, 2.0f, 10.0f }, { -0.2f, 0.0f, 0.0f });
+	for (uint32_t i = 0; i < kCountOfEnemyType; ++i) {
+		enemyModel_[i]->ApplyRaytracing();
+	}
+
+	CreateEnemyPopCommand({ 2.0f }, kEnemyType_Rocket,{ 2.0f, 2.0f, 2.0f }, { 0.0f, -0.2f, 0.0f });
+	CreateEnemyPopCommand({ 4.0f }, kEnemyType_Rocket, { 0.0f, 3.0f, 10.0f }, { 0.2f, 0.0f, 0.0f });
+	CreateEnemyPopCommand({ 8.0f }, kEnemyType_Rocket, { -2.0f, 1.0f, 1.0f }, { 0.0f, 0.0f, 0.2f });
+	CreateEnemyPopCommand({ 16.0f }, kEnemyType_Rocket, { 0.0f, 2.0f, 10.0f }, { -0.2f, 0.0f, 0.0f });
 
 	Json root = Json::object();
 
@@ -97,25 +105,18 @@ void EnemyCollection::Update() {
 		enemy->Update();
 	}
 
-	// command update
-	popTimer_.AddDeltaTime();
+	while (!commands_.empty()) {
+		const EnemyPopCommand& command = commands_.top();
 
-	for (auto commandIt = commands_.begin(); commandIt != commands_.end();) {
-
-		const auto& command = (*commandIt);
-
-		if (command.popTime <= popTimer_) {
-
+		if (command.point <= player_->GetPoint()) {
 			CreateEnemy(command.type, command.position, command.velocity);
 
-			// commandから削除
-			commandIt = commands_.erase(commandIt);
+			commands_.pop();
 			continue;
 		}
 
-		++commandIt;
+		break;
 	}
-
 }
 
 void EnemyCollection::SetAttributeImGui() {
@@ -143,11 +144,11 @@ void EnemyCollection::CreateEnemy(EnemyType type, const Vector3f& position, cons
 void EnemyCollection::CreateEnemyPopCommand(DeltaTimePoint popTime, EnemyType type, const Vector3f& position, const Vector3f& velocity) {
 
 	EnemyPopCommand command = {};
-	command.popTime  = popTime;
+	command.point    = popTime;
 	command.type     = type;
 	command.velocity = velocity;
 	command.position = position;
 
-	commands_.emplace_back(command);
+	commands_.emplace(command);
 
 }
