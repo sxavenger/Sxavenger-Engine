@@ -19,9 +19,12 @@
 
 void PlayerBullet::Init() {
 	SetName("player bullet");
-	ModelBehavior::renderingFlag_ = kBehaviorRender_Systematic | kBehaviorRender_Adaptive;
+	ModelBehavior::renderingFlag_ = kBehaviorRender_Systematic | kBehaviorRender_Adaptive | kBehaviorRender_Raytracing;
 
 	ModelBehavior::model_ = SxavengerGame::LoadModel("resources/model", "beam.obj");
+	ModelBehavior::model_->ApplyRaytracing();
+	CreateRaytracingRecorder();
+
 	ModelBehavior::transform_.transform.scale = { 0.1f, 0.1f, 128.0f };
 
 	Collider::typeId_       = kColliderType_NONE;
@@ -57,10 +60,6 @@ void PlayerBullet::Shoot(bool isShot, const Vector3f& position, const Vector3f& 
 		isShot_ = false;
 	}
 
-	Collider::bounding_ = CollisionBoundings::Ray{
-		.diff = direction
-	};
-
 	Collider::position_ = position_;
 
 	ModelBehavior::transform_.transform.translate = position_;
@@ -74,8 +73,13 @@ void PlayerBullet::Shoot(bool isShot, const Vector3f& position, const Vector3f& 
 	if (isShot_) {
 		Collider::typeId_ = kColliderType_PlayerBullet;
 
+		Collider::bounding_ = CollisionBoundings::Ray{
+		.diff = direction
+		};
+
 	} else {
 		Collider::typeId_ = kColliderType_NONE;
+		Collider::bounding_ = std::nullopt;
 	}
 }
 
@@ -112,6 +116,14 @@ void PlayerBullet::DrawSystematic(_MAYBE_UNUSED const Camera3D* camera) {
 	}
 
 	ModelBehavior::DrawSystematic(camera);
+}
+
+void PlayerBullet::DrawRaytracing(_MAYBE_UNUSED DxrObject::TopLevelAS* tlas) {
+	if (!isShot_) {
+		return;
+	}
+
+	ModelBehavior::DrawRaytracing(tlas);
 }
 
 void PlayerBullet::OnCollisionEnter(_MAYBE_UNUSED Collider* const other) {

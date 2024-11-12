@@ -36,6 +36,7 @@ public:
 
 	void DrawAdaptive(_MAYBE_UNUSED const Camera3D* camera) override;
 	void DrawSystematic(_MAYBE_UNUSED const Camera3D* camera) override;
+	void DrawRaytracing(_MAYBE_UNUSED DxrObject::TopLevelAS* tlas) override;
 
 	virtual void OnCollisionEnter(_MAYBE_UNUSED Collider* const other);
 

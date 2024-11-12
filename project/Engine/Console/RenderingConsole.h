@@ -61,6 +61,10 @@ public:
 
 	DxrObject::BufferRecoreder* GetMissRecorder() const { return missRecorder_.get(); }
 
+	//* setter *//
+
+	void SetRaytracingEnable(bool enable) { isRaytracingEnabled_ = enable; }
+
 protected:
 
 	//=========================================================================================

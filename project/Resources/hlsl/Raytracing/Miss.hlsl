@@ -78,7 +78,7 @@ void mainMiss(inout Payload payload) {
 		return;
 	}
 
-	float3 rayOrign = WorldRayOrigin();
+	float3 rayOrign = float3(0.0f, -20.0f, 0.0f);
 	float3 rayDirection = WorldRayDirection();
 
 	float3 skyPos = IntersectionPos(rayOrign, rayDirection, gAtmosphetic.outerRadius);

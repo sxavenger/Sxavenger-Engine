@@ -15,8 +15,8 @@ void VisualProcessDoF::Init() {
 	parameter_ = std::make_unique<BufferResource<Parameter>>(Sxavenger::GetDevicesObj(), 1);
 
 	// 仮値
-	(*parameter_)[0].f           = 0.01f;
-	(*parameter_)[0].focusLength = 0.01f;
+	(*parameter_)[0].f           = 1.45f;
+	(*parameter_)[0].focusLength = 0.1f;
 }
 
 void VisualProcessDoF::Term() {

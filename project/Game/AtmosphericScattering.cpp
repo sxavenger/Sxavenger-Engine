@@ -17,6 +17,9 @@ void AtmosphericScattering::Init() {
 	buffer_ = std::make_unique<BufferResource<GPUBuffer>>(Sxavenger::GetDevicesObj(), 1);
 	(*buffer_)[0].Reset();
 
+	(*buffer_)[0].lightDir = { 0.0f, -1.0f, 0.0f };
+	(*buffer_)[0].eSun     = 2000.0f;
+
 	sSystemConsole->GetMissRecorder()->SetAddress(0, buffer_->GetGPUVirtualAddress());
 }
 
