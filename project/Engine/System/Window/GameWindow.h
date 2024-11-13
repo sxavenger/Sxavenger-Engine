@@ -76,7 +76,7 @@ private:
 	// private methods
 	//=========================================================================================
 
-	//* window process *//
+	//* window proc *//
 
 	static LRESULT CALLBACK WindowProcMain(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam);
 	static LRESULT CALLBACK WindowProcSub(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam);
