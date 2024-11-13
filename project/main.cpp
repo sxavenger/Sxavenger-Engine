@@ -2,10 +2,7 @@
 // include
 //-----------------------------------------------------------------------------------------
 //* engine
-#include <Engine/System/Sxavenger.h>
-#include <Engine/Game/SxavengerGame.h>
-#include <Engine/Game/GameScene.h>
-#include <Engine/Console/SystemConsole.h>
+#include <Engine/System/Window/GameWindow.h>
 
 //* lib
 #include <Lib/Environment.h>
@@ -13,12 +10,14 @@
 // c++
 #include <memory>
 
+#pragma comment(lib, "dxgi.lib")
+
 ////////////////////////////////////////////////////////////////////////////////////////////
 // メイン関数
 ////////////////////////////////////////////////////////////////////////////////////////////
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
-	Sxavenger::Init(kWindowSize, kWindowTitle);
+	/*Sxavenger::Init(kWindowSize, kWindowTitle);
 	SxavengerGame::Init();
 
 	sSystemConsole->Init();
@@ -31,6 +30,14 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	sSystemConsole->Term();
 
 	SxavengerGame::Term();
-	Sxavenger::Term();
+	Sxavenger::Term();*/
+
+	std::unique_ptr<GameWindowCollection> collection = std::make_unique<GameWindowCollection>();
+	collection->CreateMainWindow({1280, 720}, L"main");
+	collection->TryCreateSubWindow({ 1280, 720 }, L"sub");
+
+	while (collection->ProcessMessages()) {
+	}
+
 	return 0;
 }
