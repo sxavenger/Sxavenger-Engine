@@ -19,6 +19,7 @@
     <ClCompile Include="externals\imgui\imgui_tables.cpp" />
     <ClCompile Include="externals\imgui\imgui_widgets.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Engine\System\Window\Window.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\System\Window\GameWindow.h" />
@@ -31,5 +32,6 @@
     <ClInclude Include="externals\imgui\imgui_internal.h" />
     <ClInclude Include="externals\imgui\imstb_rectpack.h" />
     <ClInclude Include="externals\imgui\imstb_textedit.h" />
+    <ClInclude Include="Engine\System\Window\Window.h" />
   </ItemGroup>
 </Project>

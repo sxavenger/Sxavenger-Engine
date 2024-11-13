@@ -130,6 +130,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
   <ItemGroup>
     <ClCompile Include="Engine\System\Window\GameWindow.cpp" />
     <ClCompile Include="Engine\System\Logger.cpp" />
+    <ClCompile Include="Engine\System\Window\Window.cpp" />
     <ClCompile Include="externals\imgui\imgui.cpp" />
     <ClCompile Include="externals\imgui\imgui_demo.cpp" />
     <ClCompile Include="externals\imgui\imgui_draw.cpp" />
@@ -142,6 +143,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
   <ItemGroup>
     <ClInclude Include="Engine\System\Window\GameWindow.h" />
     <ClInclude Include="Engine\System\Logger.h" />
+    <ClInclude Include="Engine\System\Window\Window.h" />
     <ClInclude Include="externals\imgui\imconfig.h" />
     <ClInclude Include="externals\imgui\imgui.h" />
     <ClInclude Include="externals\imgui\imgui_impl_dx12.h" />
