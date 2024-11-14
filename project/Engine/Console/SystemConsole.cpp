@@ -223,6 +223,7 @@ void SystemConsole::DrawScene() {
 		sceneFrame_->BeginAdaptive();
 
 		gameCamera_->DrawFrustum(ToColor4f(0xFAFA00FF), 8.0f);
+		SxavengerGame::DrawColliders();
 		SxavengerGame::DrawToScene(sceneCamera_.get());
 
 		sceneFrame_->EndAdaptive();

@@ -294,7 +294,6 @@
     <ClCompile Include="Engine\Console\RenderingConsole.cpp" />
     <ClCompile Include="Engine\Game\SxavengerPipeline\SxavengerFrame.cpp" />
     <ClCompile Include="Engine\Game\SxavengerPipeline\MultiViewTexture.cpp" />
-    <ClCompile Include="Engine\Game\Collider\Collider.cpp" />
     <ClCompile Include="Engine\Game\Collider\ColliderManager.cpp" />
     <ClCompile Include="Engine\Game\Collider\CollisionDetection.cpp" />
     <ClCompile Include="Engine\Game\Behavior\BaseBehavior.cpp" />
@@ -335,6 +334,7 @@
     <ClCompile Include="Engine\Game\SxavengerPipeline\ProcessLayer.cpp" />
     <ClCompile Include="Game\Sponza.cpp" />
     <ClCompile Include="Engine\Beta\WorldInstance.cpp" />
+    <ClCompile Include="Engine\Game\Collider\Collider.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="externals\imgui\imconfig.h">
@@ -526,7 +526,6 @@
     <ClInclude Include="Engine\Game\SxavengerPipeline\SxavengerFrame.h" />
     <ClInclude Include="Engine\Game\SxavengerPipeline\MultiViewTexture.h" />
     <ClInclude Include="Engine\Game\Collider\CollisionDetection.h" />
-    <ClInclude Include="Engine\Game\Collider\Collider.h" />
     <ClInclude Include="Engine\Game\Collider\ColliderManager.h" />
     <ClInclude Include="Engine\Game\Behavior\BaseBehavior.h" />
     <ClInclude Include="Engine\Game\Behavior\ModelBehavior.h" />
@@ -566,6 +565,7 @@
     <ClInclude Include="Engine\Game\SxavengerPipeline\ProcessLayer.h" />
     <ClInclude Include="Game\Sponza.h" />
     <ClInclude Include="Engine\Beta\WorldInstance.h" />
+    <ClInclude Include="Engine\Game\Collider\Collider.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

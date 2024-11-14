@@ -29,14 +29,19 @@ void Collider::SetColliderBoundingAABB(const CollisionBoundings::AABB& aabb) {
 	bounding_ = aabb;
 }
 
-void Collider::CallOnCollisionMethods() {
+void Collider::CallbackOnCollision() {
+
 	for (auto it = states_.begin(); it != states_.end();) {
 
 		if (it->second.isHit && !it->second.isPreHit) { //!< colliderが当たったかどうか
-			OnCollisionEnter(it->first);
+			if (onCollisionEnterFunc_) {
+				onCollisionEnterFunc_(it->first);
+			}
 
 		} else if (!it->second.isHit && it->second.isPreHit) { //!< colliderが離れたかどうか
-			OnCollisionExit(it->first);
+			if (onCollisionExitFunc_) {
+				onCollisionExitFunc_(it->first);
+			}
 		}
 
 		//!< 次フレームの準備
@@ -55,6 +60,10 @@ void Collider::CallOnCollisionMethods() {
 
 void Collider::OnCollision(Collider* other) {
 	states_[other].isHit = true; //!< 現在frameで当たった
+}
+
+const Vector3f& Collider::GetColliderPosition() const {
+	return position_; //!< FIXME: userからpositionを受け取る. 仮値.
 }
 
 bool Collider::ShouldCheckForCollision(const Collider* const other) const {

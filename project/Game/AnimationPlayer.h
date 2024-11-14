@@ -8,6 +8,7 @@
 
 //* engine
 #include <Engine/Beta/Curve.h>
+#include <Engine/Game/Collider/Collider.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // AnimationPlayer class
@@ -38,5 +39,8 @@ private:
 	//=========================================================================================
 
 	Curve test_curve;
+
+	std::unique_ptr<Collider> test_;
+	std::unique_ptr<Collider> test2_;
 
 };

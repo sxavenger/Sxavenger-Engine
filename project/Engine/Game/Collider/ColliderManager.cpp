@@ -21,7 +21,7 @@ void ColliderManager::Update() {
 	CheckAllCollision(); //!< 全当たり判定の計算
 
 	for (auto& collider : colliders_) { //!< collider関数の呼び出し
-		collider->CallOnCollisionMethods();
+		collider->CallbackOnCollision();
 	}
 }
 

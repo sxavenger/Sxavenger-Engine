@@ -3,18 +3,16 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
+//* CollisionDetection
+#include "CollisionDetection.h"
+
 //* lib
 #include <Lib/CXXAttributeConfig.h>
-#include <Lib/Geometry/Vector3.h>
 
 //* c++
-#include <utility>
 #include <string>
-#include <unordered_map>
+#include <functional>
 #include <optional>
-
-// collisionDetection
-#include "CollisionDetection.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // ColliderType enum
@@ -24,9 +22,17 @@ enum ColliderType {
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// Collider base class
+// Collider class
 ////////////////////////////////////////////////////////////////////////////////////////////
 class Collider {
+public:
+
+	////////////////////////////////////////////////////////////////////////////////////////////
+	// using
+	////////////////////////////////////////////////////////////////////////////////////////////
+	//!< OnCollision関数
+	using OnCollisionFunction = std::function<void(_MAYBE_UNUSED Collider* const)>;
+
 public:
 
 	//=========================================================================================
@@ -34,7 +40,7 @@ public:
 	//=========================================================================================
 
 	Collider() { Init(); }
-	virtual ~Collider() { Term(); }
+	~Collider() { Term(); }
 
 	void Init();
 
@@ -42,19 +48,27 @@ public:
 
 	//* bounding setter *//
 
-	void SetColliderBoundingSphere(const CollisionBoundings::Sphere& sphere = {.radius = 1.0f});
+	void SetColliderBoundingSphere(const CollisionBoundings::Sphere& sphere = { .radius = 1.0f });
 
-	void SetColliderBoundingAABB(const CollisionBoundings::AABB& aabb = {.localMin = {-0.5f, -0.5f, -0.5f}, .localMax = {0.5f, 0.5f, 0.5f}});
+	void SetColliderBoundingAABB(const CollisionBoundings::AABB& aabb = { .localMin = {-0.5f, -0.5f, -0.5f}, .localMax = {0.5f, 0.5f, 0.5f} });
+
+	//* call back function setter *//
+
+	void SetOnCollisionEnter(const OnCollisionFunction& func) { onCollisionEnterFunc_ = func; }
+
+	void SetOnCollisionExit(const OnCollisionFunction& func) { onCollisionExitFunc_ = func; }
 
 	//* collision states *//
 
-	void CallOnCollisionMethods();
+	void CallbackOnCollision();
 
 	void OnCollision(Collider* other);
-	
+
 	//* collision getter *//
 
-	virtual const Vector3f& GetColliderPosition() const = 0;
+	//virtual const Vector3f& GetColliderPosition() const = 0;
+
+	const Vector3f& GetColliderPosition() const;
 
 	const CollisionBoundings::Boundings& GetBounding() const { return bounding_; }
 
@@ -72,30 +86,13 @@ public:
 		const std::optional<bool>& isHit = std::nullopt, const std::optional<bool>& isPreHit = std::nullopt
 	);
 
-	//* user collision methods *//
+	void SetTypeId(uint32_t typeId) { typeId_ = typeId; }
 
-	virtual void OnCollisionEnter(_MAYBE_UNUSED Collider* const other) {}
+	void SetTargetTypeId(uint32_t targetTypeId) { targetTypeId_ = targetTypeId; }
 
-	virtual void OnCollisionExit(_MAYBE_UNUSED Collider* const other) {}
-
-	//* imgui *//
+	//* imgui option *//
 
 	void SetColliderImGuiCommand();
-
-protected:
-
-	//=========================================================================================
-	// protected variables
-	//=========================================================================================
-	
-	std::string colliderTag_ = "";
-
-	//! 当たり判定の判定情報
-	CollisionBoundings::Boundings bounding_;
-
-	//!< filter情報
-	uint32_t typeId_       = 0; //!< 自分のid
-	uint32_t targetTypeId_ = 0; //!< 判定対象とするtype
 
 private:
 
@@ -110,6 +107,25 @@ private:
 	// private variables
 	//=========================================================================================
 
+	std::string colliderTag_ = "";
+
+	//! 当たり判定の判定情報
+	CollisionBoundings::Boundings bounding_;
+
+	//!< filter情報
+	uint32_t typeId_       = 0; //!< 自分のid
+	uint32_t targetTypeId_ = 0; //!< 判定対象とするtype
+
+	//* functions *//
+
+	OnCollisionFunction onCollisionEnterFunc_;
+	OnCollisionFunction onCollisionExitFunc_;
+
+	// TODO: positionを持ってくる
+	// worldInstanceから持ってくる...?
+
+	Vector3f position_;
+
 	//! [unordered_map]
 	//! key:   対象のcollider
 	//! value: 当たり判定結果
@@ -117,6 +133,7 @@ private:
 
 	//!< すり抜け等の管理flagが欲しい
 	//!< 判定しないのflagが欲しい
+
 
 
 };
