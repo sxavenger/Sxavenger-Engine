@@ -66,8 +66,6 @@ public:
 
 	//* collision getter *//
 
-	//virtual const Vector3f& GetColliderPosition() const = 0;
-
 	const Vector3f& GetColliderPosition() const;
 
 	const CollisionBoundings::Boundings& GetBounding() const { return bounding_; }
@@ -85,6 +83,8 @@ public:
 		Collider* const collider,
 		const std::optional<bool>& isHit = std::nullopt, const std::optional<bool>& isPreHit = std::nullopt
 	);
+
+	void SetColliderPosition(const Vector3f& position) { position_ = position; }
 
 	void SetTypeId(uint32_t typeId) { typeId_ = typeId; }
 
