@@ -16,8 +16,10 @@ public:
 	// public methods
 	//=========================================================================================
 
-	WorldInstance()  = default;
+	WorldInstance()  { Create(); }
 	~WorldInstance() = default;
+
+	void Create();
 
 	const QuaternionTransformBuffer& GetTransformBuffer() const { return transform_; }
 	QuaternionTransformBuffer& GetTransformBuffer() { return transform_; }
