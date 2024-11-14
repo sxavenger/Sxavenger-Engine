@@ -63,7 +63,7 @@ void Collider::OnCollision(Collider* other) {
 }
 
 const Vector3f& Collider::GetColliderPosition() const {
-	return position_; //!< FIXME: userからpositionを受け取る. 仮値.
+	return position_;
 }
 
 bool Collider::ShouldCheckForCollision(const Collider* const other) const {

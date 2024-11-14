@@ -25,9 +25,9 @@ void ColliderManager::Update() {
 	}
 }
 
-void ColliderManager::DrawColliders() {
+void ColliderManager::DrawColliders(const Color4f& color) {
 	for (const auto& collider : colliders_) {
-		DrawCollider(collider);
+		DrawCollider(collider, color);
 	}
 }
 
@@ -77,21 +77,25 @@ void ColliderManager::CheckCollisionPair(Collider* colliderA, Collider* collider
 	}
 }
 
-void ColliderManager::DrawCollider(const Collider* const collider) const {
+void ColliderManager::DrawCollider(const Collider* const collider, const Color4f& color) const {
 
 	const auto& bounding = collider->GetBounding();
 
 	//!< boundingの型の取得
 	if (std::holds_alternative<CollisionBoundings::Sphere>(bounding)) {
-		DrawSphereCollider(collider->GetColliderPosition(), std::get<CollisionBoundings::Sphere>(bounding));
+		DrawSphereCollider(
+			collider->GetColliderPosition(), std::get<CollisionBoundings::Sphere>(bounding), color
+		);
 
 	} else if (std::holds_alternative<CollisionBoundings::AABB>(bounding)) {
-		DrawAABBCollider(collider->GetColliderPosition(), std::get<CollisionBoundings::AABB>(bounding));
+		DrawAABBCollider(
+			collider->GetColliderPosition(), std::get<CollisionBoundings::AABB>(bounding), color
+		);
 
 	}
 }
 
-void ColliderManager::DrawSphereCollider(const Vector3f& position, const CollisionBoundings::Sphere& sphere) const {
+void ColliderManager::DrawSphereCollider(const Vector3f& position, const CollisionBoundings::Sphere& sphere, const Color4f& color) const {
 
 	const uint32_t kSubdivision = 24; //!< parameter
 	const float kRoundEvery = pi_v * 2.0f / kSubdivision; //!< 1周 / 分割数
@@ -117,7 +121,7 @@ void ColliderManager::DrawSphereCollider(const Vector3f& position, const Collisi
 		start *= sphere.radius;
 		end   *= sphere.radius;
 
-		SxavengerGame::DrawLine(start + position, end + position, color_);
+		SxavengerGame::DrawLine(start + position, end + position, color);
 	}
 
 	// xy軸の円
@@ -141,7 +145,7 @@ void ColliderManager::DrawSphereCollider(const Vector3f& position, const Collisi
 		start *= sphere.radius;
 		end *= sphere.radius;
 
-		SxavengerGame::DrawLine(start + position, end + position, color_);
+		SxavengerGame::DrawLine(start + position, end + position, color);
 	}
 
 	// yz軸の円
@@ -165,11 +169,11 @@ void ColliderManager::DrawSphereCollider(const Vector3f& position, const Collisi
 		start *= sphere.radius;
 		end *= sphere.radius;
 
-		SxavengerGame::DrawLine(start + position, end + position, color_);
+		SxavengerGame::DrawLine(start + position, end + position, color);
 	}
 }
 
-void ColliderManager::DrawAABBCollider(const Vector3f& position, const CollisionBoundings::AABB& aabb) const {
+void ColliderManager::DrawAABBCollider(const Vector3f& position, const CollisionBoundings::AABB& aabb, const Color4f& color) const {
 
 	Vector3f pos[8] = {};
 
@@ -195,8 +199,8 @@ void ColliderManager::DrawAABBCollider(const Vector3f& position, const Collision
 
 	for (int i = 0; i < 4; ++i) {
 		int next = (i + 1) % 4;
-		SxavengerGame::DrawLine(pos[i] + position, pos[next] + position, color_);
-		SxavengerGame::DrawLine(pos[i + 4] + position, pos[next + 4] + position, color_);
-		SxavengerGame::DrawLine(pos[i] + position, pos[i + 4] + position, color_);
+		SxavengerGame::DrawLine(pos[i] + position, pos[next] + position, color);
+		SxavengerGame::DrawLine(pos[i + 4] + position, pos[next + 4] + position, color);
+		SxavengerGame::DrawLine(pos[i] + position, pos[i + 4] + position, color);
 	}
 }

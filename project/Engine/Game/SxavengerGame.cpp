@@ -102,8 +102,8 @@ void SxavengerGameEngine::UpdateColliders() {
 	sColliderManager->Update();
 }
 
-void SxavengerGameEngine::DrawColliders() {
-	sColliderManager->DrawColliders();
+void SxavengerGameEngine::DrawColliders(const Color4f& color) {
+	sColliderManager->DrawColliders(color);
 }
 
 ColliderManager* SxavengerGameEngine::GetColliderManager() {

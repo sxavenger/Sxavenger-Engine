@@ -64,7 +64,7 @@ public:
 
 	static void UpdateColliders();
 
-	static void DrawColliders();
+	static void DrawColliders(const Color4f& color = ToColor4f(0xFAFA00FF));
 
 	static ColliderManager* GetColliderManager();
 

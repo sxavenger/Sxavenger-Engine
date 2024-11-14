@@ -128,8 +128,14 @@ private:
 	std::unique_ptr<SxavengerFrame> sceneFrame_;
 	std::unique_ptr<DebugCamera3D> sceneCamera_;
 
-	//* checker board render target *//
+	//* debug option paraemter *//
 
+	bool isDrawGameCameraFrustum_   = true;
+	Color4f gameCameraFrustumColor_ = ToColor4f(0xFAFA00FF);
+	float gameCameraFrustumLength_  = 8.0f;
+
+	bool isDrawBounding_   = true;
+	Color4f boundingColor_ = ToColor4f(0xFAFA00FF);
 
 	//=========================================================================================
 	// private methods
@@ -143,9 +149,9 @@ private:
 	void InitFrame();
 	void TermFrame();
 
-	void InitCheckerBoard();
+	/*void InitCheckerBoard();
 	void TermCheckerBoard();
-	void DrawCheckerBoard();
+	void DrawCheckerBoard();*/
 
 	void UpdateConsoleShortcut();
 
@@ -162,7 +168,8 @@ private:
 	void DisplayGame();
 	void DisplayScene();
 
-	void DisplaySystemMenu();
+	void ShowSystemMenu();
+	void ShowDebugMenu();
 
 	//* assistance methods *//
 

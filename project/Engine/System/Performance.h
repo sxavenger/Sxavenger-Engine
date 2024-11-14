@@ -113,11 +113,15 @@ public:
 		*this -= Performance::GetDeltaTime(s);
 	}
 
+	void Reset() {
+		time = 0;
+	}
+
 	//=========================================================================================
 	// public operator
 	//=========================================================================================
 
-	void operator=(const DeltaTimePoint& other) {
+	void operator=(DeltaTimePoint other) {
 		time = other.time;
 	}
 

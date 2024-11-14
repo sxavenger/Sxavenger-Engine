@@ -33,12 +33,8 @@ void JsonAdapter::WriteJson(const std::string& path, const Json& data) {
 	// ファイルパス生成
 	std::string filePath = directory_ + path;
 
-	std::ofstream ofs;
-	ofs.open(filePath);
-
-	/*Assert(!ofs.fail());*/
-
-	ofs << std::setw(4) << data << std::endl;
+	std::ofstream ofs(filePath);
+	ofs << std::setfill('\t') << std::setw(1) << data << std::endl;
 	ofs.close();
 }
 
@@ -59,8 +55,6 @@ void JsonAdapter::OverwriteJson(const std::string& path, const Json& data) {
 	saveData.update(data);
 
 	std::ofstream ofs(filePath);
-
-	ofs << std::setw(4) << saveData << std::endl;
-
+	ofs << std::setfill('\t') << std::setw(1) << data << std::endl;
 	ofs.close();
 }

@@ -9,6 +9,8 @@ _DXOBJECT_USING
 #include <Engine/System/Performance.h>
 #include <Engine/Game/SxavengerGame.h>
 
+//* external
+#include <imgui.h>
 
 //=========================================================================================
 // SystemConsole // static variables
@@ -219,11 +221,17 @@ void SystemConsole::DrawScene() {
 	//* late adaptive
 	RenderingConsole::RenderAdaptive(sceneFrame_.get());
 
-	{
+	{ //!< Debug情報
 		sceneFrame_->BeginAdaptive();
 
-		gameCamera_->DrawFrustum(ToColor4f(0xFAFA00FF), 8.0f);
-		SxavengerGame::DrawColliders();
+		if (isDrawGameCameraFrustum_) {
+			gameCamera_->DrawFrustum(gameCameraFrustumColor_, gameCameraFrustumLength_);
+		}
+		
+		if (isDrawBounding_) {
+			SxavengerGame::DrawColliders(boundingColor_);
+		}
+
 		SxavengerGame::DrawToScene(sceneCamera_.get());
 
 		sceneFrame_->EndAdaptive();
@@ -293,7 +301,7 @@ void SystemConsole::DisplayMainMenu() {
 
 	if (ImGui::BeginMenu("System")) {
 		ImGui::Dummy({ 200.0f, 0.0f });
-		DisplaySystemMenu();
+		ShowSystemMenu();
 		ImGui::EndMenu();
 	}
 
@@ -305,7 +313,14 @@ void SystemConsole::DisplayMainMenu() {
 	}
 
 	if (ImGui::BeginMenu("Rendering")) {
+		ImGui::Dummy({ 200.0f, 0.0f });
 		ImGui::Checkbox("raytracing enabled", &(RenderingConsole::isRaytracingEnabled_));
+		ImGui::EndMenu();
+	}
+
+	if (ImGui::BeginMenu("Debug")) {
+		ImGui::Dummy({ 200.0f, 0.0f });
+		ShowDebugMenu();
 		ImGui::EndMenu();
 	}
 
@@ -390,6 +405,11 @@ void SystemConsole::DisplayScene() {
 	DisplayTextureImGuiFullWindow(Sxavenger::GetTexture<BaseTexture>("resources/checker_black.png")); //< HACK
 	DisplayTextureImGuiFullWindow(sceneFrame_->GetAdaptive()->GetTexture());
 
+	if (ImGui::IsWindowHovered() && ImGui::IsMouseClicked(2)) {
+		//!< window hovered 状態で mouse middle click が押された場合, camera操作(forcus)を許可.
+		ImGui::SetWindowFocus();
+	}
+
 	if (ImGui::IsWindowFocused()) {
 		sceneCamera_->Update();
 	}
@@ -397,7 +417,7 @@ void SystemConsole::DisplayScene() {
 	ImGui::End();
 }
 
-void SystemConsole::DisplaySystemMenu() {
+void SystemConsole::ShowSystemMenu() {
 	//!< 更新処理関係
 	if (ImGui::CollapsingHeader("Process")) {
 		if (updateLimit_ == std::nullopt) { //!< 更新処理の制限がない場合
@@ -550,6 +570,17 @@ void SystemConsole::DisplaySystemMenu() {
 
 	}
 
+}
+
+void SystemConsole::ShowDebugMenu() {
+	ImGui::SeparatorText("Game Camera");
+	ImGui::Checkbox("draw frustum",    &isDrawGameCameraFrustum_);
+	ImGui::ColorEdit4("frustum color", &gameCameraFrustumColor_.r);
+	ImGui::DragFloat("frustum length", &gameCameraFrustumLength_, 0.01f, 0.0f, 128.0f);
+
+	ImGui::SeparatorText("Collider");
+	ImGui::Checkbox("draw bounding",    &isDrawBounding_);
+	ImGui::ColorEdit4("bounding color", &boundingColor_.r);
 }
 
 void SystemConsole::DisplayTextureImGuiFullWindow(const MultiViewTexture* texture) const {
