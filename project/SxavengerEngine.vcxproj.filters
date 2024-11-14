@@ -9,7 +9,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Engine\System\Window\GameWindow.cpp" />
+    <ClCompile Include="Engine\System\Window\SxavengerWindow.cpp" />
     <ClCompile Include="Engine\System\Logger.cpp" />
     <ClCompile Include="externals\imgui\imgui.cpp" />
     <ClCompile Include="externals\imgui\imgui_demo.cpp" />
@@ -20,9 +20,10 @@
     <ClCompile Include="externals\imgui\imgui_widgets.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Engine\System\Window\Window.cpp" />
+    <ClCompile Include="Engine\System\Thread\Thread.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Engine\System\Window\GameWindow.h" />
+    <ClInclude Include="Engine\System\Window\SxavengerWindow.h" />
     <ClInclude Include="Engine\System\Logger.h" />
     <ClInclude Include="externals\imgui\imstb_truetype.h" />
     <ClInclude Include="externals\imgui\imconfig.h" />
@@ -33,5 +34,6 @@
     <ClInclude Include="externals\imgui\imstb_rectpack.h" />
     <ClInclude Include="externals\imgui\imstb_textedit.h" />
     <ClInclude Include="Engine\System\Window\Window.h" />
+    <ClInclude Include="Engine\System\Thread\Thread.h" />
   </ItemGroup>
 </Project>

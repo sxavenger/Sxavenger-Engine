@@ -128,7 +128,8 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Engine\System\Window\GameWindow.cpp" />
+    <ClCompile Include="Engine\System\Thread\Thread.cpp" />
+    <ClCompile Include="Engine\System\Window\SxavengerWindow.cpp" />
     <ClCompile Include="Engine\System\Logger.cpp" />
     <ClCompile Include="Engine\System\Window\Window.cpp" />
     <ClCompile Include="externals\imgui\imgui.cpp" />
@@ -141,7 +142,8 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Engine\System\Window\GameWindow.h" />
+    <ClInclude Include="Engine\System\Thread\Thread.h" />
+    <ClInclude Include="Engine\System\Window\SxavengerWindow.h" />
     <ClInclude Include="Engine\System\Logger.h" />
     <ClInclude Include="Engine\System\Window\Window.h" />
     <ClInclude Include="externals\imgui\imconfig.h" />

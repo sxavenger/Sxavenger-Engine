@@ -2,7 +2,8 @@
 // include
 //-----------------------------------------------------------------------------------------
 //* engine
-#include <Engine/System/Window/GameWindow.h>
+#include <Engine/System/Window/Window.h>
+#include <Engine/System/Thread/Thread.h>
 
 //* lib
 #include <Lib/Environment.h>
@@ -32,12 +33,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	SxavengerGame::Term();
 	Sxavenger::Term();*/
 
-	std::unique_ptr<GameWindowCollection> collection = std::make_unique<GameWindowCollection>();
-	collection->CreateMainWindow({1280, 720}, L"main");
-	collection->TryCreateSubWindow({ 1280, 720 }, L"sub");
-
-	while (collection->ProcessMessages()) {
-	}
+	std::unique_ptr<ThreadCollection> collection = std::make_unique<ThreadCollection>();
+	collection->Init(4);
 
 	return 0;
 }

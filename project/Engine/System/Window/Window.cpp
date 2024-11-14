@@ -1,8 +1,84 @@
 #include "Window.h"
 
+//-----------------------------------------------------------------------------------------
+// include
+//-----------------------------------------------------------------------------------------
+//* external
+#include <imgui_impl_win32.h>
+extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
+
+//* engine
+#include <Engine/System/Logger.h>
+
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Window class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
+
+void Window::Create(const Vector2ui& clientSize, const LPCWSTR name, const HWND parentHwnd) {
+
+	// 引数の保存
+	clientSize_ = clientSize;
+	name_       = name;
+	className_  = L"Sxavenger Engine Window: ";
+	className_ += name;
+
+	// window type の設定
+	type_ = WindowType::kMainWindow;
+
+	if (parentHwnd != nullptr) {
+		type_ = WindowType::kSubWindow;
+	}
+
+	// インスタンスハンドルを取得
+	hInst_ = GetModuleHandle(nullptr);
+	Assert(hInst_ != nullptr);
+
+	// window設定
+	WNDCLASS wc = {};
+	wc.lpszClassName = className_.c_str();
+	wc.hInstance     = hInst_;
+	wc.lpfnWndProc   = MainWindowProc;
+
+	if (type_ == WindowType::kSubWindow) {
+		wc.lpfnWndProc = SubWindowProc;
+	}
+
+	Assert(RegisterClass(&wc));
+
+	RECT rc = {};
+	rc.right  = clientSize_.x;
+	rc.bottom = clientSize_.y;
+
+	// ウィンドウサイズの調整
+	AdjustWindowRect(&rc, WS_OVERLAPPEDWINDOW, false);
+
+	// ウィンドウを生成
+	hwnd_ = CreateWindow(
+		wc.lpszClassName,
+		name_,
+		WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX, //!< windowのサイズの固定
+		CW_USEDEFAULT,
+		CW_USEDEFAULT,
+		rc.right - rc.left,
+		rc.bottom - rc.top,
+		parentHwnd,
+		nullptr,
+		hInst_,
+		nullptr
+	);
+	Assert(hwnd_ != nullptr);
+
+	// ウィンドウを表示
+	ShowWindow(hwnd_, SW_SHOW);
+}
+
+void Window::Term() {
+	CloseWindow(hwnd_);
+
+	if (hInst_ != nullptr) {
+		UnregisterClass(className_.c_str(), hInst_);
+	}
+}
 
 LRESULT Window::MainWindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
 

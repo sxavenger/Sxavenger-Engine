@@ -5,6 +5,14 @@
 //-----------------------------------------------------------------------------------------
 #include <comdef.h>
 #include <sstream>
+#include <mutex>
+
+//-----------------------------------------------------------------------------------------
+// namespace
+//-----------------------------------------------------------------------------------------
+namespace {
+	std::mutex sMutex;
+}
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Convert string methods
@@ -55,14 +63,34 @@ void Log(const std::wstring& log) {
 }
 
 void EngineLog(const std::string& log) {
-	std::string tag = "## Sxavenger Engine >> ";
+	std::string tag = "## Sxavenger Engine : ";
 	OutputDebugStringA(tag.c_str());
 	Log(log);
 }
 
 void EngineLog(const std::wstring& log) {
-	std::string tag = "## Sxavenger Engine >> ";
+	std::string tag = "## Sxavenger Engine : ";
 	OutputDebugStringA(tag.c_str());
+	Log(log);
+}
+
+void ThreadLog(const std::string& log) {
+	std::lock_guard<std::mutex> lock(sMutex);
+
+	std::ostringstream tag;
+	tag << "## Sxavenger Engine [thread id: " << std::this_thread::get_id() << "] : ";
+	OutputDebugStringA(tag.str().c_str());
+
+	Log(log);
+}
+
+void ThreadLog(const std::wstring& log) {
+	std::lock_guard<std::mutex> lock(sMutex);
+
+	std::ostringstream tag;
+	tag << "## Sxavenger Engine [thread id: " << std::this_thread::get_id() << "] : ";
+	OutputDebugStringA(tag.str().c_str());
+
 	Log(log);
 }
 

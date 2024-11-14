@@ -34,7 +34,7 @@ public:
 	Window()  = default;
 	~Window() { Term(); }
 
-	void Create(const Vector2ui& clientSize, const LPCWSTR name, const HWND parentHwnd = nullptr);
+	virtual void Create(const Vector2ui& clientSize, const LPCWSTR name, const HWND parentHwnd = nullptr);
 
 	void Term();
 
