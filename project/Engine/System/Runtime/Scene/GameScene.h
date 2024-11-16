@@ -3,27 +3,23 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
-//* c++
-#include <random>
-
 //* engine
-#include <Engine/System/Logger.h>
+#include <Engine/System/Window/GameWindow.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// Random class
+// GameScene class
 ////////////////////////////////////////////////////////////////////////////////////////////
-class Random {
+class GameScene {
 public:
 
 	//=========================================================================================
 	// public methods
 	//=========================================================================================
 
-	template <std::floating_point T>
-	static T Generate(T min, T max);
+	GameScene()  = default;
+	~GameScene() = default;
 
-	template <std::integral T>
-	static T Generate(T min, T max);
+	void Run();
 
 private:
 
@@ -31,17 +27,17 @@ private:
 	// private variables
 	//=========================================================================================
 
-	static std::mt19937 seed_;
+	GameWindow* mainWindow_ = nullptr;
+
+	//=========================================================================================
+	// private methods
+	//=========================================================================================
+
+	void Init();
+
+	void Update();
+
+	void Draw();
+
+	void Term();
 };
-
-template <std::floating_point T>
-inline T Random::Generate(T min, T max) {
-	std::uniform_real_distribution<T> dist(min, max);
-	return dist(seed_);
-}
-
-template <std::integral T>
-inline T Random::Generate(T min, T max) {
-	std::uniform_int_distribution<T> dist(min, max);
-	return dist(seed_);
-}

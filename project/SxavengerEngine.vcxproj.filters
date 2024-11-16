@@ -9,8 +9,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Engine\System\Window\SxavengerWindow.cpp" />
-    <ClCompile Include="Engine\System\Logger.cpp" />
     <ClCompile Include="externals\imgui\imgui.cpp" />
     <ClCompile Include="externals\imgui\imgui_demo.cpp" />
     <ClCompile Include="externals\imgui\imgui_draw.cpp" />
@@ -20,11 +18,33 @@
     <ClCompile Include="externals\imgui\imgui_widgets.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Engine\System\Window\Window.cpp" />
-    <ClCompile Include="Engine\System\Thread\Thread.cpp" />
+    <ClCompile Include="Lib\Adapter\Json.cpp" />
+    <ClCompile Include="Lib\Adapter\Random.cpp" />
+    <ClCompile Include="Engine\System\Window\GameWindow.cpp" />
+    <ClCompile Include="Engine\System\DirectX\DxObject\DxObjectCommon.cpp" />
+    <ClCompile Include="Engine\System\Utility\Logger.cpp" />
+    <ClCompile Include="Engine\System\DirectX\DxObject\DxDevice.cpp" />
+    <ClCompile Include="Engine\System\DirectX\DxObject\DxDescriptor.cpp" />
+    <ClCompile Include="Engine\System\DirectX\DxObject\DxDescriptorHeaps.cpp" />
+    <ClCompile Include="Engine\System\DirectX\DirectXCommon.cpp" />
+    <ClCompile Include="Engine\System\SxavengerSystem.cpp" />
+    <ClCompile Include="Engine\System\DirectX\DxObject\DxShaderCompiler.cpp" />
+    <ClCompile Include="Engine\System\DirectX\DxObject\DxSwapChain.cpp" />
+    <ClCompile Include="Engine\System\DirectX\DxObject\DxCommandContext.cpp" />
+    <ClCompile Include="Engine\System\Runtime\Thread\Thread.cpp" />
+    <ClCompile Include="Engine\System\DirectX\DxObject\DxDepthStencil.cpp" />
+    <ClCompile Include="Lib\Geometry\MathLib.cpp" />
+    <ClCompile Include="Lib\Geometry\Matrix4x4.cpp" />
+    <ClCompile Include="Lib\Geometry\Quaternion.cpp" />
+    <ClCompile Include="Lib\Geometry\Vector2.cpp" />
+    <ClCompile Include="Lib\Geometry\Vector3.cpp" />
+    <ClCompile Include="Lib\Geometry\Vector4.cpp" />
+    <ClCompile Include="Engine\System\Window\GameWindowCollection.cpp" />
+    <ClCompile Include="Engine\System\DirectX\DirectXContext.cpp" />
+    <ClCompile Include="Engine\System\WinApp\WinApp.cpp" />
+    <ClCompile Include="Engine\System\Runtime\Scene\GameScene.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Engine\System\Window\SxavengerWindow.h" />
-    <ClInclude Include="Engine\System\Logger.h" />
     <ClInclude Include="externals\imgui\imstb_truetype.h" />
     <ClInclude Include="externals\imgui\imconfig.h" />
     <ClInclude Include="externals\imgui\imgui.h" />
@@ -34,6 +54,35 @@
     <ClInclude Include="externals\imgui\imstb_rectpack.h" />
     <ClInclude Include="externals\imgui\imstb_textedit.h" />
     <ClInclude Include="Engine\System\Window\Window.h" />
-    <ClInclude Include="Engine\System\Thread\Thread.h" />
+    <ClInclude Include="Lib\Adapter\Random.h" />
+    <ClInclude Include="Lib\Adapter\Json.h" />
+    <ClInclude Include="Engine\System\Window\GameWindow.h" />
+    <ClInclude Include="Engine\System\DirectX\DxObject\DxObjectCommon.h" />
+    <ClInclude Include="Engine\System\Utility\Logger.h" />
+    <ClInclude Include="Engine\System\Utility\ComPtr.h" />
+    <ClInclude Include="Engine\System\DirectX\DxObject\DxDevice.h" />
+    <ClInclude Include="Engine\System\DirectX\DxObject\DxDescriptorHeaps.h" />
+    <ClInclude Include="Engine\System\DirectX\DxObject\DxDescriptor.h" />
+    <ClInclude Include="Engine\System\DirectX\DirectXCommon.h" />
+    <ClInclude Include="Engine\System\SxavengerSystem.h" />
+    <ClInclude Include="Engine\System\DirectX\DxObject\DxShaderCompiler.h" />
+    <ClInclude Include="Engine\System\DirectX\DxObject\DxSwapChain.h" />
+    <ClInclude Include="Engine\System\DirectX\DxObject\DxCommandContext.h" />
+    <ClInclude Include="Engine\System\Runtime\Thread\Thread.h" />
+    <ClInclude Include="Engine\System\DirectX\DxObject\DxDepthStencil.h" />
+    <ClInclude Include="Lib\Geometry\MathLib.h" />
+    <ClInclude Include="Lib\Geometry\Matrix4x4.h" />
+    <ClInclude Include="Lib\Geometry\Quaternion.h" />
+    <ClInclude Include="Lib\Geometry\Vector2.h" />
+    <ClInclude Include="Lib\Geometry\Vector3.h" />
+    <ClInclude Include="Lib\Geometry\Vector4.h" />
+    <ClInclude Include="Lib\Geometry\VectorComparison.h" />
+    <ClInclude Include="Lib\ObjectStructure.h" />
+    <ClInclude Include="Lib\CXXAttributeConfig.h" />
+    <ClInclude Include="Lib\Environment.h" />
+    <ClInclude Include="Engine\System\Window\GameWindowCollection.h" />
+    <ClInclude Include="Engine\System\DirectX\DirectXContext.h" />
+    <ClInclude Include="Engine\System\WinApp\WinApp.h" />
+    <ClInclude Include="Engine\System\Runtime\Scene\GameScene.h" />
   </ItemGroup>
 </Project>

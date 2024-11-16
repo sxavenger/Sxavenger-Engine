@@ -38,7 +38,7 @@ void JsonAdapter::WriteJson(const std::string& path, const Json& data) {
 
 	/*Assert(!ofs.fail());*/
 
-	ofs << std::setw(4) << data << std::endl;
+	ofs << std::setfill('\t') << std::setw(1) << data << std::endl;
 	ofs.close();
 }
 
@@ -54,13 +54,12 @@ void JsonAdapter::OverwriteJson(const std::string& path, const Json& data) {
 		ifs >> saveData;
 		ifs.close();
 	}
-	
+
 	// 新データの書き込み
 	saveData.update(data);
 
 	std::ofstream ofs(filePath);
 
-	ofs << std::setw(4) << saveData << std::endl;
-
+	ofs << std::setfill('\t') << std::setw(1) << data << std::endl;
 	ofs.close();
 }

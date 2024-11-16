@@ -3,52 +3,45 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
-//* windows
-#include <windows.h>
+//* DXOBJECT
+#include "DxObjectCommon.h"
+#include "DxDevice.h"
+#include "DxDescriptor.h"
+#include "DxDescriptorHeaps.h"
 
 //* lib
 #include <Lib/Geometry/Vector2.h>
 
-//* c++
-#include <optional>
-#include <string>
+////////////////////////////////////////////////////////////////////////////////////////////
+// DXOBJECT
+////////////////////////////////////////////////////////////////////////////////////////////
+_DXOBJECT_NAMESPACE_BEGIN
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// WindowType enum class
+// DepthSteincil class
 ////////////////////////////////////////////////////////////////////////////////////////////
-enum class WindowType {
-	kMainWindow,
-	kSubWindow
-};
-
-////////////////////////////////////////////////////////////////////////////////////////////
-// Window class
-////////////////////////////////////////////////////////////////////////////////////////////
-class Window {
+class DepthStencil {
 public:
 
 	//=========================================================================================
 	// public methods
 	//=========================================================================================
 
-	Window()  = default;
-	~Window() { Close(); }
+	DepthStencil()  = default;
+	~DepthStencil() { Term(); }
 
-	void Create(const Vector2ui& clientSize, const LPCWSTR name, const HWND parentHwnd = nullptr);
+	void Init(
+		Device* device, DescriptorHeaps* descriptorHeaps,
+		const Vector2ui& size, DXGI_FORMAT format = DxObject::kDefaultDepthFormat
+	);
 
-	void Close();
-
-	void SetIcon(const LPCSTR& filepath, const Vector2ui& cursolSize);
+	void Term();
 
 	//* getter *//
 
-	const HINSTANCE& GetHInst() const { return hInst_; }
+	ID3D12Resource* GetResource() const { return resource_.Get(); }
 
-	const HWND& GetHwnd() const { return hwnd_; }
-
-	bool IsOpenWindow() const { return hwnd_ != nullptr && IsWindow(hwnd_); }
-
-	const Vector2ui& GetSize() const { return clientSize_; }
+	const D3D12_CPU_DESCRIPTOR_HANDLE& GetCPUHandle() const { return descriptorDSV_.GetCPUHandle(); }
 
 private:
 
@@ -56,27 +49,19 @@ private:
 	// private variables
 	//=========================================================================================
 
-	//* window info *//
+	//* buffer *//
 
-	std::optional<WindowType> type_ = std::nullopt;
+	ComPtr<ID3D12Resource> resource_;
 
-	//* window parameter *//
-
-	HINSTANCE hInst_;
-	HWND      hwnd_;
-
-	Vector2ui clientSize_;
-	LPCWSTR   name_;
-
-	std::wstring className_;
+	DxObject::Descriptor descriptorDSV_;
 
 	//=========================================================================================
 	// private methods
 	//=========================================================================================
 
-	//* window proc *//
-
-	static LRESULT CALLBACK MainWindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam);
-	static LRESULT CALLBACK SubWindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam);
+	void CreateResource(Device* device, const Vector2ui& size, DXGI_FORMAT format);
+	void CreateDSV(Device* devices, DescriptorHeaps* descriptorHeaps, DXGI_FORMAT format);
 
 };
+
+_DXOBJECT_NAMESPACE_END

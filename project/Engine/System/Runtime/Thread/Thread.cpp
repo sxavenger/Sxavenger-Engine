@@ -3,14 +3,14 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
-//* engin
-#include <Engine/System/Logger.h>
+//* engine
+#include <Engine/System/SxavengerSystem.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// Interface ThreadExecution class methods
+// BaseTaskExecution class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-void IThreadExecution::WaitComplate() {
+void BaseTaskExecution::WaitCompleted() {
 	while (state_ != ExecutionState::kCompleted) {
 		std::this_thread::sleep_for(std::chrono::milliseconds(1));
 	}
@@ -21,20 +21,21 @@ void IThreadExecution::WaitComplate() {
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 void Thread::Create(const std::function<void()>& threadFunc) {
-
 	// threadに設定
 	thread_ = std::thread(threadFunc);
+
+	DirectXThreadContext::Init(1);
 }
 
 void Thread::Term() {
-
 	isTerm_ = true;
 
 	if (thread_.joinable()) {
 		thread_.join();
 	}
 
-	Assert(task_ == nullptr, "task is not nullptr.");
+	DirectXThreadContext::ExecuteAllAllocators();
+	Assert(task_ == nullptr, "tasks remain.");
 }
 
 void Thread::ExecuteTask() {
@@ -44,7 +45,10 @@ void Thread::ExecuteTask() {
 
 	if (task_->GetState() == ExecutionState::kWaiting) {
 		task_->SetState(ExecutionState::kRunning);
+
 		task_->Execute(this);
+		DirectXThreadContext::ExecuteAllAllocators();
+
 		task_->SetState(ExecutionState::kCompleted);
 	}
 

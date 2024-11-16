@@ -1,23 +1,17 @@
+#include "GameWindow.h"
+_DXOBJECT_USING
+
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
 //* engine
 #include <Engine/System/SxavengerSystem.h>
-#include <Engine/System/Runtime/Scene/GameScene.h>
-
-// c++
-#include <memory>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// メイン関数
+// GameWindow class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
-int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
-	SxavengerSystem::Init();
-
-	std::unique_ptr<GameScene> scene = std::make_unique<GameScene>();
-	scene->Run();
-	
-	SxavengerSystem::Term();
-	return 0;
+void GameWindow::Create(const Vector2ui& clientSize, const LPCWSTR& name, DirectXThreadContext* threadContext, const HWND& parentHwnd, const Color4f& clearColor) {
+	Window::Create(clientSize, name, parentHwnd);                //!< window自体の生成
+	DirectXWindowContext::Init(this, threadContext, clearColor); //!< windowに関与するDirectX12の初期化
 }

@@ -3,21 +3,41 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
-//* engine
-#include <Engine/System/Window/Window.h>
+//* DXOBJECT
+#include "DxObject/DxDevice.h"
+#include "DxObject/DxDescriptorHeaps.h"
+#include "DxObject/DxShaderCompiler.h"
+
+//* DXOBJECT utility
+#include "DxObject/DxDescriptor.h"
+#include "DxObject/DxCommandContext.h"
+#include "DxObject/DxSwapChain.h"
+
+//* c++
+#include <memory>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// SxavengerWindow class
+// DirectXCommon class
 ////////////////////////////////////////////////////////////////////////////////////////////
-class SxavengerWindow
-	: public Window {
+class DirectXCommon {
 public:
 
 	//=========================================================================================
 	// public methods
 	//=========================================================================================
 
-	void Create(const Vector2ui& clientSize, const LPCWSTR name, const HWND parentHwnd = nullptr) override;
+	DirectXCommon()  = default;
+	~DirectXCommon() { Term(); }
+
+	void Init();
+
+	void Term();
+
+	//* getter *//
+
+	DxObject::Device* GetDevice() const { return device_.get(); }
+
+	DxObject::DescriptorHeaps* GetDesriptorHeaps() const { return descriptorHeaps_.get(); }
 
 private:
 
@@ -25,5 +45,12 @@ private:
 	// private variables
 	//=========================================================================================
 
-	// swapchain
+	//* DXOBJECT *//
+
+	DxObject::Device::DxLeakChecker leakChecher_;
+
+	std::unique_ptr<DxObject::Device>          device_;
+	std::unique_ptr<DxObject::DescriptorHeaps> descriptorHeaps_;
+	std::unique_ptr<DxObject::ShaderCompiler>  shaderCompiler_;
+
 };

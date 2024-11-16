@@ -11,7 +11,7 @@
 // namespace
 //-----------------------------------------------------------------------------------------
 namespace {
-	std::mutex sMutex;
+	//std::mutex sLogMutex;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -63,35 +63,29 @@ void Log(const std::wstring& log) {
 }
 
 void EngineLog(const std::string& log) {
-	std::string tag = "## Sxavenger Engine : ";
-	OutputDebugStringA(tag.c_str());
-	Log(log);
+	std::string tag = "## Sxavenger Engine >> ";
+	std::string mes = tag + log + "\n";
+	OutputDebugStringA(mes.c_str());
 }
 
 void EngineLog(const std::wstring& log) {
-	std::string tag = "## Sxavenger Engine : ";
+	std::string tag = "## Sxavenger Engine >> ";
 	OutputDebugStringA(tag.c_str());
 	Log(log);
 }
 
 void ThreadLog(const std::string& log) {
-	std::lock_guard<std::mutex> lock(sMutex);
-
-	std::ostringstream tag;
-	tag << "## Sxavenger Engine [thread id: " << std::this_thread::get_id() << "] : ";
-	OutputDebugStringA(tag.str().c_str());
-
-	Log(log);
+	std::ostringstream mes;
+	mes << "## Sxavenger Engine [thread id: " << std::this_thread::get_id() << "] : ";
+	mes << log << "\n";
+	OutputDebugStringA(mes.str().c_str());
 }
 
 void ThreadLog(const std::wstring& log) {
-	std::lock_guard<std::mutex> lock(sMutex);
-
-	std::ostringstream tag;
-	tag << "## Sxavenger Engine [thread id: " << std::this_thread::get_id() << "] : ";
-	OutputDebugStringA(tag.str().c_str());
-
-	Log(log);
+	std::wostringstream mes;
+	mes << "## Sxavenger Engine [thread id: " << std::this_thread::get_id() << "] : ";
+	mes << log << "\n";
+	OutputDebugStringW(mes.str().c_str());
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -102,6 +96,8 @@ void Assert(bool expresion, const std::string& detail, const std::source_locatio
 	if (expresion) {
 		return;
 	}
+
+	//!< mutexがいるかも...
 
 	// location message
 	std::ostringstream locationMes;

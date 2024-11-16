@@ -8,7 +8,7 @@
 extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
 //* engine
-#include <Engine/System/Logger.h>
+#include <Engine/System/Utility/Logger.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Window class methods
@@ -72,12 +72,25 @@ void Window::Create(const Vector2ui& clientSize, const LPCWSTR name, const HWND 
 	ShowWindow(hwnd_, SW_SHOW);
 }
 
-void Window::Term() {
+void Window::Close() {
 	CloseWindow(hwnd_);
 
 	if (hInst_ != nullptr) {
 		UnregisterClass(className_.c_str(), hInst_);
 	}
+}
+
+void Window::SetIcon(const LPCSTR& filepath, const Vector2ui& cursolSize) {
+
+	HICON smallIcon
+		= static_cast<HICON>(LoadImageA(GetModuleHandle(NULL), filepath, IMAGE_ICON, cursolSize.x, cursolSize.y, LR_LOADFROMFILE));
+
+	HICON largeIcon
+		= static_cast<HICON>(LoadImageA(GetModuleHandle(NULL), filepath, IMAGE_ICON, cursolSize.x, cursolSize.y, LR_LOADFROMFILE));
+
+	SendMessage(hwnd_, WM_SETICON, ICON_SMALL, reinterpret_cast<LPARAM>(smallIcon));
+	SendMessage(hwnd_, WM_SETICON, ICON_BIG,   reinterpret_cast<LPARAM>(largeIcon));
+
 }
 
 LRESULT Window::MainWindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {

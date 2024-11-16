@@ -3,13 +3,16 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
+//* engine
+#include <Engine/System/DirectX/DirectXContext.h>
+
 //* lib
 #include <Lib/CXXAttributeConfig.h>
 
 //* c++
 #include <thread>
-#include <mutex>
 #include <functional>
+#include <mutex>
 #include <queue>
 
 //-----------------------------------------------------------------------------------------
@@ -27,38 +30,41 @@ enum class ExecutionState {
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// Interface ThreadExecution class
+// BaseTaskExecution class
 ////////////////////////////////////////////////////////////////////////////////////////////
-class IThreadExecution {
+class BaseTaskExecution {
 public:
 
 	//=========================================================================================
 	// public methods
 	//=========================================================================================
 
-	virtual void Execute(_MAYBE_UNUSED Thread* thread) = 0;
-	// TODO: commandListを入れておく
+	virtual void Execute(_MAYBE_UNUSED const Thread* const thread) = 0;
 
-	void WaitComplate();
+	void WaitCompleted();
+
+	bool IsCompleted() { return state_ == ExecutionState::kCompleted; }
+
+	//* getter and setter *//
 
 	ExecutionState GetState() const { return state_; }
 
 	void SetState(ExecutionState state) { state_ = state; }
 
-protected:
+private:
 
 	//=========================================================================================
-	// protected variables
+	// private variables
 	//=========================================================================================
 
 	ExecutionState state_ = ExecutionState::kWaiting;
-
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Thread class
 ////////////////////////////////////////////////////////////////////////////////////////////
-class Thread {
+class Thread
+	: public DirectXThreadContext {
 public:
 
 	//=========================================================================================
@@ -68,7 +74,7 @@ public:
 	Thread()  = default;
 	~Thread() { Term(); }
 
-	void Create(const std::function<void()>& threadFunc);
+	virtual void Create(const std::function<void()>& threadFunc);
 
 	void Term();
 
@@ -80,20 +86,23 @@ public:
 
 	//* setter *//
 
-	void SetTask(IThreadExecution* task) { task_ = task; }
+	void SetTask(BaseTaskExecution* task) { task_ = task; }
 
-private:
+protected:
 
 	//=========================================================================================
-	// private variables
+	// protected variables
 	//=========================================================================================
+
+	//* thread paramter *//
 
 	std::thread thread_;
-	//!< commandList, fenceの追加
 
 	bool isTerm_ = false;
 
-	IThreadExecution* task_ = nullptr;
+	//* task parameter *//
+
+	BaseTaskExecution* task_ = nullptr;
 
 };
 
@@ -114,7 +123,7 @@ public:
 
 	void Term();
 
-	void PushTask(IThreadExecution* task) { tasks_.push(task); }
+	void PushTask(BaseTaskExecution* task) { tasks_.emplace(task); }
 
 private:
 
@@ -130,7 +139,7 @@ private:
 
 	//* task container *//
 
-	std::queue<IThreadExecution*> tasks_;
+	std::queue<BaseTaskExecution*> tasks_;
 
 
 };
