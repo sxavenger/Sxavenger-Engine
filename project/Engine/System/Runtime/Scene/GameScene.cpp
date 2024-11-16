@@ -53,6 +53,7 @@ void GameScene::Run() {
 void GameScene::Init() {
 	mainWindow_ = SxavengerSystem::CreateMainWindow(kMainWindowSize, kMainWindowTitle);
 	mainWindow_->SetIcon("resources/icon/SxavengerEngineIcon.ico", { 32, 32 });
+
 }
 
 void GameScene::Update() {
