@@ -53,6 +53,7 @@ protected:
 	QuaternionTransformBuffer transform_;
 	PBRMaterialBuffer material_;
 	UVTransformBuffer uvTransform_;
+	ColorBuffer color_;
 
 	//* raytracing
 	std::vector<std::unique_ptr<DxrObject::BufferRecoreder>> recorders_;

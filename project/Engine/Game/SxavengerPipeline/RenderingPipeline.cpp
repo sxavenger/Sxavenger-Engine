@@ -59,6 +59,7 @@ void RenderingPipeline::CreateForward() {
 		desc.SetCBV(2, VISIBILITY_VERTEX, 0);        //!< UVTransform
 		desc.SetSRV(3, VISIBILITY_PIXEL, 0);         //!< Albedo
 		desc.SetSampler(MODE_WRAP, VISIBILITY_PIXEL, 0);
+		desc.SetCBV(4, VISIBILITY_PIXEL, 0);         //!< Color
 
 		pipelines_[kDefaultVS_AlbedoPS]->CreateRootSignature(deviceObj, desc);
 		pipelines_[kDefaultVS_AlbedoPS]->CreatePipeline(deviceObj, blobs_[kDefaultVS_AlbedoPS].get(), forwardPipelineDesc_);
@@ -84,6 +85,7 @@ void RenderingPipeline::CreateForward() {
 		desc.SetCBV(8, VISIBILITY_MESH, 0);        //!< uvTransform
 		desc.SetSRV(9, VISIBILITY_PIXEL, 0);       //!< Albedo
 		desc.SetSampler(MODE_WRAP, VISIBILITY_PIXEL, 0);
+		desc.SetCBV(10, VISIBILITY_PIXEL, 0);      //!< Color
 
 		pipelines_[kDefaultMS_AlbedoPS]->CreateRootSignature(deviceObj, desc);
 		pipelines_[kDefaultMS_AlbedoPS]->CreatePipeline(deviceObj, blobs_[kDefaultMS_AlbedoPS].get(), forwardPipelineDesc_);
@@ -107,6 +109,7 @@ void RenderingPipeline::CreateDeferred() {
 		desc.SetCBV(2, VISIBILITY_VERTEX, 0);        //!< UVTransform
 		desc.SetSRV(3, VISIBILITY_PIXEL, 0);         //!< Albedo
 		desc.SetSampler(MODE_WRAP, VISIBILITY_PIXEL, 0);
+		desc.SetCBV(4, VISIBILITY_PIXEL, 0);          //!< Color
 
 		pipelines_[kDefaultVS_AlbedoPS_Deferred]->CreateRootSignature(deviceObj, desc);
 		pipelines_[kDefaultVS_AlbedoPS_Deferred]->CreatePipeline(deviceObj, blobs_[kDefaultVS_AlbedoPS_Deferred].get(), deferredPiplineDesc_);
@@ -132,6 +135,7 @@ void RenderingPipeline::CreateDeferred() {
 		desc.SetCBV(8, VISIBILITY_MESH, 0);        //!< uvTransform
 		desc.SetSRV(9, VISIBILITY_PIXEL, 0);       //!< Albedo
 		desc.SetSampler(MODE_WRAP, VISIBILITY_PIXEL, 0);
+		desc.SetCBV(10, VISIBILITY_PIXEL, 0);      //!< Color
 
 		pipelines_[kDefaultMS_AlbedoPS_Deferred]->CreateRootSignature(deviceObj, desc);
 		pipelines_[kDefaultMS_AlbedoPS_Deferred]->CreatePipeline(deviceObj, blobs_[kDefaultMS_AlbedoPS_Deferred].get(), deferredPiplineDesc_);

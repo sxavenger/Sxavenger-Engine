@@ -50,6 +50,9 @@ public:
 
 	const EulerTransform& GetTransform() const { return transform_.transform; }
 
+	const EulerTransformBuffer& GetTransformBuffer() const { return transform_; }
+	EulerTransformBuffer& GetTransformBuffer() { return transform_; }
+
 	//* camera getter *//
 
 	const Matrix4x4 GetViewProjMatrix() const { return (*buffer_)[0].viewMatrix * (*buffer_)[0].projMatrix; }
