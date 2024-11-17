@@ -135,6 +135,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="Engine\System\DirectX\DxObject\DxDescriptor.cpp" />
     <ClCompile Include="Engine\System\DirectX\DxObject\DxDescriptorHeaps.cpp" />
     <ClCompile Include="Engine\System\DirectX\DxObject\DxDevice.cpp" />
+    <ClCompile Include="Engine\System\DirectX\DxObject\DxDimensionBuffer.cpp" />
     <ClCompile Include="Engine\System\DirectX\DxObject\DxObjectCommon.cpp" />
     <ClCompile Include="Engine\System\DirectX\DxObject\DxShaderCompiler.cpp" />
     <ClCompile Include="Engine\System\DirectX\DxObject\DxSwapChain.cpp" />
@@ -162,6 +163,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="Lib\Geometry\Vector2.cpp" />
     <ClCompile Include="Lib\Geometry\Vector3.cpp" />
     <ClCompile Include="Lib\Geometry\Vector4.cpp" />
+    <ClCompile Include="Lib\Sxl\LowerUnorderedMap.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -172,6 +174,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Engine\System\DirectX\DxObject\DxDescriptor.h" />
     <ClInclude Include="Engine\System\DirectX\DxObject\DxDescriptorHeaps.h" />
     <ClInclude Include="Engine\System\DirectX\DxObject\DxDevice.h" />
+    <ClInclude Include="Engine\System\DirectX\DxObject\DxDimensionBuffer.h" />
     <ClInclude Include="Engine\System\DirectX\DxObject\DxObjectCommon.h" />
     <ClInclude Include="Engine\System\DirectX\DxObject\DxShaderCompiler.h" />
     <ClInclude Include="Engine\System\DirectX\DxObject\DxSwapChain.h" />
@@ -206,6 +209,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Lib\Geometry\Vector4.h" />
     <ClInclude Include="Lib\Geometry\VectorComparison.h" />
     <ClInclude Include="Lib\ObjectStructure.h" />
+    <ClInclude Include="Lib\Sxl\LowerUnorderedMap.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

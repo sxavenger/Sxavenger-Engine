@@ -57,7 +57,7 @@ void KeyboardInput::Update() {
 	keyboardDevice_->Acquire();
 
 	// キーボードの入力状態を取得
-	keyboardDevice_->GetDeviceState(keys_.first.size(), keys_.first.data());
+	keyboardDevice_->GetDeviceState(sizeof(keys_.first), keys_.first.data());
 
 }
 

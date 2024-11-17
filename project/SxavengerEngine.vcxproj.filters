@@ -44,6 +44,8 @@
     <ClCompile Include="Engine\System\WinApp\WinApp.cpp" />
     <ClCompile Include="Engine\System\Runtime\Scene\GameScene.cpp" />
     <ClCompile Include="Engine\System\Runtime\Input\Input.cpp" />
+    <ClCompile Include="Lib\Sxl\LowerUnorderedMap.cpp" />
+    <ClCompile Include="Engine\System\DirectX\DxObject\DxDimensionBuffer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="externals\imgui\imstb_truetype.h" />
@@ -87,5 +89,7 @@
     <ClInclude Include="Engine\System\Runtime\Scene\GameScene.h" />
     <ClInclude Include="Engine\System\Runtime\Input\Input.h" />
     <ClInclude Include="Engine\System\Runtime\Input\InputId.h" />
+    <ClInclude Include="Lib\Sxl\LowerUnorderedMap.h" />
+    <ClInclude Include="Engine\System\DirectX\DxObject\DxDimensionBuffer.h" />
   </ItemGroup>
 </Project>

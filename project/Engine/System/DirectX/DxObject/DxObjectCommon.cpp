@@ -5,7 +5,7 @@ _DXOBJECT_USING
 // methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-ComPtr<ID3D12Resource> CreateBufferResource(
+ComPtr<ID3D12Resource> _DXOBJECT CreateBufferResource(
 	ID3D12Device* device,
 	D3D12_HEAP_TYPE heapType,
 	size_t sizeInBytes,
@@ -42,7 +42,7 @@ ComPtr<ID3D12Resource> CreateBufferResource(
 	return result;
 }
 
-ComPtr<ID3D12Resource> CreateBufferResource(
+ComPtr<ID3D12Resource> _DXOBJECT CreateBufferResource(
 	ID3D12Device* device, size_t sizeInBytes) {
 
 	Assert(sizeInBytes != 0);
@@ -78,7 +78,7 @@ ComPtr<ID3D12Resource> CreateBufferResource(
 
 }
 
-UINT RoundUp(UINT round, UINT thread) {
+UINT _DXOBJECT RoundUp(UINT round, UINT thread) {
 	Assert(thread > 0);
 	return (round + thread - 1) / thread;
 }
