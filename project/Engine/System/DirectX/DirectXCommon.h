@@ -7,6 +7,7 @@
 #include "DxObject/DxDevice.h"
 #include "DxObject/DxDescriptorHeaps.h"
 #include "DxObject/DxShaderCompiler.h"
+#include "DxObject/DxCompileBlobCollection.h"
 
 //* DXOBJECT utility
 #include "DxObject/DxDescriptor.h"
@@ -49,8 +50,9 @@ private:
 
 	DxObject::Device::DxLeakChecker leakChecher_;
 
-	std::unique_ptr<DxObject::Device>          device_;
-	std::unique_ptr<DxObject::DescriptorHeaps> descriptorHeaps_;
-	std::unique_ptr<DxObject::ShaderCompiler>  shaderCompiler_;
+	std::unique_ptr<DxObject::Device>                device_;
+	std::unique_ptr<DxObject::DescriptorHeaps>       descriptorHeaps_;
+	std::unique_ptr<DxObject::ShaderCompiler>        shaderCompiler_;
+	std::unique_ptr<DxObject::CompileBlobCollection> compileBlobCollection_;
 
 };

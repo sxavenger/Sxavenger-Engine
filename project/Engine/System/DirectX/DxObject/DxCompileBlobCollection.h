@@ -5,17 +5,14 @@
 //-----------------------------------------------------------------------------------------
 //* DXOBJECT
 #include "DxObjectCommon.h"
+#include "DxShaderCompiler.h"
 
-//* DirectX12
-#include <dxcapi.h>
+//* lib
+#include <Lib/Sxl/LowerUnorderedMap.h>
 
 //* c++
-#include <array>
-
-//-----------------------------------------------------------------------------------------
-// comment
-//-----------------------------------------------------------------------------------------
-#pragma comment(lib, "dxcompiler.lib")
+#include <memory>
+#include <string>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // DXOBJECT
@@ -23,56 +20,54 @@
 _DXOBJECT_NAMESPACE_BEGIN
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// CompileProfile enum class
+// CompileBlobCollection class
 ////////////////////////////////////////////////////////////////////////////////////////////
-enum class CompileProfile : uint32_t {
-	vs,
-	gs,
-	ms,
-	as,
-	ps,
-	cs,
-	lib,
-};
-
-////////////////////////////////////////////////////////////////////////////////////////////
-// ShaderCompiler class
-////////////////////////////////////////////////////////////////////////////////////////////
-class ShaderCompiler {
+class CompileBlobCollection {
 public:
 
 	//=========================================================================================
 	// public methods
 	//=========================================================================================
 
-	ShaderCompiler()  = default;
-	~ShaderCompiler() { Term(); }
+	CompileBlobCollection()  = default;
+	~CompileBlobCollection() { Term(); };
 
-	void Init();
+	void Init(ShaderCompiler* compiler);
 
 	void Term();
 
-	//* compiler opiton *//
+	std::weak_ptr<ComPtr<IDxcBlob>> TryCreateBlob(const std::wstring& filename, CompileProfile profile);
 
-	ComPtr<IDxcBlob> Compile(
-		const std::wstring& filepath,
-		CompileProfile profile,
-		const std::wstring& entryPoint = L""
-	);
+	void HotReload(const std::wstring& filename);
+
+	std::weak_ptr<ComPtr<IDxcBlob>> GetBlob(const std::wstring& filename);
+
+	//* setter *//
+
+	void SetCompiler(ShaderCompiler* compiler) { compiler_ = compiler; }
 
 private:
+
+	////////////////////////////////////////////////////////////////////////////////////////////
+	// CompileBlob structure
+	////////////////////////////////////////////////////////////////////////////////////////////
+	struct CompileBlob {
+		std::shared_ptr<ComPtr<IDxcBlob>> blob;
+		CompileProfile                    profile;
+	};
 
 	//=========================================================================================
 	// private variables
 	//=========================================================================================
 
-	//* dxc compiler *//
+	//* external *//
 
-	ComPtr<IDxcUtils>          utils_;
-	ComPtr<IDxcCompiler3>      compiler_;
-	ComPtr<IDxcIncludeHandler> includeHandler_;
+	ShaderCompiler* compiler_ = nullptr;
 
-	static const std::array<LPCWSTR, static_cast<uint32_t>(CompileProfile::lib) + 1> profiles_;
+	//* collection *//
+
+	Sxl::LowerUnorderedMapW<CompileBlob> blobs_;
+	//!< main, profile統一
 
 };
 

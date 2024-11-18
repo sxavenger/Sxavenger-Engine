@@ -7,6 +7,20 @@ _DXOBJECT_USING
 //* c++
 #include <vector>
 
+//=========================================================================================
+// static variables
+//=========================================================================================
+
+const std::array<LPCWSTR, static_cast<uint32_t>(CompileProfile::lib) + 1> ShaderCompiler::profiles_ = {
+	L"vs_6_6", //!< vs
+	L"gs_6_6", //!< gs
+	L"ms_6_6", //!< ms
+	L"as_6_6", //!< as
+	L"ps_6_6", //!< ps
+	L"cs_6_6", //!< cs
+	L"lib_6_6" //!< lib
+};
+
 ////////////////////////////////////////////////////////////////////////////////////////////
 // ShaderCompiler class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -37,7 +51,7 @@ void ShaderCompiler::Term() {
 
 ComPtr<IDxcBlob> ShaderCompiler::Compile(
 	const std::wstring& filepath,
-	const std::wstring& profile,
+	CompileProfile profile,
 	const std::wstring& entryPoint) {
 
 	// hlslファイルを読み込む
@@ -53,11 +67,11 @@ ComPtr<IDxcBlob> ShaderCompiler::Compile(
 
 	// 基本情報の設定
 	std::vector<LPCWSTR> arguments = {
-		filepath.c_str(),         //!< コンパイル対象のhlslファイルパス
-		L"-T", profile.c_str(),  //!< ShaderProfileの設定
-		L"-Zi", L"-Qembed_debug", //!< デバッグ用情報を埋め込む
-		L"-Od",                   //!< 最適化を外しておく
-		L"-Zpr",                  //!< メモリレイアウトは行優先
+		filepath.c_str(),                                 //!< コンパイル対象のhlslファイルパス
+		L"-T", profiles_[static_cast<uint32_t>(profile)], //!< ShaderProfileの設定
+		L"-Zi", L"-Qembed_debug",                         //!< デバッグ用情報を埋め込む
+		L"-Od",                                           //!< 最適化を外しておく
+		L"-Zpr",                                          //!< メモリレイアウトは行優先
 	};
 
 	//!< entry pointがある場合, 設定

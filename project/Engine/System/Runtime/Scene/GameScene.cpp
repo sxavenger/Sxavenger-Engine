@@ -9,8 +9,6 @@
 //* lib
 #include <Lib/Environment.h>
 
-#include "Engine/System/DirectX/DxObject/DxDimensionBuffer.h"
-
 ////////////////////////////////////////////////////////////////////////////////////////////
 // GameScene class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -55,12 +53,6 @@ void GameScene::Run() {
 void GameScene::Init() {
 	mainWindow_ = SxavengerSystem::CreateMainWindow(kMainWindowSize, kMainWindowTitle);
 	mainWindow_->SetIcon("resources/icon/SxavengerEngineIcon.ico", { 32, 32 });
-
-	std::unique_ptr<DxObject::DimensionBuffer<float>> dimension = std::make_unique< DxObject::DimensionBuffer<float>>();
-	dimension->Create(SxavengerSystem::GetDxDevice(), 2);
-
-	(*dimension)[0] = (*dimension)[1];
-	(*dimension)[2];
 }
 
 void GameScene::Update() {

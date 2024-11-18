@@ -46,6 +46,9 @@
     <ClCompile Include="Engine\System\Runtime\Input\Input.cpp" />
     <ClCompile Include="Lib\Sxl\LowerUnorderedMap.cpp" />
     <ClCompile Include="Engine\System\DirectX\DxObject\DxDimensionBuffer.cpp" />
+    <ClCompile Include="Engine\System\DirectX\DxObject\DxCompileBlobCollection.cpp" />
+    <ClCompile Include="Engine\System\DirectX\DxObject\DxGraphicsPipelineState.cpp" />
+    <ClCompile Include="Engine\System\DirectX\DxObject\DxRootSignatureDesc.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="externals\imgui\imstb_truetype.h" />
@@ -91,5 +94,8 @@
     <ClInclude Include="Engine\System\Runtime\Input\InputId.h" />
     <ClInclude Include="Lib\Sxl\LowerUnorderedMap.h" />
     <ClInclude Include="Engine\System\DirectX\DxObject\DxDimensionBuffer.h" />
+    <ClInclude Include="Engine\System\DirectX\DxObject\DxCompileBlobCollection.h" />
+    <ClInclude Include="Engine\System\DirectX\DxObject\DxGraphicsPipelineState.h" />
+    <ClInclude Include="Engine\System\DirectX\DxObject\DxRootSignatureDesc.h" />
   </ItemGroup>
 </Project>

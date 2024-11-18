@@ -15,6 +15,11 @@ void DirectXCommon::Init() {
 
 	shaderCompiler_ = std::make_unique<ShaderCompiler>();
 	shaderCompiler_->Init();
+
+	compileBlobCollection_ = std::make_unique<CompileBlobCollection>();
+	compileBlobCollection_->Init(shaderCompiler_.get());
+
+
 }
 
 void DirectXCommon::Term() {
