@@ -11,6 +11,9 @@
 //* engine
 #include <Engine/System/Performance.h>
 
+//* game
+#include <Game/Particle.h>
+
 //* c++
 #include <queue>
 
@@ -45,7 +48,7 @@ public:
 	Enemy()  = default;
 	~Enemy() { Term(); }
 
-	void Init(Model* model, const Vector3f& position, const Vector3f& velocity = {}, int32_t point = 30);
+	void Init(Model* model, const Vector3f& position, const Vector3f& velocity = {}, ParticleCollection* particle = nullptr, int32_t point = 30);
 
 	void Term();
 
@@ -80,6 +83,8 @@ private:
 
 	DeltaTimePoint deleteTime_;
 	DeltaTimePoint deleteTimer_ = { 8.0f };
+
+	ParticleCollection* particle_ = nullptr;
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -106,6 +111,8 @@ public:
 
 	void SetPlayer(Player* player) { player_ = player; }
 
+	void SetParticleCollection(ParticleCollection* particle) { particle_ = particle; }
+
 private:
 
 	////////////////////////////////////////////////////////////////////////////////////////////
@@ -131,6 +138,7 @@ private:
 	//* external *//
 
 	Player* player_ = nullptr;
+	ParticleCollection* particle_ = nullptr;
 
 	//* container *//
 

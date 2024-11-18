@@ -40,7 +40,7 @@ void Player::Init() {
 	bullet_->SetScore(score_.get());
 	SetChild(bullet_.get());
 
-	ModelBehavior::renderingFlag_ = kBehaviorRender_Adaptive | kBehaviorRender_Systematic | kBehaviorRender_Raytracing;
+	ModelBehavior::renderingFlag_ = kBehaviorRender_LateAdaptive | kBehaviorRender_Systematic | kBehaviorRender_Raytracing;
 
 	Sxavenger::LoadTexture("resources/textures/reticle.png");
 }
@@ -115,7 +115,7 @@ void Player::Shot() {
 		mouse.y / kWindowSize.y * 2.0f - 1.0f,
 	};
 
-	Vector3f direction = Matrix::Transform({ mouse.x, -mouse.y, 1.0f }, invViewProj);
+	Vector3f direction = Normalize(Matrix::Transform({ mouse.x, -mouse.y, 1.0f }, invViewProj));
 
 	bullet_->Update();
 	bullet_->Shoot(Sxavenger::IsPressKey(DIK_SPACE), transform_.GetWorldPosition(), direction);

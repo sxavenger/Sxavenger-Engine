@@ -11,12 +11,13 @@
 
 //* Game
 #include <Game/Player.h>
+#include <Game/PlayerBullet.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Enemy class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-void Enemy::Init(Model* model, const Vector3f& position, const Vector3f& velocity, int32_t point) {
+void Enemy::Init(Model* model, const Vector3f& position, const Vector3f& velocity, ParticleCollection* particle, int32_t point) {
 
 	SetName(std::format("enemy {:p}", reinterpret_cast<void*>(this)));
 
@@ -39,6 +40,8 @@ void Enemy::Init(Model* model, const Vector3f& position, const Vector3f& velocit
 
 	Collider::typeId_       = kColliderType_Enemy;
 	Collider::targetTypeId_ = kColliderType_PlayerBullet;
+
+	particle_ = particle;
 }
 
 void Enemy::Term() {
@@ -68,6 +71,11 @@ void Enemy::SetAttributeImGui() {
 
 void Enemy::OnCollisionEnter(_MAYBE_UNUSED Collider* const other) {
 	isDelete_ = true;
+
+	if (particle_ != nullptr) {
+		auto ptr = dynamic_cast<PlayerBullet*>(other);
+		particle_->CreateParticle(transform_.GetWorldPosition(), -(ptr->GetDirection()) / 400.0f);
+	}
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -143,7 +151,7 @@ void EnemyCollection::CreateEnemy(const EnemyPopCommand& command) {
 	Vector3f base = player_->CatmullRomPosition(command.point);
 
 	std::unique_ptr<Enemy> newEnemy = std::make_unique<Enemy>();
-	newEnemy->Init(enemyModel_[command.type], command.offset + base, command.velocity);
+	newEnemy->Init(enemyModel_[command.type], command.offset + base, command.velocity, particle_);
 
 	SetChild(newEnemy.get());
 	enemies_.emplace_back(std::move(newEnemy));

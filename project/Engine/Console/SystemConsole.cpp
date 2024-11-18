@@ -85,8 +85,8 @@ void SystemConsole::Draw() {
 
 	Sxavenger::TranstionAllocator();
 
-	//RenderingConsole::RenderAdaptive(gameFrame_.get());
-	//RenderingConsole::RenderAdaptive(sceneFrame_.get());
+	RenderingConsole::RenderAdaptive(gameFrame_.get());
+	RenderingConsole::RenderAdaptive(sceneFrame_.get());
 
 	gameFrame_->TransitionAdaptiveToVisual();
 	sceneFrame_->TransitionAdaptiveToVisual();
@@ -101,8 +101,8 @@ void SystemConsole::Draw() {
 
 	Sxavenger::TranstionAllocator();
 
-	RenderingConsole::RenderAdaptive(gameFrame_.get());
-	RenderingConsole::RenderAdaptive(sceneFrame_.get());
+	RenderingConsole::RenderLateAdaptive(gameFrame_.get());
+	RenderingConsole::RenderLateAdaptive(sceneFrame_.get());
 
 	{
 		sceneFrame_->BeginAdaptive();

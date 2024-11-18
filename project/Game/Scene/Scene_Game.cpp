@@ -17,6 +17,8 @@ void Scene_Game::Init() {
 	SxavengerGame::ClearColliders();
 	sSystemConsole->SetRaytracingEnable(true);
 
+	SxavengerGame::LoadModel("resources/model/CG2", "axis.obj");
+
 	player_ = std::make_unique<Player>();
 	player_->Init();
 	player_->SetToConsole();
@@ -29,6 +31,12 @@ void Scene_Game::Init() {
 	field_ = std::make_unique<Field>();
 	field_->Init();
 	field_->SetToConsole();
+
+	particle_ = std::make_unique<ParticleCollection>();
+	particle_->Init();
+	particle_->SetToConsole();
+
+	enemyCollection_->SetParticleCollection(particle_.get());
 }
 
 void Scene_Game::Term() {
@@ -42,6 +50,8 @@ void Scene_Game::Update() {
 	if (player_->IsEnd()) {
 		SetNextScene<Scene_Title>();
 	}
+
+	particle_->Update();
 
 	SxavengerGame::UpdateColliders();
 

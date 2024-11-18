@@ -13,7 +13,7 @@
 void Score::Init() {
 	SetName("score");
 
-	BaseBehavior::renderingFlag_ = kBehaviorRender_Adaptive;
+	BaseBehavior::renderingFlag_ = kBehaviorRender_LateAdaptive;
 
 	texture_      = Sxavenger::LoadTexture("resources/textures/score_numbres.png");
 	boardTexture_ = Sxavenger::LoadTexture("resources/textures/score.png");

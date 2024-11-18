@@ -22,10 +22,11 @@ class Camera3D;
 // BehaviorRenderingType enum
 ////////////////////////////////////////////////////////////////////////////////////////////
 enum BehaviorRenderingFlag : uint32_t {
-	kBehaviorRender_None       = 0,
-	kBehaviorRender_Systematic = 1 << 0,
-	kBehaviorRender_Adaptive   = 1 << 1,
-	kBehaviorRender_Raytracing = 1 << 2,
+	kBehaviorRender_None         = 0,
+	kBehaviorRender_Systematic   = 1 << 0,
+	kBehaviorRender_Adaptive     = 1 << 1,
+	kBehaviorRender_LateAdaptive = 1 << 1,
+	kBehaviorRender_Raytracing   = 1 << 2,
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////

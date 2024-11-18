@@ -85,7 +85,7 @@ private:
 	std::unique_ptr<DxObject::GraphicsBlob>     blob_;
 	std::unique_ptr<DxObject::GraphicsPipeline> pipeline_;
 
-	static const uint32_t kMaxVertexCount_ = 514;
+	static const uint32_t kMaxVertexCount_ = 514 * 2;
 	static const uint32_t kPrimitiveCount_ = 2;
 
 	InputAssembler<RailIA> ia_;

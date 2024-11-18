@@ -11,6 +11,7 @@
 #include <Game/Enemy.h>
 
 #include <Game/Field.h>
+#include <Game/Particle.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Scene_Game class
@@ -45,5 +46,7 @@ private:
 	std::unique_ptr<EnemyCollection> enemyCollection_;
 
 	std::unique_ptr<Field> field_;
+
+	std::unique_ptr<ParticleCollection> particle_;
 
 };

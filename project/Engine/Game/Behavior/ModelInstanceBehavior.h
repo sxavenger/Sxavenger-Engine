@@ -27,7 +27,8 @@ public:
 
 	void Term();
 
-	virtual void DrawSystematic(_MAYBE_UNUSED const Camera3D* camera);
+	virtual void DrawSystematic(_MAYBE_UNUSED const Camera3D* camera) override;
+	virtual void DrawAdaptive(_MAYBE_UNUSED const Camera3D* camera) override;
 
 protected:
 

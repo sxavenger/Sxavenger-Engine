@@ -40,6 +40,8 @@ public:
 
 	virtual void OnCollisionEnter(_MAYBE_UNUSED Collider* const other);
 
+	const Vector3f& GetDirection() const { return direction_; }
+
 	//* setter *//
 
 	void SetScore(Score* score) { score_ = score; }

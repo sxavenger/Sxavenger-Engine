@@ -218,6 +218,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="Game\ChessBoard.cpp" />
     <ClCompile Include="Engine\Beta\Curve.cpp" />
     <ClCompile Include="Game\Field.cpp" />
+    <ClCompile Include="Game\Particle.cpp" />
     <ClCompile Include="Game\Plane.cpp" />
     <ClCompile Include="Game\Scene\IScene.cpp" />
     <ClCompile Include="Game\Scene\SceneManager.cpp" />
@@ -233,6 +234,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="Game\Teapot.cpp" />
     <ClCompile Include="Lib\Adapter\Json.cpp" />
     <ClCompile Include="Lib\Adapter\Random.cpp" />
+    <ClCompile Include="Lib\Easing.cpp" />
     <ClCompile Include="Lib\Geometry\MathLib.cpp" />
     <ClCompile Include="Lib\Geometry\Matrix4x4.cpp" />
     <ClCompile Include="Lib\Geometry\Quaternion.cpp" />
@@ -329,6 +331,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Game\ChessBoard.h" />
     <ClInclude Include="Engine\Beta\Curve.h" />
     <ClInclude Include="Game\Field.h" />
+    <ClInclude Include="Game\Particle.h" />
     <ClInclude Include="Game\Player.h" />
     <ClInclude Include="Game\PlayerBullet.h" />
     <ClInclude Include="Game\PlayerBulletCollisionManager.h" />
@@ -345,6 +348,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Lib\Adapter\Json.h" />
     <ClInclude Include="Lib\Adapter\Random.h" />
     <ClInclude Include="Lib\CXXAttributeConfig.h" />
+    <ClInclude Include="Lib\Easing.h" />
     <ClInclude Include="Lib\Environment.h" />
     <ClInclude Include="Lib\Geometry\MathLib.h" />
     <ClInclude Include="Lib\Geometry\Matrix4x4.h" />

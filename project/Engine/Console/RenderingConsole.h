@@ -39,6 +39,7 @@ public:
 
 	void RenderSystematic(SxavengerFrame* frame);
 	void RenderAdaptive(SxavengerFrame* frame);
+	void RenderLateAdaptive(SxavengerFrame* frame);
 
 	void SetupRaytracing();
 	void RenderRaytracing(SxavengerFrame* frame);
@@ -129,6 +130,7 @@ private:
 
 	void DrawSystematicBehavior(BaseBehavior* behavior, SxavengerFrame* frame);
 	void DrawAdaptiveBehavior(BaseBehavior* behavior, SxavengerFrame* frame);
+	void DrawLateAdaptiveBehavior(BaseBehavior* behavior, SxavengerFrame* frame);
 	void DrawRaytracingBehavior(BaseBehavior* behavior);
 
 };

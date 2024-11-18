@@ -29,7 +29,7 @@ void Curve::TEST_Create() {
 	};
 }
 
-float Curve::GetOutput(float inputT) {
+float Curve::GetOutput(float inputT) const {
 	Assert(points_.size() >= 4); //!< 制御pointが少ない
 
 	if (inputT <= points_.front().input) {

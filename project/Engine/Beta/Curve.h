@@ -25,7 +25,7 @@ public:
 
 	void TEST_Create();
 
-	float GetOutput(float inputT);
+	float GetOutput(float inputT) const;
 
 	void SetImGuiCommand();
 

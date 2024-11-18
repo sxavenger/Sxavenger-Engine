@@ -19,7 +19,7 @@
 
 void PlayerBullet::Init() {
 	SetName("player bullet");
-	ModelBehavior::renderingFlag_ = kBehaviorRender_Systematic | kBehaviorRender_Adaptive | kBehaviorRender_Raytracing;
+	ModelBehavior::renderingFlag_ = kBehaviorRender_Systematic | kBehaviorRender_LateAdaptive | kBehaviorRender_Raytracing;
 
 	ModelBehavior::model_ = SxavengerGame::LoadModel("resources/model", "beam.obj");
 	ModelBehavior::model_->ApplyRaytracing();
