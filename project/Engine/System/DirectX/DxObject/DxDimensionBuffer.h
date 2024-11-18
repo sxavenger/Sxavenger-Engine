@@ -118,7 +118,7 @@ public:
 	// public methods
 	//=========================================================================================
 
-	const D3D12_INDEX_BUFFER_VIEW GetIndexBufferView() const;
+	const D3D12_VERTEX_BUFFER_VIEW GetVertexBufferView() const;
 
 private:
 };
@@ -184,7 +184,7 @@ inline const T& DimensionBuffer<T>::operator[](uint32_t index) const {
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 template<class T>
-inline const D3D12_INDEX_BUFFER_VIEW VertexDimensionBuffer<T>::GetIndexBufferView() const {
+inline const D3D12_VERTEX_BUFFER_VIEW VertexDimensionBuffer<T>::GetVertexBufferView() const {
 	D3D12_VERTEX_BUFFER_VIEW result = {};
 	result.BufferLocation = this->GetGPUVirtualAddress();
 	result.SizeInBytes    = this->stride_ * this->size_;
