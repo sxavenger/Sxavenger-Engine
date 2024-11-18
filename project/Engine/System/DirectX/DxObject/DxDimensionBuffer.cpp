@@ -28,7 +28,13 @@ void BaseDimensionBuffer::Create(Device* devices, uint32_t size, size_t stride) 
 	address_ = resource_->GetGPUVirtualAddress();
 }
 
-void BaseDimensionBuffer::Term() {
+void BaseDimensionBuffer::Release() {
+
+	if (resource_ != nullptr) {
+		resource_->Unmap(0, nullptr);
+		resource_.Reset();
+	}
+
 	size_   = NULL;
 	stride_ = NULL;
 

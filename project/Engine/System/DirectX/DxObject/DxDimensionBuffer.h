@@ -27,7 +27,7 @@ public:
 	//=========================================================================================
 
 	BaseDimensionBuffer()          = default;
-	virtual ~BaseDimensionBuffer() { Term(); }
+	virtual ~BaseDimensionBuffer() { Release(); }
 
 	//* getter *//
 
@@ -62,7 +62,7 @@ protected:
 
 	void Create(Device* device, uint32_t size, size_t stride);
 
-	void Term();
+	void Release();
 
 	bool CheckIndex(uint32_t index);
 
@@ -81,11 +81,11 @@ public:
 	//=========================================================================================
 
 	DimensionBuffer()  = default;
-	~DimensionBuffer() { Term(); }
+	~DimensionBuffer() { Release(); }
 
 	void Create(Device* device, uint32_t size);
 
-	void Term();
+	void Release();
 
 	const T& At(uint32_t index) const;
 
@@ -156,7 +156,9 @@ inline void DimensionBuffer<T>::Create(Device* device, uint32_t size) {
 }
 
 template<class T>
-inline void DimensionBuffer<T>::Term() {
+inline void DimensionBuffer<T>::Release() {
+	BaseDimensionBuffer::Release();
+	mappedDatas_ = {};
 }
 
 template<class T>
@@ -184,9 +186,9 @@ inline const T& DimensionBuffer<T>::operator[](uint32_t index) const {
 template<class T>
 inline const D3D12_INDEX_BUFFER_VIEW VertexDimensionBuffer<T>::GetIndexBufferView() const {
 	D3D12_VERTEX_BUFFER_VIEW result = {};
-	result.BufferLocation = GetGPUVirtualAddress();
-	result.SizeInBytes    = stride_ * size_;
-	result.StrideInBytes  = stride_;
+	result.BufferLocation = this->GetGPUVirtualAddress();
+	result.SizeInBytes    = this->stride_ * this->size_;
+	result.StrideInBytes  = this->stride_;
 
 	return result;
 }
