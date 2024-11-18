@@ -7,6 +7,8 @@
 #include <Engine/System/Window/GameWindow.h>
 
 #include "Engine/System/DirectX/DxObject/DxGraphicsPipelineState.h"
+#include "Engine/Content/InputAssembler/InputAssembler.h"
+#include "Lib/Geometry/Vector4.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // GameScene class
@@ -30,6 +32,8 @@ private:
 	//=========================================================================================
 
 	GameWindow* mainWindow_ = nullptr;
+
+	InputAssembler<Vector4f> input_;
 
 	//=========================================================================================
 	// private methods

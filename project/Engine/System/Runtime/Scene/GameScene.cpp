@@ -53,6 +53,17 @@ void GameScene::Run() {
 void GameScene::Init() {
 	mainWindow_ = SxavengerSystem::CreateMainWindow(kMainWindowSize, kMainWindowTitle);
 	mainWindow_->SetIcon("resources/icon/SxavengerEngineIcon.ico", { 32, 32 });
+
+	input_.Create(3, 3);
+	(*input_.GetVertex())[0] = { 0.0f, 0.1f, 0.0f };
+	(*input_.GetVertex())[1] = { 0.1f, -0.1f, 0.0f };
+	(*input_.GetVertex())[2] = { -0.1f, -0.1f, 0.0f };
+
+	(*input_.GetIndex())[0] = 0;
+	(*input_.GetIndex())[1] = 1;
+	(*input_.GetIndex())[2] = 2;
+
+
 }
 
 void GameScene::Update() {
