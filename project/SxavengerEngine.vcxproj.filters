@@ -97,5 +97,7 @@
     <ClInclude Include="Engine\System\DirectX\DxObject\DxCompileBlobCollection.h" />
     <ClInclude Include="Engine\System\DirectX\DxObject\DxGraphicsPipelineState.h" />
     <ClInclude Include="Engine\System\DirectX\DxObject\DxRootSignatureDesc.h" />
+    <ClInclude Include="Engine\System\Cinfig\SxavengerDirectory.h" />
+    <ClInclude Include="Engine\System\Config\SxavengerDirectory.h" />
   </ItemGroup>
 </Project>

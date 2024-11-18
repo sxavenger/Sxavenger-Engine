@@ -170,6 +170,8 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Engine\System\Cinfig\SxavengerDirectory.h" />
+    <ClInclude Include="Engine\System\Config\SxavengerDirectory.h" />
     <ClInclude Include="Engine\System\DirectX\DirectXCommon.h" />
     <ClInclude Include="Engine\System\DirectX\DirectXContext.h" />
     <ClInclude Include="Engine\System\DirectX\DxObject\DxCommandContext.h" />
