@@ -54,7 +54,7 @@ void GameScene::Init() {
 	mainWindow_ = SxavengerSystem::CreateMainWindow(kMainWindowSize, kMainWindowTitle);
 	mainWindow_->SetIcon("resources/icon/SxavengerEngineIcon.ico", { 32, 32 });
 
-	SxavengerSystem::TryCreateSubWindow({ 400, 400 }, L"sub");
+	subWindow_ = SxavengerSystem::TryCreateSubWindow({ 400, 400 }, L"sub", ToColor4f(0x3A504BFF));
 
 	SxavengerSystem::GetInput()->Init(mainWindow_);
 
@@ -113,6 +113,14 @@ void GameScene::Draw() {
 	input_.DrawCall();
 
 	mainWindow_->EndRendering();
+
+	if (!subWindow_.expired()) {
+		auto window = subWindow_.lock();
+
+		window->BeginRendering();
+		window->ClearWindow();
+		window->EndRendering();
+	}
 
 	SxavengerSystem::PresentAllWindow();
 	SxavengerSystem::ExecuteAllAllocator();

@@ -32,6 +32,7 @@ private:
 	//=========================================================================================
 
 	GameWindow* mainWindow_ = nullptr;
+	std::weak_ptr<GameWindow> subWindow_;
 
 	InputAssembler<Vector4f> input_;
 	std::unique_ptr<DxObject::GraphicsPipelineState> state_;

@@ -40,6 +40,10 @@ void SxavengerSystemEngine::Init() {
 void SxavengerSystemEngine::Term() {
 }
 
+_DXOBJECT Descriptor SxavengerSystemEngine::GetDescriptor(_DXOBJECT DescriptorType type) {
+	return sDirectXCommon->GetDesriptorHeaps()->GetDescriptor(type);
+}
+
 _DXOBJECT Device* SxavengerSystemEngine::GetDxDevice() {
 	return sDirectXCommon->GetDevice();
 }

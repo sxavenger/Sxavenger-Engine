@@ -29,6 +29,8 @@ public:
 	// DirectXCommon option
 	//-----------------------------------------------------------------------------------------
 
+	static _DXOBJECT Descriptor GetDescriptor(_DXOBJECT DescriptorType type);
+
 	static _DXOBJECT Device* GetDxDevice();
 
 	static _DXOBJECT DescriptorHeaps* GetDxDescriptorHeaps();
