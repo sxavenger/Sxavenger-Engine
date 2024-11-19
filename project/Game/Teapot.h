@@ -6,6 +6,10 @@
 //* base
 #include <Engine/Game/Behavior/ModelBehavior.h>
 
+
+//* c++
+#include <memory>
+
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Teapot class
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -21,6 +25,7 @@ public:
 
 	void SetAttributeImGui() override;
 
+	void DrawSystematic(_MAYBE_UNUSED const Camera3D* camera) override;
 	void DrawAdaptive(_MAYBE_UNUSED const Camera3D* camera) override;
 
 private:
@@ -32,5 +37,10 @@ private:
 	Vector2f pos_ = { 0.0f, 0.0f };
 	Vector2f size_ = { 128.0f, 128.0f };
 	float rotate_ = 0.0f;
+
+	static const uint32_t kIntanceCount_ = 512;
+
+	std::unique_ptr<DxObject::BufferResource<TransformationMatrix>> matrix_;
+
 
 };
