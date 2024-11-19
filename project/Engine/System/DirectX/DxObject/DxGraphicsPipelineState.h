@@ -8,6 +8,7 @@
 #include "DxDevice.h"
 #include "DxCommandContext.h"
 #include "DxCompileBlobCollection.h"
+#include "DxBlendState.h"
 #include "DxRootSignatureDesc.h"
 
 //* lib
@@ -58,10 +59,11 @@ public:
 	//* desc setting option *//
 
 	void SetElement(const LPCSTR& semanticName, UINT semanticIndex, DXGI_FORMAT format, UINT inputSlot = 0);
-
 	void SetRasterizer(D3D12_CULL_MODE cullMode, D3D12_FILL_MODE fillMode);
-
 	void SetDepthStencil(bool depthEnable, D3D12_DEPTH_WRITE_MASK writeMask = D3D12_DEPTH_WRITE_MASK_ALL);
+
+	void SetBlendMode(uint32_t renderTargetIndex, BlendMode mode);
+	void SetIndependentBlendEnable(bool isIndependentEnable);
 
 	void SetPrimitive(PrimitiveType type);
 
@@ -89,7 +91,8 @@ public:
 
 	//* blend mode *//
 
-	//BlendMode blendMode;
+	std::array<BlendMode, D3D12_SIMULTANEOUS_RENDER_TARGET_COUNT> blendModes;
+	bool isIndependentBlendEnable = false;
 
 	//* primitive *//
 
@@ -131,10 +134,16 @@ public:
 
 	void Term();
 
+	void HotReloadShader();
+
 	//* setter *//
 
 	void SetPipeline(CommandContext* context) const;
 	void SetPipeline(ID3D12GraphicsCommandList* commandList) const;
+
+	//* external *//
+
+	static void SetExternal(CompileBlobCollection* collection, BlendState* blendState);
 
 private:
 
@@ -153,6 +162,7 @@ private:
 	//* external *//
 
 	static CompileBlobCollection* collection_;
+	static BlendState* blendState_;
 	Device* device_ = nullptr;
 
 	//* blob *//
@@ -184,6 +194,7 @@ private:
 	void CreatePipeline();
 
 	D3D12_SHADER_BYTECODE GetBytecode(GraphicsShaderType type, bool isRequired = false);
+	D3D12_BLEND_DESC GetBlendDesc() const;
 
 	bool CheckShaderHotReload() const;
 

@@ -8,11 +8,13 @@
 #include "DxObject/DxDescriptorHeaps.h"
 #include "DxObject/DxShaderCompiler.h"
 #include "DxObject/DxCompileBlobCollection.h"
+#include "DxObject/DxBlendState.h"
 
 //* DXOBJECT utility
 #include "DxObject/DxDescriptor.h"
 #include "DxObject/DxCommandContext.h"
 #include "DxObject/DxSwapChain.h"
+#include "DxObject/DxGraphicsPipelineState.h"
 
 //* c++
 #include <memory>
@@ -54,5 +56,6 @@ private:
 	std::unique_ptr<DxObject::DescriptorHeaps>       descriptorHeaps_;
 	std::unique_ptr<DxObject::ShaderCompiler>        shaderCompiler_;
 	std::unique_ptr<DxObject::CompileBlobCollection> compileBlobCollection_;
+	std::unique_ptr<DxObject::BlendState>            blendState_;
 
 };

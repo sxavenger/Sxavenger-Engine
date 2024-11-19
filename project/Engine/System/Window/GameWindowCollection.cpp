@@ -83,6 +83,22 @@ const std::weak_ptr<GameWindow> GameWindowCollection::GetSubWindow(const LPCWSTR
 	return subWindows_.at(name);
 }
 
+const GameWindow* GameWindowCollection::GetForcusWindow() const {
+	HWND hwnd = GetForegroundWindow();
+
+	if (hwnd == mainWindow_->GetHwnd()) {
+		return mainWindow_.get();
+	}
+
+	for (const auto& window : subWindows_) {
+		if (hwnd == window.second->GetHwnd()) {
+			return window.second.get();
+		}
+	}
+
+	return nullptr;
+}
+
 void GameWindowCollection::RemoveClosedSubWindow() {
 	for (auto it = subWindows_.begin(); it != subWindows_.end();) {
 		if (!it->second->IsOpenWindow()) {

@@ -34,6 +34,7 @@ private:
 	GameWindow* mainWindow_ = nullptr;
 
 	InputAssembler<Vector4f> input_;
+	std::unique_ptr<DxObject::GraphicsPipelineState> state_;
 
 	//=========================================================================================
 	// private methods

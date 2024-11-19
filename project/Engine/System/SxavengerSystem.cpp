@@ -4,10 +4,15 @@
 // namespace -anonymouse-
 ////////////////////////////////////////////////////////////////////////////////////////////
 namespace {
+	//* system orign
 	std::unique_ptr<WinApp>               sWinApp            = nullptr; //!< win app system
 	std::unique_ptr<DirectXCommon>        sDirectXCommon     = nullptr; //!< DirectX12 system
 	std::unique_ptr<DirectXThreadContext> sMainThreadContext = nullptr; //!< main thread context
+	std::unique_ptr<ThreadCollection>     sThreadCollection  = nullptr; //!< thread collection
+
+	//* system user
 	std::unique_ptr<GameWindowCollection> sWindowCollection  = nullptr; //!< window collection
+	std::unique_ptr<Input>                sInput             = nullptr; //!< input system
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -25,7 +30,11 @@ void SxavengerSystemEngine::Init() {
 	sMainThreadContext = std::make_unique<DirectXThreadContext>();
 	sMainThreadContext->Init(2);
 
+	sThreadCollection = std::make_unique<ThreadCollection>();
+	sThreadCollection->Init(2);
+
 	sWindowCollection = std::make_unique<GameWindowCollection>();
+	sInput            = std::make_unique<Input>();
 }
 
 void SxavengerSystemEngine::Term() {
@@ -71,4 +80,28 @@ bool SxavengerSystemEngine::ProcessMessage() {
 
 void SxavengerSystemEngine::PresentAllWindow() {
 	sWindowCollection->PresentAllWindow();
+}
+
+const GameWindow* SxavengerSystemEngine::GetMainWindow() {
+	return sWindowCollection->GetMainWindow();
+}
+
+const GameWindow* SxavengerSystemEngine::GetForcusWindow() {
+	return sWindowCollection->GetForcusWindow();
+}
+
+bool SxavengerSystemEngine::IsPressKey(KeyId id) {
+	return sInput->IsPressKey(id);
+}
+
+bool SxavengerSystemEngine::IsTriggerKey(KeyId id) {
+	return  sInput->IsTriggerKey(id);
+}
+
+bool SxavengerSystemEngine::IsReleaseKey(KeyId id) {
+	return sInput->IsReleaseKey(id);
+}
+
+Input* SxavengerSystemEngine::GetInput() {
+	return sInput.get();
 }

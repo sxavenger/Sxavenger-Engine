@@ -17,10 +17,12 @@
 
 //* engine
 #include <Engine/System/Utility/ComPtr.h>
+#include <Engine/System/Window/Window.h>
 
 //* c++
 #include <cstdint>
 #include <array>
+#include <memory>
 
 //-----------------------------------------------------------------------------------------
 // comment
@@ -55,7 +57,7 @@ public:
 	KeyboardInput()  = default;
 	~KeyboardInput() { Term(); }
 
-	void Init(IDirectInput8* dInput, const HWND& hwnd);
+	void Init(IDirectInput8* dInput, const Window* mainWindow);
 
 	void Term();
 
@@ -78,6 +80,8 @@ private:
 	//* input device *//
 
 	ComPtr<IDirectInputDevice8> keyboardDevice_;
+
+	DWORD flags_ = NULL;
 
 	//* member *//
 
@@ -104,5 +108,48 @@ public:
 	void Term();
 
 private:
+};
+
+////////////////////////////////////////////////////////////////////////////////////////////
+// Input class
+////////////////////////////////////////////////////////////////////////////////////////////
+class Input {
+public:
+
+	//=========================================================================================
+	// public methods
+	//=========================================================================================
+
+	Input() = default;
+	~Input() { Term(); }
+
+	void Init(const Window* mainWindow);
+
+	void Term();
+
+	void Update();
+
+	//* key input option *//
+
+	bool IsPressKey(KeyId id);
+
+	bool IsTriggerKey(KeyId id);
+
+	bool IsReleaseKey(KeyId id);
+
+private:
+
+	//=========================================================================================
+	// private variables
+	//=========================================================================================
+
+	//* directInput *//
+
+	ComPtr<IDirectInput8> directInput_;
+
+	//* dinput *//
+
+	std::unique_ptr<KeyboardInput> keyboard_;
+	//std::unique_ptr<MouseInput> mouse_;
 };
 

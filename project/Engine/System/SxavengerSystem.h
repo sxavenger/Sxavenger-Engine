@@ -9,6 +9,7 @@
 #include "DirectX/DirectXContext.h"
 #include "Window/GameWindowCollection.h"
 #include "Runtime/Thread/Thread.h"
+#include "Runtime/Input/Input.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // SxavengerSystemEngine class
@@ -59,6 +60,22 @@ public:
 	static bool ProcessMessage();
 
 	static void PresentAllWindow();
+
+	static const GameWindow* GetMainWindow();
+
+	static const GameWindow* GetForcusWindow();
+
+	//-----------------------------------------------------------------------------------------
+	// Input option
+	//-----------------------------------------------------------------------------------------
+
+	static bool IsPressKey(KeyId id);
+
+	static bool IsTriggerKey(KeyId id);
+
+	static bool IsReleaseKey(KeyId id);
+
+	static Input* GetInput();
 
 private:
 };

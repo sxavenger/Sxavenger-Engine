@@ -42,7 +42,7 @@ void BaseDimensionBuffer::Release() {
 }
 
 bool BaseDimensionBuffer::CheckIndex(uint32_t index) {
-	if (index < size_) {
+	if (index >= size_) {
 		return false;
 	}
 

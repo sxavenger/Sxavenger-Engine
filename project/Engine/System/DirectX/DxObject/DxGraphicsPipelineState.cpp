@@ -36,6 +36,14 @@ void GraphicsPipelineDesc::SetDepthStencil(bool depthEnable, D3D12_DEPTH_WRITE_M
 	depthStencilDesc.DepthFunc      = D3D12_COMPARISON_FUNC_LESS_EQUAL;
 }
 
+void GraphicsPipelineDesc::SetBlendMode(uint32_t renderTargetIndex, BlendMode mode) {
+	blendModes[renderTargetIndex] = mode;
+}
+
+void GraphicsPipelineDesc::SetIndependentBlendEnable(bool isIndependentEnable) {
+	isIndependentBlendEnable = isIndependentEnable;
+}
+
 void GraphicsPipelineDesc::SetPrimitive(PrimitiveType type) {
 	if (type == PrimitiveType::Line) { //!< 線分
 		primitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_LINE;
@@ -89,7 +97,8 @@ void GraphicsPipelineDesc::CreateDefaultDesc() {
 	SetRasterizer(D3D12_CULL_MODE_BACK, D3D12_FILL_MODE_SOLID);
 	SetDepthStencil(true);
 
-	//SetBlendMode(kBlendModeNormal);
+	SetBlendMode(0, BlendMode::kBlendModeNormal);
+	SetIndependentBlendEnable(false);
 
 	SetPrimitive(PrimitiveType::Triangle);
 
@@ -111,6 +120,7 @@ D3D12_INPUT_LAYOUT_DESC GraphicsPipelineDesc::GetInputLayout() const {
 //=========================================================================================
 
 CompileBlobCollection* GraphicsPipelineState::collection_ = nullptr;
+BlendState* GraphicsPipelineState::blendState_ = nullptr;
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // GraphicsPipelineState class methods
@@ -153,6 +163,18 @@ void GraphicsPipelineState::CheckAndUpdatePipeline() {
 void GraphicsPipelineState::Term() {
 }
 
+void GraphicsPipelineState::HotReloadShader() {
+	Assert(collection_ != nullptr, "collection is not set.");
+
+	for (uint32_t i = 0; i < blobs_.size(); ++i) {
+		if (blobs_[i].blob.has_value()) {
+			collection_->HotReload(blobs_[i].filename);
+		}
+	}
+
+	CheckAndUpdatePipeline();
+}
+
 void GraphicsPipelineState::SetPipeline(CommandContext* context) const {
 	SetPipeline(context->GetCommandList());
 }
@@ -169,6 +191,11 @@ void GraphicsPipelineState::SetPipeline(ID3D12GraphicsCommandList* commandList) 
 		commandList->IASetPrimitiveTopology(pipelineDesc_.primitiveTopology);
 	}
 	
+}
+
+void GraphicsPipelineState::SetExternal(CompileBlobCollection* collection, BlendState* blendState) {
+	collection_ = collection;
+	blendState_ = blendState;
 }
 
 CompileProfile GraphicsPipelineState::GetProfile(GraphicsShaderType type) {
@@ -218,6 +245,9 @@ void GraphicsPipelineState::CreatePipeline() {
 		desc.SampleDesc.Count   = 1;
 		desc.Flags              = D3D12_PIPELINE_STATE_FLAG_NONE;
 
+		// blendModeの設定
+		desc.BlendState = GetBlendDesc();
+		
 		// RTVFormatの設定
 		desc.NumRenderTargets = static_cast<UINT>(pipelineDesc_.rtvFormats.size());
 		std::copy(pipelineDesc_.rtvFormats.begin(), pipelineDesc_.rtvFormats.end(), desc.RTVFormats);
@@ -247,13 +277,15 @@ void GraphicsPipelineState::CreatePipeline() {
 		D3D12_GRAPHICS_PIPELINE_STATE_DESC desc = {};
 		desc.pRootSignature        = rootSignature_.Get();
 		desc.InputLayout           = pipelineDesc_.GetInputLayout();
-		//desc.BlendState            = blendState_->operator[](pipelineDesc_.blendMode);
 		desc.RasterizerState       = pipelineDesc_.rasterizerDesc;
 		desc.SampleDesc.Count      = 1;
 		desc.SampleMask            = D3D12_DEFAULT_SAMPLE_MASK;
 		desc.DepthStencilState     = pipelineDesc_.depthStencilDesc;
 		desc.DSVFormat             = pipelineDesc_.dsvFormat;
 		desc.PrimitiveTopologyType = pipelineDesc_.primitiveTopologyType;
+
+		// blendModeの設定
+		desc.BlendState = GetBlendDesc();
 
 		// RTVformatの設定
 		desc.NumRenderTargets = static_cast<UINT>(pipelineDesc_.rtvFormats.size());
@@ -294,6 +326,20 @@ D3D12_SHADER_BYTECODE GraphicsPipelineState::GetBytecode(GraphicsShaderType type
 	bytecode.pShaderBytecode = (*blob)->GetBufferPointer();
 
 	return bytecode;
+}
+
+D3D12_BLEND_DESC GraphicsPipelineState::GetBlendDesc() const {
+	D3D12_BLEND_DESC desc = {};
+	desc.IndependentBlendEnable = pipelineDesc_.isIndependentBlendEnable;
+	desc.RenderTarget[0]        = blendState_->GetDesc(pipelineDesc_.blendModes[0]);
+
+	if (desc.IndependentBlendEnable) {
+		for (uint32_t i = 1; i < D3D12_SIMULTANEOUS_RENDER_TARGET_COUNT; ++i) {
+			desc.RenderTarget[i] = blendState_->GetDesc(pipelineDesc_.blendModes[i]);
+		}
+	}
+
+	return desc;
 }
 
 bool GraphicsPipelineState::CheckShaderHotReload() const {

@@ -10,4 +10,4 @@
 // Directory
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-static const std::wstring kShaderDirectory = L"../resources/hlsl/";
+static const std::wstring kShaderDirectory = L"./resources/hlsl/";

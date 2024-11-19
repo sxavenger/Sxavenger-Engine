@@ -50,6 +50,8 @@ public:
 	const std::weak_ptr<GameWindow> TryGetSubWindow(const LPCWSTR& name) const noexcept;
 	const std::weak_ptr<GameWindow> GetSubWindow(const LPCWSTR& name) const;
 
+	const GameWindow* GetForcusWindow() const;
+
 private:
 
 	//=========================================================================================
@@ -64,7 +66,7 @@ private:
 	// CONSIDER: dequeシステムで一番先頭がmain, その他がsubとしたい
 	//+ debug, releaseでのmainの設定が簡単
 	//- windowの検索がo(n)になる
-	//- 型をそろえる必要がある
+	//- 型をそろえる必要がある (今後の拡張性を含めあり)
 
 	//=========================================================================================
 	// private methods

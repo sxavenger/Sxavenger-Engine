@@ -5,12 +5,13 @@
 //-----------------------------------------------------------------------------------------
 //* engine
 #include <Engine/System/Utility/Logger.h>
+#include <Engine/System/SxavengerSystem.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // KeyboardInput class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-void KeyboardInput::Init(IDirectInput8* dInput, const HWND& hwnd) {
+void KeyboardInput::Init(IDirectInput8* dInput, const Window* mainWindow) {
 	
 	// キーボードデバイスの生成
 	auto hr = dInput->CreateDevice(
@@ -24,25 +25,21 @@ void KeyboardInput::Init(IDirectInput8* dInput, const HWND& hwnd) {
 	);
 	Assert(SUCCEEDED(hr));
 
-	// flagの設定
-	DWORD flags = 0;
-	flags |= DISCL_FOREGROUND;
-	flags |= DISCL_NONEXCLUSIVE;
-	/*flags |= DISCL_NOWINKEY;*/
+	flags_ |= DISCL_FOREGROUND;
+	flags_ |= DISCL_NONEXCLUSIVE;
+	/*flags_ |= DISCL_NOWINKEY;*/
 
-	/*
-		DISCL_FOREGROUND   -> 画面が手前にある場合のみ入力を受け付け
-		DISCL_NONEXCLUSIVE -> デバイスをこのアプリで占有しない
-		DISCL_NOWINKEY     -> Windowsキーの無効化
-	*/
+	//* DISCL_FOREGROUND   -> 画面が手前にある場合のみ入力を受け付け
+	//* DISCL_NONEXCLUSIVE -> デバイスをこのアプリで占有しない
+	//* DISCL_NOWINKEY     -> Windowsキーの無効化
 
-	// 排他制御レベルのセット
+		// 排他制御レベルのセット
 	hr = keyboardDevice_->SetCooperativeLevel(
-		hwnd,
-		flags
+		mainWindow->GetHwnd(),
+		flags_
 	);
 	Assert(SUCCEEDED(hr));
-	
+
 }
 
 void KeyboardInput::Term() {
@@ -53,12 +50,14 @@ void KeyboardInput::Update() {
 	// 前frameのkey状態の保存
 	keys_.second = keys_.first;
 
+	keys_.first = {};
+
 	// キーボード情報の取得開始
 	keyboardDevice_->Acquire();
 
 	// キーボードの入力状態を取得
 	keyboardDevice_->GetDeviceState(sizeof(keys_.first), keys_.first.data());
-
+	
 }
 
 bool KeyboardInput::IsPress(KeyId id) const {
@@ -76,3 +75,37 @@ bool KeyboardInput::IsRelease(KeyId id) const {
 ////////////////////////////////////////////////////////////////////////////////////////////
 // MouseInput class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
+
+void Input::Init(const Window* mainWindow) {
+
+	auto hr = DirectInput8Create(
+		mainWindow->GetHInst(),
+		DIRECTINPUT_VERSION, IID_IDirectInput8,
+		(void**)&directInput_, nullptr
+	);
+	Assert(SUCCEEDED(hr));
+
+	//* dinput *//
+
+	keyboard_ = std::make_unique<KeyboardInput>();
+	keyboard_->Init(directInput_.Get(), mainWindow);
+}
+
+void Input::Term() {
+}
+
+void Input::Update() {
+	keyboard_->Update();
+}
+
+bool Input::IsPressKey(KeyId id) {
+	return keyboard_->IsPress(id);
+}
+
+bool Input::IsTriggerKey(KeyId id) {
+	return keyboard_->IsTrigger(id);
+}
+
+bool Input::IsReleaseKey(KeyId id) {
+	return keyboard_->IsRelease(id);
+}

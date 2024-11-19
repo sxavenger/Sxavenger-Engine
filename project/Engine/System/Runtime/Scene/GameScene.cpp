@@ -37,9 +37,9 @@ void GameScene::Run() {
 
 		Draw();
 
-		/*if (false) {
+		if (SxavengerSystem::IsTriggerKey(KeyId::KEY_F4)) {
 			break;
-		}*/
+		}
 	}
 
 	//-----------------------------------------------------------------------------------------
@@ -54,19 +54,51 @@ void GameScene::Init() {
 	mainWindow_ = SxavengerSystem::CreateMainWindow(kMainWindowSize, kMainWindowTitle);
 	mainWindow_->SetIcon("resources/icon/SxavengerEngineIcon.ico", { 32, 32 });
 
+	SxavengerSystem::TryCreateSubWindow({ 400, 400 }, L"sub");
+
+	SxavengerSystem::GetInput()->Init(mainWindow_);
+
 	input_.Create(3, 3);
-	(*input_.GetVertex())[0] = { 0.0f, 0.1f, 0.0f };
-	(*input_.GetVertex())[1] = { 0.1f, -0.1f, 0.0f };
-	(*input_.GetVertex())[2] = { -0.1f, -0.1f, 0.0f };
+	(*input_.GetVertex())[0] = { 0.0f, 0.1f, 0.1f };
+	(*input_.GetVertex())[1] = { 0.1f, -0.1f, 0.1f };
+	(*input_.GetVertex())[2] = { -0.1f, -0.1f, 0.1f };
 
 	(*input_.GetIndex())[0] = 0;
 	(*input_.GetIndex())[1] = 1;
 	(*input_.GetIndex())[2] = 2;
 
+	state_ = std::make_unique<DxObject::GraphicsPipelineState>();
+	state_->CreateBlob(L"simple.vs.hlsl", DxObject::GraphicsShaderType::vs);
+	state_->CreateBlob(L"simple.ps.hlsl", DxObject::GraphicsShaderType::ps);
 
+	state_->CreateRootSignature(SxavengerSystem::GetDxDevice(), {});
+
+	DxObject::GraphicsPipelineDesc desc = {};
+	desc.SetElement("POSITION", 0, DXGI_FORMAT_R32G32B32A32_FLOAT);
+
+	desc.SetRasterizer(D3D12_CULL_MODE_NONE, D3D12_FILL_MODE_SOLID);
+	desc.SetDepthStencil(true);
+
+	desc.SetBlendMode(0, BlendMode::kBlendModeNormal);
+
+	desc.SetPrimitive(DxObject::PrimitiveType::Triangle);
+
+	desc.SetRTVFormat(DxObject::kScreenFormat);
+	desc.SetDSVFormat(DxObject::kDefaultDepthFormat);
+
+	desc.SetViewport(kMainWindowSize);
+
+	state_->CreatePipeline(SxavengerSystem::GetDxDevice(), desc);
 }
 
 void GameScene::Update() {
+
+	SxavengerSystem::GetInput()->Update();
+
+	if (SxavengerSystem::IsTriggerKey(KeyId::KEY_SPACE)) {
+		state_->HotReloadShader();
+	}
+
 	SxavengerSystem::TransitionAllocator();
 }
 
@@ -74,10 +106,16 @@ void GameScene::Draw() {
 
 	mainWindow_->BeginRendering();
 	mainWindow_->ClearWindow();
+ 
+	state_->SetPipeline(SxavengerSystem::GetCommandList());
+
+	input_.BindIABuffer();
+	input_.DrawCall();
 
 	mainWindow_->EndRendering();
 
 	SxavengerSystem::PresentAllWindow();
+	SxavengerSystem::ExecuteAllAllocator();
 }
 
 void GameScene::Term() {

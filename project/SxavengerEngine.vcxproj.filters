@@ -50,6 +50,7 @@
     <ClCompile Include="Engine\System\DirectX\DxObject\DxGraphicsPipelineState.cpp" />
     <ClCompile Include="Engine\System\DirectX\DxObject\DxRootSignatureDesc.cpp" />
     <ClCompile Include="Engine\Content\InputAssembler\InputAssembler.cpp" />
+    <ClCompile Include="Engine\System\DirectX\DxObject\DxBlendState.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="externals\imgui\imstb_truetype.h" />
@@ -101,5 +102,6 @@
     <ClInclude Include="Engine\System\Cinfig\SxavengerDirectory.h" />
     <ClInclude Include="Engine\System\Config\SxavengerDirectory.h" />
     <ClInclude Include="Engine\Content\InputAssembler\InputAssembler.h" />
+    <ClInclude Include="Engine\System\DirectX\DxObject\DxBlendState.h" />
   </ItemGroup>
 </Project>
