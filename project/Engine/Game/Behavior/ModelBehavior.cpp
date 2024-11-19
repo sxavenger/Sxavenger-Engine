@@ -57,6 +57,10 @@ void ModelBehavior::SystemAttributeImGui() {
 		color_.SetImGuiCommand();
 		ImGui::TreePop();
 	}
+
+	if (ImGui::Button("output json")) {
+		OutputJson();
+	}
 }
 
 void ModelBehavior::DrawSystematic(_MAYBE_UNUSED const Camera3D* camera) {
@@ -172,5 +176,8 @@ void ModelBehavior::OutputJson() {
 	material["roughness"] = material_.material.roughness;
 	material["metallic"]  = material_.material.metallic;
 
+	auto& color = root["color"] = Json::object();
+	color = JsonAdapter::ToJson(color_.color);
 
+	JsonAdapter::WriteJson("/behavior/" + name_ + ".json", root);
 }

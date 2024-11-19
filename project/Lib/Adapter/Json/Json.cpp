@@ -87,8 +87,12 @@ Json JsonAdapter::ToJson(const Vector4f& v) {
 	return { {"x", v.x}, {"y", v.y}, {"z", v.z}, {"w", v.w} };
 }
 
-Json JsonAdapter::ToJson(const Quaternion& v) {
-	return { {"x", v.x}, {"y", v.y}, {"z", v.z}, {"w", v.w} };
+Json JsonAdapter::ToJson(const Quaternion& q) {
+	return { {"x", q.x}, {"y", q.y}, {"z", q.z}, {"w", q.w} };
+}
+
+Json JsonAdapter::ToJson(const Color4f& c) {
+	return { {"r", c.r}, {"g", c.g}, {"b", c.b}, {"a", c.a} };
 }
 
 Vector2f JsonAdapter::ToVector2f(const Json& data) {
@@ -105,4 +109,8 @@ Vector4f JsonAdapter::ToVector4f(const Json& data) {
 
 Quaternion JsonAdapter::ToQuaternion(const Json& data) {
 	return { data["x"], data["y"], data["z"], data["w"] };
+}
+
+Color4f JsonAdapter::ToColor4f(const Json& data) {
+	return { data["r"], data["g"], data["b"], data["a"] };
 }
