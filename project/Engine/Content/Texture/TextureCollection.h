@@ -1,17 +1,18 @@
+#pragma once
+
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
-#include "Simple.hlsli"
+//* Texture
+#include "Texture.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// main
+// TextureCollection class
 ////////////////////////////////////////////////////////////////////////////////////////////
-PSOutput main(VSOutput input) {
+class TextureCollection {
+public:
 
-	PSOutput output = (PSOutput)0;
+private:
+};
 
-	output.color = float4(0.2f, 0.2f, 1.0f, 1.0f);
 
-	return output;
-	
-}

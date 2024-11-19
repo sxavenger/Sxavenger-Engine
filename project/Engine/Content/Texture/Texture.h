@@ -19,6 +19,12 @@
 #include <Lib/Geometry/Vector4.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
+// static variables
+////////////////////////////////////////////////////////////////////////////////////////////
+
+static const Color4f kDefaultTextureClearColor = ToColor4f(0x3A504BFF);
+
+////////////////////////////////////////////////////////////////////////////////////////////
 // BaseTexture base class
 ////////////////////////////////////////////////////////////////////////////////////////////
 class BaseTexture { //!< このクラス単体では使わない
@@ -41,6 +47,8 @@ public:
 
 	const Vector2ui& GetSize() const { return size_; }
 
+	const DXGI_FORMAT GetFormat() const { return format_; }
+
 protected:
 
 	//=========================================================================================
@@ -56,6 +64,8 @@ protected:
 	//* paraemter *//
 
 	Vector2ui size_;
+	DXGI_FORMAT format_;
+
 
 };
 
@@ -111,10 +121,65 @@ public:
 	//=========================================================================================
 
 	RenderTexture()  = default;
-	~RenderTexture() = default;
+	~RenderTexture() { Term(); }
 
-	void Create(const Vector2ui& size, const Color4f& clearColor = ToColor4f(0x3A504BFF));
+	void Create(const Vector2ui& size, const Color4f& clearColor = kDefaultTextureClearColor, DXGI_FORMAT format = DxObject::kOffscreenFormat);
+
+	void Term();
+
+	//* getter *//
+
+	const D3D12_CPU_DESCRIPTOR_HANDLE& GetCPUHandleRTV() const { return descriptorRTV_.GetCPUHandle(); }
+
+	const Color4f& GetClearColor() const { return clearColor_; }
 
 private:
+
+	//=========================================================================================
+	// private variables
+	//=========================================================================================
+
+	//* descriptor *//
+
+	DxObject::Descriptor descriptorRTV_;
+
+	//* parameter *//
+
+	Color4f clearColor_;
+
+};
+
+////////////////////////////////////////////////////////////////////////////////////////////
+// DummyTexture class
+////////////////////////////////////////////////////////////////////////////////////////////
+class DummyTexture
+	: public BaseTexture {
+public:
+
+	//=========================================================================================
+	// public methods
+	//=========================================================================================
+
+	DummyTexture() = default;
+	~DummyTexture() { Term(); }
+
+	void Create(const Vector2ui& size, DXGI_FORMAT format = DxObject::kOffscreenFormat);
+
+	void Term();
+
+	//* getter *//
+
+	const D3D12_GPU_DESCRIPTOR_HANDLE& GetGPUHandleUAV() const { return descriptorUAV_.GetGPUHandle(); }
+
+private:
+
+	//=========================================================================================
+	// private variables
+	//=========================================================================================
+
+	//* descriptor *//
+
+	DxObject::Descriptor descriptorUAV_;
+
 };
 

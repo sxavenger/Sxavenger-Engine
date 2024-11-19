@@ -52,6 +52,7 @@
     <ClCompile Include="Engine\Content\InputAssembler\InputAssembler.cpp" />
     <ClCompile Include="Engine\System\DirectX\DxObject\DxBlendState.cpp" />
     <ClCompile Include="Engine\Content\Texture\Texture.cpp" />
+    <ClCompile Include="Engine\Content\Texture\TextureCollection.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="externals\imgui\imstb_truetype.h" />
@@ -105,5 +106,6 @@
     <ClInclude Include="Engine\Content\InputAssembler\InputAssembler.h" />
     <ClInclude Include="Engine\System\DirectX\DxObject\DxBlendState.h" />
     <ClInclude Include="Engine\Content\Texture\Texture.h" />
+    <ClInclude Include="Engine\Content\Texture\TextureCollection.h" />
   </ItemGroup>
 </Project>

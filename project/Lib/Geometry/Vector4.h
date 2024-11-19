@@ -81,3 +81,5 @@ using Color4i = Color4<int>;
 constexpr Color4i ToColor4i(const Color4f& color);
 constexpr Color4f ToColor4f(const Color4i& color);
 Color4f ToColor4f(uint32_t colorCode); //!< constexprに変換
+
+
