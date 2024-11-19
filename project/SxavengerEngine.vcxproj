@@ -126,6 +126,9 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ProjectReference Include="externals\DirectXTex\DirectXTex_Desktop_2022_Win10.vcxproj">
       <Project>{371b9fa9-4c90-4ac6-a123-aced756d6c77}</Project>
     </ProjectReference>
+    <ProjectReference Include="externals\imgui\imgui.vcxproj">
+      <Project>{a4d2730b-3b09-47db-9a37-3445e9559de4}</Project>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\Content\InputAssembler\InputAssembler.cpp" />
@@ -155,13 +158,6 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="Engine\System\Window\GameWindow.cpp" />
     <ClCompile Include="Engine\System\Window\GameWindowCollection.cpp" />
     <ClCompile Include="Engine\System\Window\Window.cpp" />
-    <ClCompile Include="externals\imgui\imgui.cpp" />
-    <ClCompile Include="externals\imgui\imgui_demo.cpp" />
-    <ClCompile Include="externals\imgui\imgui_draw.cpp" />
-    <ClCompile Include="externals\imgui\imgui_impl_dx12.cpp" />
-    <ClCompile Include="externals\imgui\imgui_impl_win32.cpp" />
-    <ClCompile Include="externals\imgui\imgui_tables.cpp" />
-    <ClCompile Include="externals\imgui\imgui_widgets.cpp" />
     <ClCompile Include="Lib\Adapter\Json.cpp" />
     <ClCompile Include="Lib\Adapter\Random.cpp" />
     <ClCompile Include="Lib\Geometry\MathLib.cpp" />
@@ -205,14 +201,6 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Engine\System\Window\GameWindow.h" />
     <ClInclude Include="Engine\System\Window\GameWindowCollection.h" />
     <ClInclude Include="Engine\System\Window\Window.h" />
-    <ClInclude Include="externals\imgui\imconfig.h" />
-    <ClInclude Include="externals\imgui\imgui.h" />
-    <ClInclude Include="externals\imgui\imgui_impl_dx12.h" />
-    <ClInclude Include="externals\imgui\imgui_impl_win32.h" />
-    <ClInclude Include="externals\imgui\imgui_internal.h" />
-    <ClInclude Include="externals\imgui\imstb_rectpack.h" />
-    <ClInclude Include="externals\imgui\imstb_textedit.h" />
-    <ClInclude Include="externals\imgui\imstb_truetype.h" />
     <ClInclude Include="Lib\Adapter\Json.h" />
     <ClInclude Include="Lib\Adapter\Random.h" />
     <ClInclude Include="Lib\CXXAttributeConfig.h" />
