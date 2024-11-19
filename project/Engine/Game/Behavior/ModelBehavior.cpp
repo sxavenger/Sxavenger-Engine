@@ -6,6 +6,7 @@ _DXROBJECT_USING
 //-----------------------------------------------------------------------------------------
 //* engine
 #include <Engine/Console/SystemConsole.h>
+#include <Lib/Adapter/Json/Json.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // ModelBehavior class methods
@@ -151,4 +152,25 @@ void ModelBehavior::DrawRaytracing(_MAYBE_UNUSED DxrObject::TopLevelAS* tlas) {
 	for (uint32_t i = 0; i < model_->GetMeshSize(); ++i) {
 		tlas->SetInstance(model_->GetMesh(i).GetBLAS(), mat, recorders_.at(i).get(), 0);
 	}
+}
+
+void ModelBehavior::OutputJson() {
+
+	Json root = Json::object();
+
+	auto& transform = root["Transform"] = Json::object();
+	transform["scale"]      = JsonAdapter::ToJson(transform_.transform.scale);
+	transform["rotate"]     = JsonAdapter::ToJson(transform_.transform.rotate);
+	transform["translate"]  = JsonAdapter::ToJson(transform_.transform.translate);
+
+	auto& uvTransform = root["UVTransform"] = Json::object();
+	uvTransform["scale"]     = JsonAdapter::ToJson(uvTransform_.transform.scale);
+	uvTransform["rotate"]    = uvTransform_.transform.rotate;
+	uvTransform["translate"] = JsonAdapter::ToJson(uvTransform_.transform.translate);
+
+	auto& material = root["material"] = Json::object();
+	material["roughness"] = material_.material.roughness;
+	material["metallic"]  = material_.material.metallic;
+
+
 }

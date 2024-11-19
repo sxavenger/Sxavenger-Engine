@@ -29,6 +29,22 @@ Json JsonAdapter::LoadJson(const std::string& path) {
 	return std::move(result);
 }
 
+bool JsonAdapter::TryLoadJson(const std::string& path, Json& data) {
+
+	// ファイルパスの生成
+	std::string filepath = directory_ + path;
+
+	std::ifstream ifs(filepath);
+	if (ifs.fail()) {
+		return false;
+	}
+
+	ifs >> data;
+	ifs.close();
+
+	return true;
+}
+
 void JsonAdapter::WriteJson(const std::string& path, const Json& data) {
 	// ファイルパス生成
 	std::string filePath = directory_ + path;
@@ -57,4 +73,36 @@ void JsonAdapter::OverwriteJson(const std::string& path, const Json& data) {
 	std::ofstream ofs(filePath);
 	ofs << std::setfill('\t') << std::setw(1) << data << std::endl;
 	ofs.close();
+}
+
+Json JsonAdapter::ToJson(const Vector2f& v) {
+	return { {"x", v.x}, {"y", v.y} };
+}
+
+Json JsonAdapter::ToJson(const Vector3f& v) {
+	return { {"x", v.x}, {"y", v.y}, {"z", v.z} };
+}
+
+Json JsonAdapter::ToJson(const Vector4f& v) {
+	return { {"x", v.x}, {"y", v.y}, {"z", v.z}, {"w", v.w} };
+}
+
+Json JsonAdapter::ToJson(const Quaternion& v) {
+	return { {"x", v.x}, {"y", v.y}, {"z", v.z}, {"w", v.w} };
+}
+
+Vector2f JsonAdapter::ToVector2f(const Json& data) {
+	return { data["x"], data["y"] };
+}
+
+Vector3f JsonAdapter::ToVector3f(const Json& data) {
+	return { data["x"], data["y"], data["z"] };
+}
+
+Vector4f JsonAdapter::ToVector4f(const Json& data) {
+	return { data["x"], data["y"], data["z"], data["w"] };
+}
+
+Quaternion JsonAdapter::ToQuaternion(const Json& data) {
+	return { data["x"], data["y"], data["z"], data["w"] };
 }

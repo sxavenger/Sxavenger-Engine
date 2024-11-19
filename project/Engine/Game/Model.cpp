@@ -99,7 +99,7 @@ void Model::LoadModelFile(const std::string& directoryPath, const std::string& f
 	// sceneの取得
 	sceneAi_ = importer_.ReadFile(filepath.c_str(), option);
 
-	Assert(sceneAi_ != nullptr, "model file not found. filepath: " + filepath);
+	Assert(sceneAi_ != nullptr, importer_.GetErrorString());
 	Assert(sceneAi_->HasMeshes()); //!< メッシュナシは未対応
 
 	// 各objectの取得

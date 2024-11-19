@@ -13,6 +13,7 @@
 #include <string>
 #include <functional>
 #include <optional>
+#include <bitset>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // ColliderType enum
@@ -32,6 +33,12 @@ public:
 	////////////////////////////////////////////////////////////////////////////////////////////
 	//!< OnCollision関数
 	using OnCollisionFunction = std::function<void(_MAYBE_UNUSED Collider* const)>;
+
+	//!< CollisionState記録用
+	//! [bitset] (enum CollisionStateとindexを同期)
+	//! index 0: 現在frameのhit情報
+	//! index 1: 1frame前のhit情報
+	using CollisionStatesBit = std::bitset<2>;
 
 public:
 
@@ -84,6 +91,8 @@ public:
 		const std::optional<bool>& isHit = std::nullopt, const std::optional<bool>& isPreHit = std::nullopt
 	);
 
+	const CollisionStatesBit GetStates(Collider* other) const;
+
 	void SetColliderPosition(const Vector3f& position) { position_ = position; }
 
 	void SetTypeId(uint32_t typeId) { typeId_ = typeId; }
@@ -97,10 +106,11 @@ public:
 private:
 
 	////////////////////////////////////////////////////////////////////////////////////////////
-	// CollisionState structure
+	// CollisionState enum
 	////////////////////////////////////////////////////////////////////////////////////////////
-	struct CollisionState {
-		bool isHit, isPreHit;
+	enum CollisionState : uint32_t {
+		kCollisionState_Current = 0,
+		kCollisionState_Prev    = 1,
 	};
 
 	//=========================================================================================
@@ -129,7 +139,7 @@ private:
 	//! [unordered_map]
 	//! key:   対象のcollider
 	//! value: 当たり判定結果
-	std::unordered_map<Collider*, CollisionState> states_;
+	std::unordered_map<Collider*, CollisionStatesBit> states_;
 
 	//!< すり抜け等の管理flagが欲しい
 	//!< 判定しないのflagが欲しい

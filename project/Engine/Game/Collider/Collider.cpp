@@ -33,23 +33,23 @@ void Collider::CallbackOnCollision() {
 
 	for (auto it = states_.begin(); it != states_.end();) {
 
-		if (it->second.isHit && !it->second.isPreHit) { //!< colliderが当たったかどうか
+		if (it->second.test(kCollisionState_Current) && !it->second.test(kCollisionState_Prev)) { //!< colliderが当たったかどうか
 			if (onCollisionEnterFunc_) {
 				onCollisionEnterFunc_(it->first);
 			}
 
-		} else if (!it->second.isHit && it->second.isPreHit) { //!< colliderが離れたかどうか
+		} else if (!it->second.test(kCollisionState_Current) && it->second.test(kCollisionState_Prev)) { //!< colliderが離れたかどうか
 			if (onCollisionExitFunc_) {
 				onCollisionExitFunc_(it->first);
 			}
 		}
 
 		//!< 次フレームの準備
-		it->second.isPreHit = it->second.isHit;
-		it->second.isHit    = false;
+		it->second[kCollisionState_Prev] = it->second[kCollisionState_Current];
+		it->second.reset(kCollisionState_Current);
 
 		// 当たらなくなったので削除
-		if (!it->second.isHit && !it->second.isPreHit) {
+		if (it->second.none()) {
 			it = states_.erase(it);
 			continue;
 		}
@@ -59,7 +59,7 @@ void Collider::CallbackOnCollision() {
 }
 
 void Collider::OnCollision(Collider* other) {
-	states_[other].isHit = true; //!< 現在frameで当たった
+	states_[other].set(kCollisionState_Current); //!< 現在frameで当たった
 }
 
 const Vector3f& Collider::GetColliderPosition() const {
@@ -81,12 +81,21 @@ void Collider::SetCollisionState(
 	}
 
 	if (isHit) { //!< 変更要求がされていた場合
-		it->second.isHit = isHit.value();
+		it->second[kCollisionState_Current] = isHit.value();
 	}
 
 	if (isPreHit) { //!< 変更要求がされていた場合
-		it->second.isPreHit = isPreHit.value();
+		it->second[kCollisionState_Prev] = isPreHit.value();
 	}
+}
+
+const Collider::CollisionStatesBit Collider::GetStates(Collider* other) const {
+	auto it = states_.find(other);
+	if (it == states_.end()) {
+		return {}; //!< 見つからなかったので判定なしを返す.
+	}
+
+	return it->second;
 }
 
 void Collider::SetColliderImGuiCommand() {
