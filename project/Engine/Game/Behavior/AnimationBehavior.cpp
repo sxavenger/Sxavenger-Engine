@@ -11,28 +11,6 @@ _DXOBJECT_USING
 // AnimationBehavior class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-void AnimationBehavior::Init() {
-}
-
-void AnimationBehavior::Term() {
-}
-
-void AnimationBehavior::CreateAnimation() {
-	Assert(model_ != nullptr, "model is not set.");
-	animator_ = std::make_unique<Animator>();
-	animator_->Create(model_);
-}
-
-void AnimationBehavior::UpdateAnimator(uint32_t animaitonIndex, bool isLoop) {
-	animator_->Update(animationTime_, animaitonIndex, isLoop);
-}
-
-void AnimationBehavior::SystemAttributeImGui() {
-	ModelBehavior::SystemAttributeImGui();
-
-	ImGui::DragFloat("animation time", &animationTime_.time, 0.01f);
-}
-
 void AnimationBehavior::DrawSystematic(_MAYBE_UNUSED const Camera3D* camera) {
 	if (model_ == nullptr) {
 		return; //!< modelが設定されていない
