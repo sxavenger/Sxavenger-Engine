@@ -125,7 +125,7 @@ D3D12_GPU_DESCRIPTOR_HANDLE DescriptorPool::GetGPUDescriptorHandle(uint32_t inde
 void DescriptorHeaps::Init(Devices* devices) {
 
 	pools_[DescriptorType::RTV]
-		= std::make_unique<DescriptorPool>(devices, D3D12_DESCRIPTOR_HEAP_TYPE_RTV, 12);
+		= std::make_unique<DescriptorPool>(devices, D3D12_DESCRIPTOR_HEAP_TYPE_RTV, 24);
 
 	pools_[DescriptorType::DSV]
 		= std::make_unique<DescriptorPool>(devices, D3D12_DESCRIPTOR_HEAP_TYPE_DSV, 8);

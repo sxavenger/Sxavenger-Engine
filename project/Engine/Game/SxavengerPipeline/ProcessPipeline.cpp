@@ -41,8 +41,10 @@ void ProcessPipeline::CreateTransition() {
 		desc.SetSRV(0, 10); //!< Albedo
 		desc.SetSRV(1, 11); //!< Normal
 		desc.SetSRV(2, 12); //!< Position
-		desc.SetCBV(3, 10); //!< Config
-		desc.SetUAV(4, 0);  //!< Xclipse
+		desc.SetSRV(3, 13); //!< Material
+		desc.SetCBV(4, 10); //!< Config
+		desc.SetCBV(5, 0);  //!< Camera
+		desc.SetUAV(6, 0);  //!< Xclipse
 
 		pipelines_[kTransition_SampleLighting]->CreatePipeline(desc, blobs_[kTransition_SampleLighting].get());
 	}

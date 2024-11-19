@@ -43,4 +43,7 @@ private:
 	std::unique_ptr<Collider> test_;
 	std::unique_ptr<Collider> test2_;
 
+	std::unique_ptr<Animator> animator_;
+	DeltaTimePoint animationTime_;
+
 };

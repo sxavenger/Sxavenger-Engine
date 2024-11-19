@@ -16,6 +16,7 @@ const SystematicRenderingFrame::GBufferArray<DXGI_FORMAT> SystematicRenderingFra
 	kOffscreenFormat,               //!< albedo
 	DXGI_FORMAT_R8G8B8A8_UNORM,     //!< normal
 	DXGI_FORMAT_R32G32B32A32_FLOAT, //!< position
+	DXGI_FORMAT_R8G8B8A8_UNORM,     //!< material
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -370,8 +371,10 @@ void SxavengerFrame::TransitionSystematicToXclipse() {
 	commandList->SetComputeRootDescriptorTable(0, systematic_->GetTexture(SystematicRenderingFrame::GBUFFER_ALBEDO)->GetGPUHandleSRV());
 	commandList->SetComputeRootDescriptorTable(1, systematic_->GetTexture(SystematicRenderingFrame::GBUFFER_NORMAL)->GetGPUHandleSRV());
 	commandList->SetComputeRootDescriptorTable(2, systematic_->GetTexture(SystematicRenderingFrame::GBUFFER_POSITION)->GetGPUHandleSRV());
-	commandList->SetComputeRootConstantBufferView(3, config_->GetGPUVirtualAddress());
-	commandList->SetComputeRootDescriptorTable(4, xclipse_->GetTexture()->GetGPUHandleUAV());
+	commandList->SetComputeRootDescriptorTable(3, systematic_->GetTexture(SystematicRenderingFrame::GBUFFER_MATERIAL)->GetGPUHandleSRV());
+	commandList->SetComputeRootConstantBufferView(4, config_->GetGPUVirtualAddress());
+	commandList->SetComputeRootConstantBufferView(5, camera_->GetGPUVirtualAddress());
+	commandList->SetComputeRootDescriptorTable(6, xclipse_->GetTexture()->GetGPUHandleUAV());
 
 	sSystemConsole->Dispatch((*config_)[0].size);
 

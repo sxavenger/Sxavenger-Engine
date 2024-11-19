@@ -242,7 +242,6 @@ void RenderingConsole::DrawSystematicBehavior(BaseBehavior* behavior, SxavengerF
 	if (behavior->GetRenderingFlag() & kBehaviorRender_Systematic) {
 		behavior->DrawSystematic(frame->GetCamera());
 	}
-	
 
 	for (auto child : behavior->GetChildren()) {
 		DrawSystematicBehavior(child, frame);

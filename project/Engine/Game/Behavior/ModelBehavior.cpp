@@ -75,7 +75,8 @@ void ModelBehavior::DrawSystematic(_MAYBE_UNUSED const Camera3D* camera) {
 			commandList->SetGraphicsRootShaderResourceView(7, transform_.GetGPUVirtualAddress());
 			commandList->SetGraphicsRootConstantBufferView(8, uvTransform_.GetVirtualAddress());
 			commandList->SetGraphicsRootDescriptorTable(9, model_->GetTextureHandle(i));
-			commandList->SetGraphicsRootConstantBufferView(10, color_.GetGPUVirtualAddress());
+			commandList->SetGraphicsRootConstantBufferView(10, material_.GetGPUVirtualAddress());
+			commandList->SetGraphicsRootConstantBufferView(11, color_.GetGPUVirtualAddress());
 
 			model_->GetMesh(i).Dispatch(0, 1, 2, 3, 4, 6);
 
@@ -90,7 +91,8 @@ void ModelBehavior::DrawSystematic(_MAYBE_UNUSED const Camera3D* camera) {
 			commandList->SetGraphicsRootShaderResourceView(1, transform_.GetGPUVirtualAddress());
 			commandList->SetGraphicsRootConstantBufferView(2, uvTransform_.GetVirtualAddress());
 			commandList->SetGraphicsRootDescriptorTable(3, model_->GetTextureHandle(i));
-			commandList->SetGraphicsRootConstantBufferView(4, color_.GetGPUVirtualAddress());
+			commandList->SetGraphicsRootConstantBufferView(4, material_.GetGPUVirtualAddress());
+			commandList->SetGraphicsRootConstantBufferView(5, color_.GetGPUVirtualAddress());
 
 			model_->GetMesh(i).DrawCall();
 		}

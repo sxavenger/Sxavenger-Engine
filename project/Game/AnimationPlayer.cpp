@@ -15,7 +15,9 @@ void AnimationPlayer::Init() {
 	SetName("animation player");
 
 	model_ = SxavengerGame::LoadModel("resources/model", "player_jump.gltf");
-	CreateAnimation();
+
+	animator_ = std::make_unique<Animator>(model_);
+	AnimationBehavior::animator_ = animator_.get();
 
 	AnimationBehavior::renderingFlag_ = kBehaviorRender_Systematic;
 
@@ -32,9 +34,8 @@ void AnimationPlayer::Term() {
 }
 
 void AnimationPlayer::Update() {
-	AnimationBehavior::animationTime_.AddDeltaTime();
-	UpdateAnimator(0, true);
-	//UpdateAnimator(0, true);
+	animationTime_.AddDeltaTime();
+	animator_->Update(animationTime_, 0, true);
 
 	test_->SetColliderPosition(transform_.GetWorldPosition());
 	test2_->SetColliderPosition(transform_.GetWorldPosition());

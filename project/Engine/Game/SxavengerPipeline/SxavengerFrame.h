@@ -30,6 +30,7 @@ public:
 		GBUFFER_ALBEDO,
 		GBUFFER_NORMAL,
 		GBUFFER_POSITION,
+		GBUFFER_MATERIAL,
 		kCountOfGBuffer
 	};
 	static_assert(kCountOfGBuffer < D3D12_SIMULTANEOUS_RENDER_TARGET_COUNT, "[Systematic frame GBuffer]: The number of GBuffer exceeds <D3D12_SIMULTANEOUS_RENDER_TARGET_COUNT>.");

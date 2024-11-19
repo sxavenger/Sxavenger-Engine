@@ -3,6 +3,13 @@
 //-----------------------------------------------------------------------------------------
 #include "../SystematicProcess.hlsli"
 #include "../../Light.hlsli"
+#include "../../Camera.hlsli"
+
+//=========================================================================================
+// Camera
+//=========================================================================================
+
+ConstantBuffer<Camera> gCamera : register(b0);
 
 //=========================================================================================
 // Output
@@ -27,6 +34,7 @@ void main(uint3 dispatchThreadId : SV_DispatchThreadID) {
 	float4 albedo   = GetAlbedo(currentId);
 	float3 normal   = GetNormal(currentId);
 	float4 position = GetPosition(currentId);
+	PBRMaterial material = GetMaterial(currentId);
 	 
 	if (albedo.a == 0.0f) {
 		gXclipse[currentId] = (float4)0;
@@ -39,8 +47,11 @@ void main(uint3 dispatchThreadId : SV_DispatchThreadID) {
 	float d = pow((NdotL + 1.0f) * 0.5f, 2.0f);
 	
 	float4 color = (float4)0.0f;
-	color.rgb = albedo.rgb * d;
 	color.a = albedo.a;
+
+	float3 toCamera = normalize(gCamera.position.xyz - position.xyz);
+
+	color.rgb = GGX(material, normal, toCamera, -lightDirection) * albedo.rgb;
 	
 	gXclipse[currentId] = color;
 }

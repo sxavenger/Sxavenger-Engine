@@ -7,7 +7,7 @@
 #include "ModelBehavior.h"
 
 //* engine
-#include <Engine/Game/Animation.h>s
+#include <Engine/Game/Animation.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // AnimationBehavior class
