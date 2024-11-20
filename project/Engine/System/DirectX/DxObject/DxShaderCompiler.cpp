@@ -4,6 +4,9 @@ _DXOBJECT_USING
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
+//* engine
+#include <Engine/System/Config/SxavengerDirectory.h>
+
 //* c++
 #include <vector>
 
@@ -20,6 +23,8 @@ const std::array<LPCWSTR, static_cast<uint32_t>(CompileProfile::lib) + 1> Shader
 	L"cs_6_6", //!< cs
 	L"lib_6_6" //!< lib
 };
+
+const std::wstring ShaderCompiler::kDirectory_ = kShaderDirectory;
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // ShaderCompiler class methods
@@ -55,9 +60,12 @@ ComPtr<IDxcBlob> ShaderCompiler::Compile(
 	CompileProfile profile,
 	const std::wstring& entryPoint) {
 
+	// 全体pathの生成
+	std::wstring directorypath = kDirectory_ + filepath;
+
 	// hlslファイルを読み込む
 	ComPtr<IDxcBlobEncoding> shaderSource;
-	auto hr = utils_->LoadFile(filepath.c_str(), nullptr, &shaderSource);
+	auto hr = utils_->LoadFile(directorypath.c_str(), nullptr, &shaderSource);
 	AssertW(SUCCEEDED(hr), L"hlsl not found. filepath: " + filepath);
 
 	// 読み込んだファイルの内容を設定する
@@ -68,7 +76,7 @@ ComPtr<IDxcBlob> ShaderCompiler::Compile(
 
 	// 基本情報の設定
 	std::vector<LPCWSTR> arguments = {
-		filepath.c_str(),                                 //!< コンパイル対象のhlslファイルパス
+		directorypath.c_str(),                            //!< コンパイル対象のhlslファイルパス
 		L"-T", profiles_[static_cast<uint32_t>(profile)], //!< ShaderProfileの設定
 		L"-Zi", L"-Qembed_debug",                         //!< デバッグ用情報を埋め込む
 		L"-Od",                                           //!< 最適化を外しておく

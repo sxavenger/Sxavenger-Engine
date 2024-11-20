@@ -74,6 +74,8 @@ private:
 
 	static const std::array<LPCWSTR, static_cast<uint32_t>(CompileProfile::lib) + 1> profiles_;
 
+	static const std::wstring kDirectory_;
+
 };
 
 _DXOBJECT_NAMESPACE_END
