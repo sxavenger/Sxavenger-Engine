@@ -33,6 +33,7 @@ void Device::Init() {
 }
 
 void Device::Term() {
+	EngineLog("[_DXOBJECT]::Device term.");
 }
 
 void Device::CreateDebugLayer() {

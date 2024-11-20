@@ -13,6 +13,7 @@ namespace {
 	//* system user
 	std::unique_ptr<GameWindowCollection> sWindowCollection  = nullptr; //!< window collection
 	std::unique_ptr<Input>                sInput             = nullptr; //!< input system
+	std::unique_ptr<ImGuiController>      sImGuiController   = nullptr; //!< ui system
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -35,9 +36,18 @@ void SxavengerSystemEngine::Init() {
 
 	sWindowCollection = std::make_unique<GameWindowCollection>();
 	sInput            = std::make_unique<Input>();
+	sImGuiController  = std::make_unique<ImGuiController>();
 }
 
 void SxavengerSystemEngine::Term() {
+	sImGuiController.reset();
+	sInput.reset();
+	sWindowCollection.reset();
+
+	sThreadCollection.reset();
+	sMainThreadContext.reset();
+	sDirectXCommon.reset();
+	sWinApp.reset();
 }
 
 _DXOBJECT Descriptor SxavengerSystemEngine::GetDescriptor(_DXOBJECT DescriptorType type) {
@@ -70,7 +80,15 @@ DirectXThreadContext* SxavengerSystemEngine::GetMainThreadContext() {
 
 GameWindow* SxavengerSystemEngine::CreateMainWindow(
 	const Vector2ui& clientSize, const LPCWSTR& name, const Color4f& clearColor) {
-	return sWindowCollection->CreateMainWindow(clientSize, name, clearColor);
+
+	// windowの生成
+	auto window = sWindowCollection->CreateMainWindow(clientSize, name, clearColor);
+
+	// user system の初期化
+	sInput->Init(window);
+	sImGuiController->Init(window);
+
+	return window;
 }
 
 const std::weak_ptr<GameWindow> SxavengerSystemEngine::TryCreateSubWindow(
@@ -108,4 +126,20 @@ bool SxavengerSystemEngine::IsReleaseKey(KeyId id) {
 
 Input* SxavengerSystemEngine::GetInput() {
 	return sInput.get();
+}
+
+void SxavengerSystemEngine::BeginImGuiFrame() {
+	sImGuiController->BeginFrame();
+}
+
+void SxavengerSystemEngine::EndImGuiFrame() {
+	sImGuiController->EndFrame();
+}
+
+void SxavengerSystemEngine::RenderImGui(DirectXThreadContext* context) {
+	sImGuiController->Render(context);
+}
+
+ImGuiController* SxavengerSystemEngine::GetImGuiController() {
+	return sImGuiController.get();
 }

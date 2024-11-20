@@ -56,8 +56,6 @@ void GameScene::Init() {
 
 	subWindow_ = SxavengerSystem::TryCreateSubWindow({ 400, 400 }, L"sub", ToColor4f(0x3A504BFF));
 
-	SxavengerSystem::GetInput()->Init(mainWindow_);
-
 	input_.Create(3, 3);
 	(*input_.GetVertex())[0] = { 0.0f, 0.1f, 0.1f };
 	(*input_.GetVertex())[1] = { 0.1f, -0.1f, 0.1f };
@@ -89,9 +87,12 @@ void GameScene::Init() {
 	desc.SetViewport(kMainWindowSize);
 
 	state_->CreatePipeline(SxavengerSystem::GetDxDevice(), desc);
+
+	SxavengerSystem::ExecuteAllAllocator();
 }
 
 void GameScene::Update() {
+	SxavengerSystem::BeginImGuiFrame();
 
 	SxavengerSystem::GetInput()->Update();
 
@@ -99,10 +100,31 @@ void GameScene::Update() {
 		state_->HotReloadShader();
 	}
 
+	if (SxavengerSystem::IsTriggerKey(KeyId::KEY_P)) {
+		isDisplayImGuiWindow_ = !isDisplayImGuiWindow_;
+	}
+
+	ImGui::ShowDemoWindow();
+	ImGui::ShowDebugLogWindow();
+
 	SxavengerSystem::TransitionAllocator();
+	SxavengerSystem::EndImGuiFrame();
 }
 
 void GameScene::Draw() {
+
+	if (!subWindow_.expired()) {
+		auto window = subWindow_.lock();
+
+		window->BeginRendering();
+		window->ClearWindow();
+
+		if (!isDisplayImGuiWindow_) {
+			SxavengerSystem::RenderImGui();
+		}
+
+		window->EndRendering();
+	}
 
 	mainWindow_->BeginRendering();
 	mainWindow_->ClearWindow();
@@ -112,18 +134,16 @@ void GameScene::Draw() {
 	input_.BindIABuffer();
 	input_.DrawCall();
 
-	mainWindow_->EndRendering();
-
-	if (!subWindow_.expired()) {
-		auto window = subWindow_.lock();
-
-		window->BeginRendering();
-		window->ClearWindow();
-		window->EndRendering();
+	if (isDisplayImGuiWindow_) {
+		SxavengerSystem::RenderImGui();
 	}
+
+	mainWindow_->EndRendering();
 
 	SxavengerSystem::PresentAllWindow();
 	SxavengerSystem::ExecuteAllAllocator();
+	//!< sub window delete時に死ぬ
+	//!< shader hot reload 時に死ぬ
 }
 
 void GameScene::Term() {

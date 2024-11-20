@@ -10,6 +10,7 @@
 #include "Window/GameWindowCollection.h"
 #include "Runtime/Thread/Thread.h"
 #include "Runtime/Input/Input.h"
+#include "UI/ImGuiController.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // SxavengerSystemEngine class
@@ -78,6 +79,18 @@ public:
 	static bool IsReleaseKey(KeyId id);
 
 	static Input* GetInput();
+
+	//-----------------------------------------------------------------------------------------
+	// imgui controller option
+	//-----------------------------------------------------------------------------------------
+
+	static void BeginImGuiFrame();
+
+	static void EndImGuiFrame();
+
+	static void RenderImGui(DirectXThreadContext* context = GetMainThreadContext());
+
+	static ImGuiController* GetImGuiController();
 
 private:
 };

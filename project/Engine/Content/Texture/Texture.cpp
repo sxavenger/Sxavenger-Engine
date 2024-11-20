@@ -65,6 +65,9 @@ void Texture::Load(const std::string& filepath, DirectXThreadContext* context) {
 	}
 }
 
+void Texture::Term() {
+}
+
 DirectX::ScratchImage Texture::LoadTexture(const std::string& filepath) {
 	DirectX::ScratchImage image = {};
 	std::wstring filePathW = ToWString(filepath); //!< wstringに変換

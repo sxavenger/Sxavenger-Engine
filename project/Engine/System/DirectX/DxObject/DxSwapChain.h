@@ -48,6 +48,8 @@ public:
 
 	const D3D12_CPU_DESCRIPTOR_HANDLE& GetBackBufferCPUHandle() const { return descriptorsRTV_[currentBackBufferIndex_].GetCPUHandle(); }
 
+	static const UINT GetBufferCount() { return kBufferCount_; }
+
 private:
 
 	//=========================================================================================

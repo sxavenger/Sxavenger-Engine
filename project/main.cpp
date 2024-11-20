@@ -4,6 +4,7 @@
 //* engine
 #include <Engine/System/SxavengerSystem.h>
 #include <Engine/System/Runtime/Scene/GameScene.h>
+#include <Engine/Content/SxavengerContent.h>
 
 // c++
 #include <memory>
@@ -13,11 +14,25 @@
 ////////////////////////////////////////////////////////////////////////////////////////////
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
+	//=========================================================================================
+	// sxavenger engine initalize.
+	//=========================================================================================
 	SxavengerSystem::Init();
+	SxavengerContent::Init();
 
-	std::unique_ptr<GameScene> scene = std::make_unique<GameScene>();
-	scene->Run();
-	
+	//=========================================================================================
+	// game scene run.
+	//=========================================================================================
+	{
+		std::unique_ptr<GameScene> scene = std::make_unique<GameScene>();
+		scene->Run();
+	}
+
+	//=========================================================================================
+	// sxavenger engine term.
+	//=========================================================================================
+	SxavengerContent::Term();
 	SxavengerSystem::Term();
+
 	return 0;
 }

@@ -3,27 +3,45 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
+//* external
+#include <imgui.h>
+#include <imgui_impl_dx12.h>
+#include <imgui_impl_win32.h>
+
 //* engine
-#include <Engine/System/Window/GameWindow.h>
+#include <Engine/System/Window/Window.h>
+#include <Engine/System/DirectX/DirectXContext.h>
+#include <Engine/System/DirectX/DxObject/DxDescriptor.h>
 
-#include "Engine/System/DirectX/DxObject/DxGraphicsPipelineState.h"
-#include "Engine/Content/InputAssembler/InputAssembler.h"
-#include "Lib/Geometry/Vector4.h"
+//* lib
+#include <Lib/Geometry/Vector4.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// GameScene class
+// ImGuiController class
 ////////////////////////////////////////////////////////////////////////////////////////////
-class GameScene {
+class ImGuiController {
 public:
 
 	//=========================================================================================
 	// public methods
 	//=========================================================================================
 
-	GameScene()  = default;
-	~GameScene() = default;
+	ImGuiController()  = default;
+	~ImGuiController() { Term(); }
 
-	void Run();
+	void Init(Window* mainWindow);
+
+	void Term();
+
+	void BeginFrame();
+
+	void EndFrame();
+
+	void Render(DirectXThreadContext* context);
+
+	//* convert *//
+
+	static ImVec4 ToImVec4(const Color4i& color);
 
 private:
 
@@ -31,23 +49,13 @@ private:
 	// private variables
 	//=========================================================================================
 
-	GameWindow* mainWindow_ = nullptr;
-	std::weak_ptr<GameWindow> subWindow_;
-
-	InputAssembler<Vector4f> input_;
-	std::unique_ptr<DxObject::GraphicsPipelineState> state_;
-
-	bool isDisplayImGuiWindow_ = true;
+	DxObject::Descriptor descriptorSRV_;
 
 	//=========================================================================================
 	// private methods
 	//=========================================================================================
 
-	void Init();
+	void SetImGuiStyle();
+	void SettingImGui();
 
-	void Update();
-
-	void Draw();
-
-	void Term();
 };

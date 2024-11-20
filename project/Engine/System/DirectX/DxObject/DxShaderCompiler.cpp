@@ -47,6 +47,7 @@ void ShaderCompiler::Init() {
 }
 
 void ShaderCompiler::Term() {
+	EngineLog("[_DXOBJECT]::ShaderCompiler term.");
 }
 
 ComPtr<IDxcBlob> ShaderCompiler::Compile(

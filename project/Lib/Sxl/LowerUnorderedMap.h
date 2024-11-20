@@ -32,7 +32,7 @@ namespace Sxl {
 		//=========================================================================================
 
 		LowerUnorderedMapA()  = default;
-		~LowerUnorderedMapA() = default;
+		~LowerUnorderedMapA() { Clear(); }
 
 		void Emplace(const std::string& key, const _Value& value);
 		void TryEmplace(const std::string& key, const _Value& value);
@@ -40,6 +40,8 @@ namespace Sxl {
 		bool Contains(const std::string& key) const;
 
 		void Erase(const std::string& key);
+
+		const _Value& At(const std::string& key) const;
 
 		void Clear();
 
@@ -89,6 +91,11 @@ namespace Sxl {
 	template<class _Value>
 	inline void LowerUnorderedMapA<_Value>::Erase(const std::string& key) {
 		map_.erase(ToLower(key));
+	}
+
+	template<class _Value>
+	inline const _Value& LowerUnorderedMapA<_Value>::At(const std::string& key) const {
+		return map_.at(ToLower(key));
 	}
 
 	template<class _Value>

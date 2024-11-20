@@ -132,6 +132,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\Content\InputAssembler\InputAssembler.cpp" />
+    <ClCompile Include="Engine\Content\SxavengerContent.cpp" />
     <ClCompile Include="Engine\Content\Texture\Texture.cpp" />
     <ClCompile Include="Engine\Content\Texture\TextureCollection.cpp" />
     <ClCompile Include="Engine\System\DirectX\DirectXCommon.cpp" />
@@ -153,6 +154,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="Engine\System\Runtime\Scene\GameScene.cpp" />
     <ClCompile Include="Engine\System\SxavengerSystem.cpp" />
     <ClCompile Include="Engine\System\Runtime\Thread\Thread.cpp" />
+    <ClCompile Include="Engine\System\UI\ImGuiController.cpp" />
     <ClCompile Include="Engine\System\Utility\Logger.cpp" />
     <ClCompile Include="Engine\System\WinApp\WinApp.cpp" />
     <ClCompile Include="Engine\System\Window\GameWindow.cpp" />
@@ -171,6 +173,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Content\InputAssembler\InputAssembler.h" />
+    <ClInclude Include="Engine\Content\SxavengerContent.h" />
     <ClInclude Include="Engine\Content\Texture\Texture.h" />
     <ClInclude Include="Engine\Content\Texture\TextureCollection.h" />
     <ClInclude Include="Engine\System\Cinfig\SxavengerDirectory.h" />
@@ -195,6 +198,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Engine\System\Runtime\Scene\GameScene.h" />
     <ClInclude Include="Engine\System\SxavengerSystem.h" />
     <ClInclude Include="Engine\System\Runtime\Thread\Thread.h" />
+    <ClInclude Include="Engine\System\UI\ImGuiController.h" />
     <ClInclude Include="Engine\System\Utility\ComPtr.h" />
     <ClInclude Include="Engine\System\Utility\Logger.h" />
     <ClInclude Include="Engine\System\WinApp\WinApp.h" />

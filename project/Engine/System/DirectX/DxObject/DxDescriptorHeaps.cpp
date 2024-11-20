@@ -132,6 +132,7 @@ void DescriptorHeaps::Init(Device* device) {
 }
 
 void DescriptorHeaps::Term() {
+	EngineLog("[_DXOBJECT]::DescriptorHeaps term.");
 }
 
 Descriptor DescriptorHeaps::GetDescriptor(DescriptorType type) {

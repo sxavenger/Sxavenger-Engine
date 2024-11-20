@@ -34,8 +34,8 @@ public:
 	// public methods
 	//=========================================================================================
 
-	BaseTexture()  = default;
-	~BaseTexture() { Term(); }
+	BaseTexture()          = default;
+	virtual ~BaseTexture() { Term(); }
 
 	void Term();
 
@@ -81,9 +81,11 @@ public:
 	//=========================================================================================
 
 	Texture()  = default;
-	~Texture() = default;
+	~Texture() { Term(); }
 
 	void Load(const std::string& filepath, DirectXThreadContext* context);
+
+	void Term();
 
 private:
 
