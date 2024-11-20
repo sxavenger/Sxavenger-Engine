@@ -31,8 +31,4 @@ public:
 
 private:
 
-	float value_ = 0.0f;
-
-	ImGuiJsonExporter imguiJsonExporter_;
-
 };

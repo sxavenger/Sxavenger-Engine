@@ -22,6 +22,11 @@ void BaseBehavior::SetToConsole(const std::string& name) {
 	SetToConsole();
 }
 
+void BaseBehavior::SetName(const std::string& name) {
+	name_ = name;
+	exporter_.SetName(name);
+}
+
 void BaseBehavior::SetChild(BaseBehavior* child) {
 	child->parent_ = this;
 	children_.emplace_back(child);

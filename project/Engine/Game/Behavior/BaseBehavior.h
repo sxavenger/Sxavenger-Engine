@@ -5,6 +5,7 @@
 //-----------------------------------------------------------------------------------------
 //* engine
 #include <Engine/System/DxrObject/DxrAccelerationStructure.h>
+#include <Engine/Beta/ImGuiJsonExporter.h>
 
 //* lib
 #include <Lib/CXXAttributeConfig.h>
@@ -46,7 +47,7 @@ public:
 	void SetToConsole();
 	void SetToConsole(const std::string& name);
 
-	void SetName(const std::string& name) { name_ = name; }
+	void SetName(const std::string& name);
 
 	void SetChild(BaseBehavior* child);
 	void RemoveChild(BaseBehavior* child);
@@ -81,6 +82,10 @@ protected:
 	std::string name_ = "new behavior";
 
 	uint32_t renderingFlag_ = kBehaviorRender_None;
+
+	//* expoter parameter *//
+
+	ImGuiJsonExporter exporter_;
 
 private:
 
