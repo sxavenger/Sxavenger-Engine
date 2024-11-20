@@ -1,17 +1,17 @@
-#include "Json.h"
+#include "json.h"
 
 //=========================================================================================
 // static variables
 //=========================================================================================
 
-const std::string JsonAdapter::directory_ = "./resources/Json/";
+const std::string JsonAdapter::directory_ = "./resources/json/";
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // JsonAdapter methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-Json JsonAdapter::LoadJson(const std::string& path) {
-	Json result;
+json JsonAdapter::LoadJson(const std::string& path) {
+	json result;
 
 	// ファイルパスの生成
 	std::string filePath = directory_ + path;
@@ -29,7 +29,7 @@ Json JsonAdapter::LoadJson(const std::string& path) {
 	return std::move(result);
 }
 
-void JsonAdapter::WriteJson(const std::string& path, const Json& data) {
+void JsonAdapter::WriteJson(const std::string& path, const json& data) {
 	// ファイルパス生成
 	std::string filePath = directory_ + path;
 
@@ -42,11 +42,11 @@ void JsonAdapter::WriteJson(const std::string& path, const Json& data) {
 	ofs.close();
 }
 
-void JsonAdapter::OverwriteJson(const std::string& path, const Json& data) {
+void JsonAdapter::OverwriteJson(const std::string& path, const json& data) {
 
 	std::string filePath = directory_ + path;
 
-	Json saveData;
+	json saveData;
 
 	// 旧データの回収
 	std::ifstream ifs(filePath);

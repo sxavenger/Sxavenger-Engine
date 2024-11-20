@@ -11,8 +11,8 @@
   <ItemGroup>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Engine\System\Window\Window.cpp" />
-    <ClCompile Include="Lib\Adapter\Json.cpp" />
-    <ClCompile Include="Lib\Adapter\Random.cpp" />
+    <ClCompile Include="Lib\Adapter\Json\Json.cpp" />
+    <ClCompile Include="Lib\Adapter\Random\Random.cpp" />
     <ClCompile Include="Engine\System\Window\GameWindow.cpp" />
     <ClCompile Include="Engine\System\DirectX\DxObject\DxObjectCommon.cpp" />
     <ClCompile Include="Engine\System\Utility\Logger.cpp" />
@@ -51,8 +51,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\System\Window\Window.h" />
-    <ClInclude Include="Lib\Adapter\Random.h" />
-    <ClInclude Include="Lib\Adapter\Json.h" />
+    <ClInclude Include="Lib\Adapter\Random\Random.h" />
+    <ClInclude Include="Lib\Adapter\Json\Json.h" />
     <ClInclude Include="Engine\System\Window\GameWindow.h" />
     <ClInclude Include="Engine\System\DirectX\DxObject\DxObjectCommon.h" />
     <ClInclude Include="Engine\System\Utility\Logger.h" />
@@ -96,5 +96,6 @@
     <ClInclude Include="Engine\Content\Texture\TextureCollection.h" />
     <ClInclude Include="Engine\Content\SxavengerContent.h" />
     <ClInclude Include="Engine\System\UI\ImGuiController.h" />
+    <ClInclude Include="Lib\Adapter\Json\IJsonSerializer.h" />
   </ItemGroup>
 </Project>

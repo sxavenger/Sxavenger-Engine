@@ -19,10 +19,10 @@ public:
 	// public methods
 	//=========================================================================================
 
-	template <std::floating_point T>
+	template <std::floating_point T = float>
 	static T Generate(T min, T max);
 
-	template <std::integral T>
+	template <std::integral T = int>
 	static T Generate(T min, T max);
 
 private:
