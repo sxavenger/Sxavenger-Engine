@@ -35,7 +35,7 @@
 		"r": 1.0
 	},
 	"material": {
-		"metallic": 0.0,
-		"roughness": 0.0
+		"metallic": 0.8199999928474426,
+		"roughness": 0.5799999833106995
 	}
 }

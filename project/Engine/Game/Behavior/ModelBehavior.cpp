@@ -179,5 +179,44 @@ void ModelBehavior::OutputJson() {
 	auto& color = root["color"] = Json::object();
 	color = JsonAdapter::ToJson(color_.color);
 
-	JsonAdapter::WriteJson("/behavior/" + name_ + ".json", root);
+	JsonAdapter::WriteJson(kBehaviorDirectory + name_ + ".json", root);
+}
+
+void ModelBehavior::TryLoadJson(const std::string& filename) {
+
+	std::string filepath = kBehaviorDirectory;
+
+	if (filename.empty()) {
+		filepath += name_ + ".json";
+
+	} else {
+		filepath += filename;
+	}
+
+	Json data;
+
+	if (!JsonAdapter::TryLoadJson(filepath, data)) {
+		return; //!< 読み込み失敗したら抜ける
+	}
+
+	const auto& transform = data["Transform"];
+	transform_.transform.scale     = JsonAdapter::ToVector3f(transform["scale"]);
+	transform_.transform.rotate    = JsonAdapter::ToQuaternion(transform["rotate"]);
+	transform_.transform.translate = JsonAdapter::ToVector3f(transform["translate"]);
+	transform_.UpdateMatrix();
+
+	const auto& uvTransform = data["UVTransform"];
+	uvTransform_.transform.scale     = JsonAdapter::ToVector2f(uvTransform["scale"]);
+	uvTransform_.transform.rotate    = uvTransform["rotate"];
+	uvTransform_.transform.translate = JsonAdapter::ToVector2f(uvTransform["translate"]);
+	uvTransform_.Transfer();
+
+	const auto& material = data["material"];
+	material_.material.roughness = material["roughness"];
+	material_.material.metallic  = material["metallic"];
+	material_.Transfer();
+
+	const auto& color = data["color"];
+	color_.color = JsonAdapter::ToColor4f(color);
+	color_.Transfer();
 }

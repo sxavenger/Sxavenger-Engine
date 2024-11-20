@@ -12,6 +12,7 @@
 
 void Plane::Init() {
 	SetName("plane");
+	TryLoadJson();
 
 	ModelBehavior::model_ = SxavengerGame::LoadModel("resources/model/CG2", "plane.obj");
 	model_->ApplyRaytracing();
