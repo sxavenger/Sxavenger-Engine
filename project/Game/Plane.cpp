@@ -19,7 +19,15 @@ void Plane::Init() {
 	CreateRaytracingRecorder();
 
 	renderingFlag_ = kBehaviorRender_Raytracing | kBehaviorRender_Systematic;
+
+	imguiJsonExporter_.SetName("plane");
+	//imguiJsonExporter_.TryLoad();
+}
+
+void Plane::Term() {
+	//imguiJsonExporter_.Output();
 }
 
 void Plane::SetAttributeImGui() {
+	imguiJsonExporter_.DragFloat("value", &value_, 0.2f);
 }

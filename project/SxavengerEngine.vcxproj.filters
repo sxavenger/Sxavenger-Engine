@@ -336,6 +336,7 @@
     <ClCompile Include="Engine\Beta\WorldInstance.cpp" />
     <ClCompile Include="Engine\Game\Collider\Collider.cpp" />
     <ClCompile Include="Lib\Easing.cpp" />
+    <ClCompile Include="Engine\Beta\ImGuiJsonExporter.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="externals\imgui\imconfig.h">
@@ -568,6 +569,7 @@
     <ClInclude Include="Engine\Beta\WorldInstance.h" />
     <ClInclude Include="Engine\Game\Collider\Collider.h" />
     <ClInclude Include="Lib\Easing.h" />
+    <ClInclude Include="Engine\Beta\ImGuiJsonExporter.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

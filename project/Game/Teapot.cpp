@@ -14,7 +14,7 @@
 void Teapot::Init() {
 	SetName("teapot");
 
-	ModelBehavior::model_ = SxavengerGame::LoadModel("resources/model/CG2", "bunny.obj");
+	ModelBehavior::model_ = SxavengerGame::LoadModel("resources/model/CG2", "teapot.obj");
 	//model_->ApplyRaytracing();
 	//CreateRaytracingRecorder();
 
