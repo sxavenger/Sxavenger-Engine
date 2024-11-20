@@ -36,6 +36,10 @@ public:
 	const Json& GetStash() const { return stash_; }
 	Json& GetStash() { return stash_; }
 
+	void SetToStash(const char* label, float* value, int32_t components);
+
+	void GetFromStash(const char* label, float* out, int32_t components);
+
 	//* imgui option *//
 
 	bool DragFloatN(const char* label, float* value, int32_t components, float speed = 1.0f, float min = 0.0f, float max = 0.0f, const char* format = "%.3f", ImGuiSliderFlags flags = ImGuiSliderFlags_None);
@@ -49,8 +53,6 @@ public:
 	bool SliderFloat2(const char* label, float* value, float min, float max, const char* format = "%.3f", ImGuiSliderFlags flags = ImGuiSliderFlags_None);
 	bool SliderFloat3(const char* label, float* value, float min, float max, const char* format = "%.3f", ImGuiSliderFlags flags = ImGuiSliderFlags_None);
 	bool SliderFloat4(const char* label, float* value, float min, float max, const char* format = "%.3f", ImGuiSliderFlags flags = ImGuiSliderFlags_None);
-
-	
 
 private:
 
@@ -70,7 +72,4 @@ private:
 	//=========================================================================================
 	// private methods
 	//=========================================================================================
-
-	void SetToStash(const char* label, float* value, int32_t components);
-	void GetFromStash(const char* label, float* out, int32_t components);
 };

@@ -46,6 +46,36 @@ void ImGuiJsonExporter::Clear() {
 	stash_.clear();
 }
 
+void ImGuiJsonExporter::SetToStash(const char* label, float* value, int32_t components) {
+
+	auto& element = stash_[label];
+
+	if (stash_[label].empty()) {
+		element = Json::array();
+		element.get_ref<Json::array_t&>().resize(components);
+	}
+
+	Assert(element.is_array(), "element is not json::array. label: " + std::string(label));
+
+	for (int32_t i = 0; i < components; ++i) {
+		element.at(i) = value[i];
+	}
+}
+
+void ImGuiJsonExporter::GetFromStash(const char* label, float* out, int32_t components) {
+	if (!stash_.contains(label)) {
+		return;
+	}
+
+	auto& element = stash_[label];
+
+	Assert(element.is_array() && element.size() >= components, "element not the same type. label: " + std::string(label));
+
+	for (int32_t i = 0; i < components; ++i) {
+		out[i] = element.at(i);
+	}
+}
+
 bool ImGuiJsonExporter::DragFloatN(const char* label, float* value, int32_t components, float speed, float min, float max, const char* format, ImGuiSliderFlags flags) {
 	GetFromStash(label, value, components);
 
@@ -94,34 +124,4 @@ bool ImGuiJsonExporter::SliderFloat3(const char* label, float* value, float min,
 
 bool ImGuiJsonExporter::SliderFloat4(const char* label, float* value, float min, float max, const char* format, ImGuiSliderFlags flags) {
 	return SliderFloatN(label, value, 4, min, max, format, flags);
-}
-
-void ImGuiJsonExporter::SetToStash(const char* label, float* value, int32_t components) {
-
-	auto& element = stash_[label];
-
-	if (stash_[label].empty()) {
-		element = Json::array();
-		element.get_ref<Json::array_t&>().resize(components);
-	}
-
-	Assert(element.is_array(), "element is not json::array. label: " + std::string(label));
-
-	for (int32_t i = 0; i < components; ++i) {
-		element.at(i) = value[i];
-	}
-}
-
-void ImGuiJsonExporter::GetFromStash(const char* label, float* out, int32_t components) {
-	if (!stash_.contains(label)) {
-		return;
-	}
-
-	auto& element = stash_[label];
-
-	Assert(element.is_array() && element.size() >= components, "element not the same type. label: " + std::string(label));
-
-	for (int32_t i = 0; i < components; ++i) {
-		out[i] = element.at(i);
-	}
 }
