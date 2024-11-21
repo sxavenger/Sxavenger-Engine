@@ -67,6 +67,8 @@ public:
 
 	//* collision states *//
 
+	void SetupCallbackOnCollision();
+
 	void CallbackOnCollision();
 
 	void OnCollision(Collider* other);

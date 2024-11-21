@@ -29,6 +29,14 @@ void Collider::SetColliderBoundingAABB(const CollisionBoundings::AABB& aabb) {
 	bounding_ = aabb;
 }
 
+void Collider::SetupCallbackOnCollision() {
+	for (auto it = states_.begin(); it != states_.end(); ++it) {
+		//!< 次フレームの準備
+		it->second[kCollisionState_Prev] = it->second[kCollisionState_Current];
+		it->second.reset(kCollisionState_Current);
+	}
+}
+
 void Collider::CallbackOnCollision() {
 
 	for (auto it = states_.begin(); it != states_.end();) {
@@ -43,10 +51,6 @@ void Collider::CallbackOnCollision() {
 				onCollisionExitFunc_(it->first);
 			}
 		}
-
-		//!< 次フレームの準備
-		it->second[kCollisionState_Prev] = it->second[kCollisionState_Current];
-		it->second.reset(kCollisionState_Current);
 
 		// 当たらなくなったので削除
 		if (it->second.none()) {

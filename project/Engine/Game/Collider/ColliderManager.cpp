@@ -18,6 +18,7 @@ void ColliderManager::Term() {
 }
 
 void ColliderManager::Update() {
+	SetupCallbackOnCollision(); //!< 当たり判定のsetup
 	CheckAllCollision(); //!< 全当たり判定の計算
 
 	for (auto& collider : colliders_) { //!< collider関数の呼び出し
@@ -28,6 +29,12 @@ void ColliderManager::Update() {
 void ColliderManager::DrawColliders(const Color4f& color) {
 	for (const auto& collider : colliders_) {
 		DrawCollider(collider, color);
+	}
+}
+
+void ColliderManager::SetupCallbackOnCollision() {
+	for (auto it = colliders_.begin(); it != colliders_.end(); ++it) {
+		(*it)->SetupCallbackOnCollision();
 	}
 }
 

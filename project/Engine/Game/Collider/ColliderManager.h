@@ -54,6 +54,7 @@ private:
 	// private methods
 	//=========================================================================================
 
+	void SetupCallbackOnCollision();
 	void CheckAllCollision();
 
 	void CheckCollisionPair(Collider* colliderA, Collider* colliderB);
