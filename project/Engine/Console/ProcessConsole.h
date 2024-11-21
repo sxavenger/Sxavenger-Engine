@@ -46,6 +46,16 @@ public:
 
 	void Dispatch(const Vector2ui& size);
 
+	//* layer option *//
+
+	void SetVisualLayer(BaseVisualProcessLayer* layer);
+
+	void RemoveSelectedVisualLayer(BaseVisualProcessLayer* layer);
+
+	void RemoveVisualLayer(BaseVisualProcessLayer* layer);
+
+	bool IsSelectedVisualLayer(BaseVisualProcessLayer* layer);
+
 protected:
 
 	//=========================================================================================
@@ -61,7 +71,7 @@ private:
 	////////////////////////////////////////////////////////////////////////////////////////////
 	// layer container using
 	////////////////////////////////////////////////////////////////////////////////////////////
-	using VisualLayerContainer = std::list<std::unique_ptr<BaseVisualProcessLayer>>;
+	using VisualLayerContainer = std::list<BaseVisualProcessLayer*>;
 
 	//=========================================================================================
 	// private variables

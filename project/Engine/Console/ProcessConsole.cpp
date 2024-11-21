@@ -15,11 +15,9 @@ void ProcessConsole::Init() {
 	processPipeline_ = std::make_unique<ProcessPipeline>();
 	processPipeline_->Init();
 
-	std::unique_ptr<VisualProcessDoF> dof = std::make_unique<VisualProcessDoF>();
-	dof->Init();
-	dof->SetName("dof");
-
-	visualProcessLayer_.emplace_back(std::move(dof));
+	//std::unique_ptr<VisualProcessDoF> dof = std::make_unique<VisualProcessDoF>();
+	//dof->Init();
+	//dof->SetName("dof");
 }
 
 void ProcessConsole::Term() {
@@ -62,6 +60,34 @@ void ProcessConsole::SetProcessPipeline(ProcessPipelineType type) {
 
 void ProcessConsole::Dispatch(const Vector2ui& size) {
 	processPipeline_->Dispatch(size);
+}
+
+void ProcessConsole::SetVisualLayer(BaseVisualProcessLayer* layer) {
+	visualProcessLayer_.emplace_back(layer);
+}
+
+void ProcessConsole::RemoveSelectedVisualLayer(BaseVisualProcessLayer* layer) {
+	if (selectedVisualProcess_.has_value() && layer == (*selectedVisualProcess_.value())) {
+		if (selectedVisualProcess_.value() == visualProcessLayer_.begin()) {
+			selectedVisualProcess_ = std::nullopt;
+
+		} else {
+			selectedVisualProcess_.value()--;
+		}
+	}
+}
+
+void ProcessConsole::RemoveVisualLayer(BaseVisualProcessLayer* layer) {
+	RemoveSelectedVisualLayer(layer);
+	visualProcessLayer_.remove(layer);
+}
+
+bool ProcessConsole::IsSelectedVisualLayer(BaseVisualProcessLayer* layer) {
+	if (selectedVisualProcess_.has_value()) {
+		return layer == (*selectedVisualProcess_.value());
+	}
+
+	return false;
 }
 
 void ProcessConsole::DisplayCanvas() {

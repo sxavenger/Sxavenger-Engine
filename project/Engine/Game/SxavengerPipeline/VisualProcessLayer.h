@@ -25,13 +25,20 @@ public:
 	//=========================================================================================
 
 	BaseVisualProcessLayer()          = default;
-	virtual ~BaseVisualProcessLayer() = default;
+	virtual ~BaseVisualProcessLayer() { Term(); }
+
+	void Term();
 
 	//* interface *//
 
 	virtual void Process(_MAYBE_UNUSED SxavengerFrame* frame) {}
 
 	virtual void SetLayerImGui() {}
+
+	//* cosole option *//
+
+	void SetToConsole();
+	void SetToConsole(const std::string& name);
 
 	//* getter *//
 
