@@ -30,7 +30,7 @@ std::weak_ptr<ComPtr<IDxcBlob>> CompileBlobCollection::TryCreateBlob(const std::
 	return blobs_.At(filename).blob;
 }
 
-void CompileBlobCollection::HotReload(const std::wstring& filename) {
+void CompileBlobCollection::Reload(const std::wstring& filename) {
 	if (!blobs_.Contains(filename)) {
 		return; //!< filenameのblobが見つからなかったため
 	}

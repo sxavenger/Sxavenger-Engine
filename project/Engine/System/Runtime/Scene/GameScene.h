@@ -7,6 +7,7 @@
 #include <Engine/System/Window/GameWindow.h>
 
 #include "Engine/System/DirectX/DxObject/DxGraphicsPipelineState.h"
+#include "Engine/System/DirectX/DxObject/DxDimensionBuffer.h"
 #include "Engine/Content/InputAssembler/InputAssembler.h"
 #include "Lib/Geometry/Vector4.h"
 
@@ -35,9 +36,11 @@ private:
 	std::weak_ptr<GameWindow> subWindow_;
 
 	InputAssembler<Vector4f> input_;
-	std::unique_ptr<DxObject::GraphicsPipelineState> state_;
+	std::unique_ptr<DxObject::ReflectionGraphicsPipelineState> state_;
 
-	bool isDisplayImGuiWindow_ = true;
+	std::unique_ptr<DxObject::DimensionBuffer<Vector2f>> buffer_;
+
+	bool renderWindowSwitch_ = true;
 
 	//=========================================================================================
 	// private methods

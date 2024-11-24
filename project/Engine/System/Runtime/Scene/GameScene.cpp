@@ -67,11 +67,11 @@ void GameScene::Init() {
 	(*input_.GetIndex())[1] = 1;
 	(*input_.GetIndex())[2] = 2;
 
-	state_ = std::make_unique<DxObject::GraphicsPipelineState>();
+	state_ = std::make_unique<DxObject::ReflectionGraphicsPipelineState>();
 	state_->CreateBlob(L"simple.vs.hlsl", DxObject::GraphicsShaderType::vs);
 	state_->CreateBlob(L"simple.ps.hlsl", DxObject::GraphicsShaderType::ps);
 
-	state_->CreateRootSignature(SxavengerSystem::GetDxDevice(), {});
+	state_->ReflectionRootSignature(SxavengerSystem::GetDxDevice());
 
 	DxObject::GraphicsPipelineDesc desc = {};
 	desc.SetElement("POSITION", 0, DXGI_FORMAT_R32G32B32A32_FLOAT);
@@ -81,14 +81,16 @@ void GameScene::Init() {
 
 	desc.SetBlendMode(0, BlendMode::kBlendModeNormal);
 
-	desc.SetPrimitive(DxObject::PrimitiveType::Triangle);
+	desc.SetPrimitive(DxObject::PrimitiveType::kTriangle);
 
 	desc.SetRTVFormat(DxObject::kScreenFormat);
 	desc.SetDSVFormat(DxObject::kDefaultDepthFormat);
 
-	desc.SetViewport(kMainWindowSize);
-
 	state_->CreatePipeline(SxavengerSystem::GetDxDevice(), desc);
+
+	buffer_ = std::make_unique<DxObject::DimensionBuffer<Vector2f>>();
+	buffer_->Create(SxavengerSystem::GetDxDevice(), 1);
+	(*buffer_)[0] = { 0.2f, 0.0f };
 
 	SxavengerSystem::ExecuteAllAllocator();
 }
@@ -99,11 +101,11 @@ void GameScene::Update() {
 	SxavengerSystem::GetInput()->Update();
 
 	if (SxavengerSystem::IsTriggerKey(KeyId::KEY_SPACE)) {
-		state_->HotReloadShader();
+		state_->ReloadShader();
 	}
 
 	if (SxavengerSystem::IsTriggerKey(KeyId::KEY_P)) {
-		isDisplayImGuiWindow_ = !isDisplayImGuiWindow_;
+		renderWindowSwitch_ = !renderWindowSwitch_;
 	}
 
 	ImGui::ShowDemoWindow();
@@ -121,7 +123,18 @@ void GameScene::Draw() {
 		window->BeginRendering();
 		window->ClearWindow();
 
-		if (!isDisplayImGuiWindow_) {
+		if (!renderWindowSwitch_) {
+
+			state_->SetPipeline(SxavengerSystem::GetCommandList(), window->GetSize());
+
+			DxObject::BindBufferDesc desc = {};
+			desc.SetAddress("gTest", buffer_->GetGPUVirtualAddress());
+			desc.SetAddress("gTestA", buffer_->GetGPUVirtualAddress());
+			state_->BindGraphicsBuffer(SxavengerSystem::GetMainThreadContext()->GetDxCommand(), desc);
+
+			input_.BindIABuffer();
+			input_.DrawCall();
+
 			SxavengerSystem::RenderImGui();
 		}
 
@@ -130,13 +143,19 @@ void GameScene::Draw() {
 
 	mainWindow_->BeginRendering();
 	mainWindow_->ClearWindow();
- 
-	state_->SetPipeline(SxavengerSystem::GetCommandList());
 
-	input_.BindIABuffer();
-	input_.DrawCall();
+	if (renderWindowSwitch_) {
 
-	if (isDisplayImGuiWindow_) {
+		state_->SetPipeline(SxavengerSystem::GetCommandList(), mainWindow_->GetSize());
+
+		DxObject::BindBufferDesc desc = {};
+		desc.SetAddress("gTest", buffer_->GetGPUVirtualAddress());
+		desc.SetAddress("gTestA", buffer_->GetGPUVirtualAddress());
+		state_->BindGraphicsBuffer(SxavengerSystem::GetMainThreadContext()->GetDxCommand(), desc);
+
+		input_.BindIABuffer();
+		input_.DrawCall();
+
 		SxavengerSystem::RenderImGui();
 	}
 

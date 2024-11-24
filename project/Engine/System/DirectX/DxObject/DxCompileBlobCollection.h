@@ -38,13 +38,17 @@ public:
 
 	std::weak_ptr<ComPtr<IDxcBlob>> TryCreateBlob(const std::wstring& filename, CompileProfile profile);
 
-	void HotReload(const std::wstring& filename);
+	void Reload(const std::wstring& filename);
 
 	std::weak_ptr<ComPtr<IDxcBlob>> GetBlob(const std::wstring& filename);
 
 	//* setter *//
 
 	void SetCompiler(ShaderCompiler* compiler) { compiler_ = compiler; }
+
+	//* getter *//
+
+	ShaderCompiler* GetCompiler() const { return compiler_; }
 
 private:
 

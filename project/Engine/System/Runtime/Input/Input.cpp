@@ -11,7 +11,7 @@
 // KeyboardInput class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-void KeyboardInput::Init(IDirectInput8* dInput, const Window* mainWindow) {
+void KeyboardInput::Init(IDirectInput8* dInput) {
 	
 	// キーボードデバイスの生成
 	auto hr = dInput->CreateDevice(
@@ -32,20 +32,31 @@ void KeyboardInput::Init(IDirectInput8* dInput, const Window* mainWindow) {
 	//* DISCL_FOREGROUND   -> 画面が手前にある場合のみ入力を受け付け
 	//* DISCL_NONEXCLUSIVE -> デバイスをこのアプリで占有しない
 	//* DISCL_NOWINKEY     -> Windowsキーの無効化
-
-		// 排他制御レベルのセット
-	hr = keyboardDevice_->SetCooperativeLevel(
-		mainWindow->GetHwnd(),
-		flags_
-	);
-	Assert(SUCCEEDED(hr));
-
 }
 
 void KeyboardInput::Term() {
 }
 
 void KeyboardInput::Update() {
+
+	const GameWindow* window = SxavengerSystem::GetForcusWindow();
+
+	if (window != nullptr) {
+		HWND hwnd = window->GetHwnd();
+
+		if (hwnd != currentHwnd_) {
+			//* 現在のhwndと違う場合, 再設定
+			// 排他制御レベルのセット
+			auto hr = keyboardDevice_->SetCooperativeLevel(
+				hwnd,
+				flags_
+			);
+			Assert(SUCCEEDED(hr));
+
+
+			currentHwnd_ = hwnd;
+		}
+	}
 
 	// 前frameのkey状態の保存
 	keys_.second = keys_.first;
@@ -88,7 +99,7 @@ void Input::Init(const Window* mainWindow) {
 	//* dinput *//
 
 	keyboard_ = std::make_unique<KeyboardInput>();
-	keyboard_->Init(directInput_.Get(), mainWindow);
+	keyboard_->Init(directInput_.Get());
 }
 
 void Input::Term() {

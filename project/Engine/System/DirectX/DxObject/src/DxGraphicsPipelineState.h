@@ -13,7 +13,6 @@
 #include "DxBindBuffer.h"
 
 //* lib
-#include <Lib/Environment.h>
 #include <Lib/Geometry/Vector2.h>
 
 //* c++
@@ -30,8 +29,8 @@ _DXOBJECT_NAMESPACE_BEGIN
 // PrimitiveType enum
 ////////////////////////////////////////////////////////////////////////////////////////////
 enum class PrimitiveType {
-	kLine,
-	kTriangle,
+	Line,
+	Triangle,
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -61,6 +60,8 @@ public:
 	void SetRTVFormat(DXGI_FORMAT format);
 	void SetRTVFormats(uint32_t size, const DXGI_FORMAT formats[]);
 	void SetDSVFormat(DXGI_FORMAT format);
+
+	void SetViewport(const Vector2ui& size);
 
 	void CreateDefaultDesc();
 
@@ -93,6 +94,11 @@ public:
 	std::vector<DXGI_FORMAT> rtvFormats;
 	DXGI_FORMAT              dsvFormat;
 
+	//* viewports *//
+
+	D3D12_VIEWPORT viewport = {};
+	D3D12_RECT     rect     = {};
+
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -105,12 +111,8 @@ public:
 	// public methods
 	//=========================================================================================
 
-	GraphicsPipelineState() = default;
+	GraphicsPipelineState()  = default;
 	~GraphicsPipelineState() { Term(); }
-
-	void Term();
-
-	//* create methods *//
 
 	void CreateBlob(const std::wstring& filename, GraphicsShaderType type);
 
@@ -118,22 +120,18 @@ public:
 
 	void CreatePipeline(Device* device, const GraphicsPipelineDesc& desc);
 
-	//* update methods *//
+	void CheckAndUpdatePipeline();
 
-	void ReloadShader();
+	void Term();
 
-	virtual void CheckAndUpdatePipeline();
+	void HotReloadShader();
 
-	//* setting pipeline *//
+	//* setter *//
 
-	void SetPipeline(ID3D12GraphicsCommandList* commandList, const Vector2ui& windowSize = kMainWindowSize) const;
-	void SetPipeline(CommandContext* context, const Vector2ui& windowSize = kMainWindowSize) const;
+	void SetPipeline(CommandContext* context) const;
+	void SetPipeline(ID3D12GraphicsCommandList* commandList) const;
 
-	void ReloadAndSetPipeline(ID3D12GraphicsCommandList* commandList, const Vector2ui& windowSize = kMainWindowSize);
-	void ReloadAndSetPipeline(CommandContext* context, const Vector2ui& windowSize = kMainWindowSize);
-
-
-	//* external methods *//
+	//* external *//
 
 	static void SetExternal(CompileBlobCollection* collection, BlendState* blendState);
 
@@ -175,6 +173,7 @@ protected:
 
 	bool isUseMeshShaderPipeline_ = false;
 
+
 	//=========================================================================================
 	// protected methods
 	//=========================================================================================
@@ -182,13 +181,12 @@ protected:
 	void CreateRootSignature();
 	void CreatePipeline();
 
-	//* option *//
-
-	IDxcBlob* GetBlob(GraphicsShaderType type);
 	D3D12_SHADER_BYTECODE GetBytecode(GraphicsShaderType type, bool isRequired = false);
 	D3D12_BLEND_DESC GetBlendDesc() const;
 
-	bool CheckShaderReloadStatus();
+	bool CheckShaderHotReload() const;
+
+	IDxcBlob* GetBlob(GraphicsShaderType type) const;
 
 };
 
@@ -206,15 +204,9 @@ public:
 	ReflectionGraphicsPipelineState()  = default;
 	~ReflectionGraphicsPipelineState() = default;
 
-	//* reflection methods *//
-
 	void ReflectionRootSignature(Device* device);
 
 	void BindGraphicsBuffer(CommandContext* context, const BindBufferDesc& desc);
-
-	//* update methods *//
-
-	void CheckAndUpdatePipeline() override;
 
 private:
 

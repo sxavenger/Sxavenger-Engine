@@ -54,10 +54,10 @@ public:
 	// public methods
 	//=========================================================================================
 
-	KeyboardInput()  = default;
+	KeyboardInput() = default;
 	~KeyboardInput() { Term(); }
 
-	void Init(IDirectInput8* dInput, const Window* mainWindow);
+	void Init(IDirectInput8* dInput);
 
 	void Term();
 
@@ -82,6 +82,8 @@ private:
 	ComPtr<IDirectInputDevice8> keyboardDevice_;
 
 	DWORD flags_ = NULL;
+
+	HWND currentHwnd_ = nullptr;
 
 	//* member *//
 

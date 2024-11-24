@@ -116,3 +116,20 @@ ComPtr<IDxcBlob> ShaderCompiler::Compile(
 
 	return blob;
 }
+
+ComPtr<ID3D12ShaderReflection> ShaderCompiler::Reflection(IDxcBlob* blob) {
+
+	ComPtr<ID3D12ShaderReflection> result;
+
+	DxcBuffer buffer = {};
+	buffer.Size = blob->GetBufferSize();
+	buffer.Ptr  = blob->GetBufferPointer();
+
+	auto hr = utils_->CreateReflection(
+		&buffer,
+		IID_PPV_ARGS(&result)
+	);
+	Assert(SUCCEEDED(hr), "shader reflection is failed.");
+
+	return result;
+}

@@ -48,6 +48,7 @@
     <ClCompile Include="Engine\Content\SxavengerContent.cpp" />
     <ClCompile Include="Engine\System\UI\ImGuiController.cpp" />
     <ClCompile Include="Lib\Adapter\Json\JsonAdapter.cpp" />
+    <ClCompile Include="Engine\System\DirectX\DxObject\DxBindBuffer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\System\Window\Window.h" />
@@ -97,5 +98,6 @@
     <ClInclude Include="Engine\System\UI\ImGuiController.h" />
     <ClInclude Include="Lib\Adapter\Json\IJsonSerializer.h" />
     <ClInclude Include="Lib\Adapter\Json\JsonAdapter.h" />
+    <ClInclude Include="Engine\System\DirectX\DxObject\DxBindBuffer.h" />
   </ItemGroup>
 </Project>

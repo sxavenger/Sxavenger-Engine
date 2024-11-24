@@ -7,6 +7,9 @@ _DXOBJECT_USING
 //* DirectX12
 #include <d3dx12.h>
 
+//* lib
+#include <Lib/Environment.h>
+
 ////////////////////////////////////////////////////////////////////////////////////////////
 // GraphicsPipelineDesc structure methods
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -42,12 +45,12 @@ void GraphicsPipelineDesc::SetIndependentBlendEnable(bool isIndependentEnable) {
 }
 
 void GraphicsPipelineDesc::SetPrimitive(PrimitiveType type) {
-	if (type == PrimitiveType::kLine) { //!< 線分
+	if (type == PrimitiveType::Line) { //!< 線分
 		primitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_LINE;
 		primitiveTopology     = D3D_PRIMITIVE_TOPOLOGY_LINELIST;
 		return;
 
-	} else if (type == PrimitiveType::kTriangle) { //!< 三角形
+	} else if (type == PrimitiveType::Triangle) { //!< 三角形
 		primitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
 		primitiveTopology     = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
 		return;
@@ -70,6 +73,22 @@ void GraphicsPipelineDesc::SetDSVFormat(DXGI_FORMAT format) {
 	dsvFormat = format;
 }
 
+void GraphicsPipelineDesc::SetViewport(const Vector2ui& size) {
+	// viewportの設定
+	viewport.Width    = static_cast<float>(size.x);
+	viewport.Height   = static_cast<float>(size.y);
+	viewport.TopLeftX = 0;
+	viewport.TopLeftY = 0;
+	viewport.MinDepth = 0.0f;
+	viewport.MaxDepth = 1.0f;
+
+	// シザー矩形の設定
+	rect.left   = 0;
+	rect.right  = size.x;
+	rect.top    = 0;
+	rect.bottom = size.y;
+}
+
 void GraphicsPipelineDesc::CreateDefaultDesc() {
 	SetElement("POSITION", 0, DXGI_FORMAT_R32G32B32A32_FLOAT);
 	SetElement("TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT);
@@ -81,10 +100,12 @@ void GraphicsPipelineDesc::CreateDefaultDesc() {
 	SetBlendMode(0, BlendMode::kBlendModeNormal);
 	SetIndependentBlendEnable(false);
 
-	SetPrimitive(PrimitiveType::kTriangle);
+	SetPrimitive(PrimitiveType::Triangle);
 
 	SetRTVFormat(kOffscreenFormat);
 	SetDSVFormat(kDefaultDepthFormat);
+
+	SetViewport(kMainWindowSize);
 }
 
 D3D12_INPUT_LAYOUT_DESC GraphicsPipelineDesc::GetInputLayout() const {
@@ -99,14 +120,11 @@ D3D12_INPUT_LAYOUT_DESC GraphicsPipelineDesc::GetInputLayout() const {
 //=========================================================================================
 
 CompileBlobCollection* GraphicsPipelineState::collection_ = nullptr;
-BlendState* GraphicsPipelineState::blendState_            = nullptr;
+BlendState* GraphicsPipelineState::blendState_ = nullptr;
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // GraphicsPipelineState class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
-
-void GraphicsPipelineState::Term() {
-}
 
 void GraphicsPipelineState::CreateBlob(const std::wstring& filename, GraphicsShaderType type) {
 	Assert(collection_ != nullptr, "collection is not set.");
@@ -134,44 +152,34 @@ void GraphicsPipelineState::CreatePipeline(Device* device, const GraphicsPipelin
 	CreatePipeline();
 }
 
-void GraphicsPipelineState::ReloadShader() {
+void GraphicsPipelineState::CheckAndUpdatePipeline() {
+	if (CheckShaderHotReload()) {
+		CreatePipeline();
+	}
+}
+
+void GraphicsPipelineState::Term() {
+}
+
+void GraphicsPipelineState::HotReloadShader() {
 	Assert(collection_ != nullptr, "collection is not set.");
 
 	for (uint32_t i = 0; i < blobs_.size(); ++i) {
 		if (blobs_[i].blob.has_value()) {
-			collection_->Reload(blobs_[i].filename);
+			collection_->HotReload(blobs_[i].filename);
 		}
 	}
 
 	CheckAndUpdatePipeline();
 }
 
-void GraphicsPipelineState::CheckAndUpdatePipeline() {
-	if (CheckShaderReloadStatus()) {
-		CreatePipeline();
-	}
+void GraphicsPipelineState::SetPipeline(CommandContext* context) const {
+	SetPipeline(context->GetCommandList());
 }
 
-void GraphicsPipelineState::SetPipeline(ID3D12GraphicsCommandList* commandList, const Vector2ui& windowSize) const {
-
-	// viewportの設定
-	D3D12_VIEWPORT viewport = {};
-	viewport.Width    = static_cast<float>(windowSize.x);
-	viewport.Height   = static_cast<float>(windowSize.y);
-	viewport.TopLeftX = 0;
-	viewport.TopLeftY = 0;
-	viewport.MinDepth = 0.0f;
-	viewport.MaxDepth = 1.0f;
-
-	// シザー矩形の設定
-	D3D12_RECT rect = {};
-	rect.left   = 0;
-	rect.right  = windowSize.x;
-	rect.top    = 0;
-	rect.bottom = windowSize.y;
-
-	commandList->RSSetViewports(1, &viewport);
-	commandList->RSSetScissorRects(1, &rect);
+void GraphicsPipelineState::SetPipeline(ID3D12GraphicsCommandList* commandList) const {
+	commandList->RSSetViewports(1, &pipelineDesc_.viewport);
+	commandList->RSSetScissorRects(1, &pipelineDesc_.rect);
 
 	commandList->SetGraphicsRootSignature(rootSignature_.Get());
 	commandList->SetPipelineState(pipeline_.Get());
@@ -180,26 +188,13 @@ void GraphicsPipelineState::SetPipeline(ID3D12GraphicsCommandList* commandList, 
 		//!< vertex pipeline のときIAPrimitiveが必要になるので
 		commandList->IASetPrimitiveTopology(pipelineDesc_.primitiveTopology);
 	}
-}
-
-void GraphicsPipelineState::SetPipeline(CommandContext* context, const Vector2ui& windowSize) const {
-	SetPipeline(context->GetCommandList(), windowSize);
-}
-
-void GraphicsPipelineState::ReloadAndSetPipeline(ID3D12GraphicsCommandList* commandList, const Vector2ui& windowSize) {
-	CheckAndUpdatePipeline();
-	SetPipeline(commandList, windowSize);
-}
-
-void GraphicsPipelineState::ReloadAndSetPipeline(CommandContext* context, const Vector2ui& windowSize) {
-	ReloadAndSetPipeline(context->GetCommandList(), windowSize);
+	
 }
 
 void GraphicsPipelineState::SetExternal(CompileBlobCollection* collection, BlendState* blendState) {
 	collection_ = collection;
 	blendState_ = blendState;
 }
-
 
 void GraphicsPipelineState::CreateRootSignature() {
 	Assert(device_ != nullptr, "device is not set.");
@@ -282,34 +277,22 @@ void GraphicsPipelineState::CreatePipeline() {
 	}
 }
 
-IDxcBlob* GraphicsPipelineState::GetBlob(GraphicsShaderType type) {
-	if (!blobs_[static_cast<uint32_t>(type)].blob.has_value()) {
-		Assert(false, "blob is not set.");  //!< blobが設定されていない
-		return {};
-	}
-
-	if (blobs_[static_cast<uint32_t>(type)].blob.value().expired()) {
-		//!< hotReloadされている場合, 再度取得
-		Assert(collection_ != nullptr, "external collection is not set."); //!< external collectionが設定されていない
-		blobs_[static_cast<uint32_t>(type)].blob = collection_->GetBlob(blobs_[static_cast<uint32_t>(type)].filename);
-	}
-
-	auto blob = blobs_[static_cast<uint32_t>(type)].blob.value().lock();
-
-	return (*blob).Get();
-}
-
 D3D12_SHADER_BYTECODE GraphicsPipelineState::GetBytecode(GraphicsShaderType type, bool isRequired) {
 	if (!blobs_[static_cast<uint32_t>(type)].blob.has_value()) {
 		Assert(!isRequired, "required blob is not set.");  //!< 絶対的に使用されるblobが設定されていない.
 		return {};
 	}
 
-	IDxcBlob* blob = GetBlob(type);
+	if (blobs_[static_cast<uint32_t>(type)].blob.value().expired()) {
+		Assert(collection_ != nullptr, "collection is not set.");
+		blobs_[static_cast<uint32_t>(type)].blob = collection_->GetBlob(blobs_[static_cast<uint32_t>(type)].filename);
+	}
+
+	auto blob = blobs_[static_cast<uint32_t>(type)].blob.value().lock();
 
 	D3D12_SHADER_BYTECODE bytecode = {};
-	bytecode.BytecodeLength  = blob->GetBufferSize();
-	bytecode.pShaderBytecode = blob->GetBufferPointer();
+	bytecode.BytecodeLength  = (*blob)->GetBufferSize();
+	bytecode.pShaderBytecode = (*blob)->GetBufferPointer();
 
 	return bytecode;
 }
@@ -328,7 +311,7 @@ D3D12_BLEND_DESC GraphicsPipelineState::GetBlendDesc() const {
 	return desc;
 }
 
-bool GraphicsPipelineState::CheckShaderReloadStatus() {
+bool GraphicsPipelineState::CheckShaderHotReload() const {
 	for (const auto& blob : blobs_) {
 		if (blob.blob.has_value() && blob.blob.value().expired()) {
 			return true;
@@ -338,14 +321,23 @@ bool GraphicsPipelineState::CheckShaderReloadStatus() {
 	return false;
 }
 
+IDxcBlob* GraphicsPipelineState::GetBlob(GraphicsShaderType type) const {
+
+	auto& blob = blobs_[static_cast<uint32_t>(type)].blob;
+
+	Assert(blob.has_value(), "blob is not value.");
+	Assert(!blob.value().expired(), "blob is not alive.");
+
+	auto ptr = blob.value().lock();
+	return ptr->Get();
+}
+
 ////////////////////////////////////////////////////////////////////////////////////////////
 // ReflectionGraphicsPipelineState class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 void ReflectionGraphicsPipelineState::ReflectionRootSignature(Device* device) {
 	device_ = device;
-
-	table_.Reset();
 
 	if (isUseMeshShaderPipeline_) {
 		TrySetBlobToTable(GraphicsShaderType::as, ShaderVisibility::VISIBILITY_AMPLIFICATION);
@@ -359,18 +351,11 @@ void ReflectionGraphicsPipelineState::ReflectionRootSignature(Device* device) {
 	TrySetBlobToTable(GraphicsShaderType::ps, ShaderVisibility::VISIBILITY_PIXEL, true);
 
 	rootSignatureDesc_ = table_.CreateGraphicsRootSignatureDesc();
-	CreateRootSignature();
+	rootSignature_     = rootSignatureDesc_.CreateRootSignature(device->GetDevice());
 }
 
 void ReflectionGraphicsPipelineState::BindGraphicsBuffer(CommandContext* context, const BindBufferDesc& desc) {
 	table_.BindGraphicsBuffer(context, desc);
-}
-
-void ReflectionGraphicsPipelineState::CheckAndUpdatePipeline() {
-	if (CheckShaderReloadStatus()) {
-		ReflectionRootSignature(device_);
-		CreatePipeline();
-	}
 }
 
 void ReflectionGraphicsPipelineState::TrySetBlobToTable(GraphicsShaderType type, ShaderVisibility visibility, bool isRequired) {
@@ -379,9 +364,11 @@ void ReflectionGraphicsPipelineState::TrySetBlobToTable(GraphicsShaderType type,
 		return; //!< blobが登録されていないのでreturn
 	}
 
-	IDxcBlob* blob = GetBlob(type);
+	auto& blob = blobs_[static_cast<uint32_t>(type)].blob.value();
+	Assert(!blob.expired(), "blob is not alive.");
 
-	ComPtr<ID3D12ShaderReflection> reflection = collection_->GetCompiler()->Reflection(blob);
+	auto ptr = blob.lock();
+
+	ComPtr<ID3D12ShaderReflection> reflection = collection_->GetCompiler()->Reflection(ptr->Get());
 	table_.CreateTable(reflection.Get(), visibility);
 }
-

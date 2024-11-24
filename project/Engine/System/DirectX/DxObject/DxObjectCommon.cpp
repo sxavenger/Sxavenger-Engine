@@ -82,3 +82,29 @@ UINT _DXOBJECT RoundUp(UINT round, UINT thread) {
 	Assert(thread > 0);
 	return (round + thread - 1) / thread;
 }
+
+CompileProfile _DXOBJECT ToProfile(GraphicsShaderType type) {
+	switch (type) {
+		case GraphicsShaderType::vs:
+			return CompileProfile::vs;
+			break;
+
+		case GraphicsShaderType::gs:
+			return CompileProfile::gs;
+			break;
+
+		case GraphicsShaderType::ms:
+			return CompileProfile::ms;
+			break;
+		case GraphicsShaderType::as:
+			return CompileProfile::as;
+			break;
+
+		case GraphicsShaderType::ps:
+			return CompileProfile::ps;
+			break;
+	}
+
+	Assert(false, "Graphics Shader Type is undefine.");
+	return {};
+}
