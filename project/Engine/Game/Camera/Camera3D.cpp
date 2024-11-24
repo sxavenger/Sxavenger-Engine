@@ -73,7 +73,7 @@ void Camera3D::DrawFrustum(const Color4f& color, float length) const {
 		);
 
 		SxavengerGame::DrawLine(
-			frustumPoint[i], transform_.transform.translate, color
+			frustumPoint[i], transform_.GetWorldPosition(), color
 		);
 	}
 }

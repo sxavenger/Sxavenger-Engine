@@ -20,6 +20,8 @@
 ////////////////////////////////////////////////////////////////////////////////////////////
 enum ColliderType {
 	ColliderType_NONE = 0,
+	ColliderTypeTest_A = 1 << 0,
+	ColliderTypeTest_B = 1 << 1,
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -57,6 +59,8 @@ public:
 
 	void SetColliderBoundingSphere(const CollisionBoundings::Sphere& sphere = { .radius = 1.0f });
 
+	void SetColliderBoundingCapsule(const CollisionBoundings::Capsule& capsule = { .direction = { 0.0f, 1.0f, 0.0f }, .radius = { 1.0f }, .length = { 2.0f } });
+
 	void SetColliderBoundingAABB(const CollisionBoundings::AABB& aabb = { .localMin = {-0.5f, -0.5f, -0.5f}, .localMax = {0.5f, 0.5f, 0.5f} });
 
 	//* call back function setter *//
@@ -75,7 +79,7 @@ public:
 
 	//* collision getter *//
 
-	const Vector3f& GetColliderPosition() const;
+	const std::optional<Vector3f>& GetColliderPosition() const;
 
 	const CollisionBoundings::Boundings& GetBounding() const { return bounding_; }
 
@@ -136,7 +140,7 @@ private:
 	// TODO: positionを持ってくる
 	// worldInstanceから持ってくる...?
 
-	Vector3f position_;
+	std::optional<Vector3f> position_;
 
 	//! [unordered_map]
 	//! key:   対象のcollider

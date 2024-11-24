@@ -40,8 +40,11 @@ private:
 
 	Curve test_curve;
 
-	std::unique_ptr<Collider> test_;
-	std::unique_ptr<Collider> test2_;
+	std::unique_ptr<Collider> testA_;
+	std::unique_ptr<Collider> testB_;
+
+	Vector3f positionA = {};
+	Vector3f positionB = {};
 
 	std::unique_ptr<Animator> animator_;
 	DeltaTimePoint animationTime_;

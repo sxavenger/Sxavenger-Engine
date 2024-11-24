@@ -25,6 +25,10 @@ void Collider::SetColliderBoundingSphere(const CollisionBoundings::Sphere& spher
 	bounding_ = sphere;
 }
 
+void Collider::SetColliderBoundingCapsule(const CollisionBoundings::Capsule& capsule) {
+	bounding_ = capsule;
+}
+
 void Collider::SetColliderBoundingAABB(const CollisionBoundings::AABB& aabb) {
 	bounding_ = aabb;
 }
@@ -66,7 +70,7 @@ void Collider::OnCollision(Collider* other) {
 	states_[other].set(kCollisionState_Current); //!< 現在frameで当たった
 }
 
-const Vector3f& Collider::GetColliderPosition() const {
+const std::optional<Vector3f>& Collider::GetColliderPosition() const {
 	return position_;
 }
 
@@ -110,6 +114,18 @@ void Collider::SetColliderImGuiCommand() {
 
 		ImGui::Text("Boundings: Sphere");
 		ImGui::DragFloat("radius", &sphere.radius, 0.01f);
+
+	} else if (std::holds_alternative<CollisionBoundings::Capsule>(bounding_)) {
+		auto& capsule = std::get<CollisionBoundings::Capsule>(bounding_);
+
+		ImGui::Text("Boundings: Capsule");
+
+		if (ImGui::DragFloat3("direction", &capsule.direction.x, 0.01f)) {
+			capsule.direction = Normalize(capsule.direction);
+		}
+
+		ImGui::DragFloat("radius", &capsule.radius, 0.01f);
+		ImGui::DragFloat("length", &capsule.length, 0.01f);
 
 	} else if (std::holds_alternative<CollisionBoundings::AABB>(bounding_)) { //!< AABBの場合
 		auto& aabb = std::get<CollisionBoundings::AABB>(bounding_);

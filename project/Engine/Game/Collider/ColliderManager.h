@@ -62,6 +62,6 @@ private:
 	void DrawCollider(const Collider* const collider, const Color4f& color) const;
 	// todo: primitiveに移動
 	void DrawSphereCollider(const Vector3f& position, const CollisionBoundings::Sphere& sphere, const Color4f& color) const;
+	void DrawCapsule(const Vector3f& position, const CollisionBoundings::Capsule& capsule, const Color4f& color) const;
 	void DrawAABBCollider(const Vector3f& position, const CollisionBoundings::AABB& aabb, const Color4f& color) const;
-
 };

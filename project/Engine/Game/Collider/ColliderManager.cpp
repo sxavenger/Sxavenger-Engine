@@ -67,10 +67,12 @@ void ColliderManager::CheckCollisionPair(Collider* colliderA, Collider* collider
 		return;
 	}
 
+	Assert(colliderA->GetColliderPosition().has_value() && colliderB->GetColliderPosition().has_value(), "collider is not set position.");
+
 	// どちらか片方が当たり判定を必要としてた場合
 	bool isCollision = CollisionDetection::CheckCollision(
-		colliderA->GetColliderPosition(), colliderA->GetBounding(),
-		colliderB->GetColliderPosition(), colliderB->GetBounding()
+		colliderA->GetColliderPosition().value(), colliderA->GetBounding(),
+		colliderB->GetColliderPosition().value(), colliderB->GetBounding()
 	);
 
 	if (isCollision) { //!< 衝突してた場合
@@ -88,17 +90,30 @@ void ColliderManager::DrawCollider(const Collider* const collider, const Color4f
 
 	const auto& bounding = collider->GetBounding();
 
-	//!< boundingの型の取得
-	if (std::holds_alternative<CollisionBoundings::Sphere>(bounding)) {
-		DrawSphereCollider(
-			collider->GetColliderPosition(), std::get<CollisionBoundings::Sphere>(bounding), color
-		);
+	if (!collider->GetColliderPosition().has_value()) {
+		return; //!< collider is not set position.
+	}
 
-	} else if (std::holds_alternative<CollisionBoundings::AABB>(bounding)) {
-		DrawAABBCollider(
-			collider->GetColliderPosition(), std::get<CollisionBoundings::AABB>(bounding), color
-		);
+	const Vector3f& position = collider->GetColliderPosition().value();
 
+	switch (bounding.index()) {
+		case CollisionBoundings::BoundingsType::kSphere:
+			DrawSphereCollider(
+				position, std::get<CollisionBoundings::Sphere>(bounding), color
+			);
+			break;
+
+		case CollisionBoundings::BoundingsType::kCapsule:
+			DrawCapsule(
+				position, std::get<CollisionBoundings::Capsule>(bounding), color
+			);
+			break;
+
+		case CollisionBoundings::BoundingsType::kAABB:
+			DrawAABBCollider(
+				position, std::get<CollisionBoundings::AABB>(bounding), color
+			);
+			break;
 	}
 }
 
@@ -179,6 +194,82 @@ void ColliderManager::DrawSphereCollider(const Vector3f& position, const Collisi
 		SxavengerGame::DrawLine(start + position, end + position, color);
 	}
 }
+
+void ColliderManager::DrawCapsule(const Vector3f& position, const CollisionBoundings::Capsule& capsule, const Color4f& color) const {
+	const uint32_t kSubdivision = 24;
+
+	// カプセルの両端の中心を計算
+	Vector3f topCenter    = position + capsule.direction * (capsule.length * 0.5f);
+	Vector3f bottomCenter = position - capsule.direction * (capsule.length * 0.5f);
+
+	Vector3f arbitrary = (std::abs(capsule.direction.x) < std::abs(capsule.direction.y)) ? Vector3f(1, 0, 0) : Vector3f(0, 1, 0);
+	Vector3f xAxis     = Normalize(Cross(capsule.direction, arbitrary)); // 半円の「横」方向
+	Vector3f zAxis     = Normalize(Cross(capsule.direction, xAxis));     // 半円の「奥」方向
+
+	const float kLonEvery = pi_v * 2.0f / kSubdivision;
+	const float kLatEvery = pi_v / kSubdivision;
+
+	// xz軸円
+	for (uint32_t i = 0; i < kSubdivision; ++i) {
+
+		float lon = kLonEvery * i;
+		float x = std::cos(lon) * capsule.radius;
+		float z = std::sin(lon) * capsule.radius;
+
+		float nextX = std::cos(lon + kLonEvery) * capsule.radius;
+		float nextZ = std::sin(lon + kLonEvery) * capsule.radius;
+
+		// 現在の点を計算
+		Vector3f currentPoint = xAxis * x + zAxis * z;
+		Vector3f nextPoint    = xAxis * nextX + zAxis * nextZ;
+
+		// 線を描画
+		SxavengerGame::DrawLine(currentPoint + topCenter, nextPoint + topCenter, color);
+		SxavengerGame::DrawLine(currentPoint + bottomCenter, nextPoint + bottomCenter, color);
+	}
+
+	// xy軸円
+	for (uint32_t i = 0; i < kSubdivision; ++i) {
+		float lat = kLatEvery * i;
+		float x = std::cos(lat) * capsule.radius;
+		float y = std::sin(lat) * capsule.radius;
+
+		float nextX = std::cos(lat + kLatEvery) * capsule.radius;
+		float nextY = std::sin(lat + kLatEvery) * capsule.radius;
+
+		// 現在の点を計算
+		Vector3f currentPoint = xAxis * x + capsule.direction * y;
+		Vector3f nextPoint    = xAxis * nextX + capsule.direction * nextY;
+
+		// 線を描画
+		SxavengerGame::DrawLine((xAxis * x + capsule.direction * y) + topCenter, (xAxis * nextX + capsule.direction * nextY) + topCenter, color);
+		SxavengerGame::DrawLine((xAxis * x - capsule.direction * y) + bottomCenter, (xAxis * nextX - capsule.direction * nextY) + bottomCenter, color);
+	}
+
+	// xy軸円
+	for (uint32_t i = 0; i < kSubdivision; ++i) {
+		float lat = kLatEvery * i;
+		float y = std::sin(lat) * capsule.radius;
+		float z = std::cos(lat) * capsule.radius;
+
+		float nextY = std::sin(lat + kLatEvery) * capsule.radius;
+		float nextZ = std::cos(lat + kLatEvery) * capsule.radius;
+
+		// 現在の点を計算
+		Vector3f currentPoint = zAxis * z + capsule.direction * y;
+		Vector3f nextPoint    = zAxis * nextZ + capsule.direction * nextY;
+
+		// 線を描画
+		SxavengerGame::DrawLine((zAxis * z + capsule.direction * y) + topCenter, (zAxis * nextZ + capsule.direction * nextY) + topCenter, color);
+		SxavengerGame::DrawLine((zAxis * z - capsule.direction * y) + bottomCenter, (zAxis * nextZ - capsule.direction * nextY) + bottomCenter, color);
+	}
+
+	SxavengerGame::DrawLine(xAxis * capsule.radius + topCenter, xAxis * capsule.radius + bottomCenter, color);
+	SxavengerGame::DrawLine(-xAxis * capsule.radius + topCenter, -xAxis * capsule.radius + bottomCenter, color);
+	SxavengerGame::DrawLine(zAxis * capsule.radius + topCenter, zAxis * capsule.radius + bottomCenter, color);
+	SxavengerGame::DrawLine(-zAxis * capsule.radius + topCenter, -zAxis * capsule.radius + bottomCenter, color);
+}
+
 
 void ColliderManager::DrawAABBCollider(const Vector3f& position, const CollisionBoundings::AABB& aabb, const Color4f& color) const {
 

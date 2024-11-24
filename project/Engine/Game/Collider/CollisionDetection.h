@@ -25,7 +25,14 @@ namespace CollisionBoundings {
 		float radius;
 	};
 
-	//!< カプセルも入れたい...
+	////////////////////////////////////////////////////////////////////////////////////////////
+	// Capsule structure
+	////////////////////////////////////////////////////////////////////////////////////////////
+	struct Capsule {
+		Vector3f direction;
+		float radius;
+		float length;
+	};
 
 	////////////////////////////////////////////////////////////////////////////////////////////
 	// AABB structure
@@ -33,8 +40,6 @@ namespace CollisionBoundings {
 	struct AABB {
 		Vector3f localMin;
 		Vector3f localMax;
-
-		//!< 外部のtranslationを使ってworldに変換する
 	};
 
 	////////////////////////////////////////////////////////////////////////////////////////////
@@ -48,13 +53,14 @@ namespace CollisionBoundings {
 	//=========================================================================================
 	// using
 	//=========================================================================================
-	using Boundings = std::variant<Sphere, AABB, OBB>;
+	using Boundings = std::variant<Sphere, Capsule, AABB, OBB>;
 
 	//=========================================================================================
 	// BoundingsType enum
 	//=========================================================================================
 	enum BoundingsType : size_t { //!< boundingsのvariant indexに合わせる
 		kSphere,
+		kCapsule,
 		kAABB,
 		kOBB
 	};
@@ -72,33 +78,93 @@ public:
 	//=========================================================================================
 
 	static bool CheckCollision(
-		const Vector3f& posisionA, const CollisionBoundings::Boundings& boundingA,
-		const Vector3f& posisionB, const CollisionBoundings::Boundings& boundingB
+		const Vector3f& positionA, const CollisionBoundings::Boundings& boundingA,
+		const Vector3f& positionB, const CollisionBoundings::Boundings& boundingB
 	);
 
 private:
 
 	//=========================================================================================
-	// private methods
+	// private handle methods
 	//=========================================================================================
 
-	//* sphere to *//
+	static bool HandleSphereCollision(
+		const Vector3f& posisionA, const CollisionBoundings::Sphere& sphereA,
+		const Vector3f& posisionB, const CollisionBoundings::Boundings& boundingB
+	);
+
+	static bool HandleCapsuleCollision(
+		const Vector3f& posisionA, const CollisionBoundings::Capsule& capsuleA,
+		const Vector3f& posisionB, const CollisionBoundings::Boundings& boundingB
+	);
+
+	static bool HandleAABBCollision(
+		const Vector3f& posisionA, const CollisionBoundings::AABB& aabbA,
+		const Vector3f& posisionB, const CollisionBoundings::Boundings& boundingB
+	);
+
+	static bool HandleOBBCollision(
+		const Vector3f& posisionA, const CollisionBoundings::OBB& obbA,
+		const Vector3f& posisionB, const CollisionBoundings::Boundings& boundingB
+	);
+
+
+	//=========================================================================================
+	// private collision methods
+	//=========================================================================================
+
+	//* Sphere to *//
 
 	static bool SphereTo(
-		const Vector3f& posisionA, const CollisionBoundings::Sphere& sphereA,
-		const Vector3f& posisionB, const CollisionBoundings::Sphere& sphereB
+		const Vector3f& positionA, const CollisionBoundings::Sphere& sphereA,
+		const Vector3f& positionB, const CollisionBoundings::Sphere& sphereB
+	);
+
+	static bool SphereToCapsule(
+		const Vector3f& positionA, const CollisionBoundings::Sphere& sphereA,
+		const Vector3f& positionB, const CollisionBoundings::Capsule& capsuleB
 	);
 
 	static bool SphereToAABB(
-		const Vector3f& posisionA, const CollisionBoundings::Sphere& sphereA,
-		const Vector3f& posisionB, const CollisionBoundings::AABB& aabbB
+		const Vector3f& positionA, const CollisionBoundings::Sphere& sphereA,
+		const Vector3f& positionB, const CollisionBoundings::AABB& aabbB
+	);
+
+	static bool SphereToOBB(
+		const Vector3f& positionA, const CollisionBoundings::Sphere& sphereA,
+		const Vector3f& positionB, const CollisionBoundings::OBB& obbB
+	);
+
+	//* Capsule to *//
+
+	static bool CapsuleTo(
+		const Vector3f& positionA, const CollisionBoundings::Capsule& capsuleA,
+		const Vector3f& positionB, const CollisionBoundings::Capsule& capsuleB
 	);
 
 	//* AABB to *//
 
 	static bool AABBTo(
-		const Vector3f& posisionA, const CollisionBoundings::AABB& aabbA,
-		const Vector3f& posisionB, const CollisionBoundings::AABB& aabbB
+		const Vector3f& positionA, const CollisionBoundings::AABB& aabbA,
+		const Vector3f& positionB, const CollisionBoundings::AABB& aabbB
 	);
 
+	static bool AABBToOBB(
+		const Vector3f& positionA, const CollisionBoundings::AABB& aabbA,
+		const Vector3f& positionB, const CollisionBoundings::OBB& obbB
+	);
+
+	//* OBB to *//
+
+	static bool OBBTo(
+		const Vector3f& positionA, const CollisionBoundings::OBB& obbA,
+		const Vector3f& positionB, const CollisionBoundings::OBB& obbB
+	);
+
+	//=========================================================================================
+	// private exception methods
+	//=========================================================================================
+
+	static void ExceptionUnimplement();
+	static void ExceptionValiant();
 };

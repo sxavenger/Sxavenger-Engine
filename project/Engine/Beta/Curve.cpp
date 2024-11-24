@@ -103,11 +103,11 @@ void Curve::SetImGuiCommand() {
 
 	ImGui::InputText("filename", buf_, _countof(buf_));
 
-	if (ImGui::Button("output json")) {
+	if (ImGui::Button("output json curve")) {
 		OutputJson(buf_);
 	}
 
-	if (ImGui::Button("load json")) {
+	if (ImGui::Button("load json curve")) {
 		LoadJson(buf_);
 	}
 
