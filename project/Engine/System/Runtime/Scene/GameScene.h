@@ -43,7 +43,6 @@ private:
 
 	bool renderWindowSwitch_ = true;
 
-	Performance p_;
 	DeltaTimePoint<SecondsUnit::s> ds_;
 
 	//=========================================================================================

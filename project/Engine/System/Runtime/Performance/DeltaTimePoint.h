@@ -15,18 +15,55 @@ public:
 	//=========================================================================================
 
 	void AddDeltaTime() {
-		*this += Performance::GetDeltaTime<T>();
+		*this += Performance::GetDeltaTime();
 	}
 
 	void SubtractDeltaTime() {
-		*this -= Performance::GetDeltaTime<T>();
+		*this -= Performance::GetDeltaTime();
+	}
+
+	void Reset() {
+		time = 0.0f;
 	}
 
 	//=========================================================================================
 	// public operator
 	//=========================================================================================
 
+	void operator=(const DeltaTimePoint& other) {
+		time = other.time;
+	}
 
+
+	DeltaTimePoint& operator+=(DeltaTimePoint other) {
+		time += other.time;
+		return *this;
+	}
+
+	DeltaTimePoint& operator-=(DeltaTimePoint other) {
+		time -= other.time;
+		return *this;
+	}
+
+	bool operator==(DeltaTimePoint other) const {
+		return time == other.time;
+	}
+
+	bool operator<(DeltaTimePoint other) const {
+		return time < other.time;
+	}
+
+	bool operator<=(DeltaTimePoint other) const {
+		return time <= other.time;
+	}
+
+	bool operator>(DeltaTimePoint other) const {
+		return time > other.time;
+	}
+
+	bool operator>=(DeltaTimePoint other) const {
+		return time >= other.time;
+	}
 
 	//=========================================================================================
 	// public member

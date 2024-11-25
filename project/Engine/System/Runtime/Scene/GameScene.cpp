@@ -5,6 +5,7 @@
 //-----------------------------------------------------------------------------------------
 //* engine
 #include <Engine/System/SxavengerSystem.h>
+#include <Engine/System/Runtime/Performance/Performance.h>
 
 //* lib
 #include <Lib/Environment.h>
@@ -26,6 +27,7 @@ void GameScene::Run() {
 	// ゲームループ
 	//-----------------------------------------------------------------------------------------
 	while (SxavengerSystem::ProcessMessage()) {
+		Performance::BeginFrame();
 
 		//-----------------------------------------------------------------------------------------
 		// 更新処理
@@ -38,6 +40,8 @@ void GameScene::Run() {
 		//-----------------------------------------------------------------------------------------
 
 		Draw();
+
+		Performance::EndFrame();
 
 		if (SxavengerSystem::IsTriggerKey(KeyId::KEY_F4)) {
 			break;
@@ -93,9 +97,6 @@ void GameScene::Init() {
 	transform_.UpdateMatrix();
 
 	SxavengerSystem::ExecuteAllAllocator();
-
-	ds_ = p_.GetDeltaTime<SecondsUnit::s>();
-	ds_.AddDeltaTime();
 }
 
 void GameScene::Update() {
