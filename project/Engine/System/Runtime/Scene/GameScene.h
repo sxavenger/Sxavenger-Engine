@@ -7,7 +7,7 @@
 #include <Engine/System/Window/GameWindow.h>
 
 #include "Engine/System/DirectX/DxObject/DxGraphicsPipelineState.h"
-#include "Engine/System/DirectX/DxObject/DxDimensionBuffer.h"
+#include "Engine/System/Runtime/Performance/DeltaTimePoint.h"
 #include "Engine/Content/InputAssembler/InputAssembler.h"
 #include "Engine/Module/Transform/TransformComponent.h"
 #include "Lib/Geometry/Vector4.h"
@@ -42,6 +42,9 @@ private:
 	TransformComponent transform_;
 
 	bool renderWindowSwitch_ = true;
+
+	Performance p_;
+	DeltaTimePoint<SecondsUnit::s> ds_;
 
 	//=========================================================================================
 	// private methods

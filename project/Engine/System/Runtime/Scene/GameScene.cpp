@@ -93,6 +93,9 @@ void GameScene::Init() {
 	transform_.UpdateMatrix();
 
 	SxavengerSystem::ExecuteAllAllocator();
+
+	ds_ = p_.GetDeltaTime<SecondsUnit::s>();
+	ds_.AddDeltaTime();
 }
 
 void GameScene::Update() {

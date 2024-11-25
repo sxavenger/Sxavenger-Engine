@@ -54,6 +54,7 @@
     <ClCompile Include="Engine\Module\Behavior\BaseBehavior.cpp" />
     <ClCompile Include="Lib\Adapter\Json\IJsonSerializer.cpp" />
     <ClCompile Include="Engine\System\Runtime\Performance\Performance.cpp" />
+    <ClCompile Include="Engine\System\Runtime\Performance\DeltaTimePoint.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\System\Window\Window.h" />
@@ -108,5 +109,6 @@
     <ClInclude Include="Engine\Module\Transform\Transform.h" />
     <ClInclude Include="Engine\Module\Behavior\BaseBehavior.h" />
     <ClInclude Include="Engine\System\Runtime\Performance\Performance.h" />
+    <ClInclude Include="Engine\System\Runtime\Performance\DeltaTimePoint.h" />
   </ItemGroup>
 </Project>
