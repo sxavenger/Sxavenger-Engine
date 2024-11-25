@@ -182,7 +182,7 @@ void BindBufferTable::InsertBindBuffer(const D3D12_SHADER_INPUT_BIND_DESC& desc,
 		//* visibility all になるかの確認
 		BindBufferInfo& preInfo = table_.at(desc.Name);
 
-		Assert(info.type == preInfo.type, "buffer is not same type.");                          //!< bufferの型が違う.
+		Assert(info.type == preInfo.type, "buffer is conflict.");                               //!< bufferの型が違う.
 		Assert(info.registerNum == preInfo.registerNum, "buffer is not same register number."); //!< register番号が違う
 
 		// allに変更

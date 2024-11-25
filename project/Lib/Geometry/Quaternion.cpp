@@ -178,7 +178,7 @@ Quaternion LookAt(const Vector3f& u, const Vector3f& v) {
 	
 	Vector3f up = Normalize(Cross(u, v));
 
-	if (All(up == kOrigin3)) {
+	if (All(up == kOrigin3<float>)) {
 		up = { 0.0f, 1.0f, 0.0f };
 	}
 

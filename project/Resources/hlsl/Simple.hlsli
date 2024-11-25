@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Transform.hlsli"
+
 struct VSInput {
 	float4 position : POSITION0;
 };

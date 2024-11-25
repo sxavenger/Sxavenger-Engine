@@ -49,6 +49,11 @@
     <ClCompile Include="Engine\System\UI\ImGuiController.cpp" />
     <ClCompile Include="Lib\Adapter\Json\JsonAdapter.cpp" />
     <ClCompile Include="Engine\System\DirectX\DxObject\DxBindBuffer.cpp" />
+    <ClCompile Include="Engine\Module\Transform\Transform.cpp" />
+    <ClCompile Include="Engine\Module\Transform\TransformComponent.cpp" />
+    <ClCompile Include="Engine\Module\Behavior\BaseBehavior.cpp" />
+    <ClCompile Include="Lib\Adapter\Json\IJsonSerializer.cpp" />
+    <ClCompile Include="Engine\System\Runtime\Performance\Performance.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\System\Window\Window.h" />
@@ -99,5 +104,9 @@
     <ClInclude Include="Lib\Adapter\Json\IJsonSerializer.h" />
     <ClInclude Include="Lib\Adapter\Json\JsonAdapter.h" />
     <ClInclude Include="Engine\System\DirectX\DxObject\DxBindBuffer.h" />
+    <ClInclude Include="Engine\Module\Transform\TransformComponent.h" />
+    <ClInclude Include="Engine\Module\Transform\Transform.h" />
+    <ClInclude Include="Engine\Module\Behavior\BaseBehavior.h" />
+    <ClInclude Include="Engine\System\Runtime\Performance\Performance.h" />
   </ItemGroup>
 </Project>

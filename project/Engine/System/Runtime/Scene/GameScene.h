@@ -9,6 +9,7 @@
 #include "Engine/System/DirectX/DxObject/DxGraphicsPipelineState.h"
 #include "Engine/System/DirectX/DxObject/DxDimensionBuffer.h"
 #include "Engine/Content/InputAssembler/InputAssembler.h"
+#include "Engine/Module/Transform/TransformComponent.h"
 #include "Lib/Geometry/Vector4.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -38,7 +39,7 @@ private:
 	InputAssembler<Vector4f> input_;
 	std::unique_ptr<DxObject::ReflectionGraphicsPipelineState> state_;
 
-	std::unique_ptr<DxObject::DimensionBuffer<Vector2f>> buffer_;
+	TransformComponent transform_;
 
 	bool renderWindowSwitch_ = true;
 

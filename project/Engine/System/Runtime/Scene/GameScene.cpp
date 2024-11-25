@@ -88,9 +88,9 @@ void GameScene::Init() {
 
 	state_->CreatePipeline(SxavengerSystem::GetDxDevice(), desc);
 
-	buffer_ = std::make_unique<DxObject::DimensionBuffer<Vector2f>>();
-	buffer_->Create(SxavengerSystem::GetDxDevice(), 1);
-	(*buffer_)[0] = { 0.2f, 0.0f };
+	transform_.CreateBuffer();
+	transform_.transform.translate = { 0.0f, 0.1f, 0.0f };
+	transform_.UpdateMatrix();
 
 	SxavengerSystem::ExecuteAllAllocator();
 }
@@ -99,6 +99,9 @@ void GameScene::Update() {
 	SxavengerSystem::BeginImGuiFrame();
 
 	SxavengerSystem::GetInput()->Update();
+
+	transform_.transform.translate.y += 0.01f;
+	transform_.UpdateMatrix();
 
 	if (SxavengerSystem::IsTriggerKey(KeyId::KEY_SPACE)) {
 		state_->ReloadShader();
@@ -128,8 +131,8 @@ void GameScene::Draw() {
 			state_->SetPipeline(SxavengerSystem::GetCommandList(), window->GetSize());
 
 			DxObject::BindBufferDesc desc = {};
-			desc.SetAddress("gTest", buffer_->GetGPUVirtualAddress());
-			desc.SetAddress("gTestA", buffer_->GetGPUVirtualAddress());
+			desc.SetAddress("gTransform", transform_.GetGPUVirtualAddress());
+
 			state_->BindGraphicsBuffer(SxavengerSystem::GetMainThreadContext()->GetDxCommand(), desc);
 
 			input_.BindIABuffer();
@@ -149,8 +152,8 @@ void GameScene::Draw() {
 		state_->SetPipeline(SxavengerSystem::GetCommandList(), mainWindow_->GetSize());
 
 		DxObject::BindBufferDesc desc = {};
-		desc.SetAddress("gTest", buffer_->GetGPUVirtualAddress());
-		desc.SetAddress("gTestA", buffer_->GetGPUVirtualAddress());
+		desc.SetAddress("gTransform", transform_.GetGPUVirtualAddress());
+
 		state_->BindGraphicsBuffer(SxavengerSystem::GetMainThreadContext()->GetDxCommand(), desc);
 
 		input_.BindIABuffer();

@@ -215,7 +215,6 @@ void GraphicsPipelineState::CreatePipeline() {
 		D3DX12_MESH_SHADER_PIPELINE_STATE_DESC desc = {};
 		desc.pRootSignature     = rootSignature_.Get();
 		desc.RasterizerState    = pipelineDesc_.rasterizerDesc;
-		//desc.BlendState         = blendState_->operator[](pipelineDesc_.blendMode);
 		desc.DepthStencilState  = pipelineDesc_.depthStencilDesc;
 		desc.DSVFormat          = pipelineDesc_.dsvFormat;
 		desc.SampleMask         = UINT_MAX;

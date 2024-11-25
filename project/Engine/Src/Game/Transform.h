@@ -1,3 +1,4 @@
+#include "Transform.h"
 #pragma once
 //* ConstantBuffer用のTransformクラス
 

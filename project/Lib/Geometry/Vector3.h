@@ -122,8 +122,11 @@ using Vector3ui = Vector3<uint32_t>;
 // constexpr
 //-----------------------------------------------------------------------------------------
 
-constexpr const Vector3f kOrigin3 = { 0.0f, 0.0f, 0.0f };
-constexpr const Vector3f kUnit3   = { 1.0f, 1.0f, 1.0f };
+template <class T = float>
+constexpr const Vector3<T> kOrigin3 = { 0, 0, 0 };
+
+template <class T = float>
+constexpr const Vector3<T> kUnit3 = { 1, 1, 1 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Vector3 methods

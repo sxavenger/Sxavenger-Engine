@@ -3,14 +3,10 @@
 //-----------------------------------------------------------------------------------------
 #include "Simple.hlsli"
 
-#define _DEFINE_CONSTANT_BUFFER
+//#define _DEFINE_CONSTANT_BUFFER
 
 #ifdef _DEFINE_CONSTANT_BUFFER
-struct Test {
-	float2 v;
-};
-ConstantBuffer<Test> gTest : register(b0);
-ConstantBuffer<Test> gTestA : register(b1);
+ConstantBuffer<TransformationMatrix> gTransform : register(b0);
 #endif
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -23,7 +19,7 @@ VSOutput main(VSInput input) {
 	output.position = input.position;
 	
 #ifdef _DEFINE_CONSTANT_BUFFER
-	output.position.xy += gTest.v;
+	output.position = mul(input.position, gTransform.mat);
 #endif
 
 	return output;
