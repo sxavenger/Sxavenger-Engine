@@ -134,8 +134,8 @@ void ReflectionComputePipelineState::ReflectionRootSignature(Device* device) {
 	CreateRootSignature();
 }
 
-void ReflectionComputePipelineState::BindGraphicsBuffer(CommandContext* context, const BindBufferDesc& desc) {
-	table_.BindGraphicsBuffer(context, desc);
+void ReflectionComputePipelineState::BindComputeBuffer(CommandContext* context, const BindBufferDesc& desc) {
+	table_.BindComputeBuffer(context, desc);
 }
 
 void ReflectionComputePipelineState::CheckAndUpdatePipeline() {

@@ -103,10 +103,10 @@ public:
 	ComputeRootSignatureDesc CreateComputeRootSignatureDesc();
 	ComPtr<ID3D12RootSignature> CreateComputeRootSignature(Device* device);
 
-
 	void Reset();
 
 	void BindGraphicsBuffer(CommandContext* context, const BindBufferDesc& desc);
+	void BindComputeBuffer(CommandContext* context, const BindBufferDesc& desc);
 
 private:
 

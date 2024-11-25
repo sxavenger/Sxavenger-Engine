@@ -124,7 +124,7 @@ public:
 
 	void ReflectionRootSignature(Device* device);
 
-	void BindGraphicsBuffer(CommandContext* context, const BindBufferDesc& desc);
+	void BindComputeBuffer(CommandContext* context, const BindBufferDesc& desc);
 
 	//* update methods *//
 

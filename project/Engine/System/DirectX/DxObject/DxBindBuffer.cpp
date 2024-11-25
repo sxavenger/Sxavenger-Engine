@@ -190,6 +190,42 @@ void BindBufferTable::BindGraphicsBuffer(CommandContext* context, const BindBuff
 	}
 }
 
+void BindBufferTable::BindComputeBuffer(CommandContext* context, const BindBufferDesc& desc) {
+
+	auto commandList = context->GetCommandList();
+
+	for (const auto& it : table_) {
+
+		const auto& name = it.first;
+		const auto& info = it.second;
+
+		if (info.bindBufferType == BindBufferType::kSampler) {
+			continue;
+		}
+
+		Assert(desc.Contains(name), "buffer is not found. buffer name: " + name);
+
+		switch (info.bindBufferType) {
+			case BindBufferType::kVirtual_CBV:
+				commandList->SetComputeRootConstantBufferView(info.rootParam.value(), desc.GetAddress(name));
+				break;
+
+			case BindBufferType::kVirtual_SRV:
+				commandList->SetComputeRootShaderResourceView(info.rootParam.value(), desc.GetAddress(name));
+				break;
+
+			case BindBufferType::kVirtual_UAV:
+				commandList->SetComputeRootUnorderedAccessView(info.rootParam.value(), desc.GetAddress(name));
+				break;
+
+			case BindBufferType::kHandle_SRV:
+			case BindBufferType::kHandle_UAV:
+				commandList->SetComputeRootDescriptorTable(info.rootParam.value(), desc.GetHandle(name));
+				break;
+		}
+	}
+}
+
 BindBufferType BindBufferTable::ToBindBufferType(D3D_SHADER_INPUT_TYPE type) {
 	switch (type) {
 		case D3D_SHADER_INPUT_TYPE::D3D_SIT_CBUFFER:
