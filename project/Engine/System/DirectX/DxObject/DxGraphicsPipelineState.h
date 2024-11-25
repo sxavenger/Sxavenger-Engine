@@ -114,7 +114,7 @@ public:
 
 	void CreateBlob(const std::wstring& filename, GraphicsShaderType type);
 
-	void CreateRootSignature(Device* device, const GraphicsRootSignatureDesc& desc);
+	void CreateRootSignature(Device* device, GraphicsRootSignatureDesc& desc);
 
 	void CreatePipeline(Device* device, const GraphicsPipelineDesc& desc);
 

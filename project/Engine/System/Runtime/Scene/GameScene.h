@@ -10,6 +10,7 @@
 #include "Engine/System/DirectX/DxObject/DxComputePipelineState.h"
 #include "Engine/System/Runtime/Performance/DeltaTimePoint.h"
 #include "Engine/Content/InputAssembler/InputAssembler.h"
+#include "Engine/Content/Texture/Texture.h"
 #include "Engine/Module/Transform/TransformComponent.h"
 #include "Lib/Geometry/Vector4.h"
 
@@ -43,6 +44,7 @@ private:
 	TransformComponent transform_;
 
 	std::unique_ptr<DxObject::ReflectionComputePipelineState> compute_;
+	std::unique_ptr<UnorderedTexture> texture_;
 
 	bool renderWindowSwitch_ = true;
 

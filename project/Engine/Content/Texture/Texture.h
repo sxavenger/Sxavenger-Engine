@@ -129,6 +129,14 @@ public:
 
 	void Term();
 
+	//* render option *//
+
+	void TransitionBeginRender(DirectXThreadContext* context);
+
+	void TransitionEndRender(DirectXThreadContext* context);
+
+	void ClearRender(DirectXThreadContext* context);
+
 	//* getter *//
 
 	const D3D12_CPU_DESCRIPTOR_HANDLE& GetCPUHandleRTV() const { return descriptorRTV_.GetCPUHandle(); }
@@ -152,9 +160,9 @@ private:
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// DummyTexture class
+// UnorderedTexture class
 ////////////////////////////////////////////////////////////////////////////////////////////
-class DummyTexture
+class UnorderedTexture
 	: public BaseTexture {
 public:
 
@@ -162,12 +170,18 @@ public:
 	// public methods
 	//=========================================================================================
 
-	DummyTexture() = default;
-	~DummyTexture() { Term(); }
+	UnorderedTexture() = default;
+	~UnorderedTexture() { Term(); }
 
 	void Create(const Vector2ui& size, DXGI_FORMAT format = DxObject::kOffscreenFormat);
 
 	void Term();
+
+	//* unordered option *//
+
+	void TransitionBeginUnordered(DirectXThreadContext* context);
+
+	void TransitionEndUnordered(DirectXThreadContext* context);
 
 	//* getter *//
 

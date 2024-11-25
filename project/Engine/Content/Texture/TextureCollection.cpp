@@ -47,10 +47,10 @@ std::shared_ptr<RenderTexture> TextureCollection::TryCreateRenderTexture(const s
 	return GetTexture<RenderTexture>(TryCreateRenderTextureSafely(key, size, clearColor, format));
 }
 
-std::shared_ptr<BaseTexture> TextureCollection::TryCreateDummyTextureSafely(const std::string& key, const Vector2ui& size, DXGI_FORMAT format) {
+std::shared_ptr<BaseTexture> TextureCollection::TryCreateUnorderedTextureSafely(const std::string& key, const Vector2ui& size, DXGI_FORMAT format) {
 	if (!textures_.Contains(key)) {
 		// 新しくtextureを生成
-		std::shared_ptr<DummyTexture> texture = std::make_shared<DummyTexture>();
+		std::shared_ptr<UnorderedTexture> texture = std::make_shared<UnorderedTexture>();
 		texture->Create(size, format);
 		textures_.Emplace(key, std::move(texture));
 	}
@@ -58,8 +58,8 @@ std::shared_ptr<BaseTexture> TextureCollection::TryCreateDummyTextureSafely(cons
 	return textures_.At(key);
 }
 
-std::shared_ptr<DummyTexture> TextureCollection::TryCreateDummyTexture(const std::string& key, const Vector2ui& size, DXGI_FORMAT format) {
-	return GetTexture<DummyTexture>(TryCreateDummyTextureSafely(key, size, format));
+std::shared_ptr<UnorderedTexture> TextureCollection::TryCreateUnorderedTexture(const std::string& key, const Vector2ui& size, DXGI_FORMAT format) {
+	return GetTexture<UnorderedTexture>(TryCreateUnorderedTextureSafely(key, size, format));
 }
 
 void TextureCollection::ReleaseTexture(const std::string& key) {

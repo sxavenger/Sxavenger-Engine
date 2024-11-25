@@ -102,6 +102,7 @@ ComPtr<ID3D12RootSignature> BindBufferTable::CreateGraphicsRootSignature(Device*
 }
 
 ComputeRootSignatureDesc BindBufferTable::CreateComputeRootSignatureDesc() {
+
 	ComputeRootSignatureDesc desc = {};
 
 	UINT rootIndex = 0;

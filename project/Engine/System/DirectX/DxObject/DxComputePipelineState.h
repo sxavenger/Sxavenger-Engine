@@ -35,7 +35,7 @@ public:
 
 	void CreateBlob(const std::wstring& filename);
 
-	void CreatePipeline(Device* device, const ComputeRootSignatureDesc& desc);
+	void CreatePipeline(Device* device, ComputeRootSignatureDesc& desc);
 
 	//* update methods *//
 
@@ -122,7 +122,7 @@ public:
 
 	//* reflection methods *//
 
-	void ReflectionRootSignature(Device* device);
+	void ReflectionPipeline(Device* device);
 
 	void BindComputeBuffer(CommandContext* context, const BindBufferDesc& desc);
 

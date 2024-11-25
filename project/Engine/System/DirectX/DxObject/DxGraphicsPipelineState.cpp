@@ -118,8 +118,8 @@ void GraphicsPipelineState::CreateBlob(const std::wstring& filename, GraphicsSha
 	}
 }
 
-void GraphicsPipelineState::CreateRootSignature(Device* device, const GraphicsRootSignatureDesc& desc) {
-	rootSignatureDesc_ = desc;
+void GraphicsPipelineState::CreateRootSignature(Device* device, GraphicsRootSignatureDesc& desc) {
+	rootSignatureDesc_ = std::move(desc);
 	rootSignatureDesc_.ShrinkToFit();
 
 	device_ = device;

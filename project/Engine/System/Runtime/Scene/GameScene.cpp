@@ -97,7 +97,11 @@ void GameScene::Init() {
 	transform_.UpdateMatrix();
 
 	compute_ = std::make_unique<DxObject::ReflectionComputePipelineState>();
-	compute_->CreateBlob(L"white"); //!< TEST PLEASE
+	compute_->CreateBlob(L"common/white1x1.cs.hlsl");
+	compute_->ReflectionPipeline(SxavengerSystem::GetDxDevice());
+
+	texture_ = std::make_unique<UnorderedTexture>();
+	texture_->Create({ 1, 1 });
 
 	SxavengerSystem::ExecuteAllAllocator();
 }
@@ -112,6 +116,7 @@ void GameScene::Update() {
 
 	if (SxavengerSystem::IsTriggerKey(KeyId::KEY_SPACE)) {
 		state_->ReloadShader();
+		compute_->ReloadShader();
 	}
 
 	if (SxavengerSystem::IsTriggerKey(KeyId::KEY_P)) {
@@ -126,6 +131,18 @@ void GameScene::Update() {
 }
 
 void GameScene::Draw() {
+
+	texture_->TransitionBeginUnordered(SxavengerSystem::GetMainThreadContext());
+
+	compute_->ReloadAndSetPipeline(SxavengerSystem::GetMainThreadContext()->GetDxCommand());
+
+	DxObject::BindBufferDesc bind = {};
+	bind.SetHandle("gOutput", texture_->GetGPUHandleUAV());
+
+	compute_->BindComputeBuffer(SxavengerSystem::GetMainThreadContext()->GetDxCommand(), bind);
+	compute_->Dispatch(SxavengerSystem::GetMainThreadContext()->GetDxCommand(), 1, 1, 1);
+
+	texture_->TransitionEndUnordered(SxavengerSystem::GetMainThreadContext());
 
 	if (!subWindow_.expired()) {
 		auto window = subWindow_.lock();

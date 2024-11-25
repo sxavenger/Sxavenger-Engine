@@ -36,6 +36,8 @@ public:
 
 	void ShrinkToFit();
 
+	void Reset();
+
 	//* container setter *//
 
 	void SetVirtual(uint32_t index, ShaderVisibility stage, D3D12_ROOT_PARAMETER_TYPE type, uint32_t shaderRegister);
@@ -46,6 +48,14 @@ public:
 	void SetSamplerPoint(SamplerMode mode, ShaderVisibility stage, UINT shaderRegister);
 
 	virtual ComPtr<ID3D12RootSignature> CreateRootSignature(ID3D12Device* device, D3D12_ROOT_SIGNATURE_FLAGS flags) const;
+
+	//* operator *//
+
+	BaseRootSignatureDesc& operator=(const BaseRootSignatureDesc&) = delete;
+	BaseRootSignatureDesc(const BaseRootSignatureDesc&)            = delete;
+
+	BaseRootSignatureDesc& operator=(BaseRootSignatureDesc&&) = default;
+	BaseRootSignatureDesc(BaseRootSignatureDesc&&)            = default;
 
 	//=========================================================================================
 	// public variables

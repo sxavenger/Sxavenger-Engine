@@ -258,11 +258,43 @@ void RenderTexture::Term() {
 	descriptorRTV_.Delete();
 }
 
+void RenderTexture::TransitionBeginRender(DirectXThreadContext* context) {
+
+	auto commandList = context->GetCommandList();
+
+	D3D12_RESOURCE_BARRIER barrier = {};
+	barrier.Type                   = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+	barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
+	barrier.Transition.StateAfter  = D3D12_RESOURCE_STATE_RENDER_TARGET;
+	barrier.Transition.pResource   = resource_.Get();
+
+	commandList->ResourceBarrier(1, &barrier);
+}
+
+void RenderTexture::TransitionEndRender(DirectXThreadContext* context) {
+	D3D12_RESOURCE_BARRIER barrier = {};
+	barrier.Type                   = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+	barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
+	barrier.Transition.StateAfter  = D3D12_RESOURCE_STATE_RENDER_TARGET;
+	barrier.Transition.pResource   = resource_.Get();
+
+	context->GetCommandList()->ResourceBarrier(1, &barrier);
+}
+
+void RenderTexture::ClearRender(DirectXThreadContext* context) {
+	// 画面のクリア
+	context->GetCommandList()->ClearRenderTargetView(
+		descriptorRTV_.GetCPUHandle(),
+		&clearColor_.r,
+		0, nullptr
+	);
+}
+
 ////////////////////////////////////////////////////////////////////////////////////////////
-// DummyTexture class methods
+// UnorderedTexture class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-void DummyTexture::Create(const Vector2ui& size, DXGI_FORMAT format) {
+void UnorderedTexture::Create(const Vector2ui& size, DXGI_FORMAT format) {
 
 	// 引数の保存
 	format_ = format;
@@ -334,6 +366,26 @@ void DummyTexture::Create(const Vector2ui& size, DXGI_FORMAT format) {
 	}
 }
 
-void DummyTexture::Term() {
+void UnorderedTexture::Term() {
 	descriptorUAV_.Delete();
+}
+
+void UnorderedTexture::TransitionBeginUnordered(DirectXThreadContext* context) {
+	D3D12_RESOURCE_BARRIER barrier = {};
+	barrier.Type                   = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+	barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
+	barrier.Transition.StateAfter  = D3D12_RESOURCE_STATE_UNORDERED_ACCESS;
+	barrier.Transition.pResource   = resource_.Get();
+
+	context->GetCommandList()->ResourceBarrier(1, &barrier);
+}
+
+void UnorderedTexture::TransitionEndUnordered(DirectXThreadContext* context) {
+	D3D12_RESOURCE_BARRIER barrier = {};
+	barrier.Type                   = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+	barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_UNORDERED_ACCESS;
+	barrier.Transition.StateAfter  = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
+	barrier.Transition.pResource   = resource_.Get();
+
+	context->GetCommandList()->ResourceBarrier(1, &barrier);
 }

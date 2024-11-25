@@ -20,9 +20,9 @@ void ComputePipelineState::CreateBlob(const std::wstring& filename) {
 	blob_.filename = filename;
 }
 
-void ComputePipelineState::CreatePipeline(Device* device, const ComputeRootSignatureDesc& desc) {
+void ComputePipelineState::CreatePipeline(Device* device, ComputeRootSignatureDesc& desc) {
 	device_            = device;
-	rootSignatureDesc_ = desc;
+	rootSignatureDesc_ = std::move(desc);
 
 	CreateRootSignature();
 	CreatePipeline();
@@ -123,7 +123,7 @@ bool ComputePipelineState::CheckShaderReloadStatus() {
 	return blob_.blob.has_value() && blob_.blob.value().expired();
 }
 
-void ReflectionComputePipelineState::ReflectionRootSignature(Device* device) {
+void ReflectionComputePipelineState::ReflectionPipeline(Device* device) {
 	device_ = device;
 
 	table_.Reset();
@@ -132,6 +132,7 @@ void ReflectionComputePipelineState::ReflectionRootSignature(Device* device) {
 
 	rootSignatureDesc_ = table_.CreateComputeRootSignatureDesc();
 	CreateRootSignature();
+	CreatePipeline();
 }
 
 void ReflectionComputePipelineState::BindComputeBuffer(CommandContext* context, const BindBufferDesc& desc) {
@@ -140,8 +141,7 @@ void ReflectionComputePipelineState::BindComputeBuffer(CommandContext* context, 
 
 void ReflectionComputePipelineState::CheckAndUpdatePipeline() {
 	if (CheckShaderReloadStatus()) {
-		ReflectionRootSignature(device_);
-		CreatePipeline();
+		ReflectionPipeline(device_);
 	}
 }
 

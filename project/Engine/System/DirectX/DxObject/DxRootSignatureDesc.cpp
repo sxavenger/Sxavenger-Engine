@@ -23,6 +23,11 @@ void BaseRootSignatureDesc::ShrinkToFit() {
 	samplers.shrink_to_fit();
 }
 
+void BaseRootSignatureDesc::Reset() {
+	Clear();
+	Reserve();
+}
+
 void BaseRootSignatureDesc::SetVirtual(uint32_t index, ShaderVisibility stage, D3D12_ROOT_PARAMETER_TYPE type, uint32_t shaderRegister) {
 	AutoResizeParam(index);
 	params.at(index).ParameterType             = type;
