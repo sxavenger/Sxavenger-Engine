@@ -39,6 +39,8 @@ public:
 
 	void End();
 
+	void WaitForFPS(float fps);
+
 	template <SecondsUnit T>
 	DeltaTimePoint<T> GetDeltaTime();
 
