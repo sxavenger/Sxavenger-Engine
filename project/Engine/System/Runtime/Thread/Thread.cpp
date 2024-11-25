@@ -7,13 +7,14 @@
 #include <Engine/System/SxavengerSystem.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// BaseTaskExecution class methods
+// TaskThreadExecution class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-void BaseTaskExecution::WaitCompleted() {
-	while (state_ != ExecutionState::kCompleted) {
-		std::this_thread::sleep_for(std::chrono::milliseconds(1));
-	}
+void TaskThreadExecution::Execute(const Thread* const thread) {
+	task_(thread);
+}
+
+void TaskThreadExecution::WaitCompleted() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////

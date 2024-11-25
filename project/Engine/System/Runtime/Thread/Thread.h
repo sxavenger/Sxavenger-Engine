@@ -21,6 +21,11 @@
 class Thread;
 
 ////////////////////////////////////////////////////////////////////////////////////////////
+// using
+////////////////////////////////////////////////////////////////////////////////////////////
+using ThreadExecuteFunction = std::function<void(_MAYBE_UNUSED const Thread* const)>;
+
+////////////////////////////////////////////////////////////////////////////////////////////
 // ExecutionState enum class
 ////////////////////////////////////////////////////////////////////////////////////////////
 enum class ExecutionState {
@@ -30,26 +35,41 @@ enum class ExecutionState {
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// BaseTaskExecution class
+// TaskThreadExecution class
 ////////////////////////////////////////////////////////////////////////////////////////////
-class BaseTaskExecution {
+class TaskThreadExecution {
 public:
 
 	//=========================================================================================
 	// public methods
 	//=========================================================================================
 
-	virtual void Execute(_MAYBE_UNUSED const Thread* const thread) = 0;
+	TaskThreadExecution()  = default;
+	~TaskThreadExecution() = default;
 
-	void WaitCompleted();
+	//* task option *//
 
-	bool IsCompleted() { return state_ == ExecutionState::kCompleted; }
+	void Execute(const Thread* const thread);
 
-	//* getter and setter *//
+	void SetTask(const ThreadExecuteFunction& task) { task_ = task; }
+
+	//* state option *//
+
+	void WaitCompleted() const;
+
+	bool IsCompleted() const { return state_ == ExecutionState::kCompleted; }
 
 	ExecutionState GetState() const { return state_; }
 
 	void SetState(ExecutionState state) { state_ = state; }
+
+protected:
+
+	//=========================================================================================
+	// protected variables
+	//=========================================================================================
+
+	ThreadExecuteFunction task_;
 
 private:
 
@@ -58,6 +78,7 @@ private:
 	//=========================================================================================
 
 	ExecutionState state_ = ExecutionState::kWaiting;
+
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -86,7 +107,7 @@ public:
 
 	//* setter *//
 
-	void SetTask(BaseTaskExecution* task) { task_ = task; }
+	void SetTask(TaskThreadExecution* task) { task_ = task; }
 
 protected:
 
@@ -102,7 +123,7 @@ protected:
 
 	//* task parameter *//
 
-	BaseTaskExecution* task_ = nullptr;
+	TaskThreadExecution* task_ = nullptr;
 
 };
 
@@ -123,7 +144,7 @@ public:
 
 	void Term();
 
-	void PushTask(BaseTaskExecution* task) { tasks_.emplace(task); }
+	void PushTask(TaskThreadExecution* task) { tasks_.emplace(task); }
 
 private:
 
@@ -139,7 +160,7 @@ private:
 
 	//* task container *//
 
-	std::queue<BaseTaskExecution*> tasks_;
+	std::queue<TaskThreadExecution*> tasks_;
 
 
 };
