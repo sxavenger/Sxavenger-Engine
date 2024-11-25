@@ -96,6 +96,9 @@ void GameScene::Init() {
 	transform_.transform.translate = { 0.0f, 0.1f, 0.0f };
 	transform_.UpdateMatrix();
 
+	compute_ = std::make_unique<DxObject::ReflectionComputePipelineState>();
+	compute_->CreateBlob(L"white"); //!< TEST PLEASE
+
 	SxavengerSystem::ExecuteAllAllocator();
 }
 

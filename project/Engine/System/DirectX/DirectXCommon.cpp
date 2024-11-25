@@ -23,6 +23,7 @@ void DirectXCommon::Init() {
 	blendState_->Init();
 
 	GraphicsPipelineState::SetExternal(compileBlobCollection_.get(), blendState_.get());
+	ComputePipelineState::SetExternal(compileBlobCollection_.get());
 }
 
 void DirectXCommon::Term() {

@@ -45,7 +45,7 @@ public:
 	void SetSamplerAnisotropic(SamplerMode mode, ShaderVisibility stage, UINT shaderRegister, uint32_t anisotropic);
 	void SetSamplerPoint(SamplerMode mode, ShaderVisibility stage, UINT shaderRegister);
 
-	virtual ComPtr<ID3D12RootSignature> CreateRootSignature(ID3D12Device* device) const;
+	virtual ComPtr<ID3D12RootSignature> CreateRootSignature(ID3D12Device* device, D3D12_ROOT_SIGNATURE_FLAGS flags) const;
 
 	//=========================================================================================
 	// public variables
@@ -98,6 +98,32 @@ public:
 	void SetHandleSRV(uint32_t index, ShaderVisibility stage, uint32_t shaderRegister);
 	void SetHandleUAV(uint32_t index, ShaderVisibility stage, uint32_t shaderRegister);
 
+	ComPtr<ID3D12RootSignature> CreateGraphicsRootSignature(ID3D12Device* device) const;
+};
+
+////////////////////////////////////////////////////////////////////////////////////////////
+// ComputeRootSignatureDesc structure
+////////////////////////////////////////////////////////////////////////////////////////////
+struct ComputeRootSignatureDesc
+	: public BaseRootSignatureDesc {
+public:
+
+	//=========================================================================================
+	// public methods
+	//=========================================================================================
+
+	//* virtual address *//
+
+	void SetVirtualCBV(uint32_t index, uint32_t shaderRegister);
+	void SetVirtualSRV(uint32_t index, uint32_t shaderRegister);
+	void SetVirtualUAV(uint32_t index, uint32_t shaderRegister);
+
+	//* handle *//
+
+	void SetHandleSRV(uint32_t index, uint32_t shaderRegister);
+	void SetHandleUAV(uint32_t index, uint32_t shaderRegister);
+
+	ComPtr<ID3D12RootSignature> CreateComputeRootSignature(ID3D12Device* device) const;
 };
 
 _DXOBJECT_NAMESPACE_END

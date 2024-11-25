@@ -15,6 +15,7 @@
 #include "DxObject/DxCommandContext.h"
 #include "DxObject/DxSwapChain.h"
 #include "DxObject/DxGraphicsPipelineState.h"
+#include "DxObject/DxComputePipelineState.h"
 
 //* c++
 #include <memory>

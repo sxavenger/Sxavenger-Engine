@@ -7,6 +7,7 @@
 #include <Engine/System/Window/GameWindow.h>
 
 #include "Engine/System/DirectX/DxObject/DxGraphicsPipelineState.h"
+#include "Engine/System/DirectX/DxObject/DxComputePipelineState.h"
 #include "Engine/System/Runtime/Performance/DeltaTimePoint.h"
 #include "Engine/Content/InputAssembler/InputAssembler.h"
 #include "Engine/Module/Transform/TransformComponent.h"
@@ -41,9 +42,9 @@ private:
 
 	TransformComponent transform_;
 
-	bool renderWindowSwitch_ = true;
+	std::unique_ptr<DxObject::ReflectionComputePipelineState> compute_;
 
-	DeltaTimePoint<SecondsUnit::s> ds_;
+	bool renderWindowSwitch_ = true;
 
 	//=========================================================================================
 	// private methods

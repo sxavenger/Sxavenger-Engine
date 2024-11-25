@@ -203,7 +203,7 @@ void GraphicsPipelineState::SetExternal(CompileBlobCollection* collection, Blend
 
 void GraphicsPipelineState::CreateRootSignature() {
 	Assert(device_ != nullptr, "device is not set.");
-	rootSignature_ = rootSignatureDesc_.CreateRootSignature(device_->GetDevice());
+	rootSignature_ = rootSignatureDesc_.CreateGraphicsRootSignature(device_->GetDevice());
 }
 
 void GraphicsPipelineState::CreatePipeline() {

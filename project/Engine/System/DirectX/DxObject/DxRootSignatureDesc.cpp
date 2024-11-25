@@ -86,10 +86,10 @@ void BaseRootSignatureDesc::SetSamplerPoint(SamplerMode mode, ShaderVisibility s
 	samplers.at(sampleIndex).ShaderVisibility = static_cast<D3D12_SHADER_VISIBILITY>(stage);
 }
 
-ComPtr<ID3D12RootSignature> BaseRootSignatureDesc::CreateRootSignature(ID3D12Device* device) const {
+ComPtr<ID3D12RootSignature> BaseRootSignatureDesc::CreateRootSignature(ID3D12Device* device, D3D12_ROOT_SIGNATURE_FLAGS flags) const {
 
 	D3D12_ROOT_SIGNATURE_DESC desc = {};
-	desc.Flags = D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT;
+	desc.Flags = flags;
 
 	if (!params.empty()) {
 		desc.pParameters   = params.data();
@@ -127,7 +127,6 @@ ComPtr<ID3D12RootSignature> BaseRootSignatureDesc::CreateRootSignature(ID3D12Dev
 		signatureBlob->GetBufferSize(),
 		IID_PPV_ARGS(&result)
 	);
-
 	Assert(SUCCEEDED(hr));
 
 	return result;
@@ -176,4 +175,36 @@ void GraphicsRootSignatureDesc::SetHandleSRV(uint32_t index, ShaderVisibility st
 
 void GraphicsRootSignatureDesc::SetHandleUAV(uint32_t index, ShaderVisibility stage, uint32_t shaderRegister) {
 	BaseRootSignatureDesc::SetHandle(index, stage, D3D12_DESCRIPTOR_RANGE_TYPE_UAV, shaderRegister);
+}
+
+ComPtr<ID3D12RootSignature> GraphicsRootSignatureDesc::CreateGraphicsRootSignature(ID3D12Device* device) const {
+	return BaseRootSignatureDesc::CreateRootSignature(device, D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////
+// ComputeRootSignatureDesc structure methods
+////////////////////////////////////////////////////////////////////////////////////////////
+
+void ComputeRootSignatureDesc::SetVirtualCBV(uint32_t index, uint32_t shaderRegister) {
+	BaseRootSignatureDesc::SetVirtual(index, ShaderVisibility::VISIBILITY_ALL, D3D12_ROOT_PARAMETER_TYPE_CBV, shaderRegister);
+}
+
+void ComputeRootSignatureDesc::SetVirtualSRV(uint32_t index, uint32_t shaderRegister) {
+	BaseRootSignatureDesc::SetVirtual(index, ShaderVisibility::VISIBILITY_ALL, D3D12_ROOT_PARAMETER_TYPE_SRV, shaderRegister);
+}
+
+void ComputeRootSignatureDesc::SetVirtualUAV(uint32_t index, uint32_t shaderRegister) {
+	BaseRootSignatureDesc::SetVirtual(index, ShaderVisibility::VISIBILITY_ALL, D3D12_ROOT_PARAMETER_TYPE_UAV, shaderRegister);
+}
+
+void ComputeRootSignatureDesc::SetHandleSRV(uint32_t index, uint32_t shaderRegister) {
+	BaseRootSignatureDesc::SetHandle(index, ShaderVisibility::VISIBILITY_ALL, D3D12_DESCRIPTOR_RANGE_TYPE_SRV, shaderRegister);
+}
+
+void ComputeRootSignatureDesc::SetHandleUAV(uint32_t index, uint32_t shaderRegister) {
+	BaseRootSignatureDesc::SetHandle(index, ShaderVisibility::VISIBILITY_ALL, D3D12_DESCRIPTOR_RANGE_TYPE_UAV, shaderRegister);
+}
+
+ComPtr<ID3D12RootSignature> ComputeRootSignatureDesc::CreateComputeRootSignature(ID3D12Device* device) const {
+	return BaseRootSignatureDesc::CreateRootSignature(device, D3D12_ROOT_SIGNATURE_FLAG_NONE);
 }

@@ -55,6 +55,7 @@
     <ClCompile Include="Lib\Adapter\Json\IJsonSerializer.cpp" />
     <ClCompile Include="Engine\System\Runtime\Performance\Performance.cpp" />
     <ClCompile Include="Engine\System\Runtime\Performance\DeltaTimePoint.cpp" />
+    <ClCompile Include="Engine\System\DirectX\DxObject\DxComputePipelineState.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\System\Window\Window.h" />
@@ -110,5 +111,6 @@
     <ClInclude Include="Engine\Module\Behavior\BaseBehavior.h" />
     <ClInclude Include="Engine\System\Runtime\Performance\Performance.h" />
     <ClInclude Include="Engine\System\Runtime\Performance\DeltaTimePoint.h" />
+    <ClInclude Include="Engine\System\DirectX\DxObject\DxComputePipelineState.h" />
   </ItemGroup>
 </Project>

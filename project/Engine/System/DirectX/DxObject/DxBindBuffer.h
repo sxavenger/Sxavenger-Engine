@@ -98,8 +98,10 @@ public:
 	void CreateTable(ID3D12ShaderReflection* reflection, ShaderVisibility visibility);
 
 	GraphicsRootSignatureDesc CreateGraphicsRootSignatureDesc();
-
 	ComPtr<ID3D12RootSignature> CreateGraphicsRootSignature(Device* device);
+
+	ComputeRootSignatureDesc CreateComputeRootSignatureDesc();
+	ComPtr<ID3D12RootSignature> CreateComputeRootSignature(Device* device);
 
 
 	void Reset();

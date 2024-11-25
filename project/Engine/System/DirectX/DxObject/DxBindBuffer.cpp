@@ -98,7 +98,56 @@ GraphicsRootSignatureDesc BindBufferTable::CreateGraphicsRootSignatureDesc() {
 }
 
 ComPtr<ID3D12RootSignature> BindBufferTable::CreateGraphicsRootSignature(Device* device) {
-	return CreateGraphicsRootSignatureDesc().CreateRootSignature(device->GetDevice());
+	return CreateGraphicsRootSignatureDesc().CreateGraphicsRootSignature(device->GetDevice());
+}
+
+ComputeRootSignatureDesc BindBufferTable::CreateComputeRootSignatureDesc() {
+	ComputeRootSignatureDesc desc = {};
+
+	UINT rootIndex = 0;
+
+	for (auto& it : table_) {
+		// infoの取り出し
+		BindBufferInfo& info = it.second;
+
+		Assert(info.visibility == ShaderVisibility::VISIBILITY_ALL, "buffer visibility is not VISIBILITY_ALL");
+
+		switch (info.bindBufferType) {
+			case BindBufferType::kVirtual_CBV:
+				desc.SetVirtualCBV(rootIndex, info.registerNum);
+				break;
+
+			case BindBufferType::kVirtual_SRV:
+				desc.SetVirtualSRV(rootIndex, info.registerNum);
+				break;
+
+			case BindBufferType::kVirtual_UAV:
+				desc.SetVirtualUAV(rootIndex, info.registerNum);
+				break;
+
+			case BindBufferType::kHandle_SRV:
+				desc.SetHandleSRV(rootIndex, info.registerNum);
+				break;
+
+			case BindBufferType::kHandle_UAV:
+				desc.SetHandleUAV(rootIndex, info.registerNum);
+				break;
+
+			case BindBufferType::kSampler:
+				desc.SetSamplerLinear(MODE_WRAP, info.visibility, info.registerNum);
+				continue;
+				break;
+		}
+
+		info.rootParam = rootIndex;
+		rootIndex++;
+	}
+
+	return desc;
+}
+
+ComPtr<ID3D12RootSignature> BindBufferTable::CreateComputeRootSignature(Device* device) {
+	return CreateComputeRootSignatureDesc().CreateComputeRootSignature(device->GetDevice());
 }
 
 void BindBufferTable::Reset() {
