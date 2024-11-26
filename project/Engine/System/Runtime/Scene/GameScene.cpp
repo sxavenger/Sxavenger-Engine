@@ -6,11 +6,13 @@
 //* engine
 #include <Engine/System/SxavengerSystem.h>
 #include <Engine/System/Runtime/Performance/Performance.h>
+#include <Engine/Console/Console.h>
 
 //* lib
 #include <Lib/Environment.h>
 
 #include "Lib/Adapter/Json/JsonAdapter.h"
+
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // GameScene class methods
@@ -21,25 +23,42 @@ void GameScene::Run() {
 	//-----------------------------------------------------------------------------------------
 	// 初期化処理
 	//-----------------------------------------------------------------------------------------
+	sConsole->Init();
 	Init();
+	SxavengerSystem::ExecuteAllAllocator();
 
 	//-----------------------------------------------------------------------------------------
 	// ゲームループ
 	//-----------------------------------------------------------------------------------------
 	while (SxavengerSystem::ProcessMessage()) {
+
 		Performance::BeginFrame();
+		SxavengerSystem::BeginImGuiFrame();
 
 		//-----------------------------------------------------------------------------------------
 		// 更新処理
 		//-----------------------------------------------------------------------------------------
 
-		Update();
+		SxavengerSystem::GetInput()->Update();
+		sConsole->UpdateConsole();
+
+		if (sConsole->IsUpdateRequired()) {
+			Update();
+		}
+
+		SxavengerSystem::EndImGuiFrame();
+		SxavengerSystem::TransitionAllocator();
 
 		//-----------------------------------------------------------------------------------------
 		// 描画処理
 		//-----------------------------------------------------------------------------------------
 
 		Draw();
+
+		SxavengerSystem::PresentAllWindow();
+		SxavengerSystem::ExecuteAllAllocator();
+		//!< sub window delete時に死ぬ
+		//!< shader hot reload 時に死ぬ
 
 		Performance::EndFrame();
 
@@ -53,6 +72,7 @@ void GameScene::Run() {
 	//-----------------------------------------------------------------------------------------
 
 	Term();
+	sConsole->Term();
 
 }
 
@@ -103,16 +123,25 @@ void GameScene::Init() {
 	texture_ = std::make_unique<UnorderedTexture>();
 	texture_->Create({ 1, 1 });
 
-	SxavengerSystem::ExecuteAllAllocator();
+	execution_ = std::make_unique<TaskThreadExecution>();
+	execution_->SetTask([](_MAYBE_UNUSED const Thread* const thread) {
+		std::this_thread::sleep_for(std::chrono::seconds(10));
+	});
+
+	SxavengerSystem::PushTask(execution_.get());
 }
 
 void GameScene::Update() {
-	SxavengerSystem::BeginImGuiFrame();
-
-	SxavengerSystem::GetInput()->Update();
 
 	transform_.transform.translate.y += 0.01f;
 	transform_.UpdateMatrix();
+
+	if (SxavengerSystem::IsTriggerKey(KeyId::KEY_T)) {
+		if (execution_->IsCompleted()) {
+			execution_->SetState(ExecutionState::kWaiting);
+			SxavengerSystem::PushTask(execution_.get());
+		}
+	}
 
 	if (SxavengerSystem::IsTriggerKey(KeyId::KEY_SPACE)) {
 		state_->ReloadShader();
@@ -123,11 +152,7 @@ void GameScene::Update() {
 		renderWindowSwitch_ = !renderWindowSwitch_;
 	}
 
-	ImGui::ShowDemoWindow();
-	ImGui::ShowDebugLogWindow();
 
-	SxavengerSystem::TransitionAllocator();
-	SxavengerSystem::EndImGuiFrame();
 }
 
 void GameScene::Draw() {
@@ -156,6 +181,7 @@ void GameScene::Draw() {
 
 			DxObject::BindBufferDesc desc = {};
 			desc.SetAddress("gTransform", transform_.GetGPUVirtualAddress());
+			desc.SetHandle("gTexture", texture_->GetGPUHandleSRV());
 
 			state_->BindGraphicsBuffer(SxavengerSystem::GetMainThreadContext()->GetDxCommand(), desc);
 
@@ -177,6 +203,7 @@ void GameScene::Draw() {
 
 		DxObject::BindBufferDesc desc = {};
 		desc.SetAddress("gTransform", transform_.GetGPUVirtualAddress());
+		desc.SetHandle("gTexture", texture_->GetGPUHandleSRV());
 
 		state_->BindGraphicsBuffer(SxavengerSystem::GetMainThreadContext()->GetDxCommand(), desc);
 
@@ -187,11 +214,6 @@ void GameScene::Draw() {
 	}
 
 	mainWindow_->EndRendering();
-
-	SxavengerSystem::PresentAllWindow();
-	SxavengerSystem::ExecuteAllAllocator();
-	//!< sub window delete時に死ぬ
-	//!< shader hot reload 時に死ぬ
 }
 
 void GameScene::Term() {

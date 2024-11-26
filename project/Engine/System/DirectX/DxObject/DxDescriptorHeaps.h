@@ -8,6 +8,9 @@
 #include "DxDevice.h"
 #include "DxDescriptor.h"
 
+//* engine
+#include <Engine/System/UI/ISystemDebugGui.h>
+
 // c++
 #include <deque>
 #include <memory>
@@ -98,7 +101,8 @@ private:
 ////////////////////////////////////////////////////////////////////////////////////////////
 // DescriptorHeaps class
 ////////////////////////////////////////////////////////////////////////////////////////////
-class DescriptorHeaps {
+class DescriptorHeaps
+	: public ISystemDebugGui {
 public:
 
 	//=========================================================================================
@@ -134,7 +138,7 @@ public:
 
 	//* imgui option *//
 
-	void SystemImGuiCommand();
+	void SystemDebugGui() override;
 
 private:
 

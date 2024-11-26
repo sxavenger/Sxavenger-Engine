@@ -131,6 +131,8 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Engine\Console\Console.cpp" />
+    <ClCompile Include="Engine\Console\SystemConsole.cpp" />
     <ClCompile Include="Engine\Content\InputAssembler\InputAssembler.cpp" />
     <ClCompile Include="Engine\Content\SxavengerContent.cpp" />
     <ClCompile Include="Engine\Content\Texture\Texture.cpp" />
@@ -180,6 +182,8 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Engine\Console\Console.h" />
+    <ClInclude Include="Engine\Console\SystemConsole.h" />
     <ClInclude Include="Engine\Content\InputAssembler\InputAssembler.h" />
     <ClInclude Include="Engine\Content\SxavengerContent.h" />
     <ClInclude Include="Engine\Content\Texture\Texture.h" />
@@ -214,6 +218,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Engine\System\SxavengerSystem.h" />
     <ClInclude Include="Engine\System\Runtime\Thread\Thread.h" />
     <ClInclude Include="Engine\System\UI\ImGuiController.h" />
+    <ClInclude Include="Engine\System\UI\ISystemDebugGui.h" />
     <ClInclude Include="Engine\System\Utility\ComPtr.h" />
     <ClInclude Include="Engine\System\Utility\Logger.h" />
     <ClInclude Include="Engine\System\WinApp\WinApp.h" />

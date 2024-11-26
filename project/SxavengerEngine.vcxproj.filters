@@ -56,6 +56,8 @@
     <ClCompile Include="Engine\System\Runtime\Performance\Performance.cpp" />
     <ClCompile Include="Engine\System\Runtime\Performance\DeltaTimePoint.cpp" />
     <ClCompile Include="Engine\System\DirectX\DxObject\DxComputePipelineState.cpp" />
+    <ClCompile Include="Engine\Console\SystemConsole.cpp" />
+    <ClCompile Include="Engine\Console\Console.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\System\Window\Window.h" />
@@ -112,5 +114,8 @@
     <ClInclude Include="Engine\System\Runtime\Performance\Performance.h" />
     <ClInclude Include="Engine\System\Runtime\Performance\DeltaTimePoint.h" />
     <ClInclude Include="Engine\System\DirectX\DxObject\DxComputePipelineState.h" />
+    <ClInclude Include="Engine\Console\SystemConsole.h" />
+    <ClInclude Include="Engine\Console\Console.h" />
+    <ClInclude Include="Engine\System\UI\ISystemDebugGui.h" />
   </ItemGroup>
 </Project>

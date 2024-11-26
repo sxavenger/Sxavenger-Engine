@@ -115,7 +115,7 @@ private:
 	//! [pair]
 	//! first: ログ内容
 	//!  second: [optional]
-	//!  std::nullopt: 通常text
+	//!  nullopt: 通常text
 	//!  has_value:    colorText
 	std::deque<std::pair<std::string, std::optional<Color4f>>> logs_;
 	uint32_t limitLog_ = 32;

@@ -5,6 +5,7 @@
 //-----------------------------------------------------------------------------------------
 //* engine
 #include <Engine/System/DirectX/DirectXContext.h>
+#include <Engine/System/UI/ISystemDebugGui.h>
 
 //* lib
 #include <Lib/CXXAttributeConfig.h>
@@ -85,7 +86,7 @@ private:
 // Thread class
 ////////////////////////////////////////////////////////////////////////////////////////////
 class Thread
-	: public DirectXThreadContext {
+	: public DirectXThreadContext, public ISystemDebugGui {
 public:
 
 	//=========================================================================================
@@ -100,6 +101,8 @@ public:
 	void Term();
 
 	void ExecuteTask();
+
+	void SystemDebugGui() override;
 
 	//* getter *//
 
@@ -119,7 +122,8 @@ protected:
 
 	std::thread thread_;
 
-	bool isTerm_ = false;
+	bool isTerm_      = false;
+	bool isExecuting_ = false;
 
 	//* task parameter *//
 
@@ -130,7 +134,8 @@ protected:
 ////////////////////////////////////////////////////////////////////////////////////////////
 // ThreadCollection class
 ////////////////////////////////////////////////////////////////////////////////////////////
-class ThreadCollection {
+class ThreadCollection
+	: public ISystemDebugGui {
 public:
 
 	//=========================================================================================
@@ -145,6 +150,8 @@ public:
 	void Term();
 
 	void PushTask(TaskThreadExecution* task) { tasks_.emplace(task); }
+
+	void SystemDebugGui() override;
 
 private:
 

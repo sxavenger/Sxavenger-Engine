@@ -3,7 +3,7 @@
 //-----------------------------------------------------------------------------------------
 #include "Simple.hlsli"
 
-//#define _DEFINE_CONSTANT_BUFFER
+#define _DEFINE_CONSTANT_BUFFER
 
 #ifdef _DEFINE_CONSTANT_BUFFER
 ConstantBuffer<TransformationMatrix> gTransform : register(b0);

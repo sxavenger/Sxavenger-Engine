@@ -49,6 +49,14 @@ public:
 	static DirectXThreadContext* GetMainThreadContext();
 
 	//-----------------------------------------------------------------------------------------
+	// ThreadCollection option
+	//-----------------------------------------------------------------------------------------
+
+	static void PushTask(TaskThreadExecution* thread);
+
+	static ThreadCollection* GetThreadCollection();
+
+	//-----------------------------------------------------------------------------------------
 	// GameWindowCollection option
 	//-----------------------------------------------------------------------------------------
 

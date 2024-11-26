@@ -6,7 +6,7 @@
 //*
 #include "Performance.h"
 
-template <SecondsUnit T>
+template <TimeUnit T>
 class DeltaTimePoint {
 public:
 

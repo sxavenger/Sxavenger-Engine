@@ -150,8 +150,8 @@ void DescriptorHeaps::DeleteDescriptor(Descriptor& descriptor) {
 	}
 }
 
-void DescriptorHeaps::SystemImGuiCommand() {
-
+void DescriptorHeaps::SystemDebugGui() {
+	ImGui::SeparatorText("DescriptorPools");
 	{ //!< RTV
 		auto pool = pools_[kDescriptor_RTV].get();
 
@@ -204,4 +204,5 @@ void DescriptorHeaps::SystemImGuiCommand() {
 		ImGui::SameLine();
 		ImGui::Text("CBV_SRV_UAV");
 	}
+
 }

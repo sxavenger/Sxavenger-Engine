@@ -6,6 +6,9 @@
 //* time
 #include "DeltaTimePoint.h"
 
+//* engine
+#include <Engine/Console/Console.h>
+
 //* c++
 #include <thread>
 
@@ -13,7 +16,7 @@
 // RunTimeTracker static variables
 //=========================================================================================
 
-const std::array<float, static_cast<uint8_t>(SecondsUnit::s) + 1> RunTimeTracker::kSecondsConversions_ = {
+const std::array<float, static_cast<uint8_t>(TimeUnit::s) + 1> RunTimeTracker::kSecondsConversions_ = {
 	1.0f, 0.001f, 0.000001f
 };
 
@@ -68,5 +71,8 @@ void Performance::BeginFrame() {
 
 void Performance::EndFrame() {
 	runTimeTracker_.WaitForFPS(lockFPS_);
-	runTimeTracker_.End();
+
+	if (sConsole->IsUpdateRequired()) {
+		runTimeTracker_.End();
+	}
 }

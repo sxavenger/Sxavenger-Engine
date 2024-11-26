@@ -6,6 +6,13 @@
 //* engine
 #include <Engine/System/SxavengerSystem.h>
 
+//* external
+#include <imgui.h>
+
+//* c++
+#include <sstream>
+#include <format>
+
 ////////////////////////////////////////////////////////////////////////////////////////////
 // TaskThreadExecution class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -45,15 +52,28 @@ void Thread::ExecuteTask() {
 	}
 
 	if (task_->GetState() == ExecutionState::kWaiting) {
+		isExecuting_ = true;
 		task_->SetState(ExecutionState::kRunning);
-
 		task_->Execute(this);
 		DirectXThreadContext::ExecuteAllAllocators();
-
 		task_->SetState(ExecutionState::kCompleted);
+		isExecuting_ = false;
 	}
 
 	task_ = nullptr;
+}
+
+void Thread::SystemDebugGui() {
+	std::stringstream ss;
+	ss << "[thread id]: " << thread_.get_id() << " ";
+	ss << std::format("[executing]: {}", isExecuting_);
+
+	if (isExecuting_) {
+		ImGui::TextDisabled(ss.str().c_str());
+
+	} else {
+		ImGui::Text(ss.str().c_str());
+	}
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -94,4 +114,14 @@ void ThreadCollection::Init(uint32_t threadCount) {
 }
 
 void ThreadCollection::Term() {
+}
+
+void ThreadCollection::SystemDebugGui() {
+	ImGui::SeparatorText("thread collection");
+	ImGui::Text(std::format("remain task queue size: {}", tasks_.size()).c_str());
+
+	ImGui::SeparatorText("threads");
+	for (auto& thread : threads_) {
+		thread->SystemDebugGui();
+	}
 }

@@ -78,6 +78,14 @@ DirectXThreadContext* SxavengerSystemEngine::GetMainThreadContext() {
 	return sMainThreadContext.get();
 }
 
+void SxavengerSystemEngine::PushTask(TaskThreadExecution* thread) {
+	sThreadCollection->PushTask(thread);
+}
+
+ThreadCollection* SxavengerSystemEngine::GetThreadCollection() {
+	return sThreadCollection.get();
+}
+
 GameWindow* SxavengerSystemEngine::CreateMainWindow(
 	const Vector2ui& clientSize, const LPCWSTR& name, const Color4f& clearColor) {
 
