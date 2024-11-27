@@ -29,11 +29,11 @@ public:
 
 	//* depth option *//
 
-	void TransitionBeginDepthWrite(DirectXThreadContext* context);
+	void TransitionBeginDepthWrite(const DirectXThreadContext* context);
 
-	void TransitionEndDepthWrite(DirectXThreadContext* context);
+	void TransitionEndDepthWrite(const DirectXThreadContext* context);
 
-	void ClearDepth(DirectXThreadContext* context);
+	void ClearDepth(const DirectXThreadContext* context);
 
 private:
 

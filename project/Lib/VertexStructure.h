@@ -7,17 +7,12 @@
 #include <Lib/Geometry/Vector2.h>
 #include <Lib/Geometry/Vector3.h>
 #include <Lib/Geometry/Vector4.h>
-#include <Lib/Geometry/Quaternion.h>
-#include <Lib/Geometry/Matrix4x4.h>
-
-// imgui
-#include <imgui.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // structure
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-struct VertexData {
+struct MeshVertexData {
 	Vector4f position;
 	Vector2f texcoord;
 	Vector3f normal;

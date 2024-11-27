@@ -38,21 +38,20 @@ public:
 
 	const Vector3f GetPosition() const;
 
+	const Matrix4x4& GetMatrix() const { return mat_; }
+	Matrix4x4& GetMatrix() { return mat_; }
+
 	//* setter *//
 
 	void SetParent(const BaseTransformComponent* component) { parent_ = component; }
-
-	//=========================================================================================
-	// public variables
-	//=========================================================================================
-
-	Matrix4x4 mat = Matrix4x4::Identity();
 
 protected:
 
 	//=========================================================================================
 	// protected variables
 	//=========================================================================================
+
+	Matrix4x4 mat_ = Matrix4x4::Identity();
 
 	const BaseTransformComponent* parent_ = nullptr;
 
@@ -78,16 +77,22 @@ public:
 
 	void SetImGuiCommand();
 
-	json OutputJson() override;
+	virtual json OutputJson() override;
 
-	void InputJson(const json& data) override;
+	virtual void InputJson(const json& data) override;
+
+	//* getter *//
+
+	const QuaternionTransform& GetTransform() const { return transform_; }
+	QuaternionTransform& GetTransform() { return transform_; }
+
+protected:
 
 	//=========================================================================================
-	// public variables
+	// protected variables
 	//=========================================================================================
 
-	QuaternionTransform transform;
+	QuaternionTransform transform_;
 
-private:
 };
 

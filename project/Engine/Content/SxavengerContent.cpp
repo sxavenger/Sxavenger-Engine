@@ -26,3 +26,7 @@ void SxavengerContent::Init() {
 void SxavengerContent::Term() {
 	sTextureCollection.reset();
 }
+
+std::shared_ptr<Texture> SxavengerContent::TryLoadTexture(const std::string& filename, const DirectXThreadContext* context) {
+	return sTextureCollection->TryLoadTexture(filename, context);
+}

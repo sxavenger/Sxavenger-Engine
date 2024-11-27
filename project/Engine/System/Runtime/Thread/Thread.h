@@ -123,11 +123,12 @@ protected:
 	std::thread thread_;
 
 	bool isTerm_      = false;
-	bool isExecuting_ = false;
+	bool isAvailable_ = true;
 
 	//* task parameter *//
 
 	TaskThreadExecution* task_ = nullptr;
+	// FIXME: 所有者が破棄されると未定義動作になる.
 
 };
 
@@ -168,6 +169,7 @@ private:
 	//* task container *//
 
 	std::queue<TaskThreadExecution*> tasks_;
+	// FIXME: 所有者が破棄されると未定義動作になる.
 
 
 };

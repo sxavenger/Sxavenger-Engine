@@ -6,30 +6,31 @@
 //* base
 #include "InputAssembler.h"
 
-//* DXROBJECT
-#include <Engine/System/DxrObject/DxrAccelerationStructure.h>
-
 //* DirectX
 #include <DirectXMesh.h>
 
-//* object
-#include <Lib/ObjectStructure.h>
+//* engine
+#include <Engine/System/DirectX/DxObject/DxDimensionBuffer.h>
+//#include <Engine/System/DxrObject/DxrAccelerationStructure.h>
+
+//* lib
+#include <Lib/VertexStructure.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // InputMesh class
 ////////////////////////////////////////////////////////////////////////////////////////////
 class InputMesh
-	: public InputAssembler<VertexData> { //!< 新しくInputAssemblerをこれにするかどうか
+	: public InputAssembler<MeshVertexData> {
 public:
 
 	//=========================================================================================
 	// public methods
 	//=========================================================================================
 
-	InputMesh()  = default;
+	InputMesh() = default;
 	~InputMesh() = default;
 
-	//* mesh shader option *//
+	//* meshlet option *//
 
 	void CreateMeshlet();
 
@@ -38,14 +39,6 @@ public:
 		UINT instanceCount = 1) const;
 
 	bool IsCreateMeshlet() const { return isCreateMeshlet_; }
-
-	//* raytracing option *//
-
-	void CreateBLAS();
-
-	DxrObject::BottomLevelAS* GetBLAS() const;
-
-	bool IsCreateBLAS() const { return isCreateBLAS_; }
 
 	//* operator *//
 
@@ -66,12 +59,14 @@ private:
 	//=========================================================================================
 
 	//* mesh shader *//
+	bool isCreateMeshlet_ = false;
+
 	//* buffers
-	std::unique_ptr<DxObject::BufferResource<uint32_t>>                 uniqueVertexIndices_;
-	std::unique_ptr<DxObject::BufferResource<DirectX::MeshletTriangle>> primitiveIndices_;
-	std::unique_ptr<DxObject::BufferResource<DirectX::Meshlet>>         meshlets_;
-	std::unique_ptr<DxObject::BufferResource<DirectX::CullData>>        cullDatas_;
-	std::unique_ptr<DxObject::BufferResource<MeshInfo>>                 meshInfo_;
+	std::unique_ptr<DxObject::DimensionBuffer<uint32_t>>                 uniqueVertexIndices_;
+	std::unique_ptr<DxObject::DimensionBuffer<DirectX::MeshletTriangle>> primitiveIndices_;
+	std::unique_ptr<DxObject::DimensionBuffer<DirectX::Meshlet>>         meshlets_;
+	std::unique_ptr<DxObject::DimensionBuffer<DirectX::CullData>>        cullDatas_;
+	std::unique_ptr<DxObject::DimensionBuffer<MeshInfo>>                 meshInfo_;
 
 	//* configs
 	static const uint32_t kMaxVertices_        = 64;
@@ -79,11 +74,6 @@ private:
 	static const UINT kAmplificationNumthread_ = 32;
 
 	//* raytracing *//
+	// TODO:
 
-	std::unique_ptr<DxrObject::BottomLevelAS> blas_;
-	
-	//* info *//
-
-	bool isCreateMeshlet_ = false;
-	bool isCreateBLAS_    = false;
 };

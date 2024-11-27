@@ -17,7 +17,7 @@ void TextureCollection::Init() {
 void TextureCollection::Term() {
 }
 
-std::shared_ptr<BaseTexture> TextureCollection::TryLoadTextureSafely(const std::string& filename, DirectXThreadContext* context) {
+std::shared_ptr<BaseTexture> TextureCollection::TryLoadTextureSafely(const std::string& filename, const DirectXThreadContext* context) {
 	if (!textures_.Contains(filename)) {
 		// 新しくtextureを生成
 		std::shared_ptr<Texture> texture = std::make_shared<Texture>();
@@ -28,7 +28,7 @@ std::shared_ptr<BaseTexture> TextureCollection::TryLoadTextureSafely(const std::
 	return textures_.At(filename);
 }
 
-std::shared_ptr<Texture> TextureCollection::TryLoadTexture(const std::string& filename, DirectXThreadContext* context) {
+std::shared_ptr<Texture> TextureCollection::TryLoadTexture(const std::string& filename, const DirectXThreadContext* context) {
 	return GetTexture<Texture>(TryLoadTextureSafely(filename, context));
 }
 

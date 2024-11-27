@@ -59,6 +59,9 @@
     <ClCompile Include="Engine\Console\SystemConsole.cpp" />
     <ClCompile Include="Engine\Console\Console.cpp" />
     <ClCompile Include="Engine\Content\Texture\DepthTexture.cpp" />
+    <ClCompile Include="Engine\Content\InputAssembler\InputMesh.cpp" />
+    <ClCompile Include="Engine\Content\Model\Model.cpp" />
+    <ClCompile Include="Engine\Module\Camera\Camera3d.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\System\Window\Window.h" />
@@ -84,7 +87,7 @@
     <ClInclude Include="Lib\Geometry\Vector3.h" />
     <ClInclude Include="Lib\Geometry\Vector4.h" />
     <ClInclude Include="Lib\Geometry\VectorComparison.h" />
-    <ClInclude Include="Lib\ObjectStructure.h" />
+    <ClInclude Include="Lib\VertexStructure.h" />
     <ClInclude Include="Lib\CXXAttributeConfig.h" />
     <ClInclude Include="Lib\Environment.h" />
     <ClInclude Include="Engine\System\Window\GameWindowCollection.h" />
@@ -119,5 +122,8 @@
     <ClInclude Include="Engine\Console\Console.h" />
     <ClInclude Include="Engine\System\UI\ISystemDebugGui.h" />
     <ClInclude Include="Engine\Content\Texture\DepthTexture.h" />
+    <ClInclude Include="Engine\Content\InputAssembler\InputMesh.h" />
+    <ClInclude Include="Engine\Content\Model\Model.h" />
+    <ClInclude Include="Engine\Module\Camera\Camera3d.h" />
   </ItemGroup>
 </Project>

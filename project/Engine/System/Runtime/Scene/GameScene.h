@@ -11,6 +11,7 @@
 #include "Engine/System/Runtime/Performance/DeltaTimePoint.h"
 #include "Engine/Content/InputAssembler/InputAssembler.h"
 #include "Engine/Content/Texture/Texture.h"
+#include "Engine/Content/Model/Model.h"
 #include "Engine/Module/Transform/TransformComponent.h"
 #include "Lib/Geometry/Vector4.h"
 
@@ -48,6 +49,7 @@ private:
 
 	bool renderWindowSwitch_ = true;
 
+	std::unique_ptr<Model> model_;
 	std::unique_ptr<TaskThreadExecution> execution_;
 
 	//=========================================================================================

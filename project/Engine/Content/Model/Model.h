@@ -1,0 +1,131 @@
+#pragma once
+
+//-----------------------------------------------------------------------------------------
+// include
+//-----------------------------------------------------------------------------------------
+//* engine
+#include <Engine/System/DirectX/DirectXContext.h>
+#include <Engine/System/Runtime/Thread/Thread.h>
+#include <Engine/Content/InputAssembler/InputMesh.h>
+#include <Engine/Content/Texture/Texture.h>
+#include <Engine/Module/Transform/Transform.h>
+
+//* lib
+#include <Lib/Geometry/Matrix4x4.h>
+
+//* external
+#include <assimp/Importer.hpp>
+#include <assimp/scene.h>
+#include <assimp/postprocess.h>
+
+//* c++
+#include <cstdint>
+#include <vector>
+#include <optional>
+#include <unordered_map>
+#include <string>
+#include <memory>
+#include <array>
+
+////////////////////////////////////////////////////////////////////////////////////////////
+// Weight structure
+////////////////////////////////////////////////////////////////////////////////////////////
+
+struct VertexWeightData {
+	float weight;
+	uint32_t vertexIndex;
+};
+
+struct JointWeightData {
+	Matrix4x4 inverseBindPoseMatrix;
+	std::vector<VertexWeightData> vertexWeights;
+};
+
+////////////////////////////////////////////////////////////////////////////////////////////
+// MeshData structure
+////////////////////////////////////////////////////////////////////////////////////////////
+struct MeshData {
+	InputMesh                                        mesh;
+	std::optional<uint32_t>                          materialIndex;
+	std::unordered_map<std::string, JointWeightData> skinCluster;
+};
+
+////////////////////////////////////////////////////////////////////////////////////////////
+// MaterailTextureType enum class
+////////////////////////////////////////////////////////////////////////////////////////////
+enum class MaterialTextureType : uint8_t {
+	kDiffuse,
+	kNormal,
+};
+
+////////////////////////////////////////////////////////////////////////////////////////////
+// MaterialData structure
+////////////////////////////////////////////////////////////////////////////////////////////
+struct MaterialData {
+	std::array<std::shared_ptr<Texture>, static_cast<uint8_t>(MaterialTextureType::kNormal) + 1> textures_;
+};
+
+////////////////////////////////////////////////////////////////////////////////////////////
+// NodeData structure
+////////////////////////////////////////////////////////////////////////////////////////////
+struct Node {
+	QuaternionTransform transform;
+	Matrix4x4           localMatrix;
+
+	std::string name;
+	std::vector<Node> children;
+};
+
+////////////////////////////////////////////////////////////////////////////////////////////
+// Model class
+////////////////////////////////////////////////////////////////////////////////////////////
+class Model
+	: public TaskThreadExecution {
+public:
+
+	//=========================================================================================
+	// public methods
+	//=========================================================================================
+
+	Model()  = default;
+	~Model() { Term(); }
+
+	void Load(const std::string& directory, const std::string& filename, const DirectXThreadContext* context, uint32_t assimpOption = kDefaultAssimpOption_);
+
+	void Term();
+
+	//* task option *//
+
+	void AsyncLoad(const std::string& directory, const std::string& filename, uint32_t assimpOption = kDefaultAssimpOption_);
+
+	//* other getter *//
+
+	static uint32_t GetDefaultAssimpOption() { return kDefaultAssimpOption_; }
+
+private:
+
+	//=========================================================================================
+	// private variables
+	//=========================================================================================
+
+	std::vector<MeshData>     meshes_;
+	std::vector<MaterialData> materials_;
+
+	Node root_;
+
+	static const uint32_t kDefaultAssimpOption_;
+
+	//* parameter *//
+
+	std::string directory_;
+	std::string filename_;
+
+	//=========================================================================================
+	// private methods
+	//=========================================================================================
+
+	void LoadMesh(const aiScene* aiScene);
+	void LoadMaterial(const aiScene* aiScene, const std::string& directory, const DirectXThreadContext* context);
+	Node ReadNode(aiNode* node);
+
+};

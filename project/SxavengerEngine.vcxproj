@@ -134,11 +134,14 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="Engine\Console\Console.cpp" />
     <ClCompile Include="Engine\Console\SystemConsole.cpp" />
     <ClCompile Include="Engine\Content\InputAssembler\InputAssembler.cpp" />
+    <ClCompile Include="Engine\Content\InputAssembler\InputMesh.cpp" />
+    <ClCompile Include="Engine\Content\Model\Model.cpp" />
     <ClCompile Include="Engine\Content\SxavengerContent.cpp" />
     <ClCompile Include="Engine\Content\Texture\DepthTexture.cpp" />
     <ClCompile Include="Engine\Content\Texture\Texture.cpp" />
     <ClCompile Include="Engine\Content\Texture\TextureCollection.cpp" />
     <ClCompile Include="Engine\Module\Behavior\BaseBehavior.cpp" />
+    <ClCompile Include="Engine\Module\Camera\Camera3d.cpp" />
     <ClCompile Include="Engine\Module\Transform\Transform.cpp" />
     <ClCompile Include="Engine\Module\Transform\TransformComponent.cpp" />
     <ClCompile Include="Engine\System\DirectX\DirectXCommon.cpp" />
@@ -186,11 +189,14 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Engine\Console\Console.h" />
     <ClInclude Include="Engine\Console\SystemConsole.h" />
     <ClInclude Include="Engine\Content\InputAssembler\InputAssembler.h" />
+    <ClInclude Include="Engine\Content\InputAssembler\InputMesh.h" />
+    <ClInclude Include="Engine\Content\Model\Model.h" />
     <ClInclude Include="Engine\Content\SxavengerContent.h" />
     <ClInclude Include="Engine\Content\Texture\DepthTexture.h" />
     <ClInclude Include="Engine\Content\Texture\Texture.h" />
     <ClInclude Include="Engine\Content\Texture\TextureCollection.h" />
     <ClInclude Include="Engine\Module\Behavior\BaseBehavior.h" />
+    <ClInclude Include="Engine\Module\Camera\Camera3d.h" />
     <ClInclude Include="Engine\Module\Transform\Transform.h" />
     <ClInclude Include="Engine\Module\Transform\TransformComponent.h" />
     <ClInclude Include="Engine\System\Cinfig\SxavengerDirectory.h" />
@@ -239,7 +245,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Lib\Geometry\Vector3.h" />
     <ClInclude Include="Lib\Geometry\Vector4.h" />
     <ClInclude Include="Lib\Geometry\VectorComparison.h" />
-    <ClInclude Include="Lib\ObjectStructure.h" />
+    <ClInclude Include="Lib\VertexStructure.h" />
     <ClInclude Include="Lib\Sxl\LowerUnorderedMap.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

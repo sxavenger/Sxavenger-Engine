@@ -20,7 +20,7 @@ void BaseTexture::Term() {
 // Texture class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-void Texture::Load(const std::string& filepath, DirectXThreadContext* context) {
+void Texture::Load(const std::string& filepath, const DirectXThreadContext* context) {
 
 	// device, commandListの取得
 	auto device      = SxavengerSystem::GetDxDevice()->GetDevice();
@@ -258,7 +258,7 @@ void RenderTexture::Term() {
 	descriptorRTV_.Delete();
 }
 
-void RenderTexture::TransitionBeginRender(DirectXThreadContext* context) {
+void RenderTexture::TransitionBeginRender(const DirectXThreadContext* context) {
 
 	auto commandList = context->GetCommandList();
 
@@ -271,7 +271,7 @@ void RenderTexture::TransitionBeginRender(DirectXThreadContext* context) {
 	commandList->ResourceBarrier(1, &barrier);
 }
 
-void RenderTexture::TransitionEndRender(DirectXThreadContext* context) {
+void RenderTexture::TransitionEndRender(const DirectXThreadContext* context) {
 	D3D12_RESOURCE_BARRIER barrier = {};
 	barrier.Type                   = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
 	barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
@@ -281,7 +281,7 @@ void RenderTexture::TransitionEndRender(DirectXThreadContext* context) {
 	context->GetCommandList()->ResourceBarrier(1, &barrier);
 }
 
-void RenderTexture::ClearRender(DirectXThreadContext* context) {
+void RenderTexture::ClearRender(const DirectXThreadContext* context) {
 	// 画面のクリア
 	context->GetCommandList()->ClearRenderTargetView(
 		descriptorRTV_.GetCPUHandle(),
@@ -370,7 +370,7 @@ void UnorderedTexture::Term() {
 	descriptorUAV_.Delete();
 }
 
-void UnorderedTexture::TransitionBeginUnordered(DirectXThreadContext* context) {
+void UnorderedTexture::TransitionBeginUnordered(const DirectXThreadContext* context) {
 	D3D12_RESOURCE_BARRIER barrier = {};
 	barrier.Type                   = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
 	barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
@@ -380,7 +380,7 @@ void UnorderedTexture::TransitionBeginUnordered(DirectXThreadContext* context) {
 	context->GetCommandList()->ResourceBarrier(1, &barrier);
 }
 
-void UnorderedTexture::TransitionEndUnordered(DirectXThreadContext* context) {
+void UnorderedTexture::TransitionEndUnordered(const DirectXThreadContext* context) {
 	D3D12_RESOURCE_BARRIER barrier = {};
 	barrier.Type                   = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
 	barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_UNORDERED_ACCESS;

@@ -92,37 +92,78 @@ void ThreadLog(const std::wstring& log) {
 // Assert methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-void Assert(bool expresion, const std::string& detail, const std::source_location& location) {
+void Assert(bool expresion, const std::string& label, const std::string& detail, const std::source_location& location) {
 	if (expresion) {
 		return;
 	}
 
-	//!< mutexがいるかも...
-
-	// location message
+	// location
 	std::ostringstream locationMes;
 	locationMes << "[location]\n";
 	locationMes << " filename: " << location.file_name()     << "\n";
 	locationMes << " function: " << location.function_name() << "\n";
 	locationMes << " line:     " << location.line()          << "\n";
-
 	Log(std::string("\nError: Sxavenger Engine assertion\n\n" + locationMes.str()).c_str());
 
-	// detail message
+	// label
+	std::ostringstream labelMes;
+	if (!label.empty()) {
+		labelMes << "[label]\n";
+		labelMes << " " << label << "\n";
+		Log(labelMes.str());
+	}
+
+	// detail
 	std::ostringstream detailMes;
-
 	if (!detail.empty()) {
-		detailMes << "[details]\n";
+		detailMes << "[detail]\n";
 		detailMes << " " << detail << "\n";
-
 		Log(detailMes.str());
-		//ExternalLogger::Write(detailMes.str());
 	}
 
 	MessageBoxA(
 		NULL,
-		(locationMes.str() + "\n" + detailMes.str()).c_str(),
+		(locationMes.str() + "\n" + labelMes.str()).c_str(),
 		"Sxavenger Engine assertion",
+		MB_TASKMODAL | MB_ICONHAND
+	);
+
+	__debugbreak();
+}
+
+void AssertW(bool expresion, const std::wstring& label, const std::wstring& detail, const std::source_location& location) {
+	if (expresion) {
+		return;
+	}
+
+	// location
+	std::wostringstream locationMes;
+	locationMes << "[location]\n";
+	locationMes << " filename: " << location.file_name()     << "\n";
+	locationMes << " function: " << location.function_name() << "\n";
+	locationMes << " line:     " << location.line()          << "\n";
+	Log(std::wstring(L"\nError: Sxavenger Engine assertion\n\n" + locationMes.str()).c_str());
+
+	// label
+	std::wostringstream labelMes;
+	if (!label.empty()) {
+		labelMes << "[label]\n";
+		labelMes << " " << label << "\n";
+		Log(labelMes.str());
+	}
+
+	// detail
+	std::wostringstream detailMes;
+	if (!detail.empty()) {
+		detailMes << "[detail]\n";
+		detailMes << " " << detail << "\n";
+		Log(detailMes.str());
+	}
+
+	MessageBoxW(
+		NULL,
+		(locationMes.str() + L"\n" + labelMes.str()).c_str(),
+		L"Sxavenger Engine assertion",
 		MB_TASKMODAL | MB_ICONHAND
 	);
 

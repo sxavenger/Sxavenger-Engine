@@ -31,5 +31,5 @@ void ThreadLog(const std::wstring& log);
 // Assert methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-void Assert(bool expresion, const std::string& detail = "", const std::source_location& location = std::source_location::current());
-void AssertW(bool expresion, const std::wstring& detail = L"", const std::source_location& location = std::source_location::current());
+void Assert(bool expresion, const std::string& label = "", const std::string& detail = "", const std::source_location& location = std::source_location::current());
+void AssertW(bool expresion, const std::wstring& label = L"", const std::wstring& detail = L"", const std::source_location& location = std::source_location::current());

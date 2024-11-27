@@ -117,11 +117,7 @@ ComPtr<ID3D12RootSignature> BaseRootSignatureDesc::CreateRootSignature(ID3D12Dev
 	);
 
 	if (FAILED(hr)) {
-		std::string log = "\n[root signature error]\n ";
-		log += reinterpret_cast<char*>(signatureErrorBlob->GetBufferPointer());
-		Log(log);
-
-		Assert(false, "Root Signature create error.");
+		Assert(false, "Root Signature create error.", reinterpret_cast<char*>(signatureErrorBlob->GetBufferPointer()));
 	}
 
 	ComPtr<ID3D12RootSignature> result;

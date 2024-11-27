@@ -41,13 +41,13 @@ public:
 
 	//* operator *//
 
-	InputAssembler(InputAssembler&& other) noexcept            = default;
-	InputAssembler& operator=(InputAssembler&& other) noexcept = default;
+	InputAssembler(InputAssembler&&) noexcept            = default;
+	InputAssembler& operator=(InputAssembler&&) noexcept = default;
 
-private:
+protected:
 
 	//=========================================================================================
-	// private variables
+	// protected variables
 	//=========================================================================================
 
 	std::unique_ptr<DxObject::VertexDimensionBuffer<T>> vertex_;

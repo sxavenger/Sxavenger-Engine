@@ -52,12 +52,12 @@ void Thread::ExecuteTask() {
 	}
 
 	if (task_->GetState() == ExecutionState::kWaiting) {
-		isExecuting_ = true;
+		isAvailable_ = false;
 		task_->SetState(ExecutionState::kRunning);
 		task_->Execute(this);
 		DirectXThreadContext::ExecuteAllAllocators();
 		task_->SetState(ExecutionState::kCompleted);
-		isExecuting_ = false;
+		isAvailable_ = true;
 	}
 
 	task_ = nullptr;
@@ -66,13 +66,13 @@ void Thread::ExecuteTask() {
 void Thread::SystemDebugGui() {
 	std::stringstream ss;
 	ss << "[thread id]: " << thread_.get_id() << " ";
-	ss << std::format("[executing]: {}", isExecuting_);
+	ss << std::format("[available]: {}", isAvailable_);
 
-	if (isExecuting_) {
-		ImGui::TextDisabled(ss.str().c_str());
+	if (isAvailable_) {
+		ImGui::Text(ss.str().c_str());
 
 	} else {
-		ImGui::Text(ss.str().c_str());
+		ImGui::TextDisabled(ss.str().c_str());
 	}
 }
 

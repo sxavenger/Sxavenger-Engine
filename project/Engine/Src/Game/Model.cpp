@@ -122,7 +122,7 @@ void Model::LoadMesh() {
 		const aiMesh* meshAi = sceneAi_->mMeshes[meshIndex];
 
 		// IAの初期化
-		meshes_.at(meshIndex).mesh.Create(meshAi->mNumVertices, meshAi->mNumFaces * 3/*triangle*/);
+		meshes_.at(meshIndex).mesh.Create(meshAi->mNumVertices, meshAi->mNumFaces * 3);
 		//* mesh
 		auto vertices = meshes_.at(meshIndex).mesh.GetVertexBuffer();
 		auto indices  = meshes_.at(meshIndex).mesh.GetIndexBuffer();

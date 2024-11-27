@@ -20,6 +20,12 @@ public:
 
 	static void Term();
 
+	//-----------------------------------------------------------------------------------------
+	// TextureCollection option
+	//-----------------------------------------------------------------------------------------
+
+	static std::shared_ptr<Texture> TryLoadTexture(const std::string& filename, const DirectXThreadContext* context);
+
 private:
 
 };

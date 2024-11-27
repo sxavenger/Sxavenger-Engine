@@ -89,6 +89,10 @@ public:
 
 	const T& At(uint32_t index) const;
 
+	const T* GetData();
+
+	void Memcpy(const T* value);
+
 	//=========================================================================================
 	// operator
 	//=========================================================================================
@@ -165,6 +169,16 @@ template<class T>
 inline const T& DimensionBuffer<T>::At(uint32_t index) const {
 	Assert(CheckIndex(index), "Dimension Buffer out of range.");
 	return mappedDatas_[index];
+}
+
+template<class T>
+inline const T* DimensionBuffer<T>::GetData() {
+	return mappedDatas_.data();
+}
+
+template<class T>
+inline void DimensionBuffer<T>::Memcpy(const T* value) {
+	std::memcpy(mappedDatas_.data(), value, stride_ * size_);
 }
 
 template<class T>

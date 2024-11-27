@@ -38,8 +38,8 @@ public:
 
 	//* texture create methods *// //!< 関数名の見直し
 
-	std::shared_ptr<BaseTexture> TryLoadTextureSafely(const std::string& filename, DirectXThreadContext* context);
-	std::shared_ptr<Texture> TryLoadTexture(const std::string& filename, DirectXThreadContext* context);
+	std::shared_ptr<BaseTexture> TryLoadTextureSafely(const std::string& filename, const DirectXThreadContext* context);
+	std::shared_ptr<Texture> TryLoadTexture(const std::string& filename, const DirectXThreadContext* context);
 
 	std::shared_ptr<BaseTexture> TryCreateRenderTextureSafely(const std::string& key, const Vector2ui& size, const Color4f& clearColor = kDefaultTextureClearColor, DXGI_FORMAT format = DxObject::kOffscreenFormat);
 	std::shared_ptr<RenderTexture> TryCreateRenderTexture(const std::string& key, const Vector2ui& size, const Color4f& clearColor = kDefaultTextureClearColor, DXGI_FORMAT format = DxObject::kOffscreenFormat);

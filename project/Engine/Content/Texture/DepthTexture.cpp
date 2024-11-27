@@ -12,7 +12,7 @@ _DXOBJECT_USING
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 void DepthTexture::Create(const Vector2ui& size) {
-	size_   = size;
+	size_ = size;
 
 	CreateResource();
 	CreateDSV();
@@ -24,7 +24,7 @@ void DepthTexture::Term() {
 	descriptorSRV_.Delete();
 }
 
-void DepthTexture::TransitionBeginDepthWrite(DirectXThreadContext* context) {
+void DepthTexture::TransitionBeginDepthWrite(const DirectXThreadContext* context) {
 	// barrierの設定
 	D3D12_RESOURCE_BARRIER barrier = {};
 	barrier.Type                   = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
@@ -35,7 +35,7 @@ void DepthTexture::TransitionBeginDepthWrite(DirectXThreadContext* context) {
 	context->GetCommandList()->ResourceBarrier(1, &barrier);
 }
 
-void DepthTexture::TransitionEndDepthWrite(DirectXThreadContext* context) {
+void DepthTexture::TransitionEndDepthWrite(const DirectXThreadContext* context) {
 	// barrierの設定
 	D3D12_RESOURCE_BARRIER barrier = {};
 	barrier.Type                   = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
@@ -46,7 +46,7 @@ void DepthTexture::TransitionEndDepthWrite(DirectXThreadContext* context) {
 	context->GetCommandList()->ResourceBarrier(1, &barrier);
 }
 
-void DepthTexture::ClearDepth(DirectXThreadContext* context) {
+void DepthTexture::ClearDepth(const DirectXThreadContext* context) {
 	// 深度をクリア
 	context->GetCommandList()->ClearDepthStencilView(
 		descriptorDSV_.GetCPUHandle(),
@@ -70,7 +70,7 @@ void DepthTexture::CreateResource() {
 	desc.Height           = size_.y;
 	desc.MipLevels        = 1;
 	desc.DepthOrArraySize = 1;
-	desc.Format           = DXGI_FORMAT_D24_UNORM_S8_UINT;
+	desc.Format           = DXGI_FORMAT_D32_FLOAT_S8X24_UINT;
 	desc.SampleDesc.Count = 1;
 	desc.Dimension        = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
 	desc.Flags            = D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL;
@@ -101,7 +101,7 @@ void DepthTexture::CreateDSV() {
 
 	// descの設定
 	D3D12_DEPTH_STENCIL_VIEW_DESC desc = {};
-	desc.Format        = DXGI_FORMAT_D24_UNORM_S8_UINT;
+	desc.Format        = DXGI_FORMAT_D32_FLOAT_S8X24_UINT;
 	desc.ViewDimension = D3D12_DSV_DIMENSION_TEXTURE2D;
 
 	// DSVの生成
@@ -121,7 +121,7 @@ void DepthTexture::CreateSRV() {
 
 	// descの設定
 	D3D12_SHADER_RESOURCE_VIEW_DESC desc = {};
-	desc.Format                  = DXGI_FORMAT_R24_UNORM_X8_TYPELESS;
+	desc.Format                  = DXGI_FORMAT_R32_FLOAT_X8X24_TYPELESS;
 	desc.ViewDimension           = D3D12_SRV_DIMENSION_TEXTURE2D;
 	desc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
 	desc.Texture2D.MipLevels     = 1;

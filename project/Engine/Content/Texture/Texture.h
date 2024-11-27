@@ -83,7 +83,7 @@ public:
 	Texture()  = default;
 	~Texture() { Term(); }
 
-	void Load(const std::string& filepath, DirectXThreadContext* context);
+	void Load(const std::string& filepath, const DirectXThreadContext* context);
 
 	void Term();
 
@@ -131,11 +131,11 @@ public:
 
 	//* render option *//
 
-	void TransitionBeginRender(DirectXThreadContext* context);
+	void TransitionBeginRender(const DirectXThreadContext* context);
 
-	void TransitionEndRender(DirectXThreadContext* context);
+	void TransitionEndRender(const DirectXThreadContext* context);
 
-	void ClearRender(DirectXThreadContext* context);
+	void ClearRender(const DirectXThreadContext* context);
 
 	//* getter *//
 
@@ -179,9 +179,9 @@ public:
 
 	//* unordered option *//
 
-	void TransitionBeginUnordered(DirectXThreadContext* context);
+	void TransitionBeginUnordered(const DirectXThreadContext* context);
 
-	void TransitionEndUnordered(DirectXThreadContext* context);
+	void TransitionEndUnordered(const DirectXThreadContext* context);
 
 	//* getter *//
 

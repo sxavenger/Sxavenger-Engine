@@ -14,4 +14,4 @@
 //-----------------------------------------------------------------------------------------
 
 static const Vector2ui kMainWindowSize  = { 1280, 720 };
-static const LPCWSTR   kMainWindowTitle = L"Sxavenger Engine";
+static const LPCWSTR   kMainWindowTitle = L"Sxavenger Engine 3.0";

@@ -113,7 +113,7 @@ void GameScene::Init() {
 	state_->CreatePipeline(SxavengerSystem::GetDxDevice(), desc);
 
 	transform_.CreateBuffer();
-	transform_.transform.translate = { 0.0f, 0.1f, 0.0f };
+	transform_.GetTransform().translate = { 0.0f, -1.0f, 0.0f };
 	transform_.UpdateMatrix();
 
 	compute_ = std::make_unique<DxObject::ReflectionComputePipelineState>();
@@ -122,6 +122,9 @@ void GameScene::Init() {
 
 	texture_ = std::make_unique<UnorderedTexture>();
 	texture_->Create({ 1, 1 });
+
+	model_ = std::make_unique<Model>();
+	model_->AsyncLoad("resources/model/kipfel", "kipfel.fbx", Model::GetDefaultAssimpOption() | aiProcess_Triangulate);
 
 	execution_ = std::make_unique<TaskThreadExecution>();
 	execution_->SetTask([](_MAYBE_UNUSED const Thread* const thread) {
@@ -133,15 +136,8 @@ void GameScene::Init() {
 
 void GameScene::Update() {
 
-	transform_.transform.translate.y += 0.01f;
+	transform_.GetTransform().translate.y += 0.01f;
 	transform_.UpdateMatrix();
-
-	if (SxavengerSystem::IsTriggerKey(KeyId::KEY_T)) {
-		if (execution_->IsCompleted()) {
-			execution_->SetState(ExecutionState::kWaiting);
-			SxavengerSystem::PushTask(execution_.get());
-		}
-	}
 
 	if (SxavengerSystem::IsTriggerKey(KeyId::KEY_SPACE)) {
 		state_->ReloadShader();
