@@ -10,6 +10,9 @@
 //* c++
 #include <memory>
 
+//* game
+#include <Game/Plane.h>
+
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Teapot class
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -38,9 +41,11 @@ private:
 	Vector2f size_ = { 128.0f, 128.0f };
 	float rotate_ = 0.0f;
 
-	static const uint32_t kIntanceCount_ = 512;
+	static const uint32_t kIntanceCount_ = 2;
 
 	std::unique_ptr<DxObject::BufferResource<TransformationMatrix>> matrix_;
+
+	std::unique_ptr<Plane> plane_;
 
 
 };

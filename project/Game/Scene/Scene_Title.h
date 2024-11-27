@@ -8,7 +8,6 @@
 
 //* Game
 #include <Game/Teapot.h>
-#include <Game/Plane.h>
 #include <Game/AnimationPlayer.h>
 #include <Engine/Game/Camera/CineCamera.h>
 
@@ -41,7 +40,6 @@ private:
 	//=========================================================================================
 
 	std::unique_ptr<Teapot> teapot_;
-	std::unique_ptr<Plane> plane_;
 
 	std::unique_ptr<AnimationPlayer> animationTest_;
 

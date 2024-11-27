@@ -20,10 +20,6 @@ void Scene_Title::Init() {
 	teapot_->Init();
 	teapot_->SetToConsole();
 
-	plane_ = std::make_unique<Plane>();
-	plane_->Init();
-	plane_->SetToConsole();
-
 	animationTest_ = std::make_unique<AnimationPlayer>();
 	animationTest_->Init();
 	animationTest_->SetToConsole();

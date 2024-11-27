@@ -221,13 +221,16 @@ void RenderingConsole::SelectableBehavior(const BehaviorContainer::const_iterato
 			flags |= ImGuiTreeNodeFlags_Selected;
 		}
 
-		if (ImGui::TreeNodeEx(label.c_str(), flags)) {
-			if (ImGui::IsItemClicked() && !ImGui::IsItemToggledOpen()) { //!< selectされた場合
-				selectedBehavior_      = it;
-				selectedBehaviorTable_ = &table;
+		bool isOpenTreeNode = ImGui::TreeNodeEx(label.c_str(), flags);
 
-				//localCamera_->Reset();
-			}
+		if (ImGui::IsItemClicked() && !ImGui::IsItemToggledOpen()) { //!< selectされた場合
+			selectedBehavior_ = it;
+			selectedBehaviorTable_ = &table;
+			//localCamera_->Reset();
+		}
+
+		if (isOpenTreeNode) {
+			
 
 			for (auto childIt = behavior->GetChildren().begin(); childIt != behavior->GetChildren().end(); ++childIt) {
 				SelectableBehavior(childIt, behavior->GetChildren());

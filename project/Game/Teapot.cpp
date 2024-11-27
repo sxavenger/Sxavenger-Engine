@@ -30,6 +30,10 @@ void Teapot::Init() {
 
 		(*matrix_)[i].Transfer(transform.ToMatrix());
 	}
+
+	plane_ = std::make_unique<Plane>();
+	plane_->Init();
+	SetChild(plane_.get());
 }
 
 void Teapot::SetAttributeImGui() {
