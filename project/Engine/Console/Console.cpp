@@ -12,6 +12,8 @@ const std::string Console::kImGuiLayoutFilepath_ = "imgui.ini";
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 void Console::Init() {
+	runtime_.Begin();
+
 	ImGui::LoadIniSettingsFromDisk(kImGuiLayoutFilepath_.c_str());
 
 	//* windowFlag
@@ -22,14 +24,13 @@ void Console::Init() {
 	windowFlag_ |= ImGuiWindowFlags_NoResize;
 
 	SystemConsole::Init();
-
-	runtime_.Begin();
 }
 
 void Console::Term() {
-	runtime_.End();
-
 	SystemConsole::Term();
+
+	runtime_.End();
+	EngineLog(std::format("[Console] executed time<TimeUtil::s>: {:.0f}sec", runtime_.GetDeltaTime<TimeUnit::s>().time));
 }
 
 void Console::UpdateConsole() {

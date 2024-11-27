@@ -137,7 +137,6 @@ void SystemConsole::DisplayLog() {
 	}
 
 	ImGui::SliderInt("limit log", (int*)&limitLog_, 0, 128);
-
 	ImGui::End();
 }
 

@@ -58,6 +58,7 @@
     <ClCompile Include="Engine\System\DirectX\DxObject\DxComputePipelineState.cpp" />
     <ClCompile Include="Engine\Console\SystemConsole.cpp" />
     <ClCompile Include="Engine\Console\Console.cpp" />
+    <ClCompile Include="Engine\Content\Texture\DepthTexture.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\System\Window\Window.h" />
@@ -117,5 +118,6 @@
     <ClInclude Include="Engine\Console\SystemConsole.h" />
     <ClInclude Include="Engine\Console\Console.h" />
     <ClInclude Include="Engine\System\UI\ISystemDebugGui.h" />
+    <ClInclude Include="Engine\Content\Texture\DepthTexture.h" />
   </ItemGroup>
 </Project>

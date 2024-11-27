@@ -61,7 +61,7 @@ private:
 
 	float deltaTime_;
 
-	static const std::array<float, static_cast<uint8_t>(TimeUnit::s) + 1> kSecondsConversions_;
+	static const std::array<float, static_cast<uint8_t>(TimeUnit::s) + 1> kConversions_;
 
 };
 
@@ -71,7 +71,7 @@ private:
 
 template<TimeUnit T>
 inline DeltaTimePoint<T> RunTimeTracker::GetDeltaTime() const {
-	return { deltaTime_ * kSecondsConversions_[static_cast<uint8_t>(T)] };
+	return { deltaTime_ * kConversions_[static_cast<uint8_t>(T)] };
 }
 
 template<TimeUnit T>
@@ -80,7 +80,7 @@ inline DeltaTimePoint<T> RunTimeTracker::GetElapsedTime() const {
 
 	// deltaTimeの書き込み
 	float elapsed = static_cast<float>(std::chrono::duration_cast<std::chrono::microseconds>(now - reference_).count());
-	return { elapsed * kSecondsConversions_[static_cast<uint8_t>(T)] };
+	return { elapsed * kConversions_[static_cast<uint8_t>(T)] };
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
