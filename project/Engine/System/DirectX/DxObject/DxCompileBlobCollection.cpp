@@ -7,6 +7,9 @@ _DXOBJECT_USING
 //* engine
 #include <Engine/System/Config/SxavengerDirectory.h>
 
+//* external
+#include <imgui.h>
+
 ////////////////////////////////////////////////////////////////////////////////////////////
 // CompileBlobCollection class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -41,4 +44,15 @@ void CompileBlobCollection::Reload(const std::wstring& filename) {
 std::weak_ptr<ComPtr<IDxcBlob>> CompileBlobCollection::GetBlob(const std::wstring& filename) {
 	AssertW(blobs_.Contains(filename), L"Compile Blob not found. filename: " + filename);
 	return blobs_.At(filename).blob;
+}
+
+void CompileBlobCollection::SystemDebugGui() {
+
+	ImGui::SeparatorText("reload shaders");
+
+	for (auto& blob : blobs_.GetMap()) {
+		if (ImGui::Selectable(ToString(blob.first).c_str(), false)) {
+			Reload(blob.first);
+		}
+	}
 }

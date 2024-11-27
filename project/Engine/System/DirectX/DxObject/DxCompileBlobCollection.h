@@ -7,6 +7,9 @@
 #include "DxObjectCommon.h"
 #include "DxShaderCompiler.h"
 
+//* engine
+#include <Engine/System/UI/ISystemDebugGui.h>
+
 //* lib
 #include <Lib/Sxl/LowerUnorderedMap.h>
 
@@ -22,7 +25,8 @@ _DXOBJECT_NAMESPACE_BEGIN
 ////////////////////////////////////////////////////////////////////////////////////////////
 // CompileBlobCollection class
 ////////////////////////////////////////////////////////////////////////////////////////////
-class CompileBlobCollection {
+class CompileBlobCollection
+	: public ISystemDebugGui {
 public:
 
 	//=========================================================================================
@@ -49,6 +53,8 @@ public:
 	//* getter *//
 
 	ShaderCompiler* GetCompiler() const { return compiler_; }
+
+	void SystemDebugGui() override;
 
 private:
 

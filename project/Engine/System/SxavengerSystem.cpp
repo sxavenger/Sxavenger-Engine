@@ -62,6 +62,10 @@ _DXOBJECT DescriptorHeaps* SxavengerSystemEngine::GetDxDescriptorHeaps() {
 	return sDirectXCommon->GetDesriptorHeaps();
 }
 
+_DXOBJECT CompileBlobCollection* SxavengerSystemEngine::GetDxCompileBlobCollection() {
+	return  sDirectXCommon->GetCompileBlobCollection();
+}
+
 void SxavengerSystemEngine::TransitionAllocator() {
 	sMainThreadContext->TransitionAllocator();
 }

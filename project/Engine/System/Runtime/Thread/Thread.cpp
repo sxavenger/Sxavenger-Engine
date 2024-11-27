@@ -22,6 +22,9 @@ void TaskThreadExecution::Execute(const Thread* const thread) {
 }
 
 void TaskThreadExecution::WaitCompleted() const {
+	while (state_ != ExecutionState::kCompleted) {
+		std::this_thread::sleep_for(std::chrono::milliseconds(1));
+	}
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////

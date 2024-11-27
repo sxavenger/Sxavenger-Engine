@@ -36,6 +36,8 @@ public:
 
 	static _DXOBJECT DescriptorHeaps* GetDxDescriptorHeaps();
 
+	static _DXOBJECT CompileBlobCollection* GetDxCompileBlobCollection();
+
 	//-----------------------------------------------------------------------------------------
 	// DirectXThreadContext main thread option
 	//-----------------------------------------------------------------------------------------

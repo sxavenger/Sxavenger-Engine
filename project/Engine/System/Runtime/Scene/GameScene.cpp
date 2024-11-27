@@ -125,13 +125,6 @@ void GameScene::Init() {
 
 	model_ = std::make_unique<Model>();
 	model_->AsyncLoad("resources/model/kipfel", "kipfel.fbx", Model::GetDefaultAssimpOption() | aiProcess_Triangulate);
-
-	execution_ = std::make_unique<TaskThreadExecution>();
-	execution_->SetTask([](_MAYBE_UNUSED const Thread* const thread) {
-		std::this_thread::sleep_for(std::chrono::seconds(10));
-	});
-
-	SxavengerSystem::PushTask(execution_.get());
 }
 
 void GameScene::Update() {
@@ -173,7 +166,7 @@ void GameScene::Draw() {
 
 		if (!renderWindowSwitch_) {
 
-			state_->SetPipeline(SxavengerSystem::GetCommandList(), window->GetSize());
+			state_->ReloadAndSetPipeline(SxavengerSystem::GetCommandList(), window->GetSize());
 
 			DxObject::BindBufferDesc desc = {};
 			desc.SetAddress("gTransform", transform_.GetGPUVirtualAddress());
@@ -195,7 +188,7 @@ void GameScene::Draw() {
 
 	if (renderWindowSwitch_) {
 
-		state_->SetPipeline(SxavengerSystem::GetCommandList(), mainWindow_->GetSize());
+		state_->ReloadAndSetPipeline(SxavengerSystem::GetCommandList(), mainWindow_->GetSize());
 
 		DxObject::BindBufferDesc desc = {};
 		desc.SetAddress("gTransform", transform_.GetGPUVirtualAddress());

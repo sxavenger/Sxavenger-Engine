@@ -50,7 +50,6 @@ private:
 	bool renderWindowSwitch_ = true;
 
 	std::unique_ptr<Model> model_;
-	std::unique_ptr<TaskThreadExecution> execution_;
 
 	//=========================================================================================
 	// private methods

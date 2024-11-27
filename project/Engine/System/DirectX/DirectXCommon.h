@@ -43,6 +43,8 @@ public:
 
 	DxObject::DescriptorHeaps* GetDesriptorHeaps() const { return descriptorHeaps_.get(); }
 
+	DxObject::CompileBlobCollection* GetCompileBlobCollection() const { return compileBlobCollection_.get(); }
+
 private:
 
 	//=========================================================================================

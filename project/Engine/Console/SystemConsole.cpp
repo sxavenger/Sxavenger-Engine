@@ -38,6 +38,8 @@ void SystemConsole::DisplaySystemMenu() {
 	if (ImGui::BeginMenu("Process")) {
 		ImGui::Dummy({ 200.0f, 0.0f });
 
+		ImGui::SeparatorText("process frame");
+
 		if (updateLimit_ == std::nullopt) { //!< 更新処理の制限がない場合
 			if (ImGui::Button("frame stop")) {
 				updateLimit_ = 0; //!< 制限の代入
@@ -86,6 +88,15 @@ void SystemConsole::DisplaySystemMenu() {
 		ImGui::EndMenu();
 	}
 
+	if (ImGui::BeginMenu("thread")) {
+		ImGui::Dummy({ 200.0f, 0.0f });
+
+		auto threadCollection = SxavengerSystem::GetThreadCollection();
+		threadCollection->SystemDebugGui();
+
+		ImGui::EndMenu();
+	}
+
 	if (ImGui::BeginMenu("DescriptorHeaps")) {
 		ImGui::Dummy({ 200.0f, 0.0f });
 
@@ -95,10 +106,12 @@ void SystemConsole::DisplaySystemMenu() {
 		ImGui::EndMenu();
 	}
 
-	if (ImGui::BeginMenu("thread")) {
 
-		auto threadCollection = SxavengerSystem::GetThreadCollection();
-		threadCollection->SystemDebugGui();
+	if (ImGui::BeginMenu("CompileBlobColleciton")) {
+		ImGui::Dummy({ 200.0f, 0.0f });
+
+		auto compileBlobCollection = SxavengerSystem::GetDxCompileBlobCollection();
+		compileBlobCollection->SystemDebugGui();
 
 		ImGui::EndMenu();
 	}
