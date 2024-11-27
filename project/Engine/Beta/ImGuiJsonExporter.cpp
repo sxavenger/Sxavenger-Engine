@@ -46,36 +46,6 @@ void ImGuiJsonExporter::Clear() {
 	stash_.clear();
 }
 
-void ImGuiJsonExporter::SetToStash(const char* label, float* value, int32_t components) {
-
-	auto& element = stash_[label];
-
-	if (stash_[label].empty()) {
-		element = Json::array();
-		element.get_ref<Json::array_t&>().resize(components);
-	}
-
-	Assert(element.is_array(), "element is not json::array. label: " + std::string(label));
-
-	for (int32_t i = 0; i < components; ++i) {
-		element.at(i) = value[i];
-	}
-}
-
-void ImGuiJsonExporter::GetFromStash(const char* label, float* out, int32_t components) {
-	if (!stash_.contains(label)) {
-		return;
-	}
-
-	auto& element = stash_[label];
-
-	Assert(element.is_array() && element.size() >= components, "element not the same type. label: " + std::string(label));
-
-	for (int32_t i = 0; i < components; ++i) {
-		out[i] = element.at(i);
-	}
-}
-
 bool ImGuiJsonExporter::DragFloatN(const char* label, float* value, int32_t components, float speed, float min, float max, const char* format, ImGuiSliderFlags flags) {
 	GetFromStash(label, value, components);
 
@@ -101,7 +71,7 @@ bool ImGuiJsonExporter::DragFloat4(const char* label, float* value, float speed,
 	return DragFloatN(label, value, 4, speed, min, max, format, flags);
 }
 
-bool ImGuiJsonExporter::SliderFloatN(const char* label, float* value, int components, float min, float max, const char* format, ImGuiSliderFlags flags) {
+bool ImGuiJsonExporter::SliderFloatN(const char* label, float* value, int32_t components, float min, float max, const char* format, ImGuiSliderFlags flags) {
 	GetFromStash(label, value, components);
 
 	bool result = ImGui::SliderScalarN(label, ImGuiDataType_Float, value, components, &min, &max, format, flags);
@@ -124,4 +94,104 @@ bool ImGuiJsonExporter::SliderFloat3(const char* label, float* value, float min,
 
 bool ImGuiJsonExporter::SliderFloat4(const char* label, float* value, float min, float max, const char* format, ImGuiSliderFlags flags) {
 	return SliderFloatN(label, value, 4, min, max, format, flags);
+}
+
+bool ImGuiJsonExporter::DragIntN(const char* label, int32_t* value, int32_t components, float speed, int32_t min, int32_t max, const char* format, ImGuiSliderFlags flags) {
+	GetFromStash(label, value, components);
+
+	bool result = ImGui::DragScalarN(label, ImGuiDataType_S32, value, components, speed, &min, &max, format, flags);
+	SetToStash(label, value, components);
+
+	return result;
+}
+
+bool ImGuiJsonExporter::DragInt(const char* label, int32_t* value, float speed, int32_t min, int32_t max, const char* format, ImGuiSliderFlags flags) {
+	return DragIntN(label, value, 1, speed, min, max, format, flags);
+}
+
+bool ImGuiJsonExporter::DragInt2(const char* label, int32_t* value, float speed, int32_t min, int32_t max, const char* format, ImGuiSliderFlags flags) {
+	return DragIntN(label, value, 2, speed, min, max, format, flags);
+}
+
+bool ImGuiJsonExporter::DragInt3(const char* label, int32_t* value, float speed, int32_t min, int32_t max, const char* format, ImGuiSliderFlags flags) {
+	return DragIntN(label, value, 3, speed, min, max, format, flags);
+}
+
+bool ImGuiJsonExporter::DragInt4(const char* label, int32_t* value, float speed, int32_t min, int32_t max, const char* format, ImGuiSliderFlags flags) {
+	return DragIntN(label, value, 4, speed, min, max, format, flags);
+}
+
+bool ImGuiJsonExporter::SliderIntN(const char* label, int32_t* value, int32_t components, int32_t min, int32_t max, const char* format, ImGuiSliderFlags flags) {
+	GetFromStash(label, value, components);
+
+	bool result = ImGui::SliderScalarN(label, ImGuiDataType_S32, value, components, &min, &max, format, flags);
+	SetToStash(label, value, components);
+
+	return result;
+}
+
+bool ImGuiJsonExporter::SliderInt(const char* label, int32_t* value, int32_t min, int32_t max, const char* format, ImGuiSliderFlags flags) {
+	return SliderIntN(label, value, 1, min, max, format, flags);
+}
+
+bool ImGuiJsonExporter::SliderInt2(const char* label, int32_t* value, int32_t min, int32_t max, const char* format, ImGuiSliderFlags flags) {
+	return SliderIntN(label, value, 2, min, max, format, flags);
+}
+
+bool ImGuiJsonExporter::SliderInt3(const char* label, int32_t* value, int32_t min, int32_t max, const char* format, ImGuiSliderFlags flags) {
+	return SliderIntN(label, value, 3, min, max, format, flags);
+}
+
+bool ImGuiJsonExporter::SliderInt4(const char* label, int32_t* value, int32_t min, int32_t max, const char* format, ImGuiSliderFlags flags) {
+	return SliderIntN(label, value, 4, min, max, format, flags);
+}
+
+bool ImGuiJsonExporter::DragUintN(const char* label, uint32_t* value, int32_t components, float speed, uint32_t min, uint32_t max, const char* format, ImGuiSliderFlags flags) {
+	GetFromStash(label, value, components);
+
+	bool result = ImGui::DragScalarN(label, ImGuiDataType_U32, value, components, speed, &min, &max, format, flags);
+	SetToStash(label, value, components);
+
+	return result;
+}
+
+bool ImGuiJsonExporter::DragUint(const char* label, uint32_t* value, float speed, uint32_t min, uint32_t max, const char* format, ImGuiSliderFlags flags) {
+	return DragUintN(label, value, 1, speed, min, max, format, flags);
+}
+
+bool ImGuiJsonExporter::DragUint2(const char* label, uint32_t* value, float speed, uint32_t min, uint32_t max, const char* format, ImGuiSliderFlags flags) {
+	return DragUintN(label, value, 2, speed, min, max, format, flags);
+}
+
+bool ImGuiJsonExporter::DragUint3(const char* label, uint32_t* value, float speed, uint32_t min, uint32_t max, const char* format, ImGuiSliderFlags flags) {
+	return DragUintN(label, value, 3, speed, min, max, format, flags);
+}
+
+bool ImGuiJsonExporter::DragUint4(const char* label, uint32_t* value, float speed, uint32_t min, uint32_t max, const char* format, ImGuiSliderFlags flags) {
+	return DragUintN(label, value, 4, speed, min, max, format, flags);
+}
+
+bool ImGuiJsonExporter::SliderUintN(const char* label, uint32_t* value, int32_t components, uint32_t min, uint32_t max, const char* format, ImGuiSliderFlags flags) {
+	GetFromStash(label, value, components);
+
+	bool result = ImGui::SliderScalarN(label, ImGuiDataType_U32, value, components, &min, &max, format, flags);
+	SetToStash(label, value, components);
+
+	return result;
+}
+
+bool ImGuiJsonExporter::SliderUint(const char* label, uint32_t* value, uint32_t min, uint32_t max, const char* format, ImGuiSliderFlags flags) {
+	return SliderUintN(label, value, 1, min, max, format, flags);
+}
+
+bool ImGuiJsonExporter::SliderUint2(const char* label, uint32_t* value, uint32_t min, uint32_t max, const char* format, ImGuiSliderFlags flags) {
+	return SliderUintN(label, value, 2, min, max, format, flags);
+}
+
+bool ImGuiJsonExporter::SliderUint3(const char* label, uint32_t* value, uint32_t min, uint32_t max, const char* format, ImGuiSliderFlags flags) {
+	return SliderUintN(label, value, 3, min, max, format, flags);
+}
+
+bool ImGuiJsonExporter::SliderUint4(const char* label, uint32_t* value, uint32_t min, uint32_t max, const char* format, ImGuiSliderFlags flags) {
+	return SliderUintN(label, value, 4, min, max, format, flags);
 }

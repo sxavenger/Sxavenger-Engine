@@ -47,5 +47,7 @@ private:
 
 	std::unique_ptr<Plane> plane_;
 
+	Vector2<uint32_t> test_;
+
 
 };

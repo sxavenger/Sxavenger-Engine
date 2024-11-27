@@ -40,6 +40,12 @@ void Teapot::SetAttributeImGui() {
 	ImGui::DragFloat2("pos", &pos_.x, 0.01f);
 	ImGui::DragFloat2("size", &size_.x, 0.01f);
 	ImGui::DragFloat("rotate", &rotate_, 0.01f);
+
+	exporter_.SliderUint2("test", &test_.x, 1, 10);
+
+	if (ImGui::Button("o")) {
+		exporter_.Output();
+	}
 }
 
 void Teapot::DrawSystematic(_MAYBE_UNUSED const Camera3D* camera) {
