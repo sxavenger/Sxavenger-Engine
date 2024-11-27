@@ -59,7 +59,7 @@ void DescriptorPool::DeleteDescriptor(Descriptor& descriptor) {
 	// TODO: multi thread 用にmutexを用意
 	
 	//!< 空き配列に挿入
-	descriptorDeletedIndices_.push_back(descriptor.index_);
+	descriptorDeletedIndices_.emplace(descriptor.index_);
 	descriptor.Reset();
 }
 
@@ -84,7 +84,7 @@ uint32_t DescriptorPool::GetCurrentDescriptorIndex() {
 	if (!descriptorDeletedIndices_.empty()) { //!< 空きindexがある場合
 		// 先頭の空きindexの取得
 		result = descriptorDeletedIndices_.front(); 
-		descriptorDeletedIndices_.pop_front();
+		descriptorDeletedIndices_.pop();
 
 		return result;
 	}

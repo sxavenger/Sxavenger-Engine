@@ -12,7 +12,7 @@
 #include <Engine/System/UI/ISystemDebugGui.h>
 
 // c++
-#include <deque>
+#include <queue>
 #include <memory>
 #include <array>
 
@@ -79,7 +79,7 @@ private:
 	uint32_t descriptorMaxCount_;   //!< descriptorの最大数
 	uint32_t descriptorIndexCount_ = 0;
 	
-	std::deque<uint32_t> descriptorDeletedIndices_; //!< 動的に消されたDescriptorのIndexの格納先
+	std::queue<uint32_t> descriptorDeletedIndices_; //!< 動的に消されたDescriptorのIndexの格納先
 
 	//* config *//
 

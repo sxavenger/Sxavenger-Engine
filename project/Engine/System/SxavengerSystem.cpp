@@ -40,14 +40,6 @@ void SxavengerSystemEngine::Init() {
 }
 
 void SxavengerSystemEngine::Term() {
-	sImGuiController.reset();
-	sInput.reset();
-	sWindowCollection.reset();
-
-	sThreadCollection.reset();
-	sMainThreadContext.reset();
-	sDirectXCommon.reset();
-	sWinApp.reset();
 }
 
 _DXOBJECT Descriptor SxavengerSystemEngine::GetDescriptor(_DXOBJECT DescriptorType type) {
