@@ -14,7 +14,7 @@ CompileBlobCollection* ComputePipelineState::collection_ = nullptr;
 void ComputePipelineState::Term() {
 }
 
-void ComputePipelineState::CreateBlob(const std::wstring& filename) {
+void ComputePipelineState::CreateBlob(const std::filesystem::path& filename) {
 	Assert(collection_ != nullptr, "collection is not set.");
 	blob_.blob     = collection_->TryCreateBlob(filename, CompileProfile::cs);
 	blob_.filename = filename;

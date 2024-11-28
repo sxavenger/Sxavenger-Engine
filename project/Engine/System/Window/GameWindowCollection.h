@@ -6,8 +6,12 @@
 //* window
 #include "GameWindow.h"
 
+//* engine
+#include <Engine/System/UI/ISystemDebugGui.h>
+
 //* lib
 #include <Lib/Geometry/Vector4.h>
+#include <Lib/Sxl/OptimizedMap.h>
 
 //* c++
 #include <memory>
@@ -16,7 +20,8 @@
 ////////////////////////////////////////////////////////////////////////////////////////////
 // GameWindowCollection class
 ////////////////////////////////////////////////////////////////////////////////////////////
-class GameWindowCollection {
+class GameWindowCollection
+	: public ISystemDebugGui {
 public:
 
 	//=========================================================================================
@@ -52,6 +57,8 @@ public:
 
 	const GameWindow* GetForcusWindow() const;
 
+	void SystemDebugGui() override;
+
 private:
 
 	//=========================================================================================
@@ -61,7 +68,7 @@ private:
 	//* windows *//
 
 	std::unique_ptr<GameWindow>                              mainWindow_;
-	std::unordered_map<LPCWSTR, std::shared_ptr<GameWindow>> subWindows_;
+	Sxl::OptimizerdMap<LPCWSTR, std::shared_ptr<GameWindow>> subWindows_;
 
 	// CONSIDER: dequeシステムで一番先頭がmain, その他がsubとしたい
 	//+ debug, releaseでのmainの設定が簡単

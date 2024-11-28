@@ -18,6 +18,9 @@
 #include <Lib/Geometry/Vector2.h>
 #include <Lib/Geometry/Vector4.h>
 
+//* c++
+#include <filesystem>
+
 ////////////////////////////////////////////////////////////////////////////////////////////
 // static variables
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -83,7 +86,7 @@ public:
 	Texture()  = default;
 	~Texture() { Term(); }
 
-	void Load(const std::string& filepath, const DirectXThreadContext* context);
+	void Load(const std::filesystem::path& filepath, const DirectXThreadContext* context);
 
 	void Term();
 
@@ -101,7 +104,7 @@ private:
 	// private methods
 	//=========================================================================================
 
-	static DirectX::ScratchImage LoadTexture(const std::string& filepath);
+	static DirectX::ScratchImage LoadTexture(const std::filesystem::path& filepath);
 
 	static ComPtr<ID3D12Resource> CreateTextureResource(ID3D12Device* device, const DirectX::TexMetadata& metadata);
 
@@ -131,11 +134,11 @@ public:
 
 	//* render option *//
 
-	void TransitionBeginRender(const DirectXThreadContext* context);
+	void TransitionBeginRenderTarget(const DirectXThreadContext* context);
 
-	void TransitionEndRender(const DirectXThreadContext* context);
+	void TransitionEndRenderTarget(const DirectXThreadContext* context);
 
-	void ClearRender(const DirectXThreadContext* context);
+	void ClearRenderTarget(const DirectXThreadContext* context);
 
 	//* getter *//
 

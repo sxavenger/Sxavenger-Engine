@@ -108,7 +108,7 @@ BlendState* GraphicsPipelineState::blendState_            = nullptr;
 void GraphicsPipelineState::Term() {
 }
 
-void GraphicsPipelineState::CreateBlob(const std::wstring& filename, GraphicsShaderType type) {
+void GraphicsPipelineState::CreateBlob(const std::filesystem::path& filename, GraphicsShaderType type) {
 	Assert(collection_ != nullptr, "collection is not set.");
 	blobs_[static_cast<uint32_t>(type)].blob     = collection_->TryCreateBlob(filename, ToProfile(type));
 	blobs_[static_cast<uint32_t>(type)].filename = filename;

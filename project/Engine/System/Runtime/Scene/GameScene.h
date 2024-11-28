@@ -13,7 +13,10 @@
 #include "Engine/Content/Texture/Texture.h"
 #include "Engine/Content/Model/Model.h"
 #include "Engine/Module/Transform/TransformComponent.h"
+
 #include "Lib/Geometry/Vector4.h"
+
+#include "Lib/Sxl/LowerPathMap.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // GameScene class

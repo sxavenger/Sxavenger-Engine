@@ -124,7 +124,7 @@ void GameScene::Init() {
 	texture_->Create({ 1, 1 });
 
 	model_ = std::make_unique<Model>();
-	model_->AsyncLoad("resources/model/kipfel", "kipfel.fbx", Model::GetDefaultAssimpOption() | aiProcess_Triangulate);
+	//model_->AsyncLoad("resources/model/kipfel", "kipfel.fbx", Model::GetDefaultAssimpOption() | aiProcess_Triangulate);
 }
 
 void GameScene::Update() {

@@ -36,7 +36,6 @@
     <ClCompile Include="Engine\System\WinApp\WinApp.cpp" />
     <ClCompile Include="Engine\System\Runtime\Scene\GameScene.cpp" />
     <ClCompile Include="Engine\System\Runtime\Input\Input.cpp" />
-    <ClCompile Include="Lib\Sxl\LowerUnorderedMap.cpp" />
     <ClCompile Include="Engine\System\DirectX\DxObject\DxDimensionBuffer.cpp" />
     <ClCompile Include="Engine\System\DirectX\DxObject\DxCompileBlobCollection.cpp" />
     <ClCompile Include="Engine\System\DirectX\DxObject\DxGraphicsPipelineState.cpp" />
@@ -62,6 +61,11 @@
     <ClCompile Include="Engine\Content\InputAssembler\InputMesh.cpp" />
     <ClCompile Include="Engine\Content\Model\Model.cpp" />
     <ClCompile Include="Engine\Module\Camera\Camera3d.cpp" />
+    <ClCompile Include="Lib\Sxl\OptimizedMap.cpp" />
+    <ClCompile Include="Lib\Sxl\LowerPathMap.cpp" />
+    <ClCompile Include="Lib\Sxl\LowerUnorderedMap.cpp" />
+    <ClCompile Include="Engine\Module\SxavengerGraphics\SystematicRenderFrame.cpp" />
+    <ClCompile Include="Engine\Content\Texture\MultiViewTexture.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\System\Window\Window.h" />
@@ -96,7 +100,6 @@
     <ClInclude Include="Engine\System\Runtime\Scene\GameScene.h" />
     <ClInclude Include="Engine\System\Runtime\Input\Input.h" />
     <ClInclude Include="Engine\System\Runtime\Input\InputId.h" />
-    <ClInclude Include="Lib\Sxl\LowerUnorderedMap.h" />
     <ClInclude Include="Engine\System\DirectX\DxObject\DxDimensionBuffer.h" />
     <ClInclude Include="Engine\System\DirectX\DxObject\DxCompileBlobCollection.h" />
     <ClInclude Include="Engine\System\DirectX\DxObject\DxGraphicsPipelineState.h" />
@@ -125,5 +128,11 @@
     <ClInclude Include="Engine\Content\InputAssembler\InputMesh.h" />
     <ClInclude Include="Engine\Content\Model\Model.h" />
     <ClInclude Include="Engine\Module\Camera\Camera3d.h" />
+    <ClInclude Include="Lib\Sxl\OptimizedMap.h" />
+    <ClInclude Include="Lib\Sxl\SxavengerLibrary.h" />
+    <ClInclude Include="Lib\Sxl\LowerPathMap.h" />
+    <ClInclude Include="Lib\Sxl\LowerUnorderedMap.h" />
+    <ClInclude Include="Engine\Module\SxavengerGraphics\SystematicRenderFrame.h" />
+    <ClInclude Include="Engine\Content\Texture\MultiViewTexture.h" />
   </ItemGroup>
 </Project>

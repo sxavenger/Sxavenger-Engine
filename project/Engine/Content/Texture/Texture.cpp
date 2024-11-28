@@ -20,7 +20,7 @@ void BaseTexture::Term() {
 // Texture class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-void Texture::Load(const std::string& filepath, const DirectXThreadContext* context) {
+void Texture::Load(const std::filesystem::path& filepath, const DirectXThreadContext* context) {
 
 	// device, commandListの取得
 	auto device      = SxavengerSystem::GetDxDevice()->GetDevice();
@@ -68,13 +68,13 @@ void Texture::Load(const std::string& filepath, const DirectXThreadContext* cont
 void Texture::Term() {
 }
 
-DirectX::ScratchImage Texture::LoadTexture(const std::string& filepath) {
+DirectX::ScratchImage Texture::LoadTexture(const std::filesystem::path& filepath) {
 	DirectX::ScratchImage image = {};
-	std::wstring filePathW = ToWString(filepath); //!< wstringに変換
+	std::wstring filePathW = filepath.wstring();
 
 	HRESULT hr;
 
-	if (filePathW.ends_with(L".dds")) { //!< .ddsでpathが終わっている場合
+	if (filepath.extension() == ".dds") { //!< .ddsでpathが終わっている場合
 		// DDSファイルとして読み込み
 		hr = DirectX::LoadFromDDSFile(
 			filePathW.c_str(),
@@ -92,7 +92,7 @@ DirectX::ScratchImage Texture::LoadTexture(const std::string& filepath) {
 		);
 	}
 
-	Assert(SUCCEEDED(hr), "Texture not found. filepath: " + filepath);
+	Assert(SUCCEEDED(hr), "Texture not found. filepath: " + filepath.string());
 
 	// MipMapsの生成
 	DirectX::ScratchImage mipImage = {};
@@ -258,7 +258,7 @@ void RenderTexture::Term() {
 	descriptorRTV_.Delete();
 }
 
-void RenderTexture::TransitionBeginRender(const DirectXThreadContext* context) {
+void RenderTexture::TransitionBeginRenderTarget(const DirectXThreadContext* context) {
 
 	auto commandList = context->GetCommandList();
 
@@ -271,7 +271,7 @@ void RenderTexture::TransitionBeginRender(const DirectXThreadContext* context) {
 	commandList->ResourceBarrier(1, &barrier);
 }
 
-void RenderTexture::TransitionEndRender(const DirectXThreadContext* context) {
+void RenderTexture::TransitionEndRenderTarget(const DirectXThreadContext* context) {
 	D3D12_RESOURCE_BARRIER barrier = {};
 	barrier.Type                   = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
 	barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
@@ -281,7 +281,7 @@ void RenderTexture::TransitionEndRender(const DirectXThreadContext* context) {
 	context->GetCommandList()->ResourceBarrier(1, &barrier);
 }
 
-void RenderTexture::ClearRender(const DirectXThreadContext* context) {
+void RenderTexture::ClearRenderTarget(const DirectXThreadContext* context) {
 	// 画面のクリア
 	context->GetCommandList()->ClearRenderTargetView(
 		descriptorRTV_.GetCPUHandle(),

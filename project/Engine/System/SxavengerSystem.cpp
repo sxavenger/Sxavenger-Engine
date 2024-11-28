@@ -116,6 +116,10 @@ const GameWindow* SxavengerSystemEngine::GetForcusWindow() {
 	return sWindowCollection->GetForcusWindow();
 }
 
+GameWindowCollection* SxavengerSystemEngine::GetGameWindowCollection() {
+	return sWindowCollection.get();
+}
+
 bool SxavengerSystemEngine::IsPressKey(KeyId id) {
 	return sInput->IsPressKey(id);
 }

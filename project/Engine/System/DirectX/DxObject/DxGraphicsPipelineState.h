@@ -20,6 +20,7 @@
 #include <array>
 #include <memory>
 #include <optional>
+#include <filesystem>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // DXOBJECT
@@ -112,7 +113,7 @@ public:
 
 	//* create methods *//
 
-	void CreateBlob(const std::wstring& filename, GraphicsShaderType type);
+	void CreateBlob(const std::filesystem::path& filename, GraphicsShaderType type);
 
 	void CreateRootSignature(Device* device, GraphicsRootSignatureDesc& desc);
 
@@ -144,7 +145,7 @@ protected:
 	////////////////////////////////////////////////////////////////////////////////////////////
 	struct GraphicsBlob {
 		std::optional<std::weak_ptr<ComPtr<IDxcBlob>>> blob;
-		std::wstring                                   filename;
+		std::filesystem::path                          filename;
 	};
 
 	//=========================================================================================

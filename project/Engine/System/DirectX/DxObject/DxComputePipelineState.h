@@ -11,6 +11,9 @@
 #include "DxRootSignatureDesc.h"
 #include "DxBindBuffer.h"
 
+//* c++
+#include <filesystem>
+
 ////////////////////////////////////////////////////////////////////////////////////////////
 // DXOBJECT
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -33,7 +36,7 @@ public:
 
 	//* create methods *//
 
-	void CreateBlob(const std::wstring& filename);
+	void CreateBlob(const std::filesystem::path& filename);
 
 	void CreatePipeline(Device* device, ComputeRootSignatureDesc& desc);
 
@@ -65,7 +68,7 @@ protected:
 	////////////////////////////////////////////////////////////////////////////////////////////
 	struct ComputeBlob {
 		std::optional<std::weak_ptr<ComPtr<IDxcBlob>>> blob;
-		std::wstring                                   filename;
+		std::filesystem::path                          filename;
 	};
 
 	//=========================================================================================

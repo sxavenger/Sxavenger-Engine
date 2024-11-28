@@ -36,7 +36,7 @@ void SystemConsole::Log(const std::string& log, const std::optional<Color4f>& co
 
 void SystemConsole::DisplaySystemMenu() {
 	if (ImGui::BeginMenu("Process")) {
-		ImGui::Dummy({ 200.0f, 0.0f });
+		MenuDummy();
 
 		ImGui::SeparatorText("process frame");
 
@@ -89,7 +89,7 @@ void SystemConsole::DisplaySystemMenu() {
 	}
 
 	if (ImGui::BeginMenu("thread")) {
-		ImGui::Dummy({ 200.0f, 0.0f });
+		MenuDummy();
 
 		auto threadCollection = SxavengerSystem::GetThreadCollection();
 		threadCollection->SystemDebugGui();
@@ -97,8 +97,17 @@ void SystemConsole::DisplaySystemMenu() {
 		ImGui::EndMenu();
 	}
 
+	if (ImGui::BeginMenu("window collection")) {
+		MenuDummy();
+
+		auto windowCollection = SxavengerSystem::GetGameWindowCollection();
+		windowCollection->SystemDebugGui();
+
+		ImGui::EndMenu();
+	}
+
 	if (ImGui::BeginMenu("DescriptorHeaps")) {
-		ImGui::Dummy({ 200.0f, 0.0f });
+		MenuDummy();
 
 		auto desciptorHeaps = SxavengerSystem::GetDxDescriptorHeaps();
 		desciptorHeaps->SystemDebugGui();
@@ -108,7 +117,7 @@ void SystemConsole::DisplaySystemMenu() {
 
 
 	if (ImGui::BeginMenu("CompileBlobColleciton")) {
-		ImGui::Dummy({ 200.0f, 0.0f });
+		MenuDummy();
 
 		auto compileBlobCollection = SxavengerSystem::GetDxCompileBlobCollection();
 		compileBlobCollection->SystemDebugGui();
@@ -151,5 +160,10 @@ void SystemConsole::DisplayLog() {
 
 	ImGui::SliderInt("limit log", (int*)&limitLog_, 0, 128);
 	ImGui::End();
+}
+
+void SystemConsole::MenuDummy() {
+	static const ImVec2 size = { 240.0f, 0.0f };
+	ImGui::Dummy(size);
 }
 

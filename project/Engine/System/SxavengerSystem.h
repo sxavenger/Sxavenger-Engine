@@ -78,6 +78,8 @@ public:
 
 	static const GameWindow* GetForcusWindow();
 
+	static GameWindowCollection* GetGameWindowCollection();
+
 	//-----------------------------------------------------------------------------------------
 	// Input option
 	//-----------------------------------------------------------------------------------------

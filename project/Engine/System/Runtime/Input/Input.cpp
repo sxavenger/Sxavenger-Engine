@@ -47,12 +47,11 @@ void KeyboardInput::Update() {
 		if (hwnd != currentHwnd_) {
 			//* 現在のhwndと違う場合, 再設定
 			// 排他制御レベルのセット
-			auto hr = keyboardDevice_->SetCooperativeLevel(
+			keyboardDevice_->SetCooperativeLevel(
 				hwnd,
 				flags_
 			);
-			Assert(SUCCEEDED(hr));
-
+			//Assert(SUCCEEDED(hr)); // HACK:
 
 			currentHwnd_ = hwnd;
 		}

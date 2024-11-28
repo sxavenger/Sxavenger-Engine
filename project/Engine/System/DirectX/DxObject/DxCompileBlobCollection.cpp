@@ -21,7 +21,7 @@ void CompileBlobCollection::Init(ShaderCompiler* compiler) {
 void CompileBlobCollection::Term() {
 }
 
-std::weak_ptr<ComPtr<IDxcBlob>> CompileBlobCollection::TryCreateBlob(const std::wstring& filename, CompileProfile profile) {
+std::weak_ptr<ComPtr<IDxcBlob>> CompileBlobCollection::TryCreateBlob(const std::filesystem::path& filename, CompileProfile profile) {
 
 	if (!blobs_.Contains(filename)) {
 		std::shared_ptr<ComPtr<IDxcBlob>> blob
@@ -33,7 +33,7 @@ std::weak_ptr<ComPtr<IDxcBlob>> CompileBlobCollection::TryCreateBlob(const std::
 	return blobs_.At(filename).blob;
 }
 
-void CompileBlobCollection::Reload(const std::wstring& filename) {
+void CompileBlobCollection::Reload(const std::filesystem::path& filename) {
 	if (!blobs_.Contains(filename)) {
 		return; //!< filenameのblobが見つからなかったため
 	}
@@ -41,8 +41,8 @@ void CompileBlobCollection::Reload(const std::wstring& filename) {
 	blobs_[filename].blob = std::make_shared<ComPtr<IDxcBlob>>(compiler_->Compile(filename, blobs_.At(filename).profile, L"main"));
 }
 
-std::weak_ptr<ComPtr<IDxcBlob>> CompileBlobCollection::GetBlob(const std::wstring& filename) {
-	AssertW(blobs_.Contains(filename), L"Compile Blob not found. filename: " + filename);
+std::weak_ptr<ComPtr<IDxcBlob>> CompileBlobCollection::GetBlob(const std::filesystem::path& filename) {
+	Assert(blobs_.Contains(filename), "Compile Blob not found. filename: " + filename.string());
 	return blobs_.At(filename).blob;
 }
 

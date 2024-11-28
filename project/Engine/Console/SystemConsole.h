@@ -81,4 +81,8 @@ protected:
 
 	void DisplayLog();
 
+	//* assist methods *//
+
+	static void MenuDummy();
+
 };

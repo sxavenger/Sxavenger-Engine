@@ -11,24 +11,23 @@
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 void TextureCollection::Init() {
-	TryLoadTexture("resources/white1x1.png", SxavengerSystem::GetMainThreadContext()); //!< default texture の読み込み.
 }
 
 void TextureCollection::Term() {
 }
 
-std::shared_ptr<BaseTexture> TextureCollection::TryLoadTextureSafely(const std::string& filename, const DirectXThreadContext* context) {
-	if (!textures_.Contains(filename)) {
+std::shared_ptr<BaseTexture> TextureCollection::TryLoadTextureSafely(const std::filesystem::path& filename, const DirectXThreadContext* context) {
+	if (!textures_.Contains(filename.string())) {
 		// 新しくtextureを生成
 		std::shared_ptr<Texture> texture = std::make_shared<Texture>();
 		texture->Load(filename, context);
-		textures_.Emplace(filename, std::move(texture));
+		textures_.Emplace(filename.string(), std::move(texture));
 	}
 
-	return textures_.At(filename);
+	return textures_.At(filename.string());
 }
 
-std::shared_ptr<Texture> TextureCollection::TryLoadTexture(const std::string& filename, const DirectXThreadContext* context) {
+std::shared_ptr<Texture> TextureCollection::TryLoadTexture(const std::filesystem::path& filename, const DirectXThreadContext* context) {
 	return GetTexture<Texture>(TryLoadTextureSafely(filename, context));
 }
 

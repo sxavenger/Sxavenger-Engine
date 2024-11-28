@@ -11,11 +11,12 @@
 #include <Engine/System/UI/ISystemDebugGui.h>
 
 //* lib
-#include <Lib/Sxl/LowerUnorderedMap.h>
+#include <Lib/Sxl/LowerPathMap.h>
 
 //* c++
 #include <memory>
 #include <string>
+#include <filesystem>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // DXOBJECT
@@ -40,11 +41,11 @@ public:
 
 	void Term();
 
-	std::weak_ptr<ComPtr<IDxcBlob>> TryCreateBlob(const std::wstring& filename, CompileProfile profile);
+	std::weak_ptr<ComPtr<IDxcBlob>> TryCreateBlob(const std::filesystem::path& filename, CompileProfile profile);
 
-	void Reload(const std::wstring& filename);
+	void Reload(const std::filesystem::path& filename);
 
-	std::weak_ptr<ComPtr<IDxcBlob>> GetBlob(const std::wstring& filename);
+	std::weak_ptr<ComPtr<IDxcBlob>> GetBlob(const std::filesystem::path& filename);
 
 	//* setter *//
 
@@ -76,7 +77,7 @@ private:
 
 	//* collection *//
 
-	Sxl::LowerUnorderedMapW<CompileBlob> blobs_;
+	Sxl::LowerPathMap<CompileBlob> blobs_;
 	//!< main, profile統一
 
 };

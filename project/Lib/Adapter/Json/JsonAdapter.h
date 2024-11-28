@@ -7,7 +7,7 @@
 #include <json.hpp>
 
 //* c++
-#include <string>
+#include <filesystem>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // using
@@ -25,22 +25,15 @@ public:
 	//=========================================================================================
 
 	//! @brief Jsonファイル読み込み
-	static json LoadFromJson(const std::string& filename);
+	static json LoadFromJson(const std::filesystem::path& filename);
 
 	//! @brief Jsonファイル読み込み
 	//! @retval true  成功
 	//! @retval false 失敗
-	static bool TryLoadFromJson(const std::string& filename, json& out);
+	static bool TryLoadFromJson(const std::filesystem::path& filename, json& out);
 
 	//! @brief Jsonファイルに書き込み
-	static void WriteToJson(const std::string& filename, const json& data);
+	static void WriteToJson(const std::filesystem::path& filename, const json& data);
 
 private:
-
-	//=========================================================================================
-	// private variables
-	//=========================================================================================
-
-	static const std::string kDirectory_;
-
 };

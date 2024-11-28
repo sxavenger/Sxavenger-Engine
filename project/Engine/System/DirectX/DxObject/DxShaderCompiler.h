@@ -12,6 +12,7 @@
 
 //* c++
 #include <array>
+#include <filesystem>
 
 //-----------------------------------------------------------------------------------------
 // comment
@@ -43,7 +44,7 @@ public:
 	//* compiler opiton *//
 
 	ComPtr<IDxcBlob> Compile(
-		const std::wstring& filepath,
+		const std::filesystem::path& filename,
 		CompileProfile profile,
 		const std::wstring& entryPoint = L""
 	);
@@ -63,8 +64,6 @@ private:
 	ComPtr<IDxcIncludeHandler> includeHandler_;
 
 	static const std::array<LPCWSTR, static_cast<uint32_t>(CompileProfile::lib) + 1> profiles_;
-
-	static const std::wstring kDirectory_;
 
 };
 
