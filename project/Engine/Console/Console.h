@@ -4,24 +4,27 @@
 // include
 //-----------------------------------------------------------------------------------------
 //* console
-#include "SystemConsole.h"
+#include "SystemConsole/SystemConsole.h"
+#include "RenderConsole/RenderConsole.h"
 
 //* engine
 #include <Engine/System/UI/ImGuiController.h>
 #include <Engine/System/Runtime/Performance/Performance.h>
 #include <Engine/System/Runtime/Performance/DeltaTimePoint.h>
+#include <Engine/System/Window/GameWindow.h>
 
 //* external
 #include <imgui.h>
 
 //* c++
 #include <string>
+#include <memory>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Console class
 ////////////////////////////////////////////////////////////////////////////////////////////
 class Console
-	: public SystemConsole {
+	: public SystemConsole, public RenderConsole {
 public:
 
 	//=========================================================================================
@@ -36,6 +39,8 @@ public:
 
 	void Draw();
 
+	void DrawConsole();
+
 	//* console docking *//
 
 	void DockingConsole() const;
@@ -43,6 +48,10 @@ public:
 	//* getter *//
 
 	ImGuiWindowFlags GetWindowFlag() const { return windowFlag_; } //!< HACK:
+
+	//* setter *//
+
+	void SetWindow(const std::weak_ptr<GameWindow>& window);
 
 	//* singleton *//
 
@@ -56,6 +65,10 @@ private:
 	// private variables
 	//=========================================================================================
 
+	//* external *//
+
+	std::weak_ptr<GameWindow> window_;
+
 	//* config *//
 	//* console
 	bool isDisplayConsole_ = true;
@@ -67,7 +80,6 @@ private:
 	//* parameter *//
 
 	static const std::string kConsoleName_;
-	static const std::string kImGuiLayoutFilepath_;
 
 	//* runtime *//
 
@@ -84,6 +96,15 @@ private:
 	//* window *//
 
 	void DisplayPerformace();
+
+	//* sub methods *//
+
+	bool IsForcusConsoleWindow();
+
+	void BeginDisabled(bool isDisable = true);
+	void EndDisabled();
+
+	static void MenuDummy();
 
 };
 

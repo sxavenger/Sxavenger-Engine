@@ -4,7 +4,7 @@
 // include
 //-----------------------------------------------------------------------------------------
 //* console
-#include "Console.h"
+#include "../Console.h"
 
 //* engine
 #include <Engine/System/SxavengerSystem.h>
@@ -13,7 +13,8 @@
 // SystemConsole class
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-void SystemConsole::Init() {
+void SystemConsole::Init(Console* console) {
+	console_ = console;
 }
 
 void SystemConsole::Term() {
@@ -34,7 +35,7 @@ void SystemConsole::Log(const std::string& log, const std::optional<Color4f>& co
 	}
 }
 
-void SystemConsole::DisplaySystemMenu() {
+void SystemConsole::ShowSystemMenu() {
 	if (ImGui::BeginMenu("Process")) {
 		MenuDummy();
 
@@ -127,8 +128,8 @@ void SystemConsole::DisplaySystemMenu() {
 }
 
 void SystemConsole::DisplayLog() {
-	sConsole->DockingConsole();
-	ImGui::Begin("Log ## System Console", nullptr, sConsole->GetWindowFlag());
+	console_->DockingConsole();
+	ImGui::Begin("Log ## System Console", nullptr, console_->GetWindowFlag());
 
 	ImVec2 cntRegionMax = ImGui::GetWindowContentRegionMax();
 	ImVec2 cntRegionMin = ImGui::GetWindowContentRegionMin();

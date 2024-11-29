@@ -70,7 +70,7 @@ void Texture::Term() {
 
 DirectX::ScratchImage Texture::LoadTexture(const std::filesystem::path& filepath) {
 	DirectX::ScratchImage image = {};
-	std::wstring filePathW = filepath.wstring();
+	std::wstring filePathW = filepath.generic_wstring();
 
 	HRESULT hr;
 
@@ -92,7 +92,7 @@ DirectX::ScratchImage Texture::LoadTexture(const std::filesystem::path& filepath
 		);
 	}
 
-	Assert(SUCCEEDED(hr), "Texture not found. filepath: " + filepath.string());
+	Assert(SUCCEEDED(hr), "Texture not found. filepath: " + filepath.generic_string());
 
 	// MipMapsの生成
 	DirectX::ScratchImage mipImage = {};

@@ -6,19 +6,21 @@
 //=========================================================================================
 // buffer
 //=========================================================================================
-
-Texture2D<float4> gTexture : register(t0);
-SamplerState gSampler      : register(s0);
+ConstantBuffer<TransformationMatrix> gTransform : register(b0);
+ConstantBuffer<Camera3d> gCamera : register(b1);
+static const float4x4 kViewProj = mul(gCamera.viewMatrix, gCamera.projMatrix);
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // main
 ////////////////////////////////////////////////////////////////////////////////////////////
-PSOutput main(VSOutput input) {
+PSInput main(Vertex input) {
 
-	PSOutput output = (PSOutput)0;
+	PSInput output = (PSInput)0;
 
-	output.color = gTexture.Sample(gSampler, float2(0.0f, 0.0f));
+	output.position = mul(mul(input.position, gTransform.mat), kViewProj);
+	output.texcoord = input.texcoord;
+	output.normal   = normalize(mul(input.normal, (float3x3)gTransform.matInverseTransopse));
 
 	return output;
-	
+
 }

@@ -31,7 +31,7 @@ public:
 	GameWindowCollection()  = default;
 	~GameWindowCollection() { Term(); }
 
-	GameWindow* CreateMainWindow(
+	const std::weak_ptr<GameWindow> CreateMainWindow(
 		const Vector2ui& clientSize, const LPCWSTR& name, const Color4f& clearColor = kDefaultGameWindowColor
 	);
 
@@ -50,7 +50,7 @@ public:
 
 	//* getter *//
 
-	GameWindow* GetMainWindow() const { return mainWindow_.get(); }
+	const std::weak_ptr<GameWindow> GetMainWindow() const;
 
 	const std::weak_ptr<GameWindow> TryGetSubWindow(const LPCWSTR& name) const noexcept;
 	const std::weak_ptr<GameWindow> GetSubWindow(const LPCWSTR& name) const;
@@ -67,13 +67,8 @@ private:
 
 	//* windows *//
 
-	std::unique_ptr<GameWindow>                              mainWindow_;
+	std::shared_ptr<GameWindow>                              mainWindow_;
 	Sxl::OptimizerdMap<LPCWSTR, std::shared_ptr<GameWindow>> subWindows_;
-
-	// CONSIDER: dequeシステムで一番先頭がmain, その他がsubとしたい
-	//+ debug, releaseでのmainの設定が簡単
-	//- windowの検索がo(n)になる
-	//- 型をそろえる必要がある (今後の拡張性を含めあり)
 
 	//=========================================================================================
 	// private methods

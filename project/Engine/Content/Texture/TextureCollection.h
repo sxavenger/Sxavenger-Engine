@@ -51,7 +51,9 @@ public:
 	//* texture get methods *//
 
 	template <TextureConcept T = BaseTexture>
-	std::shared_ptr<T> GetTexture(const std::string& key);
+	std::shared_ptr<T> GetTexture(const std::string& key) const;
+
+	const D3D12_GPU_DESCRIPTOR_HANDLE& GetGPUHandleSRV(const std::string& key) const;
 
 	//* texture release *//
 
@@ -71,7 +73,7 @@ private:
 	//=========================================================================================
 
 	template <TextureConcept T>
-	std::shared_ptr<T> GetTexture(const std::shared_ptr<BaseTexture>& base);
+	std::shared_ptr<T> GetTexture(const std::shared_ptr<BaseTexture>& base) const;
 	
 };
 
@@ -80,13 +82,13 @@ private:
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 template<TextureConcept T>
-inline std::shared_ptr<T> TextureCollection::GetTexture(const std::string& key) {
+inline std::shared_ptr<T> TextureCollection::GetTexture(const std::string& key) const {
 	Assert(textures_.Contains(key), "Texture is not found.");
 	return GetTexture<T>(textures_.At(key));
 }
 
 template <TextureConcept T>
-inline std::shared_ptr<T> TextureCollection::GetTexture(const std::shared_ptr<BaseTexture>& base) {
+inline std::shared_ptr<T> TextureCollection::GetTexture(const std::shared_ptr<BaseTexture>& base) const {
 	std::shared_ptr<T> texture = std::dynamic_pointer_cast<T>(base);
 	Assert(texture != nullptr, "Texture don't match concept.");
 	return texture;

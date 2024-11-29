@@ -3,25 +3,22 @@
 //-----------------------------------------------------------------------------------------
 #include "Simple.hlsli"
 
-#define _DEFINE_CONSTANT_BUFFER
+//=========================================================================================
+// buffer
+//=========================================================================================
 
-#ifdef _DEFINE_CONSTANT_BUFFER
-ConstantBuffer<TransformationMatrix> gTransform : register(b0);
-#endif
+Texture2D<float4> gDiffuse : register(t0);
+SamplerState gSampler      : register(s0);
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // main
 ////////////////////////////////////////////////////////////////////////////////////////////
-VSOutput main(VSInput input) {
+PSOutput main(PSInput input) {
 
-	VSOutput output = (VSOutput)0;
+	PSOutput output = (PSOutput)0;
 
-	output.position = input.position;
-	
-#ifdef _DEFINE_CONSTANT_BUFFER
-	output.position = mul(input.position, gTransform.mat);
-#endif
+	output.color = gDiffuse.Sample(gSampler, input.texcoord);
 
 	return output;
-
+	
 }

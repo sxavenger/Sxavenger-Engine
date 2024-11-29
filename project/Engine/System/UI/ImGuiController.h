@@ -16,6 +16,9 @@
 //* lib
 #include <Lib/Geometry/Vector4.h>
 
+//* c++
+#include <filesystem>
+
 ////////////////////////////////////////////////////////////////////////////////////////////
 // ImGuiController class
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -39,6 +42,8 @@ public:
 
 	void Render(DirectXThreadContext* context);
 
+	void OutputLayout();
+
 	//* convert *//
 
 	static ImVec4 ToImVec4(const Color4i& color);
@@ -50,6 +55,8 @@ private:
 	//=========================================================================================
 
 	DxObject::Descriptor descriptorSRV_;
+
+	static const std::filesystem::path kImGuiLayoutFilepath_;
 
 	//=========================================================================================
 	// private methods

@@ -60,19 +60,18 @@ ComPtr<IDxcBlob> ShaderCompiler::Compile(
 
 	// 全体pathの生成
 	std::filesystem::path filepath = kShaderDirectory / filename;
+	std::wstring filepathW = filepath.generic_wstring(); //!< wstringの寿命確保
 
 	// hlslファイルを読み込む
 	ComPtr<IDxcBlobEncoding> shaderSource;
-	auto hr = utils_->LoadFile(filepath.c_str(), nullptr, &shaderSource);
-	Assert(SUCCEEDED(hr), "hlsl not found.", "filepath: " + filepath.string());
+	auto hr = utils_->LoadFile(filepathW.c_str(), nullptr, &shaderSource);
+	Assert(SUCCEEDED(hr), "hlsl not found.", "filepath: " + filepath.generic_string());
 
 	// 読み込んだファイルの内容を設定する
 	DxcBuffer shaderSourceBuffer = {};
 	shaderSourceBuffer.Ptr      = shaderSource->GetBufferPointer();
 	shaderSourceBuffer.Size     = shaderSource->GetBufferSize();
 	shaderSourceBuffer.Encoding = DXC_CP_UTF8;
-
-	std::wstring filepathW = filepath.wstring(); //!< wstringの寿命確保
 
 	// 基本情報の設定
 	std::vector<LPCWSTR> arguments = {
@@ -105,7 +104,7 @@ ComPtr<IDxcBlob> ShaderCompiler::Compile(
 	hr = shaderResult->GetOutput(DXC_OUT_ERRORS, IID_PPV_ARGS(&shaderError), nullptr);
 
 	if (shaderError != nullptr && shaderError->GetStringLength() != 0) {
-		Assert(false, "hlsl is compile error. filepath: " + filepath.string(), shaderError->GetStringPointer());
+		Assert(false, "hlsl is compile error. filepath: " + filepath.generic_string(), shaderError->GetStringPointer());
 	}
 
 	ComPtr<IDxcBlob> blob;

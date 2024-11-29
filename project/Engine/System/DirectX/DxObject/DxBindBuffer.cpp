@@ -10,15 +10,15 @@ void BindBufferDesc::Clear() {
 }
 
 void BindBufferDesc::SetAddress(const std::string& name, const D3D12_GPU_VIRTUAL_ADDRESS& address) {
-	container_.emplace(name, address);
+	container_[name] = address;
 }
 
 void BindBufferDesc::SetHandle(const std::string& name, const D3D12_GPU_DESCRIPTOR_HANDLE& handle) {
-	container_.emplace(name, handle);
+	container_[name] = handle;
 }
 
 void BindBufferDesc::SetBuffer(const std::string& name, const BindGPUBuffer& buffer) {
-	container_.emplace(name, buffer);
+	container_[name] = buffer;
 }
 
 bool BindBufferDesc::Contains(const std::string& name) const {

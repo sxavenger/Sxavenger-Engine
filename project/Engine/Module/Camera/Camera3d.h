@@ -10,10 +10,12 @@
 #include <Engine/System/DirectX/DxObject/DxDimensionBuffer.h>
 
 //* lib
+#include <Lib/Geometry/Vector4.h>
 #include <Lib/Geometry/Matrix4x4.h>
 
 //* c++
 #include <memory>
+#include <optional>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Camera3d class
@@ -39,9 +41,13 @@ public:
 
 	void SetProjection(float fovY, float aspectRatio, float nearClip, float farClip);
 
+	void DrawFrustum(const Color4f& color, const std::optional<float>& lenght); // TODO:
+
 	virtual json OutputJson() override;
 
 	virtual void InputJson(const json& data) override;
+
+	const D3D12_GPU_VIRTUAL_ADDRESS& GetGPUVirtualAddress() const;
 
 protected:
 

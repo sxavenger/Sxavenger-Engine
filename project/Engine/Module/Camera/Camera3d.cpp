@@ -24,7 +24,7 @@ void Camera3d::Term() {
 }
 
 void Camera3d::Reset() {
-	transform_.translate = kUnit3<float>;
+	transform_.scale     = kUnit3<float>;
 	transform_.rotate    = Quaternion::Identity();
 	transform_.translate = { 0.0f, 0.0f, -16.0f };
 	UpdateMatrix();
@@ -45,11 +45,18 @@ void Camera3d::SetProjection(float fovY, float aspectRatio, float nearClip, floa
 }
 
 json Camera3d::OutputJson() {
-	return json();
+	json root = json::object();
+	root["TransformComponent"] = TransformComponent::OutputJson();
+	return root;
 }
 
 void Camera3d::InputJson(const json& data) {
-	data;
+	TransformComponent::InputJson(data["TransformComponent"]);
+}
+
+const D3D12_GPU_VIRTUAL_ADDRESS& Camera3d::GetGPUVirtualAddress() const {
+	Assert(buffer_ != nullptr, "camera buffer is not create.");
+	return buffer_->GetGPUVirtualAddress();
 }
 
 

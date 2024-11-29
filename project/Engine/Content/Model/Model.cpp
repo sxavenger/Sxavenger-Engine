@@ -24,33 +24,56 @@ const uint32_t Model::kDefaultAssimpOption_ = aiProcess_FlipWindingOrder | aiPro
 // Model class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-void Model::Load(const std::string& directory, const std::string& filename, const DirectXThreadContext* context, uint32_t assimpOption) {
+void Model::Load(const std::filesystem::path& directory, const std::filesystem::path& filename, const DirectXThreadContext* context, uint32_t assimpOption) {
 	TaskThreadExecution::SetState(ExecutionState::kRunning);
 
 	directory_ = directory;
 	filename_  = filename;
 
-	std::string filepath = directory_ + "/" + filename_;
+	std::filesystem::path filepath = directory_ / filename_;
+
+	std::string filepathA = filepath.generic_string();
 
 	// sceneの取得
 	Assimp::Importer importer; //!< scene保存するため保管
-	const aiScene* aiScene = importer.ReadFile(filepath.c_str(), assimpOption);
+	const aiScene* aiScene = importer.ReadFile(filepathA.c_str(), assimpOption);
 
-	Assert(aiScene != nullptr, "model load failed. filepath: " + filepath, importer.GetErrorString());
+	Assert(aiScene != nullptr, "model load failed. filepath: " + filepath.generic_string(), importer.GetErrorString());
 	Assert(aiScene->HasMeshes()); //!< メッシュナシは未対応
 
 	LoadMesh(aiScene);
 	LoadMaterial(aiScene, directory_, context);
 
 	root_ = ReadNode(aiScene->mRootNode);
-
-	TaskThreadExecution::SetState(ExecutionState::kCompleted);
 }
 
 void Model::Term() {
 }
 
-void Model::AsyncLoad(const std::string& directory, const std::string& filename, uint32_t assimpOption) {
+void Model::SetIABuffer(uint32_t meshIndex) const {
+	CheckMeshIndex(meshIndex);
+	meshes_.at(meshIndex).mesh.BindIABuffer();
+}
+
+const D3D12_GPU_DESCRIPTOR_HANDLE& Model::GetTextureHandle(uint32_t meshIndex, MaterialTextureType type) const {
+	CheckMeshIndex(meshIndex);
+	Assert(meshes_.at(meshIndex).materialIndex.has_value()); //!< materialが使われていない
+
+	uint32_t materialIndex = meshes_.at(meshIndex).materialIndex.value();
+	Assert(materialIndex < materials_.size(), "material index out of range."); //!< materialサイズ以上のindex
+
+	if (materials_.at(materialIndex).textures_[static_cast<uint8_t>(type)] == nullptr) {
+		return SxavengerContent::GetTextureGPUHandleSRV("white1x1.png");
+	}
+
+	return materials_.at(materialIndex).textures_[static_cast<uint8_t>(type)]->GetGPUHandleSRV();
+}
+
+void Model::DrawCall(uint32_t meshIndex, uint32_t instanceCount) const {
+	meshes_[meshIndex].mesh.DrawCall(instanceCount);
+}
+
+void Model::AsyncLoad(const std::filesystem::path& directory, const std::filesystem::path& filename, uint32_t assimpOption) {
 
 	directory_ = directory;
 	filename_  = filename;
@@ -164,7 +187,7 @@ void Model::LoadMesh(const aiScene* aiScene) {
 	}
 }
 
-void Model::LoadMaterial(const aiScene* aiScene, const std::string& directory, const DirectXThreadContext* context) {
+void Model::LoadMaterial(const aiScene* aiScene, const std::filesystem::path& directory, const DirectXThreadContext* context) {
 
 	// materail数のメモリ確保
 	materials_.resize(aiScene->mNumMaterials);
@@ -183,7 +206,7 @@ void Model::LoadMaterial(const aiScene* aiScene, const std::string& directory, c
 			aiMaterial->GetTexture(aiTextureType_DIFFUSE, 0, &textureFilePath);
 
 			// データの保存
-			material.textures_[static_cast<uint8_t>(MaterialTextureType::kDiffuse)] = SxavengerContent::TryLoadTexture(directory + "/" + textureFilePath.C_Str(), context);
+			material.textures_[static_cast<uint8_t>(MaterialTextureType::kDiffuse)] = SxavengerContent::TryLoadTexture(directory / std::filesystem::path(textureFilePath.C_Str()), context);
 		}
 
 		// normal textureの取得
@@ -192,7 +215,7 @@ void Model::LoadMaterial(const aiScene* aiScene, const std::string& directory, c
 			aiMaterial->GetTexture(aiTextureType_NORMALS, 0, &textureFilePath);
 
 			// データの保存
-			material.textures_[static_cast<uint8_t>(MaterialTextureType::kNormal)] = SxavengerContent::TryLoadTexture(directory + "/" + textureFilePath.C_Str(), context);
+			material.textures_[static_cast<uint8_t>(MaterialTextureType::kNormal)] = SxavengerContent::TryLoadTexture(directory / std::filesystem::path(textureFilePath.C_Str()), context);
 		}
 	}
 }
@@ -231,4 +254,8 @@ Node Model::ReadNode(aiNode* node) {
 	}
 
 	return result;
+}
+
+void Model::CheckMeshIndex(uint32_t meshIndex) const {
+	Assert(meshIndex < meshes_.size(), "mesh index out of range.");
 }

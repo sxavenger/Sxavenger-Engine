@@ -3,13 +3,19 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
-//* c++
-#include <filesystem>
+#include "../Transform.hlsli"
+#include "../Camera3d.hlsli"
+#include "../VertexStructure.hlsli"
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// Directory
+// Input / Output structure
 ////////////////////////////////////////////////////////////////////////////////////////////
+struct PSInput {
+	float4 position : SV_Position;
+	float2 texcoord : TEXCOORD0;
+	float3 normal   : NORMAL0;
+};
 
-static const std::filesystem::path kShaderDirectory = "resources/hlsl";
-static const std::filesystem::path kJsonDirectory   = "resources/json";
-static const std::filesystem::path kModelDirectory  = "resources/model";
+struct PSOutput {
+	float4 color : SV_Target0;
+};

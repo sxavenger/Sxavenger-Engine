@@ -16,7 +16,7 @@
 // GameWindowCollection class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-GameWindow* GameWindowCollection::CreateMainWindow(
+const std::weak_ptr<GameWindow> GameWindowCollection::CreateMainWindow(
 	const Vector2ui& clientSize, const LPCWSTR& name, const Color4f& clearColor) {
 
 	mainWindow_ = std::make_unique<GameWindow>();
@@ -71,6 +71,10 @@ void GameWindowCollection::PresentAllWindow() {
 	for (auto& window : subWindows_.GetMap()) {
 		window.second->Present(false);
 	}
+}
+
+const std::weak_ptr<GameWindow> GameWindowCollection::GetMainWindow() const {
+	return mainWindow_;
 }
 
 const std::weak_ptr<GameWindow> GameWindowCollection::TryGetSubWindow(const LPCWSTR& name) const noexcept {

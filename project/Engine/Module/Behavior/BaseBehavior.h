@@ -30,9 +30,8 @@ enum BehaviorRenderingFlag {
 ////////////////////////////////////////////////////////////////////////////////////////////
 // using
 ////////////////////////////////////////////////////////////////////////////////////////////
-using BehaviorOutliner = std::list<std::shared_ptr<BaseBehavior>>; //!< Consoleでのcontainer
-using BehaviorNode     = std::list<BaseBehavior*>;                 //!< Node関係のlist
-using BehaviorIterator = std::variant<BehaviorOutliner::const_iterator, BehaviorNode::const_iterator>; //!< erase用iterator
+using BehaviorContainer = std::list<BaseBehavior*>;          //!< behavior list
+using BehaviorIterator  = BehaviorContainer::const_iterator; //!< behavior iterator
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // BaseBehavior class
@@ -45,16 +44,21 @@ public:
 	//=========================================================================================
 
 	BaseBehavior()  = default;
-	~BaseBehavior() = default;
+	~BaseBehavior() { Term(); }
+
+	void Term();
 
 	//* behavior option *//
 
-
+	void SetToConsole();
+	void SetToConsole(const std::string& name);
 
 	void SetName(const std::string& name) { name_ = name; }
 
 	void SetChild(BaseBehavior* child);
-	void RemoveChild(BaseBehavior* child);
+	void EraseChild(BaseBehavior* child);
+
+	void ResetIterator();
 
 	//* derivative behaivor methods *//
 	//* ImGui command
@@ -67,7 +71,7 @@ public:
 
 	const uint32_t GetRenderingFlag() const { return renderingFlag_; }
 
-	const BehaviorNode& GetChildren() const { return children_; }
+	const BehaviorContainer& GetChildren() const { return children_; }
 
 	const bool IsActive() const { return isActive_; }
 
@@ -80,7 +84,7 @@ protected:
 	std::string name_ = "New Behavior";
 
 	uint32_t renderingFlag_ = kBehaviorRendering_None;
-	bool isActive_          = true;
+	bool isActive_          = true; //!< TODO: methods define
 
 private:
 
@@ -96,6 +100,12 @@ private:
 	BaseBehavior* parent_ = nullptr;
 
 	//!< 自身が親となっているnode
-	BehaviorNode children_;
-	
+	BehaviorContainer children_;
+
+	//=========================================================================================
+	// private methods
+	//=========================================================================================
+
+	void CheckIterator();
+
 };

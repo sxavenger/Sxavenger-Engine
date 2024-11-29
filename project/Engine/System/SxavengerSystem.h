@@ -62,7 +62,7 @@ public:
 	// GameWindowCollection option
 	//-----------------------------------------------------------------------------------------
 
-	static GameWindow* CreateMainWindow(
+	static const std::weak_ptr<GameWindow> CreateMainWindow(
 		const Vector2ui& clientSize, const LPCWSTR& name, const Color4f& clearColor = kDefaultGameWindowColor
 	);
 
@@ -74,7 +74,7 @@ public:
 
 	static void PresentAllWindow();
 
-	static const GameWindow* GetMainWindow();
+	static const std::weak_ptr<GameWindow> GetMainWindow();
 
 	static const GameWindow* GetForcusWindow();
 

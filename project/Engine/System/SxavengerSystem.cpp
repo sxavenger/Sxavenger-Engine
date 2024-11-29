@@ -82,15 +82,15 @@ ThreadCollection* SxavengerSystemEngine::GetThreadCollection() {
 	return sThreadCollection.get();
 }
 
-GameWindow* SxavengerSystemEngine::CreateMainWindow(
+const std::weak_ptr<GameWindow> SxavengerSystemEngine::CreateMainWindow(
 	const Vector2ui& clientSize, const LPCWSTR& name, const Color4f& clearColor) {
 
 	// windowの生成
 	auto window = sWindowCollection->CreateMainWindow(clientSize, name, clearColor);
 
 	// user system の初期化
-	sInput->Init(window);
-	sImGuiController->Init(window);
+	sInput->Init(window.lock().get());
+	sImGuiController->Init(window.lock().get());
 
 	return window;
 }
@@ -108,7 +108,7 @@ void SxavengerSystemEngine::PresentAllWindow() {
 	sWindowCollection->PresentAllWindow();
 }
 
-const GameWindow* SxavengerSystemEngine::GetMainWindow() {
+const std::weak_ptr<GameWindow> SxavengerSystemEngine::GetMainWindow() {
 	return sWindowCollection->GetMainWindow();
 }
 

@@ -17,14 +17,14 @@ void TextureCollection::Term() {
 }
 
 std::shared_ptr<BaseTexture> TextureCollection::TryLoadTextureSafely(const std::filesystem::path& filename, const DirectXThreadContext* context) {
-	if (!textures_.Contains(filename.string())) {
+	if (!textures_.Contains(filename.generic_string())) {
 		// 新しくtextureを生成
 		std::shared_ptr<Texture> texture = std::make_shared<Texture>();
 		texture->Load(filename, context);
-		textures_.Emplace(filename.string(), std::move(texture));
+		textures_.Emplace(filename.generic_string(), std::move(texture));
 	}
 
-	return textures_.At(filename.string());
+	return textures_.At(filename.generic_string());
 }
 
 std::shared_ptr<Texture> TextureCollection::TryLoadTexture(const std::filesystem::path& filename, const DirectXThreadContext* context) {
@@ -59,6 +59,10 @@ std::shared_ptr<BaseTexture> TextureCollection::TryCreateUnorderedTextureSafely(
 
 std::shared_ptr<UnorderedTexture> TextureCollection::TryCreateUnorderedTexture(const std::string& key, const Vector2ui& size, DXGI_FORMAT format) {
 	return GetTexture<UnorderedTexture>(TryCreateUnorderedTextureSafely(key, size, format));
+}
+
+const D3D12_GPU_DESCRIPTOR_HANDLE& TextureCollection::GetGPUHandleSRV(const std::string& key) const {
+	return GetTexture<BaseTexture>(key)->GetGPUHandleSRV();
 }
 
 void TextureCollection::ReleaseTexture(const std::string& key) {

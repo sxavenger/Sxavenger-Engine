@@ -1,15 +1,25 @@
-#pragma once
+#include "RenderBehavior.h"
 
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
-//* c++
-#include <filesystem>
+//* external
+#include <imgui.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// Directory
+// RenderBehavior class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-static const std::filesystem::path kShaderDirectory = "resources/hlsl";
-static const std::filesystem::path kJsonDirectory   = "resources/json";
-static const std::filesystem::path kModelDirectory  = "resources/model";
+void RenderBehavior::Init() {
+	SetName("render behavior");
+	SetToConsole();
+}
+
+void RenderBehavior::Term() {
+}
+
+void RenderBehavior::SetAttributeImGui() {
+	if (ImGui::Button("delete")) {
+		isDelete_ = true;
+	}
+}

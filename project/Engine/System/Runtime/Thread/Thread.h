@@ -6,6 +6,8 @@
 //* engine
 #include <Engine/System/DirectX/DirectXContext.h>
 #include <Engine/System/UI/ISystemDebugGui.h>
+#include <Engine/System/Runtime/Performance/DeltaTimePoint.h>
+#include <Engine/System/Runtime/Performance/Performance.h>
 
 //* lib
 #include <Lib/CXXAttributeConfig.h>
@@ -129,6 +131,8 @@ protected:
 
 	TaskThreadExecution* task_ = nullptr;
 	// FIXME: 所有者が破棄されると未定義動作になる.
+
+	RunTimeTracker runtime_;
 
 };
 

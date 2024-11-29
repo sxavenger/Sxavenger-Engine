@@ -55,7 +55,7 @@
     <ClCompile Include="Engine\System\Runtime\Performance\Performance.cpp" />
     <ClCompile Include="Engine\System\Runtime\Performance\DeltaTimePoint.cpp" />
     <ClCompile Include="Engine\System\DirectX\DxObject\DxComputePipelineState.cpp" />
-    <ClCompile Include="Engine\Console\SystemConsole.cpp" />
+    <ClCompile Include="Engine\Console\SystemConsole\SystemConsole.cpp" />
     <ClCompile Include="Engine\Console\Console.cpp" />
     <ClCompile Include="Engine\Content\Texture\DepthTexture.cpp" />
     <ClCompile Include="Engine\Content\InputAssembler\InputMesh.cpp" />
@@ -66,6 +66,9 @@
     <ClCompile Include="Lib\Sxl\LowerUnorderedMap.cpp" />
     <ClCompile Include="Engine\Module\SxavengerGraphics\SystematicRenderFrame.cpp" />
     <ClCompile Include="Engine\Content\Texture\MultiViewTexture.cpp" />
+    <ClCompile Include="Engine\Module\Camera\DebugCamera3d.cpp" />
+    <ClCompile Include="Engine\Console\RenderConsole\RenderConsole.cpp" />
+    <ClCompile Include="Engine\Console\RenderConsole\RenderBehavior.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\System\Window\Window.h" />
@@ -121,7 +124,7 @@
     <ClInclude Include="Engine\System\Runtime\Performance\Performance.h" />
     <ClInclude Include="Engine\System\Runtime\Performance\DeltaTimePoint.h" />
     <ClInclude Include="Engine\System\DirectX\DxObject\DxComputePipelineState.h" />
-    <ClInclude Include="Engine\Console\SystemConsole.h" />
+    <ClInclude Include="Engine\Console\SystemConsole\SystemConsole.h" />
     <ClInclude Include="Engine\Console\Console.h" />
     <ClInclude Include="Engine\System\UI\ISystemDebugGui.h" />
     <ClInclude Include="Engine\Content\Texture\DepthTexture.h" />
@@ -134,5 +137,8 @@
     <ClInclude Include="Lib\Sxl\LowerUnorderedMap.h" />
     <ClInclude Include="Engine\Module\SxavengerGraphics\SystematicRenderFrame.h" />
     <ClInclude Include="Engine\Content\Texture\MultiViewTexture.h" />
+    <ClInclude Include="Engine\Module\Camera\DebugCamera3d.h" />
+    <ClInclude Include="Engine\Console\RenderConsole\RenderConsole.h" />
+    <ClInclude Include="Engine\Console\RenderConsole\RenderBehavior.h" />
   </ItemGroup>
 </Project>

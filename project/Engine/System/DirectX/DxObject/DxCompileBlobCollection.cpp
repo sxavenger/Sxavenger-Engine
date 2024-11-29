@@ -51,7 +51,10 @@ void CompileBlobCollection::SystemDebugGui() {
 	ImGui::SeparatorText("reload shaders");
 
 	for (auto& blob : blobs_.GetMap()) {
-		if (ImGui::Selectable(ToString(blob.first).c_str(), false)) {
+
+		std::string filepath = blob.first.generic_string();
+
+		if (ImGui::Selectable(filepath.c_str(), false)) {
 			Reload(blob.first);
 		}
 	}

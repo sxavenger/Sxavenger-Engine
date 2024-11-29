@@ -7,16 +7,9 @@
 #include <Engine/System/Window/GameWindow.h>
 
 #include "Engine/System/DirectX/DxObject/DxGraphicsPipelineState.h"
-#include "Engine/System/DirectX/DxObject/DxComputePipelineState.h"
-#include "Engine/System/Runtime/Performance/DeltaTimePoint.h"
-#include "Engine/Content/InputAssembler/InputAssembler.h"
-#include "Engine/Content/Texture/Texture.h"
 #include "Engine/Content/Model/Model.h"
 #include "Engine/Module/Transform/TransformComponent.h"
-
-#include "Lib/Geometry/Vector4.h"
-
-#include "Lib/Sxl/LowerPathMap.h"
+#include "Engine/Module/Camera/Camera3d.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // GameScene class
@@ -39,20 +32,17 @@ private:
 	// private variables
 	//=========================================================================================
 
-	GameWindow* mainWindow_ = nullptr;
+	std::shared_ptr<GameWindow> mainWindow_;
 	std::weak_ptr<GameWindow> subWindow_;
-
-	InputAssembler<Vector4f> input_;
-	std::unique_ptr<DxObject::ReflectionGraphicsPipelineState> state_;
-
-	TransformComponent transform_;
-
-	std::unique_ptr<DxObject::ReflectionComputePipelineState> compute_;
-	std::unique_ptr<UnorderedTexture> texture_;
 
 	bool renderWindowSwitch_ = true;
 
 	std::unique_ptr<Model> model_;
+	TransformComponent transform_;
+
+	std::unique_ptr<Camera3d> camera_;
+
+	std::unique_ptr<DxObject::ReflectionGraphicsPipelineState> pipeline_;
 
 	//=========================================================================================
 	// private methods

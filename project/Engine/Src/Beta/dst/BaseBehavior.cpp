@@ -11,7 +11,7 @@
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 void BaseBehavior::Term() {
-	Assert(children_.empty()); //!< 親(this)を消す場合, 子をdeleteまたはclearしてなければならない
+	Assert(children_.empty());
 
 	// selectから削除
 	sBetaConsole->RemoveSelectedBehavior(this);

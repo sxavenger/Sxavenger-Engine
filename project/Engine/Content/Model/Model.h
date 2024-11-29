@@ -26,6 +26,7 @@
 #include <string>
 #include <memory>
 #include <array>
+#include <filesystem>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Weight structure
@@ -90,17 +91,29 @@ public:
 	Model()  = default;
 	~Model() { Term(); }
 
-	void Load(const std::string& directory, const std::string& filename, const DirectXThreadContext* context, uint32_t assimpOption = kDefaultAssimpOption_);
+	void Load(const std::filesystem::path& directory, const std::filesystem::path& filename, const DirectXThreadContext* context, uint32_t assimpOption = kDefaultAssimpOption_);
 
 	void Term();
 
 	//* task option *//
 
-	void AsyncLoad(const std::string& directory, const std::string& filename, uint32_t assimpOption = kDefaultAssimpOption_);
+	//!< 非推奨
+	void AsyncLoad(const std::filesystem::path& directory, const std::filesystem::path& filename, uint32_t assimpOption = kDefaultAssimpOption_);
+
+	//* mesh getter *//
+
+	void SetIABuffer(uint32_t meshIndex) const;
+
+	const D3D12_GPU_DESCRIPTOR_HANDLE& GetTextureHandle(uint32_t meshIndex, MaterialTextureType type = MaterialTextureType::kDiffuse) const;
+
+	void DrawCall(uint32_t meshIndex, uint32_t instanceCount = 1) const;
+
+	uint32_t GetMeshSize() const { return static_cast<uint32_t>(meshes_.size()); }
 
 	//* other getter *//
 
 	static uint32_t GetDefaultAssimpOption() { return kDefaultAssimpOption_; }
+
 
 private:
 
@@ -117,15 +130,19 @@ private:
 
 	//* parameter *//
 
-	std::string directory_;
-	std::string filename_;
+	std::filesystem::path directory_;
+	std::filesystem::path filename_;
 
 	//=========================================================================================
 	// private methods
 	//=========================================================================================
 
 	void LoadMesh(const aiScene* aiScene);
-	void LoadMaterial(const aiScene* aiScene, const std::string& directory, const DirectXThreadContext* context);
+	void LoadMaterial(const aiScene* aiScene, const std::filesystem::path& directory, const DirectXThreadContext* context);
 	Node ReadNode(aiNode* node);
+
+	//* sub methods *//
+
+	void CheckMeshIndex(uint32_t meshIndex) const;
 
 };

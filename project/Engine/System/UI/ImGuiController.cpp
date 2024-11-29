@@ -7,6 +7,12 @@ _DXOBJECT_USING
 //* engine
 #include <Engine/System/SxavengerSystem.h>
 
+//=========================================================================================
+// static variables
+//=========================================================================================
+
+const std::filesystem::path ImGuiController::kImGuiLayoutFilepath_ = "imgui.ini";
+
 ////////////////////////////////////////////////////////////////////////////////////////////
 // ImGuiController class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -31,6 +37,10 @@ void ImGuiController::Init(Window* mainWindow) {
 	);
 
 	SetImGuiStyle();
+
+	// iniの読み込み
+	std::string filepath = kImGuiLayoutFilepath_.generic_string();
+	ImGui::LoadIniSettingsFromDisk(filepath.c_str());
 }
 
 void ImGuiController::Term() {
@@ -55,6 +65,11 @@ void ImGuiController::Render(DirectXThreadContext* context) {
 #ifdef _DEBUG
 	ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(), context->GetCommandList());
 #endif // _DEBUG
+}
+
+void ImGuiController::OutputLayout() {
+	std::string filepath = kImGuiLayoutFilepath_.generic_string();
+	ImGui::SaveIniSettingsToDisk(filepath.c_str());
 }
 
 ImVec4 ImGuiController::ToImVec4(const Color4i& color) {

@@ -28,7 +28,7 @@ void BaseTransformComponent::Transfer() {
 }
 
 const D3D12_GPU_VIRTUAL_ADDRESS& BaseTransformComponent::GetGPUVirtualAddress() const {
-	Assert(buffer_ != nullptr, "transform_ buffer is not craete.");
+	Assert(buffer_ != nullptr, "transform buffer is not craete.");
 	return buffer_->GetGPUVirtualAddress();
 }
 
