@@ -25,6 +25,7 @@ void GameScene::Run() {
 	// 初期化処理
 	//-----------------------------------------------------------------------------------------
 	sConsole->Init();
+	SystemInit();
 	Init();
 	SxavengerSystem::ExecuteAllAllocator();
 
@@ -78,13 +79,34 @@ void GameScene::Run() {
 
 }
 
-void GameScene::Init() {
+void GameScene::SystemInit() {
+
 	mainWindow_ = SxavengerSystem::CreateMainWindow(kMainWindowSize, kMainWindowTitle).lock();
 	mainWindow_->SetIcon("resources/icon/SxavengerEngineIcon.ico", { 32, 32 });
 
-	subWindow_ = SxavengerSystem::TryCreateSubWindow({ 400, 400 }, L"sub", ToColor4f(0x3A504BFF));
-
 	sConsole->SetWindow(mainWindow_);
+
+	{
+		std::unique_ptr<DxObject::ReflectionComputePipelineState> compute = std::make_unique<DxObject::ReflectionComputePipelineState>();
+		compute->CreateBlob("common/white1x1.cs.hlsl");
+		compute->ReflectionPipeline(SxavengerSystem::GetDxDevice());
+
+		std::shared_ptr<UnorderedTexture> white1x1 = SxavengerContent::TryCreateUnorderedTexture("white1x1.png", { 1, 1 });
+		white1x1->TransitionBeginUnordered(SxavengerSystem::GetMainThreadContext());
+		compute->SetPipeline(SxavengerSystem::GetCommandList());
+
+
+		DxObject::BindBufferDesc bind = {};
+		bind.SetHandle("gOutput", white1x1->GetGPUHandleUAV());
+
+		compute->Dispatch(SxavengerSystem::GetCommandList(), 1, 1, 1);
+
+		white1x1->TransitionEndUnordered(SxavengerSystem::GetMainThreadContext());
+		SxavengerSystem::TransitionAllocator();
+	}
+}
+
+void GameScene::Init() {
 
 	transform_.CreateBuffer();
 	transform_.GetTransform().scale = { 4.0f, 4.0f, 4.0f };
@@ -112,24 +134,14 @@ void GameScene::Init() {
 
 	pipeline_->CreatePipeline(SxavengerSystem::GetDxDevice(), desc);
 
-	{
-		std::unique_ptr<DxObject::ReflectionComputePipelineState> compute = std::make_unique<DxObject::ReflectionComputePipelineState>();
-		compute->CreateBlob("common/white1x1.cs.hlsl");
-		compute->ReflectionPipeline(SxavengerSystem::GetDxDevice());
+	g_ = std::make_unique<SxavGraphicsFrame>();
+	g_->Create(kMainWindowSize);
 
-		std::shared_ptr<UnorderedTexture> white1x1 = SxavengerContent::TryCreateUnorderedTexture("white1x1.png", { 1, 1 });
-		white1x1->TransitionBeginUnordered(SxavengerSystem::GetMainThreadContext());
-		compute->SetPipeline(SxavengerSystem::GetCommandList());
+	matrix_ = std::make_unique<DxObject::DimensionBuffer<Matrix4x4>>();
+	matrix_->Create(SxavengerSystem::GetDxDevice(), 1);
+	(*matrix_)[0] = Matrix4x4::Identity();
 
-
-		DxObject::BindBufferDesc bind = {};
-		bind.SetHandle("gOutput", white1x1->GetGPUHandleUAV());
-
-		compute->Dispatch(SxavengerSystem::GetCommandList(), 1, 1, 1);
-
-		white1x1->TransitionEndUnordered(SxavengerSystem::GetMainThreadContext());
-		SxavengerSystem::TransitionAllocator();
-	}
+	asset_.Import("asset/interdinate/test.hlsl");
 }
 
 void GameScene::Update() {
@@ -141,6 +153,30 @@ void GameScene::Update() {
 void GameScene::Draw() {
 
 	auto commandList = SxavengerSystem::GetCommandList();
+
+	g_->BeginAdaptive(SxavengerSystem::GetMainThreadContext());
+	//g_->ClearSystematic(SxavengerSystem::GetMainThreadContext());
+	g_->ClearRasterizerDepth(SxavengerSystem::GetMainThreadContext());
+
+	sConsole->SetGraphicsPipeline(kDefaultVS_AlbedoPS, SxavengerSystem::GetMainThreadContext(), g_->GetSize());
+
+	DxObject::BindBufferDesc bindT = {};
+	bindT.SetAddress("gCamera", camera_->GetGPUVirtualAddress());
+	bindT.SetAddress("gTransform", transform_.GetGPUVirtualAddress());
+	bindT.SetAddress("gUVTransform", matrix_->GetGPUVirtualAddress());
+
+	for (uint32_t i = 0; i < model_->GetMeshSize(); ++i) {
+		model_->SetIABuffer(i);
+
+		bindT.SetHandle("gAlbedo", model_->GetTextureHandle(i));
+		sConsole->BindGraphicsBuffer(kDefaultVS_AlbedoPS, SxavengerSystem::GetMainThreadContext(), bindT);
+
+		model_->DrawCall(i);
+	}
+
+	g_->EndAdaptive(SxavengerSystem::GetMainThreadContext());
+
+	SxavengerSystem::TransitionAllocator();
 
 	if (!subWindow_.expired()) {
 		auto window = subWindow_.lock();

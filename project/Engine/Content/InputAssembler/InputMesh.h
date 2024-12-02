@@ -34,13 +34,21 @@ public:
 
 	void CreateMeshlet();
 
-	void Dispatch(
+	void Dispatch( //!< TODO:
 		UINT verticesParam, UINT uniqueVertexIndicesParam, UINT meshletsParam, UINT primitiveIndices, UINT cullDataParam, UINT meshInfoParam,
-		UINT instanceCount = 1) const;
+		UINT instanceCount = 1
+	) const;
+
+	void Dispatch(
+
+	) const;
 
 	bool IsCreateMeshlet() const { return isCreateMeshlet_; }
 
 	//* operator *//
+
+	InputMesh(InputMesh&)            = delete;
+	InputMesh& operator=(InputMesh&) = delete;
 
 	InputMesh(InputMesh&&) noexcept            = default;
 	InputMesh& operator=(InputMesh&&) noexcept = default;

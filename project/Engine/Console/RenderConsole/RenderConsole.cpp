@@ -12,10 +12,18 @@
 
 void RenderConsole::Init(Console* console) {
 	console_ = console;
+
+	renderPipeline_ = std::make_unique<RenderPipelineCollection>();
+	renderPipeline_->Init();
+
+	computePipeline_ = std::make_unique<ComputePipelineCollection>();
+	computePipeline_->Init();
 }
 
 void RenderConsole::Term() {
 	ResetBehavior();
+	renderPipeline_.reset();
+	computePipeline_.reset();
 }
 
 void RenderConsole::UpdateConsole() {
@@ -27,6 +35,9 @@ void RenderConsole::UpdateConsole() {
 		DisplayOutliner();
 		DisplayAttribute();
 	}
+}
+
+void RenderConsole::Draw() {
 }
 
 BehaviorIterator RenderConsole::SetBehavior(BaseBehavior* behavior) {
@@ -64,6 +75,26 @@ void RenderConsole::RemoveUniqueBehavior() {
 	behaviors_.clear();
 }
 
+void RenderConsole::SetGraphicsPipeline(RenderPipelineType type, const DirectXThreadContext* context, const Vector2ui& size) {
+	renderPipeline_->SetPipeline(type, context, size);
+}
+
+void RenderConsole::BindGraphicsBuffer(RenderPipelineType type, const DirectXThreadContext* context, const DxObject::BindBufferDesc& desc) {
+	renderPipeline_->BindGraphicsBuffer(type, context, desc);
+}
+
+void RenderConsole::SetComputePipeline(ComputePipelineType type, const DirectXThreadContext* context) {
+	computePipeline_->SetPipeline(type, context);
+}
+
+void RenderConsole::BindComputeBuffer(ComputePipelineType type, const DirectXThreadContext* context, const DxObject::BindBufferDesc& desc) {
+	computePipeline_->BindComputeBuffer(type, context, desc);
+}
+
+void RenderConsole::DispatchCompute(const DirectXThreadContext* context, const Vector2ui& size) {
+	computePipeline_->Dispatch(context, size);
+}
+
 void RenderConsole::ShowRenderConsoleMenu() {
 	if (ImGui::BeginMenu("behavior outliner")) {
 		MenuDummy();
@@ -88,6 +119,11 @@ void RenderConsole::ShowBehaviorMenu() {
 
 		ImGui::EndMenu();
 	}
+}
+
+void RenderConsole::CreateSceneFrame(const Vector2ui& size) {
+	scene_ = std::make_unique<SxavGraphicsFrame>();
+	scene_->Create(size);
 }
 
 void RenderConsole::DisplayOutliner() {

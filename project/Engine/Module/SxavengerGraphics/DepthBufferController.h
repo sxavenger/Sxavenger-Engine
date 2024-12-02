@@ -6,40 +6,46 @@
 //* engine
 #include <Engine/System/DirectX/DxObject/DxDescriptor.h>
 #include <Engine/System/DirectX/DirectXContext.h>
+#include <Engine/Content/Texture/DepthTexture.h>
 
 //* lib
 #include <Lib/Geometry/Vector2.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// DepthTexture class
+// DepthBufferController class
 ////////////////////////////////////////////////////////////////////////////////////////////
-class DepthTexture {
+class DepthBufferController {
 public:
 
 	//=========================================================================================
 	// public methods
 	//=========================================================================================
 
-	DepthTexture()  = default;
-	~DepthTexture() { Term(); }
+	DepthBufferController()  = default;
+	~DepthBufferController() { Term(); }
 
-	void Create(const Vector2ui& size); //!< default depth format only.
+	void Create(const Vector2ui& size);
 
 	void Term();
 
-	//* depth option *//
+	//* depth buffer option *//
 
-	void TransitionBeginDepthWrite(const DirectXThreadContext* context);
+	void TransitionBeginRaytracingDepthWrite(const DirectXThreadContext* context);
 
-	void TransitionEndDepthWrite(const DirectXThreadContext* context);
+	void TransitionEndRaytracingDepthWrite(const DirectXThreadContext* context);
 
-	void ClearDepth(const DirectXThreadContext* context);
+	void TransferRaytracingToRasterize(const DirectXThreadContext* context);
+	//* rasterize, raytracing どちらも depthWrite状態じゃないことが条件
+
+	void TransitionBeginRasterizeDepthWrite(const DirectXThreadContext* context);
+
+	void TransitionEndRasterizeDepthWrite(const DirectXThreadContext* context);
+
+	void ClearRasterizeDepth(const DirectXThreadContext* context);
 
 	//* getter *//
 
-	ID3D12Resource* GetResource() const { return resource_.Get(); }
-
-	const D3D12_CPU_DESCRIPTOR_HANDLE& GetCPUHandleDSV() const { return descriptorDSV_.GetCPUHandle(); }
+	const D3D12_CPU_DESCRIPTOR_HANDLE& GetRasterizerCPUHandleDSV() const { return resterizerDepth_->GetCPUHandleDSV(); }
 
 private:
 
@@ -47,23 +53,19 @@ private:
 	// private variables
 	//=========================================================================================
 
-	//* DirectX12 *//
+	//* rasterizer depth *//
 
-	ComPtr<ID3D12Resource> resource_;
+	std::unique_ptr<DepthTexture> resterizerDepth_;
 
-	DxObject::Descriptor descriptorDSV_;
-	DxObject::Descriptor descriptorSRV_;
+	//* raytracing depth *//
 
-	//* paraemter *//
-
-	Vector2ui size_;
+	ComPtr<ID3D12Resource> raytracingDepthBuffer_;
+	DxObject::Descriptor descriptorUAV_;
 
 	//=========================================================================================
 	// private methods
 	//=========================================================================================
 
-	void CreateResource();
-	void CreateDSV();
-	void CreateSRV();
+	void CreateRaytracingDepth(const Vector2ui& size);
 
 };

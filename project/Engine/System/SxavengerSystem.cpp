@@ -55,7 +55,7 @@ _DXOBJECT DescriptorHeaps* SxavengerSystemEngine::GetDxDescriptorHeaps() {
 }
 
 _DXOBJECT CompileBlobCollection* SxavengerSystemEngine::GetDxCompileBlobCollection() {
-	return  sDirectXCommon->GetCompileBlobCollection();
+	return sDirectXCommon->GetCompileBlobCollection();
 }
 
 void SxavengerSystemEngine::TransitionAllocator() {

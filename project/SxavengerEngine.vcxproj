@@ -131,6 +131,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Engine\Asset\Asset.cpp" />
     <ClCompile Include="Engine\Console\Console.cpp" />
     <ClCompile Include="Engine\Console\RenderConsole\RenderBehavior.cpp" />
     <ClCompile Include="Engine\Console\RenderConsole\RenderConsole.cpp" />
@@ -144,9 +145,17 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="Engine\Content\Texture\Texture.cpp" />
     <ClCompile Include="Engine\Content\Texture\TextureCollection.cpp" />
     <ClCompile Include="Engine\Module\Behavior\BaseBehavior.cpp" />
+    <ClCompile Include="Engine\Module\Behavior\ModelBehavior.cpp" />
     <ClCompile Include="Engine\Module\Camera\Camera3d.cpp" />
     <ClCompile Include="Engine\Module\Camera\DebugCamera3d.cpp" />
+    <ClCompile Include="Engine\Module\Pipeline\ComputePipelineCollection.cpp" />
+    <ClCompile Include="Engine\Module\Pipeline\RenderPipelineCollection.cpp" />
+    <ClCompile Include="Engine\Module\SxavengerGraphics\AdaptiveRenderFrame.cpp" />
+    <ClCompile Include="Engine\Module\SxavengerGraphics\DepthBufferController.cpp" />
+    <ClCompile Include="Engine\Module\SxavengerGraphics\SxavGraphicsFrame.cpp" />
     <ClCompile Include="Engine\Module\SxavengerGraphics\SystematicRenderFrame.cpp" />
+    <ClCompile Include="Engine\Module\SxavengerGraphics\VisualProcessFrame.cpp" />
+    <ClCompile Include="Engine\Module\SxavengerGraphics\XclipseProcessFrame.cpp" />
     <ClCompile Include="Engine\Module\Transform\Transform.cpp" />
     <ClCompile Include="Engine\Module\Transform\TransformComponent.cpp" />
     <ClCompile Include="Engine\System\DirectX\DirectXCommon.cpp" />
@@ -190,9 +199,11 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="Lib\Sxl\LowerPathMap.cpp" />
     <ClCompile Include="Lib\Sxl\LowerUnorderedMap.cpp" />
     <ClCompile Include="Lib\Sxl\OptimizedMap.cpp" />
+    <ClCompile Include="Lib\Sxl\OptimizedSet.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Engine\Asset\Asset.h" />
     <ClInclude Include="Engine\Console\Console.h" />
     <ClInclude Include="Engine\Console\RenderConsole\RenderBehavior.h" />
     <ClInclude Include="Engine\Console\RenderConsole\RenderConsole.h" />
@@ -206,9 +217,17 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Engine\Content\Texture\Texture.h" />
     <ClInclude Include="Engine\Content\Texture\TextureCollection.h" />
     <ClInclude Include="Engine\Module\Behavior\BaseBehavior.h" />
+    <ClInclude Include="Engine\Module\Behavior\ModelBehavior.h" />
     <ClInclude Include="Engine\Module\Camera\Camera3d.h" />
     <ClInclude Include="Engine\Module\Camera\DebugCamera3d.h" />
+    <ClInclude Include="Engine\Module\Pipeline\ComputePipelineCollection.h" />
+    <ClInclude Include="Engine\Module\Pipeline\RenderPipelineCollection.h" />
+    <ClInclude Include="Engine\Module\SxavengerGraphics\AdaptiveRenderFrame.h" />
+    <ClInclude Include="Engine\Module\SxavengerGraphics\DepthBufferController.h" />
+    <ClInclude Include="Engine\Module\SxavengerGraphics\SxavGraphicsFrame.h" />
     <ClInclude Include="Engine\Module\SxavengerGraphics\SystematicRenderFrame.h" />
+    <ClInclude Include="Engine\Module\SxavengerGraphics\VisualProcessFrame.h" />
+    <ClInclude Include="Engine\Module\SxavengerGraphics\XclipseProcessFrame.h" />
     <ClInclude Include="Engine\Module\Transform\Transform.h" />
     <ClInclude Include="Engine\Module\Transform\TransformComponent.h" />
     <ClInclude Include="Engine\System\Cinfig\SxavengerDirectory.h" />
@@ -260,6 +279,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Lib\Sxl\LowerPathMap.h" />
     <ClInclude Include="Lib\Sxl\LowerUnorderedMap.h" />
     <ClInclude Include="Lib\Sxl\OptimizedMap.h" />
+    <ClInclude Include="Lib\Sxl\OptimizedSet.h" />
     <ClInclude Include="Lib\Sxl\SxavengerLibrary.h" />
     <ClInclude Include="Lib\VertexStructure.h" />
   </ItemGroup>

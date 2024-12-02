@@ -1,0 +1,19 @@
+#include "Asset.h"
+
+////////////////////////////////////////////////////////////////////////////////////////////
+// Asset class methods
+////////////////////////////////////////////////////////////////////////////////////////////
+
+void Asset::Import(const std::filesystem::path& filepath) {
+
+	Node* node = &root_;
+
+	for (const auto& path : filepath) {
+		if (path.has_extension()) {
+			node->files[path] = {};
+
+		} else {
+			node = &node->folders[path];
+		}
+	}
+}

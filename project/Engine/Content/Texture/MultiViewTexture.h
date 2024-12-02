@@ -68,6 +68,9 @@ public:
 	bool IsCreatedRTV() const;
 	bool IsCreatedUAV() const;
 
+
+	ID3D12Resource* GetResource() const { return resource_.Get(); }
+
 private:
 
 	////////////////////////////////////////////////////////////////////////////////////////////

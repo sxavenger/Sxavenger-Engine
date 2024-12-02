@@ -3,6 +3,9 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
+//* lib
+#include <Lib/CXXAttributeConfig.h>
+
 //* c++
 #include <list>
 #include <memory>
@@ -14,7 +17,7 @@
 // forward
 //-----------------------------------------------------------------------------------------
 class BaseBehavior;
-class Camera; //!< 基底のcameraに合わせる
+class Camera3d; //!< 基底のcameraに合わせる
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // BehaviorRenderingFlag enum
@@ -64,6 +67,12 @@ public:
 	//* ImGui command
 	virtual void SystemAttributeImGui() {} //!< system using
 	virtual void SetAttributeImGui() {}    //!< user側で定義可能
+
+	//* Draw methods
+
+	virtual void DrawSystematic(_MAYBE_UNUSED const Camera3d* camera) {}
+	virtual void DrawAdaptive(_MAYBE_UNUSED const Camera3d* camera) {}
+	virtual void DrawLateAdaptive(_MAYBE_UNUSED const Camera3d* camera) {}
 
 	//* getter *//
 

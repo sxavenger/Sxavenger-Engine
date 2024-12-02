@@ -10,6 +10,8 @@
 #include "Engine/Content/Model/Model.h"
 #include "Engine/Module/Transform/TransformComponent.h"
 #include "Engine/Module/Camera/Camera3d.h"
+#include "Engine/Module/SxavengerGraphics/SxavGraphicsFrame.h"
+#include "Engine/Asset/Asset.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // GameScene class
@@ -44,10 +46,17 @@ private:
 
 	std::unique_ptr<DxObject::ReflectionGraphicsPipelineState> pipeline_;
 
+	std::unique_ptr<SxavGraphicsFrame> g_;
+
+	std::unique_ptr<DxObject::DimensionBuffer<Matrix4x4>> matrix_;
+
+	Asset asset_;
+
 	//=========================================================================================
 	// private methods
 	//=========================================================================================
 
+	void SystemInit();
 	void Init();
 
 	void Update();
