@@ -17,3 +17,12 @@ void ModelBehavior::SystemAttributeImGui() {
 		ImGui::TreePop();
 	}
 }
+
+void ModelBehavior::DrawSystematic(_MAYBE_UNUSED const Camera3d* camera) {
+}
+
+void ModelBehavior::DrawAdaptive(_MAYBE_UNUSED const Camera3d* camera) {
+}
+
+void ModelBehavior::DrawLateAdaptive(_MAYBE_UNUSED const Camera3d* camera) {
+}

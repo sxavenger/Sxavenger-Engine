@@ -28,13 +28,13 @@ public:
 
 	//* derivative behaivor methods *//
 	//* ImGui command
-	virtual void SystemAttributeImGui();
+	virtual void SystemAttributeImGui() override;
 
 	//* Draw methods
 
-	virtual void DrawSystematic(_MAYBE_UNUSED const Camera3d* camera);
-	virtual void DrawAdaptive(_MAYBE_UNUSED const Camera3d* camera);
-	virtual void DrawLateAdaptive(_MAYBE_UNUSED const Camera3d* camera);
+	virtual void DrawSystematic(_MAYBE_UNUSED const Camera3d* camera) override;
+	virtual void DrawAdaptive(_MAYBE_UNUSED const Camera3d* camera) override;
+	virtual void DrawLateAdaptive(_MAYBE_UNUSED const Camera3d* camera) override;
 
 private:
 
