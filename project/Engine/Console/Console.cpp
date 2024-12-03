@@ -34,8 +34,6 @@ void Console::Term() {
 	SystemConsole::Term();
 	RenderConsole::Term();
 
-	scene_.reset();
-
 	runtime_.End();
 	EngineLog(std::format("[Console] executed time<TimeUtil::s>: {:.0f}sec", runtime_.GetDeltaTime<TimeUnit::s>().time));
 }
@@ -60,6 +58,7 @@ void Console::UpdateConsole() {
 }
 
 void Console::Draw() {
+	RenderConsole::Draw();
 }
 
 void Console::DrawConsole() {
@@ -79,7 +78,7 @@ void Console::DockingConsole() const {
 void Console::SetWindow(const std::weak_ptr<GameWindow>& window) {
 	window_ = window;
 
-	RenderConsole::CreateSceneFrame(window.lock()->GetSize());
+	RenderConsole::CreateFrame(window.lock()->GetSize());
 }
 
 Console* Console::GetInstance() {
@@ -143,9 +142,9 @@ void Console::DisplayMainMenu() {
 		ImGui::EndMenu();
 	}
 
-	if (ImGui::BeginMenu("Behavior")) {
+	if (ImGui::BeginMenu("Graphics")) {
 		MenuDummy();
-		RenderConsole::ShowBehaviorMenu();
+		RenderConsole::ShowGraphicsMenu();
 		ImGui::EndMenu();
 	}
 

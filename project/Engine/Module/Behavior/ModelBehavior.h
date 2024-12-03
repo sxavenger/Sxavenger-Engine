@@ -32,14 +32,14 @@ public:
 
 	//* Draw methods
 
-	virtual void DrawSystematic(_MAYBE_UNUSED const Camera3d* camera) override;
-	virtual void DrawAdaptive(_MAYBE_UNUSED const Camera3d* camera) override;
-	virtual void DrawLateAdaptive(_MAYBE_UNUSED const Camera3d* camera) override;
+	virtual void DrawSystematic(_MAYBE_UNUSED const SxavGraphicsFrame* frame) override;
+	virtual void DrawAdaptive(_MAYBE_UNUSED const SxavGraphicsFrame* frame) override;
+	virtual void DrawLateAdaptive(_MAYBE_UNUSED const SxavGraphicsFrame* frame) override;
 
-private:
+protected:
 
 	//=========================================================================================
-	// private variables
+	// protected variables
 	//=========================================================================================
 
 	Model* model_;

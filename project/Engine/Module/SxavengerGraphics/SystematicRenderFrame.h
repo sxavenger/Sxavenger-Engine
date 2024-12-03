@@ -56,7 +56,12 @@ public:
 
 	//* getter *//
 
-	const D3D12_CPU_DESCRIPTOR_HANDLE& GetCPUHandleRTV(uint32_t index) const { return buffers_[index]->GetCPUHandleRTV(); }
+	const D3D12_CPU_DESCRIPTOR_HANDLE& GetCPUHandleRTV(GBuffer index) const { return buffers_.at(static_cast<uint8_t>(index))->GetCPUHandleRTV(); }
+	const D3D12_CPU_DESCRIPTOR_HANDLE& GetCPUHandleRTV(uint8_t index) const { return buffers_.at(index)->GetCPUHandleRTV(); }
+
+	const D3D12_GPU_DESCRIPTOR_HANDLE& GetGPUHandleSRV(GBuffer index) const { return buffers_.at(static_cast<uint8_t>(index))->GetGPUHandleSRV(); }
+
+	const MultiViewTexture* GetTexture(GBuffer index) const { return buffers_.at(static_cast<uint8_t>(index)).get(); }
 
 	//=========================================================================================
 	// public variables

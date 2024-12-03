@@ -3,54 +3,40 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
+//* base
+#include <Engine/Module/Behavior/ModelBehavior.h>
+
 //* engine
-#include <Engine/System/Window/GameWindow.h>
-
-
-#include "Engine/Asset/Asset.h"
-#include "Demo/ChessBoard.h"
+#include <Engine/Module/VisualLayer/VisualDoF.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// GameScene class
+// ChessBoard class
 ////////////////////////////////////////////////////////////////////////////////////////////
-class GameScene {
+class ChessBoard
+	: public ModelBehavior {
 public:
 
 	//=========================================================================================
 	// public methods
 	//=========================================================================================
 
-	GameScene()  = default;
-	~GameScene() = default;
+	ChessBoard()  = default;
+	~ChessBoard() = default;
 
-	void Run();
+	void Init();
+
+	void Term();
+
+	void Update();
+
+	void DrawSystematic(_MAYBE_UNUSED const SxavGraphicsFrame* frame) override;
 
 private:
 
 	//=========================================================================================
-	// private variables
+	// public methods
 	//=========================================================================================
 
-	std::shared_ptr<GameWindow> mainWindow_;
-	std::weak_ptr<GameWindow> subWindow_;
+	std::unique_ptr<Model> model_;
 
-	bool renderWindowSwitch_ = true;
-
-	Asset asset_;
-
-	std::unique_ptr<ChessBoard> chess_;
-
-	//=========================================================================================
-	// private methods
-	//=========================================================================================
-
-	void SystemInit();
-	void Init();
-
-	void Update();
-
-	void Draw();
-	void DrawScreen();
-
-	void Term();
 };

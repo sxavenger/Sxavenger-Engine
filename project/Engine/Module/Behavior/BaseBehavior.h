@@ -17,7 +17,7 @@
 // forward
 //-----------------------------------------------------------------------------------------
 class BaseBehavior;
-class Camera3d; //!< 基底のcameraに合わせる
+class SxavGraphicsFrame;
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // BehaviorRenderingFlag enum
@@ -70,9 +70,9 @@ public:
 
 	//* Draw methods
 
-	virtual void DrawSystematic(_MAYBE_UNUSED const Camera3d* camera) {}
-	virtual void DrawAdaptive(_MAYBE_UNUSED const Camera3d* camera) {}
-	virtual void DrawLateAdaptive(_MAYBE_UNUSED const Camera3d* camera) {}
+	virtual void DrawSystematic(_MAYBE_UNUSED const SxavGraphicsFrame*) {}
+	virtual void DrawAdaptive(_MAYBE_UNUSED const SxavGraphicsFrame*) {}
+	virtual void DrawLateAdaptive(_MAYBE_UNUSED const SxavGraphicsFrame*) {}
 
 	//* getter *//
 

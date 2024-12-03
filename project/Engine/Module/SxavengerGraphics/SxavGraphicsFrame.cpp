@@ -6,6 +6,7 @@ _DXOBJECT_USING
 //-----------------------------------------------------------------------------------------
 //* engine
 #include <Engine/System/SxavengerSystem.h>
+#include <Engine/Module/Camera/Camera3d.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // SystematicRenderFrame class methods
@@ -46,7 +47,7 @@ void SxavGraphicsFrame::BeginSystematic(const DirectXThreadContext* context) {
 	// RenderTargetとDepthStencilを設定
 	SystematicRenderFrame::GBufferArray<D3D12_CPU_DESCRIPTOR_HANDLE> handles;
 
-	for (uint32_t i = 0; i < handles.size(); ++i) {
+	for (uint8_t i = 0; i < handles.size(); ++i) {
 		handles[i] = systematic_->GetCPUHandleRTV(i);
 	}
 
@@ -86,8 +87,45 @@ void SxavGraphicsFrame::ClearRasterizerDepth(const DirectXThreadContext* context
 	depthBuffer_->ClearRasterizeDepth(context);
 }
 
+void SxavGraphicsFrame::BeginXclipse(const DirectXThreadContext* context) {
+	xclipse_->TransitionBeginProcess(context);
+}
+
+void SxavGraphicsFrame::EndXclipse(const DirectXThreadContext* context) {
+	xclipse_->TransitionEndProcess(context);
+}
+
+void SxavGraphicsFrame::BeginVisual(const DirectXThreadContext* context) {
+	visual_->TransitionBeginProcess(context);
+}
+
+void SxavGraphicsFrame::EndVisual(const DirectXThreadContext* context) {
+	visual_->TransitionEndProcess(context);
+}
+
 void SxavGraphicsFrame::TransitionXclipseToAdaptive(const DirectXThreadContext* context) {
 	CopyTexture(context, adaptive_->GetTexture(), xclipse_->GetTexture());
+}
+
+void SxavGraphicsFrame::TransitionAdaptiveToVisual(const DirectXThreadContext* context) {
+	visual_->ResetResultBufferIndex();
+	CopyTexture(context, visual_->GetResultBuffer(), adaptive_->GetTexture());
+}
+
+void SxavGraphicsFrame::TransitionVisualToAdaptive(const DirectXThreadContext* context) {
+	CopyTexture(context, adaptive_->GetTexture(), visual_->GetResultBuffer());
+}
+
+DxObject::BindBufferDesc SxavGraphicsFrame::GetTransitionSystematicBindDesc() const {
+	DxObject::BindBufferDesc bind = {};
+	bind.SetHandle("gAlbedo",   systematic_->GetGPUHandleSRV(SystematicRenderFrame::GBuffer::kAlbedo));
+	bind.SetHandle("gNormal",   systematic_->GetGPUHandleSRV(SystematicRenderFrame::GBuffer::kNormal));
+	bind.SetHandle("gPosition", systematic_->GetGPUHandleSRV(SystematicRenderFrame::GBuffer::kPosition));
+	bind.SetAddress("gCamera",  camera_->GetGPUVirtualAddress());
+	bind.SetAddress("gConfig",  config_->GetGPUVirtualAddress());
+	bind.SetHandle("gXclipse",  xclipse_->GetTexture()->GetGPUHandleUAV());
+
+	return bind;
 }
 
 void SxavGraphicsFrame::CopyTexture(const DirectXThreadContext* context, const MultiViewTexture* dst, const MultiViewTexture* src) {

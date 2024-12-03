@@ -23,7 +23,7 @@ enum ComputePipelineType {
 	////* visual
 	//kVisual_Glayscale,
 	//kVisual_LUT,
-	//kVisual_DoF,
+	kVisual_DoF,
 	//kVisual_Toon,
 
 	kCountOfComputePipelineType
@@ -79,5 +79,7 @@ private:
 	//=========================================================================================
 
 	void CreateTransition();
+
+	void CreateVisual();
 
 };

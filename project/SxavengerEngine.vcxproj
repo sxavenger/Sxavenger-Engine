@@ -131,6 +131,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Demo\ChessBoard.cpp" />
     <ClCompile Include="Engine\Asset\Asset.cpp" />
     <ClCompile Include="Engine\Console\Console.cpp" />
     <ClCompile Include="Engine\Console\RenderConsole\RenderBehavior.cpp" />
@@ -152,12 +153,15 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="Engine\Module\Pipeline\RenderPipelineCollection.cpp" />
     <ClCompile Include="Engine\Module\SxavengerGraphics\AdaptiveRenderFrame.cpp" />
     <ClCompile Include="Engine\Module\SxavengerGraphics\DepthBufferController.cpp" />
+    <ClCompile Include="Engine\Module\SxavengerGraphics\ScreenPresenter.cpp" />
     <ClCompile Include="Engine\Module\SxavengerGraphics\SxavGraphicsFrame.cpp" />
     <ClCompile Include="Engine\Module\SxavengerGraphics\SystematicRenderFrame.cpp" />
     <ClCompile Include="Engine\Module\SxavengerGraphics\VisualProcessFrame.cpp" />
     <ClCompile Include="Engine\Module\SxavengerGraphics\XclipseProcessFrame.cpp" />
     <ClCompile Include="Engine\Module\Transform\Transform.cpp" />
     <ClCompile Include="Engine\Module\Transform\TransformComponent.cpp" />
+    <ClCompile Include="Engine\Module\VisualLayer\VisualDoF.cpp" />
+    <ClCompile Include="Engine\Module\VisualLayer\VisualLayer.cpp" />
     <ClCompile Include="Engine\System\DirectX\DirectXCommon.cpp" />
     <ClCompile Include="Engine\System\DirectX\DirectXContext.cpp" />
     <ClCompile Include="Engine\System\DirectX\DxObject\DxBindBuffer.cpp" />
@@ -203,6 +207,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Demo\ChessBoard.h" />
     <ClInclude Include="Engine\Asset\Asset.h" />
     <ClInclude Include="Engine\Console\Console.h" />
     <ClInclude Include="Engine\Console\RenderConsole\RenderBehavior.h" />
@@ -224,12 +229,15 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Engine\Module\Pipeline\RenderPipelineCollection.h" />
     <ClInclude Include="Engine\Module\SxavengerGraphics\AdaptiveRenderFrame.h" />
     <ClInclude Include="Engine\Module\SxavengerGraphics\DepthBufferController.h" />
+    <ClInclude Include="Engine\Module\SxavengerGraphics\ScreenPresenter.h" />
     <ClInclude Include="Engine\Module\SxavengerGraphics\SxavGraphicsFrame.h" />
     <ClInclude Include="Engine\Module\SxavengerGraphics\SystematicRenderFrame.h" />
     <ClInclude Include="Engine\Module\SxavengerGraphics\VisualProcessFrame.h" />
     <ClInclude Include="Engine\Module\SxavengerGraphics\XclipseProcessFrame.h" />
     <ClInclude Include="Engine\Module\Transform\Transform.h" />
     <ClInclude Include="Engine\Module\Transform\TransformComponent.h" />
+    <ClInclude Include="Engine\Module\VisualLayer\VisualDoF.h" />
+    <ClInclude Include="Engine\Module\VisualLayer\VisualLayer.h" />
     <ClInclude Include="Engine\System\Cinfig\SxavengerDirectory.h" />
     <ClInclude Include="Engine\System\Config\SxavengerDirectory.h" />
     <ClInclude Include="Engine\System\DirectX\DirectXCommon.h" />

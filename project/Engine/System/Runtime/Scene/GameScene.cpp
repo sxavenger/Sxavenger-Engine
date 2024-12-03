@@ -56,6 +56,8 @@ void GameScene::Run() {
 		//-----------------------------------------------------------------------------------------
 
 		Draw();
+		sConsole->Draw();
+		DrawScreen();
 		sConsole->DrawConsole();
 
 		SxavengerSystem::PresentAllWindow();
@@ -86,6 +88,8 @@ void GameScene::SystemInit() {
 
 	sConsole->SetWindow(mainWindow_);
 
+	subWindow_ = SxavengerSystem::TryCreateSubWindow(kMainWindowSize, L"sub").lock();
+
 	{
 		std::unique_ptr<DxObject::ReflectionComputePipelineState> compute = std::make_unique<DxObject::ReflectionComputePipelineState>();
 		compute->CreateBlob("common/white1x1.cs.hlsl");
@@ -108,112 +112,41 @@ void GameScene::SystemInit() {
 
 void GameScene::Init() {
 
-	transform_.CreateBuffer();
-	transform_.GetTransform().scale = { 4.0f, 4.0f, 4.0f };
-	transform_.UpdateMatrix();
-
-	model_ = std::make_unique<Model>();
-	//model_->AsyncLoad("resources/model/chessBoard", "chessBoard.gltf", Model::GetDefaultAssimpOption() | aiProcess_Triangulate);
-	model_->AsyncLoad("resources/model/demo", "teapot.obj", Model::GetDefaultAssimpOption() | aiProcess_Triangulate);
-	//model_->SetState(ExecutionState::kCompleted);
-
-	camera_ = std::make_unique<Camera3d>();
-	camera_->Create();
-	camera_->GetTransform().translate = { 0.0f, 0.0f, -12.0f };
-	camera_->UpdateMatrix();
-
-	pipeline_ = std::make_unique<DxObject::ReflectionGraphicsPipelineState>();
-	pipeline_->CreateBlob("demo/simple.vs.hlsl", DxObject::GraphicsShaderType::vs);
-	pipeline_->CreateBlob("demo/simple.ps.hlsl", DxObject::GraphicsShaderType::ps);
-
-	pipeline_->ReflectionRootSignature(SxavengerSystem::GetDxDevice());
-
-	DxObject::GraphicsPipelineDesc desc = {};
-	desc.CreateDefaultDesc();
-	desc.rtvFormats[0] = DxObject::kScreenFormat;
-
-	pipeline_->CreatePipeline(SxavengerSystem::GetDxDevice(), desc);
-
-	g_ = std::make_unique<SxavGraphicsFrame>();
-	g_->Create(kMainWindowSize);
-
-	matrix_ = std::make_unique<DxObject::DimensionBuffer<Matrix4x4>>();
-	matrix_->Create(SxavengerSystem::GetDxDevice(), 1);
-	(*matrix_)[0] = Matrix4x4::Identity();
-
 	asset_.Import("asset/interdinate/test.hlsl");
+
+	chess_ = std::make_unique<ChessBoard>();
+	chess_->Init();
+	chess_->SetToConsole();
 }
 
 void GameScene::Update() {
-
-	transform_.GetTransform().rotate *= MakeAxisAngle({0.0f, 1.0f, 0.0f}, 0.01f);
-	transform_.UpdateMatrix();
 }
 
 void GameScene::Draw() {
+}
 
-	auto commandList = SxavengerSystem::GetCommandList();
+void GameScene::DrawScreen() {
 
-	g_->BeginAdaptive(SxavengerSystem::GetMainThreadContext());
-	//g_->ClearSystematic(SxavengerSystem::GetMainThreadContext());
-	g_->ClearRasterizerDepth(SxavengerSystem::GetMainThreadContext());
+	mainWindow_->BeginRendering();
+	mainWindow_->ClearWindow();
 
-	sConsole->SetGraphicsPipeline(kDefaultVS_AlbedoPS, SxavengerSystem::GetMainThreadContext(), g_->GetSize());
+	mainWindow_->EndRendering();
 
-	DxObject::BindBufferDesc bindT = {};
-	bindT.SetAddress("gCamera", camera_->GetGPUVirtualAddress());
-	bindT.SetAddress("gTransform", transform_.GetGPUVirtualAddress());
-	bindT.SetAddress("gUVTransform", matrix_->GetGPUVirtualAddress());
-
-	for (uint32_t i = 0; i < model_->GetMeshSize(); ++i) {
-		model_->SetIABuffer(i);
-
-		bindT.SetHandle("gAlbedo", model_->GetTextureHandle(i));
-		sConsole->BindGraphicsBuffer(kDefaultVS_AlbedoPS, SxavengerSystem::GetMainThreadContext(), bindT);
-
-		model_->DrawCall(i);
-	}
-
-	g_->EndAdaptive(SxavengerSystem::GetMainThreadContext());
-
-	SxavengerSystem::TransitionAllocator();
-
+	
 	if (!subWindow_.expired()) {
 		auto window = subWindow_.lock();
 
 		window->BeginRendering();
 		window->ClearWindow();
+
+		sConsole->PresentToScreen(window.get(), SxavengerSystem::GetMainThreadContext());
+
 		window->EndRendering();
 	}
-
-	mainWindow_->BeginRendering();
-	mainWindow_->ClearWindow();
-
-	if (renderWindowSwitch_) {
-
-		pipeline_->ReloadAndSetPipeline(commandList);
-
-		if (model_->IsCompleted()) {
-
-			DxObject::BindBufferDesc bind = {};
-			bind.SetAddress("gTransform", transform_.GetGPUVirtualAddress());
-			bind.SetAddress("gCamera", camera_->GetGPUVirtualAddress());
-
-			for (uint32_t i = 0; i < model_->GetMeshSize(); ++i) {
-				model_->SetIABuffer(i);
-
-				bind.SetHandle("gDiffuse", model_->GetTextureHandle(i));
-				pipeline_->BindGraphicsBuffer(SxavengerSystem::GetMainThreadContext()->GetDxCommand(), bind);
-
-				model_->DrawCall(i);
-			}
-		}
-	}
-
-	mainWindow_->EndRendering();
 }
 
 void GameScene::Term() {
+	chess_.reset();
 	SxavengerSystem::ExecuteAllAllocator();
 }
 

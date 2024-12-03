@@ -24,25 +24,23 @@ const uint32_t Model::kDefaultAssimpOption_ = aiProcess_FlipWindingOrder | aiPro
 // Model class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-void Model::Load(const std::filesystem::path& directory, const std::filesystem::path& filename, const DirectXThreadContext* context, uint32_t assimpOption) {
+void Model::Load(const std::filesystem::path& filepath, const DirectXThreadContext* context, uint32_t assimpOption) {
 	TaskThreadExecution::SetState(ExecutionState::kRunning);
 
-	directory_ = directory;
-	filename_  = filename;
+	filepath_     = filepath;
+	assimpOption_ = assimpOption;
 
-	std::filesystem::path filepath = directory_ / filename_;
-
-	std::string filepathA = filepath.generic_string();
+	std::string filepathA = filepath_.generic_string();
 
 	// sceneの取得
 	Assimp::Importer importer; //!< scene保存するため保管
-	const aiScene* aiScene = importer.ReadFile(filepathA.c_str(), assimpOption);
+	const aiScene* aiScene = importer.ReadFile(filepathA.c_str(), assimpOption_);
 
-	Assert(aiScene != nullptr, "model load failed. filepath: " + filepath.generic_string(), importer.GetErrorString());
+	Assert(aiScene != nullptr, "model load failed. filepath: " + filepath_.generic_string(), importer.GetErrorString());
 	Assert(aiScene->HasMeshes()); //!< メッシュナシは未対応
 
 	LoadMesh(aiScene);
-	LoadMaterial(aiScene, directory_, context);
+	LoadMaterial(aiScene, filepath_.parent_path(), context);
 
 	root_ = ReadNode(aiScene->mRootNode);
 }
@@ -73,13 +71,13 @@ void Model::DrawCall(uint32_t meshIndex, uint32_t instanceCount) const {
 	meshes_[meshIndex].mesh.DrawCall(instanceCount);
 }
 
-void Model::AsyncLoad(const std::filesystem::path& directory, const std::filesystem::path& filename, uint32_t assimpOption) {
+void Model::AsyncLoad(const std::filesystem::path& filepath, uint32_t assimpOption) {
 
-	directory_ = directory;
-	filename_  = filename;
+	filepath_     = filepath;
+	assimpOption_ = assimpOption;
 
 	TaskThreadExecution::SetTask([&](_MAYBE_UNUSED const Thread* const thread) {
-		Load(directory_, filename_, thread, assimpOption);
+		Load(filepath_, thread, assimpOption_);
 	});
 
 	SxavengerSystem::PushTask(this);
@@ -202,20 +200,25 @@ void Model::LoadMaterial(const aiScene* aiScene, const std::filesystem::path& di
 
 		// diffuse textureの取得
 		if (aiMaterial->GetTextureCount(aiTextureType_DIFFUSE) != 0) {
-			aiString textureFilePath;
-			aiMaterial->GetTexture(aiTextureType_DIFFUSE, 0, &textureFilePath);
+			aiString aiTextureFilePath;
+			aiMaterial->GetTexture(aiTextureType_DIFFUSE, 0, &aiTextureFilePath);
+
+			std::filesystem::path textureFilepath = directory / aiTextureFilePath.C_Str();
+
 
 			// データの保存
-			material.textures_[static_cast<uint8_t>(MaterialTextureType::kDiffuse)] = SxavengerContent::TryLoadTexture(directory / std::filesystem::path(textureFilePath.C_Str()), context);
+			material.textures_[static_cast<uint8_t>(MaterialTextureType::kDiffuse)] = SxavengerContent::TryLoadTexture(textureFilepath, context);
 		}
 
 		// normal textureの取得
 		if (aiMaterial->GetTextureCount(aiTextureType_NORMALS) != 0) {
-			aiString textureFilePath;
-			aiMaterial->GetTexture(aiTextureType_NORMALS, 0, &textureFilePath);
+			aiString aiTextureFilePath;
+			aiMaterial->GetTexture(aiTextureType_NORMALS, 0, &aiTextureFilePath);
+
+			std::filesystem::path textureFilepath = directory / aiTextureFilePath.C_Str();
 
 			// データの保存
-			material.textures_[static_cast<uint8_t>(MaterialTextureType::kNormal)] = SxavengerContent::TryLoadTexture(directory / std::filesystem::path(textureFilePath.C_Str()), context);
+			material.textures_[static_cast<uint8_t>(MaterialTextureType::kNormal)] = SxavengerContent::TryLoadTexture(textureFilepath, context);
 		}
 	}
 }

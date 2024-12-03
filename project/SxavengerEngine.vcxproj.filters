@@ -79,6 +79,10 @@
     <ClCompile Include="Engine\Module\Pipeline\ComputePipelineCollection.cpp" />
     <ClCompile Include="Engine\Asset\Asset.cpp" />
     <ClCompile Include="Lib\Sxl\OptimizedSet.cpp" />
+    <ClCompile Include="Demo\ChessBoard.cpp" />
+    <ClCompile Include="Engine\Module\SxavengerGraphics\ScreenPresenter.cpp" />
+    <ClCompile Include="Engine\Module\VisualLayer\VisualLayer.cpp" />
+    <ClCompile Include="Engine\Module\VisualLayer\VisualDoF.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\System\Window\Window.h" />
@@ -160,5 +164,9 @@
     <ClInclude Include="Engine\Module\Pipeline\ComputePipelineCollection.h" />
     <ClInclude Include="Engine\Asset\Asset.h" />
     <ClInclude Include="Lib\Sxl\OptimizedSet.h" />
+    <ClInclude Include="Demo\ChessBoard.h" />
+    <ClInclude Include="Engine\Module\SxavengerGraphics\ScreenPresenter.h" />
+    <ClInclude Include="Engine\Module\VisualLayer\VisualLayer.h" />
+    <ClInclude Include="Engine\Module\VisualLayer\VisualDoF.h" />
   </ItemGroup>
 </Project>

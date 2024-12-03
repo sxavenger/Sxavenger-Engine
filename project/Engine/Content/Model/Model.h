@@ -91,14 +91,14 @@ public:
 	Model()  = default;
 	~Model() { Term(); }
 
-	void Load(const std::filesystem::path& directory, const std::filesystem::path& filename, const DirectXThreadContext* context, uint32_t assimpOption = kDefaultAssimpOption_);
+	void Load(const std::filesystem::path& filepath, const DirectXThreadContext* context, uint32_t assimpOption = kDefaultAssimpOption_);
 
 	void Term();
 
 	//* task option *//
 
 	//!< 非推奨
-	void AsyncLoad(const std::filesystem::path& directory, const std::filesystem::path& filename, uint32_t assimpOption = kDefaultAssimpOption_);
+	void AsyncLoad(const std::filesystem::path& filepath, uint32_t assimpOption = kDefaultAssimpOption_);
 
 	//* mesh getter *//
 
@@ -130,8 +130,8 @@ private:
 
 	//* parameter *//
 
-	std::filesystem::path directory_;
-	std::filesystem::path filename_;
+	std::filesystem::path filepath_;
+	uint32_t assimpOption_;
 
 	//=========================================================================================
 	// private methods

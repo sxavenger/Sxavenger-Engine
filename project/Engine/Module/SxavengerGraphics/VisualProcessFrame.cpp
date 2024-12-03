@@ -29,7 +29,7 @@ void VisualProcessFrame::TransitionBeginProcess(const DirectXThreadContext* cont
 	context->GetCommandList()->ResourceBarrier(kProcessBufferNum_, barrires.data());
 }
 
-void VisualProcessFrame::TransitonEndProcess(const DirectXThreadContext* context) {
+void VisualProcessFrame::TransitionEndProcess(const DirectXThreadContext* context) {
 
 	std::array<D3D12_RESOURCE_BARRIER, kProcessBufferNum_> barrires = {};
 
@@ -50,5 +50,12 @@ void VisualProcessFrame::NextResultBufferIndex() {
 
 void VisualProcessFrame::ResetResultBufferIndex() {
 	resultBufferIndex_ = 0;
+}
+
+MultiViewTexture* VisualProcessFrame::GetPrevBuffer(uint32_t prev) const {
+	Assert(prev < kProcessBufferNum_, "visual: prev over process buffer.");
+
+	uint32_t index = (resultBufferIndex_ + kProcessBufferNum_ - prev) % kProcessBufferNum_;
+	return buffers_.at(index).get();
 }
 

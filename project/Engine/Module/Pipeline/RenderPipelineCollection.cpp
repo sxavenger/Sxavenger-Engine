@@ -16,6 +16,7 @@ void RenderPipelineCollection::Init() {
 	CreateDefaultDesc();
 	CreateDeffered();
 	CreateForward();
+	CreatePresent();
 }
 
 void RenderPipelineCollection::Term() {
@@ -77,8 +78,8 @@ void RenderPipelineCollection::CreateForward() {
 
 	{ //!< default.vs -> albedo.ps
 		pipelines_[kDefaultVS_AlbedoPS] = std::make_unique<ReflectionGraphicsPipelineState>();
-		pipelines_[kDefaultVS_AlbedoPS]->CreateBlob(L"sxavenger/behavior/default.vs.hlsl", GraphicsShaderType::vs);
-		pipelines_[kDefaultVS_AlbedoPS]->CreateBlob(L"sxavenger/behavior/albedo.ps.hlsl",  GraphicsShaderType::ps);
+		pipelines_[kDefaultVS_AlbedoPS]->CreateBlob("sxavenger/behavior/default.vs.hlsl", GraphicsShaderType::vs);
+		pipelines_[kDefaultVS_AlbedoPS]->CreateBlob("sxavenger/behavior/albedo.ps.hlsl",  GraphicsShaderType::ps);
 
 		pipelines_[kDefaultVS_AlbedoPS]->ReflectionRootSignature(device);
 
@@ -87,12 +88,32 @@ void RenderPipelineCollection::CreateForward() {
 
 	{
 		pipelines_[kDefaultMS_AlbedoPS] = std::make_unique<ReflectionGraphicsPipelineState>();
-		pipelines_[kDefaultMS_AlbedoPS]->CreateBlob(L"sxavenger/behavior/default.as.hlsl", GraphicsShaderType::as);
-		pipelines_[kDefaultMS_AlbedoPS]->CreateBlob(L"sxavenger/behavior/default.ms.hlsl", GraphicsShaderType::ms);
-		pipelines_[kDefaultMS_AlbedoPS]->CreateBlob(L"sxavenger/behavior/albedo.ps.hlsl", GraphicsShaderType::ps);
+		pipelines_[kDefaultMS_AlbedoPS]->CreateBlob("sxavenger/behavior/default.as.hlsl", GraphicsShaderType::as);
+		pipelines_[kDefaultMS_AlbedoPS]->CreateBlob("sxavenger/behavior/default.ms.hlsl", GraphicsShaderType::ms);
+		pipelines_[kDefaultMS_AlbedoPS]->CreateBlob("sxavenger/behavior/albedo.ps.hlsl", GraphicsShaderType::ps);
 
 		pipelines_[kDefaultMS_AlbedoPS]->ReflectionRootSignature(device);
 
 		pipelines_[kDefaultMS_AlbedoPS]->CreatePipeline(device, forwardDefaultDesc_);
 	}
+}
+
+void RenderPipelineCollection::CreatePresent() {
+
+	auto device = SxavengerSystem::GetDxDevice();
+
+	pipelines_[kPresentToScreen] = std::make_unique<ReflectionGraphicsPipelineState>();
+	pipelines_[kPresentToScreen]->CreateBlob("sxavenger/present/present.vs.hlsl", GraphicsShaderType::vs);
+	pipelines_[kPresentToScreen]->CreateBlob("sxavenger/present/present.ps.hlsl", GraphicsShaderType::ps);
+
+	pipelines_[kPresentToScreen]->ReflectionRootSignature(device);
+
+	DxObject::GraphicsPipelineDesc desc = {};
+	desc.CreateDefaultDesc();
+
+	desc.rtvFormats.clear();
+	desc.SetRTVFormat(kScreenFormat);
+
+	pipelines_[kPresentToScreen]->CreatePipeline(device, desc);
+
 }

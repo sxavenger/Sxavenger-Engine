@@ -14,8 +14,13 @@
 
 //* engine
 #include <Engine/System/DirectX/DxObject/DxDimensionBuffer.h>
+#include <Engine/System/DirectX/DxObject/DxBindBuffer.h>
 #include <Engine/System/DirectX/DirectXContext.h>
-#include <Engine/Module/Camera/Camera3d.h>
+
+//-----------------------------------------------------------------------------------------
+// forward
+//-----------------------------------------------------------------------------------------
+class Camera3d;
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // SystematicRenderFrame class
@@ -48,15 +53,44 @@ public:
 
 	void ClearRasterizerDepth(const DirectXThreadContext* context);
 
+	//* process option *//
+
+	void BeginXclipse(const DirectXThreadContext* context);
+
+	void EndXclipse(const DirectXThreadContext* context);
+
+	void BeginVisual(const DirectXThreadContext* context);
+
+	void EndVisual(const DirectXThreadContext* context);
+
 	//* transition *//
 
 	//void TransitionSystematicToXclipse(const DirectXThreadContext* context);
 
 	void TransitionXclipseToAdaptive(const DirectXThreadContext* context);
+	void TransitionAdaptiveToVisual(const DirectXThreadContext* context);
+	void TransitionVisualToAdaptive(const DirectXThreadContext* context);
 
 	//* getter *//
 
+	SystematicRenderFrame* GetSystematic() const { return systematic_.get(); }
+	AdaptiveRenderFrame* GetAdaptive() const { return adaptive_.get(); }
+	VisualProcessFrame* GetVisual() const { return visual_.get(); }
+
+	DepthBufferController* GetDepthBufferController() const { return depthBuffer_.get(); }
+
+
 	const Vector2ui& GetSize() const { return (*config_)[0].size; }
+
+	Camera3d* GetCamera() const { return camera_; }
+
+	const D3D12_GPU_VIRTUAL_ADDRESS& GetGetConfigVirtualAddress() const { return config_->GetGPUVirtualAddress(); }
+
+	DxObject::BindBufferDesc GetTransitionSystematicBindDesc() const;
+
+	//* setter *//
+
+	void SetCamera(Camera3d* camera) { camera_ = camera; }
 
 private:
 

@@ -71,6 +71,8 @@ public:
 
 	ID3D12Resource* GetResource() const { return resource_.Get(); }
 
+	const Vector2ui& GetSize() const { return size_; }
+
 private:
 
 	////////////////////////////////////////////////////////////////////////////////////////////

@@ -28,7 +28,7 @@ public:
 
 	void TransitionBeginProcess(const DirectXThreadContext* context);
 
-	void TransitonEndProcess(const DirectXThreadContext* context);
+	void TransitionEndProcess(const DirectXThreadContext* context);
 
 	//* index option *//
 
@@ -39,6 +39,8 @@ public:
 	//* getter *//
 
 	MultiViewTexture* GetResultBuffer() const { return buffers_.at(resultBufferIndex_).get(); }
+
+	MultiViewTexture* GetPrevBuffer(uint32_t prev = 1) const;
 	
 
 private:

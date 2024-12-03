@@ -47,6 +47,8 @@ public:
 
 	const D3D12_CPU_DESCRIPTOR_HANDLE& GetRasterizerCPUHandleDSV() const { return resterizerDepth_->GetCPUHandleDSV(); }
 
+	const D3D12_GPU_DESCRIPTOR_HANDLE& GetRasterizerGPUHandleSRV() const { return resterizerDepth_->GetGPUHandleSRV(); }
+
 private:
 
 	//=========================================================================================

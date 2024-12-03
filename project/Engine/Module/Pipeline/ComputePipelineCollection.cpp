@@ -13,6 +13,7 @@ _DXOBJECT_USING
 
 void ComputePipelineCollection::Init() {
 	CreateTransition();
+	CreateVisual();
 }
 
 void ComputePipelineCollection::Term() {
@@ -35,5 +36,13 @@ void ComputePipelineCollection::CreateTransition() {
 	pipelines_[kTransition_SampleLighting] = std::make_unique<ReflectionComputePipelineState>();
 	pipelines_[kTransition_SampleLighting]->CreateBlob("sxavenger/transition/transitionSampleLighting.cs.hlsl");
 	pipelines_[kTransition_SampleLighting]->ReflectionPipeline(SxavengerSystem::GetDxDevice());
+
+}
+
+void ComputePipelineCollection::CreateVisual() {
+
+	pipelines_[kVisual_DoF] = std::make_unique<ReflectionComputePipelineState>();
+	pipelines_[kVisual_DoF]->CreateBlob("sxavenger/visual/visualDoF.cs.hlsl");
+	pipelines_[kVisual_DoF]->ReflectionPipeline(SxavengerSystem::GetDxDevice());
 
 }
