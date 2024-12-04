@@ -24,9 +24,6 @@ public:
 	// TextureCollection option
 	//-----------------------------------------------------------------------------------------
 
-	static std::shared_ptr<BaseTexture> TryLoadTextureSafely(const std::filesystem::path& filename, const DirectXThreadContext* context);
-	static std::shared_ptr<Texture> TryLoadTexture(const std::filesystem::path& filename, const DirectXThreadContext* context);
-
 	static std::shared_ptr<BaseTexture> TryCreateRenderTextureSafely(const std::string& key, const Vector2ui& size, const Color4f& clearColor = kDefaultTextureClearColor, DXGI_FORMAT format = DxObject::kOffscreenFormat);
 	static std::shared_ptr<RenderTexture> TryCreateRenderTexture(const std::string& key, const Vector2ui& size, const Color4f& clearColor = kDefaultTextureClearColor, DXGI_FORMAT format = DxObject::kOffscreenFormat);
 

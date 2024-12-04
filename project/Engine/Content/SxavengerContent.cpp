@@ -27,14 +27,6 @@ void SxavengerContent::Term() {
 	sTextureCollection.reset();
 }
 
-std::shared_ptr<BaseTexture> SxavengerContent::TryLoadTextureSafely(const std::filesystem::path& filename, const DirectXThreadContext* context) {
-	return sTextureCollection->TryLoadTextureSafely(filename, context);
-}
-
-std::shared_ptr<Texture> SxavengerContent::TryLoadTexture(const  std::filesystem::path& filename, const DirectXThreadContext* context) {
-	return sTextureCollection->TryLoadTexture(filename, context);
-}
-
 std::shared_ptr<BaseTexture> SxavengerContent::TryCreateRenderTextureSafely(const std::string& key, const Vector2ui& size, const Color4f& clearColor, DXGI_FORMAT format) {
 	return sTextureCollection->TryCreateRenderTextureSafely(key, size, clearColor, format);
 }
