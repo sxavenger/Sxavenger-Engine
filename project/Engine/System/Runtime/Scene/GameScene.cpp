@@ -85,7 +85,7 @@ void GameScene::Run() {
 void GameScene::SystemInit() {
 
 	mainWindow_ = SxavengerSystem::CreateMainWindow(kMainWindowSize, kMainWindowTitle).lock();
-	mainWindow_->SetIcon("resources/icon/SxavengerEngineIcon.ico", { 32, 32 });
+	mainWindow_->SetIcon("packages/icon/SxavengerEngineIcon.ico", { 32, 32 });
 
 	sConsole->SetWindow(mainWindow_);
 

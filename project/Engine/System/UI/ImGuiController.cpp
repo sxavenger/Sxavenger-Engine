@@ -185,7 +185,7 @@ void ImGuiController::SettingImGui() {
 	// imgui dockingブランチを参照...
 	
 	{ //!< fontの変更
-		std::string filepath = "Resources/font/FiraMono-Regular.ttf";
+		std::string filepath = "packages/font/FiraMono-Regular.ttf";
 		io.Fonts->AddFontFromFileTTF(filepath.c_str(), 14.0f);
 	}
 

@@ -10,6 +10,6 @@
 // Directory
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-static const std::filesystem::path kShaderDirectory = "resources/hlsl";
-static const std::filesystem::path kJsonDirectory   = "resources/json";
-static const std::filesystem::path kModelDirectory  = "resources/model";
+static const std::filesystem::path kShaderDirectory = "packages/hlsl";
+static const std::filesystem::path kJsonDirectory   = "asset/json";
+static const std::filesystem::path kModelDirectory  = "asset/model";

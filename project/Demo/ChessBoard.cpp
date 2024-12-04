@@ -5,7 +5,7 @@
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 void ChessBoard::Init() {
-	model_ = SxavengerAsset::ImportModel("resources/model/chessBoard/chessBoard.gltf");
+	model_ = SxavengerAsset::ImportModel("asset/model/chessBoard/chessBoard.gltf");
 	model_->AsyncLoad(Model::GetDefaultAssimpOption() | aiProcess_Triangulate);
 	SxavengerSystem::PushTask(model_);
 
