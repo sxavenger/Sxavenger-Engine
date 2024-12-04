@@ -6,6 +6,7 @@
 //* console
 #include "SystemConsole/SystemConsole.h"
 #include "RenderConsole/RenderConsole.h"
+#include "AssetConsole/AssetConsole.h"
 
 //* engine
 #include <Engine/System/UI/ImGuiController.h>
@@ -24,7 +25,7 @@
 // Console class
 ////////////////////////////////////////////////////////////////////////////////////////////
 class Console
-	: public SystemConsole, public RenderConsole {
+	: public SystemConsole, public RenderConsole, public AssetConsole {
 public:
 
 	//=========================================================================================

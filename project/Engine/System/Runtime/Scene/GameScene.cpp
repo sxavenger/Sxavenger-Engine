@@ -8,6 +8,7 @@
 #include <Engine/System/Runtime/Performance/Performance.h>
 #include <Engine/Console/Console.h>
 #include <Engine/Content/SxavengerContent.h>
+#include <Engine/Asset/SxavengerAsset.h>
 
 //* lib
 #include <Lib/Environment.h>
@@ -111,8 +112,6 @@ void GameScene::SystemInit() {
 }
 
 void GameScene::Init() {
-
-	asset_.Import("asset/interdinate/test.hlsl");
 
 	chess_ = std::make_unique<ChessBoard>();
 	chess_->Init();

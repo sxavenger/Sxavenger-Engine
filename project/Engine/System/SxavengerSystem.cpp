@@ -5,15 +5,15 @@
 ////////////////////////////////////////////////////////////////////////////////////////////
 namespace {
 	//* system orign
-	std::unique_ptr<WinApp>               sWinApp            = nullptr; //!< win app system
-	std::unique_ptr<DirectXCommon>        sDirectXCommon     = nullptr; //!< DirectX12 system
-	std::unique_ptr<DirectXThreadContext> sMainThreadContext = nullptr; //!< main thread context
-	std::unique_ptr<ThreadCollection>     sThreadCollection  = nullptr; //!< thread collection
+	static std::unique_ptr<WinApp>               sWinApp            = nullptr; //!< win app system
+	static std::unique_ptr<DirectXCommon>        sDirectXCommon     = nullptr; //!< DirectX12 system
+	static std::unique_ptr<DirectXThreadContext> sMainThreadContext = nullptr; //!< main thread context
+	static std::unique_ptr<ThreadCollection>     sThreadCollection  = nullptr; //!< thread collection
 
 	//* system user
-	std::unique_ptr<GameWindowCollection> sWindowCollection  = nullptr; //!< window collection
-	std::unique_ptr<Input>                sInput             = nullptr; //!< input system
-	std::unique_ptr<ImGuiController>      sImGuiController   = nullptr; //!< ui system
+	static std::unique_ptr<GameWindowCollection> sWindowCollection  = nullptr; //!< window collection
+	static std::unique_ptr<Input>                sInput             = nullptr; //!< input system
+	static std::unique_ptr<ImGuiController>      sImGuiController   = nullptr; //!< ui system
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -74,8 +74,12 @@ DirectXThreadContext* SxavengerSystemEngine::GetMainThreadContext() {
 	return sMainThreadContext.get();
 }
 
-void SxavengerSystemEngine::PushTask(TaskThreadExecution* thread) {
-	sThreadCollection->PushTask(thread);
+void SxavengerSystemEngine::PushTask(const std::shared_ptr<TaskThreadExecution>& task) {
+	sThreadCollection->PushTask(task);
+}
+
+void SxavengerSystemEngine::TermThreadCollection() {
+	sThreadCollection.reset();
 }
 
 ThreadCollection* SxavengerSystemEngine::GetThreadCollection() {

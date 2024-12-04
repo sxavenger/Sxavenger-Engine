@@ -17,6 +17,7 @@
 #include <functional>
 #include <mutex>
 #include <queue>
+#include <memory>
 
 //-----------------------------------------------------------------------------------------
 // forward
@@ -112,7 +113,7 @@ public:
 
 	//* setter *//
 
-	void SetTask(TaskThreadExecution* task) { task_ = task; }
+	void SetTask(const std::shared_ptr<TaskThreadExecution>& task) { task_ = task; }
 
 protected:
 
@@ -129,8 +130,8 @@ protected:
 
 	//* task parameter *//
 
-	TaskThreadExecution* task_ = nullptr;
-	// FIXME: 所有者が破棄されると未定義動作になる.
+	std::shared_ptr<TaskThreadExecution> task_ = nullptr;
+	
 
 	RunTimeTracker runtime_;
 
@@ -154,7 +155,7 @@ public:
 
 	void Term();
 
-	void PushTask(TaskThreadExecution* task) { tasks_.emplace(task); }
+	void PushTask(const std::shared_ptr<TaskThreadExecution>& task) { tasks_.emplace(task); }
 
 	void SystemDebugGui() override;
 
@@ -172,7 +173,7 @@ private:
 
 	//* task container *//
 
-	std::queue<TaskThreadExecution*> tasks_;
+	std::queue<std::shared_ptr<TaskThreadExecution>> tasks_;
 	// FIXME: 所有者が破棄されると未定義動作になる.
 
 

@@ -5,8 +5,11 @@
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 void ChessBoard::Init() {
-	model_ = std::make_unique<Model>();
-	model_->AsyncLoad("resources/model/demo/teapot.obj", Model::GetDefaultAssimpOption() | aiProcess_Triangulate);
+	model_ = SxavengerAsset::ImportModel("resources/model/chessBoard/chessBoard.gltf");
+	model_->AsyncLoad(Model::GetDefaultAssimpOption() | aiProcess_Triangulate);
+	SxavengerSystem::PushTask(model_);
+
+	//model_->AsyncLoad("resources/model/demo/teapot.obj", Model::GetDefaultAssimpOption() | aiProcess_Triangulate);
 	//model_->AsyncLoad("resources/model/chessBoard/chessBoard.gltf", Model::GetDefaultAssimpOption() | aiProcess_Triangulate);
 
 	ModelBehavior::model_ = model_.get();

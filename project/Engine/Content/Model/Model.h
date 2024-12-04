@@ -80,8 +80,7 @@ struct Node {
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Model class
 ////////////////////////////////////////////////////////////////////////////////////////////
-class Model
-	: public TaskThreadExecution {
+class Model {
 public:
 
 	//=========================================================================================
@@ -94,11 +93,6 @@ public:
 	void Load(const std::filesystem::path& filepath, const DirectXThreadContext* context, uint32_t assimpOption = kDefaultAssimpOption_);
 
 	void Term();
-
-	//* task option *//
-
-	//!< 非推奨
-	void AsyncLoad(const std::filesystem::path& filepath, uint32_t assimpOption = kDefaultAssimpOption_);
 
 	//* mesh getter *//
 
@@ -127,11 +121,6 @@ private:
 	Node root_;
 
 	static const uint32_t kDefaultAssimpOption_;
-
-	//* parameter *//
-
-	std::filesystem::path filepath_;
-	uint32_t assimpOption_;
 
 	//=========================================================================================
 	// private methods

@@ -3,33 +3,30 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
-//* camera
-#include "Camera3d.h"
+//* asset
+#include "Asset.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// BlenderDebugCamera3d class
+// SxavengerAsset class
 ////////////////////////////////////////////////////////////////////////////////////////////
-class BlenderDebugCamera3d
-	: public Camera3d {
+class SxavengerAsset {
 public:
 
 	//=========================================================================================
 	// public methods
 	//=========================================================================================
 
-	BlenderDebugCamera3d()  { Reset(); }
-	~BlenderDebugCamera3d() = default;
+	static void Init();
 
-	void Reset();
+	static void Term();
 
-	void Update();
+	static Asset::Files Import(const std::filesystem::path& filepath);
+
+	static std::shared_ptr<AssetTexture> ImportTexture(const std::filesystem::path& filepath);
+
+	static std::shared_ptr<AssetModel> ImportModel(const std::filesystem::path& filepath);
+
+	static Asset* GetAsset();
 
 private:
-
-	//=========================================================================================
-	// private variables
-	//=========================================================================================
-
-	float distance_;
-
 };

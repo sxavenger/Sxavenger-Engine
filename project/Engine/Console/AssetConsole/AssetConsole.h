@@ -1,43 +1,54 @@
+#pragma once
+
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
 //* engine
-#include <Engine/System/SxavengerSystem.h>
-#include <Engine/System/Runtime/Scene/GameScene.h>
-#include <Engine/Asset/SxavengerAsset.h>
-#include <Engine/Content/SxavengerContent.h>
 
-// c++
-#include <memory>
+//-----------------------------------------------------------------------------------------
+// forward
+//-----------------------------------------------------------------------------------------
+class Console;
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// メイン関数
+// SystemConsole class
 ////////////////////////////////////////////////////////////////////////////////////////////
-int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
+class AssetConsole {
+public:
 
 	//=========================================================================================
-	// sxavenger engine initalize.
+	// public methods
 	//=========================================================================================
-	SxavengerSystem::Init();
-	SxavengerAsset::Init();
-	SxavengerContent::Init();
+
+	void Init(Console* console);
+
+	void Term();
+
+	void UpdateConsole();
+
+protected:
 
 	//=========================================================================================
-	// game scene run.
+	// protected variables
 	//=========================================================================================
-	{
-		std::unique_ptr<GameScene> scene = std::make_unique<GameScene>();
-		scene->Run();
-	}
+
+	bool isDisplayAssetConsole_ = true;
 
 	//=========================================================================================
-	// sxavenger engine term.
+	// protected methods
 	//=========================================================================================
-	SxavengerSystem::TermThreadCollection();
 
-	SxavengerContent::Term();
-	SxavengerAsset::Term();
-	SxavengerSystem::Term();
+	void DisplayAsset();
 
-	return 0;
-}
+private:
+
+	//=========================================================================================
+	// private variables
+	//=========================================================================================
+
+	//* external *//
+
+	Console* console_ = nullptr;
+
+
+};

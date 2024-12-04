@@ -3,41 +3,33 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
-//* base
-#include <Engine/Module/Behavior/ModelBehavior.h>
+//* asset
+#include "../IAsset.h"
 
-//* engine
-#include <Engine/Asset/SxavengerAsset.h>
-#include <Engine/Module/VisualLayer/VisualDoF.h>
+//* c++
+#include <filesystem>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// ChessBoard class
+// AssetUnkown class
 ////////////////////////////////////////////////////////////////////////////////////////////
-class ChessBoard
-	: public ModelBehavior {
+class AssetUnkown
+	: public IAsset {
 public:
 
 	//=========================================================================================
 	// public methods
 	//=========================================================================================
 
-	ChessBoard()  = default;
-	~ChessBoard() = default;
+	void SetFilepath(const std::filesystem::path& filepath) { filepath_ = filepath; }
 
-	void Init();
-
-	void Term();
-
-	void Update();
-
-	void DrawSystematic(_MAYBE_UNUSED const SxavGraphicsFrame* frame) override;
+	void SetInspectorImGui() override;
 
 private:
 
 	//=========================================================================================
-	// public methods
+	// private variables
 	//=========================================================================================
 
-	std::shared_ptr<AssetModel> model_;
+	std::filesystem::path filepath_;
 
 };

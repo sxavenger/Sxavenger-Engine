@@ -3,41 +3,46 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
-//* base
-#include <Engine/Module/Behavior/ModelBehavior.h>
+//* asset
+#include "../IAsset.h"
 
 //* engine
-#include <Engine/Asset/SxavengerAsset.h>
-#include <Engine/Module/VisualLayer/VisualDoF.h>
+#include <Engine/System/DirectX/DirectXContext.h>
+#include <Engine/Content/Texture/Texture.h>
+
+//* c++
+#include <filesystem>
+#include <unordered_set>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// ChessBoard class
+// AssetTexture class
 ////////////////////////////////////////////////////////////////////////////////////////////
-class ChessBoard
-	: public ModelBehavior {
+class AssetTexture
+	: public IAsset, public Texture {
 public:
 
 	//=========================================================================================
 	// public methods
 	//=========================================================================================
 
-	ChessBoard()  = default;
-	~ChessBoard() = default;
+	void Load(const DirectXThreadContext* context);
 
-	void Init();
+	void SetFilepath(const std::filesystem::path& filepath) { filepath_ = filepath; }
 
-	void Term();
+	void SetInspectorImGui() override;
 
-	void Update();
-
-	void DrawSystematic(_MAYBE_UNUSED const SxavGraphicsFrame* frame) override;
+	static bool CheckExtension(const std::filesystem::path& extension);
 
 private:
 
 	//=========================================================================================
-	// public methods
+	// private variables
 	//=========================================================================================
 
-	std::shared_ptr<AssetModel> model_;
+	std::filesystem::path filepath_;
+
+	//* extension *//
+
+	static const std::unordered_set<std::filesystem::path> extension_;
 
 };

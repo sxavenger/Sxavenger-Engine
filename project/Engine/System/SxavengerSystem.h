@@ -54,7 +54,9 @@ public:
 	// ThreadCollection option
 	//-----------------------------------------------------------------------------------------
 
-	static void PushTask(TaskThreadExecution* thread);
+	static void PushTask(const std::shared_ptr<TaskThreadExecution>& task);
+
+	static void TermThreadCollection();
 
 	static ThreadCollection* GetThreadCollection();
 

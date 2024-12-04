@@ -6,8 +6,6 @@
 //* engine
 #include <Engine/System/Window/GameWindow.h>
 
-
-#include "Engine/Asset/Asset.h"
 #include "Demo/ChessBoard.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -35,8 +33,6 @@ private:
 	std::weak_ptr<GameWindow> subWindow_;
 
 	bool renderWindowSwitch_ = true;
-
-	Asset asset_;
 
 	std::unique_ptr<ChessBoard> chess_;
 

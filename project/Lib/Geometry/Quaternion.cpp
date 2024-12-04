@@ -167,7 +167,7 @@ Quaternion ToQuaternion(const Vector3f& euler) {
 	Quaternion q = {
 		cr * sp * cy + sr * cp * sy, // x
 		cr * cp * sy - sr * sp * cy, // y
-		sr * cp * cy - cr * sp * sy,   // z
+		sr * cp * cy - cr * sp * sy, // z
 		cr * cp * cy + sr * sp * sy  // w
 	};
 

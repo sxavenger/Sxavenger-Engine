@@ -28,11 +28,13 @@ void Console::Init() {
 
 	SystemConsole::Init(this);
 	RenderConsole::Init(this);
+	AssetConsole::Init(this);
 }
 
 void Console::Term() {
 	SystemConsole::Term();
 	RenderConsole::Term();
+	AssetConsole::Term();
 
 	runtime_.End();
 	EngineLog(std::format("[Console] executed time<TimeUtil::s>: {:.0f}sec", runtime_.GetDeltaTime<TimeUnit::s>().time));
@@ -52,6 +54,7 @@ void Console::UpdateConsole() {
 
 		SystemConsole::UpdateConsole();
 		RenderConsole::UpdateConsole();
+		AssetConsole::UpdateConsole();
 	}
 
 	EndDisabled();
@@ -127,6 +130,7 @@ void Console::DisplayMainMenu() {
 		MenuDummy();
 		ImGui::Checkbox("display system console", &(SystemConsole::isDisplaySystemConsole_));
 		ImGui::Checkbox("display render console", &(RenderConsole::isDisplayRenderConsole_));
+		ImGui::Checkbox("display asset console", &(AssetConsole::isDisplayAssetConsole_));
 		ImGui::EndMenu();
 	}
 

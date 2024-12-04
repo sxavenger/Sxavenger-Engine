@@ -83,6 +83,12 @@
     <ClCompile Include="Engine\Module\SxavengerGraphics\ScreenPresenter.cpp" />
     <ClCompile Include="Engine\Module\VisualLayer\VisualLayer.cpp" />
     <ClCompile Include="Engine\Module\VisualLayer\VisualDoF.cpp" />
+    <ClCompile Include="Engine\Asset\AssetLibrary\IAsset.cpp" />
+    <ClCompile Include="Engine\Asset\AssetLibrary\Texture\AssetTexture.cpp" />
+    <ClCompile Include="Engine\Asset\AssetLibrary\Model\AssetModel.cpp" />
+    <ClCompile Include="Engine\Asset\SxavengerAsset.cpp" />
+    <ClCompile Include="Engine\Asset\AssetLibrary\Unkown\AssetUnkown.cpp" />
+    <ClCompile Include="Engine\Console\AssetConsole\AssetConsole.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\System\Window\Window.h" />
@@ -168,5 +174,11 @@
     <ClInclude Include="Engine\Module\SxavengerGraphics\ScreenPresenter.h" />
     <ClInclude Include="Engine\Module\VisualLayer\VisualLayer.h" />
     <ClInclude Include="Engine\Module\VisualLayer\VisualDoF.h" />
+    <ClInclude Include="Engine\Asset\AssetLibrary\IAsset.h" />
+    <ClInclude Include="Engine\Asset\AssetLibrary\Texture\AssetTexture.h" />
+    <ClInclude Include="Engine\Asset\AssetLibrary\Model\AssetModel.h" />
+    <ClInclude Include="Engine\Asset\SxavengerAsset.h" />
+    <ClInclude Include="Engine\Asset\AssetLibrary\Unkown\AssetUnkown.h" />
+    <ClInclude Include="Engine\Console\AssetConsole\AssetConsole.h" />
   </ItemGroup>
 </Project>
