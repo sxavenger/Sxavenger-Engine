@@ -83,12 +83,18 @@ private:
 
 	DWORD flags_ = NULL;
 
-	HWND currentHwnd_ = nullptr;
+	HWND currentHwnd_ = NULL;
 
 	//* member *//
 
 	static const uint32_t kKeyNum_ = 256;
 	InputState<std::array<BYTE, kKeyNum_>> keys_;
+
+	//=========================================================================================
+	// private variables
+	//=========================================================================================
+
+	void SetCooperativeLevel(const Window* window);
 
 };
 
@@ -105,11 +111,59 @@ public:
 	MouseInput()  = default;
 	~MouseInput() { Term(); }
 
-	void Init();
+	void Init(IDirectInput8* dInput);
 
 	void Term();
 
+	void Update();
+
+	//* mouse position option *//
+
+	Vector2i GetPosition() const;
+	Vector2i GetPosition(const Window* window) const;
+
+	Vector2i GetDeltaTime() const;
+
+	//* mouse input option *//
+
+	bool IsPress(MouseId id) const;
+
+	bool IsTrigger(MouseId id) const;
+
+	bool IsRelease(MouseId id) const;
+
+	//* mouse wheel *//
+
+	int32_t GetDeltaWheel() const;
+
+	bool IsWheelUp() const;
+
+	bool IsWheelDown() const;
+
 private:
+
+	//=========================================================================================
+	// private variables
+	//=========================================================================================
+
+	//* input device *//
+
+	ComPtr<IDirectInputDevice8> mouseDevice_;
+
+	DWORD flags_ = NULL;
+
+	HWND currentHwnd_ = nullptr;
+
+	//* member *//
+
+	InputState<DIMOUSESTATE2> mouse_;
+
+	//=========================================================================================
+	// private variables
+	//=========================================================================================
+
+	void SetCooperativeLevel(const Window* window);
+
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -139,6 +193,12 @@ public:
 
 	bool IsReleaseKey(KeyId id);
 
+	//* getter *//
+
+	const KeyboardInput* GetKeyboardInput() const { return keyboard_.get(); }
+
+	const MouseInput* GetMouseInput() const { return mouse_.get(); }
+
 private:
 
 	//=========================================================================================
@@ -152,6 +212,6 @@ private:
 	//* dinput *//
 
 	std::unique_ptr<KeyboardInput> keyboard_;
-	//std::unique_ptr<MouseInput> mouse_;
+	std::unique_ptr<MouseInput>    mouse_;
 };
 

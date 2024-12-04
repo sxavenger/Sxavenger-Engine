@@ -39,23 +39,7 @@ void KeyboardInput::Term() {
 
 void KeyboardInput::Update() {
 
-	const GameWindow* window = SxavengerSystem::GetForcusWindow();
-
-	if (window != nullptr) {
-		HWND hwnd = window->GetHwnd();
-
-		if (hwnd != currentHwnd_) {
-			//* 現在のhwndと違う場合, 再設定
-			// 排他制御レベルのセット
-			keyboardDevice_->SetCooperativeLevel(
-				hwnd,
-				flags_
-			);
-			//Assert(SUCCEEDED(hr)); // HACK:
-
-			currentHwnd_ = hwnd;
-		}
-	}
+	SetCooperativeLevel(SxavengerSystem::GetForcusWindow());
 
 	// 前frameのkey状態の保存
 	keys_.second = keys_.first;
@@ -82,8 +66,137 @@ bool KeyboardInput::IsRelease(KeyId id) const {
 	return !keys_.first[static_cast<uint8_t>(id)] && keys_.second[static_cast<uint8_t>(id)];
 }
 
+void KeyboardInput::SetCooperativeLevel(const Window* window) {
+
+	if (window != nullptr) {
+		HWND hwnd = window->GetHwnd();
+
+		if (hwnd != currentHwnd_) {
+			//* 現在のhwndと違う場合, 再設定
+			// 排他制御レベルのセット
+			keyboardDevice_->SetCooperativeLevel(
+				hwnd,
+				flags_
+			);
+			//Assert(SUCCEEDED(hr)); // HACK:
+
+			currentHwnd_ = hwnd;
+		}
+	}
+}
+
 ////////////////////////////////////////////////////////////////////////////////////////////
 // MouseInput class methods
+////////////////////////////////////////////////////////////////////////////////////////////
+
+void MouseInput::Init(IDirectInput8* dInput) {
+
+	// デバイスの生成
+	auto hr = dInput->CreateDevice(
+		GUID_SysMouse, &mouseDevice_, NULL
+	);
+	Assert(SUCCEEDED(hr));
+
+	// 入力データ形式のセット
+	hr = mouseDevice_->SetDataFormat(
+		&c_dfDIMouse2 // 標準形式
+	);
+	Assert(SUCCEEDED(hr));
+
+	flags_ |= DISCL_FOREGROUND;
+	flags_ |= DISCL_NONEXCLUSIVE;
+
+	//* DISCL_FOREGROUND   -> 画面が手前にある場合のみ入力を受け付け
+	//* DISCL_NONEXCLUSIVE -> デバイスをこのアプリで占有しない
+
+}
+
+void MouseInput::Term() {
+}
+
+void MouseInput::Update() {
+
+	SetCooperativeLevel(SxavengerSystem::GetForcusWindow());
+
+	// 前frameのmouse状態の保存
+	mouse_.second = mouse_.first;
+
+	// マウス情報の取得開始
+	mouseDevice_->Acquire();
+
+	// マウスの入力状態を取得
+	mouseDevice_->GetDeviceState(sizeof(mouse_.first), &mouse_.first);
+
+}
+
+Vector2i MouseInput::GetPosition() const {
+	POINT point = {};
+	GetCursorPos(&point);
+	ScreenToClient(currentHwnd_, &point);
+
+	return { point.x, point.y };
+}
+
+Vector2i MouseInput::GetPosition(const Window* window) const {
+	POINT point = {};
+	GetCursorPos(&point);
+
+	if (window != nullptr) {
+		ScreenToClient(window->GetHwnd(), &point);
+	}
+
+	return { point.x, point.y };
+}
+
+Vector2i MouseInput::GetDeltaTime() const {
+	return { mouse_.first.lX, mouse_.first.lY };
+}
+
+bool MouseInput::IsPress(MouseId id) const {
+	return mouse_.first.rgbButtons[static_cast<uint8_t>(id)];
+}
+
+bool MouseInput::IsTrigger(MouseId id) const {
+	return mouse_.first.rgbButtons[static_cast<uint8_t>(id)] && !mouse_.second.rgbButtons[static_cast<uint8_t>(id)];;
+}
+
+bool MouseInput::IsRelease(MouseId id) const {
+	return !mouse_.first.rgbButtons[static_cast<uint8_t>(id)] && mouse_.second.rgbButtons[static_cast<uint8_t>(id)];;
+}
+
+int32_t MouseInput::GetDeltaWheel() const {
+	return mouse_.first.lZ / WHEEL_DELTA; //!< wheelの最大値でnormalize
+}
+
+bool MouseInput::IsWheelUp() const {
+	return mouse_.first.lZ > 0;
+}
+
+bool MouseInput::IsWheelDown() const {
+	return mouse_.first.lZ < 0;
+}
+
+void MouseInput::SetCooperativeLevel(const Window* window) {
+
+	if (window != nullptr) {
+		HWND hwnd = window->GetHwnd();
+
+		if (hwnd != currentHwnd_) {
+			//* 現在のhwndと違う場合, 再設定
+			// 排他制御レベルのセット
+			mouseDevice_->SetCooperativeLevel(
+				hwnd,
+				flags_
+			);
+			//Assert(SUCCEEDED(hr)); // HACK:
+
+			currentHwnd_ = hwnd;
+		}
+	}
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////
+// Input class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 void Input::Init(const Window* mainWindow) {
@@ -99,6 +212,9 @@ void Input::Init(const Window* mainWindow) {
 
 	keyboard_ = std::make_unique<KeyboardInput>();
 	keyboard_->Init(directInput_.Get());
+
+	mouse_ = std::make_unique<MouseInput>();
+	mouse_->Init(directInput_.Get());
 }
 
 void Input::Term() {
@@ -106,6 +222,7 @@ void Input::Term() {
 
 void Input::Update() {
 	keyboard_->Update();
+	mouse_->Update();
 }
 
 bool Input::IsPressKey(KeyId id) {

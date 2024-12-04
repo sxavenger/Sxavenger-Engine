@@ -14,7 +14,7 @@
 ////////////////////////////////////////////////////////////////////////////////////////////
 enum class KeyId : uint8_t {
 
-	// 数字キー
+	//* 数字キー
 	KEY_0 = DIK_0,
 	KEY_1 = DIK_1,
 	KEY_2 = DIK_2,
@@ -26,7 +26,7 @@ enum class KeyId : uint8_t {
 	KEY_8 = DIK_8,
 	KEY_9 = DIK_9,
 
-	// アルファベットキー
+	//* アルファベットキー
 	KEY_A = DIK_A,
 	KEY_B = DIK_B,
 	KEY_C = DIK_C,
@@ -54,7 +54,7 @@ enum class KeyId : uint8_t {
 	KEY_Y = DIK_Y,
 	KEY_Z = DIK_Z,
 
-	// ファンクションキー
+	//* ファンクションキー
 	KEY_F1  = DIK_F1,
 	KEY_F2  = DIK_F2,
 	KEY_F3  = DIK_F3,
@@ -68,13 +68,13 @@ enum class KeyId : uint8_t {
 	KEY_F11 = DIK_F11,
 	KEY_F12 = DIK_F12,
 
-	// 矢印キー
+	//* 矢印キー
 	KEY_UP    = DIK_UP,
 	KEY_DOWN  = DIK_DOWN,
 	KEY_LEFT  = DIK_LEFT,
 	KEY_RIGHT = DIK_RIGHT,
 
-	 // 特殊キー
+	//* 特殊キー
 	KEY_ESCAPE    = DIK_ESCAPE,
 	KEY_TAB       = DIK_TAB,
 	KEY_CAPSLOCK  = DIK_CAPSLOCK,
@@ -94,7 +94,7 @@ enum class KeyId : uint8_t {
 	KEY_PAGEUP    = DIK_PGUP,
 	KEY_PAGEDOWN  = DIK_PGDN,
 
-	// テンキー
+	//* テンキー
 	KEY_NUMPAD0     = DIK_NUMPAD0,
 	KEY_NUMPAD1     = DIK_NUMPAD1,
 	KEY_NUMPAD2     = DIK_NUMPAD2,
@@ -112,7 +112,7 @@ enum class KeyId : uint8_t {
 	KEY_DIVIDE      = DIK_DIVIDE,
 	KEY_DECIMAL     = DIK_DECIMAL,
 
-	// その他のキー
+	//* その他のキー
 	KEY_PRINTSCREEN = DIK_SYSRQ,
 	KEY_SCROLLLOCK  = DIK_SCROLL,
 	KEY_PAUSE       = DIK_PAUSE,
@@ -128,11 +128,26 @@ enum class KeyId : uint8_t {
 	KEY_BACKSLASH   = DIK_BACKSLASH,
 	KEY_APOSTROPHE  = DIK_APOSTROPHE,
 
-	// メディアキー (一部環境依存)
+	//* メディアキー (一部環境依存)
 	KEY_MEDIA_PLAY_PAUSE = DIK_MEDIASELECT,
 	KEY_MEDIA_NEXT       = DIK_NEXTTRACK,
 	KEY_MEDIA_PREV       = DIK_PREVTRACK,
 	KEY_VOLUME_UP        = DIK_VOLUMEUP,
 	KEY_VOLUME_DOWN      = DIK_VOLUMEDOWN,
 	KEY_MUTE             = DIK_MUTE,
+};
+
+////////////////////////////////////////////////////////////////////////////////////////////
+// MouseId enum class
+////////////////////////////////////////////////////////////////////////////////////////////
+enum class MouseId : uint8_t {
+	MOUSE_LEFT,
+	MOUSE_RIGHT,
+	MOUSE_MIDDLE,
+
+	MOUSE_BUTTON4,
+	MOUSE_BUTTON5,
+	MOUSE_BUTTON6,
+	MOUSE_BUTTON7,
+	MOUSE_BUTTON8,
 };
