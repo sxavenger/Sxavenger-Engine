@@ -89,6 +89,7 @@
     <ClCompile Include="Engine\Asset\SxavengerAsset.cpp" />
     <ClCompile Include="Engine\Asset\AssetLibrary\Unkown\AssetUnkown.cpp" />
     <ClCompile Include="Engine\Console\AssetConsole\AssetConsole.cpp" />
+    <ClCompile Include="Demo\GuizmoScene.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\System\Window\Window.h" />
@@ -180,5 +181,6 @@
     <ClInclude Include="Engine\Asset\SxavengerAsset.h" />
     <ClInclude Include="Engine\Asset\AssetLibrary\Unkown\AssetUnkown.h" />
     <ClInclude Include="Engine\Console\AssetConsole\AssetConsole.h" />
+    <ClInclude Include="Demo\GuizmoScene.h" />
   </ItemGroup>
 </Project>

@@ -52,6 +52,8 @@ public:
 
 	void UpdateConsole();
 
+	void TEST_UPDATE();
+
 	void Draw();
 
 	//* behavior container option *//
@@ -116,6 +118,14 @@ protected:
 	void CreateFrame(const Vector2ui& size);
 
 private:
+
+	////////////////////////////////////////////////////////////////////////////////////////////
+	// WindowRect structure
+	////////////////////////////////////////////////////////////////////////////////////////////
+	struct WindowRect {
+		Vector2f pos;
+		Vector2f size;
+	};
 
 	//=========================================================================================
 	// private variables
@@ -204,6 +214,8 @@ private:
 
 	static void MenuDummy();
 
-	static void ShowTextureImGuiFullWindow(const MultiViewTexture* texture);
+	static WindowRect ShowTextureImGuiFullWindow(const MultiViewTexture* texture);
+
+	static void ShowGrid(const Camera3d* camera, const WindowRect& rect, float length);
 
 };

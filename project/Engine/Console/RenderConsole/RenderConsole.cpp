@@ -10,6 +10,9 @@ _DXOBJECT_USING
 //* engine
 #include <Engine/System/SxavengerSystem.h>
 
+//* external
+#include <ImGuizmo.h>
+
 ////////////////////////////////////////////////////////////////////////////////////////////
 // RenderConsole class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -282,9 +285,12 @@ void RenderConsole::DisplayScene() {
 	console_->DockingConsole();
 	ImGui::Begin("Scene ## Render Console", nullptr, console_->GetWindowFlag() | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
 
+	WindowRect rect = {};
+
 	if (scene_ != nullptr) {
 		//ShowTextureImGuiFullWindow(Sxavenger::GetTexture<BaseTexture>("resources/checker_black.png")); //< HACK
-		ShowTextureImGuiFullWindow(scene_->GetAdaptive()->GetTexture());
+		rect = ShowTextureImGuiFullWindow(scene_->GetAdaptive()->GetTexture());
+		//ShowGrid(scene_->GetCamera(), rect, 12.0f);
 	}
 
 	if (ImGui::IsWindowHovered() && ImGui::IsMouseClicked(2)) {
@@ -297,6 +303,10 @@ void RenderConsole::DisplayScene() {
 	}
 
 	ImGui::End();
+
+	if (scene_ != nullptr) {
+		ShowGrid(scene_->GetCamera(), rect, 12.0f);
+	}
 }
 
 void RenderConsole::DisplayGame() {
@@ -465,6 +475,7 @@ void RenderConsole::DrawScene() {
 		scene_->BeginAdaptive(context);
 		DrawAdaptiveBehavior(scene_.get(), outliner_);
 		DrawLateAdaptiveBehavior(scene_.get(), outliner_);
+		
 		scene_->EndAdaptive(context);
 	}
 }
@@ -530,7 +541,7 @@ void RenderConsole::MenuDummy() {
 	ImGui::Dummy(size);
 }
 
-void RenderConsole::ShowTextureImGuiFullWindow(const MultiViewTexture* texture) {
+RenderConsole::WindowRect RenderConsole::ShowTextureImGuiFullWindow(const MultiViewTexture* texture) {
 
 	// タブ等を排除した全体のwindowSize計算
 	ImVec2 regionMax  = ImGui::GetWindowContentRegionMax();
@@ -563,4 +574,33 @@ void RenderConsole::ShowTextureImGuiFullWindow(const MultiViewTexture* texture) 
 	ImGui::SetCursorPos(leftTop);
 	ImGui::Image(texture->GetGPUHandleSRV().ptr, displayTextureSize);
 
+	WindowRect rect = {};
+	rect.pos  = { leftTop.x, leftTop.y };
+	rect.size = { displayTextureSize.x, displayTextureSize.y };
+
+	return rect;
+}
+
+void RenderConsole::ShowGrid(const Camera3d* camera, const WindowRect& rect, float length) {
+
+	ImGuizmo::SetRect(rect.pos.x, rect.pos.y, rect.size.x, rect.size.y);
+
+	ImGuizmo::DrawGrid(
+		reinterpret_cast<const float*>(camera->GetView().m),
+		reinterpret_cast<const float*>(camera->GetProj().m),
+		reinterpret_cast<const float*>(Matrix4x4::Identity().m),
+		length
+	);
+
+	// this test
+
+	Matrix4x4 m = Matrix4x4::Identity();
+
+	ImGuizmo::Manipulate(
+		reinterpret_cast<const float*>(camera->GetView().m),
+		reinterpret_cast<const float*>(camera->GetProj().m),
+		ImGuizmo::TRANSLATE,
+		ImGuizmo::WORLD,
+		reinterpret_cast<float*>(m.m)
+	);
 }

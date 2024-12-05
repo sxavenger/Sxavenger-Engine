@@ -1,46 +1,52 @@
+#pragma once
+
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
 //* engine
-#include <Engine/System/SxavengerSystem.h>
-#include <Engine/System/Runtime/Scene/GameScene.h>
-#include <Engine/Asset/SxavengerAsset.h>
-#include <Engine/Content/SxavengerContent.h>
+#include <Engine/System/Window/GameWindow.h>
 
-#include "Demo/GuizmoScene.h"
-
-
-// c++
-#include <memory>
+#include "Engine/Module/Camera/Camera3d.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// メイン関数
+// GuizmoScene class
 ////////////////////////////////////////////////////////////////////////////////////////////
-int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
+class GuizmoScene {
+public:
 
 	//=========================================================================================
-	// sxavenger engine initalize.
+	// public methods
 	//=========================================================================================
-	SxavengerSystem::Init();
-	SxavengerAsset::Init();
-	SxavengerContent::Init();
+
+	GuizmoScene() = default;
+	~GuizmoScene() = default;
+
+	void Run();
+
+private:
 
 	//=========================================================================================
-	// game scene run.
+	// private variables
 	//=========================================================================================
-	{
-		std::unique_ptr<GuizmoScene> scene = std::make_unique<GuizmoScene>();
-		scene->Run();
-	}
+
+	std::shared_ptr<GameWindow> mainWindow_;
+
+	std::unique_ptr<Camera3d> camera_;
+
+	TransformComponent component_;
 
 	//=========================================================================================
-	// sxavenger engine term.
+	// private methods
 	//=========================================================================================
-	SxavengerSystem::TermThreadCollection();
 
-	SxavengerContent::Term();
-	SxavengerAsset::Term();
-	SxavengerSystem::Term();
+	void SystemInit();
+	void Init();
 
-	return 0;
-}
+	void Update();
+
+	void Draw();
+	void DrawScreen();
+
+	void Term();
+
+};

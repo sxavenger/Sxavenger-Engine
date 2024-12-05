@@ -1,4 +1,4 @@
-#include "GameScene.h"
+#include "GuizmoScene.h"
 
 //-----------------------------------------------------------------------------------------
 // include
@@ -13,19 +13,15 @@
 //* lib
 #include <Lib/Environment.h>
 
-#include "Lib/Adapter/Json/JsonAdapter.h"
-
-
 ////////////////////////////////////////////////////////////////////////////////////////////
-// GameScene class methods
+// GuizmoScene class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-void GameScene::Run() {
+void GuizmoScene::Run() {
 
 	//-----------------------------------------------------------------------------------------
 	// 初期化処理
 	//-----------------------------------------------------------------------------------------
-	sConsole->Init();
 	SystemInit();
 	Init();
 	SxavengerSystem::ExecuteAllAllocator();
@@ -43,11 +39,8 @@ void GameScene::Run() {
 		//-----------------------------------------------------------------------------------------
 
 		SxavengerSystem::GetInput()->Update();
-		sConsole->UpdateConsole();
 
-		if (sConsole->IsUpdateRequired()) {
-			Update();
-		}
+		Update();
 
 		SxavengerSystem::EndImGuiFrame();
 		SxavengerSystem::TransitionAllocator();
@@ -57,9 +50,7 @@ void GameScene::Run() {
 		//-----------------------------------------------------------------------------------------
 
 		Draw();
-		sConsole->Draw();
 		DrawScreen();
-		sConsole->DrawConsole();
 
 		SxavengerSystem::PresentAllWindow();
 		SxavengerSystem::ExecuteAllAllocator();
@@ -78,18 +69,14 @@ void GameScene::Run() {
 	//-----------------------------------------------------------------------------------------
 
 	Term();
-	sConsole->Term();
 
 }
 
-void GameScene::SystemInit() {
+void GuizmoScene::SystemInit() {
+
 
 	mainWindow_ = SxavengerSystem::CreateMainWindow(kMainWindowSize, kMainWindowTitle).lock();
 	mainWindow_->SetIcon("packages/icon/SxavengerEngineIcon.ico", { 32, 32 });
-
-	sConsole->SetWindow(mainWindow_);
-
-	subWindow_ = SxavengerSystem::TryCreateSubWindow(kMainWindowSize, L"sub").lock();
 
 	{
 		std::unique_ptr<DxObject::ReflectionComputePipelineState> compute = std::make_unique<DxObject::ReflectionComputePipelineState>();
@@ -109,45 +96,72 @@ void GameScene::SystemInit() {
 		white1x1->TransitionEndUnordered(SxavengerSystem::GetMainThreadContext());
 		SxavengerSystem::TransitionAllocator();
 	}
-}
 
-void GameScene::Init() {
-
-	chess_ = std::make_unique<ChessBoard>();
-	chess_->Init();
-	chess_->SetToConsole();
-}
-
-void GameScene::Update() {
 
 }
 
-void GameScene::Draw() {
+void GuizmoScene::Init() {
+
+	camera_ = std::make_unique<Camera3d>();
+	camera_->Create();
+
+	component_.CreateBuffer();
 }
 
-void GameScene::DrawScreen() {
+void GuizmoScene::Update() {
+
+	Matrix4x4 m = component_.GetMatrix();
+
+	ImGui::Begin("camera");
+
+	camera_->SetImGuiCommand();
+	camera_->UpdateMatrix();
+	ImGui::End();
+
+	ImGuizmo::SetRect(0, 0, static_cast<float>(kMainWindowSize.x), static_cast<float>(kMainWindowSize.y));
+
+	ImGuizmo::Manipulate(
+		reinterpret_cast<const float*>(camera_->GetView().m),
+		reinterpret_cast<const float*>(camera_->GetProj().m),
+		ImGuizmo::TRANSLATE,
+		ImGuizmo::WORLD,
+		reinterpret_cast<float*>(m.m)
+	);
+
+	EulerTransform t = {};
+
+	ImGuizmo::DecomposeMatrixToComponents(
+		reinterpret_cast<float*>(m.m),
+		&t.translate.x,
+		&t.rotate.x,
+		&t.scale.x
+	);
+
+	component_.GetTransform().translate = t.translate;
+	component_.GetTransform().rotate    = ToQuaternion(t.rotate);
+	component_.GetTransform().scale     = t.scale;
+	component_.UpdateMatrix();
+
+	ImGuizmo::DrawGrid(
+		reinterpret_cast<const float*>(camera_->GetView().m),
+		reinterpret_cast<const float*>(camera_->GetProj().m),
+		reinterpret_cast<const float*>(Matrix4x4::Identity().m),
+		12.0f
+	);
+}
+
+void GuizmoScene::Draw() {
+}
+
+void GuizmoScene::DrawScreen() {
 
 	mainWindow_->BeginRendering();
 	mainWindow_->ClearWindow();
 
+	SxavengerSystem::RenderImGui();
+
 	mainWindow_->EndRendering();
-
-	
-	if (!subWindow_.expired()) {
-		auto window = subWindow_.lock();
-
-		window->BeginRendering();
-		window->ClearWindow();
-
-		sConsole->PresentToScreen(window.get(), SxavengerSystem::GetMainThreadContext());
-
-		window->EndRendering();
-	}
 }
 
-void GameScene::Term() {
-	chess_.reset();
-	SxavengerSystem::ExecuteAllAllocator();
+void GuizmoScene::Term() {
 }
-
-

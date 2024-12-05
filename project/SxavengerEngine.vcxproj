@@ -57,7 +57,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NOMINMAX;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)externals\nlohmann;$(ProjectDir)externals\meshoptimizer;$(ProjectDir)externals\imgui;$(ProjectDir)externals\DirectXTex;$(ProjectDir)externals\DirectXMesh;$(ProjectDir)externals\assimp\include;$(ProjectDir)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)externals\nlohmann;$(ProjectDir)externals\meshoptimizer;$(ProjectDir)externals\imgui\imguizmo;$(ProjectDir)externals\imgui;$(ProjectDir)externals\DirectXTex;$(ProjectDir)externals\DirectXMesh;$(ProjectDir)externals\assimp\include;$(ProjectDir)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
@@ -129,9 +129,13 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ProjectReference Include="externals\imgui\imgui.vcxproj">
       <Project>{a4d2730b-3b09-47db-9a37-3445e9559de4}</Project>
     </ProjectReference>
+    <ProjectReference Include="externals\imgui\imguizmo\imguizmo.vcxproj">
+      <Project>{466d4740-256c-4d38-99b1-7d046805c23b}</Project>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Demo\ChessBoard.cpp" />
+    <ClCompile Include="Demo\GuizmoScene.cpp" />
     <ClCompile Include="Engine\Asset\Asset.cpp" />
     <ClCompile Include="Engine\Asset\AssetLibrary\IAsset.cpp" />
     <ClCompile Include="Engine\Asset\AssetLibrary\Model\AssetModel.cpp" />
@@ -214,6 +218,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Demo\ChessBoard.h" />
+    <ClInclude Include="Demo\GuizmoScene.h" />
     <ClInclude Include="Engine\Asset\Asset.h" />
     <ClInclude Include="Engine\Asset\AssetLibrary\IAsset.h" />
     <ClInclude Include="Engine\Asset\AssetLibrary\Model\AssetModel.h" />
