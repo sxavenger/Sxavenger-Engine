@@ -45,27 +45,27 @@ const Vector3f BaseTransformComponent::GetPosition() const {
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 void TransformComponent::UpdateMatrix() {
-	mat_ = transform_.ToMatrix();
+	mat_ = uvTransform_.ToMatrix();
 	Transfer();
 }
 
 void TransformComponent::SetImGuiCommand() {
-	transform_.SetImGuiCommand();
+	uvTransform_.SetImGuiCommand();
 	UpdateMatrix();
 }
 
 json TransformComponent::OutputJson() {
 	json root = json::object();
-	root["scale"]     = IJsonSerializer::ToJson(transform_.scale);
-	root["rotate"]    = IJsonSerializer::ToJson(transform_.rotate);
-	root["translate"] = IJsonSerializer::ToJson(transform_.translate);
+	root["scale"]     = IJsonSerializer::ToJson(uvTransform_.scale);
+	root["rotate"]    = IJsonSerializer::ToJson(uvTransform_.rotate);
+	root["translate"] = IJsonSerializer::ToJson(uvTransform_.translate);
 
 	return root;
 }
 
 void TransformComponent::InputJson(const json& data) {
-	transform_.scale     = IJsonSerializer::ToVector3f(data.at("scale"));
-	transform_.rotate    = IJsonSerializer::ToQuaternion(data.at("rotate"));
-	transform_.translate = IJsonSerializer::ToVector3f(data.at("translate"));
+	uvTransform_.scale     = IJsonSerializer::ToVector3f(data.at("scale"));
+	uvTransform_.rotate    = IJsonSerializer::ToQuaternion(data.at("rotate"));
+	uvTransform_.translate = IJsonSerializer::ToVector3f(data.at("translate"));
 	UpdateMatrix();
 }

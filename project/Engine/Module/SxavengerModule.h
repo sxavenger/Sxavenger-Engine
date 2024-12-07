@@ -31,6 +31,10 @@ public:
 
 	static void DrawAxis(const Vector3f& center, float length);
 
+	static void DrawGrid(const Vector3f& center, float size);
+
+	static void DrawBox(const Vector3f& min, const Vector3f& max, const Color4f& color);
+
 	static DebugPrimitive* GetDebugPrimitive();
 
 private:

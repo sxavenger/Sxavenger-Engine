@@ -122,7 +122,7 @@ public:
 	Vector2i GetPosition() const;
 	Vector2i GetPosition(const Window* window) const;
 
-	Vector2i GetDeltaTime() const;
+	Vector2i GetDeltaPosition() const;
 
 	//* mouse input option *//
 
@@ -134,7 +134,7 @@ public:
 
 	//* mouse wheel *//
 
-	int32_t GetDeltaWheel() const;
+	float GetDeltaWheel() const;
 
 	bool IsWheelUp() const;
 

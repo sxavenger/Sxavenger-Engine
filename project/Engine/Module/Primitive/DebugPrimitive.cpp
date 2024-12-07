@@ -102,10 +102,71 @@ void DebugPrimitive::DrawLine(const Vector3f& v1, const Vector3f& v2, const Colo
 	line_->DrawLine(v1, v2, color);
 }
 
+void DebugPrimitive::DrawGrid(const Vector3f& center, float size) {
+
+	static const float cell    = 1.0f;
+	const Color4f defaultColor = ToColor4f(0x909090FF);
+	const Color4f centerColor  = ToColor4f(0xF2630DFF);
+
+	float half = size * 0.5f;
+
+
+	for (float w = -half; w <= half; w += cell) {
+
+		Color4f color = defaultColor;
+
+		if (w == 0.0f) {
+			color = centerColor;
+		}
+
+		DrawLine(
+			{ center.x + w, center.y, center.z - half },
+			{ center.x + w, center.y, center.z + half },
+			color
+		);
+
+		DrawLine(
+			{ center.x - half, center.y, center.z + w },
+			{ center.x + half, center.y, center.z + w },
+			color
+		);
+	}
+}
+
 void DebugPrimitive::DrawAxis(const Vector3f& center, float length) {
 	DrawLine(center, center + Vector3f(length, 0.0f, 0.0f), ToColor4f(0xFA0000FF)); //!< x軸
 	DrawLine(center, center + Vector3f(0.0f, length, 0.0f), ToColor4f(0x00FA00FF)); //!< y軸
 	DrawLine(center, center + Vector3f(0.0f, 0.0f, length), ToColor4f(0x0000FAFF)); //!< z軸
+}
+
+void DebugPrimitive::DrawBox(const Vector3f& min, const Vector3f& max, const Color4f& color) {
+	// ボックスの頂点を計算
+	Vector3f v0 = { min.x, min.y, min.z };
+	Vector3f v1 = { max.x, min.y, min.z };
+	Vector3f v2 = { max.x, max.y, min.z };
+	Vector3f v3 = { min.x, max.y, min.z };
+	Vector3f v4 = { min.x, min.y, max.z };
+	Vector3f v5 = { max.x, min.y, max.z };
+	Vector3f v6 = { max.x, max.y, max.z };
+	Vector3f v7 = { min.x, max.y, max.z };
+
+	// 下部の四角形
+	DrawLine(v0, v1, color);
+	DrawLine(v1, v2, color);
+	DrawLine(v2, v3, color);
+	DrawLine(v3, v0, color);
+
+	// 上部の四角形
+	DrawLine(v4, v5, color);
+	DrawLine(v5, v6, color);
+	DrawLine(v6, v7, color);
+	DrawLine(v7, v4, color);
+
+	// 側面の線
+	DrawLine(v0, v4, color);
+	DrawLine(v1, v5, color);
+	DrawLine(v2, v6, color);
+	DrawLine(v3, v7, color);
 }
 
 void DebugPrimitive::CreatePrimitive() {

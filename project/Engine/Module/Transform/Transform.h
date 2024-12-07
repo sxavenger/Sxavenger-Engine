@@ -19,7 +19,8 @@ public:
 	// public methods
 	//=========================================================================================
 
-	EulerTransform() = default;
+	EulerTransform()  = default;
+	~EulerTransform() = default;
 
 	void SetImGuiCommand(float granularityTranslate = 0.01f, float granularityRotate = 1.0f, float granularityScale = 0.01f);
 
@@ -43,7 +44,8 @@ struct QuaternionTransform {
 	// public methods
 	//=========================================================================================
 
-	QuaternionTransform() = default;
+	QuaternionTransform()  = default;
+	~QuaternionTransform() = default;
 
 	void SetImGuiCommand(float granularityTranslate = 0.01f, float granularityRotate = 0.01f, float granularityScale = 0.01f);
 
@@ -67,7 +69,8 @@ struct TransformationMatrix {
 	// public methods
 	//=========================================================================================
 
-	TransformationMatrix() = default;
+	TransformationMatrix()  = default;
+	~TransformationMatrix() = default;
 
 	void Init();
 
@@ -79,4 +82,30 @@ struct TransformationMatrix {
 
 	Matrix4x4 mat                 = Matrix4x4::Identity();
 	Matrix4x4 matInverseTranspose = Matrix4x4::Identity(); //!< 非均一スケール用
+};
+
+////////////////////////////////////////////////////////////////////////////////////////////
+// UVTransform structure
+////////////////////////////////////////////////////////////////////////////////////////////
+struct UVTransform {
+
+	//=========================================================================================
+	// public methods
+	//=========================================================================================
+
+	UVTransform()  = default;
+	~UVTransform() = default;
+
+	void SetImGuiCommand(float granularityTranslate = 0.01f, float granularityScale = 0.01f);
+
+	Matrix4x4 ToMatrix() const;
+
+	//=========================================================================================
+	// public variables
+	//=========================================================================================
+
+	Vector2f scale     = kUnit2<float>;
+	float    rotate    = 0.0f;
+	Vector2f translate = kOrigin2<float>;
+
 };

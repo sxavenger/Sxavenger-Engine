@@ -10,6 +10,7 @@ _DXOBJECT_USING
 //* engine
 #include <Engine/System/SxavengerSystem.h>
 #include <Engine/Asset/SxavengerAsset.h>
+#include <Engine/Module/SxavengerModule.h>
 
 //* external
 #include <ImGuizmo.h>
@@ -27,11 +28,8 @@ void RenderConsole::Init(Console* console) {
 	computePipeline_ = std::make_unique<ComputePipelineCollection>();
 	computePipeline_->Init();
 
-	sceneCamera_ = std::make_unique<Camera3d>();
+	sceneCamera_ = std::make_unique<BlenderDebugCamera3d>();
 	sceneCamera_->Create();
-	sceneCamera_->GetTransform().translate = { 0.0f, 0.0f, -8.0f };
-	sceneCamera_->GetTransform().rotate    = MakeAxisAngle({1.0f, 0.0f, 0.0f}, pi_v / 16.0f);
-	sceneCamera_->UpdateMatrix();
 
 	gameCamera_ = std::make_unique<Camera3d>();
 	gameCamera_->Create();
@@ -175,10 +173,6 @@ void RenderConsole::PresentToScreen(GameWindow* window, const DirectXThreadConte
 	}
 }
 
-void RenderConsole::SetManipulateImGuiCommand() {
-
-}
-
 void RenderConsole::Manipulate(ImGuizmo::OPERATION operation, ImGuizmo::MODE mode, TransformComponent* component) {
 
 	ImGuizmo::SetRect(sceneRect_.pos.x, sceneRect_.pos.y, sceneRect_.size.x, sceneRect_.size.y);
@@ -202,9 +196,10 @@ void RenderConsole::Manipulate(ImGuizmo::OPERATION operation, ImGuizmo::MODE mod
 		&transform.scale.x
 	);
 
+	// FIXME: rotate and scale
 	component->GetTransform().translate = transform.translate;
-	//component->GetTransform().rotate    = ToQuaternion2(transform.rotate).Normalize(); // FIXME: rotate
-	component->GetTransform().scale     = transform.scale;
+	//component->GetTransform().rotate    = ToQuaternion2(transform.rotate).Normalize(); 
+	//component->GetTransform().scale     = transform.scale;
 	component->UpdateMatrix();
 }
 
@@ -336,7 +331,7 @@ void RenderConsole::DisplayScene() {
 	}
 
 	if (ImGui::IsWindowFocused()) {
-		//sceneCamera_->Update();
+		sceneCamera_->Update();
 	}
 
 	ImGui::End();
@@ -508,6 +503,13 @@ void RenderConsole::DrawScene() {
 		scene_->BeginAdaptive(context);
 		DrawAdaptiveBehavior(scene_.get(), outliner_);
 		DrawLateAdaptiveBehavior(scene_.get(), outliner_);
+
+		if (game_ != nullptr && game_->GetCamera() != nullptr) {
+			game_->GetCamera()->DrawFrustum(ToColor4f(0xFAFA00FF), 4.0f);
+		}
+
+		SxavengerModule::DrawGrid(kOrigin3<float>, 12.0f);
+		SxavengerModule::DrawToScene(SxavengerSystem::GetMainThreadContext(), scene_->GetCamera());
 		
 		scene_->EndAdaptive(context);
 	}
@@ -549,6 +551,7 @@ void RenderConsole::DrawGame() {
 	{
 		game_->BeginAdaptive(context);
 		DrawAdaptiveBehavior(game_.get(), outliner_);
+		SxavengerModule::DrawToScene(SxavengerSystem::GetMainThreadContext(), game_->GetCamera());
 		game_->EndAdaptive(context);
 	}
 
@@ -565,6 +568,7 @@ void RenderConsole::DrawGame() {
 	{
 		game_->BeginAdaptive(context);
 		DrawLateAdaptiveBehavior(game_.get(), outliner_);
+		SxavengerModule::DrawToScene(SxavengerSystem::GetMainThreadContext(), game_->GetCamera());
 		game_->EndAdaptive(context);
 	}
 }

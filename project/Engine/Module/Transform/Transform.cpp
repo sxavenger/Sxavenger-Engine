@@ -45,7 +45,7 @@ Matrix4x4 QuaternionTransform::ToMatrix() const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// TransformationMatrix structure
+// TransformationMatrix structure methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 void TransformationMatrix::Init() {
@@ -56,4 +56,18 @@ void TransformationMatrix::Init() {
 void TransformationMatrix::Transfer(const Matrix4x4& _mat) {
 	mat                 = _mat;
 	matInverseTranspose = _mat.Inverse().Transpose();
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////
+// UVTransform structure methods
+////////////////////////////////////////////////////////////////////////////////////////////
+
+void UVTransform::SetImGuiCommand(float granularityTranslate, float granularityScale) {
+	ImGui::DragFloat2("translate", &translate.x, granularityTranslate);
+	ImGui::SliderAngle("rotate", &rotate);
+	ImGui::DragFloat2("scale", &scale.x, granularityScale);
+}
+
+Matrix4x4 UVTransform::ToMatrix() const {
+	return Matrix::MakeAffine({ scale.x, scale.y, 0.0f }, { 0.0f, 0.0f, rotate }, { translate.x, translate.y, 0.0f });
 }

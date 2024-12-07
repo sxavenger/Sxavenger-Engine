@@ -21,7 +21,7 @@ void ChessBoard::Term() {
 }
 
 void ChessBoard::Update() {
-	TransformComponent::transform_.rotate *= MakeAxisAngle({0.0f, 1.0f, 0.0f}, 0.01f);
+	TransformComponent::uvTransform_.rotate *= MakeAxisAngle({0.0f, 1.0f, 0.0f}, 0.01f);
 	TransformComponent::UpdateMatrix();
 }
 

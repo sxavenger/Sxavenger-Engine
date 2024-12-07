@@ -94,6 +94,10 @@
     <ClCompile Include="Engine\Module\Behavior\TransformBehavior.cpp" />
     <ClCompile Include="Engine\Module\Primitive\DebugPrimitive.cpp" />
     <ClCompile Include="Engine\Module\SxavengerModule.cpp" />
+    <ClCompile Include="Demo\Particle\Emitter.cpp" />
+    <ClCompile Include="Demo\Particle\BaseParticle.cpp" />
+    <ClCompile Include="Engine\Module\Behavior\InstanceBehavior.cpp" />
+    <ClCompile Include="Engine\Module\Material\MaterialComponent.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\System\Window\Window.h" />
@@ -190,5 +194,9 @@
     <ClInclude Include="Engine\Module\Behavior\TransformBehavior.h" />
     <ClInclude Include="Engine\Module\Primitive\DebugPrimitive.h" />
     <ClInclude Include="Engine\Module\SxavengerModule.h" />
+    <ClInclude Include="Demo\Particle\Emitter.h" />
+    <ClInclude Include="Demo\Particle\BaseParticle.h" />
+    <ClInclude Include="Engine\Module\Behavior\InstanceBehavior.h" />
+    <ClInclude Include="Engine\Module\Material\MaterialComponent.h" />
   </ItemGroup>
 </Project>

@@ -118,6 +118,10 @@ void GameScene::Init() {
 	chess_ = std::make_unique<ChessBoard>();
 	chess_->Init();
 	chess_->SetToConsole();
+
+	emitter_ = std::make_unique<Emitter>();
+	emitter_->Init();
+	emitter_->SetToConsole();
 }
 
 void GameScene::Update() {
@@ -149,6 +153,8 @@ void GameScene::DrawScreen() {
 
 void GameScene::Term() {
 	chess_.reset();
+	emitter_.reset();
+
 	SxavengerSystem::ExecuteAllAllocator();
 }
 

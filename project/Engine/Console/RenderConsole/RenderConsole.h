@@ -17,6 +17,7 @@
 #include <Engine/Module/VisualLayer/VisualLayer.h>
 #include <Engine/Module/VisualLayer/VisualDoF.h>
 #include <Engine/Module/Camera/Camera3d.h>
+#include <Engine/Module/Camera/DebugCamera3d.h>
 
 //* c++
 #include <optional>
@@ -174,8 +175,8 @@ private:
 
 	std::weak_ptr<AssetTexture> checkerTexture_;
 
-	std::unique_ptr<SxavGraphicsFrame> scene_;
-	std::unique_ptr<Camera3d>          sceneCamera_; //!< 後debugCameraに変更
+	std::unique_ptr<SxavGraphicsFrame>    scene_;
+	std::unique_ptr<BlenderDebugCamera3d> sceneCamera_;
 
 	std::unique_ptr<SxavGraphicsFrame> game_;
 	std::unique_ptr<Camera3d>          gameCamera_;

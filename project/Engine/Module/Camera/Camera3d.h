@@ -41,7 +41,7 @@ public:
 
 	void SetProjection(float fovY, float aspectRatio, float nearClip, float farClip);
 
-	void DrawFrustum(const Color4f& color, const std::optional<float>& lenght); // TODO:
+	void DrawFrustum(const Color4f& color, const std::optional<float>& length);
 
 	virtual json OutputJson() override;
 

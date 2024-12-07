@@ -125,9 +125,11 @@ public:
 
 	//* drawer options *//
 
-	void DrawGrid();
+	void DrawGrid(const Vector3f& center, float size);
 
 	void DrawAxis(const Vector3f& center, float length);
+
+	void DrawBox(const Vector3f& min, const Vector3f& max, const Color4f& color);
 
 private:
 

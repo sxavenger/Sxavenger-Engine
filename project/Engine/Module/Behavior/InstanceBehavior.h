@@ -4,37 +4,38 @@
 // include
 //-----------------------------------------------------------------------------------------
 //* base
-#include "TransformBehavior.h"
+#include "BaseBehavior.h"
 
 //* engine
+#include <Engine/System/DirectX/DxObject/DxDimensionBuffer.h>
 #include <Engine/Content/Model/Model.h>
+#include <Engine/Module/Transform/Transform.h>
 #include <Engine/Module/Material/MaterialComponent.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// ModelBehavior class
+// InstanceBehavior class
 ////////////////////////////////////////////////////////////////////////////////////////////
-class ModelBehavior
-	: public TransformBehavior, public MaterialComponent {
+class InstanceBehavior
+	: public BaseBehavior, public MaterialComponent {
 public:
 
 	//=========================================================================================
 	// public methods
 	//=========================================================================================
 
-	ModelBehavior()  { Init(); }
-	~ModelBehavior() = default;
+	InstanceBehavior()  { Init(); }
+	~InstanceBehavior() = default;
 
 	void Init();
 
-	//* derivative behaivor methods *//
-	//* ImGui command
-	virtual void SystemAttributeImGui() override;
+	void CreateInstance(uint32_t size);
 
+	//* derivative behaivor methods *//
 	//* Draw methods
 
-	virtual void DrawSystematic(_MAYBE_UNUSED const SxavGraphicsFrame* frame) override;
-	virtual void DrawAdaptive(_MAYBE_UNUSED const SxavGraphicsFrame* frame) override;
-	virtual void DrawLateAdaptive(_MAYBE_UNUSED const SxavGraphicsFrame* frame) override;
+	virtual void DrawSystematic(_MAYBE_UNUSED const SxavGraphicsFrame* frame);
+	virtual void DrawAdaptive(_MAYBE_UNUSED const SxavGraphicsFrame* frame);
+	virtual void DrawLateAdaptive(_MAYBE_UNUSED const SxavGraphicsFrame* frame);
 
 protected:
 
@@ -44,4 +45,7 @@ protected:
 
 	Model* model_;
 
+	std::unique_ptr<DxObject::DimensionBuffer<TransformationMatrix>> matrixInstance_;
+
 };
+

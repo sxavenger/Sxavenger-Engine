@@ -3,28 +3,28 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
-//* camera
-#include "Camera3d.h"
+//* base
+#include <Engine/Module/Behavior/TransformBehavior.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// BlenderDebugCamera3d class
+// Emitter class
 ////////////////////////////////////////////////////////////////////////////////////////////
-class BlenderDebugCamera3d
-	: public Camera3d {
+class Emitter
+	: public TransformBehavior {
 public:
 
 	//=========================================================================================
 	// public methods
 	//=========================================================================================
 
-	BlenderDebugCamera3d()  = default;
-	~BlenderDebugCamera3d() = default;
+	Emitter()  = default;
+	~Emitter() { Term(); }
 
-	void Create();
+	void Init();
 
-	void Reset();
+	void Term();
 
-	void Update();
+	virtual void DrawLateAdaptive(_MAYBE_UNUSED const SxavGraphicsFrame* frame) override;
 
 private:
 
@@ -32,19 +32,8 @@ private:
 	// private variables
 	//=========================================================================================
 
-	float distance_ = 12.0f;
-	float lon_      = 0.0f;
-	float lat_      = 0.0f;
-	Vector3f   point_    = kOrigin3<float>;
-
-	//* parameter *//
-
-	float rotateDelta_   = 0.01f;
-
-	//=========================================================================================
-	// private methods
-	//=========================================================================================
-
-	void CalculateView();
+	//* AABB emitter
+	Vector3f min_ = { 1.0f, 1.0f, 1.0f };
+	Vector3f max_ = { -1.0f, -1.0f, -1.0f };
 
 };

@@ -148,7 +148,7 @@ Vector2i MouseInput::GetPosition(const Window* window) const {
 	return { point.x, point.y };
 }
 
-Vector2i MouseInput::GetDeltaTime() const {
+Vector2i MouseInput::GetDeltaPosition() const {
 	return { mouse_.first.lX, mouse_.first.lY };
 }
 
@@ -164,8 +164,8 @@ bool MouseInput::IsRelease(MouseId id) const {
 	return !mouse_.first.rgbButtons[static_cast<uint8_t>(id)] && mouse_.second.rgbButtons[static_cast<uint8_t>(id)];;
 }
 
-int32_t MouseInput::GetDeltaWheel() const {
-	return mouse_.first.lZ / WHEEL_DELTA; //!< wheelの最大値でnormalize
+float MouseInput::GetDeltaWheel() const {
+	return static_cast<float>(mouse_.first.lZ) / WHEEL_DELTA; //!< wheelの最大値でnormalize
 }
 
 bool MouseInput::IsWheelUp() const {
