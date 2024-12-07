@@ -12,7 +12,7 @@ _DXOBJECT_USING
 // SystematicRenderFrame class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-void SxavGraphicsFrame::Create(const Vector2ui& size, SxavGraphicsFrameType type = SxavGraphicsFrameType::kNone) {
+void SxavGraphicsFrame::Create(const Vector2ui& size, SxavGraphicsFrameType type) {
 
 	type_ = type;
 
