@@ -4,7 +4,9 @@
 // include
 //-----------------------------------------------------------------------------------------
 //* engine
-#include <Engine/System/Logger.h>
+#include <Engine/System/Utility/Logger.h>
+
+#include "DirectXMath.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // methods

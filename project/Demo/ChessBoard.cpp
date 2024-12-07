@@ -5,7 +5,8 @@
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 void ChessBoard::Init() {
-	model_ = SxavengerAsset::ImportModel("asset/model/chessBoard/chessBoard.gltf");
+	//model_ = SxavengerAsset::ImportModel("asset/model/chessBoard/chessBoard.gltf");
+	model_ = SxavengerAsset::ImportModel("asset/model/demo/teapot.obj");
 	model_->AsyncLoad(Model::GetDefaultAssimpOption() | aiProcess_Triangulate);
 	SxavengerSystem::PushTask(model_);
 
@@ -20,7 +21,7 @@ void ChessBoard::Term() {
 }
 
 void ChessBoard::Update() {
-	TransformComponent::transform_.rotate *= MakeAxisAngle({0.0f, 1.0f, 0.0f}, 0.01f);
+	TransformComponent::uvTransform_.rotate *= MakeAxisAngle({0.0f, 1.0f, 0.0f}, 0.01f);
 	TransformComponent::UpdateMatrix();
 }
 

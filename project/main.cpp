@@ -6,6 +6,10 @@
 #include <Engine/System/Runtime/Scene/GameScene.h>
 #include <Engine/Asset/SxavengerAsset.h>
 #include <Engine/Content/SxavengerContent.h>
+#include <Engine/Module/SxavengerModule.h>
+
+#include "Demo/GuizmoScene.h"
+
 
 // c++
 #include <memory>
@@ -21,6 +25,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	SxavengerSystem::Init();
 	SxavengerAsset::Init();
 	SxavengerContent::Init();
+	SxavengerModule::Init();
 
 	//=========================================================================================
 	// game scene run.
@@ -35,6 +40,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	//=========================================================================================
 	SxavengerSystem::TermThreadCollection();
 
+	SxavengerModule::Term();
 	SxavengerContent::Term();
 	SxavengerAsset::Term();
 	SxavengerSystem::Term();

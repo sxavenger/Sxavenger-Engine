@@ -7,6 +7,7 @@
 #include <Engine/System/Window/GameWindow.h>
 
 #include "Demo/ChessBoard.h"
+#include "Demo/Particle/Emitter.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // GameScene class
@@ -35,6 +36,8 @@ private:
 	bool renderWindowSwitch_ = true;
 
 	std::unique_ptr<ChessBoard> chess_;
+
+	std::unique_ptr<Emitter> emitter_;
 
 	//=========================================================================================
 	// private methods

@@ -41,7 +41,7 @@ public:
 
 	void SetProjection(float fovY, float aspectRatio, float nearClip, float farClip);
 
-	void DrawFrustum(const Color4f& color, const std::optional<float>& lenght); // TODO:
+	void DrawFrustum(const Color4f& color, const std::optional<float>& length);
 
 	virtual json OutputJson() override;
 
@@ -51,9 +51,13 @@ public:
 
 	const D3D12_GPU_VIRTUAL_ADDRESS& GetGPUVirtualAddress() const;
 
-	Matrix4x4 GetViewProj() const { return (*buffer_)[0].viewMatrix * (*buffer_)[0].projMatrix; }
+	const Matrix4x4& GetView() const { return (*buffer_)[0].viewMatrix; }
+
+	const Matrix4x4& GetProj() const { return (*buffer_)[0].projMatrix; }
 
 	const Matrix4x4& GetProjInverse() const { return (*buffer_)[0].projInverseMatrix; }
+
+	Matrix4x4 GetViewProj() const { return GetView() * GetProj(); }
 
 protected:
 

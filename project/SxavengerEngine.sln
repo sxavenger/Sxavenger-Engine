@@ -11,6 +11,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DirectXMesh", "externals\Di
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "imgui", "externals\imgui\imgui.vcxproj", "{A4D2730B-3B09-47DB-9A37-3445E9559DE4}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "imguizmo", "externals\imgui\imguizmo\imguizmo.vcxproj", "{466D4740-256C-4D38-99B1-7D046805C23B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -33,6 +35,10 @@ Global
 		{A4D2730B-3B09-47DB-9A37-3445E9559DE4}.Debug|x64.Build.0 = Debug|x64
 		{A4D2730B-3B09-47DB-9A37-3445E9559DE4}.Release|x64.ActiveCfg = Release|x64
 		{A4D2730B-3B09-47DB-9A37-3445E9559DE4}.Release|x64.Build.0 = Release|x64
+		{466D4740-256C-4D38-99B1-7D046805C23B}.Debug|x64.ActiveCfg = Debug|x64
+		{466D4740-256C-4D38-99B1-7D046805C23B}.Debug|x64.Build.0 = Debug|x64
+		{466D4740-256C-4D38-99B1-7D046805C23B}.Release|x64.ActiveCfg = Release|x64
+		{466D4740-256C-4D38-99B1-7D046805C23B}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

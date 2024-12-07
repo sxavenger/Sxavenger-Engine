@@ -9,6 +9,11 @@ _DXOBJECT_USING
 
 //* engine
 #include <Engine/System/SxavengerSystem.h>
+#include <Engine/Asset/SxavengerAsset.h>
+#include <Engine/Module/SxavengerModule.h>
+
+//* external
+#include <ImGuizmo.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // RenderConsole class methods
@@ -23,10 +28,8 @@ void RenderConsole::Init(Console* console) {
 	computePipeline_ = std::make_unique<ComputePipelineCollection>();
 	computePipeline_->Init();
 
-	sceneCamera_ = std::make_unique<Camera3d>();
+	sceneCamera_ = std::make_unique<BlenderDebugCamera3d>();
 	sceneCamera_->Create();
-	sceneCamera_->GetTransform().translate = { 0.0f, 0.0f, -12.0f };
-	sceneCamera_->UpdateMatrix();
 
 	gameCamera_ = std::make_unique<Camera3d>();
 	gameCamera_->Create();
@@ -35,6 +38,9 @@ void RenderConsole::Init(Console* console) {
 
 	presenter_ = std::make_unique<ScreenPresenter>();
 	presenter_->Init();
+
+	checkerTexture_ = SxavengerAsset::ImportTexture("asset/textures/checker_black.png");
+	checkerTexture_.lock()->Load(SxavengerSystem::GetMainThreadContext());
 }
 
 void RenderConsole::Term() {
@@ -61,12 +67,12 @@ void RenderConsole::UpdateConsole() {
 		UpdateUniqueRemove();
 
 		//* window *//
+		DisplayScene();
+		DisplayGame();
 		DisplayOutliner();
 		DisplayAttribute();
 		DisplayCanvas();
 		DisplayLayer();
-		DisplayScene();
-		DisplayGame();
 	}
 }
 
@@ -167,6 +173,36 @@ void RenderConsole::PresentToScreen(GameWindow* window, const DirectXThreadConte
 	}
 }
 
+void RenderConsole::Manipulate(ImGuizmo::OPERATION operation, ImGuizmo::MODE mode, TransformComponent* component) {
+
+	ImGuizmo::SetRect(sceneRect_.pos.x, sceneRect_.pos.y, sceneRect_.size.x, sceneRect_.size.y);
+
+	Matrix4x4 m = component->GetMatrix();
+
+	ImGuizmo::Manipulate(
+		reinterpret_cast<const float*>(sceneCamera_->GetView().m),
+		reinterpret_cast<const float*>(sceneCamera_->GetProj().m),
+		operation,
+		mode,
+		reinterpret_cast<float*>(m.m)
+	);
+
+	EulerTransform transform = {};
+
+	ImGuizmo::DecomposeMatrixToComponents(
+		reinterpret_cast<const float*>(m.m),
+		&transform.translate.x,
+		&transform.rotate.x,
+		&transform.scale.x
+	);
+
+	// FIXME: rotate and scale
+	component->GetTransform().translate = transform.translate;
+	//component->GetTransform().rotate    = ToQuaternion2(transform.rotate).Normalize(); 
+	//component->GetTransform().scale     = transform.scale;
+	component->UpdateMatrix();
+}
+
 void RenderConsole::ShowRenderConsoleMenu() {
 	if (ImGui::BeginMenu("behavior")) {
 		MenuDummy();
@@ -219,11 +255,11 @@ void RenderConsole::ShowGraphicsMenu() {
 
 void RenderConsole::CreateFrame(const Vector2ui& size) {
 	scene_ = std::make_unique<SxavGraphicsFrame>();
-	scene_->Create(size);
+	scene_->Create(size, SxavGraphicsFrameType::kDebug);
 	scene_->SetCamera(sceneCamera_.get());
 
 	game_ = std::make_unique<SxavGraphicsFrame>();
-	game_->Create(size);
+	game_->Create(size, SxavGraphicsFrameType::kGame);
 	game_->SetCamera(gameCamera_.get());
 }
 
@@ -279,12 +315,14 @@ void RenderConsole::DisplayLayer() {
 }
 
 void RenderConsole::DisplayScene() {
+
 	console_->DockingConsole();
 	ImGui::Begin("Scene ## Render Console", nullptr, console_->GetWindowFlag() | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
 
 	if (scene_ != nullptr) {
-		//ShowTextureImGuiFullWindow(Sxavenger::GetTexture<BaseTexture>("resources/checker_black.png")); //< HACK
-		ShowTextureImGuiFullWindow(scene_->GetAdaptive()->GetTexture());
+		ShowTextureImGuiFullWindow(checkerTexture_.lock().get()); //< HACK
+		sceneRect_ = ShowTextureImGuiFullWindow(scene_->GetAdaptive()->GetTexture());
+		ImGuizmo::SetDrawlist();
 	}
 
 	if (ImGui::IsWindowHovered() && ImGui::IsMouseClicked(2)) {
@@ -293,7 +331,7 @@ void RenderConsole::DisplayScene() {
 	}
 
 	if (ImGui::IsWindowFocused()) {
-		//sceneCamera_->Update();
+		sceneCamera_->Update();
 	}
 
 	ImGui::End();
@@ -304,7 +342,7 @@ void RenderConsole::DisplayGame() {
 	ImGui::Begin("Game ## Render Console", nullptr, console_->GetWindowFlag() | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
 
 	if (game_ != nullptr) {
-		//ShowTextureImGuiFullWindow(Sxavenger::GetTexture<BaseTexture>("resources/checker_black.png")); //< HACK
+		ShowTextureImGuiFullWindow(checkerTexture_.lock().get()); //< HACK
 		ShowTextureImGuiFullWindow(game_->GetAdaptive()->GetTexture());
 	}
 
@@ -465,6 +503,14 @@ void RenderConsole::DrawScene() {
 		scene_->BeginAdaptive(context);
 		DrawAdaptiveBehavior(scene_.get(), outliner_);
 		DrawLateAdaptiveBehavior(scene_.get(), outliner_);
+
+		if (game_ != nullptr && game_->GetCamera() != nullptr) {
+			game_->GetCamera()->DrawFrustum(ToColor4f(0xFAFA00FF), 4.0f);
+		}
+
+		SxavengerModule::DrawGrid(kOrigin3<float>, 12.0f);
+		SxavengerModule::DrawToScene(SxavengerSystem::GetMainThreadContext(), scene_->GetCamera());
+		
 		scene_->EndAdaptive(context);
 	}
 }
@@ -505,6 +551,7 @@ void RenderConsole::DrawGame() {
 	{
 		game_->BeginAdaptive(context);
 		DrawAdaptiveBehavior(game_.get(), outliner_);
+		SxavengerModule::DrawToScene(SxavengerSystem::GetMainThreadContext(), game_->GetCamera());
 		game_->EndAdaptive(context);
 	}
 
@@ -521,6 +568,7 @@ void RenderConsole::DrawGame() {
 	{
 		game_->BeginAdaptive(context);
 		DrawLateAdaptiveBehavior(game_.get(), outliner_);
+		SxavengerModule::DrawToScene(SxavengerSystem::GetMainThreadContext(), game_->GetCamera());
 		game_->EndAdaptive(context);
 	}
 }
@@ -530,7 +578,7 @@ void RenderConsole::MenuDummy() {
 	ImGui::Dummy(size);
 }
 
-void RenderConsole::ShowTextureImGuiFullWindow(const MultiViewTexture* texture) {
+RenderConsole::WindowRect RenderConsole::ShowTextureImGuiFullWindow(const MultiViewTexture* texture) {
 
 	// タブ等を排除した全体のwindowSize計算
 	ImVec2 regionMax  = ImGui::GetWindowContentRegionMax();
@@ -563,4 +611,76 @@ void RenderConsole::ShowTextureImGuiFullWindow(const MultiViewTexture* texture) 
 	ImGui::SetCursorPos(leftTop);
 	ImGui::Image(texture->GetGPUHandleSRV().ptr, displayTextureSize);
 
+	WindowRect rect = {};
+	rect.pos  = { leftTop.x + ImGui::GetWindowPos().x, leftTop.y + ImGui::GetWindowPos().y };
+	rect.size = { displayTextureSize.x, displayTextureSize.y };
+
+	return rect;
+}
+
+RenderConsole::WindowRect RenderConsole::ShowTextureImGuiFullWindow(const BaseTexture* texture) {
+
+	// タブ等を排除した全体のwindowSize計算
+	ImVec2 regionMax  = ImGui::GetWindowContentRegionMax();
+	ImVec2 regionMin  = ImGui::GetWindowContentRegionMin();
+	ImVec2 windowSize = { regionMax.x - regionMin.x, regionMax.y - regionMin.y };
+
+	Vector2f textureSize = texture->GetSize();
+	
+	// 画像アス比と分割したWindowアス比の計算
+	float textureAspectRatio = textureSize.x / textureSize.y;
+	float windowAspectRatio  = windowSize.x / windowSize.y;
+	
+	// 出力する画像サイズの設定
+	ImVec2 displayTextureSize = windowSize;
+	
+	// 画像サイズの調整
+	if (textureAspectRatio <= windowAspectRatio) {
+		displayTextureSize.x *= textureAspectRatio / windowAspectRatio;
+	
+	} else {
+		displayTextureSize.y *= windowAspectRatio / textureAspectRatio;
+	}
+	
+	// 出力場所の調整
+	ImVec2 leftTop = {
+		(windowSize.x - displayTextureSize.x) * 0.5f + regionMin.x,
+		(windowSize.y - displayTextureSize.y) * 0.5f + regionMin.y,
+	};
+	
+	ImGui::SetCursorPos(leftTop);
+	ImGui::Image(texture->GetGPUHandleSRV().ptr, displayTextureSize);
+
+	WindowRect rect = {};
+	rect.pos  = { leftTop.x + ImGui::GetWindowPos().x, leftTop.y + ImGui::GetWindowPos().y };
+	rect.size = { displayTextureSize.x, displayTextureSize.y };
+
+	return rect;
+
+}
+
+void RenderConsole::ShowDemoGrid(const Camera3d* camera, const WindowRect& rect, float length) {
+
+	ImGuizmo::SetDrawlist();
+
+	ImGuizmo::SetRect(rect.pos.x, rect.pos.y, rect.size.x, rect.size.y);
+
+	ImGuizmo::DrawGrid(
+		reinterpret_cast<const float*>(camera->GetView().m),
+		reinterpret_cast<const float*>(camera->GetProj().m),
+		reinterpret_cast<const float*>(Matrix4x4::Identity().m),
+		length
+	);
+
+	// this test
+
+	Matrix4x4 m = Matrix4x4::Identity();
+
+	ImGuizmo::Manipulate(
+		reinterpret_cast<const float*>(camera->GetView().m),
+		reinterpret_cast<const float*>(camera->GetProj().m),
+		ImGuizmo::TRANSLATE,
+		ImGuizmo::WORLD,
+		reinterpret_cast<float*>(m.m)
+	);
 }

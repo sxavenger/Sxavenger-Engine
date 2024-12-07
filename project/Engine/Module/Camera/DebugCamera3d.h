@@ -17,8 +17,10 @@ public:
 	// public methods
 	//=========================================================================================
 
-	BlenderDebugCamera3d()  { Reset(); }
+	BlenderDebugCamera3d()  = default;
 	~BlenderDebugCamera3d() = default;
+
+	void Create();
 
 	void Reset();
 
@@ -30,6 +32,19 @@ private:
 	// private variables
 	//=========================================================================================
 
-	float distance_;
+	float distance_ = 12.0f;
+	float lon_      = 0.0f;
+	float lat_      = 0.0f;
+	Vector3f   point_    = kOrigin3<float>;
+
+	//* parameter *//
+
+	float rotateDelta_   = 0.01f;
+
+	//=========================================================================================
+	// private methods
+	//=========================================================================================
+
+	void CalculateView();
 
 };

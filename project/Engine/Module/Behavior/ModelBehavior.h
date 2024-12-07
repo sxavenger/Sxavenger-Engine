@@ -4,17 +4,17 @@
 // include
 //-----------------------------------------------------------------------------------------
 //* base
-#include "BaseBehavior.h"
+#include "TransformBehavior.h"
 
 //* engine
 #include <Engine/Content/Model/Model.h>
-#include <Engine/Module/Transform/TransformComponent.h>
+#include <Engine/Module/Material/MaterialComponent.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // ModelBehavior class
 ////////////////////////////////////////////////////////////////////////////////////////////
 class ModelBehavior
-	: public BaseBehavior, public TransformComponent {
+	: public TransformBehavior, public MaterialComponent {
 public:
 
 	//=========================================================================================
@@ -43,8 +43,5 @@ protected:
 	//=========================================================================================
 
 	Model* model_;
-
-	std::unique_ptr<DxObject::DimensionBuffer<Matrix4x4>> mat_;
-	//!< UVTransform(hack)
 
 };

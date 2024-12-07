@@ -8,7 +8,7 @@
 #include <Engine/System/Runtime/Performance/Performance.h>
 #include <Engine/Console/Console.h>
 #include <Engine/Content/SxavengerContent.h>
-#include <Engine/Asset/SxavengerAsset.h>
+#include <Engine/Module/SxavengerModule.h>
 
 //* lib
 #include <Lib/Environment.h>
@@ -66,6 +66,8 @@ void GameScene::Run() {
 		//!< sub window delete時に死ぬ
 		//!< shader hot reload 時に死ぬ
 
+		SxavengerModule::ResetPrimtive();
+
 		Performance::EndFrame();
 
 		if (SxavengerSystem::IsTriggerKey(KeyId::KEY_F4)) {
@@ -116,9 +118,14 @@ void GameScene::Init() {
 	chess_ = std::make_unique<ChessBoard>();
 	chess_->Init();
 	chess_->SetToConsole();
+
+	emitter_ = std::make_unique<Emitter>();
+	emitter_->Init();
+	emitter_->SetToConsole();
 }
 
 void GameScene::Update() {
+	chess_->Update();
 }
 
 void GameScene::Draw() {
@@ -146,6 +153,8 @@ void GameScene::DrawScreen() {
 
 void GameScene::Term() {
 	chess_.reset();
+	emitter_.reset();
+
 	SxavengerSystem::ExecuteAllAllocator();
 }
 

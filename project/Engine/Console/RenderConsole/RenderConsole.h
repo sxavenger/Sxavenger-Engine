@@ -6,7 +6,9 @@
 //* console
 #include "RenderBehavior.h"
 
+
 //* engine
+#include <Engine/Asset/AssetLibrary/Texture/AssetTexture.h>
 #include <Engine/Module/Behavior/BaseBehavior.h>
 #include <Engine/Module/Pipeline/RenderPipelineCollection.h>
 #include <Engine/Module/Pipeline/ComputePipelineCollection.h>
@@ -15,9 +17,14 @@
 #include <Engine/Module/VisualLayer/VisualLayer.h>
 #include <Engine/Module/VisualLayer/VisualDoF.h>
 #include <Engine/Module/Camera/Camera3d.h>
+#include <Engine/Module/Camera/DebugCamera3d.h>
 
 //* c++
 #include <optional>
+
+//* external
+#include <imgui.h>
+#include <ImGuizmo.h>
 
 //-----------------------------------------------------------------------------------------
 // forward
@@ -94,6 +101,11 @@ public:
 
 	void PresentToScreen(GameWindow* window, const DirectXThreadContext* context);
 
+	//* imgui methods option *//
+
+	void SetManipulateImGuiCommand();
+	void Manipulate(ImGuizmo::OPERATION operation, ImGuizmo::MODE mode, TransformComponent* component);
+
 protected:
 
 	//=========================================================================================
@@ -116,6 +128,14 @@ protected:
 	void CreateFrame(const Vector2ui& size);
 
 private:
+
+	////////////////////////////////////////////////////////////////////////////////////////////
+	// WindowRect structure
+	////////////////////////////////////////////////////////////////////////////////////////////
+	struct WindowRect {
+		Vector2f pos;
+		Vector2f size;
+	};
 
 	//=========================================================================================
 	// private variables
@@ -153,14 +173,23 @@ private:
 
 	//* frames *//
 
-	std::unique_ptr<SxavGraphicsFrame> scene_;
-	std::unique_ptr<Camera3d>          sceneCamera_; //!< 後debugCameraに変更
+	std::weak_ptr<AssetTexture> checkerTexture_;
+
+	std::unique_ptr<SxavGraphicsFrame>    scene_;
+	std::unique_ptr<BlenderDebugCamera3d> sceneCamera_;
 
 	std::unique_ptr<SxavGraphicsFrame> game_;
 	std::unique_ptr<Camera3d>          gameCamera_;
 	// CONSENDER: frameはどこに持たせるべきか.
 
 	FullScreenFrameType type_ = FullScreenFrameType::kGame;
+
+	//* Manipulate *//
+
+	WindowRect sceneRect_ = {};
+
+	ImGuizmo::OPERATION operation_ = ImGuizmo::TRANSLATE;
+	ImGuizmo::MODE mode_           = ImGuizmo::LOCAL;
 
 	//=========================================================================================
 	// private methods
@@ -204,6 +233,9 @@ private:
 
 	static void MenuDummy();
 
-	static void ShowTextureImGuiFullWindow(const MultiViewTexture* texture);
+	static WindowRect ShowTextureImGuiFullWindow(const MultiViewTexture* texture);
+	static WindowRect ShowTextureImGuiFullWindow(const BaseTexture* texture);
+
+	static void ShowDemoGrid(const Camera3d* camera, const WindowRect& rect, float length);
 
 };

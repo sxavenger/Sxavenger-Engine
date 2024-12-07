@@ -35,7 +35,10 @@ public:
 	static Vector3f ToVector3f(const json& data);
 
 	static json ToJson(const Vector4f& v);
+	static Vector4f ToVector4f(const json& data);
+
 	static json ToJson(const Color4f& c);
+	static Color4f ToColor4f(const json& data);
 
 	static json ToJson(const Quaternion& q);
 	static Quaternion ToQuaternion(const json& data);
