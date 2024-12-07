@@ -21,10 +21,7 @@ void ModelBehavior::Init() {
 }
 
 void ModelBehavior::SystemAttributeImGui() {
-	if (ImGui::TreeNode("Transform Component")) {
-		TransformComponent::SetImGuiCommand();
-		ImGui::TreePop();
-	}
+	TransformBehavior::SystemAttributeImGui();
 }
 
 void ModelBehavior::DrawSystematic(_MAYBE_UNUSED const SxavGraphicsFrame* frame) {

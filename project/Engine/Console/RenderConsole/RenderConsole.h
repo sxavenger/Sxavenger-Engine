@@ -6,7 +6,9 @@
 //* console
 #include "RenderBehavior.h"
 
+
 //* engine
+#include <Engine/Asset/AssetLibrary/Texture/AssetTexture.h>
 #include <Engine/Module/Behavior/BaseBehavior.h>
 #include <Engine/Module/Pipeline/RenderPipelineCollection.h>
 #include <Engine/Module/Pipeline/ComputePipelineCollection.h>
@@ -18,6 +20,10 @@
 
 //* c++
 #include <optional>
+
+//* external
+#include <imgui.h>
+#include <ImGuizmo.h>
 
 //-----------------------------------------------------------------------------------------
 // forward
@@ -51,8 +57,6 @@ public:
 	void Term();
 
 	void UpdateConsole();
-
-	void TEST_UPDATE();
 
 	void Draw();
 
@@ -95,6 +99,11 @@ public:
 	void DispatchCompute(const DirectXThreadContext* context, const Vector2ui& size);
 
 	void PresentToScreen(GameWindow* window, const DirectXThreadContext* context);
+
+	//* imgui methods option *//
+
+	void SetManipulateImGuiCommand();
+	void Manipulate(ImGuizmo::OPERATION operation, ImGuizmo::MODE mode, TransformComponent* component);
 
 protected:
 
@@ -163,6 +172,8 @@ private:
 
 	//* frames *//
 
+	std::weak_ptr<AssetTexture> checkerTexture_;
+
 	std::unique_ptr<SxavGraphicsFrame> scene_;
 	std::unique_ptr<Camera3d>          sceneCamera_; //!< 後debugCameraに変更
 
@@ -171,6 +182,13 @@ private:
 	// CONSENDER: frameはどこに持たせるべきか.
 
 	FullScreenFrameType type_ = FullScreenFrameType::kGame;
+
+	//* Manipulate *//
+
+	WindowRect sceneRect_ = {};
+
+	ImGuizmo::OPERATION operation_ = ImGuizmo::TRANSLATE;
+	ImGuizmo::MODE mode_           = ImGuizmo::LOCAL;
 
 	//=========================================================================================
 	// private methods
@@ -215,7 +233,8 @@ private:
 	static void MenuDummy();
 
 	static WindowRect ShowTextureImGuiFullWindow(const MultiViewTexture* texture);
+	static WindowRect ShowTextureImGuiFullWindow(const BaseTexture* texture);
 
-	static void ShowGrid(const Camera3d* camera, const WindowRect& rect, float length);
+	static void ShowDemoGrid(const Camera3d* camera, const WindowRect& rect, float length);
 
 };

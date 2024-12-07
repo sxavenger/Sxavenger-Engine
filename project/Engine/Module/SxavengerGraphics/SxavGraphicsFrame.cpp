@@ -12,7 +12,10 @@ _DXOBJECT_USING
 // SystematicRenderFrame class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-void SxavGraphicsFrame::Create(const Vector2ui& size) {
+void SxavGraphicsFrame::Create(const Vector2ui& size, SxavGraphicsFrameType type = SxavGraphicsFrameType::kNone) {
+
+	type_ = type;
+
 	systematic_ = std::make_unique<SystematicRenderFrame>();
 	systematic_->Create(size);
 

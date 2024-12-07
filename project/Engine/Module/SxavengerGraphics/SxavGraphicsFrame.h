@@ -23,7 +23,16 @@
 class Camera3d;
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// SystematicRenderFrame class
+// SxavGraphicsFrameType enum class
+////////////////////////////////////////////////////////////////////////////////////////////
+enum class SxavGraphicsFrameType : uint8_t {
+	kNone,
+	kDebug,
+	kGame,
+};
+
+////////////////////////////////////////////////////////////////////////////////////////////
+// SxavGraphicsFrame class
 ////////////////////////////////////////////////////////////////////////////////////////////
 class SxavGraphicsFrame {
 public:
@@ -35,7 +44,7 @@ public:
 	SxavGraphicsFrame()  = default;
 	~SxavGraphicsFrame() = default;
 
-	void Create(const Vector2ui& size);
+	void Create(const Vector2ui& size, SxavGraphicsFrameType type = SxavGraphicsFrameType::kNone);
 
 	void Term();
 
@@ -88,6 +97,8 @@ public:
 
 	DxObject::BindBufferDesc GetTransitionSystematicBindDesc() const;
 
+	SxavGraphicsFrameType GetType() const { return type_; }
+
 	//* setter *//
 
 	void SetCamera(Camera3d* camera) { camera_ = camera; }
@@ -123,6 +134,10 @@ private:
 	//* buffer
 
 	std::unique_ptr<DxObject::DimensionBuffer<Config>> config_;
+
+	//* config
+
+	SxavGraphicsFrameType type_ = SxavGraphicsFrameType::kNone;
 
 	//=========================================================================================
 	// private methods

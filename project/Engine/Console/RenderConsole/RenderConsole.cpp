@@ -9,6 +9,7 @@ _DXOBJECT_USING
 
 //* engine
 #include <Engine/System/SxavengerSystem.h>
+#include <Engine/Asset/SxavengerAsset.h>
 
 //* external
 #include <ImGuizmo.h>
@@ -28,7 +29,8 @@ void RenderConsole::Init(Console* console) {
 
 	sceneCamera_ = std::make_unique<Camera3d>();
 	sceneCamera_->Create();
-	sceneCamera_->GetTransform().translate = { 0.0f, 0.0f, -12.0f };
+	sceneCamera_->GetTransform().translate = { 0.0f, 0.0f, -8.0f };
+	sceneCamera_->GetTransform().rotate    = MakeAxisAngle({1.0f, 0.0f, 0.0f}, pi_v / 16.0f);
 	sceneCamera_->UpdateMatrix();
 
 	gameCamera_ = std::make_unique<Camera3d>();
@@ -38,6 +40,9 @@ void RenderConsole::Init(Console* console) {
 
 	presenter_ = std::make_unique<ScreenPresenter>();
 	presenter_->Init();
+
+	checkerTexture_ = SxavengerAsset::ImportTexture("asset/textures/checker_black.png");
+	checkerTexture_.lock()->Load(SxavengerSystem::GetMainThreadContext());
 }
 
 void RenderConsole::Term() {
@@ -64,12 +69,12 @@ void RenderConsole::UpdateConsole() {
 		UpdateUniqueRemove();
 
 		//* window *//
+		DisplayScene();
+		DisplayGame();
 		DisplayOutliner();
 		DisplayAttribute();
 		DisplayCanvas();
 		DisplayLayer();
-		DisplayScene();
-		DisplayGame();
 	}
 }
 
@@ -170,6 +175,39 @@ void RenderConsole::PresentToScreen(GameWindow* window, const DirectXThreadConte
 	}
 }
 
+void RenderConsole::SetManipulateImGuiCommand() {
+
+}
+
+void RenderConsole::Manipulate(ImGuizmo::OPERATION operation, ImGuizmo::MODE mode, TransformComponent* component) {
+
+	ImGuizmo::SetRect(sceneRect_.pos.x, sceneRect_.pos.y, sceneRect_.size.x, sceneRect_.size.y);
+
+	Matrix4x4 m = component->GetMatrix();
+
+	ImGuizmo::Manipulate(
+		reinterpret_cast<const float*>(sceneCamera_->GetView().m),
+		reinterpret_cast<const float*>(sceneCamera_->GetProj().m),
+		operation,
+		mode,
+		reinterpret_cast<float*>(m.m)
+	);
+
+	EulerTransform transform = {};
+
+	ImGuizmo::DecomposeMatrixToComponents(
+		reinterpret_cast<const float*>(m.m),
+		&transform.translate.x,
+		&transform.rotate.x,
+		&transform.scale.x
+	);
+
+	component->GetTransform().translate = transform.translate;
+	//component->GetTransform().rotate    = ToQuaternion2(transform.rotate).Normalize(); // FIXME: rotate
+	component->GetTransform().scale     = transform.scale;
+	component->UpdateMatrix();
+}
+
 void RenderConsole::ShowRenderConsoleMenu() {
 	if (ImGui::BeginMenu("behavior")) {
 		MenuDummy();
@@ -222,11 +260,11 @@ void RenderConsole::ShowGraphicsMenu() {
 
 void RenderConsole::CreateFrame(const Vector2ui& size) {
 	scene_ = std::make_unique<SxavGraphicsFrame>();
-	scene_->Create(size);
+	scene_->Create(size, SxavGraphicsFrameType::kDebug);
 	scene_->SetCamera(sceneCamera_.get());
 
 	game_ = std::make_unique<SxavGraphicsFrame>();
-	game_->Create(size);
+	game_->Create(size, SxavGraphicsFrameType::kGame);
 	game_->SetCamera(gameCamera_.get());
 }
 
@@ -282,15 +320,14 @@ void RenderConsole::DisplayLayer() {
 }
 
 void RenderConsole::DisplayScene() {
+
 	console_->DockingConsole();
 	ImGui::Begin("Scene ## Render Console", nullptr, console_->GetWindowFlag() | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
 
-	WindowRect rect = {};
-
 	if (scene_ != nullptr) {
-		//ShowTextureImGuiFullWindow(Sxavenger::GetTexture<BaseTexture>("resources/checker_black.png")); //< HACK
-		rect = ShowTextureImGuiFullWindow(scene_->GetAdaptive()->GetTexture());
-		//ShowGrid(scene_->GetCamera(), rect, 12.0f);
+		ShowTextureImGuiFullWindow(checkerTexture_.lock().get()); //< HACK
+		sceneRect_ = ShowTextureImGuiFullWindow(scene_->GetAdaptive()->GetTexture());
+		ImGuizmo::SetDrawlist();
 	}
 
 	if (ImGui::IsWindowHovered() && ImGui::IsMouseClicked(2)) {
@@ -303,10 +340,6 @@ void RenderConsole::DisplayScene() {
 	}
 
 	ImGui::End();
-
-	if (scene_ != nullptr) {
-		ShowGrid(scene_->GetCamera(), rect, 12.0f);
-	}
 }
 
 void RenderConsole::DisplayGame() {
@@ -314,7 +347,7 @@ void RenderConsole::DisplayGame() {
 	ImGui::Begin("Game ## Render Console", nullptr, console_->GetWindowFlag() | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
 
 	if (game_ != nullptr) {
-		//ShowTextureImGuiFullWindow(Sxavenger::GetTexture<BaseTexture>("resources/checker_black.png")); //< HACK
+		ShowTextureImGuiFullWindow(checkerTexture_.lock().get()); //< HACK
 		ShowTextureImGuiFullWindow(game_->GetAdaptive()->GetTexture());
 	}
 
@@ -575,13 +608,56 @@ RenderConsole::WindowRect RenderConsole::ShowTextureImGuiFullWindow(const MultiV
 	ImGui::Image(texture->GetGPUHandleSRV().ptr, displayTextureSize);
 
 	WindowRect rect = {};
-	rect.pos  = { leftTop.x, leftTop.y };
+	rect.pos  = { leftTop.x + ImGui::GetWindowPos().x, leftTop.y + ImGui::GetWindowPos().y };
 	rect.size = { displayTextureSize.x, displayTextureSize.y };
 
 	return rect;
 }
 
-void RenderConsole::ShowGrid(const Camera3d* camera, const WindowRect& rect, float length) {
+RenderConsole::WindowRect RenderConsole::ShowTextureImGuiFullWindow(const BaseTexture* texture) {
+
+	// タブ等を排除した全体のwindowSize計算
+	ImVec2 regionMax  = ImGui::GetWindowContentRegionMax();
+	ImVec2 regionMin  = ImGui::GetWindowContentRegionMin();
+	ImVec2 windowSize = { regionMax.x - regionMin.x, regionMax.y - regionMin.y };
+
+	Vector2f textureSize = texture->GetSize();
+	
+	// 画像アス比と分割したWindowアス比の計算
+	float textureAspectRatio = textureSize.x / textureSize.y;
+	float windowAspectRatio  = windowSize.x / windowSize.y;
+	
+	// 出力する画像サイズの設定
+	ImVec2 displayTextureSize = windowSize;
+	
+	// 画像サイズの調整
+	if (textureAspectRatio <= windowAspectRatio) {
+		displayTextureSize.x *= textureAspectRatio / windowAspectRatio;
+	
+	} else {
+		displayTextureSize.y *= windowAspectRatio / textureAspectRatio;
+	}
+	
+	// 出力場所の調整
+	ImVec2 leftTop = {
+		(windowSize.x - displayTextureSize.x) * 0.5f + regionMin.x,
+		(windowSize.y - displayTextureSize.y) * 0.5f + regionMin.y,
+	};
+	
+	ImGui::SetCursorPos(leftTop);
+	ImGui::Image(texture->GetGPUHandleSRV().ptr, displayTextureSize);
+
+	WindowRect rect = {};
+	rect.pos  = { leftTop.x + ImGui::GetWindowPos().x, leftTop.y + ImGui::GetWindowPos().y };
+	rect.size = { displayTextureSize.x, displayTextureSize.y };
+
+	return rect;
+
+}
+
+void RenderConsole::ShowDemoGrid(const Camera3d* camera, const WindowRect& rect, float length) {
+
+	ImGuizmo::SetDrawlist();
 
 	ImGuizmo::SetRect(rect.pos.x, rect.pos.y, rect.size.x, rect.size.y);
 

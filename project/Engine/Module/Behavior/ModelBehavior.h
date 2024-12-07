@@ -4,7 +4,7 @@
 // include
 //-----------------------------------------------------------------------------------------
 //* base
-#include "BaseBehavior.h"
+#include "TransformBehavior.h"
 
 //* engine
 #include <Engine/Content/Model/Model.h>
@@ -14,7 +14,7 @@
 // ModelBehavior class
 ////////////////////////////////////////////////////////////////////////////////////////////
 class ModelBehavior
-	: public BaseBehavior, public TransformComponent {
+	: public TransformBehavior {
 public:
 
 	//=========================================================================================

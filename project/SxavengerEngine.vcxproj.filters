@@ -90,6 +90,10 @@
     <ClCompile Include="Engine\Asset\AssetLibrary\Unkown\AssetUnkown.cpp" />
     <ClCompile Include="Engine\Console\AssetConsole\AssetConsole.cpp" />
     <ClCompile Include="Demo\GuizmoScene.cpp" />
+    <ClCompile Include="Lib\MyMath.cpp" />
+    <ClCompile Include="Engine\Module\Behavior\TransformBehavior.cpp" />
+    <ClCompile Include="Engine\Module\Primitive\DebugPrimitive.cpp" />
+    <ClCompile Include="Engine\Module\SxavengerModule.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\System\Window\Window.h" />
@@ -182,5 +186,9 @@
     <ClInclude Include="Engine\Asset\AssetLibrary\Unkown\AssetUnkown.h" />
     <ClInclude Include="Engine\Console\AssetConsole\AssetConsole.h" />
     <ClInclude Include="Demo\GuizmoScene.h" />
+    <ClInclude Include="Lib\MyMath.h" />
+    <ClInclude Include="Engine\Module\Behavior\TransformBehavior.h" />
+    <ClInclude Include="Engine\Module\Primitive\DebugPrimitive.h" />
+    <ClInclude Include="Engine\Module\SxavengerModule.h" />
   </ItemGroup>
 </Project>
