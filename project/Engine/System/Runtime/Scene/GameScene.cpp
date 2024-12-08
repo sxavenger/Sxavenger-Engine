@@ -98,13 +98,14 @@ void GameScene::SystemInit() {
 		compute->CreateBlob("common/white1x1.cs.hlsl");
 		compute->ReflectionPipeline(SxavengerSystem::GetDxDevice());
 
-		std::shared_ptr<UnorderedTexture> white1x1 = SxavengerContent::TryCreateUnorderedTexture("white1x1.png", { 1, 1 });
+		std::shared_ptr<UnorderedTexture> white1x1 = SxavengerContent::TryCreateUnorderedTexture("white1x1", { 1, 1 });
 		white1x1->TransitionBeginUnordered(SxavengerSystem::GetMainThreadContext());
 		compute->SetPipeline(SxavengerSystem::GetCommandList());
 
 
 		DxObject::BindBufferDesc bind = {};
 		bind.SetHandle("gOutput", white1x1->GetGPUHandleUAV());
+		compute->BindComputeBuffer(SxavengerSystem::GetMainThreadContext()->GetDxCommand(), bind);
 
 		compute->Dispatch(SxavengerSystem::GetCommandList(), 1, 1, 1);
 
@@ -122,10 +123,23 @@ void GameScene::Init() {
 	emitter_ = std::make_unique<Emitter>();
 	emitter_->Init();
 	emitter_->SetToConsole();
+
+	smoke_ = std::make_unique<Smoke>();
+	smoke_->Init();
+	smoke_->SetToConsole();
+
+	emitter_->SetParticle(smoke_.get());
+
+
+	illmination_ = std::make_unique<Illmination>();
+	illmination_->Init();
+	illmination_->SetToConsole();
 }
 
 void GameScene::Update() {
 	chess_->Update();
+	emitter_->Update();
+	smoke_->Update();
 }
 
 void GameScene::Draw() {
@@ -154,6 +168,8 @@ void GameScene::DrawScreen() {
 void GameScene::Term() {
 	chess_.reset();
 	emitter_.reset();
+	smoke_.reset();
+	illmination_.reset();
 
 	SxavengerSystem::ExecuteAllAllocator();
 }

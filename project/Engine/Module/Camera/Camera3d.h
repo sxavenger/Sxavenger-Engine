@@ -5,6 +5,7 @@
 //-----------------------------------------------------------------------------------------
 //* base
 #include <Engine/Module/Transform/TransformComponent.h>
+#include <Engine/Module/Behavior/TransformBehavior.h>
 
 //* engine
 #include <Engine/System/DirectX/DxObject/DxDimensionBuffer.h>
@@ -21,7 +22,7 @@
 // Camera3d class
 ////////////////////////////////////////////////////////////////////////////////////////////
 class Camera3d
-	: public TransformComponent {
+	: public TransformBehavior {
 public:
 
 	//=========================================================================================
@@ -46,6 +47,8 @@ public:
 	virtual json OutputJson() override;
 
 	virtual void InputJson(const json& data) override;
+
+	void SystemAttributeImGui() override;
 
 	//* getter *//
 

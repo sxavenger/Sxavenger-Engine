@@ -32,14 +32,15 @@ private:
 	// private variables
 	//=========================================================================================
 
-	float distance_ = 12.0f;
-	float lon_      = 0.0f;
-	float lat_      = 0.0f;
-	Vector3f   point_    = kOrigin3<float>;
+	float distance_    = 12.0f;
+	float lon_         = 0.0f;
+	float lat_         = 0.0f;
+	Vector3f point_    = kOrigin3<float>;
 
 	//* parameter *//
 
-	float rotateDelta_   = 0.01f;
+	float rotateDelta_ = 0.01f;
+	float moveDelta_   = 0.01f;
 
 	//=========================================================================================
 	// private methods

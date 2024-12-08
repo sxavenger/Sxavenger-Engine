@@ -25,7 +25,7 @@ public:
 	// public methods
 	//=========================================================================================
 
-	void AsyncLoad(uint32_t assimpOption);
+	void AsyncLoad(uint32_t assimpOption = Model::GetDefaultAssimpOption());
 
 	void SetFilepath(const std::filesystem::path& filepath) { filepath_ = filepath; }
 

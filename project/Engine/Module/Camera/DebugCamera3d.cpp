@@ -34,6 +34,16 @@ void BlenderDebugCamera3d::Update() {
 		lat_ = std::fmod(lat_ + delta.y * rotateDelta_, pi_v * 2.0f);
 	}
 
+	if (input->IsPress(MouseId::MOUSE_RIGHT)) {
+		Vector2f delta = input->GetDeltaPosition();
+
+		Vector3f right = RotateVector({ 1.0f, 0.0f, 0.0f }, Camera3d::GetTransform().rotate);
+		Vector3f up    = RotateVector({ 0.0f, 1.0f, 0.0f }, Camera3d::GetTransform().rotate);
+
+		point_ += -right * delta.x * moveDelta_;
+		point_ += up * delta.y * moveDelta_;
+	}
+
 	distance_ = std::max(distance_ - input->GetDeltaWheel(), 0.0f);
 
 	CalculateView();

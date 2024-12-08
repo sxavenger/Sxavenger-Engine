@@ -19,6 +19,8 @@ void Camera3d::Create() {
 	buffer_ = std::make_unique<DimensionBuffer<Camera3dForGPU>>();
 	buffer_->Create(SxavengerSystem::GetDxDevice(), 1);
 	Reset();
+
+	SetName("camera");
 }
 
 void Camera3d::Term() {
@@ -82,6 +84,11 @@ json Camera3d::OutputJson() {
 
 void Camera3d::InputJson(const json& data) {
 	TransformComponent::InputJson(data["TransformComponent"]);
+}
+
+void Camera3d::SystemAttributeImGui() {
+	TransformBehavior::SystemAttributeImGui();
+	UpdateMatrix();
 }
 
 const D3D12_GPU_VIRTUAL_ADDRESS& Camera3d::GetGPUVirtualAddress() const {

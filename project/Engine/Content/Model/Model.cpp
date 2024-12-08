@@ -19,7 +19,7 @@
 // static variables
 //=========================================================================================
 
-const uint32_t Model::kDefaultAssimpOption_ = aiProcess_FlipWindingOrder | aiProcess_FlipUVs;
+const uint32_t Model::kDefaultAssimpOption_ = aiProcess_FlipWindingOrder | aiProcess_FlipUVs | aiProcess_Triangulate;
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Model class methods
@@ -58,7 +58,7 @@ const D3D12_GPU_DESCRIPTOR_HANDLE& Model::GetTextureHandle(uint32_t meshIndex, M
 	Assert(materialIndex < materials_.size(), "material index out of range."); //!< materialサイズ以上のindex
 
 	if (materials_.at(materialIndex).textures_[static_cast<uint8_t>(type)] == nullptr) {
-		return SxavengerContent::GetTextureGPUHandleSRV("white1x1.png");
+		return SxavengerContent::GetTextureGPUHandleSRV("white1x1");
 	}
 
 	return materials_.at(materialIndex).textures_[static_cast<uint8_t>(type)]->GetGPUHandleSRV();

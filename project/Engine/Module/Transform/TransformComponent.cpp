@@ -64,8 +64,8 @@ json TransformComponent::OutputJson() {
 }
 
 void TransformComponent::InputJson(const json& data) {
-	uvTransform_.scale     = IJsonSerializer::ToVector3f(data.at("scale"));
-	uvTransform_.rotate    = IJsonSerializer::ToQuaternion(data.at("rotate"));
-	uvTransform_.translate = IJsonSerializer::ToVector3f(data.at("translate"));
+	uvTransform_.scale     = IJsonSerializer::JsonToVector3f(data.at("scale"));
+	uvTransform_.rotate    = IJsonSerializer::JsonToQuaternion(data.at("rotate"));
+	uvTransform_.translate = IJsonSerializer::JsonToVector3f(data.at("translate"));
 	UpdateMatrix();
 }

@@ -35,6 +35,7 @@ void RenderConsole::Init(Console* console) {
 	gameCamera_->Create();
 	gameCamera_->GetTransform().translate = { 0.0f, 0.0f, -24.0f };
 	gameCamera_->UpdateMatrix();
+	gameCamera_->SetToConsole();
 
 	presenter_ = std::make_unique<ScreenPresenter>();
 	presenter_->Init();
@@ -45,10 +46,6 @@ void RenderConsole::Init(Console* console) {
 
 void RenderConsole::Term() {
 
-	RemoveUniqueBehavior();
-	RemoveUniqueLayer();
-
-	ResetBehavior();
 	renderPipeline_.reset();
 	computePipeline_.reset();
 
@@ -59,6 +56,11 @@ void RenderConsole::Term() {
 	gameCamera_.reset();
 
 	presenter_.reset();
+
+	RemoveUniqueBehavior();
+	RemoveUniqueLayer();
+
+	ResetBehavior();
 }
 
 void RenderConsole::UpdateConsole() {

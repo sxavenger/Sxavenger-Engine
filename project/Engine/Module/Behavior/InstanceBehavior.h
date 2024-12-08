@@ -37,6 +37,11 @@ public:
 	virtual void DrawAdaptive(_MAYBE_UNUSED const SxavGraphicsFrame* frame);
 	virtual void DrawLateAdaptive(_MAYBE_UNUSED const SxavGraphicsFrame* frame);
 
+	//* getter *//
+
+	const TransformationMatrix& GetMatrix(uint32_t index) const { return (*matrixInstance_)[index]; }
+	TransformationMatrix& GetMatrix(uint32_t index) { return (*matrixInstance_)[index]; }
+
 protected:
 
 	//=========================================================================================

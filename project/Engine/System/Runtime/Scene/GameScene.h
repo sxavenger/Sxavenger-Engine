@@ -8,6 +8,8 @@
 
 #include "Demo/ChessBoard.h"
 #include "Demo/Particle/Emitter.h"
+#include "Demo/DemoParticle/Smoke.h"
+#include "Demo/DemoParticle/Illumination.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // GameScene class
@@ -38,6 +40,9 @@ private:
 	std::unique_ptr<ChessBoard> chess_;
 
 	std::unique_ptr<Emitter> emitter_;
+	std::unique_ptr<Smoke> smoke_;
+
+	std::unique_ptr<Illmination> illmination_;
 
 	//=========================================================================================
 	// private methods

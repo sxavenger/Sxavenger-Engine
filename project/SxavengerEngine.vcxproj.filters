@@ -98,6 +98,8 @@
     <ClCompile Include="Demo\Particle\BaseParticle.cpp" />
     <ClCompile Include="Engine\Module\Behavior\InstanceBehavior.cpp" />
     <ClCompile Include="Engine\Module\Material\MaterialComponent.cpp" />
+    <ClCompile Include="Demo\DemoParticle\Illumination.cpp" />
+    <ClCompile Include="Demo\DemoParticle\Smoke.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\System\Window\Window.h" />
@@ -198,5 +200,7 @@
     <ClInclude Include="Demo\Particle\BaseParticle.h" />
     <ClInclude Include="Engine\Module\Behavior\InstanceBehavior.h" />
     <ClInclude Include="Engine\Module\Material\MaterialComponent.h" />
+    <ClInclude Include="Demo\DemoParticle\Illumination.h" />
+    <ClInclude Include="Demo\DemoParticle\Smoke.h" />
   </ItemGroup>
 </Project>

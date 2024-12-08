@@ -135,6 +135,8 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Demo\ChessBoard.cpp" />
+    <ClCompile Include="Demo\DemoParticle\Illumination.cpp" />
+    <ClCompile Include="Demo\DemoParticle\Smoke.cpp" />
     <ClCompile Include="Demo\GuizmoScene.cpp" />
     <ClCompile Include="Demo\Particle\BaseParticle.cpp" />
     <ClCompile Include="Demo\Particle\Emitter.cpp" />
@@ -226,6 +228,8 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Demo\ChessBoard.h" />
+    <ClInclude Include="Demo\DemoParticle\Illumination.h" />
+    <ClInclude Include="Demo\DemoParticle\Smoke.h" />
     <ClInclude Include="Demo\GuizmoScene.h" />
     <ClInclude Include="Demo\Particle\BaseParticle.h" />
     <ClInclude Include="Demo\Particle\Emitter.h" />

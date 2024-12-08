@@ -33,7 +33,7 @@ void MaterialComponent::Transfer() {
 
 void MaterialComponent::SetImGuiCommand() {
 	uvTransform_.SetImGuiCommand();
-	ImGui::ColorEdit4("color", &color_.r);
+	ImGui::ColorEdit4("color", &color_.r, ImGuiColorEditFlags_AlphaBar | ImGuiColorEditFlags_AlphaPreview);
 	Transfer();
 }
 
@@ -48,11 +48,11 @@ json MaterialComponent::OutputJson() {
 }
 
 void MaterialComponent::InputJson(const json& data) {
-	uvTransform_.scale     = IJsonSerializer::ToVector2f(data.at("scale"));
+	uvTransform_.scale     = IJsonSerializer::JsonToVector2f(data.at("scale"));
 	uvTransform_.rotate    = data.at("rotate");
-	uvTransform_.translate = IJsonSerializer::ToVector2f(data.at("translate"));
+	uvTransform_.translate = IJsonSerializer::JsonToVector2f(data.at("translate"));
 
-	color_ = IJsonSerializer::ToColor4f(data.at("color"));
+	color_ = IJsonSerializer::JsonToColor4f(data.at("color"));
 
 	Transfer();
 }

@@ -15,11 +15,11 @@ public:
 	//=========================================================================================
 
 	void AddDeltaTime() {
-		*this += Performance::GetDeltaTime();
+		*this += Performance::GetDeltaTime<T>();
 	}
 
 	void SubtractDeltaTime() {
-		*this -= Performance::GetDeltaTime();
+		*this -= Performance::GetDeltaTime<T>();
 	}
 
 	void Reset() {
