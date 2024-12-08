@@ -85,6 +85,8 @@ public:
 
 	void ClearWindow(bool isClearColor = true, bool isClearDepth = true);
 
+	void TryClearWindow(bool isClearColor = true, bool isClearDepth = true);
+
 	void Present(bool isTransitonAllocator = true);
 
 private:
@@ -105,5 +107,7 @@ private:
 	//* paraemeter *//
 
 	Color4f clearColor_ = {};
+
+	bool isClearWindow_ = false;
 
 };

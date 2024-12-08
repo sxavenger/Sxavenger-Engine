@@ -72,7 +72,7 @@ public:
 //-----------------------------------------------------------------------------------------
 
 using Color4f = Color4<float>;
-using Color4i = Color4<int>;
+using Color4i = Color4<int32_t>;
 
 //-----------------------------------------------------------------------------------------
 // constexpr
@@ -84,8 +84,21 @@ constexpr const Color4f kWhite4 = { 1.0f, 1.0f, 1.0f, 1.0f };
 // methods
 //-----------------------------------------------------------------------------------------
 
-constexpr Color4i ToColor4i(const Color4f& color);
-constexpr Color4f ToColor4f(const Color4i& color);
-Color4f ToColor4f(uint32_t colorCode); //!< constexprに変換
+constexpr Color4<int32_t> ToColor4i(const Color4<float>& color) {
+	return { static_cast<int>(color.r * 255.0f), static_cast<int>(color.g * 255.0f), static_cast<int>(color.b * 255.0f), static_cast<int>(color.a * 255.0f) };
+}
+
+constexpr Color4<float> ToColor4f(const Color4<int32_t>& color) {
+	return { color.r / 255.0f, color.g / 255.0f, color.b / 255.0f, color.a / 255.0f };
+}
+
+constexpr Color4<float> ToColor4f(const uint32_t colorCode) {
+	return {
+		((colorCode >> (8 * 3)) & 0xFF) / 255.0f, // r
+		((colorCode >> (8 * 2)) & 0xFF) / 255.0f, // g
+		((colorCode >> (8 * 1)) & 0xFF) / 255.0f, // b
+		((colorCode >> (8 * 0)) & 0xFF) / 255.0f  // a
+	};
+}
 
 

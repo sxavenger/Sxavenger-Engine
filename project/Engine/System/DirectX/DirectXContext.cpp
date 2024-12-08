@@ -90,7 +90,6 @@ void DirectXWindowContext::BeginRendering() {
 		false,
 		&depthStencil_->GetCPUHandle()
 	);
-
 }
 
 void DirectXWindowContext::EndRendering() {
@@ -129,6 +128,15 @@ void DirectXWindowContext::ClearWindow(bool isClearColor, bool isClearDepth) {
 		);
 	}
 
+	isClearWindow_ = true;
+}
+
+void DirectXWindowContext::TryClearWindow(bool isClearColor, bool isClearDepth) {
+	if (isClearWindow_) {
+		return;
+	}
+
+	ClearWindow(isClearColor, isClearDepth);
 }
 
 void DirectXWindowContext::Present(bool isTransitonAllocator) {
@@ -136,4 +144,6 @@ void DirectXWindowContext::Present(bool isTransitonAllocator) {
 		threadContext_->TransitionAllocator();
 	}
 	swapChain_->Present(1, 0);
+
+	isClearWindow_ = false;
 }

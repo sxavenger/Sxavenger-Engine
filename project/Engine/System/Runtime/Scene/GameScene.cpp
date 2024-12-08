@@ -120,26 +120,12 @@ void GameScene::Init() {
 	chess_->Init();
 	chess_->SetToConsole();
 
-	emitter_ = std::make_unique<Emitter>();
-	emitter_->Init();
-	emitter_->SetToConsole();
+	constexpr Color4f a = ToColor4f(0xFAFAFAFF);
 
-	smoke_ = std::make_unique<Smoke>();
-	smoke_->Init();
-	smoke_->SetToConsole();
-
-	emitter_->SetParticle(smoke_.get());
-
-
-	illmination_ = std::make_unique<Illmination>();
-	illmination_->Init();
-	illmination_->SetToConsole();
 }
 
 void GameScene::Update() {
 	chess_->Update();
-	emitter_->Update();
-	smoke_->Update();
 }
 
 void GameScene::Draw() {
@@ -147,11 +133,10 @@ void GameScene::Draw() {
 
 void GameScene::DrawScreen() {
 
-	mainWindow_->BeginRendering();
+	/*mainWindow_->BeginRendering();
 	mainWindow_->ClearWindow();
 
-	mainWindow_->EndRendering();
-
+	mainWindow_->EndRendering();*/
 	
 	if (!subWindow_.expired()) {
 		auto window = subWindow_.lock();
@@ -159,17 +144,12 @@ void GameScene::DrawScreen() {
 		window->BeginRendering();
 		window->ClearWindow();
 
-		sConsole->PresentToScreen(window.get(), SxavengerSystem::GetMainThreadContext());
-
 		window->EndRendering();
 	}
 }
 
 void GameScene::Term() {
 	chess_.reset();
-	emitter_.reset();
-	smoke_.reset();
-	illmination_.reset();
 
 	SxavengerSystem::ExecuteAllAllocator();
 }

@@ -65,10 +65,25 @@ void Console::Draw() {
 }
 
 void Console::DrawConsole() {
+	if (!subWindow_.expired()) {
+		auto window = subWindow_.lock();
+
+		window->BeginRendering();
+		window->TryClearWindow();
+
+		RenderConsole::PresentToScreen(window.get(), SxavengerSystem::GetMainThreadContext());
+
+		window->EndRendering();
+	}
+
 	if (!window_.expired()) {
 		auto window = window_.lock();
 
 		window->BeginRendering();
+		window->TryClearWindow();
+
+		RenderConsole::PresentToScreen(window.get(), SxavengerSystem::GetMainThreadContext());
+		
 		SxavengerSystem::RenderImGui();
 		window->EndRendering();
 	}
@@ -131,6 +146,22 @@ void Console::DisplayMainMenu() {
 		ImGui::Checkbox("display system console", &(SystemConsole::isDisplaySystemConsole_));
 		ImGui::Checkbox("display render console", &(RenderConsole::isDisplayRenderConsole_));
 		ImGui::Checkbox("display asset console", &(AssetConsole::isDisplayAssetConsole_));
+
+		if (subWindow_.expired()) {
+			if (ImGui::Button("create sub window")) {
+				if (!window_.expired()) {
+					subWindow_ = SxavengerSystem::TryCreateSubWindow(window_.lock()->GetSize(), L"Sxavenger Console Window");
+					subWindow_.lock()->SetWindowIcon("packages/icon/SxavengerEngineSubIcon.ico", { 32, 32 });
+				}
+			}
+
+		} else {
+			if (ImGui::Button("close window")) {
+				auto window = subWindow_.lock();
+				window->Close();
+			}
+		}
+
 		ImGui::EndMenu();
 	}
 

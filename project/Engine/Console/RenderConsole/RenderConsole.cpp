@@ -206,6 +206,30 @@ void RenderConsole::Manipulate(ImGuizmo::OPERATION operation, ImGuizmo::MODE mod
 }
 
 void RenderConsole::ShowRenderConsoleMenu() {
+	if (ImGui::BeginMenu("present")) {
+		MenuDummy();
+
+		ImGui::SeparatorText("present");
+
+		if (ImGui::RadioButton("none", reinterpret_cast<int32_t*>(&type_), static_cast<int32_t>(FullScreenFrameType::kNone))) {
+			type_ = FullScreenFrameType::kNone;
+		}
+
+		ImGui::SameLine();
+
+		if (ImGui::RadioButton("game", reinterpret_cast<int32_t*>(&type_), static_cast<int32_t>(FullScreenFrameType::kGame))) {
+			type_ = FullScreenFrameType::kGame;
+		}
+
+		ImGui::SameLine();
+
+		if (ImGui::RadioButton("scene", reinterpret_cast<int32_t*>(&type_), static_cast<int32_t>(FullScreenFrameType::kScene))) {
+			type_ = FullScreenFrameType::kScene;
+		}
+
+		ImGui::EndMenu();
+	}
+
 	if (ImGui::BeginMenu("behavior")) {
 		MenuDummy();
 

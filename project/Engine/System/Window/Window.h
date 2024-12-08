@@ -12,6 +12,7 @@
 //* c++
 #include <optional>
 #include <string>
+#include <filesystem>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // WindowType enum class
@@ -38,7 +39,9 @@ public:
 
 	void Close();
 
-	void SetIcon(const LPCSTR& filepath, const Vector2ui& cursolSize);
+	void SetIcon(const std::filesystem::path& filepath, const Vector2ui& cursolSize);
+	void SetWindowIcon(const std::filesystem::path& filepath, const Vector2ui& cursolSize);
+	void SetTaskbarIcon(const std::filesystem::path& filepath, const Vector2ui& cursolSize);
 
 	//* getter *//
 

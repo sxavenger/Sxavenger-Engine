@@ -73,6 +73,7 @@ void Window::Create(const Vector2ui& clientSize, const LPCWSTR name, const HWND 
 }
 
 void Window::Close() {
+	DestroyWindow(hwnd_);
 	CloseWindow(hwnd_);
 
 	if (hInst_ != nullptr) {
@@ -80,17 +81,25 @@ void Window::Close() {
 	}
 }
 
-void Window::SetIcon(const LPCSTR& filepath, const Vector2ui& cursolSize) {
+void Window::SetIcon(const std::filesystem::path& filepath, const Vector2ui& cursolSize) {
+	SetWindowIcon(filepath, cursolSize);
+	SetTaskbarIcon(filepath, cursolSize);
+}
+
+void Window::SetWindowIcon(const std::filesystem::path& filepath, const Vector2ui& cursolSize) {
 
 	HICON smallIcon
-		= static_cast<HICON>(LoadImageA(GetModuleHandle(NULL), filepath, IMAGE_ICON, cursolSize.x, cursolSize.y, LR_LOADFROMFILE));
-
-	HICON largeIcon
-		= static_cast<HICON>(LoadImageA(GetModuleHandle(NULL), filepath, IMAGE_ICON, cursolSize.x, cursolSize.y, LR_LOADFROMFILE));
+		= static_cast<HICON>(LoadImageA(GetModuleHandle(NULL), filepath.generic_string().c_str(), IMAGE_ICON, cursolSize.x, cursolSize.y, LR_LOADFROMFILE));
 
 	SendMessage(hwnd_, WM_SETICON, ICON_SMALL, reinterpret_cast<LPARAM>(smallIcon));
-	SendMessage(hwnd_, WM_SETICON, ICON_BIG,   reinterpret_cast<LPARAM>(largeIcon));
+}
 
+void Window::SetTaskbarIcon(const std::filesystem::path& filepath, const Vector2ui& cursolSize) {
+
+	HICON largeIcon
+		= static_cast<HICON>(LoadImageA(GetModuleHandle(NULL), filepath.generic_string().c_str(), IMAGE_ICON, cursolSize.x, cursolSize.y, LR_LOADFROMFILE));
+
+	SendMessage(hwnd_, WM_SETICON, ICON_BIG, reinterpret_cast<LPARAM>(largeIcon));
 }
 
 LRESULT Window::MainWindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {

@@ -69,6 +69,7 @@ private:
 	//* external *//
 
 	std::weak_ptr<GameWindow> window_;
+	std::weak_ptr<GameWindow> subWindow_;
 
 	//* config *//
 	//* console
