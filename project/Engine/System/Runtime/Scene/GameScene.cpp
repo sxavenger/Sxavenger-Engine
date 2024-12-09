@@ -13,8 +13,7 @@
 //* lib
 #include <Lib/Environment.h>
 
-#include "Lib/Adapter/Json/JsonAdapter.h"
-
+#include "Engine/Content/Animation/AnimationGroup.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // GameScene class methods
@@ -117,6 +116,9 @@ void GameScene::Init() {
 	chess_ = std::make_unique<ChessBoard>();
 	chess_->Init();
 	chess_->SetToConsole();
+
+	DeltaTimePoint<TimeUnit::s> s   = { 1.0f };
+	DeltaTimePoint<TimeUnit::ms> ms = { 2.0f };
 
 }
 

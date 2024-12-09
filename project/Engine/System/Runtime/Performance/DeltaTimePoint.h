@@ -26,15 +26,15 @@ public:
 		time = 0.0f;
 	}
 
-	DeltaTimePoint Mod(DeltaTimePoint& other) {
-		return { std::fmod(time, other.time) };
+	DeltaTimePoint Mod(DeltaTimePoint divisor) {
+		return { std::fmod(time, divisor.time) };
 	}
 
 	//=========================================================================================
 	// public operator
 	//=========================================================================================
 
-	void operator=(const DeltaTimePoint& other) {
+	void operator=(DeltaTimePoint other) {
 		time = other.time;
 	}
 

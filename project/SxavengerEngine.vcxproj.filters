@@ -103,8 +103,9 @@
     <ClCompile Include="Engine\Content\Animation\Skeleton.cpp" />
     <ClCompile Include="Engine\Content\Animation\Animation.cpp" />
     <ClCompile Include="Engine\Content\Animation\SkinCluster.cpp" />
-    <ClCompile Include="Engine\Content\Animation\Animator.cpp" />
     <ClCompile Include="Engine\Content\Animation\AnimationGroup.cpp" />
+    <ClCompile Include="Engine\System\DirectX\DxObject\DxUnorderedDimensionBuffer.cpp" />
+    <ClCompile Include="Engine\Content\Animation\SkeletonMesh.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\System\Window\Window.h" />
@@ -213,7 +214,8 @@
     <ClInclude Include="Engine\Content\Animation\JointWeight.h" />
     <ClInclude Include="Engine\Content\Animation\Skeleton.h" />
     <ClInclude Include="Engine\Content\Animation\SkinCluster.h" />
-    <ClInclude Include="Engine\Content\Animation\Animator.h" />
     <ClInclude Include="Engine\Content\Animation\AnimationGroup.h" />
+    <ClInclude Include="Engine\System\DirectX\DxObject\DxUnorderedDimensionBuffer.h" />
+    <ClInclude Include="Engine\Content\Animation\SkeletonMesh.h" />
   </ItemGroup>
 </Project>

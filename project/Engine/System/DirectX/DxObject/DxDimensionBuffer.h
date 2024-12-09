@@ -26,8 +26,8 @@ public:
 	// public methods
 	//=========================================================================================
 
-	BaseDimensionBuffer()          = default;
-	virtual ~BaseDimensionBuffer() { Release(); }
+	BaseDimensionBuffer()  = default;
+	~BaseDimensionBuffer() { Release(); }
 
 	//* getter *//
 

@@ -48,6 +48,10 @@ void Model::SetIABuffer(uint32_t meshIndex) const {
 	meshes_.at(meshIndex).mesh.BindIABuffer();
 }
 
+void Model::DrawCall(uint32_t meshIndex, uint32_t instanceCount) const {
+	meshes_[meshIndex].mesh.DrawCall(instanceCount);
+}
+
 const D3D12_GPU_DESCRIPTOR_HANDLE& Model::GetTextureHandle(uint32_t meshIndex, MaterialTextureType type) const {
 	CheckMeshIndex(meshIndex);
 	Assert(meshes_.at(meshIndex).materialIndex.has_value()); //!< materialが使われていない
@@ -62,9 +66,15 @@ const D3D12_GPU_DESCRIPTOR_HANDLE& Model::GetTextureHandle(uint32_t meshIndex, M
 	return materials_.at(materialIndex).textures_[static_cast<uint8_t>(type)]->GetGPUHandleSRV();
 }
 
-void Model::DrawCall(uint32_t meshIndex, uint32_t instanceCount) const {
-	meshes_[meshIndex].mesh.DrawCall(instanceCount);
+const MeshData& Model::GetMeshData(uint32_t meshIndex) const {
+	CheckMeshIndex(meshIndex);
+	return meshes_.at(meshIndex);
 }
+
+const InputMesh& Model::GetInputMesh(uint32_t meshIndex) const {
+	return GetMeshData(meshIndex).mesh;
+}
+
 
 void Model::LoadMesh(const aiScene* aiScene) {
 
@@ -125,7 +135,7 @@ void Model::LoadMesh(const aiScene* aiScene) {
 		//* SkinCluster
 		//*
 
-		auto& skinCluster = meshes_.at(meshIndex).skinCluster;
+		auto& jointWeights = meshes_.at(meshIndex).jointWeights;
 
 		// skinClusterの解析
 		for (uint32_t boneIndex = 0; boneIndex < aiMesh->mNumBones; ++boneIndex) {
@@ -134,8 +144,7 @@ void Model::LoadMesh(const aiScene* aiScene) {
 			const aiBone* aiBone = aiMesh->mBones[boneIndex];
 
 			// clusterの登録
-			std::string name = aiBone->mName.C_Str();
-			JointWeightData& jointWeightData = skinCluster[name];
+			JointWeightData& jointWeightData = jointWeights[aiBone->mName.C_Str()];
 
 			// inverseBindPoseMatrixの抽出
 			aiMatrix4x4 aiBindPoseMatrix = aiBone->mOffsetMatrix;

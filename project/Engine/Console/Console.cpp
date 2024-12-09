@@ -203,10 +203,9 @@ void Console::DisplayPerformace() {
 
 	DeltaTimePoint<TimeUnit::s> framesPerSec = Performance::GetDeltaTime<TimeUnit::s>();
 
-	ImGui::Text("exec speed / frame: %.6f", framesPerSec.time);
+	ImGui::Text("[exec speed / frame]: %.6f", framesPerSec.time);
 	ImGui::SameLine();
-	ImGui::Text("FPS: %.0f", 1.0f / framesPerSec.time);
-	
+	ImGui::Text("[frame per second]: %.1f", 1.0f / framesPerSec.time);
 
 	ImGui::End();
 

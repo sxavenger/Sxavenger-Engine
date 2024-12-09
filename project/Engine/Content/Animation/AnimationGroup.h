@@ -28,6 +28,16 @@ public:
 
 	void Load(const std::filesystem::path& filepath);
 
+	//* getter *//
+
+	const uint32_t GetAnimationSize() const { return static_cast<uint32_t>(animations_.size()); }
+
+	const Animation& GetAnimation(uint32_t index) const { return animations_[index]; }
+	const Animation& GetAnimation(const std::string& name) const;
+
+	const DeltaTimePoint<TimeUnit::s> GetDurationTime(uint32_t index) const { return animations_[index].duration; }
+	const DeltaTimePoint<TimeUnit::s> GetDurationTime(const std::string& name) const;
+
 private:
 
 	//=========================================================================================
@@ -36,5 +46,13 @@ private:
 
 	std::vector<Animation>                    animations_;
 	std::unordered_map<std::string, uint32_t> animationMap_; //!< key: name, value: animation index
+
+	//=========================================================================================
+	// private methods
+	//=========================================================================================
+
+	static DeltaTimePoint<TimeUnit::s> GetTime(double time, double ticksPerSeconds);
+
+	void LoadTransformAnimation(const aiNodeAnim* aiNodeAnimation, Animation& animation, double tickPerSeconds);
 
 };
