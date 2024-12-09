@@ -1,25 +1,28 @@
-name: DebugBuild
+name: "debug build"
 on:
-  push:
-    branches:
-      - develop
+    push:
+        branches:
+            - "3.0_Beta"
+            - "3.0"
+
 env:
-  # リポジトリのルートディレクトリを基点としたslnのfilapath
-  SOLUTION_FILE_PATH: project/SxavengerEngine.sln
-  # Visual studioの構成(Debug || Release)
-  CONFIGURATION: Debug
+    # リポジトリのルートディレクトリを基点としたslnのfilepath
+    SOLUTION_FILE_PATH: project/SxavengerEngine.sln
+    # Visual Sudio の構成(Debug || Release)
+    CONFIGURATION: Debug
 
 jobs:
-  build:
-    runs-on: windows-2022
+    build:
+        runs-on: windows-2022
 
-    step:
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          msbuild-architecture: x64
-      - name: Build
-        run: |
-          mubuild ${{env.SOLUTION_FILE_PATH}} /p:Platform=x64,Configuration=${{env.CINFIGURATION}}
-          
-        
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v4
+
+            - name: Add MSBuild to PATH
+              uses: microsoft/setup-msbuild@v2
+              with:
+                msbuild_architecture: x64
+
+            - name: Build
+              run: msbuild ${{env.SOLUTION_FILE_PATH}} /p:Platform=x64,Configuration=${{env.CONFIGURATION}}

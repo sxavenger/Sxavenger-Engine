@@ -1,0 +1,347 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>17.0</VCProjectVersion>
+    <Keyword>Win32Proj</Keyword>
+    <ProjectGuid>{D12DBC4D-E27E-4404-AC98-B010DABF1BCC}</ProjectGuid>
+    <RootNamespace>DirectXGame2</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <IntDir>$(SolutionDir)..\Generated\obj\$(ProjectName)\$(Configuration)\</IntDir>
+    <OutDir>$(SolutionDir)..\Generated\outputs\$(Configuration)\</OutDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <OutDir>$(SolutionDir)..\Generated\outputs\$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)..\Generated\obj\$(ProjectName)\$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <WarningLevel>Level4</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>NOMINMAX;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>$(ProjectDir)externals\nlohmann;$(ProjectDir)externals\meshoptimizer;$(ProjectDir)externals\imgui\imguizmo;$(ProjectDir)externals\imgui;$(ProjectDir)externals\DirectXTex;$(ProjectDir)externals\DirectXMesh;$(ProjectDir)externals\assimp\include;$(ProjectDir)</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <TreatWarningAsError>true</TreatWarningAsError>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalOptions>/ignore:4049 %(AdditionalOptions)</AdditionalOptions>
+      <TreatLinkerWarningAsErrors>true</TreatLinkerWarningAsErrors>
+      <AdditionalLibraryDirectories>$(ProjectDir)externals\assimp\lib\Debug</AdditionalLibraryDirectories>
+      <AdditionalDependencies>assimp-vc143-mtd.lib</AdditionalDependencies>
+      <DelayLoadDLLs>
+      </DelayLoadDLLs>
+      <ProgramDatabaseFile>$(SolutionDir)..\Generated\obj\$(ProjectName)\$(Configuration)\$(TargetName).pdb</ProgramDatabaseFile>
+    </Link>
+    <PostBuildEvent>
+      <Command>copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxcompiler.dll" "$(TargetDir)dxcompiler.dll"
+copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dxil.dll"
+copy "$(SolutionDir)externals\assimp\lib\Debug\assimp-vc143-mtd.dll" "$(TargetDir)assimp-vc143-mtd.dll"</Command>
+    </PostBuildEvent>
+    <FxCompile>
+      <ShaderModel>6.4</ShaderModel>
+      <AdditionalIncludeDirectories>$(ProjectDir)\resources\hlsl;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </FxCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>NOMINMAX;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <AdditionalIncludeDirectories>$(ProjectDir)externals\nlohmann;$(ProjectDir)externals\meshoptimizer;$(ProjectDir)externals\imgui\imguizmo;$(ProjectDir)externals\imgui;$(ProjectDir)externals\DirectXTex;$(ProjectDir)externals\DirectXMesh;$(ProjectDir)externals\assimp\include;$(ProjectDir)</AdditionalIncludeDirectories>
+      <TreatWarningAsError>true</TreatWarningAsError>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <TreatLinkerWarningAsErrors>true</TreatLinkerWarningAsErrors>
+      <AdditionalLibraryDirectories>$(ProjectDir)externals\assimp\lib\Release</AdditionalLibraryDirectories>
+      <AdditionalDependencies>assimp-vc143-mt.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <ProgramDatabaseFile>$(SolutionDir)..\Generated\obj\$(ProjectName)\$(Configuration)\$(TargetName).pdb</ProgramDatabaseFile>
+    </Link>
+    <FxCompile>
+      <ShaderModel>6.4</ShaderModel>
+    </FxCompile>
+    <PostBuildEvent>
+      <Command>copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxcompiler.dll" "$(TargetDir)dxcompiler.dll"
+copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dxil.dll"
+copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetDir)assimp-vc143-mt.dll"</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ProjectReference Include="externals\DirectXMesh\DirectXMesh_Desktop_2022_Win10.vcxproj">
+      <Project>{6857f086-f6fe-4150-9ed7-7446f1c1c220}</Project>
+    </ProjectReference>
+    <ProjectReference Include="externals\DirectXTex\DirectXTex_Desktop_2022_Win10.vcxproj">
+      <Project>{371b9fa9-4c90-4ac6-a123-aced756d6c77}</Project>
+    </ProjectReference>
+    <ProjectReference Include="externals\imgui\imgui.vcxproj">
+      <Project>{a4d2730b-3b09-47db-9a37-3445e9559de4}</Project>
+    </ProjectReference>
+    <ProjectReference Include="externals\imgui\imguizmo\imguizmo.vcxproj">
+      <Project>{466d4740-256c-4d38-99b1-7d046805c23b}</Project>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Demo\ChessBoard.cpp" />
+    <ClCompile Include="Demo\DemoParticle\Illumination.cpp" />
+    <ClCompile Include="Demo\DemoParticle\Smoke.cpp" />
+    <ClCompile Include="Demo\GuizmoScene.cpp" />
+    <ClCompile Include="Demo\Particle\BaseParticle.cpp" />
+    <ClCompile Include="Demo\Particle\Emitter.cpp" />
+    <ClCompile Include="Engine\Asset\Asset.cpp" />
+    <ClCompile Include="Engine\Asset\AssetLibrary\IAsset.cpp" />
+    <ClCompile Include="Engine\Asset\AssetLibrary\Model\AssetModel.cpp" />
+    <ClCompile Include="Engine\Asset\AssetLibrary\Texture\AssetTexture.cpp" />
+    <ClCompile Include="Engine\Asset\AssetLibrary\Unkown\AssetUnkown.cpp" />
+    <ClCompile Include="Engine\Asset\SxavengerAsset.cpp" />
+    <ClCompile Include="Engine\Console\AssetConsole\AssetConsole.cpp" />
+    <ClCompile Include="Engine\Console\Console.cpp" />
+    <ClCompile Include="Engine\Console\RenderConsole\RenderBehavior.cpp" />
+    <ClCompile Include="Engine\Console\RenderConsole\RenderConsole.cpp" />
+    <ClCompile Include="Engine\Console\SystemConsole\SystemConsole.cpp" />
+    <ClCompile Include="Engine\Content\Animation\Animation.cpp" />
+    <ClCompile Include="Engine\Content\Animation\AnimationGroup.cpp" />
+    <ClCompile Include="Engine\Content\Animation\Animator.cpp" />
+    <ClCompile Include="Engine\Content\Animation\Skeleton.cpp" />
+    <ClCompile Include="Engine\Content\Animation\SkinCluster.cpp" />
+    <ClCompile Include="Engine\Content\InputAssembler\InputAssembler.cpp" />
+    <ClCompile Include="Engine\Content\InputAssembler\InputMesh.cpp" />
+    <ClCompile Include="Engine\Content\Model\Model.cpp" />
+    <ClCompile Include="Engine\Content\SxavengerContent.cpp" />
+    <ClCompile Include="Engine\Content\Texture\DepthTexture.cpp" />
+    <ClCompile Include="Engine\Content\Texture\MultiViewTexture.cpp" />
+    <ClCompile Include="Engine\Content\Texture\Texture.cpp" />
+    <ClCompile Include="Engine\Content\Texture\TextureCollection.cpp" />
+    <ClCompile Include="Engine\Module\Behavior\BaseBehavior.cpp" />
+    <ClCompile Include="Engine\Module\Behavior\InstanceBehavior.cpp" />
+    <ClCompile Include="Engine\Module\Behavior\ModelBehavior.cpp" />
+    <ClCompile Include="Engine\Module\Behavior\TransformBehavior.cpp" />
+    <ClCompile Include="Engine\Module\Camera\Camera3d.cpp" />
+    <ClCompile Include="Engine\Module\Camera\DebugCamera3d.cpp" />
+    <ClCompile Include="Engine\Module\Material\MaterialComponent.cpp" />
+    <ClCompile Include="Engine\Module\Pipeline\ComputePipelineCollection.cpp" />
+    <ClCompile Include="Engine\Module\Pipeline\RenderPipelineCollection.cpp" />
+    <ClCompile Include="Engine\Module\Primitive\DebugPrimitive.cpp" />
+    <ClCompile Include="Engine\Module\SxavengerGraphics\AdaptiveRenderFrame.cpp" />
+    <ClCompile Include="Engine\Module\SxavengerGraphics\DepthBufferController.cpp" />
+    <ClCompile Include="Engine\Module\SxavengerGraphics\ScreenPresenter.cpp" />
+    <ClCompile Include="Engine\Module\SxavengerGraphics\SxavGraphicsFrame.cpp" />
+    <ClCompile Include="Engine\Module\SxavengerGraphics\SystematicRenderFrame.cpp" />
+    <ClCompile Include="Engine\Module\SxavengerGraphics\VisualProcessFrame.cpp" />
+    <ClCompile Include="Engine\Module\SxavengerGraphics\XclipseProcessFrame.cpp" />
+    <ClCompile Include="Engine\Module\SxavengerModule.cpp" />
+    <ClCompile Include="Engine\Module\Transform\Transform.cpp" />
+    <ClCompile Include="Engine\Module\Transform\TransformComponent.cpp" />
+    <ClCompile Include="Engine\Module\VisualLayer\VisualDoF.cpp" />
+    <ClCompile Include="Engine\Module\VisualLayer\VisualLayer.cpp" />
+    <ClCompile Include="Engine\System\DirectX\DirectXCommon.cpp" />
+    <ClCompile Include="Engine\System\DirectX\DirectXContext.cpp" />
+    <ClCompile Include="Engine\System\DirectX\DxObject\DxBindBuffer.cpp" />
+    <ClCompile Include="Engine\System\DirectX\DxObject\DxBlendState.cpp" />
+    <ClCompile Include="Engine\System\DirectX\DxObject\DxCommandContext.cpp" />
+    <ClCompile Include="Engine\System\DirectX\DxObject\DxCompileBlobCollection.cpp" />
+    <ClCompile Include="Engine\System\DirectX\DxObject\DxComputePipelineState.cpp" />
+    <ClCompile Include="Engine\System\DirectX\DxObject\DxDepthStencil.cpp" />
+    <ClCompile Include="Engine\System\DirectX\DxObject\DxDescriptor.cpp" />
+    <ClCompile Include="Engine\System\DirectX\DxObject\DxDescriptorHeaps.cpp" />
+    <ClCompile Include="Engine\System\DirectX\DxObject\DxDevice.cpp" />
+    <ClCompile Include="Engine\System\DirectX\DxObject\DxDimensionBuffer.cpp" />
+    <ClCompile Include="Engine\System\DirectX\DxObject\DxGraphicsPipelineState.cpp" />
+    <ClCompile Include="Engine\System\DirectX\DxObject\DxObjectCommon.cpp" />
+    <ClCompile Include="Engine\System\DirectX\DxObject\DxRootSignatureDesc.cpp" />
+    <ClCompile Include="Engine\System\DirectX\DxObject\DxShaderCompiler.cpp" />
+    <ClCompile Include="Engine\System\DirectX\DxObject\DxSwapChain.cpp" />
+    <ClCompile Include="Engine\System\Runtime\Input\Input.cpp" />
+    <ClCompile Include="Engine\System\Runtime\Performance\DeltaTimePoint.cpp" />
+    <ClCompile Include="Engine\System\Runtime\Performance\Performance.cpp" />
+    <ClCompile Include="Engine\System\Runtime\Scene\GameScene.cpp" />
+    <ClCompile Include="Engine\System\SxavengerSystem.cpp" />
+    <ClCompile Include="Engine\System\Runtime\Thread\Thread.cpp" />
+    <ClCompile Include="Engine\System\UI\ImGuiController.cpp" />
+    <ClCompile Include="Engine\System\Utility\Logger.cpp" />
+    <ClCompile Include="Engine\System\WinApp\WinApp.cpp" />
+    <ClCompile Include="Engine\System\Window\GameWindow.cpp" />
+    <ClCompile Include="Engine\System\Window\GameWindowCollection.cpp" />
+    <ClCompile Include="Engine\System\Window\Window.cpp" />
+    <ClCompile Include="Lib\Adapter\Json\IJsonSerializer.cpp" />
+    <ClCompile Include="Lib\Adapter\Json\JsonAdapter.cpp" />
+    <ClCompile Include="Lib\Adapter\Random\Random.cpp" />
+    <ClCompile Include="Lib\Geometry\MathLib.cpp" />
+    <ClCompile Include="Lib\Geometry\Matrix4x4.cpp" />
+    <ClCompile Include="Lib\Geometry\Quaternion.cpp" />
+    <ClCompile Include="Lib\Geometry\Vector2.cpp" />
+    <ClCompile Include="Lib\Geometry\Vector3.cpp" />
+    <ClCompile Include="Lib\Geometry\Vector4.cpp" />
+    <ClCompile Include="Lib\MyMath.cpp" />
+    <ClCompile Include="Lib\Sxl\LowerPathMap.cpp" />
+    <ClCompile Include="Lib\Sxl\LowerUnorderedMap.cpp" />
+    <ClCompile Include="Lib\Sxl\OptimizedMap.cpp" />
+    <ClCompile Include="Lib\Sxl\OptimizedSet.cpp" />
+    <ClCompile Include="main.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Demo\ChessBoard.h" />
+    <ClInclude Include="Demo\DemoParticle\Illumination.h" />
+    <ClInclude Include="Demo\DemoParticle\Smoke.h" />
+    <ClInclude Include="Demo\GuizmoScene.h" />
+    <ClInclude Include="Demo\Particle\BaseParticle.h" />
+    <ClInclude Include="Demo\Particle\Emitter.h" />
+    <ClInclude Include="Engine\Asset\Asset.h" />
+    <ClInclude Include="Engine\Asset\AssetLibrary\IAsset.h" />
+    <ClInclude Include="Engine\Asset\AssetLibrary\Model\AssetModel.h" />
+    <ClInclude Include="Engine\Asset\AssetLibrary\Texture\AssetTexture.h" />
+    <ClInclude Include="Engine\Asset\AssetLibrary\Unkown\AssetUnkown.h" />
+    <ClInclude Include="Engine\Asset\SxavengerAsset.h" />
+    <ClInclude Include="Engine\Console\AssetConsole\AssetConsole.h" />
+    <ClInclude Include="Engine\Console\Console.h" />
+    <ClInclude Include="Engine\Console\RenderConsole\RenderBehavior.h" />
+    <ClInclude Include="Engine\Console\RenderConsole\RenderConsole.h" />
+    <ClInclude Include="Engine\Console\SystemConsole\SystemConsole.h" />
+    <ClInclude Include="Engine\Content\Animation\Animation.h" />
+    <ClInclude Include="Engine\Content\Animation\AnimationGroup.h" />
+    <ClInclude Include="Engine\Content\Animation\Animator.h" />
+    <ClInclude Include="Engine\Content\Animation\BornNode.h" />
+    <ClInclude Include="Engine\Content\Animation\JointWeight.h" />
+    <ClInclude Include="Engine\Content\Animation\Skeleton.h" />
+    <ClInclude Include="Engine\Content\Animation\SkinCluster.h" />
+    <ClInclude Include="Engine\Content\InputAssembler\InputAssembler.h" />
+    <ClInclude Include="Engine\Content\InputAssembler\InputMesh.h" />
+    <ClInclude Include="Engine\Content\Model\Model.h" />
+    <ClInclude Include="Engine\Content\SxavengerContent.h" />
+    <ClInclude Include="Engine\Content\Texture\DepthTexture.h" />
+    <ClInclude Include="Engine\Content\Texture\MultiViewTexture.h" />
+    <ClInclude Include="Engine\Content\Texture\Texture.h" />
+    <ClInclude Include="Engine\Content\Texture\TextureCollection.h" />
+    <ClInclude Include="Engine\Module\Animation\Animation.h" />
+    <ClInclude Include="Engine\Module\Behavior\BaseBehavior.h" />
+    <ClInclude Include="Engine\Module\Behavior\InstanceBehavior.h" />
+    <ClInclude Include="Engine\Module\Behavior\ModelBehavior.h" />
+    <ClInclude Include="Engine\Module\Behavior\TransformBehavior.h" />
+    <ClInclude Include="Engine\Module\Camera\Camera3d.h" />
+    <ClInclude Include="Engine\Module\Camera\DebugCamera3d.h" />
+    <ClInclude Include="Engine\Module\Material\MaterialComponent.h" />
+    <ClInclude Include="Engine\Module\Pipeline\ComputePipelineCollection.h" />
+    <ClInclude Include="Engine\Module\Pipeline\RenderPipelineCollection.h" />
+    <ClInclude Include="Engine\Module\Primitive\DebugPrimitive.h" />
+    <ClInclude Include="Engine\Module\SxavengerGraphics\AdaptiveRenderFrame.h" />
+    <ClInclude Include="Engine\Module\SxavengerGraphics\DepthBufferController.h" />
+    <ClInclude Include="Engine\Module\SxavengerGraphics\ScreenPresenter.h" />
+    <ClInclude Include="Engine\Module\SxavengerGraphics\SxavGraphicsFrame.h" />
+    <ClInclude Include="Engine\Module\SxavengerGraphics\SystematicRenderFrame.h" />
+    <ClInclude Include="Engine\Module\SxavengerGraphics\VisualProcessFrame.h" />
+    <ClInclude Include="Engine\Module\SxavengerGraphics\XclipseProcessFrame.h" />
+    <ClInclude Include="Engine\Module\SxavengerModule.h" />
+    <ClInclude Include="Engine\Module\Transform\Transform.h" />
+    <ClInclude Include="Engine\Module\Transform\TransformComponent.h" />
+    <ClInclude Include="Engine\Module\VisualLayer\VisualDoF.h" />
+    <ClInclude Include="Engine\Module\VisualLayer\VisualLayer.h" />
+    <ClInclude Include="Engine\System\Cinfig\SxavengerDirectory.h" />
+    <ClInclude Include="Engine\System\Config\SxavengerDirectory.h" />
+    <ClInclude Include="Engine\System\DirectX\DirectXCommon.h" />
+    <ClInclude Include="Engine\System\DirectX\DirectXContext.h" />
+    <ClInclude Include="Engine\System\DirectX\DxObject\DxBindBuffer.h" />
+    <ClInclude Include="Engine\System\DirectX\DxObject\DxBlendState.h" />
+    <ClInclude Include="Engine\System\DirectX\DxObject\DxCommandContext.h" />
+    <ClInclude Include="Engine\System\DirectX\DxObject\DxCompileBlobCollection.h" />
+    <ClInclude Include="Engine\System\DirectX\DxObject\DxComputePipelineState.h" />
+    <ClInclude Include="Engine\System\DirectX\DxObject\DxDepthStencil.h" />
+    <ClInclude Include="Engine\System\DirectX\DxObject\DxDescriptor.h" />
+    <ClInclude Include="Engine\System\DirectX\DxObject\DxDescriptorHeaps.h" />
+    <ClInclude Include="Engine\System\DirectX\DxObject\DxDevice.h" />
+    <ClInclude Include="Engine\System\DirectX\DxObject\DxDimensionBuffer.h" />
+    <ClInclude Include="Engine\System\DirectX\DxObject\DxGraphicsPipelineState.h" />
+    <ClInclude Include="Engine\System\DirectX\DxObject\DxObjectCommon.h" />
+    <ClInclude Include="Engine\System\DirectX\DxObject\DxRootSignatureDesc.h" />
+    <ClInclude Include="Engine\System\DirectX\DxObject\DxShaderCompiler.h" />
+    <ClInclude Include="Engine\System\DirectX\DxObject\DxSwapChain.h" />
+    <ClInclude Include="Engine\System\Runtime\Input\Input.h" />
+    <ClInclude Include="Engine\System\Runtime\Input\InputId.h" />
+    <ClInclude Include="Engine\System\Runtime\Performance\DeltaTimePoint.h" />
+    <ClInclude Include="Engine\System\Runtime\Performance\Performance.h" />
+    <ClInclude Include="Engine\System\Runtime\Scene\GameScene.h" />
+    <ClInclude Include="Engine\System\SxavengerSystem.h" />
+    <ClInclude Include="Engine\System\Runtime\Thread\Thread.h" />
+    <ClInclude Include="Engine\System\UI\ImGuiController.h" />
+    <ClInclude Include="Engine\System\UI\ISystemDebugGui.h" />
+    <ClInclude Include="Engine\System\Utility\ComPtr.h" />
+    <ClInclude Include="Engine\System\Utility\Logger.h" />
+    <ClInclude Include="Engine\System\WinApp\WinApp.h" />
+    <ClInclude Include="Engine\System\Window\GameWindow.h" />
+    <ClInclude Include="Engine\System\Window\GameWindowCollection.h" />
+    <ClInclude Include="Engine\System\Window\Window.h" />
+    <ClInclude Include="Lib\Adapter\Json\IJsonSerializer.h" />
+    <ClInclude Include="Lib\Adapter\Json\JsonAdapter.h" />
+    <ClInclude Include="Lib\Adapter\Random\Random.h" />
+    <ClInclude Include="Lib\CXXAttributeConfig.h" />
+    <ClInclude Include="Lib\Environment.h" />
+    <ClInclude Include="Lib\Geometry\MathLib.h" />
+    <ClInclude Include="Lib\Geometry\Matrix4x4.h" />
+    <ClInclude Include="Lib\Geometry\Quaternion.h" />
+    <ClInclude Include="Lib\Geometry\Vector2.h" />
+    <ClInclude Include="Lib\Geometry\Vector3.h" />
+    <ClInclude Include="Lib\Geometry\Vector4.h" />
+    <ClInclude Include="Lib\Geometry\VectorComparison.h" />
+    <ClInclude Include="Lib\MyMath.h" />
+    <ClInclude Include="Lib\Sxl\LowerPathMap.h" />
+    <ClInclude Include="Lib\Sxl\LowerUnorderedMap.h" />
+    <ClInclude Include="Lib\Sxl\OptimizedMap.h" />
+    <ClInclude Include="Lib\Sxl\OptimizedSet.h" />
+    <ClInclude Include="Lib\Sxl\SxavengerLibrary.h" />
+    <ClInclude Include="Lib\VertexStructure.h" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
