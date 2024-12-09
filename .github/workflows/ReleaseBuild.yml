@@ -2,8 +2,7 @@ name: "release build"
 on:
     push:
         branches:
-            - "3.0_Beta"
-            - "3.0"
+            - "master"
 
 env:
     # リポジトリのルートディレクトリを基点としたslnのfilepath
