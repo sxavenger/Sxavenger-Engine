@@ -41,6 +41,7 @@ void Console::Term() {
 }
 
 void Console::UpdateConsole() {
+#ifdef _DEBUG
 	BeginDisabled(!IsForcusConsoleWindow());
 
 	DisplayMainMenu();
@@ -58,6 +59,7 @@ void Console::UpdateConsole() {
 	}
 
 	EndDisabled();
+#endif // _DEBUG
 }
 
 void Console::Draw() {

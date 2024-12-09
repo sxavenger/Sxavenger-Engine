@@ -167,12 +167,16 @@ void RenderConsole::DispatchCompute(const DirectXThreadContext* context, const V
 }
 
 void RenderConsole::PresentToScreen(GameWindow* window, const DirectXThreadContext* context) {
+#ifdef _DEBUG
 	if (type_ == FullScreenFrameType::kScene) {
 		presenter_->Present(window, context, scene_->GetAdaptive()->GetTexture()->GetGPUHandleSRV());
 
 	} else if (type_ == FullScreenFrameType::kGame) {
 		presenter_->Present(window, context, game_->GetAdaptive()->GetTexture()->GetGPUHandleSRV());
 	}
+#else
+	presenter_->Present(window, context, game_->GetAdaptive()->GetTexture()->GetGPUHandleSRV());
+#endif
 }
 
 void RenderConsole::Manipulate(ImGuizmo::OPERATION operation, ImGuizmo::MODE mode, TransformComponent* component) {

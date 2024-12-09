@@ -91,8 +91,6 @@ void GameScene::SystemInit() {
 
 	sConsole->SetWindow(mainWindow_);
 
-	subWindow_ = SxavengerSystem::TryCreateSubWindow(kMainWindowSize, L"sub").lock();
-
 	{
 		std::unique_ptr<DxObject::ReflectionComputePipelineState> compute = std::make_unique<DxObject::ReflectionComputePipelineState>();
 		compute->CreateBlob("common/white1x1.cs.hlsl");
@@ -120,8 +118,6 @@ void GameScene::Init() {
 	chess_->Init();
 	chess_->SetToConsole();
 
-	constexpr Color4f a = ToColor4f(0xFAFAFAFF);
-
 }
 
 void GameScene::Update() {
@@ -132,20 +128,6 @@ void GameScene::Draw() {
 }
 
 void GameScene::DrawScreen() {
-
-	/*mainWindow_->BeginRendering();
-	mainWindow_->ClearWindow();
-
-	mainWindow_->EndRendering();*/
-	
-	if (!subWindow_.expired()) {
-		auto window = subWindow_.lock();
-
-		window->BeginRendering();
-		window->ClearWindow();
-
-		window->EndRendering();
-	}
 }
 
 void GameScene::Term() {

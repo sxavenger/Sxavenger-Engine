@@ -30,7 +30,6 @@ private:
 	//=========================================================================================
 
 	std::shared_ptr<GameWindow> mainWindow_;
-	std::weak_ptr<GameWindow> subWindow_;
 
 	bool renderWindowSwitch_ = true;
 
