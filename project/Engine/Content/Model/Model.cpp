@@ -27,11 +27,9 @@ const uint32_t Model::kDefaultAssimpOption_ = aiProcess_FlipWindingOrder | aiPro
 
 void Model::Load(const std::filesystem::path& filepath, const DirectXThreadContext* context, uint32_t assimpOption) {
 
-	std::string filepathA = filepath.generic_string();
-
 	// sceneの取得
 	Assimp::Importer importer; //!< scene保存するため保管
-	const aiScene* aiScene = importer.ReadFile(filepathA.c_str(), assimpOption);
+	const aiScene* aiScene = importer.ReadFile(filepath.generic_string().c_str(), assimpOption);
 
 	Assert(aiScene != nullptr, "model load failed. filepath: " + filepath.generic_string(), importer.GetErrorString());
 	Assert(aiScene->HasMeshes()); //!< メッシュナシは未対応
@@ -210,9 +208,9 @@ void Model::LoadMaterial(const aiScene* aiScene, const std::filesystem::path& di
 	}
 }
 
-Node Model::ReadNode(aiNode* node) {
+BornNode Model::ReadNode(aiNode* node) {
 	
-	Node result = {};
+	BornNode result = {};
 
 	// transformの取得
 	aiVector3D scale, translate;

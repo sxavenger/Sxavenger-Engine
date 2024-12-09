@@ -151,6 +151,11 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="Engine\Console\RenderConsole\RenderBehavior.cpp" />
     <ClCompile Include="Engine\Console\RenderConsole\RenderConsole.cpp" />
     <ClCompile Include="Engine\Console\SystemConsole\SystemConsole.cpp" />
+    <ClCompile Include="Engine\Content\Animation\Animation.cpp" />
+    <ClCompile Include="Engine\Content\Animation\AnimationGroup.cpp" />
+    <ClCompile Include="Engine\Content\Animation\Animator.cpp" />
+    <ClCompile Include="Engine\Content\Animation\Skeleton.cpp" />
+    <ClCompile Include="Engine\Content\Animation\SkinCluster.cpp" />
     <ClCompile Include="Engine\Content\InputAssembler\InputAssembler.cpp" />
     <ClCompile Include="Engine\Content\InputAssembler\InputMesh.cpp" />
     <ClCompile Include="Engine\Content\Model\Model.cpp" />
@@ -244,6 +249,13 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Engine\Console\RenderConsole\RenderBehavior.h" />
     <ClInclude Include="Engine\Console\RenderConsole\RenderConsole.h" />
     <ClInclude Include="Engine\Console\SystemConsole\SystemConsole.h" />
+    <ClInclude Include="Engine\Content\Animation\Animation.h" />
+    <ClInclude Include="Engine\Content\Animation\AnimationGroup.h" />
+    <ClInclude Include="Engine\Content\Animation\Animator.h" />
+    <ClInclude Include="Engine\Content\Animation\BornNode.h" />
+    <ClInclude Include="Engine\Content\Animation\JointWeight.h" />
+    <ClInclude Include="Engine\Content\Animation\Skeleton.h" />
+    <ClInclude Include="Engine\Content\Animation\SkinCluster.h" />
     <ClInclude Include="Engine\Content\InputAssembler\InputAssembler.h" />
     <ClInclude Include="Engine\Content\InputAssembler\InputMesh.h" />
     <ClInclude Include="Engine\Content\Model\Model.h" />
@@ -252,6 +264,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Engine\Content\Texture\MultiViewTexture.h" />
     <ClInclude Include="Engine\Content\Texture\Texture.h" />
     <ClInclude Include="Engine\Content\Texture\TextureCollection.h" />
+    <ClInclude Include="Engine\Module\Animation\Animation.h" />
     <ClInclude Include="Engine\Module\Behavior\BaseBehavior.h" />
     <ClInclude Include="Engine\Module\Behavior\InstanceBehavior.h" />
     <ClInclude Include="Engine\Module\Behavior\ModelBehavior.h" />

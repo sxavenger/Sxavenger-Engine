@@ -37,7 +37,7 @@ void Console::Term() {
 	AssetConsole::Term();
 
 	runtime_.End();
-	EngineLog(std::format("[Console] executed time<TimeUtil::s>: {:.0f}sec", runtime_.GetDeltaTime<TimeUnit::s>().time));
+	EngineLog(std::format("[Console] executed time: {:.0f}sec", runtime_.GetDeltaTime<TimeUnit::s>().time));
 }
 
 void Console::UpdateConsole() {

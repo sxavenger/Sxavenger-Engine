@@ -8,6 +8,8 @@
 #include <Engine/System/Runtime/Thread/Thread.h>
 #include <Engine/Content/InputAssembler/InputMesh.h>
 #include <Engine/Content/Texture/Texture.h>
+#include <Engine/Content/Animation/BornNode.h>
+#include <Engine/Content/Animation/JointWeight.h>
 #include <Engine/Module/Transform/Transform.h>
 
 //* lib
@@ -27,20 +29,6 @@
 #include <memory>
 #include <array>
 #include <filesystem>
-
-////////////////////////////////////////////////////////////////////////////////////////////
-// Weight structure
-////////////////////////////////////////////////////////////////////////////////////////////
-
-struct VertexWeightData {
-	float weight;
-	uint32_t vertexIndex;
-};
-
-struct JointWeightData {
-	Matrix4x4 inverseBindPoseMatrix;
-	std::vector<VertexWeightData> vertexWeights;
-};
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // MeshData structure
@@ -64,17 +52,6 @@ enum class MaterialTextureType : uint8_t {
 ////////////////////////////////////////////////////////////////////////////////////////////
 struct MaterialData {
 	std::array<std::shared_ptr<Texture>, static_cast<uint8_t>(MaterialTextureType::kNormal) + 1> textures_;
-};
-
-////////////////////////////////////////////////////////////////////////////////////////////
-// NodeData structure
-////////////////////////////////////////////////////////////////////////////////////////////
-struct Node {
-	QuaternionTransform transform;
-	Matrix4x4           localMatrix;
-
-	std::string name;
-	std::vector<Node> children;
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -118,7 +95,7 @@ private:
 	std::vector<MeshData>     meshes_;
 	std::vector<MaterialData> materials_;
 
-	Node root_;
+	BornNode root_;
 
 	static const uint32_t kDefaultAssimpOption_;
 
@@ -128,7 +105,7 @@ private:
 
 	void LoadMesh(const aiScene* aiScene);
 	void LoadMaterial(const aiScene* aiScene, const std::filesystem::path& directory, const DirectXThreadContext* context);
-	Node ReadNode(aiNode* node);
+	BornNode ReadNode(aiNode* node);
 
 	//* sub methods *//
 

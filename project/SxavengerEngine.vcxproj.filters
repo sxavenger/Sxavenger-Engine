@@ -100,6 +100,11 @@
     <ClCompile Include="Engine\Module\Material\MaterialComponent.cpp" />
     <ClCompile Include="Demo\DemoParticle\Illumination.cpp" />
     <ClCompile Include="Demo\DemoParticle\Smoke.cpp" />
+    <ClCompile Include="Engine\Content\Animation\Skeleton.cpp" />
+    <ClCompile Include="Engine\Content\Animation\Animation.cpp" />
+    <ClCompile Include="Engine\Content\Animation\SkinCluster.cpp" />
+    <ClCompile Include="Engine\Content\Animation\Animator.cpp" />
+    <ClCompile Include="Engine\Content\Animation\AnimationGroup.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\System\Window\Window.h" />
@@ -202,5 +207,13 @@
     <ClInclude Include="Engine\Module\Material\MaterialComponent.h" />
     <ClInclude Include="Demo\DemoParticle\Illumination.h" />
     <ClInclude Include="Demo\DemoParticle\Smoke.h" />
+    <ClInclude Include="Engine\Module\Animation\Animation.h" />
+    <ClInclude Include="Engine\Content\Animation\Animation.h" />
+    <ClInclude Include="Engine\Content\Animation\BornNode.h" />
+    <ClInclude Include="Engine\Content\Animation\JointWeight.h" />
+    <ClInclude Include="Engine\Content\Animation\Skeleton.h" />
+    <ClInclude Include="Engine\Content\Animation\SkinCluster.h" />
+    <ClInclude Include="Engine\Content\Animation\Animator.h" />
+    <ClInclude Include="Engine\Content\Animation\AnimationGroup.h" />
   </ItemGroup>
 </Project>
