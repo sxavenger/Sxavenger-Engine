@@ -33,7 +33,14 @@ void AssetConsole::DisplayAsset() {
 	console_->DockingConsole();
 	ImGui::Begin("Asset ## Asset Console", nullptr, console_->GetWindowFlag());
 
-	SxavengerAsset::GetAsset()->SystemDebugGui();
+	{ //!< asset tree
+		ImGuiWindowFlags flag = ImGuiWindowFlags_AlwaysVerticalScrollbar;
+		ImVec2 region         = ImGui::GetContentRegionAvail();
+
+		ImGui::BeginChild("asset tree", { region.x * 0.2f, region.y }, ImGuiChildFlags_Borders, flag);
+		SxavengerAsset::GetAsset()->SystemDebugGui();
+		ImGui::EndChild();
+	}
 
 	ImGui::End();
 }

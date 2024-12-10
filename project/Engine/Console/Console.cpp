@@ -206,13 +206,9 @@ void Console::DisplayMainMenu() {
 }
 
 void Console::DisplayPerformace() {
-	// systemの状態によってstyleを変える
-	ImGuiStyle& style = ImGui::GetStyle();
-	ImVec4 defaultWindowColor = style.Colors[ImGuiCol_WindowBg]; //!< 後で元に戻すので保存
-
 	if (SystemConsole::IsUpdateRequired()) {
 		// windowの色を変更
-		style.Colors[ImGuiCol_WindowBg] = ImGuiController::ToImVec4({ 45, 5, 8, 255 });
+		ImGui::PushStyleColor(ImGuiCol_WindowBg, ImGuiController::ToImVec4({ 45, 5, 8, 255 }));
 	}
 
 	DockingConsole();
@@ -224,6 +220,8 @@ void Console::DisplayPerformace() {
 	ImGui::SameLine();
 	ImGui::Text("[frame per second]: %.1f", 1.0f / framesPerSec.time);
 
+	ImGui::End();
+
 	if (SystemConsole::IsUpdateRequired()) {
 		// historyに保存
 		fpsHistory_.emplace_back(1.0f / framesPerSec.time);
@@ -231,11 +229,9 @@ void Console::DisplayPerformace() {
 		while (fpsHistory_.size() >= kHistoryCount_) {
 			fpsHistory_.pop_front();
 		}
+
+		ImGui::PopStyleColor();
 	}
-
-	ImGui::End();
-
-	style.Colors[ImGuiCol_WindowBg] = defaultWindowColor;
 }
 
 bool Console::IsForcusConsoleWindow() {
