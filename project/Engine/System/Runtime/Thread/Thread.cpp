@@ -78,9 +78,19 @@ void Thread::SystemDebugGui() {
 		ImGui::Text(ss.str().c_str());
 
 	} else {
-		ss << std::format("[runtime]: {:.1f}sec", runtime_.GetElapsedTime<TimeUnit::s>().time);
-		ss << std::format("[task]: {:p}", reinterpret_cast<void*>(task_.get()));
 		ImGui::TextDisabled(ss.str().c_str());
+
+		if (ImGui::BeginItemTooltip()) {
+			ImGui::SeparatorText("thread details");
+
+			std::string text = "";
+			text += std::format("[runtime]: {:.1f}sec", runtime_.GetElapsedTime<TimeUnit::s>().time) + "\n";
+			text += std::format("[executing task]: {:p}", reinterpret_cast<void*>(task_.get())) + " ";
+
+			ImGui::Text(text.c_str());
+
+			ImGui::EndTooltip();
+		}
 	}
 }
 
