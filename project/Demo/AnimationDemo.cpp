@@ -35,3 +35,7 @@ void AnimationDemo::Update() {
 	time_.AddDeltaTime();
 	mesh_.UpdateAnimation(group_, time_);
 }
+
+void AnimationDemo::SetAttributeImGui() {
+	ImGui::Checkbox("active", &isActive_);
+}

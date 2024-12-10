@@ -31,6 +31,8 @@ public:
 
 	void Update();
 
+	virtual void SetAttributeImGui() override;
+
 private:
 
 	//=========================================================================================

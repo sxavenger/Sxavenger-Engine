@@ -191,6 +191,10 @@ private:
 	ImGuizmo::OPERATION operation_ = ImGuizmo::TRANSLATE;
 	ImGuizmo::MODE mode_           = ImGuizmo::LOCAL;
 
+	//* parameter *//
+
+	const ImVec4 kBehaviorDisableColor_ = { 0.4f, 0.4f, 0.4f, 1.0f };
+
 	//=========================================================================================
 	// private methods
 	//=========================================================================================

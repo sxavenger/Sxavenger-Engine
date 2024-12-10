@@ -396,10 +396,20 @@ void RenderConsole::SelectableBehavior(const BehaviorContainer& container) {
 		std::string label = behavior->GetName() + std::format("##{:p}", reinterpret_cast<void*>(behavior)); //!< 名前重複対策
 
 		if (behavior->GetChildren().empty()) { //!< 子がいない場合
+
+			// 非activeの場合, 灰色に
+			if (!behavior->IsActive()) {
+				ImGui::PushStyleColor(ImGuiCol_Text, kBehaviorDisableColor_);
+			}
+
 			if (ImGui::Selectable(label.c_str(), isSelected)) {
 				attributeIterator_ = itr;
 				attributeTable_    = &container;
 				//localCamera_->Reset();
+			}
+
+			if (!behavior->IsActive()) {
+				ImGui::PopStyleColor();
 			}
 
 		} else {
@@ -412,7 +422,16 @@ void RenderConsole::SelectableBehavior(const BehaviorContainer& container) {
 				flags |= ImGuiTreeNodeFlags_Selected;
 			}
 
+			// 非activeの場合, 灰色に
+			if (!behavior->IsActive()) {
+				ImGui::PushStyleColor(ImGuiCol_Text, kBehaviorDisableColor_);
+			}
+
 			bool isOpenTreeNode = ImGui::TreeNodeEx(label.c_str(), flags);
+
+			if (!behavior->IsActive()) {
+				ImGui::PopStyleColor();
+			}
 
 			if (ImGui::IsItemClicked() && !ImGui::IsItemToggledOpen()) { //!< selectされた場合
 				attributeIterator_ = itr;
