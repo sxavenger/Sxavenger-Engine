@@ -436,7 +436,7 @@ void RenderConsole::UpdateUniqueRemove() {
 
 void RenderConsole::DrawSystematicBehavior(SxavGraphicsFrame* frame, const BehaviorContainer& container) {
 	for (const auto& behavior : container) {
-		if (behavior->GetRenderingFlag() & kBehaviorRendering_Systematic) {
+		if (behavior->CheckRenderingFlag(BehaviorRenderingType::kSystematic)) {
 			behavior->DrawSystematic(frame);
 		}
 
@@ -448,7 +448,7 @@ void RenderConsole::DrawSystematicBehavior(SxavGraphicsFrame* frame, const Behav
 
 void RenderConsole::DrawAdaptiveBehavior(SxavGraphicsFrame* frame, const BehaviorContainer& container) {
 	for (const auto& behavior : container) {
-		if (behavior->GetRenderingFlag() & kBehaviorRendering_Adaptive) {
+		if (behavior->CheckRenderingFlag(BehaviorRenderingType::kAdaptive)) {
 			behavior->DrawAdaptive(frame);
 		}
 
@@ -460,7 +460,7 @@ void RenderConsole::DrawAdaptiveBehavior(SxavGraphicsFrame* frame, const Behavio
 
 void RenderConsole::DrawLateAdaptiveBehavior(SxavGraphicsFrame* frame, const BehaviorContainer& container) {
 	for (const auto& behavior : container) {
-		if (behavior->GetRenderingFlag() & kBehaviorRendering_LateAdaptive) {
+		if (behavior->CheckRenderingFlag(BehaviorRenderingType::kLateAdaptive)) {
 			behavior->DrawLateAdaptive(frame);
 		}
 

@@ -28,7 +28,7 @@ public:
 	//=========================================================================================
 
 	UnorderedDimensionBuffer()  = default;
-	~UnorderedDimensionBuffer() {}
+	~UnorderedDimensionBuffer() { Release(); }
 
 	void Create(Device* device, uint32_t size);
 
@@ -78,7 +78,14 @@ inline void UnorderedDimensionBuffer<T>::Create(Device* device, uint32_t size) {
 
 template<class T>
 inline void UnorderedDimensionBuffer<T>::Release() {
-	BaseDimensionBuffer::Release();
+	if (resource_ != nullptr) {
+		resource_.Reset();
+	}
+
+	size_   = NULL;
+	stride_ = NULL;
+
+	address_ = std::nullopt;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////

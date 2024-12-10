@@ -11,7 +11,7 @@ void ChessBoard::Init() {
 	SxavengerSystem::PushTask(model_);
 
 	ModelBehavior::model_ = model_.get();
-	ModelBehavior::renderingFlag_ = kBehaviorRendering_Systematic;
+	ModelBehavior::SetRenderingFlag(BehaviorRenderingType::kSystematic);
 }
 
 void ChessBoard::Term() {

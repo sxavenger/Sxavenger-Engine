@@ -16,7 +16,7 @@
 
 void Emitter::Init() {
 	SetName("emitter");
-	TransformBehavior::renderingFlag_ = kBehaviorRendering_LateAdaptive;
+	TransformBehavior::SetRenderingFlag(BehaviorRenderingType::kLateAdaptive);
 
 	TransformBehavior::GetTransform().translate.y = 4.0f;
 	TransformBehavior::UpdateMatrix();

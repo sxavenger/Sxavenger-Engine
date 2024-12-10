@@ -16,9 +16,19 @@ void Skeleton::Create(const BornNode& node) {
 	UpdateMatrix();
 }
 
-void Skeleton::Update(const Animation& animation, DeltaTimePoint<TimeUnit::s> time) {
+void Skeleton::Update(const Animation& animation, DeltaTimePoint<TimeUnit::s> time, bool isLoop) {
+	if (isLoop) {
+		time = time.Mod(animation.duration);
+	}
+
 	ApplyAnimation(animation, time);
 	UpdateMatrix();
+}
+
+void Skeleton::Update(const AnimationGroup& animationGroup, DeltaTimePoint<TimeUnit::s> time, bool isLoop) {
+	for (const auto& animation : animationGroup.GetAnimations()) {
+		Update(animation, time, isLoop);
+	}
 }
 
 void Skeleton::TransitionAnimation(
@@ -37,10 +47,10 @@ void Skeleton::TransitionAnimation(
 
 uint32_t Skeleton::CreateJoint(const BornNode& node, const std::optional<uint32_t>& parent) {
 
-	Joint& joint = joints.emplace_back();
+	Joint joint = {};
 
 	joint.name  = node.name;
-	joint.index = static_cast<uint32_t>(joints.size() - 1);
+	joint.index = static_cast<uint32_t>(joints.size());
 
 	joint.parent = parent;
 
@@ -49,9 +59,11 @@ uint32_t Skeleton::CreateJoint(const BornNode& node, const std::optional<uint32_
 	joint.localMatrix         = node.localMatrix;
 	joint.skeletonSpaceMatrix = Matrix4x4::Identity();
 
+	joints.emplace_back(joint);
+
 	for (const auto& child : node.children) {
-		uint32_t& index = joint.children.emplace_back();
-		index = CreateJoint(child, joint.index);
+		uint32_t index = CreateJoint(child, joint.index);
+		joint.children.emplace_back(index);
 	}
 
 	return joint.index;

@@ -4,45 +4,44 @@
 // include
 //-----------------------------------------------------------------------------------------
 //* base
-#include "TransformBehavior.h"
+#include <Engine/Module/Behavior/AnimationBehavior.h>
 
 //* engine
-#include <Engine/Content/Model/Model.h>
-#include <Engine/Module/Material/MaterialComponent.h>
+#include <Engine/Asset/AssetLibrary/Model/AssetModel.h>
+#include <Engine/Content/Animation/AnimationGroup.h>
+#include <Engine/Content/Animation/SkeletonMesh.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// ModelBehavior class
+// AnimationDemo class
 ////////////////////////////////////////////////////////////////////////////////////////////
-class ModelBehavior
-	: public TransformBehavior, public MaterialComponent {
+class AnimationDemo
+	: public AnimationBehavior {
 public:
 
 	//=========================================================================================
 	// public methods
 	//=========================================================================================
 
-	ModelBehavior()  { Init(); }
-	~ModelBehavior() = default;
+	AnimationDemo()  = default;
+	~AnimationDemo() { Term(); }
 
 	void Init();
 
-	//* derivative behaivor methods *//
-	//* ImGui command
+	void Term();
 
-	virtual void SystemAttributeImGui() override;
+	void Update();
 
-	//* Draw methods
-
-	virtual void DrawSystematic(_MAYBE_UNUSED const SxavGraphicsFrame* frame) override;
-	virtual void DrawAdaptive(_MAYBE_UNUSED const SxavGraphicsFrame* frame) override;
-	virtual void DrawLateAdaptive(_MAYBE_UNUSED const SxavGraphicsFrame* frame) override;
-
-protected:
+private:
 
 	//=========================================================================================
-	// protected variables
+	// private variables
 	//=========================================================================================
 
-	Model* model_;
+	std::shared_ptr<AssetModel> model_;
+
+	AnimationGroup group_;
+	SkeletonMesh   mesh_;
+
+	DeltaTimePoint<TimeUnit::s> time_ = {};
 
 };

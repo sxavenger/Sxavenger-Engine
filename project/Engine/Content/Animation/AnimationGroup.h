@@ -38,6 +38,8 @@ public:
 	const DeltaTimePoint<TimeUnit::s> GetDurationTime(uint32_t index) const { return animations_[index].duration; }
 	const DeltaTimePoint<TimeUnit::s> GetDurationTime(const std::string& name) const;
 
+	const std::vector<Animation>& GetAnimations() const { return animations_; }
+
 private:
 
 	//=========================================================================================

@@ -32,6 +32,7 @@ public:
 	//* animation option *//
 
 	void UpdateAnimation(const Animation& animation, DeltaTimePoint<TimeUnit::s> time, bool isLoop = true);
+	void UpdateAnimation(const AnimationGroup& animationGroup, DeltaTimePoint<TimeUnit::s> time, bool isLoop = true);
 
 	void UpdateTransitionAnimationAToB(
 		const Animation& animationA, DeltaTimePoint<TimeUnit::s> timeA,

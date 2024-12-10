@@ -145,25 +145,42 @@ void Console::DisplayMainMenu() {
 
 	if (ImGui::BeginMenu("Window")) {
 		MenuDummy();
-		ImGui::Checkbox("display system console", &(SystemConsole::isDisplaySystemConsole_));
-		ImGui::Checkbox("display render console", &(RenderConsole::isDisplayRenderConsole_));
-		ImGui::Checkbox("display asset console", &(AssetConsole::isDisplayAssetConsole_));
+		
+		if (ImGui::BeginMenu("console window")) {
+			MenuDummy();
+			ImGui::Checkbox("display system console", &(SystemConsole::isDisplaySystemConsole_));
+			ImGui::Checkbox("display render console", &(RenderConsole::isDisplayRenderConsole_));
+			ImGui::Checkbox("display asset console",  &(AssetConsole::isDisplayAssetConsole_));
+			ImGui::EndMenu();
+		}
+		
+		if (ImGui::BeginMenu("sub window")) {
+			MenuDummy();
 
-		if (subWindow_.expired()) {
-			if (ImGui::Button("create sub window")) {
-				if (!window_.expired()) {
-					subWindow_ = SxavengerSystem::TryCreateSubWindow(window_.lock()->GetSize(), L"Sxavenger Console Window");
-					subWindow_.lock()->SetWindowIcon("packages/icon/SxavengerEngineSubIcon.ico", { 32, 32 });
+			if (subWindow_.expired()) {
+				if (ImGui::Button("create sub window")) {
+					if (!window_.expired()) {
+						subWindow_ = SxavengerSystem::TryCreateSubWindow(window_.lock()->GetSize(), L"Sxavenger Console Window");
+						subWindow_.lock()->SetWindowIcon("packages/icon/SxavengerEngineSubIcon.ico", { 32, 32 });
+					}
+				}
+
+			} else {
+				if (ImGui::Button("close window")) {
+					auto window = subWindow_.lock();
+					window->Close();
 				}
 			}
 
-		} else {
-			if (ImGui::Button("close window")) {
-				auto window = subWindow_.lock();
-				window->Close();
-			}
+			ImGui::EndMenu();
 		}
 
+		ImGui::EndMenu();
+	}
+
+	if (ImGui::BeginMenu("Performace")) {
+		MenuDummy();
+		// TODO
 		ImGui::EndMenu();
 	}
 
@@ -206,6 +223,15 @@ void Console::DisplayPerformace() {
 	ImGui::Text("[exec speed / frame]: %.6f", framesPerSec.time);
 	ImGui::SameLine();
 	ImGui::Text("[frame per second]: %.1f", 1.0f / framesPerSec.time);
+
+	if (SystemConsole::IsUpdateRequired()) {
+		// historyに保存
+		fpsHistory_.emplace_back(1.0f / framesPerSec.time);
+
+		while (fpsHistory_.size() >= kHistoryCount_) {
+			fpsHistory_.pop_front();
+		}
+	}
 
 	ImGui::End();
 

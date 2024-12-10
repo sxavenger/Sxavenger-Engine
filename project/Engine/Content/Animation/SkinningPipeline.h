@@ -3,46 +3,42 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
-//* base
-#include "TransformBehavior.h"
-
 //* engine
-#include <Engine/Content/Model/Model.h>
-#include <Engine/Module/Material/MaterialComponent.h>
+#include <Engine/System/DirectX/DxObject/DxComputePipelineState.h>
+#include <Engine/System/DirectX/DirectXContext.h>
+
+//* c++
+#include <memory>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// ModelBehavior class
+// SkinningComputePipeline class
 ////////////////////////////////////////////////////////////////////////////////////////////
-class ModelBehavior
-	: public TransformBehavior, public MaterialComponent {
+class SkinningComputePipeline {
 public:
 
 	//=========================================================================================
 	// public methods
 	//=========================================================================================
 
-	ModelBehavior()  { Init(); }
-	~ModelBehavior() = default;
+	SkinningComputePipeline()  = default;
+	~SkinningComputePipeline() = default;
 
 	void Init();
 
-	//* derivative behaivor methods *//
-	//* ImGui command
+	void Term();
 
-	virtual void SystemAttributeImGui() override;
+	void SetPipeline(const DirectXThreadContext* context);
 
-	//* Draw methods
+	void Dispatch(const DirectXThreadContext* context, const DxObject::BindBufferDesc& desc, uint32_t vertexSize);
 
-	virtual void DrawSystematic(_MAYBE_UNUSED const SxavGraphicsFrame* frame) override;
-	virtual void DrawAdaptive(_MAYBE_UNUSED const SxavGraphicsFrame* frame) override;
-	virtual void DrawLateAdaptive(_MAYBE_UNUSED const SxavGraphicsFrame* frame) override;
-
-protected:
+private:
 
 	//=========================================================================================
-	// protected variables
+	// private variables
 	//=========================================================================================
 
-	Model* model_;
+	std::unique_ptr<DxObject::ReflectionComputePipelineState> state_;
+
+	static const uint32_t kNumthreads_ = 1024;
 
 };

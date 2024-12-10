@@ -117,13 +117,15 @@ void GameScene::Init() {
 	chess_->Init();
 	chess_->SetToConsole();
 
-	DeltaTimePoint<TimeUnit::s> s   = { 1.0f };
-	DeltaTimePoint<TimeUnit::ms> ms = { 2.0f };
+	animationDemo_ = std::make_unique<AnimationDemo>();
+	animationDemo_->Init();
+	animationDemo_->SetToConsole();
 
 }
 
 void GameScene::Update() {
 	chess_->Update();
+	animationDemo_->Update();
 }
 
 void GameScene::Draw() {
@@ -134,6 +136,7 @@ void GameScene::DrawScreen() {
 
 void GameScene::Term() {
 	chess_.reset();
+	animationDemo_.reset();
 
 	SxavengerSystem::ExecuteAllAllocator();
 }

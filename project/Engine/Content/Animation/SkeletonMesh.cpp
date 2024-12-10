@@ -6,6 +6,7 @@ _DXOBJECT_USING
 //-----------------------------------------------------------------------------------------
 //* engine
 #include <Engine/System/SxavengerSystem.h>
+#include <Engine/Content/SxavengerContent.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // SkeletonMesh class methods
@@ -22,12 +23,12 @@ void SkeletonMesh::Create(const Model* model) {
 }
 
 void SkeletonMesh::UpdateAnimation(const Animation& animation, DeltaTimePoint<TimeUnit::s> time, bool isLoop) {
-	if (isLoop) {
-		time = time.Mod(animation.duration);
-	}
+	skeleton_.Update(animation, time, isLoop);
+	Skinning();
+}
 
-	skeleton_.Update(animation, time);
-
+void SkeletonMesh::UpdateAnimation(const AnimationGroup& animationGroup, DeltaTimePoint<TimeUnit::s> time, bool isLoop) {
+	skeleton_.Update(animationGroup, time, isLoop);
 	Skinning();
 }
 
@@ -133,10 +134,21 @@ void SkeletonMesh::CreateSkinnedVertex() {
 }
 
 void SkeletonMesh::Skinning() {
-	for (uint32_t i = 0; model_->GetMeshSize(); ++i) {
+
+	SxavengerContent::SetSkinningPipeline(SxavengerSystem::GetMainThreadContext());
+
+	for (uint32_t i = 0; i < model_->GetMeshSize(); ++i) {
 		skinClusters_[i].UpdatePalette(skeleton_);
 
 		//* skinning
 		// TODO: skinning
+		BindBufferDesc bind = {};
+		bind.SetAddress("gInputVertex",  model_->GetInputMesh(i).GetVertex()->GetGPUVirtualAddress());
+		bind.SetAddress("gPalette",      skinClusters_[i].palette->GetGPUVirtualAddress());
+		bind.SetAddress("gInfluence",    skinClusters_[i].influence->GetGPUVirtualAddress());
+		bind.SetAddress("gInfo",         skinClusters_[i].info->GetGPUVirtualAddress());
+		bind.SetAddress("gOutputVertex", skinnedVertex_[i]->GetGPUVirtualAddress());
+
+		SxavengerContent::DispatchSkinning(SxavengerSystem::GetMainThreadContext(), bind, (*skinClusters_[i].info)[0]);
 	}
 }

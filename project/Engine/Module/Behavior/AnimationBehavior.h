@@ -4,27 +4,24 @@
 // include
 //-----------------------------------------------------------------------------------------
 //* base
-#include "TransformBehavior.h"
+#include "ModelBehavior.h"
 
 //* engine
-#include <Engine/Content/Model/Model.h>
-#include <Engine/Module/Material/MaterialComponent.h>
+#include <Engine/Content/Animation/SkeletonMesh.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// ModelBehavior class
+// AnimationBehavior class
 ////////////////////////////////////////////////////////////////////////////////////////////
-class ModelBehavior
-	: public TransformBehavior, public MaterialComponent {
+class AnimationBehavior
+	: public ModelBehavior {
 public:
 
 	//=========================================================================================
 	// public methods
 	//=========================================================================================
 
-	ModelBehavior()  { Init(); }
-	~ModelBehavior() = default;
-
-	void Init();
+	AnimationBehavior()  = default;
+	~AnimationBehavior() = default;
 
 	//* derivative behaivor methods *//
 	//* ImGui command
@@ -43,6 +40,6 @@ protected:
 	// protected variables
 	//=========================================================================================
 
-	Model* model_;
+	SkeletonMesh* skeletonMesh_ = nullptr;
 
 };
