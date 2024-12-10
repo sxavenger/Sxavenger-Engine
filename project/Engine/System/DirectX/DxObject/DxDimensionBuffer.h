@@ -157,6 +157,7 @@ inline void DimensionBuffer<T>::Create(Device* device, uint32_t size) {
 
 	// resourceをマッピング
 	resource_->Map(0, nullptr, reinterpret_cast<void**>(&mappingTarget));
+	resource_->SetName(L"dimension buffer");
 
 	mappedDatas_ = { mappingTarget, size_ };
 }

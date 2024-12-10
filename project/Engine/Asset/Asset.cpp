@@ -10,7 +10,11 @@ Asset::Files Asset::Import(const std::filesystem::path& filepath) {
 
 	for (const auto& path : filepath) {
 		if (path.has_extension()) {
-			return node->files[path] = ImportFile(filepath);
+			if (!node->files.Contains(path)) {
+				node->files.Emplace(path, ImportFile(filepath));
+			}
+			
+			return node->files.At(path);
 
 		} else {
 			node = &node->folders[path];

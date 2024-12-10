@@ -25,6 +25,10 @@ void AnimationDemo::Init() {
 	AnimationBehavior::skeletonMesh_ = &mesh_;
 
 	AnimationBehavior::SetRenderingFlag(BehaviorRenderingType::kSystematic);
+
+	chess_ = std::make_unique<ChessBoard>();
+	chess_->Init();
+	SetChild(chess_.get());
 }
 
 void AnimationDemo::Term() {

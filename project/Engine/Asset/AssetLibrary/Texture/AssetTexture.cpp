@@ -13,7 +13,12 @@ const std::unordered_set<std::filesystem::path> AssetTexture::extension_ = {
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 void AssetTexture::Load(const DirectXThreadContext* context) {
+	if (isLoad_) {
+		return;
+	}
+
 	Texture::Load(filepath_, context);
+	isLoad_ = true;
 }
 
 void AssetTexture::SetInspectorImGui() {

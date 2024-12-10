@@ -11,6 +11,8 @@
 #include <Engine/Content/Animation/AnimationGroup.h>
 #include <Engine/Content/Animation/SkeletonMesh.h>
 
+#include "Demo/ChessBoard.h"
+
 ////////////////////////////////////////////////////////////////////////////////////////////
 // AnimationDemo class
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -45,5 +47,7 @@ private:
 	SkeletonMesh   mesh_;
 
 	DeltaTimePoint<TimeUnit::s> time_ = {};
+
+	std::unique_ptr<ChessBoard> chess_;
 
 };

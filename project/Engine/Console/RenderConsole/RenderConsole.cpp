@@ -395,21 +395,17 @@ void RenderConsole::SelectableBehavior(const BehaviorContainer& container) {
 
 		std::string label = behavior->GetName() + std::format("##{:p}", reinterpret_cast<void*>(behavior)); //!< 名前重複対策
 
-		if (behavior->GetChildren().empty()) { //!< 子がいない場合
+		// 非activeの場合, 灰色に
+		if (!behavior->IsActive()) {
+			ImGui::PushStyleColor(ImGuiCol_Text, kBehaviorDisableColor_);
+		}
 
-			// 非activeの場合, 灰色に
-			if (!behavior->IsActive()) {
-				ImGui::PushStyleColor(ImGuiCol_Text, kBehaviorDisableColor_);
-			}
+		if (behavior->GetChildren().empty()) { //!< 子がいない場合
 
 			if (ImGui::Selectable(label.c_str(), isSelected)) {
 				attributeIterator_ = itr;
 				attributeTable_    = &container;
 				//localCamera_->Reset();
-			}
-
-			if (!behavior->IsActive()) {
-				ImGui::PopStyleColor();
 			}
 
 		} else {
@@ -422,16 +418,7 @@ void RenderConsole::SelectableBehavior(const BehaviorContainer& container) {
 				flags |= ImGuiTreeNodeFlags_Selected;
 			}
 
-			// 非activeの場合, 灰色に
-			if (!behavior->IsActive()) {
-				ImGui::PushStyleColor(ImGuiCol_Text, kBehaviorDisableColor_);
-			}
-
 			bool isOpenTreeNode = ImGui::TreeNodeEx(label.c_str(), flags);
-
-			if (!behavior->IsActive()) {
-				ImGui::PopStyleColor();
-			}
 
 			if (ImGui::IsItemClicked() && !ImGui::IsItemToggledOpen()) { //!< selectされた場合
 				attributeIterator_ = itr;
@@ -444,6 +431,10 @@ void RenderConsole::SelectableBehavior(const BehaviorContainer& container) {
 				ImGui::TreePop();
 			}
 		}
+
+		if (!behavior->IsActive()) {
+			ImGui::PopStyleColor();
+		}
 	}
 }
 
@@ -455,36 +446,42 @@ void RenderConsole::UpdateUniqueRemove() {
 
 void RenderConsole::DrawSystematicBehavior(SxavGraphicsFrame* frame, const BehaviorContainer& container) {
 	for (const auto& behavior : container) {
-		if (behavior->CheckRenderingFlag(BehaviorRenderingType::kSystematic)) {
-			behavior->DrawSystematic(frame);
-		}
+		if (behavior->IsActive()) {
+			if (behavior->CheckRenderingFlag(BehaviorRenderingType::kSystematic)) {
+				behavior->DrawSystematic(frame);
+			}
 
-		if (!behavior->GetChildren().empty()) {
-			DrawSystematicBehavior(frame, behavior->GetChildren());
+			if (!behavior->GetChildren().empty()) {
+				DrawSystematicBehavior(frame, behavior->GetChildren());
+			}
 		}
 	}
 }
 
 void RenderConsole::DrawAdaptiveBehavior(SxavGraphicsFrame* frame, const BehaviorContainer& container) {
 	for (const auto& behavior : container) {
-		if (behavior->CheckRenderingFlag(BehaviorRenderingType::kAdaptive)) {
-			behavior->DrawAdaptive(frame);
-		}
+		if (behavior->IsActive()) {
+			if (behavior->CheckRenderingFlag(BehaviorRenderingType::kAdaptive)) {
+				behavior->DrawAdaptive(frame);
+			}
 
-		if (!behavior->GetChildren().empty()) {
-			DrawAdaptiveBehavior(frame, behavior->GetChildren());
+			if (!behavior->GetChildren().empty()) {
+				DrawAdaptiveBehavior(frame, behavior->GetChildren());
+			}
 		}
 	}
 }
 
 void RenderConsole::DrawLateAdaptiveBehavior(SxavGraphicsFrame* frame, const BehaviorContainer& container) {
 	for (const auto& behavior : container) {
-		if (behavior->CheckRenderingFlag(BehaviorRenderingType::kLateAdaptive)) {
-			behavior->DrawLateAdaptive(frame);
-		}
+		if (behavior->IsActive()) {
+			if (behavior->CheckRenderingFlag(BehaviorRenderingType::kLateAdaptive)) {
+				behavior->DrawLateAdaptive(frame);
+			}
 
-		if (!behavior->GetChildren().empty()) {
-			DrawLateAdaptiveBehavior(frame, behavior->GetChildren());
+			if (!behavior->GetChildren().empty()) {
+				DrawLateAdaptiveBehavior(frame, behavior->GetChildren());
+			}
 		}
 	}
 }

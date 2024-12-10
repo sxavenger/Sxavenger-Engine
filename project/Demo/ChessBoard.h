@@ -32,6 +32,8 @@ public:
 
 	void DrawSystematic(_MAYBE_UNUSED const SxavGraphicsFrame* frame) override;
 
+	void Wait() { model_->WaitCompleted(); }
+
 private:
 
 	//=========================================================================================

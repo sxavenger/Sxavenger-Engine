@@ -54,18 +54,17 @@ void Thread::ExecuteTask() {
 		return;
 	}
 
-	if (task_->GetState() == ExecutionState::kWaiting) {
-		runtime_.Begin();
-		isAvailable_ = false;
-		task_->SetState(ExecutionState::kRunning);
+	runtime_.Begin();
+	isAvailable_ = false;
+	//task_->SetState(ExecutionState::kRunning);
 
-		task_->Execute(this);
-		DirectXThreadContext::ExecuteAllAllocators();
+	task_->Execute(this);
+	DirectXThreadContext::ExecuteAllAllocators();
 
-		task_->SetState(ExecutionState::kCompleted);
-		isAvailable_ = true;
-		runtime_.End();
-	}
+	task_->SetState(ExecutionState::kCompleted);
+
+	isAvailable_ = true;
+	runtime_.End();
 
 	task_ = nullptr;
 }
@@ -80,6 +79,7 @@ void Thread::SystemDebugGui() {
 
 	} else {
 		ss << std::format("[runtime]: {:.1f}sec", runtime_.GetElapsedTime<TimeUnit::s>().time);
+		ss << std::format("[task]: {:p}", reinterpret_cast<void*>(task_.get()));
 		ImGui::TextDisabled(ss.str().c_str());
 	}
 }
@@ -104,8 +104,7 @@ void ThreadCollection::Init(uint32_t threadCount) {
 					std::lock_guard<std::mutex> lock(mutex_);
 
 					if (!tasks_.empty()) {
-						thread->SetTask(tasks_.front());
-						tasks_.pop();
+						thread->SetTask(GetTask());
 					}
 				}
 
@@ -132,4 +131,17 @@ void ThreadCollection::SystemDebugGui() {
 	for (auto& thread : threads_) {
 		thread->SystemDebugGui();
 	}
+}
+
+std::shared_ptr<TaskThreadExecution> ThreadCollection::GetTask() {
+	auto task = tasks_.front();
+
+	if (task->GetState() != ExecutionState::kWaiting) {
+		tasks_.pop();
+		return nullptr;
+	}
+
+	task->SetState(ExecutionState::kRunning);
+	tasks_.pop();
+	return task;
 }
