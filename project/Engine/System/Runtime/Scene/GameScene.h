@@ -6,9 +6,6 @@
 //* engine
 #include <Engine/System/Window/GameWindow.h>
 
-#include "Demo/ChessBoard.h"
-#include "Demo/AnimationDemo.h"
-
 ////////////////////////////////////////////////////////////////////////////////////////////
 // GameScene class
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -31,10 +28,6 @@ private:
 	//=========================================================================================
 
 	std::shared_ptr<GameWindow> mainWindow_;
-
-	//* demo
-	std::unique_ptr<ChessBoard> chess_;
-	std::unique_ptr<AnimationDemo> animationDemo_;
 
 	//=========================================================================================
 	// private methods
