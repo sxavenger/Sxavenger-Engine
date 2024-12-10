@@ -41,5 +41,4 @@ void AnimationDemo::Update() {
 }
 
 void AnimationDemo::SetAttributeImGui() {
-	ImGui::Checkbox("active", &isActive_);
 }

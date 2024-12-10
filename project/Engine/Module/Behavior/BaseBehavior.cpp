@@ -60,6 +60,10 @@ void BaseBehavior::ResetIterator() {
 	}
 }
 
+void BaseBehavior::BaseAttributeImGui() {
+	ImGui::Checkbox("active", &isActive_);
+}
+
 void BaseBehavior::CheckIterator() {
 	Assert(iterator_ == std::nullopt, "behavior iterator is not nullopt.");
 }

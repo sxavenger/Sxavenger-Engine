@@ -68,6 +68,7 @@ public:
 	//* derivative behaivor methods *//
 	//* ImGui command
 
+	void BaseAttributeImGui();
 	virtual void SystemAttributeImGui() {} //!< system using
 	virtual void SetAttributeImGui() {}    //!< user側で定義可能
 

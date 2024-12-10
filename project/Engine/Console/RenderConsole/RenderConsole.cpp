@@ -311,6 +311,10 @@ void RenderConsole::DisplayAttribute() {
 
 		ImGui::SeparatorText(behavior->GetName().c_str());
 
+		behavior->BaseAttributeImGui();
+		ImGui::Separator();
+		ImGui::Spacing();
+
 		behavior->SystemAttributeImGui();
 		ImGui::Spacing();
 		behavior->SetAttributeImGui();
