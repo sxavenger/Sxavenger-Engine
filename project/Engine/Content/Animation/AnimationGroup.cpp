@@ -103,7 +103,7 @@ void AnimationGroup::LoadTransformAnimation(const aiNodeAnim* aiNodeAnimation, A
 		Keyframe<Vector3f>& keyframe = nodeAnimation.scale.emplace_back();
 
 		keyframe.time  = GetTime(aiKey.mTime, tickPerSeconds);
-		keyframe.value = { aiKey.mValue.x, aiKey.mValue.y, -aiKey.mValue.z }; //!< 左手座標系に変換
+		keyframe.value = { aiKey.mValue.x, aiKey.mValue.y, aiKey.mValue.z }; //!< 左手座標系に変換
 	}
 
 }

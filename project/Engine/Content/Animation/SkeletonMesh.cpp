@@ -84,8 +84,8 @@ void SkeletonMesh::CreateSkinCluster() {
 		skinCluster.influence = std::make_unique<DimensionBuffer<VertexInfluence>>();
 		skinCluster.influence->Create(SxavengerSystem::GetDxDevice(), kVertexSize);
 
-		//std::fill();
-		//std::memset(skinClusterElement.influenceResource->GetData(), 0, skinClusterElement.influenceResource->GetStructureSize() * skinClusterElement.influenceResource->GetIndexSize()); //!< 0で埋めておく
+		std::fill(skinCluster.influence->GetMappedData().begin(), skinCluster.influence->GetMappedData().end(), VertexInfluence{});
+		//std::memset(skinCluster.influence->GetData(), 0, skinCluster.influence->GetStructureSize() * skinClusterElement.influenceResource->GetIndexSize()); //!< 0で埋めておく
 
 		//* palette
 		skinCluster.palette = std::make_unique<DimensionBuffer<TransformationMatrix>>();
@@ -111,9 +111,9 @@ void SkeletonMesh::CreateSkinCluster() {
 
 				// influenceの空いているところに代入
 				for (uint32_t ij = 0; ij < kInfluenceCount; ++ij) {
-					if (currentInfluence.weights[i] == 0.0f) {
-						currentInfluence.weights[i]      = vertexWeight.weight;
-						currentInfluence.jointIndices[i] = jointIndex;
+					if (currentInfluence.weights[ij] == 0.0f) {
+						currentInfluence.weights[ij]      = vertexWeight.weight;
+						currentInfluence.jointIndices[ij] = jointIndex;
 						break;
 					}
 				}
