@@ -165,6 +165,7 @@ void Console::DisplayMainMenu() {
 					}
 				}
 
+
 			} else {
 				if (ImGui::Button("close window")) {
 					auto window = subWindow_.lock();
