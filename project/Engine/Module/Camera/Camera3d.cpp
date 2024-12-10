@@ -27,9 +27,9 @@ void Camera3d::Term() {
 }
 
 void Camera3d::Reset() {
-	uvTransform_.scale     = kUnit3<float>;
-	uvTransform_.rotate    = Quaternion::Identity();
-	uvTransform_.translate = { 0.0f, 0.0f, -16.0f };
+	transform_.scale     = kUnit3<float>;
+	transform_.rotate    = Quaternion::Identity();
+	transform_.translate = { 0.0f, 0.0f, -16.0f };
 	UpdateMatrix();
 
 	SetProjection(0.45f, static_cast<float>(kMainWindowSize.x) / static_cast<float>(kMainWindowSize.y), 0.1f, 1024.0f);

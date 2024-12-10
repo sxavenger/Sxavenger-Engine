@@ -8,9 +8,6 @@
 #include <Engine/Content/SxavengerContent.h>
 #include <Engine/Module/SxavengerModule.h>
 
-#include "Demo/GuizmoScene.h"
-
-
 // c++
 #include <memory>
 
