@@ -21,9 +21,11 @@ void TransformBehavior::SystemAttributeImGui() {
 		ImGui::TreePop();
 	}*/
 
-	sConsole->Manipulate(
-		ImGuizmo::TRANSLATE,
-		ImGuizmo::WORLD,
-		this
-	);
+	if (!TransformComponent::IsSetParent()) {
+		sConsole->Manipulate(
+			ImGuizmo::TRANSLATE,
+			ImGuizmo::WORLD,
+			this
+		);
+	}
 }

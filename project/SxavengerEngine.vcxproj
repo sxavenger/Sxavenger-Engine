@@ -138,7 +138,6 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="Demo\ChessBoard.cpp" />
     <ClCompile Include="Demo\DemoParticle\Illumination.cpp" />
     <ClCompile Include="Demo\DemoParticle\Smoke.cpp" />
-    <ClCompile Include="Demo\GuizmoScene.cpp" />
     <ClCompile Include="Demo\Particle\BaseParticle.cpp" />
     <ClCompile Include="Demo\Particle\Emitter.cpp" />
     <ClCompile Include="Engine\Asset\Asset.cpp" />
@@ -219,6 +218,8 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="Engine\System\Window\GameWindow.cpp" />
     <ClCompile Include="Engine\System\Window\GameWindowCollection.cpp" />
     <ClCompile Include="Engine\System\Window\Window.cpp" />
+    <ClCompile Include="Game\Entity\Player.cpp" />
+    <ClCompile Include="Game\Object\Weapon.cpp" />
     <ClCompile Include="Lib\Adapter\Json\IJsonSerializer.cpp" />
     <ClCompile Include="Lib\Adapter\Json\JsonAdapter.cpp" />
     <ClCompile Include="Lib\Adapter\Random\Random.cpp" />
@@ -240,7 +241,6 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Demo\ChessBoard.h" />
     <ClInclude Include="Demo\DemoParticle\Illumination.h" />
     <ClInclude Include="Demo\DemoParticle\Smoke.h" />
-    <ClInclude Include="Demo\GuizmoScene.h" />
     <ClInclude Include="Demo\Particle\BaseParticle.h" />
     <ClInclude Include="Demo\Particle\Emitter.h" />
     <ClInclude Include="Engine\Asset\Asset.h" />
@@ -329,6 +329,8 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Engine\System\Window\GameWindow.h" />
     <ClInclude Include="Engine\System\Window\GameWindowCollection.h" />
     <ClInclude Include="Engine\System\Window\Window.h" />
+    <ClInclude Include="Game\Entity\Player.h" />
+    <ClInclude Include="Game\Object\Weapon.h" />
     <ClInclude Include="Lib\Adapter\Json\IJsonSerializer.h" />
     <ClInclude Include="Lib\Adapter\Json\JsonAdapter.h" />
     <ClInclude Include="Lib\Adapter\Random\Random.h" />

@@ -3,26 +3,36 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
+//* base
+#include <Engine/Module/Behavior/ModelBehavior.h>
+
 //* engine
-#include <Engine/System/Window/GameWindow.h>
+#include <Engine/Asset/Asset.h>
 
-//* Game
-#include <Game/Entity/Player.h>
+//* game
+#include <Game/Object/Weapon.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// GameScene class
+// Player class
 ////////////////////////////////////////////////////////////////////////////////////////////
-class GameScene {
+class Player
+	: public ModelBehavior {
 public:
 
 	//=========================================================================================
 	// public methods
 	//=========================================================================================
 
-	GameScene()  = default;
-	~GameScene() = default;
+	Player()  = default;
+	~Player() = default;
 
-	void Run();
+	void Init();
+
+	void Term();
+
+	void Update();
+
+	void SetAttributeImGui() override;
 
 private:
 
@@ -30,21 +40,23 @@ private:
 	// private variables
 	//=========================================================================================
 
-	std::shared_ptr<GameWindow> mainWindow_;
+	std::shared_ptr<AssetModel> model_;
 
-	std::unique_ptr<Player> player_;
+	float speed_ = 1.0f;
+
+	Vector3f velocity_ = {};
+
+	//* weapon *//
+
+	std::unique_ptr<Weapon> weapon_;
+
+	DeltaTimePoint<TimeUnit::s> attackTime_ = {};
 
 	//=========================================================================================
 	// private methods
 	//=========================================================================================
 
-	void SystemInit();
-	void Init();
+	void MoveWithKeyboard();
+	void AttackWithKeyboard();
 
-	void Update();
-
-	void Draw();
-	void DrawScreen();
-
-	void Term();
 };

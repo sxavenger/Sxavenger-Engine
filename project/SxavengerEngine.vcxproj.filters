@@ -89,7 +89,6 @@
     <ClCompile Include="Engine\Asset\SxavengerAsset.cpp" />
     <ClCompile Include="Engine\Asset\AssetLibrary\Unkown\AssetUnkown.cpp" />
     <ClCompile Include="Engine\Console\AssetConsole\AssetConsole.cpp" />
-    <ClCompile Include="Demo\GuizmoScene.cpp" />
     <ClCompile Include="Lib\MyMath.cpp" />
     <ClCompile Include="Engine\Module\Behavior\TransformBehavior.cpp" />
     <ClCompile Include="Engine\Module\Primitive\DebugPrimitive.cpp" />
@@ -109,6 +108,8 @@
     <ClCompile Include="Engine\Module\Behavior\AnimationBehavior.cpp" />
     <ClCompile Include="Demo\AnimationDemo.cpp" />
     <ClCompile Include="Engine\Content\Animation\SkinningPipeline.cpp" />
+    <ClCompile Include="Game\Entity\Player.cpp" />
+    <ClCompile Include="Game\Object\Weapon.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\System\Window\Window.h" />
@@ -200,7 +201,6 @@
     <ClInclude Include="Engine\Asset\SxavengerAsset.h" />
     <ClInclude Include="Engine\Asset\AssetLibrary\Unkown\AssetUnkown.h" />
     <ClInclude Include="Engine\Console\AssetConsole\AssetConsole.h" />
-    <ClInclude Include="Demo\GuizmoScene.h" />
     <ClInclude Include="Lib\MyMath.h" />
     <ClInclude Include="Engine\Module\Behavior\TransformBehavior.h" />
     <ClInclude Include="Engine\Module\Primitive\DebugPrimitive.h" />
@@ -223,5 +223,7 @@
     <ClInclude Include="Engine\Module\Behavior\AnimationBehavior.h" />
     <ClInclude Include="Demo\AnimationDemo.h" />
     <ClInclude Include="Engine\Content\Animation\SkinningPipeline.h" />
+    <ClInclude Include="Game\Entity\Player.h" />
+    <ClInclude Include="Game\Object\Weapon.h" />
   </ItemGroup>
 </Project>

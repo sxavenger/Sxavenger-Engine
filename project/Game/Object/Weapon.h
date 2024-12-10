@@ -3,26 +3,33 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
+//* base
+#include <Engine/Module/Behavior/ModelBehavior.h>
+
 //* engine
-#include <Engine/System/Window/GameWindow.h>
-
-//* Game
-#include <Game/Entity/Player.h>
+#include <Engine/Asset/Asset.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// GameScene class
+// Weapon class
 ////////////////////////////////////////////////////////////////////////////////////////////
-class GameScene {
+class Weapon
+	: public ModelBehavior {
 public:
 
 	//=========================================================================================
 	// public methods
 	//=========================================================================================
 
-	GameScene()  = default;
-	~GameScene() = default;
+	Weapon()  = default;
+	~Weapon() = default;
 
-	void Run();
+	void Init();
+
+	void Term();
+
+	void Update();
+
+	void SetActive(bool isActive) { isActive_ = isActive; }
 
 private:
 
@@ -30,21 +37,6 @@ private:
 	// private variables
 	//=========================================================================================
 
-	std::shared_ptr<GameWindow> mainWindow_;
+	std::shared_ptr<AssetModel> model_;
 
-	std::unique_ptr<Player> player_;
-
-	//=========================================================================================
-	// private methods
-	//=========================================================================================
-
-	void SystemInit();
-	void Init();
-
-	void Update();
-
-	void Draw();
-	void DrawScreen();
-
-	void Term();
 };

@@ -41,6 +41,8 @@ public:
 	const Matrix4x4& GetMatrix() const { return mat_; }
 	Matrix4x4& GetMatrix() { return mat_; }
 
+	bool IsSetParent() const { return parent_ != nullptr; }
+
 	//* setter *//
 
 	void SetParent(const BaseTransformComponent* component) { parent_ = component; }
@@ -83,8 +85,8 @@ public:
 
 	//* getter *//
 
-	const QuaternionTransform& GetTransform() const { return uvTransform_; }
-	QuaternionTransform& GetTransform() { return uvTransform_; }
+	const QuaternionTransform& GetTransform() const { return transform_; }
+	QuaternionTransform& GetTransform() { return transform_; }
 
 protected:
 
@@ -92,7 +94,7 @@ protected:
 	// protected variables
 	//=========================================================================================
 
-	QuaternionTransform uvTransform_;
+	QuaternionTransform transform_;
 
 };
 

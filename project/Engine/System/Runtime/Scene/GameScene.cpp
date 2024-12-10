@@ -112,20 +112,13 @@ void GameScene::SystemInit() {
 }
 
 void GameScene::Init() {
-
-	chess_ = std::make_unique<ChessBoard>();
-	chess_->Init();
-	chess_->SetToConsole();
-
-	animationDemo_ = std::make_unique<AnimationDemo>();
-	animationDemo_->Init();
-	animationDemo_->SetToConsole();
-
+	player_ = std::make_unique<Player>();
+	player_->Init();
+	player_->SetToConsole();
 }
 
 void GameScene::Update() {
-	chess_->Update();
-	animationDemo_->Update();
+	player_->Update();
 }
 
 void GameScene::Draw() {
@@ -135,8 +128,7 @@ void GameScene::DrawScreen() {
 }
 
 void GameScene::Term() {
-	chess_.reset();
-	animationDemo_.reset();
+	player_.reset();
 
 	SxavengerSystem::ExecuteAllAllocator();
 }
