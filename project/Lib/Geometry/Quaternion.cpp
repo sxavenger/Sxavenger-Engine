@@ -16,7 +16,7 @@
 namespace {
 
 	//! @brief vector結果を出力するための構造体
-	struct float3 {
+	struct ImaginaryVector3 {
 		float x, y, z;
 	};
 
@@ -26,7 +26,7 @@ namespace {
 	}
 
 	//! @brief QuartanionのVector部分のcross演算用関数
-	float3 CrossVector(const Quaternion& q, const Quaternion& r) {
+	ImaginaryVector3 CrossVector(const Quaternion& q, const Quaternion& r) {
 		return {
 			q.y * r.z - q.z * r.y,
 			q.z * r.x - q.x * r.z,
@@ -68,8 +68,8 @@ Quaternion& Quaternion::operator*=(const Quaternion& q) {
 
 	Quaternion result;
 
-	float3 cross = CrossVector(*this, q);
-	float dot = DotVector(*this, q);
+	ImaginaryVector3 cross = CrossVector(*this, q);
+	float dot              = DotVector(*this, q);
 
 	result.x = cross.x + q.w * x + w * q.x;
 	result.y = cross.y + q.w * y + w * q.y;
@@ -88,7 +88,7 @@ Quaternion operator*(const Quaternion& q, const Quaternion& r) {
 
 	Quaternion result;
 
-	float3 cross = CrossVector(q, r);
+	ImaginaryVector3 cross = CrossVector(q, r);
 	float dot = DotVector(q, r);
 
 	result.x = cross.x + r.w * q.x + q.w * r.x;

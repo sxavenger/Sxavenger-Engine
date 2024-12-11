@@ -354,12 +354,12 @@ void RenderConsole::DisplayScene() {
 	ImGui::Begin("Scene ## Render Console", nullptr, console_->GetWindowFlag() | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
 
 	if (scene_ != nullptr) {
-		ShowTextureImGuiFullWindow(checkerTexture_.lock().get()); //< HACK
+		ShowTextureImGuiFullWindow(checkerTexture_.lock().get()); //!< HACK
 		sceneRect_ = ShowTextureImGuiFullWindow(scene_->GetAdaptive()->GetTexture());
 		ImGuizmo::SetDrawlist();
 	}
 
-	if (ImGui::IsWindowHovered() && ImGui::IsMouseClicked(2)) {
+	if (ImGui::IsWindowHovered() && (ImGui::IsMouseClicked(2) || ImGui::IsMouseClicked(3))) {
 		//!< window hovered 状態で mouse middle click が押された場合, camera操作(forcus)を許可.
 		ImGui::SetWindowFocus();
 	}
