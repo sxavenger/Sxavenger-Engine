@@ -28,7 +28,7 @@ public:
 
 	static Quaternion Identity();
 
-	Quaternion Conjugation() const;
+	Quaternion Conjugate() const;
 
 	float Norm() const;
 

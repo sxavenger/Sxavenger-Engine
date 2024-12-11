@@ -43,7 +43,7 @@ Quaternion Quaternion::Identity() {
 	return { 0.0f, 0.0f, 0.0f, 1.0f };
 }
 
-Quaternion Quaternion::Conjugation() const {
+Quaternion Quaternion::Conjugate() const {
 	return { -x, -y, -z, w };
 }
 
@@ -58,7 +58,7 @@ Quaternion Quaternion::Normalize() const {
 }
 
 Quaternion Quaternion::Inverse() const {
-	Quaternion conj = Conjugation();
+	Quaternion conj = Conjugate();
 	float norm2 = x * x + y * y + z * z + w * w;
 
 	return { conj.x / norm2, conj.y / norm2, conj.z / norm2, conj.w / norm2 };
@@ -125,7 +125,7 @@ Quaternion MakeAxisAngle(const Vector3f& axis, float angle) {
 
 Vector3f RotateVector(const Vector3f& v, const Quaternion& q) {
 	Quaternion r = { v.x, v.y, v.z, 0.0f };
-	Quaternion result = q * r * q.Conjugation();
+	Quaternion result = q * r * q.Conjugate();
 
 	return { result.x, result.y, result.z };
 }
@@ -201,7 +201,12 @@ Quaternion LookAt(const Vector3f& u, const Vector3f& v) {
 	Vector3f up = Normalize(Cross(u, v));
 
 	if (All(up == kOrigin3<float>)) {
-		up = { 0.0f, 1.0f, 0.0f };
+		if (u.x != 0.0f || u.y != 0.0f) {
+			up = { u.y, -u.x, 0.0f };
+
+		} else {
+			up = { u.z, 0.0f, -u.x };
+		}
 	}
 
 	float theta = std::acos(Dot(u, v));
