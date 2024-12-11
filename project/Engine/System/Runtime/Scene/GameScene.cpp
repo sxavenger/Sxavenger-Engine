@@ -118,6 +118,8 @@ void GameScene::Init() {
 	animationDemo_->Init();
 	animationDemo_->SetToConsole();
 
+	sConsole->Log(std::format("window size: {}", mainWindow_->GetSize()));
+
 }
 
 void GameScene::Update() {

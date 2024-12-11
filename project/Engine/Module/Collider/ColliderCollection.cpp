@@ -109,13 +109,18 @@ void CollisionDrawer::DrawCollider(const Collider* collider, const Color4f& colo
 }
 
 void CollisionDrawer::DrawSphere(const Vector3f& position, const CollisionBoundings::Sphere& sphere, const Color4f& color) {
+	position, sphere, color;
 }
 
 void CollisionDrawer::DrawCapsule(const Vector3f& position, const CollisionBoundings::Capsule& capsule, const Color4f& color) {
+	position, capsule, color;
 }
 
 void CollisionDrawer::DrawAABB(const Vector3f& position, const CollisionBoundings::AABB& aabb, const Color4f& color) {
+	position, aabb, color;
 }
 
 void CollisionDrawer::DrawOBB(const Vector3f& position, const CollisionBoundings::OBB& obb, const Color4f& color) {
+	position, obb, color;
 }
+

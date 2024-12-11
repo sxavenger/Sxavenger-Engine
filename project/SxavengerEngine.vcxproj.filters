@@ -112,6 +112,7 @@
     <ClCompile Include="Engine\Module\Collider\Collider.cpp" />
     <ClCompile Include="Engine\Module\Collider\CollisionDetection.cpp" />
     <ClCompile Include="Engine\Module\Collider\ColliderCollection.cpp" />
+    <ClCompile Include="Lib\Sxl\Formatter.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\System\Window\Window.h" />
@@ -229,5 +230,6 @@
     <ClInclude Include="Engine\Module\Collider\Collider.h" />
     <ClInclude Include="Engine\Module\Collider\CollisionDetection.h" />
     <ClInclude Include="Engine\Module\Collider\ColliderCollection.h" />
+    <ClInclude Include="Lib\Sxl\Formatter.h" />
   </ItemGroup>
 </Project>
