@@ -33,6 +33,12 @@ public:
 
 	void SystemDebugGui() override;
 
+	//* collider option *//
+
+	void SetCollider(Collider* collider);
+
+	void EraseCollider(Collider* collider);
+
 private:
 
 	//=========================================================================================
@@ -45,7 +51,8 @@ private:
 
 	//* paraemter *//
 
-
+	Color4f activeColor_   = ToColor4f(0xFAFA00FF);
+	Color4f inactiveColor_ = ToColor4f(0x808040FF);
 
 	//=========================================================================================
 	// private methods
@@ -60,16 +67,16 @@ private:
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// CollisionDrawer class
+// ColliderDrawer class
 ////////////////////////////////////////////////////////////////////////////////////////////
-class CollisionDrawer {
+class ColliderDrawer {
 public:
 
 	//=========================================================================================
 	// public methods
 	//=========================================================================================
 
-	void DrawCollider(const Collider* collider, const Color4f& color);
+	static void DrawCollider(const Collider* collider, const Color4f& color);
 
 private:
 

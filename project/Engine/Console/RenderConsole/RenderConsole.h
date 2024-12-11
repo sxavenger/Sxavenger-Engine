@@ -122,6 +122,7 @@ protected:
 
 	void ShowRenderConsoleMenu();
 	void ShowGraphicsMenu();
+	void ShowDebugMenu();
 
 	//* sub *//
 
@@ -183,6 +184,8 @@ private:
 	// CONSENDER: frameはどこに持たせるべきか.
 
 	FullScreenFrameType type_ = FullScreenFrameType::kGame;
+
+	Color4f frustumColor_ = ToColor4f(0xFAFA00FF);
 
 	//* Manipulate *//
 

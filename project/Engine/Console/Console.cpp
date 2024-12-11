@@ -191,6 +191,12 @@ void Console::DisplayMainMenu() {
 		ImGui::EndMenu();
 	}
 
+	if (ImGui::BeginMenu("Debug")) {
+		MenuDummy();
+		RenderConsole::ShowDebugMenu();
+		ImGui::EndMenu();
+	}
+
 	if (ImGui::BeginMenu("Graphics")) {
 		MenuDummy();
 		RenderConsole::ShowGraphicsMenu();

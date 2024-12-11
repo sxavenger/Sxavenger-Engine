@@ -4,7 +4,8 @@
 // namespace
 ////////////////////////////////////////////////////////////////////////////////////////////
 namespace {
-	static std::unique_ptr<DebugPrimitive> sPrimitive = nullptr;
+	static std::unique_ptr<DebugPrimitive> sPrimitive              = nullptr;
+	static std::unique_ptr<ColliderCollection> sColliderCollection = nullptr;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -14,6 +15,8 @@ namespace {
 void SxavengerModule::Init() {
 	sPrimitive = std::make_unique<DebugPrimitive>();
 	sPrimitive->Init();
+
+	sColliderCollection = std::make_unique<ColliderCollection>();
 }
 
 void SxavengerModule::Term() {
@@ -42,4 +45,24 @@ void SxavengerModule::DrawBox(const Vector3f& min, const Vector3f& max, const Co
 
 DebugPrimitive* SxavengerModule::GetDebugPrimitive() {
 	return sPrimitive.get();
+}
+
+void SxavengerModule::SetCollider(Collider* collider) {
+	sColliderCollection->SetCollider(collider);
+}
+
+void SxavengerModule::EraseCollider(Collider* collider) {
+	sColliderCollection->EraseCollider(collider);
+}
+
+void SxavengerModule::CheckCollision() {
+	sColliderCollection->CheckCollision();
+}
+
+void SxavengerModule::DrawCollider() {
+	sColliderCollection->Draw();
+}
+
+ColliderCollection* SxavengerModule::GetColliderCollection() {
+	return sColliderCollection.get();
 }

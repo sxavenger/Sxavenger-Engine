@@ -60,10 +60,9 @@ public:
 	Collider()  = default;
 	~Collider() { Term(); }
 
-	void Init();
-	//!< set to collider でやるかどうか...
-
 	void Term();
+
+	void SetToCollection();
 
 	//* bounding option *//
 
@@ -115,6 +114,10 @@ public:
 	void SetIsActive(bool isActive) { isActive_ = isActive; }
 
 	bool IsActive() const { return isActive_; }
+
+	//* imgui command *//
+
+	void SetImGuiCommand();
 
 protected:
 

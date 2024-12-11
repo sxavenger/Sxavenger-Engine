@@ -283,6 +283,25 @@ void RenderConsole::ShowGraphicsMenu() {
 	}
 }
 
+void RenderConsole::ShowDebugMenu() {
+	if (ImGui::BeginMenu("Camera")) {
+		MenuDummy();
+		ImGui::SeparatorText("camera");
+		ImGui::ColorEdit4("frustum", &frustumColor_.r);
+		ImGui::EndMenu();
+	}
+
+	if (ImGui::BeginMenu("Collider")) {
+		MenuDummy();
+
+		ImGui::SeparatorText("collider");
+		auto colliderCollection = SxavengerModule::GetColliderCollection();
+		colliderCollection->SystemDebugGui();
+
+		ImGui::EndMenu();
+	}
+}
+
 void RenderConsole::CreateFrame(const Vector2ui& size) {
 	scene_ = std::make_unique<SxavGraphicsFrame>();
 	scene_->Create(size, SxavGraphicsFrameType::kDebug);
@@ -559,6 +578,7 @@ void RenderConsole::DrawScene() {
 		}
 
 		SxavengerModule::DrawGrid(kOrigin3<float>, 12.0f);
+		SxavengerModule::DrawCollider();
 		SxavengerModule::DrawToScene(SxavengerSystem::GetMainThreadContext(), scene_->GetCamera());
 		
 		scene_->EndAdaptive(context);
