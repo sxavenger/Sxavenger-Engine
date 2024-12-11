@@ -179,12 +179,6 @@ void Console::DisplayMainMenu() {
 		ImGui::EndMenu();
 	}
 
-	if (ImGui::BeginMenu("Performace")) {
-		MenuDummy();
-		// TODO
-		ImGui::EndMenu();
-	}
-
 	if (ImGui::BeginMenu("System")) {
 		MenuDummy();
 		SystemConsole::ShowSystemMenu();
@@ -217,9 +211,16 @@ void Console::DisplayPerformace() {
 
 	DeltaTimePoint<TimeUnit::s> framesPerSec = Performance::GetDeltaTime<TimeUnit::s>();
 
-	ImGui::Text("[exec speed / frame]: %.6f", framesPerSec.time);
-	ImGui::SameLine();
-	ImGui::Text("[frame per second]: %.1f", 1.0f / framesPerSec.time);
+	std::string text = "";
+	text += std::format("[exec speed / frame]: {:.6f}", framesPerSec.time) + " ";
+	text += std::format("[frame per second]: {:.1f}", 1.0f / framesPerSec.time);
+	ImGui::Text(text.c_str());
+
+	if (ImGui::BeginItemTooltip()) {
+		//ImGui::PlotLines("frame per second", (*fpsHistory_.begin()), );
+		// TODO:
+		ImGui::EndTooltip();
+	}
 
 	ImGui::End();
 

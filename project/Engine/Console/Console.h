@@ -87,7 +87,7 @@ private:
 
 	RunTimeTracker runtime_;
 
-	std::deque<float> fpsHistory_;
+	std::deque<float>     fpsHistory_;
 	static const uint32_t kHistoryCount_ = 60 * 4;
 
 	//=========================================================================================

@@ -109,6 +109,7 @@
     <ClCompile Include="Engine\Module\Behavior\AnimationBehavior.cpp" />
     <ClCompile Include="Demo\AnimationDemo.cpp" />
     <ClCompile Include="Engine\Content\Animation\SkinningPipeline.cpp" />
+    <ClCompile Include="Engine\Module\Collider\Collider.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\System\Window\Window.h" />
@@ -223,5 +224,6 @@
     <ClInclude Include="Engine\Module\Behavior\AnimationBehavior.h" />
     <ClInclude Include="Demo\AnimationDemo.h" />
     <ClInclude Include="Engine\Content\Animation\SkinningPipeline.h" />
+    <ClInclude Include="Engine\Module\Collider\Collider.h" />
   </ItemGroup>
 </Project>

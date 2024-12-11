@@ -13,8 +13,6 @@
 //* lib
 #include <Lib/Environment.h>
 
-#include "Engine/Content/Animation/AnimationGroup.h"
-
 ////////////////////////////////////////////////////////////////////////////////////////////
 // GameScene class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -98,7 +96,6 @@ void GameScene::SystemInit() {
 		std::shared_ptr<UnorderedTexture> white1x1 = SxavengerContent::TryCreateUnorderedTexture("white1x1", { 1, 1 });
 		white1x1->TransitionBeginUnordered(SxavengerSystem::GetMainThreadContext());
 		compute->SetPipeline(SxavengerSystem::GetCommandList());
-
 
 		DxObject::BindBufferDesc bind = {};
 		bind.SetHandle("gOutput", white1x1->GetGPUHandleUAV());
