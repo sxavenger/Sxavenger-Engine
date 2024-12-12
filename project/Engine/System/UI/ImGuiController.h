@@ -19,6 +19,7 @@
 
 //* c++
 #include <filesystem>
+#include <list>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // ImGuiController class
@@ -55,7 +56,9 @@ private:
 	// private variables
 	//=========================================================================================
 
-	DxObject::Descriptor descriptorSRV_;
+	//DxObject::Descriptor descriptorSRV_;
+
+	std::list<DxObject::Descriptor> descriptorsSRV_;
 
 	static const std::filesystem::path kImGuiLayoutFilepath_;
 

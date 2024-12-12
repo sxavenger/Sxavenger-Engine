@@ -10,6 +10,12 @@
 
 ConstantBuffer<Camera3d> gCamera : register(b0);
 
+struct Sun {
+	float3 direction;
+	float  intensity;
+};
+ConstantBuffer<Sun> gSun : register(b1);
+
 //=========================================================================================
 // Output
 //=========================================================================================
@@ -26,8 +32,8 @@ static const float pi = 3.1415926535897932384626433832795f;
 // static const parameter variables
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-static const float3 kSunDir      = normalize(float3(0.0f, 1.0f, 0.0f)); //!< ‘¾—z‚Ì•ûŒü
-static const float kSunIntensity = 20.0f;                               //!< ‘¾—z‚Ì‹­‚³
+//static const float3 kSunDir      = normalize(float3(0.0f, 1.0f, 10.0f)); //!< ‘¾—z‚Ì•ûŒü
+//static const float kSunIntensity = 20.0f;                               //!< ‘¾—z‚Ì‹­‚³
 
 static const uint kNumSamples = 16; //!< ƒTƒ“ƒvƒŠƒ“ƒO”
 static const uint kNumScatter = 8; //!< ŽU—‰ñ”
@@ -140,13 +146,13 @@ float3 GetIncidentLight(Ray ray, Sphere atmosphere) {
 	float distanceFar  = 0.0f;
 
 	if (!IntersectSphere(ray, atmosphere, distanceNear, distanceFar)) {
-		return float3(0.1f, 0.2f, 0.2f);
+		return float3(1.0f, 0.0f, 0.0f);
 	}
 	
 	//float marchStep = (distanceFar - distanceNear) / kNumSamples;
 	float marchStep = distanceFar / kNumSamples;
 	
-	float mu = dot(ray.direction, kSunDir);
+	float mu = dot(ray.direction, gSun.direction);
 	
 	float phaseR = RayleighPhaseFunction(mu);
 	float phaseM = HenyeyGreensteinPhaseFunction(mu);
@@ -170,7 +176,7 @@ float3 GetIncidentLight(Ray ray, Sphere atmosphere) {
 		
 		Ray lightRay = (Ray)0;
 		lightRay.origin    = samplePoint;
-		lightRay.direction = kSunDir;
+		lightRay.direction = gSun.direction;
 		
 		float opticalDepthLightR = 0.0f;
 		float opticalDepthLightM = 0.0f;
@@ -188,7 +194,7 @@ float3 GetIncidentLight(Ray ray, Sphere atmosphere) {
 		}
 	}
 	
-	return kSunIntensity * (phaseR * sumR * kBetaR + phaseM * sumM * kBetaM);
+	return gSun.intensity * (phaseR * sumR * kBetaR + phaseM * sumM * kBetaM);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -220,13 +226,14 @@ void main(uint3 dispatchThreadId : SV_DispatchThreadID) {
 	Ray ray = GenerateRay((float2(currentIndex) / size) * 2.0f - 1.0f);
 	ray.origin.y += kEarthRadius;
 	
-	float3 col = float3(0.0f, 0.0f, 0.0f);
+	float3 col = GetIncidentLight(ray, atmosphere);
+	float d = dot(ray.direction, float3(0.0f, 1.0f, 0.0f));
 	
-	col = GetIncidentLight(ray, atmosphere);
-	
-	//if (dot(ray.direction, float3(0.0f, 1.0f, 0.0f)) > 0.0f) {
-	//	col = GetIncidentLight(ray, atmosphere);
+	//if (d < 0.0f) {
+	//	col = lerp(col, float3(0.1f, 0.1f, 0.1f), abs(d));
+
 	//}
+
 	
 	gOutput[currentIndex] = float4(col, 1.0f);
 	

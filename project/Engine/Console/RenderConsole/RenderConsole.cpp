@@ -42,9 +42,16 @@ void RenderConsole::Init(Console* console) {
 
 	checkerTexture_ = SxavengerAsset::ImportTexture("asset/textures/checker_black.png");
 	checkerTexture_.lock()->Load(SxavengerSystem::GetMainThreadContext());
+
+	buffer_ = std::make_unique<DxObject::DimensionBuffer<Vector4f>>();
+	buffer_->Create(SxavengerSystem::GetDxDevice(), 1);
+
+	(*buffer_)[0] = { 0.0f, 1.0f, 0.0f, 20.0f };
 }
 
 void RenderConsole::Term() {
+
+	buffer_.reset();
 
 	renderPipeline_.reset();
 	computePipeline_.reset();
@@ -75,6 +82,20 @@ void RenderConsole::UpdateConsole() {
 		DisplayAttribute();
 		DisplayCanvas();
 		DisplayLayer();
+
+		ImGui::Begin("debug");
+
+		if (ImGui::DragFloat3("Sun direction", &(*buffer_)[0].x, 0.01f)) {
+			Vector3f sun = { (*buffer_)[0].x, (*buffer_)[0].y, (*buffer_)[0].z };
+			sun = Normalize(sun);
+			(*buffer_)[0].x = sun.x;
+			(*buffer_)[0].y = sun.y;
+			(*buffer_)[0].z = sun.z;
+		}
+
+		ImGui::DragFloat("Sun Intencity", &(*buffer_)[0].w, 0.01f);
+
+		ImGui::End();
 	}
 }
 
@@ -618,12 +639,17 @@ void RenderConsole::DrawGame() {
 		}
 
 		{ //* atmosphere
+
+			game_->GetXclipse()->NextResultBufferIndex();
+
 			computePipeline_->SetPipeline(kXclipse_Atmosphere, context);
 
 			BindBufferDesc bind = {};
+			//bind.SetHandle("gInput", game_->GetXclipse()->GetPrevBuffer()->GetGPUHandleSRV);
+			bind.SetAddress("gSun", buffer_->GetGPUVirtualAddress());
 			bind.SetAddress("gCamera", game_->GetCamera()->GetGPUVirtualAddress());
 			bind.SetAddress("gConfig", game_->GetGetConfigVirtualAddress());
-			bind.SetHandle("gOutput", game_->GetXclipse()->GetResultBuffer()->GetGPUHandleSRV());
+			bind.SetHandle("gOutput", game_->GetXclipse()->GetResultBuffer()->GetGPUHandleUAV());
 
 			computePipeline_->BindComputeBuffer(kXclipse_Atmosphere, context, bind);
 			computePipeline_->Dispatch(context, game_->GetSize());

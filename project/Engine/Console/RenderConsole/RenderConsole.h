@@ -200,6 +200,8 @@ private:
 
 	const ImVec4 kBehaviorDisableColor_ = { 0.4f, 0.4f, 0.4f, 1.0f };
 
+	std::unique_ptr<DxObject::DimensionBuffer<Vector4f>> buffer_;
+
 	//=========================================================================================
 	// private methods
 	//=========================================================================================

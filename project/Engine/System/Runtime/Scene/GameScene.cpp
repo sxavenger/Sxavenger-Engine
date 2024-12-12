@@ -95,13 +95,13 @@ void GameScene::SystemInit() {
 
 		std::shared_ptr<UnorderedTexture> white1x1 = SxavengerContent::TryCreateUnorderedTexture("white1x1", { 1, 1 });
 		white1x1->TransitionBeginUnordered(SxavengerSystem::GetMainThreadContext());
-		compute->SetPipeline(SxavengerSystem::GetCommandList());
+		compute->SetPipeline(SxavengerSystem::GetMainThreadContext()->GetDxCommand());
 
 		DxObject::BindBufferDesc bind = {};
 		bind.SetHandle("gOutput", white1x1->GetGPUHandleUAV());
 		compute->BindComputeBuffer(SxavengerSystem::GetMainThreadContext()->GetDxCommand(), bind);
 
-		compute->Dispatch(SxavengerSystem::GetCommandList(), 1, 1, 1);
+		compute->Dispatch(SxavengerSystem::GetMainThreadContext()->GetDxCommand(), 1, 1, 1);
 
 		white1x1->TransitionEndUnordered(SxavengerSystem::GetMainThreadContext());
 		SxavengerSystem::TransitionAllocator();

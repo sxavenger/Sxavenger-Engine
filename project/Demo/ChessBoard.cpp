@@ -5,8 +5,8 @@
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 void ChessBoard::Init() {
-	model_ = SxavengerAsset::ImportModel("asset/model/chessBoard/chessBoard.gltf");
-	//model_ = SxavengerAsset::ImportModel("asset/model/demo/teapot.obj");
+	//model_ = SxavengerAsset::ImportModel("asset/model/chessBoard/chessBoard.gltf");
+	model_ = SxavengerAsset::ImportModel("asset/model/demo/teapot.obj");
 	model_->AsyncLoad(Model::GetDefaultAssimpOption());
 	SxavengerSystem::PushTask(model_);
 

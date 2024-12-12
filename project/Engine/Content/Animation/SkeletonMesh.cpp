@@ -48,7 +48,7 @@ void SkeletonMesh::UpdateTransitionAnimationAToB(
 
 void SkeletonMesh::SetIABuffer(uint32_t meshIndex) const {
 
-	auto commandList = SxavengerSystem::GetCommandList();
+	auto commandList = SxavengerSystem::GetMainThreadContext()->GetCommandList();
 
 	D3D12_VERTEX_BUFFER_VIEW vbv = skinnedVertex_[meshIndex]->GetVertexBufferView();
 	D3D12_INDEX_BUFFER_VIEW  ibv = model_->GetInputMesh(meshIndex).GetIndex()->GetIndexBufferView();

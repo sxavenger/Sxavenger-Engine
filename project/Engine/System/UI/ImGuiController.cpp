@@ -19,24 +19,65 @@ const std::filesystem::path ImGuiController::kImGuiLayoutFilepath_ = "imgui.ini"
 
 void ImGuiController::Init(Window* mainWindow) {
 	// handleの取得
-	descriptorSRV_ = SxavengerSystem::GetDescriptor(kDescriptor_SRV);
+	//descriptorSRV_ = SxavengerSystem::GetDescriptor(kDescriptor_SRV);
 
 	// ImGuiの初期化
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
+
 	SettingImGui();
 	ImGui::StyleColorsDark();
+	SetImGuiStyle();
+
 	ImGui_ImplWin32_Init(mainWindow->GetHwnd());
-	ImGui_ImplDX12_Init(
+	/*ImGui_ImplDX12_Init(
 		SxavengerSystem::GetDxDevice()->GetDevice(),
 		DxObject::SwapChain::GetBufferCount(),
 		DxObject::kScreenFormat,
 		SxavengerSystem::GetDxDescriptorHeaps()->GetDescriptorHeap(kDescriptor_CBV_SRV_UAV),
 		descriptorSRV_.GetCPUHandle(),
 		descriptorSRV_.GetGPUHandle()
-	);
+	);*/
 
-	SetImGuiStyle();
+	ImGui_ImplDX12_InitInfo info = {};
+	info.Device            = SxavengerSystem::GetDxDevice()->GetDevice();
+	info.CommandQueue      = SxavengerSystem::GetMainThreadContext()->GetCommandQueue();
+	info.NumFramesInFlight = DxObject::SwapChain::GetBufferCount();
+	info.RTVFormat         = DxObject::kScreenFormat;
+	info.DSVFormat         = DxObject::kDefaultDepthFormat;
+	info.SrvDescriptorHeap = SxavengerSystem::GetDxDescriptorHeaps()->GetDescriptorHeap(kDescriptor_CBV_SRV_UAV);
+
+	info.UserData = &descriptorsSRV_;
+
+	info.SrvDescriptorAllocFn = [](ImGui_ImplDX12_InitInfo* info, D3D12_CPU_DESCRIPTOR_HANDLE* cpuHandle, D3D12_GPU_DESCRIPTOR_HANDLE* gpuHandle) {
+		// descriptorの追加
+		auto& descriptors = *static_cast<std::list<DxObject::Descriptor>*>(info->UserData);
+		descriptors.emplace_back(SxavengerSystem::GetDxDescriptorHeaps()->GetDescriptor(kDescriptor_SRV));
+
+		// handleの取得
+		auto& descriptor = descriptors.back();
+		*cpuHandle = descriptor.GetCPUHandle();
+		*gpuHandle = descriptor.GetGPUHandle();
+	};
+
+	info.SrvDescriptorFreeFn = [](ImGui_ImplDX12_InitInfo* info, D3D12_CPU_DESCRIPTOR_HANDLE cpuHandle, D3D12_GPU_DESCRIPTOR_HANDLE gpuHandle) {
+		gpuHandle; //!< unused
+
+		// descriptor listの取得
+		auto& descriptors = *static_cast<std::list<DxObject::Descriptor>*>(info->UserData);
+
+		// descriptorの削除
+		descriptors.remove_if([&](DxObject::Descriptor& descriptor) {
+			if (descriptor.GetCPUHandle().ptr == cpuHandle.ptr) {
+				descriptor.Delete();
+				return true;
+			}
+
+			return false;
+		});
+	};
+
+	ImGui_ImplDX12_Init(&info);
 
 	// iniの読み込み
 	std::string filepath = kImGuiLayoutFilepath_.generic_string();
@@ -48,7 +89,7 @@ void ImGuiController::Term() {
 	ImGui_ImplWin32_Shutdown();
 	ImGui::DestroyContext();
 
-	descriptorSRV_.Delete();
+	//descriptorSRV_.Delete();
 }
 
 void ImGuiController::BeginFrame() {
