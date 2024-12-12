@@ -318,6 +318,8 @@ void RenderConsole::DisplayOutliner() {
 
 	SelectableBehavior(outliner_);
 
+	isOutlinerWindowForcus_ = ImGui::IsWindowFocused();
+
 	ImGui::End();
 }
 
@@ -378,7 +380,7 @@ void RenderConsole::DisplayScene() {
 		ImGuizmo::SetDrawlist();
 	}
 
-	if (ImGui::IsWindowHovered() && (ImGui::IsMouseClicked(2) || ImGui::IsMouseClicked(3))) {
+	if (ImGui::IsWindowHovered() && (ImGui::IsMouseClicked(ImGuiMouseButton_Middle) || ImGui::IsMouseClicked(ImGuiMouseButton_Right))) {
 		//!< window hovered 状態で mouse middle click が押された場合, camera操作(forcus)を許可.
 		ImGui::SetWindowFocus();
 	}
@@ -605,13 +607,28 @@ void RenderConsole::DrawGame() {
 	{ //* transition
 
 		game_->BeginXclipse(context);
-		
-		computePipeline_->SetPipeline(kTransition_SampleLighting, context);
 
-		BindBufferDesc bind = game_->GetTransitionSystematicBindDesc();
-		computePipeline_->BindComputeBuffer(kTransition_SampleLighting, context, bind);
+		{ //* transition
+			computePipeline_->SetPipeline(kTransition_SampleLighting, context);
 
-		computePipeline_->Dispatch(context, game_->GetSize());
+			BindBufferDesc bind = game_->GetTransitionSystematicBindDesc();
+			computePipeline_->BindComputeBuffer(kTransition_SampleLighting, context, bind);
+
+			computePipeline_->Dispatch(context, game_->GetSize());
+		}
+
+		{ //* atmosphere
+			computePipeline_->SetPipeline(kXclipse_Atmosphere, context);
+
+			BindBufferDesc bind = {};
+			bind.SetAddress("gCamera", game_->GetCamera()->GetGPUVirtualAddress());
+			bind.SetAddress("gConfig", game_->GetGetConfigVirtualAddress());
+			bind.SetHandle("gOutput", game_->GetXclipse()->GetResultBuffer()->GetGPUHandleSRV());
+
+			computePipeline_->BindComputeBuffer(kXclipse_Atmosphere, context, bind);
+			computePipeline_->Dispatch(context, game_->GetSize());
+
+		}
 
 		game_->EndXclipse(context);
 	}

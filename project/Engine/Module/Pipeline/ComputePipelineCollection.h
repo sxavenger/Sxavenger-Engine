@@ -18,7 +18,7 @@ enum ComputePipelineType {
 	kTransition_SampleLighting,
 
 	////* xclipse
-	//kXclipse_AtmoSphericScattering,
+	kXclipse_Atmosphere,
 
 	////* visual
 	//kVisual_Glayscale,
@@ -81,5 +81,7 @@ private:
 	void CreateTransition();
 
 	void CreateVisual();
+
+	void CreateXclipse();
 
 };

@@ -223,8 +223,12 @@ void Console::DisplayPerformace() {
 	ImGui::Text(text.c_str());
 
 	if (ImGui::BeginItemTooltip()) {
-		//ImGui::PlotLines("frame per second", (*fpsHistory_.begin()), );
-		// TODO:
+		std::vector<float> values(fpsHistory_.begin(), fpsHistory_.end());
+		auto max = std::ranges::max_element(values);
+
+		std::string overlay = std::format("max: {:.1f}", *max);
+
+		ImGui::PlotLines("fps", values.data(), static_cast<int32_t>(values.size()), 0, overlay.c_str(), 0.0f, *max, {200.0f, 40.0f});
 		ImGui::EndTooltip();
 	}
 

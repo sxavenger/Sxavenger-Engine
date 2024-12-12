@@ -153,6 +153,8 @@ private:
 	std::optional<BehaviorIterator> attributeIterator_ = std::nullopt; //!< 現在選択されているitretor
 	const BehaviorContainer*        attributeTable_    = nullptr;      //!< 選択されているiteratorのコンテナ
 
+	bool isOutlinerWindowForcus_ = false;
+
 	//* render behavior *//
 
 	std::list<std::unique_ptr<RenderBehavior>> behaviors_;
