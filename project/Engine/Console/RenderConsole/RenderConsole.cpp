@@ -21,6 +21,7 @@ _DXOBJECT_USING
 
 void RenderConsole::Init(Console* console) {
 	console_ = console;
+	Outliner::Init(console);
 
 	renderPipeline_ = std::make_unique<RenderPipelineCollection>();
 	renderPipeline_->Init();
@@ -50,6 +51,7 @@ void RenderConsole::Init(Console* console) {
 }
 
 void RenderConsole::Term() {
+	Outliner::Term();
 
 	buffer_.reset();
 
@@ -73,13 +75,13 @@ void RenderConsole::Term() {
 void RenderConsole::UpdateConsole() {
 	if (isDisplayRenderConsole_) {
 		//* behavior *//
-		UpdateUniqueRemove();
+		Outliner::UpdateUniqueRemove();
 
 		//* window *//
 		DisplayScene();
 		DisplayGame();
-		DisplayOutliner();
-		DisplayAttribute();
+		Outliner::DisplayOutliner();
+		Outliner::DisplayAttribute();
 		DisplayCanvas();
 		DisplayLayer();
 
@@ -105,41 +107,6 @@ void RenderConsole::Draw() {
 
 	DrawGame();
 	SxavengerSystem::TransitionAllocator();
-}
-
-BehaviorIterator RenderConsole::SetBehavior(BaseBehavior* behavior) {
-	return outliner_.emplace(outliner_.end(), behavior);
-}
-
-void RenderConsole::EraseBehavior(const BehaviorIterator& iterator) {
-	RemoveAttributeBehavior(iterator);
-	outliner_.erase(iterator);
-}
-
-void RenderConsole::ResetBehavior() {
-	RemoveUniqueBehavior();
-	ResetAttributeBehavior();
-	outliner_.clear();
-}
-
-void RenderConsole::RemoveAttributeBehavior(const BehaviorIterator& iterator) {
-	if (attributeIterator_.has_value() && *attributeIterator_.value() == *iterator) {
-		if (attributeIterator_.value() == attributeTable_->begin()) {
-			ResetAttributeBehavior();
-
-		} else {
-			attributeIterator_.value()--;
-		}
-	}
-}
-
-void RenderConsole::ResetAttributeBehavior() {
-	attributeIterator_ = std::nullopt;
-	attributeTable_    = nullptr;
-}
-
-void RenderConsole::RemoveUniqueBehavior() {
-	behaviors_.clear();
 }
 
 VisualIterator RenderConsole::SetLayer(BaseVisualLayer* layer) {
@@ -283,7 +250,7 @@ void RenderConsole::ShowGraphicsMenu() {
 		MenuDummy();
 
 		if (ImGui::Selectable("base behavior", false)) {
-			auto& behavior = behaviors_.emplace_back();
+			auto& behavior = Outliner::behaviors_.emplace_back();
 			behavior = std::make_unique<RenderBehavior>();
 		}
 
@@ -331,42 +298,6 @@ void RenderConsole::CreateFrame(const Vector2ui& size) {
 	game_ = std::make_unique<SxavGraphicsFrame>();
 	game_->Create(size, SxavGraphicsFrameType::kGame);
 	game_->SetCamera(gameCamera_.get());
-}
-
-void RenderConsole::DisplayOutliner() {
-	console_->DockingConsole();
-	ImGui::Begin("Outliner ## Render Console", nullptr, console_->GetWindowFlag());
-
-	SelectableBehavior(outliner_);
-
-	isOutlinerWindowForcus_ = ImGui::IsWindowFocused();
-
-	ImGui::End();
-}
-
-void RenderConsole::DisplayAttribute() {
-	console_->DockingConsole();
-	ImGui::Begin("Attribute ## Render Console", nullptr, console_->GetWindowFlag());
-
-	if (attributeIterator_.has_value()) {
-		auto behavior = (*attributeIterator_.value());
-
-		ImGui::SeparatorText(behavior->GetName().c_str());
-
-		behavior->BaseAttributeImGui();
-		ImGui::Separator();
-		ImGui::Spacing();
-
-		behavior->SystemAttributeImGui();
-		ImGui::Spacing();
-		behavior->SetAttributeImGui();
-
-		if (ImGui::IsWindowFocused()) {
-			//localCamera_->Update();
-		}
-	}
-
-	ImGui::End();
 }
 
 void RenderConsole::DisplayCanvas() {
@@ -425,113 +356,6 @@ void RenderConsole::DisplayGame() {
 	ImGui::End();
 }
 
-bool RenderConsole::IsSelectedBehavior(BaseBehavior* behavior) {
-	if (attributeIterator_.has_value()) {
-		return behavior == (*attributeIterator_.value());
-	}
-
-	return false;
-}
-
-void RenderConsole::SelectableBehavior(const BehaviorContainer& container) {
-
-	for (auto itr = container.begin(); itr != container.end(); ++itr) {
-		BaseBehavior* behavior = (*itr);
-		bool isSelected        = IsSelectedBehavior(behavior);
-
-		std::string label = behavior->GetName() + std::format("##{:p}", reinterpret_cast<void*>(behavior)); //!< 名前重複対策
-
-		// 非activeの場合, 灰色に
-		if (!behavior->IsActive()) {
-			ImGui::PushStyleColor(ImGuiCol_Text, kBehaviorDisableColor_);
-		}
-
-		if (behavior->GetChildren().empty()) { //!< 子がいない場合
-
-			if (ImGui::Selectable(label.c_str(), isSelected)) {
-				attributeIterator_ = itr;
-				attributeTable_    = &container;
-				//localCamera_->Reset();
-			}
-
-		} else {
-
-			ImGuiTreeNodeFlags flags
-				= ImGuiTreeNodeFlags_OpenOnDoubleClick
-				| ImGuiTreeNodeFlags_OpenOnArrow;
-
-			if (isSelected) {
-				flags |= ImGuiTreeNodeFlags_Selected;
-			}
-
-			bool isOpenTreeNode = ImGui::TreeNodeEx(label.c_str(), flags);
-
-			if (ImGui::IsItemClicked() && !ImGui::IsItemToggledOpen()) { //!< selectされた場合
-				attributeIterator_ = itr;
-				attributeTable_    = &container;
-				//localCamera_->Reset();
-			}
-
-			if (isOpenTreeNode) {
-				SelectableBehavior(behavior->GetChildren());
-				ImGui::TreePop();
-			}
-		}
-
-		if (!behavior->IsActive()) {
-			ImGui::PopStyleColor();
-		}
-	}
-}
-
-void RenderConsole::UpdateUniqueRemove() {
-	behaviors_.remove_if([](const std::unique_ptr<RenderBehavior>& behavior) {
-		return behavior->IsDelete();
-	});
-}
-
-void RenderConsole::DrawSystematicBehavior(SxavGraphicsFrame* frame, const BehaviorContainer& container) {
-	for (const auto& behavior : container) {
-		if (behavior->IsActive()) {
-			if (behavior->CheckRenderingFlag(BehaviorRenderingType::kSystematic)) {
-				behavior->DrawSystematic(frame);
-			}
-
-			if (!behavior->GetChildren().empty()) {
-				DrawSystematicBehavior(frame, behavior->GetChildren());
-			}
-		}
-	}
-}
-
-void RenderConsole::DrawAdaptiveBehavior(SxavGraphicsFrame* frame, const BehaviorContainer& container) {
-	for (const auto& behavior : container) {
-		if (behavior->IsActive()) {
-			if (behavior->CheckRenderingFlag(BehaviorRenderingType::kAdaptive)) {
-				behavior->DrawAdaptive(frame);
-			}
-
-			if (!behavior->GetChildren().empty()) {
-				DrawAdaptiveBehavior(frame, behavior->GetChildren());
-			}
-		}
-	}
-}
-
-void RenderConsole::DrawLateAdaptiveBehavior(SxavGraphicsFrame* frame, const BehaviorContainer& container) {
-	for (const auto& behavior : container) {
-		if (behavior->IsActive()) {
-			if (behavior->CheckRenderingFlag(BehaviorRenderingType::kLateAdaptive)) {
-				behavior->DrawLateAdaptive(frame);
-			}
-
-			if (!behavior->GetChildren().empty()) {
-				DrawLateAdaptiveBehavior(frame, behavior->GetChildren());
-			}
-		}
-	}
-}
-
 bool RenderConsole::IsSelectedLayer(BaseVisualLayer* layer) {
 	if (visualIterator_.has_value()) {
 		return (layer == (*visualIterator_.value()));
@@ -570,7 +394,7 @@ void RenderConsole::DrawScene() {
 		scene_->ClearSystematic(context);
 		scene_->ClearRasterizerDepth(context);
 
-		DrawSystematicBehavior(scene_.get(), outliner_);
+		DrawSystematicBehavior(scene_.get(), Outliner::GetOutliner());
 
 		scene_->EndSystematic(context);
 	}
@@ -593,8 +417,8 @@ void RenderConsole::DrawScene() {
 
 	{
 		scene_->BeginAdaptive(context);
-		DrawAdaptiveBehavior(scene_.get(), outliner_);
-		DrawLateAdaptiveBehavior(scene_.get(), outliner_);
+		DrawAdaptiveBehavior(scene_.get(), Outliner::GetOutliner());
+		DrawLateAdaptiveBehavior(scene_.get(), Outliner::GetOutliner());
 
 		if (game_ != nullptr && game_->GetCamera() != nullptr) {
 			game_->GetCamera()->DrawFrustum(ToColor4f(0xFAFA00FF), 4.0f);
@@ -620,7 +444,7 @@ void RenderConsole::DrawGame() {
 		game_->ClearSystematic(context);
 		game_->ClearRasterizerDepth(context);
 
-		DrawSystematicBehavior(game_.get(), outliner_);
+		DrawSystematicBehavior(game_.get(), Outliner::GetOutliner());
 
 		game_->EndSystematic(context);
 	}
@@ -663,7 +487,7 @@ void RenderConsole::DrawGame() {
 
 	{
 		game_->BeginAdaptive(context);
-		DrawAdaptiveBehavior(game_.get(), outliner_);
+		DrawAdaptiveBehavior(game_.get(), Outliner::GetOutliner());
 		SxavengerModule::DrawToScene(SxavengerSystem::GetMainThreadContext(), game_->GetCamera());
 		game_->EndAdaptive(context);
 	}
@@ -680,7 +504,7 @@ void RenderConsole::DrawGame() {
 
 	{
 		game_->BeginAdaptive(context);
-		DrawLateAdaptiveBehavior(game_.get(), outliner_);
+		DrawLateAdaptiveBehavior(game_.get(), Outliner::GetOutliner());
 		SxavengerModule::DrawToScene(SxavengerSystem::GetMainThreadContext(), game_->GetCamera());
 		game_->EndAdaptive(context);
 	}

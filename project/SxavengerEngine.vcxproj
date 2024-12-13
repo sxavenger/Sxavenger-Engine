@@ -149,6 +149,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="Engine\Asset\SxavengerAsset.cpp" />
     <ClCompile Include="Engine\Console\AssetConsole\AssetConsole.cpp" />
     <ClCompile Include="Engine\Console\Console.cpp" />
+    <ClCompile Include="Engine\Console\RenderConsole\Outliner.cpp" />
     <ClCompile Include="Engine\Console\RenderConsole\RenderBehavior.cpp" />
     <ClCompile Include="Engine\Console\RenderConsole\RenderConsole.cpp" />
     <ClCompile Include="Engine\Console\SystemConsole\SystemConsole.cpp" />
@@ -255,6 +256,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Engine\Asset\SxavengerAsset.h" />
     <ClInclude Include="Engine\Console\AssetConsole\AssetConsole.h" />
     <ClInclude Include="Engine\Console\Console.h" />
+    <ClInclude Include="Engine\Console\RenderConsole\Outliner.h" />
     <ClInclude Include="Engine\Console\RenderConsole\RenderBehavior.h" />
     <ClInclude Include="Engine\Console\RenderConsole\RenderConsole.h" />
     <ClInclude Include="Engine\Console\SystemConsole\SystemConsole.h" />
