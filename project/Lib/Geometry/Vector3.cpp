@@ -57,3 +57,19 @@ Vector3f Clamp(const Vector3f& v, const Vector3f& min, const Vector3f& max) {
 		std::clamp(v.z, min.z, max.z),
 	};
 }
+
+Vector3f Min(const Vector3f& x, const Vector3f& y) {
+	return {
+		std::min(x.x, y.x),
+		std::min(x.y, y.y),
+		std::min(x.z, y.z)
+	};
+}
+
+Vector3f Max(const Vector3f& x, const Vector3f& y) {
+	return {
+		std::max(x.x, y.x),
+		std::max(x.y, y.y),
+		std::max(x.z, y.z)
+	};
+}

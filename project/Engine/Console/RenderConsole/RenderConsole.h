@@ -4,8 +4,7 @@
 // include
 //-----------------------------------------------------------------------------------------
 //* console
-#include "RenderBehavior.h"
-
+#include "Outliner.h"
 
 //* engine
 #include <Engine/Asset/AssetLibrary/Texture/AssetTexture.h>
@@ -43,7 +42,8 @@ enum class FullScreenFrameType : uint8_t {
 ////////////////////////////////////////////////////////////////////////////////////////////
 // RenderConsole class
 ////////////////////////////////////////////////////////////////////////////////////////////
-class RenderConsole {
+class RenderConsole
+	: public Outliner {
 public:
 
 	//=========================================================================================
@@ -60,20 +60,6 @@ public:
 	void UpdateConsole();
 
 	void Draw();
-
-	//* behavior container option *//
-
-	BehaviorIterator SetBehavior(BaseBehavior* behavior);
-
-	void EraseBehavior(const BehaviorIterator& iterator);
-
-	void ResetBehavior();
-
-	void RemoveAttributeBehavior(const BehaviorIterator& iterator);
-
-	void ResetAttributeBehavior();
-
-	void RemoveUniqueBehavior();
 
 	//* visual iterator option *//
 
@@ -122,6 +108,7 @@ protected:
 
 	void ShowRenderConsoleMenu();
 	void ShowGraphicsMenu();
+	void ShowDebugMenu();
 
 	//* sub *//
 
@@ -144,17 +131,6 @@ private:
 	//* external *//
 
 	Console* console_ = nullptr;
-
-	//* behavior *//
-
-	BehaviorContainer outliner_;
-
-	std::optional<BehaviorIterator> attributeIterator_ = std::nullopt; //!< 現在選択されているitretor
-	const BehaviorContainer*        attributeTable_    = nullptr;      //!< 選択されているiteratorのコンテナ
-
-	//* render behavior *//
-
-	std::list<std::unique_ptr<RenderBehavior>> behaviors_;
 
 	//* visual *//
 
@@ -184,6 +160,8 @@ private:
 
 	FullScreenFrameType type_ = FullScreenFrameType::kGame;
 
+	Color4f frustumColor_ = ToColor4f(0xFAFA00FF);
+
 	//* Manipulate *//
 
 	WindowRect sceneRect_ = {};
@@ -191,31 +169,21 @@ private:
 	ImGuizmo::OPERATION operation_ = ImGuizmo::TRANSLATE;
 	ImGuizmo::MODE mode_           = ImGuizmo::LOCAL;
 
+	//* parameter *//
+
+	std::unique_ptr<DxObject::DimensionBuffer<Vector4f>> buffer_;
+
 	//=========================================================================================
 	// private methods
 	//=========================================================================================
 
 	//* window *//
 
-	void DisplayOutliner();
-	void DisplayAttribute();
-
 	void DisplayCanvas();
 	void DisplayLayer();
 
 	void DisplayScene();
 	void DisplayGame();
-
-	//* behavior methods *//
-
-	bool IsSelectedBehavior(BaseBehavior* behavior);
-	void SelectableBehavior(const BehaviorContainer& container);
-
-	void UpdateUniqueRemove();
-
-	void DrawSystematicBehavior(SxavGraphicsFrame* frame, const BehaviorContainer& container);
-	void DrawAdaptiveBehavior(SxavGraphicsFrame* frame, const BehaviorContainer& container);
-	void DrawLateAdaptiveBehavior(SxavGraphicsFrame* frame, const BehaviorContainer& container);
 
 	//* layer methods *//
 

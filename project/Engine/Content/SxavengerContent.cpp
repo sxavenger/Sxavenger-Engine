@@ -11,7 +11,8 @@
 ////////////////////////////////////////////////////////////////////////////////////////////
 namespace {
 	//* content
-	static std::unique_ptr<TextureCollection> sTextureCollection = nullptr;
+	static std::unique_ptr<TextureCollection> sTextureCollection      = nullptr;
+	static std::unique_ptr<SkinningComputePipeline> sSkinningPipeline = nullptr;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -21,10 +22,14 @@ namespace {
 void SxavengerContent::Init() {
 	sTextureCollection = std::make_unique<TextureCollection>();
 	sTextureCollection->Init();
+
+	sSkinningPipeline = std::make_unique<SkinningComputePipeline>();
+	sSkinningPipeline->Init();
 }
 
 void SxavengerContent::Term() {
 	sTextureCollection.reset();
+	sSkinningPipeline.reset();
 }
 
 std::shared_ptr<BaseTexture> SxavengerContent::TryCreateRenderTextureSafely(const std::string& key, const Vector2ui& size, const Color4f& clearColor, DXGI_FORMAT format) {
@@ -45,4 +50,12 @@ std::shared_ptr<UnorderedTexture> SxavengerContent::TryCreateUnorderedTexture(co
 
 const D3D12_GPU_DESCRIPTOR_HANDLE& SxavengerContent::GetTextureGPUHandleSRV(const std::string& key) {
 	return sTextureCollection->GetGPUHandleSRV(key);
+}
+
+void SxavengerContent::SetSkinningPipeline(const DirectXThreadContext* context) {
+	sSkinningPipeline->SetPipeline(context);
+}
+
+void SxavengerContent::DispatchSkinning(const DirectXThreadContext* context, const DxObject::BindBufferDesc& desc, uint32_t vertexSize) {
+	sSkinningPipeline->Dispatch(context, desc, vertexSize);
 }

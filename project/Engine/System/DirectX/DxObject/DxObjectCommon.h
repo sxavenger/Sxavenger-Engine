@@ -120,12 +120,12 @@ CompileProfile ToProfile(GraphicsShaderType type);
 // Configs
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-static const D3D_SHADER_MODEL kHeighestShaderModel = D3D_SHADER_MODEL_6_6;
+constexpr const D3D_SHADER_MODEL kHeighestShaderModel = D3D_SHADER_MODEL_6_6;
 static_assert(kHeighestShaderModel >= D3D_SHADER_MODEL_6_5, "mesh shader is 6.5 or higher");
 
-static const DXGI_FORMAT kScreenFormat    = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB; //!< 最終的なスクリーン画面のformat
-static const DXGI_FORMAT kOffscreenFormat = DXGI_FORMAT_R8G8B8A8_UNORM;      //!< offscreenで使われるformat
+constexpr const DXGI_FORMAT kScreenFormat    = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB; //!< 最終的なスクリーン画面のformat
+constexpr const DXGI_FORMAT kOffscreenFormat = DXGI_FORMAT_R8G8B8A8_UNORM;      //!< offscreenで使われるformat
 
-static const DXGI_FORMAT kDefaultDepthFormat = DXGI_FORMAT_D32_FLOAT_S8X24_UINT;
+constexpr const DXGI_FORMAT kDefaultDepthFormat = DXGI_FORMAT_D32_FLOAT_S8X24_UINT;
 
 _DXOBJECT_NAMESPACE_END

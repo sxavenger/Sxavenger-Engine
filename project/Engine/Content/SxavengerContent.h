@@ -5,6 +5,7 @@
 //-----------------------------------------------------------------------------------------
 //* content
 #include "Texture/TextureCollection.h"
+#include "Animation/SkinningPipeline.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // SxavengerContent class
@@ -31,6 +32,14 @@ public:
 	static std::shared_ptr<UnorderedTexture> TryCreateUnorderedTexture(const std::string& key, const Vector2ui& size, DXGI_FORMAT format = DxObject::kOffscreenFormat);
 
 	static const D3D12_GPU_DESCRIPTOR_HANDLE& GetTextureGPUHandleSRV(const std::string& key);
+
+	//-----------------------------------------------------------------------------------------
+	// Skinning option
+	//-----------------------------------------------------------------------------------------
+
+	static void SetSkinningPipeline(const DirectXThreadContext* context);
+
+	static void DispatchSkinning(const DirectXThreadContext* context, const DxObject::BindBufferDesc& desc, uint32_t vertexSize);
 
 private:
 

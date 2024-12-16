@@ -94,17 +94,25 @@
     <ClCompile Include="Engine\Module\Behavior\TransformBehavior.cpp" />
     <ClCompile Include="Engine\Module\Primitive\DebugPrimitive.cpp" />
     <ClCompile Include="Engine\Module\SxavengerModule.cpp" />
-    <ClCompile Include="Demo\Particle\Emitter.cpp" />
-    <ClCompile Include="Demo\Particle\BaseParticle.cpp" />
     <ClCompile Include="Engine\Module\Behavior\InstanceBehavior.cpp" />
     <ClCompile Include="Engine\Module\Material\MaterialComponent.cpp" />
-    <ClCompile Include="Demo\DemoParticle\Illumination.cpp" />
-    <ClCompile Include="Demo\DemoParticle\Smoke.cpp" />
     <ClCompile Include="Engine\Content\Animation\Skeleton.cpp" />
     <ClCompile Include="Engine\Content\Animation\Animation.cpp" />
     <ClCompile Include="Engine\Content\Animation\SkinCluster.cpp" />
-    <ClCompile Include="Engine\Content\Animation\Animator.cpp" />
     <ClCompile Include="Engine\Content\Animation\AnimationGroup.cpp" />
+    <ClCompile Include="Engine\System\DirectX\DxObject\DxUnorderedDimensionBuffer.cpp" />
+    <ClCompile Include="Engine\Content\Animation\SkeletonMesh.cpp" />
+    <ClCompile Include="Engine\Module\Behavior\AnimationBehavior.cpp" />
+    <ClCompile Include="Demo\AnimationDemo.cpp" />
+    <ClCompile Include="Engine\Content\Animation\SkinningPipeline.cpp" />
+    <ClCompile Include="Engine\Module\Collider\Collider.cpp" />
+    <ClCompile Include="Engine\Module\Collider\CollisionDetection.cpp" />
+    <ClCompile Include="Engine\Module\Collider\ColliderCollection.cpp" />
+    <ClCompile Include="Lib\Sxl\Formatter.cpp" />
+    <ClCompile Include="Engine\Console\RenderConsole\Outliner.cpp" />
+    <ClCompile Include="Demo\Ground.cpp" />
+    <ClCompile Include="Engine\Adapter\Particle\Emitter.cpp" />
+    <ClCompile Include="Engine\Adapter\Particle\BaseParticle.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\System\Window\Window.h" />
@@ -201,19 +209,27 @@
     <ClInclude Include="Engine\Module\Behavior\TransformBehavior.h" />
     <ClInclude Include="Engine\Module\Primitive\DebugPrimitive.h" />
     <ClInclude Include="Engine\Module\SxavengerModule.h" />
-    <ClInclude Include="Demo\Particle\Emitter.h" />
-    <ClInclude Include="Demo\Particle\BaseParticle.h" />
     <ClInclude Include="Engine\Module\Behavior\InstanceBehavior.h" />
     <ClInclude Include="Engine\Module\Material\MaterialComponent.h" />
-    <ClInclude Include="Demo\DemoParticle\Illumination.h" />
-    <ClInclude Include="Demo\DemoParticle\Smoke.h" />
     <ClInclude Include="Engine\Module\Animation\Animation.h" />
     <ClInclude Include="Engine\Content\Animation\Animation.h" />
     <ClInclude Include="Engine\Content\Animation\BornNode.h" />
     <ClInclude Include="Engine\Content\Animation\JointWeight.h" />
     <ClInclude Include="Engine\Content\Animation\Skeleton.h" />
     <ClInclude Include="Engine\Content\Animation\SkinCluster.h" />
-    <ClInclude Include="Engine\Content\Animation\Animator.h" />
     <ClInclude Include="Engine\Content\Animation\AnimationGroup.h" />
+    <ClInclude Include="Engine\System\DirectX\DxObject\DxUnorderedDimensionBuffer.h" />
+    <ClInclude Include="Engine\Content\Animation\SkeletonMesh.h" />
+    <ClInclude Include="Engine\Module\Behavior\AnimationBehavior.h" />
+    <ClInclude Include="Demo\AnimationDemo.h" />
+    <ClInclude Include="Engine\Content\Animation\SkinningPipeline.h" />
+    <ClInclude Include="Engine\Module\Collider\Collider.h" />
+    <ClInclude Include="Engine\Module\Collider\CollisionDetection.h" />
+    <ClInclude Include="Engine\Module\Collider\ColliderCollection.h" />
+    <ClInclude Include="Lib\Sxl\Formatter.h" />
+    <ClInclude Include="Engine\Console\RenderConsole\Outliner.h" />
+    <ClInclude Include="Demo\Ground.h" />
+    <ClInclude Include="Engine\Adapter\Particle\Emitter.h" />
+    <ClInclude Include="Engine\Adapter\Particle\BaseParticle.h" />
   </ItemGroup>
 </Project>

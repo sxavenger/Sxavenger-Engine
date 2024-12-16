@@ -7,6 +7,8 @@
 #include <Engine/System/Window/GameWindow.h>
 
 #include "Demo/ChessBoard.h"
+#include "Demo/AnimationDemo.h"
+#include "Demo/Ground.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // GameScene class
@@ -31,9 +33,10 @@ private:
 
 	std::shared_ptr<GameWindow> mainWindow_;
 
-	bool renderWindowSwitch_ = true;
-
+	//* demo
 	std::unique_ptr<ChessBoard> chess_;
+	std::unique_ptr<AnimationDemo> animationDemo_;
+	std::unique_ptr<Ground> ground_;
 
 	//=========================================================================================
 	// private methods

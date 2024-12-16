@@ -8,10 +8,9 @@
 
 //* c++
 #include <list>
-#include <memory>
 #include <string>
 #include <optional>
-#include <variant>
+#include <bitset>
 
 //-----------------------------------------------------------------------------------------
 // forward
@@ -20,14 +19,13 @@ class BaseBehavior;
 class SxavGraphicsFrame;
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// BehaviorRenderingFlag enum
+// BehaviorRenderingType enum class
 ////////////////////////////////////////////////////////////////////////////////////////////
-enum BehaviorRenderingFlag {
-	kBehaviorRendering_None         = 0,
-	kBehaviorRendering_Systematic   = 1 << 0,
-	kBehaviorRendering_Adaptive     = 1 << 1,
-	kBehaviorRendering_LateAdaptive = 1 << 2,
-	kBehaviorRendering_Raytracing   = 1 << 3,
+enum class BehaviorRenderingType : uint8_t {
+	kSystematic,
+	kAdaptive,
+	kLateAdaptive,
+	kRaytracing,
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -63,9 +61,14 @@ public:
 
 	void ResetIterator();
 
+	//* rendering option *//
+
+	void SetRenderingFlag(BehaviorRenderingType type, bool isRendering = true) { renderingFlag_.set(static_cast<uint8_t>(type)) = isRendering; }
+
 	//* derivative behaivor methods *//
 	//* ImGui command
 
+	void BaseAttributeImGui();
 	virtual void SystemAttributeImGui() {} //!< system using
 	virtual void SetAttributeImGui() {}    //!< user側で定義可能
 
@@ -79,11 +82,11 @@ public:
 
 	const std::string& GetName() const { return name_; }
 
-	const uint32_t GetRenderingFlag() const { return renderingFlag_; }
+	bool CheckRenderingFlag(BehaviorRenderingType type) const { return renderingFlag_.test(static_cast<uint8_t>(type)); }
 
 	const BehaviorContainer& GetChildren() const { return children_; }
 
-	const bool IsActive() const { return isActive_; }
+	bool IsActive() const { return isActive_; }
 
 protected:
 
@@ -93,14 +96,15 @@ protected:
 
 	std::string name_ = "New Behavior";
 
-	uint32_t renderingFlag_ = kBehaviorRendering_None;
-	bool isActive_          = true; //!< TODO: methods define
+	bool isActive_ = true; //!< TODO: methods define
 
 private:
 
 	//=========================================================================================
 	// private variables
 	//=========================================================================================
+
+	//* iterator and node *//
 
 	//!< listとして登録された場合, iteratorが保存される.
 	//* outlinerとchildは両方となることはない.
@@ -111,6 +115,10 @@ private:
 
 	//!< 自身が親となっているnode
 	BehaviorContainer children_;
+
+	//* rendering flag *//
+
+	std::bitset<static_cast<uint8_t>(BehaviorRenderingType::kRaytracing) + 1> renderingFlag_ = {};
 
 	//=========================================================================================
 	// private methods

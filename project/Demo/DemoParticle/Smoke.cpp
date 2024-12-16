@@ -47,7 +47,7 @@ void Smoke::Init() {
 	SxavengerSystem::PushTask(model_);
 	model_->WaitCompleted();
 
-	InstanceBehavior::renderingFlag_ = kBehaviorRendering_Adaptive;
+	InstanceBehavior::SetRenderingFlag(BehaviorRenderingType::kAdaptive);
 	InstanceBehavior::model_ = model_.get();
 	
 }

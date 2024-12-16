@@ -176,5 +176,10 @@ private:
 	std::queue<std::shared_ptr<TaskThreadExecution>> tasks_;
 	// FIXME: 所有者が破棄されると未定義動作になる.
 
+	//=========================================================================================
+	// private methods
+	//=========================================================================================
+
+	std::shared_ptr<TaskThreadExecution> GetTask();
 
 };

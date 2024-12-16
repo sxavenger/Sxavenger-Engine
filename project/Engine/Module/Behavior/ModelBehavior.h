@@ -28,6 +28,7 @@ public:
 
 	//* derivative behaivor methods *//
 	//* ImGui command
+
 	virtual void SystemAttributeImGui() override;
 
 	//* Draw methods

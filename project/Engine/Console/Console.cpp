@@ -145,23 +145,35 @@ void Console::DisplayMainMenu() {
 
 	if (ImGui::BeginMenu("Window")) {
 		MenuDummy();
-		ImGui::Checkbox("display system console", &(SystemConsole::isDisplaySystemConsole_));
-		ImGui::Checkbox("display render console", &(RenderConsole::isDisplayRenderConsole_));
-		ImGui::Checkbox("display asset console", &(AssetConsole::isDisplayAssetConsole_));
+		
+		if (ImGui::BeginMenu("console window")) {
+			MenuDummy();
+			ImGui::Checkbox("display system console", &(SystemConsole::isDisplaySystemConsole_));
+			ImGui::Checkbox("display render console", &(RenderConsole::isDisplayRenderConsole_));
+			ImGui::Checkbox("display asset console",  &(AssetConsole::isDisplayAssetConsole_));
+			ImGui::EndMenu();
+		}
+		
+		if (ImGui::BeginMenu("sub window")) {
+			MenuDummy();
 
-		if (subWindow_.expired()) {
-			if (ImGui::Button("create sub window")) {
-				if (!window_.expired()) {
-					subWindow_ = SxavengerSystem::TryCreateSubWindow(window_.lock()->GetSize(), L"Sxavenger Console Window");
-					subWindow_.lock()->SetWindowIcon("packages/icon/SxavengerEngineSubIcon.ico", { 32, 32 });
+			if (subWindow_.expired()) {
+				if (ImGui::Button("create sub window")) {
+					if (!window_.expired()) {
+						subWindow_ = SxavengerSystem::TryCreateSubWindow(window_.lock()->GetSize(), L"Sxavenger Console Window");
+						subWindow_.lock()->SetWindowIcon("packages/icon/SxavengerEngineSubIcon.ico", { 32, 32 });
+					}
+				}
+
+
+			} else {
+				if (ImGui::Button("close window")) {
+					auto window = subWindow_.lock();
+					window->Close();
 				}
 			}
 
-		} else {
-			if (ImGui::Button("close window")) {
-				auto window = subWindow_.lock();
-				window->Close();
-			}
+			ImGui::EndMenu();
 		}
 
 		ImGui::EndMenu();
@@ -179,6 +191,12 @@ void Console::DisplayMainMenu() {
 		ImGui::EndMenu();
 	}
 
+	if (ImGui::BeginMenu("Debug")) {
+		MenuDummy();
+		RenderConsole::ShowDebugMenu();
+		ImGui::EndMenu();
+	}
+
 	if (ImGui::BeginMenu("Graphics")) {
 		MenuDummy();
 		RenderConsole::ShowGraphicsMenu();
@@ -189,13 +207,9 @@ void Console::DisplayMainMenu() {
 }
 
 void Console::DisplayPerformace() {
-	// systemの状態によってstyleを変える
-	ImGuiStyle& style = ImGui::GetStyle();
-	ImVec4 defaultWindowColor = style.Colors[ImGuiCol_WindowBg]; //!< 後で元に戻すので保存
-
 	if (SystemConsole::IsUpdateRequired()) {
 		// windowの色を変更
-		style.Colors[ImGuiCol_WindowBg] = ImGuiController::ToImVec4({ 45, 5, 8, 255 });
+		ImGui::PushStyleColor(ImGuiCol_WindowBg, ImGuiController::ToImVec4({ 45, 5, 8, 255 }));
 	}
 
 	DockingConsole();
@@ -203,14 +217,33 @@ void Console::DisplayPerformace() {
 
 	DeltaTimePoint<TimeUnit::s> framesPerSec = Performance::GetDeltaTime<TimeUnit::s>();
 
-	ImGui::Text("exec speed / frame: %.6f", framesPerSec.time);
-	ImGui::SameLine();
-	ImGui::Text("FPS: %.0f", 1.0f / framesPerSec.time);
-	
+	std::string text = "";
+	text += std::format("[exec speed / frame]: {:.6f}", framesPerSec.time) + " ";
+	text += std::format("[frame per second]: {:.1f}", 1.0f / framesPerSec.time);
+	ImGui::Text(text.c_str());
+
+	if (ImGui::BeginItemTooltip()) {
+		std::vector<float> values(fpsHistory_.begin(), fpsHistory_.end());
+		auto max = std::ranges::max_element(values);
+
+		std::string overlay = std::format("max: {:.1f}", *max);
+
+		ImGui::PlotLines("fps", values.data(), static_cast<int32_t>(values.size()), 0, overlay.c_str(), 0.0f, *max, {200.0f, 40.0f});
+		ImGui::EndTooltip();
+	}
 
 	ImGui::End();
 
-	style.Colors[ImGuiCol_WindowBg] = defaultWindowColor;
+	if (SystemConsole::IsUpdateRequired()) {
+		// historyに保存
+		fpsHistory_.emplace_back(1.0f / framesPerSec.time);
+
+		while (fpsHistory_.size() >= kHistoryCount_) {
+			fpsHistory_.pop_front();
+		}
+
+		ImGui::PopStyleColor();
+	}
 }
 
 bool Console::IsForcusConsoleWindow() {

@@ -1,0 +1,5 @@
+{
+  "C_Cpp.clang_format_style": "{ BasedOnStyle: LLVM, IndentWidth: 4, ColumnLimit: 0, AllowShortIfStatementsOnASingleLine: false, BreakBeforeBraces: Allman }",
+  "editor.formatOnSave": true,
+  "editor.formatOnType": true
+}

@@ -107,7 +107,7 @@ void SxavGraphicsFrame::EndVisual(const DirectXThreadContext* context) {
 }
 
 void SxavGraphicsFrame::TransitionXclipseToAdaptive(const DirectXThreadContext* context) {
-	CopyTexture(context, adaptive_->GetTexture(), xclipse_->GetTexture());
+	CopyTexture(context, adaptive_->GetTexture(), xclipse_->GetResultBuffer());
 }
 
 void SxavGraphicsFrame::TransitionAdaptiveToVisual(const DirectXThreadContext* context) {
@@ -126,7 +126,7 @@ DxObject::BindBufferDesc SxavGraphicsFrame::GetTransitionSystematicBindDesc() co
 	bind.SetHandle("gPosition", systematic_->GetGPUHandleSRV(SystematicRenderFrame::GBuffer::kPosition));
 	bind.SetAddress("gCamera",  camera_->GetGPUVirtualAddress());
 	bind.SetAddress("gConfig",  config_->GetGPUVirtualAddress());
-	bind.SetHandle("gXclipse",  xclipse_->GetTexture()->GetGPUHandleUAV());
+	bind.SetHandle("gXclipse",  xclipse_->GetResultBuffer()->GetGPUHandleUAV());
 
 	return bind;
 }

@@ -3,7 +3,9 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
+//* module
 #include "Primitive/DebugPrimitive.h"
+#include "Collider/ColliderCollection.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // SxavengerModule class
@@ -36,6 +38,20 @@ public:
 	static void DrawBox(const Vector3f& min, const Vector3f& max, const Color4f& color);
 
 	static DebugPrimitive* GetDebugPrimitive();
+
+	//-----------------------------------------------------------------------------------------
+	// collider collection option
+	//-----------------------------------------------------------------------------------------
+
+	static void SetCollider(Collider* collider);
+
+	static void EraseCollider(Collider* collider);
+
+	static void CheckCollision();
+
+	static void DrawCollider();
+
+	static ColliderCollection* GetColliderCollection();
 
 private:
 };

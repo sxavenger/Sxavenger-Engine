@@ -5,6 +5,7 @@
 //-----------------------------------------------------------------------------------------
 //* animation
 #include "Animation.h"
+#include "AnimationGroup.h"
 #include "BornNode.h"
 
 //* engine
@@ -48,7 +49,8 @@ struct Skeleton {
 
 	void Create(const BornNode& node);
 
-	void Update(const Animation& animation, DeltaTimePoint<TimeUnit::s> time);
+	void Update(const Animation& animation, DeltaTimePoint<TimeUnit::s> time, bool isLoop = true);
+	void Update(const AnimationGroup& animationGroup, DeltaTimePoint<TimeUnit::s> time, bool isLoop = true);
 
 	void TransitionAnimation(
 		const Animation& animationA, DeltaTimePoint<TimeUnit::s> timeA,

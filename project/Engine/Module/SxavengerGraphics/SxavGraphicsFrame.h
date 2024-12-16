@@ -83,6 +83,7 @@ public:
 	//* getter *//
 
 	SystematicRenderFrame* GetSystematic() const { return systematic_.get(); }
+	XclipseProcessFrame* GetXclipse() const { return xclipse_.get(); }
 	AdaptiveRenderFrame* GetAdaptive() const { return adaptive_.get(); }
 	VisualProcessFrame* GetVisual() const { return visual_.get(); }
 

@@ -83,8 +83,8 @@ public:
 
 	//* getter *//
 
-	const QuaternionTransform& GetTransform() const { return uvTransform_; }
-	QuaternionTransform& GetTransform() { return uvTransform_; }
+	const QuaternionTransform& GetTransform() const { return transform_; }
+	QuaternionTransform& GetTransform() { return transform_; }
 
 protected:
 
@@ -92,7 +92,7 @@ protected:
 	// protected variables
 	//=========================================================================================
 
-	QuaternionTransform uvTransform_;
+	QuaternionTransform transform_;
 
 };
 

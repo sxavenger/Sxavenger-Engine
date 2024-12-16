@@ -35,6 +35,9 @@ void Texture::Load(const std::filesystem::path& filepath, const DirectXThreadCon
 	resource_            = CreateTextureResource(device, metadata);
 	intermediateResouce_ = UploadTextureData(resource_.Get(), mipImage, device, commandList);
 
+	resource_->SetName(L"texture");
+	intermediateResouce_->SetName(L"intermediate texture");
+
 	// SRV - shaderResourceViewの生成
 	{
 		D3D12_SHADER_RESOURCE_VIEW_DESC desc = {};
@@ -221,6 +224,8 @@ void RenderTexture::Create(const Vector2ui& size, const Color4f& clearColor, DXG
 			&clearValue,
 			IID_PPV_ARGS(&resource_)
 		);
+
+		resource_->SetName(L"render texture");
 	}
 
 	// SRV - shaderResourceViewの生成
@@ -327,6 +332,8 @@ void UnorderedTexture::Create(const Vector2ui& size, DXGI_FORMAT format) {
 			nullptr,
 			IID_PPV_ARGS(&resource_)
 		);
+
+		resource_->SetName(L"unordered texture");
 	}
 
 	// SRV - shaderResourceViewの生成

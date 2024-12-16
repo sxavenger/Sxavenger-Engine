@@ -13,9 +13,6 @@
 //* lib
 #include <Lib/Environment.h>
 
-#include "Lib/Adapter/Json/JsonAdapter.h"
-
-
 ////////////////////////////////////////////////////////////////////////////////////////////
 // GameScene class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -23,7 +20,7 @@
 void GameScene::Run() {
 
 	//-----------------------------------------------------------------------------------------
-	// 初期化処理
+	// init process.
 	//-----------------------------------------------------------------------------------------
 	sConsole->Init();
 	SystemInit();
@@ -31,7 +28,7 @@ void GameScene::Run() {
 	SxavengerSystem::ExecuteAllAllocator();
 
 	//-----------------------------------------------------------------------------------------
-	// ゲームループ
+	// game loop.
 	//-----------------------------------------------------------------------------------------
 	while (SxavengerSystem::ProcessMessage()) {
 
@@ -39,7 +36,7 @@ void GameScene::Run() {
 		SxavengerSystem::BeginImGuiFrame();
 
 		//-----------------------------------------------------------------------------------------
-		// 更新処理
+		// update process
 		//-----------------------------------------------------------------------------------------
 
 		SxavengerSystem::GetInput()->Update();
@@ -53,7 +50,7 @@ void GameScene::Run() {
 		SxavengerSystem::TransitionAllocator();
 
 		//-----------------------------------------------------------------------------------------
-		// 描画処理
+		// draw process.
 		//-----------------------------------------------------------------------------------------
 
 		Draw();
@@ -76,7 +73,7 @@ void GameScene::Run() {
 	}
 
 	//-----------------------------------------------------------------------------------------
-	// 終了処理
+	// term process
 	//-----------------------------------------------------------------------------------------
 
 	Term();
@@ -98,14 +95,13 @@ void GameScene::SystemInit() {
 
 		std::shared_ptr<UnorderedTexture> white1x1 = SxavengerContent::TryCreateUnorderedTexture("white1x1", { 1, 1 });
 		white1x1->TransitionBeginUnordered(SxavengerSystem::GetMainThreadContext());
-		compute->SetPipeline(SxavengerSystem::GetCommandList());
-
+		compute->SetPipeline(SxavengerSystem::GetMainThreadContext()->GetDxCommand());
 
 		DxObject::BindBufferDesc bind = {};
 		bind.SetHandle("gOutput", white1x1->GetGPUHandleUAV());
 		compute->BindComputeBuffer(SxavengerSystem::GetMainThreadContext()->GetDxCommand(), bind);
 
-		compute->Dispatch(SxavengerSystem::GetCommandList(), 1, 1, 1);
+		compute->Dispatch(SxavengerSystem::GetMainThreadContext()->GetDxCommand(), 1, 1, 1);
 
 		white1x1->TransitionEndUnordered(SxavengerSystem::GetMainThreadContext());
 		SxavengerSystem::TransitionAllocator();
@@ -118,10 +114,21 @@ void GameScene::Init() {
 	chess_->Init();
 	chess_->SetToConsole();
 
+	animationDemo_ = std::make_unique<AnimationDemo>();
+	animationDemo_->Init();
+	animationDemo_->SetToConsole();
+
+	ground_ = std::make_unique<Ground>();
+	ground_->Init();
+	ground_->SetToConsole();
+
+	sConsole->Log(std::format("window size: {}", mainWindow_->GetSize()));
+
 }
 
 void GameScene::Update() {
 	chess_->Update();
+	animationDemo_->Update();
 }
 
 void GameScene::Draw() {
@@ -132,6 +139,7 @@ void GameScene::DrawScreen() {
 
 void GameScene::Term() {
 	chess_.reset();
+	animationDemo_.reset();
 
 	SxavengerSystem::ExecuteAllAllocator();
 }

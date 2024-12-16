@@ -41,6 +41,8 @@ private:
 
 	std::filesystem::path filepath_;
 
+	bool isLoad_ = false;
+
 	//* extension *//
 
 	static const std::unordered_set<std::filesystem::path> extension_;

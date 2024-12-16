@@ -8,7 +8,7 @@
 
 //* engine
 #include <Engine/Asset/SxavengerAsset.h>
-#include <Engine/Module/VisualLayer/VisualDoF.h>
+#include <Engine/Module/Collider/Collider.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // ChessBoard class
@@ -32,6 +32,10 @@ public:
 
 	void DrawSystematic(_MAYBE_UNUSED const SxavGraphicsFrame* frame) override;
 
+	void Wait() { model_->WaitCompleted(); }
+
+	void SetAttributeImGui() override;
+
 private:
 
 	//=========================================================================================
@@ -39,5 +43,7 @@ private:
 	//=========================================================================================
 
 	std::shared_ptr<AssetModel> model_;
+
+	std::unique_ptr<Collider> collider_;
 
 };

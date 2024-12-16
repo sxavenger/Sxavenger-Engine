@@ -23,7 +23,7 @@
 static const uint32_t kInfluenceCount = 4;
 
 struct VertexInfluence {
-	std::array<float, kInfluenceCount>   weights;
+	std::array<float,   kInfluenceCount> weights;
 	std::array<int32_t, kInfluenceCount> jointIndices;
 };
 

@@ -66,9 +66,9 @@ void SxavengerSystemEngine::ExecuteAllAllocator() {
 	sMainThreadContext->ExecuteAllAllocators();
 }
 
-ID3D12GraphicsCommandList6* SxavengerSystemEngine::GetCommandList() {
-	return sMainThreadContext->GetCommandList();
-}
+//ID3D12GraphicsCommandList6* SxavengerSystemEngine::GetCommandList() {
+//	return sMainThreadContext->GetCommandList();
+//}
 
 DirectXThreadContext* SxavengerSystemEngine::GetMainThreadContext() {
 	return sMainThreadContext.get();

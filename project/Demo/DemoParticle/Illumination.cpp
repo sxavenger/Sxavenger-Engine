@@ -27,7 +27,8 @@ void Illmination::Init() {
 	model_->WaitCompleted();
 
 	InstanceBehavior::model_         = model_.get();
-	InstanceBehavior::renderingFlag_ = kBehaviorRendering_Adaptive | kBehaviorRendering_Systematic;
+	InstanceBehavior::SetRenderingFlag(BehaviorRenderingType::kAdaptive);
+	InstanceBehavior::SetRenderingFlag(BehaviorRenderingType::kSystematic);
 
 	CreateInstance(kInstanceCount_);
 

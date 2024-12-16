@@ -21,6 +21,7 @@ _DXOBJECT_USING
 
 void RenderConsole::Init(Console* console) {
 	console_ = console;
+	Outliner::Init(console);
 
 	renderPipeline_ = std::make_unique<RenderPipelineCollection>();
 	renderPipeline_->Init();
@@ -42,9 +43,17 @@ void RenderConsole::Init(Console* console) {
 
 	checkerTexture_ = SxavengerAsset::ImportTexture("asset/textures/checker_black.png");
 	checkerTexture_.lock()->Load(SxavengerSystem::GetMainThreadContext());
+
+	buffer_ = std::make_unique<DxObject::DimensionBuffer<Vector4f>>();
+	buffer_->Create(SxavengerSystem::GetDxDevice(), 1);
+
+	(*buffer_)[0] = { 0.0f, 1.0f, 0.0f, 20.0f };
 }
 
 void RenderConsole::Term() {
+	Outliner::Term();
+
+	buffer_.reset();
 
 	renderPipeline_.reset();
 	computePipeline_.reset();
@@ -66,15 +75,29 @@ void RenderConsole::Term() {
 void RenderConsole::UpdateConsole() {
 	if (isDisplayRenderConsole_) {
 		//* behavior *//
-		UpdateUniqueRemove();
+		Outliner::UpdateUniqueRemove();
 
 		//* window *//
 		DisplayScene();
 		DisplayGame();
-		DisplayOutliner();
-		DisplayAttribute();
+		Outliner::DisplayOutliner();
+		Outliner::DisplayAttribute();
 		DisplayCanvas();
 		DisplayLayer();
+
+		ImGui::Begin("debug");
+
+		if (ImGui::DragFloat3("Sun direction", &(*buffer_)[0].x, 0.01f)) {
+			Vector3f sun = { (*buffer_)[0].x, (*buffer_)[0].y, (*buffer_)[0].z };
+			sun = Normalize(sun);
+			(*buffer_)[0].x = sun.x;
+			(*buffer_)[0].y = sun.y;
+			(*buffer_)[0].z = sun.z;
+		}
+
+		ImGui::DragFloat("Sun Intencity", &(*buffer_)[0].w, 0.01f);
+
+		ImGui::End();
 	}
 }
 
@@ -84,41 +107,6 @@ void RenderConsole::Draw() {
 
 	DrawGame();
 	SxavengerSystem::TransitionAllocator();
-}
-
-BehaviorIterator RenderConsole::SetBehavior(BaseBehavior* behavior) {
-	return outliner_.emplace(outliner_.end(), behavior);
-}
-
-void RenderConsole::EraseBehavior(const BehaviorIterator& iterator) {
-	RemoveAttributeBehavior(iterator);
-	outliner_.erase(iterator);
-}
-
-void RenderConsole::ResetBehavior() {
-	RemoveUniqueBehavior();
-	ResetAttributeBehavior();
-	outliner_.clear();
-}
-
-void RenderConsole::RemoveAttributeBehavior(const BehaviorIterator& iterator) {
-	if (attributeIterator_.has_value() && *attributeIterator_.value() == *iterator) {
-		if (attributeIterator_.value() == attributeTable_->begin()) {
-			ResetAttributeBehavior();
-
-		} else {
-			attributeIterator_.value()--;
-		}
-	}
-}
-
-void RenderConsole::ResetAttributeBehavior() {
-	attributeIterator_ = std::nullopt;
-	attributeTable_    = nullptr;
-}
-
-void RenderConsole::RemoveUniqueBehavior() {
-	behaviors_.clear();
 }
 
 VisualIterator RenderConsole::SetLayer(BaseVisualLayer* layer) {
@@ -262,7 +250,7 @@ void RenderConsole::ShowGraphicsMenu() {
 		MenuDummy();
 
 		if (ImGui::Selectable("base behavior", false)) {
-			auto& behavior = behaviors_.emplace_back();
+			auto& behavior = Outliner::behaviors_.emplace_back();
 			behavior = std::make_unique<RenderBehavior>();
 		}
 
@@ -283,6 +271,25 @@ void RenderConsole::ShowGraphicsMenu() {
 	}
 }
 
+void RenderConsole::ShowDebugMenu() {
+	if (ImGui::BeginMenu("Camera")) {
+		MenuDummy();
+		ImGui::SeparatorText("camera");
+		ImGui::ColorEdit4("frustum", &frustumColor_.r);
+		ImGui::EndMenu();
+	}
+
+	if (ImGui::BeginMenu("Collider")) {
+		MenuDummy();
+
+		ImGui::SeparatorText("collider");
+		auto colliderCollection = SxavengerModule::GetColliderCollection();
+		colliderCollection->SystemDebugGui();
+
+		ImGui::EndMenu();
+	}
+}
+
 void RenderConsole::CreateFrame(const Vector2ui& size) {
 	scene_ = std::make_unique<SxavGraphicsFrame>();
 	scene_->Create(size, SxavGraphicsFrameType::kDebug);
@@ -291,36 +298,6 @@ void RenderConsole::CreateFrame(const Vector2ui& size) {
 	game_ = std::make_unique<SxavGraphicsFrame>();
 	game_->Create(size, SxavGraphicsFrameType::kGame);
 	game_->SetCamera(gameCamera_.get());
-}
-
-void RenderConsole::DisplayOutliner() {
-	console_->DockingConsole();
-	ImGui::Begin("Outliner ## Render Console", nullptr, console_->GetWindowFlag());
-
-	SelectableBehavior(outliner_);
-
-	ImGui::End();
-}
-
-void RenderConsole::DisplayAttribute() {
-	console_->DockingConsole();
-	ImGui::Begin("Attribute ## Render Console", nullptr, console_->GetWindowFlag());
-
-	if (attributeIterator_.has_value()) {
-		auto behavior = (*attributeIterator_.value());
-
-		ImGui::SeparatorText(behavior->GetName().c_str());
-
-		behavior->SystemAttributeImGui();
-		ImGui::Spacing();
-		behavior->SetAttributeImGui();
-
-		if (ImGui::IsWindowFocused()) {
-			//localCamera_->Update();
-		}
-	}
-
-	ImGui::End();
 }
 
 void RenderConsole::DisplayCanvas() {
@@ -350,12 +327,12 @@ void RenderConsole::DisplayScene() {
 	ImGui::Begin("Scene ## Render Console", nullptr, console_->GetWindowFlag() | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
 
 	if (scene_ != nullptr) {
-		ShowTextureImGuiFullWindow(checkerTexture_.lock().get()); //< HACK
+		ShowTextureImGuiFullWindow(checkerTexture_.lock().get()); //!< HACK
 		sceneRect_ = ShowTextureImGuiFullWindow(scene_->GetAdaptive()->GetTexture());
 		ImGuizmo::SetDrawlist();
 	}
 
-	if (ImGui::IsWindowHovered() && ImGui::IsMouseClicked(2)) {
+	if (ImGui::IsWindowHovered() && (ImGui::IsMouseClicked(ImGuiMouseButton_Middle) || ImGui::IsMouseClicked(ImGuiMouseButton_Right))) {
 		//!< window hovered 状態で mouse middle click が押された場合, camera操作(forcus)を許可.
 		ImGui::SetWindowFocus();
 	}
@@ -377,97 +354,6 @@ void RenderConsole::DisplayGame() {
 	}
 
 	ImGui::End();
-}
-
-bool RenderConsole::IsSelectedBehavior(BaseBehavior* behavior) {
-	if (attributeIterator_.has_value()) {
-		return behavior == (*attributeIterator_.value());
-	}
-
-	return false;
-}
-
-void RenderConsole::SelectableBehavior(const BehaviorContainer& container) {
-
-	for (auto itr = container.begin(); itr != container.end(); ++itr) {
-		BaseBehavior* behavior = (*itr);
-		bool isSelected        = IsSelectedBehavior(behavior);
-
-		std::string label = behavior->GetName() + std::format("##{:p}", reinterpret_cast<void*>(behavior)); //!< 名前重複対策
-
-		if (behavior->GetChildren().empty()) { //!< 子がいない場合
-			if (ImGui::Selectable(label.c_str(), isSelected)) {
-				attributeIterator_ = itr;
-				attributeTable_    = &container;
-				//localCamera_->Reset();
-			}
-
-		} else {
-
-			ImGuiTreeNodeFlags flags
-				= ImGuiTreeNodeFlags_OpenOnDoubleClick
-				| ImGuiTreeNodeFlags_OpenOnArrow;
-
-			if (isSelected) {
-				flags |= ImGuiTreeNodeFlags_Selected;
-			}
-
-			bool isOpenTreeNode = ImGui::TreeNodeEx(label.c_str(), flags);
-
-			if (ImGui::IsItemClicked() && !ImGui::IsItemToggledOpen()) { //!< selectされた場合
-				attributeIterator_ = itr;
-				attributeTable_    = &container;
-				//localCamera_->Reset();
-			}
-
-			if (isOpenTreeNode) {
-				SelectableBehavior(behavior->GetChildren());
-				ImGui::TreePop();
-			}
-		}
-	}
-}
-
-void RenderConsole::UpdateUniqueRemove() {
-	behaviors_.remove_if([](const std::unique_ptr<RenderBehavior>& behavior) {
-		return behavior->IsDelete();
-	});
-}
-
-void RenderConsole::DrawSystematicBehavior(SxavGraphicsFrame* frame, const BehaviorContainer& container) {
-	for (const auto& behavior : container) {
-		if (behavior->GetRenderingFlag() & kBehaviorRendering_Systematic) {
-			behavior->DrawSystematic(frame);
-		}
-
-		if (!behavior->GetChildren().empty()) {
-			DrawSystematicBehavior(frame, behavior->GetChildren());
-		}
-	}
-}
-
-void RenderConsole::DrawAdaptiveBehavior(SxavGraphicsFrame* frame, const BehaviorContainer& container) {
-	for (const auto& behavior : container) {
-		if (behavior->GetRenderingFlag() & kBehaviorRendering_Adaptive) {
-			behavior->DrawAdaptive(frame);
-		}
-
-		if (!behavior->GetChildren().empty()) {
-			DrawAdaptiveBehavior(frame, behavior->GetChildren());
-		}
-	}
-}
-
-void RenderConsole::DrawLateAdaptiveBehavior(SxavGraphicsFrame* frame, const BehaviorContainer& container) {
-	for (const auto& behavior : container) {
-		if (behavior->GetRenderingFlag() & kBehaviorRendering_LateAdaptive) {
-			behavior->DrawLateAdaptive(frame);
-		}
-
-		if (!behavior->GetChildren().empty()) {
-			DrawLateAdaptiveBehavior(frame, behavior->GetChildren());
-		}
-	}
 }
 
 bool RenderConsole::IsSelectedLayer(BaseVisualLayer* layer) {
@@ -508,7 +394,7 @@ void RenderConsole::DrawScene() {
 		scene_->ClearSystematic(context);
 		scene_->ClearRasterizerDepth(context);
 
-		DrawSystematicBehavior(scene_.get(), outliner_);
+		DrawSystematicBehavior(scene_.get(), Outliner::GetOutliner());
 
 		scene_->EndSystematic(context);
 	}
@@ -531,14 +417,15 @@ void RenderConsole::DrawScene() {
 
 	{
 		scene_->BeginAdaptive(context);
-		DrawAdaptiveBehavior(scene_.get(), outliner_);
-		DrawLateAdaptiveBehavior(scene_.get(), outliner_);
+		DrawAdaptiveBehavior(scene_.get(), Outliner::GetOutliner());
+		DrawLateAdaptiveBehavior(scene_.get(), Outliner::GetOutliner());
 
 		if (game_ != nullptr && game_->GetCamera() != nullptr) {
 			game_->GetCamera()->DrawFrustum(ToColor4f(0xFAFA00FF), 4.0f);
 		}
 
 		SxavengerModule::DrawGrid(kOrigin3<float>, 12.0f);
+		SxavengerModule::DrawCollider();
 		SxavengerModule::DrawToScene(SxavengerSystem::GetMainThreadContext(), scene_->GetCamera());
 		
 		scene_->EndAdaptive(context);
@@ -557,7 +444,7 @@ void RenderConsole::DrawGame() {
 		game_->ClearSystematic(context);
 		game_->ClearRasterizerDepth(context);
 
-		DrawSystematicBehavior(game_.get(), outliner_);
+		DrawSystematicBehavior(game_.get(), Outliner::GetOutliner());
 
 		game_->EndSystematic(context);
 	}
@@ -565,22 +452,61 @@ void RenderConsole::DrawGame() {
 	{ //* transition
 
 		game_->BeginXclipse(context);
-		
-		computePipeline_->SetPipeline(kTransition_SampleLighting, context);
 
-		BindBufferDesc bind = game_->GetTransitionSystematicBindDesc();
-		computePipeline_->BindComputeBuffer(kTransition_SampleLighting, context, bind);
+		{ //* transition
+			game_->GetXclipse()->ResetResultBufferIndex();
+			computePipeline_->SetPipeline(kTransition_SampleLighting, context);
 
-		computePipeline_->Dispatch(context, game_->GetSize());
+			BindBufferDesc bind = game_->GetTransitionSystematicBindDesc();
+			computePipeline_->BindComputeBuffer(kTransition_SampleLighting, context, bind);
 
-		game_->EndXclipse(context);
+			computePipeline_->Dispatch(context, game_->GetSize());
+		}
+
+		{ //!< ssao
+			game_->GetXclipse()->NextResultBufferIndex();
+
+			computePipeline_->SetPipeline(kXclipse_SSAO, context);
+
+			BindBufferDesc bind = {};
+			bind.SetHandle("gInput", game_->GetXclipse()->GetPrevBuffer()->GetGPUHandleUAV());
+			bind.SetAddress("gCamera", game_->GetCamera()->GetGPUVirtualAddress());
+			bind.SetAddress("gConfig", game_->GetGetConfigVirtualAddress());
+			bind.SetHandle("gNormal", game_->GetSystematic()->GetGPUHandleSRV(SystematicRenderFrame::GBuffer::kNormal));
+			bind.SetHandle("gPosition", game_->GetSystematic()->GetGPUHandleSRV(SystematicRenderFrame::GBuffer::kPosition));
+			bind.SetHandle("gDepth", game_->GetDepthBufferController()->GetRasterizerGPUHandleSRV());
+			bind.SetHandle("gOutput", game_->GetXclipse()->GetResultBuffer()->GetGPUHandleUAV());
+
+			computePipeline_->BindComputeBuffer(kXclipse_SSAO, context, bind);
+			computePipeline_->Dispatch(context, game_->GetSize());
+
+			game_->EndXclipse(context);
+		}
+
+		{ //* atmosphere
+
+			game_->GetXclipse()->NextResultBufferIndex();
+
+			computePipeline_->SetPipeline(kXclipse_Atmosphere, context);
+
+			BindBufferDesc bind = {};
+			bind.SetHandle("gInput", game_->GetXclipse()->GetPrevBuffer()->GetGPUHandleSRV());
+			bind.SetAddress("gSun", buffer_->GetGPUVirtualAddress());
+			bind.SetAddress("gCamera", game_->GetCamera()->GetGPUVirtualAddress());
+			bind.SetAddress("gConfig", game_->GetGetConfigVirtualAddress());
+			bind.SetHandle("gOutput", game_->GetXclipse()->GetResultBuffer()->GetGPUHandleUAV());
+
+			computePipeline_->BindComputeBuffer(kXclipse_Atmosphere, context, bind);
+			computePipeline_->Dispatch(context, game_->GetSize());
+
+		}
 	}
 
 	game_->TransitionXclipseToAdaptive(context);
 
 	{
 		game_->BeginAdaptive(context);
-		DrawAdaptiveBehavior(game_.get(), outliner_);
+		DrawAdaptiveBehavior(game_.get(), Outliner::GetOutliner());
 		SxavengerModule::DrawToScene(SxavengerSystem::GetMainThreadContext(), game_->GetCamera());
 		game_->EndAdaptive(context);
 	}
@@ -597,7 +523,7 @@ void RenderConsole::DrawGame() {
 
 	{
 		game_->BeginAdaptive(context);
-		DrawLateAdaptiveBehavior(game_.get(), outliner_);
+		DrawLateAdaptiveBehavior(game_.get(), Outliner::GetOutliner());
 		SxavengerModule::DrawToScene(SxavengerSystem::GetMainThreadContext(), game_->GetCamera());
 		game_->EndAdaptive(context);
 	}
