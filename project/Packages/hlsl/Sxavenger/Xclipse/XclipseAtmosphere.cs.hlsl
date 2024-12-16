@@ -8,6 +8,7 @@
 // Input
 //=========================================================================================
 
+Texture2D<float4> gInput         : register(t0);
 ConstantBuffer<Camera3d> gCamera : register(b0);
 
 struct Sun {
@@ -212,9 +213,10 @@ void main(uint3 dispatchThreadId : SV_DispatchThreadID) {
 	}
 
 	// åªç›Ç‹Ç≈ÇÃcolorÇÃéÊÇËèoÇµ
-	float4 color = gOutput[currentIndex];
+	float4 color = gInput[currentIndex];
 	
 	if (color.a != 0.0f) {
+		gOutput[currentIndex] = color;
 		return;
 	}
 	
@@ -233,7 +235,6 @@ void main(uint3 dispatchThreadId : SV_DispatchThreadID) {
 	//	col = lerp(col, float3(0.1f, 0.1f, 0.1f), abs(d));
 
 	//}
-
 	
 	gOutput[currentIndex] = float4(col, 1.0f);
 	

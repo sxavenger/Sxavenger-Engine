@@ -136,11 +136,10 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
   <ItemGroup>
     <ClCompile Include="Demo\AnimationDemo.cpp" />
     <ClCompile Include="Demo\ChessBoard.cpp" />
-    <ClCompile Include="Demo\DemoParticle\Illumination.cpp" />
-    <ClCompile Include="Demo\DemoParticle\Smoke.cpp" />
+    <ClCompile Include="Demo\Ground.cpp" />
     <ClCompile Include="Demo\GuizmoScene.cpp" />
-    <ClCompile Include="Demo\Particle\BaseParticle.cpp" />
-    <ClCompile Include="Demo\Particle\Emitter.cpp" />
+    <ClCompile Include="Engine\Adapter\Particle\BaseParticle.cpp" />
+    <ClCompile Include="Engine\Adapter\Particle\Emitter.cpp" />
     <ClCompile Include="Engine\Asset\Asset.cpp" />
     <ClCompile Include="Engine\Asset\AssetLibrary\IAsset.cpp" />
     <ClCompile Include="Engine\Asset\AssetLibrary\Model\AssetModel.cpp" />
@@ -243,11 +242,10 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
   <ItemGroup>
     <ClInclude Include="Demo\AnimationDemo.h" />
     <ClInclude Include="Demo\ChessBoard.h" />
-    <ClInclude Include="Demo\DemoParticle\Illumination.h" />
-    <ClInclude Include="Demo\DemoParticle\Smoke.h" />
+    <ClInclude Include="Demo\Ground.h" />
     <ClInclude Include="Demo\GuizmoScene.h" />
-    <ClInclude Include="Demo\Particle\BaseParticle.h" />
-    <ClInclude Include="Demo\Particle\Emitter.h" />
+    <ClInclude Include="Engine\Adapter\Particle\BaseParticle.h" />
+    <ClInclude Include="Engine\Adapter\Particle\Emitter.h" />
     <ClInclude Include="Engine\Asset\Asset.h" />
     <ClInclude Include="Engine\Asset\AssetLibrary\IAsset.h" />
     <ClInclude Include="Engine\Asset\AssetLibrary\Model\AssetModel.h" />

@@ -454,12 +454,33 @@ void RenderConsole::DrawGame() {
 		game_->BeginXclipse(context);
 
 		{ //* transition
+			game_->GetXclipse()->ResetResultBufferIndex();
 			computePipeline_->SetPipeline(kTransition_SampleLighting, context);
 
 			BindBufferDesc bind = game_->GetTransitionSystematicBindDesc();
 			computePipeline_->BindComputeBuffer(kTransition_SampleLighting, context, bind);
 
 			computePipeline_->Dispatch(context, game_->GetSize());
+		}
+
+		{ //!< ssao
+			game_->GetXclipse()->NextResultBufferIndex();
+
+			computePipeline_->SetPipeline(kXclipse_SSAO, context);
+
+			BindBufferDesc bind = {};
+			bind.SetHandle("gInput", game_->GetXclipse()->GetPrevBuffer()->GetGPUHandleUAV());
+			bind.SetAddress("gCamera", game_->GetCamera()->GetGPUVirtualAddress());
+			bind.SetAddress("gConfig", game_->GetGetConfigVirtualAddress());
+			bind.SetHandle("gNormal", game_->GetSystematic()->GetGPUHandleSRV(SystematicRenderFrame::GBuffer::kNormal));
+			bind.SetHandle("gPosition", game_->GetSystematic()->GetGPUHandleSRV(SystematicRenderFrame::GBuffer::kPosition));
+			bind.SetHandle("gDepth", game_->GetDepthBufferController()->GetRasterizerGPUHandleSRV());
+			bind.SetHandle("gOutput", game_->GetXclipse()->GetResultBuffer()->GetGPUHandleUAV());
+
+			computePipeline_->BindComputeBuffer(kXclipse_SSAO, context, bind);
+			computePipeline_->Dispatch(context, game_->GetSize());
+
+			game_->EndXclipse(context);
 		}
 
 		{ //* atmosphere
@@ -469,7 +490,7 @@ void RenderConsole::DrawGame() {
 			computePipeline_->SetPipeline(kXclipse_Atmosphere, context);
 
 			BindBufferDesc bind = {};
-			//bind.SetHandle("gInput", game_->GetXclipse()->GetPrevBuffer()->GetGPUHandleSRV);
+			bind.SetHandle("gInput", game_->GetXclipse()->GetPrevBuffer()->GetGPUHandleSRV());
 			bind.SetAddress("gSun", buffer_->GetGPUVirtualAddress());
 			bind.SetAddress("gCamera", game_->GetCamera()->GetGPUVirtualAddress());
 			bind.SetAddress("gConfig", game_->GetGetConfigVirtualAddress());
@@ -479,8 +500,6 @@ void RenderConsole::DrawGame() {
 			computePipeline_->Dispatch(context, game_->GetSize());
 
 		}
-
-		game_->EndXclipse(context);
 	}
 
 	game_->TransitionXclipseToAdaptive(context);

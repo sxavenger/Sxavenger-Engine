@@ -52,4 +52,8 @@ void ComputePipelineCollection::CreateXclipse() {
 	pipelines_[kXclipse_Atmosphere] = std::make_unique<ReflectionComputePipelineState>();
 	pipelines_[kXclipse_Atmosphere]->CreateBlob("sxavenger/xclipse/xclipseAtmosphere.cs.hlsl");
 	pipelines_[kXclipse_Atmosphere]->ReflectionPipeline(SxavengerSystem::GetDxDevice());
+
+	pipelines_[kXclipse_SSAO] = std::make_unique<ReflectionComputePipelineState>();
+	pipelines_[kXclipse_SSAO]->CreateBlob("sxavenger/xclipse/xclipseSSAO.cs.hlsl");
+	pipelines_[kXclipse_SSAO]->ReflectionPipeline(SxavengerSystem::GetDxDevice());
 }

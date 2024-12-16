@@ -19,6 +19,7 @@ enum ComputePipelineType {
 
 	////* xclipse
 	kXclipse_Atmosphere,
+	kXclipse_SSAO,
 
 	////* visual
 	//kVisual_Glayscale,

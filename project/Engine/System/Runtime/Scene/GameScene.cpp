@@ -118,6 +118,10 @@ void GameScene::Init() {
 	animationDemo_->Init();
 	animationDemo_->SetToConsole();
 
+	ground_ = std::make_unique<Ground>();
+	ground_->Init();
+	ground_->SetToConsole();
+
 	sConsole->Log(std::format("window size: {}", mainWindow_->GetSize()));
 
 }
