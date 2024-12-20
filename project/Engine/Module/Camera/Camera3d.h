@@ -73,6 +73,8 @@ protected:
 		Matrix4x4 projMatrix        = Matrix4x4::Identity();
 		Matrix4x4 projInverseMatrix = Matrix4x4::Identity();
 		Vector3f position;
+		float nearZ;
+		float farZ;
 	};
 
 	//=========================================================================================

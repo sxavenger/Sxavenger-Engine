@@ -26,13 +26,25 @@ void SystemConsole::UpdateConsole() {
 	}
 }
 
-void SystemConsole::Log(const std::string& log, const std::optional<Color4f>& color) {
-	// logの追加
-	logs_.emplace_front(log, color);
-
+void SystemConsole::Log(const std::string& label, const std::string& detail, const std::optional<Color4f> color) {
 	while (logs_.size() >= limitLog_) {
-		logs_.pop_back(); //!< 一番古いログの削除
+		logs_.pop_front();
 	}
+
+	if (!logs_.empty()) {
+		auto& back = logs_.back();
+
+		//!< 同じログが連続している場合
+		if (label == back.label && detail == back.detail && back.color == color) {
+			back.duplication++;
+			return;
+		}
+	}
+
+	LogEntry& log = logs_.emplace_back();
+	log.label  = label;
+	log.detail = detail;
+	log.color  = color;
 }
 
 void SystemConsole::ShowSystemMenu() {
@@ -131,27 +143,55 @@ void SystemConsole::DisplayLog() {
 	console_->DockingConsole();
 	ImGui::Begin("Log ## System Console", nullptr, console_->GetWindowFlag());
 
-	ImVec2 cntRegionMax = ImGui::GetWindowContentRegionMax();
-	ImVec2 cntRegionMin = ImGui::GetWindowContentRegionMin();
-	ImVec2 wndSize = { cntRegionMax.x - cntRegionMin.x, cntRegionMax.y - cntRegionMin.y };
+	ImVec2 regionMax = ImGui::GetWindowContentRegionMax();
+	ImVec2 regionMin = ImGui::GetWindowContentRegionMin();
+	ImVec2 windowSize = { regionMax.x - regionMin.x, regionMax.y - regionMin.y };
 
-	ImGui::BeginChild(ImGui::GetID((void*)0), wndSize, ImGuiChildFlags_Border, ImGuiWindowFlags_AlwaysVerticalScrollbar | ImGuiWindowFlags_AlwaysHorizontalScrollbar);
+	{
+		ImGui::BeginChild(ImGui::GetID((void*)0), windowSize, ImGuiChildFlags_Border, ImGuiWindowFlags_AlwaysVerticalScrollbar | ImGuiWindowFlags_AlwaysHorizontalScrollbar);
 
-	for (const auto& log : logs_) {
-		if (log.second.has_value()) {
-			ImGui::TextColored(
-				{ log.second.value().r, log.second.value().g, log.second.value().b, log.second.value().a },
-				log.first.c_str()
-			);
+		// logの表示
+		for (const auto& log : logs_) {
+			if (log.color.has_value()) {
 
-		} else {
-			ImGui::Text(
-				log.first.c_str()
-			);
+				Color4f color = log.color.value();
+
+				if (log.duplication != 0) {
+					ImGui::TextColored(
+						{ color.r, color.g, color.b, color.a },
+						std::format("{} [x{}]", log.label, log.duplication + 1).c_str()
+					);
+
+				} else {
+					ImGui::TextColored(
+						{ color.r, color.g, color.b, color.a },
+						log.label.c_str()
+					);
+				}
+
+			} else {
+				if (log.duplication != 0) {
+					ImGui::Text(
+						std::format("{} [x{}]", log.label, log.duplication + 1).c_str()
+					);
+
+				} else {
+					ImGui::Text(
+						log.label.c_str()
+					);
+				}
+			}
+
+			if (ImGui::IsItemHovered() && !log.detail.empty()) {
+				if (ImGui::BeginTooltip()) {
+					ImGui::Text(log.detail.c_str());
+					ImGui::EndTooltip();
+				}
+			}
 		}
-	}
 
-	ImGui::EndChild();
+		ImGui::EndChild();
+	}
 
 	//* setting *//
 

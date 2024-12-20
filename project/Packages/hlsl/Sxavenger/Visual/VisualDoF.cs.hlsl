@@ -68,7 +68,7 @@ void main(uint3 dispatchThreadId : SV_DispatchThreadID) {
 	}
 
 	float4 input  = gInput[currentId];
-	float depth   = FixedDepth(gDepth[currentId]);
+	float depth   = FixedDepth(gDepth.Load(uint3(currentId, 0)));
 	
 	float4 output = (float4)0;
 

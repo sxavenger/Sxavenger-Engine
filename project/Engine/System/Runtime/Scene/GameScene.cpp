@@ -122,13 +122,12 @@ void GameScene::Init() {
 	ground_->Init();
 	ground_->SetToConsole();
 
-	sConsole->Log(std::format("window size: {}", mainWindow_->GetSize()));
-
 }
 
 void GameScene::Update() {
 	chess_->Update();
 	animationDemo_->Update();
+
 }
 
 void GameScene::Draw() {

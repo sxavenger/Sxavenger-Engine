@@ -45,6 +45,8 @@ void Camera3d::UpdateMatrix() {
 void Camera3d::SetProjection(float fovY, float aspectRatio, float nearClip, float farClip) {
 	(*buffer_)[0].projMatrix        = Matrix::MakePerspectiveFov(fovY, aspectRatio, nearClip, farClip);
 	(*buffer_)[0].projInverseMatrix = (*buffer_)[0].projMatrix.Inverse();
+	(*buffer_)[0].nearZ             = nearClip;
+	(*buffer_)[0].farZ              = farClip;
 }
 
 void Camera3d::DrawFrustum(const Color4f& color, const std::optional<float>& length) {

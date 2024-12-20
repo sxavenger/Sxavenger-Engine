@@ -10,9 +10,9 @@
 
 Texture2D<float4> gInput : register(t0); //!< input xclipse texture
 
-Texture2D<float4> gNormal   : register(t1); //!< systematic normal texture
+Texture2D<float4> gNormal : register(t1); //!< systematic normal texture
 Texture2D<float4> gPosition : register(t2); //!< systematic normal texture
-Texture2D<float>  gDepth    : register(t3);  //!< depth texture
+Texture2D<float> gDepth : register(t3); //!< depth texture
 
 ConstantBuffer<Camera3d> gCamera : register(b0); //!< camera buffer
 
@@ -23,13 +23,13 @@ ConstantBuffer<Camera3d> gCamera : register(b0); //!< camera buffer
 RWTexture2D<float4> gOutput : register(u0); //!< output xclipse texture
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// static const variables
+// const static variables
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-static const uint kKernelSize    = 64; //!< kernel size
-static const float kKernelRadius = 0.2f; //!< kernel radius
+static const uint  kKernelSize = 64;
+static const float kKernelRadius = 1.0f;
 
-static const float kMinDistance = 0.1f; //!< minimum distance
+static const float kMinDistance = 0.01f; //!< minimum distance
 static const float kMaxDistance = 1.0f; //!< maximum distance
 
 static const float kStrength = 1.0f; //!< occulusion strength
@@ -37,16 +37,6 @@ static const float kStrength = 1.0f; //!< occulusion strength
 ////////////////////////////////////////////////////////////////////////////////////////////
 // methods
 ////////////////////////////////////////////////////////////////////////////////////////////
-
-float FixedDepth(float depth) {
-	float z = depth;
-	// 逆射影行列を使用してビュー空間の位置に戻す
-	float4 clipSpacePos = float4(0.0, 0.0, z, 1.0);
-	float4 viewSpacePos = mul(clipSpacePos, gCamera.projInverseMatrix);
-	
-	// viewSpacePos.z / viewSpacePos.w で線形深度を取得
-	return viewSpacePos.z / viewSpacePos.w;
-}
 
 float3 GeneratePseudoRandom(uint2 currentIndex) { //!< test random function
 	uint seed = currentIndex.x * 0x1f1f1f1f + currentIndex.y;
@@ -58,15 +48,19 @@ float3 GeneratePseudoRandom(uint2 currentIndex) { //!< test random function
 	));
 }
 
-float3 GetViewPosition(uint2 currentIndex) {
-	float2 uv = (currentIndex + 0.5f) / gConfig.size;
-	float2 ndc = uv * 2.0f - 1.0f;
-	
-	float4 clipSpacePos = float4(ndc, gDepth[currentIndex].r, 1.0f);
+float FixedDepth(float depth) {
+	// 逆射影行列を使用してビュー空間の位置に戻す
+	float4 clipSpacePos = float4(0.0, 0.0, depth, 1.0);
 	float4 viewSpacePos = mul(clipSpacePos, gCamera.projInverseMatrix);
 	
-	return viewSpacePos.xyz / viewSpacePos.w;
+	// viewSpacePos.z / viewSpacePos.w で線形深度を取得
+	return viewSpacePos.z / viewSpacePos.w;
 }
+
+float GetLinearDepth(float viewZ) {
+	return gCamera.near + viewZ * (gCamera.far - gCamera.near);
+}
+
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // main
@@ -74,22 +68,26 @@ float3 GetViewPosition(uint2 currentIndex) {
 [numthreads(_NUMTHREADS_X, _NUMTHREADS_Y, 1)]
 void main(uint3 dispatchThreadId : SV_DispatchThreadID) {
 	
-	 uint2 currentIndex = dispatchThreadId.xy;
+	uint2 currentIndex = dispatchThreadId.xy;
 	uint2 size         = gConfig.size;
 
 	// 画像サイズ以上の場合, 書き込みをしない
 	if (any(currentIndex >= size)) {
 		return;
 	}
+
+	float4 input = gInput.Load(uint3(currentIndex, 0));
 	
-	//float4 color = gInput[currentIndex];
-	
-	//if (color.a == 0.0f) {
+	//if (input.a == 0.0f) {
+	//	gOutput[currentIndex] = input;
 	//	return;
 	//}
 	
-	float3 normal = normalize(gNormal[currentIndex].xyz + 1.0f) * 0.5f;
-	float3 viewPosition = GetViewPosition(currentIndex);
+	//* texture data
+	float3 normal   = normalize(gNormal[currentIndex].xyz * 2.0f - 1.0f);
+	//normal = normalize(mul(normal, (float3x3)gCamera.projMatrix));
+
+	float4 position = mul(gPosition[currentIndex], gCamera.viewMatrix);
 	float  depth    = FixedDepth(gDepth[currentIndex].r);
 	
 	//float3 random = GeneratePseudoRandom(currentIndex);
@@ -107,16 +105,18 @@ void main(uint3 dispatchThreadId : SV_DispatchThreadID) {
 	float occlusion = 0.0f;
 	
 	for (uint i = 0; i < kKernelSize; ++i) {
-		float3 sampleVector = mul(GeneratePseudoRandom(uint2(i, i)), kernelMatrix);
-		float3 samplePoint    = viewPosition + sampleVector * kKernelRadius;
+		float3 sampleVector   = mul(GeneratePseudoRandom(uint2(i, i)), kernelMatrix);
+		float3 samplePoint    = (position.xyz + sampleVector) * kKernelRadius;
 		float4 samplePointNDC = mul(float4(samplePoint, 1.0), gCamera.projMatrix);
 		samplePointNDC /= samplePointNDC.w;
 		
 		float2 samplePointUV = (samplePointNDC.xy + 1.0f) * 0.5f;
-		uint2  samplePointIndex = uint2(samplePointUV * size);
+		int2  samplePointIndex = int2(samplePointUV * size);
 		
-		float depthSample = FixedDepth(gDepth[samplePointIndex].r);
-		float delta       = depth - depthSample;
+		float depthSample = gDepth.Load(uint3(samplePointIndex, 0));
+		float depthSample2 = samplePoint.z;
+		
+		float delta = depthSample - depthSample2;
 		
 		if (delta > kMinDistance && delta < kMaxDistance) {
 			occlusion += 1.0f;
@@ -128,7 +128,4 @@ void main(uint3 dispatchThreadId : SV_DispatchThreadID) {
 
 	gOutput[currentIndex] = float4(col, 1.0f);
 
-	//float3 final = lerp(gInput[currentIndex].rgb, col, occlusion);
-	//gOutput[currentIndex] = float4(final, 1.0f);
-	
 }

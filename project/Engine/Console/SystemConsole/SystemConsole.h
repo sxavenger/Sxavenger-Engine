@@ -13,6 +13,7 @@
 #include <optional>
 #include <string>
 #include <deque>
+#include <source_location>
 
 //-----------------------------------------------------------------------------------------
 // forward
@@ -37,9 +38,9 @@ public:
 
 	//* console option *//
 
-	void Log(const std::string& log, const std::optional<Color4f>& color = std::nullopt);
+	void Log(const std::string& label, const std::string& detail = "", const std::optional<Color4f> color = std::nullopt);
 
-	void BreakPoint(); //!< TODO:
+	void BreakPoint(const std::source_location& location = std::source_location::current()); //!< TODO:
 
 	//* getter *//
 
@@ -63,6 +64,16 @@ protected:
 
 private:
 
+	////////////////////////////////////////////////////////////////////////////////////////////
+	// LogEntry structure
+	////////////////////////////////////////////////////////////////////////////////////////////
+	struct LogEntry {
+		std::string label;            //!< ラベル
+		std::string detail;           //!< 詳細
+		std::optional<Color4f> color; //!< logの色
+		uint32_t duplication = 0;     //!< 重複数
+	};
+
 	//=========================================================================================
 	// private variables
 	//=========================================================================================
@@ -82,13 +93,8 @@ private:
 
 	//* log *//
 
-	//! [pair]
-	//! first: ログ内容
-	//!  second: [optional]
-	//!  nullopt: 通常text
-	//!  has_value:    colorText
-	std::deque<std::pair<std::string, std::optional<Color4f>>> logs_;
-	uint32_t limitLog_ = 32;
+	std::deque<LogEntry> logs_;
+	uint32_t limitLog_ = 1 << 4;
 
 	//=========================================================================================
 	// private methods

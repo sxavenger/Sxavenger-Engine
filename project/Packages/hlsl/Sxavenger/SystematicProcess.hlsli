@@ -24,14 +24,14 @@ ConstantBuffer<ProcessConfig> gConfig : register(b10);
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 float4 GetAlbedo(uint2 index) {
-	return gAlbedo[index];
+	return gAlbedo.Load(uint3(index, 0));
 }
 
 float3 GetNormal(uint2 index) {
-	float4 normal = gNormal[index];
+	float4 normal = gNormal.Load(uint3(index, 0));
 	return normalize(normal.rgb * 2.0f - 1.0f);
 }
 
 float4 GetPosition(uint2 index) {
-	return gPosition[index];
+	return gPosition.Load(uint3(index, 0));
 }

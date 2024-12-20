@@ -9,4 +9,6 @@ struct Camera3d {
 	float4x4 projMatrix;
 	float4x4 projInverseMatrix;
 	float3   position;
+	float    near;
+	float    far;
 };
