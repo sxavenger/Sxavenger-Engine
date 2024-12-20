@@ -52,7 +52,7 @@ struct std::formatter<Vector4<T>> : Sxl::BaseFormatter<Vector4<T>> {};
 //-----------------------------------------------------------------------------------------
 
 using Vector4f = Vector4<float>;
-using Vector4i = Vector4<int>;
+using Vector4i = Vector4<int32_t>;
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Color4 class
@@ -135,7 +135,7 @@ constexpr const Color4f kWhite4 = { 1.0f, 1.0f, 1.0f, 1.0f };
 //-----------------------------------------------------------------------------------------
 
 constexpr Color4<int32_t> ToColor4i(const Color4<float>& color) {
-	return { static_cast<int>(color.r * 255.0f), static_cast<int>(color.g * 255.0f), static_cast<int>(color.b * 255.0f), static_cast<int>(color.a * 255.0f) };
+	return { static_cast<int32_t>(color.r * 255.0f), static_cast<int32_t>(color.g * 255.0f), static_cast<int32_t>(color.b * 255.0f), static_cast<int32_t>(color.a * 255.0f) };
 }
 
 constexpr Color4<float> ToColor4f(const Color4<int32_t>& color) {
