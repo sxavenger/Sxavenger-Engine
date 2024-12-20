@@ -4,21 +4,20 @@
 // include
 //-----------------------------------------------------------------------------------------
 //* asset
-#include "../IAsset.h"
+#include "../BaseAsset.h"
 
 //* engine
 #include <Engine/System/DirectX/DirectXContext.h>
 #include <Engine/Content/Texture/Texture.h>
 
 //* c++
-#include <filesystem>
 #include <unordered_set>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // AssetTexture class
 ////////////////////////////////////////////////////////////////////////////////////////////
 class AssetTexture
-	: public IAsset, public Texture {
+	: public BaseAsset, public Texture {
 public:
 
 	//=========================================================================================
@@ -26,8 +25,7 @@ public:
 	//=========================================================================================
 
 	void Load(const DirectXThreadContext* context);
-
-	void SetFilepath(const std::filesystem::path& filepath) { filepath_ = filepath; }
+	//!< single thread only.
 
 	void SetInspectorImGui() override;
 
@@ -38,13 +36,8 @@ private:
 	//=========================================================================================
 	// private variables
 	//=========================================================================================
-
-	std::filesystem::path filepath_;
-
-	bool isLoad_ = false;
-
+	
 	//* extension *//
 
 	static const std::unordered_set<std::filesystem::path> extension_;
-
 };

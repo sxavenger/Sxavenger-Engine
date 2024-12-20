@@ -7,17 +7,12 @@
 #include "DxObjectCommon.h"
 #include "DxDevice.h"
 #include "DxCommandContext.h"
-#include "DxBlendState.h"
-#include "DxShaderBlob.h"
+#include "DxCompileBlobCollection.h"
 #include "DxRootSignatureDesc.h"
 #include "DxBindBuffer.h"
 
-//* lib
-#include <Lib/Geometry/Vector3.h>
-
 //* c++
 #include <filesystem>
-#include <optional>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // DXOBJECT
@@ -34,36 +29,65 @@ public:
 	// public methods
 	//=========================================================================================
 
-	ComputePipelineState() = default;
+	ComputePipelineState()  = default;
 	~ComputePipelineState() { Term(); }
 
 	void Term();
 
 	//* create methods *//
 
-	void CreateBlob(const std::filesystem::path& filepath);
-	void SetBlob(ShaderBlob* blob);
+	void CreateBlob(const std::filesystem::path& filename);
 
-	void CreatePipeline(Device* device, ComputeRootSignatureDesc&& desc); //!< rootSignatureDescはmove前提
+	void CreatePipeline(Device* device, ComputeRootSignatureDesc& desc);
+
+	//* update methods *//
+
+	void ReloadShader();
+
+	virtual void CheckAndUpdatePipeline();
 
 	//* setting pipeline *//
 
+	void SetPipeline(ID3D12GraphicsCommandList* commandList) const;
 	void SetPipeline(CommandContext* context) const;
 
-	void Dispatch(CommandContext* context, const Vector3ui& threadGroupCount) const;
+	void ReloadAndSetPipeline(ID3D12GraphicsCommandList* commandList);
+	void ReloadAndSetPipeline(CommandContext* context);
+
+	void Dispatch(ID3D12GraphicsCommandList* commandList, UINT threadGroupCountX, UINT threadGroupCountY, UINT threadGroupCountZ) const;
+	void Dispatch(CommandContext* context, UINT threadGroupCountX, UINT threadGroupCountY, UINT threadGroupCountZ) const;
+
+	//* external methods *//
+
+	static void SetExternal(CompileBlobCollection* collection);
 
 protected:
+
+	////////////////////////////////////////////////////////////////////////////////////////////
+	// ComputeBlob structure
+	////////////////////////////////////////////////////////////////////////////////////////////
+	struct ComputeBlob {
+		std::optional<std::weak_ptr<ComPtr<IDxcBlob>>> blob;
+		std::filesystem::path                          filename;
+	};
 
 	//=========================================================================================
 	// protected variables
 	//=========================================================================================
 
-	std::optional<ShaderBlob> blob_;
+	//* external *//
+
+	static CompileBlobCollection* collection_;
+	Device* device_ = nullptr;
+
+	//* blob *//
+
+	ComputeBlob blob_;
 
 	//* rootSignature *//
 
-	ComputeRootSignatureDesc    rootSignatureDesc_;
 	ComPtr<ID3D12RootSignature> rootSignature_;
+	ComputeRootSignatureDesc    rootSignatureDesc_;
 
 	//* pipeline *//
 
@@ -73,15 +97,15 @@ protected:
 	// protected methods
 	//=========================================================================================
 
+	void CreateRootSignature();
+	void CreatePipeline();
+
 	//* option *//
 
+	IDxcBlob* GetBlob();
 	D3D12_SHADER_BYTECODE GetBytecode();
 
-	//* methods *//
-
-	void CreateDirectXRootSignature(Device* device);
-
-	void CreateDirectXPipeline(Device* device);
+	bool CheckShaderReloadStatus();
 
 };
 
@@ -96,7 +120,7 @@ public:
 	// public methods
 	//=========================================================================================
 
-	ReflectionComputePipelineState() = default;
+	ReflectionComputePipelineState()  = default;
 	~ReflectionComputePipelineState() = default;
 
 	//* reflection methods *//
@@ -104,6 +128,10 @@ public:
 	void ReflectionPipeline(Device* device);
 
 	void BindComputeBuffer(CommandContext* context, const BindBufferDesc& desc);
+
+	//* update methods *//
+
+	void CheckAndUpdatePipeline() override;
 
 private:
 
@@ -118,7 +146,8 @@ private:
 	//=========================================================================================
 
 	void SetBlobToTable();
+
 };
 
-
 _DXOBJECT_NAMESPACE_END
+

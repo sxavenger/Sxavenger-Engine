@@ -1,22 +1,23 @@
-#pragma once
+#include "AsyncTask.h"
 
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
+//* c++
+#include <thread>
+#include <chrono>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// Interface Asset class
+// AsyncTask class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
-class IAsset {
-public:
 
-	//=========================================================================================
-	// public methods
-	//=========================================================================================
+void AsyncTask::Execute(const AsyncThread* const thread) {
+	function_(thread);
+	function_ = nullptr;
+}
 
-	virtual void SetInspectorImGui() = 0;
-
-private:
-
-
-};
+void AsyncTask::WaitCompleted() const {
+	while (state_ != ExecutionState::kCompleted) {
+		std::this_thread::sleep_for(std::chrono::milliseconds(1));
+	}
+}

@@ -7,29 +7,25 @@
 #include "DxObjectCommon.h"
 #include "DxDevice.h"
 #include "DxCommandContext.h"
+#include "DxCompileBlobCollection.h"
 #include "DxBlendState.h"
-#include "DxShaderBlob.h"
 #include "DxRootSignatureDesc.h"
 #include "DxBindBuffer.h"
 
 //* lib
-#include <Lib/Geometry/Vector2.h>
 #include <Lib/Environment.h>
+#include <Lib/Geometry/Vector2.h>
 
 //* c++
 #include <array>
-#include <filesystem>
+#include <memory>
 #include <optional>
+#include <filesystem>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // DXOBJECT
 ////////////////////////////////////////////////////////////////////////////////////////////
 _DXOBJECT_NAMESPACE_BEGIN
-
-////////////////////////////////////////////////////////////////////////////////////////////
-// using
-////////////////////////////////////////////////////////////////////////////////////////////
-using BlendOption = std::variant<BlendMode, D3D12_RENDER_TARGET_BLEND_DESC>;
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // PrimitiveType enum
@@ -55,19 +51,15 @@ public:
 	//* desc setting option *//
 
 	void SetElement(const LPCSTR& semanticName, UINT semanticIndex, DXGI_FORMAT format, UINT inputSlot = 0);
-	void ClearElement();
-
 	void SetRasterizer(D3D12_CULL_MODE cullMode, D3D12_FILL_MODE fillMode);
 	void SetDepthStencil(bool depthEnable, D3D12_DEPTH_WRITE_MASK writeMask = D3D12_DEPTH_WRITE_MASK_ALL);
 
 	void SetBlendMode(uint32_t renderTargetIndex, BlendMode mode);
-	void SetBlendDesc(uint32_t renderTargetIndex, const D3D12_RENDER_TARGET_BLEND_DESC& desc);
 	void SetIndependentBlendEnable(bool isIndependentEnable);
 
 	void SetPrimitive(PrimitiveType type);
 
 	void SetRTVFormat(DXGI_FORMAT format);
-	void SetRTVFormat(uint32_t index, DXGI_FORMAT format);
 	void SetRTVFormats(uint32_t size, const DXGI_FORMAT formats[]);
 	void SetDSVFormat(DXGI_FORMAT format);
 
@@ -87,9 +79,9 @@ public:
 	D3D12_RASTERIZER_DESC                 rasterizerDesc   = {}; //!< RasterizerDesc
 	D3D12_DEPTH_STENCIL_DESC              depthStencilDesc = {}; //!< DepthStencilDesc
 
-	//* blends *//
+	//* blend mode *//
 
-	std::array<BlendOption, D3D12_SIMULTANEOUS_RENDER_TARGET_COUNT> blends;
+	std::array<BlendMode, D3D12_SIMULTANEOUS_RENDER_TARGET_COUNT> blendModes;
 	bool isIndependentBlendEnable = false;
 
 	//* primitive *//
@@ -114,30 +106,47 @@ public:
 	// public methods
 	//=========================================================================================
 
-	GraphicsPipelineState()  = default;
+	GraphicsPipelineState() = default;
 	~GraphicsPipelineState() { Term(); }
 
 	void Term();
 
 	//* create methods *//
 
-	void CreateBlob(const std::filesystem::path& filepath, GraphicsShaderType type);
-	void SetBlob(ShaderBlob* blob, GraphicsShaderType type);
+	void CreateBlob(const std::filesystem::path& filename, GraphicsShaderType type);
 
-	void CreateRootSignature(Device* device, GraphicsRootSignatureDesc&& desc); //!< rootSignatureDescはmove前提
+	void CreateRootSignature(Device* device, GraphicsRootSignatureDesc& desc);
 
 	void CreatePipeline(Device* device, const GraphicsPipelineDesc& desc);
 
+	//* update methods *//
+
+	void ReloadShader();
+
+	virtual void CheckAndUpdatePipeline();
+
 	//* setting pipeline *//
 
-	void SetPipeline(CommandContext* context, const D3D12_VIEWPORT& viewport, const D3D12_RECT& rect) const;
+	void SetPipeline(ID3D12GraphicsCommandList* commandList, const Vector2ui& windowSize = kMainWindowSize) const;
 	void SetPipeline(CommandContext* context, const Vector2ui& windowSize = kMainWindowSize) const;
+
+	void ReloadAndSetPipeline(ID3D12GraphicsCommandList* commandList, const Vector2ui& windowSize = kMainWindowSize);
+	void ReloadAndSetPipeline(CommandContext* context, const Vector2ui& windowSize = kMainWindowSize);
+
 
 	//* external methods *//
 
-	static void SetExternal(BlendState* blendState);
+	static void SetExternal(CompileBlobCollection* collection, BlendState* blendState);
 
 protected:
+
+	////////////////////////////////////////////////////////////////////////////////////////////
+	// GraphicsBlob structure
+	////////////////////////////////////////////////////////////////////////////////////////////
+	struct GraphicsBlob {
+		std::optional<std::weak_ptr<ComPtr<IDxcBlob>>> blob;
+		std::filesystem::path                          filename;
+	};
 
 	//=========================================================================================
 	// protected variables
@@ -145,21 +154,23 @@ protected:
 
 	//* external *//
 
+	static CompileBlobCollection* collection_;
 	static BlendState* blendState_;
+	Device* device_ = nullptr;
 
 	//* blob *//
 
-	std::array<std::optional<ShaderBlob>, static_cast<uint8_t>(GraphicsShaderType::ps) + 1> blobs_;
+	std::array<GraphicsBlob, static_cast<uint32_t>(GraphicsShaderType::ps) + 1> blobs_;
 
 	//* rootSignature *//
 
-	GraphicsRootSignatureDesc   rootSignatureDesc_;
 	ComPtr<ID3D12RootSignature> rootSignature_;
+	GraphicsRootSignatureDesc   rootSignatureDesc_;
 
 	//* pipeline *//
 
-	GraphicsPipelineDesc        pipelineDesc_;
 	ComPtr<ID3D12PipelineState> pipeline_;
+	GraphicsPipelineDesc        pipelineDesc_;
 
 	//* parameter *//
 
@@ -169,18 +180,16 @@ protected:
 	// protected methods
 	//=========================================================================================
 
+	void CreateRootSignature();
+	void CreatePipeline();
+
 	//* option *//
 
+	IDxcBlob* GetBlob(GraphicsShaderType type);
 	D3D12_SHADER_BYTECODE GetBytecode(GraphicsShaderType type, bool isRequired = false);
-
-	D3D12_RENDER_TARGET_BLEND_DESC GetRenderTargetBlendDesc(const BlendOption& option) const;
 	D3D12_BLEND_DESC GetBlendDesc() const;
 
-	//* methods *//
-
-	void CreateDirectXRootSignature(Device* device);
-
-	void CreateDirectXPipeline(Device* device);
+	bool CheckShaderReloadStatus();
 
 };
 
@@ -203,6 +212,10 @@ public:
 	void ReflectionRootSignature(Device* device);
 
 	void BindGraphicsBuffer(CommandContext* context, const BindBufferDesc& desc);
+
+	//* update methods *//
+
+	void CheckAndUpdatePipeline() override;
 
 private:
 

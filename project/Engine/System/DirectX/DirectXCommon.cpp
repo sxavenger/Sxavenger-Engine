@@ -22,14 +22,11 @@ void DirectXCommon::Init() {
 	shaderCompiler_ = std::make_unique<ShaderCompiler>();
 	shaderCompiler_->Init();
 
-	compileBlobCollection_ = std::make_unique<CompileBlobCollection>();
-	compileBlobCollection_->Init(shaderCompiler_.get());
-
 	blendState_ = std::make_unique<BlendState>();
 	blendState_->Init();
 
-	GraphicsPipelineState::SetExternal(compileBlobCollection_.get(), blendState_.get());
-	ComputePipelineState::SetExternal(compileBlobCollection_.get());
+	ShaderBlob::SetExternal(shaderCompiler_.get());
+	GraphicsPipelineState::SetExternal(blendState_.get());
 }
 
 void DirectXCommon::Term() {

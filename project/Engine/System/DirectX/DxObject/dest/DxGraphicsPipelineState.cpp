@@ -22,10 +22,6 @@ void GraphicsPipelineDesc::SetElement(const LPCSTR& semanticName, UINT semanticI
 	elements.emplace_back(element);
 }
 
-void GraphicsPipelineDesc::ClearElement() {
-	elements.clear();
-}
-
 void GraphicsPipelineDesc::SetRasterizer(D3D12_CULL_MODE cullMode, D3D12_FILL_MODE fillMode) {
 	rasterizerDesc.CullMode = cullMode;
 	rasterizerDesc.FillMode = fillMode;
@@ -38,11 +34,7 @@ void GraphicsPipelineDesc::SetDepthStencil(bool depthEnable, D3D12_DEPTH_WRITE_M
 }
 
 void GraphicsPipelineDesc::SetBlendMode(uint32_t renderTargetIndex, BlendMode mode) {
-	blends[renderTargetIndex] = mode;
-}
-
-void GraphicsPipelineDesc::SetBlendDesc(uint32_t renderTargetIndex, const D3D12_RENDER_TARGET_BLEND_DESC& desc) {
-	blends[renderTargetIndex] = desc;
+	blendModes[renderTargetIndex] = mode;
 }
 
 void GraphicsPipelineDesc::SetIndependentBlendEnable(bool isIndependentEnable) {
@@ -69,11 +61,6 @@ void GraphicsPipelineDesc::SetRTVFormat(DXGI_FORMAT format) {
 	Assert(rtvFormats.size() < D3D12_SIMULTANEOUS_RENDER_TARGET_COUNT, "RTV Format must be within D3D12_SIMULTANEOUS_RENDER_TARGET_COUNT"); //!< RTVの設定限界
 }
 
-void GraphicsPipelineDesc::SetRTVFormat(uint32_t index, DXGI_FORMAT format) {
-	rtvFormats[index] = format;
-	Assert(rtvFormats.size() < D3D12_SIMULTANEOUS_RENDER_TARGET_COUNT, "RTV Format must be within D3D12_SIMULTANEOUS_RENDER_TARGET_COUNT"); //!< RTVの設定限界
-}
-
 void GraphicsPipelineDesc::SetRTVFormats(uint32_t size, const DXGI_FORMAT formats[]) {
 	rtvFormats.insert(rtvFormats.end(), formats, formats + size);
 	Assert(rtvFormats.size() < D3D12_SIMULTANEOUS_RENDER_TARGET_COUNT, "RTV Format must be within D3D12_SIMULTANEOUS_RENDER_TARGET_COUNT"); //!< RTVの設定限界
@@ -84,7 +71,6 @@ void GraphicsPipelineDesc::SetDSVFormat(DXGI_FORMAT format) {
 }
 
 void GraphicsPipelineDesc::CreateDefaultDesc() {
-	ClearElement();
 	SetElement("POSITION", 0, DXGI_FORMAT_R32G32B32A32_FLOAT);
 	SetElement("TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT);
 	SetElement("NORMAL",   0, DXGI_FORMAT_R32G32B32_FLOAT);
@@ -97,7 +83,7 @@ void GraphicsPipelineDesc::CreateDefaultDesc() {
 
 	SetPrimitive(PrimitiveType::kTriangle);
 
-	SetRTVFormat(0, kOffscreenFormat);
+	SetRTVFormat(kOffscreenFormat);
 	SetDSVFormat(kDefaultDepthFormat);
 }
 
@@ -112,38 +98,77 @@ D3D12_INPUT_LAYOUT_DESC GraphicsPipelineDesc::GetInputLayout() const {
 // static variables
 //=========================================================================================
 
-BlendState* GraphicsPipelineState::blendState_ = nullptr;
+CompileBlobCollection* GraphicsPipelineState::collection_ = nullptr;
+BlendState* GraphicsPipelineState::blendState_            = nullptr;
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // GraphicsPipelineState class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-void GraphicsPipelineState::CreateBlob(const std::filesystem::path& filepath, GraphicsShaderType type) {
-	std::unique_ptr<ShaderBlob> blob = std::make_unique<ShaderBlob>();
-	blob->Create(filepath, ToProfile(type));
-
-	SetBlob(blob.get(), type);
+void GraphicsPipelineState::Term() {
 }
 
-void GraphicsPipelineState::SetBlob(ShaderBlob* blob, GraphicsShaderType type) {
-	blobs_[static_cast<uint8_t>(type)] = *blob;
+void GraphicsPipelineState::CreateBlob(const std::filesystem::path& filename, GraphicsShaderType type) {
+	Assert(collection_ != nullptr, "collection is not set.");
+	blobs_[static_cast<uint32_t>(type)].blob     = collection_->TryCreateBlob(filename, ToProfile(type));
+	blobs_[static_cast<uint32_t>(type)].filename = filename;
+
+	if (type == GraphicsShaderType::ms) {
+		isUseMeshShaderPipeline_ = true;
+	}
 }
 
-void GraphicsPipelineState::CreateRootSignature(Device* device, GraphicsRootSignatureDesc&& desc) {
+void GraphicsPipelineState::CreateRootSignature(Device* device, GraphicsRootSignatureDesc& desc) {
 	rootSignatureDesc_ = std::move(desc);
 	rootSignatureDesc_.ShrinkToFit();
 
-	CreateDirectXRootSignature(device);
+	device_ = device;
+
+	CreateRootSignature();
 }
 
 void GraphicsPipelineState::CreatePipeline(Device* device, const GraphicsPipelineDesc& desc) {
 	pipelineDesc_ = desc;
+	device_       = device;
 
-	CreateDirectXPipeline(device);
+	CreatePipeline();
 }
 
-void GraphicsPipelineState::SetPipeline(CommandContext* context, const D3D12_VIEWPORT& viewport, const D3D12_RECT& rect) const {
-	auto commandList = context->GetCommandList();
+void GraphicsPipelineState::ReloadShader() {
+	Assert(collection_ != nullptr, "collection is not set.");
+
+	for (uint32_t i = 0; i < blobs_.size(); ++i) {
+		if (blobs_[i].blob.has_value()) {
+			collection_->Reload(blobs_[i].filename);
+		}
+	}
+
+	CheckAndUpdatePipeline();
+}
+
+void GraphicsPipelineState::CheckAndUpdatePipeline() {
+	if (CheckShaderReloadStatus()) {
+		CreatePipeline();
+	}
+}
+
+void GraphicsPipelineState::SetPipeline(ID3D12GraphicsCommandList* commandList, const Vector2ui& windowSize) const {
+
+	// viewportの設定
+	D3D12_VIEWPORT viewport = {};
+	viewport.Width    = static_cast<float>(windowSize.x);
+	viewport.Height   = static_cast<float>(windowSize.y);
+	viewport.TopLeftX = 0;
+	viewport.TopLeftY = 0;
+	viewport.MinDepth = 0.0f;
+	viewport.MaxDepth = 1.0f;
+
+	// シザー矩形の設定
+	D3D12_RECT rect = {};
+	rect.left   = 0;
+	rect.right  = windowSize.x;
+	rect.top    = 0;
+	rect.bottom = windowSize.y;
 
 	commandList->RSSetViewports(1, &viewport);
 	commandList->RSSetScissorRects(1, &rect);
@@ -158,71 +183,32 @@ void GraphicsPipelineState::SetPipeline(CommandContext* context, const D3D12_VIE
 }
 
 void GraphicsPipelineState::SetPipeline(CommandContext* context, const Vector2ui& windowSize) const {
-
-	// viewportの設定
-	D3D12_VIEWPORT viewport = {};
-	viewport.TopLeftX = 0;
-	viewport.TopLeftY = 0;
-	viewport.Width    = static_cast<float>(windowSize.x);
-	viewport.Height   = static_cast<float>(windowSize.y);
-	viewport.MinDepth = 0.0f;
-	viewport.MaxDepth = 1.0f;
-
-	// シザー矩形の設定
-	D3D12_RECT rect = {};
-	rect.left   = 0;
-	rect.right  = windowSize.x;
-	rect.top    = 0;
-	rect.bottom = windowSize.y;
-
-	SetPipeline(context, viewport, rect);
+	SetPipeline(context->GetCommandList(), windowSize);
 }
 
-void GraphicsPipelineState::SetExternal(BlendState* blendState) {
+void GraphicsPipelineState::ReloadAndSetPipeline(ID3D12GraphicsCommandList* commandList, const Vector2ui& windowSize) {
+	CheckAndUpdatePipeline();
+	SetPipeline(commandList, windowSize);
+}
+
+void GraphicsPipelineState::ReloadAndSetPipeline(CommandContext* context, const Vector2ui& windowSize) {
+	ReloadAndSetPipeline(context->GetCommandList(), windowSize);
+}
+
+void GraphicsPipelineState::SetExternal(CompileBlobCollection* collection, BlendState* blendState) {
+	collection_ = collection;
 	blendState_ = blendState;
 }
 
-D3D12_SHADER_BYTECODE GraphicsPipelineState::GetBytecode(GraphicsShaderType type, bool isRequired) {
-	if (!blobs_[static_cast<uint8_t>(type)].has_value()) {
-		Assert(!isRequired, "required blob is not set."); //!< 絶対的に使用されるblobが設定されていない.
-		return {};
-	}
 
-	return blobs_[static_cast<uint8_t>(type)].value().GetBytecode();
+void GraphicsPipelineState::CreateRootSignature() {
+	Assert(device_ != nullptr, "device is not set.");
+	rootSignature_ = rootSignatureDesc_.CreateGraphicsRootSignature(device_->GetDevice());
 }
 
-D3D12_RENDER_TARGET_BLEND_DESC GraphicsPipelineState::GetRenderTargetBlendDesc(const BlendOption& option) const {
-	if (std::holds_alternative<BlendMode>(option)) {
-		BlendMode blendMode = std::get<BlendMode>(option);
-		return blendState_->GetDesc(blendMode);
+void GraphicsPipelineState::CreatePipeline() {
+	Assert(device_ != nullptr, "device is not set.");
 
-	} else if (std::holds_alternative<D3D12_RENDER_TARGET_BLEND_DESC>(option)) {
-		return std::get<D3D12_RENDER_TARGET_BLEND_DESC>(option);
-	}
-
-	Assert(false, "is not define option.");
-	return {};
-}
-
-D3D12_BLEND_DESC GraphicsPipelineState::GetBlendDesc() const {
-	D3D12_BLEND_DESC desc = {};
-	desc.IndependentBlendEnable = pipelineDesc_.isIndependentBlendEnable;
-	desc.RenderTarget[0]        = GetRenderTargetBlendDesc(pipelineDesc_.blends[0]);
-
-	if (desc.IndependentBlendEnable) {
-		for (uint32_t i = 1; i < D3D12_SIMULTANEOUS_RENDER_TARGET_COUNT; ++i) {
-			desc.RenderTarget[i] = GetRenderTargetBlendDesc(pipelineDesc_.blends[i]);
-		}
-	}
-
-	return desc;
-}
-
-void GraphicsPipelineState::CreateDirectXRootSignature(Device* device) {
-	rootSignature_ = rootSignatureDesc_.CreateGraphicsRootSignature(device->GetDevice());
-}
-
-void GraphicsPipelineState::CreateDirectXPipeline(Device* device) {
 	if (isUseMeshShaderPipeline_) {
 
 		//!< mesh piplineの設定
@@ -254,7 +240,7 @@ void GraphicsPipelineState::CreateDirectXPipeline(Device* device) {
 		descStream.pPipelineStateSubobjectStream = &psoStream;
 		descStream.SizeInBytes                   = sizeof(psoStream);
 
-		auto hr = device->GetDevice()->CreatePipelineState(
+		auto hr = device_->GetDevice()->CreatePipelineState(
 			&descStream,
 			IID_PPV_ARGS(&pipeline_)
 		);
@@ -286,7 +272,7 @@ void GraphicsPipelineState::CreateDirectXPipeline(Device* device) {
 		desc.PS = GetBytecode(GraphicsShaderType::ps, true);
 
 		// pipelineの生成
-		auto hr = device->GetDevice()->CreateGraphicsPipelineState(
+		auto hr = device_->GetDevice()->CreateGraphicsPipelineState(
 			&desc,
 			IID_PPV_ARGS(&pipeline_)
 		);
@@ -295,11 +281,68 @@ void GraphicsPipelineState::CreateDirectXPipeline(Device* device) {
 	}
 }
 
+IDxcBlob* GraphicsPipelineState::GetBlob(GraphicsShaderType type) {
+	if (!blobs_[static_cast<uint32_t>(type)].blob.has_value()) {
+		Assert(false, "blob is not set.");  //!< blobが設定されていない
+		return {};
+	}
+
+	if (blobs_[static_cast<uint32_t>(type)].blob.value().expired()) {
+		//!< hotReloadされている場合, 再度取得
+		Assert(collection_ != nullptr, "external collection is not set."); //!< external collectionが設定されていない
+		blobs_[static_cast<uint32_t>(type)].blob = collection_->GetBlob(blobs_[static_cast<uint32_t>(type)].filename);
+	}
+
+	auto blob = blobs_[static_cast<uint32_t>(type)].blob.value().lock();
+
+	return (*blob).Get();
+}
+
+D3D12_SHADER_BYTECODE GraphicsPipelineState::GetBytecode(GraphicsShaderType type, bool isRequired) {
+	if (!blobs_[static_cast<uint32_t>(type)].blob.has_value()) {
+		Assert(!isRequired, "required blob is not set.");  //!< 絶対的に使用されるblobが設定されていない.
+		return {};
+	}
+
+	IDxcBlob* blob = GetBlob(type);
+
+	D3D12_SHADER_BYTECODE bytecode = {};
+	bytecode.BytecodeLength  = blob->GetBufferSize();
+	bytecode.pShaderBytecode = blob->GetBufferPointer();
+
+	return bytecode;
+}
+
+D3D12_BLEND_DESC GraphicsPipelineState::GetBlendDesc() const {
+	D3D12_BLEND_DESC desc = {};
+	desc.IndependentBlendEnable = pipelineDesc_.isIndependentBlendEnable;
+	desc.RenderTarget[0]        = blendState_->GetDesc(pipelineDesc_.blendModes[0]);
+
+	if (desc.IndependentBlendEnable) {
+		for (uint32_t i = 1; i < D3D12_SIMULTANEOUS_RENDER_TARGET_COUNT; ++i) {
+			desc.RenderTarget[i] = blendState_->GetDesc(pipelineDesc_.blendModes[i]);
+		}
+	}
+
+	return desc;
+}
+
+bool GraphicsPipelineState::CheckShaderReloadStatus() {
+	for (const auto& blob : blobs_) {
+		if (blob.blob.has_value() && blob.blob.value().expired()) {
+			return true;
+		}
+	}
+
+	return false;
+}
+
 ////////////////////////////////////////////////////////////////////////////////////////////
 // ReflectionGraphicsPipelineState class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 void ReflectionGraphicsPipelineState::ReflectionRootSignature(Device* device) {
+	device_ = device;
 
 	table_.Reset();
 
@@ -315,19 +358,29 @@ void ReflectionGraphicsPipelineState::ReflectionRootSignature(Device* device) {
 	TrySetBlobToTable(GraphicsShaderType::ps, ShaderVisibility::VISIBILITY_PIXEL, true);
 
 	rootSignatureDesc_ = table_.CreateGraphicsRootSignatureDesc();
-	CreateDirectXRootSignature(device);
+	CreateRootSignature();
 }
 
 void ReflectionGraphicsPipelineState::BindGraphicsBuffer(CommandContext* context, const BindBufferDesc& desc) {
 	table_.BindGraphicsBuffer(context, desc);
 }
 
+void ReflectionGraphicsPipelineState::CheckAndUpdatePipeline() {
+	if (CheckShaderReloadStatus()) {
+		ReflectionRootSignature(device_);
+		CreatePipeline();
+	}
+}
+
 void ReflectionGraphicsPipelineState::TrySetBlobToTable(GraphicsShaderType type, ShaderVisibility visibility, bool isRequired) {
-	if (!blobs_[static_cast<uint32_t>(type)].has_value()) {
+	if (!blobs_[static_cast<uint32_t>(type)].blob.has_value()) {
 		Assert(!isRequired, "required blob is not set."); //!< 絶対的に使用されるblobが設定されていない.
 		return; //!< blobが登録されていないのでreturn
 	}
 
-	ComPtr<ID3D12ShaderReflection> reflection = blobs_[static_cast<uint32_t>(type)].value().GetReflection();
+	IDxcBlob* blob = GetBlob(type);
+
+	ComPtr<ID3D12ShaderReflection> reflection = collection_->GetCompiler()->Reflection(blob);
 	table_.CreateTable(reflection.Get(), visibility);
 }
+

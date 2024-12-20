@@ -23,7 +23,6 @@
     <ClCompile Include="Engine\System\DirectX\DxObject\DxShaderCompiler.cpp" />
     <ClCompile Include="Engine\System\DirectX\DxObject\DxSwapChain.cpp" />
     <ClCompile Include="Engine\System\DirectX\DxObject\DxCommandContext.cpp" />
-    <ClCompile Include="Engine\System\Runtime\Thread\Thread.cpp" />
     <ClCompile Include="Engine\System\DirectX\DxObject\DxDepthStencil.cpp" />
     <ClCompile Include="Lib\Geometry\MathLib.cpp" />
     <ClCompile Include="Lib\Geometry\Matrix4x4.cpp" />
@@ -37,8 +36,6 @@
     <ClCompile Include="Engine\System\Runtime\Scene\GameScene.cpp" />
     <ClCompile Include="Engine\System\Runtime\Input\Input.cpp" />
     <ClCompile Include="Engine\System\DirectX\DxObject\DxDimensionBuffer.cpp" />
-    <ClCompile Include="Engine\System\DirectX\DxObject\DxCompileBlobCollection.cpp" />
-    <ClCompile Include="Engine\System\DirectX\DxObject\DxGraphicsPipelineState.cpp" />
     <ClCompile Include="Engine\System\DirectX\DxObject\DxRootSignatureDesc.cpp" />
     <ClCompile Include="Engine\Content\InputAssembler\InputAssembler.cpp" />
     <ClCompile Include="Engine\System\DirectX\DxObject\DxBlendState.cpp" />
@@ -54,7 +51,6 @@
     <ClCompile Include="Lib\Adapter\Json\IJsonSerializer.cpp" />
     <ClCompile Include="Engine\System\Runtime\Performance\Performance.cpp" />
     <ClCompile Include="Engine\System\Runtime\Performance\DeltaTimePoint.cpp" />
-    <ClCompile Include="Engine\System\DirectX\DxObject\DxComputePipelineState.cpp" />
     <ClCompile Include="Engine\Console\SystemConsole\SystemConsole.cpp" />
     <ClCompile Include="Engine\Console\Console.cpp" />
     <ClCompile Include="Engine\Content\Texture\DepthTexture.cpp" />
@@ -114,6 +110,16 @@
     <ClCompile Include="Engine\Adapter\Particle\Emitter.cpp" />
     <ClCompile Include="Engine\Adapter\Particle\BaseParticle.cpp" />
     <ClCompile Include="Lib\Adapter\Curve\Curve.cpp" />
+    <ClCompile Include="Engine\System\DirectX\DxObject\DxShaderBlob.cpp" />
+    <ClCompile Include="Engine\System\DirectX\DxObject\DxGraphicsPipelineState.cpp" />
+    <ClCompile Include="Engine\System\DirectX\DxObject\DxComputePipelineState.cpp" />
+    <ClCompile Include="Engine\Asset\AssetLib\BaseAsset.cpp" />
+    <ClCompile Include="Engine\Asset\AssetLib\Texture\AssetTexture.cpp" />
+    <ClCompile Include="Engine\System\Runtime\Thread\AsyncTask.cpp" />
+    <ClCompile Include="Engine\System\Runtime\Thread\AsyncThread.cpp" />
+    <ClCompile Include="Engine\System\Runtime\Thread\AsyncThreadCollection.cpp" />
+    <ClCompile Include="Engine\Asset\AssetLib\Unknown\AssetUnknown.cpp" />
+    <ClCompile Include="Engine\Asset\AssetLib\Model\AssetModel.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\System\Window\Window.h" />
@@ -130,7 +136,6 @@
     <ClInclude Include="Engine\System\DirectX\DxObject\DxShaderCompiler.h" />
     <ClInclude Include="Engine\System\DirectX\DxObject\DxSwapChain.h" />
     <ClInclude Include="Engine\System\DirectX\DxObject\DxCommandContext.h" />
-    <ClInclude Include="Engine\System\Runtime\Thread\Thread.h" />
     <ClInclude Include="Engine\System\DirectX\DxObject\DxDepthStencil.h" />
     <ClInclude Include="Lib\Geometry\MathLib.h" />
     <ClInclude Include="Lib\Geometry\Matrix4x4.h" />
@@ -149,8 +154,6 @@
     <ClInclude Include="Engine\System\Runtime\Input\Input.h" />
     <ClInclude Include="Engine\System\Runtime\Input\InputId.h" />
     <ClInclude Include="Engine\System\DirectX\DxObject\DxDimensionBuffer.h" />
-    <ClInclude Include="Engine\System\DirectX\DxObject\DxCompileBlobCollection.h" />
-    <ClInclude Include="Engine\System\DirectX\DxObject\DxGraphicsPipelineState.h" />
     <ClInclude Include="Engine\System\DirectX\DxObject\DxRootSignatureDesc.h" />
     <ClInclude Include="Engine\System\Cinfig\SxavengerDirectory.h" />
     <ClInclude Include="Engine\System\Config\SxavengerDirectory.h" />
@@ -168,7 +171,6 @@
     <ClInclude Include="Engine\Module\Behavior\BaseBehavior.h" />
     <ClInclude Include="Engine\System\Runtime\Performance\Performance.h" />
     <ClInclude Include="Engine\System\Runtime\Performance\DeltaTimePoint.h" />
-    <ClInclude Include="Engine\System\DirectX\DxObject\DxComputePipelineState.h" />
     <ClInclude Include="Engine\Console\SystemConsole\SystemConsole.h" />
     <ClInclude Include="Engine\Console\Console.h" />
     <ClInclude Include="Engine\System\UI\ISystemDebugGui.h" />
@@ -233,5 +235,15 @@
     <ClInclude Include="Engine\Adapter\Particle\Emitter.h" />
     <ClInclude Include="Engine\Adapter\Particle\BaseParticle.h" />
     <ClInclude Include="Lib\Adapter\Curve\Curve.h" />
+    <ClInclude Include="Engine\System\DirectX\DxObject\DxShaderBlob.h" />
+    <ClInclude Include="Engine\System\DirectX\DxObject\DxGraphicsPipelineState.h" />
+    <ClInclude Include="Engine\System\DirectX\DxObject\DxComputePipelineState.h" />
+    <ClInclude Include="Engine\Asset\AssetLib\BaseAsset.h" />
+    <ClInclude Include="Engine\Asset\AssetLib\Texture\AssetTexture.h" />
+    <ClInclude Include="Engine\System\Runtime\Thread\AsyncTask.h" />
+    <ClInclude Include="Engine\System\Runtime\Thread\AsyncThread.h" />
+    <ClInclude Include="Engine\System\Runtime\Thread\AsyncThreadCollection.h" />
+    <ClInclude Include="Engine\Asset\AssetLib\Unknown\AssetUnknown.h" />
+    <ClInclude Include="Engine\Asset\AssetLib\Model\AssetModel.h" />
   </ItemGroup>
 </Project>

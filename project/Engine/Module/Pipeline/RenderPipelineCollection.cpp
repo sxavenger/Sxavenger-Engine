@@ -23,7 +23,8 @@ void RenderPipelineCollection::Term() {
 }
 
 void RenderPipelineCollection::SetPipeline(RenderPipelineType type, const DirectXThreadContext* context, const Vector2ui& size) {
-	pipelines_[type]->ReloadAndSetPipeline(context->GetDxCommand(), size);
+	//pipelines_[type]->ReloadAndSetPipeline(context->GetDxCommand(), size);
+	pipelines_[type]->SetPipeline(context->GetDxCommand(), size);
 }
 
 void RenderPipelineCollection::BindGraphicsBuffer(RenderPipelineType type, const DirectXThreadContext* context, const DxObject::BindBufferDesc& desc) {

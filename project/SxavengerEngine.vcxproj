@@ -145,6 +145,10 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="Engine\Asset\AssetLibrary\Model\AssetModel.cpp" />
     <ClCompile Include="Engine\Asset\AssetLibrary\Texture\AssetTexture.cpp" />
     <ClCompile Include="Engine\Asset\AssetLibrary\Unkown\AssetUnkown.cpp" />
+    <ClCompile Include="Engine\Asset\AssetLib\BaseAsset.cpp" />
+    <ClCompile Include="Engine\Asset\AssetLib\Model\AssetModel.cpp" />
+    <ClCompile Include="Engine\Asset\AssetLib\Texture\AssetTexture.cpp" />
+    <ClCompile Include="Engine\Asset\AssetLib\Unknown\AssetUnknown.cpp" />
     <ClCompile Include="Engine\Asset\SxavengerAsset.cpp" />
     <ClCompile Include="Engine\Console\AssetConsole\AssetConsole.cpp" />
     <ClCompile Include="Engine\Console\Console.cpp" />
@@ -197,7 +201,6 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="Engine\System\DirectX\DxObject\DxBindBuffer.cpp" />
     <ClCompile Include="Engine\System\DirectX\DxObject\DxBlendState.cpp" />
     <ClCompile Include="Engine\System\DirectX\DxObject\DxCommandContext.cpp" />
-    <ClCompile Include="Engine\System\DirectX\DxObject\DxCompileBlobCollection.cpp" />
     <ClCompile Include="Engine\System\DirectX\DxObject\DxComputePipelineState.cpp" />
     <ClCompile Include="Engine\System\DirectX\DxObject\DxDepthStencil.cpp" />
     <ClCompile Include="Engine\System\DirectX\DxObject\DxDescriptor.cpp" />
@@ -207,6 +210,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="Engine\System\DirectX\DxObject\DxGraphicsPipelineState.cpp" />
     <ClCompile Include="Engine\System\DirectX\DxObject\DxObjectCommon.cpp" />
     <ClCompile Include="Engine\System\DirectX\DxObject\DxRootSignatureDesc.cpp" />
+    <ClCompile Include="Engine\System\DirectX\DxObject\DxShaderBlob.cpp" />
     <ClCompile Include="Engine\System\DirectX\DxObject\DxShaderCompiler.cpp" />
     <ClCompile Include="Engine\System\DirectX\DxObject\DxSwapChain.cpp" />
     <ClCompile Include="Engine\System\DirectX\DxObject\DxUnorderedDimensionBuffer.cpp" />
@@ -214,8 +218,10 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="Engine\System\Runtime\Performance\DeltaTimePoint.cpp" />
     <ClCompile Include="Engine\System\Runtime\Performance\Performance.cpp" />
     <ClCompile Include="Engine\System\Runtime\Scene\GameScene.cpp" />
+    <ClCompile Include="Engine\System\Runtime\Thread\AsyncTask.cpp" />
+    <ClCompile Include="Engine\System\Runtime\Thread\AsyncThread.cpp" />
+    <ClCompile Include="Engine\System\Runtime\Thread\AsyncThreadCollection.cpp" />
     <ClCompile Include="Engine\System\SxavengerSystem.cpp" />
-    <ClCompile Include="Engine\System\Runtime\Thread\Thread.cpp" />
     <ClCompile Include="Engine\System\UI\ImGuiController.cpp" />
     <ClCompile Include="Engine\System\Utility\Logger.cpp" />
     <ClCompile Include="Engine\System\WinApp\WinApp.cpp" />
@@ -252,6 +258,10 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Engine\Asset\AssetLibrary\Model\AssetModel.h" />
     <ClInclude Include="Engine\Asset\AssetLibrary\Texture\AssetTexture.h" />
     <ClInclude Include="Engine\Asset\AssetLibrary\Unkown\AssetUnkown.h" />
+    <ClInclude Include="Engine\Asset\AssetLib\BaseAsset.h" />
+    <ClInclude Include="Engine\Asset\AssetLib\Model\AssetModel.h" />
+    <ClInclude Include="Engine\Asset\AssetLib\Texture\AssetTexture.h" />
+    <ClInclude Include="Engine\Asset\AssetLib\Unknown\AssetUnknown.h" />
     <ClInclude Include="Engine\Asset\SxavengerAsset.h" />
     <ClInclude Include="Engine\Console\AssetConsole\AssetConsole.h" />
     <ClInclude Include="Engine\Console\Console.h" />
@@ -309,7 +319,6 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Engine\System\DirectX\DxObject\DxBindBuffer.h" />
     <ClInclude Include="Engine\System\DirectX\DxObject\DxBlendState.h" />
     <ClInclude Include="Engine\System\DirectX\DxObject\DxCommandContext.h" />
-    <ClInclude Include="Engine\System\DirectX\DxObject\DxCompileBlobCollection.h" />
     <ClInclude Include="Engine\System\DirectX\DxObject\DxComputePipelineState.h" />
     <ClInclude Include="Engine\System\DirectX\DxObject\DxDepthStencil.h" />
     <ClInclude Include="Engine\System\DirectX\DxObject\DxDescriptor.h" />
@@ -319,6 +328,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Engine\System\DirectX\DxObject\DxGraphicsPipelineState.h" />
     <ClInclude Include="Engine\System\DirectX\DxObject\DxObjectCommon.h" />
     <ClInclude Include="Engine\System\DirectX\DxObject\DxRootSignatureDesc.h" />
+    <ClInclude Include="Engine\System\DirectX\DxObject\DxShaderBlob.h" />
     <ClInclude Include="Engine\System\DirectX\DxObject\DxShaderCompiler.h" />
     <ClInclude Include="Engine\System\DirectX\DxObject\DxSwapChain.h" />
     <ClInclude Include="Engine\System\DirectX\DxObject\DxUnorderedDimensionBuffer.h" />
@@ -327,8 +337,10 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Engine\System\Runtime\Performance\DeltaTimePoint.h" />
     <ClInclude Include="Engine\System\Runtime\Performance\Performance.h" />
     <ClInclude Include="Engine\System\Runtime\Scene\GameScene.h" />
+    <ClInclude Include="Engine\System\Runtime\Thread\AsyncTask.h" />
+    <ClInclude Include="Engine\System\Runtime\Thread\AsyncThread.h" />
+    <ClInclude Include="Engine\System\Runtime\Thread\AsyncThreadCollection.h" />
     <ClInclude Include="Engine\System\SxavengerSystem.h" />
-    <ClInclude Include="Engine\System\Runtime\Thread\Thread.h" />
     <ClInclude Include="Engine\System\UI\ImGuiController.h" />
     <ClInclude Include="Engine\System\UI\ISystemDebugGui.h" />
     <ClInclude Include="Engine\System\Utility\ComPtr.h" />

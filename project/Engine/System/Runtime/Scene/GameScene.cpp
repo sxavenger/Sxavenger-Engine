@@ -101,7 +101,7 @@ void GameScene::SystemInit() {
 		bind.SetHandle("gOutput", white1x1->GetGPUHandleUAV());
 		compute->BindComputeBuffer(SxavengerSystem::GetMainThreadContext()->GetDxCommand(), bind);
 
-		compute->Dispatch(SxavengerSystem::GetMainThreadContext()->GetDxCommand(), 1, 1, 1);
+		compute->Dispatch(SxavengerSystem::GetMainThreadContext()->GetDxCommand(), { 1, 1, 1 });
 
 		white1x1->TransitionEndUnordered(SxavengerSystem::GetMainThreadContext());
 		SxavengerSystem::TransitionAllocator();

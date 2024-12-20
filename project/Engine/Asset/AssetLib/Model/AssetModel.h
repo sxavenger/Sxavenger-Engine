@@ -3,25 +3,29 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
+//* asset
+#include "../BaseAsset.h"
+
 //* engine
-#include <Engine/System/Window/GameWindow.h>
-
-#include "Engine/Module/Camera/Camera3d.h"
+#include <Engine/System/Runtime/Thread/AsyncTask.h>
+#include <Engine/Content/Model/Model.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// GuizmoScene class
+// AssetModel class
 ////////////////////////////////////////////////////////////////////////////////////////////
-class GuizmoScene {
+class AssetModel
+	: public BaseAsset, public Model, public AsyncTask {
 public:
 
 	//=========================================================================================
 	// public methods
 	//=========================================================================================
 
-	GuizmoScene() = default;
-	~GuizmoScene() = default;
+	void SetAsyncTask(uint32_t assimpOption = Model::GetDefaultAssimpOption());
 
-	void Run();
+	void SetInspectorImGui() override;
+
+	static bool CheckExtension(const std::filesystem::path& extension);
 
 private:
 
@@ -29,24 +33,10 @@ private:
 	// private variables
 	//=========================================================================================
 
-	std::shared_ptr<GameWindow> mainWindow_;
+	uint32_t assimpOption_;
 
-	std::unique_ptr<Camera3d> camera_;
+	//* extension *//
 
-	TransformComponent component_;
-
-	//=========================================================================================
-	// private methods
-	//=========================================================================================
-
-	void SystemInit();
-	void Init();
-
-	void Update();
-
-	void Draw();
-	void DrawScreen();
-
-	void Term();
+	static const std::unordered_set<std::filesystem::path> extension_;
 
 };

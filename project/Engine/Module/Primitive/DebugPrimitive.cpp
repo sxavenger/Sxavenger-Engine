@@ -85,10 +85,8 @@ void DebugPrimitive::Term() {
 
 void DebugPrimitive::DrawToScene(const DirectXThreadContext* context, const Camera3d* camera) {
 
-	auto commandList = context->GetCommandList();
-
 	{
-		pipeline_->SetPipeline(commandList);
+		pipeline_->SetPipeline(context->GetDxCommand());
 		line_->Draw(context, camera);
 	}
 	
@@ -182,7 +180,7 @@ void DebugPrimitive::CreatePipeline() {
 	GraphicsRootSignatureDesc rootDesc;
 	rootDesc.SetVirtualCBV(0, ShaderVisibility::VISIBILITY_ALL, 0); //!< camera
 
-	pipeline_->CreateRootSignature(SxavengerSystem::GetDxDevice(), rootDesc);
+	pipeline_->CreateRootSignature(SxavengerSystem::GetDxDevice(), std::move(rootDesc));
 
 	GraphicsPipelineDesc desc = {};
 	desc.CreateDefaultDesc();

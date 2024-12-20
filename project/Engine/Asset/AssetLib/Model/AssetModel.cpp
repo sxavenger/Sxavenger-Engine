@@ -1,11 +1,5 @@
 #include "AssetModel.h"
 
-//-----------------------------------------------------------------------------------------
-// include
-//-----------------------------------------------------------------------------------------
-//* engine
-#include <Engine/System/SxavengerSystem.h>
-
 //=========================================================================================
 // static variables
 //=========================================================================================
@@ -18,16 +12,14 @@ const std::unordered_set<std::filesystem::path> AssetModel::extension_ = {
 // AssetModel class
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-void AssetModel::AsyncLoad(uint32_t assimpOption) {
+void AssetModel::SetAsyncTask(uint32_t assimpOption) {
 
 	assimpOption_ = assimpOption;
 
-	task_ = [&](_MAYBE_UNUSED const Thread* const thread) {
+	function_ = [&](_MAYBE_UNUSED const AsyncThread* const thread) {
 		Model::Load(filepath_, thread, assimpOption_);
 	};
 }
-
-
 
 void AssetModel::SetInspectorImGui() {
 }

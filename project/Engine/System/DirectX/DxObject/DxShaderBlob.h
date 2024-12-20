@@ -5,19 +5,10 @@
 //-----------------------------------------------------------------------------------------
 //* DXOBJECT
 #include "DxObjectCommon.h"
-
-//* DirectX12
-#include <dxcapi.h>
-#include <d3d12shader.h>
+#include "DxShaderCompiler.h"
 
 //* c++
-#include <array>
 #include <filesystem>
-
-//-----------------------------------------------------------------------------------------
-// comment
-//-----------------------------------------------------------------------------------------
-#pragma comment(lib, "dxcompiler.lib")
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // DXOBJECT
@@ -25,31 +16,31 @@
 _DXOBJECT_NAMESPACE_BEGIN
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// ShaderCompiler class
+// ShaderBlob class
 ////////////////////////////////////////////////////////////////////////////////////////////
-class ShaderCompiler {
+class ShaderBlob {
 public:
 
 	//=========================================================================================
 	// public methods
 	//=========================================================================================
 
-	ShaderCompiler()  = default;
-	~ShaderCompiler() { Term(); }
+	ShaderBlob()  = default;
+	~ShaderBlob() = default;
 
-	void Init();
+	void Create(const std::filesystem::path& filepath, CompileProfile profile, const std::wstring& entrypoint = L"main");
 
-	void Term();
+	//* gettter *//
 
-	//* compiler opiton *//
+	IDxcBlob* GetBlob() const { return blob_.Get(); }
 
-	ComPtr<IDxcBlob> Compile(
-		const std::filesystem::path& filename,
-		CompileProfile profile,
-		const std::wstring& entryPoint = L""
-	);
+	D3D12_SHADER_BYTECODE GetBytecode() const;
 
-	ComPtr<ID3D12ShaderReflection> Reflection(IDxcBlob* blob);
+	ComPtr<ID3D12ShaderReflection> GetReflection() const;
+
+	//* external *//
+
+	static void SetExternal(ShaderCompiler* compiler) { compiler_ = compiler; }
 
 private:
 
@@ -57,13 +48,13 @@ private:
 	// private variables
 	//=========================================================================================
 
-	//* dxc compiler *//
+	//* external *//
 
-	ComPtr<IDxcUtils>          utils_;
-	ComPtr<IDxcCompiler3>      compiler_;
-	ComPtr<IDxcIncludeHandler> includeHandler_;
+	static ShaderCompiler* compiler_;
 
-	static const std::array<LPCWSTR, static_cast<uint8_t>(CompileProfile::lib) + 1> profiles_;
+	//* blob *//
+
+	ComPtr<IDxcBlob> blob_;
 
 };
 

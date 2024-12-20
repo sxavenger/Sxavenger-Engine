@@ -127,16 +127,6 @@ void SystemConsole::ShowSystemMenu() {
 
 		ImGui::EndMenu();
 	}
-
-
-	if (ImGui::BeginMenu("CompileBlobColleciton")) {
-		MenuDummy();
-
-		auto compileBlobCollection = SxavengerSystem::GetDxCompileBlobCollection();
-		compileBlobCollection->SystemDebugGui();
-
-		ImGui::EndMenu();
-	}
 }
 
 void SystemConsole::DisplayLog() {

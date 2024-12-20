@@ -8,7 +8,7 @@
 #include "DirectX/DirectXCommon.h"
 #include "DirectX/DirectXContext.h"
 #include "Window/GameWindowCollection.h"
-#include "Runtime/Thread/Thread.h"
+#include "Runtime/Thread/AsyncThreadCollection.h"
 #include "Runtime/Input/Input.h"
 #include "UI/ImGuiController.h"
 
@@ -36,8 +36,6 @@ public:
 
 	static _DXOBJECT DescriptorHeaps* GetDxDescriptorHeaps();
 
-	static _DXOBJECT CompileBlobCollection* GetDxCompileBlobCollection();
-
 	//-----------------------------------------------------------------------------------------
 	// DirectXThreadContext main thread option
 	//-----------------------------------------------------------------------------------------
@@ -51,14 +49,14 @@ public:
 	static DirectXThreadContext* GetMainThreadContext();
 
 	//-----------------------------------------------------------------------------------------
-	// ThreadCollection option
+	// AsyncThreadCollection option
 	//-----------------------------------------------------------------------------------------
 
-	static void PushTask(const std::shared_ptr<TaskThreadExecution>& task);
+	static void PushTask(const std::weak_ptr<AsyncTask>& task);
 
 	static void TermThreadCollection();
 
-	static ThreadCollection* GetThreadCollection();
+	static AsyncThreadCollection* GetThreadCollection();
 
 	//-----------------------------------------------------------------------------------------
 	// GameWindowCollection option
