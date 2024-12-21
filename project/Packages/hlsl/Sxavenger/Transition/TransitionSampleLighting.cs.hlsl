@@ -3,6 +3,15 @@
 //-----------------------------------------------------------------------------------------
 #include "../SystematicProcess.hlsli"
 #include "../../Light.hlsli"
+#include "../../Camera3d.hlsli"
+
+//#define _LAMBERT
+
+//=========================================================================================
+// Input
+//=========================================================================================
+
+ConstantBuffer<Camera3d> gCamera : register(b0);
 
 //=========================================================================================
 // Output
@@ -33,6 +42,7 @@ void main(uint3 dispatchThreadId : SV_DispatchThreadID) {
 		return;
 	}
 
+#ifdef _LAMBERT
 	float3 lightDirection = normalize(float3(-1.0f, -1.0f, 0.0f));
 
 	float NdotL = dot(normal, -lightDirection);
@@ -40,7 +50,28 @@ void main(uint3 dispatchThreadId : SV_DispatchThreadID) {
 	
 	float4 color = (float4)0.0f;
 	color.rgb = albedo.rgb * d;
-	color.a   = albedo.a;
+	color.a = albedo.a;
 	
 	gXclipse[currentId] = color;
+	
+#else
+	
+	float3 l = -normalize(float3(-1.0f, -1.0f, 0.0f));
+	float3 v = normalize(gCamera.position - position.xyz);
+	float3 n = normal;
+	
+	float3 c_saface = albedo.rgb;
+	
+	float3 c_cool      = float3(0.0f, 0.0f, 0.55f) + 0.25f * c_saface;
+	float3 c_warm      = float3(0.3f, 0.3f, 0.0f) + 0.25f * c_saface;
+	float3 c_highlight = float3(1.0f, 1.0f, 1.0f);
+	
+	float t  = (dot(n, l) + 1.0f) / 2.0f;
+	float3 r = 2.0f * dot(n, l) * n - l;
+	float s = saturate(100.0f * dot(r, v) - 97.0f);
+	
+	float3 c_shadered = s * c_highlight + (1.0f - s) * (t * c_warm + (1.0f - t) * c_cool);
+
+	gXclipse[currentId] = float4(c_shadered, 1.0f);
+#endif
 }

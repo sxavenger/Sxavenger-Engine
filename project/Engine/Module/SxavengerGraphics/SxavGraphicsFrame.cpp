@@ -127,6 +127,7 @@ DxObject::BindBufferDesc SxavGraphicsFrame::GetTransitionSystematicBindDesc() co
 	bind.SetAddress("gCamera",  camera_->GetGPUVirtualAddress());
 	bind.SetAddress("gConfig",  config_->GetGPUVirtualAddress());
 	bind.SetHandle("gXclipse",  xclipse_->GetResultBuffer()->GetGPUHandleUAV());
+	bind.SetAddress("gCamera",  camera_->GetGPUVirtualAddress());
 
 	return bind;
 }
