@@ -1,29 +1,30 @@
-#include "AssetModel.h"
+#include "AssetAnimation.h"
 
 //=========================================================================================
 // static variables
 //=========================================================================================
 
-const std::unordered_set<std::filesystem::path> AssetModel::extension_ = {
-	".obj", ".gltf", ".fbx"
+const std::unordered_set<std::filesystem::path> AssetAnimation::extension_ = {
+	".gltf", ".fbx"
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// AssetModel class
+// AssetAnimation class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-void AssetModel::SetAsyncTask(uint32_t assimpOption) {
+void AssetAnimation::SetAsyncTask(uint32_t assimpOption) {
 
 	assimpOption_ = assimpOption;
 
-	function_ = [&](_MAYBE_UNUSED const AsyncThread* const thread) {
-		Model::Load(filepath_, thread, assimpOption_);
+	function_ = [this](_MAYBE_UNUSED const AsyncThread* const thread) {
+		AnimationGroup::Load(filepath_, assimpOption_);
+		isLoaded_ = true;
 	};
 }
 
-void AssetModel::SetInspectorImGui() {
+void AssetAnimation::SetInspectorImGui() {
 }
 
-bool AssetModel::CheckExtension(const std::filesystem::path& extension) {
+bool AssetAnimation::CheckExtension(const std::filesystem::path& extension) {
 	return extension_.contains(extension);
 }

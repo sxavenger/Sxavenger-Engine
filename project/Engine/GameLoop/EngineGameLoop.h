@@ -3,30 +3,23 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
-//* asset
-#include "AssetLib/AssetCollection.h"
+//* engine
+#include <Engine/System/Runtime/GameLoop/GameLoop.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// SxavengerAsset class
+// EngineGameLoop class
 ////////////////////////////////////////////////////////////////////////////////////////////
-class SxavengerAsset {
+class EngineGameLoop
+	: public GameLoop::Interface {
 public:
 
 	//=========================================================================================
-	// public methods
+	// public method
 	//=========================================================================================
 
-	static void Init();
+	void Init(GameLoop::Context* context) override;
 
-	static void Term();
-
-	static std::weak_ptr<AssetFile> Import(const std::filesystem::path& filepath);
-
-	/*static std::shared_ptr<AssetTexture> ImportTexture(const std::filesystem::path& filepath);
-
-	static std::shared_ptr<AssetModel> ImportModel(const std::filesystem::path& filepath);*/
-
-	static AssetCollection* GetAsset();
+	void Term() override;
 
 private:
 };

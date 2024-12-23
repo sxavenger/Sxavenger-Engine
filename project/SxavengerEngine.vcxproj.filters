@@ -33,7 +33,6 @@
     <ClCompile Include="Engine\System\Window\GameWindowCollection.cpp" />
     <ClCompile Include="Engine\System\DirectX\DirectXContext.cpp" />
     <ClCompile Include="Engine\System\WinApp\WinApp.cpp" />
-    <ClCompile Include="Engine\System\Runtime\Scene\GameScene.cpp" />
     <ClCompile Include="Engine\System\Runtime\Input\Input.cpp" />
     <ClCompile Include="Engine\System\DirectX\DxObject\DxDimensionBuffer.cpp" />
     <ClCompile Include="Engine\System\DirectX\DxObject\DxRootSignatureDesc.cpp" />
@@ -73,19 +72,13 @@
     <ClCompile Include="Engine\Module\Pipeline\RenderPipelineCollection.cpp" />
     <ClCompile Include="Engine\Module\Behavior\ModelBehavior.cpp" />
     <ClCompile Include="Engine\Module\Pipeline\ComputePipelineCollection.cpp" />
-    <ClCompile Include="Engine\Asset\Asset.cpp" />
     <ClCompile Include="Lib\Sxl\OptimizedSet.cpp" />
     <ClCompile Include="Demo\ChessBoard.cpp" />
     <ClCompile Include="Engine\Module\SxavengerGraphics\ScreenPresenter.cpp" />
     <ClCompile Include="Engine\Module\VisualLayer\VisualLayer.cpp" />
     <ClCompile Include="Engine\Module\VisualLayer\VisualDoF.cpp" />
-    <ClCompile Include="Engine\Asset\AssetLibrary\IAsset.cpp" />
-    <ClCompile Include="Engine\Asset\AssetLibrary\Texture\AssetTexture.cpp" />
-    <ClCompile Include="Engine\Asset\AssetLibrary\Model\AssetModel.cpp" />
     <ClCompile Include="Engine\Asset\SxavengerAsset.cpp" />
-    <ClCompile Include="Engine\Asset\AssetLibrary\Unkown\AssetUnkown.cpp" />
     <ClCompile Include="Engine\Console\AssetConsole\AssetConsole.cpp" />
-    <ClCompile Include="Demo\GuizmoScene.cpp" />
     <ClCompile Include="Lib\MyMath.cpp" />
     <ClCompile Include="Engine\Module\Behavior\TransformBehavior.cpp" />
     <ClCompile Include="Engine\Module\Primitive\DebugPrimitive.cpp" />
@@ -119,7 +112,17 @@
     <ClCompile Include="Engine\System\Runtime\Thread\AsyncThread.cpp" />
     <ClCompile Include="Engine\System\Runtime\Thread\AsyncThreadCollection.cpp" />
     <ClCompile Include="Engine\Asset\AssetLib\Unknown\AssetUnknown.cpp" />
-    <ClCompile Include="Engine\Asset\AssetLib\Model\AssetModel.cpp" />
+    <ClCompile Include="Engine\Asset\AssetLib\AssetCollection.cpp" />
+    <ClCompile Include="Engine\Asset\AssetLib\ModelAnimation\Model\AssetModel.cpp" />
+    <ClCompile Include="Engine\Asset\AssetLib\ModelAnimation\Animation\AssetAnimation.cpp" />
+    <ClCompile Include="Engine\Asset\AssetLib\ModelAnimation\AssetModelAnimation.cpp" />
+    <ClCompile Include="Engine\System\Runtime\Scene\BaseScene.cpp" />
+    <ClCompile Include="Engine\System\Runtime\Scene\BaseSceneFactory.cpp" />
+    <ClCompile Include="Engine\System\Runtime\Scene\SceneController.cpp" />
+    <ClCompile Include="Engine\System\Runtime\GameLoop\GameLoop.cpp" />
+    <ClCompile Include="Engine\System\Runtime\Framework\IFramework.cpp" />
+    <ClCompile Include="Engine\GameLoop\ConsoleGameLoop.cpp" />
+    <ClCompile Include="Engine\GameLoop\EngineGameLoop.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\System\Window\Window.h" />
@@ -150,7 +153,6 @@
     <ClInclude Include="Engine\System\Window\GameWindowCollection.h" />
     <ClInclude Include="Engine\System\DirectX\DirectXContext.h" />
     <ClInclude Include="Engine\System\WinApp\WinApp.h" />
-    <ClInclude Include="Engine\System\Runtime\Scene\GameScene.h" />
     <ClInclude Include="Engine\System\Runtime\Input\Input.h" />
     <ClInclude Include="Engine\System\Runtime\Input\InputId.h" />
     <ClInclude Include="Engine\System\DirectX\DxObject\DxDimensionBuffer.h" />
@@ -195,19 +197,13 @@
     <ClInclude Include="Engine\Module\Pipeline\RenderPipelineCollection.h" />
     <ClInclude Include="Engine\Module\Behavior\ModelBehavior.h" />
     <ClInclude Include="Engine\Module\Pipeline\ComputePipelineCollection.h" />
-    <ClInclude Include="Engine\Asset\Asset.h" />
     <ClInclude Include="Lib\Sxl\OptimizedSet.h" />
     <ClInclude Include="Demo\ChessBoard.h" />
     <ClInclude Include="Engine\Module\SxavengerGraphics\ScreenPresenter.h" />
     <ClInclude Include="Engine\Module\VisualLayer\VisualLayer.h" />
     <ClInclude Include="Engine\Module\VisualLayer\VisualDoF.h" />
-    <ClInclude Include="Engine\Asset\AssetLibrary\IAsset.h" />
-    <ClInclude Include="Engine\Asset\AssetLibrary\Texture\AssetTexture.h" />
-    <ClInclude Include="Engine\Asset\AssetLibrary\Model\AssetModel.h" />
     <ClInclude Include="Engine\Asset\SxavengerAsset.h" />
-    <ClInclude Include="Engine\Asset\AssetLibrary\Unkown\AssetUnkown.h" />
     <ClInclude Include="Engine\Console\AssetConsole\AssetConsole.h" />
-    <ClInclude Include="Demo\GuizmoScene.h" />
     <ClInclude Include="Lib\MyMath.h" />
     <ClInclude Include="Engine\Module\Behavior\TransformBehavior.h" />
     <ClInclude Include="Engine\Module\Primitive\DebugPrimitive.h" />
@@ -244,6 +240,16 @@
     <ClInclude Include="Engine\System\Runtime\Thread\AsyncThread.h" />
     <ClInclude Include="Engine\System\Runtime\Thread\AsyncThreadCollection.h" />
     <ClInclude Include="Engine\Asset\AssetLib\Unknown\AssetUnknown.h" />
-    <ClInclude Include="Engine\Asset\AssetLib\Model\AssetModel.h" />
+    <ClInclude Include="Engine\Asset\AssetLib\AssetCollection.h" />
+    <ClInclude Include="Engine\Asset\AssetLib\ModelAnimation\Model\AssetModel.h" />
+    <ClInclude Include="Engine\Asset\AssetLib\ModelAnimation\Animation\AssetAnimation.h" />
+    <ClInclude Include="Engine\Asset\AssetLib\ModelAnimation\AssetModelAnimation.h" />
+    <ClInclude Include="Engine\System\Runtime\Scene\BaseScene.h" />
+    <ClInclude Include="Engine\System\Runtime\Scene\BaseSceneFactory.h" />
+    <ClInclude Include="Engine\System\Runtime\Scene\SceneController.h" />
+    <ClInclude Include="Engine\System\Runtime\GameLoop\GameLoop.h" />
+    <ClInclude Include="Engine\System\Runtime\Framework\IFramework.h" />
+    <ClInclude Include="Engine\GameLoop\ConsoleGameLoop.h" />
+    <ClInclude Include="Engine\GameLoop\EngineGameLoop.h" />
   </ItemGroup>
 </Project>

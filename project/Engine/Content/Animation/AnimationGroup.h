@@ -26,7 +26,7 @@ public:
 	// public methods
 	//=========================================================================================
 
-	void Load(const std::filesystem::path& filepath);
+	void Load(const std::filesystem::path& filepath, uint32_t assimpOption = 0);
 
 	//* getter *//
 

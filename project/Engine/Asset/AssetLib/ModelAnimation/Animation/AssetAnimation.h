@@ -4,24 +4,24 @@
 // include
 //-----------------------------------------------------------------------------------------
 //* asset
-#include "../BaseAsset.h"
+#include "../../BaseAsset.h"
 
 //* engine
 #include <Engine/System/Runtime/Thread/AsyncTask.h>
-#include <Engine/Content/Model/Model.h>
+#include <Engine/Content/Animation/AnimationGroup.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// AssetModel class
+// AssetAnimation class
 ////////////////////////////////////////////////////////////////////////////////////////////
-class AssetModel
-	: public BaseAsset, public Model, public AsyncTask {
+class AssetAnimation
+	: public BaseAsset, public AnimationGroup, public AsyncTask {
 public:
 
 	//=========================================================================================
 	// public methods
 	//=========================================================================================
 
-	void SetAsyncTask(uint32_t assimpOption = Model::GetDefaultAssimpOption());
+	void SetAsyncTask(uint32_t assimpOption = NULL);
 
 	void SetInspectorImGui() override;
 
@@ -33,10 +33,11 @@ private:
 	// private variables
 	//=========================================================================================
 
+	//* load parameter *//
+
 	uint32_t assimpOption_;
 
 	//* extension *//
 
 	static const std::unordered_set<std::filesystem::path> extension_;
-
 };

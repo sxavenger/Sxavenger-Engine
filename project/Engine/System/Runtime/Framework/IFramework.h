@@ -3,30 +3,28 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
-//* asset
-#include "AssetLib/AssetCollection.h"
+//* c++
+#include <concepts>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// SxavengerAsset class
+// Interface Framework class
 ////////////////////////////////////////////////////////////////////////////////////////////
-class SxavengerAsset {
+class IFramework {
 public:
 
 	//=========================================================================================
-	// public methods
+	// public method
 	//=========================================================================================
 
-	static void Init();
+	IFramework()          = default;
+	virtual ~IFramework() = default;
 
-	static void Term();
+	virtual void Run() = 0;
 
-	static std::weak_ptr<AssetFile> Import(const std::filesystem::path& filepath);
-
-	/*static std::shared_ptr<AssetTexture> ImportTexture(const std::filesystem::path& filepath);
-
-	static std::shared_ptr<AssetModel> ImportModel(const std::filesystem::path& filepath);*/
-
-	static AssetCollection* GetAsset();
-
-private:
 };
+
+////////////////////////////////////////////////////////////////////////////////////////////
+// concept
+////////////////////////////////////////////////////////////////////////////////////////////
+template <class T>
+concept DerivedFromFramework = std::derived_from<T, IFramework>;

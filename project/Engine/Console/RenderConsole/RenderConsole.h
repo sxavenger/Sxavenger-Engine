@@ -7,7 +7,7 @@
 #include "Outliner.h"
 
 //* engine
-#include <Engine/Asset/AssetLibrary/Texture/AssetTexture.h>
+#include <Engine/Asset/AssetLib/Texture/AssetTexture.h>
 #include <Engine/Module/Behavior/BaseBehavior.h>
 #include <Engine/Module/Pipeline/RenderPipelineCollection.h>
 #include <Engine/Module/Pipeline/ComputePipelineCollection.h>

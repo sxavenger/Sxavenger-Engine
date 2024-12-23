@@ -3,27 +3,36 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
-//* engine
-#include <Engine/System/Window/GameWindow.h>
-
-#include "Demo/ChessBoard.h"
-#include "Demo/AnimationDemo.h"
-#include "Demo/Ground.h"
+//* asset
+#include "../BaseAsset.h"
+#include "Animation/AssetAnimation.h"
+#include "Model/AssetModel.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// GameScene class
+// AssetAnimation class
 ////////////////////////////////////////////////////////////////////////////////////////////
-class GameScene {
+class AssetModelAnimation
+	: public BaseAsset {
 public:
 
 	//=========================================================================================
 	// public methods
 	//=========================================================================================
 
-	GameScene()  = default;
-	~GameScene() = default;
+	std::shared_ptr<AssetModel> CreateModel();
+	std::shared_ptr<AssetModel> TryCreateModel();
 
-	void Run();
+	std::shared_ptr<AssetAnimation> CreateAnimation();
+	std::shared_ptr<AssetAnimation> TryCreateAnimation();
+
+	void SetInspectorImGui() override;
+
+	static bool CheckExtension(const std::filesystem::path& extension);
+
+	//* getter *//
+
+	std::shared_ptr<AssetModel> GetModel() const { return modelAnimation_.first; }
+	std::shared_ptr<AssetAnimation> GetAnimation() const { return modelAnimation_.second; }
 
 private:
 
@@ -31,24 +40,6 @@ private:
 	// private variables
 	//=========================================================================================
 
-	std::shared_ptr<GameWindow> mainWindow_;
+	std::pair<std::shared_ptr<AssetModel>, std::shared_ptr<AssetAnimation>> modelAnimation_;
 
-	//* demo
-	std::unique_ptr<ChessBoard> chess_;
-	std::unique_ptr<AnimationDemo> animationDemo_;
-	std::unique_ptr<Ground> ground_;
-
-	//=========================================================================================
-	// private methods
-	//=========================================================================================
-
-	void SystemInit();
-	void Init();
-
-	void Update();
-
-	void Draw();
-	void DrawScreen();
-
-	void Term();
 };

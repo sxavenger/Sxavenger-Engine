@@ -10,11 +10,11 @@
 // AnimationGroup class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-void AnimationGroup::Load(const std::filesystem::path& filepath) {
+void AnimationGroup::Load(const std::filesystem::path& filepath, uint32_t assimpOption) {
 
 	// sceneの取得
 	Assimp::Importer importer; //!< scene保存するため保管
-	const aiScene* aiScene = importer.ReadFile(filepath.generic_string().c_str(), 0);
+	const aiScene* aiScene = importer.ReadFile(filepath.generic_string().c_str(), assimpOption);
 
 	Assert(aiScene != nullptr, "model load failed. filepath: " + filepath.generic_string(), importer.GetErrorString());
 
