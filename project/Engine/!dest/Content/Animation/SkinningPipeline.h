@@ -3,35 +3,33 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
-//* asset
-#include "../IAsset.h"
-
 //* engine
+#include <Engine/System/DirectX/DxObject/DxComputePipelineState.h>
 #include <Engine/System/DirectX/DirectXContext.h>
-#include <Engine/Content/Texture/Texture.h>
 
 //* c++
-#include <filesystem>
-#include <unordered_set>
+#include <memory>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// AssetTexture class
+// SkinningComputePipeline class
 ////////////////////////////////////////////////////////////////////////////////////////////
-class AssetTexture
-	: public IAsset, public Texture {
+class SkinningComputePipeline {
 public:
 
 	//=========================================================================================
 	// public methods
 	//=========================================================================================
 
-	void Load(const DirectXThreadContext* context);
+	SkinningComputePipeline()  = default;
+	~SkinningComputePipeline() = default;
 
-	void SetFilepath(const std::filesystem::path& filepath) { filepath_ = filepath; }
+	void Init();
 
-	void SetInspectorImGui() override;
+	void Term();
 
-	static bool CheckExtension(const std::filesystem::path& extension);
+	void SetPipeline(const DirectXThreadContext* context);
+
+	void Dispatch(const DirectXThreadContext* context, const DxObject::BindBufferDesc& desc, uint32_t vertexSize);
 
 private:
 
@@ -39,12 +37,8 @@ private:
 	// private variables
 	//=========================================================================================
 
-	std::filesystem::path filepath_;
+	std::unique_ptr<DxObject::ReflectionComputePipelineState> state_;
 
-	bool isLoad_ = false;
-
-	//* extension *//
-
-	static const std::unordered_set<std::filesystem::path> extension_;
+	static const uint32_t kNumthreads_ = 1024;
 
 };

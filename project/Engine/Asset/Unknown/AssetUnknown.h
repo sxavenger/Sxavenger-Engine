@@ -4,32 +4,23 @@
 // include
 //-----------------------------------------------------------------------------------------
 //* asset
-#include "../IAsset.h"
-
-//* c++
-#include <filesystem>
+#include "../BaseAsset.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// AssetUnkown class
+// AssetUnknown class
 ////////////////////////////////////////////////////////////////////////////////////////////
-class AssetUnkown
-	: public IAsset {
+class AssetUnknown
+	: public BaseAsset {
 public:
 
 	//=========================================================================================
 	// public methods
 	//=========================================================================================
 
-	void SetFilepath(const std::filesystem::path& filepath) { filepath_ = filepath; }
+	AssetUnknown()  = default;
+	~AssetUnknown() = default;
 
-	void SetInspectorImGui() override;
+	void Load(_MAYBE_UNUSED const DirectXThreadContext* context) override;
 
 private:
-
-	//=========================================================================================
-	// private variables
-	//=========================================================================================
-
-	std::filesystem::path filepath_;
-
 };

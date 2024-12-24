@@ -3,13 +3,14 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
+//* asset
+#include "../BaseAsset.h"
+#include "../Texture/Texture.h"
+
 //* engine
-#include <Engine/System/DirectX/DirectXContext.h>
 #include <Engine/Content/InputAssembler/InputMesh.h>
-#include <Engine/Content/Texture/Texture.h>
-#include <Engine/Content/Animation/BornNode.h>
 #include <Engine/Content/Animation/JointWeight.h>
-#include <Engine/Module/Transform/Transform.h>
+#include <Engine/Content/Animation/BornNode.h>
 
 //* external
 #include <assimp/Importer.hpp>
@@ -27,33 +28,36 @@
 #include <filesystem>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// MeshData structure
-////////////////////////////////////////////////////////////////////////////////////////////
-struct MeshData {
-	InputMesh                                        mesh;
-	std::optional<uint32_t>                          materialIndex;
-	std::unordered_map<std::string, JointWeightData> jointWeights;
-};
-
-////////////////////////////////////////////////////////////////////////////////////////////
-// MaterailTextureType enum class
-////////////////////////////////////////////////////////////////////////////////////////////
-enum class MaterialTextureType : uint8_t {
-	kDiffuse,
-	kNormal,
-};
-
-////////////////////////////////////////////////////////////////////////////////////////////
-// MaterialData structure
-////////////////////////////////////////////////////////////////////////////////////////////
-struct MaterialData {
-	std::array<std::shared_ptr<Texture>, static_cast<uint8_t>(MaterialTextureType::kNormal) + 1> textures_;
-};
-
-////////////////////////////////////////////////////////////////////////////////////////////
 // Model class
 ////////////////////////////////////////////////////////////////////////////////////////////
-class Model {
+class Model
+	: public BaseAsset {
+public:
+
+	////////////////////////////////////////////////////////////////////////////////////////////
+	// MeshData structure
+	////////////////////////////////////////////////////////////////////////////////////////////
+	struct MeshData {
+		InputMesh                                        mesh;
+		std::optional<uint32_t>                          materialIndex;
+		std::unordered_map<std::string, JointWeightData> jointWeights;
+	};
+
+	////////////////////////////////////////////////////////////////////////////////////////////
+	// MaterailTextureType enum class
+	////////////////////////////////////////////////////////////////////////////////////////////
+	enum class TextureType : uint8_t {
+		kDiffuse,
+		kNormal,
+	};
+
+	////////////////////////////////////////////////////////////////////////////////////////////
+	// MaterialData structure
+	////////////////////////////////////////////////////////////////////////////////////////////
+	struct MaterialData {
+		std::array<std::shared_ptr<Texture>, static_cast<uint8_t>(TextureType::kNormal) + 1> textures_;
+	};
+
 public:
 
 	//=========================================================================================
@@ -63,7 +67,7 @@ public:
 	Model()  = default;
 	~Model() { Term(); }
 
-	void Load(const std::filesystem::path& filepath, const DirectXThreadContext* context, uint32_t assimpOption = kDefaultAssimpOption_);
+	void Load(_MAYBE_UNUSED const DirectXThreadContext* context) override;
 
 	void Term();
 
@@ -71,13 +75,7 @@ public:
 
 	void SetIABuffer(uint32_t meshIndex) const;
 
-	void DrawCall(uint32_t meshIndex, uint32_t instanceCount = 1) const;
-
-	//* materials option *//
-
-	const D3D12_GPU_DESCRIPTOR_HANDLE& GetTextureHandle(uint32_t meshIndex, MaterialTextureType type = MaterialTextureType::kDiffuse) const;
-
-	//* mesh getter *//
+	void DrawCall(uint32_t meshIndex, uint32_t instanceCount) const;
 
 	uint32_t GetMeshSize() const { return static_cast<uint32_t>(meshes_.size()); }
 
@@ -85,11 +83,17 @@ public:
 
 	const InputMesh& GetInputMesh(uint32_t meshIndex) const;
 
-	//* other getter *//
+	//* material option *//
 
-	static uint32_t GetDefaultAssimpOption() { return kDefaultAssimpOption_; }
+	const D3D12_GPU_DESCRIPTOR_HANDLE& GetTextureHandle(uint32_t meshIndex, TextureType type = TextureType::kDiffuse) const;
 
-	const BornNode& GetRootNode() const { return root_; }
+	//* getter *//
+
+	static const uint32_t GetDefaultAssimpOption() { return kDefaultAssimpOption_; }
+
+	//* setter *//
+
+	void SetAssimpOption(uint32_t option) { assimpOption_ = option; }
 
 private:
 
@@ -97,19 +101,26 @@ private:
 	// private variables
 	//=========================================================================================
 
+	//* mesh data
+
 	std::vector<MeshData>     meshes_;
 	std::vector<MaterialData> materials_;
 
 	BornNode root_;
 
+	//* input parameter *//
+
 	static const uint32_t kDefaultAssimpOption_;
+	uint32_t assimpOption_ = kDefaultAssimpOption_;
 
 	//=========================================================================================
 	// private methods
 	//=========================================================================================
 
 	void LoadMesh(const aiScene* aiScene);
+
 	void LoadMaterial(const aiScene* aiScene, const std::filesystem::path& directory, const DirectXThreadContext* context);
+
 	BornNode ReadNode(aiNode* node);
 
 	//* sub methods *//

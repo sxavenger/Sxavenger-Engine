@@ -3,20 +3,20 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
+//* engine
+#include <Engine/Module/Transform/Transform.h>
+
+//* c++
+#include <string>
+#include <vector>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// Interface Asset class
+// BornNode structure
 ////////////////////////////////////////////////////////////////////////////////////////////
-class IAsset {
-public:
+struct BornNode {
+	QuaternionTransform transform;
+	Matrix4x4           localMatrix;
 
-	//=========================================================================================
-	// public methods
-	//=========================================================================================
-
-	virtual void SetInspectorImGui() = 0;
-
-private:
-
-
+	std::string name;
+	std::vector<BornNode> children;
 };
