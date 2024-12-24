@@ -7,6 +7,7 @@
 #include "BaseAsset.h"
 #include "Texture/Texture.h"
 #include "Unknown/AssetUnknown.h"
+#include "Thread/AsyncAssetThreadCollection.h"
 
 //* engine
 #include <Engine/System/Utility/Logger.h>
@@ -21,7 +22,8 @@
 ////////////////////////////////////////////////////////////////////////////////////////////
 // AssetCollection class
 ////////////////////////////////////////////////////////////////////////////////////////////
-class AssetCollection {
+class AssetCollection
+	: public AsyncAssetThreadCollection {
 public:
 
 	////////////////////////////////////////////////////////////////////////////////////////////
@@ -56,11 +58,24 @@ public:
 	AssetCollection()  = default;
 	~AssetCollection() = default;
 
-	//* import methods *//
+	void Init();
 
+	//* asset option *//
+	//* import *//
+
+	template <DerivedFromBaseAssetConcept T>
+	std::weak_ptr<T> Import(const std::filesystem::path& filepath);
+
+	template <>
 	std::weak_ptr<BaseAsset> Import(const std::filesystem::path& filepath);
 
-	std::weak_ptr<Texture> ImportTexture(const std::filesystem::path& filepath);
+	//* get *//
+
+	template <DerivedFromBaseAssetConcept T>
+	std::shared_ptr<T> GetAsset(const std::filesystem::path& filepath);
+
+	template <>
+	std::shared_ptr<BaseAsset> GetAsset(const std::filesystem::path& filepath);
 
 private:
 
@@ -72,19 +87,20 @@ private:
 
 	Folder root_ = {};
 
-	//* thread *//
-
 	//=========================================================================================
 	// private methods
 	//=========================================================================================
-
 
 	static FileType GetFileType(const std::filesystem::path& filepath);
 
 	static File CreateFileData(const std::filesystem::path& filepath);
 
-	template <class T> requires std::is_base_of_v<BaseAsset, T>
+	template <DerivedFromBaseAssetConcept T>
 	static std::shared_ptr<T> ConvertAsset(const std::shared_ptr<BaseAsset>& base);
+
+	const File& ImportFile(const std::filesystem::path& filepath);
+
+	const File& GetFile(const std::filesystem::path& filepath) const;
 
 };
 
@@ -92,11 +108,30 @@ private:
 // AssetCollection class template methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-template <class T> requires std::is_base_of_v<BaseAsset, T>
-inline std::shared_ptr<T> AssetCollection::ConvertAsset(const std::shared_ptr<BaseAsset>& base) {
+template <DerivedFromBaseAssetConcept T>
+inline std::weak_ptr<T> AssetCollection::Import(const std::filesystem::path& filepath) {
+	return ConvertAsset<T>(ImportFile(filepath).second);
+}
 
+template <>
+inline std::weak_ptr<BaseAsset> AssetCollection::Import(const std::filesystem::path& filepath) {
+	return ImportFile(filepath).second;
+}
+
+template <DerivedFromBaseAssetConcept T>
+inline std::shared_ptr<T> AssetCollection::ConvertAsset(const std::shared_ptr<BaseAsset>& base) {
 	std::shared_ptr<T> result = std::dynamic_pointer_cast<T>(base)
 	Assert(result != nullptr, "base asset type is different.");
 
 	return result;
+}
+
+template <DerivedFromBaseAssetConcept T>
+inline std::shared_ptr<T> AssetCollection::GetAsset(const std::filesystem::path& filepath) {
+	return ConvertAsset<T>(GetFile(filepath).second);
+}
+
+template <>
+inline std::shared_ptr<BaseAsset> AssetCollection::GetAsset(const std::filesystem::path& filepath) {
+	return GetFile(filepath).second;
 }

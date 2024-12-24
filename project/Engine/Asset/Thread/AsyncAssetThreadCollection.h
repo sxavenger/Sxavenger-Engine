@@ -3,46 +3,56 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
-//* base
-#include "TransformBehavior.h"
+//* thread
+#include "AsyncAssetThread.h"
 
 //* engine
-#include <Engine/Asset/Model/Model.h>
-#include <Engine/Module/Material/MaterialComponent.h>
+#include <Engine/System/UI/ISystemDebugGui.h>
+
+//* c++
+#include <vector>
+#include <mutex>
+#include <memory>
+#include <queue>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// ModelBehavior class
+// AsyncAssetThreadCollection class
 ////////////////////////////////////////////////////////////////////////////////////////////
-class ModelBehavior
-	: public TransformBehavior, public MaterialComponent {
+class AsyncAssetThreadCollection
+	: public ISystemDebugGui {
 public:
 
 	//=========================================================================================
 	// public methods
 	//=========================================================================================
 
-	ModelBehavior()  { Init(); }
-	~ModelBehavior() = default;
+	AsyncAssetThreadCollection()  = default;
+	~AsyncAssetThreadCollection() { Term(); }
 
-	void Init();
+	void Init(uint32_t threadSize);
 
-	//* derivative behaivor methods *//
-	//* ImGui command
+	void Term();
 
-	virtual void SystemAttributeImGui() override;
+	void SystemDebugGui() override;
 
-	//* Draw methods
+	//* task option *//
 
-	virtual void DrawSystematic(_MAYBE_UNUSED const SxavGraphicsFrame* frame) override;
-	virtual void DrawAdaptive(_MAYBE_UNUSED const SxavGraphicsFrame* frame) override;
-	virtual void DrawLateAdaptive(_MAYBE_UNUSED const SxavGraphicsFrame* frame) override;
+	void PushTask(const std::shared_ptr<BaseAsset>& task);
 
-protected:
+private:
 
 	//=========================================================================================
-	// protected variables
+	// private variables
 	//=========================================================================================
 
-	Model* model_; //!< CONSIDER: std::shared_ptr<Model> model_;
+	//* thread *//
+
+	std::vector<std::unique_ptr<AsyncAssetThread>> threads_;
+
+	std::mutex mutex_;
+
+	//* tasks *//
+
+	std::queue<std::weak_ptr<BaseAsset>> tasks_;
 
 };

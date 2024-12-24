@@ -7,7 +7,7 @@
 #include "Outliner.h"
 
 //* engine
-#include <Engine/Asset/AssetLib/Texture/AssetTexture.h>
+#include <Engine/Asset/Texture/Texture.h>
 #include <Engine/Module/Behavior/BaseBehavior.h>
 #include <Engine/Module/Pipeline/RenderPipelineCollection.h>
 #include <Engine/Module/Pipeline/ComputePipelineCollection.h>
@@ -149,7 +149,7 @@ private:
 
 	//* frames *//
 
-	std::weak_ptr<AssetTexture> checkerTexture_;
+	std::weak_ptr<Texture> checkerTexture_;
 
 	std::unique_ptr<SxavGraphicsFrame>    scene_;
 	std::unique_ptr<BlenderDebugCamera3d> sceneCamera_;

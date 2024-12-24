@@ -3,46 +3,45 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
-//* base
-#include "TransformBehavior.h"
+//* engine
+#include <Engine/System/Runtime/GameLoop/GameLoop.h>
 
 //* engine
-#include <Engine/Asset/Model/Model.h>
-#include <Engine/Module/Material/MaterialComponent.h>
+#include <Engine/Asset/SxavengerAsset.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// ModelBehavior class
+// DemoGameLoop class
 ////////////////////////////////////////////////////////////////////////////////////////////
-class ModelBehavior
-	: public TransformBehavior, public MaterialComponent {
+class DemoGameLoop
+	: public GameLoop::Interface {
 public:
 
 	//=========================================================================================
-	// public methods
+	// public method
 	//=========================================================================================
 
-	ModelBehavior()  { Init(); }
-	~ModelBehavior() = default;
+	void Init(GameLoop::Context* context) override;
 
-	void Init();
+	void Term() override;
 
-	//* derivative behaivor methods *//
-	//* ImGui command
-
-	virtual void SystemAttributeImGui() override;
-
-	//* Draw methods
-
-	virtual void DrawSystematic(_MAYBE_UNUSED const SxavGraphicsFrame* frame) override;
-	virtual void DrawAdaptive(_MAYBE_UNUSED const SxavGraphicsFrame* frame) override;
-	virtual void DrawLateAdaptive(_MAYBE_UNUSED const SxavGraphicsFrame* frame) override;
-
-protected:
+private:
 
 	//=========================================================================================
-	// protected variables
+	// private variables
 	//=========================================================================================
 
-	Model* model_; //!< CONSIDER: std::shared_ptr<Model> model_;
+	std::shared_ptr<Texture> texture_;
+
+	//=========================================================================================
+	// private method
+	//=========================================================================================
+
+	void InitGame();
+
+	void TermGame();
+
+	void UpdateGame();
+
+	void RenderGame();
 
 };

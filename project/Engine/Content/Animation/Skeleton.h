@@ -5,14 +5,12 @@
 //-----------------------------------------------------------------------------------------
 //* animation
 #include "Animation.h"
-#include "AnimationGroup.h"
+//#include "AnimationGroup.h"
 #include "BornNode.h"
-
-//* engine
-#include <Engine/Module/Transform/Transform.h>
 
 //* lib
 #include <Lib/Geometry/Matrix4x4.h>
+#include <Lib/Transform/Transform.h>
 
 //* c++
 #include <cstdint>
@@ -50,7 +48,7 @@ struct Skeleton {
 	void Create(const BornNode& node);
 
 	void Update(const Animation& animation, DeltaTimePoint<TimeUnit::s> time, bool isLoop = true);
-	void Update(const AnimationGroup& animationGroup, DeltaTimePoint<TimeUnit::s> time, bool isLoop = true);
+	//void Update(const AnimationGroup& animationGroup, DeltaTimePoint<TimeUnit::s> time, bool isLoop = true);
 
 	void TransitionAnimation(
 		const Animation& animationA, DeltaTimePoint<TimeUnit::s> timeA,

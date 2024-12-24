@@ -13,6 +13,12 @@
 #include <cstdint>
 #include <filesystem>
 #include <mutex>
+#include <concepts>
+
+//-----------------------------------------------------------------------------------------
+// forward
+//-----------------------------------------------------------------------------------------
+class AssetCollection;
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // AssetState enum class
@@ -21,7 +27,7 @@ enum class AssetState : uint8_t {
 	Unloaded,
 	Loading,
 	Loaded,
-	Compiled,
+	Complete //!< 同threadでのLoadの場合, この状態になることはない
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -41,9 +47,11 @@ public:
 
 	//* setter *//
 
+	void SetCollection(AssetCollection* collection) { collection_ = collection; }
+
 	void SetFilepath(const std::filesystem::path& filepath) { filepath_ = filepath; }
 
-	void Compile() { state_ = AssetState::Compiled; }
+	void Complete() { state_ = AssetState::Complete; }
 
 protected:
 
@@ -54,6 +62,10 @@ protected:
 	//* input parameter *//
 
 	std::filesystem::path filepath_;
+
+	//* asset collection *//
+
+	AssetCollection* collection_ = nullptr;
 
 	//=========================================================================================
 	// protected methods
@@ -78,3 +90,12 @@ private:
 	AssetState state_ = AssetState::Unloaded;
 
 };
+
+////////////////////////////////////////////////////////////////////////////////////////////
+// concept
+////////////////////////////////////////////////////////////////////////////////////////////
+template <class T>
+concept BaseAssetConcept = std::is_base_of_v<BaseAsset, T>;
+
+template <class T>
+concept DerivedFromBaseAssetConcept = std::derived_from<T, BaseAsset>;

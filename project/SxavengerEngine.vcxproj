@@ -136,6 +136,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
   <ItemGroup>
     <ClCompile Include="Demo\AnimationDemo.cpp" />
     <ClCompile Include="Demo\ChessBoard.cpp" />
+    <ClCompile Include="Demo\GameLoop\DemoGameLoop.cpp" />
     <ClCompile Include="Demo\Ground.cpp" />
     <ClCompile Include="Engine\Adapter\Particle\BaseParticle.cpp" />
     <ClCompile Include="Engine\Adapter\Particle\Emitter.cpp" />
@@ -143,7 +144,10 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="Engine\Asset\AssetCollection.cpp" />
     <ClCompile Include="Engine\Asset\BaseAsset.cpp" />
     <ClCompile Include="Engine\Asset\Model\Model.cpp" />
+    <ClCompile Include="Engine\Asset\SxavengerAsset.cpp" />
     <ClCompile Include="Engine\Asset\Texture\Texture.cpp" />
+    <ClCompile Include="Engine\Asset\Thread\AsyncAssetThread.cpp" />
+    <ClCompile Include="Engine\Asset\Thread\AsyncAssetThreadCollection.cpp" />
     <ClCompile Include="Engine\Asset\Unknown\AssetUnknown.cpp" />
     <ClCompile Include="Engine\Console\AssetConsole\AssetConsole.cpp" />
     <ClCompile Include="Engine\Console\Console.cpp" />
@@ -152,7 +156,6 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="Engine\Console\RenderConsole\RenderConsole.cpp" />
     <ClCompile Include="Engine\Console\SystemConsole\SystemConsole.cpp" />
     <ClCompile Include="Engine\Content\Animation\Animation.cpp" />
-    <ClCompile Include="Engine\Content\Animation\SkeletonMesh.cpp" />
     <ClCompile Include="Engine\Content\Animation\Skeleton.cpp" />
     <ClCompile Include="Engine\Content\Animation\SkinCluster.cpp" />
     <ClCompile Include="Engine\Content\Animation\SkinningPipeline.cpp" />
@@ -182,6 +185,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="Engine\Module\SxavengerGraphics\VisualProcessFrame.cpp" />
     <ClCompile Include="Engine\Module\SxavengerGraphics\XclipseProcessFrame.cpp" />
     <ClCompile Include="Engine\Module\SxavengerModule.cpp" />
+    <ClCompile Include="Engine\Module\TransformComponent\TransformComponent.cpp" />
     <ClCompile Include="Engine\Module\Transform\Transform.cpp" />
     <ClCompile Include="Engine\Module\Transform\TransformComponent.cpp" />
     <ClCompile Include="Engine\Module\VisualLayer\VisualDoF.cpp" />
@@ -238,11 +242,13 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="Lib\Sxl\LowerUnorderedMap.cpp" />
     <ClCompile Include="Lib\Sxl\OptimizedMap.cpp" />
     <ClCompile Include="Lib\Sxl\OptimizedSet.cpp" />
+    <ClCompile Include="Lib\Transform\Transform.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Demo\AnimationDemo.h" />
     <ClInclude Include="Demo\ChessBoard.h" />
+    <ClInclude Include="Demo\GameLoop\DemoGameLoop.h" />
     <ClInclude Include="Demo\Ground.h" />
     <ClInclude Include="Engine\Adapter\Particle\BaseParticle.h" />
     <ClInclude Include="Engine\Adapter\Particle\Emitter.h" />
@@ -250,7 +256,10 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Engine\Asset\AssetCollection.h" />
     <ClInclude Include="Engine\Asset\BaseAsset.h" />
     <ClInclude Include="Engine\Asset\Model\Model.h" />
+    <ClInclude Include="Engine\Asset\SxavengerAsset.h" />
     <ClInclude Include="Engine\Asset\Texture\Texture.h" />
+    <ClInclude Include="Engine\Asset\Thread\AsyncAssetThread.h" />
+    <ClInclude Include="Engine\Asset\Thread\AsyncAssetThreadCollection.h" />
     <ClInclude Include="Engine\Asset\Unknown\AssetUnknown.h" />
     <ClInclude Include="Engine\Console\AssetConsole\AssetConsole.h" />
     <ClInclude Include="Engine\Console\Console.h" />
@@ -259,7 +268,6 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Engine\Console\RenderConsole\RenderConsole.h" />
     <ClInclude Include="Engine\Console\SystemConsole\SystemConsole.h" />
     <ClInclude Include="Engine\Content\Animation\Animation.h" />
-    <ClInclude Include="Engine\Content\Animation\SkeletonMesh.h" />
     <ClInclude Include="Engine\Content\Animation\BornNode.h" />
     <ClInclude Include="Engine\Content\Animation\JointWeight.h" />
     <ClInclude Include="Engine\Content\Animation\Skeleton.h" />
@@ -292,6 +300,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Engine\Module\SxavengerGraphics\VisualProcessFrame.h" />
     <ClInclude Include="Engine\Module\SxavengerGraphics\XclipseProcessFrame.h" />
     <ClInclude Include="Engine\Module\SxavengerModule.h" />
+    <ClInclude Include="Engine\Module\TransformComponent\TransformComponent.h" />
     <ClInclude Include="Engine\Module\Transform\Transform.h" />
     <ClInclude Include="Engine\Module\Transform\TransformComponent.h" />
     <ClInclude Include="Engine\Module\VisualLayer\VisualDoF.h" />
@@ -357,6 +366,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Lib\Sxl\OptimizedMap.h" />
     <ClInclude Include="Lib\Sxl\OptimizedSet.h" />
     <ClInclude Include="Lib\Sxl\SxavengerLibrary.h" />
+    <ClInclude Include="Lib\Transform\Transform.h" />
     <ClInclude Include="Lib\VertexStructure.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

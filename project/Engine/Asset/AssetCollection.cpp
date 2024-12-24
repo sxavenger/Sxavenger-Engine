@@ -1,27 +1,11 @@
 #include "AssetCollection.h"
 
-std::weak_ptr<BaseAsset> AssetCollection::Import(const std::filesystem::path& filepath) {
+////////////////////////////////////////////////////////////////////////////////////////////
+// AssetCollection class methods
+////////////////////////////////////////////////////////////////////////////////////////////
 
-	const auto filename = filepath.filename();
-
-	Folder* current = &root_;
-
-	//!< filenameが含まれているフォルダまで移動または作成
-	for (const auto& path : filepath) {
-		if (path == filename) {
-			break;
-		}
-
-		current = &current->folder[path];
-	}
-
-	current->files.TryEmplace(filename, CreateFileData(filepath));
-	return current->files.At(filename).second;
-}
-
-std::weak_ptr<Texture> AssetCollection::ImportTexture(const std::filesystem::path& filepath) {
-	const auto asset = Import(filepath);
-	return ConvertAsset<Texture>(asset.lock());
+void AssetCollection::Init() {
+	AsyncAssetThreadCollection::Init(1);
 }
 
 AssetCollection::FileType AssetCollection::GetFileType(const std::filesystem::path& filepath) {
@@ -55,4 +39,48 @@ AssetCollection::File AssetCollection::CreateFileData(const std::filesystem::pat
 	}
 
 	return file;
+}
+
+const AssetCollection::File& AssetCollection::ImportFile(const std::filesystem::path& filepath) {
+
+	const auto filename = filepath.filename();
+	Folder* current = &root_;
+
+	//!< filenameが含まれているフォルダまで移動または作成
+	for (const auto& path : filepath) {
+		if (path == filename) {
+			break;
+		}
+
+		current = &current->folder[path];
+	}
+
+	//!< importされていない場合, 作成
+	if (current->files.Contains(filename)) {
+
+		File file = CreateFileData(filepath);
+		file.second->SetCollection(this);
+
+		current->files.Emplace(filename, file);
+		return file;
+	}
+
+	return current->files.At(filename);
+}
+
+const AssetCollection::File& AssetCollection::GetFile(const std::filesystem::path& filepath) const {
+
+	const auto filename   = filepath.filename();
+	const Folder* current = &root_;
+
+	//!< filenameが含まれているフォルダまで移動または作成
+	for (const auto& path : filepath) {
+		if (path == filename) {
+			break;
+		}
+
+		current = &current->folder.At(path);
+	}
+
+	return current->files.At(filename);
 }

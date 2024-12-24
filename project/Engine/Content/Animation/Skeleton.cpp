@@ -25,11 +25,11 @@ void Skeleton::Update(const Animation& animation, DeltaTimePoint<TimeUnit::s> ti
 	UpdateMatrix();
 }
 
-void Skeleton::Update(const AnimationGroup& animationGroup, DeltaTimePoint<TimeUnit::s> time, bool isLoop) {
-	for (const auto& animation : animationGroup.GetAnimations()) {
-		Update(animation, time, isLoop);
-	}
-}
+//void Skeleton::Update(const AnimationGroup& animationGroup, DeltaTimePoint<TimeUnit::s> time, bool isLoop) {
+//	for (const auto& animation : animationGroup.GetAnimations()) {
+//		Update(animation, time, isLoop);
+//	}
+//}
 
 void Skeleton::TransitionAnimation(
 	const Animation& animationA, DeltaTimePoint<TimeUnit::s> timeA,

@@ -7,6 +7,12 @@
 //* Vector4
 //*  Quarternion = -x, -y, z, w;
 
+//-----------------------------------------------------------------------------------------
+// include
+//-----------------------------------------------------------------------------------------
+//* asset
+#include "../AssetCollection.h"
+
 //=========================================================================================
 // static const variables
 //=========================================================================================
@@ -191,29 +197,29 @@ void Model::LoadMaterial(const aiScene* aiScene, const std::filesystem::path& di
 
 		// TODO: テクスチャの読み込み
 
-		//auto& material = materials_.at(materialIndex);
-		directory, context; //!< 未使用
+		auto& material = materials_.at(materialIndex);
 
 		// diffuseの取得
 		if (aiMaterial->GetTextureCount(aiTextureType_DIFFUSE) != 0) {
-			aiString aiTextureFilePath;
-			aiMaterial->GetTexture(aiTextureType_DIFFUSE, 0, &aiTextureFilePath);
+			aiString aiTextureFilepath;
+			aiMaterial->GetTexture(aiTextureType_DIFFUSE, 0, &aiTextureFilepath);
 
 			// データの保存
-			/*std::shared_ptr<AssetTexture> texture = SxavengerAsset::ImportTexture(directory / aiTextureFilePath.C_Str());
+			std::shared_ptr<Texture> texture = collection_->Import<Texture>(directory / aiTextureFilepath.C_Str()).lock();
 			texture->Load(context);
-			material.textures_[static_cast<uint8_t>(MaterialTextureType::kDiffuse)] = texture;*/
+			material.textures_[static_cast<uint8_t>(TextureType::kDiffuse)] = texture;
+
 		}
 
 		// normalの取得
 		if (aiMaterial->GetTextureCount(aiTextureType_NORMALS) != 0) {
-			aiString aiTextureFilePath;
-			aiMaterial->GetTexture(aiTextureType_NORMALS, 0, &aiTextureFilePath);
+			aiString aiTextureFilepath;
+			aiMaterial->GetTexture(aiTextureType_NORMALS, 0, &aiTextureFilepath);
 
 			// データの保存
-			/*std::shared_ptr<AssetTexture> texture = SxavengerAsset::ImportTexture(directory / aiTextureFilePath.C_Str());
+			std::shared_ptr<Texture> texture = collection_->Import<Texture>(directory / aiTextureFilepath.C_Str()).lock();
 			texture->Load(context);
-			material.textures_[static_cast<uint8_t>(MaterialTextureType::kNormal)] = texture;*/
+			material.textures_[static_cast<uint8_t>(TextureType::kNormal)] = texture;
 		}
 	}
 }

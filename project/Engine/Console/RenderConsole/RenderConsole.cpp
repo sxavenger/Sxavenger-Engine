@@ -41,7 +41,7 @@ void RenderConsole::Init(Console* console) {
 	presenter_ = std::make_unique<ScreenPresenter>();
 	presenter_->Init();
 
-	checkerTexture_ = SxavengerAsset::ImportTexture("asset/textures/checker_black.png");
+	checkerTexture_ = SxavengerAsset::Import<Texture>("asset/textures/checker_black.png").lock();
 	checkerTexture_.lock()->Load(SxavengerSystem::GetMainThreadContext());
 
 	buffer_ = std::make_unique<DxObject::DimensionBuffer<Vector4f>>();

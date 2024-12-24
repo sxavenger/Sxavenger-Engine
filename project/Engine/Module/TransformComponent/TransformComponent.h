@@ -3,14 +3,12 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
-//* transform
-#include "Transform.h"
-
 //* engine
 #include <Engine/System/DirectX/DxObject/DxDimensionBuffer.h>
 
 //* lib
 #include <Lib/Adapter/Json/IJsonSerializer.h>
+#include <Lib/Transform/Transform.h>
 
 //* c++
 #include <memory>
