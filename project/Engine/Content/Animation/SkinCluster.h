@@ -8,7 +8,9 @@
 
 //* engine
 #include <Engine/System/DirectX/DxObject/DxDimensionBuffer.h>
-#include <Engine/Module/Transform/Transform.h>
+
+//* lib
+#include <Lib/Transform/Transform.h>
 
 //* c++
 #include <cstdint>

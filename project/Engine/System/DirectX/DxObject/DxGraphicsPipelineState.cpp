@@ -37,11 +37,11 @@ void GraphicsPipelineDesc::SetDepthStencil(bool depthEnable, D3D12_DEPTH_WRITE_M
 	depthStencilDesc.DepthFunc      = D3D12_COMPARISON_FUNC_LESS_EQUAL;
 }
 
-void GraphicsPipelineDesc::SetBlendMode(uint32_t renderTargetIndex, BlendMode mode) {
+void GraphicsPipelineDesc::SetBlendMode(uint8_t renderTargetIndex, BlendMode mode) {
 	blends[renderTargetIndex] = mode;
 }
 
-void GraphicsPipelineDesc::SetBlendDesc(uint32_t renderTargetIndex, const D3D12_RENDER_TARGET_BLEND_DESC& desc) {
+void GraphicsPipelineDesc::SetBlendDesc(uint8_t renderTargetIndex, const D3D12_RENDER_TARGET_BLEND_DESC& desc) {
 	blends[renderTargetIndex] = desc;
 }
 
@@ -69,12 +69,12 @@ void GraphicsPipelineDesc::SetRTVFormat(DXGI_FORMAT format) {
 	Assert(rtvFormats.size() < D3D12_SIMULTANEOUS_RENDER_TARGET_COUNT, "RTV Format must be within D3D12_SIMULTANEOUS_RENDER_TARGET_COUNT"); //!< RTVの設定限界
 }
 
-void GraphicsPipelineDesc::SetRTVFormat(uint32_t index, DXGI_FORMAT format) {
+void GraphicsPipelineDesc::SetRTVFormat(uint8_t index, DXGI_FORMAT format) {
 	rtvFormats[index] = format;
 	Assert(rtvFormats.size() < D3D12_SIMULTANEOUS_RENDER_TARGET_COUNT, "RTV Format must be within D3D12_SIMULTANEOUS_RENDER_TARGET_COUNT"); //!< RTVの設定限界
 }
 
-void GraphicsPipelineDesc::SetRTVFormats(uint32_t size, const DXGI_FORMAT formats[]) {
+void GraphicsPipelineDesc::SetRTVFormats(uint8_t size, const DXGI_FORMAT formats[]) {
 	rtvFormats.insert(rtvFormats.end(), formats, formats + size);
 	Assert(rtvFormats.size() < D3D12_SIMULTANEOUS_RENDER_TARGET_COUNT, "RTV Format must be within D3D12_SIMULTANEOUS_RENDER_TARGET_COUNT"); //!< RTVの設定限界
 }
@@ -97,7 +97,7 @@ void GraphicsPipelineDesc::CreateDefaultDesc() {
 
 	SetPrimitive(PrimitiveType::kTriangle);
 
-	SetRTVFormat(0, kOffscreenFormat);
+	SetRTVFormat(kOffscreenFormat);
 	SetDSVFormat(kDefaultDepthFormat);
 }
 
@@ -118,6 +118,9 @@ BlendState* GraphicsPipelineState::blendState_ = nullptr;
 // GraphicsPipelineState class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
+void GraphicsPipelineState::Term() {
+}
+
 void GraphicsPipelineState::CreateBlob(const std::filesystem::path& filepath, GraphicsShaderType type) {
 	std::unique_ptr<ShaderBlob> blob = std::make_unique<ShaderBlob>();
 	blob->Create(filepath, ToProfile(type));
@@ -126,6 +129,10 @@ void GraphicsPipelineState::CreateBlob(const std::filesystem::path& filepath, Gr
 }
 
 void GraphicsPipelineState::SetBlob(ShaderBlob* blob, GraphicsShaderType type) {
+	if (type == GraphicsShaderType::ms) {
+		isUseMeshShaderPipeline_ = true; //!< mesh shader pipelineを使用する場合
+	}
+
 	blobs_[static_cast<uint8_t>(type)] = *blob;
 }
 
@@ -210,7 +217,7 @@ D3D12_BLEND_DESC GraphicsPipelineState::GetBlendDesc() const {
 	desc.RenderTarget[0]        = GetRenderTargetBlendDesc(pipelineDesc_.blends[0]);
 
 	if (desc.IndependentBlendEnable) {
-		for (uint32_t i = 1; i < D3D12_SIMULTANEOUS_RENDER_TARGET_COUNT; ++i) {
+		for (uint8_t i = 1; i < D3D12_SIMULTANEOUS_RENDER_TARGET_COUNT; ++i) {
 			desc.RenderTarget[i] = GetRenderTargetBlendDesc(pipelineDesc_.blends[i]);
 		}
 	}
@@ -323,11 +330,11 @@ void ReflectionGraphicsPipelineState::BindGraphicsBuffer(CommandContext* context
 }
 
 void ReflectionGraphicsPipelineState::TrySetBlobToTable(GraphicsShaderType type, ShaderVisibility visibility, bool isRequired) {
-	if (!blobs_[static_cast<uint32_t>(type)].has_value()) {
+	if (!blobs_[static_cast<uint8_t>(type)].has_value()) {
 		Assert(!isRequired, "required blob is not set."); //!< 絶対的に使用されるblobが設定されていない.
 		return; //!< blobが登録されていないのでreturn
 	}
 
-	ComPtr<ID3D12ShaderReflection> reflection = blobs_[static_cast<uint32_t>(type)].value().GetReflection();
+	ComPtr<ID3D12ShaderReflection> reflection = blobs_[static_cast<uint8_t>(type)].value().GetReflection();
 	table_.CreateTable(reflection.Get(), visibility);
 }

@@ -17,7 +17,7 @@ void AnimationBehavior::SystemAttributeImGui() {
 }
 
 void AnimationBehavior::DrawSystematic(_MAYBE_UNUSED const SxavGraphicsFrame* frame) {
-	if (skeletonMesh_ == nullptr) {
+	/*if (skeletonMesh_ == nullptr) {
 		ModelBehavior::DrawSystematic(frame);
 		return;
 	}
@@ -37,11 +37,11 @@ void AnimationBehavior::DrawSystematic(_MAYBE_UNUSED const SxavGraphicsFrame* fr
 		sConsole->BindGraphicsBuffer(kDefaultVS_AlbedoPS_Deferred, SxavengerSystem::GetMainThreadContext(), bind);
 
 		skeletonMesh_->DrawCall(i);
-	}
+	}*/
 }
 
 void AnimationBehavior::DrawAdaptive(_MAYBE_UNUSED const SxavGraphicsFrame* frame) {
-	if (skeletonMesh_ == nullptr) {
+	/*if (skeletonMesh_ == nullptr) {
 		ModelBehavior::DrawAdaptive(frame);
 		return;
 	}
@@ -61,20 +61,15 @@ void AnimationBehavior::DrawAdaptive(_MAYBE_UNUSED const SxavGraphicsFrame* fram
 		sConsole->BindGraphicsBuffer(kDefaultVS_AlbedoPS, SxavengerSystem::GetMainThreadContext(), bind);
 
 		skeletonMesh_->DrawCall(i);
-	}
+	}*/
 }
 
 void AnimationBehavior::DrawLateAdaptive(_MAYBE_UNUSED const SxavGraphicsFrame* frame) {
-	if (skeletonMesh_ == nullptr) {
+	/*if (skeletonMesh_ == nullptr) {
 		ModelBehavior::DrawLateAdaptive(frame);
 		return;
 	}
 
-	if (skeletonMesh_ == nullptr) {
-		ModelBehavior::DrawAdaptive(frame);
-		return;
-	}
-
 	sConsole->SetGraphicsPipeline(kDefaultVS_AlbedoPS, SxavengerSystem::GetMainThreadContext(), frame->GetSize());
 
 	DxObject::BindBufferDesc bind = {};
@@ -90,5 +85,5 @@ void AnimationBehavior::DrawLateAdaptive(_MAYBE_UNUSED const SxavGraphicsFrame* 
 		sConsole->BindGraphicsBuffer(kDefaultVS_AlbedoPS, SxavengerSystem::GetMainThreadContext(), bind);
 
 		skeletonMesh_->DrawCall(i);
-	}
+	}*/
 }

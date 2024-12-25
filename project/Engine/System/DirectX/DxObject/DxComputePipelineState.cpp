@@ -21,7 +21,6 @@ void ComputePipelineState::SetBlob(ShaderBlob* blob) {
 
 void ComputePipelineState::CreatePipeline(Device* device, ComputeRootSignatureDesc&& desc) {
 	rootSignatureDesc_ = std::move(desc);
-	rootSignatureDesc_.ShrinkToFit();
 	
 	CreateDirectXRootSignature(device);
 	CreateDirectXPipeline(device);
@@ -73,7 +72,6 @@ void ReflectionComputePipelineState::ReflectionPipeline(Device* device) {
 	SetBlobToTable();
 
 	rootSignatureDesc_ = table_.CreateComputeRootSignatureDesc();
-	rootSignatureDesc_.ShrinkToFit();
 
 	CreateDirectXRootSignature(device);
 	CreateDirectXPipeline(device);

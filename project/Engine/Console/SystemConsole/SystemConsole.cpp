@@ -101,15 +101,6 @@ void SystemConsole::ShowSystemMenu() {
 		ImGui::EndMenu();
 	}
 
-	if (ImGui::BeginMenu("thread")) {
-		MenuDummy();
-
-		auto threadCollection = SxavengerSystem::GetThreadCollection();
-		threadCollection->SystemDebugGui();
-
-		ImGui::EndMenu();
-	}
-
 	if (ImGui::BeginMenu("window collection")) {
 		MenuDummy();
 

@@ -6,7 +6,7 @@
 //* engine
 #include <Engine/System/DirectX/DxObject/DxDescriptor.h>
 #include <Engine/System/DirectX/DirectXContext.h>
-#include <Engine/Content/Texture/DepthTexture.h>
+#include <Engine/Content/TextureBuffer/DepthTexture.h>
 
 //* lib
 #include <Lib/Geometry/Vector2.h>

@@ -4,7 +4,7 @@
 // include
 //-----------------------------------------------------------------------------------------
 //* base
-#include <Engine/Module/Transform/TransformComponent.h>
+#include <Engine/Module/TransformComponent/TransformComponent.h>
 
 //* collider
 #include "CollisionDetection.h"

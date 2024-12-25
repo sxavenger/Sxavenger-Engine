@@ -3,61 +3,62 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
+//* texture
+#include "BaseOffscreenTexture.h"
+
 //* engine
-#include <Engine/System/UI/ISystemDebugGui.h>
+#include <Engine/System/DirectX/DirectXContext.h>
 
-//* thread
-#include "AsyncTask.h"
-#include "AsyncThread.h"
-
-//* c++
-#include <vector>
-#include <queue>
-#include <memory>
-#include <mutex>
+//* lib
+#include <Lib/Geometry/Vector4.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// AsyncThreadCollection class
+// DepthTexture class
 ////////////////////////////////////////////////////////////////////////////////////////////
-class AsyncThreadCollection
-	: public ISystemDebugGui {
+class DepthTexture
+	: public BaseOffscreenTexture {
 public:
 
 	//=========================================================================================
 	// public methods
 	//=========================================================================================
 
-	AsyncThreadCollection()  = default;
-	~AsyncThreadCollection() { Term(); }
+	DepthTexture()  = default;
+	~DepthTexture() { Term(); }
 
-	void Init(uint32_t threadCount);
+	void Create(const Vector2ui& size); //!< default depth format only.
+	//!< format独自設定したい場合は, DepthFormatの変換を用意する.
 
 	void Term();
 
-	void PushTask(const std::weak_ptr<AsyncTask>& task);
+	//* depth option *//
 
-	void SystemDebugGui() override;
+	void TransitionBeginDepthWrite(const DirectXThreadContext* context);
+
+	void TransitionEndDepthWrite(const DirectXThreadContext* context);
+
+	void ClearDepth(const DirectXThreadContext* context);
+
+	//* getter *//
+
+	const D3D12_CPU_DESCRIPTOR_HANDLE& GetCPUHandleDSV() const { return descriptorDSV_.GetCPUHandle(); }
 
 private:
 
 	//=========================================================================================
 	// private variables
 	//=========================================================================================
-	
-	//* thread parameter *//
 
-	std::vector<std::unique_ptr<AsyncThread>> threads_;
+	//* descriptor *//
 
-	std::mutex mutex_;
-
-	//* task container *//
-
-	std::queue<std::weak_ptr<AsyncTask>> tasks_;
+	DxObject::Descriptor descriptorDSV_;
 
 	//=========================================================================================
 	// private methods
 	//=========================================================================================
 
-	std::shared_ptr<AsyncTask> GetTask();
+	void CreateResource();
+	void CreateDSV();
+	void CreateSRV();
 
 };

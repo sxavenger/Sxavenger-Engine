@@ -41,8 +41,6 @@
     <ClCompile Include="Engine\System\UI\ImGuiController.cpp" />
     <ClCompile Include="Lib\Adapter\Json\JsonAdapter.cpp" />
     <ClCompile Include="Engine\System\DirectX\DxObject\DxBindBuffer.cpp" />
-    <ClCompile Include="Engine\Module\Transform\Transform.cpp" />
-    <ClCompile Include="Engine\Module\Transform\TransformComponent.cpp" />
     <ClCompile Include="Engine\Module\Behavior\BaseBehavior.cpp" />
     <ClCompile Include="Lib\Adapter\Json\IJsonSerializer.cpp" />
     <ClCompile Include="Engine\System\Runtime\Performance\Performance.cpp" />
@@ -67,7 +65,6 @@
     <ClCompile Include="Engine\Module\Behavior\ModelBehavior.cpp" />
     <ClCompile Include="Engine\Module\Pipeline\ComputePipelineCollection.cpp" />
     <ClCompile Include="Lib\Sxl\OptimizedSet.cpp" />
-    <ClCompile Include="Demo\ChessBoard.cpp" />
     <ClCompile Include="Engine\Module\SxavengerGraphics\ScreenPresenter.cpp" />
     <ClCompile Include="Engine\Module\VisualLayer\VisualLayer.cpp" />
     <ClCompile Include="Engine\Module\VisualLayer\VisualDoF.cpp" />
@@ -83,23 +80,18 @@
     <ClCompile Include="Engine\Content\Animation\SkinCluster.cpp" />
     <ClCompile Include="Engine\System\DirectX\DxObject\DxUnorderedDimensionBuffer.cpp" />
     <ClCompile Include="Engine\Module\Behavior\AnimationBehavior.cpp" />
-    <ClCompile Include="Demo\AnimationDemo.cpp" />
     <ClCompile Include="Engine\Content\Animation\SkinningPipeline.cpp" />
     <ClCompile Include="Engine\Module\Collider\Collider.cpp" />
     <ClCompile Include="Engine\Module\Collider\CollisionDetection.cpp" />
     <ClCompile Include="Engine\Module\Collider\ColliderCollection.cpp" />
     <ClCompile Include="Lib\Sxl\Formatter.cpp" />
     <ClCompile Include="Engine\Console\RenderConsole\Outliner.cpp" />
-    <ClCompile Include="Demo\Ground.cpp" />
     <ClCompile Include="Engine\Adapter\Particle\Emitter.cpp" />
     <ClCompile Include="Engine\Adapter\Particle\BaseParticle.cpp" />
     <ClCompile Include="Lib\Adapter\Curve\Curve.cpp" />
     <ClCompile Include="Engine\System\DirectX\DxObject\DxShaderBlob.cpp" />
     <ClCompile Include="Engine\System\DirectX\DxObject\DxGraphicsPipelineState.cpp" />
     <ClCompile Include="Engine\System\DirectX\DxObject\DxComputePipelineState.cpp" />
-    <ClCompile Include="Engine\System\Runtime\Thread\AsyncTask.cpp" />
-    <ClCompile Include="Engine\System\Runtime\Thread\AsyncThread.cpp" />
-    <ClCompile Include="Engine\System\Runtime\Thread\AsyncThreadCollection.cpp" />
     <ClCompile Include="Engine\System\Runtime\Scene\BaseScene.cpp" />
     <ClCompile Include="Engine\System\Runtime\Scene\BaseSceneFactory.cpp" />
     <ClCompile Include="Engine\System\Runtime\Scene\SceneController.cpp" />
@@ -119,6 +111,12 @@
     <ClCompile Include="Demo\GameLoop\DemoGameLoop.cpp" />
     <ClCompile Include="Engine\Module\TransformComponent\TransformComponent.cpp" />
     <ClCompile Include="Lib\Transform\Transform.cpp" />
+    <ClCompile Include="Engine\Content\TextureBuffer\BaseOffscreenTexture.cpp" />
+    <ClCompile Include="Engine\Content\TextureBuffer\MultiViewTextureBuffer.cpp" />
+    <ClCompile Include="Engine\Content\TextureBuffer\OffscreenTextureCollection.cpp" />
+    <ClCompile Include="Engine\Content\TextureBuffer\RenderTexture.cpp" />
+    <ClCompile Include="Engine\Content\TextureBuffer\UnorderedTexture.cpp" />
+    <ClCompile Include="Engine\Content\TextureBuffer\DepthTexture.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\System\Window\Window.h" />
@@ -161,8 +159,6 @@
     <ClInclude Include="Lib\Adapter\Json\IJsonSerializer.h" />
     <ClInclude Include="Lib\Adapter\Json\JsonAdapter.h" />
     <ClInclude Include="Engine\System\DirectX\DxObject\DxBindBuffer.h" />
-    <ClInclude Include="Engine\Module\Transform\TransformComponent.h" />
-    <ClInclude Include="Engine\Module\Transform\Transform.h" />
     <ClInclude Include="Engine\Module\Behavior\BaseBehavior.h" />
     <ClInclude Include="Engine\System\Runtime\Performance\Performance.h" />
     <ClInclude Include="Engine\System\Runtime\Performance\DeltaTimePoint.h" />
@@ -188,7 +184,6 @@
     <ClInclude Include="Engine\Module\Behavior\ModelBehavior.h" />
     <ClInclude Include="Engine\Module\Pipeline\ComputePipelineCollection.h" />
     <ClInclude Include="Lib\Sxl\OptimizedSet.h" />
-    <ClInclude Include="Demo\ChessBoard.h" />
     <ClInclude Include="Engine\Module\SxavengerGraphics\ScreenPresenter.h" />
     <ClInclude Include="Engine\Module\VisualLayer\VisualLayer.h" />
     <ClInclude Include="Engine\Module\VisualLayer\VisualDoF.h" />
@@ -207,23 +202,18 @@
     <ClInclude Include="Engine\Content\Animation\SkinCluster.h" />
     <ClInclude Include="Engine\System\DirectX\DxObject\DxUnorderedDimensionBuffer.h" />
     <ClInclude Include="Engine\Module\Behavior\AnimationBehavior.h" />
-    <ClInclude Include="Demo\AnimationDemo.h" />
     <ClInclude Include="Engine\Content\Animation\SkinningPipeline.h" />
     <ClInclude Include="Engine\Module\Collider\Collider.h" />
     <ClInclude Include="Engine\Module\Collider\CollisionDetection.h" />
     <ClInclude Include="Engine\Module\Collider\ColliderCollection.h" />
     <ClInclude Include="Lib\Sxl\Formatter.h" />
     <ClInclude Include="Engine\Console\RenderConsole\Outliner.h" />
-    <ClInclude Include="Demo\Ground.h" />
     <ClInclude Include="Engine\Adapter\Particle\Emitter.h" />
     <ClInclude Include="Engine\Adapter\Particle\BaseParticle.h" />
     <ClInclude Include="Lib\Adapter\Curve\Curve.h" />
     <ClInclude Include="Engine\System\DirectX\DxObject\DxShaderBlob.h" />
     <ClInclude Include="Engine\System\DirectX\DxObject\DxGraphicsPipelineState.h" />
     <ClInclude Include="Engine\System\DirectX\DxObject\DxComputePipelineState.h" />
-    <ClInclude Include="Engine\System\Runtime\Thread\AsyncTask.h" />
-    <ClInclude Include="Engine\System\Runtime\Thread\AsyncThread.h" />
-    <ClInclude Include="Engine\System\Runtime\Thread\AsyncThreadCollection.h" />
     <ClInclude Include="Engine\System\Runtime\Scene\BaseScene.h" />
     <ClInclude Include="Engine\System\Runtime\Scene\BaseSceneFactory.h" />
     <ClInclude Include="Engine\System\Runtime\Scene\SceneController.h" />
@@ -243,5 +233,11 @@
     <ClInclude Include="Demo\GameLoop\DemoGameLoop.h" />
     <ClInclude Include="Engine\Module\TransformComponent\TransformComponent.h" />
     <ClInclude Include="Lib\Transform\Transform.h" />
+    <ClInclude Include="Engine\Content\TextureBuffer\BaseOffscreenTexture.h" />
+    <ClInclude Include="Engine\Content\TextureBuffer\MultiViewTextureBuffer.h" />
+    <ClInclude Include="Engine\Content\TextureBuffer\OffscreenTextureCollection.h" />
+    <ClInclude Include="Engine\Content\TextureBuffer\RenderTexture.h" />
+    <ClInclude Include="Engine\Content\TextureBuffer\UnorderedTexture.h" />
+    <ClInclude Include="Engine\Content\TextureBuffer\DepthTexture.h" />
   </ItemGroup>
 </Project>

@@ -8,7 +8,6 @@ namespace {
 	static std::unique_ptr<WinApp>                sWinApp            = nullptr; //!< win app system
 	static std::unique_ptr<DirectXCommon>         sDirectXCommon     = nullptr; //!< DirectX12 system
 	static std::unique_ptr<DirectXThreadContext>  sMainThreadContext = nullptr; //!< main thread context
-	static std::unique_ptr<AsyncThreadCollection> sThreadCollection  = nullptr; //!< thread collection
 
 	//* system user
 	static std::unique_ptr<GameWindowCollection> sWindowCollection  = nullptr; //!< window collection
@@ -30,9 +29,6 @@ void SxavengerSystemEngine::Init() {
 
 	sMainThreadContext = std::make_unique<DirectXThreadContext>();
 	sMainThreadContext->Init(2); //!< allocator count
-
-	sThreadCollection = std::make_unique<AsyncThreadCollection>();
-	sThreadCollection->Init(2); //!< thread count
 
 	sWindowCollection = std::make_unique<GameWindowCollection>();
 	sInput            = std::make_unique<Input>();
@@ -68,18 +64,6 @@ void SxavengerSystemEngine::ExecuteAllAllocator() {
 
 DirectXThreadContext* SxavengerSystemEngine::GetMainThreadContext() {
 	return sMainThreadContext.get();
-}
-
-void SxavengerSystemEngine::PushTask(const std::weak_ptr<AsyncTask>& task) {
-	sThreadCollection->PushTask(task);
-}
-
-void SxavengerSystemEngine::TermThreadCollection() {
-	sThreadCollection.reset();
-}
-
-AsyncThreadCollection* SxavengerSystemEngine::GetThreadCollection() {
-	return sThreadCollection.get();
 }
 
 const std::weak_ptr<GameWindow> SxavengerSystemEngine::CreateMainWindow(

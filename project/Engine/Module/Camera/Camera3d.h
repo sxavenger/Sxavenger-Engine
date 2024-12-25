@@ -4,7 +4,6 @@
 // include
 //-----------------------------------------------------------------------------------------
 //* base
-#include <Engine/Module/Transform/TransformComponent.h>
 #include <Engine/Module/Behavior/TransformBehavior.h>
 
 //* engine

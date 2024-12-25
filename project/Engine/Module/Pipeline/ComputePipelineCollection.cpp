@@ -21,7 +21,8 @@ void ComputePipelineCollection::Term() {
 }
 
 void ComputePipelineCollection::SetPipeline(ComputePipelineType type, const DirectXThreadContext* context) {
-	pipelines_[type]->ReloadAndSetPipeline(context->GetDxCommand());
+	//pipelines_[type]->ReloadAndSetPipeline(context->GetDxCommand());
+	pipelines_[type]->SetPipeline(context->GetDxCommand()); //!< 仮設定
 }
 
 void ComputePipelineCollection::BindComputeBuffer(ComputePipelineType type, const DirectXThreadContext* context, const DxObject::BindBufferDesc& desc) {

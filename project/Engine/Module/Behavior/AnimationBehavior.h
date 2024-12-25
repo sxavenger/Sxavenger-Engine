@@ -7,7 +7,7 @@
 #include "ModelBehavior.h"
 
 //* engine
-#include <Engine/Content/Animation/SkeletonMesh.h>
+//#include <Engine/Content/Animation/SkeletonMesh.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // AnimationBehavior class
@@ -40,6 +40,6 @@ protected:
 	// protected variables
 	//=========================================================================================
 
-	SkeletonMesh* skeletonMesh_ = nullptr;
+	//SkeletonMesh* skeletonMesh_ = nullptr;
 
 };

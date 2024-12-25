@@ -18,7 +18,7 @@ const SystematicRenderFrame::GBufferArray<DXGI_FORMAT> SystematicRenderFrame::fo
 
 void SystematicRenderFrame::Create(const Vector2ui& size) {
 	for (uint32_t i = 0; i < formats_.size(); ++i) {
-		buffers_[i] = std::make_unique<MultiViewTexture>();
+		buffers_[i] = std::make_unique<MultiViewTextureBuffer>();
 		buffers_[i]->Create(VIEWFLAG_RENDER_TEXTURE, size, {}, formats_[i]);
 	}
 }

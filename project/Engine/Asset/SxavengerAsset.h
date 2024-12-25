@@ -26,6 +26,8 @@ public:
 	template <BaseAssetConcept T>
 	static std::shared_ptr<T> GetAsset(const std::filesystem::path& filepath);
 
+	static AssetCollection* GetCollection() { return collection_.get(); }
+
 private:
 
 	//=========================================================================================

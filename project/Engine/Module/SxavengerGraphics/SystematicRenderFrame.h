@@ -5,7 +5,7 @@
 //-----------------------------------------------------------------------------------------
 //* engine
 #include <Engine/System/DirectX/DirectXContext.h>
-#include <Engine/Content/Texture/MultiViewTexture.h>
+#include <Engine/Content/TextureBuffer/MultiViewTextureBuffer.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // SystematicRenderFrame class
@@ -61,7 +61,7 @@ public:
 
 	const D3D12_GPU_DESCRIPTOR_HANDLE& GetGPUHandleSRV(GBuffer index) const { return buffers_.at(static_cast<uint8_t>(index))->GetGPUHandleSRV(); }
 
-	const MultiViewTexture* GetTexture(GBuffer index) const { return buffers_.at(static_cast<uint8_t>(index)).get(); }
+	const MultiViewTextureBuffer* GetTexture(GBuffer index) const { return buffers_.at(static_cast<uint8_t>(index)).get(); }
 
 	//=========================================================================================
 	// public variables
@@ -75,6 +75,6 @@ private:
 	// private variables
 	//=========================================================================================
 
-	GBufferArray<std::unique_ptr<MultiViewTexture>> buffers_;
+	GBufferArray<std::unique_ptr<MultiViewTextureBuffer>> buffers_;
 
 };

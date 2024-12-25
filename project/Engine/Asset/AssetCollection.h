@@ -120,7 +120,7 @@ inline std::weak_ptr<BaseAsset> AssetCollection::Import(const std::filesystem::p
 
 template <DerivedFromBaseAssetConcept T>
 inline std::shared_ptr<T> AssetCollection::ConvertAsset(const std::shared_ptr<BaseAsset>& base) {
-	std::shared_ptr<T> result = std::dynamic_pointer_cast<T>(base)
+	std::shared_ptr<T> result = std::dynamic_pointer_cast<T>(base);
 	Assert(result != nullptr, "base asset type is different.");
 
 	return result;

@@ -201,8 +201,8 @@ private:
 
 	static void MenuDummy();
 
-	static WindowRect ShowTextureImGuiFullWindow(const MultiViewTexture* texture);
-	static WindowRect ShowTextureImGuiFullWindow(const BaseTexture* texture);
+	static WindowRect ShowTextureImGuiFullWindow(const MultiViewTextureBuffer* texture);
+	static WindowRect ShowTextureImGuiFullWindow(const Texture* texture);
 
 	static void ShowDemoGrid(const Camera3d* camera, const WindowRect& rect, float length);
 

@@ -3,52 +3,55 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
-//* scene
-#include "IScene.h"
+//* engine
+#include <Engine/System/Utility/ComPtr.h>
+#include <Engine/System/DirectX/DxObject/DxDescriptor.h>
+
+//* lib
+#include <Lib/Geometry/Vector2.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// SceneManager class
+// Base OffscreenTexture class
 ////////////////////////////////////////////////////////////////////////////////////////////
-class SceneManager {
+class BaseOffscreenTexture {
 public:
 
 	//=========================================================================================
 	// public methods
 	//=========================================================================================
 
-	//! [template]
-	//! スタート時のsceneの設定
-	template <DerivedFromIScene T>
-	void Init();
-
-	void Init(std::unique_ptr<IScene>& scene);
+	BaseOffscreenTexture()  = default;
+	~BaseOffscreenTexture() { Term(); }
 
 	void Term();
 
-	void Update();
+	//* getter *//
 
-	void Draw();
+	ID3D12Resource* GetResource() const { return resource_.Get(); }
 
-	void ChangeScene();
+	const D3D12_GPU_DESCRIPTOR_HANDLE& GetGPUHandleSRV() const { return descriptorSRV_.GetGPUHandle(); }
 
-private:
+	const Vector2ui& GetSize() const { return size_; }
+
+	const DXGI_FORMAT GetFormat() const { return format_; }
+
+protected:
 
 	//=========================================================================================
-	// private variables
+	// protected variables
 	//=========================================================================================
 
-	//* scene *//
+	//* DirectX12 *//
 
-	std::unique_ptr<IScene> scene_ = nullptr;
+	ComPtr<ID3D12Resource> resource_;
+
+	//* descriptor *//
+
+	DxObject::Descriptor descriptorSRV_;
+
+	//* parameter *//
+
+	Vector2ui   size_;
+	DXGI_FORMAT format_;
 
 };
-
-////////////////////////////////////////////////////////////////////////////////////////////
-// SceneManager class template methods
-////////////////////////////////////////////////////////////////////////////////////////////
-
-template<DerivedFromIScene T>
-inline void SceneManager::Init() {
-	scene_ = std::make_unique<T>();
-	scene_->Init();
-}

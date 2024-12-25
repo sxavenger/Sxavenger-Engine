@@ -144,7 +144,7 @@ private:
 	// private methods
 	//=========================================================================================
 
-	void CopyTexture(const DirectXThreadContext* context, const MultiViewTexture* dst, const MultiViewTexture* src);
+	void CopyTexture(const DirectXThreadContext* context, const MultiViewTextureBuffer* dst, const MultiViewTextureBuffer* src);
 	// HACK: Dispatch式に変更
 
 };

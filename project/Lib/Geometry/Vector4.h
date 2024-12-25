@@ -57,8 +57,8 @@ using Vector4i = Vector4<int32_t>;
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Color4 class
 ////////////////////////////////////////////////////////////////////////////////////////////
-template <typename T>
-concept ColorT = std::same_as<T, int> || std::same_as<T, float>;
+template <typename T> // TODO: std::intergral<T> || std::floating_point<T> に変更
+concept ColorT = std::same_as<T, int32_t> || std::same_as<T, float>;
 //!< intまたはfloatのみを使用
 
 template <ColorT T>

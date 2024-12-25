@@ -9,7 +9,7 @@
 
 //* engine
 #include <Engine/System/DirectX/DxObject/DxUnorderedDimensionBuffer.h>
-#include <Engine/Content/Model/Model.h>
+#include <Engine/Asset/Model/Model.h>
 
 //* c++
 #include <vector>
@@ -32,7 +32,7 @@ public:
 	//* animation option *//
 
 	void UpdateAnimation(const Animation& animation, DeltaTimePoint<TimeUnit::s> time, bool isLoop = true);
-	void UpdateAnimation(const AnimationGroup& animationGroup, DeltaTimePoint<TimeUnit::s> time, bool isLoop = true);
+	//void UpdateAnimation(const AnimationGroup& animationGroup, DeltaTimePoint<TimeUnit::s> time, bool isLoop = true);
 
 	void UpdateTransitionAnimationAToB(
 		const Animation& animationA, DeltaTimePoint<TimeUnit::s> timeA,

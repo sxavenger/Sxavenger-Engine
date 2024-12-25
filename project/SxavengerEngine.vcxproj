@@ -134,10 +134,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Demo\AnimationDemo.cpp" />
-    <ClCompile Include="Demo\ChessBoard.cpp" />
     <ClCompile Include="Demo\GameLoop\DemoGameLoop.cpp" />
-    <ClCompile Include="Demo\Ground.cpp" />
     <ClCompile Include="Engine\Adapter\Particle\BaseParticle.cpp" />
     <ClCompile Include="Engine\Adapter\Particle\Emitter.cpp" />
     <ClCompile Include="Engine\Asset\Animator\Animator.cpp" />
@@ -161,6 +158,12 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="Engine\Content\Animation\SkinningPipeline.cpp" />
     <ClCompile Include="Engine\Content\InputAssembler\InputAssembler.cpp" />
     <ClCompile Include="Engine\Content\InputAssembler\InputMesh.cpp" />
+    <ClCompile Include="Engine\Content\TextureBuffer\BaseOffscreenTexture.cpp" />
+    <ClCompile Include="Engine\Content\TextureBuffer\DepthTexture.cpp" />
+    <ClCompile Include="Engine\Content\TextureBuffer\MultiViewTextureBuffer.cpp" />
+    <ClCompile Include="Engine\Content\TextureBuffer\OffscreenTextureCollection.cpp" />
+    <ClCompile Include="Engine\Content\TextureBuffer\RenderTexture.cpp" />
+    <ClCompile Include="Engine\Content\TextureBuffer\UnorderedTexture.cpp" />
     <ClCompile Include="Engine\GameLoop\ConsoleGameLoop.cpp" />
     <ClCompile Include="Engine\GameLoop\EngineGameLoop.cpp" />
     <ClCompile Include="Engine\Module\Behavior\AnimationBehavior.cpp" />
@@ -186,8 +189,6 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="Engine\Module\SxavengerGraphics\XclipseProcessFrame.cpp" />
     <ClCompile Include="Engine\Module\SxavengerModule.cpp" />
     <ClCompile Include="Engine\Module\TransformComponent\TransformComponent.cpp" />
-    <ClCompile Include="Engine\Module\Transform\Transform.cpp" />
-    <ClCompile Include="Engine\Module\Transform\TransformComponent.cpp" />
     <ClCompile Include="Engine\Module\VisualLayer\VisualDoF.cpp" />
     <ClCompile Include="Engine\Module\VisualLayer\VisualLayer.cpp" />
     <ClCompile Include="Engine\System\DirectX\DirectXCommon.cpp" />
@@ -216,9 +217,6 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="Engine\System\Runtime\Scene\BaseScene.cpp" />
     <ClCompile Include="Engine\System\Runtime\Scene\BaseSceneFactory.cpp" />
     <ClCompile Include="Engine\System\Runtime\Scene\SceneController.cpp" />
-    <ClCompile Include="Engine\System\Runtime\Thread\AsyncTask.cpp" />
-    <ClCompile Include="Engine\System\Runtime\Thread\AsyncThread.cpp" />
-    <ClCompile Include="Engine\System\Runtime\Thread\AsyncThreadCollection.cpp" />
     <ClCompile Include="Engine\System\SxavengerSystem.cpp" />
     <ClCompile Include="Engine\System\UI\ImGuiController.cpp" />
     <ClCompile Include="Engine\System\Utility\Logger.cpp" />
@@ -246,10 +244,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Demo\AnimationDemo.h" />
-    <ClInclude Include="Demo\ChessBoard.h" />
     <ClInclude Include="Demo\GameLoop\DemoGameLoop.h" />
-    <ClInclude Include="Demo\Ground.h" />
     <ClInclude Include="Engine\Adapter\Particle\BaseParticle.h" />
     <ClInclude Include="Engine\Adapter\Particle\Emitter.h" />
     <ClInclude Include="Engine\Asset\Animator\Animator.h" />
@@ -275,6 +270,12 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Engine\Content\Animation\SkinningPipeline.h" />
     <ClInclude Include="Engine\Content\InputAssembler\InputAssembler.h" />
     <ClInclude Include="Engine\Content\InputAssembler\InputMesh.h" />
+    <ClInclude Include="Engine\Content\TextureBuffer\BaseOffscreenTexture.h" />
+    <ClInclude Include="Engine\Content\TextureBuffer\DepthTexture.h" />
+    <ClInclude Include="Engine\Content\TextureBuffer\MultiViewTextureBuffer.h" />
+    <ClInclude Include="Engine\Content\TextureBuffer\OffscreenTextureCollection.h" />
+    <ClInclude Include="Engine\Content\TextureBuffer\RenderTexture.h" />
+    <ClInclude Include="Engine\Content\TextureBuffer\UnorderedTexture.h" />
     <ClInclude Include="Engine\GameLoop\ConsoleGameLoop.h" />
     <ClInclude Include="Engine\GameLoop\EngineGameLoop.h" />
     <ClInclude Include="Engine\Module\Animation\Animation.h" />
@@ -301,8 +302,6 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Engine\Module\SxavengerGraphics\XclipseProcessFrame.h" />
     <ClInclude Include="Engine\Module\SxavengerModule.h" />
     <ClInclude Include="Engine\Module\TransformComponent\TransformComponent.h" />
-    <ClInclude Include="Engine\Module\Transform\Transform.h" />
-    <ClInclude Include="Engine\Module\Transform\TransformComponent.h" />
     <ClInclude Include="Engine\Module\VisualLayer\VisualDoF.h" />
     <ClInclude Include="Engine\Module\VisualLayer\VisualLayer.h" />
     <ClInclude Include="Engine\System\Cinfig\SxavengerDirectory.h" />
@@ -334,9 +333,6 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Engine\System\Runtime\Scene\BaseScene.h" />
     <ClInclude Include="Engine\System\Runtime\Scene\BaseSceneFactory.h" />
     <ClInclude Include="Engine\System\Runtime\Scene\SceneController.h" />
-    <ClInclude Include="Engine\System\Runtime\Thread\AsyncTask.h" />
-    <ClInclude Include="Engine\System\Runtime\Thread\AsyncThread.h" />
-    <ClInclude Include="Engine\System\Runtime\Thread\AsyncThreadCollection.h" />
     <ClInclude Include="Engine\System\SxavengerSystem.h" />
     <ClInclude Include="Engine\System\UI\ImGuiController.h" />
     <ClInclude Include="Engine\System\UI\ISystemDebugGui.h" />

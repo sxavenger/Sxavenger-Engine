@@ -8,9 +8,11 @@
 
 //* engine
 #include <Engine/System/DirectX/DxObject/DxDimensionBuffer.h>
-#include <Engine/Content/Model/Model.h>
-#include <Engine/Module/Transform/Transform.h>
+#include <Engine/Asset/Model/Model.h>
 #include <Engine/Module/Material/MaterialComponent.h>
+
+//* lib
+#include <Lib/Transform/Transform.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // InstanceBehavior class
@@ -48,7 +50,7 @@ protected:
 	// protected variables
 	//=========================================================================================
 
-	Model* model_;
+	Model* model_; //!< FIXME: AssetModelに変更
 
 	std::unique_ptr<DxObject::DimensionBuffer<TransformationMatrix>> matrixInstance_;
 

@@ -5,7 +5,9 @@
 //-----------------------------------------------------------------------------------------
 //* engine
 #include <Engine/System/DirectX/DxObject/DxDimensionBuffer.h>
-#include <Engine/Module/Transform/Transform.h>
+
+//* lib
+#include <Lib/Transform/Transform.h>
 
 //* lib
 #include <Lib/Geometry/Vector4.h>

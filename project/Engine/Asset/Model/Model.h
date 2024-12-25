@@ -75,7 +75,7 @@ public:
 
 	void SetIABuffer(uint32_t meshIndex) const;
 
-	void DrawCall(uint32_t meshIndex, uint32_t instanceCount) const;
+	void DrawCall(uint32_t meshIndex, uint32_t instanceCount = 1) const;
 
 	uint32_t GetMeshSize() const { return static_cast<uint32_t>(meshes_.size()); }
 

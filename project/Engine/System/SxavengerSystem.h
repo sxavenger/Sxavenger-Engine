@@ -8,7 +8,6 @@
 #include "DirectX/DirectXCommon.h"
 #include "DirectX/DirectXContext.h"
 #include "Window/GameWindowCollection.h"
-#include "Runtime/Thread/AsyncThreadCollection.h"
 #include "Runtime/Input/Input.h"
 #include "UI/ImGuiController.h"
 
@@ -47,16 +46,6 @@ public:
 	//static ID3D12GraphicsCommandList6* GetCommandList();
 
 	static DirectXThreadContext* GetMainThreadContext();
-
-	//-----------------------------------------------------------------------------------------
-	// AsyncThreadCollection option
-	//-----------------------------------------------------------------------------------------
-
-	static void PushTask(const std::weak_ptr<AsyncTask>& task);
-
-	static void TermThreadCollection();
-
-	static AsyncThreadCollection* GetThreadCollection();
 
 	//-----------------------------------------------------------------------------------------
 	// GameWindowCollection option

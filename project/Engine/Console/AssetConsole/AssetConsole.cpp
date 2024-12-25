@@ -38,7 +38,7 @@ void AssetConsole::DisplayAsset() {
 		ImVec2 region         = ImGui::GetContentRegionAvail();
 
 		ImGui::BeginChild("asset tree", { region.x * 0.2f, region.y }, ImGuiChildFlags_Borders, flag);
-		SxavengerAsset::GetAsset()->SystemDebugGui();
+		SxavengerAsset::GetCollection()->SystemDebugGui();
 		ImGui::EndChild();
 	}
 

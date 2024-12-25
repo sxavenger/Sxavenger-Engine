@@ -463,25 +463,25 @@ void RenderConsole::DrawGame() {
 			computePipeline_->Dispatch(context, game_->GetSize());
 		}
 
-		{ //!< ssao
-			game_->GetXclipse()->NextResultBufferIndex();
+		//{ //!< ssao
+		//	game_->GetXclipse()->NextResultBufferIndex();
 
-			computePipeline_->SetPipeline(kXclipse_SSAO, context);
+		//	computePipeline_->SetPipeline(kXclipse_SSAO, context);
 
-			BindBufferDesc bind = {};
-			bind.SetHandle("gInput", game_->GetXclipse()->GetPrevBuffer()->GetGPUHandleUAV());
-			bind.SetAddress("gCamera", game_->GetCamera()->GetGPUVirtualAddress());
-			bind.SetAddress("gConfig", game_->GetGetConfigVirtualAddress());
-			bind.SetHandle("gNormal", game_->GetSystematic()->GetGPUHandleSRV(SystematicRenderFrame::GBuffer::kNormal));
-			bind.SetHandle("gPosition", game_->GetSystematic()->GetGPUHandleSRV(SystematicRenderFrame::GBuffer::kPosition));
-			bind.SetHandle("gDepth", game_->GetDepthBufferController()->GetRasterizerGPUHandleSRV());
-			bind.SetHandle("gOutput", game_->GetXclipse()->GetResultBuffer()->GetGPUHandleUAV());
+		//	BindBufferDesc bind = {};
+		//	bind.SetHandle("gInput", game_->GetXclipse()->GetPrevBuffer()->GetGPUHandleUAV());
+		//	bind.SetAddress("gCamera", game_->GetCamera()->GetGPUVirtualAddress());
+		//	bind.SetAddress("gConfig", game_->GetGetConfigVirtualAddress());
+		//	bind.SetHandle("gNormal", game_->GetSystematic()->GetGPUHandleSRV(SystematicRenderFrame::GBuffer::kNormal));
+		//	bind.SetHandle("gPosition", game_->GetSystematic()->GetGPUHandleSRV(SystematicRenderFrame::GBuffer::kPosition));
+		//	bind.SetHandle("gDepth", game_->GetDepthBufferController()->GetRasterizerGPUHandleSRV());
+		//	bind.SetHandle("gOutput", game_->GetXclipse()->GetResultBuffer()->GetGPUHandleUAV());
 
-			computePipeline_->BindComputeBuffer(kXclipse_SSAO, context, bind);
-			computePipeline_->Dispatch(context, game_->GetSize());
+		//	computePipeline_->BindComputeBuffer(kXclipse_SSAO, context, bind);
+		//	computePipeline_->Dispatch(context, game_->GetSize());
 
-			game_->EndXclipse(context);
-		}
+		//	
+		//}
 
 		{ //* atmosphere
 
@@ -500,6 +500,8 @@ void RenderConsole::DrawGame() {
 			computePipeline_->Dispatch(context, game_->GetSize());
 
 		}
+
+		game_->EndXclipse(context);
 	}
 
 	game_->TransitionXclipseToAdaptive(context);
@@ -534,7 +536,7 @@ void RenderConsole::MenuDummy() {
 	ImGui::Dummy(size);
 }
 
-RenderConsole::WindowRect RenderConsole::ShowTextureImGuiFullWindow(const MultiViewTexture* texture) {
+RenderConsole::WindowRect RenderConsole::ShowTextureImGuiFullWindow(const MultiViewTextureBuffer* texture) {
 
 	// タブ等を排除した全体のwindowSize計算
 	ImVec2 regionMax  = ImGui::GetWindowContentRegionMax();
@@ -574,7 +576,7 @@ RenderConsole::WindowRect RenderConsole::ShowTextureImGuiFullWindow(const MultiV
 	return rect;
 }
 
-RenderConsole::WindowRect RenderConsole::ShowTextureImGuiFullWindow(const BaseTexture* texture) {
+RenderConsole::WindowRect RenderConsole::ShowTextureImGuiFullWindow(const Texture* texture) {
 
 	// タブ等を排除した全体のwindowSize計算
 	ImVec2 regionMax  = ImGui::GetWindowContentRegionMax();

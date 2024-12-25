@@ -6,7 +6,7 @@ _DXOBJECT_USING
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 void AdaptiveRenderFrame::Create(const Vector2ui& size) {
-	buffer_ = std::make_unique<MultiViewTexture>();
+	buffer_ = std::make_unique<MultiViewTextureBuffer>();
 	buffer_->Create(VIEWFLAG_RENDER_TEXTURE, size, {}, kOffscreenFormat);
 }
 

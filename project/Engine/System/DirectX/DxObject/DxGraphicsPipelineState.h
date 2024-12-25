@@ -60,15 +60,15 @@ public:
 	void SetRasterizer(D3D12_CULL_MODE cullMode, D3D12_FILL_MODE fillMode);
 	void SetDepthStencil(bool depthEnable, D3D12_DEPTH_WRITE_MASK writeMask = D3D12_DEPTH_WRITE_MASK_ALL);
 
-	void SetBlendMode(uint32_t renderTargetIndex, BlendMode mode);
-	void SetBlendDesc(uint32_t renderTargetIndex, const D3D12_RENDER_TARGET_BLEND_DESC& desc);
+	void SetBlendMode(uint8_t renderTargetIndex, BlendMode mode);
+	void SetBlendDesc(uint8_t renderTargetIndex, const D3D12_RENDER_TARGET_BLEND_DESC& desc);
 	void SetIndependentBlendEnable(bool isIndependentEnable);
 
 	void SetPrimitive(PrimitiveType type);
 
 	void SetRTVFormat(DXGI_FORMAT format);
-	void SetRTVFormat(uint32_t index, DXGI_FORMAT format);
-	void SetRTVFormats(uint32_t size, const DXGI_FORMAT formats[]);
+	void SetRTVFormat(uint8_t index, DXGI_FORMAT format);
+	void SetRTVFormats(uint8_t size, const DXGI_FORMAT formats[]);
 	void SetDSVFormat(DXGI_FORMAT format);
 
 	void CreateDefaultDesc();

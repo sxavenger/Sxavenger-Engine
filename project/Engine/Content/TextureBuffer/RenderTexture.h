@@ -3,28 +3,34 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
+//* texture
+#include "BaseOffscreenTexture.h"
+
 //* engine
 #include <Engine/System/DirectX/DirectXContext.h>
-#include <Engine/Content/TextureBuffer/MultiViewTextureBuffer.h>
+
+//* lib
+#include <Lib/Geometry/Vector4.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// AdaptiveRenderFrame class
+// RenderTexture class
 ////////////////////////////////////////////////////////////////////////////////////////////
-class AdaptiveRenderFrame {
+class RenderTexture
+	: public BaseOffscreenTexture {
 public:
 
 	//=========================================================================================
 	// public methods
 	//=========================================================================================
 
-	AdaptiveRenderFrame()  = default;
-	~AdaptiveRenderFrame() { Term(); }
+	RenderTexture()  = default;
+	~RenderTexture() { Term(); }
 
-	void Create(const Vector2ui& size);
+	void Create(const Vector2ui& size, const Color4f& clearColor = kDefaultClearColor, DXGI_FORMAT format = DxObject::kOffscreenFormat);
 
 	void Term();
 
-	//* adaptive option *//
+	//* render option *//
 
 	void TransitionBeginRenderTarget(const DirectXThreadContext* context);
 
@@ -34,9 +40,13 @@ public:
 
 	//* getter *//
 
-	const D3D12_CPU_DESCRIPTOR_HANDLE& GetCPUHandleRTV() const { return buffer_->GetCPUHandleRTV(); }
+	const D3D12_CPU_DESCRIPTOR_HANDLE& GetCPUHandleRTV() const { return descriptorRTV_.GetCPUHandle(); }
 
-	const MultiViewTextureBuffer* GetTexture() const { return buffer_.get(); }
+	//=========================================================================================
+	// public variables
+	//=========================================================================================
+
+	static const Color4f kDefaultClearColor;
 
 private:
 
@@ -44,6 +54,12 @@ private:
 	// private variables
 	//=========================================================================================
 
-	std::unique_ptr<MultiViewTextureBuffer> buffer_;
+	//* descriptor *//
+
+	DxObject::Descriptor descriptorRTV_;
+
+	//* parameter *//
+
+	Color4f clearColor_;
 
 };

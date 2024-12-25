@@ -5,7 +5,7 @@
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 void AssetCollection::Init() {
-	AsyncAssetThreadCollection::Init(1);
+	AsyncAssetThreadCollection::Init(2);
 }
 
 AssetCollection::FileType AssetCollection::GetFileType(const std::filesystem::path& filepath) {
@@ -38,6 +38,7 @@ AssetCollection::File AssetCollection::CreateFileData(const std::filesystem::pat
 			break;
 	}
 
+	file.second->SetFilepath(filepath);
 	return file;
 }
 
@@ -56,13 +57,12 @@ const AssetCollection::File& AssetCollection::ImportFile(const std::filesystem::
 	}
 
 	//!< importされていない場合, 作成
-	if (current->files.Contains(filename)) {
+	if (!current->files.Contains(filename)) {
 
 		File file = CreateFileData(filepath);
 		file.second->SetCollection(this);
 
 		current->files.Emplace(filename, file);
-		return file;
 	}
 
 	return current->files.At(filename);
