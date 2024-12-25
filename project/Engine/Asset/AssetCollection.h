@@ -77,6 +77,10 @@ public:
 	template <>
 	std::shared_ptr<BaseAsset> GetAsset(const std::filesystem::path& filepath);
 
+	//* debug *//
+
+	void ShowAssetTree();
+
 private:
 
 	//=========================================================================================

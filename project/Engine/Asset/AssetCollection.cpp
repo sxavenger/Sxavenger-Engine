@@ -1,11 +1,38 @@
 #include "AssetCollection.h"
 
+//-----------------------------------------------------------------------------------------
+// include
+//-----------------------------------------------------------------------------------------
+//* external
+#include <imgui.h>
+
 ////////////////////////////////////////////////////////////////////////////////////////////
 // AssetCollection class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 void AssetCollection::Init() {
 	AsyncAssetThreadCollection::Init(2);
+}
+
+void AssetCollection::ShowAssetTree() {
+
+	std::function<void(Folder*)> folderFunction = [&](Folder* node) {
+		//!< folder全探索
+		for (auto& folder : node->folder.GetMap()) {
+			if (ImGui::TreeNodeEx(folder.first.string().c_str(), ImGuiTreeNodeFlags_OpenOnArrow)) {
+				folderFunction(&folder.second);
+				ImGui::TreePop();
+			}
+		}
+
+		//!< fileの表示
+		for (auto& file : node->files.GetMap()) {
+			ImGui::Selectable(file.first.string().c_str());
+		}
+	};
+
+	folderFunction(&root_);
+
 }
 
 AssetCollection::FileType AssetCollection::GetFileType(const std::filesystem::path& filepath) {

@@ -38,9 +38,23 @@ void AssetConsole::DisplayAsset() {
 		ImVec2 region         = ImGui::GetContentRegionAvail();
 
 		ImGui::BeginChild("asset tree", { region.x * 0.2f, region.y }, ImGuiChildFlags_Borders, flag);
-		SxavengerAsset::GetCollection()->SystemDebugGui();
+		SxavengerAsset::GetCollection()->ShowAssetTree();
 		ImGui::EndChild();
 	}
 
 	ImGui::End();
+}
+
+void AssetConsole::ShowAssetMenu() {
+	if (ImGui::BeginMenu("Thread")) {
+		MenuDummy();
+		SxavengerAsset::GetCollection()->SystemDebugGui();
+		ImGui::EndMenu();
+	}
+
+}
+
+void AssetConsole::MenuDummy() {
+	static const ImVec2 size = { 240.0f, 0.0f };
+	ImGui::Dummy(size);
 }
