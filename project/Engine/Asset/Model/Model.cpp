@@ -205,7 +205,7 @@ void Model::LoadMaterial(const aiScene* aiScene, const std::filesystem::path& di
 			aiMaterial->GetTexture(aiTextureType_DIFFUSE, 0, &aiTextureFilepath);
 
 			// データの保存
-			std::shared_ptr<Texture> texture = collection_->Import<Texture>(directory / aiTextureFilepath.C_Str()).lock();
+			std::shared_ptr<Texture> texture = collection_->ImportPtr<Texture>(directory / aiTextureFilepath.C_Str()); //!< todo: observerに変更
 			texture->Load(context);
 			material.textures_[static_cast<uint8_t>(TextureType::kDiffuse)] = texture;
 
@@ -217,7 +217,7 @@ void Model::LoadMaterial(const aiScene* aiScene, const std::filesystem::path& di
 			aiMaterial->GetTexture(aiTextureType_NORMALS, 0, &aiTextureFilepath);
 
 			// データの保存
-			std::shared_ptr<Texture> texture = collection_->Import<Texture>(directory / aiTextureFilepath.C_Str()).lock();
+			std::shared_ptr<Texture> texture = collection_->ImportPtr<Texture>(directory / aiTextureFilepath.C_Str()); //!< todo: observerに変更
 			texture->Load(context);
 			material.textures_[static_cast<uint8_t>(TextureType::kNormal)] = texture;
 		}

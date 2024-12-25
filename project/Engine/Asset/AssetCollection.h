@@ -8,6 +8,7 @@
 #include "Texture/Texture.h"
 #include "Unknown/AssetUnknown.h"
 #include "Thread/AsyncAssetThreadCollection.h"
+#include "AssetObserver.h"
 
 //* engine
 #include <Engine/System/Utility/Logger.h>
@@ -64,18 +65,35 @@ public:
 	//* import *//
 
 	template <DerivedFromBaseAssetConcept T>
-	std::weak_ptr<T> Import(const std::filesystem::path& filepath);
+	std::shared_ptr<T> ImportPtr(const std::filesystem::path& filepath);
 
 	template <>
-	std::weak_ptr<BaseAsset> Import(const std::filesystem::path& filepath);
+	std::shared_ptr<BaseAsset> ImportPtr(const std::filesystem::path& filepath);
+
+	template <BaseAssetConcept T>
+	AssetObserver<T> Import(const std::filesystem::path& filepath);
+
+	//* try import *//
+
+	template <DerivedFromBaseAssetConcept T>
+	std::shared_ptr<T> TryImportPtr(const std::filesystem::path& filepath);
+
+	template <>
+	std::shared_ptr<BaseAsset> TryImportPtr(const std::filesystem::path& filepath);
+
+	template <BaseAssetConcept T>
+	AssetObserver<T> TryImport(const std::filesystem::path& filepath);
 
 	//* get *//
 
 	template <DerivedFromBaseAssetConcept T>
-	std::shared_ptr<T> GetAsset(const std::filesystem::path& filepath);
+	std::shared_ptr<T> GetAssetPtr(const std::filesystem::path& filepath);
 
 	template <>
-	std::shared_ptr<BaseAsset> GetAsset(const std::filesystem::path& filepath);
+	std::shared_ptr<BaseAsset> GetAssetPtr(const std::filesystem::path& filepath);
+
+	template <BaseAssetConcept T>
+	AssetObserver<T> GetAsset(const std::filesystem::path& filepath);
 
 	//* debug *//
 
@@ -103,6 +121,7 @@ private:
 	static std::shared_ptr<T> ConvertAsset(const std::shared_ptr<BaseAsset>& base);
 
 	const File& ImportFile(const std::filesystem::path& filepath);
+	const File& TryImportFile(const std::filesystem::path& filepath);
 
 	const File& GetFile(const std::filesystem::path& filepath) const;
 
@@ -113,13 +132,37 @@ private:
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 template <DerivedFromBaseAssetConcept T>
-inline std::weak_ptr<T> AssetCollection::Import(const std::filesystem::path& filepath) {
+inline std::shared_ptr<T> AssetCollection::ImportPtr(const std::filesystem::path& filepath) {
 	return ConvertAsset<T>(ImportFile(filepath).second);
 }
 
 template <>
-inline std::weak_ptr<BaseAsset> AssetCollection::Import(const std::filesystem::path& filepath) {
+inline std::shared_ptr<BaseAsset> AssetCollection::ImportPtr(const std::filesystem::path& filepath) {
 	return ImportFile(filepath).second;
+}
+
+template <BaseAssetConcept T>
+inline AssetObserver<T> AssetCollection::Import(const std::filesystem::path& filepath) {
+	AssetObserver<T> observer = {};
+	observer.Create(ImportPtr<T>(filepath), filepath, this);
+	return observer;
+}
+
+template <DerivedFromBaseAssetConcept T>
+inline std::shared_ptr<T> AssetCollection::TryImportPtr(const std::filesystem::path& filepath) {
+	return ConvertAsset<T>(TryImportFile(filepath).second);
+}
+
+template <>
+inline std::shared_ptr<BaseAsset> AssetCollection::TryImportPtr(const std::filesystem::path& filepath) {
+	return TryImportFile(filepath).second;
+}
+
+template<BaseAssetConcept T>
+inline AssetObserver<T> AssetCollection::TryImport(const std::filesystem::path& filepath) {
+	AssetObserver<T> observer = {};
+	observer.Create(TryImportPtr<T>(filepath), filepath, this);
+	return observer;
 }
 
 template <DerivedFromBaseAssetConcept T>
@@ -131,11 +174,18 @@ inline std::shared_ptr<T> AssetCollection::ConvertAsset(const std::shared_ptr<Ba
 }
 
 template <DerivedFromBaseAssetConcept T>
-inline std::shared_ptr<T> AssetCollection::GetAsset(const std::filesystem::path& filepath) {
+inline std::shared_ptr<T> AssetCollection::GetAssetPtr(const std::filesystem::path& filepath) {
 	return ConvertAsset<T>(GetFile(filepath).second);
 }
 
 template <>
-inline std::shared_ptr<BaseAsset> AssetCollection::GetAsset(const std::filesystem::path& filepath) {
+inline std::shared_ptr<BaseAsset> AssetCollection::GetAssetPtr(const std::filesystem::path& filepath) {
 	return GetFile(filepath).second;
+}
+
+template <BaseAssetConcept T>
+inline AssetObserver<T> AssetCollection::GetAsset(const std::filesystem::path& filepath) {
+	AssetObserver<T> observer = {};
+	observer.Create(GetAssetPtr<T>(filepath), filepath, this);
+	return observer;
 }

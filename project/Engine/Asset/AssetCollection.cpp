@@ -83,6 +83,28 @@ const AssetCollection::File& AssetCollection::ImportFile(const std::filesystem::
 		current = &current->folder[path];
 	}
 
+	File file = CreateFileData(filepath);
+	file.second->SetCollection(this);
+
+	current->files[filename] = file;
+
+	return current->files.At(filename);
+}
+
+const AssetCollection::File& AssetCollection::TryImportFile(const std::filesystem::path& filepath) {
+
+	const auto filename = filepath.filename();
+	Folder* current = &root_;
+
+	//!< filenameが含まれているフォルダまで移動または作成
+	for (const auto& path : filepath) {
+		if (path == filename) {
+			break;
+		}
+
+		current = &current->folder[path];
+	}
+
 	//!< importされていない場合, 作成
 	if (!current->files.Contains(filename)) {
 

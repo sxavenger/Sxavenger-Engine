@@ -15,7 +15,7 @@ void DemoGameLoop::Term() {
 }
 
 void DemoGameLoop::InitGame() {
-	texture_ = SxavengerAsset::Import<Texture>("asset/textures/tile_black.png").lock();
+	texture_ = SxavengerAsset::Import<Texture>("asset/textures/tile_black.png");
 }
 
 void DemoGameLoop::TermGame() {

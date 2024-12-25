@@ -41,8 +41,8 @@ void RenderConsole::Init(Console* console) {
 	presenter_ = std::make_unique<ScreenPresenter>();
 	presenter_->Init();
 
-	checkerTexture_ = SxavengerAsset::Import<Texture>("asset/textures/checker_black.png").lock();
-	checkerTexture_.lock()->Load(SxavengerSystem::GetMainThreadContext());
+	checkerTexture_ = SxavengerAsset::TryImport<Texture>("asset/textures/checker_black.png");
+	checkerTexture_.Lock()->Load(SxavengerSystem::GetMainThreadContext());
 
 	buffer_ = std::make_unique<DxObject::DimensionBuffer<Vector4f>>();
 	buffer_->Create(SxavengerSystem::GetDxDevice(), 1);
@@ -327,7 +327,7 @@ void RenderConsole::DisplayScene() {
 	ImGui::Begin("Scene ## Render Console", nullptr, console_->GetWindowFlag() | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
 
 	if (scene_ != nullptr) {
-		ShowTextureImGuiFullWindow(checkerTexture_.lock().get()); //!< HACK
+		ShowTextureImGuiFullWindow(checkerTexture_.ReloadAndLock().get()); //!< HACK
 		sceneRect_ = ShowTextureImGuiFullWindow(scene_->GetAdaptive()->GetTexture());
 		ImGuizmo::SetDrawlist();
 	}
@@ -349,7 +349,7 @@ void RenderConsole::DisplayGame() {
 	ImGui::Begin("Game ## Render Console", nullptr, console_->GetWindowFlag() | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
 
 	if (game_ != nullptr) {
-		ShowTextureImGuiFullWindow(checkerTexture_.lock().get()); //< HACK
+		ShowTextureImGuiFullWindow(checkerTexture_.ReloadAndLock().get()); //< HACK
 		ShowTextureImGuiFullWindow(game_->GetAdaptive()->GetTexture());
 	}
 
