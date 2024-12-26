@@ -76,11 +76,8 @@ inline void AssetObserver<T>::Create(const std::shared_ptr<T>& asset, const std:
 
 template<BaseAssetConcept T>
 inline void AssetObserver<T>::Reload() {
-	if (filepath_.empty()) {
-		return;
-	}
-
 	Assert(collection_ != nullptr, "asset collection is not set.");
+	Assert(!filepath_.empty(), "asset filepath is empty.");
 	asset_ = collection_->template GetAssetPtr<T>(filepath_);
 }
 
