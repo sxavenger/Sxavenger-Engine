@@ -4,6 +4,11 @@
 // include
 //-----------------------------------------------------------------------------------------
 //* engine
+#include <Engine/Asset/AssetCollection.h>
+
+//* c++
+#include <optional>
+#include <array>
 
 //-----------------------------------------------------------------------------------------
 // forward
@@ -38,15 +43,21 @@ protected:
 	// protected methods
 	//=========================================================================================
 
-	//* window *//
-
-	void DisplayAsset();
-
 	//* menu *//
 
 	void ShowAssetMenu();
 
 private:
+
+	////////////////////////////////////////////////////////////////////////////////////////////
+	// TextureType enum class
+	////////////////////////////////////////////////////////////////////////////////////////////
+	enum TextureType : uint8_t {
+		File,
+		FilePng,
+		Folder,
+		FolderOpen,
+	};
 
 	//=========================================================================================
 	// private variables
@@ -56,9 +67,27 @@ private:
 
 	Console* console_ = nullptr;
 
+	//* node *//
+
+	std::optional<AssetCollection::Folder*> folder_ = std::nullopt;
+
+	//* texture *//
+
+	std::array<std::shared_ptr<Texture>, TextureType::FolderOpen + 1> textures_;
+
 	//=========================================================================================
 	// private methods
 	//=========================================================================================
+
+	//*
+
+	void InitTexture();
+
+	//* window *//
+
+	void DisplayProject();
+
+	//* sub methods *//
 
 	static void MenuDummy();
 

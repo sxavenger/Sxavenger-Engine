@@ -1,5 +1,11 @@
 #include "BaseAsset.h"
 
+void BaseAsset::WaitComplete() const {
+	while (state_ != AssetState::Complete) {
+		std::this_thread::sleep_for(std::chrono::milliseconds(1));
+	}
+}
+
 bool BaseAsset::CheckAndBeginLoad() {
 	std::unique_lock<std::mutex> lock(mutex_);
 	

@@ -322,6 +322,7 @@ void RenderConsole::DisplayLayer() {
 }
 
 void RenderConsole::DisplayScene() {
+	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, { 0, 0 });
 
 	console_->DockingConsole();
 	ImGui::Begin("Scene ## Render Console", nullptr, console_->GetWindowFlag() | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
@@ -342,9 +343,13 @@ void RenderConsole::DisplayScene() {
 	}
 
 	ImGui::End();
+
+	ImGui::PopStyleVar();
 }
 
 void RenderConsole::DisplayGame() {
+	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, { 0, 0 });
+
 	console_->DockingConsole();
 	ImGui::Begin("Game ## Render Console", nullptr, console_->GetWindowFlag() | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
 
@@ -354,6 +359,8 @@ void RenderConsole::DisplayGame() {
 	}
 
 	ImGui::End();
+
+	ImGui::PopStyleVar();
 }
 
 bool RenderConsole::IsSelectedLayer(BaseVisualLayer* layer) {

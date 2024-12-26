@@ -39,6 +39,8 @@ public:
 
 	bool Check() const { return !asset_.expired(); }
 
+	bool CheckExpired() const { return asset_.expired(); }
+
 	std::shared_ptr<T> Lock();
 
 	std::shared_ptr<T> ReloadAndLock();

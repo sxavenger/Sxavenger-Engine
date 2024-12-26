@@ -99,6 +99,10 @@ public:
 
 	void ShowAssetTree();
 
+	//* getter *//
+
+	Folder& GetRoot() { return root_; }
+
 private:
 
 	//=========================================================================================

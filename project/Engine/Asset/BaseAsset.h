@@ -45,6 +45,12 @@ public:
 
 	virtual void Load(_MAYBE_UNUSED const DirectXThreadContext* context) = 0;
 
+	//* state option *//
+
+	void WaitComplete() const; //!< 同threadでのLoadの場合, この関数は使わない
+
+	AssetState GetAssetState() const { return state_; }
+
 	//* setter *//
 
 	void SetCollection(AssetCollection* collection) { collection_ = collection; }

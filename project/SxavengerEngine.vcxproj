@@ -141,6 +141,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="Engine\Asset\AssetCollection.cpp" />
     <ClCompile Include="Engine\Asset\AssetObserver.cpp" />
     <ClCompile Include="Engine\Asset\BaseAsset.cpp" />
+    <ClCompile Include="Engine\Asset\Blob\AssetBlob.cpp" />
     <ClCompile Include="Engine\Asset\Model\Model.cpp" />
     <ClCompile Include="Engine\Asset\SxavengerAsset.cpp" />
     <ClCompile Include="Engine\Asset\Texture\Texture.cpp" />
@@ -179,6 +180,8 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="Engine\Module\Collider\CollisionDetection.cpp" />
     <ClCompile Include="Engine\Module\Material\MaterialComponent.cpp" />
     <ClCompile Include="Engine\Module\Pipeline\ComputePipelineCollection.cpp" />
+    <ClCompile Include="Engine\Module\Pipeline\CustomComputePipeline.cpp" />
+    <ClCompile Include="Engine\Module\Pipeline\CustomGraphicsPipeline.cpp" />
     <ClCompile Include="Engine\Module\Pipeline\RenderPipelineCollection.cpp" />
     <ClCompile Include="Engine\Module\Primitive\DebugPrimitive.cpp" />
     <ClCompile Include="Engine\Module\SxavengerGraphics\AdaptiveRenderFrame.cpp" />
@@ -252,6 +255,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Engine\Asset\AssetCollection.h" />
     <ClInclude Include="Engine\Asset\AssetObserver.h" />
     <ClInclude Include="Engine\Asset\BaseAsset.h" />
+    <ClInclude Include="Engine\Asset\Blob\AssetBlob.h" />
     <ClInclude Include="Engine\Asset\Model\Model.h" />
     <ClInclude Include="Engine\Asset\SxavengerAsset.h" />
     <ClInclude Include="Engine\Asset\Texture\Texture.h" />
@@ -293,6 +297,8 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Engine\Module\Collider\CollisionDetection.h" />
     <ClInclude Include="Engine\Module\Material\MaterialComponent.h" />
     <ClInclude Include="Engine\Module\Pipeline\ComputePipelineCollection.h" />
+    <ClInclude Include="Engine\Module\Pipeline\CustomComputePipeline.h" />
+    <ClInclude Include="Engine\Module\Pipeline\CustomGraphicsPipeline.h" />
     <ClInclude Include="Engine\Module\Pipeline\RenderPipelineCollection.h" />
     <ClInclude Include="Engine\Module\Primitive\DebugPrimitive.h" />
     <ClInclude Include="Engine\Module\SxavengerGraphics\AdaptiveRenderFrame.h" />

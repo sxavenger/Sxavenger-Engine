@@ -118,6 +118,9 @@
     <ClCompile Include="Engine\Content\TextureBuffer\UnorderedTexture.cpp" />
     <ClCompile Include="Engine\Content\TextureBuffer\DepthTexture.cpp" />
     <ClCompile Include="Engine\Asset\AssetObserver.cpp" />
+    <ClCompile Include="Engine\Module\Pipeline\CustomComputePipeline.cpp" />
+    <ClCompile Include="Engine\Module\Pipeline\CustomGraphicsPipeline.cpp" />
+    <ClCompile Include="Engine\Asset\Blob\AssetBlob.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\System\Window\Window.h" />
@@ -241,5 +244,8 @@
     <ClInclude Include="Engine\Content\TextureBuffer\UnorderedTexture.h" />
     <ClInclude Include="Engine\Content\TextureBuffer\DepthTexture.h" />
     <ClInclude Include="Engine\Asset\AssetObserver.h" />
+    <ClInclude Include="Engine\Module\Pipeline\CustomComputePipeline.h" />
+    <ClInclude Include="Engine\Module\Pipeline\CustomGraphicsPipeline.h" />
+    <ClInclude Include="Engine\Asset\Blob\AssetBlob.h" />
   </ItemGroup>
 </Project>
