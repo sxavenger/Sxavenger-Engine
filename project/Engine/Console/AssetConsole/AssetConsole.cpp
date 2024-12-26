@@ -83,10 +83,9 @@ void AssetConsole::DisplayProject() {
 				}
 
 				//!< image
-				/*float spacing = ImGui::GetTextLineHeightWithSpacing();
-
+				float spacing = 16;
 				ImGui::Image(textures_[TextureType::Folder]->GetGPUHandleSRV().ptr, { spacing, spacing });
-				ImGui::SameLine();*/
+				ImGui::SameLine();
 
 				bool isOpenTreeNode = ImGui::TreeNodeEx(folder.first.string().c_str(), nodeFlag);
 
@@ -102,6 +101,11 @@ void AssetConsole::DisplayProject() {
 
 			//!< fileの表示
 			for (auto& file : node->files.GetMap()) {
+
+				float spacing = 16;
+				ImGui::Image(textures_[TextureType::File]->GetGPUHandleSRV().ptr, { spacing, spacing });
+				ImGui::SameLine();
+
 				if (ImGui::Selectable(file.first.string().c_str())) {
 					// todo: file select
 				}
