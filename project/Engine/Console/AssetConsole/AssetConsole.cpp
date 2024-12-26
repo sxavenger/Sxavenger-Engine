@@ -87,6 +87,11 @@ void AssetConsole::DisplayProject() {
 				ImGui::Image(textures_[TextureType::Folder]->GetGPUHandleSRV().ptr, { spacing, spacing });
 				ImGui::SameLine();
 
+				ImVec2 cursol = ImGui::GetCursorPos();
+				ImGui::SetCursorPos({ cursol.x - 4, cursol.y });
+				// todo: icon描画関数を用意
+				// todo: colorを入れる
+
 				bool isOpenTreeNode = ImGui::TreeNodeEx(folder.first.string().c_str(), nodeFlag);
 
 				if (ImGui::IsItemClicked()) {
@@ -105,6 +110,9 @@ void AssetConsole::DisplayProject() {
 				float spacing = 16;
 				ImGui::Image(textures_[TextureType::File]->GetGPUHandleSRV().ptr, { spacing, spacing });
 				ImGui::SameLine();
+
+				ImVec2 cursol = ImGui::GetCursorPos();
+				ImGui::SetCursorPos({ cursol.x - 4, cursol.y });
 
 				if (ImGui::Selectable(file.first.string().c_str())) {
 					// todo: file select
