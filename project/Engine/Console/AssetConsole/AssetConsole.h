@@ -96,6 +96,9 @@ private:
 
 	void DisplayProject();
 
+	void ShowFolderTree();
+	void ShowFolderProject();
+
 	//* sub methods *//
 
 	static void MenuDummy();

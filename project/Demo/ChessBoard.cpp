@@ -5,7 +5,7 @@
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 void ChessBoard::Init() {
-	//model_ = SxavengerAsset::ImportModel("asset/model/chessBoard/chessBoard.gltf");
+	//model_ = SxavengerAsset::TryImport<Model>("asset/model/chessBoard/chessBoard.gltf");
 	model_ = SxavengerAsset::TryImport<Model>("asset/model/demo/teapot.obj");
 	model_.value().Lock()->Load(SxavengerSystem::GetMainThreadContext());
 

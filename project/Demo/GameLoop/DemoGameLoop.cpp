@@ -26,6 +26,7 @@ void DemoGameLoop::InitGame() {
 }
 
 void DemoGameLoop::TermGame() {
+	chessBoard_.reset();
 }
 
 void DemoGameLoop::UpdateGame() {
