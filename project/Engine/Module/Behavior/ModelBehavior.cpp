@@ -27,7 +27,12 @@ void ModelBehavior::SystemAttributeImGui() {
 }
 
 void ModelBehavior::DrawSystematic(_MAYBE_UNUSED const SxavGraphicsFrame* frame) {
-	if (model_ == nullptr) { return; }
+	if (!model_.has_value()) {
+		return;
+	}
+
+	model_.value().CheckAndReload();
+	std::shared_ptr<Model> model = model_.value().Lock();
 
 	sConsole->SetGraphicsPipeline(kDefaultVS_AlbedoPS_Deferred, SxavengerSystem::GetMainThreadContext(), frame->GetSize());
 
@@ -37,18 +42,23 @@ void ModelBehavior::DrawSystematic(_MAYBE_UNUSED const SxavGraphicsFrame* frame)
 	bind.SetAddress("gUVTransform", MaterialComponent::GetTransformGPUVirtualAddress());
 	bind.SetAddress("gColor",       MaterialComponent::GetColorGPUVirtualAddress());
 
-	for (uint32_t i = 0; i < model_->GetMeshSize(); ++i) {
-		model_->SetIABuffer(i);
+	for (uint32_t i = 0; i < model->GetMeshSize(); ++i) {
+		model->SetIABuffer(i);
 
-		bind.SetHandle("gAlbedo", model_->GetTextureHandle(i));
+		bind.SetHandle("gAlbedo", model->GetTextureHandle(i));
 		sConsole->BindGraphicsBuffer(kDefaultVS_AlbedoPS_Deferred, SxavengerSystem::GetMainThreadContext(), bind);
 
-		model_->DrawCall(i);
+		model->DrawCall(i);
 	}
 }
 
 void ModelBehavior::DrawAdaptive(_MAYBE_UNUSED const SxavGraphicsFrame* frame) {
-	if (model_ == nullptr) { return; }
+	if (!model_.has_value()) {
+		return;
+	}
+
+	model_.value().CheckAndReload();
+	std::shared_ptr<Model> model = model_.value().Lock();
 
 	sConsole->SetGraphicsPipeline(kDefaultVS_AlbedoPS, SxavengerSystem::GetMainThreadContext(), frame->GetSize());
 
@@ -58,18 +68,23 @@ void ModelBehavior::DrawAdaptive(_MAYBE_UNUSED const SxavGraphicsFrame* frame) {
 	bind.SetAddress("gUVTransform", MaterialComponent::GetTransformGPUVirtualAddress());
 	bind.SetAddress("gColor",       MaterialComponent::GetColorGPUVirtualAddress());
 
-	for (uint32_t i = 0; i < model_->GetMeshSize(); ++i) {
-		model_->SetIABuffer(i);
+	for (uint32_t i = 0; i < model->GetMeshSize(); ++i) {
+		model->SetIABuffer(i);
 
-		bind.SetHandle("gAlbedo", model_->GetTextureHandle(i));
+		bind.SetHandle("gAlbedo", model->GetTextureHandle(i));
 		sConsole->BindGraphicsBuffer(kDefaultVS_AlbedoPS, SxavengerSystem::GetMainThreadContext(), bind);
 
-		model_->DrawCall(i);
+		model->DrawCall(i);
 	}
 }
 
 void ModelBehavior::DrawLateAdaptive(_MAYBE_UNUSED const SxavGraphicsFrame* frame) {
-	if (model_ == nullptr) { return; }
+	if (!model_.has_value()) {
+		return;
+	}
+
+	model_.value().CheckAndReload();
+	std::shared_ptr<Model> model = model_.value().Lock();
 
 	sConsole->SetGraphicsPipeline(kDefaultVS_AlbedoPS, SxavengerSystem::GetMainThreadContext(), frame->GetSize());
 
@@ -79,12 +94,12 @@ void ModelBehavior::DrawLateAdaptive(_MAYBE_UNUSED const SxavGraphicsFrame* fram
 	bind.SetAddress("gUVTransform", MaterialComponent::GetTransformGPUVirtualAddress());
 	bind.SetAddress("gColor",       MaterialComponent::GetColorGPUVirtualAddress());
 
-	for (uint32_t i = 0; i < model_->GetMeshSize(); ++i) {
-		model_->SetIABuffer(i);
+	for (uint32_t i = 0; i < model->GetMeshSize(); ++i) {
+		model->SetIABuffer(i);
 
-		bind.SetHandle("gAlbedo", model_->GetTextureHandle(i));
+		bind.SetHandle("gAlbedo", model->GetTextureHandle(i));
 		sConsole->BindGraphicsBuffer(kDefaultVS_AlbedoPS, SxavengerSystem::GetMainThreadContext(), bind);
 
-		model_->DrawCall(i);
+		model->DrawCall(i);
 	}
 }

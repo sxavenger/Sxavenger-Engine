@@ -7,8 +7,12 @@
 #include "TransformBehavior.h"
 
 //* engine
-#include <Engine/Asset/Model/Model.h>
+#include <Engine/Asset/AssetObserver.h>
+#include <Engine/Asset/ModelAnimator/Model/Model.h>
 #include <Engine/Module/Material/MaterialComponent.h>
+
+//* c++
+#include <optional>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // ModelBehavior class
@@ -43,6 +47,7 @@ protected:
 	// protected variables
 	//=========================================================================================
 
-	Model* model_; //!< CONSIDER: std::shared_ptr<Model> model_;
+	std::optional<AssetObserver<Model>> model_;
+	// HACK: modelがloadされていることが前提となってる.
 
 };

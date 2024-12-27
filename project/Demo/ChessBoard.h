@@ -30,10 +30,6 @@ public:
 
 	void Update();
 
-	void DrawSystematic(_MAYBE_UNUSED const SxavGraphicsFrame* frame) override;
-
-	void Wait() { model_->WaitCompleted(); }
-
 	void SetAttributeImGui() override;
 
 private:
@@ -41,8 +37,6 @@ private:
 	//=========================================================================================
 	// public methods
 	//=========================================================================================
-
-	std::shared_ptr<AssetModel> model_;
 
 	std::unique_ptr<Collider> collider_;
 

@@ -124,6 +124,7 @@
     <ClCompile Include="Engine\Asset\ModelAnimator\Model\Model.cpp" />
     <ClCompile Include="Engine\Asset\ModelAnimator\ModelAnimator.cpp" />
     <ClCompile Include="Engine\Asset\AssetCollection.cpp" />
+    <ClCompile Include="Demo\ChessBoard.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\System\Window\Window.h" />
@@ -253,5 +254,6 @@
     <ClInclude Include="Engine\Asset\ModelAnimator\Model\Model.h" />
     <ClInclude Include="Engine\Asset\ModelAnimator\ModelAnimator.h" />
     <ClInclude Include="Engine\Asset\AssetCollection.h" />
+    <ClInclude Include="Demo\ChessBoard.h" />
   </ItemGroup>
 </Project>

@@ -6,11 +6,9 @@
 
 void ChessBoard::Init() {
 	//model_ = SxavengerAsset::ImportModel("asset/model/chessBoard/chessBoard.gltf");
-	model_ = SxavengerAsset::ImportModel("asset/model/demo/teapot.obj");
-	model_->AsyncLoad(Model::GetDefaultAssimpOption());
-	SxavengerSystem::PushTask(model_);
+	model_ = SxavengerAsset::TryImport<Model>("asset/model/demo/teapot.obj");
+	model_.value().Lock()->Load(SxavengerSystem::GetMainThreadContext());
 
-	ModelBehavior::model_ = model_.get();
 	ModelBehavior::SetRenderingFlag(BehaviorRenderingType::kSystematic);
 
 	collider_ = std::make_unique<Collider>();
@@ -26,12 +24,6 @@ void ChessBoard::Update() {
 	TransformComponent::transform_.rotate *= MakeAxisAngle({0.0f, 1.0f, 0.0f}, 0.01f);
 	TransformComponent::UpdateMatrix();
 	collider_->UpdateMatrix();
-}
-
-void ChessBoard::DrawSystematic(_MAYBE_UNUSED const SxavGraphicsFrame* frame) {
-	if (model_->IsCompleted()) {
-		ModelBehavior::DrawSystematic(frame);
-	}
 }
 
 void ChessBoard::SetAttributeImGui() {

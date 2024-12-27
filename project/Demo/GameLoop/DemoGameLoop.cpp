@@ -19,6 +19,10 @@ void DemoGameLoop::InitGame() {
 
 	model_ = SxavengerAsset::TryImport<Model>("asset/model/demo/cube.obj");
 	model_.Lock()->Load(SxavengerSystem::GetMainThreadContext());
+
+	chessBoard_ = std::make_unique<ChessBoard>();
+	chessBoard_->Init();
+	chessBoard_->SetToConsole();
 }
 
 void DemoGameLoop::TermGame() {
