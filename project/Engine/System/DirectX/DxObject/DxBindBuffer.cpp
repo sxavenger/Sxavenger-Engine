@@ -21,6 +21,12 @@ void BindBufferDesc::SetBuffer(const std::string& name, const BindGPUBuffer& buf
 	container_[name] = buffer;
 }
 
+void BindBufferDesc::Merge(const BindBufferDesc& desc) {
+	for (const auto& [name, buffer] : desc.container_) {
+		container_[name] = buffer;
+	}
+}
+
 bool BindBufferDesc::Contains(const std::string& name) const {
 	return container_.contains(name);
 }

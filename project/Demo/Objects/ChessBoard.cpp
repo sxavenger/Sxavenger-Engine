@@ -6,7 +6,7 @@
 
 void ChessBoard::Init() {
 	model_ = SxavengerAsset::TryImport<Model>("asset/model/chessBoard/chessBoard.gltf");
-	//model_ = SxavengerAsset::TryImport<Model>("asset/model/demo/teapot.obj");
+	model_.value().Lock()->SetUseMeshShader(true);
 	SxavengerAsset::PushTask(model_.value().Lock());
 
 	ModelBehavior::SetRenderingFlag(BehaviorRenderingType::kSystematic);

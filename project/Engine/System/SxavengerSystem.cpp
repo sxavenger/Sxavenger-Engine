@@ -28,7 +28,7 @@ void SxavengerSystemEngine::Init() {
 	sDirectXCommon->Init();
 
 	sMainThreadContext = std::make_unique<DirectXThreadContext>();
-	sMainThreadContext->Init(2); //!< allocator count
+	sMainThreadContext->Init(3); //!< allocator count
 
 	sWindowCollection = std::make_unique<GameWindowCollection>();
 	sInput            = std::make_unique<Input>();

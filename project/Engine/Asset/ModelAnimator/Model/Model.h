@@ -28,6 +28,12 @@
 #include <filesystem>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
+// constexpr variables
+////////////////////////////////////////////////////////////////////////////////////////////
+
+constexpr const uint32_t kChildThreadCount = 4;
+
+////////////////////////////////////////////////////////////////////////////////////////////
 // Model class
 ////////////////////////////////////////////////////////////////////////////////////////////
 class Model
@@ -99,6 +105,8 @@ public:
 
 	void SetAssimpOption(uint32_t option) { assimpOption_ = option; }
 
+	void SetUseMeshShader(bool useMeshShader) { useMeshShader_ = useMeshShader; }
+
 private:
 
 	//=========================================================================================
@@ -117,6 +125,8 @@ private:
 	static const uint32_t kDefaultAssimpOption_;
 	uint32_t assimpOption_ = kDefaultAssimpOption_;
 
+	bool useMeshShader_ = false;
+
 	//=========================================================================================
 	// private methods
 	//=========================================================================================
@@ -126,6 +136,8 @@ private:
 	void LoadMaterial(const aiScene* aiScene, const std::filesystem::path& directory, const DirectXThreadContext* context);
 
 	BornNode ReadNode(aiNode* node);
+
+	void CreateMeshlet();
 
 	//* sub methods *//
 

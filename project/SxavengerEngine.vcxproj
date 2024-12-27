@@ -134,8 +134,9 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Demo\ChessBoard.cpp" />
+    <ClCompile Include="Demo\DemoModelRender.cpp" />
     <ClCompile Include="Demo\GameLoop\DemoGameLoop.cpp" />
+    <ClCompile Include="Demo\Objects\ChessBoard.cpp" />
     <ClCompile Include="Engine\Adapter\Particle\BaseParticle.cpp" />
     <ClCompile Include="Engine\Adapter\Particle\Emitter.cpp" />
     <ClCompile Include="Engine\Asset\AssetCollection.cpp" />
@@ -253,8 +254,9 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Demo\ChessBoard.h" />
+    <ClInclude Include="Demo\DemoModelRender.h" />
     <ClInclude Include="Demo\GameLoop\DemoGameLoop.h" />
+    <ClInclude Include="Demo\Objects\ChessBoard.h" />
     <ClInclude Include="Engine\Adapter\Particle\BaseParticle.h" />
     <ClInclude Include="Engine\Adapter\Particle\Emitter.h" />
     <ClInclude Include="Engine\Asset\AssetCollection.h" />

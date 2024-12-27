@@ -8,25 +8,20 @@ void DemoGameLoop::Init(GameLoop::Context* context) {
 	context->SetState(GameLoop::State::Init,   std::nullopt, [this]() { InitGame(); });
 	context->SetState(GameLoop::State::Term,   std::nullopt, [this]() { TermGame(); });
 	context->SetState(GameLoop::State::Update, std::nullopt, [this]() { UpdateGame(); });
-	context->SetState(GameLoop::State::Render, std::nullopt, [this]() { RenderGame(); });
+	context->SetState(GameLoop::State::Draw,   std::nullopt, [this]() { RenderGame(); });
 }
 
 void DemoGameLoop::Term() {
 }
 
 void DemoGameLoop::InitGame() {
-	texture_ = SxavengerAsset::Import<Texture>("asset/textures/tile_black.png");
-
-	model_ = SxavengerAsset::TryImport<Model>("asset/model/demo/cube.obj");
-	model_.Lock()->Load(SxavengerSystem::GetMainThreadContext());
-
-	chessBoard_ = std::make_unique<ChessBoard>();
-	chessBoard_->Init();
-	chessBoard_->SetToConsole();
+	demo_ = std::make_unique<DemoModelRender>();
+	demo_->Init("asset/model/demo/teapot.obj", true);
+	demo_->SetToConsole();
 }
 
 void DemoGameLoop::TermGame() {
-	chessBoard_.reset();
+	demo_.reset();
 }
 
 void DemoGameLoop::UpdateGame() {

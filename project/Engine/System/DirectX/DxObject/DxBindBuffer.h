@@ -60,6 +60,8 @@ public:
 
 	void SetBuffer(const std::string& name, const BindGPUBuffer& buffer);
 
+	void Merge(const BindBufferDesc& desc);
+
 	//* getter *//
 
 	bool Contains(const std::string& name) const;

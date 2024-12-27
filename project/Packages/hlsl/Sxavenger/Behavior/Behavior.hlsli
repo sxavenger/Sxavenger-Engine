@@ -14,10 +14,12 @@
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 struct PSInput {
-	float4 position : SV_Position;
-	float2 texcoord : TEXCOORD0;
-	float3 normal   : NORMAL0;
-	float3 worldPos : POSITION0;
+	float4 position  : SV_Position;
+	float2 texcoord  : TEXCOORD0;
+	float3 normal    : NORMAL0;
+	float3 worldPos  : POSITION0;
+	float3 tangent   : TANGENT0;
+	float3 bitangent : BITANGENT0;
 };
 
 struct AdaptiveOutput {

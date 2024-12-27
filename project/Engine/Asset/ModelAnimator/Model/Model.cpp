@@ -20,7 +20,11 @@
 // static const variables
 //=========================================================================================
 
-const uint32_t Model::kDefaultAssimpOption_ = aiProcess_FlipWindingOrder | aiProcess_FlipUVs | aiProcess_Triangulate;
+const uint32_t Model::kDefaultAssimpOption_
+	= aiProcess_FlipWindingOrder
+	| aiProcess_FlipUVs
+	| aiProcess_Triangulate
+	| aiProcess_CalcTangentSpace;
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Model class methods
@@ -40,8 +44,11 @@ void Model::Load(_MAYBE_UNUSED const DirectXThreadContext* context) {
 
 	LoadMesh(aiScene);
 	LoadMaterial(aiScene, filepath_.parent_path(), context);
-
 	root_ = ReadNode(aiScene->mRootNode);
+
+	if (useMeshShader_) {
+		CreateMeshlet();
+	}
 
 	BaseAsset::Complete(context);
 }
@@ -82,7 +89,6 @@ const D3D12_GPU_DESCRIPTOR_HANDLE& Model::GetTextureHandle(uint32_t meshIndex, T
 }
 
 void Model::LoadMesh(const aiScene* aiScene) {
-
 	// mesh数のメモリ確保
 	meshes_.resize(aiScene->mNumMeshes);
 
@@ -119,6 +125,14 @@ void Model::LoadMesh(const aiScene* aiScene) {
 			if (aiMesh->HasTextureCoords(0)) {
 				aiVector3D& texcoord = aiMesh->mTextureCoords[0][element];
 				(*vertex)[element].texcoord = { texcoord.x, texcoord.y };
+			}
+
+			if (aiMesh->HasTangentsAndBitangents()) {
+				aiVector3D& tangent = aiMesh->mTangents[element];
+				(*vertex)[element].tangent = { tangent.x, tangent.y, -tangent.z }; //!< 左手座標系に変換
+
+				aiVector3D& bitangent = aiMesh->mBitangents[element];
+				(*vertex)[element].bitangent = { bitangent.x, bitangent.y, -bitangent.z }; //!< 左手座標系に変換
 			}
 		}
 
@@ -260,6 +274,37 @@ BornNode Model::ReadNode(aiNode* node) {
 	}
 
 	return result;
+}
+
+void Model::CreateMeshlet() {
+
+	//!< thread pools
+	std::array<std::thread, kChildThreadCount> threads;
+	std::queue<std::function<void()>>          tasks;
+	std::mutex                                 mutex;
+
+	for (uint32_t i = 0; i < GetMeshSize(); ++i) {
+		tasks.emplace([this, i]() { meshes_[i].mesh.CreateMeshlet(); });
+	}
+
+	for (uint32_t i = 0; i < threads.size(); ++i) {
+		threads[i] = std::thread([&]() {
+			while (true) {
+				std::function<void()> task;
+				{
+					std::lock_guard<std::mutex> lock(mutex);
+					if (tasks.empty()) {
+						break;
+					}
+					task = tasks.front();
+					tasks.pop();
+				}
+				task();
+			}
+		});
+	}
+
+	std::for_each(threads.begin(), threads.end(), [](std::thread& thread) { thread.join(); });
 }
 
 void Model::CheckMeshIndex(uint32_t meshIndex) const {

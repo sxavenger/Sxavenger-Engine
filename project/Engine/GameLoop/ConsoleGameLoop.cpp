@@ -37,7 +37,7 @@ void ConsoleGameLoop::Init(GameLoop::Context* context) {
 	);
 
 	context->SetState(
-		GameLoop::State::Render, UINT32_MAX, [this]() {
+		GameLoop::State::Draw, UINT32_MAX, [this]() {
 			sConsole->Draw();
 			sConsole->DrawConsole();
 		}

@@ -29,7 +29,7 @@ namespace GameLoop {
 		Init,
 		Begin,
 		Update,
-		Render,
+		Draw,
 		End,
 		Term, //!< reverse process order.
 	};

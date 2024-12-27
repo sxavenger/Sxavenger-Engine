@@ -43,10 +43,12 @@ void main(
 		
 		PSInput output = (PSInput)0;
 		
-		output.position = mul(gTransform[instanceIndex].Transform(input.position), viewProj);
-		output.texcoord = gUVTransform.Transform(input.texcoord);
-		output.normal   = gTransform[instanceIndex].TransformNormal(input.normal);
-		output.worldPos = gTransform[instanceIndex].Transform(input.position).xyz;
+		output.position  = mul(gTransform[instanceIndex].Transform(input.position), viewProj);
+		output.texcoord  = gUVTransform.Transform(input.texcoord);
+		output.normal    = gTransform[instanceIndex].TransformNormal(input.normal);
+		output.worldPos  = gTransform[instanceIndex].Transform(input.position).xyz;
+		output.tangent   = gTransform[instanceIndex].TransformNormal(input.tangent);
+		output.bitangent = gTransform[instanceIndex].TransformNormal(input.bitangent);
 
 		verts[groupThreadId] = output;
 	}

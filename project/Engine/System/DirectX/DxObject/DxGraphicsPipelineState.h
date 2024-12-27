@@ -55,6 +55,7 @@ public:
 	//* desc setting option *//
 
 	void SetElement(const LPCSTR& semanticName, UINT semanticIndex, DXGI_FORMAT format, UINT inputSlot = 0);
+
 	void ClearElement();
 
 	void SetRasterizer(D3D12_CULL_MODE cullMode, D3D12_FILL_MODE fillMode);

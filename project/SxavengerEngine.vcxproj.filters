@@ -124,8 +124,9 @@
     <ClCompile Include="Engine\Asset\ModelAnimator\Model\Model.cpp" />
     <ClCompile Include="Engine\Asset\ModelAnimator\ModelAnimator.cpp" />
     <ClCompile Include="Engine\Asset\AssetCollection.cpp" />
-    <ClCompile Include="Demo\ChessBoard.cpp" />
     <ClCompile Include="Engine\Module\Skeleton\SkeletonMesh.cpp" />
+    <ClCompile Include="Demo\Objects\ChessBoard.cpp" />
+    <ClCompile Include="Demo\DemoModelRender.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\System\Window\Window.h" />
@@ -255,7 +256,8 @@
     <ClInclude Include="Engine\Asset\ModelAnimator\Model\Model.h" />
     <ClInclude Include="Engine\Asset\ModelAnimator\ModelAnimator.h" />
     <ClInclude Include="Engine\Asset\AssetCollection.h" />
-    <ClInclude Include="Demo\ChessBoard.h" />
     <ClInclude Include="Engine\Module\Skeleton\SkeletonMesh.h" />
+    <ClInclude Include="Demo\Objects\ChessBoard.h" />
+    <ClInclude Include="Demo\DemoModelRender.h" />
   </ItemGroup>
 </Project>

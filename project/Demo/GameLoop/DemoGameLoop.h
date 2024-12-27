@@ -6,11 +6,9 @@
 //* base
 #include <Engine/System/Runtime/GameLoop/GameLoop.h>
 
-//* engine
-#include <Engine/Asset/SxavengerAsset.h>
-
 //* demo
-#include "../ChessBoard.h"
+#include "../DemoModelRender.h"
+#include "../Objects/ChessBoard.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // DemoGameLoop class
@@ -33,10 +31,7 @@ private:
 	// private variables
 	//=========================================================================================
 
-	AssetObserver<Texture> texture_;
-	AssetObserver<Model>   model_;
-
-	std::unique_ptr<ChessBoard> chessBoard_;
+	std::unique_ptr<DemoModelRender> demo_;
 
 	//=========================================================================================
 	// private method

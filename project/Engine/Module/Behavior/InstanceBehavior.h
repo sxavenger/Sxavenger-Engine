@@ -8,8 +8,9 @@
 
 //* engine
 #include <Engine/System/DirectX/DxObject/DxDimensionBuffer.h>
-#include <Engine/Asset/Model/Model.h>
+#include <Engine/Asset/ModelAnimator/Model/Model.h>
 #include <Engine/Module/Material/MaterialComponent.h>
+#include <Engine/Module/Pipeline/RenderPipelineCollection.h>
 
 //* lib
 #include <Lib/Transform/Transform.h>
@@ -50,9 +51,17 @@ protected:
 	// protected variables
 	//=========================================================================================
 
-	Model* model_; //!< FIXME: AssetModelに変更
+	std::optional<AssetObserver<Model>> model_;
 
 	std::unique_ptr<DxObject::DimensionBuffer<TransformationMatrix>> matrixInstance_;
+
+private:
+
+	//=========================================================================================
+	// private methods
+	//=========================================================================================
+
+	void DrawModel(const SxavGraphicsFrame* frame, RenderPipelineType vertex, RenderPipelineType mesh);
 
 };
 

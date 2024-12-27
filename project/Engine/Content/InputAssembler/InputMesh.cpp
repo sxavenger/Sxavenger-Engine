@@ -6,6 +6,9 @@ _DXOBJECT_USING
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 void InputMesh::CreateMeshlet() {
+	if (isCreateMeshlet_) {
+		return;
+	}
 
 	//!< 最適化は除外
 	//!< bufferが増えるので
@@ -109,4 +112,24 @@ void InputMesh::CreateMeshlet() {
 	}
 
 	isCreateMeshlet_ = true;
+}
+
+DxObject::BindBufferDesc InputMesh::GetMeshletBindBufferDesc() const {
+	DxObject::BindBufferDesc desc = {};
+	desc.SetAddress("gVertices",   vertex_->GetGPUVirtualAddress());
+	desc.SetAddress("gIndices",    uniqueVertexIndices_->GetGPUVirtualAddress());
+	desc.SetAddress("gMeshlets",   meshlets_->GetGPUVirtualAddress());
+	desc.SetAddress("gPrimitives", primitiveIndices_->GetGPUVirtualAddress());
+	desc.SetAddress("gCullData",   cullDatas_->GetGPUVirtualAddress());
+	desc.SetAddress("gMeshInfo",   meshInfo_->GetGPUVirtualAddress());
+	return desc;
+}
+
+void InputMesh::Dispatch(const DirectXThreadContext* context, UINT instanceCount) const {
+	Assert(isCreateMeshlet_, "meshlet is not create.");
+	context->GetCommandList()->DispatchMesh(
+		RoundUp(static_cast<UINT>(meshlets_->GetSize()), kAmplificationNumthread_),
+		RoundUp(instanceCount, 1),
+		1
+	);
 }

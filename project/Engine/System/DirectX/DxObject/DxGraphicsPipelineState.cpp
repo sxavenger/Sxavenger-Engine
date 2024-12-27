@@ -85,9 +85,11 @@ void GraphicsPipelineDesc::SetDSVFormat(DXGI_FORMAT format) {
 
 void GraphicsPipelineDesc::CreateDefaultDesc() {
 	ClearElement();
-	SetElement("POSITION", 0, DXGI_FORMAT_R32G32B32A32_FLOAT);
-	SetElement("TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT);
-	SetElement("NORMAL",   0, DXGI_FORMAT_R32G32B32_FLOAT);
+	SetElement("POSITION",  0, DXGI_FORMAT_R32G32B32A32_FLOAT);
+	SetElement("TEXCOORD",  0, DXGI_FORMAT_R32G32_FLOAT);
+	SetElement("NORMAL",    0, DXGI_FORMAT_R32G32B32_FLOAT);
+	SetElement("TANGENT",   0, DXGI_FORMAT_R32G32B32_FLOAT);
+	SetElement("BITANGENT", 0, DXGI_FORMAT_R32G32B32_FLOAT);
 
 	SetRasterizer(D3D12_CULL_MODE_BACK, D3D12_FILL_MODE_SOLID);
 	SetDepthStencil(true);

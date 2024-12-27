@@ -88,7 +88,7 @@ void GameLoop::Context::Loop() {
 	while (true) {
 		Execute(State::Begin);
 		Execute(State::Update);
-		Execute(State::Render);
+		Execute(State::Draw);
 		Execute(State::End);
 
 		if (std::any_of(conditionFuncs_.begin(), conditionFuncs_.end(), [](const auto& func) { return func(); })) {

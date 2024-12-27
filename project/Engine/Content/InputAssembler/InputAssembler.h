@@ -5,8 +5,9 @@
 //-----------------------------------------------------------------------------------------
 //* engine
 #include <Engine/System/SxavengerSystem.h>
-#include <Engine/System/DirectX/DirectXContext.h>
 #include <Engine/System/DirectX/DxObject/DxDimensionBuffer.h>
+#include <Engine/System/DirectX/DxObject/DxBindBuffer.h>
+#include <Engine/System/DirectX/DirectXContext.h>
 
 //* c++
 #include <memory>

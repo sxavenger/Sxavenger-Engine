@@ -16,6 +16,7 @@ void SxavengerAsset::Init() {
 }
 
 void SxavengerAsset::Term() {
+	collection_->Term();
 	collection_.reset();
 }
 
