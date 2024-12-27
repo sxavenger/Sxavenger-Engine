@@ -23,6 +23,14 @@ void AssetConsole::Init(Console* console) {
 	InitTexture();
 
 	folder_ = SxavengerAsset::GetCollection()->GetRoot();
+
+	std::filesystem::path path = "packages/tmp";
+
+	AssetCollection::FolderPair* folder = SxavengerAsset::GetCollection()->GetRoot();
+
+	for (const auto& part : path) {
+		folder = &folder->second.folder[part];
+	}
 }
 
 void AssetConsole::Term() {
@@ -113,15 +121,16 @@ void AssetConsole::DisplayProject() {
 
 				if (folder.second.Empty()) {
 					if (isSelected) {
-						type = TextureType::Folder_Empty;
+						type = TextureType::Folder_Empty_Open;
 
 					} else {
-						type = TextureType::Folder_Empty_Open;
+						type = TextureType::Folder_Empty;
 					}
 
 				} else {
 					if (isSelected) {
 						type = TextureType::Folder_Open;
+
 					} else {
 						type = TextureType::Folder;
 					}

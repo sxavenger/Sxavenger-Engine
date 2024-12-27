@@ -7,8 +7,11 @@
 	FFFFFF
 
 ## folder
-- Weight
+- Weight(fill)
 	200
+
+- Weight(Solid)
+	300
 
 - Grade
 	default
