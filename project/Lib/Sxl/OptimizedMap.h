@@ -55,6 +55,8 @@ public:
 
 	size_t Size() const;
 
+	bool Empty() const { return map_.empty(); }
+
 	Container::iterator Begin();
 	Container::const_iterator Begin() const;
 

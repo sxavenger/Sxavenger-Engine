@@ -48,8 +48,16 @@ public:
 	// Folder structure
 	////////////////////////////////////////////////////////////////////////////////////////////
 	struct Folder {
-		Sxl::OptimizedLowerPathMap<File>   files;
+
+		//* member *//
+
+		Sxl::OptimizedLowerPathMap<File>                                     files;
 		Sxl::OptimizedLowerPathMap<std::pair<std::filesystem::path, Folder>> folder;
+
+		//* methods *//
+
+		bool Empty() const { return files.Empty() && folder.Empty(); }
+
 	};
 	using FolderPair = std::pair<std::filesystem::path, Folder>;
 

@@ -71,8 +71,10 @@ void AssetConsole::InitTexture() {
 	textures_[TextureType::File_Shader]        = SxavengerAsset::TryImportPtr<Texture>("Packages/textures/tree/file_shader.png").lock();
 
 	//!< folder
-	textures_[TextureType::Folder]       = SxavengerAsset::TryImportPtr<Texture>("Packages/textures/tree/folder.png").lock();
-	textures_[TextureType::Folder_Open]  = SxavengerAsset::TryImportPtr<Texture>("Packages/textures/tree/folder_open.png").lock();
+	textures_[TextureType::Folder]            = SxavengerAsset::TryImportPtr<Texture>("Packages/textures/tree/folder.png").lock();
+	textures_[TextureType::Folder_Open]       = SxavengerAsset::TryImportPtr<Texture>("Packages/textures/tree/folder_open.png").lock();
+	textures_[TextureType::Folder_Empty]      = SxavengerAsset::TryImportPtr<Texture>("Packages/textures/tree/folder_empty.png").lock();
+	textures_[TextureType::Folder_Empty_Open] = SxavengerAsset::TryImportPtr<Texture>("Packages/textures/tree/folder_empty_open.png").lock();
 
 	std::for_each(textures_.begin(), textures_.end(), [](std::shared_ptr<Texture>& texture) { texture->Load(SxavengerSystem::GetMainThreadContext()); });
 }
@@ -93,10 +95,10 @@ void AssetConsole::DisplayProject() {
 		std::function<void(AssetCollection::FolderPair*)> folderFunction = [&](AssetCollection::FolderPair* node) {
 
 			//!< folder全探索
-			for (auto& folder : node->second.folder.GetMap()) {
+			for (auto& [part, folder] : node->second.folder.GetMap()) {
 
 				//!< selected
-				bool isSelected = folder_.has_value() && folder_.value() == &folder.second;
+				bool isSelected = folder_.has_value() && folder_.value() == &folder;
 
 				//!< node flag
 				ImGuiTreeNodeFlags nodeFlag
@@ -109,8 +111,20 @@ void AssetConsole::DisplayProject() {
 
 				TextureType type = TextureType::Folder;
 
-				if (folder_.has_value() && &folder.second == folder_.value()) {
-					type = TextureType::Folder_Open;
+				if (folder.second.Empty()) {
+					if (isSelected) {
+						type = TextureType::Folder_Empty;
+
+					} else {
+						type = TextureType::Folder_Empty_Open;
+					}
+
+				} else {
+					if (isSelected) {
+						type = TextureType::Folder_Open;
+					} else {
+						type = TextureType::Folder;
+					}
 				}
 
 				//!< image
@@ -123,22 +137,22 @@ void AssetConsole::DisplayProject() {
 				// todo: icon描画関数を用意
 				// todo: colorを入れる
 
-				bool isOpenTreeNode = ImGui::TreeNodeEx(folder.first.string().c_str(), nodeFlag);
+				bool isOpenTreeNode = ImGui::TreeNodeEx(part.string().c_str(), nodeFlag);
 
 				if (ImGui::IsItemClicked()) {
-					folder_ = &folder.second;
+					folder_ = &folder;
 				}
 
 				if (isOpenTreeNode) {
-					folderFunction(&folder.second);
+					folderFunction(&folder);
 					ImGui::TreePop();
 				}
 			}
 
 			//!< fileの表示
-			for (auto& file : node->second.files.GetMap()) {
+			for (auto& [part, file] : node->second.files.GetMap()) {
 
-				TextureType type = GetTextureType(file.second);
+				TextureType type = GetTextureType(file);
 
 				float spacing = 16;
 				ImGui::Image(textures_[type]->GetGPUHandleSRV().ptr, { spacing, spacing });
@@ -147,7 +161,7 @@ void AssetConsole::DisplayProject() {
 				ImVec2 cursol = ImGui::GetCursorPos();
 				ImGui::SetCursorPos({ cursol.x - 4, cursol.y });
 
-				if (ImGui::Selectable(file.first.string().c_str())) {
+				if (ImGui::Selectable(part.string().c_str())) {
 					// todo: file select
 				}
 			}

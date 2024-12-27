@@ -52,13 +52,18 @@ private:
 	////////////////////////////////////////////////////////////////////////////////////////////
 	// TextureType enum class
 	////////////////////////////////////////////////////////////////////////////////////////////
-	enum TextureType : uint8_t {
+	enum TextureType : uint32_t {
+		//!< file
 		File,
 		File_Texture,
 		File_ModelAnimator,
 		File_Shader,
+
+		//!< folder
 		Folder,
 		Folder_Open,
+		Folder_Empty,
+		Folder_Empty_Open,
 	};
 
 	//=========================================================================================
@@ -75,7 +80,7 @@ private:
 
 	//* texture *//
 
-	std::array<std::shared_ptr<Texture>, TextureType::Folder_Open + 1> textures_;
+	std::array<std::shared_ptr<Texture>, TextureType::Folder_Empty_Open + 1> textures_;
 
 	//=========================================================================================
 	// private methods
