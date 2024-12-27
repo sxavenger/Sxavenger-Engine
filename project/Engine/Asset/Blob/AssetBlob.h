@@ -31,6 +31,8 @@ public:
 
 	const DxObject::ShaderBlob& GetBlob() const { return blob_; }
 
+	//* debug *//
+
 private:
 
 	//=========================================================================================

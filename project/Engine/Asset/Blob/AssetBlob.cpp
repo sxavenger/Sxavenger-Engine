@@ -11,6 +11,5 @@ void AssetBlob::Load(_MAYBE_UNUSED const DirectXThreadContext* context) {
 
 	blob_.Create(filepath_, profile_);
 
-	BaseAsset::EndLoad();
 	BaseAsset::Complete();
 }

@@ -1,7 +1,7 @@
 #include "BaseAsset.h"
 
 void BaseAsset::WaitComplete() const {
-	while (state_ != AssetState::Complete) {
+	while (state_ != AssetState::Completed) {
 		std::this_thread::sleep_for(std::chrono::milliseconds(1));
 	}
 }
@@ -15,4 +15,13 @@ bool BaseAsset::CheckAndBeginLoad() {
 	}
 
 	return false;
+}
+
+void BaseAsset::Complete() {
+	state_ = AssetState::Completed;
+}
+
+void BaseAsset::Complete(const DirectXThreadContext* context) {
+	context->ExecuteAllAllocators();
+	Complete();
 }

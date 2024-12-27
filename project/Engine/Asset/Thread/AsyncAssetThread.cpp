@@ -70,8 +70,6 @@ void AsyncAssetThread::Execute() {
 	runtime_.Begin();
 
 	task_->Load(this);
-	DirectXThreadContext::ExecuteAllAllocators();
-	task_->Complete();
 
 	task_        = nullptr;
 	isAvailable_ = false;

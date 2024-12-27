@@ -18,3 +18,7 @@ void SxavengerAsset::Init() {
 void SxavengerAsset::Term() {
 	collection_.reset();
 }
+
+void SxavengerAsset::PushTask(const std::shared_ptr<BaseAsset>& asset) {
+	collection_->PushTask(asset);
+}

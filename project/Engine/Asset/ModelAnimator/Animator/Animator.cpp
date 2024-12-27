@@ -40,7 +40,7 @@ void Animator::Load(_MAYBE_UNUSED const DirectXThreadContext* context) {
 		}
 	}
 
-	BaseAsset::EndLoad();
+	BaseAsset::Complete();
 }
 
 void Animator::Term() {

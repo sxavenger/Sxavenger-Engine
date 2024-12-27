@@ -6,13 +6,13 @@ _DXOBJECT_USING
 //-----------------------------------------------------------------------------------------
 //* engine
 #include <Engine/System/SxavengerSystem.h>
-#include <Engine/Content/SxavengerContent.h>
+#include <Engine/Module/SxavengerModule.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // SkeletonMesh class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-void SkeletonMesh::Create(const Model* model) {
+void SkeletonMesh::Create(const std::shared_ptr<Model>& model) {
 
 	// 引数の保存
 	model_ = model;
@@ -27,10 +27,10 @@ void SkeletonMesh::UpdateAnimation(const Animation& animation, DeltaTimePoint<Ti
 	Skinning();
 }
 
-void SkeletonMesh::UpdateAnimation(const AnimationGroup& animationGroup, DeltaTimePoint<TimeUnit::s> time, bool isLoop) {
-	skeleton_.Update(animationGroup, time, isLoop);
-	Skinning();
-}
+//void SkeletonMesh::UpdateAnimation(const AnimationGroup& animationGroup, DeltaTimePoint<TimeUnit::s> time, bool isLoop) {
+//	skeleton_.Update(animationGroup, time, isLoop);
+//	Skinning();
+//}
 
 void SkeletonMesh::UpdateTransitionAnimationAToB(
 	const Animation& animationA, DeltaTimePoint<TimeUnit::s> timeA,
@@ -135,7 +135,7 @@ void SkeletonMesh::CreateSkinnedVertex() {
 
 void SkeletonMesh::Skinning() {
 
-	SxavengerContent::SetSkinningPipeline(SxavengerSystem::GetMainThreadContext());
+	SxavengerModule::SetSkinningPipeline(SxavengerSystem::GetMainThreadContext());
 
 	for (uint32_t i = 0; i < model_->GetMeshSize(); ++i) {
 		skinClusters_[i].UpdatePalette(skeleton_);
@@ -149,6 +149,6 @@ void SkeletonMesh::Skinning() {
 		bind.SetAddress("gInfo",         skinClusters_[i].info->GetGPUVirtualAddress());
 		bind.SetAddress("gOutputVertex", skinnedVertex_[i]->GetGPUVirtualAddress());
 
-		SxavengerContent::DispatchSkinning(SxavengerSystem::GetMainThreadContext(), bind, (*skinClusters_[i].info)[0]);
+		SxavengerModule::DispatchSkinningPipeline(SxavengerSystem::GetMainThreadContext(), bind, (*skinClusters_[i].info)[0]);
 	}
 }

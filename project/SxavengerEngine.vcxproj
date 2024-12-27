@@ -157,9 +157,10 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="Engine\Console\RenderConsole\RenderConsole.cpp" />
     <ClCompile Include="Engine\Console\SystemConsole\SystemConsole.cpp" />
     <ClCompile Include="Engine\Content\Animation\Animation.cpp" />
-    <ClCompile Include="Engine\Content\Animation\Skeleton.cpp" />
-    <ClCompile Include="Engine\Content\Animation\SkinCluster.cpp" />
-    <ClCompile Include="Engine\Content\Animation\SkinningPipeline.cpp" />
+    <ClCompile Include="Engine\Module\Skeleton\Skeleton.cpp" />
+    <ClCompile Include="Engine\Module\Skeleton\SkeletonMesh.cpp" />
+    <ClCompile Include="Engine\Module\Skeleton\SkinCluster.cpp" />
+    <ClCompile Include="Engine\Module\Skeleton\SkinningPipeline.cpp" />
     <ClCompile Include="Engine\Content\InputAssembler\InputAssembler.cpp" />
     <ClCompile Include="Engine\Content\InputAssembler\InputMesh.cpp" />
     <ClCompile Include="Engine\Content\SxavengerContent.cpp" />
@@ -277,9 +278,10 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Engine\Content\Animation\Animation.h" />
     <ClInclude Include="Engine\Content\Animation\BornNode.h" />
     <ClInclude Include="Engine\Content\Animation\JointWeight.h" />
-    <ClInclude Include="Engine\Content\Animation\Skeleton.h" />
-    <ClInclude Include="Engine\Content\Animation\SkinCluster.h" />
-    <ClInclude Include="Engine\Content\Animation\SkinningPipeline.h" />
+    <ClInclude Include="Engine\Module\Skeleton\Skeleton.h" />
+    <ClInclude Include="Engine\Module\Skeleton\SkeletonMesh.h" />
+    <ClInclude Include="Engine\Module\Skeleton\SkinCluster.h" />
+    <ClInclude Include="Engine\Module\Skeleton\SkinningPipeline.h" />
     <ClInclude Include="Engine\Content\InputAssembler\InputAssembler.h" />
     <ClInclude Include="Engine\Content\InputAssembler\InputMesh.h" />
     <ClInclude Include="Engine\Content\SxavengerContent.h" />

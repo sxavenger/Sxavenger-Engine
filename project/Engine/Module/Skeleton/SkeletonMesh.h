@@ -9,7 +9,7 @@
 
 //* engine
 #include <Engine/System/DirectX/DxObject/DxUnorderedDimensionBuffer.h>
-#include <Engine/Asset/Model/Model.h>
+#include <Engine/Asset/ModelAnimator/Model/Model.h>
 
 //* c++
 #include <vector>
@@ -27,7 +27,7 @@ public:
 	SkeletonMesh()  = default;
 	~SkeletonMesh() = default;
 
-	void Create(const Model* model);
+	void Create(const std::shared_ptr<Model>& model);
 
 	//* animation option *//
 
@@ -54,7 +54,7 @@ private:
 
 	//* external *//
 
-	const Model* model_ = nullptr;
+	std::shared_ptr<const Model> model_;
 
 	//* member *//
 

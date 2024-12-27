@@ -26,8 +26,7 @@ class AssetCollection;
 enum class AssetState : uint8_t {
 	Unloaded,
 	Loading,
-	Loaded,
-	Complete //!< 同threadでのLoadの場合, この状態になることはない
+	Completed //!< 同threadでのLoadの場合, この状態になることはない
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -51,13 +50,17 @@ public:
 
 	AssetState GetAssetState() const { return state_; }
 
+	bool IsCompleted() const { return state_ == AssetState::Completed; }
+
 	//* setter *//
 
 	void SetCollection(AssetCollection* collection) { collection_ = collection; }
 
 	void SetFilepath(const std::filesystem::path& filepath) { filepath_ = filepath; }
 
-	void Complete() { state_ = AssetState::Complete; }
+	//* debug *//
+
+	virtual void SystemInspectorImGui() {};
 
 protected:
 
@@ -79,7 +82,8 @@ protected:
 
 	bool CheckAndBeginLoad();
 
-	void EndLoad() { state_ = AssetState::Loaded; }
+	void Complete();
+	void Complete(const DirectXThreadContext* context);
 
 private:
 

@@ -32,6 +32,7 @@ void AssetConsole::Term() {
 void AssetConsole::UpdateConsole() {
 	if (isDisplayAssetConsole_) {
 		DisplayProject();
+		//DisplayInspector();
 	}
 }
 
@@ -170,7 +171,7 @@ void AssetConsole::ShowFolderTree() {
 			ImGui::SetCursorPos({ cursol.x - 4, cursol.y });
 
 			if (ImGui::Selectable(part.string().c_str())) {
-				// todo: file select
+				file_ = &file;
 			}
 		}
 	};
@@ -212,25 +213,38 @@ void AssetConsole::ShowFolderProject() {
 
 	ImGui::SetCursorPos({ beginCursol.x, beginCursol.y + rect.y + sapcing.y * 2.0f });
 
+
 	//!< folder and file button
-	for (auto& folder : folder_.value()->second.folder.GetMap()) {
+	for (auto& [part, folder] : folder_.value()->second.folder.GetMap()) {
 
-		if (ImGui::ImageButton(folder.first.generic_string().c_str(), textures_[TextureType::Folder]->GetGPUHandleSRV().ptr, { 24, 24 })) {
-			folder_ = &folder.second;
+		if (ImGui::ImageButton(part.generic_string().c_str(), textures_[TextureType::Folder]->GetGPUHandleSRV().ptr, { 24, 24 })) {
+			folder_ = &folder;
 		}
 
 		ImGui::SameLine();
 	}
 
-	for (auto& file : folder_.value()->second.files.GetMap()) {
+	for (auto& [part, file] : folder_.value()->second.files.GetMap()) {
 
-		TextureType type = GetTextureType(file.second);
+		TextureType type = GetTextureType(file);
 
-		if (ImGui::ImageButton(file.first.generic_string().c_str(), textures_[type]->GetGPUHandleSRV().ptr, { 24, 24 })) {
+		if (ImGui::ImageButton(part.generic_string().c_str(), textures_[type]->GetGPUHandleSRV().ptr, { 24, 24 })) {
+			file_ = &file;
 		}
 
 		ImGui::SameLine();
 	}
+}
+
+void AssetConsole::DisplayInspector() {
+	console_->DockingConsole();
+	ImGui::Begin("Inspector ## Asset Console", nullptr, console_->GetWindowFlag());
+
+	if (file_.has_value()) {
+		file_.value()->second->SystemInspectorImGui();
+	}
+
+	ImGui::End();
 }
 
 void AssetConsole::MenuDummy() {

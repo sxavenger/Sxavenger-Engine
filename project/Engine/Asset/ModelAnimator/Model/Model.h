@@ -87,6 +87,10 @@ public:
 
 	const D3D12_GPU_DESCRIPTOR_HANDLE& GetTextureHandle(uint32_t meshIndex, TextureType type = TextureType::Diffuse) const;
 
+	//* node option *//
+
+	const BornNode& GetRootNode() const { return root_; }
+
 	//* getter *//
 
 	static const uint32_t GetDefaultAssimpOption() { return kDefaultAssimpOption_; }

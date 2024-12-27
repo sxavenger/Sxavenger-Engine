@@ -20,12 +20,12 @@ void DirectXThreadContext::Init(uint32_t allocatorCount) {
 void DirectXThreadContext::Term() {
 }
 
-void DirectXThreadContext::TransitionAllocator() {
+void DirectXThreadContext::TransitionAllocator() const {
 	command_->TransitionAllocator();
 	SetDescriptorHeap();
 }
 
-void DirectXThreadContext::ExecuteAllAllocators() {
+void DirectXThreadContext::ExecuteAllAllocators() const {
 	command_->ExecuteAllAllocators();
 	SetDescriptorHeap();
 }
@@ -38,7 +38,7 @@ ID3D12CommandQueue* DirectXThreadContext::GetCommandQueue() const {
 	return command_->GetCommandQueue();
 }
 
-void DirectXThreadContext::SetDescriptorHeap() {
+void DirectXThreadContext::SetDescriptorHeap() const {
 
 	ID3D12DescriptorHeap* descriptorHeaps[] = {
 		SxavengerSystem::GetDxDescriptorHeaps()->GetDescriptorHeap(kDescriptor_CBV_SRV_UAV)

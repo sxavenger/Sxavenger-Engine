@@ -3,10 +3,10 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
-//* animation
-#include "Animation.h"
+//* engine
+#include <Engine/Content/Animation/Animation.h>
+#include <Engine/Content/Animation/BornNode.h>
 //#include "AnimationGroup.h"
-#include "BornNode.h"
 
 //* lib
 #include <Lib/Geometry/Matrix4x4.h>

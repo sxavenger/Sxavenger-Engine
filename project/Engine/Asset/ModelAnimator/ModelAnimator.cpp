@@ -15,7 +15,7 @@ void ModelAnimator::Load(const DirectXThreadContext* context) {
 		modelAnimator_.second->Load(context);
 	}
 
-	BaseAsset::EndLoad();
+	BaseAsset::Complete(context);
 }
 
 void ModelAnimator::CreateModel() {

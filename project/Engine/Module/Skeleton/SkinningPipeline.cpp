@@ -6,6 +6,7 @@ _DXOBJECT_USING
 //-----------------------------------------------------------------------------------------
 //* engine
 #include <Engine/System/SxavengerSystem.h>
+#include <Engine/System/Config/SxavengerDirectory.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // SkinningComputePipeline class methods
@@ -13,7 +14,7 @@ _DXOBJECT_USING
 
 void SkinningComputePipeline::Init() {
 	state_ = std::make_unique<ReflectionComputePipelineState>();
-	state_->CreateBlob("animation/skinning.cs.hlsl");
+	state_->CreateBlob(kPackagesShaderDirectory / "animation/skinning.cs.hlsl");
 	state_->ReflectionPipeline(SxavengerSystem::GetDxDevice());
 }
 

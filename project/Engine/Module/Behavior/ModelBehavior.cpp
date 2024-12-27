@@ -34,6 +34,10 @@ void ModelBehavior::DrawSystematic(_MAYBE_UNUSED const SxavGraphicsFrame* frame)
 	model_.value().CheckAndReload();
 	std::shared_ptr<Model> model = model_.value().Lock();
 
+	if (!model->IsCompleted()) {
+		return;
+	}
+
 	sConsole->SetGraphicsPipeline(kDefaultVS_AlbedoPS_Deferred, SxavengerSystem::GetMainThreadContext(), frame->GetSize());
 
 	DxObject::BindBufferDesc bind = {};
@@ -60,6 +64,10 @@ void ModelBehavior::DrawAdaptive(_MAYBE_UNUSED const SxavGraphicsFrame* frame) {
 	model_.value().CheckAndReload();
 	std::shared_ptr<Model> model = model_.value().Lock();
 
+	if (!model->IsCompleted()) {
+		return;
+	}
+
 	sConsole->SetGraphicsPipeline(kDefaultVS_AlbedoPS, SxavengerSystem::GetMainThreadContext(), frame->GetSize());
 
 	DxObject::BindBufferDesc bind = {};
@@ -85,6 +93,10 @@ void ModelBehavior::DrawLateAdaptive(_MAYBE_UNUSED const SxavGraphicsFrame* fram
 
 	model_.value().CheckAndReload();
 	std::shared_ptr<Model> model = model_.value().Lock();
+
+	if (!model->IsCompleted()) {
+		return;
+	}
 
 	sConsole->SetGraphicsPipeline(kDefaultVS_AlbedoPS, SxavengerSystem::GetMainThreadContext(), frame->GetSize());
 

@@ -22,8 +22,8 @@ void Texture::Load(_MAYBE_UNUSED const DirectXThreadContext* context) {
 	// deviceの取得
 	auto device = SxavengerSystem::GetDxDevice()->GetDevice();
 
-	resource_     = CreateTextureResource(device, metadata);
-	intermediate_ = UploadTextureData(resource_.Get(), image, SxavengerSystem::GetDxDevice()->GetDevice(), context->GetCommandList());
+	resource_                           = CreateTextureResource(device, metadata);
+	ComPtr<ID3D12Resource> intermediate = UploadTextureData(resource_.Get(), image, SxavengerSystem::GetDxDevice()->GetDevice(), context->GetCommandList());
 
 	// SRVの生成
 	{
@@ -58,7 +58,7 @@ void Texture::Load(_MAYBE_UNUSED const DirectXThreadContext* context) {
 	size_   = { static_cast<uint32_t>(metadata.width), static_cast<uint32_t>(metadata.height) };
 	format_ = metadata.format;
 
-	BaseAsset::EndLoad();
+	BaseAsset::Complete(context);
 }
 
 void Texture::Term() {

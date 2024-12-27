@@ -38,6 +38,8 @@ public:
 	template <BaseAssetConcept T>
 	static AssetObserver<T> GetAsset(const std::filesystem::path& filepath);
 
+	static void PushTask(const std::shared_ptr<BaseAsset>& asset);
+
 	static AssetCollection* GetCollection() { return collection_.get(); }
 
 private:

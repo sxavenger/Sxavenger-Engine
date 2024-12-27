@@ -5,5 +5,5 @@
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 void AssetUnknown::Load(_MAYBE_UNUSED const DirectXThreadContext* context) {
-	BaseAsset::EndLoad();
+	BaseAsset::Complete();
 }

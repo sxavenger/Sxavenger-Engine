@@ -77,6 +77,7 @@ private:
 	//* node *//
 
 	std::optional<AssetCollection::FolderPair*> folder_ = std::nullopt;
+	std::optional<AssetCollection::File*>       file_   = std::nullopt;
 
 	//* texture *//
 
@@ -98,6 +99,8 @@ private:
 
 	void ShowFolderTree();
 	void ShowFolderProject();
+
+	void DisplayInspector();
 
 	//* sub methods *//
 

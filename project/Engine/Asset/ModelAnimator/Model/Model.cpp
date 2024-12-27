@@ -43,7 +43,7 @@ void Model::Load(_MAYBE_UNUSED const DirectXThreadContext* context) {
 
 	root_ = ReadNode(aiScene->mRootNode);
 
-	BaseAsset::EndLoad();
+	BaseAsset::Complete(context);
 }
 
 void Model::Term() {
