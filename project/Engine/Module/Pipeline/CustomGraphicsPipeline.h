@@ -27,8 +27,7 @@ public:
 	//* asset option *//
 
 	void SetAsset(const std::optional<AssetObserver<AssetBlob>>& blob, DxObject::GraphicsShaderType type);
-
-	void SetAsset(const std::filesystem::path& filepath, DxObject::GraphicsShaderType type);
+	void CreateAsset(const std::filesystem::path& filepath, DxObject::GraphicsShaderType type);
 
 	void ClearAsset();
 

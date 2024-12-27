@@ -5,8 +5,10 @@
 //-----------------------------------------------------------------------------------------
 //* asset
 #include "BaseAsset.h"
-#include "Texture/Texture.h"
 #include "Unknown/AssetUnknown.h"
+#include "Texture/Texture.h"
+#include "ModelAnimator/ModelAnimator.h"
+#include "Blob/AssetBlob.h"
 #include "Thread/AsyncAssetThreadCollection.h"
 #include "AssetObserver.h"
 
@@ -14,7 +16,7 @@
 #include <Engine/System/Utility/Logger.h>
 
 //* lib
-#include <Lib/Sxl/OptimizedMap.h>
+#include <Lib/Sxl/OptimizedLowerPathMap.h>
 
 //* c++
 #include <filesystem>
@@ -33,22 +35,24 @@ public:
 	enum class FileType {
 		Unknown,
 		Texture,
-		Model,     //*
-		Animatior, //* 同じになるかも
+		ModelAnimator,
+		Shader,
 	};
 
 	////////////////////////////////////////////////////////////////////////////////////////////
 	// File using
 	////////////////////////////////////////////////////////////////////////////////////////////
-	using File = std::pair<FileType, std::shared_ptr<BaseAsset>>;
+	using File   = std::pair<FileType, std::shared_ptr<BaseAsset>>;
 
 	////////////////////////////////////////////////////////////////////////////////////////////
 	// Folder structure
 	////////////////////////////////////////////////////////////////////////////////////////////
 	struct Folder {
-		Sxl::OptimizerdMap<std::filesystem::path, File>   files;
-		Sxl::OptimizerdMap<std::filesystem::path, Folder> folder;
+		Sxl::OptimizedLowerPathMap<File>   files;
+		Sxl::OptimizedLowerPathMap<std::pair<std::filesystem::path, Folder>> folder;
 	};
+	using FolderPair = std::pair<std::filesystem::path, Folder>;
+
 
 public:
 
@@ -64,34 +68,55 @@ public:
 	//* asset option *//
 	//* import *//
 
-	template <DerivedFromBaseAssetConcept T>
+	//!< default
+	template <DerivedFromBaseAssetConcept T> requires (!ModelAnimatorConcept<T>)
 	std::shared_ptr<T> ImportPtr(const std::filesystem::path& filepath);
 
+	//!< model and animator
+	template <ModelAnimatorConcept T>
+	std::shared_ptr<T> ImportPtr(const std::filesystem::path& filepath);
+
+	//!< base asset
 	template <>
 	std::shared_ptr<BaseAsset> ImportPtr(const std::filesystem::path& filepath);
 
+	//!< observer
 	template <BaseAssetConcept T>
 	AssetObserver<T> Import(const std::filesystem::path& filepath);
 
 	//* try import *//
 
-	template <DerivedFromBaseAssetConcept T>
+	//!< default
+	template <DerivedFromBaseAssetConcept T> requires (!ModelAnimatorConcept<T>)
 	std::shared_ptr<T> TryImportPtr(const std::filesystem::path& filepath);
 
+	//!< model and animator
+	template <ModelAnimatorConcept T>
+	std::shared_ptr<T> TryImportPtr(const std::filesystem::path& filepath);
+
+	//!< base asset
 	template <>
 	std::shared_ptr<BaseAsset> TryImportPtr(const std::filesystem::path& filepath);
 
+	//!< observer
 	template <BaseAssetConcept T>
 	AssetObserver<T> TryImport(const std::filesystem::path& filepath);
 
 	//* get *//
 
-	template <DerivedFromBaseAssetConcept T>
+	//!< default
+	template <DerivedFromBaseAssetConcept T> requires (!ModelAnimatorConcept<T>)
 	std::shared_ptr<T> GetAssetPtr(const std::filesystem::path& filepath);
 
+	//!< model and animator
+	template <ModelAnimatorConcept T>
+	std::shared_ptr<T> GetAssetPtr(const std::filesystem::path& filepath);
+
+	//!< base asset
 	template <>
 	std::shared_ptr<BaseAsset> GetAssetPtr(const std::filesystem::path& filepath);
 
+	//!< observer
 	template <BaseAssetConcept T>
 	AssetObserver<T> GetAsset(const std::filesystem::path& filepath);
 
@@ -101,7 +126,9 @@ public:
 
 	//* getter *//
 
-	Folder& GetRoot() { return root_; }
+	FolderPair* GetRoot() { return &root_; }
+
+	FolderPair* GetFolder(const std::filesystem::path& folderpath);
 
 private:
 
@@ -111,11 +138,13 @@ private:
 
 	//* assets *//
 
-	Folder root_ = {};
+	FolderPair root_ = {};
 
 	//=========================================================================================
 	// private methods
 	//=========================================================================================
+
+	static std::filesystem::path ToLower(const std::filesystem::path& path);
 
 	static FileType GetFileType(const std::filesystem::path& filepath);
 
@@ -135,9 +164,16 @@ private:
 // AssetCollection class template methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-template <DerivedFromBaseAssetConcept T>
+template <DerivedFromBaseAssetConcept T> requires (!ModelAnimatorConcept<T>)
 inline std::shared_ptr<T> AssetCollection::ImportPtr(const std::filesystem::path& filepath) {
 	return ConvertAsset<T>(ImportFile(filepath).second);
+}
+
+template <ModelAnimatorConcept T>
+inline std::shared_ptr<T> AssetCollection::ImportPtr(const std::filesystem::path& filepath) {
+	auto asset = ConvertAsset<ModelAnimator>(ImportFile(filepath).second);
+	asset->Create<T>();
+	return asset->GetPtr<T>();
 }
 
 template <>
@@ -152,21 +188,28 @@ inline AssetObserver<T> AssetCollection::Import(const std::filesystem::path& fil
 	return observer;
 }
 
-template <DerivedFromBaseAssetConcept T>
+template <DerivedFromBaseAssetConcept T> requires (!ModelAnimatorConcept<T>)
 inline std::shared_ptr<T> AssetCollection::TryImportPtr(const std::filesystem::path& filepath) {
 	return ConvertAsset<T>(TryImportFile(filepath).second);
+}
+
+template <ModelAnimatorConcept T>
+inline std::shared_ptr<T> AssetCollection::TryImportPtr(const std::filesystem::path& filepath) {
+	auto asset = ConvertAsset<ModelAnimator>(TryImportFile(filepath).second);
+	asset->TryCreate<T>();
+	return asset->GetPtr<T>();
+}
+
+template <BaseAssetConcept T>
+inline AssetObserver<T> AssetCollection::TryImport(const std::filesystem::path& filepath) {
+	AssetObserver<T> observer = {};
+	observer.Create(TryImportPtr<T>(filepath), filepath, this);
+	return observer;
 }
 
 template <>
 inline std::shared_ptr<BaseAsset> AssetCollection::TryImportPtr(const std::filesystem::path& filepath) {
 	return TryImportFile(filepath).second;
-}
-
-template<BaseAssetConcept T>
-inline AssetObserver<T> AssetCollection::TryImport(const std::filesystem::path& filepath) {
-	AssetObserver<T> observer = {};
-	observer.Create(TryImportPtr<T>(filepath), filepath, this);
-	return observer;
 }
 
 template <DerivedFromBaseAssetConcept T>
@@ -177,9 +220,15 @@ inline std::shared_ptr<T> AssetCollection::ConvertAsset(const std::shared_ptr<Ba
 	return result;
 }
 
-template <DerivedFromBaseAssetConcept T>
+template <DerivedFromBaseAssetConcept T> requires (!ModelAnimatorConcept<T>)
 inline std::shared_ptr<T> AssetCollection::GetAssetPtr(const std::filesystem::path& filepath) {
 	return ConvertAsset<T>(GetFile(filepath).second);
+}
+
+template <ModelAnimatorConcept T>
+inline std::shared_ptr<T> AssetCollection::GetAssetPtr(const std::filesystem::path& filepath) {
+	auto asset = ConvertAsset<ModelAnimator>(GetFile(filepath).second);
+	return asset->GetPtr<T>();
 }
 
 template <>

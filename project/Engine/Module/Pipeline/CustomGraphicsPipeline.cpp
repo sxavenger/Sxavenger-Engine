@@ -16,8 +16,12 @@ void BaseCustomGraphicsPipeline::SetAsset(const std::optional<AssetObserver<Asse
 	assets_[static_cast<uint8_t>(type)] = blob;
 }
 
-void BaseCustomGraphicsPipeline::SetAsset(const std::filesystem::path& filepath, DxObject::GraphicsShaderType type) {
-	assets_[static_cast<uint8_t>(type)] = SxavengerAsset::TryImport<AssetBlob>(filepath);
+void BaseCustomGraphicsPipeline::CreateAsset(const std::filesystem::path& filepath, DxObject::GraphicsShaderType type) {
+	AssetObserver<AssetBlob> observer = SxavengerAsset::TryImport<AssetBlob>(filepath);
+	observer.Lock()->SetProfile(ToProfile(type));
+	observer.Lock()->Load(nullptr);
+
+	SetAsset(observer, type);
 }
 
 void BaseCustomGraphicsPipeline::ClearAsset() {
@@ -47,7 +51,7 @@ bool BaseCustomGraphicsPipeline::CheckAsset() const {
 void CustomGraphicsPipeline::RegisterBlob() {
 	for (uint8_t i = 0; i < assets_.size(); ++i) {
 		if (assets_[i].has_value()) {
-			blobs_[i] = assets_[i].value().Lock()->GetBlob();
+			SetBlob(assets_[i].value().Lock()->GetBlob(), static_cast<GraphicsShaderType>(i));
 
 		} else {
 			blobs_[i] = std::nullopt;
@@ -68,9 +72,9 @@ void CustomGraphicsPipeline::ReloadAndSetPipeline(const DirectXThreadContext* co
 void CustomGraphicsPipeline::CheckAndReload() {
 	if (CheckAsset()) {
 		ReloadAsset();
+		RegisterBlob();
+		GraphicsPipelineState::CreateDirectXPipeline(SxavengerSystem::GetDxDevice());
 	}
-
-	GraphicsPipelineState::CreateDirectXPipeline(SxavengerSystem::GetDxDevice());
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -80,7 +84,8 @@ void CustomGraphicsPipeline::CheckAndReload() {
 void CustomReflectionGraphicsPipeline::RegisterBlob() {
 	for (uint8_t i = 0; i < assets_.size(); ++i) {
 		if (assets_[i].has_value()) {
-			blobs_[i] = assets_[i].value().Lock()->GetBlob();
+			SetBlob(assets_[i].value().Lock()->GetBlob(), static_cast<GraphicsShaderType>(i));
+
 		} else {
 			blobs_[i] = std::nullopt;
 		}
@@ -100,10 +105,10 @@ void CustomReflectionGraphicsPipeline::ReloadAndSetPipeline(const DirectXThreadC
 void CustomReflectionGraphicsPipeline::CheckAndReload() {
 	if (CheckAsset()) {
 		ReloadAsset();
+		RegisterBlob();
+		ReflectionGraphicsPipelineState::ReflectionRootSignature(SxavengerSystem::GetDxDevice());
+		ReflectionGraphicsPipelineState::CreateDirectXPipeline(SxavengerSystem::GetDxDevice());
 	}
-
-	ReflectionGraphicsPipelineState::ReflectionRootSignature(SxavengerSystem::GetDxDevice());
-	ReflectionGraphicsPipelineState::CreateDirectXPipeline(SxavengerSystem::GetDxDevice());
 }
 
 

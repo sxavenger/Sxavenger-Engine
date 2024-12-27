@@ -137,12 +137,13 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="Demo\GameLoop\DemoGameLoop.cpp" />
     <ClCompile Include="Engine\Adapter\Particle\BaseParticle.cpp" />
     <ClCompile Include="Engine\Adapter\Particle\Emitter.cpp" />
-    <ClCompile Include="Engine\Asset\Animator\Animator.cpp" />
     <ClCompile Include="Engine\Asset\AssetCollection.cpp" />
     <ClCompile Include="Engine\Asset\AssetObserver.cpp" />
     <ClCompile Include="Engine\Asset\BaseAsset.cpp" />
     <ClCompile Include="Engine\Asset\Blob\AssetBlob.cpp" />
-    <ClCompile Include="Engine\Asset\Model\Model.cpp" />
+    <ClCompile Include="Engine\Asset\ModelAnimator\Animator\Animator.cpp" />
+    <ClCompile Include="Engine\Asset\ModelAnimator\ModelAnimator.cpp" />
+    <ClCompile Include="Engine\Asset\ModelAnimator\Model\Model.cpp" />
     <ClCompile Include="Engine\Asset\SxavengerAsset.cpp" />
     <ClCompile Include="Engine\Asset\Texture\Texture.cpp" />
     <ClCompile Include="Engine\Asset\Thread\AsyncAssetThread.cpp" />
@@ -160,6 +161,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="Engine\Content\Animation\SkinningPipeline.cpp" />
     <ClCompile Include="Engine\Content\InputAssembler\InputAssembler.cpp" />
     <ClCompile Include="Engine\Content\InputAssembler\InputMesh.cpp" />
+    <ClCompile Include="Engine\Content\SxavengerContent.cpp" />
     <ClCompile Include="Engine\Content\TextureBuffer\BaseOffscreenTexture.cpp" />
     <ClCompile Include="Engine\Content\TextureBuffer\DepthTexture.cpp" />
     <ClCompile Include="Engine\Content\TextureBuffer\MultiViewTextureBuffer.cpp" />
@@ -242,6 +244,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="Lib\Sxl\Formatter.cpp" />
     <ClCompile Include="Lib\Sxl\LowerPathMap.cpp" />
     <ClCompile Include="Lib\Sxl\LowerUnorderedMap.cpp" />
+    <ClCompile Include="Lib\Sxl\OptimizedLowerPathMap.cpp" />
     <ClCompile Include="Lib\Sxl\OptimizedMap.cpp" />
     <ClCompile Include="Lib\Sxl\OptimizedSet.cpp" />
     <ClCompile Include="Lib\Transform\Transform.cpp" />
@@ -251,12 +254,13 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Demo\GameLoop\DemoGameLoop.h" />
     <ClInclude Include="Engine\Adapter\Particle\BaseParticle.h" />
     <ClInclude Include="Engine\Adapter\Particle\Emitter.h" />
-    <ClInclude Include="Engine\Asset\Animator\Animator.h" />
     <ClInclude Include="Engine\Asset\AssetCollection.h" />
     <ClInclude Include="Engine\Asset\AssetObserver.h" />
     <ClInclude Include="Engine\Asset\BaseAsset.h" />
     <ClInclude Include="Engine\Asset\Blob\AssetBlob.h" />
-    <ClInclude Include="Engine\Asset\Model\Model.h" />
+    <ClInclude Include="Engine\Asset\ModelAnimator\Animator\Animator.h" />
+    <ClInclude Include="Engine\Asset\ModelAnimator\ModelAnimator.h" />
+    <ClInclude Include="Engine\Asset\ModelAnimator\Model\Model.h" />
     <ClInclude Include="Engine\Asset\SxavengerAsset.h" />
     <ClInclude Include="Engine\Asset\Texture\Texture.h" />
     <ClInclude Include="Engine\Asset\Thread\AsyncAssetThread.h" />
@@ -276,6 +280,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Engine\Content\Animation\SkinningPipeline.h" />
     <ClInclude Include="Engine\Content\InputAssembler\InputAssembler.h" />
     <ClInclude Include="Engine\Content\InputAssembler\InputMesh.h" />
+    <ClInclude Include="Engine\Content\SxavengerContent.h" />
     <ClInclude Include="Engine\Content\TextureBuffer\BaseOffscreenTexture.h" />
     <ClInclude Include="Engine\Content\TextureBuffer\DepthTexture.h" />
     <ClInclude Include="Engine\Content\TextureBuffer\MultiViewTextureBuffer.h" />
@@ -367,6 +372,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Lib\Sxl\Formatter.h" />
     <ClInclude Include="Lib\Sxl\LowerPathMap.h" />
     <ClInclude Include="Lib\Sxl\LowerUnorderedMap.h" />
+    <ClInclude Include="Lib\Sxl\OptimizedLowerPathMap.h" />
     <ClInclude Include="Lib\Sxl\OptimizedMap.h" />
     <ClInclude Include="Lib\Sxl\OptimizedSet.h" />
     <ClInclude Include="Lib\Sxl\SxavengerLibrary.h" />

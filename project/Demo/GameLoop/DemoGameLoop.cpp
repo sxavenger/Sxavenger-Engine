@@ -16,6 +16,9 @@ void DemoGameLoop::Term() {
 
 void DemoGameLoop::InitGame() {
 	texture_ = SxavengerAsset::Import<Texture>("asset/textures/tile_black.png");
+
+	model_ = SxavengerAsset::TryImport<Model>("asset/model/demo/cube.obj");
+	model_.Lock()->Load(SxavengerSystem::GetMainThreadContext());
 }
 
 void DemoGameLoop::TermGame() {

@@ -125,15 +125,15 @@ void GraphicsPipelineState::CreateBlob(const std::filesystem::path& filepath, Gr
 	std::unique_ptr<ShaderBlob> blob = std::make_unique<ShaderBlob>();
 	blob->Create(filepath, ToProfile(type));
 
-	SetBlob(blob.get(), type);
+	SetBlob(*blob.get(), type);
 }
 
-void GraphicsPipelineState::SetBlob(ShaderBlob* blob, GraphicsShaderType type) {
+void GraphicsPipelineState::SetBlob(const ShaderBlob& blob, GraphicsShaderType type) {
 	if (type == GraphicsShaderType::ms) {
 		isUseMeshShaderPipeline_ = true; //!< mesh shader pipelineを使用する場合
 	}
 
-	blobs_[static_cast<uint8_t>(type)] = *blob;
+	blobs_[static_cast<uint8_t>(type)] = blob;
 }
 
 void GraphicsPipelineState::CreateRootSignature(Device* device, GraphicsRootSignatureDesc&& desc) {

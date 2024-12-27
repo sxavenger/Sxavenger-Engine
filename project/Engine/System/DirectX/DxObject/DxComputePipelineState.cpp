@@ -8,15 +8,15 @@ _DXOBJECT_USING
 void ComputePipelineState::Term() {
 }
 
+void ComputePipelineState::SetBlob(const ShaderBlob& blob) {
+	blob_ = blob;
+}
+
 void ComputePipelineState::CreateBlob(const std::filesystem::path& filepath) {
 	std::unique_ptr<ShaderBlob> blob = std::make_unique<ShaderBlob>();
 	blob->Create(filepath, CompileProfile::cs);
 
-	SetBlob(blob.get());
-}
-
-void ComputePipelineState::SetBlob(ShaderBlob* blob) {
-	blob_ = *blob;
+	SetBlob(*blob.get());
 }
 
 void ComputePipelineState::CreatePipeline(Device* device, ComputeRootSignatureDesc&& desc) {

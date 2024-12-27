@@ -54,12 +54,10 @@ void ShaderCompiler::Term() {
 }
 
 ComPtr<IDxcBlob> ShaderCompiler::Compile(
-	const std::filesystem::path& filename,
+	const std::filesystem::path& filepath,
 	CompileProfile profile,
 	const std::wstring& entryPoint) {
 
-	// 全体pathの生成
-	std::filesystem::path filepath = kShaderDirectory / filename;
 	std::wstring filepathW = filepath.generic_wstring(); //!< wstringの寿命確保
 
 	// hlslファイルを読み込む

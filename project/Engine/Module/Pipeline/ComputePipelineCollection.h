@@ -3,8 +3,10 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
+//* pipeline
+#include "CustomComputePipeline.h"
+
 //* engine
-#include <Engine/System/DirectX/DxObject/DxComputePipelineState.h>
 #include <Engine/System/DirectX/DirectXContext.h>
 
 //* lib
@@ -69,7 +71,7 @@ private:
 	// private variables
 	//=========================================================================================
 
-	ComputeArray<std::unique_ptr<DxObject::ReflectionComputePipelineState>> pipelines_;
+	ComputeArray<std::unique_ptr<CustomReflectionComputePipeline>> pipelines_;
 
 	//* config *//
 

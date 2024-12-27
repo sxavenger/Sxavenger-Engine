@@ -101,9 +101,6 @@
     <ClCompile Include="Engine\GameLoop\EngineGameLoop.cpp" />
     <ClCompile Include="Engine\Asset\Texture\Texture.cpp" />
     <ClCompile Include="Engine\Asset\BaseAsset.cpp" />
-    <ClCompile Include="Engine\Asset\Model\Model.cpp" />
-    <ClCompile Include="Engine\Asset\Animator\Animator.cpp" />
-    <ClCompile Include="Engine\Asset\AssetCollection.cpp" />
     <ClCompile Include="Engine\Asset\Unknown\AssetUnknown.cpp" />
     <ClCompile Include="Engine\Asset\Thread\AsyncAssetThread.cpp" />
     <ClCompile Include="Engine\Asset\Thread\AsyncAssetThreadCollection.cpp" />
@@ -121,6 +118,12 @@
     <ClCompile Include="Engine\Module\Pipeline\CustomComputePipeline.cpp" />
     <ClCompile Include="Engine\Module\Pipeline\CustomGraphicsPipeline.cpp" />
     <ClCompile Include="Engine\Asset\Blob\AssetBlob.cpp" />
+    <ClCompile Include="Lib\Sxl\OptimizedLowerPathMap.cpp" />
+    <ClCompile Include="Engine\Content\SxavengerContent.cpp" />
+    <ClCompile Include="Engine\Asset\ModelAnimator\Animator\Animator.cpp" />
+    <ClCompile Include="Engine\Asset\ModelAnimator\Model\Model.cpp" />
+    <ClCompile Include="Engine\Asset\ModelAnimator\ModelAnimator.cpp" />
+    <ClCompile Include="Engine\Asset\AssetCollection.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\System\Window\Window.h" />
@@ -227,9 +230,6 @@
     <ClInclude Include="Engine\GameLoop\EngineGameLoop.h" />
     <ClInclude Include="Engine\Asset\Texture\Texture.h" />
     <ClInclude Include="Engine\Asset\BaseAsset.h" />
-    <ClInclude Include="Engine\Asset\Model\Model.h" />
-    <ClInclude Include="Engine\Asset\Animator\Animator.h" />
-    <ClInclude Include="Engine\Asset\AssetCollection.h" />
     <ClInclude Include="Engine\Asset\Unknown\AssetUnknown.h" />
     <ClInclude Include="Engine\Asset\Thread\AsyncAssetThread.h" />
     <ClInclude Include="Engine\Asset\Thread\AsyncAssetThreadCollection.h" />
@@ -247,5 +247,11 @@
     <ClInclude Include="Engine\Module\Pipeline\CustomComputePipeline.h" />
     <ClInclude Include="Engine\Module\Pipeline\CustomGraphicsPipeline.h" />
     <ClInclude Include="Engine\Asset\Blob\AssetBlob.h" />
+    <ClInclude Include="Lib\Sxl\OptimizedLowerPathMap.h" />
+    <ClInclude Include="Engine\Content\SxavengerContent.h" />
+    <ClInclude Include="Engine\Asset\ModelAnimator\Animator\Animator.h" />
+    <ClInclude Include="Engine\Asset\ModelAnimator\Model\Model.h" />
+    <ClInclude Include="Engine\Asset\ModelAnimator\ModelAnimator.h" />
+    <ClInclude Include="Engine\Asset\AssetCollection.h" />
   </ItemGroup>
 </Project>

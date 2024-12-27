@@ -6,6 +6,7 @@ _DXOBJECT_USING
 //-----------------------------------------------------------------------------------------
 //* engine
 #include <Engine/System/SxavengerSystem.h>
+#include <Engine/System/Config/SxavengerDirectory.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // BaseDebugPrimitive base class methods
@@ -174,8 +175,8 @@ void DebugPrimitive::CreatePrimitive() {
 void DebugPrimitive::CreatePipeline() {
 
 	pipeline_ = std::make_unique<GraphicsPipelineState>();
-	pipeline_->CreateBlob("primitive/debugPrimitive.vs.hlsl", GraphicsShaderType::vs);
-	pipeline_->CreateBlob("primitive/debugPrimitive.ps.hlsl", GraphicsShaderType::ps);
+	pipeline_->CreateBlob(kPackagesShaderDirectory / "primitive/debugPrimitive.vs.hlsl", GraphicsShaderType::vs);
+	pipeline_->CreateBlob(kPackagesShaderDirectory / "primitive/debugPrimitive.ps.hlsl", GraphicsShaderType::ps);
 
 	GraphicsRootSignatureDesc rootDesc;
 	rootDesc.SetVirtualCBV(0, ShaderVisibility::VISIBILITY_ALL, 0); //!< camera

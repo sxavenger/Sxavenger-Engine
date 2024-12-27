@@ -21,7 +21,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	collection->Push<DemoGameLoop>();
 
 	collection->Run();
-	//SxavengerSystem::RunFramework(std::move(collection));
 
 	return 0;
 }

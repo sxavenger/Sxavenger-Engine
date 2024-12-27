@@ -3,6 +3,9 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
+//* pipeline
+#include "CustomGraphicsPipeline.h"
+
 //* engine
 #include <Engine/System/DirectX/DxObject/DxGraphicsPipelineState.h>
 #include <Engine/System/DirectX/DirectXContext.h>
@@ -64,7 +67,7 @@ private:
 	// private variables
 	//=========================================================================================
 
-	RenderArray<std::unique_ptr<DxObject::ReflectionGraphicsPipelineState>> pipelines_;
+	RenderArray<std::unique_ptr<CustomReflectionGraphicsPipeline>> pipelines_;
 
 	DxObject::GraphicsPipelineDesc defferedDefaultDesc_ = {};
 	DxObject::GraphicsPipelineDesc forwardDefaultDesc_  = {};

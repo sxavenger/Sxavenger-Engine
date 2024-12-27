@@ -4,7 +4,7 @@
 // include
 //-----------------------------------------------------------------------------------------
 //* asset
-#include "../BaseAsset.h"
+#include "../../BaseAsset.h"
 
 //* engine
 #include <Engine/Content/Animation/Animation.h>

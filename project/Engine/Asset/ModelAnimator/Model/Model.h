@@ -4,8 +4,8 @@
 // include
 //-----------------------------------------------------------------------------------------
 //* asset
-#include "../BaseAsset.h"
-#include "../Texture/Texture.h"
+#include "../../BaseAsset.h"
+#include "../../Texture/Texture.h"
 
 //* engine
 #include <Engine/Content/InputAssembler/InputMesh.h>
@@ -47,15 +47,15 @@ public:
 	// MaterailTextureType enum class
 	////////////////////////////////////////////////////////////////////////////////////////////
 	enum class TextureType : uint8_t {
-		kDiffuse,
-		kNormal,
+		Diffuse,
+		Normal,
 	};
 
 	////////////////////////////////////////////////////////////////////////////////////////////
 	// MaterialData structure
 	////////////////////////////////////////////////////////////////////////////////////////////
 	struct MaterialData {
-		std::array<std::shared_ptr<Texture>, static_cast<uint8_t>(TextureType::kNormal) + 1> textures_;
+		std::array<std::shared_ptr<Texture>, static_cast<uint8_t>(TextureType::Normal) + 1> textures_;
 	};
 
 public:
@@ -85,7 +85,7 @@ public:
 
 	//* material option *//
 
-	const D3D12_GPU_DESCRIPTOR_HANDLE& GetTextureHandle(uint32_t meshIndex, TextureType type = TextureType::kDiffuse) const;
+	const D3D12_GPU_DESCRIPTOR_HANDLE& GetTextureHandle(uint32_t meshIndex, TextureType type = TextureType::Diffuse) const;
 
 	//* getter *//
 

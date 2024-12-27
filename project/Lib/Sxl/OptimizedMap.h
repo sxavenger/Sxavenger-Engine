@@ -16,10 +16,10 @@
 _SXL_NAMESPACE_BEGIN
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// OptimizerdMap class
+// OptimizedMap class
 ////////////////////////////////////////////////////////////////////////////////////////////
 template <class _Key, class _Value>
-class OptimizerdMap {
+class OptimizedMap {
 public:
 
 	////////////////////////////////////////////////////////////////////////////////////////////
@@ -37,19 +37,19 @@ public:
 	// public methods
 	//=========================================================================================
 
-	OptimizerdMap()  = default;
-	~OptimizerdMap() = default;
+	OptimizedMap()  = default;
+	~OptimizedMap() = default;
 
-	void Emplace(const _Key& key, const _Value& value);
-	void TryEmplace(const _Key& key, const _Value& value);
+	virtual void Emplace(const _Key& key, const _Value& value);
+	virtual void TryEmplace(const _Key& key, const _Value& value);
 
-	bool Contains(const _Key& key) const;
+	virtual bool Contains(const _Key& key) const;
 
 	Container::iterator Erase(Container::iterator position);
 	Container::iterator Erase(Container::const_iterator position);
-	void Erase(const _Key& key);
+	virtual void Erase(const _Key& key);
 
-	const _Value& At(const _Key& key) const;
+	virtual const _Value& At(const _Key& key) const;
 
 	void Clear();
 
@@ -68,8 +68,8 @@ public:
 	// operator
 	//=========================================================================================
 
-	_Value& operator[](const _Key& key);
-	const _Value& operator[](const _Key& key) const;
+	virtual _Value& operator[](const _Key& key);
+	virtual const _Value& operator[](const _Key& key) const;
 
 protected:
 
@@ -82,81 +82,81 @@ protected:
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// OptimizerdMap class template methods
+// OptimizedMap class template methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 template<class _Key, class _Value>
-inline void OptimizerdMap<_Key, _Value>::Emplace(const _Key& key, const _Value& value) {
+inline void OptimizedMap<_Key, _Value>::Emplace(const _Key& key, const _Value& value) {
 	map_.emplace(key, value);
 }
 
 template<class _Key, class _Value>
-inline void OptimizerdMap<_Key, _Value>::TryEmplace(const _Key& key, const _Value& value) {
+inline void OptimizedMap<_Key, _Value>::TryEmplace(const _Key& key, const _Value& value) {
 	map_.try_emplace(key, value);
 }
 
 template<class _Key, class _Value>
-inline bool OptimizerdMap<_Key, _Value>::Contains(const _Key& key) const {
+inline bool OptimizedMap<_Key, _Value>::Contains(const _Key& key) const {
 	return map_.contains(key);
 }
 
 template<class _Key, class _Value>
-inline OptimizerdMap<_Key, _Value>::Container::iterator OptimizerdMap<_Key, _Value>::Erase(Container::iterator position) {
+inline OptimizedMap<_Key, _Value>::Container::iterator OptimizedMap<_Key, _Value>::Erase(Container::iterator position) {
 	return map_.erase(position);
 }
 
 template<class _Key, class _Value>
-inline OptimizerdMap<_Key, _Value>::Container::iterator OptimizerdMap<_Key, _Value>::Erase(Container::const_iterator position) {
+inline OptimizedMap<_Key, _Value>::Container::iterator OptimizedMap<_Key, _Value>::Erase(Container::const_iterator position) {
 	return map_.erase(position);
 }
 
 template<class _Key, class _Value>
-inline void OptimizerdMap<_Key, _Value>::Erase(const _Key& key) {
+inline void OptimizedMap<_Key, _Value>::Erase(const _Key& key) {
 	map_.erase(key);
 }
 
 template<class _Key, class _Value>
-inline const _Value& OptimizerdMap<_Key, _Value>::At(const _Key& key) const {
+inline const _Value& OptimizedMap<_Key, _Value>::At(const _Key& key) const {
 	return map_.at(key);
 }
 
 template<class _Key, class _Value>
-inline void OptimizerdMap<_Key, _Value>::Clear() {
+inline void OptimizedMap<_Key, _Value>::Clear() {
 	map_.clear();
 }
 
 template<class _Key, class _Value>
-inline size_t OptimizerdMap<_Key, _Value>::Size() const {
+inline size_t OptimizedMap<_Key, _Value>::Size() const {
 	return map_.size();
 }
 
 template<class _Key, class _Value>
-inline OptimizerdMap<_Key, _Value>::Container::iterator OptimizerdMap<_Key, _Value>::Begin() {
+inline OptimizedMap<_Key, _Value>::Container::iterator OptimizedMap<_Key, _Value>::Begin() {
 	return map_.begin();
 }
 
 template<class _Key, class _Value>
-inline OptimizerdMap<_Key, _Value>::Container::const_iterator OptimizerdMap<_Key, _Value>::Begin() const {
+inline OptimizedMap<_Key, _Value>::Container::const_iterator OptimizedMap<_Key, _Value>::Begin() const {
 	return map_.begin();
 }
 
 template<class _Key, class _Value>
-inline OptimizerdMap<_Key, _Value>::Container::iterator OptimizerdMap<_Key, _Value>::End() {
+inline OptimizedMap<_Key, _Value>::Container::iterator OptimizedMap<_Key, _Value>::End() {
 	return map_.end();
 }
 
 template<class _Key, class _Value>
-inline OptimizerdMap<_Key, _Value>::Container::const_iterator OptimizerdMap<_Key, _Value>::End() const {
+inline OptimizedMap<_Key, _Value>::Container::const_iterator OptimizedMap<_Key, _Value>::End() const {
 	return map_.end();
 }
 
 template<class _Key, class _Value>
-inline _Value& OptimizerdMap<_Key, _Value>::operator[](const _Key& key) {
+inline _Value& OptimizedMap<_Key, _Value>::operator[](const _Key& key) {
 	return map_[key];
 }
 
 template<class _Key, class _Value>
-inline const _Value& OptimizerdMap<_Key, _Value>::operator[](const _Key& key) const {
+inline const _Value& OptimizedMap<_Key, _Value>::operator[](const _Key& key) const {
 	return map_.at(key);
 }
 

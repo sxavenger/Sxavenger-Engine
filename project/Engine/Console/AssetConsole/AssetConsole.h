@@ -54,9 +54,11 @@ private:
 	////////////////////////////////////////////////////////////////////////////////////////////
 	enum TextureType : uint8_t {
 		File,
-		FilePng,
+		File_Texture,
+		File_ModelAnimator,
+		File_Shader,
 		Folder,
-		FolderOpen,
+		Folder_Open,
 	};
 
 	//=========================================================================================
@@ -69,17 +71,19 @@ private:
 
 	//* node *//
 
-	std::optional<AssetCollection::Folder*> folder_ = std::nullopt;
+	std::optional<AssetCollection::FolderPair*> folder_ = std::nullopt;
 
 	//* texture *//
 
-	std::array<std::shared_ptr<Texture>, TextureType::FolderOpen + 1> textures_;
+	std::array<std::shared_ptr<Texture>, TextureType::Folder_Open + 1> textures_;
 
 	//=========================================================================================
 	// private methods
 	//=========================================================================================
 
-	//*
+	//* assister *//
+
+	static TextureType GetTextureType(const AssetCollection::File& file);
 
 	void InitTexture();
 

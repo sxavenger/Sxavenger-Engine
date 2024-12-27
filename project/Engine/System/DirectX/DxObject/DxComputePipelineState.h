@@ -41,8 +41,8 @@ public:
 
 	//* create methods *//
 
+	void SetBlob(const ShaderBlob& blob);
 	void CreateBlob(const std::filesystem::path& filepath);
-	void SetBlob(ShaderBlob* blob);
 
 	void CreatePipeline(Device* device, ComputeRootSignatureDesc&& desc); //!< rootSignatureDescはmove前提
 

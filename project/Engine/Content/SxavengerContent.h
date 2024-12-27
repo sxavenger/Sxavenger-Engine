@@ -3,29 +3,29 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
-//* asset
-#include "../../BaseAsset.h"
+//* content
+#include "TextureBuffer/OffscreenTextureCollection.h"
 
-//* engine
-#include <Engine/System/Runtime/Thread/AsyncTask.h>
-#include <Engine/Content/Animation/AnimationGroup.h>
+//* c++
+#include <memory>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// AssetAnimation class
+// SxavengerContent class
 ////////////////////////////////////////////////////////////////////////////////////////////
-class AssetAnimation
-	: public BaseAsset, public AnimationGroup, public AsyncTask {
+class SxavengerContent {
 public:
 
 	//=========================================================================================
 	// public methods
 	//=========================================================================================
 
-	void SetAsyncTask(uint32_t assimpOption = NULL);
+	static void Init();
 
-	void SetInspectorImGui() override;
+	static void Term();
 
-	static bool CheckExtension(const std::filesystem::path& extension);
+	static void RegisterTexture(const std::string& name, std::unique_ptr<BaseOffscreenTexture>&& texture);
+
+	static const D3D12_GPU_DESCRIPTOR_HANDLE& GetGPUHandleSRV(const std::string& name);
 
 private:
 
@@ -33,11 +33,6 @@ private:
 	// private variables
 	//=========================================================================================
 
-	//* load parameter *//
+	static std::unique_ptr<OffscreenTextureCollection> collection_;
 
-	uint32_t assimpOption_;
-
-	//* extension *//
-
-	static const std::unordered_set<std::filesystem::path> extension_;
 };

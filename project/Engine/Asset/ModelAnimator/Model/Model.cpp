@@ -11,7 +11,10 @@
 // include
 //-----------------------------------------------------------------------------------------
 //* asset
-#include "../AssetCollection.h"
+#include "../../AssetCollection.h"
+
+//* engine
+#include <Engine/Content/SxavengerContent.h>
 
 //=========================================================================================
 // static const variables
@@ -72,8 +75,7 @@ const D3D12_GPU_DESCRIPTOR_HANDLE& Model::GetTextureHandle(uint32_t meshIndex, T
 	Assert(materialIndex < materials_.size(), "material index out of range."); //!< materialサイズ以上のindex
 
 	if (materials_.at(materialIndex).textures_[static_cast<uint8_t>(type)] == nullptr) {
-		//return SxavengerContent::GetTextureGPUHandleSRV("white1x1");
-		Assert(false, "material texture not found.");
+		return SxavengerContent::GetGPUHandleSRV("white1x1");
 	}
 
 	return materials_.at(materialIndex).textures_[static_cast<uint8_t>(type)]->GetGPUHandleSRV();
@@ -207,7 +209,7 @@ void Model::LoadMaterial(const aiScene* aiScene, const std::filesystem::path& di
 			// データの保存
 			std::shared_ptr<Texture> texture = collection_->ImportPtr<Texture>(directory / aiTextureFilepath.C_Str()); //!< todo: observerに変更
 			texture->Load(context);
-			material.textures_[static_cast<uint8_t>(TextureType::kDiffuse)] = texture;
+			material.textures_[static_cast<uint8_t>(TextureType::Diffuse)] = texture;
 
 		}
 
@@ -219,7 +221,7 @@ void Model::LoadMaterial(const aiScene* aiScene, const std::filesystem::path& di
 			// データの保存
 			std::shared_ptr<Texture> texture = collection_->ImportPtr<Texture>(directory / aiTextureFilepath.C_Str()); //!< todo: observerに変更
 			texture->Load(context);
-			material.textures_[static_cast<uint8_t>(TextureType::kNormal)] = texture;
+			material.textures_[static_cast<uint8_t>(TextureType::Normal)] = texture;
 		}
 	}
 }

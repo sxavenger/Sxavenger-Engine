@@ -44,7 +44,7 @@ public:
 	//* compiler opiton *//
 
 	ComPtr<IDxcBlob> Compile(
-		const std::filesystem::path& filename,
+		const std::filesystem::path& filepath,
 		CompileProfile profile,
 		const std::wstring& entryPoint = L""
 	);

@@ -21,6 +21,8 @@ void AssetConsole::Init(Console* console) {
 	console_ = console;
 
 	InitTexture();
+
+	folder_ = SxavengerAsset::GetCollection()->GetRoot();
 }
 
 void AssetConsole::Term() {
@@ -43,11 +45,34 @@ void AssetConsole::ShowAssetMenu() {
 
 }
 
+AssetConsole::TextureType AssetConsole::GetTextureType(const AssetCollection::File& file) {
+	switch (file.first) {
+		case AssetCollection::FileType::Texture:
+			return TextureType::File_Texture;
+			break;
+
+		case AssetCollection::FileType::ModelAnimator:
+			return TextureType::File_ModelAnimator;
+			break;
+
+		case AssetCollection::FileType::Shader:
+			return TextureType::File_Shader;
+			break;
+	}
+
+	return TextureType::File;
+}
+
 void AssetConsole::InitTexture() {
-	textures_[TextureType::File]       = SxavengerAsset::TryImportPtr<Texture>("Packages/textures/file.png").lock();
-	textures_[TextureType::FilePng]    = SxavengerAsset::TryImportPtr<Texture>("Packages/textures/file_png.png").lock();
-	textures_[TextureType::Folder]     = SxavengerAsset::TryImportPtr<Texture>("Packages/textures/folder.png").lock();
-	textures_[TextureType::FolderOpen] = SxavengerAsset::TryImportPtr<Texture>("Packages/textures/folder_open.png").lock();
+	//!< file
+	textures_[TextureType::File]               = SxavengerAsset::TryImportPtr<Texture>("Packages/textures/tree/file.png").lock();
+	textures_[TextureType::File_Texture]       = SxavengerAsset::TryImportPtr<Texture>("Packages/textures/tree/file_texture.png").lock();
+	textures_[TextureType::File_ModelAnimator] = SxavengerAsset::TryImportPtr<Texture>("Packages/textures/tree/file_model.png").lock();
+	textures_[TextureType::File_Shader]        = SxavengerAsset::TryImportPtr<Texture>("Packages/textures/tree/file_shader.png").lock();
+
+	//!< folder
+	textures_[TextureType::Folder]       = SxavengerAsset::TryImportPtr<Texture>("Packages/textures/tree/folder.png").lock();
+	textures_[TextureType::Folder_Open]  = SxavengerAsset::TryImportPtr<Texture>("Packages/textures/tree/folder_open.png").lock();
 
 	std::for_each(textures_.begin(), textures_.end(), [](std::shared_ptr<Texture>& texture) { texture->Load(SxavengerSystem::GetMainThreadContext()); });
 }
@@ -65,10 +90,10 @@ void AssetConsole::DisplayProject() {
 
 		ImGui::BeginChild("asset tree", { region.x * 0.2f, region.y }, flag, ImGuiWindowFlags_AlwaysVerticalScrollbar);
 
-		std::function<void(AssetCollection::Folder*)> folderFunction = [&](AssetCollection::Folder* node) {
+		std::function<void(AssetCollection::FolderPair*)> folderFunction = [&](AssetCollection::FolderPair* node) {
 
 			//!< folder全探索
-			for (auto& folder : node->folder.GetMap()) {
+			for (auto& folder : node->second.folder.GetMap()) {
 
 				//!< selected
 				bool isSelected = folder_.has_value() && folder_.value() == &folder.second;
@@ -82,9 +107,15 @@ void AssetConsole::DisplayProject() {
 					nodeFlag |= ImGuiTreeNodeFlags_Selected;
 				}
 
+				TextureType type = TextureType::Folder;
+
+				if (folder_.has_value() && &folder.second == folder_.value()) {
+					type = TextureType::Folder_Open;
+				}
+
 				//!< image
 				float spacing = 16;
-				ImGui::Image(textures_[TextureType::Folder]->GetGPUHandleSRV().ptr, { spacing, spacing });
+				ImGui::Image(textures_[type]->GetGPUHandleSRV().ptr, { spacing, spacing });
 				ImGui::SameLine();
 
 				ImVec2 cursol = ImGui::GetCursorPos();
@@ -105,10 +136,12 @@ void AssetConsole::DisplayProject() {
 			}
 
 			//!< fileの表示
-			for (auto& file : node->files.GetMap()) {
+			for (auto& file : node->second.files.GetMap()) {
+
+				TextureType type = GetTextureType(file.second);
 
 				float spacing = 16;
-				ImGui::Image(textures_[TextureType::File]->GetGPUHandleSRV().ptr, { spacing, spacing });
+				ImGui::Image(textures_[type]->GetGPUHandleSRV().ptr, { spacing, spacing });
 				ImGui::SameLine();
 
 				ImVec2 cursol = ImGui::GetCursorPos();
@@ -120,7 +153,7 @@ void AssetConsole::DisplayProject() {
 			}
 		};
 
-		folderFunction(&SxavengerAsset::GetCollection()->GetRoot());
+		folderFunction(SxavengerAsset::GetCollection()->GetRoot());
 
 		ImGui::EndChild();
 	}
@@ -128,19 +161,53 @@ void AssetConsole::DisplayProject() {
 	{ //!< Folder Project
 
 		if (folder_.has_value()) {
-			for (auto& folder : folder_.value()->folder.GetMap()) {
+
+			ImGui::SameLine();
+			ImVec2 beginCursol = ImGui::GetCursorPos();
+
+			//!< folder node button
+			ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.0f, 0.0f, 0.0f, 0.0f));
+
+			std::filesystem::path folderpath = "";
+			for (const auto& part : folder_.value()->first) {
+				folderpath /= part;
+
 				ImGui::SameLine();
+
+				if (ImGui::Button(part.generic_string().c_str())) {
+					folder_ = SxavengerAsset::GetCollection()->GetFolder(folderpath);
+				}
+
+				ImGui::SameLine();
+
+				ImGui::Text("/");
+			}
+
+			ImGui::PopStyleColor();
+
+			ImVec2 rect    = ImGui::GetItemRectSize();
+			ImVec2 sapcing = ImGui::GetStyle().ItemSpacing;
+
+			ImGui::SetCursorPos({ beginCursol.x, beginCursol.y + rect.y + sapcing.y * 2.0f });
+
+			//!< folder and file button
+			for (auto& folder : folder_.value()->second.folder.GetMap()) {
 
 				if (ImGui::ImageButton(folder.first.generic_string().c_str(), textures_[TextureType::Folder]->GetGPUHandleSRV().ptr, {24, 24})) {
 					folder_ = &folder.second;
 				}
+
+				ImGui::SameLine();
 			}
 
-			for (auto& file : folder_.value()->files.GetMap()) {
-				ImGui::SameLine();
+			for (auto& file : folder_.value()->second.files.GetMap()) {
 
-				if (ImGui::ImageButton(file.first.generic_string().c_str(), textures_[TextureType::File]->GetGPUHandleSRV().ptr, { 24, 24 })) {
+				TextureType type = GetTextureType(file.second);
+
+				if (ImGui::ImageButton(file.first.generic_string().c_str(), textures_[type]->GetGPUHandleSRV().ptr, { 24, 24 })) {
 				}
+
+				ImGui::SameLine();
 			}
 		}
 

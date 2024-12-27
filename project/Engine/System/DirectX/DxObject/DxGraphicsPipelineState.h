@@ -122,7 +122,7 @@ public:
 	//* create methods *//
 
 	void CreateBlob(const std::filesystem::path& filepath, GraphicsShaderType type);
-	void SetBlob(ShaderBlob* blob, GraphicsShaderType type);
+	void SetBlob(const ShaderBlob& blob, GraphicsShaderType type);
 
 	void CreateRootSignature(Device* device, GraphicsRootSignatureDesc&& desc); //!< rootSignatureDescはmove前提
 
