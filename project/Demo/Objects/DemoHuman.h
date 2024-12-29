@@ -4,46 +4,43 @@
 // include
 //-----------------------------------------------------------------------------------------
 //* base
-#include <Engine/Module/Behavior/ModelBehavior.h>
+#include <Engine/Module/Behavior/AnimationBehavior.h>
 
 //* engine
 #include <Engine/Asset/SxavengerAsset.h>
-#include <Engine/Module/Collider/Collider.h>
-
-#include "Lib/Adapter/Curve/Curve.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// Ground class
+// DemoHuman class
 ////////////////////////////////////////////////////////////////////////////////////////////
-class Ground
-	: public ModelBehavior {
+class DemoHuman
+	: public AnimationBehavior {
 public:
 
 	//=========================================================================================
 	// public methods
 	//=========================================================================================
 
-	Ground()  = default;
-	~Ground() = default;
+	DemoHuman()  = default;
+	~DemoHuman() = default;
 
 	void Init();
 
-	void Term();
-
 	void Update();
-
-	void DrawSystematic(_MAYBE_UNUSED const SxavGraphicsFrame* frame) override;
-
-	void Wait() { model_->WaitCompleted(); }
-
-	void SetAttributeImGui() override;
 
 private:
 
 	//=========================================================================================
-	// public methods
+	// private variables
 	//=========================================================================================
 
-	std::shared_ptr<AssetModel> model_;
+	AssetObserver<Model> model_;
+	AssetObserver<Animator> animator1_;
+	AssetObserver<Animator> animator2_;
+
+	std::unique_ptr<SkeletonMesh> skeleton_;
+
+	DeltaTimePoint<TimeUnit::s> time_ = {};
+
+	bool flag = true;
 
 };

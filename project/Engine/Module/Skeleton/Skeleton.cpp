@@ -32,9 +32,17 @@ void Skeleton::Update(const Animation& animation, DeltaTimePoint<TimeUnit::s> ti
 //}
 
 void Skeleton::TransitionAnimation(
-	const Animation& animationA, DeltaTimePoint<TimeUnit::s> timeA,
-	const Animation& animationB, DeltaTimePoint<TimeUnit::s> timeB,
+	const Animation& animationA, DeltaTimePoint<TimeUnit::s> timeA, bool isLoopA,
+	const Animation& animationB, DeltaTimePoint<TimeUnit::s> timeB, bool isLoopB,
 	float t) {
+
+	if (isLoopA) {
+		timeA = timeA.Mod(animationA.duration);
+	}
+
+	if (isLoopB) {
+		timeB = timeB.Mod(animationB.duration);
+	}
 
 	ApplyTransitionAnimation(
 		animationA, timeA,
@@ -110,6 +118,19 @@ void Skeleton::ApplyTransitionAnimation(
 
 		std::optional<QuaternionTransform> transformA = GetTransform(joint.name, animationA, timeA);
 		std::optional<QuaternionTransform> transformB = GetTransform(joint.name, animationB, timeB);
+
+		// 見つからなかった場合, defaultを入れておく
+		/*if (!transformA.has_value()) {
+			transformA = QuaternionTransform();
+		}
+
+		if (!transformB.has_value()) {
+			transformB = QuaternionTransform();
+		}*/
+
+		if (!(transformA.has_value() && transformB.has_value())) {
+			continue;
+		}
 
 		// 見つからなかった場合, defaultを入れておく
 		if (!transformA.has_value()) {

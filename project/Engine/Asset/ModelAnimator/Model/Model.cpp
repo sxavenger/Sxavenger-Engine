@@ -74,14 +74,28 @@ const InputMesh& Model::GetInputMesh(uint32_t meshIndex) const {
 	return GetMeshData(meshIndex).mesh;
 }
 
+uint32_t Model::GetMaterialIndex(uint32_t meshIndex) const {
+	uint32_t materialIndex = meshes_.at(meshIndex).materialIndex.value();
+	Assert(materialIndex < materials_.size(), "material index out of range."); //!< materialサイズ以上のindex
+	return materialIndex;
+}
+
+bool Model::CheckTextureWithMaterialIndex(uint32_t materialIndex, TextureType type) const {
+	return materials_.at(materialIndex).textures_[static_cast<uint8_t>(type)] != nullptr;
+}
+
+bool Model::CheckTextureWithMeshIndex(uint32_t meshIndex, TextureType type) const {
+	uint32_t materialIndex = GetMaterialIndex(meshIndex);
+	return CheckTextureWithMaterialIndex(materialIndex, type);
+}
+
 const D3D12_GPU_DESCRIPTOR_HANDLE& Model::GetTextureHandle(uint32_t meshIndex, TextureType type) const {
 	CheckMeshIndex(meshIndex);
 	Assert(meshes_.at(meshIndex).materialIndex.has_value()); //!< materialが使われていない
 
-	uint32_t materialIndex = meshes_.at(meshIndex).materialIndex.value();
-	Assert(materialIndex < materials_.size(), "material index out of range."); //!< materialサイズ以上のindex
+	uint32_t materialIndex = GetMaterialIndex(meshIndex);
 
-	if (materials_.at(materialIndex).textures_[static_cast<uint8_t>(type)] == nullptr) {
+	if (!CheckTextureWithMaterialIndex(materialIndex, type)) {
 		return SxavengerContent::GetGPUHandleSRV("white1x1");
 	}
 
@@ -117,22 +131,22 @@ void Model::LoadMesh(const aiScene* aiScene) {
 
 			//!< normal
 			if (aiMesh->HasNormals()) {
-				aiVector3D& normal = aiMesh->mNormals[element];
+				const aiVector3D& normal = aiMesh->mNormals[element];
 				(*vertex)[element].normal = { normal.x, normal.y, -normal.z }; //!< 左手座標系に変換
 			}
 
 			//!< texcoord
 			if (aiMesh->HasTextureCoords(0)) {
-				aiVector3D& texcoord = aiMesh->mTextureCoords[0][element];
+				const aiVector3D& texcoord = aiMesh->mTextureCoords[0][element];
 				(*vertex)[element].texcoord = { texcoord.x, texcoord.y };
 			}
 
 			if (aiMesh->HasTangentsAndBitangents()) {
-				aiVector3D& tangent = aiMesh->mTangents[element];
-				(*vertex)[element].tangent = { tangent.x, tangent.y, -tangent.z }; //!< 左手座標系に変換
+				const aiVector3D& tangent = aiMesh->mTangents[element];
+				(*vertex)[element].tangent = { tangent.x, tangent.y, tangent.z }; //!< 左手座標系に変換
 
-				aiVector3D& bitangent = aiMesh->mBitangents[element];
-				(*vertex)[element].bitangent = { bitangent.x, bitangent.y, -bitangent.z }; //!< 左手座標系に変換
+				const aiVector3D& bitangent = aiMesh->mBitangents[element];
+				(*vertex)[element].bitangent = { bitangent.x, bitangent.y, bitangent.z }; //!< 左手座標系に変換
 			}
 		}
 
@@ -228,14 +242,23 @@ void Model::LoadMaterial(const aiScene* aiScene, const std::filesystem::path& di
 		}
 
 		// normalの取得
-		if (aiMaterial->GetTextureCount(aiTextureType_NORMALS) != 0) {
+		if (aiMaterial->GetTextureCount(aiTextureType_HEIGHT) != 0) { //!< objの場合.
+			aiString aiTextureFilepath;
+			aiMaterial->GetTexture(aiTextureType_HEIGHT, 0, &aiTextureFilepath);
+
+			// データの保存
+			std::shared_ptr<Texture> texture = collection_->ImportPtr<Texture>(directory / aiTextureFilepath.C_Str()); //!< todo: observerに変更
+			texture->Load(context);
+			material.textures_[static_cast<uint8_t>(TextureType::Bump)] = texture;
+
+		} else if (aiMaterial->GetTextureCount(aiTextureType_NORMALS) != 0) { //!< gltfの場合.
 			aiString aiTextureFilepath;
 			aiMaterial->GetTexture(aiTextureType_NORMALS, 0, &aiTextureFilepath);
 
 			// データの保存
 			std::shared_ptr<Texture> texture = collection_->ImportPtr<Texture>(directory / aiTextureFilepath.C_Str()); //!< todo: observerに変更
 			texture->Load(context);
-			material.textures_[static_cast<uint8_t>(TextureType::Normal)] = texture;
+			material.textures_[static_cast<uint8_t>(TextureType::Bump)] = texture;
 		}
 	}
 }

@@ -45,6 +45,8 @@ public:
 
 	std::shared_ptr<T> ReloadAndLock();
 
+	std::shared_ptr<T> WaitAndLock();
+
 private:
 
 	//=========================================================================================
@@ -99,7 +101,9 @@ inline std::shared_ptr<T> AssetObserver<T>::Lock() {
 template<BaseAssetConcept T>
 inline std::shared_ptr<T> AssetObserver<T>::ReloadAndLock() {
 	CheckAndReload();
-	return Lock();
+	std::shared_ptr<T> asset = Lock();
+	asset->WaitComplete();
+	return asset;
 }
 
 

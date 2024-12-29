@@ -51,8 +51,8 @@ struct Skeleton {
 	//void Update(const AnimationGroup& animationGroup, DeltaTimePoint<TimeUnit::s> time, bool isLoop = true);
 
 	void TransitionAnimation(
-		const Animation& animationA, DeltaTimePoint<TimeUnit::s> timeA,
-		const Animation& animationB, DeltaTimePoint<TimeUnit::s> timeB,
+		const Animation& animationA, DeltaTimePoint<TimeUnit::s> timeA, bool isLoopA,
+		const Animation& animationB, DeltaTimePoint<TimeUnit::s> timeB, bool isLoopB,
 		float t
 	);
 

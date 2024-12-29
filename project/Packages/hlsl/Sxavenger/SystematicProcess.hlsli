@@ -28,8 +28,8 @@ float4 GetAlbedo(uint2 index) {
 }
 
 float3 GetNormal(uint2 index) {
-	float4 normal = gNormal.Load(uint3(index, 0));
-	return normalize(normal.rgb * 2.0f - 1.0f);
+	float3 normal = gNormal.Load(uint3(index, 0)).rgb;
+	return normalize(normal * 2.0f - 1.0f);
 }
 
 float4 GetPosition(uint2 index) {

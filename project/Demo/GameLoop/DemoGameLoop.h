@@ -9,6 +9,7 @@
 //* demo
 #include "../DemoModelRender.h"
 #include "../Objects/ChessBoard.h"
+#include "../Objects/DemoHuman.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // DemoGameLoop class
@@ -33,6 +34,8 @@ private:
 
 	std::unique_ptr<DemoModelRender> demo_;
 
+	std::unique_ptr<DemoHuman> human_;
+
 	//=========================================================================================
 	// private method
 	//=========================================================================================
@@ -43,6 +46,6 @@ private:
 
 	void UpdateGame();
 
-	void RenderGame();
+	void DrawGame();
 
 };

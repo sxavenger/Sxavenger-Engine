@@ -32,14 +32,14 @@ void SkeletonMesh::UpdateAnimation(const Animation& animation, DeltaTimePoint<Ti
 //	Skinning();
 //}
 
-void SkeletonMesh::UpdateTransitionAnimationAToB(
-	const Animation& animationA, DeltaTimePoint<TimeUnit::s> timeA,
-	const Animation& animationB, DeltaTimePoint<TimeUnit::s> timeB,
+void SkeletonMesh::UpdateTransitionAnimation(
+	const Animation& before, DeltaTimePoint<TimeUnit::s> beforeTime, bool isLoopBefore,
+	const Animation& after, DeltaTimePoint<TimeUnit::s> afterTime, bool isLoopAfter,
 	float t) {
 
 	skeleton_.TransitionAnimation(
-		animationA, timeA,
-		animationB, timeB,
+		before, beforeTime, isLoopBefore,
+		after, afterTime, isLoopAfter,
 		t
 	);
 

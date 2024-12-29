@@ -54,14 +54,14 @@ public:
 	////////////////////////////////////////////////////////////////////////////////////////////
 	enum class TextureType : uint8_t {
 		Diffuse,
-		Normal,
+		Bump,
 	};
 
 	////////////////////////////////////////////////////////////////////////////////////////////
 	// MaterialData structure
 	////////////////////////////////////////////////////////////////////////////////////////////
 	struct MaterialData {
-		std::array<std::shared_ptr<Texture>, static_cast<uint8_t>(TextureType::Normal) + 1> textures_;
+		std::array<std::shared_ptr<Texture>, static_cast<uint8_t>(TextureType::Bump) + 1> textures_;
 	};
 
 public:
@@ -90,6 +90,11 @@ public:
 	const InputMesh& GetInputMesh(uint32_t meshIndex) const;
 
 	//* material option *//
+
+	uint32_t GetMaterialIndex(uint32_t meshIndex) const;
+
+	bool CheckTextureWithMaterialIndex(uint32_t materialIndex, TextureType type) const;
+	bool CheckTextureWithMeshIndex(uint32_t meshIndex, TextureType type) const;
 
 	const D3D12_GPU_DESCRIPTOR_HANDLE& GetTextureHandle(uint32_t meshIndex, TextureType type = TextureType::Diffuse) const;
 

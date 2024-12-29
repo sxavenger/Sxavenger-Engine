@@ -36,6 +36,10 @@ void CheckDiscard(float4 color) {
 	}
 }
 
+float3x3 GetTangentSpaceMatrix(float3 normal, float3 tangent, float3 bitangent) {
+	return float3x3(tangent, bitangent, normal);
+}
+
 //=========================================================================================
 // Visibility All Buffer
 //=========================================================================================

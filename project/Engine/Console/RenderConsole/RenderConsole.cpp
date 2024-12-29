@@ -431,7 +431,7 @@ void RenderConsole::DrawScene() {
 			game_->GetCamera()->DrawFrustum(ToColor4f(0xFAFA00FF), 4.0f);
 		}
 
-		SxavengerModule::DrawGrid(kOrigin3<float>, 12.0f);
+		SxavengerModule::DrawGrid(kOrigin3<float>, 1 << 6);
 		SxavengerModule::DrawCollider();
 		SxavengerModule::DrawToScene(SxavengerSystem::GetMainThreadContext(), scene_->GetCamera());
 		

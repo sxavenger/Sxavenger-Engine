@@ -8,7 +8,6 @@
 
 //* engine
 #include <Engine/Asset/SxavengerAsset.h>
-#include <Engine/Module/Collider/Collider.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // DemoModelRender class
@@ -25,6 +24,8 @@ public:
 	~DemoModelRender() = default;
 
 	void Init(const std::filesystem::path& filepath, bool isUseMeshShader);
+
+	void DrawSystematic(_MAYBE_UNUSED const SxavGraphicsFrame* frame) override;
 
 private:
 };

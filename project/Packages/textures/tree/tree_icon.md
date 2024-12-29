@@ -20,7 +20,7 @@
 	20px
 
 ## file
-- Weight
+- Weight(Solid)
 	300
 
 - Grade

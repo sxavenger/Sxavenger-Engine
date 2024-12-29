@@ -73,6 +73,28 @@ void RenderPipelineCollection::CreateDeffered() {
 		pipelines_[kDefaultMS_AlbedoPS_Deferred]->CreatePipeline(device, defferedDefaultDesc_);
 	}
 
+	{  //!< default.vs -> albedoNormalDeferred.ps
+		pipelines_[kDefaultVS_AlbedoNormalPS_Deferred] = std::make_unique<CustomReflectionGraphicsPipeline>();
+		pipelines_[kDefaultVS_AlbedoNormalPS_Deferred]->CreateAsset(kPackagesShaderDirectory / "sxavenger/behavior/default.vs.hlsl",              GraphicsShaderType::vs);
+		pipelines_[kDefaultVS_AlbedoNormalPS_Deferred]->CreateAsset(kPackagesShaderDirectory / "sxavenger/behavior/albedoNormalDeferred.ps.hlsl", GraphicsShaderType::ps);
+		pipelines_[kDefaultVS_AlbedoNormalPS_Deferred]->RegisterBlob();
+
+		pipelines_[kDefaultVS_AlbedoNormalPS_Deferred]->ReflectionRootSignature(device);
+
+		pipelines_[kDefaultVS_AlbedoNormalPS_Deferred]->CreatePipeline(device, defferedDefaultDesc_);
+	}
+
+	{ //!< default.as -> default.ms -> albedoNormalDeferred.ps
+		pipelines_[kDefaultMS_AlbedoNormalPS_Deferred] = std::make_unique<CustomReflectionGraphicsPipeline>();
+		pipelines_[kDefaultMS_AlbedoNormalPS_Deferred]->CreateAsset(kPackagesShaderDirectory / "sxavenger/behavior/default.as.hlsl",              GraphicsShaderType::as);
+		pipelines_[kDefaultMS_AlbedoNormalPS_Deferred]->CreateAsset(kPackagesShaderDirectory / "sxavenger/behavior/default.ms.hlsl",              GraphicsShaderType::ms);
+		pipelines_[kDefaultMS_AlbedoNormalPS_Deferred]->CreateAsset(kPackagesShaderDirectory / "sxavenger/behavior/albedoNormalDeferred.ps.hlsl", GraphicsShaderType::ps);
+		pipelines_[kDefaultMS_AlbedoNormalPS_Deferred]->RegisterBlob();
+
+		pipelines_[kDefaultMS_AlbedoNormalPS_Deferred]->ReflectionRootSignature(device);
+
+		pipelines_[kDefaultMS_AlbedoNormalPS_Deferred]->CreatePipeline(device, defferedDefaultDesc_);
+	}
 }
 
 void RenderPipelineCollection::CreateForward() {

@@ -127,6 +127,7 @@
     <ClCompile Include="Engine\Module\Skeleton\SkeletonMesh.cpp" />
     <ClCompile Include="Demo\Objects\ChessBoard.cpp" />
     <ClCompile Include="Demo\DemoModelRender.cpp" />
+    <ClCompile Include="Demo\Objects\DemoHuman.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\System\Window\Window.h" />
@@ -259,5 +260,6 @@
     <ClInclude Include="Engine\Module\Skeleton\SkeletonMesh.h" />
     <ClInclude Include="Demo\Objects\ChessBoard.h" />
     <ClInclude Include="Demo\DemoModelRender.h" />
+    <ClInclude Include="Demo\Objects\DemoHuman.h" />
   </ItemGroup>
 </Project>

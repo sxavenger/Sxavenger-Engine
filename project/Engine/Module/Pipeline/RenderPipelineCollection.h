@@ -23,6 +23,8 @@ enum RenderPipelineType {
 	//* behavior
 	kDefaultVS_AlbedoPS_Deferred,
 	kDefaultMS_AlbedoPS_Deferred,
+	kDefaultVS_AlbedoNormalPS_Deferred,
+	kDefaultMS_AlbedoNormalPS_Deferred,
 	kDefaultVS_AlbedoPS,
 	kDefaultMS_AlbedoPS,
 

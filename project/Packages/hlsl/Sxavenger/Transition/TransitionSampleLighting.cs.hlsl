@@ -33,14 +33,17 @@ void main(uint3 dispatchThreadId : SV_DispatchThreadID) {
 		return;
 	}
 
-	float3 lightDirection = normalize(float3(-1.0f, -1.0f, 0.0f));
+	float3 lightDirection = normalize(float3(0.0f, 1.0f, 0.0f));
 
-	float NdotL = dot(normal, -lightDirection);
-	float d = pow((NdotL + 1.0f) * 0.5f, 2.0f);
+	//float NdotL = dot(normal, -lightDirection);
+	//float d = pow((NdotL + 1.0f) * 0.5f, 2.0f);
+	
+	float d = HalfLambertReflection(normal, lightDirection);
 	
 	float4 color = (float4)0.0f;
 	color.rgb = albedo.rgb * d;
 	color.a   = albedo.a;
 	
 	gXclipse[currentId] = color;
+
 }
