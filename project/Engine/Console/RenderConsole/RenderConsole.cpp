@@ -486,8 +486,6 @@ void RenderConsole::DrawGame() {
 
 		//	computePipeline_->BindComputeBuffer(kXclipse_SSAO, context, bind);
 		//	computePipeline_->Dispatch(context, game_->GetSize());
-
-		//	
 		//}
 
 		{ //* atmosphere
