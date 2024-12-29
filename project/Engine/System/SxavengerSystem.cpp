@@ -5,10 +5,9 @@
 ////////////////////////////////////////////////////////////////////////////////////////////
 namespace {
 	//* system orign
-	static std::unique_ptr<WinApp>               sWinApp            = nullptr; //!< win app system
-	static std::unique_ptr<DirectXCommon>        sDirectXCommon     = nullptr; //!< DirectX12 system
-	static std::unique_ptr<DirectXThreadContext> sMainThreadContext = nullptr; //!< main thread context
-	static std::unique_ptr<ThreadCollection>     sThreadCollection  = nullptr; //!< thread collection
+	static std::unique_ptr<WinApp>                sWinApp            = nullptr; //!< win app system
+	static std::unique_ptr<DirectXCommon>         sDirectXCommon     = nullptr; //!< DirectX12 system
+	static std::unique_ptr<DirectXThreadContext>  sMainThreadContext = nullptr; //!< main thread context
 
 	//* system user
 	static std::unique_ptr<GameWindowCollection> sWindowCollection  = nullptr; //!< window collection
@@ -29,10 +28,7 @@ void SxavengerSystemEngine::Init() {
 	sDirectXCommon->Init();
 
 	sMainThreadContext = std::make_unique<DirectXThreadContext>();
-	sMainThreadContext->Init(2);
-
-	sThreadCollection = std::make_unique<ThreadCollection>();
-	sThreadCollection->Init(2);
+	sMainThreadContext->Init(3); //!< allocator count
 
 	sWindowCollection = std::make_unique<GameWindowCollection>();
 	sInput            = std::make_unique<Input>();
@@ -54,10 +50,6 @@ _DXOBJECT DescriptorHeaps* SxavengerSystemEngine::GetDxDescriptorHeaps() {
 	return sDirectXCommon->GetDesriptorHeaps();
 }
 
-_DXOBJECT CompileBlobCollection* SxavengerSystemEngine::GetDxCompileBlobCollection() {
-	return sDirectXCommon->GetCompileBlobCollection();
-}
-
 void SxavengerSystemEngine::TransitionAllocator() {
 	sMainThreadContext->TransitionAllocator();
 }
@@ -72,18 +64,6 @@ void SxavengerSystemEngine::ExecuteAllAllocator() {
 
 DirectXThreadContext* SxavengerSystemEngine::GetMainThreadContext() {
 	return sMainThreadContext.get();
-}
-
-void SxavengerSystemEngine::PushTask(const std::shared_ptr<TaskThreadExecution>& task) {
-	sThreadCollection->PushTask(task);
-}
-
-void SxavengerSystemEngine::TermThreadCollection() {
-	sThreadCollection.reset();
-}
-
-ThreadCollection* SxavengerSystemEngine::GetThreadCollection() {
-	return sThreadCollection.get();
 }
 
 const std::weak_ptr<GameWindow> SxavengerSystemEngine::CreateMainWindow(

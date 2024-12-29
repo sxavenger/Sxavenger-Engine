@@ -11,6 +11,8 @@
 
 //* engine
 #include <Engine/System/DirectX/DxObject/DxDimensionBuffer.h>
+#include <Engine/System/DirectX/DxObject/DxBindBuffer.h>
+#include <Engine/System/DirectX/DirectXContext.h>
 //#include <Engine/System/DxrObject/DxrAccelerationStructure.h>
 
 //* lib
@@ -34,14 +36,9 @@ public:
 
 	void CreateMeshlet();
 
-	void Dispatch( //!< TODO:
-		UINT verticesParam, UINT uniqueVertexIndicesParam, UINT meshletsParam, UINT primitiveIndices, UINT cullDataParam, UINT meshInfoParam,
-		UINT instanceCount = 1
-	) const;
+	DxObject::BindBufferDesc GetMeshletBindBufferDesc() const;
 
-	void Dispatch(
-
-	) const;
+	void Dispatch(const DirectXThreadContext* context, UINT instanceCount = 1) const;
 
 	bool IsCreateMeshlet() const { return isCreateMeshlet_; }
 

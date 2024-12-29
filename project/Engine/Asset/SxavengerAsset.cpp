@@ -1,36 +1,25 @@
 #include "SxavengerAsset.h"
 
-////////////////////////////////////////////////////////////////////////////////////////////
-// namespace
-////////////////////////////////////////////////////////////////////////////////////////////
-namespace {
-	static std::unique_ptr<Asset> sAsset = nullptr;
-}
+//=========================================================================================
+// static variables
+//=========================================================================================
+
+std::unique_ptr<AssetCollection> SxavengerAsset::collection_;
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // SxavengerAsset class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 void SxavengerAsset::Init() {
-	sAsset = std::make_unique<Asset>();
+	collection_ = std::make_unique<AssetCollection>();
+	collection_->Init();
 }
 
 void SxavengerAsset::Term() {
-	sAsset.reset();
+	collection_->Term();
+	collection_.reset();
 }
 
-Asset::Files SxavengerAsset::Import(const std::filesystem::path& filepath) {
-	return sAsset->Import(filepath);
-}
-
-std::shared_ptr<AssetTexture> SxavengerAsset::ImportTexture(const std::filesystem::path& filepath) {
-	return sAsset->ImportTexture(filepath);
-}
-
-std::shared_ptr<AssetModel> SxavengerAsset::ImportModel(const std::filesystem::path& filepath) {
-	return sAsset->ImportModel(filepath);
-}
-
-Asset* SxavengerAsset::GetAsset() {
-	return sAsset.get();
+void SxavengerAsset::PushTask(const std::shared_ptr<BaseAsset>& asset) {
+	collection_->PushTask(asset);
 }

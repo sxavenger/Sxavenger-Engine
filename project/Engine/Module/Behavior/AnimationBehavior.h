@@ -7,7 +7,7 @@
 #include "ModelBehavior.h"
 
 //* engine
-#include <Engine/Content/Animation/SkeletonMesh.h>
+#include <Engine/Module/Skeleton/SkeletonMesh.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // AnimationBehavior class

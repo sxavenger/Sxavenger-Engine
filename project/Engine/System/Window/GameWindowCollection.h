@@ -67,8 +67,8 @@ private:
 
 	//* windows *//
 
-	std::shared_ptr<GameWindow>                              mainWindow_;
-	Sxl::OptimizerdMap<LPCWSTR, std::shared_ptr<GameWindow>> subWindows_;
+	std::shared_ptr<GameWindow>                             mainWindow_;
+	Sxl::OptimizedMap<LPCWSTR, std::shared_ptr<GameWindow>> subWindows_;
 
 	//=========================================================================================
 	// private methods

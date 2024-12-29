@@ -4,7 +4,7 @@
 // include
 //-----------------------------------------------------------------------------------------
 //* base
-#include <Engine/Module/Transform/TransformComponent.h>
+#include <Engine/Module/TransformComponent/TransformComponent.h>
 
 //* collider
 #include "CollisionDetection.h"
@@ -37,7 +37,7 @@ public:
 	////////////////////////////////////////////////////////////////////////////////////////////
 	// CollisionState enum
 	////////////////////////////////////////////////////////////////////////////////////////////
-	enum CollisionState : uint8_t {
+	enum CollisionState : bool {
 		kCurrent = 0, //!< 現在frameのhit情報
 		kPrev    = 1, //!< 1frame前のhit情報
 	};
@@ -49,7 +49,7 @@ public:
 	using OnCollisionFunction = std::function<void(_MAYBE_UNUSED Collider* const)>;
 
 	//!< CollisionState記録用
-	using CollisionStatesBit = std::bitset<static_cast<uint8_t>(CollisionState::kPrev) + 1>;
+	using CollisionStatesBit = std::bitset<static_cast<bool>(CollisionState::kPrev) + 1>;
 
 public:
 

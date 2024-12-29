@@ -27,64 +27,56 @@ void ModelBehavior::SystemAttributeImGui() {
 }
 
 void ModelBehavior::DrawSystematic(_MAYBE_UNUSED const SxavGraphicsFrame* frame) {
-	if (model_ == nullptr) { return; }
-
-	sConsole->SetGraphicsPipeline(kDefaultVS_AlbedoPS_Deferred, SxavengerSystem::GetMainThreadContext(), frame->GetSize());
-
-	DxObject::BindBufferDesc bind = {};
-	bind.SetAddress("gCamera",      frame->GetCamera()->GetGPUVirtualAddress());
-	bind.SetAddress("gTransform",   TransformComponent::GetGPUVirtualAddress());
-	bind.SetAddress("gUVTransform", MaterialComponent::GetTransformGPUVirtualAddress());
-	bind.SetAddress("gColor",       MaterialComponent::GetColorGPUVirtualAddress());
-
-	for (uint32_t i = 0; i < model_->GetMeshSize(); ++i) {
-		model_->SetIABuffer(i);
-
-		bind.SetHandle("gAlbedo", model_->GetTextureHandle(i));
-		sConsole->BindGraphicsBuffer(kDefaultVS_AlbedoPS_Deferred, SxavengerSystem::GetMainThreadContext(), bind);
-
-		model_->DrawCall(i);
-	}
+	DrawModel(frame, kDefaultVS_AlbedoPS_Deferred, kDefaultMS_AlbedoPS_Deferred);
 }
 
 void ModelBehavior::DrawAdaptive(_MAYBE_UNUSED const SxavGraphicsFrame* frame) {
-	if (model_ == nullptr) { return; }
-
-	sConsole->SetGraphicsPipeline(kDefaultVS_AlbedoPS, SxavengerSystem::GetMainThreadContext(), frame->GetSize());
-
-	DxObject::BindBufferDesc bind = {};
-	bind.SetAddress("gCamera",      frame->GetCamera()->GetGPUVirtualAddress());
-	bind.SetAddress("gTransform",   TransformComponent::GetGPUVirtualAddress());
-	bind.SetAddress("gUVTransform", MaterialComponent::GetTransformGPUVirtualAddress());
-	bind.SetAddress("gColor",       MaterialComponent::GetColorGPUVirtualAddress());
-
-	for (uint32_t i = 0; i < model_->GetMeshSize(); ++i) {
-		model_->SetIABuffer(i);
-
-		bind.SetHandle("gAlbedo", model_->GetTextureHandle(i));
-		sConsole->BindGraphicsBuffer(kDefaultVS_AlbedoPS, SxavengerSystem::GetMainThreadContext(), bind);
-
-		model_->DrawCall(i);
-	}
+	DrawModel(frame, kDefaultVS_AlbedoPS, kDefaultMS_AlbedoPS);
 }
 
 void ModelBehavior::DrawLateAdaptive(_MAYBE_UNUSED const SxavGraphicsFrame* frame) {
-	if (model_ == nullptr) { return; }
+	DrawModel(frame, kDefaultVS_AlbedoPS, kDefaultMS_AlbedoPS);
+}
 
-	sConsole->SetGraphicsPipeline(kDefaultVS_AlbedoPS, SxavengerSystem::GetMainThreadContext(), frame->GetSize());
+void ModelBehavior::DrawModel(const SxavGraphicsFrame* frame, RenderPipelineType vertex, RenderPipelineType mesh) {
+	if (!model_.has_value()) {
+		return;
+	}
 
-	DxObject::BindBufferDesc bind = {};
-	bind.SetAddress("gCamera",      frame->GetCamera()->GetGPUVirtualAddress());
-	bind.SetAddress("gTransform",   TransformComponent::GetGPUVirtualAddress());
-	bind.SetAddress("gUVTransform", MaterialComponent::GetTransformGPUVirtualAddress());
-	bind.SetAddress("gColor",       MaterialComponent::GetColorGPUVirtualAddress());
+	model_.value().CheckAndReload();
+	std::shared_ptr<Model> model = model_.value().Lock();
 
-	for (uint32_t i = 0; i < model_->GetMeshSize(); ++i) {
-		model_->SetIABuffer(i);
+	if (!model->IsCompleted()) {
+		return;
+	}
 
-		bind.SetHandle("gAlbedo", model_->GetTextureHandle(i));
-		sConsole->BindGraphicsBuffer(kDefaultVS_AlbedoPS, SxavengerSystem::GetMainThreadContext(), bind);
+	DxObject::BindBufferDesc parameter = {};
+	parameter.SetAddress("gCamera",      frame->GetCamera()->GetGPUVirtualAddress());
+	parameter.SetAddress("gTransform",   TransformComponent::GetGPUVirtualAddress());
+	parameter.SetAddress("gUVTransform", MaterialComponent::GetTransformGPUVirtualAddress());
+	parameter.SetAddress("gColor",       MaterialComponent::GetColorGPUVirtualAddress());
 
-		model_->DrawCall(i);
+	for (uint32_t i = 0; i < model->GetMeshSize(); ++i) {
+		if (model->GetInputMesh(i).IsCreateMeshlet()) {
+			sConsole->SetGraphicsPipeline(mesh, SxavengerSystem::GetMainThreadContext(), frame->GetSize());
+
+			DxObject::BindBufferDesc bind = parameter;
+			bind.Merge(model->GetInputMesh(i).GetMeshletBindBufferDesc());
+			bind.SetHandle("gAlbedo", model->GetTextureHandle(i));
+			sConsole->BindGraphicsBuffer(mesh, SxavengerSystem::GetMainThreadContext(), bind);
+
+			model->GetInputMesh(i).Dispatch(SxavengerSystem::GetMainThreadContext());
+
+		} else {
+			sConsole->SetGraphicsPipeline(vertex, SxavengerSystem::GetMainThreadContext(), frame->GetSize());
+
+			model->SetIABuffer(i);
+
+			DxObject::BindBufferDesc bind = parameter;
+			bind.SetHandle("gAlbedo", model->GetTextureHandle(i));
+			sConsole->BindGraphicsBuffer(vertex, SxavengerSystem::GetMainThreadContext(), bind);
+
+			model->DrawCall(i);
+		}
 	}
 }

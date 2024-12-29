@@ -40,23 +40,23 @@ void Collider::SetColliderBoundingOBB(const CollisionBoundings::OBB& obb) {
 void Collider::SetupColliderState() {
 	//!< 次フレームの準備
 	for (auto& state : states_) {
-		state.second[static_cast<uint8_t>(CollisionState::kPrev)] = state.second[static_cast<uint8_t>(CollisionState::kCurrent)];
-		state.second.reset(static_cast<uint8_t>(CollisionState::kCurrent));
+		state.second[static_cast<bool>(CollisionState::kPrev)] = state.second[static_cast<bool>(CollisionState::kCurrent)];
+		state.second.reset(static_cast<bool>(CollisionState::kCurrent));
 	}
 }
 
 void Collider::CallbackOnCollision() {
 	for (auto it = states_.begin(); it != states_.end();) {
 
-		if (it->second.test(static_cast<uint8_t>(CollisionState::kCurrent))
-			&& !it->second.test(static_cast<uint8_t>(CollisionState::kPrev))) { //!< colliderが当たったかどうか
+		if (it->second.test(static_cast<bool>(CollisionState::kCurrent))
+			&& !it->second.test(static_cast<bool>(CollisionState::kPrev))) { //!< colliderが当たったかどうか
 
 			if (collisionEnterFunction_) {
 				collisionEnterFunction_(it->first);
 			}
 
-		} else if (!it->second.test(static_cast<uint8_t>(CollisionState::kCurrent))
-			&& it->second.test(static_cast<uint8_t>(CollisionState::kPrev))) { //!< colliderが離れたかどうか
+		} else if (!it->second.test(static_cast<bool>(CollisionState::kCurrent))
+			&& it->second.test(static_cast<bool>(CollisionState::kPrev))) { //!< colliderが離れたかどうか
 
 			if (collisionExitFunction_) {
 				collisionExitFunction_(it->first);
@@ -72,7 +72,7 @@ void Collider::CallbackOnCollision() {
 }
 
 void Collider::OnCollision(Collider* other) {
-	states_[other].set(static_cast<uint8_t>(CollisionState::kCurrent)); //!< 現在frameで当たった
+	states_[other].set(static_cast<bool>(CollisionState::kCurrent)); //!< 現在frameで当たった
 }
 
 void Collider::SetCollisionState(
@@ -82,11 +82,11 @@ void Collider::SetCollisionState(
 	auto& state = states_[collider];
 
 	if (isHitCurrent.has_value()) {
-		state.set(static_cast<uint8_t>(CollisionState::kCurrent), isHitCurrent.value());
+		state.set(static_cast<bool>(CollisionState::kCurrent), isHitCurrent.value());
 	}
 
 	if (isHitPrev.has_value()) {
-		state.set(static_cast<uint8_t>(CollisionState::kPrev), isHitPrev.value());
+		state.set(static_cast<bool>(CollisionState::kPrev), isHitPrev.value());
 	}
 }
 

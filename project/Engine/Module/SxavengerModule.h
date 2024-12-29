@@ -6,6 +6,7 @@
 //* module
 #include "Primitive/DebugPrimitive.h"
 #include "Collider/ColliderCollection.h"
+#include "Skeleton/SkinningPipeline.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // SxavengerModule class
@@ -52,6 +53,14 @@ public:
 	static void DrawCollider();
 
 	static ColliderCollection* GetColliderCollection();
+
+	//-----------------------------------------------------------------------------------------
+	// skinning pipeline option
+	//-----------------------------------------------------------------------------------------
+
+	static void SetSkinningPipeline(const DirectXThreadContext* context);
+
+	static void DispatchSkinningPipeline(const DirectXThreadContext* context, const DxObject::BindBufferDesc& desc, uint32_t vertexSize);
 
 private:
 };

@@ -109,6 +109,7 @@ public:
 	void SetHandleUAV(uint32_t index, ShaderVisibility stage, uint32_t shaderRegister);
 
 	ComPtr<ID3D12RootSignature> CreateGraphicsRootSignature(ID3D12Device* device) const;
+
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -134,6 +135,8 @@ public:
 	void SetHandleUAV(uint32_t index, uint32_t shaderRegister);
 
 	ComPtr<ID3D12RootSignature> CreateComputeRootSignature(ID3D12Device* device) const;
+
+
 };
 
 _DXOBJECT_NAMESPACE_END

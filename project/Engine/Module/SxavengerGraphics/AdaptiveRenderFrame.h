@@ -5,7 +5,7 @@
 //-----------------------------------------------------------------------------------------
 //* engine
 #include <Engine/System/DirectX/DirectXContext.h>
-#include <Engine/Content/Texture/MultiViewTexture.h>
+#include <Engine/Content/TextureBuffer/MultiViewTextureBuffer.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // AdaptiveRenderFrame class
@@ -36,7 +36,7 @@ public:
 
 	const D3D12_CPU_DESCRIPTOR_HANDLE& GetCPUHandleRTV() const { return buffer_->GetCPUHandleRTV(); }
 
-	const MultiViewTexture* GetTexture() const { return buffer_.get(); }
+	const MultiViewTextureBuffer* GetTexture() const { return buffer_.get(); }
 
 private:
 
@@ -44,6 +44,6 @@ private:
 	// private variables
 	//=========================================================================================
 
-	std::unique_ptr<MultiViewTexture> buffer_;
+	std::unique_ptr<MultiViewTextureBuffer> buffer_;
 
 };

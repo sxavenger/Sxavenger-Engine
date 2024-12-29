@@ -43,10 +43,12 @@ void main(uint3 dispatchThreadId : SV_DispatchThreadID) {
 	}
 
 #ifdef _LAMBERT
-	float3 lightDirection = normalize(float3(-1.0f, -1.0f, 0.0f));
+	float3 lightDirection = normalize(float3(0.0f, 1.0f, 0.0f));
 
-	float NdotL = dot(normal, -lightDirection);
-	float d = pow((NdotL + 1.0f) * 0.5f, 2.0f);
+	//float NdotL = dot(normal, -lightDirection);
+	//float d = pow((NdotL + 1.0f) * 0.5f, 2.0f);
+	
+	float d = HalfLambertReflection(normal, lightDirection);
 	
 	float4 color = (float4)0.0f;
 	color.rgb = albedo.rgb * d;
@@ -73,5 +75,6 @@ void main(uint3 dispatchThreadId : SV_DispatchThreadID) {
 	float3 c_shadered = s * c_highlight + (1.0f - s) * (t * c_warm + (1.0f - t) * c_cool);
 
 	gXclipse[currentId] = float4(c_shadered, 1.0f);
+  
 #endif
 }

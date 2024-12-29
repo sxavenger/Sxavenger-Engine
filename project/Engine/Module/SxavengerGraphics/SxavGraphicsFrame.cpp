@@ -132,7 +132,7 @@ DxObject::BindBufferDesc SxavGraphicsFrame::GetTransitionSystematicBindDesc() co
 	return bind;
 }
 
-void SxavGraphicsFrame::CopyTexture(const DirectXThreadContext* context, const MultiViewTexture* dst, const MultiViewTexture* src) {
+void SxavGraphicsFrame::CopyTexture(const DirectXThreadContext* context, const MultiViewTextureBuffer* dst, const MultiViewTextureBuffer* src) {
 
 	auto commandList = context->GetCommandList();
 

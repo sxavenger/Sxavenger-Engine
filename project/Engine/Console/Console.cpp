@@ -185,6 +185,12 @@ void Console::DisplayMainMenu() {
 		ImGui::EndMenu();
 	}
 
+	if (ImGui::BeginMenu("Asset")) {
+		MenuDummy();
+		AssetConsole::ShowAssetMenu();
+		ImGui::EndMenu();
+	}
+
 	if (ImGui::BeginMenu("Render")) {
 		MenuDummy();
 		RenderConsole::ShowRenderConsoleMenu();

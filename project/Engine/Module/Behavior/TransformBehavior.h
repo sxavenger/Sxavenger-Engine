@@ -7,7 +7,7 @@
 #include "BaseBehavior.h"
 
 //* engine
-#include <Engine/Module/Transform/TransformComponent.h>
+#include <Engine/Module/TransformComponent/TransformComponent.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // TransformBehavior class

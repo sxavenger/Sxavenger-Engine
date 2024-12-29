@@ -44,7 +44,7 @@ public:
 	//* compiler opiton *//
 
 	ComPtr<IDxcBlob> Compile(
-		const std::filesystem::path& filename,
+		const std::filesystem::path& filepath,
 		CompileProfile profile,
 		const std::wstring& entryPoint = L""
 	);
@@ -63,7 +63,7 @@ private:
 	ComPtr<IDxcCompiler3>      compiler_;
 	ComPtr<IDxcIncludeHandler> includeHandler_;
 
-	static const std::array<LPCWSTR, static_cast<uint32_t>(CompileProfile::lib) + 1> profiles_;
+	static const std::array<LPCWSTR, static_cast<uint8_t>(CompileProfile::lib) + 1> profiles_;
 
 };
 

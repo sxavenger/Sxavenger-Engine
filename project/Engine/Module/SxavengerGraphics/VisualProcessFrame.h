@@ -5,7 +5,7 @@
 //-----------------------------------------------------------------------------------------
 //* engine
 #include <Engine/System/DirectX/DirectXContext.h>
-#include <Engine/Content/Texture/MultiViewTexture.h>
+#include <Engine/Content/TextureBuffer/MultiViewTextureBuffer.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // VisualProcessFrame class
@@ -38,9 +38,9 @@ public:
 
 	//* getter *//
 
-	MultiViewTexture* GetResultBuffer() const { return buffers_.at(resultBufferIndex_).get(); }
+	MultiViewTextureBuffer* GetResultBuffer() const { return buffers_.at(resultBufferIndex_).get(); }
 
-	MultiViewTexture* GetPrevBuffer(uint32_t prev = 1) const;
+	MultiViewTextureBuffer* GetPrevBuffer(uint32_t prev = 1) const;
 	
 
 private:
@@ -56,7 +56,7 @@ private:
 
 	//* buffer *//
 
-	std::array<std::unique_ptr<MultiViewTexture>, kProcessBufferNum_> buffers_;
+	std::array<std::unique_ptr<MultiViewTextureBuffer>, kProcessBufferNum_> buffers_;
 
 private:
 	static_assert(kProcessBufferNum_ >= 2, "Process Texture must be at least 2.");

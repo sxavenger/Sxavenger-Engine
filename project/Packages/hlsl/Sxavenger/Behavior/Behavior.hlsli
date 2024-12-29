@@ -14,10 +14,12 @@
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 struct PSInput {
-	float4 position : SV_Position;
-	float2 texcoord : TEXCOORD0;
-	float3 normal   : NORMAL0;
-	float3 worldPos : POSITION0;
+	float4 position  : SV_Position;
+	float2 texcoord  : TEXCOORD0;
+	float3 normal    : NORMAL0;
+	float3 worldPos  : POSITION0;
+	float3 tangent   : TANGENT0;
+	float3 bitangent : BITANGENT0;
 };
 
 struct AdaptiveOutput {
@@ -32,6 +34,10 @@ void CheckDiscard(float4 color) {
 	if (color.a <= 0.0f) {
 		discard;
 	}
+}
+
+float3x3 GetTangentSpaceMatrix(float3 normal, float3 tangent, float3 bitangent) {
+	return float3x3(tangent, bitangent, normal);
 }
 
 //=========================================================================================

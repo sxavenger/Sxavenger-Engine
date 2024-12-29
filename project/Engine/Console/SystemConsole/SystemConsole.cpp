@@ -101,15 +101,6 @@ void SystemConsole::ShowSystemMenu() {
 		ImGui::EndMenu();
 	}
 
-	if (ImGui::BeginMenu("thread")) {
-		MenuDummy();
-
-		auto threadCollection = SxavengerSystem::GetThreadCollection();
-		threadCollection->SystemDebugGui();
-
-		ImGui::EndMenu();
-	}
-
 	if (ImGui::BeginMenu("window collection")) {
 		MenuDummy();
 
@@ -124,16 +115,6 @@ void SystemConsole::ShowSystemMenu() {
 
 		auto desciptorHeaps = SxavengerSystem::GetDxDescriptorHeaps();
 		desciptorHeaps->SystemDebugGui();
-
-		ImGui::EndMenu();
-	}
-
-
-	if (ImGui::BeginMenu("CompileBlobColleciton")) {
-		MenuDummy();
-
-		auto compileBlobCollection = SxavengerSystem::GetDxCompileBlobCollection();
-		compileBlobCollection->SystemDebugGui();
 
 		ImGui::EndMenu();
 	}

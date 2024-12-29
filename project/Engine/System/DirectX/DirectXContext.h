@@ -34,9 +34,9 @@ public:
 
 	//* command context option *//
 
-	void TransitionAllocator();
+	void TransitionAllocator() const;
 
-	void ExecuteAllAllocators();
+	void ExecuteAllAllocators() const;
 
 	ID3D12GraphicsCommandList6* GetCommandList() const;
 
@@ -58,7 +58,7 @@ private:
 	// private methods
 	//=========================================================================================
 
-	void SetDescriptorHeap();
+	void SetDescriptorHeap() const;
 
 };
 

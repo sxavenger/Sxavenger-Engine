@@ -7,7 +7,7 @@ _DXOBJECT_USING
 
 void VisualProcessFrame::Create(const Vector2ui& size) {
 	for (uint32_t i = 0; i < kProcessBufferNum_; ++i) {
-		buffers_[i] = std::make_unique<MultiViewTexture>();
+		buffers_[i] = std::make_unique<MultiViewTextureBuffer>();
 		buffers_[i]->Create(VIEWFLAG_UAV | VIEWFLAG_SRV, size, {}, kOffscreenFormat);
 	}
 }
@@ -52,7 +52,7 @@ void VisualProcessFrame::ResetResultBufferIndex() {
 	resultBufferIndex_ = 0;
 }
 
-MultiViewTexture* VisualProcessFrame::GetPrevBuffer(uint32_t prev) const {
+MultiViewTextureBuffer* VisualProcessFrame::GetPrevBuffer(uint32_t prev) const {
 	Assert(prev < kProcessBufferNum_, "visual: prev over process buffer.");
 
 	uint32_t index = (resultBufferIndex_ + kProcessBufferNum_ - prev) % kProcessBufferNum_;

@@ -6,6 +6,7 @@ _DXOBJECT_USING
 //-----------------------------------------------------------------------------------------
 //* engine
 #include <Engine/System/SxavengerSystem.h>
+#include <Engine/System/Config/SxavengerDirectory.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // BaseDebugPrimitive base class methods
@@ -85,10 +86,8 @@ void DebugPrimitive::Term() {
 
 void DebugPrimitive::DrawToScene(const DirectXThreadContext* context, const Camera3d* camera) {
 
-	auto commandList = context->GetCommandList();
-
 	{
-		pipeline_->SetPipeline(commandList);
+		pipeline_->SetPipeline(context->GetDxCommand());
 		line_->Draw(context, camera);
 	}
 	
@@ -176,13 +175,13 @@ void DebugPrimitive::CreatePrimitive() {
 void DebugPrimitive::CreatePipeline() {
 
 	pipeline_ = std::make_unique<GraphicsPipelineState>();
-	pipeline_->CreateBlob("primitive/debugPrimitive.vs.hlsl", GraphicsShaderType::vs);
-	pipeline_->CreateBlob("primitive/debugPrimitive.ps.hlsl", GraphicsShaderType::ps);
+	pipeline_->CreateBlob(kPackagesShaderDirectory / "primitive/debugPrimitive.vs.hlsl", GraphicsShaderType::vs);
+	pipeline_->CreateBlob(kPackagesShaderDirectory / "primitive/debugPrimitive.ps.hlsl", GraphicsShaderType::ps);
 
 	GraphicsRootSignatureDesc rootDesc;
 	rootDesc.SetVirtualCBV(0, ShaderVisibility::VISIBILITY_ALL, 0); //!< camera
 
-	pipeline_->CreateRootSignature(SxavengerSystem::GetDxDevice(), rootDesc);
+	pipeline_->CreateRootSignature(SxavengerSystem::GetDxDevice(), std::move(rootDesc));
 
 	GraphicsPipelineDesc desc = {};
 	desc.CreateDefaultDesc();

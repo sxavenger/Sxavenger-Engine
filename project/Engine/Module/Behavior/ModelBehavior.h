@@ -7,8 +7,13 @@
 #include "TransformBehavior.h"
 
 //* engine
-#include <Engine/Content/Model/Model.h>
+#include <Engine/Asset/AssetObserver.h>
+#include <Engine/Asset/ModelAnimator/Model/Model.h>
 #include <Engine/Module/Material/MaterialComponent.h>
+#include <Engine/Module/Pipeline/RenderPipelineCollection.h>
+
+//* c++
+#include <optional>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // ModelBehavior class
@@ -43,6 +48,15 @@ protected:
 	// protected variables
 	//=========================================================================================
 
-	Model* model_;
+	std::optional<AssetObserver<Model>> model_;
+	// HACK: modelがloadされていることが前提となってる.
+
+private:
+
+	//=========================================================================================
+	// private methods
+	//=========================================================================================
+
+	void DrawModel(const SxavGraphicsFrame* frame, RenderPipelineType vertex, RenderPipelineType mesh);
 
 };

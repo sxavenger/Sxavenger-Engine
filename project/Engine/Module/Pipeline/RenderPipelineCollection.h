@@ -3,6 +3,9 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
+//* pipeline
+#include "CustomGraphicsPipeline.h"
+
 //* engine
 #include <Engine/System/DirectX/DxObject/DxGraphicsPipelineState.h>
 #include <Engine/System/DirectX/DirectXContext.h>
@@ -20,6 +23,8 @@ enum RenderPipelineType {
 	//* behavior
 	kDefaultVS_AlbedoPS_Deferred,
 	kDefaultMS_AlbedoPS_Deferred,
+	kDefaultVS_AlbedoNormalPS_Deferred,
+	kDefaultMS_AlbedoNormalPS_Deferred,
 	kDefaultVS_AlbedoPS,
 	kDefaultMS_AlbedoPS,
 
@@ -64,7 +69,7 @@ private:
 	// private variables
 	//=========================================================================================
 
-	RenderArray<std::unique_ptr<DxObject::ReflectionGraphicsPipelineState>> pipelines_;
+	RenderArray<std::unique_ptr<CustomReflectionGraphicsPipeline>> pipelines_;
 
 	DxObject::GraphicsPipelineDesc defferedDefaultDesc_ = {};
 	DxObject::GraphicsPipelineDesc forwardDefaultDesc_  = {};

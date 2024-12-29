@@ -17,8 +17,15 @@ void AnimationBehavior::SystemAttributeImGui() {
 }
 
 void AnimationBehavior::DrawSystematic(_MAYBE_UNUSED const SxavGraphicsFrame* frame) {
-	if (skeletonMesh_ == nullptr) {
+	if (skeletonMesh_ == nullptr || !model_.has_value()) {
 		ModelBehavior::DrawSystematic(frame);
+		return;
+	}
+
+	model_.value().CheckAndReload();
+	std::shared_ptr<Model> model = model_.value().Lock();
+
+	if (!model->IsCompleted()) {
 		return;
 	}
 
@@ -30,10 +37,10 @@ void AnimationBehavior::DrawSystematic(_MAYBE_UNUSED const SxavGraphicsFrame* fr
 	bind.SetAddress("gUVTransform", MaterialComponent::GetTransformGPUVirtualAddress());
 	bind.SetAddress("gColor",       MaterialComponent::GetColorGPUVirtualAddress());
 
-	for (uint32_t i = 0; i < model_->GetMeshSize(); ++i) {
+	for (uint32_t i = 0; i < model->GetMeshSize(); ++i) {
 		skeletonMesh_->SetIABuffer(i);
 
-		bind.SetHandle("gAlbedo", model_->GetTextureHandle(i));
+		bind.SetHandle("gAlbedo", model->GetTextureHandle(i));
 		sConsole->BindGraphicsBuffer(kDefaultVS_AlbedoPS_Deferred, SxavengerSystem::GetMainThreadContext(), bind);
 
 		skeletonMesh_->DrawCall(i);
@@ -41,7 +48,7 @@ void AnimationBehavior::DrawSystematic(_MAYBE_UNUSED const SxavGraphicsFrame* fr
 }
 
 void AnimationBehavior::DrawAdaptive(_MAYBE_UNUSED const SxavGraphicsFrame* frame) {
-	if (skeletonMesh_ == nullptr) {
+	/*if (skeletonMesh_ == nullptr) {
 		ModelBehavior::DrawAdaptive(frame);
 		return;
 	}
@@ -61,20 +68,15 @@ void AnimationBehavior::DrawAdaptive(_MAYBE_UNUSED const SxavGraphicsFrame* fram
 		sConsole->BindGraphicsBuffer(kDefaultVS_AlbedoPS, SxavengerSystem::GetMainThreadContext(), bind);
 
 		skeletonMesh_->DrawCall(i);
-	}
+	}*/
 }
 
 void AnimationBehavior::DrawLateAdaptive(_MAYBE_UNUSED const SxavGraphicsFrame* frame) {
-	if (skeletonMesh_ == nullptr) {
+	/*if (skeletonMesh_ == nullptr) {
 		ModelBehavior::DrawLateAdaptive(frame);
 		return;
 	}
 
-	if (skeletonMesh_ == nullptr) {
-		ModelBehavior::DrawAdaptive(frame);
-		return;
-	}
-
 	sConsole->SetGraphicsPipeline(kDefaultVS_AlbedoPS, SxavengerSystem::GetMainThreadContext(), frame->GetSize());
 
 	DxObject::BindBufferDesc bind = {};
@@ -90,5 +92,5 @@ void AnimationBehavior::DrawLateAdaptive(_MAYBE_UNUSED const SxavGraphicsFrame* 
 		sConsole->BindGraphicsBuffer(kDefaultVS_AlbedoPS, SxavengerSystem::GetMainThreadContext(), bind);
 
 		skeletonMesh_->DrawCall(i);
-	}
+	}*/
 }

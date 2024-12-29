@@ -7,7 +7,7 @@
 #include "Outliner.h"
 
 //* engine
-#include <Engine/Asset/AssetLibrary/Texture/AssetTexture.h>
+#include <Engine/Asset/AssetCollection.h>
 #include <Engine/Module/Behavior/BaseBehavior.h>
 #include <Engine/Module/Pipeline/RenderPipelineCollection.h>
 #include <Engine/Module/Pipeline/ComputePipelineCollection.h>
@@ -149,7 +149,7 @@ private:
 
 	//* frames *//
 
-	std::weak_ptr<AssetTexture> checkerTexture_;
+	AssetObserver<Texture> checkerTexture_;
 
 	std::unique_ptr<SxavGraphicsFrame>    scene_;
 	std::unique_ptr<BlenderDebugCamera3d> sceneCamera_;
@@ -201,8 +201,8 @@ private:
 
 	static void MenuDummy();
 
-	static WindowRect ShowTextureImGuiFullWindow(const MultiViewTexture* texture);
-	static WindowRect ShowTextureImGuiFullWindow(const BaseTexture* texture);
+	static WindowRect ShowTextureImGuiFullWindow(const MultiViewTextureBuffer* texture);
+	static WindowRect ShowTextureImGuiFullWindow(const Texture* texture);
 
 	static void ShowDemoGrid(const Camera3d* camera, const WindowRect& rect, float length);
 

@@ -41,8 +41,8 @@ void RenderConsole::Init(Console* console) {
 	presenter_ = std::make_unique<ScreenPresenter>();
 	presenter_->Init();
 
-	checkerTexture_ = SxavengerAsset::ImportTexture("asset/textures/checker_black.png");
-	checkerTexture_.lock()->Load(SxavengerSystem::GetMainThreadContext());
+	checkerTexture_ = SxavengerAsset::TryImport<Texture>("asset/textures/checker_black.png");
+	checkerTexture_.Lock()->Load(SxavengerSystem::GetMainThreadContext());
 
 	buffer_ = std::make_unique<DxObject::DimensionBuffer<Vector4f>>();
 	buffer_->Create(SxavengerSystem::GetDxDevice(), 1);
@@ -322,12 +322,13 @@ void RenderConsole::DisplayLayer() {
 }
 
 void RenderConsole::DisplayScene() {
+	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, { 0, 0 });
 
 	console_->DockingConsole();
 	ImGui::Begin("Scene ## Render Console", nullptr, console_->GetWindowFlag() | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
 
 	if (scene_ != nullptr) {
-		ShowTextureImGuiFullWindow(checkerTexture_.lock().get()); //!< HACK
+		ShowTextureImGuiFullWindow(checkerTexture_.ReloadAndLock().get()); //!< HACK
 		sceneRect_ = ShowTextureImGuiFullWindow(scene_->GetAdaptive()->GetTexture());
 		ImGuizmo::SetDrawlist();
 	}
@@ -342,18 +343,24 @@ void RenderConsole::DisplayScene() {
 	}
 
 	ImGui::End();
+
+	ImGui::PopStyleVar();
 }
 
 void RenderConsole::DisplayGame() {
+	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, { 0, 0 });
+
 	console_->DockingConsole();
 	ImGui::Begin("Game ## Render Console", nullptr, console_->GetWindowFlag() | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
 
 	if (game_ != nullptr) {
-		ShowTextureImGuiFullWindow(checkerTexture_.lock().get()); //< HACK
+		ShowTextureImGuiFullWindow(checkerTexture_.ReloadAndLock().get()); //< HACK
 		ShowTextureImGuiFullWindow(game_->GetAdaptive()->GetTexture());
 	}
 
 	ImGui::End();
+
+	ImGui::PopStyleVar();
 }
 
 bool RenderConsole::IsSelectedLayer(BaseVisualLayer* layer) {
@@ -424,7 +431,7 @@ void RenderConsole::DrawScene() {
 			game_->GetCamera()->DrawFrustum(ToColor4f(0xFAFA00FF), 4.0f);
 		}
 
-		SxavengerModule::DrawGrid(kOrigin3<float>, 12.0f);
+		SxavengerModule::DrawGrid(kOrigin3<float>, 1 << 6);
 		SxavengerModule::DrawCollider();
 		SxavengerModule::DrawToScene(SxavengerSystem::GetMainThreadContext(), scene_->GetCamera());
 		
@@ -479,26 +486,25 @@ void RenderConsole::DrawGame() {
 
 		//	computePipeline_->BindComputeBuffer(kXclipse_SSAO, context, bind);
 		//	computePipeline_->Dispatch(context, game_->GetSize());
-
 		//}
 
-		//{ //* atmosphere
+		{ //* atmosphere
 
-		//	game_->GetXclipse()->NextResultBufferIndex();
+			game_->GetXclipse()->NextResultBufferIndex();
 
-		//	computePipeline_->SetPipeline(kXclipse_Atmosphere, context);
+			computePipeline_->SetPipeline(kXclipse_Atmosphere, context);
 
-		//	BindBufferDesc bind = {};
-		//	bind.SetHandle("gInput", game_->GetXclipse()->GetPrevBuffer()->GetGPUHandleSRV());
-		//	bind.SetAddress("gSun", buffer_->GetGPUVirtualAddress());
-		//	bind.SetAddress("gCamera", game_->GetCamera()->GetGPUVirtualAddress());
-		//	bind.SetAddress("gConfig", game_->GetGetConfigVirtualAddress());
-		//	bind.SetHandle("gOutput", game_->GetXclipse()->GetResultBuffer()->GetGPUHandleUAV());
+			BindBufferDesc bind = {};
+			bind.SetHandle("gInput", game_->GetXclipse()->GetPrevBuffer()->GetGPUHandleSRV());
+			bind.SetAddress("gSun", buffer_->GetGPUVirtualAddress());
+			bind.SetAddress("gCamera", game_->GetCamera()->GetGPUVirtualAddress());
+			bind.SetAddress("gConfig", game_->GetGetConfigVirtualAddress());
+			bind.SetHandle("gOutput", game_->GetXclipse()->GetResultBuffer()->GetGPUHandleUAV());
 
-		//	computePipeline_->BindComputeBuffer(kXclipse_Atmosphere, context, bind);
-		//	computePipeline_->Dispatch(context, game_->GetSize());
+			computePipeline_->BindComputeBuffer(kXclipse_Atmosphere, context, bind);
+			computePipeline_->Dispatch(context, game_->GetSize());
 
-		//}
+		}
 
 		game_->EndXclipse(context);
 	}
@@ -535,7 +541,7 @@ void RenderConsole::MenuDummy() {
 	ImGui::Dummy(size);
 }
 
-RenderConsole::WindowRect RenderConsole::ShowTextureImGuiFullWindow(const MultiViewTexture* texture) {
+RenderConsole::WindowRect RenderConsole::ShowTextureImGuiFullWindow(const MultiViewTextureBuffer* texture) {
 
 	// タブ等を排除した全体のwindowSize計算
 	ImVec2 regionMax  = ImGui::GetWindowContentRegionMax();
@@ -575,7 +581,7 @@ RenderConsole::WindowRect RenderConsole::ShowTextureImGuiFullWindow(const MultiV
 	return rect;
 }
 
-RenderConsole::WindowRect RenderConsole::ShowTextureImGuiFullWindow(const BaseTexture* texture) {
+RenderConsole::WindowRect RenderConsole::ShowTextureImGuiFullWindow(const Texture* texture) {
 
 	// タブ等を排除した全体のwindowSize計算
 	ImVec2 regionMax  = ImGui::GetWindowContentRegionMax();
