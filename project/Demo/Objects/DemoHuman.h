@@ -39,6 +39,7 @@ private:
 
 	std::unique_ptr<SkeletonMesh> skeleton_;
 
+
 	DeltaTimePoint<TimeUnit::s> time_ = {};
 
 	bool flag = true;
