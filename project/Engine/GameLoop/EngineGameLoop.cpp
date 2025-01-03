@@ -64,7 +64,7 @@ void EngineGameLoop::Init(GameLoop::Context* context) {
 
 	context->SetState(
 		GameLoop::State::Begin, 0, [this]() {
-			Performance::BeginFrame();
+			SxavengerSystem::BeginPerformace();
 			SxavengerSystem::GetInput()->Update();
 			SxavengerSystem::BeginImGuiFrame();
 		}
@@ -82,7 +82,7 @@ void EngineGameLoop::Init(GameLoop::Context* context) {
 			SxavengerSystem::PresentAllWindow();
 			SxavengerSystem::ExecuteAllAllocator();
 			SxavengerModule::ResetPrimtive();
-			Performance::EndFrame();
+			SxavengerSystem::EndPerformace();
 		}
 	);
 }

@@ -43,8 +43,6 @@
     <ClCompile Include="Engine\System\DirectX\DxObject\DxBindBuffer.cpp" />
     <ClCompile Include="Engine\Module\Behavior\BaseBehavior.cpp" />
     <ClCompile Include="Lib\Adapter\Json\IJsonSerializer.cpp" />
-    <ClCompile Include="Engine\System\Runtime\Performance\Performance.cpp" />
-    <ClCompile Include="Engine\System\Runtime\Performance\DeltaTimePoint.cpp" />
     <ClCompile Include="Engine\Console\SystemConsole\SystemConsole.cpp" />
     <ClCompile Include="Engine\Console\Console.cpp" />
     <ClCompile Include="Engine\Content\InputAssembler\InputMesh.cpp" />
@@ -86,7 +84,6 @@
     <ClCompile Include="Engine\Module\Collider\ColliderCollection.cpp" />
     <ClCompile Include="Lib\Sxl\Formatter.cpp" />
     <ClCompile Include="Engine\Console\RenderConsole\Outliner.cpp" />
-    <ClCompile Include="Engine\Adapter\Particle\Emitter.cpp" />
     <ClCompile Include="Engine\Adapter\Particle\BaseParticle.cpp" />
     <ClCompile Include="Lib\Adapter\Curve\Curve.cpp" />
     <ClCompile Include="Engine\System\DirectX\DxObject\DxShaderBlob.cpp" />
@@ -128,6 +125,9 @@
     <ClCompile Include="Demo\Objects\ChessBoard.cpp" />
     <ClCompile Include="Demo\DemoModelRender.cpp" />
     <ClCompile Include="Demo\Objects\DemoHuman.cpp" />
+    <ClCompile Include="Engine\System\Runtime\Performance\TimePoint.cpp" />
+    <ClCompile Include="Engine\System\Runtime\Performance\Performance.cpp" />
+    <ClCompile Include="Engine\System\Runtime\Performance\RunTimeTracker.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\System\Window\Window.h" />
@@ -171,8 +171,6 @@
     <ClInclude Include="Lib\Adapter\Json\JsonAdapter.h" />
     <ClInclude Include="Engine\System\DirectX\DxObject\DxBindBuffer.h" />
     <ClInclude Include="Engine\Module\Behavior\BaseBehavior.h" />
-    <ClInclude Include="Engine\System\Runtime\Performance\Performance.h" />
-    <ClInclude Include="Engine\System\Runtime\Performance\DeltaTimePoint.h" />
     <ClInclude Include="Engine\Console\SystemConsole\SystemConsole.h" />
     <ClInclude Include="Engine\Console\Console.h" />
     <ClInclude Include="Engine\System\UI\ISystemDebugGui.h" />
@@ -219,7 +217,6 @@
     <ClInclude Include="Engine\Module\Collider\ColliderCollection.h" />
     <ClInclude Include="Lib\Sxl\Formatter.h" />
     <ClInclude Include="Engine\Console\RenderConsole\Outliner.h" />
-    <ClInclude Include="Engine\Adapter\Particle\Emitter.h" />
     <ClInclude Include="Engine\Adapter\Particle\BaseParticle.h" />
     <ClInclude Include="Lib\Adapter\Curve\Curve.h" />
     <ClInclude Include="Engine\System\DirectX\DxObject\DxShaderBlob.h" />
@@ -261,5 +258,8 @@
     <ClInclude Include="Demo\Objects\ChessBoard.h" />
     <ClInclude Include="Demo\DemoModelRender.h" />
     <ClInclude Include="Demo\Objects\DemoHuman.h" />
+    <ClInclude Include="Engine\System\Runtime\Performance\TimePoint.h" />
+    <ClInclude Include="Engine\System\Runtime\Performance\Performance.h" />
+    <ClInclude Include="Engine\System\Runtime\Performance\RunTimeTracker.h" />
   </ItemGroup>
 </Project>
