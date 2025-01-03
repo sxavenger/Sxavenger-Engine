@@ -10,7 +10,7 @@
 // Animation methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-Vector3f CalculateAnimationCurve(const AnimationCurve<Vector3f>& keyframes, DeltaTimePoint<TimeUnit::s> time) {
+Vector3f CalculateAnimationCurve(const AnimationCurve<Vector3f>& keyframes, TimePointf<TimeUnit::second> time) {
 	Assert(!keyframes.empty(), "keyframes is empty.");
 
 	if (keyframes.size() == 1 || time <= keyframes.front().time) {
@@ -31,7 +31,7 @@ Vector3f CalculateAnimationCurve(const AnimationCurve<Vector3f>& keyframes, Delt
 	return keyframes.back().value;
 }
 
-Quaternion CalculateAnimationCurve(const AnimationCurve<Quaternion>& keyframes, DeltaTimePoint<TimeUnit::s> time) {
+Quaternion CalculateAnimationCurve(const AnimationCurve<Quaternion>& keyframes, TimePointf<TimeUnit::second> time) {
 	Assert(!keyframes.empty(), "keyframes is empty.");
 
 	if (keyframes.size() == 1 || time <= keyframes.front().time) {

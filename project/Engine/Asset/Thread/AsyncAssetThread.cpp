@@ -50,7 +50,7 @@ void AsyncAssetThread::SystemDebugGui() {
 			ImGui::SeparatorText("thread details");
 
 			std::string text = "";
-			text += std::format("[runtime]: {:.1f}sec", runtime_.GetElapsedTime<TimeUnit::s>().time) + "\n";
+			text += std::format("[runtime]: {:.1f}sec", runtime_.GetElapsedTime<TimeUnit::second>().time) + "\n";
 			text += std::format("[task]: {:p}", reinterpret_cast<void*>(task_.get())) + " ";
 
 			ImGui::Text(text.c_str());

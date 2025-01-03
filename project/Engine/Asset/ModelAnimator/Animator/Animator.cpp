@@ -51,12 +51,12 @@ const Animation& Animator::GetAnimation(const std::string& name) const {
 	return GetAnimation(index);
 }
 
-const DeltaTimePoint<TimeUnit::s> Animator::GetDurationTime(const std::string& name) const {
+const TimePointf<TimeUnit::second> Animator::GetDurationTime(const std::string& name) const {
 	uint32_t index = GetAnimationIndex(name);
 	return GetDurationTime(index);
 }
 
-DeltaTimePoint<TimeUnit::s> Animator::GetTime(double time, double ticksPerSeconds) {
+TimePointf<TimeUnit::second> Animator::GetTime(double time, double ticksPerSeconds) {
 	return { static_cast<float>(time / ticksPerSeconds) };
 }
 

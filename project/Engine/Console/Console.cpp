@@ -37,7 +37,7 @@ void Console::Term() {
 	AssetConsole::Term();
 
 	runtime_.End();
-	EngineLog(std::format("[Console] executed time: {:.0f}sec", runtime_.GetDeltaTime<TimeUnit::s>().time));
+	EngineLog(std::format("[Console] executed time: {:.0f}sec", runtime_.GetDeltaTime<TimeUnit::second>().time));
 }
 
 void Console::UpdateConsole() {
@@ -221,7 +221,7 @@ void Console::DisplayPerformace() {
 	DockingConsole();
 	ImGui::Begin("Performance ## System Console", nullptr, windowFlag_ | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoScrollbar);
 
-	DeltaTimePoint<TimeUnit::s> framesPerSec = Performance::GetDeltaTime<TimeUnit::s>();
+	TimePointf<TimeUnit::second> framesPerSec = SxavengerSystem::GetPerformance()->GetDeltaTime();
 
 	std::string text = "";
 	text += std::format("[exec speed / frame]: {:.6f}", framesPerSec.time) + " ";

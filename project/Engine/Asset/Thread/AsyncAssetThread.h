@@ -9,8 +9,7 @@
 //* engine
 #include <Engine/System/DirectX/DirectXContext.h>
 #include <Engine/System/UI/ISystemDebugGui.h>
-#include <Engine/System/Runtime/Performance/Performance.h>
-#include <Engine/System/Runtime/Performance/DeltaTimePoint.h>
+#include <Engine/System/Runtime/Performance/RunTimeTracker.h>
 
 //* c++
 #include <thread>
