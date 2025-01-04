@@ -56,16 +56,16 @@ void TransformComponent::SetImGuiCommand() {
 
 json TransformComponent::OutputJson() {
 	json root = json::object();
-	root["scale"]     = IJsonSerializer::ToJson(transform_.scale);
-	root["rotate"]    = IJsonSerializer::ToJson(transform_.rotate);
-	root["translate"] = IJsonSerializer::ToJson(transform_.translate);
+	root["scale"]     = GeometryJsonSerializer::ToJson(transform_.scale);
+	root["rotate"]    = GeometryJsonSerializer::ToJson(transform_.rotate);
+	root["translate"] = GeometryJsonSerializer::ToJson(transform_.translate);
 
 	return root;
 }
 
 void TransformComponent::InputJson(const json& data) {
-	transform_.scale     = IJsonSerializer::JsonToVector3f(data.at("scale"));
-	transform_.rotate    = IJsonSerializer::JsonToQuaternion(data.at("rotate"));
-	transform_.translate = IJsonSerializer::JsonToVector3f(data.at("translate"));
+	transform_.scale     = GeometryJsonSerializer::JsonToVector3f(data.at("scale"));
+	transform_.rotate    = GeometryJsonSerializer::JsonToQuaternion(data.at("rotate"));
+	transform_.translate = GeometryJsonSerializer::JsonToVector3f(data.at("translate"));
 	UpdateMatrix();
 }

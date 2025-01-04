@@ -136,10 +136,10 @@ struct std::formatter<Vector2<T>> : Sxl::BaseFormatter<Vector2<T>> {};
 // constexpr
 //-----------------------------------------------------------------------------------------
 
-template <class T = float>
+template <class T>
 constexpr const Vector2<T> kOrigin2 = { 0, 0 };
 
-template <class T = float>
+template <class T>
 constexpr const Vector2<T> kUnit2 = { 1, 1 };
 
 //-----------------------------------------------------------------------------------------

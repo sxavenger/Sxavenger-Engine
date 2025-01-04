@@ -86,6 +86,9 @@ AssetCollection::FileType AssetCollection::GetFileType(const std::filesystem::pa
 
 	} else if (extension == ".hlsl" || extension == ".hlsli") {
 		return FileType::Shader;
+
+	} else if (extension == ".json") {
+		return FileType::Json;
 	}
 
 	return FileType::Unknown;
@@ -108,6 +111,10 @@ AssetCollection::File AssetCollection::CreateFileData(const std::filesystem::pat
 
 		case FileType::ModelAnimator:
 			file.second = std::make_shared<ModelAnimator>();
+			break;
+
+		case FileType::Json:
+			file.second = std::make_shared<AssetJson>();
 			break;
 
 		default:

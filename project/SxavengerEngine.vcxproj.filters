@@ -128,6 +128,7 @@
     <ClCompile Include="Engine\System\Runtime\Performance\TimePoint.cpp" />
     <ClCompile Include="Engine\System\Runtime\Performance\Performance.cpp" />
     <ClCompile Include="Engine\System\Runtime\Performance\RunTimeTracker.cpp" />
+    <ClCompile Include="Engine\Asset\Json\AssetJson.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\System\Window\Window.h" />
@@ -261,5 +262,6 @@
     <ClInclude Include="Engine\System\Runtime\Performance\TimePoint.h" />
     <ClInclude Include="Engine\System\Runtime\Performance\Performance.h" />
     <ClInclude Include="Engine\System\Runtime\Performance\RunTimeTracker.h" />
+    <ClInclude Include="Engine\Asset\Json\AssetJson.h" />
   </ItemGroup>
 </Project>
