@@ -130,6 +130,7 @@
     <ClCompile Include="Demo\Objects\DemoHuman.cpp" />
     <ClCompile Include="Engine\!Render\FSceneTextures.cpp" />
     <ClCompile Include="Engine\!Render\FSceneDepth.cpp" />
+    <ClCompile Include="Engine\!Render\FScene.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\System\Window\Window.h" />
@@ -265,5 +266,6 @@
     <ClInclude Include="Demo\Objects\DemoHuman.h" />
     <ClInclude Include="Engine\!Render\FSceneTextures.h" />
     <ClInclude Include="Engine\!Render\FSceneDepth.h" />
+    <ClInclude Include="Engine\!Render\FScene.h" />
   </ItemGroup>
 </Project>
