@@ -63,7 +63,7 @@ public:
 
 	//* rendering option *//
 
-	void SetRenderingFlag(BehaviorRenderingType type, bool isRendering = true) { renderingFlag_.set(static_cast<uint8_t>(type)) = isRendering; }
+	void SetRenderingFlag(BehaviorRenderingType type, bool isRendering = true) { renderingFlag_.set(static_cast<uint8_t>(type), isRendering); }
 
 	//* derivative behaivor methods *//
 	//* ImGui command
