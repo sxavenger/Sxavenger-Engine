@@ -78,6 +78,7 @@ public:
 	virtual void DrawAdaptive(_MAYBE_UNUSED const SxavGraphicsFrame*) {}
 	virtual void DrawLateAdaptive(_MAYBE_UNUSED const SxavGraphicsFrame*) {}
 
+
 	//* getter *//
 
 	const std::string& GetName() const { return name_; }
