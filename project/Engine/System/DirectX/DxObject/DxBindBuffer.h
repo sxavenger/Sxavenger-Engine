@@ -36,11 +36,6 @@ enum class BindBufferType {
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// using
-////////////////////////////////////////////////////////////////////////////////////////////
-using BindGPUBuffer = std::variant<D3D12_GPU_VIRTUAL_ADDRESS, D3D12_GPU_DESCRIPTOR_HANDLE>;
-
-////////////////////////////////////////////////////////////////////////////////////////////
 // BindBufferDesc structure
 ////////////////////////////////////////////////////////////////////////////////////////////
 struct BindBufferDesc {
@@ -58,7 +53,7 @@ public:
 
 	void SetHandle(const std::string& name, const D3D12_GPU_DESCRIPTOR_HANDLE& handle);
 
-	void SetBuffer(const std::string& name, const BindGPUBuffer& buffer);
+	void SetBuffer(const std::string& name, const GPUBuffer& buffer);
 
 	void Merge(const BindBufferDesc& desc);
 
@@ -79,7 +74,7 @@ private:
 	//! [unordered_map]
 	//! key:   bufferName
 	//! value: buffer
-	std::unordered_map<std::string, BindGPUBuffer> container_;
+	std::unordered_map<std::string, GPUBuffer> container_;
 
 };
 

@@ -11,17 +11,19 @@ _DXOBJECT_USING
 // Texture class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-void Texture::Load(const DirectXThreadContext* context, const std::filesystem::path& filepath) {
+void Texture::Load(_MAYBE_UNUSED const DirectXThreadContext* context) {
+	if (!BaseAsset::CheckAndBeginLoad()) {
+		return;
+	}
 
-	DirectX::ScratchImage image = LoadTexture(filepath);
-	const auto& metadata        = image.GetMetadata();
+	DirectX::ScratchImage image = LoadTexture(filepath_);
+	const auto& metadata = image.GetMetadata();
 
 	// deviceの取得
 	auto device = SxavengerSystem::GetDxDevice()->GetDevice();
 
-	// resourceの生成
-	resource_     = CreateTextureResource(device, metadata);
-	intermediate_ = UploadTextureData(resource_.Get(), image, SxavengerSystem::GetDxDevice()->GetDevice(), context->GetCommandList());
+	resource_                           = CreateTextureResource(device, metadata);
+	ComPtr<ID3D12Resource> intermediate = UploadTextureData(resource_.Get(), image, SxavengerSystem::GetDxDevice()->GetDevice(), context->GetCommandList());
 
 	// SRVの生成
 	{
@@ -52,13 +54,15 @@ void Texture::Load(const DirectXThreadContext* context, const std::filesystem::p
 		);
 	}
 
-	// parameterの保存
+	//!< parameterの保存
 	size_   = { static_cast<uint32_t>(metadata.width), static_cast<uint32_t>(metadata.height) };
 	format_ = metadata.format;
 
+	BaseAsset::Complete(context);
 }
 
 void Texture::Term() {
+	descriptorSRV_.Delete();
 }
 
 DirectX::ScratchImage Texture::LoadTexture(const std::filesystem::path& filepath) {

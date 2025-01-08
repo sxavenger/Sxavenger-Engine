@@ -1,16 +1,23 @@
-#include "BaseAsset.h"
+#pragma once
 
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
-//* engine
-#include <Engine/System/Utility/Logger.h>
+//* lib
+#include <Lib/Geometry/Matrix4x4.h>
+#include <Lib/Transform/Transform.h>
+
+//* c++
+#include <string>
+#include <vector>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// Base Asset class methods
+// BornNode structure
 ////////////////////////////////////////////////////////////////////////////////////////////
+struct BornNode {
+	QuaternionTransform transform;
+	Matrix4x4           localMatrix;
 
-AssetCollection* BaseAsset::GetCollection() const {
-	Assert(collection_ != nullptr, "asset collection is nullptr.");
-	return collection_;
-}
+	std::string name;
+	std::vector<BornNode> children;
+};

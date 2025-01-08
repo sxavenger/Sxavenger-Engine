@@ -5,9 +5,10 @@
 //-----------------------------------------------------------------------------------------
 //* renderer
 #include "FSceneDepth.h"
+#include "FTexture.h"
 
 //* engine
-#include <Engine/Content/TextureBuffer/MultiViewTextureBuffer.h>
+#include <Engine/System/DirectX/DxObject/DxDimensionBuffer.h>
 
 //* c++
 #include <cstdint>
@@ -51,11 +52,15 @@ public:
 
 	void Create(const Vector2ui& size);
 
-	//=========================================================================================
-	// public variables
-	//=========================================================================================
+private:
 
-	static const std::array<DXGI_FORMAT, kGBufferLayoutCount> kGBufferFormats;
+	////////////////////////////////////////////////////////////////////////////////////////////
+	// TexturesParameter structure
+	////////////////////////////////////////////////////////////////////////////////////////////
+	struct TexturesParameter {
+		//* member *//
+		Vector2ui size;
+	};
 
 private:
 
@@ -63,12 +68,20 @@ private:
 	// private variables
 	//=========================================================================================
 
+	//* format *//
+
+	static const std::array<DXGI_FORMAT, kGBufferLayoutCount> kGBufferFormats;
+
 	//* GBuffer textures *//
 
-	std::array<std::unique_ptr<MultiViewTextureBuffer>, kGBufferLayoutCount> gBuffers_;
+	std::array<std::unique_ptr<FTexture>, kGBufferLayoutCount> gBuffers_;
 
 	//* depth textures *//
 
 	std::unique_ptr<FSceneDepth> depth_;
+
+	//* parameter buffer *//
+
+	std::unique_ptr<DxObject::DimensionBuffer<TexturesParameter>> parameterBuffer_;
 
 };

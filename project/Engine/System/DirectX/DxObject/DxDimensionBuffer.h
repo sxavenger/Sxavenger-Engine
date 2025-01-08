@@ -87,6 +87,7 @@ public:
 
 	void Release();
 
+	T& At(uint32_t index);
 	const T& At(uint32_t index) const;
 
 	const T* GetData();
@@ -149,7 +150,7 @@ private:
 // DimensionBuffer class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-template<class T>
+template <class T>
 inline void DimensionBuffer<T>::Create(Device* device, uint32_t size) {
 	BaseDimensionBuffer::Create(device, size, sizeof(T));
 
@@ -162,35 +163,41 @@ inline void DimensionBuffer<T>::Create(Device* device, uint32_t size) {
 	mappedDatas_ = { mappingTarget, size_ };
 }
 
-template<class T>
+template <class T>
 inline void DimensionBuffer<T>::Release() {
 	BaseDimensionBuffer::Release();
 	mappedDatas_ = {};
 }
 
 template<class T>
+inline T& DimensionBuffer<T>::At(uint32_t index) {
+	Assert(CheckIndex(index), "Dimension Buffer out of range.");
+	return mappedDatas_[index];
+}
+
+template <class T>
 inline const T& DimensionBuffer<T>::At(uint32_t index) const {
 	Assert(CheckIndex(index), "Dimension Buffer out of range.");
 	return mappedDatas_[index];
 }
 
-template<class T>
+template <class T>
 inline const T* DimensionBuffer<T>::GetData() {
 	return mappedDatas_.data();
 }
 
-template<class T>
+template <class T>
 inline void DimensionBuffer<T>::Memcpy(const T* value) {
 	std::memcpy(mappedDatas_.data(), value, stride_ * size_);
 }
 
-template<class T>
+template <class T>
 inline T& DimensionBuffer<T>::operator[](uint32_t index) {
 	Assert(CheckIndex(index), "Dimension Buffer out of range.");
 	return mappedDatas_[index];
 }
 
-template<class T>
+template <class T>
 inline const T& DimensionBuffer<T>::operator[](uint32_t index) const {
 	Assert(CheckIndex(index), "Dimension Buffer out of range.");
 	return mappedDatas_[index];
@@ -200,7 +207,7 @@ inline const T& DimensionBuffer<T>::operator[](uint32_t index) const {
 // VertexDimensionBuffer class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-template<class T>
+template <class T>
 inline const D3D12_VERTEX_BUFFER_VIEW VertexDimensionBuffer<T>::GetVertexBufferView() const {
 	D3D12_VERTEX_BUFFER_VIEW result = {};
 	result.BufferLocation = this->GetGPUVirtualAddress();

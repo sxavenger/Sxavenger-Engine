@@ -11,6 +11,9 @@
 #include <Engine/System/DirectX/DxObject/DxDescriptor.h>
 #include <Engine/System/DirectX/DirectXContext.h>
 
+//* lib
+#include <Lib/CXXAttributeConfig.h>
+
 //* DirectX12
 #include <d3dx12.h>
 #include <DirectXTex.h>
@@ -32,11 +35,14 @@ public:
 	Texture()  = default;
 	~Texture() { Term(); }
 
-	void Load(const DirectXThreadContext* context, const std::filesystem::path& filepath);
+	void Load(_MAYBE_UNUSED const DirectXThreadContext* context) override;
+	// HACK: Load関数は, TextureのUploadBufferを積む関数. GPU実行待ちのTextureを生成
 
 	void Term();
 
 	//* getter *//
+
+	//ID3D12Resource* GetResource() const { return resource_.Get(); }
 
 	const D3D12_GPU_DESCRIPTOR_HANDLE& GetGPUHandleSRV() const { return descriptorSRV_.GetGPUHandle(); }
 
@@ -55,7 +61,7 @@ private:
 	ComPtr<ID3D12Resource> resource_;
 	DxObject::Descriptor   descriptorSRV_;
 
-	ComPtr<ID3D12Resource> intermediate_; // FIXME: 中管リソースを不要に.
+	//ComPtr<ID3D12Resource> intermediate_; // FIXME: 中管リソースを不要に.
 
 	//* parameter *//
 

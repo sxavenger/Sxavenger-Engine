@@ -1,37 +1,42 @@
 #pragma once
 
 //-----------------------------------------------------------------------------------------
-// forward
+// include
 //-----------------------------------------------------------------------------------------
-class AssetCollection;
+//* actor
+#include "../AGeometryActor.h"
+
+//* engine
+#include <Engine/Asset/ModelAnimator/Model/Model.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// Base Asset class
+// AModelActor class
 ////////////////////////////////////////////////////////////////////////////////////////////
-class BaseAsset {
+class AModelActor
+	: public AGeometryActor {
 public:
 
 	//=========================================================================================
 	// public methods
 	//=========================================================================================
 
-	BaseAsset()          = default;
-	virtual ~BaseAsset() = default;
+	AModelActor()          = default;
+	virtual ~AModelActor() = default;
 
-	//* getter *//
+	void Init();
 
-	AssetCollection* GetCollection() const;
+	//* render *//
 
-	//* setter *//
+	virtual void RenderOpaque() override;
+	virtual void RenderTransparent() override;
 
-	void SetCollection(AssetCollection* collection) { collection_ = collection; }
-
-private:
+protected:
 
 	//=========================================================================================
-	// private variables
+	// protected variables
 	//=========================================================================================
 
-	AssetCollection* collection_ = nullptr;
+	std::shared_ptr<Model> model_;
+	// hack: observer
 
 };

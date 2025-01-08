@@ -17,7 +17,7 @@ void BindBufferDesc::SetHandle(const std::string& name, const D3D12_GPU_DESCRIPT
 	container_[name] = handle;
 }
 
-void BindBufferDesc::SetBuffer(const std::string& name, const BindGPUBuffer& buffer) {
+void BindBufferDesc::SetBuffer(const std::string& name, const GPUBuffer& buffer) {
 	container_[name] = buffer;
 }
 

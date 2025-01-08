@@ -1,30 +1,26 @@
-#pragma once
+//-----------------------------------------------------------------------------------------
+// include
+//-----------------------------------------------------------------------------------------
+//* base
+#include <Engine/System/Runtime/GameLoop/GameLoop.h>
 
-//-----------------------------------------------------------------------------------------
-// forward
-//-----------------------------------------------------------------------------------------
-class AssetCollection;
+//* engine
+#include <Engine/System/Window/GameWindow.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// Base Asset class
+// BetaSystemGameLoop class
 ////////////////////////////////////////////////////////////////////////////////////////////
-class BaseAsset {
+class BetaSystemGameLoop
+	: public GameLoop::Interface {
 public:
 
 	//=========================================================================================
-	// public methods
+	// public method
 	//=========================================================================================
 
-	BaseAsset()          = default;
-	virtual ~BaseAsset() = default;
+	void Init(GameLoop::Context* context) override;
 
-	//* getter *//
-
-	AssetCollection* GetCollection() const;
-
-	//* setter *//
-
-	void SetCollection(AssetCollection* collection) { collection_ = collection; }
+	void Term() override;
 
 private:
 
@@ -32,6 +28,20 @@ private:
 	// private variables
 	//=========================================================================================
 
-	AssetCollection* collection_ = nullptr;
+	std::shared_ptr<GameWindow> main_;
+
+	//* render system *//
+
+	//=========================================================================================
+	// private methods
+	//=========================================================================================
+
+	void InitSystem();
+
+	void TermSystem();
+
+	void UpdateSystem();
+
+	void DrawSystem();
 
 };

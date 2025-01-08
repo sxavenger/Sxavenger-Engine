@@ -1,16 +1,24 @@
-#include "BaseAsset.h"
+#pragma once
 
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
-//* engine
-#include <Engine/System/Utility/Logger.h>
+//* lib
+#include <Lib/Geometry/Matrix4x4.h>
+
+//* c++
+#include <vector>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// Base Asset class methods
+// Weight structure
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-AssetCollection* BaseAsset::GetCollection() const {
-	Assert(collection_ != nullptr, "asset collection is nullptr.");
-	return collection_;
-}
+struct VertexWeightData {
+	float weight;
+	uint32_t vertexIndex;
+};
+
+struct JointWeightData {
+	Matrix4x4 inverseBindPoseMatrix;
+	std::vector<VertexWeightData> vertexWeights;
+};
