@@ -131,6 +131,8 @@
     <ClCompile Include="Engine\!Render\FSceneTextures.cpp" />
     <ClCompile Include="Engine\!Render\FSceneDepth.cpp" />
     <ClCompile Include="Engine\!Render\FScene.cpp" />
+    <ClCompile Include="Engine\!Render\FSceneRenderer.cpp" />
+    <ClCompile Include="Engine\!Render\FSceneActors.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\System\Window\Window.h" />
@@ -267,5 +269,7 @@
     <ClInclude Include="Engine\!Render\FSceneTextures.h" />
     <ClInclude Include="Engine\!Render\FSceneDepth.h" />
     <ClInclude Include="Engine\!Render\FScene.h" />
+    <ClInclude Include="Engine\!Render\FSceneRenderer.h" />
+    <ClInclude Include="Engine\!Render\FSceneGeometies.h" />
   </ItemGroup>
 </Project>
