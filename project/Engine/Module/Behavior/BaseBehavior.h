@@ -63,7 +63,7 @@ public:
 
 	//* rendering option *//
 
-	void SetRenderingFlag(BehaviorRenderingType type, bool isRendering = true) { renderingFlag_.set(static_cast<uint8_t>(type)) = isRendering; }
+	void SetRenderingFlag(BehaviorRenderingType type, bool isRendering = true) { renderingFlag_.set(static_cast<uint8_t>(type), isRendering); }
 
 	//* derivative behaivor methods *//
 	//* ImGui command
@@ -77,6 +77,7 @@ public:
 	virtual void DrawSystematic(_MAYBE_UNUSED const SxavGraphicsFrame*) {}
 	virtual void DrawAdaptive(_MAYBE_UNUSED const SxavGraphicsFrame*) {}
 	virtual void DrawLateAdaptive(_MAYBE_UNUSED const SxavGraphicsFrame*) {}
+
 
 	//* getter *//
 

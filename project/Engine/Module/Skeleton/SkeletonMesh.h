@@ -31,12 +31,12 @@ public:
 
 	//* animation option *//
 
-	void UpdateAnimation(const Animation& animation, DeltaTimePoint<TimeUnit::s> time, bool isLoop = true);
+	void UpdateAnimation(const Animation& animation, TimePointf<TimeUnit::second> time, bool isLoop = true);
 	//void UpdateAnimation(const AnimationGroup& animationGroup, DeltaTimePoint<TimeUnit::s> time, bool isLoop = true);
 
 	void UpdateTransitionAnimation(
-		const Animation& before, DeltaTimePoint<TimeUnit::s> beforeTime, bool isLoopBefore,
-		const Animation& after,  DeltaTimePoint<TimeUnit::s> afterTime,  bool isLoopAfter,
+		const Animation& before, TimePointf<TimeUnit::second> beforeTime, bool isLoopBefore,
+		const Animation& after,  TimePointf<TimeUnit::second> afterTime,  bool isLoopAfter,
 		float t
 	);
 

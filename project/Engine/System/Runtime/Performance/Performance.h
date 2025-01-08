@@ -3,37 +3,34 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
-//* asset
-#include "../BaseAsset.h"
+//* performance
+#include "TimePoint.h"
+#include "RunTimeTracker.h"
 
 //* engine
-#include <Engine/System/DirectX/DirectXContext.h>
 #include <Engine/System/UI/ISystemDebugGui.h>
-#include <Engine/System/Runtime/Performance/RunTimeTracker.h>
 
 //* c++
-#include <thread>
-#include <functional>
+#include <optional>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// AsyncAssetThread class
+// Performance class
 ////////////////////////////////////////////////////////////////////////////////////////////
-class AsyncAssetThread
-	: public DirectXThreadContext, public ISystemDebugGui {
+class Performance
+	: public ISystemDebugGui {
 public:
 
 	//=========================================================================================
 	// public methods
 	//=========================================================================================
 
-	AsyncAssetThread()  = default;
-	~AsyncAssetThread() { Term(); }
+	void Begin();
 
-	void Init(const std::function<std::shared_ptr<BaseAsset>()>& getter);
-
-	void Term();
+	void End();
 
 	void SystemDebugGui() override;
+
+	TimePointf<TimeUnit::second> GetDeltaTime() const { return runtime_.GetDeltaTime<TimeUnit::second>(); }
 
 private:
 
@@ -41,25 +38,20 @@ private:
 	// private variables
 	//=========================================================================================
 
-	//* thread *//
+	//* run time tracker *//
 
-	std::thread thread_;
-
-	bool isTerm_ = false;
-
-	//* task *//
-
-	std::shared_ptr<BaseAsset> task_ = nullptr;
+	RunTimeTracker runtime_;
 
 	//* parameter *//
 
-	bool isAvailable_ = false;
-	RunTimeTracker runtime_;
+	float limitFrame_ = 60.0f;
+
+	std::optional<TimePointf<TimeUnit::millisecond>> fixedDeltaTime_ = std::nullopt;
 
 	//=========================================================================================
 	// private methods
 	//=========================================================================================
 
-	void Execute();
+	void WaitFrame() const;
 
 };

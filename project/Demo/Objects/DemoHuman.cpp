@@ -36,7 +36,7 @@ void DemoHuman::Init() {
 
 void DemoHuman::Update() {
 
-	time_.AddDeltaTime();
+	time_ += SxavengerSystem::GetDeltaTime();
 
 	if (!model_.Lock()->IsCompleted()) {
 		return;

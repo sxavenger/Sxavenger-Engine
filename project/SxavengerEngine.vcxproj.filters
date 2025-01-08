@@ -83,7 +83,6 @@
     <ClCompile Include="Engine\Module\Collider\ColliderCollection.cpp" />
     <ClCompile Include="Lib\Sxl\Formatter.cpp" />
     <ClCompile Include="Engine\Console\RenderConsole\Outliner.cpp" />
-    <ClCompile Include="Engine\Adapter\Particle\Emitter.cpp" />
     <ClCompile Include="Engine\Adapter\Particle\BaseParticle.cpp" />
     <ClCompile Include="Lib\Adapter\Curve\Curve.cpp" />
     <ClCompile Include="Engine\System\DirectX\DxObject\DxShaderBlob.cpp" />
@@ -107,6 +106,9 @@
     <ClCompile Include="Demo\Objects\ChessBoard.cpp" />
     <ClCompile Include="Demo\DemoModelRender.cpp" />
     <ClCompile Include="Demo\Objects\DemoHuman.cpp" />
+    <ClCompile Include="Engine\System\Runtime\Performance\TimePoint.cpp" />
+    <ClCompile Include="Engine\System\Runtime\Performance\Performance.cpp" />
+    <ClCompile Include="Engine\System\Runtime\Performance\RunTimeTracker.cpp" />
     <ClCompile Include="Engine\!Render\FSceneTextures.cpp" />
     <ClCompile Include="Engine\!Render\FSceneDepth.cpp" />
     <ClCompile Include="Engine\!Render\FScene.cpp" />
@@ -208,7 +210,6 @@
     <ClInclude Include="Engine\Module\Collider\ColliderCollection.h" />
     <ClInclude Include="Lib\Sxl\Formatter.h" />
     <ClInclude Include="Engine\Console\RenderConsole\Outliner.h" />
-    <ClInclude Include="Engine\Adapter\Particle\Emitter.h" />
     <ClInclude Include="Engine\Adapter\Particle\BaseParticle.h" />
     <ClInclude Include="Lib\Adapter\Curve\Curve.h" />
     <ClInclude Include="Engine\System\DirectX\DxObject\DxShaderBlob.h" />
@@ -232,6 +233,9 @@
     <ClInclude Include="Demo\Objects\ChessBoard.h" />
     <ClInclude Include="Demo\DemoModelRender.h" />
     <ClInclude Include="Demo\Objects\DemoHuman.h" />
+    <ClInclude Include="Engine\System\Runtime\Performance\TimePoint.h" />
+    <ClInclude Include="Engine\System\Runtime\Performance\Performance.h" />
+    <ClInclude Include="Engine\System\Runtime\Performance\RunTimeTracker.h" />
     <ClInclude Include="Engine\!Render\FSceneTextures.h" />
     <ClInclude Include="Engine\!Render\FSceneDepth.h" />
     <ClInclude Include="Engine\!Render\FScene.h" />

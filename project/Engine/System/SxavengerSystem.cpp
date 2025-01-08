@@ -8,6 +8,7 @@ namespace {
 	static std::unique_ptr<WinApp>                sWinApp            = nullptr; //!< win app system
 	static std::unique_ptr<DirectXCommon>         sDirectXCommon     = nullptr; //!< DirectX12 system
 	static std::unique_ptr<DirectXThreadContext>  sMainThreadContext = nullptr; //!< main thread context
+	static std::unique_ptr<Performance>           sPerformance       = nullptr; //!< performance system
 
 	//* system user
 	static std::unique_ptr<GameWindowCollection> sWindowCollection  = nullptr; //!< window collection
@@ -29,6 +30,8 @@ void SxavengerSystemEngine::Init() {
 
 	sMainThreadContext = std::make_unique<DirectXThreadContext>();
 	sMainThreadContext->Init(3); //!< allocator count
+
+	sPerformance = std::make_unique<Performance>();
 
 	sWindowCollection = std::make_unique<GameWindowCollection>();
 	sInput            = std::make_unique<Input>();
@@ -118,6 +121,22 @@ bool SxavengerSystemEngine::IsReleaseKey(KeyId id) {
 
 Input* SxavengerSystemEngine::GetInput() {
 	return sInput.get();
+}
+
+void SxavengerSystemEngine::BeginPerformace() {
+	sPerformance->Begin();
+}
+
+void SxavengerSystemEngine::EndPerformace() {
+	sPerformance->End();
+}
+
+TimePointf<TimeUnit::second> SxavengerSystemEngine::GetDeltaTime() {
+	return sPerformance->GetDeltaTime();
+}
+
+Performance* SxavengerSystemEngine::GetPerformance() {
+	return sPerformance.get();
 }
 
 void SxavengerSystemEngine::BeginImGuiFrame() {

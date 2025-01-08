@@ -9,6 +9,7 @@
 #include "DirectX/DirectXContext.h"
 #include "Window/GameWindowCollection.h"
 #include "Runtime/Input/Input.h"
+#include "Runtime/Performance/Performance.h"
 #include "UI/ImGuiController.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -80,6 +81,18 @@ public:
 	static bool IsReleaseKey(KeyId id);
 
 	static Input* GetInput();
+
+	//-----------------------------------------------------------------------------------------
+	// Performance option
+	//-----------------------------------------------------------------------------------------
+
+	static void BeginPerformace();
+
+	static void EndPerformace();
+
+	static TimePointf<TimeUnit::second> GetDeltaTime();
+
+	static Performance* GetPerformance();
 
 	//-----------------------------------------------------------------------------------------
 	// imgui controller option

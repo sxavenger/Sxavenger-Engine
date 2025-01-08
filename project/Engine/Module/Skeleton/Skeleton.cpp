@@ -16,9 +16,9 @@ void Skeleton::Create(const BornNode& node) {
 	UpdateMatrix();
 }
 
-void Skeleton::Update(const Animation& animation, DeltaTimePoint<TimeUnit::s> time, bool isLoop) {
+void Skeleton::Update(const Animation& animation, TimePointf<TimeUnit::second> time, bool isLoop) {
 	if (isLoop) {
-		time = time.Mod(animation.duration);
+		time = Mod(time, animation.duration);
 	}
 
 	ApplyAnimation(animation, time);
@@ -32,16 +32,16 @@ void Skeleton::Update(const Animation& animation, DeltaTimePoint<TimeUnit::s> ti
 //}
 
 void Skeleton::TransitionAnimation(
-	const Animation& animationA, DeltaTimePoint<TimeUnit::s> timeA, bool isLoopA,
-	const Animation& animationB, DeltaTimePoint<TimeUnit::s> timeB, bool isLoopB,
+	const Animation& animationA, TimePointf<TimeUnit::second> timeA, bool isLoopA,
+	const Animation& animationB, TimePointf<TimeUnit::second> timeB, bool isLoopB,
 	float t) {
 
 	if (isLoopA) {
-		timeA = timeA.Mod(animationA.duration);
+		timeA = Mod(timeA, animationA.duration);
 	}
 
 	if (isLoopB) {
-		timeB = timeB.Mod(animationB.duration);
+		timeB = Mod(timeB, animationB.duration);
 	}
 
 	ApplyTransitionAnimation(
@@ -77,7 +77,7 @@ uint32_t Skeleton::CreateJoint(const BornNode& node, const std::optional<uint32_
 	return joint.index;
 }
 
-std::optional<QuaternionTransform> Skeleton::GetTransform(const std::string& jointName, const Animation& animation, DeltaTimePoint<TimeUnit::s> time) {
+std::optional<QuaternionTransform> Skeleton::GetTransform(const std::string& jointName, const Animation& animation, TimePointf<TimeUnit::second> time) {
 
 	// 対象のJointのAnimationがあれば, 値の適応
 	if (auto it = animation.nodeAnimations.find(jointName); it != animation.nodeAnimations.end()) { //!< animationに対象のJointがある場
@@ -96,7 +96,7 @@ std::optional<QuaternionTransform> Skeleton::GetTransform(const std::string& joi
 	return std::nullopt;
 }
 
-void Skeleton::ApplyAnimation(const Animation& animation, DeltaTimePoint<TimeUnit::s> time) {
+void Skeleton::ApplyAnimation(const Animation& animation, TimePointf<TimeUnit::second> time) {
 
 	for (auto& joint : joints) {
 
@@ -110,8 +110,8 @@ void Skeleton::ApplyAnimation(const Animation& animation, DeltaTimePoint<TimeUni
 }
 
 void Skeleton::ApplyTransitionAnimation(
-	const Animation& animationA, DeltaTimePoint<TimeUnit::s> timeA,
-	const Animation& animationB, DeltaTimePoint<TimeUnit::s> timeB,
+	const Animation& animationA, TimePointf<TimeUnit::second> timeA,
+	const Animation& animationB, TimePointf<TimeUnit::second> timeB,
 	float t) {
 
 	for (auto& joint : joints) {
