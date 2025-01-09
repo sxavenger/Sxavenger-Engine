@@ -82,6 +82,7 @@ Vector3f Quaternion::ToEuler() const {
 		euler.y = std::asin(sinp);
 	}
 
+
 	// Yaw (z-axis rotation)
 	float siny_cosp = 2 * (w * z + x * y);
 	float cosy_cosp = 1 - 2 * (y * y + z * z);
@@ -92,7 +93,7 @@ Vector3f Quaternion::ToEuler() const {
 
 Quaternion& Quaternion::operator*=(const Quaternion& q) {
 
-	Quaternion result;
+	Quaternion result = {};
 
 	ImaginaryVector3 cross = CrossVector(*this, q);
 	float dot              = DotVector(*this, q);
