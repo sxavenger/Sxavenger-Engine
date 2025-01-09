@@ -6,11 +6,24 @@
 //* engine
 #include <Engine/System/Utility/Logger.h>
 
+//* c++
+#include <thread>
+
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Base Asset class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-AssetCollection* BaseAsset::GetCollection() const {
-	Assert(collection_ != nullptr, "asset collection is nullptr.");
-	return collection_;
+void BaseAsset::WaitComplete() const {
+	while (!IsComplete()) {
+		std::this_thread::sleep_for(std::chrono::milliseconds(1));
+	}
+}
+
+bool BaseAsset::CheckAndBeginLoad() {
+	if (state_ == State::Unloaded) {
+		state_ = State::Loading;
+		return true;
+	}
+
+	return false;
 }

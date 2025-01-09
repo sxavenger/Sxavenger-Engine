@@ -4,9 +4,10 @@
 // include
 //-----------------------------------------------------------------------------------------
 //* asset
-#include "../BaseAsset.h"
+#include "../Texture/Texture.h"
 
 //* engine
+#include <Engine/System/DirectX/DirectXContext.h>
 #include <Engine/Content/InputAssembler/InputMesh.h>
 #include <Engine/Content/Animation/JointWeight.h>
 #include <Engine/Content/Animation/BornNode.h>
@@ -23,8 +24,7 @@
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Model class
 ////////////////////////////////////////////////////////////////////////////////////////////
-class Model
-	: public BaseAsset {
+class Model {
 public:
 
 	////////////////////////////////////////////////////////////////////////////////////////////
@@ -48,8 +48,7 @@ public:
 	// MaterialData structure
 	////////////////////////////////////////////////////////////////////////////////////////////
 	struct MaterialData { 
-		std::array<std::shared_ptr<Texture>, static_cast<uint8_t>(TextureType::Bump) + 1> textures_;
-		//* todo: asset texture に変更
+		std::array<std::unique_ptr<Texture>, static_cast<uint8_t>(TextureType::Bump) + 1> textures_;
 	};
 
 public:
@@ -61,7 +60,7 @@ public:
 	Model()  = default;
 	~Model() { Term(); }
 
-	void Load(const std::filesystem::path& filepath, uint32_t assimpOption = kDefaultAssimpOption_);
+	void Load(const DirectXThreadContext* context, const std::filesystem::path& filepath, uint32_t assimpOption = kDefaultAssimpOption_);
 
 	void Term();
 
@@ -117,7 +116,7 @@ private:
 
 	void LoadMesh(const aiScene* aiScene);
 
-	void LoadMaterial(const aiScene* aiScene, const std::filesystem::path& directory);
+	void LoadMaterial(const aiScene* aiScene, const DirectXThreadContext* context, const std::filesystem::path& directory);
 
 	BornNode ReadNode(aiNode* node);
 

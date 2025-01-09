@@ -59,6 +59,7 @@ void Texture::Load(const DirectXThreadContext* context, const std::filesystem::p
 }
 
 void Texture::Term() {
+	descriptorSRV_.Delete();
 }
 
 DirectX::ScratchImage Texture::LoadTexture(const std::filesystem::path& filepath) {

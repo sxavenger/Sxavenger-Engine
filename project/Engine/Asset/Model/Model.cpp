@@ -7,6 +7,12 @@
 //* Vector4
 //*  Quarternion = -x, -y, z, w;
 
+//-----------------------------------------------------------------------------------------
+// include
+//-----------------------------------------------------------------------------------------
+//* engine
+#include <Engine/Content/SxavengerContent.h>
+
 //=========================================================================================
 // static const variables
 //=========================================================================================
@@ -21,7 +27,7 @@ const uint32_t Model::kDefaultAssimpOption_
 // Model class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-void Model::Load(const std::filesystem::path& filepath, uint32_t assimpOption) {
+void Model::Load(const DirectXThreadContext* context, const std::filesystem::path& filepath, uint32_t assimpOption = kDefaultAssimpOption_) {
 
 	// sceneの取得
 	Assimp::Importer importer; //!< scene保存するため保管
@@ -31,7 +37,7 @@ void Model::Load(const std::filesystem::path& filepath, uint32_t assimpOption) {
 	Assert(aiScene->HasMeshes(), "model is not mesh.");
 
 	LoadMesh(aiScene);
-	LoadMaterial(aiScene, filepath.parent_path());
+	LoadMaterial(aiScene, context, filepath.parent_path());
 	root_ = ReadNode(aiScene->mRootNode);
 }
 
@@ -192,7 +198,7 @@ void Model::LoadMesh(const aiScene* aiScene) {
 	}
 }
 
-void Model::LoadMaterial(const aiScene* aiScene, const std::filesystem::path& directory) {
+void Model::LoadMaterial(const aiScene* aiScene, const DirectXThreadContext* context, const std::filesystem::path& directory) {
 
 	// materail数のメモリ確保
 	materials_.resize(aiScene->mNumMaterials);
@@ -207,40 +213,34 @@ void Model::LoadMaterial(const aiScene* aiScene, const std::filesystem::path& di
 		//* Texture
 		//*
 
-		// TODO: テクスチャの読み込み
-
 		auto& material = materials_.at(materialIndex);
 
 		// diffuseの取得
 		if (aiMaterial->GetTextureCount(aiTextureType_DIFFUSE) != 0) {
-			//aiString aiTextureFilepath;
-			//aiMaterial->GetTexture(aiTextureType_DIFFUSE, 0, &aiTextureFilepath);
+			aiString aiTextureFilepath;
+			aiMaterial->GetTexture(aiTextureType_DIFFUSE, 0, &aiTextureFilepath);
 
-			//// データの保存
-			//std::shared_ptr<Texture> texture = collection_->ImportPtr<Texture>(directory / aiTextureFilepath.C_Str()); //!< todo: observerに変更
-			//texture->Load(context);
-			//material.textures_[static_cast<uint8_t>(TextureType::Diffuse)] = texture;
-
+			// データの保存
+			material.textures_[static_cast<uint8_t>(TextureType::Diffuse)] = std::make_unique<Texture>();
+			material.textures_[static_cast<uint8_t>(TextureType::Diffuse)]->Load(context, directory / aiTextureFilepath.C_Str());
 		}
 
 		// normalの取得
 		if (aiMaterial->GetTextureCount(aiTextureType_HEIGHT) != 0) { //!< objの場合.
-			//aiString aiTextureFilepath;
-			//aiMaterial->GetTexture(aiTextureType_HEIGHT, 0, &aiTextureFilepath);
+			aiString aiTextureFilepath;
+			aiMaterial->GetTexture(aiTextureType_HEIGHT, 0, &aiTextureFilepath);
 
-			//// データの保存
-			//std::shared_ptr<Texture> texture = collection_->ImportPtr<Texture>(directory / aiTextureFilepath.C_Str()); //!< todo: observerに変更
-			//texture->Load(context);
-			//material.textures_[static_cast<uint8_t>(TextureType::Bump)] = texture;
+			// データの保存
+			material.textures_[static_cast<uint8_t>(TextureType::Bump)] = std::make_unique<Texture>();
+			material.textures_[static_cast<uint8_t>(TextureType::Bump)]->Load(context, directory / aiTextureFilepath.C_Str());
 
 		} else if (aiMaterial->GetTextureCount(aiTextureType_NORMALS) != 0) { //!< gltfの場合.
-			//aiString aiTextureFilepath;
-			//aiMaterial->GetTexture(aiTextureType_NORMALS, 0, &aiTextureFilepath);
+			aiString aiTextureFilepath;
+			aiMaterial->GetTexture(aiTextureType_NORMALS, 0, &aiTextureFilepath);
 
-			//// データの保存
-			//std::shared_ptr<Texture> texture = collection_->ImportPtr<Texture>(directory / aiTextureFilepath.C_Str()); //!< todo: observerに変更
-			//texture->Load(context);
-			//material.textures_[static_cast<uint8_t>(TextureType::Bump)] = texture;
+			// データの保存
+			material.textures_[static_cast<uint8_t>(TextureType::Bump)] = std::make_unique<Texture>();
+			material.textures_[static_cast<uint8_t>(TextureType::Bump)]->Load(context, directory / aiTextureFilepath.C_Str());
 		}
 	}
 }

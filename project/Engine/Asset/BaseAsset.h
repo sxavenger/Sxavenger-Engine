@@ -1,14 +1,33 @@
 #pragma once
 
 //-----------------------------------------------------------------------------------------
-// forward
+// include
 //-----------------------------------------------------------------------------------------
-class AssetCollection;
+//* engine
+#include <Engine/System/DirectX/DirectXContext.h>
+
+//* lib
+#include <Lib/CXXAttributeConfig.h>
+
+//* c++
+#include <filesystem>
+#include <concepts>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Base Asset class
 ////////////////////////////////////////////////////////////////////////////////////////////
 class BaseAsset {
+public:
+
+	////////////////////////////////////////////////////////////////////////////////////////////
+	// State enum class
+	////////////////////////////////////////////////////////////////////////////////////////////
+	enum class State {
+		Unloaded,
+		Loading,
+		Complete
+	};
+
 public:
 
 	//=========================================================================================
@@ -18,13 +37,30 @@ public:
 	BaseAsset()          = default;
 	virtual ~BaseAsset() = default;
 
-	//* getter *//
+	virtual void Load(_MAYBE_UNUSED const DirectXThreadContext* context) = 0;
 
-	AssetCollection* GetCollection() const;
+	bool IsComplete() const { return state_ == State::Complete; }
 
-	//* setter *//
+	void WaitComplete() const;
 
-	void SetCollection(AssetCollection* collection) { collection_ = collection; }
+
+protected:
+
+	//=========================================================================================
+	// protected variables
+	//=========================================================================================
+
+	//* input parameter *//
+
+	std::filesystem::path filepath_ = {};
+
+	//=========================================================================================
+	// protected methods
+	//=========================================================================================
+
+	bool CheckAndBeginLoad();
+
+	void EndLoad() { state_ = State::Complete; }
 
 private:
 
@@ -32,6 +68,14 @@ private:
 	// private variables
 	//=========================================================================================
 
-	AssetCollection* collection_ = nullptr;
+	//* state *//
+
+	State state_ = State::Unloaded;
 
 };
+
+////////////////////////////////////////////////////////////////////////////////////////////
+// concept
+////////////////////////////////////////////////////////////////////////////////////////////
+template <class T>
+concept BaseAssetConcept = std::derived_from<T, BaseAsset>;

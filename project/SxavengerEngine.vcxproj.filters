@@ -106,9 +106,6 @@
     <ClCompile Include="Demo\Objects\ChessBoard.cpp" />
     <ClCompile Include="Demo\DemoModelRender.cpp" />
     <ClCompile Include="Demo\Objects\DemoHuman.cpp" />
-    <ClCompile Include="Engine\System\Runtime\Performance\TimePoint.cpp" />
-    <ClCompile Include="Engine\System\Runtime\Performance\Performance.cpp" />
-    <ClCompile Include="Engine\System\Runtime\Performance\RunTimeTracker.cpp" />
     <ClCompile Include="Engine\!Render\FSceneTextures.cpp" />
     <ClCompile Include="Engine\!Render\FSceneDepth.cpp" />
     <ClCompile Include="Engine\!Render\FScene.cpp" />
@@ -125,6 +122,21 @@
     <ClCompile Include="Engine\Content\Animation\Animation.cpp" />
     <ClCompile Include="Engine\Asset\BaseAsset.cpp" />
     <ClCompile Include="Engine\Asset\Animator\Animator.cpp" />
+    <ClCompile Include="Engine\Adapter\Particle\Emitter.cpp" />
+    <ClCompile Include="Engine\Asset\AssetCollection.cpp" />
+    <ClCompile Include="Engine\Content\SxavengerContent.cpp" />
+    <ClCompile Include="Engine\Content\TextureBuffer\BaseOffscreenTexture.cpp" />
+    <ClCompile Include="Engine\Content\TextureBuffer\DepthTexture.cpp" />
+    <ClCompile Include="Engine\Content\TextureBuffer\MultiViewTextureBuffer.cpp" />
+    <ClCompile Include="Engine\Content\TextureBuffer\OffscreenTextureCollection.cpp" />
+    <ClCompile Include="Engine\Content\TextureBuffer\RenderTexture.cpp" />
+    <ClCompile Include="Engine\Content\TextureBuffer\UnorderedTexture.cpp" />
+    <ClCompile Include="Engine\Asset\Texture\AssetTexture.cpp" />
+    <ClCompile Include="Engine\Asset\Model\AssetModel.cpp" />
+    <ClCompile Include="Engine\Asset\Animator\AssetAnimator.cpp" />
+    <ClCompile Include="Engine\Asset\Unknown\AssetUnknown.cpp" />
+    <ClCompile Include="Engine\Asset\Blob\AssetBlob.cpp" />
+    <ClCompile Include="Engine\Asset\Thread\AsyncAssetThread.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\System\Window\Window.h" />
@@ -233,9 +245,6 @@
     <ClInclude Include="Demo\Objects\ChessBoard.h" />
     <ClInclude Include="Demo\DemoModelRender.h" />
     <ClInclude Include="Demo\Objects\DemoHuman.h" />
-    <ClInclude Include="Engine\System\Runtime\Performance\TimePoint.h" />
-    <ClInclude Include="Engine\System\Runtime\Performance\Performance.h" />
-    <ClInclude Include="Engine\System\Runtime\Performance\RunTimeTracker.h" />
     <ClInclude Include="Engine\!Render\FSceneTextures.h" />
     <ClInclude Include="Engine\!Render\FSceneDepth.h" />
     <ClInclude Include="Engine\!Render\FScene.h" />
@@ -254,5 +263,20 @@
     <ClInclude Include="Engine\Content\Animation\BornNode.h" />
     <ClInclude Include="Engine\Asset\BaseAsset.h" />
     <ClInclude Include="Engine\Asset\Animator\Animator.h" />
+    <ClInclude Include="Engine\Adapter\Particle\Emitter.h" />
+    <ClInclude Include="Engine\Asset\AssetCollection.h" />
+    <ClInclude Include="Engine\Content\SxavengerContent.h" />
+    <ClInclude Include="Engine\Content\TextureBuffer\BaseOffscreenTexture.h" />
+    <ClInclude Include="Engine\Content\TextureBuffer\DepthTexture.h" />
+    <ClInclude Include="Engine\Content\TextureBuffer\MultiViewTextureBuffer.h" />
+    <ClInclude Include="Engine\Content\TextureBuffer\OffscreenTextureCollection.h" />
+    <ClInclude Include="Engine\Content\TextureBuffer\RenderTexture.h" />
+    <ClInclude Include="Engine\Content\TextureBuffer\UnorderedTexture.h" />
+    <ClInclude Include="Engine\Asset\Texture\AssetTexture.h" />
+    <ClInclude Include="Engine\Asset\Model\AssetModel.h" />
+    <ClInclude Include="Engine\Asset\Animator\AssetAnimator.h" />
+    <ClInclude Include="Engine\Asset\Unknown\AssetUnknown.h" />
+    <ClInclude Include="Engine\Asset\Blob\AssetBlob.h" />
+    <ClInclude Include="Engine\Asset\Thread\AsyncAssetThread.h" />
   </ItemGroup>
 </Project>

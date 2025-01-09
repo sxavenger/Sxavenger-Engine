@@ -6,33 +6,31 @@
 //* engine
 #include <Engine/System/Utility/ComPtr.h>
 #include <Engine/System/DirectX/DxObject/DxDescriptor.h>
-#include <Engine/System/DirectX/DirectXContext.h>
 
-//* DirectX12
-#include <d3dx12.h>
-#include <DirectXTex.h>
+//* lib
+#include <Lib/Geometry/Vector2.h>
 
 //* c++
-#include <filesystem>
+#include <concepts>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// Texture class
+// Base OffscreenTexture class
 ////////////////////////////////////////////////////////////////////////////////////////////
-class Texture {
+class BaseOffscreenTexture {
 public:
 
 	//=========================================================================================
 	// public methods
 	//=========================================================================================
 
-	Texture()  = default;
-	~Texture() { Term(); }
-
-	void Load(const DirectXThreadContext* context, const std::filesystem::path& filepath);
+	BaseOffscreenTexture()  = default;
+	~BaseOffscreenTexture() { Term(); }
 
 	void Term();
 
 	//* getter *//
+
+	ID3D12Resource* GetResource() const { return resource_.Get(); }
 
 	const D3D12_GPU_DESCRIPTOR_HANDLE& GetGPUHandleSRV() const { return descriptorSRV_.GetGPUHandle(); }
 
@@ -40,32 +38,29 @@ public:
 
 	const DXGI_FORMAT GetFormat() const { return format_; }
 
-private:
+protected:
 
 	//=========================================================================================
-	// private variables
+	// protected variables
 	//=========================================================================================
 
-	//* DirectX12 *// 
+	//* DirectX12 *//
 
 	ComPtr<ID3D12Resource> resource_;
-	DxObject::Descriptor   descriptorSRV_;
 
-	ComPtr<ID3D12Resource> intermediate_; // FIXME: 中管リソースを不要に.
+	//* descriptor *//
+
+	DxObject::Descriptor descriptorSRV_;
 
 	//* parameter *//
 
 	Vector2ui   size_;
 	DXGI_FORMAT format_;
 
-	//=========================================================================================
-	// private methods
-	//=========================================================================================
-
-	static DirectX::ScratchImage LoadTexture(const std::filesystem::path& filepath);
-
-	static ComPtr<ID3D12Resource> CreateTextureResource(ID3D12Device* device, const DirectX::TexMetadata& metadata);
-
-	static _NODISCARD ComPtr<ID3D12Resource> UploadTextureData(ID3D12Resource* texture, const DirectX::ScratchImage& mipImages, ID3D12Device* device, ID3D12GraphicsCommandList* commandList);
-
 };
+
+////////////////////////////////////////////////////////////////////////////////////////////
+// concept
+////////////////////////////////////////////////////////////////////////////////////////////
+template <class T>
+concept BaseOffscreenTextureConcept = std::is_base_of_v<BaseOffscreenTexture, T>;

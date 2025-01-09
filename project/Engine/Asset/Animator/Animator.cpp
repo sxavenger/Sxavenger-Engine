@@ -14,7 +14,7 @@ void Animator::Load(const std::filesystem::path& filepath, uint32_t assimpOption
 
 	// sceneの取得
 	Assimp::Importer importer; //!< scene保存するため保管
-	const aiScene* aiScene = importer.ReadFile(filepath.generic_string().c_str(), assimpOption_);
+	const aiScene* aiScene = importer.ReadFile(filepath.generic_string().c_str(), assimpOption);
 
 	Assert(aiScene != nullptr, "animatior load failed. filepath: " + filepath.generic_string(), importer.GetErrorString());
 
@@ -53,12 +53,12 @@ const Animation& Animator::GetAnimation(const std::string& name) const {
 	return GetAnimation(index);
 }
 
-const DeltaTimePoint<TimeUnit::s> Animator::GetDurationTime(const std::string& name) const {
+const TimePointf<TimeUnit::second> Animator::GetDurationTime(const std::string& name) const {
 	uint32_t index = GetAnimationIndex(name);
 	return GetDurationTime(index);
 }
 
-DeltaTimePoint<TimeUnit::s> Animator::GetTime(double time, double ticksPerSeconds) {
+TimePointf<TimeUnit::second> Animator::GetTime(double time, double ticksPerSeconds) {
 	return { static_cast<float>(time / ticksPerSeconds) };
 }
 

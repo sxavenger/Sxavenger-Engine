@@ -1,4 +1,5 @@
 #include "AssetCollection.h"
+#include "AssetCollection.h"
 
 //-----------------------------------------------------------------------------------------
 // include
@@ -15,6 +16,7 @@ void AssetCollection::Init() {
 
 	root_.first = "root";
 }
+
 
 void AssetCollection::ShowAssetTree() {
 

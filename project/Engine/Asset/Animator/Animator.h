@@ -3,9 +3,6 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
-//* asset
-#include "../BaseAsset.h"
-
 //* engine
 #include <Engine/Content/Animation/Animation.h>
 
@@ -20,8 +17,7 @@
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Animator class
 ////////////////////////////////////////////////////////////////////////////////////////////
-class Animator
-	: public BaseAsset {
+class Animator {
 public:
 
 	//=========================================================================================
@@ -42,8 +38,8 @@ public:
 	const Animation& GetAnimation(uint32_t index) const { return animations_[index]; }
 	const Animation& GetAnimation(const std::string& name) const;
 
-	const DeltaTimePoint<TimeUnit::s> GetDurationTime(uint32_t index) const { return animations_[index].duration; }
-	const DeltaTimePoint<TimeUnit::s> GetDurationTime(const std::string& name) const;
+	const TimePointf<TimeUnit::second> GetDurationTime(uint32_t index) const { return animations_[index].duration; }
+	const TimePointf<TimeUnit::second> GetDurationTime(const std::string& name) const;
 
 	const std::vector<Animation>& GetAnimations() const { return animations_; }
 
@@ -58,15 +54,11 @@ private:
 	std::vector<Animation>                    animations_;
 	std::unordered_map<std::string, uint32_t> animationMap_; //!< key: name, value: animation index
 
-	//* input parameter *//
-
-	uint32_t assimpOption_ = 0;
-
 	//=========================================================================================
 	// private methods
 	//=========================================================================================
 
-	static DeltaTimePoint<TimeUnit::s> GetTime(double time, double ticksPerSeconds);
+	static TimePointf<TimeUnit::second> GetTime(double time, double ticksPerSeconds);
 
 	void LoadTransformAnimation(const aiNodeAnim* aiNodeAnimation, Animation& animation, double tickPerSeconds);
 
