@@ -109,6 +109,8 @@ public:
 
 	bool CheckCollisionTarget(const Collider* const other) const;
 
+	bool CheckTypeId(ColliderType type) const { return typeId_.test(static_cast<uint32_t>(type)); }
+
 	//* active method *//
 
 	void SetIsActive(bool isActive) { isActive_ = isActive; }
