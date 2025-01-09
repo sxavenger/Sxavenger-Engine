@@ -168,6 +168,9 @@ void RenderConsole::PresentToScreen(GameWindow* window, const DirectXThreadConte
 }
 
 void RenderConsole::Manipulate(ImGuizmo::OPERATION operation, ImGuizmo::MODE mode, TransformComponent* component) {
+	if (component->HasParent()) {
+		return;
+	}
 
 	ImGuizmo::SetRect(sceneRect_.pos.x, sceneRect_.pos.y, sceneRect_.size.x, sceneRect_.size.y);
 

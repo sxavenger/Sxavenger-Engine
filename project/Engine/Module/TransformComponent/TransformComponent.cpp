@@ -18,7 +18,7 @@ void BaseTransformComponent::CreateBuffer() {
 }
 
 void BaseTransformComponent::Transfer() {
-	if (parent_ != nullptr) {
+	if (HasParent()) {
 		mat_ *= parent_->mat_;
 	}
 
