@@ -14,15 +14,13 @@
 // JsonAdapter class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-json JsonAdapter::LoadFromJson(const std::filesystem::path& filename) {
-	json result;
+json JsonAdapter::LoadFromJson(const std::filesystem::path& filepath) {
 
-	// ファイルパスの生成
-	std::filesystem::path filepath = kJsonDirectory / filename;
+	json result;
 
 	// ファイル
 	std::ifstream ifs(filepath);
-	Assert(!ifs.fail(), "JsonAdapter failed open file. filename: " + filename.string());
+	Assert(!ifs.fail(), "JsonAdapter failed open file. filepath: " + filepath.string());
 
 	ifs >> result;
 
@@ -31,10 +29,7 @@ json JsonAdapter::LoadFromJson(const std::filesystem::path& filename) {
 	return result;
 }
 
-bool JsonAdapter::TryLoadFromJson(const std::filesystem::path& filename, json& out) {
-	// ファイルパスの生成
-	std::filesystem::path filepath = kJsonDirectory / filename;
-
+bool JsonAdapter::TryLoadFromJson(const std::filesystem::path& filepath, json& out) {
 	// ファイル
 	std::ifstream ifs(filepath);
 
@@ -49,10 +44,7 @@ bool JsonAdapter::TryLoadFromJson(const std::filesystem::path& filename, json& o
 	return true;
 }
 
-void JsonAdapter::WriteToJson(const std::filesystem::path& filename, const json& data) {
-	// ファイルパスの生成
-	std::filesystem::path filepath = kJsonDirectory / filename;
-
+void JsonAdapter::WriteToJson(const std::filesystem::path& filepath, const json& data) {
 	std::ofstream ofs(filepath);
 	ofs << std::setfill('\t') << std::setw(1) << data << std::endl;
 	ofs.close();

@@ -39,20 +39,20 @@ void MaterialComponent::SetImGuiCommand() {
 
 json MaterialComponent::OutputJson() {
 	json root = json::object();
-	root["scale"]     = IJsonSerializer::ToJson(uvTransform_.scale);
+	root["scale"]     = GeometryJsonSerializer::ToJson(uvTransform_.scale);
 	root["rotate"]    = uvTransform_.rotate;
-	root["translate"] = IJsonSerializer::ToJson(uvTransform_.translate);
-	root["color"]     = IJsonSerializer::ToJson(color_);
+	root["translate"] = GeometryJsonSerializer::ToJson(uvTransform_.translate);
+	root["color"]     = GeometryJsonSerializer::ToJson(color_);
 
 	return root;
 }
 
 void MaterialComponent::InputJson(const json& data) {
-	uvTransform_.scale     = IJsonSerializer::JsonToVector2f(data.at("scale"));
+	uvTransform_.scale     = GeometryJsonSerializer::JsonToVector2f(data.at("scale"));
 	uvTransform_.rotate    = data.at("rotate");
-	uvTransform_.translate = IJsonSerializer::JsonToVector2f(data.at("translate"));
+	uvTransform_.translate = GeometryJsonSerializer::JsonToVector2f(data.at("translate"));
 
-	color_ = IJsonSerializer::JsonToColor4f(data.at("color"));
+	color_ = GeometryJsonSerializer::JsonToColor4f(data.at("color"));
 
 	Transfer();
 }

@@ -7,6 +7,7 @@
 #include "BaseAsset.h"
 #include "Unknown/AssetUnknown.h"
 #include "Texture/Texture.h"
+#include "Json/AssetJson.h"
 #include "ModelAnimator/ModelAnimator.h"
 #include "Blob/AssetBlob.h"
 #include "Thread/AsyncAssetThreadCollection.h"
@@ -37,6 +38,7 @@ public:
 		Texture,
 		ModelAnimator,
 		Shader,
+		Json,
 	};
 
 	////////////////////////////////////////////////////////////////////////////////////////////
