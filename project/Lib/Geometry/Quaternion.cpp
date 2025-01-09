@@ -113,7 +113,7 @@ Quaternion operator+(const Quaternion& q, const Quaternion& r) {
 
 Quaternion operator*(const Quaternion& q, const Quaternion& r) {
 
-	Quaternion result;
+	Quaternion result = {};
 
 	ImaginaryVector3 cross = CrossVector(q, r);
 	float dot = DotVector(q, r);
