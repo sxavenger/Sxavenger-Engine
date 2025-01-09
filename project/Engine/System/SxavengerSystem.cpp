@@ -123,6 +123,18 @@ Input* SxavengerSystemEngine::GetInput() {
 	return sInput.get();
 }
 
+const KeyboardInput* SxavengerSystemEngine::GetKeyboardInput() {
+	return GetInput()->GetKeyboardInput();
+}
+
+const MouseInput* SxavengerSystemEngine::GetMouseInput() {
+	return GetInput()->GetMouseInput();
+}
+
+const GamepadInput* SxavengerSystemEngine::GetGamepadInput(uint8_t number) {
+	return GetInput()->GetGamepadInput(number);
+}
+
 void SxavengerSystemEngine::BeginPerformace() {
 	sPerformance->Begin();
 }

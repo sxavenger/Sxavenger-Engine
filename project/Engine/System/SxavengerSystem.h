@@ -82,6 +82,12 @@ public:
 
 	static Input* GetInput();
 
+	static const KeyboardInput* GetKeyboardInput();
+
+	static const MouseInput* GetMouseInput();
+
+	static const GamepadInput* GetGamepadInput(uint8_t number);
+
 	//-----------------------------------------------------------------------------------------
 	// Performance option
 	//-----------------------------------------------------------------------------------------
