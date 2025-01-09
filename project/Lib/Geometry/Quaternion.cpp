@@ -64,6 +64,32 @@ Quaternion Quaternion::Inverse() const {
 	return { conj.x / norm2, conj.y / norm2, conj.z / norm2, conj.w / norm2 };
 }
 
+Vector3f Quaternion::ToEuler() const {
+
+	Vector3f euler = {};
+
+	// Roll (x-axis rotation)
+	float sinr_cosp = 2 * (w * x + y * z);
+	float cosr_cosp = 1 - 2 * (x * x + y * y);
+	euler.x = std::atan2(sinr_cosp, cosr_cosp);
+
+	// Pitch (y-axis rotation)
+	float sinp = 2 * (w * y - z * x);
+	if (std::abs(sinp) >= 1) {
+		euler.y = std::copysign(pi_v * 0.5f, sinp); // use 90 degrees if out of range
+
+	} else {
+		euler.y = std::asin(sinp);
+	}
+
+	// Yaw (z-axis rotation)
+	float siny_cosp = 2 * (w * z + x * y);
+	float cosy_cosp = 1 - 2 * (y * y + z * z);
+	euler.z = std::atan2(siny_cosp, cosy_cosp);
+
+	return euler;
+}
+
 Quaternion& Quaternion::operator*=(const Quaternion& q) {
 
 	Quaternion result;
