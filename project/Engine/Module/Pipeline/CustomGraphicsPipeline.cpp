@@ -17,10 +17,8 @@ void BaseCustomGraphicsPipeline::SetAsset(const std::optional<AssetObserver<Asse
 }
 
 void BaseCustomGraphicsPipeline::CreateAsset(const std::filesystem::path& filepath, DxObject::GraphicsShaderType type) {
+	// TODO: profile set
 	AssetObserver<AssetBlob> observer = SxavengerAsset::TryImport<AssetBlob>(filepath);
-	observer.Lock()->SetProfile(ToProfile(type));
-	observer.Lock()->Load(nullptr);
-
 	SetAsset(observer, type);
 }
 
@@ -51,7 +49,7 @@ bool BaseCustomGraphicsPipeline::CheckAsset() const {
 void CustomGraphicsPipeline::RegisterBlob() {
 	for (uint8_t i = 0; i < assets_.size(); ++i) {
 		if (assets_[i].has_value()) {
-			SetBlob(assets_[i].value().Lock()->GetBlob(), static_cast<GraphicsShaderType>(i));
+			SetBlob(*assets_[i].value().WaitGet(), static_cast<GraphicsShaderType>(i));
 
 		} else {
 			blobs_[i] = std::nullopt;
@@ -71,7 +69,6 @@ void CustomGraphicsPipeline::ReloadAndSetPipeline(const DirectXThreadContext* co
 
 void CustomGraphicsPipeline::CheckAndReload() {
 	if (CheckAsset()) {
-		ReloadAsset();
 		RegisterBlob();
 		GraphicsPipelineState::CreateDirectXPipeline(SxavengerSystem::GetDxDevice());
 	}
@@ -84,7 +81,7 @@ void CustomGraphicsPipeline::CheckAndReload() {
 void CustomReflectionGraphicsPipeline::RegisterBlob() {
 	for (uint8_t i = 0; i < assets_.size(); ++i) {
 		if (assets_[i].has_value()) {
-			SetBlob(assets_[i].value().Lock()->GetBlob(), static_cast<GraphicsShaderType>(i));
+			SetBlob(*assets_[i].value().WaitGet(), static_cast<GraphicsShaderType>(i));
 
 		} else {
 			blobs_[i] = std::nullopt;
@@ -104,7 +101,6 @@ void CustomReflectionGraphicsPipeline::ReloadAndSetPipeline(const DirectXThreadC
 
 void CustomReflectionGraphicsPipeline::CheckAndReload() {
 	if (CheckAsset()) {
-		ReloadAsset();
 		RegisterBlob();
 		ReflectionGraphicsPipelineState::ReflectionRootSignature(SxavengerSystem::GetDxDevice());
 		ReflectionGraphicsPipelineState::CreateDirectXPipeline(SxavengerSystem::GetDxDevice());

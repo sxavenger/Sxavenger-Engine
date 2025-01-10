@@ -159,7 +159,7 @@ void ColliderDrawer::DrawSphere(const Vector3f& position, const CollisionBoundin
 		start *= sphere.radius;
 		end   *= sphere.radius;
 
-		SxavengerModule::DrawLine(start + position, end + position, color);
+		//SxavengerModule::DrawLine(start + position, end + position, color);
 	}
 
 	// xy軸の円
@@ -183,7 +183,7 @@ void ColliderDrawer::DrawSphere(const Vector3f& position, const CollisionBoundin
 		start *= sphere.radius;
 		end *= sphere.radius;
 
-		SxavengerModule::DrawLine(start + position, end + position, color);
+		//SxavengerModule::DrawLine(start + position, end + position, color);
 	}
 
 	// yz軸の円
@@ -207,7 +207,9 @@ void ColliderDrawer::DrawSphere(const Vector3f& position, const CollisionBoundin
 		start *= sphere.radius;
 		end *= sphere.radius;
 
-		SxavengerModule::DrawLine(start + position, end + position, color);
+		position;
+		color;
+		//SxavengerModule::DrawLine(start + position, end + position, color);
 	}
 
 }
@@ -242,8 +244,9 @@ void ColliderDrawer::DrawCapsule(const Vector3f& position, const CollisionBoundi
 		Vector3f nextPoint    = xAxis * nextX + zAxis * nextZ;
 
 		// 線を描画
-		SxavengerModule::DrawLine(currentPoint + topCenter, nextPoint + topCenter, color);
-		SxavengerModule::DrawLine(currentPoint + bottomCenter, nextPoint + bottomCenter, color);
+		color;
+		//SxavengerModule::DrawLine(currentPoint + topCenter, nextPoint + topCenter, color);
+		//SxavengerModule::DrawLine(currentPoint + bottomCenter, nextPoint + bottomCenter, color);
 	}
 
 	// xy軸円
@@ -260,8 +263,8 @@ void ColliderDrawer::DrawCapsule(const Vector3f& position, const CollisionBoundi
 		Vector3f nextPoint    = xAxis * nextX + capsule.direction * nextY;
 
 		// 線を描画
-		SxavengerModule::DrawLine((xAxis * x + capsule.direction * y) + topCenter, (xAxis * nextX + capsule.direction * nextY) + topCenter, color);
-		SxavengerModule::DrawLine((xAxis * x - capsule.direction * y) + bottomCenter, (xAxis * nextX - capsule.direction * nextY) + bottomCenter, color);
+		//SxavengerModule::DrawLine((xAxis * x + capsule.direction * y) + topCenter, (xAxis * nextX + capsule.direction * nextY) + topCenter, color);
+		//SxavengerModule::DrawLine((xAxis * x - capsule.direction * y) + bottomCenter, (xAxis * nextX - capsule.direction * nextY) + bottomCenter, color);
 	}
 
 	// xy軸円
@@ -278,14 +281,14 @@ void ColliderDrawer::DrawCapsule(const Vector3f& position, const CollisionBoundi
 		Vector3f nextPoint    = zAxis * nextZ + capsule.direction * nextY;
 
 		// 線を描画
-		SxavengerModule::DrawLine((zAxis * z + capsule.direction * y) + topCenter, (zAxis * nextZ + capsule.direction * nextY) + topCenter, color);
-		SxavengerModule::DrawLine((zAxis * z - capsule.direction * y) + bottomCenter, (zAxis * nextZ - capsule.direction * nextY) + bottomCenter, color);
+		//SxavengerModule::DrawLine((zAxis * z + capsule.direction * y) + topCenter, (zAxis * nextZ + capsule.direction * nextY) + topCenter, color);
+		//SxavengerModule::DrawLine((zAxis * z - capsule.direction * y) + bottomCenter, (zAxis * nextZ - capsule.direction * nextY) + bottomCenter, color);
 	}
 
-	SxavengerModule::DrawLine(xAxis * capsule.radius + topCenter, xAxis * capsule.radius + bottomCenter, color);
-	SxavengerModule::DrawLine(-xAxis * capsule.radius + topCenter, -xAxis * capsule.radius + bottomCenter, color);
-	SxavengerModule::DrawLine(zAxis * capsule.radius + topCenter, zAxis * capsule.radius + bottomCenter, color);
-	SxavengerModule::DrawLine(-zAxis * capsule.radius + topCenter, -zAxis * capsule.radius + bottomCenter, color);
+	//SxavengerModule::DrawLine(xAxis * capsule.radius + topCenter, xAxis * capsule.radius + bottomCenter, color);
+	//SxavengerModule::DrawLine(-xAxis * capsule.radius + topCenter, -xAxis * capsule.radius + bottomCenter, color);
+	//SxavengerModule::DrawLine(zAxis * capsule.radius + topCenter, zAxis * capsule.radius + bottomCenter, color);
+	//SxavengerModule::DrawLine(-zAxis * capsule.radius + topCenter, -zAxis * capsule.radius + bottomCenter, color);
 }
 
 void ColliderDrawer::DrawAABB(const Vector3f& position, const CollisionBoundings::AABB& aabb, const Color4f& color) {
@@ -314,9 +317,12 @@ void ColliderDrawer::DrawAABB(const Vector3f& position, const CollisionBoundings
 
 	for (int i = 0; i < 4; ++i) {
 		int next = (i + 1) % 4;
-		SxavengerModule::DrawLine(pos[i] + position, pos[next] + position, color);
-		SxavengerModule::DrawLine(pos[i + 4] + position, pos[next + 4] + position, color);
-		SxavengerModule::DrawLine(pos[i] + position, pos[i + 4] + position, color);
+		next;
+		position;
+		color;
+		//SxavengerModule::DrawLine(pos[i] + position, pos[next] + position, color);
+		//SxavengerModule::DrawLine(pos[i + 4] + position, pos[next + 4] + position, color);
+		//SxavengerModule::DrawLine(pos[i] + position, pos[i + 4] + position, color);
 	}
 }
 
@@ -343,9 +349,11 @@ void ColliderDrawer::DrawOBB(const Vector3f& position, const CollisionBoundings:
 
 	for (int i = 0; i < 4; ++i) {
 		int next = (i + 1) % 4;
-		SxavengerModule::DrawLine(pos[i], pos[next], color);
-		SxavengerModule::DrawLine(pos[i + 4], pos[next + 4], color);
-		SxavengerModule::DrawLine(pos[i], pos[i + 4], color);
+		next;
+		color;
+		//SxavengerModule::DrawLine(pos[i], pos[next], color);
+		//SxavengerModule::DrawLine(pos[i + 4], pos[next + 4], color);
+		//SxavengerModule::DrawLine(pos[i], pos[i + 4], color);
 	}
 }
 

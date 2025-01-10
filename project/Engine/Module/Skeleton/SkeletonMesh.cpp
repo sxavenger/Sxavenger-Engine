@@ -12,7 +12,8 @@ _DXOBJECT_USING
 // SkeletonMesh class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-void SkeletonMesh::Create(const std::shared_ptr<Model>& model) {
+void SkeletonMesh::Create(const std::shared_ptr<AssetModel>& model) {
+	model->WaitComplete();
 
 	// 引数の保存
 	model_ = model;

@@ -6,6 +6,7 @@
 
 //* engine
 #include <Engine/System/Window/GameWindow.h>
+#include <Engine/Asset/AssetCollection.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // BetaSystemGameLoop class
@@ -31,6 +32,10 @@ private:
 	std::shared_ptr<GameWindow> main_;
 
 	//* render system *//
+
+	AssetObserver<AssetModel> assetA_;
+	AssetObserver<AssetModel> assetB_;
+	AssetObserver<AssetAnimator> assetC_;
 
 	//=========================================================================================
 	// private methods

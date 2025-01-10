@@ -23,6 +23,10 @@ public:
 
 	void Load(const DirectXThreadContext* context) override;
 
+	//* setter *//
+
+	void SetAssimpOption(uint32_t option) { assimpOption_ = option; }
+
 private:
 
 	//=========================================================================================

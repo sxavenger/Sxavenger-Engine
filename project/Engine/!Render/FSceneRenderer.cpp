@@ -24,7 +24,7 @@ void FSceneRenderer::RenderOpaque(const DirectXThreadContext* context) {
 	for (auto geometry : geometries) {
 		if (geometry->GetTransparency() == AGeometryActor::Transparency::Opaque) {
 			// todo: render opaque
-			geometry->Render();
+			geometry->RenderOpaque();
 		}
 	}
 
@@ -39,7 +39,7 @@ void FSceneRenderer::RenderTransparent(const DirectXThreadContext* context) {
 	for (auto geometry : geometries) {
 		if (geometry->GetTransparency() == AGeometryActor::Transparency::Transparent) {
 			// todo: render transparent
-			geometry->Render();
+			geometry->RenderTransparent();
 		}
 	};
 }

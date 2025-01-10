@@ -7,7 +7,7 @@
 #include "../AGeometryActor.h"
 
 //* engine
-#include <Engine/Asset/ModelAnimator/Model/Model.h>
+//#include <Engine/Asset/ModelAnimator/Model/Model.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // AModelActor class
@@ -36,7 +36,7 @@ protected:
 	// protected variables
 	//=========================================================================================
 
-	std::shared_ptr<Model> model_;
+	//std::shared_ptr<Model> model_;
 	// hack: observer
 
 };

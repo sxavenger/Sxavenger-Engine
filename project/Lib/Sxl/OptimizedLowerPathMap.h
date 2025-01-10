@@ -45,6 +45,7 @@ public:
 	void Erase(const _Key& key) override;
 
 	const _Value& At(const _Key& key) const override;
+	_Value& At(const _Key& key) override;
 
 	//=========================================================================================
 	// operator
@@ -63,42 +64,47 @@ private:
 
 };
 
-template<class _Value>
+template <class _Value>
 inline void OptimizedLowerPathMap<_Value>::Emplace(const _Key& key, const _Value& value) {
 	OptimizedMap<std::filesystem::path, _Value>::Emplace(ToLower(key), value);
 }
 
-template<class _Value>
+template <class _Value>
 inline void OptimizedLowerPathMap<_Value>::TryEmplace(const _Key& key, const _Value& value) {
 	OptimizedMap<std::filesystem::path, _Value>::TryEmplace(ToLower(key), value);
 }
 
-template<class _Value>
+template <class _Value>
 inline bool OptimizedLowerPathMap<_Value>::Contains(const _Key& key) const {
 	return OptimizedMap<std::filesystem::path, _Value>::Contains(ToLower(key));
 }
 
-template<class _Value>
+template <class _Value>
 inline void OptimizedLowerPathMap<_Value>::Erase(const _Key& key) {
 	OptimizedMap<std::filesystem::path, _Value>::Erase(ToLower(key));
 }
 
-template<class _Value>
+template <class _Value>
 inline const _Value& OptimizedLowerPathMap<_Value>::At(const _Key& key) const {
 	return OptimizedMap<std::filesystem::path, _Value>::At(ToLower(key));
 }
 
 template<class _Value>
+inline _Value& OptimizedLowerPathMap<_Value>::At(const _Key& key) {
+	return OptimizedMap<std::filesystem::path, _Value>::At(ToLower(key));
+}
+
+template <class _Value>
 inline _Value& OptimizedLowerPathMap<_Value>::operator[](const _Key& key) {
 	return OptimizedMap<std::filesystem::path, _Value>::operator[](ToLower(key));
 }
 
-template<class _Value>
+template <class _Value>
 inline const _Value& OptimizedLowerPathMap<_Value>::operator[](const _Key& key) const {
 	return OptimizedMap<std::filesystem::path, _Value>::operator[](ToLower(key));
 }
 
-template<class _Value>
+template <class _Value>
 inline OptimizedLowerPathMap<_Value>::_Key OptimizedLowerPathMap<_Value>::ToLower(const _Key& key) {
 	_Key lowerpath;
 

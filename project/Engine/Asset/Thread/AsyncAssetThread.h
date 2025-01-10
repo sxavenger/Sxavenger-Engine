@@ -9,6 +9,7 @@
 //* engine
 #include <Engine/System/DirectX/DirectXContext.h>
 #include <Engine/System/UI/ISystemDebugGui.h>
+#include <Engine/System/Runtime/Performance/RunTimeTracker.h>
 
 //* c++
 #include <thread>
@@ -30,7 +31,11 @@ public:
 	std::thread thread;
 	std::shared_ptr<BaseAsset> task;
 
+	RunTimeTracker runtime;
+
 	//* method *//
+
+	void Init();
 
 	void SystemDebugGui() override;
 
@@ -78,6 +83,6 @@ private:
 
 	//* task queue *//
 
-	std::queue<std::shared_ptr<BaseAsset>> tasks_;
+	std::queue<std::weak_ptr<BaseAsset>> tasks_;
 
 };

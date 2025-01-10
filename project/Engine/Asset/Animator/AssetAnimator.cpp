@@ -6,7 +6,7 @@
 
 void AssetAnimator::Load(_MAYBE_UNUSED const DirectXThreadContext* context) {
 	if (CheckAndBeginLoad()) {
-		Animator::Load(filepath_);
+		Animator::Load(filepath_, assimpOption_);
 		EndLoad();
 	}
 }

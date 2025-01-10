@@ -27,7 +27,7 @@ const uint32_t Model::kDefaultAssimpOption_
 // Model class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-void Model::Load(const DirectXThreadContext* context, const std::filesystem::path& filepath, uint32_t assimpOption = kDefaultAssimpOption_) {
+void Model::Load(const DirectXThreadContext* context, const std::filesystem::path& filepath, uint32_t assimpOption) {
 
 	// sceneの取得
 	Assimp::Importer importer; //!< scene保存するため保管

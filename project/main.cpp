@@ -9,7 +9,7 @@
 #include <Engine/GameLoop/EngineGameLoop.h>
 #include <Engine/GameLoop/BetaSystemGameLoop.h>
 #include <Engine/GameLoop/ConsoleGameLoop.h>
-#include <Demo/GameLoop/DemoGameLoop.h>
+//#include <Demo/GameLoop/DemoGameLoop.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // メイン関数

@@ -24,6 +24,10 @@ public:
 	~AssetBlob() = default;
 
 	void Load(_MAYBE_UNUSED const DirectXThreadContext* context) override; //!< entry point は L"main"限定
+
+	//* setter *//
+
+	void SetProfile(DxObject::CompileProfile profile) { profile_ = profile; }
 	
 private:
 

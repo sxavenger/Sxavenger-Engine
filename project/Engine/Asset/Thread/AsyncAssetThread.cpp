@@ -6,11 +6,41 @@
 //* engine
 #include <Engine/System/Utility/Logger.h>
 
+//* external
+#include <imgui.h>
+
 ////////////////////////////////////////////////////////////////////////////////////////////
 // AsyncAssetThread structure methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
+void AsyncAssetThread::Init() {
+	DirectXThreadContext::Init(1);
+}
+
 void AsyncAssetThread::SystemDebugGui() {
+	std::stringstream ss = {};
+	ss << "[thread id]: " << thread.get_id() << " ";
+
+	bool isAvailable = (task == nullptr);
+	ss << std::format("[available]: {}", isAvailable) << " ";
+
+	if (isAvailable) {
+		ImGui::Text(ss.str().c_str());
+
+	} else {
+		ImGui::TextDisabled(ss.str().c_str());
+
+		// detail
+		if (ImGui::BeginItemTooltip()) {
+			ImGui::SeparatorText("thread details");
+
+			ImGui::Text(std::format("[runtime]: {:.1f}sec", runtime.GetElapsedTime<TimeUnit::second>().time).c_str());
+			ImGui::Text(std::format("[task] filepath: {}, ptr: {}", task->GetFilepath().generic_string(), reinterpret_cast<const void*>(task.get())).c_str());
+
+			ImGui::EndTooltip();
+		}
+	}
+
 }
 
 void AsyncAssetThread::Execute() {
@@ -18,8 +48,12 @@ void AsyncAssetThread::Execute() {
 		return;
 	}
 
+	runtime.Begin();
+
 	task->Load(this);
 	task = nullptr;
+
+	runtime.End();
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -28,6 +62,7 @@ void AsyncAssetThread::Execute() {
 
 void AsyncAssetThreadCollection::Init() {
 	for (auto& thread : threads_) {
+		thread.Init();
 		thread.thread = std::thread([this, &thread]() {
 			ThreadLog("[AsyncAssetThread]: Begin.");
 
@@ -36,13 +71,20 @@ void AsyncAssetThreadCollection::Init() {
 					std::unique_lock<std::mutex> lock(mutex_);
 					condition_.wait(lock, [this]() { return isExit_ || !tasks_.empty(); });
 
-					
 					if (isExit_) { 
 						break; //!< threadの終了 
 					}
 
-					thread.task = tasks_.front();
-					tasks_.pop();
+					while (!tasks_.empty()) {
+						auto front = tasks_.front();
+						tasks_.pop();
+
+						if (!front.expired()) {
+							thread.task = front.lock();
+							break;
+						}
+					}
+					
 				}
 
 				thread.Execute();
@@ -63,6 +105,13 @@ void AsyncAssetThreadCollection::Term() {
 }
 
 void AsyncAssetThreadCollection::SystemDebugGui() {
+	ImGui::SeparatorText("async asset thread collection");
+	ImGui::Text(std::format("remain task queue size: {}", tasks_.size()).c_str());
+
+	ImGui::SeparatorText("threads");
+	for (auto& thread : threads_) {
+		thread.SystemDebugGui();
+	}
 }
 
 void AsyncAssetThreadCollection::PushTask(const std::shared_ptr<BaseAsset>& task) {

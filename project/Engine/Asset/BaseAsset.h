@@ -43,6 +43,13 @@ public:
 
 	void WaitComplete() const;
 
+	//* getter *//
+
+	const std::filesystem::path& GetFilepath() const { return filepath_; }
+
+	//* setter *//
+
+	void SetFilepath(const std::filesystem::path& filepath) { filepath_ = filepath; }
 
 protected:
 

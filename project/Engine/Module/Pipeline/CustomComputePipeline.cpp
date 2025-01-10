@@ -16,9 +16,8 @@ void BaseCustomComputePipeline::SetAsset(const std::optional<AssetObserver<Asset
 }
 
 void BaseCustomComputePipeline::CreateAsset(const std::filesystem::path& filepath) {
+	// TODO: profile set
 	AssetObserver<AssetBlob> observer = SxavengerAsset::TryImport<AssetBlob>(filepath);
-	observer.Lock()->SetProfile(DxObject::CompileProfile::cs);
-	observer.Lock()->Load(nullptr);
 	SetAsset(observer);
 }
 
@@ -42,7 +41,7 @@ bool BaseCustomComputePipeline::CheckAsset() const {
 
 void CustomComputePipeline::RegisterBlob() {
 	if (asset_.has_value()) {
-		SetBlob(asset_.value().Lock()->GetBlob());
+		SetBlob(*asset_.value().WaitGet());
 
 	} else {
 		blob_ = std::nullopt;
@@ -56,7 +55,6 @@ void CustomComputePipeline::ReloadAndSetPipeline(const DirectXThreadContext* con
 
 void CustomComputePipeline::CheckAndReload() {
 	if (CheckAsset()) {
-		ReloadAsset();
 		RegisterBlob();
 		ComputePipelineState::CreateDirectXPipeline(SxavengerSystem::GetDxDevice());
 	}
@@ -68,7 +66,7 @@ void CustomComputePipeline::CheckAndReload() {
 
 void CustomReflectionComputePipeline::RegisterBlob() {
 	if (asset_.has_value()) {
-		SetBlob(asset_.value().Lock()->GetBlob());
+		SetBlob(*asset_.value().WaitGet());
 
 	} else {
 		blob_ = std::nullopt;
@@ -82,7 +80,6 @@ void CustomReflectionComputePipeline::ReloadAndSetPipeline(const DirectXThreadCo
 
 void CustomReflectionComputePipeline::CheckAndReload() {
 	if (CheckAsset()) {
-		ReloadAsset();
 		RegisterBlob();
 		ReflectionComputePipelineState::ReflectionPipeline(SxavengerSystem::GetDxDevice());
 	}

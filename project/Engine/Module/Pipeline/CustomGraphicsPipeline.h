@@ -8,7 +8,7 @@
 #include <Engine/System/DirectX/DirectXContext.h>
 
 //* engine
-#include <Engine/Asset/AssetObserver.h>
+#include <Engine/Asset/Observer/AssetObserver.h>
 #include <Engine/Asset/Blob/AssetBlob.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
