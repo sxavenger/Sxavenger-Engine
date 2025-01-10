@@ -4,7 +4,7 @@
 // include
 //-----------------------------------------------------------------------------------------
 //* engine
-#include <Engine/Module/TransformComponent/TransformComponent.h>
+#include <Engine/Module/Component/TransformComponent.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // AActor class

@@ -12,6 +12,9 @@
 #include <Lib/Geometry/Vector4.h>
 #include <Lib/Geometry/Quaternion.h>
 
+//* c++
+#include <concepts>
+
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Interface JsonSerialzer class
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -26,7 +29,17 @@ public:
 
 	virtual void InputJson(const json& data) = 0;
 
-	//* serialize option *//
+};
+
+////////////////////////////////////////////////////////////////////////////////////////////
+// GeometryJsonSerializer class
+////////////////////////////////////////////////////////////////////////////////////////////
+struct GeometryJsonSerializer {
+public:
+
+	//=========================================================================================
+	// public methods
+	//=========================================================================================
 
 	static json ToJson(const Vector2f& v);
 	static Vector2f JsonToVector2f(const json& data);
@@ -43,4 +56,6 @@ public:
 	static json ToJson(const Quaternion& q);
 	static Quaternion JsonToQuaternion(const json& data);
 
+private:
 };
+

@@ -5,7 +5,6 @@
 //-----------------------------------------------------------------------------------------
 //* engine
 #include <Engine/System/SxavengerSystem.h>
-#include <Engine/System/Runtime/Performance/Performance.h>
 #include <Engine/Asset/SxavengerAsset.h>
 #include <Engine/Content/SxavengerContent.h>
 #include <Engine/Module/SxavengerModule.h>

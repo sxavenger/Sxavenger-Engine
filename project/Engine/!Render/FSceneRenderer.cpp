@@ -1,21 +1,33 @@
 #include "FSceneRenderer.h"
 
-
-
 ////////////////////////////////////////////////////////////////////////////////////////////
 // FSceneRenderer class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
+void FSceneRenderer::CreateTextures(const Vector2ui& size) {
+	textures_ = std::make_unique<FSceneTextures>();
+	textures_->Create(size);
+}
+
 void FSceneRenderer::Render(const DirectXThreadContext* context) {
-	if (scene_ == nullptr || view_ == nullptr) { //!< scene or view is not set
+	if (scene_ == nullptr || camera_ == nullptr) { //!< scene or view is not set
 		return;
 	}
 
-	RenderOpaque(context);
-	RenderTransparent(context);
+	//* ベースパス
+	RenderOpaqueGeometries(context);
+
+	//* 合成処理
+	// todo:
+
+	//* 透明パス
+	RenderTransparentGeometries(context);
+
+	//* ポストプロセス
+	// todo:
 }
 
-void FSceneRenderer::RenderOpaque(const DirectXThreadContext* context) {
+void FSceneRenderer::RenderOpaqueGeometries(const DirectXThreadContext* context) {
 	context;
 
 	const auto& geometries = scene_->GetGeometries();
@@ -30,7 +42,7 @@ void FSceneRenderer::RenderOpaque(const DirectXThreadContext* context) {
 
 }
 
-void FSceneRenderer::RenderTransparent(const DirectXThreadContext* context) {
+void FSceneRenderer::RenderTransparentGeometries(const DirectXThreadContext* context) {
 	context;
 
 	const auto& geometries = scene_->GetGeometries();

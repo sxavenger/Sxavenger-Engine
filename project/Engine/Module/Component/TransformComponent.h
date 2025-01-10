@@ -30,6 +30,12 @@ public:
 
 	void Transfer();
 
+	//* prent *//
+
+	void SetParent(const BaseTransformComponent* component) { parent_ = component; }
+
+	bool HasParent() const { return parent_ != nullptr; }
+
 	//* getter *//
 
 	const D3D12_GPU_VIRTUAL_ADDRESS& GetGPUVirtualAddress() const;
@@ -38,10 +44,6 @@ public:
 
 	const Matrix4x4& GetMatrix() const { return mat_; }
 	Matrix4x4& GetMatrix() { return mat_; }
-
-	//* setter *//
-
-	void SetParent(const BaseTransformComponent* component) { parent_ = component; }
 
 protected:
 

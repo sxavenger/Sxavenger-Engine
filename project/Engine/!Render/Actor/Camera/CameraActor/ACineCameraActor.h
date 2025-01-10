@@ -4,36 +4,50 @@
 // include
 //-----------------------------------------------------------------------------------------
 //* actor
-#include "../AGeometryActor.h"
-
-//* engine
-#include <Engine/Asset/Model/AssetModel.h>
-#include <Engine/Asset/Observer/AssetObserver.h>
+#include "../ACameraActor.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// AModelActor class
+// ACineCameraActor class
 ////////////////////////////////////////////////////////////////////////////////////////////
-class AModelActor
-	: public AGeometryActor {
+class ACineCameraActor
+	: public ACameraActor {
+public:
+
+	////////////////////////////////////////////////////////////////////////////////////////////
+	// CineCameraParameter structure
+	////////////////////////////////////////////////////////////////////////////////////////////
+	struct CineCameraParameter {
+
+		//* member *//
+
+		Vector2f sensor; /*_mm*/
+		float focal;     /*_mm*/
+		float nearZ;
+		float farZ;
+
+		//* method *//
+
+		Matrix4x4 GetProj() const;
+
+	};
+
 public:
 
 	//=========================================================================================
 	// public methods
 	//=========================================================================================
 
-	AModelActor()          = default;
-	virtual ~AModelActor() = default;
+	ACineCameraActor()          = default;
+	virtual ~ACineCameraActor() = default;
 
 	void Init();
 
-	//* render *//
+	void TransferProj();
 
-	virtual void RenderOpaque() override;
-	virtual void RenderTransparent() override;
+	//* getter *//
 
-	//* setter *//
-
-	void SetModel(const AssetObserver<AssetModel>& model) { model_ = model; }
+	const CineCameraParameter& GetParameter() const { return parameter_; }
+	CineCameraParameter& GetParameter() { return parameter_; }
 
 protected:
 
@@ -41,6 +55,6 @@ protected:
 	// protected variables
 	//=========================================================================================
 
-	AssetObserver<AssetModel> model_;
+	CineCameraParameter parameter_;
 
 };

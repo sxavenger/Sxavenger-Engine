@@ -173,29 +173,6 @@ Quaternion ToQuaternion(const Vector3f& euler) {
 	return q;
 }
 
-Quaternion ToQuaternion2(const Vector3f& euler) {
-	 // 半分角を計算
-	float halfPitch = euler.y * 0.5f;
-	float halfYaw = euler.x * 0.5f;
-	float halfRoll = euler.z * 0.5f;
-
-	// 三角関数を計算
-	float sinPitch = std::sin(halfPitch);
-	float cosPitch = std::cos(halfPitch);
-	float sinYaw = std::sin(halfYaw);
-	float cosYaw = std::cos(halfYaw);
-	float sinRoll = std::sin(halfRoll);
-	float cosRoll = std::cos(halfRoll);
-
-	// 個別クォータニオン
-	Quaternion qPitch(sinPitch, 0.0f, 0.0f, cosPitch);
-	Quaternion qYaw(0.0f, sinYaw, 0.0f, cosYaw);
-	Quaternion qRoll(0.0f, 0.0f, sinRoll, cosRoll);
-
-	// 合成
-	return qYaw * (qPitch * qRoll);
-}
-
 Quaternion LookAt(const Vector3f& u, const Vector3f& v) {
 	
 	Vector3f up = Normalize(Cross(u, v));

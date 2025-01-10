@@ -4,36 +4,57 @@
 // include
 //-----------------------------------------------------------------------------------------
 //* actor
-#include "../AGeometryActor.h"
+#include "../AActor.h"
 
 //* engine
-#include <Engine/Asset/Model/AssetModel.h>
-#include <Engine/Asset/Observer/AssetObserver.h>
+#include <Engine/System/DirectX/DxObject/DxDimensionBuffer.h>
+
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// AModelActor class
+// ACameraActor class
 ////////////////////////////////////////////////////////////////////////////////////////////
-class AModelActor
-	: public AGeometryActor {
+class ACameraActor
+	: public AActor {
+public:
+
+	////////////////////////////////////////////////////////////////////////////////////////////
+	// Camera structure
+	////////////////////////////////////////////////////////////////////////////////////////////
+	struct Camera {
+
+		//* member *//
+
+		Matrix4x4 view;
+		Matrix4x4 world;
+		Matrix4x4 proj;
+		Matrix4x4 projInv;
+		//float near;
+		//float far;
+
+		//* method *//
+
+		void Init();
+
+		void TransferView(const Matrix4x4& _world);
+		void TransferProj(const Matrix4x4& _proj);
+	};
+
 public:
 
 	//=========================================================================================
 	// public methods
 	//=========================================================================================
 
-	AModelActor()          = default;
-	virtual ~AModelActor() = default;
+	ACameraActor()          = default;
+	virtual ~ACameraActor() = default;
 
 	void Init();
 
-	//* render *//
+	void TransferView();
 
-	virtual void RenderOpaque() override;
-	virtual void RenderTransparent() override;
+	//* getter *//
 
-	//* setter *//
-
-	void SetModel(const AssetObserver<AssetModel>& model) { model_ = model; }
+	const D3D12_GPU_VIRTUAL_ADDRESS& GetGPUVirtualAddress() const;
 
 protected:
 
@@ -41,6 +62,6 @@ protected:
 	// protected variables
 	//=========================================================================================
 
-	AssetObserver<AssetModel> model_;
+	std::unique_ptr<DxObject::DimensionBuffer<Camera>> buffer_;
 
 };

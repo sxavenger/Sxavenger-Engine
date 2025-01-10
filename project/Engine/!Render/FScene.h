@@ -27,6 +27,9 @@ public:
 	FScene()  = default;
 	~FScene() = default;
 
+	//* actor option *//
+
+	void AddGeometry(AGeometryActor* geometry);
 
 	//* getter *//
 

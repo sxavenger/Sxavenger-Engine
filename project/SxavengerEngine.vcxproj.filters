@@ -49,7 +49,6 @@
     <ClCompile Include="Lib\Sxl\OptimizedSet.cpp" />
     <ClCompile Include="Lib\MyMath.cpp" />
     <ClCompile Include="Engine\Module\SxavengerModule.cpp" />
-    <ClCompile Include="Engine\Module\Material\MaterialComponent.cpp" />
     <ClCompile Include="Engine\Module\Skeleton\Skeleton.cpp" />
     <ClCompile Include="Engine\Module\Skeleton\SkinCluster.cpp" />
     <ClCompile Include="Engine\System\DirectX\DxObject\DxUnorderedDimensionBuffer.cpp" />
@@ -69,7 +68,6 @@
     <ClCompile Include="Engine\System\Runtime\Framework\IFramework.cpp" />
     <ClCompile Include="Engine\GameLoop\EngineGameLoop.cpp" />
     <ClCompile Include="Engine\Asset\Texture\Texture.cpp" />
-    <ClCompile Include="Engine\Module\TransformComponent\TransformComponent.cpp" />
     <ClCompile Include="Lib\Transform\Transform.cpp" />
     <ClCompile Include="Engine\Module\Pipeline\CustomComputePipeline.cpp" />
     <ClCompile Include="Engine\Module\Pipeline\CustomGraphicsPipeline.cpp" />
@@ -111,6 +109,9 @@
     <ClCompile Include="Engine\System\Runtime\Performance\TimePoint.cpp" />
     <ClCompile Include="Engine\Asset\SxavengerAsset.cpp" />
     <ClCompile Include="Engine\Dev\DeveloperGui.cpp" />
+    <ClCompile Include="Engine\Module\Component\TransformComponent.cpp" />
+    <ClCompile Include="Engine\!Render\Actor\Camera\ACameraActor.cpp" />
+    <ClCompile Include="Engine\!Render\Actor\Camera\CameraActor\ACineCameraActor.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\System\Window\Window.h" />
@@ -162,7 +163,6 @@
     <ClInclude Include="Lib\Sxl\OptimizedSet.h" />
     <ClInclude Include="Lib\MyMath.h" />
     <ClInclude Include="Engine\Module\SxavengerModule.h" />
-    <ClInclude Include="Engine\Module\Material\MaterialComponent.h" />
     <ClInclude Include="Engine\Module\Skeleton\Skeleton.h" />
     <ClInclude Include="Engine\Module\Skeleton\SkinCluster.h" />
     <ClInclude Include="Engine\System\DirectX\DxObject\DxUnorderedDimensionBuffer.h" />
@@ -182,7 +182,6 @@
     <ClInclude Include="Engine\System\Runtime\Framework\IFramework.h" />
     <ClInclude Include="Engine\GameLoop\EngineGameLoop.h" />
     <ClInclude Include="Engine\Asset\Texture\Texture.h" />
-    <ClInclude Include="Engine\Module\TransformComponent\TransformComponent.h" />
     <ClInclude Include="Lib\Transform\Transform.h" />
     <ClInclude Include="Engine\Module\Pipeline\CustomComputePipeline.h" />
     <ClInclude Include="Engine\Module\Pipeline\CustomGraphicsPipeline.h" />
@@ -226,5 +225,8 @@
     <ClInclude Include="Engine\System\Runtime\Performance\TimePoint.h" />
     <ClInclude Include="Engine\Asset\SxavengerAsset.h" />
     <ClInclude Include="Engine\Dev\DeveloperGui.h" />
+    <ClInclude Include="Engine\Module\Component\TransformComponent.h" />
+    <ClInclude Include="Engine\!Render\Actor\Camera\ACameraActor.h" />
+    <ClInclude Include="Engine\!Render\Actor\Camera\CameraActor\ACineCameraActor.h" />
   </ItemGroup>
 </Project>

@@ -135,6 +135,8 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\!Render\Actor\AActor.cpp" />
+    <ClCompile Include="Engine\!Render\Actor\Camera\ACameraActor.cpp" />
+    <ClCompile Include="Engine\!Render\Actor\Camera\CameraActor\ACineCameraActor.cpp" />
     <ClCompile Include="Engine\!Render\Actor\Geometry\AGeometryActor.cpp" />
     <ClCompile Include="Engine\!Render\Actor\Geometry\GeometryActors\AModelActor.cpp" />
     <ClCompile Include="Engine\!Render\FScene.cpp" />
@@ -165,6 +167,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="Engine\Content\TextureBuffer\UnorderedTexture.cpp" />
     <ClCompile Include="Engine\Dev\DeveloperGui.cpp" />
     <ClCompile Include="Engine\GameLoop\BetaSystemGameLoop.cpp" />
+    <ClCompile Include="Engine\Module\Component\TransformComponent.cpp" />
     <ClCompile Include="Engine\Module\Skeleton\Skeleton.cpp" />
     <ClCompile Include="Engine\Module\Skeleton\SkeletonMesh.cpp" />
     <ClCompile Include="Engine\Module\Skeleton\SkinCluster.cpp" />
@@ -175,11 +178,9 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="Engine\Module\Collider\Collider.cpp" />
     <ClCompile Include="Engine\Module\Collider\ColliderCollection.cpp" />
     <ClCompile Include="Engine\Module\Collider\CollisionDetection.cpp" />
-    <ClCompile Include="Engine\Module\Material\MaterialComponent.cpp" />
     <ClCompile Include="Engine\Module\Pipeline\CustomComputePipeline.cpp" />
     <ClCompile Include="Engine\Module\Pipeline\CustomGraphicsPipeline.cpp" />
     <ClCompile Include="Engine\Module\SxavengerModule.cpp" />
-    <ClCompile Include="Engine\Module\TransformComponent\TransformComponent.cpp" />
     <ClCompile Include="Engine\System\DirectX\DirectXCommon.cpp" />
     <ClCompile Include="Engine\System\DirectX\DirectXContext.cpp" />
     <ClCompile Include="Engine\System\DirectX\DxObject\DxBindBuffer.cpp" />
@@ -238,6 +239,8 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\!Render\Actor\AActor.h" />
+    <ClInclude Include="Engine\!Render\Actor\Camera\ACameraActor.h" />
+    <ClInclude Include="Engine\!Render\Actor\Camera\CameraActor\ACineCameraActor.h" />
     <ClInclude Include="Engine\!Render\Actor\Geometry\AGeometryActor.h" />
     <ClInclude Include="Engine\!Render\Actor\Geometry\GeometryActors\AModelActor.h" />
     <ClInclude Include="Engine\!Render\FScene.h" />
@@ -270,6 +273,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Engine\Content\TextureBuffer\UnorderedTexture.h" />
     <ClInclude Include="Engine\Dev\DeveloperGui.h" />
     <ClInclude Include="Engine\GameLoop\BetaSystemGameLoop.h" />
+    <ClInclude Include="Engine\Module\Component\TransformComponent.h" />
     <ClInclude Include="Engine\Module\Skeleton\Skeleton.h" />
     <ClInclude Include="Engine\Module\Skeleton\SkeletonMesh.h" />
     <ClInclude Include="Engine\Module\Skeleton\SkinCluster.h" />
@@ -280,11 +284,9 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Engine\Module\Collider\Collider.h" />
     <ClInclude Include="Engine\Module\Collider\ColliderCollection.h" />
     <ClInclude Include="Engine\Module\Collider\CollisionDetection.h" />
-    <ClInclude Include="Engine\Module\Material\MaterialComponent.h" />
     <ClInclude Include="Engine\Module\Pipeline\CustomComputePipeline.h" />
     <ClInclude Include="Engine\Module\Pipeline\CustomGraphicsPipeline.h" />
     <ClInclude Include="Engine\Module\SxavengerModule.h" />
-    <ClInclude Include="Engine\Module\TransformComponent\TransformComponent.h" />
     <ClInclude Include="Engine\System\Cinfig\SxavengerDirectory.h" />
     <ClInclude Include="Engine\System\Config\SxavengerDirectory.h" />
     <ClInclude Include="Engine\System\DirectX\DirectXCommon.h" />
