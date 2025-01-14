@@ -130,6 +130,7 @@
     <ClCompile Include="Engine\System\Runtime\Performance\RunTimeTracker.cpp" />
     <ClCompile Include="Engine\Asset\Json\AssetJson.cpp" />
     <ClCompile Include="Lib\Easing.cpp" />
+    <ClCompile Include="Engine\Module\Sprite\SpriteCommon.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\System\Window\Window.h" />
@@ -265,5 +266,6 @@
     <ClInclude Include="Engine\System\Runtime\Performance\RunTimeTracker.h" />
     <ClInclude Include="Engine\Asset\Json\AssetJson.h" />
     <ClInclude Include="Lib\Easing.h" />
+    <ClInclude Include="Engine\Module\Sprite\SpriteCommon.h" />
   </ItemGroup>
 </Project>
