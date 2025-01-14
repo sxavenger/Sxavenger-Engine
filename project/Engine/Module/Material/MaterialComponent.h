@@ -43,8 +43,8 @@ public:
 
 	//* getter *//
 
-	const UVTransform& GetUVTransform() const { return uvTransform_; }
-	UVTransform& GetUVTransform() { return uvTransform_; }
+	const Transform2d& GetUVTransform() const { return uvTransform_; }
+	Transform2d& GetUVTransform() { return uvTransform_; }
 
 	const D3D12_GPU_VIRTUAL_ADDRESS& GetTransformGPUVirtualAddress() const;
 
@@ -59,7 +59,7 @@ protected:
 	// protected variables
 	//=========================================================================================
 
-	UVTransform uvTransform_;
+	Transform2d uvTransform_;
 	std::unique_ptr<DxObject::DimensionBuffer<Matrix4x4>> transformBuffer_;
 
 	Color4f color_ = kWhite4;
