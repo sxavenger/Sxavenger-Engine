@@ -44,13 +44,13 @@ void Model::Load(const DirectXThreadContext* context, const std::filesystem::pat
 void Model::Term() {
 }
 
-void Model::SetIABuffer(uint32_t meshIndex) const {
+void Model::SetIABuffer(const DirectXThreadContext* context, uint32_t meshIndex) const {
 	CheckMeshIndex(meshIndex);
-	meshes_.at(meshIndex).mesh.BindIABuffer();
+	meshes_.at(meshIndex).mesh.BindIABuffer(context);
 }
 
-void Model::DrawCall(uint32_t meshIndex, uint32_t instanceCount) const {
-	meshes_[meshIndex].mesh.DrawCall(instanceCount);
+void Model::DrawCall(const DirectXThreadContext* context, uint32_t meshIndex, uint32_t instanceCount) const {
+	meshes_[meshIndex].mesh.DrawCall(context, instanceCount);
 }
 
 const Model::MeshData& Model::GetMeshData(uint32_t meshIndex) const {

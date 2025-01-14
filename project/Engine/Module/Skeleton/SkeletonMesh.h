@@ -9,6 +9,7 @@
 
 //* engine
 #include <Engine/System/DirectX/DxObject/DxUnorderedDimensionBuffer.h>
+#include <Engine/System/DirectX/DirectXContext.h>
 #include <Engine/Asset/Model/AssetModel.h>
 
 //* c++
@@ -42,9 +43,9 @@ public:
 
 	//* meshes option *//
 
-	void SetIABuffer(uint32_t meshIndex) const;
+	void SetIABuffer(const DirectXThreadContext* context, uint32_t meshIndex) const;
 
-	void DrawCall(uint32_t meshIndex, uint32_t instanceCount = 1) const;
+	void DrawCall(const DirectXThreadContext* context, uint32_t meshIndex, uint32_t instanceCount = 1) const;
 
 private:
 

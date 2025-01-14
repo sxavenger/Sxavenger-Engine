@@ -47,9 +47,9 @@ void SkeletonMesh::UpdateTransitionAnimation(
 	Skinning();
 }
 
-void SkeletonMesh::SetIABuffer(uint32_t meshIndex) const {
+void SkeletonMesh::SetIABuffer(const DirectXThreadContext* context, uint32_t meshIndex) const {
 
-	auto commandList = SxavengerSystem::GetMainThreadContext()->GetCommandList();
+	auto commandList = context->GetCommandList();
 
 	D3D12_VERTEX_BUFFER_VIEW vbv = skinnedVertex_[meshIndex]->GetVertexBufferView();
 	D3D12_INDEX_BUFFER_VIEW  ibv = model_->GetInputMesh(meshIndex).GetIndex()->GetIndexBufferView();
@@ -58,8 +58,8 @@ void SkeletonMesh::SetIABuffer(uint32_t meshIndex) const {
 	commandList->IASetIndexBuffer(&ibv);
 }
 
-void SkeletonMesh::DrawCall(uint32_t meshIndex, uint32_t instanceCount) const {
-	model_->DrawCall(meshIndex, instanceCount);
+void SkeletonMesh::DrawCall(const DirectXThreadContext* context, uint32_t meshIndex, uint32_t instanceCount) const {
+	model_->DrawCall(context, meshIndex, instanceCount);
 }
 
 void SkeletonMesh::CreateSkeleton() {

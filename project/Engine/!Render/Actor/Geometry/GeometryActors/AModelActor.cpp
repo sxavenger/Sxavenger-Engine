@@ -30,7 +30,7 @@ void AModelActor::RenderOpaque(const RendererContext& context) {
 
 	for (uint32_t i = 0; i < model->GetMeshSize(); ++i) {
 
-		model->SetIABuffer(i);
+		model->SetIABuffer(context.context, i);
 
 		DxObject::BindBufferDesc bind = parameter;
 		bind.SetHandle("gAlbedo", model->GetTextureHandle(i));
@@ -40,7 +40,7 @@ void AModelActor::RenderOpaque(const RendererContext& context) {
 			context.context, bind
 		);
 
-		model->DrawCall(i);
+		model->DrawCall(context.context, i);
 	}
 }
 

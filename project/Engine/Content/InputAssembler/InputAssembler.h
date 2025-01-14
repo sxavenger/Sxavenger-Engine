@@ -30,9 +30,9 @@ public:
 
 	void Term();
 
-	void BindIABuffer(DirectXThreadContext* context = SxavengerSystem::GetMainThreadContext()) const;
+	void BindIABuffer(const DirectXThreadContext* context) const;
 
-	void DrawCall(UINT instanceCount = 1, DirectXThreadContext* context = SxavengerSystem::GetMainThreadContext()) const;
+	void DrawCall(const DirectXThreadContext* context, UINT instanceCount = 1) const;
 
 	//* getter *//
 
@@ -74,7 +74,7 @@ inline void InputAssembler<T>::Term() {
 }
 
 template<class T>
-inline void InputAssembler<T>::BindIABuffer(DirectXThreadContext* context) const {
+inline void InputAssembler<T>::BindIABuffer(const DirectXThreadContext* context) const {
 
 	auto commandList = context->GetCommandList();
 
@@ -86,7 +86,7 @@ inline void InputAssembler<T>::BindIABuffer(DirectXThreadContext* context) const
 }
 
 template<class T>
-inline void InputAssembler<T>::DrawCall(UINT instanceCount, DirectXThreadContext* context) const {
+inline void InputAssembler<T>::DrawCall(const DirectXThreadContext* context, UINT instanceCount) const {
 
 	auto commandList = context->GetCommandList();
 
