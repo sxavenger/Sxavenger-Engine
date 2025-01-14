@@ -140,8 +140,7 @@ void GraphicsPipelineState::SetBlob(const ShaderBlob& blob, GraphicsShaderType t
 
 void GraphicsPipelineState::CreateRootSignature(Device* device, GraphicsRootSignatureDesc&& desc) {
 	rootSignatureDesc_ = std::move(desc);
-	rootSignatureDesc_.ShrinkToFit();
-
+	
 	CreateDirectXRootSignature(device);
 }
 

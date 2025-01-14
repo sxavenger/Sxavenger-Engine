@@ -28,8 +28,8 @@ public:
 
 	//* render *//
 
-	virtual void RenderOpaque() override;
-	virtual void RenderTransparent() override;
+	virtual void RenderOpaque(const RendererContext& context) override;
+	virtual void RenderTransparent(const RendererContext& context) override;
 
 	//* setter *//
 

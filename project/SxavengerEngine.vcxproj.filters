@@ -112,6 +112,14 @@
     <ClCompile Include="Engine\Module\Component\TransformComponent.cpp" />
     <ClCompile Include="Engine\!Render\Actor\Camera\ACameraActor.cpp" />
     <ClCompile Include="Engine\!Render\Actor\Camera\CameraActor\ACineCameraActor.cpp" />
+    <ClCompile Include="Engine\!Render\FRenderCore.cpp" />
+    <ClCompile Include="Engine\System\DirectX\DxrObject\DxrExportGroup.cpp" />
+    <ClCompile Include="Engine\System\DirectX\DxrObject\DxrRootSignatureDesc.cpp" />
+    <ClCompile Include="Engine\System\DirectX\DxrObject\DxrRootSignature.cpp" />
+    <ClCompile Include="Engine\System\DirectX\DxrObject\DxrShaderTable.cpp" />
+    <ClCompile Include="Engine\System\DirectX\DxrObject\DxrRaytracingBlob.cpp" />
+    <ClCompile Include="Engine\System\DirectX\DxrObject\DxrStateObjectContext.cpp" />
+    <ClCompile Include="Engine\System\DirectX\DxrObject\DxrBindBuffer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\System\Window\Window.h" />
@@ -228,5 +236,13 @@
     <ClInclude Include="Engine\Module\Component\TransformComponent.h" />
     <ClInclude Include="Engine\!Render\Actor\Camera\ACameraActor.h" />
     <ClInclude Include="Engine\!Render\Actor\Camera\CameraActor\ACineCameraActor.h" />
+    <ClInclude Include="Engine\!Render\FRenderCore.h" />
+    <ClInclude Include="Engine\System\DirectX\DxrObject\DxrExportGroup.h" />
+    <ClInclude Include="Engine\System\DirectX\DxrObject\DxrRootSignatureDesc.h" />
+    <ClInclude Include="Engine\System\DirectX\DxrObject\DxrRootSignature.h" />
+    <ClInclude Include="Engine\System\DirectX\DxrObject\DxrShaderTable.h" />
+    <ClInclude Include="Engine\System\DirectX\DxrObject\DxrRaytracingBlob.h" />
+    <ClInclude Include="Engine\System\DirectX\DxrObject\DxrStateObjectContext.h" />
+    <ClInclude Include="Engine\System\DirectX\DxrObject\DxrBindBuffer.h" />
   </ItemGroup>
 </Project>

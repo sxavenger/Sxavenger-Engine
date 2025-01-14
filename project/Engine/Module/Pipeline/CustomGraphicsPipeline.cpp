@@ -17,7 +17,7 @@ void BaseCustomGraphicsPipeline::SetAsset(const std::optional<AssetObserver<Asse
 }
 
 void BaseCustomGraphicsPipeline::CreateAsset(const std::filesystem::path& filepath, DxObject::GraphicsShaderType type) {
-	// TODO: profile set
+	SxavengerAsset::SetNextCompileProfile(ToProfile(type));
 	AssetObserver<AssetBlob> observer = SxavengerAsset::TryImport<AssetBlob>(filepath);
 	SetAsset(observer, type);
 }

@@ -33,6 +33,13 @@ public:
 	template <BaseAssetConcept T>
 	static AssetObserver<T> TryImport(const std::filesystem::path& filepath);
 
+	//* option *//
+
+	static void SetNextCompileProfile(DxObject::CompileProfile profile) { collection_->SetCompileProfile(profile); }
+
+	static void SetNextAssimpOptionModel(uint32_t option) { collection_->SetAssimpOptionModel(option); }
+
+	static void SetNextAssimpOptionAnimator(uint32_t option) { collection_->SetAssimpOptionAnimator(option); }
 
 	//* getter *//
 

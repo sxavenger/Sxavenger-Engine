@@ -1,4 +1,5 @@
 #include "CustomComputePipeline.h"
+_DXOBJECT_USING
 
 //-----------------------------------------------------------------------------------------
 // include
@@ -16,7 +17,7 @@ void BaseCustomComputePipeline::SetAsset(const std::optional<AssetObserver<Asset
 }
 
 void BaseCustomComputePipeline::CreateAsset(const std::filesystem::path& filepath) {
-	// TODO: profile set
+	SxavengerAsset::SetNextCompileProfile(CompileProfile::cs);
 	AssetObserver<AssetBlob> observer = SxavengerAsset::TryImport<AssetBlob>(filepath);
 	SetAsset(observer);
 }

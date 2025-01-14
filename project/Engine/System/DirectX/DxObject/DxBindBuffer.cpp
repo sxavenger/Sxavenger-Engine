@@ -9,16 +9,16 @@ void BindBufferDesc::Clear() {
 	container_.clear();
 }
 
+void BindBufferDesc::SetBuffer(const std::string& name, const GPUBuffer& buffer) {
+	container_[name] = buffer;
+}
+
 void BindBufferDesc::SetAddress(const std::string& name, const D3D12_GPU_VIRTUAL_ADDRESS& address) {
-	container_[name] = address;
+	SetBuffer(name, address);
 }
 
 void BindBufferDesc::SetHandle(const std::string& name, const D3D12_GPU_DESCRIPTOR_HANDLE& handle) {
-	container_[name] = handle;
-}
-
-void BindBufferDesc::SetBuffer(const std::string& name, const GPUBuffer& buffer) {
-	container_[name] = buffer;
+	SetBuffer(name, handle);
 }
 
 void BindBufferDesc::Merge(const BindBufferDesc& desc) {

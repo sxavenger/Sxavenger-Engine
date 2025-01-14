@@ -48,7 +48,7 @@ void FSceneDepth::RasterizerDepth::Create(const Vector2ui& size) {
 
 		Assert(SUCCEEDED(hr));
 
-		resource_->SetName(L"rasterizer depth");
+		resource_->SetName(L"FSceneDepth Rasterizer");
 	}
 
 	{ //!< DSVの生成
@@ -164,7 +164,7 @@ void FSceneDepth::RaytracingDepth::Create(const Vector2ui& size) {
 
 		Assert(SUCCEEDED(hr));
 
-		resource_->SetName(L"raytracing depth");
+		resource_->SetName(L"FSceneDepth Raytracing");
 	}
 
 	{ //!< UAVの生成
@@ -226,4 +226,24 @@ void FSceneDepth::Create(const Vector2ui& size) {
 void FSceneDepth::Term() {
 	rasterizer_.Delete();
 	raytracing_.Delete();
+}
+
+void FSceneDepth::TransitionBeginRasterizer(const DirectXThreadContext* context) const {
+	rasterizer_.BeginWrite(context);
+}
+
+void FSceneDepth::TransitionEndRasterizer(const DirectXThreadContext* context) const {
+	rasterizer_.EndWrite(context);
+}
+
+void FSceneDepth::ClearRasterizerDepth(const DirectXThreadContext* context) const {
+	rasterizer_.ClearDepth(context);
+}
+
+void FSceneDepth::TransitionBeginRaytracing(const DirectXThreadContext* context) const {
+	raytracing_.BeginWrite(context);
+}
+
+void FSceneDepth::TransitionEndRaytracing(const DirectXThreadContext* context) const {
+	raytracing_.EndWrite(context);
 }

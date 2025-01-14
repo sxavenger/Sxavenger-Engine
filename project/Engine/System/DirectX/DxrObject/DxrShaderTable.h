@@ -3,45 +3,37 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
-//* component
-#include "TransformComponent.h"
+//* DXROBJECT
+#include "DxrObjectCommon.h"
 
-//* engine
-#include <Engine/System/DirectX/DxObject/DxDimensionBuffer.h>
-
-//* lib
-#include <Lib/Geometry/Matrix4x4.h>
-
-//* c++
-#include <memory>
+//* DXOBJECT
+#include <Engine/System/DirectX/DxObject/DxDevice.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// CameraComponent class
+// DXROBJECT namespace
 ////////////////////////////////////////////////////////////////////////////////////////////
-class CameraComponent
-	: public TransformComponent {
+_DXROBJECT_NAMESPACE_BEGIN
+
+////////////////////////////////////////////////////////////////////////////////////////////
+// ShaderTable class
+////////////////////////////////////////////////////////////////////////////////////////////
+class ShaderTable {
 public:
 
 	////////////////////////////////////////////////////////////////////////////////////////////
-	// Camera structure
+	// RecorderSize structure
 	////////////////////////////////////////////////////////////////////////////////////////////
-	struct Camera {
+	struct RecorderSize {
 
 		//* member *//
 
-		Matrix4x4 view;
-		Matrix4x4 world;
-		Matrix4x4 proj;
-		Matrix4x4 projInv;
-		//float near;
-		//float far;
+		UINT raygeneration;
+		UINT miss;
+		UINT hitgroup;
 
-		//* method *//
+		//* methods *//
 
-		void Init();
-
-		void TransferView(const Matrix4x4& _world);
-		void TransferProj(const Matrix4x4& _proj);
+		void AlignmentRecoder(UINT align);
 
 	};
 
@@ -51,16 +43,12 @@ public:
 	// public methods
 	//=========================================================================================
 
-	CameraComponent()  = default;
-	~CameraComponent() = default;
+	ShaderTable()  = default;
+	~ShaderTable() = default;
 
-	void CreateBuffer();
+	void Init(DxObject::Device* device);
 
-	void UpdateViewMatrix();
-
-	//* getter *//
-
-	const D3D12_GPU_VIRTUAL_ADDRESS& GetGPUVirtualAddress() const;
+	void Register();
 
 private:
 
@@ -68,6 +56,10 @@ private:
 	// private variables
 	//=========================================================================================
 
-	std::unique_ptr<DxObject::DimensionBuffer<Camera>> buffer_;
-	
+	ComPtr<ID3D12Resource> resource_;
+
+	static const size_t kShaderTableSize = 0x10000; //!< 仮設定 64KB
+
 };
+
+_DXROBJECT_NAMESPACE_END

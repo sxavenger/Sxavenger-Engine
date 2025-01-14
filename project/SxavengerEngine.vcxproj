@@ -139,6 +139,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="Engine\!Render\Actor\Camera\CameraActor\ACineCameraActor.cpp" />
     <ClCompile Include="Engine\!Render\Actor\Geometry\AGeometryActor.cpp" />
     <ClCompile Include="Engine\!Render\Actor\Geometry\GeometryActors\AModelActor.cpp" />
+    <ClCompile Include="Engine\!Render\FRenderCore.cpp" />
     <ClCompile Include="Engine\!Render\FScene.cpp" />
     <ClCompile Include="Engine\!Render\FSceneDepth.cpp" />
     <ClCompile Include="Engine\!Render\FSceneRenderer.cpp" />
@@ -200,7 +201,14 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="Engine\System\DirectX\DxObject\DxSwapChain.cpp" />
     <ClCompile Include="Engine\System\DirectX\DxObject\DxUnorderedDimensionBuffer.cpp" />
     <ClCompile Include="Engine\System\DirectX\DxrObject\DxrAccelerationStructure.cpp" />
+    <ClCompile Include="Engine\System\DirectX\DxrObject\DxrBindBuffer.cpp" />
+    <ClCompile Include="Engine\System\DirectX\DxrObject\DxrExportGroup.cpp" />
     <ClCompile Include="Engine\System\DirectX\DxrObject\DxrObjectCommon.cpp" />
+    <ClCompile Include="Engine\System\DirectX\DxrObject\DxrRaytracingBlob.cpp" />
+    <ClCompile Include="Engine\System\DirectX\DxrObject\DxrRootSignature.cpp" />
+    <ClCompile Include="Engine\System\DirectX\DxrObject\DxrRootSignatureDesc.cpp" />
+    <ClCompile Include="Engine\System\DirectX\DxrObject\DxrShaderTable.cpp" />
+    <ClCompile Include="Engine\System\DirectX\DxrObject\DxrStateObjectContext.cpp" />
     <ClCompile Include="Engine\System\Runtime\Framework\IFramework.cpp" />
     <ClCompile Include="Engine\System\Runtime\GameLoop\GameLoop.cpp" />
     <ClCompile Include="Engine\System\Runtime\Input\Input.cpp" />
@@ -243,6 +251,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Engine\!Render\Actor\Camera\CameraActor\ACineCameraActor.h" />
     <ClInclude Include="Engine\!Render\Actor\Geometry\AGeometryActor.h" />
     <ClInclude Include="Engine\!Render\Actor\Geometry\GeometryActors\AModelActor.h" />
+    <ClInclude Include="Engine\!Render\FRenderCore.h" />
     <ClInclude Include="Engine\!Render\FScene.h" />
     <ClInclude Include="Engine\!Render\FSceneDepth.h" />
     <ClInclude Include="Engine\!Render\FSceneRenderer.h" />
@@ -308,7 +317,14 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Engine\System\DirectX\DxObject\DxSwapChain.h" />
     <ClInclude Include="Engine\System\DirectX\DxObject\DxUnorderedDimensionBuffer.h" />
     <ClInclude Include="Engine\System\DirectX\DxrObject\DxrAccelerationStructure.h" />
+    <ClInclude Include="Engine\System\DirectX\DxrObject\DxrBindBuffer.h" />
+    <ClInclude Include="Engine\System\DirectX\DxrObject\DxrExportGroup.h" />
     <ClInclude Include="Engine\System\DirectX\DxrObject\DxrObjectCommon.h" />
+    <ClInclude Include="Engine\System\DirectX\DxrObject\DxrRaytracingBlob.h" />
+    <ClInclude Include="Engine\System\DirectX\DxrObject\DxrRootSignature.h" />
+    <ClInclude Include="Engine\System\DirectX\DxrObject\DxrRootSignatureDesc.h" />
+    <ClInclude Include="Engine\System\DirectX\DxrObject\DxrShaderTable.h" />
+    <ClInclude Include="Engine\System\DirectX\DxrObject\DxrStateObjectContext.h" />
     <ClInclude Include="Engine\System\Runtime\Framework\IFramework.h" />
     <ClInclude Include="Engine\System\Runtime\GameLoop\GameLoop.h" />
     <ClInclude Include="Engine\System\Runtime\Input\Input.h" />

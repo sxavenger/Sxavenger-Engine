@@ -52,6 +52,16 @@ public:
 
 	void Create(const Vector2ui& size);
 
+	//* option *//
+
+	void BeginBasePass(const DirectXThreadContext* context) const;
+
+	void EndBasePass(const DirectXThreadContext* context) const;
+
+	//* getter *//
+
+	const Vector2ui& GetSize() const { return parameterBuffer_->At(0).size; }
+
 private:
 
 	////////////////////////////////////////////////////////////////////////////////////////////

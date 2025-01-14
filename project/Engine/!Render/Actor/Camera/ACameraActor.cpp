@@ -37,7 +37,7 @@ void ACameraActor::Init() {
 	(*buffer_)[0].Init();
 }
 
-void ACameraActor::TransferView() {
+void ACameraActor::UpdateView() {
 	TransformComponent::UpdateMatrix();
 	(*buffer_)[0].TransferView(GetMatrix());
 }

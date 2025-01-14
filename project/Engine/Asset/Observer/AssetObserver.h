@@ -5,6 +5,7 @@
 //-----------------------------------------------------------------------------------------
 //* asset
 #include "../BaseAsset.h"
+#include "../AssetCollection.h"
 
 //* engine
 #include <Engine/System/Utility/Logger.h>
@@ -13,11 +14,6 @@
 #include <filesystem>
 #include <optional>
 #include <memory>
-
-//-----------------------------------------------------------------------------------------
-// forward
-//-----------------------------------------------------------------------------------------
-class AssetCollection;
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // AssetObserver class
@@ -102,7 +98,7 @@ template <BaseAssetConcept T>
 inline void AssetObserver<T>::Reload() {
 	Assert(GetCondition() != Condition::UnRegistered, "asset is not registered.");
 	Assert(collection_ != nullptr, "collection is not set.");
-	*this = collection_->template Import<T>(filepath_);
+	asset_ = collection_->ImportPtr<T>(filepath_);
 }
 
 template <BaseAssetConcept T>
@@ -137,7 +133,7 @@ inline std::shared_ptr<T> AssetObserver<T>::Get() {
 
 	if (condition == Condition::Expired) {
 		Assert(collection_ != nullptr, "collection is not set.");
-		*this = collection_->template TryImport<T>(filepath_);
+		asset_ = collection_->TryImportPtr<T>(filepath_);
 	}
 
 	return asset_.value().lock();

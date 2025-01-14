@@ -17,12 +17,6 @@ void BaseRootSignatureDesc::Clear() {
 	ranges_.clear();
 }
 
-void BaseRootSignatureDesc::ShrinkToFit() {
-	params.shrink_to_fit();
-	ranges_.shrink_to_fit();
-	samplers.shrink_to_fit();
-}
-
 void BaseRootSignatureDesc::Reset() {
 	Clear();
 	Reserve();

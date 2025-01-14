@@ -17,6 +17,9 @@ void FSceneRenderer::Render(const DirectXThreadContext* context) {
 	//* ベースパス
 	RenderOpaqueGeometries(context);
 
+	//* 照明と影の処理
+	// todo:
+
 	//* 合成処理
 	// todo:
 
@@ -28,18 +31,24 @@ void FSceneRenderer::Render(const DirectXThreadContext* context) {
 }
 
 void FSceneRenderer::RenderOpaqueGeometries(const DirectXThreadContext* context) {
-	context;
 
 	const auto& geometries = scene_->GetGeometries();
 
+	textures_->BeginBasePass(context);
+
+	AGeometryActor::RendererContext rendererContext = {};
+	rendererContext.context = context;
+	rendererContext.size    = textures_->GetSize();
+	rendererContext.camera  = camera_;
+
 	// 不透明なジオメトリを描画
 	for (auto geometry : geometries) {
-		if (geometry->GetTransparency() == AGeometryActor::Transparency::Opaque) {
-			// todo: render opaque
-			geometry->RenderOpaque();
+		if (geometry->CheckVisibility(AGeometryActor::Transparency::Opaque)) {
+			geometry->RenderOpaque(rendererContext);
 		}
 	}
 
+	textures_->EndBasePass(context);
 }
 
 void FSceneRenderer::RenderTransparentGeometries(const DirectXThreadContext* context) {
@@ -47,11 +56,15 @@ void FSceneRenderer::RenderTransparentGeometries(const DirectXThreadContext* con
 
 	const auto& geometries = scene_->GetGeometries();
 
+	AGeometryActor::RendererContext rendererContext = {};
+	rendererContext.context = context;
+	rendererContext.size    = textures_->GetSize();
+	rendererContext.camera  = camera_;
+
 	// 半透明なジオメトリを描画
 	for (auto geometry : geometries) {
-		if (geometry->GetTransparency() == AGeometryActor::Transparency::Transparent) {
-			// todo: render transparent
-			geometry->RenderTransparent();
+		if (geometry->CheckVisibility(AGeometryActor::Transparency::Transparent)) {
+			geometry->RenderTransparent(rendererContext);
 		}
 	};
 }

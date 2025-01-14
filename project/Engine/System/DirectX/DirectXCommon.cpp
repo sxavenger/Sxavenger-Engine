@@ -1,5 +1,6 @@
 #include "DirectXCommon.h"
 _DXOBJECT_USING
+_DXROBJECT_USING
 
 //=========================================================================================
 // static variables
@@ -27,6 +28,8 @@ void DirectXCommon::Init() {
 
 	ShaderBlob::SetExternal(shaderCompiler_.get());
 	GraphicsPipelineState::SetExternal(blendState_.get());
+
+	RaytracingBlob::SetExternal(shaderCompiler_.get());
 }
 
 void DirectXCommon::Term() {

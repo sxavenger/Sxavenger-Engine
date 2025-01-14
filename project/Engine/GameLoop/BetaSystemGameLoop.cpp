@@ -8,6 +8,8 @@
 #include <Engine/Asset/SxavengerAsset.h>
 #include <Engine/Dev/DeveloperGui.h>
 
+#include <Engine/!Render/FRenderCore.h>
+
 ////////////////////////////////////////////////////////////////////////////////////////////
 // BetaSystemGameLoop class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -43,8 +45,26 @@ void BetaSystemGameLoop::InitSystem() {
 	renderer_->SetCamera(camera_.get());
 
 	model_ = std::make_unique<AModelActor>();
+	model_->Init();
 	model_->SetModel(SxavengerAsset::TryImport<AssetModel>("asset/model/human/idle.gltf"));
 	scene_->AddGeometry(model_.get());
+
+	FRenderCore::GetInstance()->Init();
+
+	blob1_ = std::make_unique<DxrObject::RaytracingBlob>();
+	blob1_->Create("packages/shaders/raytracingDemo/RaygenerationDemo.hlsl");
+
+	raygeneration_ = std::make_unique<DxrObject::ExportGroup>();
+	raygeneration_->ExportRaygeneration(L"mainRaygeneration");
+
+	miss_ = std::make_unique<DxrObject::ExportGroup>();
+	miss_->ExportMiss(L"mainMiss");
+
+	blob1_->SetExport(raygeneration_.get());
+	blob1_->SetExport(miss_.get());
+
+
+
 
 }
 

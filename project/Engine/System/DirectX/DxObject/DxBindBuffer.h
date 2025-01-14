@@ -49,11 +49,9 @@ public:
 
 	void Clear();
 
-	void SetAddress(const std::string& name, const D3D12_GPU_VIRTUAL_ADDRESS& address);
-
-	void SetHandle(const std::string& name, const D3D12_GPU_DESCRIPTOR_HANDLE& handle);
-
 	void SetBuffer(const std::string& name, const GPUBuffer& buffer);
+	void SetAddress(const std::string& name, const D3D12_GPU_VIRTUAL_ADDRESS& address);
+	void SetHandle(const std::string& name, const D3D12_GPU_DESCRIPTOR_HANDLE& handle);
 
 	void Merge(const BindBufferDesc& desc);
 
@@ -127,6 +125,8 @@ private:
 			bindBufferType = ToBindBufferType(_desc.Type);
 		}
 	};
+
+private:
 
 	//=========================================================================================
 	// private variables

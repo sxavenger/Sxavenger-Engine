@@ -61,11 +61,11 @@ void BottomLevelAS::Build(
 	buildDesc.Inputs.pGeometryDescs = &geomDesc;
 
 	// input情報からbufferの生成
-	buffers_.Create(device, buildDesc.Inputs);
+	AccelerationStructureBuffers::Create(device, buildDesc.Inputs);
 
 	// bufferの設定
-	buildDesc.ScratchAccelerationStructureData = buffers_.scratch->GetGPUVirtualAddress();
-	buildDesc.DestAccelerationStructureData    = buffers_.asbuffer->GetGPUVirtualAddress();
+	buildDesc.ScratchAccelerationStructureData = scratch->GetGPUVirtualAddress();
+	buildDesc.DestAccelerationStructureData    = asbuffer->GetGPUVirtualAddress();
 
 	// build descの設定
 	context->GetCommandList()->BuildRaytracingAccelerationStructure(
@@ -75,7 +75,42 @@ void BottomLevelAS::Build(
 	// barrierの設定
 	D3D12_RESOURCE_BARRIER barrier = {};
 	barrier.Type          = D3D12_RESOURCE_BARRIER_TYPE_UAV;
-	barrier.UAV.pResource = buffers_.asbuffer.Get();
+	barrier.UAV.pResource = asbuffer.Get();
 
 	context->GetCommandList()->ResourceBarrier(1, &barrier);
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////
+// TopLevelAS class methods
+////////////////////////////////////////////////////////////////////////////////////////////
+
+void TopLevelAS::Build(DxObject::Device* device, const DxObject::CommandContext* context) {
+
+	// build descの設定
+	D3D12_BUILD_RAYTRACING_ACCELERATION_STRUCTURE_DESC buildDesc = {};
+	buildDesc.Inputs.Type           = D3D12_RAYTRACING_ACCELERATION_STRUCTURE_TYPE_TOP_LEVEL;
+	buildDesc.Inputs.DescsLayout    = D3D12_ELEMENTS_LAYOUT_ARRAY;
+	buildDesc.Inputs.Flags          = D3D12_RAYTRACING_ACCELERATION_STRUCTURE_BUILD_FLAG_ALLOW_UPDATE;
+	//buildDesc.Inputs.NumDescs       = 1; //!< instanceの数
+	//buildDesc.Inputs.InstanceDescs = instanceDescs->GetGPUVirtualAddress();
+
+	// input情報からbufferの生成
+	AccelerationStructureBuffers::Create(device, buildDesc.Inputs);
+
+	// bufferの設定
+	buildDesc.ScratchAccelerationStructureData = scratch->GetGPUVirtualAddress();
+	buildDesc.DestAccelerationStructureData    = asbuffer->GetGPUVirtualAddress();
+
+	// build descの設定
+	context->GetCommandList()->BuildRaytracingAccelerationStructure(
+		&buildDesc, 0, nullptr
+	);
+
+	// barrierの設定
+	D3D12_RESOURCE_BARRIER barrier = {};
+	barrier.Type          = D3D12_RESOURCE_BARRIER_TYPE_UAV;
+	barrier.UAV.pResource = asbuffer.Get();
+
+	context->GetCommandList()->ResourceBarrier(1, &barrier);
+
 }

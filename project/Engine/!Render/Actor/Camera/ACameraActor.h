@@ -50,7 +50,7 @@ public:
 
 	void Init();
 
-	void TransferView();
+	void UpdateView();
 
 	//* getter *//
 

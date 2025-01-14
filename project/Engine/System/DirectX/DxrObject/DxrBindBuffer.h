@@ -6,9 +6,9 @@
 //* DXROBJECT
 #include "DxrObjectCommon.h"
 
-//* DXOBJECT
-#include <Engine/System/DirectX/DxObject/DxDevice.h>
-#include <Engine/System/DirectX/DxObject/DxCommandContext.h>
+//* c++
+#include <vector>
+#include <unordered_map>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // DXROBJECT namespace
@@ -16,75 +16,95 @@
 _DXROBJECT_NAMESPACE_BEGIN
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// AccelerationStructureBuffers structure
+// WriteBindBufferType enum class
 ////////////////////////////////////////////////////////////////////////////////////////////
-struct AccelerationStructureBuffers {
-
-	//* member *//
-
-	ComPtr<ID3D12Resource> scratch;
-	ComPtr<ID3D12Resource> asbuffer;
-	ComPtr<ID3D12Resource> update;
-
-	//* methods *//
-
-	void Create(
-		DxObject::Device* device,
-		const D3D12_BUILD_RAYTRACING_ACCELERATION_STRUCTURE_INPUTS& inputs
-	);
-
+enum class WriteBindBufferType {
+	VirtualAddress,
+	DescriptorHandle,
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// BottomLevelAS class
+// using
 ////////////////////////////////////////////////////////////////////////////////////////////
-class BottomLevelAS
-	: protected AccelerationStructureBuffers {
+
+//! [unordered_map]
+//! key:   bufferName
+//! value: buffer
+using BufferContainer = std::unordered_map<std::string, DxObject::GPUBuffer>;
+
+//! [vector]
+using WriteBufferContainer = std::vector<DxObject::GPUBuffer>;
+
+////////////////////////////////////////////////////////////////////////////////////////////
+// WriteBindBufferDesc class
+////////////////////////////////////////////////////////////////////////////////////////////
+struct WriteBindBufferDesc {
 public:
 
 	//=========================================================================================
 	// public methods
 	//=========================================================================================
 
-	BottomLevelAS()  = default;
-	~BottomLevelAS() = default;
+	//* container option *//
 
+	void Clear();
 
+	void SetBuffer(const std::string& name, const DxObject::GPUBuffer& buffer);
+	void SetAddress(const std::string& name, const D3D12_GPU_VIRTUAL_ADDRESS& address);
+	void SetHandle(const std::string& name, const D3D12_GPU_DESCRIPTOR_HANDLE& handle);
+
+	//* getter *//
+
+	const BufferContainer& GetTable() const { return container_; }
 
 private:
 
 	//=========================================================================================
-	// private methods
+	// private variables
 	//=========================================================================================
 
-	void Build(
-		DxObject::Device* device, const DxObject::CommandContext* context,
-		const D3D12_RAYTRACING_GEOMETRY_DESC& geomDesc
-	);
+	//! [unordered_map]
+	//! key:   bufferName
+	//! value: buffer
+	BufferContainer container_;
 
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// TopLevelAS class
+// WriteBindBufferTable class
 ////////////////////////////////////////////////////////////////////////////////////////////
-class TopLevelAS
-	: protected AccelerationStructureBuffers {
+class WriteBindBufferTable {
 public:
 
 	//=========================================================================================
 	// public methods
 	//=========================================================================================
 
-	TopLevelAS()  = default;
-	~TopLevelAS() = default;
+	WriteBindBufferTable()  = default;
+	~WriteBindBufferTable() = default;
+
+	void Register(const std::string& name, UINT index, WriteBindBufferType type);
+	void RegisterAddress(const std::string& name, UINT index);
+	void RegisterHandle(const std::string& name, UINT index);
+
+	//* getter *//
+
+	WriteBufferContainer GetWriteBuffer(const WriteBindBufferDesc& desc) const;
 
 private:
+
+	//=========================================================================================
+	// private variables
+	//=========================================================================================
+
+	std::vector<WriteBindBufferType>      table_;
+	std::unordered_map<std::string, UINT> tableIndex_;
 
 	//=========================================================================================
 	// private methods
 	//=========================================================================================
 
-	void Build(DxObject::Device* device, const DxObject::CommandContext* context);
+	void AutoResize(UINT index);
 
 };
 

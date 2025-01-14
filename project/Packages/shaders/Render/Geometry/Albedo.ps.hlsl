@@ -4,7 +4,7 @@
 #include "GeometryPass.hlsli"
 
 //=========================================================================================
-// buffer
+// Buffer
 //=========================================================================================
 
 Texture2D<float4> gAlbedo : register(t0);
@@ -15,14 +15,12 @@ SamplerState gSampler     : register(s0);
 ////////////////////////////////////////////////////////////////////////////////////////////
 // main
 ////////////////////////////////////////////////////////////////////////////////////////////
-GeometryDeferredOutput main(GeometryPSInput input) {
-	
-	GeometryDeferredOutput output = (GeometryDeferredOutput)0;
+GeometryForwardOutput main(GeometryPSInput input) {
 
-	output.SetAlbedo(gAlbedo.Sample(gSampler, input.texcoord).rgb);
-	output.SetAO(_NOT_USED_1);
-	output.SetNormal(input.normal);
-	output.SetPosition(input.worldPos);
-	
+	GeometryForwardOutput output = (GeometryForwardOutput)0;
+
+	output.color = gAlbedo.Sample(gSampler, input.texcoord);
+
 	return output;
+	
 }

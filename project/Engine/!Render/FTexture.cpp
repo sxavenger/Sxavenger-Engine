@@ -120,9 +120,12 @@ void FTexture::TransitionEndRenderTarget(const DirectXThreadContext* context) co
 }
 
 void FTexture::ClearRenderTarget(const DirectXThreadContext* context) const {
+
+	static const Color4f clearColor = { 0.0f, 0.0f, 0.0f, 0.0f };
+
 	context->GetCommandList()->ClearRenderTargetView(
 		descriptorRTV_.GetCPUHandle(),
-		nullptr, //!< clear color
+		&clearColor.r,
 		0, nullptr
 	);
 }

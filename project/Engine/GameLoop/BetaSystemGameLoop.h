@@ -8,11 +8,15 @@
 #include <Engine/System/Window/GameWindow.h>
 #include <Engine/Asset/AssetCollection.h>
 
-//* test
+//* test !render
 #include <Engine/!Render/FScene.h>
 #include <Engine/!Render/FSceneRenderer.h>
 #include <Engine/!Render/Actor/Camera/CameraActor/ACineCameraActor.h>
 #include <Engine/!Render/Actor/Geometry/GeometryActors/AModelActor.h>
+
+//* test raytracing
+#include <Engine/System/DirectX/DxrObject/DxrRaytracingBlob.h>
+#include <Engine/System/DirectX/DxrObject/DxrExportGroup.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // BetaSystemGameLoop class
@@ -45,6 +49,13 @@ private:
 	std::unique_ptr<ACineCameraActor> camera_;
 
 	std::unique_ptr<AModelActor> model_;
+
+	//* raytracing system *//
+
+	std::unique_ptr<DxrObject::RaytracingBlob> blob1_;
+
+	std::unique_ptr<DxrObject::ExportGroup> raygeneration_;
+	std::unique_ptr<DxrObject::ExportGroup> miss_;
 
 	//=========================================================================================
 	// private methods

@@ -3,40 +3,36 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
-//* actor
-#include "Actor/Geometry/AGeometryActor.h"
+//* DXROBJECT
+#include "DxrObjectCommon.h"
+#include "DxrRootSignatureDesc.h"
 
-//* engine
-#include <Engine/System/DirectX/DxrObject/DxrAccelerationStructure.h>
-
-//* c++
-#include <list>
-
-//-----------------------------------------------------------------------------------------
-// forward
-//-----------------------------------------------------------------------------------------
-class ALightActor;
+//* DXOBJECT
+#include <Engine/System/DirectX/DxObject/DxDevice.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// FScene class
+// DXROBJECT namespace
 ////////////////////////////////////////////////////////////////////////////////////////////
-class FScene {
+_DXROBJECT_NAMESPACE_BEGIN
+
+////////////////////////////////////////////////////////////////////////////////////////////
+// LocalRootSignature class
+////////////////////////////////////////////////////////////////////////////////////////////
+class LocalRootSignature {
 public:
 
 	//=========================================================================================
 	// public methods
 	//=========================================================================================
 
-	FScene()  = default;
-	~FScene() = default;
+	LocalRootSignature()  = default;
+	~LocalRootSignature() = default;
 
-	//* actor option *//
-
-	void AddGeometry(AGeometryActor* geometry);
+	void CreateRootSignature(DxObject::Device* device, const LocalRootSignatureDesc& desc);
 
 	//* getter *//
 
-	const std::list<AGeometryActor*>& GetGeometries() const { return geometries_; }
+	ID3D12RootSignature* GetRootSignature() const { return rootSignature_.Get(); }
 
 private:
 
@@ -44,18 +40,14 @@ private:
 	// private variables
 	//=========================================================================================
 
-	//* geometry actors *//
+	//* root signature *//
 
-	std::list<AGeometryActor*> geometries_;
-	//* sceneに描画されるactorのリスト
+	ComPtr<ID3D12RootSignature> rootSignature_;
 
-	DxrObject::TopLevelAS topLevelAS_;
+	//* size *//
 
-	//* light actors *//
-
-	std::list<ALightActor*> lights_;
-	//* sceneに描画されるactorのリスト
-
-	
+	size_t size_ = NULL;
 
 };
+
+_DXROBJECT_NAMESPACE_END

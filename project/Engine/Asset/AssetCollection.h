@@ -12,7 +12,7 @@
 
 //* other asset adapter
 #include "Thread/AsyncAssetThread.h"
-#include "Observer/AssetObserver.h"
+//#include "Observer/AssetObserver.h"
 
 //* lib
 #include <Lib/Sxl/OptimizedLowerPathMap.h>
@@ -21,6 +21,12 @@
 #include <filesystem>
 #include <memory>
 #include <variant>
+
+//-----------------------------------------------------------------------------------------
+// forward
+//-----------------------------------------------------------------------------------------
+template <BaseAssetConcept T>
+class AssetObserver;
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // AssetCollection class
@@ -104,6 +110,9 @@ public:
 
 	template <BaseAssetConcept T>
 	AssetObserver<T> TryImport(const std::filesystem::path& filepath);
+
+	template <BaseAssetConcept T>
+	std::shared_ptr<T> TryImportPtr(const std::filesystem::path& filepath);
 
 	//* import option *//
 
@@ -250,6 +259,30 @@ inline AssetObserver<T> AssetCollection::TryImport(const std::filesystem::path& 
 	}
 
 	return observer;
+}
+
+template <BaseAssetConcept T>
+inline std::shared_ptr<T> AssetCollection::TryImportPtr(const std::filesystem::path& filepath) {
+	auto& fileData = GetFile(filepath);
+
+	if constexpr (std::is_same_v<T, AssetUnknown>) {
+		return TryLoadUnknown(fileData, filepath);
+
+	} else if constexpr (std::is_same_v<T, AssetTexture>) {
+		return TryLoadTexture(fileData, filepath);
+
+	} else if constexpr (std::is_same_v<T, AssetModel>) {
+		return TryLoadModel(fileData, filepath);
+
+	} else if constexpr (std::is_same_v<T, AssetAnimator>) {
+		return TryLoadAnimator(fileData, filepath);
+
+	} else if constexpr (std::is_same_v<T, AssetBlob>) {
+		return TryLoadBlob(fileData, filepath);
+
+	} else {
+		static_assert(false, "not supported type.");
+	}
 }
 
 template <BaseAssetConcept T>

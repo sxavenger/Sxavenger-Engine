@@ -29,6 +29,26 @@ public:
 
 	void Term();
 
+	//* option *//
+
+	void TransitionBeginRasterizer(const DirectXThreadContext* context) const;
+
+	void TransitionEndRasterizer(const DirectXThreadContext* context) const;
+
+	void ClearRasterizerDepth(const DirectXThreadContext* context) const;
+
+	void TransitionBeginRaytracing(const DirectXThreadContext* context) const;
+
+	void TransitionEndRaytracing(const DirectXThreadContext* context) const;
+
+	// todo: raytracing -> rasterizer
+
+	//* getter *//
+
+	const D3D12_CPU_DESCRIPTOR_HANDLE& GetRasterizerCPUHandleDSV() const { return rasterizer_.descriptorDSV_.GetCPUHandle(); }
+
+	const D3D12_GPU_DESCRIPTOR_HANDLE& GetRaytracingGPUHandleUAV() const { return raytracing_.descriptorUAV_.GetGPUHandle(); }
+
 private:
 
 	////////////////////////////////////////////////////////////////////////////////////////////
@@ -77,6 +97,8 @@ private:
 		void EndWrite(const DirectXThreadContext* context) const; //!< Transition to pixel shader resource state.
 
 	};
+
+private:
 
 	//=========================================================================================
 	// private variables

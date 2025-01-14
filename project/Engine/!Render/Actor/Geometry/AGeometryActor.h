@@ -5,9 +5,15 @@
 //-----------------------------------------------------------------------------------------
 //* actor
 #include "../AActor.h"
+#include "../Camera/ACameraActor.h"
 
 //* engine
 #include <Engine/System/DirectX/DxrObject/DxrAccelerationStructure.h>
+#include <Engine/System/DirectX/DirectXContext.h>
+
+//* lib
+#include <Lib/CXXAttributeConfig.h>
+#include <Lib/Geometry/Vector2.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // AGeometryActor class
@@ -26,6 +32,17 @@ public:
 	};
 	// hack: material側に持たせる
 
+	////////////////////////////////////////////////////////////////////////////////////////////
+	// RendererContext structure
+	////////////////////////////////////////////////////////////////////////////////////////////
+	struct RendererContext {
+		//* 描画情報
+		const DirectXThreadContext* context; //!< DirectXスレッドコンテキスト
+		Vector2ui size;                      //!< 描画サイズ
+
+		ACameraActor* camera; //!< カメラ
+	};
+
 public:
 
 	//=========================================================================================
@@ -37,9 +54,11 @@ public:
 
 	//* render *//
 
-	virtual void RenderOpaque()      = 0;
-	virtual void RenderTransparent() = 0;
+	virtual void RenderOpaque(const RendererContext& context)      = 0;
+	virtual void RenderTransparent(const RendererContext& context) = 0;
 	//* 描画情報を引数に渡す
+
+	bool CheckVisibility(Transparency target) const;
 
 	//* getter *//
 
@@ -52,6 +71,8 @@ protected:
 	//=========================================================================================
 
 	//* parameter *//
+
+	bool isActive_ = true;
 
 	Transparency transparency_ = Transparency::Opaque;
 

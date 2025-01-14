@@ -17,6 +17,9 @@
 #include "DxObject/DxGraphicsPipelineState.h"
 #include "DxObject/DxComputePipelineState.h"
 
+//* DXROBJECT utility
+#include "DxrObject/DxrRaytracingBlob.h"
+
 //* c++
 #include <memory>
 

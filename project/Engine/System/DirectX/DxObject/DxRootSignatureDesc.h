@@ -34,8 +34,6 @@ public:
 
 	void Clear();
 
-	void ShrinkToFit();
-
 	void Reset();
 
 	//* container setter *//

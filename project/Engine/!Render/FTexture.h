@@ -44,6 +44,10 @@ public:
 
 	ID3D12Resource* GetResource() const { return resource_.Get(); }
 
+	const D3D12_CPU_DESCRIPTOR_HANDLE& GetCPUHandleRTV() const { return descriptorRTV_.GetCPUHandle(); }
+
+	const D3D12_CPU_DESCRIPTOR_HANDLE& GetCPUHandleUAV() const { return descriptorUAV_.GetCPUHandle(); }
+
 private:
 
 	//=========================================================================================
