@@ -43,7 +43,6 @@ public:
 	const Vector3f GetPosition() const;
 
 	const Matrix4x4& GetMatrix() const { return mat_; }
-	Matrix4x4& GetMatrix() { return mat_; }
 
 protected:
 

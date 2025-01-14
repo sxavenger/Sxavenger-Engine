@@ -103,7 +103,6 @@
     <ClCompile Include="Engine\Asset\Thread\AsyncAssetThreadCollection.cpp" />
     <ClCompile Include="Engine\Asset\SxavengerAsset.cpp" />
     <ClCompile Include="Demo\GameLoop\DemoGameLoop.cpp" />
-    <ClCompile Include="Engine\Module\TransformComponent\TransformComponent.cpp" />
     <ClCompile Include="Lib\Transform\Transform.cpp" />
     <ClCompile Include="Engine\Content\TextureBuffer\BaseOffscreenTexture.cpp" />
     <ClCompile Include="Engine\Content\TextureBuffer\MultiViewTextureBuffer.cpp" />
@@ -130,7 +129,9 @@
     <ClCompile Include="Engine\System\Runtime\Performance\RunTimeTracker.cpp" />
     <ClCompile Include="Engine\Asset\Json\AssetJson.cpp" />
     <ClCompile Include="Lib\Easing.cpp" />
-    <ClCompile Include="Engine\Module\Sprite\SpriteCommon.cpp" />
+    <ClCompile Include="Engine\Module\Sprite\Sprite.cpp" />
+    <ClCompile Include="Engine\Module\Component\Transform2dComponent.cpp" />
+    <ClCompile Include="Engine\Module\Component\TransformComponent.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\System\Window\Window.h" />
@@ -239,7 +240,6 @@
     <ClInclude Include="Engine\Asset\Thread\AsyncAssetThreadCollection.h" />
     <ClInclude Include="Engine\Asset\SxavengerAsset.h" />
     <ClInclude Include="Demo\GameLoop\DemoGameLoop.h" />
-    <ClInclude Include="Engine\Module\TransformComponent\TransformComponent.h" />
     <ClInclude Include="Lib\Transform\Transform.h" />
     <ClInclude Include="Engine\Content\TextureBuffer\BaseOffscreenTexture.h" />
     <ClInclude Include="Engine\Content\TextureBuffer\MultiViewTextureBuffer.h" />
@@ -266,6 +266,8 @@
     <ClInclude Include="Engine\System\Runtime\Performance\RunTimeTracker.h" />
     <ClInclude Include="Engine\Asset\Json\AssetJson.h" />
     <ClInclude Include="Lib\Easing.h" />
-    <ClInclude Include="Engine\Module\Sprite\SpriteCommon.h" />
+    <ClInclude Include="Engine\Module\Sprite\Sprite.h" />
+    <ClInclude Include="Engine\Module\Component\TransformComponent.h" />
+    <ClInclude Include="Engine\Module\Component\Transform2dComponent.h" />
   </ItemGroup>
 </Project>

@@ -61,15 +61,15 @@ void TransformationMatrix::Transfer(const Matrix4x4& _mat) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// UVTransform structure methods
+// Transform2d structure methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-void UVTransform::SetImGuiCommand(float granularityTranslate, float granularityScale) {
+void Transform2d::SetImGuiCommand(float granularityTranslate, float granularityScale) {
 	ImGui::DragFloat2("translate", &translate.x, granularityTranslate);
 	ImGui::SliderAngle("rotate", &rotate);
 	ImGui::DragFloat2("scale", &scale.x, granularityScale);
 }
 
-Matrix4x4 UVTransform::ToMatrix() const {
+Matrix4x4 Transform2d::ToMatrix() const {
 	return Matrix::MakeAffine({ scale.x, scale.y, 0.0f }, { 0.0f, 0.0f, rotate }, { translate.x, translate.y, 0.0f });
 }

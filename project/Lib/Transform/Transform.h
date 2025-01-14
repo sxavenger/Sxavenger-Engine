@@ -85,16 +85,16 @@ struct TransformationMatrix {
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// UVTransform structure
+// Transform2d structure
 ////////////////////////////////////////////////////////////////////////////////////////////
-struct UVTransform {
+struct Transform2d {
 
 	//=========================================================================================
 	// public methods
 	//=========================================================================================
 
-	UVTransform()  = default;
-	~UVTransform() = default;
+	Transform2d()  = default;
+	~Transform2d() = default;
 
 	void SetImGuiCommand(float granularityTranslate = 0.01f, float granularityScale = 0.01f);
 

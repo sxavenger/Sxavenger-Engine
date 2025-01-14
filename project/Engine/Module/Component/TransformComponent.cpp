@@ -46,7 +46,7 @@ const Vector3f BaseTransformComponent::GetPosition() const {
 
 void TransformComponent::UpdateMatrix() {
 	mat_ = transform_.ToMatrix();
-	Transfer();
+	BaseTransformComponent::Transfer();
 }
 
 void TransformComponent::SetImGuiCommand() {
