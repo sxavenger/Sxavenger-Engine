@@ -8,7 +8,7 @@
 
 //* c++
 #include <vector>
-#include <unordered_map>
+#include <optional>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // DXROBJECT namespace
@@ -18,44 +18,36 @@ _DXROBJECT_NAMESPACE_BEGIN
 ////////////////////////////////////////////////////////////////////////////////////////////
 // WriteBindBufferType enum class
 ////////////////////////////////////////////////////////////////////////////////////////////
-enum class WriteBindBufferType {
+enum class WriteBindBufferType : bool {
 	VirtualAddress,
 	DescriptorHandle,
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// using
-////////////////////////////////////////////////////////////////////////////////////////////
-
-//! [unordered_map]
-//! key:   bufferName
-//! value: buffer
-using BufferContainer = std::unordered_map<std::string, DxObject::GPUBuffer>;
-
-//! [vector]
-using WriteBufferContainer = std::vector<DxObject::GPUBuffer>;
-
-////////////////////////////////////////////////////////////////////////////////////////////
-// WriteBindBufferDesc class
+// WriteBindBufferDesc structure
 ////////////////////////////////////////////////////////////////////////////////////////////
 struct WriteBindBufferDesc {
+public:
+
+	////////////////////////////////////////////////////////////////////////////////////////////
+	// using
+	////////////////////////////////////////////////////////////////////////////////////////////
+	using Container = std::vector<std::optional<DxObject::GPUBuffer>>;
+
 public:
 
 	//=========================================================================================
 	// public methods
 	//=========================================================================================
 
-	//* container option *//
-
-	void Clear();
-
-	void SetBuffer(const std::string& name, const DxObject::GPUBuffer& buffer);
-	void SetAddress(const std::string& name, const D3D12_GPU_VIRTUAL_ADDRESS& address);
-	void SetHandle(const std::string& name, const D3D12_GPU_DESCRIPTOR_HANDLE& handle);
+	void SetBuffer(uint32_t index, const std::optional<DxObject::GPUBuffer>& buffer);
+	void SetAddress(uint32_t index, const D3D12_GPU_VIRTUAL_ADDRESS& address);
+	void SetHandle(uint32_t index, const D3D12_GPU_DESCRIPTOR_HANDLE& handle);
 
 	//* getter *//
 
-	const BufferContainer& GetTable() const { return container_; }
+	D3D12_GPU_VIRTUAL_ADDRESS GetAddress(uint32_t index) const;
+	D3D12_GPU_DESCRIPTOR_HANDLE GetHandle(uint32_t index) const;
 
 private:
 
@@ -63,10 +55,7 @@ private:
 	// private variables
 	//=========================================================================================
 
-	//! [unordered_map]
-	//! key:   bufferName
-	//! value: buffer
-	BufferContainer container_;
+	Container container_;
 
 };
 
@@ -76,20 +65,24 @@ private:
 class WriteBindBufferTable {
 public:
 
+	////////////////////////////////////////////////////////////////////////////////////////////
+	// using
+	////////////////////////////////////////////////////////////////////////////////////////////
+	using Table = std::vector<WriteBindBufferType>;
+
+public:
+
 	//=========================================================================================
 	// public methods
 	//=========================================================================================
 
-	WriteBindBufferTable()  = default;
-	~WriteBindBufferTable() = default;
-
-	void Register(const std::string& name, UINT index, WriteBindBufferType type);
-	void RegisterAddress(const std::string& name, UINT index);
-	void RegisterHandle(const std::string& name, UINT index);
+	void Register(uint32_t index, WriteBindBufferType type);
+	void RegisterAddress(uint32_t index);
+	void RegisterHandle(uint32_t index);
 
 	//* getter *//
 
-	WriteBufferContainer GetWriteBuffer(const WriteBindBufferDesc& desc) const;
+	WriteBindBufferDesc::Container GetWriteBuffers(const WriteBindBufferDesc& desc) const;
 
 private:
 
@@ -97,15 +90,9 @@ private:
 	// private variables
 	//=========================================================================================
 
-	std::vector<WriteBindBufferType>      table_;
-	std::unordered_map<std::string, UINT> tableIndex_;
-
-	//=========================================================================================
-	// private methods
-	//=========================================================================================
-
-	void AutoResize(UINT index);
-
+	Table table_;
 };
+
+
 
 _DXROBJECT_NAMESPACE_END

@@ -2,58 +2,63 @@
 _DXROBJECT_USING
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// WriteBindBufferDesc class
+// WriteBindBufferDesc structure methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-void WriteBindBufferDesc::Clear() {
-	container_.clear();
+void WriteBindBufferDesc::SetBuffer(uint32_t index, const std::optional<DxObject::GPUBuffer>& buffer) {
+	container_[index] = buffer;
 }
 
-void WriteBindBufferDesc::SetBuffer(const std::string& name, const DxObject::GPUBuffer& buffer) {
-	container_[name] = buffer;
+void WriteBindBufferDesc::SetAddress(uint32_t index, const D3D12_GPU_VIRTUAL_ADDRESS& address) {
+	SetBuffer(index, address);
 }
 
-void WriteBindBufferDesc::SetAddress(const std::string& name, const D3D12_GPU_VIRTUAL_ADDRESS& address) {
-	SetBuffer(name, address);
+void WriteBindBufferDesc::SetHandle(uint32_t index, const D3D12_GPU_DESCRIPTOR_HANDLE& handle) {
+	SetBuffer(index, handle);
 }
 
-void WriteBindBufferDesc::SetHandle(const std::string& name, const D3D12_GPU_DESCRIPTOR_HANDLE& handle) {
-	SetBuffer(name, handle);
+D3D12_GPU_VIRTUAL_ADDRESS WriteBindBufferDesc::GetAddress(uint32_t index) const {
+	Assert(container_[index].has_value(), "buffer is not set.");
+	Assert(std::holds_alternative<D3D12_GPU_VIRTUAL_ADDRESS>(container_[index].value()), "buffer type different.");
+	return std::get<D3D12_GPU_VIRTUAL_ADDRESS>(container_[index].value());
+}
+
+D3D12_GPU_DESCRIPTOR_HANDLE WriteBindBufferDesc::GetHandle(uint32_t index) const {
+	Assert(container_[index].has_value(), "buffer is not set.");
+	Assert(std::holds_alternative<D3D12_GPU_DESCRIPTOR_HANDLE>(container_[index].value()), "buffer type different.");
+	return std::get<D3D12_GPU_DESCRIPTOR_HANDLE>(container_[index].value());
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // WriteBindBufferTable class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-void WriteBindBufferTable::Register(const std::string& name, UINT index, WriteBindBufferType type) {
-	AutoResize(index);
-	table_[index]     = type;
-	tableIndex_[name] = index;
+void WriteBindBufferTable::Register(uint32_t index, WriteBindBufferType type) {
+	table_[index] = type;
 }
 
-void WriteBindBufferTable::RegisterAddress(const std::string& name, UINT index) {
-	Register(name, index, WriteBindBufferType::VirtualAddress);
+void WriteBindBufferTable::RegisterAddress(uint32_t index) {
+	Register(index, WriteBindBufferType::VirtualAddress);
 }
 
-void WriteBindBufferTable::RegisterHandle(const std::string& name, UINT index) {
-	Register(name, index, WriteBindBufferType::DescriptorHandle);
+void WriteBindBufferTable::RegisterHandle(uint32_t index) {
+	Register(index, WriteBindBufferType::DescriptorHandle);
 }
 
-WriteBufferContainer WriteBindBufferTable::GetWriteBuffer(const WriteBindBufferDesc& desc) const {
+WriteBindBufferDesc::Container WriteBindBufferTable::GetWriteBuffers(const WriteBindBufferDesc& desc) const {
+	WriteBindBufferDesc::Container buffers(table_.size());
 
-	WriteBufferContainer container = {};
-	container.resize(table_.size());
+	for (uint32_t i = 0; i < table_.size(); ++i) {
+		switch (table_[i]) {
+			case WriteBindBufferType::VirtualAddress:
+				buffers[i] = desc.GetAddress(i);
+				break;
 
-	for (const auto& [name, index] : tableIndex_) {
-		Assert(desc.GetTable().contains(name), "buffer is not found.");
-		container[index] = desc.GetTable().at(name);
+			case WriteBindBufferType::DescriptorHandle:
+				buffers[i] = desc.GetHandle(i);
+				break;
+		}
 	}
 
-	return container;
-}
-
-void WriteBindBufferTable::AutoResize(UINT index) {
-	if (table_.size() <= index) {
-		table_.resize(index + 1);
-	}
+	return buffers;
 }

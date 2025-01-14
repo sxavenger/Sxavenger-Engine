@@ -10,11 +10,11 @@ void StateObjectDesc::SetBlob(const DxrObject::RaytracingBlob* blob) {
 }
 
 void StateObjectDesc::SetExportParameter() {
-	for (const auto& blob : blobs) {
-		for (const auto& expt : blob->GetExports()) {
-			// todo: ...
-		}
-	}
+	//for (const auto& blob : blobs) {
+	//	for (const auto& expt : blob->GetExports()) {
+	//		// todo: ...
+	//	}
+	//}
 }
 
 void StateObjectDesc::SetPayloadStride(size_t stride) {
