@@ -19,7 +19,7 @@ GeometryPSInput main(GeometryVertex input, uint instanceId : SV_InstanceID) {
 	
 	output.position  = mul(gTransform[instanceId].Transform(input.position), kViewProj);
 	output.texcoord  = input.texcoord; // todo: UVTransform.Transform(input.texcoord);
-	output.normal    = gTransform[instanceId].TransformNormal(input.normal);
+	output.normal    = normalize(gTransform[instanceId].TransformNormal(input.normal));
 	output.worldPos  = gTransform[instanceId].Transform(input.position).xyz;
 	output.tangent   = gTransform[instanceId].TransformNormal(input.tangent);
 	output.bitangent = gTransform[instanceId].TransformNormal(input.bitangent);

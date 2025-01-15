@@ -12,7 +12,7 @@ struct TransformationMatrix {
 	}
 
 	float3 TransformNormal(float3 normal) {
-		return normalize(mul(normal, (float3x3)matInverseTransopse));
+		return mul(normal, (float3x3)matInverseTransopse);
 	}
 	
 	float3 GetPosition() {

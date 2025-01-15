@@ -111,7 +111,7 @@
     <ClCompile Include="Engine\Dev\DeveloperGui.cpp" />
     <ClCompile Include="Engine\Module\Component\TransformComponent.cpp" />
     <ClCompile Include="Engine\!Render\Actor\Camera\ACameraActor.cpp" />
-    <ClCompile Include="Engine\!Render\Actor\Camera\CameraActor\ACineCameraActor.cpp" />
+    <ClCompile Include="Engine\!Render\Actor\Camera\CameraActors\ACineCameraActor.cpp" />
     <ClCompile Include="Engine\!Render\FRenderCore.cpp" />
     <ClCompile Include="Engine\System\DirectX\DxrObject\DxrExportGroup.cpp" />
     <ClCompile Include="Engine\System\DirectX\DxrObject\DxrRootSignatureDesc.cpp" />
@@ -121,7 +121,7 @@
     <ClCompile Include="Engine\System\DirectX\DxrObject\DxrStateObjectContext.cpp" />
     <ClCompile Include="Engine\System\DirectX\DxrObject\DxrBindBuffer.cpp" />
     <ClCompile Include="Engine\!Render\Actor\Light\ALightActor.cpp" />
-    <ClCompile Include="Engine\!Render\Actor\Light\LightActor\APointLight.cpp" />
+    <ClCompile Include="Engine\!Render\Actor\Light\LightActors\APointLight.cpp" />
     <ClCompile Include="Engine\Content\InputAssembler\LineInputAssembler.cpp" />
     <ClCompile Include="Engine\Content\InputAssembler\TriangleInputAssembler.cpp" />
   </ItemGroup>
@@ -239,7 +239,7 @@
     <ClInclude Include="Engine\Dev\DeveloperGui.h" />
     <ClInclude Include="Engine\Module\Component\TransformComponent.h" />
     <ClInclude Include="Engine\!Render\Actor\Camera\ACameraActor.h" />
-    <ClInclude Include="Engine\!Render\Actor\Camera\CameraActor\ACineCameraActor.h" />
+    <ClInclude Include="Engine\!Render\Actor\Camera\CameraActors\ACineCameraActor.h" />
     <ClInclude Include="Engine\!Render\FRenderCore.h" />
     <ClInclude Include="Engine\System\DirectX\DxrObject\DxrExportGroup.h" />
     <ClInclude Include="Engine\System\DirectX\DxrObject\DxrRootSignatureDesc.h" />
@@ -249,7 +249,7 @@
     <ClInclude Include="Engine\System\DirectX\DxrObject\DxrStateObjectContext.h" />
     <ClInclude Include="Engine\System\DirectX\DxrObject\DxrBindBuffer.h" />
     <ClInclude Include="Engine\!Render\Actor\Light\ALightActor.h" />
-    <ClInclude Include="Engine\!Render\Actor\Light\LightActor\APointLight.h" />
+    <ClInclude Include="Engine\!Render\Actor\Light\LightActors\APointLight.h" />
     <ClInclude Include="Engine\Content\InputAssembler\LineInputAssembler.h" />
     <ClInclude Include="Engine\Content\InputAssembler\TriangleInputAssembler.h" />
   </ItemGroup>

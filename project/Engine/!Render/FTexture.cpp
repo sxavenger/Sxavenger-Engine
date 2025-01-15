@@ -89,6 +89,26 @@ void FTexture::Create(const Vector2ui& size, DXGI_FORMAT format) {
 			descriptorUAV_.GetCPUHandle()
 		);
 	}
+
+	{ //!< SRVの生成
+
+		// handleの取得
+		descriptorSRV_ = SxavengerSystem::GetDescriptor(kDescriptor_SRV);
+
+		// descの設定
+		D3D12_SHADER_RESOURCE_VIEW_DESC desc = {};
+		desc.Format                    = format;
+		desc.ViewDimension             = D3D12_SRV_DIMENSION_TEXTURE2D;
+		desc.Shader4ComponentMapping   = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
+		desc.Texture2D.MipLevels       = 1;
+
+		// SRVの生成
+		device->CreateShaderResourceView(
+			resource_.Get(),
+			&desc,
+			descriptorSRV_.GetCPUHandle()
+		);
+	}
 }
 
 void FTexture::Term() {
@@ -97,7 +117,7 @@ void FTexture::Term() {
 	descriptorRTV_.Delete();
 }
 
-void FTexture::TransitionBeginRenderTarget(const DirectXThreadContext* context) const {
+D3D12_RESOURCE_BARRIER FTexture::TransitionBeginRenderTarget() const {
 
 	D3D12_RESOURCE_BARRIER barrier = {};
 	barrier.Type                   = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
@@ -105,10 +125,10 @@ void FTexture::TransitionBeginRenderTarget(const DirectXThreadContext* context) 
 	barrier.Transition.StateAfter  = D3D12_RESOURCE_STATE_RENDER_TARGET;
 	barrier.Transition.pResource   = GetResource();
 
-	context->GetCommandList()->ResourceBarrier(1, &barrier);
+	return barrier;
 }
 
-void FTexture::TransitionEndRenderTarget(const DirectXThreadContext* context) const {
+D3D12_RESOURCE_BARRIER FTexture::TransitionEndRenderTarget() const {
 
 	D3D12_RESOURCE_BARRIER barrier = {};
 	barrier.Type                   = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
@@ -116,7 +136,7 @@ void FTexture::TransitionEndRenderTarget(const DirectXThreadContext* context) co
 	barrier.Transition.StateAfter  = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
 	barrier.Transition.pResource   = GetResource();
 
-	context->GetCommandList()->ResourceBarrier(1, &barrier);
+	return barrier;
 }
 
 void FTexture::ClearRenderTarget(const DirectXThreadContext* context) const {
@@ -130,7 +150,7 @@ void FTexture::ClearRenderTarget(const DirectXThreadContext* context) const {
 	);
 }
 
-void FTexture::TransitionBeginUnordered(const DirectXThreadContext* context) const {
+D3D12_RESOURCE_BARRIER FTexture::TransitionBeginUnordered() const {
 
 	D3D12_RESOURCE_BARRIER barrier = {};
 	barrier.Type                   = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
@@ -138,10 +158,10 @@ void FTexture::TransitionBeginUnordered(const DirectXThreadContext* context) con
 	barrier.Transition.StateAfter  = D3D12_RESOURCE_STATE_UNORDERED_ACCESS;
 	barrier.Transition.pResource   = GetResource();
 
-	context->GetCommandList()->ResourceBarrier(1, &barrier);
+	return barrier;
 }
 
-void FTexture::TransitionEndUnordered(const DirectXThreadContext* context) const {
+D3D12_RESOURCE_BARRIER FTexture::TransitionEndUnordered() const {
 
 	D3D12_RESOURCE_BARRIER barrier = {};
 	barrier.Type                   = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
@@ -149,5 +169,5 @@ void FTexture::TransitionEndUnordered(const DirectXThreadContext* context) const
 	barrier.Transition.StateAfter  = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
 	barrier.Transition.pResource   = GetResource();
 
-	context->GetCommandList()->ResourceBarrier(1, &barrier);
+	return barrier;
 }

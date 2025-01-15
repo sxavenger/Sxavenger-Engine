@@ -39,10 +39,15 @@ void FSceneTextures::Create(const Vector2ui& size) {
 }
 
 void FSceneTextures::BeginBasePass(const DirectXThreadContext* context) const {
-	gBuffers_[static_cast<uint8_t>(GBufferLayout::Normal)]->TransitionBeginRenderTarget(context);
-	gBuffers_[static_cast<uint8_t>(GBufferLayout::Material)]->TransitionBeginRenderTarget(context);
-	gBuffers_[static_cast<uint8_t>(GBufferLayout::Albedo_AO)]->TransitionBeginRenderTarget(context);
-	gBuffers_[static_cast<uint8_t>(GBufferLayout::Position)]->TransitionBeginRenderTarget(context);
+
+	D3D12_RESOURCE_BARRIER barriers[] = {
+		gBuffers_[static_cast<uint8_t>(GBufferLayout::Normal)]->TransitionBeginRenderTarget(),
+		gBuffers_[static_cast<uint8_t>(GBufferLayout::Material)]->TransitionBeginRenderTarget(),
+		gBuffers_[static_cast<uint8_t>(GBufferLayout::Albedo_AO)]->TransitionBeginRenderTarget(),
+		gBuffers_[static_cast<uint8_t>(GBufferLayout::Position)]->TransitionBeginRenderTarget(),
+	};
+
+	context->GetCommandList()->ResourceBarrier(_countof(barriers), barriers);
 
 	depth_->TransitionBeginRasterizer(context);
 
@@ -66,10 +71,41 @@ void FSceneTextures::BeginBasePass(const DirectXThreadContext* context) const {
 }
 
 void FSceneTextures::EndBasePass(const DirectXThreadContext* context) const {
-	gBuffers_[static_cast<uint8_t>(GBufferLayout::Normal)]->TransitionEndRenderTarget(context);
-	gBuffers_[static_cast<uint8_t>(GBufferLayout::Material)]->TransitionEndRenderTarget(context);
-	gBuffers_[static_cast<uint8_t>(GBufferLayout::Albedo_AO)]->TransitionEndRenderTarget(context);
-	gBuffers_[static_cast<uint8_t>(GBufferLayout::Position)]->TransitionEndRenderTarget(context);
+	D3D12_RESOURCE_BARRIER barriers[] = {
+		gBuffers_[static_cast<uint8_t>(GBufferLayout::Normal)]->TransitionEndRenderTarget(),
+		gBuffers_[static_cast<uint8_t>(GBufferLayout::Material)]->TransitionEndRenderTarget(),
+		gBuffers_[static_cast<uint8_t>(GBufferLayout::Albedo_AO)]->TransitionEndRenderTarget(),
+		gBuffers_[static_cast<uint8_t>(GBufferLayout::Position)]->TransitionEndRenderTarget(),
+	};
+
+	context->GetCommandList()->ResourceBarrier(_countof(barriers), barriers);
 
 	depth_->TransitionEndRasterizer(context);
+}
+
+void FSceneTextures::BeginLightingPass(const DirectXThreadContext* context) const {
+
+	D3D12_RESOURCE_BARRIER barriers[] = {
+		gBuffers_[static_cast<uint8_t>(GBufferLayout::Lighting)]->TransitionBeginRenderTarget(),
+	};
+
+	context->GetCommandList()->ResourceBarrier(_countof(barriers), barriers);
+
+	static const uint8_t kGBufferCount = 1;
+	std::array<D3D12_CPU_DESCRIPTOR_HANDLE, kGBufferCount> handles = {};
+	handles[0] = gBuffers_[static_cast<uint8_t>(GBufferLayout::Lighting)]->GetCPUHandleRTV();
+
+	context->GetCommandList()->OMSetRenderTargets(
+		kGBufferCount, handles.data(), false, nullptr
+	);
+
+	gBuffers_[static_cast<uint8_t>(GBufferLayout::Lighting)]->ClearRenderTarget(context);
+}
+
+void FSceneTextures::EndLightingPass(const DirectXThreadContext* context) const {
+	D3D12_RESOURCE_BARRIER barriers[] = {
+		gBuffers_[static_cast<uint8_t>(GBufferLayout::Lighting)]->TransitionEndRenderTarget(),
+	};
+
+	context->GetCommandList()->ResourceBarrier(_countof(barriers), barriers);
 }

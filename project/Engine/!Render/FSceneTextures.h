@@ -58,9 +58,17 @@ public:
 
 	void EndBasePass(const DirectXThreadContext* context) const;
 
+	void BeginLightingPass(const DirectXThreadContext* context) const;
+
+	void EndLightingPass(const DirectXThreadContext* context) const;
+
 	//* getter *//
 
 	const Vector2ui& GetSize() const { return parameterBuffer_->At(0).size; }
+
+	const FTexture* GetGBuffer(GBufferLayout layout) const { return gBuffers_[static_cast<uint8_t>(layout)].get(); }
+
+	const FSceneDepth* GetDepth() const { return depth_.get(); }
 
 private:
 

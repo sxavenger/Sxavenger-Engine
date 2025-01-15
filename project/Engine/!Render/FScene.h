@@ -30,9 +30,13 @@ public:
 
 	void AddGeometry(AGeometryActor* geometry);
 
+	void AddLight(ALightActor* light);
+
 	//* getter *//
 
 	const std::list<AGeometryActor*>& GetGeometries() const { return geometries_; }
+
+	const std::list<ALightActor*>& GetLights() const { return lights_; }
 
 private:
 

@@ -18,7 +18,7 @@ void FSceneRenderer::Render(const DirectXThreadContext* context) {
 	RenderOpaqueGeometries(context);
 
 	//* 照明と影の処理
-	// todo:
+	ProcessLighting(context);
 
 	//* 合成処理
 	// todo:
@@ -49,6 +49,32 @@ void FSceneRenderer::RenderOpaqueGeometries(const DirectXThreadContext* context)
 	}
 
 	textures_->EndBasePass(context);
+}
+
+void FSceneRenderer::ProcessLighting(const DirectXThreadContext* context) {
+
+	const auto& lights = scene_->GetLights();
+
+	textures_->BeginLightingPass(context);
+
+	ALightActor::RendererContext rendererContext = {};
+	rendererContext.context        = context;
+	rendererContext.size           = textures_->GetSize();
+
+	rendererContext.parameter.SetAddress("gCamera",  camera_->GetGPUVirtualAddress());
+	rendererContext.parameter.SetHandle("gDepth",    textures_->GetDepth()->GetRasterizerGPUHandleSRV());
+	rendererContext.parameter.SetHandle("gAlbedo",   textures_->GetGBuffer(FSceneTextures::GBufferLayout::Albedo_AO)->GetGPUHandleUAV());
+	rendererContext.parameter.SetHandle("gNormal",   textures_->GetGBuffer(FSceneTextures::GBufferLayout::Normal)->GetGPUHandleUAV());
+	rendererContext.parameter.SetHandle("gPosition", textures_->GetGBuffer(FSceneTextures::GBufferLayout::Position)->GetGPUHandleUAV());
+
+	// 照明の処理
+	for (auto light : lights) {
+		if (light->IsActive()) {
+			light->Render(rendererContext);
+		}
+	}
+
+	textures_->EndLightingPass(context);
 }
 
 void FSceneRenderer::RenderTransparentGeometries(const DirectXThreadContext* context) {

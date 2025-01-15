@@ -30,15 +30,15 @@ public:
 
 	//* transition methods *//
 
-	void TransitionBeginRenderTarget(const DirectXThreadContext* context) const;
+	D3D12_RESOURCE_BARRIER TransitionBeginRenderTarget() const;
 
-	void TransitionEndRenderTarget(const DirectXThreadContext* context) const;
+	D3D12_RESOURCE_BARRIER TransitionEndRenderTarget() const;
 
 	void ClearRenderTarget(const DirectXThreadContext* context) const;
 
-	void TransitionBeginUnordered(const DirectXThreadContext* context) const;
+	D3D12_RESOURCE_BARRIER TransitionBeginUnordered() const;
 
-	void TransitionEndUnordered(const DirectXThreadContext* context) const;
+	D3D12_RESOURCE_BARRIER TransitionEndUnordered() const;
 
 	//* getter *//
 
@@ -46,7 +46,9 @@ public:
 
 	const D3D12_CPU_DESCRIPTOR_HANDLE& GetCPUHandleRTV() const { return descriptorRTV_.GetCPUHandle(); }
 
-	const D3D12_CPU_DESCRIPTOR_HANDLE& GetCPUHandleUAV() const { return descriptorUAV_.GetCPUHandle(); }
+	const D3D12_GPU_DESCRIPTOR_HANDLE& GetGPUHandleUAV() const { return descriptorUAV_.GetGPUHandle(); }
+
+	const D3D12_GPU_DESCRIPTOR_HANDLE& GetGPUHandleSRV() const { return descriptorSRV_.GetGPUHandle(); }
 
 private:
 
@@ -60,6 +62,7 @@ private:
 
 	DxObject::Descriptor descriptorUAV_;
 	DxObject::Descriptor descriptorRTV_;
+	DxObject::Descriptor descriptorSRV_; //!< TEST
 
 	//* parameter *//
 

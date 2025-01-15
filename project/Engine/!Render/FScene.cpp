@@ -7,3 +7,7 @@
 void FScene::AddGeometry(AGeometryActor* geometry) {
 	geometries_.emplace_back(geometry);
 }
+
+void FScene::AddLight(ALightActor* light) {
+	lights_.emplace_back(light);
+}

@@ -29,13 +29,8 @@ struct PSOutput {
 // buffers
 //=========================================================================================
 
-//* t10 and t11 is defined in DeferredBuffer.hlsli
-StructuredBuffer<TransformationMatrix> gTransform : register(t12);
-
 ConstantBuffer<Camera> gCamera : register(b10);
 static const float4x4 kViewProj = mul(gCamera.view, gCamera.proj);
 
-struct Infomation {
-	float2 size;
-};
-ConstantBuffer<Infomation> gInfo : register(b11);
+//* t10 ~ t13 is defined in DeferredBuffer.hlsli
+StructuredBuffer<TransformationMatrix> gTransform : register(t14);

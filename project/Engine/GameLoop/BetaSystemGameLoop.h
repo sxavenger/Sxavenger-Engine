@@ -11,8 +11,9 @@
 //* test !render
 #include <Engine/!Render/FScene.h>
 #include <Engine/!Render/FSceneRenderer.h>
-#include <Engine/!Render/Actor/Camera/CameraActor/ACineCameraActor.h>
+#include <Engine/!Render/Actor/Camera/CameraActors/ACineCameraActor.h>
 #include <Engine/!Render/Actor/Geometry/GeometryActors/AModelActor.h>
+#include <Engine/!Render/Actor/Light/LightActors/APointLight.h>
 
 //* test raytracing
 #include <Engine/System/DirectX/DxrObject/DxrRaytracingBlob.h>
@@ -49,6 +50,7 @@ private:
 	std::unique_ptr<ACineCameraActor> camera_;
 
 	std::unique_ptr<AModelActor> model_;
+	std::unique_ptr<APointLight> light_;
 
 	//* raytracing system *//
 

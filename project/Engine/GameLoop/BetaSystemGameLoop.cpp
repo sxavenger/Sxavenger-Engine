@@ -46,8 +46,13 @@ void BetaSystemGameLoop::InitSystem() {
 
 	model_ = std::make_unique<AModelActor>();
 	model_->Init();
-	model_->SetModel(SxavengerAsset::TryImport<AssetModel>("asset/model/human/idle.gltf"));
+	//model_->SetModel(SxavengerAsset::TryImport<AssetModel>("asset/model/human/idle.gltf"));
+	model_->SetModel(SxavengerAsset::TryImport<AssetModel>("asset/model/primitive/teapot.obj"));
 	scene_->AddGeometry(model_.get());
+
+	light_ = std::make_unique<APointLight>();
+	light_->Init();
+	scene_->AddLight(light_.get());
 
 	FRenderCore::GetInstance()->Init();
 

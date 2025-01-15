@@ -58,6 +58,8 @@ private:
 
 	void RenderOpaqueGeometries(const DirectXThreadContext* context);
 
+	void ProcessLighting(const DirectXThreadContext* context);
+
 	void RenderTransparentGeometries(const DirectXThreadContext* context);
 
 };
