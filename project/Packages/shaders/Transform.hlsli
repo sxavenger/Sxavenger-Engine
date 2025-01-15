@@ -14,4 +14,8 @@ struct TransformationMatrix {
 	float3 TransformNormal(float3 normal) {
 		return normalize(mul(normal, (float3x3)matInverseTransopse));
 	}
+	
+	float3 GetPosition() {
+		return mat[3].xyz;
+	}
 };

@@ -4,54 +4,37 @@
 // include
 //-----------------------------------------------------------------------------------------
 //* actor
-#include "Actor/Geometry/AGeometryActor.h"
-#include "Actor/Light/ALightActor.h"
-
-//* engine
-#include <Engine/System/DirectX/DxrObject/DxrAccelerationStructure.h>
-
-//* c++
-#include <list>
+#include "../AActor.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// FScene class
+// ALightActor class
 ////////////////////////////////////////////////////////////////////////////////////////////
-class FScene {
+class ALightActor //!< light actor
+	: public AActor {
+	//* Light(光源)を持つActor
 public:
 
 	//=========================================================================================
 	// public methods
 	//=========================================================================================
 
-	FScene()  = default;
-	~FScene() = default;
+	ALightActor()          = default;
+	virtual ~ALightActor() = default;
 
-	//* actor option *//
+	//* render *//
 
-	void AddGeometry(AGeometryActor* geometry);
+	virtual void Render() = 0; //!< DeferredでのLight効果範囲描画
 
 	//* getter *//
 
-	const std::list<AGeometryActor*>& GetGeometries() const { return geometries_; }
+	bool IsActive() const { return isActive_; }
 
-private:
+protected:
 
 	//=========================================================================================
-	// private variables
+	// protected variables
 	//=========================================================================================
 
-	//* geometry actors *//
-
-	std::list<AGeometryActor*> geometries_;
-	//* sceneに描画されるactorのリスト
-
-	DxrObject::TopLevelAS topLevelAS_;
-
-	//* light actors *//
-
-	std::list<ALightActor*> lights_;
-	//* sceneに描画されるactorのリスト
-
-	
+	bool isActive_ = true;
 
 };

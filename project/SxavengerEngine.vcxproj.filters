@@ -120,6 +120,8 @@
     <ClCompile Include="Engine\System\DirectX\DxrObject\DxrRaytracingBlob.cpp" />
     <ClCompile Include="Engine\System\DirectX\DxrObject\DxrStateObjectContext.cpp" />
     <ClCompile Include="Engine\System\DirectX\DxrObject\DxrBindBuffer.cpp" />
+    <ClCompile Include="Engine\!Render\Actor\Light\ALightActor.cpp" />
+    <ClCompile Include="Engine\!Render\Actor\Light\LightActor\APointLight.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\System\Window\Window.h" />
@@ -244,5 +246,7 @@
     <ClInclude Include="Engine\System\DirectX\DxrObject\DxrRaytracingBlob.h" />
     <ClInclude Include="Engine\System\DirectX\DxrObject\DxrStateObjectContext.h" />
     <ClInclude Include="Engine\System\DirectX\DxrObject\DxrBindBuffer.h" />
+    <ClInclude Include="Engine\!Render\Actor\Light\ALightActor.h" />
+    <ClInclude Include="Engine\!Render\Actor\Light\LightActor\APointLight.h" />
   </ItemGroup>
 </Project>

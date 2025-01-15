@@ -139,6 +139,8 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="Engine\!Render\Actor\Camera\CameraActor\ACineCameraActor.cpp" />
     <ClCompile Include="Engine\!Render\Actor\Geometry\AGeometryActor.cpp" />
     <ClCompile Include="Engine\!Render\Actor\Geometry\GeometryActors\AModelActor.cpp" />
+    <ClCompile Include="Engine\!Render\Actor\Light\ALightActor.cpp" />
+    <ClCompile Include="Engine\!Render\Actor\Light\LightActor\APointLight.cpp" />
     <ClCompile Include="Engine\!Render\FRenderCore.cpp" />
     <ClCompile Include="Engine\!Render\FScene.cpp" />
     <ClCompile Include="Engine\!Render\FSceneDepth.cpp" />
@@ -251,6 +253,8 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Engine\!Render\Actor\Camera\CameraActor\ACineCameraActor.h" />
     <ClInclude Include="Engine\!Render\Actor\Geometry\AGeometryActor.h" />
     <ClInclude Include="Engine\!Render\Actor\Geometry\GeometryActors\AModelActor.h" />
+    <ClInclude Include="Engine\!Render\Actor\Light\ALightActor.h" />
+    <ClInclude Include="Engine\!Render\Actor\Light\LightActor\APointLight.h" />
     <ClInclude Include="Engine\!Render\FRenderCore.h" />
     <ClInclude Include="Engine\!Render\FScene.h" />
     <ClInclude Include="Engine\!Render\FSceneDepth.h" />
