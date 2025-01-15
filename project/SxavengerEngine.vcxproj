@@ -161,6 +161,8 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="Engine\Asset\Unknown\AssetUnknown.cpp" />
     <ClCompile Include="Engine\Content\Animation\Animation.cpp" />
     <ClCompile Include="Engine\Asset\Model\Model.cpp" />
+    <ClCompile Include="Engine\Content\InputAssembler\LineInputAssembler.cpp" />
+    <ClCompile Include="Engine\Content\InputAssembler\TriangleInputAssembler.cpp" />
     <ClCompile Include="Engine\Content\SxavengerContent.cpp" />
     <ClCompile Include="Engine\Content\TextureBuffer\BaseOffscreenTexture.cpp" />
     <ClCompile Include="Engine\Content\TextureBuffer\DepthTexture.cpp" />
@@ -277,6 +279,8 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Engine\Content\Animation\BornNode.h" />
     <ClInclude Include="Engine\Content\Animation\JointWeight.h" />
     <ClInclude Include="Engine\Asset\Model\Model.h" />
+    <ClInclude Include="Engine\Content\InputAssembler\LineInputAssembler.h" />
+    <ClInclude Include="Engine\Content\InputAssembler\TriangleInputAssembler.h" />
     <ClInclude Include="Engine\Content\SxavengerContent.h" />
     <ClInclude Include="Engine\Content\TextureBuffer\BaseOffscreenTexture.h" />
     <ClInclude Include="Engine\Content\TextureBuffer\DepthTexture.h" />

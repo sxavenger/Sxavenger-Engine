@@ -122,6 +122,8 @@
     <ClCompile Include="Engine\System\DirectX\DxrObject\DxrBindBuffer.cpp" />
     <ClCompile Include="Engine\!Render\Actor\Light\ALightActor.cpp" />
     <ClCompile Include="Engine\!Render\Actor\Light\LightActor\APointLight.cpp" />
+    <ClCompile Include="Engine\Content\InputAssembler\LineInputAssembler.cpp" />
+    <ClCompile Include="Engine\Content\InputAssembler\TriangleInputAssembler.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\System\Window\Window.h" />
@@ -248,5 +250,7 @@
     <ClInclude Include="Engine\System\DirectX\DxrObject\DxrBindBuffer.h" />
     <ClInclude Include="Engine\!Render\Actor\Light\ALightActor.h" />
     <ClInclude Include="Engine\!Render\Actor\Light\LightActor\APointLight.h" />
+    <ClInclude Include="Engine\Content\InputAssembler\LineInputAssembler.h" />
+    <ClInclude Include="Engine\Content\InputAssembler\TriangleInputAssembler.h" />
   </ItemGroup>
 </Project>

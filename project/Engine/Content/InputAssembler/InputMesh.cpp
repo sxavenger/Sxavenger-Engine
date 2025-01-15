@@ -41,7 +41,7 @@ void InputMesh::CreateMeshlet() {
 		std::vector<uint8_t> uniqueVertexIB;
 
 		auto hr = DirectX::ComputeMeshlets(
-			index_->GetData(), index_->GetSize() / 3,
+			reinterpret_cast<const UINT*>(index_->GetData()), index_->GetSize(), //!< HACK: ここはuint32_tでないといけない
 			positions.data(), positions.size(),
 			nullptr,
 			bufferMeshlets,

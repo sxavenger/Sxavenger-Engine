@@ -106,7 +106,7 @@ void Model::LoadMesh(const aiScene* aiScene) {
 
 		// InputAssemblerの初期化
 		auto& ia = meshes_.at(meshIndex).mesh;
-		ia.Create(aiMesh->mNumVertices, aiMesh->mNumFaces * 3 /*_triangle*/);
+		ia.Create(aiMesh->mNumVertices, aiMesh->mNumFaces);
 
 		auto vertex = ia.GetVertex();
 		auto index  = ia.GetIndex();
@@ -146,10 +146,7 @@ void Model::LoadMesh(const aiScene* aiScene) {
 			Assert(aiFace.mNumIndices == 3); //!< 三角形のみの対応
 
 			// indexの解析
-			for (uint32_t element = 0; element < aiFace.mNumIndices; ++element) {
-				//!< index
-				(*index)[faceIndex * 3 + element] = aiFace.mIndices[element];
-			}
+			(*index)[faceIndex] = { aiFace.mIndices[0], aiFace.mIndices[1], aiFace.mIndices[2] };
 		}
 
 		//* 

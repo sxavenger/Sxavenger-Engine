@@ -12,18 +12,18 @@
 #include <memory>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// InputAssembler class
+// TriangleInputAssembler class
 ////////////////////////////////////////////////////////////////////////////////////////////
 template <class _Vertex>
-class InputAssembler {
+class TriangleInputAssembler {
 public:
 
 	//=========================================================================================
 	// public methods
 	//=========================================================================================
 
-	InputAssembler()  = default;
-	~InputAssembler() { Term(); }
+	TriangleInputAssembler() = default;
+	~TriangleInputAssembler() { Term(); }
 
 	void Create(uint32_t vertexSize, uint32_t indexSize);
 
@@ -39,12 +39,12 @@ public:
 
 	DxObject::VertexDimensionBuffer<_Vertex>* GetVertex() const { return vertex_.get(); }
 
-	DxObject::IndexDimensionBuffer* GetIndex() const { return index_.get(); }
+	DxObject::TriangleIndexDimensionBuffer* GetIndex() const { return index_.get(); }
 
 	//* operator *//
 
-	InputAssembler(InputAssembler&&) noexcept            = default;
-	InputAssembler& operator=(InputAssembler&&) noexcept = default;
+	TriangleInputAssembler(TriangleInputAssembler&&) noexcept = default;
+	TriangleInputAssembler& operator=(TriangleInputAssembler&&) noexcept = default;
 
 protected:
 
@@ -53,30 +53,29 @@ protected:
 	//=========================================================================================
 
 	std::unique_ptr<DxObject::VertexDimensionBuffer<_Vertex>> vertex_;
-	std::unique_ptr<DxObject::IndexDimensionBuffer>     index_;
+	std::unique_ptr<DxObject::TriangleIndexDimensionBuffer>   index_;
 
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// InputAssembler class methods
+// TriangleInputAssembler class template methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 template <class _Vertex>
-inline void InputAssembler<_Vertex>::Create(uint32_t vertexSize, uint32_t indexSize) {
+inline void TriangleInputAssembler<_Vertex>::Create(uint32_t vertexSize, uint32_t indexSize) {
 	vertex_ = std::make_unique<DxObject::VertexDimensionBuffer<_Vertex>>();
 	vertex_->Create(SxavengerSystem::GetDxDevice(), vertexSize);
 
-	index_ = std::make_unique<DxObject::IndexDimensionBuffer>();
+	index_ = std::make_unique<DxObject::TriangleIndexDimensionBuffer>();
 	index_->Create(SxavengerSystem::GetDxDevice(), indexSize);
 }
 
 template <class _Vertex>
-inline void InputAssembler<_Vertex>::Term() {
+inline void TriangleInputAssembler<_Vertex>::Term() {
 }
 
 template <class _Vertex>
-inline void InputAssembler<_Vertex>::BindIABuffer(const DirectXThreadContext* context) const {
-
+inline void TriangleInputAssembler<_Vertex>::BindIABuffer(const DirectXThreadContext* context) const {
 	auto commandList = context->GetCommandList();
 
 	D3D12_VERTEX_BUFFER_VIEW vbv = vertex_->GetVertexBufferView();
@@ -87,9 +86,6 @@ inline void InputAssembler<_Vertex>::BindIABuffer(const DirectXThreadContext* co
 }
 
 template <class _Vertex>
-inline void InputAssembler<_Vertex>::DrawCall(const DirectXThreadContext* context, UINT instanceCount) const {
+inline void TriangleInputAssembler<_Vertex>::DrawCall(const DirectXThreadContext* context, UINT instanceCount) const {
 	context->GetCommandList()->DrawIndexedInstanced(index_->GetIndexCount(), instanceCount, 0, 0, 0);
 }
-
-
-

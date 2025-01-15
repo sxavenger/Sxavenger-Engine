@@ -141,6 +141,44 @@ public:
 	// public methods
 	//=========================================================================================
 
+	const UINT GetIndexCount() const;
+
+	const D3D12_INDEX_BUFFER_VIEW GetIndexBufferView() const;
+
+private:
+};
+
+////////////////////////////////////////////////////////////////////////////////////////////
+// LineIndexDimensionBuffer class
+////////////////////////////////////////////////////////////////////////////////////////////
+class LineIndexDimensionBuffer
+	: public DimensionBuffer<std::pair<UINT, UINT>> {
+public:
+
+	//=========================================================================================
+	// public methods
+	//=========================================================================================
+
+	const UINT GetIndexCount() const;
+
+	const D3D12_INDEX_BUFFER_VIEW GetIndexBufferView() const;
+
+private:
+};
+
+////////////////////////////////////////////////////////////////////////////////////////////
+// TriangleIndexDimensionBuffer class
+////////////////////////////////////////////////////////////////////////////////////////////
+class TriangleIndexDimensionBuffer
+	: public DimensionBuffer<std::tuple<UINT, UINT, UINT>> {
+public:
+
+	//=========================================================================================
+	// public methods
+	//=========================================================================================
+
+	const UINT GetIndexCount() const;
+
 	const D3D12_INDEX_BUFFER_VIEW GetIndexBufferView() const;
 
 private:

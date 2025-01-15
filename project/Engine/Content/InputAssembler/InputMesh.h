@@ -4,7 +4,7 @@
 // include
 //-----------------------------------------------------------------------------------------
 //* base
-#include "InputAssembler.h"
+#include "TriangleInputAssembler.h"
 
 //* DirectX
 #include <DirectXMesh.h>
@@ -22,7 +22,7 @@
 // InputMesh class
 ////////////////////////////////////////////////////////////////////////////////////////////
 class InputMesh
-	: public InputAssembler<MeshVertexData> {
+	: public TriangleInputAssembler<MeshVertexData> {
 public:
 
 	//=========================================================================================
