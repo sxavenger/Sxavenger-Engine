@@ -106,6 +106,12 @@ public:
 
 	static ImGuiController* GetImGuiController();
 
+	//=========================================================================================
+	// public variables
+	//=========================================================================================
+
+	static const std::string kEngineVersion;
+
 private:
 };
 

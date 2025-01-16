@@ -8,7 +8,8 @@
 #include <Engine/Asset/SxavengerAsset.h>
 #include <Engine/Dev/DeveloperGui.h>
 
-#include <Engine/!Render/FRenderCore.h>
+#include "Engine/!Render/FRenderCore.h"
+#include "Engine/System/Config/SxavengerDirectory.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // BetaSystemGameLoop class methods
@@ -47,14 +48,18 @@ void BetaSystemGameLoop::InitSystem() {
 	model_ = std::make_unique<AModelActor>();
 	model_->Init();
 	//model_->SetModel(SxavengerAsset::TryImport<AssetModel>("asset/model/human/idle.gltf"));
-	model_->SetModel(SxavengerAsset::TryImport<AssetModel>("asset/model/primitive/teapot.obj"));
+	//model_->SetModel(SxavengerAsset::TryImport<AssetModel>("asset/model/primitive/teapot.obj"));
+	model_->SetModel(SxavengerAsset::TryImport<AssetModel>("asset/model/chessBoard/chessBoard.gltf"));
+	model_->SetRenderWait(false);
 	scene_->AddGeometry(model_.get());
 
-	light_ = std::make_unique<APointLight>();
+	light_ = std::make_unique<APointLightActor>();
 	light_->Init();
 	scene_->AddLight(light_.get());
 
 	FRenderCore::GetInstance()->Init();
+
+	//* raytracing system *//
 
 	blob1_ = std::make_unique<DxrObject::RaytracingBlob>();
 	blob1_->Create("packages/shaders/raytracingDemo/RaygenerationDemo.hlsl");
@@ -68,16 +73,45 @@ void BetaSystemGameLoop::InitSystem() {
 	blob1_->SetExport(raygeneration_.get());
 	blob1_->SetExport(miss_.get());
 
+	//* presenter *//
 
+	presenter_ = std::make_unique<DxObject::ReflectionGraphicsPipelineState>();
+	presenter_->CreateBlob(kPackagesShaderDirectory / "render/presenter/presenter.vs.hlsl", DxObject::GraphicsShaderType::vs);
+	presenter_->CreateBlob(kPackagesShaderDirectory / "render/presenter/presenter.ps.hlsl", DxObject::GraphicsShaderType::ps);
+	presenter_->ReflectionRootSignature(SxavengerSystem::GetDxDevice());
 
+	DxObject::GraphicsPipelineDesc desc = {};
+	desc.CreateDefaultDesc();
 
+	desc.elements.clear();
+	desc.SetElement("POSITION", 0, DXGI_FORMAT_R32G32B32A32_FLOAT);
+	desc.SetElement("TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT);
+
+	desc.SetRTVFormat(0, DxObject::kScreenFormat);
+
+	presenter_->CreatePipeline(SxavengerSystem::GetDxDevice(), desc);
+
+	vb_ = std::make_unique<DxObject::VertexDimensionBuffer<std::pair<Vector4f, Vector2f>>>();
+	vb_->Create(SxavengerSystem::GetDxDevice(), 3);
+	vb_->At(0) = { { -1.0f, 1.0f, 0.0f }, { 0.0f, 0.0f } };
+	vb_->At(1) = { { 3.0f, 1.0f, 0.0f }, { 2.0f, 0.0f } };
+	vb_->At(2) = { { -1.0f, -3.0f, 0.0f }, { 0.0f, 2.0f } };
+	
 }
 
 void BetaSystemGameLoop::TermSystem() {
 }
 
 void BetaSystemGameLoop::UpdateSystem() {
-	sDeveloperGui->RenderMainMenu();
+	model_->GetTransform().scale  = { 4.0f, 4.0f, 4.0f };
+	model_->GetTransform().rotate *= MakeAxisAngle({ 0.0f, 1.0f, 0.0f }, 0.01f);
+	model_->UpdateMatrix();
+
+	static float frame = 0.0f;
+
+	light_->GetTransform().translate.y = 3.0f;
+	light_->GetTransform().translate.x = 1.0f;
+	light_->UpdateMatrix();
 }
 
 void BetaSystemGameLoop::DrawSystem() {
@@ -86,6 +120,22 @@ void BetaSystemGameLoop::DrawSystem() {
 
 	main_->BeginRendering();
 	main_->ClearWindow();
+
+	{
+		auto command = SxavengerSystem::GetMainThreadContext()->GetDxCommand();
+
+		presenter_->SetPipeline(command, main_->GetSize());
+
+		D3D12_VERTEX_BUFFER_VIEW vbv = vb_->GetVertexBufferView();
+		command->GetCommandList()->IASetVertexBuffers(0, 1, &vbv);
+
+		DxObject::BindBufferDesc desc = {};
+		desc.SetHandle("gTexture", renderer_->GetDebugTexture());
+
+		presenter_->BindGraphicsBuffer(command, desc);
+
+		command->GetCommandList()->DrawInstanced(3, 1, 0, 0);
+	}
 
 	SxavengerSystem::RenderImGui();
 

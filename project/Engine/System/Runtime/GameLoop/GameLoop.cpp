@@ -16,9 +16,9 @@
 
 void GameLoop::Context::Run() {
 
-	EngineLog(std::format("[GameLoop::Context]: Begin Loop. ptr: {:p}", reinterpret_cast<void*>(this)));
+	Log(std::format("[GameLoop::Context]: Begin Loop. ptr: {:p}", reinterpret_cast<void*>(this)));
 	Loop();
-	EngineLog(std::format("[GameLoop::Context]: End Loop. ptr: {:p}", reinterpret_cast<void*>(this)));
+	Log(std::format("[GameLoop::Context]: End Loop. ptr: {:p}", reinterpret_cast<void*>(this)));
 
 	Clear();
 }

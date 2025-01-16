@@ -3,42 +3,46 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
-//* render
-#include "FScene.h"
-#include "FSceneTextures.h"
-#include "Actor/Camera/ACameraActor.h"
+//* editors
 
-//* engine	
-#include <Engine/System/DirectX/DirectXContext.h>
+//* external
+#include <imgui.h>
+
+//* c++
+#include <string>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// FSceneRenderer class
+// EditorEngine class
 ////////////////////////////////////////////////////////////////////////////////////////////
-class FSceneRenderer {
+class EditorEngine {
 public:
 
 	//=========================================================================================
-	// public methods
+	// public method
 	//=========================================================================================
 
-	FSceneRenderer()  = default;
-	~FSceneRenderer() = default;
+	EditorEngine()  = default;
+	~EditorEngine() = default;
 
-	void CreateTextures(const Vector2ui& size);
+	void Init();
 
-	//* render *//
+	void Term();
 
-	void Render(const DirectXThreadContext* context);
+	void UpdateEditor();
 
-	//* setter *//
+	//* imgui opiton *//
 
-	void SetScene(FScene* scene) { scene_ = scene; }
+	ImGuiWindowFlags GetWindowFlag() const { return windowFlag_; }
 
-	void SetCamera(ACameraActor* camera) { camera_ = camera; }
+	void SetNextWindowDocking() const;
 
-	//* debug *//
+	//* singleton *//
 
-	const D3D12_GPU_DESCRIPTOR_HANDLE& GetDebugTexture() const;
+	static EditorEngine* GetInstance();
+
+private:
+
+
 
 private:
 
@@ -46,24 +50,28 @@ private:
 	// private variables
 	//=========================================================================================
 
-	//* scene *//
+	static const std::string kEditorName_;
 
-	FScene* scene_ = nullptr; //!< geometry and light actors
+	//* imgui parameter *//
 
-	//* view info *//
-
-	ACameraActor* camera_ = nullptr; //!< camera
-	std::unique_ptr<FSceneTextures> textures_;
-	//! externalに変えるかも...
+	ImGuiID          dockingId_  = NULL;
+	ImGuiWindowFlags windowFlag_ = NULL;
 
 	//=========================================================================================
 	// private methods
 	//=========================================================================================
 
-	void RenderOpaqueGeometries(const DirectXThreadContext* context);
+	//* show imgui component *//
 
-	void ProcessLighting(const DirectXThreadContext* context);
+	void ShowMainMenu();
 
-	void RenderTransparentGeometries(const DirectXThreadContext* context);
+	void ShowWindow();
+
+
 
 };
+
+//=========================================================================================
+// static variable
+//=========================================================================================
+static EditorEngine* const sEditorEngine = EditorEngine::GetInstance();

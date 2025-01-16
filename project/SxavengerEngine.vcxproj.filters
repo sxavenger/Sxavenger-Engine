@@ -121,9 +121,12 @@
     <ClCompile Include="Engine\System\DirectX\DxrObject\DxrStateObjectContext.cpp" />
     <ClCompile Include="Engine\System\DirectX\DxrObject\DxrBindBuffer.cpp" />
     <ClCompile Include="Engine\!Render\Actor\Light\ALightActor.cpp" />
-    <ClCompile Include="Engine\!Render\Actor\Light\LightActors\APointLight.cpp" />
+    <ClCompile Include="Engine\!Render\Actor\Light\LightActors\APointLightActor.cpp" />
     <ClCompile Include="Engine\Content\InputAssembler\LineInputAssembler.cpp" />
     <ClCompile Include="Engine\Content\InputAssembler\TriangleInputAssembler.cpp" />
+    <ClCompile Include="Engine\Editor\EditorEngine.cpp" />
+    <ClCompile Include="Engine\Editor\Editors\EngineDeveloperEditor.cpp" />
+    <ClCompile Include="Engine\GameLoop\EditorEngineGameLoop.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\System\Window\Window.h" />
@@ -249,8 +252,11 @@
     <ClInclude Include="Engine\System\DirectX\DxrObject\DxrStateObjectContext.h" />
     <ClInclude Include="Engine\System\DirectX\DxrObject\DxrBindBuffer.h" />
     <ClInclude Include="Engine\!Render\Actor\Light\ALightActor.h" />
-    <ClInclude Include="Engine\!Render\Actor\Light\LightActors\APointLight.h" />
+    <ClInclude Include="Engine\!Render\Actor\Light\LightActors\APointLightActor.h" />
     <ClInclude Include="Engine\Content\InputAssembler\LineInputAssembler.h" />
     <ClInclude Include="Engine\Content\InputAssembler\TriangleInputAssembler.h" />
+    <ClInclude Include="Engine\Editor\EditorEngine.h" />
+    <ClInclude Include="Engine\Editor\Editors\EngineDeveloperEditor.h" />
+    <ClInclude Include="Engine\GameLoop\EditorEngineGameLoop.h" />
   </ItemGroup>
 </Project>

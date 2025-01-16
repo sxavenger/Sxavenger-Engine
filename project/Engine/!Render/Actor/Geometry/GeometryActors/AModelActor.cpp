@@ -20,6 +20,10 @@ void AModelActor::RenderOpaque(const RendererContext& context) {
 		context.context, context.size
 	);
 
+	if (!isRenderWait_ && !model_.Get()->IsComplete()) {
+		return;
+	}
+
 	auto model = model_.WaitGet();
 
 	DxObject::BindBufferDesc parameter = {};

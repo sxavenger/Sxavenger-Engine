@@ -35,12 +35,20 @@ public:
 
 	void SetModel(const AssetObserver<AssetModel>& model) { model_ = model; }
 
+	void SetRenderWait(bool isRenderWait) { isRenderWait_ = isRenderWait; }
+
 protected:
 
 	//=========================================================================================
 	// protected variables
 	//=========================================================================================
 
+	//* asset *//
+
 	AssetObserver<AssetModel> model_;
+
+	//* option *//
+
+	bool isRenderWait_ = true;
 
 };

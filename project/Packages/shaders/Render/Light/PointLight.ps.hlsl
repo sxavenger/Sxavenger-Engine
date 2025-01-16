@@ -37,7 +37,7 @@ PSOutput main(PSInput input) {
 	float3 l = normalize(p_light - p_surface); //!< light‚Ì•ûŒüƒxƒNƒgƒ‹
 	float r  = length(p_light - p_surface);    //!< light‚Æsurface‚Ì‹——£
 
-	float diffuse = CalculateDiffuseHalfLambert(n, l);
+	float diffuse = CalculateDiffuseLambert(n, l);
 	
 	float dist     = pow(max(1.0f - pow(r / gPointLight.radius, 4.0f), 0.0f), 2.0f); //!< dist = func_win(r);
 	float3 c_light = gPointLight.color_intensity.rgb * gPointLight.color_intensity.a * dist;

@@ -16,11 +16,19 @@ namespace {
 	static std::unique_ptr<ImGuiController>      sImGuiController   = nullptr; //!< ui system
 }
 
+//=========================================================================================
+// static variables
+//=========================================================================================
+
+const std::string SxavengerSystemEngine::kEngineVersion = "3.1";
+
 ////////////////////////////////////////////////////////////////////////////////////////////
 // SxavengerSystemEngine class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 void SxavengerSystemEngine::Init() {
+
+	EngineLog("Engine Version: " + kEngineVersion);
 
 	sWinApp = std::make_unique<WinApp>();
 	sWinApp->Init();

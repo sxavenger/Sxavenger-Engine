@@ -1,4 +1,4 @@
-#include "APointLight.h"
+#include "APointLightActor.h"
 
 //-----------------------------------------------------------------------------------------
 // include
@@ -11,7 +11,7 @@
 // ALightActor class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-void APointLight::Init() {
+void APointLightActor::Init() {
 
 	TransformComponent::CreateBuffer();
 
@@ -22,11 +22,11 @@ void APointLight::Init() {
 	TestInit();
 }
 
-void APointLight::Render(const RendererContext& context) {
+void APointLightActor::Render(const RendererContext& context) {
 	TestRender(context);
 }
 
-void APointLight::TestInit() {
+void APointLightActor::TestInit() {
 
 	TransformComponent::GetTransform().scale = { 20.0f, 20.0f, 20.0f };
 	TransformComponent::GetTransform().translate = { 0.0f, 2.0f, 0.0f };
@@ -73,7 +73,7 @@ void APointLight::TestInit() {
 
 }
 
-void APointLight::TestRender(const RendererContext& context) {
+void APointLightActor::TestRender(const RendererContext& context) {
 	pipeline_->SetPipeline(context.context->GetDxCommand(), context.size);
 
 	DxObject::BindBufferDesc parameter = context.parameter;

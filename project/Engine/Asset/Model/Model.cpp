@@ -146,7 +146,7 @@ void Model::LoadMesh(const aiScene* aiScene) {
 			Assert(aiFace.mNumIndices == 3); //!< 三角形のみの対応
 
 			// indexの解析
-			(*index)[faceIndex] = { aiFace.mIndices[0], aiFace.mIndices[1], aiFace.mIndices[2] };
+			(*index)[faceIndex] = { aiFace.mIndices[0], aiFace.mIndices[2], aiFace.mIndices[1] };
 		}
 
 		//* 

@@ -13,7 +13,7 @@
 #include <Engine/!Render/FSceneRenderer.h>
 #include <Engine/!Render/Actor/Camera/CameraActors/ACineCameraActor.h>
 #include <Engine/!Render/Actor/Geometry/GeometryActors/AModelActor.h>
-#include <Engine/!Render/Actor/Light/LightActors/APointLight.h>
+#include <Engine/!Render/Actor/Light/LightActors/APointLightActor.h>
 
 //* test raytracing
 #include <Engine/System/DirectX/DxrObject/DxrRaytracingBlob.h>
@@ -50,7 +50,7 @@ private:
 	std::unique_ptr<ACineCameraActor> camera_;
 
 	std::unique_ptr<AModelActor> model_;
-	std::unique_ptr<APointLight> light_;
+	std::unique_ptr<APointLightActor> light_;
 
 	//* raytracing system *//
 
@@ -58,6 +58,11 @@ private:
 
 	std::unique_ptr<DxrObject::ExportGroup> raygeneration_;
 	std::unique_ptr<DxrObject::ExportGroup> miss_;
+
+	//* presenter *//
+
+	std::unique_ptr<DxObject::VertexDimensionBuffer<std::pair<Vector4f, Vector2f>>> vb_;
+	std::unique_ptr<DxObject::ReflectionGraphicsPipelineState> presenter_;
 
 	//=========================================================================================
 	// private methods

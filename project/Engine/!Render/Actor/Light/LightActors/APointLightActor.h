@@ -14,9 +14,9 @@
 #include <Lib/Geometry/Vector4.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// ALightActor class
+// APointLightActor class
 ////////////////////////////////////////////////////////////////////////////////////////////
-class APointLight
+class APointLightActor
 	: public ALightActor {
 public:
 
@@ -31,7 +31,7 @@ public:
 
 		void Init() {
 			color_intensity = { 1.0f, 1.0f, 1.0f, 1.0f };
-			radius          = 2.0f;
+			radius          = 10.0f;
 		}
 
 	};
@@ -42,8 +42,8 @@ public:
 	// public methods
 	//=========================================================================================
 
-	APointLight()          = default;
-	virtual ~APointLight() = default;
+	APointLightActor()          = default;
+	virtual ~APointLightActor() = default;
 
 	void Init();
 

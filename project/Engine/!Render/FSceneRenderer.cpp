@@ -30,6 +30,10 @@ void FSceneRenderer::Render(const DirectXThreadContext* context) {
 	// todo:
 }
 
+const D3D12_GPU_DESCRIPTOR_HANDLE& FSceneRenderer::GetDebugTexture() const {
+	return textures_->GetGBuffer(FSceneTextures::GBufferLayout::Lighting)->GetGPUHandleSRV();
+}
+
 void FSceneRenderer::RenderOpaqueGeometries(const DirectXThreadContext* context) {
 
 	const auto& geometries = scene_->GetGeometries();
