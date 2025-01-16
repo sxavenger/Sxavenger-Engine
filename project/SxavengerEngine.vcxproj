@@ -193,6 +193,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="Engine\Module\Pipeline\RenderPipelineCollection.cpp" />
     <ClCompile Include="Engine\Module\Primitive\DebugPrimitive.cpp" />
     <ClCompile Include="Engine\Module\Sprite\Sprite.cpp" />
+    <ClCompile Include="Engine\Module\Sprite\SpriteCommon.cpp" />
     <ClCompile Include="Engine\Module\SxavengerGraphics\AdaptiveRenderFrame.cpp" />
     <ClCompile Include="Engine\Module\SxavengerGraphics\DepthBufferController.cpp" />
     <ClCompile Include="Engine\Module\SxavengerGraphics\ScreenPresenter.cpp" />
@@ -321,6 +322,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Engine\Module\Pipeline\RenderPipelineCollection.h" />
     <ClInclude Include="Engine\Module\Primitive\DebugPrimitive.h" />
     <ClInclude Include="Engine\Module\Sprite\Sprite.h" />
+    <ClInclude Include="Engine\Module\Sprite\SpriteCommon.h" />
     <ClInclude Include="Engine\Module\SxavengerGraphics\AdaptiveRenderFrame.h" />
     <ClInclude Include="Engine\Module\SxavengerGraphics\DepthBufferController.h" />
     <ClInclude Include="Engine\Module\SxavengerGraphics\ScreenPresenter.h" />

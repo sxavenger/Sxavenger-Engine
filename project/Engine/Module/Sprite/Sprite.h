@@ -18,7 +18,7 @@
 // Sprite class
 ////////////////////////////////////////////////////////////////////////////////////////
 class Sprite
-	: public Transform2dComponent {
+	: protected Transform2dComponent {
 public:
 
 	////////////////////////////////////////////////////////////////////////////////////////
@@ -42,9 +42,16 @@ public:
 
 	void Init();
 
+	//* option *//
+
+	void SetSize(const Vector2f& size);
+
+	void SetColor(const Color4f& color, VertexId id);
+	void SetColor(const Color4f& color);
+
 	//* texture *//
 
-	void SetHandle(D3D12_GPU_DESCRIPTOR_HANDLE handle) { handle_ = handle; }
+	void SetHandle(const D3D12_GPU_DESCRIPTOR_HANDLE& handle) { handle_ = handle; }
 
 private:
 
@@ -52,8 +59,8 @@ private:
 	// SpriteVertex structure
 	////////////////////////////////////////////////////////////////////////////////////////
 	struct SpriteVertex {
-		Vector3f position;
-		Vector2f uv;
+		Vector4f position;
+		Vector2f texcoord;
 		Color4f  color;
 	};
 
@@ -74,6 +81,13 @@ private:
 	Vector2f pivot_  = kOrigin2<float>;
 	Vector2f anchor_ = kOrigin2<float>;
 
-	std::bitset<2> isFlip_ = 0;
+	std::bitset<2> isFlip_ = {};
+
+	//=========================================================================================
+	// private methods
+	//=========================================================================================
+
+	void UpdateVertex();
+	void UpdateTexcoord();
 
 };

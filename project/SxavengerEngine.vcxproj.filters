@@ -132,6 +132,7 @@
     <ClCompile Include="Engine\Module\Sprite\Sprite.cpp" />
     <ClCompile Include="Engine\Module\Component\Transform2dComponent.cpp" />
     <ClCompile Include="Engine\Module\Component\TransformComponent.cpp" />
+    <ClCompile Include="Engine\Module\Sprite\SpriteCommon.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\System\Window\Window.h" />
@@ -269,5 +270,6 @@
     <ClInclude Include="Engine\Module\Sprite\Sprite.h" />
     <ClInclude Include="Engine\Module\Component\TransformComponent.h" />
     <ClInclude Include="Engine\Module\Component\Transform2dComponent.h" />
+    <ClInclude Include="Engine\Module\Sprite\SpriteCommon.h" />
   </ItemGroup>
 </Project>

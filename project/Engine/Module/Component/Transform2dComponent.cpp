@@ -51,4 +51,5 @@ json Transform2dComponent::OutputJson() {
 }
 
 void Transform2dComponent::InputJson(const json& data) {
+	data;
 }
