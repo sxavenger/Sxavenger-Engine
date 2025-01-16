@@ -29,9 +29,13 @@ void DemoHuman::Init() {
 	skeleton_->Create(model_.Lock());
 
 	AnimationBehavior::SetRenderingFlag(BehaviorRenderingType::kSystematic);
+	AnimationBehavior::SetRenderingFlag(BehaviorRenderingType::kLateAdaptive);
 	AnimationBehavior::skeletonMesh_ = skeleton_.get();
 	AnimationBehavior::model_ = model_;
 
+	sprite_.Init();
+	sprite_.SetHandle(model_.Lock()->GetTextureHandle(0));
+	sprite_.SetSize({ 100.0f, 100.0f });
 }
 
 void DemoHuman::Update() {
@@ -53,4 +57,8 @@ void DemoHuman::Update() {
 		t
 	);
 	
+}
+
+void DemoHuman::DrawLateAdaptive(_MAYBE_UNUSED const SxavGraphicsFrame* frame) {
+	sprite_.Draw();
 }

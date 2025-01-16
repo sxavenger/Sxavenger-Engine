@@ -7,6 +7,7 @@
 #include "Primitive/DebugPrimitive.h"
 #include "Collider/ColliderCollection.h"
 #include "Skeleton/SkinningPipeline.h"
+#include "Sprite/SpriteCommon.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // SxavengerModule class
@@ -61,6 +62,14 @@ public:
 	static void SetSkinningPipeline(const DirectXThreadContext* context);
 
 	static void DispatchSkinningPipeline(const DirectXThreadContext* context, const DxObject::BindBufferDesc& desc, uint32_t vertexSize);
+
+	//-----------------------------------------------------------------------------------------
+	// skinning pipeline option
+	//-----------------------------------------------------------------------------------------
+
+	static void SetSpritePipeline(const DirectXThreadContext* context);
+
+	static void BindSpriteBuffer(const DirectXThreadContext* context, const DxObject::BindBufferDesc& desc);
 
 private:
 };

@@ -7,6 +7,7 @@ namespace {
 	static std::unique_ptr<DebugPrimitive> sPrimitive                 = nullptr;
 	static std::unique_ptr<ColliderCollection> sColliderCollection    = nullptr;
 	static std::unique_ptr<SkinningComputePipeline> sSkinningPipeline = nullptr;
+	static std::unique_ptr<SpriteCommon> sSpritePipeline              = nullptr;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -21,11 +22,15 @@ void SxavengerModule::Init() {
 
 	sSkinningPipeline = std::make_unique<SkinningComputePipeline>();
 	sSkinningPipeline->Init();
+
+	sSpritePipeline = std::make_unique<SpriteCommon>();
+	sSpritePipeline->Init();
 }
 
 void SxavengerModule::Term() {
 	sSkinningPipeline.reset();
 	sPrimitive.reset();
+	sSpritePipeline.reset();
 }
 
 void SxavengerModule::ResetPrimtive() {
@@ -78,4 +83,12 @@ void SxavengerModule::SetSkinningPipeline(const DirectXThreadContext* context) {
 
 void SxavengerModule::DispatchSkinningPipeline(const DirectXThreadContext* context, const DxObject::BindBufferDesc& desc, uint32_t vertexSize) {
 	sSkinningPipeline->Dispatch(context, desc, vertexSize);
+}
+
+void SxavengerModule::SetSpritePipeline(const DirectXThreadContext* context) {
+	sSpritePipeline->SetPipeline(context);
+}
+
+void SxavengerModule::BindSpriteBuffer(const DirectXThreadContext* context, const DxObject::BindBufferDesc& desc) {
+	sSpritePipeline->BindBuffer(context, desc);
 }

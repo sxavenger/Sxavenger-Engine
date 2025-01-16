@@ -7,7 +7,7 @@
 #include <Engine/Module/Component/Transform2dComponent.h>
 
 //* engine
-#include <Engine/System/DirectX/DxObject/DxDimensionBuffer.h>
+#include <Engine/Content/InputAssembler/InputAssembler.h>
 
 //* c++
 #include <memory>
@@ -44,6 +44,8 @@ public:
 
 	//* option *//
 
+	void SetPosition(const Vector2f& position);
+
 	void SetSize(const Vector2f& size);
 
 	void SetColor(const Color4f& color, VertexId id);
@@ -52,6 +54,10 @@ public:
 	//* texture *//
 
 	void SetHandle(const D3D12_GPU_DESCRIPTOR_HANDLE& handle) { handle_ = handle; }
+
+	//* render *//
+
+	void Draw();
 
 private:
 
@@ -72,7 +78,7 @@ private:
 
 	//* vertex *//
 
-	std::unique_ptr<DxObject::VertexDimensionBuffer<SpriteVertex>> vertex_;
+	InputAssembler<SpriteVertex> ia_;
 
 	//* parameter *// 
 

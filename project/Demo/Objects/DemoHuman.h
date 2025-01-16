@@ -8,6 +8,7 @@
 
 //* engine
 #include <Engine/Asset/SxavengerAsset.h>
+#include <Engine/Module/Sprite/Sprite.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // DemoHuman class
@@ -27,6 +28,8 @@ public:
 
 	void Update();
 
+	void DrawLateAdaptive(_MAYBE_UNUSED const SxavGraphicsFrame* frame) override;
+
 private:
 
 	//=========================================================================================
@@ -43,5 +46,7 @@ private:
 	TimePointf<TimeUnit::second> time_;
 
 	bool flag = true;
+
+	Sprite sprite_;
 
 };

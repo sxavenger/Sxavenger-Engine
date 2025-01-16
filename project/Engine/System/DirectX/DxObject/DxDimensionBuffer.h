@@ -87,8 +87,8 @@ public:
 
 	void Release();
 
-	const T& At(uint32_t index) const;
 	T& At(uint32_t index);
+	const T& At(uint32_t index) const;
 
 	const T* GetData();
 
@@ -141,6 +141,44 @@ public:
 	// public methods
 	//=========================================================================================
 
+	const UINT GetIndexCount() const;
+
+	const D3D12_INDEX_BUFFER_VIEW GetIndexBufferView() const;
+
+private:
+};
+
+////////////////////////////////////////////////////////////////////////////////////////////
+// LineIndexDimensionBuffer class
+////////////////////////////////////////////////////////////////////////////////////////////
+class LineIndexDimensionBuffer
+	: public DimensionBuffer<std::pair<UINT, UINT>> {
+public:
+
+	//=========================================================================================
+	// public methods
+	//=========================================================================================
+
+	const UINT GetIndexCount() const;
+
+	const D3D12_INDEX_BUFFER_VIEW GetIndexBufferView() const;
+
+private:
+};
+
+////////////////////////////////////////////////////////////////////////////////////////////
+// TriangleIndexDimensionBuffer class
+////////////////////////////////////////////////////////////////////////////////////////////
+class TriangleIndexDimensionBuffer
+	: public DimensionBuffer<std::tuple<UINT, UINT, UINT>> {
+public:
+
+	//=========================================================================================
+	// public methods
+	//=========================================================================================
+
+	const UINT GetIndexCount() const;
+
 	const D3D12_INDEX_BUFFER_VIEW GetIndexBufferView() const;
 
 private:
@@ -169,14 +207,14 @@ inline void DimensionBuffer<T>::Release() {
 	mappedDatas_ = {};
 }
 
-template <class T>
-inline const T& DimensionBuffer<T>::At(uint32_t index) const {
+template<class T>
+inline T& DimensionBuffer<T>::At(uint32_t index) {
 	Assert(CheckIndex(index), "Dimension Buffer out of range.");
 	return mappedDatas_[index];
 }
 
 template <class T>
-inline T& DimensionBuffer<T>::At(uint32_t index) {
+inline const T& DimensionBuffer<T>::At(uint32_t index) const {
 	Assert(CheckIndex(index), "Dimension Buffer out of range.");
 	return mappedDatas_[index];
 }
@@ -207,7 +245,7 @@ inline const T& DimensionBuffer<T>::operator[](uint32_t index) const {
 // VertexDimensionBuffer class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-template<class T>
+template <class T>
 inline const D3D12_VERTEX_BUFFER_VIEW VertexDimensionBuffer<T>::GetVertexBufferView() const {
 	D3D12_VERTEX_BUFFER_VIEW result = {};
 	result.BufferLocation = this->GetGPUVirtualAddress();

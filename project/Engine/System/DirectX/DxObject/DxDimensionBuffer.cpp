@@ -49,11 +49,50 @@ bool BaseDimensionBuffer::CheckIndex(uint32_t index) {
 	return true;
 }
 
+////////////////////////////////////////////////////////////////////////////////////////////
+// IndexDimensionBuffer class
+////////////////////////////////////////////////////////////////////////////////////////////
+
+const UINT IndexDimensionBuffer::GetIndexCount() const {
+	return size_;
+}
+
 const D3D12_INDEX_BUFFER_VIEW IndexDimensionBuffer::GetIndexBufferView() const {
 	D3D12_INDEX_BUFFER_VIEW result = {};
 	result.Format         = DXGI_FORMAT_R32_UINT;
 	result.BufferLocation = GetGPUVirtualAddress();
 	result.SizeInBytes    = stride_ * size_;
+	return result;
+}
 
+////////////////////////////////////////////////////////////////////////////////////////////
+// LineIndexDimensionBuffer class methods
+////////////////////////////////////////////////////////////////////////////////////////////
+
+const UINT LineIndexDimensionBuffer::GetIndexCount() const {
+	return size_ * 2;
+}
+
+const D3D12_INDEX_BUFFER_VIEW LineIndexDimensionBuffer::GetIndexBufferView() const {
+	D3D12_INDEX_BUFFER_VIEW result = {};
+	result.Format         = DXGI_FORMAT_R32_UINT;
+	result.BufferLocation = GetGPUVirtualAddress();
+	result.SizeInBytes    = stride_ * size_;
+	return result;
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////
+// TriangleIndexDimensionBuffer class
+////////////////////////////////////////////////////////////////////////////////////////////
+
+const UINT TriangleIndexDimensionBuffer::GetIndexCount() const {
+	return size_ * 3;
+}
+
+const D3D12_INDEX_BUFFER_VIEW TriangleIndexDimensionBuffer::GetIndexBufferView() const {
+	D3D12_INDEX_BUFFER_VIEW result = {};
+	result.Format         = DXGI_FORMAT_R32_UINT;
+	result.BufferLocation = GetGPUVirtualAddress();
+	result.SizeInBytes    = stride_ * size_;
 	return result;
 }
