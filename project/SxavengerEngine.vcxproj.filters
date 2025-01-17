@@ -130,6 +130,9 @@
     <ClCompile Include="Engine\Editor\Editors\RenderSceneEditor.cpp" />
     <ClCompile Include="Engine\Editor\Editors\BaseEditor.cpp" />
     <ClCompile Include="Engine\!Render\Actor\Camera\CameraActors\APivotCameraActor.cpp" />
+    <ClCompile Include="Engine\!Render\Core\FRenderCoreGeometry.cpp" />
+    <ClCompile Include="Engine\!Render\Core\FRenderCoreLight.cpp" />
+    <ClCompile Include="Engine\!Render\Actor\Light\LightActors\ADirectionalLightActor.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\System\Window\Window.h" />
@@ -264,5 +267,8 @@
     <ClInclude Include="Engine\Editor\Editors\RenderSceneEditor.h" />
     <ClInclude Include="Engine\Editor\Editors\BaseEditor.h" />
     <ClInclude Include="Engine\!Render\Actor\Camera\CameraActors\APivotCameraActor.h" />
+    <ClInclude Include="Engine\!Render\Core\FRenderCoreGeometry.h" />
+    <ClInclude Include="Engine\!Render\Core\FRenderCoreLight.h" />
+    <ClInclude Include="Engine\!Render\Actor\Light\LightActors\ADirectionalLightActor.h" />
   </ItemGroup>
 </Project>

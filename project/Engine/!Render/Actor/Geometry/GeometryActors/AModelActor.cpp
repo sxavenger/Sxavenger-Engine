@@ -15,8 +15,8 @@ void AModelActor::Init() {
 }
 
 void AModelActor::RenderOpaque(const RendererContext& context) {
-	FRenderCore::GetInstance()->SetPipeline(
-		FRenderCore::RenderType::Deffered, FRenderCore::VertexStage::DefaultVS, FRenderCore::PixelStage::Albedo,
+	FRenderCore::GetInstance()->GetGeometry()->SetPipeline(
+		FRenderCoreGeometry::RenderType::Deffered, FRenderCoreGeometry::VertexStage::DefaultVS, FRenderCoreGeometry::PixelStage::Albedo,
 		context.context, context.size
 	);
 
@@ -39,8 +39,8 @@ void AModelActor::RenderOpaque(const RendererContext& context) {
 		DxObject::BindBufferDesc bind = parameter;
 		bind.SetHandle("gAlbedo", model->GetTextureHandle(i));
 
-		FRenderCore::GetInstance()->BindGraphicsBuffer(
-			FRenderCore::RenderType::Deffered, FRenderCore::VertexStage::DefaultVS, FRenderCore::PixelStage::Albedo,
+		FRenderCore::GetInstance()->GetGeometry()->BindGraphicsBuffer(
+			FRenderCoreGeometry::RenderType::Deffered, FRenderCoreGeometry::VertexStage::DefaultVS, FRenderCoreGeometry::PixelStage::Albedo,
 			context.context, bind
 		);
 

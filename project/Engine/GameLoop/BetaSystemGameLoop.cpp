@@ -64,14 +64,19 @@ void BetaSystemGameLoop::InitSystem() {
 	model_->SetRenderWait(false);
 	scene_->AddGeometry(model_.get());
 
-	light1_ = std::make_unique<APointLightActor>();
+	/*light1_ = std::make_unique<APointLightActor>();
 	light1_->Init();
 
 	light2_ = std::make_unique<APointLightActor>();
 	light2_->Init();
 
 	scene_->AddLight(light1_.get());
-	scene_->AddLight(light2_.get());
+	scene_->AddLight(light2_.get());*/
+
+	light3_ = std::make_unique<ADirectionalLightActor>();
+	light3_->Init();
+
+	scene_->AddLight(light3_.get());
 
 	FRenderCore::GetInstance()->Init();
 
@@ -133,7 +138,7 @@ void BetaSystemGameLoop::UpdateSystem() {
 
 	static float frame = 0.0f;
 
-	light2_->GetParameter().color_intensity = { 1.0f, 0.0f, 0.0f, 1.0f };
+	//light2_->GetParameter().color_intensity = { 1.0f, 0.0f, 0.0f, 1.0f };
 	/*light2_->GetTransform().translate.y = 2.0f;
 	light2_->GetTransform().translate.x = std::sin(++frame / 120.0f * pi_v) * 2.0f;
 	light2_->UpdateMatrix();*/

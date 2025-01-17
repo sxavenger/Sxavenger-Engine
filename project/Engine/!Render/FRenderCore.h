@@ -3,47 +3,14 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
-//* engine
-#include <Engine/System/DirectX/DirectXContext.h>
-#include <Engine/Module/Pipeline/CustomGraphicsPipeline.h>
-
-//* lib
-#include <Lib/Geometry/Vector2.h>
-
-//* c++
-#include <functional>
+//* core
+#include "Core/FRenderCoreGeometry.h"
+#include "Core/FRenderCoreLight.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // FRenderCore class
 ////////////////////////////////////////////////////////////////////////////////////////////
-class FRenderCore { // FIXME: Light描画使う
-public:
-
-	////////////////////////////////////////////////////////////////////////////////////////////
-	// RenderType enum
-	////////////////////////////////////////////////////////////////////////////////////////////
-	enum RenderType {
-		Forward,
-		Deffered,
-	};
-	static const size_t kRenderTypeCount = Deffered + 1;
-
-	////////////////////////////////////////////////////////////////////////////////////////////
-	// VertexStage enum
-	////////////////////////////////////////////////////////////////////////////////////////////
-	enum VertexStage {
-		DefaultVS,
-	};
-	static const size_t kVertexStageCount = DefaultVS + 1;
-
-	////////////////////////////////////////////////////////////////////////////////////////////
-	// PixelStage enum
-	////////////////////////////////////////////////////////////////////////////////////////////
-	enum PixelStage {
-		Albedo,
-	};
-	static const size_t kPixelStageCount = Albedo + 1;
-
+class FRenderCore {
 public:
 
 	//=========================================================================================
@@ -55,24 +22,17 @@ public:
 
 	void Init();
 
-	//* pipeline option *//
+	void Term();
 
-	void SetPipeline(
-		RenderType type, VertexStage vs, PixelStage ps,
-		const DirectXThreadContext* context, const Vector2ui& size
-	);
+	//* getter *//
 
-	void BindGraphicsBuffer(
-		RenderType type, VertexStage vs, PixelStage ps,
-		const DirectXThreadContext* context, const DxObject::BindBufferDesc& desc
-	);
+	FRenderCoreGeometry* GetGeometry() { return geometry_.get(); }
 
-	//* test singleton *//
+	FRenderCoreLight* GetLight() { return light_.get(); }
 
-	static FRenderCore* GetInstance() {
-		static FRenderCore instance;
-		return &instance;
-	}
+	//* singleton *//
+
+	static FRenderCore* GetInstance();
 	
 private:
 
@@ -80,25 +40,8 @@ private:
 	// private variables
 	//=========================================================================================
 
-	//* graphics pipeline *//
+	std::unique_ptr<FRenderCoreGeometry> geometry_;
+	std::unique_ptr<FRenderCoreLight>    light_;
 
-	std::array<std::array<std::array<std::unique_ptr<CustomReflectionGraphicsPipeline>, kPixelStageCount>, kVertexStageCount>, kRenderTypeCount> graphicsPipelines_ = {};
-
-	DxObject::GraphicsPipelineDesc defferedDefaultDesc_ = {};
-	DxObject::GraphicsPipelineDesc forwardDefaultDesc_  = {};
-
-	//* directory *//
-
-	static const std::filesystem::path kDirectory_;
-
-	//=========================================================================================
-	// private variables
-	//=========================================================================================
-
-	void CreateDefaultDesc();
-
-	void CreateDeferred();
-
-	void CreateForward();
 
 };

@@ -15,6 +15,7 @@
 #include <Engine/!Render/Actor/Camera/CameraActors/APivotCameraActor.h>
 #include <Engine/!Render/Actor/Geometry/GeometryActors/AModelActor.h>
 #include <Engine/!Render/Actor/Light/LightActors/APointLightActor.h>
+#include <Engine/!Render/Actor/Light/LightActors/ADirectionalLightActor.h>
 
 //* test raytracing
 #include <Engine/System/DirectX/DxrObject/DxrRaytracingBlob.h>
@@ -54,6 +55,8 @@ private:
 
 	std::unique_ptr<APointLightActor> light1_;
 	std::unique_ptr<APointLightActor> light2_;
+
+	std::unique_ptr<ADirectionalLightActor> light3_;
 
 
 	//* raytracing system *//
