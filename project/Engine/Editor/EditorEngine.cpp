@@ -1,5 +1,11 @@
 #include "EditorEngine.h"
 
+//-----------------------------------------------------------------------------------------
+// include
+//-----------------------------------------------------------------------------------------
+//* engine
+#include <Engine/System/SxavengerSystem.h>
+
 //=========================================================================================
 // static variables
 //=========================================================================================
@@ -11,7 +17,6 @@ const std::string EditorEngine::kEditorName_ = "Sxavenger Engine Editor";
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 void EditorEngine::Init() {
-
 	windowFlag_ = 0;
 	windowFlag_ |= ImGuiWindowFlags_NoCollapse;
 	windowFlag_ |= ImGuiWindowFlags_NoMove;
@@ -40,11 +45,107 @@ EditorEngine* EditorEngine::GetInstance() {
 }
 
 void EditorEngine::ShowMainMenu() {
+	ImGui::BeginMainMenuBar();
+
+	ShowEditorMenu();
+
+	for (const auto& [typeindex, editor] : editors_) {
+		editor->ShowMainMenu();
+	}
+
+	ImGui::EndMainMenuBar();
 }
 
 void EditorEngine::ShowWindow() {
+#ifdef _DEBUG
+
+	if (!isEditorDisplay_) {
+		return;
+	}
+
 	dockingId_ = ImGui::GetID(kEditorName_.c_str());
 
+	for (const auto& [typeindex, editor] : editors_) {
+		if (editor->IsDisplay()) {
+			editor->ShowWindow();
+		}
+	}
 
+#endif
 }
+
+void EditorEngine::MenuDummy() {
+	ImGui::Dummy({ 240.0f, 0 });
+}
+
+void EditorEngine::ShowEditorMenu() {
+	if (ImGui::BeginMenu("editor")) {
+		MenuDummy();
+
+		if (ImGui::BeginMenu("config")) {
+			MenuDummy();
+
+			ImGui::SeparatorText("config");
+			ImGui::Checkbox("display", &isEditorDisplay_);
+
+			ImGui::SeparatorText("window");
+
+			ImGuiWindowFlags lock = 0;
+			lock |= ImGuiWindowFlags_NoMove;
+			lock |= ImGuiWindowFlags_NoResize;
+			ImGui::CheckboxFlags("lock", &windowFlag_, lock);
+
+			if (ImGui::Button("output")) {
+				SxavengerSystem::GetImGuiController()->OutputLayout();
+			}
+
+			ImGui::EndMenu();
+		}
+
+		if (ImGui::BeginMenu("layout")) {
+			MenuDummy();
+			ImGui::ShowStyleEditor();
+			ImGui::EndMenu();
+		}
+
+		if (ImGui::BeginMenu("other")) {
+			MenuDummy();
+			ImGui::SeparatorText("other");
+
+			if (ImGui::BeginTable("## other editor", 3, ImGuiTableFlags_ScrollY | ImGuiTableFlags_RowBg | ImGuiTableFlags_Borders)) {
+				ImGui::TableSetupColumn("typeindex");
+				ImGui::TableSetupColumn("ptr");
+				ImGui::TableSetupColumn("display");
+				ImGui::TableHeadersRow();
+
+				for (const auto& [typeindex, editor] : editors_) {
+					ImGui::TableNextRow();
+
+					ImGui::TableNextColumn();
+					ImGui::Text(typeindex.name());
+					ImGui::SameLine();
+					ImGui::Dummy({ 16.0f, 0.0f });
+
+					ImGui::TableNextColumn();
+					ImGui::Text(std::format("{:p}", reinterpret_cast<const void*>(editor.get())).c_str());
+					ImGui::SameLine();
+					ImGui::Dummy({ 16.0f, 0.0f });
+
+					ImGui::TableNextColumn();
+					ImGui::Text(std::format("{}", editor->IsDisplay()).c_str());
+					ImGui::SameLine();
+					ImGui::Dummy({ 16.0f, 0.0f });
+				}
+
+				ImGui::EndTable();
+			}
+
+			ImGui::EndMenu();
+		}
+
+		ImGui::EndMenu();
+	}
+}
+
+
 

@@ -48,7 +48,7 @@ public:
 	// MaterialData structure
 	////////////////////////////////////////////////////////////////////////////////////////////
 	struct MaterialData { 
-		std::array<std::unique_ptr<Texture>, static_cast<uint8_t>(TextureType::Bump) + 1> textures_;
+		std::array<std::shared_ptr<Texture>, static_cast<uint8_t>(TextureType::Bump) + 1> textures_;
 	};
 
 public:

@@ -12,6 +12,7 @@
 #include <Engine/!Render/FScene.h>
 #include <Engine/!Render/FSceneRenderer.h>
 #include <Engine/!Render/Actor/Camera/CameraActors/ACineCameraActor.h>
+#include <Engine/!Render/Actor/Camera/CameraActors/APivotCameraActor.h>
 #include <Engine/!Render/Actor/Geometry/GeometryActors/AModelActor.h>
 #include <Engine/!Render/Actor/Light/LightActors/APointLightActor.h>
 
@@ -50,7 +51,10 @@ private:
 	std::unique_ptr<ACineCameraActor> camera_;
 
 	std::unique_ptr<AModelActor> model_;
-	std::unique_ptr<APointLightActor> light_;
+
+	std::unique_ptr<APointLightActor> light1_;
+	std::unique_ptr<APointLightActor> light2_;
+
 
 	//* raytracing system *//
 

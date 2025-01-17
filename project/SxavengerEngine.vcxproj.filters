@@ -108,7 +108,6 @@
     <ClCompile Include="Engine\System\Runtime\Performance\RunTimeTracker.cpp" />
     <ClCompile Include="Engine\System\Runtime\Performance\TimePoint.cpp" />
     <ClCompile Include="Engine\Asset\SxavengerAsset.cpp" />
-    <ClCompile Include="Engine\Dev\DeveloperGui.cpp" />
     <ClCompile Include="Engine\Module\Component\TransformComponent.cpp" />
     <ClCompile Include="Engine\!Render\Actor\Camera\ACameraActor.cpp" />
     <ClCompile Include="Engine\!Render\Actor\Camera\CameraActors\ACineCameraActor.cpp" />
@@ -127,6 +126,10 @@
     <ClCompile Include="Engine\Editor\EditorEngine.cpp" />
     <ClCompile Include="Engine\Editor\Editors\EngineDeveloperEditor.cpp" />
     <ClCompile Include="Engine\GameLoop\EditorEngineGameLoop.cpp" />
+    <ClCompile Include="Engine\Editor\EditorComponent\EditorComponent.cpp" />
+    <ClCompile Include="Engine\Editor\Editors\RenderSceneEditor.cpp" />
+    <ClCompile Include="Engine\Editor\Editors\BaseEditor.cpp" />
+    <ClCompile Include="Engine\!Render\Actor\Camera\CameraActors\APivotCameraActor.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\System\Window\Window.h" />
@@ -239,7 +242,6 @@
     <ClInclude Include="Engine\System\Runtime\Performance\RunTimeTracker.h" />
     <ClInclude Include="Engine\System\Runtime\Performance\TimePoint.h" />
     <ClInclude Include="Engine\Asset\SxavengerAsset.h" />
-    <ClInclude Include="Engine\Dev\DeveloperGui.h" />
     <ClInclude Include="Engine\Module\Component\TransformComponent.h" />
     <ClInclude Include="Engine\!Render\Actor\Camera\ACameraActor.h" />
     <ClInclude Include="Engine\!Render\Actor\Camera\CameraActors\ACineCameraActor.h" />
@@ -258,5 +260,9 @@
     <ClInclude Include="Engine\Editor\EditorEngine.h" />
     <ClInclude Include="Engine\Editor\Editors\EngineDeveloperEditor.h" />
     <ClInclude Include="Engine\GameLoop\EditorEngineGameLoop.h" />
+    <ClInclude Include="Engine\Editor\EditorComponent\EditorComponent.h" />
+    <ClInclude Include="Engine\Editor\Editors\RenderSceneEditor.h" />
+    <ClInclude Include="Engine\Editor\Editors\BaseEditor.h" />
+    <ClInclude Include="Engine\!Render\Actor\Camera\CameraActors\APivotCameraActor.h" />
   </ItemGroup>
 </Project>

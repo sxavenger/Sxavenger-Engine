@@ -3,41 +3,53 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
+//* actor
+#include "../ACameraActor.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// DeveloperGui class
+// ACineCameraActor class
 ////////////////////////////////////////////////////////////////////////////////////////////
-class DeveloperGui {
-	//* sxavenger engine の 開発者用のgui *//
+class APivotCameraActor
+	: public ACameraActor {
+public:
+
+	////////////////////////////////////////////////////////////////////////////////////////////
+	// Parameter structure
+	////////////////////////////////////////////////////////////////////////////////////////////
+	struct Parameter {
+
+		//* member *//
+
+		Vector3f point = kOrigin3<float>;
+		Vector2f angle = { 0.0f, pi_v / 16.0f };
+		float distance = 12.0f;
+
+	};
+
 public:
 
 	//=========================================================================================
-	// public method
+	// public methods
 	//=========================================================================================
+
+	APivotCameraActor()          = default;
+	virtual ~APivotCameraActor() = default;
 
 	void Init();
 
-	void Term();
+	void UpdateView();
 
-	void RenderMainMenu();
+	//* getter *//
 
-	static DeveloperGui* GetInstance();
+	const Parameter& GetParameter() const { return parameter_; }
+	Parameter& GetParameter() { return parameter_; }
 
 private:
 
 	//=========================================================================================
-	// private methods
+	// private variables
 	//=========================================================================================
 
-	static void DummyMenu();
-
-	void ShowSystemMenu();
-	void ShowAssetMenu();
+	Parameter parameter_;
 
 };
-
-////////////////////////////////////////////////////////////////////////////////////////////
-// static variables
-////////////////////////////////////////////////////////////////////////////////////////////
-
-static DeveloperGui* const sDeveloperGui = DeveloperGui::GetInstance();

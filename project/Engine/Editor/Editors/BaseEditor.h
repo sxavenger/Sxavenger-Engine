@@ -3,65 +3,63 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
-//* editor
-#include "BaseEditor.h"
-
 //* c++
-#include <optional>
+#include <concepts>
+
+//-----------------------------------------------------------------------------------------
+// forward
+//-----------------------------------------------------------------------------------------
+class EditorEngine;
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// EngineDeveloperEditor class
+// Base Editor class
 ////////////////////////////////////////////////////////////////////////////////////////////
-class EngineDeveloperEditor
-	: public BaseEditor {
+class BaseEditor {
 public:
 
 	//=========================================================================================
 	// public method
 	//=========================================================================================
 
-	EngineDeveloperEditor(EditorEngine* editor) : BaseEditor(editor) {}
-	~EngineDeveloperEditor() = default;
+	BaseEditor(EditorEngine* editor) : editor_(editor) {}
+	virtual ~BaseEditor() = default;
 
-	void Init() override;
+	virtual void Init() {}
 
-	void ShowMainMenu() override;
+	virtual void ShowMainMenu() {}
 
-	void ShowWindow() override;
+	virtual void ShowWindow() {}
 
 	//* getter *//
 
-	bool IsProcessRequired() const { return isProcessRequired_; }
+	bool IsDisplay() const { return isDisplay_; }
 
-private:
-
-	//=========================================================================================
-	// private variables
-	//=========================================================================================
-
-	//* update state *//
-
-	bool isProcessRequired_ = true; //!< 最終的なプロセス管理
-
-	//! [optional]
-	//! nullopt:   通常状態(制限なく更新処理をする)
-	//! has_value: 何回更新処理をするか<frame>(0の場合は更新処理を止める)
-	std::optional<uint32_t> processLimit_ = std::nullopt;
+protected:
 
 	//=========================================================================================
-	// private methods
+	// protected variables
 	//=========================================================================================
 
-	//* show imgui component *//
+	//* external *//
 
-	void ShowProcessMenu();
-	void ShowSystemMenu();
-	void ShowThreadMenu();
+	EditorEngine* editor_ = nullptr;
 
-	void ShowPerformanceWindow();
+	//* config *//
 
-	//* sub method *//
+	bool isDisplay_ = true;
 
-	void BreakPoint();
+	//=========================================================================================
+	// protected methods
+	//=========================================================================================
+
+	//* layout *//
+
+	static void MenuPadding();
 
 };
+
+////////////////////////////////////////////////////////////////////////////////////////////
+// concept
+////////////////////////////////////////////////////////////////////////////////////////////
+template <class T>
+concept BaseEditorDerived = std::derived_from<T, BaseEditor>;

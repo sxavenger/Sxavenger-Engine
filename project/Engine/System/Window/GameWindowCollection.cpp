@@ -92,7 +92,7 @@ const std::weak_ptr<GameWindow> GameWindowCollection::GetSubWindow(const LPCWSTR
 
 const GameWindow* GameWindowCollection::GetForcusWindow() const {
 	HWND hwnd = GetForegroundWindow();
-
+	 
 	if (hwnd == mainWindow_->GetHwnd()) {
 		return mainWindow_.get();
 	}
@@ -107,6 +107,8 @@ const GameWindow* GameWindowCollection::GetForcusWindow() const {
 }
 
 void GameWindowCollection::SystemDebugGui() {
+	ImGui::Dummy({ 240.0f, 0 });
+
 	ImGui::SeparatorText("main window");
 	if (ImGui::Selectable(ToString(kMainWindowTitle).c_str(), false)) {
 		SetForegroundWindow(mainWindow_->GetHwnd());

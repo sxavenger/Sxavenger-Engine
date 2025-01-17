@@ -137,6 +137,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="Engine\!Render\Actor\AActor.cpp" />
     <ClCompile Include="Engine\!Render\Actor\Camera\ACameraActor.cpp" />
     <ClCompile Include="Engine\!Render\Actor\Camera\CameraActors\ACineCameraActor.cpp" />
+    <ClCompile Include="Engine\!Render\Actor\Camera\CameraActors\APivotCameraActor.cpp" />
     <ClCompile Include="Engine\!Render\Actor\Geometry\AGeometryActor.cpp" />
     <ClCompile Include="Engine\!Render\Actor\Geometry\GeometryActors\AModelActor.cpp" />
     <ClCompile Include="Engine\!Render\Actor\Light\ALightActor.cpp" />
@@ -170,9 +171,11 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="Engine\Content\TextureBuffer\OffscreenTextureCollection.cpp" />
     <ClCompile Include="Engine\Content\TextureBuffer\RenderTexture.cpp" />
     <ClCompile Include="Engine\Content\TextureBuffer\UnorderedTexture.cpp" />
-    <ClCompile Include="Engine\Dev\DeveloperGui.cpp" />
+    <ClCompile Include="Engine\Editor\EditorComponent\EditorComponent.cpp" />
     <ClCompile Include="Engine\Editor\EditorEngine.cpp" />
+    <ClCompile Include="Engine\Editor\Editors\BaseEditor.cpp" />
     <ClCompile Include="Engine\Editor\Editors\EngineDeveloperEditor.cpp" />
+    <ClCompile Include="Engine\Editor\Editors\RenderSceneEditor.cpp" />
     <ClCompile Include="Engine\GameLoop\BetaSystemGameLoop.cpp" />
     <ClCompile Include="Engine\GameLoop\EditorEngineGameLoop.cpp" />
     <ClCompile Include="Engine\Module\Component\TransformComponent.cpp" />
@@ -256,6 +259,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Engine\!Render\Actor\AActor.h" />
     <ClInclude Include="Engine\!Render\Actor\Camera\ACameraActor.h" />
     <ClInclude Include="Engine\!Render\Actor\Camera\CameraActors\ACineCameraActor.h" />
+    <ClInclude Include="Engine\!Render\Actor\Camera\CameraActors\APivotCameraActor.h" />
     <ClInclude Include="Engine\!Render\Actor\Geometry\AGeometryActor.h" />
     <ClInclude Include="Engine\!Render\Actor\Geometry\GeometryActors\AModelActor.h" />
     <ClInclude Include="Engine\!Render\Actor\Light\ALightActor.h" />
@@ -291,9 +295,11 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Engine\Content\TextureBuffer\OffscreenTextureCollection.h" />
     <ClInclude Include="Engine\Content\TextureBuffer\RenderTexture.h" />
     <ClInclude Include="Engine\Content\TextureBuffer\UnorderedTexture.h" />
-    <ClInclude Include="Engine\Dev\DeveloperGui.h" />
+    <ClInclude Include="Engine\Editor\EditorComponent\EditorComponent.h" />
     <ClInclude Include="Engine\Editor\EditorEngine.h" />
+    <ClInclude Include="Engine\Editor\Editors\BaseEditor.h" />
     <ClInclude Include="Engine\Editor\Editors\EngineDeveloperEditor.h" />
+    <ClInclude Include="Engine\Editor\Editors\RenderSceneEditor.h" />
     <ClInclude Include="Engine\GameLoop\BetaSystemGameLoop.h" />
     <ClInclude Include="Engine\GameLoop\EditorEngineGameLoop.h" />
     <ClInclude Include="Engine\Module\Component\TransformComponent.h" />

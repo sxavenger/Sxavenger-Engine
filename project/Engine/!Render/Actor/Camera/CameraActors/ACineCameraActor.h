@@ -42,7 +42,7 @@ public:
 
 	void Init();
 
-	void TransferProj();
+	void UpdateProj();
 
 	//* getter *//
 
@@ -55,6 +55,6 @@ protected:
 	// protected variables
 	//=========================================================================================
 
-	CineCameraParameter parameter_;
+	CineCameraParameter parameter_ = {};
 
 };

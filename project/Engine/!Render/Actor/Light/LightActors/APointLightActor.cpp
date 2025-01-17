@@ -69,6 +69,21 @@ void APointLightActor::TestInit() {
 	desc.SetDepthStencil(false);
 	desc.SetRTVFormat(0, DXGI_FORMAT_R32G32B32A32_FLOAT);
 
+	D3D12_RENDER_TARGET_BLEND_DESC blend = {};
+	blend.BlendEnable    = true;
+	blend.LogicOpEnable  = false;
+	blend.SrcBlend       = D3D12_BLEND_ONE;
+	blend.DestBlend      = D3D12_BLEND_ONE;
+	blend.BlendOp        = D3D12_BLEND_OP_ADD;
+	blend.SrcBlendAlpha  = D3D12_BLEND_ONE;
+	blend.DestBlendAlpha = D3D12_BLEND_ONE;
+	blend.BlendOpAlpha   = D3D12_BLEND_OP_ADD;
+	blend.LogicOp        = D3D12_LOGIC_OP_NOOP;
+	blend.RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE_ALL;
+
+	desc.SetIndependentBlendEnable(false);
+	desc.SetBlendDesc(0, blend);
+
 	pipeline_->CreatePipeline(SxavengerSystem::GetDxDevice(), desc);
 
 }

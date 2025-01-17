@@ -6,7 +6,9 @@
 //* engine
 #include <Engine/System/SxavengerSystem.h>
 #include <Engine/Asset/SxavengerAsset.h>
-#include <Engine/Dev/DeveloperGui.h>
+#include <Engine/Editor/EditorEngine.h>
+#include <Engine/Editor/Editors/EngineDeveloperEditor.h>
+#include <Engine/Editor/Editors/RenderSceneEditor.h>
 
 #include "Engine/!Render/FRenderCore.h"
 #include "Engine/System/Config/SxavengerDirectory.h"
@@ -18,7 +20,15 @@
 void BetaSystemGameLoop::Init(GameLoop::Context* context) {
 	context->SetState(GameLoop::State::Init, std::nullopt, [this]() { InitSystem(); });
 	context->SetState(GameLoop::State::Term, std::nullopt, [this]() { TermSystem(); });
-	context->SetState(GameLoop::State::Update, std::nullopt, [this]() { UpdateSystem(); });
+	context->SetState(GameLoop::State::Update, std::nullopt, [this]() {
+		if (auto developer = sEditorEngine->TryGetEditor<EngineDeveloperEditor>()) {
+			if (!developer->IsProcessRequired()) {
+				return;
+			}
+		}
+
+		UpdateSystem();
+	});
 	context->SetState(GameLoop::State::Draw, std::nullopt, [this]() { DrawSystem(); });
 
 	context->SetCondition(
@@ -43,25 +53,31 @@ void BetaSystemGameLoop::InitSystem() {
 
 	camera_ = std::make_unique<ACineCameraActor>();
 	camera_->Init();
+
 	renderer_->SetCamera(camera_.get());
 
 	model_ = std::make_unique<AModelActor>();
 	model_->Init();
-	//model_->SetModel(SxavengerAsset::TryImport<AssetModel>("asset/model/human/idle.gltf"));
+	model_->SetModel(SxavengerAsset::TryImport<AssetModel>("asset/model/human/idle.gltf"));
 	//model_->SetModel(SxavengerAsset::TryImport<AssetModel>("asset/model/primitive/teapot.obj"));
-	model_->SetModel(SxavengerAsset::TryImport<AssetModel>("asset/model/chessBoard/chessBoard.gltf"));
+	//model_->SetModel(SxavengerAsset::TryImport<AssetModel>("asset/model/chessBoard/chessBoard.gltf"));
 	model_->SetRenderWait(false);
 	scene_->AddGeometry(model_.get());
 
-	light_ = std::make_unique<APointLightActor>();
-	light_->Init();
-	scene_->AddLight(light_.get());
+	light1_ = std::make_unique<APointLightActor>();
+	light1_->Init();
+
+	light2_ = std::make_unique<APointLightActor>();
+	light2_->Init();
+
+	scene_->AddLight(light1_.get());
+	scene_->AddLight(light2_.get());
 
 	FRenderCore::GetInstance()->Init();
 
 	//* raytracing system *//
 
-	blob1_ = std::make_unique<DxrObject::RaytracingBlob>();
+	/*blob1_ = std::make_unique<DxrObject::RaytracingBlob>();
 	blob1_->Create("packages/shaders/raytracingDemo/RaygenerationDemo.hlsl");
 
 	raygeneration_ = std::make_unique<DxrObject::ExportGroup>();
@@ -71,7 +87,7 @@ void BetaSystemGameLoop::InitSystem() {
 	miss_->ExportMiss(L"mainMiss");
 
 	blob1_->SetExport(raygeneration_.get());
-	blob1_->SetExport(miss_.get());
+	blob1_->SetExport(miss_.get());*/
 
 	//* presenter *//
 
@@ -96,25 +112,37 @@ void BetaSystemGameLoop::InitSystem() {
 	vb_->At(0) = { { -1.0f, 1.0f, 0.0f }, { 0.0f, 0.0f } };
 	vb_->At(1) = { { 3.0f, 1.0f, 0.0f }, { 2.0f, 0.0f } };
 	vb_->At(2) = { { -1.0f, -3.0f, 0.0f }, { 0.0f, 2.0f } };
-	
+
+	sEditorEngine->RegisterEditor<RenderSceneEditor>();
+	//sEditorEngine->GetEditor<RenderSceneEditor>()->SetScene(scene_.get());
+	sEditorEngine->GetEditor<RenderSceneEditor>()->SetGameRenderer(renderer_.get());
 }
 
 void BetaSystemGameLoop::TermSystem() {
+	sEditorEngine->RemoveEditor<RenderSceneEditor>();
 }
 
 void BetaSystemGameLoop::UpdateSystem() {
-	model_->GetTransform().scale  = { 4.0f, 4.0f, 4.0f };
+	//model_->GetTransform().scale  = { 4.0f, 4.0f, 4.0f };
 	model_->GetTransform().rotate *= MakeAxisAngle({ 0.0f, 1.0f, 0.0f }, 0.01f);
 	model_->UpdateMatrix();
 
+	/*light1_->GetTransform().translate.y = 3.0f;
+	light1_->GetTransform().translate.x = 1.0f;
+	light1_->UpdateMatrix();*/
+
 	static float frame = 0.0f;
 
-	light_->GetTransform().translate.y = 3.0f;
-	light_->GetTransform().translate.x = 1.0f;
-	light_->UpdateMatrix();
+	light2_->GetParameter().color_intensity = { 1.0f, 0.0f, 0.0f, 1.0f };
+	/*light2_->GetTransform().translate.y = 2.0f;
+	light2_->GetTransform().translate.x = std::sin(++frame / 120.0f * pi_v) * 2.0f;
+	light2_->UpdateMatrix();*/
+
 }
 
 void BetaSystemGameLoop::DrawSystem() {
+
+	sEditorEngine->GetEditor<RenderSceneEditor>()->Draw();
 
 	renderer_->Render(SxavengerSystem::GetMainThreadContext());
 

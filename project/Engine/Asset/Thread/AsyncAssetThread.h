@@ -23,7 +23,7 @@
 // AsyncAssetThread structure
 ////////////////////////////////////////////////////////////////////////////////////////////
 struct AsyncAssetThread
-	: public DirectXThreadContext, public ISystemDebugGui {
+	: public DirectXThreadContext {
 public:
 
 	//* member *//
@@ -37,7 +37,7 @@ public:
 
 	void Init();
 
-	void SystemDebugGui() override;
+	void SetImGuiTableCommand();
 
 	void Execute();
 

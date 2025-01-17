@@ -17,20 +17,23 @@ void AsyncAssetThread::Init() {
 	DirectXThreadContext::Init(1);
 }
 
-void AsyncAssetThread::SystemDebugGui() {
-	std::stringstream ss = {};
-	ss << "[thread id]: " << thread.get_id() << " ";
+void AsyncAssetThread::SetImGuiTableCommand() {
+	ImGui::TableNextRow();
 
+	ImGui::TableNextColumn();
+	std::stringstream ss;
+	ss << thread.get_id();
+	ImGui::Text(ss.str().c_str());
+	
+	ImGui::TableNextColumn();
 	bool isAvailable = (task == nullptr);
-	ss << std::format("[available]: {}", isAvailable) << " ";
 
 	if (isAvailable) {
-		ImGui::Text(ss.str().c_str());
+		ImGui::Text(std::format("{}", isAvailable).c_str());
 
 	} else {
-		ImGui::TextDisabled(ss.str().c_str());
+		ImGui::TextDisabled(std::format("{}", isAvailable).c_str());
 
-		// detail
 		if (ImGui::BeginItemTooltip()) {
 			ImGui::SeparatorText("thread details");
 
@@ -40,7 +43,6 @@ void AsyncAssetThread::SystemDebugGui() {
 			ImGui::EndTooltip();
 		}
 	}
-
 }
 
 void AsyncAssetThread::Execute() {
@@ -109,8 +111,17 @@ void AsyncAssetThreadCollection::SystemDebugGui() {
 	ImGui::Text(std::format("remain task queue size: {}", tasks_.size()).c_str());
 
 	ImGui::SeparatorText("threads");
-	for (auto& thread : threads_) {
-		thread.SystemDebugGui();
+
+	if (ImGui::BeginTable("## asset thread", 2, ImGuiTableFlags_ScrollY | ImGuiTableFlags_RowBg | ImGuiTableFlags_Borders)) {
+		ImGui::TableSetupColumn("thread id");
+		ImGui::TableSetupColumn("available");
+		ImGui::TableHeadersRow();
+
+		for (auto& thread : threads_) {
+			thread.SetImGuiTableCommand();
+		}
+
+		ImGui::EndTable();
 	}
 }
 

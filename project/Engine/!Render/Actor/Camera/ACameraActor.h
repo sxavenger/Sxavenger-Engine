@@ -9,6 +9,8 @@
 //* engine
 #include <Engine/System/DirectX/DxObject/DxDimensionBuffer.h>
 
+//* c++
+#include <memory>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // ACameraActor class
@@ -52,9 +54,13 @@ public:
 
 	void UpdateView();
 
+	void UpdateProj(const Matrix4x4& proj);
+
 	//* getter *//
 
 	const D3D12_GPU_VIRTUAL_ADDRESS& GetGPUVirtualAddress() const;
+
+	const Camera& GetCamera() const { return buffer_->At(0); }
 
 protected:
 

@@ -35,11 +35,17 @@ void ACameraActor::Init() {
 	buffer_ = std::make_unique<DxObject::DimensionBuffer<Camera>>();
 	buffer_->Create(SxavengerSystem::GetDxDevice(), 1);
 	(*buffer_)[0].Init();
+
+	UpdateProj(Matrix::MakePerspectiveFov(0.45f, static_cast<float>(kMainWindowSize.x) / static_cast<float>(kMainWindowSize.y), 0.1f, 1024.0f));
 }
 
 void ACameraActor::UpdateView() {
 	TransformComponent::UpdateMatrix();
 	(*buffer_)[0].TransferView(GetMatrix());
+}
+
+void ACameraActor::UpdateProj(const Matrix4x4& proj) {
+	(*buffer_)[0].TransferProj(proj);
 }
 
 const D3D12_GPU_VIRTUAL_ADDRESS& ACameraActor::GetGPUVirtualAddress() const {

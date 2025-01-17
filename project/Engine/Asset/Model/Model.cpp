@@ -218,7 +218,7 @@ void Model::LoadMaterial(const aiScene* aiScene, const DirectXThreadContext* con
 			aiMaterial->GetTexture(aiTextureType_DIFFUSE, 0, &aiTextureFilepath);
 
 			// データの保存
-			material.textures_[static_cast<uint8_t>(TextureType::Diffuse)] = std::make_unique<Texture>();
+			material.textures_[static_cast<uint8_t>(TextureType::Diffuse)] = std::make_shared<Texture>();
 			material.textures_[static_cast<uint8_t>(TextureType::Diffuse)]->Load(context, directory / aiTextureFilepath.C_Str());
 		}
 
@@ -228,7 +228,7 @@ void Model::LoadMaterial(const aiScene* aiScene, const DirectXThreadContext* con
 			aiMaterial->GetTexture(aiTextureType_HEIGHT, 0, &aiTextureFilepath);
 
 			// データの保存
-			material.textures_[static_cast<uint8_t>(TextureType::Bump)] = std::make_unique<Texture>();
+			material.textures_[static_cast<uint8_t>(TextureType::Bump)] = std::make_shared<Texture>();
 			material.textures_[static_cast<uint8_t>(TextureType::Bump)]->Load(context, directory / aiTextureFilepath.C_Str());
 
 		} else if (aiMaterial->GetTextureCount(aiTextureType_NORMALS) != 0) { //!< gltfの場合.
@@ -236,7 +236,7 @@ void Model::LoadMaterial(const aiScene* aiScene, const DirectXThreadContext* con
 			aiMaterial->GetTexture(aiTextureType_NORMALS, 0, &aiTextureFilepath);
 
 			// データの保存
-			material.textures_[static_cast<uint8_t>(TextureType::Bump)] = std::make_unique<Texture>();
+			material.textures_[static_cast<uint8_t>(TextureType::Bump)] = std::make_shared<Texture>();
 			material.textures_[static_cast<uint8_t>(TextureType::Bump)]->Load(context, directory / aiTextureFilepath.C_Str());
 		}
 	}

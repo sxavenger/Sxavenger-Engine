@@ -51,6 +51,11 @@ public:
 
 	virtual void Render(const RendererContext& context) override;
 
+	//* getter *//
+
+	const Parameter& GetParameter() const { return cb_->At(0); }
+	Parameter& GetParameter() { return cb_->At(0); }
+
 protected:
 
 	//=========================================================================================

@@ -60,9 +60,11 @@ public:
 
 	bool CheckVisibility(Transparency target) const;
 
-	//* getter *//
+	//* accessor *//
 
 	const Transparency GetTransparency() const { return transparency_; }
+
+	void SetTransparency(Transparency transparency) { transparency_ = transparency; }
 
 protected:
 

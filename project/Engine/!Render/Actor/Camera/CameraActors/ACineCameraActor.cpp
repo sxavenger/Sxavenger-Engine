@@ -28,9 +28,9 @@ void ACineCameraActor::Init() {
 	parameter_.nearZ  = 0.01f;
 	parameter_.farZ   = 1000.0f;
 
-	TransferProj();
+	UpdateProj();
 }
 
-void ACineCameraActor::TransferProj() {
-	(*buffer_)[0].TransferProj(parameter_.GetProj());
+void ACineCameraActor::UpdateProj() {
+	ACameraActor::UpdateProj(parameter_.GetProj());
 }

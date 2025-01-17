@@ -36,6 +36,12 @@ public:
 
 	void SetCamera(ACameraActor* camera) { camera_ = camera; }
 
+	//* getter *//
+
+	Vector2ui GetSize() const { return textures_->GetSize(); }
+
+	FScene* GetScene() const { return scene_; }
+
 	//* debug *//
 
 	const D3D12_GPU_DESCRIPTOR_HANDLE& GetDebugTexture() const;

@@ -13,16 +13,30 @@
 // EngineDeveloperEditor class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-void EngineDeveloperEditor::Init(EditorEngine* editor) {
-	editor_ = editor;
+void EngineDeveloperEditor::Init() {
 }
 
-void EngineDeveloperEditor::Term() {
+void EngineDeveloperEditor::ShowMainMenu() {
+	if (ImGui::BeginMenu("developer")) {
+		MenuPadding();
+
+		ImGui::SeparatorText("developer");
+		ShowProcessMenu();
+		ShowSystemMenu();
+		ShowThreadMenu();
+
+		ImGui::EndMenu();
+	}
+}
+
+void EngineDeveloperEditor::ShowWindow() {
+	ShowPerformanceWindow();
 }
 
 void EngineDeveloperEditor::ShowProcessMenu() {
 	if (ImGui::BeginMenu("process")) {
-		MenuDummy();
+		MenuPadding();
+		ImGui::SeparatorText("process");
 
 		if (processLimit_.has_value()) {
 			if (ImGui::Button("resame")) { //!< 再生
@@ -48,7 +62,9 @@ void EngineDeveloperEditor::ShowProcessMenu() {
 				count = 0;
 			}
 
-			ImGui::Text("update count remaining : %u <frame>", processLimit_.value());
+			if (processLimit_.has_value()) {
+				ImGui::Text("update count remaining : %u <frame>", processLimit_.value());
+			}
 
 		} else {
 			if (ImGui::Button("stop")) { //!< 停止
@@ -75,10 +91,11 @@ void EngineDeveloperEditor::ShowProcessMenu() {
 
 void EngineDeveloperEditor::ShowSystemMenu() {
 	if (ImGui::BeginMenu("system")) {
-		MenuDummy();
+		MenuPadding();
+		ImGui::SeparatorText("system");
 
 		if (ImGui::BeginMenu("descriptor")) {
-			MenuDummy();
+			MenuPadding();
 
 			auto descriptorHeaps = SxavengerSystem::GetDxDescriptorHeaps();
 			descriptorHeaps->SystemDebugGui();
@@ -93,12 +110,14 @@ void EngineDeveloperEditor::ShowSystemMenu() {
 
 			ImGui::EndMenu();
 		}
+
+		ImGui::EndMenu();
 	}
 }
 
 void EngineDeveloperEditor::ShowThreadMenu() {
-	if (ImGui::BeginMenu("asset collection")) {
-		MenuDummy();
+	if (ImGui::BeginMenu("thread")) {
+		MenuPadding();
 
 		auto collection = SxavengerAsset::GetCollection();
 		collection->SystemDebugGui();
@@ -113,7 +132,7 @@ void EngineDeveloperEditor::ShowPerformanceWindow() {
 	}
 
 	editor_->SetNextWindowDocking();
-	ImGui::Begin("Performace ## Engine Developer Editor", nullptr, editor_->GetWindowFlag());
+	ImGui::Begin("Performace ## Engine Developer Editor", nullptr, editor_->GetWindowFlag() | ImGuiWindowFlags_NoTitleBar);
 
 	const Performance* performance = SxavengerSystem::GetPerformance();
 	TimePointf<TimeUnit::second> time = performance->GetDeltaTime();
@@ -143,8 +162,4 @@ void EngineDeveloperEditor::ShowPerformanceWindow() {
 void EngineDeveloperEditor::BreakPoint() {
 	isProcessRequired_ = false;
 	processLimit_      = 0;
-}
-
-void EngineDeveloperEditor::MenuDummy() {
-	ImGui::Dummy({ 240.0f, 0.0f });
 }
