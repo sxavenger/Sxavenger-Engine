@@ -49,15 +49,15 @@ void FRenderCoreLight::CreateInputAssembler() {
 void FRenderCoreLight::CreatePipeline() {
 
 	D3D12_RENDER_TARGET_BLEND_DESC blend = {};
-	blend.BlendEnable    = true;
-	blend.LogicOpEnable  = false;
-	blend.SrcBlend       = D3D12_BLEND_ONE;
-	blend.DestBlend      = D3D12_BLEND_ONE;
-	blend.BlendOp        = D3D12_BLEND_OP_ADD;
-	blend.SrcBlendAlpha  = D3D12_BLEND_ONE;
-	blend.DestBlendAlpha = D3D12_BLEND_ONE;
-	blend.BlendOpAlpha   = D3D12_BLEND_OP_ADD;
-	blend.LogicOp        = D3D12_LOGIC_OP_NOOP;
+	blend.BlendEnable           = true;
+	blend.LogicOpEnable         = false;
+	blend.SrcBlend              = D3D12_BLEND_ONE;
+	blend.DestBlend             = D3D12_BLEND_ONE;
+	blend.BlendOp               = D3D12_BLEND_OP_ADD;
+	blend.SrcBlendAlpha         = D3D12_BLEND_ONE;
+	blend.DestBlendAlpha        = D3D12_BLEND_ZERO;
+	blend.BlendOpAlpha          = D3D12_BLEND_OP_ADD;
+	blend.LogicOp               = D3D12_LOGIC_OP_NOOP;
 	blend.RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE_ALL;
 
 	GraphicsPipelineDesc desc2d = {};
@@ -76,5 +76,18 @@ void FRenderCoreLight::CreatePipeline() {
 	pipelines_[LightType::Directional]->ReflectionRootSignature(SxavengerSystem::GetDxDevice());
 	pipelines_[LightType::Directional]->CreatePipeline(SxavengerSystem::GetDxDevice(), desc2d);
 
+	pipelines_[LightType::Point] = std::make_unique<CustomReflectionGraphicsPipeline>();
+	pipelines_[LightType::Point]->CreateAsset(kDirectory_ / "lightRender2d.vs.hlsl", GraphicsShaderType::vs);
+	pipelines_[LightType::Point]->CreateAsset(kDirectory_ / "pointLight.ps.hlsl", GraphicsShaderType::ps);
+	pipelines_[LightType::Point]->RegisterBlob();
+	pipelines_[LightType::Point]->ReflectionRootSignature(SxavengerSystem::GetDxDevice());
+	pipelines_[LightType::Point]->CreatePipeline(SxavengerSystem::GetDxDevice(), desc2d);
+
+	pipelines_[LightType::Spot] = std::make_unique<CustomReflectionGraphicsPipeline>();
+	pipelines_[LightType::Spot]->CreateAsset(kDirectory_ / "lightRender2d.vs.hlsl", GraphicsShaderType::vs);
+	pipelines_[LightType::Spot]->CreateAsset(kDirectory_ / "spotLight.ps.hlsl", GraphicsShaderType::ps);
+	pipelines_[LightType::Spot]->RegisterBlob();
+	pipelines_[LightType::Spot]->ReflectionRootSignature(SxavengerSystem::GetDxDevice());
+	pipelines_[LightType::Spot]->CreatePipeline(SxavengerSystem::GetDxDevice(), desc2d);
 
 }

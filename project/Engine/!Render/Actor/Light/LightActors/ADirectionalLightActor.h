@@ -27,14 +27,12 @@ public:
 
 		//* member *//
 
-		Color4f  color_intensity; //!< rgb: color, a: intensity
-		Vector3f direction;
+		Color4f color_intensity; //!< rgb: color, a: intensity
 
 		//* method *//
 
 		void Init() {
 			color_intensity = { 1.0f, 1.0f, 1.0f, 1.0f };
-			direction       = Normalize({ 1.0f, -1.0f, 0.0f });
 		}
 	};
 
@@ -58,10 +56,10 @@ public:
 	const Parameter& GetParameter() const { return cb_->At(0); }
 	Parameter& GetParameter() { return cb_->At(0); }
 
-private:
+protected:
 
 	//=========================================================================================
-	// private variables
+	// protected variables
 	//=========================================================================================
 
 	std::unique_ptr<DxObject::DimensionBuffer<Parameter>> cb_; //!< constant buffer

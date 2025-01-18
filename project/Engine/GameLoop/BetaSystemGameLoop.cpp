@@ -58,25 +58,32 @@ void BetaSystemGameLoop::InitSystem() {
 
 	model_ = std::make_unique<AModelActor>();
 	model_->Init();
-	model_->SetModel(SxavengerAsset::TryImport<AssetModel>("asset/model/human/idle.gltf"));
-	//model_->SetModel(SxavengerAsset::TryImport<AssetModel>("asset/model/primitive/teapot.obj"));
+	//model_->SetModel(SxavengerAsset::TryImport<AssetModel>("asset/model/human/idle.gltf"));
+	model_->SetModel(SxavengerAsset::TryImport<AssetModel>("asset/model/primitive/teapot.obj"));
 	//model_->SetModel(SxavengerAsset::TryImport<AssetModel>("asset/model/chessBoard/chessBoard.gltf"));
 	model_->SetRenderWait(false);
 	scene_->AddGeometry(model_.get());
 
-	/*light1_ = std::make_unique<APointLightActor>();
+	light1_ = std::make_unique<APointLightActor>();
 	light1_->Init();
+	light1_->GetParameter().color_intensity = { 1.0f, 0.0f, 0.0f, 0.0f };
 
 	light2_ = std::make_unique<APointLightActor>();
 	light2_->Init();
-
-	scene_->AddLight(light1_.get());
-	scene_->AddLight(light2_.get());*/
+	light2_->GetParameter().color_intensity = { 1.0f, 1.0f, 1.0f, 0.0f };
 
 	light3_ = std::make_unique<ADirectionalLightActor>();
 	light3_->Init();
+	light3_->GetParameter().color_intensity = { 1.0f, 1.0f, 1.0f, 0.0f };
 
+	light4_ = std::make_unique<ASpotLightActor>();
+	light4_->Init();
+	light4_->GetParameter().color_intensity = { 1.0f, 1.0f, 1.0f, 1.0f };
+
+	scene_->AddLight(light1_.get());
+	scene_->AddLight(light2_.get());
 	scene_->AddLight(light3_.get());
+	scene_->AddLight(light4_.get());
 
 	FRenderCore::GetInstance()->Init();
 
@@ -131,18 +138,6 @@ void BetaSystemGameLoop::UpdateSystem() {
 	//model_->GetTransform().scale  = { 4.0f, 4.0f, 4.0f };
 	model_->GetTransform().rotate *= MakeAxisAngle({ 0.0f, 1.0f, 0.0f }, 0.01f);
 	model_->UpdateMatrix();
-
-	/*light1_->GetTransform().translate.y = 3.0f;
-	light1_->GetTransform().translate.x = 1.0f;
-	light1_->UpdateMatrix();*/
-
-	static float frame = 0.0f;
-
-	//light2_->GetParameter().color_intensity = { 1.0f, 0.0f, 0.0f, 1.0f };
-	/*light2_->GetTransform().translate.y = 2.0f;
-	light2_->GetTransform().translate.x = std::sin(++frame / 120.0f * pi_v) * 2.0f;
-	light2_->UpdateMatrix();*/
-
 }
 
 void BetaSystemGameLoop::DrawSystem() {

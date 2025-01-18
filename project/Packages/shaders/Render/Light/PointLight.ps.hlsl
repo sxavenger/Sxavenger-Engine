@@ -7,10 +7,11 @@
 // buffers
 //=========================================================================================
 
-struct DirectionalLight {
-	float4 color_intencity; //!< rgb : color, a : intensity
+struct PointLight {
+	float4 color_intensity; //!< rgb : color, a : intensity
+	float distance;
 };
-ConstantBuffer<DirectionalLight> gDirectionalLight : register(b0);
+ConstantBuffer<PointLight> gPointLight : register(b0);
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // main
@@ -24,11 +25,18 @@ PSOutput main(PSInput input) {
 	surface.GetSurface(input.position.xy);
 	
 	//* Lightの情報を取得
-	float3 l         = -gTransform[input.instanceId].GetDirection();                                //!< surfaceからlightへの方向ベクトル
-	float3 c_light   = gDirectionalLight.color_intencity.rgb * gDirectionalLight.color_intencity.a; //!< lightのcolor
+	float3 p_light = gTransform[input.instanceId].GetPosition(); //!< lightの中心座標
 	
 	//* 計算
+	//!< func_diffuse(n, l)
+	float3 l      = normalize(p_light - surface.position); //!< lightの方向ベクトル
 	float diffuse = CalculateDiffuseHalfLambert(surface.normal, l);
+	
+	//!< func_dist(r) = func_win(r);
+	float r    = length(p_light - surface.position); //!< lightとsurfaceの距離
+	float dist = pow(max(1.0f - pow(r / gPointLight.distance, 4.0f), 0.0f), 2.0f); //!< dist = func_win(r);
+	
+	float3 c_light = gPointLight.color_intensity.rgb * gPointLight.color_intensity.a * dist;
 	
 	//* 出力
 	output.color.rgb = diffuse * c_light * surface.albedo;
@@ -37,4 +45,5 @@ PSOutput main(PSInput input) {
 	output.color.a = 1.0f;
 	
 	return output;
+	
 }
