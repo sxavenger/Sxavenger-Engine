@@ -46,6 +46,7 @@ public:
 
 	//* getter *//
 
+	DxObject::GPUBuffer GetBuffer(uint32_t index) const;
 	D3D12_GPU_VIRTUAL_ADDRESS GetAddress(uint32_t index) const;
 	D3D12_GPU_DESCRIPTOR_HANDLE GetHandle(uint32_t index) const;
 
@@ -75,6 +76,8 @@ public:
 	//=========================================================================================
 	// public methods
 	//=========================================================================================
+
+	void Resize(uint32_t size) { table_.resize(size); }
 
 	void Register(uint32_t index, WriteBindBufferType type);
 	void RegisterAddress(uint32_t index);

@@ -19,8 +19,8 @@ GeometryDeferredOutput main(GeometryPSInput input) {
 	
 	GeometryDeferredOutput output = (GeometryDeferredOutput)0;
 
-	output.SetAlbedo(gAlbedo.Sample(gSampler, input.texcoord).rgb);
-	output.SetAO(_NOT_USED_1);
+	output.SetAlbedo(gAlbedo.Sample(gSampler, input.texcoord).rgb * gTextureComponent.color.rgb);
+	//output.SetAO(_NOT_USED_1);
 	output.SetNormal(input.normal);
 	output.SetPosition(input.worldPos);
 	

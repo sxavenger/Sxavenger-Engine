@@ -3,49 +3,46 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
-//* core
-#include "Core/FRenderCoreGeometry.h"
-#include "Core/FRenderCoreLight.h"
-#include "Core/FRenderCoreRaytracing.h"
+//* actor
+#include "../AGeometryActor.h"
+
+//* engine
+#include <Engine/Content/InputAssembler/InputMesh.h>
+#include <Engine/Asset/Texture/AssetTexture.h>
+#include <Engine/Asset/Observer/AssetObserver.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// FRenderCore class
+// AManualGeometryActor class
 ////////////////////////////////////////////////////////////////////////////////////////////
-class FRenderCore {
+class AManualGeometryActor
+	: public AGeometryActor {
 public:
 
 	//=========================================================================================
 	// public methods
 	//=========================================================================================
 
-	FRenderCore()  = default;
-	~FRenderCore() = default;
+	AManualGeometryActor()          = default;
+	virtual ~AManualGeometryActor() = default;
 
 	void Init();
 
-	void Term();
+	//* render *//
 
-	//* getter *//
+	virtual void RenderOpaque(const RendererContext& context) override;
 
-	FRenderCoreGeometry* GetGeometry() { return geometry_.get(); }
+	virtual void RenderTransparent(const RendererContext& context) override;
 
-	FRenderCoreLight* GetLight() { return light_.get(); }
+	virtual void SetupToplevelAS(const SetupContext& context) override;
 
-	FRenderCoreRaytracing* GetRaytracing() { return raytracing_.get(); }
+protected:
 
-	//* singleton *//
+	//=========================================================================================
+	// protected variables
+	//=========================================================================================
 
-	static FRenderCore* GetInstance();
+	InputMesh                   ia_;
+	AssetObserver<AssetTexture> texture_;
+	// todo: variant AssertObserver || D3D12_GPU_DESCRIPTOR_HANDLE
 	
-private:
-
-	//=========================================================================================
-	// private variables
-	//=========================================================================================
-
-	std::unique_ptr<FRenderCoreGeometry>   geometry_;
-	std::unique_ptr<FRenderCoreLight>      light_;
-	std::unique_ptr<FRenderCoreRaytracing> raytracing_;
-
-
 };

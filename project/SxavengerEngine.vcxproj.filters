@@ -134,6 +134,12 @@
     <ClCompile Include="Engine\!Render\Core\FRenderCoreLight.cpp" />
     <ClCompile Include="Engine\!Render\Actor\Light\LightActors\ADirectionalLightActor.cpp" />
     <ClCompile Include="Engine\!Render\Actor\Light\LightActors\ASpotLightActor.cpp" />
+    <ClCompile Include="Engine\!Render\Actor\Geometry\GeometryActors\AManualGeometryActor.cpp" />
+    <ClCompile Include="Lib\Sxl\Holder.cpp" />
+    <ClCompile Include="Demo\Actor\AFloorActor.cpp" />
+    <ClCompile Include="Engine\Module\Component\TextureComponent.cpp" />
+    <ClCompile Include="Lib\Sxl\Flag.cpp" />
+    <ClCompile Include="Engine\!Render\Core\FRenderCoreRaytracing.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\System\Window\Window.h" />
@@ -272,5 +278,11 @@
     <ClInclude Include="Engine\!Render\Core\FRenderCoreLight.h" />
     <ClInclude Include="Engine\!Render\Actor\Light\LightActors\ADirectionalLightActor.h" />
     <ClInclude Include="Engine\!Render\Actor\Light\LightActors\ASpotLightActor.h" />
+    <ClInclude Include="Engine\!Render\Actor\Geometry\GeometryActors\AManualGeometryActor.h" />
+    <ClInclude Include="Lib\Sxl\Holder.h" />
+    <ClInclude Include="Demo\Actor\AFloorActor.h" />
+    <ClInclude Include="Engine\Module\Component\TextureComponent.h" />
+    <ClInclude Include="Lib\Sxl\Flag.h" />
+    <ClInclude Include="Engine\!Render\Core\FRenderCoreRaytracing.h" />
   </ItemGroup>
 </Project>

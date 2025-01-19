@@ -12,6 +12,7 @@
 
 void AModelActor::Init() {
 	TransformComponent::CreateBuffer();
+	TextureComponent::CreateBuffer();
 }
 
 void AModelActor::RenderOpaque(const RendererContext& context) {
@@ -26,9 +27,9 @@ void AModelActor::RenderOpaque(const RendererContext& context) {
 
 	auto model = model_.WaitGet();
 
-	DxObject::BindBufferDesc parameter = {};
-	parameter.SetAddress("gCamera",    context.camera->GetGPUVirtualAddress());
-	parameter.SetAddress("gTransform", TransformComponent::GetGPUVirtualAddress());
+	DxObject::BindBufferDesc parameter = context.parameter;
+	parameter.SetAddress("gTransform",        TransformComponent::GetGPUVirtualAddress());
+	parameter.SetAddress("gTextureComponent", TextureComponent::GetGPUVirtualAddress());
 
 	// todo: mesh shader
 
@@ -50,4 +51,29 @@ void AModelActor::RenderOpaque(const RendererContext& context) {
 
 void AModelActor::RenderTransparent(const RendererContext& context) {
 	context;
+}
+
+void AModelActor::SetupToplevelAS(const SetupContext& context) {
+
+	if (!isRenderWait_ && !model_.Get()->IsComplete()) {
+		return;
+	}
+
+	auto model = model_.WaitGet();
+
+	DxrObject::TopLevelAS::Instance instance = {};
+	instance.flag       = D3D12_RAYTRACING_INSTANCE_FLAG_NONE;
+	instance.mat        = TransformComponent::GetMatrix();
+	instance.instanceId = 0;
+
+	instance.expt      = nullptr; //!< TODO: export group
+	instance.parameter = nullptr; //!< TODO: bind buffer desc
+
+	model->CreateBottomLevelAS(context.context);
+
+	for (uint32_t i = 0; i < model->GetMeshSize(); ++i) {
+		instance.bottomLevelAS = model->GetInputMesh(i).GetBottomLevelAS();
+		context.toplevelAS->AddInstance(instance);
+	}
+
 }

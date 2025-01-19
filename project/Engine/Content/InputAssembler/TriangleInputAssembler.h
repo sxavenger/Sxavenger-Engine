@@ -37,13 +37,15 @@ public:
 
 	//* getter *//
 
+	bool IsCreate() const { return vertex_ != nullptr && index_ != nullptr; }
+
 	DxObject::VertexDimensionBuffer<_Vertex>* GetVertex() const { return vertex_.get(); }
 
 	DxObject::TriangleIndexDimensionBuffer* GetIndex() const { return index_.get(); }
 
 	//* operator *//
 
-	TriangleInputAssembler(TriangleInputAssembler&&) noexcept = default;
+	TriangleInputAssembler(TriangleInputAssembler&&) noexcept            = default;
 	TriangleInputAssembler& operator=(TriangleInputAssembler&&) noexcept = default;
 
 protected:

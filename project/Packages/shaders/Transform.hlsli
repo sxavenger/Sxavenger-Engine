@@ -20,7 +20,7 @@ struct TransformationMatrix {
 	}
 
 	float3 GetDirection() {
-		static const float3 forward = float3(0.0f, 0.0f, 1.0f);
+		static const float3 forward = float3(0.0f, 0.0f, -1.0f);
 		return mul(forward, (float3x3)mat);
 	}
 	

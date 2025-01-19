@@ -134,11 +134,13 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Demo\Actor\AFloorActor.cpp" />
     <ClCompile Include="Engine\!Render\Actor\AActor.cpp" />
     <ClCompile Include="Engine\!Render\Actor\Camera\ACameraActor.cpp" />
     <ClCompile Include="Engine\!Render\Actor\Camera\CameraActors\ACineCameraActor.cpp" />
     <ClCompile Include="Engine\!Render\Actor\Camera\CameraActors\APivotCameraActor.cpp" />
     <ClCompile Include="Engine\!Render\Actor\Geometry\AGeometryActor.cpp" />
+    <ClCompile Include="Engine\!Render\Actor\Geometry\GeometryActors\AManualGeometryActor.cpp" />
     <ClCompile Include="Engine\!Render\Actor\Geometry\GeometryActors\AModelActor.cpp" />
     <ClCompile Include="Engine\!Render\Actor\Light\ALightActor.cpp" />
     <ClCompile Include="Engine\!Render\Actor\Light\LightActors\ADirectionalLightActor.cpp" />
@@ -146,6 +148,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="Engine\!Render\Actor\Light\LightActors\ASpotLightActor.cpp" />
     <ClCompile Include="Engine\!Render\Core\FRenderCoreGeometry.cpp" />
     <ClCompile Include="Engine\!Render\Core\FRenderCoreLight.cpp" />
+    <ClCompile Include="Engine\!Render\Core\FRenderCoreRaytracing.cpp" />
     <ClCompile Include="Engine\!Render\FRenderCore.cpp" />
     <ClCompile Include="Engine\!Render\FScene.cpp" />
     <ClCompile Include="Engine\!Render\FSceneDepth.cpp" />
@@ -182,6 +185,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="Engine\Editor\Editors\RenderSceneEditor.cpp" />
     <ClCompile Include="Engine\GameLoop\BetaSystemGameLoop.cpp" />
     <ClCompile Include="Engine\GameLoop\EditorEngineGameLoop.cpp" />
+    <ClCompile Include="Engine\Module\Component\TextureComponent.cpp" />
     <ClCompile Include="Engine\Module\Component\TransformComponent.cpp" />
     <ClCompile Include="Engine\Module\Skeleton\Skeleton.cpp" />
     <ClCompile Include="Engine\Module\Skeleton\SkeletonMesh.cpp" />
@@ -250,7 +254,9 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="Lib\Geometry\Vector3.cpp" />
     <ClCompile Include="Lib\Geometry\Vector4.cpp" />
     <ClCompile Include="Lib\MyMath.cpp" />
+    <ClCompile Include="Lib\Sxl\Flag.cpp" />
     <ClCompile Include="Lib\Sxl\Formatter.cpp" />
+    <ClCompile Include="Lib\Sxl\Holder.cpp" />
     <ClCompile Include="Lib\Sxl\LowerPathMap.cpp" />
     <ClCompile Include="Lib\Sxl\LowerUnorderedMap.cpp" />
     <ClCompile Include="Lib\Sxl\OptimizedLowerPathMap.cpp" />
@@ -260,11 +266,13 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Demo\Actor\AFloorActor.h" />
     <ClInclude Include="Engine\!Render\Actor\AActor.h" />
     <ClInclude Include="Engine\!Render\Actor\Camera\ACameraActor.h" />
     <ClInclude Include="Engine\!Render\Actor\Camera\CameraActors\ACineCameraActor.h" />
     <ClInclude Include="Engine\!Render\Actor\Camera\CameraActors\APivotCameraActor.h" />
     <ClInclude Include="Engine\!Render\Actor\Geometry\AGeometryActor.h" />
+    <ClInclude Include="Engine\!Render\Actor\Geometry\GeometryActors\AManualGeometryActor.h" />
     <ClInclude Include="Engine\!Render\Actor\Geometry\GeometryActors\AModelActor.h" />
     <ClInclude Include="Engine\!Render\Actor\Light\ALightActor.h" />
     <ClInclude Include="Engine\!Render\Actor\Light\LightActors\ADirectionalLightActor.h" />
@@ -272,6 +280,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Engine\!Render\Actor\Light\LightActors\ASpotLightActor.h" />
     <ClInclude Include="Engine\!Render\Core\FRenderCoreGeometry.h" />
     <ClInclude Include="Engine\!Render\Core\FRenderCoreLight.h" />
+    <ClInclude Include="Engine\!Render\Core\FRenderCoreRaytracing.h" />
     <ClInclude Include="Engine\!Render\FRenderCore.h" />
     <ClInclude Include="Engine\!Render\FScene.h" />
     <ClInclude Include="Engine\!Render\FSceneDepth.h" />
@@ -310,6 +319,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Engine\Editor\Editors\RenderSceneEditor.h" />
     <ClInclude Include="Engine\GameLoop\BetaSystemGameLoop.h" />
     <ClInclude Include="Engine\GameLoop\EditorEngineGameLoop.h" />
+    <ClInclude Include="Engine\Module\Component\TextureComponent.h" />
     <ClInclude Include="Engine\Module\Component\TransformComponent.h" />
     <ClInclude Include="Engine\Module\Skeleton\Skeleton.h" />
     <ClInclude Include="Engine\Module\Skeleton\SkeletonMesh.h" />
@@ -386,7 +396,9 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Lib\Geometry\Vector4.h" />
     <ClInclude Include="Lib\Geometry\VectorComparison.h" />
     <ClInclude Include="Lib\MyMath.h" />
+    <ClInclude Include="Lib\Sxl\Flag.h" />
     <ClInclude Include="Lib\Sxl\Formatter.h" />
+    <ClInclude Include="Lib\Sxl\Holder.h" />
     <ClInclude Include="Lib\Sxl\LowerPathMap.h" />
     <ClInclude Include="Lib\Sxl\LowerUnorderedMap.h" />
     <ClInclude Include="Lib\Sxl\OptimizedLowerPathMap.h" />

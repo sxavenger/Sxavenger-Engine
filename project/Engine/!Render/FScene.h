@@ -9,6 +9,7 @@
 
 //* engine
 #include <Engine/System/DirectX/DxrObject/DxrAccelerationStructure.h>
+#include <Engine/System/DirectX/DirectXContext.h>
 
 //* c++
 #include <list>
@@ -31,6 +32,10 @@ public:
 	void AddGeometry(AGeometryActor* geometry);
 
 	void AddLight(ALightActor* light);
+
+	//* raytracing option *//
+
+	void SetupTopLevelAS(const DirectXThreadContext* context);
 
 	//* getter *//
 

@@ -1,26 +1,29 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
-#include "GeometryPass.hlsli"
+#include "ReflectionHitgroupCommon.hlsli"
 
 //=========================================================================================
-// Buffer
+// buffers
 //=========================================================================================
+//* local buffer
 
-Texture2D<float4> gAlbedo : register(t0);
-SamplerState gSampler     : register(s0);
-
-// todo: material
+//!< t0, t1 はReflectionHitgroupCommon.hlsliで定義済み
+Texture2D<float4> gAlbedo  : register(t2);
+SamplerState      gSampler : register(s0);
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // main
 ////////////////////////////////////////////////////////////////////////////////////////////
-GeometryForwardOutput main(GeometryPSInput input) {
-
-	GeometryForwardOutput output = (GeometryForwardOutput)0;
-
-	output.color = gAlbedo.Sample(gSampler, input.texcoord) * gTextureComponent.color;
-
-	return output;
+[shader("closesthit")]
+void mainGeometryClosesthit(inout Payload payload, Attribute attribute) {
+	// HACK: recrusion処理やや透明の場合は, anyhitで処理を行う
+	//<- anyhitのオーバーヘッドの考慮
 	
+	Vertex vtx = GetVertex(attribute);
+
+	float4 color = gAlbedo.Sample(gSampler, vtx.texcoord);
+	
+	payload.color = color.rgb;
 }
+

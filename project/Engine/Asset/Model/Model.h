@@ -64,6 +64,10 @@ public:
 
 	void Term();
 
+	//* mesh option *//
+
+	void CreateBottomLevelAS(const DirectXThreadContext* context);
+
 	//* meshes option *//
 
 	void SetIABuffer(const DirectXThreadContext* context, uint32_t meshIndex) const;

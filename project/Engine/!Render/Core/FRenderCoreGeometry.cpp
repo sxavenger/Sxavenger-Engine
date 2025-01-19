@@ -48,6 +48,20 @@ void FRenderCoreGeometry::CreateDesc() {
 	defferedDesc_.SetRTVFormat(DXGI_FORMAT_R32G32B32A32_FLOAT);
 	defferedDesc_.SetRTVFormat(DXGI_FORMAT_R32G32B32A32_FLOAT);
 
+	D3D12_RENDER_TARGET_BLEND_DESC blend = {};
+	blend.BlendEnable           = true;
+	blend.LogicOpEnable         = false;
+	blend.SrcBlend              = D3D12_BLEND_ONE;
+	blend.DestBlend             = D3D12_BLEND_ZERO;
+	blend.BlendOp               = D3D12_BLEND_OP_ADD;
+	blend.SrcBlendAlpha         = D3D12_BLEND_ONE;
+	blend.DestBlendAlpha        = D3D12_BLEND_ZERO;
+	blend.BlendOpAlpha          = D3D12_BLEND_OP_ADD;
+	blend.RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE_ALL;
+
+	defferedDesc_.SetBlendDesc(0, blend);
+	defferedDesc_.SetIndependentBlendEnable(false);
+
 	//* forward
 	forwardDesc_ = {};
 	forwardDesc_.CreateDefaultDesc();

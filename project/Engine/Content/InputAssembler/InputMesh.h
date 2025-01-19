@@ -12,6 +12,7 @@
 //* engine
 #include <Engine/System/DirectX/DxObject/DxDimensionBuffer.h>
 #include <Engine/System/DirectX/DxObject/DxBindBuffer.h>
+#include <Engine/System/DirectX/DxrObject/DxrAccelerationStructure.h>
 #include <Engine/System/DirectX/DirectXContext.h>
 //#include <Engine/System/DxrObject/DxrAccelerationStructure.h>
 
@@ -41,6 +42,14 @@ public:
 	void Dispatch(const DirectXThreadContext* context, UINT instanceCount = 1) const;
 
 	bool IsCreateMeshlet() const { return isCreateMeshlet_; }
+
+	//* raytracing option *//
+
+	void CreateBottomLevelAS(const DirectXThreadContext* context);
+
+	DxrObject::BottomLevelAS* GetBottomLevelAS() const;
+
+	bool IsCreateBottomLevelAS() const { return isCreateBottomLevelAS_; }
 
 	//* operator *//
 
@@ -79,6 +88,8 @@ private:
 	static const UINT kAmplificationNumthread_ = 32;
 
 	//* raytracing *//
-	// TODO:
+	bool isCreateBottomLevelAS_ = false;
+
+	std::unique_ptr<DxrObject::BottomLevelAS> bottomLevelAS_;
 
 };

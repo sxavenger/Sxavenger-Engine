@@ -38,8 +38,8 @@ public:
 	// HitgroupEntry structure
 	////////////////////////////////////////////////////////////////////////////////////////////
 	struct HitgroupEntry {
-		std::wstring closestHit   = L"";
-		std::wstring anyHit       = L"";
+		std::wstring closesthit   = L"";
+		std::wstring anyhit       = L"";
 		std::wstring intersection = L"";
 	};
 

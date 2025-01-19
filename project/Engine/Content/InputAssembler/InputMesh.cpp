@@ -133,3 +133,31 @@ void InputMesh::Dispatch(const DirectXThreadContext* context, UINT instanceCount
 		1
 	);
 }
+
+void InputMesh::CreateBottomLevelAS(const DirectXThreadContext* context) {
+	if (isCreateBottomLevelAS_) {
+		return;
+	}
+
+	D3D12_RAYTRACING_GEOMETRY_DESC desc = {};
+	desc.Type                                 = D3D12_RAYTRACING_GEOMETRY_TYPE_TRIANGLES;
+	desc.Flags                                = D3D12_RAYTRACING_GEOMETRY_FLAG_OPAQUE; // hack: 
+	desc.Triangles.VertexBuffer.StartAddress  = TriangleInputAssembler::GetVertex()->GetGPUVirtualAddress();
+	desc.Triangles.VertexBuffer.StrideInBytes = TriangleInputAssembler::GetVertex()->GetStride();
+	desc.Triangles.VertexCount                = TriangleInputAssembler::GetVertex()->GetSize();
+	desc.Triangles.VertexFormat               = DXGI_FORMAT_R32G32B32_FLOAT;
+	desc.Triangles.IndexBuffer                = TriangleInputAssembler::GetIndex()->GetGPUVirtualAddress();
+	desc.Triangles.IndexCount                 = TriangleInputAssembler::GetIndex()->GetIndexCount();
+	desc.Triangles.IndexFormat                = DXGI_FORMAT_R32_UINT;
+
+	// BottomLevelASの生成
+	bottomLevelAS_ = std::make_unique<DxrObject::BottomLevelAS>();
+	bottomLevelAS_->Build(SxavengerSystem::GetDxDevice(), context->GetDxCommand(), desc);
+
+	isCreateBottomLevelAS_ = true;
+}
+
+DxrObject::BottomLevelAS* InputMesh::GetBottomLevelAS() const {
+	Assert(isCreateBottomLevelAS_, "bottomLevelAS is not create.");
+	return bottomLevelAS_.get();
+}

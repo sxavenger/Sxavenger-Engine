@@ -43,7 +43,8 @@ void FSceneRenderer::RenderOpaqueGeometries(const DirectXThreadContext* context)
 	AGeometryActor::RendererContext rendererContext = {};
 	rendererContext.context = context;
 	rendererContext.size    = textures_->GetSize();
-	rendererContext.camera  = camera_;
+
+	rendererContext.parameter.SetAddress("gCamera", camera_->GetGPUVirtualAddress());
 
 	// 不透明なジオメトリを描画
 	for (auto geometry : geometries) {
@@ -89,7 +90,8 @@ void FSceneRenderer::RenderTransparentGeometries(const DirectXThreadContext* con
 	AGeometryActor::RendererContext rendererContext = {};
 	rendererContext.context = context;
 	rendererContext.size    = textures_->GetSize();
-	rendererContext.camera  = camera_;
+
+	rendererContext.parameter.SetAddress("gCamera", camera_->GetGPUVirtualAddress());
 
 	// 半透明なジオメトリを描画
 	for (auto geometry : geometries) {

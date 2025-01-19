@@ -18,9 +18,12 @@
 #include <Engine/!Render/Actor/Light/LightActors/ADirectionalLightActor.h>
 #include <Engine/!Render/Actor/Light/LightActors/ASpotLightActor.h>
 
+#include "Demo/Actor/AFloorActor.h"
+
 //* test raytracing
 #include <Engine/System/DirectX/DxrObject/DxrRaytracingBlob.h>
 #include <Engine/System/DirectX/DxrObject/DxrExportGroup.h>
+#include <Engine/System/DirectX/DxrObject/DxrStateObjectContext.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // BetaSystemGameLoop class
@@ -53,6 +56,7 @@ private:
 	std::unique_ptr<ACineCameraActor> camera_;
 
 	std::unique_ptr<AModelActor> model_;
+	std::unique_ptr<AFloorActor> floor_;
 
 	std::unique_ptr<APointLightActor> light1_;
 	std::unique_ptr<APointLightActor> light2_;
@@ -65,6 +69,8 @@ private:
 
 	std::unique_ptr<DxrObject::ExportGroup> raygeneration_;
 	std::unique_ptr<DxrObject::ExportGroup> miss_;
+
+	std::unique_ptr<DxrObject::StateObjectContext> stateObjectContext_;
 
 	//* presenter *//
 

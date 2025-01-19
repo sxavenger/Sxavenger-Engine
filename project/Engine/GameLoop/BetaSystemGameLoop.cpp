@@ -62,7 +62,14 @@ void BetaSystemGameLoop::InitSystem() {
 	model_->SetModel(SxavengerAsset::TryImport<AssetModel>("asset/model/primitive/teapot.obj"));
 	//model_->SetModel(SxavengerAsset::TryImport<AssetModel>("asset/model/chessBoard/chessBoard.gltf"));
 	model_->SetRenderWait(false);
+
+	floor_ = std::make_unique<AFloorActor>();
+	floor_->Init();
+	floor_->SetSize({ 12.0f, 12.0f });
+
 	scene_->AddGeometry(model_.get());
+	scene_->AddGeometry(floor_.get());
+
 
 	light1_ = std::make_unique<APointLightActor>();
 	light1_->Init();
@@ -89,7 +96,7 @@ void BetaSystemGameLoop::InitSystem() {
 
 	//* raytracing system *//
 
-	/*blob1_ = std::make_unique<DxrObject::RaytracingBlob>();
+	blob1_ = std::make_unique<DxrObject::RaytracingBlob>();
 	blob1_->Create("packages/shaders/raytracingDemo/RaygenerationDemo.hlsl");
 
 	raygeneration_ = std::make_unique<DxrObject::ExportGroup>();
@@ -99,7 +106,23 @@ void BetaSystemGameLoop::InitSystem() {
 	miss_->ExportMiss(L"mainMiss");
 
 	blob1_->SetExport(raygeneration_.get());
-	blob1_->SetExport(miss_.get());*/
+	blob1_->SetExport(miss_.get());
+	{
+		DxrObject::StateObjectDesc desc = {};
+		desc.SetBlob(blob1_.get());
+		desc.SetExportParameter();
+		desc.SetMaxRecursionDepth(1);
+		desc.SetAttributeStride(sizeof(float) * 2);
+		desc.SetPayloadStride(sizeof(float) * 3);
+
+		DxrObject::GlobalRootSignatureDesc rootDesc = {};
+		rootDesc.SetHandleSRV(0, 10);
+
+		stateObjectContext_ = std::make_unique<DxrObject::StateObjectContext>();
+		stateObjectContext_->CreateRootSignature(SxavengerSystem::GetDxDevice(), rootDesc);
+		stateObjectContext_->CreateStateObject(SxavengerSystem::GetDxDevice(), desc);
+		stateObjectContext_->UpdateShaderTable(SxavengerSystem::GetDxDevice());
+	}
 
 	//* presenter *//
 
@@ -143,6 +166,9 @@ void BetaSystemGameLoop::UpdateSystem() {
 void BetaSystemGameLoop::DrawSystem() {
 
 	sEditorEngine->GetEditor<RenderSceneEditor>()->Draw();
+
+	stateObjectContext_->SetStateObject(SxavengerSystem::GetMainThreadContext()->GetDxCommand());
+	stateObjectContext_->DispatchRays(SxavengerSystem::GetMainThreadContext()->GetDxCommand(), main_->GetSize());
 
 	renderer_->Render(SxavengerSystem::GetMainThreadContext());
 

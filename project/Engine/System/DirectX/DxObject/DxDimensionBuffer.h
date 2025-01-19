@@ -92,7 +92,9 @@ public:
 
 	const T* GetData();
 
-	void Memcpy(const T* value);
+	void Memcpy(const T* data);
+
+	void Fill(const T& value);
 
 	const std::span<T>& GetMappedData() const { return mappedDatas_; }
 
@@ -207,7 +209,7 @@ inline void DimensionBuffer<T>::Release() {
 	mappedDatas_ = {};
 }
 
-template<class T>
+template <class T>
 inline T& DimensionBuffer<T>::At(uint32_t index) {
 	Assert(CheckIndex(index), "Dimension Buffer out of range.");
 	return mappedDatas_[index];
@@ -225,8 +227,13 @@ inline const T* DimensionBuffer<T>::GetData() {
 }
 
 template <class T>
-inline void DimensionBuffer<T>::Memcpy(const T* value) {
-	std::memcpy(mappedDatas_.data(), value, stride_ * size_);
+inline void DimensionBuffer<T>::Memcpy(const T* data) {
+	std::memcpy(mappedDatas_.data(), data, stride_ * size_);
+}
+
+template <class T>
+inline void DimensionBuffer<T>::Fill(const T& value) {
+	std::fill(mappedDatas_.begin(), mappedDatas_.end(), value);
 }
 
 template <class T>

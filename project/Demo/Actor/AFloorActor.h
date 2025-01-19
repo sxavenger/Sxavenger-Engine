@@ -3,49 +3,47 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
-//* core
-#include "Core/FRenderCoreGeometry.h"
-#include "Core/FRenderCoreLight.h"
-#include "Core/FRenderCoreRaytracing.h"
+//* actor
+#include <Engine/!Render/Actor/Geometry/GeometryActors/AManualGeometryActor.h>
+
+//* lib
+#include <Lib/Geometry/Vector2.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// FRenderCore class
+// AFloorActor class
 ////////////////////////////////////////////////////////////////////////////////////////////
-class FRenderCore {
+class AFloorActor
+	: public AManualGeometryActor {
 public:
 
 	//=========================================================================================
 	// public methods
 	//=========================================================================================
 
-	FRenderCore()  = default;
-	~FRenderCore() = default;
+	AFloorActor()  = default;
+	~AFloorActor() = default;
 
 	void Init();
 
 	void Term();
 
-	//* getter *//
+	void SetSize(const Vector2f& size);
 
-	FRenderCoreGeometry* GetGeometry() { return geometry_.get(); }
+	void SetTexture(const AssetObserver<AssetTexture>& texture) { texture_ = texture; }
 
-	FRenderCoreLight* GetLight() { return light_.get(); }
-
-	FRenderCoreRaytracing* GetRaytracing() { return raytracing_.get(); }
-
-	//* singleton *//
-
-	static FRenderCore* GetInstance();
-	
 private:
 
 	//=========================================================================================
 	// private variables
 	//=========================================================================================
 
-	std::unique_ptr<FRenderCoreGeometry>   geometry_;
-	std::unique_ptr<FRenderCoreLight>      light_;
-	std::unique_ptr<FRenderCoreRaytracing> raytracing_;
+	Vector2f size_ = { 1.0f, 1.0f };
 
+	//=========================================================================================
+	// private methods
+	//=========================================================================================
+
+	void UpdateInputAssembler();
+	void UpdateTextureComponent();
 
 };

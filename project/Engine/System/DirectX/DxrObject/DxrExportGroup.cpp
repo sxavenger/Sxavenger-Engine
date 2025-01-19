@@ -19,7 +19,7 @@ void ExportGroup::ExportMiss(const std::wstring& entry) {
 
 void ExportGroup::ExportHitgroup(const std::wstring& name, const HitgroupEntry& hitgroup) {
 	Assert(!name.empty(),                "name is empty.");
-	Assert(!hitgroup.closestHit.empty(), "closesthit is empty.");
+	Assert(!hitgroup.closesthit.empty(), "closesthit is empty.");
 	name_     = name;
 	hitgroup_ = hitgroup;
 	type_     = ExportType::Hitgroup;

@@ -29,7 +29,12 @@ public:
 	//* render *//
 
 	virtual void RenderOpaque(const RendererContext& context) override;
+
 	virtual void RenderTransparent(const RendererContext& context) override;
+
+	//* raytracing option *//
+
+	virtual void SetupToplevelAS(const SetupContext& context) override;
 
 	//* setter *//
 

@@ -4,7 +4,7 @@
 // buffers
 //=========================================================================================
 
-RaytracingAccelerationStructure gTLAS : register(t10);
+//RaytracingAccelerationStructure gScene : register(t10);
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // common static variables
@@ -32,8 +32,8 @@ struct Attribute {
 // common methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-void TraceRay(inout RayDesc rayDesc, inout Payload payload) {
-	TraceRay(gTLAS, kFlag, 0xFF, 0, 1, 0, rayDesc, payload);
+void TraceRay(RayDesc rayDesc, inout Payload payload) {
+	//TraceRay(gScene, kFlag, 0xFF, 0, 1, 0, rayDesc, payload);
 }
 
 

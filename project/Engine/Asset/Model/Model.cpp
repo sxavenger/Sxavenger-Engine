@@ -44,6 +44,12 @@ void Model::Load(const DirectXThreadContext* context, const std::filesystem::pat
 void Model::Term() {
 }
 
+void Model::CreateBottomLevelAS(const DirectXThreadContext* context) {
+	for (uint32_t i = 0; i < GetMeshSize(); ++i) {
+		meshes_[i].mesh.CreateBottomLevelAS(context);
+	}
+}
+
 void Model::SetIABuffer(const DirectXThreadContext* context, uint32_t meshIndex) const {
 	CheckMeshIndex(meshIndex);
 	meshes_.at(meshIndex).mesh.BindIABuffer(context);
