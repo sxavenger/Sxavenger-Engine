@@ -6,6 +6,7 @@
 //* DXROBJECT
 #include "DxrObjectCommon.h"
 #include "DxrRootSignature.h"
+#include "DxrRaytracingBlob.h"
 
 //* c++
 #include <optional>
@@ -35,9 +36,10 @@ class ExportGroup
 public:
 
 	////////////////////////////////////////////////////////////////////////////////////////////
-	// HitgroupEntry structure
+	// Hitgroup structure
 	////////////////////////////////////////////////////////////////////////////////////////////
-	struct HitgroupEntry {
+	struct Hitgroup {
+		D3D12_HIT_GROUP_TYPE type = D3D12_HIT_GROUP_TYPE_TRIANGLES;
 		std::wstring closesthit   = L"";
 		std::wstring anyhit       = L"";
 		std::wstring intersection = L"";
@@ -58,7 +60,9 @@ public:
 
 	void ExportMiss(const std::wstring& entry);
 
-	void ExportHitgroup(const std::wstring& name, const HitgroupEntry& hitgroup);
+	void ExportHitgroup(const std::wstring& name, const Hitgroup& hitgroup);
+
+	void SetBlob(const RaytracingBlob* blob) { blob_ = blob; }
 
 	//* getter *//
 
@@ -66,7 +70,9 @@ public:
 
 	const std::wstring& GetName() const { return name_; }
 
-	const HitgroupEntry& GetHitgroup() const { return hitgroup_; }
+	const Hitgroup& GetHitgroup() const { return hitgroup_; }
+
+	const RaytracingBlob* GetBlob() const { return blob_; }
 
 private:
 
@@ -74,10 +80,12 @@ private:
 	// private variables
 	//=========================================================================================
 
-	std::wstring name_      = L"";
-	HitgroupEntry hitgroup_ = {};
+	std::wstring name_ = L"";
+	Hitgroup hitgroup_ = {};
 
 	std::optional<ExportType> type_ = std::nullopt;
+
+	const RaytracingBlob* blob_ = nullptr;
 
 };
 

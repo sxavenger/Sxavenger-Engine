@@ -52,8 +52,8 @@ Vertex GetVertex(Attribute attribute) {
 
 Vertex ToWorld(Vertex vtx) {
 
-	vtx.position = mul(vtx.position, ObjectToWorld4x3());
-	vtx.normal   = normalize(mul(vtx.normal, (float3x3)ObjectToWorld4x3()));
+	vtx.position.xyz = mul(vtx.position, ObjectToWorld4x3());
+	vtx.normal       = normalize(mul(vtx.normal, (float3x3)ObjectToWorld4x3()));
 	
 	return vtx;
 }

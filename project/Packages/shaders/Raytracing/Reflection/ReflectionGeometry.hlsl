@@ -22,7 +22,7 @@ void mainGeometryClosesthit(inout Payload payload, Attribute attribute) {
 	
 	Vertex vtx = GetVertex(attribute);
 
-	float4 color = gAlbedo.Sample(gSampler, vtx.texcoord);
+	float4 color = gAlbedo.SampleLevel(gSampler, vtx.texcoord, 0.0f);
 	
 	payload.color = color.rgb;
 }

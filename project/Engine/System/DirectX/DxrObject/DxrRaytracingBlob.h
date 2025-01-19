@@ -5,7 +5,6 @@
 //-----------------------------------------------------------------------------------------
 //* DXROBJECT
 #include "DxrObjectCommon.h"
-#include "DxrExportGroup.h"
 
 //* DXOBJECT
 #include <Engine/System/DirectX/DxObject/DxShaderCompiler.h>
@@ -15,7 +14,6 @@
 
 //* c++
 #include <filesystem>
-#include <unordered_set>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // DXROBJECT namespace
@@ -37,13 +35,9 @@ public:
 
 	void Create(const std::filesystem::path& filepath);
 
-	void SetExport(const ExportGroup* expt) { exports_.emplace(expt); }
-
 	//* getter *//
 
 	D3D12_SHADER_BYTECODE GetBytecode() const;
-
-	std::unordered_set<const ExportGroup*> GetExports() const { return exports_; }
 
 	//* setter *//
 
@@ -62,10 +56,6 @@ private:
 	//* blob *//
 	 
 	ComPtr<IDxcBlob> blob_;
-
-	//* export *//
-
-	std::unordered_set<const ExportGroup*> exports_;
 
 };
 

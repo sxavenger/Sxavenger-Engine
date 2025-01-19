@@ -5,26 +5,10 @@ _DXROBJECT_USING
 // StateObjectDesc structure
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-void StateObjectDesc::SetBlob(const DxrObject::RaytracingBlob* blob) {
-	blobs.emplace(blob);
-}
-
-void StateObjectDesc::SetExportParameter() {
-	//!< 初期化
-	exports_    = {};
-	maxStrides_ = {};
-
-	for (const auto& blob : blobs) {
-		for (const auto& expt : blob->GetExports()) {
-
-			ExportType type = expt->GetType();
-			Assert(!(type == ExportType::Raygeneration && exports_[static_cast<size_t>(type)].size() == 1), "raytracing enviorment can set one raygeneration.");
-			//!< raygenerationは1つしか含まれない
-
-			exports_[static_cast<size_t>(type)].emplace(expt);
-			maxStrides_[static_cast<size_t>(type)] = std::max(maxStrides_[static_cast<size_t>(type)], expt->GetBufferStride());
-		}
-	}
+void StateObjectDesc::SetExport(const DxrObject::ExportGroup* expt) {
+	ExportType type = expt->GetType();
+	exports_[static_cast<size_t>(type)].emplace(expt);
+	maxStrides_[static_cast<size_t>(type)] = std::max(maxStrides_[static_cast<size_t>(type)], expt->GetBufferStride());
 }
 
 void StateObjectDesc::SetPayloadStride(size_t stride) {
@@ -194,7 +178,25 @@ void StateObjectContext::DispatchRays(DxObject::CommandContext* context, const V
 }
 
 void StateObjectContext::BindDXGILibrarySubobject(CD3DX12_STATE_OBJECT_DESC& desc) {
-	for (const auto& blob : desc_.blobs) {
+
+	//!< blobごとにexportを仕分け
+	std::unordered_map<const DxrObject::RaytracingBlob*, std::vector<const DxrObject::ExportGroup*>> map = {};
+
+	for (const auto& expt : desc_.GetExports(ExportType::Raygeneration)) {
+		map[expt->GetBlob()].emplace_back(expt);
+	}
+
+	for (const auto& expt : desc_.GetExports(ExportType::Miss)) {
+		map[expt->GetBlob()].emplace_back(expt);
+	}
+
+	for (const auto& expt : desc_.GetExports(ExportType::Hitgroup)) {
+		map[expt->GetBlob()].emplace_back(expt);
+	}
+
+	//!< blobごとにsubobjectを作成
+	for (const auto& [blob, exports] : map) {
+
 		// subobjectの作成
 		auto subobject = desc.CreateSubobject<CD3DX12_DXIL_LIBRARY_SUBOBJECT>();
 
@@ -206,7 +208,7 @@ void StateObjectContext::BindDXGILibrarySubobject(CD3DX12_STATE_OBJECT_DESC& des
 		std::vector<LPCWSTR> entries = {};
 
 		// exportからentryを取得
-		for (const auto& expt : blob->GetExports()) {
+		for (const auto& expt : exports) {
 			switch (expt->GetType()) {
 				case ExportType::Raygeneration:
 					// raygenerationのentryを取得
@@ -221,7 +223,6 @@ void StateObjectContext::BindDXGILibrarySubobject(CD3DX12_STATE_OBJECT_DESC& des
 				case ExportType::Hitgroup:
 					// hitgroupのentryを取得
 					const auto& hitgroup = expt->GetHitgroup();
-
 					entries.emplace_back(hitgroup.closesthit.c_str());
 
 					if (!hitgroup.anyhit.empty()) {
@@ -231,7 +232,6 @@ void StateObjectContext::BindDXGILibrarySubobject(CD3DX12_STATE_OBJECT_DESC& des
 					if (!hitgroup.intersection.empty()) {
 						entries.emplace_back(hitgroup.intersection.c_str());
 					}
-
 					break;
 			}
 		}
@@ -246,49 +246,64 @@ void StateObjectContext::BindGlobalRootSignatureSubobject(CD3DX12_STATE_OBJECT_D
 }
 
 void StateObjectContext::BindExportLocalRootSignatureSubobject(CD3DX12_STATE_OBJECT_DESC& desc) {
-	for (const auto& blob : desc_.blobs) {
-		for (const auto& expt : blob->GetExports()) {
 
-			// hitgroupの場合
-			if (expt->GetType() == ExportType::Hitgroup) {
-
-				// hitgroupのexportを設定
-				auto hitgroupSubobject = desc.CreateSubobject<CD3DX12_HIT_GROUP_SUBOBJECT>();
-				hitgroupSubobject->SetHitGroupExport(expt->GetName().c_str());
-				hitgroupSubobject->SetHitGroupType(D3D12_HIT_GROUP_TYPE_TRIANGLES);
-				// todo: AABB Geometryの対応
-
-				// entry pointの設定
-				const auto& hitgroup = expt->GetHitgroup();
-
-				Assert(!hitgroup.closesthit.empty(), "closest hit is empty.");
-				hitgroupSubobject->SetClosestHitShaderImport(hitgroup.closesthit.c_str());
-
-				if (!hitgroup.anyhit.empty()) {
-					hitgroupSubobject->SetAnyHitShaderImport(hitgroup.anyhit.c_str());
-				}
-
-				if (!hitgroup.intersection.empty()) {
-					hitgroupSubobject->SetIntersectionShaderImport(hitgroup.intersection.c_str());
-				}
-			}
-
-			ID3D12RootSignature* localRootSignature = expt->GetRootSignature();
-
-			if (localRootSignature == nullptr) {
-				continue;
-			}
-
-			// localRootSignatureの設定
-			auto localRootSignatureSubobject = desc.CreateSubobject<CD3DX12_LOCAL_ROOT_SIGNATURE_SUBOBJECT>();
-			localRootSignatureSubobject->SetRootSignature(localRootSignature);
-
-			// export関連付け
-			auto exportSubobject = desc.CreateSubobject<CD3DX12_SUBOBJECT_TO_EXPORTS_ASSOCIATION_SUBOBJECT>();
-			exportSubobject->AddExport(expt->GetName().c_str());
-			exportSubobject->SetSubobjectToAssociate(*localRootSignatureSubobject);
+	for (const auto& expt : desc_.GetExports(ExportType::Raygeneration)) {
+		if (expt->GetRootSignature() == nullptr) {
+			continue;
 		}
+
+		auto localRootSignatureSubobject = desc.CreateSubobject<CD3DX12_LOCAL_ROOT_SIGNATURE_SUBOBJECT>();
+		localRootSignatureSubobject->SetRootSignature(expt->GetRootSignature());
+
+		auto exportSubobject = desc.CreateSubobject<CD3DX12_SUBOBJECT_TO_EXPORTS_ASSOCIATION_SUBOBJECT>();
+		exportSubobject->AddExport(expt->GetName().c_str());
+		exportSubobject->SetSubobjectToAssociate(*localRootSignatureSubobject);
 	}
+
+	for (const auto& expt : desc_.GetExports(ExportType::Miss)) {
+		if (expt->GetRootSignature() == nullptr) {
+			continue;
+		}
+
+		auto localRootSignatureSubobject = desc.CreateSubobject<CD3DX12_LOCAL_ROOT_SIGNATURE_SUBOBJECT>();
+		localRootSignatureSubobject->SetRootSignature(expt->GetRootSignature());
+
+		auto exportSubobject = desc.CreateSubobject<CD3DX12_SUBOBJECT_TO_EXPORTS_ASSOCIATION_SUBOBJECT>();
+		exportSubobject->AddExport(expt->GetName().c_str());
+		exportSubobject->SetSubobjectToAssociate(*localRootSignatureSubobject);
+	}
+
+	for (const auto& expt : desc_.GetExports(ExportType::Hitgroup)) {
+
+		const auto& hitgroup = expt->GetHitgroup();
+
+		auto hitgroupSubobject = desc.CreateSubobject<CD3DX12_HIT_GROUP_SUBOBJECT>();
+		hitgroupSubobject->SetHitGroupExport(expt->GetName().c_str());
+		hitgroupSubobject->SetHitGroupType(hitgroup.type);
+
+		hitgroupSubobject->SetClosestHitShaderImport(hitgroup.closesthit.c_str());
+
+		if (!hitgroup.anyhit.empty()) {
+			hitgroupSubobject->SetAnyHitShaderImport(hitgroup.anyhit.c_str());
+		}
+
+		if (!hitgroup.intersection.empty()) {
+			hitgroupSubobject->SetIntersectionShaderImport(hitgroup.intersection.c_str());
+		}
+
+		if (expt->GetRootSignature() == nullptr) {
+			continue;
+		}
+
+		auto localRootSignatureSubobject = desc.CreateSubobject<CD3DX12_LOCAL_ROOT_SIGNATURE_SUBOBJECT>();
+		localRootSignatureSubobject->SetRootSignature(expt->GetRootSignature());
+
+		auto exportSubobject = desc.CreateSubobject<CD3DX12_SUBOBJECT_TO_EXPORTS_ASSOCIATION_SUBOBJECT>();
+		exportSubobject->AddExport(expt->GetName().c_str());
+		exportSubobject->SetSubobjectToAssociate(*localRootSignatureSubobject);
+	}
+
+	// todo: 関数でまとめる
 }
 
 void StateObjectContext::BindConfigsSubobject(CD3DX12_STATE_OBJECT_DESC& desc) {

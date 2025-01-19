@@ -6,7 +6,6 @@
 //* DXROBJECT
 #include "DxrObjectCommon.h"
 #include "DxrRootSignature.h"
-#include "DxrRaytracingBlob.h"
 #include "DxrExportGroup.h"
 #include "DxrBindBuffer.h"
 
@@ -22,6 +21,9 @@
 
 //* c++
 #include <unordered_set>
+#include <unordered_map>
+#include <array>
+#include <vector>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // DXROBJECT namespace
@@ -44,9 +46,7 @@ public:
 
 	//* blob option *//
 
-	void SetBlob(const DxrObject::RaytracingBlob* blob);
-
-	void SetExportParameter();
+	void SetExport(const DxrObject::ExportGroup* expt);
 
 	//* parameter option *//
 
@@ -67,10 +67,6 @@ public:
 	//=========================================================================================
 	// public variables
 	//=========================================================================================
-
-	//* blob container *//
-
-	std::unordered_set<const DxrObject::RaytracingBlob*> blobs;
 
 	//* parameters *//
 

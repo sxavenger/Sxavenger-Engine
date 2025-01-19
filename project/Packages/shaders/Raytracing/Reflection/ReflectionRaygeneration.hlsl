@@ -9,7 +9,7 @@
 //=========================================================================================
 //* local buffer
 
-Texture2D<float4> gDepth    : register(t0);
+Texture2D<float>  gDepth    : register(t0);
 Texture2D<float4> gNormal   : register(t1);
 Texture2D<float4> gPosition : register(t2);
 ConstantBuffer<Camera> gCamera : register(b0);

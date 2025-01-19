@@ -97,20 +97,20 @@ void BetaSystemGameLoop::InitSystem() {
 	//* raytracing system *//
 
 	blob1_ = std::make_unique<DxrObject::RaytracingBlob>();
-	blob1_->Create("packages/shaders/raytracingDemo/RaygenerationDemo.hlsl");
+	blob1_->Create("packages/shaders/raytracing/demo/RaygenerationDemo.hlsl");
 
 	raygeneration_ = std::make_unique<DxrObject::ExportGroup>();
 	raygeneration_->ExportRaygeneration(L"mainRaygeneration");
+	raygeneration_->SetBlob(blob1_.get());
 
 	miss_ = std::make_unique<DxrObject::ExportGroup>();
 	miss_->ExportMiss(L"mainMiss");
+	miss_->SetBlob(blob1_.get());
 
-	blob1_->SetExport(raygeneration_.get());
-	blob1_->SetExport(miss_.get());
 	{
 		DxrObject::StateObjectDesc desc = {};
-		desc.SetBlob(blob1_.get());
-		desc.SetExportParameter();
+		desc.SetExport(raygeneration_.get());
+		desc.SetExport(miss_.get());
 		desc.SetMaxRecursionDepth(1);
 		desc.SetAttributeStride(sizeof(float) * 2);
 		desc.SetPayloadStride(sizeof(float) * 3);
@@ -121,7 +121,6 @@ void BetaSystemGameLoop::InitSystem() {
 		stateObjectContext_ = std::make_unique<DxrObject::StateObjectContext>();
 		stateObjectContext_->CreateRootSignature(SxavengerSystem::GetDxDevice(), rootDesc);
 		stateObjectContext_->CreateStateObject(SxavengerSystem::GetDxDevice(), desc);
-		stateObjectContext_->UpdateShaderTable(SxavengerSystem::GetDxDevice());
 	}
 
 	//* presenter *//
@@ -167,6 +166,7 @@ void BetaSystemGameLoop::DrawSystem() {
 
 	sEditorEngine->GetEditor<RenderSceneEditor>()->Draw();
 
+	stateObjectContext_->UpdateShaderTable(SxavengerSystem::GetDxDevice());
 	stateObjectContext_->SetStateObject(SxavengerSystem::GetMainThreadContext()->GetDxCommand());
 	stateObjectContext_->DispatchRays(SxavengerSystem::GetMainThreadContext()->GetDxCommand(), main_->GetSize());
 

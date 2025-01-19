@@ -57,9 +57,9 @@ private:
 	// private variables
 	//=========================================================================================
 
-	std::array<std::pair<DxrObject::ExportGroup, DxrObject::RaytracingBlob>, kRaygenerationExportTypeCount> raygenerationExportGroups_;
-	std::array<std::pair<DxrObject::ExportGroup, DxrObject::RaytracingBlob>, kMissExportTypeCount>          missExportGroups_;
-	std::array<std::pair<DxrObject::ExportGroup, DxrObject::RaytracingBlob>, kHitgroupExportTypeCount>      hitgroupExportGroups_;
+	std::array<std::pair<DxrObject::RaytracingBlob, DxrObject::ExportGroup>, kRaygenerationExportTypeCount> raygenerationExportGroups_;
+	std::array<std::pair<DxrObject::RaytracingBlob, DxrObject::ExportGroup>, kMissExportTypeCount>          missExportGroups_;
+	std::array<std::pair<DxrObject::RaytracingBlob, DxrObject::ExportGroup>, kHitgroupExportTypeCount>      hitgroupExportGroups_;
 
 	static const std::filesystem::path kDirectory_;
 

@@ -6,23 +6,33 @@ _DXROBJECT_USING
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 void ExportGroup::ExportRaygeneration(const std::wstring& entry) {
+	type_ = ExportType::Raygeneration;
+
 	Assert(!entry.empty(), "entry point is empty.");
 	name_ = entry;
-	type_ = ExportType::Raygeneration;
 }
 
 void ExportGroup::ExportMiss(const std::wstring& entry) {
+	type_ = ExportType::Miss;
+
 	Assert(!entry.empty(), "entry point is empty.");
 	name_ = entry;
-	type_ = ExportType::Miss;
 }
 
-void ExportGroup::ExportHitgroup(const std::wstring& name, const HitgroupEntry& hitgroup) {
-	Assert(!name.empty(),                "name is empty.");
+void ExportGroup::ExportHitgroup(const std::wstring& name, const Hitgroup& hitgroup) {
+	type_ = ExportType::Hitgroup;
+
+	Assert(!name.empty(), "name is empty.");
+
+	//!< shader entry point check
 	Assert(!hitgroup.closesthit.empty(), "closesthit is empty.");
+
+	if (hitgroup.type == D3D12_HIT_GROUP_TYPE_PROCEDURAL_PRIMITIVE) {
+		Assert(!hitgroup.intersection.empty(), "intersection is empty.");
+	}
+	
 	name_     = name;
 	hitgroup_ = hitgroup;
-	type_     = ExportType::Hitgroup;
 }
 
 ExportType ExportGroup::GetType() const {

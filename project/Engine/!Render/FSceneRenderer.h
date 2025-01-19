@@ -10,6 +10,7 @@
 
 //* engine	
 #include <Engine/System/DirectX/DirectXContext.h>
+#include <Engine/System/DirectX/DxrObject/DxrStateObjectContext.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // FSceneRenderer class
@@ -62,6 +63,10 @@ private:
 	std::unique_ptr<FSceneTextures> textures_;
 	//! externalに変えるかも...
 
+	//* raytracing *//
+
+	DxrObject::StateObjectContext stateObjectContext_;
+
 	//=========================================================================================
 	// private methods
 	//=========================================================================================
@@ -71,5 +76,7 @@ private:
 	void ProcessLighting(const DirectXThreadContext* context);
 
 	void RenderTransparentGeometries(const DirectXThreadContext* context);
+
+	void ProcessRaytracingReflection(const DirectXThreadContext* context);
 
 };

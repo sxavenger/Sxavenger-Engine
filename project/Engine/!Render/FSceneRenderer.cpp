@@ -100,3 +100,9 @@ void FSceneRenderer::RenderTransparentGeometries(const DirectXThreadContext* con
 		}
 	};
 }
+
+void FSceneRenderer::ProcessRaytracingReflection(const DirectXThreadContext* context) {
+
+	scene_->SetupTopLevelAS(context);
+
+}

@@ -18,13 +18,19 @@ const std::filesystem::path FRenderCoreRaytracing::kDirectory_ = "packages/shade
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 void FRenderCoreRaytracing::Init() {
+	InitRaygenerationExportGroup();
+	InitMissExportGroup();
+	InitHitgroupExportGroup();
 }
 
 void FRenderCoreRaytracing::InitRaygenerationExportGroup() {
 
 	{
-		auto& [expt, blob] = raygenerationExportGroups_[static_cast<uint32_t>(RaygenerationExportType::Default)];
+		auto& [blob, expt] = raygenerationExportGroups_[static_cast<uint32_t>(RaygenerationExportType::Default)];
+		blob.Create(kDirectory_ / "reflection/reflectionRaygeneration.hlsl");
+
 		expt.ExportRaygeneration(L"mainRaygen");
+		expt.SetBlob(&blob);
 
 		LocalRootSignatureDesc desc = {};
 		desc.SetHandleSRV(0, 0); //!< gDepth
@@ -34,32 +40,31 @@ void FRenderCoreRaytracing::InitRaygenerationExportGroup() {
 		desc.SetHandleUAV(4, 0); //!< gReflection
 
 		expt.CreateRootSignature(SxavengerSystem::GetDxDevice(), desc);
-
-		blob.Create(kDirectory_ / "reflection/reflectionRaygeneration.hlsl");
-		blob.SetExport(&expt);
 	}
 }
 
 void FRenderCoreRaytracing::InitMissExportGroup() {
 
 	{
-		auto& [expt, blob] = missExportGroups_[static_cast<uint32_t>(MissExportType::Default)];
-		expt.ExportMiss(L"mainMiss");
-
+		auto& [blob, expt] = missExportGroups_[static_cast<uint32_t>(MissExportType::Default)];
 		blob.Create(kDirectory_ / "reflection/reflectionMiss.hlsl");
-		blob.SetExport(&expt);
+
+		expt.ExportMiss(L"mainMiss");
+		expt.SetBlob(&blob);
 	}
 }
 
 void FRenderCoreRaytracing::InitHitgroupExportGroup() {
 
 	{
-		auto& [expt, blob] = hitgroupExportGroups_[static_cast<uint32_t>(HitgroupExportType::Geometry)];
+		auto& [blob, expt] = hitgroupExportGroups_[static_cast<uint32_t>(HitgroupExportType::Geometry)];
+		blob.Create(kDirectory_ / "reflection/reflectionGeometry.hlsl");
 
-		ExportGroup::HitgroupEntry entry = {};
+		ExportGroup::Hitgroup entry = {};
 		entry.closesthit = L"mainGeometryClosesthit";
 
 		expt.ExportHitgroup(L"Geometry", entry);
+		expt.SetBlob(&blob);
 
 		LocalRootSignatureDesc desc = {};
 		desc.SetHandleSRV(0, 0); //!< gVertices
@@ -68,9 +73,6 @@ void FRenderCoreRaytracing::InitHitgroupExportGroup() {
 		desc.SetSamplerLinear(DxObject::SamplerMode::MODE_WRAP, DxObject::ShaderVisibility::VISIBILITY_ALL, 0);
 
 		expt.CreateRootSignature(SxavengerSystem::GetDxDevice(), desc);
-
-		blob.Create(kDirectory_ / "reflection/reflectionGeometry.hlsl");
-		blob.SetExport(&expt);
 	}
 
 }
