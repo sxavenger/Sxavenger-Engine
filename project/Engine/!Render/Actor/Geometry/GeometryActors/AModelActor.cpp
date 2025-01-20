@@ -66,13 +66,20 @@ void AModelActor::SetupToplevelAS(const SetupContext& context) {
 	instance.mat        = TransformComponent::GetMatrix();
 	instance.instanceId = 0;
 
-	instance.expt      = nullptr; //!< TODO: export group
-	instance.parameter = nullptr; //!< TODO: bind buffer desc
+	instance.expt = &FRenderCore::GetInstance()->GetRaytracing()->GetHitgroupExport(FRenderCoreRaytracing::HitgroupExportType::Geometry);
 
 	model->CreateBottomLevelAS(context.context);
 
 	for (uint32_t i = 0; i < model->GetMeshSize(); ++i) {
 		instance.bottomLevelAS = model->GetInputMesh(i).GetBottomLevelAS();
+
+		DxrObject::WriteBindBufferDesc desc = {};
+		desc.SetAddress(0, model->GetInputMesh(i).GetVertex()->GetGPUVirtualAddress()); //!< gVertices
+		desc.SetAddress(1, model->GetInputMesh(i).GetIndex()->GetGPUVirtualAddress());  //!< gIndices
+		desc.SetHandle(2, model->GetTextureHandle(i));                                  //!< gAlbedo
+
+		instance.parameter = desc;
+
 		context.toplevelAS->AddInstance(instance);
 	}
 

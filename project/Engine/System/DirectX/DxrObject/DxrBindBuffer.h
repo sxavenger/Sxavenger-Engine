@@ -40,9 +40,13 @@ public:
 	// public methods
 	//=========================================================================================
 
+	WriteBindBufferDesc() { Reserve(12); }
+
 	void SetBuffer(uint32_t index, const std::optional<DxObject::GPUBuffer>& buffer);
 	void SetAddress(uint32_t index, const D3D12_GPU_VIRTUAL_ADDRESS& address);
 	void SetHandle(uint32_t index, const D3D12_GPU_DESCRIPTOR_HANDLE& handle);
+
+	void Reserve(uint32_t size) { container_.reserve(size); }
 
 	//* getter *//
 
@@ -57,6 +61,8 @@ private:
 	//=========================================================================================
 
 	Container container_;
+
+	void AutoResize(uint32_t index);
 
 };
 

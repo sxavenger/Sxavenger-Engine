@@ -51,8 +51,14 @@ void AManualGeometryActor::SetupToplevelAS(const SetupContext& context) {
 	instance.mat        = TransformComponent::GetMatrix();
 	instance.instanceId = 0;
 
-	instance.expt      = nullptr; //!< TODO: export group
-	instance.parameter = nullptr; //!< TODO: bind buffer desc
+	instance.expt = &FRenderCore::GetInstance()->GetRaytracing()->GetHitgroupExport(FRenderCoreRaytracing::HitgroupExportType::Geometry);
+
+	DxrObject::WriteBindBufferDesc desc = {};
+	desc.SetAddress(0, ia_.GetVertex()->GetGPUVirtualAddress()); //!< gVertices
+	desc.SetAddress(1, ia_.GetIndex()->GetGPUVirtualAddress());  //!< gIndices
+	desc.SetHandle(2, texture_.WaitGet()->GetGPUHandleSRV());    //!< gAlbedo
+
+	instance.parameter = desc;
 
 	ia_.CreateBottomLevelAS(context.context);
 	instance.bottomLevelAS = ia_.GetBottomLevelAS();

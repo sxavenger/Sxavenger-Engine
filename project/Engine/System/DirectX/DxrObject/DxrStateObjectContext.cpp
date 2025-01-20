@@ -59,7 +59,10 @@ void StateObjectContext::CreateStateObject(DxObject::Device* device, const State
 
 }
 
-void StateObjectContext::UpdateShaderTable(DxObject::Device* device) {
+void StateObjectContext::UpdateShaderTable(
+	DxObject::Device* device,
+	const DxrObject::TopLevelAS* toplevelAS,
+	const DxrObject::WriteBindBufferDesc* raygeneration, const DxrObject::WriteBindBufferDesc* miss) {
 
 	// shader単体のsizeの設定
 	UINT raygenerationRecordSize = kShaderRecordSize;
@@ -113,7 +116,7 @@ void StateObjectContext::UpdateShaderTable(DxObject::Device* device) {
 		uint8_t* address = addressStart;
 
 		for (const auto& expt : desc_.GetExports(ExportType::Raygeneration)) {
-			address = WriteExport(address, raygenerationRecordSize, expt);
+			address = WriteExport(address, raygenerationRecordSize, expt, raygeneration);
 		}
 	}
 
@@ -122,7 +125,7 @@ void StateObjectContext::UpdateShaderTable(DxObject::Device* device) {
 		uint8_t* address = addressStart + raygenerationRegion;
 
 		for (const auto& expt : desc_.GetExports(ExportType::Miss)) {
-			address = WriteExport(address, missRecordSize, expt);
+			address = WriteExport(address, missRecordSize, expt, miss);
 		}
 	}
 
@@ -130,8 +133,8 @@ void StateObjectContext::UpdateShaderTable(DxObject::Device* device) {
 	{
 		uint8_t* address = addressStart + raygenerationRegion + missRegion;
 
-		for (const auto& expt : desc_.GetExports(ExportType::Hitgroup)) {
-			address = WriteExport(address, hitgroupRecordSize, expt); //!< todo: desc
+		for (const auto& instance : toplevelAS->GetInstances()) {
+			address = WriteExport(address, hitgroupRecordSize, instance.expt, &instance.parameter);
 		}
 	}
 

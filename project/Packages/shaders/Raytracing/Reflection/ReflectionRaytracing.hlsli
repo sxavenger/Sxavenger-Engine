@@ -6,6 +6,7 @@
 //* global buffer
 
 RaytracingAccelerationStructure gScene : register(t10);
+RWTexture2D<float4> gReflection : register(u10);
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // common static variables

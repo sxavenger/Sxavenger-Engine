@@ -43,6 +43,8 @@ public:
 
 	const std::list<ALightActor*>& GetLights() const { return lights_; }
 
+	const DxrObject::TopLevelAS& GetTopLevelAS() const { return topLevelAS_; }
+
 private:
 
 	//=========================================================================================

@@ -94,8 +94,8 @@ public:
 		Sxl::Flag<D3D12_RAYTRACING_INSTANCE_FLAGS, UINT> flag;
 
 		//* table書き込み
-		const ExportGroup*         expt;
-		const WriteBindBufferDesc* parameter;
+		const ExportGroup*  expt;
+		WriteBindBufferDesc parameter;
 	};
 
 public:
@@ -114,6 +114,12 @@ public:
 	void AddInstance(const Instance& instance);
 
 	void EndSetupInstance(DxObject::Device* device, DxObject::CommandContext* context);
+
+	//* getter *//
+
+	D3D12_GPU_VIRTUAL_ADDRESS GetGPUVirtualAddress() const { return asbuffer->GetGPUVirtualAddress(); }
+
+	const std::vector<Instance>& GetInstances() const { return instances_; }
 
 private:
 

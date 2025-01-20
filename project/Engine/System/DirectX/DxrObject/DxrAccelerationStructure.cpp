@@ -163,6 +163,8 @@ bool TopLevelAS::UpdateInstanceBuffer(DxObject::Device* device) {
 
 	if (descs_ == nullptr) {
 		descs_ = std::make_unique<DxObject::DimensionBuffer<D3D12_RAYTRACING_INSTANCE_DESC>>();
+		descs_->Create(device, 12);
+		isRequiredUpdate = true;
 	}
 
 	if (instances_.size() > descs_->GetSize()) { //!< instanceの数がbufferの数より多い場合

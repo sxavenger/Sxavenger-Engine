@@ -11,9 +11,12 @@
 #include <cstdint>
 #include <variant>
 
-//* System
+//* engine
 #include <Engine/System/Utility/ComPtr.h>
 #include <Engine/System/Utility/Logger.h>
+
+//* lib
+#include <Lib/Geometry/Vector3.h>
 
 //-----------------------------------------------------------------------------------------
 // comment

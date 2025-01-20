@@ -8,6 +8,7 @@
 #include "DxrRootSignature.h"
 #include "DxrExportGroup.h"
 #include "DxrBindBuffer.h"
+#include "DxrAccelerationStructure.h"
 
 //* DXOBJECT
 #include <Engine/System/DirectX/DxObject/DxDevice.h>
@@ -111,7 +112,11 @@ public:
 
 	//* shader table option *//
 
-	void UpdateShaderTable(DxObject::Device* device);
+	void UpdateShaderTable(
+		DxObject::Device* device,
+		const DxrObject::TopLevelAS* toplevelAS,
+		const DxrObject::WriteBindBufferDesc* raygeneration = nullptr, const DxrObject::WriteBindBufferDesc* miss = nullptr //!< HACK: 複数設定できるようにする
+	);
 
 	//* render option *//
 

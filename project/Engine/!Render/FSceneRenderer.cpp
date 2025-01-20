@@ -1,5 +1,14 @@
 #include "FSceneRenderer.h"
 
+//-----------------------------------------------------------------------------------------
+// include
+//-----------------------------------------------------------------------------------------
+//* render
+#include "FRenderCore.h"
+
+//* engine
+#include <Engine/System/SxavengerSystem.h>
+
 ////////////////////////////////////////////////////////////////////////////////////////////
 // FSceneRenderer class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -7,6 +16,11 @@
 void FSceneRenderer::CreateTextures(const Vector2ui& size) {
 	textures_ = std::make_unique<FSceneTextures>();
 	textures_->Create(size);
+
+	p_.CreateBlob("packages/shaders/common/blend.cs.hlsl");
+	p_.ReflectionPipeline(SxavengerSystem::GetDxDevice());
+
+
 }
 
 void FSceneRenderer::Render(const DirectXThreadContext* context) {
@@ -19,6 +33,10 @@ void FSceneRenderer::Render(const DirectXThreadContext* context) {
 
 	//* 照明と影の処理
 	ProcessLighting(context);
+
+	/*SetupRaytracing(context);
+	ProcessRaytracingReflection(context);
+	context->TransitionAllocator();*/
 
 	//* 合成処理
 	// todo:
@@ -101,8 +119,76 @@ void FSceneRenderer::RenderTransparentGeometries(const DirectXThreadContext* con
 	};
 }
 
-void FSceneRenderer::ProcessRaytracingReflection(const DirectXThreadContext* context) {
+void FSceneRenderer::SetupRaytracing(const DirectXThreadContext* context) {
+	if (!config_.isUseRaytracing) {
+		return;
+	}
 
 	scene_->SetupTopLevelAS(context);
 
+	DxrObject::StateObjectDesc desc = {};
+
+	for (const auto& instance : scene_->GetTopLevelAS().GetInstances()) {
+		desc.SetExport(instance.expt);
+	}
+
+	desc.SetExport(&FRenderCore::GetInstance()->GetRaytracing()->GetRaygenerationExport(FRenderCoreRaytracing::RaygenerationExportType::Default));
+	desc.SetExport(&FRenderCore::GetInstance()->GetRaytracing()->GetMissExport(FRenderCoreRaytracing::MissExportType::Default));
+
+	desc.SetMaxRecursionDepth(1);
+	desc.SetAttributeStride(sizeof(Vector2f));
+	desc.SetPayloadStride(sizeof(Vector3f));
+
+	DxrObject::GlobalRootSignatureDesc rootDesc = {};
+	rootDesc.SetVirtualSRV(0, 10); //!< gScene
+	rootDesc.SetHandleUAV(1, 10);   //!< gReflection
+
+	stateObjectContext_.CreateRootSignature(SxavengerSystem::GetDxDevice(), rootDesc);
+
+	stateObjectContext_.CreateStateObject(SxavengerSystem::GetDxDevice(), desc);
+
+	DxrObject::WriteBindBufferDesc raygeneration = {};
+	raygeneration.SetHandle(0, textures_->GetDepth()->GetRasterizerGPUHandleSRV());                                  //!< gDepth
+	raygeneration.SetHandle(1, textures_->GetGBuffer(FSceneTextures::GBufferLayout::Normal)->GetGPUHandleSRV());     //!< gNormal
+	raygeneration.SetHandle(2, textures_->GetGBuffer(FSceneTextures::GBufferLayout::Position)->GetGPUHandleSRV());   //!< gPosition
+	raygeneration.SetAddress(3, camera_->GetGPUVirtualAddress());                                                    //!< gCamera
+
+	stateObjectContext_.UpdateShaderTable(
+		SxavengerSystem::GetDxDevice(),
+		&scene_->GetTopLevelAS(),
+		&raygeneration, nullptr
+	);
+}
+
+void FSceneRenderer::ProcessRaytracingReflection(const DirectXThreadContext* context) {
+	if (!config_.isUseRaytracing) {
+		return;
+	}
+
+	stateObjectContext_.SetStateObject(context->GetDxCommand());
+
+	context->GetDxCommand()->GetCommandList()->SetComputeRootShaderResourceView(0, scene_->GetTopLevelAS().GetGPUVirtualAddress());
+	context->GetDxCommand()->GetCommandList()->SetComputeRootDescriptorTable(1, textures_->GetGBuffer(FSceneTextures::GBufferLayout::Reflection)->GetGPUHandleUAV());
+
+	stateObjectContext_.DispatchRays(context->GetDxCommand(), GetSize());
+	
+	D3D12_RESOURCE_BARRIER barrier = textures_->GetGBuffer(FSceneTextures::GBufferLayout::Lighting)->TransitionBeginUnordered();
+	context->GetDxCommand()->GetCommandList()->ResourceBarrier(1, &barrier);
+
+	p_.SetPipeline(context->GetDxCommand());
+
+	DxObject::BindBufferDesc desc = {};
+	desc.SetHandle("gSrc",     textures_->GetGBuffer(FSceneTextures::GBufferLayout::Reflection)->GetGPUHandleSRV());
+	desc.SetHandle("gDst",     textures_->GetGBuffer(FSceneTextures::GBufferLayout::Lighting)->GetGPUHandleUAV());
+	desc.SetAddress("gConfig", textures_->GetParameter());
+
+	p_.BindComputeBuffer(context->GetDxCommand(), desc);
+
+	p_.Dispatch(
+		context->GetDxCommand(),
+		{ DxObject::RoundUp(textures_->GetSize().x, 16), DxObject::RoundUp(textures_->GetSize().y, 16), 1 }
+	);
+
+	barrier = textures_->GetGBuffer(FSceneTextures::GBufferLayout::Lighting)->TransitionEndUnordered();
+	context->GetDxCommand()->GetCommandList()->ResourceBarrier(1, &barrier);
 }

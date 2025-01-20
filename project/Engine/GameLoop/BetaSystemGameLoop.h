@@ -20,11 +20,6 @@
 
 #include "Demo/Actor/AFloorActor.h"
 
-//* test raytracing
-#include <Engine/System/DirectX/DxrObject/DxrRaytracingBlob.h>
-#include <Engine/System/DirectX/DxrObject/DxrExportGroup.h>
-#include <Engine/System/DirectX/DxrObject/DxrStateObjectContext.h>
-
 ////////////////////////////////////////////////////////////////////////////////////////////
 // BetaSystemGameLoop class
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -62,15 +57,6 @@ private:
 	std::unique_ptr<APointLightActor> light2_;
 	std::unique_ptr<ADirectionalLightActor> light3_;
 	std::unique_ptr<ASpotLightActor> light4_;
-
-	//* raytracing system *//
-
-	std::unique_ptr<DxrObject::RaytracingBlob> blob1_;
-
-	std::unique_ptr<DxrObject::ExportGroup> raygeneration_;
-	std::unique_ptr<DxrObject::ExportGroup> miss_;
-
-	std::unique_ptr<DxrObject::StateObjectContext> stateObjectContext_;
 
 	//* presenter *//
 

@@ -14,8 +14,6 @@ Texture2D<float4> gNormal   : register(t1);
 Texture2D<float4> gPosition : register(t2);
 ConstantBuffer<Camera> gCamera : register(b0);
 
-RWTexture2D<float4> gReflection : register(u0);
-
 ////////////////////////////////////////////////////////////////////////////////////////////
 // main
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -35,13 +33,13 @@ void mainRaygen() {
 	
 	float3 position_camera  = gCamera.GetPosition();
 	
-	float3 v = normalize(position_camera - position_surface);
+	float3 v = normalize(position_surface - position_camera);
 	
 	//* surfaceÇÃîΩéÀrayÇê∂ê¨
 	RayDesc desc;
 	desc.Origin    = position_surface;
-	desc.Direction = reflect(-v, normal_surface);
-	desc.TMin      = kDefaultTMin;
+	desc.Direction = reflect(v, normal_surface);
+	desc.TMin      = 0.1f;
 	desc.TMax      = kDefaultTMax;
 	
 	Payload payload = (Payload)0;

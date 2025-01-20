@@ -37,7 +37,6 @@ void FRenderCoreRaytracing::InitRaygenerationExportGroup() {
 		desc.SetHandleSRV(1, 1); //!< gNormal
 		desc.SetHandleSRV(2, 2); //!< gPosition
 		desc.SetVirtualCBV(3, 0); //!< gCamera
-		desc.SetHandleUAV(4, 0); //!< gReflection
 
 		expt.CreateRootSignature(SxavengerSystem::GetDxDevice(), desc);
 	}
@@ -67,8 +66,8 @@ void FRenderCoreRaytracing::InitHitgroupExportGroup() {
 		expt.SetBlob(&blob);
 
 		LocalRootSignatureDesc desc = {};
-		desc.SetHandleSRV(0, 0); //!< gVertices
-		desc.SetHandleSRV(1, 1); //!< gIndices
+		desc.SetVirtualSRV(0, 0); //!< gVertices
+		desc.SetVirtualSRV(1, 1); //!< gIndices
 		desc.SetHandleSRV(2, 2); //!< gAlbedo
 		desc.SetSamplerLinear(DxObject::SamplerMode::MODE_WRAP, DxObject::ShaderVisibility::VISIBILITY_ALL, 0);
 

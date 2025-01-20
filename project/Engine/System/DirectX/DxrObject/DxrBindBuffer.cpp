@@ -6,6 +6,7 @@ _DXROBJECT_USING
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 void WriteBindBufferDesc::SetBuffer(uint32_t index, const std::optional<DxObject::GPUBuffer>& buffer) {
+	AutoResize(index);
 	container_[index] = buffer;
 }
 
@@ -32,6 +33,12 @@ D3D12_GPU_DESCRIPTOR_HANDLE WriteBindBufferDesc::GetHandle(uint32_t index) const
 	auto buffer = GetBuffer(index);
 	Assert(std::holds_alternative<D3D12_GPU_DESCRIPTOR_HANDLE>(buffer), "buffer type different.");
 	return std::get<D3D12_GPU_DESCRIPTOR_HANDLE>(buffer);
+}
+
+void WriteBindBufferDesc::AutoResize(uint32_t index) {
+	if (container_.size() <= index) {
+		container_.resize(index + 1);
+	}
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////

@@ -51,6 +51,14 @@ public:
 
 	void Init();
 
+	//* getter *//
+
+	const DxrObject::ExportGroup& GetRaygenerationExport(RaygenerationExportType type) const { return raygenerationExportGroups_[static_cast<uint32_t>(type)].second; }
+
+	const DxrObject::ExportGroup& GetMissExport(MissExportType type) const { return missExportGroups_[static_cast<uint32_t>(type)].second; }
+
+	const DxrObject::ExportGroup& GetHitgroupExport(HitgroupExportType type) const { return hitgroupExportGroups_[static_cast<uint32_t>(type)].second; }
+
 private:
 
 	//=========================================================================================

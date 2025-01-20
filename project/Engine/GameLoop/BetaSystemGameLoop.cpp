@@ -50,6 +50,7 @@ void BetaSystemGameLoop::InitSystem() {
 	renderer_ = std::make_unique<FSceneRenderer>();
 	renderer_->CreateTextures(main_->GetSize());
 	renderer_->SetScene(scene_.get());
+	renderer_->GetConfig().isUseRaytracing = false;
 
 	camera_ = std::make_unique<ACineCameraActor>();
 	camera_->Init();
@@ -73,55 +74,26 @@ void BetaSystemGameLoop::InitSystem() {
 
 	light1_ = std::make_unique<APointLightActor>();
 	light1_->Init();
-	light1_->GetParameter().color_intensity = { 1.0f, 0.0f, 0.0f, 0.0f };
+	light1_->GetParameter().color_intensity = { 1.0f, 1.0f, 1.0f, 1.0f };
 
 	light2_ = std::make_unique<APointLightActor>();
 	light2_->Init();
-	light2_->GetParameter().color_intensity = { 1.0f, 1.0f, 1.0f, 0.0f };
+	light2_->GetParameter().color_intensity = { 1.0f, 1.0f, 1.0f, 1.0f };
 
 	light3_ = std::make_unique<ADirectionalLightActor>();
 	light3_->Init();
-	light3_->GetParameter().color_intensity = { 1.0f, 1.0f, 1.0f, 0.0f };
+	light3_->GetParameter().color_intensity = { 1.0f, 1.0f, 1.0f, 1.0f };
 
 	light4_ = std::make_unique<ASpotLightActor>();
 	light4_->Init();
 	light4_->GetParameter().color_intensity = { 1.0f, 1.0f, 1.0f, 1.0f };
 
 	scene_->AddLight(light1_.get());
-	scene_->AddLight(light2_.get());
-	scene_->AddLight(light3_.get());
-	scene_->AddLight(light4_.get());
+	//scene_->AddLight(light2_.get());
+	//scene_->AddLight(light3_.get());
+	//scene_->AddLight(light4_.get());
 
 	FRenderCore::GetInstance()->Init();
-
-	//* raytracing system *//
-
-	blob1_ = std::make_unique<DxrObject::RaytracingBlob>();
-	blob1_->Create("packages/shaders/raytracing/demo/RaygenerationDemo.hlsl");
-
-	raygeneration_ = std::make_unique<DxrObject::ExportGroup>();
-	raygeneration_->ExportRaygeneration(L"mainRaygeneration");
-	raygeneration_->SetBlob(blob1_.get());
-
-	miss_ = std::make_unique<DxrObject::ExportGroup>();
-	miss_->ExportMiss(L"mainMiss");
-	miss_->SetBlob(blob1_.get());
-
-	{
-		DxrObject::StateObjectDesc desc = {};
-		desc.SetExport(raygeneration_.get());
-		desc.SetExport(miss_.get());
-		desc.SetMaxRecursionDepth(1);
-		desc.SetAttributeStride(sizeof(float) * 2);
-		desc.SetPayloadStride(sizeof(float) * 3);
-
-		DxrObject::GlobalRootSignatureDesc rootDesc = {};
-		rootDesc.SetHandleSRV(0, 10);
-
-		stateObjectContext_ = std::make_unique<DxrObject::StateObjectContext>();
-		stateObjectContext_->CreateRootSignature(SxavengerSystem::GetDxDevice(), rootDesc);
-		stateObjectContext_->CreateStateObject(SxavengerSystem::GetDxDevice(), desc);
-	}
 
 	//* presenter *//
 
@@ -166,9 +138,9 @@ void BetaSystemGameLoop::DrawSystem() {
 
 	sEditorEngine->GetEditor<RenderSceneEditor>()->Draw();
 
-	stateObjectContext_->UpdateShaderTable(SxavengerSystem::GetDxDevice());
+	/*stateObjectContext_->UpdateShaderTable(SxavengerSystem::GetDxDevice());
 	stateObjectContext_->SetStateObject(SxavengerSystem::GetMainThreadContext()->GetDxCommand());
-	stateObjectContext_->DispatchRays(SxavengerSystem::GetMainThreadContext()->GetDxCommand(), main_->GetSize());
+	stateObjectContext_->DispatchRays(SxavengerSystem::GetMainThreadContext()->GetDxCommand(), main_->GetSize());*/
 
 	renderer_->Render(SxavengerSystem::GetMainThreadContext());
 

@@ -28,8 +28,9 @@ public:
 		Albedo_AO,
 		Position, // HACK: Deferredが完成したら削除するkamo
 		Lighting,
+		Reflection,
 	};
-	static const uint8_t kGBufferLayoutCount = static_cast<uint8_t>(GBufferLayout::Lighting) + 1;
+	static const uint8_t kGBufferLayoutCount = static_cast<uint8_t>(GBufferLayout::Reflection) + 1;
 
 	//* [detail GBuffer Layout]
 	//* Normal:    float3 normal, float _NOT_USED_1                                   [R8G8B8A8_UNORM]
@@ -69,6 +70,8 @@ public:
 	const FTexture* GetGBuffer(GBufferLayout layout) const { return gBuffers_[static_cast<uint8_t>(layout)].get(); }
 
 	const FSceneDepth* GetDepth() const { return depth_.get(); }
+
+	const D3D12_GPU_VIRTUAL_ADDRESS GetParameter() const { return parameterBuffer_->GetGPUVirtualAddress(); }
 
 private:
 

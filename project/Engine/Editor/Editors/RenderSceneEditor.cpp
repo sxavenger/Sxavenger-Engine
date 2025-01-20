@@ -24,6 +24,7 @@ void RenderSceneEditor::Init() {
 	sceneRenderer_ = std::make_unique<FSceneRenderer>();
 	sceneRenderer_->CreateTextures(kMainWindowSize);
 	sceneRenderer_->SetCamera(sceneCamera_.get());
+	sceneRenderer_->GetConfig().isUseRaytracing = true;
 
 	checkerBoard_ = SxavengerAsset::TryImport<AssetTexture>("asset/textures/checker_black.png");
 }
