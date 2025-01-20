@@ -3,33 +3,41 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
-//* actor
-#include <Engine/!Render/Scene/Actor/Geometry/GeometryActors/AManualGeometryActor.h>
+//* layer
+#include "../FSceneTextures.h"
+#include "Layer/LLayer.h"
 
-//* lib
-#include <Lib/Geometry/Vector2.h>
+//* engine
+#include <Engine/System/DirectX/DirectXContext.h>
+
+//* c++
+#include <list>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// AFloorActor class
+// FCanvas class
 ////////////////////////////////////////////////////////////////////////////////////////////
-class AFloorActor
-	: public AManualGeometryActor {
+class FCanvas {
+	//* canvasに描画されるUIの管理クラス
 public:
 
 	//=========================================================================================
 	// public methods
 	//=========================================================================================
 
-	AFloorActor()  = default;
-	~AFloorActor() = default;
+	FCanvas()  = default;
+	~FCanvas() = default;
 
-	void Init();
+	//* render *//
 
-	void Term();
+	void Render(const DirectXThreadContext* context);
 
-	void SetSize(const Vector2f& size);
+	bool CheckRender() const;
 
-	void SetTexture(const AssetObserver<AssetTexture>& texture) { texture_ = texture; }
+	//* setter *//
+
+	void AddLayer(LLayer* layer) { layers_.emplace_back(layer); }
+
+	void SetTextures(FSceneTextures* textures) { textures_ = textures; }
 
 private:
 
@@ -37,13 +45,12 @@ private:
 	// private variables
 	//=========================================================================================
 
-	Vector2f size_ = { 1.0f, 1.0f };
+	//* layers *//
 
-	//=========================================================================================
-	// private methods
-	//=========================================================================================
+	std::list<LLayer*> layers_;
 
-	void UpdateInputAssembler();
-	void UpdateTextureComponent();
+	//* view info *//
+
+	FSceneTextures* textures_ = nullptr;
 
 };

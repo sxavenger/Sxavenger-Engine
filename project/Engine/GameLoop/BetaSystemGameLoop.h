@@ -9,14 +9,17 @@
 #include <Engine/Asset/AssetCollection.h>
 
 //* test !render
-#include <Engine/!Render/FScene.h>
-#include <Engine/!Render/FSceneRenderer.h>
-#include <Engine/!Render/Actor/Camera/CameraActors/ACineCameraActor.h>
-#include <Engine/!Render/Actor/Camera/CameraActors/APivotCameraActor.h>
-#include <Engine/!Render/Actor/Geometry/GeometryActors/AModelActor.h>
-#include <Engine/!Render/Actor/Light/LightActors/APointLightActor.h>
-#include <Engine/!Render/Actor/Light/LightActors/ADirectionalLightActor.h>
-#include <Engine/!Render/Actor/Light/LightActors/ASpotLightActor.h>
+#include <Engine/!Render/Scene/FScene.h>
+#include <Engine/!Render/Scene/FSceneRenderer.h>
+#include <Engine/!Render/Scene/Actor/Camera/CameraActors/ACineCameraActor.h>
+#include <Engine/!Render/Scene/Actor/Camera/CameraActors/APivotCameraActor.h>
+#include <Engine/!Render/Scene/Actor/Geometry/GeometryActors/AModelActor.h>
+#include <Engine/!Render/Scene/Actor/Geometry/GeometryActors/AModelInstanceActor.h>
+#include <Engine/!Render/Scene/Actor/Light/LightActors/APointLightActor.h>
+#include <Engine/!Render/Scene/Actor/Light/LightActors/ADirectionalLightActor.h>
+#include <Engine/!Render/Scene/Actor/Light/LightActors/ASpotLightActor.h>
+#include <Engine/!Render/Canvas/FCanvas.h>
+#include <Engine/!Render/Canvas/Layer/Layers/LSprite.h>
 
 #include "Demo/Actor/AFloorActor.h"
 
@@ -45,6 +48,8 @@ private:
 
 	//* render system *//
 
+	std::unique_ptr<FSceneTextures> textures_;
+
 	std::unique_ptr<FScene> scene_;
 	std::unique_ptr<FSceneRenderer> renderer_;
 
@@ -57,6 +62,9 @@ private:
 	std::unique_ptr<APointLightActor> light2_;
 	std::unique_ptr<ADirectionalLightActor> light3_;
 	std::unique_ptr<ASpotLightActor> light4_;
+
+	std::unique_ptr<FCanvas> canvas_;
+	std::unique_ptr<LSprite> sprite_;
 
 	//* presenter *//
 

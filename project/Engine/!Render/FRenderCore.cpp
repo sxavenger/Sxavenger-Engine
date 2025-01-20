@@ -21,12 +21,16 @@ void FRenderCore::Init() {
 
 	/*raytracing_ = std::make_unique<FRenderCoreRaytracing>();
 	raytracing_->Init();*/
+
+	layer_ = std::make_unique<FRenderCoreLayer>();
+	layer_->Init();
 }
 
 void FRenderCore::Term() {
 	geometry_.reset();
 	light_.reset();
 	raytracing_.reset();
+	layer_.reset();
 }
 
 FRenderCore* FRenderCore::GetInstance() {

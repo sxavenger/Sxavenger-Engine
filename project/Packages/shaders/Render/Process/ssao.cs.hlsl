@@ -1,27 +1,25 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
-#include "GeometryPass.hlsli"
+#include "../../Camera.hlsli"
 
 //=========================================================================================
-// buffer
+// buffers
 //=========================================================================================
 
-Texture2D<float4> gAlbedo : register(t0);
-SamplerState gSampler     : register(s0);
+Texture2D<float>  gDepth    : register(t0);
+Texture2D<float4> gNormal   : register(t1);
+Texture2D<float4> gPosition : register(t2);
 
-// todo: material
+RWTexture2D<float4> gOutput : register(u0);
+
+struct Parameter {
+	uint2 size;
+};
+ConstantBuffer<Parameter> gParameter : register(b0);
+
+
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // main
 ////////////////////////////////////////////////////////////////////////////////////////////
-GeometryDeferredOutput main(GeometryPSInput input) {
-	
-	GeometryDeferredOutput output = (GeometryDeferredOutput)0;
-
-	output.SetAlbedo(gAlbedo.Sample(gSampler, input.texcoord).rgb * gTextureComponent.color.rgb);
-	output.SetNormal(input.normal);
-	output.SetPosition(input.worldPos);
-	
-	return output;
-}

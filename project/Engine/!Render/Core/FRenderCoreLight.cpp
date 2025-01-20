@@ -39,7 +39,7 @@ void FRenderCoreLight::BindGraphicsBuffer(LightType type, const DirectXThreadCon
 }
 
 void FRenderCoreLight::CreateInputAssembler() {
-	ia_.Create(3, 3);
+	ia_.Create(3, 1);
 	ia_.GetVertex()->At(0) = { -1.0f, 1.0f };
 	ia_.GetVertex()->At(1) = { 3.0f, 1.0f };
 	ia_.GetVertex()->At(2) = { -1.0f, -3.0f };

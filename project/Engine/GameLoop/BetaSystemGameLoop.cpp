@@ -45,10 +45,13 @@ void BetaSystemGameLoop::InitSystem() {
 
 	//* render system *//
 
+	textures_ = std::make_unique<FSceneTextures>();
+	textures_->Create(main_->GetSize());
+
 	scene_ = std::make_unique<FScene>();
 
 	renderer_ = std::make_unique<FSceneRenderer>();
-	renderer_->CreateTextures(main_->GetSize());
+	renderer_->SetTextures(textures_.get());
 	renderer_->SetScene(scene_.get());
 	renderer_->GetConfig().isUseRaytracing = false;
 
@@ -70,7 +73,6 @@ void BetaSystemGameLoop::InitSystem() {
 
 	scene_->AddGeometry(model_.get());
 	scene_->AddGeometry(floor_.get());
-
 
 	light1_ = std::make_unique<APointLightActor>();
 	light1_->Init();
@@ -94,6 +96,19 @@ void BetaSystemGameLoop::InitSystem() {
 	//scene_->AddLight(light4_.get());
 
 	FRenderCore::GetInstance()->Init();
+
+	canvas_ = std::make_unique<FCanvas>();
+	canvas_->SetTextures(textures_.get());
+
+	auto texture = SxavengerAsset::TryImport<AssetTexture>("asset/textures/uvChecker.png");
+
+	sprite_ = std::make_unique<LSprite>();
+	sprite_->Init();
+	sprite_->SetTexture(texture.WaitGet()->GetGPUHandleSRV());
+	sprite_->SetPosition({ 100.0f, 100.0f });
+	sprite_->SetSize({ 400.0f, 400.0f });
+
+	canvas_->AddLayer(sprite_.get());
 
 	//* presenter *//
 
@@ -143,6 +158,7 @@ void BetaSystemGameLoop::DrawSystem() {
 	stateObjectContext_->DispatchRays(SxavengerSystem::GetMainThreadContext()->GetDxCommand(), main_->GetSize());*/
 
 	renderer_->Render(SxavengerSystem::GetMainThreadContext());
+	canvas_->Render(SxavengerSystem::GetMainThreadContext());
 
 	main_->BeginRendering();
 	main_->ClearWindow();

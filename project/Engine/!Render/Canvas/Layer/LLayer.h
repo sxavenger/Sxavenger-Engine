@@ -3,33 +3,24 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
-//* actor
-#include "../AActor.h"
-#include "../Camera/ACameraActor.h"
-
-//* render
-#include <Engine/!Render/FTexture.h>
-#include <Engine/!Render/FSceneDepth.h>
-
 //* engine
 #include <Engine/System/DirectX/DxObject/DxBindBuffer.h>
 #include <Engine/System/DirectX/DirectXContext.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// ALightActor class
+// LLayer class
 ////////////////////////////////////////////////////////////////////////////////////////////
-class ALightActor //!< light actor
-	: public AActor {
-	//* Light(光源)を持つActor
+class LLayer {
+	//* canvasに描画されるUIの基底クラス
 public:
 
 	////////////////////////////////////////////////////////////////////////////////////////////
-	// RendererContext structure
+	// RenderContext structure
 	////////////////////////////////////////////////////////////////////////////////////////////
-	struct RendererContext {
-		//* 描画情報
-		const DirectXThreadContext* context; //!< DirectXスレッドコンテキスト
-		Vector2ui size;                      //!< 描画サイズ
+	struct RenderContext {
+		//* member *//
+		const DirectXThreadContext* context;
+		Vector2ui                   size;
 
 		DxObject::BindBufferDesc parameter;
 	};
@@ -40,16 +31,14 @@ public:
 	// public methods
 	//=========================================================================================
 
-	ALightActor()          = default;
-	virtual ~ALightActor() = default;
+	LLayer()          = default;
+	virtual ~LLayer() = default;
 
 	//* render *//
 
-	virtual void Render(const RendererContext& context) = 0; //!< DeferredでのLight効果範囲描画
+	virtual void Render(const RenderContext& context) = 0;
 
-	//* getter *//
-
-	bool IsActive() const { return isActive_; }
+	bool CheckVisibility() const;
 
 protected:
 
@@ -58,5 +47,5 @@ protected:
 	//=========================================================================================
 
 	bool isActive_ = true;
-
+	
 };

@@ -16,11 +16,6 @@ void AModelActor::Init() {
 }
 
 void AModelActor::RenderOpaque(const RendererContext& context) {
-	FRenderCore::GetInstance()->GetGeometry()->SetPipeline(
-		FRenderCoreGeometry::RenderType::Deffered, FRenderCoreGeometry::VertexStage::DefaultVS, FRenderCoreGeometry::PixelStage::Albedo,
-		context.context, context.size
-	);
-
 	if (!isRenderWait_ && !model_.Get()->IsComplete()) {
 		return;
 	}
@@ -32,6 +27,10 @@ void AModelActor::RenderOpaque(const RendererContext& context) {
 	parameter.SetAddress("gTextureComponent", TextureComponent::GetGPUVirtualAddress());
 
 	// todo: mesh shader
+	FRenderCore::GetInstance()->GetGeometry()->SetPipeline(
+		FRenderCoreGeometry::RenderType::Deffered, FRenderCoreGeometry::VertexStage::DefaultVS, FRenderCoreGeometry::PixelStage::Albedo,
+		context.context, context.size
+	);
 
 	for (uint32_t i = 0; i < model->GetMeshSize(); ++i) {
 

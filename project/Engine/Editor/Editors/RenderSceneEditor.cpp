@@ -18,13 +18,19 @@
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 void RenderSceneEditor::Init() {
+
+	textures_ = std::make_unique<FSceneTextures>();
+	textures_->Create(kMainWindowSize);
+
+	sceneRenderer_ = std::make_unique<FSceneRenderer>();
+	sceneRenderer_->GetConfig().isUseRaytracing = true;
+
 	sceneCamera_ = std::make_unique<APivotCameraActor>();
 	sceneCamera_->Init();
 
-	sceneRenderer_ = std::make_unique<FSceneRenderer>();
-	sceneRenderer_->CreateTextures(kMainWindowSize);
 	sceneRenderer_->SetCamera(sceneCamera_.get());
-	sceneRenderer_->GetConfig().isUseRaytracing = true;
+	sceneRenderer_->SetTextures(textures_.get());
+
 
 	checkerBoard_ = SxavengerAsset::TryImport<AssetTexture>("asset/textures/checker_black.png");
 }

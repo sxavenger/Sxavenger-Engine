@@ -9,8 +9,8 @@
 //* engine
 #include <Engine/Asset/Texture/AssetTexture.h>
 #include <Engine/Asset/Observer/AssetObserver.h>
-#include <Engine/!Render/Actor/Camera/CameraActors/APivotCameraActor.h>
-#include <Engine/!Render/FSceneRenderer.h>
+#include <Engine/!Render/Scene/Actor/Camera/CameraActors/APivotCameraActor.h>
+#include <Engine/!Render/Scene/FSceneRenderer.h>
 
 //* external
 #include <imgui.h>
@@ -66,8 +66,9 @@ private:
 
 	//* scene render *//
 
-	std::unique_ptr<APivotCameraActor> sceneCamera_; //!< debug camera
+	std::unique_ptr<FSceneTextures> textures_;       //!< debug textures
 	std::unique_ptr<FSceneRenderer> sceneRenderer_;  //!< debug scene
+	std::unique_ptr<APivotCameraActor> sceneCamera_; //!< debug camera
 
 	FSceneRenderer* gameRenderer_ = nullptr; //!< game scene
 

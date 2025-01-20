@@ -4,8 +4,8 @@
 // include
 //-----------------------------------------------------------------------------------------
 //* render
+#include "../FSceneTextures.h"
 #include "FScene.h"
-#include "FSceneTextures.h"
 #include "Actor/Camera/ACameraActor.h"
 
 //* engine	
@@ -36,17 +36,19 @@ public:
 	FSceneRenderer()  = default;
 	~FSceneRenderer() = default;
 
-	void CreateTextures(const Vector2ui& size);
-
 	//* render *//
 
 	void Render(const DirectXThreadContext* context);
+
+	bool CheckRender() const;
 
 	//* setter *//
 
 	void SetScene(FScene* scene) { scene_ = scene; }
 
 	void SetCamera(ACameraActor* camera) { camera_ = camera; }
+
+	void SetTextures(FSceneTextures* textures) { textures_ = textures; }
 
 	//* getter *//
 
@@ -71,11 +73,11 @@ private:
 
 	FScene* scene_ = nullptr; //!< geometry and light actors
 
+	ACameraActor* camera_ = nullptr; //!< camera
+
 	//* view info *//
 
-	ACameraActor* camera_ = nullptr; //!< camera
-	std::unique_ptr<FSceneTextures> textures_;
-	//! externalに変えるかも...
+	FSceneTextures* textures_ = nullptr;
 
 	//* raytracing *//
 
@@ -86,8 +88,6 @@ private:
 	Config config_ = {};
 
 	//* HACK
-
-	DxObject::ReflectionComputePipelineState p_;
 
 	//=========================================================================================
 	// private methods
