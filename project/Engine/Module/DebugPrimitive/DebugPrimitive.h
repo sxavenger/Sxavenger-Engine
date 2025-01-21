@@ -18,7 +18,7 @@
 //-----------------------------------------------------------------------------------------
 // forward
 //-----------------------------------------------------------------------------------------
-class AViewActor;
+class ACameraActor;
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // BaseDebugPrimitive class
@@ -33,7 +33,7 @@ public:
 	BaseDebugPrimitive()          = default;
 	virtual ~BaseDebugPrimitive() = default;
 
-	void Draw(const DirectXThreadContext* context, const AViewActor* view);
+	void Draw(const DirectXThreadContext* context, const ACameraActor* camera);
 
 	void Reset();
 
@@ -70,6 +70,91 @@ protected:
 
 	void CreateInputBuffer(uint32_t size);
 
-	void SetVertexBuffer(const Vector4f& position, const Color4f& color);
+	void SetVertexBuffer(const Vector3f& position, const Color4f& color);
+
+};
+
+////////////////////////////////////////////////////////////////////////////////////////////
+// DebugPrimitiveLine class
+////////////////////////////////////////////////////////////////////////////////////////////
+class DebugPrimitiveLine
+	: public BaseDebugPrimitive {
+public:
+
+	//=========================================================================================
+	// public methods
+	//=========================================================================================
+
+	DebugPrimitiveLine() { Init(); }
+	~DebugPrimitiveLine() = default;
+
+	void Init();
+
+	void DrawLine(const Vector3f& v1, const Vector3f& v2, const Color4f& color);
+
+private:
+
+	//=========================================================================================
+	// private variables
+	//=========================================================================================
+
+	//* config *//
+
+	static const uint32_t kMaxLineNum_ = (1 << 16);
+	static const uint32_t kVertexNum_  = 2; //!< lineなので2頂点
+
+};
+
+////////////////////////////////////////////////////////////////////////////////////////////
+// DebugPrimitive class
+////////////////////////////////////////////////////////////////////////////////////////////
+class DebugPrimitive {
+public:
+
+	//=========================================================================================
+	// public methods
+	//=========================================================================================
+
+	DebugPrimitive() = default;
+	~DebugPrimitive() = default;
+
+	void Init();
+
+	void Term();
+
+	void DrawToScene(const DirectXThreadContext* context, const ACameraActor* camera);
+
+	void ResetPrimitive();
+
+	void DrawLine(const Vector3f& v1, const Vector3f& v2, const Color4f& color);
+
+	//* drawer options *//
+
+	void DrawGrid(const Vector3f& center, float size);
+
+	void DrawAxis(const Vector3f& center, float length);
+
+	void DrawBox(const Vector3f& min, const Vector3f& max, const Color4f& color);
+
+private:
+
+	//=========================================================================================
+	// private variables
+	//=========================================================================================
+
+	//* primitive *//
+
+	std::unique_ptr<DebugPrimitiveLine> line_;
+
+	//* pipeline *//
+
+	std::unique_ptr<DxObject::GraphicsPipelineState> pipeline_;
+
+	//=========================================================================================
+	// private methods
+	//=========================================================================================
+
+	void CreatePrimitive();
+	void CreatePipeline();
 
 };

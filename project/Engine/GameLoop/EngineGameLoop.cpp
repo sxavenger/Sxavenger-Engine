@@ -80,7 +80,7 @@ void EngineGameLoop::Init(GameLoop::Context* context) {
 		GameLoop::State::End, 0, [this]() {
 			SxavengerSystem::PresentAllWindow();
 			SxavengerSystem::ExecuteAllAllocator();
-			//SxavengerModule::ResetPrimtive();
+			SxavengerModule::ResetPrimtive();
 			SxavengerSystem::EndPerformace();
 		}
 	);

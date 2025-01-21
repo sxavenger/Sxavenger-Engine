@@ -23,6 +23,8 @@
 
 #include <Engine/Editor/EditorComponent/AttributeComponent.h>
 
+#include <Engine/Module/Collider/Collider.h>
+
 #include "Demo/Actor/AFloorActor.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -73,6 +75,8 @@ private:
 	std::unique_ptr<LSprite> sprite_;
 
 	std::unique_ptr<AttributeComponent> attribute_;
+
+	std::unique_ptr<Collider> collider_;
 
 	//* presenter *//
 

@@ -4,7 +4,7 @@
 // include
 //-----------------------------------------------------------------------------------------
 //* module
-//#include "Primitive/DebugPrimitive.h"
+#include "DebugPrimitive/DebugPrimitive.h"
 #include "Collider/ColliderCollection.h"
 #include "Skeleton/SkinningPipeline.h"
 
@@ -26,9 +26,7 @@ public:
 	// primitive option
 	//-----------------------------------------------------------------------------------------
 
-	/*static void ResetPrimtive();
-
-	static void DrawToScene(const DirectXThreadContext* context, const Camera3d* camera);
+	static void ResetPrimtive();
 
 	static void DrawLine(const Vector3f& v1, const Vector3f& v2, const Color4f& color);
 
@@ -38,7 +36,7 @@ public:
 
 	static void DrawBox(const Vector3f& min, const Vector3f& max, const Color4f& color);
 
-	static DebugPrimitive* GetDebugPrimitive();*/
+	static DebugPrimitive* GetDebugPrimitive();
 
 	//-----------------------------------------------------------------------------------------
 	// collider collection option

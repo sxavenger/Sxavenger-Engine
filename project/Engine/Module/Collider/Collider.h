@@ -72,7 +72,7 @@ public:
 
 	void SetColliderBoundingAABB(const CollisionBoundings::AABB& aabb = { .min = {-0.5f, -0.5f, -0.5f}, .max = {0.5f, 0.5f, 0.5f} });
 
-	void SetColliderBoundingOBB(const CollisionBoundings::OBB& obb = { .orientation = Matrix4x4::Identity(), .size = { 1.0f, 1.0f, 1.0f } });
+	void SetColliderBoundingOBB(const CollisionBoundings::OBB& obb = { .orientation = Quaternion::Identity(), .size = { 1.0f, 1.0f, 1.0f } });
 
 	const std::optional<CollisionBoundings::Boundings>& GetBoundings() const { return bounding_; }
 

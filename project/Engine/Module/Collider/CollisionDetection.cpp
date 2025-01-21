@@ -81,7 +81,7 @@ bool CollisionDetection::SphereToOBB(
 	const Vector3f& positionA, const CollisionBoundings::Sphere& sphereA,
 	const Vector3f& positionB, const CollisionBoundings::OBB& obbB) {
 
-	Vector3f centerAInOBBLocal = Matrix::Transform(positionA, Matrix4x4(obbB.orientation * Matrix::MakeTranslate(positionB)).Inverse());
+	Vector3f centerAInOBBLocal = Matrix::Transform(positionA, Matrix::MakeAffine(kUnit3<float>, obbB.orientation.Inverse(), positionB));
 
 	CollisionBoundings::Sphere sphereAInOBBLocal = {
 		.radius = sphereA.radius
@@ -180,9 +180,11 @@ bool CollisionDetection::AABBToOBB(
 	aabbAxesA[1] = { 0.0f, 1.0f, 0.0f };
 	aabbAxesA[2] = { 0.0f, 0.0f, 1.0f };
 
-	obbAxesB[0] = Matrix::Transform({ 1.0f, 0.0f, 0.0f }, obbB.orientation);
-	obbAxesB[1] = Matrix::Transform({ 0.0f, 1.0f, 0.0f }, obbB.orientation);
-	obbAxesB[2] = Matrix::Transform({ 0.0f, 0.0f, 1.0f }, obbB.orientation);
+	Matrix4x4 rotation = Matrix::MakeRotate(obbB.orientation);
+
+	obbAxesB[0] = Matrix::Transform({ 1.0f, 0.0f, 0.0f }, rotation);
+	obbAxesB[1] = Matrix::Transform({ 0.0f, 1.0f, 0.0f }, rotation);
+	obbAxesB[2] = Matrix::Transform({ 0.0f, 0.0f, 1.0f }, rotation);
 
 	int k = 0;
 
@@ -233,13 +235,16 @@ bool CollisionDetection::OBBTo(
 	Vector3f obbAxesA[3] = {};
 	Vector3f obbAxesB[3] = {};
 
-	obbAxesA[0] = Matrix::Transform({ 1.0f, 0.0f, 0.0f }, obbA.orientation);
-	obbAxesA[1] = Matrix::Transform({ 0.0f, 1.0f, 0.0f }, obbA.orientation);
-	obbAxesA[2] = Matrix::Transform({ 0.0f, 0.0f, 1.0f }, obbA.orientation);
+	Matrix4x4 rotationA = Matrix::MakeRotate(obbA.orientation);
+	Matrix4x4 rotationB = Matrix::MakeRotate(obbB.orientation);
 
-	obbAxesB[0] = Matrix::Transform({ 1.0f, 0.0f, 0.0f }, obbB.orientation);
-	obbAxesB[1] = Matrix::Transform({ 0.0f, 1.0f, 0.0f }, obbB.orientation);
-	obbAxesB[2] = Matrix::Transform({ 0.0f, 0.0f, 1.0f }, obbB.orientation);
+	obbAxesA[0] = Matrix::Transform({ 1.0f, 0.0f, 0.0f }, rotationA);
+	obbAxesA[1] = Matrix::Transform({ 0.0f, 1.0f, 0.0f }, rotationA);
+	obbAxesA[2] = Matrix::Transform({ 0.0f, 0.0f, 1.0f }, rotationA);
+
+	obbAxesB[0] = Matrix::Transform({ 1.0f, 0.0f, 0.0f }, rotationB);
+	obbAxesB[1] = Matrix::Transform({ 0.0f, 1.0f, 0.0f }, rotationB);
+	obbAxesB[2] = Matrix::Transform({ 0.0f, 0.0f, 1.0f }, rotationB);
 
 	int k = 0;
 

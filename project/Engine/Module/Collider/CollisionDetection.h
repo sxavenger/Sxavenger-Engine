@@ -44,8 +44,8 @@ namespace CollisionBoundings {
 	// OBB structure
 	////////////////////////////////////////////////////////////////////////////////////////////
 	struct OBB {
-		Matrix4x4 orientation = Matrix4x4::Identity(); //!< 回転行列のみ入る
-		Vector3f  size;
+		Quaternion orientation = Quaternion::Identity();
+		Vector3f   size;
 	};
 
 	//=========================================================================================

@@ -33,11 +33,21 @@ void QuaternionTransform::SetImGuiCommand(float granularityTranslate, float gran
 	ImGui::DragFloat3("translate", &translate.x, granularityTranslate);
 
 	Vector3f drag = {};
-	if (ImGui::DragFloat3("rotation drager", &drag.x, granularityRotate, -1.0f, 1.0f, "", ImGuiSliderFlags_NoInput)) {
+	if (ImGui::DragFloat3("## rotation drager", &drag.x, granularityRotate, -1.0f, 1.0f, "", ImGuiSliderFlags_NoInput)) {
 		rotate *= MakeAxisAngle({ 1.0f, 0.0f, 0.0f }, drag.x);
 		rotate *= MakeAxisAngle({ 0.0f, 1.0f, 0.0f }, drag.y);
 		rotate *= MakeAxisAngle({ 0.0f, 0.0f, 1.0f }, drag.z);
 	}
+
+	ImGui::SameLine();
+
+	if (ImGui::Button("reset")) {
+		rotate = Quaternion::Identity();
+	}
+
+	ImGui::SameLine();
+	ImGui::Text("rotation");
+
 
 	ImGui::DragFloat3("scale", &scale.x, granularityScale);
 }

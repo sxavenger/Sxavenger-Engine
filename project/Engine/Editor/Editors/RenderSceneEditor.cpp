@@ -6,6 +6,7 @@
 //* engine
 #include <Engine/System/SxavengerSystem.h>
 #include <Engine/Asset/SxavengerAsset.h>
+#include <Engine/Module/SxavengerModule.h>
 
 //* lib
 #include <Lib/Environment.h>
@@ -45,6 +46,13 @@ void RenderSceneEditor::ShowWindow() {
 void RenderSceneEditor::Draw() {
 	sceneCamera_->UpdateView();
 	sceneRenderer_->Render(SxavengerSystem::GetMainThreadContext());
+
+	textures_->BeginForward(SxavengerSystem::GetMainThreadContext());
+
+	SxavengerModule::DrawCollider();
+	SxavengerModule::GetDebugPrimitive()->DrawToScene(SxavengerSystem::GetMainThreadContext(), sceneCamera_.get());
+
+	textures_->EndForward(SxavengerSystem::GetMainThreadContext());
 }
 
 void RenderSceneEditor::SetGameRenderer(FSceneRenderer* renderer) {

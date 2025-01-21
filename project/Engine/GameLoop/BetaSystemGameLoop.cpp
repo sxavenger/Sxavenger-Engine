@@ -116,6 +116,10 @@ void BetaSystemGameLoop::InitSystem() {
 
 	canvas_->AddLayer(sprite_.get());
 
+	collider_ = std::make_unique<Collider>();
+	collider_->SetColliderBoundingOBB();
+	collider_->SetToCollection();
+
 	//* presenter *//
 
 	presenter_ = std::make_unique<DxObject::ReflectionGraphicsPipelineState>();
