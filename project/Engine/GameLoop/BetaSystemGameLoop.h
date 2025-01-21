@@ -21,6 +21,8 @@
 #include <Engine/!Render/Canvas/FCanvas.h>
 #include <Engine/!Render/Canvas/Layer/Layers/LSprite.h>
 
+#include <Engine/Editor/EditorComponent/AttributeComponent.h>
+
 #include "Demo/Actor/AFloorActor.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -69,6 +71,8 @@ private:
 
 	std::unique_ptr<FCanvas> canvas_;
 	std::unique_ptr<LSprite> sprite_;
+
+	std::unique_ptr<AttributeComponent> attribute_;
 
 	//* presenter *//
 

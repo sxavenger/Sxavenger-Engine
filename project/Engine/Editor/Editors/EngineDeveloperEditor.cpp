@@ -3,9 +3,6 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
-//* editor
-#include "../EditorEngine.h"
-
 //* engine
 #include <Engine/Asset/SxavengerAsset.h>
 
@@ -131,8 +128,8 @@ void EngineDeveloperEditor::ShowPerformanceWindow() {
 		ImGui::PushStyleColor(ImGuiCol_WindowBg, ImGuiController::ToImVec4({ 45, 5, 8, 255 }));
 	}
 
-	editor_->SetNextWindowDocking();
-	ImGui::Begin("Performace ## Engine Developer Editor", nullptr, editor_->GetWindowFlag() | ImGuiWindowFlags_NoTitleBar);
+	BaseEditor::SetNextWindowDocking();
+	ImGui::Begin("Performace ## Engine Developer Editor", nullptr, BaseEditor::GetWindowFlag() | ImGuiWindowFlags_NoTitleBar);
 
 	const Performance* performance = SxavengerSystem::GetPerformance();
 	TimePointf<TimeUnit::second> time = performance->GetDeltaTime();

@@ -3,9 +3,6 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
-//* editor
-#include "../EditorEngine.h"
-
 //* engine
 #include <Engine/System/SxavengerSystem.h>
 #include <Engine/Asset/SxavengerAsset.h>
@@ -63,8 +60,8 @@ void RenderSceneEditor::ShowSceneWindow() {
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, { 0, 0 });
 
 	//* begin window
-	editor_->SetNextWindowDocking();
-	ImGui::Begin("Scene ## Render Scene Editor", nullptr, editor_->GetWindowFlag() | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
+	BaseEditor::SetNextWindowDocking();
+	ImGui::Begin("Scene ## Render Scene Editor", nullptr, BaseEditor::GetWindowFlag() | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
 
 	auto checker = checkerBoard_.WaitGet();
 	SetImGuiImageFullWindow(checker->GetGPUHandleSRV(), checker->GetSize());
@@ -89,8 +86,8 @@ void RenderSceneEditor::ShowGameWindow() {
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, { 0, 0 });
 
 	//* begin window
-	editor_->SetNextWindowDocking();
-	ImGui::Begin("Game ## Render Scene Editor", nullptr, editor_->GetWindowFlag() | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
+	BaseEditor::SetNextWindowDocking();
+	ImGui::Begin("Game ## Render Scene Editor", nullptr, BaseEditor::GetWindowFlag() | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
 
 	auto checker = checkerBoard_.WaitGet();
 	SetImGuiImageFullWindow(checker->GetGPUHandleSRV(), checker->GetSize());
@@ -104,8 +101,8 @@ void RenderSceneEditor::ShowGameWindow() {
 }
 
 void RenderSceneEditor::ShowHierarchyWindow() {
-	editor_->SetNextWindowDocking();
-	ImGui::Begin("Hierarchy ## Render Scene Editor", nullptr, editor_->GetWindowFlag());
+	BaseEditor::SetNextWindowDocking();
+	ImGui::Begin("Hierarchy ## Render Scene Editor", nullptr, BaseEditor::GetWindowFlag());
 
 	auto scene = sceneRenderer_->GetScene();
 
@@ -177,8 +174,8 @@ void RenderSceneEditor::ShowHierarchyWindow() {
 }
 
 void RenderSceneEditor::ShowInspectorWindow() {
-	editor_->SetNextWindowDocking();
-	ImGui::Begin("Inspector ## Render Scene Editor", nullptr, editor_->GetWindowFlag());
+	BaseEditor::SetNextWindowDocking();
+	ImGui::Begin("Inspector ## Render Scene Editor", nullptr, BaseEditor::GetWindowFlag());
 
 	if (selectedActor_.has_value()) {
 

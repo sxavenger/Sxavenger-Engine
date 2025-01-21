@@ -140,7 +140,6 @@ void BetaSystemGameLoop::InitSystem() {
 	vb_->At(1) = { { 3.0f, 1.0f, 0.0f }, { 2.0f, 0.0f } };
 	vb_->At(2) = { { -1.0f, -3.0f, 0.0f }, { 0.0f, 2.0f } };
 
-	sEditorEngine->RegisterEditor<RenderSceneEditor>();
 	sEditorEngine->ExecuteEditorFunction<RenderSceneEditor>([this](RenderSceneEditor* editor) {
 		editor->SetGameRenderer(renderer_.get());
 	});
@@ -157,6 +156,17 @@ void BetaSystemGameLoop::UpdateSystem() {
 
 	time_ += SxavengerSystem::GetDeltaTime();
 	animation_->GetSkeleton()->UpdateAnimation(animator_.WaitGet()->GetAnimation(0), time_, true);
+
+	if (SxavengerSystem::IsTriggerKey(KeyId::KEY_SPACE)) {
+		if (attribute_ == nullptr) {
+			attribute_ = std::make_unique<AttributeComponent>();
+			attribute_->GetName() = "new attribute";
+			attribute_->SetToOutliner();
+
+		} else {
+			attribute_.reset();
+		}
+	}
 }
 
 void BetaSystemGameLoop::DrawSystem() {

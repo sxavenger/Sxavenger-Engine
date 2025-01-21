@@ -3,23 +3,33 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
-
 //* c++
-#include <string>
 #include <list>
+#include <string>
+#include <functional>
 #include <optional>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// EditorComponent class
+// AttributeComponent class
 ////////////////////////////////////////////////////////////////////////////////////////////
-class EditorComponent {
+class AttributeComponent {
 public:
 
 	////////////////////////////////////////////////////////////////////////////////////////////
 	// using
 	////////////////////////////////////////////////////////////////////////////////////////////
-	using Container = std::list<EditorComponent*>;
-	using Iterator  = Container::iterator;
+
+	using Container = std::list<AttributeComponent*>;
+	using Iterator  = Container::const_iterator;
+
+	////////////////////////////////////////////////////////////////////////////////////////////
+	// Status enum class
+	////////////////////////////////////////////////////////////////////////////////////////////
+	enum class Status : uint8_t {
+		Unregistered, //!< 未登録
+		Child,        //!< childとして設定
+		Outliner      //!< outlinerとして設定
+	};
 
 public:
 
@@ -27,22 +37,29 @@ public:
 	// public method
 	//=========================================================================================
 
-	EditorComponent()  = default;
-	~EditorComponent() { Term(); }
+	AttributeComponent()          = default;
+	virtual ~AttributeComponent() { RemoveIterator(); }
 
-	void Term();
+	void ExecuteAttribute() { attributeFunc_(); }
+
+	//* attribute option *//
+
+	virtual void AttributeImGui() {}
 
 	//* component option *//
 
-	void SetName(const std::string& name) { name_ = name; }
+	void SetToOutliner();
 
-	//* container iterator option *//
+	void SetChild(AttributeComponent* child);
 
-	void SetChild(EditorComponent* child);
+	void RemoveIterator();
 
-	void SetToConsole();
+	//* getter *//
 
-	void EraseToIteratorContainer();
+	const Container& GetChildren() const { return children_; }
+
+	const std::string& GetName() const { return name_; }
+	std::string& GetName() { return name_; }
 
 protected:
 
@@ -50,7 +67,9 @@ protected:
 	// protected variables
 	//=========================================================================================
 
-	std::string name_ = "new component";
+	std::string name_ = "new attribute";
+
+	std::function<void()> attributeFunc_ = [this]() { AttributeImGui(); };
 
 private:
 
@@ -58,20 +77,12 @@ private:
 	// private variables
 	//=========================================================================================
 
-	//!< Containerのiterator, Containerに所属していない場合はnullopt
-	//!< 削除用途のために保持している
-	std::optional<Iterator> iterator_ = std::nullopt;
+	std::optional<Iterator> iterator_;
 
-	//!< 親コンポーネント
-	EditorComponent* parent_ = nullptr;
+	AttributeComponent* parent_ = nullptr;
+	Container           children_;
 
-	//!< 子コンポーネント
-	Container children_;
-
-	//=========================================================================================
-	// private methods
-	//=========================================================================================
-
-	void SetIterator(const Iterator& iterator);
+	Status GetStatus() const;
+	bool CheckIteratorEmpty() const;
 
 };

@@ -10,6 +10,8 @@
 Texture2D<float4> gTexture : register(t0);
 SamplerState gSampler      : register(s0);
 
+// todo: HDR‚Ì‘Î‰ž
+
 ////////////////////////////////////////////////////////////////////////////////////////////
 // main
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -17,7 +19,9 @@ PSOutput main(PSInput input) {
 	
 	PSOutput output = (PSOutput)0;
 	
-	output.color = gTexture.Sample(gSampler, input.texcoord);
+	float4 color = gTexture.Sample(gSampler, input.texcoord);
 	
+	output.color = saturate(color); //!< HDR‚Ì‘Î‰ž‚Ü‚Å‚ÌŽb’èˆ—
+
 	return output;
 }

@@ -58,6 +58,12 @@ protected:
 
 	static void MenuPadding();
 
+	//* option *//
+
+	void SetNextWindowDocking();
+
+	uint32_t GetWindowFlag() const;
+
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////

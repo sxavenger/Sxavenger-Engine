@@ -36,6 +36,7 @@ public:
 	~Window() { Close(); }
 
 	void Create(const Vector2ui& clientSize, const LPCWSTR name, const HWND parentHwnd = nullptr);
+	void CreateEx(const Vector2ui& clientSize, const LPCWSTR name, const WNDPROC& proc, const HWND parentHwnd = nullptr);
 
 	void Close();
 

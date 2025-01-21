@@ -6,6 +6,8 @@
 //* engine
 #include <Engine/Editor/EditorEngine.h>
 #include <Engine/Editor/Editors/EngineDeveloperEditor.h>
+#include <Engine/Editor/Editors/RenderSceneEditor.h>
+#include <Engine/Editor/Editors/OutlinerEditor.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // EditorEngineGameLoop class
@@ -23,6 +25,8 @@ void EditorEngineGameLoop::Term() {
 void EditorEngineGameLoop::InitEditor() {
 	sEditorEngine->Init();
 	sEditorEngine->RegisterEditor<EngineDeveloperEditor>();
+	sEditorEngine->RegisterEditor<RenderSceneEditor>();
+	sEditorEngine->RegisterEditor<OutlinerEditor>();
 }
 
 void EditorEngineGameLoop::TermEditor() {

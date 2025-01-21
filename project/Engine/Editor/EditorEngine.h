@@ -64,10 +64,6 @@ public:
 
 private:
 
-
-
-private:
-
 	//=========================================================================================
 	// private variables
 	//=========================================================================================
@@ -145,7 +141,7 @@ inline T* EditorEngine::TryGetEditor() {
 	return nullptr;
 }
 
-template<BaseEditorDerived T>
+template <BaseEditorDerived T>
 inline void EditorEngine::ExecuteEditorFunction(const std::function<void(T*)>& function) {
 	if (auto editor = TryGetEditor<T>()) {
 		function(editor);

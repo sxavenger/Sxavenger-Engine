@@ -72,6 +72,61 @@ void Window::Create(const Vector2ui& clientSize, const LPCWSTR name, const HWND 
 	ShowWindow(hwnd_, SW_SHOW);
 }
 
+void Window::CreateEx(const Vector2ui& clientSize, const LPCWSTR name, const WNDPROC& proc, const HWND parentHwnd) {
+
+	// 引数の保存
+	clientSize_ = clientSize;
+	name_       = name;
+	className_  = L"Sxavenger Engine Window: ";
+	className_ += name;
+
+	// window type の設定
+	type_ = WindowType::kMainWindow;
+
+	if (parentHwnd != nullptr) {
+		type_ = WindowType::kSubWindow;
+	}
+
+	// インスタンスハンドルを取得
+	hInst_ = GetModuleHandle(nullptr);
+	Assert(hInst_ != nullptr);
+
+	// window設定
+	WNDCLASS wc = {};
+	wc.lpszClassName = className_.c_str();
+	wc.hInstance     = hInst_;
+	wc.lpfnWndProc   = proc;
+
+	Assert(RegisterClass(&wc));
+
+	RECT rc = {};
+	rc.right  = clientSize_.x;
+	rc.bottom = clientSize_.y;
+
+	// ウィンドウサイズの調整
+	AdjustWindowRect(&rc, WS_OVERLAPPEDWINDOW, false);
+
+	// ウィンドウを生成
+	hwnd_ = CreateWindow(
+		wc.lpszClassName,
+		name_,
+		WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX, //!< windowのサイズの固定
+		CW_USEDEFAULT,
+		CW_USEDEFAULT,
+		rc.right - rc.left,
+		rc.bottom - rc.top,
+		parentHwnd,
+		nullptr,
+		hInst_,
+		nullptr
+	);
+	Assert(hwnd_ != nullptr);
+
+	// ウィンドウを表示
+	ShowWindow(hwnd_, SW_SHOW);
+
+}
+
 void Window::Close() {
 	DestroyWindow(hwnd_);
 	CloseWindow(hwnd_);
