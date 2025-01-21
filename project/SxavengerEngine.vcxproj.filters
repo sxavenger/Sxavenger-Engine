@@ -147,6 +147,7 @@
     <ClCompile Include="Engine\!Render\Scene\Actor\Geometry\GeometryActors\AModelAnimationActor.cpp" />
     <ClCompile Include="Engine\Editor\Editors\OutlinerEditor.cpp" />
     <ClCompile Include="Engine\Editor\EditorComponent\AttributeComponent.cpp" />
+    <ClCompile Include="Engine\Module\DebugPrimitive\DebugPrimitive.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\System\Window\Window.h" />
@@ -298,5 +299,6 @@
     <ClInclude Include="Engine\!Render\Scene\Actor\Geometry\GeometryActors\AModelAnimationActor.h" />
     <ClInclude Include="Engine\Editor\Editors\OutlinerEditor.h" />
     <ClInclude Include="Engine\Editor\EditorComponent\AttributeComponent.h" />
+    <ClInclude Include="Engine\Module\DebugPrimitive\DebugPrimitive.h" />
   </ItemGroup>
 </Project>

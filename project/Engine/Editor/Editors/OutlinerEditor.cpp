@@ -64,7 +64,7 @@ void OutlinerEditor::ShowAttributeWindow() {
 	ImGui::Begin("Attribute ## Outliner Editor", nullptr, BaseEditor::GetWindowFlag());
 
 	if (selectIterator_.has_value()) {
-		AttributeComponent* component = (*selectIterator_.value())
+		AttributeComponent* component = (*selectIterator_.value());
 
 		ImGui::SeparatorText(component->GetName().c_str());
 

@@ -112,11 +112,11 @@ static EditorEngine* const sEditorEngine = EditorEngine::GetInstance();
 
 template <BaseEditorDerived T>
 inline void EditorEngine::RegisterEditor() {
-#ifdef _DEBUG
+#ifndef _RELEASE
 	auto ptr = std::make_unique<T>(this);
 	ptr->Init();
 	editors_.try_emplace(typeid(T), std::move(ptr));
-#endif // _DEBUG
+#endif // _RELEASE
 }
 
 template <BaseEditorDerived T>
@@ -132,11 +132,11 @@ inline T* EditorEngine::GetEditor() {
 
 template <BaseEditorDerived T>
 inline T* EditorEngine::TryGetEditor() {
-#ifdef _DEBUG
+#ifndef _RELEASE
 	if (editors_.contains(typeid(T))) {
 		return dynamic_cast<T*>(editors_.at(typeid(T)).get());
 	}
-#endif // _DEBUG
+#endif // _RELEASE
 
 	return nullptr;
 }

@@ -27,7 +27,7 @@ void EditorEngine::Term() {
 }
 
 void EditorEngine::UpdateEditor() {
-#ifdef _DEBUG
+#ifndef _RELEASE
 	ShowMainMenu();
 	ShowWindow();
 #endif
@@ -55,8 +55,6 @@ void EditorEngine::ShowMainMenu() {
 }
 
 void EditorEngine::ShowWindow() {
-#ifdef _DEBUG
-
 	if (!isEditorDisplay_) {
 		return;
 	}
@@ -68,8 +66,6 @@ void EditorEngine::ShowWindow() {
 			editor->ShowWindow();
 		}
 	}
-
-#endif
 }
 
 void EditorEngine::MenuDummy() {

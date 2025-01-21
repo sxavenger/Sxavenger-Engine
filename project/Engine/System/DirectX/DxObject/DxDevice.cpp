@@ -111,8 +111,8 @@ void Device::CreateDevice() {
 }
 
 void Device::CreateInfoQueue() {
-#ifdef _DEBUG
-// プログラムを停止する機能
+#ifndef _RELEASE
+	// プログラムを停止する機能
 	{
 		if (SUCCEEDED(device_->QueryInterface(IID_PPV_ARGS(&infoQueue_)))) {
 			// プログラムを停止する種類
