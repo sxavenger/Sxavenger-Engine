@@ -11,6 +11,7 @@
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 void AManualGeometryActor::Init() {
+	AActor::name_ = "manual geometry actor";
 }
 
 void AManualGeometryActor::RenderOpaque(const RendererContext& context) {

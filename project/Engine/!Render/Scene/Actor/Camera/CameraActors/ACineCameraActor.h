@@ -44,6 +44,8 @@ public:
 
 	void UpdateProj();
 
+	void InspectorImGui() override;
+
 	//* getter *//
 
 	const CineCameraParameter& GetParameter() const { return parameter_; }

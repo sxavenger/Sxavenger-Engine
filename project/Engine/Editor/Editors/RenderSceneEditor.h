@@ -89,6 +89,7 @@ private:
 	void ShowSceneWindow();
 	void ShowGameWindow();
 	void ShowHierarchyWindow();
+	void ShowInspectorWindow();
 
 	//* sub method *//
 

@@ -88,6 +88,8 @@ private:
 	Config config_ = {};
 
 	//* HACK
+	std::unique_ptr<DxObject::ReflectionComputePipelineState> p_;
+	void HACKProcessSSAO(const DirectXThreadContext* context);
 
 	//=========================================================================================
 	// private methods
@@ -102,5 +104,9 @@ private:
 	void SetupRaytracing(const DirectXThreadContext* context);
 
 	void ProcessRaytracingReflection(const DirectXThreadContext* context);
+
+	//* sub method
+
+	void RenderEmptyLight(const ALightActor::RendererContext& context);
 
 };

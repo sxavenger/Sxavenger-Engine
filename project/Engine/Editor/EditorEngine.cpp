@@ -126,13 +126,15 @@ void EditorEngine::ShowEditorMenu() {
 					ImGui::SameLine();
 					ImGui::Dummy({ 16.0f, 0.0f });
 
+					std::string ptr = std::format("{:p}", reinterpret_cast<const void*>(editor.get()));
+
 					ImGui::TableNextColumn();
-					ImGui::Text(std::format("{:p}", reinterpret_cast<const void*>(editor.get())).c_str());
+					ImGui::Text(ptr.c_str());
 					ImGui::SameLine();
 					ImGui::Dummy({ 16.0f, 0.0f });
 
 					ImGui::TableNextColumn();
-					ImGui::Text(std::format("{}", editor->IsDisplay()).c_str());
+					ImGui::Checkbox(std::format("## {}", ptr).c_str(), &editor->GetIsDisplay());
 					ImGui::SameLine();
 					ImGui::Dummy({ 16.0f, 0.0f });
 				}

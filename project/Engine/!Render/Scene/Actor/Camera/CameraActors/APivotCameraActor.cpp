@@ -7,6 +7,8 @@
 void APivotCameraActor::Init() {
 	ACameraActor::Init();
 	UpdateView();
+
+	AActor::name_ = "pivot camera actor";
 }
 
 void APivotCameraActor::UpdateView() {

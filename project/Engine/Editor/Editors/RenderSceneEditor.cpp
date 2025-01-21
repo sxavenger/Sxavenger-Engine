@@ -32,7 +32,7 @@ void RenderSceneEditor::Init() {
 	sceneRenderer_->SetTextures(textures_.get());
 
 
-	checkerBoard_ = SxavengerAsset::TryImport<AssetTexture>("asset/textures/checker_black.png");
+	checkerBoard_ = SxavengerAsset::TryImport<AssetTexture>("packages/textures/checker_black.png");
 }
 
 void RenderSceneEditor::ShowMainMenu() {
@@ -42,6 +42,7 @@ void RenderSceneEditor::ShowWindow() {
 	ShowSceneWindow();
 	ShowGameWindow();
 	ShowHierarchyWindow();
+	ShowInspectorWindow();
 }
 
 void RenderSceneEditor::Draw() {
@@ -115,7 +116,7 @@ void RenderSceneEditor::ShowHierarchyWindow() {
 				bool isAvailable = false; //!< 選択されたActorが存在するか
 
 				for (const auto& geometry : scene->GetGeometries()) {
-					std::string name = std::format("{:p}", reinterpret_cast<const void*>(geometry));
+					std::string name = std::format("{} # {:p}", geometry->GetName(), reinterpret_cast<const void*>(geometry));
 					bool isSelected  = IsSelectedActor(geometry);
 
 					if (isSelected) {
@@ -140,7 +141,7 @@ void RenderSceneEditor::ShowHierarchyWindow() {
 				bool isAvailable = false; //!< 選択されたActorが存在するか
 
 				for (const auto& light : scene->GetLights()) {
-					std::string name = std::format("{:p}", reinterpret_cast<const void*>(light));
+					std::string name = std::format("{} # {:p}", light->GetName(), reinterpret_cast<const void*>(light));
 					bool isSelected = IsSelectedActor(light);
 
 					if (isSelected) {
@@ -170,6 +171,37 @@ void RenderSceneEditor::ShowHierarchyWindow() {
 
 	if (selectedActor_.has_value()) {
 		Manipulate(ImGuizmo::TRANSLATE, ImGuizmo::WORLD, selectedActor_.value());
+	}
+
+	ImGui::End();
+}
+
+void RenderSceneEditor::ShowInspectorWindow() {
+	editor_->SetNextWindowDocking();
+	ImGui::Begin("Inspector ## Render Scene Editor", nullptr, editor_->GetWindowFlag());
+
+	if (selectedActor_.has_value()) {
+
+		auto actor = selectedActor_.value();
+
+		ImGui::Checkbox("## active", &actor->GetIsActive());
+
+		ImGui::SameLine();
+
+		if (actor->IsActive()) {
+			ImGui::Text(actor->GetName().c_str());
+
+		} else {
+			ImGui::TextDisabled(actor->GetName().c_str());
+		}
+
+		ImGui::Separator();
+
+		actor->SetImGuiCommand();
+
+		ImGui::Dummy({ 0, 4.0f });
+
+		actor->InspectorImGui();
 	}
 
 	ImGui::End();

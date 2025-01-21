@@ -37,6 +37,8 @@ void ACameraActor::Init() {
 	(*buffer_)[0].Init();
 
 	UpdateProj(Matrix::MakePerspectiveFov(0.45f, static_cast<float>(kMainWindowSize.x) / static_cast<float>(kMainWindowSize.y), 0.1f, 1024.0f));
+
+	AActor::name_ = "camera actor";
 }
 
 void ACameraActor::UpdateView() {

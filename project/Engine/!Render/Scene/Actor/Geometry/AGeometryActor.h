@@ -91,8 +91,6 @@ protected:
 
 	//* parameter *//
 
-	bool isActive_ = true;
-
 	Transparency transparency_ = Transparency::Opaque;
 
 };

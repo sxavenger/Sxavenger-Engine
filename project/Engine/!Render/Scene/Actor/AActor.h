@@ -6,6 +6,9 @@
 //* engine
 #include <Engine/Module/Component/TransformComponent.h>
 
+//* c++
+#include <string>
+
 ////////////////////////////////////////////////////////////////////////////////////////////
 // AActor class
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -21,5 +24,23 @@ public:
 	AActor()          = default;
 	virtual ~AActor() = default;
 
-private:
+	virtual void InspectorImGui() {}
+	//!< Inspector表示用のImGui
+
+	const std::string& GetName() const { return name_; }
+	std::string& GetName() { return name_; }
+
+	bool IsActive() const { return isActive_; }
+	bool& GetIsActive() { return isActive_; }
+
+protected:
+
+	//=========================================================================================
+	// protected variables
+	//=========================================================================================
+
+	std::string name_ = "actor";
+
+	bool isActive_ = true;
+
 };

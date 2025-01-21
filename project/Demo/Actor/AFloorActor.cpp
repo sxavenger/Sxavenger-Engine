@@ -17,7 +17,7 @@ void AFloorActor::Init() {
 	ia_.Create(4, 2);
 	UpdateInputAssembler();
 
-	SetTexture(SxavengerAsset::TryImport<AssetTexture>("asset/textures/tile_black.png"));
+	SetTexture(SxavengerAsset::TryImport<AssetTexture>("packages/textures/tile_black.png"));
 }
 
 void AFloorActor::Term() {
@@ -25,6 +25,12 @@ void AFloorActor::Term() {
 
 void AFloorActor::SetSize(const Vector2f& size) {
 	size_ = size;
+	UpdateInputAssembler();
+	UpdateTextureComponent();
+}
+
+void AFloorActor::InspectorImGui() {
+	ImGui::DragFloat2("size", &size_.x, 0.01f, 0.0f, 100.0f);
 	UpdateInputAssembler();
 	UpdateTextureComponent();
 }

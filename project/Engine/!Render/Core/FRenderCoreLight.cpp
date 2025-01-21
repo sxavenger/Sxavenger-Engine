@@ -69,6 +69,13 @@ void FRenderCoreLight::CreatePipeline() {
 	desc2d.SetIndependentBlendEnable(false);
 	desc2d.SetBlendDesc(0, blend);
 
+	pipelines_[LightType::Empty] = std::make_unique<CustomReflectionGraphicsPipeline>();
+	pipelines_[LightType::Empty]->CreateAsset(kDirectory_ / "lightRender2d.vs.hlsl", GraphicsShaderType::vs);
+	pipelines_[LightType::Empty]->CreateAsset(kDirectory_ / "empty.ps.hlsl", GraphicsShaderType::ps);
+	pipelines_[LightType::Empty]->RegisterBlob();
+	pipelines_[LightType::Empty]->ReflectionRootSignature(SxavengerSystem::GetDxDevice());
+	pipelines_[LightType::Empty]->CreatePipeline(SxavengerSystem::GetDxDevice(), desc2d);
+
 	pipelines_[LightType::Directional] = std::make_unique<CustomReflectionGraphicsPipeline>();
 	pipelines_[LightType::Directional]->CreateAsset(kDirectory_ / "lightRender2d.vs.hlsl", GraphicsShaderType::vs);
 	pipelines_[LightType::Directional]->CreateAsset(kDirectory_ / "directionalLight.ps.hlsl", GraphicsShaderType::ps);

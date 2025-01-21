@@ -140,7 +140,8 @@ void ImGuiController::SetImGuiStyle() {
 	style.DockingSeparatorSize = 1;
 
 	/* borderSize */
-	style.FrameBorderSize = 0.0f;
+	style.FrameBorderSize  = 0.0f;
+	style.WindowBorderSize = 0.0f;
 
 	/* color */
 	// text

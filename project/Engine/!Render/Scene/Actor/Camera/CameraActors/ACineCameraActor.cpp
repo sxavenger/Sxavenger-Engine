@@ -1,5 +1,11 @@
 #include "ACineCameraActor.h"
 
+//-----------------------------------------------------------------------------------------
+// include
+//-----------------------------------------------------------------------------------------
+//* external
+#include <imgui.h>
+
 ////////////////////////////////////////////////////////////////////////////////////////////
 // CineCameraParameter structure
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -29,8 +35,18 @@ void ACineCameraActor::Init() {
 	parameter_.farZ   = 1000.0f;
 
 	UpdateProj();
+
+	AActor::name_ = "cine camera actor";
 }
 
 void ACineCameraActor::UpdateProj() {
 	ACameraActor::UpdateProj(parameter_.GetProj());
+}
+
+void ACineCameraActor::InspectorImGui() {
+	ImGui::DragFloat2("sensor", &parameter_.sensor.x, 0.01f);
+	ImGui::DragFloat("focal", &parameter_.focal, 0.01f);
+	ImGui::DragFloat("nearZ", &parameter_.nearZ, 0.01f);
+	ImGui::DragFloat("farZ", &parameter_.farZ, 0.01f);
+	UpdateProj();
 }

@@ -34,6 +34,8 @@ public:
 
 	bool IsDisplay() const { return isDisplay_; }
 
+	bool& GetIsDisplay() { return isDisplay_; }
+
 protected:
 
 	//=========================================================================================

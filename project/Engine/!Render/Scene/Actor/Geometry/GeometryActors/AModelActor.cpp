@@ -13,6 +13,8 @@
 void AModelActor::Init() {
 	TransformComponent::CreateBuffer();
 	TextureComponent::CreateBuffer();
+
+	AActor::name_ = "model actor";
 }
 
 void AModelActor::RenderOpaque(const RendererContext& context) {

@@ -54,6 +54,10 @@ public:
 
 	virtual void Render(const RendererContext& context) override;
 
+	//* inspector *//
+
+	virtual void InspectorImGui() override;
+
 	//* getter *//
 
 	const Parameter& GetParameter() const { return cb_->At(0); }

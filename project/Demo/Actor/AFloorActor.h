@@ -31,6 +31,10 @@ public:
 
 	void SetTexture(const AssetObserver<AssetTexture>& texture) { texture_ = texture; }
 
+	//* inspector *//
+
+	virtual void InspectorImGui() override;
+
 private:
 
 	//=========================================================================================

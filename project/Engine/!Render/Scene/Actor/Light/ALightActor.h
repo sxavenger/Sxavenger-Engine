@@ -56,17 +56,11 @@ public:
 
 	virtual void Render(const RendererContext& context) = 0; //!< DeferredでのLight効果範囲描画
 
-	//* getter *//
-
-	bool IsActive() const { return isActive_; }
-
 protected:
 
 	//=========================================================================================
 	// protected variables
 	//=========================================================================================
-
-	bool isActive_ = true;
 
 	Category category_ = Category::Default;
 	//? scene rendererにおいて, PBRとDefaultを使い分けるかどうか

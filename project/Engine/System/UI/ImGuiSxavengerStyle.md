@@ -15,6 +15,10 @@
 > Docking
 	- SeparatorSize = 1
 
+> border
+	- FrameBorderSize  = 0
+	- WindowBorderSize = 0
+
 ## color
 system color...
 
