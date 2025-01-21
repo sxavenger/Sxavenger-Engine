@@ -145,6 +145,7 @@
     <ClCompile Include="Engine\!Render\Canvas\Layer\Layers\LSprite.cpp" />
     <ClCompile Include="Engine\Module\Component\Transform2dComponent.cpp" />
     <ClCompile Include="Engine\!Render\Core\FRenderCoreLayer.cpp" />
+    <ClCompile Include="Engine\!Render\Scene\Actor\Geometry\GeometryActors\AModelAnimationActor.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\System\Window\Window.h" />
@@ -294,5 +295,6 @@
     <ClInclude Include="Engine\!Render\Canvas\Layer\Layers\LSprite.h" />
     <ClInclude Include="Engine\Module\Component\Transform2dComponent.h" />
     <ClInclude Include="Engine\!Render\Core\FRenderCoreLayer.h" />
+    <ClInclude Include="Engine\!Render\Scene\Actor\Geometry\GeometryActors\AModelAnimationActor.h" />
   </ItemGroup>
 </Project>

@@ -62,7 +62,6 @@ void BetaSystemGameLoop::InitSystem() {
 
 	model_ = std::make_unique<AModelActor>();
 	model_->Init();
-	//model_->SetModel(SxavengerAsset::TryImport<AssetModel>("asset/model/human/idle.gltf"));
 	model_->SetModel(SxavengerAsset::TryImport<AssetModel>("asset/model/primitive/teapot.obj"));
 	//model_->SetModel(SxavengerAsset::TryImport<AssetModel>("asset/model/chessBoard/chessBoard.gltf"));
 	model_->SetRenderWait(false);
@@ -71,8 +70,15 @@ void BetaSystemGameLoop::InitSystem() {
 	floor_->Init();
 	floor_->SetSize({ 12.0f, 12.0f });
 
+	animation_ = std::make_unique<AModelAnimationActor>();
+	animation_->SetModel(SxavengerAsset::TryImport<AssetModel>("asset/model/human/idle.gltf"));
+	animation_->Init();
+
+	animator_ = SxavengerAsset::TryImport<AssetAnimator>("asset/model/human/idle.gltf");
+
 	scene_->AddGeometry(model_.get());
 	scene_->AddGeometry(floor_.get());
+	scene_->AddGeometry(animation_.get());
 
 	light1_ = std::make_unique<APointLightActor>();
 	light1_->Init();
@@ -135,8 +141,9 @@ void BetaSystemGameLoop::InitSystem() {
 	vb_->At(2) = { { -1.0f, -3.0f, 0.0f }, { 0.0f, 2.0f } };
 
 	sEditorEngine->RegisterEditor<RenderSceneEditor>();
-	//sEditorEngine->GetEditor<RenderSceneEditor>()->SetScene(scene_.get());
-	sEditorEngine->GetEditor<RenderSceneEditor>()->SetGameRenderer(renderer_.get());
+	sEditorEngine->ExecuteEditorFunction<RenderSceneEditor>([this](RenderSceneEditor* editor) {
+		editor->SetGameRenderer(renderer_.get());
+	});
 }
 
 void BetaSystemGameLoop::TermSystem() {
@@ -147,11 +154,16 @@ void BetaSystemGameLoop::UpdateSystem() {
 	//model_->GetTransform().scale  = { 4.0f, 4.0f, 4.0f };
 	model_->GetTransform().rotate *= MakeAxisAngle({ 0.0f, 1.0f, 0.0f }, 0.01f);
 	model_->UpdateMatrix();
+
+	time_ += SxavengerSystem::GetDeltaTime();
+	animation_->GetSkeleton()->UpdateAnimation(animator_.WaitGet()->GetAnimation(0), time_, true);
 }
 
 void BetaSystemGameLoop::DrawSystem() {
 
-	sEditorEngine->GetEditor<RenderSceneEditor>()->Draw();
+	sEditorEngine->ExecuteEditorFunction<RenderSceneEditor>([](RenderSceneEditor* editor) {
+		editor->Draw();
+	});
 
 	/*stateObjectContext_->UpdateShaderTable(SxavengerSystem::GetDxDevice());
 	stateObjectContext_->SetStateObject(SxavengerSystem::GetMainThreadContext()->GetDxCommand());

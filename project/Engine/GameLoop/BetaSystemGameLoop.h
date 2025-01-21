@@ -14,7 +14,7 @@
 #include <Engine/!Render/Scene/Actor/Camera/CameraActors/ACineCameraActor.h>
 #include <Engine/!Render/Scene/Actor/Camera/CameraActors/APivotCameraActor.h>
 #include <Engine/!Render/Scene/Actor/Geometry/GeometryActors/AModelActor.h>
-#include <Engine/!Render/Scene/Actor/Geometry/GeometryActors/AModelInstanceActor.h>
+#include <Engine/!Render/Scene/Actor/Geometry/GeometryActors/AModelAnimationActor.h>
 #include <Engine/!Render/Scene/Actor/Light/LightActors/APointLightActor.h>
 #include <Engine/!Render/Scene/Actor/Light/LightActors/ADirectionalLightActor.h>
 #include <Engine/!Render/Scene/Actor/Light/LightActors/ASpotLightActor.h>
@@ -57,6 +57,10 @@ private:
 
 	std::unique_ptr<AModelActor> model_;
 	std::unique_ptr<AFloorActor> floor_;
+
+	std::unique_ptr<AModelAnimationActor> animation_;
+	AssetObserver<AssetAnimator> animator_;
+	TimePointf<TimeUnit::second> time_;
 
 	std::unique_ptr<APointLightActor> light1_;
 	std::unique_ptr<APointLightActor> light2_;

@@ -34,7 +34,7 @@ public:
 
 	//* getter *//
 
-	const D3D12_GPU_VIRTUAL_ADDRESS& GetGPUVirtualAddress() const { return buffer_->GetGPUVirtualAddress(); }
+	const D3D12_GPU_VIRTUAL_ADDRESS& GetGPUVirtualAddress() const;
 
 	const Transform2d& GetTransform2d() const { return transform2d_; }
 	Transform2d& GetTransform2d() { return transform2d_; }

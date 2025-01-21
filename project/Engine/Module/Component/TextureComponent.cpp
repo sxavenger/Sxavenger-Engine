@@ -34,3 +34,8 @@ void TextureComponent::CreateBuffer() {
 void TextureComponent::Transfer() {
 	buffer_->At(0).Transfer(transform2d_, color_);
 }
+
+const D3D12_GPU_VIRTUAL_ADDRESS& TextureComponent::GetGPUVirtualAddress() const {
+	Assert(buffer_ != nullptr, "texture component is not create.");
+	return buffer_->GetGPUVirtualAddress();
+}

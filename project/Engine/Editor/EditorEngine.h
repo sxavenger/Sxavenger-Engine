@@ -14,6 +14,7 @@
 #include <unordered_map>
 #include <typeindex>
 #include <memory>
+#include <functional>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // EditorEngine class
@@ -53,6 +54,9 @@ public:
 
 	template <BaseEditorDerived T>
 	T* TryGetEditor();
+
+	template <BaseEditorDerived T>
+	void ExecuteEditorFunction(const std::function<void(T*)>& function);
 
 	//* singleton *//
 
@@ -112,9 +116,11 @@ static EditorEngine* const sEditorEngine = EditorEngine::GetInstance();
 
 template <BaseEditorDerived T>
 inline void EditorEngine::RegisterEditor() {
+#ifdef _DEBUG
 	auto ptr = std::make_unique<T>(this);
 	ptr->Init();
 	editors_.try_emplace(typeid(T), std::move(ptr));
+#endif // _DEBUG
 }
 
 template <BaseEditorDerived T>
@@ -125,14 +131,23 @@ inline void EditorEngine::RemoveEditor() {
 template <BaseEditorDerived T>
 inline T* EditorEngine::GetEditor() {
 	Assert(editors_.contains(typeid(T)), "editor is not found.");
-	return dynamic_cast<T*>(editors_[typeid(T)].get());
+	return dynamic_cast<T*>(editors_.at(typeid(T)).get());
 }
 
 template <BaseEditorDerived T>
 inline T* EditorEngine::TryGetEditor() {
+#ifdef _DEBUG
 	if (editors_.contains(typeid(T))) {
-		return dynamic_cast<T*>(editors_[typeid(T)].get());
+		return dynamic_cast<T*>(editors_.at(typeid(T)).get());
 	}
+#endif // _DEBUG
 
 	return nullptr;
+}
+
+template<BaseEditorDerived T>
+inline void EditorEngine::ExecuteEditorFunction(const std::function<void(T*)>& function) {
+	if (auto editor = TryGetEditor<T>()) {
+		function(editor);
+	}
 }

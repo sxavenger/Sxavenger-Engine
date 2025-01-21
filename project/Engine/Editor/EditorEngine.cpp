@@ -28,10 +28,8 @@ void EditorEngine::Term() {
 
 void EditorEngine::UpdateEditor() {
 #ifdef _DEBUG
-
 	ShowMainMenu();
 	ShowWindow();
-
 #endif
 }
 
