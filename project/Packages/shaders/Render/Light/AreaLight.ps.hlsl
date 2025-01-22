@@ -7,17 +7,18 @@
 // buffers
 //=========================================================================================
 
+struct AreaLight {
+	float4 color_intensity; //!< rgb : color, a : intensity
+	float distance;
+	float falloff; //!< theta_p
+	float angle;   //!< theta_u
+};
+ConstantBuffer<AreaLight> gSpotLight : register(b0);
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // main
 ////////////////////////////////////////////////////////////////////////////////////////////
-PSInput main(VSInput input, uint instanceId : SV_InstanceID) {
+PSOutput main(PSInput input) {
 
-	PSInput output = (PSInput)0;
-	
-	output.position   = mul(gTransform[instanceId].Transform(input.position), kViewProj);
-	output.instanceId = instanceId;
-	
-	return output;
-	
+	PSOutput output = (PSOutput)0;
 }

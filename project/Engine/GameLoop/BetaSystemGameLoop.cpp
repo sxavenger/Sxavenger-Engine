@@ -62,7 +62,8 @@ void BetaSystemGameLoop::InitSystem() {
 
 	model_ = std::make_unique<AModelActor>();
 	model_->Init();
-	model_->SetModel(SxavengerAsset::TryImport<AssetModel>("asset/model/primitive/teapot.obj"));
+	model_->SetModel(SxavengerAsset::TryImport<AssetModel>("asset/model/player.obj"));
+	//model_->SetModel(SxavengerAsset::TryImport<AssetModel>("asset/model/primitive/teapot.obj"));
 	//model_->SetModel(SxavengerAsset::TryImport<AssetModel>("asset/model/chessBoard/chessBoard.gltf"));
 	model_->SetRenderWait(false);
 
