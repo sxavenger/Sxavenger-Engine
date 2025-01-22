@@ -196,6 +196,100 @@ void MouseInput::SetCooperativeLevel(const Window* window) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
+// GamepadInput class methods
+////////////////////////////////////////////////////////////////////////////////////////////
+
+void GamepadInput::Init(uint8_t number) {
+	// numberの設定
+	number_ = number;
+}
+
+void GamepadInput::Term() {
+}
+
+void GamepadInput::Update() {
+
+	// 1frame前のコントローラー状態の保存
+	state_.second = state_.first;
+
+	// コントローラーの入力状態を取得
+	auto dr = XInputGetState(number_, &state_.first);
+
+	// 接続状態の更新
+	isConnect_ = (dr == ERROR_SUCCESS);
+	//!< [retval] true: 接続されてる, false: 接続されてない
+
+}
+
+bool GamepadInput::IsPress(GamepadButtonId id) const {
+	const auto& [first, second] = state_;
+	return (first.Gamepad.wButtons & static_cast<uint16_t>(id));
+}
+
+bool GamepadInput::IsPress(GamepadTriggerId id) const {
+	const auto& [first, second] = state_;
+
+	if (id == GamepadTriggerId::TRIGGER_LEFT) {
+		return (first.Gamepad.bLeftTrigger > XINPUT_GAMEPAD_TRIGGER_THRESHOLD);
+
+	} else if (id == GamepadTriggerId::TRIGGER_RIGHT) {
+		return (first.Gamepad.bRightTrigger > XINPUT_GAMEPAD_TRIGGER_THRESHOLD);
+	}
+
+	return {}; //!< error case
+}
+
+bool GamepadInput::IsTrigger(GamepadButtonId id) const {
+	const auto& [first, second] = state_;
+	return (first.Gamepad.wButtons & static_cast<uint16_t>(id)) && !(second.Gamepad.wButtons & static_cast<uint16_t>(id));
+}
+
+bool GamepadInput::IsTrigger(GamepadTriggerId id) const {
+	const auto& [first, second] = state_;
+
+	if (id == GamepadTriggerId::TRIGGER_LEFT) {
+		return (first.Gamepad.bLeftTrigger > XINPUT_GAMEPAD_TRIGGER_THRESHOLD) && !(second.Gamepad.bLeftTrigger > XINPUT_GAMEPAD_TRIGGER_THRESHOLD);
+
+	} else if (id == GamepadTriggerId::TRIGGER_RIGHT) {
+		return (first.Gamepad.bRightTrigger > XINPUT_GAMEPAD_TRIGGER_THRESHOLD) && !(second.Gamepad.bRightTrigger > XINPUT_GAMEPAD_TRIGGER_THRESHOLD);
+	}
+
+	return {}; //!< error case
+}
+
+bool GamepadInput::IsRelease(GamepadButtonId id) const {
+	const auto& [first, second] = state_;
+	return !(first.Gamepad.wButtons & static_cast<uint16_t>(id)) && (second.Gamepad.wButtons & static_cast<uint16_t>(id));
+}
+
+bool GamepadInput::IsRelease(GamepadTriggerId id) const {
+	const auto& [first, second] = state_;
+
+	if (id == GamepadTriggerId::TRIGGER_LEFT) {
+		return !(first.Gamepad.bLeftTrigger > XINPUT_GAMEPAD_TRIGGER_THRESHOLD) && (second.Gamepad.bLeftTrigger > XINPUT_GAMEPAD_TRIGGER_THRESHOLD);
+
+	} else if (id == GamepadTriggerId::TRIGGER_RIGHT) {
+		return !(first.Gamepad.bRightTrigger > XINPUT_GAMEPAD_TRIGGER_THRESHOLD) && (second.Gamepad.bRightTrigger > XINPUT_GAMEPAD_TRIGGER_THRESHOLD);
+	}
+
+	return {}; //!< error case
+}
+
+Vector2i GamepadInput::GetStick(GamepadStickId id) const {
+	if (id == GamepadStickId::STICK_LEFT) {
+		return { state_.first.Gamepad.sThumbLX, state_.first.Gamepad.sThumbLY };
+
+	} else if (id == GamepadStickId::STICK_RIGHT) {
+		return { state_.first.Gamepad.sThumbRX, state_.first.Gamepad.sThumbRY };
+	}
+
+	return {}; //!< error case
+}
+
+Vector2f GamepadInput::GetStickNormalized(GamepadStickId id) const {
+	return static_cast<Vector2f>(GetStick(id)) / static_cast<float>(SHRT_MAX);
+}
+////////////////////////////////////////////////////////////////////////////////////////////
 // Input class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -215,6 +309,11 @@ void Input::Init(const Window* mainWindow) {
 
 	mouse_ = std::make_unique<MouseInput>();
 	mouse_->Init(directInput_.Get());
+
+	for (uint8_t i = 0; i < XUSER_MAX_COUNT; ++i) {
+		gamepads_[i] = std::make_unique<GamepadInput>();
+		gamepads_[i]->Init(i);
+	}
 }
 
 void Input::Term() {
@@ -223,6 +322,8 @@ void Input::Term() {
 void Input::Update() {
 	keyboard_->Update();
 	mouse_->Update();
+
+	std::for_each(gamepads_.begin(), gamepads_.end(), [](auto& gamepad) { gamepad->Update(); });
 }
 
 bool Input::IsPressKey(KeyId id) {
