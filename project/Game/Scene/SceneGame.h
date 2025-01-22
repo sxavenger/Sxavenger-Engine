@@ -4,7 +4,7 @@
 // include
 //-----------------------------------------------------------------------------------------
 //* engine
-#include <Engine/System/Runtime/Scene/BaseScene.h>
+#include <Engine/Adapter/Scene/BaseScene.h>
 
 //* game
 #include "../Entity/Player/Player.h"

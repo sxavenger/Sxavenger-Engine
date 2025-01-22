@@ -30,12 +30,18 @@ public:
 
 		//* member *//
 
-		std::unique_ptr<FScene>  scene_ = nullptr;
-		std::unique_ptr<FCanvas> canvas_ = nullptr;
+		std::unique_ptr<FSceneRenderer> renderer_ = nullptr;
+		std::unique_ptr<FCanvas>        canvas_   = nullptr;
 
 		//* method *//
 
+		void Render(FSceneTextures* textures) const {
+			renderer_->SetTextures(textures);
+			renderer_->Render(SxavengerSystem::GetMainThreadContext());
 
+			canvas_->SetTextures(textures);
+			canvas_->Render(SxavengerSystem::GetMainThreadContext());
+		}
 
 	};
 

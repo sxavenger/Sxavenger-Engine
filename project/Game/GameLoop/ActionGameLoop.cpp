@@ -59,5 +59,6 @@ void ActionGameLoop::UpdateGame() {
 void ActionGameLoop::DrawGame() {
 	collection_->DrawScene();
 
-	collection_->GetScene()->
+	collection_->GetScene()->GetComponent().Render(textures_.get());
+
 }
