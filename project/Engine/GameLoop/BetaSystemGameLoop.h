@@ -20,6 +20,7 @@
 #include <Engine/!Render/Scene/Actor/Light/LightActors/ASpotLightActor.h>
 #include <Engine/!Render/Canvas/FCanvas.h>
 #include <Engine/!Render/Canvas/Layer/Layers/LSprite.h>
+#include <Engine/!Render/FPresenter.h>
 
 #include <Engine/Editor/EditorComponent/AttributeComponent.h>
 
@@ -80,8 +81,7 @@ private:
 
 	//* presenter *//
 
-	std::unique_ptr<DxObject::VertexDimensionBuffer<std::pair<Vector4f, Vector2f>>> vb_;
-	std::unique_ptr<DxObject::ReflectionGraphicsPipelineState> presenter_;
+	FPresenter presenter_;
 
 	//=========================================================================================
 	// private methods

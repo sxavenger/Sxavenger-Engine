@@ -192,6 +192,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="Engine\!Render\Canvas\Layer\Layers\LSprite.cpp" />
     <ClCompile Include="Engine\!Render\Canvas\Layer\LLayer.cpp" />
     <ClCompile Include="Engine\!Render\Core\FRenderCoreLayer.cpp" />
+    <ClCompile Include="Engine\!Render\FPresenter.cpp" />
     <ClCompile Include="Engine\!Render\Scene\Actor\AActor.cpp" />
     <ClCompile Include="Engine\!Render\Scene\Actor\Camera\ACameraActor.cpp" />
     <ClCompile Include="Engine\!Render\Scene\Actor\Camera\CameraActors\ACineCameraActor.cpp" />
@@ -332,6 +333,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Engine\!Render\Canvas\Layer\Layers\LSprite.h" />
     <ClInclude Include="Engine\!Render\Canvas\Layer\LLayer.h" />
     <ClInclude Include="Engine\!Render\Core\FRenderCoreLayer.h" />
+    <ClInclude Include="Engine\!Render\FPresenter.h" />
     <ClInclude Include="Engine\!Render\Scene\Actor\AActor.h" />
     <ClInclude Include="Engine\!Render\Scene\Actor\Camera\ACameraActor.h" />
     <ClInclude Include="Engine\!Render\Scene\Actor\Camera\CameraActors\ACineCameraActor.h" />
@@ -476,6 +478,9 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Lib\Sxl\SxavengerLibrary.h" />
     <ClInclude Include="Lib\Transform\Transform.h" />
     <ClInclude Include="Lib\VertexStructure.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include=".editorconfig" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
