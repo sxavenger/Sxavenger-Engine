@@ -46,6 +46,6 @@ private:
 	//=========================================================================================
 
 	std::unique_ptr<DxObject::VertexDimensionBuffer<Vertex>>   vb_;
-	std::unique_ptr<DxObject::ReflectionGraphicsPipelineState> presenter_;
+	std::unique_ptr<DxObject::ReflectionGraphicsPipelineState> pipeline_;
 
 };
