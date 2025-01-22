@@ -214,6 +214,9 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="Engine\!Render\Scene\FSceneRenderer.cpp" />
     <ClCompile Include="Engine\!Render\FSceneTextures.cpp" />
     <ClCompile Include="Engine\!Render\FTexture.cpp" />
+    <ClCompile Include="Engine\Adapter\Scene\BaseScene.cpp" />
+    <ClCompile Include="Engine\Adapter\Scene\BaseSceneFactory.cpp" />
+    <ClCompile Include="Engine\Adapter\Scene\SceneController.cpp" />
     <ClCompile Include="Engine\Asset\Animator\Animator.cpp" />
     <ClCompile Include="Engine\Asset\Animator\AssetAnimator.cpp" />
     <ClCompile Include="Engine\Asset\AssetCollection.cpp" />
@@ -294,9 +297,6 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="Engine\System\Runtime\Performance\Performance.cpp" />
     <ClCompile Include="Engine\System\Runtime\Performance\RunTimeTracker.cpp" />
     <ClCompile Include="Engine\System\Runtime\Performance\TimePoint.cpp" />
-    <ClCompile Include="Engine\System\Runtime\Scene\BaseScene.cpp" />
-    <ClCompile Include="Engine\System\Runtime\Scene\BaseSceneFactory.cpp" />
-    <ClCompile Include="Engine\System\Runtime\Scene\SceneController.cpp" />
     <ClCompile Include="Engine\System\SxavengerSystem.cpp" />
     <ClCompile Include="Engine\System\UI\ImGuiController.cpp" />
     <ClCompile Include="Engine\System\Utility\Logger.cpp" />
@@ -354,6 +354,9 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Engine\!Render\Scene\FSceneRenderer.h" />
     <ClInclude Include="Engine\!Render\FSceneTextures.h" />
     <ClInclude Include="Engine\!Render\FTexture.h" />
+    <ClInclude Include="Engine\Adapter\Scene\BaseScene.h" />
+    <ClInclude Include="Engine\Adapter\Scene\BaseSceneFactory.h" />
+    <ClInclude Include="Engine\Adapter\Scene\SceneController.h" />
     <ClInclude Include="Engine\Asset\Animator\Animator.h" />
     <ClInclude Include="Engine\Asset\Animator\AssetAnimator.h" />
     <ClInclude Include="Engine\Asset\AssetCollection.h" />
@@ -439,9 +442,6 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Engine\System\Runtime\Performance\Performance.h" />
     <ClInclude Include="Engine\System\Runtime\Performance\RunTimeTracker.h" />
     <ClInclude Include="Engine\System\Runtime\Performance\TimePoint.h" />
-    <ClInclude Include="Engine\System\Runtime\Scene\BaseScene.h" />
-    <ClInclude Include="Engine\System\Runtime\Scene\BaseSceneFactory.h" />
-    <ClInclude Include="Engine\System\Runtime\Scene\SceneController.h" />
     <ClInclude Include="Engine\System\SxavengerSystem.h" />
     <ClInclude Include="Engine\System\UI\ImGuiController.h" />
     <ClInclude Include="Engine\System\UI\ISystemDebugGui.h" />

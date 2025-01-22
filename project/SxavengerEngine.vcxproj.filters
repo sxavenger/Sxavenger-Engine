@@ -61,9 +61,6 @@
     <ClCompile Include="Engine\System\DirectX\DxObject\DxShaderBlob.cpp" />
     <ClCompile Include="Engine\System\DirectX\DxObject\DxGraphicsPipelineState.cpp" />
     <ClCompile Include="Engine\System\DirectX\DxObject\DxComputePipelineState.cpp" />
-    <ClCompile Include="Engine\System\Runtime\Scene\BaseScene.cpp" />
-    <ClCompile Include="Engine\System\Runtime\Scene\BaseSceneFactory.cpp" />
-    <ClCompile Include="Engine\System\Runtime\Scene\SceneController.cpp" />
     <ClCompile Include="Engine\System\Runtime\GameLoop\GameLoop.cpp" />
     <ClCompile Include="Engine\System\Runtime\Framework\IFramework.cpp" />
     <ClCompile Include="Engine\GameLoop\EngineGameLoop.cpp" />
@@ -148,6 +145,9 @@
     <ClCompile Include="Engine\Editor\Editors\OutlinerEditor.cpp" />
     <ClCompile Include="Engine\Editor\EditorComponent\AttributeComponent.cpp" />
     <ClCompile Include="Engine\Module\DebugPrimitive\DebugPrimitive.cpp" />
+    <ClCompile Include="Engine\Adapter\Scene\BaseScene.cpp" />
+    <ClCompile Include="Engine\Adapter\Scene\BaseSceneFactory.cpp" />
+    <ClCompile Include="Engine\Adapter\Scene\SceneController.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\System\Window\Window.h" />
@@ -211,9 +211,6 @@
     <ClInclude Include="Engine\System\DirectX\DxObject\DxShaderBlob.h" />
     <ClInclude Include="Engine\System\DirectX\DxObject\DxGraphicsPipelineState.h" />
     <ClInclude Include="Engine\System\DirectX\DxObject\DxComputePipelineState.h" />
-    <ClInclude Include="Engine\System\Runtime\Scene\BaseScene.h" />
-    <ClInclude Include="Engine\System\Runtime\Scene\BaseSceneFactory.h" />
-    <ClInclude Include="Engine\System\Runtime\Scene\SceneController.h" />
     <ClInclude Include="Engine\System\Runtime\GameLoop\GameLoop.h" />
     <ClInclude Include="Engine\System\Runtime\Framework\IFramework.h" />
     <ClInclude Include="Engine\GameLoop\EngineGameLoop.h" />
@@ -300,5 +297,8 @@
     <ClInclude Include="Engine\Editor\Editors\OutlinerEditor.h" />
     <ClInclude Include="Engine\Editor\EditorComponent\AttributeComponent.h" />
     <ClInclude Include="Engine\Module\DebugPrimitive\DebugPrimitive.h" />
+    <ClInclude Include="Engine\Adapter\Scene\BaseScene.h" />
+    <ClInclude Include="Engine\Adapter\Scene\BaseSceneFactory.h" />
+    <ClInclude Include="Engine\Adapter\Scene\SceneController.h" />
   </ItemGroup>
 </Project>
