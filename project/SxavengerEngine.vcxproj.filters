@@ -149,6 +149,7 @@
     <ClCompile Include="Engine\Adapter\Scene\BaseSceneFactory.cpp" />
     <ClCompile Include="Engine\Adapter\Scene\SceneController.cpp" />
     <ClCompile Include="Engine\!Render\FPresenter.cpp" />
+    <ClCompile Include="Engine\Adapter\Particle\Emitter.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\System\Window\Window.h" />
@@ -302,6 +303,7 @@
     <ClInclude Include="Engine\Adapter\Scene\BaseSceneFactory.h" />
     <ClInclude Include="Engine\Adapter\Scene\SceneController.h" />
     <ClInclude Include="Engine\!Render\FPresenter.h" />
+    <ClInclude Include="Engine\Adapter\Particle\Emitter.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

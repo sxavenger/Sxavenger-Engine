@@ -11,6 +11,7 @@
 #include <Engine/Asset/Observer/AssetObserver.h>
 #include <Engine/!Render/Scene/Actor/Camera/CameraActors/APivotCameraActor.h>
 #include <Engine/!Render/Scene/FSceneRenderer.h>
+#include <Engine/!Render/Canvas/FCanvas.h>
 
 //* external
 #include <imgui.h>
@@ -48,6 +49,8 @@ public:
 
 	void SetGameRenderer(FSceneRenderer* renderer);
 
+	void SetCanvas(FCanvas* canvas) { canvas_ = canvas; }
+
 private:
 
 	////////////////////////////////////////////////////////////////////////////////////////////
@@ -64,6 +67,10 @@ private:
 	// private variables
 	//=========================================================================================
 
+	//* window *//
+
+	WindowRect rect_ = {};
+
 	//* scene render *//
 
 	std::unique_ptr<FSceneTextures> textures_;       //!< debug textures
@@ -74,9 +81,11 @@ private:
 
 	AssetObserver<AssetTexture> checkerBoard_;
 
-	WindowRect rect_ = {};
+	//* canvas *//
 
-	//* outliner *//
+	FCanvas* canvas_ = nullptr;
+
+	//* hierarchy *//
 
 	std::optional<AActor*> selectedActor_ = std::nullopt;
 
@@ -88,6 +97,7 @@ private:
 
 	void ShowSceneWindow();
 	void ShowGameWindow();
+	void ShowCanvasWindow();
 	void ShowHierarchyWindow();
 	void ShowInspectorWindow();
 

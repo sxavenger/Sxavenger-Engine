@@ -60,12 +60,20 @@ void ColliderCollection::CheckAllCollision() {
 	for (; itrA != colliders_.end(); ++itrA) {
 		Collider* colliderA = *itrA;
 
+		if (!colliderA->IsActive()) {
+			continue;
+		}
+
 		// Aの次から回し, 重複をなくす
 		auto itrB = itrA;
 		itrB++;
 
 		for (; itrB != colliders_.end(); ++itrB) {
 			Collider* colliderB = *itrB;
+
+			if (!colliderB->IsActive()) {
+				continue;
+			}
 
 			CheckCollisionPair(colliderA, colliderB);
 		}
