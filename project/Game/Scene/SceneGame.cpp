@@ -5,14 +5,13 @@
 //-----------------------------------------------------------------------------------------
 //* engine
 #include <Engine/Module/SxavengerModule.h>
-#include <Engine/System/Runtime/Scene/SceneController.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // SceneGame class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 void SceneGame::Init() {
-	player_ = std::make_unique<Player>();
+	/*player_ = std::make_unique<Player>();
 
 	QuaternionTransform transform = {};
 	transform.translate = { 0.0f, 0.0f, -8.0f };
@@ -26,18 +25,18 @@ void SceneGame::Init() {
 
 	ground_ = std::make_unique<Ground>();
 	ground_->Init();
-	ground_->SetToConsole();
+	ground_->SetToConsole();*/
 }
 
 void SceneGame::Update() {
-	player_->Update();
-	enemy_->Update();
+	//player_->Update();
+	//enemy_->Update();
 
-	SxavengerModule::CheckCollision();
+	//SxavengerModule::CheckCollision();
 
-	if (enemy_->IsDead()) {
-		controller_->RequestNextScene("Title");
-	}
+	//if (enemy_->IsDead()) {
+	//	controller_->RequestNextScene("Title");
+	//}
 }
 
 void SceneGame::Draw() {

@@ -4,6 +4,7 @@
 // include
 //-----------------------------------------------------------------------------------------
 //* engine
+#include <Engine/System/DirectX/DirectXContext.h>
 #include <Engine/!Render/Canvas/FCanvas.h>
 #include <Engine/!Render/Scene/FScene.h>
 #include <Engine/!Render/Scene/FSceneRenderer.h>
@@ -30,17 +31,26 @@ public:
 
 		//* member *//
 
+		std::unique_ptr<FScene>         scene_    = nullptr;
 		std::unique_ptr<FSceneRenderer> renderer_ = nullptr;
 		std::unique_ptr<FCanvas>        canvas_   = nullptr;
 
 		//* method *//
 
-		void Render(FSceneTextures* textures) const {
+		void Init() {
+			scene_    = std::make_unique<FScene>();
+			renderer_ = std::make_unique<FSceneRenderer>();
+			canvas_   = std::make_unique<FCanvas>();
+
+			renderer_->SetScene(scene_.get());
+		}
+
+		void Render(const DirectXThreadContext* context, FSceneTextures* textures) const {
 			renderer_->SetTextures(textures);
-			renderer_->Render(SxavengerSystem::GetMainThreadContext());
+			renderer_->Render(context);
 
 			canvas_->SetTextures(textures);
-			canvas_->Render(SxavengerSystem::GetMainThreadContext());
+			canvas_->Render(context);
 		}
 
 	};

@@ -31,12 +31,18 @@ void ActionGameLoop::Init(GameLoop::Context* context) {
 	});
 
 	context->SetState(GameLoop::State::Draw, std::nullopt, [this]() { DrawGame(); });
+
+	context->SetCondition(
+		[this]() { return !SxavengerSystem::ProcessMessage(); }
+	);
 }
 
 void ActionGameLoop::Term() {
 }
 
 void ActionGameLoop::InitGame() {
+
+	main_ = SxavengerSystem::CreateMainWindow(kMainWindowSize, kMainWindowTitle).lock();
 
 	std::unique_ptr<BaseSceneFactory> factory = std::make_unique<BaseSceneFactory>();
 	factory->Register<SceneGame>("Game");
@@ -59,6 +65,15 @@ void ActionGameLoop::UpdateGame() {
 void ActionGameLoop::DrawGame() {
 	collection_->DrawScene();
 
-	collection_->GetScene()->GetComponent().Render(textures_.get());
+	collection_->GetScene()->GetComponent().Render(SxavengerSystem::GetMainThreadContext(), textures_.get());
+
+	main_->BeginRendering();
+	main_->ClearWindow();
+
+	presenter_->Present(SxavengerSystem::GetMainThreadContext(), main_->GetSize(), textures_->GetGBuffer(FSceneTextures::GBufferLayout::Result)->GetGPUHandleSRV());
+
+	SxavengerSystem::RenderImGui();
+
+	main_->EndRendering();
 
 }

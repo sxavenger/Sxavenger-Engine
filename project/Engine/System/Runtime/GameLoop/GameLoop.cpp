@@ -80,6 +80,7 @@ void GameLoop::Context::Execute(State state, bool isReverse) {
 void GameLoop::Context::Loop() {
 
 	if (conditionFuncs_.empty()) {
+		Log("[GameLoop::Context] warning: condition function is empty.");
 		return;
 	}
 

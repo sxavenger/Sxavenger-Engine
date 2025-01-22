@@ -7,8 +7,9 @@
 #include <Engine/System/Runtime/GameLoop/GameLoop.h>
 
 //* engine
+#include <Engine/System/Window/GameWindow.h>
 #include <Engine/!Render/FSceneTextures.h>
-#include <Engine/!Render/Presenter/FPresenter.h>
+#include <Engine/!Render/FPresenter.h>
 
 //* game
 #include "Engine/Adapter/Scene/SceneController.h"
@@ -34,7 +35,7 @@ private:
 	// private variables
 	//=========================================================================================
 
-
+	std::shared_ptr<GameWindow> main_ = nullptr;
 
 	std::unique_ptr<SceneController> collection_;
 
