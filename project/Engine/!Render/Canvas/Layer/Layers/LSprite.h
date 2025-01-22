@@ -9,6 +9,8 @@
 //* engine
 #include <Engine/Content/InputAssembler/TriangleInputAssembler.h>
 #include <Engine/Module/Component/Transform2dComponent.h>
+#include <Engine/Asset/Texture/AssetTexture.h>
+#include <Engine/Asset/Observer/AssetObserver.h>
 
 //* lib
 #include <Lib/Geometry/Vector2.h>
@@ -22,6 +24,11 @@
 class LSprite
 	: public LLayer, protected Transform2dComponent {
 public:
+
+	////////////////////////////////////////////////////////////////////////////////////////////
+	// using
+	////////////////////////////////////////////////////////////////////////////////////////////
+	using TextureType = std::variant<D3D12_GPU_DESCRIPTOR_HANDLE, AssetObserver<AssetTexture>>;
 
 	////////////////////////////////////////////////////////////////////////////////////////////
 	// VertexPoint enum class
@@ -64,7 +71,8 @@ public:
 
 	//* setter *//
 
-	void SetTexture(const D3D12_GPU_DESCRIPTOR_HANDLE& handle) { handle_ = handle; }
+	void SetTexture(const D3D12_GPU_DESCRIPTOR_HANDLE& handle) { texture_   = handle; }
+	void SetTexture(const AssetObserver<AssetTexture>& observer) { texture_ = observer; }
 
 	void SetPosition(const Vector2f& position);
 
@@ -76,8 +84,8 @@ private:
 	// private variables
 	//=========================================================================================
 
-	TriangleInputAssembler<Vertex>             ia_;
-	std::optional<D3D12_GPU_DESCRIPTOR_HANDLE> handle_;
+	TriangleInputAssembler<Vertex> ia_;
+	std::optional<TextureType>     texture_;
 
 	Vector2f anchor_ = kOrigin2<float>;
 	Vector2f pivot_  = kOrigin2<float>;
