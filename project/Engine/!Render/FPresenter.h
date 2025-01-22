@@ -3,42 +3,41 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
-//* texture
-#include "BaseOffscreenTexture.h"
-
 //* engine
+#include <Engine/System/DirectX/DxObject/DxDimensionBuffer.h>
+#include <Engine/System/DirectX/DxObject/DxGraphicsPipelineState.h>
 #include <Engine/System/DirectX/DirectXContext.h>
 
 //* lib
 #include <Lib/Geometry/Vector4.h>
+#include <Lib/Geometry/Vector2.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// UnorderedTexture class
+// FPresenter class
 ////////////////////////////////////////////////////////////////////////////////////////////
-class UnorderedTexture
-	: public BaseOffscreenTexture {
+class FPresenter {
 public:
 
 	//=========================================================================================
 	// public methods
 	//=========================================================================================
 
-	UnorderedTexture() = default;
-	~UnorderedTexture() { Term(); }
+	FPresenter()  = default;
+	~FPresenter() = default;
 
-	void Create(const Vector2ui& size, DXGI_FORMAT format = DxObject::kOffscreenFormat);
+	void Init();
 
-	void Term();
+	void Present(const DirectXThreadContext* context, const Vector2ui& windowSize, const D3D12_GPU_DESCRIPTOR_HANDLE& handle);
 
-	//* unordered option *//
+private:
 
-	void TransitionBeginUnordered(const DirectXThreadContext* context);
-
-	void TransitionEndUnordered(const DirectXThreadContext* context);
-
-	//* getter *//
-
-	const D3D12_GPU_DESCRIPTOR_HANDLE& GetGPUHandleUAV() const { return descriptorUAV_.GetGPUHandle(); }
+	////////////////////////////////////////////////////////////////////////////////////////////
+	// Vertex structure
+	////////////////////////////////////////////////////////////////////////////////////////////
+	struct Vertex {
+		Vector4f position;
+		Vector2f texcoord;
+	};
 
 private:
 
@@ -46,8 +45,7 @@ private:
 	// private variables
 	//=========================================================================================
 
-	//* descriptor *//
-
-	DxObject::Descriptor descriptorUAV_;
+	std::unique_ptr<DxObject::VertexDimensionBuffer<Vertex>>   vb_;
+	std::unique_ptr<DxObject::ReflectionGraphicsPipelineState> presenter_;
 
 };

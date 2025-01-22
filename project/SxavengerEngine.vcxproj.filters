@@ -61,9 +61,6 @@
     <ClCompile Include="Engine\System\DirectX\DxObject\DxShaderBlob.cpp" />
     <ClCompile Include="Engine\System\DirectX\DxObject\DxGraphicsPipelineState.cpp" />
     <ClCompile Include="Engine\System\DirectX\DxObject\DxComputePipelineState.cpp" />
-    <ClCompile Include="Engine\System\Runtime\Scene\BaseScene.cpp" />
-    <ClCompile Include="Engine\System\Runtime\Scene\BaseSceneFactory.cpp" />
-    <ClCompile Include="Engine\System\Runtime\Scene\SceneController.cpp" />
     <ClCompile Include="Engine\System\Runtime\GameLoop\GameLoop.cpp" />
     <ClCompile Include="Engine\System\Runtime\Framework\IFramework.cpp" />
     <ClCompile Include="Engine\GameLoop\EngineGameLoop.cpp" />
@@ -151,6 +148,10 @@
     <ClCompile Include="Game\GameLoop\ActionGameLoop.cpp" />
     <ClCompile Include="Game\Scene\SceneGame.cpp" />
     <ClCompile Include="Game\Scene\SceneTitle.cpp" />
+    <ClCompile Include="Engine\Adapter\Scene\BaseScene.cpp" />
+    <ClCompile Include="Engine\Adapter\Scene\BaseSceneFactory.cpp" />
+    <ClCompile Include="Engine\Adapter\Scene\SceneController.cpp" />
+    <ClCompile Include="Engine\!Render\FPresenter.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\System\Window\Window.h" />
@@ -214,9 +215,6 @@
     <ClInclude Include="Engine\System\DirectX\DxObject\DxShaderBlob.h" />
     <ClInclude Include="Engine\System\DirectX\DxObject\DxGraphicsPipelineState.h" />
     <ClInclude Include="Engine\System\DirectX\DxObject\DxComputePipelineState.h" />
-    <ClInclude Include="Engine\System\Runtime\Scene\BaseScene.h" />
-    <ClInclude Include="Engine\System\Runtime\Scene\BaseSceneFactory.h" />
-    <ClInclude Include="Engine\System\Runtime\Scene\SceneController.h" />
     <ClInclude Include="Engine\System\Runtime\GameLoop\GameLoop.h" />
     <ClInclude Include="Engine\System\Runtime\Framework\IFramework.h" />
     <ClInclude Include="Engine\GameLoop\EngineGameLoop.h" />
@@ -306,5 +304,12 @@
     <ClInclude Include="Game\GameLoop\ActionGameLoop.h" />
     <ClInclude Include="Game\Scene\SceneGame.h" />
     <ClInclude Include="Game\Scene\SceneTitle.h" />
+    <ClInclude Include="Engine\Adapter\Scene\BaseScene.h" />
+    <ClInclude Include="Engine\Adapter\Scene\BaseSceneFactory.h" />
+    <ClInclude Include="Engine\Adapter\Scene\SceneController.h" />
+    <ClInclude Include="Engine\!Render\FPresenter.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include=".editorconfig" />
   </ItemGroup>
 </Project>

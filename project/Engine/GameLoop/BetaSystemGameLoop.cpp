@@ -121,33 +121,13 @@ void BetaSystemGameLoop::InitSystem() {
 	collider_->SetColliderBoundingOBB();
 	collider_->SetToCollection();
 
-	//* presenter *//
-
-	presenter_ = std::make_unique<DxObject::ReflectionGraphicsPipelineState>();
-	presenter_->CreateBlob(kPackagesShaderDirectory / "render/presenter/presenter.vs.hlsl", DxObject::GraphicsShaderType::vs);
-	presenter_->CreateBlob(kPackagesShaderDirectory / "render/presenter/presenter.ps.hlsl", DxObject::GraphicsShaderType::ps);
-	presenter_->ReflectionRootSignature(SxavengerSystem::GetDxDevice());
-
-	DxObject::GraphicsPipelineDesc desc = {};
-	desc.CreateDefaultDesc();
-
-	desc.elements.clear();
-	desc.SetElement("POSITION", 0, DXGI_FORMAT_R32G32B32A32_FLOAT);
-	desc.SetElement("TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT);
-
-	desc.SetRTVFormat(0, DxObject::kScreenFormat);
-
-	presenter_->CreatePipeline(SxavengerSystem::GetDxDevice(), desc);
-
-	vb_ = std::make_unique<DxObject::VertexDimensionBuffer<std::pair<Vector4f, Vector2f>>>();
-	vb_->Create(SxavengerSystem::GetDxDevice(), 3);
-	vb_->At(0) = { { -1.0f, 1.0f, 0.0f }, { 0.0f, 0.0f } };
-	vb_->At(1) = { { 3.0f, 1.0f, 0.0f }, { 2.0f, 0.0f } };
-	vb_->At(2) = { { -1.0f, -3.0f, 0.0f }, { 0.0f, 2.0f } };
-
 	sEditorEngine->ExecuteEditorFunction<RenderSceneEditor>([this](RenderSceneEditor* editor) {
 		editor->SetGameRenderer(renderer_.get());
 	});
+
+	//* presenter *//
+
+	presenter_.Init();
 }
 
 void BetaSystemGameLoop::TermSystem() {
@@ -180,31 +160,13 @@ void BetaSystemGameLoop::DrawSystem() {
 		editor->Draw();
 	});
 
-	/*stateObjectContext_->UpdateShaderTable(SxavengerSystem::GetDxDevice());
-	stateObjectContext_->SetStateObject(SxavengerSystem::GetMainThreadContext()->GetDxCommand());
-	stateObjectContext_->DispatchRays(SxavengerSystem::GetMainThreadContext()->GetDxCommand(), main_->GetSize());*/
-
 	renderer_->Render(SxavengerSystem::GetMainThreadContext());
 	canvas_->Render(SxavengerSystem::GetMainThreadContext());
 
 	main_->BeginRendering();
 	main_->ClearWindow();
 
-	{
-		auto command = SxavengerSystem::GetMainThreadContext()->GetDxCommand();
-
-		presenter_->SetPipeline(command, main_->GetSize());
-
-		D3D12_VERTEX_BUFFER_VIEW vbv = vb_->GetVertexBufferView();
-		command->GetCommandList()->IASetVertexBuffers(0, 1, &vbv);
-
-		DxObject::BindBufferDesc desc = {};
-		desc.SetHandle("gTexture", renderer_->GetDebugTexture());
-
-		presenter_->BindGraphicsBuffer(command, desc);
-
-		command->GetCommandList()->DrawInstanced(3, 1, 0, 0);
-	}
+	presenter_.Present(SxavengerSystem::GetMainThreadContext(), main_->GetSize(), textures_->GetGBuffer(FSceneTextures::GBufferLayout::Result)->GetGPUHandleSRV());
 
 	SxavengerSystem::RenderImGui();
 
