@@ -15,7 +15,8 @@
 void SceneTitle::Init() {
 	title_ = std::make_unique<LSprite>();
 	title_->Init();
-	title_->SetTexture(SxavengerAsset::TryImport<AssetTexture>());
+	title_->SetTexture(SxavengerAsset::TryImport<AssetTexture>("asset/textures/title.png"));
+	title_->SetSize(kMainWindowSize);
 }
 
 void SceneTitle::Update() {

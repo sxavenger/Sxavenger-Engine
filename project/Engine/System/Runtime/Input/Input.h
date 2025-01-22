@@ -167,6 +167,64 @@ private:
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////
+// GamepadInput class
+////////////////////////////////////////////////////////////////////////////////////////////
+class GamepadInput {
+public:
+
+	//=========================================================================================
+	// public methods
+	//=========================================================================================
+
+	GamepadInput() = default;
+	~GamepadInput() { Term(); }
+
+	void Init(uint8_t number);
+
+	void Term();
+
+	void Update();
+
+	//* gamepad state option *//
+
+	bool IsConnect() const { return isConnect_; }
+
+	//* gamepad input option *//
+
+	bool IsPress(GamepadButtonId id) const;
+	bool IsPress(GamepadTriggerId id) const;
+
+	bool IsTrigger(GamepadButtonId id) const;
+	bool IsTrigger(GamepadTriggerId id) const;
+
+	bool IsRelease(GamepadButtonId id) const;
+	bool IsRelease(GamepadTriggerId id) const;
+
+	//* gamepad stick option *//
+
+	Vector2i GetStick(GamepadStickId id) const;
+	Vector2f GetStickNormalized(GamepadStickId id) const;
+
+private:
+
+	//=========================================================================================
+	// private variables
+	//=========================================================================================
+
+	//* member *//
+
+	uint8_t number_ = NULL;
+
+	//* state *//
+
+	InputState<XINPUT_STATE> state_;
+
+	bool isConnect_ = false;
+
+};
+
+
+////////////////////////////////////////////////////////////////////////////////////////////
 // Input class
 ////////////////////////////////////////////////////////////////////////////////////////////
 class Input {
@@ -199,6 +257,8 @@ public:
 
 	const MouseInput* GetMouseInput() const { return mouse_.get(); }
 
+	const GamepadInput* GetGamepadInput(uint8_t number) const { return gamepads_[number].get(); }
+
 private:
 
 	//=========================================================================================
@@ -213,5 +273,10 @@ private:
 
 	std::unique_ptr<KeyboardInput> keyboard_;
 	std::unique_ptr<MouseInput>    mouse_;
+
+	//* xinput *//
+
+	std::array<std::unique_ptr<GamepadInput>, XUSER_MAX_COUNT> gamepads_;
+
 };
 
