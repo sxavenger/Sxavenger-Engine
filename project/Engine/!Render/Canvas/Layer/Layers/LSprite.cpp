@@ -22,7 +22,7 @@ void LSprite::Init() {
 }
 
 void LSprite::Render(const RenderContext& context) {
-	if (!handle_.has_value()) {
+	if (!texture_.has_value()) {
 		return;
 	}
 
@@ -37,7 +37,15 @@ void LSprite::Render(const RenderContext& context) {
 
 	BindBufferDesc parameter = context.parameter;
 	parameter.SetAddress("gTransform", Transform2dComponent::GetGPUVirtualAddress());
-	parameter.SetHandle("gTexture",    handle_.value());
+
+	if (std::holds_alternative<D3D12_GPU_DESCRIPTOR_HANDLE>(texture_.value())) {
+		parameter.SetHandle("gTexture", std::get<D3D12_GPU_DESCRIPTOR_HANDLE>(texture_.value()));
+
+	} else {
+		auto& observer = std::get<AssetObserver<AssetTexture>>(texture_.value());
+		auto texture = observer.WaitGet();
+		parameter.SetHandle("gTexture", texture->GetGPUHandleSRV());
+	}
 
 	FRenderCore::GetInstance()->GetLayer()->BindGraphicsBuffer(
 		FRenderCoreLayer::PipelineType::Sprite, context.context, parameter
