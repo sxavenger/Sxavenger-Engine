@@ -58,4 +58,6 @@ void ActionGameLoop::UpdateGame() {
 
 void ActionGameLoop::DrawGame() {
 	collection_->DrawScene();
+
+	collection_->GetScene()->
 }
