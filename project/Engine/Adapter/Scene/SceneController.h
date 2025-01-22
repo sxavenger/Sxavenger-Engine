@@ -44,7 +44,7 @@ public:
 
 	//* getter *//
 
-	const BaseScene* GetScene() const { return scene_.get(); }
+	BaseScene* GetScene() const { return scene_.get(); }
 
 private:
 
