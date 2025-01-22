@@ -3,6 +3,11 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
+//* engine
+#include <Engine/!Render/Canvas/FCanvas.h>
+#include <Engine/!Render/Scene/FScene.h>
+#include <Engine/!Render/Scene/FSceneRenderer.h>
+
 //* c++
 #include <concepts>
 
@@ -15,6 +20,24 @@ class SceneController;
 // Interface Scene class
 ////////////////////////////////////////////////////////////////////////////////////////////
 class BaseScene {
+public:
+
+	////////////////////////////////////////////////////////////////////////////////////////////
+	// SceneComponent structure
+	////////////////////////////////////////////////////////////////////////////////////////////
+	struct SceneComponent {
+
+		//* member *//
+
+		std::unique_ptr<FScene>  scene_ = nullptr;
+		std::unique_ptr<FCanvas> canvas_ = nullptr;
+
+		//* method *//
+
+
+
+	};
+
 public:
 
 	//=========================================================================================
@@ -33,6 +56,8 @@ public:
 
 	void SetController(SceneController* controller) { controller_ = controller; }
 
+	const SceneComponent& GetComponent() const { return component_; }
+
 protected:
 
 	//=========================================================================================
@@ -41,6 +66,7 @@ protected:
 
 	SceneController* controller_ = nullptr;
 
+	SceneComponent component_;
 
 };
 
