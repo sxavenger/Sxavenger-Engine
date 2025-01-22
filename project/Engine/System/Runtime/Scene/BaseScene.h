@@ -5,6 +5,7 @@
 //-----------------------------------------------------------------------------------------
 //* c++
 #include <concepts>
+#include <string>
 
 //-----------------------------------------------------------------------------------------
 // forward
@@ -12,7 +13,7 @@
 class SceneController;
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// Interface Scene class
+// Base Scene class
 ////////////////////////////////////////////////////////////////////////////////////////////
 class BaseScene {
 public:
@@ -32,6 +33,8 @@ public:
 	virtual void Term() = 0;
 
 	void SetController(SceneController* controller) { controller_ = controller; }
+
+	void RequestNextScene(const std::string& name);
 
 protected:
 

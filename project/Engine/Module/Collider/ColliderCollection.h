@@ -52,7 +52,7 @@ private:
 	//* paraemter *//
 
 	Color4f activeColor_   = ToColor4f(0xFAFA00FF);
-	Color4f inactiveColor_ = ToColor4f(0x808040FF);
+	Color4f inactiveColor_ = ToColor4f(0x80804030);
 
 	//=========================================================================================
 	// private methods

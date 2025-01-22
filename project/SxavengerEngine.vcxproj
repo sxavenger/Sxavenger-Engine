@@ -304,6 +304,9 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="Engine\System\Window\GameWindow.cpp" />
     <ClCompile Include="Engine\System\Window\GameWindowCollection.cpp" />
     <ClCompile Include="Engine\System\Window\Window.cpp" />
+    <ClCompile Include="Game\GameLoop\ActionGameLoop.cpp" />
+    <ClCompile Include="Game\Scene\SceneGame.cpp" />
+    <ClCompile Include="Game\Scene\SceneTitle.cpp" />
     <ClCompile Include="Lib\Adapter\Curve\Curve.cpp" />
     <ClCompile Include="Lib\Adapter\Json\IJsonSerializer.cpp" />
     <ClCompile Include="Lib\Adapter\Json\JsonAdapter.cpp" />
@@ -451,6 +454,9 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Engine\System\Window\GameWindow.h" />
     <ClInclude Include="Engine\System\Window\GameWindowCollection.h" />
     <ClInclude Include="Engine\System\Window\Window.h" />
+    <ClInclude Include="Game\GameLoop\ActionGameLoop.h" />
+    <ClInclude Include="Game\Scene\SceneGame.h" />
+    <ClInclude Include="Game\Scene\SceneTitle.h" />
     <ClInclude Include="Lib\Adapter\Curve\Curve.h" />
     <ClInclude Include="Lib\Adapter\Json\IJsonSerializer.h" />
     <ClInclude Include="Lib\Adapter\Json\JsonAdapter.h" />
