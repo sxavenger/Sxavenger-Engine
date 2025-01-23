@@ -129,6 +129,8 @@ void FSceneTextures::BeginCanvasPass(const DirectXThreadContext* context) const 
 		kGBufferCount, handles.data(), false, &depth_->GetRasterizerCPUHandleDSV()
 	);
 
+	depth_->ClearRasterizerDepth(context);
+
 	//gBuffers_[static_cast<uint8_t>(GBufferLayout::Result)]->ClearRenderTarget(context);
 
 }
