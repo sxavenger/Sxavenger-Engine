@@ -5,6 +5,7 @@
 //=========================================================================================
 
 //RaytracingAccelerationStructure gScene : register(t10);
+RWTexture2D<float4> gOutput            : register(u10);
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // common static variables
