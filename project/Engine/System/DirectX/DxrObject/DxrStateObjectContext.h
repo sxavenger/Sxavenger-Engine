@@ -47,7 +47,7 @@ public:
 
 	//* blob option *//
 
-	void SetExport(const DxrObject::ExportGroup* expt);
+	void AddExport(const DxrObject::ExportGroup* expt);
 
 	//* parameter option *//
 

@@ -19,9 +19,9 @@
 #include <Engine/!Render/FPresenter.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// BetaSystemGameLoop class
+// SampleRaytracingGameLoop class
 ////////////////////////////////////////////////////////////////////////////////////////////
-class BetaSystemGameLoop
+class SampleRaytracingGameLoop
 	: public GameLoop::Interface {
 public:
 
@@ -68,7 +68,7 @@ private:
 	FPresenter presenter_;
 
 	//=========================================================================================
-	// private methods
+	// private method
 	//=========================================================================================
 
 	void InitSystem();

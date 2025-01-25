@@ -1,4 +1,4 @@
-#include "BetaSystemGameLoop.h"
+#include "SampleRaytracingGameLoop.h"
 
 //-----------------------------------------------------------------------------------------
 // include
@@ -14,10 +14,10 @@
 #include "Engine/System/Config/SxavengerDirectory.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// BetaSystemGameLoop class methods
+// SampleRaytracingGameLoop class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-void BetaSystemGameLoop::Init(GameLoop::Context* context) {
+void SampleRaytracingGameLoop::Init(GameLoop::Context* context) {
 	context->SetState(GameLoop::State::Init, std::nullopt, [this]() { InitSystem(); });
 	context->SetState(GameLoop::State::Term, std::nullopt, [this]() { TermSystem(); });
 	context->SetState(GameLoop::State::Update, std::nullopt, [this]() {
@@ -36,11 +36,11 @@ void BetaSystemGameLoop::Init(GameLoop::Context* context) {
 	);
 }
 
-void BetaSystemGameLoop::Term() {
+void SampleRaytracingGameLoop::Term() {
 }
 
-void BetaSystemGameLoop::InitSystem() {
-
+void SampleRaytracingGameLoop::InitSystem() {
+	
 	main_ = SxavengerSystem::CreateMainWindow(kMainWindowSize, L"beta system window").lock();
 	main_->SetIcon("packages/icon/SxavengerEngineSubIcon.ico", { 32, 32 });
 
@@ -132,13 +132,12 @@ void BetaSystemGameLoop::InitSystem() {
 	
 	presenter_.Init();
 
-	//dynamicModel_ = SxavengerAsset::TryImport<AssetModel>("asset/model/fence/fence.obj").WaitGet();
 }
 
-void BetaSystemGameLoop::TermSystem() {
+void SampleRaytracingGameLoop::TermSystem() {
 }
 
-void BetaSystemGameLoop::UpdateSystem() {
+void SampleRaytracingGameLoop::UpdateSystem() {
 
 	if (SxavengerSystem::IsTriggerKey(KeyId::KEY_1)) {
 		isView1_ = true;
@@ -186,10 +185,10 @@ void BetaSystemGameLoop::UpdateSystem() {
 	}
 
 	topLevelAS_->EndSetupInstance(SxavengerSystem::GetDxDevice(), SxavengerSystem::GetMainThreadContext()->GetDxCommand());
+
 }
 
-void BetaSystemGameLoop::DrawSystem() {
-
+void SampleRaytracingGameLoop::DrawSystem() {
 	stateObject_->UpdateShaderTable(SxavengerSystem::GetDxDevice(), topLevelAS_.get());
 
 	auto command = SxavengerSystem::GetMainThreadContext()->GetDxCommand();

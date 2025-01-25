@@ -150,6 +150,7 @@
     <ClCompile Include="Engine\Adapter\Scene\SceneController.cpp" />
     <ClCompile Include="Engine\!Render\FPresenter.cpp" />
     <ClCompile Include="Engine\Adapter\Particle\Emitter.cpp" />
+    <ClCompile Include="Demo\Sample\GameLoop\SampleRaytracingGameLoop.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\System\Window\Window.h" />
@@ -304,6 +305,7 @@
     <ClInclude Include="Engine\Adapter\Scene\SceneController.h" />
     <ClInclude Include="Engine\!Render\FPresenter.h" />
     <ClInclude Include="Engine\Adapter\Particle\Emitter.h" />
+    <ClInclude Include="Demo\Sample\GameLoop\SampleRaytracingGameLoop.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

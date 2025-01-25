@@ -24,6 +24,7 @@ void EditorEngine::Init() {
 }
 
 void EditorEngine::Term() {
+	editors_.clear();
 }
 
 void EditorEngine::UpdateEditor() {

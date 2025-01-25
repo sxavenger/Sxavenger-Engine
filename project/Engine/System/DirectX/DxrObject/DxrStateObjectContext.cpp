@@ -5,7 +5,7 @@ _DXROBJECT_USING
 // StateObjectDesc structure
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-void StateObjectDesc::SetExport(const DxrObject::ExportGroup* expt) {
+void StateObjectDesc::AddExport(const DxrObject::ExportGroup* expt) {
 	ExportType type = expt->GetType();
 	exports_[static_cast<size_t>(type)].emplace(expt);
 	maxStrides_[static_cast<size_t>(type)] = std::max(maxStrides_[static_cast<size_t>(type)], expt->GetBufferStride());
@@ -80,9 +80,9 @@ void StateObjectContext::UpdateShaderTable(
 	hitgroupRecordSize      = Alignment(hitgroupRecordSize, kShaderRecordAlignment);
 
 	// 使用する各シェーダーの個数より、シェーダーテーブルのサイズを求める.
-	UINT raygenerationSize = static_cast<UINT>(desc_.GetCount(ExportType::Raygeneration))* raygenerationRecordSize;
+	UINT raygenerationSize = static_cast<UINT>(desc_.GetCount(ExportType::Raygeneration)) * raygenerationRecordSize;
 	UINT missSize          = static_cast<UINT>(desc_.GetCount(ExportType::Miss)) * missRecordSize;
-	UINT hitgroupSize      = static_cast<UINT>(desc_.GetCount(ExportType::Hitgroup)) * hitgroupRecordSize;
+	UINT hitgroupSize      = static_cast<UINT>(toplevelAS->GetInstances().size()) * hitgroupRecordSize;
 
 	// 各テーブル開始位置にアライメント調整
 	UINT raygenerationRegion = Alignment(raygenerationSize, kShaderTableAlignment);
@@ -133,8 +133,10 @@ void StateObjectContext::UpdateShaderTable(
 	{
 		uint8_t* address = addressStart + raygenerationRegion + missRegion;
 
-		for (const auto& instance : toplevelAS->GetInstances()) {
-			address = WriteExport(address, hitgroupRecordSize, instance.expt, &instance.parameter);
+		if (toplevelAS != nullptr) { //!< HACK
+			for (const auto& instance : toplevelAS->GetInstances()) {
+				address = WriteExport(address, hitgroupRecordSize, instance.expt, &instance.parameter);
+			}
 		}
 	}
 
