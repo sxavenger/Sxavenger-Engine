@@ -26,9 +26,9 @@ void FTexture::Create(const Vector2ui& size, DXGI_FORMAT format) {
 
 		// descの設定
 		D3D12_RESOURCE_DESC desc = {};
-		desc.Width  = size_.x;
-		desc.Height = size_.y;
-		desc.MipLevels = 1;
+		desc.Width            = size_.x;
+		desc.Height           = size_.y;
+		desc.MipLevels        = 1;
 		desc.DepthOrArraySize = 1;
 		desc.Format           = format_;
 		desc.SampleDesc.Count = 1;

@@ -8,6 +8,7 @@
 #include "Core/FRenderCoreLight.h"
 #include "Core/FRenderCoreRaytracing.h"
 #include "Core/FRenderCoreLayer.h"
+#include "Core/FRenderCoreProcess.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // FRenderCore class
@@ -36,6 +37,8 @@ public:
 
 	FRenderCoreLayer* GetLayer() { return layer_.get(); }
 
+	FRenderCoreProcess* GetProcess() { return process_.get(); }
+
 	//* singleton *//
 
 	static FRenderCore* GetInstance();
@@ -50,5 +53,6 @@ private:
 	std::unique_ptr<FRenderCoreLight>      light_;
 	std::unique_ptr<FRenderCoreRaytracing> raytracing_;
 	std::unique_ptr<FRenderCoreLayer>      layer_;
+	std::unique_ptr<FRenderCoreProcess>    process_;
 
 };

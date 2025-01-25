@@ -50,6 +50,7 @@ void RenderSceneEditor::Draw() {
 	textures_->BeginForward(SxavengerSystem::GetMainThreadContext());
 
 	SxavengerModule::DrawCollider();
+	SxavengerModule::DrawGrid(kOrigin3<float>, 16.0f);
 	SxavengerModule::GetDebugPrimitive()->DrawToScene(SxavengerSystem::GetMainThreadContext(), sceneCamera_.get());
 
 	textures_->EndForward(SxavengerSystem::GetMainThreadContext());

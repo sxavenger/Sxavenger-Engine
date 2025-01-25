@@ -5,7 +5,7 @@
 //-----------------------------------------------------------------------------------------
 //* engine
 #include <Engine/System/DirectX/DxObject/DxDescriptor.h>
-#include <Engine/System/DirectX/DirectXContext.h>\
+#include <Engine/System/DirectX/DirectXContext.h>
 
 
 //* lib
@@ -49,6 +49,10 @@ public:
 	const D3D12_GPU_DESCRIPTOR_HANDLE& GetGPUHandleUAV() const { return descriptorUAV_.GetGPUHandle(); }
 
 	const D3D12_GPU_DESCRIPTOR_HANDLE& GetGPUHandleSRV() const { return descriptorSRV_.GetGPUHandle(); }
+
+	const Vector2ui& GetSize() const { return size_; }
+
+	const DXGI_FORMAT& GetFormat() const { return format_; }
 
 private:
 

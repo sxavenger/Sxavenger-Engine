@@ -61,6 +61,8 @@ public:
 	const std::string& GetName() const { return name_; }
 	std::string& GetName() { return name_; }
 
+	void SetAttributeFunc(const std::function<void()>& func) { attributeFunc_ = func; }
+
 protected:
 
 	//=========================================================================================
