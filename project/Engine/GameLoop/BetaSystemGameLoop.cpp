@@ -71,7 +71,7 @@ void BetaSystemGameLoop::InitSystem() {
 
 	model_ = std::make_unique<AModelActor>();
 	model_->Init();
-	model_->SetModel(SxavengerAsset::TryImport<AssetModel>("asset/model/chessboard/chessboard.gltf"));
+	model_->SetModel(SxavengerAsset::TryImport<AssetModel>("asset/model/room/room.obj"));
 	model_->SetRenderWait(false);
 
 	scene_->AddGeometry(model_.get());
@@ -121,6 +121,35 @@ void BetaSystemGameLoop::TermSystem() {
 }
 
 void BetaSystemGameLoop::UpdateSystem() {
+
+	if (SxavengerSystem::IsPressKey(KeyId::KEY_1)) {
+		auto mouse = SxavengerSystem::GetInput()->GetMouseInput();
+
+		if (mouse->IsPress(MouseId::MOUSE_MIDDLE)) {
+			Vector2f delta = mouse->GetDeltaPosition();
+			static const Vector2f kSensitivity = { 0.01f, 0.01f };
+
+			camera_->GetParameter().angle += delta * kSensitivity;
+			camera_->GetParameter().angle.x = std::fmod(camera_->GetParameter().angle.x, pi_v * 2.0f);
+			camera_->GetParameter().angle.y = std::clamp(camera_->GetParameter().angle.y, -pi_v / 2.0f, pi_v / 2.0f);
+
+		}
+
+		if (mouse->IsPress(MouseId::MOUSE_RIGHT)) {
+			Vector2f delta = mouse->GetDeltaPosition();
+			static const Vector2f kSensitivity = { 0.01f, 0.01f };
+
+			Vector3f right = RotateVector({ 1.0f, 0.0f, 0.0f }, camera_->GetTransform().rotate);
+			Vector3f up = RotateVector({ 0.0f, 1.0f, 0.0f }, camera_->GetTransform().rotate);
+
+			camera_->GetParameter().point -= right * delta.x * kSensitivity.x;
+			camera_->GetParameter().point += up * delta.y * kSensitivity.y;
+		}
+
+		camera_->GetParameter().distance = std::max(camera_->GetParameter().distance - mouse->GetDeltaWheel(), 0.0f);
+		camera_->UpdateView();
+	}
+
 }
 
 void BetaSystemGameLoop::DrawSystem() {
