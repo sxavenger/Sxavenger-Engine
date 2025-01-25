@@ -51,26 +51,6 @@ const D3D12_GPU_DESCRIPTOR_HANDLE& FSceneRenderer::GetDebugTexture() const {
 	return textures_->GetGBuffer(FSceneTextures::GBufferLayout::Result)->GetGPUHandleSRV();
 }
 
-void FSceneRenderer::HACKProcessSSAO(const DirectXThreadContext* context) {
-	if (p_ == nullptr) {
-		p_ = std::make_unique<DxObject::ReflectionComputePipelineState>();
-		p_->CreateBlob("packages/shaders/render/process/ssao.cs.hlsl");
-		p_->ReflectionPipeline(SxavengerSystem::GetDxDevice());
-	}
-
-	p_->SetPipeline(context->GetDxCommand());
-
-	DxObject::BindBufferDesc desc = {};
-	desc.SetHandle("gDepth", textures_->GetDepth()->GetRasterizerGPUHandleSRV());
-	desc.SetHandle("gNormal", textures_->GetGBuffer(FSceneTextures::GBufferLayout::Normal)->GetGPUHandleSRV());
-	desc.SetHandle("gPosition", textures_->GetGBuffer(FSceneTextures::GBufferLayout::Position)->GetGPUHandleSRV());
-	desc.SetHandle("gOutput", textures_->GetGBuffer(FSceneTextures::GBufferLayout::Result)->GetGPUHandleUAV());
-	desc.SetAddress("gParameter", textures_->GetParameter());
-
-	p_->BindComputeBuffer(context->GetDxCommand(), desc);
-	p_->Dispatch(context->GetDxCommand(), { DxObject::RoundUp(textures_->GetSize().x, 16), DxObject::RoundUp(textures_->GetSize().y, 16), 1 });
-}
-
 void FSceneRenderer::RenderOpaqueGeometries(const DirectXThreadContext* context) {
 
 	const auto& geometries = scene_->GetGeometries();

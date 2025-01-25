@@ -54,6 +54,10 @@ public:
 	Flag operator^(_MaskType mask) const { return Flag(mask_ ^ mask); }
 	Flag operator^(_BitType bit) const { return operator^(static_cast<_MaskType>(bit)); }
 
+	//* methods *//
+
+	bool Test(_MaskType mask) const { return (mask_ & mask) == mask; }
+
 	//* getter *//
 
 	_MaskType Get() const { return mask_; }

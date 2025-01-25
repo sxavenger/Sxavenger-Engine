@@ -87,10 +87,6 @@ private:
 
 	Config config_ = {};
 
-	//* HACK
-	std::unique_ptr<DxObject::ReflectionComputePipelineState> p_;
-	void HACKProcessSSAO(const DirectXThreadContext* context);
-
 	//=========================================================================================
 	// private methods
 	//=========================================================================================
