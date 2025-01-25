@@ -24,6 +24,9 @@ void FRenderCore::Init() {
 
 	layer_ = std::make_unique<FRenderCoreLayer>();
 	layer_->Init();
+
+	process_ = std::make_unique<FRenderCoreProcess>();
+	process_->Init();
 }
 
 void FRenderCore::Term() {
@@ -31,6 +34,7 @@ void FRenderCore::Term() {
 	light_.reset();
 	raytracing_.reset();
 	layer_.reset();
+	process_.reset();
 }
 
 FRenderCore* FRenderCore::GetInstance() {

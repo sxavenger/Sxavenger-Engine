@@ -30,13 +30,12 @@ void FSceneRenderer::Render(const DirectXThreadContext* context) {
 
 	//* 合成処理
 	// todo:
-	//HACKProcessSSAO(context);
 
 	//* 透明パス
 	RenderTransparentGeometries(context);
 
 	//* ポストプロセス
-	// todo:
+	PostProcessPass(context);
 }
 
 bool FSceneRenderer::CheckRender() const {
@@ -119,6 +118,43 @@ void FSceneRenderer::RenderTransparentGeometries(const DirectXThreadContext* con
 			geometry->RenderTransparent(rendererContext);
 		}
 	};
+}
+
+void FSceneRenderer::PostProcessPass(const DirectXThreadContext* context) {
+	if (textures_ == nullptr || setting_ == nullptr) {
+		return;
+	}
+
+	// ポストプロセスのTextureの確認
+	if (processTextures_ == nullptr || !processTextures_->CheckMatchTexture(textures_->GetGBuffer(FSceneTextures::GBufferLayout::Result))) {
+		processTextures_ = std::make_unique<FPostProcessTextures>();
+		processTextures_->Create(kProcessTextureSize, textures_->GetGBuffer(FSceneTextures::GBufferLayout::Result));
+	}
+
+	if (setting_->GetProcesses().empty()) {
+		return;
+	}
+
+	processTextures_->CopyFromTexture(context, textures_->GetGBuffer(FSceneTextures::GBufferLayout::Result));
+
+	FPostProcess::ProcessContext processContext = {};
+	processContext.context       = context;
+	processContext.size          = textures_->GetSize();
+	processContext.textures      = processTextures_.get();
+
+	processContext.sceneTextures = textures_;
+
+	DxObject::BindBufferDesc parameter = {};
+	parameter.SetAddress("gCamera", camera_->GetGPUVirtualAddress());
+	parameter.SetAddress("gConfig", textures_->GetParameter());
+
+	processContext.parameter = parameter;
+
+	for (auto process : setting_->GetProcesses()) {
+		process->Process(processContext);
+	}
+
+	processTextures_->CopyToTexture(context, textures_->GetGBuffer(FSceneTextures::GBufferLayout::Result));
 }
 
 void FSceneRenderer::RenderEmptyLight(const ALightActor::RendererContext& context) {

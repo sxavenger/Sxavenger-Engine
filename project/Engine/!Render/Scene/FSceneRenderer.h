@@ -7,6 +7,8 @@
 #include "../FSceneTextures.h"
 #include "FScene.h"
 #include "Actor/Camera/ACameraActor.h"
+#include "FPostProcessSetting.h"
+#include "PostProcess/FPostProcessTextures.h"
 
 //* engine	
 #include <Engine/System/DirectX/DirectXContext.h>
@@ -44,11 +46,13 @@ public:
 
 	//* setter *//
 
+	void SetTextures(FSceneTextures* textures) { textures_ = textures; }
+
 	void SetScene(FScene* scene) { scene_ = scene; }
 
 	void SetCamera(ACameraActor* camera) { camera_ = camera; }
 
-	void SetTextures(FSceneTextures* textures) { textures_ = textures; }
+	void SetPostProcessSetting(FPostProcessSetting* setting) { setting_ = setting; }
 
 	//* getter *//
 
@@ -69,15 +73,21 @@ private:
 	// private variables
 	//=========================================================================================
 
-	//* scene *//
-
-	FScene* scene_ = nullptr; //!< geometry and light actors
-
-	ACameraActor* camera_ = nullptr; //!< camera
-
-	//* view info *//
+	//* textures *//
 
 	FSceneTextures* textures_ = nullptr;
+
+	//* scene *//
+
+	FScene* scene_        = nullptr; //!< geometry and light actors
+	ACameraActor* camera_ = nullptr; //!< camera
+
+	//* post process *//
+
+	FPostProcessSetting* setting_ = nullptr;
+
+	std::unique_ptr<FPostProcessTextures> processTextures_;
+	static const size_t kProcessTextureSize = 2;
 
 	//* raytracing *//
 
@@ -97,9 +107,11 @@ private:
 
 	void RenderTransparentGeometries(const DirectXThreadContext* context);
 
-	void SetupRaytracing(const DirectXThreadContext* context);
+	/*void SetupRaytracing(const DirectXThreadContext* context);
 
-	void ProcessRaytracingReflection(const DirectXThreadContext* context);
+	void ProcessRaytracingReflection(const DirectXThreadContext* context);*/
+
+	void PostProcessPass(const DirectXThreadContext* context);
 
 	//* sub method
 

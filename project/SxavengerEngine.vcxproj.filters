@@ -151,6 +151,11 @@
     <ClCompile Include="Engine\!Render\FPresenter.cpp" />
     <ClCompile Include="Engine\Adapter\Particle\Emitter.cpp" />
     <ClCompile Include="Demo\Sample\GameLoop\SampleRaytracingGameLoop.cpp" />
+    <ClCompile Include="Engine\!Render\Scene\FPostProcessSetting.cpp" />
+    <ClCompile Include="Engine\!Render\Scene\PostProcess\FPostProcess.cpp" />
+    <ClCompile Include="Engine\!Render\Scene\PostProcess\FPostProcessTextures.cpp" />
+    <ClCompile Include="Engine\!Render\Core\FRenderCoreProcess.cpp" />
+    <ClCompile Include="Engine\!Render\Scene\PostProcess\PostProcesses\FProcessLut.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\System\Window\Window.h" />
@@ -306,6 +311,11 @@
     <ClInclude Include="Engine\!Render\FPresenter.h" />
     <ClInclude Include="Engine\Adapter\Particle\Emitter.h" />
     <ClInclude Include="Demo\Sample\GameLoop\SampleRaytracingGameLoop.h" />
+    <ClInclude Include="Engine\!Render\Scene\FPostProcessSetting.h" />
+    <ClInclude Include="Engine\!Render\Scene\PostProcess\FPostProcess.h" />
+    <ClInclude Include="Engine\!Render\Scene\PostProcess\FPostProcessTextures.h" />
+    <ClInclude Include="Engine\!Render\Core\FRenderCoreProcess.h" />
+    <ClInclude Include="Engine\!Render\Scene\PostProcess\PostProcesses\FProcessLut.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

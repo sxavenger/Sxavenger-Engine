@@ -35,11 +35,14 @@ PSOutput main(PSInput input) {
 	//!< func_dist(r) = func_win(r);
 	float r    = length(p_light - surface.position); //!< light‚Æsurface‚Ì‹——£
 	float dist = pow(max(1.0f - pow(r / gPointLight.distance, 4.0f), 0.0f), 2.0f); //!< dist = func_win(r);
+
+	float3 v = normalize(gCamera.GetPosition() - surface.position);
+	float3 phong = CalculateSpecularBlinnPhong(surface.normal, l, v);
 	
 	float3 c_light = gPointLight.color_intensity.rgb * gPointLight.color_intensity.a * dist;
 	
 	//* o—Í
-	output.color.rgb = diffuse * c_light * surface.albedo;
+	output.color.rgb = diffuse * c_light * surface.albedo + phong * c_light;
 	// func_unlit() = float3(0.0f, 0.0f, 0.0f), func_lit() = c_surface
 	
 	output.color.a = 1.0f;
