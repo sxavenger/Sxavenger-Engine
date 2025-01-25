@@ -1,11 +1,18 @@
 #pragma once
 
+//-----------------------------------------------------------------------------------------
+// include
+//-----------------------------------------------------------------------------------------
+#include "../../Camera.hlsli"
+
 //=========================================================================================
 // buffers
 //=========================================================================================
 
-//RaytracingAccelerationStructure gScene : register(t10);
 RWTexture2D<float4> gOutput            : register(u10);
+RaytracingAccelerationStructure gScene : register(t10);
+
+ConstantBuffer<Camera> gCamera : register(b10);
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // common static variables
@@ -34,7 +41,7 @@ struct Attribute {
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 void TraceRay(RayDesc rayDesc, inout Payload payload) {
-	//TraceRay(gScene, kFlag, 0xFF, 0, 1, 0, rayDesc, payload);
+	TraceRay(gScene, kFlag, kRayMask, 0, 1, 0, rayDesc, payload);
 }
 
 

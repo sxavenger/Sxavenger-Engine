@@ -23,6 +23,7 @@ void AccelerationStructureBuffers::Create(
 		D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS,
 		D3D12_RESOURCE_STATE_COMMON
 	);
+	scratch->SetName(L"AccelerationStructureBuffers::scratch");
 
 	asbuffer = DxObject::CreateBufferResource(
 		device,
@@ -31,6 +32,7 @@ void AccelerationStructureBuffers::Create(
 		D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS,
 		D3D12_RESOURCE_STATE_RAYTRACING_ACCELERATION_STRUCTURE
 	);
+	asbuffer->SetName(L"AccelerationStructureBuffers::asbuffer");
 
 	if (inputs.Flags & D3D12_RAYTRACING_ACCELERATION_STRUCTURE_BUILD_FLAG_ALLOW_UPDATE) {
 		update = DxObject::CreateBufferResource(
@@ -40,6 +42,7 @@ void AccelerationStructureBuffers::Create(
 			D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS,
 			D3D12_RESOURCE_STATE_COMMON
 		);
+		update->SetName(L"AccelerationStructureBuffers::update");
 	}
 }
 
@@ -163,7 +166,7 @@ bool TopLevelAS::UpdateInstanceBuffer(DxObject::Device* device) {
 
 	if (descs_ == nullptr) {
 		descs_ = std::make_unique<DxObject::DimensionBuffer<D3D12_RAYTRACING_INSTANCE_DESC>>();
-		descs_->Create(device, 12);
+		descs_->Create(device, 1);
 		isRequiredUpdate = true;
 	}
 

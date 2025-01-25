@@ -141,7 +141,7 @@ void InputMesh::CreateBottomLevelAS(const DirectXThreadContext* context) {
 
 	D3D12_RAYTRACING_GEOMETRY_DESC desc = {};
 	desc.Type                                 = D3D12_RAYTRACING_GEOMETRY_TYPE_TRIANGLES;
-	desc.Flags                                = D3D12_RAYTRACING_GEOMETRY_FLAG_OPAQUE; // hack: 
+	desc.Flags                                = D3D12_RAYTRACING_GEOMETRY_FLAG_NONE;
 	desc.Triangles.VertexBuffer.StartAddress  = TriangleInputAssembler::GetVertex()->GetGPUVirtualAddress();
 	desc.Triangles.VertexBuffer.StrideInBytes = TriangleInputAssembler::GetVertex()->GetStride();
 	desc.Triangles.VertexCount                = TriangleInputAssembler::GetVertex()->GetSize();
