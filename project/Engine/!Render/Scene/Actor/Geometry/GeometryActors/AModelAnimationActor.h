@@ -35,6 +35,10 @@ public:
 
 	SkeletonMesh* GetSkeleton() { return skeleton_.get(); }
 
+	void UpdateAnimation(const Animation& animation, TimePointf<TimeUnit::second> time, bool isLoop = true) {
+		skeleton_->UpdateAnimation(animation, time, isLoop);
+	}
+
 protected:
 
 	//=========================================================================================

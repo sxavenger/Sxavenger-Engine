@@ -154,9 +154,19 @@ void RenderSceneEditor::ShowHierarchyWindow() {
 						isAvailable = true;
 					}
 
+					bool isActive = light->IsActive();
+
+					if (!isActive) {
+						ImGui::PushStyleColor(ImGuiCol_Text, { 0.5f, 0.5f, 0.5f, 1.0f });
+					}
+
 					if (ImGui::Selectable(name.c_str(), isSelected)) {
 						selectedActor_ = light;
 						isAvailable    = true;
+					}
+
+					if (!isActive) {
+						ImGui::PopStyleColor();
 					}
 				}
 

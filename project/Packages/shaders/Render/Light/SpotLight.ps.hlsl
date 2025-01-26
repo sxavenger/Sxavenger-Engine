@@ -45,9 +45,12 @@ PSOutput main(PSInput input) {
 	float dir     = t * t * (3.0f - 2.0f * t); //!< smoothstep
 
 	float3 c_light = gSpotLight.color_intensity.rgb * gSpotLight.color_intensity.a * dist * dir;
+
+	float3 v = normalize(gCamera.GetPosition() - surface.position);
+	float speculer = CalculateSpecularBlinnPhong(surface.normal, l, v);
 	
 	//* o—Í
-	output.color.rgb = diffuse * c_light * surface.albedo;
+	output.color.rgb = diffuse * c_light * surface.albedo + speculer * c_light;
 	// func_unlit() = float3(0.0f, 0.0f, 0.0f), func_lit() = c_surface
 	
 	output.color.a = 1.0f;

@@ -30,6 +30,8 @@ public:
 	const std::string& GetName() const { return name_; }
 	std::string& GetName() { return name_; }
 
+	void SetName(const std::string& name) { name_ = name; }
+
 	bool IsActive() const { return isActive_; }
 	bool& GetIsActive() { return isActive_; }
 
