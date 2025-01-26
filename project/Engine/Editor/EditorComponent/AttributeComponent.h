@@ -50,6 +50,8 @@ public:
 
 	void SetToOutliner();
 
+	void SetName(const std::string& name) { name_ = name; }
+
 	void SetChild(AttributeComponent* child);
 
 	void RemoveIterator();

@@ -91,6 +91,7 @@ void BetaSystemGameLoop::InitSystem() {
 	setting_->AddProcess(lut_.get());
 
 	attribute_ = std::make_unique<AttributeComponent>();
+	attribute_->SetName("lut");
 	attribute_->SetToOutliner();
 	attribute_->SetAttributeFunc([this]() {
 		if (ImGui::TreeNode("red")) {
