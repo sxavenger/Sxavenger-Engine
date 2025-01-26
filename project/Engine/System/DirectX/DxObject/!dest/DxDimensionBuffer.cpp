@@ -5,25 +5,16 @@ _DXOBJECT_USING
 // BaseDimensionBuffer class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-void BaseDimensionBuffer::Release() {
-	if (resource_ != nullptr) {
-		resource_->Unmap(0, nullptr);
-		resource_.Reset();
-		address_ = std::nullopt;
-	}
-
-	size_ = NULL;
-}
-
 const D3D12_GPU_VIRTUAL_ADDRESS& BaseDimensionBuffer::GetGPUVirtualAddress() const {
 	Assert(address_.has_value(), "Dimension Buffer not create.");
 	return address_.value();
 }
 
-void BaseDimensionBuffer::Create(Device* devices, uint32_t size) {
+void BaseDimensionBuffer::Create(Device* devices, uint32_t size, size_t stride) {
 
 	// 引数の保存
-	size_ = size;
+	size_   = size;
+	stride_ = static_cast<uint32_t>(stride);
 
 	// deviceの取り出し
 	auto device = devices->GetDevice();
@@ -37,7 +28,20 @@ void BaseDimensionBuffer::Create(Device* devices, uint32_t size) {
 	address_ = resource_->GetGPUVirtualAddress();
 }
 
-bool BaseDimensionBuffer::CheckIndex(uint32_t index) const {
+void BaseDimensionBuffer::Release() {
+
+	if (resource_ != nullptr) {
+		resource_->Unmap(0, nullptr);
+		resource_.Reset();
+	}
+
+	size_   = NULL;
+	stride_ = NULL;
+
+	address_ = std::nullopt;
+}
+
+bool BaseDimensionBuffer::CheckIndex(uint32_t index) {
 	if (index >= size_) {
 		return false;
 	}
@@ -92,4 +96,3 @@ const D3D12_INDEX_BUFFER_VIEW TriangleIndexDimensionBuffer::GetIndexBufferView()
 	result.SizeInBytes    = stride_ * size_;
 	return result;
 }
-

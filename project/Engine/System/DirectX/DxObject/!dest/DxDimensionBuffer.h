@@ -26,10 +26,8 @@ public:
 	// public methods
 	//=========================================================================================
 
-	BaseDimensionBuffer(size_t stride) : stride_(static_cast<uint32_t>(stride)) {}
-	virtual ~BaseDimensionBuffer() { Release(); }
-
-	virtual void Release();
+	BaseDimensionBuffer()  = default;
+	~BaseDimensionBuffer() { Release(); }
 
 	//* getter *//
 
@@ -50,20 +48,23 @@ protected:
 	//* DirectX12 *//
 
 	ComPtr<ID3D12Resource> resource_;
+
 	std::optional<D3D12_GPU_VIRTUAL_ADDRESS> address_ = std::nullopt;
 
 	//* paraemter *//
 
-	uint32_t size_         = NULL;
-	const uint32_t stride_ = NULL;
+	uint32_t size_   = NULL;
+	uint32_t stride_ = NULL;
 
 	//=========================================================================================
 	// protected methods
 	//=========================================================================================
 
-	void Create(Device* devices, uint32_t size);
+	void Create(Device* device, uint32_t size, size_t stride);
 
-	bool CheckIndex(uint32_t index) const;
+	void Release();
+
+	bool CheckIndex(uint32_t index);
 
 };
 
@@ -79,12 +80,12 @@ public:
 	// public methods
 	//=========================================================================================
 
-	DimensionBuffer() : BaseDimensionBuffer(sizeof(T)) {}
-	virtual ~DimensionBuffer() { Release(); }
+	DimensionBuffer()  = default;
+	~DimensionBuffer() { Release(); }
 
 	void Create(Device* device, uint32_t size);
 
-	void Release() override;
+	void Release();
 
 	T& At(uint32_t index);
 	const T& At(uint32_t index) const;
@@ -185,14 +186,13 @@ public:
 private:
 };
 
-
 ////////////////////////////////////////////////////////////////////////////////////////////
-// DimensionBuffer class template methods
+// DimensionBuffer class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 template <class T>
 inline void DimensionBuffer<T>::Create(Device* device, uint32_t size) {
-	BaseDimensionBuffer::Create(device, size);
+	BaseDimensionBuffer::Create(device, size, sizeof(T));
 
 	T* mappingTarget = nullptr;
 
@@ -201,7 +201,6 @@ inline void DimensionBuffer<T>::Create(Device* device, uint32_t size) {
 	resource_->SetName(L"dimension buffer");
 
 	mappedDatas_ = { mappingTarget, size_ };
-
 }
 
 template <class T>
@@ -250,7 +249,7 @@ inline const T& DimensionBuffer<T>::operator[](uint32_t index) const {
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// VertexDimensionBuffer class template methods
+// VertexDimensionBuffer class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 template <class T>
@@ -264,5 +263,3 @@ inline const D3D12_VERTEX_BUFFER_VIEW VertexDimensionBuffer<T>::GetVertexBufferV
 }
 
 _DXOBJECT_NAMESPACE_END
-
-

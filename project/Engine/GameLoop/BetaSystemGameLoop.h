@@ -46,31 +46,7 @@ private:
 
 	std::shared_ptr<GameWindow> main_;
 
-	std::unique_ptr<FSceneTextures> textures_;
-
-	std::unique_ptr<FScene>              scene_;
-	std::unique_ptr<FPostProcessSetting> setting_;
-
-	std::unique_ptr<FSceneRenderer> renderer_;
-
-	//* camera *//
-
-	std::unique_ptr<APivotCameraActor> camera_;
-
-	//* geometries *//
-
-	std::unique_ptr<AModelActor> model_;
-
-	//* light *//
-
-	std::unique_ptr<APointLightActor> light_;
-
-	//* process *//
-
-	std::unique_ptr<FProcessLut> lut_;
-	std::unique_ptr<AttributeComponent> attribute_;
-
-	FPresenter presenter_;
+	ComPtr<ID3D12Resource> resource_;
 
 	//=========================================================================================
 	// private methods

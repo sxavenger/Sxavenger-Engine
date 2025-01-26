@@ -27,7 +27,7 @@ public:
 	// public methods
 	//=========================================================================================
 
-	UnorderedDimensionBuffer()  = default;
+	UnorderedDimensionBuffer() : BaseDimensionBuffer(sizeof(T)) {}
 	~UnorderedDimensionBuffer() { Release(); }
 
 	void Create(Device* device, uint32_t size);
@@ -62,7 +62,6 @@ inline void UnorderedDimensionBuffer<T>::Create(Device* device, uint32_t size) {
 
 	// 引数の保存
 	size_   = size;
-	stride_ = static_cast<uint32_t>(sizeof(T));
 
 	// resourceの生成
 	resource_ = CreateBufferResource(
@@ -80,12 +79,10 @@ template<class T>
 inline void UnorderedDimensionBuffer<T>::Release() {
 	if (resource_ != nullptr) {
 		resource_.Reset();
+		address_ = std::nullopt;
 	}
 
-	size_   = NULL;
-	stride_ = NULL;
-
-	address_ = std::nullopt;
+	size_ = NULL;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
