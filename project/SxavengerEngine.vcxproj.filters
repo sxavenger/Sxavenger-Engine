@@ -156,6 +156,7 @@
     <ClCompile Include="Engine\!Render\Scene\PostProcess\FPostProcessTextures.cpp" />
     <ClCompile Include="Engine\!Render\Core\FRenderCoreProcess.cpp" />
     <ClCompile Include="Engine\!Render\Scene\PostProcess\PostProcesses\FProcessLut.cpp" />
+    <ClCompile Include="Engine\!Render\Scene\Renderer\FBaseRenderer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\System\Window\Window.h" />
@@ -316,6 +317,7 @@
     <ClInclude Include="Engine\!Render\Scene\PostProcess\FPostProcessTextures.h" />
     <ClInclude Include="Engine\!Render\Core\FRenderCoreProcess.h" />
     <ClInclude Include="Engine\!Render\Scene\PostProcess\PostProcesses\FProcessLut.h" />
+    <ClInclude Include="Engine\!Render\Scene\Renderer\FBaseRenderer.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />
