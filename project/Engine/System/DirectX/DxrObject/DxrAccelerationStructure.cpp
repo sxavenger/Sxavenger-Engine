@@ -162,18 +162,18 @@ void TopLevelAS::Update(DxObject::CommandContext* context) {
 }
 
 bool TopLevelAS::UpdateInstanceBuffer(DxObject::Device* device) {
-	bool isRequiredUpdate = false;
+	bool isRequiredBuild = false;
 
 	if (descs_ == nullptr) {
 		descs_ = std::make_unique<DxObject::DimensionBuffer<D3D12_RAYTRACING_INSTANCE_DESC>>();
 		descs_->Create(device, 1);
-		isRequiredUpdate = true;
+		isRequiredBuild = true;
 	}
 
 	if (instances_.size() > descs_->GetSize()) { //!< instanceの数がbufferの数より多い場合
 		//!< capacityの拡張
 		descs_->Create(device, static_cast<uint32_t>(instances_.size()));
-		isRequiredUpdate = true;
+		isRequiredBuild = true;
 	}
 
 	descs_->Fill(D3D12_RAYTRACING_INSTANCE_DESC{}); //!< bufferの初期化
@@ -190,5 +190,5 @@ bool TopLevelAS::UpdateInstanceBuffer(DxObject::Device* device) {
 		std::memcpy((*descs_)[i].Transform, &mat, sizeof((*descs_)[i].Transform));
 	}
 
-	return isRequiredUpdate;
+	return isRequiredBuild;
 }
