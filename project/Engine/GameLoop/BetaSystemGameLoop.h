@@ -22,6 +22,8 @@
 #include <Engine/!Render/FSceneTextures.h>
 #include <Engine/!Render/Scene/FScene.h>
 #include <Engine/!Render/Scene/FPostProcessSetting.h>
+#include <Engine/!Render/Scene/PostProcess/PostProcesses/FProcessLut.h>
+#include <Engine/Editor/EditorComponent/AttributeComponent.h>
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -68,6 +70,11 @@ private:
 	//* light *//
 
 	std::unique_ptr<APointLightActor> light_;
+
+	//* process *//
+
+	std::unique_ptr<FProcessLut> lut_;
+	std::unique_ptr<AttributeComponent> attribute_;
 
 	FPresenter presenter_;
 

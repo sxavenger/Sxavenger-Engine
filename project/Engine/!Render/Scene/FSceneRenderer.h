@@ -26,7 +26,7 @@ public:
 	// Config structure
 	////////////////////////////////////////////////////////////////////////////////////////////
 	struct Config {
-		bool isUseRaytracing = true;
+		bool isEmptyLightAlbedo = false;
 	};
 
 public:

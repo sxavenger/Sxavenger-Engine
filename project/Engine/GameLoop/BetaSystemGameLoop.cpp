@@ -89,6 +89,35 @@ void BetaSystemGameLoop::InitSystem() {
 
 	scene_->AddLight(light_.get());
 
+	//* process *//
+
+	//* process *//
+
+	lut_ = std::make_unique<FProcessLut>();
+	lut_->Init();
+
+	setting_->AddProcess(lut_.get());
+
+	attribute_ = std::make_unique<AttributeComponent>();
+	attribute_->SetName("lut");
+	attribute_->SetToOutliner();
+	attribute_->SetAttributeFunc([this]() {
+		if (ImGui::TreeNode("red")) {
+			lut_->GetParameter().r.SetImGuiCommand();
+			ImGui::TreePop();
+		}
+
+		if (ImGui::TreeNode("green")) {
+			lut_->GetParameter().g.SetImGuiCommand();
+			ImGui::TreePop();
+		}
+
+		if (ImGui::TreeNode("blue")) {
+			lut_->GetParameter().b.SetImGuiCommand();
+			ImGui::TreePop();
+		}
+	});
+
 	//* editors *//
 
 	sEditorEngine->ExecuteEditorFunction<RenderSceneEditor>([this](RenderSceneEditor* editor) {
@@ -97,6 +126,7 @@ void BetaSystemGameLoop::InitSystem() {
 }
 
 void BetaSystemGameLoop::TermSystem() {
+	attribute_.reset();
 }
 
 void BetaSystemGameLoop::UpdateSystem() {

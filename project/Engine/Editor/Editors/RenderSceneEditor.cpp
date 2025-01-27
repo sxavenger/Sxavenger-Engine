@@ -21,7 +21,7 @@ void RenderSceneEditor::Init() {
 	textures_->Create(kMainWindowSize);
 
 	sceneRenderer_ = std::make_unique<FSceneRenderer>();
-	sceneRenderer_->GetConfig().isUseRaytracing = true;
+	sceneRenderer_->GetConfig().isEmptyLightAlbedo = true;
 
 	sceneCamera_ = std::make_unique<APivotCameraActor>();
 	sceneCamera_->Init();
@@ -125,6 +125,12 @@ void RenderSceneEditor::ShowHierarchyWindow() {
 					std::string name = std::format("{} # {:p}", geometry->GetName(), reinterpret_cast<const void*>(geometry));
 					bool isSelected  = IsSelectedActor(geometry);
 
+					bool isActive = geometry->IsActive();
+
+					if (!isActive) {
+						ImGui::PushStyleColor(ImGuiCol_Text, disabled_);
+					}
+
 					if (isSelected) {
 						isAvailable = true;
 					}
@@ -132,6 +138,10 @@ void RenderSceneEditor::ShowHierarchyWindow() {
 					if (ImGui::Selectable(name.c_str(), isSelected)) {
 						selectedActor_ = geometry;
 						isAvailable    = true;
+					}
+
+					if (!isActive) {
+						ImGui::PopStyleColor();
 					}
 				}
 
@@ -150,6 +160,12 @@ void RenderSceneEditor::ShowHierarchyWindow() {
 					std::string name = std::format("{} # {:p}", light->GetName(), reinterpret_cast<const void*>(light));
 					bool isSelected = IsSelectedActor(light);
 
+					bool isActive = light->IsActive();
+
+					if (!isActive) {
+						ImGui::PushStyleColor(ImGuiCol_Text, disabled_);
+					}
+
 					if (isSelected) {
 						isAvailable = true;
 					}
@@ -157,6 +173,10 @@ void RenderSceneEditor::ShowHierarchyWindow() {
 					if (ImGui::Selectable(name.c_str(), isSelected)) {
 						selectedActor_ = light;
 						isAvailable    = true;
+					}
+
+					if (!isActive) {
+						ImGui::PopStyleColor();
 					}
 				}
 

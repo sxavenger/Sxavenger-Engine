@@ -195,6 +195,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="Engine\!Render\Core\FRenderCoreLayer.cpp" />
     <ClCompile Include="Engine\!Render\Core\FRenderCoreProcess.cpp" />
     <ClCompile Include="Engine\!Render\FPresenter.cpp" />
+    <ClCompile Include="Engine\!Render\Renderer\FBaseRenderer.cpp" />
     <ClCompile Include="Engine\!Render\Scene\Actor\AActor.cpp" />
     <ClCompile Include="Engine\!Render\Scene\Actor\Camera\ACameraActor.cpp" />
     <ClCompile Include="Engine\!Render\Scene\Actor\Camera\CameraActors\ACineCameraActor.cpp" />
@@ -221,7 +222,6 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="Engine\!Render\Scene\PostProcess\FPostProcess.cpp" />
     <ClCompile Include="Engine\!Render\Scene\PostProcess\FPostProcessTextures.cpp" />
     <ClCompile Include="Engine\!Render\Scene\PostProcess\PostProcesses\FProcessLut.cpp" />
-    <ClCompile Include="Engine\!Render\Scene\Renderer\FBaseRenderer.cpp" />
     <ClCompile Include="Engine\Adapter\Particle\Emitter.cpp" />
     <ClCompile Include="Engine\Adapter\Scene\BaseScene.cpp" />
     <ClCompile Include="Engine\Adapter\Scene\BaseSceneFactory.cpp" />
@@ -344,6 +344,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Engine\!Render\Core\FRenderCoreLayer.h" />
     <ClInclude Include="Engine\!Render\Core\FRenderCoreProcess.h" />
     <ClInclude Include="Engine\!Render\FPresenter.h" />
+    <ClInclude Include="Engine\!Render\Renderer\FBaseRenderer.h" />
     <ClInclude Include="Engine\!Render\Scene\Actor\AActor.h" />
     <ClInclude Include="Engine\!Render\Scene\Actor\Camera\ACameraActor.h" />
     <ClInclude Include="Engine\!Render\Scene\Actor\Camera\CameraActors\ACineCameraActor.h" />
@@ -370,7 +371,6 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Engine\!Render\Scene\PostProcess\FPostProcess.h" />
     <ClInclude Include="Engine\!Render\Scene\PostProcess\FPostProcessTextures.h" />
     <ClInclude Include="Engine\!Render\Scene\PostProcess\PostProcesses\FProcessLut.h" />
-    <ClInclude Include="Engine\!Render\Scene\Renderer\FBaseRenderer.h" />
     <ClInclude Include="Engine\Adapter\Particle\Emitter.h" />
     <ClInclude Include="Engine\Adapter\Scene\BaseScene.h" />
     <ClInclude Include="Engine\Adapter\Scene\BaseSceneFactory.h" />
