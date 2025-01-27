@@ -229,6 +229,8 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="Engine\Asset\Animator\Animator.cpp" />
     <ClCompile Include="Engine\Asset\Animator\AssetAnimator.cpp" />
     <ClCompile Include="Engine\Asset\AssetCollection.cpp" />
+    <ClCompile Include="Engine\Asset\AudioBuffer\AssetAudioBuffer.cpp" />
+    <ClCompile Include="Engine\Asset\AudioBuffer\AudioBuffer.cpp" />
     <ClCompile Include="Engine\Asset\BaseAsset.cpp" />
     <ClCompile Include="Engine\Asset\Blob\AssetBlob.cpp" />
     <ClCompile Include="Engine\Asset\Model\AssetModel.cpp" />
@@ -257,6 +259,8 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="Engine\Editor\Editors\RenderSceneEditor.cpp" />
     <ClCompile Include="Engine\GameLoop\BetaSystemGameLoop.cpp" />
     <ClCompile Include="Engine\GameLoop\EditorEngineGameLoop.cpp" />
+    <ClCompile Include="Engine\Module\Audio\Audio.cpp" />
+    <ClCompile Include="Engine\Module\Audio\AudioController.cpp" />
     <ClCompile Include="Engine\Module\Component\TextureComponent.cpp" />
     <ClCompile Include="Engine\Module\Component\Transform2dComponent.cpp" />
     <ClCompile Include="Engine\Module\Component\TransformComponent.cpp" />
@@ -378,6 +382,8 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Engine\Asset\Animator\Animator.h" />
     <ClInclude Include="Engine\Asset\Animator\AssetAnimator.h" />
     <ClInclude Include="Engine\Asset\AssetCollection.h" />
+    <ClInclude Include="Engine\Asset\AudioBuffer\AssetAudioBuffer.h" />
+    <ClInclude Include="Engine\Asset\AudioBuffer\AudioBuffer.h" />
     <ClInclude Include="Engine\Asset\BaseAsset.h" />
     <ClInclude Include="Engine\Asset\Blob\AssetBlob.h" />
     <ClInclude Include="Engine\Asset\Model\AssetModel.h" />
@@ -408,6 +414,8 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Engine\Editor\Editors\RenderSceneEditor.h" />
     <ClInclude Include="Engine\GameLoop\BetaSystemGameLoop.h" />
     <ClInclude Include="Engine\GameLoop\EditorEngineGameLoop.h" />
+    <ClInclude Include="Engine\Module\Audio\Audio.h" />
+    <ClInclude Include="Engine\Module\Audio\AudioController.h" />
     <ClInclude Include="Engine\Module\Component\TextureComponent.h" />
     <ClInclude Include="Engine\Module\Component\Transform2dComponent.h" />
     <ClInclude Include="Engine\Module\Component\TransformComponent.h" />

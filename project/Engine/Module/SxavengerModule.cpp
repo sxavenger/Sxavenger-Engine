@@ -7,6 +7,7 @@ namespace {
 	static std::unique_ptr<DebugPrimitive> sPrimitive                 = nullptr;
 	static std::unique_ptr<ColliderCollection> sColliderCollection    = nullptr;
 	static std::unique_ptr<SkinningComputePipeline> sSkinningPipeline = nullptr;
+	static std::unique_ptr<AudioController> sAudioController          = nullptr;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -21,6 +22,9 @@ void SxavengerModule::Init() {
 
 	sSkinningPipeline = std::make_unique<SkinningComputePipeline>();
 	sSkinningPipeline->Init();
+
+	sAudioController = std::make_unique<AudioController>();
+	sAudioController->Init();
 }
 
 void SxavengerModule::Term() {
@@ -78,4 +82,16 @@ void SxavengerModule::SetSkinningPipeline(const DirectXThreadContext* context) {
 
 void SxavengerModule::DispatchSkinningPipeline(const DirectXThreadContext* context, const DxObject::BindBufferDesc& desc, uint32_t vertexSize) {
 	sSkinningPipeline->Dispatch(context, desc, vertexSize);
+}
+
+std::unique_ptr<Audio> SxavengerModule::CreateAudio(const AudioBuffer* buffer, bool isLoop) {
+	return sAudioController->CreateAudio(buffer, isLoop);
+}
+
+void SxavengerModule::PlayOneShot(const AudioBuffer* buffer, float volume) {
+	sAudioController->PlayOneShot(buffer, volume);
+}
+
+AudioController* SxavengerModule::GetAudioController() {
+	return sAudioController.get();
 }

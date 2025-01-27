@@ -71,11 +71,6 @@ private:
 
 	std::unique_ptr<APointLightActor> light_;
 
-	//* process *//
-
-	std::unique_ptr<FProcessLut> lut_;
-	std::unique_ptr<AttributeComponent> attribute_;
-
 	FPresenter presenter_;
 
 	//=========================================================================================

@@ -9,6 +9,7 @@
 #include "Model/AssetModel.h"
 #include "Animator/AssetAnimator.h"
 #include "Blob/AssetBlob.h"
+#include "AudioBuffer/AssetAudioBuffer.h"
 
 //* other asset adapter
 #include "Thread/AsyncAssetThread.h"
@@ -43,6 +44,7 @@ public:
 		Texture,
 		Model_Animator,
 		Shader,
+		AudioBuffer,
 	};
 
 	////////////////////////////////////////////////////////////////////////////////////////////
@@ -53,7 +55,8 @@ public:
 		std::shared_ptr<AssetUnknown>,
 		std::shared_ptr<AssetTexture>,
 		std::pair<std::shared_ptr<AssetModel>, std::shared_ptr<AssetAnimator>>, // todo: usingでまとめる
-		std::shared_ptr<AssetBlob>
+		std::shared_ptr<AssetBlob>,
+		std::shared_ptr<AssetAudioBuffer>
 	>;
 
 	////////////////////////////////////////////////////////////////////////////////////////////
@@ -164,6 +167,7 @@ private:
 	std::shared_ptr<AssetModel> LoadModel(FileData& fileData, const std::filesystem::path& filepath);
 	std::shared_ptr<AssetAnimator> LoadAnimator(FileData& fileData, const std::filesystem::path& filepath);
 	std::shared_ptr<AssetBlob> LoadBlob(FileData& fileData, const std::filesystem::path& filepath);
+	std::shared_ptr<AssetAudioBuffer> LoadAudioBuffer(FileData& fileData, const std::filesystem::path& filepath);
 
 	//* try load *//
 
@@ -172,6 +176,7 @@ private:
 	std::shared_ptr<AssetModel> TryLoadModel(FileData& fileData, const std::filesystem::path& filepath);
 	std::shared_ptr<AssetAnimator> TryLoadAnimator(FileData& fileData, const std::filesystem::path& filepath);
 	std::shared_ptr<AssetBlob> TryLoadBlob(FileData& fileData, const std::filesystem::path& filepath);
+	std::shared_ptr<AssetAudioBuffer> TryLoadAudioBuffer(FileData& fileData, const std::filesystem::path& filepath);
 
 };
 
@@ -201,6 +206,9 @@ inline AssetObserver<T> AssetCollection::Import(const std::filesystem::path& fil
 	} else if constexpr (std::is_same_v<T, AssetBlob>) {
 		observer.Register(LoadBlob(fileData, filepath), this);
 
+	} else if constexpr (std::is_same_v<T, AssetAudioBuffer>) {
+		observer.Register(LoadAudioBuffer(fileData, filepath), this);
+
 	} else {
 		static_assert(false, "not supported type.");
 	}
@@ -226,6 +234,9 @@ inline std::shared_ptr<T> AssetCollection::ImportPtr(const std::filesystem::path
 
 	} else if constexpr (std::is_same_v<T, AssetBlob>) {
 		return LoadBlob(fileData, filepath);
+
+	} else if constexpr (std::is_same_v<T, AssetAudioBuffer>) {
+		return LoadAudioBuffer(fileData, filepath);
 
 	} else {
 		static_assert(false, "not supported type.");
@@ -254,6 +265,9 @@ inline AssetObserver<T> AssetCollection::TryImport(const std::filesystem::path& 
 	} else if constexpr (std::is_same_v<T, AssetBlob>) {
 		observer.Register(TryLoadBlob(fileData, filepath), this);
 
+	} else if constexpr (std::is_same_v<T, AssetAudioBuffer>) {
+		observer.Register(TryLoadAudioBuffer(fileData, filepath), this);
+
 	} else {
 		static_assert(false, "not supported type.");
 	}
@@ -279,6 +293,9 @@ inline std::shared_ptr<T> AssetCollection::TryImportPtr(const std::filesystem::p
 
 	} else if constexpr (std::is_same_v<T, AssetBlob>) {
 		return TryLoadBlob(fileData, filepath);
+
+	} else if constexpr (std::is_same_v<T, AssetAudioBuffer>) {
+		return TryLoadAudioBuffer(fileData, filepath);
 
 	} else {
 		static_assert(false, "not supported type.");

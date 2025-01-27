@@ -157,6 +157,10 @@
     <ClCompile Include="Engine\!Render\Core\FRenderCoreProcess.cpp" />
     <ClCompile Include="Engine\!Render\Scene\PostProcess\PostProcesses\FProcessLut.cpp" />
     <ClCompile Include="Engine\!Render\Renderer\FBaseRenderer.cpp" />
+    <ClCompile Include="Engine\Asset\AudioBuffer\AudioBuffer.cpp" />
+    <ClCompile Include="Engine\Asset\AudioBuffer\AssetAudioBuffer.cpp" />
+    <ClCompile Include="Engine\Module\Audio\Audio.cpp" />
+    <ClCompile Include="Engine\Module\Audio\AudioController.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\System\Window\Window.h" />
@@ -318,6 +322,10 @@
     <ClInclude Include="Engine\!Render\Core\FRenderCoreProcess.h" />
     <ClInclude Include="Engine\!Render\Scene\PostProcess\PostProcesses\FProcessLut.h" />
     <ClInclude Include="Engine\!Render\Renderer\FBaseRenderer.h" />
+    <ClInclude Include="Engine\Asset\AudioBuffer\AudioBuffer.h" />
+    <ClInclude Include="Engine\Asset\AudioBuffer\AssetAudioBuffer.h" />
+    <ClInclude Include="Engine\Module\Audio\Audio.h" />
+    <ClInclude Include="Engine\Module\Audio\AudioController.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />
