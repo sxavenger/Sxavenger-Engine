@@ -71,7 +71,7 @@ void BetaSystemGameLoop::InitSystem() {
 
 	model_ = std::make_unique<AModelActor>();
 	model_->Init();
-	model_->SetModel(SxavengerAsset::TryImport<AssetModel>("asset/model/room/room.obj"));
+	model_->SetModel(SxavengerAsset::TryImport<AssetModel>("asset/models/room/room.obj"));
 	model_->SetRenderWait(false);
 
 	scene_->AddGeometry(model_.get());
@@ -109,6 +109,12 @@ void BetaSystemGameLoop::InitSystem() {
 			ImGui::TreePop();
 		}
 	});
+
+	//* test *//
+
+	p_ = std::make_unique<DxObject::ReflectionComputePipelineState>();
+	p_->CreateBlob("asset/shaders/RayQuerySample.cs.hlsl");
+	p_->ReflectionPipeline(SxavengerSystem::GetDxDevice());
 
 	//* editors *//
 

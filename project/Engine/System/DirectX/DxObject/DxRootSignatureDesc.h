@@ -59,7 +59,7 @@ public:
 	// public variables
 	//=========================================================================================
 
-	std::vector<D3D12_ROOT_PARAMETER>      params;
+	std::vector<D3D12_ROOT_PARAMETER1>     params;
 	std::vector<D3D12_STATIC_SAMPLER_DESC> samplers;
 
 protected:
@@ -68,7 +68,7 @@ protected:
 	// protected variables
 	//=========================================================================================
 
-	std::vector<D3D12_DESCRIPTOR_RANGE> ranges_;
+	std::vector<D3D12_DESCRIPTOR_RANGE1> ranges_;
 
 	//* parameter *//
 

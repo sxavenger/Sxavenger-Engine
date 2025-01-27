@@ -23,6 +23,9 @@
 
 #include <Engine/Editor/EditorComponent/AttributeComponent.h>
 
+//* test !raytracing
+#include <Engine/Module/Pipeline/CustomComputePipeline.h>
+
 ////////////////////////////////////////////////////////////////////////////////////////////
 // BetaSystemGameLoop class
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -69,6 +72,10 @@ private:
 
 	std::unique_ptr<FProcessLut> lut_;
 	std::unique_ptr<AttributeComponent> attribute_;
+
+	//* test *//
+
+	std::unique_ptr<DxObject::ReflectionComputePipelineState> p_;
 
 	FPresenter presenter_;
 
