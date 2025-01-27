@@ -317,6 +317,10 @@ void RenderSceneEditor::Manipulate(ImGuizmo::OPERATION operation, ImGuizmo::MODE
 		reinterpret_cast<float*>(m.m)
 	);
 
+	if (component->HasParent()) {
+		return;
+	}
+
 	EulerTransform transform = {};
 
 	ImGuizmo::DecomposeMatrixToComponents(
