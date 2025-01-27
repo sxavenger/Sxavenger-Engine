@@ -42,7 +42,7 @@ void AManualGeometryActor::RenderOpaque(const RendererContext& context) {
 }
 
 void AManualGeometryActor::RenderTransparent(const RendererContext& context) {
-	context;;
+	context;
 }
 
 void AManualGeometryActor::SetupToplevelAS(const SetupContext& context) {
@@ -52,14 +52,14 @@ void AManualGeometryActor::SetupToplevelAS(const SetupContext& context) {
 	instance.mat        = TransformComponent::GetMatrix();
 	instance.instanceId = 0;
 
-	instance.expt = &FRenderCore::GetInstance()->GetRaytracing()->GetHitgroupExport(FRenderCoreRaytracing::HitgroupExportType::Geometry);
+	//instance.expt = &FRenderCore::GetInstance()->GetRaytracing()->GetHitgroupExport(FRenderCoreRaytracing::HitgroupExportType::Geometry);
 
-	DxrObject::WriteBindBufferDesc desc = {};
-	desc.SetAddress(0, ia_.GetVertex()->GetGPUVirtualAddress()); //!< gVertices
-	desc.SetAddress(1, ia_.GetIndex()->GetGPUVirtualAddress());  //!< gIndices
-	desc.SetHandle(2, texture_.WaitGet()->GetGPUHandleSRV());    //!< gAlbedo
+	//DxrObject::WriteBindBufferDesc desc = {};
+	//desc.SetAddress(0, ia_.GetVertex()->GetGPUVirtualAddress()); //!< gVertices
+	//desc.SetAddress(1, ia_.GetIndex()->GetGPUVirtualAddress());  //!< gIndices
+	//desc.SetHandle(2, texture_.WaitGet()->GetGPUHandleSRV());    //!< gAlbedo
 
-	instance.parameter = desc;
+	//instance.parameter = desc;
 
 	ia_.CreateBottomLevelAS(context.context);
 	instance.bottomLevelAS = ia_.GetBottomLevelAS();

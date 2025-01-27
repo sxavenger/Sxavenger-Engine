@@ -96,6 +96,7 @@ public:
 		//* table書き込み
 		const ExportGroup*  expt;
 		WriteBindBufferDesc parameter;
+		//!< DXR1.1では不使用
 	};
 
 public:

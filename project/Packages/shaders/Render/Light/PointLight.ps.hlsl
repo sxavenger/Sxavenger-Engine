@@ -41,8 +41,27 @@ PSOutput main(PSInput input) {
 	
 	float3 c_light = gPointLight.color_intensity.rgb * gPointLight.color_intensity.a * dist;
 	
+	RayQuery<0> q;
+	
+	RayDesc ray;
+	ray.Origin    = surface.position;
+	ray.Direction = l;
+	ray.TMin      = 0.001f;
+	ray.TMax      = r;
+	
+	q.TraceRayInline(
+		gScene,
+		RAY_FLAG_NONE,
+		0xFF,
+		ray
+	);
+	
+	if (q.Proceed()) {
+		c_light /= 2.0f;
+	}
+	
 	//* èoóÕ
-	output.color.rgb = diffuse * c_light * surface.albedo + phong * c_light;
+	output.color.rgb = diffuse * c_light * surface.albedo;
 	// func_unlit() = float3(0.0f, 0.0f, 0.0f), func_lit() = c_surface
 	
 	output.color.a = 1.0f;

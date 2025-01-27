@@ -45,7 +45,6 @@ void BetaSystemGameLoop::InitSystem() {
 
 	main_ = SxavengerSystem::CreateMainWindow(kMainWindowSize, L"beta system window").lock();
 	main_->SetIcon("packages/icon/SxavengerEngineSubIcon.ico", { 32, 32 });
-
 	textures_ = std::make_unique<FSceneTextures>();
 	textures_->Create(main_->GetSize());
 
@@ -62,7 +61,7 @@ void BetaSystemGameLoop::InitSystem() {
 
 	//* camera *//
 
-	camera_ = std::make_unique<APivotCameraActor>();
+	camera_ = std::make_unique<ACineCameraActor>();
 	camera_->Init();
 
 	renderer_->SetCamera(camera_.get());
@@ -83,39 +82,6 @@ void BetaSystemGameLoop::InitSystem() {
 
 	scene_->AddLight(light_.get());
 
-	//* process *//
-
-	lut_ = std::make_unique<FProcessLut>();
-	lut_->Init();
-
-	setting_->AddProcess(lut_.get());
-
-	attribute_ = std::make_unique<AttributeComponent>();
-	attribute_->SetName("lut");
-	attribute_->SetToOutliner();
-	attribute_->SetAttributeFunc([this]() {
-		if (ImGui::TreeNode("red")) {
-			lut_->GetParameter().r.SetImGuiCommand();
-			ImGui::TreePop();
-		}
-
-		if (ImGui::TreeNode("green")) {
-			lut_->GetParameter().g.SetImGuiCommand();
-			ImGui::TreePop();
-		}
-
-		if (ImGui::TreeNode("blue")) {
-			lut_->GetParameter().b.SetImGuiCommand();
-			ImGui::TreePop();
-		}
-	});
-
-	//* test *//
-
-	p_ = std::make_unique<DxObject::ReflectionComputePipelineState>();
-	p_->CreateBlob("asset/shaders/RayQuerySample.cs.hlsl");
-	p_->ReflectionPipeline(SxavengerSystem::GetDxDevice());
-
 	//* editors *//
 
 	sEditorEngine->ExecuteEditorFunction<RenderSceneEditor>([this](RenderSceneEditor* editor) {
@@ -124,39 +90,9 @@ void BetaSystemGameLoop::InitSystem() {
 }
 
 void BetaSystemGameLoop::TermSystem() {
-	attribute_.reset();
 }
 
 void BetaSystemGameLoop::UpdateSystem() {
-
-	if (SxavengerSystem::IsPressKey(KeyId::KEY_1)) {
-		auto mouse = SxavengerSystem::GetInput()->GetMouseInput();
-
-		if (mouse->IsPress(MouseId::MOUSE_MIDDLE)) {
-			Vector2f delta = mouse->GetDeltaPosition();
-			static const Vector2f kSensitivity = { 0.01f, 0.01f };
-
-			camera_->GetParameter().angle += delta * kSensitivity;
-			camera_->GetParameter().angle.x = std::fmod(camera_->GetParameter().angle.x, pi_v * 2.0f);
-			camera_->GetParameter().angle.y = std::clamp(camera_->GetParameter().angle.y, -pi_v / 2.0f, pi_v / 2.0f);
-
-		}
-
-		if (mouse->IsPress(MouseId::MOUSE_RIGHT)) {
-			Vector2f delta = mouse->GetDeltaPosition();
-			static const Vector2f kSensitivity = { 0.01f, 0.01f };
-
-			Vector3f right = RotateVector({ 1.0f, 0.0f, 0.0f }, camera_->GetTransform().rotate);
-			Vector3f up = RotateVector({ 0.0f, 1.0f, 0.0f }, camera_->GetTransform().rotate);
-
-			camera_->GetParameter().point -= right * delta.x * kSensitivity.x;
-			camera_->GetParameter().point += up * delta.y * kSensitivity.y;
-		}
-
-		camera_->GetParameter().distance = std::max(camera_->GetParameter().distance - mouse->GetDeltaWheel(), 0.0f);
-		camera_->UpdateView();
-	}
-
 }
 
 void BetaSystemGameLoop::DrawSystem() {
