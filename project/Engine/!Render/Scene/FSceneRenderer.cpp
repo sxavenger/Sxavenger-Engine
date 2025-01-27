@@ -105,9 +105,10 @@ void FSceneRenderer::ProcessLighting(const DirectXThreadContext* context) {
 }
 
 void FSceneRenderer::RenderTransparentGeometries(const DirectXThreadContext* context) {
-	context;
 
 	const auto& geometries = scene_->GetGeometries();
+
+	textures_->BeginForward(context);
 
 	AGeometryActor::RendererContext rendererContext = {};
 	rendererContext.context = context;
@@ -121,6 +122,8 @@ void FSceneRenderer::RenderTransparentGeometries(const DirectXThreadContext* con
 			geometry->RenderTransparent(rendererContext);
 		}
 	};
+
+	textures_->EndForward(context);
 }
 
 void FSceneRenderer::PostProcessPass(const DirectXThreadContext* context) {

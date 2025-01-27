@@ -63,6 +63,7 @@ private:
 	//* geometries *//
 
 	std::unique_ptr<AModelActor> model_;
+	std::unique_ptr<AModelActor> model1_;
 
 	//* light *//
 

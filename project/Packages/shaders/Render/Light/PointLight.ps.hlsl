@@ -58,6 +58,7 @@ PSOutput main(PSInput input) {
 	
 	if (q.Proceed()) {
 		c_light /= 2.0f;
+
 	}
 	
 	//* èoóÕ

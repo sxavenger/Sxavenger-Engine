@@ -75,6 +75,13 @@ void BetaSystemGameLoop::InitSystem() {
 
 	scene_->AddGeometry(model_.get());
 
+	model1_ = std::make_unique<AModelActor>();
+	model1_->Init();
+	model1_->SetModel(SxavengerAsset::TryImport<AssetModel>("asset/models/primitive/teapot.obj"));
+	model1_->SetTransparency(AGeometryActor::Transparency::Transparent);
+
+	scene_->AddGeometry(model1_.get());
+
 	//* light *//
 
 	light_ = std::make_unique<APointLightActor>();

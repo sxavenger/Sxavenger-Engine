@@ -65,6 +65,7 @@ void FRenderCoreGeometry::CreateDesc() {
 	//* forward
 	forwardDesc_ = {};
 	forwardDesc_.CreateDefaultDesc();
+	forwardDesc_.SetRTVFormat(0, DXGI_FORMAT_R32G32B32A32_FLOAT);
 }
 
 void FRenderCoreGeometry::CreateDeferred() {
