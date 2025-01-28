@@ -30,6 +30,7 @@ void SxavengerModule::Init() {
 void SxavengerModule::Term() {
 	sSkinningPipeline.reset();
 	sPrimitive.reset();
+	sAudioController.reset();
 }
 
 void SxavengerModule::ResetPrimtive() {

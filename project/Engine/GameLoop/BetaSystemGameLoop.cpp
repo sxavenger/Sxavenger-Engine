@@ -91,6 +91,8 @@ void BetaSystemGameLoop::InitSystem() {
 
 	scene_->AddLight(light_.get());
 
+	SxavengerModule::PlayOneShot(SxavengerAsset::TryImport<AssetAudioBuffer>("asset/sounds/fanfare.wav").WaitGet().get(), 1.0f);
+
 	//* editors *//
 
 	sEditorEngine->ExecuteEditorFunction<RenderSceneEditor>([this](RenderSceneEditor* editor) {
