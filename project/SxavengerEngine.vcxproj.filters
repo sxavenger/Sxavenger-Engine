@@ -161,6 +161,7 @@
     <ClCompile Include="Engine\Asset\AudioBuffer\AssetAudioBuffer.cpp" />
     <ClCompile Include="Engine\Module\Audio\Audio.cpp" />
     <ClCompile Include="Engine\Module\Audio\AudioController.cpp" />
+    <ClCompile Include="Engine\!Render\Scene\PostProcess\PostProcesses\FProcessFog.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\System\Window\Window.h" />
@@ -326,6 +327,7 @@
     <ClInclude Include="Engine\Asset\AudioBuffer\AssetAudioBuffer.h" />
     <ClInclude Include="Engine\Module\Audio\Audio.h" />
     <ClInclude Include="Engine\Module\Audio\AudioController.h" />
+    <ClInclude Include="Engine\!Render\Scene\PostProcess\PostProcesses\FProcessFog.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />
