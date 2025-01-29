@@ -55,11 +55,14 @@ void BottomLevelAS::Build(
 	DxObject::Device* device, const DxObject::CommandContext* context,
 	const D3D12_RAYTRACING_GEOMETRY_DESC& geomDesc) {
 
+	// geomDescの保存
+	geomDesc_ = geomDesc;
+
 	// build descの設定
 	D3D12_BUILD_RAYTRACING_ACCELERATION_STRUCTURE_DESC buildDesc = {};
 	buildDesc.Inputs.Type           = D3D12_RAYTRACING_ACCELERATION_STRUCTURE_TYPE_BOTTOM_LEVEL;
 	buildDesc.Inputs.DescsLayout    = D3D12_ELEMENTS_LAYOUT_ARRAY;
-	buildDesc.Inputs.Flags          = D3D12_RAYTRACING_ACCELERATION_STRUCTURE_BUILD_FLAG_NONE;
+	buildDesc.Inputs.Flags          = D3D12_RAYTRACING_ACCELERATION_STRUCTURE_BUILD_FLAG_ALLOW_UPDATE;
 	buildDesc.Inputs.NumDescs       = 1;
 	buildDesc.Inputs.pGeometryDescs = &geomDesc;
 
@@ -81,6 +84,33 @@ void BottomLevelAS::Build(
 	barrier.UAV.pResource = asbuffer.Get();
 
 	context->GetCommandList()->ResourceBarrier(1, &barrier);
+}
+
+void BottomLevelAS::Update(DxObject::CommandContext* context) {
+
+	D3D12_BUILD_RAYTRACING_ACCELERATION_STRUCTURE_DESC buildASDesc = {};
+	buildASDesc.Inputs.Type           = D3D12_RAYTRACING_ACCELERATION_STRUCTURE_TYPE_BOTTOM_LEVEL;
+	buildASDesc.Inputs.DescsLayout    = D3D12_ELEMENTS_LAYOUT_ARRAY;
+	buildASDesc.Inputs.NumDescs       = 1;
+	buildASDesc.Inputs.pGeometryDescs = &geomDesc_;
+	buildASDesc.Inputs.Flags
+		= D3D12_RAYTRACING_ACCELERATION_STRUCTURE_BUILD_FLAG_ALLOW_UPDATE
+		| D3D12_RAYTRACING_ACCELERATION_STRUCTURE_BUILD_FLAG_PERFORM_UPDATE;
+
+	buildASDesc.SourceAccelerationStructureData  = asbuffer->GetGPUVirtualAddress();
+	buildASDesc.DestAccelerationStructureData    = asbuffer->GetGPUVirtualAddress();
+	buildASDesc.ScratchAccelerationStructureData = update->GetGPUVirtualAddress();
+
+	context->GetCommandList()->BuildRaytracingAccelerationStructure(
+		&buildASDesc, 0, nullptr
+	);
+
+	D3D12_RESOURCE_BARRIER barrier = {};
+	barrier.Type          = D3D12_RESOURCE_BARRIER_TYPE_UAV;
+	barrier.UAV.pResource = asbuffer.Get();
+
+	context->GetCommandList()->ResourceBarrier(1, &barrier);
+
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////

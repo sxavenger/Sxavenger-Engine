@@ -31,6 +31,10 @@ public:
 
 	virtual void RenderTransparent(const RendererContext& context) override;
 
+	//* raytracing option *//
+
+	virtual void SetupToplevelAS(const SetupContext& context) override;
+
 	//* option *//
 
 	SkeletonMesh* GetSkeleton() { return skeleton_.get(); }
