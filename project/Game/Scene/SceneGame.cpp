@@ -38,8 +38,12 @@ void SceneGame::Init() {
 
 	light_ = std::make_unique<ADirectionalLightActor>();
 	light_->Init();
+	light_->GetTransform().rotate = MakeAxisAngle({1.0f, 0.0f, 0.0f}, -pi_v / 2.0f + 0.01f);
+	light_->UpdateMatrix();
 
 	component_.scene_->AddLight(light_.get());
+
+
 }
 
 void SceneGame::Update() {
