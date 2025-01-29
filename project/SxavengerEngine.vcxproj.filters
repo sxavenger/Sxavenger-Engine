@@ -175,6 +175,15 @@
     <ClCompile Include="Game\Entity\Player\PlayerStateRoot.cpp" />
     <ClCompile Include="Game\Object\GameCamera.cpp" />
     <ClCompile Include="Game\Object\Ground.cpp" />
+    <ClCompile Include="Game\Entity\Enemy\BaseEnemyState.cpp" />
+    <ClCompile Include="Game\Entity\Enemy\Enemy.cpp" />
+    <ClCompile Include="Game\Entity\Enemy\EnemyCollection.cpp" />
+    <ClCompile Include="Game\Entity\Enemy\EnemyStateApproach.cpp" />
+    <ClCompile Include="Game\Entity\Enemy\EnemyStateKnock.cpp" />
+    <ClCompile Include="Game\Entity\Enemy\EnemyStateReactionHeavy.cpp" />
+    <ClCompile Include="Game\Entity\Enemy\EnemyStateReactionLight.cpp" />
+    <ClCompile Include="Game\Entity\Enemy\EnemyStateRoot.cpp" />
+    <ClCompile Include="Game\Entity\Enemy\EnemyStateStraight.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\System\Window\Window.h" />
@@ -355,6 +364,15 @@
     <ClInclude Include="Game\Entity\Player\PlayerStateRoot.h" />
     <ClInclude Include="Game\Object\GameCamera.h" />
     <ClInclude Include="Game\Object\Ground.h" />
+    <ClInclude Include="Game\Entity\Enemy\BaseEnemyState.h" />
+    <ClInclude Include="Game\Entity\Enemy\Enemy.h" />
+    <ClInclude Include="Game\Entity\Enemy\EnemyCollection.h" />
+    <ClInclude Include="Game\Entity\Enemy\EnemyStateApproach.h" />
+    <ClInclude Include="Game\Entity\Enemy\EnemyStateKnock.h" />
+    <ClInclude Include="Game\Entity\Enemy\EnemyStateReactionHeavy.h" />
+    <ClInclude Include="Game\Entity\Enemy\EnemyStateReactionLight.h" />
+    <ClInclude Include="Game\Entity\Enemy\EnemyStateRoot.h" />
+    <ClInclude Include="Game\Entity\Enemy\EnemyStateStraight.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

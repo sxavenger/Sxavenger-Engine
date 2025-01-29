@@ -35,12 +35,12 @@ PSOutput main(PSInput input) {
 	RayDesc ray;
 	ray.Origin    = surface.position;
 	ray.Direction = l;
-	ray.TMin      = 0.001f;
+	ray.TMin      = 0.1f;
 	ray.TMax      = 10000.0f;
 	
 	q.TraceRayInline(
 		gScene,
-		RAY_FLAG_NONE,
+		RAY_FLAG_CULL_BACK_FACING_TRIANGLES,
 		0xFF,
 		ray
 	);

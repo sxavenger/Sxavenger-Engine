@@ -30,7 +30,7 @@ void Player::Init() {
 	state_->Init();
 
 	AModelAnimationActor::SetName("player");
-	AModelAnimationActor::transparency_ = AGeometryActor::Transparency::Opaque;
+	AModelAnimationActor::SetTransparency(AGeometryActor::Transparency::Opaque);
 
 	AModelAnimationActor::SetModel(SxavengerAsset::TryImport<AssetModel>("asset/model/sample/idle.gltf"));
 	AModelAnimationActor::Init();
