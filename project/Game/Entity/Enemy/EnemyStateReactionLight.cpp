@@ -11,7 +11,7 @@
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 void EnemyStateReactionLight::Init() {
-	duration_ = enemy_->animators_[Enemy::AnimationState::ReactionLight]->GetDurationTime(0);
+	duration_ = enemy_->animators_[Enemy::AnimationState::ReactionLight].WaitGet()->GetDurationTime(0);
 	enemy_->SetAnimationState(Enemy::AnimationState::ReactionLight);
 }
 

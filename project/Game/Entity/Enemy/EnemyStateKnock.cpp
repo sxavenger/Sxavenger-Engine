@@ -11,7 +11,7 @@
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 void EnemyStateKnock::Init() {
-	duration_ = enemy_->animators_[Enemy::AnimationState::Knock]->GetDurationTime(0);
+	duration_ = enemy_->animators_[Enemy::AnimationState::Knock].WaitGet()->GetDurationTime(0);
 	enemy_->SetAnimationState(Enemy::AnimationState::Knock);
 
 	enemy_->hitCollider_->SetIsActive(false);
@@ -28,7 +28,7 @@ void EnemyStateKnock::Update() {
 		enemy_->isDead_ = true;
 	}
 
-	time_ = Min(time_, { duration_.time - 0.01f });
+	time_.time = std::min(time_.time, { duration_.time - 0.01f });
 
 	enemy_->time_ = time_;
 

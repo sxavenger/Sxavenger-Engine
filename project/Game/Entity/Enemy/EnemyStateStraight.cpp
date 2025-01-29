@@ -11,7 +11,7 @@
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 void EnemyStateStraight::Init() {
-	duration_ = enemy_->animators_[Enemy::AnimationState::Straight]->GetDurationTime(0);
+	duration_ = enemy_->animators_[Enemy::AnimationState::Straight].WaitGet()->GetDurationTime(0);
 	enemy_->SetAnimationState(Enemy::AnimationState::Straight);
 }
 

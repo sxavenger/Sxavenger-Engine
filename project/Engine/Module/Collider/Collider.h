@@ -25,6 +25,7 @@ enum ColliderType {
 	kPlayer,
 	kPlayerAttack,
 	kEnemy,
+	kEnemyApproach,
 
 	kCountOfColliderType
 };

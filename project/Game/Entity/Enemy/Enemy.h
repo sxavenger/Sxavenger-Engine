@@ -68,6 +68,10 @@ public:
 
 	bool IsDead() const { return isDead_; }
 
+	//* render *//
+
+	virtual void RenderOpaque(const RendererContext& context) override;
+
 private:
 
 	//=========================================================================================

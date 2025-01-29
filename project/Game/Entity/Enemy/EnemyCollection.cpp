@@ -16,7 +16,7 @@ void EnemyCollection::Init() {
 		enemies_[i]->Init(transform);
 
 
-		enemies_[i]->SetName(std::format("enemy ## ptr: {:p}", reinterpret_cast<const void*>(enemies_[i].get())));
+		enemies_[i]->AttributeComponent::SetName(std::format("enemy ## ptr: {:p}", reinterpret_cast<const void*>(enemies_[i].get())));
 		SetChild(enemies_[i].get());
 	}
 
@@ -30,5 +30,5 @@ void EnemyCollection::Update() {
 void EnemyCollection::Draw() {
 }
 
-void EnemyCollection::SetAttributeImGui() {
+void EnemyCollection::AttributeImGui() {
 }

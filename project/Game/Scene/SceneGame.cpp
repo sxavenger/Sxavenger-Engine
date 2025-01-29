@@ -25,12 +25,12 @@ void SceneGame::Init() {
 	transform.rotate = Quaternion::Identity();
 	player_->Init(transform);
 	player_->SetToOutliner();
-
 	component_.scene_->AddGeometry(player_.get());
 
-	/*enemy_ = std::make_unique<Enemy>();
+	enemy_ = std::make_unique<Enemy>();
 	enemy_->Init();
-	enemy_->SetToConsole();*/
+	enemy_->SetToOutliner();
+	component_.scene_->AddGeometry(enemy_.get());
 
 	ground_ = std::make_unique<Ground>();
 	ground_->Init();
@@ -46,15 +46,13 @@ void SceneGame::Update() {
 
 	camera_->Update();
 	player_->Update();
+	enemy_->Update();
 
-	//player_->Update();
-	//enemy_->Update();
+	SxavengerModule::CheckCollision();
 
-	//SxavengerModule::CheckCollision();
-
-	//if (enemy_->IsDead()) {
-	//	controller_->RequestNextScene("Title");
-	//}
+	if (enemy_->IsDead()) {
+		BaseScene::RequestNextScene("Title");
+	}
 }
 
 void SceneGame::Draw() {

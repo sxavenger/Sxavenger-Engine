@@ -3,6 +3,9 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
+//* render
+#include <Engine/!Render/FRenderCore.h>
+
 //* lib
 #include <Lib/MyMath.h>
 
@@ -20,6 +23,7 @@ void Enemy::Init() {
 
 	AModelAnimationActor::SetModel(SxavengerAsset::TryImport<AssetModel>("asset/model/sample/idle.gltf"));
 	AModelAnimationActor::Init();
+	AModelAnimationActor::GetSkeleton()->CreateBottomLevelAS(SxavengerSystem::GetMainThreadContext());
 
 	//* visual *//
 
@@ -71,8 +75,8 @@ void Enemy::Init(const QuaternionTransform& transform) {
 void Enemy::Update() {
 	UpdateState();
 
-	AModelAnimationActor::GetTransform().translate.x = std::clamp(AnimationBehavior::GetTransform().translate.x, -12.0f, 12.0f);
-	AModelAnimationActor::GetTransform().translate.z = std::clamp(AnimationBehavior::GetTransform().translate.z, -12.0f, 12.0f);
+	AModelAnimationActor::GetTransform().translate.x = std::clamp(AModelAnimationActor::GetTransform().translate.x, -12.0f, 12.0f);
+	AModelAnimationActor::GetTransform().translate.z = std::clamp(AModelAnimationActor::GetTransform().translate.z, -12.0f, 12.0f);
 
 	AModelAnimationActor::UpdateMatrix();
 	hitCollider_->UpdateMatrix();
@@ -113,38 +117,8 @@ void Enemy::OnCollisionEnter(_MAYBE_UNUSED Collider* const other) {
 		Vector3f position      = { GetPosition().x, 1.0f, GetPosition().z };
 		Vector3f otherPosition = { other->GetPosition().x, 1.0f, other->GetPosition().z };
 
-		AnimationBehavior::GetTransform().rotate
+		AModelAnimationActor::GetTransform().rotate
 			= ToQuaternion(CalculateEuler(Normalize(otherPosition - position)));
-	}
-}
-
-void Enemy::DrawSystematic(_MAYBE_UNUSED const SxavGraphicsFrame* frame) {
-	if (skeletonMesh_ == nullptr || !model_.has_value()) {
-		return;
-	}
-
-	model_.value().CheckAndReload();
-	std::shared_ptr<Model> model = model_.value().Lock();
-
-	if (!model->IsCompleted()) {
-		return;
-	}
-
-	sConsole->SetGraphicsPipeline(kDefaultVS_AlbedoPS_Deferred, SxavengerSystem::GetMainThreadContext(), frame->GetSize());
-
-	DxObject::BindBufferDesc bind = {};
-	bind.SetAddress("gCamera", frame->GetCamera()->GetGPUVirtualAddress());
-	bind.SetAddress("gTransform", TransformComponent::GetGPUVirtualAddress());
-	bind.SetAddress("gUVTransform", MaterialComponent::GetTransformGPUVirtualAddress());
-	bind.SetAddress("gColor", MaterialComponent::GetColorGPUVirtualAddress());
-	bind.SetHandle("gAlbedo", texture_->GetGPUHandleSRV());
-
-	for (uint32_t i = 0; i < model->GetMeshSize(); ++i) {
-		skeletonMesh_->SetIABuffer(i);
-
-		sConsole->BindGraphicsBuffer(kDefaultVS_AlbedoPS_Deferred, SxavengerSystem::GetMainThreadContext(), bind);
-
-		skeletonMesh_->DrawCall(i);
 	}
 }
 
@@ -154,6 +128,38 @@ void Enemy::AttributeImGui() {
 		requestState_ = std::make_unique<EnemyStateRoot>(this);
 		target_ = nullptr;
 	}
+}
+
+void Enemy::RenderOpaque(const RendererContext& context) {
+	if (!isRenderWait_ && !model_.Get()->IsComplete()) {
+		return;
+	}
+
+	auto model = model_.WaitGet();
+
+	DxObject::BindBufferDesc parameter = context.parameter;
+	parameter.SetAddress("gTransform",        TransformComponent::GetGPUVirtualAddress());
+	parameter.SetAddress("gTextureComponent", TextureComponent::GetGPUVirtualAddress());
+	parameter.SetHandle("gAlbedo",            texture_.WaitGet()->GetGPUHandleSRV());
+
+	// todo: mesh shader
+	FRenderCore::GetInstance()->GetGeometry()->SetPipeline(
+		FRenderCoreGeometry::RenderType::Deffered, FRenderCoreGeometry::VertexStage::DefaultVS, FRenderCoreGeometry::PixelStage::Albedo,
+		context.context, context.size
+	);
+
+	for (uint32_t i = 0; i < model->GetMeshSize(); ++i) {
+
+		skeleton_->SetIABuffer(context.context, i);
+
+		FRenderCore::GetInstance()->GetGeometry()->BindGraphicsBuffer(
+			FRenderCoreGeometry::RenderType::Deffered, FRenderCoreGeometry::VertexStage::DefaultVS, FRenderCoreGeometry::PixelStage::Albedo,
+			context.context, parameter
+		);
+
+		skeleton_->DrawCall(context.context, i);
+	}
+
 }
 
 void Enemy::UpdateAnimation() {

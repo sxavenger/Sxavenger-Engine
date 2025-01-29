@@ -13,7 +13,7 @@
 // EnemyCollection class
 ////////////////////////////////////////////////////////////////////////////////////////////
 class EnemyCollection
-	: public BaseBehavior {
+	: public AttributeComponent {
 public:
 
 	//=========================================================================================
@@ -29,7 +29,7 @@ public:
 
 	void Draw();
 
-	void SetAttributeImGui();
+	void AttributeImGui();
 
 private:
 

@@ -11,7 +11,7 @@
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 void EnemyStateReactionHeavy::Init() {
-	duration_ = enemy_->animators_[Enemy::AnimationState::ReactionHeavy]->GetDurationTime(0);
+	duration_ = enemy_->animators_[Enemy::AnimationState::ReactionHeavy].WaitGet()->GetDurationTime(0);
 	enemy_->SetAnimationState(Enemy::AnimationState::ReactionHeavy);
 }
 
