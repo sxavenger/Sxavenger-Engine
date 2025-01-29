@@ -34,6 +34,7 @@ void Player::Init() {
 
 	AModelAnimationActor::SetModel(SxavengerAsset::TryImport<AssetModel>("asset/model/sample/idle.gltf"));
 	AModelAnimationActor::Init();
+	AModelAnimationActor::GetSkeleton()->CreateBottomLevelAS(SxavengerSystem::GetMainThreadContext());
 
 	//* animation *//
 
@@ -160,6 +161,8 @@ void Player::UpdateAnimation() {
 	} else {
 		AModelAnimationActor::GetSkeleton()->UpdateAnimation(animators_[animationState_].WaitGet()->GetAnimation(0), time_);
 	}
+
+	AModelAnimationActor::GetSkeleton()->UpdateBottomLevelAS(SxavengerSystem::GetMainThreadContext());
 }
 
 void Player::UpdateCamera() {

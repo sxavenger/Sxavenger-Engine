@@ -37,15 +37,7 @@ public:
 
 	//* option *//
 
-	//SkeletonMesh* GetSkeleton() { return skeleton_.get(); }
-
-	void UpdateAnimation(const Animation& animation, TimePointf<TimeUnit::second> time, bool isLoop = true);
-
-	void UpdateTransitionAnimation(
-		const Animation& before, TimePointf<TimeUnit::second> beforeTime, bool isLoopBefore,
-		const Animation& after, TimePointf<TimeUnit::second> afterTime, bool isLoopAfter,
-		float t
-	);
+	SkeletonMesh* GetSkeleton() { return skeleton_.get(); }
 
 protected:
 
@@ -54,11 +46,5 @@ protected:
 	//=========================================================================================
 
 	std::unique_ptr<SkeletonMesh> skeleton_;
-
-	//=========================================================================================
-	// protected methods
-	//=========================================================================================
-
-	void UpdateBottomLevelAS();
 
 };
