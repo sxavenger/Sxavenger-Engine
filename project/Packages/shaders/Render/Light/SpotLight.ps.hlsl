@@ -61,7 +61,7 @@ PSOutput main(PSInput input) {
 		ray
 	);
 	
-	if (q.Proceed()) {
+	if (q.Proceed()) { //!< Õ“Ë‚µ‚½ê‡
 		c_light /= 2.0f;
 	}
 	
