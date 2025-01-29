@@ -3,46 +3,54 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
-//* engine
-#include <Engine/Module/Component/TransformComponent.h>
+//* state
+#include "BasePlayerState.h"
 
-//* c++
-#include <string>
+//* lib
+#include <Lib/Geometry/Vector2.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// AActor class
+// PlayerStateRoot class
 ////////////////////////////////////////////////////////////////////////////////////////////
-class AActor
-	: public TransformComponent {
-	//* 3D Object で Transformを持っているモノをActorとして扱う
+class PlayerStateRoot
+	: public BasePlayerState {
 public:
 
 	//=========================================================================================
 	// public methods
 	//=========================================================================================
 
-	AActor()          = default;
-	virtual ~AActor() = default;
+	PlayerStateRoot(Player* player) : BasePlayerState(player) {}
+	~PlayerStateRoot() = default;
 
-	virtual void InspectorImGui() {}
-	//!< Inspector表示用のImGui
+	void Init() override;
 
-	const std::string& GetName() const { return name_; }
-	std::string& GetName() { return name_; }
+	void Term() override;
 
-	void SetName(const std::string& name) { name_ = name; }
+	void Update() override;
 
-	bool IsActive() const { return isActive_; }
-	bool& GetIsActive() { return isActive_; }
-
-protected:
+private:
 
 	//=========================================================================================
-	// protected variables
+	// private variables
 	//=========================================================================================
 
-	std::string name_ = "actor";
+	//* paraemter *//
 
-	bool isActive_ = true;
+	float speed_    = 1.0f;
+	float runSpeed_ = 4.0f;
 
+	Vector2f rotationDelta_ = { 0.02f, 0.01f };
+
+	//=========================================================================================
+	// private methods
+	//=========================================================================================
+
+	void RotateCameraGamepad();
+	void MoveGamepad();
+	void ActionGamepad();
+
+	void MoveKeyboard();
+
+	// HACK: 移動を扱う
 };

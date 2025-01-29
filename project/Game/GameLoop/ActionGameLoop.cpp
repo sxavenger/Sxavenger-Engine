@@ -77,7 +77,13 @@ void ActionGameLoop::UpdateGame() {
 }
 
 void ActionGameLoop::DrawGame() {
+	collection_->GetScene()->GetComponent().scene_->SetupTopLevelAS(SxavengerSystem::GetMainThreadContext());
 	collection_->DrawScene();
+
+	sEditorEngine->ExecuteEditorFunction<RenderSceneEditor>([](RenderSceneEditor* editor) {
+		editor->Draw();
+	});
+
 	collection_->GetScene()->GetComponent().Render(SxavengerSystem::GetMainThreadContext(), textures_.get());
 
 	main_->BeginRendering();

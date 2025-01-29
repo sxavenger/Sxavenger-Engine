@@ -3,46 +3,35 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
-//* base
-#include <Engine/Adapter/Scene/BaseScene.h>
+//* state
+#include "BasePlayerState.h"
 
 //* engine
-#include <Engine/!Render/Scene/Actor/Light/LightActors/ADirectionalLightActor.h>
-
-
-//* game
-//#include "../Entity/Player/Player.h"
-//#include "../Entity/Enemy/Enemy.h"
-//#include "../Object/Ground.h"
+#include <Engine/System/Runtime/Performance/TimePoint.h>
+#include <Engine/Module/Collider/Collider.h>
 
 //* game
-#include "../Object/GameCamera.h"
-#include "../Entity/Player/Player.h"
-
-//* c++
-#include <memory>
+#include "PlayerAttackCollider.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// SceneGame class
+// PlayerStateRolling class
 ////////////////////////////////////////////////////////////////////////////////////////////
-class SceneGame
-	: public BaseScene {
+class PlayerStateKick
+	: public BasePlayerState {
 public:
 
 	//=========================================================================================
 	// public methods
 	//=========================================================================================
 
-	SceneGame() = default;
-	~SceneGame() = default;
+	PlayerStateKick(Player* player) : BasePlayerState(player) {};
+	~PlayerStateKick() = default;
 
 	void Init() override;
 
-	void Update() override;
-
-	void Draw() override;
-
 	void Term() override;
+
+	void Update() override;
 
 private:
 
@@ -50,16 +39,20 @@ private:
 	// private variables
 	//=========================================================================================
 
-	std::unique_ptr<GameCamera> camera_;
+	//* time *//
 
-	std::unique_ptr<Player> player_;
+	TimePointf<TimeUnit::second> time_;
+	TimePointf<TimeUnit::second> duration_;
 
-	/*std::unique_ptr<Enemy> enemy_;
+	//* collider *//
 
-	std::unique_ptr<Ground> ground_;*/
+	std::unique_ptr<PlayerAttackCollider> attackCollider_;
 
+	//=========================================================================================
+	// private methods
+	//=========================================================================================
 
-
-	std::unique_ptr<ADirectionalLightActor> light_;
+	void UpdateAnimation();
 
 };
+

@@ -165,6 +165,15 @@
     <ClCompile Include="Engine\Module\Audio\Audio.cpp" />
     <ClCompile Include="Engine\Module\Audio\AudioController.cpp" />
     <ClCompile Include="Engine\!Render\Scene\PostProcess\PostProcesses\FProcessFog.cpp" />
+    <ClCompile Include="Game\Entity\Player\BasePlayerState.cpp" />
+    <ClCompile Include="Game\Entity\Player\Player.cpp" />
+    <ClCompile Include="Game\Entity\Player\PlayerStateElbow.cpp" />
+    <ClCompile Include="Game\Entity\Player\PlayerStateHook.cpp" />
+    <ClCompile Include="Game\Entity\Player\PlayerStateKick.cpp" />
+    <ClCompile Include="Game\Entity\Player\PlayerStatePunch.cpp" />
+    <ClCompile Include="Game\Entity\Player\PlayerStateRolling.cpp" />
+    <ClCompile Include="Game\Entity\Player\PlayerStateRoot.cpp" />
+    <ClCompile Include="Game\Object\GameCamera.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\System\Window\Window.h" />
@@ -334,6 +343,16 @@
     <ClInclude Include="Engine\Module\Audio\Audio.h" />
     <ClInclude Include="Engine\Module\Audio\AudioController.h" />
     <ClInclude Include="Engine\!Render\Scene\PostProcess\PostProcesses\FProcessFog.h" />
+    <ClInclude Include="Game\Entity\Player\BasePlayerState.h" />
+    <ClInclude Include="Game\Entity\Player\Player.h" />
+    <ClInclude Include="Game\Entity\Player\PlayerAttackCollider.h" />
+    <ClInclude Include="Game\Entity\Player\PlayerStateElbow.h" />
+    <ClInclude Include="Game\Entity\Player\PlayerStateHook.h" />
+    <ClInclude Include="Game\Entity\Player\PlayerStateKick.h" />
+    <ClInclude Include="Game\Entity\Player\PlayerStatePunch.h" />
+    <ClInclude Include="Game\Entity\Player\PlayerStateRolling.h" />
+    <ClInclude Include="Game\Entity\Player\PlayerStateRoot.h" />
+    <ClInclude Include="Game\Object\GameCamera.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

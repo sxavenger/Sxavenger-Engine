@@ -26,8 +26,9 @@ void SceneTitle::Init() {
 void SceneTitle::Update() {
 
 	const GamepadInput* gamepad = SxavengerSystem::GetInput()->GetGamepadInput(0);
+	const KeyboardInput* keyboard = SxavengerSystem::GetInput()->GetKeyboardInput();
 
-	if (gamepad->IsTrigger(GamepadButtonId::BUTTON_A)) {
+	if (gamepad->IsTrigger(GamepadButtonId::BUTTON_A) || keyboard->IsTrigger(KeyId::KEY_SPACE)) {
 		BaseScene::RequestNextScene("Game");
 	}
 }

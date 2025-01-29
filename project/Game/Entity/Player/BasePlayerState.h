@@ -3,37 +3,32 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
-//* engine
-#include <Engine/Module/Component/TransformComponent.h>
 
-//* c++
-#include <string>
+//-----------------------------------------------------------------------------------------
+// forward
+//-----------------------------------------------------------------------------------------
+class Player;
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// AActor class
+// BasePlayerState class
 ////////////////////////////////////////////////////////////////////////////////////////////
-class AActor
-	: public TransformComponent {
-	//* 3D Object で Transformを持っているモノをActorとして扱う
+class BasePlayerState {
 public:
 
 	//=========================================================================================
 	// public methods
 	//=========================================================================================
 
-	AActor()          = default;
-	virtual ~AActor() = default;
+	BasePlayerState(Player* player) { player_ = player; }
+	virtual ~BasePlayerState() = default;
 
-	virtual void InspectorImGui() {}
-	//!< Inspector表示用のImGui
+	virtual void Init() = 0;
 
-	const std::string& GetName() const { return name_; }
-	std::string& GetName() { return name_; }
+	virtual void Term() = 0;
 
-	void SetName(const std::string& name) { name_ = name; }
+	virtual void Update() = 0;
 
-	bool IsActive() const { return isActive_; }
-	bool& GetIsActive() { return isActive_; }
+	virtual void ImGuiCommand() {}
 
 protected:
 
@@ -41,8 +36,8 @@ protected:
 	// protected variables
 	//=========================================================================================
 
-	std::string name_ = "actor";
+	//* external *//
 
-	bool isActive_ = true;
+	Player* player_ = nullptr;
 
 };

@@ -3,46 +3,46 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
+//* state
+#include "BasePlayerState.h"
+
 //* engine
-#include <Engine/Module/Component/TransformComponent.h>
-
-//* c++
-#include <string>
+#include <Engine/System/Runtime/Performance/TimePoint.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// AActor class
+// PlayerStateRolling class
 ////////////////////////////////////////////////////////////////////////////////////////////
-class AActor
-	: public TransformComponent {
-	//* 3D Object で Transformを持っているモノをActorとして扱う
+class PlayerStateRolling
+	: public BasePlayerState {
 public:
 
 	//=========================================================================================
 	// public methods
 	//=========================================================================================
 
-	AActor()          = default;
-	virtual ~AActor() = default;
+	PlayerStateRolling(Player* player) : BasePlayerState(player) {};
+	~PlayerStateRolling() = default;
 
-	virtual void InspectorImGui() {}
-	//!< Inspector表示用のImGui
+	void Init() override;
 
-	const std::string& GetName() const { return name_; }
-	std::string& GetName() { return name_; }
+	void Term() override;
 
-	void SetName(const std::string& name) { name_ = name; }
+	void Update() override;
 
-	bool IsActive() const { return isActive_; }
-	bool& GetIsActive() { return isActive_; }
-
-protected:
+private:
 
 	//=========================================================================================
-	// protected variables
+	// private variables
 	//=========================================================================================
 
-	std::string name_ = "actor";
+	//* time *//
 
-	bool isActive_ = true;
+	TimePointf<TimeUnit::second> time_;
+	TimePointf<TimeUnit::second> duration_;
+
+	//* parameter *//
+
+	float speed_ = 5.0f;
+
 
 };

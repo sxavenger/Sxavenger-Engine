@@ -4,45 +4,47 @@
 // include
 //-----------------------------------------------------------------------------------------
 //* engine
-#include <Engine/Module/Component/TransformComponent.h>
-
-//* c++
-#include <string>
+#include <Engine/System/Runtime/Input/Input.h>
+#include <Engine/!Render/Scene/Actor/Camera/CameraActors/APivotCameraActor.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// AActor class
+// GameCamera class
 ////////////////////////////////////////////////////////////////////////////////////////////
-class AActor
-	: public TransformComponent {
-	//* 3D Object で Transformを持っているモノをActorとして扱う
+class GameCamera
+	: public APivotCameraActor {
 public:
 
 	//=========================================================================================
 	// public methods
 	//=========================================================================================
 
-	AActor()          = default;
-	virtual ~AActor() = default;
+	GameCamera()  = default;
+	~GameCamera() = default;
 
-	virtual void InspectorImGui() {}
-	//!< Inspector表示用のImGui
+	void Init();
 
-	const std::string& GetName() const { return name_; }
-	std::string& GetName() { return name_; }
+	void Term();
 
-	void SetName(const std::string& name) { name_ = name; }
+	void Update();
 
-	bool IsActive() const { return isActive_; }
-	bool& GetIsActive() { return isActive_; }
-
-protected:
+private:
 
 	//=========================================================================================
-	// protected variables
+	// private variables
 	//=========================================================================================
 
-	std::string name_ = "actor";
+	//* external *//
 
-	bool isActive_ = true;
+	const GamepadInput* gamepad_ = nullptr;
+
+	//* parameter *//
+
+	Vector2f rotationDelta_ = { 0.02f, 0.01f };
+
+	//=========================================================================================
+	// private methods
+	//=========================================================================================
+
+	void UpdateGamepad();
 
 };
