@@ -83,6 +83,9 @@ AssetCollection::FileType AssetCollection::GetFileType(const std::filesystem::pa
 
 	} else if (extension == ".hlsl" || extension == ".hlsli") {
 		return FileType::Shader;
+
+	} else if (extension == ".wav" || extension == ".mp3") {
+		return FileType::AudioBuffer;
 	}
 
 	return FileType::Unknown;
@@ -200,6 +203,18 @@ std::shared_ptr<AssetBlob> AssetCollection::LoadBlob(FileData& fileData, const s
 	return asset;
 }
 
+std::shared_ptr<AssetAudioBuffer> AssetCollection::LoadAudioBuffer(FileData& fileData, const std::filesystem::path& filepath) {
+	auto& [type, file] = fileData;
+	Assert(type == FileType::AudioBuffer, "different type.");
+
+	auto asset = std::make_shared<AssetAudioBuffer>();
+	file       = asset;
+
+	asset->SetFilepath(filepath);
+	AsyncAssetThreadCollection::PushTask(asset);
+	return asset;
+}
+
 std::shared_ptr<AssetUnknown> AssetCollection::TryLoadUnknown(FileData& fileData, const std::filesystem::path& filepath) {
 	auto& [type, file] = fileData;
 	Assert(type == FileType::Unknown, "different type.");
@@ -261,5 +276,16 @@ std::shared_ptr<AssetBlob> AssetCollection::TryLoadBlob(FileData& fileData, cons
 	}
 
 	return LoadBlob(fileData, filepath);
+}
+
+std::shared_ptr<AssetAudioBuffer> AssetCollection::TryLoadAudioBuffer(FileData& fileData, const std::filesystem::path& filepath) {
+	auto& [type, file] = fileData;
+	Assert(type == FileType::AudioBuffer, "different type.");
+
+	if (std::holds_alternative<std::shared_ptr<AssetAudioBuffer>>(file)) { //!< audio bufferが存在する場合
+		return std::get<std::shared_ptr<AssetAudioBuffer>>(file);
+	}
+
+	return LoadAudioBuffer(fileData, filepath);
 }
 

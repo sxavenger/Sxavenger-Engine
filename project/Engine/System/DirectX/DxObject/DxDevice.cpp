@@ -146,8 +146,8 @@ bool Device::CheckShaderModel() {
 	auto hr = device_->CheckFeatureSupport(D3D12_FEATURE_SHADER_MODEL, &shaderModel, sizeof(shaderModel));
 
 	if (FAILED(hr) || (shaderModel.HighestShaderModel < DxObject::kHeighestShaderModel)) {
-		EngineLog("Warning : Sxavenger Engine is enviorment shader model 6.6");
-		return false; //!< shader modelが6.5以下しかサポートされてない
+		EngineLog("warning : Sxavenger Engine is enviorment shader model 6.6");
+		return false; //!< shader modelが6.6以上をサポートしていない
 	}
 
 	return true;
@@ -158,9 +158,9 @@ bool Device::CheckRayTracingEnable() {
 	D3D12_FEATURE_DATA_D3D12_OPTIONS5 option = {};
 	auto hr = device_->CheckFeatureSupport(D3D12_FEATURE_D3D12_OPTIONS5, &option, sizeof(option));
 
-	if (FAILED(hr) || option.RaytracingTier < D3D12_RAYTRACING_TIER_1_0) {
-		EngineLog("Warning : RayTracing is not supported.");
-		return false; //!< RayTracingがサポートされていない
+	if (FAILED(hr) || option.RaytracingTier < D3D12_RAYTRACING_TIER_1_1) {
+		EngineLog("warning : RayTracing is not supported. D3D12_RAYTRACING_TIER_1_1 or less.");
+		return false; //!< Raytracing 1.1 未満
 	}
 	
 	return true;
@@ -172,7 +172,7 @@ bool Device::CheckMeshShaderEnable() {
 	auto hr = device_->CheckFeatureSupport(D3D12_FEATURE_D3D12_OPTIONS7, &features, sizeof(features));
 
 	if (FAILED(hr) || (features.MeshShaderTier == D3D12_MESH_SHADER_TIER_NOT_SUPPORTED)) {
-		EngineLog("Warning : Mesh Shaders aren't supported.");
+		EngineLog("warning : mesh shaders aren't supported.");
 		return false; //!< mesh shaderがサポートされてない
 	}
 	

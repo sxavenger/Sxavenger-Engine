@@ -257,7 +257,11 @@ BindBufferType BindBufferTable::ToBindBufferType(D3D_SHADER_INPUT_TYPE type) {
 
 		case D3D_SHADER_INPUT_TYPE::D3D_SIT_UAV_RWSTRUCTURED:
 			return BindBufferType::kVirtual_UAV;
-				break;
+			break;
+
+		case D3D_SHADER_INPUT_TYPE::D3D_SIT_RTACCELERATIONSTRUCTURE:
+			return BindBufferType::kVirtual_SRV;
+			break;
 	}
 
 	Assert(false, "D3D_SHADER_INPUT_TYPE is undefine.");

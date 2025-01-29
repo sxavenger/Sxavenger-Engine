@@ -25,6 +25,8 @@ void FPresenter::Init() {
 	desc.SetElement("POSITION", 0, DXGI_FORMAT_R32G32B32A32_FLOAT);
 	desc.SetElement("TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT);
 
+	desc.SetBlendMode(0, BlendMode::kBlendModeNone);
+
 	desc.SetRTVFormat(0, DxObject::kScreenFormat);
 
 	pipeline_->CreatePipeline(SxavengerSystem::GetDxDevice(), desc);

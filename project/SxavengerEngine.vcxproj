@@ -188,11 +188,14 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Demo\Actor\AFloorActor.cpp" />
+    <ClCompile Include="Demo\Sample\GameLoop\SampleRaytracingGameLoop.cpp" />
     <ClCompile Include="Engine\!Render\Canvas\FCanvas.cpp" />
     <ClCompile Include="Engine\!Render\Canvas\Layer\Layers\LSprite.cpp" />
     <ClCompile Include="Engine\!Render\Canvas\Layer\LLayer.cpp" />
     <ClCompile Include="Engine\!Render\Core\FRenderCoreLayer.cpp" />
+    <ClCompile Include="Engine\!Render\Core\FRenderCoreProcess.cpp" />
     <ClCompile Include="Engine\!Render\FPresenter.cpp" />
+    <ClCompile Include="Engine\!Render\Renderer\FBaseRenderer.cpp" />
     <ClCompile Include="Engine\!Render\Scene\Actor\AActor.cpp" />
     <ClCompile Include="Engine\!Render\Scene\Actor\Camera\ACameraActor.cpp" />
     <ClCompile Include="Engine\!Render\Scene\Actor\Camera\CameraActors\ACineCameraActor.cpp" />
@@ -210,17 +213,25 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="Engine\!Render\Core\FRenderCoreLight.cpp" />
     <ClCompile Include="Engine\!Render\Core\FRenderCoreRaytracing.cpp" />
     <ClCompile Include="Engine\!Render\FRenderCore.cpp" />
+    <ClCompile Include="Engine\!Render\Scene\FPostProcessSetting.cpp" />
     <ClCompile Include="Engine\!Render\Scene\FScene.cpp" />
     <ClCompile Include="Engine\!Render\FSceneDepth.cpp" />
     <ClCompile Include="Engine\!Render\Scene\FSceneRenderer.cpp" />
     <ClCompile Include="Engine\!Render\FSceneTextures.cpp" />
     <ClCompile Include="Engine\!Render\FTexture.cpp" />
+    <ClCompile Include="Engine\!Render\Scene\PostProcess\FPostProcess.cpp" />
+    <ClCompile Include="Engine\!Render\Scene\PostProcess\FPostProcessTextures.cpp" />
+    <ClCompile Include="Engine\!Render\Scene\PostProcess\PostProcesses\FProcessFog.cpp" />
+    <ClCompile Include="Engine\!Render\Scene\PostProcess\PostProcesses\FProcessLut.cpp" />
+    <ClCompile Include="Engine\Adapter\Particle\Emitter.cpp" />
     <ClCompile Include="Engine\Adapter\Scene\BaseScene.cpp" />
     <ClCompile Include="Engine\Adapter\Scene\BaseSceneFactory.cpp" />
     <ClCompile Include="Engine\Adapter\Scene\SceneController.cpp" />
     <ClCompile Include="Engine\Asset\Animator\Animator.cpp" />
     <ClCompile Include="Engine\Asset\Animator\AssetAnimator.cpp" />
     <ClCompile Include="Engine\Asset\AssetCollection.cpp" />
+    <ClCompile Include="Engine\Asset\AudioBuffer\AssetAudioBuffer.cpp" />
+    <ClCompile Include="Engine\Asset\AudioBuffer\AudioBuffer.cpp" />
     <ClCompile Include="Engine\Asset\BaseAsset.cpp" />
     <ClCompile Include="Engine\Asset\Blob\AssetBlob.cpp" />
     <ClCompile Include="Engine\Asset\Model\AssetModel.cpp" />
@@ -249,6 +260,8 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="Engine\Editor\Editors\RenderSceneEditor.cpp" />
     <ClCompile Include="Engine\GameLoop\BetaSystemGameLoop.cpp" />
     <ClCompile Include="Engine\GameLoop\EditorEngineGameLoop.cpp" />
+    <ClCompile Include="Engine\Module\Audio\Audio.cpp" />
+    <ClCompile Include="Engine\Module\Audio\AudioController.cpp" />
     <ClCompile Include="Engine\Module\Component\TextureComponent.cpp" />
     <ClCompile Include="Engine\Module\Component\Transform2dComponent.cpp" />
     <ClCompile Include="Engine\Module\Component\TransformComponent.cpp" />
@@ -332,11 +345,14 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Demo\Actor\AFloorActor.h" />
+    <ClInclude Include="Demo\Sample\GameLoop\SampleRaytracingGameLoop.h" />
     <ClInclude Include="Engine\!Render\Canvas\FCanvas.h" />
     <ClInclude Include="Engine\!Render\Canvas\Layer\Layers\LSprite.h" />
     <ClInclude Include="Engine\!Render\Canvas\Layer\LLayer.h" />
     <ClInclude Include="Engine\!Render\Core\FRenderCoreLayer.h" />
+    <ClInclude Include="Engine\!Render\Core\FRenderCoreProcess.h" />
     <ClInclude Include="Engine\!Render\FPresenter.h" />
+    <ClInclude Include="Engine\!Render\Renderer\FBaseRenderer.h" />
     <ClInclude Include="Engine\!Render\Scene\Actor\AActor.h" />
     <ClInclude Include="Engine\!Render\Scene\Actor\Camera\ACameraActor.h" />
     <ClInclude Include="Engine\!Render\Scene\Actor\Camera\CameraActors\ACineCameraActor.h" />
@@ -354,17 +370,25 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Engine\!Render\Core\FRenderCoreLight.h" />
     <ClInclude Include="Engine\!Render\Core\FRenderCoreRaytracing.h" />
     <ClInclude Include="Engine\!Render\FRenderCore.h" />
+    <ClInclude Include="Engine\!Render\Scene\FPostProcessSetting.h" />
     <ClInclude Include="Engine\!Render\Scene\FScene.h" />
     <ClInclude Include="Engine\!Render\FSceneDepth.h" />
     <ClInclude Include="Engine\!Render\Scene\FSceneRenderer.h" />
     <ClInclude Include="Engine\!Render\FSceneTextures.h" />
     <ClInclude Include="Engine\!Render\FTexture.h" />
+    <ClInclude Include="Engine\!Render\Scene\PostProcess\FPostProcess.h" />
+    <ClInclude Include="Engine\!Render\Scene\PostProcess\FPostProcessTextures.h" />
+    <ClInclude Include="Engine\!Render\Scene\PostProcess\PostProcesses\FProcessFog.h" />
+    <ClInclude Include="Engine\!Render\Scene\PostProcess\PostProcesses\FProcessLut.h" />
+    <ClInclude Include="Engine\Adapter\Particle\Emitter.h" />
     <ClInclude Include="Engine\Adapter\Scene\BaseScene.h" />
     <ClInclude Include="Engine\Adapter\Scene\BaseSceneFactory.h" />
     <ClInclude Include="Engine\Adapter\Scene\SceneController.h" />
     <ClInclude Include="Engine\Asset\Animator\Animator.h" />
     <ClInclude Include="Engine\Asset\Animator\AssetAnimator.h" />
     <ClInclude Include="Engine\Asset\AssetCollection.h" />
+    <ClInclude Include="Engine\Asset\AudioBuffer\AssetAudioBuffer.h" />
+    <ClInclude Include="Engine\Asset\AudioBuffer\AudioBuffer.h" />
     <ClInclude Include="Engine\Asset\BaseAsset.h" />
     <ClInclude Include="Engine\Asset\Blob\AssetBlob.h" />
     <ClInclude Include="Engine\Asset\Model\AssetModel.h" />
@@ -395,6 +419,8 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Engine\Editor\Editors\RenderSceneEditor.h" />
     <ClInclude Include="Engine\GameLoop\BetaSystemGameLoop.h" />
     <ClInclude Include="Engine\GameLoop\EditorEngineGameLoop.h" />
+    <ClInclude Include="Engine\Module\Audio\Audio.h" />
+    <ClInclude Include="Engine\Module\Audio\AudioController.h" />
     <ClInclude Include="Engine\Module\Component\TextureComponent.h" />
     <ClInclude Include="Engine\Module\Component\Transform2dComponent.h" />
     <ClInclude Include="Engine\Module\Component\TransformComponent.h" />

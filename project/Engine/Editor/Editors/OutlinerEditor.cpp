@@ -69,7 +69,7 @@ void OutlinerEditor::ShowAttributeWindow() {
 		ImGui::SeparatorText(component->GetName().c_str());
 
 		//!< base imgui
-		component->AttributeImGui();
+		component->ExecuteAttribute();
 		
 	}
 
@@ -78,7 +78,7 @@ void OutlinerEditor::ShowAttributeWindow() {
 
 bool OutlinerEditor::CheckSelected(const AttributeComponent::Iterator& iterator) const {
 	if (selectIterator_.has_value()) {
-		return iterator == selectIterator_.value();
+		return (*iterator) == (*selectIterator_.value());
 	}
 
 	return false;

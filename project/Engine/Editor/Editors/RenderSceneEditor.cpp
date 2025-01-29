@@ -21,7 +21,7 @@ void RenderSceneEditor::Init() {
 	textures_->Create(kMainWindowSize);
 
 	sceneRenderer_ = std::make_unique<FSceneRenderer>();
-	sceneRenderer_->GetConfig().isUseRaytracing = true;
+	sceneRenderer_->GetConfig().isEmptyLightAlbedo = true;
 
 	sceneCamera_ = std::make_unique<APivotCameraActor>();
 	sceneCamera_->Init();
@@ -50,6 +50,7 @@ void RenderSceneEditor::Draw() {
 	textures_->BeginForward(SxavengerSystem::GetMainThreadContext());
 
 	SxavengerModule::DrawCollider();
+	SxavengerModule::DrawGrid(kOrigin3<float>, 16.0f);
 	SxavengerModule::GetDebugPrimitive()->DrawToScene(SxavengerSystem::GetMainThreadContext(), sceneCamera_.get());
 
 	textures_->EndForward(SxavengerSystem::GetMainThreadContext());
@@ -124,6 +125,12 @@ void RenderSceneEditor::ShowHierarchyWindow() {
 					std::string name = std::format("{} # {:p}", geometry->GetName(), reinterpret_cast<const void*>(geometry));
 					bool isSelected  = IsSelectedActor(geometry);
 
+					bool isActive = geometry->IsActive();
+
+					if (!isActive) {
+						ImGui::PushStyleColor(ImGuiCol_Text, disabled_);
+					}
+
 					if (isSelected) {
 						isAvailable = true;
 					}
@@ -131,6 +138,10 @@ void RenderSceneEditor::ShowHierarchyWindow() {
 					if (ImGui::Selectable(name.c_str(), isSelected)) {
 						selectedActor_ = geometry;
 						isAvailable    = true;
+					}
+
+					if (!isActive) {
+						ImGui::PopStyleColor();
 					}
 				}
 
@@ -149,6 +160,12 @@ void RenderSceneEditor::ShowHierarchyWindow() {
 					std::string name = std::format("{} # {:p}", light->GetName(), reinterpret_cast<const void*>(light));
 					bool isSelected = IsSelectedActor(light);
 
+					bool isActive = light->IsActive();
+
+					if (!isActive) {
+						ImGui::PushStyleColor(ImGuiCol_Text, disabled_);
+					}
+
 					if (isSelected) {
 						isAvailable = true;
 					}
@@ -156,6 +173,10 @@ void RenderSceneEditor::ShowHierarchyWindow() {
 					if (ImGui::Selectable(name.c_str(), isSelected)) {
 						selectedActor_ = light;
 						isAvailable    = true;
+					}
+
+					if (!isActive) {
+						ImGui::PopStyleColor();
 					}
 				}
 
@@ -295,6 +316,10 @@ void RenderSceneEditor::Manipulate(ImGuizmo::OPERATION operation, ImGuizmo::MODE
 		mode,
 		reinterpret_cast<float*>(m.m)
 	);
+
+	if (component->HasParent()) {
+		return;
+	}
 
 	EulerTransform transform = {};
 

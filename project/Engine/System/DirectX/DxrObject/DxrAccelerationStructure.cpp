@@ -23,6 +23,7 @@ void AccelerationStructureBuffers::Create(
 		D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS,
 		D3D12_RESOURCE_STATE_COMMON
 	);
+	scratch->SetName(L"AccelerationStructureBuffers::scratch");
 
 	asbuffer = DxObject::CreateBufferResource(
 		device,
@@ -31,6 +32,7 @@ void AccelerationStructureBuffers::Create(
 		D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS,
 		D3D12_RESOURCE_STATE_RAYTRACING_ACCELERATION_STRUCTURE
 	);
+	asbuffer->SetName(L"AccelerationStructureBuffers::asbuffer");
 
 	if (inputs.Flags & D3D12_RAYTRACING_ACCELERATION_STRUCTURE_BUILD_FLAG_ALLOW_UPDATE) {
 		update = DxObject::CreateBufferResource(
@@ -40,6 +42,7 @@ void AccelerationStructureBuffers::Create(
 			D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS,
 			D3D12_RESOURCE_STATE_COMMON
 		);
+		update->SetName(L"AccelerationStructureBuffers::update");
 	}
 }
 
@@ -159,18 +162,18 @@ void TopLevelAS::Update(DxObject::CommandContext* context) {
 }
 
 bool TopLevelAS::UpdateInstanceBuffer(DxObject::Device* device) {
-	bool isRequiredUpdate = false;
+	bool isRequiredBuild = false;
 
 	if (descs_ == nullptr) {
 		descs_ = std::make_unique<DxObject::DimensionBuffer<D3D12_RAYTRACING_INSTANCE_DESC>>();
-		descs_->Create(device, 12);
-		isRequiredUpdate = true;
+		descs_->Create(device, 1);
+		isRequiredBuild = true;
 	}
 
 	if (instances_.size() > descs_->GetSize()) { //!< instanceの数がbufferの数より多い場合
 		//!< capacityの拡張
 		descs_->Create(device, static_cast<uint32_t>(instances_.size()));
-		isRequiredUpdate = true;
+		isRequiredBuild = true;
 	}
 
 	descs_->Fill(D3D12_RAYTRACING_INSTANCE_DESC{}); //!< bufferの初期化
@@ -187,5 +190,5 @@ bool TopLevelAS::UpdateInstanceBuffer(DxObject::Device* device) {
 		std::memcpy((*descs_)[i].Transform, &mat, sizeof((*descs_)[i].Transform));
 	}
 
-	return isRequiredUpdate;
+	return isRequiredBuild;
 }

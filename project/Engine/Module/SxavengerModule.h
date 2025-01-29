@@ -7,6 +7,7 @@
 #include "DebugPrimitive/DebugPrimitive.h"
 #include "Collider/ColliderCollection.h"
 #include "Skeleton/SkinningPipeline.h"
+#include "Audio/AudioController.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // SxavengerModule class
@@ -59,6 +60,16 @@ public:
 	static void SetSkinningPipeline(const DirectXThreadContext* context);
 
 	static void DispatchSkinningPipeline(const DirectXThreadContext* context, const DxObject::BindBufferDesc& desc, uint32_t vertexSize);
+
+	//-----------------------------------------------------------------------------------------
+	// audio controller option
+	//-----------------------------------------------------------------------------------------
+
+	static std::unique_ptr<Audio> CreateAudio(const AudioBuffer* buffer, bool isLoop = false);
+
+	static void PlayOneShot(const AudioBuffer* buffer, float volume);
+
+	static AudioController* GetAudioController();
 
 private:
 };

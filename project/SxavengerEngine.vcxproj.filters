@@ -152,6 +152,19 @@
     <ClCompile Include="Engine\Adapter\Scene\BaseSceneFactory.cpp" />
     <ClCompile Include="Engine\Adapter\Scene\SceneController.cpp" />
     <ClCompile Include="Engine\!Render\FPresenter.cpp" />
+    <ClCompile Include="Engine\Adapter\Particle\Emitter.cpp" />
+    <ClCompile Include="Demo\Sample\GameLoop\SampleRaytracingGameLoop.cpp" />
+    <ClCompile Include="Engine\!Render\Scene\FPostProcessSetting.cpp" />
+    <ClCompile Include="Engine\!Render\Scene\PostProcess\FPostProcess.cpp" />
+    <ClCompile Include="Engine\!Render\Scene\PostProcess\FPostProcessTextures.cpp" />
+    <ClCompile Include="Engine\!Render\Core\FRenderCoreProcess.cpp" />
+    <ClCompile Include="Engine\!Render\Scene\PostProcess\PostProcesses\FProcessLut.cpp" />
+    <ClCompile Include="Engine\!Render\Renderer\FBaseRenderer.cpp" />
+    <ClCompile Include="Engine\Asset\AudioBuffer\AudioBuffer.cpp" />
+    <ClCompile Include="Engine\Asset\AudioBuffer\AssetAudioBuffer.cpp" />
+    <ClCompile Include="Engine\Module\Audio\Audio.cpp" />
+    <ClCompile Include="Engine\Module\Audio\AudioController.cpp" />
+    <ClCompile Include="Engine\!Render\Scene\PostProcess\PostProcesses\FProcessFog.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\System\Window\Window.h" />
@@ -308,6 +321,19 @@
     <ClInclude Include="Engine\Adapter\Scene\BaseSceneFactory.h" />
     <ClInclude Include="Engine\Adapter\Scene\SceneController.h" />
     <ClInclude Include="Engine\!Render\FPresenter.h" />
+    <ClInclude Include="Engine\Adapter\Particle\Emitter.h" />
+    <ClInclude Include="Demo\Sample\GameLoop\SampleRaytracingGameLoop.h" />
+    <ClInclude Include="Engine\!Render\Scene\FPostProcessSetting.h" />
+    <ClInclude Include="Engine\!Render\Scene\PostProcess\FPostProcess.h" />
+    <ClInclude Include="Engine\!Render\Scene\PostProcess\FPostProcessTextures.h" />
+    <ClInclude Include="Engine\!Render\Core\FRenderCoreProcess.h" />
+    <ClInclude Include="Engine\!Render\Scene\PostProcess\PostProcesses\FProcessLut.h" />
+    <ClInclude Include="Engine\!Render\Renderer\FBaseRenderer.h" />
+    <ClInclude Include="Engine\Asset\AudioBuffer\AudioBuffer.h" />
+    <ClInclude Include="Engine\Asset\AudioBuffer\AssetAudioBuffer.h" />
+    <ClInclude Include="Engine\Module\Audio\Audio.h" />
+    <ClInclude Include="Engine\Module\Audio\AudioController.h" />
+    <ClInclude Include="Engine\!Render\Scene\PostProcess\PostProcesses\FProcessFog.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />
