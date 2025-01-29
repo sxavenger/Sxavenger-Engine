@@ -59,13 +59,28 @@ void AModelAnimationActor::RenderTransparent(const RendererContext& context) {
 	context;
 }
 
-void AModelAnimationActor::UpdateAnimation(const Animation& animation, TimePointf<TimeUnit::second> time, bool isLoop) {
-	skeleton_->UpdateAnimation(animation, time, isLoop);
-}
+void AModelAnimationActor::SetupToplevelAS(const SetupContext& context) {
+	auto model = model_.WaitGet();
 
-void AModelAnimationActor::UpdateTransitionAnimation(const Animation& before, TimePointf<TimeUnit::second> beforeTime, bool isLoopBefore, const Animation& after, TimePointf<TimeUnit::second> afterTime, bool isLoopAfter, float t) {
-	skeleton_->UpdateTransitionAnimation(before, beforeTime, isLoopBefore, after, afterTime, isLoopAfter, t);
-}
+	DxrObject::TopLevelAS::Instance instance = {};
+	instance.flag       = D3D12_RAYTRACING_INSTANCE_FLAG_NONE;
+	instance.mat        = TransformComponent::GetMatrix();
+	instance.instanceId = 0;
 
-void AModelAnimationActor::UpdateBottomLevelAS() {
+	//instance.expt = &FRenderCore::GetInstance()->GetRaytracing()->GetHitgroupExport(FRenderCoreRaytracing::HitgroupExportType::Geometry);
+
+	skeleton_->CreateBottomLevelAS(context.context);
+
+	for (uint32_t i = 0; i < model->GetMeshSize(); ++i) {
+		instance.bottomLevelAS = &skeleton_->GetBottomLevelAS(i);
+
+		//DxrObject::WriteBindBufferDesc desc = {};
+		//desc.SetAddress(0, model->GetInputMesh(i).GetVertex()->GetGPUVirtualAddress()); //!< gVertices
+		//desc.SetAddress(1, model->GetInputMesh(i).GetIndex()->GetGPUVirtualAddress());  //!< gIndices
+		//desc.SetHandle(2, model->GetTextureHandle(i));                                  //!< gAlbedo
+
+		//instance.parameter = desc;
+
+		context.toplevelAS->AddInstance(instance);
+	}
 }

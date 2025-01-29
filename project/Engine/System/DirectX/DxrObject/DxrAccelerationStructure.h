@@ -64,6 +64,8 @@ public:
 		const D3D12_RAYTRACING_GEOMETRY_DESC& geomDesc
 	);
 
+	void Update(DxObject::CommandContext* context);
+
 	//* getter *//
 
 	D3D12_GPU_VIRTUAL_ADDRESS GetGPUVirtualAddress() const { return asbuffer->GetGPUVirtualAddress(); }
@@ -73,6 +75,8 @@ protected:
 	//=========================================================================================
 	// protected methods
 	//=========================================================================================
+
+	D3D12_RAYTRACING_GEOMETRY_DESC geomDesc_;
 
 };
 

@@ -30,6 +30,8 @@ public:
 
 	void Create(const std::shared_ptr<AssetModel>& model);
 
+	void CreateBottomLevelAS(const DirectXThreadContext* context);
+
 	//* animation option *//
 
 	void UpdateAnimation(const Animation& animation, TimePointf<TimeUnit::second> time, bool isLoop = true);
@@ -41,11 +43,17 @@ public:
 		float t
 	);
 
+	void UpdateBottomLevelAS(const DirectXThreadContext* context);
+
 	//* meshes option *//
 
 	void SetIABuffer(const DirectXThreadContext* context, uint32_t meshIndex) const;
 
 	void DrawCall(const DirectXThreadContext* context, uint32_t meshIndex, uint32_t instanceCount = 1) const;
+
+	//* getter *//
+
+	const DxrObject::BottomLevelAS& GetBottomLevelAS(uint32_t index) { return bottomLevelASs_[index]; }
 
 private:
 
@@ -65,6 +73,7 @@ private:
 	std::vector<std::unique_ptr<DxObject::VertexUnorderedDimensionBuffer<MeshVertexData>>> skinnedVertex_;
 
 	std::vector<DxrObject::BottomLevelAS> bottomLevelASs_;
+	bool isCreateBottomLevelAS_ = false;
 
 	//=========================================================================================
 	// private methods

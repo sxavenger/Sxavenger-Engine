@@ -23,6 +23,32 @@ void SkeletonMesh::Create(const std::shared_ptr<AssetModel>& model) {
 	CreateSkinnedVertex();
 }
 
+void SkeletonMesh::CreateBottomLevelAS(const DirectXThreadContext* context) {
+	if (isCreateBottomLevelAS_) {
+		return;
+	}
+
+	bottomLevelASs_.resize(model_->GetMeshSize());
+
+	for (uint32_t i = 0; i < model_->GetMeshSize(); ++i) {
+
+		D3D12_RAYTRACING_GEOMETRY_DESC desc = {};
+		desc.Type                                 = D3D12_RAYTRACING_GEOMETRY_TYPE_TRIANGLES;
+		desc.Flags                                = D3D12_RAYTRACING_GEOMETRY_FLAG_NONE;
+		desc.Triangles.VertexBuffer.StartAddress  = skinnedVertex_[i]->GetGPUVirtualAddress();
+		desc.Triangles.VertexBuffer.StrideInBytes = skinnedVertex_[i]->GetStride();
+		desc.Triangles.VertexCount                = skinnedVertex_[i]->GetSize();
+		desc.Triangles.VertexFormat               = DXGI_FORMAT_R32G32B32_FLOAT;
+		desc.Triangles.IndexBuffer                = model_->GetInputMesh(i).GetIndex()->GetGPUVirtualAddress();
+		desc.Triangles.IndexCount                 = model_->GetInputMesh(i).GetIndex()->GetIndexCount();
+		desc.Triangles.IndexFormat                = DXGI_FORMAT_R32_UINT;
+
+		bottomLevelASs_[i].Build(SxavengerSystem::GetDxDevice(), context->GetDxCommand(), desc);
+	}
+
+	isCreateBottomLevelAS_ = true;
+}
+
 void SkeletonMesh::UpdateAnimation(const Animation& animation, TimePointf<TimeUnit::second> time, bool isLoop) {
 	skeleton_.Update(animation, time, isLoop);
 	Skinning();
@@ -45,6 +71,12 @@ void SkeletonMesh::UpdateTransitionAnimation(
 	);
 
 	Skinning();
+}
+
+void SkeletonMesh::UpdateBottomLevelAS(const DirectXThreadContext* context) {
+	for (uint32_t i = 0; i < model_->GetMeshSize(); ++i) {
+		bottomLevelASs_[i].Update(context->GetDxCommand());
+	}
 }
 
 void SkeletonMesh::SetIABuffer(const DirectXThreadContext* context, uint32_t meshIndex) const {
