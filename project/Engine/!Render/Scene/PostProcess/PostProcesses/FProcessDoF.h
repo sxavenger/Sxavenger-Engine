@@ -44,6 +44,7 @@ public:
 			isDebugView = false;
 		}
 
+		// hack: parameterの不足
 	};
 
 public:
