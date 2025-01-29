@@ -8,6 +8,7 @@
 
 //* engine
 #include <Engine/System/DirectX/DxObject/DxDimensionBuffer.h>
+#include <Engine/!Render/Scene/Actor/Camera/ACameraActor.h>
 
 //* lib
 #include <Lib/Geometry/Vector2.h>
@@ -68,6 +69,10 @@ public:
 
 	const Parameter& GetParameter() const { return parameter_->At(0); }
 	Parameter& GetParameter() { return parameter_->At(0); }
+
+	//* setter *//
+
+	void SetFocus(const Vector3f& position, const ACameraActor* camera);
 
 private:
 

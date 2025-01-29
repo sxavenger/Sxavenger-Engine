@@ -113,6 +113,7 @@ void BetaSystemGameLoop::TermSystem() {
 }
 
 void BetaSystemGameLoop::UpdateSystem() {
+	processDoF_->SetFocus(model1_->GetPosition(), camera_.get());
 }
 
 void BetaSystemGameLoop::DrawSystem() {
