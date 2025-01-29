@@ -58,3 +58,14 @@ void AModelAnimationActor::RenderOpaque(const RendererContext& context) {
 void AModelAnimationActor::RenderTransparent(const RendererContext& context) {
 	context;
 }
+
+void AModelAnimationActor::UpdateAnimation(const Animation& animation, TimePointf<TimeUnit::second> time, bool isLoop) {
+	skeleton_->UpdateAnimation(animation, time, isLoop);
+}
+
+void AModelAnimationActor::UpdateTransitionAnimation(const Animation& before, TimePointf<TimeUnit::second> beforeTime, bool isLoopBefore, const Animation& after, TimePointf<TimeUnit::second> afterTime, bool isLoopAfter, float t) {
+	skeleton_->UpdateTransitionAnimation(before, beforeTime, isLoopBefore, after, afterTime, isLoopAfter, t);
+}
+
+void AModelAnimationActor::UpdateBottomLevelAS() {
+}

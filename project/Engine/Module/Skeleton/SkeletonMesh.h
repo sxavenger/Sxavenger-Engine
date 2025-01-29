@@ -64,6 +64,8 @@ private:
 	std::vector<SkinCluster>                                                               skinClusters_;
 	std::vector<std::unique_ptr<DxObject::VertexUnorderedDimensionBuffer<MeshVertexData>>> skinnedVertex_;
 
+	std::vector<DxrObject::BottomLevelAS> bottomLevelASs_;
+
 	//=========================================================================================
 	// private methods
 	//=========================================================================================

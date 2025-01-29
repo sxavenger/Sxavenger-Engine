@@ -328,6 +328,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="Game\Entity\Player\PlayerStateRoot.cpp" />
     <ClCompile Include="Game\GameLoop\ActionGameLoop.cpp" />
     <ClCompile Include="Game\Object\GameCamera.cpp" />
+    <ClCompile Include="Game\Object\Ground.cpp" />
     <ClCompile Include="Game\Scene\SceneGame.cpp" />
     <ClCompile Include="Game\Scene\SceneTitle.cpp" />
     <ClCompile Include="Lib\Adapter\Curve\Curve.cpp" />
@@ -502,6 +503,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Game\Entity\Player\PlayerStateRoot.h" />
     <ClInclude Include="Game\GameLoop\ActionGameLoop.h" />
     <ClInclude Include="Game\Object\GameCamera.h" />
+    <ClInclude Include="Game\Object\Ground.h" />
     <ClInclude Include="Game\Scene\SceneGame.h" />
     <ClInclude Include="Game\Scene\SceneTitle.h" />
     <ClInclude Include="Lib\Adapter\Curve\Curve.h" />

@@ -30,11 +30,11 @@ void SceneGame::Init() {
 
 	/*enemy_ = std::make_unique<Enemy>();
 	enemy_->Init();
-	enemy_->SetToConsole();
+	enemy_->SetToConsole();*/
 
 	ground_ = std::make_unique<Ground>();
 	ground_->Init();
-	ground_->SetToConsole();*/
+	component_.scene_->AddGeometry(ground_.get());
 
 	light_ = std::make_unique<ADirectionalLightActor>();
 	light_->Init();

@@ -174,6 +174,7 @@
     <ClCompile Include="Game\Entity\Player\PlayerStateRolling.cpp" />
     <ClCompile Include="Game\Entity\Player\PlayerStateRoot.cpp" />
     <ClCompile Include="Game\Object\GameCamera.cpp" />
+    <ClCompile Include="Game\Object\Ground.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\System\Window\Window.h" />
@@ -353,6 +354,7 @@
     <ClInclude Include="Game\Entity\Player\PlayerStateRolling.h" />
     <ClInclude Include="Game\Entity\Player\PlayerStateRoot.h" />
     <ClInclude Include="Game\Object\GameCamera.h" />
+    <ClInclude Include="Game\Object\Ground.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

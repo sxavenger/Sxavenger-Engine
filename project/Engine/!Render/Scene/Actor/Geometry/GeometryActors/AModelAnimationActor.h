@@ -31,16 +31,32 @@ public:
 
 	virtual void RenderTransparent(const RendererContext& context) override;
 
+	virtual void SetupToplevelAS(const SetupContext& context) override;
+
 	//* option *//
 
-	SkeletonMesh* GetSkeleton() { return skeleton_.get(); }
+	//SkeletonMesh* GetSkeleton() { return skeleton_.get(); }
+
+	void UpdateAnimation(const Animation& animation, TimePointf<TimeUnit::second> time, bool isLoop = true);
+
+	void UpdateTransitionAnimation(
+		const Animation& before, TimePointf<TimeUnit::second> beforeTime, bool isLoopBefore,
+		const Animation& after, TimePointf<TimeUnit::second> afterTime, bool isLoopAfter,
+		float t
+	);
 
 protected:
+
+	//=========================================================================================
+	// protected variables
+	//=========================================================================================
+
+	std::unique_ptr<SkeletonMesh> skeleton_;
 
 	//=========================================================================================
 	// protected methods
 	//=========================================================================================
 
-	std::unique_ptr<SkeletonMesh> skeleton_;
+	void UpdateBottomLevelAS();
 
 };
