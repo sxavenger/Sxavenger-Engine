@@ -171,3 +171,23 @@ D3D12_RESOURCE_BARRIER FTexture::TransitionEndUnordered() const {
 
 	return barrier;
 }
+
+D3D12_RESOURCE_BARRIER FTexture::TransitionBeginState(D3D12_RESOURCE_STATES state) const {
+	D3D12_RESOURCE_BARRIER barrier = {};
+	barrier.Type                   = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+	barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
+	barrier.Transition.StateAfter  = state;
+	barrier.Transition.pResource   = GetResource();
+
+	return barrier;
+}
+
+D3D12_RESOURCE_BARRIER FTexture::TransitionEndState(D3D12_RESOURCE_STATES state) const {
+	D3D12_RESOURCE_BARRIER barrier = {};
+	barrier.Type                   = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+	barrier.Transition.StateBefore = state;
+	barrier.Transition.StateAfter  = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
+	barrier.Transition.pResource   = GetResource();
+
+	return barrier;
+}

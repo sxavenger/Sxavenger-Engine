@@ -80,6 +80,12 @@ public:
 
 	void Process(const ProcessContext& context) override;
 
+	//* debug *//
+
+	void SetImGuiCommand() override;
+
+	//* getter *//
+
 	const Parameter& GetParameter() const { return parameter_->At(0); }
 	Parameter& GetParameter() { return parameter_->At(0); }
 

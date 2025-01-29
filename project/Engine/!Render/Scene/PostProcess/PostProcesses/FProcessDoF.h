@@ -1,27 +1,49 @@
 #pragma once
+
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
+//* process
+#include "../FPostProcess.h"
+
 //* engine
-#include <Engine/Module/Pipeline/CustomComputePipeline.h>
+#include <Engine/System/DirectX/DxObject/DxDimensionBuffer.h>
+
+//* lib
+#include <Lib/Geometry/Vector2.h>
 
 //* c++
-#include <array>
+#include <memory>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// FRenderCoreProcess class
+// FProcessDoF class
 ////////////////////////////////////////////////////////////////////////////////////////////
-class FRenderCoreProcess {
+class FProcessDoF
+	: public FPostProcess { //!< 被写界深度
 public:
 
 	////////////////////////////////////////////////////////////////////////////////////////////
-	// FRenderCoreProcess class
+	// Parameter structure
 	////////////////////////////////////////////////////////////////////////////////////////////
-	enum class ProcessType : uint32_t {
-		LUT,
-		DoF,
+	struct Parameter {
+
+		//* member *//
+
+		Vector2ui strength;
+		float     focus;
+		float     f;
+		uint32_t  isDebugView; //!< デバッグ表示
+
+		//* methods *//
+
+		void Init() {
+			strength    = { 8, 8 };
+			focus       = 0.0f;
+			f           = 0.0f;
+			isDebugView = false;
+		}
+
 	};
-	static const uint32_t kProcessTypeCount = static_cast<uint32_t>(ProcessType::DoF) + 1;
 
 public:
 
@@ -29,18 +51,23 @@ public:
 	// public methods
 	//=========================================================================================
 
-	FRenderCoreProcess()  = default;
-	~FRenderCoreProcess() = default;
+	FProcessDoF()          = default;
+	virtual ~FProcessDoF() = default;
 
 	void Init();
 
-	//* option *//
+	//* process *//
 
-	void SetPipeline(ProcessType type, const DirectXThreadContext* context);
+	virtual void Process(const FPostProcess::ProcessContext& context) override;
 
-	void BindComputeBuffer(ProcessType type, const DirectXThreadContext* context, const DxObject::BindBufferDesc& desc);
+	//* debug *//
 
-	void Dispatch(const DirectXThreadContext* context, const Vector2ui& size) const;
+	virtual void SetImGuiCommand() override;
+
+	//* getter *//
+
+	const Parameter& GetParameter() const { return parameter_->At(0); }
+	Parameter& GetParameter() { return parameter_->At(0); }
 
 private:
 
@@ -48,9 +75,6 @@ private:
 	// private variables
 	//=========================================================================================
 
-	std::array<std::unique_ptr<CustomReflectionComputePipeline>, kProcessTypeCount> processes_;
-
-	static const Vector2ui kNumThreadSize_;
-
+	std::unique_ptr<DxObject::DimensionBuffer<Parameter>> parameter_;
 
 };

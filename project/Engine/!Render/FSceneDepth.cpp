@@ -128,6 +128,28 @@ void FSceneDepth::RasterizerDepth::ClearDepth(const DirectXThreadContext* contex
 	);
 }
 
+void FSceneDepth::RasterizerDepth::BeginState(const DirectXThreadContext* context, D3D12_RESOURCE_STATES state) const {
+	// barrierの設定
+	D3D12_RESOURCE_BARRIER barrier = {};
+	barrier.Type                   = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+	barrier.Transition.pResource   = resource_.Get();
+	barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
+	barrier.Transition.StateAfter  = state;
+
+	context->GetCommandList()->ResourceBarrier(1, &barrier);
+}
+
+void FSceneDepth::RasterizerDepth::EndState(const DirectXThreadContext* context, D3D12_RESOURCE_STATES state) const {
+	// barrierの設定
+	D3D12_RESOURCE_BARRIER barrier = {};
+	barrier.Type                   = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+	barrier.Transition.pResource   = resource_.Get();
+	barrier.Transition.StateBefore = state;
+	barrier.Transition.StateAfter  = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
+
+	context->GetCommandList()->ResourceBarrier(1, &barrier);
+}
+
 ////////////////////////////////////////////////////////////////////////////////////////////
 // FSceneDepth RaytracingDepth structure method
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -246,4 +268,12 @@ void FSceneDepth::TransitionBeginRaytracing(const DirectXThreadContext* context)
 
 void FSceneDepth::TransitionEndRaytracing(const DirectXThreadContext* context) const {
 	raytracing_.EndWrite(context);
+}
+
+void FSceneDepth::TransitionBeginStateRasterizer(const DirectXThreadContext* context, D3D12_RESOURCE_STATES state) const {
+	rasterizer_.BeginState(context, state);
+}
+
+void FSceneDepth::TransitionEndStateRasterizer(const DirectXThreadContext* context, D3D12_RESOURCE_STATES state) const {
+	rasterizer_.EndState(context, state);
 }

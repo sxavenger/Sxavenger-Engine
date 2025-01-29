@@ -54,7 +54,7 @@ void FSceneRenderer::RenderOpaqueGeometries(const DirectXThreadContext* context)
 
 	const auto& geometries = scene_->GetGeometries();
 
-	textures_->BeginBasePass(context);
+	textures_->BeginOpaqueBasePass(context);
 
 	AGeometryActor::RendererContext rendererContext = {};
 	rendererContext.context = context;
@@ -69,7 +69,7 @@ void FSceneRenderer::RenderOpaqueGeometries(const DirectXThreadContext* context)
 		}
 	}
 
-	textures_->EndBasePass(context);
+	textures_->EndOpaqueBasePass(context);
 }
 
 void FSceneRenderer::ProcessLighting(const DirectXThreadContext* context) {
@@ -111,7 +111,7 @@ void FSceneRenderer::RenderTransparentGeometries(const DirectXThreadContext* con
 
 	const auto& geometries = scene_->GetGeometries();
 
-	textures_->BeginForward(context);
+	textures_->BeginTransparentBasePass(context);
 
 	AGeometryActor::RendererContext rendererContext = {};
 	rendererContext.context = context;
@@ -126,7 +126,7 @@ void FSceneRenderer::RenderTransparentGeometries(const DirectXThreadContext* con
 		}
 	};
 
-	textures_->EndForward(context);
+	textures_->EndTransparentBasePass(context);
 }
 
 void FSceneRenderer::PostProcessPass(const DirectXThreadContext* context) {
@@ -146,6 +146,8 @@ void FSceneRenderer::PostProcessPass(const DirectXThreadContext* context) {
 
 	processTextures_->CopyFromTexture(context, textures_->GetGBuffer(FSceneTextures::GBufferLayout::Result));
 
+	textures_->BeginPostProcessPass(context);
+
 	FPostProcess::ProcessContext processContext = {};
 	processContext.context       = context;
 	processContext.size          = textures_->GetSize();
@@ -154,14 +156,20 @@ void FSceneRenderer::PostProcessPass(const DirectXThreadContext* context) {
 	processContext.sceneTextures = textures_;
 
 	DxObject::BindBufferDesc parameter = {};
-	parameter.SetAddress("gCamera", camera_->GetGPUVirtualAddress());
-	parameter.SetAddress("gConfig", textures_->GetParameter());
+	parameter.SetAddress("gCamera",  camera_->GetGPUVirtualAddress());
+	parameter.SetAddress("gConfig",  textures_->GetParameter());
+	parameter.SetHandle("gDepth",    textures_->GetDepth()->GetRasterizerGPUHandleSRV());
+	parameter.SetHandle("gAlbedo",   textures_->GetGBuffer(FSceneTextures::GBufferLayout::Albedo_AO)->GetGPUHandleSRV());
+	parameter.SetHandle("gNormal",   textures_->GetGBuffer(FSceneTextures::GBufferLayout::Normal)->GetGPUHandleSRV());
+	parameter.SetHandle("gPosition", textures_->GetGBuffer(FSceneTextures::GBufferLayout::Position)->GetGPUHandleSRV());
 
 	processContext.parameter = parameter;
 
 	for (auto process : setting_->GetProcesses()) {
 		process->Process(processContext);
 	}
+
+	textures_->EndPostProcessPass(context);
 
 	processTextures_->CopyToTexture(context, textures_->GetGBuffer(FSceneTextures::GBufferLayout::Result));
 }

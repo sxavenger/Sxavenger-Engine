@@ -56,11 +56,17 @@ public:
 
 	//* option *//
 
-	void BeginBasePass(const DirectXThreadContext* context) const;
-	void EndBasePass(const DirectXThreadContext* context) const;
+	void BeginOpaqueBasePass(const DirectXThreadContext* context) const;
+	void EndOpaqueBasePass(const DirectXThreadContext* context) const;
 
 	void BeginLightingPass(const DirectXThreadContext* context) const;
 	void EndLightingPass(const DirectXThreadContext* context) const;
+
+	void BeginTransparentBasePass(const DirectXThreadContext* context) const;
+	void EndTransparentBasePass(const DirectXThreadContext* context) const;
+
+	void BeginPostProcessPass(const DirectXThreadContext* context) const;
+	void EndPostProcessPass(const DirectXThreadContext* context) const;
 
 	void BeginCanvasPass(const DirectXThreadContext* context) const;
 	void EndCanvasPass(const DirectXThreadContext* context) const;

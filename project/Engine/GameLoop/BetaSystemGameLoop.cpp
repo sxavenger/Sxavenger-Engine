@@ -91,7 +91,16 @@ void BetaSystemGameLoop::InitSystem() {
 
 	scene_->AddLight(light_.get());
 
-	SxavengerModule::PlayOneShot(SxavengerAsset::TryImport<AssetAudioBuffer>("asset/sounds/fanfare.wav").WaitGet().get(), 1.0f);
+	//* process *//
+
+	processDoF_ = std::make_unique<FProcessDoF>();
+	processDoF_->Init();
+	setting_->AddProcess(processDoF_.get());
+
+	doFComponent_ = std::make_unique<AttributeComponent>();
+	doFComponent_->SetToOutliner();
+	doFComponent_->SetAttributeFunc([this]() { processDoF_->SetImGuiCommand(); });
+
 
 	//* editors *//
 

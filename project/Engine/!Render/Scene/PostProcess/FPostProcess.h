@@ -54,6 +54,10 @@ public:
 
 	virtual void Process(const ProcessContext& context) = 0;
 
+	//* debug *//
+
+	virtual void SetImGuiCommand() {}
+
 private:
 
 	//=========================================================================================

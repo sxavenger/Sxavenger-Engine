@@ -138,3 +138,20 @@ void FProcessLut::Process(const ProcessContext& context) {
 	FRenderCore::GetInstance()->GetProcess()->BindComputeBuffer(FRenderCoreProcess::ProcessType::LUT, context.context, parameter);
 	FRenderCore::GetInstance()->GetProcess()->Dispatch(context.context, context.size);
 }
+
+void FProcessLut::SetImGuiCommand() {
+	if (ImGui::TreeNode("red")) {
+		parameter_->At(0).r.SetImGuiCommand();
+		ImGui::TreePop();
+	}
+
+	if (ImGui::TreeNode("green")) {
+		parameter_->At(0).g.SetImGuiCommand();
+		ImGui::TreePop();
+	}
+
+	if (ImGui::TreeNode("blue")) {
+		parameter_->At(0).b.SetImGuiCommand();
+		ImGui::TreePop();
+	}
+}

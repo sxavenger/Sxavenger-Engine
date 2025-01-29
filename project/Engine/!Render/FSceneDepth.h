@@ -43,6 +43,10 @@ public:
 
 	// todo: raytracing -> rasterizer
 
+	void TransitionBeginStateRasterizer(const DirectXThreadContext* context, D3D12_RESOURCE_STATES state) const;
+
+	void TransitionEndStateRasterizer(const DirectXThreadContext* context, D3D12_RESOURCE_STATES state) const;
+
 	//* getter *//
 
 	const D3D12_CPU_DESCRIPTOR_HANDLE& GetRasterizerCPUHandleDSV() const { return rasterizer_.descriptorDSV_.GetCPUHandle(); }
@@ -75,6 +79,10 @@ private:
 		void EndWrite(const DirectXThreadContext* context) const; //!< Transition to pixel shader resource state.
 
 		void ClearDepth(const DirectXThreadContext* context) const; //!< Clear depth value.
+
+		void BeginState(const DirectXThreadContext* context, D3D12_RESOURCE_STATES state) const; //!< Transition to user state
+
+		void EndState(const DirectXThreadContext* context, D3D12_RESOURCE_STATES state) const; //!< Transition to pixel shader resource state.
 
 	};
 

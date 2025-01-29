@@ -40,6 +40,10 @@ public:
 
 	D3D12_RESOURCE_BARRIER TransitionEndUnordered() const;
 
+	D3D12_RESOURCE_BARRIER TransitionBeginState(D3D12_RESOURCE_STATES state) const;
+
+	D3D12_RESOURCE_BARRIER TransitionEndState(D3D12_RESOURCE_STATES state) const;
+
 	//* getter *//
 
 	ID3D12Resource* GetResource() const { return resource_.Get(); }
