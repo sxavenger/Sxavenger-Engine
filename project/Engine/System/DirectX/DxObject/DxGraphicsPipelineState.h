@@ -201,7 +201,7 @@ public:
 
 	//* reflection methods *//
 
-	void ReflectionRootSignature(Device* device);
+	void ReflectionRootSignature(Device* device, const std::optional<SamplerBindDesc>& desc = std::nullopt);
 
 	void BindGraphicsBuffer(CommandContext* context, const BindBufferDesc& desc);
 

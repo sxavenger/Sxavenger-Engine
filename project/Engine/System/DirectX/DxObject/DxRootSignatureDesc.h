@@ -41,6 +41,7 @@ public:
 	void SetVirtual(uint32_t index, ShaderVisibility stage, D3D12_ROOT_PARAMETER_TYPE type, uint32_t shaderRegister);
 	void SetHandle(uint32_t index, ShaderVisibility stage, D3D12_DESCRIPTOR_RANGE_TYPE type, uint32_t shaderRegister);
 
+	void SetSamplerDesc(const D3D12_STATIC_SAMPLER_DESC& desc);
 	void SetSamplerLinear(SamplerMode mode, ShaderVisibility stage, UINT shaderRegister);
 	void SetSamplerAnisotropic(SamplerMode mode, ShaderVisibility stage, UINT shaderRegister, uint32_t anisotropic);
 	void SetSamplerPoint(SamplerMode mode, ShaderVisibility stage, UINT shaderRegister);

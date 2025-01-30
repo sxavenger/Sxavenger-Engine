@@ -42,6 +42,13 @@ void BaseRootSignatureDesc::SetHandle(uint32_t index, ShaderVisibility stage, D3
 	params.at(index).DescriptorTable.NumDescriptorRanges = 1;
 }
 
+void BaseRootSignatureDesc::SetSamplerDesc(const D3D12_STATIC_SAMPLER_DESC& desc) {
+	uint32_t sampleIndex = static_cast<uint32_t>(samplers.size());
+
+	AutoResizeSampler(sampleIndex);
+	samplers.at(sampleIndex) = desc;
+}
+
 void BaseRootSignatureDesc::SetSamplerLinear(SamplerMode mode, ShaderVisibility stage, UINT shaderRegister) {
 	uint32_t sampleIndex = static_cast<uint32_t>(samplers.size());
 
