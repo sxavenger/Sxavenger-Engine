@@ -17,9 +17,9 @@
 #include <memory>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// FProcessDoF class
+// FPostProcessDoF class
 ////////////////////////////////////////////////////////////////////////////////////////////
-class FProcessDoF
+class FPostProcessDoF
 	: public FPostProcess { //!< 被写界深度
 public:
 
@@ -53,8 +53,8 @@ public:
 	// public methods
 	//=========================================================================================
 
-	FProcessDoF()          = default;
-	virtual ~FProcessDoF() = default;
+	FPostProcessDoF()          = default;
+	virtual ~FPostProcessDoF() = default;
 
 	void Init();
 

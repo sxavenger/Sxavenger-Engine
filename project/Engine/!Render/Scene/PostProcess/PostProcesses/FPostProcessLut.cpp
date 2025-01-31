@@ -1,4 +1,4 @@
-#include "FProcessLut.h"
+#include "FPostProcessLut.h"
 _DXOBJECT_USING
 
 //-----------------------------------------------------------------------------------------
@@ -17,7 +17,7 @@ _DXOBJECT_USING
 // config methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-float FProcessLut::CatmullRomInterpolation(float p0, float p1, float p2, float p3, float t) {
+float FPostProcessLut::CatmullRomInterpolation(float p0, float p1, float p2, float p3, float t) {
 	float t2 = t * t;
 	float t3 = t2 * t;
 
@@ -33,20 +33,20 @@ float FProcessLut::CatmullRomInterpolation(float p0, float p1, float p2, float p
 // Table structure methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-void FProcessLut::Table::Init() {
+void FPostProcessLut::Table::Init() {
 	for (uint32_t i = 0; i < kPointCount; ++i) {
 		points[i] = { i / static_cast<float>(kPointCount - 1), i / static_cast<float>(kPointCount - 1) };
 	}
 	//!< 0 ~ 1 の線形初期化
 }
 
-void FProcessLut::Table::Sort() {
+void FPostProcessLut::Table::Sort() {
 	std::sort(points.begin(), points.end(), [](const auto& a, const auto& b) {
 		return a.input < b.input;
 	});
 }
 
-void FProcessLut::Table::SetImGuiCommand() {
+void FPostProcessLut::Table::SetImGuiCommand() {
 
 	std::vector<float> values(256);
 
@@ -66,7 +66,7 @@ void FProcessLut::Table::SetImGuiCommand() {
 	}
 }
 
-float FProcessLut::Table::GetOutput(float input) {
+float FPostProcessLut::Table::GetOutput(float input) {
 
 	if (input <= points[0].input) { //!< 始点より小さい場合
 		return points[0].output;
@@ -108,10 +108,10 @@ float FProcessLut::Table::GetOutput(float input) {
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// FProcessLut class methods
+// FPostProcessLut class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-void FProcessLut::Init() {
+void FPostProcessLut::Init() {
 	parameter_ = std::make_unique<DimensionBuffer<Parameter>>();
 	parameter_->Create(SxavengerSystem::GetDxDevice(), 1);
 
@@ -120,7 +120,7 @@ void FProcessLut::Init() {
 	parameter_->At(0).b.Init();
 }
 
-void FProcessLut::Process(const ProcessContext& context) {
+void FPostProcessLut::Process(const ProcessContext& context) {
 	context.textures->NextIndex();
 
 	parameter_->At(0).r.Sort();
@@ -139,7 +139,7 @@ void FProcessLut::Process(const ProcessContext& context) {
 	FRenderCore::GetInstance()->GetProcess()->Dispatch(context.context, context.size);
 }
 
-void FProcessLut::SetImGuiCommand() {
+void FPostProcessLut::SetImGuiCommand() {
 	if (ImGui::TreeNode("red")) {
 		parameter_->At(0).r.SetImGuiCommand();
 		ImGui::TreePop();

@@ -1,4 +1,4 @@
-#include "FProcessDoF.h"
+#include "FPostProcessDoF.h"
 
 //-----------------------------------------------------------------------------------------
 // include
@@ -10,16 +10,16 @@
 #include <Engine/System/SxavengerSystem.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// FProcessDoF class methods
+// FPostProcessDoF class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-void FProcessDoF::Init() {
+void FPostProcessDoF::Init() {
 	parameter_ = std::make_unique<DxObject::DimensionBuffer<Parameter>>();
 	parameter_->Create(SxavengerSystem::GetDxDevice(), 1);
 	parameter_->At(0).Init();
 }
 
-void FProcessDoF::Process(const FPostProcess::ProcessContext& context) {
+void FPostProcessDoF::Process(const FPostProcess::ProcessContext& context) {
 	context.textures->NextIndex();
 
 	FRenderCore::GetInstance()->GetProcess()->SetPipeline(FRenderCoreProcess::ProcessType::DoF, context.context);
@@ -34,7 +34,7 @@ void FProcessDoF::Process(const FPostProcess::ProcessContext& context) {
 	FRenderCore::GetInstance()->GetProcess()->Dispatch(context.context, context.size);
 }
 
-void FProcessDoF::SetImGuiCommand() {
+void FPostProcessDoF::SetImGuiCommand() {
 	ImGui::DragFloat("focus", &parameter_->At(0).focus, 0.01f, 0.0f, 128.0f);
 	ImGui::DragFloat("f",     &parameter_->At(0).f,     0.01f, 0.0f, 128.0f);
 
@@ -44,7 +44,7 @@ void FProcessDoF::SetImGuiCommand() {
 	ImGui::CheckboxFlags("Debug View", &parameter_->At(0).isDebugView, 1);
 }
 
-void FProcessDoF::SetFocus(const Vector3f& position, const ACameraActor* camera) {
+void FPostProcessDoF::SetFocus(const Vector3f& position, const ACameraActor* camera) {
 	Vector3f clip = Matrix::Transform(position, camera->GetCamera().view * camera->GetCamera().proj);
 	Vector3f view = Matrix::Transform({ 0.0f, 0.0f, clip.z }, camera->GetCamera().projInv);
 	(*parameter_)[0].focus = view.z;

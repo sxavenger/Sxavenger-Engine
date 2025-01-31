@@ -93,7 +93,7 @@ void BetaSystemGameLoop::InitSystem() {
 
 	//* process *//
 
-	processDoF_ = std::make_unique<FProcessDoF>();
+	processDoF_ = std::make_unique<FPostProcessDoF>();
 	processDoF_->Init();
 	setting_->AddProcess(processDoF_.get());
 
