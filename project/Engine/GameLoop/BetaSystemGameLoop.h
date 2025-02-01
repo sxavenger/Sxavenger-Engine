@@ -24,6 +24,7 @@
 #include <Engine/!Render/Scene/FPostProcessSetting.h>
 #include <Engine/!Render/Scene/PostProcess/PostProcesses/FPostProcessLut.h>
 #include <Engine/!Render/Scene/PostProcess/PostProcesses/FPostProcessDoF.h>
+#include <Engine/!Render/Scene/PostProcess/PostProcesses/FPostProcessDemo.h>
 #include <Engine/Editor/EditorComponent/AttributeComponent.h>
 
 
@@ -76,6 +77,8 @@ private:
 
 	std::unique_ptr<FPostProcessDoF> processDoF_;
 	std::unique_ptr<AttributeComponent> doFComponent_;
+
+	std::unique_ptr<FPostProcessDemo> demo_;
 
 	FPresenter presenter_;
 

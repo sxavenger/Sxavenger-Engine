@@ -95,12 +95,16 @@ void BetaSystemGameLoop::InitSystem() {
 
 	processDoF_ = std::make_unique<FPostProcessDoF>();
 	processDoF_->Init();
-	setting_->AddProcess(processDoF_.get());
+	//setting_->AddProcess(processDoF_.get());
 
 	doFComponent_ = std::make_unique<AttributeComponent>();
-	doFComponent_->SetToOutliner();
+	//doFComponent_->SetToOutliner();
 	doFComponent_->SetAttributeFunc([this]() { processDoF_->SetImGuiCommand(); });
 
+	demo_ = std::make_unique<FPostProcessDemo>();
+	demo_->Init();
+	demo_->SetToOutliner();
+	setting_->AddProcess(demo_.get());
 
 	//* editors *//
 
@@ -110,6 +114,7 @@ void BetaSystemGameLoop::InitSystem() {
 }
 
 void BetaSystemGameLoop::TermSystem() {
+	demo_.reset();
 }
 
 void BetaSystemGameLoop::UpdateSystem() {
