@@ -25,6 +25,7 @@ void FPostProcessDemo::Init() {
 	pipeline1_ = std::make_unique<CustomReflectionComputePipeline>();
 	pipeline1_->CreateAsset("packages/shaders/render/postprocess/testSSAOBlur.cs.hlsl");
 	pipeline1_->RegisterBlob();
+
 	pipeline1_->ReflectionPipeline(SxavengerSystem::GetDxDevice());
 }
 

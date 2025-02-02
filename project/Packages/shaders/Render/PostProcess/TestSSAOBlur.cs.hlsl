@@ -44,35 +44,6 @@ float Gaussian2d(float2 diff, float sigma) {
 	return a * b;
 }
 
-float CrossBilateralWeight(float r, float ddiff, inout float weightTotal) {
-	float w = exp(-r * r * 2.0f * pi_v) * (ddiff < gParameter.filter ? 1.0 : 0.0);
-	weightTotal += w;
-	return w;
-}
-
-// Perform a gaussian blur in one direction
-float Blur(float2 texcoord) {
-	float weightTotal = 1.0;
-	float aoDepth = gIntermediate[texcoord].r;
-	float totalAO = aoDepth.x;
-	float centerZ = gPosition[texcoord].z;
-	
-	static const int kKernelRadius = 15;
-	// [unroll]
-	for (int i = -kKernelRadius; i < kKernelRadius; i++) {
-		float2 current = texcoord + (float(i) * 2.0f);
-		
-		float sampleAO = gIntermediate[current].r;
-		float sampleZ = gPosition[current].z;
-		
-		float diff   = abs(sampleZ - centerZ);
-		float weight = CrossBilateralWeight(float(i), diff, weightTotal);
-		totalAO     += sampleAO * weight;
-	}
-
-	return totalAO / weightTotal;
-}
-
 ////////////////////////////////////////////////////////////////////////////////////////////
 // main
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -88,10 +59,27 @@ void main(uint3 dispatchThreadId : SV_DispatchThreadID) {
 	
 	float2 texcoord = float2(index) / float2(size);
 	
-	float blur = Blur(texcoord);
-	
 	float4 input = gInput[index];
+	float4 intermediate = gIntermediate[index];
 	
-	gOutput[index] = float4(input.rgb * blur, input.a);
+	static const int2 kScale = int2(gParameter.scale);
+	
+	float sum = 0.0f;
+	float weightSum = 0.0f;
+	
+	for (int x = -kScale.x; x <= kScale.x; ++x) {
+		for (int y = -kScale.y; y <= kScale.y; ++y) {
+
+			int2 ind = int2(index) + int2(x, y);
+			
+			float weight = Gaussian2d(float2(x, y), 2.0f);
+			sum += weight * gIntermediate[ind].r;
+			weightSum += weight;
+		}
+	}
+	
+	float ao = saturate(sum / weightSum);
+	
+	gOutput[index] = float4(input.rgb * ao, input.a);
 	
 }
