@@ -13,8 +13,8 @@ _DXOBJECT_USING
 
 const std::array<DXGI_FORMAT, FSceneTextures::kGBufferLayoutCount> FSceneTextures::kGBufferFormats = {
 	DXGI_FORMAT_R8G8B8A8_UNORM,     //!< Normal
-	DXGI_FORMAT_R8G8B8A8_UNORM,     //!< Material
-	DXGI_FORMAT_R32G32B32A32_FLOAT, //!< Albedo_AO
+	DXGI_FORMAT_R8G8B8A8_UNORM,     //!< Material_AO
+	DXGI_FORMAT_R32G32B32A32_FLOAT, //!< Albedo
 	DXGI_FORMAT_R32G32B32A32_FLOAT, //!< Position
 	DXGI_FORMAT_R32G32B32A32_FLOAT, //!< Lighting
 };
@@ -41,8 +41,8 @@ void FSceneTextures::Create(const Vector2ui& size) {
 void FSceneTextures::BeginOpaqueBasePass(const DirectXThreadContext* context) const {
 	D3D12_RESOURCE_BARRIER barriers[] = {
 		gBuffers_[static_cast<uint8_t>(GBufferLayout::Normal)]->TransitionBeginRenderTarget(),
-		gBuffers_[static_cast<uint8_t>(GBufferLayout::Material)]->TransitionBeginRenderTarget(),
-		gBuffers_[static_cast<uint8_t>(GBufferLayout::Albedo_AO)]->TransitionBeginRenderTarget(),
+		gBuffers_[static_cast<uint8_t>(GBufferLayout::Material_AO)]->TransitionBeginRenderTarget(),
+		gBuffers_[static_cast<uint8_t>(GBufferLayout::Albedo)]->TransitionBeginRenderTarget(),
 		gBuffers_[static_cast<uint8_t>(GBufferLayout::Position)]->TransitionBeginRenderTarget(),
 	};
 
@@ -53,8 +53,8 @@ void FSceneTextures::BeginOpaqueBasePass(const DirectXThreadContext* context) co
 	static const uint8_t kGBufferCount = 4;
 	std::array<D3D12_CPU_DESCRIPTOR_HANDLE, kGBufferCount> handles = {};
 	handles[0] = gBuffers_[static_cast<uint8_t>(GBufferLayout::Normal)]->GetCPUHandleRTV();
-	handles[1] = gBuffers_[static_cast<uint8_t>(GBufferLayout::Material)]->GetCPUHandleRTV();
-	handles[2] = gBuffers_[static_cast<uint8_t>(GBufferLayout::Albedo_AO)]->GetCPUHandleRTV();
+	handles[1] = gBuffers_[static_cast<uint8_t>(GBufferLayout::Material_AO)]->GetCPUHandleRTV();
+	handles[2] = gBuffers_[static_cast<uint8_t>(GBufferLayout::Albedo)]->GetCPUHandleRTV();
 	handles[3] = gBuffers_[static_cast<uint8_t>(GBufferLayout::Position)]->GetCPUHandleRTV();
 
 	context->GetCommandList()->OMSetRenderTargets(
@@ -62,8 +62,8 @@ void FSceneTextures::BeginOpaqueBasePass(const DirectXThreadContext* context) co
 	);
 
 	gBuffers_[static_cast<uint8_t>(GBufferLayout::Normal)]->ClearRenderTarget(context);
-	gBuffers_[static_cast<uint8_t>(GBufferLayout::Material)]->ClearRenderTarget(context);
-	gBuffers_[static_cast<uint8_t>(GBufferLayout::Albedo_AO)]->ClearRenderTarget(context);
+	gBuffers_[static_cast<uint8_t>(GBufferLayout::Material_AO)]->ClearRenderTarget(context);
+	gBuffers_[static_cast<uint8_t>(GBufferLayout::Albedo)]->ClearRenderTarget(context);
 	gBuffers_[static_cast<uint8_t>(GBufferLayout::Position)]->ClearRenderTarget(context);
 
 	depth_->ClearRasterizerDepth(context);
@@ -72,8 +72,8 @@ void FSceneTextures::BeginOpaqueBasePass(const DirectXThreadContext* context) co
 void FSceneTextures::EndOpaqueBasePass(const DirectXThreadContext* context) const {
 	D3D12_RESOURCE_BARRIER barriers[] = {
 		gBuffers_[static_cast<uint8_t>(GBufferLayout::Normal)]->TransitionEndRenderTarget(),
-		gBuffers_[static_cast<uint8_t>(GBufferLayout::Material)]->TransitionEndRenderTarget(),
-		gBuffers_[static_cast<uint8_t>(GBufferLayout::Albedo_AO)]->TransitionEndRenderTarget(),
+		gBuffers_[static_cast<uint8_t>(GBufferLayout::Material_AO)]->TransitionEndRenderTarget(),
+		gBuffers_[static_cast<uint8_t>(GBufferLayout::Albedo)]->TransitionEndRenderTarget(),
 		gBuffers_[static_cast<uint8_t>(GBufferLayout::Position)]->TransitionEndRenderTarget(),
 	};
 
@@ -140,8 +140,8 @@ void FSceneTextures::EndTransparentBasePass(const DirectXThreadContext* context)
 void FSceneTextures::BeginPostProcessPass(const DirectXThreadContext* context) const {
 	D3D12_RESOURCE_BARRIER barriers[] = {
 		gBuffers_[static_cast<uint8_t>(GBufferLayout::Normal)]->TransitionBeginState(D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE),
-		gBuffers_[static_cast<uint8_t>(GBufferLayout::Material)]->TransitionBeginState(D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE),
-		gBuffers_[static_cast<uint8_t>(GBufferLayout::Albedo_AO)]->TransitionBeginState(D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE),
+		gBuffers_[static_cast<uint8_t>(GBufferLayout::Material_AO)]->TransitionBeginState(D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE),
+		gBuffers_[static_cast<uint8_t>(GBufferLayout::Albedo)]->TransitionBeginState(D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE),
 		gBuffers_[static_cast<uint8_t>(GBufferLayout::Position)]->TransitionBeginState(D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE),
 	};
 
@@ -153,8 +153,8 @@ void FSceneTextures::BeginPostProcessPass(const DirectXThreadContext* context) c
 void FSceneTextures::EndPostProcessPass(const DirectXThreadContext* context) const {
 	D3D12_RESOURCE_BARRIER barriers[] = {
 		gBuffers_[static_cast<uint8_t>(GBufferLayout::Normal)]->TransitionEndState(D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE),
-		gBuffers_[static_cast<uint8_t>(GBufferLayout::Material)]->TransitionEndState(D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE),
-		gBuffers_[static_cast<uint8_t>(GBufferLayout::Albedo_AO)]->TransitionEndState(D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE),
+		gBuffers_[static_cast<uint8_t>(GBufferLayout::Material_AO)]->TransitionEndState(D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE),
+		gBuffers_[static_cast<uint8_t>(GBufferLayout::Albedo)]->TransitionEndState(D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE),
 		gBuffers_[static_cast<uint8_t>(GBufferLayout::Position)]->TransitionEndState(D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE),
 	};
 

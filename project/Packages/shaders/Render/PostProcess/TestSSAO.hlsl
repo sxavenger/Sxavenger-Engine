@@ -92,7 +92,14 @@ void main(uint3 dispatchThreadId : SV_DispatchThreadID) {
 			int2 ind = int2(index) + int2(x, y);
 			
 			Surface s;
+			
 			if (!s.GetSurface(ind)) {
+				continue;
+			}
+			
+			float3 v = s.position - surface.position;
+			
+			if (dot(v, surface.normal) > 0.0f) {
 				continue;
 			}
 			

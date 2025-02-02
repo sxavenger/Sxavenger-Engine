@@ -24,8 +24,8 @@ public:
 	////////////////////////////////////////////////////////////////////////////////////////////
 	enum class GBufferLayout : uint8_t {
 		Normal,
-		Material,
-		Albedo_AO,
+		Material_AO,
+		Albedo,
 		Position, // todo: depthから復元する
 		Result,
 	};
@@ -33,8 +33,8 @@ public:
 
 	//* [detail GBuffer Layout]
 	//* Normal:    float3 normal, float _NOT_USED_1                                   [R8G8B8A8_UNORM]
-	//* Material:  float metallic, float specular, float roughness, float _NOT_USED_1 [R8G8B8A8_UNORM]
-	//* Albedo_AO: float3 albedo, float AO, float _NOT_USED_1                         [R32G32B32A32_FLOAT] //!< HDRのため32bit浮動小数点
+	//* Material:  float metallic, float specular, float roughness, float AO          [R8G8B8A8_UNORM]
+	//* Albedo_AO: float3 albedo, float _NOT_USED_1                                   [R32G32B32A32_FLOAT] //!< HDRのため32bit浮動小数点
 	//* Position:  float3 position, float _NOT_USED_1                                 [R32G32B32A32_FLOAT] //!< HDRのため32bit浮動小数点
 	//* Result:    float4 color                                                       [R32G32B32A32_FLOAT] //!< HDRのため32bit浮動小数点
 
