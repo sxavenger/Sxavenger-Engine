@@ -21,6 +21,7 @@ struct Parameter {
 	float angleBias;
 	float stregth;
 	float filter;
+	float2 scale;
 };
 ConstantBuffer<Parameter> gParameter : register(b1);
 
@@ -30,158 +31,141 @@ ConstantBuffer<Parameter> gParameter : register(b1);
 
 static const float pi_v = 3.14159265359f;
 
+// vvv except vvv
+
+static const float4 kNotProcessed = float4(0.0f, 0.0f, 0.0f, 0.0f);
+
 // vvv parameter vvv
 
-static const uint kNumDirection = 8;
-static const uint kNumSteps     = 8;
+static const uint kStepCount = 16;
+static const uint kNumDirections = 8;
 
-static const float kTanAngleBias = tan(gParameter.angleBias);
-
-static const uint kMaxSteps = 16;
+static const float kTanBias = tan(gParameter.angleBias);
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // common methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-float2 PseudoRandom(float2 uv) {
+float2 PseudoRandom2(float2 uv) {
 	float2 p = float2(dot(uv, float2(127.1, 311.7)), dot(uv, float2(269.5, 183.3)));
 	return frac(sin(p) * 43758.5453123) * 2.0 - 1.0;
 }
 
-// vvv HBAO vvv
-
-float2 Rand(float2 p) {
-	p = float2(dot(p, float2(127.1, 311.7)), dot(p, float2(269.5, 183.3)));
-	return -1.0 + 2.0 * frac(sin(p) * 43758.5453123);
+float3 PseudoRandom3(float2 uv) {
+	float3 p = float3(dot(uv, float2(127.1, 311.7)), dot(uv, float2(269.5, 183.3)), dot(uv, float2(419.2, 371.9)));
+	return frac(sin(p) * 43758.5453123) * 2.0 - 1.0;
 }
 
+// vvv SSAO vvv
 
-float3 GetViewPosition(float2 uv) {
-	float3 position = gPosition.SampleLevel(gSampler, uv, 0).xyz;
-	return mul(float4(position, 1.0f), gCamera.view).xyz;
-}
+float3 GetViewPosition(float2 texcoord) {
 
-float3 MinDiff(float3 a, float3 b, float3 c) {
-	float3 v1 = b - a;
-	float3 v2 = a - c;
+	float3 position = gPosition.SampleLevel(gSampler, texcoord, 0).xyz;
+	float4 viewPosition = mul(float4(position, 1.0f), gCamera.view);
+	return viewPosition.xyz / viewPosition.w;
 	
-	return dot(v1, v1) < dot(v2, v2) ? v1 : v2;
 }
 
-float3 RandCosSinJitter(float2 uv) {
-	float2 r = Rand(uv); //!< rand
-	float angle = 2.0f * pi_v * r.x / float(kNumDirection);
-	return float3(cos(angle), sin(angle), r.y);
+float3 MinDiff(float3 p, float3 pr, float3 pl) {
+	float3 v0 = pr - p;
+	float3 v1 = p - pl;
+	return (dot(v0, v0) < dot(v1, v1)) ? v0 : v1;
 }
 
-void CalculateNumSteps(inout float2 stepSize, inout float numStep, float radius, float rand) {
-	float maxRadius = gParameter.maxRadius;
-	float2 invRes   = 1.0f / float2(gConfig.size);
+void CalculateNumStep(out float2 stepSizeInUV, out float numSteps, float radiusInPixels, float rand) {
+	numSteps = min(float(kStepCount), radiusInPixels);
+	float stepSizeInPixels = radiusInPixels / (numSteps + 1.0f);
+	float maxNumSteps = gParameter.maxRadius / stepSizeInPixels;
 	
-	numStep = min(float(kNumSteps), radius);
-
-	float stepSizeInPixels = radius / (numStep + 1.0);
-	float maxNumSteps      = maxRadius / stepSizeInPixels;
-	
-	if (maxNumSteps < numStep) {
-		numStep = floor(maxNumSteps + rand);
-		numStep = max(numStep, 1.0);
-		stepSizeInPixels = maxRadius / numStep;
+	if (numSteps > maxNumSteps) {
+		numSteps = floor(maxNumSteps + rand);
+		numSteps = max(1.0f, numSteps);
+		stepSizeInPixels = gParameter.maxRadius / numSteps;
 	}
-
-	stepSize = stepSizeInPixels * invRes.xy;
+	
+	float2 invRes = 1.0f / float2(gConfig.size);
+	
+	stepSizeInUV = stepSizeInPixels / invRes;
 }
 
-float2 RotateDirection(float2 dir, float cos, float sin) {
-	return float2(dir.x * cos - dir.y * sin, dir.x * sin + dir.y * cos);
+// vvv calculate occlusion vvv
+
+float Tangent(float3 t) {
+	return t.z * rsqrt(dot(t.xy, t.xy));
 }
 
-float2 SnapUVOffset(float2 uv) {
-	float2 res    = float2(gConfig.size);
-	float2 invRes = 1.0f / res;
-	return round(uv * res) * invRes;
-}
-
-float Rsqrt(float x) {
-	return 1.0f / sqrt(x);
-}
-
-float GetBiasTangent(float3 t) {
-	return -t.z * Rsqrt(dot(t.xy, t.xy)) + kTanAngleBias;
+float BiasedTangent(float3 t) {
+	return t.z * rsqrt(dot(t.xy, t.xy)) + kTanBias;
 }
 
 float TanToSin(float x) {
-	return x * Rsqrt(1.0f + x * x);
+	return x * rsqrt(x * x + 1);
 }
 
-float GetTangent(float3 t) {
-	return -t.z * Rsqrt(dot(t.xy, t.xy));
+float FalloffFactor(float d2, float r2) {
+	return 1.0f - d2 / r2;
 }
 
-float falloffFactor(float d2) {
-	float NegInvRadius = -1.0 / (gParameter.radius * gParameter.radius);
-	return d2 * NegInvRadius + 1.0;
-}
-
-float IntegrateOcclusion(float2 uv0, float2 snapped_duv, float3 p, float3 dPdu, float3 dPdv, inout float tanH) {
-	float ao = 0.0;
-
-	float3 t    = snapped_duv.x * dPdu + snapped_duv.y * dPdv;
-	float tanT  = GetBiasTangent(t);
-	float sinT  = TanToSin(tanT);
-	float3 s    = GetViewPosition(uv0 + snapped_duv);
-	float3 diff = s - p;
-	float tanS = GetTangent(diff);
-	float sinS = TanToSin(tanS);
-	float d2 = dot(diff, diff);
-	float R2 = gParameter.radius * gParameter.radius; // R*R
-	if ((d2 < R2) && (tanS > tanT)) {
-		ao = falloffFactor(d2) * saturate(sinS - sinT);
-		tanH = max(tanH, tanS);
-	}
-
-	return ao;
-}
-
-float CalculateHorizonOcclusion(float2 dUv, float2 texelDeltaUV, float2 uv0, float3 p, float numSteps, float randStep, float3 dPdu, float3 dPdv) {
-
+float IntegrateOcclusion(float2 texcoord, float2 duv, float3 p, float3 dpdu, float3 dpdv, inout float tanH) {
 	float ao = 0.0f;
 	
-	float2 uv      = uv0 + SnapUVOffset(randStep * dUv);
-	float2 deltaUV = SnapUVOffset(dUv);
-	float3 t       = deltaUV.x * dPdu + deltaUV.y * dPdv;
+	float3 t = duv.x * dpdu + duv.y * dpdv;
+	float tanT = BiasedTangent(t);
+	float sinT = TanToSin(tanT);
+	float3 s = GetViewPosition(texcoord + duv);
+	float3 diff = s - p;
+	float tanS = Tangent(diff);
+	float sinS = TanToSin(tanS);
+	float d2 = dot(diff, diff);
+	float r2 = gParameter.radius * gParameter.radius;
 	
-	float tanT = GetBiasTangent(t);
+	if ((d2 < r2) && (tanS > tanT)) {
+		ao = FalloffFactor(d2, r2) * saturate(sinS - sinT);
+		tanH = max(tanH, tanS);
+	}
+	
+	return ao;
 
+}
+
+float CalculateHorizonOcclusion(float2 deltaUV, float2 texelDeltaUV, float2 texcoord, float3 p, float numSteps, float randStep, float3 dpdu, float3 dpdv) {
+
+	float ao = 0.0f;
+
+	float2 uv = texcoord + randStep * deltaUV;
+	float3 t = deltaUV.x * dpdu + deltaUV.y * dpdv;
+	float tanH = BiasedTangent(t);
 	
-	float2 snappedUV = SnapUVOffset(randStep * deltaUV + texelDeltaUV);
-	ao = IntegrateOcclusion(uv0, snappedUV, p, dPdu, dPdv, tanT);
-	numSteps--;
+	// first step
+	float2 duv = randStep * deltaUV + texelDeltaUV;
+	ao = IntegrateOcclusion(texcoord, duv, p, dpdu, dpdv, tanH);
+	--numSteps;
 	
-	float sinH = TanToSin(tanT);
+	float sinH = TanToSin(tanH);
 	
-	for (int j = 1; j < kMaxSteps; ++j) {
-		if (float(j) >= numSteps) {
+	for (uint si = 1; si < kStepCount; ++si) {
+		if (float(si) >= numSteps) {
 			break;
 		}
-
+		
 		uv += deltaUV;
 		float3 s = GetViewPosition(uv);
 		float3 diff = s - p;
-		float tanS = GetTangent(diff);
+		float tanS = Tangent(diff);
 		float d2 = dot(diff, diff);
-		float R2 = gParameter.radius * gParameter.radius;
+		float r2 = gParameter.radius * gParameter.radius;
 		
-		if ((d2 < R2) && (tanS > tanT)) {
+		if ((d2 < r2) && (tanS > tanH)) {
 			float sinS = TanToSin(tanS);
-			ao += falloffFactor(d2) * saturate(sinS - sinH);
+			ao += FalloffFactor(d2, r2) * saturate(sinS - sinH);
 
-			tanT = tanS;
+			tanH = tanS;
 			sinH = sinS;
 		}
 	}
 
 	return ao;
+	
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -191,65 +175,57 @@ float CalculateHorizonOcclusion(float2 dUv, float2 texelDeltaUV, float2 uv0, flo
 void main(uint3 dispatchThreadId : SV_DispatchThreadID) {
 
 	uint2 index = dispatchThreadId.xy;
-	uint2 size = gConfig.size;
+	uint2 size  = gConfig.size;
 	
 	if (any(index >= size)) {
 		return; //!< texture size over
 	}
 	
-	Surface surface;
+	//* vvv HBAO vvv *//
 	
-	const float4 not_process = float4(0.0f, 0.0f, 0.0f, 0.0f);
+	float2 texcoord = (float2(index)) / size;
 	
-	if (!surface.GetSurface(index)) {
-		gOutput[index] = not_process;
-		return; //!< surface is not valid.
-	}
+	float3 p = GetViewPosition(texcoord);
 	
-
-	float3 position = mul(float4(surface.position, 1.0f), gCamera.view).xyz;
-	float3 normal   = normalize(mul(surface.normal, (float3x3)gCamera.view));
+	float focalLength    = gCamera.proj._22 * float(size.y) / float(size.x);
+	float radiusInPixels = gParameter.radius * focalLength / p.z;
 	
-	float diskRadius = gParameter.radius * gCamera.proj._11 * 0.5f / position.z;
-	float radius     = diskRadius * size.x;
-	
-	if (radius <= 1.0f) {
-		gOutput[index] = not_process;
+	if (radiusInPixels <= 1.0f) {
+		gOutput[index] = kNotProcessed;
 		return;
 	}
-	
-	float2 uv     = index / float2(size);
-	float2 res    = float2(size);
-	float2 invRes = 1.0f / float2(size);
-	
-	float3 pr = GetViewPosition(uv + float2(invRes.x, 0.0f));
-	float3 pl = GetViewPosition(uv - float2(invRes.x, 0.0f));
-	float3 pt = GetViewPosition(uv + float2(0.0f, invRes.y));
-	float3 pb = GetViewPosition(uv - float2(0.0f, invRes.y));
-	
-	
-	float3 dPdu = MinDiff(position, pr, pl);
-	float3 dPdv = MinDiff(position, pt, pb) * (res.x * invRes.x); //!< ? 
 
+	float2 res = float2(size);
+	float2 invRes = 1.0f / res;
+	
+	float3 pr = GetViewPosition(texcoord + float2(invRes.x, 0.0f));
+	float3 pl = GetViewPosition(texcoord - float2(invRes.x, 0.0f));
+	float3 pt = GetViewPosition(texcoord + float2(0.0f, invRes.y));
+	float3 pb = GetViewPosition(texcoord - float2(0.0f, invRes.y));
+
+	float3 dpdu = MinDiff(p, pr, pl);
+	float3 dpdv = MinDiff(p, pt, pb);
+
+	float3 random = PseudoRandom3(texcoord * 0.24f);
+	
+	float numSteps;
+	float2 stepSize;
+	CalculateNumStep(stepSize, numSteps, radiusInPixels, random.z);
+	
 	float ao = 0.0f;
 	
-	const float alpha = pi_v * 2.0f / float(kNumDirection);
-	
-	float numStep;  //!< output
-	float2 stepSize; //!< output
-	float3 rand = RandCosSinJitter(uv);
-	CalculateNumSteps(stepSize, numStep, radius, rand.z);
-	
-	for (uint i = 0; i < kNumDirection; ++i) {
-
-		float angle = alpha * float(i);
-		float2 dir  = RotateDirection(float2(cos(angle), sin(angle)), rand.x, rand.y);
-		float2 deltaUV = dir * stepSize;
+	for (uint d = 0; d < kNumDirections; ++d) {
+		
+		float k = (float(d) + random.x) / float(kNumDirections);
+		float phi = k * pi_v * 2.0f;
+		float2 dir = float2(cos(phi), sin(phi));
+		float2 deltaUV      = dir * stepSize;
 		float2 texelDeltaUV = dir * invRes;
-		ao += CalculateHorizonOcclusion(deltaUV, texelDeltaUV, uv, position, numStep, rand.z, dPdu, dPdv);
+		
+		ao += CalculateHorizonOcclusion(deltaUV, texelDeltaUV, texcoord, p, numSteps, random.y, dpdu, dpdv);
 	}
 	
-	ao = 1.0f - ao / float(kNumDirection) * gParameter.stregth;
-	
-	gOutput[index] = float4(ao, position.z, 0.0f, 1.0f);
+	ao = 1.0f - saturate(ao / float(kNumDirections) * gParameter.stregth);
+
+	gOutput[index] = float4(ao, ao, ao, 1.0f);
 }

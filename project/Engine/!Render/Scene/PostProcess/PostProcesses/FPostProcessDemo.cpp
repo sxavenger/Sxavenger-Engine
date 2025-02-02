@@ -38,12 +38,14 @@ void FPostProcessDemo::Process(const FPostProcess::ProcessContext& context) {
 
 		DxObject::BindBufferDesc parameter = context.parameter;
 
-		/*parameter.SetHandle("gInput", context.textures->GetPrevTexture(1)->GetGPUHandleUAV());*/
+		parameter.SetHandle("gInput", context.textures->GetPrevTexture(1)->GetGPUHandleUAV());
 		parameter.SetHandle("gOutput", buffer_->GetGPUHandleUAV());
 		parameter.SetAddress("gParameter", parameter_->GetGPUVirtualAddress());
 
 		pipeline_->BindComputeBuffer(context.context->GetDxCommand(), parameter);
 		FRenderCore::GetInstance()->GetProcess()->Dispatch(context.context, context.size);
+
+		SxavengerSystem::TransitionAllocator();
 	}
 
 	context.textures->NextIndex();
@@ -54,7 +56,7 @@ void FPostProcessDemo::Process(const FPostProcess::ProcessContext& context) {
 		DxObject::BindBufferDesc parameter = context.parameter;
 
 		parameter.SetHandle("gInput", context.textures->GetPrevTexture(1)->GetGPUHandleUAV());
-		parameter.SetHandle("gIntermediate", buffer_->GetGPUHandleSRV());
+		parameter.SetHandle("gIntermediate", buffer_->GetGPUHandleUAV());
 		parameter.SetHandle("gOutput", context.textures->GetPrevTexture(0)->GetGPUHandleUAV());
 		parameter.SetAddress("gParameter", parameter_->GetGPUVirtualAddress());
 
@@ -73,6 +75,6 @@ void FPostProcessDemo::AttributeImGui() {
 	ImGui::DragFloat("radius", &parameter_->At(0).radius, 0.01f, 0.0f, 128.0f);
 	ImGui::DragFloat("strength", &parameter_->At(0).strength, 0.01f, 0.0f, 12.0f);
 	ImGui::DragFloat("filtter", &parameter_->At(0).filtter, 0.01f, 0.0f, 128.0f);
-	ImGui::DragFloat("scale", &parameter_->At(0).scale, 0.01f, 0.0f, 128.0f);
+	ImGui::DragFloat2("scale", &parameter_->At(0).scale.x, 0.01f, 0.0f, 128.0f);
 
 }

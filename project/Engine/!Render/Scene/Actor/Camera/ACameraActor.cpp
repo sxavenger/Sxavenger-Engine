@@ -50,6 +50,10 @@ void ACameraActor::UpdateProj(const Matrix4x4& proj) {
 	(*buffer_)[0].TransferProj(proj);
 }
 
+void ACameraActor::InspectorImGui() {
+	UpdateView();
+}
+
 const D3D12_GPU_VIRTUAL_ADDRESS& ACameraActor::GetGPUVirtualAddress() const {
 	Assert(buffer_ != nullptr, "camera actor not init.");
 	return buffer_->GetGPUVirtualAddress();

@@ -111,6 +111,8 @@ void BetaSystemGameLoop::InitSystem() {
 	sEditorEngine->ExecuteEditorFunction<RenderSceneEditor>([this](RenderSceneEditor* editor) {
 		editor->SetGameRenderer(renderer_.get());
 	});
+
+	
 }
 
 void BetaSystemGameLoop::TermSystem() {

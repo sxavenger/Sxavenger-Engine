@@ -27,7 +27,7 @@ public:
 		float angleBias;
 		float strength;
 		float filtter;
-		float scale;
+		Vector2f scale;
 	};
 
 public:

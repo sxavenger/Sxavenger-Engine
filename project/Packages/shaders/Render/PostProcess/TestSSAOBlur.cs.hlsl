@@ -9,7 +9,7 @@
 //=========================================================================================
 
 RWTexture2D<float4> gInput        : register(u0); //!< input texture
-Texture2D<float4> gIntermediate : register(t1); //!< intermediate texture
+RWTexture2D<float4> gIntermediate : register(u1); //!< intermediate texture
 RWTexture2D<float4> gOutput       : register(u2); //!< output texture
 
 SamplerState gSampler : register(s0);
@@ -22,7 +22,7 @@ struct Parameter {
 	float angleBias;
 	float stregth;
 	float filter;
-	float scale;
+	float2 scale;
 };
 ConstantBuffer<Parameter> gParameter : register(b1);
 
@@ -38,34 +38,10 @@ static const int kKernelRadius = 15;
 // methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-float CrossBilateralWeight(float r, float ddiff, inout float weightTotal) {
-	
-	float w = exp(-r * r * pi_v) * (ddiff < gParameter.filter ? 1.0 : 0.0);
-	weightTotal += w;
-	return w;
-}
-
-float2 Blur(float2 uv, float2 scale) {
-	float2 centerCoord = uv;
-	float weightTotal = 1.0;
-
-	float2 aoDepth = gIntermediate.SampleLevel(gSampler, centerCoord, 0).xy;	
-
-	float totalAO = aoDepth.x;
-	float centerZ = mul(float4(gPosition.SampleLevel(gSampler, centerCoord, 0).rgb, 1.0f), gCamera.view).z;
-	
-	// [unroll]
-	for (int i = -kKernelRadius; i < kKernelRadius; ++i) {
-		float2 texcoord  = centerCoord + float(i) * scale;
-		float2 sampleAOZ = gIntermediate.SampleLevel(gSampler, texcoord, 0).xy;
-		float z = mul(float4(gPosition.SampleLevel(gSampler, texcoord, 0).rgb, 1.0f), gCamera.view).z;
-		float diff       = abs(z - centerZ);
-		
-		float weight = CrossBilateralWeight(float(i), diff, weightTotal);
-		totalAO += sampleAOZ.x * weight;
-	}
-
-	return float2(totalAO / weightTotal, centerZ);
+float Gaussian2d(float2 diff, float sigma) {
+	float a = 1.0f / (2.0f * pi_v * sigma * sigma);
+	float b = exp(-(diff.x * diff.x + diff.y * diff.y) / (2.0f * sigma * sigma));
+	return a * b;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -80,14 +56,38 @@ void main(uint3 dispatchThreadId : SV_DispatchThreadID) {
 	if (any(index >= size)) {
 		return; //!< texture size over
 	}
+
 	
-	float2 uv = index / float2(size);
+	//float4 ao = gIntermediate[index];
+	//gOutput[index] = float4(ao.rgb, 1.0f);
+	//return;
 	
-	float2 blur = Blur(uv, gParameter.scale);
+	static const int2 kStrength = int2(gParameter.scale);
+	
+	float sum = 0.0f;
+	float weightSum = 0.0f;
+	
+	for (int x = -kStrength.x; x < kStrength.x; ++x) {
+		for (int y = -kStrength.x; y < kStrength.y; ++y) {
+			
+			int2 i = int2(index) + int2(x, y);
+
+			float ao     = gIntermediate[i].r;
+			float weight = Gaussian2d(float2(x, y), 24.0f);
+			
+			sum       += ao * weight;
+			weightSum += weight;
+			
+		}
+	}
+	
+	float ambient = saturate(sum / weightSum);
 	
 	float4 input = gInput[index];
 	
-	gOutput[index] = input * float4(blur.r, blur.r, blur.r, 1.0f);
+	gOutput[index] = float4(input.rgb * ambient, input.a);
 	
+	//float ao = gIntermediate[index].r;
+	//gOutput[index] = float4(ao, ao, ao, 1.0f);
 	
 }

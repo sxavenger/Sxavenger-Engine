@@ -30,8 +30,8 @@ public:
 		Matrix4x4 world;
 		Matrix4x4 proj;
 		Matrix4x4 projInv;
-		//float near;
-		//float far;
+		/*float nearZ;
+		float farZ;*/
 
 		//* method *//
 
@@ -55,6 +55,8 @@ public:
 	void UpdateView();
 
 	void UpdateProj(const Matrix4x4& proj);
+
+	virtual void InspectorImGui() override;
 
 	//* getter *//
 

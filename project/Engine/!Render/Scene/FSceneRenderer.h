@@ -63,6 +63,8 @@ public:
 	const Config& GetConfig() const { return config_; }
 	Config& GetConfig() { return config_; }
 
+	ACameraActor* GetCamera() const { return camera_; }
+
 	//* debug *//
 
 	const D3D12_GPU_DESCRIPTOR_HANDLE& GetDebugTexture() const;
