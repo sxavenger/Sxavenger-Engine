@@ -21,7 +21,7 @@ mono_crash.*
 generated/
 
 # imgui
-project/imgui.ini
+*project/imgui.ini
 
 # git yml
 .github/
