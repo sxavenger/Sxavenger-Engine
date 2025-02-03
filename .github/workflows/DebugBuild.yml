@@ -2,7 +2,7 @@ name: "debug build"
 on:
     push:
         branches:
-            - "master"
+            - "3.1"
 
 env:
     # リポジトリのルートディレクトリを基点としたslnのfilepath

@@ -59,6 +59,9 @@ public:
 	bool Test(_MaskType mask) const { return (mask_ & mask) == mask; }
 	bool Test(_BitType bit) const { return Test(static_cast<_MaskType>(bit)); }
 
+	bool Any(_MaskType mask) const { return (mask_ & mask) != 0; }
+	bool Any(_BitType bit) const { return Any(static_cast<_MaskType>(bit)); }
+
 	//* getter *//
 
 	_MaskType Get() const { return mask_; }
