@@ -60,7 +60,7 @@ public:
 
 	void Render(const DirectXThreadContext* context);
 
-	Sxl::Flag<Status, uint32_t> CheckStatus() const;
+	Sxl::Flag<Status> CheckStatus() const;
 
 	//* setter *//
 
