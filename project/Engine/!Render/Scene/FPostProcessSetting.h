@@ -28,6 +28,12 @@ public:
 
 	void EraseProcess(const FPostProcess::Iterator& it);
 
+	//* execute process option *//
+
+	bool CheckProcess() const { return !processes_.empty(); }
+
+	void ExecuteProcess(const FPostProcess::ProcessContext& context);
+
 	//* getter *//
 
 	const FPostProcess::Contanier& GetProcesses() const { return processes_; }

@@ -164,8 +164,8 @@
     <ClCompile Include="Engine\!Render\Scene\PostProcess\PostProcesses\FPostProcessDoF.cpp" />
     <ClCompile Include="Engine\!Render\Scene\FAmbientProcessSetting.cpp" />
     <ClCompile Include="Engine\!Render\Scene\AmbientProcess\FAmbientProcess.cpp" />
-    <ClCompile Include="Engine\!Render\Scene\AmbientProcess\AmbientProcesses\FAmbientProcessSSAO.cpp" />
     <ClCompile Include="Engine\!Render\Scene\PostProcess\PostProcesses\FPostProcessDemo.cpp" />
+    <ClCompile Include="Engine\!Render\Scene\AmbientProcess\AmbientProcesses\FAmbientProcessNLAO.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\System\Window\Window.h" />
@@ -334,8 +334,8 @@
     <ClInclude Include="Engine\!Render\Scene\PostProcess\PostProcesses\FPostProcessDoF.h" />
     <ClInclude Include="Engine\!Render\Scene\FAmbientProcessSetting.h" />
     <ClInclude Include="Engine\!Render\Scene\AmbientProcess\FAmbientProcess.h" />
-    <ClInclude Include="Engine\!Render\Scene\AmbientProcess\AmbientProcesses\FAmbientProcessSSAO.h" />
     <ClInclude Include="Engine\!Render\Scene\PostProcess\PostProcesses\FPostProcessDemo.h" />
+    <ClInclude Include="Engine\!Render\Scene\AmbientProcess\AmbientProcesses\FAmbientProcessNLAO.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

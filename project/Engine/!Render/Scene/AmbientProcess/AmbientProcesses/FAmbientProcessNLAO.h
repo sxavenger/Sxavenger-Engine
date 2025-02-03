@@ -1,29 +1,50 @@
 #pragma once
+
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
+//* process
+#include "../FAmbientProcess.h"
+
 //* engine
-#include <Engine/Module/Pipeline/CustomComputePipeline.h>
+#include <Engine/System/DirectX/DxObject/DxDimensionBuffer.h>
+
+//* lib
+
 
 //* c++
-#include <array>
+#include <memory>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// FRenderCoreProcess class
+// FAmbientProcessNLAO class
 ////////////////////////////////////////////////////////////////////////////////////////////
-class FRenderCoreProcess {
+class FAmbientProcessNLAO
+	: public FAmbientProcess {
+	//* 自作式のAmbient Occlusion. (Normal Lambert Ambient Occlusion)
+	//* hack: まだシステムとしては未完成
 public:
 
 	////////////////////////////////////////////////////////////////////////////////////////////
-	// FRenderCoreProcess class
+	// Prameter structure
 	////////////////////////////////////////////////////////////////////////////////////////////
-	enum class ProcessType : uint32_t {
-		NLAO,
-		NLAO_Blur,
-		LUT,
-		DoF,
+	struct Parameter {
+
+		//* member *//
+
+		Vector2ui samples;
+		Vector2ui size;
+		float radius;
+		float strength;
+
+		//* methods *//
+
+		void Init() {
+			samples  = { 1, 1 };
+			size     = { 4, 4 };
+			radius   = 4.0f;
+			strength = 1.0f;
+		}
 	};
-	static const uint32_t kProcessTypeCount = static_cast<uint32_t>(ProcessType::DoF) + 1;
 
 public:
 
@@ -31,18 +52,18 @@ public:
 	// public methods
 	//=========================================================================================
 
-	FRenderCoreProcess()  = default;
-	~FRenderCoreProcess() = default;
+	FAmbientProcessNLAO()  = default;
+	~FAmbientProcessNLAO() = default;
 
 	void Init();
 
-	//* option *//
+	//* process *//
 
-	void SetPipeline(ProcessType type, const DirectXThreadContext* context);
+	virtual void Process(const ProcessContext& context) override;
 
-	void BindComputeBuffer(ProcessType type, const DirectXThreadContext* context, const DxObject::BindBufferDesc& desc);
+	//* debug *//
 
-	void Dispatch(const DirectXThreadContext* context, const Vector2ui& size) const;
+	virtual void SetImGuiCommand() override;
 
 private:
 
@@ -50,9 +71,6 @@ private:
 	// private variables
 	//=========================================================================================
 
-	std::array<std::unique_ptr<CustomReflectionComputePipeline>, kProcessTypeCount> processes_;
-
-	static const Vector2ui kNumThreadSize_;
-
+	std::unique_ptr<DxObject::DimensionBuffer<Parameter>> parameter_;
 
 };

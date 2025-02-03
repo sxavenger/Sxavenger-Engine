@@ -1,42 +1,49 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
-#include "PostProcess.hlsli"
-#include "../../Camera.hlsli"
+#include "AmbientProcess.hlsli"
+#include "NLAO.hlsli"
 
 //=========================================================================================
 // buffers
 //=========================================================================================
 
-RWTexture2D<float4> gInput : register(u0); //!< input texture
-RWTexture2D<float4> gIntermediate : register(u1); //!< intermediate texture
-RWTexture2D<float4> gOutput : register(u2); //!< output texture
+RWTexture2D<float4> gMain : register(u0); //!< main texture
 
-SamplerState gSampler : register(s0);
-
-ConstantBuffer<Camera> gCamera : register(b0);
-
-struct Parameter {
-	float radius;
-	float maxRadius;
-	float angleBias;
-	float stregth;
-	float filter;
-	float2 scale;
-};
-ConstantBuffer<Parameter> gParameter : register(b1);
-
+Texture2D<float4> gMaterial_AO : register(t0); //!< material and ao texture
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // variables
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 static const float pi_v = 3.14159265359f;
-static const int kKernelRadius = 15;
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// methods
+// ProcessOutput structure
 ////////////////////////////////////////////////////////////////////////////////////////////
+struct ProcessOutput {
+	
+	//* member *//
+	
+	float ao;
+	
+	//* method *//
+	
+	void SetOutput(uint2 index) {
+		float4 color = gMain[index];
+		color.rgb *= float3(ao, ao, ao);
+		gMain[index] = color;
+	}
+	
+};
+
+////////////////////////////////////////////////////////////////////////////////////////////
+// common method
+////////////////////////////////////////////////////////////////////////////////////////////
+
+bool CheckOverTexture(uint2 index) {
+	return any(index >= gConfig.size);
+}
 
 float Gaussian2d(float2 diff, float sigma) {
 	float a = 1.0f / (2.0f * pi_v * sigma * sigma);
@@ -51,18 +58,14 @@ float Gaussian2d(float2 diff, float sigma) {
 void main(uint3 dispatchThreadId : SV_DispatchThreadID) {
 
 	uint2 index = dispatchThreadId.xy;
-	uint2 size = gConfig.size;
 	
-	if (any(index >= size)) {
+	if (CheckOverTexture(index)) {
 		return; //!< texture size over
 	}
 	
-	float2 texcoord = float2(index) / float2(size);
+	ProcessOutput output = (ProcessOutput)0;
 	
-	float4 input = gInput[index];
-	float4 intermediate = gIntermediate[index];
-	
-	static const int2 kScale = int2(gParameter.scale);
+	static const int2 kScale = int2(gParameter.size);
 	
 	float sum = 0.0f;
 	float weightSum = 0.0f;
@@ -70,16 +73,16 @@ void main(uint3 dispatchThreadId : SV_DispatchThreadID) {
 	for (int x = -kScale.x; x <= kScale.x; ++x) {
 		for (int y = -kScale.y; y <= kScale.y; ++y) {
 
-			int2 ind = int2(index) + int2(x, y);
+			int2 sample_index = int2(index) + int2(x, y);
 			
 			float weight = Gaussian2d(float2(x, y), 2.0f);
-			sum += weight * gIntermediate[ind].r;
+			
+			sum       += weight * gMaterial_AO[sample_index].a;
 			weightSum += weight;
 		}
 	}
 	
-	float ao = saturate(sum / weightSum);
-	
-	gOutput[index] = float4(input.rgb * ao, input.a);
+	output.ao = saturate(sum / weightSum);
+	output.SetOutput(index);
 	
 }

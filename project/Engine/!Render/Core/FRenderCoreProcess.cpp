@@ -12,6 +12,24 @@ const Vector2ui FRenderCoreProcess::kNumThreadSize_ = { 16, 16 };
 
 void FRenderCoreProcess::Init() {
 
+	{ //!< nlao
+		auto process = std::make_unique<CustomReflectionComputePipeline>();
+		process->CreateAsset(L"packages/shaders/render/AmbientProcess/NLAO.cs.hlsl");
+		process->RegisterBlob();
+		process->ReflectionPipeline(SxavengerSystem::GetDxDevice());
+
+		processes_[static_cast<uint32_t>(ProcessType::NLAO)] = std::move(process);
+	}
+
+	{ //!< nlao blur
+		auto process = std::make_unique<CustomReflectionComputePipeline>();
+		process->CreateAsset(L"packages/shaders/render/AmbientProcess/NLAOBlur.cs.hlsl");
+		process->RegisterBlob();
+		process->ReflectionPipeline(SxavengerSystem::GetDxDevice());
+
+		processes_[static_cast<uint32_t>(ProcessType::NLAO_Blur)] = std::move(process);
+	}
+
 	{ //!< lut
 		auto process = std::make_unique<CustomReflectionComputePipeline>();
 		process->CreateAsset(L"packages/shaders/render/PostProcess/LUT.cs.hlsl");
@@ -28,7 +46,6 @@ void FRenderCoreProcess::Init() {
 		process->ReflectionPipeline(SxavengerSystem::GetDxDevice());
 
 		processes_[static_cast<uint32_t>(ProcessType::DoF)] = std::move(process);
-
 	}
 }
 

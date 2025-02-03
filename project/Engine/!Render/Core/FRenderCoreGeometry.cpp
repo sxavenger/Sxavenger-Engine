@@ -43,7 +43,7 @@ void FRenderCoreGeometry::CreateDesc() {
 
 	defferedDesc_.rtvFormats.clear();
 	//!< Geometry
-	defferedDesc_.SetRTVFormat(DXGI_FORMAT_R8G8B8A8_UNORM);
+	defferedDesc_.SetRTVFormat(DXGI_FORMAT_R10G10B10A2_UNORM);
 	defferedDesc_.SetRTVFormat(DXGI_FORMAT_R8G8B8A8_UNORM);
 	defferedDesc_.SetRTVFormat(DXGI_FORMAT_R32G32B32A32_FLOAT);
 	defferedDesc_.SetRTVFormat(DXGI_FORMAT_R32G32B32A32_FLOAT);

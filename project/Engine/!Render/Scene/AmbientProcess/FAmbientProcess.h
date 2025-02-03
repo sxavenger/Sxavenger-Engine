@@ -3,6 +3,12 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
+//* render
+#include "../../FSceneTextures.h"
+
+//* engine
+#include <Engine/System/DirectX/DxObject/DxBindBuffer.h>
+#include <Engine/System/DirectX/DirectXContext.h>
 
 //* c++
 #include <list>
@@ -24,7 +30,15 @@ public:
 	// ProcessContext structure
 	////////////////////////////////////////////////////////////////////////////////////////////
 	struct ProcessContext {
+		//* system *//
+		const DirectXThreadContext* context;
+		Vector2ui                   size;
 
+		//* textures *//
+		FSceneTextures* textures;
+
+		//* parameter *//
+		DxObject::BindBufferDesc parameter;
 	};
 
 public:
@@ -39,6 +53,10 @@ public:
 	//* process *//
 
 	virtual void Process(const ProcessContext& context) = 0;
+
+	//* debug *//
+
+	virtual void SetImGuiCommand() {}
 
 private:
 };

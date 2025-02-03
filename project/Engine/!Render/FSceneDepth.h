@@ -118,4 +118,8 @@ private:
 	RaytracingDepth raytracing_;
 
 	// todo: 深度プリパスの追加
+
+	//* state *//
+
+	static const D3D12_RESOURCE_STATES kDefaultState_ = D3D12_RESOURCE_STATE_ALL_SHADER_RESOURCE;
 };

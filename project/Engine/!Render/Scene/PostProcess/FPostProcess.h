@@ -31,14 +31,15 @@ public:
 	// ProcessContext structure
 	////////////////////////////////////////////////////////////////////////////////////////////
 	struct ProcessContext {
+		//* system *//
 		const DirectXThreadContext* context;
 		Vector2ui                   size;
+
+		//* textures *//
 		FPostProcessTextures*       textures;
 
+		//* parameter *//
 		DxObject::BindBufferDesc parameter;
-
-		//* src *//
-		const FSceneTextures* sceneTextures;
 	};
 
 public:
