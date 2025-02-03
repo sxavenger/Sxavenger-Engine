@@ -16,7 +16,7 @@
 void FSceneRenderer::Render(const DirectXThreadContext* context) {
 	auto status = CheckStatus();
 
-	if (status.Test(Status::Status_Error)) {
+	if (status.Any(Status::Status_Error)) {
 		return;
 	}
 
