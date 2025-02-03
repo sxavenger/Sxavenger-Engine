@@ -84,7 +84,7 @@ void FProcessTexture::CopyFromTexture(const DirectXThreadContext* context, const
 	D3D12_RESOURCE_BARRIER barriers[2] = {};
 	//* src
 	barriers[0].Type                   = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
-	barriers[0].Transition.StateBefore = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
+	barriers[0].Transition.StateBefore = FTexture::GetDefaultState();
 	barriers[0].Transition.StateAfter  = D3D12_RESOURCE_STATE_COPY_SOURCE;
 	barriers[0].Transition.pResource   = texture->GetResource();
 
@@ -121,7 +121,7 @@ void FProcessTexture::CopyToTexture(const DirectXThreadContext* context, const F
 	barriers[1].Transition.StateBefore = FTexture::GetDefaultState();
 	barriers[1].Transition.StateAfter  = D3D12_RESOURCE_STATE_COPY_DEST;
 	barriers[1].Transition.pResource   = texture->GetResource();
-
+ 
 	commandList->ResourceBarrier(2, barriers);
 
 	//* copy
