@@ -89,7 +89,7 @@ void ActionGameLoop::DrawGame() {
 	main_->BeginRendering();
 	main_->ClearWindow();
 
-	presenter_->Present(SxavengerSystem::GetMainThreadContext(), main_->GetSize(), textures_->GetGBuffer(FSceneTextures::GBufferLayout::Result)->GetGPUHandleSRV());
+	presenter_->Present(SxavengerSystem::GetMainThreadContext(), main_->GetSize(), textures_->GetGBuffer(FSceneTextures::GBufferLayout::Main)->GetGPUHandleSRV());
 
 	SxavengerSystem::RenderImGui();
 
