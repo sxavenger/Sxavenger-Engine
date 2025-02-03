@@ -113,7 +113,7 @@ private:
 	FPostProcessSetting* postProcesses_ = nullptr;
 
 	std::unique_ptr<FPostProcessTextures> processTextures_;
-	static const size_t kProcessTextureSize = 2;
+	static const size_t kProcessTextureSize = 3;
 
 	//* raytracing *//
 

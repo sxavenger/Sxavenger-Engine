@@ -18,6 +18,8 @@ void FPostProcessSetting::EraseProcess(const FPostProcess::Iterator& it) {
 
 void FPostProcessSetting::ExecuteProcess(const FPostProcess::ProcessContext& context) {
 	for (auto process : processes_) {
-		process->Process(context);
+		if (process->IsActive()) {
+			process->Process(context);
+		}
 	}
 }

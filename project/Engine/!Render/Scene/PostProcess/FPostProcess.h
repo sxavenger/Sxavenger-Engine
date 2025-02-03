@@ -59,12 +59,16 @@ public:
 
 	virtual void SetImGuiCommand() {}
 
-private:
+	//* getter *//
+
+	bool IsActive() const { return isActive_; }
+
+protected:
 
 	//=========================================================================================
-	// private variables
+	// protected variables
 	//=========================================================================================
 
-
+	bool isActive_ = true;
 
 };

@@ -6,28 +6,29 @@
 //* process
 #include "../FPostProcess.h"
 
-//* engine
-#include <Engine/Content/TextureBuffer/UnorderedTexture.h>
-#include <Engine/Module/Pipeline/CustomComputePipeline.h>
-#include <Engine/Editor/EditorComponent/AttributeComponent.h>
-
 ////////////////////////////////////////////////////////////////////////////////////////////
-// FPostProcessDemo class
+// FPostProcessBloom class
 ////////////////////////////////////////////////////////////////////////////////////////////
-class FPostProcessDemo
-	: public FPostProcess, public AttributeComponent {
+class FPostProcessBloom
+	: public FPostProcess {
 public:
 
 	////////////////////////////////////////////////////////////////////////////////////////////
-	// struct Parameter
+	// Parameter structure
 	////////////////////////////////////////////////////////////////////////////////////////////
 	struct Parameter {
-		float radius;
-		float maxRadius;
-		float angleBias;
-		float strength;
-		float filtter;
-		Vector2f scale;
+
+		//* member *//
+
+		Vector2ui size;      //!< blur size
+		float     threshold; //!< 閾値
+
+		//* methods *//
+
+		void Init() {
+			size      = { 4, 4 };
+			threshold = 1.0f;
+		}
 	};
 
 public:
@@ -36,16 +37,16 @@ public:
 	// public methods
 	//=========================================================================================
 
-	FPostProcessDemo()          = default;
-	virtual ~FPostProcessDemo() = default;
+	FPostProcessBloom()          = default;
+	virtual ~FPostProcessBloom() = default;
 
 	void Init();
 
 	//* process *//
 
-	virtual void Process(const FPostProcess::ProcessContext& context) override;
+	virtual void Process(const ProcessContext& context) override;
 
-	virtual void AttributeImGui() override;
+	virtual void SetImGuiCommand() override;
 
 private:
 
@@ -53,13 +54,6 @@ private:
 	// private variables
 	//=========================================================================================
 
-	bool isActive_ = true;
-
-	std::unique_ptr<CustomReflectionComputePipeline> pipeline_;
-	std::unique_ptr<CustomReflectionComputePipeline> pipeline1_;
-
 	std::unique_ptr<DxObject::DimensionBuffer<Parameter>> parameter_;
-
-	std::unique_ptr<UnorderedTexture> buffer_;
 
 };

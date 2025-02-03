@@ -82,7 +82,7 @@ void BetaSystemGameLoop::InitSystem() {
 	model1_ = std::make_unique<AModelActor>();
 	model1_->Init();
 	model1_->SetModel(SxavengerAsset::TryImport<AssetModel>("asset/models/primitive/teapot.obj"));
-	model1_->SetTransparency(AGeometryActor::Transparency::Transparent);
+	model1_->SetTransparency(AGeometryActor::Transparency::Opaque);
 
 	scene_->AddGeometry(model1_.get());
 
@@ -110,6 +110,16 @@ void BetaSystemGameLoop::InitSystem() {
 	nlaoComponent_ = std::make_unique<AttributeComponent>();
 	nlaoComponent_->SetToOutliner();
 	nlaoComponent_->SetAttributeFunc([this]() { processNLAO_->SetImGuiCommand(); });
+
+	processBloom_ = std::make_unique<FPostProcessBloom>();
+	processBloom_->Init();
+	postProcess_->AddProcess(processBloom_.get());
+
+	bloomComponent_ = std::make_unique<AttributeComponent>();
+	bloomComponent_->SetName("Bloom");
+	bloomComponent_->SetToOutliner();
+	bloomComponent_->SetAttributeFunc([this]() { processBloom_->SetImGuiCommand(); });
+
 
 	//* editors *//
 

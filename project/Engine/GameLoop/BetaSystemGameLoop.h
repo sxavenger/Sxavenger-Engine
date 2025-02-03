@@ -24,6 +24,7 @@
 #include <Engine/!Render/Scene/FPostProcessSetting.h>
 #include <Engine/!Render/Scene/PostProcess/PostProcesses/FPostProcessLut.h>
 #include <Engine/!Render/Scene/PostProcess/PostProcesses/FPostProcessDoF.h>
+#include <Engine/!Render/Scene/PostProcess/PostProcesses/FPostProcessBloom.h>
 #include <Engine/!Render/Scene/AmbientProcess/AmbientProcesses/FAmbientProcessNLAO.h>
 #include <Engine/Editor/EditorComponent/AttributeComponent.h>
 
@@ -81,6 +82,9 @@ private:
 
 	std::unique_ptr<FAmbientProcessNLAO> processNLAO_;
 	std::unique_ptr<AttributeComponent> nlaoComponent_;
+
+	std::unique_ptr<FPostProcessBloom> processBloom_;
+	std::unique_ptr<AttributeComponent> bloomComponent_;
 
 	FPresenter presenter_;
 

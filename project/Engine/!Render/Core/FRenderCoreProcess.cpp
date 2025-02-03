@@ -30,6 +30,24 @@ void FRenderCoreProcess::Init() {
 		processes_[static_cast<uint32_t>(ProcessType::NLAO_Blur)] = std::move(process);
 	}
 
+	{ //!< overlay
+		auto process = std::make_unique<CustomReflectionComputePipeline>();
+		process->CreateAsset(L"packages/shaders/render/PostProcess/Overlay.cs.hlsl");
+		process->RegisterBlob();
+		process->ReflectionPipeline(SxavengerSystem::GetDxDevice());
+
+		processes_[static_cast<uint32_t>(ProcessType::Overlay)] = std::move(process);
+	}
+
+	{ //!< bloom
+		auto process = std::make_unique<CustomReflectionComputePipeline>();
+		process->CreateAsset(L"packages/shaders/render/PostProcess/Bloom.cs.hlsl");
+		process->RegisterBlob();
+		process->ReflectionPipeline(SxavengerSystem::GetDxDevice());
+
+		processes_[static_cast<uint32_t>(ProcessType::Bloom)] = std::move(process);
+	}
+
 	{ //!< lut
 		auto process = std::make_unique<CustomReflectionComputePipeline>();
 		process->CreateAsset(L"packages/shaders/render/PostProcess/LUT.cs.hlsl");
