@@ -11,3 +11,11 @@ bool AGeometryActor::CheckVisibility(Transparency target) const {
 
 	return false;
 }
+
+AGeometryActor::Iterator AGeometryActor::AddChild(AGeometryActor* child) {
+	return children_.emplace(children_.end(), child);
+}
+
+void AGeometryActor::ClearChildren() {
+	children_.clear();
+}

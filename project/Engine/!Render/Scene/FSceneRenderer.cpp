@@ -14,47 +14,73 @@
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 void FSceneRenderer::Render(const DirectXThreadContext* context) {
-	if (!CheckRender()) { //!< scene or view is not set
+	auto status = CheckStatus();
+
+	if (status.Test(Status::Status_Error)) {
 		return;
 	}
 
 	//* ベースパス
-	RenderOpaqueGeometries(context);
-
-	//* 照明と影の処理
-	ProcessLighting(context);
-
-	/*SetupRaytracing(context);
-	ProcessRaytracingReflection(context);
-	context->TransitionAllocator();*/
-
-	//* 合成処理
-	// todo:
-
-	//* 透明パス
-	RenderTransparentGeometries(context);
-
-	//* ポストプロセス
-	PostProcessPass(context);
-}
-
-bool FSceneRenderer::CheckRender() const {
-	if (textures_ == nullptr || scene_ == nullptr || camera_ == nullptr) {
-		return false;
+	if (!status.Test(Status::Warning_Scene)) {
+		RenderOpaqueGeometries(context);
 	}
 
-	return true;
+	//* 照明と影の処理
+	if (!status.Test(Status::Warning_Scene)) {
+		ProcessLighting(context);
+	}
+
+	//* 合成処理
+	if (!status.Test(Status::Warning_AmbientProcess)) {
+		ProcessAmbientPass(context);
+	}
+
+	//* 透明パス
+	if (!status.Test(Status::Warning_Scene)) {
+		RenderTransparentGeometries(context);
+	}
+
+	//* ポストプロセス
+	if (!status.Test(Status::Warning_PostProcess)) {
+		PostProcessPass(context);
+	}
+}
+
+Sxl::Flag<FSceneRenderer::Status, uint32_t> FSceneRenderer::CheckStatus() const {
+	Sxl::Flag<Status, uint32_t> result = Status::Success;
+
+	if (textures_ == nullptr) {
+		result |= Status::Error_Textures;
+	}
+
+	if (camera_ == nullptr) {
+		result |= Status::Error_Camera;
+	}
+
+	if (scene_ == nullptr) {
+		result |= Status::Warning_Scene;
+	}
+
+	if (ambientProcesses_ == nullptr) {
+		result |= Status::Warning_AmbientProcess;
+	}
+
+	if (postProcesses_ == nullptr) {
+		result |= Status::Warning_PostProcess;
+	}
+
+	return result;
 }
 
 const D3D12_GPU_DESCRIPTOR_HANDLE& FSceneRenderer::GetDebugTexture() const {
-	return textures_->GetGBuffer(FSceneTextures::GBufferLayout::Result)->GetGPUHandleSRV();
+	return textures_->GetGBuffer(FSceneTextures::GBufferLayout::Main)->GetGPUHandleSRV();
 }
 
 void FSceneRenderer::RenderOpaqueGeometries(const DirectXThreadContext* context) {
 
 	const auto& geometries = scene_->GetGeometries();
 
-	textures_->BeginBasePass(context);
+	textures_->BeginOpaqueBasePass(context);
 
 	AGeometryActor::RendererContext rendererContext = {};
 	rendererContext.context = context;
@@ -63,13 +89,9 @@ void FSceneRenderer::RenderOpaqueGeometries(const DirectXThreadContext* context)
 	rendererContext.parameter.SetAddress("gCamera", camera_->GetGPUVirtualAddress());
 
 	// 不透明なジオメトリを描画
-	for (auto geometry : geometries) {
-		if (geometry->CheckVisibility(AGeometryActor::Transparency::Opaque)) {
-			geometry->RenderOpaque(rendererContext);
-		}
-	}
+	RenderOpaqueGeometriesContainer(geometries, rendererContext);
 
-	textures_->EndBasePass(context);
+	textures_->EndOpaqueBasePass(context);
 }
 
 void FSceneRenderer::ProcessLighting(const DirectXThreadContext* context) {
@@ -86,7 +108,7 @@ void FSceneRenderer::ProcessLighting(const DirectXThreadContext* context) {
 
 	rendererContext.parameter.SetAddress("gCamera",  camera_->GetGPUVirtualAddress());
 	rendererContext.parameter.SetHandle("gDepth",    textures_->GetDepth()->GetRasterizerGPUHandleSRV());
-	rendererContext.parameter.SetHandle("gAlbedo",   textures_->GetGBuffer(FSceneTextures::GBufferLayout::Albedo_AO)->GetGPUHandleSRV());
+	rendererContext.parameter.SetHandle("gAlbedo",   textures_->GetGBuffer(FSceneTextures::GBufferLayout::Albedo)->GetGPUHandleSRV());
 	rendererContext.parameter.SetHandle("gNormal",   textures_->GetGBuffer(FSceneTextures::GBufferLayout::Normal)->GetGPUHandleSRV());
 	rendererContext.parameter.SetHandle("gPosition", textures_->GetGBuffer(FSceneTextures::GBufferLayout::Position)->GetGPUHandleSRV());
 	rendererContext.parameter.SetAddress("gScene",   scene_->GetTopLevelAS().GetGPUVirtualAddress());
@@ -107,11 +129,28 @@ void FSceneRenderer::ProcessLighting(const DirectXThreadContext* context) {
 	textures_->EndLightingPass(context);
 }
 
+void FSceneRenderer::ProcessAmbientPass(const DirectXThreadContext* context) {
+	if (!ambientProcesses_->CheckProcess()) {
+		return;
+	}
+
+	FAmbientProcess::ProcessContext processContext = {};
+	processContext.context  = context;
+	processContext.size     = textures_->GetSize();
+	processContext.textures = textures_;
+
+	processContext.parameter.SetAddress("gCamera", camera_->GetGPUVirtualAddress());
+	processContext.parameter.SetAddress("gConfig", textures_->GetParameter());
+	processContext.parameter.SetHandle("gDepth", textures_->GetDepth()->GetRasterizerGPUHandleSRV());
+
+	ambientProcesses_->ExecuteProcess(processContext);
+}
+
 void FSceneRenderer::RenderTransparentGeometries(const DirectXThreadContext* context) {
 
 	const auto& geometries = scene_->GetGeometries();
 
-	textures_->BeginForward(context);
+	textures_->BeginTransparentBasePass(context);
 
 	AGeometryActor::RendererContext rendererContext = {};
 	rendererContext.context = context;
@@ -120,50 +159,46 @@ void FSceneRenderer::RenderTransparentGeometries(const DirectXThreadContext* con
 	rendererContext.parameter.SetAddress("gCamera", camera_->GetGPUVirtualAddress());
 
 	// 半透明なジオメトリを描画
-	for (auto geometry : geometries) {
-		if (geometry->CheckVisibility(AGeometryActor::Transparency::Transparent)) {
-			geometry->RenderTransparent(rendererContext);
-		}
-	};
+	RenderTransparentGeometriesContainer(geometries, rendererContext);
 
-	textures_->EndForward(context);
+	textures_->EndTransparentBasePass(context);
 }
 
 void FSceneRenderer::PostProcessPass(const DirectXThreadContext* context) {
-	if (textures_ == nullptr || setting_ == nullptr) {
-		return;
-	}
-
 	// ポストプロセスのTextureの確認
-	if (processTextures_ == nullptr || !processTextures_->CheckMatchTexture(textures_->GetGBuffer(FSceneTextures::GBufferLayout::Result))) {
+	if (processTextures_ == nullptr || !processTextures_->CheckMatchTexture(textures_->GetGBuffer(FSceneTextures::GBufferLayout::Main))) {
 		processTextures_ = std::make_unique<FPostProcessTextures>();
-		processTextures_->Create(kProcessTextureSize, textures_->GetGBuffer(FSceneTextures::GBufferLayout::Result));
+		processTextures_->Create(kProcessTextureSize, textures_->GetGBuffer(FSceneTextures::GBufferLayout::Main));
 	}
 
-	if (setting_->GetProcesses().empty()) {
+	if (!postProcesses_->CheckProcess()) {
 		return;
 	}
 
-	processTextures_->CopyFromTexture(context, textures_->GetGBuffer(FSceneTextures::GBufferLayout::Result));
+	processTextures_->CopyFromTexture(context, textures_->GetGBuffer(FSceneTextures::GBufferLayout::Main));
+
+	textures_->BeginPostProcessPass(context);
 
 	FPostProcess::ProcessContext processContext = {};
 	processContext.context       = context;
 	processContext.size          = textures_->GetSize();
 	processContext.textures      = processTextures_.get();
 
-	processContext.sceneTextures = textures_;
-
 	DxObject::BindBufferDesc parameter = {};
-	parameter.SetAddress("gCamera", camera_->GetGPUVirtualAddress());
-	parameter.SetAddress("gConfig", textures_->GetParameter());
+	parameter.SetAddress("gCamera",  camera_->GetGPUVirtualAddress());
+	parameter.SetAddress("gConfig",  textures_->GetParameter());
+	parameter.SetHandle("gDepth",    textures_->GetDepth()->GetRasterizerGPUHandleSRV());
+	parameter.SetHandle("gAlbedo",   textures_->GetGBuffer(FSceneTextures::GBufferLayout::Albedo)->GetGPUHandleSRV());
+	parameter.SetHandle("gNormal",   textures_->GetGBuffer(FSceneTextures::GBufferLayout::Normal)->GetGPUHandleSRV());
+	parameter.SetHandle("gPosition", textures_->GetGBuffer(FSceneTextures::GBufferLayout::Position)->GetGPUHandleSRV());
 
 	processContext.parameter = parameter;
 
-	for (auto process : setting_->GetProcesses()) {
-		process->Process(processContext);
-	}
+	postProcesses_->ExecuteProcess(processContext);
 
-	processTextures_->CopyToTexture(context, textures_->GetGBuffer(FSceneTextures::GBufferLayout::Result));
+	textures_->EndPostProcessPass(context);
+
+	processTextures_->CopyToTexture(context, textures_->GetGBuffer(FSceneTextures::GBufferLayout::Main));
 }
 
 void FSceneRenderer::RenderEmptyLight(const ALightActor::RendererContext& context) {
@@ -185,4 +220,28 @@ void FSceneRenderer::RenderEmptyLight(const ALightActor::RendererContext& contex
 	);
 
 	FRenderCore::GetInstance()->GetLight()->DrawCall(context.context);
+}
+
+void FSceneRenderer::RenderOpaqueGeometriesContainer(
+	const AGeometryActor::Container& container, const AGeometryActor::RendererContext& context) {
+
+	for (auto geometry : container) {
+		if (geometry->CheckVisibility(AGeometryActor::Transparency::Opaque)) {
+			geometry->RenderOpaque(context);
+		}
+
+		RenderOpaqueGeometriesContainer(geometry->GetChildren(), context);
+	}
+}
+
+void FSceneRenderer::RenderTransparentGeometriesContainer(
+	const AGeometryActor::Container& container, const AGeometryActor::RendererContext& context) {
+
+	for (auto geometry : container) {
+		if (geometry->CheckVisibility(AGeometryActor::Transparency::Transparent)) {
+			geometry->RenderTransparent(context);
+		}
+
+		RenderTransparentGeometriesContainer(geometry->GetChildren(), context);
+	}
 }

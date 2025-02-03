@@ -43,7 +43,7 @@ void FTexture::Create(const Vector2ui& size, DXGI_FORMAT format) {
 			&prop,
 			D3D12_HEAP_FLAG_NONE,
 			&desc,
-			D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE,
+			kDefaultState_,
 			&clearValue,
 			IID_PPV_ARGS(&resource_)
 		);
@@ -121,7 +121,7 @@ D3D12_RESOURCE_BARRIER FTexture::TransitionBeginRenderTarget() const {
 
 	D3D12_RESOURCE_BARRIER barrier = {};
 	barrier.Type                   = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
-	barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
+	barrier.Transition.StateBefore = kDefaultState_;
 	barrier.Transition.StateAfter  = D3D12_RESOURCE_STATE_RENDER_TARGET;
 	barrier.Transition.pResource   = GetResource();
 
@@ -133,7 +133,7 @@ D3D12_RESOURCE_BARRIER FTexture::TransitionEndRenderTarget() const {
 	D3D12_RESOURCE_BARRIER barrier = {};
 	barrier.Type                   = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
 	barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_RENDER_TARGET;
-	barrier.Transition.StateAfter  = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
+	barrier.Transition.StateAfter  = kDefaultState_;
 	barrier.Transition.pResource   = GetResource();
 
 	return barrier;
@@ -154,7 +154,7 @@ D3D12_RESOURCE_BARRIER FTexture::TransitionBeginUnordered() const {
 
 	D3D12_RESOURCE_BARRIER barrier = {};
 	barrier.Type                   = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
-	barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
+	barrier.Transition.StateBefore = kDefaultState_;
 	barrier.Transition.StateAfter  = D3D12_RESOURCE_STATE_UNORDERED_ACCESS;
 	barrier.Transition.pResource   = GetResource();
 
@@ -166,7 +166,27 @@ D3D12_RESOURCE_BARRIER FTexture::TransitionEndUnordered() const {
 	D3D12_RESOURCE_BARRIER barrier = {};
 	barrier.Type                   = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
 	barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_UNORDERED_ACCESS;
-	barrier.Transition.StateAfter  = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
+	barrier.Transition.StateAfter  = kDefaultState_;
+	barrier.Transition.pResource   = GetResource();
+
+	return barrier;
+}
+
+D3D12_RESOURCE_BARRIER FTexture::TransitionBeginState(D3D12_RESOURCE_STATES state) const {
+	D3D12_RESOURCE_BARRIER barrier = {};
+	barrier.Type                   = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+	barrier.Transition.StateBefore = kDefaultState_;
+	barrier.Transition.StateAfter  = state;
+	barrier.Transition.pResource   = GetResource();
+
+	return barrier;
+}
+
+D3D12_RESOURCE_BARRIER FTexture::TransitionEndState(D3D12_RESOURCE_STATES state) const {
+	D3D12_RESOURCE_BARRIER barrier = {};
+	barrier.Type                   = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+	barrier.Transition.StateBefore = state;
+	barrier.Transition.StateAfter  = kDefaultState_;
 	barrier.Transition.pResource   = GetResource();
 
 	return barrier;

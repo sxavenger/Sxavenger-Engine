@@ -40,6 +40,10 @@ public:
 
 	D3D12_RESOURCE_BARRIER TransitionEndUnordered() const;
 
+	D3D12_RESOURCE_BARRIER TransitionBeginState(D3D12_RESOURCE_STATES state) const;
+
+	D3D12_RESOURCE_BARRIER TransitionEndState(D3D12_RESOURCE_STATES state) const;
+
 	//* getter *//
 
 	ID3D12Resource* GetResource() const { return resource_.Get(); }
@@ -54,6 +58,8 @@ public:
 
 	const DXGI_FORMAT& GetFormat() const { return format_; }
 
+	static const D3D12_RESOURCE_STATES GetDefaultState() { return kDefaultState_; }
+
 private:
 
 	//=========================================================================================
@@ -66,11 +72,15 @@ private:
 
 	DxObject::Descriptor descriptorUAV_;
 	DxObject::Descriptor descriptorRTV_;
-	DxObject::Descriptor descriptorSRV_; //!< TEST
+	DxObject::Descriptor descriptorSRV_;
 
 	//* parameter *//
 
 	Vector2ui   size_;
 	DXGI_FORMAT format_;
+
+	//* state *//
+
+	static const D3D12_RESOURCE_STATES kDefaultState_ = D3D12_RESOURCE_STATE_ALL_SHADER_RESOURCE;
 
 };

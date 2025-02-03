@@ -6,7 +6,7 @@
 #include "../../Transform.hlsli"
 #include "../../Camera.hlsli"
 #include "../../Light.hlsli"
-#include "DeferredBuffer.hlsli"
+#include "DeferredBuffers.hlsli"
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Input / Output structure
@@ -27,31 +27,6 @@ struct PSInput {
 
 struct PSOutput {
 	float4 color : SV_Target0;
-};
-
-////////////////////////////////////////////////////////////////////////////////////////////
-// Surface structure
-////////////////////////////////////////////////////////////////////////////////////////////
-struct Surface {
-
-	//* member *//
-	
-	float3 position;
-	float3 albedo;
-	float3 normal;
-	
-	//* methods *//
-	
-	void GetSurface(uint2 index) {
-		if (GetDepth(index) == 1.0f) {
-			discard; //!< object is not exist.
-		}
-		
-		position = GetPosition(index);
-		albedo   = GetAlbedo(index);
-		normal   = GetNormal(index);
-	}
-	
 };
 
 //=========================================================================================

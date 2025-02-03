@@ -35,6 +35,7 @@ void OutlinerEditor::RemoveAttribute(const AttributeComponent::Iterator& iterato
 void OutlinerEditor::Clear() {
 	for (auto& attribute : outliner_) {
 		attribute->RemoveIterator();
+		// todo: attribute component
 	}
 }
 

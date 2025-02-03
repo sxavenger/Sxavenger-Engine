@@ -8,50 +8,20 @@
 
 //* engine
 #include <Engine/System/DirectX/DxObject/DxDimensionBuffer.h>
+#include <Engine/!Render/Scene/Actor/Camera/ACameraActor.h>
+
+//* lib
+#include <Lib/Geometry/Vector2.h>
+
+//* c++
+#include <memory>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// FProcessLut class
+// FPostProcessDoF class
 ////////////////////////////////////////////////////////////////////////////////////////////
-class FProcessLut
-	: public FPostProcess {
+class FPostProcessDoF
+	: public FPostProcess { //!< 被写界深度
 public:
-
-	////////////////////////////////////////////////////////////////////////////////////////////
-	// config
-	////////////////////////////////////////////////////////////////////////////////////////////
-
-	static const uint32_t kPointCount = 4;
-
-	static float CatmullRomInterpolation(float p0, float p1, float p2, float p3, float t);
-
-	////////////////////////////////////////////////////////////////////////////////////////////
-	// Point structure
-	////////////////////////////////////////////////////////////////////////////////////////////
-	struct Point {
-		float input, output;
-		float padding[2];
-	};
-
-	////////////////////////////////////////////////////////////////////////////////////////////
-	// Table structure
-	////////////////////////////////////////////////////////////////////////////////////////////
-	struct Table {
-
-		//* member *//
-
-		std::array<Point, kPointCount> points;
-
-		//* methods *//
-
-		void Init();
-
-		void Sort();
-
-		void SetImGuiCommand();
-
-		float GetOutput(float input);
-
-	};
 
 	////////////////////////////////////////////////////////////////////////////////////////////
 	// Parameter structure
@@ -60,9 +30,21 @@ public:
 
 		//* member *//
 
-		Table r;
-		Table g;
-		Table b;
+		Vector2ui strength;
+		float     focus;
+		float     f;
+		uint32_t  isDebugView; //!< デバッグ表示
+
+		//* methods *//
+
+		void Init() {
+			strength    = { 8, 8 };
+			focus       = 0.0f;
+			f           = 0.0f;
+			isDebugView = false;
+		}
+
+		// hack: parameterの不足
 	};
 
 public:
@@ -71,17 +53,27 @@ public:
 	// public methods
 	//=========================================================================================
 
-	FProcessLut()          = default;
-	virtual ~FProcessLut() = default;
+	FPostProcessDoF()          = default;
+	virtual ~FPostProcessDoF() = default;
 
 	void Init();
 
 	//* process *//
 
-	void Process(const ProcessContext& context) override;
+	virtual void Process(const FPostProcess::ProcessContext& context) override;
+
+	//* debug *//
+
+	virtual void SetImGuiCommand() override;
+
+	//* getter *//
 
 	const Parameter& GetParameter() const { return parameter_->At(0); }
 	Parameter& GetParameter() { return parameter_->At(0); }
+
+	//* setter *//
+
+	void SetFocus(const Vector3f& position, const ACameraActor* camera);
 
 private:
 
@@ -89,9 +81,6 @@ private:
 	// private variables
 	//=========================================================================================
 
-	//* parameter *//
-
 	std::unique_ptr<DxObject::DimensionBuffer<Parameter>> parameter_;
-
 
 };

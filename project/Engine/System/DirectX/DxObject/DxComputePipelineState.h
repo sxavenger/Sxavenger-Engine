@@ -96,12 +96,12 @@ public:
 	// public methods
 	//=========================================================================================
 
-	ReflectionComputePipelineState() = default;
+	ReflectionComputePipelineState()  = default;
 	~ReflectionComputePipelineState() = default;
 
 	//* reflection methods *//
 
-	void ReflectionPipeline(Device* device);
+	void ReflectionPipeline(Device* device, const std::optional<SamplerBindDesc>& desc = std::nullopt);
 
 	void BindComputeBuffer(CommandContext* context, const BindBufferDesc& desc);
 

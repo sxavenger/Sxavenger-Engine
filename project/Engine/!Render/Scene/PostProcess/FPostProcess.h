@@ -31,14 +31,15 @@ public:
 	// ProcessContext structure
 	////////////////////////////////////////////////////////////////////////////////////////////
 	struct ProcessContext {
+		//* system *//
 		const DirectXThreadContext* context;
 		Vector2ui                   size;
+
+		//* textures *//
 		FPostProcessTextures*       textures;
 
+		//* parameter *//
 		DxObject::BindBufferDesc parameter;
-
-		//* src *//
-		const FSceneTextures* sceneTextures;
 	};
 
 public:
@@ -54,12 +55,20 @@ public:
 
 	virtual void Process(const ProcessContext& context) = 0;
 
-private:
+	//* debug *//
+
+	virtual void SetImGuiCommand() {}
+
+	//* getter *//
+
+	bool IsActive() const { return isActive_; }
+
+protected:
 
 	//=========================================================================================
-	// private variables
+	// protected variables
 	//=========================================================================================
 
-
+	bool isActive_ = true;
 
 };

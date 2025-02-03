@@ -18,9 +18,14 @@ public:
 	// FRenderCoreProcess class
 	////////////////////////////////////////////////////////////////////////////////////////////
 	enum class ProcessType : uint32_t {
+		NLAO,
+		NLAO_Blur,
+		Overlay,
+		Bloom,
 		LUT,
+		DoF,
 	};
-	static const uint32_t kProcessTypeCount = static_cast<uint32_t>(ProcessType::LUT) + 1;
+	static const uint32_t kProcessTypeCount = static_cast<uint32_t>(ProcessType::DoF) + 1;
 
 public:
 

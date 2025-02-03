@@ -11,8 +11,8 @@ struct Camera {
 	float4x4 world; //!< view inverse
 	float4x4 proj;
 	float4x4 projInv;
-	//float    near;
-	//float    far;
+	float near;
+	float far;
 	
 	//* method *//
 	

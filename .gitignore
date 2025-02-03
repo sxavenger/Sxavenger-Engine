@@ -16,8 +16,12 @@
 # Mono auto generated files
 mono_crash.*
 
+## use
 # Build results
 generated/
+
+# imgui
+*project/imgui.ini
 
 # git yml
 .github/

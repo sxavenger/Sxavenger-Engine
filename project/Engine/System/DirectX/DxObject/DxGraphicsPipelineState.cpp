@@ -307,7 +307,7 @@ void GraphicsPipelineState::CreateDirectXPipeline(Device* device) {
 // ReflectionGraphicsPipelineState class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-void ReflectionGraphicsPipelineState::ReflectionRootSignature(Device* device) {
+void ReflectionGraphicsPipelineState::ReflectionRootSignature(Device* device, const std::optional<SamplerBindDesc>& desc) {
 
 	table_.Reset();
 
@@ -322,7 +322,14 @@ void ReflectionGraphicsPipelineState::ReflectionRootSignature(Device* device) {
 
 	TrySetBlobToTable(GraphicsShaderType::ps, ShaderVisibility::VISIBILITY_PIXEL, true);
 
-	rootSignatureDesc_ = table_.CreateGraphicsRootSignatureDesc();
+
+	if (desc.has_value()) {
+		rootSignatureDesc_ = table_.CreateGraphicsRootSignatureDesc(desc.value());
+
+	} else {
+		rootSignatureDesc_ = table_.CreateGraphicsRootSignatureDesc();
+	}
+
 	CreateDirectXRootSignature(device);
 }
 

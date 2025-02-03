@@ -76,6 +76,36 @@ private:
 
 };
 
+////////////////////////////////////////////////////////////////////////////////////////////
+// SamplerBindDesc structure
+////////////////////////////////////////////////////////////////////////////////////////////
+struct SamplerBindDesc {
+public:
+
+	//=========================================================================================
+	// public methods
+	//=========================================================================================
+
+	SamplerBindDesc()  = default;
+	~SamplerBindDesc() = default;
+
+	void SetSamplerLinear(const std::string& name, SamplerMode mode);
+	void SetSamplerAnisotropic(const std::string& name, SamplerMode mode, uint32_t anisotropic);
+	void SetSamplerPoint(const std::string& name, SamplerMode mode);
+
+	bool Contains(const std::string& name) const;
+
+	D3D12_STATIC_SAMPLER_DESC GetSampler(const std::string& name, ShaderVisibility stage, UINT shaderRegister) const;
+
+private:
+
+	//=========================================================================================
+	// private variables
+	//=========================================================================================
+
+	std::unordered_map<std::string, D3D12_STATIC_SAMPLER_DESC> samplers_;
+
+};
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // BindBufferTable class
@@ -93,9 +123,11 @@ public:
 	void CreateTable(ID3D12ShaderReflection* reflection, ShaderVisibility visibility);
 
 	GraphicsRootSignatureDesc CreateGraphicsRootSignatureDesc();
+	GraphicsRootSignatureDesc CreateGraphicsRootSignatureDesc(const SamplerBindDesc& samplerDesc);
 	ComPtr<ID3D12RootSignature> CreateGraphicsRootSignature(Device* device);
 
 	ComputeRootSignatureDesc CreateComputeRootSignatureDesc();
+	ComputeRootSignatureDesc CreateComputeRootSignatureDesc(const SamplerBindDesc& samplerDesc);
 	ComPtr<ID3D12RootSignature> CreateComputeRootSignature(Device* device);
 
 	void Reset();

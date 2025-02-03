@@ -15,3 +15,11 @@ void FPostProcessSetting::RemoveProcess(FPostProcess* process) {
 void FPostProcessSetting::EraseProcess(const FPostProcess::Iterator& it) {
 	processes_.erase(it);
 }
+
+void FPostProcessSetting::ExecuteProcess(const FPostProcess::ProcessContext& context) {
+	for (auto process : processes_) {
+		if (process->IsActive()) {
+			process->Process(context);
+		}
+	}
+}

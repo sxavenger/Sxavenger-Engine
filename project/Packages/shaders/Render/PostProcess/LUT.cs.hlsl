@@ -106,9 +106,8 @@ ConstantBuffer<Parameter> gParameter : register(b0);
 void main(uint3 dispatchThreadId : SV_DispatchThreadID) {
 
 	uint2 index = dispatchThreadId.xy;
-	uint2 size  = gConfig.size;
 	
-	if (any(index >= size)) {
+	if (CheckOverTexture(index)) {
 		return; //!< texture size over
 	}
 

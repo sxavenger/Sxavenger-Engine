@@ -187,6 +187,35 @@ void RenderSceneEditor::ShowHierarchyWindow() {
 				ImGui::EndTabItem();
 			}
 
+			if (ImGui::BeginTabItem("Camera")) {
+				if (gameRenderer_ != nullptr) {
+					bool isAvailable = false; //!< 選択されたActorが存在するか
+
+					auto camera = gameRenderer_->GetCamera();
+
+					bool isSelected = IsSelectedActor(camera);
+
+					if (isSelected) {
+						isAvailable = true;
+					}
+
+					if (ImGui::Selectable(camera->GetName().c_str(), isSelected)) {
+						selectedActor_ = camera;
+						isAvailable = true;
+					}
+
+					if (!isAvailable) {
+						selectedActor_ = std::nullopt;
+					}
+
+				} else {
+					selectedActor_ = std::nullopt;
+				}
+				
+
+				ImGui::EndTabItem();
+			}
+
 			ImGui::EndTabBar();
 		}
 
