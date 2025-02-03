@@ -7,6 +7,7 @@
 #include "GeometryRenderTarget.hlsli"
 #include "../../Camera.hlsli"
 #include "../../Transform.hlsli"
+#include "../Component.hlsli"
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // intermediate structure
@@ -36,16 +37,5 @@ float3x3 GetTangentSpaceMatrix(float3 normal, float3 tangent, float3 bitangent) 
 ConstantBuffer<Camera> gCamera : register(b10);
 static const float4x4 kViewProj = gCamera.GetViewProj();
 
-struct TextureComponent {
-	float4x4 mat;
-	float4 color;
-
-	//* methods *//
-	
-	float2 Transform2d(float2 texcoord) {
-		return mul(float4(texcoord, 0.0f, 1.0f), mat).xy;
-	}
-	
-};
 ConstantBuffer<TextureComponent> gTextureComponent : register(b11);
 
