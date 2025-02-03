@@ -89,11 +89,7 @@ void FSceneRenderer::RenderOpaqueGeometries(const DirectXThreadContext* context)
 	rendererContext.parameter.SetAddress("gCamera", camera_->GetGPUVirtualAddress());
 
 	// 不透明なジオメトリを描画
-	for (auto geometry : geometries) {
-		if (geometry->CheckVisibility(AGeometryActor::Transparency::Opaque)) {
-			geometry->RenderOpaque(rendererContext);
-		}
-	}
+	RenderOpaqueGeometriesContainer(geometries, rendererContext);
 
 	textures_->EndOpaqueBasePass(context);
 }
@@ -163,11 +159,7 @@ void FSceneRenderer::RenderTransparentGeometries(const DirectXThreadContext* con
 	rendererContext.parameter.SetAddress("gCamera", camera_->GetGPUVirtualAddress());
 
 	// 半透明なジオメトリを描画
-	for (auto geometry : geometries) {
-		if (geometry->CheckVisibility(AGeometryActor::Transparency::Transparent)) {
-			geometry->RenderTransparent(rendererContext);
-		}
-	};
+	RenderTransparentGeometriesContainer(geometries, rendererContext);
 
 	textures_->EndTransparentBasePass(context);
 }
@@ -228,4 +220,28 @@ void FSceneRenderer::RenderEmptyLight(const ALightActor::RendererContext& contex
 	);
 
 	FRenderCore::GetInstance()->GetLight()->DrawCall(context.context);
+}
+
+void FSceneRenderer::RenderOpaqueGeometriesContainer(
+	const AGeometryActor::Container& container, const AGeometryActor::RendererContext& context) {
+
+	for (auto geometry : container) {
+		if (geometry->CheckVisibility(AGeometryActor::Transparency::Opaque)) {
+			geometry->RenderOpaque(context);
+		}
+
+		RenderOpaqueGeometriesContainer(geometry->GetChildren(), context);
+	}
+}
+
+void FSceneRenderer::RenderTransparentGeometriesContainer(
+	const AGeometryActor::Container& container, const AGeometryActor::RendererContext& context) {
+
+	for (auto geometry : container) {
+		if (geometry->CheckVisibility(AGeometryActor::Transparency::Transparent)) {
+			geometry->RenderTransparent(context);
+		}
+
+		RenderTransparentGeometriesContainer(geometry->GetChildren(), context);
+	}
 }

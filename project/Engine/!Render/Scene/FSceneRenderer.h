@@ -145,4 +145,8 @@ private:
 
 	void RenderEmptyLight(const ALightActor::RendererContext& context);
 
+	void RenderOpaqueGeometriesContainer(const AGeometryActor::Container& container, const AGeometryActor::RendererContext& context);
+
+	void RenderTransparentGeometriesContainer(const AGeometryActor::Container& container, const AGeometryActor::RendererContext& context);
+
 };

@@ -25,11 +25,17 @@ void FScene::SetupTopLevelAS(const DirectXThreadContext* context) {
 	setupContext.context    = context;
 	setupContext.toplevelAS = &topLevelAS_;
 
-	for (auto& geometry : geometries_) {
-		if (geometry->GetTransparency() == AGeometryActor::Transparency::Opaque) {
-			geometry->SetupToplevelAS(setupContext);
-		}
-	}
+	SetupTopLevelASContainer(setupContext, geometries_);
 
 	topLevelAS_.EndSetupInstance(SxavengerSystem::GetDxDevice(), context->GetDxCommand());
+}
+
+void FScene::SetupTopLevelASContainer(const AGeometryActor::SetupContext& context, const AGeometryActor::Container& container) {
+	for (auto& geometry : container) {
+		if (geometry->GetTransparency() == AGeometryActor::Transparency::Opaque) {
+			geometry->SetupToplevelAS(context);
+		}
+
+		SetupTopLevelASContainer(context, geometry->GetChildren());
+	}
 }

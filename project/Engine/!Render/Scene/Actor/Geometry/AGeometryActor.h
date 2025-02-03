@@ -27,6 +27,13 @@ class AGeometryActor //!< geometry actor
 public:
 
 	////////////////////////////////////////////////////////////////////////////////////////////
+	// using
+	////////////////////////////////////////////////////////////////////////////////////////////
+
+	using Container = std::list<AGeometryActor*>;
+	using Iterator  = Container::iterator;
+
+	////////////////////////////////////////////////////////////////////////////////////////////
 	// Transparency enum class
 	////////////////////////////////////////////////////////////////////////////////////////////
 	enum class Transparency : uint8_t {
@@ -83,6 +90,12 @@ public:
 
 	void SetTransparency(Transparency transparency) { transparency_ = transparency; }
 
+	//* children option *//
+
+	Iterator AddChild(AGeometryActor* child);
+
+	const Container& GetChildren() const { return children_; }
+
 protected:
 
 	//=========================================================================================
@@ -92,5 +105,13 @@ protected:
 	//* parameter *//
 
 	Transparency transparency_ = Transparency::Opaque;
+
+private:
+
+	//=========================================================================================
+	// private variables
+	//=========================================================================================
+
+	Container children_; //!< 子Actor
 
 };

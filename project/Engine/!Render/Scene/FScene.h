@@ -63,6 +63,10 @@ private:
 	std::list<ALightActor*> lights_;
 	//* sceneに描画されるactorのリスト
 
-	
+	//=========================================================================================
+	// private variables
+	//=========================================================================================
+
+	void SetupTopLevelASContainer(const AGeometryActor::SetupContext& context, const AGeometryActor::Container& container);
 
 };
