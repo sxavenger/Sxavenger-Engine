@@ -94,6 +94,8 @@ public:
 
 	Iterator AddChild(AGeometryActor* child);
 
+	void ClearChildren();
+
 	const Container& GetChildren() const { return children_; }
 
 protected:
