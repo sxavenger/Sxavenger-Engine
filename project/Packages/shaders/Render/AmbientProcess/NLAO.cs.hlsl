@@ -36,7 +36,7 @@ struct InfomationSurface {
 		}
 		
 		position = gPosition.Load(int3(index, 0)).xyz;
-		normal   = gNormal.Load(int3(index, 0)).xyz;
+		normal = gNormal.Load(int3(index, 0)).xyz * 2.0f - 1.0f;
 		
 		return true;
 	}
