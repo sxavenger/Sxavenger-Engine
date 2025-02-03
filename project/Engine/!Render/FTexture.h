@@ -58,6 +58,8 @@ public:
 
 	const DXGI_FORMAT& GetFormat() const { return format_; }
 
+	static const D3D12_RESOURCE_STATES GetDefaultState() { return kDefaultState_; }
+
 private:
 
 	//=========================================================================================
