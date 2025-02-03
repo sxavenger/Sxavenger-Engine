@@ -1,29 +1,34 @@
 #pragma once
+
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
+//* process
+#include "../FPostProcess.h"
+
 //* engine
+#include <Engine/Content/TextureBuffer/UnorderedTexture.h>
 #include <Engine/Module/Pipeline/CustomComputePipeline.h>
-
-//* c++
-#include <array>
+#include <Engine/Editor/EditorComponent/AttributeComponent.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// FRenderCoreProcess class
+// FPostProcessDemo class
 ////////////////////////////////////////////////////////////////////////////////////////////
-class FRenderCoreProcess {
+class FPostProcessDemo
+	: public FPostProcess, public AttributeComponent {
 public:
 
 	////////////////////////////////////////////////////////////////////////////////////////////
-	// FRenderCoreProcess class
+	// struct Parameter
 	////////////////////////////////////////////////////////////////////////////////////////////
-	enum class ProcessType : uint32_t {
-		NLAO,
-		NLAO_Blur,
-		LUT,
-		DoF,
+	struct Parameter {
+		float radius;
+		float maxRadius;
+		float angleBias;
+		float strength;
+		float filtter;
+		Vector2f scale;
 	};
-	static const uint32_t kProcessTypeCount = static_cast<uint32_t>(ProcessType::DoF) + 1;
 
 public:
 
@@ -31,18 +36,16 @@ public:
 	// public methods
 	//=========================================================================================
 
-	FRenderCoreProcess()  = default;
-	~FRenderCoreProcess() = default;
+	FPostProcessDemo()          = default;
+	virtual ~FPostProcessDemo() = default;
 
 	void Init();
 
-	//* option *//
+	//* process *//
 
-	void SetPipeline(ProcessType type, const DirectXThreadContext* context);
+	virtual void Process(const FPostProcess::ProcessContext& context) override;
 
-	void BindComputeBuffer(ProcessType type, const DirectXThreadContext* context, const DxObject::BindBufferDesc& desc);
-
-	void Dispatch(const DirectXThreadContext* context, const Vector2ui& size) const;
+	virtual void AttributeImGui() override;
 
 private:
 
@@ -50,9 +53,13 @@ private:
 	// private variables
 	//=========================================================================================
 
-	std::array<std::unique_ptr<CustomReflectionComputePipeline>, kProcessTypeCount> processes_;
+	bool isActive_ = true;
 
-	static const Vector2ui kNumThreadSize_;
+	std::unique_ptr<CustomReflectionComputePipeline> pipeline_;
+	std::unique_ptr<CustomReflectionComputePipeline> pipeline1_;
 
+	std::unique_ptr<DxObject::DimensionBuffer<Parameter>> parameter_;
+
+	std::unique_ptr<UnorderedTexture> buffer_;
 
 };

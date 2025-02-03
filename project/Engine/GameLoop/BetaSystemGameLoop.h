@@ -22,8 +22,9 @@
 #include <Engine/!Render/FSceneTextures.h>
 #include <Engine/!Render/Scene/FScene.h>
 #include <Engine/!Render/Scene/FPostProcessSetting.h>
-#include <Engine/!Render/Scene/PostProcess/PostProcesses/FProcessLut.h>
-#include <Engine/!Render/Scene/PostProcess/PostProcesses/FProcessDoF.h>
+#include <Engine/!Render/Scene/PostProcess/PostProcesses/FPostProcessLut.h>
+#include <Engine/!Render/Scene/PostProcess/PostProcesses/FPostProcessDoF.h>
+#include <Engine/!Render/Scene/AmbientProcess/AmbientProcesses/FAmbientProcessNLAO.h>
 #include <Engine/Editor/EditorComponent/AttributeComponent.h>
 
 
@@ -55,7 +56,8 @@ private:
 	std::unique_ptr<FSceneTextures> textures_;
 
 	std::unique_ptr<FScene>              scene_;
-	std::unique_ptr<FPostProcessSetting> setting_;
+	std::unique_ptr<FAmbientProcessSetting> ambientProcess_;
+	std::unique_ptr<FPostProcessSetting> postProcess_;
 
 	std::unique_ptr<FSceneRenderer> renderer_;
 
@@ -72,10 +74,13 @@ private:
 
 	std::unique_ptr<APointLightActor> light_;
 
-	//* process *//
+	//* post process *//
 
-	std::unique_ptr<FProcessDoF> processDoF_;
+	std::unique_ptr<FPostProcessDoF> processDoF_;
 	std::unique_ptr<AttributeComponent> doFComponent_;
+
+	std::unique_ptr<FAmbientProcessNLAO> processNLAO_;
+	std::unique_ptr<AttributeComponent> nlaoComponent_;
 
 	FPresenter presenter_;
 

@@ -52,12 +52,14 @@ void BetaSystemGameLoop::InitSystem() {
 
 	scene_ = std::make_unique<FScene>();
 
-	setting_ = std::make_unique<FPostProcessSetting>();
+	ambientProcess_ = std::make_unique<FAmbientProcessSetting>();
+	postProcess_ = std::make_unique<FPostProcessSetting>();
 
 	renderer_ = std::make_unique<FSceneRenderer>();
 	renderer_->SetTextures(textures_.get());
 	renderer_->SetScene(scene_.get());
-	renderer_->SetPostProcessSetting(setting_.get());
+	renderer_->SetAmbientSetting(ambientProcess_.get());
+	renderer_->SetPostProcessSetting(postProcess_.get());
 
 	presenter_.Init();
 
@@ -93,23 +95,33 @@ void BetaSystemGameLoop::InitSystem() {
 
 	//* process *//
 
-	processDoF_ = std::make_unique<FProcessDoF>();
+	processDoF_ = std::make_unique<FPostProcessDoF>();
 	processDoF_->Init();
-	setting_->AddProcess(processDoF_.get());
+	//postProcess_->AddProcess(processDoF_.get());
 
 	doFComponent_ = std::make_unique<AttributeComponent>();
-	doFComponent_->SetToOutliner();
+	//doFComponent_->SetToOutliner();
 	doFComponent_->SetAttributeFunc([this]() { processDoF_->SetImGuiCommand(); });
 
+	processNLAO_ = std::make_unique<FAmbientProcessNLAO>();
+	processNLAO_->Init();
+	ambientProcess_->AddProcess(processNLAO_.get());
+
+	nlaoComponent_ = std::make_unique<AttributeComponent>();
+	nlaoComponent_->SetToOutliner();
+	nlaoComponent_->SetAttributeFunc([this]() { processNLAO_->SetImGuiCommand(); });
 
 	//* editors *//
 
 	sEditorEngine->ExecuteEditorFunction<RenderSceneEditor>([this](RenderSceneEditor* editor) {
 		editor->SetGameRenderer(renderer_.get());
 	});
+
+	
 }
 
 void BetaSystemGameLoop::TermSystem() {
+	nlaoComponent_.reset();
 }
 
 void BetaSystemGameLoop::UpdateSystem() {
@@ -127,7 +139,7 @@ void BetaSystemGameLoop::DrawSystem() {
 	main_->BeginRendering();
 	main_->ClearWindow();
 
-	presenter_.Present(SxavengerSystem::GetMainThreadContext(), textures_->GetSize(), textures_->GetGBuffer(FSceneTextures::GBufferLayout::Result)->GetGPUHandleSRV());
+	presenter_.Present(SxavengerSystem::GetMainThreadContext(), textures_->GetSize(), textures_->GetGBuffer(FSceneTextures::GBufferLayout::Main)->GetGPUHandleSRV());
 
 	SxavengerSystem::RenderImGui();
 

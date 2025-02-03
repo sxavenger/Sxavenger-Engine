@@ -3,42 +3,47 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
-//* actor
-#include "../AActor.h"
+//* process
+#include "../FAmbientProcess.h"
 
 //* engine
 #include <Engine/System/DirectX/DxObject/DxDimensionBuffer.h>
+
+//* lib
+
 
 //* c++
 #include <memory>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// ACameraActor class
+// FAmbientProcessNLAO class
 ////////////////////////////////////////////////////////////////////////////////////////////
-class ACameraActor
-	: public AActor {
+class FAmbientProcessNLAO
+	: public FAmbientProcess {
+	//* 自作式のAmbient Occlusion. (Normal Lambert Ambient Occlusion)
+	//* hack: まだシステムとしては未完成
 public:
 
 	////////////////////////////////////////////////////////////////////////////////////////////
-	// Camera structure
+	// Prameter structure
 	////////////////////////////////////////////////////////////////////////////////////////////
-	struct Camera {
+	struct Parameter {
 
 		//* member *//
 
-		Matrix4x4 view;
-		Matrix4x4 world;
-		Matrix4x4 proj;
-		Matrix4x4 projInv;
-		/*float nearZ;
-		float farZ;*/
+		Vector2ui samples;
+		Vector2ui size;
+		float radius;
+		float strength;
 
-		//* method *//
+		//* methods *//
 
-		void Init();
-
-		void TransferView(const Matrix4x4& _world);
-		void TransferProj(const Matrix4x4& _proj);
+		void Init() {
+			samples  = { 1, 1 };
+			size     = { 4, 4 };
+			radius   = 4.0f;
+			strength = 1.0f;
+		}
 	};
 
 public:
@@ -47,29 +52,25 @@ public:
 	// public methods
 	//=========================================================================================
 
-	ACameraActor()          = default;
-	virtual ~ACameraActor() = default;
+	FAmbientProcessNLAO()  = default;
+	~FAmbientProcessNLAO() = default;
 
 	void Init();
 
-	void UpdateView();
+	//* process *//
 
-	void UpdateProj(const Matrix4x4& proj);
+	virtual void Process(const ProcessContext& context) override;
 
-	virtual void InspectorImGui() override;
+	//* debug *//
 
-	//* getter *//
+	virtual void SetImGuiCommand() override;
 
-	const D3D12_GPU_VIRTUAL_ADDRESS& GetGPUVirtualAddress() const;
-
-	const Camera& GetCamera() const { return buffer_->At(0); }
-
-protected:
+private:
 
 	//=========================================================================================
-	// protected variables
+	// private variables
 	//=========================================================================================
 
-	std::unique_ptr<DxObject::DimensionBuffer<Camera>> buffer_;
+	std::unique_ptr<DxObject::DimensionBuffer<Parameter>> parameter_;
 
 };

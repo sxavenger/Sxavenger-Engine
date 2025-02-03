@@ -7,6 +7,7 @@
 #include "../FSceneTextures.h"
 #include "FScene.h"
 #include "Actor/Camera/ACameraActor.h"
+#include "FAmbientProcessSetting.h"
 #include "FPostProcessSetting.h"
 #include "PostProcess/FPostProcessTextures.h"
 
@@ -21,6 +22,23 @@
 ////////////////////////////////////////////////////////////////////////////////////////////
 class FSceneRenderer {
 public:
+
+	////////////////////////////////////////////////////////////////////////////////////////////
+	// Status enum class
+	////////////////////////////////////////////////////////////////////////////////////////////
+	enum class Status : uint32_t {
+		Success        = 0,
+		Error_Textures = 1 << 0,
+		Error_Camera   = 1 << 1,
+
+		Warning_Scene          = 1 << 2, //!< warning...?
+		Warning_AmbientProcess = 1 << 3,
+		Warning_PostProcess    = 1 << 4,
+
+		//* vvv Error vvv *//
+
+		Status_Error = Error_Textures | Error_Camera,
+	};
 
 	////////////////////////////////////////////////////////////////////////////////////////////
 	// Config structure
@@ -42,17 +60,19 @@ public:
 
 	void Render(const DirectXThreadContext* context);
 
-	bool CheckRender() const;
+	Sxl::Flag<Status, uint32_t> CheckStatus() const;
 
 	//* setter *//
 
 	void SetTextures(FSceneTextures* textures) { textures_ = textures; }
 
-	void SetScene(FScene* scene) { scene_ = scene; }
-
 	void SetCamera(ACameraActor* camera) { camera_ = camera; }
 
-	void SetPostProcessSetting(FPostProcessSetting* setting) { setting_ = setting; }
+	void SetScene(FScene* scene) { scene_ = scene; }
+
+	void SetAmbientSetting(FAmbientProcessSetting* setting) { ambientProcesses_ = setting; }
+
+	void SetPostProcessSetting(FPostProcessSetting* setting) { postProcesses_ = setting; }
 
 	//* getter *//
 
@@ -62,6 +82,8 @@ public:
 
 	const Config& GetConfig() const { return config_; }
 	Config& GetConfig() { return config_; }
+
+	ACameraActor* GetCamera() const { return camera_; }
 
 	//* debug *//
 
@@ -76,15 +98,19 @@ private:
 	//* textures *//
 
 	FSceneTextures* textures_ = nullptr;
+	ACameraActor* camera_     = nullptr; //!< camera
 
 	//* scene *//
 
-	FScene* scene_        = nullptr; //!< geometry and light actors
-	ACameraActor* camera_ = nullptr; //!< camera
+	FScene* scene_ = nullptr; //!< geometry and light actors
+
+	//* ambient process *//
+
+	FAmbientProcessSetting* ambientProcesses_ = nullptr;
 
 	//* post process *//
 
-	FPostProcessSetting* setting_ = nullptr;
+	FPostProcessSetting* postProcesses_ = nullptr;
 
 	std::unique_ptr<FPostProcessTextures> processTextures_;
 	static const size_t kProcessTextureSize = 2;
@@ -104,6 +130,8 @@ private:
 	void RenderOpaqueGeometries(const DirectXThreadContext* context);
 
 	void ProcessLighting(const DirectXThreadContext* context);
+
+	void ProcessAmbientPass(const DirectXThreadContext* context);
 
 	void RenderTransparentGeometries(const DirectXThreadContext* context);
 

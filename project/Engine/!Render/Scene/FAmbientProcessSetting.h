@@ -4,39 +4,38 @@
 // include
 //-----------------------------------------------------------------------------------------
 //* render
-#include "PostProcess/FPostProcessTextures.h"
-#include "PostProcess/FPostProcess.h"
+#include "AmbientProcess/FAmbientProcess.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// FPostProcessSetting class
+// FAmbientProcessSetting class
 ////////////////////////////////////////////////////////////////////////////////////////////
-class FPostProcessSetting {
+class FAmbientProcessSetting {
 public:
 
 	//=========================================================================================
 	// public methods
 	//=========================================================================================
 
-	FPostProcessSetting()  = default;
-	~FPostProcessSetting() = default;
+	FAmbientProcessSetting()  = default;
+	~FAmbientProcessSetting() = default;
 
 	//* process *//
 
-	FPostProcess::Iterator AddProcess(FPostProcess* process);
+	FAmbientProcess::Iterator AddProcess(FAmbientProcess* process);
 
-	void RemoveProcess(FPostProcess* process);
+	void RemoveProcess(FAmbientProcess* process);
 
-	void EraseProcess(const FPostProcess::Iterator& it);
+	void EraseProcess(const FAmbientProcess::Iterator& it);
 
 	//* execute process option *//
 
 	bool CheckProcess() const { return !processes_.empty(); }
 
-	void ExecuteProcess(const FPostProcess::ProcessContext& context);
+	void ExecuteProcess(const FAmbientProcess::ProcessContext& context);
 
 	//* getter *//
 
-	const FPostProcess::Contanier& GetProcesses() const { return processes_; }
+	const FAmbientProcess::Container& GetProcesses() const { return processes_; }
 
 private:
 
@@ -44,6 +43,6 @@ private:
 	// private variables
 	//=========================================================================================
 
-	FPostProcess::Contanier processes_;
+	FAmbientProcess::Container processes_;
 
 };

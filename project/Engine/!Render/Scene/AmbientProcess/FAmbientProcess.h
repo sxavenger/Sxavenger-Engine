@@ -4,7 +4,6 @@
 // include
 //-----------------------------------------------------------------------------------------
 //* render
-#include "FPostProcessTextures.h"
 #include "../../FSceneTextures.h"
 
 //* engine
@@ -15,17 +14,17 @@
 #include <list>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// FPostProcess class
+// FAmbientProcess class
 ////////////////////////////////////////////////////////////////////////////////////////////
-class FPostProcess {
+class FAmbientProcess {
 public:
 
 	////////////////////////////////////////////////////////////////////////////////////////////
 	// using
 	////////////////////////////////////////////////////////////////////////////////////////////
 
-	using Contanier = std::list<FPostProcess*>;
-	using Iterator  = Contanier::iterator;
+	using Container = std::list<FAmbientProcess*>;
+	using Iterator  = Container::iterator;
 
 	////////////////////////////////////////////////////////////////////////////////////////////
 	// ProcessContext structure
@@ -36,7 +35,7 @@ public:
 		Vector2ui                   size;
 
 		//* textures *//
-		FPostProcessTextures*       textures;
+		FSceneTextures* textures;
 
 		//* parameter *//
 		DxObject::BindBufferDesc parameter;
@@ -48,8 +47,8 @@ public:
 	// public methods
 	//=========================================================================================
 
-	FPostProcess()          = default;
-	virtual ~FPostProcess() = default;
+	FAmbientProcess()          = default;
+	virtual ~FAmbientProcess() = default;
 
 	//* process *//
 
@@ -60,11 +59,4 @@ public:
 	virtual void SetImGuiCommand() {}
 
 private:
-
-	//=========================================================================================
-	// private variables
-	//=========================================================================================
-
-
-
 };

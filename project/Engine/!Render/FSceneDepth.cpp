@@ -41,7 +41,7 @@ void FSceneDepth::RasterizerDepth::Create(const Vector2ui& size) {
 			&prop,
 			D3D12_HEAP_FLAG_NONE,
 			&desc,
-			D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE,
+			kDefaultState_,
 			&clear,
 			IID_PPV_ARGS(&resource_)
 		);
@@ -101,7 +101,7 @@ void FSceneDepth::RasterizerDepth::BeginWrite(const DirectXThreadContext* contex
 	D3D12_RESOURCE_BARRIER barrier = {};
 	barrier.Type                   = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
 	barrier.Transition.pResource   = resource_.Get();
-	barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
+	barrier.Transition.StateBefore = kDefaultState_;
 	barrier.Transition.StateAfter  = D3D12_RESOURCE_STATE_DEPTH_WRITE;
 
 	context->GetCommandList()->ResourceBarrier(1, &barrier);
@@ -113,7 +113,7 @@ void FSceneDepth::RasterizerDepth::EndWrite(const DirectXThreadContext* context)
 	barrier.Type                   = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
 	barrier.Transition.pResource   = resource_.Get();
 	barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_DEPTH_WRITE;
-	barrier.Transition.StateAfter  = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
+	barrier.Transition.StateAfter  = kDefaultState_;
 
 	context->GetCommandList()->ResourceBarrier(1, &barrier);
 }
@@ -133,7 +133,7 @@ void FSceneDepth::RasterizerDepth::BeginState(const DirectXThreadContext* contex
 	D3D12_RESOURCE_BARRIER barrier = {};
 	barrier.Type                   = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
 	barrier.Transition.pResource   = resource_.Get();
-	barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
+	barrier.Transition.StateBefore = kDefaultState_;
 	barrier.Transition.StateAfter  = state;
 
 	context->GetCommandList()->ResourceBarrier(1, &barrier);
@@ -145,7 +145,7 @@ void FSceneDepth::RasterizerDepth::EndState(const DirectXThreadContext* context,
 	barrier.Type                   = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
 	barrier.Transition.pResource   = resource_.Get();
 	barrier.Transition.StateBefore = state;
-	barrier.Transition.StateAfter  = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
+	barrier.Transition.StateAfter  = kDefaultState_;
 
 	context->GetCommandList()->ResourceBarrier(1, &barrier);
 }
@@ -179,7 +179,7 @@ void FSceneDepth::RaytracingDepth::Create(const Vector2ui& size) {
 			&prop,
 			D3D12_HEAP_FLAG_NONE,
 			&desc,
-			D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE,
+			kDefaultState_,
 			nullptr,
 			IID_PPV_ARGS(&resource_)
 		);
@@ -218,7 +218,7 @@ void FSceneDepth::RaytracingDepth::BeginWrite(const DirectXThreadContext* contex
 	// barrierの設定
 	D3D12_RESOURCE_BARRIER barrier = {};
 	barrier.Type                   = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
-	barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
+	barrier.Transition.StateBefore = kDefaultState_;
 	barrier.Transition.StateAfter  = D3D12_RESOURCE_STATE_UNORDERED_ACCESS;
 	barrier.Transition.pResource   = resource_.Get();
 
@@ -230,7 +230,7 @@ void FSceneDepth::RaytracingDepth::EndWrite(const DirectXThreadContext* context)
 	D3D12_RESOURCE_BARRIER barrier = {};
 	barrier.Type                   = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
 	barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_UNORDERED_ACCESS;
-	barrier.Transition.StateAfter  = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
+	barrier.Transition.StateAfter  = kDefaultState_;
 	barrier.Transition.pResource   = resource_.Get();
 
 	context->GetCommandList()->ResourceBarrier(1, &barrier);

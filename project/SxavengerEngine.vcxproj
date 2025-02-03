@@ -213,6 +213,9 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="Engine\!Render\Core\FRenderCoreLight.cpp" />
     <ClCompile Include="Engine\!Render\Core\FRenderCoreRaytracing.cpp" />
     <ClCompile Include="Engine\!Render\FRenderCore.cpp" />
+    <ClCompile Include="Engine\!Render\Scene\AmbientProcess\AmbientProcesses\FAmbientProcessNLAO.cpp" />
+    <ClCompile Include="Engine\!Render\Scene\AmbientProcess\FAmbientProcess.cpp" />
+    <ClCompile Include="Engine\!Render\Scene\FAmbientProcessSetting.cpp" />
     <ClCompile Include="Engine\!Render\Scene\FPostProcessSetting.cpp" />
     <ClCompile Include="Engine\!Render\Scene\FScene.cpp" />
     <ClCompile Include="Engine\!Render\FSceneDepth.cpp" />
@@ -221,8 +224,9 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="Engine\!Render\FTexture.cpp" />
     <ClCompile Include="Engine\!Render\Scene\PostProcess\FPostProcess.cpp" />
     <ClCompile Include="Engine\!Render\Scene\PostProcess\FPostProcessTextures.cpp" />
-    <ClCompile Include="Engine\!Render\Scene\PostProcess\PostProcesses\FProcessDoF.cpp" />
-    <ClCompile Include="Engine\!Render\Scene\PostProcess\PostProcesses\FProcessLut.cpp" />
+    <ClCompile Include="Engine\!Render\Scene\PostProcess\PostProcesses\FPostProcessDemo.cpp" />
+    <ClCompile Include="Engine\!Render\Scene\PostProcess\PostProcesses\FPostProcessDoF.cpp" />
+    <ClCompile Include="Engine\!Render\Scene\PostProcess\PostProcesses\FPostProcessLut.cpp" />
     <ClCompile Include="Engine\Adapter\Particle\Emitter.cpp" />
     <ClCompile Include="Engine\Adapter\Scene\BaseScene.cpp" />
     <ClCompile Include="Engine\Adapter\Scene\BaseSceneFactory.cpp" />
@@ -367,6 +371,9 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Engine\!Render\Core\FRenderCoreLight.h" />
     <ClInclude Include="Engine\!Render\Core\FRenderCoreRaytracing.h" />
     <ClInclude Include="Engine\!Render\FRenderCore.h" />
+    <ClInclude Include="Engine\!Render\Scene\AmbientProcess\AmbientProcesses\FAmbientProcessNLAO.h" />
+    <ClInclude Include="Engine\!Render\Scene\AmbientProcess\FAmbientProcess.h" />
+    <ClInclude Include="Engine\!Render\Scene\FAmbientProcessSetting.h" />
     <ClInclude Include="Engine\!Render\Scene\FPostProcessSetting.h" />
     <ClInclude Include="Engine\!Render\Scene\FScene.h" />
     <ClInclude Include="Engine\!Render\FSceneDepth.h" />
@@ -375,8 +382,9 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Engine\!Render\FTexture.h" />
     <ClInclude Include="Engine\!Render\Scene\PostProcess\FPostProcess.h" />
     <ClInclude Include="Engine\!Render\Scene\PostProcess\FPostProcessTextures.h" />
-    <ClInclude Include="Engine\!Render\Scene\PostProcess\PostProcesses\FProcessDoF.h" />
-    <ClInclude Include="Engine\!Render\Scene\PostProcess\PostProcesses\FProcessLut.h" />
+    <ClInclude Include="Engine\!Render\Scene\PostProcess\PostProcesses\FPostProcessDemo.h" />
+    <ClInclude Include="Engine\!Render\Scene\PostProcess\PostProcesses\FPostProcessDoF.h" />
+    <ClInclude Include="Engine\!Render\Scene\PostProcess\PostProcesses\FPostProcessLut.h" />
     <ClInclude Include="Engine\Adapter\Particle\Emitter.h" />
     <ClInclude Include="Engine\Adapter\Scene\BaseScene.h" />
     <ClInclude Include="Engine\Adapter\Scene\BaseSceneFactory.h" />

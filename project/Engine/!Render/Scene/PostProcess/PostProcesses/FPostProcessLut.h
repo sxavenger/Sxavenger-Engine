@@ -10,9 +10,9 @@
 #include <Engine/System/DirectX/DxObject/DxDimensionBuffer.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// FProcessLut class
+// FPostProcessLut class
 ////////////////////////////////////////////////////////////////////////////////////////////
-class FProcessLut
+class FPostProcessLut
 	: public FPostProcess {
 public:
 
@@ -71,8 +71,8 @@ public:
 	// public methods
 	//=========================================================================================
 
-	FProcessLut()          = default;
-	virtual ~FProcessLut() = default;
+	FPostProcessLut()          = default;
+	virtual ~FPostProcessLut() = default;
 
 	void Init();
 

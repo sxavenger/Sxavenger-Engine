@@ -44,6 +44,8 @@ void ACineCameraActor::UpdateProj() {
 }
 
 void ACineCameraActor::InspectorImGui() {
+	ACameraActor::UpdateView();
+
 	ImGui::DragFloat2("sensor", &parameter_.sensor.x, 0.01f);
 	ImGui::DragFloat("focal", &parameter_.focal, 0.01f);
 	ImGui::DragFloat("nearZ", &parameter_.nearZ, 0.01f);
