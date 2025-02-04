@@ -15,6 +15,7 @@ void PlayerStateElbow::Init() {
 	player_->SetAnimationState(Player::AnimationState::Elbow);
 
 	attackCollider_ = std::make_unique<PlayerAttackCollider>();
+	attackCollider_->SetIsActive(false);
 	attackCollider_->SetToCollection();
 	attackCollider_->SetTypeId(ColliderType::kPlayerAttack);
 	attackCollider_->SetTargetId(ColliderType::kEnemy);
@@ -35,6 +36,10 @@ void PlayerStateElbow::Term() {
 void PlayerStateElbow::Update() {
 	UpdateAnimation();
 	ActionGamepad();
+
+	if (time_ >= duration_.time / 2.0f) {
+		attackCollider_->SetIsActive(true);
+	}
 
 	if (time_ >= duration_) {
 		if (nextAttackState_.has_value()) {

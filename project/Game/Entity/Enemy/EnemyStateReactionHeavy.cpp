@@ -19,7 +19,7 @@ void EnemyStateReactionHeavy::Term() {
 }
 
 void EnemyStateReactionHeavy::Update() {
-	time_ += SxavengerSystem::GetDeltaTime();
+	time_ += SxavengerSystem::GetDeltaTime().time * enemy_->delta_;
 	enemy_->time_ = time_;
 
 	if (time_ >= duration_) {

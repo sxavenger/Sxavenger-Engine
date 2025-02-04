@@ -119,6 +119,8 @@ void Enemy::OnCollisionEnter(_MAYBE_UNUSED Collider* const other) {
 
 		AModelAnimationActor::GetTransform().rotate
 			= ToQuaternion(CalculateEuler(Normalize(otherPosition - position)));
+
+		delta_ = 0.04f;
 	}
 }
 
@@ -192,4 +194,8 @@ void Enemy::UpdateState() {
 
 	//!< update state
 	state_->Update();
+
+	if (delta_ < 1.0f) {
+		delta_ += SxavengerSystem::GetDeltaTime().time / 1.5f;
+	}
 }

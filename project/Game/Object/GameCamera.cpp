@@ -11,7 +11,7 @@
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 void GameCamera::Init() {
-	APivotCameraActor::Init();
+	ACineCameraActor::Init();
 
 	gamepad_ = SxavengerSystem::GetInput()->GetGamepadInput(0);
 }
@@ -20,7 +20,7 @@ void GameCamera::Term() {
 }
 
 void GameCamera::Update() {
-	UpdateGamepad();
+	//UpdateGamepad();
 }
 
 void GameCamera::UpdateGamepad() {
@@ -45,5 +45,5 @@ void GameCamera::UpdateGamepad() {
 		};
 	}
 
-	APivotCameraActor::GetParameter().angle += direction * rotationDelta_;
+	parameter_.angle += direction * rotationDelta_;
 }

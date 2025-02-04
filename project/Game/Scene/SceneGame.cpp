@@ -23,9 +23,11 @@ void SceneGame::Init() {
 	QuaternionTransform transform = {};
 	transform.translate = { 0.0f, 0.0f, -8.0f };
 	transform.rotate = Quaternion::Identity();
+	player_->SetCamera(camera_.get());
 	player_->Init(transform);
 	player_->SetToOutliner();
 	component_.scene_->AddGeometry(player_.get());
+	
 
 	enemy_ = std::make_unique<Enemy>();
 	enemy_->Init();

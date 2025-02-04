@@ -6,12 +6,13 @@
 //* engine
 #include <Engine/System/Runtime/Input/Input.h>
 #include <Engine/!Render/Scene/Actor/Camera/CameraActors/APivotCameraActor.h>
+#include <Engine/!Render/Scene/Actor/Camera/CameraActors/ACineCameraActor.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // GameCamera class
 ////////////////////////////////////////////////////////////////////////////////////////////
 class GameCamera
-	: public APivotCameraActor {
+	: public ACineCameraActor {
 public:
 
 	//=========================================================================================
@@ -40,6 +41,8 @@ private:
 	//* parameter *//
 
 	Vector2f rotationDelta_ = { 0.02f, 0.01f };
+
+	APivotCameraActor::Parameter parameter_;
 
 	//=========================================================================================
 	// private methods

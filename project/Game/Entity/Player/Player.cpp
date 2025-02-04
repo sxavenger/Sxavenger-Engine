@@ -199,6 +199,6 @@ void Player::UpdateCamera() {
 		transform.translate += shake;
 	}
 
-	/*camera_->GetTransform() = transform;
-	camera_->UpdateMatrix();*/
+	camera_->GetTransform() = transform;
+	camera_->UpdateView();
 }

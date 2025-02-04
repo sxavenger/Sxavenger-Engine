@@ -27,6 +27,9 @@
 #include <Engine/!Render/Scene/Actor/Geometry/GeometryActors/AModelAnimationActor.h>
 #include <Engine/Editor/EditorComponent/AttributeComponent.h>
 
+//* game
+#include <Game/Object/GameCamera.h>
+
 //* c++
 #include <memory>
 #include <optional>
@@ -75,6 +78,8 @@ public:
 
 	void SetShake(TimePointf<TimeUnit::second> time, const Vector2f& strength);
 
+	void SetCamera(GameCamera* camera) { camera_ = camera; }
+
 private:
 
 	//=========================================================================================
@@ -86,7 +91,7 @@ private:
 	const KeyboardInput* keyboard_ = nullptr;
 	const GamepadInput*  gamepad_  = nullptr;
 
-	//Camera3d* camera_ = nullptr;
+	GameCamera* camera_ = nullptr;
 
 	//* state *//
 

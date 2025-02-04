@@ -15,6 +15,7 @@ void PlayerStatePunch::Init() {
 	player_->SetAnimationState(Player::AnimationState::Punching);
 
 	attackCollider_ = std::make_unique<PlayerAttackCollider>();
+	attackCollider_->SetIsActive(false);
 	attackCollider_->SetToCollection();
 	attackCollider_->SetTypeId(ColliderType::kPlayerAttack);
 	attackCollider_->SetTargetId(ColliderType::kEnemy);
@@ -42,6 +43,9 @@ void PlayerStatePunch::Update() {
 		} else {
 			player_->requestState_ = std::make_unique<PlayerStateRoot>(player_);
 		}
+
+	} else if (time_ >= duration_.time * 0.2f) {
+		attackCollider_->SetIsActive(true);
 	}
 
 }
