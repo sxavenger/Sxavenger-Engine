@@ -31,8 +31,8 @@ public:
 		float    intensity;
 
 		void Init() {
-			direction = { 0.0f, 1.0f, 0.0f };
-			intensity = 20.0f;
+			direction = Normalize(Vector3f(0.0f, 1.0f, 0.0f));
+			intensity = 12.0f;
 		}
 	};
 
