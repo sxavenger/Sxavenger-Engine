@@ -10,3 +10,4 @@ struct GeometryVertex {
 	float3 tangent   : TANGENT0;
 	float3 bitangent : BITANGENT0;
 };
+

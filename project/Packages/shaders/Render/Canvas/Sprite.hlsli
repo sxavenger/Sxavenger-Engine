@@ -53,3 +53,4 @@ struct Parameter {
 ConstantBuffer<Parameter> gParameter : register(b11);
 
 ConstantBuffer<TextureComponent> gTextureComponent : register(b12);
+

@@ -16,3 +16,4 @@ float CalculateSpecularBlinnPhong(float3 n, float3 l, float3 v, float power = 64
 	float3 h = normalize(l + v);
 	return pow(saturate(dot(n, h)), power);
 }
+

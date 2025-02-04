@@ -39,3 +39,4 @@ static const float4x4 kViewProj = gCamera.GetViewProj();
 
 ConstantBuffer<TextureComponent> gTextureComponent : register(b11);
 
+

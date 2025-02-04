@@ -45,3 +45,4 @@ void TraceRay(RayDesc rayDesc, inout Payload payload) {
 }
 
 
+

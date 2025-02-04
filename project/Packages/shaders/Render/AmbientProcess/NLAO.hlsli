@@ -11,4 +11,5 @@ struct Parameter {
 	float strength;
 };
 ConstantBuffer<Parameter> gParameter : register(b0);
-//!< b11‚É•ÏX‚·‚é‚©‚à
+//!< b11ã«å¤‰æ›´ã™ã‚‹ã‹ã‚‚
+
