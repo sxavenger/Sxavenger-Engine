@@ -213,6 +213,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="Engine\!Render\Core\FRenderCoreLight.cpp" />
     <ClCompile Include="Engine\!Render\Core\FRenderCoreRaytracing.cpp" />
     <ClCompile Include="Engine\!Render\FRenderCore.cpp" />
+    <ClCompile Include="Engine\!Render\Scene\AmbientProcess\AmbientProcesses\FAmbientProcessAtmosphere.cpp" />
     <ClCompile Include="Engine\!Render\Scene\AmbientProcess\AmbientProcesses\FAmbientProcessNLAO.cpp" />
     <ClCompile Include="Engine\!Render\Scene\AmbientProcess\FAmbientProcess.cpp" />
     <ClCompile Include="Engine\!Render\Scene\FAmbientProcessSetting.cpp" />
@@ -394,6 +395,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Engine\!Render\Core\FRenderCoreLight.h" />
     <ClInclude Include="Engine\!Render\Core\FRenderCoreRaytracing.h" />
     <ClInclude Include="Engine\!Render\FRenderCore.h" />
+    <ClInclude Include="Engine\!Render\Scene\AmbientProcess\AmbientProcesses\FAmbientProcessAtmosphere.h" />
     <ClInclude Include="Engine\!Render\Scene\AmbientProcess\AmbientProcesses\FAmbientProcessNLAO.h" />
     <ClInclude Include="Engine\!Render\Scene\AmbientProcess\FAmbientProcess.h" />
     <ClInclude Include="Engine\!Render\Scene\FAmbientProcessSetting.h" />
