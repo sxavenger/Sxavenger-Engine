@@ -49,7 +49,7 @@ float Gaussian2d(float2 diff, float sigma) {
 
 float4 Sample(uint2 index, int2 diff) {
 	int2 texIndex = int2(index) + diff;
-	texIndex = clamp(texIndex, float2(0.0f, 0.0f), gConfig.size - 1.0f);
+	texIndex = clamp(texIndex, int2(0, 0), gConfig.size - 1);
 	return gInput[texIndex];
 }
 
