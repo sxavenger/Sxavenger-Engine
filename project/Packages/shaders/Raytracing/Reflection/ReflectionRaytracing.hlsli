@@ -37,3 +37,4 @@ struct Attribute {
 void TraceRay(RayDesc rayDesc, inout Payload payload) {
 	TraceRay(gScene, kFlag, 0xFF, 0, 1, 0, rayDesc, payload);
 }
+

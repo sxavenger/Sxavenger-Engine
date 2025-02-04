@@ -6,7 +6,9 @@
 
 struct Parameter {
 	uint2 size;     //!< blur size
-	float threshold; //!< è‡’l note: float3‚É‚·‚é‚©‚à
+	float threshold; //!< é–¾å€¤ note: float3ã«ã™ã‚‹ã‹ã‚‚
 };
 ConstantBuffer<Parameter> gParameter : register(b0);
-//!< b11‚É•ÏX‚·‚é‚©‚à
+//!< b11ã«å¤‰æ›´ã™ã‚‹ã‹ã‚‚
+
+

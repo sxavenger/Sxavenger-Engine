@@ -17,3 +17,4 @@ struct PSInput {
 struct PSOutput {
 	float4 color : SV_TARGET0;
 };
+

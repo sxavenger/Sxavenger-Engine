@@ -24,3 +24,4 @@ struct Camera {
 		return mul(view, proj);
 	}
 };
+

@@ -72,5 +72,3 @@ struct GeometryDeferredOutput { //!< FSceneTextures::GBuffers
 	
 };
 
-
-

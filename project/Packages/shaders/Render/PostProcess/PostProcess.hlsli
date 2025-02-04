@@ -28,3 +28,4 @@ ConstantBuffer<Config> gConfig : register(b10);
 bool CheckOverTexture(uint2 index) {
 	return any(index >= gConfig.size);
 }
+

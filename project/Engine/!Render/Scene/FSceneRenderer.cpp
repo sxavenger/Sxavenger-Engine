@@ -16,7 +16,7 @@
 void FSceneRenderer::Render(const DirectXThreadContext* context) {
 	auto status = CheckStatus();
 
-	if (status.Test(Status::Status_Error)) {
+	if (status.Any(Status::Status_Error)) {
 		return;
 	}
 
@@ -46,8 +46,8 @@ void FSceneRenderer::Render(const DirectXThreadContext* context) {
 	}
 }
 
-Sxl::Flag<FSceneRenderer::Status, uint32_t> FSceneRenderer::CheckStatus() const {
-	Sxl::Flag<Status, uint32_t> result = Status::Success;
+Sxl::Flag<FSceneRenderer::Status> FSceneRenderer::CheckStatus() const {
+	Sxl::Flag<Status> result = Status::Success;
 
 	if (textures_ == nullptr) {
 		result |= Status::Error_Textures;

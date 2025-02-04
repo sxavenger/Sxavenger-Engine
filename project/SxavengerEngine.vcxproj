@@ -227,7 +227,8 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="Engine\!Render\Scene\PostProcess\PostProcesses\FPostProcessBloom.cpp" />
     <ClCompile Include="Engine\!Render\Scene\PostProcess\PostProcesses\FPostProcessDoF.cpp" />
     <ClCompile Include="Engine\!Render\Scene\PostProcess\PostProcesses\FPostProcessLut.cpp" />
-    <ClCompile Include="Engine\Adapter\Particle\Emitter.cpp" />
+    <ClCompile Include="Engine\Adapter\Particle\Emitter\Emitter.cpp" />
+    <ClCompile Include="Engine\Adapter\Particle\Emitter\Emitters\PointEmitter.cpp" />
     <ClCompile Include="Engine\Adapter\Scene\BaseScene.cpp" />
     <ClCompile Include="Engine\Adapter\Scene\BaseSceneFactory.cpp" />
     <ClCompile Include="Engine\Adapter\Scene\SceneController.cpp" />
@@ -407,7 +408,8 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Engine\!Render\Scene\PostProcess\PostProcesses\FPostProcessBloom.h" />
     <ClInclude Include="Engine\!Render\Scene\PostProcess\PostProcesses\FPostProcessDoF.h" />
     <ClInclude Include="Engine\!Render\Scene\PostProcess\PostProcesses\FPostProcessLut.h" />
-    <ClInclude Include="Engine\Adapter\Particle\Emitter.h" />
+    <ClInclude Include="Engine\Adapter\Particle\Emitter\Emitter.h" />
+    <ClInclude Include="Engine\Adapter\Particle\Emitter\Emitters\PointEmitter.h" />
     <ClInclude Include="Engine\Adapter\Scene\BaseScene.h" />
     <ClInclude Include="Engine\Adapter\Scene\BaseSceneFactory.h" />
     <ClInclude Include="Engine\Adapter\Scene\SceneController.h" />

@@ -92,10 +92,10 @@ public:
 	////////////////////////////////////////////////////////////////////////////////////////////
 	struct Instance {
 		//* desc書き込み
-		const BottomLevelAS*                             bottomLevelAS;
-		Matrix4x4                                        mat;
-		UINT                                             instanceId;
-		Sxl::Flag<D3D12_RAYTRACING_INSTANCE_FLAGS, UINT> flag;
+		const BottomLevelAS*                       bottomLevelAS;
+		Matrix4x4                                  mat;
+		UINT                                       instanceId;
+		Sxl::Flag<D3D12_RAYTRACING_INSTANCE_FLAGS> flag;
 
 		//* table書き込み
 		const ExportGroup*  expt;

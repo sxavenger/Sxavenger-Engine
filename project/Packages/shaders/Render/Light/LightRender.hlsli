@@ -40,3 +40,4 @@ static const float4x4 kViewProj = mul(gCamera.view, gCamera.proj);
 StructuredBuffer<TransformationMatrix> gTransform : register(t14); //!< Light transform buffer
 
 RaytracingAccelerationStructure gScene : register(t15);
+

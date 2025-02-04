@@ -12,3 +12,4 @@ struct Vertex {
 };
 
 typedef Vertex VertexInput;
+

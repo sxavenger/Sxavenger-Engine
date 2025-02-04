@@ -19,3 +19,4 @@ struct Config {
 	uint2 size;
 };
 ConstantBuffer<Config> gConfig : register(b10);
+

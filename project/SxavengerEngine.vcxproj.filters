@@ -152,7 +152,6 @@
     <ClCompile Include="Engine\Adapter\Scene\BaseSceneFactory.cpp" />
     <ClCompile Include="Engine\Adapter\Scene\SceneController.cpp" />
     <ClCompile Include="Engine\!Render\FPresenter.cpp" />
-    <ClCompile Include="Engine\Adapter\Particle\Emitter.cpp" />
     <ClCompile Include="Demo\Sample\GameLoop\SampleRaytracingGameLoop.cpp" />
     <ClCompile Include="Engine\!Render\Scene\FPostProcessSetting.cpp" />
     <ClCompile Include="Engine\!Render\Scene\PostProcess\FPostProcess.cpp" />
@@ -189,6 +188,8 @@
     <ClCompile Include="Game\Entity\Enemy\EnemyStateReactionLight.cpp" />
     <ClCompile Include="Game\Entity\Enemy\EnemyStateRoot.cpp" />
     <ClCompile Include="Game\Entity\Enemy\EnemyStateStraight.cpp" />
+    <ClCompile Include="Engine\Adapter\Particle\Emitter\Emitter.cpp" />
+    <ClCompile Include="Engine\Adapter\Particle\Emitter\Emitters\PointEmitter.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\System\Window\Window.h" />
@@ -345,7 +346,6 @@
     <ClInclude Include="Engine\Adapter\Scene\BaseSceneFactory.h" />
     <ClInclude Include="Engine\Adapter\Scene\SceneController.h" />
     <ClInclude Include="Engine\!Render\FPresenter.h" />
-    <ClInclude Include="Engine\Adapter\Particle\Emitter.h" />
     <ClInclude Include="Demo\Sample\GameLoop\SampleRaytracingGameLoop.h" />
     <ClInclude Include="Engine\!Render\Scene\FPostProcessSetting.h" />
     <ClInclude Include="Engine\!Render\Scene\PostProcess\FPostProcess.h" />
@@ -383,6 +383,8 @@
     <ClInclude Include="Game\Entity\Enemy\EnemyStateReactionLight.h" />
     <ClInclude Include="Game\Entity\Enemy\EnemyStateRoot.h" />
     <ClInclude Include="Game\Entity\Enemy\EnemyStateStraight.h" />
+    <ClInclude Include="Engine\Adapter\Particle\Emitter\Emitter.h" />
+    <ClInclude Include="Engine\Adapter\Particle\Emitter\Emitters\PointEmitter.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

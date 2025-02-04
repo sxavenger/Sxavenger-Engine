@@ -17,6 +17,7 @@ void LSprite::Init() {
 	ia_.GetIndex()->At(1) = { 2, 1, 3 };
 
 	Transform2dComponent::CreateBuffer();
+	TextureComponent::CreateBuffer();
 
 	TransferColor({ 1.0f, 1.0f, 1.0f, 1.0f }); 
 }
@@ -36,7 +37,8 @@ void LSprite::Render(const RenderContext& context) {
 	ia_.BindIABuffer(context.context);
 
 	BindBufferDesc parameter = context.parameter;
-	parameter.SetAddress("gTransform", Transform2dComponent::GetGPUVirtualAddress());
+	parameter.SetAddress("gTransform",        Transform2dComponent::GetGPUVirtualAddress());
+	parameter.SetAddress("gTextureComponent", TextureComponent::GetGPUVirtualAddress());
 
 	if (std::holds_alternative<D3D12_GPU_DESCRIPTOR_HANDLE>(texture_.value())) {
 		parameter.SetHandle("gTexture", std::get<D3D12_GPU_DESCRIPTOR_HANDLE>(texture_.value()));

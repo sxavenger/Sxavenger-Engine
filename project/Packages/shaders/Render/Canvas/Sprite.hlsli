@@ -3,6 +3,7 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
+#include "../Component.hlsli"
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Input / Output structure
@@ -50,3 +51,6 @@ struct Parameter {
 	uint2 size;
 };
 ConstantBuffer<Parameter> gParameter : register(b11);
+
+ConstantBuffer<TextureComponent> gTextureComponent : register(b12);
+
