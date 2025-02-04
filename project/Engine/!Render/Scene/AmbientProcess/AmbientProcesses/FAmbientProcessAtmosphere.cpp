@@ -17,7 +17,7 @@ _DXOBJECT_USING
 void FAmbientProcessAtmosphere::Init() {
 	parameter_ = std::make_unique<DxObject::DimensionBuffer<Parameter>>();
 	parameter_->Create(SxavengerSystem::GetDxDevice(), 1);
-	parameter_->At(0).Reset();
+	parameter_->At(0).Init();
 }
 
 void FAmbientProcessAtmosphere::Process(const ProcessContext& context) {
