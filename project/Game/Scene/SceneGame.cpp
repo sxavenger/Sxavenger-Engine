@@ -45,6 +45,12 @@ void SceneGame::Init() {
 
 	component_.scene_->AddLight(light_.get());
 
+	ambient_ = std::make_unique<FAmbientProcessSetting>();
+	component_.renderer_->SetAmbientSetting(ambient_.get());
+
+	atmosphere_ = std::make_unique<FAmbientProcessAtmosphere>();
+	atmosphere_->Init();
+	ambient_->AddProcess(atmosphere_.get());
 
 }
 

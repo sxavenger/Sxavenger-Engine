@@ -8,7 +8,8 @@
 
 //* engine
 #include <Engine/!Render/Scene/Actor/Light/LightActors/ADirectionalLightActor.h>
-
+#include <Engine/!Render/Scene/FAmbientProcessSetting.h>
+#include <Engine/!Render/Scene/AmbientProcess/AmbientProcesses/FAmbientProcessAtmosphere.h>
 
 //* game
 //#include "../Entity/Player/Player.h"
@@ -62,6 +63,10 @@ private:
 
 	std::unique_ptr<ADirectionalLightActor> light_;
 
+	std::unique_ptr<FAmbientProcessSetting> ambient_;
+
+	std::unique_ptr<FAmbientProcessAtmosphere> atmosphere_;
+		 
 	//* UI *//
 
 
