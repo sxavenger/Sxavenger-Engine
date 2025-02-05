@@ -144,6 +144,15 @@ void BetaSystemGameLoop::TermSystem() {
 
 void BetaSystemGameLoop::UpdateSystem() {
 	processDoF_->SetFocus(model1_->GetPosition(), camera_.get());
+
+	if (SxavengerSystem::IsTriggerKey(KeyId::KEY_SPACE)) {
+		if (main_->GetMode() == Window::Mode::Borderless) {
+			main_->SetWindowMode(Window::Mode::Window);
+
+		} else {
+			main_->SetWindowMode(Window::Mode::Borderless);
+		}
+	}
 }
 
 void BetaSystemGameLoop::DrawSystem() {

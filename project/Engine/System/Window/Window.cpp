@@ -23,10 +23,10 @@ void Window::Create(const Vector2ui& clientSize, const LPCWSTR name, const HWND 
 	className_ += name;
 
 	// window type の設定
-	type_ = WindowType::kMainWindow;
+	type_ = Category::MainWindow;
 
 	if (parentHwnd != nullptr) {
-		type_ = WindowType::kSubWindow;
+		type_ = Category::SubWindow;
 	}
 
 	// インスタンスハンドルを取得
@@ -39,18 +39,18 @@ void Window::Create(const Vector2ui& clientSize, const LPCWSTR name, const HWND 
 	wc.hInstance     = hInst_;
 	wc.lpfnWndProc   = MainWindowProc;
 
-	if (type_ == WindowType::kSubWindow) {
+	if (type_ == Category::SubWindow) {
 		wc.lpfnWndProc = SubWindowProc;
 	}
 
 	Assert(RegisterClass(&wc));
 
-	RECT rc = {};
-	rc.right  = clientSize_.x;
-	rc.bottom = clientSize_.y;
+	rect_ = {};
+	rect_.right  = clientSize_.x;
+	rect_.bottom = clientSize_.y;
 
 	// ウィンドウサイズの調整
-	AdjustWindowRect(&rc, WS_OVERLAPPEDWINDOW, false);
+	AdjustWindowRect(&rect_, WS_OVERLAPPEDWINDOW, false);
 
 	// ウィンドウを生成
 	hwnd_ = CreateWindow(
@@ -59,8 +59,8 @@ void Window::Create(const Vector2ui& clientSize, const LPCWSTR name, const HWND 
 		WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX, //!< windowのサイズの固定
 		CW_USEDEFAULT,
 		CW_USEDEFAULT,
-		rc.right - rc.left,
-		rc.bottom - rc.top,
+		rect_.right - rect_.left,
+		rect_.bottom - rect_.top,
 		parentHwnd,
 		nullptr,
 		hInst_,
@@ -81,10 +81,10 @@ void Window::CreateEx(const Vector2ui& clientSize, const LPCWSTR name, const WND
 	className_ += name;
 
 	// window type の設定
-	type_ = WindowType::kMainWindow;
+	type_ = Category::MainWindow;
 
 	if (parentHwnd != nullptr) {
-		type_ = WindowType::kSubWindow;
+		type_ = Category::SubWindow;
 	}
 
 	// インスタンスハンドルを取得
@@ -155,6 +155,74 @@ void Window::SetTaskbarIcon(const std::filesystem::path& filepath, const Vector2
 		= static_cast<HICON>(LoadImageA(GetModuleHandle(NULL), filepath.generic_string().c_str(), IMAGE_ICON, cursolSize.x, cursolSize.y, LR_LOADFROMFILE));
 
 	SendMessage(hwnd_, WM_SETICON, ICON_BIG, reinterpret_cast<LPARAM>(largeIcon));
+}
+
+void Window::SetWindowMode(Mode mode) {
+	if (mode_ == mode) {
+		return; //!< 既に設定されている
+	}
+
+	uint32_t style = WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX;
+	// todo: styleを指定できるように変更
+
+	switch (mode) {
+		case Mode::Borderless:
+			{
+				// 元の状態を取得
+				GetWindowRect(hwnd_, &rect_);
+
+				// 仮想フルスクリーン化
+				SetWindowLong(
+					hwnd_,
+					GWL_STYLE,
+					style & ~(WS_CAPTION | WS_MAXIMIZEBOX | WS_MINIMIZEBOX | WS_SYSMENU | WS_THICKFRAME)
+				);
+
+				// モニター情報の取得
+				HMONITOR monitor = MonitorFromWindow(hwnd_, MONITOR_DEFAULTTONEAREST);
+				MONITORINFO info = {};
+				info.cbSize = sizeof(MONITORINFO);
+				GetMonitorInfo(monitor, &info);
+
+				RECT rc = {};
+				rc.right  = info.rcMonitor.right - info.rcMonitor.left;
+				rc.bottom = info.rcMonitor.bottom - info.rcMonitor.top;
+
+				// ウィンドウの位置を変更
+				SetWindowPos(
+					hwnd_, HWND_TOPMOST,
+					rc.left, rc.top, rc.right, rc.bottom,
+					SWP_NOACTIVATE
+				);
+
+				ShowWindow(hwnd_, SW_MAXIMIZE);
+			}
+			break;
+
+		case Mode::Window:
+			{
+				// 通常ウィンドウに戻す
+				SetWindowLong(hwnd_, GWL_STYLE, style);
+
+				// ウィンドウの位置を変更
+				RECT rc = {};
+				rc.left   = rect_.left;
+				rc.top    = rect_.top;
+				rc.right  = rect_.right - rect_.left;
+				rc.bottom = rect_.bottom - rect_.top;
+
+				SetWindowPos(
+					hwnd_, HWND_NOTOPMOST,
+					rc.left, rc.top, rc.right, rc.bottom,
+					SWP_FRAMECHANGED | SWP_NOACTIVATE
+				);
+
+				ShowWindow(hwnd_, SW_NORMAL);
+			}
+			break;
+	}
+
+	mode_ = mode;
 }
 
 LRESULT Window::MainWindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
