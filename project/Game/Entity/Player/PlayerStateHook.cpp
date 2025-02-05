@@ -26,6 +26,7 @@ void PlayerStateHook::Init() {
 	attackCollider_->strength_ = AttackStrength::Light;
 	attackCollider_->SetOnCollisionEnter([this](_MAYBE_UNUSED Collider* const) {
 		player_->SetShake(0.1f, { 0.2f, 0.1f });
+		player_->delta_ = 0.1f;
 	});
 
 }
@@ -65,7 +66,7 @@ void PlayerStateHook::ActionGamepad() {
 }
 
 void PlayerStateHook::UpdateAnimation() {
-	time_ += SxavengerSystem::GetDeltaTime().time * 1.4f;
+	time_ += SxavengerSystem::GetDeltaTime().time * 1.4f * player_->delta_;
 
 	//* player側に設定
 	player_->time_ = time_;

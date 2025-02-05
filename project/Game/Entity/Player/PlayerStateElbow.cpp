@@ -26,6 +26,7 @@ void PlayerStateElbow::Init() {
 	attackCollider_->strength_ = AttackStrength::Light;
 	attackCollider_->SetOnCollisionEnter([this](_MAYBE_UNUSED Collider* const) {
 		player_->SetShake(0.1f, { 0.1f, 0.2f });
+		player_->delta_ = 0.2f;
 	});
 
 }
@@ -70,7 +71,7 @@ void PlayerStateElbow::ActionGamepad() {
 }
 
 void PlayerStateElbow::UpdateAnimation() {
-	time_ += SxavengerSystem::GetDeltaTime();
+	time_ += SxavengerSystem::GetDeltaTime().time * player_->delta_;
 
 	//* player側に設定
 	player_->time_ = time_;

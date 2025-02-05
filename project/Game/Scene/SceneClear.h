@@ -3,25 +3,11 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
-//* base
-#include <Engine/Adapter/Scene/BaseScene.h>
-
 //* engine
-#include <Engine/!Render/Scene/Actor/Light/LightActors/ADirectionalLightActor.h>
-#include <Engine/!Render/Scene/FAmbientProcessSetting.h>
-#include <Engine/!Render/Scene/AmbientProcess/AmbientProcesses/FAmbientProcessAtmosphere.h>
+#include <Engine/Adapter/Scene/BaseScene.h>
+#include <Engine/!Render/FSceneTextures.h>
+#include <Engine/!Render/Canvas/FCanvas.h>
 #include <Engine/!Render/Canvas/Layer/Layers/LSprite.h>
-
-//* game
-//#include "../Entity/Player/Player.h"
-//#include "../Entity/Enemy/Enemy.h"
-//#include "../Object/Ground.h"
-
-//* game
-#include "../Object/GameCamera.h"
-#include "../Entity/Player/Player.h"
-#include "../Entity/Enemy/Enemy.h"
-#include "../Object/Ground.h"
 
 //* c++
 #include <memory>
@@ -29,7 +15,7 @@
 ////////////////////////////////////////////////////////////////////////////////////////////
 // SceneGame class
 ////////////////////////////////////////////////////////////////////////////////////////////
-class SceneGame
+class SceneClear
 	: public BaseScene {
 public:
 
@@ -37,8 +23,8 @@ public:
 	// public methods
 	//=========================================================================================
 
-	SceneGame() = default;
-	~SceneGame() = default;
+	SceneClear() = default;
+	~SceneClear() = default;
 
 	void Init() override;
 
@@ -54,24 +40,8 @@ private:
 	// private variables
 	//=========================================================================================
 
-	//* scene *//
+	std::unique_ptr<FSceneTextures> textures_;
+	std::unique_ptr<FCanvas>        canvas_;
 
-	std::unique_ptr<GameCamera> camera_;
-
-	std::unique_ptr<Player> player_;
-	std::unique_ptr<Enemy> enemy_;
-	std::unique_ptr<Ground> ground_;
-
-	std::unique_ptr<ADirectionalLightActor> light_;
-
-	std::unique_ptr<FAmbientProcessSetting> ambient_;
-
-	std::unique_ptr<FAmbientProcessAtmosphere> atmosphere_;
-
-	std::unique_ptr<LSprite> ui_;
-		 
-	//* UI *//
-
-
-
+	std::unique_ptr<LSprite> clear_;
 };

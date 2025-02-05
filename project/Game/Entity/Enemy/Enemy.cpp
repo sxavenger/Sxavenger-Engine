@@ -84,6 +84,11 @@ void Enemy::Update() {
 	//* update skeleton *//
 
 	UpdateAnimation();
+
+	if (delta_ < 1.0f) {
+		delta_ += SxavengerSystem::GetDeltaTime().time / 1.5f;
+		delta_ = std::clamp(delta_, 0.0f, 1.0f);
+	}
 }
 
 void Enemy::SetAnimationState(AnimationState state) {
@@ -120,7 +125,7 @@ void Enemy::OnCollisionEnter(_MAYBE_UNUSED Collider* const other) {
 		AModelAnimationActor::GetTransform().rotate
 			= ToQuaternion(CalculateEuler(Normalize(otherPosition - position)));
 
-		delta_ = 0.04f;
+		delta_ = 0.1f;
 	}
 }
 
@@ -194,8 +199,4 @@ void Enemy::UpdateState() {
 
 	//!< update state
 	state_->Update();
-
-	if (delta_ < 1.0f) {
-		delta_ += SxavengerSystem::GetDeltaTime().time / 1.5f;
-	}
 }

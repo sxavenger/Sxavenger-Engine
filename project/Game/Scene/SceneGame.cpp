@@ -52,6 +52,13 @@ void SceneGame::Init() {
 	atmosphere_->Init();
 	ambient_->AddProcess(atmosphere_.get());
 
+	ui_ = std::make_unique<LSprite>();
+	ui_->Init();
+	ui_->SetTexture(SxavengerAsset::TryImport<AssetTexture>("asset/textures/ui.png"));
+	ui_->SetSize(kMainWindowSize);
+
+	component_.canvas_->AddLayer(ui_.get());
+
 }
 
 void SceneGame::Update() {
@@ -63,7 +70,7 @@ void SceneGame::Update() {
 	SxavengerModule::CheckCollision();
 
 	if (enemy_->IsDead()) {
-		BaseScene::RequestNextScene("Title");
+		BaseScene::RequestNextScene("Clear");
 	}
 }
 

@@ -25,6 +25,7 @@
 #include <Engine/Asset/SxavengerAsset.h>
 #include <Engine/Module/Collider/Collider.h>
 #include <Engine/!Render/Scene/Actor/Geometry/GeometryActors/AModelAnimationActor.h>
+#include <Engine/!Render/Scene/Actor/Geometry/GeometryActors/AModelInstanceActor.h>
 #include <Engine/Editor/EditorComponent/AttributeComponent.h>
 
 //* game
@@ -135,6 +136,8 @@ private:
 
 	std::unique_ptr<Collider> hitCollider_;
 
+	float delta_ = 1.0f;
+
 	//* visual
 
 	//std::unique_ptr<VisualDoF> dof_;
@@ -150,6 +153,8 @@ private:
 	void UpdateAnimation();
 
 	void UpdateCamera();
+
+	void UpdateParticle();
 	
 public:
 	////////////////////////////////////////////////////////////////////////////////////////////

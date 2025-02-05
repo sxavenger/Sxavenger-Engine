@@ -12,6 +12,7 @@
 //* other scene
 #include "../Scene/SceneGame.h"
 #include "../Scene/SceneTitle.h"
+#include "../Scene/SceneClear.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // ActionGameLoop class
@@ -51,6 +52,7 @@ void ActionGameLoop::InitGame() {
 	std::unique_ptr<BaseSceneFactory> factory = std::make_unique<BaseSceneFactory>();
 	factory->Register<SceneGame>("Game");
 	factory->Register<SceneTitle>("Title");
+	factory->Register<SceneClear>("Clear");
 
 	collection_ = std::make_unique<SceneController>();
 	collection_->SetSceneFactory(std::move(factory));

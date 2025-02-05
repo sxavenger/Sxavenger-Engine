@@ -26,7 +26,8 @@ void PlayerStateKick::Init() {
 	attackCollider_->strength_ = AttackStrength::Heavy;
 	attackCollider_->damage_   = 2.0f;
 	attackCollider_->SetOnCollisionEnter([this](_MAYBE_UNUSED Collider* const) {
-		player_->SetShake(1.0f, { 0.4f, 0.2f });
+		player_->SetShake(0.4f, { 0.4f, 0.2f });
+		player_->delta_ = 0.1f;
 	});
 }
 
@@ -45,7 +46,7 @@ void PlayerStateKick::Update() {
 }
 
 void PlayerStateKick::UpdateAnimation() {
-	time_ += SxavengerSystem::GetDeltaTime();
+	time_ += SxavengerSystem::GetDeltaTime().time * player_->delta_;
 
 	//* player側に設定
 	player_->time_ = time_;

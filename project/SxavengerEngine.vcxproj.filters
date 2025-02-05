@@ -168,7 +168,6 @@
     <ClCompile Include="Engine\!Render\Scene\AmbientProcess\FAmbientProcess.cpp" />
     <ClCompile Include="Engine\!Render\Scene\AmbientProcess\AmbientProcesses\FAmbientProcessNLAO.cpp" />
     <ClCompile Include="Engine\!Render\Scene\PostProcess\PostProcesses\FPostProcessBloom.cpp" />
-    <ClCompile Include="Engine\!Render\Scene\PostProcess\PostProcesses\FProcessFog.cpp" />
     <ClCompile Include="Game\Entity\Player\BasePlayerState.cpp" />
     <ClCompile Include="Game\Entity\Player\Player.cpp" />
     <ClCompile Include="Game\Entity\Player\PlayerStateElbow.cpp" />
@@ -191,6 +190,7 @@
     <ClCompile Include="Engine\Adapter\Particle\Emitter\Emitter.cpp" />
     <ClCompile Include="Engine\Adapter\Particle\Emitter\Emitters\PointEmitter.cpp" />
     <ClCompile Include="Engine\!Render\Scene\AmbientProcess\AmbientProcesses\FAmbientProcessAtmosphere.cpp" />
+    <ClCompile Include="Game\Scene\SceneClear.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\System\Window\Window.h" />
@@ -363,7 +363,6 @@
     <ClInclude Include="Engine\!Render\Scene\AmbientProcess\FAmbientProcess.h" />
     <ClInclude Include="Engine\!Render\Scene\AmbientProcess\AmbientProcesses\FAmbientProcessNLAO.h" />
     <ClInclude Include="Engine\!Render\Scene\PostProcess\PostProcesses\FPostProcessBloom.h" />
-    <ClInclude Include="Engine\!Render\Scene\PostProcess\PostProcesses\FProcessFog.h" />
     <ClInclude Include="Game\Entity\Player\BasePlayerState.h" />
     <ClInclude Include="Game\Entity\Player\Player.h" />
     <ClInclude Include="Game\Entity\Player\PlayerAttackCollider.h" />
@@ -387,6 +386,7 @@
     <ClInclude Include="Engine\Adapter\Particle\Emitter\Emitter.h" />
     <ClInclude Include="Engine\Adapter\Particle\Emitter\Emitters\PointEmitter.h" />
     <ClInclude Include="Engine\!Render\Scene\AmbientProcess\AmbientProcesses\FAmbientProcessAtmosphere.h" />
+    <ClInclude Include="Game\Scene\SceneClear.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

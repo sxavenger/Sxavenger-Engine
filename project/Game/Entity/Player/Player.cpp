@@ -72,7 +72,6 @@ void Player::Init() {
 	/*texture_ = SxavengerAsset::TryImport<Texture>("asset/textures/ui.png").Lock();
 	SxavengerAsset::PushTask(texture_);
 	texture_->WaitComplete();*/
-
 }
 
 void Player::Init(const QuaternionTransform& transform) {
@@ -98,6 +97,12 @@ void Player::Update() {
 	//* update skeleton *//
 
 	UpdateAnimation();
+
+	delta_ = 1.0f;
+	if (delta_ < 1.0f) {
+		delta_ += SxavengerSystem::GetDeltaTime().time / 1.5f;
+		delta_ = std::clamp(delta_, 0.0f, 1.0f);
+	}
 }
 
 void Player::SetAnimationState(AnimationState state) {
@@ -201,4 +206,7 @@ void Player::UpdateCamera() {
 
 	camera_->GetTransform() = transform;
 	camera_->UpdateView();
+}
+
+void Player::UpdateParticle() {
 }
