@@ -25,7 +25,9 @@
 #include <Engine/!Render/Scene/PostProcess/PostProcesses/FPostProcessLut.h>
 #include <Engine/!Render/Scene/PostProcess/PostProcesses/FPostProcessDoF.h>
 #include <Engine/!Render/Scene/PostProcess/PostProcesses/FPostProcessBloom.h>
+#include <Engine/!Render/Scene/PostProcess/PostProcesses/FPostProcessVignette.h>
 #include <Engine/!Render/Scene/AmbientProcess/AmbientProcesses/FAmbientProcessNLAO.h>
+
 #include <Engine/Editor/EditorComponent/AttributeComponent.h>
 
 
@@ -85,6 +87,9 @@ private:
 
 	std::unique_ptr<FPostProcessBloom> processBloom_;
 	std::unique_ptr<AttributeComponent> bloomComponent_;
+
+	std::unique_ptr<FPostProcessVignette> processVignette_;
+	std::unique_ptr<AttributeComponent> vignetteComponent_;
 
 	FPresenter presenter_;
 

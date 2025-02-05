@@ -168,6 +168,7 @@
     <ClCompile Include="Engine\Adapter\Particle\Emitter\Emitter.cpp" />
     <ClCompile Include="Engine\Adapter\Particle\Emitter\Emitters\PointEmitter.cpp" />
     <ClCompile Include="Engine\!Render\Scene\AmbientProcess\AmbientProcesses\FAmbientProcessAtmosphere.cpp" />
+    <ClCompile Include="Engine\!Render\Scene\PostProcess\PostProcesses\FPostProcessVignette.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\System\Window\Window.h" />
@@ -340,6 +341,7 @@
     <ClInclude Include="Engine\Adapter\Particle\Emitter\Emitter.h" />
     <ClInclude Include="Engine\Adapter\Particle\Emitter\Emitters\PointEmitter.h" />
     <ClInclude Include="Engine\!Render\Scene\AmbientProcess\AmbientProcesses\FAmbientProcessAtmosphere.h" />
+    <ClInclude Include="Engine\!Render\Scene\PostProcess\PostProcesses\FPostProcessVignette.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

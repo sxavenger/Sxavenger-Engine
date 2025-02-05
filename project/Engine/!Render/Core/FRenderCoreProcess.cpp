@@ -74,6 +74,15 @@ void FRenderCoreProcess::Init() {
 
 		processes_[static_cast<uint32_t>(ProcessType::DoF)] = std::move(process);
 	}
+
+	{ //!< vignette
+		auto process = std::make_unique<CustomReflectionComputePipeline>();
+		process->CreateAsset(L"packages/shaders/render/PostProcess/Vignette.cs.hlsl");
+		process->RegisterBlob();
+		process->ReflectionPipeline(SxavengerSystem::GetDxDevice());
+
+		processes_[static_cast<uint32_t>(ProcessType::Vignette)] = std::move(process);
+	}
 }
 
 void FRenderCoreProcess::SetPipeline(ProcessType type, const DirectXThreadContext* context) {

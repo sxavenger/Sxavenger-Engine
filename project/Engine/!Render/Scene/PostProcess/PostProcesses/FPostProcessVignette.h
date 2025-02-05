@@ -1,33 +1,26 @@
 #pragma once
+
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
-//* engine
-#include <Engine/Module/Pipeline/CustomComputePipeline.h>
-
-//* c++
-#include <array>
+//* process
+#include "../FPostProcess.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// FRenderCoreProcess class
+// FPostProcessVignette class
 ////////////////////////////////////////////////////////////////////////////////////////////
-class FRenderCoreProcess {
+class FPostProcessVignette
+	: public FPostProcess {
 public:
 
 	////////////////////////////////////////////////////////////////////////////////////////////
-	// FRenderCoreProcess class
+	// Parameter structure
 	////////////////////////////////////////////////////////////////////////////////////////////
-	enum class ProcessType : uint32_t {
-		NLAO,
-		NLAO_Blur,
-		Atmosphere,
-		Overlay,
-		Bloom,
-		LUT,
-		DoF,
-		Vignette,
+	struct Parameter {
+		Color4f color;
+		float offset;
+		float power;
 	};
-	static const uint32_t kProcessTypeCount = static_cast<uint32_t>(ProcessType::Vignette) + 1;
 
 public:
 
@@ -35,18 +28,18 @@ public:
 	// public methods
 	//=========================================================================================
 
-	FRenderCoreProcess()  = default;
-	~FRenderCoreProcess() = default;
+	FPostProcessVignette()          = default;
+	virtual ~FPostProcessVignette() = default;
 
 	void Init();
 
-	//* option *//
+	//* process *//
 
-	void SetPipeline(ProcessType type, const DirectXThreadContext* context);
+	void Process(const ProcessContext& context) override;
 
-	void BindComputeBuffer(ProcessType type, const DirectXThreadContext* context, const DxObject::BindBufferDesc& desc);
+	//* debug *//
 
-	void Dispatch(const DirectXThreadContext* context, const Vector2ui& size) const;
+	void SetImGuiCommand() override;
 
 private:
 
@@ -54,9 +47,6 @@ private:
 	// private variables
 	//=========================================================================================
 
-	std::array<std::unique_ptr<CustomReflectionComputePipeline>, kProcessTypeCount> processes_;
-
-	static const Vector2ui kNumThreadSize_;
-
+	std::unique_ptr<DxObject::DimensionBuffer<Parameter>> parameter_;
 
 };

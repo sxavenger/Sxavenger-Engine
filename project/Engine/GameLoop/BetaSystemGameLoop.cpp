@@ -111,15 +111,23 @@ void BetaSystemGameLoop::InitSystem() {
 	nlaoComponent_->SetToOutliner();
 	nlaoComponent_->SetAttributeFunc([this]() { processNLAO_->SetImGuiCommand(); });
 
-	processBloom_ = std::make_unique<FPostProcessBloom>();
+	/*processBloom_ = std::make_unique<FPostProcessBloom>();
 	processBloom_->Init();
 	postProcess_->AddProcess(processBloom_.get());
 
 	bloomComponent_ = std::make_unique<AttributeComponent>();
 	bloomComponent_->SetName("Bloom");
 	bloomComponent_->SetToOutliner();
-	bloomComponent_->SetAttributeFunc([this]() { processBloom_->SetImGuiCommand(); });
+	bloomComponent_->SetAttributeFunc([this]() { processBloom_->SetImGuiCommand(); });*/
 
+	processVignette_ = std::make_unique<FPostProcessVignette>();
+	processVignette_->Init();
+	postProcess_->AddProcess(processVignette_.get());
+
+	vignetteComponent_ = std::make_unique<AttributeComponent>();
+	vignetteComponent_->SetName("Vignette");
+	vignetteComponent_->SetToOutliner();
+	vignetteComponent_->SetAttributeFunc([this]() { processVignette_->SetImGuiCommand(); });
 
 	//* editors *//
 
