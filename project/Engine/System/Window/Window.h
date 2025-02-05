@@ -15,17 +15,19 @@
 #include <filesystem>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// WindowType enum class
-////////////////////////////////////////////////////////////////////////////////////////////
-enum class WindowType {
-	kMainWindow,
-	kSubWindow
-};
-
-////////////////////////////////////////////////////////////////////////////////////////////
 // Window class
 ////////////////////////////////////////////////////////////////////////////////////////////
 class Window {
+public:
+
+	////////////////////////////////////////////////////////////////////////////////////////////
+	// Mode enum class
+	////////////////////////////////////////////////////////////////////////////////////////////
+	enum class Mode : uint8_t {
+		Borderless,
+		Window
+	};
+
 public:
 
 	//=========================================================================================
@@ -44,6 +46,8 @@ public:
 	void SetWindowIcon(const std::filesystem::path& filepath, const Vector2ui& cursolSize);
 	void SetTaskbarIcon(const std::filesystem::path& filepath, const Vector2ui& cursolSize);
 
+	void SetWindowMode(Mode mode);
+
 	//* getter *//
 
 	const HINSTANCE& GetHInst() const { return hInst_; }
@@ -54,6 +58,18 @@ public:
 
 	const Vector2ui& GetSize() const { return clientSize_; }
 
+	Mode GetMode() const { return mode_; }
+
+private:
+
+	////////////////////////////////////////////////////////////////////////////////////////////
+	// Category enum class
+	////////////////////////////////////////////////////////////////////////////////////////////
+	enum class Category : bool {
+		MainWindow,
+		SubWindow
+	};
+
 private:
 
 	//=========================================================================================
@@ -62,17 +78,21 @@ private:
 
 	//* window info *//
 
-	std::optional<WindowType> type_ = std::nullopt;
+	std::optional<Category> type_ = std::nullopt;
 
 	//* window parameter *//
 
 	HINSTANCE hInst_;
 	HWND      hwnd_;
 
+	RECT rect_;
+
 	Vector2ui clientSize_;
 	LPCWSTR   name_;
 
 	std::wstring className_;
+
+	Mode mode_ = Mode::Window;
 
 	//=========================================================================================
 	// private methods
