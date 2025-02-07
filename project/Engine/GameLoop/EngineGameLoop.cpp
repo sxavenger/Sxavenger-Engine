@@ -8,7 +8,7 @@
 #include <Engine/Asset/SxavengerAsset.h>
 #include <Engine/Content/SxavengerContent.h>
 #include <Engine/Module/SxavengerModule.h>
-#include <Engine/System/Config/SxavengerDirectory.h>
+#include <Engine/System/Config/SxavengerConfig.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // EngineGameLoop class methods
@@ -17,6 +17,7 @@
 void EngineGameLoop::Init(GameLoop::Context* context) {
 	context->SetState(
 		GameLoop::State::Init, std::nullopt, [this]() {
+			SxavengerLogger::Init();
 			SxavengerSystem::Init();
 			SxavengerAsset::Init();
 			SxavengerContent::Init();

@@ -3,16 +3,13 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
+//* engine
+#include <Engine/System/Config/SxavengerConfig.h>
+
+//* c++
 #include <comdef.h>
 #include <sstream>
-#include <mutex>
-
-//-----------------------------------------------------------------------------------------
-// namespace
-//-----------------------------------------------------------------------------------------
-namespace {
-	//std::mutex sLogMutex;
-}
+#include <thread>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Convert string methods
@@ -48,79 +45,84 @@ std::wstring ToWString(const std::string& str) {
 
 }
 
-////////////////////////////////////////////////////////////////////////////////////////////
-// Log methods
-////////////////////////////////////////////////////////////////////////////////////////////
+//=========================================================================================
+// static variable
+//=========================================================================================
 
-void Log(const std::string& log) {
-	std::string output = log + "\n";
-	OutputDebugStringA(output.c_str());
-}
+const std::filesystem::path SxavengerLogger::filepath_ = "SxavengerEngineLog.md";
 
-void Log(const std::wstring& log) {
-	std::wstring output = log + L"\n";
-	OutputDebugStringW(output.c_str());
-}
+std::mutex SxavengerLogger::mutex_;
 
-void EngineLog(const std::string& log) {
-	std::string tag = "## Sxavenger Engine >> ";
-	std::string mes = tag + log + "\n";
-	OutputDebugStringA(mes.c_str());
-}
-
-void EngineLog(const std::wstring& log) {
-	std::string tag = "## Sxavenger Engine >> ";
-	OutputDebugStringA(tag.c_str());
-	Log(log);
-}
-
-void ThreadLog(const std::string& log) {
-	std::ostringstream mes;
-	mes << "## Sxavenger Engine [thread id: " << std::this_thread::get_id() << "] : ";
-	mes << log << "\n";
-	OutputDebugStringA(mes.str().c_str());
-}
-
-void ThreadLog(const std::wstring& log) {
-	std::wostringstream mes;
-	mes << "## Sxavenger Engine [thread id: " << std::this_thread::get_id() << "] : ";
-	mes << log << "\n";
-	OutputDebugStringW(mes.str().c_str());
-}
+#ifdef _DEVELOPMENT
+#define _OUTPUT_SXAVENGER_LOG_FILE //!< ログファイルに出力するかどうか
+#endif
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// Assert methods
+// SxavengerLogger class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-void Assert(bool expresion, const std::string& label, const std::string& detail, const std::source_location& location) {
-	if (expresion) {
-		return;
-	}
+void SxavengerLogger::Init() {
+#ifdef _OUTPUT_SXAVENGER_LOG_FILE
+	std::ofstream file(filepath_, std::ofstream::out | std::ofstream::trunc); //!< clear file
+	file << "# "  << "Sxavenger Engine Log" << "\n";
+	file << "## " << "engine version: " << kSxavengerEngineVersion << "\n";
+#endif
+}
 
+void SxavengerLogger::LogA(const std::string& mes) {
+	OutputA(mes);
+
+#ifdef _OUTPUT_SXAVENGER_LOG_FILE
+	TextA(mes);
+#endif
+}
+
+void SxavengerLogger::LogW(const std::wstring& log) {
+	OutputDebugStringW(log.c_str());
+	OutputDebugStringW(L"\n");
+
+#ifdef _OUTPUT_SXAVENGER_LOG_FILE
+	TextW(log);
+#endif
+}
+
+void SxavengerLogger::ExceptionA(const std::string& label, const std::string& detail, const std::source_location& location) {
 	// location
 	std::ostringstream locationMes;
-	locationMes << "[location]\n";
-	locationMes << " filename: " << location.file_name()     << "\n";
-	locationMes << " function: " << location.function_name() << "\n";
-	locationMes << " line:     " << location.line()          << "\n";
-	Log(std::string("\nError: Sxavenger Engine assertion\n\n" + locationMes.str()).c_str());
+	locationMes << "[location]" << "  \n";
+	locationMes << " filename: " << location.file_name()     << "  \n";
+	locationMes << " function: " << location.function_name() << "  \n";
+	locationMes << " line:     " << location.line()          << "  \n";
+	OutputA("\nError: Sxavenger Engine assertion\n\n" + locationMes.str());
 
 	// label
 	std::ostringstream labelMes;
 	if (!label.empty()) {
-		labelMes << "[label]\n";
+		labelMes << "[label]" << "  \n";
 		labelMes << " " << label << "\n";
-		Log(labelMes.str());
+		OutputA(labelMes.str());
 	}
 
 	// detail
 	std::ostringstream detailMes;
 	if (!detail.empty()) {
-		detailMes << "[detail]\n";
+		detailMes << "[detail]" << "  \n";
 		detailMes << " " << detail << "\n";
-		Log(detailMes.str());
+		OutputA(detailMes.str());
 	}
 
+#ifdef _OUTPUT_SXAVENGER_LOG_FILE
+	{
+		std::unique_lock<std::mutex> lock(mutex_);
+		TextA("<details><summary> Error </summary>");
+		TextA(locationMes.str());
+		TextA(labelMes.str());
+		TextA(detailMes.str());
+		TextA("</details><summary>");
+	}
+#endif
+
+	// window
 	MessageBoxA(
 		NULL,
 		(locationMes.str() + "\n" + labelMes.str()).c_str(),
@@ -131,35 +133,43 @@ void Assert(bool expresion, const std::string& label, const std::string& detail,
 	__debugbreak();
 }
 
-void AssertW(bool expresion, const std::wstring& label, const std::wstring& detail, const std::source_location& location) {
-	if (expresion) {
-		return;
-	}
-
+void SxavengerLogger::ExceptionW(const std::wstring& label, const std::wstring& detail, const std::source_location& location) {
 	// location
 	std::wostringstream locationMes;
-	locationMes << "[location]\n";
-	locationMes << " filename: " << location.file_name()     << "\n";
-	locationMes << " function: " << location.function_name() << "\n";
-	locationMes << " line:     " << location.line()          << "\n";
-	Log(std::wstring(L"\nError: Sxavenger Engine assertion\n\n" + locationMes.str()).c_str());
+	locationMes << "[location]" << "  \n";
+	locationMes << " filename: " << location.file_name() << "  \n";
+	locationMes << " function: " << location.function_name() << "  \n";
+	locationMes << " line:     " << location.line() << "  \n";
+	OutputW(std::wstring(L"\nError: Sxavenger Engine assertion\n\n" + locationMes.str()).c_str());
 
 	// label
 	std::wostringstream labelMes;
 	if (!label.empty()) {
-		labelMes << "[label]\n";
+		labelMes << "[label]" << "  \n";
 		labelMes << " " << label << "\n";
-		Log(labelMes.str());
+		OutputW(labelMes.str());
 	}
 
 	// detail
 	std::wostringstream detailMes;
 	if (!detail.empty()) {
-		detailMes << "[detail]\n";
+		detailMes << "[detail]" << "  \n";
 		detailMes << " " << detail << "\n";
-		Log(detailMes.str());
+		OutputW(detailMes.str());
 	}
 
+#ifdef _OUTPUT_SXAVENGER_LOG_FILE
+	{
+		std::unique_lock<std::mutex> lock(mutex_);
+		TextW(L"<details><summary> Error </summary>");
+		TextW(locationMes.str());
+		TextW(labelMes.str());
+		TextW(detailMes.str());
+		TextW(L"</details><summary>");
+	}
+#endif
+
+	// window
 	MessageBoxW(
 		NULL,
 		(locationMes.str() + L"\n" + labelMes.str()).c_str(),
@@ -170,37 +180,72 @@ void AssertW(bool expresion, const std::wstring& label, const std::wstring& deta
 	__debugbreak();
 }
 
-void AssertW(bool expresion, const std::wstring& detail, const std::source_location& location) {
-	if (expresion) {
+void SxavengerLogger::OutputA(const std::string& mes) {
+	OutputDebugStringA(mes.c_str());
+	OutputDebugStringA("\n");
+}
+
+void SxavengerLogger::OutputW(const std::wstring& mes) {
+	OutputDebugStringW(mes.c_str());
+	OutputDebugStringW(L"\n");
+}
+
+void SxavengerLogger::TextA(const std::string& mes) {
+	std::ofstream file(filepath_, mode_);
+	file << mes << "  " << "\n";
+}
+
+void SxavengerLogger::TextW(const std::wstring& mes) {
+	std::wofstream file(filepath_, mode_);
+	file << mes << "  " << "\n";
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////
+// Log methods
+////////////////////////////////////////////////////////////////////////////////////////////
+
+void Log(const std::string& log) {
+	SxavengerLogger::LogA(log);
+}
+
+void Log(const std::wstring& log) {
+	SxavengerLogger::LogW(log);
+}
+
+void EngineLog(const std::string& log) {
+	std::string tag = "[Sxavenger Engine] >> ";
+	SxavengerLogger::LogA(tag + log);
+}
+
+void EngineLog(const std::wstring& log) {
+	std::wstring tag = L"[Sxavenger Engine] >> ";
+	SxavengerLogger::LogW(tag + log);
+}
+
+void EngineThreadLog(const std::string& log) {
+	std::ostringstream tag;
+	tag << "[Sxavenger Engine] [thread id: " << std::this_thread::get_id() << "] : ";
+	SxavengerLogger::LogA(tag.str() + log);
+}
+
+void EngineThreadLog(const std::wstring& log) {
+	std::wostringstream tag;
+	tag << "[Sxavenger Engine] [thread id: " << std::this_thread::get_id() << "] : ";
+	SxavengerLogger::LogW(tag.str() + log);
+}
+
+void Assert(bool expression, const std::string& label, const std::string& detail, const std::source_location& location) {
+	if (expression) {
 		return;
 	}
 
-	// location message
-	std::wostringstream locationMes;
-	locationMes << "[location]\n";
-	locationMes << " filename: " << location.file_name()     << "\n";
-	locationMes << " function: " << location.function_name() << "\n";
-	locationMes << " line:     " << location.line()          << "\n";
+	SxavengerLogger::ExceptionA(label, detail, location);
+}
 
-	Log(std::wstring(L"\nError: Sxavenger Engine assertion\n\n" + locationMes.str()).c_str());
-
-	// detail message
-	std::wostringstream detailMes;
-
-	if (!detail.empty()) {
-		detailMes << "[details]\n";
-		detailMes << " " << detail << "\n";
-
-		Log(detailMes.str());
-		//ExternalLogger::Write(detailMes.str());
+void AssertW(bool expression, const std::wstring& label, const std::wstring& detail, const std::source_location& location) {
+	if (expression) {
+		return;
 	}
 
-	MessageBoxW(
-		NULL,
-		(locationMes.str() + L"\n" + detailMes.str()).c_str(),
-		L"Sxavenger Engine assertion",
-		MB_TASKMODAL | MB_ICONHAND
-	);
-
-	__debugbreak();
+	SxavengerLogger::ExceptionW(label, detail, location);
 }

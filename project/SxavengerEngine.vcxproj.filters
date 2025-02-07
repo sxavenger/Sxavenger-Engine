@@ -169,6 +169,7 @@
     <ClCompile Include="Engine\Adapter\Particle\Emitter\Emitters\PointEmitter.cpp" />
     <ClCompile Include="Engine\!Render\Scene\AmbientProcess\AmbientProcesses\FAmbientProcessAtmosphere.cpp" />
     <ClCompile Include="Engine\!Render\Scene\PostProcess\PostProcesses\FPostProcessVignette.cpp" />
+    <ClCompile Include="Engine\System\Config\SxavengerConfig.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\System\Window\Window.h" />
@@ -204,7 +205,6 @@
     <ClInclude Include="Engine\System\DirectX\DxObject\DxDimensionBuffer.h" />
     <ClInclude Include="Engine\System\DirectX\DxObject\DxRootSignatureDesc.h" />
     <ClInclude Include="Engine\System\Cinfig\SxavengerDirectory.h" />
-    <ClInclude Include="Engine\System\Config\SxavengerDirectory.h" />
     <ClInclude Include="Engine\Content\InputAssembler\InputAssembler.h" />
     <ClInclude Include="Engine\System\DirectX\DxObject\DxBlendState.h" />
     <ClInclude Include="Engine\System\UI\ImGuiController.h" />
@@ -342,6 +342,7 @@
     <ClInclude Include="Engine\Adapter\Particle\Emitter\Emitters\PointEmitter.h" />
     <ClInclude Include="Engine\!Render\Scene\AmbientProcess\AmbientProcesses\FAmbientProcessAtmosphere.h" />
     <ClInclude Include="Engine\!Render\Scene\PostProcess\PostProcesses\FPostProcessVignette.h" />
+    <ClInclude Include="Engine\System\Config\SxavengerConfig.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

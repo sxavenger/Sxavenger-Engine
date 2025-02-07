@@ -11,7 +11,7 @@
 #include <Engine/Editor/Editors/RenderSceneEditor.h>
 
 #include "Engine/!Render/FRenderCore.h"
-#include "Engine/System/Config/SxavengerDirectory.h"
+#include "Engine/System/Config/SxavengerConfig.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // SampleRaytracingGameLoop class methods
