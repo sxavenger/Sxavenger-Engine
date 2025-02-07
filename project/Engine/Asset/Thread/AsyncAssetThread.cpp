@@ -81,10 +81,7 @@ void AsyncAssetThreadCollection::Init() {
 						auto front = tasks_.front();
 						tasks_.pop();
 
-						if (!front.expired()) {
-							thread.task = front.lock();
-							break;
-						}
+						thread.task = front;
 					}
 					
 				}

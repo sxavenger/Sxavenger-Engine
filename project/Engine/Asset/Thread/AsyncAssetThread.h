@@ -83,6 +83,6 @@ private:
 
 	//* task queue *//
 
-	std::queue<std::weak_ptr<BaseAsset>> tasks_;
+	std::queue<std::shared_ptr<BaseAsset>> tasks_;
 
 };
