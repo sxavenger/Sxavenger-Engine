@@ -66,7 +66,7 @@ void AsyncAssetThreadCollection::Init() {
 	for (auto& thread : threads_) {
 		thread.Init();
 		thread.thread = std::thread([this, &thread]() {
-			ThreadLog("[AsyncAssetThread]: Begin.");
+			EngineThreadLog("[AsyncAssetThread]: Begin.");
 
 			while (true) {
 				{ //!< threadの終了またはtaskの取得
@@ -80,6 +80,7 @@ void AsyncAssetThreadCollection::Init() {
 					while (!tasks_.empty()) {
 						auto front = tasks_.front();
 						tasks_.pop();
+						EngineThreadLog("[AsyncAssetThread]: task poped. filepath: " + front->GetFilepath().generic_string());
 
 						thread.task = front;
 					}
@@ -89,7 +90,7 @@ void AsyncAssetThreadCollection::Init() {
 				thread.Execute();
 			}
 
-			ThreadLog("[AsyncAssetThread]: End.");
+			EngineThreadLog("[AsyncAssetThread]: End.");
 		});
 	}
 }
@@ -129,4 +130,6 @@ void AsyncAssetThreadCollection::PushTask(const std::shared_ptr<BaseAsset>& task
 
 	tasks_.push(task);
 	condition_.notify_one();
+
+	EngineLog("[AsyncAssetThread]: task pushed. filepath: " + task->GetFilepath().generic_string());
 }

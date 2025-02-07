@@ -28,7 +28,7 @@ void EditorEngine::Term() {
 }
 
 void EditorEngine::UpdateEditor() {
-#ifndef _RELEASE
+#ifdef _DEVELOPMENT
 	ShowMainMenu();
 	ShowWindow();
 #endif

@@ -6,7 +6,7 @@ _DXOBJECT_USING
 //-----------------------------------------------------------------------------------------
 //* engine
 #include <Engine/System/SxavengerSystem.h>
-#include <Engine/System/Config/SxavengerDirectory.h>
+#include <Engine/System/Config/SxavengerConfig.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // SkinningComputePipeline class methods

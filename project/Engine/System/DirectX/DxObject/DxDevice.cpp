@@ -111,7 +111,7 @@ void Device::CreateDevice() {
 }
 
 void Device::CreateInfoQueue() {
-#ifndef _RELEASE
+#ifdef _DEVELOPMENT
 	// プログラムを停止する機能
 	{
 		if (SUCCEEDED(device_->QueryInterface(IID_PPV_ARGS(&infoQueue_)))) {
@@ -138,7 +138,7 @@ void Device::CreateInfoQueue() {
 			infoQueue_->PushStorageFilter(&filter);
 		}
 	}
-#endif // _DEBUG
+#endif // _DEVELOPMENT
 }
 
 bool Device::CheckShaderModel() {
