@@ -54,45 +54,6 @@ private:
 
 	std::shared_ptr<GameWindow> main_;
 
-	//* test *//
-
-	std::unique_ptr<FSceneTextures> textures_;
-
-	std::unique_ptr<FScene>              scene_;
-	std::unique_ptr<FAmbientProcessSetting> ambientProcess_;
-	std::unique_ptr<FPostProcessSetting> postProcess_;
-
-	std::unique_ptr<FSceneRenderer> renderer_;
-
-	//* camera *//
-
-	std::unique_ptr<ACineCameraActor> camera_;
-
-	//* geometries *//
-
-	std::unique_ptr<AModelActor> model_;
-	std::unique_ptr<AModelActor> model1_;
-
-	//* light *//
-
-	std::unique_ptr<APointLightActor> light_;
-
-	//* post process *//
-
-	std::unique_ptr<FPostProcessDoF> processDoF_;
-	std::unique_ptr<AttributeComponent> doFComponent_;
-
-	std::unique_ptr<FAmbientProcessNLAO> processNLAO_;
-	std::unique_ptr<AttributeComponent> nlaoComponent_;
-
-	std::unique_ptr<FPostProcessBloom> processBloom_;
-	std::unique_ptr<AttributeComponent> bloomComponent_;
-
-	std::unique_ptr<FPostProcessVignette> processVignette_;
-	std::unique_ptr<AttributeComponent> vignetteComponent_;
-
-	FPresenter presenter_;
-
 	//=========================================================================================
 	// private methods
 	//=========================================================================================
