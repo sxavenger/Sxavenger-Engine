@@ -53,6 +53,7 @@ void AsyncAssetThread::Execute() {
 	runtime.Begin();
 
 	task->Load(this);
+	EngineThreadLog(std::format("[AsyncAssetThread]: task finished. filepath: {}, runtime: {}sec", task->GetFilepath().generic_string(), runtime.GetElapsedTime<TimeUnit::second>().time));
 	task = nullptr;
 
 	runtime.End();
@@ -77,7 +78,7 @@ void AsyncAssetThreadCollection::Init() {
 						break; //!< threadの終了 
 					}
 
-					while (!tasks_.empty()) {
+					if (!tasks_.empty()) {
 						auto front = tasks_.front();
 						tasks_.pop();
 						EngineThreadLog("[AsyncAssetThread]: task poped. filepath: " + front->GetFilepath().generic_string());
@@ -131,5 +132,5 @@ void AsyncAssetThreadCollection::PushTask(const std::shared_ptr<BaseAsset>& task
 	tasks_.push(task);
 	condition_.notify_one();
 
-	EngineLog("[AsyncAssetThread]: task pushed. filepath: " + task->GetFilepath().generic_string());
+	EngineLog("[AsyncAssetThreadCollection]: task pushed. filepath: " + task->GetFilepath().generic_string());
 }

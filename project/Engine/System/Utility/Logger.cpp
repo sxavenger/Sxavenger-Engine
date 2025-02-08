@@ -114,11 +114,10 @@ void SxavengerLogger::ExceptionA(const std::string& label, const std::string& de
 #ifdef _OUTPUT_SXAVENGER_LOG_FILE
 	{
 		std::unique_lock<std::mutex> lock(mutex_);
-		TextA("<details><summary> Error </summary>");
+		TextA("> Exception");
 		TextA(locationMes.str());
 		TextA(labelMes.str());
 		TextA(detailMes.str());
-		TextA("</details><summary>");
 	}
 #endif
 
@@ -161,11 +160,10 @@ void SxavengerLogger::ExceptionW(const std::wstring& label, const std::wstring& 
 #ifdef _OUTPUT_SXAVENGER_LOG_FILE
 	{
 		std::unique_lock<std::mutex> lock(mutex_);
-		TextW(L"<details><summary> Error </summary>");
+		TextW(L"> Exception");
 		TextW(locationMes.str());
 		TextW(labelMes.str());
 		TextW(detailMes.str());
-		TextW(L"</details><summary>");
 	}
 #endif
 
