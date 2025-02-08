@@ -132,7 +132,7 @@ inline T* EditorEngine::GetEditor() {
 
 template <BaseEditorDerived T>
 inline T* EditorEngine::TryGetEditor() {
-#ifndef _DEVELOPMENT
+#ifdef _DEVELOPMENT
 	if (editors_.contains(typeid(T))) {
 		return dynamic_cast<T*>(editors_.at(typeid(T)).get());
 	}
