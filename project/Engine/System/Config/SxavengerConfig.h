@@ -11,7 +11,7 @@
 // Version
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-static const std::string kSxavengerEngineVersion = "3.1.1";
+static const std::string kSxavengerEngineVersion = "3.2";
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Directory
@@ -22,4 +22,4 @@ static const std::filesystem::path kPackagesShaderDirectory = kPackagesDirectory
 
 static const std::filesystem::path kAssetsDirectory         = "assets";
 static const std::filesystem::path kAssetsJsonDirectory     = kAssetsDirectory / "json";
-static const std::filesystem::path kAssetsModelDirectory    = kAssetsDirectory / "model";
+static const std::filesystem::path kAssetsModelDirectory    = kAssetsDirectory / "models";

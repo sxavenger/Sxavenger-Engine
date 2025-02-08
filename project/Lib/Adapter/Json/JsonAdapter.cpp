@@ -4,7 +4,7 @@
 // include
 //-----------------------------------------------------------------------------------------
 //* engine
-#include <Engine/System/Config/SxavengerDirectory.h>
+#include <Engine/System/Config/SxavengerConfig.h>
 #include <Engine/System/Utility/Logger.h>
 
 //* c++

@@ -46,7 +46,6 @@ void BetaSystemGameLoop::InitSystem() {
 	main_ = SxavengerSystem::CreateMainWindow(kMainWindowSize, L"beta system window").lock();
 	main_->SetIcon("packages/icon/SxavengerEngineSubIcon.ico", { 32, 32 });
 
-	
 }
 
 void BetaSystemGameLoop::TermSystem() {
