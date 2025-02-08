@@ -10,7 +10,7 @@
 #include <Engine/Editor/Editors/EngineDeveloperEditor.h>
 #include <Engine/Editor/Editors/RenderSceneEditor.h>
 
-#include "Engine/!Render/FRenderCore.h"
+#include "Engine/Render/FRenderCore.h"
 #include "Engine/System/Config/SxavengerConfig.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////////

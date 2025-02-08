@@ -7,7 +7,7 @@ _DXOBJECT_USING
 //* engine
 #include <Engine/System/Config/SxavengerConfig.h>
 #include <Engine/System/SxavengerSystem.h>
-#include <Engine/!Render/Scene/Actor/Camera/ACameraActor.h>
+#include <Engine/Render/Scene/Actor/Camera/ACameraActor.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // BaseDebugPrimitive class methods

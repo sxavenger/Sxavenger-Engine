@@ -5,7 +5,7 @@ _DXOBJECT_USING
 // include
 //-----------------------------------------------------------------------------------------
 //* render
-#include <Engine/!Render/FRenderCore.h>
+#include <Engine/Render/FRenderCore.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // FAmbientProcessNLAO class methods

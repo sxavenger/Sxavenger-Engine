@@ -4,7 +4,7 @@
 // include
 //-----------------------------------------------------------------------------------------
 //* actor
-#include <Engine/!Render/Scene/Actor/Geometry/GeometryActors/AManualGeometryActor.h>
+#include <Engine/Render/Scene/Actor/Geometry/GeometryActors/AManualGeometryActor.h>
 
 //* lib
 #include <Lib/Geometry/Vector2.h>

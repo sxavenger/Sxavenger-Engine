@@ -8,8 +8,8 @@
 #include "../Camera/ACameraActor.h"
 
 //* render
-#include <Engine/!Render/FTexture.h>
-#include <Engine/!Render/FSceneDepth.h>
+#include <Engine/Render/FTexture.h>
+#include <Engine/Render/FSceneDepth.h>
 
 //* engine
 #include <Engine/System/DirectX/DxObject/DxBindBuffer.h>

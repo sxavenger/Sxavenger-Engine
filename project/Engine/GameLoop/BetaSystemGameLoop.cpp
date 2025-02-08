@@ -12,7 +12,7 @@
 #include <Engine/Module/SxavengerModule.h>
 
 
-#include "Engine/!Render/FRenderCore.h"
+#include "Engine/Render/FRenderCore.h"
 #include "Engine/System/Config/SxavengerConfig.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////////

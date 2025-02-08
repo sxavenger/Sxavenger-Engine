@@ -8,7 +8,7 @@
 
 //* engine
 #include <Engine/System/DirectX/DxObject/DxDimensionBuffer.h>
-#include <Engine/!Render/Scene/Actor/Camera/ACameraActor.h>
+#include <Engine/Render/Scene/Actor/Camera/ACameraActor.h>
 
 //* lib
 #include <Lib/Geometry/Vector2.h>
