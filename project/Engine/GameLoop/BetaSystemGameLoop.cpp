@@ -11,9 +11,7 @@
 #include <Engine/Editor/Editors/RenderSceneEditor.h>
 #include <Engine/Module/SxavengerModule.h>
 
-
-#include "Engine/Render/FRenderCore.h"
-#include "Engine/System/Config/SxavengerConfig.h"
+#include <Lib/Sxl/Optional.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // BetaSystemGameLoop class methods
@@ -45,6 +43,8 @@ void BetaSystemGameLoop::InitSystem() {
 
 	main_ = SxavengerSystem::CreateMainWindow(kMainWindowSize, L"beta system window").lock();
 	main_->SetIcon("packages/icon/SxavengerEngineSubIcon.ico", { 32, 32 });
+
+	
 
 }
 

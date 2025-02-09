@@ -345,6 +345,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="Lib\Sxl\OptimizedLowerPathMap.cpp" />
     <ClCompile Include="Lib\Sxl\OptimizedMap.cpp" />
     <ClCompile Include="Lib\Sxl\OptimizedSet.cpp" />
+    <ClCompile Include="Lib\Sxl\Optional.cpp" />
     <ClCompile Include="Lib\Transform\Transform.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
@@ -516,6 +517,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Lib\Sxl\OptimizedLowerPathMap.h" />
     <ClInclude Include="Lib\Sxl\OptimizedMap.h" />
     <ClInclude Include="Lib\Sxl\OptimizedSet.h" />
+    <ClInclude Include="Lib\Sxl\Optional.h" />
     <ClInclude Include="Lib\Sxl\SxavengerLibrary.h" />
     <ClInclude Include="Lib\Transform\Transform.h" />
     <ClInclude Include="Lib\VertexStructure.h" />
