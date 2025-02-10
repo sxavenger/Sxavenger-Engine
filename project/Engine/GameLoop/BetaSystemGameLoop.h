@@ -12,6 +12,9 @@
 #include <Engine/Module/Pipeline/CustomComputePipeline.h>
 #include <Engine/Content/TextureBuffer/UnorderedTexture.h>
 
+#include <Engine/System/DirectX/DirectXAlignment.h>
+#include <Engine/Module/Component/MaterialComponent.h>
+
 ////////////////////////////////////////////////////////////////////////////////////////////
 // BetaSystemGameLoop class
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -37,7 +40,7 @@ private:
 
 	std::unique_ptr<CustomReflectionComputePipeline> pipeline_;
 
-	std::unique_ptr<DxObject::DimensionBuffer<std::pair<Color4f, Color4f>>> buffer_;
+	MaterialComponent material_;
 
 	std::unique_ptr<UnorderedTexture> texture_;
 

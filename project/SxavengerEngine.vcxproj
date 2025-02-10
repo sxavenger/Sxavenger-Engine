@@ -456,6 +456,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Engine\Module\SxavengerModule.h" />
     <ClInclude Include="Engine\System\Cinfig\SxavengerDirectory.h" />
     <ClInclude Include="Engine\System\Config\SxavengerConfig.h" />
+    <ClInclude Include="Engine\System\DirectX\DirectXAlignment.h" />
     <ClInclude Include="Engine\System\DirectX\DirectXCommon.h" />
     <ClInclude Include="Engine\System\DirectX\DirectXContext.h" />
     <ClInclude Include="Engine\System\DirectX\DxObject\DxBindBuffer.h" />

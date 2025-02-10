@@ -349,6 +349,7 @@
     <ClInclude Include="Lib\Sxl\Optional.h" />
     <ClInclude Include="Engine\Module\Component\MaterialComponent.h" />
     <ClInclude Include="Lib\Geometry\Color.h" />
+    <ClInclude Include="Engine\System\DirectX\DirectXAlignment.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

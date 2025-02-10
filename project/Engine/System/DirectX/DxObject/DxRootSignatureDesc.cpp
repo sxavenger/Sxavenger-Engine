@@ -96,6 +96,7 @@ ComPtr<ID3D12RootSignature> BaseRootSignatureDesc::CreateRootSignature(ID3D12Dev
 
 	D3D12_ROOT_SIGNATURE_DESC1 desc = {};
 	desc.Flags = flags;
+	desc.Flags |= D3D12_ROOT_SIGNATURE_FLAG_CBV_SRV_UAV_HEAP_DIRECTLY_INDEXED; //!< 
 
 	if (!params.empty()) {
 		desc.pParameters   = params.data();

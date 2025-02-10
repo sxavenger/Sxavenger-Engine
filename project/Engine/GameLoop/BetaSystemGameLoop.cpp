@@ -50,14 +50,11 @@ void BetaSystemGameLoop::InitSystem() {
 	pipeline_->RegisterBlob();
 	pipeline_->ReflectionPipeline(SxavengerSystem::GetDxDevice());
 
-	buffer_ = std::make_unique<DxObject::DimensionBuffer<std::pair<Color4f, Color4f>>>();
-	buffer_->Create(SxavengerSystem::GetDxDevice(), 1);
-	buffer_->At(0).first = { 1.0f, 0.0f, 0.0f, 1.0f };
-	buffer_->At(0).second = { 1.0f, 1.0f, 0.0f, 1.0f };
-
 	texture_ = std::make_unique<UnorderedTexture>();
 	texture_->Create({ 1, 1 });
 	texture_->TransitionBeginUnordered(SxavengerSystem::GetMainThreadContext());
+
+	material_.Create();
 
 }
 
@@ -72,7 +69,7 @@ void BetaSystemGameLoop::DrawSystem() {
 	pipeline_->SetPipeline(SxavengerSystem::GetMainThreadContext()->GetDxCommand());
 
 	DxObject::BindBufferDesc desc = {};
-	desc.SetAddress("gParameter", buffer_->GetGPUVirtualAddress());
+	desc.SetAddress("gMaterial", material_.GetGPUVirtualAddress());
 	desc.SetHandle("gOutput", texture_->GetGPUHandleUAV());
 
 	pipeline_->BindComputeBuffer(SxavengerSystem::GetMainThreadContext()->GetDxCommand(), desc);
