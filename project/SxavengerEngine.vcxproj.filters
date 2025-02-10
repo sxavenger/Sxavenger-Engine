@@ -171,6 +171,8 @@
     <ClCompile Include="Engine\Render\Scene\PostProcess\PostProcesses\FPostProcessVignette.cpp" />
     <ClCompile Include="Engine\System\Config\SxavengerConfig.cpp" />
     <ClCompile Include="Lib\Sxl\Optional.cpp" />
+    <ClCompile Include="Engine\Module\Component\MaterialComponent.cpp" />
+    <ClCompile Include="Lib\Geometry\Color.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\System\Window\Window.h" />
@@ -345,6 +347,8 @@
     <ClInclude Include="Engine\Render\Scene\PostProcess\PostProcesses\FPostProcessVignette.h" />
     <ClInclude Include="Engine\System\Config\SxavengerConfig.h" />
     <ClInclude Include="Lib\Sxl\Optional.h" />
+    <ClInclude Include="Engine\Module\Component\MaterialComponent.h" />
+    <ClInclude Include="Lib\Geometry\Color.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

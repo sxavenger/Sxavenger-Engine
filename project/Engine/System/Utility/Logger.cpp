@@ -70,6 +70,8 @@ void SxavengerLogger::Init() {
 }
 
 void SxavengerLogger::LogA(const std::string& mes) {
+	std::unique_lock<std::mutex> lock(mutex_);
+
 	OutputA(mes);
 
 #ifdef _OUTPUT_SXAVENGER_LOG_FILE
@@ -78,8 +80,9 @@ void SxavengerLogger::LogA(const std::string& mes) {
 }
 
 void SxavengerLogger::LogW(const std::wstring& log) {
-	OutputDebugStringW(log.c_str());
-	OutputDebugStringW(L"\n");
+	std::unique_lock<std::mutex> lock(mutex_);
+
+	OutputW(log);
 
 #ifdef _OUTPUT_SXAVENGER_LOG_FILE
 	TextW(log);

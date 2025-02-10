@@ -7,10 +7,18 @@
 [Sxavenger Engine] >> [_DXOBJECT]::Device complete init.  
 [Sxavenger Engine] >> [_DXOBJECT]::DescriptorHeaps complete init.  
 [Sxavenger Engine] >> [_DXOBJECT]::ShaderCompiler complete init.  
-[Sxavenger Engine] [thread id: 34524] : [AsyncAssetThread]: Begin.  
-[Sxavenger Engine] [thread id: 34528] : [AsyncAssetThread]: Begin.  
-[Sxavenger Engine] [thread id: 34532] : [AsyncAssetThread]: Begin.  
-[Sxavenger Engine] [thread id: 34536] : [AsyncAssetThread]: Begin.  
+[Sxavenger Engine] [thread id: 20976] : [AsyncAssetThread]: Begin.  
+[Sxavenger Engine] [thread id: 30832] : [AsyncAssetThread]: Begin.  
+[Sxavenger Engine] [thread id: 29680] : [AsyncAssetThread]: Begin.  
+[Sxavenger Engine] [thread id: 13064] : [AsyncAssetThread]: Begin.  
 [Sxavenger Engine] >> [AsyncAssetThreadCollection]: task pushed. filepath: packages/textures/checker_black.png  
-[Sxavenger Engine] [thread id: 34524] : [AsyncAssetThread]: task poped. filepath: packages/textures/checker_black.png  
-[Sxavenger Engine] [thread id: 34524] : [AsyncAssetThread]: task finished. filepath: packages/textures/checker_black.png, runtime: 0.130524sec  
+[Sxavenger Engine] [thread id: 20976] : [AsyncAssetThread]: task poped. filepath: packages/textures/checker_black.png  
+[Sxavenger Engine] [thread id: 20976] : [AsyncAssetThread]: task finished. filepath: packages/textures/checker_black.png, runtime: 0.085737sec  
+[Sxavenger Engine] >> [AsyncAssetThreadCollection]: task pushed. filepath: assets/shaders/test.cs.hlsl  
+[Sxavenger Engine] [thread id: 30832] : [AsyncAssetThread]: task poped. filepath: assets/shaders/test.cs.hlsl  
+[Sxavenger Engine] [thread id: 30832] : [AsyncAssetThread]: task finished. filepath: assets/shaders/test.cs.hlsl, runtime: 0.008254sec  
+[Sxavenger Engine] [thread id: 20976] : [AsyncAssetThread]: End.  
+[Sxavenger Engine] [thread id: 13064] : [AsyncAssetThread]: End.  
+[Sxavenger Engine] [thread id: 30832] : [AsyncAssetThread]: End.  
+[Sxavenger Engine] [thread id: 29680] : [AsyncAssetThread]: End.  
+[GameLoop::Context]: End Loop. ptr: 0x22b67bb37c0  

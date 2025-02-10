@@ -9,9 +9,12 @@
 //* engine
 #include <Engine/System/UI/ISystemDebugGui.h>
 
+//* lib
+#include <Lib/Geometry/Color.h>
+
 //* c++
 #include <unordered_set>
-#include "../../../Lib/Geometry/Vector4.h"
+
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // ColliderCollection class
@@ -51,8 +54,8 @@ private:
 
 	//* paraemter *//
 
-	Color4f activeColor_   = ToColor4f(0xFAFA00FF);
-	Color4f inactiveColor_ = ToColor4f(0x808040FF);
+	Color4f activeColor_   = ToColor4<float>(0xFAFA00FF);
+	Color4f inactiveColor_ = ToColor4<float>(0x808040FF);
 
 	//=========================================================================================
 	// private methods

@@ -189,6 +189,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
   <ItemGroup>
     <ClCompile Include="Demo\Actor\AFloorActor.cpp" />
     <ClCompile Include="Demo\Sample\GameLoop\SampleRaytracingGameLoop.cpp" />
+    <ClCompile Include="Engine\Module\Component\MaterialComponent.cpp" />
     <ClCompile Include="Engine\Render\Canvas\FCanvas.cpp" />
     <ClCompile Include="Engine\Render\Canvas\Layer\Layers\LSprite.cpp" />
     <ClCompile Include="Engine\Render\Canvas\Layer\LLayer.cpp" />
@@ -330,6 +331,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="Lib\Adapter\Json\IJsonSerializer.cpp" />
     <ClCompile Include="Lib\Adapter\Json\JsonAdapter.cpp" />
     <ClCompile Include="Lib\Adapter\Random\Random.cpp" />
+    <ClCompile Include="Lib\Geometry\Color.cpp" />
     <ClCompile Include="Lib\Geometry\MathLib.cpp" />
     <ClCompile Include="Lib\Geometry\Matrix4x4.cpp" />
     <ClCompile Include="Lib\Geometry\Quaternion.cpp" />
@@ -352,6 +354,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
   <ItemGroup>
     <ClInclude Include="Demo\Actor\AFloorActor.h" />
     <ClInclude Include="Demo\Sample\GameLoop\SampleRaytracingGameLoop.h" />
+    <ClInclude Include="Engine\Module\Component\MaterialComponent.h" />
     <ClInclude Include="Engine\Render\Canvas\FCanvas.h" />
     <ClInclude Include="Engine\Render\Canvas\Layer\Layers\LSprite.h" />
     <ClInclude Include="Engine\Render\Canvas\Layer\LLayer.h" />
@@ -501,6 +504,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Lib\Adapter\Random\Random.h" />
     <ClInclude Include="Lib\CXXAttributeConfig.h" />
     <ClInclude Include="Lib\Environment.h" />
+    <ClInclude Include="Lib\Geometry\Color.h" />
     <ClInclude Include="Lib\Geometry\MathLib.h" />
     <ClInclude Include="Lib\Geometry\Matrix4x4.h" />
     <ClInclude Include="Lib\Geometry\Quaternion.h" />

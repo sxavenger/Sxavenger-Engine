@@ -9,7 +9,8 @@
 //* engine
 #include <Engine/System/Window/GameWindow.h>
 #include <Engine/Asset/AssetCollection.h>
-
+#include <Engine/Module/Pipeline/CustomComputePipeline.h>
+#include <Engine/Content/TextureBuffer/UnorderedTexture.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // BetaSystemGameLoop class
@@ -33,6 +34,12 @@ private:
 	//=========================================================================================
 
 	std::shared_ptr<GameWindow> main_;
+
+	std::unique_ptr<CustomReflectionComputePipeline> pipeline_;
+
+	std::unique_ptr<DxObject::DimensionBuffer<std::pair<Color4f, Color4f>>> buffer_;
+
+	std::unique_ptr<UnorderedTexture> texture_;
 
 	//=========================================================================================
 	// private methods

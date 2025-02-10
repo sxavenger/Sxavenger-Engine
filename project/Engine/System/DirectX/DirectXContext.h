@@ -11,6 +11,7 @@
 //* lib
 #include <Lib/Geometry/Vector2.h>
 #include <Lib/Geometry/Vector4.h>
+#include <Lib/Geometry/Color.h>
 
 //* c++
 #include <memory>

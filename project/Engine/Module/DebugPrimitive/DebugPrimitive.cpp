@@ -96,8 +96,8 @@ void DebugPrimitive::DrawLine(const Vector3f& v1, const Vector3f& v2, const Colo
 
 void DebugPrimitive::DrawGrid(const Vector3f& center, float size) {
 	static const float cell    = 1.0f;
-	const Color4f defaultColor = ToColor4f(0x909090FF);
-	const Color4f centerColor  = ToColor4f(0xF2630DFF);
+	const Color4f defaultColor = ToColor4<float>(0x909090FF);
+	const Color4f centerColor  = ToColor4<float>(0xF2630DFF);
 
 	float half = size * 0.5f;
 
@@ -125,9 +125,9 @@ void DebugPrimitive::DrawGrid(const Vector3f& center, float size) {
 }
 
 void DebugPrimitive::DrawAxis(const Vector3f& center, float length) {
-	DrawLine(center, center + Vector3f(length, 0.0f, 0.0f), ToColor4f(0xFA0000FF)); //!< x軸
-	DrawLine(center, center + Vector3f(0.0f, length, 0.0f), ToColor4f(0x00FA00FF)); //!< y軸
-	DrawLine(center, center + Vector3f(0.0f, 0.0f, length), ToColor4f(0x0000FAFF)); //!< z軸
+	DrawLine(center, center + Vector3f(length, 0.0f, 0.0f), ToColor4<float>(0xFA0000FF)); //!< x軸
+	DrawLine(center, center + Vector3f(0.0f, length, 0.0f), ToColor4<float>(0x00FA00FF)); //!< y軸
+	DrawLine(center, center + Vector3f(0.0f, 0.0f, length), ToColor4<float>(0x0000FAFF)); //!< z軸
 }
 
 void DebugPrimitive::DrawBox(const Vector3f& min, const Vector3f& max, const Color4f& color) {

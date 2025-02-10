@@ -176,7 +176,7 @@ inline constexpr Optional<_Type>& Optional<_Type>::operator=(std::nullopt_t) {
 template<class _Type>
 inline void Optional<_Type>::CheckBadAccess() const {
 	if (!HasValue()) {
-		throw std::exception("Optional value is not set.");
+		throw std::runtime_error("Optional value is not set.");
 	}
 }
 
