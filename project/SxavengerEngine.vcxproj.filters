@@ -173,6 +173,7 @@
     <ClCompile Include="Lib\Sxl\Optional.cpp" />
     <ClCompile Include="Engine\Module\Component\MaterialComponent.cpp" />
     <ClCompile Include="Lib\Geometry\Color.cpp" />
+    <ClCompile Include="Engine\Asset\Model\!update\Model.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\System\Window\Window.h" />
@@ -350,6 +351,7 @@
     <ClInclude Include="Engine\Module\Component\MaterialComponent.h" />
     <ClInclude Include="Lib\Geometry\Color.h" />
     <ClInclude Include="Engine\System\DirectX\DirectXAlignment.h" />
+    <ClInclude Include="Engine\Asset\Model\!update\Model.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

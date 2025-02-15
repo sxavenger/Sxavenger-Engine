@@ -189,6 +189,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
   <ItemGroup>
     <ClCompile Include="Demo\Actor\AFloorActor.cpp" />
     <ClCompile Include="Demo\Sample\GameLoop\SampleRaytracingGameLoop.cpp" />
+    <ClCompile Include="Engine\Asset\Model\!update\Model.cpp" />
     <ClCompile Include="Engine\Module\Component\MaterialComponent.cpp" />
     <ClCompile Include="Engine\Render\Canvas\FCanvas.cpp" />
     <ClCompile Include="Engine\Render\Canvas\Layer\Layers\LSprite.cpp" />
@@ -354,6 +355,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
   <ItemGroup>
     <ClInclude Include="Demo\Actor\AFloorActor.h" />
     <ClInclude Include="Demo\Sample\GameLoop\SampleRaytracingGameLoop.h" />
+    <ClInclude Include="Engine\Asset\Model\!update\Model.h" />
     <ClInclude Include="Engine\Module\Component\MaterialComponent.h" />
     <ClInclude Include="Engine\Render\Canvas\FCanvas.h" />
     <ClInclude Include="Engine\Render\Canvas\Layer\Layers\LSprite.h" />

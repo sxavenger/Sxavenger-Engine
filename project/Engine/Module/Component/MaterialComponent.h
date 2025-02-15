@@ -197,4 +197,6 @@ protected:
 
 	std::unique_ptr<DxObject::DimensionBuffer<MaterialBuffer>> buffer_;
 
+	Transparency transparency_ = Transparency::Opaque;
+
 };
