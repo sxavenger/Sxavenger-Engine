@@ -36,7 +36,6 @@ namespace Material {
 			}
 
 			return (float3)0; //!< exception
-
 		}
 	};
 
@@ -92,17 +91,17 @@ namespace Material {
 		// public methods
 		//=========================================================================================
 
-		float3 GetNormal(float3 normal, float2 texcoord = float2(0.0f, 0.0f), SamplerState samplers = defaultSampler) {
+		float3 GetNormal(float3 normal, float2 texcoord = float2(0.0f, 0.0f), SamplerState samplers = defaultSampler, float3x3 tbn = (float3x3)0) {
 			if (type == 0) {
 				return normal;
 				
 			} else if (type == 1) {
 				Texture2D<float4> texture = ResourceDescriptorHeap[index];
-				return texture.Sample(defaultSampler, texcoord.xy).xyz;
+				float3 map = texture.Sample(defaultSampler, texcoord.xy).xyz;
+				return normalize(mul(map * 2.0f - 1.0f, tbn));
 			}
 
 			return (float3)0; //!< exception
-
 		}
 		
 	};

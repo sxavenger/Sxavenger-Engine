@@ -14,10 +14,10 @@ void EngineDeveloperEditor::Init() {
 }
 
 void EngineDeveloperEditor::ShowMainMenu() {
-	if (ImGui::BeginMenu("developer")) {
+	if (ImGui::BeginMenu("develop")) {
 		MenuPadding();
 
-		ImGui::SeparatorText("developer");
+		ImGui::SeparatorText("develop");
 		ShowProcessMenu();
 		ShowSystemMenu();
 		ShowThreadMenu();
