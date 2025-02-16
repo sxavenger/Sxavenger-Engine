@@ -9,6 +9,7 @@
 
 struct DirectionalLight {
 	float4 color_intencity; //!< rgb : color, a : intensity
+	// todo: float4 to float3 and float.
 };
 ConstantBuffer<DirectionalLight> gDirectionalLight : register(b0);
 
@@ -19,15 +20,15 @@ PSOutput main(PSInput input) {
 
 	PSOutput output = (PSOutput)0;
 	
-	//* Deferred Passî•ñ‚Ìæ“¾
+	//* Deferred Passæƒ…å ±ã®å–å¾—
 	Surface surface;
 	surface.GetSurface(input.position.xy);
 	
-	//* Light‚Ìî•ñ‚ğæ“¾
-	float3 l         = -gTransform[input.instanceId].GetDirection();                                //!< surface‚©‚çlight‚Ö‚Ì•ûŒüƒxƒNƒgƒ‹
-	float3 c_light   = gDirectionalLight.color_intencity.rgb * gDirectionalLight.color_intencity.a; //!< light‚Ìcolor
+	//* Lightã®æƒ…å ±ã‚’å–å¾—
+	float3 l         = -gTransform[input.instanceId].GetDirection();                                //!< surfaceã‹ã‚‰lightã¸ã®æ–¹å‘ãƒ™ã‚¯ãƒˆãƒ«
+	float3 c_light   = gDirectionalLight.color_intencity.rgb * gDirectionalLight.color_intencity.a; //!< lightã®color
 	
-	//* ŒvZ
+	//* è¨ˆç®—
 	float diffuse = CalculateDiffuseHalfLambert(surface.normal, l);
 	
 	RayQuery<0> q;
@@ -45,11 +46,11 @@ PSOutput main(PSInput input) {
 		ray
 	);
 	
-	if (q.Proceed()) { //!< Õ“Ë‚µ‚½ê‡
+	if (q.Proceed()) { //!< è¡çªã—ãŸå ´åˆ
 		c_light /= 2.0f;
 	}
 	
-	//* o—Í
+	//* å‡ºåŠ›
 	output.color.rgb = diffuse * c_light * surface.albedo;
 	// func_unlit() = float3(0.0f, 0.0f, 0.0f), func_lit() = c_surface
 	

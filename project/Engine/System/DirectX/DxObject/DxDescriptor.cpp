@@ -30,6 +30,11 @@ const D3D12_GPU_DESCRIPTOR_HANDLE& Descriptor::GetGPUHandle() const {
 	return handles_.second.value();
 }
 
+const uint32_t Descriptor::GetIndex() const {
+	Assert(type_.has_value(), "descriptor type is nullopt.");
+	return index_;
+}
+
 void Descriptor::Reset() {
 	type_  = std::nullopt;
 	index_ = {};

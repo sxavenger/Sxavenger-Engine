@@ -114,6 +114,12 @@ void SxavengerLogger::ExceptionA(const std::string& label, const std::string& de
 		OutputA(detailMes.str());
 	}
 
+	// thread
+	std::ostringstream threadMes;
+	threadMes << "[thread]" << "  \n";
+	threadMes << " id: " << std::this_thread::get_id() << "\n";
+	OutputA(threadMes.str());
+
 #ifdef _OUTPUT_SXAVENGER_LOG_FILE
 	{
 		std::unique_lock<std::mutex> lock(mutex_);
@@ -121,6 +127,7 @@ void SxavengerLogger::ExceptionA(const std::string& label, const std::string& de
 		TextA(locationMes.str());
 		TextA(labelMes.str());
 		TextA(detailMes.str());
+		TextA(threadMes.str());
 	}
 #endif
 
@@ -160,6 +167,12 @@ void SxavengerLogger::ExceptionW(const std::wstring& label, const std::wstring& 
 		OutputW(detailMes.str());
 	}
 
+	// thread
+	std::wostringstream threadMes;
+	threadMes << "[thread]" << "  \n";
+	threadMes << " id: " << std::this_thread::get_id() << "\n";
+	OutputW(threadMes.str());
+
 #ifdef _OUTPUT_SXAVENGER_LOG_FILE
 	{
 		std::unique_lock<std::mutex> lock(mutex_);
@@ -167,6 +180,7 @@ void SxavengerLogger::ExceptionW(const std::wstring& label, const std::wstring& 
 		TextW(locationMes.str());
 		TextW(labelMes.str());
 		TextW(detailMes.str());
+		TextW(threadMes.str());
 	}
 #endif
 
@@ -193,12 +207,12 @@ void SxavengerLogger::OutputW(const std::wstring& mes) {
 
 void SxavengerLogger::TextA(const std::string& mes) {
 	std::ofstream file(filepath_, mode_);
-	file << mes << "  " << "\n";
+	file << mes << "\n";
 }
 
 void SxavengerLogger::TextW(const std::wstring& mes) {
 	std::wofstream file(filepath_, mode_);
-	file << mes << "  " << "\n";
+	file << mes << "\n";
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -225,13 +239,13 @@ void EngineLog(const std::wstring& log) {
 
 void EngineThreadLog(const std::string& log) {
 	std::ostringstream tag;
-	tag << "[Sxavenger Engine] [thread id: " << std::this_thread::get_id() << "] : ";
+	tag << "[Sxavenger Engine] [thread id: " << std::this_thread::get_id() << "] >> ";
 	SxavengerLogger::LogA(tag.str() + log);
 }
 
 void EngineThreadLog(const std::wstring& log) {
 	std::wostringstream tag;
-	tag << "[Sxavenger Engine] [thread id: " << std::this_thread::get_id() << "] : ";
+	tag << L"[Sxavenger Engine] [thread id: " << std::this_thread::get_id() << L"] >> ";
 	SxavengerLogger::LogW(tag.str() + log);
 }
 

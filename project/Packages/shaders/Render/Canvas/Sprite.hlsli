@@ -3,7 +3,8 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
-#include "../Component.hlsli"
+#include "../Component/TextureComponent.hlsli"
+#include "../Component/Transform2dComponent.hlsli"
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Input / Output structure
@@ -32,25 +33,11 @@ struct PSOutput {
 Texture2D<float4> gTexture : register(t10);
 SamplerState gSampler      : register(s10);
 
-struct TransformationMatrix2d {
-
-	//* member *//
-	
-	float4x4 mat;
-
-	//* methods *//
-	
-	float2 Trasnform(float2 position) {
-		return mul(float4(position, 0.0f, 1.0f), mat).xy;
-	}
-	
-};
-ConstantBuffer<TransformationMatrix2d> gTransform : register(b10);
-
 struct Parameter {
 	uint2 size;
 };
-ConstantBuffer<Parameter> gParameter : register(b11);
+ConstantBuffer<Parameter> gParameter : register(b10);
 
+ConstantBuffer<Transform2dComponent> gTransform2d  : register(b11);
 ConstantBuffer<TextureComponent> gTextureComponent : register(b12);
 

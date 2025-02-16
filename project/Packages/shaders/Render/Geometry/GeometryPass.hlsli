@@ -6,8 +6,10 @@
 #include "GeometryVertex.hlsli"
 #include "GeometryRenderTarget.hlsli"
 #include "../../Camera.hlsli"
-#include "../../Transform.hlsli"
-#include "../Component.hlsli"
+
+#include "../Component/TransformComponent.hlsli"
+#include "../Component/Transform2dComponent.hlsli"
+#include "../Component/MaterialComponent.hlsli"
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // intermediate structure
@@ -36,7 +38,5 @@ float3x3 GetTangentSpaceMatrix(float3 normal, float3 tangent, float3 bitangent) 
 
 ConstantBuffer<Camera> gCamera : register(b10);
 static const float4x4 kViewProj = gCamera.GetViewProj();
-
-ConstantBuffer<TextureComponent> gTextureComponent : register(b11);
 
 

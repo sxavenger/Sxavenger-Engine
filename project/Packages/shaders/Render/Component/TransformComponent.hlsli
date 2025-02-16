@@ -1,11 +1,20 @@
 #pragma once
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// TransformationMatrix sturcture
+// TransformComponent sturcture
 ////////////////////////////////////////////////////////////////////////////////////////////
-struct TransformationMatrix {
+struct TransformComponent {
+
+	//=========================================================================================
+	// public variables
+	//=========================================================================================
+	
 	float4x4 mat;
 	float4x4 matInverseTransopse;
+
+	//=========================================================================================
+	// public methods
+	//=========================================================================================
 
 	float4 Transform(float4 position) {
 		return mul(position, mat);
@@ -20,9 +29,8 @@ struct TransformationMatrix {
 	}
 
 	float3 GetDirection() {
-		static const float3 forward = float3(0.0f, 0.0f, -1.0f);
+		static const float3 forward = float3(0.0f, 0.0f, 1.0f);
 		return mul(forward, (float3x3)mat);
 	}
 	
 };
-

@@ -8,6 +8,7 @@
 #include <Engine/System/DirectX/DirectXAlignment.h>
 
 //* lib
+#include <Lib/Traits.h>
 #include <Lib/Geometry/Color.h>
 
 //* c++
@@ -22,12 +23,15 @@ public:
 	////////////////////////////////////////////////////////////////////////////////////////////
 	// enum class State
 	////////////////////////////////////////////////////////////////////////////////////////////
-	enum class Transparency : uint32_t {
+	enum class BlendMode : uint8_t {
+		//* 不透明
 		Opaque,
-		Transparent,
+
+		//* 半透明
+		Translucent,
 	};
 
-	_BEGIN_GPU_BUFFER_ALIGNAS
+	_PUSH_GPU_BUFFER_ALIGNAS
 
 	////////////////////////////////////////////////////////////////////////////////////////////
 	// Albedo structure
@@ -69,9 +73,9 @@ public:
 	};
 
 	////////////////////////////////////////////////////////////////////////////////////////////
-	// Opacity structure
+	// Transparency structure
 	////////////////////////////////////////////////////////////////////////////////////////////
-	struct _GPU_BUFFER_ALIGNAS Opacity {
+	struct _GPU_BUFFER_ALIGNAS Transparency {
 	public:
 
 		////////////////////////////////////////////////////////////////////////////////////////////
@@ -163,13 +167,13 @@ public:
 		//=========================================================================================
 
 		Albedo       albedo;
-		Opacity      opacity;
+		Transparency transparency;
 		Normal       normal;
 
 	};
 	// todo: 各parameterをprivateにする
 
-	_END_GPU_BUFFER_ALIGNAS
+	_POP_GPU_BUFFER_ALIGNAS
 
 public:
 
@@ -182,12 +186,16 @@ public:
 
 	void Create();
 
-	const D3D12_GPU_VIRTUAL_ADDRESS& GetGPUVirtualAddress() const;
-
 	//* getter *//
+
+	const D3D12_GPU_VIRTUAL_ADDRESS& GetGPUVirtualAddress() const;
 
 	const MaterialBuffer& GetMaterial() const;
 	MaterialBuffer& GetMaterial();
+
+	const BlendMode GetBlendMode() const { return mode_; }
+
+	_DEFAULT_MOVE(MaterialComponent)
 
 protected:
 
@@ -197,6 +205,6 @@ protected:
 
 	std::unique_ptr<DxObject::DimensionBuffer<MaterialBuffer>> buffer_;
 
-	Transparency transparency_ = Transparency::Opaque;
+	BlendMode mode_ = BlendMode::Opaque;
 
 };

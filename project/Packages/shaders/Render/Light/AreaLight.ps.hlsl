@@ -21,4 +21,6 @@ ConstantBuffer<AreaLight> gSpotLight : register(b0);
 PSOutput main(PSInput input) {
 
 	PSOutput output = (PSOutput)0;
+
+	// todo
 }

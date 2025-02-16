@@ -36,6 +36,8 @@ public:
 
 	const D3D12_GPU_DESCRIPTOR_HANDLE& GetGPUHandleSRV() const { return descriptorSRV_.GetGPUHandle(); }
 
+	const DxObject::Descriptor& GetDescriptorSRV() const { return descriptorSRV_; }
+
 	const Vector2ui& GetSize() const { return size_; }
 
 	const DXGI_FORMAT GetFormat() const { return format_; }

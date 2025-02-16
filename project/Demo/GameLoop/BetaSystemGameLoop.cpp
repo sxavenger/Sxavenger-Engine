@@ -42,20 +42,45 @@ void BetaSystemGameLoop::Term() {
 
 void BetaSystemGameLoop::InitSystem() {
 
-	main_ = SxavengerSystem::CreateMainWindow(kMainWindowSize, L"beta system window").lock();
+	main_ = SxavengerSystem::CreateMainWindow(kMainWindowSize, L"sxavenger engine beta window").lock();
 	main_->SetIcon("packages/icon/SxavengerEngineSubIcon.ico", { 32, 32 });
 
-	pipeline_ = std::make_unique<CustomReflectionComputePipeline>();
-	pipeline_->CreateAsset(kAssetsDirectory / "shaders/test.cs.hlsl");
-	pipeline_->RegisterBlob();
-	pipeline_->ReflectionPipeline(SxavengerSystem::GetDxDevice());
+	// vvv render system vvv //
 
-	texture_ = std::make_unique<UnorderedTexture>();
-	texture_->Create({ 1, 1 });
-	texture_->TransitionBeginUnordered(SxavengerSystem::GetMainThreadContext());
+	presenter_.Init();
 
-	material_.Create();
+	textures_ = std::make_unique<FSceneTextures>();
+	textures_->Create(main_->GetSize());
 
+	renderer_ = std::make_unique<FSceneRenderer>();
+	renderer_->SetTextures(textures_.get());
+
+	scene_ = std::make_unique<FScene>();
+	renderer_->SetScene(scene_.get());
+
+	// vvv actors vvv //
+
+	camera_ = std::make_unique<ACineCameraActor>();
+	camera_->Init();
+
+	renderer_->SetCamera(camera_.get());
+
+	model_ = std::make_unique<AModelActor>();
+	model_->Init();
+	model_->SetModel(SxavengerAsset::TryImport<AssetModel>("assets/models/primitive/cube.obj"));
+
+	scene_->AddGeometry(model_.get());
+
+	light_ = std::make_unique<ADirectionalLightActor>();
+	light_->Init();
+
+	scene_->AddLight(light_.get());
+
+	//* editor *//
+
+	sEditorEngine->ExecuteEditorFunction<RenderSceneEditor>([this](RenderSceneEditor* editor) {
+		editor->SetGameRenderer(renderer_.get());
+	});
 }
 
 void BetaSystemGameLoop::TermSystem() {
@@ -66,17 +91,16 @@ void BetaSystemGameLoop::UpdateSystem() {
 
 void BetaSystemGameLoop::DrawSystem() {
 
-	pipeline_->SetPipeline(SxavengerSystem::GetMainThreadContext()->GetDxCommand());
+	renderer_->Render(SxavengerSystem::GetMainThreadContext());
 
-	DxObject::BindBufferDesc desc = {};
-	desc.SetAddress("gMaterial", material_.GetGPUVirtualAddress());
-	desc.SetHandle("gOutput", texture_->GetGPUHandleUAV());
-
-	pipeline_->BindComputeBuffer(SxavengerSystem::GetMainThreadContext()->GetDxCommand(), desc);
-	pipeline_->Dispatch(SxavengerSystem::GetMainThreadContext()->GetDxCommand(), { 1, 1, 1 });
+	sEditorEngine->ExecuteEditorFunction<RenderSceneEditor>([](RenderSceneEditor* editor) {
+		editor->Draw();
+	});
 
 	main_->BeginRendering();
 	main_->ClearWindow();
+
+	presenter_.Present(SxavengerSystem::GetMainThreadContext(), main_->GetSize(), textures_->GetGBuffer(FSceneTextures::GBufferLayout::Main)->GetGPUHandleSRV());
 
 	SxavengerSystem::RenderImGui();
 

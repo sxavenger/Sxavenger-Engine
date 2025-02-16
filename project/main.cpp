@@ -8,7 +8,7 @@
 //* loops
 #include <Engine/GameLoop/EngineGameLoop.h>
 #include <Engine/GameLoop/EditorEngineGameLoop.h>
-#include <Engine/GameLoop/BetaSystemGameLoop.h>
+#include <Demo/GameLoop/BetaSystemGameLoop.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // メイン関数

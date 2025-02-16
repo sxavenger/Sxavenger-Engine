@@ -79,10 +79,9 @@
     <ClCompile Include="Engine\Render\Scene\Actor\Geometry\AGeometryActor.cpp" />
     <ClCompile Include="Engine\System\DirectX\DxrObject\DxrAccelerationStructure.cpp" />
     <ClCompile Include="Engine\System\DirectX\DxrObject\DxrObjectCommon.cpp" />
-    <ClCompile Include="Engine\GameLoop\BetaSystemGameLoop.cpp" />
+    <ClCompile Include="Demo\GameLoop\BetaSystemGameLoop.cpp" />
     <ClCompile Include="Engine\Render\Scene\Actor\Geometry\GeometryActors\AModelActor.cpp" />
     <ClCompile Include="Engine\Asset\Texture\Texture.cpp" />
-    <ClCompile Include="Engine\Asset\Model\Model.cpp" />
     <ClCompile Include="Engine\Content\Animation\Animation.cpp" />
     <ClCompile Include="Engine\Asset\BaseAsset.cpp" />
     <ClCompile Include="Engine\Asset\Animator\Animator.cpp" />
@@ -105,7 +104,7 @@
     <ClCompile Include="Engine\System\Runtime\Performance\RunTimeTracker.cpp" />
     <ClCompile Include="Engine\System\Runtime\Performance\TimePoint.cpp" />
     <ClCompile Include="Engine\Asset\SxavengerAsset.cpp" />
-    <ClCompile Include="Engine\Module\Component\TransformComponent.cpp" />
+    <ClCompile Include="Engine\Content\Component\TransformComponent.cpp" />
     <ClCompile Include="Engine\Render\Scene\Actor\Camera\ACameraActor.cpp" />
     <ClCompile Include="Engine\Render\Scene\Actor\Camera\CameraActors\ACineCameraActor.cpp" />
     <ClCompile Include="Engine\Render\FRenderCore.cpp" />
@@ -129,19 +128,15 @@
     <ClCompile Include="Engine\Render\Core\FRenderCoreLight.cpp" />
     <ClCompile Include="Engine\Render\Scene\Actor\Light\LightActors\ADirectionalLightActor.cpp" />
     <ClCompile Include="Engine\Render\Scene\Actor\Light\LightActors\ASpotLightActor.cpp" />
-    <ClCompile Include="Engine\Render\Scene\Actor\Geometry\GeometryActors\AManualGeometryActor.cpp" />
     <ClCompile Include="Lib\Sxl\Holder.cpp" />
-    <ClCompile Include="Demo\Actor\AFloorActor.cpp" />
-    <ClCompile Include="Engine\Module\Component\TextureComponent.cpp" />
+    <ClCompile Include="Engine\Content\Component\TextureComponent.cpp" />
     <ClCompile Include="Lib\Sxl\Flag.cpp" />
     <ClCompile Include="Engine\Render\Core\FRenderCoreRaytracing.cpp" />
     <ClCompile Include="Engine\Render\Canvas\FCanvas.cpp" />
-    <ClCompile Include="Engine\Render\Scene\Actor\Geometry\GeometryActors\AModelInstanceActor.cpp" />
     <ClCompile Include="Engine\Render\Canvas\Layer\LLayer.cpp" />
     <ClCompile Include="Engine\Render\Canvas\Layer\Layers\LSprite.cpp" />
-    <ClCompile Include="Engine\Module\Component\Transform2dComponent.cpp" />
+    <ClCompile Include="Engine\Content\Component\Transform2dComponent.cpp" />
     <ClCompile Include="Engine\Render\Core\FRenderCoreLayer.cpp" />
-    <ClCompile Include="Engine\Render\Scene\Actor\Geometry\GeometryActors\AModelAnimationActor.cpp" />
     <ClCompile Include="Engine\Editor\Editors\OutlinerEditor.cpp" />
     <ClCompile Include="Engine\Editor\EditorComponent\AttributeComponent.cpp" />
     <ClCompile Include="Engine\Module\DebugPrimitive\DebugPrimitive.cpp" />
@@ -149,7 +144,6 @@
     <ClCompile Include="Engine\Adapter\Scene\BaseSceneFactory.cpp" />
     <ClCompile Include="Engine\Adapter\Scene\SceneController.cpp" />
     <ClCompile Include="Engine\Render\FPresenter.cpp" />
-    <ClCompile Include="Demo\Sample\GameLoop\SampleRaytracingGameLoop.cpp" />
     <ClCompile Include="Engine\Render\Scene\FPostProcessSetting.cpp" />
     <ClCompile Include="Engine\Render\Scene\PostProcess\FPostProcess.cpp" />
     <ClCompile Include="Engine\Render\Scene\PostProcess\FPostProcessTextures.cpp" />
@@ -165,15 +159,13 @@
     <ClCompile Include="Engine\Render\Scene\AmbientProcess\FAmbientProcess.cpp" />
     <ClCompile Include="Engine\Render\Scene\AmbientProcess\AmbientProcesses\FAmbientProcessNLAO.cpp" />
     <ClCompile Include="Engine\Render\Scene\PostProcess\PostProcesses\FPostProcessBloom.cpp" />
-    <ClCompile Include="Engine\Adapter\Particle\Emitter\Emitter.cpp" />
-    <ClCompile Include="Engine\Adapter\Particle\Emitter\Emitters\PointEmitter.cpp" />
     <ClCompile Include="Engine\Render\Scene\AmbientProcess\AmbientProcesses\FAmbientProcessAtmosphere.cpp" />
     <ClCompile Include="Engine\Render\Scene\PostProcess\PostProcesses\FPostProcessVignette.cpp" />
     <ClCompile Include="Engine\System\Config\SxavengerConfig.cpp" />
     <ClCompile Include="Lib\Sxl\Optional.cpp" />
-    <ClCompile Include="Engine\Module\Component\MaterialComponent.cpp" />
+    <ClCompile Include="Engine\Content\Component\MaterialComponent.cpp" />
     <ClCompile Include="Lib\Geometry\Color.cpp" />
-    <ClCompile Include="Engine\Asset\Model\!update\Model.cpp" />
+    <ClCompile Include="Engine\Asset\Model\Model.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\System\Window\Window.h" />
@@ -254,10 +246,9 @@
     <ClInclude Include="Engine\Render\Scene\Actor\Geometry\AGeometryActor.h" />
     <ClInclude Include="Engine\System\DirectX\DxrObject\DxrAccelerationStructure.h" />
     <ClInclude Include="Engine\System\DirectX\DxrObject\DxrObjectCommon.h" />
-    <ClInclude Include="Engine\GameLoop\BetaSystemGameLoop.h" />
+    <ClInclude Include="Demo\GameLoop\BetaSystemGameLoop.h" />
     <ClInclude Include="Engine\Render\Scene\Actor\Geometry\GeometryActors\AModelActor.h" />
     <ClInclude Include="Engine\Asset\Texture\Texture.h" />
-    <ClInclude Include="Engine\Asset\Model\Model.h" />
     <ClInclude Include="Engine\Content\Animation\JointWeight.h" />
     <ClInclude Include="Engine\Content\Animation\Animation.h" />
     <ClInclude Include="Engine\Content\Animation\BornNode.h" />
@@ -282,7 +273,7 @@
     <ClInclude Include="Engine\System\Runtime\Performance\RunTimeTracker.h" />
     <ClInclude Include="Engine\System\Runtime\Performance\TimePoint.h" />
     <ClInclude Include="Engine\Asset\SxavengerAsset.h" />
-    <ClInclude Include="Engine\Module\Component\TransformComponent.h" />
+    <ClInclude Include="Engine\Content\Component\TransformComponent.h" />
     <ClInclude Include="Engine\Render\Scene\Actor\Camera\ACameraActor.h" />
     <ClInclude Include="Engine\Render\Scene\Actor\Camera\CameraActors\ACineCameraActor.h" />
     <ClInclude Include="Engine\Render\FRenderCore.h" />
@@ -306,19 +297,15 @@
     <ClInclude Include="Engine\Render\Core\FRenderCoreLight.h" />
     <ClInclude Include="Engine\Render\Scene\Actor\Light\LightActors\ADirectionalLightActor.h" />
     <ClInclude Include="Engine\Render\Scene\Actor\Light\LightActors\ASpotLightActor.h" />
-    <ClInclude Include="Engine\Render\Scene\Actor\Geometry\GeometryActors\AManualGeometryActor.h" />
     <ClInclude Include="Lib\Sxl\Holder.h" />
-    <ClInclude Include="Demo\Actor\AFloorActor.h" />
-    <ClInclude Include="Engine\Module\Component\TextureComponent.h" />
+    <ClInclude Include="Engine\Content\Component\TextureComponent.h" />
     <ClInclude Include="Lib\Sxl\Flag.h" />
     <ClInclude Include="Engine\Render\Core\FRenderCoreRaytracing.h" />
     <ClInclude Include="Engine\Render\Canvas\FCanvas.h" />
-    <ClInclude Include="Engine\Render\Scene\Actor\Geometry\GeometryActors\AModelInstanceActor.h" />
     <ClInclude Include="Engine\Render\Canvas\Layer\LLayer.h" />
     <ClInclude Include="Engine\Render\Canvas\Layer\Layers\LSprite.h" />
-    <ClInclude Include="Engine\Module\Component\Transform2dComponent.h" />
+    <ClInclude Include="Engine\Content\Component\Transform2dComponent.h" />
     <ClInclude Include="Engine\Render\Core\FRenderCoreLayer.h" />
-    <ClInclude Include="Engine\Render\Scene\Actor\Geometry\GeometryActors\AModelAnimationActor.h" />
     <ClInclude Include="Engine\Editor\Editors\OutlinerEditor.h" />
     <ClInclude Include="Engine\Editor\EditorComponent\AttributeComponent.h" />
     <ClInclude Include="Engine\Module\DebugPrimitive\DebugPrimitive.h" />
@@ -326,7 +313,6 @@
     <ClInclude Include="Engine\Adapter\Scene\BaseSceneFactory.h" />
     <ClInclude Include="Engine\Adapter\Scene\SceneController.h" />
     <ClInclude Include="Engine\Render\FPresenter.h" />
-    <ClInclude Include="Demo\Sample\GameLoop\SampleRaytracingGameLoop.h" />
     <ClInclude Include="Engine\Render\Scene\FPostProcessSetting.h" />
     <ClInclude Include="Engine\Render\Scene\PostProcess\FPostProcess.h" />
     <ClInclude Include="Engine\Render\Scene\PostProcess\FPostProcessTextures.h" />
@@ -342,16 +328,15 @@
     <ClInclude Include="Engine\Render\Scene\AmbientProcess\FAmbientProcess.h" />
     <ClInclude Include="Engine\Render\Scene\AmbientProcess\AmbientProcesses\FAmbientProcessNLAO.h" />
     <ClInclude Include="Engine\Render\Scene\PostProcess\PostProcesses\FPostProcessBloom.h" />
-    <ClInclude Include="Engine\Adapter\Particle\Emitter\Emitter.h" />
-    <ClInclude Include="Engine\Adapter\Particle\Emitter\Emitters\PointEmitter.h" />
     <ClInclude Include="Engine\Render\Scene\AmbientProcess\AmbientProcesses\FAmbientProcessAtmosphere.h" />
     <ClInclude Include="Engine\Render\Scene\PostProcess\PostProcesses\FPostProcessVignette.h" />
     <ClInclude Include="Engine\System\Config\SxavengerConfig.h" />
     <ClInclude Include="Lib\Sxl\Optional.h" />
-    <ClInclude Include="Engine\Module\Component\MaterialComponent.h" />
+    <ClInclude Include="Engine\Content\Component\MaterialComponent.h" />
     <ClInclude Include="Lib\Geometry\Color.h" />
     <ClInclude Include="Engine\System\DirectX\DirectXAlignment.h" />
-    <ClInclude Include="Engine\Asset\Model\!update\Model.h" />
+    <ClInclude Include="Engine\Asset\Model\Model.h" />
+    <ClInclude Include="Lib\Traits.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

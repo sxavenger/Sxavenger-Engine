@@ -9,6 +9,7 @@
 #include <Engine/Content/SxavengerContent.h>
 #include <Engine/Module/SxavengerModule.h>
 #include <Engine/System/Config/SxavengerConfig.h>
+#include <Engine/Render/FRenderCore.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // EngineGameLoop class methods
@@ -44,6 +45,8 @@ void EngineGameLoop::Init(GameLoop::Context* context) {
 
 				SxavengerContent::RegisterTexture("white1x1", std::move(white1x1));
 			}
+
+			FRenderCore::GetInstance()->Init();
 		}
 	);
 
@@ -55,6 +58,8 @@ void EngineGameLoop::Init(GameLoop::Context* context) {
 
 	context->SetState(
 		GameLoop::State::Term, std::nullopt, [this]() {
+			FRenderCore::GetInstance()->Term();
+
 			SxavengerModule::Term();
 			SxavengerContent::Term();
 			SxavengerAsset::Term();

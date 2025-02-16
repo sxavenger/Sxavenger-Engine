@@ -4,6 +4,7 @@
 // include
 //-----------------------------------------------------------------------------------------
 //* system
+#include "Config/SxavengerConfig.h"
 #include "WinApp/WinApp.h"
 #include "DirectX/DirectXCommon.h"
 #include "DirectX/DirectXContext.h"
@@ -105,12 +106,6 @@ public:
 	static void RenderImGui(DirectXThreadContext* context = GetMainThreadContext());
 
 	static ImGuiController* GetImGuiController();
-
-	//=========================================================================================
-	// public variables
-	//=========================================================================================
-
-	static const std::string kEngineVersion;
 
 private:
 };

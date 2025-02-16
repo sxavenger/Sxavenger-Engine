@@ -28,9 +28,7 @@ public:
 
 	//* render *//
 
-	virtual void RenderOpaque(const RendererContext& context) override;
-
-	virtual void RenderTransparent(const RendererContext& context) override;
+	virtual void Render(const RendererContext& context) override;
 
 	//* raytracing option *//
 
@@ -55,5 +53,12 @@ protected:
 	//* option *//
 
 	bool isRenderWait_ = true;
+
+	//=========================================================================================
+	// protected methods
+	//=========================================================================================
+
+	virtual void RenderOpaque(const RendererContext& context, const DxObject::BindBufferDesc& parameter);
+	virtual void RenderTranslucent(const RendererContext& context, const DxObject::BindBufferDesc& parameter);
 
 };

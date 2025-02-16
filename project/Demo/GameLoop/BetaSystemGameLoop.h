@@ -8,12 +8,13 @@
 
 //* engine
 #include <Engine/System/Window/GameWindow.h>
-#include <Engine/Asset/AssetCollection.h>
-#include <Engine/Module/Pipeline/CustomComputePipeline.h>
-#include <Engine/Content/TextureBuffer/UnorderedTexture.h>
-
-#include <Engine/System/DirectX/DirectXAlignment.h>
-#include <Engine/Module/Component/MaterialComponent.h>
+#include <Engine/Render/FPresenter.h>
+#include <Engine/Render/FSceneTextures.h>
+#include <Engine/Render/Scene/FSceneRenderer.h>
+#include <Engine/Render/Scene/FScene.h>
+#include <Engine/Render/Scene/Actor/Camera/CameraActors/ACineCameraActor.h>
+#include <Engine/Render/Scene/Actor/Geometry/GeometryActors/AModelActor.h>
+#include <Engine/Render/Scene/Actor/Light/LightActors/ADirectionalLightActor.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // BetaSystemGameLoop class
@@ -38,11 +39,22 @@ private:
 
 	std::shared_ptr<GameWindow> main_;
 
-	std::unique_ptr<CustomReflectionComputePipeline> pipeline_;
+	// vvv render system vvv //
 
-	MaterialComponent material_;
+	FPresenter presenter_;
 
-	std::unique_ptr<UnorderedTexture> texture_;
+	std::unique_ptr<FSceneTextures> textures_;
+	std::unique_ptr<FSceneRenderer> renderer_;
+
+	std::unique_ptr<FScene> scene_;
+
+	// vvv actors vvv //
+
+	std::unique_ptr<ACineCameraActor> camera_;
+
+	std::unique_ptr<AModelActor> model_;
+
+	std::unique_ptr<ADirectionalLightActor> light_;
 
 	//=========================================================================================
 	// private methods

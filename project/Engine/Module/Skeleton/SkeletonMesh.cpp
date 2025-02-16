@@ -39,8 +39,8 @@ void SkeletonMesh::CreateBottomLevelAS(const DirectXThreadContext* context) {
 		desc.Triangles.VertexBuffer.StrideInBytes = skinnedVertex_[i]->GetStride();
 		desc.Triangles.VertexCount                = skinnedVertex_[i]->GetSize();
 		desc.Triangles.VertexFormat               = DXGI_FORMAT_R32G32B32_FLOAT;
-		desc.Triangles.IndexBuffer                = model_->GetInputMesh(i).GetIndex()->GetGPUVirtualAddress();
-		desc.Triangles.IndexCount                 = model_->GetInputMesh(i).GetIndex()->GetIndexCount();
+		desc.Triangles.IndexBuffer                = model_->GetMesh(i).input.GetIndex()->GetGPUVirtualAddress();
+		desc.Triangles.IndexCount                 = model_->GetMesh(i).input.GetIndex()->GetIndexCount();
 		desc.Triangles.IndexFormat                = DXGI_FORMAT_R32_UINT;
 
 		bottomLevelASs_[i].Build(SxavengerSystem::GetDxDevice(), context->GetDxCommand(), desc);
@@ -84,7 +84,7 @@ void SkeletonMesh::SetIABuffer(const DirectXThreadContext* context, uint32_t mes
 	auto commandList = context->GetCommandList();
 
 	D3D12_VERTEX_BUFFER_VIEW vbv = skinnedVertex_[meshIndex]->GetVertexBufferView();
-	D3D12_INDEX_BUFFER_VIEW  ibv = model_->GetInputMesh(meshIndex).GetIndex()->GetIndexBufferView();
+	D3D12_INDEX_BUFFER_VIEW  ibv = model_->GetMesh(meshIndex).input.GetIndex()->GetIndexBufferView();
 
 	commandList->IASetVertexBuffers(0, 1, &vbv);
 	commandList->IASetIndexBuffer(&ibv);
@@ -95,7 +95,7 @@ void SkeletonMesh::DrawCall(const DirectXThreadContext* context, uint32_t meshIn
 }
 
 void SkeletonMesh::CreateSkeleton() {
-	skeleton_.Create(model_->GetRootNode());
+	skeleton_.Create(model_->GetRoot());
 }
 
 void SkeletonMesh::CreateSkinCluster() {
@@ -104,7 +104,7 @@ void SkeletonMesh::CreateSkinCluster() {
 
 	for (uint32_t i = 0; i < skinClusters_.size(); ++i) {
 
-		const uint32_t kVertexSize = model_->GetMeshData(i).mesh.GetVertex()->GetSize();
+		const uint32_t kVertexSize = model_->GetMesh(i).input.GetVertex()->GetSize();
 
 		SkinCluster& skinCluster = skinClusters_[i];
 
@@ -129,7 +129,7 @@ void SkeletonMesh::CreateSkinCluster() {
 		std::generate(skinCluster.inverseBindPoseMatrices.begin(), skinCluster.inverseBindPoseMatrices.end(), Matrix4x4::Identity);
 
 
-		for (const auto& jointWeight : model_->GetMeshData(i).jointWeights) {
+		for (const auto& jointWeight : model_->GetMesh(i).jointWeights) {
 			if (!skeleton_.jointMap.contains(jointWeight.first)) {
 				continue; //!< この名前のJointは存在しない
 			}
@@ -162,7 +162,7 @@ void SkeletonMesh::CreateSkinnedVertex() {
 
 	for (uint32_t i = 0; i < model_->GetMeshSize(); ++i) {
 		skinnedVertex_[i] = std::make_unique<VertexUnorderedDimensionBuffer<MeshVertexData>>();
-		skinnedVertex_[i]->Create(SxavengerSystem::GetDxDevice(), model_->GetInputMesh(i).GetVertex()->GetSize());
+		skinnedVertex_[i]->Create(SxavengerSystem::GetDxDevice(), model_->GetMesh(i).input.GetVertex()->GetSize());
 	}
 }
 
@@ -176,7 +176,7 @@ void SkeletonMesh::Skinning() {
 		//* skinning
 		// TODO: skinning
 		BindBufferDesc bind = {};
-		bind.SetAddress("gInputVertex",  model_->GetInputMesh(i).GetVertex()->GetGPUVirtualAddress());
+		bind.SetAddress("gInputVertex",  model_->GetMesh(i).input.GetVertex()->GetGPUVirtualAddress());
 		bind.SetAddress("gPalette",      skinClusters_[i].palette->GetGPUVirtualAddress());
 		bind.SetAddress("gInfluence",    skinClusters_[i].influence->GetGPUVirtualAddress());
 		bind.SetAddress("gInfo",         skinClusters_[i].info->GetGPUVirtualAddress());

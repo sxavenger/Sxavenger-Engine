@@ -60,7 +60,7 @@ void FTexture::Create(const Vector2ui& size, DXGI_FORMAT format) {
 
 		// descの設定
 		D3D12_RENDER_TARGET_VIEW_DESC desc = {};
-		desc.Format        = format;
+		desc.Format        = format_;
 		desc.ViewDimension = D3D12_RTV_DIMENSION_TEXTURE2D;
 
 		// RTVの生成
@@ -78,7 +78,7 @@ void FTexture::Create(const Vector2ui& size, DXGI_FORMAT format) {
 
 		// descの設定
 		D3D12_UNORDERED_ACCESS_VIEW_DESC desc = {};
-		desc.Format        = format;
+		desc.Format        = format_;
 		desc.ViewDimension = D3D12_UAV_DIMENSION_TEXTURE2D;
 
 		// UAVの生成
@@ -97,7 +97,7 @@ void FTexture::Create(const Vector2ui& size, DXGI_FORMAT format) {
 
 		// descの設定
 		D3D12_SHADER_RESOURCE_VIEW_DESC desc = {};
-		desc.Format                    = format;
+		desc.Format                    = format_;
 		desc.ViewDimension             = D3D12_SRV_DIMENSION_TEXTURE2D;
 		desc.Shader4ComponentMapping   = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
 		desc.Texture2D.MipLevels       = 1;

@@ -3,9 +3,9 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
-#include "../../Transform.hlsli"
 #include "../../Camera.hlsli"
 #include "../../Light.hlsli"
+#include "../Component/TransformComponent.hlsli"
 #include "DeferredBuffers.hlsli"
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -37,7 +37,7 @@ ConstantBuffer<Camera> gCamera : register(b10);
 static const float4x4 kViewProj = mul(gCamera.view, gCamera.proj);
 
 //* t10 ~ t13 is defined in DeferredBuffer.hlsli
-StructuredBuffer<TransformationMatrix> gTransform : register(t14); //!< Light transform buffer
+StructuredBuffer<TransformComponent> gTransform : register(t14); //!< Light transform buffer
 
 RaytracingAccelerationStructure gScene : register(t15);
 

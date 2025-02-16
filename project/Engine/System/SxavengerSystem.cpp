@@ -16,19 +16,14 @@ namespace {
 	static std::unique_ptr<ImGuiController>      sImGuiController   = nullptr; //!< ui system
 }
 
-//=========================================================================================
-// static variables
-//=========================================================================================
-
-const std::string SxavengerSystemEngine::kEngineVersion = "3.1";
-
 ////////////////////////////////////////////////////////////////////////////////////////////
 // SxavengerSystemEngine class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 void SxavengerSystemEngine::Init() {
 
-	EngineLog("Engine Version: " + kEngineVersion);
+	EngineLog("Engine Version: " + kSxavengerEngineVersion);
+	EngineThreadLog("this thread is main thread.");
 
 	sWinApp = std::make_unique<WinApp>();
 	sWinApp->Init();
@@ -68,10 +63,6 @@ void SxavengerSystemEngine::TransitionAllocator() {
 void SxavengerSystemEngine::ExecuteAllAllocator() {
 	sMainThreadContext->ExecuteAllAllocators();
 }
-
-//ID3D12GraphicsCommandList6* SxavengerSystemEngine::GetCommandList() {
-//	return sMainThreadContext->GetCommandList();
-//}
 
 DirectXThreadContext* SxavengerSystemEngine::GetMainThreadContext() {
 	return sMainThreadContext.get();

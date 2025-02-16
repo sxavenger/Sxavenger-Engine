@@ -2,7 +2,7 @@
 // include
 //-----------------------------------------------------------------------------------------
 #include "../VertexStructure.hlsli"
-#include "../Transform.hlsli"
+#include "../Render/Component/TransformComponent.hlsli"
 
 //=========================================================================================
 // config
@@ -13,8 +13,8 @@
 // Input Buffer
 //=========================================================================================
 
-StructuredBuffer<Vertex> gInputVertex           : register(t0);
-StructuredBuffer<TransformationMatrix> gPalette : register(t1);
+StructuredBuffer<Vertex> gInputVertex         : register(t0);
+StructuredBuffer<TransformComponent> gPalette : register(t1);
 
 struct VertexInfluence {
 	float4 weight;

@@ -239,7 +239,9 @@ void RenderSceneEditor::ShowInspectorWindow() {
 
 		auto actor = selectedActor_.value();
 
-		ImGui::Checkbox("## active", &actor->GetIsActive());
+		bool isActive = actor->IsActive();
+		ImGui::Checkbox("## active", &isActive);
+		actor->SetActive(isActive);
 
 		ImGui::SameLine();
 

@@ -27,21 +27,21 @@ void MaterialComponent::Albedo::SetTexture(uint32_t _index) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// Opacity structure methods
+// Transparency structure methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-void MaterialComponent::Opacity::Init() {
+void MaterialComponent::Transparency::Init() {
 	type  = Type::Value;
 	alpha = 1.0f;
 	index = NULL;
 }
 
-void MaterialComponent::Opacity::SetValue(float _alpha) {
+void MaterialComponent::Transparency::SetValue(float _alpha) {
 	type  = Type::Value;
 	alpha = _alpha;
 }
 
-void MaterialComponent::Opacity::SetTexture(uint32_t _index) {
+void MaterialComponent::Transparency::SetTexture(uint32_t _index) {
 	type  = Type::Texture;
 	index = _index;
 }
@@ -70,7 +70,7 @@ void MaterialComponent::Normal::SetTexture(uint32_t _index) {
 
 void MaterialComponent::MaterialBuffer::Init() {
 	albedo.Init();
-	opacity.Init();
+	transparency.Init();
 	normal.Init();
 }
 

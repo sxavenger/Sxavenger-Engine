@@ -8,10 +8,10 @@
 
 //* engine
 #include <Engine/Content/InputAssembler/TriangleInputAssembler.h>
-#include <Engine/Module/Component/Transform2dComponent.h>
+#include <Engine/Content/Component/Transform2dComponent.h>
+#include <Engine/Content/Component/TextureComponent.h>
 #include <Engine/Asset/Texture/AssetTexture.h>
 #include <Engine/Asset/Observer/AssetObserver.h>
-#include <Engine/Module/Component/TextureComponent.h>
 
 //* lib
 #include <Lib/Geometry/Vector2.h>

@@ -4,7 +4,7 @@
 // include
 //-----------------------------------------------------------------------------------------
 //* engine
-#include <Engine/Module/Component/TransformComponent.h>
+#include <Engine/Content/Component/TransformComponent.h>
 
 //* c++
 #include <string>
@@ -27,11 +27,16 @@ public:
 	virtual void InspectorImGui() {}
 	//!< Inspector表示用のImGui
 
+	//* getter *//
+
 	const std::string& GetName() const { return name_; }
 	std::string& GetName() { return name_; }
 
 	bool IsActive() const { return isActive_; }
-	bool& GetIsActive() { return isActive_; }
+
+	//* setter *//
+
+	void SetActive(bool isActive) { isActive_ = isActive; }
 
 protected:
 

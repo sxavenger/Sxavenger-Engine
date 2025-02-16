@@ -16,7 +16,3 @@ float4 BlendNormalAlpha(float4 src, float4 dst) {
 float4 BlendAdd(float4 src, float4 dst) {
 	return float4(src.rgb * src.a + dst.rgb, src.a);
 }
-
-union {
-
-}

@@ -32,9 +32,11 @@ void FScene::SetupTopLevelAS(const DirectXThreadContext* context) {
 
 void FScene::SetupTopLevelASContainer(const AGeometryActor::SetupContext& context, const AGeometryActor::Container& container) {
 	for (auto& geometry : container) {
-		if (geometry->GetTransparency() == AGeometryActor::Transparency::Opaque) {
-			geometry->SetupToplevelAS(context);
+		if (!geometry->IsActive()) {
+			continue;
 		}
+
+		geometry->SetupToplevelAS(context);
 
 		SetupTopLevelASContainer(context, geometry->GetChildren());
 	}

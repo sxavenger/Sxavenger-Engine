@@ -86,6 +86,8 @@ void FSceneRenderer::RenderOpaqueGeometries(const DirectXThreadContext* context)
 	rendererContext.context = context;
 	rendererContext.size    = textures_->GetSize();
 
+	rendererContext.target = MaterialComponent::BlendMode::Opaque;
+
 	rendererContext.parameter.SetAddress("gCamera", camera_->GetGPUVirtualAddress());
 
 	// 不透明なジオメトリを描画
@@ -155,6 +157,8 @@ void FSceneRenderer::RenderTransparentGeometries(const DirectXThreadContext* con
 	AGeometryActor::RendererContext rendererContext = {};
 	rendererContext.context = context;
 	rendererContext.size    = textures_->GetSize();
+
+	rendererContext.target = MaterialComponent::BlendMode::Translucent;
 
 	rendererContext.parameter.SetAddress("gCamera", camera_->GetGPUVirtualAddress());
 
@@ -226,9 +230,11 @@ void FSceneRenderer::RenderOpaqueGeometriesContainer(
 	const AGeometryActor::Container& container, const AGeometryActor::RendererContext& context) {
 
 	for (auto geometry : container) {
-		if (geometry->CheckVisibility(AGeometryActor::Transparency::Opaque)) {
-			geometry->RenderOpaque(context);
+		if (!geometry->IsActive()) {
+			continue;
 		}
+
+		geometry->Render(context);
 
 		RenderOpaqueGeometriesContainer(geometry->GetChildren(), context);
 	}
@@ -238,9 +244,11 @@ void FSceneRenderer::RenderTransparentGeometriesContainer(
 	const AGeometryActor::Container& container, const AGeometryActor::RendererContext& context) {
 
 	for (auto geometry : container) {
-		if (geometry->CheckVisibility(AGeometryActor::Transparency::Transparent)) {
-			geometry->RenderTransparent(context);
+		if (!geometry->IsActive()) {
+			continue;
 		}
+
+		geometry->Render(context);
 
 		RenderTransparentGeometriesContainer(geometry->GetChildren(), context);
 	}

@@ -1,4 +1,5 @@
 #include "Model.h"
+
 //* 右手座標から左手座標系への変換 -zを採用
 //* Vector3
 //*  position = x, y, -z;
@@ -7,11 +8,22 @@
 //* Vector4
 //*  Quarternion = -x, -y, z, w;
 
-//-----------------------------------------------------------------------------------------
-// include
-//-----------------------------------------------------------------------------------------
-//* engine
-#include <Engine/Content/SxavengerContent.h>
+////////////////////////////////////////////////////////////////////////////////////////////
+// Material structure methods
+////////////////////////////////////////////////////////////////////////////////////////////
+
+void Model::Material::CreateComponent() {
+	MaterialComponent::Create();
+
+	if (textures_[static_cast<uint8_t>(TextureType::Diffuse)] != nullptr) {
+		MaterialComponent::GetMaterial().albedo.SetTexture(textures_[static_cast<uint8_t>(TextureType::Diffuse)]->GetDescriptorSRV().GetIndex());
+	}
+
+	//!< todo: 機能検証
+	if (textures_[static_cast<uint8_t>(TextureType::Bump)] != nullptr) {
+		MaterialComponent::GetMaterial().normal.SetTexture(textures_[static_cast<uint8_t>(TextureType::Bump)]->GetDescriptorSRV().GetIndex());
+	}
+}
 
 //=========================================================================================
 // static const variables
@@ -46,26 +58,40 @@ void Model::Term() {
 
 void Model::CreateBottomLevelAS(const DirectXThreadContext* context) {
 	for (uint32_t i = 0; i < GetMeshSize(); ++i) {
-		meshes_[i].mesh.CreateBottomLevelAS(context);
+		meshes_.at(i).input.CreateBottomLevelAS(context);
 	}
 }
 
+const Model::Mesh& Model::GetMesh(uint32_t index) const {
+	CheckMeshIndex(index);
+	return meshes_.at(index);
+}
+
+Model::Mesh& Model::GetMesh(uint32_t index) {
+	CheckMeshIndex(index);
+	return meshes_.at(index);
+}
+
+const Model::Material& Model::GetMeshMaterial(uint32_t meshIndex) const {
+	return GetMaterial(GetMaterialIndex(meshIndex));
+}
+
+const Model::Material& Model::GetMaterial(uint32_t index) const {
+	CheckMaterialIndex(index);
+	return materials_.at(index);
+}
+
+Model::Material& Model::GetMaterial(uint32_t index) {
+	CheckMaterialIndex(index);
+	return materials_.at(index);
+}
+
 void Model::SetIABuffer(const DirectXThreadContext* context, uint32_t meshIndex) const {
-	CheckMeshIndex(meshIndex);
-	meshes_.at(meshIndex).mesh.BindIABuffer(context);
+	GetMesh(meshIndex).input.BindIABuffer(context);
 }
 
 void Model::DrawCall(const DirectXThreadContext* context, uint32_t meshIndex, uint32_t instanceCount) const {
-	meshes_[meshIndex].mesh.DrawCall(context, instanceCount);
-}
-
-const Model::MeshData& Model::GetMeshData(uint32_t meshIndex) const {
-	CheckMeshIndex(meshIndex);
-	return meshes_.at(meshIndex);
-}
-
-const InputMesh& Model::GetInputMesh(uint32_t meshIndex) const {
-	return GetMeshData(meshIndex).mesh;
+	GetMesh(meshIndex).input.DrawCall(context, instanceCount);
 }
 
 uint32_t Model::GetMaterialIndex(uint32_t meshIndex) const {
@@ -74,27 +100,21 @@ uint32_t Model::GetMaterialIndex(uint32_t meshIndex) const {
 	return materialIndex;
 }
 
-bool Model::CheckTextureWithMaterialIndex(uint32_t materialIndex, TextureType type) const {
-	return materials_.at(materialIndex).textures_[static_cast<uint8_t>(type)] != nullptr;
+Vector3f Model::ConvertNormal(const aiVector3D& aiVector) {
+	return { aiVector.x, aiVector.y, -aiVector.z }; //!< 左手座標系に変換
 }
 
-bool Model::CheckTextureWithMeshIndex(uint32_t meshIndex, TextureType type) const {
-	uint32_t materialIndex = GetMaterialIndex(meshIndex);
-	return CheckTextureWithMaterialIndex(materialIndex, type);
+Vector3f Model::ConvertPosition3(const aiVector3D& aiVector) {
+	return { aiVector.x, aiVector.y, -aiVector.z }; //!< 左手座標系に変換
 }
 
-const D3D12_GPU_DESCRIPTOR_HANDLE& Model::GetTextureHandle(uint32_t meshIndex, TextureType type) const {
-	CheckMeshIndex(meshIndex);
-	Assert(meshes_.at(meshIndex).materialIndex.has_value()); //!< materialが使われていない
-
-	uint32_t materialIndex = GetMaterialIndex(meshIndex);
-
-	if (!CheckTextureWithMaterialIndex(materialIndex, type)) {
-		return SxavengerContent::GetGPUHandleSRV("white1x1");
-	}
-
-	return materials_.at(materialIndex).textures_[static_cast<uint8_t>(type)]->GetGPUHandleSRV();
+Vector4f Model::ConvertPosition4(const aiVector3D& aiVector) {
+	return { aiVector.x, aiVector.y, -aiVector.z }; //!< 左手座標系に変換
 }
+
+Quaternion Model::ConvertQuaternion(const aiQuaternion& aiQuaternion) {
+	return { -aiQuaternion.x, -aiQuaternion.y, aiQuaternion.z, aiQuaternion.w }; //!< 左手座標系に変換
+} 
 
 void Model::LoadMesh(const aiScene* aiScene) {
 	// mesh数のメモリ確保
@@ -105,105 +125,105 @@ void Model::LoadMesh(const aiScene* aiScene) {
 
 		// meshの取得
 		const aiMesh* aiMesh = aiScene->mMeshes[meshIndex];
+		auto& mesh           = meshes_.at(meshIndex);
 
-		//* 
-		//* InputAssembler
-		//* 
+		{ //!< InputAssembler
 
-		// InputAssemblerの初期化
-		auto& ia = meshes_.at(meshIndex).mesh;
-		ia.Create(aiMesh->mNumVertices, aiMesh->mNumFaces);
+			// inputの初期化
+			auto& ia = mesh.input;
+			ia.Create(aiMesh->mNumVertices, aiMesh->mNumFaces);
 
-		auto vertex = ia.GetVertex();
-		auto index  = ia.GetIndex();
+			auto vertex = ia.GetVertex();
+			auto index  = ia.GetIndex();
 
-		// verticesの解析
-		for (uint32_t element = 0; element < aiMesh->mNumVertices; ++element) {
-			//!< position
-			const aiVector3D& position = aiMesh->mVertices[element];
-			(*vertex)[element].position = { position.x, position.y, -position.z }; //!< 左手座標系に変換
+			// verticesの解析
+			for (uint32_t element = 0; element < aiMesh->mNumVertices; ++element) {
 
-			//!< normal
-			if (aiMesh->HasNormals()) {
-				const aiVector3D& normal = aiMesh->mNormals[element];
-				(*vertex)[element].normal = { normal.x, normal.y, -normal.z }; //!< 左手座標系に変換
+				//!< position
+				const aiVector3D& position = aiMesh->mVertices[element];
+				(*vertex)[element].position = ConvertPosition4(position);
+
+				//!< normal
+				if (aiMesh->HasNormals()) {
+					const aiVector3D& normal = aiMesh->mNormals[element];
+					(*vertex)[element].normal = ConvertNormal(normal);
+				}
+
+				//!< texcoord
+				if (aiMesh->HasTextureCoords(0)) {
+					const aiVector3D& texcoord = aiMesh->mTextureCoords[0][element];
+					(*vertex)[element].texcoord = { texcoord.x, texcoord.y };
+				}
+
+				if (aiMesh->HasTangentsAndBitangents()) {
+					//!< todo: 左手座標系に変換
+					
+					const aiVector3D& tangent = aiMesh->mTangents[element];
+					(*vertex)[element].tangent = { tangent.x, tangent.y, tangent.z }; //!< 左手座標系に変換
+
+					const aiVector3D& bitangent = aiMesh->mBitangents[element];
+					(*vertex)[element].bitangent = { bitangent.x, bitangent.y, bitangent.z }; //!< 左手座標系に変換
+				}
+
+				// faceの解析
+				for (uint32_t faceIndex = 0; faceIndex < aiMesh->mNumFaces; ++faceIndex) {
+
+					// faceの取得
+					const aiFace& aiFace = aiMesh->mFaces[faceIndex];
+
+					Assert(aiFace.mNumIndices == 3); //!< 三角形のみの対応
+
+					// indexの解析
+					(*index)[faceIndex] = { aiFace.mIndices[0], aiFace.mIndices[2], aiFace.mIndices[1] }; //!< 左手座標系に変換
+				}
 			}
 
-			//!< texcoord
-			if (aiMesh->HasTextureCoords(0)) {
-				const aiVector3D& texcoord = aiMesh->mTextureCoords[0][element];
-				(*vertex)[element].texcoord = { texcoord.x, texcoord.y };
+			{ //!< SkinCluster
+
+				auto& jointWeights = meshes_.at(meshIndex).jointWeights;
+
+				// skinClusterの解析
+				for (uint32_t boneIndex = 0; boneIndex < aiMesh->mNumBones; ++boneIndex) {
+
+					// jointごとの格納領域を作る
+					const aiBone* aiBone = aiMesh->mBones[boneIndex];
+
+					// clusterの登録
+					JointWeightData& jointWeightData = jointWeights[aiBone->mName.C_Str()];
+
+					// inverseBindPoseMatrixの抽出
+					aiMatrix4x4 aiBindPoseMatrix = aiBone->mOffsetMatrix;
+					aiBindPoseMatrix.Inverse();
+
+					aiVector3D scale, translate;
+					aiQuaternion rotate;
+					aiBindPoseMatrix.Decompose(scale, rotate, translate); //!< 成分を抽出
+
+					// 左手系のBindPoseMatrixを作る
+					Matrix4x4 bindPoseMatrix = Matrix::MakeAffine(
+						{ scale.x, scale.y, scale.z }, ConvertQuaternion(rotate), ConvertPosition3(translate)
+					);
+
+					// inverseBindOiseMatrixにする
+					jointWeightData.inverseBindPoseMatrix = bindPoseMatrix.Inverse();
+
+					// weight情報を取り出し
+					for (uint32_t weightIndex = 0; weightIndex < aiBone->mNumWeights; ++weightIndex) {
+						jointWeightData.vertexWeights.emplace_back(aiBone->mWeights[weightIndex].mWeight, aiBone->mWeights[weightIndex].mVertexId);
+					}
+				}
 			}
 
-			if (aiMesh->HasTangentsAndBitangents()) {
-				const aiVector3D& tangent = aiMesh->mTangents[element];
-				(*vertex)[element].tangent = { tangent.x, tangent.y, tangent.z }; //!< 左手座標系に変換
-
-				const aiVector3D& bitangent = aiMesh->mBitangents[element];
-				(*vertex)[element].bitangent = { bitangent.x, bitangent.y, bitangent.z }; //!< 左手座標系に変換
+			{ //!< material
+				mesh.materialIndex = aiMesh->mMaterialIndex;
 			}
 		}
-
-		// faceの解析
-		for (uint32_t faceIndex = 0; faceIndex < aiMesh->mNumFaces; ++faceIndex) {
-			// faceの取得
-			const aiFace& aiFace = aiMesh->mFaces[faceIndex];
-
-			Assert(aiFace.mNumIndices == 3); //!< 三角形のみの対応
-
-			// indexの解析
-			(*index)[faceIndex] = { aiFace.mIndices[0], aiFace.mIndices[2], aiFace.mIndices[1] };
-		}
-
-		//* 
-		//* SkinCluster
-		//*
-
-		auto& jointWeights = meshes_.at(meshIndex).jointWeights;
-
-		// skinClusterの解析
-		for (uint32_t boneIndex = 0; boneIndex < aiMesh->mNumBones; ++boneIndex) {
-
-			// jointごとの格納領域を作る
-			const aiBone* aiBone = aiMesh->mBones[boneIndex];
-
-			// clusterの登録
-			JointWeightData& jointWeightData = jointWeights[aiBone->mName.C_Str()];
-
-			// inverseBindPoseMatrixの抽出
-			aiMatrix4x4 aiBindPoseMatrix = aiBone->mOffsetMatrix;
-			aiBindPoseMatrix.Inverse();
-
-			aiVector3D scale, translate;
-			aiQuaternion rotate;
-			aiBindPoseMatrix.Decompose(scale, rotate, translate); //!< 成分を抽出
-
-			// 左手系のBindPoseMatrixを作る
-			Matrix4x4 bindPoseMatrix = Matrix::MakeAffine(
-				{ scale.x, scale.y, scale.z }, { -rotate.x, -rotate.y, rotate.z, rotate.w }, { translate.x, translate.y, -translate.z }
-			);
-
-			// inverseBindOiseMatrixにする
-			jointWeightData.inverseBindPoseMatrix = bindPoseMatrix.Inverse();
-
-			// weight情報を取り出し
-			for (uint32_t weightIndex = 0; weightIndex < aiBone->mNumWeights; ++weightIndex) {
-				jointWeightData.vertexWeights.emplace_back(aiBone->mWeights[weightIndex].mWeight, aiBone->mWeights[weightIndex].mVertexId);
-			}
-		}
-
-		//* 
-		//* Material
-		//*
-
-		auto& materialIndex = meshes_.at(meshIndex).materialIndex;
-		materialIndex = aiMesh->mMaterialIndex;
 	}
 }
 
 void Model::LoadMaterial(const aiScene* aiScene, const DirectXThreadContext* context, const std::filesystem::path& directory) {
 
-	// materail数のメモリ確保
+	// materail数の要素数確保
 	materials_.resize(aiScene->mNumMaterials);
 
 	// materialsの解析
@@ -211,39 +231,41 @@ void Model::LoadMaterial(const aiScene* aiScene, const DirectXThreadContext* con
 
 		// materialの取得
 		const aiMaterial* aiMaterial = aiScene->mMaterials[materialIndex];
+		auto& material               = materials_.at(materialIndex);
 
-		//*
-		//* Texture
-		//*
+		{ //!< Texture
 
-		auto& material = materials_.at(materialIndex);
+			// diffuseの取得
+			if (aiMaterial->GetTextureCount(aiTextureType_DIFFUSE) != 0) {
+				aiString aiTextureFilepath;
+				aiMaterial->GetTexture(aiTextureType_DIFFUSE, 0, &aiTextureFilepath);
 
-		// diffuseの取得
-		if (aiMaterial->GetTextureCount(aiTextureType_DIFFUSE) != 0) {
-			aiString aiTextureFilepath;
-			aiMaterial->GetTexture(aiTextureType_DIFFUSE, 0, &aiTextureFilepath);
+				// データの保存
+				material.textures_[static_cast<uint8_t>(Material::TextureType::Diffuse)] = std::make_shared<Texture>();
+				material.textures_[static_cast<uint8_t>(Material::TextureType::Diffuse)]->Load(context, directory / aiTextureFilepath.C_Str());
+			}
 
-			// データの保存
-			material.textures_[static_cast<uint8_t>(TextureType::Diffuse)] = std::make_shared<Texture>();
-			material.textures_[static_cast<uint8_t>(TextureType::Diffuse)]->Load(context, directory / aiTextureFilepath.C_Str());
+			// normalの取得
+			if (aiMaterial->GetTextureCount(aiTextureType_HEIGHT) != 0) { //!< .objの場合
+				aiString aiTextureFilepath;
+				aiMaterial->GetTexture(aiTextureType_HEIGHT, 0, &aiTextureFilepath);
+
+				// データの保存
+				material.textures_[static_cast<uint8_t>(Material::TextureType::Bump)] = std::make_shared<Texture>();
+				material.textures_[static_cast<uint8_t>(Material::TextureType::Bump)]->Load(context, directory / aiTextureFilepath.C_Str());
+
+			} else if (aiMaterial->GetTextureCount(aiTextureType_NORMALS) != 0) { //!< .gltfの場合
+				aiString aiTextureFilepath;
+				aiMaterial->GetTexture(aiTextureType_NORMALS, 0, &aiTextureFilepath);
+
+				// データの保存
+				material.textures_[static_cast<uint8_t>(Material::TextureType::Bump)] = std::make_shared<Texture>();
+				material.textures_[static_cast<uint8_t>(Material::TextureType::Bump)]->Load(context, directory / aiTextureFilepath.C_Str());
+			}
 		}
 
-		// normalの取得
-		if (aiMaterial->GetTextureCount(aiTextureType_HEIGHT) != 0) { //!< objの場合.
-			aiString aiTextureFilepath;
-			aiMaterial->GetTexture(aiTextureType_HEIGHT, 0, &aiTextureFilepath);
-
-			// データの保存
-			material.textures_[static_cast<uint8_t>(TextureType::Bump)] = std::make_shared<Texture>();
-			material.textures_[static_cast<uint8_t>(TextureType::Bump)]->Load(context, directory / aiTextureFilepath.C_Str());
-
-		} else if (aiMaterial->GetTextureCount(aiTextureType_NORMALS) != 0) { //!< gltfの場合.
-			aiString aiTextureFilepath;
-			aiMaterial->GetTexture(aiTextureType_NORMALS, 0, &aiTextureFilepath);
-
-			// データの保存
-			material.textures_[static_cast<uint8_t>(TextureType::Bump)] = std::make_shared<Texture>();
-			material.textures_[static_cast<uint8_t>(TextureType::Bump)]->Load(context, directory / aiTextureFilepath.C_Str());
+		{ //!< Component
+			material.CreateComponent();
 		}
 	}
 }
@@ -260,8 +282,8 @@ BornNode Model::ReadNode(aiNode* node) {
 
 	// resultに代入
 	result.transform.scale     = { scale.x, scale.y, scale.z };
-	result.transform.rotate    = { -rotate.x, -rotate.y, rotate.z, rotate.w }; //!< 右手 -> 左手座標系に変換
-	result.transform.translate = { translate.x, translate.y, -translate.z };   //!< 右手 -> 左手座標系に変換
+	result.transform.rotate    = ConvertQuaternion(rotate); //!< 右手 -> 左手座標系に変換
+	result.transform.translate = ConvertPosition3(translate);
 
 	// nodeのlocalMatの取得
 	aiMatrix4x4 aiLocalMatrix = node->mTransformation;
@@ -284,38 +306,14 @@ BornNode Model::ReadNode(aiNode* node) {
 	return result;
 }
 
-//void Model::CreateMeshlet() {
-//
-//	//!< thread pools
-//	std::array<std::thread, kChildThreadCount> threads;
-//	std::queue<std::function<void()>>          tasks;
-//	std::mutex                                 mutex;
-//
-//	for (uint32_t i = 0; i < GetMeshSize(); ++i) {
-//		tasks.emplace([this, i]() { meshes_[i].mesh.CreateMeshlet(); });
-//	}
-//
-//	for (uint32_t i = 0; i < threads.size(); ++i) {
-//		threads[i] = std::thread([&]() {
-//			while (true) {
-//				std::function<void()> task;
-//				{
-//					std::lock_guard<std::mutex> lock(mutex);
-//					if (tasks.empty()) {
-//						break;
-//					}
-//					task = tasks.front();
-//					tasks.pop();
-//				}
-//				task();
-//			}
-//		});
-//	}
-//
-//	std::for_each(threads.begin(), threads.end(), [](std::thread& thread) { thread.join(); });
-//}
-
-void Model::CheckMeshIndex(uint32_t meshIndex) const {
-	Assert(meshIndex < meshes_.size(), "mesh index out of range.");
+bool Model::CheckMeshIndex(uint32_t meshIndex) const {
+	bool expression = meshIndex < meshes_.size();
+	Assert(expression, "mesh index out of range.");
+	return !expression;
 }
 
+bool Model::CheckMaterialIndex(uint32_t materialIndex) const {
+	bool expression = materialIndex < materials_.size();
+	Assert(expression, "material index out of range.");
+	return !expression;
+}
