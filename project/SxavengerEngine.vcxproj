@@ -202,6 +202,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="Engine\Render\Scene\Actor\Camera\CameraActors\APivotCameraActor.cpp" />
     <ClCompile Include="Engine\Render\Scene\Actor\Geometry\AGeometryActor.cpp" />
     <ClCompile Include="Engine\Render\Scene\Actor\Geometry\GeometryActors\AModelActor.cpp" />
+    <ClCompile Include="Engine\Render\Scene\Actor\Geometry\GeometryActors\AModelInstanceActor.cpp" />
     <ClCompile Include="Engine\Render\Scene\Actor\Light\ALightActor.cpp" />
     <ClCompile Include="Engine\Render\Scene\Actor\Light\LightActors\ADirectionalLightActor.cpp" />
     <ClCompile Include="Engine\Render\Scene\Actor\Light\LightActors\APointLightActor.cpp" />
@@ -360,6 +361,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Engine\Render\Scene\Actor\Camera\CameraActors\APivotCameraActor.h" />
     <ClInclude Include="Engine\Render\Scene\Actor\Geometry\AGeometryActor.h" />
     <ClInclude Include="Engine\Render\Scene\Actor\Geometry\GeometryActors\AModelActor.h" />
+    <ClInclude Include="Engine\Render\Scene\Actor\Geometry\GeometryActors\AModelInstanceActor.h" />
     <ClInclude Include="Engine\Render\Scene\Actor\Light\ALightActor.h" />
     <ClInclude Include="Engine\Render\Scene\Actor\Light\LightActors\ADirectionalLightActor.h" />
     <ClInclude Include="Engine\Render\Scene\Actor\Light\LightActors\APointLightActor.h" />

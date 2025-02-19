@@ -52,13 +52,18 @@ protected:
 
 	//* option *//
 
+#ifdef _DEVELOPMENT
+	bool isRenderWait_ = false;
+#else
 	bool isRenderWait_ = true;
+#endif
 
 	//=========================================================================================
 	// protected methods
 	//=========================================================================================
 
-	virtual void RenderOpaque(const RendererContext& context, const DxObject::BindBufferDesc& parameter);
-	virtual void RenderTranslucent(const RendererContext& context, const DxObject::BindBufferDesc& parameter);
+	void RenderOpaque(const RendererContext& context, const DxObject::BindBufferDesc& parameter);
+
+	void RenderTranslucent(const RendererContext& context, const DxObject::BindBufferDesc& parameter);
 
 };

@@ -14,6 +14,7 @@
 #include <Engine/Render/Scene/FScene.h>
 #include <Engine/Render/Scene/Actor/Camera/CameraActors/ACineCameraActor.h>
 #include <Engine/Render/Scene/Actor/Geometry/GeometryActors/AModelActor.h>
+#include <Engine/Render/Scene/Actor/Geometry/GeometryActors/AModelInstanceActor.h>
 #include <Engine/Render/Scene/Actor/Light/LightActors/ADirectionalLightActor.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -54,6 +55,8 @@ private:
 
 	std::unique_ptr<AModelActor> model_;
 	std::unique_ptr<AModelActor> model2_;
+
+	std::unique_ptr<AModelInstanceActor> instance_;
 
 	std::unique_ptr<ADirectionalLightActor> light_;
 

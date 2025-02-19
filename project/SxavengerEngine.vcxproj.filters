@@ -166,6 +166,7 @@
     <ClCompile Include="Engine\Content\Component\MaterialComponent.cpp" />
     <ClCompile Include="Lib\Geometry\Color.cpp" />
     <ClCompile Include="Engine\Asset\Model\Model.cpp" />
+    <ClCompile Include="Engine\Render\Scene\Actor\Geometry\GeometryActors\AModelInstanceActor.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\System\Window\Window.h" />
@@ -337,6 +338,7 @@
     <ClInclude Include="Engine\System\DirectX\DirectXAlignment.h" />
     <ClInclude Include="Engine\Asset\Model\Model.h" />
     <ClInclude Include="Lib\Traits.h" />
+    <ClInclude Include="Engine\Render\Scene\Actor\Geometry\GeometryActors\AModelInstanceActor.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

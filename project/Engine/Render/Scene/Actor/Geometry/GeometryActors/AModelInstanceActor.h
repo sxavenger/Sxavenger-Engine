@@ -28,9 +28,7 @@ public:
 
 	//* render *//
 
-	virtual void RenderOpaque(const RendererContext& context) override;
-
-	virtual void RenderTransparent(const RendererContext& context) override;
+	virtual void Render(const RendererContext& context) override;
 
 	//* raytracing option *//
 
@@ -61,5 +59,13 @@ private:
 	//* buffer *//
 
 	std::unique_ptr<DxObject::DimensionBuffer<TransformationMatrix>> mat_;
+
+	//=========================================================================================
+	// protected methods
+	//=========================================================================================
+
+	void RenderOpaque(const RendererContext& context, const DxObject::BindBufferDesc& parameter);
+
+	void RenderTranslucent(const RendererContext& context, const DxObject::BindBufferDesc& parameter);
 
 };

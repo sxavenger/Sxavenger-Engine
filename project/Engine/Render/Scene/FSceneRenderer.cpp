@@ -228,14 +228,13 @@ void FSceneRenderer::RenderEmptyLight(const ALightActor::RendererContext& contex
 
 void FSceneRenderer::RenderOpaqueGeometriesContainer(
 	const AGeometryActor::Container& container, const AGeometryActor::RendererContext& context) {
-
+	
 	for (auto geometry : container) {
 		if (!geometry->IsActive()) {
 			continue;
 		}
 
 		geometry->Render(context);
-
 		RenderOpaqueGeometriesContainer(geometry->GetChildren(), context);
 	}
 }
