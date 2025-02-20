@@ -164,59 +164,59 @@ void Model::LoadMesh(const aiScene* aiScene) {
 					const aiVector3D& bitangent = aiMesh->mBitangents[element];
 					(*vertex)[element].bitangent = { bitangent.x, bitangent.y, bitangent.z }; //!< 左手座標系に変換
 				}
+			}
 
-				// faceの解析
-				for (uint32_t faceIndex = 0; faceIndex < aiMesh->mNumFaces; ++faceIndex) {
+			// faceの解析
+			for (uint32_t faceIndex = 0; faceIndex < aiMesh->mNumFaces; ++faceIndex) {
 
-					// faceの取得
-					const aiFace& aiFace = aiMesh->mFaces[faceIndex];
+				// faceの取得
+				const aiFace& aiFace = aiMesh->mFaces[faceIndex];
 
-					Assert(aiFace.mNumIndices == 3); //!< 三角形のみの対応
+				Assert(aiFace.mNumIndices == 3); //!< 三角形のみの対応
 
-					// indexの解析
-					(*index)[faceIndex] = { aiFace.mIndices[0], aiFace.mIndices[2], aiFace.mIndices[1] }; //!< 左手座標系に変換
+				// indexの解析
+				(*index)[faceIndex] = { aiFace.mIndices[0], aiFace.mIndices[2], aiFace.mIndices[1] }; //!< 左手座標系に変換
+			}
+		}
+
+		{ //!< SkinCluster
+
+			auto& jointWeights = meshes_.at(meshIndex).jointWeights;
+
+			// skinClusterの解析
+			for (uint32_t boneIndex = 0; boneIndex < aiMesh->mNumBones; ++boneIndex) {
+
+				// jointごとの格納領域を作る
+				const aiBone* aiBone = aiMesh->mBones[boneIndex];
+
+				// clusterの登録
+				JointWeightData& jointWeightData = jointWeights[aiBone->mName.C_Str()];
+
+				// inverseBindPoseMatrixの抽出
+				aiMatrix4x4 aiBindPoseMatrix = aiBone->mOffsetMatrix;
+				aiBindPoseMatrix.Inverse();
+
+				aiVector3D scale, translate;
+				aiQuaternion rotate;
+				aiBindPoseMatrix.Decompose(scale, rotate, translate); //!< 成分を抽出
+
+				// 左手系のBindPoseMatrixを作る
+				Matrix4x4 bindPoseMatrix = Matrix::MakeAffine(
+					{ scale.x, scale.y, scale.z }, ConvertQuaternion(rotate), ConvertPosition3(translate)
+				);
+
+				// inverseBindOiseMatrixにする
+				jointWeightData.inverseBindPoseMatrix = bindPoseMatrix.Inverse();
+
+				// weight情報を取り出し
+				for (uint32_t weightIndex = 0; weightIndex < aiBone->mNumWeights; ++weightIndex) {
+					jointWeightData.vertexWeights.emplace_back(aiBone->mWeights[weightIndex].mWeight, aiBone->mWeights[weightIndex].mVertexId);
 				}
 			}
+		}
 
-			{ //!< SkinCluster
-
-				auto& jointWeights = meshes_.at(meshIndex).jointWeights;
-
-				// skinClusterの解析
-				for (uint32_t boneIndex = 0; boneIndex < aiMesh->mNumBones; ++boneIndex) {
-
-					// jointごとの格納領域を作る
-					const aiBone* aiBone = aiMesh->mBones[boneIndex];
-
-					// clusterの登録
-					JointWeightData& jointWeightData = jointWeights[aiBone->mName.C_Str()];
-
-					// inverseBindPoseMatrixの抽出
-					aiMatrix4x4 aiBindPoseMatrix = aiBone->mOffsetMatrix;
-					aiBindPoseMatrix.Inverse();
-
-					aiVector3D scale, translate;
-					aiQuaternion rotate;
-					aiBindPoseMatrix.Decompose(scale, rotate, translate); //!< 成分を抽出
-
-					// 左手系のBindPoseMatrixを作る
-					Matrix4x4 bindPoseMatrix = Matrix::MakeAffine(
-						{ scale.x, scale.y, scale.z }, ConvertQuaternion(rotate), ConvertPosition3(translate)
-					);
-
-					// inverseBindOiseMatrixにする
-					jointWeightData.inverseBindPoseMatrix = bindPoseMatrix.Inverse();
-
-					// weight情報を取り出し
-					for (uint32_t weightIndex = 0; weightIndex < aiBone->mNumWeights; ++weightIndex) {
-						jointWeightData.vertexWeights.emplace_back(aiBone->mWeights[weightIndex].mWeight, aiBone->mWeights[weightIndex].mVertexId);
-					}
-				}
-			}
-
-			{ //!< material
-				mesh.materialIndex = aiMesh->mMaterialIndex;
-			}
+		{ //!< material
+			mesh.materialIndex = aiMesh->mMaterialIndex;
 		}
 	}
 }

@@ -15,15 +15,25 @@ ConstantBuffer<MaterialComponent> gMaterial : register(b0);
 ////////////////////////////////////////////////////////////////////////////////////////////
 // main
 ////////////////////////////////////////////////////////////////////////////////////////////
+[earlydepthstencil]
 GeometryDeferredOutput main(GeometryPSInput input) {
 	
 	GeometryDeferredOutput output = (GeometryDeferredOutput)0;
 
 	float3x3 tbn = float3x3(input.tangent, input.bitangent, input.normal);
 
-	output.SetAlbedo(gMaterial.albedo.GetAlbedo(input.texcoord, gSampler));
-	output.SetNormal(gMaterial.normal.GetNormal(input.normal, input.texcoord, gSampler, tbn));
+	Material::TextureParameter parameter;
+	parameter.Set(input.texcoord, gSampler);
+
+	output.SetAlbedo(gMaterial.albedo.GetAlbedo(parameter));
+	output.SetNormal(gMaterial.normal.GetNormal(input.normal, parameter, tbn));
 	output.SetPosition(input.worldPos);
 	
+	output.SetMaterial(
+		gMaterial.properties.metallic.GetValue(parameter),
+		gMaterial.properties.specular.GetValue(parameter),
+		gMaterial.properties.roughness.GetValue(parameter)
+	);
+
 	return output;
 }

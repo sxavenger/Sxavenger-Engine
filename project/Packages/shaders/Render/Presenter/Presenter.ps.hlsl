@@ -10,18 +10,19 @@
 Texture2D<float4> gTexture : register(t0);
 SamplerState gSampler      : register(s0);
 
-// todo: HDR�̑Ή�
+// todo: HDRの対応
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // main
 ////////////////////////////////////////////////////////////////////////////////////////////
+[earlydepthstencil]
 PSOutput main(PSInput input) {
 	
 	PSOutput output = (PSOutput)0;
 	
 	float4 color = gTexture.Sample(gSampler, input.texcoord);
 	
-	output.color = saturate(color); //!< HDR�̑Ή��܂ł̎b�菈��
+	output.color = saturate(color); //!< HDRの対応までの暫定処理
 
 	return output;
 }

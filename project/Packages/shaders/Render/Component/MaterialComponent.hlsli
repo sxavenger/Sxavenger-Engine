@@ -5,7 +5,28 @@
 ////////////////////////////////////////////////////////////////////////////////////////////
 namespace Material {
 
-	SamplerState defaultSampler;
+	////////////////////////////////////////////////////////////////////////////////////////////
+	// TextureParameter structure
+	////////////////////////////////////////////////////////////////////////////////////////////
+	struct TextureParameter { //!< helper structure.
+
+		//=========================================================================================
+		// public variables
+		//=========================================================================================
+
+		SamplerState samplers;
+		float2 texcoord;
+
+		//=========================================================================================
+		// public methods
+		//=========================================================================================
+
+		void Set(float2 _texcoord, SamplerState _samplers) {
+			texcoord = _texcoord;
+			samplers = _samplers;
+		}
+		
+	};
 
 	////////////////////////////////////////////////////////////////////////////////////////////
 	// Albedo structure
@@ -16,23 +37,23 @@ namespace Material {
 		// public variables
 		//=========================================================================================
 		
-		uint   type;
+		uint type;
 		//!< 0: float3 color, 1: texture
 		
 		float3 color;
-		uint   index;
+		uint index;
 
 		//=========================================================================================
 		// public methods
 		//=========================================================================================
 
-		float3 GetAlbedo(float2 texcoord = float2(0.0f, 0.0f), SamplerState samplers = defaultSampler) {
+		float3 GetAlbedo(TextureParameter parameter) {
 			if (type == 0) {
 				return color;
 				
 			} else if (type == 1) {
 				Texture2D<float4> texture = ResourceDescriptorHeap[index];
-				return texture.Sample(samplers, texcoord).rgb;
+				return texture.Sample(parameter.samplers, parameter.texcoord).rgb;
 			}
 
 			return (float3)0; //!< exception
@@ -52,19 +73,19 @@ namespace Material {
 		//!< 0: float value, 1: texture
 
 		float alpha;
-		uint  index;
+		uint index;
 
 		//=========================================================================================
 		// public methods
 		//=========================================================================================
 
-		float GetTrnasparency(float2 texcoord = float2(0.0f, 0.0f), SamplerState samplers = defaultSampler) {
+		float GetTransparency(TextureParameter parameter) {
 			if (type == 0) {
 				return alpha;
 				
 			} else if (type == 1) {
 				Texture2D<float4> texture = ResourceDescriptorHeap[index];
-				return texture.Sample(samplers, texcoord).r;
+				return texture.Sample(parameter.samplers, parameter.texcoord).r;
 			}
 
 			return 0.0f; //!< exception
@@ -76,7 +97,6 @@ namespace Material {
 	// Normal structure
 	////////////////////////////////////////////////////////////////////////////////////////////
 	struct Normal {
-		//* todo: bitangent process
 
 		//=========================================================================================
 		// public variables
@@ -91,18 +111,59 @@ namespace Material {
 		// public methods
 		//=========================================================================================
 
-		float3 GetNormal(float3 normal, float2 texcoord = float2(0.0f, 0.0f), SamplerState samplers = defaultSampler, float3x3 tbn = (float3x3)0) {
+		float3 GetNormal(float3 normal, TextureParameter parameter, float3x3 tbn = (float3x3)0) {
 			if (type == 0) {
 				return normal;
 				
 			} else if (type == 1) {
 				Texture2D<float4> texture = ResourceDescriptorHeap[index];
-				float3 map = texture.Sample(defaultSampler, texcoord.xy).xyz;
-				return normalize(mul(map * 2.0f - 1.0f, tbn));
+				float3 map = texture.Sample(parameter.samplers, parameter.texcoord).xyz;
+				return normalize(mul(map * 2.0f - 1.0f, tbn)); //!< fix...? test plz.
 			}
 
 			return (float3)0; //!< exception
 		}
+		
+	};
+
+	////////////////////////////////////////////////////////////////////////////////////////////
+	// Property structure
+	////////////////////////////////////////////////////////////////////////////////////////////
+	struct Property { //!< helper structure.
+			
+		uint type;
+		//!< 0: float value, 1: texture
+
+		float value;
+		
+		uint index;
+
+		float GetValue(TextureParameter parameter) {
+			if (type == 0) {
+				return value;
+				
+			} else if (type == 1) {
+				Texture2D<float4> texture = ResourceDescriptorHeap[index];
+				return texture.Sample(parameter.samplers, parameter.texcoord).r;
+			}
+
+			return 0.0f; //!< exception
+		}
+			
+	};
+
+	////////////////////////////////////////////////////////////////////////////////////////////
+	// SurfaceProperties structure
+	////////////////////////////////////////////////////////////////////////////////////////////
+	struct SurfaceProperties {
+
+		//=========================================================================================
+		// public variables
+		//=========================================================================================
+
+		Property metallic;
+		Property specular;
+		Property roughness;
 		
 	};
 
@@ -119,7 +180,9 @@ struct MaterialComponent {
 	// public variables
 	//=========================================================================================
 	
-	Material::Albedo       albedo;
+	Material::Albedo albedo;
 	Material::Transparency transparency;
-	Material::Normal       normal;
+	Material::Normal normal;
+	Material::SurfaceProperties properties;
+	
 };

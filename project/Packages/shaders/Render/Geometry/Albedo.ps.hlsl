@@ -15,12 +15,16 @@ ConstantBuffer<MaterialComponent> gMaterial : register(b0);
 ////////////////////////////////////////////////////////////////////////////////////////////
 // main
 ////////////////////////////////////////////////////////////////////////////////////////////
+[earlydepthstencil]
 GeometryForwardOutput main(GeometryPSInput input) {
 
 	GeometryForwardOutput output = (GeometryForwardOutput)0;
 
-	output.color.rgb = gMaterial.albedo.GetAlbedo(input.texcoord, gSampler);
-	output.color.a   = gMaterial.transparency.GetTrnasparency(input.texcoord, gSampler);
+	Material::TextureParameter parameter;
+	parameter.Set(input.texcoord, gSampler);
+
+	output.color.rgb = gMaterial.albedo.GetAlbedo(parameter);
+	output.color.a   = gMaterial.transparency.GetTransparency(parameter);
 
 	return output;
 	

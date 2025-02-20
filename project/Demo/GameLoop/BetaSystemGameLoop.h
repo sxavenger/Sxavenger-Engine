@@ -56,8 +56,6 @@ private:
 	std::unique_ptr<AModelActor> model_;
 	std::unique_ptr<AModelActor> model2_;
 
-	std::unique_ptr<AModelInstanceActor> instance_;
-
 	std::unique_ptr<ADirectionalLightActor> light_;
 
 	//=========================================================================================
