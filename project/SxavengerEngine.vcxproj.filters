@@ -167,6 +167,7 @@
     <ClCompile Include="Lib\Geometry\Color.cpp" />
     <ClCompile Include="Engine\Asset\Model\Model.cpp" />
     <ClCompile Include="Engine\Render\Scene\Actor\Geometry\GeometryActors\AModelInstanceActor.cpp" />
+    <ClCompile Include="Demo\Prototype\PrototypeGameLoop.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\System\Window\Window.h" />
@@ -339,6 +340,7 @@
     <ClInclude Include="Engine\Asset\Model\Model.h" />
     <ClInclude Include="Lib\Traits.h" />
     <ClInclude Include="Engine\Render\Scene\Actor\Geometry\GeometryActors\AModelInstanceActor.h" />
+    <ClInclude Include="Demo\Prototype\PrototypeGameLoop.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

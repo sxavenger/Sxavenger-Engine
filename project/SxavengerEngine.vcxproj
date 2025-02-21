@@ -187,6 +187,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Demo\Prototype\PrototypeGameLoop.cpp" />
     <ClCompile Include="Engine\Asset\Model\Model.cpp" />
     <ClCompile Include="Engine\Content\Component\MaterialComponent.cpp" />
     <ClCompile Include="Engine\Render\Canvas\FCanvas.cpp" />
@@ -346,6 +347,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Demo\Prototype\PrototypeGameLoop.h" />
     <ClInclude Include="Engine\Asset\Model\Model.h" />
     <ClInclude Include="Engine\Content\Component\MaterialComponent.h" />
     <ClInclude Include="Engine\Render\Canvas\FCanvas.h" />
