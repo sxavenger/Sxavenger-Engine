@@ -11,7 +11,7 @@
 #include <Engine/Content/InputAssembler/TriangleInputAssembler.h>
 
 //* lib
-#include <Lib/Geometry/Vector4.h>
+#include <Lib/Geometry/Color.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // APointLightActor class
@@ -24,14 +24,19 @@ public:
 	// Parameter structure
 	////////////////////////////////////////////////////////////////////////////////////////////
 	struct Parameter {
-		Color4f color_intensity; //!< rgb: color, a: intensity
+
+		//* member *//
+
+		Color3f color;
+		float intensity;
 		float distance;
 
 		//* method *//
 
 		void Init() {
-			color_intensity = { 1.0f, 1.0f, 1.0f, 1.0f };
-			distance        = 8.0f;
+			color     = { 1.0f, 1.0f, 1.0f };
+			intensity = 1.0f;
+			distance  = 8.0f;
 		}
 
 	};

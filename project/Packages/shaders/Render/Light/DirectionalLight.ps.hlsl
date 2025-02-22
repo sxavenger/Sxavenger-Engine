@@ -13,7 +13,9 @@ struct DirectionalLight {
 };
 ConstantBuffer<DirectionalLight> gDirectionalLight : register(b0);
 
-#define _BRDF
+ConstantBuffer<RayQueryShadow> gShadow : register(b1);
+
+//#define _BRDF
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // main
@@ -76,8 +78,6 @@ PSOutput main(PSInput input) {
 	
 	//* 計算
 	float diffuse = CalculateDiffuseHalfLambert(surface.normal, l);
-
-	InlineRayQueryShadow q;
 	
 	RayDesc desc;
 	desc.Origin    = surface.position;
@@ -85,11 +85,7 @@ PSOutput main(PSInput input) {
 	desc.TMin      = 0.001f;
 	desc.TMax      = 10000.0f;
 
-	uint flag = RAY_FLAG_CULL_BACK_FACING_TRIANGLES;
-
-	if (q.TraceInlineRay(desc, flag)) {
-		c_light /= 2.0f; //!< 仮
-	}
+	c_light *= gShadow.TraceShadow(desc);
 	
 	//* 出力
 	output.color.rgb = diffuse * c_light * surface.albedo;

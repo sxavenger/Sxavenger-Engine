@@ -104,6 +104,9 @@ private:
 
 	FScene* scene_ = nullptr; //!< geometry and light actors
 
+	//* lighting parameter
+	// todo: unlit parameter
+
 	//* ambient process *//
 
 	FAmbientProcessSetting* ambientProcesses_ = nullptr;

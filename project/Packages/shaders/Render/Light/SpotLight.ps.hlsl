@@ -8,12 +8,15 @@
 //=========================================================================================
 
 struct SpotLight {
-	float4 color_intensity; //!< rgb : color, a : intensity
+	float3 color;
+	float intensity;
 	float distance;
 	float falloff; //!< theta_p
 	float angle;   //!< theta_u
 };
 ConstantBuffer<SpotLight> gSpotLight : register(b0);
+
+ConstantBuffer<RayQueryShadow> gShadow : register(b1);
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // main
@@ -22,20 +25,20 @@ PSOutput main(PSInput input) {
 
 	PSOutput output = (PSOutput)0;
 	
-	//* Deferred Passî•ñ‚Ìæ“¾
+	//* Deferred Passæƒ…å ±ã®å–å¾—
 	Surface surface;
 	surface.GetSurface(input.position.xy);
 	
-	//* Light‚Ìî•ñ‚ğæ“¾
-	float3 p_light = gTransform[input.instanceId].GetPosition(); //!< light‚Ì’†SÀ•W
+	//* Lightã®æƒ…å ±ã‚’å–å¾—
+	float3 p_light = gTransform[input.instanceId].GetPosition(); //!< lightã®ä¸­å¿ƒåº§æ¨™
 	
-	//* ŒvZ
+	//* è¨ˆç®—
 	//!< func_diffuse(n, l)
-	float3 l      = normalize(p_light - surface.position); //!< light‚Ì•ûŒüƒxƒNƒgƒ‹
+	float3 l      = normalize(p_light - surface.position); //!< lightã®æ–¹å‘ãƒ™ã‚¯ãƒˆãƒ«
 	float diffuse = CalculateDiffuseHalfLambert(surface.normal, l);
 	
 	//!< func_dist(r) = func_win(r);
-	float r    = length(p_light - surface.position); //!< light‚Æsurface‚Ì‹——£
+	float r    = length(p_light - surface.position); //!< lightã¨surfaceã®è·é›¢
 	float dist = pow(max(1.0f - pow(r / gSpotLight.distance, 4.0f), 0.0f), 2.0f); //!< dist = func_win(r);
 	
 	//!< func_dir(l)
@@ -44,28 +47,17 @@ PSOutput main(PSInput input) {
 	//float dir     = t * t;
 	float dir     = t * t * (3.0f - 2.0f * t); //!< smoothstep
 
-	float3 c_light = gSpotLight.color_intensity.rgb * gSpotLight.color_intensity.a * dist * dir;
-	
-	RayQuery<0> q;
+	float3 c_light = gSpotLight.color * gSpotLight.intensity * dist * dir;
 	
 	RayDesc ray;
 	ray.Origin    = surface.position;
 	ray.Direction = l;
 	ray.TMin      = 0.001f;
 	ray.TMax      = r;
+
+	c_light *= gShadow.TraceShadow(ray);
 	
-	q.TraceRayInline(
-		gScene,
-		RAY_FLAG_NONE,
-		0xFF,
-		ray
-	);
-	
-	if (q.Proceed()) { //!< Õ“Ë‚µ‚½ê‡
-		c_light /= 2.0f;
-	}
-	
-	//* o—Í
+	//* å‡ºåŠ›
 	output.color.rgb = diffuse * c_light * surface.albedo;
 	// func_unlit() = float3(0.0f, 0.0f, 0.0f), func_lit() = c_surface
 	

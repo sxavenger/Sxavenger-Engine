@@ -43,21 +43,22 @@ StructuredBuffer<TransformComponent> gTransform : register(t10); //!< Light tran
 RaytracingAccelerationStructure gScene : register(t11);
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// InlineRayQueryShadow structure
+// RayQueryShadow structure
 ////////////////////////////////////////////////////////////////////////////////////////////
-struct InlineRayQueryShadow {
+struct RayQueryShadow {
 
 	//=========================================================================================
 	// public variables
 	//=========================================================================================
 
-	
+	float strength;
+	uint  flag;
 
 	//=========================================================================================
 	// public variables
 	//=========================================================================================
 
-	bool TraceInlineRay(RayDesc desc, uint flag) {
+	float TraceShadow(RayDesc desc) {
 		RayQuery<0> q;
 
 		q.TraceRayInline(
@@ -67,7 +68,11 @@ struct InlineRayQueryShadow {
 			desc
 		);
 
-		return q.Proceed();
+		if (q.Proceed()) {
+			return 1.0f - strength;
+		}
+
+		return 1.0f;
 	}
 	
 };

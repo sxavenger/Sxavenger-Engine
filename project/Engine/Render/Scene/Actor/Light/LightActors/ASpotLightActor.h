@@ -7,7 +7,7 @@
 #include "../ALightActor.h"
 
 //* lib
-#include <Lib/Geometry/Vector4.h>
+#include <Lib/Geometry/Color.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // ASpotLightActor class
@@ -23,7 +23,8 @@ public:
 
 		//* member *//
 
-		Color4f color_intensity; //!< rgb: color, a: intensity
+		Color3f color;
+		float intensity;
 		float distance;
 		float falloff;
 		float angle;
@@ -31,10 +32,11 @@ public:
 		//* method *//
 
 		void Init() {
-			color_intensity = { 1.0f, 1.0f, 1.0f, 1.0f };
-			distance        = 8.0f;
-			falloff 	    = std::cos(pi_v);
-			angle           = std::cos(pi_v / 3.0f);
+			color     = { 1.0f, 1.0f, 1.0f };
+			intensity = 1.0f;
+			distance  = 8.0f;
+			falloff   = std::cos(pi_v);
+			angle     = std::cos(pi_v / 3.0f);
 		}
 		
 	};

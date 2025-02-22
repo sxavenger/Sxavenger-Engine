@@ -28,8 +28,8 @@ public:
 
 		//* member *//
 
-		Color3f color;           //!< color
-		float   intensity;       //!< intensity
+		Color3f color;     //!< color
+		float   intensity; //!< intensity
 
 		//* method *//
 
