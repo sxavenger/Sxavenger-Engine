@@ -8,14 +8,60 @@
 //=========================================================================================
 
 struct DirectionalLight {
-	float4 color_intencity; //!< rgb : color, a : intensity
-	// todo: float4 to float3 and float.
+	float3 color;
+	float  intensity;
 };
 ConstantBuffer<DirectionalLight> gDirectionalLight : register(b0);
+
+#define _BRDF
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // main
 ////////////////////////////////////////////////////////////////////////////////////////////
+#ifdef _BRDF
+PSOutput main(PSInput input) {
+
+	PSOutput output = (PSOutput)0;
+	
+	//* Deferred Pass情報の取得
+	Surface surface;
+	surface.GetSurface(input.position.xy);
+
+	//* Lightの情報を取得
+	float3 l       = -gTransform[input.instanceId].GetDirection();          //!< surfaceからlightへの方向ベクトル
+	float3 c_light = gDirectionalLight.color * gDirectionalLight.intensity; //!< lightのcolor
+
+	//* BRDFの計算
+	float3 v = normalize(gCamera.GetPosition() - surface.position);
+	float3 h = normalize(l + v);
+
+	float3 diffuse = dot(l, surface.normal);
+
+	float specular = CalculateSpecularBRDF(surface.normal, v, l, surface.roughness);
+
+	// vvv 仮 vvv //
+	
+	InlineRayQueryShadow q;
+
+	RayDesc desc;
+	desc.Origin    = surface.position;
+	desc.Direction = l;
+	desc.TMin      = 0.001f;
+	desc.TMax      = 10000.0f;
+
+	uint flag = RAY_FLAG_CULL_BACK_FACING_TRIANGLES;
+
+	if (q.TraceInlineRay(desc, flag)) {
+		c_light /= 2.0f;
+	}
+
+	output.color.rgb = diffuse * c_light * CalculateDiffuseBRDF(surface.albedo) + specular * CalculateDiffuseBRDF(c_light);
+	//output.color.rgb = specular * CalculateDiffuseBRDF(c_light);
+
+	output.color.a = 1.0f;
+	return output;
+}
+#else
 PSOutput main(PSInput input) {
 
 	PSOutput output = (PSOutput)0;
@@ -25,29 +71,24 @@ PSOutput main(PSInput input) {
 	surface.GetSurface(input.position.xy);
 	
 	//* Lightの情報を取得
-	float3 l         = -gTransform[input.instanceId].GetDirection();                                //!< surfaceからlightへの方向ベクトル
-	float3 c_light   = gDirectionalLight.color_intencity.rgb * gDirectionalLight.color_intencity.a; //!< lightのcolor
+	float3 l       = -gTransform[input.instanceId].GetDirection();          //!< surfaceからlightへの方向ベクトル
+	float3 c_light = gDirectionalLight.color * gDirectionalLight.intensity; //!< lightのcolor
 	
 	//* 計算
 	float diffuse = CalculateDiffuseHalfLambert(surface.normal, l);
+
+	InlineRayQueryShadow q;
 	
-	RayQuery<0> q;
-	
-	RayDesc ray;
-	ray.Origin    = surface.position;
-	ray.Direction = l;
-	ray.TMin      = 0.001f;
-	ray.TMax      = 10000.0f;
-	
-	q.TraceRayInline(
-		gScene,
-		RAY_FLAG_NONE,
-		0xFF,
-		ray
-	);
-	
-	if (q.Proceed()) { //!< 衝突した場合
-		c_light /= 2.0f;
+	RayDesc desc;
+	desc.Origin    = surface.position;
+	desc.Direction = l;
+	desc.TMin      = 0.001f;
+	desc.TMax      = 10000.0f;
+
+	uint flag = RAY_FLAG_CULL_BACK_FACING_TRIANGLES;
+
+	if (q.TraceInlineRay(desc, flag)) {
+		c_light /= 2.0f; //!< 仮
 	}
 	
 	//* 出力
@@ -58,3 +99,4 @@ PSOutput main(PSInput input) {
 	
 	return output;
 }
+#endif

@@ -40,6 +40,10 @@ public:
 
 	void SetRenderWait(bool isRenderWait) { isRenderWait_ = isRenderWait; }
 
+	//* inspector *//
+
+	virtual void InspectorImGui() override;
+
 protected:
 
 	//=========================================================================================

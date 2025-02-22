@@ -98,7 +98,7 @@ void FSceneRenderer::RenderOpaqueGeometries(const DirectXThreadContext* context)
 
 void FSceneRenderer::ProcessLighting(const DirectXThreadContext* context) {
 
-	scene_->SetupTopLevelAS(context);
+	//scene_->SetupTopLevelAS(context);
 
 	const auto& lights = scene_->GetLights();
 
@@ -113,6 +113,7 @@ void FSceneRenderer::ProcessLighting(const DirectXThreadContext* context) {
 	rendererContext.parameter.SetHandle("gAlbedo",   textures_->GetGBuffer(FSceneTextures::GBufferLayout::Albedo)->GetGPUHandleSRV());
 	rendererContext.parameter.SetHandle("gNormal",   textures_->GetGBuffer(FSceneTextures::GBufferLayout::Normal)->GetGPUHandleSRV());
 	rendererContext.parameter.SetHandle("gPosition", textures_->GetGBuffer(FSceneTextures::GBufferLayout::Position)->GetGPUHandleSRV());
+	rendererContext.parameter.SetHandle("gMaterial", textures_->GetGBuffer(FSceneTextures::GBufferLayout::Material_AO)->GetGPUHandleSRV());
 	rendererContext.parameter.SetAddress("gScene",   scene_->GetTopLevelAS().GetGPUVirtualAddress());
 
 	if (lights.empty()) {

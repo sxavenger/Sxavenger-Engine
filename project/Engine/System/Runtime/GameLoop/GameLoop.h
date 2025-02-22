@@ -114,7 +114,7 @@ namespace GameLoop {
 	// Interface concept
 	////////////////////////////////////////////////////////////////////////////////////////////
 	template <class T>
-	concept InterfaceConcept = std::derived_from<T, Interface>; // FIXME: derived from 
+	concept InterfaceConcept = std::derived_from<T, Interface>;
 
 	////////////////////////////////////////////////////////////////////////////////////////////
 	// Collection class
@@ -138,6 +138,7 @@ namespace GameLoop {
 		//=========================================================================================
 
 		std::deque<std::shared_ptr<Interface>> interfaces_;
+		// todo: vector<unique_ptr<>>に変更
 
 	};
 

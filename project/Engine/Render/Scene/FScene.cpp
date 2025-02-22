@@ -28,6 +28,7 @@ void FScene::SetupTopLevelAS(const DirectXThreadContext* context) {
 	SetupTopLevelASContainer(setupContext, geometries_);
 
 	topLevelAS_.EndSetupInstance(SxavengerSystem::GetDxDevice(), context->GetDxCommand());
+	context->TransitionAllocator();
 }
 
 void FScene::SetupTopLevelASContainer(const AGeometryActor::SetupContext& context, const AGeometryActor::Container& container) {

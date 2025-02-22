@@ -19,8 +19,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	std::unique_ptr<GameLoop::Collection> collection = std::make_unique<GameLoop::Collection>();
 	collection->Push<EngineGameLoop>();
 	collection->Push<EditorEngineGameLoop>();
-	//collection->Push<BetaSystemGameLoop>();
-	collection->Push<PrototypeGameLoop>();
+	collection->Push<BetaSystemGameLoop>();
+	//collection->Push<PrototypeGameLoop>();
 
 	collection->Run();
 

@@ -7,6 +7,7 @@
 #include "../../Light.hlsli"
 #include "../Component/TransformComponent.hlsli"
 #include "DeferredBuffers.hlsli"
+#include "../BRDFLib.hlsli"
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Input / Output structure
@@ -37,7 +38,36 @@ ConstantBuffer<Camera> gCamera : register(b10);
 static const float4x4 kViewProj = mul(gCamera.view, gCamera.proj);
 
 //* t10 ~ t13 is defined in DeferredBuffer.hlsli
-StructuredBuffer<TransformComponent> gTransform : register(t14); //!< Light transform buffer
+StructuredBuffer<TransformComponent> gTransform : register(t10); //!< Light transform buffer
 
-RaytracingAccelerationStructure gScene : register(t15);
+RaytracingAccelerationStructure gScene : register(t11);
 
+////////////////////////////////////////////////////////////////////////////////////////////
+// InlineRayQueryShadow structure
+////////////////////////////////////////////////////////////////////////////////////////////
+struct InlineRayQueryShadow {
+
+	//=========================================================================================
+	// public variables
+	//=========================================================================================
+
+	
+
+	//=========================================================================================
+	// public variables
+	//=========================================================================================
+
+	bool TraceInlineRay(RayDesc desc, uint flag) {
+		RayQuery<0> q;
+
+		q.TraceRayInline(
+			gScene,
+			flag,
+			0xFF,
+			desc
+		);
+
+		return q.Proceed();
+	}
+	
+};

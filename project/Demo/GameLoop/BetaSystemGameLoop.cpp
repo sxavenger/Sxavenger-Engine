@@ -67,7 +67,7 @@ void BetaSystemGameLoop::InitSystem() {
 
 	model_ = std::make_unique<AModelActor>();
 	model_->Init();
-	model_->SetModel(SxavengerAsset::TryImport<AssetModel>("assets/models/primitive/cube.obj"));
+	model_->SetModel(SxavengerAsset::TryImport<AssetModel>("assets/models/primitive/teapot.obj"));
 	model_->SetRenderWait(false);
 
 	model2_ = std::make_unique<AModelActor>();
@@ -96,6 +96,8 @@ void BetaSystemGameLoop::UpdateSystem() {
 }
 
 void BetaSystemGameLoop::DrawSystem() {
+
+	scene_->SetupTopLevelAS(SxavengerSystem::GetMainThreadContext());
 
 	renderer_->Render(SxavengerSystem::GetMainThreadContext());
 

@@ -69,6 +69,18 @@ void AModelActor::SetupToplevelAS(const SetupContext& context) {
 
 }
 
+void AModelActor::InspectorImGui() {
+	if (!model_.Get()->IsComplete()) {
+		return;
+	}
+
+	ImGui::Text("warning: model parameter");
+
+	auto model = model_.WaitGet();
+
+	model->GetMaterial(model->GetMaterialIndex(0)).SetImGuiCommand();
+}
+
 void AModelActor::RenderOpaque(const RendererContext& context, const DxObject::BindBufferDesc& parameter) {
 
 	auto model = model_.WaitGet();

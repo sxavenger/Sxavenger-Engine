@@ -6,6 +6,9 @@
 //* engine
 #include <Engine/System/SxavengerSystem.h>
 
+//* external
+#include <imgui.h>
+
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Albedo structure methods
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -24,6 +27,25 @@ void MaterialComponent::Albedo::SetValue(const Color3f& _color) {
 void MaterialComponent::Albedo::SetTexture(uint32_t _index) {
 	type  = Type::Texture;
 	index = _index;
+}
+
+void MaterialComponent::Albedo::SetImGuiCommand() {
+	if (ImGui::RadioButton("value", type == Type::Value)) {
+		type = Type::Value;
+	}
+
+	ImGui::SameLine();
+
+	if (ImGui::RadioButton("texture", type == Type::Texture)) {
+		type = Type::Texture;
+	}
+
+	if (type == Type::Value) {
+		ImGui::ColorEdit3("color", &color.x);
+
+	} else {
+		ImGui::Text("texture index: %d", index);
+	}
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -46,6 +68,25 @@ void MaterialComponent::Transparency::SetTexture(uint32_t _index) {
 	index = _index;
 }
 
+void MaterialComponent::Transparency::SetImGuiCommand() {
+	if (ImGui::RadioButton("value", type == Type::Value)) {
+		type = Type::Value;
+	}
+
+	ImGui::SameLine();
+
+	if (ImGui::RadioButton("texture", type == Type::Texture)) {
+		type = Type::Texture;
+	}
+
+	if (type == Type::Value) {
+		ImGui::DragFloat("alpha", &alpha, 0.01f, 0.0f, 1.0f);
+
+	} else {
+		ImGui::Text("texture index: %d", index);
+	}
+}
+
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Normal structure methods
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -62,6 +103,22 @@ void MaterialComponent::Normal::SetNone() {
 void MaterialComponent::Normal::SetTexture(uint32_t _index) {
 	type  = Type::Texture;
 	index = _index;
+}
+
+void MaterialComponent::Normal::SetImGuiCommand() {
+	if (ImGui::RadioButton("none", type == Type::None)) {
+		type = Type::None;
+	}
+
+	ImGui::SameLine();
+
+	if (ImGui::RadioButton("texture", type == Type::Texture)) {
+		type = Type::Texture;
+	}
+
+	if (type == Type::Texture) {
+		ImGui::Text("texture index: %d", index);
+	}
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -84,6 +141,25 @@ void MaterialComponent::Property::SetTexture(uint32_t _index) {
 	index = _index;
 }
 
+void MaterialComponent::Property::SetImGuiCommand() {
+	if (ImGui::RadioButton("value", type == Type::Value)) {
+		type = Type::Value;
+	}
+
+	ImGui::SameLine();
+
+	if (ImGui::RadioButton("texture", type == Type::Texture)) {
+		type = Type::Texture;
+	}
+
+	if (type == Type::Value) {
+		ImGui::DragFloat("v", &value, 0.01f, 0.0f, 1.0f);
+
+	} else {
+		ImGui::Text("texture index: %d", index);
+	}
+}
+
 ////////////////////////////////////////////////////////////////////////////////////////////
 // SurfaceProperties structure
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -92,6 +168,23 @@ void MaterialComponent::SurfaceProperties::Init() {
 	metallic.Init();
 	specular.Init();
 	roughness.Init();
+}
+
+void MaterialComponent::SurfaceProperties::SetImGuiCommand() {
+	if (ImGui::TreeNode("metallic")) {
+		metallic.SetImGuiCommand();
+		ImGui::TreePop();
+	}
+
+	if (ImGui::TreeNode("specular")) {
+		specular.SetImGuiCommand();
+		ImGui::TreePop();
+	}
+
+	if (ImGui::TreeNode("roughness")) {
+		roughness.SetImGuiCommand();
+		ImGui::TreePop();
+	}
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -127,4 +220,31 @@ const MaterialComponent::MaterialBuffer& MaterialComponent::GetMaterial() const 
 MaterialComponent::MaterialBuffer& MaterialComponent::GetMaterial() {
 	Assert(buffer_ != nullptr, "buffer is not create.");
 	return buffer_->At(0);
+}
+
+void MaterialComponent::SetImGuiCommand() {
+	if (buffer_ != nullptr) {
+		if (ImGui::TreeNode("albedo")) {
+			buffer_->At(0).albedo.SetImGuiCommand();
+			ImGui::TreePop();
+		}
+
+		if (ImGui::TreeNode("transparency")) {
+			buffer_->At(0).transparency.SetImGuiCommand();
+			ImGui::TreePop();
+		}
+
+		if (ImGui::TreeNode("normal")) {
+			buffer_->At(0).normal.SetImGuiCommand();
+			ImGui::TreePop();
+		}
+
+		if (ImGui::TreeNode("properties")) {
+			buffer_->At(0).properties.SetImGuiCommand();
+			ImGui::TreePop();
+		}
+
+	} else {
+		ImGui::Text("not create buffer.");
+	}
 }

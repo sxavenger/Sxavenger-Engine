@@ -4,10 +4,11 @@
 // buffers
 //=========================================================================================
 
-Texture2D<float>  gDepth    : register(t10);
-Texture2D<float4> gAlbedo   : register(t11);
-Texture2D<float4> gNormal   : register(t12);
-Texture2D<float4> gPosition : register(t13);
+Texture2D<float>  gDepth    : register(t20);
+Texture2D<float4> gAlbedo   : register(t21);
+Texture2D<float4> gNormal   : register(t22);
+Texture2D<float4> gPosition : register(t23);
+Texture2D<float4> gMaterial : register(t24);
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // methods
@@ -30,6 +31,10 @@ float3 GetPosition(uint2 index) {
 	return gPosition.Load(uint3(index, 0)).rgb;
 }
 
+float3 GetMaterial(uint2 index) {
+	return gMaterial.Load(uint3(index, 0)).rgb;
+}
+
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Surface structure
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -40,6 +45,10 @@ struct Surface {
 	float3 position;
 	float3 albedo;
 	float3 normal;
+
+	float metallic;
+	float specular;
+	float roughness;
 	
 	//* methods *//
 	
@@ -51,6 +60,11 @@ struct Surface {
 		position = GetPosition(index);
 		albedo   = GetAlbedo(index);
 		normal   = GetNormal(index);
+
+		float3 material = GetMaterial(index);
+		metallic  = material.r;
+		specular  = material.g;
+		roughness = material.b;
 	}
 	
 };

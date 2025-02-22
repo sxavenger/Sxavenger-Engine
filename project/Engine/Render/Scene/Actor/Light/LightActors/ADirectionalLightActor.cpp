@@ -41,6 +41,6 @@ void ADirectionalLightActor::Render(const RendererContext& context) {
 }
 
 void ADirectionalLightActor::InspectorImGui() {
-	ImGui::ColorEdit3("color",      &GetParameter().color_intensity.r);
-	ImGui::DragFloat("intensity",   &GetParameter().color_intensity.a, 0.01f, 0.0f, 12.0f);
+	ImGui::ColorEdit3("color",      &GetParameter().color.r);
+	ImGui::DragFloat("intensity",   &GetParameter().intensity, 0.01f, 0.0f, 12.0f);
 }

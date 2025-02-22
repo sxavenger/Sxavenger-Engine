@@ -71,6 +71,10 @@ public:
 
 		void SetTexture(uint32_t _index);
 
+		//* debug *//
+
+		void SetImGuiCommand();
+
 		//=========================================================================================
 		// public variables
 		//=========================================================================================
@@ -109,6 +113,10 @@ public:
 		void SetValue(float _alpha);
 
 		void SetTexture(uint32_t _index);
+
+		//* debug *//
+
+		void SetImGuiCommand();
 
 		//=========================================================================================
 		// public variables
@@ -149,6 +157,10 @@ public:
 
 		void SetTexture(uint32_t _index);
 
+		//* debug *//
+
+		void SetImGuiCommand();
+
 		//=========================================================================================
 		// public variables
 		//=========================================================================================
@@ -187,6 +199,10 @@ public:
 
 		void SetTexture(uint32_t _index);
 
+		//* debug *//
+
+		void SetImGuiCommand();
+
 		//=========================================================================================
 		// public methods
 		//=========================================================================================
@@ -209,6 +225,10 @@ public:
 		//=========================================================================================
 
 		void Init();
+
+		//* debug *//
+
+		void SetImGuiCommand();
 
 		//=========================================================================================
 		// public variables
@@ -266,7 +286,11 @@ public:
 
 	const BlendMode GetBlendMode() const { return mode_; }
 
-	_DEFAULT_MOVE(MaterialComponent)
+	_DEFAULT_MOVE(MaterialComponent);
+
+	//* imgui *//
+
+	void SetImGuiCommand();
 
 protected:
 

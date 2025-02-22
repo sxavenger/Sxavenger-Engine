@@ -12,6 +12,7 @@
 
 //* lib
 #include <Lib/Geometry/Vector4.h>
+#include <Lib/Geometry/Color.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // ADirectionalLightActor class
@@ -27,12 +28,14 @@ public:
 
 		//* member *//
 
-		Color4f color_intensity; //!< rgb: color, a: intensity
+		Color3f color;           //!< color
+		float   intensity;       //!< intensity
 
 		//* method *//
 
 		void Init() {
-			color_intensity = { 1.0f, 1.0f, 1.0f, 1.0f };
+			color     = { 1.0f, 1.0f, 1.0f };
+			intensity = 1.0f;
 		}
 	};
 
