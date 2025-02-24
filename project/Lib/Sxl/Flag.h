@@ -26,9 +26,9 @@ public:
 	// public methods
 	//=========================================================================================
 
-	FlagMask() : mask_(NULL) {}
-	FlagMask(_Mask mask) : mask_(mask) {}
-	FlagMask(_Bit bit) : mask_(static_cast<_Mask>(bit)) {}
+	constexpr FlagMask() : mask_(NULL) {}
+	constexpr FlagMask(_Mask mask) : mask_(mask) {}
+	constexpr FlagMask(_Bit bit) : mask_(static_cast<_Mask>(bit)) {}
 
 	~FlagMask() = default;
 
@@ -36,41 +36,41 @@ public:
 	// public operator
 	//=========================================================================================
 
-	FlagMask& operator=(_Mask mask) { mask_ = mask; return *this; }
-	FlagMask& operator=(_Bit bit) { return operator=(static_cast<_Mask>(bit)); }
+	constexpr FlagMask& operator=(_Mask mask) { mask_ = mask; return *this; }
+	constexpr FlagMask& operator=(_Bit bit) { return operator=(static_cast<_Mask>(bit)); }
 
-	FlagMask& operator|=(_Mask mask) { mask_ |= mask; return *this; }
-	FlagMask& operator|=(_Bit bit) { return operator|=(static_cast<_Mask>(bit)); }
+	constexpr FlagMask& operator|=(_Mask mask) { mask_ |= mask; return *this; }
+	constexpr FlagMask& operator|=(_Bit bit) { return operator|=(static_cast<_Mask>(bit)); }
 
-	FlagMask& operator&=(_Mask mask) { mask_ &= mask; return *this; }
-	FlagMask& operator&=(_Bit bit) { return operator&=(static_cast<_Mask>(bit)); }
+	constexpr FlagMask& operator&=(_Mask mask) { mask_ &= mask; return *this; }
+	constexpr FlagMask& operator&=(_Bit bit) { return operator&=(static_cast<_Mask>(bit)); }
 
-	FlagMask& operator^=(_Mask mask) { mask_ ^= mask; return *this; }
-	FlagMask& operator^=(_Bit bit) { return operator^=(static_cast<_Mask>(bit)); }
+	constexpr FlagMask& operator^=(_Mask mask) { mask_ ^= mask; return *this; }
+	constexpr FlagMask& operator^=(_Bit bit) { return operator^=(static_cast<_Mask>(bit)); }
 
-	FlagMask operator|(_Mask mask) const { return FlagMask(mask_ | mask); }
-	FlagMask operator|(_Bit bit) const { return operator|(static_cast<_Mask>(bit)); }
+	constexpr FlagMask operator|(_Mask mask) const { return FlagMask(mask_ | mask); }
+	constexpr FlagMask operator|(_Bit bit) const { return operator|(static_cast<_Mask>(bit)); }
 
-	FlagMask operator&(_Mask mask) const { return FlagMask(mask_ & mask); }
-	FlagMask operator&(_Bit bit) const { return operator&(static_cast<_Mask>(bit)); }
+	constexpr FlagMask operator&(_Mask mask) const { return FlagMask(mask_ & mask); }
+	constexpr FlagMask operator&(_Bit bit) const { return operator&(static_cast<_Mask>(bit)); }
 
-	FlagMask operator^(_Mask mask) const { return FlagMask(mask_ ^ mask); }
-	FlagMask operator^(_Bit bit) const { return operator^(static_cast<_Mask>(bit)); }
+	constexpr FlagMask operator^(_Mask mask) const { return FlagMask(mask_ ^ mask); }
+	constexpr FlagMask operator^(_Bit bit) const { return operator^(static_cast<_Mask>(bit)); }
 
-	const _Mask& operator&() const { return mask_; }
-	_Mask& operator&() { return mask_; }
+	constexpr const _Mask& operator&() const { return mask_; }
+	constexpr _Mask& operator&() { return mask_; }
 
 	//* methods *//
 
-	bool Test(_Mask mask) const { return (mask_ & mask) == mask; }
-	bool Test(_Bit bit) const { return Test(static_cast<_Mask>(bit)); }
+	constexpr bool Test(_Mask mask) const { return (mask_ & mask) == mask; }
+	constexpr bool Test(_Bit bit) const { return Test(static_cast<_Mask>(bit)); }
 
-	bool Any(_Mask mask) const { return (mask_ & mask) != 0; }
-	bool Any(_Bit bit) const { return Any(static_cast<_Mask>(bit)); }
+	constexpr bool Any(_Mask mask) const { return (mask_ & mask) != 0; }
+	constexpr bool Any(_Bit bit) const { return Any(static_cast<_Mask>(bit)); }
 
 	//* getter *//
 
-	_Mask Get() const { return mask_; }
+	constexpr _Mask Get() const { return mask_; }
 
 private:
 
@@ -95,10 +95,9 @@ public:
 	// public methods
 	//=========================================================================================
 
-	Flag() : FlagMask<_Bit, std::underlying_type_t<_Bit>>() {}
-	Flag(_Bit bit) : FlagMask<_Bit, std::underlying_type_t<_Bit>>(bit) {}
+	constexpr Flag() : FlagMask<_Bit, std::underlying_type_t<_Bit>>() {}
+	constexpr Flag(_Bit bit) : FlagMask<_Bit, std::underlying_type_t<_Bit>>(bit) {}
 
 };
-
 
 _SXL_NAMESPACE_END

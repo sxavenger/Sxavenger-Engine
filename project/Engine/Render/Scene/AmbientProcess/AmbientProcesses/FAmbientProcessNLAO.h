@@ -41,7 +41,7 @@ public:
 		void Init() {
 			samples  = { 1, 1 };
 			size     = { 4, 4 };
-			radius   = 4.0f;
+			radius   = 0.8f;
 			strength = 1.0f;
 		}
 	};

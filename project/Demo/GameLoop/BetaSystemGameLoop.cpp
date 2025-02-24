@@ -58,6 +58,9 @@ void BetaSystemGameLoop::InitSystem() {
 	scene_ = std::make_unique<FScene>();
 	renderer_->SetScene(scene_.get());
 
+	ambient_ = std::make_unique<FAmbientProcessSetting>();
+	renderer_->SetAmbientSetting(ambient_.get());
+
 	// vvv actors vvv //
 
 	camera_ = std::make_unique<ACineCameraActor>();
@@ -76,6 +79,12 @@ void BetaSystemGameLoop::InitSystem() {
 	light_->Init();
 
 	scene_->AddLight(light_.get());
+
+	// vvv visual vvv //
+
+	ambientNLAO_ = std::make_unique<FAmbientProcessNLAO>();
+	ambientNLAO_->Init();
+	ambient_->AddProcess(ambientNLAO_.get());
 
 	//* editor *//
 

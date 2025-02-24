@@ -25,7 +25,7 @@ float3 CalculateDiffuseBRDF(float3 albedo) {
 float CalculateSpecularF(float3 v, float3 h) {
 	static const float f0 = 0.04f; //!< need parameter...?
 
-	float exponent = (-5.55473f * saturate(dot(v, h)) - 6.98316f) * saturate(dot(v, h));
+	float exponent = (-5.55473f * dot(v, h) - 6.98316f) * dot(v, h);
 	return f0 + (1.0f - f0) * pow(2.0f, exponent);
 }
 
@@ -33,18 +33,21 @@ float CalculateSpecularF(float3 v, float3 h) {
 float CalculateSpecularD(float3 n, float3 h, float roughness) {
 	const float a  = roughness * roughness;
 	const float a2 = a * a;
-	const float NdotH  = dot(n, h);
+	const float NdotH  = saturate(dot(n, h));
 	const float NdotH2 = NdotH * NdotH;
 
-	return a2 / pi_v * pow(NdotH2 * (a2 - 1.0f) + 1.0f, 2.0f);
+	return a2 / (pi_v * pow(NdotH2 * (a2 - 1.0f) + 1.0f, 2.0f));
 }
 
 // Geometric Attenuation(G)
 float CalculateSpecularG(float3 n, float3 v, float3 l, float roughness) {
 	const float k = pow(roughness + 1.0f, 2.0f) / 8.0f;
 
-	float g1_v = dot(n, v) / (dot(n, v) * (1.0f - k) + k); //!< G1(v)
-	float g1_l = dot(n, l) / (dot(n, l) * (1.0f - k) + k); //!< G1(l)
+	float NdotV = saturate(dot(n, v));
+	float NdotL = saturate(dot(n, l));
+
+	float g1_v = NdotV / (NdotV * (1.0f - k) + k); //!< G1(v)
+	float g1_l = NdotL / (NdotL * (1.0f - k) + k); //!< G1(l)
 
 	return g1_v * g1_l;
 }
@@ -55,6 +58,6 @@ float CalculateSpecularBRDF(float3 n, float3 v, float3 l, float roughness) {
 	float f = CalculateSpecularF(v, h);
 	float d = CalculateSpecularD(n, h, roughness);
 	float g = CalculateSpecularG(n, v, l, roughness);
-	return f * g * d / 4.0f * dot(n, l) * dot(n, v);
+	return f * g * d / 4.0f * saturate(dot(n, l)) * saturate(dot(n, v));
 }
 

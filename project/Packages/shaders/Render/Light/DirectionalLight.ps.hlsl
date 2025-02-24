@@ -15,7 +15,7 @@ ConstantBuffer<DirectionalLight> gDirectionalLight : register(b0);
 
 ConstantBuffer<RayQueryShadow> gShadow : register(b1);
 
-//#define _BRDF
+#define _BRDF
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // main
@@ -43,19 +43,13 @@ PSOutput main(PSInput input) {
 
 	// vvv 仮 vvv //
 	
-	InlineRayQueryShadow q;
-
 	RayDesc desc;
 	desc.Origin    = surface.position;
 	desc.Direction = l;
 	desc.TMin      = 0.001f;
 	desc.TMax      = 10000.0f;
 
-	uint flag = RAY_FLAG_CULL_BACK_FACING_TRIANGLES;
-
-	if (q.TraceInlineRay(desc, flag)) {
-		c_light /= 2.0f;
-	}
+	c_light *= gShadow.TraceShadow(desc);
 
 	output.color.rgb = diffuse * c_light * CalculateDiffuseBRDF(surface.albedo) + specular * CalculateDiffuseBRDF(c_light);
 	//output.color.rgb = specular * CalculateDiffuseBRDF(c_light);
