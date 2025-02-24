@@ -72,6 +72,7 @@ public:
 		std::array<std::shared_ptr<Texture>, static_cast<uint8_t>(TextureType::Bump) + 1> textures_;
 
 		// FIXME: ここにMaterialComponentを持たせるのはModelクラスの定義制約に反する.
+		//!< このmaterialをdefaultと定義してその他のmaterialの更新を行いたい場合は, 個別でcomponentを作成する.
 	};
 
 	////////////////////////////////////////////////////////////////////////////////////////////

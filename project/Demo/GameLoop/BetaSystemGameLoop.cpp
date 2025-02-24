@@ -67,15 +67,10 @@ void BetaSystemGameLoop::InitSystem() {
 
 	model_ = std::make_unique<AModelActor>();
 	model_->Init();
-	model_->SetModel(SxavengerAsset::TryImport<AssetModel>("assets/models/primitive/teapot.obj"));
+	model_->SetModel(SxavengerAsset::TryImport<AssetModel>("assets/models/primitive/randomCubes.obj"));
 	model_->SetRenderWait(false);
 
-	model2_ = std::make_unique<AModelActor>();
-	model2_->Init();
-	model2_->SetModel(SxavengerAsset::TryImport<AssetModel>("assets/models/bricks/bricks.obj"));
-
 	scene_->AddGeometry(model_.get());
-	scene_->AddGeometry(model2_.get());
 
 	light_ = std::make_unique<ADirectionalLightActor>();
 	light_->Init();

@@ -16,6 +16,8 @@
 #include <Engine/Render/Scene/Actor/Geometry/GeometryActors/AModelActor.h>
 #include <Engine/Render/Scene/Actor/Geometry/GeometryActors/AModelInstanceActor.h>
 #include <Engine/Render/Scene/Actor/Light/LightActors/ADirectionalLightActor.h>
+#include <Engine/Render/Scene/FAmbientProcessSetting.h>
+#include <Engine/Render/Scene/FPostProcessSetting.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // BetaSystemGameLoop class
@@ -54,9 +56,10 @@ private:
 	std::unique_ptr<ACineCameraActor> camera_;
 
 	std::unique_ptr<AModelActor> model_;
-	std::unique_ptr<AModelActor> model2_;
 
 	std::unique_ptr<ADirectionalLightActor> light_;
+
+	// vvv visual vvv //
 
 	//=========================================================================================
 	// private methods
