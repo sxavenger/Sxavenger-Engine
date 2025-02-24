@@ -115,13 +115,29 @@ void RenderSceneEditor::ShowHierarchyWindow() {
 
 	auto scene = sceneRenderer_->GetScene();
 
+	static char buffer[256] = {};
+	ImVec2 cursor = ImGui::GetCursorPos();
+	ImGui::InputText("## Search", buffer, sizeof(buffer));
+
+	if (buffer[0] == static_cast<char>(0)) { //!< 検索がない場合
+		ImGui::SetCursorPos(cursor);
+		ImGui::PushStyleColor(ImGuiCol_Text, disabled_);
+		ImGui::Text("sarch...");
+		ImGui::PopStyleColor();
+	}
+
+	ImGui::Spacing();
+
 	if (scene != nullptr) {
 		if (ImGui::BeginTabBar("## Outliner Tab")) {
+
+			//* Geometry *//
 			if (ImGui::BeginTabItem("Geometry")) {
 
 				bool isAvailable = false; //!< 選択されたActorが存在するか
 
-				for (const auto& geometry : scene->GetGeometries()) {
+				for (const auto& geometry : scene->GetGeometries() | std::views::filter([&](const AActor* ptr) { return ptr->GetName().starts_with(std::string_view{buffer}); })) {
+
 					std::string name = std::format("{} # {:p}", geometry->GetName(), reinterpret_cast<const void*>(geometry));
 					bool isSelected  = IsSelectedActor(geometry);
 
@@ -152,11 +168,12 @@ void RenderSceneEditor::ShowHierarchyWindow() {
 				ImGui::EndTabItem();
 			}
 
+			//* Light *//
 			if (ImGui::BeginTabItem("Light")) {
 
 				bool isAvailable = false; //!< 選択されたActorが存在するか
 
-				for (const auto& light : scene->GetLights()) {
+				for (const auto& light : scene->GetLights() | std::views::filter([&](const AActor* ptr) { return ptr->GetName().starts_with(std::string_view{ buffer }); })) {
 					std::string name = std::format("{} # {:p}", light->GetName(), reinterpret_cast<const void*>(light));
 					bool isSelected = IsSelectedActor(light);
 
@@ -187,6 +204,7 @@ void RenderSceneEditor::ShowHierarchyWindow() {
 				ImGui::EndTabItem();
 			}
 
+			//* Camera *//
 			if (ImGui::BeginTabItem("Camera")) {
 				if (gameRenderer_ != nullptr) {
 					bool isAvailable = false; //!< 選択されたActorが存在するか
