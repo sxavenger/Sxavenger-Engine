@@ -42,6 +42,8 @@ public:
 
 	void SetRenderWait(bool isRenderWait) { isRenderWait_ = isRenderWait; }
 
+	void SetRenderInstanceCount(std::optional<uint32_t> count = std::nullopt);
+
 private:
 
 	//=========================================================================================
@@ -59,6 +61,7 @@ private:
 	//* buffer *//
 
 	std::unique_ptr<DxObject::DimensionBuffer<TransformationMatrix>> mat_;
+	uint32_t renderInstanceCount_ = 0;
 
 	//=========================================================================================
 	// protected methods

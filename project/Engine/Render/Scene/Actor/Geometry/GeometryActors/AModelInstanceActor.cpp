@@ -16,6 +16,8 @@ void AModelInstanceActor::Init(uint32_t instanceCount) {
 	mat_ = std::make_unique<DxObject::DimensionBuffer<TransformationMatrix>>();
 	mat_->Create(SxavengerSystem::GetDxDevice(), instanceCount);
 	mat_->Fill({});
+
+	SetRenderInstanceCount(instanceCount);
 }
 
 void AModelInstanceActor::Render(const RendererContext& context) {
@@ -37,6 +39,11 @@ void AModelInstanceActor::Render(const RendererContext& context) {
 
 void AModelInstanceActor::SetupToplevelAS(const SetupContext& context) {
 	context;
+}
+
+void AModelInstanceActor::SetRenderInstanceCount(std::optional<uint32_t> count) {
+	Assert(count.value_or(mat_->GetSize()) <= mat_->GetSize(), "render instance count is max instance over.");
+	renderInstanceCount_ = count.value_or(mat_->GetSize());
 }
 
 void AModelInstanceActor::RenderOpaque(const RendererContext& context, const DxObject::BindBufferDesc& parameter) {
@@ -64,7 +71,7 @@ void AModelInstanceActor::RenderOpaque(const RendererContext& context, const DxO
 			context.context, bind
 		);
 
-		model->DrawCall(context.context, i, mat_->GetSize());
+		model->DrawCall(context.context, i, renderInstanceCount_);
 	}
 }
 
@@ -93,7 +100,7 @@ void AModelInstanceActor::RenderTranslucent(const RendererContext& context, cons
 			context.context, bind
 		);
 
-		model->DrawCall(context.context, i, mat_->GetSize());
+		model->DrawCall(context.context, i, renderInstanceCount_);
 	}
 
 }
