@@ -324,3 +324,6 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+
+# vvv this is user ignorable. vvv
+/project/SxavengerEngineLog.md
