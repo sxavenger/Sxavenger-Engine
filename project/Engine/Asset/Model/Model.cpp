@@ -172,7 +172,7 @@ void Model::LoadMesh(const aiScene* aiScene) {
 				// faceの取得
 				const aiFace& aiFace = aiMesh->mFaces[faceIndex];
 
-				Assert(aiFace.mNumIndices == 3); //!< 三角形のみの対応
+				Assert(aiFace.mNumIndices == 3, "mesh is not triangle."); //!< 三角形のみの対応
 
 				// indexの解析
 				(*index)[faceIndex] = { aiFace.mIndices[0], aiFace.mIndices[2], aiFace.mIndices[1] }; //!< 左手座標系に変換
