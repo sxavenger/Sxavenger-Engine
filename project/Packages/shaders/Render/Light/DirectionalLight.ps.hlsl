@@ -15,7 +15,7 @@ ConstantBuffer<DirectionalLight> gDirectionalLight : register(b0);
 
 ConstantBuffer<RayQueryShadow> gShadow : register(b1);
 
-#define _BRDF
+//#define _BRDF
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // main
