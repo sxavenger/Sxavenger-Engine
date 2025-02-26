@@ -6,6 +6,9 @@
 //* engine
 #include <Engine/System/Config/SxavengerConfig.h>
 
+//* lib
+#include <Lib/CXXAttributeConfig.h>
+
 //* c++
 #include <comdef.h>
 #include <sstream>
@@ -250,7 +253,7 @@ void EngineThreadLog(const std::wstring& log) {
 }
 
 void Assert(bool expression, const std::string& label, const std::string& detail, const std::source_location& location) {
-	if (expression) {
+	if (expression) _LIKELY {
 		return;
 	}
 
@@ -258,7 +261,7 @@ void Assert(bool expression, const std::string& label, const std::string& detail
 }
 
 void AssertW(bool expression, const std::wstring& label, const std::wstring& detail, const std::source_location& location) {
-	if (expression) {
+	if (expression) _LIKELY {
 		return;
 	}
 

@@ -16,7 +16,7 @@ const std::array<DXGI_FORMAT, FSceneTextures::kGBufferLayoutCount> FSceneTexture
 	DXGI_FORMAT_R8G8B8A8_UNORM,     //!< Material_AO
 	DXGI_FORMAT_R32G32B32A32_FLOAT, //!< Albedo
 	DXGI_FORMAT_R32G32B32A32_FLOAT, //!< Position
-	DXGI_FORMAT_R32G32B32A32_FLOAT, //!< Lighting
+	DXGI_FORMAT_R32G32B32A32_FLOAT, //!< Main
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////

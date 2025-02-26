@@ -41,7 +41,7 @@ public:
 
 	void ShowWindow() override;
 
-	void Draw();
+	void Render();
 
 	//* setter *//
 

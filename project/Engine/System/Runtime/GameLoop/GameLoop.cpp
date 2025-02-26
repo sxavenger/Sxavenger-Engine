@@ -9,6 +9,7 @@
 //* c++
 #include <algorithm>
 #include <format>
+#include <ranges>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Context class methods
@@ -66,8 +67,8 @@ void GameLoop::Context::Execute(State state, bool isReverse) {
 	}
 
 	if (isReverse) {
-		for (auto it = stateFuncs_[static_cast<uint8_t>(state)].rbegin(); it != stateFuncs_[static_cast<uint8_t>(state)].rend(); ++it) {
-			it->second();
+		for (const auto& func : stateFuncs_[static_cast<uint8_t>(state)] | std::views::reverse) {
+			func.second();
 		}
 
 	} else {

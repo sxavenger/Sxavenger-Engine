@@ -43,7 +43,7 @@ void RenderSceneEditor::ShowWindow() {
 	ShowInspectorWindow();
 }
 
-void RenderSceneEditor::Draw() {
+void RenderSceneEditor::Render() {
 	sceneCamera_->UpdateView();
 	sceneRenderer_->Render(SxavengerSystem::GetMainThreadContext());
 

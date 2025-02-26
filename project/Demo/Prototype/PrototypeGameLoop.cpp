@@ -113,7 +113,7 @@ void PrototypeGameLoop::DrawSystem() {
 	renderer_->Render(SxavengerSystem::GetMainThreadContext());
 
 	sEditorEngine->ExecuteEditorFunction<RenderSceneEditor>([](RenderSceneEditor* editor) {
-		editor->Draw();
+		editor->Render();
 	});
 
 	main_->BeginRendering();
