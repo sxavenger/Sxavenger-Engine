@@ -6,6 +6,7 @@
 //-----------------------------------------------------------------------------------------
 //* engine
 #include <Engine/System/SxavengerSystem.h>
+#include <Engine/Asset/SxavengerAsset.h>
 #include <Engine/Editor/EditorEngine.h>
 #include <Engine/Editor/Editors/EngineDeveloperEditor.h>
 #include <Engine/Editor/Editors/RenderSceneEditor.h>
@@ -50,6 +51,21 @@ void DemoGameLoop::InitGame() {
 
 	scene_ = std::make_unique<FScene>();
 	renderer_->SetScene(scene_.get());
+
+	//* actor関係 *//
+
+	camera_ = std::make_unique<ACineCameraActor>();
+	camera_->Init();
+	renderer_->SetCamera(camera_.get());
+
+	model_ = std::make_unique<AModelActor>();
+	model_->Init();
+	model_->SetModel(SxavengerAsset::TryImport<AssetModel>("assets/models/primitive/cube.obj"));
+	scene_->AddGeometry(model_.get());
+
+	light_ = std::make_unique<ADirectionalLightActor>();
+	light_->Init();
+	scene_->AddLight(light_.get());
 
 	//* editor *//
 

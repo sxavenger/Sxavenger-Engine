@@ -11,6 +11,9 @@
 #include <Engine/Render/FSceneTextures.h>
 #include <Engine/Render/Scene/FSceneRenderer.h>
 #include <Engine/Render/Scene/FScene.h>
+#include <Engine/Render/Scene/Actor/Camera/CameraActors/ACineCameraActor.h>
+#include <Engine/Render/Scene/Actor/Geometry/GeometryActors/AModelActor.h>
+#include <Engine/Render/Scene/Actor/Light/LightActors/ADirectionalLightActor.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // DemoGameLoop class
@@ -42,6 +45,14 @@ private:
 
 	std::unique_ptr<FSceneRenderer> renderer_; //!< sceneを描画するクラス
 	std::unique_ptr<FScene> scene_;            //!< 描画するためのactorを管理するクラス
+
+	//* actor関係 *//
+
+	std::unique_ptr<ACineCameraActor> camera_; //!< カメラ
+
+	std::unique_ptr<AModelActor> model_; //!< モデル
+
+	std::unique_ptr<ADirectionalLightActor> light_; //!< ライト
 
 	//=========================================================================================
 	// private methods
