@@ -168,6 +168,7 @@
     <ClCompile Include="Engine\Asset\Model\Model.cpp" />
     <ClCompile Include="Engine\Render\Scene\Actor\Geometry\GeometryActors\AModelInstanceActor.cpp" />
     <ClCompile Include="Demo\Prototype\PrototypeGameLoop.cpp" />
+    <ClCompile Include="Demo\GameLoop\DemoGameLoop.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\System\Window\Window.h" />
@@ -341,6 +342,7 @@
     <ClInclude Include="Lib\Traits.h" />
     <ClInclude Include="Engine\Render\Scene\Actor\Geometry\GeometryActors\AModelInstanceActor.h" />
     <ClInclude Include="Demo\Prototype\PrototypeGameLoop.h" />
+    <ClInclude Include="Demo\GameLoop\DemoGameLoop.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

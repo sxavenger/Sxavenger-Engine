@@ -10,12 +10,12 @@
 // FScene class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-void FScene::AddGeometry(AGeometryActor* geometry) {
-	geometries_.emplace_back(geometry);
+AGeometryActor::Iterator FScene::AddGeometry(AGeometryActor* geometry) {
+	return geometries_.emplace(geometries_.end(), geometry);
 }
 
-void FScene::AddLight(ALightActor* light) {
-	lights_.emplace_back(light);
+ALightActor::Iterator FScene::AddLight(ALightActor* light) {
+	return lights_.emplace(lights_.end(), light);
 }
 
 void FScene::SetupTopLevelAS(const DirectXThreadContext* context) {

@@ -29,9 +29,9 @@ public:
 
 	//* actor option *//
 
-	void AddGeometry(AGeometryActor* geometry);
+	AGeometryActor::Iterator AddGeometry(AGeometryActor* geometry);
 
-	void AddLight(ALightActor* light);
+	ALightActor::Iterator AddLight(ALightActor* light);
 
 	//* raytracing option *//
 
@@ -39,9 +39,9 @@ public:
 
 	//* getter *//
 
-	const std::list<AGeometryActor*>& GetGeometries() const { return geometries_; }
+	const AGeometryActor::Container& GetGeometries() const { return geometries_; }
 
-	const std::list<ALightActor*>& GetLights() const { return lights_; }
+	const ALightActor::Container& GetLights() const { return lights_; }
 
 	const DxrObject::TopLevelAS& GetTopLevelAS() const { return topLevelAS_; }
 
@@ -53,14 +53,14 @@ private:
 
 	//* geometry actors *//
 
-	std::list<AGeometryActor*> geometries_;
+	AGeometryActor::Container geometries_;
 	//* sceneに描画されるactorのリスト
 
 	DxrObject::TopLevelAS topLevelAS_;
 
 	//* light actors *//
 
-	std::list<ALightActor*> lights_;
+	ALightActor::Container lights_;
 	//* sceneに描画されるactorのリスト
 
 	//=========================================================================================

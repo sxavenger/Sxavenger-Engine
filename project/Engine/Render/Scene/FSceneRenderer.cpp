@@ -122,10 +122,8 @@ void FSceneRenderer::ProcessLighting(const DirectXThreadContext* context) {
 
 	} else {
 		// 照明の処理
-		for (auto light : lights) {
-			if (light->IsActive()) {
-				light->Render(rendererContext);
-			}
+		for (auto light : lights | std::views::filter([](ALightActor* light) { return light->IsActive(); })) {
+			light->Render(rendererContext);
 		}
 	}
 
@@ -230,11 +228,7 @@ void FSceneRenderer::RenderEmptyLight(const ALightActor::RendererContext& contex
 void FSceneRenderer::RenderOpaqueGeometriesContainer(
 	const AGeometryActor::Container& container, const AGeometryActor::RendererContext& context) {
 	
-	for (auto geometry : container) {
-		if (!geometry->IsActive()) {
-			continue;
-		}
-
+	for (auto geometry : container | std::views::filter([](AGeometryActor* actor) { return actor->IsActive(); })) {
 		geometry->Render(context);
 		RenderOpaqueGeometriesContainer(geometry->GetChildren(), context);
 	}
@@ -243,13 +237,8 @@ void FSceneRenderer::RenderOpaqueGeometriesContainer(
 void FSceneRenderer::RenderTransparentGeometriesContainer(
 	const AGeometryActor::Container& container, const AGeometryActor::RendererContext& context) {
 
-	for (auto geometry : container) {
-		if (!geometry->IsActive()) {
-			continue;
-		}
-
+	for (auto geometry : container | std::views::filter([](AGeometryActor* actor) { return actor->IsActive(); })) {
 		geometry->Render(context);
-
 		RenderTransparentGeometriesContainer(geometry->GetChildren(), context);
 	}
 }

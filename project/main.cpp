@@ -8,19 +8,17 @@
 //* loops
 #include <Engine/GameLoop/EngineGameLoop.h>
 #include <Engine/GameLoop/EditorEngineGameLoop.h>
-#include <Demo/GameLoop/BetaSystemGameLoop.h>
-#include <Demo/Prototype/PrototypeGameLoop.h>
+#include <Demo/GameLoop/DemoGameLoop.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// メイン関数
+// main
 ////////////////////////////////////////////////////////////////////////////////////////////
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 	std::unique_ptr<GameLoop::Collection> collection = std::make_unique<GameLoop::Collection>();
 	collection->Push<EngineGameLoop>();
 	collection->Push<EditorEngineGameLoop>();
-	collection->Push<BetaSystemGameLoop>();
-	//collection->Push<PrototypeGameLoop>();
+	collection->Push<DemoGameLoop>();
 
 	collection->Run();
 
