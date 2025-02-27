@@ -108,39 +108,37 @@ private:
 
 	void Map();
 
+	void Recreate(Device* device, uint32_t capacity);
+
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // VectorDimensionBuffer class template methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-template<class T>
+template <class T>
 inline void VectorDimensionBuffer<T>::Resize(Device* device, uint32_t size) {
 	// 引数の保存
 	size_ = size;
 
-	if (size_ > capacity_) {
-		// 一時的に保存
-		std::vector<T> data(mappedDatas_.begin(), mappedDatas_.end());
+	if (resource_ == nullptr || size_ > capacity_) {
+		Recreate(device, size_);
 
-		// resourceの生成
-		BaseVectorDimensionBuffer::Create(device, size_);
+	} else {
 		Map();
-
-		std::copy(data.begin(), data.begin(), mappedDatas_.begin());
 	}
 }
 
-template<class T>
+template <class T>
 inline void VectorDimensionBuffer<T>::Reserve(Device* device, uint32_t capacity) {
-	// 引数の保存
-	capacity_ = capacity;
-	// resourceの生成
-	BaseVectorDimensionBuffer::Create(device, capacity_);
-	Map();
+	if (capacity <= capacity_) {
+		return;
+	}
+
+	Recreate(device, capacity);
 }
 
-template<class T>
+template <class T>
 inline void VectorDimensionBuffer<T>::Map() {
 	T* mappingTarget = nullptr;
 
@@ -149,4 +147,17 @@ inline void VectorDimensionBuffer<T>::Map() {
 	mappedDatas_ = { mappingTarget, size_ };
 }
 
+template <class T>
+inline void VectorDimensionBuffer<T>::Recreate(Device* device, uint32_t capacity) {
+	// 一時的に保存
+	std::vector<T> data(mappedDatas_.begin(), mappedDatas_.end());
+
+	// resourceの生成
+	BaseVectorDimensionBuffer::Create(device, capacity);
+	Map();
+
+	// データのコピー
+	std::copy(data.begin(), data.begin() + size_, mappedDatas_.begin());
+	std::fill(mappedDatas_.begin() + size_, mappedDatas_.end(), T{});
+}
 _DXOBJECT_NAMESPACE_END

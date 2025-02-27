@@ -228,19 +228,17 @@ void Model::LoadMesh(const aiScene* aiScene) {
 }
 
 void Model::LoadMaterial(const aiScene* aiScene, const DirectXThreadContext* context, const std::filesystem::path& directory) {
-
 	// materail数の要素数確保
 	materials_.resize(aiScene->mNumMaterials);
 
 	// materialsの解析
-	for (uint32_t materialIndex = 0; materialIndex < aiScene->mNumMaterials; ++materialIndex) {
+	std::for_each(std::execution::seq, materials_.begin(), materials_.end(), [this, aiScene, context, &directory](Material& material) {
+		size_t materialIndex = &material - &materials_.front(); //!< indexの取得
 
 		// materialの取得
 		const aiMaterial* aiMaterial = aiScene->mMaterials[materialIndex];
-		auto& material               = materials_.at(materialIndex);
 
 		{ //!< Texture
-
 			// diffuseの取得
 			if (aiMaterial->GetTextureCount(aiTextureType_DIFFUSE) != 0) {
 				aiString aiTextureFilepath;
@@ -273,7 +271,7 @@ void Model::LoadMaterial(const aiScene* aiScene, const DirectXThreadContext* con
 		{ //!< Component
 			material.CreateComponent();
 		}
-	}
+	});
 }
 
 BornNode Model::ReadNode(aiNode* node) {
