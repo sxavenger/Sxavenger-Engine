@@ -40,7 +40,7 @@ public:
 	// compound assignment operator
 	//=========================================================================================
 
-	Quaternion& operator*=(const Quaternion& q);
+	Quaternion& operator*=(const Quaternion& rhs);
 
 	//=========================================================================================
 	// variables
@@ -63,12 +63,12 @@ public:
 // binary operator
 //=========================================================================================
 
-Quaternion operator+(const Quaternion& q, const Quaternion& r);
+Quaternion operator+(const Quaternion& lhs, const Quaternion& rhs);
 
-Quaternion operator*(const Quaternion& q, const Quaternion& r);
+Quaternion operator*(const Quaternion& lhs, const Quaternion& rhs);
 
-Quaternion operator*(const Quaternion& q, float scaler);
-Quaternion operator*(float scaler, const Quaternion& q);
+Quaternion operator*(const Quaternion& lhs, float rhs);
+Quaternion operator*(float lhs, const Quaternion& rhs);
 
 //=========================================================================================
 // unary operator
@@ -87,19 +87,3 @@ inline Quaternion operator-(const Quaternion& q) {
 ////////////////////////////////////////////////////////////////////////////////////////////
 template <>
 struct std::formatter<Quaternion> : Sxl::BaseFormatter<Quaternion> {};
-
-////////////////////////////////////////////////////////////////////////////////////////////
-// Quaternion methods
-////////////////////////////////////////////////////////////////////////////////////////////
-
-float Dot(const Quaternion& q, const Quaternion& r);
-
-Quaternion MakeAxisAngle(const Vector3f& axis, float angle);
-
-Vector3f RotateVector(const Vector3f& v, const Quaternion& q);
-
-Quaternion Slerp(const Quaternion& q0, const Quaternion& q1, float t);
-
-Quaternion ToQuaternion(const Vector3f& euler);
-
-Quaternion LookAt(const Vector3f& u, const Vector3f& v);

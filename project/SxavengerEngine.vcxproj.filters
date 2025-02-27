@@ -24,7 +24,6 @@
     <ClCompile Include="Engine\System\DirectX\DxObject\DxSwapChain.cpp" />
     <ClCompile Include="Engine\System\DirectX\DxObject\DxCommandContext.cpp" />
     <ClCompile Include="Engine\System\DirectX\DxObject\DxDepthStencil.cpp" />
-    <ClCompile Include="Lib\Geometry\MathLib.cpp" />
     <ClCompile Include="Lib\Geometry\Matrix4x4.cpp" />
     <ClCompile Include="Lib\Geometry\Quaternion.cpp" />
     <ClCompile Include="Lib\Geometry\Vector2.cpp" />
@@ -170,6 +169,7 @@
     <ClCompile Include="Demo\Prototype\PrototypeGameLoop.cpp" />
     <ClCompile Include="Demo\GameLoop\DemoGameLoop.cpp" />
     <ClCompile Include="Engine\System\DirectX\DxObject\DxVectorDimensionBuffer.cpp" />
+    <ClCompile Include="Lib\Geometry\GeometryMath.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\System\Window\Window.h" />
@@ -187,7 +187,6 @@
     <ClInclude Include="Engine\System\DirectX\DxObject\DxSwapChain.h" />
     <ClInclude Include="Engine\System\DirectX\DxObject\DxCommandContext.h" />
     <ClInclude Include="Engine\System\DirectX\DxObject\DxDepthStencil.h" />
-    <ClInclude Include="Lib\Geometry\MathLib.h" />
     <ClInclude Include="Lib\Geometry\Matrix4x4.h" />
     <ClInclude Include="Lib\Geometry\Quaternion.h" />
     <ClInclude Include="Lib\Geometry\Vector2.h" />
@@ -345,6 +344,7 @@
     <ClInclude Include="Demo\Prototype\PrototypeGameLoop.h" />
     <ClInclude Include="Demo\GameLoop\DemoGameLoop.h" />
     <ClInclude Include="Engine\System\DirectX\DxObject\DxVectorDimensionBuffer.h" />
+    <ClInclude Include="Lib\Geometry\GeometryMath.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

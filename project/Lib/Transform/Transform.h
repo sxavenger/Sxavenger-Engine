@@ -4,10 +4,11 @@
 // include
 //-----------------------------------------------------------------------------------------
 //* lib
+#include <Lib/Geometry/Vector2.h>
 #include <Lib/Geometry/Vector3.h>
 #include <Lib/Geometry/Quaternion.h>
 #include <Lib/Geometry/Matrix4x4.h>
-#include <Lib/Geometry/MathLib.h>
+#include <Lib/Geometry/GeometryMath.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // EulerTransform structure

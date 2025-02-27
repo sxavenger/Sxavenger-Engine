@@ -28,18 +28,18 @@ public:
 	//=========================================================================================
 
 	/* Add */
-	constexpr Vector3& operator+=(const Vector3& v) { x += v.x; y += v.y; z += v.z; return *this; }
+	constexpr Vector3& operator+=(const Vector3& rhs);
 
 	/* Subtract */
-	constexpr Vector3& operator-=(const Vector3& v) { x -= v.x; y -= v.y; z -= v.z; return *this; }
+	constexpr Vector3& operator-=(const Vector3& rhs);
 
 	/* Multiply */
-	constexpr Vector3& operator*=(const Vector3& v) { x *= v.x; y *= v.y; z *= v.z; return *this; }
-	constexpr Vector3& operator*=(T s) { x *= s; y *= s; z *= s; return *this; }
+	constexpr Vector3& operator*=(const Vector3& rhs);
+	constexpr Vector3& operator*=(T rhs);
 
 	/* Division */
-	constexpr Vector3& operator/=(const Vector3& v) { x /= v.x; y /= v.y; z /= v.z; return *this; }
-	constexpr Vector3& operator/=(T s) { x /= s; y /= s; z /= s; return *this; }
+	constexpr Vector3& operator/=(const Vector3& rhs);
+	constexpr Vector3& operator/=(T rhs);
 
 	//=========================================================================================
 	// cast opraotor
@@ -51,10 +51,14 @@ public:
 	}
 
 	//=========================================================================================
-	// random access opraotor
+	// random access operator
 	//=========================================================================================
 
 	constexpr T& operator[](size_t i) {
+		return (&x)[i];
+	}
+
+	const T& operator[](size_t i) const {
 		return (&x)[i];
 	}
 
@@ -75,47 +79,104 @@ public:
 
 };
 
+////////////////////////////////////////////////////////////////////////////////////////////
+// Vector3 class template methods
+////////////////////////////////////////////////////////////////////////////////////////////
+
+template <typename T>
+constexpr Vector3<T>& Vector3<T>::operator+=(const Vector3<T>& rhs) {
+	x += rhs.x;
+	y += rhs.y;
+	z += rhs.z;
+	return *this;
+}
+
+template <typename T>
+constexpr Vector3<T>& Vector3<T>::operator-=(const Vector3<T>& rhs) {
+	x -= rhs.x;
+	y -= rhs.y;
+	z -= rhs.z;
+	return *this;
+}
+
+template <typename T>
+constexpr Vector3<T>& Vector3<T>::operator*=(const Vector3<T>& rhs) {
+	x *= rhs.x;
+	y *= rhs.y;
+	z *= rhs.z;
+	return *this;
+}
+
+template <typename T>
+constexpr Vector3<T>& Vector3<T>::operator*=(T rhs) {
+	x *= rhs;
+	y *= rhs;
+	z *= rhs;
+	return *this;
+}
+
+template <typename T>
+constexpr Vector3<T>& Vector3<T>::operator/=(const Vector3<T>& rhs) {
+	x /= rhs.x;
+	y /= rhs.y;
+	z /= rhs.z;
+	return *this;
+}
+
+template <typename T>
+constexpr Vector3<T>& Vector3<T>::operator/=(T rhs) {
+	x /= rhs;
+	y /= rhs;
+	z /= rhs;
+	return *this;
+}
+
 //=========================================================================================
 // binary operator
 //=========================================================================================
 
 /* Add */
 template <typename T>
-constexpr Vector3<T> operator+(const Vector3<T>& v1, const Vector3<T>& v2) {
-	return { v1.x + v2.x, v1.y + v2.y, v1.z + v2.z };
+constexpr Vector3<T> operator+(const Vector3<T>& lhs, const Vector3<T>& rhs) {
+	return { lhs.x + rhs.x, lhs.y + rhs.y, lhs.z + rhs.z };
 }
 
 /* Subtract */
 template <typename T>
-constexpr Vector3<T> operator-(const Vector3<T>& v1, const Vector3<T>& v2) {
-	return { v1.x - v2.x, v1.y - v2.y, v1.z - v2.z };
+constexpr Vector3<T> operator-(const Vector3<T>& lhs, const Vector3<T>& rhs) {
+	return { lhs.x - rhs.x, lhs.y - rhs.y, lhs.z - rhs.z };
 }
 
 /* Multiply */
 template <typename T>
-constexpr Vector3<T> operator*(const Vector3<T>& v1, const Vector3<T>& v2) {
-	return { v1.x * v2.x, v1.y * v2.y, v1.z * v2.z };
+constexpr Vector3<T> operator*(const Vector3<T>& lhs, const Vector3<T>& rhs) {
+	return { lhs.x * rhs.x, lhs.y * rhs.y, lhs.z * rhs.z };
 }
 
 template <typename T>
-constexpr Vector3<T> operator*(const Vector3<T>& v, T s) {
-	return { v.x * s, v.y * s, v.z * s };
+constexpr Vector3<T> operator*(const Vector3<T>& lhs, T rhs) {
+	return { lhs.x * rhs, lhs.y * rhs, lhs.z * rhs };
 }
 
 template <typename T>
-constexpr Vector3<T> operator*(T s, const Vector3<T>& v) {
-	return { s * v.x, s * v.y, s * v.z };
+constexpr Vector3<T> operator*(T lhs, const Vector3<T>& rhs) {
+	return { lhs * rhs.x, lhs * rhs.y, lhs * rhs.z };
 }
 
 /* Division */
 template <typename T>
-constexpr Vector3<T> operator/(const Vector3<T>& v1, const Vector3<T>& v2) {
-	return { v1.x / v2.x, v1.y / v2.y, v1.z / v2.z };
+constexpr Vector3<T> operator/(const Vector3<T>& lhs, const Vector3<T>& rhs) {
+	return { lhs.x / rhs.x, lhs.y / rhs.y, lhs.z / rhs.z };
 }
 
 template <typename T>
-constexpr Vector3<T> operator/(const Vector3<T>& v, T s) {
-	return { v.x / s, v.y / s, v.z / s };
+constexpr Vector3<T> operator/(const Vector3<T>& lhs, T rhs) {
+	return { lhs.x / rhs, lhs.y / rhs, lhs.z / rhs };
+}
+
+template <typename T>
+constexpr Vector3<T> operator/(T lhs, const Vector3<T>& rhs) {
+	return { lhs / rhs.x, lhs / rhs.y, lhs / rhs.z };
 }
 
 //=========================================================================================
@@ -154,25 +215,3 @@ constexpr const Vector3<T> kOrigin3 = { 0, 0, 0 };
 
 template <class T = float>
 constexpr const Vector3<T> kUnit3 = { 1, 1, 1 };
-
-////////////////////////////////////////////////////////////////////////////////////////////
-// Vector3 methods
-////////////////////////////////////////////////////////////////////////////////////////////
-
-Vector3f Normalize(const Vector3f& v);
-
-float Length(const Vector3f& v);
-
-float Dot(const Vector3f& x, const Vector3f& y);
-
-Vector3f Cross(const Vector3f& x, const Vector3f& y);
-
-Vector3f Reflect(const Vector3f& i, const Vector3f& n);
-
-Vector3f Lerp(const Vector3f& x, const Vector3f& y, float s);
-
-Vector3f Clamp(const Vector3f& v, const Vector3f& min, const Vector3f& max);
-
-Vector3f Min(const Vector3f& x, const Vector3f& y);
-
-Vector3f Max(const Vector3f& x, const Vector3f& y);

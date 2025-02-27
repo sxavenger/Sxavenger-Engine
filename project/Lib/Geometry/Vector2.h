@@ -29,18 +29,18 @@ public:
 	//=========================================================================================
 
 	/* Add */
-	constexpr Vector2& operator+=(const Vector2& v) { x += v.x; y += v.y; return *this; }
+	constexpr Vector2& operator+=(const Vector2& rhs);
 
 	/* Subtract */
-	constexpr Vector2& operator-=(const Vector2& v) { x -= v.x; y -= v.y; return *this; }
+	constexpr Vector2& operator-=(const Vector2& rhs);
 
 	/* Multiply */
-	constexpr Vector2& operator*=(const Vector2& v) { x *= v.x; y *= v.y; return *this; }
-	constexpr Vector2& operator*=(T s) { x *= s; y *= s; return *this; }
+	constexpr Vector2& operator*=(const Vector2& rhs);
+	constexpr Vector2& operator*=(T rhs);
 
 	/* Division */
-	constexpr Vector2& operator/=(const Vector2& v) { x /= v.x; y /= v.y; return *this; }
-	constexpr Vector2& operator/=(T s) { x /= s; y /= s; return *this; }
+	constexpr Vector2& operator/=(const Vector2& rhs);
+	constexpr Vector2& operator/=(T rhs);
 
 	//=========================================================================================
 	// cast operator
@@ -49,6 +49,18 @@ public:
 	template <typename U>
 	constexpr operator Vector2<U>() const {
 		return { static_cast<U>(x), static_cast<U>(y) };
+	}
+
+	//=========================================================================================
+	// access operator
+	//=========================================================================================
+
+	constexpr T& operator[](size_t i) {
+		return (&x)[i];
+	}
+
+	const T& operator[](size_t i) const {
+		return (&x)[i];
 	}
 
 	//=========================================================================================
@@ -68,47 +80,87 @@ public:
 
 };
 
+////////////////////////////////////////////////////////////////////////////////////////////
+// Vector2 class template methods
+////////////////////////////////////////////////////////////////////////////////////////////
+
+template <typename T>
+inline constexpr Vector2<T>& Vector2<T>::operator+=(const Vector2& rhs) {
+	x += rhs.x; y += rhs.y;
+	return *this;
+}
+
+template <typename T>
+inline constexpr Vector2<T>& Vector2<T>::operator-=(const Vector2& rhs) {
+	x -= rhs.x; y -= rhs.y;
+	return *this;
+}
+
+template <typename T>
+inline constexpr Vector2<T>& Vector2<T>::operator*=(const Vector2& rhs) {
+	x *= rhs.x; y *= rhs.y;
+	return *this;
+}
+
+template <typename T>
+inline constexpr Vector2<T>& Vector2<T>::operator*=(T rhs) {
+	x *= rhs; y *= rhs;
+	return *this;
+}
+
+template <typename T>
+inline constexpr Vector2<T>& Vector2<T>::operator/=(const Vector2& rhs) {
+	x /= rhs.x; y /= rhs.y;
+	return *this;
+}
+
+template <typename T>
+inline constexpr Vector2<T>& Vector2<T>::operator/=(T rhs) {
+	x /= rhs; y /= rhs;
+	return *this;
+}
+
 //=========================================================================================
 // binary operator
 //=========================================================================================
 
 /* Add */
 template <typename T>
-constexpr Vector2<T> operator+(const Vector2<T>& v1, const Vector2<T>& v2) {
-	return { v1.x + v2.x, v1.y + v2.y };
+constexpr Vector2<T> operator+(const Vector2<T>& lhs, const Vector2<T>& rhs) {
+	return { lhs.x + rhs.x, lhs.y + rhs.y };
 }
 
 /* Subtract */
 template <typename T>
-constexpr Vector2<T> operator-(const Vector2<T>& v1, const Vector2<T>& v2) {
-	return { v1.x - v2.x, v1.y - v2.y };
+constexpr Vector2<T> operator-(const Vector2<T>& lhs, const Vector2<T>& rhs) {
+	return { lhs.x - rhs.x, lhs.y - rhs.y };
 }
 
 /* Multiply */
 template <typename T>
-constexpr Vector2<T> operator*(const Vector2<T>& v1, const Vector2<T>& v2) {
-	return { v1.x * v2.x, v1.y * v2.y };
+constexpr Vector2<T> operator*(const Vector2<T>& lhs, const Vector2<T>& rhs) {
+	return { lhs.x * rhs.x, lhs.y * rhs.y };
 }
 
 template <typename T>
-constexpr Vector2<T> operator*(const Vector2<T>& v, T s) {
-	return { v.x * s, v.y * s };
+constexpr Vector2<T> operator*(const Vector2<T>& lhs, T rhs) {
+	return { lhs.x * rhs, lhs.y * rhs };
 }
 
 template <typename T>
-constexpr Vector2<T> operator*(T s, const Vector2<T>& v) {
-	return { s * v.x, s * v.y };
+constexpr Vector2<T> operator*(T lhs, const Vector2<T>& rhs) {
+	return { lhs * rhs.x, lhs * rhs.y };
 }
 
 /* Division */
 template <typename T>
-constexpr Vector2<T> operator/(const Vector2<T>& v1, const Vector2<T>& v2) {
-	return { v1.x / v2.x, v1.y / v2.y };
+constexpr Vector2<T> operator/(const Vector2<T>& lhs, const Vector2<T>& rhs) {
+	return { lhs.x / rhs.x, lhs.y / rhs.y };
 }
 
 template <typename T>
-constexpr Vector2<T> operator/(const Vector2<T>& v, T s) {
-	return { v.x / s, v.y / s };
+constexpr Vector2<T> operator/(const Vector2<T>& lhs, T rhs) {
+	return { lhs.x / rhs, lhs.y / rhs };
 }
 
 //=========================================================================================
@@ -149,16 +201,3 @@ constexpr const Vector2<T> kUnit2 = { 1, 1 };
 using Vector2f  = Vector2<float>;
 using Vector2i  = Vector2<int32_t>;
 using Vector2ui = Vector2<uint32_t>;
-
-////////////////////////////////////////////////////////////////////////////////////////////
-// Vector2 methods
-////////////////////////////////////////////////////////////////////////////////////////////
-
-float Length(const Vector2f& v);
-
-Vector2f Normalize(const Vector2f& v);
-
-float Dot(const Vector2f& x, const Vector2f& y);
-
-float Cross(const Vector2f& x, const Vector2f& y);
-

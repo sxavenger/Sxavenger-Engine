@@ -329,7 +329,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="Lib\Adapter\Json\JsonAdapter.cpp" />
     <ClCompile Include="Lib\Adapter\Random\Random.cpp" />
     <ClCompile Include="Lib\Geometry\Color.cpp" />
-    <ClCompile Include="Lib\Geometry\MathLib.cpp" />
+    <ClCompile Include="Lib\Geometry\GeometryMath.cpp" />
     <ClCompile Include="Lib\Geometry\Matrix4x4.cpp" />
     <ClCompile Include="Lib\Geometry\Quaternion.cpp" />
     <ClCompile Include="Lib\Geometry\Vector2.cpp" />
@@ -500,7 +500,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Lib\CXXAttributeConfig.h" />
     <ClInclude Include="Lib\Environment.h" />
     <ClInclude Include="Lib\Geometry\Color.h" />
-    <ClInclude Include="Lib\Geometry\MathLib.h" />
+    <ClInclude Include="Lib\Geometry\GeometryMath.h" />
     <ClInclude Include="Lib\Geometry\Matrix4x4.h" />
     <ClInclude Include="Lib\Geometry\Quaternion.h" />
     <ClInclude Include="Lib\Geometry\Vector2.h" />

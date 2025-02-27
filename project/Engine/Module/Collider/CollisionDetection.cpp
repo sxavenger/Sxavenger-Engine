@@ -50,7 +50,7 @@ bool CollisionDetection::SphereToCapsule(
 
 	t = std::clamp(t, 0.0f, 1.0f);
 
-	Vector3f closest = origin + t * diff;
+	Vector3f closest = origin + diff * t;
 
 	float distance = Length(closest - positionA);
 
@@ -131,8 +131,8 @@ bool CollisionDetection::CapsuleTo(
 		s = std::clamp(s, 0.0f, 1.0f);
 		t = std::clamp(t, 0.0f, 1.0f);
 
-		Vector3f closestA = originA + s * originA;
-		Vector3f closestB = originB + t * originB;
+		Vector3f closestA = originA + originA * s;
+		Vector3f closestB = originB + originB * t;
 
 		distance = Length(closestA - closestB);
 

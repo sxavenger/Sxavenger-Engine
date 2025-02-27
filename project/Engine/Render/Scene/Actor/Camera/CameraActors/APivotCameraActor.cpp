@@ -14,7 +14,7 @@ void APivotCameraActor::Init() {
 void APivotCameraActor::UpdateView() {
 
 	Quaternion r
-		= MakeAxisAngle({ 0.0f, 1.0f, 0.0f }, parameter_.angle.x) * MakeAxisAngle({ 1.0f, 0.0f, 0.0f }, parameter_.angle.y);
+		= AxisAngle({ 0.0f, 1.0f, 0.0f }, parameter_.angle.x) * AxisAngle({ 1.0f, 0.0f, 0.0f }, parameter_.angle.y);
 
 	Vector3f direciton = RotateVector({ 0.0f, 0.0f, -1.0f }, r);
 

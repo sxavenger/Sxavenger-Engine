@@ -9,6 +9,7 @@
 //* lib
 #include <Lib/Geometry/Vector3.h>
 #include <Lib/Geometry/Quaternion.h>
+#include <Lib/Geometry/GeometryMath.h>
 
 //* c++
 #include <vector>
