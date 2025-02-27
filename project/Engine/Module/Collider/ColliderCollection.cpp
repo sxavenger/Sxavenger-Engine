@@ -23,6 +23,10 @@ void ColliderCollection::CheckCollision() {
 }
 
 void ColliderCollection::Draw() {
+	if (!isDraw_) {
+		return;
+	}
+
 	for (const auto& collider : colliders_) {
 
 		Color4f color = inactiveColor_;
