@@ -42,6 +42,10 @@ public:
 
 	void TermScene();
 
+	//* getter *//
+
+	BaseScene* GetScene() { return scene_.get(); }
+
 private:
 
 	//=========================================================================================
