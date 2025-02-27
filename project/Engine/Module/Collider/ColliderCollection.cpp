@@ -28,14 +28,7 @@ void ColliderCollection::Draw() {
 	}
 
 	for (const auto& collider : colliders_) {
-
-		Color4f color = inactiveColor_;
-
-		if (collider->IsActive()) {
-			color = activeColor_;
-		}
-
-		ColliderDrawer::DrawCollider(collider, color);
+		ColliderDrawer::DrawCollider(collider, collider->IsActive() ? activeColor_ : inactiveColor_);
 	}
 }
 
