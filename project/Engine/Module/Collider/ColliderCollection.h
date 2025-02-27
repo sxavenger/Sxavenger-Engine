@@ -57,6 +57,8 @@ private:
 	Color4f activeColor_   = ToColor4<float>(0xFAFA00FF);
 	Color4f inactiveColor_ = ToColor4<float>(0x808040FF);
 
+	bool isDraw_ = true;
+
 	//=========================================================================================
 	// private methods
 	//=========================================================================================

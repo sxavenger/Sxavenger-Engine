@@ -36,8 +36,13 @@ void ColliderCollection::Draw() {
 }
 
 void ColliderCollection::SystemDebugGui() {
-	ImGui::ColorEdit4("active",   &activeColor_.r);
+	ImGui::SeparatorText("parameter");
+	ImGui::ColorEdit4("active", &activeColor_.r);
 	ImGui::ColorEdit4("inactive", &inactiveColor_.r);
+	ImGui::Checkbox("draw", &isDraw_);
+
+	ImGui::SeparatorText("info");
+	ImGui::Text("collider count : %d", colliders_.size());
 }
 
 void ColliderCollection::SetCollider(Collider* collider) {

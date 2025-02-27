@@ -5,6 +5,7 @@
 //-----------------------------------------------------------------------------------------
 //* engine
 #include <Engine/Asset/SxavengerAsset.h>
+#include <Engine/Module/SxavengerModule.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // EngineDeveloperEditor class methods
@@ -21,6 +22,7 @@ void EngineDeveloperEditor::ShowMainMenu() {
 		ShowProcessMenu();
 		ShowSystemMenu();
 		ShowThreadMenu();
+		ShowColliderMenu();
 
 		ImGui::EndMenu();
 	}
@@ -123,6 +125,17 @@ void EngineDeveloperEditor::ShowThreadMenu() {
 	}
 }
 
+void EngineDeveloperEditor::ShowColliderMenu() {
+	if (ImGui::BeginMenu("collider")) {
+		MenuPadding();
+
+		auto collection = SxavengerModule::GetColliderCollection();
+		collection->SystemDebugGui();
+
+		ImGui::EndMenu();
+	}
+}
+
 void EngineDeveloperEditor::ShowPerformanceWindow() {
 	if (isProcessRequired_) { //!< 更新中の場合
 		ImGui::PushStyleColor(ImGuiCol_WindowBg, ImGuiController::ToImVec4({ 45, 5, 8, 255 }));
@@ -145,15 +158,6 @@ void EngineDeveloperEditor::ShowPerformanceWindow() {
 			ImGui::TableSetupColumn("name");
 			ImGui::TableSetupColumn("lap");
 			ImGui::TableHeadersRow();
-
-			/*for (const auto& [name, lap] : performance->GetLap()) {
-				ImGui::TableNextRow();
-				ImGui::TableNextColumn();
-				ImGui::Text(name.c_str());
-
-				ImGui::TableNextColumn();
-				ImGui::Text(std::format("{:.2f}ms", lap.time).c_str());
-			}*/
 
 			const auto& laps = performance->GetLap();
 			for (auto itr = laps.begin(); itr != laps.end(); ++itr) {

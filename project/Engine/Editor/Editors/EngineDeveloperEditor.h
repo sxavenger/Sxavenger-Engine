@@ -57,6 +57,7 @@ private:
 	void ShowProcessMenu();
 	void ShowSystemMenu();
 	void ShowThreadMenu();
+	void ShowColliderMenu();
 
 	void ShowPerformanceWindow();
 
