@@ -29,18 +29,23 @@ public:
 
 		//* member *//
 
-		std::unique_ptr<FScene>  scene_                   = nullptr;
-		std::unique_ptr<FAmbientProcessSetting> ambient_  = nullptr;
-		std::unique_ptr<FPostProcessSetting> postProcess_ = nullptr;
-		std::unique_ptr<FCanvas> canvas_                  = nullptr;
+		std::unique_ptr<FScene>         scene_    = nullptr;
+		std::unique_ptr<FSceneRenderer> renderer_ = nullptr;
+		std::unique_ptr<FCanvas>        canvas_   = nullptr;
 
 		//* method *//
 
 		SceneComponent() {
-			scene_       = std::make_unique<FScene>();
-			ambient_     = std::make_unique<FAmbientProcessSetting>();
-			postProcess_ = std::make_unique<FPostProcessSetting>();
-			canvas_      = std::make_unique<FCanvas>();
+			scene_    = std::make_unique<FScene>();
+			renderer_ = std::make_unique<FSceneRenderer>();
+			canvas_   = std::make_unique<FCanvas>();
+
+			renderer_->SetScene(scene_.get());
+		}
+
+		void Render(const DirectXThreadContext* context) {
+			renderer_->Render(context);
+			canvas_->Render(context);
 		}
 	};
 
