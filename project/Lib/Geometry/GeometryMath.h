@@ -59,6 +59,7 @@ Vector4<float> Clamp(const Vector4<float>& v, const Vector4<float>& min, const V
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 Quaternion AxisAngle(const Vector3<float>& axis, float angle);
+Quaternion MakeAxisAngle(const Vector3<float>& axis, float angle); //!< 削除予定
 
 Quaternion Slerp(const Quaternion& x, const Quaternion& y, float t);
 

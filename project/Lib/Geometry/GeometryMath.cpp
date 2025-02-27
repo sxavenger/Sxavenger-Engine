@@ -115,6 +115,10 @@ Quaternion AxisAngle(const Vector3<float>& axis, float angle) {
 	return Quaternion{ axis.x * std::sin(angle / 2.0f), axis.y * std::sin(angle / 2.0f), axis.z * std::sin(angle / 2.0f), std::cos(angle / 2.0f) };
 }
 
+Quaternion MakeAxisAngle(const Vector3<float>& axis, float angle) {
+	return AxisAngle(axis, angle);
+}
+
 float Dot(const Quaternion& x, const Quaternion& y) {
 	return x.x * y.x + x.y * y.y + x.z * y.z + x.w * y.w;
 }
