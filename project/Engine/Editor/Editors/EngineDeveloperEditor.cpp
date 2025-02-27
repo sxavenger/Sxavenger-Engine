@@ -146,14 +146,14 @@ void EngineDeveloperEditor::ShowPerformanceWindow() {
 			ImGui::TableSetupColumn("lap");
 			ImGui::TableHeadersRow();
 
-			for (const auto& [name, lap] : performance->GetLap()) {
+			/*for (const auto& [name, lap] : performance->GetLap()) {
 				ImGui::TableNextRow();
 				ImGui::TableNextColumn();
 				ImGui::Text(name.c_str());
 
 				ImGui::TableNextColumn();
 				ImGui::Text(std::format("{:.2f}ms", lap.time).c_str());
-			}
+			}*/
 
 			const auto& laps = performance->GetLap();
 			for (auto itr = laps.begin(); itr != laps.end(); ++itr) {
@@ -164,12 +164,11 @@ void EngineDeveloperEditor::ShowPerformanceWindow() {
 				ImGui::TableNextColumn();
 
 				if (itr == laps.begin()) {
-
+					ImGui::Text(std::format("{:.2f}ms", itr->second.time).c_str());
 
 				} else {
 					auto prev = std::prev(itr);
-
-
+					ImGui::Text(std::format("{:.2f}ms", itr->second.time - prev->second.time).c_str());
 				}
 			}
 

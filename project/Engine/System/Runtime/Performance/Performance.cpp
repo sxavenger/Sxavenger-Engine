@@ -18,10 +18,6 @@ void Performance::End() {
 	WaitFrame();
 	runtime_.End();
 
-	if (isRecord_) {
-		RecordLap("end");
-	}
-
 	// lapの更新かどうかの判定
 	recordedTime_ -= runtime_.GetDeltaTime<TimeUnit::second>();
 	isRecord_ = (recordedTime_ <= 0.0f);
