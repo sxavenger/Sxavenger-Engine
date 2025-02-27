@@ -12,12 +12,22 @@
 
 //* c++
 #include <optional>
+#include <array>
+#include <deque>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Performance class
 ////////////////////////////////////////////////////////////////////////////////////////////
 class Performance
 	: public ISystemDebugGui {
+public:
+
+	////////////////////////////////////////////////////////////////////////////////////////////
+	// using
+	////////////////////////////////////////////////////////////////////////////////////////////
+
+	using LapContainer = std::deque<std::pair<std::string, TimePointf<TimeUnit::millisecond>>>;
+
 public:
 
 	//=========================================================================================
@@ -28,9 +38,14 @@ public:
 
 	void End();
 
+	void RecordLap(const std::string& name);
+
 	void SystemDebugGui() override;
 
-	TimePointf<TimeUnit::second> GetDeltaTime() const { return runtime_.GetDeltaTime<TimeUnit::second>(); }
+	template <TimeUnit T = TimeUnit::second>
+	TimePointf<T> GetDeltaTime() const { return runtime_.GetDeltaTime<T>(); }
+
+	const LapContainer& GetLap() const { return laps_[(lapIndex_ + 1) % lapCount_]; }
 
 private:
 
@@ -46,7 +61,16 @@ private:
 
 	float limitFrame_ = 60.0f;
 
-	std::optional<TimePointf<TimeUnit::millisecond>> fixedDeltaTime_ = std::nullopt;
+	//* lap *//
+
+	static const uint8_t lapCount_ = 2;
+	std::array<LapContainer, lapCount_> laps_;
+
+	uint8_t lapIndex_ = 0;
+
+	TimePointf<TimeUnit::second> recordInterval_ = 1.0f;
+	TimePointf<TimeUnit::second> recordedTime_   = {};
+	bool isRecord_ = true;
 
 	//=========================================================================================
 	// private methods

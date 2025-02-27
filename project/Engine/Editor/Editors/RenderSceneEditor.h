@@ -43,6 +43,10 @@ public:
 
 	void Render();
 
+	//* option *//
+
+	void ResetSelectedActor() { selectedActor_ = std::nullopt; }
+
 	//* setter *//
 
 	void SetScene(FScene* scene) { sceneRenderer_->SetScene(scene); }

@@ -77,15 +77,19 @@ void EngineGameLoop::Init(GameLoop::Context* context) {
 
 	context->SetState(
 		GameLoop::State::Update, UINT32_MAX, [this]() {
+			SxavengerSystem::RecordLap("update [game logic]");
 			SxavengerSystem::EndImGuiFrame();
 			SxavengerSystem::TransitionAllocator();
+			SxavengerSystem::RecordLap("update [gpu transtion]");
 		}
 	);
 
 	context->SetState(
 		GameLoop::State::End, 0, [this]() {
+			SxavengerSystem::RecordLap("draw [draw logic]");
 			SxavengerSystem::PresentAllWindow();
 			SxavengerSystem::ExecuteAllAllocator();
+			SxavengerSystem::RecordLap("draw [gpu execution]");
 			SxavengerModule::ResetPrimtive();
 			SxavengerSystem::EndPerformace();
 		}

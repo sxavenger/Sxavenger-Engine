@@ -134,6 +134,10 @@ TimePointf<TimeUnit::second> SxavengerSystemEngine::GetDeltaTime() {
 	return sPerformance->GetDeltaTime();
 }
 
+void SxavengerSystemEngine::RecordLap(const std::string& name) {
+	sPerformance->RecordLap(name);
+}
+
 Performance* SxavengerSystemEngine::GetPerformance() {
 	return sPerformance.get();
 }

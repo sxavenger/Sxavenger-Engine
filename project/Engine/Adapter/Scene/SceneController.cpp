@@ -5,6 +5,8 @@
 //-----------------------------------------------------------------------------------------
 //* engine
 #include <Engine/System/Utility/Logger.h>
+#include <Engine/Editor/EditorEngine.h>
+#include <Engine/Editor/Editors/RenderSceneEditor.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // SceneController class methods
@@ -26,6 +28,11 @@ void SceneController::Term() {
 
 void SceneController::RequestNextScene(const std::string& key) {
 	if (factory_ != nullptr) {
+
+		sEditorEngine->ExecuteEditorFunction<RenderSceneEditor>([](RenderSceneEditor* editor) {
+			editor->ResetSelectedActor();
+		});
+
 		nextScene_ = factory_->CreateScene(key);
 	}
 }

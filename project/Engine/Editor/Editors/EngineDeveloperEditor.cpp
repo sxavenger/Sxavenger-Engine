@@ -139,15 +139,45 @@ void EngineDeveloperEditor::ShowPerformanceWindow() {
 	text += std::format("[frame per second]: {:.1f}",   1.0f / time.time);
 	ImGui::Text(text.c_str());
 
-	/*if (ImGui::BeginItemTooltip()) {
-		std::vector<float> values(fpsHistory_.begin(), fpsHistory_.end());
-		auto max = std::ranges::max_element(values);
+	if (ImGui::BeginItemTooltip()) {
 
-		std::string overlay = std::format("max: {:.1f}", *max);
+		if (ImGui::BeginTable("## record laps", 2, ImGuiTableFlags_ScrollY | ImGuiTableFlags_Borders)) {
+			ImGui::TableSetupColumn("name");
+			ImGui::TableSetupColumn("lap");
+			ImGui::TableHeadersRow();
 
-		ImGui::PlotLines("fps", values.data(), static_cast<int32_t>(values.size()), 0, overlay.c_str(), 0.0f, *max, { 200.0f, 40.0f });
+			for (const auto& [name, lap] : performance->GetLap()) {
+				ImGui::TableNextRow();
+				ImGui::TableNextColumn();
+				ImGui::Text(name.c_str());
+
+				ImGui::TableNextColumn();
+				ImGui::Text(std::format("{:.2f}ms", lap.time).c_str());
+			}
+
+			const auto& laps = performance->GetLap();
+			for (auto itr = laps.begin(); itr != laps.end(); ++itr) {
+				ImGui::TableNextRow();
+				ImGui::TableNextColumn();
+				ImGui::Text(itr->first.c_str());
+
+				ImGui::TableNextColumn();
+
+				if (itr == laps.begin()) {
+
+
+				} else {
+					auto prev = std::prev(itr);
+
+
+				}
+			}
+
+			ImGui::EndTable();
+		}
+
 		ImGui::EndTooltip();
-	}*/
+	}
 
 	ImGui::End();
 

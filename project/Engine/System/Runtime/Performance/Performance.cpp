@@ -18,7 +18,26 @@ void Performance::End() {
 	WaitFrame();
 	runtime_.End();
 
-	// todo: fixedDeltaTime_の処理
+	if (isRecord_) {
+		RecordLap("end");
+	}
+
+	// lapの更新かどうかの判定
+	recordedTime_ -= runtime_.GetDeltaTime<TimeUnit::second>();
+	isRecord_ = (recordedTime_ <= 0.0f);
+
+	if (isRecord_) {
+		// lapの更新
+		recordedTime_ = recordInterval_;
+		++lapIndex_ %= lapCount_;
+		laps_[lapIndex_].clear();
+	}
+}
+
+void Performance::RecordLap(const std::string& name) {
+	if (isRecord_) {
+		laps_[lapIndex_].emplace_back(name, runtime_.GetElapsedTime<TimeUnit::millisecond>());
+	}
 }
 
 void Performance::SystemDebugGui() {
