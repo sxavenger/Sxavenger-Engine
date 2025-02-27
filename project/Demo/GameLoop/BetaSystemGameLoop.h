@@ -19,6 +19,8 @@
 #include <Engine/Render/Scene/FAmbientProcessSetting.h>
 #include <Engine/Render/Scene/AmbientProcess/AmbientProcesses/FAmbientProcessNLAO.h>
 
+#include "Engine/System/DirectX/DxObject/DxVectorDimensionBuffer.h"
+
 ////////////////////////////////////////////////////////////////////////////////////////////
 // BetaSystemGameLoop class
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -59,7 +61,9 @@ private:
 
 	std::unique_ptr<AModelActor> model_;
 
-	// vvv visual vvv //
+	// vvv engine debug vvv //
+
+	std::unique_ptr<DxObject::VectorDimensionBuffer<Vector4f>> buffer_;
 
 	//=========================================================================================
 	// private methods

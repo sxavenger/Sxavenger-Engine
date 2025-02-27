@@ -94,6 +94,16 @@ public:
 
 	void Reserve(Device* device, uint32_t capacity);
 
+	const T& At(size_t index) const;
+	T& At(size_t index);
+
+	//=========================================================================================
+	// public operator
+	//=========================================================================================
+
+	const T& operator[](size_t index) const;
+	T& operator[](size_t index);
+
 private:
 
 	//=========================================================================================
@@ -121,8 +131,8 @@ inline void VectorDimensionBuffer<T>::Resize(Device* device, uint32_t size) {
 	// 引数の保存
 	size_ = size;
 
-	if (resource_ == nullptr || size_ > capacity_) {
-		Recreate(device, size_);
+	if (resource_ == nullptr || size > capacity_) {
+		Recreate(device, size);
 
 	} else {
 		Map();
@@ -139,6 +149,30 @@ inline void VectorDimensionBuffer<T>::Reserve(Device* device, uint32_t capacity)
 }
 
 template <class T>
+inline const T& VectorDimensionBuffer<T>::At(size_t index) const {
+	Assert(CheckIndex(index), "index out of range.");
+	return mappedDatas_[index];
+}
+
+template <class T>
+inline T& VectorDimensionBuffer<T>::At(size_t index) {
+	Assert(CheckIndex(index), "index out of range.");
+	return mappedDatas_[index];
+}
+
+template <class T>
+inline const T& VectorDimensionBuffer<T>::operator[](size_t index) const {
+	Assert(CheckIndex(index), "index out of range.");
+	return mappedDatas_[index];
+}
+
+template <class T>
+inline T& VectorDimensionBuffer<T>::operator[](size_t index) {
+	Assert(CheckIndex(index), "index out of range.");
+	return mappedDatas_[index];
+}
+
+template <class T>
 inline void VectorDimensionBuffer<T>::Map() {
 	T* mappingTarget = nullptr;
 
@@ -150,14 +184,16 @@ inline void VectorDimensionBuffer<T>::Map() {
 template <class T>
 inline void VectorDimensionBuffer<T>::Recreate(Device* device, uint32_t capacity) {
 	// 一時的に保存
-	std::vector<T> data(mappedDatas_.begin(), mappedDatas_.end());
+	std::vector<T> tmp(mappedDatas_.begin(), mappedDatas_.end());
+	tmp.resize(size_);
 
 	// resourceの生成
 	BaseVectorDimensionBuffer::Create(device, capacity);
 	Map();
 
 	// データのコピー
-	std::copy(data.begin(), data.begin() + size_, mappedDatas_.begin());
+	std::copy(tmp.begin(), tmp.begin() + size_, mappedDatas_.begin());
 	std::fill(mappedDatas_.begin() + size_, mappedDatas_.end(), T{});
 }
+
 _DXOBJECT_NAMESPACE_END
