@@ -93,8 +93,8 @@ template<class T>
 inline const D3D12_VERTEX_BUFFER_VIEW VertexUnorderedDimensionBuffer<T>::GetVertexBufferView() const {
 	D3D12_VERTEX_BUFFER_VIEW result = {};
 	result.BufferLocation = this->GetGPUVirtualAddress();
-	result.SizeInBytes    = this->stride_ * this->size_;
-	result.StrideInBytes  = this->stride_;
+	result.SizeInBytes    = static_cast<UINT>(this->stride_ * this->size_);
+	result.StrideInBytes  = static_cast<UINT>(this->stride_);
 
 	return result;
 }

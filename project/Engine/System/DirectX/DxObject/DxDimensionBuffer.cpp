@@ -34,15 +34,15 @@ void BaseDimensionBuffer::Create(Device* devices, uint32_t size) {
 		size_ * stride_
 	);
 
-	address_ = resource_->GetGPUVirtualAddress();
+	UpdateAddress();
 }
 
-bool BaseDimensionBuffer::CheckIndex(uint32_t index) const {
-	if (index >= size_) {
-		return false;
-	}
+void BaseDimensionBuffer::UpdateAddress() {
+	address_ = (resource_ != nullptr) ? std::optional<D3D12_GPU_VIRTUAL_ADDRESS>{ resource_->GetGPUVirtualAddress() } : std::nullopt;
+}
 
-	return true;
+bool BaseDimensionBuffer::CheckIndex(size_t index) const {
+	return index < size_;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -57,7 +57,7 @@ const D3D12_INDEX_BUFFER_VIEW IndexDimensionBuffer::GetIndexBufferView() const {
 	D3D12_INDEX_BUFFER_VIEW result = {};
 	result.Format         = DXGI_FORMAT_R32_UINT;
 	result.BufferLocation = GetGPUVirtualAddress();
-	result.SizeInBytes    = stride_ * size_;
+	result.SizeInBytes    = static_cast<UINT>(stride_ * size_);
 	return result;
 }
 
@@ -73,7 +73,7 @@ const D3D12_INDEX_BUFFER_VIEW LineIndexDimensionBuffer::GetIndexBufferView() con
 	D3D12_INDEX_BUFFER_VIEW result = {};
 	result.Format         = DXGI_FORMAT_R32_UINT;
 	result.BufferLocation = GetGPUVirtualAddress();
-	result.SizeInBytes    = stride_ * size_;
+	result.SizeInBytes    = static_cast<UINT>(stride_ * size_);
 	return result;
 }
 
@@ -89,7 +89,6 @@ const D3D12_INDEX_BUFFER_VIEW TriangleIndexDimensionBuffer::GetIndexBufferView()
 	D3D12_INDEX_BUFFER_VIEW result = {};
 	result.Format         = DXGI_FORMAT_R32_UINT;
 	result.BufferLocation = GetGPUVirtualAddress();
-	result.SizeInBytes    = stride_ * size_;
+	result.SizeInBytes    = static_cast<UINT>(stride_ * size_);
 	return result;
 }
-

@@ -51,20 +51,15 @@ private:
 
 	std::unique_ptr<FScene> scene_;
 
-	std::unique_ptr<FAmbientProcessSetting> ambient_;
-
 	// vvv actors vvv //
 
 	std::unique_ptr<ACineCameraActor> camera_;
 
-	std::unique_ptr<AModelActor> model_;
-	std::unique_ptr<AModelActor> model2_;
-
 	std::unique_ptr<ADirectionalLightActor> light_;
 
-	// vvv visual vvv //
+	std::unique_ptr<AModelActor> model_;
 
-	std::unique_ptr<FAmbientProcessNLAO> ambientNLAO_;
+	// vvv visual vvv //
 
 	//=========================================================================================
 	// private methods

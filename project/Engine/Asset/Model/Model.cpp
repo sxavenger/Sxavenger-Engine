@@ -1,5 +1,11 @@
 #include "Model.h"
 
+//-----------------------------------------------------------------------------------------
+// include
+//-----------------------------------------------------------------------------------------
+//* c++
+#include <execution>
+
 //* 右手座標から左手座標系への変換 -zを採用
 //* Vector3
 //*  position = x, y, -z;
@@ -121,11 +127,11 @@ void Model::LoadMesh(const aiScene* aiScene) {
 	meshes_.resize(aiScene->mNumMeshes);
 
 	// meshesの解析
-	for (uint32_t meshIndex = 0; meshIndex < aiScene->mNumMeshes; ++meshIndex) {
+	std::for_each(std::execution::seq, meshes_.begin(), meshes_.end(), [this, aiScene](Mesh& mesh) {
+		size_t meshIndex = &mesh - &meshes_.front(); //!< indexの取得
 
 		// meshの取得
 		const aiMesh* aiMesh = aiScene->mMeshes[meshIndex];
-		auto& mesh           = meshes_.at(meshIndex);
 
 		{ //!< InputAssembler
 
@@ -218,7 +224,7 @@ void Model::LoadMesh(const aiScene* aiScene) {
 		{ //!< material
 			mesh.materialIndex = aiMesh->mMaterialIndex;
 		}
-	}
+	});
 }
 
 void Model::LoadMaterial(const aiScene* aiScene, const DirectXThreadContext* context, const std::filesystem::path& directory) {

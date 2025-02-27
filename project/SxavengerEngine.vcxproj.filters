@@ -169,6 +169,7 @@
     <ClCompile Include="Engine\Render\Scene\Actor\Geometry\GeometryActors\AModelInstanceActor.cpp" />
     <ClCompile Include="Demo\Prototype\PrototypeGameLoop.cpp" />
     <ClCompile Include="Demo\GameLoop\DemoGameLoop.cpp" />
+    <ClCompile Include="Engine\System\DirectX\DxObject\DxVectorDimensionBuffer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\System\Window\Window.h" />
@@ -343,6 +344,7 @@
     <ClInclude Include="Engine\Render\Scene\Actor\Geometry\GeometryActors\AModelInstanceActor.h" />
     <ClInclude Include="Demo\Prototype\PrototypeGameLoop.h" />
     <ClInclude Include="Demo\GameLoop\DemoGameLoop.h" />
+    <ClInclude Include="Engine\System\DirectX\DxObject\DxVectorDimensionBuffer.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

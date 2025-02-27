@@ -58,9 +58,6 @@ void BetaSystemGameLoop::InitSystem() {
 	scene_ = std::make_unique<FScene>();
 	renderer_->SetScene(scene_.get());
 
-	ambient_ = std::make_unique<FAmbientProcessSetting>();
-	renderer_->SetAmbientSetting(ambient_.get());
-
 	// vvv actors vvv //
 
 	camera_ = std::make_unique<ACineCameraActor>();
@@ -68,32 +65,15 @@ void BetaSystemGameLoop::InitSystem() {
 
 	renderer_->SetCamera(camera_.get());
 
-	model_ = std::make_unique<AModelActor>();
-	model_->Init();
-	model_->SetModel(SxavengerAsset::TryImport<AssetModel>("assets/models/primitive/randomCubes.obj"));
-	model_->SetRenderWait(false);
-	model_->GetName() = "model A";
-
-	scene_->AddGeometry(model_.get());
-
-	model2_ = std::make_unique<AModelActor>();
-	model2_->Init();
-	model2_->SetModel(SxavengerAsset::TryImport<AssetModel>("assets/models/primitive/randomCubes.obj"));
-	model2_->SetRenderWait(false);
-	model2_->GetName() = "model B";
-
-	scene_->AddGeometry(model2_.get());
-
 	light_ = std::make_unique<ADirectionalLightActor>();
 	light_->Init();
 
 	scene_->AddLight(light_.get());
 
-	// vvv visual vvv //
-
-	ambientNLAO_ = std::make_unique<FAmbientProcessNLAO>();
-	ambientNLAO_->Init();
-	ambient_->AddProcess(ambientNLAO_.get());
+	model_ = std::make_unique<AModelActor>();
+	model_->Init();
+	model_->SetModel(SxavengerAsset::TryImport<AssetModel>("assets/models/chessboard/chessboard.gltf"));
+	scene_->AddGeometry(model_.get());
 
 	//* editor *//
 
@@ -122,7 +102,7 @@ void BetaSystemGameLoop::DrawSystem() {
 	main_->ClearWindow();
 
 	presenter_.Present(SxavengerSystem::GetMainThreadContext(), main_->GetSize(), textures_->GetGBuffer(FSceneTextures::GBufferLayout::Main)->GetGPUHandleSRV());
-
+	 
 	SxavengerSystem::RenderImGui();
 
 	main_->EndRendering();

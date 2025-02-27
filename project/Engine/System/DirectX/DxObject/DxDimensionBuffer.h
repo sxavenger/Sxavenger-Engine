@@ -26,7 +26,7 @@ public:
 	// public methods
 	//=========================================================================================
 
-	BaseDimensionBuffer(size_t stride) : stride_(static_cast<uint32_t>(stride)) {}
+	BaseDimensionBuffer(size_t stride) : stride_(stride) {}
 	virtual ~BaseDimensionBuffer() { Release(); }
 
 	virtual void Release();
@@ -39,7 +39,7 @@ public:
 
 	const uint32_t GetSize() const { return size_; }
 
-	const uint32_t GetStride() const { return stride_; }
+	const size_t GetStride() const { return stride_; }
 
 protected:
 
@@ -54,8 +54,8 @@ protected:
 
 	//* paraemter *//
 
-	uint32_t size_         = NULL;
-	const uint32_t stride_ = NULL;
+	uint32_t size_       = NULL;
+	const size_t stride_ = NULL;
 
 	//=========================================================================================
 	// protected methods
@@ -63,7 +63,9 @@ protected:
 
 	void Create(Device* devices, uint32_t size);
 
-	bool CheckIndex(uint32_t index) const;
+	void UpdateAddress();
+
+	bool CheckIndex(size_t index) const;
 
 };
 
@@ -86,8 +88,8 @@ public:
 
 	void Release() override;
 
-	T& At(uint32_t index);
-	const T& At(uint32_t index) const;
+	T& At(size_t index);
+	const T& At(size_t index) const;
 
 	const T* GetData();
 
@@ -101,8 +103,8 @@ public:
 	// operator
 	//=========================================================================================
 
-	T& operator[](uint32_t index);
-	const T& operator[](uint32_t index) const;
+	T& operator[](size_t index);
+	const T& operator[](size_t index) const;
 
 private:
 
@@ -211,13 +213,13 @@ inline void DimensionBuffer<T>::Release() {
 }
 
 template <class T>
-inline T& DimensionBuffer<T>::At(uint32_t index) {
+inline T& DimensionBuffer<T>::At(size_t index) {
 	Assert(CheckIndex(index), "Dimension Buffer out of range.");
 	return mappedDatas_[index];
 }
 
 template <class T>
-inline const T& DimensionBuffer<T>::At(uint32_t index) const {
+inline const T& DimensionBuffer<T>::At(size_t index) const {
 	Assert(CheckIndex(index), "Dimension Buffer out of range.");
 	return mappedDatas_[index];
 }
@@ -238,13 +240,13 @@ inline void DimensionBuffer<T>::Fill(const T& value) {
 }
 
 template <class T>
-inline T& DimensionBuffer<T>::operator[](uint32_t index) {
+inline T& DimensionBuffer<T>::operator[](size_t index) {
 	Assert(CheckIndex(index), "Dimension Buffer out of range.");
 	return mappedDatas_[index];
 }
 
 template <class T>
-inline const T& DimensionBuffer<T>::operator[](uint32_t index) const {
+inline const T& DimensionBuffer<T>::operator[](size_t index) const {
 	Assert(CheckIndex(index), "Dimension Buffer out of range.");
 	return mappedDatas_[index];
 }
@@ -257,8 +259,8 @@ template <class T>
 inline const D3D12_VERTEX_BUFFER_VIEW VertexDimensionBuffer<T>::GetVertexBufferView() const {
 	D3D12_VERTEX_BUFFER_VIEW result = {};
 	result.BufferLocation = this->GetGPUVirtualAddress();
-	result.SizeInBytes    = this->stride_ * this->size_;
-	result.StrideInBytes  = this->stride_;
+	result.SizeInBytes    = static_cast<UINT>(this->stride_ * this->size_);
+	result.StrideInBytes  = static_cast<UINT>(this->stride_);
 
 	return result;
 }
