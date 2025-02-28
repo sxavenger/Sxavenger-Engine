@@ -8,6 +8,7 @@
 
 //* engine
 #include <Engine/System/UI/ISystemDebugGui.h>
+#include <Engine/Content/InputAssembler/LineInputAssembler.h>
 
 //* lib
 #include <Lib/Geometry/Color.h>
@@ -135,6 +136,15 @@ private:
 class ColliderPrimitiveDrawer {
 public:
 
+	//=========================================================================================
+	// public methods
+	//=========================================================================================
+
+	ColliderPrimitiveDrawer()  = default;
+	~ColliderPrimitiveDrawer() = default;
+
+	void Init();
+
 private:
 
 	////////////////////////////////////////////////////////////////////////////////////////////
@@ -148,9 +158,44 @@ private:
 		Vector3f position = {};
 		Color4f color     = {};
 
+		//* methods *//
 
+		void operator()(const CollisionBoundings::Sphere& sphere) {
+			sphere;
+			//DrawSphere(position, sphere, color);
+		}
 
+		void operator()(const CollisionBoundings::Capsule& capsule) {
+			capsule;
+			//DrawCapsule(position, capsule, color);
+		}
+
+		void operator()(const CollisionBoundings::AABB& aabb) {
+			aabb;
+			//DrawAABB(position, aabb, color);
+		}
+
+		void operator()(const CollisionBoundings::OBB& obb) {
+			obb;
+			//DrawOBB(position, obb, color);
+		}
 	};
 
 private:
+
+	//=========================================================================================
+	// private variables
+	//=========================================================================================
+
+	LineInputAssembler<Vector4f> sphereIA_;
+	LineInputAssembler<Vector4f> boxIA_;
+
+
+
+	//=========================================================================================
+	// private methods
+	//=========================================================================================
+
+	void CreateIA();
+	
 };
