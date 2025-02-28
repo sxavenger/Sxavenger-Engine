@@ -190,7 +190,12 @@ private:
 	LineInputAssembler<Vector4f> sphereIA_;
 	LineInputAssembler<Vector4f> boxIA_;
 
+	//!< LineStrip想定
 
+	//* parameter *//
+
+	const uint32_t kSphereSubdivision = 24;
+	const float kSphereRoundEvery     = pi_v * 2.0f / kSphereSubdivision;
 
 	//=========================================================================================
 	// private methods

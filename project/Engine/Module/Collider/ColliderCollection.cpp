@@ -370,5 +370,8 @@ void ColliderPrimitiveDrawer::Init() {
 }
 
 void ColliderPrimitiveDrawer::CreateIA() {
+	{ //!< sphere
 
+		// todo: initialize sphereIA_
+	}
 }

@@ -50,18 +50,22 @@ void GraphicsPipelineDesc::SetIndependentBlendEnable(bool isIndependentEnable) {
 }
 
 void GraphicsPipelineDesc::SetPrimitive(PrimitiveType type) {
-	if (type == PrimitiveType::kLine) { //!< 線分
-		primitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_LINE;
-		primitiveTopology     = D3D_PRIMITIVE_TOPOLOGY_LINELIST;
-		return;
+	switch (type) {
+		case PrimitiveType::kLineList:
+			primitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_LINE;
+			primitiveTopology     = D3D_PRIMITIVE_TOPOLOGY_LINELIST;
+			break;
 
-	} else if (type == PrimitiveType::kTriangle) { //!< 三角形
-		primitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
-		primitiveTopology     = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
-		return;
+		case PrimitiveType::kLineStrip:
+			primitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_LINE;
+			primitiveTopology     = D3D_PRIMITIVE_TOPOLOGY_LINESTRIP;
+			break;
+
+		case PrimitiveType::kTrianglList:
+			primitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
+			primitiveTopology     = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+			break;
 	}
-
-	Assert(false); //!< 未定義のtype
 }
 
 void GraphicsPipelineDesc::SetRTVFormat(DXGI_FORMAT format) {
@@ -97,7 +101,7 @@ void GraphicsPipelineDesc::CreateDefaultDesc() {
 	SetBlendMode(0, BlendMode::kBlendModeNormal);
 	SetIndependentBlendEnable(false);
 
-	SetPrimitive(PrimitiveType::kTriangle);
+	SetPrimitive(PrimitiveType::kTrianglList);
 
 	SetRTVFormat(kOffscreenFormat);
 	SetDSVFormat(kDefaultDepthFormat);

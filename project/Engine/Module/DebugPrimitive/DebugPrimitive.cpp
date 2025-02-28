@@ -183,7 +183,7 @@ void DebugPrimitive::CreatePipeline() {
 	desc.SetElement("COLOR",    0, DXGI_FORMAT_R32G32B32A32_FLOAT);
 
 	desc.SetRasterizer(D3D12_CULL_MODE_NONE, D3D12_FILL_MODE_SOLID);
-	desc.SetPrimitive(PrimitiveType::kLine);
+	desc.SetPrimitive(PrimitiveType::kLineList);
 
 	desc.SetRTVFormat(0, DXGI_FORMAT_R32G32B32A32_FLOAT);
 
