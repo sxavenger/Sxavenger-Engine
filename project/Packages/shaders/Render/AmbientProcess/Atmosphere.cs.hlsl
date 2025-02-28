@@ -89,7 +89,7 @@ float HenyeyGreensteinPhaseFunction(float mu) {
 	return 1.0f / (4.0f * pi) * (1.0f - kG * kG) / pow(1.0f + kG * kG - 2.0f * kG * mu, 1.5f);
 }
 
-bool IntersectSphere(Ray ray, Sphere sphere, out float distanceNear, out float distanceFar) {
+bool IntersectSphere(Ray ray, Sphere sphere, inout float distanceNear, inout float distanceFar) {
 	float3 rc     = sphere.center - ray.origin;
 	float radius2 = sphere.radius * sphere.radius;
 	float tca     = dot(rc, ray.direction);
@@ -106,7 +106,7 @@ bool IntersectSphere(Ray ray, Sphere sphere, out float distanceNear, out float d
 	return true;
 }
 
-bool GetSunLight(Ray ray, Sphere sphere, out float opticalDepthR, out float opticalDepthM) {
+bool GetSunLight(Ray ray, Sphere sphere, inout float opticalDepthR, inout float opticalDepthM) {
 	
 	float distanceNear = 0.0f;
 	float distanceFar  = 0.0f;
