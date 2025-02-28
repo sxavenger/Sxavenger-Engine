@@ -1,4 +1,5 @@
 #include "ColliderCollection.h"
+_DXOBJECT_USING
 
 //-----------------------------------------------------------------------------------------
 // include
@@ -7,6 +8,7 @@
 #include "CollisionDetection.h"
 
 //* engine
+#include <Engine/System/SxavengerSystem.h>
 #include <Engine/Module/SxavengerModule.h>
 
 //* external
@@ -366,12 +368,63 @@ void ColliderDrawer::DrawOBB(const Vector3f& position, const CollisionBoundings:
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 void ColliderPrimitiveDrawer::Init() {
-
+	CreateSphereIA();
 }
 
-void ColliderPrimitiveDrawer::CreateIA() {
-	{ //!< sphere
+void ColliderPrimitiveDrawer::CreateSphereIA() {
 
-		// todo: initialize sphereIA_
+	sphereVB_ = std::make_unique<DxObject::DimensionBuffer<Vector4f>>();
+	sphereVB_->Create(SxavengerSystem::GetDxDevice(), (kSphereSubdivision + 1) * 3);
+
+	uint32_t index = 0;
+
+	// xz軸の円
+	for (uint32_t lon = 0; lon <= kSphereSubdivision; ++lon) {
+		float theta = kSphereRoundEvery * lon;
+
+		// 単位円の生成
+		Vector3f p = { //!< 始点
+			std::sin(theta),
+			0.0f,
+			std::cos(theta),
+		};
+
+		sphereVB_->At(index++) = { p.x, p.y, p.z, 1.0f };
 	}
+
+	// xy軸の円
+	for (uint32_t lat = 0; lat <= kSphereSubdivision; ++lat) {
+		float phi = kSphereRoundEvery * lat;
+
+		// 単位円の生成
+		Vector3f p = { //!< 始点
+			std::cos(phi),
+			std::sin(phi),
+			0.0f
+		};
+
+		sphereVB_->At(index++) = { p.x, p.y, p.z, 1.0f };
+	}
+
+	// yz軸の円
+	for (uint32_t lat = 0; lat < kSphereSubdivision; ++lat) {
+		float phi = kSphereRoundEvery * lat;
+
+		// 単位円の生成
+		Vector3f p = { //!< 始点
+			0.0f,
+			std::sin(phi),
+			std::cos(phi)
+		};
+
+		sphereVB_->At(index++) = { p.x, p.y, p.z, 1.0f };
+	}
+}
+
+void ColliderPrimitiveDrawer::CreatePipeline() {
+	pipeline_ = std::make_unique<DxObject::ReflectionGraphicsPipelineState>();
+	pipeline_->CreateBlob(kPackagesShaderDirectory / "primitive/collider/colliderPrimitive.vs.hlsl", GraphicsShaderType::vs);
+	pipeline_->CreateBlob(kPackagesShaderDirectory / "primitive/collider/colliderPrimitive.ps.hlsl", GraphicsShaderType::ps);
+	pipeline_->ReflectionRootSignature(SxavengerSystem::GetDxDevice());
+	
 }

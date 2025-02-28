@@ -31,7 +31,11 @@ public:
 
 	AGeometryActor::Iterator AddGeometry(AGeometryActor* geometry);
 
+	void ClearGeometries() { geometries_.clear(); }
+
 	ALightActor::Iterator AddLight(ALightActor* light);
+
+	void ClearLights() { lights_.clear(); }
 
 	//* raytracing option *//
 

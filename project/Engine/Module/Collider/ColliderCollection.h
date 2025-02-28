@@ -8,14 +8,15 @@
 
 //* engine
 #include <Engine/System/UI/ISystemDebugGui.h>
-#include <Engine/Content/InputAssembler/LineInputAssembler.h>
+#include <Engine/System/DirectX/DxObject/DxDimensionBuffer.h>
+#include <Engine/System/DirectX/DxObject/DxGraphicsPipelineState.h>
 
 //* lib
 #include <Lib/Geometry/Color.h>
 
 //* c++
 #include <unordered_set>
-
+#include <memory>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // ColliderCollection class
@@ -187,10 +188,13 @@ private:
 	// private variables
 	//=========================================================================================
 
-	LineInputAssembler<Vector4f> sphereIA_;
-	LineInputAssembler<Vector4f> boxIA_;
+	std::unique_ptr<DxObject::DimensionBuffer<Vector4f>> sphereVB_;
 
 	//!< LineStrip想定
+
+	//* pipeline *//
+
+	std::unique_ptr<DxObject::ReflectionGraphicsPipelineState> pipeline_;
 
 	//* parameter *//
 
@@ -201,6 +205,8 @@ private:
 	// private methods
 	//=========================================================================================
 
-	void CreateIA();
+	void CreateSphereIA();
+
+	void CreatePipeline();
 	
 };
