@@ -13,12 +13,12 @@ PSInput main(VSInput input) {
 	output.position.z  = input.position.z;
 	output.position.w  = 1.0f;
 
-	output.texcoord = input.texcoord;
+	output.texcoord = mul(float4(input.texcoord, 0.0f, 1.0f), gTextureComponent.mat).xy;
 	
 	//* to screen
 	output.position.y *= -1.0f;
 	
-	output.color = input.color;
+	output.color = input.color * gTextureComponent.color;
 	
 	return output;
 }

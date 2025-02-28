@@ -37,7 +37,7 @@ void LSprite::Render(const RenderContext& context) {
 	ia_.BindIABuffer(context.context);
 
 	BindBufferDesc parameter = context.parameter;
-	parameter.SetAddress("gTransform",        Transform2dComponent::GetGPUVirtualAddress());
+	parameter.SetAddress("gTransform2d",      Transform2dComponent::GetGPUVirtualAddress());
 	parameter.SetAddress("gTextureComponent", TextureComponent::GetGPUVirtualAddress());
 
 	if (std::holds_alternative<D3D12_GPU_DESCRIPTOR_HANDLE>(texture_.value())) {
