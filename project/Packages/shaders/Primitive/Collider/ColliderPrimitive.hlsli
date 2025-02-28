@@ -33,4 +33,4 @@ struct Parameter {
 	float4x4 mat;
 	float4 color;
 };
-ConstantBuffer<Parameter> gParameter : register(b1);
+StructuredBuffer<Parameter> gParameter : register(t0);

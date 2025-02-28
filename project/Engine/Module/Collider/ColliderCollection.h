@@ -5,11 +5,13 @@
 //-----------------------------------------------------------------------------------------
 //* collider
 #include "Collider.h"
+#include "ColliderPrimitiveDrawer.h"
 
 //* engine
 #include <Engine/System/UI/ISystemDebugGui.h>
 #include <Engine/System/DirectX/DxObject/DxDimensionBuffer.h>
 #include <Engine/System/DirectX/DxObject/DxGraphicsPipelineState.h>
+#include <Engine/System/DirectX/DxObject/DxVectorDimensionBuffer.h>
 
 //* lib
 #include <Lib/Geometry/Color.h>
@@ -32,6 +34,8 @@ public:
 	ColliderCollection()  = default;
 	~ColliderCollection() = default;
 
+	void Init();
+
 	void CheckCollision();
 
 	void Draw();
@@ -43,6 +47,10 @@ public:
 	void SetCollider(Collider* collider);
 
 	void EraseCollider(Collider* collider);
+
+	//* getter *//
+
+	ColliderPrimitiveDrawer* GetDrawer() { return &drawer_; }
 
 private:
 
@@ -60,6 +68,10 @@ private:
 	Color4f inactiveColor_ = ToColor4<float>(0x808040FF);
 
 	bool isDraw_ = true;
+
+	//* drawer *//
+
+	ColliderPrimitiveDrawer drawer_;
 
 	//=========================================================================================
 	// private methods
@@ -128,85 +140,4 @@ private:
 
 	static void DrawOBB(const Vector3f& position, const CollisionBoundings::OBB& obb, const Color4f& color);
 
-};
-
-
-////////////////////////////////////////////////////////////////////////////////////////////
-// ColliderPrimitiveDrawer class
-////////////////////////////////////////////////////////////////////////////////////////////
-class ColliderPrimitiveDrawer {
-public:
-
-	//=========================================================================================
-	// public methods
-	//=========================================================================================
-
-	ColliderPrimitiveDrawer()  = default;
-	~ColliderPrimitiveDrawer() = default;
-
-	void Init();
-
-private:
-
-	////////////////////////////////////////////////////////////////////////////////////////////
-	// Visitor structure
-	////////////////////////////////////////////////////////////////////////////////////////////
-	struct Visitor {
-	public:
-
-		//* member *//
-
-		Vector3f position = {};
-		Color4f color     = {};
-
-		//* methods *//
-
-		void operator()(const CollisionBoundings::Sphere& sphere) {
-			sphere;
-			//DrawSphere(position, sphere, color);
-		}
-
-		void operator()(const CollisionBoundings::Capsule& capsule) {
-			capsule;
-			//DrawCapsule(position, capsule, color);
-		}
-
-		void operator()(const CollisionBoundings::AABB& aabb) {
-			aabb;
-			//DrawAABB(position, aabb, color);
-		}
-
-		void operator()(const CollisionBoundings::OBB& obb) {
-			obb;
-			//DrawOBB(position, obb, color);
-		}
-	};
-
-private:
-
-	//=========================================================================================
-	// private variables
-	//=========================================================================================
-
-	std::unique_ptr<DxObject::DimensionBuffer<Vector4f>> sphereVB_;
-
-	//!< LineStrip想定
-
-	//* pipeline *//
-
-	std::unique_ptr<DxObject::ReflectionGraphicsPipelineState> pipeline_;
-
-	//* parameter *//
-
-	const uint32_t kSphereSubdivision = 24;
-	const float kSphereRoundEvery     = pi_v * 2.0f / kSphereSubdivision;
-
-	//=========================================================================================
-	// private methods
-	//=========================================================================================
-
-	void CreateSphereIA();
-
-	void CreatePipeline();
-	
 };

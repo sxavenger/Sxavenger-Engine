@@ -49,8 +49,6 @@ public:
 
 	static void CheckCollision();
 
-	static void DrawCollider();
-
 	static ColliderCollection* GetColliderCollection();
 
 	//-----------------------------------------------------------------------------------------

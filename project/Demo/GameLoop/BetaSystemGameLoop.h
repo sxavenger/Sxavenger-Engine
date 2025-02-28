@@ -20,6 +20,7 @@
 #include <Engine/Render/Scene/AmbientProcess/AmbientProcesses/FAmbientProcessNLAO.h>
 
 #include "Engine/System/DirectX/DxObject/DxVectorDimensionBuffer.h"
+#include "Engine/Module/Collider/Collider.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // BetaSystemGameLoop class
@@ -64,6 +65,8 @@ private:
 	// vvv engine debug vvv //
 
 	std::unique_ptr<DxObject::VectorDimensionBuffer<Vector4f>> buffer_;
+
+	std::unique_ptr<Collider> colliders_[128];
 
 	//=========================================================================================
 	// private methods

@@ -191,6 +191,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="Demo\Prototype\PrototypeGameLoop.cpp" />
     <ClCompile Include="Engine\Asset\Model\Model.cpp" />
     <ClCompile Include="Engine\Content\Component\MaterialComponent.cpp" />
+    <ClCompile Include="Engine\Module\Collider\ColliderPrimitiveDrawer.cpp" />
     <ClCompile Include="Engine\Render\Canvas\FCanvas.cpp" />
     <ClCompile Include="Engine\Render\Canvas\Layer\Layers\LSprite.cpp" />
     <ClCompile Include="Engine\Render\Canvas\Layer\LLayer.cpp" />
@@ -353,6 +354,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Demo\Prototype\PrototypeGameLoop.h" />
     <ClInclude Include="Engine\Asset\Model\Model.h" />
     <ClInclude Include="Engine\Content\Component\MaterialComponent.h" />
+    <ClInclude Include="Engine\Module\Collider\ColliderPrimitiveDrawer.h" />
     <ClInclude Include="Engine\Render\Canvas\FCanvas.h" />
     <ClInclude Include="Engine\Render\Canvas\Layer\Layers\LSprite.h" />
     <ClInclude Include="Engine\Render\Canvas\Layer\LLayer.h" />

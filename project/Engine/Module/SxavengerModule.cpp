@@ -19,6 +19,7 @@ void SxavengerModule::Init() {
 	sPrimitive->Init();
 
 	sColliderCollection = std::make_unique<ColliderCollection>();
+	sColliderCollection->Init();
 
 	sSkinningPipeline = std::make_unique<SkinningComputePipeline>();
 	sSkinningPipeline->Init();
@@ -35,6 +36,7 @@ void SxavengerModule::Term() {
 
 void SxavengerModule::ResetPrimtive() {
 	sPrimitive->ResetPrimitive();
+	sColliderCollection->GetDrawer()->Clear();
 }
 
 void SxavengerModule::DrawLine(const Vector3f& v1, const Vector3f& v2, const Color4f& color) {
@@ -67,10 +69,6 @@ void SxavengerModule::EraseCollider(Collider* collider) {
 
 void SxavengerModule::CheckCollision() {
 	sColliderCollection->CheckCollision();
-}
-
-void SxavengerModule::DrawCollider() {
-	sColliderCollection->Draw();
 }
 
 ColliderCollection* SxavengerModule::GetColliderCollection() {

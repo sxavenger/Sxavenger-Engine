@@ -1,236 +1,112 @@
-#include "ColliderCollection.h"
+#include "ColliderPrimitiveDrawer.h"
 _DXOBJECT_USING
 
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
-//* collider
-#include "CollisionDetection.h"
-
 //* engine
 #include <Engine/System/SxavengerSystem.h>
 #include <Engine/Module/SxavengerModule.h>
-
-//* external
-#include <imgui.h>
-
-//* c++
-#include <execution>
+#include <Engine/Render/Scene/Actor/Camera/ACameraActor.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// ColliderCollection class methods
+// ColliderPrimitiveDrawer class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-void ColliderCollection::Init() {
-	drawer_.Init();
+void ColliderPrimitiveDrawer::Init() {
+	CreatePipeline();
+	CreateSphereIA();
+
+	sphereBuffer_ = std::make_unique<DxObject::VectorDimensionBuffer<std::pair<Matrix4x4, Color4f>>>();
+	sphereBuffer_->Reserve(SxavengerSystem::GetDxDevice(), 128);
 }
 
-void ColliderCollection::CheckCollision() {
-	SetupColliderState();
-	CheckAllCollision();
-	CallBack();
-}
-
-void ColliderCollection::Draw() {
-	if (!isDraw_) {
+void ColliderPrimitiveDrawer::DrawCollider(const std::optional<CollisionBoundings::Boundings>& boundings, const Vector3f& position, const Color4f& color) {
+	if (!boundings.has_value()) {
 		return;
 	}
 
-	for (const auto& collider : colliders_) {
-		drawer_.DrawCollider(collider->GetBoundings(), collider->GetPosition(), collider->IsActive() ? activeColor_ : inactiveColor_);
-	}
-}
-
-void ColliderCollection::SystemDebugGui() {
-	ImGui::SeparatorText("parameter");
-	ImGui::ColorEdit4("active", &activeColor_.r);
-	ImGui::ColorEdit4("inactive", &inactiveColor_.r);
-	ImGui::Checkbox("draw", &isDraw_);
-
-	ImGui::SeparatorText("info");
-	ImGui::Text("collider count : %d", colliders_.size());
-}
-
-void ColliderCollection::SetCollider(Collider* collider) {
-	colliders_.emplace(collider);
-}
-
-void ColliderCollection::EraseCollider(Collider* collider) {
-	colliders_.erase(collider);
-}
-
-void ColliderCollection::SetupColliderState() {
-	for (auto& collider : colliders_) {
-		collider->SetupColliderState();
-	}
-}
-
-void ColliderCollection::CheckAllCollision() {
-	// コンテナ内の当たり判定の総当たり
-	auto itrA = colliders_.begin();
-	for (; itrA != colliders_.end(); ++itrA) {
-		Collider* colliderA = *itrA;
-
-		if (!colliderA->IsActive()) {
-			continue;
-		}
-
-		// Aの次から回し, 重複をなくす
-		auto itrB = itrA;
-		itrB++;
-
-		for (; itrB != colliders_.end(); ++itrB) {
-			Collider* colliderB = *itrB;
-
-			if (!colliderB->IsActive()) {
-				continue;
-			}
-
-			CheckCollisionPair(colliderA, colliderB);
-		}
-	}
-}
-
-void ColliderCollection::CheckCollisionPair(Collider* colliderA, Collider* colliderB) {
-	if (!(colliderA->IsActive() && colliderB->IsActive())) {
-		return; //!< どちらか一方が非アクティブの場合
-	}
-
-	//!< 各コライダーが当たり判定を必要としているか確認
-	bool isTargetB = colliderA->CheckCollisionTarget(colliderB);
-	bool isTargetA = colliderB->CheckCollisionTarget(colliderA);
-
-	// このペアの当たり判定が必要かの確認
-	if (!(isTargetB || isTargetA)) {
-		return; //!< どちらも当たり判定が必要ではない場合
-	}
-
-	const std::optional<CollisionBoundings::Boundings>& boundingA = colliderA->GetBoundings();
-	const std::optional<CollisionBoundings::Boundings>& boundingB = colliderB->GetBoundings();
-	Assert(boundingA.has_value() && boundingB.has_value(), "bounding is not set.");
-
-	bool isCollision = CollisionDetection::CheckCollision(
-		colliderA->GetPosition(), boundingA.value(),
-		colliderB->GetPosition(), boundingB.value()
-	);
-
-	if (!isCollision) {
-		return; //!< collider同士が当たっていない場合
-	}
-
-	if (isTargetA) {
-		colliderB->OnCollision(colliderA);
-	}
-
-	if (isTargetB) {
-		colliderA->OnCollision(colliderB);
-	}
-}
-
-void ColliderCollection::CallBack() {
-	for (auto& collider : colliders_) { //!< collider関数の呼び出し
-		collider->CallbackOnCollision();
-	}
-}
-
-////////////////////////////////////////////////////////////////////////////////////////////
-// ColliderDrawer class methods
-////////////////////////////////////////////////////////////////////////////////////////////
-
-void ColliderDrawer::DrawCollider(const Collider* collider, const Color4f& color) {
-
-	const std::optional<CollisionBoundings::Boundings>& bounding = collider->GetBoundings();
-
-	if (!bounding.has_value()) {
-		return;
-	}
-
-	Visitor visitor = {};
-	visitor.position = collider->GetPosition();
+	ColliderPrimitiveDrawerVisitor visitor = {};
+	visitor.drawer   = this;
+	visitor.position = position;
 	visitor.color    = color;
 
-	std::visit(visitor, bounding.value());
+	std::visit(visitor, boundings.value());
 }
 
-void ColliderDrawer::DrawSphere(const Vector3f& position, const CollisionBoundings::Sphere& sphere, const Color4f& color) {
+void ColliderPrimitiveDrawer::CreateSphereIA() {
 
-	static const uint32_t kSubdivision = 4;                     //!< parameter
-	static const float kRoundEvery = pi_v * 2.0f / kSubdivision; //!< 1周 / 分割数
+	sphereVB_ = std::make_unique<DxObject::VertexDimensionBuffer<Vector4f>>();
+	sphereVB_->Create(SxavengerSystem::GetDxDevice(), (kSphereSubdivision + 1) * 3 - 1);
+
+	uint32_t index = 0;
 
 	// xz軸の円
-	for (uint32_t lon = 0; lon < kSubdivision; ++lon) {
-		float theta = kRoundEvery * lon;
+	for (uint32_t lon = 0; lon <= kSphereSubdivision; ++lon) {
+		float theta = kSphereRoundEvery * lon;
 
 		// 単位円の生成
-		Vector3f start = { //!< 始点
+		Vector3f p = { //!< 始点
 			std::sin(theta),
 			0.0f,
 			std::cos(theta),
 		};
 
-		Vector3f end = { //!< 終点
-			std::sin(theta + kRoundEvery),
-			0.0f,
-			std::cos(theta + kRoundEvery),
-		};
-
-		// 半径を使ってローカル座標での円座標にする
-		start *= sphere.radius;
-		end   *= sphere.radius;
-
-		SxavengerModule::DrawLine(start + position, end + position, color);
+		sphereVB_->At(index++) = { p.x, p.y, p.z, 1.0f };
 	}
 
 	// xy軸の円
-	for (uint32_t lat = 0; lat < kSubdivision; ++lat) {
-		float phi = kRoundEvery * lat;
+	for (uint32_t lat = 0; lat <= kSphereSubdivision; ++lat) {
+		float phi = kSphereRoundEvery * lat;
 
 		// 単位円の生成
-		Vector3f start = { //!< 始点
+		Vector3f p = { //!< 始点
 			std::cos(phi),
 			std::sin(phi),
 			0.0f
 		};
 
-		Vector3f end = { //!< 終点
-			std::cos(phi + kRoundEvery),
-			std::sin(phi + kRoundEvery),
-			0.0f
-		};
-
-		// 半径を使ってローカル座標での円座標にする
-		start *= sphere.radius;
-		end *= sphere.radius;
-
-		SxavengerModule::DrawLine(start + position, end + position, color);
+		sphereVB_->At(index++) = { p.x, p.y, p.z, 1.0f };
 	}
 
 	// yz軸の円
-	for (uint32_t lat = 0; lat < kSubdivision; ++lat) {
-		float phi = kRoundEvery * lat;
+	for (uint32_t lat = 0; lat < kSphereSubdivision; ++lat) {
+		float phi = kSphereRoundEvery * lat;
 
 		// 単位円の生成
-		Vector3f start = { //!< 始点
+		Vector3f p = { //!< 始点
 			0.0f,
 			std::sin(phi),
 			std::cos(phi)
 		};
 
-		Vector3f end = { //!< 終点
-			0.0f,
-			std::sin(phi + kRoundEvery),
-			std::cos(phi + kRoundEvery),
-		};
-
-		// 半径を使ってローカル座標での円座標にする
-		start *= sphere.radius;
-		end *= sphere.radius;
-
-		SxavengerModule::DrawLine(start + position, end + position, color);
+		sphereVB_->At(index++) = { p.x, p.y, p.z, 1.0f };
 	}
 }
 
-void ColliderDrawer::DrawCapsule(const Vector3f& position, const CollisionBoundings::Capsule& capsule, const Color4f& color) {
+void ColliderPrimitiveDrawer::CreatePipeline() {
+	pipeline_ = std::make_unique<DxObject::ReflectionGraphicsPipelineState>();
+	pipeline_->CreateBlob(kPackagesShaderDirectory / "primitive/collider/colliderPrimitive.vs.hlsl", GraphicsShaderType::vs);
+	pipeline_->CreateBlob(kPackagesShaderDirectory / "primitive/collider/colliderPrimitive.ps.hlsl", GraphicsShaderType::ps);
+	pipeline_->ReflectionRootSignature(SxavengerSystem::GetDxDevice());
+
+	GraphicsPipelineDesc desc = {};
+	desc.CreateDefaultDesc();
+	desc.SetPrimitive(PrimitiveType::kLineStrip);
+	desc.SetRTVFormat(0, DXGI_FORMAT_R32G32B32A32_FLOAT);
+
+	pipeline_->CreatePipeline(SxavengerSystem::GetDxDevice(), desc);
+}
+
+void ColliderPrimitiveDrawer::DrawSphere(const Vector3f& position, const CollisionBoundings::Sphere& sphere, const Color4f& color) {
+	uint32_t index = sphereBuffer_->GetSize();
+	sphereBuffer_->Resize(SxavengerSystem::GetDxDevice(), index + 1);
+	sphereBuffer_->At(index).first  = Matrix::MakeAffine({ sphere.radius, sphere.radius, sphere.radius }, Quaternion::Identity(), position);
+	sphereBuffer_->At(index).second = color;
+}
+
+void ColliderPrimitiveDrawer::DrawCapsule(const Vector3f& position, const CollisionBoundings::Capsule& capsule, const Color4f& color) {
+	// todo:
 
 	static const uint32_t kSubdivision = 24;
 
@@ -306,7 +182,8 @@ void ColliderDrawer::DrawCapsule(const Vector3f& position, const CollisionBoundi
 	SxavengerModule::DrawLine(-zAxis * capsule.radius + topCenter, -zAxis * capsule.radius + bottomCenter, color);
 }
 
-void ColliderDrawer::DrawAABB(const Vector3f& position, const CollisionBoundings::AABB& aabb, const Color4f& color) {
+void ColliderPrimitiveDrawer::DrawAABB(const Vector3f& position, const CollisionBoundings::AABB& aabb, const Color4f& color) {
+	// todo:
 
 	Vector3f pos[8] = {};
 
@@ -338,7 +215,8 @@ void ColliderDrawer::DrawAABB(const Vector3f& position, const CollisionBoundings
 	}
 }
 
-void ColliderDrawer::DrawOBB(const Vector3f& position, const CollisionBoundings::OBB& obb, const Color4f& color) {
+void ColliderPrimitiveDrawer::DrawOBB(const Vector3f& position, const CollisionBoundings::OBB& obb, const Color4f& color) {
+	// todo:
 
 	Vector3f pos[8] = {};
 
@@ -367,4 +245,45 @@ void ColliderDrawer::DrawOBB(const Vector3f& position, const CollisionBoundings:
 		SxavengerModule::DrawLine(pos[i + 4], pos[next + 4], color);
 		SxavengerModule::DrawLine(pos[i], pos[i + 4], color);
 	}
+}
+
+void ColliderPrimitiveDrawer::Render(const DirectXThreadContext* context, ACameraActor* actor) {
+	if (sphereBuffer_->GetSize() != 0) {
+		pipeline_->SetPipeline(context->GetDxCommand());
+
+		D3D12_VERTEX_BUFFER_VIEW vbv = sphereVB_->GetVertexBufferView();
+		context->GetCommandList()->IASetVertexBuffers(0, 1, &vbv);
+
+		BindBufferDesc desc = {};
+		desc.SetAddress("gCamera", actor->GetGPUVirtualAddress());
+		desc.SetAddress("gParameter", sphereBuffer_->GetGPUVirtualAddress());
+
+		pipeline_->BindGraphicsBuffer(context->GetDxCommand(), desc);
+
+		context->GetCommandList()->DrawInstanced(sphereVB_->GetSize(), sphereBuffer_->GetSize(), 0, 0);
+	}
+}
+
+void ColliderPrimitiveDrawer::Clear() {
+	sphereBuffer_->Resize(SxavengerSystem::GetDxDevice(), 0);
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////
+// ColliderPrimitiveDrawerVisitor class
+////////////////////////////////////////////////////////////////////////////////////////////
+
+void ColliderPrimitiveDrawerVisitor::operator()(const CollisionBoundings::Sphere& sphere) {
+	drawer->DrawSphere(position, sphere, color);
+}
+
+void ColliderPrimitiveDrawerVisitor::operator()(const CollisionBoundings::Capsule& capsule) {
+	drawer->DrawCapsule(position, capsule, color);
+}
+
+void ColliderPrimitiveDrawerVisitor::operator()(const CollisionBoundings::AABB& aabb) {
+	drawer->DrawAABB(position, aabb, color);
+}
+
+void ColliderPrimitiveDrawerVisitor::operator()(const CollisionBoundings::OBB& obb) {
+	drawer->DrawOBB(position, obb, color);
 }

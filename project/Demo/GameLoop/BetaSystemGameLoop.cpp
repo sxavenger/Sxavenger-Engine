@@ -81,6 +81,13 @@ void BetaSystemGameLoop::InitSystem() {
 		editor->SetGameRenderer(renderer_.get());
 	});
 
+	for (size_t i = 0; i < 128; ++i) {
+		colliders_[i] = std::make_unique<Collider>();
+		colliders_[i]->SetColliderBoundingSphere({ .radius = 1.0f });
+		colliders_[i]->GetTransform().translate = { i * 0.8f, i * 0.8f, 0.0f };
+		colliders_[i]->UpdateMatrix();
+		colliders_[i]->SetToCollection();
+	}
 }
 
 void BetaSystemGameLoop::TermSystem() {

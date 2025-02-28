@@ -170,6 +170,7 @@
     <ClCompile Include="Demo\GameLoop\DemoGameLoop.cpp" />
     <ClCompile Include="Engine\System\DirectX\DxObject\DxVectorDimensionBuffer.cpp" />
     <ClCompile Include="Lib\Geometry\GeometryMath.cpp" />
+    <ClCompile Include="Engine\Module\Collider\ColliderPrimitiveDrawer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\System\Window\Window.h" />
@@ -345,6 +346,7 @@
     <ClInclude Include="Demo\GameLoop\DemoGameLoop.h" />
     <ClInclude Include="Engine\System\DirectX\DxObject\DxVectorDimensionBuffer.h" />
     <ClInclude Include="Lib\Geometry\GeometryMath.h" />
+    <ClInclude Include="Engine\Module\Collider\ColliderPrimitiveDrawer.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />
