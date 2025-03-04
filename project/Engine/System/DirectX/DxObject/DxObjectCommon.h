@@ -135,6 +135,7 @@ static_assert(kHeighestShaderModel >= D3D_SHADER_MODEL_6_5, "mesh shader is 6.5 
 constexpr const DXGI_FORMAT kScreenFormat    = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB; //!< 最終的なスクリーン画面のformat
 constexpr const DXGI_FORMAT kOffscreenFormat = DXGI_FORMAT_R8G8B8A8_UNORM;      //!< offscreenで使われるformat
 
-constexpr const DXGI_FORMAT kDefaultDepthFormat = DXGI_FORMAT_D32_FLOAT_S8X24_UINT;
+constexpr const DXGI_FORMAT kDefaultDepthFormat     = DXGI_FORMAT_D32_FLOAT_S8X24_UINT;
+constexpr const DXGI_FORMAT kDefaultDepthViewFormat = DXGI_FORMAT_R32_FLOAT_X8X24_TYPELESS;
 
 _DXOBJECT_NAMESPACE_END

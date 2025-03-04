@@ -5,10 +5,8 @@
 #include <Engine/System/SxavengerSystem.h>
 #include <Engine/System/Runtime/GameLoop/GameLoop.h>
 
-//* loops
-#include <Engine/GameLoop/EngineGameLoop.h>
-#include <Engine/GameLoop/EditorEngineGameLoop.h>
-#include <Demo/GameLoop/BetaSystemGameLoop.h>
+//* gameloop
+#include <Engine/GameLoop/SxavengerEngineGameLoop.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // main
@@ -16,9 +14,7 @@
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 	std::unique_ptr<GameLoop::Collection> collection = std::make_unique<GameLoop::Collection>();
-	collection->Push<EngineGameLoop>();
-	collection->Push<EditorEngineGameLoop>();
-	collection->Push<BetaSystemGameLoop>();
+	collection->Push<SxavengerEngineGameLoop>();
 
 	collection->Run();
 

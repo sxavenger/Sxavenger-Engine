@@ -3,6 +3,10 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
+//* engine
+#include <Engine/Component/Components/Transform/TransformComponent.h>
+#include <Engine/Component/Components/MeshRenderer/MeshRendererComponent.h>
+
 //* c++
 #include <execution>
 
@@ -15,19 +19,18 @@
 //*  Quarternion = -x, -y, z, w;
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// Material structure methods
+// AssimpMaterial structure methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-void Model::Material::CreateComponent() {
-	MaterialComponent::Create();
+void Model::AssimpMaterial::CreateComponent() {
+	Material::CreateBuffer();
 
 	if (textures_[static_cast<uint8_t>(TextureType::Diffuse)] != nullptr) {
-		MaterialComponent::GetMaterial().albedo.SetTexture(textures_[static_cast<uint8_t>(TextureType::Diffuse)]->GetDescriptorSRV().GetIndex());
+		Material::GetMaterial().albedo.SetTexture(textures_[static_cast<uint8_t>(TextureType::Diffuse)]->GetDescriptorSRV().GetIndex());
 	}
 
-	//!< todo: 機能検証
 	if (textures_[static_cast<uint8_t>(TextureType::Bump)] != nullptr) {
-		MaterialComponent::GetMaterial().normal.SetTexture(textures_[static_cast<uint8_t>(TextureType::Bump)]->GetDescriptorSRV().GetIndex());
+		Material::GetMaterial().normal.SetTexture(textures_[static_cast<uint8_t>(TextureType::Bump)]->GetDescriptorSRV().GetIndex());
 	}
 }
 
@@ -62,48 +65,67 @@ void Model::Load(const DirectXThreadContext* context, const std::filesystem::pat
 void Model::Term() {
 }
 
-void Model::CreateBottomLevelAS(const DirectXThreadContext* context) {
-	for (uint32_t i = 0; i < GetMeshSize(); ++i) {
-		meshes_.at(i).input.CreateBottomLevelAS(context);
-	}
-}
-
-const Model::Mesh& Model::GetMesh(uint32_t index) const {
-	CheckMeshIndex(index);
-	return meshes_.at(index);
-}
-
-Model::Mesh& Model::GetMesh(uint32_t index) {
-	CheckMeshIndex(index);
-	return meshes_.at(index);
-}
-
-const Model::Material& Model::GetMeshMaterial(uint32_t meshIndex) const {
-	return GetMaterial(GetMaterialIndex(meshIndex));
-}
-
-const Model::Material& Model::GetMaterial(uint32_t index) const {
+const Model::AssimpMaterial& Model::GetMaterial(uint32_t index) const {
 	CheckMaterialIndex(index);
 	return materials_.at(index);
 }
 
-Model::Material& Model::GetMaterial(uint32_t index) {
+Model::AssimpMaterial& Model::GetMaterial(uint32_t index) {
 	CheckMaterialIndex(index);
 	return materials_.at(index);
 }
 
-void Model::SetIABuffer(const DirectXThreadContext* context, uint32_t meshIndex) const {
-	GetMesh(meshIndex).input.BindIABuffer(context);
-}
+//void Model::CreateBottomLevelAS(const DirectXThreadContext* context) {
+//	for (uint32_t i = 0; i < GetMeshSize(); ++i) {
+//		meshes_.at(i).input.CreateBottomLevelAS(context);
+//	}
+//}
+//
+//const Model::AssimpMesh& Model::GetMesh(uint32_t index) const {
+//	CheckMeshIndex(index);
+//	return meshes_.at(index);
+//}
+//
+//Model::AssimpMesh& Model::GetMesh(uint32_t index) {
+//	CheckMeshIndex(index);
+//	return meshes_.at(index);
+//}
+//
+//void Model::SetIABuffer(const DirectXThreadContext* context, uint32_t meshIndex) const {
+//	GetMesh(meshIndex).input.BindIABuffer(context);
+//}
+//
+//void Model::DrawCall(const DirectXThreadContext* context, uint32_t meshIndex, uint32_t instanceCount) const {
+//	GetMesh(meshIndex).input.DrawCall(context, instanceCount);
+//}
+//
+//uint32_t Model::GetMaterialIndex(uint32_t meshIndex) const {
+//	uint32_t materialIndex = meshes_.at(meshIndex).materialIndex.value();
+//	Assert(materialIndex < materials_.size(), "material index out of range."); //!< materialサイズ以上のindex
+//	return materialIndex;
+//}
 
-void Model::DrawCall(const DirectXThreadContext* context, uint32_t meshIndex, uint32_t instanceCount) const {
-	GetMesh(meshIndex).input.DrawCall(context, instanceCount);
-}
+std::unique_ptr<MonoBehaviour> Model::CreateMonoBehavior(const std::string& name) {
+	auto root = std::make_unique<MonoBehaviour>();
+	root->SetName(name);
 
-uint32_t Model::GetMaterialIndex(uint32_t meshIndex) const {
-	uint32_t materialIndex = meshes_.at(meshIndex).materialIndex.value();
-	Assert(materialIndex < materials_.size(), "material index out of range."); //!< materialサイズ以上のindex
-	return materialIndex;
+	// MonoBehaviorの登録
+	std::for_each(std::execution::seq, meshes_.begin(), meshes_.end(), [this, &root](AssimpMesh& mesh) {
+		auto child = std::make_unique<MonoBehaviour>();
+		child->SetName(mesh.name);
+
+		// transform component
+		child->AddComponent<TransformComponent>();
+
+		// renderer component
+		auto renderer = child->AddComponent<MeshRendererComponent>();
+		renderer->SetMesh(&mesh.input);
+		renderer->SetMaterial(&GetMaterial(mesh.materialIndex.value()));
+
+		root->AddChild(std::move(child));
+	});
+
+	return std::move(root); 
 }
 
 Vector3f Model::ConvertNormal(const aiVector3D& aiVector) {
@@ -127,11 +149,15 @@ void Model::LoadMesh(const aiScene* aiScene) {
 	meshes_.resize(aiScene->mNumMeshes);
 
 	// meshesの解析
-	std::for_each(std::execution::seq, meshes_.begin(), meshes_.end(), [this, aiScene](Mesh& mesh) {
+	std::for_each(std::execution::seq, meshes_.begin(), meshes_.end(), [this, aiScene](AssimpMesh& mesh) {
 		size_t meshIndex = &mesh - &meshes_.front(); //!< indexの取得
 
 		// meshの取得
 		const aiMesh* aiMesh = aiScene->mMeshes[meshIndex];
+
+		{ //!< name
+			mesh.name = aiMesh->mName.C_Str();
+		}
 
 		{ //!< InputAssembler
 
@@ -232,7 +258,7 @@ void Model::LoadMaterial(const aiScene* aiScene, const DirectXThreadContext* con
 	materials_.resize(aiScene->mNumMaterials);
 
 	// materialsの解析
-	std::for_each(std::execution::seq, materials_.begin(), materials_.end(), [this, aiScene, context, &directory](Material& material) {
+	std::for_each(std::execution::seq, materials_.begin(), materials_.end(), [this, aiScene, context, &directory](AssimpMaterial& material) {
 		size_t materialIndex = &material - &materials_.front(); //!< indexの取得
 
 		// materialの取得
@@ -245,8 +271,8 @@ void Model::LoadMaterial(const aiScene* aiScene, const DirectXThreadContext* con
 				aiMaterial->GetTexture(aiTextureType_DIFFUSE, 0, &aiTextureFilepath);
 
 				// データの保存
-				material.textures_[static_cast<uint8_t>(Material::TextureType::Diffuse)] = std::make_shared<Texture>();
-				material.textures_[static_cast<uint8_t>(Material::TextureType::Diffuse)]->Load(context, directory / aiTextureFilepath.C_Str());
+				material.textures_[static_cast<uint8_t>(AssimpMaterial::TextureType::Diffuse)] = std::make_shared<Texture>();
+				material.textures_[static_cast<uint8_t>(AssimpMaterial::TextureType::Diffuse)]->Load(context, directory / aiTextureFilepath.C_Str());
 			}
 
 			// normalの取得
@@ -255,16 +281,16 @@ void Model::LoadMaterial(const aiScene* aiScene, const DirectXThreadContext* con
 				aiMaterial->GetTexture(aiTextureType_HEIGHT, 0, &aiTextureFilepath);
 
 				// データの保存
-				material.textures_[static_cast<uint8_t>(Material::TextureType::Bump)] = std::make_shared<Texture>();
-				material.textures_[static_cast<uint8_t>(Material::TextureType::Bump)]->Load(context, directory / aiTextureFilepath.C_Str());
+				material.textures_[static_cast<uint8_t>(AssimpMaterial::TextureType::Bump)] = std::make_shared<Texture>();
+				material.textures_[static_cast<uint8_t>(AssimpMaterial::TextureType::Bump)]->Load(context, directory / aiTextureFilepath.C_Str());
 
 			} else if (aiMaterial->GetTextureCount(aiTextureType_NORMALS) != 0) { //!< .gltfの場合
 				aiString aiTextureFilepath;
 				aiMaterial->GetTexture(aiTextureType_NORMALS, 0, &aiTextureFilepath);
 
 				// データの保存
-				material.textures_[static_cast<uint8_t>(Material::TextureType::Bump)] = std::make_shared<Texture>();
-				material.textures_[static_cast<uint8_t>(Material::TextureType::Bump)]->Load(context, directory / aiTextureFilepath.C_Str());
+				material.textures_[static_cast<uint8_t>(AssimpMaterial::TextureType::Bump)] = std::make_shared<Texture>();
+				material.textures_[static_cast<uint8_t>(AssimpMaterial::TextureType::Bump)]->Load(context, directory / aiTextureFilepath.C_Str());
 			}
 		}
 

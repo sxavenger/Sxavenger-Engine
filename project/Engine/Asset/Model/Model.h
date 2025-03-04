@@ -7,10 +7,11 @@
 #include "../Texture/Texture.h"
 
 //* engine
-#include <Engine/Content/Component/MaterialComponent.h>
+#include <Engine/Content/Material/Material.h>
 #include <Engine/Content/InputAssembler/InputMesh.h>
 #include <Engine/Content/Animation/JointWeight.h>
 #include <Engine/Content/Animation/BornNode.h>
+#include <Engine/Component/MonoBehaviour.h>
 
 //* external
 #include <assimp/Importer.hpp>
@@ -27,9 +28,9 @@ class Model {
 public:
 
 	////////////////////////////////////////////////////////////////////////////////////////////
-	// Mesh structure
+	// AssimpMesh structure
 	////////////////////////////////////////////////////////////////////////////////////////////
-	struct Mesh {
+	struct AssimpMesh {
 	public:
 
 		//=========================================================================================
@@ -39,14 +40,15 @@ public:
 		InputMesh                                        input;
 		std::optional<uint32_t>                          materialIndex;
 		std::unordered_map<std::string, JointWeightData> jointWeights;
+		std::string                                      name;
 
 	};
 
 	////////////////////////////////////////////////////////////////////////////////////////////
-	// Material structure
+	// AssimpMaterial structure
 	////////////////////////////////////////////////////////////////////////////////////////////
-	struct Material
-		: public MaterialComponent {
+	struct AssimpMaterial
+		: public Material {
 	public:
 
 		////////////////////////////////////////////////////////////////////////////////////////////
@@ -71,16 +73,14 @@ public:
 
 		std::array<std::shared_ptr<Texture>, static_cast<uint8_t>(TextureType::Bump) + 1> textures_;
 
-		// FIXME: ここにMaterialComponentを持たせるのはModelクラスの定義制約に反する.
-		//!< このmaterialをdefaultと定義してその他のmaterialの更新を行いたい場合は, 個別でcomponentを作成する.
 	};
 
 	////////////////////////////////////////////////////////////////////////////////////////////
 	// using 
 	////////////////////////////////////////////////////////////////////////////////////////////
 
-	using MeshContainer     = std::vector<Mesh>;
-	using MaterialContainer = std::vector<Material>;
+	using MeshContainer     = std::vector<AssimpMesh>;
+	using MaterialContainer = std::vector<AssimpMaterial>;
 
 public:
 
@@ -95,35 +95,39 @@ public:
 
 	void Term();
 
-	//* material option *//
+	////* material option *//
 
 	const MaterialContainer& GetMaterials() const { return materials_; }
 	MaterialContainer& GetMaterials() { return materials_; }
 
-	const Material& GetMaterial(uint32_t index) const;
-	Material& GetMaterial(uint32_t index);
+	const AssimpMaterial& GetMaterial(uint32_t index) const;
+	AssimpMaterial& GetMaterial(uint32_t index);
 
-	//* meshes option *//
+	////* meshes option *//
 
-	void CreateBottomLevelAS(const DirectXThreadContext* context);
+	//void CreateBottomLevelAS(const DirectXThreadContext* context);
 
-	const uint32_t GetMeshSize() const { return static_cast<uint32_t>(meshes_.size()); }
+	//const uint32_t GetMeshSize() const { return static_cast<uint32_t>(meshes_.size()); }
 
 	const MeshContainer& GetMeshes() const { return meshes_; }
 	MeshContainer& GetMeshes() { return meshes_; }
 
-	const Mesh& GetMesh(uint32_t index) const;
-	Mesh& GetMesh(uint32_t index);
+	//const AssimpMesh& GetMesh(uint32_t index) const;
+	//AssimpMesh& GetMesh(uint32_t index);
 
-	//* mesh option *//
+	////* mesh option *//
 
-	void SetIABuffer(const DirectXThreadContext* context, uint32_t meshIndex) const;
+	//void SetIABuffer(const DirectXThreadContext* context, uint32_t meshIndex) const;
 
-	void DrawCall(const DirectXThreadContext* context, uint32_t meshIndex, uint32_t instanceCount = 1) const;
+	//void DrawCall(const DirectXThreadContext* context, uint32_t meshIndex, uint32_t instanceCount = 1) const;
 
-	uint32_t GetMaterialIndex(uint32_t meshIndex) const;
+	//uint32_t GetMaterialIndex(uint32_t meshIndex) const;
 
-	const Material& GetMeshMaterial(uint32_t meshIndex) const;
+	//const AssimpMaterial& GetMeshMaterial(uint32_t meshIndex) const;
+
+	//* MonoBehavior option *//
+
+	std::unique_ptr<MonoBehaviour> CreateMonoBehavior(const std::string& name = "model");
 
 	//* root option *//
 

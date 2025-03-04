@@ -24,27 +24,14 @@ void GameLoop::Context::Run() {
 	Clear();
 }
 
-void GameLoop::Context::SetState(State state, const std::optional<uint32_t>& _index, const StateFunc& function) {
-
-	uint32_t index = 0;
-
-	if (_index.has_value()) {
-		index = _index.value();
-
-	} else if (!stateFuncs_[static_cast<uint8_t>(state)].empty()) {
-		index = FindMinIndex(state);
-	}
-
-	RegisterState(state, index, function);
+void GameLoop::Context::SetProcess(Process process, const std::optional<uint32_t>& layer, const ProcessFunction& function) {
+	RegisterProcess(process, layer.value_or(FindMinLayer(process)), function);
 }
 
-uint32_t GameLoop::Context::FindMinIndex(State state) const {
-	if (stateFuncs_[static_cast<uint8_t>(state)].empty()) {
-		return 0;
-	}
-
+uint32_t GameLoop::Context::FindMinLayer(Process process) const {
 	uint32_t expected = 0;
-	for (const auto& element : stateFuncs_[static_cast<uint8_t>(state)]) {
+
+	for (const auto& element : processes_[static_cast<uint8_t>(process)]) {
 
 		if (element.first != expected) {
 			return expected; // 連続していない最初の要素を返す
@@ -56,56 +43,57 @@ uint32_t GameLoop::Context::FindMinIndex(State state) const {
 	return expected; // すべて連続している場合は次の要素を返す
 }
 
-void GameLoop::Context::RegisterState(State state, uint32_t index, const StateFunc& function) {
-	Assert(!stateFuncs_[static_cast<uint8_t>(state)].contains(index), "state functions is layer conflict."); //!< 重複していないか確認
-	stateFuncs_[static_cast<uint8_t>(state)].emplace(index, function);
+void GameLoop::Context::RegisterProcess(Process process, uint32_t layer, const ProcessFunction& function) {
+	Assert(!processes_[static_cast<uint8_t>(process)].contains(layer), "state functions is layer conflict."); //!< 重複していないか確認
+	processes_[static_cast<uint8_t>(process)].emplace(layer, function);
 }
 
-void GameLoop::Context::Execute(State state, bool isReverse) {
-	if (stateFuncs_[static_cast<uint8_t>(state)].empty()) {
+void GameLoop::Context::Execute(Process process, bool isReverse) {
+	if (processes_[static_cast<uint8_t>(process)].empty()) {
 		return;
 	}
 
 	if (isReverse) {
-		for (const auto& func : stateFuncs_[static_cast<uint8_t>(state)] | std::views::reverse) {
-			func.second();
+		for (const auto& [layer, func] : processes_[static_cast<uint8_t>(process)] | std::views::reverse) {
+			func();
 		}
 
 	} else {
-		for (const auto& func : stateFuncs_[static_cast<uint8_t>(state)]) {
-			func.second();
+		for (const auto& [layer, func] : processes_[static_cast<uint8_t>(process)] | std::views::common) {
+			func();
 		}
 	}
 }
 
 void GameLoop::Context::Loop() {
+	Execute(Process::Init);
 
-	if (conditionFuncs_.empty()) {
-		return;
-	}
+	if (!conditions_.empty()) {
+		while (true) {
+			Execute(Process::Begin);
+			Execute(Process::Update);
+			Execute(Process::Render);
+			Execute(Process::End);
 
-	Execute(State::Init);
-
-	while (true) {
-		Execute(State::Begin);
-		Execute(State::Update);
-		Execute(State::Draw);
-		Execute(State::End);
-
-		if (std::any_of(conditionFuncs_.begin(), conditionFuncs_.end(), [](const auto& func) { return func(); })) {
-			break;
+			if (std::any_of(conditions_.begin(), conditions_.end(), [](const auto& func) { return func(); })) {
+				break;
+			}
 		}
+
+	} else {
+		Log("[GameLoop::Context] warning: while condition is empty.");
+		//!< whileを抜ける条件式がないので不適格.
 	}
 
-	Execute(State::Term, true);
+	Execute(Process::Term, true);
 }
 
 void GameLoop::Context::Clear() {
-	for (uint8_t i = 0; i < kStateCount; ++i) {
-		stateFuncs_[i].clear();
+	for (uint8_t i = 0; i < kProcessCount; ++i) {
+		processes_[i].clear();
 	}
 
-	conditionFuncs_.clear();
+	conditions_.clear();
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////

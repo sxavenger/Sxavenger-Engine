@@ -18,9 +18,6 @@ const std::filesystem::path ImGuiController::kImGuiLayoutFilepath_ = "imgui.ini"
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 void ImGuiController::Init(Window* mainWindow) {
-	// handleの取得
-	//descriptorSRV_ = SxavengerSystem::GetDescriptor(kDescriptor_SRV);
-
 	// ImGuiの初期化
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
@@ -30,14 +27,6 @@ void ImGuiController::Init(Window* mainWindow) {
 	SetImGuiStyle();
 
 	ImGui_ImplWin32_Init(mainWindow->GetHwnd());
-	/*ImGui_ImplDX12_Init(
-		SxavengerSystem::GetDxDevice()->GetDevice(),
-		DxObject::SwapChain::GetBufferCount(),
-		DxObject::kScreenFormat,
-		SxavengerSystem::GetDxDescriptorHeaps()->GetDescriptorHeap(kDescriptor_CBV_SRV_UAV),
-		descriptorSRV_.GetCPUHandle(),
-		descriptorSRV_.GetGPUHandle()
-	);*/
 
 	ImGui_ImplDX12_InitInfo info = {};
 	info.Device            = SxavengerSystem::GetDxDevice()->GetDevice();
@@ -82,14 +71,16 @@ void ImGuiController::Init(Window* mainWindow) {
 	// iniの読み込み
 	std::string filepath = kImGuiLayoutFilepath_.generic_string();
 	ImGui::LoadIniSettingsFromDisk(filepath.c_str());
+
+	isInit_ = true;
 }
 
 void ImGuiController::Term() {
-	ImGui_ImplDX12_Shutdown();
-	ImGui_ImplWin32_Shutdown();
-	ImGui::DestroyContext();
-
-	//descriptorSRV_.Delete();
+	if (isInit_) {
+		ImGui_ImplDX12_Shutdown();
+		ImGui_ImplWin32_Shutdown();
+		ImGui::DestroyContext();
+	}
 }
 
 void ImGuiController::BeginFrame() {

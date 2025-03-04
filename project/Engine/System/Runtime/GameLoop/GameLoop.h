@@ -23,30 +23,35 @@
 namespace GameLoop {
 
 	////////////////////////////////////////////////////////////////////////////////////////////
-	// State enum class
+	// Process enum class
 	////////////////////////////////////////////////////////////////////////////////////////////
-	enum class State : uint8_t { //!< 実行順
+	enum class Process : uint8_t { //!< 実行順
+		//* Init
 		Init,
+
+		//* Loop
 		Begin,
 		Update,
-		Draw,
+		Render,
 		End,
+
+		//* Term
 		Term, //!< reverse process order.
 	};
-	constexpr uint8_t kStateCount = static_cast<uint8_t>(State::Term) + 1;
+	constexpr uint8_t kProcessCount = static_cast<uint8_t>(Process::Term) + 1;
 
 	////////////////////////////////////////////////////////////////////////////////////////////
-	// State Function using
+	// Process Function using
 	////////////////////////////////////////////////////////////////////////////////////////////
 
-	using StateFunc     = std::function<void()>;
-	using ConditionFunc = std::function<bool()>; //!< true: break loop
+	using ProcessFunction   = std::function<void()>;
+	using ConditionFunction = std::function<bool()>; //!< true: break loop
 
 	////////////////////////////////////////////////////////////////////////////////////////////
 	// State Array using
 	////////////////////////////////////////////////////////////////////////////////////////////
 	template <class T>
-	using StateArray = std::array<T, kStateCount>;
+	using ProcessArray = std::array<T, kProcessCount>;
 
 	////////////////////////////////////////////////////////////////////////////////////////////
 	// Context class
@@ -63,9 +68,9 @@ namespace GameLoop {
 
 		virtual void Run() override;
 
-		void SetState(State state, const std::optional<uint32_t>& index, const StateFunc& function);
+		void SetProcess(Process process, const std::optional<uint32_t>& layer, const ProcessFunction& function);
 
-		void SetCondition(const ConditionFunc& func) { conditionFuncs_.emplace_back(func); }
+		void SetCondition(const ConditionFunction& func) { conditions_.emplace_back(func); }
 
 	private:
 
@@ -73,18 +78,18 @@ namespace GameLoop {
 		// private variables
 		//=========================================================================================
 
-		StateArray<std::map<uint32_t, StateFunc>> stateFuncs_;
-		std::list<ConditionFunc>                  conditionFuncs_;
+		ProcessArray<std::map<uint32_t, ProcessFunction>> processes_;
+		std::list<ConditionFunction>                      conditions_;
 
 		//=========================================================================================
 		// private method
 		//=========================================================================================
 
-		uint32_t FindMinIndex(State state) const;
+		uint32_t FindMinLayer(Process process) const;
 
-		void RegisterState(State state, uint32_t index, const StateFunc& function);
+		void RegisterProcess(Process process, uint32_t layer, const ProcessFunction& function);
 
-		void Execute(State state, bool isReverse = false);
+		void Execute(Process process, bool isReverse = false);
 
 		void Loop();
 

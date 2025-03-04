@@ -3,52 +3,49 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
-//* external
-#include <imgui.h>
-#include <imgui_impl_dx12.h>
-#include <imgui_impl_win32.h>
-#include <ImGuizmo.h>
+//* component
+#include "../../BaseComponent.h"
 
 //* engine
-#include <Engine/System/Window/Window.h>
-#include <Engine/System/DirectX/DirectXContext.h>
-#include <Engine/System/DirectX/DxObject/DxDescriptor.h>
+#include <Engine/System/DirectX/DxObject/DxDimensionBuffer.h>
 
 //* lib
-#include <Lib/Geometry/Vector4.h>
+#include <Lib/Geometry/Matrix4x4.h>
+#include <Lib/Transform/Transform.h>
 
 //* c++
-#include <filesystem>
-#include <list>
+#include <memory>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// ImGuiController class
+// TransformComponent class
 ////////////////////////////////////////////////////////////////////////////////////////////
-class ImGuiController {
+class TransformComponent
+	: public BaseComponent {
 public:
 
 	//=========================================================================================
 	// public methods
 	//=========================================================================================
 
-	ImGuiController()  = default;
-	~ImGuiController() { Term(); }
+	TransformComponent(MonoBehaviour* behaviour) : BaseComponent(behaviour) {}
+	~TransformComponent() override = default;
 
-	void Init(Window* mainWindow);
+	//* buffer option *//
 
-	void Term();
+	void CreateBuffer();
 
-	void BeginFrame();
+	const D3D12_GPU_VIRTUAL_ADDRESS& GetGPUVirtualAddress() const;
 
-	void EndFrame();
+	//* transform option *//
 
-	void Render(DirectXThreadContext* context);
+	void UpdateMatrix();
 
-	void OutputLayout();
+	const QuaternionTransform& GetTransform() const { return transform_; }
+	QuaternionTransform& GetTransform() { return transform_; }
 
-	//* convert *//
+	const Matrix4x4& GetMatrix() const { return mat_; }
 
-	static ImVec4 ToImVec4(const Color4i& color);
+	const Vector3f GetPosition() const;
 
 private:
 
@@ -56,17 +53,19 @@ private:
 	// private variables
 	//=========================================================================================
 
-	std::list<DxObject::Descriptor> descriptorsSRV_;
+	//* transform *//
 
-	static const std::filesystem::path kImGuiLayoutFilepath_;
+	Matrix4x4 mat_                 = Matrix4x4::Identity();
+	QuaternionTransform transform_ = {};
 
-	bool isInit_ = false;
+	//* buffer *//
+
+	std::unique_ptr<DxObject::DimensionBuffer<TransformationMatrix>> buffer_;
 
 	//=========================================================================================
 	// private methods
 	//=========================================================================================
 
-	void SetImGuiStyle();
-	void SettingImGui();
+	void TransferGPU();
 
 };
