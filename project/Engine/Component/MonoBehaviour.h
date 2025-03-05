@@ -108,7 +108,7 @@ public:
 	Hierarchy children_;
 
 	//* name
-	std::string name_;
+	std::string name_ = "new behaviour";
 
 	//=========================================================================================
 	// private methods
@@ -163,6 +163,6 @@ template <Component T>
 T* MonoBehaviour::RequireComponent() const {
 	T* component = GetComponent<T>();
 
-	Assert(component != nullptr, "component is not found.");
+	Assert(component != nullptr, "component is not found.", "type: " + std::string(typeid(T).name()));
 	return component;
 }

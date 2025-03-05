@@ -50,14 +50,8 @@ void BetaSystemGameLoop::InitSystem() {
 
 	presenter_.Init();
 
-	actor_.Init();
-	renderer_->SetCamera(&actor_);
-
 	AssetObserver<AssetModel> observerA = SxavengerAsset::TryImport<AssetModel>("assets/models/chessboard/chessboard.gltf");
 	//behaviourA_ = observerA.WaitGet()->CreateMonoBehavior("teapot");
-
-	material_.CreateBuffer();
-	material_.GetMaterial().albedo.SetValue({ 1.0f, 1.0f, 1.0f });
 
 	for (size_t i = 0; i < 1; i++) {
 		behaviourA_[i] = observerA.WaitGet()->CreateMonoBehavior("teapot");
@@ -69,22 +63,18 @@ void BetaSystemGameLoop::InitSystem() {
 				transform->GetTransform().scale     = { 1.0f, 1.0f, 1.0f };
 				transform->UpdateMatrix();
 			}
-
-			if (i % 3 != 0) {
-				continue;
-			}
-
-			if (auto component = std::get_if<std::unique_ptr<MonoBehaviour>>(&child)) {
-				auto mesh = (*component)->GetComponent<MeshRendererComponent>();
-				mesh->SetMaterial(&material_);
-			}
 		}
 	}
 
+	camera_ = std::make_unique<MonoBehaviour>();
+	camera_->AddComponent<TransformComponent>();
+	auto camera = camera_->AddComponent<CameraComponent>();
+	camera->Init();
+	camera->SetTag(CameraComponent::Tag::GameCamera);
+
 	if (auto outliner = sEditorEngine->TryGetEditor<OutlinerEditor>()) {
-		outliner->SetBehaviour(behaviourA_[0].get());
+		outliner->SetBehaviour(camera_.get());
 	}
-	
 }
 
 void BetaSystemGameLoop::TermSystem() {

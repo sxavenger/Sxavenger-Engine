@@ -130,6 +130,7 @@
     <ClCompile Include="Engine\Editor\Editors\DevelopEditor.cpp" />
     <ClCompile Include="Engine\Editor\Editors\OutlinerEditor.cpp" />
     <ClCompile Include="Engine\Editor\Editors\RenderSceneEditor.cpp" />
+    <ClCompile Include="Engine\Component\Components\Camera\CameraComponent.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\System\Window\Window.h" />
@@ -265,6 +266,7 @@
     <ClInclude Include="Engine\Editor\Editors\DevelopEditor.h" />
     <ClInclude Include="Engine\Editor\Editors\OutlinerEditor.h" />
     <ClInclude Include="Engine\Editor\Editors\RenderSceneEditor.h" />
+    <ClInclude Include="Engine\Component\Components\Camera\CameraComponent.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

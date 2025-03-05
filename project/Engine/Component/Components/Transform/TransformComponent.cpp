@@ -14,6 +14,11 @@ _DXOBJECT_USING
 // TransformComponent class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
+void TransformComponent::InspectorImGui() {
+	transform_.SetImGuiCommand();
+	UpdateMatrix();
+}
+
 void TransformComponent::CreateBuffer() {
 	if (buffer_ != nullptr) {
 		return;
@@ -31,11 +36,6 @@ const D3D12_GPU_VIRTUAL_ADDRESS& TransformComponent::GetGPUVirtualAddress() cons
 
 const Vector3f TransformComponent::GetPosition() const {
 	return { mat_.m[3][0], mat_.m[3][1], mat_.m[3][2] };
-}
-
-const TransformationMatrix& TransformComponent::GetTransformationMatrix() const {
-	Assert(buffer_ != nullptr, "transform buffer is not craete.");
-	return (*buffer_)[0];
 }
 
 void TransformComponent::UpdateMatrix() {

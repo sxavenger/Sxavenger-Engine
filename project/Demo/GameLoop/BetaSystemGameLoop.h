@@ -10,6 +10,7 @@
 #include <Engine/System/Window/GameWindow.h>
 #include <Engine/Content/Material/Material.h>
 #include <Engine/Component/MonoBehaviour.h>
+#include <Engine/Component/Components/Camera/CameraComponent.h>
 #include <Engine/Render/FPresenter.h>
 #include <Engine/Render/Scene/FSceneRenderer.h>
 #include <Engine/Render/Scene/Actor/Camera/CameraActors/ACineCameraActor.h>
@@ -42,11 +43,9 @@ private:
 
 	FPresenter presenter_;
 
-	ACineCameraActor actor_;
-
 	std::unique_ptr<MonoBehaviour> behaviourA_[10000];
 
-	Material material_ = {};
+	std::unique_ptr<MonoBehaviour> camera_;
 
 	//=========================================================================================
 	// private methods

@@ -11,6 +11,7 @@
 #include <unordered_map>
 #include <memory>
 #include <list>
+#include <functional>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // ComponentStorage class
@@ -23,7 +24,6 @@ public:
 	////////////////////////////////////////////////////////////////////////////////////////////
 	using ComponentContainer = std::list<std::unique_ptr<BaseComponent>>;
 	using ComponentIterator  = ComponentContainer::iterator;
-
 
 public:
 
@@ -40,6 +40,9 @@ public:
 	void UnregisterComponent(const ComponentIterator& iterator);
 
 	void UnregisterComponent(std::type_index type, const ComponentIterator& iterator);
+
+	template <Component T>
+	void ForEach(const std::function<void(T*)>& func);
 
 	//* getter *//
 
@@ -79,6 +82,13 @@ ComponentStorage::ComponentIterator ComponentStorage::RegisterComponent(MonoBeha
 template <Component T>
 inline void ComponentStorage::UnregisterComponent(const ComponentIterator& iterator) {
 	storage_[typeid(T)].erase(iterator);
+}
+
+template <Component T>
+void ComponentStorage::ForEach(const std::function<void(T*)>& func) {
+	for (auto& component : storage_[typeid(T)]) {
+		func(static_cast<T*>(component.get()));
+	}
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////

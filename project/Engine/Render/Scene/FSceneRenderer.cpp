@@ -13,8 +13,13 @@
 // FSceneRenderer class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-void FSceneRenderer::Render(const DirectXThreadContext* context) {
-	Sxl::Flag<Status> status = CheckStatus();
+void FSceneRenderer::Render(const DirectXThreadContext* context, const Config& config) {
+
+	//* configの確認
+	Config conf = config;
+	ApplyConfig(conf);
+
+	Sxl::Flag<Status> status = CheckStatus(conf);
 
 	// texturesの確認
 	if (!status.Test(Status::Error_Textures)) {
@@ -25,10 +30,23 @@ void FSceneRenderer::Render(const DirectXThreadContext* context) {
 		return;
 	}
 
-	RenderGeometryPass(context);
+	RenderGeometryPass(context, conf);
 }
 
-Sxl::Flag<FSceneRenderer::Status> FSceneRenderer::CheckStatus() const {
+void FSceneRenderer::ApplyConfig(Config& config) {
+	if (config.camera == nullptr) { //!< cameraが設定されていない場合, Tagのcameraを取得
+		if (config.tag != CameraComponent::Tag::None) {
+			// component storage から tag に一致する camera component を取得.
+			sComponentStorage->ForEach<CameraComponent>([&](CameraComponent* component) {
+				if (component->GetTag() == config.tag) {
+					config.camera = component;
+				}
+			});
+		}
+	}
+}
+
+Sxl::Flag<FSceneRenderer::Status> FSceneRenderer::CheckStatus(const Config& config) const {
 
 	Sxl::Flag<Status> status = Status::Success;
 
@@ -36,14 +54,14 @@ Sxl::Flag<FSceneRenderer::Status> FSceneRenderer::CheckStatus() const {
 		status |= Status::Error_Textures;
 	}
 
-	if (camera_ == nullptr) {
+	if (config.camera == nullptr) {
 		status |= Status::Error_Camera;
 	}
 
 	return status;
 }
 
-void FSceneRenderer::RenderGeometryPass(const DirectXThreadContext* context) {
+void FSceneRenderer::RenderGeometryPass(const DirectXThreadContext* context, const Config& config) {
 
 	// mesh renderer container(BaseComponent)の取得
 	auto& container = sComponentStorage->GetComponentContainer<MeshRendererComponent>();
@@ -101,7 +119,7 @@ void FSceneRenderer::RenderGeometryPass(const DirectXThreadContext* context) {
 		);
 
 		DxObject::BindBufferDesc parameter = {};
-		parameter.SetAddress("gCamera",     camera_->GetGPUVirtualAddress());
+		parameter.SetAddress("gCamera",     config.camera->GetGPUVirtualAddress());
 		parameter.SetAddress("gTransforms", transforms_->GetGPUVirtualAddress());
 		parameter.SetAddress("gMaterials",  materials_->GetGPUVirtualAddress());
 

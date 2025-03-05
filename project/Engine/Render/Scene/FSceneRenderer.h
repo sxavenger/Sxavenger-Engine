@@ -5,13 +5,13 @@
 //-----------------------------------------------------------------------------------------
 //* render
 #include "../FRenderTargetTextures.h"
-#include "Actor/Camera/ACameraActor.h" //!< todo: component化
 
 //* engine
 #include <Engine/System/DirectX/DxObject/DxVectorDimensionBuffer.h>
-#include <Engine/Component/Components/MeshRenderer/MeshRendererComponent.h>
 #include <Engine/System/DirectX/DirectXContext.h>
 #include <Engine/Component/ComponentStorage.h>
+#include <Engine/Component/Components/MeshRenderer/MeshRendererComponent.h>
+#include <Engine/Component/Components/Camera/CameraComponent.h>
 
 //* lib
 #include <Lib/Sxl/Flag.h>
@@ -44,6 +44,23 @@ public:
 		Status_Warning = Warning_Scene | Warning_AmbientProcess | Warning_PostProcess,
 	};
 
+	////////////////////////////////////////////////////////////////////////////////////////////
+	// Config structure
+	////////////////////////////////////////////////////////////////////////////////////////////
+	struct Config {
+	public:
+
+		//=========================================================================================
+		// public variables
+		//=========================================================================================
+
+		//* camera setting *//
+
+		const CameraComponent* camera = nullptr;
+		CameraComponent::Tag tag      = CameraComponent::Tag::GameCamera;
+
+	};
+
 public:
 
 	//=========================================================================================
@@ -53,13 +70,11 @@ public:
 	FSceneRenderer()  = default;
 	~FSceneRenderer() = default;
 
-	void Render(const DirectXThreadContext* context);
+	void Render(const DirectXThreadContext* context, const Config& config = {});
 
 	//* setter *//
 
 	void SetTextures(FRenderTargetTextures* textures) { textures_ = textures; }
-
-	void SetCamera(ACameraActor* camera) { camera_ = camera; }
 
 private:
 
@@ -71,10 +86,6 @@ private:
 
 	FRenderTargetTextures* textures_ = nullptr;
 
-	//* scene *//
-
-	ACameraActor* camera_ = nullptr; //!< componentとして変換したい
-
 	//* geometry pass parameter *//
 
 	std::unique_ptr<DxObject::VectorDimensionBuffer<TransformationMatrix>>     transforms_;
@@ -84,10 +95,12 @@ private:
 	// private methods
 	//=========================================================================================
 
-	Sxl::Flag<Status> CheckStatus() const;
+	void ApplyConfig(Config& config);
+
+	Sxl::Flag<Status> CheckStatus(const Config& config) const;
 
 	//* render *//
 
-	void RenderGeometryPass(const DirectXThreadContext* context);
+	void RenderGeometryPass(const DirectXThreadContext* context, const Config& config);
 
 };

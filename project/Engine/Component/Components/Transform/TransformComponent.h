@@ -30,6 +30,8 @@ public:
 	TransformComponent(MonoBehaviour* behaviour) : BaseComponent(behaviour) {}
 	~TransformComponent() override = default;
 
+	void InspectorImGui() override;
+
 	//* buffer option *//
 
 	void CreateBuffer();
@@ -46,8 +48,6 @@ public:
 	const Matrix4x4& GetMatrix() const { return mat_; }
 
 	const Vector3f GetPosition() const;
-
-	const TransformationMatrix& GetTransformationMatrix() const;
 
 private:
 
