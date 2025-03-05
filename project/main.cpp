@@ -7,6 +7,7 @@
 
 //* gameloop
 #include <Engine/GameLoop/SxavengerEngineGameLoop.h>
+#include <Demo/GameLoop/BetaSystemGameLoop.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // main
@@ -15,6 +16,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 	std::unique_ptr<GameLoop::Collection> collection = std::make_unique<GameLoop::Collection>();
 	collection->Push<SxavengerEngineGameLoop>();
+	collection->Push<BetaSystemGameLoop>();
 
 	collection->Run();
 

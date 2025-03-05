@@ -110,7 +110,7 @@ std::unique_ptr<MonoBehaviour> Model::CreateMonoBehavior(const std::string& name
 	root->SetName(name);
 
 	// MonoBehaviorの登録
-	std::for_each(std::execution::seq, meshes_.begin(), meshes_.end(), [this, &root](AssimpMesh& mesh) {
+	std::for_each(/*std::execution::seq, */meshes_.begin(), meshes_.end(), [this, &root](AssimpMesh& mesh) {
 		auto child = std::make_unique<MonoBehaviour>();
 		child->SetName(mesh.name);
 

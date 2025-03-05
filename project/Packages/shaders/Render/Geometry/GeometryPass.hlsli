@@ -22,6 +22,7 @@ struct GeometryPSInput {
 	float3 worldPos  : POSITION0;
 	float3 tangent   : TANGENT0;
 	float3 bitangent : BITANGENT0;
+	uint instanceId  : INSTANCEID;
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////

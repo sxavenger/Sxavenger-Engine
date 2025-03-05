@@ -47,6 +47,8 @@ public:
 
 	const Vector3f GetPosition() const;
 
+	const TransformationMatrix& GetTransformationMatrix() const;
+
 private:
 
 	//=========================================================================================

@@ -46,7 +46,6 @@
     <ClCompile Include="Lib\Sxl\LowerPathMap.cpp" />
     <ClCompile Include="Lib\Sxl\LowerUnorderedMap.cpp" />
     <ClCompile Include="Lib\Sxl\OptimizedSet.cpp" />
-    <ClCompile Include="Lib\MyMath.cpp" />
     <ClCompile Include="Engine\System\DirectX\DxObject\DxUnorderedDimensionBuffer.cpp" />
     <ClCompile Include="Lib\Sxl\Formatter.cpp" />
     <ClCompile Include="Lib\Adapter\Curve\Curve.cpp" />
@@ -119,6 +118,12 @@
     <ClCompile Include="Engine\Render\Common\FTexture.cpp" />
     <ClCompile Include="Engine\Render\FRenderTargetTextures.cpp" />
     <ClCompile Include="Engine\Render\Common\FDepthTexture.cpp" />
+    <ClCompile Include="Engine\Render\Scene\FSceneRenderer.cpp" />
+    <ClCompile Include="Demo\GameLoop\BetaSystemGameLoop.cpp" />
+    <ClCompile Include="Engine\Render\Scene\Actor\Camera\CameraActors\ACineCameraActor.cpp" />
+    <ClCompile Include="Engine\Render\Scene\Actor\Camera\CameraActors\APivotCameraActor.cpp" />
+    <ClCompile Include="Engine\Render\Scene\Actor\Camera\ACameraActor.cpp" />
+    <ClCompile Include="Engine\Render\Scene\Actor\AActor.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\System\Window\Window.h" />
@@ -166,7 +171,6 @@
     <ClInclude Include="Lib\Sxl\LowerPathMap.h" />
     <ClInclude Include="Lib\Sxl\LowerUnorderedMap.h" />
     <ClInclude Include="Lib\Sxl\OptimizedSet.h" />
-    <ClInclude Include="Lib\MyMath.h" />
     <ClInclude Include="Engine\System\DirectX\DxObject\DxUnorderedDimensionBuffer.h" />
     <ClInclude Include="Lib\Sxl\Formatter.h" />
     <ClInclude Include="Lib\Adapter\Curve\Curve.h" />
@@ -243,6 +247,12 @@
     <ClInclude Include="Engine\Render\Common\FTexture.h" />
     <ClInclude Include="Engine\Render\FRenderTargetTextures.h" />
     <ClInclude Include="Engine\Render\Common\FDepthTexture.h" />
+    <ClInclude Include="Engine\Render\Scene\FSceneRenderer.h" />
+    <ClInclude Include="Demo\GameLoop\BetaSystemGameLoop.h" />
+    <ClInclude Include="Engine\Render\Scene\Actor\Camera\CameraActors\ACineCameraActor.h" />
+    <ClInclude Include="Engine\Render\Scene\Actor\Camera\CameraActors\APivotCameraActor.h" />
+    <ClInclude Include="Engine\Render\Scene\Actor\Camera\ACameraActor.h" />
+    <ClInclude Include="Engine\Render\Scene\Actor\AActor.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

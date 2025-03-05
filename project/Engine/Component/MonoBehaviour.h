@@ -70,6 +70,8 @@ public:
 
 	MonoBehaviour* GetParent() const { return parent_; }
 
+	const Hierarchy& GetChildren() const { return children_; }
+
 	//* name option *//
 
 	void SetName(const std::string& name) { name_ = name; }
@@ -136,7 +138,7 @@ T* MonoBehaviour::GetComponent() const {
 
 	std::type_index type = typeid(T);
 
-	if (!components_.contains(type)) {
+	if (components_.contains(type)) {
 		return static_cast<T*>(components_.at(type)->get());
 	}
 

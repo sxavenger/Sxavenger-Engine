@@ -36,6 +36,29 @@ void FRenderTargetTextures::Create(const Vector2ui& size) {
 	size_ = size;
 }
 
+void FRenderTargetTextures::ClearTextures(const DirectXThreadContext* context) const {
+	//* GBufferのクリア
+	std::array<D3D12_RESOURCE_BARRIER, kGBufferLayoutCount> barriers = {};
+
+	for (uint8_t i = 0; i < kGBufferLayoutCount; ++i) {
+		barriers[i] = gBuffers_[i]->TransitionBeginRenderTarget();
+	}
+
+	context->GetCommandList()->ResourceBarrier(static_cast<UINT>(barriers.size()), barriers.data());
+
+	for (uint8_t i = 0; i < kGBufferLayoutCount; ++i) {
+		gBuffers_[i]->ClearRenderTarget(context);
+		barriers[i] = gBuffers_[i]->TransitionEndRenderTarget();
+	}
+
+	context->GetCommandList()->ResourceBarrier(static_cast<UINT>(barriers.size()), barriers.data());
+
+	//* Depthのクリア
+	depth_->TransitionBeginRasterizer(context);
+	depth_->ClearRasterizerDepth(context);
+	depth_->TransitionEndRasterizer(context);
+}
+
 void FRenderTargetTextures::BeginGeometryPass(const DirectXThreadContext* context) const {
 	D3D12_RESOURCE_BARRIER barriers[] = {
 		gBuffers_[static_cast<uint8_t>(GBufferLayout::Normal)]->TransitionBeginRenderTarget(),
@@ -58,13 +81,6 @@ void FRenderTargetTextures::BeginGeometryPass(const DirectXThreadContext* contex
 	context->GetCommandList()->OMSetRenderTargets(
 		kGBufferCount, handles.data(), false, &depth_->GetRasterizerCPUHandleDSV()
 	);
-
-	gBuffers_[static_cast<uint8_t>(GBufferLayout::Normal)]->ClearRenderTarget(context);
-	gBuffers_[static_cast<uint8_t>(GBufferLayout::Material_AO)]->ClearRenderTarget(context);
-	gBuffers_[static_cast<uint8_t>(GBufferLayout::Albedo)]->ClearRenderTarget(context);
-	gBuffers_[static_cast<uint8_t>(GBufferLayout::Position)]->ClearRenderTarget(context);
-
-	depth_->ClearRasterizerDepth(context);
 }
 
 void FRenderTargetTextures::EndGeometryPass(const DirectXThreadContext* context) const {
@@ -78,6 +94,19 @@ void FRenderTargetTextures::EndGeometryPass(const DirectXThreadContext* context)
 	context->GetCommandList()->ResourceBarrier(_countof(barriers), barriers);
 
 	depth_->TransitionEndRasterizer(context);
+}
+
+void FRenderTargetTextures::SetupGeometryPass(const DirectXThreadContext* context) const {
+	static const uint8_t kGBufferCount = 4;
+	std::array<D3D12_CPU_DESCRIPTOR_HANDLE, kGBufferCount> handles = {};
+	handles[0] = gBuffers_[static_cast<uint8_t>(GBufferLayout::Normal)]->GetCPUHandleRTV();
+	handles[1] = gBuffers_[static_cast<uint8_t>(GBufferLayout::Material_AO)]->GetCPUHandleRTV();
+	handles[2] = gBuffers_[static_cast<uint8_t>(GBufferLayout::Albedo)]->GetCPUHandleRTV();
+	handles[3] = gBuffers_[static_cast<uint8_t>(GBufferLayout::Position)]->GetCPUHandleRTV();
+
+	context->GetCommandList()->OMSetRenderTargets(
+		kGBufferCount, handles.data(), false, &depth_->GetRasterizerCPUHandleDSV()
+	);
 }
 
 void FRenderTargetTextures::BeginLightingPass(const DirectXThreadContext* context) const {

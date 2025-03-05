@@ -7,31 +7,24 @@
 #include <Engine/System/SxavengerSystem.h>
 #include <Engine/Content/SxavengerContent.h>
 #include <Engine/Asset/SxavengerAsset.h>
-
+#include <Engine/Render/FRenderCore.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // SxavengerEngineGameLoop class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 void SxavengerEngineGameLoop::Init(GameLoop::Context* context) {
-	/*context->SetProcess(GameLoop::Process::Init, std::nullopt, [this]() {
-		SxavengerLogger::Init();
-		SxavengerSystem::Init();
-		SxavengerContent::Init();
-		CreateWhite1x1();
-
-		SxavengerAsset::Init();
-	});*/
+	context->SetProcess(GameLoop::Process::Init, std::nullopt, [this]() {
+		FRenderCore::GetInstance()->Init();
+	});
 
 	context->SetProcess(GameLoop::Process::Init, UINT32_MAX, [this]() {
 		SxavengerSystem::ExecuteAllAllocator();
 	});
 
-	/*context->SetProcess(GameLoop::Process::Term, std::nullopt, [this]() {
-		SxavengerAsset::Term();
-		SxavengerContent::Term();
-		SxavengerSystem::Term();
-	});*/
+	context->SetProcess(GameLoop::Process::Term, std::nullopt, [this]() {
+		FRenderCore::GetInstance()->Term();
+	});
 
 	context->SetProcess(GameLoop::Process::Begin, 0, [this]() {
 		SxavengerSystem::BeginPerformace();

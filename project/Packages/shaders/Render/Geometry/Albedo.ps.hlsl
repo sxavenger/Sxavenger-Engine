@@ -10,7 +10,7 @@
 Texture2D<float4> gAlbedo : register(t0);
 SamplerState gSampler     : register(s0);
 
-ConstantBuffer<MaterialComponent> gMaterial : register(b0);
+StructuredBuffer<MaterialComponent> gMaterials : register(t1);
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // main
@@ -23,8 +23,8 @@ GeometryForwardOutput main(GeometryPSInput input) {
 	Material::TextureParameter parameter;
 	parameter.Set(input.texcoord, gSampler);
 
-	output.color.rgb = gMaterial.albedo.GetAlbedo(parameter);
-	output.color.a   = gMaterial.transparency.GetTransparency(parameter);
+	output.color.rgb = gMaterials[input.instanceId].albedo.GetAlbedo(parameter);
+	output.color.a   = gMaterials[input.instanceId].transparency.GetTransparency(parameter);
 
 	return output;
 	

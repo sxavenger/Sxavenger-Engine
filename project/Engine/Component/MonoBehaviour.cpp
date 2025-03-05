@@ -29,20 +29,15 @@ void MonoBehaviour::Term() {
 
 	// childrenの登録解除
 	while (!children_.empty()) {
-		std::visit(Visit{}, children_.front());
-
-		if (children_.empty()) {
-			break;
-		}
-
-		children_.pop_front();
+		std::visit(Visit{}, children_.back());
 	}
 
 	// componentの登録解除
-	std::for_each(std::execution::seq, components_.begin(), components_.end(), [](const std::pair<std::type_index, ComponentStorage::ComponentIterator>& pair) {
+	std::for_each(/*std::execution::seq, */components_.begin(), components_.end(), [](const std::pair<std::type_index, ComponentStorage::ComponentIterator>& pair) {
 		const auto& [type, iterator] = pair;
 		sComponentStorage->UnregisterComponent(type, iterator);
 	});
+	components_.clear();
 }
 
 void MonoBehaviour::SetParent(MonoBehaviour* parent) {
@@ -65,9 +60,9 @@ void MonoBehaviour::AddChild(std::unique_ptr<MonoBehaviour> child) {
 }
 
 void MonoBehaviour::RemoveChild(MonoBehaviour* child) {
-	child->parent_ = nullptr;
-
 	RemoveHierarchy(child->iterator_.value());
+	child->parent_   = nullptr;
+	child->iterator_ = std::nullopt;
 }
 
 MonoBehaviour::Iterator MonoBehaviour::AddHierarchy(std::variant<MonoBehaviour*, std::unique_ptr<MonoBehaviour>>&& child) {

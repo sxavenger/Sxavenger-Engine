@@ -49,11 +49,17 @@ public:
 
 	void Create(const Vector2ui& size);
 
+	//* clear option *//
+
+	void ClearTextures(const DirectXThreadContext* context) const;
+
 	//* deferred option *//
 
 	void BeginGeometryPass(const DirectXThreadContext* context) const;
 
 	void EndGeometryPass(const DirectXThreadContext* context) const;
+
+	void SetupGeometryPass(const DirectXThreadContext* context) const;
 
 	void BeginLightingPass(const DirectXThreadContext* context) const;
 
@@ -62,6 +68,12 @@ public:
 	void BeginTransparentBasePass(const DirectXThreadContext* context) const;
 
 	void EndTransparentBasePass(const DirectXThreadContext* context) const;
+
+	//* getter *//
+
+	const Vector2ui& GetSize() const { return size_; }
+
+	const FTexture* GetGBuffer(GBufferLayout layout) const { return gBuffers_[static_cast<size_t>(layout)].get(); }
 
 private:
 

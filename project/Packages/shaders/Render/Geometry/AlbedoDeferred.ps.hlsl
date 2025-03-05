@@ -10,7 +10,7 @@
 Texture2D<float4> gAlbedo : register(t0);
 SamplerState gSampler     : register(s0);
 
-ConstantBuffer<MaterialComponent> gMaterial : register(b0);
+StructuredBuffer<MaterialComponent> gMaterials : register(t1);
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // main
@@ -25,14 +25,14 @@ GeometryDeferredOutput main(GeometryPSInput input) {
 	Material::TextureParameter parameter;
 	parameter.Set(input.texcoord, gSampler);
 
-	output.SetAlbedo(gMaterial.albedo.GetAlbedo(parameter));
-	output.SetNormal(gMaterial.normal.GetNormal(input.normal, parameter, tbn));
+	output.SetAlbedo(gMaterials[input.instanceId].albedo.GetAlbedo(parameter));
+	output.SetNormal(gMaterials[input.instanceId].normal.GetNormal(input.normal, parameter, tbn));
 	output.SetPosition(input.worldPos);
 	
 	output.SetMaterial(
-		gMaterial.properties.metallic.GetValue(parameter),
-		gMaterial.properties.specular.GetValue(parameter),
-		gMaterial.properties.roughness.GetValue(parameter)
+		gMaterials[input.instanceId].properties.metallic.GetValue(parameter),
+		gMaterials[input.instanceId].properties.specular.GetValue(parameter),
+		gMaterials[input.instanceId].properties.roughness.GetValue(parameter)
 	);
 
 	return output;

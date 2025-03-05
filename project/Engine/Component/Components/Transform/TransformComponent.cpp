@@ -33,6 +33,11 @@ const Vector3f TransformComponent::GetPosition() const {
 	return { mat_.m[3][0], mat_.m[3][1], mat_.m[3][2] };
 }
 
+const TransformationMatrix& TransformComponent::GetTransformationMatrix() const {
+	Assert(buffer_ != nullptr, "transform buffer is not craete.");
+	return (*buffer_)[0];
+}
+
 void TransformComponent::UpdateMatrix() {
 	mat_ = transform_.ToMatrix();
 

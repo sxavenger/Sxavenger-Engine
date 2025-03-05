@@ -8,19 +8,10 @@
 
 //* engine
 #include <Engine/System/Window/GameWindow.h>
+#include <Engine/Component/MonoBehaviour.h>
 #include <Engine/Render/FPresenter.h>
-#include <Engine/Render/FSceneTextures.h>
 #include <Engine/Render/Scene/FSceneRenderer.h>
-#include <Engine/Render/Scene/FScene.h>
 #include <Engine/Render/Scene/Actor/Camera/CameraActors/ACineCameraActor.h>
-#include <Engine/Render/Scene/Actor/Geometry/GeometryActors/AModelActor.h>
-#include <Engine/Render/Scene/Actor/Geometry/GeometryActors/AModelInstanceActor.h>
-#include <Engine/Render/Scene/Actor/Light/LightActors/ADirectionalLightActor.h>
-#include <Engine/Render/Scene/FAmbientProcessSetting.h>
-#include <Engine/Render/Scene/AmbientProcess/AmbientProcesses/FAmbientProcessNLAO.h>
-
-#include "Engine/System/DirectX/DxObject/DxVectorDimensionBuffer.h"
-#include "Engine/Module/Collider/Collider.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // BetaSystemGameLoop class
@@ -45,28 +36,14 @@ private:
 
 	std::shared_ptr<GameWindow> main_;
 
-	// vvv render system vvv //
+	std::unique_ptr<FRenderTargetTextures> textures_;
+	std::unique_ptr<FSceneRenderer> renderer_;
 
 	FPresenter presenter_;
 
-	std::unique_ptr<FSceneTextures> textures_;
-	std::unique_ptr<FSceneRenderer> renderer_;
+	ACineCameraActor actor_;
 
-	std::unique_ptr<FScene> scene_;
-
-	// vvv actors vvv //
-
-	std::unique_ptr<ACineCameraActor> camera_;
-
-	std::unique_ptr<ADirectionalLightActor> light_;
-
-	std::unique_ptr<AModelActor> model_;
-
-	// vvv engine debug vvv //
-
-	std::unique_ptr<DxObject::VectorDimensionBuffer<Vector4f>> buffer_;
-
-	std::unique_ptr<Collider> colliders_[128];
+	std::unique_ptr<MonoBehaviour> behaviour_[2];
 
 	//=========================================================================================
 	// private methods
