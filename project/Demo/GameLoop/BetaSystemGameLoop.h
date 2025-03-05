@@ -8,6 +8,7 @@
 
 //* engine
 #include <Engine/System/Window/GameWindow.h>
+#include <Engine/Content/Material/Material.h>
 #include <Engine/Component/MonoBehaviour.h>
 #include <Engine/Render/FPresenter.h>
 #include <Engine/Render/Scene/FSceneRenderer.h>
@@ -43,7 +44,9 @@ private:
 
 	ACineCameraActor actor_;
 
-	std::unique_ptr<MonoBehaviour> behaviour_[2];
+	std::unique_ptr<MonoBehaviour> behaviourA_[10000];
+
+	Material material_ = {};
 
 	//=========================================================================================
 	// private methods

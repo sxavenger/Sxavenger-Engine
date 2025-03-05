@@ -28,8 +28,20 @@ public:
 	// using
 	////////////////////////////////////////////////////////////////////////////////////////////
 
+	//* component container
+	using ComponentContainer = std::unordered_map<std::type_index, ComponentStorage::ComponentIterator>;
+
+	//* behaviour hierarchy
 	using Hierarchy = std::list<std::variant<MonoBehaviour*, std::unique_ptr<MonoBehaviour>>>;
 	using Iterator  = Hierarchy::iterator;
+
+	////////////////////////////////////////////////////////////////////////////////////////////
+	// struct GetPtrVisitor
+	////////////////////////////////////////////////////////////////////////////////////////////
+	struct GetPtrVisitor {
+		MonoBehaviour* operator()(MonoBehaviour* ptr) const { return ptr; }
+		MonoBehaviour* operator()(const std::unique_ptr<MonoBehaviour>& ptr) const { return ptr.get(); }
+	};
 
 public:
 
@@ -55,6 +67,8 @@ public:
 
 	template <Component T>
 	T* RequireComponent() const;
+
+	ComponentContainer& GetComponents() { return components_; }
 
 	//* hierarchy option *//
 
@@ -85,7 +99,7 @@ public:
 	//=========================================================================================
 
 	//* component container
-	std::unordered_map<std::type_index, ComponentStorage::ComponentIterator> components_;
+	ComponentContainer components_;
 
 	//* hierarchy
 	MonoBehaviour* parent_            = nullptr;

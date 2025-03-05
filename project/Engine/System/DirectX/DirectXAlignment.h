@@ -5,7 +5,7 @@
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 //!< GPU Bufferに対するアライメント
-constexpr size_t kAlignment = 16;
+constexpr size_t kAlignment = sizeof(float) * 4;
 #define _GPU_BUFFER_ALIGNAS alignas(kAlignment)
 
 //!< warning対策

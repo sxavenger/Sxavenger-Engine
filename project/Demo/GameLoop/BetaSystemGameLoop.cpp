@@ -7,6 +7,9 @@
 #include <Engine/System/SxavengerSystem.h>
 #include <Engine/Asset/SxavengerAsset.h>
 #include <Engine/Asset/Observer/AssetObserver.h>
+#include <Engine/Editor/EditorEngine.h>
+#include <Engine/Editor/Editors/DevelopEditor.h>
+#include <Engine/Editor/Editors/OutlinerEditor.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // BetaSystemGameLoop class methods
@@ -16,11 +19,11 @@ void BetaSystemGameLoop::Init(GameLoop::Context* context) {
 	context->SetProcess(GameLoop::Process::Init, std::nullopt, [this]() { InitSystem(); });
 	context->SetProcess(GameLoop::Process::Term, std::nullopt, [this]() { TermSystem(); });
 	context->SetProcess(GameLoop::Process::Update, std::nullopt, [this]() {
-		/*if (auto developer = sEditorEngine->TryGetEditor<EngineDeveloperEditor>()) {
-			if (!developer->IsProcessRequired()) {
+		if (auto develop = sEditorEngine->TryGetEditor<DevelopEditor>()) {
+			if (!develop->IsProcessRequired()) {
 				return;
 			}
-		}*/
+		}
 
 		UpdateSystem();
 	});
@@ -50,20 +53,37 @@ void BetaSystemGameLoop::InitSystem() {
 	actor_.Init();
 	renderer_->SetCamera(&actor_);
 
-	AssetObserver<AssetModel> observerA = SxavengerAsset::TryImport<AssetModel>("assets/models/primitive/teapot.obj");
-	behaviour_[0] = observerA.WaitGet()->CreateMonoBehavior("teapot");
+	AssetObserver<AssetModel> observerA = SxavengerAsset::TryImport<AssetModel>("assets/models/chessboard/chessboard.gltf");
+	//behaviourA_ = observerA.WaitGet()->CreateMonoBehavior("teapot");
 
-	AssetObserver<AssetModel> observerB = SxavengerAsset::TryImport<AssetModel>("assets/models/chessboard/chessboard.gltf");
-	behaviour_[1] = observerB.WaitGet()->CreateMonoBehavior("chessboard");
+	material_.CreateBuffer();
+	material_.GetMaterial().albedo.SetValue({ 1.0f, 1.0f, 1.0f });
 
-	for (auto& child : behaviour_[1]->GetChildren()) {
-		if (auto component = std::get_if<std::unique_ptr<MonoBehaviour>>(&child)) {
-			auto transform = (*component)->GetComponent<TransformComponent>();
-			transform->GetTransform().translate = { 1.0f, -1.0f, 1.0f };
-			transform->GetTransform().scale     = { 2.0f, 2.0f, 2.0f };
-			transform->UpdateMatrix();
+	for (size_t i = 0; i < 1; i++) {
+		behaviourA_[i] = observerA.WaitGet()->CreateMonoBehavior("teapot");
+
+		for (auto& child : behaviourA_[i]->GetChildren()) {
+			if (auto component = std::get_if<std::unique_ptr<MonoBehaviour>>(&child)) {
+				auto transform = (*component)->GetComponent<TransformComponent>();
+				transform->GetTransform().translate = { static_cast<float>(i) * 0.18f, static_cast<float>(i) * 0.18f, static_cast<float>(i) };
+				transform->GetTransform().scale     = { 1.0f, 1.0f, 1.0f };
+				transform->UpdateMatrix();
+			}
+
+			if (i % 3 != 0) {
+				continue;
+			}
+
+			if (auto component = std::get_if<std::unique_ptr<MonoBehaviour>>(&child)) {
+				auto mesh = (*component)->GetComponent<MeshRendererComponent>();
+				mesh->SetMaterial(&material_);
+			}
 		}
-	};
+	}
+
+	if (auto outliner = sEditorEngine->TryGetEditor<OutlinerEditor>()) {
+		outliner->SetBehaviour(behaviourA_[0].get());
+	}
 	
 }
 

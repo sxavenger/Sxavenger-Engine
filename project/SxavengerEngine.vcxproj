@@ -221,6 +221,12 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="Engine\Content\TextureBuffer\OffscreenTextureCollection.cpp" />
     <ClCompile Include="Engine\Content\TextureBuffer\RenderTexture.cpp" />
     <ClCompile Include="Engine\Content\TextureBuffer\UnorderedTexture.cpp" />
+    <ClCompile Include="Engine\Editor\EditorEngine.cpp" />
+    <ClCompile Include="Engine\Editor\Editors\BaseEditor.cpp" />
+    <ClCompile Include="Engine\Editor\Editors\DevelopEditor.cpp" />
+    <ClCompile Include="Engine\Editor\Editors\OutlinerEditor.cpp" />
+    <ClCompile Include="Engine\Editor\Editors\RenderSceneEditor.cpp" />
+    <ClCompile Include="Engine\GameLoop\EditorEngineGameLoop.cpp" />
     <ClCompile Include="Engine\GameLoop\SxavengerEngineGameLoop.cpp" />
     <ClCompile Include="Engine\Module\Pipeline\CustomComputePipeline.cpp" />
     <ClCompile Include="Engine\Module\Pipeline\CustomGraphicsPipeline.cpp" />
@@ -339,6 +345,12 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Engine\Content\TextureBuffer\OffscreenTextureCollection.h" />
     <ClInclude Include="Engine\Content\TextureBuffer\RenderTexture.h" />
     <ClInclude Include="Engine\Content\TextureBuffer\UnorderedTexture.h" />
+    <ClInclude Include="Engine\Editor\EditorEngine.h" />
+    <ClInclude Include="Engine\Editor\Editors\BaseEditor.h" />
+    <ClInclude Include="Engine\Editor\Editors\DevelopEditor.h" />
+    <ClInclude Include="Engine\Editor\Editors\OutlinerEditor.h" />
+    <ClInclude Include="Engine\Editor\Editors\RenderSceneEditor.h" />
+    <ClInclude Include="Engine\GameLoop\EditorEngineGameLoop.h" />
     <ClInclude Include="Engine\GameLoop\SxavengerEngineGameLoop.h" />
     <ClInclude Include="Engine\Module\Pipeline\CustomComputePipeline.h" />
     <ClInclude Include="Engine\Module\Pipeline\CustomGraphicsPipeline.h" />

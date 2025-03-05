@@ -49,10 +49,11 @@ void FSceneRenderer::RenderGeometryPass(const DirectXThreadContext* context) {
 	auto& container = sComponentStorage->GetComponentContainer<MeshRendererComponent>();
 
 	// InputMeshごとに分ける
+	// todo: mesh renderer componentの登録をcomponentが作成された際に行うように変更
 	std::unordered_map<const InputMesh*, std::vector<MeshRendererComponent*>> map;
 
 	// todo: 実行時間の早い方に変更
-	std::for_each(/*std::execution::seq, */container.begin(), container.end(), [&](auto& component) {
+	std::for_each(std::execution::seq, container.begin(), container.end(), [&](auto& component) {
 		// renderer componentの取得
 		MeshRendererComponent* renderer = static_cast<MeshRendererComponent*>(component.get());
 
@@ -85,10 +86,11 @@ void FSceneRenderer::RenderGeometryPass(const DirectXThreadContext* context) {
 		transforms_->Resize(SxavengerSystem::GetDxDevice(), static_cast<uint32_t>(components.size()));
 		materials_->Resize(SxavengerSystem::GetDxDevice(), static_cast<uint32_t>(components.size()));
 
-		for (size_t i = 0; i < components.size(); ++i) {
-			materials_->At(i) = components[i]->GetMaterial()->GetMaterial();
-			transforms_->At(i).Transfer(components[i]->GetTransform()->GetMatrix());
-		}
+		std::for_each(std::execution::seq, components.begin(), components.end(), [&](auto& component) {
+			size_t index = &component - std::to_address(components.begin());
+			materials_->At(index) = components[index]->GetMaterial()->GetMaterial();
+			transforms_->At(index).Transfer(components[index]->GetTransform()->GetMatrix());
+		});
 
 		mesh->BindIABuffer(context);
 

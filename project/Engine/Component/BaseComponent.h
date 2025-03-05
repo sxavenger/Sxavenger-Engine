@@ -24,6 +24,8 @@ public:
 	BaseComponent(MonoBehaviour* behaviour) : behaviour_(behaviour) {}
 	virtual ~BaseComponent() = default;
 
+	virtual void InspectorImGui() {}
+
 	//* getter *//
 
 	MonoBehaviour* GetBehaviour() const;

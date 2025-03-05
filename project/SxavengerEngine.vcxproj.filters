@@ -124,6 +124,12 @@
     <ClCompile Include="Engine\Render\Scene\Actor\Camera\CameraActors\APivotCameraActor.cpp" />
     <ClCompile Include="Engine\Render\Scene\Actor\Camera\ACameraActor.cpp" />
     <ClCompile Include="Engine\Render\Scene\Actor\AActor.cpp" />
+    <ClCompile Include="Engine\Editor\Editors\BaseEditor.cpp" />
+    <ClCompile Include="Engine\Editor\EditorEngine.cpp" />
+    <ClCompile Include="Engine\GameLoop\EditorEngineGameLoop.cpp" />
+    <ClCompile Include="Engine\Editor\Editors\DevelopEditor.cpp" />
+    <ClCompile Include="Engine\Editor\Editors\OutlinerEditor.cpp" />
+    <ClCompile Include="Engine\Editor\Editors\RenderSceneEditor.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\System\Window\Window.h" />
@@ -253,6 +259,12 @@
     <ClInclude Include="Engine\Render\Scene\Actor\Camera\CameraActors\APivotCameraActor.h" />
     <ClInclude Include="Engine\Render\Scene\Actor\Camera\ACameraActor.h" />
     <ClInclude Include="Engine\Render\Scene\Actor\AActor.h" />
+    <ClInclude Include="Engine\Editor\EditorEngine.h" />
+    <ClInclude Include="Engine\Editor\Editors\BaseEditor.h" />
+    <ClInclude Include="Engine\GameLoop\EditorEngineGameLoop.h" />
+    <ClInclude Include="Engine\Editor\Editors\DevelopEditor.h" />
+    <ClInclude Include="Engine\Editor\Editors\OutlinerEditor.h" />
+    <ClInclude Include="Engine\Editor\Editors\RenderSceneEditor.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

@@ -115,7 +115,8 @@ std::unique_ptr<MonoBehaviour> Model::CreateMonoBehavior(const std::string& name
 		child->SetName(mesh.name);
 
 		// transform component
-		child->AddComponent<TransformComponent>();
+		auto transform = child->AddComponent<TransformComponent>();
+		transform->CreateBuffer();
 
 		// renderer component
 		auto renderer = child->AddComponent<MeshRendererComponent>();
