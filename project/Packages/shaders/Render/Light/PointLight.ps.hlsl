@@ -14,7 +14,7 @@ struct PointLight {
 };
 ConstantBuffer<PointLight> gPointLight : register(b0);
 
-ConstantBuffer<RayQueryShadow> gShadow : register(b1);
+ConstantBuffer<InlineShadow> gShadow : register(b1);
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // main

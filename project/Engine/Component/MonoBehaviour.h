@@ -53,6 +53,12 @@ public:
 	~MonoBehaviour() { Term(); }
 
 	void Term();
+
+	//* active option *//
+
+	void SetActive(bool isActive) { isActive_ = isActive; }
+
+	bool IsActive() const { return isActive_; }
 	
 	//* components option *//
 
@@ -92,11 +98,14 @@ public:
 
 	const std::string& GetName() const { return name_; }
 
-public:
+private:
 
 	//=========================================================================================
 	// private variables
 	//=========================================================================================
+
+	//* active
+	bool isActive_ = true;
 
 	//* component container
 	ComponentContainer components_;

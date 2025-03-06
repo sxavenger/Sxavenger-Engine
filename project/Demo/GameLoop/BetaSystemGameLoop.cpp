@@ -50,8 +50,8 @@ void BetaSystemGameLoop::InitSystem() {
 
 	presenter_.Init();
 
-	AssetObserver<AssetModel> observer = SxavengerAsset::TryImport<AssetModel>("assets/models/chessboard/chessboard.gltf");
-	mesh_ = observer.WaitGet()->CreateMonoBehavior("chessboard");
+	AssetObserver<AssetModel> observer = SxavengerAsset::TryImport<AssetModel>("assets/models/primitive/teapot.obj");
+	mesh_ = observer.WaitGet()->CreateMonoBehavior("teapot");
 
 	camera_ = std::make_unique<MonoBehaviour>();
 	camera_->AddComponent<TransformComponent>();

@@ -38,6 +38,7 @@ public:
 		Sxl::FlagMask<D3D12_RAY_FLAGS, uint32_t> flag;
 
 		// todo: soft shadow
+		// strength自体を削除したい.
 	};
 	
 public:

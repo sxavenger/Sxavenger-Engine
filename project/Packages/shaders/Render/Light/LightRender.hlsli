@@ -59,6 +59,10 @@ struct InlineShadow {
 	//=========================================================================================
 
 	float TraceShadow(RayDesc desc) {
+		if (strength <= 0.0f) {
+			return 1.0f;
+		}
+		
 		RayQuery<0> q;
 
 		q.TraceRayInline(

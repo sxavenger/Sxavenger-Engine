@@ -27,7 +27,7 @@ public:
 	// public methods
 	//=========================================================================================
 
-	TransformComponent(MonoBehaviour* behaviour) : BaseComponent(behaviour) {}
+	TransformComponent(MonoBehaviour* behaviour) : BaseComponent(behaviour) { CreateBuffer(); }
 	~TransformComponent() override = default;
 
 	void InspectorImGui() override;

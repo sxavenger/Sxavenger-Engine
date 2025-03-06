@@ -16,7 +16,7 @@ struct SpotLight {
 };
 ConstantBuffer<SpotLight> gSpotLight : register(b0);
 
-ConstantBuffer<RayQueryShadow> gShadow : register(b1);
+ConstantBuffer<InlineShadow> gShadow : register(b1);
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // main

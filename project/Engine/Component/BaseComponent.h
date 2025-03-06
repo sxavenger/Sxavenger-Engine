@@ -30,6 +30,8 @@ public:
 
 	MonoBehaviour* GetBehaviour() const;
 
+	bool IsActive() const;
+
 private:
 
 	//=========================================================================================

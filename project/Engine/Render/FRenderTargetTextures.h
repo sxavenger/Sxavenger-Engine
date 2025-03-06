@@ -75,6 +75,8 @@ public:
 
 	const FTexture* GetGBuffer(GBufferLayout layout) const { return gBuffers_[static_cast<size_t>(layout)].get(); }
 
+	const FDepthTexture* GetDepth() const { return depth_.get(); }
+
 private:
 
 	//=========================================================================================

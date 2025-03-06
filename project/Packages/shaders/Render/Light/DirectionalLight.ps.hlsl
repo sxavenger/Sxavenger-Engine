@@ -40,6 +40,7 @@ PSOutput main(PSInput input) {
 	desc.TMax      = 10000.0f;
 
 	c_light *= gShadow.TraceShadow(desc);
+	// todo: 不必要な場合は、gShadow.TraceShadow()を呼び出さないようにする
 	
 	//* 出力
 	output.color.rgb = diffuse * c_light * surface.albedo;

@@ -82,6 +82,7 @@ D3D12_STATIC_SAMPLER_DESC SamplerBindDesc::GetSampler(const std::string& name, S
 
 	D3D12_STATIC_SAMPLER_DESC desc = samplers_.at(name);
 	desc.ShaderRegister   = shaderRegister;
+	desc.RegisterSpace    = registerSpace;
 	desc.ShaderVisibility = static_cast<D3D12_SHADER_VISIBILITY>(stage);
 
 	return desc;
