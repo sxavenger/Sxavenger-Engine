@@ -122,7 +122,7 @@ public:
 
 	//* getter *//
 
-	D3D12_GPU_VIRTUAL_ADDRESS GetGPUVirtualAddress() const { return asbuffer->GetGPUVirtualAddress(); }
+	const D3D12_GPU_VIRTUAL_ADDRESS GetGPUVirtualAddress() const { return asbuffer->GetGPUVirtualAddress(); }
 
 	const std::vector<Instance>& GetInstances() const { return instances_; }
 

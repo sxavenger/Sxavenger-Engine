@@ -242,10 +242,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="Engine\Render\FRenderCore.cpp" />
     <ClCompile Include="Engine\Render\FRenderTargetTextures.cpp" />
     <ClCompile Include="Engine\Render\Common\FTexture.cpp" />
-    <ClCompile Include="Engine\Render\Scene\Actor\AActor.cpp" />
-    <ClCompile Include="Engine\Render\Scene\Actor\Camera\ACameraActor.cpp" />
-    <ClCompile Include="Engine\Render\Scene\Actor\Camera\CameraActors\ACineCameraActor.cpp" />
-    <ClCompile Include="Engine\Render\Scene\Actor\Camera\CameraActors\APivotCameraActor.cpp" />
+    <ClCompile Include="Engine\Render\Scene\FScene.cpp" />
     <ClCompile Include="Engine\Render\Scene\FSceneRenderer.cpp" />
     <ClCompile Include="Engine\System\Config\SxavengerConfig.cpp" />
     <ClCompile Include="Engine\System\DirectX\DirectXCommon.cpp" />
@@ -369,10 +366,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Engine\Render\FRenderCore.h" />
     <ClInclude Include="Engine\Render\FRenderTargetTextures.h" />
     <ClInclude Include="Engine\Render\Common\FTexture.h" />
-    <ClInclude Include="Engine\Render\Scene\Actor\AActor.h" />
-    <ClInclude Include="Engine\Render\Scene\Actor\Camera\ACameraActor.h" />
-    <ClInclude Include="Engine\Render\Scene\Actor\Camera\CameraActors\ACineCameraActor.h" />
-    <ClInclude Include="Engine\Render\Scene\Actor\Camera\CameraActors\APivotCameraActor.h" />
+    <ClInclude Include="Engine\Render\Scene\FScene.h" />
     <ClInclude Include="Engine\Render\Scene\FSceneRenderer.h" />
     <ClInclude Include="Engine\System\Cinfig\SxavengerDirectory.h" />
     <ClInclude Include="Engine\System\Config\SxavengerConfig.h" />

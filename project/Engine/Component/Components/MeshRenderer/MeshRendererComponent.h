@@ -27,13 +27,14 @@ public:
 
 	//* setter *//
 
-	void SetMesh(const InputMesh* mesh) { mesh_ = mesh; }
+	void SetMesh(InputMesh* mesh) { mesh_ = mesh; }
 
 	void SetMaterial(const Material* material) { material_ = material; }
 
 	//* getter *//
 
 	const InputMesh* GetMesh() const { return mesh_; }
+	InputMesh* GetMesh() { return mesh_; }
 
 	const Material* GetMaterial() const { return material_; }
 
@@ -45,7 +46,7 @@ private:
 	// private variables
 	//=========================================================================================
 
-	const InputMesh* mesh_    = nullptr; //!< 仮
+	InputMesh* mesh_          = nullptr; //!< 仮
 	const Material* material_ = nullptr;
 
 };

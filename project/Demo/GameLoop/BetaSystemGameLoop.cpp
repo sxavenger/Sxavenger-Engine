@@ -45,13 +45,19 @@ void BetaSystemGameLoop::InitSystem() {
 	textures_ = std::make_unique<FRenderTargetTextures>();
 	textures_->Create(main_->GetSize());
 
+	scene_ = std::make_unique<FScene>();
+
 	renderer_ = std::make_unique<FSceneRenderer>();
 	renderer_->SetTextures(textures_.get());
+	renderer_->SetScene(scene_.get());
 
 	presenter_.Init();
 
 	AssetObserver<AssetModel> observer = SxavengerAsset::TryImport<AssetModel>("assets/models/primitive/teapot.obj");
 	mesh_ = observer.WaitGet()->CreateMonoBehavior("teapot");
+
+	/*AssetObserver<AssetModel> observer = SxavengerAsset::TryImport<AssetModel>("assets/models/chessboard/chessboard.gltf");
+	mesh_ = observer.WaitGet()->CreateMonoBehavior("chessboard");*/
 
 	camera_ = std::make_unique<MonoBehaviour>();
 	camera_->AddComponent<TransformComponent>();
@@ -60,7 +66,9 @@ void BetaSystemGameLoop::InitSystem() {
 	camera->SetTag(CameraComponent::Tag::GameCamera);
 
 	light_ = std::make_unique<MonoBehaviour>();
-	light_->AddComponent<TransformComponent>();
+	auto transform = light_->AddComponent<TransformComponent>();
+	transform->GetTransform().rotate = AxisAngle({ 1.0f, 0.0f, 0.0f }, pi_v / 2.0f);
+	transform->UpdateMatrix();
 	auto light = light_->AddComponent<DirectionalLightComponent>();
 	light->Init();
 
@@ -78,12 +86,14 @@ void BetaSystemGameLoop::UpdateSystem() {
 
 void BetaSystemGameLoop::DrawSystem() {
 
+	scene_->SetupTopLevelAS(SxavengerSystem::GetMainThreadContext());
+
 	renderer_->Render(SxavengerSystem::GetMainThreadContext());
 
 	main_->BeginRendering();
 	main_->ClearWindow();
 
-	presenter_.Present(SxavengerSystem::GetMainThreadContext(), main_->GetSize(), textures_->GetGBuffer(FRenderTargetTextures::GBufferLayout::Albedo)->GetGPUHandleSRV());
+	presenter_.Present(SxavengerSystem::GetMainThreadContext(), main_->GetSize(), textures_->GetGBuffer(FRenderTargetTextures::GBufferLayout::Main)->GetGPUHandleSRV());
 	 
 	SxavengerSystem::RenderImGui();
 

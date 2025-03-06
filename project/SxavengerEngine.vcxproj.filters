@@ -120,10 +120,6 @@
     <ClCompile Include="Engine\Render\Common\FDepthTexture.cpp" />
     <ClCompile Include="Engine\Render\Scene\FSceneRenderer.cpp" />
     <ClCompile Include="Demo\GameLoop\BetaSystemGameLoop.cpp" />
-    <ClCompile Include="Engine\Render\Scene\Actor\Camera\CameraActors\ACineCameraActor.cpp" />
-    <ClCompile Include="Engine\Render\Scene\Actor\Camera\CameraActors\APivotCameraActor.cpp" />
-    <ClCompile Include="Engine\Render\Scene\Actor\Camera\ACameraActor.cpp" />
-    <ClCompile Include="Engine\Render\Scene\Actor\AActor.cpp" />
     <ClCompile Include="Engine\Editor\Editors\BaseEditor.cpp" />
     <ClCompile Include="Engine\Editor\EditorEngine.cpp" />
     <ClCompile Include="Engine\GameLoop\EditorEngineGameLoop.cpp" />
@@ -133,6 +129,7 @@
     <ClCompile Include="Engine\Component\Components\Camera\CameraComponent.cpp" />
     <ClCompile Include="Engine\Component\Components\Light\DirectionalLightComponent.cpp" />
     <ClCompile Include="Engine\Component\Components\Light\LightSource.cpp" />
+    <ClCompile Include="Engine\Render\Scene\FScene.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\System\Window\Window.h" />
@@ -258,10 +255,6 @@
     <ClInclude Include="Engine\Render\Common\FDepthTexture.h" />
     <ClInclude Include="Engine\Render\Scene\FSceneRenderer.h" />
     <ClInclude Include="Demo\GameLoop\BetaSystemGameLoop.h" />
-    <ClInclude Include="Engine\Render\Scene\Actor\Camera\CameraActors\ACineCameraActor.h" />
-    <ClInclude Include="Engine\Render\Scene\Actor\Camera\CameraActors\APivotCameraActor.h" />
-    <ClInclude Include="Engine\Render\Scene\Actor\Camera\ACameraActor.h" />
-    <ClInclude Include="Engine\Render\Scene\Actor\AActor.h" />
     <ClInclude Include="Engine\Editor\EditorEngine.h" />
     <ClInclude Include="Engine\Editor\Editors\BaseEditor.h" />
     <ClInclude Include="Engine\GameLoop\EditorEngineGameLoop.h" />
@@ -271,6 +264,7 @@
     <ClInclude Include="Engine\Component\Components\Camera\CameraComponent.h" />
     <ClInclude Include="Engine\Component\Components\Light\DirectionalLightComponent.h" />
     <ClInclude Include="Engine\Component\Components\Light\LightSource.h" />
+    <ClInclude Include="Engine\Render\Scene\FScene.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

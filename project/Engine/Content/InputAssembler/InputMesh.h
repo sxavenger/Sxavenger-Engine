@@ -18,6 +18,7 @@
 
 //* lib
 #include <Lib/VertexStructure.h>
+#include <Lib/Traits.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // InputMesh class
@@ -51,13 +52,8 @@ public:
 
 	bool IsCreateBottomLevelAS() const { return isCreateBottomLevelAS_; }
 
-	//* operator *//
-
-	InputMesh(InputMesh&)            = delete;
-	InputMesh& operator=(InputMesh&) = delete;
-
-	InputMesh(InputMesh&&) noexcept            = default;
-	InputMesh& operator=(InputMesh&&) noexcept = default;
+	_DELETE_COPY(InputMesh)
+	_DEFAULT_MOVE(InputMesh)
 
 private:
 

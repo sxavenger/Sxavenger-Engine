@@ -5,6 +5,7 @@
 //-----------------------------------------------------------------------------------------
 //* render
 #include "../FRenderTargetTextures.h"
+#include "FScene.h" //!< 仮
 
 //* engine
 #include <Engine/System/DirectX/DxObject/DxVectorDimensionBuffer.h>
@@ -77,6 +78,8 @@ public:
 
 	void SetTextures(FRenderTargetTextures* textures) { textures_ = textures; }
 
+	void SetScene(FScene* scene) { scene_ = scene; }
+
 private:
 
 	//=========================================================================================
@@ -86,6 +89,8 @@ private:
 	//* textures *//
 
 	FRenderTargetTextures* textures_ = nullptr;
+
+	FScene* scene_ = nullptr; //!< hack.
 
 	//* geometry pass parameter *//
 

@@ -30,7 +30,7 @@ struct TransformComponent {
 
 	float3 GetDirection() {
 		static const float3 forward = float3(0.0f, 0.0f, 1.0f);
-		return mul(forward, (float3x3)mat);
+		return normalize(mul(forward, (float3x3)mat));
 	}
 	
 };

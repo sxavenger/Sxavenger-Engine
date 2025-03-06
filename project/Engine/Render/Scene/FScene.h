@@ -3,46 +3,27 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
-//* actor
-#include "../ACameraActor.h"
+//* component
+#include <Engine/Component/ComponentStorage.h>
+#include <Engine/Component/Components/MeshRenderer/MeshRendererComponent.h>
+
+//* engine
+#include <Engine/System/DirectX/DxrObject/DxrAccelerationStructure.h>
+#include <Engine/System/DirectX/DirectXContext.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// ACineCameraActor class
+// FScene class
 ////////////////////////////////////////////////////////////////////////////////////////////
-class APivotCameraActor
-	: public ACameraActor {
-public:
-
-	////////////////////////////////////////////////////////////////////////////////////////////
-	// Parameter structure
-	////////////////////////////////////////////////////////////////////////////////////////////
-	struct Parameter {
-
-		//* member *//
-
-		Vector3f point = kOrigin3<float>;
-		Vector2f angle = { 0.0f, pi_v / 16.0f };
-		float distance = 12.0f;
-
-	};
-
+class FScene {
 public:
 
 	//=========================================================================================
 	// public methods
 	//=========================================================================================
 
-	APivotCameraActor()          = default;
-	virtual ~APivotCameraActor() = default;
+	void SetupTopLevelAS(const DirectXThreadContext* context);
 
-	void Init();
-
-	void UpdateView();
-
-	//* getter *//
-
-	const Parameter& GetParameter() const { return parameter_; }
-	Parameter& GetParameter() { return parameter_; }
+	const DxrObject::TopLevelAS& GetTopLevelAS() const { return topLevelAS_; }
 
 private:
 
@@ -50,6 +31,6 @@ private:
 	// private variables
 	//=========================================================================================
 
-	Parameter parameter_;
+	DxrObject::TopLevelAS topLevelAS_;
 
 };
