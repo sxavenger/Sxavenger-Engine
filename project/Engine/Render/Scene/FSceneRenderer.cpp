@@ -134,5 +134,25 @@ void FSceneRenderer::RenderGeometryPass(const DirectXThreadContext* context, con
 	}
 
 	textures_->EndGeometryPass(context);
+}
 
+void FSceneRenderer::LightingPass(const DirectXThreadContext* context, const Config& config) {
+
+	textures_->BeginLightingPass(context);
+
+	//!< DirectionalLight
+	LightingPassDirectionalLight(context, config);
+	
+
+	textures_->EndLightingPass(context);
+
+}
+
+void FSceneRenderer::LightingPassDirectionalLight(const DirectXThreadContext* context, const Config& config) {
+
+	sComponentStorage->ForEach<DirectionalLightComponent>([](DirectionalLightComponent* component) {
+
+		component->GetTransform()->GetGPUVirtualAddress();
+		
+	});
 }

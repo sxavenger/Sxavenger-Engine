@@ -50,21 +50,8 @@ void BetaSystemGameLoop::InitSystem() {
 
 	presenter_.Init();
 
-	AssetObserver<AssetModel> observerA = SxavengerAsset::TryImport<AssetModel>("assets/models/chessboard/chessboard.gltf");
-	//behaviourA_ = observerA.WaitGet()->CreateMonoBehavior("teapot");
-
-	for (size_t i = 0; i < 1; i++) {
-		behaviourA_[i] = observerA.WaitGet()->CreateMonoBehavior("teapot");
-
-		for (auto& child : behaviourA_[i]->GetChildren()) {
-			if (auto component = std::get_if<std::unique_ptr<MonoBehaviour>>(&child)) {
-				auto transform = (*component)->GetComponent<TransformComponent>();
-				transform->GetTransform().translate = { static_cast<float>(i) * 0.18f, static_cast<float>(i) * 0.18f, static_cast<float>(i) };
-				transform->GetTransform().scale     = { 1.0f, 1.0f, 1.0f };
-				transform->UpdateMatrix();
-			}
-		}
-	}
+	AssetObserver<AssetModel> observer = SxavengerAsset::TryImport<AssetModel>("assets/models/chessboard/chessboard.gltf");
+	mesh_ = observer.WaitGet()->CreateMonoBehavior("chessboard");
 
 	camera_ = std::make_unique<MonoBehaviour>();
 	camera_->AddComponent<TransformComponent>();
@@ -72,9 +59,14 @@ void BetaSystemGameLoop::InitSystem() {
 	camera->Init();
 	camera->SetTag(CameraComponent::Tag::GameCamera);
 
-	if (auto outliner = sEditorEngine->TryGetEditor<OutlinerEditor>()) {
-		outliner->SetBehaviour(camera_.get());
-	}
+	light_ = std::make_unique<MonoBehaviour>();
+	light_->AddComponent<TransformComponent>();
+	auto light = light_->AddComponent<DirectionalLightComponent>();
+	light->Init();
+
+	sEditorEngine->ExecuteEditorFunction<OutlinerEditor>([&](OutlinerEditor* editor) {
+		editor->SetBehaviour(camera_.get());
+	});
 }
 
 void BetaSystemGameLoop::TermSystem() {

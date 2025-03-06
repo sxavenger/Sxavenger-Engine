@@ -95,7 +95,7 @@ public:
 
 	bool Contains(const std::string& name) const;
 
-	D3D12_STATIC_SAMPLER_DESC GetSampler(const std::string& name, ShaderVisibility stage, UINT shaderRegister) const;
+	D3D12_STATIC_SAMPLER_DESC GetSampler(const std::string& name, ShaderVisibility stage, UINT shaderRegister, UINT registerSpace = 0) const;
 
 private:
 
@@ -145,6 +145,7 @@ private:
 		std::optional<UINT>   rootParam;
 		ShaderVisibility      visibility;
 		UINT                  registerNum;
+		UINT                  registerSpace;
 		D3D_SHADER_INPUT_TYPE type; //!< debug用
 		BindBufferType        bindBufferType;
 
@@ -153,6 +154,7 @@ private:
 			rootParam      = std::nullopt;
 			visibility     = _visibility;
 			registerNum    = _desc.BindPoint;
+			registerSpace  = _desc.Space;
 			type           = _desc.Type;
 			bindBufferType = ToBindBufferType(_desc.Type);
 		}

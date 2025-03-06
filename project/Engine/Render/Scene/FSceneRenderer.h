@@ -12,6 +12,7 @@
 #include <Engine/Component/ComponentStorage.h>
 #include <Engine/Component/Components/MeshRenderer/MeshRendererComponent.h>
 #include <Engine/Component/Components/Camera/CameraComponent.h>
+#include <Engine/Component/Components/Light/DirectionalLightComponent.h>
 
 //* lib
 #include <Lib/Sxl/Flag.h>
@@ -102,5 +103,8 @@ private:
 	//* render *//
 
 	void RenderGeometryPass(const DirectXThreadContext* context, const Config& config);
+
+	void LightingPass(const DirectXThreadContext* context, const Config& config);
+	void LightingPassDirectionalLight(const DirectXThreadContext* context, const Config& config);
 
 };

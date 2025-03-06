@@ -43,9 +43,9 @@ StructuredBuffer<TransformComponent> gTransform : register(t10); //!< Light tran
 RaytracingAccelerationStructure gScene : register(t11);
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// RayQueryShadow structure
+// InlineShadow structure
 ////////////////////////////////////////////////////////////////////////////////////////////
-struct RayQueryShadow {
+struct InlineShadow {
 
 	//=========================================================================================
 	// public variables

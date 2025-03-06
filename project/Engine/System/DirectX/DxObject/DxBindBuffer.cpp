@@ -77,7 +77,7 @@ bool SamplerBindDesc::Contains(const std::string& name) const {
 	return samplers_.contains(name);
 }
 
-D3D12_STATIC_SAMPLER_DESC SamplerBindDesc::GetSampler(const std::string& name, ShaderVisibility stage, UINT shaderRegister) const {
+D3D12_STATIC_SAMPLER_DESC SamplerBindDesc::GetSampler(const std::string& name, ShaderVisibility stage, UINT shaderRegister, UINT registerSpace) const {
 	Assert(Contains(name), "sampler is not found. sampler name: " + name);
 
 	D3D12_STATIC_SAMPLER_DESC desc = samplers_.at(name);
@@ -209,27 +209,27 @@ ComputeRootSignatureDesc BindBufferTable::CreateComputeRootSignatureDesc() {
 
 		switch (info.bindBufferType) {
 			case BindBufferType::kVirtual_CBV:
-				desc.SetVirtualCBV(rootIndex, info.registerNum);
+				desc.SetVirtualCBV(rootIndex, info.registerNum, info.registerSpace);
 				break;
 
 			case BindBufferType::kVirtual_SRV:
-				desc.SetVirtualSRV(rootIndex, info.registerNum);
+				desc.SetVirtualSRV(rootIndex, info.registerNum, info.registerSpace);
 				break;
 
 			case BindBufferType::kVirtual_UAV:
-				desc.SetVirtualUAV(rootIndex, info.registerNum);
+				desc.SetVirtualUAV(rootIndex, info.registerNum, info.registerSpace);
 				break;
 
 			case BindBufferType::kHandle_SRV:
-				desc.SetHandleSRV(rootIndex, info.registerNum);
+				desc.SetHandleSRV(rootIndex, info.registerNum, info.registerSpace);
 				break;
 
 			case BindBufferType::kHandle_UAV:
-				desc.SetHandleUAV(rootIndex, info.registerNum);
+				desc.SetHandleUAV(rootIndex, info.registerNum, info.registerSpace);
 				break;
 
 			case BindBufferType::kSampler:
-				desc.SetSamplerLinear(MODE_WRAP, info.visibility, info.registerNum);
+				desc.SetSamplerLinear(MODE_WRAP, info.visibility, info.registerNum, info.registerSpace);
 				continue;
 				break;
 		}
@@ -252,33 +252,33 @@ ComputeRootSignatureDesc BindBufferTable::CreateComputeRootSignatureDesc(const S
 
 		switch (info.bindBufferType) {
 			case BindBufferType::kVirtual_CBV:
-				desc.SetVirtualCBV(rootIndex, info.registerNum);
+				desc.SetVirtualCBV(rootIndex, info.registerNum, info.registerSpace);
 				break;
 
 			case BindBufferType::kVirtual_SRV:
-				desc.SetVirtualSRV(rootIndex, info.registerNum);
+				desc.SetVirtualSRV(rootIndex, info.registerNum, info.registerSpace);
 				break;
 
 			case BindBufferType::kVirtual_UAV:
-				desc.SetVirtualUAV(rootIndex, info.registerNum);
+				desc.SetVirtualUAV(rootIndex, info.registerNum, info.registerSpace);
 				break;
 
 			case BindBufferType::kHandle_SRV:
-				desc.SetHandleSRV(rootIndex, info.registerNum);
+				desc.SetHandleSRV(rootIndex, info.registerNum, info.registerSpace);
 				break;
 
 			case BindBufferType::kHandle_UAV:
-				desc.SetHandleUAV(rootIndex, info.registerNum);
+				desc.SetHandleUAV(rootIndex, info.registerNum, info.registerSpace);
 				break;
 
 			case BindBufferType::kSampler:
 				if (samplerDesc.Contains(name)) {
 					//!< samplerがある場合はsamplerを設定
-					desc.SetSamplerDesc(samplerDesc.GetSampler(name, info.visibility, info.registerNum));
+					desc.SetSamplerDesc(samplerDesc.GetSampler(name, info.visibility, info.registerNum, info.registerSpace));
 
 				} else {
 					//!< samplerがない場合はデフォルトのsamplerを設定
-					desc.SetSamplerLinear(MODE_WRAP, info.visibility, info.registerNum);
+					desc.SetSamplerLinear(MODE_WRAP, info.visibility, info.registerNum, info.registerSpace);
 				}
 				continue;
 				break;
@@ -410,8 +410,8 @@ void BindBufferTable::InsertBindBuffer(const D3D12_SHADER_INPUT_BIND_DESC& desc,
 		//* visibility all になるかの確認
 		BindBufferInfo& preInfo = table_.at(desc.Name);
 
-		Assert(info.type == preInfo.type, "buffer is conflict.");                               //!< bufferの型が違う.
-		Assert(info.registerNum == preInfo.registerNum, "buffer is not same register number."); //!< register番号が違う
+		Assert(info.type == preInfo.type, "buffer is conflict.");                                                                       //!< bufferの型が違う.
+		Assert(info.registerNum == preInfo.registerNum && info.registerSpace == preInfo.registerSpace, "buffer is not same register."); //!< register関係が違う
 
 		// allに変更
 		preInfo.visibility = ShaderVisibility::VISIBILITY_ALL;
