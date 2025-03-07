@@ -1,7 +1,7 @@
 #include "Easing.h"
 
 #include <cmath>
-#include <Lib/Geometry/MathLib.h>
+#include <Lib/Geometry/GeometryMath.h>
 
 /* --- Sine --- */
 float EaseInSine(float t) {
@@ -101,17 +101,17 @@ float EaseInOutExpo(float t) {
 
 /* --- Circ --- */
 float EaseInCirc(float t) {
-	return 1.0f - sqrtf(1.0f - std::pow(t, 2.0f));
+	return 1.0f - std::sqrt(1.0f - std::pow(t, 2.0f));
 }
 
 float EaseOutCirc(float t) {
-	return sqrtf(1.0f - std::pow(t - 1.0f, 2.0f));
+	return std::sqrt(1.0f - std::pow(t - 1.0f, 2.0f));
 }
 
 float EaseInOutCirc(float t) {
 	return t < 0.5f
-		? (1.0f - sqrtf(1.0f - std::pow(2.0f * t, 2.0f))) / 2.0f
-		: (sqrtf(1.0f - std::pow(-2.0f * t + 2.0f, 2.0f)) + 1.0f) / 2.0f;
+		? (1.0f - std::sqrt(1.0f - std::pow(2.0f * t, 2.0f))) / 2.0f
+		: (std::sqrt(1.0f - std::pow(-2.0f * t + 2.0f, 2.0f)) + 1.0f) / 2.0f;
 }
 
 /* --- Back --- */

@@ -204,6 +204,9 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="Engine\Asset\Thread\AsyncAssetThread.cpp" />
     <ClCompile Include="Engine\Asset\Unknown\AssetUnknown.cpp" />
     <ClCompile Include="Engine\Component\Components\Camera\CameraComponent.cpp" />
+    <ClCompile Include="Engine\Component\Components\Collider\ColliderComponent.cpp" />
+    <ClCompile Include="Engine\Component\Components\Collider\CollisionDetection.cpp" />
+    <ClCompile Include="Engine\Component\Components\Collider\CollisionManager.cpp" />
     <ClCompile Include="Engine\Component\Components\Light\DirectionalLightComponent.cpp" />
     <ClCompile Include="Engine\Component\Components\Light\LightSource.cpp" />
     <ClCompile Include="Engine\Component\Components\MeshRenderer\MeshRendererComponent.cpp" />
@@ -329,6 +332,9 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Engine\Asset\Thread\AsyncAssetThread.h" />
     <ClInclude Include="Engine\Asset\Unknown\AssetUnknown.h" />
     <ClInclude Include="Engine\Component\Components\Camera\CameraComponent.h" />
+    <ClInclude Include="Engine\Component\Components\Collider\ColliderComponent.h" />
+    <ClInclude Include="Engine\Component\Components\Collider\CollisionDetection.h" />
+    <ClInclude Include="Engine\Component\Components\Collider\CollisionManager.h" />
     <ClInclude Include="Engine\Component\Components\Light\DirectionalLightComponent.h" />
     <ClInclude Include="Engine\Component\Components\Light\LightSource.h" />
     <ClInclude Include="Engine\Component\Components\MeshRenderer\MeshRendererComponent.h" />

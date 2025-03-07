@@ -133,6 +133,9 @@
     <ClCompile Include="Engine\Component\MonoBehaviourContainer.cpp" />
     <ClCompile Include="Engine\Render\FMainRender.cpp" />
     <ClCompile Include="Lib\Easing.cpp" />
+    <ClCompile Include="Engine\Component\Components\Collider\ColliderComponent.cpp" />
+    <ClCompile Include="Engine\Component\Components\Collider\CollisionDetection.cpp" />
+    <ClCompile Include="Engine\Component\Components\Collider\CollisionManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\System\Window\Window.h" />
@@ -271,6 +274,9 @@
     <ClInclude Include="Engine\Component\MonoBehaviourContainer.h" />
     <ClInclude Include="Engine\Render\FMainRender.h" />
     <ClInclude Include="Lib\Easing.h" />
+    <ClInclude Include="Engine\Component\Components\Collider\ColliderComponent.h" />
+    <ClInclude Include="Engine\Component\Components\Collider\CollisionDetection.h" />
+    <ClInclude Include="Engine\Component\Components\Collider\CollisionManager.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />
