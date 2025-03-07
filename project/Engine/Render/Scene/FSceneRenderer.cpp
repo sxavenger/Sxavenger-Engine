@@ -32,9 +32,7 @@ void FSceneRenderer::Render(const DirectXThreadContext* context, const Config& c
 
 	RenderGeometryPass(context, conf);
 
-	if (!status.Test(Status::Warning_Scene)) {
-		LightingPass(context, conf);
-	}
+	LightingPass(context, conf);
 }
 
 void FSceneRenderer::ApplyConfig(Config& config) {
@@ -56,10 +54,6 @@ Sxl::Flag<FSceneRenderer::Status> FSceneRenderer::CheckStatus(const Config& conf
 
 	if (textures_ == nullptr) {
 		status |= Status::Error_Textures;
-	}
-
-	if (scene_ == nullptr) {
-		status |= Status::Warning_Scene;
 	}
 
 	if (config.camera == nullptr) {
@@ -172,15 +166,15 @@ void FSceneRenderer::LightingPassDirectionalLight(const DirectXThreadContext* co
 
 		DxObject::BindBufferDesc parameter = {};
 		// common parameter
-		parameter.SetAddress("gCamera",    config.camera->GetGPUVirtualAddress());
-		parameter.SetAddress("gScene",     scene_->GetTopLevelAS().GetGPUVirtualAddress());
+		parameter.SetAddress("gCamera",config.camera->GetGPUVirtualAddress());
+		parameter.SetAddress("gScene", FRenderCore::GetInstance()->GetScene()->GetTopLevelAS()->GetGPUVirtualAddress());
 
 		// deferred paraemter
-		parameter.SetHandle("gDepth",      textures_->GetDepth()->GetRasterizerGPUHandleSRV());
-		parameter.SetHandle("gAlbedo",     textures_->GetGBuffer(FRenderTargetTextures::GBufferLayout::Albedo)->GetGPUHandleSRV());
-		parameter.SetHandle("gNormal",     textures_->GetGBuffer(FRenderTargetTextures::GBufferLayout::Normal)->GetGPUHandleSRV());
-		parameter.SetHandle("gPosition",   textures_->GetGBuffer(FRenderTargetTextures::GBufferLayout::Position)->GetGPUHandleSRV());
-		parameter.SetHandle("gMaerial",   textures_->GetGBuffer(FRenderTargetTextures::GBufferLayout::Material_AO)->GetGPUHandleSRV());
+		parameter.SetHandle("gDepth",    textures_->GetDepth()->GetRasterizerGPUHandleSRV());
+		parameter.SetHandle("gAlbedo",   textures_->GetGBuffer(FRenderTargetTextures::GBufferLayout::Albedo)->GetGPUHandleSRV());
+		parameter.SetHandle("gNormal",   textures_->GetGBuffer(FRenderTargetTextures::GBufferLayout::Normal)->GetGPUHandleSRV());
+		parameter.SetHandle("gPosition", textures_->GetGBuffer(FRenderTargetTextures::GBufferLayout::Position)->GetGPUHandleSRV());
+		parameter.SetHandle("gMaterial", textures_->GetGBuffer(FRenderTargetTextures::GBufferLayout::Material_AO)->GetGPUHandleSRV());
 
 		// direcitonal light parameter
 		parameter.SetAddress("gTransform", component->GetTransform()->GetGPUVirtualAddress());

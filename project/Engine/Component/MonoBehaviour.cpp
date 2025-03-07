@@ -22,8 +22,7 @@ void MonoBehaviour::Term() {
 		}
 
 		void operator()(std::unique_ptr<MonoBehaviour>& behavior) const {
-			auto tmp = std::move(behavior);
-			operator()(tmp.get());
+			behavior.reset();
 		}
 	};
 
@@ -52,7 +51,7 @@ void MonoBehaviour::AddChild(MonoBehaviour* child) {
 	child->iterator_ = AddHierarchy(child);
 }
 
-void MonoBehaviour::AddChild(std::unique_ptr<MonoBehaviour> child) {
+void MonoBehaviour::AddChild(std::unique_ptr<MonoBehaviour>&& child) {
 	auto ptr = child.get();
 	Assert(!ptr->HasParent(), "behaviour already have parent.");
 	ptr->parent_   = this;
@@ -65,10 +64,10 @@ void MonoBehaviour::RemoveChild(MonoBehaviour* child) {
 	child->iterator_ = std::nullopt;
 }
 
-MonoBehaviour::Iterator MonoBehaviour::AddHierarchy(std::variant<MonoBehaviour*, std::unique_ptr<MonoBehaviour>>&& child) {
+MonoBehaviour::HierarchyIterator MonoBehaviour::AddHierarchy(std::variant<MonoBehaviour*, std::unique_ptr<MonoBehaviour>>&& child) {
 	return children_.emplace(children_.end(), std::move(child));
 }
 
-void MonoBehaviour::RemoveHierarchy(const Iterator& iterator) {
+void MonoBehaviour::RemoveHierarchy(const HierarchyIterator& iterator) {
 	children_.erase(iterator);
 }

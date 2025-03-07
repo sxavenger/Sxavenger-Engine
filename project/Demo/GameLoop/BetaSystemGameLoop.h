@@ -40,7 +40,6 @@ private:
 	std::shared_ptr<GameWindow> main_;
 
 	std::unique_ptr<FRenderTargetTextures> textures_;
-	std::unique_ptr<FScene> scene_;
 	std::unique_ptr<FSceneRenderer> renderer_;
 
 	FPresenter presenter_;

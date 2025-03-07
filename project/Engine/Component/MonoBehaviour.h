@@ -32,8 +32,8 @@ public:
 	using ComponentContainer = std::unordered_map<std::type_index, ComponentStorage::ComponentIterator>;
 
 	//* behaviour hierarchy
-	using Hierarchy = std::list<std::variant<MonoBehaviour*, std::unique_ptr<MonoBehaviour>>>;
-	using Iterator  = Hierarchy::iterator;
+	using Hierarchy         = std::list<std::variant<MonoBehaviour*, std::unique_ptr<MonoBehaviour>>>;
+	using HierarchyIterator = Hierarchy::iterator;
 
 	////////////////////////////////////////////////////////////////////////////////////////////
 	// struct GetPtrVisitor
@@ -82,7 +82,7 @@ public:
 
 	void AddChild(MonoBehaviour* child);
 
-	void AddChild(std::unique_ptr<MonoBehaviour> child);
+	void AddChild(std::unique_ptr<MonoBehaviour>&& child);
 
 	void RemoveChild(MonoBehaviour* child);
 
@@ -112,20 +112,22 @@ private:
 
 	//* hierarchy
 	MonoBehaviour* parent_            = nullptr;
-	std::optional<Iterator> iterator_ = std::nullopt; //!< parentのiterator.
+	std::optional<HierarchyIterator> iterator_ = std::nullopt; //!< parentのiterator.
 
 	Hierarchy children_;
 
 	//* name
 	std::string name_ = "new behaviour";
 
+
+
 	//=========================================================================================
 	// private methods
 	//=========================================================================================
 
-	Iterator AddHierarchy(std::variant<MonoBehaviour*, std::unique_ptr<MonoBehaviour>>&& child);
+	HierarchyIterator AddHierarchy(std::variant<MonoBehaviour*, std::unique_ptr<MonoBehaviour>>&& child);
 
-	void RemoveHierarchy(const Iterator& iterator);
+	void RemoveHierarchy(const HierarchyIterator& iterator);
 
 };
 

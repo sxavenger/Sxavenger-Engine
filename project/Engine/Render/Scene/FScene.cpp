@@ -10,8 +10,16 @@
 // FScene class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
+void FScene::Create() {
+	topLevelAS_ = std::make_unique<DxrObject::TopLevelAS>();
+}
+
+void FScene::Term() {
+	topLevelAS_.reset();
+}
+
 void FScene::SetupTopLevelAS(const DirectXThreadContext* context) {
-	topLevelAS_.BeginSetupInstance();
+	topLevelAS_->BeginSetupInstance();
 
 	sComponentStorage->ForEach<MeshRendererComponent>([&](MeshRendererComponent* component) {
 		// todo: std::execution::parに変更
@@ -33,9 +41,9 @@ void FScene::SetupTopLevelAS(const DirectXThreadContext* context) {
 		instance.instanceId    = 0;
 		// hack: inline raytracing以外で使う場合はここにExportGroupを設定する
 
-		topLevelAS_.AddInstance(instance);
+		topLevelAS_->AddInstance(instance);
 	});
 
-	topLevelAS_.EndSetupInstance(SxavengerSystem::GetDxDevice(), context->GetDxCommand());
+	topLevelAS_->EndSetupInstance(SxavengerSystem::GetDxDevice(), context->GetDxCommand());
 	context->TransitionAllocator();
 }

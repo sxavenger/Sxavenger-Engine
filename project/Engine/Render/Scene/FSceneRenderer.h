@@ -35,15 +35,15 @@ public:
 		Error_Camera   = 1 << 1,
 
 		//* vvv warning type vvv *//
-		Warning_Scene          = 1 << 2,
-		Warning_AmbientProcess = 1 << 3,
-		Warning_PostProcess    = 1 << 4,
+		//Warning_Scene          = 1 << 2,
+		Warning_AmbientProcess = 1 << 2,
+		Warning_PostProcess    = 1 << 3,
 
 		//* vvv error vvv *//
 		Status_Error = Error_Textures | Error_Camera,
 
 		//* vvv warning vvv *//
-		Status_Warning = Warning_Scene | Warning_AmbientProcess | Warning_PostProcess,
+		Status_Warning = Warning_AmbientProcess | Warning_PostProcess,
 	};
 
 	////////////////////////////////////////////////////////////////////////////////////////////
@@ -78,8 +78,6 @@ public:
 
 	void SetTextures(FRenderTargetTextures* textures) { textures_ = textures; }
 
-	void SetScene(FScene* scene) { scene_ = scene; }
-
 private:
 
 	//=========================================================================================
@@ -89,8 +87,6 @@ private:
 	//* textures *//
 
 	FRenderTargetTextures* textures_ = nullptr;
-
-	FScene* scene_ = nullptr; //!< hack.
 
 	//* geometry pass parameter *//
 

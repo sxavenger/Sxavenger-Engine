@@ -130,6 +130,7 @@
     <ClCompile Include="Engine\Component\Components\Light\DirectionalLightComponent.cpp" />
     <ClCompile Include="Engine\Component\Components\Light\LightSource.cpp" />
     <ClCompile Include="Engine\Render\Scene\FScene.cpp" />
+    <ClCompile Include="Engine\Component\MonoBehaviourContainer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\System\Window\Window.h" />
@@ -265,6 +266,7 @@
     <ClInclude Include="Engine\Component\Components\Light\DirectionalLightComponent.h" />
     <ClInclude Include="Engine\Component\Components\Light\LightSource.h" />
     <ClInclude Include="Engine\Render\Scene\FScene.h" />
+    <ClInclude Include="Engine\Component\MonoBehaviourContainer.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

@@ -208,6 +208,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="Engine\Component\Components\Light\LightSource.cpp" />
     <ClCompile Include="Engine\Component\Components\MeshRenderer\MeshRendererComponent.cpp" />
     <ClCompile Include="Engine\Component\MonoBehaviour.cpp" />
+    <ClCompile Include="Engine\Component\MonoBehaviourContainer.cpp" />
     <ClCompile Include="Engine\Content\Animation\Animation.cpp" />
     <ClCompile Include="Engine\Content\InputAssembler\LineInputAssembler.cpp" />
     <ClCompile Include="Engine\Content\InputAssembler\TriangleInputAssembler.cpp" />
@@ -329,6 +330,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Engine\Component\Components\Light\DirectionalLightComponent.h" />
     <ClInclude Include="Engine\Component\Components\Light\LightSource.h" />
     <ClInclude Include="Engine\Component\Components\MeshRenderer\MeshRendererComponent.h" />
+    <ClInclude Include="Engine\Component\MonoBehaviourContainer.h" />
     <ClInclude Include="Engine\Content\Animation\Animation.h" />
     <ClInclude Include="Engine\Content\Animation\BornNode.h" />
     <ClInclude Include="Engine\Content\Animation\JointWeight.h" />

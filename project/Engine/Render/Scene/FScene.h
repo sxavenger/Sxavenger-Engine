@@ -21,9 +21,13 @@ public:
 	// public methods
 	//=========================================================================================
 
+	void Create();
+
+	void Term();
+
 	void SetupTopLevelAS(const DirectXThreadContext* context);
 
-	const DxrObject::TopLevelAS& GetTopLevelAS() const { return topLevelAS_; }
+	const DxrObject::TopLevelAS* GetTopLevelAS() const { return topLevelAS_.get(); }
 
 private:
 
@@ -31,6 +35,6 @@ private:
 	// private variables
 	//=========================================================================================
 
-	DxrObject::TopLevelAS topLevelAS_;
+	std::unique_ptr<DxrObject::TopLevelAS> topLevelAS_;
 
 };

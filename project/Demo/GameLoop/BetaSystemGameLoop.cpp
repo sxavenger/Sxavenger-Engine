@@ -10,6 +10,7 @@
 #include <Engine/Editor/EditorEngine.h>
 #include <Engine/Editor/Editors/DevelopEditor.h>
 #include <Engine/Editor/Editors/OutlinerEditor.h>
+#include <Engine/Render/FRenderCore.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // BetaSystemGameLoop class methods
@@ -45,11 +46,8 @@ void BetaSystemGameLoop::InitSystem() {
 	textures_ = std::make_unique<FRenderTargetTextures>();
 	textures_->Create(main_->GetSize());
 
-	scene_ = std::make_unique<FScene>();
-
 	renderer_ = std::make_unique<FSceneRenderer>();
 	renderer_->SetTextures(textures_.get());
-	renderer_->SetScene(scene_.get());
 
 	presenter_.Init();
 
@@ -86,7 +84,7 @@ void BetaSystemGameLoop::UpdateSystem() {
 
 void BetaSystemGameLoop::DrawSystem() {
 
-	scene_->SetupTopLevelAS(SxavengerSystem::GetMainThreadContext());
+	FRenderCore::GetInstance()->GetScene()->SetupTopLevelAS(SxavengerSystem::GetMainThreadContext());
 
 	renderer_->Render(SxavengerSystem::GetMainThreadContext());
 
