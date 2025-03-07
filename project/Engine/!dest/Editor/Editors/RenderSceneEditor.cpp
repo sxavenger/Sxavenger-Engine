@@ -343,7 +343,7 @@ void RenderSceneEditor::UpdateSceneCamera() {
 		static const Vector2f kSensitivity = { 0.01f, 0.01f };
 
 		Vector3f right = RotateVector({ 1.0f, 0.0f, 0.0f }, sceneCamera_->GetTransform().rotate);
-		Vector3f up    = RotateVector({ 0.0f, 1.0f, 0.0f },    sceneCamera_->GetTransform().rotate);
+		Vector3f up    = RotateVector({ 0.0f, 1.0f, 0.0f }, sceneCamera_->GetTransform().rotate);
 
 		sceneCamera_->GetParameter().point -= right * delta.x * kSensitivity.x;
 		sceneCamera_->GetParameter().point += up    * delta.y * kSensitivity.y;

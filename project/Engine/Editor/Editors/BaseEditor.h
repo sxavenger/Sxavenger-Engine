@@ -24,11 +24,11 @@ public:
 	BaseEditor(EditorEngine* editor) : editor_(editor) {}
 	virtual ~BaseEditor() = default;
 
-	virtual void Init() {}
+	virtual void Init() = 0;
 
-	virtual void ShowMainMenu() {}
+	virtual void ShowMainMenu() = 0;
 
-	virtual void ShowWindow() {}
+	virtual void ShowWindow() = 0;
 
 	//* getter *//
 

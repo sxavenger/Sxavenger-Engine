@@ -60,6 +60,49 @@ void RenderSceneEditor::Render() {
 	textures_->EndTransparentBasePass(SxavengerSystem::GetMainThreadContext());
 }
 
+void RenderSceneEditor::Manipulate(MonoBehaviour* behaviour, ImGuizmo::OPERATION operation, ImGuizmo::MODE mode) {
+	operation = ImGuizmo::TRANSLATE; // FIXME: translateしか使えない
+
+	// transform component の取得
+	auto component = behaviour->GetComponent<TransformComponent>();
+
+	if (component == nullptr) { //!< transform component が存在してない場合
+		return;
+	}
+
+	ImGuizmo::SetRect(rect_.pos.x, rect_.pos.y, rect_.size.x, rect_.size.y);
+
+	Matrix4x4 m = component->GetMatrix();
+
+	ImGuizmo::Manipulate(
+		reinterpret_cast<const float*>(camera_->GetComponent<CameraComponent>()->GetCamera().view.m),
+		reinterpret_cast<const float*>(camera_->GetComponent<CameraComponent>()->GetCamera().proj.m),
+		operation,
+		mode,
+		reinterpret_cast<float*>(m.m)
+	);
+
+	if (component->HasParent()) {
+		return;
+	}
+
+	EulerTransform transform = {};
+
+	ImGuizmo::DecomposeMatrixToComponents(
+		reinterpret_cast<const float*>(m.m),
+		&transform.translate.x,
+		&transform.rotate.x,
+		&transform.scale.x
+	);
+
+	// FIXME: rotate and scale
+	component->GetTransform().translate = transform.translate;
+	//component->GetTransform().rotate    = ToQuaternion2(transform.rotate).Normalize(); 
+	//component->GetTransform().scale     = transform.scale;
+	component->UpdateMatrix();
+
+}
+
 void RenderSceneEditor::ShowSceneMenu() {
 	if (ImGui::BeginMenu("scene")) {
 		MenuPadding();
@@ -100,6 +143,17 @@ void RenderSceneEditor::ShowSceneWindow() {
 		textures_->GetGBuffer(layout_)->GetGPUHandleSRV(),
 		kMainWindowSize
 	);
+
+	ImGuizmo::SetDrawlist();
+
+	if (ImGui::IsWindowHovered() && (ImGui::IsMouseClicked(ImGuiMouseButton_Middle) || ImGui::IsMouseClicked(ImGuiMouseButton_Right))) {
+		//!< window hovered 状態で mouse middle click が押された場合, camera操作(forcus)を許可.
+		ImGui::SetWindowFocus();
+	}
+
+	if (ImGui::IsWindowFocused()) {
+		//UpdateSceneCamera();
+	}
 
 	ImGui::End();
 	ImGui::PopStyleVar();
@@ -161,5 +215,4 @@ RenderSceneEditor::WindowRect RenderSceneEditor::SetImGuiImageFullWindow(const D
 	rect.size = { displayTextureSize.x, displayTextureSize.y };
 
 	return rect;
-
 }

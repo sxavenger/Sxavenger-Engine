@@ -102,3 +102,8 @@ void CameraComponent::UpdateProj() {
 	// projection から proj matrix を取得
 	buffer_->At(0).TransferProj(projection_.ToProj());
 }
+
+const CameraComponent::Camera& CameraComponent::GetCamera() const {
+	Assert(buffer_ != nullptr, "camera buffer is not craete.");
+	return (*buffer_)[0];
+}

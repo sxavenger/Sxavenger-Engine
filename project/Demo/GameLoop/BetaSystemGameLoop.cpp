@@ -63,7 +63,7 @@ void BetaSystemGameLoop::InitSystem() {
 	light->Init();
 
 	sEditorEngine->ExecuteEditorFunction<OutlinerEditor>([&](OutlinerEditor* editor) {
-		editor->SetBehaviour(camera_.get());
+		editor->SetBehaviour(mesh_.get());
 	});
 }
 
@@ -82,7 +82,6 @@ void BetaSystemGameLoop::DrawSystem() {
 	main_->ClearWindow();
 
 	FMainRender::GetInstance()->PresentMain(SxavengerSystem::GetMainThreadContext());
-	 
 	SxavengerSystem::RenderImGui();
 
 	main_->EndRendering();

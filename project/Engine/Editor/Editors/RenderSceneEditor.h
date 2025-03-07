@@ -35,7 +35,11 @@ public:
 
 	void ShowWindow() override;
 
+	//* editor option *//
+
 	void Render();
+
+	void Manipulate(MonoBehaviour* behaviour, ImGuizmo::OPERATION operation, ImGuizmo::MODE mode);
 
 private:
 
@@ -71,6 +75,10 @@ private:
 
 	FRenderTargetTextures::GBufferLayout layout_ = FRenderTargetTextures::GBufferLayout::Main;
 
+	//* camera *//
+
+
+
 	//=========================================================================================
 	// private methods
 	//=========================================================================================
@@ -85,5 +93,7 @@ private:
 	//* sub methods *//
 
 	WindowRect SetImGuiImageFullWindow(const D3D12_GPU_DESCRIPTOR_HANDLE& handle, const Vector2ui& size);
+
+	void UpdateCamera();
 
 };

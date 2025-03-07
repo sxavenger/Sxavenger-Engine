@@ -50,6 +50,16 @@ void TransformComponent::UpdateMatrix() {
 	TransferGPU();
 }
 
+bool TransformComponent::HasParent() const {
+	if (auto parent = BaseComponent::GetBehaviour()->GetParent()) {
+		if (auto component = parent->GetComponent<TransformComponent>()) {
+			return true;
+		}
+	}
+
+	return false;
+}
+
 void TransformComponent::TransferGPU() {
 	if (buffer_ != nullptr) {
 		(*buffer_)[0].Transfer(mat_);

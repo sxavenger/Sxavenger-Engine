@@ -3,6 +3,10 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
+//* editor
+#include "../EditorEngine.h"
+#include "RenderSceneEditor.h"
+
 //* external
 #include <imgui.h>
 
@@ -42,6 +46,11 @@ void OutlinerEditor::ShowInspectorWindow() {
 				(*component)->InspectorImGui();
 			}
 		}
+
+		// Manipulateの設定
+		BaseEditor::editor_->ExecuteEditorFunction<RenderSceneEditor>([&](RenderSceneEditor* editor) {
+			editor->Manipulate(selected_, ImGuizmo::TRANSLATE, ImGuizmo::WORLD);
+		});
 	}
 
 	ImGui::End();

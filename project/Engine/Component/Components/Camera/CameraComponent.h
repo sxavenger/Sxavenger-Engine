@@ -113,6 +113,10 @@ public:
 
 	void SetTag(Tag tag) { tag_ = tag; }
 
+	//* getter *//
+
+	const Camera& GetCamera() const;
+
 private:
 
 	//=========================================================================================

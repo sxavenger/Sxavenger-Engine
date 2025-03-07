@@ -26,8 +26,8 @@ void EditorEngineGameLoop::Term() {
 void EditorEngineGameLoop::InitEditor() {
 	sEditorEngine->Init();
 	sEditorEngine->RegisterEditor<DevelopEditor>();
-	sEditorEngine->RegisterEditor<OutlinerEditor>();
 	sEditorEngine->RegisterEditor<RenderSceneEditor>();
+	sEditorEngine->RegisterEditor<OutlinerEditor>(); //!< RenderSceneEditorの後に登録
 }
 
 void EditorEngineGameLoop::TermEditor() {

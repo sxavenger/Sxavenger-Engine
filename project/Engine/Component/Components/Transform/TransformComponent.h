@@ -42,6 +42,8 @@ public:
 
 	void UpdateMatrix();
 
+	bool HasParent() const;
+
 	const QuaternionTransform& GetTransform() const { return transform_; }
 	QuaternionTransform& GetTransform() { return transform_; }
 
