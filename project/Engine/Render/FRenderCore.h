@@ -10,9 +10,6 @@
 #include "Core/FRenderCoreLayer.h"
 #include "Core/FRenderCoreProcess.h"
 
-//* render
-#include <Engine/Render/Scene/FScene.h>
-
 ////////////////////////////////////////////////////////////////////////////////////////////
 // FRenderCore class
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -42,8 +39,6 @@ public:
 
 	FRenderCoreProcess* GetProcess() { return process_.get(); }
 
-	FScene* GetScene() { return scene_.get(); }
-
 	//* singleton *//
 
 	static FRenderCore* GetInstance();
@@ -59,9 +54,5 @@ private:
 	std::unique_ptr<FRenderCoreRaytracing> raytracing_;
 	std::unique_ptr<FRenderCoreLayer>      layer_;
 	std::unique_ptr<FRenderCoreProcess>    process_;
-
-	//* vvv single instance vvv *//
-
-	std::unique_ptr<FScene> scene_;
 
 };

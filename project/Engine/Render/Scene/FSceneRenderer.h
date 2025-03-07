@@ -5,7 +5,6 @@
 //-----------------------------------------------------------------------------------------
 //* render
 #include "../FRenderTargetTextures.h"
-#include "FScene.h" //!< 仮
 
 //* engine
 #include <Engine/System/DirectX/DxObject/DxVectorDimensionBuffer.h>

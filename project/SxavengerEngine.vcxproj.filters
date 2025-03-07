@@ -131,6 +131,7 @@
     <ClCompile Include="Engine\Component\Components\Light\LightSource.cpp" />
     <ClCompile Include="Engine\Render\Scene\FScene.cpp" />
     <ClCompile Include="Engine\Component\MonoBehaviourContainer.cpp" />
+    <ClCompile Include="Engine\Render\FMainRender.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\System\Window\Window.h" />
@@ -267,6 +268,7 @@
     <ClInclude Include="Engine\Component\Components\Light\LightSource.h" />
     <ClInclude Include="Engine\Render\Scene\FScene.h" />
     <ClInclude Include="Engine\Component\MonoBehaviourContainer.h" />
+    <ClInclude Include="Engine\Render\FMainRender.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

@@ -33,6 +33,8 @@ private:
 
 	void UpdateEditor();
 
+	void RenderEditor();
+
 };
 
 

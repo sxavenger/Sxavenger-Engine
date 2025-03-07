@@ -5,6 +5,7 @@
 //-----------------------------------------------------------------------------------------
 //* render
 #include "../FRenderCore.h"
+#include "../FMainRender.h"
 
 //* c++
 #include <execution>
@@ -167,7 +168,7 @@ void FSceneRenderer::LightingPassDirectionalLight(const DirectXThreadContext* co
 		DxObject::BindBufferDesc parameter = {};
 		// common parameter
 		parameter.SetAddress("gCamera",config.camera->GetGPUVirtualAddress());
-		parameter.SetAddress("gScene", FRenderCore::GetInstance()->GetScene()->GetTopLevelAS()->GetGPUVirtualAddress());
+		parameter.SetAddress("gScene", FMainRender::GetInstance()->GetScene()->GetTopLevelAS().GetGPUVirtualAddress());
 
 		// deferred paraemter
 		parameter.SetHandle("gDepth",    textures_->GetDepth()->GetRasterizerGPUHandleSRV());

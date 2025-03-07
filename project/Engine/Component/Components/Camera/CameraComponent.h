@@ -90,7 +90,7 @@ public:
 	// public methods
 	//=========================================================================================
 
-	CameraComponent(MonoBehaviour* behaviour) : BaseComponent(behaviour) {}
+	CameraComponent(MonoBehaviour* behaviour) : BaseComponent(behaviour) { Init(); }
 	~CameraComponent() override = default;
 
 	void InspectorImGui() override;

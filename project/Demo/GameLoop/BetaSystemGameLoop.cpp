@@ -10,7 +10,7 @@
 #include <Engine/Editor/EditorEngine.h>
 #include <Engine/Editor/Editors/DevelopEditor.h>
 #include <Engine/Editor/Editors/OutlinerEditor.h>
-#include <Engine/Render/FRenderCore.h>
+#include <Engine/Render/FMainRender.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // BetaSystemGameLoop class methods
@@ -43,14 +43,6 @@ void BetaSystemGameLoop::InitSystem() {
 	main_ = SxavengerSystem::CreateMainWindow(kMainWindowSize, L"sxavenger engine beta window").lock();
 	main_->SetIcon("packages/icon/SxavengerEngineSubIcon.ico", { 32, 32 });
 
-	textures_ = std::make_unique<FRenderTargetTextures>();
-	textures_->Create(main_->GetSize());
-
-	renderer_ = std::make_unique<FSceneRenderer>();
-	renderer_->SetTextures(textures_.get());
-
-	presenter_.Init();
-
 	AssetObserver<AssetModel> observer = SxavengerAsset::TryImport<AssetModel>("assets/models/primitive/teapot.obj");
 	mesh_ = observer.WaitGet()->CreateMonoBehavior("teapot");
 
@@ -79,19 +71,17 @@ void BetaSystemGameLoop::TermSystem() {
 }
 
 void BetaSystemGameLoop::UpdateSystem() {
-
+	FMainRender::GetInstance()->GetScene()->SetupTopLevelAS(SxavengerSystem::GetMainThreadContext());
 }
 
 void BetaSystemGameLoop::DrawSystem() {
 
-	FRenderCore::GetInstance()->GetScene()->SetupTopLevelAS(SxavengerSystem::GetMainThreadContext());
-
-	renderer_->Render(SxavengerSystem::GetMainThreadContext());
+	FMainRender::GetInstance()->GetRenderer()->Render(SxavengerSystem::GetMainThreadContext());
 
 	main_->BeginRendering();
 	main_->ClearWindow();
 
-	presenter_.Present(SxavengerSystem::GetMainThreadContext(), main_->GetSize(), textures_->GetGBuffer(FRenderTargetTextures::GBufferLayout::Main)->GetGPUHandleSRV());
+	FMainRender::GetInstance()->PresentMain(SxavengerSystem::GetMainThreadContext());
 	 
 	SxavengerSystem::RenderImGui();
 

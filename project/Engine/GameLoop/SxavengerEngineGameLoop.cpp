@@ -8,6 +8,7 @@
 #include <Engine/Content/SxavengerContent.h>
 #include <Engine/Asset/SxavengerAsset.h>
 #include <Engine/Render/FRenderCore.h>
+#include <Engine/Render/FMainRender.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // SxavengerEngineGameLoop class methods
@@ -16,6 +17,7 @@
 void SxavengerEngineGameLoop::Init(GameLoop::Context* context) {
 	context->SetProcess(GameLoop::Process::Init, std::nullopt, [this]() {
 		FRenderCore::GetInstance()->Init();
+		FMainRender::GetInstance()->Init();
 	});
 
 	context->SetProcess(GameLoop::Process::Init, UINT32_MAX, [this]() {
@@ -23,6 +25,7 @@ void SxavengerEngineGameLoop::Init(GameLoop::Context* context) {
 	});
 
 	context->SetProcess(GameLoop::Process::Term, std::nullopt, [this]() {
+		FMainRender::GetInstance()->Term();
 		FRenderCore::GetInstance()->Term();
 	});
 

@@ -3,27 +3,47 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
-//* component
-#include <Engine/Component/ComponentStorage.h>
-#include <Engine/Component/Components/MeshRenderer/MeshRendererComponent.h>
+//* render
+#include <Engine/Render/FPresenter.h>
+#include <Engine/Render/FRenderTargetTextures.h>
+#include <Engine/Render/Scene/FScene.h>
+#include <Engine/Render/Scene/FSceneRenderer.h>
 
 //* engine
-#include <Engine/System/DirectX/DxrObject/DxrAccelerationStructure.h>
 #include <Engine/System/DirectX/DirectXContext.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// FScene class
+// FMainRender class
 ////////////////////////////////////////////////////////////////////////////////////////////
-class FScene {
+class FMainRender {
 public:
 
 	//=========================================================================================
 	// public methods
 	//=========================================================================================
 
-	void SetupTopLevelAS(const DirectXThreadContext* context);
+	FMainRender()  = default;
+	~FMainRender() = default;
 
-	const DxrObject::TopLevelAS& GetTopLevelAS() const { return topLevelAS_; }
+	void Init();
+
+	void Term();
+
+	//* option *//
+
+	void PresentMain(const DirectXThreadContext* context);
+
+	//* getter *//
+
+	FRenderTargetTextures* GetTextures() const { return textures_.get(); }
+
+	FSceneRenderer* GetRenderer() const { return renderer_.get(); }
+
+	FScene* GetScene() const { return scene_.get(); }
+
+	//* singleton *//
+
+	static FMainRender* GetInstance();
 
 private:
 
@@ -31,6 +51,9 @@ private:
 	// private variables
 	//=========================================================================================
 
-	DxrObject::TopLevelAS topLevelAS_;
+	std::unique_ptr<FPresenter> presenter_;
 
+	std::unique_ptr<FRenderTargetTextures> textures_;
+	std::unique_ptr<FSceneRenderer>        renderer_;
+	std::unique_ptr<FScene>                scene_;
 };

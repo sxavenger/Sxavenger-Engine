@@ -39,11 +39,6 @@ private:
 
 	std::shared_ptr<GameWindow> main_;
 
-	std::unique_ptr<FRenderTargetTextures> textures_;
-	std::unique_ptr<FSceneRenderer> renderer_;
-
-	FPresenter presenter_;
-
 	std::unique_ptr<MonoBehaviour> mesh_;
 
 	std::unique_ptr<MonoBehaviour> camera_;
