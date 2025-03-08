@@ -31,6 +31,7 @@ void EditorEngine::UpdateEditor() {
 #ifdef _DEVELOPMENT
 	ShowMainMenu();
 	ShowWindow();
+	SxavengerSystem::RecordLap("update [editors]");
 #endif
 }
 

@@ -23,6 +23,12 @@ void DirectionalLightComponent::Parameter::Init() {
 // DirectionalLightComponent class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
+void DirectionalLightComponent::InspectorImGui() {
+	auto& parameter = parameter_->At(0);
+	ImGui::ColorEdit3("color",      &parameter.color.r);
+	ImGui::SliderFloat("intensity", &parameter.intensity, 0.0f, 1.0f);
+}
+
 void DirectionalLightComponent::Init() {
 	CreateParameterBuffer();
 	LightSource::CreateShadowBuffer();

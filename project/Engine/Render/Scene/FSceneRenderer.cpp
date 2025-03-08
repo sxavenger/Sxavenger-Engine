@@ -133,7 +133,8 @@ void FSceneRenderer::RenderGeometryPass(const DirectXThreadContext* context, con
 
 		mesh->DrawCall(context, static_cast<uint32_t>(components.size()));
 
-		context->TransitionAllocator();
+		context->ExecuteAllAllocators();
+		// todo: allocatorごとに一時bufferを作成
 	}
 
 	textures_->EndGeometryPass(context);

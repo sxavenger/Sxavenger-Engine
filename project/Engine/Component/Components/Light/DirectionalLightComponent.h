@@ -51,7 +51,7 @@ public:
 	DirectionalLightComponent(MonoBehaviour* behaviour) : BaseComponent(behaviour) {}
 	virtual ~DirectionalLightComponent() = default;
 
-	virtual void InspectorImGui() override {}
+	virtual void InspectorImGui() override;
 
 	void Init();
 
