@@ -13,6 +13,7 @@
 #include <Engine/Render/FMainRender.h>
 #include <Engine/Component/Components/Collider/ColliderComponent.h>
 #include <Engine/Component/Components/Collider/CollisionManager.h>
+#include <Engine/Component/MonoBehaviourContainer.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // BetaSystemGameLoop class methods
@@ -45,11 +46,11 @@ void BetaSystemGameLoop::InitSystem() {
 	main_ = SxavengerSystem::CreateMainWindow(kMainWindowSize, L"sxavenger engine beta window").lock();
 	main_->SetIcon("packages/icon/SxavengerEngineSubIcon.ico", { 32, 32 });
 
-	/*AssetObserver<AssetModel> observer = SxavengerAsset::TryImport<AssetModel>("assets/models/primitive/teapot.obj");
-	mesh_ = observer.WaitGet()->CreateMonoBehavior("teapot");*/
+	AssetObserver<AssetModel> observer = SxavengerAsset::TryImport<AssetModel>("assets/models/primitive/teapot.obj");
+	mesh_ = observer.WaitGet()->CreateMonoBehavior("teapot");
 
-	AssetObserver<AssetModel> observer = SxavengerAsset::TryImport<AssetModel>("assets/models/chessboard/chessboard.gltf");
-	mesh_ = observer.WaitGet()->CreateMonoBehavior("chessboard");
+	/*AssetObserver<AssetModel> observer = SxavengerAsset::TryImport<AssetModel>("assets/models/chessboard/chessboard.gltf");
+	mesh_ = observer.WaitGet()->CreateMonoBehavior("chessboard");*/
 
 	auto collider = mesh_->AddComponent<ColliderComponent>();
 	collider->SetColliderBoundingSphere({ 1.0f });
@@ -69,7 +70,6 @@ void BetaSystemGameLoop::InitSystem() {
 	light_ = std::make_unique<MonoBehaviour>();
 	auto transform = light_->AddComponent<TransformComponent>();
 	transform->GetTransform().rotate = AxisAngle({ 1.0f, 0.0f, 0.0f }, pi_v / 2.0f);
-	transform->UpdateMatrix();
 	auto light = light_->AddComponent<DirectionalLightComponent>();
 	light->Init();
 
@@ -89,8 +89,16 @@ void BetaSystemGameLoop::TermSystem() {
 }
 
 void BetaSystemGameLoop::UpdateSystem() {
-	FMainRender::GetInstance()->GetScene()->SetupTopLevelAS(SxavengerSystem::GetMainThreadContext());
+
+	sMonoBehaviourContainer->ForEach([](MonoBehaviour* behaviour) {
+		behaviour->UpdateComponent(); // todo: 遅延updateで何とかしたい.
+	});
+	// todo: engine側のgameloopに移動.
+
 	sCollisionManager->CheckCollision();
+
+	FMainRender::GetInstance()->GetScene()->SetupTopLevelAS(SxavengerSystem::GetMainThreadContext());
+	// todo: render game loopに移動
 }
 
 void BetaSystemGameLoop::DrawSystem() {

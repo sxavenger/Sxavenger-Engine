@@ -113,9 +113,13 @@ static EditorEngine* const sEditorEngine = EditorEngine::GetInstance();
 template <BaseEditorDerived T>
 inline void EditorEngine::RegisterEditor() {
 #ifdef _DEVELOPMENT
+	if (editors_.contains(typeid(T))) {
+		return;
+	}
+
 	auto ptr = std::make_unique<T>(this);
 	ptr->Init();
-	editors_.try_emplace(typeid(T), std::move(ptr));
+	editors_.emplace(typeid(T), std::move(ptr));
 #endif // _DEVELOPMENT
 }
 

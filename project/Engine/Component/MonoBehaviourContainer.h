@@ -22,6 +22,8 @@ public:
 
 	const MonoBehaviour::Container& GetContainer() const { return container_; }
 
+	void ForEach(const std::function<void(MonoBehaviour*)>& function);
+
 	//* singleton *//
 
 	static MonoBehaviourContainer* GetInstance();
@@ -34,6 +36,12 @@ private:
 
 	//* container
 	MonoBehaviour::Container container_;
+
+	//=========================================================================================
+	// private methods
+	//=========================================================================================
+
+	void Execute(MonoBehaviour* behaviour, const std::function<void(MonoBehaviour*)>& function);
 
 };
 

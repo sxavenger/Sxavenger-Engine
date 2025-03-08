@@ -106,6 +106,10 @@ public:
 
 	const std::string& GetName() const { return name_; }
 
+	//* update option *//
+
+	void UpdateComponent();
+
 private:
 
 	//=========================================================================================

@@ -5,6 +5,8 @@
 //-----------------------------------------------------------------------------------------
 //* component
 #include "MonoBehaviourContainer.h"
+#include "Components/Transform/TransformComponent.h"
+#include "Components/Camera/CameraComponent.h"
 
 //* c++
 #include <execution>
@@ -75,6 +77,17 @@ void MonoBehaviour::AddChild(std::unique_ptr<MonoBehaviour>&& child) {
 
 void MonoBehaviour::RemoveChild(MonoBehaviour* child) {
 	child->RemoveParent();
+}
+
+void MonoBehaviour::UpdateComponent() {
+	if (auto transform = GetComponent<TransformComponent>()) {
+		transform->UpdateMatrix();
+	}
+
+	if (auto camera = GetComponent<CameraComponent>()) {
+		camera->UpdateView();
+		camera->UpdateProj();
+	}
 }
 
 MonoBehaviour::HierarchyIterator MonoBehaviour::AddHierarchy(std::variant<MonoBehaviour*, std::unique_ptr<MonoBehaviour>>&& child) {

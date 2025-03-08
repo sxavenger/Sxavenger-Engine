@@ -12,7 +12,23 @@ void MonoBehaviourContainer::RemoveBehaviour(const MonoBehaviour::ContainerItera
 	container_.erase(iterator);
 }
 
+void MonoBehaviourContainer::ForEach(const std::function<void(MonoBehaviour*)>& function) {
+	//!< 計算量: o(MonoBehaviourの数)
+	//! container_.size()ではないので注意.
+	for (auto& behaviour : container_) {
+		Execute(behaviour, function);
+	}
+}
+
 MonoBehaviourContainer* MonoBehaviourContainer::GetInstance() {
 	static MonoBehaviourContainer instance;
 	return &instance;
+}
+
+void MonoBehaviourContainer::Execute(MonoBehaviour* behaviour, const std::function<void(MonoBehaviour*)>& function) {
+	function(behaviour);
+
+	for (auto& child : behaviour->GetChildren()) {
+		Execute(std::visit(MonoBehaviour::GetPtrVisitor{}, child), function);
+	}
 }
