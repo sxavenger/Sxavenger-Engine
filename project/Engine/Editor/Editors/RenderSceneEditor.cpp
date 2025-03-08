@@ -71,6 +71,8 @@ void RenderSceneEditor::Manipulate(MonoBehaviour* behaviour, ImGuizmo::OPERATION
 
 	Matrix4x4 m = component->GetMatrix();
 
+	ImGuizmo::Enable(!component->HasParent());
+
 	ImGuizmo::Manipulate(
 		reinterpret_cast<const float*>(camera_->GetComponent<CameraComponent>()->GetCamera().view.m),
 		reinterpret_cast<const float*>(camera_->GetComponent<CameraComponent>()->GetCamera().proj.m),

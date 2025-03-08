@@ -29,18 +29,11 @@ public:
 
 	void ShowWindow() override;
 
-	//* test *//
-
-	void SetBehaviour(MonoBehaviour* behaviour) { behaviour_ = behaviour; }
-
 private:
 
 	//=========================================================================================
 	// private variables
 	//=========================================================================================
-
-	MonoBehaviour* behaviour_ = nullptr;
-	// todo: MonoBehaviourのリストを持つ
 
 	MonoBehaviour* selected_ = nullptr;
 

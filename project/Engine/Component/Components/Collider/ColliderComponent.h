@@ -29,6 +29,7 @@ class CollisionCallbackCollection;
 class ColliderComponent final
 	: public BaseComponent {
 public:
+	// hack: Boundingごとにクラスを分ける
 
 	////////////////////////////////////////////////////////////////////////////////////////////
 	// CollisionState enum

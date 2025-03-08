@@ -7,6 +7,9 @@
 #include "../EditorEngine.h"
 #include "RenderSceneEditor.h"
 
+//* engine
+#include <Engine/Component/MonoBehaviourContainer.h>
+
 //* external
 #include <imgui.h>
 
@@ -29,8 +32,8 @@ void OutlinerEditor::ShowOutlinerWindow() {
 	BaseEditor::SetNextWindowDocking();
 	ImGui::Begin("Outliner ## Outliner Editor", nullptr, BaseEditor::GetWindowFlag());
 
-	if (behaviour_ != nullptr) {
-		OutlinerSelectable(behaviour_);
+	for (auto& behaviour : sMonoBehaviourContainer->GetContainer()) {
+		OutlinerSelectable(behaviour);
 	}
 
 	ImGui::End();
@@ -57,16 +60,34 @@ void OutlinerEditor::ShowInspectorWindow() {
 }
 
 void OutlinerEditor::OutlinerSelectable(MonoBehaviour* behaviour) {
+
+	bool isSelect     = (behaviour == selected_);
+	std::string label = std::format("{} # {:p}", behaviour->GetName(), reinterpret_cast<const void*>(behaviour));
+
 	if (behaviour->GetChildren().empty()) {
-		if (ImGui::Selectable(behaviour->GetName().c_str())) {
+		if (ImGui::Selectable(label.c_str(), isSelect)) {
 			// todo: 選択処理
 			selected_ = behaviour;
 		}
 
 	} else {
 
-		if (ImGui::TreeNode(behaviour->GetName().c_str())) {
-			// todo: 選択処理
+		ImGuiTreeNodeFlags flags
+			= ImGuiTreeNodeFlags_OpenOnDoubleClick
+			| ImGuiTreeNodeFlags_OpenOnArrow;
+
+		if (isSelect) {
+			flags |= ImGuiTreeNodeFlags_Selected;
+		}
+
+		bool isOpen = ImGui::TreeNodeEx(label.c_str(), flags);
+
+		if (ImGui::IsItemClicked()) {
+			selected_ = behaviour;
+			//localCamera_->Reset();
+		}
+
+		if (isOpen) {
 
 			for (auto& child : behaviour->GetChildren()) {
 				OutlinerSelectable(std::visit(MonoBehaviour::GetPtrVisitor{}, child));

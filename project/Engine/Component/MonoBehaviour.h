@@ -35,10 +35,14 @@ public:
 	using Hierarchy         = std::list<std::variant<MonoBehaviour*, std::unique_ptr<MonoBehaviour>>>;
 	using HierarchyIterator = Hierarchy::iterator;
 
+	//* behaviour container
+	using Container          = std::list<MonoBehaviour*>;
+	using ContainerIterator  = Container::iterator;
+
 	////////////////////////////////////////////////////////////////////////////////////////////
 	// struct GetPtrVisitor
 	////////////////////////////////////////////////////////////////////////////////////////////
-	struct GetPtrVisitor {
+	struct GetPtrVisitor { //!< using std::visit()
 		MonoBehaviour* operator()(MonoBehaviour* ptr) const { return ptr; }
 		MonoBehaviour* operator()(const std::unique_ptr<MonoBehaviour>& ptr) const { return ptr.get(); }
 	};
@@ -49,8 +53,10 @@ public:
 	// public methods
 	//=========================================================================================
 
-	MonoBehaviour() = default;
+	MonoBehaviour() { Init(); }
 	~MonoBehaviour() { Term(); }
+
+	void Init();
 
 	void Term();
 
@@ -79,6 +85,8 @@ public:
 	//* hierarchy option *//
 
 	void SetParent(MonoBehaviour* parent);
+
+	void RemoveParent();
 
 	void AddChild(MonoBehaviour* child);
 
@@ -119,7 +127,8 @@ private:
 	//* name
 	std::string name_ = "new behaviour";
 
-
+	//* container
+	std::optional<ContainerIterator> containerIterator_;
 
 	//=========================================================================================
 	// private methods
@@ -128,6 +137,8 @@ private:
 	HierarchyIterator AddHierarchy(std::variant<MonoBehaviour*, std::unique_ptr<MonoBehaviour>>&& child);
 
 	void RemoveHierarchy(const HierarchyIterator& iterator);
+
+	void ApplyContainerIterator();
 
 };
 

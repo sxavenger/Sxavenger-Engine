@@ -45,15 +45,16 @@ void BetaSystemGameLoop::InitSystem() {
 	main_ = SxavengerSystem::CreateMainWindow(kMainWindowSize, L"sxavenger engine beta window").lock();
 	main_->SetIcon("packages/icon/SxavengerEngineSubIcon.ico", { 32, 32 });
 
-	AssetObserver<AssetModel> observer = SxavengerAsset::TryImport<AssetModel>("assets/models/primitive/teapot.obj");
-	mesh_ = observer.WaitGet()->CreateMonoBehavior("teapot");
+	/*AssetObserver<AssetModel> observer = SxavengerAsset::TryImport<AssetModel>("assets/models/primitive/teapot.obj");
+	mesh_ = observer.WaitGet()->CreateMonoBehavior("teapot");*/
+
+	AssetObserver<AssetModel> observer = SxavengerAsset::TryImport<AssetModel>("assets/models/chessboard/chessboard.gltf");
+	mesh_ = observer.WaitGet()->CreateMonoBehavior("chessboard");
+
 	auto collider = mesh_->AddComponent<ColliderComponent>();
 	collider->SetColliderBoundingSphere({ 1.0f });
 	collider->SetTag("tag1");
 	mesh_->AddComponent<TransformComponent>();
-
-	/*AssetObserver<AssetModel> observer = SxavengerAsset::TryImport<AssetModel>("assets/models/chessboard/chessboard.gltf");
-	mesh_ = observer.WaitGet()->CreateMonoBehavior("chessboard");*/
 
 	camera_ = std::make_unique<MonoBehaviour>();
 	camera_->AddComponent<TransformComponent>();
@@ -71,10 +72,6 @@ void BetaSystemGameLoop::InitSystem() {
 	transform->UpdateMatrix();
 	auto light = light_->AddComponent<DirectionalLightComponent>();
 	light->Init();
-
-	sEditorEngine->ExecuteEditorFunction<OutlinerEditor>([&](OutlinerEditor* editor) {
-		editor->SetBehaviour(mesh_.get());
-	});
 
 	sCollisionManager->SetOnCollisionFunctions(
 		"tag1", "tag2", {
