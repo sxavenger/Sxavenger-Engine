@@ -2,7 +2,7 @@
 // include
 //-----------------------------------------------------------------------------------------
 //* lib
-#include <Lib/Geometry/MathLib.h>
+#include <Lib/Geometry/GeometryMath.h>
 
 //* c++
 #include <vector>
