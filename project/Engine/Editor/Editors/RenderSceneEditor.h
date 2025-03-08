@@ -15,6 +15,7 @@
 
 //* lib
 #include <Lib/Geometry/Vector2.h>
+#include <Lib/Geometry/Vector3.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // RenderSceneEditor class
@@ -57,7 +58,7 @@ private:
 	// private variables
 	//=========================================================================================
 
-	//* window *//
+	//* rect *//
 
 	WindowRect rect_ = {};
 
@@ -75,9 +76,16 @@ private:
 
 	FRenderTargetTextures::GBufferLayout layout_ = FRenderTargetTextures::GBufferLayout::Main;
 
+	//* window *//
+
+	std::shared_ptr<GameWindow> window_;
+	// todo: screen window の描画
+
 	//* camera *//
 
-
+	Vector3f point_ = kOrigin3<float>;
+	Vector2f angle_ = { 0.0f, pi_v / 16.0f };
+	float distance_ = 12.0f;
 
 	//=========================================================================================
 	// private methods

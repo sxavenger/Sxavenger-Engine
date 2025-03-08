@@ -57,7 +57,12 @@ void CollisionManager::CheckCollision() {
 	}
 
 	// colliderのcallback
-	sComponentStorage->ForEach<ColliderComponent>([](ColliderComponent* collider) {
-		collider->CallbackOnCollision();
+	sComponentStorage->ForEach<ColliderComponent>([this](ColliderComponent* collider) {
+		collider->CallbackOnCollision(this);
 	});
+}
+
+CollisionManager* CollisionManager::GetInstance() {
+	static CollisionManager instance;
+	return &instance;
 }

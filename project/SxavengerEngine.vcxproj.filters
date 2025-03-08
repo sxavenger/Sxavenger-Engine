@@ -136,6 +136,7 @@
     <ClCompile Include="Engine\Component\Components\Collider\ColliderComponent.cpp" />
     <ClCompile Include="Engine\Component\Components\Collider\CollisionDetection.cpp" />
     <ClCompile Include="Engine\Component\Components\Collider\CollisionManager.cpp" />
+    <ClCompile Include="Engine\Component\Components\Collider\CollisionCallbackCollection.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\System\Window\Window.h" />
@@ -277,6 +278,7 @@
     <ClInclude Include="Engine\Component\Components\Collider\ColliderComponent.h" />
     <ClInclude Include="Engine\Component\Components\Collider\CollisionDetection.h" />
     <ClInclude Include="Engine\Component\Components\Collider\CollisionManager.h" />
+    <ClInclude Include="Engine\Component\Components\Collider\CollisionCallbackCollection.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

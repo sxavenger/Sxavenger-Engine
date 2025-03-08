@@ -11,6 +11,8 @@
 #include <Engine/Editor/Editors/DevelopEditor.h>
 #include <Engine/Editor/Editors/OutlinerEditor.h>
 #include <Engine/Render/FMainRender.h>
+#include <Engine/Component/Components/Collider/ColliderComponent.h>
+#include <Engine/Component/Components/Collider/CollisionManager.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // BetaSystemGameLoop class methods
@@ -45,6 +47,10 @@ void BetaSystemGameLoop::InitSystem() {
 
 	AssetObserver<AssetModel> observer = SxavengerAsset::TryImport<AssetModel>("assets/models/primitive/teapot.obj");
 	mesh_ = observer.WaitGet()->CreateMonoBehavior("teapot");
+	auto collider = mesh_->AddComponent<ColliderComponent>();
+	collider->SetColliderBoundingSphere({ 1.0f });
+	collider->SetTag("tag1");
+	mesh_->AddComponent<TransformComponent>();
 
 	/*AssetObserver<AssetModel> observer = SxavengerAsset::TryImport<AssetModel>("assets/models/chessboard/chessboard.gltf");
 	mesh_ = observer.WaitGet()->CreateMonoBehavior("chessboard");*/
@@ -54,6 +60,10 @@ void BetaSystemGameLoop::InitSystem() {
 	auto camera = camera_->AddComponent<CameraComponent>();
 	camera->Init();
 	camera->SetTag(CameraComponent::Tag::GameCamera);
+	auto collider2 = camera_->AddComponent<ColliderComponent>();
+	collider2->SetColliderBoundingSphere({ 1.0f });
+	collider2->SetTag("tag2");
+
 
 	light_ = std::make_unique<MonoBehaviour>();
 	auto transform = light_->AddComponent<TransformComponent>();
@@ -65,6 +75,17 @@ void BetaSystemGameLoop::InitSystem() {
 	sEditorEngine->ExecuteEditorFunction<OutlinerEditor>([&](OutlinerEditor* editor) {
 		editor->SetBehaviour(mesh_.get());
 	});
+
+	sCollisionManager->SetOnCollisionFunctions(
+		"tag1", "tag2", {
+			[](ColliderComponent*, ColliderComponent*) {
+				Log("on collision enter");
+			},
+			[](ColliderComponent*, ColliderComponent*) {
+				Log("on collision stay");
+			}
+		}
+	);
 }
 
 void BetaSystemGameLoop::TermSystem() {
@@ -72,6 +93,7 @@ void BetaSystemGameLoop::TermSystem() {
 
 void BetaSystemGameLoop::UpdateSystem() {
 	FMainRender::GetInstance()->GetScene()->SetupTopLevelAS(SxavengerSystem::GetMainThreadContext());
+	sCollisionManager->CheckCollision();
 }
 
 void BetaSystemGameLoop::DrawSystem() {

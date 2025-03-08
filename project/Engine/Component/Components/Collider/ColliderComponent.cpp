@@ -6,6 +6,9 @@
 //* component
 #include "../../MonoBehaviour.h"
 
+//* collider
+#include "CollisionCallbackCollection.h"
+
 ////////////////////////////////////////////////////////////////////////////////////////////
 // ColliderComponent class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -37,7 +40,7 @@ void ColliderComponent::UpdateColliderState() {
 	}
 }
 
-void ColliderComponent::CallbackOnCollision() {
+void ColliderComponent::CallbackOnCollision(const CollisionCallbackCollection* collection) {
 	for (auto it = states_.begin(); it != states_.end();) {
 		switch (it->second.to_ulong()) {
 			case 0b00: //!< prev 0, current 0
@@ -45,18 +48,15 @@ void ColliderComponent::CallbackOnCollision() {
 				continue;
 
 			case 0b01: //!< prev 0, current 1
-				if (collisionEnterFunction_) {
-					collisionEnterFunction_(it->first);
-				}
+				collection->CallbackOnCollisionEnter(this, it->first);
 				break;
 
 			case 0b10: //!< prev 1, current 0
-				if (collisionExitFunction_) {
-					collisionExitFunction_(it->first);
-				}
+				collection->CallbackOnCollisionExit(this, it->first);
 				break;
 
 			case 0b11: //!< prev 1, current 1
+				collection->CallbackOnCollisionStay(this, it->first);
 				break;
 		};
 

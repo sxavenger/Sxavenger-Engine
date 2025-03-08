@@ -24,11 +24,8 @@ void RenderSceneEditor::Init() {
 	renderer_->SetTextures(textures_.get());
 
 	camera_ = std::make_unique<MonoBehaviour>();
-	auto t = camera_->AddComponent<TransformComponent>();
-	t->GetTransform().translate = { 0.0f, 0.0f, -8.0f };
-	t->UpdateMatrix();
-	auto v = camera_->AddComponent<CameraComponent>();
-	v->UpdateView();
+	camera_->AddComponent<TransformComponent>();
+	camera_->AddComponent<CameraComponent>();
 }
 
 void RenderSceneEditor::ShowMainMenu() {
@@ -152,7 +149,7 @@ void RenderSceneEditor::ShowSceneWindow() {
 	}
 
 	if (ImGui::IsWindowFocused()) {
-		//UpdateSceneCamera();
+		UpdateCamera();
 	}
 
 	ImGui::End();
@@ -215,4 +212,42 @@ RenderSceneEditor::WindowRect RenderSceneEditor::SetImGuiImageFullWindow(const D
 	rect.size = { displayTextureSize.x, displayTextureSize.y };
 
 	return rect;
+}
+
+void RenderSceneEditor::UpdateCamera() {
+
+	auto mouse     = SxavengerSystem::GetInput()->GetMouseInput();
+	auto transform = camera_->GetComponent<TransformComponent>();
+
+	if (mouse->IsPress(MouseId::MOUSE_MIDDLE)) {
+		Vector2f delta = mouse->GetDeltaPosition();
+		static const Vector2f kSensitivity = { 0.01f, 0.01f };
+
+		angle_   += delta * kSensitivity;
+		angle_.x = std::fmod(angle_.x, pi_v * 2.0f);
+		angle_.y = std::clamp(angle_.y, -pi_v / 2.0f, pi_v / 2.0f);
+	}
+
+	if (mouse->IsPress(MouseId::MOUSE_RIGHT)) {
+		Vector2f delta = mouse->GetDeltaPosition();
+		static const Vector2f kSensitivity = { 0.01f, 0.01f };
+
+		Vector3f right = RotateVector({ 1.0f, 0.0f, 0.0f }, transform->GetTransform().rotate);
+		Vector3f up    = RotateVector({ 0.0f, 1.0f, 0.0f }, transform->GetTransform().rotate);
+
+		point_ -= right * delta.x * kSensitivity.x;
+		point_ += up * delta.y * kSensitivity.y;
+	}
+
+	distance_ = std::max(distance_ - mouse->GetDeltaWheel(), 0.0f);
+
+	Quaternion r = AxisAngle({ 0.0f, 1.0f, 0.0f }, angle_.x) * AxisAngle({ 1.0f, 0.0f, 0.0f }, angle_.y);
+
+	Vector3f direciton = RotateVector({ 0.0f, 0.0f, -1.0f }, r);
+
+	transform->GetTransform().translate = point_ + direciton * distance_;
+	transform->GetTransform().rotate    = r;
+	transform->UpdateMatrix();
+
+	camera_->GetComponent<CameraComponent>()->UpdateView();
 }

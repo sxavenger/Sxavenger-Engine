@@ -18,7 +18,10 @@
 #include <bitset>
 #include <optional>
 
-// FIXME: collider type の削除
+////////////////////////////////////////////////////////////////////////////////////////////
+// forward
+////////////////////////////////////////////////////////////////////////////////////////////
+class CollisionCallbackCollection;
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // ColliderComponent class
@@ -39,14 +42,16 @@ public:
 	// using
 	////////////////////////////////////////////////////////////////////////////////////////////
 	
-	using OnCollisionFunction = std::function<void(_MAYBE_UNUSED ColliderComponent* const)>; //!< OnCollision関数
-	using CollisionStatesBit  = std::bitset<static_cast<bool>(CollisionState::kPrev) + 1>;    //!< CollisionState記録用
+	using CollisionStatesBit  = std::bitset<static_cast<bool>(CollisionState::kPrev) + 1>; //!< CollisionState記録用
 
 public:
 
 	//=========================================================================================
 	// public methods
 	//=========================================================================================
+
+	ColliderComponent(MonoBehaviour* behaviour) : BaseComponent(behaviour) {}
+	virtual ~ColliderComponent() = default;
 
 	//* bounding option *//
 
@@ -62,18 +67,11 @@ public:
 
 	const std::optional<CollisionBoundings::Boundings>& GetBoundings() const { return bounding_; }
 
-	//* collision function setter *//
-	// todo: hitgroup systemに変更
-
-	void SetOnCollisionEnter(const OnCollisionFunction& function) { collisionEnterFunction_ = function; }
-
-	void SetOnCollisionExit(const OnCollisionFunction& function) { collisionExitFunction_ = function; }
-
 	//* collision state option *//
 
 	void UpdateColliderState();
 
-	void CallbackOnCollision();
+	void CallbackOnCollision(const CollisionCallbackCollection* collection);
 
 	void OnCollision(ColliderComponent* other);
 
@@ -85,6 +83,12 @@ public:
 		ColliderComponent* const other,
 		const std::optional<bool>& isHitCurrent = std::nullopt, const std::optional<bool>& isHitPrev = std::nullopt
 	);
+
+	//* tag option *//
+
+	void SetTag(const std::string& tag) { tag_ = tag; }
+
+	const std::string& GetTag() const { return tag_; }
 
 	//* other component option *//
 
@@ -103,11 +107,6 @@ private:
 	//* boundings *//
 
 	std::optional<CollisionBoundings::Boundings> bounding_;
-
-	//* functions *//
-
-	OnCollisionFunction collisionEnterFunction_;
-	OnCollisionFunction collisionExitFunction_;
 
 	//* states *//
 
