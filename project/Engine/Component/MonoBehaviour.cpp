@@ -8,6 +8,9 @@
 #include "Components/Transform/TransformComponent.h"
 #include "Components/Camera/CameraComponent.h"
 
+//* external
+#include <imgui.h>
+
 //* c++
 #include <execution>
 
@@ -88,6 +91,24 @@ void MonoBehaviour::UpdateComponent() {
 		camera->UpdateView();
 		camera->UpdateProj();
 	}
+}
+
+void MonoBehaviour::SetBehaviourImGuiCommand(char buf[256]) {
+	ImGui::Checkbox("## Active", &isActive_);
+	ImGui::SameLine();
+
+	if (ImGui::InputText("## Name", buf, 256)) {
+		SetName(buf);
+	}
+
+	ImGui::Separator();
+
+	for (const auto& [type, component] : GetComponents()) {
+		if (ImGui::CollapsingHeader(type.name())) {
+			(*component)->InspectorImGui();
+		}
+	}
+
 }
 
 MonoBehaviour::HierarchyIterator MonoBehaviour::AddHierarchy(std::variant<MonoBehaviour*, std::unique_ptr<MonoBehaviour>>&& child) {

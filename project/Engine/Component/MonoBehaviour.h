@@ -110,6 +110,10 @@ public:
 
 	void UpdateComponent();
 
+	//* debug option *//
+
+	void SetBehaviourImGuiCommand(char buf[256]);
+
 private:
 
 	//=========================================================================================

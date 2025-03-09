@@ -37,6 +37,8 @@ private:
 
 	MonoBehaviour* selected_ = nullptr;
 
+	char buf_[256] = {};
+
 	//=========================================================================================
 	// private methods
 	//=========================================================================================
@@ -49,5 +51,7 @@ private:
 	//* sub method *//
 
 	void OutlinerSelectable(MonoBehaviour* behaviour);
+
+	void SetSelected(MonoBehaviour* behaviour);
 
 };

@@ -44,11 +44,7 @@ void OutlinerEditor::ShowInspectorWindow() {
 	ImGui::Begin("Inspector ## Outliner Editor", nullptr, BaseEditor::GetWindowFlag());
 
 	if (selected_ != nullptr) { // todo: selected behaviour に変更
-		for (const auto& [type, component] : selected_->GetComponents()) {
-			if (ImGui::CollapsingHeader(type.name())) {
-				(*component)->InspectorImGui();
-			}
-		}
+		selected_->SetBehaviourImGuiCommand(buf_);
 
 		// Manipulateの設定
 		BaseEditor::editor_->ExecuteEditorFunction<RenderSceneEditor>([&](RenderSceneEditor* editor) {
@@ -67,7 +63,7 @@ void OutlinerEditor::OutlinerSelectable(MonoBehaviour* behaviour) {
 	if (behaviour->GetChildren().empty()) {
 		if (ImGui::Selectable(label.c_str(), isSelect)) {
 			// todo: 選択処理
-			selected_ = behaviour;
+			SetSelected(behaviour);
 		}
 
 	} else {
@@ -83,7 +79,7 @@ void OutlinerEditor::OutlinerSelectable(MonoBehaviour* behaviour) {
 		bool isOpen = ImGui::TreeNodeEx(label.c_str(), flags);
 
 		if (ImGui::IsItemClicked()) {
-			selected_ = behaviour;
+			SetSelected(behaviour);
 			//localCamera_->Reset();
 		}
 
@@ -96,4 +92,10 @@ void OutlinerEditor::OutlinerSelectable(MonoBehaviour* behaviour) {
 			ImGui::TreePop();
 		}
 	}
+}
+
+void OutlinerEditor::SetSelected(MonoBehaviour* behaviour) {
+	selected_ = behaviour;
+	std::memset(buf_, 0, sizeof(buf_));
+	std::memcpy(buf_, behaviour->GetName().c_str(), behaviour->GetName().size());
 }
