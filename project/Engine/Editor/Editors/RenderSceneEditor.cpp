@@ -34,9 +34,10 @@ void RenderSceneEditor::Init() {
 void RenderSceneEditor::ShowMainMenu() {
 	if (ImGui::BeginMenu("render")) {
 		MenuPadding();
-
 		ImGui::SeparatorText("render");
+
 		ShowSceneMenu();
+		ShowColliderMenu();
 		
 		ImGui::EndMenu();
 	}
@@ -53,9 +54,10 @@ void RenderSceneEditor::Render() {
 
 	renderer_->Render(SxavengerSystem::GetMainThreadContext(), config);
 
+	//* Debug Render *//
 	textures_->BeginTransparentBasePass(SxavengerSystem::GetMainThreadContext());
 
-	// todo: collider, draw lines, etc...
+	// todo: draw lines, etc...
 	colliderDrawer_->Render(SxavengerSystem::GetMainThreadContext(), camera_->GetComponent<CameraComponent>());
 
 	textures_->EndTransparentBasePass(SxavengerSystem::GetMainThreadContext());
@@ -128,6 +130,15 @@ void RenderSceneEditor::ShowSceneMenu() {
 			ImGui::EndCombo();
 		}
 		
+		ImGui::EndMenu();
+	}
+}
+
+void RenderSceneEditor::ShowColliderMenu() {
+	if (ImGui::BeginMenu("collider")) {
+		MenuPadding();
+		ImGui::SeparatorText("collider");
+		colliderDrawer_->SetImGuiCommand();
 		ImGui::EndMenu();
 	}
 }

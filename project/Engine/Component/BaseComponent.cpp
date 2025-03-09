@@ -21,3 +21,7 @@ MonoBehaviour* BaseComponent::GetBehaviour() const {
 bool BaseComponent::IsActive() const {
 	return behaviour_->IsActive();
 }
+
+bool BaseComponent::IsView() const {
+	return behaviour_->IsView();
+}

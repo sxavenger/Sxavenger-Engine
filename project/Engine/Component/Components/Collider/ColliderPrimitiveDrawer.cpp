@@ -205,3 +205,12 @@ void ColliderPrimitiveDrawer::Render(const DirectXThreadContext* context, Camera
 void ColliderPrimitiveDrawer::StackSphere(const Vector3f& position, const CollisionBoundings::Sphere& sphere, const Color4f& color) {
 	sphere_->StackBuffer(position, sphere, color);
 }
+
+void ColliderPrimitiveDrawer::SetImGuiCommand() {
+	ImGui::ColorEdit3("enable color", &enableColor_.x);
+
+	ImGui::Checkbox("disable render", &isDisableRender_);
+	ImGui::BeginDisabled(!isDisableRender_);
+	ImGui::ColorEdit3("disable color", &disableColor_.x);
+	ImGui::EndDisabled();
+}

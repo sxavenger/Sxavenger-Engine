@@ -99,6 +99,7 @@ private:
 	//* show imgui component *//
 
 	void ShowSceneMenu();
+	void ShowColliderMenu();
 
 	void ShowSceneWindow();
 	void ShowGameWindow();

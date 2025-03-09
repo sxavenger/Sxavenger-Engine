@@ -65,6 +65,12 @@ public:
 	void SetActive(bool isActive) { isActive_ = isActive; }
 
 	bool IsActive() const { return isActive_; }
+
+	//* view option *//
+
+	void SetView(bool isView) { isView_ = isView; }
+
+	bool IsView() const { return isView_; }
 	
 	//* components option *//
 
@@ -122,6 +128,9 @@ private:
 
 	//* active
 	bool isActive_ = true;
+
+	//* view
+	bool isView_ = true;
 
 	//* component container
 	ComponentContainer components_;

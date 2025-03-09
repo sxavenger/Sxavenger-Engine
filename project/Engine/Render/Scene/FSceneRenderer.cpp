@@ -78,6 +78,10 @@ void FSceneRenderer::RenderGeometryPass(const DirectXThreadContext* context, con
 		// renderer componentの取得
 		MeshRendererComponent* renderer = static_cast<MeshRendererComponent*>(component.get());
 
+		if (!renderer->IsView()) {
+			return;
+		}
+
 		if (renderer->GetMaterial()->GetBlendMode() != Material::BlendMode::Opaque) {
 			// 透明なジオメトリは別のパスで描画
 			return;

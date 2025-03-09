@@ -78,6 +78,8 @@ public:
 
 	void StackSphere(const Vector3f& position, const CollisionBoundings::Sphere& sphere, const Color4f& color);
 
+	void SetImGuiCommand();
+
 private:
 
 	//=========================================================================================
