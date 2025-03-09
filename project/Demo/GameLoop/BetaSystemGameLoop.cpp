@@ -80,7 +80,7 @@ void BetaSystemGameLoop::InitSystem() {
 				Log("on collision enter");
 			},
 			[](ColliderComponent*, ColliderComponent*) {
-				Log("on collision stay");
+				Log("on collision exit");
 			}
 		}
 	);
