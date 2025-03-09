@@ -8,6 +8,7 @@
 
 //* engine
 #include <Engine/Component/MonoBehaviour.h>
+#include <Engine/Component/Components/Collider/ColliderPrimitiveDrawer.h>
 #include <Engine/Asset/Texture/AssetTexture.h>
 #include <Engine/Asset/Observer/AssetObserver.h>
 #include <Engine/Render/FRenderTargetTextures.h>
@@ -86,6 +87,10 @@ private:
 	Vector3f point_ = kOrigin3<float>;
 	Vector2f angle_ = { 0.0f, pi_v / 16.0f };
 	float distance_ = 12.0f;
+
+	//* collider *//
+
+	std::unique_ptr<ColliderPrimitiveDrawer> colliderDrawer_;
 
 	//=========================================================================================
 	// private methods

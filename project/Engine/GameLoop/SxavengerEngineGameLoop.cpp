@@ -38,6 +38,7 @@ void SxavengerEngineGameLoop::Init(GameLoop::Context* context) {
 	context->SetProcess(GameLoop::Process::Update, UINT32_MAX, [this]() {
 		SxavengerSystem::RecordLap("update [game logic]");
 		SxavengerSystem::EndImGuiFrame();
+		FMainRender::GetInstance()->GetScene()->SetupTopLevelAS(SxavengerSystem::GetMainThreadContext());
 		SxavengerSystem::TransitionAllocator();
 		SxavengerSystem::RecordLap("update [gpu transtion]");
 	});

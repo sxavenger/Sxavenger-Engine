@@ -56,6 +56,7 @@ void BetaSystemGameLoop::InitSystem() {
 	collider->SetColliderBoundingSphere({ 1.0f });
 	collider->SetTag("tag1");
 	mesh_->AddComponent<TransformComponent>();
+	mesh_->SetActive(false);
 
 	camera_ = std::make_unique<MonoBehaviour>();
 	camera_->AddComponent<TransformComponent>();
@@ -96,9 +97,6 @@ void BetaSystemGameLoop::UpdateSystem() {
 	// todo: engine側のgameloopに移動.
 
 	sCollisionManager->CheckCollision();
-
-	FMainRender::GetInstance()->GetScene()->SetupTopLevelAS(SxavengerSystem::GetMainThreadContext());
-	// todo: render game loopに移動
 }
 
 void BetaSystemGameLoop::DrawSystem() {

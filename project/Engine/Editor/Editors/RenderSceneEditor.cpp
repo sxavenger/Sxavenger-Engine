@@ -26,6 +26,9 @@ void RenderSceneEditor::Init() {
 	camera_ = std::make_unique<MonoBehaviour>();
 	camera_->AddComponent<TransformComponent>();
 	camera_->AddComponent<CameraComponent>();
+
+	colliderDrawer_ = std::make_unique<ColliderPrimitiveDrawer>();
+	colliderDrawer_->Init();
 }
 
 void RenderSceneEditor::ShowMainMenu() {
@@ -53,6 +56,7 @@ void RenderSceneEditor::Render() {
 	textures_->BeginTransparentBasePass(SxavengerSystem::GetMainThreadContext());
 
 	// todo: collider, draw lines, etc...
+	colliderDrawer_->Render(SxavengerSystem::GetMainThreadContext(), camera_->GetComponent<CameraComponent>());
 
 	textures_->EndTransparentBasePass(SxavengerSystem::GetMainThreadContext());
 }
