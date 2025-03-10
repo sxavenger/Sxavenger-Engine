@@ -185,6 +185,9 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Demo\GameLoop\BetaSystemGameLoop.cpp" />
+    <ClCompile Include="Engine\Adapter\Scene\BaseScene.cpp" />
+    <ClCompile Include="Engine\Adapter\Scene\BaseSceneFactory.cpp" />
+    <ClCompile Include="Engine\Adapter\Scene\SceneController.cpp" />
     <ClCompile Include="Engine\Asset\Model\Model.cpp" />
     <ClCompile Include="Engine\Asset\Animator\Animator.cpp" />
     <ClCompile Include="Engine\Asset\Animator\AssetAnimator.cpp" />
@@ -322,6 +325,9 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Demo\GameLoop\BetaSystemGameLoop.h" />
+    <ClInclude Include="Engine\Adapter\Scene\BaseScene.h" />
+    <ClInclude Include="Engine\Adapter\Scene\BaseSceneFactory.h" />
+    <ClInclude Include="Engine\Adapter\Scene\SceneController.h" />
     <ClInclude Include="Engine\Asset\Model\Model.h" />
     <ClInclude Include="Engine\Asset\Animator\Animator.h" />
     <ClInclude Include="Engine\Asset\Animator\AssetAnimator.h" />

@@ -51,6 +51,16 @@ public:
 
 	const Vector3f GetPosition() const;
 
+	//=========================================================================================
+	// public variables
+	//=========================================================================================
+
+	//* transform option *//
+
+	Vector3f& translate = transform_.translate;
+	Vector3f& scale     = transform_.scale;
+	Quaternion& rotate  = transform_.rotate;
+
 private:
 
 	//=========================================================================================

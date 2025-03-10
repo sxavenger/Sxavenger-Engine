@@ -9,17 +9,21 @@ void FMainRender::Init() {
 	textures_  = std::make_unique<FRenderTargetTextures>();
 	renderer_  = std::make_unique<FSceneRenderer>();
 	scene_     = std::make_unique<FScene>();
+	canvas_    = std::make_unique<FCanvas>();
 
 	presenter_->Init();
 
 	textures_->Create(kMainWindowSize);
 	renderer_->SetTextures(textures_.get());
+
+	canvas_->SetTextures(textures_.get());
 }
 
 void FMainRender::Term() {
 	textures_.reset();
 	renderer_.reset();
 	scene_.reset();
+	canvas_.reset();
 }
 
 void FMainRender::PresentMain(const DirectXThreadContext* context) {

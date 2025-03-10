@@ -8,6 +8,7 @@
 #include <Engine/Render/FRenderTargetTextures.h>
 #include <Engine/Render/Scene/FScene.h>
 #include <Engine/Render/Scene/FSceneRenderer.h>
+#include <Engine/Render/Canvas/FCanvas.h>
 
 //* engine
 #include <Engine/System/DirectX/DirectXContext.h>
@@ -41,6 +42,8 @@ public:
 
 	FScene* GetScene() const { return scene_.get(); }
 
+	FCanvas* GetCanvas() const { return canvas_.get(); }
+
 	//* singleton *//
 
 	static FMainRender* GetInstance();
@@ -56,4 +59,6 @@ private:
 	std::unique_ptr<FRenderTargetTextures> textures_;
 	std::unique_ptr<FSceneRenderer>        renderer_;
 	std::unique_ptr<FScene>                scene_;
+	std::unique_ptr<FCanvas>               canvas_;
+
 };
