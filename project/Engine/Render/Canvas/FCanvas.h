@@ -4,7 +4,7 @@
 // include
 //-----------------------------------------------------------------------------------------
 //* layer
-#include "../FSceneTextures.h"
+#include "../FRenderTargetTextures.h"
 #include "Layer/LLayer.h"
 
 //* engine
@@ -37,7 +37,7 @@ public:
 
 	void AddLayer(LLayer* layer) { layers_.emplace_back(layer); }
 
-	void SetTextures(FSceneTextures* textures) { textures_ = textures; }
+	void SetTextures(FRenderTargetTextures* textures) { textures_ = textures; }
 
 private:
 
@@ -51,6 +51,6 @@ private:
 
 	//* view info *//
 
-	FSceneTextures* textures_ = nullptr;
+	FRenderTargetTextures* textures_ = nullptr;
 
 };

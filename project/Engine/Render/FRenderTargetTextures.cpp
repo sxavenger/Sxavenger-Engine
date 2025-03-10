@@ -34,6 +34,10 @@ void FRenderTargetTextures::Create(const Vector2ui& size) {
 	depth_->Create(size);
 
 	size_ = size;
+
+	dimension_ = std::make_unique<DimensionBuffer<Vector2ui>>();
+	dimension_->Create(SxavengerSystem::GetDxDevice(), 1);
+	dimension_->At(0) = size;
 }
 
 void FRenderTargetTextures::ClearTextures(const DirectXThreadContext* context) const {

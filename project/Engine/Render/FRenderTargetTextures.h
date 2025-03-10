@@ -77,6 +77,8 @@ public:
 
 	const FDepthTexture* GetDepth() const { return depth_.get(); }
 
+	const D3D12_GPU_VIRTUAL_ADDRESS& GetParameter() const { return dimension_->GetGPUVirtualAddress(); }
+
 private:
 
 	//=========================================================================================
@@ -99,5 +101,7 @@ private:
 
 	Vector2ui size_;
 	//!< gpu parameter buffer は GetDimension()関数で取得する
+
+	std::unique_ptr<DxObject::DimensionBuffer<Vector2ui>> dimension_;
 
 };

@@ -237,6 +237,11 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="Engine\GameLoop\SxavengerEngineGameLoop.cpp" />
     <ClCompile Include="Engine\Module\Pipeline\CustomComputePipeline.cpp" />
     <ClCompile Include="Engine\Module\Pipeline\CustomGraphicsPipeline.cpp" />
+    <ClCompile Include="Engine\Render\Canvas\FCanvas.cpp" />
+    <ClCompile Include="Engine\Render\Canvas\Layer\Layers\LSprite.cpp" />
+    <ClCompile Include="Engine\Render\Canvas\Layer\Layers\TextureComponent.cpp" />
+    <ClCompile Include="Engine\Render\Canvas\Layer\Layers\Transform2dComponent.cpp" />
+    <ClCompile Include="Engine\Render\Canvas\Layer\LLayer.cpp" />
     <ClCompile Include="Engine\Render\Common\FDepthTexture.cpp" />
     <ClCompile Include="Engine\Render\Core\FRenderCoreGeometry.cpp" />
     <ClCompile Include="Engine\Render\Core\FRenderCoreLayer.cpp" />
@@ -370,6 +375,11 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Engine\GameLoop\SxavengerEngineGameLoop.h" />
     <ClInclude Include="Engine\Module\Pipeline\CustomComputePipeline.h" />
     <ClInclude Include="Engine\Module\Pipeline\CustomGraphicsPipeline.h" />
+    <ClInclude Include="Engine\Render\Canvas\FCanvas.h" />
+    <ClInclude Include="Engine\Render\Canvas\Layer\Layers\LSprite.h" />
+    <ClInclude Include="Engine\Render\Canvas\Layer\Layers\TextureComponent.h" />
+    <ClInclude Include="Engine\Render\Canvas\Layer\Layers\Transform2dComponent.h" />
+    <ClInclude Include="Engine\Render\Canvas\Layer\LLayer.h" />
     <ClInclude Include="Engine\Render\Common\FDepthTexture.h" />
     <ClInclude Include="Engine\Render\Core\FRenderCoreGeometry.h" />
     <ClInclude Include="Engine\Render\Core\FRenderCoreLayer.h" />

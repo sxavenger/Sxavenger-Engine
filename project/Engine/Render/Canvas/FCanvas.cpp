@@ -15,7 +15,7 @@ void FCanvas::Render(const DirectXThreadContext* context) {
 
 	renderContext.parameter.SetAddress("gParameter", textures_->GetParameter());
 
-	textures_->BeginCanvasPass(context);
+	textures_->BeginTransparentBasePass(context);
 
 	for (auto& layer : layers_) {
 		if (layer->CheckVisibility()) {
@@ -23,7 +23,7 @@ void FCanvas::Render(const DirectXThreadContext* context) {
 		}
 	}
 
-	textures_->EndCanvasPass(context);
+	textures_->EndTransparentBasePass(context);
 }
 
 bool FCanvas::CheckRender() const {
