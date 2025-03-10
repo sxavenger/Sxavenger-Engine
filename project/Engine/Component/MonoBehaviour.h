@@ -35,7 +35,8 @@ public:
 	using ComponentContainer = Sxl::OptimizedMap<std::type_index, ComponentStorage::ComponentIterator>;
 
 	//* behaviour hierarchy
-	using Hierarchy         = std::list<std::variant<MonoBehaviour*, std::unique_ptr<MonoBehaviour>>>;
+	using HierarchyElement  = std::variant<MonoBehaviour*, std::unique_ptr<MonoBehaviour>>;
+	using Hierarchy         = std::list<HierarchyElement>;
 	using HierarchyIterator = Hierarchy::iterator;
 
 	//* behaviour container
@@ -102,6 +103,8 @@ public:
 	void AddChild(std::unique_ptr<MonoBehaviour>&& child);
 
 	void RemoveChild(MonoBehaviour* child);
+
+	MonoBehaviour* GetChild(const std::string& name);
 
 	bool HasParent() const { return parent_ != nullptr; }
 

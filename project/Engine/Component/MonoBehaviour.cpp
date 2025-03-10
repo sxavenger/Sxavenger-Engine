@@ -82,6 +82,16 @@ void MonoBehaviour::RemoveChild(MonoBehaviour* child) {
 	child->RemoveParent();
 }
 
+MonoBehaviour* MonoBehaviour::GetChild(const std::string& name) {
+	for (const auto& child : children_) {
+		MonoBehaviour* ptr = std::visit(GetPtrVisitor{}, child);
+
+		if (ptr->GetName() == name) {
+			return ptr;
+		}
+	}
+}
+
 void MonoBehaviour::UpdateComponent() {
 	if (auto transform = GetComponent<TransformComponent>()) {
 		transform->UpdateMatrix();
