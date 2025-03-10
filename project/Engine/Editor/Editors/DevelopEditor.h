@@ -48,6 +48,8 @@ private:
 	//! has_value: 何回更新処理をするか<frame>(0の場合は更新処理を止める)
 	std::optional<uint32_t> processLimit_ = std::nullopt;
 
+	//* console option *//
+
 	//=========================================================================================
 	// private methods
 	//=========================================================================================
@@ -59,6 +61,7 @@ private:
 	void ShowThreadMenu();
 
 	void ShowPerformanceWindow();
+	void ShowConsole();
 
 	//* sub method *//
 

@@ -92,6 +92,12 @@ public:
 	static void ExceptionA(const std::string& label, const std::string& detail, const std::source_location& location);
 	static void ExceptionW(const std::wstring& label, const std::wstring& detail, const std::source_location& location);
 
+	//* runtime log methods *//
+
+	static void LogRuntimeA(Status status, const std::string& label, const std::string& detail = "");
+
+	static const Container& GetStacks() { return stacks_; }
+
 private:
 
 	//=========================================================================================
@@ -127,7 +133,7 @@ private:
 
 	//* stack methods *//
 
-	static void PushStack(const StackData& data);
+	static void Push(const StackData& data);
 
 };
 
@@ -147,3 +153,7 @@ void EngineThreadLog(const std::wstring& log);
 
 void Assert(bool expression, const std::string& label = "", const std::string& detail = "", const std::source_location& location = std::source_location::current());
 void AssertW(bool expression, const std::wstring& label = L"", const std::wstring& detail = L"", const std::source_location& location = std::source_location::current());
+
+void LogRuntime(const std::string& label, const std::string& detail = "", SxavengerLogger::Status status = SxavengerLogger::Status::None);
+void WarningRuntime(const std::string& label, const std::string& detail = "");
+void ErrorRuntime(const std::string& label, const std::string& detail = "");

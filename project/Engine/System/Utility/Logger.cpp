@@ -205,6 +205,10 @@ void SxavengerLogger::ExceptionW(const std::wstring& label, const std::wstring& 
 	__debugbreak();
 }
 
+void SxavengerLogger::LogRuntimeA(Status status, const std::string& label, const std::string& detail) {
+	Push({ status, label, detail });
+}
+
 void SxavengerLogger::OutputA(const std::string& mes) {
 	OutputDebugStringA(mes.c_str());
 	OutputDebugStringA("\n");
@@ -225,7 +229,7 @@ void SxavengerLogger::TextW(const std::wstring& mes) {
 	file << mes << "\n";
 }
 
-void SxavengerLogger::PushStack(const StackData& data) {
+void SxavengerLogger::Push(const StackData& data) {
 	if (stacks_.empty() || stacks_.back().first != data) {
 		stacks_.emplace_back(std::make_pair(data, 1));
 
@@ -282,4 +286,16 @@ void AssertW(bool expression, const std::wstring& label, const std::wstring& det
 	}
 
 	SxavengerLogger::ExceptionW(label, detail, location);
+}
+
+void LogRuntime(const std::string& label, const std::string& detail, SxavengerLogger::Status status) {
+	SxavengerLogger::LogRuntimeA(status, label, detail);
+}
+
+void WarningRuntime(const std::string& label, const std::string& detail) {
+	SxavengerLogger::LogRuntimeA(SxavengerLogger::Status::Warning, label, detail);
+}
+
+void ErrorRuntime(const std::string& label, const std::string& detail) {
+	SxavengerLogger::LogRuntimeA(SxavengerLogger::Status::Error, label, detail);
 }

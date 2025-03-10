@@ -6,6 +6,9 @@
 //* engine
 #include <Engine/Asset/SxavengerAsset.h>
 
+//* c++
+#include <ranges>
+
 ////////////////////////////////////////////////////////////////////////////////////////////
 // DevelopEditor class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -28,6 +31,7 @@ void DevelopEditor::ShowMainMenu() {
 
 void DevelopEditor::ShowWindow() {
 	ShowPerformanceWindow();
+	ShowConsole();
 }
 
 void DevelopEditor::ShowProcessMenu() {
@@ -174,6 +178,41 @@ void DevelopEditor::ShowPerformanceWindow() {
 	if (isProcessRequired_) {
 		ImGui::PopStyleColor();
 	}
+}
+
+void DevelopEditor::ShowConsole() {
+	BaseEditor::SetNextWindowDocking();
+	ImGui::Begin("Console ## Engine Developer Editor", nullptr, BaseEditor::GetWindowFlag());
+
+	//* console option *//
+	static ImColor colors[3] = {
+		ImGui::GetStyle().Colors[ImGuiCol_Text],
+		ImColor(250, 250, 0, 255),
+		ImColor(250, 0, 0, 255),
+	};
+
+	//* console log *//
+	ImGui::BeginChild(ImGui::GetID((void*)0), ImGui::GetContentRegionAvail(), ImGuiChildFlags_Border, ImGuiWindowFlags_AlwaysVerticalScrollbar);
+
+	//!< todo: filterできるようにする
+	for (const auto& [data, count] : SxavengerLogger::GetStacks() | std::views::filter([](const auto&) { return true; })) {
+		if (count == 0) {
+			ImGui::TextColored(colors[static_cast<uint32_t>(data.status)], std::format("{}", data.label).c_str());
+
+		} else {
+			ImGui::TextColored(colors[static_cast<uint32_t>(data.status)], std::format("{} [x{}]", data.label, count).c_str());
+		}
+		
+		if (!data.detail.empty()) {
+			if (ImGui::BeginItemTooltip()) {
+				ImGui::Text(data.detail.c_str());
+				ImGui::EndTooltip();
+			}
+		}
+	}
+
+	ImGui::EndChild();
+	ImGui::End();
 }
 
 void DevelopEditor::BreakPoint() {
