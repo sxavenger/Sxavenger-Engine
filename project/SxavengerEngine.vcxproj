@@ -139,7 +139,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Develop|x64'">
     <ClCompile>
-      <WarningLevel>Level3</WarningLevel>
+      <WarningLevel>Level4</WarningLevel>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
@@ -181,9 +181,6 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     </ProjectReference>
     <ProjectReference Include="externals\imgui\imgui.vcxproj">
       <Project>{a4d2730b-3b09-47db-9a37-3445e9559de4}</Project>
-    </ProjectReference>
-    <ProjectReference Include="externals\imgui\imguizmo\imguizmo.vcxproj">
-      <Project>{466d4740-256c-4d38-99b1-7d046805c23b}</Project>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
