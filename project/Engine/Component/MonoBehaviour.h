@@ -173,6 +173,9 @@ T* MonoBehaviour::AddComponent() {
 
 	if (!components_.Contains(type)) {
 		components_[type] = sComponentStorage->RegisterComponent<T>(this);
+
+	} else {
+		CommentRuntime("comment | [MonoBehaviour]::AddComponent", "component is already added. type: " + std::string(type.name()));
 	}
 
 	return static_cast<T*>(components_[type]->get());
@@ -186,6 +189,8 @@ void MonoBehaviour::RemoveComponent() {
 	if (components_.Contains(type)) {
 		sComponentStorage->UnregisterComponent<T>(components_[type]);
 		components_.Erase(type);
+	} else {
+		CommentRuntime("comment | [MonoBehaviour]::RemoveComponent", "component is not found. type: " + std::string(type.name()));
 	}
 }
 

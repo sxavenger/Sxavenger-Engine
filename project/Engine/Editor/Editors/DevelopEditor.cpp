@@ -185,8 +185,9 @@ void DevelopEditor::ShowConsole() {
 	ImGui::Begin("Console ## Engine Developer Editor", nullptr, BaseEditor::GetWindowFlag());
 
 	//* console option *//
-	static ImColor colors[3] = {
+	static ImColor colors[4] = {
 		ImGui::GetStyle().Colors[ImGuiCol_Text],
+		ImColor(100, 100, 100, 255),
 		ImColor(250, 250, 0, 255),
 		ImColor(250, 0, 0, 255),
 	};

@@ -292,6 +292,10 @@ void LogRuntime(const std::string& label, const std::string& detail, SxavengerLo
 	SxavengerLogger::LogRuntimeA(status, label, detail);
 }
 
+void CommentRuntime(const std::string& label, const std::string& detail) {
+	SxavengerLogger::LogRuntimeA(SxavengerLogger::Status::Comment, label, detail);
+}
+
 void WarningRuntime(const std::string& label, const std::string& detail) {
 	SxavengerLogger::LogRuntimeA(SxavengerLogger::Status::Warning, label, detail);
 }

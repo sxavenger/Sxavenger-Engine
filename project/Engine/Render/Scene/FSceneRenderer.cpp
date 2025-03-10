@@ -54,10 +54,12 @@ Sxl::Flag<FSceneRenderer::Status> FSceneRenderer::CheckStatus(const Config& conf
 	Sxl::Flag<Status> status = Status::Success;
 
 	if (textures_ == nullptr) {
+		WarningRuntime("warning | [FSceneRenderer]::Status", "textures is nullptr.");
 		status |= Status::Error_Textures;
 	}
 
 	if (config.camera == nullptr) {
+		WarningRuntime("warning | [FSceneRenderer]::Status", "camera is nullptr.");
 		status |= Status::Error_Camera;
 	}
 

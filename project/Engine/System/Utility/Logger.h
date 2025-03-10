@@ -39,6 +39,7 @@ public:
 	////////////////////////////////////////////////////////////////////////////////////////////
 	enum class Status {
 		None,
+		Comment,
 		Warning,
 		Error,
 	};
@@ -155,5 +156,6 @@ void Assert(bool expression, const std::string& label = "", const std::string& d
 void AssertW(bool expression, const std::wstring& label = L"", const std::wstring& detail = L"", const std::source_location& location = std::source_location::current());
 
 void LogRuntime(const std::string& label, const std::string& detail = "", SxavengerLogger::Status status = SxavengerLogger::Status::None);
+void CommentRuntime(const std::string& label, const std::string& detail = "");
 void WarningRuntime(const std::string& label, const std::string& detail = "");
 void ErrorRuntime(const std::string& label, const std::string& detail = "");
