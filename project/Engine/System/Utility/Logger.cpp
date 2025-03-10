@@ -52,12 +52,19 @@ std::wstring ToWString(const std::string& str) {
 // static variable
 //=========================================================================================
 
-const std::filesystem::path SxavengerLogger::filepath_ = "SxavengerEngineLog.md";
-
+//* thread safety *//
 std::mutex SxavengerLogger::mutex_;
+
+//* file output parameters *//
+const std::filesystem::path SxavengerLogger::filepath_ = "SxavengerEngineLog.md";
+const std::ofstream::openmode SxavengerLogger::mode_   = std::ofstream::out | std::ofstream::app;
+
+//* log stacks *//
+SxavengerLogger::Container SxavengerLogger::stacks_;
 
 #ifdef _DEVELOPMENT
 #define _OUTPUT_SXAVENGER_LOG_FILE //!< ログファイルに出力するかどうか
+#define _LOG_STACK                 //!< ログスタックを有効にするかどうか
 #endif
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -216,6 +223,15 @@ void SxavengerLogger::TextA(const std::string& mes) {
 void SxavengerLogger::TextW(const std::wstring& mes) {
 	std::wofstream file(filepath_, mode_);
 	file << mes << "\n";
+}
+
+void SxavengerLogger::PushStack(const StackData& data) {
+	if (stacks_.empty() || stacks_.back().first != data) {
+		stacks_.emplace_back(std::make_pair(data, 1));
+
+	} else {
+		stacks_.back().second++;
+	}
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////

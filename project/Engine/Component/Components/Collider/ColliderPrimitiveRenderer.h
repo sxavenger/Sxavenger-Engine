@@ -51,6 +51,7 @@ private:
 	const float kRoundEvery     = (pi_v * 2.0f) / kSubdivision;
 
 	uint32_t index_ = 0;
+	const uint32_t kMaxBuffer = 256;
 
 	//=========================================================================================
 	// private variables
@@ -61,9 +62,38 @@ private:
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// ColliderPrimitiveDrawer class
+// ColliderPrimitiveLine class
 ////////////////////////////////////////////////////////////////////////////////////////////
-class ColliderPrimitiveDrawer {
+class ColliderPrimitiveLine {
+public:
+
+	//=========================================================================================
+	// public methods
+	//=========================================================================================
+
+	void Init();
+
+	void Reset();
+
+	void StackLine(const Vector3f& x, const Vector3f& y, const Color4f& color);
+
+	void Render(const DirectXThreadContext* context, CameraComponent* component);
+
+private:
+
+	//=========================================================================================
+	// private variables
+	//=========================================================================================
+
+
+
+};
+
+
+////////////////////////////////////////////////////////////////////////////////////////////
+// ColliderPrimitiveRenderer class
+////////////////////////////////////////////////////////////////////////////////////////////
+class ColliderPrimitiveRenderer {
 public:
 
 	//=========================================================================================

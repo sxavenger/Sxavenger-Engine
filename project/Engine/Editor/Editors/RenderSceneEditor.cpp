@@ -27,7 +27,7 @@ void RenderSceneEditor::Init() {
 	camera_->AddComponent<TransformComponent>();
 	camera_->AddComponent<CameraComponent>();
 
-	colliderDrawer_ = std::make_unique<ColliderPrimitiveDrawer>();
+	colliderDrawer_ = std::make_unique<ColliderPrimitiveRenderer>();
 	colliderDrawer_->Init();
 }
 

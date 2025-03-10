@@ -47,6 +47,7 @@ public:
 		enum class Type : uint32_t {
 			Value,
 			Texture,
+			Multiply,
 		};
 
 	public:
@@ -62,6 +63,8 @@ public:
 		void SetValue(const Color3f& _color);
 
 		void SetTexture(uint32_t _index);
+
+		void SetMultiply(const Color3f& _color, const std::optional<uint32_t>& _index = std::nullopt);
 
 		//* debug *//
 

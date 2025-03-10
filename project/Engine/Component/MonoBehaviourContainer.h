@@ -24,6 +24,9 @@ public:
 
 	void ForEach(const std::function<void(MonoBehaviour*)>& function);
 
+	template <class _ExecutionPolicy>
+	void ForEach(_ExecutionPolicy&& policy, const std::function<void(MonoBehaviour*)>& function);
+
 	//* singleton *//
 
 	static MonoBehaviourContainer* GetInstance();
@@ -44,6 +47,17 @@ private:
 	void Execute(MonoBehaviour* behaviour, const std::function<void(MonoBehaviour*)>& function);
 
 };
+
+////////////////////////////////////////////////////////////////////////////////////////////
+// MonoBehaviourContainer class template methods
+////////////////////////////////////////////////////////////////////////////////////////////
+
+template <class _ExecutionPolicy>
+inline void MonoBehaviourContainer::ForEach(_ExecutionPolicy&& policy, const std::function<void(MonoBehaviour*)>& function) {
+	std::for_each(policy, container_.begin(), container_.end(), [&](MonoBehaviour* behaviour) {
+		Execute(behaviour, function);
+	});
+}
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // MonoBehaviourContainer class instance

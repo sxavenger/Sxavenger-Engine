@@ -12,6 +12,7 @@
 #include <filesystem>
 #include <fstream>
 #include <mutex>
+#include <vector>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // define
@@ -31,6 +32,50 @@ std::wstring ToWString(const std::string& str);
 // SxavengerLogger class
 ////////////////////////////////////////////////////////////////////////////////////////////
 class SxavengerLogger {
+public:
+
+	////////////////////////////////////////////////////////////////////////////////////////////
+	// Status enum class
+	////////////////////////////////////////////////////////////////////////////////////////////
+	enum class Status {
+		None,
+		Warning,
+		Error,
+	};
+
+	////////////////////////////////////////////////////////////////////////////////////////////
+	// StackData structure
+	////////////////////////////////////////////////////////////////////////////////////////////
+	struct StackData {
+	public:
+
+		//=========================================================================================
+		// operator
+		//=========================================================================================
+
+		bool operator==(const StackData& data) const {
+			return label == data.label && detail == data.detail;
+		}
+
+		bool operator!=(const StackData& data) const {
+			return !(*this == data);
+		}
+
+		//=========================================================================================
+		// public variables
+		//=========================================================================================
+
+		Status status = Status::None;
+		std::string label;
+		std::string detail;
+
+	};
+
+	////////////////////////////////////////////////////////////////////////////////////////////
+	// using
+	////////////////////////////////////////////////////////////////////////////////////////////
+	using Container = std::vector<std::pair<StackData, size_t>>;
+
 public:
 
 	//=========================================================================================
@@ -53,23 +98,36 @@ private:
 	// private variable
 	//=========================================================================================
 
-	static const std::filesystem::path filepath_;
-
-	static const std::ofstream::openmode mode_ = std::ofstream::out | std::ofstream::app;
+	//* thread safety *//
 
 	static std::mutex mutex_;
+
+	//* file output parameter *//
+
+	static const std::filesystem::path filepath_;
+	static const std::ofstream::openmode mode_;
+
+	//* log stacks *//
+
+	static Container stacks_;
 
 	//=========================================================================================
 	// private methods
 	//=========================================================================================
 
+	//* output debug log *//
+
 	static void OutputA(const std::string& mes);
 	static void OutputW(const std::wstring& mes);
 
-	//* write mark down option *//
+	//* output file text *//
 
 	static void TextA(const std::string& mes);
 	static void TextW(const std::wstring& mes);
+
+	//* stack methods *//
+
+	static void PushStack(const StackData& data);
 
 };
 

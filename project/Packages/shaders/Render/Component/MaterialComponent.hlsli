@@ -38,7 +38,7 @@ namespace Material {
 		//=========================================================================================
 		
 		uint type;
-		//!< 0: float3 color, 1: texture
+		//!< 0: float3 color, 1: texture, 2: multiply
 		
 		float3 color;
 		uint index;
@@ -48,12 +48,19 @@ namespace Material {
 		//=========================================================================================
 
 		float3 GetAlbedo(TextureParameter parameter) {
-			if (type == 0) {
-				return color;
+			switch (type) {
+				case 0:
+					return color;
 				
-			} else if (type == 1) {
-				Texture2D<float4> texture = ResourceDescriptorHeap[index];
-				return texture.Sample(parameter.samplers, parameter.texcoord).rgb;
+				case 1:{
+						Texture2D<float4> texture = ResourceDescriptorHeap[index];
+						return texture.Sample(parameter.samplers, parameter.texcoord).rgb;
+					}
+				
+				case 2:{
+						Texture2D<float4> texture = ResourceDescriptorHeap[index];
+						return texture.Sample(parameter.samplers, parameter.texcoord).rgb * color;
+					}
 			}
 
 			return (float3)0; //!< exception

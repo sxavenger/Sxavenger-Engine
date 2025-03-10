@@ -8,7 +8,7 @@
 
 //* engine
 #include <Engine/Component/MonoBehaviour.h>
-#include <Engine/Component/Components/Collider/ColliderPrimitiveDrawer.h>
+#include <Engine/Component/Components/Collider/ColliderPrimitiveRenderer.h>
 #include <Engine/Asset/Texture/AssetTexture.h>
 #include <Engine/Asset/Observer/AssetObserver.h>
 #include <Engine/Render/FRenderTargetTextures.h>
@@ -90,7 +90,7 @@ private:
 
 	//* collider *//
 
-	std::unique_ptr<ColliderPrimitiveDrawer> colliderDrawer_;
+	std::unique_ptr<ColliderPrimitiveRenderer> colliderDrawer_;
 
 	//=========================================================================================
 	// private methods

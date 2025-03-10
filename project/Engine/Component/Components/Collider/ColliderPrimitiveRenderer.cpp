@@ -1,4 +1,4 @@
-#include "ColliderPrimitiveDrawer.h"
+#include "ColliderPrimitiveRenderer.h"
 _DXOBJECT_USING
 
 //-----------------------------------------------------------------------------------------
@@ -18,6 +18,7 @@ _DXOBJECT_USING
 void ColliderPrimitiveSphere::Init() {
 	CreatePipeline();
 
+	//* vertex buffer
 	vb_ = std::make_unique<DxObject::VertexDimensionBuffer<Vector4f>>();
 	vb_->Create(SxavengerSystem::GetDxDevice(), kSubdivision * 3 * 2);
 
@@ -87,7 +88,7 @@ void ColliderPrimitiveSphere::Init() {
 	}
 
 	buffer_ = std::make_unique<DxObject::VectorDimensionBuffer<std::pair<Matrix4x4, Color4f>>>();
-	buffer_->Resize(SxavengerSystem::GetDxDevice(), 256);
+	buffer_->Resize(SxavengerSystem::GetDxDevice(), kMaxBuffer);
 }
 
 void ColliderPrimitiveSphere::Reset() {
@@ -95,6 +96,10 @@ void ColliderPrimitiveSphere::Reset() {
 }
 
 void ColliderPrimitiveSphere::StackBuffer(const Vector3f& position, const CollisionBoundings::Sphere& sphere, const Color4f& color) {
+	if (index_ >= kMaxBuffer) {
+		return; //!< buffer is full.
+	}
+
 	buffer_->At(index_).first  = Matrix::MakeAffine({ sphere.radius, sphere.radius, sphere.radius }, Quaternion::Identity(), position);
 	buffer_->At(index_).second = color;
 	index_++;
@@ -130,6 +135,12 @@ void ColliderPrimitiveSphere::CreatePipeline() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
+// ColliderPrimitiveLine class methods
+////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+////////////////////////////////////////////////////////////////////////////////////////////
 // ColliderPrimitiveVisitor structure
 ////////////////////////////////////////////////////////////////////////////////////////////
 struct ColliderPrimitiveVisitor {
@@ -159,7 +170,7 @@ public:
 	// public variables
 	//=========================================================================================
 
-	ColliderPrimitiveDrawer* drawer = nullptr;
+	ColliderPrimitiveRenderer* drawer = nullptr;
 
 	Vector3f position = {};
 	Color4f color     = {};
@@ -167,19 +178,19 @@ public:
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// ColliderPrimitiveDrawer class methods
+// ColliderPrimitiveRenderer class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-void ColliderPrimitiveDrawer::Init() {
+void ColliderPrimitiveRenderer::Init() {
 	sphere_ = std::make_unique<ColliderPrimitiveSphere>();
 	sphere_->Init();
 }
 
-void ColliderPrimitiveDrawer::Term() {
+void ColliderPrimitiveRenderer::Term() {
 	sphere_.reset();
 }
 
-void ColliderPrimitiveDrawer::Render(const DirectXThreadContext* context, CameraComponent* component) {
+void ColliderPrimitiveRenderer::Render(const DirectXThreadContext* context, CameraComponent* component) {
 	sphere_->Reset();
 
 	sComponentStorage->ForEach<ColliderComponent>([this](ColliderComponent* collider) {
@@ -202,11 +213,11 @@ void ColliderPrimitiveDrawer::Render(const DirectXThreadContext* context, Camera
 	sphere_->Render(context, component);
 }
 
-void ColliderPrimitiveDrawer::StackSphere(const Vector3f& position, const CollisionBoundings::Sphere& sphere, const Color4f& color) {
+void ColliderPrimitiveRenderer::StackSphere(const Vector3f& position, const CollisionBoundings::Sphere& sphere, const Color4f& color) {
 	sphere_->StackBuffer(position, sphere, color);
 }
 
-void ColliderPrimitiveDrawer::SetImGuiCommand() {
+void ColliderPrimitiveRenderer::SetImGuiCommand() {
 	ImGui::ColorEdit3("enable color", &enableColor_.x);
 
 	ImGui::Checkbox("disable render", &isDisableRender_);

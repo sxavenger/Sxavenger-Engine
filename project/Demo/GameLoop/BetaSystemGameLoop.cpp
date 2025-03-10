@@ -15,6 +15,9 @@
 #include <Engine/Component/Components/Collider/CollisionManager.h>
 #include <Engine/Component/MonoBehaviourContainer.h>
 
+//* c++
+#include <execution>
+
 ////////////////////////////////////////////////////////////////////////////////////////////
 // BetaSystemGameLoop class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -94,7 +97,7 @@ void BetaSystemGameLoop::TermSystem() {
 
 void BetaSystemGameLoop::UpdateSystem() {
 
-	sMonoBehaviourContainer->ForEach([](MonoBehaviour* behaviour) {
+	sMonoBehaviourContainer->ForEach(std::execution::par, [](MonoBehaviour* behaviour) {
 		behaviour->UpdateComponent(); // todo: 遅延updateで何とかしたい.
 	});
 	// todo: engine側のgameloopに移動.

@@ -29,6 +29,12 @@ void Material::Albedo::SetTexture(uint32_t _index) {
 	index = _index;
 }
 
+void Material::Albedo::SetMultiply(const Color3f& _color, const std::optional<uint32_t>& _index) {
+	type = Type::Multiply;
+	color = _color;
+	index = _index.value_or(NULL);
+}
+
 void Material::Albedo::SetImGuiCommand() {
 	if (ImGui::RadioButton("value", type == Type::Value)) {
 		type = Type::Value;
@@ -40,12 +46,26 @@ void Material::Albedo::SetImGuiCommand() {
 		type = Type::Texture;
 	}
 
-	if (type == Type::Value) {
-		ImGui::ColorEdit3("color", &color.x);
+	ImGui::SameLine();
 
-	} else {
-		ImGui::Text("texture index: %d", index);
+	if (ImGui::RadioButton("multiply", type == Type::Multiply)) {
+		type = Type::Multiply;
 	}
+
+	switch (type) {
+		case Type::Value:
+			ImGui::ColorEdit3("color", &color.x);
+			break;
+
+		case Type::Texture:
+			ImGui::Text("texture index: %d", index);
+			break;
+
+		case Type::Multiply:
+			ImGui::ColorEdit3("color", &color.x);
+			ImGui::Text("texture index: %d", index);
+			break;
+	};
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
