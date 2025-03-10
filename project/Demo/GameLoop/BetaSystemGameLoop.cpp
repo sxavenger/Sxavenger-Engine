@@ -9,7 +9,7 @@
 #include <Engine/Asset/Observer/AssetObserver.h>
 #include <Engine/Editor/EditorEngine.h>
 #include <Engine/Editor/Editors/DevelopEditor.h>
-#include <Engine/Editor/Editors/OutlinerEditor.h>
+#include <Engine/Editor/Editors/HierarchyEditor.h>
 #include <Engine/Render/FMainRender.h>
 #include <Engine/Component/Components/Collider/ColliderComponent.h>
 #include <Engine/Component/Components/Collider/CollisionManager.h>
@@ -90,6 +90,12 @@ void BetaSystemGameLoop::InitSystem() {
 			}
 		}
 	);
+
+	attribute_ = std::make_unique<Attribute>();
+	attribute_->SetName("attribute yay");
+	attribute_->SetAttributeFunc([this]() {
+		ImGui::Text("attribute yay");
+	});
 }
 
 void BetaSystemGameLoop::TermSystem() {

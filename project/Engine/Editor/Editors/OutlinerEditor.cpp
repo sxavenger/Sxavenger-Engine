@@ -3,19 +3,66 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
-//* editor
-#include "../EditorEngine.h"
-#include "RenderSceneEditor.h"
-
 //* engine
-#include <Engine/Component/MonoBehaviourContainer.h>
+#include <Engine/System/Utility/Logger.h>
+#include <Engine/Editor/EditorEngine.h>
 
 //* external
 #include <imgui.h>
 
-//////////////////////////////////////////////////////////////////////////////////////////
+//* c++
+#include <format>
+
+////////////////////////////////////////////////////////////////////////////////////////////
+// Attribute class methods
+////////////////////////////////////////////////////////////////////////////////////////////
+
+void Attribute::SetToOutliner() {
+	Assert(CheckIteratorEmpty(), "iterator already registered.");
+
+	// outlinerに登録
+	sEditorEngine->ExecuteEditorFunction<OutlinerEditor>([this](OutlinerEditor* editor) {
+		iterator_ = editor->SetAttribute(this);
+	});
+}
+
+void Attribute::RemoveIterator() {
+	Status status = GetStatus();
+
+	if (status == Status::Unregistered) {
+		return;
+	}
+
+	// 選択解除
+	sEditorEngine->ExecuteEditorFunction<OutlinerEditor>([this](OutlinerEditor* editor) {
+		editor->CheckSelectClear(iterator_.value());
+	});
+
+	if (status == Status::Outliner) {
+		// outlinerから削除
+		sEditorEngine->ExecuteEditorFunction<OutlinerEditor>([this](OutlinerEditor* editor) {
+			editor->RemoveAttribute(iterator_.value());
+		});
+	}
+
+	iterator_ = std::nullopt;
+}
+
+Attribute::Status Attribute::GetStatus() const {
+	if (iterator_.has_value()) {
+		return Status::Outliner;
+	}
+
+	return Status::Unregistered;
+}
+
+bool Attribute::CheckIteratorEmpty() const {
+	return GetStatus() == Status::Unregistered;
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////
 // OutlinerEditor class methods
-//////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////
 
 void OutlinerEditor::Init() {
 }
@@ -25,77 +72,66 @@ void OutlinerEditor::ShowMainMenu() {
 
 void OutlinerEditor::ShowWindow() {
 	ShowOutlinerWindow();
-	ShowInspectorWindow();
+	ShowAttributeWindow();
+}
+
+Attribute::Iterator OutlinerEditor::SetAttribute(Attribute* attribute) {
+	return outliner_.emplace(outliner_.end(), attribute);
+}
+
+void OutlinerEditor::RemoveAttribute(const Attribute::Iterator& iterator) {
+	outliner_.erase(iterator);
+}
+
+//void OutlinerEditor::Clear() {
+//	for (auto& attribute : outliner_) {
+//		attribute->RemoveIterator();
+//		// todo: attribute component
+//	}
+//}
+
+void OutlinerEditor::CheckSelectClear(const Attribute::Iterator& iterator) {
+	if (CheckSelected((*iterator))) {
+		selected_ = nullptr;
+	}
 }
 
 void OutlinerEditor::ShowOutlinerWindow() {
 	BaseEditor::SetNextWindowDocking();
 	ImGui::Begin("Outliner ## Outliner Editor", nullptr, BaseEditor::GetWindowFlag());
 
-	for (auto& behaviour : sMonoBehaviourContainer->GetContainer()) {
-		OutlinerSelectable(behaviour);
-	}
+	Selectable(outliner_);
 
 	ImGui::End();
 }
 
-void OutlinerEditor::ShowInspectorWindow() {
+void OutlinerEditor::ShowAttributeWindow() {
 	BaseEditor::SetNextWindowDocking();
-	ImGui::Begin("Inspector ## Outliner Editor", nullptr, BaseEditor::GetWindowFlag());
+	ImGui::Begin("Attribute ## Outliner Editor", nullptr, BaseEditor::GetWindowFlag());
 
-	if (selected_ != nullptr) { // todo: selected behaviour に変更
-		selected_->SetBehaviourImGuiCommand(buf_);
+	if (selected_ != nullptr) {
 
-		// Manipulateの設定
-		BaseEditor::editor_->ExecuteEditorFunction<RenderSceneEditor>([&](RenderSceneEditor* editor) {
-			editor->Manipulate(selected_, ImGuizmo::TRANSLATE, ImGuizmo::WORLD);
-		});
+		ImGui::SeparatorText(selected_->GetName().c_str());
+
+		//!< base imgui
+		selected_->ExecuteAttribute();
 	}
 
 	ImGui::End();
 }
 
-void OutlinerEditor::OutlinerSelectable(MonoBehaviour* behaviour) {
-
-	bool isSelect     = (behaviour == selected_);
-	std::string label = std::format("{} # {:p}", behaviour->GetName(), reinterpret_cast<const void*>(behaviour));
-
-	if (behaviour->GetChildren().empty()) {
-		if (ImGui::Selectable(label.c_str(), isSelect)) {
-			// todo: 選択処理
-			SetSelected(behaviour);
-		}
-
-	} else {
-
-		ImGuiTreeNodeFlags flags
-			= ImGuiTreeNodeFlags_OpenOnDoubleClick
-			| ImGuiTreeNodeFlags_OpenOnArrow;
-
-		if (isSelect) {
-			flags |= ImGuiTreeNodeFlags_Selected;
-		}
-
-		bool isOpen = ImGui::TreeNodeEx(label.c_str(), flags);
-
-		if (ImGui::IsItemClicked()) {
-			SetSelected(behaviour);
-			//localCamera_->Reset();
-		}
-
-		if (isOpen) {
-
-			for (auto& child : behaviour->GetChildren()) {
-				OutlinerSelectable(std::visit(MonoBehaviour::GetPtrVisitor{}, child));
-			}
-
-			ImGui::TreePop();
-		}
-	}
+bool OutlinerEditor::CheckSelected(const Attribute* attribute) const {
+	return attribute == selected_;
 }
 
-void OutlinerEditor::SetSelected(MonoBehaviour* behaviour) {
-	selected_ = behaviour;
-	std::memset(buf_, 0, sizeof(buf_));
-	std::memcpy(buf_, behaviour->GetName().c_str(), behaviour->GetName().size());
+void OutlinerEditor::Selectable(const Attribute::Container& container) {
+
+	for (const auto& attribute : container) {
+		bool isSelect     = CheckSelected(attribute);
+		std::string label = std::format("{} ## {:p}", attribute->GetName(), static_cast<const void*>(attribute));
+
+		if (ImGui::Selectable(label.c_str(), isSelect)) {
+			selected_ = attribute;
+		}
+	}
 }

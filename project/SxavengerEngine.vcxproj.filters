@@ -124,7 +124,6 @@
     <ClCompile Include="Engine\Editor\EditorEngine.cpp" />
     <ClCompile Include="Engine\GameLoop\EditorEngineGameLoop.cpp" />
     <ClCompile Include="Engine\Editor\Editors\DevelopEditor.cpp" />
-    <ClCompile Include="Engine\Editor\Editors\OutlinerEditor.cpp" />
     <ClCompile Include="Engine\Editor\Editors\RenderSceneEditor.cpp" />
     <ClCompile Include="Engine\Component\Components\Camera\CameraComponent.cpp" />
     <ClCompile Include="Engine\Component\Components\Light\DirectionalLightComponent.cpp" />
@@ -144,6 +143,8 @@
     <ClCompile Include="Engine\Render\Canvas\Layer\Layers\LSprite.cpp" />
     <ClCompile Include="Engine\Render\Canvas\Layer\Layers\TextureComponent.cpp" />
     <ClCompile Include="Engine\Render\Canvas\Layer\Layers\Transform2dComponent.cpp" />
+    <ClCompile Include="Engine\Editor\Editors\HierarchyEditor.cpp" />
+    <ClCompile Include="Engine\Editor\Editors\OutlinerEditor.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\System\Window\Window.h" />
@@ -273,7 +274,7 @@
     <ClInclude Include="Engine\Editor\Editors\BaseEditor.h" />
     <ClInclude Include="Engine\GameLoop\EditorEngineGameLoop.h" />
     <ClInclude Include="Engine\Editor\Editors\DevelopEditor.h" />
-    <ClInclude Include="Engine\Editor\Editors\OutlinerEditor.h" />
+    <ClInclude Include="Engine\Editor\Editors\HierarchyEditor.h" />
     <ClInclude Include="Engine\Editor\Editors\RenderSceneEditor.h" />
     <ClInclude Include="Engine\Component\Components\Camera\CameraComponent.h" />
     <ClInclude Include="Engine\Component\Components\Light\DirectionalLightComponent.h" />
@@ -293,6 +294,7 @@
     <ClInclude Include="Engine\Render\Canvas\Layer\Layers\LSprite.h" />
     <ClInclude Include="Engine\Render\Canvas\Layer\Layers\TextureComponent.h" />
     <ClInclude Include="Engine\Render\Canvas\Layer\Layers\Transform2dComponent.h" />
+    <ClInclude Include="Engine\Editor\Editors\OutlinerEditor.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

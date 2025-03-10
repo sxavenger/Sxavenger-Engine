@@ -69,6 +69,10 @@ public:
 
 	void EndTransparentBasePass(const DirectXThreadContext* context) const;
 
+	void BeginCanvasPass(const DirectXThreadContext* context) const;
+
+	void EndCanvasPass(const DirectXThreadContext* context) const;
+
 	//* getter *//
 
 	const Vector2ui& GetSize() const { return size_; }

@@ -15,6 +15,7 @@
 #include <Engine/Render/FPresenter.h>
 #include <Engine/Render/Scene/FScene.h>
 #include <Engine/Render/Scene/FSceneRenderer.h>
+#include <Engine/Editor/Editors/OutlinerEditor.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // BetaSystemGameLoop class
@@ -44,6 +45,8 @@ private:
 	std::unique_ptr<MonoBehaviour> camera_;
 
 	std::unique_ptr<MonoBehaviour> light_;
+
+	std::unique_ptr<Attribute> attribute_;
 
 	//=========================================================================================
 	// private methods
