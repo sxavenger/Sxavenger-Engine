@@ -90,6 +90,9 @@ MonoBehaviour* MonoBehaviour::GetChild(const std::string& name) {
 			return ptr;
 		}
 	}
+
+	WarningRuntime("warning | [MonoBehaviour] GetChild", "child not found.");
+	return nullptr;
 }
 
 void MonoBehaviour::UpdateComponent() {

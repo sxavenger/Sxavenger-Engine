@@ -61,8 +61,6 @@ void BetaSystemGameLoop::InitSystem() {
 	mesh_->AddComponent<TransformComponent>();
 	mesh_->SetActive(false);
 
-	mesh_->GetChild()
-
 	camera_ = std::make_unique<MonoBehaviour>();
 	camera_->AddComponent<TransformComponent>();
 	auto camera = camera_->AddComponent<CameraComponent>();
