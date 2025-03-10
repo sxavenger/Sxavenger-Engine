@@ -8,6 +8,7 @@
 #include <imgui_impl_dx12.h>
 #include <imgui_impl_win32.h>
 #include <ImGuizmo.h>
+#include <imnodes.h>
 
 //* engine
 #include <Engine/System/Window/Window.h>
@@ -34,7 +35,7 @@ public:
 	ImGuiController()  = default;
 	~ImGuiController() { Term(); }
 
-	void Init(Window* mainWindow);
+	void Init(Window* main);
 
 	void Term();
 
@@ -68,5 +69,6 @@ private:
 
 	void SetImGuiStyle();
 	void SettingImGui();
+
 
 };

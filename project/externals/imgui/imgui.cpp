@@ -668,7 +668,6 @@ CODE
  - 2022/01/05 (1.87) - removed io.ImeSetInputScreenPosFn() in favor of more flexible io.SetPlatformImeDataFn(). Removed 'void* io.ImeWindowHandle' in favor of writing to 'void* ImGuiViewport::PlatformHandleRaw'.
  - 2022/01/01 (1.87) - commented out redirecting functions/enums names that were marked obsolete in 1.69, 1.70, 1.71, 1.72 (March-July 2019)
                         - ImGui::SetNextTreeNodeOpen()        -> use ImGui::SetNextItemOpen()
-                        - ImGui::GetContentRegionAvailWidth() -> use ImGui::GetContentRegionAvail().x
                         - ImGui::TreeAdvanceToLabelPos()      -> use ImGui::SetCursorPosX(ImGui::GetCursorPosX() + ImGui::GetTreeNodeToLabelSpacing());
                         - ImFontAtlas::CustomRect             -> use ImFontAtlasCustomRect
                         - ImGuiColorEditFlags_RGB/HSV/HEX     -> use ImGuiColorEditFlags_DisplayRGB/HSV/Hex

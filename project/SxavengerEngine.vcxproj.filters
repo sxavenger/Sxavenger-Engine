@@ -138,6 +138,7 @@
     <ClCompile Include="Engine\Component\Components\Collider\CollisionManager.cpp" />
     <ClCompile Include="Engine\Component\Components\Collider\CollisionCallbackCollection.cpp" />
     <ClCompile Include="Engine\Component\Components\Collider\ColliderPrimitiveDrawer.cpp" />
+    <ClCompile Include="Engine\Editor\Editors\NodeEditor.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\System\Window\Window.h" />
@@ -281,6 +282,7 @@
     <ClInclude Include="Engine\Component\Components\Collider\CollisionManager.h" />
     <ClInclude Include="Engine\Component\Components\Collider\CollisionCallbackCollection.h" />
     <ClInclude Include="Engine\Component\Components\Collider\ColliderPrimitiveDrawer.h" />
+    <ClInclude Include="Engine\Editor\Editors\NodeEditor.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

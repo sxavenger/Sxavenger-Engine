@@ -17,7 +17,7 @@ const std::filesystem::path ImGuiController::kImGuiLayoutFilepath_ = "imgui.ini"
 // ImGuiController class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-void ImGuiController::Init(Window* mainWindow) {
+void ImGuiController::Init(Window* main) {
 	// ImGuiの初期化
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
@@ -26,7 +26,7 @@ void ImGuiController::Init(Window* mainWindow) {
 	ImGui::StyleColorsDark();
 	SetImGuiStyle();
 
-	ImGui_ImplWin32_Init(mainWindow->GetHwnd());
+	ImGui_ImplWin32_Init(main->GetHwnd());
 
 	ImGui_ImplDX12_InitInfo info = {};
 	info.Device            = SxavengerSystem::GetDxDevice()->GetDevice();
@@ -73,10 +73,14 @@ void ImGuiController::Init(Window* mainWindow) {
 	ImGui::LoadIniSettingsFromDisk(filepath.c_str());
 
 	isInit_ = true;
+
+	ImNodes::CreateContext();
 }
 
 void ImGuiController::Term() {
 	if (isInit_) {
+		ImNodes::DestroyContext();
+
 		ImGui_ImplDX12_Shutdown();
 		ImGui_ImplWin32_Shutdown();
 		ImGui::DestroyContext();

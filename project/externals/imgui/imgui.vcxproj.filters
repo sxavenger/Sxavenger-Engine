@@ -42,6 +42,9 @@
     <ClInclude Include="imguizmo\ImGuizmo.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
+    <ClInclude Include="imnode\imnodes.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="imgui.cpp">
@@ -66,6 +69,9 @@
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="imguizmo\ImGuizmo.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="imnode\imnodes.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>

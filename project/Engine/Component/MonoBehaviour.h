@@ -9,6 +9,9 @@
 //* engine
 #include <Engine/System/Utility/Logger.h>
 
+//* lib
+#include <Lib/Sxl/OptimizedMap.h>
+
 //* c++
 #include <typeindex>
 #include <unordered_map>
@@ -29,7 +32,7 @@ public:
 	////////////////////////////////////////////////////////////////////////////////////////////
 
 	//* component container
-	using ComponentContainer = std::unordered_map<std::type_index, ComponentStorage::ComponentIterator>;
+	using ComponentContainer = Sxl::OptimizedMap<std::type_index, ComponentStorage::ComponentIterator>;
 
 	//* behaviour hierarchy
 	using Hierarchy         = std::list<std::variant<MonoBehaviour*, std::unique_ptr<MonoBehaviour>>>;
@@ -168,7 +171,7 @@ T* MonoBehaviour::AddComponent() {
 
 	std::type_index type = typeid(T);
 
-	if (!components_.contains(type)) {
+	if (!components_.Contains(type)) {
 		components_[type] = sComponentStorage->RegisterComponent<T>(this);
 	}
 
@@ -180,9 +183,9 @@ void MonoBehaviour::RemoveComponent() {
 
 	std::type_index type = typeid(T);
 
-	if (components_.contains(type)) {
+	if (components_.Contains(type)) {
 		sComponentStorage->UnregisterComponent<T>(components_[type]);
-		components_.erase(type);
+		components_.Erase(type);
 	}
 }
 
@@ -191,8 +194,8 @@ T* MonoBehaviour::GetComponent() const {
 
 	std::type_index type = typeid(T);
 
-	if (components_.contains(type)) {
-		return static_cast<T*>(components_.at(type)->get());
+	if (components_.Contains(type)) {
+		return static_cast<T*>(components_.At(type)->get());
 	}
 
 	return nullptr;

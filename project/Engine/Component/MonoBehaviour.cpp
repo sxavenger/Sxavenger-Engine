@@ -38,11 +38,11 @@ void MonoBehaviour::Term() {
 	}
 
 	// componentの登録解除
-	std::for_each(std::execution::seq, components_.begin(), components_.end(), [](const std::pair<std::type_index, ComponentStorage::ComponentIterator>& pair) {
+	std::for_each(std::execution::seq, components_.GetMap().begin(), components_.GetMap().end(), [](const std::pair<std::type_index, ComponentStorage::ComponentIterator>& pair) {
 		const auto& [type, iterator] = pair;
 		sComponentStorage->UnregisterComponent(type, iterator);
 	});
-	components_.clear();
+	components_.Clear();
 
 	// containerの登録解除
 	if (containerIterator_.has_value()) {
@@ -103,7 +103,7 @@ void MonoBehaviour::SetBehaviourImGuiCommand(char buf[256]) {
 
 	ImGui::Separator();
 
-	for (const auto& [type, component] : GetComponents()) {
+	for (const auto& [type, component] : GetComponents().GetMap()) {
 		if (ImGui::CollapsingHeader(type.name())) {
 			(*component)->InspectorImGui();
 		}

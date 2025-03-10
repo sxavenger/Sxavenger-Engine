@@ -73,9 +73,12 @@ void BetaSystemGameLoop::InitSystem() {
 	transform->GetTransform().rotate = AxisAngle({ 1.0f, 0.0f, 0.0f }, pi_v / 2.0f);
 	auto light = light_->AddComponent<DirectionalLightComponent>();
 	light->Init();
+	light_->AddComponent<ColliderComponent>()->SetColliderBoundingSphere({ 1.0f });
+	light_->GetComponent<ColliderComponent>()->SetTag("tag1");
+
 
 	sCollisionManager->SetOnCollisionFunctions(
-		"tag1", "tag2", {
+		"tag2", "tag1", {
 			[](ColliderComponent*, ColliderComponent*) {
 				Log("on collision enter");
 			},

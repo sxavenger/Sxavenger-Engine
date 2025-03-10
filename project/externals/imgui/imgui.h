@@ -3974,6 +3974,7 @@ namespace ImGui
 #include IMGUI_USER_H_FILENAME
 #else
 #include "imgui_user.h"
+#include "imgui_extra_math.h"
 #endif
 #endif
 
