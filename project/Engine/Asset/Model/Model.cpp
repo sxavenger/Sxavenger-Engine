@@ -129,6 +129,25 @@ std::unique_ptr<MonoBehaviour> Model::CreateMonoBehavior(const std::string& name
 	return std::move(root); 
 }
 
+void Model::CreateMonoBehavior(MonoBehaviour* root) {
+	// MonoBehaviorの登録
+	std::for_each(/*std::execution::seq, */meshes_.begin(), meshes_.end(), [this, root](AssimpMesh& mesh) {
+		auto child = std::make_unique<MonoBehaviour>();
+		child->SetName(mesh.name);
+
+		// transform component
+		auto transform = child->AddComponent<TransformComponent>();
+		transform->CreateBuffer();
+
+		// renderer component
+		auto renderer = child->AddComponent<MeshRendererComponent>();
+		renderer->SetMesh(&mesh.input);
+		renderer->SetMaterial(&GetMaterial(mesh.materialIndex.value()));
+
+		root->AddChild(std::move(child));
+	});
+}
+
 Vector3f Model::ConvertNormal(const aiVector3D& aiVector) {
 	return { aiVector.x, aiVector.y, -aiVector.z }; //!< 左手座標系に変換
 }

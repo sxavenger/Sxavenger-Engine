@@ -129,6 +129,8 @@ public:
 
 	std::unique_ptr<MonoBehaviour> CreateMonoBehavior(const std::string& name = "model");
 
+	void CreateMonoBehavior(MonoBehaviour* root);
+
 	//* root option *//
 
 	const BornNode& GetRoot() const { return root_; }
