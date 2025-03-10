@@ -148,6 +148,7 @@
     <ClCompile Include="Engine\Adapter\Scene\BaseScene.cpp" />
     <ClCompile Include="Engine\Adapter\Scene\BaseSceneFactory.cpp" />
     <ClCompile Include="Engine\Adapter\Scene\SceneController.cpp" />
+    <ClCompile Include="Engine\Component\Components\MeshRenderer\SkinnedMeshRendererComponent.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\System\Window\Window.h" />
@@ -301,6 +302,7 @@
     <ClInclude Include="Engine\Adapter\Scene\BaseScene.h" />
     <ClInclude Include="Engine\Adapter\Scene\BaseSceneFactory.h" />
     <ClInclude Include="Engine\Adapter\Scene\SceneController.h" />
+    <ClInclude Include="Engine\Component\Components\MeshRenderer\SkinnedMeshRendererComponent.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

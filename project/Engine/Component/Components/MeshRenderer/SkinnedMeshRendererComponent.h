@@ -3,43 +3,35 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
-//* actor
-#include "../AActor.h"
+//* component
+#include "../../BaseComponent.h"
+#include "../Transform/TransformComponent.h"
 
 //* engine
-#include <Engine/System/DirectX/DxObject/DxDimensionBuffer.h>
-
-//* c++
-#include <memory>
+#include <Engine/Content/InputAssembler/InputMesh.h>
+#include <Engine/Content/Material/Material.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// ACameraActor class
+// SkinnedMeshRendererComponent class
 ////////////////////////////////////////////////////////////////////////////////////////////
-class ACameraActor
-	: public AActor {
+class SkinnedMeshRendererComponent final
+	: public BaseComponent {
 public:
 
 	////////////////////////////////////////////////////////////////////////////////////////////
-	// Camera structure
+	// InputSkinnedMesh structure
 	////////////////////////////////////////////////////////////////////////////////////////////
-	struct Camera {
+	struct InputSkinnedMesh {
+	public:
 
-		//* member *//
+		//=========================================================================================
+		// public variables
+		//=========================================================================================
 
-		Matrix4x4 view;
-		Matrix4x4 world;
-		Matrix4x4 proj;
-		Matrix4x4 projInv;
-		/*float nearZ;
-		float farZ;*/
 
-		//* method *//
 
-		void Init();
-
-		void TransferView(const Matrix4x4& _world);
-		void TransferProj(const Matrix4x4& _proj);
 	};
+
 
 public:
 
@@ -47,29 +39,17 @@ public:
 	// public methods
 	//=========================================================================================
 
-	ACameraActor()          = default;
-	virtual ~ACameraActor() = default;
+	SkinnedMeshRendererComponent(MonoBehaviour* behaviour) : BaseComponent(behaviour) {}
+	~SkinnedMeshRendererComponent() override = default;
 
-	void Init();
+	const TransformComponent* GetTransform() const;
 
-	void UpdateView();
-
-	void UpdateProj(const Matrix4x4& proj);
-
-	virtual void InspectorImGui() override;
-
-	//* getter *//
-
-	const D3D12_GPU_VIRTUAL_ADDRESS& GetGPUVirtualAddress() const;
-
-	const Camera& GetCamera() const { return buffer_->At(0); }
-
-protected:
+private:
 
 	//=========================================================================================
-	// protected variables
+	// private variables
 	//=========================================================================================
 
-	std::unique_ptr<DxObject::DimensionBuffer<Camera>> buffer_;
+
 
 };
