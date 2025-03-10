@@ -327,4 +327,4 @@ FodyWeavers.xsd
 
 # vvv this is user ignorable. vvv
 project/SxavengerEngineLog.md
-project/externals/DirectXTex/Shader/Compiled
+project/externals/DirectXTex/Shaders/Compiled
