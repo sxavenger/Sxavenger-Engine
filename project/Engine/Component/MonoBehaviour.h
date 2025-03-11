@@ -13,7 +13,7 @@
 #include <Lib/Sxl/OptimizedMap.h>
 
 //* c++
-#include <typeindex>
+#include <typeinfo>
 #include <unordered_map>
 #include <string>
 #include <list>
@@ -32,7 +32,7 @@ public:
 	////////////////////////////////////////////////////////////////////////////////////////////
 
 	//* component container
-	using ComponentContainer = Sxl::OptimizedMap<std::type_index, ComponentStorage::ComponentIterator>;
+	using ComponentContainer = Sxl::OptimizedMap<const std::type_info*, ComponentStorage::ComponentIterator>;
 
 	//* behaviour hierarchy
 	using HierarchyElement  = std::variant<MonoBehaviour*, std::unique_ptr<MonoBehaviour>>;
@@ -172,13 +172,13 @@ private:
 template <Component T>
 T* MonoBehaviour::AddComponent() {
 
-	std::type_index type = typeid(T);
+	constexpr const std::type_info* type = &typeid(T);
 
 	if (!components_.Contains(type)) {
 		components_[type] = sComponentStorage->RegisterComponent<T>(this);
 
 	} else {
-		CommentRuntime("comment | [MonoBehaviour]::AddComponent", "component is already added. type: " + std::string(type.name()));
+		CommentRuntime("comment | [MonoBehaviour]::AddComponent", "component is already added. type: " + std::string(type->name()));
 	}
 
 	return static_cast<T*>(components_[type]->get());
@@ -187,20 +187,20 @@ T* MonoBehaviour::AddComponent() {
 template <Component T>
 void MonoBehaviour::RemoveComponent() {
 
-	std::type_index type = typeid(T);
+	constexpr const std::type_info* type = &typeid(T);
 
 	if (components_.Contains(type)) {
 		sComponentStorage->UnregisterComponent<T>(components_[type]);
 		components_.Erase(type);
 	} else {
-		CommentRuntime("comment | [MonoBehaviour]::RemoveComponent", "component is not found. type: " + std::string(type.name()));
+		CommentRuntime("comment | [MonoBehaviour]::RemoveComponent", "component is not found. type: " + std::string(type->name()));
 	}
 }
 
 template <Component T>
 T* MonoBehaviour::GetComponent() const {
 
-	std::type_index type = typeid(T);
+	constexpr const std::type_info* type = &typeid(T);
 
 	if (components_.Contains(type)) {
 		return static_cast<T*>(components_.At(type)->get());

@@ -114,15 +114,15 @@ void EditorEngine::ShowEditorMenu() {
 				ImGui::TableSetupColumn("display");
 				ImGui::TableHeadersRow();
 
-				for (const auto& [typeindex, editor] : editors_) {
+				for (const auto& [type, editor] : editors_) {
 					ImGui::TableNextRow();
 
 					ImGui::TableNextColumn();
-					ImGui::Text(typeindex.name());
+					ImGui::Text(type->name());
 					ImGui::SameLine();
 					ImGui::Dummy({ 16.0f, 0.0f });
 
-					std::string ptr = std::format("{:p}", reinterpret_cast<const void*>(editor.get()));
+					std::string ptr = std::format("{:p}", static_cast<const void*>(editor.get()));
 
 					ImGui::TableNextColumn();
 					ImGui::Text(ptr.c_str());

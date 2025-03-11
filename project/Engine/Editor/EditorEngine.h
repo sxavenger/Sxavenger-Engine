@@ -12,7 +12,7 @@
 //* c++
 #include <string>
 #include <unordered_map>
-#include <typeindex>
+#include <typeinfo>
 #include <memory>
 #include <functional>
 
@@ -81,7 +81,7 @@ private:
 
 	//* editor *//
 
-	std::unordered_map<std::type_index, std::unique_ptr<BaseEditor>> editors_;
+	std::unordered_map<const std::type_info*, std::unique_ptr<BaseEditor>> editors_;
 
 	//=========================================================================================
 	// private methods
@@ -113,32 +113,41 @@ static EditorEngine* const sEditorEngine = EditorEngine::GetInstance();
 template <BaseEditorDerived T>
 inline void EditorEngine::RegisterEditor() {
 #ifdef _DEVELOPMENT
-	if (editors_.contains(typeid(T))) {
+
+	constexpr const std::type_info* type = &typeid(T);
+
+	if (editors_.contains(type)) {
 		return;
 	}
 
 	auto ptr = std::make_unique<T>(this);
 	ptr->Init();
-	editors_.emplace(typeid(T), std::move(ptr));
+	editors_.emplace(type, std::move(ptr));
 #endif // _DEVELOPMENT
 }
 
 template <BaseEditorDerived T>
 inline void EditorEngine::RemoveEditor() {
-	editors_.erase(typeid(T));
+	editors_.erase(&typeid(T));
 }
 
 template <BaseEditorDerived T>
 inline T* EditorEngine::GetEditor() {
-	Assert(editors_.contains(typeid(T)), "editor is not found.");
-	return static_cast<T*>(editors_.at(typeid(T)).get());
+
+	constexpr const std::type_info* type = &typeid(T);
+
+	Assert(editors_.contains(type), "editor is not found.");
+	return static_cast<T*>(editors_.at(type).get());
 }
 
 template <BaseEditorDerived T>
 inline T* EditorEngine::TryGetEditor() {
 #ifdef _DEVELOPMENT
-	if (editors_.contains(typeid(T))) {
-		return static_cast<T*>(editors_.at(typeid(T)).get());
+
+	constexpr const std::type_info* type = &typeid(T);
+
+	if (editors_.contains(type)) {
+		return static_cast<T*>(editors_.at(type).get());
 	}
 #endif // _DEVELOPMENT
 

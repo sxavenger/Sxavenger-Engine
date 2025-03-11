@@ -4,7 +4,7 @@
 // ComponentStorage class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-void ComponentStorage::UnregisterComponent(std::type_index type, const ComponentIterator& iterator) {
+void ComponentStorage::UnregisterComponent(const std::type_info* type, const ComponentIterator& iterator) {
 	storage_.at(type).erase(iterator);
 }
 

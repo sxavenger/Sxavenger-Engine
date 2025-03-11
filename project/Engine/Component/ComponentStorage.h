@@ -39,7 +39,7 @@ public:
 	template <Component T>
 	void UnregisterComponent(const ComponentIterator& iterator);
 
-	void UnregisterComponent(std::type_index type, const ComponentIterator& iterator);
+	void UnregisterComponent(const std::type_info* type, const ComponentIterator& iterator);
 
 	template <Component T>
 	void ForEach(const std::function<void(T*)>& func);
@@ -47,7 +47,7 @@ public:
 	//* getter *//
 
 	template <Component T>
-	ComponentContainer& GetComponentContainer() { return storage_[typeid(T)]; }
+	ComponentContainer& GetComponentContainer() { return storage_[&typeid(T)]; }
 
 	//* singleton *//
 
@@ -59,7 +59,7 @@ private:
 	// private variables
 	//=========================================================================================
 
-	std::unordered_map<std::type_index, ComponentContainer> storage_;
+	std::unordered_map<const std::type_info*, ComponentContainer> storage_;
 
 };
 
@@ -69,7 +69,7 @@ private:
 
 template <Component T>
 ComponentStorage::ComponentIterator ComponentStorage::RegisterComponent(MonoBehaviour* behavior) {
-	std::type_index type = typeid(T);
+	constexpr const std::type_info* type = &typeid(T);
 
 	if (!storage_.contains(type)) {
 		storage_[type] = ComponentContainer();
@@ -81,12 +81,12 @@ ComponentStorage::ComponentIterator ComponentStorage::RegisterComponent(MonoBeha
 
 template <Component T>
 inline void ComponentStorage::UnregisterComponent(const ComponentIterator& iterator) {
-	storage_[typeid(T)].erase(iterator);
+	storage_[&typeid(T)].erase(iterator);
 }
 
 template <Component T>
 void ComponentStorage::ForEach(const std::function<void(T*)>& func) {
-	for (auto& component : storage_[typeid(T)]) {
+	for (auto& component : storage_[&typeid(T)]) {
 		func(static_cast<T*>(component.get()));
 	}
 }
