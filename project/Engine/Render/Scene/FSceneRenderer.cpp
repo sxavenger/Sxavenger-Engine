@@ -150,12 +150,43 @@ void FSceneRenderer::LightingPass(const DirectXThreadContext* context, const Con
 
 	textures_->BeginLightingPass(context);
 
+	//!< EmptyLight
+	LightingEmpty(context, config);
+
 	//!< DirectionalLight
 	LightingPassDirectionalLight(context, config);
 	
 
 	textures_->EndLightingPass(context);
 
+}
+
+void FSceneRenderer::LightingEmpty(const DirectXThreadContext* context, const Config& config) {
+	FRenderCoreLight::LightType emptyType = FRenderCoreLight::LightType::Empty;
+
+	FRenderCore::GetInstance()->GetLight()->SetPipeline(
+		emptyType, context, textures_->GetSize()
+	);
+
+	FRenderCore::GetInstance()->GetLight()->BindIABuffer(context);
+
+	DxObject::BindBufferDesc parameter = {};
+	// common parameter
+	parameter.SetAddress("gCamera",config.camera->GetGPUVirtualAddress());
+	parameter.SetAddress("gScene", FMainRender::GetInstance()->GetScene()->GetTopLevelAS().GetGPUVirtualAddress());
+
+	// deferred paraemter
+	parameter.SetHandle("gDepth",    textures_->GetDepth()->GetRasterizerGPUHandleSRV());
+	parameter.SetHandle("gAlbedo",   textures_->GetGBuffer(FRenderTargetTextures::GBufferLayout::Albedo)->GetGPUHandleSRV());
+	parameter.SetHandle("gNormal",   textures_->GetGBuffer(FRenderTargetTextures::GBufferLayout::Normal)->GetGPUHandleSRV());
+	parameter.SetHandle("gPosition", textures_->GetGBuffer(FRenderTargetTextures::GBufferLayout::Position)->GetGPUHandleSRV());
+	parameter.SetHandle("gMaterial", textures_->GetGBuffer(FRenderTargetTextures::GBufferLayout::Material_AO)->GetGPUHandleSRV());
+
+	FRenderCore::GetInstance()->GetLight()->BindGraphicsBuffer(
+		emptyType, context, parameter
+	);
+
+	FRenderCore::GetInstance()->GetLight()->DrawCall(context);
 }
 
 void FSceneRenderer::LightingPassDirectionalLight(const DirectXThreadContext* context, const Config& config) {
