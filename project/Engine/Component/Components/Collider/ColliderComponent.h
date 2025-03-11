@@ -54,6 +54,8 @@ public:
 	ColliderComponent(MonoBehaviour* behaviour) : BaseComponent(behaviour) {}
 	virtual ~ColliderComponent() = default;
 
+	virtual void InspectorImGui() override {}
+
 	//* bounding option *//
 
 	void SetColliderBoundingSphere(const CollisionBoundings::Sphere& sphere = { .radius = 1.0f });
@@ -91,6 +93,12 @@ public:
 
 	const std::string& GetTag() const { return tag_; }
 
+	//* active option *//
+
+	void SetActive(bool isActive) { isActive_ = isActive; }
+
+	bool IsActive() const { return isActive_ && BaseComponent::IsActive(); }
+
 	//* other component option *//
 
 	TransformComponent* GetTransform() const;
@@ -100,6 +108,10 @@ private:
 	//=========================================================================================
 	// private variables
 	//=========================================================================================
+
+	//* active *//
+
+	bool isActive_ = true;
 
 	//* tag *//
 

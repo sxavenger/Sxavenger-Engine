@@ -60,6 +60,7 @@ void BetaSystemGameLoop::InitSystem() {
 	collider->SetTag("tag1");
 	mesh_->AddComponent<TransformComponent>();
 	mesh_->SetActive(false);
+	mesh_->SetView(false);
 
 	camera_ = std::make_unique<MonoBehaviour>();
 	camera_->AddComponent<TransformComponent>();
