@@ -93,7 +93,8 @@ bool IsNan(const Quaternion& q);
 // angle methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-constexpr const float pi_v = std::numbers::pi_v<float>;
+constexpr const float pi_v  = std::numbers::pi_v<float>;
+constexpr const float tau_v = std::numbers::pi_v<float> * 2.0f;
 
 constexpr const float kRadToDeg = 180.0f / pi_v;
 constexpr const float kDegToRad = pi_v / 180.0f;

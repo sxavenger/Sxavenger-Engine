@@ -46,9 +46,11 @@ public:
 
 	void SetOnCollisionFunctions(const std::string& x, const std::string& y, const OnCollisionCallbacks& functions);
 
-	void CallbackOnCollisionEnter(ColliderComponent* rhs, ColliderComponent* lhs) const;
-	void CallbackOnCollisionExit(ColliderComponent* rhs, ColliderComponent* lhs) const;
-	void CallbackOnCollisionStay(ColliderComponent* rhs, ColliderComponent* lhs) const;
+	void CallbackOnCollisionEnter(ColliderComponent* lhs, ColliderComponent* rhs) const;
+	void CallbackOnCollisionExit(ColliderComponent* lhs, ColliderComponent* rhs) const;
+	void CallbackOnCollisionStay(ColliderComponent* lhs, ColliderComponent* rhs) const;
+
+	bool CheckRegistered(ColliderComponent* lhs, ColliderComponent* rhs) const;
 
 private:
 

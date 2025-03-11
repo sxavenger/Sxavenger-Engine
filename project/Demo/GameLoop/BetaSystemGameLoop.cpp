@@ -70,6 +70,8 @@ void BetaSystemGameLoop::InitSystem() {
 	collider2->SetColliderBoundingSphere({ 1.0f });
 	collider2->SetTag("tag2");
 
+	//camera_->GetChild();
+
 
 	light_ = std::make_unique<MonoBehaviour>();
 	auto transform = light_->AddComponent<TransformComponent>();

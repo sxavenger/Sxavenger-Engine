@@ -60,6 +60,8 @@ void Model::Load(const DirectXThreadContext* context, const std::filesystem::pat
 	LoadMesh(aiScene);
 	LoadMaterial(aiScene, context, filepath.parent_path());
 	root_ = ReadNode(aiScene->mRootNode);
+
+	CreateSkeleton();
 }
 
 void Model::Term() {
@@ -73,6 +75,10 @@ const Model::AssimpMaterial& Model::GetMaterial(uint32_t index) const {
 Model::AssimpMaterial& Model::GetMaterial(uint32_t index) {
 	CheckMaterialIndex(index);
 	return materials_.at(index);
+}
+
+const Model::AssimpMesh& Model::GetMesh(uint32_t index) const {
+	return GetMeshes().at(index);
 }
 
 //void Model::CreateBottomLevelAS(const DirectXThreadContext* context) {
@@ -354,6 +360,10 @@ BornNode Model::ReadNode(aiNode* node) {
 	}
 
 	return result;
+}
+
+void Model::CreateSkeleton() {
+	skeleton_.Create(root_);
 }
 
 bool Model::CheckMeshIndex(uint32_t meshIndex) const {

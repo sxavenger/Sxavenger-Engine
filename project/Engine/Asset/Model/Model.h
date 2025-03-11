@@ -11,6 +11,7 @@
 #include <Engine/Content/InputAssembler/InputMesh.h>
 #include <Engine/Content/Animation/JointWeight.h>
 #include <Engine/Content/Animation/BornNode.h>
+#include <Engine/Content/Animation/Skeleton.h>
 #include <Engine/Component/MonoBehaviour.h>
 
 //* external
@@ -112,6 +113,8 @@ public:
 	const MeshContainer& GetMeshes() const { return meshes_; }
 	MeshContainer& GetMeshes() { return meshes_; }
 
+	const AssimpMesh& GetMesh(uint32_t index) const;
+
 	//const AssimpMesh& GetMesh(uint32_t index) const;
 	//AssimpMesh& GetMesh(uint32_t index);
 
@@ -135,6 +138,8 @@ public:
 
 	const BornNode& GetRoot() const { return root_; }
 
+	const Skeleton& GetSkeleton() { return skeleton_; }
+
 	//* parameter option *//
 
 	static const uint32_t GetDefaultAssimpOption() { return kDefaultAssimpOption_; }
@@ -149,6 +154,7 @@ private:
 	MaterialContainer materials_;
 
 	BornNode root_;
+	Skeleton skeleton_;
 
 	//* parameter *//
 
@@ -172,6 +178,8 @@ private:
 	void LoadMaterial(const aiScene* aiScene, const DirectXThreadContext* context, const std::filesystem::path& directory);
 
 	BornNode ReadNode(aiNode* node);
+
+	void CreateSkeleton();
 
 	bool CheckMeshIndex(uint32_t meshIndex) const;
 	bool CheckMaterialIndex(uint32_t materialIndex) const;
