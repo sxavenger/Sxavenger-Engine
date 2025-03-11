@@ -223,10 +223,30 @@ void ImGuiController::SettingImGui() {
 	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 	// imgui dockingブランチを参照...
 	
-	{ //!< fontの変更
-		std::string filepath = "packages/font/FiraMono-Regular.ttf";
-		io.Fonts->AddFontFromFileTTF(filepath.c_str(), 14.0f);
+	{ //!< fontの変更 english
+		std::filesystem::path filepath = "packages/font/FiraMono-Regular.ttf";
+		io.Fonts->AddFontFromFileTTF(filepath.generic_string().c_str(), 14.0f);
 	}
+
+	{ //!< fontの変更 japanese
+
+		ImFontConfig config = {};
+		config.MergeMode = true;
+
+		static const ImWchar ranges[] = {
+			static_cast<ImWchar>(0x0020), static_cast<ImWchar>(0x00FF),   //!< Basic Latin + Latin-1 Supplement
+			static_cast<ImWchar>(0x3000), static_cast<ImWchar>(0x30FF),   //!< CJK Symbols and Punctuation + Hiragana + Katakana
+			static_cast<ImWchar>(0x4E00), static_cast<ImWchar>(0x9FAF),   //!< CJK Unified Ideographs
+			static_cast<ImWchar>(0xFF00), static_cast<ImWchar>(0xFFEF),   //!< Half-width characters
+			static_cast<ImWchar>(0x1F000), static_cast<ImWchar>(0x1F02F), //!< Emoticons
+			static_cast<ImWchar>(0)
+		};
+
+		std::filesystem::path filepath = "packages/font/MPLUSRounded1c-Regular.ttf";
+		io.Fonts->AddFontFromFileTTF(filepath.generic_string().c_str(), 16.0f, &config, ranges);
+	}
+
+	io.Fonts->Build();
 
 	{ //!< imguiの書き込み, 読み込みを手動に変更
 		io.IniFilename = NULL;

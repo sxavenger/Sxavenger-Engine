@@ -97,7 +97,7 @@ void BetaSystemGameLoop::InitSystem() {
 	attribute_ = std::make_unique<Attribute>();
 	attribute_->SetName("attribute yay");
 	attribute_->SetAttributeFunc([this]() {
-		ImGui::Text("attribute yay");
+		ImGui::Text("これはお試し WASD");
 	});
 }
 
