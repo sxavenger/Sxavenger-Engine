@@ -8,6 +8,10 @@
 #include "Components/Transform/TransformComponent.h"
 #include "Components/Camera/CameraComponent.h"
 
+//* engine
+#include <Engine/Editor/EditorEngine.h>
+#include <Engine/Editor/Editors/HierarchyEditor.h>
+
 //* external
 #include <imgui.h>
 
@@ -48,6 +52,11 @@ void MonoBehaviour::Term() {
 	if (containerIterator_.has_value()) {
 		sMonoBehaviourContainer->RemoveBehaviour(containerIterator_.value());
 	}
+
+	// editorの削除
+	sEditorEngine->ExecuteEditorFunction<HierarchyEditor>([this](HierarchyEditor* editor) {
+		editor->CheckResetBehaviour(this);
+	});
 }
 
 void MonoBehaviour::SetParent(MonoBehaviour* parent) {

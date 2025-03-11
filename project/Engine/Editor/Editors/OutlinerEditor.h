@@ -30,7 +30,8 @@ public:
 	////////////////////////////////////////////////////////////////////////////////////////////
 	enum class Status : uint8_t {
 		Unregistered, //!< 未登録
-		Outliner      //!< outlinerとして設定
+		Outliner,     //!< outlinerとして設定
+		Child         //!< childとして設定
 	};
 
 public:
@@ -40,7 +41,11 @@ public:
 	//=========================================================================================
 
 	Attribute() { SetToOutliner(); }
-	~Attribute() { RemoveIterator(); }
+	~Attribute() { Term(); }
+
+	void Term();
+
+	//* function option *//
 
 	void ExecuteAttribute() { attributeFunc_(); }
 
@@ -56,6 +61,10 @@ public:
 
 	void RemoveIterator();
 
+	void SetParent(Attribute* parent);
+
+	void SetChild(Attribute* child);
+
 	//* getter *//
 
 	const std::string& GetName() const { return name_; }
@@ -63,13 +72,19 @@ public:
 
 	void SetAttributeFunc(const std::function<void()>& func) { attributeFunc_ = func; }
 
+	const Container& GetChildren() const { return children_; }
+
 protected:
 
 	//=========================================================================================
 	// protected variables
 	//=========================================================================================
 
+	//* name *//
+
 	std::string name_ = "new attribute";
+
+	//* function *//
 
 	std::function<void()> attributeFunc_ = [this]() { AttributeImGui(); };
 
@@ -81,9 +96,20 @@ private:
 
 	std::optional<Iterator> iterator_;
 
+	Attribute* parent_ = nullptr;
+	Container children_;
+
+	//=========================================================================================
+	// private methods
+	//=========================================================================================
+
 	Status GetStatus() const;
 
 	bool CheckIteratorEmpty() const;
+
+	Iterator AddChildren(Attribute* child);
+
+	void EraseChild(const Iterator& iterator);
 
 };
 

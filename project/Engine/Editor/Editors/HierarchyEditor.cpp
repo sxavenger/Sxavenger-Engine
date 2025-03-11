@@ -28,6 +28,12 @@ void HierarchyEditor::ShowWindow() {
 	ShowInspectorWindow();
 }
 
+void HierarchyEditor::CheckResetBehaviour(MonoBehaviour* behaviour) {
+	if (behaviour == selected_) {
+		selected_ = nullptr;
+	}
+}
+
 void HierarchyEditor::ShowHierarchyWindow() {
 	BaseEditor::SetNextWindowDocking();
 	ImGui::Begin("Hierarchy ## Hierarchy Editor", nullptr, BaseEditor::GetWindowFlag());

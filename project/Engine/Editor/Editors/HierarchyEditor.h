@@ -29,6 +29,8 @@ public:
 
 	void ShowWindow() override;
 
+	void CheckResetBehaviour(MonoBehaviour* behaviour);
+
 private:
 
 	//=========================================================================================

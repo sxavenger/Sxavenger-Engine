@@ -17,16 +17,26 @@
 // Attribute class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
+void Attribute::Term() {
+	while (!children_.empty()) {
+		children_.front()->RemoveIterator();
+	}
+
+	RemoveIterator();
+}
+
 void Attribute::SetToOutliner() {
 	Assert(CheckIteratorEmpty(), "iterator already registered.");
 
 	// outlinerに登録
 	sEditorEngine->ExecuteEditorFunction<OutlinerEditor>([this](OutlinerEditor* editor) {
 		iterator_ = editor->SetAttribute(this);
+		parent_   = nullptr;
 	});
 }
 
 void Attribute::RemoveIterator() {
+
 	Status status = GetStatus();
 
 	if (status == Status::Unregistered) {
@@ -43,14 +53,28 @@ void Attribute::RemoveIterator() {
 		sEditorEngine->ExecuteEditorFunction<OutlinerEditor>([this](OutlinerEditor* editor) {
 			editor->RemoveAttribute(iterator_.value());
 		});
+
+	} else if (status == Status::Child) {
+		parent_->EraseChild(iterator_.value());
 	}
 
+	parent_   = nullptr;
 	iterator_ = std::nullopt;
+}
+
+void Attribute::SetParent(Attribute* parent) {
+	RemoveIterator();
+	parent_   = parent;
+	iterator_ = parent->AddChildren(this);
+}
+
+void Attribute::SetChild(Attribute* child) {
+	child->SetParent(this);
 }
 
 Attribute::Status Attribute::GetStatus() const {
 	if (iterator_.has_value()) {
-		return Status::Outliner;
+		return parent_ == nullptr ? Status::Outliner : Status::Child;
 	}
 
 	return Status::Unregistered;
@@ -58,6 +82,14 @@ Attribute::Status Attribute::GetStatus() const {
 
 bool Attribute::CheckIteratorEmpty() const {
 	return GetStatus() == Status::Unregistered;
+}
+
+Attribute::Iterator Attribute::AddChildren(Attribute* child) {
+	return children_.emplace(children_.end(), child);
+}
+
+void Attribute::EraseChild(const Iterator& iterator) {
+	children_.erase(iterator);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -130,8 +162,36 @@ void OutlinerEditor::Selectable(const Attribute::Container& container) {
 		bool isSelect     = CheckSelected(attribute);
 		std::string label = std::format("{} ## {:p}", attribute->GetName(), static_cast<const void*>(attribute));
 
-		if (ImGui::Selectable(label.c_str(), isSelect)) {
-			selected_ = attribute;
+		if (attribute->GetChildren().empty()) {
+
+			if (ImGui::Selectable(label.c_str(), isSelect)) {
+				selected_ = attribute;
+			}
+
+		} else {
+
+			ImGuiTreeNodeFlags flags
+				= ImGuiTreeNodeFlags_OpenOnDoubleClick
+				| ImGuiTreeNodeFlags_OpenOnArrow;
+
+			if (isSelect) {
+				flags |= ImGuiTreeNodeFlags_Selected;
+			}
+
+			bool isOpen = ImGui::TreeNodeEx(label.c_str(), flags);
+
+			if (ImGui::IsItemClicked()) {
+				selected_ = attribute;
+			}
+
+			if (isOpen) {
+
+				Selectable(attribute->GetChildren());
+
+				ImGui::TreePop();
+			}
+
 		}
+		
 	}
 }

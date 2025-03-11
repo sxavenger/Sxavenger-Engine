@@ -112,6 +112,19 @@ void BetaSystemGameLoop::UpdateSystem() {
 	// todo: engine側のgameloopに移動.
 
 	sCollisionManager->CheckCollision();
+
+	if (SxavengerSystem::IsTriggerKey(KeyId::KEY_SPACE)) {
+		static std::unique_ptr<Attribute> atr = nullptr;
+
+		if (atr == nullptr) {
+			atr = std::make_unique<Attribute>();
+			atr->SetParent(attribute_.get());
+
+		} else {
+			atr.reset();
+		}
+	}
+
 }
 
 void BetaSystemGameLoop::DrawSystem() {
