@@ -117,15 +117,15 @@ void SkinnedMeshRendererComponent::CreateCluster() {
 	cluster_.inverseBindPoseMatrices.resize(kJointSize);
 	std::generate(cluster_.inverseBindPoseMatrices.begin(), cluster_.inverseBindPoseMatrices.end(), Matrix4x4::Identity);
 
-	for (const auto& jointWeight : referenceMesh_->jointWeights) {
-		if (!skeleton.jointMap.contains(jointWeight.first)) {
+	for (const auto& [name, jointWeight] : referenceMesh_->jointWeights) {
+		if (!skeleton.jointMap.contains(name)) {
 			continue; //!< この名前のJointは存在しない
 		}
 
-		uint32_t jointIndex = skeleton.jointMap.at(jointWeight.first);
-		cluster_.inverseBindPoseMatrices[jointIndex] = jointWeight.second.inverseBindPoseMatrix;
+		uint32_t jointIndex = skeleton.jointMap.at(name);
+		cluster_.inverseBindPoseMatrices[jointIndex] = jointWeight.inverseBindPoseMatrix;
 
-		for (const auto& vertexWeight : jointWeight.second.vertexWeights) {
+		for (const auto& vertexWeight : jointWeight.vertexWeights) {
 			// 該当のindexのinfluence情報の参照
 			auto& currentInfluence = (*cluster_.influence)[vertexWeight.vertexIndex];
 

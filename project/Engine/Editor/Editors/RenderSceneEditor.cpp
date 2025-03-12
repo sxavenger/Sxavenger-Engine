@@ -28,8 +28,8 @@ void RenderSceneEditor::Init() {
 	camera_->AddComponent<TransformComponent>();
 	camera_->AddComponent<CameraComponent>();
 
-	colliderDrawer_ = std::make_unique<ColliderPrimitiveRenderer>();
-	colliderDrawer_->Init();
+	colliderRenderer_ = std::make_unique<ColliderPrimitiveRenderer>();
+	colliderRenderer_->Init();
 }
 
 void RenderSceneEditor::ShowMainMenu() {
@@ -59,7 +59,9 @@ void RenderSceneEditor::Render() {
 	textures_->BeginTransparentBasePass(SxavengerSystem::GetMainThreadContext());
 
 	// todo: draw lines, etc...
-	colliderDrawer_->Render(SxavengerSystem::GetMainThreadContext(), camera_->GetComponent<CameraComponent>());
+	if (isRenderCollider_) {
+		colliderRenderer_->Render(SxavengerSystem::GetMainThreadContext(), camera_->GetComponent<CameraComponent>());
+	}
 
 	textures_->EndTransparentBasePass(SxavengerSystem::GetMainThreadContext());
 }
@@ -139,7 +141,14 @@ void RenderSceneEditor::ShowColliderMenu() {
 	if (ImGui::BeginMenu("collider")) {
 		MenuPadding();
 		ImGui::SeparatorText("collider");
-		colliderDrawer_->SetImGuiCommand();
+
+		ImGui::Checkbox("render", &isRenderCollider_);
+		ImGui::Separator();
+
+		ImGui::BeginDisabled(!isRenderCollider_);
+		colliderRenderer_->SetImGuiCommand();
+		ImGui::EndDisabled();
+
 		ImGui::EndMenu();
 	}
 }

@@ -90,7 +90,8 @@ private:
 
 	//* collider *//
 
-	std::unique_ptr<ColliderPrimitiveRenderer> colliderDrawer_;
+	std::unique_ptr<ColliderPrimitiveRenderer> colliderRenderer_;
+	bool isRenderCollider_ = true;
 
 	//=========================================================================================
 	// private methods
