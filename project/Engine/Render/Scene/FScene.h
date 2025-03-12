@@ -6,6 +6,7 @@
 //* component
 #include <Engine/Component/ComponentStorage.h>
 #include <Engine/Component/Components/MeshRenderer/MeshRendererComponent.h>
+#include <Engine/Component/Components/MeshRenderer/SkinnedMeshRendererComponent.h>
 
 //* engine
 #include <Engine/System/DirectX/DxrObject/DxrAccelerationStructure.h>

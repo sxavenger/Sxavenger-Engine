@@ -28,6 +28,15 @@ void HierarchyEditor::ShowWindow() {
 	ShowInspectorWindow();
 }
 
+void HierarchyEditor::LateUpdate() {
+	if (selected_ != nullptr) {
+		// Manipulateの設定
+		BaseEditor::editor_->ExecuteEditorFunction<RenderSceneEditor>([&](RenderSceneEditor* editor) {
+			editor->Manipulate(selected_, ImGuizmo::TRANSLATE, ImGuizmo::WORLD);
+		});
+	}
+}
+
 void HierarchyEditor::CheckResetBehaviour(MonoBehaviour* behaviour) {
 	if (behaviour == selected_) {
 		selected_ = nullptr;
@@ -51,11 +60,6 @@ void HierarchyEditor::ShowInspectorWindow() {
 
 	if (selected_ != nullptr) { // todo: selected behaviour に変更
 		selected_->SetBehaviourImGuiCommand(buf_);
-
-		// Manipulateの設定
-		BaseEditor::editor_->ExecuteEditorFunction<RenderSceneEditor>([&](RenderSceneEditor* editor) {
-			editor->Manipulate(selected_, ImGuizmo::TRANSLATE, ImGuizmo::WORLD);
-		});
 	}
 
 	ImGui::End();

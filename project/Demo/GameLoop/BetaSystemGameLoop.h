@@ -16,6 +16,7 @@
 #include <Engine/Render/Scene/FScene.h>
 #include <Engine/Render/Scene/FSceneRenderer.h>
 #include <Engine/Editor/Editors/OutlinerEditor.h>
+#include <Engine/Asset/Observer/AssetObserver.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // BetaSystemGameLoop class
@@ -52,6 +53,9 @@ private:
 	std::array<std::unique_ptr<MonoBehaviour>, kTreeCount> trees_;
 
 	std::unique_ptr<MonoBehaviour> tile_;
+
+	std::unique_ptr<MonoBehaviour> cube_;
+	AssetObserver<AssetAnimator> animator_;
 
 	//=========================================================================================
 	// private methods

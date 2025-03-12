@@ -119,6 +119,7 @@ MonoBehaviour* MonoBehaviour::GetChild(const std::string& name) {
 	}
 
 	WarningRuntime("warning | [MonoBehaviour] GetChild", "child not found.");
+	Assert(false, "child not found.");
 	return nullptr;
 }
 
@@ -146,9 +147,14 @@ void MonoBehaviour::SetBehaviourImGuiCommand(char buf[256]) {
 
 	ImGui::SameLine();
 
-	if (ImGui::InputText("## Name", buf, 256)) {
-		SetName(buf);
+	if (isRenamable_) {
+		if (ImGui::InputText("## Name", buf, 256)) {
+			SetName(buf);
+		}
+	} else {
+		ImGui::Text(name_.c_str());
 	}
+	
 
 	ImGui::Separator();
 

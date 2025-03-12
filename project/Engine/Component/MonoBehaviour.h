@@ -118,6 +118,8 @@ public:
 
 	const std::string& GetName() const { return name_; }
 
+	void SetRenamable(bool isRenamable) { isRenamable_ = isRenamable; }
+
 	//* update option *//
 
 	void UpdateComponent();
@@ -149,6 +151,7 @@ private:
 
 	//* name
 	std::string name_ = "new behaviour";
+	bool isRenamable_ = true;
 
 	//* container
 	std::optional<ContainerIterator> containerIterator_;

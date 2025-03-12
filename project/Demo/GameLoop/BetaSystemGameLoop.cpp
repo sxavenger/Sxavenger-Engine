@@ -6,7 +6,6 @@
 //* engine
 #include <Engine/System/SxavengerSystem.h>
 #include <Engine/Asset/SxavengerAsset.h>
-#include <Engine/Asset/Observer/AssetObserver.h>
 #include <Engine/Editor/EditorEngine.h>
 #include <Engine/Editor/Editors/DevelopEditor.h>
 #include <Engine/Editor/Editors/HierarchyEditor.h>
@@ -50,37 +49,28 @@ void BetaSystemGameLoop::InitSystem() {
 	main_->SetIcon("packages/icon/SxavengerEngineSubIcon.ico", { 32, 32 });
 
 	AssetObserver<AssetModel> observer = SxavengerAsset::TryImport<AssetModel>("assets/models/primitive/teapot.obj");
-	mesh_ = observer.WaitGet()->CreateMonoBehavior("teapot");
+	mesh_ = observer.WaitGet()->CreateStaticMeshBehaviour("teapot");
 
 	/*AssetObserver<AssetModel> observer = SxavengerAsset::TryImport<AssetModel>("assets/models/chessboard/chessboard.gltf");
 	mesh_ = observer.WaitGet()->CreateMonoBehavior("chessboard");*/
 
-	auto collider = mesh_->AddComponent<ColliderComponent>();
-	collider->SetColliderBoundingSphere({ 1.0f });
-	collider->SetTag("tag1");
 	mesh_->AddComponent<TransformComponent>();
 	mesh_->SetActive(false);
 	mesh_->SetView(false);
 
 	camera_ = std::make_unique<MonoBehaviour>();
+	camera_->SetName("game camera");
 	camera_->AddComponent<TransformComponent>();
 	auto camera = camera_->AddComponent<CameraComponent>();
 	camera->Init();
 	camera->SetTag(CameraComponent::Tag::GameCamera);
-	auto collider2 = camera_->AddComponent<ColliderComponent>();
-	collider2->SetColliderBoundingSphere({ 1.0f });
-	collider2->SetTag("tag2");
-
-	//camera_->GetChild();
-
 
 	light_ = std::make_unique<MonoBehaviour>();
+	light_->SetName("directional light");
 	auto transform = light_->AddComponent<TransformComponent>();
 	transform->GetTransform().rotate = AxisAngle({ 1.0f, 0.0f, 0.0f }, pi_v / 2.0f);
 	auto light = light_->AddComponent<DirectionalLightComponent>();
 	light->Init();
-	light_->AddComponent<ColliderComponent>()->SetColliderBoundingSphere({ 1.0f });
-	light_->GetComponent<ColliderComponent>()->SetTag("tag1");
 
 	attribute_ = std::make_unique<Attribute>();
 	attribute_->SetName("attribute yay");
@@ -93,7 +83,7 @@ void BetaSystemGameLoop::InitSystem() {
 
 		for (uint32_t i = 0; i < kTreeCount; ++i) {
 			trees_[i] = std::make_unique<MonoBehaviour>();
-			tree.WaitGet()->CreateMonoBehavior(trees_[i].get());
+			tree.WaitGet()->CreateStaticMeshBehaviour(trees_[i].get());
 			trees_[i]->AddComponent<TransformComponent>();
 			trees_[i]->SetName("tree[" + std::to_string(i) + "]");
 		}
@@ -101,8 +91,18 @@ void BetaSystemGameLoop::InitSystem() {
 
 	{
 		AssetObserver<AssetModel> tile = SxavengerAsset::TryImport<AssetModel>("assets/models/objects/tile.obj");
-		tile_ = tile.WaitGet()->CreateMonoBehavior("tile");
+		tile_ = tile.WaitGet()->CreateStaticMeshBehaviour("tile");
 		tile_->AddComponent<TransformComponent>();
+	}
+
+	{
+		AssetObserver<AssetModel> cube = SxavengerAsset::TryImport<AssetModel>("assets/models/human/idle.gltf");
+		cube_ = cube.WaitGet()->CreateSkinnedMeshBehaviour("animatedCube");
+		cube_->AddComponent<TransformComponent>();
+
+		animator_ = SxavengerAsset::TryImport<AssetAnimator>("assets/models/human/idle.gltf");
+		/*auto child = cube_->GetChild("AnimatedCube");
+		child->GetComponent<SkinnedMeshRendererComponent>()->UpdateAnimation(animator_.WaitGet()->GetAnimation(0), 0.0f, true);*/
 	}
 }
 
@@ -111,8 +111,20 @@ void BetaSystemGameLoop::TermSystem() {
 
 void BetaSystemGameLoop::UpdateSystem() {
 
+	static TimePointf<TimeUnit::second> time = 0.0f;
+	time += SxavengerSystem::GetDeltaTime();
+
+	auto child = cube_->GetChild(ArmatureComponent::kArmatureName);
+	child->GetComponent<ArmatureComponent>()->UpdateAnimation(animator_.WaitGet()->GetAnimation(0), time, true);
+
+
 	sMonoBehaviourContainer->ForEach(std::execution::par, [](MonoBehaviour* behaviour) {
 		behaviour->UpdateComponent(); // todo: 遅延updateで何とかしたい.
+	});
+	// todo: engine側のgameloopに移動.
+
+	sComponentStorage->ForEach<SkinnedMeshRendererComponent>([](SkinnedMeshRendererComponent* renderer) {
+		renderer->SkinUpdate();
 	});
 	// todo: engine側のgameloopに移動.
 

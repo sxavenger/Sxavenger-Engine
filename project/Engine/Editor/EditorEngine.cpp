@@ -68,6 +68,12 @@ void EditorEngine::ShowWindow() {
 			editor->ShowWindow();
 		}
 	}
+
+	for (const auto& [typeindex, editor] : editors_) {
+		if (editor->IsDisplay()) {
+			editor->LateUpdate();
+		}
+	}
 }
 
 void EditorEngine::MenuDummy() {

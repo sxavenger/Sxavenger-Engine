@@ -203,6 +203,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="Engine\Asset\Texture\Texture.cpp" />
     <ClCompile Include="Engine\Asset\Thread\AsyncAssetThread.cpp" />
     <ClCompile Include="Engine\Asset\Unknown\AssetUnknown.cpp" />
+    <ClCompile Include="Engine\Component\Components\Armature\ArmatureComponent.cpp" />
     <ClCompile Include="Engine\Component\Components\Camera\CameraComponent.cpp" />
     <ClCompile Include="Engine\Component\Components\Collider\ColliderComponent.cpp" />
     <ClCompile Include="Engine\Component\Components\Collider\ColliderPrimitiveRenderer.cpp" />
@@ -218,6 +219,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="Engine\Component\MonoBehaviour.cpp" />
     <ClCompile Include="Engine\Component\MonoBehaviourContainer.cpp" />
     <ClCompile Include="Engine\Content\Animation\Animation.cpp" />
+    <ClCompile Include="Engine\Content\Animation\SkinningPipeline.cpp" />
     <ClCompile Include="Engine\Content\InputAssembler\LineInputAssembler.cpp" />
     <ClCompile Include="Engine\Content\InputAssembler\TriangleInputAssembler.cpp" />
     <ClCompile Include="Engine\Content\Material\Material.cpp" />
@@ -346,6 +348,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Engine\Asset\Texture\Texture.h" />
     <ClInclude Include="Engine\Asset\Thread\AsyncAssetThread.h" />
     <ClInclude Include="Engine\Asset\Unknown\AssetUnknown.h" />
+    <ClInclude Include="Engine\Component\Components\Armature\ArmatureComponent.h" />
     <ClInclude Include="Engine\Component\Components\Camera\CameraComponent.h" />
     <ClInclude Include="Engine\Component\Components\Collider\ColliderComponent.h" />
     <ClInclude Include="Engine\Component\Components\Collider\ColliderPrimitiveRenderer.h" />
@@ -362,6 +365,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Engine\Content\Animation\Animation.h" />
     <ClInclude Include="Engine\Content\Animation\BornNode.h" />
     <ClInclude Include="Engine\Content\Animation\JointWeight.h" />
+    <ClInclude Include="Engine\Content\Animation\SkinningPipeline.h" />
     <ClInclude Include="Engine\Content\InputAssembler\LineInputAssembler.h" />
     <ClInclude Include="Engine\Content\InputAssembler\TriangleInputAssembler.h" />
     <ClInclude Include="Engine\Content\Material\Material.h" />

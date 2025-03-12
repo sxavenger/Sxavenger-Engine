@@ -6,6 +6,7 @@
 //* engine
 #include <Engine/Component/Components/Transform/TransformComponent.h>
 #include <Engine/Component/Components/MeshRenderer/MeshRendererComponent.h>
+#include <Engine/Component/Components/MeshRenderer/SkinnedMeshRendererComponent.h>
 
 //* c++
 #include <execution>
@@ -111,7 +112,7 @@ const Model::AssimpMesh& Model::GetMesh(uint32_t index) const {
 //	return materialIndex;
 //}
 
-std::unique_ptr<MonoBehaviour> Model::CreateMonoBehavior(const std::string& name) {
+std::unique_ptr<MonoBehaviour> Model::CreateStaticMeshBehaviour(const std::string& name) {
 	auto root = std::make_unique<MonoBehaviour>();
 	root->SetName(name);
 
@@ -135,7 +136,7 @@ std::unique_ptr<MonoBehaviour> Model::CreateMonoBehavior(const std::string& name
 	return std::move(root); 
 }
 
-void Model::CreateMonoBehavior(MonoBehaviour* root) {
+void Model::CreateStaticMeshBehaviour(MonoBehaviour* root) {
 	// MonoBehaviorの登録
 	std::for_each(/*std::execution::seq, */meshes_.begin(), meshes_.end(), [this, root](AssimpMesh& mesh) {
 		auto child = std::make_unique<MonoBehaviour>();
@@ -151,6 +152,67 @@ void Model::CreateMonoBehavior(MonoBehaviour* root) {
 		renderer->SetMaterial(&GetMaterial(mesh.materialIndex.value()));
 
 		root->AddChild(std::move(child));
+	});
+}
+
+std::unique_ptr<MonoBehaviour> Model::CreateSkinnedMeshBehaviour(const std::string& name) {
+	auto root = std::make_unique<MonoBehaviour>();
+	root->SetName(name);
+
+	{ //!< ArmatureComponent
+		auto armature = std::make_unique<MonoBehaviour>();
+		armature->SetName(ArmatureComponent::kArmatureName);
+		armature->SetRenamable(false);
+		armature->AddComponent<ArmatureComponent>()->SetSkeleton(skeleton_);
+		root->AddChild(std::move(armature));
+	}
+
+	// Meshの登録
+	std::for_each(/*std::execution::seq, */meshes_.begin(), meshes_.end(), [this, &root](AssimpMesh& mesh) {
+		auto child = std::make_unique<MonoBehaviour>();
+		auto ptr = child.get();
+		root->AddChild(std::move(child));
+
+		ptr->SetName(mesh.name);
+
+		// transform component
+		auto transform = ptr->AddComponent<TransformComponent>();
+		transform->CreateBuffer();
+
+		// renderer component
+		auto renderer = ptr->AddComponent<SkinnedMeshRendererComponent>();
+		renderer->CreateMesh(&mesh);
+		renderer->SetMaterial(&GetMaterial(mesh.materialIndex.value()));
+	});
+
+	return std::move(root);
+}
+
+void Model::CreateSkinnedMeshBehaviour(MonoBehaviour* root) {
+	{ //!< ArmatureComponent
+		auto armature = std::make_unique<MonoBehaviour>();
+		armature->SetName(ArmatureComponent::kArmatureName);
+		armature->SetRenamable(false);
+		armature->AddComponent<ArmatureComponent>()->SetSkeleton(skeleton_);
+		root->AddChild(std::move(armature));
+	}
+
+	// Meshの登録
+	std::for_each(/*std::execution::seq, */meshes_.begin(), meshes_.end(), [this, &root](AssimpMesh& mesh) {
+		auto child = std::make_unique<MonoBehaviour>();
+		auto ptr = child.get();
+		root->AddChild(std::move(child));
+
+		ptr->SetName(mesh.name);
+
+		// transform component
+		auto transform = ptr->AddComponent<TransformComponent>();
+		transform->CreateBuffer();
+
+		// renderer component
+		auto renderer = ptr->AddComponent<SkinnedMeshRendererComponent>();
+		renderer->CreateMesh(&mesh);
+		renderer->SetMaterial(&GetMaterial(mesh.materialIndex.value()));
 	});
 }
 
@@ -239,7 +301,7 @@ void Model::LoadMesh(const aiScene* aiScene) {
 
 		{ //!< SkinCluster
 
-			auto& jointWeights = meshes_.at(meshIndex).jointWeights;
+			auto& jointWeights = mesh.jointWeights;
 
 			// skinClusterの解析
 			for (uint32_t boneIndex = 0; boneIndex < aiMesh->mNumBones; ++boneIndex) {

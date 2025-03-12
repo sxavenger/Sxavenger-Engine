@@ -130,15 +130,19 @@ public:
 
 	//* MonoBehavior option *//
 
-	std::unique_ptr<MonoBehaviour> CreateMonoBehavior(const std::string& name = "model");
+	std::unique_ptr<MonoBehaviour> CreateStaticMeshBehaviour(const std::string& name = "static mesh");
 
-	void CreateMonoBehavior(MonoBehaviour* root);
+	void CreateStaticMeshBehaviour(MonoBehaviour* root);
+
+	std::unique_ptr<MonoBehaviour> CreateSkinnedMeshBehaviour(const std::string& name = "skinned mesh");
+
+	void CreateSkinnedMeshBehaviour(MonoBehaviour* root);
 
 	//* root option *//
 
 	const BornNode& GetRoot() const { return root_; }
 
-	const Skeleton& GetSkeleton() { return skeleton_; }
+	const Skeleton& GetSkeleton() const { return skeleton_; }
 
 	//* parameter option *//
 

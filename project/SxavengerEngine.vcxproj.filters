@@ -151,6 +151,8 @@
     <ClCompile Include="Engine\Component\Components\MeshRenderer\SkinnedMeshRendererComponent.cpp" />
     <ClCompile Include="Engine\Content\Animation\Skeleton.cpp" />
     <ClCompile Include="Engine\Content\Animation\SkinCluster.cpp" />
+    <ClCompile Include="Engine\Content\Animation\SkinningPipeline.cpp" />
+    <ClCompile Include="Engine\Component\Components\Armature\ArmatureComponent.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\System\Window\Window.h" />
@@ -307,6 +309,8 @@
     <ClInclude Include="Engine\Component\Components\MeshRenderer\SkinnedMeshRendererComponent.h" />
     <ClInclude Include="Engine\Content\Animation\Skeleton.h" />
     <ClInclude Include="Engine\Content\Animation\SkinCluster.h" />
+    <ClInclude Include="Engine\Content\Animation\SkinningPipeline.h" />
+    <ClInclude Include="Engine\Component\Components\Armature\ArmatureComponent.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

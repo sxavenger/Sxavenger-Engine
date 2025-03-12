@@ -67,7 +67,15 @@ Sxl::Flag<FSceneRenderer::Status> FSceneRenderer::CheckStatus(const Config& conf
 }
 
 void FSceneRenderer::RenderGeometryPass(const DirectXThreadContext* context, const Config& config) {
+	textures_->BeginGeometryPass(context);
 
+	RenderGeometryMesh(context, config);
+	RenderGeometrySkinnedMesh(context, config);
+
+	textures_->EndGeometryPass(context);
+}
+
+void FSceneRenderer::RenderGeometryMesh(const DirectXThreadContext* context, const Config& config) {
 	// mesh renderer container(BaseComponent)の取得
 	auto& container = sComponentStorage->GetComponentContainer<MeshRendererComponent>();
 
@@ -92,8 +100,6 @@ void FSceneRenderer::RenderGeometryPass(const DirectXThreadContext* context, con
 		// componentの登録
 		map[renderer->GetMesh()].emplace_back(renderer);
 	});
-
-	textures_->BeginGeometryPass(context);
 
 	// instance描画用のバッファを作成
 	if (transforms_ == nullptr) {
@@ -142,8 +148,52 @@ void FSceneRenderer::RenderGeometryPass(const DirectXThreadContext* context, con
 		context->ExecuteAllAllocators();
 		// todo: allocatorごとに一時bufferを作成
 	}
+}
 
-	textures_->EndGeometryPass(context);
+void FSceneRenderer::RenderGeometrySkinnedMesh(const DirectXThreadContext* context, const Config& config) {
+
+	// mesh renderer container(BaseComponent)の取得
+	auto& container = sComponentStorage->GetComponentContainer<SkinnedMeshRendererComponent>();
+
+	auto core = FRenderCore::GetInstance()->GetGeometry();
+
+	std::for_each(std::execution::seq, container.begin(), container.end(), [&](auto& component) {
+
+		textures_->SetupGeometryPass(context);
+
+		// renderer componentの取得
+		SkinnedMeshRendererComponent* renderer = static_cast<SkinnedMeshRendererComponent*>(component.get());
+
+		if (!renderer->IsView()) {
+			return;
+		}
+
+		if (renderer->GetMaterial()->GetBlendMode() != Material::BlendMode::Opaque) {
+			// 透明なジオメトリは別のパスで描画
+			return;
+		}
+
+		renderer->BindIABuffer(context);
+
+		core->SetPipeline(
+			FRenderCoreGeometry::Deffered, FRenderCoreGeometry::VertexStage::DefaultVS, FRenderCoreGeometry::PixelStage::Albedo,
+			context, textures_->GetSize()
+		);
+
+		DxObject::BindBufferDesc parameter = {};
+		parameter.SetAddress("gCamera",     config.camera->GetGPUVirtualAddress());
+		parameter.SetAddress("gTransforms", renderer->GetTransform()->GetGPUVirtualAddress());
+		parameter.SetAddress("gMaterials",  renderer->GetMaterial()->GetGPUVirtualAddress());
+
+		core->BindGraphicsBuffer(
+			FRenderCoreGeometry::Deffered, FRenderCoreGeometry::VertexStage::DefaultVS, FRenderCoreGeometry::PixelStage::Albedo,
+			context, parameter
+		);
+
+		renderer->DrawCall(context, 1); //!< instance数は必ず1
+
+		context->ExecuteAllAllocators();
+	});
 }
 
 void FSceneRenderer::LightingPass(const DirectXThreadContext* context, const Config& config) {

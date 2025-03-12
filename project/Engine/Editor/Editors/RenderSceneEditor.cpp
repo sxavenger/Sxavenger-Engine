@@ -24,6 +24,7 @@ void RenderSceneEditor::Init() {
 	renderer_->SetTextures(textures_.get());
 
 	camera_ = std::make_unique<MonoBehaviour>();
+	camera_->SetName("editor camera");
 	camera_->AddComponent<TransformComponent>();
 	camera_->AddComponent<CameraComponent>();
 

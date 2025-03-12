@@ -30,6 +30,8 @@ public:
 
 	virtual void ShowWindow() = 0;
 
+	virtual void LateUpdate() {}
+
 	//* getter *//
 
 	bool IsDisplay() const { return isDisplay_; }

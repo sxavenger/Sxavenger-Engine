@@ -32,6 +32,8 @@ public:
 
 	void ShowWindow() override;
 
+	void LateUpdate() override;
+
 	void CheckResetBehaviour(MonoBehaviour* behaviour);
 
 private:

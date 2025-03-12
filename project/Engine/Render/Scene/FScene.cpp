@@ -36,6 +36,27 @@ void FScene::SetupTopLevelAS(const DirectXThreadContext* context) {
 		topLevelAS_.AddInstance(instance);
 	});
 
+	sComponentStorage->ForEach<SkinnedMeshRendererComponent>([&](SkinnedMeshRendererComponent* component) {
+		// todo: std::execution::parに変更
+		if (!component->IsView()) {
+			return;
+		}
+
+		// 透過の場合はスキップ
+		if (component->GetMaterial()->GetBlendMode() != Material::BlendMode::Opaque) {
+			return;
+		}
+
+		component->GetMesh().UpdateBottomLevelAS(context);
+
+		DxrObject::TopLevelAS::Instance instance = {};
+		instance.flag          = D3D12_RAYTRACING_INSTANCE_FLAG_NONE;
+		instance.bottomLevelAS = component->GetMesh().GetBottomLevelAS();
+		instance.mat           = component->GetTransform()->GetMatrix();
+
+		topLevelAS_.AddInstance(instance);
+	});
+
 	topLevelAS_.EndSetupInstance(SxavengerSystem::GetDxDevice(), context->GetDxCommand());
 	context->TransitionAllocator();
 }
