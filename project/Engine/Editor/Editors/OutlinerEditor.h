@@ -147,8 +147,9 @@ private:
 	// private variables
 	//=========================================================================================
 
-	Attribute::Container outliner_;
+	//* attribute *//
 
+	Attribute::Container outliner_;
 	Attribute* selected_ = nullptr;
 
 	//=========================================================================================

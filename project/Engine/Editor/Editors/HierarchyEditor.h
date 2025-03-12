@@ -9,6 +9,9 @@
 //* engine
 #include <Engine/Component/MonoBehaviour.h>
 
+//* lib
+#include <Lib/Geometry/Color.h>
+
 //////////////////////////////////////////////////////////////////////////////////////////
 // HierarchyEditor class
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -40,6 +43,10 @@ private:
 	MonoBehaviour* selected_ = nullptr;
 
 	char buf_[256] = {};
+
+	//* parameter *//
+
+	const Color4f disableColor_ = { 0.4f, 0.4f, 0.4f, 1.0f };
 
 	//=========================================================================================
 	// private methods

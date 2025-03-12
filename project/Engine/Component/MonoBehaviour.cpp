@@ -59,6 +59,24 @@ void MonoBehaviour::Term() {
 	});
 }
 
+void MonoBehaviour::SetActive(bool isActive) {
+	isActive_ = isActive;
+
+	for (const auto& child : children_) {
+		MonoBehaviour* ptr = std::visit(GetPtrVisitor{}, child);
+		ptr->SetActive(isActive_);
+	}
+}
+
+void MonoBehaviour::SetView(bool isView) {
+	isView_ = isView;
+
+	for (const auto& child : children_) {
+		MonoBehaviour* ptr = std::visit(GetPtrVisitor{}, child);
+		ptr->SetView(isView_);
+	}
+}
+
 void MonoBehaviour::SetParent(MonoBehaviour* parent) {
 	Assert(!HasParent(), "behaviour already have parent.");
 	parent_   = parent;
@@ -116,7 +134,16 @@ void MonoBehaviour::UpdateComponent() {
 }
 
 void MonoBehaviour::SetBehaviourImGuiCommand(char buf[256]) {
-	ImGui::Checkbox("## Active", &isActive_);
+	if (ImGui::Checkbox("## Active", &isActive_)) {
+		SetActive(isActive_);
+	}
+
+	ImGui::SameLine();
+
+	if (ImGui::Checkbox("## View", &isView_)) {
+		SetView(isView_);
+	}
+
 	ImGui::SameLine();
 
 	if (ImGui::InputText("## Name", buf, 256)) {

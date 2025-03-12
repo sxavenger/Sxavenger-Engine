@@ -95,7 +95,7 @@ public:
 
 	//* active option *//
 
-	void SetActive(bool isActive) { isActive_ = isActive; }
+	void SetActiveCollider(bool isActive) { isActive_ = isActive; }
 
 	bool IsActive() const { return isActive_ && BaseComponent::IsActive(); }
 

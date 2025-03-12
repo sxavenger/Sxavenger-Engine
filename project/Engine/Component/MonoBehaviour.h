@@ -66,13 +66,13 @@ public:
 
 	//* active option *//
 
-	void SetActive(bool isActive) { isActive_ = isActive; }
+	void SetActive(bool isActive);
 
 	bool IsActive() const { return isActive_; }
 
 	//* view option *//
 
-	void SetView(bool isView) { isView_ = isView; }
+	void SetView(bool isView);
 
 	bool IsView() const { return isView_; }
 	

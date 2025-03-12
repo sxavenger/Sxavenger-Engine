@@ -66,10 +66,17 @@ void HierarchyEditor::HierarchySelectable(MonoBehaviour* behaviour) {
 	bool isSelect     = (behaviour == selected_);
 	std::string label = std::format("{} # {:p}", behaviour->GetName(), reinterpret_cast<const void*>(behaviour));
 
+	if (!behaviour->IsActive()) {
+		ImGui::PushStyleColor(ImGuiCol_Text, { disableColor_.r, disableColor_.g, disableColor_.b, disableColor_.a });
+	}
+
 	if (behaviour->GetChildren().empty()) {
 		if (ImGui::Selectable(label.c_str(), isSelect)) {
-			// todo: 選択処理
 			SetSelected(behaviour);
+		}
+
+		if (!behaviour->IsActive()) {
+			ImGui::PopStyleColor();
 		}
 
 	} else {
@@ -83,6 +90,10 @@ void HierarchyEditor::HierarchySelectable(MonoBehaviour* behaviour) {
 		}
 
 		bool isOpen = ImGui::TreeNodeEx(label.c_str(), flags);
+
+		if (!behaviour->IsActive()) {
+			ImGui::PopStyleColor();
+		}
 
 		if (ImGui::IsItemClicked()) {
 			SetSelected(behaviour);
