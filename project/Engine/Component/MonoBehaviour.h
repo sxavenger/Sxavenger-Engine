@@ -108,7 +108,7 @@ public:
 
 	bool HasParent() const { return parent_ != nullptr; }
 
-	MonoBehaviour* GetParent() const { return parent_; }
+	MonoBehaviour* GetParent() const;
 
 	const Hierarchy& GetChildren() const { return children_; }
 

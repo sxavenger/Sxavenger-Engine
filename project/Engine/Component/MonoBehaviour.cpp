@@ -123,6 +123,11 @@ MonoBehaviour* MonoBehaviour::GetChild(const std::string& name) {
 	return nullptr;
 }
 
+MonoBehaviour* MonoBehaviour::GetParent() const {
+	Assert(HasParent(), "behaviour does not have parent.");
+	return parent_;
+}
+
 void MonoBehaviour::UpdateComponent() {
 	if (auto transform = GetComponent<TransformComponent>()) {
 		transform->UpdateMatrix();
