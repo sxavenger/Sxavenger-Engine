@@ -82,23 +82,28 @@ void BetaSystemGameLoop::InitSystem() {
 	light_->AddComponent<ColliderComponent>()->SetColliderBoundingSphere({ 1.0f });
 	light_->GetComponent<ColliderComponent>()->SetTag("tag1");
 
-
-	sCollisionManager->SetOnCollisionFunctions(
-		"tag2", "tag1", {
-			[](ColliderComponent*, ColliderComponent*) {
-				Log("on collision enter");
-			},
-			[](ColliderComponent*, ColliderComponent*) {
-				Log("on collision exit");
-			}
-		}
-	);
-
 	attribute_ = std::make_unique<Attribute>();
 	attribute_->SetName("attribute yay");
 	attribute_->SetAttributeFunc([this]() {
 		ImGui::Text("これはお試し WASD");
 	});
+
+	{
+		AssetObserver<AssetModel> tree = SxavengerAsset::TryImport<AssetModel>("assets/models/objects/tree_low.obj");
+
+		for (uint32_t i = 0; i < kTreeCount; ++i) {
+			trees_[i] = std::make_unique<MonoBehaviour>();
+			tree.WaitGet()->CreateMonoBehavior(trees_[i].get());
+			trees_[i]->AddComponent<TransformComponent>();
+			trees_[i]->SetName("tree[" + std::to_string(i) + "]");
+		}
+	}
+
+	{
+		AssetObserver<AssetModel> tile = SxavengerAsset::TryImport<AssetModel>("assets/models/objects/tile.obj");
+		tile_ = tile.WaitGet()->CreateMonoBehavior("tile");
+		tile_->AddComponent<TransformComponent>();
+	}
 }
 
 void BetaSystemGameLoop::TermSystem() {

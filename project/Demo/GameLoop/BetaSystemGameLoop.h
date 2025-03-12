@@ -48,6 +48,11 @@ private:
 
 	std::unique_ptr<Attribute> attribute_;
 
+	static const uint32_t kTreeCount = 12;
+	std::array<std::unique_ptr<MonoBehaviour>, kTreeCount> trees_;
+
+	std::unique_ptr<MonoBehaviour> tile_;
+
 	//=========================================================================================
 	// private methods
 	//=========================================================================================
