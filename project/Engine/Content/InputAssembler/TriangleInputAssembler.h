@@ -25,7 +25,7 @@ public:
 	TriangleInputAssembler() = default;
 	~TriangleInputAssembler() { Term(); }
 
-	void Create(uint32_t vertexSize, uint32_t indexSize);
+	void Create(uint32_t vertexSize, uint32_t triangleCount);
 
 	void Term();
 
@@ -64,12 +64,12 @@ protected:
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 template <class _Vertex>
-inline void TriangleInputAssembler<_Vertex>::Create(uint32_t vertexSize, uint32_t indexSize) {
+inline void TriangleInputAssembler<_Vertex>::Create(uint32_t vertexSize, uint32_t triangleCount) {
 	vertex_ = std::make_unique<DxObject::VertexDimensionBuffer<_Vertex>>();
 	vertex_->Create(SxavengerSystem::GetDxDevice(), vertexSize);
 
 	index_ = std::make_unique<DxObject::TriangleIndexDimensionBuffer>();
-	index_->Create(SxavengerSystem::GetDxDevice(), indexSize);
+	index_->Create(SxavengerSystem::GetDxDevice(), triangleCount);
 }
 
 template <class _Vertex>

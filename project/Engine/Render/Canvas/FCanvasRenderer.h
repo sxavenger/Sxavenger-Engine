@@ -3,39 +3,24 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
-//* layer
+//* render
 #include "../FRenderTargetTextures.h"
-#include "Layer/LLayer.h"
-
-//* engine
-#include <Engine/System/DirectX/DirectXContext.h>
-
-//* c++
-#include <list>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// FCanvas class
+// FCanvasRenderer class
 ////////////////////////////////////////////////////////////////////////////////////////////
-class FCanvas {
-	//* canvasに描画されるUIの管理クラス
+class FCanvasRenderer {
 public:
 
 	//=========================================================================================
 	// public methods
 	//=========================================================================================
-
-	FCanvas()  = default;
-	~FCanvas() = default;
-
+	
 	//* render *//
 
 	void Render(const DirectXThreadContext* context);
 
-	bool CheckRender() const;
-
 	//* setter *//
-
-	void AddLayer(LLayer* layer) { layers_.emplace_back(layer); }
 
 	void SetTextures(FRenderTargetTextures* textures) { textures_ = textures; }
 
@@ -45,12 +30,17 @@ private:
 	// private variables
 	//=========================================================================================
 
-	//* layers *//
-
-	std::list<LLayer*> layers_;
-
-	//* view info *//
+	//* canvas textures *//
 
 	FRenderTargetTextures* textures_ = nullptr;
+	//!< todo: 2d描画用のテクスチャに設定する
+
+	//=========================================================================================
+	// private methods
+	//=========================================================================================
+
+	bool CheckRender() const;
+
+	void RenderSpriteComponents(const DirectXThreadContext* context);
 
 };

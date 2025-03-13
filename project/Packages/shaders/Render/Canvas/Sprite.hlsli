@@ -3,8 +3,6 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
-#include "../Component/TextureComponent.hlsli"
-#include "../Component/Transform2dComponent.hlsli"
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Input / Output structure
@@ -38,6 +36,23 @@ struct Parameter {
 };
 ConstantBuffer<Parameter> gParameter : register(b10);
 
-ConstantBuffer<Transform2dComponent> gTransform2d  : register(b11);
-ConstantBuffer<TextureComponent> gTextureComponent : register(b12);
+struct Transformation2d {
+
+	//=========================================================================================
+	// variables
+	//=========================================================================================
+	
+	float4x4 mat;
+
+	//=========================================================================================
+	// methods
+	//=========================================================================================
+
+	float2 Transform(float2 v) {
+		return mul(float4(v, 0.0f, 1.0f), mat).xy;
+	}
+	
+};
+ConstantBuffer<Transformation2d> gTransformation2d : register(b11);
+ConstantBuffer<Transformation2d> gTransformationUV : register(b12);
 

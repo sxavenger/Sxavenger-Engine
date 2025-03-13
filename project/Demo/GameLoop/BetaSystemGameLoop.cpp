@@ -12,6 +12,7 @@
 #include <Engine/Render/FMainRender.h>
 #include <Engine/Component/Components/Collider/ColliderComponent.h>
 #include <Engine/Component/Components/Collider/CollisionManager.h>
+#include <Engine/Component/Components/SpriteRenderer/SpriteRendererComponent.h>
 #include <Engine/Component/MonoBehaviourContainer.h>
 
 //* c++
@@ -64,6 +65,10 @@ void BetaSystemGameLoop::InitSystem() {
 	auto camera = camera_->AddComponent<CameraComponent>();
 	camera->Init();
 	camera->SetTag(CameraComponent::Tag::GameCamera);
+
+	auto sprite = camera_->AddComponent<SpriteRendererComponent>();
+	sprite->SetTexture(SxavengerAsset::TryImport<AssetTexture>("assets/textures/uvChecker.png"));
+	sprite->SetSize({ 120.0f, 120.0f });
 
 	light_ = std::make_unique<MonoBehaviour>();
 	light_->SetName("directional light");
@@ -146,7 +151,7 @@ void BetaSystemGameLoop::UpdateSystem() {
 
 void BetaSystemGameLoop::DrawSystem() {
 
-	FMainRender::GetInstance()->GetRenderer()->Render(SxavengerSystem::GetMainThreadContext());
+	FMainRender::GetInstance()->Render(SxavengerSystem::GetMainThreadContext());
 
 	main_->BeginRendering();
 	main_->ClearWindow();

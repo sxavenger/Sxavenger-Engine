@@ -110,6 +110,8 @@ public:
 
 	MonoBehaviour* GetParent() const;
 
+	MonoBehaviour* RequireParent() const;
+
 	const Hierarchy& GetChildren() const { return children_; }
 
 	//* name option *//

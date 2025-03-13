@@ -54,8 +54,10 @@ public:
 	bool CheckExpired() const;
 
 	std::shared_ptr<T> Get();
+	std::shared_ptr<T> Get() const; //!< todo: 通常版と機能が違うので名前を変える
 
 	std::shared_ptr<T> WaitGet();
+	std::shared_ptr<T> WaitGet() const;
 
 private:
 
@@ -140,7 +142,23 @@ inline std::shared_ptr<T> AssetObserver<T>::Get() {
 }
 
 template <BaseAssetConcept T>
+inline std::shared_ptr<T> AssetObserver<T>::Get() const {
+	Condition condition = GetCondition();
+
+	Assert(condition == Condition::Valid, "asset is not valid");
+
+	return asset_.value().lock();
+}
+
+template <BaseAssetConcept T>
 inline std::shared_ptr<T> AssetObserver<T>::WaitGet() {
+	std::shared_ptr<T> asset = Get();
+	asset->WaitComplete();
+	return asset;
+}
+
+template <BaseAssetConcept T>
+inline std::shared_ptr<T> AssetObserver<T>::WaitGet() const {
 	std::shared_ptr<T> asset = Get();
 	asset->WaitComplete();
 	return asset;

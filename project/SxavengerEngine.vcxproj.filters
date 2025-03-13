@@ -138,7 +138,6 @@
     <ClCompile Include="Engine\Component\Components\Collider\CollisionCallbackCollection.cpp" />
     <ClCompile Include="Engine\Component\Components\Collider\ColliderPrimitiveRenderer.cpp" />
     <ClCompile Include="Engine\Editor\Editors\NodeEditor.cpp" />
-    <ClCompile Include="Engine\Render\Canvas\FCanvas.cpp" />
     <ClCompile Include="Engine\Render\Canvas\Layer\LLayer.cpp" />
     <ClCompile Include="Engine\Render\Canvas\Layer\Layers\LSprite.cpp" />
     <ClCompile Include="Engine\Render\Canvas\Layer\Layers\TextureComponent.cpp" />
@@ -153,6 +152,8 @@
     <ClCompile Include="Engine\Content\Animation\SkinCluster.cpp" />
     <ClCompile Include="Engine\Content\Animation\SkinningPipeline.cpp" />
     <ClCompile Include="Engine\Component\Components\Armature\ArmatureComponent.cpp" />
+    <ClCompile Include="Engine\Component\Components\SpriteRenderer\SpriteRendererComponent.cpp" />
+    <ClCompile Include="Engine\Render\Canvas\FCanvasRenderer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\System\Window\Window.h" />
@@ -297,7 +298,6 @@
     <ClInclude Include="Engine\Component\Components\Collider\CollisionCallbackCollection.h" />
     <ClInclude Include="Engine\Component\Components\Collider\ColliderPrimitiveRenderer.h" />
     <ClInclude Include="Engine\Editor\Editors\NodeEditor.h" />
-    <ClInclude Include="Engine\Render\Canvas\FCanvas.h" />
     <ClInclude Include="Engine\Render\Canvas\Layer\LLayer.h" />
     <ClInclude Include="Engine\Render\Canvas\Layer\Layers\LSprite.h" />
     <ClInclude Include="Engine\Render\Canvas\Layer\Layers\TextureComponent.h" />
@@ -311,6 +311,8 @@
     <ClInclude Include="Engine\Content\Animation\SkinCluster.h" />
     <ClInclude Include="Engine\Content\Animation\SkinningPipeline.h" />
     <ClInclude Include="Engine\Component\Components\Armature\ArmatureComponent.h" />
+    <ClInclude Include="Engine\Component\Components\SpriteRenderer\SpriteRendererComponent.h" />
+    <ClInclude Include="Engine\Render\Canvas\FCanvasRenderer.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

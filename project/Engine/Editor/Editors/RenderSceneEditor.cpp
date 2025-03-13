@@ -5,6 +5,7 @@
 //-----------------------------------------------------------------------------------------
 //* engine
 #include <Engine/Component/Components/Transform/TransformComponent.h>
+#include <Engine/Component/Components/SpriteRenderer/SpriteRendererComponent.h>
 #include <Engine/Component/Components/Camera/CameraComponent.h>
 #include <Engine/Asset/SxavengerAsset.h>
 #include <Engine/Render/FMainRender.h>
@@ -109,6 +110,47 @@ void RenderSceneEditor::Manipulate(MonoBehaviour* behaviour, ImGuizmo::OPERATION
 	//component->GetTransform().scale     = transform.scale;
 	component->UpdateMatrix();
 
+}
+
+void RenderSceneEditor::Manipulate2dSprite(MonoBehaviour* behaviour, ImGuizmo::OPERATION operation) {
+
+	// sprite component の取得
+	auto component = behaviour->GetComponent<SpriteRendererComponent>();
+
+	if (component == nullptr) {
+		return;
+	}
+
+	ImGuizmo::SetRect(rect_.pos.x, rect_.pos.y, rect_.size.x, rect_.size.y);
+
+	Matrix4x4 m = component->GetTransform2d().ToMatrix();
+
+	// todo: 2d sprite の操作
+	Matrix4x4 view = Matrix4x4::Identity();
+	Matrix4x4 proj = Matrix4x4::Identity();
+
+	ImGuizmo::Manipulate(
+		reinterpret_cast<const float*>(view.m),
+		reinterpret_cast<const float*>(proj.m),
+		operation,
+		ImGuizmo::WORLD,
+		reinterpret_cast<float*>(m.m)
+	);
+
+	EulerTransform transform = {};
+
+	ImGuizmo::DecomposeMatrixToComponents(
+		reinterpret_cast<const float*>(m.m),
+		&transform.translate.x,
+		&transform.rotate.x,
+		&transform.scale.x
+	);
+
+	Transform2d& transform2d = component->GetTransform2d();
+	transform2d.translate = { transform.translate.x, transform.translate.y };
+	transform2d.rotate    = transform.rotate.z;
+	transform2d.scale     = { transform.scale.x, transform.scale.y };
+	
 }
 
 void RenderSceneEditor::ShowSceneMenu() {

@@ -24,6 +24,7 @@
 class RenderSceneEditor
 	: public BaseEditor {
 public:
+
 	//=========================================================================================
 	// public methods
 	//=========================================================================================
@@ -41,7 +42,11 @@ public:
 
 	void Render();
 
+	//* manipulator *//
+
 	void Manipulate(MonoBehaviour* behaviour, ImGuizmo::OPERATION operation, ImGuizmo::MODE mode);
+
+	void Manipulate2dSprite(MonoBehaviour* behaviour, ImGuizmo::OPERATION operation);
 
 private:
 

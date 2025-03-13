@@ -143,7 +143,7 @@ void SkinnedMeshRendererComponent::CreateCluster() {
 
 const ArmatureComponent* SkinnedMeshRendererComponent::GetArmature() const {
 	//!< 同一階層のArmatureComponentを取得
-	auto child = BaseComponent::GetBehaviour()->GetParent()->GetChild(ArmatureComponent::kArmatureName);
+	auto child = BaseComponent::GetBehaviour()->RequireParent()->GetChild(ArmatureComponent::kArmatureName);
 
 	//!< ArmatureComponentを取得
 	return child->RequireComponent<ArmatureComponent>();

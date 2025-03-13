@@ -41,7 +41,7 @@ void FRenderCoreLayer::CreateDesc() {
 	desc_.SetElement("COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT);
 
 	desc_.SetRTVFormat(0, DXGI_FORMAT_R32G32B32A32_FLOAT);
-
+	//desc_.SetBlendMode(0, BlendMode::kBlendModeNormalSrc);
 	desc_.SetRasterizer(D3D12_CULL_MODE_NONE, D3D12_FILL_MODE_SOLID);
 
 }

@@ -213,6 +213,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="Engine\Component\Components\Light\DirectionalLightComponent.cpp" />
     <ClCompile Include="Engine\Component\Components\Light\LightSource.cpp" />
     <ClCompile Include="Engine\Component\Components\MeshRenderer\MeshRendererComponent.cpp" />
+    <ClCompile Include="Engine\Component\Components\SpriteRenderer\SpriteRendererComponent.cpp" />
     <ClCompile Include="Engine\Content\Animation\Skeleton.cpp" />
     <ClCompile Include="Engine\Content\Animation\SkinCluster.cpp" />
     <ClCompile Include="Engine\Component\Components\MeshRenderer\SkinnedMeshRendererComponent.cpp" />
@@ -246,7 +247,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="Engine\GameLoop\SxavengerEngineGameLoop.cpp" />
     <ClCompile Include="Engine\Module\Pipeline\CustomComputePipeline.cpp" />
     <ClCompile Include="Engine\Module\Pipeline\CustomGraphicsPipeline.cpp" />
-    <ClCompile Include="Engine\Render\Canvas\FCanvas.cpp" />
+    <ClCompile Include="Engine\Render\Canvas\FCanvasRenderer.cpp" />
     <ClCompile Include="Engine\Render\Canvas\Layer\Layers\LSprite.cpp" />
     <ClCompile Include="Engine\Render\Canvas\Layer\Layers\TextureComponent.cpp" />
     <ClCompile Include="Engine\Render\Canvas\Layer\Layers\Transform2dComponent.cpp" />
@@ -358,6 +359,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Engine\Component\Components\Light\DirectionalLightComponent.h" />
     <ClInclude Include="Engine\Component\Components\Light\LightSource.h" />
     <ClInclude Include="Engine\Component\Components\MeshRenderer\MeshRendererComponent.h" />
+    <ClInclude Include="Engine\Component\Components\SpriteRenderer\SpriteRendererComponent.h" />
     <ClInclude Include="Engine\Content\Animation\Skeleton.h" />
     <ClInclude Include="Engine\Content\Animation\SkinCluster.h" />
     <ClInclude Include="Engine\Component\Components\MeshRenderer\SkinnedMeshRendererComponent.h" />
@@ -393,7 +395,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Engine\GameLoop\SxavengerEngineGameLoop.h" />
     <ClInclude Include="Engine\Module\Pipeline\CustomComputePipeline.h" />
     <ClInclude Include="Engine\Module\Pipeline\CustomGraphicsPipeline.h" />
-    <ClInclude Include="Engine\Render\Canvas\FCanvas.h" />
+    <ClInclude Include="Engine\Render\Canvas\FCanvasRenderer.h" />
     <ClInclude Include="Engine\Render\Canvas\Layer\Layers\LSprite.h" />
     <ClInclude Include="Engine\Render\Canvas\Layer\Layers\TextureComponent.h" />
     <ClInclude Include="Engine\Render\Canvas\Layer\Layers\Transform2dComponent.h" />

@@ -124,8 +124,13 @@ MonoBehaviour* MonoBehaviour::GetChild(const std::string& name) {
 }
 
 MonoBehaviour* MonoBehaviour::GetParent() const {
-	Assert(HasParent(), "behaviour does not have parent.");
 	return parent_;
+}
+
+MonoBehaviour* MonoBehaviour::RequireParent() const {
+	MonoBehaviour* ptr = GetParent();
+	Assert(ptr != nullptr, "parent is not found.");
+	return ptr;
 }
 
 void MonoBehaviour::UpdateComponent() {

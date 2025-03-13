@@ -5,25 +5,29 @@
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 void FMainRender::Init() {
-	presenter_ = std::make_unique<FPresenter>();
-	textures_  = std::make_unique<FRenderTargetTextures>();
-	renderer_  = std::make_unique<FSceneRenderer>();
-	scene_     = std::make_unique<FScene>();
-	canvas_    = std::make_unique<FCanvas>();
+	presenter_      = std::make_unique<FPresenter>();
+	textures_       = std::make_unique<FRenderTargetTextures>();
+	sceneRenderer_  = std::make_unique<FSceneRenderer>();
+	scene_          = std::make_unique<FScene>();
+	canvasRenderer_ = std::make_unique<FCanvasRenderer>();
 
 	presenter_->Init();
-
 	textures_->Create(kMainWindowSize);
-	renderer_->SetTextures(textures_.get());
 
-	canvas_->SetTextures(textures_.get());
+	sceneRenderer_->SetTextures(textures_.get());
+	canvasRenderer_->SetTextures(textures_.get());
 }
 
 void FMainRender::Term() {
 	textures_.reset();
-	renderer_.reset();
+	sceneRenderer_.reset();
 	scene_.reset();
-	canvas_.reset();
+	canvasRenderer_.reset();
+}
+
+void FMainRender::Render(const DirectXThreadContext* context) {
+	sceneRenderer_->Render(context);
+	canvasRenderer_->Render(context);
 }
 
 void FMainRender::PresentMain(const DirectXThreadContext* context) {
