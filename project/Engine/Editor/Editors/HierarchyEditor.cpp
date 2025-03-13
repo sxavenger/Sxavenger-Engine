@@ -32,15 +32,11 @@ void HierarchyEditor::LateUpdate() {
 	if (selected_ != nullptr) {
 		// Manipulateの設定
 		BaseEditor::editor_->ExecuteEditorFunction<RenderSceneEditor>([&](RenderSceneEditor* editor) {
-			editor->Manipulate(selected_, ImGuizmo::TRANSLATE, ImGuizmo::WORLD);
+			editor->Manipulate(selected_);
 		});
 
 		BaseEditor::editor_->ExecuteEditorFunction<RenderSceneEditor>([&](RenderSceneEditor* editor) {
-			ImGuizmo::OPERATION translate = ImGuizmo::TRANSLATE_X | ImGuizmo::TRANSLATE_Y;
-			ImGuizmo::OPERATION rotate    = ImGuizmo::ROTATE_Z;
-			ImGuizmo::OPERATION scale     = ImGuizmo::SCALE_X | ImGuizmo::SCALE_Y;
-
-			editor->ManipulateCanvas(selected_, translate | rotate | scale);
+			editor->ManipulateCanvas(selected_);
 		});
 	}
 }

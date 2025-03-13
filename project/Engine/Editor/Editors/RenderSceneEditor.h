@@ -50,9 +50,9 @@ public:
 
 	//* manipulator *//
 
-	void Manipulate(MonoBehaviour* behaviour, ImGuizmo::OPERATION operation, ImGuizmo::MODE mode);
+	void Manipulate(MonoBehaviour* behaviour);
 
-	void ManipulateCanvas(MonoBehaviour* behaviour, ImGuizmo::OPERATION operation);
+	void ManipulateCanvas(MonoBehaviour* behaviour);
 
 private:
 

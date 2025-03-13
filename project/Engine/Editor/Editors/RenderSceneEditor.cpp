@@ -68,14 +68,14 @@ void RenderSceneEditor::Render() {
 	textures_->EndTransparentBasePass(SxavengerSystem::GetMainThreadContext());
 }
 
-void RenderSceneEditor::Manipulate(MonoBehaviour* behaviour, ImGuizmo::OPERATION operation, ImGuizmo::MODE mode) {
+void RenderSceneEditor::Manipulate(MonoBehaviour* behaviour) {
 	if (guizmoUsed_.has_value() && guizmoUsed_.value() != GuizmoUsed::Scene) {
 		return;
 	}
 
 	ImGuizmo::SetDrawlist(sceneWindow_);
 
-	operation = ImGuizmo::TRANSLATE; // FIXME: translateしか使えない
+	ImGuizmo::OPERATION operation = ImGuizmo::TRANSLATE; // FIXME: translateしか使えない
 
 	// transform component の取得
 	auto component = behaviour->GetComponent<TransformComponent>();
@@ -96,7 +96,7 @@ void RenderSceneEditor::Manipulate(MonoBehaviour* behaviour, ImGuizmo::OPERATION
 		reinterpret_cast<const float*>(camera_->GetComponent<CameraComponent>()->GetCamera().view.m),
 		reinterpret_cast<const float*>(camera_->GetComponent<CameraComponent>()->GetCamera().proj.m),
 		operation,
-		mode,
+		ImGuizmo::WORLD,
 		reinterpret_cast<float*>(m.m)
 	);
 
@@ -129,7 +129,7 @@ void RenderSceneEditor::Manipulate(MonoBehaviour* behaviour, ImGuizmo::OPERATION
 
 }
 
-void RenderSceneEditor::ManipulateCanvas(MonoBehaviour* behaviour, ImGuizmo::OPERATION operation) {
+void RenderSceneEditor::ManipulateCanvas(MonoBehaviour* behaviour) {
 	if (guizmoUsed_.has_value() && guizmoUsed_.value() != GuizmoUsed::Canvas) {
 		return;
 	}
@@ -137,7 +137,7 @@ void RenderSceneEditor::ManipulateCanvas(MonoBehaviour* behaviour, ImGuizmo::OPE
 	ImGuizmo::SetDrawlist(canvasWindow_);
 	ImGuizmo::SetOrthographic(true);
 
-	operation = ImGuizmo::TRANSLATE_X | ImGuizmo::TRANSLATE_Y; //!< translate only
+	ImGuizmo::OPERATION operation = ImGuizmo::TRANSLATE_X | ImGuizmo::TRANSLATE_Y; //!< translate only
 
 	// sprite component の取得
 	auto component = behaviour->GetComponent<SpriteRendererComponent>();
