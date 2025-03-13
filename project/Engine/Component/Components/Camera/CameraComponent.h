@@ -95,6 +95,10 @@ public:
 
 	void InspectorImGui() override;
 
+	json OutputJson() const override;
+
+	void InputJson(const json& data) override;
+
 	void Init();
 
 	//* buffer option *//

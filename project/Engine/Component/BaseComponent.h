@@ -3,6 +3,9 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
+//* lib
+#include <Lib/Adapter/Json/IJsonSerializer.h>
+
 //* c++
 #include <concepts>
 
@@ -14,7 +17,8 @@ class MonoBehaviour;
 ////////////////////////////////////////////////////////////////////////////////////////////
 // BaseComponent class
 ////////////////////////////////////////////////////////////////////////////////////////////
-class BaseComponent {
+class BaseComponent
+	: public IJsonSerializer {
 public:
 
 	//=========================================================================================
@@ -25,6 +29,10 @@ public:
 	virtual ~BaseComponent() = default;
 
 	virtual void InspectorImGui() {}
+
+	virtual json OutputJson() const override { return json(); }
+
+	virtual void InputJson(const json&) override {}
 
 	//* getter *//
 

@@ -62,6 +62,26 @@ void CameraComponent::InspectorImGui() {
 	UpdateProj();
 }
 
+json CameraComponent::OutputJson() const {
+	json component;
+
+	component["sensor"] = GeometryJsonSerializer::ToJson(projection_.sensor);
+	component["focal"]  = projection_.focal;
+	component["nearZ"]  = projection_.nearZ;
+	component["farZ"]   = projection_.farZ;
+
+	return component;
+}
+
+void CameraComponent::InputJson(const json& data) {
+	const json& component = data.at(typeid(CameraComponent).name());
+
+	projection_.sensor = GeometryJsonSerializer::JsonToVector2f(component.at("sensor"));
+	projection_.focal  = component.at("focal");
+	projection_.nearZ  = component.at("nearZ");
+	projection_.farZ   = component.at("farZ");
+}
+
 void CameraComponent::Init() {
 	CreateBuffer();
 

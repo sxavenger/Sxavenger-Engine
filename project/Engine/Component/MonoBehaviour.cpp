@@ -18,6 +18,12 @@
 //* c++
 #include <execution>
 
+//=========================================================================================
+// static const variables
+//=========================================================================================
+
+const std::filesystem::path MonoBehaviour::kJsonDirectory_ = "assets/json/behaviour";
+
 ////////////////////////////////////////////////////////////////////////////////////////////
 // MonoBehaviour class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -165,8 +171,8 @@ void MonoBehaviour::SetBehaviourImGuiCommand(char buf[256]) {
 		ImGui::Text(name_.c_str());
 	}
 	
-
 	ImGui::Separator();
+	ImGui::SeparatorText("components");
 
 	for (const auto& [type, component] : GetComponents().GetMap()) {
 		if (ImGui::CollapsingHeader(type->name())) {
@@ -174,6 +180,51 @@ void MonoBehaviour::SetBehaviourImGuiCommand(char buf[256]) {
 		}
 	}
 
+	ImGui::SeparatorText("json");
+
+	if (ImGui::Button("output json")) {
+		OutputJson();
+	}
+
+	ImGui::SameLine();
+
+	if (ImGui::Button("input json")) {
+		InputJson();
+	}
+
+}
+
+void MonoBehaviour::OutputJson(const std::filesystem::path& filename) const {
+	// pathの決定
+	std::filesystem::path filepath = filename.empty() ? kJsonDirectory_ / (name_ + ".json") : kJsonDirectory_ / filename;
+
+	// jsonの出力
+	json root;
+
+	for (const auto& [type, component] : GetComponents().GetMap()) {
+		root[type->name()] = (*component)->OutputJson();
+	}
+
+	JsonAdapter::WriteToJson(filepath, root);
+}
+
+void MonoBehaviour::InputJson(const std::filesystem::path& filename) {
+	// pathの決定
+	std::filesystem::path filepath = filename.empty() ? kJsonDirectory_ / (name_ + ".json") : kJsonDirectory_ / filename;
+
+	// jsonの読み込み
+	json root;
+
+	if (!JsonAdapter::TryLoadFromJson(filepath, root)) {
+		WarningRuntime("warning | [MonoBehaviour]::InputJson", "json file is not found. filepath: " + filepath.string());
+		return;
+	}
+
+	for (const auto& [type, component] : GetComponents().GetMap()) {
+		if (root.contains(type->name())) {
+			(*component)->InputJson(root);
+		}
+	}
 }
 
 MonoBehaviour::HierarchyIterator MonoBehaviour::AddHierarchy(std::variant<MonoBehaviour*, std::unique_ptr<MonoBehaviour>>&& child) {

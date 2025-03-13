@@ -56,6 +56,20 @@ Matrix4x4 QuaternionTransform::ToMatrix() const {
 	return Matrix::MakeAffine(scale, rotate, translate);
 }
 
+json QuaternionTransform::OutputJson() const {
+	json data;
+	data["translate"] = GeometryJsonSerializer::ToJson(translate);
+	data["rotate"]    = GeometryJsonSerializer::ToJson(rotate);
+	data["scale"]     = GeometryJsonSerializer::ToJson(scale);
+	return data;
+}
+
+void QuaternionTransform::InputJson(const json& data) {
+	translate = GeometryJsonSerializer::JsonToVector3f(data.at("translate"));
+	rotate    = GeometryJsonSerializer::JsonToQuaternion(data.at("rotate"));
+	scale     = GeometryJsonSerializer::JsonToVector3f(data.at("scale"));
+}
+
 ////////////////////////////////////////////////////////////////////////////////////////////
 // TransformationMatrix structure methods
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -82,4 +96,18 @@ void Transform2d::SetImGuiCommand(float granularityTranslate, float granularityS
 
 Matrix4x4 Transform2d::ToMatrix() const {
 	return Matrix::MakeAffine({ scale.x, scale.y, 0.0f }, { 0.0f, 0.0f, rotate }, { translate.x, translate.y, 0.0f });
+}
+
+json Transform2d::OutputJson() const {
+	json data;
+	data["translate"] = GeometryJsonSerializer::ToJson(translate);
+	data["rotate"]    = rotate;
+	data["scale"]     = GeometryJsonSerializer::ToJson(scale);
+	return data;
+}
+
+void Transform2d::InputJson(const json& data) {
+	translate = GeometryJsonSerializer::JsonToVector2f(data.at("translate"));
+	rotate    = data.at("rotate");
+	scale     = GeometryJsonSerializer::JsonToVector2f(data.at("scale"));
 }

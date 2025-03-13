@@ -20,6 +20,7 @@
 #include <variant>
 #include <memory>
 #include <optional>
+#include <filesystem>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // MonoBehaviour class
@@ -90,6 +91,7 @@ public:
 	template <Component T>
 	T* RequireComponent() const;
 
+	const ComponentContainer& GetComponents() const { return components_; }
 	ComponentContainer& GetComponents() { return components_; }
 
 	//* hierarchy option *//
@@ -130,6 +132,12 @@ public:
 
 	void SetBehaviourImGuiCommand(char buf[256]);
 
+	//* json option *//
+
+	void OutputJson(const std::filesystem::path& filename = "") const;
+
+	void InputJson(const std::filesystem::path& filename = "");
+
 private:
 
 	//=========================================================================================
@@ -157,6 +165,9 @@ private:
 
 	//* container
 	std::optional<ContainerIterator> containerIterator_;
+
+	//* json
+	static const std::filesystem::path kJsonDirectory_;
 
 	//=========================================================================================
 	// private methods

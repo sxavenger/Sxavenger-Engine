@@ -19,6 +19,23 @@ void TransformComponent::InspectorImGui() {
 	UpdateMatrix();
 }
 
+json TransformComponent::OutputJson() const {
+	json component;
+
+	component["transform"] = transform_.OutputJson();
+
+	return component;
+}
+
+void TransformComponent::InputJson(const json& data) {
+	if (!data.contains(typeid(TransformComponent).name())) {
+		return; //!< component data is not exist.
+	}
+
+	const json& component = data.at(typeid(TransformComponent).name());
+	transform_.InputJson(component.at("transform"));
+}
+
 void TransformComponent::CreateBuffer() {
 	if (buffer_ != nullptr) {
 		return;

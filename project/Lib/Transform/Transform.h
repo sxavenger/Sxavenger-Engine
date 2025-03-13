@@ -9,6 +9,7 @@
 #include <Lib/Geometry/Quaternion.h>
 #include <Lib/Geometry/Matrix4x4.h>
 #include <Lib/Geometry/GeometryMath.h>
+#include <Lib/Adapter/Json/IJsonSerializer.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // EulerTransform structure
@@ -39,7 +40,9 @@ public:
 ////////////////////////////////////////////////////////////////////////////////////////////
 // QuaternionTransform structure
 ////////////////////////////////////////////////////////////////////////////////////////////
-struct QuaternionTransform {
+struct QuaternionTransform
+	: public IJsonSerializer {
+public:
 
 	//=========================================================================================
 	// public methods
@@ -51,6 +54,10 @@ struct QuaternionTransform {
 	void SetImGuiCommand(float granularityTranslate = 0.01f, float granularityRotate = 0.01f, float granularityScale = 0.01f);
 
 	Matrix4x4 ToMatrix() const;
+
+	json OutputJson() const override;
+
+	void InputJson(const json& data) override;
 
 	//=========================================================================================
 	// public variables
@@ -88,7 +95,9 @@ struct TransformationMatrix {
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Transform2d structure
 ////////////////////////////////////////////////////////////////////////////////////////////
-struct Transform2d {
+struct Transform2d
+	: public IJsonSerializer {
+public:
 
 	//=========================================================================================
 	// public methods
@@ -100,6 +109,10 @@ struct Transform2d {
 	void SetImGuiCommand(float granularityTranslate = 0.01f, float granularityScale = 0.01f);
 
 	Matrix4x4 ToMatrix() const;
+
+	json OutputJson() const override;
+
+	void InputJson(const json& data) override;
 
 	//=========================================================================================
 	// public variables

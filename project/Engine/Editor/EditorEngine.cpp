@@ -24,6 +24,9 @@ void EditorEngine::Init() {
 }
 
 void EditorEngine::Term() {
+	for (auto& [typeindex, editor] : editors_) {
+		editor.reset();
+	}
 	editors_.clear();
 }
 

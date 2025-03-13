@@ -26,7 +26,7 @@ public:
 	// public methods
 	//=========================================================================================
 
-	virtual json OutputJson() = 0;
+	virtual json OutputJson() const = 0;
 
 	virtual void InputJson(const json& data) = 0;
 
@@ -56,6 +56,8 @@ public:
 
 	static json ToJson(const Quaternion& q);
 	static Quaternion JsonToQuaternion(const json& data);
+
+	//!< todo templateでまとめる
 
 private:
 };

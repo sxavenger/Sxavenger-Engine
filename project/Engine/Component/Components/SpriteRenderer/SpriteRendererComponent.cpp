@@ -78,7 +78,42 @@ void SpriteRendererComponent::InspectorImGui() {
 		ImGui::ColorEdit4("right bottom", &colors_[static_cast<uint8_t>(VertexPoint::RightBottom)].r);
 		ImGui::TreePop();
 	}
+}
 
+json SpriteRendererComponent::OutputJson() const {
+	json component;
+
+	component["transform2d"] = transform2d_.OutputJson();
+	component["transformUV"] = transformUV_.OutputJson();
+
+	component["anchor"] = GeometryJsonSerializer::ToJson(anchor_);
+	component["pivot"]  = GeometryJsonSerializer::ToJson(pivot_);
+
+	//root["texture"]     = std::visit(OutputJsonVisitor{}, texture_.value());
+	// todo: texture output
+
+	component["colors"] = json::array();
+	for (auto& color : colors_) {
+		component["colors"].emplace_back(GeometryJsonSerializer::ToJson(color));
+	}
+
+	return component;
+}
+
+void SpriteRendererComponent::InputJson(const json& data) {
+	const json& component = data.at(typeid(SpriteRendererComponent).name());
+	
+	transform2d_.InputJson(component.at("transform2d"));
+	transformUV_.InputJson(component.at("transformUV"));
+
+	anchor_ = GeometryJsonSerializer::JsonToVector2f(component.at("anchor"));
+	pivot_  = GeometryJsonSerializer::JsonToVector2f(component.at("pivot"));
+
+	// todo: texture input
+
+	for (uint8_t i = 0; i < kVertexPointCount; ++i) {
+		colors_[i] = GeometryJsonSerializer::JsonToColor4f(component.at("colors").at(i));
+	}
 }
 
 void SpriteRendererComponent::SetPosition(const Vector2f& position) {

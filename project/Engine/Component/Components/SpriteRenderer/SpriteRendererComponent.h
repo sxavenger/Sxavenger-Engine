@@ -99,6 +99,10 @@ public:
 
 	virtual void InspectorImGui() override;
 
+	json OutputJson() const override;
+
+	void InputJson(const json& data) override;
+
 	//* sprite option *//
 
 	void SetTexture(const D3D12_GPU_DESCRIPTOR_HANDLE& handle) { texture_ = handle; }
