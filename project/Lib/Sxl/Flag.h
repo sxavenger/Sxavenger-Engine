@@ -32,6 +32,21 @@ public:
 
 	~FlagMask() = default;
 
+	constexpr bool Test(_Mask mask) const { return (mask_ & mask) == mask; }
+	constexpr bool Test(_Bit bit) const { return Test(static_cast<_Mask>(bit)); }
+
+	constexpr bool Any(_Mask mask) const { return (mask_ & mask) != 0; }
+	constexpr bool Any(_Bit bit) const { return Any(static_cast<_Mask>(bit)); }
+
+	//* *//
+
+	constexpr void Clear() { mask_ = NULL; }
+	constexpr void Clear(_Mask mask) { mask_ &= ~mask; }
+
+	//* getter *//
+
+	constexpr _Mask Get() const { return mask_; }
+
 	//=========================================================================================
 	// public operator
 	//=========================================================================================
@@ -59,18 +74,6 @@ public:
 
 	constexpr const _Mask& operator&() const { return mask_; }
 	constexpr _Mask& operator&() { return mask_; }
-
-	//* methods *//
-
-	constexpr bool Test(_Mask mask) const { return (mask_ & mask) == mask; }
-	constexpr bool Test(_Bit bit) const { return Test(static_cast<_Mask>(bit)); }
-
-	constexpr bool Any(_Mask mask) const { return (mask_ & mask) != 0; }
-	constexpr bool Any(_Bit bit) const { return Any(static_cast<_Mask>(bit)); }
-
-	//* getter *//
-
-	constexpr _Mask Get() const { return mask_; }
 
 private:
 

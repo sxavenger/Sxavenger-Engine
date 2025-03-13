@@ -46,8 +46,9 @@ void RenderSceneEditor::ShowMainMenu() {
 }
 
 void RenderSceneEditor::ShowWindow() {
-	ShowSceneWindow();
 	ShowGameWindow();
+	ShowSceneWindow();
+	ShowCanvasWindow();
 }
 
 void RenderSceneEditor::Render() {
@@ -68,6 +69,12 @@ void RenderSceneEditor::Render() {
 }
 
 void RenderSceneEditor::Manipulate(MonoBehaviour* behaviour, ImGuizmo::OPERATION operation, ImGuizmo::MODE mode) {
+	if (guizmoUsed_.has_value() && guizmoUsed_.value() != GuizmoUsed::Scene) {
+		return;
+	}
+
+	ImGuizmo::SetDrawlist(sceneWindow_);
+
 	operation = ImGuizmo::TRANSLATE; // FIXME: translateしか使えない
 
 	// transform component の取得
@@ -77,13 +84,15 @@ void RenderSceneEditor::Manipulate(MonoBehaviour* behaviour, ImGuizmo::OPERATION
 		return;
 	}
 
-	ImGuizmo::SetRect(rect_.pos.x, rect_.pos.y, rect_.size.x, rect_.size.y);
+	ImGuizmo::SetRect(sceneRect_.pos.x, sceneRect_.pos.y, sceneRect_.size.x, sceneRect_.size.y);
 
 	Matrix4x4 m = component->GetMatrix();
 
 	ImGuizmo::Enable(!component->HasParent());
 
-	ImGuizmo::Manipulate(
+	bool isEdit = false;
+
+	isEdit = ImGuizmo::Manipulate(
 		reinterpret_cast<const float*>(camera_->GetComponent<CameraComponent>()->GetCamera().view.m),
 		reinterpret_cast<const float*>(camera_->GetComponent<CameraComponent>()->GetCamera().proj.m),
 		operation,
@@ -91,7 +100,15 @@ void RenderSceneEditor::Manipulate(MonoBehaviour* behaviour, ImGuizmo::OPERATION
 		reinterpret_cast<float*>(m.m)
 	);
 
+	ImGuizmo::Enable(true);
+
+	guizmoUsed_ = ImGuizmo::IsUsing() ? std::optional<GuizmoUsed>{GuizmoUsed::Scene} : std::nullopt;
+
 	if (component->HasParent()) {
+		return;
+	}
+
+	if (!isEdit) {
 		return;
 	}
 
@@ -112,7 +129,15 @@ void RenderSceneEditor::Manipulate(MonoBehaviour* behaviour, ImGuizmo::OPERATION
 
 }
 
-void RenderSceneEditor::Manipulate2dSprite(MonoBehaviour* behaviour, ImGuizmo::OPERATION operation) {
+void RenderSceneEditor::ManipulateCanvas(MonoBehaviour* behaviour, ImGuizmo::OPERATION operation) {
+	if (guizmoUsed_.has_value() && guizmoUsed_.value() != GuizmoUsed::Canvas) {
+		return;
+	}
+
+	ImGuizmo::SetDrawlist(canvasWindow_);
+	ImGuizmo::SetOrthographic(true);
+
+	operation = ImGuizmo::TRANSLATE_X | ImGuizmo::TRANSLATE_Y; //!< translate only
 
 	// sprite component の取得
 	auto component = behaviour->GetComponent<SpriteRendererComponent>();
@@ -121,21 +146,28 @@ void RenderSceneEditor::Manipulate2dSprite(MonoBehaviour* behaviour, ImGuizmo::O
 		return;
 	}
 
-	ImGuizmo::SetRect(rect_.pos.x, rect_.pos.y, rect_.size.x, rect_.size.y);
+	ImGuizmo::SetRect(canvasRect_.pos.x, canvasRect_.pos.y, canvasRect_.size.x, canvasRect_.size.y);
 
 	Matrix4x4 m = component->GetTransform2d().ToMatrix();
 
-	// todo: 2d sprite の操作
-	Matrix4x4 view = Matrix4x4::Identity();
-	Matrix4x4 proj = Matrix4x4::Identity();
+	static const Matrix4x4 view = Matrix4x4::Identity();
+	static const Matrix4x4 proj = Matrix::MakeOrthographic(0.0f, 0.0f, static_cast<float>(kMainWindowSize.x), static_cast<float>(kMainWindowSize.y), 0.0f, 128.0f);
 
-	ImGuizmo::Manipulate(
+	bool isEdit = false;
+
+	isEdit = ImGuizmo::Manipulate(
 		reinterpret_cast<const float*>(view.m),
 		reinterpret_cast<const float*>(proj.m),
 		operation,
 		ImGuizmo::WORLD,
 		reinterpret_cast<float*>(m.m)
 	);
+
+	guizmoUsed_ = ImGuizmo::IsUsing() ? std::optional<GuizmoUsed>{GuizmoUsed::Canvas} : std::nullopt;
+
+	if (!isEdit) {
+		return;
+	}
 
 	EulerTransform transform = {};
 
@@ -146,11 +178,11 @@ void RenderSceneEditor::Manipulate2dSprite(MonoBehaviour* behaviour, ImGuizmo::O
 		&transform.scale.x
 	);
 
-	Transform2d& transform2d = component->GetTransform2d();
-	transform2d.translate = { transform.translate.x, transform.translate.y };
-	transform2d.rotate    = transform.rotate.z;
-	transform2d.scale     = { transform.scale.x, transform.scale.y };
-	
+	component->GetTransform2d().translate = { transform.translate.x, transform.translate.y };
+	/*component->GetTransform2d().rotate    = transform.rotate.z;
+	component->GetTransform2d().scale     = { transform.scale.x, transform.scale.y };*/
+
+	ImGuizmo::SetOrthographic(false);
 }
 
 void RenderSceneEditor::ShowSceneMenu() {
@@ -200,17 +232,17 @@ void RenderSceneEditor::ShowSceneWindow() {
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, { 0, 0 });
 	ImGui::Begin("Scene ## Render Scene Editor", nullptr, BaseEditor::GetWindowFlag() | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
 
+	sceneWindow_ = ImGui::GetWindowDrawList();
+
 	SetImGuiImageFullWindow(
 		checkerboard_.WaitGet()->GetGPUHandleSRV(),
 		kMainWindowSize
 	);
 
-	rect_ = SetImGuiImageFullWindow(
+	sceneRect_ = SetImGuiImageFullWindow(
 		textures_->GetGBuffer(layout_)->GetGPUHandleSRV(),
 		kMainWindowSize
 	);
-
-	ImGuizmo::SetDrawlist();
 
 	if (ImGui::IsWindowHovered() && (ImGui::IsMouseClicked(ImGuiMouseButton_Middle) || ImGui::IsMouseClicked(ImGuiMouseButton_Right))) {
 		//!< window hovered 状態で mouse middle click が押された場合, camera操作(forcus)を許可.
@@ -239,6 +271,34 @@ void RenderSceneEditor::ShowGameWindow() {
 		FMainRender::GetInstance()->GetTextures()->GetGBuffer(FRenderTargetTextures::GBufferLayout::Main)->GetGPUHandleSRV(),
 		kMainWindowSize
 	);
+
+	SetImGuiImageFullWindow(
+		FMainRender::GetInstance()->GetTextures()->GetGBuffer(FRenderTargetTextures::GBufferLayout::UI)->GetGPUHandleSRV(),
+		kMainWindowSize
+	);
+
+	ImGui::End();
+	ImGui::PopStyleVar();
+}
+
+void RenderSceneEditor::ShowCanvasWindow() {
+	//* fix window style
+	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, { 0, 0 });
+	ImGui::Begin("Canvas ## Render Scene Editor", nullptr, BaseEditor::GetWindowFlag() | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
+
+	canvasWindow_ = ImGui::GetWindowDrawList();
+
+	SetImGuiImageFullWindow(
+		checkerboard_.WaitGet()->GetGPUHandleSRV(),
+		kMainWindowSize
+	);
+
+	canvasRect_ = SetImGuiImageFullWindow(
+		FMainRender::GetInstance()->GetTextures()->GetGBuffer(FRenderTargetTextures::GBufferLayout::UI)->GetGPUHandleSRV(),
+		kMainWindowSize
+	);
+
+	//ImGuizmo::SetDrawlist();
 
 	ImGui::End();
 	ImGui::PopStyleVar();

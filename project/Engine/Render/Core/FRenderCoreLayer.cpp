@@ -4,6 +4,9 @@ _DXOBJECT_USING
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
+//* render
+#include "../FRenderTargetTextures.h"
+
 //* engine
 #include <Engine/System/Config/SxavengerConfig.h>
 
@@ -38,10 +41,12 @@ void FRenderCoreLayer::CreateDesc() {
 	desc_.ClearElement();
 	desc_.SetElement("POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT);
 	desc_.SetElement("TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT);
-	desc_.SetElement("COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT);
+	desc_.SetElement("COLOR", 0,    DXGI_FORMAT_R32G32B32A32_FLOAT);
 
-	desc_.SetRTVFormat(0, DXGI_FORMAT_R32G32B32A32_FLOAT);
-	//desc_.SetBlendMode(0, BlendMode::kBlendModeNormalSrc);
+	desc_.SetRTVFormat(0, FRenderTargetTextures::GetFormat(FRenderTargetTextures::GBufferLayout::UI));
+
+	desc_.SetBlendMode(0, BlendMode::kBlendModeNormalSrc);
+
 	desc_.SetRasterizer(D3D12_CULL_MODE_NONE, D3D12_FILL_MODE_SOLID);
 
 }

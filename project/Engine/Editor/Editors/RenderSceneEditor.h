@@ -18,6 +18,12 @@
 #include <Lib/Geometry/Vector2.h>
 #include <Lib/Geometry/Vector3.h>
 
+//* external
+#include <imgui.h>
+
+//* c++
+#include <memory>
+
 ////////////////////////////////////////////////////////////////////////////////////////////
 // RenderSceneEditor class
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -46,7 +52,7 @@ public:
 
 	void Manipulate(MonoBehaviour* behaviour, ImGuizmo::OPERATION operation, ImGuizmo::MODE mode);
 
-	void Manipulate2dSprite(MonoBehaviour* behaviour, ImGuizmo::OPERATION operation);
+	void ManipulateCanvas(MonoBehaviour* behaviour, ImGuizmo::OPERATION operation);
 
 private:
 
@@ -58,6 +64,14 @@ private:
 		Vector2f size;
 	};
 
+	////////////////////////////////////////////////////////////////////////////////////////////
+	// GuizmoEnable enum class
+	////////////////////////////////////////////////////////////////////////////////////////////
+	enum class GuizmoUsed : uint32_t {
+		Scene,
+		Canvas,
+	};
+
 private:
 
 	//=========================================================================================
@@ -66,7 +80,8 @@ private:
 
 	//* rect *//
 
-	WindowRect rect_ = {};
+	WindowRect sceneRect_  = {};
+	WindowRect canvasRect_ = {};
 
 	//* texture *//
 
@@ -98,6 +113,13 @@ private:
 	std::unique_ptr<ColliderPrimitiveRenderer> colliderRenderer_;
 	bool isRenderCollider_ = true;
 
+	//* imgui *//
+
+	ImDrawList* sceneWindow_  = nullptr;
+	ImDrawList* canvasWindow_ = nullptr;
+
+	std::optional<GuizmoUsed> guizmoUsed_ = std::nullopt;
+
 	//=========================================================================================
 	// private methods
 	//=========================================================================================
@@ -109,6 +131,7 @@ private:
 
 	void ShowSceneWindow();
 	void ShowGameWindow();
+	void ShowCanvasWindow();
 
 	//* sub methods *//
 

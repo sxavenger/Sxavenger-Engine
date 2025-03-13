@@ -35,6 +35,11 @@ void FMainRender::PresentMain(const DirectXThreadContext* context) {
 		context, kMainWindowSize,
 		textures_->GetGBuffer(FRenderTargetTextures::GBufferLayout::Main)->GetGPUHandleSRV()
 	);
+
+	presenter_->Present(
+		context, kMainWindowSize,
+		textures_->GetGBuffer(FRenderTargetTextures::GBufferLayout::UI)->GetGPUHandleSRV()
+	);
 }
 
 FMainRender* FMainRender::GetInstance() {

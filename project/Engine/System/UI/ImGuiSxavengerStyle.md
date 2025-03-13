@@ -81,12 +81,13 @@ system color...
 	- Active  = 79, -, -, 242
 
 > Tab
-	- default                        = 6, -, -, 255
+	- default                        = 6, -, -, 50
 	- Hovered                        = 10, -, -, 255
 	- Active                         = 32, -, -, 255
 	- Unforcused                     = 6, -, -, 255
 	- UnforcusedActive               = 15, -, -, 255
 	- SelectedOverline               = 51, -, -, 255
+	- TabDimmed                      = 10, -, -, 0
 	- SelectedDimmedSelectedOverline = 15, -, -, 0
 
 > Plot

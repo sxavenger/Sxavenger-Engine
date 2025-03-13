@@ -35,13 +35,13 @@ void HierarchyEditor::LateUpdate() {
 			editor->Manipulate(selected_, ImGuizmo::TRANSLATE, ImGuizmo::WORLD);
 		});
 
-		/*BaseEditor::editor_->ExecuteEditorFunction<RenderSceneEditor>([&](RenderSceneEditor* editor) {
+		BaseEditor::editor_->ExecuteEditorFunction<RenderSceneEditor>([&](RenderSceneEditor* editor) {
 			ImGuizmo::OPERATION translate = ImGuizmo::TRANSLATE_X | ImGuizmo::TRANSLATE_Y;
 			ImGuizmo::OPERATION rotate    = ImGuizmo::ROTATE_Z;
 			ImGuizmo::OPERATION scale     = ImGuizmo::SCALE_X | ImGuizmo::SCALE_Y;
 
-			editor->Manipulate2dSprite(selected_, translate | rotate | scale);
-		});*/
+			editor->ManipulateCanvas(selected_, translate | rotate | scale);
+		});
 	}
 }
 

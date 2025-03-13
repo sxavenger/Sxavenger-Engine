@@ -4,6 +4,9 @@ _DXOBJECT_USING
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
+//* render
+#include "../FRenderTargetTextures.h"
+
 //* engine
 #include <Engine/System/Config/SxavengerConfig.h>
 
@@ -65,7 +68,7 @@ void FRenderCoreLight::CreatePipeline() {
 	desc2d.ClearElement();
 	desc2d.SetElement("POSITION", 0, DXGI_FORMAT_R32G32_FLOAT);
 	desc2d.SetDepthStencil(false);
-	desc2d.SetRTVFormat(0, DXGI_FORMAT_R32G32B32A32_FLOAT);
+	desc2d.SetRTVFormat(0, FRenderTargetTextures::GetFormat(FRenderTargetTextures::GBufferLayout::Main));
 	desc2d.SetIndependentBlendEnable(false);
 	desc2d.SetBlendDesc(0, blend);
 

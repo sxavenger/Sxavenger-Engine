@@ -24,6 +24,7 @@ public:
 		Material_AO,
 		Albedo,
 		Position, // todo: depthから復元する
+		UI,
 		Main,
 	};
 	static const uint8_t kGBufferLayoutCount = static_cast<uint8_t>(GBufferLayout::Main) + 1;
@@ -36,6 +37,7 @@ public:
 	//* Material:  float metallic, float specular, float roughness, float AO [R8G8B8A8_UNORM]
 	//* Albedo_AO: float3 albedo, float _NOT_USED_1                          [R32G32B32A32_FLOAT] //!< HDRのため32bit浮動小数点
 	//* Position:  float3 position, float _NOT_USED_1                        [R32G32B32A32_FLOAT] //!< HDRのため32bit浮動小数点
+	//* UI: spriteでの使用
 	//* Main:      float4 color                                              [R32G32B32A32_FLOAT] //!< HDRのため32bit浮動小数点
 
 public:
@@ -82,6 +84,8 @@ public:
 	const FDepthTexture* GetDepth() const { return depth_.get(); }
 
 	const D3D12_GPU_VIRTUAL_ADDRESS& GetParameter() const { return dimension_->GetGPUVirtualAddress(); }
+
+	static const DXGI_FORMAT GetFormat(GBufferLayout layout) { return kGBufferFormats_[static_cast<size_t>(layout)]; }
 
 private:
 

@@ -198,12 +198,13 @@ void ImGuiController::SetImGuiStyle() {
 	style.Colors[ImGuiCol_ResizeGripActive]  = ToImVec4({ 79, 79, 79, 242 });
 
 	// tab
-	style.Colors[ImGuiCol_Tab]                       = ToImVec4({ 6, 6, 6, 255 });
+	style.Colors[ImGuiCol_Tab]                       = ToImVec4({ 6, 6, 6, 50 });
 	style.Colors[ImGuiCol_TabHovered]                = ToImVec4({ 75, 75, 75, 255 });
 	style.Colors[ImGuiCol_TabActive]                 = ToImVec4({ 32, 32, 32, 255 });
 	style.Colors[ImGuiCol_TabUnfocused]              = ToImVec4({ 6, 6, 6, 255 });
 	style.Colors[ImGuiCol_TabUnfocusedActive]        = ToImVec4({ 15, 15, 15, 255 });
 	style.Colors[ImGuiCol_TabSelectedOverline]       = ToImVec4({ 51, 51, 51, 255 });
+	style.Colors[ImGuiCol_TabDimmed]                 = ToImVec4({ 10, 10, 10, 0 });
 	style.Colors[ImGuiCol_TabDimmedSelectedOverline] = ToImVec4({ 15, 15, 15, 0 });
 
 	// plot
