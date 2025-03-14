@@ -195,6 +195,7 @@ void RenderSceneEditor::ShowSceneMenu() {
 			"Material_AO",
 			"Albedo",
 			"Position",
+			"UI",
 			"Main",
 		};
 
