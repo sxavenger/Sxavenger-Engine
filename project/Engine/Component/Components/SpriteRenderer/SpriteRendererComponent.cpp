@@ -65,6 +65,8 @@ void SpriteRendererComponent::InspectorImGui() {
 	ImGui::DragFloat2("anchor", &anchor_.x, 0.01f);
 	ImGui::DragFloat2("pivot",  &pivot_.x, 0.01f);
 
+	ImGui::DragFloat("priority", &priority_, 0.01f, 0.0f, 1.0f);
+
 	// todo: flip
 
 	if (ImGui::ColorEdit4("color", &colors_[0].r)) {
@@ -89,6 +91,8 @@ json SpriteRendererComponent::OutputJson() const {
 	component["anchor"] = GeometryJsonSerializer::ToJson(anchor_);
 	component["pivot"]  = GeometryJsonSerializer::ToJson(pivot_);
 
+	component["priority"] = priority_;
+
 	//root["texture"]     = std::visit(OutputJsonVisitor{}, texture_.value());
 	// todo: texture output
 
@@ -108,6 +112,8 @@ void SpriteRendererComponent::InputJson(const json& data) {
 
 	anchor_ = GeometryJsonSerializer::JsonToVector2f(component.at("anchor"));
 	pivot_  = GeometryJsonSerializer::JsonToVector2f(component.at("pivot"));
+
+	priority_ = component.at("priority");
 
 	// todo: texture input
 
@@ -174,10 +180,10 @@ void SpriteRendererComponent::TransferPosition() {
 		std::swap(leftTop.y, rightBottom.y);
 	}
 
-	ia_.GetVertex()->At(static_cast<uint8_t>(VertexPoint::LeftTop)).position     = { leftTop.x, leftTop.y, 0.0f };
-	ia_.GetVertex()->At(static_cast<uint8_t>(VertexPoint::RightTop)).position    = { rightBottom.x, leftTop.y, 0.0f };
-	ia_.GetVertex()->At(static_cast<uint8_t>(VertexPoint::LeftBottom)).position  = { leftTop.x, rightBottom.y, 0.0f };
-	ia_.GetVertex()->At(static_cast<uint8_t>(VertexPoint::RightBottom)).position = { rightBottom.x, rightBottom.y, 0.0f };
+	ia_.GetVertex()->At(static_cast<uint8_t>(VertexPoint::LeftTop)).position     = { leftTop.x, leftTop.y, priority_ };
+	ia_.GetVertex()->At(static_cast<uint8_t>(VertexPoint::RightTop)).position    = { rightBottom.x, leftTop.y, priority_ };
+	ia_.GetVertex()->At(static_cast<uint8_t>(VertexPoint::LeftBottom)).position  = { leftTop.x, rightBottom.y, priority_ };
+	ia_.GetVertex()->At(static_cast<uint8_t>(VertexPoint::RightBottom)).position = { rightBottom.x, rightBottom.y, priority_ };
 
 	// todo: depth
 }

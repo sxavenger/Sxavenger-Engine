@@ -115,6 +115,10 @@ public:
 	void SetVertexColor(const Color4f& color, VertexPoint point);
 	void SetColor(const Color4f& color);
 
+	void SetAnchor(const Vector2f& anchor) { anchor_ = anchor; }
+	void SetPivot(const Vector2f& pivot) { pivot_ = pivot; }
+	void SetPriority(float priority) { priority_ = priority; }
+
 	//* render option *//
 
 	bool CheckTexture() const { return texture_.has_value(); }
@@ -164,6 +168,8 @@ private:
 
 	std::bitset<2> isFlip2d_ = {};
 	std::bitset<2> isFlipUV_ = {};
+
+	float priority_ = 0.0f;
 
 	//* triangle input assembler *//
 

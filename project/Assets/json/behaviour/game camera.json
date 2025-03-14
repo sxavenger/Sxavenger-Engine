@@ -1,0 +1,90 @@
+{
+	"class CameraComponent": {
+		"farZ": 1024.0,
+		"focal": 20.0,
+		"nearZ": 0.009999999776482582,
+		"sensor": {
+			"x": 16.0,
+			"y": 9.0
+		}
+	},
+	"class SpriteRendererComponent": {
+		"anchor": {
+			"x": 0.0,
+			"y": 0.0
+		},
+		"colors": [
+			{
+				"a": 1.0,
+				"b": 1.0,
+				"g": 1.0,
+				"r": 1.0
+			},
+			{
+				"a": 1.0,
+				"b": 1.0,
+				"g": 1.0,
+				"r": 1.0
+			},
+			{
+				"a": 1.0,
+				"b": 1.0,
+				"g": 1.0,
+				"r": 1.0
+			},
+			{
+				"a": 1.0,
+				"b": 1.0,
+				"g": 1.0,
+				"r": 1.0
+			}
+		],
+		"pivot": {
+			"x": 0.0,
+			"y": 0.0
+		},
+		"priority": 1.0,
+		"transform2d": {
+			"rotate": 0.0,
+			"scale": {
+				"x": 120.0,
+				"y": 120.0
+			},
+			"translate": {
+				"x": 0.0,
+				"y": 0.0
+			}
+		},
+		"transformUV": {
+			"rotate": 0.0,
+			"scale": {
+				"x": 1.0,
+				"y": 1.0
+			},
+			"translate": {
+				"x": 0.0,
+				"y": 0.0
+			}
+		}
+	},
+	"class TransformComponent": {
+		"transform": {
+			"rotate": {
+				"w": 1.0,
+				"x": 0.0,
+				"y": 0.0,
+				"z": 0.0
+			},
+			"scale": {
+				"x": 1.0,
+				"y": 1.0,
+				"z": 1.0
+			},
+			"translate": {
+				"x": 0.0,
+				"y": 0.0,
+				"z": 0.0
+			}
+		}
+	}
+}
