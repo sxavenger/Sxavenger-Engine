@@ -134,6 +134,9 @@ public:
 	const Transform2d& GetTransform2d() const { return transform2d_; }
 	Transform2d& GetTransform2d() { return transform2d_; }
 
+	const Transform2d& GetTransformUV() const { return transformUV_; }
+	Transform2d& GetTransformUV() { return transformUV_; }
+
 private:
 
 	//=========================================================================================
