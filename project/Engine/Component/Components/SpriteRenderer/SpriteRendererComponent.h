@@ -169,7 +169,7 @@ private:
 	std::bitset<2> isFlip2d_ = {};
 	std::bitset<2> isFlipUV_ = {};
 
-	uint32_t priority_ = 0;
+	uint16_t priority_ = 0;
 
 	//* triangle input assembler *//
 

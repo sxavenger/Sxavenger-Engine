@@ -65,7 +65,7 @@ void SpriteRendererComponent::InspectorImGui() {
 	ImGui::DragFloat2("anchor", &anchor_.x, 0.01f);
 	ImGui::DragFloat2("pivot",  &pivot_.x, 0.01f);
 
-	ImGui::DragScalar("priority", ImGuiDataType_U32, &priority_, 1.0f);
+	ImGui::DragScalar("priority", ImGuiDataType_U16, &priority_, 1.0f);
 
 	// todo: flip
 
@@ -180,7 +180,7 @@ void SpriteRendererComponent::TransferPosition() {
 		std::swap(leftTop.y, rightBottom.y);
 	}
 
-	float priorityDepth = static_cast<float>(priority_) / UINT32_MAX;
+	float priorityDepth = static_cast<float>(priority_) / UINT16_MAX;
 
 	ia_.GetVertex()->At(static_cast<uint8_t>(VertexPoint::LeftTop)).position     = { leftTop.x, leftTop.y, priorityDepth };
 	ia_.GetVertex()->At(static_cast<uint8_t>(VertexPoint::RightTop)).position    = { rightBottom.x, leftTop.y, priorityDepth };
