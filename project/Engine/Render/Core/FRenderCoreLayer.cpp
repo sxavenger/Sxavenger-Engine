@@ -45,8 +45,9 @@ void FRenderCoreLayer::CreateDesc() {
 
 	desc_.SetRTVFormat(0, FRenderTargetTextures::GetFormat(FRenderTargetTextures::GBufferLayout::UI));
 
-	D3D12_RENDER_TARGET_BLEND_DESC desc = {};
-	desc.RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE_ALL;
+	desc_.SetBlendMode(0, BlendMode::kBlendModeNormalSrc);
+
+	/*D3D12_RENDER_TARGET_BLEND_DESC desc = {};
 	desc.BlendEnable           = true;
 	desc.SrcBlend              = D3D12_BLEND_SRC_ALPHA;
 	desc.BlendOp               = D3D12_BLEND_OP_ADD;
@@ -54,8 +55,8 @@ void FRenderCoreLayer::CreateDesc() {
 	desc.SrcBlendAlpha         = D3D12_BLEND_ONE;
 	desc.BlendOpAlpha          = D3D12_BLEND_OP_MAX;
 	desc.DestBlendAlpha        = D3D12_BLEND_ONE;
-
-	desc_.SetBlendDesc(0, desc);
+	desc.RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE_ALL;
+	desc_.SetBlendDesc(0, desc);*/
 
 	desc_.SetRasterizer(D3D12_CULL_MODE_NONE, D3D12_FILL_MODE_SOLID);
 

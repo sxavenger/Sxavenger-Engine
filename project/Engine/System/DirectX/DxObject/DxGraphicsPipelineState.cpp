@@ -98,7 +98,7 @@ void GraphicsPipelineDesc::CreateDefaultDesc() {
 	SetRasterizer(D3D12_CULL_MODE_BACK, D3D12_FILL_MODE_SOLID);
 	SetDepthStencil(true);
 
-	SetBlendMode(0, BlendMode::kBlendModeNormal);
+	SetBlendMode(0, BlendMode::kBlendModeNormalSrc);
 	SetIndependentBlendEnable(false);
 
 	SetPrimitive(PrimitiveType::kTrianglList);

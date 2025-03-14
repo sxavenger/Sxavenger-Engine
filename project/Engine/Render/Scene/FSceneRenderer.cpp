@@ -297,6 +297,14 @@ void FSceneRenderer::RenderTransparentBaseStaticMesh(const DirectXThreadContext*
 	// componentを取得
 	sComponentStorage->ForEach<MeshRendererComponent>([&](MeshRendererComponent* component) {
 
+		if (!component->IsView()) {
+			return;
+		}
+
+		if (component->GetMaterial()->GetBlendMode() != Material::BlendMode::Translucent) {
+			return;
+		}
+
 		component->GetMesh()->BindIABuffer(context);
 
 		// メッシュの描画
