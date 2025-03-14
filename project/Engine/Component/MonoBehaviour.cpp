@@ -215,7 +215,7 @@ void MonoBehaviour::InputJson(const std::filesystem::path& filename) {
 	// jsonの読み込み
 	json root;
 
-	if (!JsonAdapter::TryLoadFromJson(filepath, root)) {
+	if (!JsonAdapter::LoadFromJson(filepath, root)) {
 		WarningRuntime("warning | [MonoBehaviour]::InputJson", "json file is not found. filepath: " + filepath.string());
 		return;
 	}

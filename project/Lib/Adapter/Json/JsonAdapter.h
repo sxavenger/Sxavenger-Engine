@@ -30,7 +30,7 @@ public:
 	//! @brief Jsonファイル読み込み
 	//! @retval true  成功
 	//! @retval false 失敗
-	static bool TryLoadFromJson(const std::filesystem::path& filepath, json& out);
+	static bool LoadFromJson(const std::filesystem::path& filepath, json& out);
 
 	//! @brief Jsonファイルに書き込み
 	static void WriteToJson(const std::filesystem::path& filepath, const json& data);

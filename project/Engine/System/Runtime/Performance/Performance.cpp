@@ -3,6 +3,9 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
+//* engine
+#include <Engine/System/Config/SxavengerConfig.h>
+
 //* c++
 #include <thread>
 
@@ -40,14 +43,16 @@ void Performance::SystemDebugGui() {
 }
 
 void Performance::WaitFrame() const {
-	if (limitFrame_ == 0.0f) {
+	if (!SxavengerConfig::GetConfig().isLockFrameRate) {
 		return;
 	}
 
 	const auto& reference = runtime_.GetReference();
 
-	const std::chrono::microseconds kWaitTime(static_cast<uint64_t>(1000000.0f / limitFrame_));
-	const std::chrono::microseconds kCheckWaitTime(static_cast<uint64_t>(1000000.0f / (limitFrame_ + 5))); //!< 60Hz倍数以外のモニター対策
+	float targetFrameRate = SxavengerConfig::GetConfig().targetFrameRate;
+
+	const std::chrono::microseconds kWaitTime(static_cast<uint64_t>(1000000.0f / targetFrameRate));
+	const std::chrono::microseconds kCheckWaitTime(static_cast<uint64_t>(1000000.0f / (targetFrameRate + 5))); //!< 60Hz倍数以外のモニター対策
 
 	// 現在時刻の取得
 	std::chrono::steady_clock::time_point now = std::chrono::steady_clock::now();

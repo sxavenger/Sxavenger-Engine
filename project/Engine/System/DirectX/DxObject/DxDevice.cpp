@@ -4,6 +4,10 @@ _DXOBJECT_USING
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
+//* engine
+#include <Engine/System/Config/SxavengerConfig.h>
+
+//* c++
 #include <psapi.h>
 #include <format>
 
@@ -61,6 +65,21 @@ void Device::CreateFactory() {
 	// DXGIファクトリーの生成
 	auto hr = CreateDXGIFactory(IID_PPV_ARGS(&dxgiFactory_));
 	Assert(SUCCEEDED(hr));
+
+	// ティアリングを確認
+	if (SxavengerConfig::GetConfig().isTearingAllowed) {
+		BOOL isTearingSupport_ = false;
+
+		hr = dxgiFactory_->CheckFeatureSupport(DXGI_FEATURE_PRESENT_ALLOW_TEARING, &isTearingSupport_, sizeof(BOOL));
+		Assert(SUCCEEDED(hr), "check feature support error.");
+
+		if (!isTearingSupport_) {
+			EngineLog("[_DXOBEJCT] warning: tearing is not supported.");
+		}
+
+		// 設定を反映
+		SxavengerConfig::GetSupport().isSupportTearing = isTearingSupport_;
+	}
 }
 
 void Device::CreateAdapter() {

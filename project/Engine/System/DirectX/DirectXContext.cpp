@@ -143,7 +143,7 @@ void DirectXWindowContext::Present(bool isTransitonAllocator) {
 	if (isTransitonAllocator) {
 		threadContext_->TransitionAllocator();
 	}
-	swapChain_->Present(1, 0);
+	swapChain_->Present();
 
 	isClearWindow_ = false;
 }

@@ -29,7 +29,7 @@ json JsonAdapter::LoadFromJson(const std::filesystem::path& filepath) {
 	return result;
 }
 
-bool JsonAdapter::TryLoadFromJson(const std::filesystem::path& filepath, json& out) {
+bool JsonAdapter::LoadFromJson(const std::filesystem::path& filepath, json& out) {
 	// ファイル
 	std::ifstream ifs(filepath);
 

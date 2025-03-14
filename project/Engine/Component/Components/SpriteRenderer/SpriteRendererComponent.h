@@ -117,7 +117,7 @@ public:
 
 	void SetAnchor(const Vector2f& anchor) { anchor_ = anchor; }
 	void SetPivot(const Vector2f& pivot) { pivot_ = pivot; }
-	void SetPriority(uint32_t priority) { priority_ = priority; }
+	void SetPriority(uint16_t priority) { priority_ = priority; }
 
 	//* render option *//
 

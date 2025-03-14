@@ -1,0 +1,5 @@
+{
+	"isTearingAllowed": true,
+	"isLockFrameRate": true,
+	"targetFrameRate": 60.0
+}

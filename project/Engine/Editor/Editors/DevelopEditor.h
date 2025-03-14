@@ -56,6 +56,7 @@ private:
 
 	//* show imgui component *//
 
+	void ShowConfigMenu();
 	void ShowProcessMenu();
 	void ShowSystemMenu();
 	void ShowThreadMenu();

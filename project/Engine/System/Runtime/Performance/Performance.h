@@ -57,10 +57,6 @@ private:
 
 	RunTimeTracker runtime_;
 
-	//* parameter *//
-
-	float limitFrame_ = 60.0f;
-
 	//* lap *//
 
 	static const uint8_t lapCount_ = 2;

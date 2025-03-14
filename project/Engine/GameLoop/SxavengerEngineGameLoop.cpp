@@ -51,6 +51,7 @@ void SxavengerEngineGameLoop::Init(GameLoop::Context* context) {
 		SxavengerSystem::EndPerformace();
 	});
 
+	SxavengerConfig::Load();
 	SxavengerLogger::Init();
 	SxavengerSystem::Init();
 	SxavengerContent::Init();

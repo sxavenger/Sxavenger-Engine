@@ -38,7 +38,7 @@ public:
 
 	void Term();
 
-	void Present(UINT SyncInterval, UINT Flags);
+	void Present();
 
 	UINT GetCurrentBackBufferIndex();
 

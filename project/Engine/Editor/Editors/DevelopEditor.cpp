@@ -21,6 +21,7 @@ void DevelopEditor::ShowMainMenu() {
 		MenuPadding();
 
 		ImGui::SeparatorText("develop");
+		ShowConfigMenu();
 		ShowProcessMenu();
 		ShowSystemMenu();
 		ShowThreadMenu();
@@ -32,6 +33,37 @@ void DevelopEditor::ShowMainMenu() {
 void DevelopEditor::ShowWindow() {
 	ShowPerformanceWindow();
 	ShowConsole();
+}
+
+void DevelopEditor::ShowConfigMenu() {
+	if (ImGui::BeginMenu("config")) {
+		MenuPadding();
+		ImGui::SeparatorText("config");
+
+		//* tearing
+		ImGui::BeginDisabled(!SxavengerConfig::GetSupport().isSupportTearing);
+		ImGui::Checkbox("tearing allow", &SxavengerConfig::FixConfig().isTearingAllowed);
+
+		if (!SxavengerConfig::GetSupport().isSupportTearing) {
+			if (SxavengerConfig::GetConfig().isTearingAllowed) {
+				ImGui::Text("tearing is not support.");
+
+			} else {
+				ImGui::Text("tearing is not true in config.");
+			}
+		}
+
+		ImGui::EndDisabled();
+
+		//* frame rate lock
+		ImGui::Checkbox("lock frame rate", &SxavengerConfig::FixConfig().isLockFrameRate);
+
+		ImGui::BeginDisabled(!SxavengerConfig::GetConfig().isLockFrameRate);
+		ImGui::InputFloat("target frame rate", &SxavengerConfig::FixConfig().targetFrameRate);
+		ImGui::EndDisabled();
+
+		ImGui::EndMenu();
+	}
 }
 
 void DevelopEditor::ShowProcessMenu() {

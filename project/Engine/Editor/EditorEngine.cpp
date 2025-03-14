@@ -87,10 +87,10 @@ void EditorEngine::ShowEditorMenu() {
 	if (ImGui::BeginMenu("editor")) {
 		MenuDummy();
 
-		if (ImGui::BeginMenu("config")) {
+		if (ImGui::BeginMenu("setting")) {
 			MenuDummy();
 
-			ImGui::SeparatorText("config");
+			ImGui::SeparatorText("setting");
 			ImGui::Checkbox("display", &isEditorDisplay_);
 
 			ImGui::SeparatorText("window");
