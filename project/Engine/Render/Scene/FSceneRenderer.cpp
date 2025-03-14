@@ -34,6 +34,9 @@ void FSceneRenderer::Render(const DirectXThreadContext* context, const Config& c
 	RenderGeometryPass(context, conf);
 
 	LightingPass(context, conf);
+
+	RenderTransparentBasePass(context, conf);
+
 }
 
 void FSceneRenderer::ApplyConfig(Config& config) {
@@ -69,13 +72,13 @@ Sxl::Flag<FSceneRenderer::Status> FSceneRenderer::CheckStatus(const Config& conf
 void FSceneRenderer::RenderGeometryPass(const DirectXThreadContext* context, const Config& config) {
 	textures_->BeginGeometryPass(context);
 
-	RenderGeometryMesh(context, config);
+	RenderGeometryStaticMesh(context, config);
 	RenderGeometrySkinnedMesh(context, config);
 
 	textures_->EndGeometryPass(context);
 }
 
-void FSceneRenderer::RenderGeometryMesh(const DirectXThreadContext* context, const Config& config) {
+void FSceneRenderer::RenderGeometryStaticMesh(const DirectXThreadContext* context, const Config& config) {
 	// mesh renderer container(BaseComponent)の取得
 	auto& container = sComponentStorage->GetComponentContainer<MeshRendererComponent>();
 
@@ -275,5 +278,44 @@ void FSceneRenderer::LightingPassDirectionalLight(const DirectXThreadContext* co
 		);
 
 		FRenderCore::GetInstance()->GetLight()->DrawCall(context);
+	});
+}
+
+void FSceneRenderer::RenderTransparentBasePass(const DirectXThreadContext* context, const Config& config) {
+
+	textures_->BeginTransparentBasePass(context);
+
+	RenderTransparentBaseStaticMesh(context, config);
+
+	textures_->EndTransparentBasePass(context);
+}
+
+void FSceneRenderer::RenderTransparentBaseStaticMesh(const DirectXThreadContext* context, const Config& config) {
+
+	auto core = FRenderCore::GetInstance()->GetGeometry();
+
+	// componentを取得
+	sComponentStorage->ForEach<MeshRendererComponent>([&](MeshRendererComponent* component) {
+
+		component->GetMesh()->BindIABuffer(context);
+
+		// メッシュの描画
+		core->SetPipeline(
+			FRenderCoreGeometry::Forward, FRenderCoreGeometry::VertexStage::DefaultVS, FRenderCoreGeometry::PixelStage::Albedo,
+			context, textures_->GetSize()
+		);
+
+		DxObject::BindBufferDesc parameter = {};
+		parameter.SetAddress("gCamera",     config.camera->GetGPUVirtualAddress());
+		parameter.SetAddress("gTransforms", component->GetTransform()->GetGPUVirtualAddress());
+		parameter.SetAddress("gMaterials",  component->GetMaterial()->GetGPUVirtualAddress());
+
+		core->BindGraphicsBuffer(
+			FRenderCoreGeometry::Forward, FRenderCoreGeometry::VertexStage::DefaultVS, FRenderCoreGeometry::PixelStage::Albedo,
+			context, parameter
+		);
+
+		component->GetMesh()->DrawCall(context, 1);
+
 	});
 }
