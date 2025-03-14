@@ -334,3 +334,4 @@ project/externals/DirectXTex/Shaders/Compiled
 
 # engine before methods
 project/Engine/!dest
+project/imgui.ini
