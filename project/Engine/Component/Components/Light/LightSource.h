@@ -56,6 +56,10 @@ public:
 
 	const D3D12_GPU_VIRTUAL_ADDRESS& GetShadowBufferAddress() const;
 
+	//* inspector *//
+
+	void InspectorImGui();
+
 protected:
 
 	//=========================================================================================

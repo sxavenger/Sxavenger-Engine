@@ -27,6 +27,7 @@ void DirectionalLightComponent::InspectorImGui() {
 	auto& parameter = parameter_->At(0);
 	ImGui::ColorEdit3("color",      &parameter.color.r);
 	ImGui::SliderFloat("intensity", &parameter.intensity, 0.0f, 1.0f);
+	LightSource::InspectorImGui();
 }
 
 void DirectionalLightComponent::Init() {

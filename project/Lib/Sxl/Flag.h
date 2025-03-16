@@ -46,6 +46,7 @@ public:
 	//* getter *//
 
 	constexpr _Mask Get() const { return mask_; }
+	constexpr _Mask& Get() { return mask_; }
 
 	//=========================================================================================
 	// public operator
