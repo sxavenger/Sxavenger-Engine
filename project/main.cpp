@@ -22,5 +22,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 	collection->Run();
 
+
+
+
 	return 0;
 }
