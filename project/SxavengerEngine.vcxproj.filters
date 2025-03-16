@@ -154,6 +154,7 @@
     <ClCompile Include="Engine\Component\Components\Armature\ArmatureComponent.cpp" />
     <ClCompile Include="Engine\Component\Components\SpriteRenderer\SpriteRendererComponent.cpp" />
     <ClCompile Include="Engine\Render\Canvas\FCanvasRenderer.cpp" />
+    <ClCompile Include="Engine\System\Runtime\Performance\DeltaTimePoint.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\System\Window\Window.h" />
@@ -313,6 +314,7 @@
     <ClInclude Include="Engine\Component\Components\Armature\ArmatureComponent.h" />
     <ClInclude Include="Engine\Component\Components\SpriteRenderer\SpriteRendererComponent.h" />
     <ClInclude Include="Engine\Render\Canvas\FCanvasRenderer.h" />
+    <ClInclude Include="Engine\System\Runtime\Performance\DeltaTimePoint.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

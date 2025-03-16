@@ -14,6 +14,7 @@
 #include <Engine/Component/Components/Collider/CollisionManager.h>
 #include <Engine/Component/Components/SpriteRenderer/SpriteRendererComponent.h>
 #include <Engine/Component/MonoBehaviourContainer.h>
+#include <Engine/System/Runtime/Performance/DeltaTimePoint.h>
 
 //* c++
 #include <execution>
@@ -116,8 +117,8 @@ void BetaSystemGameLoop::TermSystem() {
 
 void BetaSystemGameLoop::UpdateSystem() {
 
-	static TimePointf<TimeUnit::second> time = 0.0f;
-	time += SxavengerSystem::GetDeltaTime();
+	static DeltaTimePointf<TimeUnit::second> time = 0.0f;
+	time.AddDeltaTime();
 
 	auto child = cube_->GetChild(ArmatureComponent::kArmatureName);
 	child->GetComponent<ArmatureComponent>()->UpdateAnimation(animator_.WaitGet()->GetAnimation(0), time, true);
