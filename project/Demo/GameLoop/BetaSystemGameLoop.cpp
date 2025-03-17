@@ -123,7 +123,6 @@ void BetaSystemGameLoop::UpdateSystem() {
 	auto child = cube_->GetChild(ArmatureComponent::kArmatureName);
 	child->GetComponent<ArmatureComponent>()->UpdateAnimation(animator_.WaitGet()->GetAnimation(0), time, true);
 
-
 	sMonoBehaviourContainer->ForEach(std::execution::par, [](MonoBehaviour* behaviour) {
 		behaviour->UpdateComponent(); // todo: 遅延updateで何とかしたい.
 	});

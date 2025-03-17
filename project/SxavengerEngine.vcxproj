@@ -212,6 +212,8 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="Engine\Component\Components\Collider\CollisionManager.cpp" />
     <ClCompile Include="Engine\Component\Components\Light\DirectionalLightComponent.cpp" />
     <ClCompile Include="Engine\Component\Components\Light\LightSource.cpp" />
+    <ClCompile Include="Engine\Component\Components\MeshRenderer\MeshFilterComponent.cpp" />
+    <ClCompile Include="Engine\Component\Components\MeshRenderer\MeshFilterContainer.cpp" />
     <ClCompile Include="Engine\Component\Components\MeshRenderer\MeshRendererComponent.cpp" />
     <ClCompile Include="Engine\Component\Components\SpriteRenderer\SpriteRendererComponent.cpp" />
     <ClCompile Include="Engine\Content\Animation\Skeleton.cpp" />
@@ -359,6 +361,8 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Engine\Component\Components\Collider\CollisionManager.h" />
     <ClInclude Include="Engine\Component\Components\Light\DirectionalLightComponent.h" />
     <ClInclude Include="Engine\Component\Components\Light\LightSource.h" />
+    <ClInclude Include="Engine\Component\Components\MeshRenderer\MeshFilterComponent.h" />
+    <ClInclude Include="Engine\Component\Components\MeshRenderer\MeshFilterContainer.h" />
     <ClInclude Include="Engine\Component\Components\MeshRenderer\MeshRendererComponent.h" />
     <ClInclude Include="Engine\Component\Components\SpriteRenderer\SpriteRendererComponent.h" />
     <ClInclude Include="Engine\Content\Animation\Skeleton.h" />

@@ -104,6 +104,7 @@ private:
 
 	void RenderGeometryPass(const DirectXThreadContext* context, const Config& config);
 	void RenderGeometryStaticMesh(const DirectXThreadContext* context, const Config& config);
+	void RenderGeometryStaticMeshDemo(const DirectXThreadContext* context, const Config& config);
 	void RenderGeometrySkinnedMesh(const DirectXThreadContext* context, const Config& config);
 
 	void LightingPass(const DirectXThreadContext* context, const Config& config);

@@ -5,6 +5,7 @@
 //-----------------------------------------------------------------------------------------
 //* engine
 #include <Engine/Component/Components/Transform/TransformComponent.h>
+#include <Engine/Component/Components/MeshRenderer/MeshFilterComponent.h>
 #include <Engine/Component/Components/MeshRenderer/MeshRendererComponent.h>
 #include <Engine/Component/Components/MeshRenderer/SkinnedMeshRendererComponent.h>
 
@@ -116,28 +117,13 @@ std::unique_ptr<MonoBehaviour> Model::CreateStaticMeshBehaviour(const std::strin
 	auto root = std::make_unique<MonoBehaviour>();
 	root->SetName(name);
 
-	// MonoBehaviorの登録
-	std::for_each(/*std::execution::seq, */meshes_.begin(), meshes_.end(), [this, &root](AssimpMesh& mesh) {
-		auto child = std::make_unique<MonoBehaviour>();
-		child->SetName(mesh.name);
-
-		// transform component
-		auto transform = child->AddComponent<TransformComponent>();
-		transform->CreateBuffer();
-
-		// renderer component
-		auto renderer = child->AddComponent<MeshRendererComponent>();
-		renderer->SetMesh(&mesh.input);
-		renderer->SetMaterial(&GetMaterial(mesh.materialIndex.value()));
-
-		root->AddChild(std::move(child));
-	});
+	CreateStaticMeshBehaviour(root.get());
 
 	return std::move(root); 
 }
 
 void Model::CreateStaticMeshBehaviour(MonoBehaviour* root) {
-	// MonoBehaviorの登録
+	// Componentの登録
 	std::for_each(/*std::execution::seq, */meshes_.begin(), meshes_.end(), [this, root](AssimpMesh& mesh) {
 		auto child = std::make_unique<MonoBehaviour>();
 		child->SetName(mesh.name);
@@ -145,6 +131,10 @@ void Model::CreateStaticMeshBehaviour(MonoBehaviour* root) {
 		// transform component
 		auto transform = child->AddComponent<TransformComponent>();
 		transform->CreateBuffer();
+
+		// filter component
+		auto filter = child->AddComponent<MeshFilterComponent>();
+		filter->SetMesh(&mesh.input);
 
 		// renderer component
 		auto renderer = child->AddComponent<MeshRendererComponent>();

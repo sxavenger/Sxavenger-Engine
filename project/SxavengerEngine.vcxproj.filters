@@ -155,6 +155,8 @@
     <ClCompile Include="Lib\Geometry\Vector2.cpp" />
     <ClCompile Include="Lib\Geometry\Vector3.cpp" />
     <ClCompile Include="Lib\Geometry\Vector4.cpp" />
+    <ClCompile Include="Engine\Component\Components\MeshRenderer\MeshFilterComponent.cpp" />
+    <ClCompile Include="Engine\Component\Components\MeshRenderer\MeshFilterContainer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\System\Window\Window.h" />
@@ -315,6 +317,8 @@
     <ClInclude Include="Lib\Geometry\Vector3.h" />
     <ClInclude Include="Lib\Geometry\Vector4.h" />
     <ClInclude Include="Lib\Geometry\VectorComparison.h" />
+    <ClInclude Include="Engine\Component\Components\MeshRenderer\MeshFilterComponent.h" />
+    <ClInclude Include="Engine\Component\Components\MeshRenderer\MeshFilterContainer.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

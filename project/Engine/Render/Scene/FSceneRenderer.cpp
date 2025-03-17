@@ -7,6 +7,9 @@
 #include "../FRenderCore.h"
 #include "../FMainRender.h"
 
+//* engine
+#include <Engine/Component/Components/MeshRenderer/MeshFilterContainer.h>
+
 //* c++
 #include <execution>
 
@@ -72,7 +75,7 @@ Sxl::Flag<FSceneRenderer::Status> FSceneRenderer::CheckStatus(const Config& conf
 void FSceneRenderer::RenderGeometryPass(const DirectXThreadContext* context, const Config& config) {
 	textures_->BeginGeometryPass(context);
 
-	RenderGeometryStaticMesh(context, config);
+	RenderGeometryStaticMeshDemo(context, config);
 	RenderGeometrySkinnedMesh(context, config);
 
 	textures_->EndGeometryPass(context);
@@ -151,6 +154,72 @@ void FSceneRenderer::RenderGeometryStaticMesh(const DirectXThreadContext* contex
 		context->ExecuteAllAllocators();
 		// todo: allocatorごとに一時bufferを作成
 	}
+}
+
+void FSceneRenderer::RenderGeometryStaticMeshDemo(const DirectXThreadContext* context, const Config& config) {
+
+	auto core = FRenderCore::GetInstance()->GetGeometry();
+
+	// instance描画用のバッファを作成
+	if (transforms_ == nullptr) {
+		transforms_ = std::make_unique<DxObject::VectorDimensionBuffer<TransformationMatrix>>();
+	}
+
+	if (materials_ == nullptr) {
+		materials_ = std::make_unique<DxObject::VectorDimensionBuffer<Material::MaterialBuffer>>();
+	}
+
+	// メッシュごとに描画
+	for (const auto& [mesh, components] : sMeshFilterContainer->GetFilters()) {
+		textures_->SetupGeometryPass(context);
+
+		transforms_->Resize(SxavengerSystem::GetDxDevice(), static_cast<uint32_t>(components.size()));
+		materials_->Resize(SxavengerSystem::GetDxDevice(), static_cast<uint32_t>(components.size()));
+
+		size_t index = 0;
+
+		for (const auto component : components) {
+			if (!component->IsView()) {
+				continue;
+			}
+
+			if (auto renderer = component->GetRenderer()) {
+				
+				if (renderer->GetMaterial()->GetBlendMode() != Material::BlendMode::Opaque) {
+					// 透明なジオメトリは別のパスで描画
+					continue;
+				}
+
+				materials_->At(index) = renderer->GetMaterial()->GetMaterial();
+				transforms_->At(index).Transfer(renderer->GetTransform()->GetMatrix());
+				++index;
+			}
+		}
+
+		mesh->BindIABuffer(context);
+
+		// メッシュの描画
+		core->SetPipeline(
+			FRenderCoreGeometry::Deffered, FRenderCoreGeometry::VertexStage::DefaultVS, FRenderCoreGeometry::PixelStage::Albedo,
+			context, textures_->GetSize()
+		);
+
+		DxObject::BindBufferDesc parameter = {};
+		parameter.SetAddress("gCamera", config.camera->GetGPUVirtualAddress());
+		parameter.SetAddress("gTransforms", transforms_->GetGPUVirtualAddress());
+		parameter.SetAddress("gMaterials", materials_->GetGPUVirtualAddress());
+
+		core->BindGraphicsBuffer(
+			FRenderCoreGeometry::Deffered, FRenderCoreGeometry::VertexStage::DefaultVS, FRenderCoreGeometry::PixelStage::Albedo,
+			context, parameter
+		);
+
+		mesh->DrawCall(context, static_cast<uint32_t>(components.size()));
+
+		context->ExecuteAllAllocators();
+		// todo: allocatorごとに一時bufferを作成
+	}
+
 }
 
 void FSceneRenderer::RenderGeometrySkinnedMesh(const DirectXThreadContext* context, const Config& config) {
