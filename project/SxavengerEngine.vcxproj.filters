@@ -24,11 +24,6 @@
     <ClCompile Include="Engine\System\DirectX\DxObject\DxSwapChain.cpp" />
     <ClCompile Include="Engine\System\DirectX\DxObject\DxCommandContext.cpp" />
     <ClCompile Include="Engine\System\DirectX\DxObject\DxDepthStencil.cpp" />
-    <ClCompile Include="Lib\Geometry\Matrix4x4.cpp" />
-    <ClCompile Include="Lib\Geometry\Quaternion.cpp" />
-    <ClCompile Include="Lib\Geometry\Vector2.cpp" />
-    <ClCompile Include="Lib\Geometry\Vector3.cpp" />
-    <ClCompile Include="Lib\Geometry\Vector4.cpp" />
     <ClCompile Include="Engine\System\Window\GameWindowCollection.cpp" />
     <ClCompile Include="Engine\System\DirectX\DirectXContext.cpp" />
     <ClCompile Include="Engine\System\WinApp\WinApp.cpp" />
@@ -88,10 +83,8 @@
     <ClCompile Include="Engine\Asset\AudioBuffer\AssetAudioBuffer.cpp" />
     <ClCompile Include="Engine\System\Config\SxavengerConfig.cpp" />
     <ClCompile Include="Lib\Sxl\Optional.cpp" />
-    <ClCompile Include="Lib\Geometry\Color.cpp" />
     <ClCompile Include="Engine\Asset\Model\Model.cpp" />
     <ClCompile Include="Engine\System\DirectX\DxObject\DxVectorDimensionBuffer.cpp" />
-    <ClCompile Include="Lib\Geometry\GeometryMath.cpp" />
     <ClCompile Include="Engine\Component\BaseComponent.cpp" />
     <ClCompile Include="Engine\Component\ComponentStorage.cpp" />
     <ClCompile Include="Engine\Component\Components\Transform\TransformComponent.cpp" />
@@ -155,6 +148,13 @@
     <ClCompile Include="Engine\Component\Components\SpriteRenderer\SpriteRendererComponent.cpp" />
     <ClCompile Include="Engine\Render\Canvas\FCanvasRenderer.cpp" />
     <ClCompile Include="Engine\System\Runtime\Performance\DeltaTimePoint.cpp" />
+    <ClCompile Include="Lib\Geometry\Color.cpp" />
+    <ClCompile Include="Lib\Geometry\GeometryMath.cpp" />
+    <ClCompile Include="Lib\Geometry\Matrix4x4.cpp" />
+    <ClCompile Include="Lib\Geometry\Quaternion.cpp" />
+    <ClCompile Include="Lib\Geometry\Vector2.cpp" />
+    <ClCompile Include="Lib\Geometry\Vector3.cpp" />
+    <ClCompile Include="Lib\Geometry\Vector4.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\System\Window\Window.h" />
@@ -172,12 +172,6 @@
     <ClInclude Include="Engine\System\DirectX\DxObject\DxSwapChain.h" />
     <ClInclude Include="Engine\System\DirectX\DxObject\DxCommandContext.h" />
     <ClInclude Include="Engine\System\DirectX\DxObject\DxDepthStencil.h" />
-    <ClInclude Include="Lib\Geometry\Matrix4x4.h" />
-    <ClInclude Include="Lib\Geometry\Quaternion.h" />
-    <ClInclude Include="Lib\Geometry\Vector2.h" />
-    <ClInclude Include="Lib\Geometry\Vector3.h" />
-    <ClInclude Include="Lib\Geometry\Vector4.h" />
-    <ClInclude Include="Lib\Geometry\VectorComparison.h" />
     <ClInclude Include="Lib\VertexStructure.h" />
     <ClInclude Include="Lib\CXXAttributeConfig.h" />
     <ClInclude Include="Lib\Environment.h" />
@@ -246,12 +240,10 @@
     <ClInclude Include="Engine\Asset\AudioBuffer\AssetAudioBuffer.h" />
     <ClInclude Include="Engine\System\Config\SxavengerConfig.h" />
     <ClInclude Include="Lib\Sxl\Optional.h" />
-    <ClInclude Include="Lib\Geometry\Color.h" />
     <ClInclude Include="Engine\System\DirectX\DirectXAlignment.h" />
     <ClInclude Include="Engine\Asset\Model\Model.h" />
     <ClInclude Include="Lib\Traits.h" />
     <ClInclude Include="Engine\System\DirectX\DxObject\DxVectorDimensionBuffer.h" />
-    <ClInclude Include="Lib\Geometry\GeometryMath.h" />
     <ClInclude Include="Engine\Component\BaseComponent.h" />
     <ClInclude Include="Engine\Component\ComponentStorage.h" />
     <ClInclude Include="Engine\Component\MonoBehaviour.h" />
@@ -315,6 +307,14 @@
     <ClInclude Include="Engine\Component\Components\SpriteRenderer\SpriteRendererComponent.h" />
     <ClInclude Include="Engine\Render\Canvas\FCanvasRenderer.h" />
     <ClInclude Include="Engine\System\Runtime\Performance\DeltaTimePoint.h" />
+    <ClInclude Include="Lib\Geometry\Color.h" />
+    <ClInclude Include="Lib\Geometry\GeometryMath.h" />
+    <ClInclude Include="Lib\Geometry\Matrix4x4.h" />
+    <ClInclude Include="Lib\Geometry\Quaternion.h" />
+    <ClInclude Include="Lib\Geometry\Vector2.h" />
+    <ClInclude Include="Lib\Geometry\Vector3.h" />
+    <ClInclude Include="Lib\Geometry\Vector4.h" />
+    <ClInclude Include="Lib\Geometry\VectorComparison.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />
