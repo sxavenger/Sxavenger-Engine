@@ -12,6 +12,7 @@
 
 //* c++
 #include <execution>
+#include "FSceneRenderer.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // FSceneRenderer class methods
@@ -75,7 +76,7 @@ Sxl::Flag<FSceneRenderer::Status> FSceneRenderer::CheckStatus(const Config& conf
 void FSceneRenderer::RenderGeometryPass(const DirectXThreadContext* context, const Config& config) {
 	textures_->BeginGeometryPass(context);
 
-	RenderGeometryStaticMeshDemo(context, config);
+	RenderGeometryStaticMesh(context, config);
 	RenderGeometrySkinnedMesh(context, config);
 
 	textures_->EndGeometryPass(context);

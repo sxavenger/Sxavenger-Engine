@@ -110,6 +110,29 @@ void BetaSystemGameLoop::InitSystem() {
 		/*auto child = cube_->GetChild("AnimatedCube");
 		child->GetComponent<SkinnedMeshRendererComponent>()->UpdateAnimation(animator_.WaitGet()->GetAnimation(0), 0.0f, true);*/
 	}
+
+	
+	mesh.Create(3, 1);
+
+	auto vertex = mesh.GetVertex();
+	vertex->At(0).position = { 0.0f, 0.0f, 0.0f };
+	vertex->At(1).position = { 1.0f, 0.0f, 0.0f };
+	vertex->At(2).position = { 0.0f, 1.0f, 0.0f };
+
+	auto index = mesh.GetIndex();
+	index->At(0) = { 0, 1, 2 };
+
+	material.CreateBuffer();
+	material.GetMaterial().albedo.SetValue({ 1.0f, 0.0f, 0.0f });
+
+	AssetObserver<AssetTexture> texture = SxavengerAsset::TryImport<AssetTexture>("assets/textures/uvChecker.png");
+	material.GetMaterial().albedo.SetTexture(texture.WaitGet()->GetIndex());
+
+	triangle = std::make_unique<MonoBehaviour>();
+	triangle->AddComponent<TransformComponent>();
+	auto renderer = triangle->AddComponent<MeshRendererComponent>();
+	renderer->SetMaterial(&material);
+	renderer->SetMesh(&mesh);
 }
 
 void BetaSystemGameLoop::TermSystem() {
