@@ -9,6 +9,7 @@
 #include <Engine/Editor/Editors/HierarchyEditor.h>
 #include <Engine/Editor/Editors/RenderSceneEditor.h>
 #include <Engine/Editor/Editors/OutlinerEditor.h>
+#include <Engine/Editor/Editors/MaterialEditor.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // EditorEngineGameLoop class
@@ -30,6 +31,7 @@ void EditorEngineGameLoop::InitEditor() {
 	sEditorEngine->RegisterEditor<RenderSceneEditor>();
 	sEditorEngine->RegisterEditor<HierarchyEditor>(); //!< RenderSceneEditorの後に登録
 	sEditorEngine->RegisterEditor<OutlinerEditor>();
+	sEditorEngine->RegisterEditor<MaterialEditor>();
 }
 
 void EditorEngineGameLoop::TermEditor() {

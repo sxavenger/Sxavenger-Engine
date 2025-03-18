@@ -294,4 +294,73 @@ void Material::SetImGuiCommand() {
 	}
 }
 
+json Material::OutputJson() const {
+	json root;
+
+	auto& albedo = root["albedo"];
+	albedo["type"]  = static_cast<uint32_t>(GetMaterial().albedo.type);
+	albedo["color"] = GeometryJsonSerializer::ToJson(GetMaterial().albedo.color);
+	//albedo["index"] = GetMaterial().albedo.index; //!< todo: textureのfilepathを保存する
+
+	auto& transparency = root["transparency"];
+	transparency["type"]  = static_cast<uint32_t>(GetMaterial().transparency.type);
+	transparency["alpha"] = GetMaterial().transparency.alpha;
+	//transparency["index"] = GetMaterial().transparency.index; //!< todo: textureのfilepathを保存する
+
+	auto& normal = root["normal"];
+	normal["type"]    = static_cast<uint32_t>(GetMaterial().normal.type);
+	//normal["index"] = GetMaterial().normal.index; //!< todo: textureのfilepathを保存する
+
+	auto& properties = root["properties"];
+	auto& metallic = properties["metallic"];
+	metallic["type"]  = static_cast<uint32_t>(GetMaterial().properties.metallic.type);
+	metallic["value"] = GetMaterial().properties.metallic.value;
+	//metallic["index"] = GetMaterial().properties.metallic.index; //!< todo: textureのfilepathを保存する
+
+	auto& specular = properties["specular"];
+	specular["type"]  = static_cast<uint32_t>(GetMaterial().properties.specular.type);
+	specular["value"] = GetMaterial().properties.specular.value;
+	//specular["index"] = GetMaterial().properties.specular.index; //!< todo: textureのfilepathを保存する
+
+	auto& roughness = properties["roughness"];
+	roughness["type"]   = static_cast<uint32_t>(GetMaterial().properties.roughness.type);
+	roughness["value"]  = GetMaterial().properties.roughness.value;
+	//roughness["index"] = GetMaterial().properties.roughness.index; //!< todo: textureのfilepathを保存する
+
+	return root;
+}
+
+void Material::InputJson(const json& data) {
+	const auto& albedo = data.at("albedo");
+	GetMaterial().albedo.type    = static_cast<Material::Albedo::Type>(albedo.at("type"));
+	GetMaterial().albedo.color   = GeometryJsonSerializer::JsonToColor3f(albedo.at("color"));
+	//GetMaterial().albedo.index = albedo.at("index");
+
+	const auto& transparency = data.at("transparency");
+	GetMaterial().transparency.type    = static_cast<Material::Transparency::Type>(transparency.at("type"));
+	GetMaterial().transparency.alpha   = transparency.at("alpha");
+	//GetMaterial().transparency.index = transparency.at("index");
+
+	const auto& normal = data.at("normal");
+	GetMaterial().normal.type    = static_cast<Material::Normal::Type>(normal.at("type"));
+	//GetMaterial().normal.index = normal.at("index");
+
+	const auto& properties = data.at("properties");
+	const auto& metallic = properties.at("metallic");
+	GetMaterial().properties.metallic.type    = static_cast<Material::Property::Type>(metallic.at("type"));
+	GetMaterial().properties.metallic.value   = metallic.at("value");
+	//GetMaterial().properties.metallic.index = metallic.at("index");
+
+	const auto& specular = properties.at("specular");
+	GetMaterial().properties.specular.type    = static_cast<Material::Property::Type>(specular.at("type"));
+	GetMaterial().properties.specular.value   = specular.at("value");
+	//GetMaterial().properties.specular.index = specular.at("index");
+
+	const auto& roughness = properties.at("roughness");
+	GetMaterial().properties.roughness.type    = static_cast<Material::Property::Type>(roughness.at("type"));
+	GetMaterial().properties.roughness.value   = roughness.at("value");
+	//GetMaterial().properties.roughness.index = roughness.at("index");
+
+}
+
 

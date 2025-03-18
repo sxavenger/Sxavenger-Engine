@@ -1,0 +1,31 @@
+{
+	"albedo": {
+		"color": {
+			"b": 0.0,
+			"g": 0.0,
+			"r": 0.6891191601753235
+		},
+		"type": 0
+	},
+	"normal": {
+		"type": 0
+	},
+	"properties": {
+		"metallic": {
+			"type": 0,
+			"value": 0.0
+		},
+		"roughness": {
+			"type": 0,
+			"value": 0.0
+		},
+		"specular": {
+			"type": 0,
+			"value": 0.0
+		}
+	},
+	"transparency": {
+		"alpha": 1.0,
+		"type": 0
+	}
+}

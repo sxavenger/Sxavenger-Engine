@@ -32,6 +32,14 @@ Color4f GeometryJsonSerializer::JsonToColor4f(const json& data) {
 	return { data["r"], data["g"], data["b"], data["a"] };
 }
 
+json GeometryJsonSerializer::ToJson(const Color3f& c) {
+	return { { "r", c.r }, { "g", c.g }, { "b", c.b } };
+}
+
+Color3f GeometryJsonSerializer::JsonToColor3f(const json& data) {
+	return { data["r"], data["g"], data["b"] };
+}
+
 json GeometryJsonSerializer::ToJson(const Quaternion& q) {
 	return { {"x", q.x}, {"y", q.y}, {"z", q.z}, {"w", q.w} };
 }

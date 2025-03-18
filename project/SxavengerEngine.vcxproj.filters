@@ -130,7 +130,6 @@
     <ClCompile Include="Engine\Component\Components\Collider\CollisionManager.cpp" />
     <ClCompile Include="Engine\Component\Components\Collider\CollisionCallbackCollection.cpp" />
     <ClCompile Include="Engine\Component\Components\Collider\ColliderPrimitiveRenderer.cpp" />
-    <ClCompile Include="Engine\Editor\Editors\NodeEditor.cpp" />
     <ClCompile Include="Engine\Render\Canvas\Layer\LLayer.cpp" />
     <ClCompile Include="Engine\Render\Canvas\Layer\Layers\LSprite.cpp" />
     <ClCompile Include="Engine\Render\Canvas\Layer\Layers\TextureComponent.cpp" />
@@ -157,6 +156,8 @@
     <ClCompile Include="Lib\Geometry\Vector4.cpp" />
     <ClCompile Include="Engine\Component\Components\MeshRenderer\MeshFilterComponent.cpp" />
     <ClCompile Include="Engine\Component\Components\MeshRenderer\MeshFilterContainer.cpp" />
+    <ClCompile Include="Engine\Content\Material\MaterialStorage.cpp" />
+    <ClCompile Include="Engine\Editor\Editors\MaterialEditor.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\System\Window\Window.h" />
@@ -292,7 +293,6 @@
     <ClInclude Include="Engine\Component\Components\Collider\CollisionManager.h" />
     <ClInclude Include="Engine\Component\Components\Collider\CollisionCallbackCollection.h" />
     <ClInclude Include="Engine\Component\Components\Collider\ColliderPrimitiveRenderer.h" />
-    <ClInclude Include="Engine\Editor\Editors\NodeEditor.h" />
     <ClInclude Include="Engine\Render\Canvas\Layer\LLayer.h" />
     <ClInclude Include="Engine\Render\Canvas\Layer\Layers\LSprite.h" />
     <ClInclude Include="Engine\Render\Canvas\Layer\Layers\TextureComponent.h" />
@@ -319,6 +319,8 @@
     <ClInclude Include="Lib\Geometry\VectorComparison.h" />
     <ClInclude Include="Engine\Component\Components\MeshRenderer\MeshFilterComponent.h" />
     <ClInclude Include="Engine\Component\Components\MeshRenderer\MeshFilterContainer.h" />
+    <ClInclude Include="Engine\Content\Material\MaterialStorage.h" />
+    <ClInclude Include="Engine\Editor\Editors\MaterialEditor.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

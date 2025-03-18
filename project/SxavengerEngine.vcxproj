@@ -226,6 +226,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="Engine\Content\InputAssembler\LineInputAssembler.cpp" />
     <ClCompile Include="Engine\Content\InputAssembler\TriangleInputAssembler.cpp" />
     <ClCompile Include="Engine\Content\Material\Material.cpp" />
+    <ClCompile Include="Engine\Content\Material\MaterialStorage.cpp" />
     <ClCompile Include="Engine\Content\SxavengerContent.cpp" />
     <ClCompile Include="Engine\Content\InputAssembler\InputAssembler.cpp" />
     <ClCompile Include="Engine\Content\InputAssembler\InputMesh.cpp" />
@@ -241,7 +242,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="Engine\Editor\EditorEngine.cpp" />
     <ClCompile Include="Engine\Editor\Editors\BaseEditor.cpp" />
     <ClCompile Include="Engine\Editor\Editors\DevelopEditor.cpp" />
-    <ClCompile Include="Engine\Editor\Editors\NodeEditor.cpp" />
+    <ClCompile Include="Engine\Editor\Editors\MaterialEditor.cpp" />
     <ClCompile Include="Engine\Editor\Editors\HierarchyEditor.cpp" />
     <ClCompile Include="Engine\Editor\Editors\OutlinerEditor.cpp" />
     <ClCompile Include="Engine\Editor\Editors\RenderSceneEditor.cpp" />
@@ -376,6 +377,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Engine\Content\InputAssembler\LineInputAssembler.h" />
     <ClInclude Include="Engine\Content\InputAssembler\TriangleInputAssembler.h" />
     <ClInclude Include="Engine\Content\Material\Material.h" />
+    <ClInclude Include="Engine\Content\Material\MaterialStorage.h" />
     <ClInclude Include="Engine\Content\SxavengerContent.h" />
     <ClInclude Include="Engine\Content\InputAssembler\InputAssembler.h" />
     <ClInclude Include="Engine\Content\InputAssembler\InputMesh.h" />
@@ -392,7 +394,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Engine\Editor\EditorEngine.h" />
     <ClInclude Include="Engine\Editor\Editors\BaseEditor.h" />
     <ClInclude Include="Engine\Editor\Editors\DevelopEditor.h" />
-    <ClInclude Include="Engine\Editor\Editors\NodeEditor.h" />
+    <ClInclude Include="Engine\Editor\Editors\MaterialEditor.h" />
     <ClInclude Include="Engine\Editor\Editors\HierarchyEditor.h" />
     <ClInclude Include="Engine\Editor\Editors\OutlinerEditor.h" />
     <ClInclude Include="Engine\Editor\Editors\RenderSceneEditor.h" />

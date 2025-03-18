@@ -54,6 +54,9 @@ public:
 	static json ToJson(const Color4f& c);
 	static Color4f JsonToColor4f(const json& data);
 
+	static json ToJson(const Color3f& c);
+	static Color3f JsonToColor3f(const json& data);
+
 	static json ToJson(const Quaternion& q);
 	static Quaternion JsonToQuaternion(const json& data);
 

@@ -57,11 +57,6 @@ private:
 	std::unique_ptr<MonoBehaviour> cube_;
 	AssetObserver<AssetAnimator> animator_;
 
-	InputMesh mesh;
-	Material material;
-
-	std::unique_ptr<MonoBehaviour> triangle;
-
 	//=========================================================================================
 	// private methods
 	//=========================================================================================

@@ -9,6 +9,7 @@
 #include <Engine/Asset/SxavengerAsset.h>
 #include <Engine/Render/FRenderCore.h>
 #include <Engine/Render/FMainRender.h>
+#include <Engine/Content/Material/MaterialStorage.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // SxavengerEngineGameLoop class methods
@@ -18,6 +19,7 @@ void SxavengerEngineGameLoop::Init(GameLoop::Context* context) {
 	context->SetProcess(GameLoop::Process::Init, std::nullopt, [this]() {
 		FRenderCore::GetInstance()->Init();
 		FMainRender::GetInstance()->Init();
+		sMaterialStorage->InputJson();
 	});
 
 	context->SetProcess(GameLoop::Process::Init, UINT32_MAX, [this]() {
@@ -60,6 +62,7 @@ void SxavengerEngineGameLoop::Init(GameLoop::Context* context) {
 }
 
 void SxavengerEngineGameLoop::Term() {
+	sMaterialStorage->Clear();
 	SxavengerAsset::Term();
 	SxavengerContent::Term();
 	SxavengerSystem::Term();

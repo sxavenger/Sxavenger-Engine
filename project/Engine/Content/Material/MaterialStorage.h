@@ -25,7 +25,19 @@ public:
 
 	//* storage option *//
 
-	Material* CreateMaterial(const std::string& name);
+	Material* GetMaterial(const std::string& name);
+
+	void Clear() { storage_.clear(); }
+
+	//* json *//
+
+	void OutputJson() const;
+
+	void InputJson();
+
+	//* getter *//
+
+	const Storage& GetStorage() const { return storage_; }
 
 	//* singleton *//
 
@@ -38,6 +50,10 @@ private:
 	//=========================================================================================
 
 	Storage storage_;
+
+	//* json parameter *//
+
+	static const std::filesystem::path kJsonDirectory;
 
 };
 
