@@ -29,7 +29,7 @@ void MaterialStorage::OutputJson() const {
 void MaterialStorage::InputJson() {
 	for (const auto& entry : std::filesystem::directory_iterator(kJsonDirectory)) {
 		json root        = JsonAdapter::LoadFromJson(entry.path().string());
-		std::string name = entry.path().stem().generic_string();
+		std::string name = entry.path().stem().generic_string(); 
 
 		GetMaterial(name)->InputJson(root);
 	}

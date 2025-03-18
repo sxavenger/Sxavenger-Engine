@@ -92,7 +92,7 @@ namespace Material {
 				
 			} else if (type == 1) {
 				Texture2D<float4> texture = ResourceDescriptorHeap[index];
-				return texture.Sample(parameter.samplers, parameter.texcoord).r;
+				return texture.Sample(parameter.samplers, parameter.texcoord).a;
 			}
 
 			return 0.0f; //!< exception
