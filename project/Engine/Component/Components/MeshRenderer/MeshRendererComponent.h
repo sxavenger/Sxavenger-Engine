@@ -25,11 +25,13 @@ public:
 	MeshRendererComponent(MonoBehaviour* behaviour) : BaseComponent(behaviour) {}
 	~MeshRendererComponent() override = default;
 
+	virtual void InspectorImGui() override;
+
 	//* setter *//
 
 	void SetMesh(InputMesh* mesh) { mesh_ = mesh; }
 
-	void SetMaterial(const Material* material) { material_ = material; }
+	void SetMaterial(Material* material) { material_ = material; }
 
 	//* getter *//
 
@@ -47,6 +49,6 @@ private:
 	//=========================================================================================
 
 	InputMesh* mesh_          = nullptr; //!< 仮
-	const Material* material_ = nullptr;
+	Material* material_ = nullptr;
 
 };

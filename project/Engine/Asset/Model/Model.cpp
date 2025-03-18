@@ -29,6 +29,7 @@ void Model::AssimpMaterial::CreateComponent() {
 
 	if (textures_[static_cast<uint8_t>(TextureType::Diffuse)] != nullptr) {
 		Material::GetMaterial().albedo.SetTexture(textures_[static_cast<uint8_t>(TextureType::Diffuse)]->GetDescriptorSRV().GetIndex());
+		Material::GetMaterial().transparency.SetTexture(textures_[static_cast<uint8_t>(TextureType::Diffuse)]->GetDescriptorSRV().GetIndex());
 	}
 
 	if (textures_[static_cast<uint8_t>(TextureType::Bump)] != nullptr) {
