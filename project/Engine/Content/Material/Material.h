@@ -10,6 +10,8 @@
 //* lib
 #include <Lib/Traits.h>
 #include <Lib/Geometry/Color.h>
+#include <Lib/Geometry/Matrix4x4.h>
+#include <Lib/Transform/Transform.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Material class
@@ -236,6 +238,28 @@ public:
 	};
 
 	////////////////////////////////////////////////////////////////////////////////////////////
+	// Transform structure
+	////////////////////////////////////////////////////////////////////////////////////////////
+	struct Transform {
+	public:
+
+		//=========================================================================================
+		// public methods
+		//=========================================================================================
+
+		void Init();
+
+		void Transfer(const Matrix4x4& _mat);
+
+		//=========================================================================================
+		// public variables
+		//=========================================================================================
+
+		Matrix4x4 mat;
+
+	};
+
+	////////////////////////////////////////////////////////////////////////////////////////////
 	// MaterialBuffer structure
 	////////////////////////////////////////////////////////////////////////////////////////////
 	struct MaterialBuffer {
@@ -251,6 +275,7 @@ public:
 		// public variables
 		//=========================================================================================
 
+		Transform         transform;
 		Albedo            albedo;
 		Transparency      transparency;
 		Normal            normal;
@@ -270,14 +295,27 @@ public:
 
 	void CreateBuffer();
 
-	//* getter *//
-
-	const D3D12_GPU_VIRTUAL_ADDRESS& GetGPUVirtualAddress() const;
+	//* material option *//
 
 	const MaterialBuffer& GetMaterial() const;
 	MaterialBuffer& GetMaterial();
 
+	//* transform option *//
+
+	void TransferUVMatrix();
+
+	const Transform2d& GetTransform() const { return transform_; }
+	Transform2d& GetTransform() { return transform_; }
+
+	//* blend mode *//
+
+	void SetBlendMode(BlendMode mode) { mode_ = mode; }
+
 	const BlendMode GetBlendMode() const { return mode_; }
+
+	//* getter *//
+
+	const D3D12_GPU_VIRTUAL_ADDRESS& GetGPUVirtualAddress() const;
 
 	_DEFAULT_MOVE(Material)
 
@@ -293,6 +331,7 @@ private:
 
 	BlendMode mode_ = BlendMode::Opaque;
 
+	Transform2d transform_ = {};
 	std::unique_ptr<DxObject::DimensionBuffer<MaterialBuffer>> buffer_ = nullptr;
 
 };

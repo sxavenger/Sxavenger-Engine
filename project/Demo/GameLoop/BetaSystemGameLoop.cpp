@@ -126,7 +126,7 @@ void BetaSystemGameLoop::InitSystem() {
 	material.GetMaterial().albedo.SetValue({ 1.0f, 0.0f, 0.0f });
 
 	AssetObserver<AssetTexture> texture = SxavengerAsset::TryImport<AssetTexture>("assets/textures/uvChecker.png");
-	material.GetMaterial().albedo.SetTexture(texture.WaitGet()->GetIndex());
+	material.GetMaterial().albedo.SetTexture(texture.WaitGet()->GetDescriptorSRV().GetIndex());
 
 	triangle = std::make_unique<MonoBehaviour>();
 	triangle->AddComponent<TransformComponent>();

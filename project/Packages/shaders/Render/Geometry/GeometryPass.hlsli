@@ -40,4 +40,6 @@ float3x3 GetTangentSpaceMatrix(float3 normal, float3 tangent, float3 bitangent) 
 ConstantBuffer<Camera> gCamera : register(b10);
 static const float4x4 kViewProj = gCamera.GetViewProj();
 
+StructuredBuffer<MaterialComponent> gMaterials : register(t10);
+
 

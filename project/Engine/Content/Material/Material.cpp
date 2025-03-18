@@ -208,10 +208,23 @@ void Material::SurfaceProperties::SetImGuiCommand() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
+// Transform structure methods
+////////////////////////////////////////////////////////////////////////////////////////////
+
+void Material::Transform::Init() {
+	mat = Matrix4x4::Identity();
+}
+
+void Material::Transform::Transfer(const Matrix4x4& _mat) {
+	mat = _mat;
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////
 // MaterialBuffer structure methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 void Material::MaterialBuffer::Init() {
+	transform.Init();
 	albedo.Init();
 	transparency.Init();
 	normal.Init();
@@ -232,11 +245,6 @@ void Material::CreateBuffer() {
 	buffer_->At(0).Init();
 }
 
-const D3D12_GPU_VIRTUAL_ADDRESS& Material::GetGPUVirtualAddress() const {
-	Assert(buffer_ != nullptr, "buffer is not create.");
-	return buffer_->GetGPUVirtualAddress();
-}
-
 const Material::MaterialBuffer& Material::GetMaterial() const {
 	Assert(buffer_ != nullptr, "buffer is not create.");
 	return buffer_->At(0);
@@ -245,6 +253,18 @@ const Material::MaterialBuffer& Material::GetMaterial() const {
 Material::MaterialBuffer& Material::GetMaterial() {
 	Assert(buffer_ != nullptr, "buffer is not create.");
 	return buffer_->At(0);
+}
+
+void Material::TransferUVMatrix() {
+	if (buffer_ != nullptr) {
+		buffer_->At(0).transform.Transfer(transform_.ToMatrix());
+	}
+}
+
+
+const D3D12_GPU_VIRTUAL_ADDRESS& Material::GetGPUVirtualAddress() const {
+	Assert(buffer_ != nullptr, "buffer is not create.");
+	return buffer_->GetGPUVirtualAddress();
 }
 
 void Material::SetImGuiCommand() {
@@ -273,3 +293,5 @@ void Material::SetImGuiCommand() {
 		ImGui::Text("not create buffer.");
 	}
 }
+
+

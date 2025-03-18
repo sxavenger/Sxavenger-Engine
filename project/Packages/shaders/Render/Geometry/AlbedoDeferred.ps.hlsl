@@ -7,10 +7,7 @@
 // buffer
 //=========================================================================================
 
-Texture2D<float4> gAlbedo : register(t0);
-SamplerState gSampler     : register(s0);
-
-StructuredBuffer<MaterialComponent> gMaterials : register(t1);
+SamplerState gSampler : register(s0);
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // main

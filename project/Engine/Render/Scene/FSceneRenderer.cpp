@@ -88,7 +88,8 @@ void FSceneRenderer::RenderGeometryStaticMesh(const DirectXThreadContext* contex
 
 	// InputMeshごとに分ける
 	// todo: mesh renderer componentの登録をcomponentが作成された際に行うように変更
-	std::unordered_map<const InputMesh*, std::vector<MeshRendererComponent*>> map;
+	static std::unordered_map<const InputMesh*, std::vector<MeshRendererComponent*>> map;
+	map.clear();
 
 	// todo: 実行時間の早い方に変更
 	std::for_each(std::execution::seq, container.begin(), container.end(), [&](auto& component) {
