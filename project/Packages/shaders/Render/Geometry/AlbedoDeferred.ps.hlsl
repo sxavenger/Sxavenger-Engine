@@ -22,6 +22,11 @@ GeometryDeferredOutput main(GeometryPSInput input) {
 	Material::TextureParameter parameter;
 	parameter.Set(input.texcoord, gSampler);
 
+	float transparency = gMaterials[input.instanceId].transparency.GetTransparency(parameter);
+	if (transparency <= 0.05f) {
+		discard;
+	}
+
 	output.SetAlbedo(gMaterials[input.instanceId].albedo.GetAlbedo(parameter));
 	output.SetNormal(gMaterials[input.instanceId].normal.GetNormal(input.normal, parameter, tbn));
 	output.SetPosition(input.worldPos);

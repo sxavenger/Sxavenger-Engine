@@ -285,6 +285,18 @@ public:
 	};
 	// todo: 各parameterをprivateにする
 
+	////////////////////////////////////////////////////////////////////////////////////////////
+	// TextureType enum class
+	////////////////////////////////////////////////////////////////////////////////////////////
+	enum class TextureType : uint32_t {
+		Albedo,
+		Transparency,
+		Normal,
+		Metallic,
+		Specular,
+		Roughness,
+	};
+
 public:
 
 	//=========================================================================================
@@ -340,5 +352,7 @@ private:
 
 	Transform2d transform_ = {};
 	std::unique_ptr<DxObject::DimensionBuffer<MaterialBuffer>> buffer_ = nullptr;
+
+
 
 };
