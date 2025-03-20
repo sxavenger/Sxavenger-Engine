@@ -70,6 +70,14 @@
     <ClCompile Include="Engine\System\Runtime\Performance\DeltaTimePoint.cpp" />
     <ClCompile Include="Lib\Geometry\Matrix4x4.cpp" />
     <ClCompile Include="Lib\Geometry\Quaternion.cpp" />
+    <ClCompile Include="Engine\Editor\EditorEngine.cpp" />
+    <ClCompile Include="Engine\Editor\Editors\BaseEditor.cpp" />
+    <ClCompile Include="Engine\Editor\Editors\DevelopEditor.cpp" />
+    <ClCompile Include="Engine\Editor\Editors\InspectorEditor.cpp" />
+    <ClCompile Include="Engine\Content\Animation\Animation.cpp" />
+    <ClCompile Include="Engine\Content\Animation\Skeleton.cpp" />
+    <ClCompile Include="Engine\Content\Animation\SkinCluster.cpp" />
+    <ClCompile Include="Engine\Content\InputMesh\InputMesh.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\System\Window\Window.h" />
@@ -87,7 +95,7 @@
     <ClInclude Include="Engine\System\DirectX\DxObject\DxSwapChain.h" />
     <ClInclude Include="Engine\System\DirectX\DxObject\DxCommandContext.h" />
     <ClInclude Include="Engine\System\DirectX\DxObject\DxDepthStencil.h" />
-    <ClInclude Include="Lib\VertexStructure.h" />
+    <ClInclude Include="Engine\Content\InputMesh\VertexStructure.h" />
     <ClInclude Include="Lib\CXXAttributeConfig.h" />
     <ClInclude Include="Lib\Environment.h" />
     <ClInclude Include="Engine\System\Window\GameWindowCollection.h" />
@@ -149,6 +157,19 @@
     <ClInclude Include="Lib\Geometry\Vector3.h" />
     <ClInclude Include="Lib\Geometry\Vector4.h" />
     <ClInclude Include="Lib\Geometry\VectorComparision.h" />
+    <ClInclude Include="Engine\Editor\EditorEngine.h" />
+    <ClInclude Include="Engine\Editor\Editors\BaseEditor.h" />
+    <ClInclude Include="Engine\Editor\Editors\DevelopEditor.h" />
+    <ClInclude Include="Engine\Editor\Editors\InspectorEditor.h" />
+    <ClInclude Include="Engine\Content\Animation\Animation.h" />
+    <ClInclude Include="Engine\Content\Animation\BornNode.h" />
+    <ClInclude Include="Engine\Content\Animation\JointWeight.h" />
+    <ClInclude Include="Engine\Content\Animation\Skeleton.h" />
+    <ClInclude Include="Engine\Content\Animation\SkinCluster.h" />
+    <ClInclude Include="Engine\Content\InputAssembler\InputAssembler.h" />
+    <ClInclude Include="Engine\Content\InputAssembler\LineInputAssembler.h" />
+    <ClInclude Include="Engine\Content\InputAssembler\TriangleInputAssembler.h" />
+    <ClInclude Include="Engine\Content\InputMesh\InputMesh.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

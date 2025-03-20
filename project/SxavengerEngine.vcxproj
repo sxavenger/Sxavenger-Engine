@@ -183,6 +183,14 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Engine\Content\Animation\Animation.cpp" />
+    <ClCompile Include="Engine\Content\Animation\Skeleton.cpp" />
+    <ClCompile Include="Engine\Content\Animation\SkinCluster.cpp" />
+    <ClCompile Include="Engine\Content\InputMesh\InputMesh.cpp" />
+    <ClCompile Include="Engine\Editor\EditorEngine.cpp" />
+    <ClCompile Include="Engine\Editor\Editors\BaseEditor.cpp" />
+    <ClCompile Include="Engine\Editor\Editors\DevelopEditor.cpp" />
+    <ClCompile Include="Engine\Editor\Editors\InspectorEditor.cpp" />
     <ClCompile Include="Engine\System\Config\SxavengerConfig.cpp" />
     <ClCompile Include="Engine\System\DirectX\DirectXCommon.cpp" />
     <ClCompile Include="Engine\System\DirectX\DirectXContext.cpp" />
@@ -245,6 +253,19 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Engine\Content\Animation\Animation.h" />
+    <ClInclude Include="Engine\Content\Animation\BornNode.h" />
+    <ClInclude Include="Engine\Content\Animation\JointWeight.h" />
+    <ClInclude Include="Engine\Content\Animation\Skeleton.h" />
+    <ClInclude Include="Engine\Content\Animation\SkinCluster.h" />
+    <ClInclude Include="Engine\Content\InputAssembler\InputAssembler.h" />
+    <ClInclude Include="Engine\Content\InputAssembler\LineInputAssembler.h" />
+    <ClInclude Include="Engine\Content\InputAssembler\TriangleInputAssembler.h" />
+    <ClInclude Include="Engine\Content\InputMesh\InputMesh.h" />
+    <ClInclude Include="Engine\Editor\EditorEngine.h" />
+    <ClInclude Include="Engine\Editor\Editors\BaseEditor.h" />
+    <ClInclude Include="Engine\Editor\Editors\DevelopEditor.h" />
+    <ClInclude Include="Engine\Editor\Editors\InspectorEditor.h" />
     <ClInclude Include="Engine\System\Cinfig\SxavengerDirectory.h" />
     <ClInclude Include="Engine\System\Config\SxavengerConfig.h" />
     <ClInclude Include="Engine\System\DirectX\DirectXAlignment.h" />
@@ -320,7 +341,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Lib\Sxl\SxavengerLibrary.h" />
     <ClInclude Include="Lib\Traits.h" />
     <ClInclude Include="Lib\Transform\Transform.h" />
-    <ClInclude Include="Lib\VertexStructure.h" />
+    <ClInclude Include="Engine\Content\InputMesh\VertexStructure.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />
