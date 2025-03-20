@@ -5,15 +5,15 @@
 
 /* --- Sine --- */
 float EaseInSine(float t) {
-	return 1.0f - std::cos((t * static_cast<float>(pi_v)) / 2.0f);
+	return 1.0f - std::cos((t * kPi) / 2.0f);
 }
 
 float EaseOutSine(float t) {
-	return std::sin((t * static_cast<float>(pi_v)) / 2.0f);
+	return std::sin((t * kPi) / 2.0f);
 }
 
 float EaseInOutSine(float t) {
-	return -(std::cos(static_cast<float>(pi_v) * t) - 1.0f) / 2.0f;
+	return -(std::cos(kPi * t) - 1.0f) / 2.0f;
 }
 
 /* --- Quad --- */
@@ -137,7 +137,7 @@ float EaseInOutBack(float t) {
 
 /* --- Elastic --- */
 float EaseInElastic(float t) {
-	const float c4 = (2.0f * static_cast<float>(pi_v)) / 3.0f;
+	const float c4 = (2.0f * kPi) / 3.0f;
 	return t == 0.0f
 		? 0.0f
 		: t == 1.0f
@@ -146,7 +146,7 @@ float EaseInElastic(float t) {
 }
 
 float EaseOutElastic(float t) {
-	const float c4 = (2.0f * static_cast<float>(pi_v)) / 3.0f;
+	const float c4 = (2.0f * kPi) / 3.0f;
 	return t == 0.0f
 		? 0.0f
 		: t == 1.0f
@@ -155,7 +155,7 @@ float EaseOutElastic(float t) {
 }
 
 float EaseInOutElastic(float t) {
-	const float c5 = (2.0f * static_cast<float>(pi_v)) / 4.5f;
+	const float c5 = (2.0f * kPi) / 4.5f;
 	return t == 0.0f
 		? 0.0f
 		: t == 1.0f

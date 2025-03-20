@@ -105,7 +105,7 @@ private:
 	//* camera *//
 
 	Vector3f point_ = kOrigin3<float>;
-	Vector2f angle_ = { 0.0f, pi_v / 16.0f };
+	Vector2f angle_ = { 0.0f, kPi / 16.0f };
 	float distance_ = 12.0f;
 
 	//* collider *//

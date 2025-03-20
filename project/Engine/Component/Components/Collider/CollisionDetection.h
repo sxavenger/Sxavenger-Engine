@@ -6,7 +6,7 @@
 //* lib
 #include <Lib/Geometry/Vector3.h>
 #include <Lib/Geometry/Matrix4x4.h>
-#include <Lib/Geometry/VectorComparison.h>
+#include <Lib/Geometry/VectorComparision.h>
 #include <Lib/Geometry/GeometryMath.h>
 
 //* c++

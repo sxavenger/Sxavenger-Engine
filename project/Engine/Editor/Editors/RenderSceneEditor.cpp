@@ -93,11 +93,11 @@ void RenderSceneEditor::Manipulate(MonoBehaviour* behaviour) {
 	bool isEdit = false;
 
 	isEdit = ImGuizmo::Manipulate(
-		reinterpret_cast<const float*>(camera_->GetComponent<CameraComponent>()->GetCamera().view.m),
-		reinterpret_cast<const float*>(camera_->GetComponent<CameraComponent>()->GetCamera().proj.m),
+		reinterpret_cast<const float*>(camera_->GetComponent<CameraComponent>()->GetCamera().view.m.data()),
+		reinterpret_cast<const float*>(camera_->GetComponent<CameraComponent>()->GetCamera().proj.m.data()),
 		operation,
 		ImGuizmo::WORLD,
-		reinterpret_cast<float*>(m.m)
+		reinterpret_cast<float*>(m.m.data())
 	);
 
 	ImGuizmo::Enable(true);
@@ -115,7 +115,7 @@ void RenderSceneEditor::Manipulate(MonoBehaviour* behaviour) {
 	EulerTransform transform = {};
 
 	ImGuizmo::DecomposeMatrixToComponents(
-		reinterpret_cast<const float*>(m.m),
+		reinterpret_cast<const float*>(m.m.data()),
 		&transform.translate.x,
 		&transform.rotate.x,
 		&transform.scale.x
@@ -151,16 +151,16 @@ void RenderSceneEditor::ManipulateCanvas(MonoBehaviour* behaviour) {
 	Matrix4x4 m = component->GetTransform2d().ToMatrix();
 
 	static const Matrix4x4 view = Matrix4x4::Identity();
-	static const Matrix4x4 proj = Matrix::MakeOrthographic(0.0f, 0.0f, static_cast<float>(kMainWindowSize.x), static_cast<float>(kMainWindowSize.y), 0.0f, 128.0f);
+	static const Matrix4x4 proj = Matrix4x4::Orthographic(0.0f, 0.0f, static_cast<float>(kMainWindowSize.x), static_cast<float>(kMainWindowSize.y), 0.0f, 128.0f);
 
 	bool isEdit = false;
 
 	isEdit = ImGuizmo::Manipulate(
-		reinterpret_cast<const float*>(view.m),
-		reinterpret_cast<const float*>(proj.m),
+		reinterpret_cast<const float*>(view.m.data()),
+		reinterpret_cast<const float*>(proj.m.data()),
 		operation,
 		ImGuizmo::WORLD,
-		reinterpret_cast<float*>(m.m)
+		reinterpret_cast<float*>(m.m.data())
 	);
 
 	guizmoUsed_ = ImGuizmo::IsUsing() ? std::optional<GuizmoUsed>{GuizmoUsed::Canvas} : std::nullopt;
@@ -172,7 +172,7 @@ void RenderSceneEditor::ManipulateCanvas(MonoBehaviour* behaviour) {
 	EulerTransform transform = {};
 
 	ImGuizmo::DecomposeMatrixToComponents(
-		reinterpret_cast<const float*>(m.m),
+		reinterpret_cast<const float*>(m.m.data()),
 		&transform.translate.x,
 		&transform.rotate.x,
 		&transform.scale.x
@@ -354,16 +354,16 @@ void RenderSceneEditor::UpdateCamera() {
 		static const Vector2f kSensitivity = { 0.01f, 0.01f };
 
 		angle_   += delta * kSensitivity;
-		angle_.x = std::fmod(angle_.x, pi_v * 2.0f);
-		angle_.y = std::clamp(angle_.y, -pi_v / 2.0f, pi_v / 2.0f);
+		angle_.x = std::fmod(angle_.x, kPi * 2.0f);
+		angle_.y = std::clamp(angle_.y, -kPi / 2.0f, kPi / 2.0f);
 	}
 
 	if (mouse->IsPress(MouseId::MOUSE_RIGHT)) {
 		Vector2f delta = mouse->GetDeltaPosition();
 		static const Vector2f kSensitivity = { 0.01f, 0.01f };
 
-		Vector3f right = RotateVector({ 1.0f, 0.0f, 0.0f }, transform->GetTransform().rotate);
-		Vector3f up    = RotateVector({ 0.0f, 1.0f, 0.0f }, transform->GetTransform().rotate);
+		Vector3f right = Quaternion::RotateVector(kUnitX3<float>, transform->GetTransform().rotate);
+		Vector3f up    = Quaternion::RotateVector(kUnitY3<float>, transform->GetTransform().rotate);
 
 		point_ -= right * delta.x * kSensitivity.x;
 		point_ += up * delta.y * kSensitivity.y;
@@ -371,9 +371,9 @@ void RenderSceneEditor::UpdateCamera() {
 
 	distance_ = std::max(distance_ - mouse->GetDeltaWheel(), 0.0f);
 
-	Quaternion r = AxisAngle({ 0.0f, 1.0f, 0.0f }, angle_.x) * AxisAngle({ 1.0f, 0.0f, 0.0f }, angle_.y);
+	Quaternion r = Quaternion::AxisAngle(kUnitY3<float>, angle_.x) * Quaternion::AxisAngle(kUnitX3<float>, angle_.y);
 
-	Vector3f direciton = RotateVector({ 0.0f, 0.0f, -1.0f }, r);
+	Vector3f direciton = Quaternion::RotateVector(kBackward3<float>, r);
 
 	transform->GetTransform().translate = point_ + direciton * distance_;
 	transform->GetTransform().rotate    = r;

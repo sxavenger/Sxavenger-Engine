@@ -51,14 +51,14 @@ void DirectXThreadContext::SetDescriptorHeap() const {
 // DirectXWindowContext class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-void DirectXWindowContext::Init(Window* window, DirectXThreadContext* threadContext, const Color4f& clearColor) {
+void DirectXWindowContext::Init(Window* window, DirectXThreadContext* context, const Color4f& clearColor) {
 
 	// 引数の保存
-	threadContext_ = threadContext;
+	threadContext_ = context;
 
 	swapChain_ = std::make_unique<SwapChain>();
 	swapChain_->Init(
-		SxavengerSystem::GetDxDevice(), SxavengerSystem::GetDxDescriptorHeaps(), threadContext_->GetDxCommand(),
+		SxavengerSystem::GetDxDevice(), SxavengerSystem::GetDxDescriptorHeaps(), context->GetDxCommand(),
 		window
 	);
 

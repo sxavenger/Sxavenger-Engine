@@ -10,7 +10,7 @@
 #include <Engine/Component/MonoBehaviour.h>
 
 //* lib
-#include <Lib/Geometry/Color.h>
+#include <Lib/Geometry/Color4.h>
 
 //////////////////////////////////////////////////////////////////////////////////////////
 // HierarchyEditor class

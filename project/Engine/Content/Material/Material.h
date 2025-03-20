@@ -9,7 +9,7 @@
 
 //* lib
 #include <Lib/Traits.h>
-#include <Lib/Geometry/Color.h>
+#include <Lib/Geometry/Color3.h>
 #include <Lib/Geometry/Matrix4x4.h>
 #include <Lib/Transform/Transform.h>
 
@@ -79,7 +79,7 @@ public:
 
 		Type type = Type::Value;
 
-		Color3f color = kWhite3;
+		Color3f color = kWhite3<float>;
 		uint32_t index = NULL;
 
 	};

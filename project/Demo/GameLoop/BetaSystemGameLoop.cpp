@@ -75,7 +75,7 @@ void BetaSystemGameLoop::InitSystem() {
 	light_ = std::make_unique<MonoBehaviour>();
 	light_->SetName("directional light");
 	auto transform = light_->AddComponent<TransformComponent>();
-	transform->GetTransform().rotate = AxisAngle({ 1.0f, 0.0f, 0.0f }, pi_v / 2.0f);
+	transform->GetTransform().rotate = Quaternion::AxisAngle({ 1.0f, 0.0f, 0.0f }, kPi / 2.0f);
 	auto light = light_->AddComponent<DirectionalLightComponent>();
 	light->Init();
 

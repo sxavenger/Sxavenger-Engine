@@ -15,7 +15,7 @@
 
 void Material::Albedo::Init() {
 	type = Type::Value;
-	color = kWhite3;
+	color = kWhite3<float>;
 	index = NULL;
 }
 

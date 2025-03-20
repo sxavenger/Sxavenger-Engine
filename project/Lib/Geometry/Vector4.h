@@ -3,13 +3,21 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
-//* lib
-#include <Lib/Sxl/Formatter.h>
+//* geometry
+#include "Vector2.h"
+#include "Vector3.h"
+
+//* c++
+#include <cstdint>
+#include <concepts>
+#include <limits>
+#include <cmath>
+#include <algorithm>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Vector4 class
 ////////////////////////////////////////////////////////////////////////////////////////////
-template <typename T>
+template <class _Ty>
 class Vector4 {
 public:
 
@@ -17,63 +25,47 @@ public:
 	// constructor
 	//=========================================================================================
 
-	constexpr Vector4() = default;
-	constexpr Vector4(T _x, T _y, T _z) : x(_x), y(_y), z(_z), w(1.0f) {}
-	constexpr Vector4(T _x, T _y, T _z, T _w) : x(_x), y(_y), z(_z), w(_w) {}
+	constexpr Vector4() noexcept = default;
+	constexpr Vector4(_Ty _x, _Ty _y, _Ty _z, _Ty _w) noexcept : x(_x), y(_y), z(_z), w(_w) {};
+	constexpr Vector4(const Vector4& rhs) noexcept = default;
+	constexpr Vector4(Vector4&& rhs) noexcept = default;
+
+	constexpr Vector4(const Vector2<_Ty>& rhs, _Ty _z, _Ty _w) noexcept : x(rhs.x), y(rhs.y), z(_z), w(_w) {};
+	constexpr Vector4(const Vector3<_Ty>& rhs, _Ty _w) noexcept : x(rhs.x), y(rhs.y), z(rhs.z), w(_w) {};
 
 	//=========================================================================================
-	// compound assignment operator
+	// operators
 	//=========================================================================================
 
-	/* Add */
-	constexpr Vector4& operator+=(const Vector4& rhs);
+	//* compound assignment
+	constexpr Vector4& operator=(const Vector4& rhs) noexcept = default;
+	constexpr Vector4& operator=(Vector4&& rhs) noexcept = default;
+	constexpr Vector4& operator+=(const Vector4& rhs) noexcept;
+	constexpr Vector4& operator-=(const Vector4& rhs) noexcept;
+	constexpr Vector4& operator*=(const Vector4& rhs) noexcept;
+	constexpr Vector4& operator*=(const _Ty& rhs) noexcept;
+	constexpr Vector4& operator/=(const Vector4& rhs) noexcept;
+	constexpr Vector4& operator/=(const _Ty& rhs) noexcept;
 
-	/* Subtract */
-	constexpr Vector4& operator-=(const Vector4& rhs);
-
-	/* Multiply */
-	constexpr Vector4& operator*=(const Vector4& rhs);
-	constexpr Vector4& operator*=(T rhs);
-
-	/* Division */
-	constexpr Vector4& operator/=(const Vector4& rhs);
-	constexpr Vector4& operator/=(T rhs);
-
-	//=========================================================================================
-	// cast opraotor
-	//=========================================================================================
-
-	template <typename U>
-	constexpr operator Vector4<U>() const {
-		return { static_cast<U>(x), static_cast<U>(y), static_cast<U>(z), static_cast<U>(w) };
+	//* cast
+	template <class _U>
+	constexpr operator Vector4<_U>() const noexcept {
+		return { static_cast<_U>(x), static_cast<_U>(y), static_cast<_U>(z), static_cast<_U>(w) };
 	}
 
-	//=========================================================================================
-	// random access operator
-	//=========================================================================================
+	//* unary
+	constexpr Vector4 operator+() const noexcept;
+	constexpr Vector4 operator-() const noexcept;
 
-	constexpr T& operator[](size_t i) {
-		return (&x)[i];
-	}
-
-	const T& operator[](size_t i) const {
-		return (&x)[i];
-	}
+	//* access
+	constexpr _Ty& operator[](size_t index) noexcept;
+	constexpr const _Ty& operator[](size_t index) const noexcept;
 
 	//=========================================================================================
 	// variables
 	//=========================================================================================
 
-	T x, y, z, w;
-
-	//=========================================================================================
-	// formatter
-	//=========================================================================================
-
-	template <typename FormatContext>
-	auto format(FormatContext& ctx) const {
-		return std::format_to(ctx.out(), "(x: {}, y: {}, z: {}, w: {})", x, y, z, w);
-	}
+	_Ty x, y, z, w;
 
 };
 
@@ -81,8 +73,8 @@ public:
 // Vector4 class template methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-template <typename T>
-constexpr Vector4<T>& Vector4<T>::operator+=(const Vector4& rhs) {
+template <class _Ty>
+constexpr Vector4<_Ty>& Vector4<_Ty>::operator+=(const Vector4& rhs) noexcept {
 	x += rhs.x;
 	y += rhs.y;
 	z += rhs.z;
@@ -90,8 +82,8 @@ constexpr Vector4<T>& Vector4<T>::operator+=(const Vector4& rhs) {
 	return *this;
 }
 
-template <typename T>
-constexpr Vector4<T>& Vector4<T>::operator-=(const Vector4& rhs) {
+template <class _Ty>
+constexpr Vector4<_Ty>& Vector4<_Ty>::operator-=(const Vector4& rhs) noexcept {
 	x -= rhs.x;
 	y -= rhs.y;
 	z -= rhs.z;
@@ -99,8 +91,8 @@ constexpr Vector4<T>& Vector4<T>::operator-=(const Vector4& rhs) {
 	return *this;
 }
 
-template <typename T>
-constexpr Vector4<T>& Vector4<T>::operator*=(const Vector4& rhs) {
+template <class _Ty>
+constexpr Vector4<_Ty>& Vector4<_Ty>::operator*=(const Vector4& rhs) noexcept {
 	x *= rhs.x;
 	y *= rhs.y;
 	z *= rhs.z;
@@ -108,8 +100,8 @@ constexpr Vector4<T>& Vector4<T>::operator*=(const Vector4& rhs) {
 	return *this;
 }
 
-template <typename T>
-constexpr Vector4<T>& Vector4<T>::operator*=(T rhs) {
+template <class _Ty>
+constexpr Vector4<_Ty>& Vector4<_Ty>::operator*=(const _Ty& rhs) noexcept {
 	x *= rhs;
 	y *= rhs;
 	z *= rhs;
@@ -117,8 +109,8 @@ constexpr Vector4<T>& Vector4<T>::operator*=(T rhs) {
 	return *this;
 }
 
-template <typename T>
-constexpr Vector4<T>& Vector4<T>::operator/=(const Vector4& rhs) {
+template <class _Ty>
+constexpr Vector4<_Ty>& Vector4<_Ty>::operator/=(const Vector4& rhs) noexcept {
 	x /= rhs.x;
 	y /= rhs.y;
 	z /= rhs.z;
@@ -126,8 +118,8 @@ constexpr Vector4<T>& Vector4<T>::operator/=(const Vector4& rhs) {
 	return *this;
 }
 
-template <typename T>
-constexpr Vector4<T>& Vector4<T>::operator/=(T rhs) {
+template <class _Ty>
+constexpr Vector4<_Ty>& Vector4<_Ty>::operator/=(const _Ty& rhs) noexcept {
 	x /= rhs;
 	y /= rhs;
 	z /= rhs;
@@ -135,78 +127,70 @@ constexpr Vector4<T>& Vector4<T>::operator/=(T rhs) {
 	return *this;
 }
 
-//=========================================================================================
-// binary operator
-//=========================================================================================
+template <class _Ty>
+constexpr Vector4<_Ty> Vector4<_Ty>::operator+() const noexcept {
+	return *this;
+}
 
-/* Add */
-template <typename T>
-constexpr Vector4<T> operator+(const Vector4<T>& lhs, const Vector4<T>& rhs) {
+template <class _Ty>
+constexpr Vector4<_Ty> Vector4<_Ty>::operator-() const noexcept {
+	return { -x, -y, -z, -w };
+}
+
+template <class _Ty>
+constexpr _Ty& Vector4<_Ty>::operator[](size_t index) noexcept {
+	return (&x)[index];
+}
+
+template <class _Ty>
+constexpr const _Ty& Vector4<_Ty>::operator[](size_t index) const noexcept {
+	return (&x)[index];
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////
+// Vector4 class binary operators
+////////////////////////////////////////////////////////////////////////////////////////////
+
+template <class _Ty>
+constexpr Vector4<_Ty> operator+(const Vector4<_Ty>& lhs, const Vector4<_Ty>& rhs) noexcept {
 	return { lhs.x + rhs.x, lhs.y + rhs.y, lhs.z + rhs.z, lhs.w + rhs.w };
 }
 
-/* Subtract */
-template <typename T>
-constexpr Vector4<T> operator-(const Vector4<T>& lhs, const Vector4<T>& rhs) {
+template <class _Ty>
+constexpr Vector4<_Ty> operator-(const Vector4<_Ty>& lhs, const Vector4<_Ty>& rhs) noexcept {
 	return { lhs.x - rhs.x, lhs.y - rhs.y, lhs.z - rhs.z, lhs.w - rhs.w };
 }
 
-/* Multiply */
-template <typename T>
-constexpr Vector4<T> operator*(const Vector4<T>& lhs, const Vector4<T>& rhs) {
+template <class _Ty>
+constexpr Vector4<_Ty> operator*(const Vector4<_Ty>& lhs, const Vector4<_Ty>& rhs) noexcept {
 	return { lhs.x * rhs.x, lhs.y * rhs.y, lhs.z * rhs.z, lhs.w * rhs.w };
 }
 
-template <typename T>
-constexpr Vector4<T> operator*(const Vector4<T>& lhs, T rhs) {
+template <class _Ty>
+constexpr Vector4<_Ty> operator*(const Vector4<_Ty>& lhs, const _Ty& rhs) noexcept {
 	return { lhs.x * rhs, lhs.y * rhs, lhs.z * rhs, lhs.w * rhs };
 }
 
-template <typename T>
-constexpr Vector4<T> operator*(T lhs, const Vector4<T>& rhs) {
+template <class _Ty>
+constexpr Vector4<_Ty> operator*(const _Ty& lhs, const Vector4<_Ty>& rhs) noexcept {
 	return { lhs * rhs.x, lhs * rhs.y, lhs * rhs.z, lhs * rhs.w };
 }
 
-/* Division */
-template <typename T>
-constexpr Vector4<T> operator/(const Vector4<T>& lhs, const Vector4<T>& rhs) {
+template <class _Ty>
+constexpr Vector4<_Ty> operator/(const Vector4<_Ty>& lhs, const Vector4<_Ty>& rhs) noexcept {
 	return { lhs.x / rhs.x, lhs.y / rhs.y, lhs.z / rhs.z, lhs.w / rhs.w };
 }
 
-template <typename T>
-constexpr Vector4<T> operator/(const Vector4<T>& lhs, T rhs) {
+template <class _Ty>
+constexpr Vector4<_Ty> operator/(const Vector4<_Ty>& lhs, const _Ty& rhs) noexcept {
 	return { lhs.x / rhs, lhs.y / rhs, lhs.z / rhs, lhs.w / rhs };
 }
 
-template <typename T>
-constexpr Vector4<T> operator/(T lhs, const Vector4<T>& rhs) {
-	return { lhs / rhs.x, lhs / rhs.y, lhs / rhs.z, lhs / rhs.w };
-}
-
-//=========================================================================================
-// unary operator
-//=========================================================================================
-
-template <typename T>
-constexpr Vector4<T> operator+(const Vector4<T>& v) {
-	return v;
-}
-
-template <typename T>
-constexpr Vector4<T> operator-(const Vector4<T>& v) {
-	return { -v.x, -v.y, -v.z, -v.w };
-}
-
 ////////////////////////////////////////////////////////////////////////////////////////////
-// formatter
-////////////////////////////////////////////////////////////////////////////////////////////
-template <class T>
-struct std::formatter<Vector4<T>> : Sxl::BaseFormatter<Vector4<T>> {};
-
-//-----------------------------------------------------------------------------------------
 // using
-//-----------------------------------------------------------------------------------------
+////////////////////////////////////////////////////////////////////////////////////////////
 
-using Vector4f = Vector4<float>;
-using Vector4i = Vector4<int32_t>;
+using Vector4i  = Vector4<std::int32_t>;
+using Vector4ui = Vector4<std::uint32_t>;
+using Vector4f  = Vector4<float>;
 

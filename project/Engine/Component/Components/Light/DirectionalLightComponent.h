@@ -11,7 +11,7 @@
 #include "LightSource.h"
 
 //* lib
-#include <Lib/Geometry/Color.h>
+#include <Lib/Geometry/Color3.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // DirectionalLightComponent class

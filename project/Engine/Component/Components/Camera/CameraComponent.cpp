@@ -45,7 +45,7 @@ void CameraComponent::Projection::Init() {
 Matrix4x4 CameraComponent::Projection::ToProj() const {
 	float aspect = sensor.x / sensor.y;
 	float fovY   = 2.0f * std::atan(sensor.y / (2.0f * focal));
-	return Matrix::MakePerspectiveFov(fovY, aspect, nearZ, farZ);
+	return Matrix4x4::PerspectiveFov(fovY, aspect, nearZ, farZ);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////

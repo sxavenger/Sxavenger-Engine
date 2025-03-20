@@ -141,9 +141,9 @@ void Skeleton::ApplyTransitionAnimation(
 			transformB = QuaternionTransform();
 		}
 
-		joint.transform.scale     = Lerp(transformA.value().scale, transformB.value().scale, t);
-		joint.transform.rotate    = Slerp(transformA.value().rotate, transformB.value().rotate, t);
-		joint.transform.translate = Lerp(transformA.value().translate, transformB.value().translate, t);
+		joint.transform.scale     = Vector3f::Lerp(transformA.value().scale, transformB.value().scale, t);
+		joint.transform.rotate    = Quaternion::Slerp(transformA.value().rotate, transformB.value().rotate, t);
+		joint.transform.translate = Vector3f::Lerp(transformA.value().translate, transformB.value().translate, t);
 	}
 }
 
@@ -152,7 +152,7 @@ void Skeleton::UpdateMatrix() {
 	// すべてのJointの更新. 親が若いので(indexが子より親の方が小さいので)通常ループで処理可能
 	for (auto& joint : joints) {
 		// localMatrixの更新
-		joint.localMatrix = Matrix::MakeAffine(joint.transform.scale, joint.transform.rotate, joint.transform.translate);
+		joint.localMatrix = Matrix4x4::MakeAffine(joint.transform.scale, joint.transform.rotate, joint.transform.translate);
 
 		// skeletonSpaceMatrixの更新
 		if (joint.parent.has_value()) { //!< 親がいる場合

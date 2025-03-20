@@ -33,9 +33,9 @@ void FPresenter::Init() {
 
 	vb_ = std::make_unique<DxObject::VertexDimensionBuffer<Vertex>>();
 	vb_->Create(SxavengerSystem::GetDxDevice(), 3);
-	vb_->At(0) = { { -1.0f, 1.0f, 0.0f }, { 0.0f, 0.0f } };
-	vb_->At(1) = { { 3.0f, 1.0f, 0.0f }, { 2.0f, 0.0f } };
-	vb_->At(2) = { { -1.0f, -3.0f, 0.0f }, { 0.0f, 2.0f } };
+	vb_->At(0) = { { -1.0f, 1.0f, 0.0f, 1.0f }, { 0.0f, 0.0f } };
+	vb_->At(1) = { { 3.0f, 1.0f, 0.0f, 1.0f }, { 2.0f, 0.0f } };
+	vb_->At(2) = { { -1.0f, -3.0f, 0.0f, 1.0f }, { 0.0f, 2.0f } };
 
 }
 

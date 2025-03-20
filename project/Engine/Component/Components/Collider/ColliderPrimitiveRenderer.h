@@ -48,7 +48,7 @@ private:
 	std::unique_ptr<DxObject::VectorDimensionBuffer<std::pair<Matrix4x4, Color4f>>> buffer_;
 
 	const uint32_t kSubdivision = 36;
-	const float kRoundEvery     = (pi_v * 2.0f) / kSubdivision;
+	const float kRoundEvery     = (kPi * 2.0f) / kSubdivision;
 
 	uint32_t index_ = 0;
 	const uint32_t kMaxBuffer = 256;

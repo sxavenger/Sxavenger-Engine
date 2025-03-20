@@ -15,7 +15,7 @@ _DXOBJECT_USING
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 void DirectionalLightComponent::Parameter::Init() {
-	color     = kWhite3;
+	color     = kWhite3<>;
 	intensity = 1.0f;
 }
 

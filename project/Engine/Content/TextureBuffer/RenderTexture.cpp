@@ -11,7 +11,7 @@ _DXOBJECT_USING
 // static const variables
 //=========================================================================================
 
-const Color4f RenderTexture::kDefaultClearColor = ToColor4<float>(0x3A504BFF);
+const Color4f RenderTexture::kDefaultClearColor = Color4f::Convert(0x3A504BFF);
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // RenderTexture class methods

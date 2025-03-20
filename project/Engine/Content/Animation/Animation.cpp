@@ -24,7 +24,7 @@ Vector3f CalculateAnimationCurve(const AnimationCurve<Vector3f>& keyframes, Time
 		if (keyframes[i].time <= time && time <= keyframes[nextIndex].time) { //!< timeが範囲内の場合
 			// 範囲内でのtを補間
 			float t = (time.time - keyframes[i].time.time) / (keyframes[nextIndex].time.time - keyframes[i].time.time);
-			return Lerp(keyframes[i].value, keyframes[nextIndex].value, t);
+			return Vector3f::Lerp(keyframes[i].value, keyframes[nextIndex].value, t);
 		}
 	}
 
@@ -45,7 +45,7 @@ Quaternion CalculateAnimationCurve(const AnimationCurve<Quaternion>& keyframes, 
 		if (keyframes[i].time <= time && time <= keyframes[nextIndex].time) { //!< timeが範囲内の場合
 			// 範囲内でのtを補間
 			float t = (time.time - keyframes[i].time.time) / (keyframes[nextIndex].time.time - keyframes[i].time.time);
-			return Slerp(keyframes[i].value, keyframes[nextIndex].value, t);
+			return Quaternion::Slerp(keyframes[i].value, keyframes[nextIndex].value, t);
 		}
 	}
 

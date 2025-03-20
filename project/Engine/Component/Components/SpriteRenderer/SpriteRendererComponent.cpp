@@ -32,7 +32,7 @@ void SpriteRendererComponent::Create() {
 	CreateInputAssembler();
 
 	for (auto& color : colors_) {
-		color = kWhite4;
+		color = kWhite4<>;
 	}
 
 	buffer_ = std::make_unique<DxObject::DimensionBuffer<Transformation2d>>();

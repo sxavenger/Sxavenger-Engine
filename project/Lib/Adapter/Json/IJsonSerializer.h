@@ -11,7 +11,8 @@
 #include <Lib/Geometry/Vector3.h>
 #include <Lib/Geometry/Vector4.h>
 #include <Lib/Geometry/Quaternion.h>
-#include <Lib/Geometry/Color.h>
+#include <Lib/Geometry/Color3.h>
+#include <Lib/Geometry/Color4.h>
 
 //* c++
 #include <concepts>

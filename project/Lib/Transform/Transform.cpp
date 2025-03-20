@@ -22,7 +22,7 @@ void EulerTransform::SetImGuiCommand(float granularityTranslate, float granulari
 }
 
 Matrix4x4 EulerTransform::ToMatrix() const {
-	return Matrix::MakeAffine(scale, rotate, translate);
+	return Matrix4x4::MakeAffine(scale, rotate, translate);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -34,9 +34,9 @@ void QuaternionTransform::SetImGuiCommand(float granularityTranslate, float gran
 
 	Vector3f drag = {};
 	if (ImGui::DragFloat3("## rotation drager", &drag.x, granularityRotate, -1.0f, 1.0f, "", ImGuiSliderFlags_NoInput)) {
-		rotate *= AxisAngle({ 1.0f, 0.0f, 0.0f }, drag.x);
-		rotate *= AxisAngle({ 0.0f, 1.0f, 0.0f }, drag.y);
-		rotate *= AxisAngle({ 0.0f, 0.0f, 1.0f }, drag.z);
+		rotate *= Quaternion::AxisAngle({ 1.0f, 0.0f, 0.0f }, drag.x);
+		rotate *= Quaternion::AxisAngle({ 0.0f, 1.0f, 0.0f }, drag.y);
+		rotate *= Quaternion::AxisAngle({ 0.0f, 0.0f, 1.0f }, drag.z);
 	}
 
 	ImGui::SameLine();
@@ -53,7 +53,7 @@ void QuaternionTransform::SetImGuiCommand(float granularityTranslate, float gran
 }
 
 Matrix4x4 QuaternionTransform::ToMatrix() const {
-	return Matrix::MakeAffine(scale, rotate, translate);
+	return Matrix4x4::MakeAffine(scale, rotate, translate);
 }
 
 json QuaternionTransform::OutputJson() const {
@@ -95,7 +95,7 @@ void Transform2d::SetImGuiCommand(float granularityTranslate, float granularityS
 }
 
 Matrix4x4 Transform2d::ToMatrix() const {
-	return Matrix::MakeAffine({ scale.x, scale.y, 0.0f }, { 0.0f, 0.0f, rotate }, { translate.x, translate.y, 0.0f });
+	return Matrix4x4::MakeAffine({ scale.x, scale.y, 0.0f }, { 0.0f, 0.0f, rotate }, { translate.x, translate.y, 0.0f });
 }
 
 json Transform2d::OutputJson() const {

@@ -216,7 +216,7 @@ Vector3f Model::ConvertPosition3(const aiVector3D& aiVector) {
 }
 
 Vector4f Model::ConvertPosition4(const aiVector3D& aiVector) {
-	return { aiVector.x, aiVector.y, -aiVector.z }; //!< 左手座標系に変換
+	return { aiVector.x, aiVector.y, -aiVector.z, 1.0f }; //!< 左手座標系に変換
 }
 
 Quaternion Model::ConvertQuaternion(const aiQuaternion& aiQuaternion) {
@@ -312,7 +312,7 @@ void Model::LoadMesh(const aiScene* aiScene) {
 				aiBindPoseMatrix.Decompose(scale, rotate, translate); //!< 成分を抽出
 
 				// 左手系のBindPoseMatrixを作る
-				Matrix4x4 bindPoseMatrix = Matrix::MakeAffine(
+				Matrix4x4 bindPoseMatrix = Matrix4x4::MakeAffine(
 					{ scale.x, scale.y, scale.z }, ConvertQuaternion(rotate), ConvertPosition3(translate)
 				);
 

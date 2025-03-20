@@ -41,8 +41,8 @@ void ColliderPrimitiveSphere::Init() {
 			std::cos(theta + kRoundEvery),
 		};
 
-		vb_->At(index++) = { p1.x, p1.y, p1.z };
-		vb_->At(index++) = { p2.x, p2.y, p2.z };
+		vb_->At(index++) = { p1.x, p1.y, p1.z, 1.0f };
+		vb_->At(index++) = { p2.x, p2.y, p2.z, 1.0f };
 	}
 
 	// xy軸の円
@@ -62,8 +62,8 @@ void ColliderPrimitiveSphere::Init() {
 			0.0f
 		};
 
-		vb_->At(index++) = { p1.x, p1.y, p1.z };
-		vb_->At(index++) = { p2.x, p2.y, p2.z };
+		vb_->At(index++) = { p1.x, p1.y, p1.z, 1.0f };
+		vb_->At(index++) = { p2.x, p2.y, p2.z, 1.0f };
 	}
 
 	// yz軸の円
@@ -83,8 +83,8 @@ void ColliderPrimitiveSphere::Init() {
 			std::cos(phi + kRoundEvery)
 		};
 
-		vb_->At(index++) = { p1.x, p1.y, p1.z };
-		vb_->At(index++) = { p2.x, p2.y, p2.z };
+		vb_->At(index++) = { p1.x, p1.y, p1.z, 1.0f };
+		vb_->At(index++) = { p2.x, p2.y, p2.z, 1.0f };
 	}
 
 	buffer_ = std::make_unique<DxObject::VectorDimensionBuffer<std::pair<Matrix4x4, Color4f>>>();
@@ -100,7 +100,7 @@ void ColliderPrimitiveSphere::StackBuffer(const Vector3f& position, const Collis
 		return; //!< buffer is full.
 	}
 
-	buffer_->At(index_).first  = Matrix::MakeAffine({ sphere.radius, sphere.radius, sphere.radius }, Quaternion::Identity(), position);
+	buffer_->At(index_).first  = Matrix4x4::MakeAffine({ sphere.radius, sphere.radius, sphere.radius }, Quaternion::Identity(), position);
 	buffer_->At(index_).second = color;
 	index_++;
 }

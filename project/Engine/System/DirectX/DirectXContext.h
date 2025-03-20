@@ -11,7 +11,7 @@
 //* lib
 #include <Lib/Geometry/Vector2.h>
 #include <Lib/Geometry/Vector4.h>
-#include <Lib/Geometry/Color.h>
+#include <Lib/Geometry/Color4.h>
 
 //* c++
 #include <memory>
@@ -76,7 +76,7 @@ public:
 	DirectXWindowContext()  = default;
 	~DirectXWindowContext() { Term(); }
 
-	void Init(Window* window, DirectXThreadContext* threadContext, const Color4f& clearColor);
+	void Init(Window* window, DirectXThreadContext* context, const Color4f& clearColor);
 
 	void Term();
 

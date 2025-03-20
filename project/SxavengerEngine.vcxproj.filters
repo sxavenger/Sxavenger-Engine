@@ -147,17 +147,12 @@
     <ClCompile Include="Engine\Component\Components\SpriteRenderer\SpriteRendererComponent.cpp" />
     <ClCompile Include="Engine\Render\Canvas\FCanvasRenderer.cpp" />
     <ClCompile Include="Engine\System\Runtime\Performance\DeltaTimePoint.cpp" />
-    <ClCompile Include="Lib\Geometry\Color.cpp" />
-    <ClCompile Include="Lib\Geometry\GeometryMath.cpp" />
-    <ClCompile Include="Lib\Geometry\Matrix4x4.cpp" />
-    <ClCompile Include="Lib\Geometry\Quaternion.cpp" />
-    <ClCompile Include="Lib\Geometry\Vector2.cpp" />
-    <ClCompile Include="Lib\Geometry\Vector3.cpp" />
-    <ClCompile Include="Lib\Geometry\Vector4.cpp" />
     <ClCompile Include="Engine\Component\Components\MeshRenderer\MeshFilterComponent.cpp" />
     <ClCompile Include="Engine\Component\Components\MeshRenderer\MeshFilterContainer.cpp" />
     <ClCompile Include="Engine\Content\Material\MaterialStorage.cpp" />
     <ClCompile Include="Engine\Editor\Editors\MaterialEditor.cpp" />
+    <ClCompile Include="Lib\Geometry\Matrix4x4.cpp" />
+    <ClCompile Include="Lib\Geometry\Quaternion.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\System\Window\Window.h" />
@@ -309,18 +304,19 @@
     <ClInclude Include="Engine\Component\Components\SpriteRenderer\SpriteRendererComponent.h" />
     <ClInclude Include="Engine\Render\Canvas\FCanvasRenderer.h" />
     <ClInclude Include="Engine\System\Runtime\Performance\DeltaTimePoint.h" />
-    <ClInclude Include="Lib\Geometry\Color.h" />
+    <ClInclude Include="Engine\Component\Components\MeshRenderer\MeshFilterComponent.h" />
+    <ClInclude Include="Engine\Component\Components\MeshRenderer\MeshFilterContainer.h" />
+    <ClInclude Include="Engine\Content\Material\MaterialStorage.h" />
+    <ClInclude Include="Engine\Editor\Editors\MaterialEditor.h" />
+    <ClInclude Include="Lib\Geometry\Color3.h" />
+    <ClInclude Include="Lib\Geometry\Color4.h" />
     <ClInclude Include="Lib\Geometry\GeometryMath.h" />
     <ClInclude Include="Lib\Geometry\Matrix4x4.h" />
     <ClInclude Include="Lib\Geometry\Quaternion.h" />
     <ClInclude Include="Lib\Geometry\Vector2.h" />
     <ClInclude Include="Lib\Geometry\Vector3.h" />
     <ClInclude Include="Lib\Geometry\Vector4.h" />
-    <ClInclude Include="Lib\Geometry\VectorComparison.h" />
-    <ClInclude Include="Engine\Component\Components\MeshRenderer\MeshFilterComponent.h" />
-    <ClInclude Include="Engine\Component\Components\MeshRenderer\MeshFilterContainer.h" />
-    <ClInclude Include="Engine\Content\Material\MaterialStorage.h" />
-    <ClInclude Include="Engine\Editor\Editors\MaterialEditor.h" />
+    <ClInclude Include="Lib\Geometry\VectorComparision.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />
