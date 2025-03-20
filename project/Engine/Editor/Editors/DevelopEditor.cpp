@@ -235,10 +235,10 @@ void DevelopEditor::ShowConsole() {
 	//!< todo: filterできるようにする
 	for (const auto& [data, count] : SxavengerLogger::GetStacks() | std::views::filter([](const auto&) { return true; })) {
 		if (count == 0) {
-			ImGui::TextColored(colors[static_cast<uint32_t>(data.status)], std::format("{}", data.label).c_str());
+			ImGui::TextColored(colors[static_cast<uint32_t>(data.category)], std::format("{}", data.label).c_str());
 
 		} else {
-			ImGui::TextColored(colors[static_cast<uint32_t>(data.status)], std::format("{} [x{}]", data.label, count).c_str());
+			ImGui::TextColored(colors[static_cast<uint32_t>(data.category)], std::format("{} [x{}]", data.label, count).c_str());
 		}
 		
 		if (!data.detail.empty()) {

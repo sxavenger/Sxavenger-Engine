@@ -35,9 +35,9 @@ class SxavengerLogger {
 public:
 
 	////////////////////////////////////////////////////////////////////////////////////////////
-	// Status enum class
+	// Category enum class
 	////////////////////////////////////////////////////////////////////////////////////////////
-	enum class Status {
+	enum class Category {
 		None,
 		Comment,
 		Warning,
@@ -66,7 +66,7 @@ public:
 		// public variables
 		//=========================================================================================
 
-		Status status = Status::None;
+		Category category = Category::None;
 		std::string label;
 		std::string detail;
 
@@ -95,7 +95,7 @@ public:
 
 	//* runtime log methods *//
 
-	static void LogRuntimeA(Status status, const std::string& label, const std::string& detail = "");
+	static void LogRuntimeA(Category category, const std::string& label, const std::string& detail = "");
 
 	static const Container& GetStacks() { return stacks_; }
 
@@ -155,7 +155,7 @@ void EngineThreadLog(const std::wstring& log);
 void Assert(bool expression, const std::string& label = "", const std::string& detail = "", const std::source_location& location = std::source_location::current());
 void AssertW(bool expression, const std::wstring& label = L"", const std::wstring& detail = L"", const std::source_location& location = std::source_location::current());
 
-void LogRuntime(const std::string& label, const std::string& detail = "", SxavengerLogger::Status status = SxavengerLogger::Status::None);
+void LogRuntime(const std::string& label, const std::string& detail = "", SxavengerLogger::Category category = SxavengerLogger::Category::None);
 void CommentRuntime(const std::string& label, const std::string& detail = "");
 void WarningRuntime(const std::string& label, const std::string& detail = "");
 void ErrorRuntime(const std::string& label, const std::string& detail = "");

@@ -34,7 +34,7 @@ void InputMesh::Meshlet::CreateMeshlet(TriangleInputAssembler<MeshVertexData>* i
 		std::vector<uint8_t> uniqueVertexIB;
 
 		auto hr = DirectX::ComputeMeshlets(
-			reinterpret_cast<const UINT*>(ia->GetIndex()->GetData()), ia->GetIndex()->GetSize(), //!< HACK: ここはuint32_tでないといけない
+			reinterpret_cast<const UINT*>(index->GetData()), index->GetSize(), //!< HACK: ここはuint32_tでないといけない
 			positions.data(), positions.size(),
 			nullptr,
 			bufferMeshlets,
@@ -78,6 +78,11 @@ void InputMesh::Meshlet::CreateMeshlet(TriangleInputAssembler<MeshVertexData>* i
 		// _DXOBJECT Deviceの取り出し
 		auto device = SxavengerSystem::GetDxDevice();
 
+		// mesh情報を初期化
+		info = std::make_unique<DimensionBuffer<MeshletInfo>>();
+		info->Create(device, 1);
+		info->At(0).meshletCount = static_cast<uint32_t>(bufferMeshlets.size());
+
 		// uniqueVertexIndicesの初期化
 		uniqueVertexIndices = std::make_unique<DimensionBuffer<uint32_t>>();
 		uniqueVertexIndices->Create(device, static_cast<uint32_t>(bufferUniqueVertexIndices.size()));
@@ -97,11 +102,6 @@ void InputMesh::Meshlet::CreateMeshlet(TriangleInputAssembler<MeshVertexData>* i
 		cullDatas = std::make_unique<DimensionBuffer<DirectX::CullData>>();
 		cullDatas->Create(device, static_cast<uint32_t>(bufferCullDatas.size()));
 		cullDatas->Memcpy(bufferCullDatas.data());
-
-		// mesh情報を初期化
-		info = std::make_unique<DimensionBuffer<MeshletInfo>>();
-		info->Create(device, 1);
-		info->At(0).meshletCount = static_cast<uint32_t>(bufferMeshlets.size());
 	}
 }
 

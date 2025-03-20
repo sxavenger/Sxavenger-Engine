@@ -78,6 +78,9 @@
     <ClCompile Include="Engine\Content\Animation\Skeleton.cpp" />
     <ClCompile Include="Engine\Content\Animation\SkinCluster.cpp" />
     <ClCompile Include="Engine\Content\InputMesh\InputMesh.cpp" />
+    <ClCompile Include="Engine\Asset\Assets\BaseAsset.cpp" />
+    <ClCompile Include="Engine\Asset\Assets\Texture\Texture.cpp" />
+    <ClCompile Include="Engine\Asset\Assets\Texture\AssetTexture.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\System\Window\Window.h" />
@@ -170,6 +173,9 @@
     <ClInclude Include="Engine\Content\InputAssembler\LineInputAssembler.h" />
     <ClInclude Include="Engine\Content\InputAssembler\TriangleInputAssembler.h" />
     <ClInclude Include="Engine\Content\InputMesh\InputMesh.h" />
+    <ClInclude Include="Engine\Asset\Assets\BaseAsset.h" />
+    <ClInclude Include="Engine\Asset\Assets\Texture\Texture.h" />
+    <ClInclude Include="Engine\Asset\Assets\Texture\AssetTexture.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />
