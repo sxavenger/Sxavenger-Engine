@@ -45,8 +45,6 @@ public:
 
 	static void ExecuteAllAllocator();
 
-	//static ID3D12GraphicsCommandList6* GetCommandList();
-
 	static DirectXThreadContext* GetMainThreadContext();
 
 	//-----------------------------------------------------------------------------------------

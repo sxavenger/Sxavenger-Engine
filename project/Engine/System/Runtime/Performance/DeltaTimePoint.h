@@ -13,7 +13,8 @@
 // DeltaTimePoint class
 ////////////////////////////////////////////////////////////////////////////////////////////
 template <TimeUnit _Unit, std::floating_point _Value>
-class DeltaTimePoint : public TimePoint<_Unit, _Value> {
+class DeltaTimePoint
+	: public TimePoint<_Unit, _Value> {
 public:
 
 	//=========================================================================================
