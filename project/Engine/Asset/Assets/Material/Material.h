@@ -306,7 +306,7 @@ public:
 
 	//* transform option *//
 
-	void TransferUVMatrix();
+	void Transfer();
 
 	const Transform2d& GetTransform() const { return transform_; }
 	Transform2d& GetTransform() { return transform_; }

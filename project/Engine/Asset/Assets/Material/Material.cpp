@@ -255,12 +255,11 @@ Material::MaterialBuffer& Material::GetMaterial() {
 	return buffer_->At(0);
 }
 
-void Material::TransferUVMatrix() {
+void Material::Transfer() {
 	if (buffer_ != nullptr) {
 		buffer_->At(0).transformation.Transfer(transform_.ToMatrix());
 	}
 }
-
 
 const D3D12_GPU_VIRTUAL_ADDRESS& Material::GetGPUVirtualAddress() const {
 	Assert(buffer_ != nullptr, "buffer is not create.");
