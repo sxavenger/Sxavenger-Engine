@@ -1,0 +1,17 @@
+#include "BaseComponent.h"
+
+////////////////////////////////////////////////////////////////////////////////////////////
+// BaseComponent class methods
+////////////////////////////////////////////////////////////////////////////////////////////
+
+MonoBehaviour* BaseComponent::GetBehaviour() const {
+	return behaviour_;
+}
+
+bool BaseComponent::IsActive() const {
+	return false; // todo:
+}
+
+bool BaseComponent::IsView() const {
+	return false; // todo:
+}

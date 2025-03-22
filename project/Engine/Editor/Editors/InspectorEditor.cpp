@@ -3,8 +3,21 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
+//* editor
+#include "../EditorEngine.h"
+
 //* external
 #include <imgui.h>
+
+////////////////////////////////////////////////////////////////////////////////////////////
+// Inspector class methods
+////////////////////////////////////////////////////////////////////////////////////////////
+
+BaseInspector::~BaseInspector() {
+	sEditorEngine->ExecuteEditorFunction<InspectorEditor>([this](InspectorEditor* editor) {
+		editor->UnregisterInspector(this);
+	});
+}
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // InspectorEditor class methods
@@ -26,7 +39,7 @@ void InspectorEditor::LateUpdate() {
 	}
 }
 
-void InspectorEditor::UnregisterInspector(IInspector* target) {
+void InspectorEditor::UnregisterInspector(BaseInspector* target) {
 	if (target == inspector_) {
 		UnregisterInspector();
 	}

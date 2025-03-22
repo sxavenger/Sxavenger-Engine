@@ -51,7 +51,6 @@
     <ClCompile Include="Lib\Sxl\OptimizedLowerPathMap.cpp" />
     <ClCompile Include="Engine\System\DirectX\DxrObject\DxrAccelerationStructure.cpp" />
     <ClCompile Include="Engine\System\DirectX\DxrObject\DxrObjectCommon.cpp" />
-    <ClCompile Include="Engine\Asset\Texture\Texture.cpp" />
     <ClCompile Include="Engine\System\Runtime\Performance\Performance.cpp" />
     <ClCompile Include="Engine\System\Runtime\Performance\RunTimeTracker.cpp" />
     <ClCompile Include="Engine\System\Runtime\Performance\TimePoint.cpp" />
@@ -81,6 +80,10 @@
     <ClCompile Include="Engine\Asset\Assets\BaseAsset.cpp" />
     <ClCompile Include="Engine\Asset\Assets\Texture\Texture.cpp" />
     <ClCompile Include="Engine\Asset\Assets\Texture\AssetTexture.cpp" />
+    <ClCompile Include="Engine\Component\Components\BaseComponent.cpp" />
+    <ClCompile Include="Engine\Component\Components\ComponentStorage.cpp" />
+    <ClCompile Include="Engine\Component\Entity\MonoBehaviour.cpp" />
+    <ClCompile Include="Engine\Component\Entity\MonoBehaviourContainer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\System\Window\Window.h" />
@@ -132,7 +135,6 @@
     <ClInclude Include="Lib\Sxl\OptimizedLowerPathMap.h" />
     <ClInclude Include="Engine\System\DirectX\DxrObject\DxrAccelerationStructure.h" />
     <ClInclude Include="Engine\System\DirectX\DxrObject\DxrObjectCommon.h" />
-    <ClInclude Include="Engine\Asset\Texture\Texture.h" />
     <ClInclude Include="Engine\System\Runtime\Performance\Performance.h" />
     <ClInclude Include="Engine\System\Runtime\Performance\RunTimeTracker.h" />
     <ClInclude Include="Engine\System\Runtime\Performance\TimePoint.h" />
@@ -176,6 +178,10 @@
     <ClInclude Include="Engine\Asset\Assets\BaseAsset.h" />
     <ClInclude Include="Engine\Asset\Assets\Texture\Texture.h" />
     <ClInclude Include="Engine\Asset\Assets\Texture\AssetTexture.h" />
+    <ClInclude Include="Engine\Component\Components\BaseComponent.h" />
+    <ClInclude Include="Engine\Component\Components\ComponentStorage.h" />
+    <ClInclude Include="Engine\Component\Entity\MonoBehaviour.h" />
+    <ClInclude Include="Engine\Component\Entity\MonoBehaviourContainer.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

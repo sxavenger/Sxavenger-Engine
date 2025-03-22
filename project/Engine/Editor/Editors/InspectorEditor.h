@@ -7,14 +7,16 @@
 #include "BaseEditor.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// Interface Inspector class
+// BaseInspector class
 ////////////////////////////////////////////////////////////////////////////////////////////
-class IInspector {
+class BaseInspector {
 public:
 
 	//=========================================================================================
 	// public methods
 	//=========================================================================================
+
+	~BaseInspector();
 
 	virtual void ShowInspector() = 0;
 
@@ -47,10 +49,10 @@ public:
 
 	//* inspector option *//
 
-	void SetInspector(IInspector* inspector) { inspector_ = inspector; }
+	void SetInspector(BaseInspector* inspector) { inspector_ = inspector; }
 
 	void UnregisterInspector() { inspector_ = nullptr; }
-	void UnregisterInspector(IInspector* target);
+	void UnregisterInspector(BaseInspector* target);
 
 private:
 
@@ -60,7 +62,7 @@ private:
 
 	//* inspector *//
 
-	IInspector* inspector_ = nullptr;
+	BaseInspector* inspector_ = nullptr;
 
 	//=========================================================================================
 	// private methods
