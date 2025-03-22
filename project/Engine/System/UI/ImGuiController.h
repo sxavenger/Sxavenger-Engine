@@ -60,6 +60,7 @@ private:
 	std::list<DxObject::Descriptor> descriptorsSRV_;
 
 	static const std::filesystem::path kImGuiLayoutFilepath_;
+	static const std::filesystem::path kImGuiSampleLayoutFilepath_;
 
 	bool isInit_ = false;
 

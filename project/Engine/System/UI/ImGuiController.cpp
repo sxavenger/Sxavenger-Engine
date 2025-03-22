@@ -11,7 +11,8 @@ _DXOBJECT_USING
 // static variables
 //=========================================================================================
 
-const std::filesystem::path ImGuiController::kImGuiLayoutFilepath_ = "imgui.ini";
+const std::filesystem::path ImGuiController::kImGuiLayoutFilepath_       = "imgui.ini";
+const std::filesystem::path ImGuiController::kImGuiSampleLayoutFilepath_ = "packages/ini/imgui.ini";
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // ImGuiController class methods
@@ -69,8 +70,13 @@ void ImGuiController::Init(Window* main) {
 	ImGui_ImplDX12_Init(&info);
 
 	// iniの読み込み
-	std::string filepath = kImGuiLayoutFilepath_.generic_string();
-	ImGui::LoadIniSettingsFromDisk(filepath.c_str());
+#ifdef _DEVELOPMENT
+	if (!std::filesystem::exists(kImGuiLayoutFilepath_)) {
+		std::filesystem::copy(kImGuiSampleLayoutFilepath_, kImGuiLayoutFilepath_, std::filesystem::copy_options::overwrite_existing);
+	}
+#endif
+
+	ImGui::LoadIniSettingsFromDisk(kImGuiLayoutFilepath_.generic_string().c_str());
 
 	isInit_ = true;
 
