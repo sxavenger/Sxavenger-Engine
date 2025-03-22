@@ -4,12 +4,12 @@
 // include
 //-----------------------------------------------------------------------------------------
 //* component
-#include "../../BaseComponent.h"
+#include "../BaseComponent.h"
 #include "../Transform/TransformComponent.h"
 
 //* engine
-#include <Engine/Content/InputAssembler/InputMesh.h>
-#include <Engine/Content/Material/Material.h>
+#include <Engine/Content/InputMesh/InputMesh.h>
+#include <Engine/Asset/Assets/Material/Material.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // MeshRendererComponent class
@@ -25,7 +25,7 @@ public:
 	MeshRendererComponent(MonoBehaviour* behaviour) : BaseComponent(behaviour) {}
 	~MeshRendererComponent() override = default;
 
-	virtual void InspectorImGui() override;
+	void ShowComponentInspector() override;
 
 	//* setter *//
 
@@ -48,7 +48,7 @@ private:
 	// private variables
 	//=========================================================================================
 
-	InputMesh* mesh_          = nullptr; //!< 仮
+	InputMesh* mesh_    = nullptr;
 	Material* material_ = nullptr;
 
 };

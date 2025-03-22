@@ -72,6 +72,8 @@ public:
 
 	void SetName(const std::string& name);
 
+	void SetRenamable(bool isRenamable) { isRenamable_ = isRenamable; }
+
 	const std::string& GetName() const { return name_; }
 
 	//* components option *//
@@ -111,6 +113,9 @@ public:
 	template <Component _Ty>
 	_Ty* RequireComponent();
 
+	const Components& GetComponents() const { return components_; }
+	Components& GetComponents() { return components_; }
+
 	//* hierarchy option *//
 	//* parent
 
@@ -136,6 +141,10 @@ public:
 
 	const Hierarchy& GetChildren() const { return children_; }
 
+	//* inspector option *//
+
+	virtual void ShowInspector() override;
+
 private:
 
 	//=========================================================================================
@@ -145,6 +154,8 @@ private:
 	//* name
 	std::string name_ = "new behaviour";
 	bool isRenamable_ = true; //!< systemとして使われない限りtrue.
+
+	std::string buf_ = "";
 
 	//* flag
 	bool isActive_ = true;

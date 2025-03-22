@@ -115,6 +115,9 @@ public:
 
 	const MeshBottomLevelAS& GetBottomLevelAS() const;
 
+	_DELETE_COPY(InputMesh)
+	_DEFAULT_MOVE(InputMesh)
+
 private:
 
 	//=========================================================================================

@@ -6,6 +6,9 @@
 //* entity
 #include "MonoBehaviourContainer.h"
 
+//* external
+#include <imgui.h>
+
 ////////////////////////////////////////////////////////////////////////////////////////////
 // MonoBehaviour class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -95,6 +98,42 @@ MonoBehaviour* MonoBehaviour::FindRequireChild(const std::string& name) {
 	MonoBehaviour* child = FindChild(name);
 	Assert(child != nullptr, "child is not found. name: " + name);
 	return child;
+}
+
+void MonoBehaviour::ShowInspector() {
+	if (buf_.empty()) {
+		buf_.resize(256);
+		buf_ = name_;
+	}
+
+	ImGui::BeginDisabled(!isRenamable_); //!< 名前変更不可の場合はdisabled
+
+	if (ImGui::InputText("## name", buf_.data(), buf_.size())) { //!< test mode
+		SetName(buf_);
+	}
+
+	ImGui::EndDisabled();
+
+	ImGui::Separator();
+	ImGui::SeparatorText("components");
+
+	for (const auto& [type, component] : GetComponents().GetMap()) {
+		if (ImGui::CollapsingHeader(type->name())) {
+			(*component)->ShowComponentInspector();
+		}
+	}
+
+	/*ImGui::SeparatorText("json");
+
+	if (ImGui::Button("output json")) {
+		OutputJson();
+	}
+
+	ImGui::SameLine();
+
+	if (ImGui::Button("input json")) {
+		InputJson();
+	}*/
 }
 
 MonoBehaviour::HierarchyIterator MonoBehaviour::AddHierarchy(HierarchyElement&& child) {

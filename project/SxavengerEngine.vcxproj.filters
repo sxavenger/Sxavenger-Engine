@@ -87,6 +87,17 @@
     <ClCompile Include="Engine\Component\Components\Camera\CameraComponent.cpp" />
     <ClCompile Include="Engine\Asset\Assets\Material\Material.cpp" />
     <ClCompile Include="Lib\Adapter\Json\JsonHandler.cpp" />
+    <ClCompile Include="Engine\Component\Components\MeshRenderer\MeshRendererComponent.cpp" />
+    <ClCompile Include="Engine\Component\Components\Armature\ArmatureComponent.cpp" />
+    <ClCompile Include="Engine\Asset\Assets\Model\AssetModel.cpp" />
+    <ClCompile Include="Engine\Asset\Assets\Model\Model.cpp" />
+    <ClCompile Include="Engine\Component\Components\MeshRenderer\SkinnedMeshRendererComponent.cpp" />
+    <ClCompile Include="Engine\Content\Animation\SkinningPipeline.cpp" />
+    <ClCompile Include="Engine\Component\Components\Collider\ColliderComponent.cpp" />
+    <ClCompile Include="Engine\Component\Components\Collider\ColliderPrimitiveRenderer.cpp" />
+    <ClCompile Include="Engine\Component\Components\Collider\CollisionCallbackCollection.cpp" />
+    <ClCompile Include="Engine\Component\Components\Collider\CollisionDetection.cpp" />
+    <ClCompile Include="Engine\Component\Components\Collider\CollisionManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\System\Window\Window.h" />
@@ -188,6 +199,17 @@
     <ClInclude Include="Engine\Component\Components\Camera\CameraComponent.h" />
     <ClInclude Include="Engine\Asset\Assets\Material\Material.h" />
     <ClInclude Include="Lib\Adapter\Json\JsonHandler.h" />
+    <ClInclude Include="Engine\Component\Components\MeshRenderer\MeshRendererComponent.h" />
+    <ClInclude Include="Engine\Component\Components\Armature\ArmatureComponent.h" />
+    <ClInclude Include="Engine\Asset\Assets\Model\AssetModel.h" />
+    <ClInclude Include="Engine\Asset\Assets\Model\Model.h" />
+    <ClInclude Include="Engine\Component\Components\MeshRenderer\SkinnedMeshRendererComponent.h" />
+    <ClInclude Include="Engine\Content\Animation\SkinningPipeline.h" />
+    <ClInclude Include="Engine\Component\Components\Collider\ColliderComponent.h" />
+    <ClInclude Include="Engine\Component\Components\Collider\ColliderPrimitiveRenderer.h" />
+    <ClInclude Include="Engine\Component\Components\Collider\CollisionCallbackCollection.h" />
+    <ClInclude Include="Engine\Component\Components\Collider\CollisionDetection.h" />
+    <ClInclude Include="Engine\Component\Components\Collider\CollisionManager.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

@@ -5,10 +5,10 @@ _DXOBJECT_USING
 // include
 //-----------------------------------------------------------------------------------------
 //* component
-#include "../../MonoBehaviour.h"
+#include "../../Entity/MonoBehaviour.h"
 
 //* engine
-#include <Engine/Content/SxavengerContent.h>
+#include <Engine/Content/Animation/SkinningPipeline.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // InputSkinnedMesh structure methods
@@ -60,19 +60,19 @@ void SkinnedMeshRendererComponent::CreateMesh(const Model::AssimpMesh* mesh) {
 void SkinnedMeshRendererComponent::SkinUpdate() {
 
 	//* cluster update *//
-	cluster_.UpdatePalette(GetArmature()->GetSkeleton());
+	cluster_.UpdatePalette(GetArmatureComponent()->GetSkeleton());
 
 	//* compute shader skinning *//
-	SxavengerContent::SetSkinningPipeline(SxavengerSystem::GetMainThreadContext());
+	SkinningComputePipeline::GetInstance()->SetPipeline(SxavengerSystem::GetMainThreadContext());
 
 	DxObject::BindBufferDesc parameter = {};
-	parameter.SetAddress("gInputVertex", referenceMesh_->input.GetVertex()->GetGPUVirtualAddress());
+	parameter.SetAddress("gInputVertex",  referenceMesh_->input.GetVertex()->GetGPUVirtualAddress());
 	parameter.SetAddress("gPalette",      cluster_.palette->GetGPUVirtualAddress());
 	parameter.SetAddress("gInfluence",    cluster_.influence->GetGPUVirtualAddress());
 	parameter.SetAddress("gInfo",         cluster_.info->GetGPUVirtualAddress());
 	parameter.SetAddress("gOutputVertex", mesh_.vertex->GetGPUVirtualAddress());
 
-	SxavengerContent::DispatchSkinning(SxavengerSystem::GetMainThreadContext(), parameter, cluster_.info->At(0));
+	SkinningComputePipeline::GetInstance()->Dispatch(SxavengerSystem::GetMainThreadContext(), parameter, cluster_.info->At(0));
 }
 
 void SkinnedMeshRendererComponent::BindIABuffer(const DirectXThreadContext* context) const {
@@ -106,7 +106,7 @@ void SkinnedMeshRendererComponent::CreateCluster() {
 	cluster_.influence->Create(SxavengerSystem::GetDxDevice(), kVertexSize);
 	cluster_.influence->Fill(VertexInfluence{});
 
-	const auto& skeleton      = GetArmature()->GetSkeleton();
+	const auto& skeleton      = GetArmatureComponent()->GetSkeleton();
 	const uint32_t kJointSize = static_cast<uint32_t>(skeleton.GetJointSize());
 
 	//* palette
@@ -141,9 +141,9 @@ void SkinnedMeshRendererComponent::CreateCluster() {
 	}
 }
 
-const ArmatureComponent* SkinnedMeshRendererComponent::GetArmature() const {
+const ArmatureComponent* SkinnedMeshRendererComponent::GetArmatureComponent() const {
 	//!< 同一階層のArmatureComponentを取得
-	auto child = BaseComponent::GetBehaviour()->RequireParent()->GetChild(ArmatureComponent::kArmatureName);
+	auto child = BaseComponent::GetBehaviour()->RequireParent()->FindChild(ArmatureComponent::kArmatureName);
 
 	//!< ArmatureComponentを取得
 	return child->RequireComponent<ArmatureComponent>();

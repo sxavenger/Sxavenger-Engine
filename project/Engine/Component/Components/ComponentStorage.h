@@ -79,7 +79,7 @@ private:
 
 template <Component _Ty>
 ComponentStorage::ComponentIterator ComponentStorage::RegisterComponent(MonoBehaviour* behavior) {
-	constexpr std::type_info* type = &typeid(_Ty);
+	constexpr const std::type_info* type = &typeid(_Ty);
 
 	if (!storage_.contains(type)) {
 		storage_[type] = ComponentContainer();
@@ -90,14 +90,14 @@ ComponentStorage::ComponentIterator ComponentStorage::RegisterComponent(MonoBeha
 
 template <Component _Ty>
 void ComponentStorage::UnregisterComponent(const ComponentIterator& iterator) {
-	constexpr std::type_info* type = &typeid(_Ty);
+	constexpr const std::type_info* type = &typeid(_Ty);
 
 	storage_.at(type).erase(iterator);
 }
 
 template <Component _Ty>
 void ComponentStorage::ForEach(const std::function<void(_Ty*)>& func) {
-	constexpr std::type_info* type = &typeid(_Ty);
+	constexpr const std::type_info* type = &typeid(_Ty);
 
 	for (const auto& component : storage_.at(type)) {
 		func(static_cast<_Ty*>(component.get()));

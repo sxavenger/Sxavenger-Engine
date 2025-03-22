@@ -3,37 +3,25 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
-//* engine
-#include <Engine/System/DirectX/DxObject/DxComputePipelineState.h>
-#include <Engine/System/DirectX/DirectXContext.h>
-
-//* c++
-#include <memory>
+//* collider
+#include "CollisionCallbackCollection.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// SkinningComputePipeline class
+// CollisionManager class
 ////////////////////////////////////////////////////////////////////////////////////////////
-class SkinningComputePipeline {
+class CollisionManager
+	: public CollisionCallbackCollection {
 public:
 
 	//=========================================================================================
 	// public methods
 	//=========================================================================================
 
-	SkinningComputePipeline()  = default;
-	~SkinningComputePipeline() = default;
+	void CheckCollision();
 
-	void Init();
+	//* singleton option *//
 
-	void Term();
-
-	void SetPipeline(const DirectXThreadContext* context);
-
-	void Dispatch(const DirectXThreadContext* context, const DxObject::BindBufferDesc& desc, uint32_t vertexSize);
-
-	//* singleton *//
-
-	static SkinningComputePipeline* GetInstance();
+	static CollisionManager* GetInstance();
 
 private:
 
@@ -41,12 +29,9 @@ private:
 	// private variables
 	//=========================================================================================
 
-	std::unique_ptr<DxObject::ReflectionComputePipelineState> state_;
-
-	static const uint32_t kNumthreads_ = 32;
-
 };
 
-
-
-
+////////////////////////////////////////////////////////////////////////////////////////////
+// CollisionManager class instance
+////////////////////////////////////////////////////////////////////////////////////////////
+static CollisionManager* sCollisionManager = CollisionManager::GetInstance();

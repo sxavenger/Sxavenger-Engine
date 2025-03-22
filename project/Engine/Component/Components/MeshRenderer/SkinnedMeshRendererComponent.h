@@ -4,7 +4,7 @@
 // include
 //-----------------------------------------------------------------------------------------
 //* component
-#include "../../BaseComponent.h"
+#include "../BaseComponent.h"
 #include "../Transform/TransformComponent.h"
 #include "../Armature/ArmatureComponent.h"
 
@@ -13,10 +13,8 @@
 #include <Engine/System/DirectX/DxObject/DxBindBuffer.h>
 #include <Engine/System/DirectX/DxrObject/DxrAccelerationStructure.h>
 #include <Engine/Content/Animation/SkinCluster.h>
-#include <Engine/Asset/Model/Model.h>
-
-//* lib
-#include <Lib/VertexStructure.h>
+#include <Engine/Content/InputMesh/VertexStructure.h>
+#include <Engine/Asset/Assets/Model/Model.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // SkinnedMeshRendererComponent class
@@ -128,6 +126,6 @@ private:
 
 	void CreateCluster();
 
-	const ArmatureComponent* GetArmature() const;
+	const ArmatureComponent* GetArmatureComponent() const;
 
 };

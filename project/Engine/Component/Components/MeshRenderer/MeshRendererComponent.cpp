@@ -4,13 +4,13 @@
 // include
 //-----------------------------------------------------------------------------------------
 //* component
-#include "../../MonoBehaviour.h"
+#include "../../Entity/MonoBehaviour.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // MeshRendererComponent class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-void MeshRendererComponent::InspectorImGui() {
+void MeshRendererComponent::ShowComponentInspector() {
 	if (ImGui::TreeNode("material")) {
 		if (material_ != nullptr) {
 			material_->SetImGuiCommand();
@@ -18,6 +18,7 @@ void MeshRendererComponent::InspectorImGui() {
 		} else {
 			ImGui::Text("material is nullptr.");
 		}
+
 		ImGui::TreePop();
 	}
 }
