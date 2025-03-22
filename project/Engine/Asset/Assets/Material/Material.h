@@ -5,13 +5,17 @@
 //-----------------------------------------------------------------------------------------
 //* engine
 #include <Engine/System/DirectX/DxObject/DxDimensionBuffer.h>
-#include <Engine/System/DirectX/DirectXAlignment.h>
 
 //* lib
 #include <Lib/Traits.h>
 #include <Lib/Geometry/Color3.h>
 #include <Lib/Geometry/Matrix4x4.h>
 #include <Lib/Transform/Transform.h>
+#include <Lib/Adapter/Json/IJsonSerializer.h>
+
+//* c++
+#include <cstdint>
+#include <optional>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Material class
@@ -19,14 +23,6 @@
 class Material
 	: public IJsonSerializer {
 public:
-
-	////////////////////////////////////////////////////////////////////////////////////////////
-	// BlendMode enum class 
-	////////////////////////////////////////////////////////////////////////////////////////////
-	enum class BlendMode : uint8_t {
-		Opaque,      //!< 不透明
-		Translucent, //!< 半透明
-	};
 
 	////////////////////////////////////////////////////////////////////////////////////////////
 	// Channel enum class
@@ -122,7 +118,7 @@ public:
 
 		Type type = Type::Value;
 
-		float alpha = 1.0f;
+		float alpha    = 1.0f;
 		uint32_t index = NULL;
 
 	};
@@ -207,7 +203,7 @@ public:
 
 		Type type = Type::Value;
 
-		float value = 0.0f;
+		float value    = 0.0f;
 		uint32_t index = NULL;
 
 	};
@@ -239,9 +235,9 @@ public:
 	};
 
 	////////////////////////////////////////////////////////////////////////////////////////////
-	// Transform structure
+	// UVTransformation structure
 	////////////////////////////////////////////////////////////////////////////////////////////
-	struct Transform {
+	struct UVTransformation {
 	public:
 
 		//=========================================================================================
@@ -276,25 +272,20 @@ public:
 		// public variables
 		//=========================================================================================
 
-		Transform         transform;
+		UVTransformation  transformation;
 		Albedo            albedo;
 		Transparency      transparency;
 		Normal            normal;
 		SurfaceProperties properties;
 
 	};
-	// todo: 各parameterをprivateにする
 
 	////////////////////////////////////////////////////////////////////////////////////////////
-	// TextureType enum class
+	// Mode enum class 
 	////////////////////////////////////////////////////////////////////////////////////////////
-	enum class TextureType : uint32_t {
-		Albedo,
-		Transparency,
-		Normal,
-		Metallic,
-		Specular,
-		Roughness,
+	enum class Mode : uint8_t {
+		Opaque,      //!< 不透明
+		Translucent, //!< 半透明
 	};
 
 public:
@@ -303,7 +294,7 @@ public:
 	// public methods
 	//=========================================================================================
 
-	Material()  = default;
+	Material() = default;
 	~Material() = default;
 
 	void CreateBuffer();
@@ -322,9 +313,9 @@ public:
 
 	//* blend mode *//
 
-	void SetBlendMode(BlendMode mode) { mode_ = mode; }
+	void SetBlendMode(Mode mode) { mode_ = mode; }
 
-	const BlendMode GetBlendMode() const { return mode_; }
+	const Mode GetBlendMode() const { return mode_; }
 
 	//* getter *//
 
@@ -348,11 +339,9 @@ private:
 	// private variables
 	//=========================================================================================
 
-	BlendMode mode_ = BlendMode::Opaque;
+	Mode mode_ = Mode::Opaque;
 
 	Transform2d transform_ = {};
 	std::unique_ptr<DxObject::DimensionBuffer<MaterialBuffer>> buffer_ = nullptr;
-
-
-
+	
 };

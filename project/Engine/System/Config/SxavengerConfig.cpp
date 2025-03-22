@@ -7,7 +7,7 @@
 #include <Engine/System/Utility/Logger.h>
 
 //* lib
-#include <Lib/Adapter/Json/JsonAdapter.h>
+#include <Lib/Adapter/Json/JsonHandler.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Config structure methods
@@ -25,7 +25,7 @@ SxavengerConfig::Config::Config() {
 void SxavengerConfig::Config::Load(const std::filesystem::path& filepath) {
 	json data;
 
-	if (!JsonAdapter::LoadFromJson(filepath, data)) {
+	if (!JsonHandler::LoadFromJson(filepath, data)) {
 		return; //!< fileが見つからなければ初期設定の使用
 	}
 

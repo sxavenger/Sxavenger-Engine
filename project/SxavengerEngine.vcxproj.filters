@@ -32,7 +32,6 @@
     <ClCompile Include="Engine\System\DirectX\DxObject\DxRootSignatureDesc.cpp" />
     <ClCompile Include="Engine\System\DirectX\DxObject\DxBlendState.cpp" />
     <ClCompile Include="Engine\System\UI\ImGuiController.cpp" />
-    <ClCompile Include="Lib\Adapter\Json\JsonAdapter.cpp" />
     <ClCompile Include="Engine\System\DirectX\DxObject\DxBindBuffer.cpp" />
     <ClCompile Include="Lib\Adapter\Json\IJsonSerializer.cpp" />
     <ClCompile Include="Lib\Sxl\OptimizedMap.cpp" />
@@ -84,6 +83,10 @@
     <ClCompile Include="Engine\Component\Components\ComponentStorage.cpp" />
     <ClCompile Include="Engine\Component\Entity\MonoBehaviour.cpp" />
     <ClCompile Include="Engine\Component\Entity\MonoBehaviourContainer.cpp" />
+    <ClCompile Include="Engine\Component\Components\Transform\TransformComponent.cpp" />
+    <ClCompile Include="Engine\Component\Components\Camera\CameraComponent.cpp" />
+    <ClCompile Include="Engine\Asset\Assets\Material\Material.cpp" />
+    <ClCompile Include="Lib\Adapter\Json\JsonHandler.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\System\Window\Window.h" />
@@ -115,7 +118,6 @@
     <ClInclude Include="Engine\System\DirectX\DxObject\DxBlendState.h" />
     <ClInclude Include="Engine\System\UI\ImGuiController.h" />
     <ClInclude Include="Lib\Adapter\Json\IJsonSerializer.h" />
-    <ClInclude Include="Lib\Adapter\Json\JsonAdapter.h" />
     <ClInclude Include="Engine\System\DirectX\DxObject\DxBindBuffer.h" />
     <ClInclude Include="Engine\System\UI\ISystemDebugGui.h" />
     <ClInclude Include="Lib\Sxl\OptimizedMap.h" />
@@ -182,6 +184,10 @@
     <ClInclude Include="Engine\Component\Components\ComponentStorage.h" />
     <ClInclude Include="Engine\Component\Entity\MonoBehaviour.h" />
     <ClInclude Include="Engine\Component\Entity\MonoBehaviourContainer.h" />
+    <ClInclude Include="Engine\Component\Components\Transform\TransformComponent.h" />
+    <ClInclude Include="Engine\Component\Components\Camera\CameraComponent.h" />
+    <ClInclude Include="Engine\Asset\Assets\Material\Material.h" />
+    <ClInclude Include="Lib\Adapter\Json\JsonHandler.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

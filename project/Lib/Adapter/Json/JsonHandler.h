@@ -12,28 +12,24 @@
 ////////////////////////////////////////////////////////////////////////////////////////////
 // using
 ////////////////////////////////////////////////////////////////////////////////////////////
+
 using json = nlohmann::json;
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// JsonAdapter class
+// JsonHandler class
 ////////////////////////////////////////////////////////////////////////////////////////////
-class JsonAdapter {
+class JsonHandler {
 public:
 
 	//=========================================================================================
 	// public methods
 	//=========================================================================================
 
-	//! @brief Jsonファイル読み込み
+	static bool LoadFromJson(const std::filesystem::path& filepath, json& data);
 	static json LoadFromJson(const std::filesystem::path& filepath);
 
-	//! @brief Jsonファイル読み込み
-	//! @retval true  成功
-	//! @retval false 失敗
-	static bool LoadFromJson(const std::filesystem::path& filepath, json& out);
-
-	//! @brief Jsonファイルに書き込み
 	static void WriteToJson(const std::filesystem::path& filepath, const json& data);
 
-private:
+	static bool CheckExist(const std::filesystem::path& filepath);
+
 };
