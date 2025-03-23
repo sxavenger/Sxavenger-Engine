@@ -71,7 +71,8 @@ void ImGuiController::Init(Window* main) {
 
 	// iniの読み込み
 #ifdef _DEVELOPMENT
-	if (!std::filesystem::exists(kImGuiLayoutFilepath_)) {
+	if (!std::filesystem::exists(kImGuiLayoutFilepath_) && std::filesystem::exists(kImGuiSampleLayoutFilepath_)) {
+		//!< iniファイルが存在しない場合はコピー
 		std::filesystem::copy(kImGuiSampleLayoutFilepath_, kImGuiLayoutFilepath_, std::filesystem::copy_options::overwrite_existing);
 	}
 #endif

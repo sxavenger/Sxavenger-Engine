@@ -229,6 +229,8 @@ void RenderSceneEditor::ShowColliderMenu() {
 }
 
 void RenderSceneEditor::ShowSceneWindow() {
+	BaseEditor::SetNextWindowDocking();
+
 	//* fix window style
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, { 0, 0 });
 	ImGui::Begin("Scene ## Render Scene Editor", nullptr, BaseEditor::GetWindowFlag() | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
@@ -259,6 +261,8 @@ void RenderSceneEditor::ShowSceneWindow() {
 }
 
 void RenderSceneEditor::ShowGameWindow() {
+	BaseEditor::SetNextWindowDocking();
+
 	//* fix window style
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, { 0, 0 });
 	ImGui::Begin("Game ## Render Scene Editor", nullptr, BaseEditor::GetWindowFlag() | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
@@ -283,6 +287,8 @@ void RenderSceneEditor::ShowGameWindow() {
 }
 
 void RenderSceneEditor::ShowCanvasWindow() {
+	BaseEditor::SetNextWindowDocking();
+
 	//* fix window style
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, { 0, 0 });
 	ImGui::Begin("Canvas ## Render Scene Editor", nullptr, BaseEditor::GetWindowFlag() | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);

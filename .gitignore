@@ -327,11 +327,11 @@ FodyWeavers.xsd
 
 # vvv this is user ignorable. vvv
 # engine log.
-project/SxavengerEngineLog.md
+/project/SxavengerEngineLog.md
 
 # externals build results.
-project/externals/DirectXTex/Shaders/Compiled
+/project/externals/DirectXTex/Shaders/Compiled
 
 # engine before methods
-project/Engine/!dest
-project/imgui.ini
+/project/Engine/!dest
+/project/imgui.ini
