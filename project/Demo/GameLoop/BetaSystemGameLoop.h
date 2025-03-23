@@ -45,14 +45,6 @@ private:
 
 	std::unique_ptr<MonoBehaviour> light_;
 
-	static const uint32_t kTreeCount = 12;
-	std::array<std::unique_ptr<MonoBehaviour>, kTreeCount> trees_;
-
-	std::unique_ptr<MonoBehaviour> tile_;
-
-	std::unique_ptr<MonoBehaviour> human_;
-	AssetObserver<AssetAnimator> animator_;
-
 	//=========================================================================================
 	// private methods
 	//=========================================================================================

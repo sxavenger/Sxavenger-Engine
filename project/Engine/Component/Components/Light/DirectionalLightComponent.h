@@ -48,7 +48,7 @@ public:
 	// public methods
 	//=========================================================================================
 
-	DirectionalLightComponent(MonoBehaviour* behaviour) : BaseComponent(behaviour) {}
+	DirectionalLightComponent(MonoBehaviour* behaviour) : BaseComponent(behaviour) { Init(); }
 	virtual ~DirectionalLightComponent() = default;
 
 	virtual void ShowComponentInspector() override;

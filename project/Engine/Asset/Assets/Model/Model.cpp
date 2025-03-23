@@ -27,13 +27,16 @@ void Model::AssimpMaterial::CreateComponent() {
 	Material::CreateBuffer();
 
 	if (textures_[static_cast<uint8_t>(TextureType::Diffuse)] != nullptr) {
-		Material::GetMaterial().albedo.SetTexture(textures_[static_cast<uint8_t>(TextureType::Diffuse)]->GetDescriptorSRV().GetIndex());
-		Material::GetMaterial().transparency.SetTexture(textures_[static_cast<uint8_t>(TextureType::Diffuse)]->GetDescriptorSRV().GetIndex());
+		Material::GetBuffer().albedo.SetTexture(textures_[static_cast<uint8_t>(TextureType::Diffuse)]->GetDescriptorSRV().GetIndex());
+		Material::GetBuffer().transparency.SetTexture(textures_[static_cast<uint8_t>(TextureType::Diffuse)]->GetDescriptorSRV().GetIndex());
 	}
 
 	if (textures_[static_cast<uint8_t>(TextureType::Bump)] != nullptr) {
-		Material::GetMaterial().normal.SetTexture(textures_[static_cast<uint8_t>(TextureType::Bump)]->GetDescriptorSRV().GetIndex());
+		Material::GetBuffer().normal.SetTexture(textures_[static_cast<uint8_t>(TextureType::Bump)]->GetDescriptorSRV().GetIndex());
 	}
+
+	Material::GetBuffer().properties.roughness.SetValue(roughness);
+	Material::GetBuffer().properties.metallic.SetValue(metallic);
 }
 
 //=========================================================================================
@@ -101,6 +104,10 @@ void Model::CreateStaticMeshBehaviour(MonoBehaviour* root) {
 		// transform component
 		auto transform = child->AddComponent<TransformComponent>();
 		transform->CreateBuffer();
+
+		if (skeleton_.ContainsJoint(mesh.name)) {
+			transform->GetTransform() = skeleton_.GetJoint(mesh.name).transform;
+		}
 
 		// renderer component
 		auto renderer = child->AddComponent<MeshRendererComponent>();
@@ -312,6 +319,22 @@ void Model::LoadMaterial(const aiScene* aiScene, const DirectXThreadContext* con
 				material.textures_[static_cast<uint8_t>(AssimpMaterial::TextureType::Bump)] = std::make_shared<Texture>();
 				material.textures_[static_cast<uint8_t>(AssimpMaterial::TextureType::Bump)]->Load(context, directory / aiTextureFilepath.C_Str());
 			}
+		}
+
+		{ //!< parameter
+
+			// roughnessの取得
+			float roughness = 0.0f;
+			if (aiMaterial->Get(AI_MATKEY_ROUGHNESS_FACTOR, roughness) == AI_SUCCESS) {
+				material.roughness = roughness;
+			}
+
+			// metallicの取得
+			float metallic = 0.0f;
+			if (aiMaterial->Get(AI_MATKEY_METALLIC_FACTOR, metallic) == AI_SUCCESS) {
+				material.metallic = metallic;
+			}
+
 		}
 
 		{ //!< Component

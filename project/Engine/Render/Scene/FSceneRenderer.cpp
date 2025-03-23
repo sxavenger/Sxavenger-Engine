@@ -72,10 +72,53 @@ Sxl::Flag<FSceneRenderer::Status> FSceneRenderer::CheckStatus(const Config& conf
 void FSceneRenderer::RenderGeometryPass(const DirectXThreadContext* context, const Config& config) {
 	textures_->BeginGeometryPass(context);
 
-	RenderGeometryStaticMesh(context, config);
+	RenderGeometryStaticMeshDefault(context, config);
 	RenderGeometrySkinnedMesh(context, config);
 
 	textures_->EndGeometryPass(context);
+}
+
+void FSceneRenderer::RenderGeometryStaticMeshDefault(const DirectXThreadContext* context, const Config& config) {
+	// mesh renderer container(BaseComponent)の取得
+	auto& container = sComponentStorage->GetComponentContainer<MeshRendererComponent>();
+
+	auto core = FRenderCore::GetInstance()->GetGeometry();
+
+	std::for_each(std::execution::seq, container.begin(), container.end(), [&](auto& component) {
+		// renderer componentの取得
+		MeshRendererComponent* renderer = static_cast<MeshRendererComponent*>(component.get());
+
+		if (!renderer->IsView()) {
+			return;
+		}
+
+		if (renderer->GetMaterial()->GetMode() != Material::Mode::Opaque) {
+			// 透明なジオメトリは別のパスで描画
+			return;
+		}
+
+		renderer->GetMesh()->BindIABuffer(context);
+
+		// メッシュの描画
+		core->SetPipeline(
+			FRenderCoreGeometry::Deffered, FRenderCoreGeometry::VertexStage::DefaultVS, FRenderCoreGeometry::PixelStage::Albedo,
+			context, textures_->GetSize()
+		);
+
+		DxObject::BindBufferDesc parameter = {};
+		parameter.SetAddress("gCamera",     config.camera->GetGPUVirtualAddress());
+		parameter.SetAddress("gTransforms", renderer->GetTransform()->GetGPUVirtualAddress());
+		parameter.SetAddress("gMaterials",  renderer->GetMaterial()->GetGPUVirtualAddress());
+
+		core->BindGraphicsBuffer(
+			FRenderCoreGeometry::Deffered, FRenderCoreGeometry::VertexStage::DefaultVS, FRenderCoreGeometry::PixelStage::Albedo,
+			context, parameter
+		);
+
+		renderer->GetMesh()->DrawCall(context, 1);
+	});
+
+	context->TransitionAllocator();
 }
 
 void FSceneRenderer::RenderGeometryStaticMesh(const DirectXThreadContext* context, const Config& config) {
@@ -125,7 +168,7 @@ void FSceneRenderer::RenderGeometryStaticMesh(const DirectXThreadContext* contex
 
 		std::for_each(std::execution::seq, components.begin(), components.end(), [&](auto& component) {
 			size_t index = &component - std::to_address(components.begin());
-			materials_->At(index) = components[index]->GetMaterial()->GetMaterial();
+			materials_->At(index) = components[index]->GetMaterial()->GetBuffer();
 			transforms_->At(index).Transfer(components[index]->GetTransform()->GetMatrix());
 		});
 

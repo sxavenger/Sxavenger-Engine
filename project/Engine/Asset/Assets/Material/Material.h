@@ -301,8 +301,8 @@ public:
 
 	//* material option *//
 
-	const MaterialBuffer& GetMaterial() const;
-	MaterialBuffer& GetMaterial();
+	const MaterialBuffer& GetBuffer() const;
+	MaterialBuffer& GetBuffer();
 
 	//* transform option *//
 

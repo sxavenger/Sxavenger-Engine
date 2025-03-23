@@ -60,6 +60,10 @@ struct Skeleton {
 
 	size_t GetJointSize() const { return joints.size(); }
 
+	const bool ContainsJoint(const std::string& name) const { return jointMap.contains(name); }
+
+	const Joint& GetJoint(const std::string& name) const;
+
 	//=========================================================================================
 	// public variables
 	//=========================================================================================

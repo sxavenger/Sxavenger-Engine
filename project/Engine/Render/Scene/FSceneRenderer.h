@@ -103,6 +103,7 @@ private:
 	//* render *//
 
 	void RenderGeometryPass(const DirectXThreadContext* context, const Config& config);
+	void RenderGeometryStaticMeshDefault(const DirectXThreadContext* context, const Config& config);
 	void RenderGeometryStaticMesh(const DirectXThreadContext* context, const Config& config);
 	void RenderGeometrySkinnedMesh(const DirectXThreadContext* context, const Config& config);
 

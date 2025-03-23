@@ -74,6 +74,9 @@ public:
 
 		std::array<std::shared_ptr<Texture>, static_cast<uint8_t>(TextureType::Bump) + 1> textures_;
 
+		float roughness = 0.0f;
+		float metallic  = 0.0f;
+
 	};
 
 	////////////////////////////////////////////////////////////////////////////////////////////

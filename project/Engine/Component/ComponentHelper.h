@@ -30,5 +30,13 @@ public:
 
 	static void UpdateSkinning();
 
+	//* create helper *//
+
+	static std::unique_ptr<MonoBehaviour> CreateModelBehaviour(const std::filesystem::path& filepath);
+
+	static std::unique_ptr<MonoBehaviour> CreateCameraMonoBehaviour();
+
+	static std::unique_ptr<MonoBehaviour> CreateDirectionalLightMonoBehaviour();
+
 private:
 };

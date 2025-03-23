@@ -47,6 +47,10 @@ void Skeleton::TransitionAnimation(
 	UpdateMatrix();
 }
 
+const Joint& Skeleton::GetJoint(const std::string& name) const {
+	return joints[jointMap.at(name)];
+}
+
 uint32_t Skeleton::CreateJoint(const BornNode& node, const std::optional<uint32_t>& parent) {
 
 	Joint joint = {};
