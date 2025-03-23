@@ -168,7 +168,7 @@ inline AssetObserver<T> AssetCollection::Import(const std::filesystem::path& fil
 
 	AssetObserver<T> observer;
 
-	auto& fileData = GetFile(filepath);
+	auto& fileData = RegisterFile(filepath);
 
 	if constexpr (std::is_same_v<T, AssetTexture>) {
 		observer.Register(LoadTexture(fileData, filepath), this);
@@ -194,7 +194,7 @@ inline AssetObserver<T> AssetCollection::Import(const std::filesystem::path& fil
 
 template<BaseAssetConcept T>
 inline std::shared_ptr<T> AssetCollection::ImportPtr(const std::filesystem::path& filepath) {
-	auto& fileData = GetFile(filepath);
+	auto& fileData = RegisterFile(filepath);
 
 	if constexpr (std::is_same_v<T, AssetTexture>) {
 		return LoadTexture(fileData, filepath);
@@ -221,7 +221,7 @@ inline AssetObserver<T> AssetCollection::TryImport(const std::filesystem::path& 
 
 	AssetObserver<T> observer;
 
-	auto& fileData = GetFile(filepath);
+	auto& fileData = RegisterFile(filepath);
 
 	if constexpr (std::is_same_v<T, AssetTexture>) {
 		observer.Register(TryLoadTexture(fileData, filepath), this);
@@ -247,7 +247,7 @@ inline AssetObserver<T> AssetCollection::TryImport(const std::filesystem::path& 
 
 template <BaseAssetConcept T>
 inline std::shared_ptr<T> AssetCollection::TryImportPtr(const std::filesystem::path& filepath) {
-	auto& fileData = GetFile(filepath);
+	auto& fileData = RegisterFile(filepath);
 
 	if constexpr (std::is_same_v<T, AssetTexture>) {
 		return TryLoadTexture(fileData, filepath);

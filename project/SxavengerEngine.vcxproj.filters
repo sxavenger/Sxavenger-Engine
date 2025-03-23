@@ -117,6 +117,16 @@
     <ClCompile Include="Engine\Content\SxavengerContent.cpp" />
     <ClCompile Include="Engine\GameLoop\EditorEngineGameLoop.cpp" />
     <ClCompile Include="Demo\GameLoop\DemoGameLoop.cpp" />
+    <ClCompile Include="Engine\Render\Common\FDepthTexture.cpp" />
+    <ClCompile Include="Engine\Render\Common\FTexture.cpp" />
+    <ClCompile Include="Engine\Render\Core\FRenderCoreGeometry.cpp" />
+    <ClCompile Include="Engine\Render\Core\FRenderCoreLayer.cpp" />
+    <ClCompile Include="Engine\Render\Core\FRenderCoreLight.cpp" />
+    <ClCompile Include="Engine\Render\Core\FRenderCoreProcess.cpp" />
+    <ClCompile Include="Engine\Render\FRenderCore.cpp" />
+    <ClCompile Include="Engine\Render\FRenderTargetTextures.cpp" />
+    <ClCompile Include="Engine\Module\Pipeline\CustomComputePipeline.cpp" />
+    <ClCompile Include="Engine\Module\Pipeline\CustomGraphicsPipeline.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\System\Window\Window.h" />
@@ -249,6 +259,16 @@
     <ClInclude Include="Engine\Content\SxavengerContent.h" />
     <ClInclude Include="Engine\GameLoop\EditorEngineGameLoop.h" />
     <ClInclude Include="Demo\GameLoop\DemoGameLoop.h" />
+    <ClInclude Include="Engine\Render\Common\FDepthTexture.h" />
+    <ClInclude Include="Engine\Render\Common\FTexture.h" />
+    <ClInclude Include="Engine\Render\Core\FRenderCoreGeometry.h" />
+    <ClInclude Include="Engine\Render\Core\FRenderCoreLayer.h" />
+    <ClInclude Include="Engine\Render\Core\FRenderCoreLight.h" />
+    <ClInclude Include="Engine\Render\Core\FRenderCoreProcess.h" />
+    <ClInclude Include="Engine\Render\FRenderCore.h" />
+    <ClInclude Include="Engine\Render\FRenderTargetTextures.h" />
+    <ClInclude Include="Engine\Module\Pipeline\CustomComputePipeline.h" />
+    <ClInclude Include="Engine\Module\Pipeline\CustomGraphicsPipeline.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

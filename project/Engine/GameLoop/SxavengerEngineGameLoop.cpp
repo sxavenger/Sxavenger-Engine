@@ -7,9 +7,11 @@
 #include <Engine/System/SxavengerSystem.h>
 #include <Engine/Content/SxavengerContent.h>
 #include <Engine/Asset/SxavengerAsset.h>
-//#include <Engine/Render/FRenderCore.h>
+#include <Engine/Render/FRenderCore.h>
 //#include <Engine/Render/FMainRender.h>
-//#include <Engine/Content/Material/MaterialStorage.h>
+
+//* c++
+#include <limits>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // SxavengerEngineGameLoop class methods
@@ -17,17 +19,17 @@
 
 void SxavengerEngineGameLoop::Init(GameLoop::Context* context) {
 	context->SetProcess(GameLoop::Process::Init, std::nullopt, [this]() {
-		/*FRenderCore::GetInstance()->Init();
-		FMainRender::GetInstance()->Init();*/
+		FRenderCore::GetInstance()->Init();
+		//FMainRender::GetInstance()->Init();
 	});
 
-	context->SetProcess(GameLoop::Process::Init, UINT32_MAX, [this]() {
+	context->SetProcess(GameLoop::Process::Init, std::numeric_limits<uint32_t>::max(), [this]() {
 		SxavengerSystem::ExecuteAllAllocator();
 	});
 
 	context->SetProcess(GameLoop::Process::Term, std::nullopt, [this]() {
-		/*FMainRender::GetInstance()->Term();
-		FRenderCore::GetInstance()->Term();*/
+		//FMainRender::GetInstance()->Term();
+		FRenderCore::GetInstance()->Term();
 	});
 
 	context->SetProcess(GameLoop::Process::Begin, 0, [this]() {
@@ -36,7 +38,7 @@ void SxavengerEngineGameLoop::Init(GameLoop::Context* context) {
 		SxavengerSystem::BeginImGuiFrame();
 	});
 
-	context->SetProcess(GameLoop::Process::Update, UINT32_MAX, [this]() {
+	context->SetProcess(GameLoop::Process::Update, std::numeric_limits<uint32_t>::max(), [this]() {
 		SxavengerSystem::RecordLap("update [game logic]");
 		SxavengerSystem::EndImGuiFrame();
 		//FMainRender::GetInstance()->GetScene()->SetupTopLevelAS(SxavengerSystem::GetMainThreadContext());

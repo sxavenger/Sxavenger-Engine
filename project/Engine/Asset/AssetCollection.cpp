@@ -12,6 +12,8 @@ void AssetCollection::Init() {
 
 void AssetCollection::Term() {
 	loader_.reset();
+	root_.second.files.Clear();
+	root_.second.folders.Clear();
 }
 
 const AssetCollection::FileData& AssetCollection::GetFile(const std::filesystem::path& filepath) const {
