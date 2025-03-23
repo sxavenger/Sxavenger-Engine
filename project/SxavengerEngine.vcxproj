@@ -183,12 +183,19 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Demo\GameLoop\DemoGameLoop.cpp" />
+    <ClCompile Include="Engine\Asset\AssetCollection.cpp" />
+    <ClCompile Include="Engine\Asset\Assets\Animator\Animator.cpp" />
+    <ClCompile Include="Engine\Asset\Assets\Animator\AssetAnimator.cpp" />
     <ClCompile Include="Engine\Asset\Assets\BaseAsset.cpp" />
+    <ClCompile Include="Engine\Asset\Assets\Blob\AssetBlob.cpp" />
     <ClCompile Include="Engine\Asset\Assets\Material\Material.cpp" />
     <ClCompile Include="Engine\Asset\Assets\Model\AssetModel.cpp" />
     <ClCompile Include="Engine\Asset\Assets\Model\Model.cpp" />
     <ClCompile Include="Engine\Asset\Assets\Texture\AssetTexture.cpp" />
     <ClCompile Include="Engine\Asset\Assets\Texture\Texture.cpp" />
+    <ClCompile Include="Engine\Asset\SxavengerAsset.cpp" />
+    <ClCompile Include="Engine\Asset\Thread\AsyncThreadLoader.cpp" />
     <ClCompile Include="Engine\Component\Components\Armature\ArmatureComponent.cpp" />
     <ClCompile Include="Engine\Component\Components\BaseComponent.cpp" />
     <ClCompile Include="Engine\Component\Components\Camera\CameraComponent.cpp" />
@@ -198,8 +205,11 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="Engine\Component\Components\Collider\CollisionDetection.cpp" />
     <ClCompile Include="Engine\Component\Components\Collider\CollisionManager.cpp" />
     <ClCompile Include="Engine\Component\Components\ComponentStorage.cpp" />
+    <ClCompile Include="Engine\Component\Components\Light\DirectionalLightComponent.cpp" />
+    <ClCompile Include="Engine\Component\Components\Light\LightCommon.cpp" />
     <ClCompile Include="Engine\Component\Components\MeshRenderer\MeshRendererComponent.cpp" />
     <ClCompile Include="Engine\Component\Components\MeshRenderer\SkinnedMeshRendererComponent.cpp" />
+    <ClCompile Include="Engine\Component\Components\SpriteRenderer\SpriteRendererComponent.cpp" />
     <ClCompile Include="Engine\Component\Components\Transform\TransformComponent.cpp" />
     <ClCompile Include="Engine\Component\Entity\MonoBehaviour.cpp" />
     <ClCompile Include="Engine\Component\Entity\MonoBehaviourContainer.cpp" />
@@ -208,10 +218,19 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="Engine\Content\Animation\SkinCluster.cpp" />
     <ClCompile Include="Engine\Content\Animation\SkinningPipeline.cpp" />
     <ClCompile Include="Engine\Content\InputMesh\InputMesh.cpp" />
+    <ClCompile Include="Engine\Content\SxavengerContent.cpp" />
+    <ClCompile Include="Engine\Content\TextureBuffer\BaseOffscreenTexture.cpp" />
+    <ClCompile Include="Engine\Content\TextureBuffer\DepthTexture.cpp" />
+    <ClCompile Include="Engine\Content\TextureBuffer\MultiViewTextureBuffer.cpp" />
+    <ClCompile Include="Engine\Content\TextureBuffer\OffscreenTextureCollection.cpp" />
+    <ClCompile Include="Engine\Content\TextureBuffer\RenderTexture.cpp" />
+    <ClCompile Include="Engine\Content\TextureBuffer\UnorderedTexture.cpp" />
     <ClCompile Include="Engine\Editor\EditorEngine.cpp" />
     <ClCompile Include="Engine\Editor\Editors\BaseEditor.cpp" />
     <ClCompile Include="Engine\Editor\Editors\DevelopEditor.cpp" />
     <ClCompile Include="Engine\Editor\Editors\InspectorEditor.cpp" />
+    <ClCompile Include="Engine\GameLoop\EditorEngineGameLoop.cpp" />
+    <ClCompile Include="Engine\GameLoop\SxavengerEngineGameLoop.cpp" />
     <ClCompile Include="Engine\System\Config\SxavengerConfig.cpp" />
     <ClCompile Include="Engine\System\DirectX\DirectXCommon.cpp" />
     <ClCompile Include="Engine\System\DirectX\DirectXContext.cpp" />
@@ -274,12 +293,20 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Demo\GameLoop\DemoGameLoop.h" />
+    <ClInclude Include="Engine\Asset\AssetCollection.h" />
+    <ClInclude Include="Engine\Asset\Assets\Animator\Animator.h" />
+    <ClInclude Include="Engine\Asset\Assets\Animator\AssetAnimator.h" />
     <ClInclude Include="Engine\Asset\Assets\BaseAsset.h" />
+    <ClInclude Include="Engine\Asset\Assets\Blob\AssetBlob.h" />
     <ClInclude Include="Engine\Asset\Assets\Material\Material.h" />
     <ClInclude Include="Engine\Asset\Assets\Model\AssetModel.h" />
     <ClInclude Include="Engine\Asset\Assets\Model\Model.h" />
     <ClInclude Include="Engine\Asset\Assets\Texture\AssetTexture.h" />
     <ClInclude Include="Engine\Asset\Assets\Texture\Texture.h" />
+    <ClInclude Include="Engine\Asset\Observer\AssetObserver.h" />
+    <ClInclude Include="Engine\Asset\SxavengerAsset.h" />
+    <ClInclude Include="Engine\Asset\Thread\AsyncThreadLoader.h" />
     <ClInclude Include="Engine\Component\Components\Armature\ArmatureComponent.h" />
     <ClInclude Include="Engine\Component\Components\BaseComponent.h" />
     <ClInclude Include="Engine\Component\Components\Camera\CameraComponent.h" />
@@ -289,8 +316,11 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Engine\Component\Components\Collider\CollisionDetection.h" />
     <ClInclude Include="Engine\Component\Components\Collider\CollisionManager.h" />
     <ClInclude Include="Engine\Component\Components\ComponentStorage.h" />
+    <ClInclude Include="Engine\Component\Components\Light\DirectionalLightComponent.h" />
+    <ClInclude Include="Engine\Component\Components\Light\LightCommon.h" />
     <ClInclude Include="Engine\Component\Components\MeshRenderer\MeshRendererComponent.h" />
     <ClInclude Include="Engine\Component\Components\MeshRenderer\SkinnedMeshRendererComponent.h" />
+    <ClInclude Include="Engine\Component\Components\SpriteRenderer\SpriteRendererComponent.h" />
     <ClInclude Include="Engine\Component\Components\Transform\TransformComponent.h" />
     <ClInclude Include="Engine\Component\Entity\MonoBehaviour.h" />
     <ClInclude Include="Engine\Component\Entity\MonoBehaviourContainer.h" />
@@ -304,10 +334,19 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Engine\Content\InputAssembler\LineInputAssembler.h" />
     <ClInclude Include="Engine\Content\InputAssembler\TriangleInputAssembler.h" />
     <ClInclude Include="Engine\Content\InputMesh\InputMesh.h" />
+    <ClInclude Include="Engine\Content\SxavengerContent.h" />
+    <ClInclude Include="Engine\Content\TextureBuffer\BaseOffscreenTexture.h" />
+    <ClInclude Include="Engine\Content\TextureBuffer\DepthTexture.h" />
+    <ClInclude Include="Engine\Content\TextureBuffer\MultiViewTextureBuffer.h" />
+    <ClInclude Include="Engine\Content\TextureBuffer\OffscreenTextureCollection.h" />
+    <ClInclude Include="Engine\Content\TextureBuffer\RenderTexture.h" />
+    <ClInclude Include="Engine\Content\TextureBuffer\UnorderedTexture.h" />
     <ClInclude Include="Engine\Editor\EditorEngine.h" />
     <ClInclude Include="Engine\Editor\Editors\BaseEditor.h" />
     <ClInclude Include="Engine\Editor\Editors\DevelopEditor.h" />
     <ClInclude Include="Engine\Editor\Editors\InspectorEditor.h" />
+    <ClInclude Include="Engine\GameLoop\EditorEngineGameLoop.h" />
+    <ClInclude Include="Engine\GameLoop\SxavengerEngineGameLoop.h" />
     <ClInclude Include="Engine\System\Cinfig\SxavengerDirectory.h" />
     <ClInclude Include="Engine\System\Config\SxavengerConfig.h" />
     <ClInclude Include="Engine\System\DirectX\DirectXAlignment.h" />

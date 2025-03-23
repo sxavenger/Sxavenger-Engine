@@ -1,27 +1,47 @@
-//[DemoGameLoop.h]
 #pragma once
 
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
+//* texture
+#include "BaseOffscreenTexture.h"
+
 //* engine
-#include <Engine/System/Runtime/GameLoop/GameLoop.h>
-#include <Engine/System/Window/GameWindow.h>
+#include <Engine/System/DirectX/DirectXContext.h>
+
+//* lib
+#include <Lib/Geometry/Vector4.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// DemoGameLoop class
+// DepthTexture class
 ////////////////////////////////////////////////////////////////////////////////////////////
-class DemoGameLoop
-	: public GameLoop::Interface {
+class DepthTexture
+	: public BaseOffscreenTexture {
 public:
 
 	//=========================================================================================
 	// public methods
 	//=========================================================================================
 
-	void Init(GameLoop::Context* context) override;
+	DepthTexture()  = default;
+	~DepthTexture() { Term(); }
 
-	void Term() override;
+	void Create(const Vector2ui& size); //!< default depth format only.
+	//!< format独自設定したい場合は, DepthFormatの変換を用意する.
+
+	void Term();
+
+	//* depth option *//
+
+	void TransitionBeginDepthWrite(const DirectXThreadContext* context);
+
+	void TransitionEndDepthWrite(const DirectXThreadContext* context);
+
+	void ClearDepth(const DirectXThreadContext* context);
+
+	//* getter *//
+
+	const D3D12_CPU_DESCRIPTOR_HANDLE& GetCPUHandleDSV() const { return descriptorDSV_.GetCPUHandle(); }
 
 private:
 
@@ -29,18 +49,16 @@ private:
 	// private variables
 	//=========================================================================================
 
-	std::shared_ptr<GameWindow> main_;
+	//* descriptor *//
+
+	DxObject::Descriptor descriptorDSV_;
 
 	//=========================================================================================
 	// private methods
 	//=========================================================================================
 
-	void InitGame();
-
-	void TermGame();
-
-	void UpdateGame();
-
-	void DrawGame();
+	void CreateResource();
+	void CreateDSV();
+	void CreateSRV();
 
 };

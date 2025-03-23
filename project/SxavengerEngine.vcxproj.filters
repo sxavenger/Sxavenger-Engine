@@ -98,6 +98,25 @@
     <ClCompile Include="Engine\Component\Components\Collider\CollisionCallbackCollection.cpp" />
     <ClCompile Include="Engine\Component\Components\Collider\CollisionDetection.cpp" />
     <ClCompile Include="Engine\Component\Components\Collider\CollisionManager.cpp" />
+    <ClCompile Include="Engine\Component\Components\Light\DirectionalLightComponent.cpp" />
+    <ClCompile Include="Engine\Component\Components\Light\LightCommon.cpp" />
+    <ClCompile Include="Engine\Asset\Assets\Blob\AssetBlob.cpp" />
+    <ClCompile Include="Engine\Component\Components\SpriteRenderer\SpriteRendererComponent.cpp" />
+    <ClCompile Include="Engine\Asset\Thread\AsyncThreadLoader.cpp" />
+    <ClCompile Include="Engine\Asset\AssetCollection.cpp" />
+    <ClCompile Include="Engine\Asset\Assets\Animator\Animator.cpp" />
+    <ClCompile Include="Engine\Asset\Assets\Animator\AssetAnimator.cpp" />
+    <ClCompile Include="Engine\Asset\SxavengerAsset.cpp" />
+    <ClCompile Include="Engine\GameLoop\SxavengerEngineGameLoop.cpp" />
+    <ClCompile Include="Engine\Content\TextureBuffer\BaseOffscreenTexture.cpp" />
+    <ClCompile Include="Engine\Content\TextureBuffer\DepthTexture.cpp" />
+    <ClCompile Include="Engine\Content\TextureBuffer\MultiViewTextureBuffer.cpp" />
+    <ClCompile Include="Engine\Content\TextureBuffer\OffscreenTextureCollection.cpp" />
+    <ClCompile Include="Engine\Content\TextureBuffer\RenderTexture.cpp" />
+    <ClCompile Include="Engine\Content\TextureBuffer\UnorderedTexture.cpp" />
+    <ClCompile Include="Engine\Content\SxavengerContent.cpp" />
+    <ClCompile Include="Engine\GameLoop\EditorEngineGameLoop.cpp" />
+    <ClCompile Include="Demo\GameLoop\DemoGameLoop.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\System\Window\Window.h" />
@@ -210,6 +229,26 @@
     <ClInclude Include="Engine\Component\Components\Collider\CollisionCallbackCollection.h" />
     <ClInclude Include="Engine\Component\Components\Collider\CollisionDetection.h" />
     <ClInclude Include="Engine\Component\Components\Collider\CollisionManager.h" />
+    <ClInclude Include="Engine\Component\Components\Light\DirectionalLightComponent.h" />
+    <ClInclude Include="Engine\Component\Components\Light\LightCommon.h" />
+    <ClInclude Include="Engine\Asset\Assets\Blob\AssetBlob.h" />
+    <ClInclude Include="Engine\Component\Components\SpriteRenderer\SpriteRendererComponent.h" />
+    <ClInclude Include="Engine\Asset\Observer\AssetObserver.h" />
+    <ClInclude Include="Engine\Asset\Thread\AsyncThreadLoader.h" />
+    <ClInclude Include="Engine\Asset\AssetCollection.h" />
+    <ClInclude Include="Engine\Asset\Assets\Animator\AssetAnimator.h" />
+    <ClInclude Include="Engine\Asset\Assets\Animator\Animator.h" />
+    <ClInclude Include="Engine\Asset\SxavengerAsset.h" />
+    <ClInclude Include="Engine\GameLoop\SxavengerEngineGameLoop.h" />
+    <ClInclude Include="Engine\Content\TextureBuffer\BaseOffscreenTexture.h" />
+    <ClInclude Include="Engine\Content\TextureBuffer\DepthTexture.h" />
+    <ClInclude Include="Engine\Content\TextureBuffer\MultiViewTextureBuffer.h" />
+    <ClInclude Include="Engine\Content\TextureBuffer\OffscreenTextureCollection.h" />
+    <ClInclude Include="Engine\Content\TextureBuffer\RenderTexture.h" />
+    <ClInclude Include="Engine\Content\TextureBuffer\UnorderedTexture.h" />
+    <ClInclude Include="Engine\Content\SxavengerContent.h" />
+    <ClInclude Include="Engine\GameLoop\EditorEngineGameLoop.h" />
+    <ClInclude Include="Demo\GameLoop\DemoGameLoop.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

@@ -1,27 +1,31 @@
-//[DemoGameLoop.h]
 #pragma once
 
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
-//* engine
-#include <Engine/System/Runtime/GameLoop/GameLoop.h>
-#include <Engine/System/Window/GameWindow.h>
+//* asset
+#include "../BaseAsset.h"
+#include "Animator.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// DemoGameLoop class
+// Asset Animator class
 ////////////////////////////////////////////////////////////////////////////////////////////
-class DemoGameLoop
-	: public GameLoop::Interface {
+class AssetAnimator
+	: public BaseAsset, public Animator {
 public:
 
 	//=========================================================================================
 	// public methods
 	//=========================================================================================
 
-	void Init(GameLoop::Context* context) override;
+	AssetAnimator()  = default;
+	~AssetAnimator() = default;
 
-	void Term() override;
+	void Load(_MAYBE_UNUSED const DirectXThreadContext* context) override;
+
+	//* setter *//
+
+	void SetAssimpOption(uint32_t option) { assimpOption_ = option; }
 
 private:
 
@@ -29,18 +33,8 @@ private:
 	// private variables
 	//=========================================================================================
 
-	std::shared_ptr<GameWindow> main_;
+	//* input parameter *//
 
-	//=========================================================================================
-	// private methods
-	//=========================================================================================
-
-	void InitGame();
-
-	void TermGame();
-
-	void UpdateGame();
-
-	void DrawGame();
+	uint32_t assimpOption_ = 0;
 
 };

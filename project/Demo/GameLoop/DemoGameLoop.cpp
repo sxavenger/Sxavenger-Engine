@@ -8,18 +8,17 @@
 #include <Engine/System/SxavengerSystem.h>
 #include <Engine/Asset/SxavengerAsset.h>
 #include <Engine/Editor/EditorEngine.h>
-#include <Engine/Editor/Editors/EngineDeveloperEditor.h>
-#include <Engine/Editor/Editors/RenderSceneEditor.h>
+#include <Engine/Editor/Editors/DevelopEditor.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // DemoGameLoop class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 void DemoGameLoop::Init(GameLoop::Context* context) {
-	context->SetState(GameLoop::State::Init, std::nullopt, [this]() { InitGame(); });
-	context->SetState(GameLoop::State::Term, std::nullopt, [this]() { TermGame(); });
-	context->SetState(GameLoop::State::Update, std::nullopt, [this]() {
-		if (auto developer = sEditorEngine->TryGetEditor<EngineDeveloperEditor>()) {
+	context->SetProcess(GameLoop::Process::Init, std::nullopt, [this]() { InitGame(); });
+	context->SetProcess(GameLoop::Process::Term, std::nullopt, [this]() { TermGame(); });
+	context->SetProcess(GameLoop::Process::Update, std::nullopt, [this]() {
+		if (auto developer = sEditorEngine->TryGetEditor<DevelopEditor>()) {
 			if (!developer->IsProcessRequired()) {
 				return;
 			}
@@ -27,7 +26,7 @@ void DemoGameLoop::Init(GameLoop::Context* context) {
 
 		UpdateGame();
 	});
-	context->SetState(GameLoop::State::Draw, std::nullopt, [this]() { DrawGame(); });
+	context->SetProcess(GameLoop::Process::Render, std::nullopt, [this]() { DrawGame(); });
 
 	context->SetCondition([this]() { return !SxavengerSystem::ProcessMessage(); });
 }
@@ -36,42 +35,8 @@ void DemoGameLoop::Term() {
 }
 
 void DemoGameLoop::InitGame() {
-	main_ = SxavengerSystem::CreateMainWindow(kMainWindowSize, L"Demo Window").lock();
+	main_ = SxavengerSystem::CreateMainWindow(kMainWindowSize, L"demo window").lock();
 	main_->SetIcon("packages/icon/SxavengerEngineSubIcon.ico", { 32, 32 });
-
-	//* render関係 *//
-
-	textures_ = std::make_unique<FSceneTextures>();
-	textures_->Create(main_->GetSize());
-
-	presenter_.Init();
-
-	renderer_ = std::make_unique<FSceneRenderer>();
-	renderer_->SetTextures(textures_.get());
-
-	scene_ = std::make_unique<FScene>();
-	renderer_->SetScene(scene_.get());
-
-	//* actor関係 *//
-
-	camera_ = std::make_unique<ACineCameraActor>();
-	camera_->Init();
-	renderer_->SetCamera(camera_.get());
-
-	model_ = std::make_unique<AModelActor>();
-	model_->Init();
-	model_->SetModel(SxavengerAsset::TryImport<AssetModel>("assets/models/primitive/cube.obj"));
-	scene_->AddGeometry(model_.get());
-
-	light_ = std::make_unique<ADirectionalLightActor>();
-	light_->Init();
-	scene_->AddLight(light_.get());
-
-	//* editor *//
-
-	sEditorEngine->ExecuteEditorFunction<RenderSceneEditor>([this](RenderSceneEditor* editor) {
-		editor->SetGameRenderer(renderer_.get());
-	});
 }
 
 void DemoGameLoop::TermGame() {
@@ -82,17 +47,8 @@ void DemoGameLoop::UpdateGame() {
 
 void DemoGameLoop::DrawGame() {
 
-	scene_->SetupTopLevelAS(SxavengerSystem::GetMainThreadContext());
-	renderer_->Render(SxavengerSystem::GetMainThreadContext());
-
-	sEditorEngine->ExecuteEditorFunction<RenderSceneEditor>([](RenderSceneEditor* editor) {
-		editor->Render();
-	});
-
 	main_->BeginRendering();
 	main_->ClearWindow();
-
-	presenter_.Present(SxavengerSystem::GetMainThreadContext(), main_->GetSize(), textures_->GetGBuffer(FSceneTextures::GBufferLayout::Main)->GetGPUHandleSRV());
 
 	//!< ここにwindow描画処理を記述する
 	SxavengerSystem::RenderImGui();

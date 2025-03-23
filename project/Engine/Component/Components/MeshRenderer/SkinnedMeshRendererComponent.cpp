@@ -8,7 +8,7 @@ _DXOBJECT_USING
 #include "../../Entity/MonoBehaviour.h"
 
 //* engine
-#include <Engine/Content/Animation/SkinningPipeline.h>
+#include <Engine/Content/SxavengerContent.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // InputSkinnedMesh structure methods
@@ -63,7 +63,7 @@ void SkinnedMeshRendererComponent::SkinUpdate() {
 	cluster_.UpdatePalette(GetArmatureComponent()->GetSkeleton());
 
 	//* compute shader skinning *//
-	SkinningComputePipeline::GetInstance()->SetPipeline(SxavengerSystem::GetMainThreadContext());
+	SxavengerContent::SetSkinningPipeline(SxavengerSystem::GetMainThreadContext());
 
 	DxObject::BindBufferDesc parameter = {};
 	parameter.SetAddress("gInputVertex",  referenceMesh_->input.GetVertex()->GetGPUVirtualAddress());
@@ -72,7 +72,7 @@ void SkinnedMeshRendererComponent::SkinUpdate() {
 	parameter.SetAddress("gInfo",         cluster_.info->GetGPUVirtualAddress());
 	parameter.SetAddress("gOutputVertex", mesh_.vertex->GetGPUVirtualAddress());
 
-	SkinningComputePipeline::GetInstance()->Dispatch(SxavengerSystem::GetMainThreadContext(), parameter, cluster_.info->At(0));
+	SxavengerContent::DispatchSkinning(SxavengerSystem::GetMainThreadContext(), parameter, cluster_.info->At(0));
 }
 
 void SkinnedMeshRendererComponent::BindIABuffer(const DirectXThreadContext* context) const {

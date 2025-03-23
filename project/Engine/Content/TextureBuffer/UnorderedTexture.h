@@ -3,33 +3,42 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
+//* texture
+#include "BaseOffscreenTexture.h"
+
 //* engine
-#include <Engine/System/DirectX/DxObject/DxComputePipelineState.h>
 #include <Engine/System/DirectX/DirectXContext.h>
 
-//* c++
-#include <memory>
+//* lib
+#include <Lib/Geometry/Vector4.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// SkinningComputePipeline class
+// UnorderedTexture class
 ////////////////////////////////////////////////////////////////////////////////////////////
-class SkinningComputePipeline {
+class UnorderedTexture
+	: public BaseOffscreenTexture {
 public:
 
 	//=========================================================================================
 	// public methods
 	//=========================================================================================
 
-	SkinningComputePipeline()  = default;
-	~SkinningComputePipeline() = default;
+	UnorderedTexture() = default;
+	~UnorderedTexture() { Term(); }
 
-	void Init();
+	void Create(const Vector2ui& size, DXGI_FORMAT format = DxObject::kOffscreenFormat);
 
 	void Term();
 
-	void SetPipeline(const DirectXThreadContext* context);
+	//* unordered option *//
 
-	void Dispatch(const DirectXThreadContext* context, const DxObject::BindBufferDesc& desc, uint32_t vertexSize);
+	void TransitionBeginUnordered(const DirectXThreadContext* context);
+
+	void TransitionEndUnordered(const DirectXThreadContext* context);
+
+	//* getter *//
+
+	const D3D12_GPU_DESCRIPTOR_HANDLE& GetGPUHandleUAV() const { return descriptorUAV_.GetGPUHandle(); }
 
 private:
 
@@ -37,12 +46,8 @@ private:
 	// private variables
 	//=========================================================================================
 
-	std::unique_ptr<DxObject::ReflectionComputePipelineState> state_;
+	//* descriptor *//
 
-	static const uint32_t kNumthreads_ = 32;
+	DxObject::Descriptor descriptorUAV_;
 
 };
-
-
-
-

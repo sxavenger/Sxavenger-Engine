@@ -1,4 +1,3 @@
-//[DemoGameLoop.h]
 #pragma once
 
 //-----------------------------------------------------------------------------------------
@@ -6,17 +5,16 @@
 //-----------------------------------------------------------------------------------------
 //* engine
 #include <Engine/System/Runtime/GameLoop/GameLoop.h>
-#include <Engine/System/Window/GameWindow.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// DemoGameLoop class
+// EditorEngineGameLoop class
 ////////////////////////////////////////////////////////////////////////////////////////////
-class DemoGameLoop
+class EditorEngineGameLoop
 	: public GameLoop::Interface {
 public:
 
 	//=========================================================================================
-	// public methods
+	// public method
 	//=========================================================================================
 
 	void Init(GameLoop::Context* context) override;
@@ -26,21 +24,17 @@ public:
 private:
 
 	//=========================================================================================
-	// private variables
-	//=========================================================================================
-
-	std::shared_ptr<GameWindow> main_;
-
-	//=========================================================================================
 	// private methods
 	//=========================================================================================
 
-	void InitGame();
+	void InitEditor();
 
-	void TermGame();
+	void TermEditor();
 
-	void UpdateGame();
+	void UpdateEditor();
 
-	void DrawGame();
+	void RenderEditor();
 
 };
+
+

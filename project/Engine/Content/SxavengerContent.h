@@ -3,33 +3,38 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
-//* engine
-#include <Engine/System/DirectX/DxObject/DxComputePipelineState.h>
-#include <Engine/System/DirectX/DirectXContext.h>
+//* content
+#include "TextureBuffer/OffscreenTextureCollection.h"
+#include "Animation/SkinningPipeline.h"
 
 //* c++
 #include <memory>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// SkinningComputePipeline class
+// SxavengerContent class
 ////////////////////////////////////////////////////////////////////////////////////////////
-class SkinningComputePipeline {
+class SxavengerContent {
 public:
 
 	//=========================================================================================
 	// public methods
 	//=========================================================================================
 
-	SkinningComputePipeline()  = default;
-	~SkinningComputePipeline() = default;
+	static void Init();
 
-	void Init();
+	static void Term();
 
-	void Term();
+	//* offscreen texture option *//
 
-	void SetPipeline(const DirectXThreadContext* context);
+	static void RegisterTexture(const std::string& name, std::unique_ptr<BaseOffscreenTexture>&& texture);
 
-	void Dispatch(const DirectXThreadContext* context, const DxObject::BindBufferDesc& desc, uint32_t vertexSize);
+	static const D3D12_GPU_DESCRIPTOR_HANDLE& GetGPUHandleSRV(const std::string& name);
+
+	//* skinning pipeline option *//
+
+	static void SetSkinningPipeline(const DirectXThreadContext* context);
+
+	static void DispatchSkinning(const DirectXThreadContext* context, const DxObject::BindBufferDesc& desc, uint32_t vertexSize);
 
 private:
 
@@ -37,12 +42,7 @@ private:
 	// private variables
 	//=========================================================================================
 
-	std::unique_ptr<DxObject::ReflectionComputePipelineState> state_;
-
-	static const uint32_t kNumthreads_ = 32;
+	static std::unique_ptr<OffscreenTextureCollection> collection_;
+	static std::unique_ptr<SkinningComputePipeline> skinningPipeline_;
 
 };
-
-
-
-

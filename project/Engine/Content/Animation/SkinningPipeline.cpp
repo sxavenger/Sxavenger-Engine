@@ -29,8 +29,3 @@ void SkinningComputePipeline::Dispatch(const DirectXThreadContext* context, cons
 	state_->BindComputeBuffer(context->GetDxCommand(), desc);
 	state_->Dispatch(context->GetDxCommand(), { RoundUp(vertexSize, kNumthreads_), 1, 1 });
 }
-
-SkinningComputePipeline* SkinningComputePipeline::GetInstance() {
-	static SkinningComputePipeline instance;
-	return &instance;
-}

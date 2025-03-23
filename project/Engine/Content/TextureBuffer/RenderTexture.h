@@ -1,27 +1,52 @@
-//[DemoGameLoop.h]
 #pragma once
 
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
+//* texture
+#include "BaseOffscreenTexture.h"
+
 //* engine
-#include <Engine/System/Runtime/GameLoop/GameLoop.h>
-#include <Engine/System/Window/GameWindow.h>
+#include <Engine/System/DirectX/DirectXContext.h>
+
+//* lib
+#include <Lib/Geometry/Vector4.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// DemoGameLoop class
+// RenderTexture class
 ////////////////////////////////////////////////////////////////////////////////////////////
-class DemoGameLoop
-	: public GameLoop::Interface {
+class RenderTexture
+	: public BaseOffscreenTexture {
 public:
 
 	//=========================================================================================
 	// public methods
 	//=========================================================================================
 
-	void Init(GameLoop::Context* context) override;
+	RenderTexture()  = default;
+	~RenderTexture() { Term(); }
 
-	void Term() override;
+	void Create(const Vector2ui& size, const Color4f& clearColor = kDefaultClearColor, DXGI_FORMAT format = DxObject::kOffscreenFormat);
+
+	void Term();
+
+	//* render option *//
+
+	void TransitionBeginRenderTarget(const DirectXThreadContext* context);
+
+	void TransitionEndRenderTarget(const DirectXThreadContext* context);
+
+	void ClearRenderTarget(const DirectXThreadContext* context);
+
+	//* getter *//
+
+	const D3D12_CPU_DESCRIPTOR_HANDLE& GetCPUHandleRTV() const { return descriptorRTV_.GetCPUHandle(); }
+
+	//=========================================================================================
+	// public variables
+	//=========================================================================================
+
+	static const Color4f kDefaultClearColor;
 
 private:
 
@@ -29,18 +54,12 @@ private:
 	// private variables
 	//=========================================================================================
 
-	std::shared_ptr<GameWindow> main_;
+	//* descriptor *//
 
-	//=========================================================================================
-	// private methods
-	//=========================================================================================
+	DxObject::Descriptor descriptorRTV_;
 
-	void InitGame();
+	//* parameter *//
 
-	void TermGame();
-
-	void UpdateGame();
-
-	void DrawGame();
+	Color4f clearColor_;
 
 };

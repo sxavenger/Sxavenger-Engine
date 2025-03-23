@@ -1,27 +1,29 @@
-//[DemoGameLoop.h]
 #pragma once
 
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
-//* engine
-#include <Engine/System/Runtime/GameLoop/GameLoop.h>
-#include <Engine/System/Window/GameWindow.h>
+//* texture
+#include "BaseOffscreenTexture.h"
+#include "RenderTexture.h"
+#include "UnorderedTexture.h"
+
+//* c++
+#include <unordered_map>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// DemoGameLoop class
+// OffscreenTextureCollection class
 ////////////////////////////////////////////////////////////////////////////////////////////
-class DemoGameLoop
-	: public GameLoop::Interface {
+class OffscreenTextureCollection {
 public:
 
 	//=========================================================================================
 	// public methods
 	//=========================================================================================
 
-	void Init(GameLoop::Context* context) override;
+	void RegisterTexture(const std::string& name, std::unique_ptr<BaseOffscreenTexture>&& texture);
 
-	void Term() override;
+	const D3D12_GPU_DESCRIPTOR_HANDLE& GetGPUHandleSRV(const std::string& name) const;
 
 private:
 
@@ -29,18 +31,6 @@ private:
 	// private variables
 	//=========================================================================================
 
-	std::shared_ptr<GameWindow> main_;
-
-	//=========================================================================================
-	// private methods
-	//=========================================================================================
-
-	void InitGame();
-
-	void TermGame();
-
-	void UpdateGame();
-
-	void DrawGame();
+	std::unordered_map<std::string, std::unique_ptr<BaseOffscreenTexture>> textures_;
 
 };
