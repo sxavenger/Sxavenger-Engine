@@ -18,6 +18,8 @@
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 MonoBehaviour::MonoBehaviour() {
+	// containerの登録
+	containerIterator_ = sMonoBehaviourContainer->AddBehaviour(this);
 }
 
 MonoBehaviour::~MonoBehaviour() {

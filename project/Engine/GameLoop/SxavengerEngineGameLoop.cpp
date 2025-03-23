@@ -41,7 +41,7 @@ void SxavengerEngineGameLoop::Init(GameLoop::Context* context) {
 	context->SetProcess(GameLoop::Process::Update, std::numeric_limits<uint32_t>::max(), [this]() {
 		SxavengerSystem::RecordLap("update [game logic]");
 		SxavengerSystem::EndImGuiFrame();
-		//FMainRender::GetInstance()->GetScene()->SetupTopLevelAS(SxavengerSystem::GetMainThreadContext());
+		FMainRender::GetInstance()->GetScene()->SetupTopLevelAS(SxavengerSystem::GetMainThreadContext());
 		SxavengerSystem::TransitionAllocator();
 		SxavengerSystem::RecordLap("update [engine]");
 	});
