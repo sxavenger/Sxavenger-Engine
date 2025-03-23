@@ -7,7 +7,7 @@
 // const variables
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-static const float pi_v = 3.14159265359f;
+static const float kPi = 3.14159265359f;
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // functions
@@ -15,7 +15,7 @@ static const float pi_v = 3.14159265359f;
 
 //* Diffuse *//
 float3 CalculateDiffuseBRDF(float3 albedo) {
-	return albedo / pi_v;
+	return albedo / kPi;
 }
 
 //* Specular *//
@@ -36,7 +36,7 @@ float CalculateSpecularD(float3 n, float3 h, float roughness) {
 	const float NdotH  = saturate(dot(n, h));
 	const float NdotH2 = NdotH * NdotH;
 
-	return a2 / (pi_v * pow(NdotH2 * (a2 - 1.0f) + 1.0f, 2.0f));
+	return a2 / (kPi * pow(NdotH2 * (a2 - 1.0f) + 1.0f, 2.0f));
 }
 
 // Geometric Attenuation(G)

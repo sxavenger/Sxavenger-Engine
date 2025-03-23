@@ -15,6 +15,7 @@
 #include <Engine/Component/Components/SpriteRenderer/SpriteRendererComponent.h>
 #include <Engine/Component/ComponentHelper.h>
 #include <Engine/System/Runtime/Performance/DeltaTimePoint.h>
+#include <Engine/Render/FRenderCore.h>
 
 //* c++
 #include <execution>
@@ -60,6 +61,11 @@ void BetaSystemGameLoop::TermSystem() {
 }
 
 void BetaSystemGameLoop::UpdateSystem() {
+
+	if (SxavengerSystem::IsTriggerKey(KeyId::KEY_SPACE)) {
+		FRenderCore::GetInstance()->Init();
+		CommentRuntime("hot reloaded.");
+	}
 
 	ComponentHelper::UpdateTransform();
 	// todo: engine側のgameloopに移動.

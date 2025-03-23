@@ -32,9 +32,9 @@ GeometryDeferredOutput main(GeometryPSInput input) {
 	output.SetPosition(input.worldPos);
 	
 	output.SetMaterial(
+		gMaterials[input.instanceId].properties.roughness.GetValue(parameter),
 		gMaterials[input.instanceId].properties.metallic.GetValue(parameter),
-		gMaterials[input.instanceId].properties.specular.GetValue(parameter),
-		gMaterials[input.instanceId].properties.roughness.GetValue(parameter)
+		gMaterials[input.instanceId].properties.specular.GetValue(parameter)
 	);
 
 	return output;

@@ -62,9 +62,9 @@ struct Surface {
 		normal   = GetNormal(index);
 
 		float3 material = GetMaterial(index);
-		metallic  = material.r;
-		specular  = material.g;
-		roughness = material.b;
+		roughness = material.r;
+		metallic  = material.g;
+		specular  = material.b;
 	}
 	
 };

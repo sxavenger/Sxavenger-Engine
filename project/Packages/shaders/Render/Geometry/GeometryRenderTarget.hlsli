@@ -51,10 +51,10 @@ struct GeometryDeferredOutput { //!< FSceneTextures::GBuffers
 		normal = float4(map, _NOT_USED_1);
 	}
 	
-	void SetMaterial(float metallic, float specular, float roughness) {
-		material_ao.r = metallic;
-		material_ao.g = specular;
-		material_ao.b = roughness;
+	void SetMaterial(float roughness, float metallic, float specular) {
+		material_ao.r = roughness;
+		material_ao.g = metallic;
+		material_ao.b = specular;
 	}
 	
 	void SetAlbedo(float3 _albedo) {

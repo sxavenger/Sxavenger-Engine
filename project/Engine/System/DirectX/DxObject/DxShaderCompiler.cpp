@@ -76,9 +76,14 @@ ComPtr<IDxcBlob> ShaderCompiler::Compile(
 		filepathW.c_str(),                                //!< コンパイル対象のhlslファイルパス
 		L"-T", profiles_[static_cast<uint32_t>(profile)], //!< ShaderProfileの設定
 		L"-Zi", L"-Qembed_debug",                         //!< デバッグ用情報を埋め込む
-		L"-Od",                                           //!< 最適化を外しておく
 		L"-Zpr",                                          //!< メモリレイアウトは行優先
 	};
+
+#ifdef _DEBUG
+	arguments.emplace_back(L"-Od"); //!< 最適化を外しておく
+#else
+	arguments.emplace_back(L"-O2"); //!< 最適化を最大にする
+#endif
 
 	//!< entry pointがある場合, 設定
 	if (!entryPoint.empty()) {
