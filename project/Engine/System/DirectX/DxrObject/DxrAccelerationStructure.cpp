@@ -117,6 +117,15 @@ void BottomLevelAS::Update(DxObject::CommandContext* context) {
 // TopLevelAS class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
+void TopLevelAS::Init(DxObject::Device* device) {
+	D3D12_BUILD_RAYTRACING_ACCELERATION_STRUCTURE_INPUTS inputs = {};
+	inputs.Type           = D3D12_RAYTRACING_ACCELERATION_STRUCTURE_TYPE_TOP_LEVEL;
+	inputs.DescsLayout    = D3D12_ELEMENTS_LAYOUT_ARRAY;
+	inputs.Flags          = D3D12_RAYTRACING_ACCELERATION_STRUCTURE_BUILD_FLAG_ALLOW_UPDATE;
+
+	AccelerationStructureBuffers::Create(device, inputs);
+}
+
 void TopLevelAS::BeginSetupInstance() {
 	instances_.clear();
 }

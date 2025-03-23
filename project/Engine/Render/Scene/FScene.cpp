@@ -10,6 +10,10 @@
 // FScene class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
+void FScene::Init() {
+	topLevelAS_.Init(SxavengerSystem::GetDxDevice());
+}
+
 void FScene::SetupTopLevelAS(const DirectXThreadContext* context) {
 	topLevelAS_.BeginSetupInstance();
 

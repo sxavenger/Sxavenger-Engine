@@ -99,7 +99,7 @@ template <Component _Ty>
 void ComponentStorage::ForEach(const std::function<void(_Ty*)>& func) {
 	constexpr const std::type_info* type = &typeid(_Ty);
 
-	for (const auto& component : storage_.at(type)) {
+	for (const auto& component : storage_[type]) {
 		func(static_cast<_Ty*>(component.get()));
 	}
 }

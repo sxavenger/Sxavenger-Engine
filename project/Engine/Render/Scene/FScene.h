@@ -22,6 +22,8 @@ public:
 	// public methods
 	//=========================================================================================
 
+	void Init();
+
 	void SetupTopLevelAS(const DirectXThreadContext* context);
 
 	const DxrObject::TopLevelAS& GetTopLevelAS() const { return topLevelAS_; }

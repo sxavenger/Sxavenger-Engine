@@ -16,6 +16,8 @@ void FMainRender::Init() {
 
 	sceneRenderer_->SetTextures(textures_.get());
 	canvasRenderer_->SetTextures(textures_.get());
+
+	scene_->Init();
 }
 
 void FMainRender::Term() {

@@ -30,18 +30,22 @@ _DXROBJECT_NAMESPACE_BEGIN
 ////////////////////////////////////////////////////////////////////////////////////////////
 struct AccelerationStructureBuffers {
 
-	//* member *//
-
-	ComPtr<ID3D12Resource> scratch;
-	ComPtr<ID3D12Resource> asbuffer;
-	ComPtr<ID3D12Resource> update;
-
-	//* methods *//
+	//=========================================================================================
+	// public methods
+	//=========================================================================================
 
 	void Create(
 		DxObject::Device* device,
 		const D3D12_BUILD_RAYTRACING_ACCELERATION_STRUCTURE_INPUTS& inputs
 	);
+
+	//=========================================================================================
+	// public variables
+	//=========================================================================================
+
+	ComPtr<ID3D12Resource> scratch;
+	ComPtr<ID3D12Resource> asbuffer;
+	ComPtr<ID3D12Resource> update;
 
 };
 
@@ -111,6 +115,8 @@ public:
 
 	TopLevelAS()  = default;
 	~TopLevelAS() = default;
+
+	void Init(DxObject::Device* device);
 
 	//* instance option *//
 
