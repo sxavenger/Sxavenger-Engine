@@ -315,7 +315,7 @@ public:
 
 	void SetBlendMode(Mode mode) { mode_ = mode; }
 
-	const Mode GetBlendMode() const { return mode_; }
+	const Mode GetMode() const { return mode_; }
 
 	//* getter *//
 
