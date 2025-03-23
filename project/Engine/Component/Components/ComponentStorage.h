@@ -80,18 +80,12 @@ private:
 template <Component _Ty>
 ComponentStorage::ComponentIterator ComponentStorage::RegisterComponent(MonoBehaviour* behavior) {
 	constexpr const std::type_info* type = &typeid(_Ty);
-
-	if (!storage_.contains(type)) {
-		storage_[type] = ComponentContainer();
-	}
-
 	return storage_[type].emplace(storage_[type].end(), std::make_unique<_Ty>(behavior));
 }
 
 template <Component _Ty>
 void ComponentStorage::UnregisterComponent(const ComponentIterator& iterator) {
 	constexpr const std::type_info* type = &typeid(_Ty);
-
 	storage_.at(type).erase(iterator);
 }
 
