@@ -68,6 +68,16 @@ public:
 	MonoBehaviour();
 	virtual ~MonoBehaviour();
 
+	//* flag option *//
+
+	void SetActive(bool isActive);
+
+	bool IsActive() const { return isActive_; }
+
+	void SetView(bool isView);
+
+	bool IsView() const { return isView_; }
+
 	//* name option *//
 
 	void SetName(const std::string& name);
@@ -144,6 +154,8 @@ public:
 	//* inspector option *//
 
 	virtual void ShowInspector() override;
+
+	virtual void LateUpdate() override;
 
 private:
 

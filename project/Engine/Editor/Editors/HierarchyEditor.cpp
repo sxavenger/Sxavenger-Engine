@@ -5,10 +5,11 @@
 //-----------------------------------------------------------------------------------------
 //* editor
 #include "../EditorEngine.h"
-#include "RenderSceneEditor.h"
+//#include "RenderSceneEditor.h"
+#include "InspectorEditor.h"
 
 //* engine
-#include <Engine/Component/MonoBehaviourContainer.h>
+#include <Engine/Component/Entity/MonoBehaviourContainer.h>
 
 //* external
 #include <imgui.h>
@@ -25,26 +26,6 @@ void HierarchyEditor::ShowMainMenu() {
 
 void HierarchyEditor::ShowWindow() {
 	ShowHierarchyWindow();
-	ShowInspectorWindow();
-}
-
-void HierarchyEditor::LateUpdate() {
-	if (selected_ != nullptr) {
-		// Manipulateの設定
-		BaseEditor::editor_->ExecuteEditorFunction<RenderSceneEditor>([&](RenderSceneEditor* editor) {
-			editor->Manipulate(selected_);
-		});
-
-		BaseEditor::editor_->ExecuteEditorFunction<RenderSceneEditor>([&](RenderSceneEditor* editor) {
-			editor->ManipulateCanvas(selected_);
-		});
-	}
-}
-
-void HierarchyEditor::CheckResetBehaviour(MonoBehaviour* behaviour) {
-	if (behaviour == selected_) {
-		selected_ = nullptr;
-	}
 }
 
 void HierarchyEditor::ShowHierarchyWindow() {
@@ -58,20 +39,9 @@ void HierarchyEditor::ShowHierarchyWindow() {
 	ImGui::End();
 }
 
-void HierarchyEditor::ShowInspectorWindow() {
-	BaseEditor::SetNextWindowDocking();
-	ImGui::Begin("Inspector ## Hierarchy Editor", nullptr, BaseEditor::GetWindowFlag());
-
-	if (selected_ != nullptr) { // todo: selected behaviour に変更
-		selected_->SetBehaviourImGuiCommand(buf_);
-	}
-
-	ImGui::End();
-}
-
 void HierarchyEditor::HierarchySelectable(MonoBehaviour* behaviour) {
 
-	bool isSelect     = (behaviour == selected_);
+	bool isSelect     = CheckSelected(behaviour);
 	std::string label = std::format("{} # {:p}", behaviour->GetName(), reinterpret_cast<const void*>(behaviour));
 
 	if (!behaviour->IsActive()) {
@@ -118,8 +88,16 @@ void HierarchyEditor::HierarchySelectable(MonoBehaviour* behaviour) {
 	}
 }
 
+bool HierarchyEditor::CheckSelected(MonoBehaviour* behaviour) {
+	if (auto editor = BaseEditor::GetEditorEngine()->GetEditor<InspectorEditor>()) {
+		return editor->CheckInspector(behaviour);
+	}
+
+	return false;
+}
+
 void HierarchyEditor::SetSelected(MonoBehaviour* behaviour) {
-	selected_ = behaviour;
-	std::memset(buf_, 0, sizeof(buf_));
-	std::memcpy(buf_, behaviour->GetName().c_str(), behaviour->GetName().size());
+	if (auto editor = BaseEditor::GetEditorEngine()->GetEditor<InspectorEditor>()) {
+		editor->SetInspector(behaviour);
+	}
 }

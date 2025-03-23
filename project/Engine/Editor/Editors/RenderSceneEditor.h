@@ -7,9 +7,9 @@
 #include "BaseEditor.h"
 
 //* engine
-#include <Engine/Component/MonoBehaviour.h>
+#include <Engine/Component/Entity/MonoBehaviour.h>
 #include <Engine/Component/Components/Collider/ColliderPrimitiveRenderer.h>
-#include <Engine/Asset/Texture/AssetTexture.h>
+#include <Engine/Asset/Assets/Texture/AssetTexture.h>
 #include <Engine/Asset/Observer/AssetObserver.h>
 #include <Engine/Render/FRenderTargetTextures.h>
 #include <Engine/Render/Scene/FSceneRenderer.h>

@@ -8,7 +8,7 @@
 #include <Engine/Content/SxavengerContent.h>
 #include <Engine/Asset/SxavengerAsset.h>
 #include <Engine/Render/FRenderCore.h>
-//#include <Engine/Render/FMainRender.h>
+#include <Engine/Render/FMainRender.h>
 
 //* c++
 #include <limits>
@@ -20,7 +20,7 @@
 void SxavengerEngineGameLoop::Init(GameLoop::Context* context) {
 	context->SetProcess(GameLoop::Process::Init, std::nullopt, [this]() {
 		FRenderCore::GetInstance()->Init();
-		//FMainRender::GetInstance()->Init();
+		FMainRender::GetInstance()->Init();
 	});
 
 	context->SetProcess(GameLoop::Process::Init, std::numeric_limits<uint32_t>::max(), [this]() {
@@ -28,7 +28,7 @@ void SxavengerEngineGameLoop::Init(GameLoop::Context* context) {
 	});
 
 	context->SetProcess(GameLoop::Process::Term, std::nullopt, [this]() {
-		//FMainRender::GetInstance()->Term();
+		FMainRender::GetInstance()->Term();
 		FRenderCore::GetInstance()->Term();
 	});
 

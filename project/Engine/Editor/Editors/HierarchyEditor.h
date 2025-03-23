@@ -7,7 +7,7 @@
 #include "BaseEditor.h"
 
 //* engine
-#include <Engine/Component/MonoBehaviour.h>
+#include <Engine/Component/Entity/MonoBehaviour.h>
 
 //* lib
 #include <Lib/Geometry/Color4.h>
@@ -32,19 +32,11 @@ public:
 
 	void ShowWindow() override;
 
-	void LateUpdate() override;
-
-	void CheckResetBehaviour(MonoBehaviour* behaviour);
-
 private:
 
 	//=========================================================================================
 	// private variables
 	//=========================================================================================
-
-	MonoBehaviour* selected_ = nullptr;
-
-	char buf_[256] = {};
 
 	//* parameter *//
 
@@ -57,11 +49,12 @@ private:
 	//* show imgui component *//
 
 	void ShowHierarchyWindow();
-	void ShowInspectorWindow();
 
 	//* sub method *//
 
 	void HierarchySelectable(MonoBehaviour* behaviour);
+
+	bool CheckSelected(MonoBehaviour* behaviour);
 
 	void SetSelected(MonoBehaviour* behaviour);
 

@@ -38,6 +38,8 @@ public:
 
 	bool& GetIsDisplay() { return isDisplay_; }
 
+	EditorEngine* GetEditorEngine() const { return editor_; }
+
 protected:
 
 	//=========================================================================================

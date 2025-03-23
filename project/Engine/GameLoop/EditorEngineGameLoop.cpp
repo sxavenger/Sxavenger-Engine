@@ -7,8 +7,8 @@
 #include <Engine/Editor/EditorEngine.h>
 #include <Engine/Editor/Editors/DevelopEditor.h>
 #include <Engine/Editor/Editors/InspectorEditor.h>
-//#include <Engine/Editor/Editors/HierarchyEditor.h>
-//#include <Engine/Editor/Editors/RenderSceneEditor.h>
+#include <Engine/Editor/Editors/RenderSceneEditor.h>
+#include <Engine/Editor/Editors/HierarchyEditor.h>
 //#include <Engine/Editor/Editors/OutlinerEditor.h>
 //#include <Engine/Editor/Editors/MaterialEditor.h>
 
@@ -30,8 +30,8 @@ void EditorEngineGameLoop::InitEditor() {
 	sEditorEngine->Init();
 	sEditorEngine->RegisterEditor<DevelopEditor>();
 	sEditorEngine->RegisterEditor<InspectorEditor>();
-	//sEditorEngine->RegisterEditor<RenderSceneEditor>();
-	//sEditorEngine->RegisterEditor<HierarchyEditor>(); //!< RenderSceneEditorの後に登録
+	sEditorEngine->RegisterEditor<RenderSceneEditor>();
+	sEditorEngine->RegisterEditor<HierarchyEditor>();
 	//sEditorEngine->RegisterEditor<OutlinerEditor>();
 	//sEditorEngine->RegisterEditor<MaterialEditor>();
 }
@@ -45,7 +45,7 @@ void EditorEngineGameLoop::UpdateEditor() {
 }
 
 void EditorEngineGameLoop::RenderEditor() {
-	/*sEditorEngine->ExecuteEditorFunction<RenderSceneEditor>([&](RenderSceneEditor* editor) {
+	sEditorEngine->ExecuteEditorFunction<RenderSceneEditor>([&](RenderSceneEditor* editor) {
 		editor->Render();
-	});*/
+	});
 }

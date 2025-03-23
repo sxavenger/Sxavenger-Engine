@@ -54,6 +54,8 @@ public:
 	void UnregisterInspector() { inspector_ = nullptr; }
 	void UnregisterInspector(BaseInspector* target);
 
+	bool CheckInspector(BaseInspector* target) const { return inspector_ == target; }
+
 private:
 
 	//=========================================================================================

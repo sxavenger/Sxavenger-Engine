@@ -1,5 +1,11 @@
 #include "BaseComponent.h"
 
+//-----------------------------------------------------------------------------------------
+// include
+//-----------------------------------------------------------------------------------------
+//* engine
+#include <Engine/Component/Entity/MonoBehaviour.h>
+
 ////////////////////////////////////////////////////////////////////////////////////////////
 // BaseComponent class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -9,9 +15,9 @@ MonoBehaviour* BaseComponent::GetBehaviour() const {
 }
 
 bool BaseComponent::IsActive() const {
-	return false; // todo:
+	return behaviour_->IsActive();
 }
 
 bool BaseComponent::IsView() const {
-	return false; // todo:
+	return behaviour_->IsView();
 }

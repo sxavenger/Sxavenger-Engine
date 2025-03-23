@@ -6,6 +6,10 @@
 //* entity
 #include "MonoBehaviourContainer.h"
 
+//* engine
+#include <Engine/Editor/EditorEngine.h>
+#include <Engine/Editor/Editors/RenderSceneEditor.h>
+
 //* external
 #include <imgui.h>
 
@@ -37,6 +41,24 @@ MonoBehaviour::~MonoBehaviour() {
 	// containerの登録解除
 	if (containerIterator_.has_value()) {
 		sMonoBehaviourContainer->RemoveBehaviour(containerIterator_.value());
+	}
+}
+
+void MonoBehaviour::SetActive(bool isActive) {
+	isActive_ = isActive;
+
+	for (const auto& child : children_) {
+		MonoBehaviour* ptr = GetElement(child);
+		ptr->SetActive(isActive);
+	}
+}
+
+void MonoBehaviour::SetView(bool isView) {
+	isView_ = isView;
+
+	for (const auto& child : children_) {
+		MonoBehaviour* ptr = GetElement(child);
+		ptr->SetView(isView);
 	}
 }
 
@@ -134,6 +156,17 @@ void MonoBehaviour::ShowInspector() {
 	if (ImGui::Button("input json")) {
 		InputJson();
 	}*/
+}
+
+void MonoBehaviour::LateUpdate() {
+	// Manipulateの設定
+	sEditorEngine->ExecuteEditorFunction<RenderSceneEditor>([&](RenderSceneEditor* editor) {
+		editor->Manipulate(this);
+	});
+
+	sEditorEngine->ExecuteEditorFunction<RenderSceneEditor>([&](RenderSceneEditor* editor) {
+		editor->ManipulateCanvas(this);
+	});
 }
 
 MonoBehaviour::HierarchyIterator MonoBehaviour::AddHierarchy(HierarchyElement&& child) {

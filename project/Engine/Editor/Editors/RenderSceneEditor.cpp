@@ -299,8 +299,6 @@ void RenderSceneEditor::ShowCanvasWindow() {
 		kMainWindowSize
 	);
 
-	//ImGuizmo::SetDrawlist();
-
 	ImGui::End();
 	ImGui::PopStyleVar();
 }
