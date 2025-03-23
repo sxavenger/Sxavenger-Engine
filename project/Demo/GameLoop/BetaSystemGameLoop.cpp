@@ -13,9 +13,8 @@
 #include <Engine/Component/Components/Collider/ColliderComponent.h>
 #include <Engine/Component/Components/Collider/CollisionManager.h>
 #include <Engine/Component/Components/SpriteRenderer/SpriteRendererComponent.h>
-#include <Engine/Component/MonoBehaviourContainer.h>
+#include <Engine/Component/ComponentHelper.h>
 #include <Engine/System/Runtime/Performance/DeltaTimePoint.h>
-#include <Engine/Content/Material/MaterialStorage.h>
 
 //* c++
 #include <execution>
@@ -79,12 +78,6 @@ void BetaSystemGameLoop::InitSystem() {
 	auto light = light_->AddComponent<DirectionalLightComponent>();
 	light->Init();
 
-	attribute_ = std::make_unique<Attribute>();
-	attribute_->SetName("attribute yay");
-	attribute_->SetAttributeFunc([this]() {
-		ImGui::Text("これはお試し WASD");
-	});
-
 	{
 		AssetObserver<AssetModel> tree = SxavengerAsset::TryImport<AssetModel>("assets/models/objects/tree_low.obj");
 
@@ -104,15 +97,13 @@ void BetaSystemGameLoop::InitSystem() {
 
 	{
 		AssetObserver<AssetModel> cube = SxavengerAsset::TryImport<AssetModel>("assets/models/human/idle.gltf");
-		cube_ = cube.WaitGet()->CreateSkinnedMeshBehaviour("animatedCube");
-		cube_->AddComponent<TransformComponent>();
+		human_ = cube.WaitGet()->CreateSkinnedMeshBehaviour("animatedCube");
+		human_->AddComponent<TransformComponent>();
 
 		animator_ = SxavengerAsset::TryImport<AssetAnimator>("assets/models/human/idle.gltf");
 		/*auto child = cube_->GetChild("AnimatedCube");
 		child->GetComponent<SkinnedMeshRendererComponent>()->UpdateAnimation(animator_.WaitGet()->GetAnimation(0), 0.0f, true);*/
 	}
-
-	sMaterialStorage->GetMaterial("default");
 }
 
 void BetaSystemGameLoop::TermSystem() {
@@ -123,32 +114,15 @@ void BetaSystemGameLoop::UpdateSystem() {
 	static DeltaTimePointf<TimeUnit::second> time = 0.0f;
 	time.AddDeltaTime();
 
-	auto child = cube_->GetChild(ArmatureComponent::kArmatureName);
-	child->GetComponent<ArmatureComponent>()->UpdateAnimation(animator_.WaitGet()->GetAnimation(0), time, true);
+	ComponentHelper::ApplyAnimation(human_.get(), animator_.WaitGet()->GetAnimation(0), time, true);
 
-	sMonoBehaviourContainer->ForEach(std::execution::par, [](MonoBehaviour* behaviour) {
-		behaviour->UpdateComponent(); // todo: 遅延updateで何とかしたい.
-	});
+	ComponentHelper::UpdateTransform();
 	// todo: engine側のgameloopに移動.
 
-	sComponentStorage->ForEach<SkinnedMeshRendererComponent>([](SkinnedMeshRendererComponent* renderer) {
-		renderer->SkinUpdate();
-	});
+	ComponentHelper::UpdateSkinning();
 	// todo: engine側のgameloopに移動.
 
 	sCollisionManager->CheckCollision();
-
-	if (SxavengerSystem::IsTriggerKey(KeyId::KEY_SPACE)) {
-		static std::unique_ptr<Attribute> atr = nullptr;
-
-		if (atr == nullptr) {
-			atr = std::make_unique<Attribute>();
-			atr->SetParent(attribute_.get());
-
-		} else {
-			atr.reset();
-		}
-	}
 
 }
 

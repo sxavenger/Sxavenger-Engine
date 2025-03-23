@@ -86,7 +86,7 @@ public:
 
 	void SetMaterial(const Material* material) { material_ = material; }
 
-	void SkinUpdate();
+	void Skinning();
 
 	//* option *//
 

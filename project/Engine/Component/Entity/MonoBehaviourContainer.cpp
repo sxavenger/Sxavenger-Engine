@@ -13,8 +13,7 @@ void MonoBehaviourContainer::RemoveBehaviour(const MonoBehaviour::ContainerItera
 }
 
 void MonoBehaviourContainer::ForEach(const std::function<void(MonoBehaviour*)>& function) {
-	//!< 計算量: o(MonoBehaviourの数)
-	//! container_.size()ではないので注意.
+	//!< 計算量: o(MonoBehaviourの数) container_.size()ではないので注意.
 	for (auto& behaviour : container_) {
 		Execute(behaviour, function);
 	}

@@ -57,8 +57,7 @@ void SkinnedMeshRendererComponent::CreateMesh(const Model::AssimpMesh* mesh) {
 	CreateCluster();
 }
 
-void SkinnedMeshRendererComponent::SkinUpdate() {
-
+void SkinnedMeshRendererComponent::Skinning() {
 	//* cluster update *//
 	cluster_.UpdatePalette(GetArmatureComponent()->GetSkeleton());
 

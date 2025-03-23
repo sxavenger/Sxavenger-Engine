@@ -40,7 +40,6 @@
     <ClCompile Include="Lib\Sxl\OptimizedSet.cpp" />
     <ClCompile Include="Engine\System\DirectX\DxObject\DxUnorderedDimensionBuffer.cpp" />
     <ClCompile Include="Lib\Sxl\Formatter.cpp" />
-    <ClCompile Include="Lib\Adapter\Curve\Curve.cpp" />
     <ClCompile Include="Engine\System\DirectX\DxObject\DxShaderBlob.cpp" />
     <ClCompile Include="Engine\System\DirectX\DxObject\DxGraphicsPipelineState.cpp" />
     <ClCompile Include="Engine\System\DirectX\DxObject\DxComputePipelineState.cpp" />
@@ -134,6 +133,8 @@
     <ClCompile Include="Engine\Render\Canvas\FCanvasRenderer.cpp" />
     <ClCompile Include="Engine\Editor\Editors\RenderSceneEditor.cpp" />
     <ClCompile Include="Engine\Editor\Editors\HierarchyEditor.cpp" />
+    <ClCompile Include="Demo\GameLoop\BetaSystemGameLoop.cpp" />
+    <ClCompile Include="Engine\Component\ComponentHelper.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\System\Window\Window.h" />
@@ -174,7 +175,6 @@
     <ClInclude Include="Lib\Sxl\OptimizedSet.h" />
     <ClInclude Include="Engine\System\DirectX\DxObject\DxUnorderedDimensionBuffer.h" />
     <ClInclude Include="Lib\Sxl\Formatter.h" />
-    <ClInclude Include="Lib\Adapter\Curve\Curve.h" />
     <ClInclude Include="Engine\System\DirectX\DxObject\DxShaderBlob.h" />
     <ClInclude Include="Engine\System\DirectX\DxObject\DxGraphicsPipelineState.h" />
     <ClInclude Include="Engine\System\DirectX\DxObject\DxComputePipelineState.h" />
@@ -283,6 +283,8 @@
     <ClInclude Include="Engine\Render\Canvas\FCanvasRenderer.h" />
     <ClInclude Include="Engine\Editor\Editors\RenderSceneEditor.h" />
     <ClInclude Include="Engine\Editor\Editors\HierarchyEditor.h" />
+    <ClInclude Include="Demo\GameLoop\BetaSystemGameLoop.h" />
+    <ClInclude Include="Engine\Component\ComponentHelper.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />
