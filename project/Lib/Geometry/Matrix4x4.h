@@ -78,7 +78,7 @@ public:
 
 
 	static Matrix4x4 PerspectiveFov(float fov, float aspect, float near, float far) noexcept;
-	static Matrix4x4 Orthographic(float left, float right, float bottom, float top, float near, float far) noexcept;
+	static Matrix4x4 Orthographic(float left, float top, float right, float bottom, float near, float far) noexcept;
 	static Matrix4x4 Viewport(float x, float y, float width, float height, float near, float far) noexcept;
 
 

@@ -181,7 +181,7 @@ Matrix4x4 Matrix4x4::PerspectiveFov(float fov, float aspect, float near, float f
 	};
 }
 
-Matrix4x4 Matrix4x4::Orthographic(float left, float right, float bottom, float top, float near, float far) noexcept {
+Matrix4x4 Matrix4x4::Orthographic(float left, float top, float right, float bottom, float near, float far) noexcept {
 	return {
 		2.0f / (right - left), 0.0f, 0.0f, 0.0f,
 		0.0f, 2.0f / (top - bottom), 0.0f, 0.0f,
