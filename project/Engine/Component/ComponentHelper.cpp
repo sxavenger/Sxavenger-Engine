@@ -31,6 +31,8 @@ void ComponentHelper::UpdateTransform() {
 		if (auto component = behaviour->GetComponent<CameraComponent>()) {
 			component->UpdateView();
 		}
+
+		// todo: child update
 	});
 }
 
@@ -45,7 +47,7 @@ void ComponentHelper::UpdateSkinning() {
 	});
 }
 
-std::unique_ptr<MonoBehaviour> ComponentHelper::CreateModelBehaviour(const std::filesystem::path& filepath) {
+std::unique_ptr<MonoBehaviour> ComponentHelper::CreateStaticModelBehaviour(const std::filesystem::path& filepath) {
 	AssetObserver<AssetModel> observer = SxavengerAsset::TryImport<AssetModel>(filepath);
 	return observer.WaitGet()->CreateStaticMeshBehaviour(filepath.stem().generic_string());
 }

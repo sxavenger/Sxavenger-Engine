@@ -51,7 +51,8 @@ void BetaSystemGameLoop::InitSystem() {
 	main_ = SxavengerSystem::CreateMainWindow(kMainWindowSize, L"sxavenger engine beta window").lock();
 	main_->SetIcon("packages/icon/SxavengerEngineSubIcon.ico", { 32, 32 });
 
-	mesh_   = ComponentHelper::CreateModelBehaviour("assets/models/PBR_Sphere_Test/model/PBR_Sphere.gltf");
+	mesh_   = ComponentHelper::CreateStaticModelBehaviour("assets/models/PBR_Sphere_Test/model/PBR_Sphere.gltf");
+	//mesh_   = ComponentHelper::CreateStaticModelBehaviour("assets/models/sponza/NewSponza_Main_glTF_003.gltf");
 	camera_ = ComponentHelper::CreateCameraMonoBehaviour();
 	light_  = ComponentHelper::CreateDirectionalLightMonoBehaviour();
 
@@ -61,11 +62,6 @@ void BetaSystemGameLoop::TermSystem() {
 }
 
 void BetaSystemGameLoop::UpdateSystem() {
-
-	if (SxavengerSystem::IsTriggerKey(KeyId::KEY_SPACE)) {
-		FRenderCore::GetInstance()->Init();
-		CommentRuntime("hot reloaded.");
-	}
 
 	ComponentHelper::UpdateTransform();
 	// todo: engine側のgameloopに移動.

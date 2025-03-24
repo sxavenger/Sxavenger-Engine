@@ -335,3 +335,6 @@ FodyWeavers.xsd
 # engine before methods
 /project/Engine/!dest
 /project/imgui.ini
+
+# assets before
+/project/assets/models/sponza
