@@ -1,6 +1,6 @@
 #pragma once
 
-//* Reference *//
+//* reference *//
 //!< UE4 PBR: https://de45xmedrsdbp.cloudfront.net/Resources/files/2013SiggraphPresentationsNotes-26915738.pdf
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -14,19 +14,17 @@ static const float kPi = 3.14159265359f;
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 //* Diffuse *//
-float3 CalculateDiffuseBRDF(float3 albedo) {
-	return albedo / kPi;
+float3 CalculateDiffuseBRDF(float3 diffuse) {
+	return diffuse / kPi;
 }
 
 //* Specular *//
 //* f(l, v) = F(l, v) * G(l, v) * D(l, v) / 4 * dot(n, l) * dot(n, v)
 
 // Fresnel Reflection(F)
-float CalculateSpecularF(float3 v, float3 h) {
-	static const float f0 = 0.04f; //!< need parameter...?
-
+float3 CalculateSpecularF(float3 v, float3 h, float3 f0) {
 	float exponent = (-5.55473f * dot(v, h) - 6.98316f) * dot(v, h);
-	return f0 + (1.0f - f0) * pow(2.0f, exponent);
+	return f0 + (1.0f - f0) * exp2(exponent);
 }
 
 // Microfacet Distribution(D)
@@ -53,9 +51,9 @@ float CalculateSpecularG(float3 n, float3 v, float3 l, float roughness) {
 }
 
 
-float CalculateSpecularBRDF(float3 n, float3 v, float3 l, float roughness) {
+float3 CalculateSpecularBRDF(float3 n, float3 v, float3 l, float roughness, float3 f0) {
 	float3 h = normalize(l + v);
-	float f = CalculateSpecularF(v, h);
+	float3 f = CalculateSpecularF(v, h, f0);
 	float d = CalculateSpecularD(n, h, roughness);
 	float g = CalculateSpecularG(n, v, l, roughness);
 	return f * g * d / 4.0f * saturate(dot(n, l)) * saturate(dot(n, v));

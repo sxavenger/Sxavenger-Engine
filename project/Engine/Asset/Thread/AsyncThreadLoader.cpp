@@ -82,7 +82,7 @@ void AsyncThreadLoaderCollection::Init() {
 					if (!tasks_.empty()) {
 						auto front = tasks_.front();
 						tasks_.pop();
-						EngineThreadLog("[AsyncAssetThread]: task poped. filepath: " + front->GetFilepath().generic_string());
+						EngineThreadLog("[AsyncThreadLoader]: task poped. filepath: " + front->GetFilepath().generic_string());
 
 						thread.SetTask(front);
 					}

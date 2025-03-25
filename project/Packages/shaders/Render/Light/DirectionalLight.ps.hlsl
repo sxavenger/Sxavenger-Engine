@@ -48,23 +48,21 @@ PSOutput main(PSInput input) {
 
 	// 表面化albedo = a_surface
 
-	// ラフネス
-	// F(n, l) 近似値=> f0 + (1 - f0) * (1 - saturate(dot(n, l)))^5
-	// F(n, l) 近似値=> f0 + (f90 - f0) * (1 - saturate(dot(n, l)))^(1 / p)
+	// f0
 	// m = 0 -> f0 = 0.0, m = 1 -> f0 = a_surface = c_surface 
 	float3 f0 = lerp(surface.albedo, float3(0.0f, 0.0f, 0.0f), surface.metallic);
 
 	// f(l, v) = a_surface / kPi
-	float3 albedo = f0 / kPi;
+	float3 diffuse = f0 / kPi;
 
-	float spec = CalculateSpecularBRDF(surface.normal, v, l, surface.roughness);
+	float3 spec = CalculateSpecularBRDF(surface.normal, v, l, surface.roughness, f0);
 
 	//* 出力
 
 	// ローカル照明での計算
 	// L_i(l) = l
 	// L_o(v) = f(l, v) * c_light * saturate(dot(n, l))
-	output.color.rgb = albedo * c_light * saturate(dot(surface.normal, l)) + spec;
+	output.color.rgb = diffuse * c_light * saturate(dot(surface.normal, l)) + spec;
 
 	output.color.a = 1.0f;
 
