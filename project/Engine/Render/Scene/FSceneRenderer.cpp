@@ -252,6 +252,9 @@ void FSceneRenderer::LightingPass(const DirectXThreadContext* context, const Con
 
 	//!< DirectionalLight
 	LightingPassDirectionalLight(context, config);
+
+	//!< PointLight
+	LightingPassDirectionalLight(context, config);
 	
 
 	textures_->EndLightingPass(context);
@@ -287,7 +290,44 @@ void FSceneRenderer::LightingEmpty(const DirectXThreadContext* context, const Co
 }
 
 void FSceneRenderer::LightingPassDirectionalLight(const DirectXThreadContext* context, const Config& config) {
-	// todo: instance化
+
+	FRenderCore::GetInstance()->GetLight()->SetPipeline(
+		FRenderCoreLight::LightType::Point, context, textures_->GetSize()
+	);
+
+	FRenderCore::GetInstance()->GetLight()->BindIABuffer(context);
+
+	sComponentStorage->ForEach<PointLightComponent>([&](PointLightComponent* component) {
+		if (!component->IsActive()) {
+			return;
+		}
+
+		DxObject::BindBufferDesc parameter = {};
+		// common parameter
+		parameter.SetAddress("gCamera",config.camera->GetGPUVirtualAddress());
+		parameter.SetAddress("gScene", FMainRender::GetInstance()->GetScene()->GetTopLevelAS().GetGPUVirtualAddress());
+
+		// deferred paraemter
+		parameter.SetHandle("gDepth",    textures_->GetDepth()->GetRasterizerGPUHandleSRV());
+		parameter.SetHandle("gAlbedo",   textures_->GetGBuffer(FRenderTargetTextures::GBufferLayout::Albedo)->GetGPUHandleSRV());
+		parameter.SetHandle("gNormal",   textures_->GetGBuffer(FRenderTargetTextures::GBufferLayout::Normal)->GetGPUHandleSRV());
+		parameter.SetHandle("gPosition", textures_->GetGBuffer(FRenderTargetTextures::GBufferLayout::Position)->GetGPUHandleSRV());
+		parameter.SetHandle("gMaterial", textures_->GetGBuffer(FRenderTargetTextures::GBufferLayout::Material_AO)->GetGPUHandleSRV());
+
+		// direcitonal light parameter
+		parameter.SetAddress("gTransform", component->GetTransform()->GetGPUVirtualAddress());
+		parameter.SetAddress("gParameter", component->GetParameterBufferAddress());
+		parameter.SetAddress("gShadow",    component->GetShadowBufferAddress());
+
+		FRenderCore::GetInstance()->GetLight()->BindGraphicsBuffer(
+			FRenderCoreLight::LightType::Point, context, parameter
+		);
+
+		FRenderCore::GetInstance()->GetLight()->DrawCall(context);
+	});
+}
+
+void FSceneRenderer::LightingPassPointLight(const DirectXThreadContext* context, const Config& config) {
 
 	FRenderCore::GetInstance()->GetLight()->SetPipeline(
 		FRenderCoreLight::LightType::Directional, context, textures_->GetSize()
@@ -323,6 +363,7 @@ void FSceneRenderer::LightingPassDirectionalLight(const DirectXThreadContext* co
 
 		FRenderCore::GetInstance()->GetLight()->DrawCall(context);
 	});
+
 }
 
 void FSceneRenderer::RenderTransparentBasePass(const DirectXThreadContext* context, const Config& config) {

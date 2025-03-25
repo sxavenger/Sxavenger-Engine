@@ -39,9 +39,9 @@ private:
 
 	std::shared_ptr<GameWindow> main_;
 
-	std::unique_ptr<MonoBehaviour> mesh_;
-
 	std::unique_ptr<MonoBehaviour> camera_;
+
+	std::unique_ptr<MonoBehaviour> mesh_;
 
 	std::unique_ptr<MonoBehaviour> light_;
 

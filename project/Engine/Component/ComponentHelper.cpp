@@ -10,6 +10,7 @@
 #include "Components/Armature/ArmatureComponent.h"
 #include "Components/MeshRenderer/SkinnedMeshRendererComponent.h"
 #include "Components/Light/DirectionalLightComponent.h"
+#include "Components/Light/PointLightComponent.h"
 
 //* engine
 #include <Engine/Asset/SxavengerAsset.h>
@@ -68,6 +69,16 @@ std::unique_ptr<MonoBehaviour> ComponentHelper::CreateDirectionalLightMonoBehavi
 
 	root->AddComponent<TransformComponent>();
 	root->AddComponent<DirectionalLightComponent>();
+
+	return root;
+}
+
+std::unique_ptr<MonoBehaviour> ComponentHelper::CreatePointLightMonoBehaviour() {
+	std::unique_ptr<MonoBehaviour> root = std::make_unique<MonoBehaviour>();
+	root->SetName("point light");
+
+	root->AddComponent<TransformComponent>();
+	root->AddComponent<PointLightComponent>();
 
 	return root;
 }

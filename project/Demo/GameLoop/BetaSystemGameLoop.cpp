@@ -51,10 +51,11 @@ void BetaSystemGameLoop::InitSystem() {
 	main_ = SxavengerSystem::CreateMainWindow(kMainWindowSize, L"sxavenger engine beta window").lock();
 	main_->SetIcon("packages/icon/SxavengerEngineSubIcon.ico", { 32, 32 });
 
+	camera_ = ComponentHelper::CreateCameraMonoBehaviour();
+
 	mesh_   = ComponentHelper::CreateStaticModelBehaviour("assets/models/PBR_Sphere_Test/model/PBR_Sphere.gltf");
 	//mesh_   = ComponentHelper::CreateStaticModelBehaviour("assets/models/sponza/NewSponza_Main_glTF_003.gltf");
-	camera_ = ComponentHelper::CreateCameraMonoBehaviour();
-	light_  = ComponentHelper::CreateDirectionalLightMonoBehaviour();
+	light_  = ComponentHelper::CreatePointLightMonoBehaviour();
 
 }
 

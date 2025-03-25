@@ -135,6 +135,7 @@
     <ClCompile Include="Engine\Editor\Editors\HierarchyEditor.cpp" />
     <ClCompile Include="Demo\GameLoop\BetaSystemGameLoop.cpp" />
     <ClCompile Include="Engine\Component\ComponentHelper.cpp" />
+    <ClCompile Include="Engine\Component\Components\Light\PointLightComponent.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\System\Window\Window.h" />
@@ -285,6 +286,7 @@
     <ClInclude Include="Engine\Editor\Editors\HierarchyEditor.h" />
     <ClInclude Include="Demo\GameLoop\BetaSystemGameLoop.h" />
     <ClInclude Include="Engine\Component\ComponentHelper.h" />
+    <ClInclude Include="Engine\Component\Components\Light\PointLightComponent.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

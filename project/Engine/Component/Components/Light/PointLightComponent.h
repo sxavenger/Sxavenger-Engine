@@ -14,9 +14,9 @@
 #include <Lib/Geometry/Color3.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// DirectionalLightComponent class
+// PointLightComponent class
 ////////////////////////////////////////////////////////////////////////////////////////////
-class DirectionalLightComponent final
+class PointLightComponent
 	: public BaseComponent, public LightCommon {
 public:
 
@@ -36,9 +36,10 @@ public:
 		// public variables
 		//=========================================================================================
 
-		Color3f color;     //!< color
-		float   intensity; //!< intensity [0.0f ~ 1.0f]
-		// todo: 輝度単位をluxで設定
+		Color3f color;
+		Units unit;
+		float intensity;
+		float distancae;
 
 	};
 
@@ -48,8 +49,8 @@ public:
 	// public methods
 	//=========================================================================================
 
-	DirectionalLightComponent(MonoBehaviour* behaviour) : BaseComponent(behaviour) { Init(); }
-	virtual ~DirectionalLightComponent() = default;
+	PointLightComponent(MonoBehaviour* behaviour) : BaseComponent(behaviour) { Init(); }
+	virtual ~PointLightComponent() = default;
 
 	virtual void ShowComponentInspector() override;
 

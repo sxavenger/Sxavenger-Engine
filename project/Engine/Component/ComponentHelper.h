@@ -38,5 +38,7 @@ public:
 
 	static std::unique_ptr<MonoBehaviour> CreateDirectionalLightMonoBehaviour();
 
+	static std::unique_ptr<MonoBehaviour> CreatePointLightMonoBehaviour();
+
 private:
 };
