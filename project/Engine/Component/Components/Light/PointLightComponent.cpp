@@ -29,28 +29,30 @@ void PointLightComponent::ShowComponentInspector() {
 	auto& parameter = parameter_->At(0);
 	ImGui::ColorEdit3("color", &parameter.color.x);
 
-	Units preUnit = parameter.unit;
-
 	static const char* items[] = { "Lumen", "Candela" };
 
 	if (ImGui::BeginCombo("unit", items[static_cast<uint32_t>(parameter.unit)])) {
 		for (uint32_t i = 0; i < 2; ++i) {
 			if (ImGui::Selectable(items[i], parameter.unit == static_cast<Units>(i))) {
+				Units preUnit = parameter.unit;
 				parameter.unit = static_cast<Units>(i);
 
 				// intensityの変換
 				if (preUnit == Units::Lumen && parameter.unit == Units::Candela) {
-					parameter.intensity /= 4.0f * kPi;
+					parameter.intensity /= 4.0f * kPi; //!< lumen to candela
 
 				} else if (preUnit == Units::Candela && parameter.unit == Units::Lumen) {
-					parameter.intensity *= 4.0f * kPi;
+					parameter.intensity *= 4.0f * kPi; //!< candela to lumen
 				}
 			}
 		}
 		ImGui::EndCombo();
 	}
 
-	ImGui::DragFloat("intensity", &parameter.intensity, 0.1f, 0.0f, 128.0f);
+	std::string format = parameter.unit == Units::Lumen ? "%.3flm" : "%.3fcd";
+	ImGui::DragFloat("intensity", &parameter.intensity, 0.1f, 0.0f, 128.0f, format.c_str());
+
+	LightCommon::ShowCommonInspector();
 }
 
 void PointLightComponent::Init() {
