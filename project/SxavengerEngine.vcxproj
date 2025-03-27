@@ -220,6 +220,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="Engine\Content\Animation\Skeleton.cpp" />
     <ClCompile Include="Engine\Content\Animation\SkinCluster.cpp" />
     <ClCompile Include="Engine\Content\Animation\SkinningPipeline.cpp" />
+    <ClCompile Include="Engine\Content\DebugPrimitive\DebugPrimitive.cpp" />
     <ClCompile Include="Engine\Content\InputMesh\InputMesh.cpp" />
     <ClCompile Include="Engine\Content\SxavengerContent.cpp" />
     <ClCompile Include="Engine\Content\TextureBuffer\BaseOffscreenTexture.cpp" />
@@ -352,6 +353,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Engine\Content\Animation\Skeleton.h" />
     <ClInclude Include="Engine\Content\Animation\SkinCluster.h" />
     <ClInclude Include="Engine\Content\Animation\SkinningPipeline.h" />
+    <ClInclude Include="Engine\Content\DebugPrimitive\DebugPrimitive.h" />
     <ClInclude Include="Engine\Content\InputAssembler\InputAssembler.h" />
     <ClInclude Include="Engine\Content\InputAssembler\LineInputAssembler.h" />
     <ClInclude Include="Engine\Content\InputAssembler\TriangleInputAssembler.h" />

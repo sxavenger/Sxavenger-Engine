@@ -6,6 +6,7 @@
 //* content
 #include "TextureBuffer/OffscreenTextureCollection.h"
 #include "Animation/SkinningPipeline.h"
+#include "DebugPrimitive/DebugPrimitive.h"
 
 //* c++
 #include <memory>
@@ -36,13 +37,26 @@ public:
 
 	static void DispatchSkinning(const DirectXThreadContext* context, const DxObject::BindBufferDesc& desc, uint32_t vertexSize);
 
+	//* debug primitive option *//
+
+	static void ResetPrimtive();
+
+	static void PushLine(const Vector3f& v1, const Vector3f& v2, const Color4f& color);
+
+	static void PushAxis(const Vector3f& center, float length);
+
+	static void PushSphere(const Vector3f& center, float radius, const Color4f& color);
+
+	static DebugPrimitive* GetDebugPrimitive() { return debugPrimitive_.get(); }
+
 private:
 
 	//=========================================================================================
 	// private variables
 	//=========================================================================================
 
-	static std::unique_ptr<OffscreenTextureCollection> collection_;
-	static std::unique_ptr<SkinningComputePipeline> skinningPipeline_;
+	static inline std::unique_ptr<OffscreenTextureCollection> collection_;
+	static inline std::unique_ptr<SkinningComputePipeline> skinningPipeline_;
+	static inline std::unique_ptr<DebugPrimitive> debugPrimitive_;
 
 };

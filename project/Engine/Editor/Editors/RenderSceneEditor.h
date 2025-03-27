@@ -108,6 +108,8 @@ private:
 	Vector2f angle_ = { 0.0f, kPi / 16.0f };
 	float distance_ = 12.0f;
 
+	bool isMoveCamera_ = false;
+
 	//* collider *//
 
 	std::unique_ptr<ColliderPrimitiveRenderer> colliderRenderer_;

@@ -136,6 +136,7 @@
     <ClCompile Include="Demo\GameLoop\BetaSystemGameLoop.cpp" />
     <ClCompile Include="Engine\Component\ComponentHelper.cpp" />
     <ClCompile Include="Engine\Component\Components\Light\PointLightComponent.cpp" />
+    <ClCompile Include="Engine\Content\DebugPrimitive\DebugPrimitive.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\System\Window\Window.h" />
@@ -287,6 +288,7 @@
     <ClInclude Include="Demo\GameLoop\BetaSystemGameLoop.h" />
     <ClInclude Include="Engine\Component\ComponentHelper.h" />
     <ClInclude Include="Engine\Component\Components\Light\PointLightComponent.h" />
+    <ClInclude Include="Engine\Content\DebugPrimitive\DebugPrimitive.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

@@ -4,6 +4,7 @@
 // include
 //-----------------------------------------------------------------------------------------
 //* engine
+#include <Engine/Content/SxavengerContent.h>
 #include <Engine/Component/Components/Transform/TransformComponent.h>
 #include <Engine/Component/Components/SpriteRenderer/SpriteRendererComponent.h>
 #include <Engine/Component/Components/Camera/CameraComponent.h>
@@ -64,6 +65,13 @@ void RenderSceneEditor::Render() {
 	if (isRenderCollider_) {
 		colliderRenderer_->Render(SxavengerSystem::GetMainThreadContext(), camera_->GetComponent<CameraComponent>());
 	}
+
+	if (isMoveCamera_) {
+		SxavengerContent::PushAxis(point_, 1.0f);
+	}
+
+	CameraComponent* camera = camera_->GetComponent<CameraComponent>();
+	SxavengerContent::GetDebugPrimitive()->DrawToScene(SxavengerSystem::GetMainThreadContext(), camera);
 
 	textures_->EndTransparentBasePass(SxavengerSystem::GetMainThreadContext());
 }
@@ -350,6 +358,8 @@ RenderSceneEditor::WindowRect RenderSceneEditor::SetImGuiImageFullWindow(const D
 
 void RenderSceneEditor::UpdateCamera() {
 
+	isMoveCamera_ = false;
+
 	auto mouse     = SxavengerSystem::GetInput()->GetMouseInput();
 	auto transform = camera_->GetComponent<TransformComponent>();
 
@@ -360,6 +370,8 @@ void RenderSceneEditor::UpdateCamera() {
 		angle_   += delta * kSensitivity;
 		angle_.x = std::fmod(angle_.x, kPi * 2.0f);
 		angle_.y = std::clamp(angle_.y, -kPi / 2.0f, kPi / 2.0f);
+
+		isMoveCamera_ = true;
 	}
 
 	if (mouse->IsPress(MouseId::MOUSE_RIGHT)) {
@@ -371,6 +383,8 @@ void RenderSceneEditor::UpdateCamera() {
 
 		point_ -= right * delta.x * kSensitivity.x;
 		point_ += up * delta.y * kSensitivity.y;
+
+		isMoveCamera_ = true;
 	}
 
 	distance_ = std::max(distance_ - mouse->GetDeltaWheel(), 0.0f);

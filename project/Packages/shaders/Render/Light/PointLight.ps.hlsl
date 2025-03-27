@@ -51,6 +51,8 @@ PSOutput main(PSInput input) {
 
 	radiance *= dist;
 
+	radiance = saturate(radiance);
+
 	float3 c_light = gParameter.color * radiance;
 
 	// 影の計算
