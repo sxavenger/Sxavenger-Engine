@@ -52,7 +52,7 @@ PSOutput main(PSInput input) {
 	RayDesc ray;
 	ray.Origin    = surface.position;
 	ray.Direction = l;
-	ray.TMin      = 0.001f;
+	ray.TMin      = kTMin;
 	ray.TMax      = r;
 
 	c_light *= gShadow.TraceShadow(ray);

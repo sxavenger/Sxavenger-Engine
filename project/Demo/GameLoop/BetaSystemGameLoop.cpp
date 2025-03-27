@@ -53,10 +53,12 @@ void BetaSystemGameLoop::InitSystem() {
 
 	camera_ = ComponentHelper::CreateCameraMonoBehaviour();
 
-	//mesh_   = ComponentHelper::CreateStaticModelBehaviour("assets/models/PBR_Sphere_Test/model/PBR_Sphere.gltf");
+	mesh_   = ComponentHelper::CreateStaticModelBehaviour("assets/models/PBR_Sphere_Test/model/PBR_Sphere.gltf");
 	//mesh_   = ComponentHelper::CreateStaticModelBehaviour("assets/models/sponza/NewSponza_Main_glTF_003.gltf");
-	mesh_   = ComponentHelper::CreateStaticModelBehaviour("assets/models/foundation.gltf");
-	light_  = ComponentHelper::CreatePointLightMonoBehaviour();
+	//mesh_   = ComponentHelper::CreateStaticModelBehaviour("assets/models/foundation.gltf");
+	
+	//light_  = ComponentHelper::CreatePointLightMonoBehaviour();
+	light_  = ComponentHelper::CreateDirectionalLightMonoBehaviour();
 
 }
 

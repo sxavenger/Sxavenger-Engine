@@ -24,48 +24,45 @@ ConstantBuffer<InlineShadow> gShadow : register(b1);
 PSOutput main(PSInput input) {
 
 	PSOutput output = (PSOutput)0;
-	
+
 	//* Deferred Pass情報の取得
 	Surface surface;
 	surface.GetSurface(input.position.xy);
-	
-	//* Lightの情報を取得
-	float3 l       = -gTransform[input.instanceId].GetDirection(); //!< surfaceからlightへの方向ベクトル
-	float3 c_light = gParameter.color * gParameter.intensity;      //!< lightのcolor
 
-	//* cameraからの方向ベクトルを取得
-	float3 v = normalize(gCamera.GetPosition() - surface.position);
+	//* Lightの情報を取得
+	float3 c_light = gParameter.color * gParameter.intensity; //!< lightのcolor
+	float3 l       = -gTransform[input.instanceId].GetDirection(); //!< surfaceからlightへの方向ベクトル
 
 	//* shadow
 	RayDesc desc;
 	desc.Origin    = surface.position;
 	desc.Direction = l;
-	desc.TMin      = 0.001f;
-	desc.TMax      = 10000.0f;
+	desc.TMin      = kTMin;
+	desc.TMax      = kTMax;
 
 	c_light *= gShadow.TraceShadow(desc);
 	// todo: 不必要な場合は、gShadow.TraceShadow()を呼び出さないようにする
 
-	// 表面化albedo = a_surface
+	//* cameraからの方向ベクトルを取得
+	float3 v = normalize(gCamera.GetPosition() - surface.position);
+
+	//* 計算
 
 	// f0
-	// m = 0 -> f0 = 0.0, m = 1 -> f0 = a_surface = c_surface 
-	float3 f0 = lerp(surface.albedo, float3(0.0f, 0.0f, 0.0f), surface.metallic);
+	// 非金属(metalness = 0) -> の時は固定数
+	// 金属(metalness = 1) -> の時はalbedoをf0
 
-	// f(l, v) = a_surface / kPi
-	float3 diffuse = f0 / kPi;
+	static const float3 f0 = float3(0.04f, 0.04f, 0.04f); //!< 非金属の場合のf0
 
-	float3 spec = CalculateSpecularBRDF(surface.normal, v, l, surface.roughness, f0);
+	// fresnelを使った算出
+	float3 diffuseAlbedo = lerp(f0, surface.albedo, 1.0f - surface.metallic);
+	float3 diffuseBRDF   = diffuseAlbedo * saturate(dot(surface.normal, l));
+	
+	float3 specularBRDF = CalculateSpecularBRDF(surface.normal, v, l, surface.roughness, f0);
 
-	//* 出力
-
-	// ローカル照明での計算
-	// L_i(l) = l
-	// L_o(v) = f(l, v) * c_light * saturate(dot(n, l))
-	output.color.rgb = diffuse * c_light * saturate(dot(surface.normal, l)) + spec;
+	output.color.rgb = (diffuseBRDF + specularBRDF) * c_light;
 
 	output.color.a = 1.0f;
-
 	return output;
 	
 }
