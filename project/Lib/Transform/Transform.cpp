@@ -56,6 +56,10 @@ Matrix4x4 QuaternionTransform::ToMatrix() const {
 	return Matrix4x4::MakeAffine(scale, rotate, translate);
 }
 
+Vector3f QuaternionTransform::GetForward() const {
+	return Quaternion::RotateVector(kForward3<>, rotate);
+}
+
 json QuaternionTransform::OutputJson() const {
 	json data;
 	data["translate"] = GeometryJsonSerializer::ToJson(translate);

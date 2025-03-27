@@ -39,7 +39,7 @@ public:
 		Color3f color;
 		Units unit;
 		float intensity;
-		float distancae;
+		float radius;
 
 	};
 

@@ -8,6 +8,7 @@
 
 //* lib
 #include <Lib/Sxl/Flag.h>
+#include <Lib/Geometry/Color4.h>
 
 //* c++
 #include <memory>
@@ -75,5 +76,8 @@ protected:
 	//=========================================================================================
 
 	std::unique_ptr<DxObject::DimensionBuffer<InlineShadow>> shadow_;
+
+	static inline const Color4f kColor = Color4f::Convert(0xABCCC4FF);
+	// b9cdc6
 
 };

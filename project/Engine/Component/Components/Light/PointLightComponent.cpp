@@ -9,6 +9,7 @@ _DXOBJECT_USING
 
 //* engine
 #include <Engine/System/SxavengerSystem.h>
+#include <Engine/Content/SxavengerContent.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Parameter structure methods
@@ -16,9 +17,9 @@ _DXOBJECT_USING
 
 void PointLightComponent::Parameter::Init() {
 	color     = kWhite3<>;
-	unit      = Units::Lumen;
+	unit      = Units::Candela;
 	intensity = 1.0f;
-	distancae = 12.0f;
+	radius    = 1.0f;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -51,8 +52,12 @@ void PointLightComponent::ShowComponentInspector() {
 
 	std::string format = parameter.unit == Units::Lumen ? "%.3flm" : "%.3fcd";
 	ImGui::DragFloat("intensity", &parameter.intensity, 0.1f, 0.0f, 128.0f, format.c_str());
+	ImGui::DragFloat("radius",  &parameter.radius, 0.1f, 0.0f, 128.0f);
 
 	LightCommon::ShowCommonInspector();
+
+	//* push line
+	SxavengerContent::GetDebugPrimitive()->PushSphere(GetTransform()->GetPosition(), parameter.radius, kColor);
 }
 
 void PointLightComponent::Init() {

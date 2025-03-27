@@ -9,6 +9,7 @@ _DXOBJECT_USING
 
 //* engine
 #include <Engine/System/SxavengerSystem.h>
+#include <Engine/Content/SxavengerContent.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Parameter class methods
@@ -28,6 +29,10 @@ void DirectionalLightComponent::ShowComponentInspector() {
 	ImGui::ColorEdit3("color",      &parameter.color.r);
 	ImGui::SliderFloat("intensity", &parameter.intensity, 0.0f, 1.0f);
 	LightCommon::ShowCommonInspector();
+
+	//* push line
+	Vector3f dir = GetTransform()->GetTransform().GetForward();
+	SxavengerContent::PushLine(GetTransform()->GetPosition(), GetTransform()->GetPosition() + dir, kColor);
 }
 
 void DirectionalLightComponent::Init() {

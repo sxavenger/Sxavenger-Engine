@@ -164,7 +164,7 @@ void DebugPrimitive::PushBox(const Vector3f& min, const Vector3f& max, const Col
 }
 
 void DebugPrimitive::PushSphere(const Vector3f& center, float radius, const Color4f& color) {
-	static const uint32_t kSubdivision = 24;              //!< parameter
+	static const uint32_t kSubdivision = 1 << 5;          //!< parameter
 	static const float kRoundEvery = kTau / kSubdivision; //!< 1周 / 分割数
 
 	// xz軸の円
