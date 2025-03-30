@@ -59,7 +59,6 @@ void BetaSystemGameLoop::InitSystem() {
 	
 	//light_  = ComponentHelper::CreatePointLightMonoBehaviour();
 	light_  = ComponentHelper::CreateDirectionalLightMonoBehaviour();
-
 }
 
 void BetaSystemGameLoop::TermSystem() {

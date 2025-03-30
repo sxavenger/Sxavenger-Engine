@@ -240,6 +240,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="Engine\Module\Pipeline\CustomComputePipeline.cpp" />
     <ClCompile Include="Engine\Module\Pipeline\CustomGraphicsPipeline.cpp" />
     <ClCompile Include="Engine\Render\Canvas\FCanvasRenderer.cpp" />
+    <ClCompile Include="Engine\Render\Common\FBaseTexture.cpp" />
     <ClCompile Include="Engine\Render\Common\FDepthTexture.cpp" />
     <ClCompile Include="Engine\Render\Common\FTexture.cpp" />
     <ClCompile Include="Engine\Render\Core\FRenderCoreGeometry.cpp" />
@@ -376,6 +377,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Engine\Module\Pipeline\CustomComputePipeline.h" />
     <ClInclude Include="Engine\Module\Pipeline\CustomGraphicsPipeline.h" />
     <ClInclude Include="Engine\Render\Canvas\FCanvasRenderer.h" />
+    <ClInclude Include="Engine\Render\Common\FBaseTexture.h" />
     <ClInclude Include="Engine\Render\Common\FDepthTexture.h" />
     <ClInclude Include="Engine\Render\Common\FTexture.h" />
     <ClInclude Include="Engine\Render\Core\FRenderCoreGeometry.h" />

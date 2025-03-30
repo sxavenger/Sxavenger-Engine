@@ -54,13 +54,14 @@ PSOutput main(PSInput input) {
 
 	static const float3 f0 = float3(0.04f, 0.04f, 0.04f); //!< 非金属の場合のf0
 
-	// fresnelを使った算出
-	float3 diffuseAlbedo = lerp(f0, surface.albedo, 1.0f - surface.metallic);
-	float3 diffuseBRDF   = diffuseAlbedo * saturate(dot(surface.normal, l));
-	
+	// diffuseBRDF
+	float3 diffuseAlbedo = lerp(f0, surface.albedo, 1.0f - surface.metallic) / kPi;
+	float3 diffuseBRDF   = diffuseAlbedo;
+
+	// specularBRDF
 	float3 specularBRDF = CalculateSpecularBRDF(surface.normal, v, l, surface.roughness, f0);
 
-	output.color.rgb = (diffuseBRDF + specularBRDF) * c_light;
+	output.color.rgb = (diffuseBRDF + specularBRDF) * saturate(dot(surface.normal, l)) * c_light;
 
 	output.color.a = 1.0f;
 	return output;

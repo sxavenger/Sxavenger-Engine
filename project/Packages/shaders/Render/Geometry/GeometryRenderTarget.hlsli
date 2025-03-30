@@ -7,6 +7,12 @@
 #define _NOT_USED_1 1
 
 ////////////////////////////////////////////////////////////////////////////////////////////
+// common variables
+////////////////////////////////////////////////////////////////////////////////////////////
+
+static const float kExist = 1.0f;
+
+////////////////////////////////////////////////////////////////////////////////////////////
 // common methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -28,9 +34,9 @@ struct GeometryForwardOutput {
 	
 	//* method *//
 	
-	void SetColor(float4 c) {
-		color = c;
-		CheckDiscard(c);
+	void SetColor(float4 _color) {
+		color = _color;
+		CheckDiscard(_color);
 	}
 	
 };
@@ -48,7 +54,7 @@ struct GeometryDeferredOutput { //!< FSceneTextures::GBuffers
 	
 	void SetNormal(float3 n) {
 		float3 map = n * 0.5f + 0.5f; //!< [-1, 1] -> [0, 1]
-		normal = float4(map, _NOT_USED_1);
+		normal = float4(map, kExist);
 	}
 	
 	void SetMaterial(float roughness, float metallic, float specular) {

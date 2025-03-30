@@ -55,6 +55,13 @@ public:
 
 	const uint32_t GetIndex() const;
 
+	//* operator *//
+
+	Descriptor(Descriptor&&) = default;
+	Descriptor& operator=(Descriptor&&) = default;
+
+	Descriptor(const Descriptor&) = delete;
+	Descriptor& operator=(const Descriptor&) = delete;
 
 private:
 

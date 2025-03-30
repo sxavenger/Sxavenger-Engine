@@ -56,6 +56,6 @@ float3 CalculateSpecularBRDF(float3 n, float3 v, float3 l, float roughness, floa
 	float3 f = CalculateSpecularF(v, h, f0);
 	float d = CalculateSpecularD(n, h, roughness);
 	float g = CalculateSpecularG(n, v, l, roughness);
-	return f * g * d / 4.0f * saturate(dot(n, l)) * saturate(dot(n, v));
+	return (f * g * d) / max((4.0f * saturate(dot(n, l)) * saturate(dot(n, v))), 0.001f);
 }
 
