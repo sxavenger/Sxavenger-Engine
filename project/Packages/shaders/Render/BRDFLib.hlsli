@@ -13,8 +13,8 @@ static const float kPi = 3.14159265359f;
 // functions
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-float3 DiffuseBRDF(float3 albedo) {
-	return albedo / kPi;
+float3 DiffuseBRDF(float3 diffuse) {
+	return diffuse / kPi;
 }
 
 //! @brief FresnelReflectance
@@ -55,5 +55,5 @@ float DistributionFunction(float NdotH, float roughness) {
 //! @param NdotL: saturate(dot(n, l))
 //! @param NdotV: saturate(dot(n, v))
 float3 SpecularBRDF(float3 f, float g, float d, float NdotL, float NdotV) {
-	return (f * g * d) / max(4.0f * NdotL * NdotV, 0.001f);
+	return (f * g * d) / (4.0f * NdotL * NdotV);
 }

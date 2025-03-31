@@ -27,7 +27,10 @@ void DirectionalLightComponent::Parameter::Init() {
 void DirectionalLightComponent::ShowComponentInspector() {
 	auto& parameter = parameter_->At(0);
 	ImGui::ColorEdit3("color",      &parameter.color.r);
-	ImGui::SliderFloat("intensity", &parameter.intensity, 0.0f, 1.0f);
+
+	std::string format = "%.3flux";
+	ImGui::DragFloat("intensity", &parameter.intensity, 0.1f, 0.0f, 128.0f, format.c_str());
+
 	LightCommon::ShowCommonInspector();
 
 	//* push line

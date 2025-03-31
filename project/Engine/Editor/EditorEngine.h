@@ -156,7 +156,7 @@ inline T* EditorEngine::TryGetEditor() {
 
 template <BaseEditorDerived T>
 inline void EditorEngine::ExecuteEditorFunction(const std::function<void(T*)>& function) {
-	if (auto editor = TryGetEditor<T>()) {
+	if (auto editor = this->TryGetEditor<T>()) {
 		function(editor);
 	}
 }

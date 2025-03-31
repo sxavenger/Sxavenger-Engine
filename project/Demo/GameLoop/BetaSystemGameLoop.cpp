@@ -49,7 +49,7 @@ void BetaSystemGameLoop::Term() {
 void BetaSystemGameLoop::InitSystem() {
 
 	main_ = SxavengerSystem::CreateMainWindow(kMainWindowSize, L"sxavenger engine beta window").lock();
-	main_->SetIcon("packages/icon/SxavengerEngineSubIcon.ico", { 32, 32 });
+	main_->SetIcon("packages/icon/SxavengerEngineIcon.ico", { 32, 32 });
 
 	camera_ = ComponentHelper::CreateCameraMonoBehaviour();
 

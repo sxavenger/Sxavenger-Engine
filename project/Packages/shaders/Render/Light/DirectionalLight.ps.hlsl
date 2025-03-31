@@ -9,7 +9,7 @@
 
 struct Parameter {
 	float3 color;
-	float  intensity;
+	float  intensity; //!< lux
 };
 ConstantBuffer<Parameter> gParameter : register(b0);
 
@@ -30,7 +30,7 @@ PSOutput main(PSInput input) {
 	surface.GetSurface(input.position.xy);
 
 	//* Lightの情報を取得
-	float3 c_light = gParameter.color * gParameter.intensity; //!< lightのcolor
+	float3 c_light = gParameter.color * gParameter.intensity * kPi; //!< lightのcolor
 	float3 l       = -gTransform[input.instanceId].GetDirection(); //!< surfaceからlightへの方向ベクトル
 
 	//* shadow
@@ -52,6 +52,7 @@ PSOutput main(PSInput input) {
 	float NdotV = saturate(dot(surface.normal, v));
 	float NdotL = saturate(dot(surface.normal, l));
 	float NdotH = saturate(dot(surface.normal, h));
+	float VdotH = saturate(dot(v, h));
 
 	// f0
 	static const float3 f0 = float3(0.04f, 0.04f, 0.04f); //!< 非金属の場合のf0
@@ -59,18 +60,18 @@ PSOutput main(PSInput input) {
 	// diffuse Albedo
 	//!< 金属(metallic = 1.0f) -> 0.0f
 	//!< 非金属(metallic = 0.0f) -> albedo * (1.0f - f0)
-	float3 diffuseAlbedo = surface.albedo * (float3(1.0f, 1.0f, 1.0f) - f0) * (1.0f - surface.metallic);
+	float3 diffuseAlbedo = surface.albedo * (1.0f - f0) * (1.0f - surface.metallic);
 
 	// specular Albedo
 	//!< 金属(metallic = 1.0f) -> f0
 	//!< 非金属(metallic = 0.0f) -> albedo
 	float3 specularAlbedo = lerp(f0, surface.albedo, surface.metallic);
 
-	float3 f = FresnelReflectance(NdotH, specularAlbedo);
+	float3 f = FresnelReflectance(VdotH, specularAlbedo);
 	float d = DistributionFunction(NdotH, surface.roughness);
 	float g = GeometricAttenuation(NdotV, NdotL, surface.roughness);
 
-	float3 diffuseBRDF  = (1.0f - f) * DiffuseBRDF(diffuseAlbedo);
+	float3 diffuseBRDF  = DiffuseBRDF(diffuseAlbedo); //!< fresnel値は考慮しない方がsampleに近かった.
 	float3 specularBRDF = SpecularBRDF(f, g, d, NdotL, NdotV);
 
 	output.color.rgb = (diffuseBRDF + specularBRDF) * NdotL * c_light;

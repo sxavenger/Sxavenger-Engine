@@ -37,8 +37,7 @@ public:
 		//=========================================================================================
 
 		Color3f color;     //!< color
-		float   intensity; //!< intensity [0.0f ~ 1.0f]
-		// todo: 輝度単位をluxで設定
+		float   intensity; //!< intensity [lux]
 
 	};
 
