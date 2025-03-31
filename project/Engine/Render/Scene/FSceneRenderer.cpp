@@ -50,6 +50,10 @@ void FSceneRenderer::ApplyConfig(Config& config) {
 			});
 		}
 	}
+
+	if (config.scene == nullptr) { //!< sceneが設定されていない場合, main renderから取得
+		config.scene = FMainRender::GetInstance()->GetScene();
+	}
 }
 
 Sxl::Flag<FSceneRenderer::Status> FSceneRenderer::CheckStatus(const Config& config) const {
@@ -273,7 +277,7 @@ void FSceneRenderer::LightingEmpty(const DirectXThreadContext* context, const Co
 	DxObject::BindBufferDesc parameter = {};
 	// common parameter
 	parameter.SetAddress("gCamera",config.camera->GetGPUVirtualAddress());
-	parameter.SetAddress("gScene", FMainRender::GetInstance()->GetScene()->GetTopLevelAS().GetGPUVirtualAddress());
+	parameter.SetAddress("gScene", config.scene->GetTopLevelAS().GetGPUVirtualAddress());
 
 	// deferred paraemter
 	parameter.SetHandle("gDepth",    textures_->GetDepth()->GetRasterizerGPUHandleSRV());
@@ -305,7 +309,7 @@ void FSceneRenderer::LightingPassDirectionalLight(const DirectXThreadContext* co
 		DxObject::BindBufferDesc parameter = {};
 		// common parameter
 		parameter.SetAddress("gCamera",config.camera->GetGPUVirtualAddress());
-		parameter.SetAddress("gScene", FMainRender::GetInstance()->GetScene()->GetTopLevelAS().GetGPUVirtualAddress());
+		parameter.SetAddress("gScene", config.scene->GetTopLevelAS().GetGPUVirtualAddress());
 
 		// deferred paraemter
 		parameter.SetHandle("gDepth",    textures_->GetDepth()->GetRasterizerGPUHandleSRV());
@@ -343,7 +347,7 @@ void FSceneRenderer::LightingPassPointLight(const DirectXThreadContext* context,
 		DxObject::BindBufferDesc parameter = {};
 		// common parameter
 		parameter.SetAddress("gCamera",config.camera->GetGPUVirtualAddress());
-		parameter.SetAddress("gScene", FMainRender::GetInstance()->GetScene()->GetTopLevelAS().GetGPUVirtualAddress());
+		parameter.SetAddress("gScene", config.scene->GetTopLevelAS().GetGPUVirtualAddress());
 
 		// deferred paraemter
 		parameter.SetHandle("gDepth",    textures_->GetDepth()->GetRasterizerGPUHandleSRV());

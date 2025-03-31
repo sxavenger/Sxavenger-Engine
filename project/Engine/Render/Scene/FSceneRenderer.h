@@ -5,6 +5,7 @@
 //-----------------------------------------------------------------------------------------
 //* render
 #include "../FRenderTargetTextures.h"
+#include "FScene.h"
 
 //* engine
 #include <Engine/System/DirectX/DxObject/DxVectorDimensionBuffer.h>
@@ -47,6 +48,15 @@ public:
 	};
 
 	////////////////////////////////////////////////////////////////////////////////////////////
+	// GraphicsTechnique enum class
+	////////////////////////////////////////////////////////////////////////////////////////////
+	enum class GraphicsTechnique : uint8_t {
+		Deferred,
+		//RayTracing, //!< todo
+		//PathTracing,
+	};
+
+	////////////////////////////////////////////////////////////////////////////////////////////
 	// Config structure
 	////////////////////////////////////////////////////////////////////////////////////////////
 	struct Config {
@@ -56,10 +66,18 @@ public:
 		// public variables
 		//=========================================================================================
 
+		//* graphics setting *//
+
+		GraphicsTechnique technique = GraphicsTechnique::Deferred;
+
 		//* camera setting *//
 
 		const CameraComponent* camera = nullptr;
 		CameraComponent::Tag tag      = CameraComponent::Tag::GameCamera;
+
+		//* scene setting *//
+
+		FScene* scene = nullptr;
 
 	};
 
