@@ -47,22 +47,33 @@ PSOutput main(PSInput input) {
 	float3 v = normalize(gCamera.GetPosition() - surface.position);
 
 	//* 計算
+	float3 h = normalize(l + v);
+
+	float NdotV = saturate(dot(surface.normal, v));
+	float NdotL = saturate(dot(surface.normal, l));
+	float NdotH = saturate(dot(surface.normal, h));
 
 	// f0
-	// 非金属(metalness = 0) -> の時は固定数
-	// 金属(metalness = 1) -> の時はalbedoをf0
-
 	static const float3 f0 = float3(0.04f, 0.04f, 0.04f); //!< 非金属の場合のf0
 
-	// diffuse BRDF
+	// diffuse Albedo
+	//!< 金属(metallic = 1.0f) -> 0.0f
+	//!< 非金属(metallic = 0.0f) -> albedo * (1.0f - f0)
 	float3 diffuseAlbedo = surface.albedo * (float3(1.0f, 1.0f, 1.0f) - f0) * (1.0f - surface.metallic);
-	float3 diffuseBRDF   = diffuseAlbedo / kPi;
 
-	// specular BRDF
+	// specular Albedo
+	//!< 金属(metallic = 1.0f) -> f0
+	//!< 非金属(metallic = 0.0f) -> albedo
 	float3 specularAlbedo = lerp(f0, surface.albedo, surface.metallic);
-	float3 specularBRDF   = CalculateSpecularBRDF(surface.normal, v, l, surface.roughness, specularAlbedo);
 
-	output.color.rgb = (diffuseBRDF + specularBRDF) * saturate(dot(surface.normal, l)) * c_light;
+	float3 f = FresnelReflectance(NdotH, specularAlbedo);
+	float d = DistributionFunction(NdotH, surface.roughness);
+	float g = GeometricAttenuation(NdotV, NdotL, surface.roughness);
+
+	float3 diffuseBRDF  = (1.0f - f) * DiffuseBRDF(diffuseAlbedo);
+	float3 specularBRDF = SpecularBRDF(f, g, d, NdotL, NdotV);
+
+	output.color.rgb = (diffuseBRDF + specularBRDF) * NdotL * c_light;
 
 	output.color.a = 1.0f;
 	return output;
