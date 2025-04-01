@@ -45,7 +45,7 @@ void DirectionalLightComponent::Init() {
 
 void DirectionalLightComponent::CreateParameterBuffer() {
 	parameter_ = std::make_unique<DimensionBuffer<Parameter>>();
-	parameter_->Create(SxavengerSystem::GetDxDevice(), 1);
+	parameter_->Create(SxavengerSystem::GetDxDevice(), 1); 
 	parameter_->At(0).Init();
 }
 

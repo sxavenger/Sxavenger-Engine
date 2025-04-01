@@ -1,7 +1,10 @@
 #pragma once
 
-//* reference *//
-//!< UE4 PBR: https://de45xmedrsdbp.cloudfront.net/Resources/files/2013SiggraphPresentationsNotes-26915738.pdf
+/*
+# reference
+UE4 PBR: https://de45xmedrsdbp.cloudfront.net/Resources/files/2013SiggraphPresentationsNotes-26915738.pdf
+         https://www.unrealengine.com/en-US/blog/physically-based-shading-on-mobile //!< 2014 version.
+*/
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // const variables
@@ -29,7 +32,8 @@ float3 FresnelReflectance(float VdotH, float3 f0) {
 //! @param NdotV: saturate(dot(n, v))
 //! @param NdotL: saturate(dot(n, h))
 float GeometricAttenuation(float NdotV, float NdotL, float roughness) {
-	const float k = pow(roughness + 1.0f, 2.0f) / 8.0f;
+	const float a = roughness * roughness;
+	const float k = a / 2.0f;
 
 	float g1_v = NdotV / (NdotV * (1.0f - k) + k); //!< G1(v)
 	float g1_l = NdotL / (NdotL * (1.0f - k) + k); //!< G1(l)
