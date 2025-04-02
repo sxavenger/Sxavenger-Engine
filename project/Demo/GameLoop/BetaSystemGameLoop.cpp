@@ -53,12 +53,14 @@ void BetaSystemGameLoop::InitSystem() {
 
 	camera_ = ComponentHelper::CreateCameraMonoBehaviour();
 
-	mesh_   = ComponentHelper::CreateStaticModelBehaviour("assets/models/PBR_Sphere_Test/model/PBR_Sphere.gltf");
-	//mesh_   = ComponentHelper::CreateStaticModelBehaviour("assets/models/sponza/NewSponza_Main_glTF_003.gltf");
+	//mesh_   = ComponentHelper::CreateStaticNodeModelBehaviour("assets/models/PBR_Sphere_Test/model/PBR_Sphere.gltf");
+	mesh_   = ComponentHelper::CreateStaticNodeModelBehaviour("assets/models/sponza/NewSponza_Main_glTF_003.gltf");
 	//mesh_   = ComponentHelper::CreateStaticModelBehaviour("assets/models/foundation.gltf");
 	
-	//light_  = ComponentHelper::CreatePointLightMonoBehaviour();
-	light_  = ComponentHelper::CreateDirectionalLightMonoBehaviour();
+	light_  = ComponentHelper::CreatePointLightMonoBehaviour();
+	//light_  = ComponentHelper::CreateDirectionalLightMonoBehaviour();
+
+	//node_ = ComponentHelper::CreateStaticNodeModelBehaviour("assets/models/PBR_Sphere_Test/model/PBR_Sphere.gltf");
 }
 
 void BetaSystemGameLoop::TermSystem() {
@@ -66,13 +68,29 @@ void BetaSystemGameLoop::TermSystem() {
 
 void BetaSystemGameLoop::UpdateSystem() {
 
+	//-----------------------------------------------------------------------------------------
+	// Update
+	//-----------------------------------------------------------------------------------------
+
+	//-----------------------------------------------------------------------------------------
+	// SystemUpdate...?
+	//-----------------------------------------------------------------------------------------
+
 	ComponentHelper::UpdateTransform();
 	// todo: engine側のgameloopに移動.
 
-	ComponentHelper::UpdateSkinning();
+	sCollisionManager->CheckCollision();
 	// todo: engine側のgameloopに移動.
 
-	sCollisionManager->CheckCollision();
+	//-----------------------------------------------------------------------------------------
+	// LateUpdate
+	//-----------------------------------------------------------------------------------------
+
+	//-----------------------------------------------------------------------------------------
+	// final Update...?
+	//-----------------------------------------------------------------------------------------
+
+	ComponentHelper::UpdateSkinning();
 	// todo: engine側のgameloopに移動.
 
 }

@@ -96,7 +96,7 @@ std::unique_ptr<MonoBehaviour> Model::CreateStaticMeshBehaviour(const std::strin
 }
 
 void Model::CreateStaticMeshBehaviour(MonoBehaviour* root) {
-	// Componentの登録
+	// mesh componentの登録
 	std::for_each(std::execution::seq, meshes_.begin(), meshes_.end(), [this, root](AssimpMesh& mesh) {
 		auto child = std::make_unique<MonoBehaviour>();
 		child->SetName(mesh.name);
@@ -113,6 +113,66 @@ void Model::CreateStaticMeshBehaviour(MonoBehaviour* root) {
 		auto renderer = child->AddComponent<MeshRendererComponent>();
 		renderer->SetMesh(&mesh.input);
 		renderer->SetMaterial(&GetMaterial(mesh.materialIndex.value()));
+
+		root->AddChild(std::move(child));
+	});
+}
+
+std::unique_ptr<MonoBehaviour> Model::CreateStaticNodeMeshBehaviour(const std::string& name) {
+	auto root = std::make_unique<MonoBehaviour>();
+	root->SetName(name);
+
+	CreateStaticNodeMeshBehaviour(root.get());
+
+	return std::move(root);
+}
+
+void Model::CreateStaticNodeMeshBehaviour(MonoBehaviour* root) {
+
+	std::unordered_map<uint32_t, TransformComponent*> map;
+
+	// node componentの登録
+	static const std::function<void(MonoBehaviour*, const BornNode&)> nodesFunction = [&](MonoBehaviour* parent, const BornNode& node) {
+		auto child = std::make_unique<MonoBehaviour>();
+		child->SetName(node.name);
+
+		// transform component
+		auto transform = child->AddComponent<TransformComponent>();
+		transform->GetTransform() = node.transform;
+
+		for (const auto& meshIndex : node.meshIndices) {
+			map[meshIndex] = transform;
+		}
+
+		// 再帰的に登録
+		for (const auto& childNode : node.children) {
+			nodesFunction(child.get(), childNode);
+		}
+
+		parent->AddChild(std::move(child));	
+	};
+
+	nodesFunction(root, root_);
+
+	// mesh componentの登録
+	std::for_each(std::execution::seq, meshes_.begin(), meshes_.end(), [&](AssimpMesh& mesh) {
+		uint32_t meshIndex = static_cast<uint32_t>(&mesh - &meshes_.front());
+
+		auto child = std::make_unique<MonoBehaviour>();
+		child->SetName(mesh.name);
+
+		// renderer component
+		auto renderer = child->AddComponent<MeshRendererComponent>();
+		renderer->SetMesh(&mesh.input);
+		renderer->SetMaterial(&GetMaterial(mesh.materialIndex.value()));
+
+		if (map.contains(meshIndex)) {
+			renderer->SetTransform(map[meshIndex]);
+
+		} else {
+			// transform component
+			child->AddComponent<TransformComponent>();
+		}
 
 		root->AddChild(std::move(child));
 	});
@@ -367,6 +427,11 @@ BornNode Model::ReadNode(aiNode* node) {
 
 	// ノード名を格納
 	result.name = node->mName.C_Str();
+
+	// meshのindexの取得
+	for (uint32_t meshIndex = 0; meshIndex < node->mNumMeshes; ++meshIndex) {
+		result.meshIndices.emplace_back(node->mMeshes[meshIndex]);
+	}
 
 	// 子の数だけの要素の格納
 	result.children.resize(node->mNumChildren);

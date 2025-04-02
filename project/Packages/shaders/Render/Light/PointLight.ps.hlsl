@@ -47,7 +47,7 @@ PSOutput main(PSInput input) {
 
 	//radiance /= r * r; //!< テストで逆2乗則を適用
 
-	float dist = pow(max(1.0f - pow(r / gParameter.radius, 4.0f), 0.0f), 2.0f); //!< dist = func_win(r);
+	float dist = pow(saturate(1.0f - pow(r / gParameter.radius, 4.0f)), 2.0f) / (r * r + 1.0f); //!< dist = func_win(r);
 	radiance *= dist;
 
 	float3 c_light = gParameter.color * radiance;

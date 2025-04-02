@@ -20,4 +20,6 @@ struct BornNode {
 
 	std::string name;
 	std::vector<BornNode> children;
+
+	std::vector<uint32_t> meshIndices;
 };

@@ -42,6 +42,7 @@ private:
 	std::unique_ptr<MonoBehaviour> camera_;
 
 	std::unique_ptr<MonoBehaviour> mesh_;
+	std::unique_ptr<MonoBehaviour> node_;
 
 	std::unique_ptr<MonoBehaviour> light_;
 

@@ -120,6 +120,10 @@ public:
 
 	void CreateStaticMeshBehaviour(MonoBehaviour* root);
 
+	std::unique_ptr<MonoBehaviour> CreateStaticNodeMeshBehaviour(const std::string& name = "static node mesh");
+
+	void CreateStaticNodeMeshBehaviour(MonoBehaviour* root);
+
 	std::unique_ptr<MonoBehaviour> CreateSkinnedMeshBehaviour(const std::string& name = "skinned mesh");
 
 	void CreateSkinnedMeshBehaviour(MonoBehaviour* root);

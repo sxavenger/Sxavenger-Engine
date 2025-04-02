@@ -33,6 +33,8 @@ public:
 
 	void SetMaterial(Material* material) { material_ = material; }
 
+	void SetTransform(const TransformComponent* transform) { transform_ = transform; }
+
 	//* getter *//
 
 	const InputMesh* GetMesh() const { return mesh_; }
@@ -50,5 +52,7 @@ private:
 
 	InputMesh* mesh_    = nullptr;
 	Material* material_ = nullptr;
+
+	const TransformComponent* transform_ = nullptr;
 
 };

@@ -34,6 +34,8 @@ public:
 
 	static std::unique_ptr<MonoBehaviour> CreateStaticModelBehaviour(const std::filesystem::path& filepath);
 
+	static std::unique_ptr<MonoBehaviour> CreateStaticNodeModelBehaviour(const std::filesystem::path& filepath);
+
 	static std::unique_ptr<MonoBehaviour> CreateCameraMonoBehaviour();
 
 	static std::unique_ptr<MonoBehaviour> CreateDirectionalLightMonoBehaviour();

@@ -20,7 +20,7 @@ float3 DiffuseBRDF(float3 diffuse) {
 	return diffuse / kPi;
 }
 
-//! @brief FresnelReflectance
+//! @brief FresnelReflectance(Spherical Gaussian)
 //! @param VdotH: saturate(dot(v, l))
 //! @param f0: f0
 float3 FresnelReflectance(float VdotH, float3 f0) {
@@ -28,7 +28,7 @@ float3 FresnelReflectance(float VdotH, float3 f0) {
 	return f0 + (1.0f - f0) * exp2(exponent);
 }
 
-//! @brief CalculateSpecularF
+//! @brief CalculateSpecularF(Schlick)
 //! @param NdotV: saturate(dot(n, v))
 //! @param NdotL: saturate(dot(n, h))
 float GeometricAttenuation(float NdotV, float NdotL, float roughness) {
@@ -41,7 +41,7 @@ float GeometricAttenuation(float NdotV, float NdotL, float roughness) {
 	return g1_v * g1_l;
 }
 
-//! @brief DistributionFunction
+//! @brief DistributionFunction(GGX/Trowbridge-Reitz)
 //! @param NdotH: saturate(dot(n, h))
 //! @param roughness: roughness
 float DistributionFunction(float NdotH, float roughness) {

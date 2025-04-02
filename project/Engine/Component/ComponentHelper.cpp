@@ -53,6 +53,11 @@ std::unique_ptr<MonoBehaviour> ComponentHelper::CreateStaticModelBehaviour(const
 	return observer.WaitGet()->CreateStaticMeshBehaviour(filepath.stem().generic_string());
 }
 
+std::unique_ptr<MonoBehaviour> ComponentHelper::CreateStaticNodeModelBehaviour(const std::filesystem::path& filepath) {
+	AssetObserver<AssetModel> observer = SxavengerAsset::TryImport<AssetModel>(filepath);
+	return observer.WaitGet()->CreateStaticNodeMeshBehaviour(filepath.stem().generic_string());
+}
+
 std::unique_ptr<MonoBehaviour> ComponentHelper::CreateCameraMonoBehaviour() {
 	std::unique_ptr<MonoBehaviour> root = std::make_unique<MonoBehaviour>();
 	root->SetName("camera");

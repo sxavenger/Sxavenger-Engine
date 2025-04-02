@@ -24,6 +24,10 @@ void MeshRendererComponent::ShowComponentInspector() {
 }
 
 const TransformComponent* MeshRendererComponent::GetTransform() const {
+	if (transform_ != nullptr) {
+		return transform_;
+	}
+
 	return BaseComponent::GetBehaviour()->RequireComponent<TransformComponent>();
 	//!< TransformComponentが必要
 }
