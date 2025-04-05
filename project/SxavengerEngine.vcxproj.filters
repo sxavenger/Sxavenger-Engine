@@ -139,6 +139,7 @@
     <ClCompile Include="Engine\Content\DebugPrimitive\DebugPrimitive.cpp" />
     <ClCompile Include="Engine\Render\Common\FBaseTexture.cpp" />
     <ClCompile Include="Engine\Content\ImageBasedLighting\IBLParameter.cpp" />
+    <ClCompile Include="Engine\Component\Components\Light\SkyLightComponent.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\System\Window\Window.h" />
@@ -293,6 +294,7 @@
     <ClInclude Include="Engine\Content\DebugPrimitive\DebugPrimitive.h" />
     <ClInclude Include="Engine\Render\Common\FBaseTexture.h" />
     <ClInclude Include="Engine\Content\ImageBasedLighting\IBLParameter.h" />
+    <ClInclude Include="Engine\Component\Components\Light\SkyLightComponent.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />
