@@ -48,6 +48,13 @@ void ComponentHelper::UpdateSkinning() {
 	});
 }
 
+std::unique_ptr<MonoBehaviour> ComponentHelper::CreateTransformBehaviour() {
+	std::unique_ptr<MonoBehaviour> root = std::make_unique<MonoBehaviour>();
+	root->SetName("transform");
+	root->AddComponent<TransformComponent>();
+	return root;
+}
+
 std::unique_ptr<MonoBehaviour> ComponentHelper::CreateStaticModelBehaviour(const std::filesystem::path& filepath) {
 	AssetObserver<AssetModel> observer = SxavengerAsset::TryImport<AssetModel>(filepath);
 	return observer.WaitGet()->CreateStaticMeshBehaviour(filepath.stem().generic_string());

@@ -11,6 +11,7 @@
 //* engine
 #include <Engine/System/DirectX/DxrObject/DxrAccelerationStructure.h>
 #include <Engine/System/DirectX/DirectXContext.h>
+#include <Engine/Content/ImageBasedLighting/IBLParameter.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // FScene class

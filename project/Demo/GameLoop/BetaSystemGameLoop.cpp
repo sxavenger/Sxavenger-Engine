@@ -53,14 +53,17 @@ void BetaSystemGameLoop::InitSystem() {
 
 	camera_ = ComponentHelper::CreateCameraMonoBehaviour();
 
-	//mesh_   = ComponentHelper::CreateStaticNodeModelBehaviour("assets/models/PBR_Sphere_Test/model/PBR_Sphere.gltf");
-	mesh_   = ComponentHelper::CreateStaticNodeModelBehaviour("assets/models/sponza/NewSponza_Main_glTF_003.gltf");
+	mesh_   = ComponentHelper::CreateStaticNodeModelBehaviour("assets/models/PBR_Sphere_Test/model/PBR_Sphere.gltf");
+	//mesh_   = ComponentHelper::CreateStaticNodeModelBehaviour("assets/models/sponza/NewSponza_Main_glTF_003.gltf");
 	//mesh_   = ComponentHelper::CreateStaticModelBehaviour("assets/models/foundation.gltf");
 	
-	light_  = ComponentHelper::CreatePointLightMonoBehaviour();
-	//light_  = ComponentHelper::CreateDirectionalLightMonoBehaviour();
+	//light_  = ComponentHelper::CreatePointLightMonoBehaviour();
+	light_  = ComponentHelper::CreateDirectionalLightMonoBehaviour();
 
 	//node_ = ComponentHelper::CreateStaticNodeModelBehaviour("assets/models/PBR_Sphere_Test/model/PBR_Sphere.gltf");
+
+	
+	AssetObserver<AssetTexture> texture = SxavengerAsset::TryImport<AssetTexture>("assets/textures/autumn_field_puresky_4k.hdr");
 }
 
 void BetaSystemGameLoop::TermSystem() {

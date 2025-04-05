@@ -85,7 +85,7 @@ AssetCollection::FileType AssetCollection::GetFileType(const std::filesystem::pa
 
 	const auto extension = filepath.extension();
 
-	if (extension == ".png" || extension == ".jpg" || extension == ".dds") {
+	if (extension == ".png" || extension == ".jpg" || extension == ".dds" || extension == ".hdr") {
 		return FileType::Texture;
 
 	} else if (extension == ".obj" || extension == ".gltf" || extension == ".fbx") {

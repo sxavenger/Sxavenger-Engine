@@ -76,6 +76,13 @@ DirectX::ScratchImage Texture::LoadTexture(const std::filesystem::path& filepath
 			image
 		);
 
+	} else if (filepath.extension() == ".hdr") { //!< filenameが".hdr"で終わっている場合
+		hr = DirectX::LoadFromHDRFile(
+			filepath.generic_wstring().c_str(),
+			nullptr,
+			image
+		);
+
 	} else {
 		hr = DirectX::LoadFromWICFile(
 			filepath.generic_wstring().c_str(),
