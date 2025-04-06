@@ -16,6 +16,7 @@
 #include <Engine/Component/Components/Camera/CameraComponent.h>
 #include <Engine/Component/Components/Light/DirectionalLightComponent.h>
 #include <Engine/Component/Components/Light/PointLightComponent.h>
+#include <Engine/Component/Components/Light/SkyLightComponent.h>
 
 //* lib
 #include <Lib/Sxl/Flag.h>
@@ -130,6 +131,7 @@ private:
 	void LightingEmpty(const DirectXThreadContext* context, const Config& config);
 	void LightingPassDirectionalLight(const DirectXThreadContext* context, const Config& config);
 	void LightingPassPointLight(const DirectXThreadContext* context, const Config& config);
+	void LightingPassSkyLight(const DirectXThreadContext* context, const Config& config);
 
 	void RenderTransparentBasePass(const DirectXThreadContext* context, const Config& config);
 	void RenderTransparentBaseStaticMesh(const DirectXThreadContext* context, const Config& config);

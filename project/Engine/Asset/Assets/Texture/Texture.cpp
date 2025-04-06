@@ -8,6 +8,17 @@ _DXOBJECT_USING
 #include <Engine/System/SxavengerSystem.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
+// Metadata structure methods
+////////////////////////////////////////////////////////////////////////////////////////////
+
+void Texture::Metadata::Assign(const DirectX::TexMetadata& metadata) {
+	size      = { static_cast<uint32_t>(metadata.width), static_cast<uint32_t>(metadata.height) };
+	miplevels = static_cast<uint32_t>(metadata.mipLevels);
+	format    = metadata.format;
+	isCubemap = metadata.IsCubemap();
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////
 // Texture class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -52,9 +63,8 @@ void Texture::Load(const DirectXThreadContext* context, const std::filesystem::p
 		);
 	}
 
-	// parameterの保存
-	size_   = { static_cast<uint32_t>(metadata.width), static_cast<uint32_t>(metadata.height) };
-	format_ = metadata.format;
+	// metadataの保存
+	metadata_.Assign(metadata);
 
 }
 

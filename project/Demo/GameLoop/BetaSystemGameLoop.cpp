@@ -17,6 +17,8 @@
 #include <Engine/System/Runtime/Performance/DeltaTimePoint.h>
 #include <Engine/Render/FRenderCore.h>
 
+#include "Engine/Component/Components/Light/SkyLightComponent.h"
+
 //* c++
 #include <execution>
 
@@ -58,12 +60,20 @@ void BetaSystemGameLoop::InitSystem() {
 	//mesh_   = ComponentHelper::CreateStaticModelBehaviour("assets/models/foundation.gltf");
 	
 	//light_  = ComponentHelper::CreatePointLightMonoBehaviour();
-	light_  = ComponentHelper::CreateDirectionalLightMonoBehaviour();
+	//light_  = ComponentHelper::CreateDirectionalLightMonoBehaviour();
 
 	//node_ = ComponentHelper::CreateStaticNodeModelBehaviour("assets/models/PBR_Sphere_Test/model/PBR_Sphere.gltf");
 
 	
-	AssetObserver<AssetTexture> texture = SxavengerAsset::TryImport<AssetTexture>("assets/textures/autumn_field_puresky_4k.hdr");
+	AssetObserver<AssetTexture> diffuse  = SxavengerAsset::TryImport<AssetTexture>("assets/textures/diffuseHDR.dds");
+	AssetObserver<AssetTexture> specular = SxavengerAsset::TryImport<AssetTexture>("assets/textures/specularHDR.dds");
+
+	skylight_ = ComponentHelper::CreateMonoBehaviour();
+	skylight_->SetName("skylight");
+	skylight_->AddComponent<SkyLightComponent>();
+	skylight_->GetComponent<SkyLightComponent>()->GetDiffuseParameter().SetTexture(diffuse);
+	skylight_->GetComponent<SkyLightComponent>()->GetSpecularParameter().SetTexture(specular);
+
 }
 
 void BetaSystemGameLoop::TermSystem() {

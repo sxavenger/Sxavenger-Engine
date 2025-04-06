@@ -21,6 +21,31 @@
 class Texture {
 public:
 
+	////////////////////////////////////////////////////////////////////////////////////////////
+	// Metadata structure
+	////////////////////////////////////////////////////////////////////////////////////////////
+	struct Metadata {
+	public:
+
+		//=========================================================================================
+		// public methods
+		//=========================================================================================
+
+		void Assign(const DirectX::TexMetadata& metadata);
+
+		//=========================================================================================
+		// public variables
+		//=========================================================================================
+
+		Vector2ui size;
+		uint32_t miplevels;
+		DXGI_FORMAT format;
+		bool isCubemap;
+
+	};
+
+public:
+
 	//=========================================================================================
 	// public methods
 	//=========================================================================================
@@ -38,9 +63,11 @@ public:
 
 	const DxObject::Descriptor& GetDescriptorSRV() const { return descriptorSRV_; }
 
-	const Vector2ui& GetSize() const { return size_; }
+	const Metadata& GetMetadata() const { return metadata_; }
 
-	const DXGI_FORMAT GetFormat() const { return format_; }
+	const Vector2ui& GetSize() const { return metadata_.size; }
+
+	const DXGI_FORMAT GetFormat() const { return metadata_.format; }
 
 private:
 
@@ -57,8 +84,7 @@ private:
 
 	//* parameter *//
 
-	Vector2ui   size_;
-	DXGI_FORMAT format_;
+	Metadata metadata_;
 
 	//=========================================================================================
 	// private methods

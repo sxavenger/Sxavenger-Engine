@@ -48,6 +48,10 @@ void ComponentHelper::UpdateSkinning() {
 	});
 }
 
+std::unique_ptr<MonoBehaviour> ComponentHelper::CreateMonoBehaviour() {
+	return std::make_unique<MonoBehaviour>();
+}
+
 std::unique_ptr<MonoBehaviour> ComponentHelper::CreateTransformBehaviour() {
 	std::unique_ptr<MonoBehaviour> root = std::make_unique<MonoBehaviour>();
 	root->SetName("transform");

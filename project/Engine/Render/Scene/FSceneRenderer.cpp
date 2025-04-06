@@ -259,7 +259,9 @@ void FSceneRenderer::LightingPass(const DirectXThreadContext* context, const Con
 
 	//!< PointLight
 	LightingPassPointLight(context, config);
-	
+
+	//!< SkyLight
+	LightingPassSkyLight(context, config);
 
 	textures_->EndLightingPass(context);
 
@@ -276,8 +278,8 @@ void FSceneRenderer::LightingEmpty(const DirectXThreadContext* context, const Co
 
 	DxObject::BindBufferDesc parameter = {};
 	// common parameter
-	parameter.SetAddress("gCamera",config.camera->GetGPUVirtualAddress());
-	parameter.SetAddress("gScene", config.scene->GetTopLevelAS().GetGPUVirtualAddress());
+	parameter.SetAddress("gCamera", config.camera->GetGPUVirtualAddress());
+	parameter.SetAddress("gScene",  config.scene->GetTopLevelAS().GetGPUVirtualAddress());
 
 	// deferred paraemter
 	parameter.SetHandle("gDepth",    textures_->GetDepth()->GetRasterizerGPUHandleSRV());
@@ -308,8 +310,8 @@ void FSceneRenderer::LightingPassDirectionalLight(const DirectXThreadContext* co
 
 		DxObject::BindBufferDesc parameter = {};
 		// common parameter
-		parameter.SetAddress("gCamera",config.camera->GetGPUVirtualAddress());
-		parameter.SetAddress("gScene", config.scene->GetTopLevelAS().GetGPUVirtualAddress());
+		parameter.SetAddress("gCamera", config.camera->GetGPUVirtualAddress());
+		parameter.SetAddress("gScene",  config.scene->GetTopLevelAS().GetGPUVirtualAddress());
 
 		// deferred paraemter
 		parameter.SetHandle("gDepth",    textures_->GetDepth()->GetRasterizerGPUHandleSRV());
@@ -346,8 +348,8 @@ void FSceneRenderer::LightingPassPointLight(const DirectXThreadContext* context,
 
 		DxObject::BindBufferDesc parameter = {};
 		// common parameter
-		parameter.SetAddress("gCamera",config.camera->GetGPUVirtualAddress());
-		parameter.SetAddress("gScene", config.scene->GetTopLevelAS().GetGPUVirtualAddress());
+		parameter.SetAddress("gCamera", config.camera->GetGPUVirtualAddress());
+		parameter.SetAddress("gScene",  config.scene->GetTopLevelAS().GetGPUVirtualAddress());
 
 		// deferred paraemter
 		parameter.SetHandle("gDepth",    textures_->GetDepth()->GetRasterizerGPUHandleSRV());
@@ -356,7 +358,7 @@ void FSceneRenderer::LightingPassPointLight(const DirectXThreadContext* context,
 		parameter.SetHandle("gPosition", textures_->GetGBuffer(FRenderTargetTextures::GBufferLayout::Position)->GetGPUHandleSRV());
 		parameter.SetHandle("gMaterial", textures_->GetGBuffer(FRenderTargetTextures::GBufferLayout::Material_AO)->GetGPUHandleSRV());
 
-		// direcitonal light parameter
+		// point light parameter
 		parameter.SetAddress("gTransform", component->GetTransform()->GetGPUVirtualAddress());
 		parameter.SetAddress("gParameter", component->GetParameterBufferAddress());
 		parameter.SetAddress("gShadow",    component->GetShadowBufferAddress());
@@ -368,6 +370,46 @@ void FSceneRenderer::LightingPassPointLight(const DirectXThreadContext* context,
 		FRenderCore::GetInstance()->GetLight()->DrawCall(context);
 	});
 
+}
+
+void FSceneRenderer::LightingPassSkyLight(const DirectXThreadContext* context, const Config& config) {
+
+	FRenderCore::GetInstance()->GetLight()->SetPipeline(
+		FRenderCoreLight::LightType::SkyLight, context, textures_->GetSize()
+	);
+
+	FRenderCore::GetInstance()->GetLight()->BindIABuffer(context);
+
+	sComponentStorage->ForEach<SkyLightComponent>([&](SkyLightComponent* component) {
+		if (!component->IsActive()) {
+			return;
+		}
+
+		DxObject::BindBufferDesc parameter = {};
+		// common parameter
+		parameter.SetAddress("gCamera", config.camera->GetGPUVirtualAddress());
+		parameter.SetAddress("gScene",  config.scene->GetTopLevelAS().GetGPUVirtualAddress());
+
+		// deferred paraemter
+		parameter.SetHandle("gDepth",    textures_->GetDepth()->GetRasterizerGPUHandleSRV());
+		parameter.SetHandle("gAlbedo",   textures_->GetGBuffer(FRenderTargetTextures::GBufferLayout::Albedo)->GetGPUHandleSRV());
+		parameter.SetHandle("gNormal",   textures_->GetGBuffer(FRenderTargetTextures::GBufferLayout::Normal)->GetGPUHandleSRV());
+		parameter.SetHandle("gPosition", textures_->GetGBuffer(FRenderTargetTextures::GBufferLayout::Position)->GetGPUHandleSRV());
+		parameter.SetHandle("gMaterial", textures_->GetGBuffer(FRenderTargetTextures::GBufferLayout::Material_AO)->GetGPUHandleSRV());
+
+		// sky light parameter
+		parameter.SetAddress("gDiffuseParameter",  component->GetDiffuseParameterBufferAddress());
+		parameter.SetAddress("gSpecularParameter", component->GetSpecularParameterBufferAddress());
+		parameter.SetHandle("gBRDFLut",            FRenderCore::GetInstance()->GetBRDFLut());
+
+		//parameter.SetAddress("gShadow",    component->GetShadowBufferAddress());
+
+		FRenderCore::GetInstance()->GetLight()->BindGraphicsBuffer(
+			FRenderCoreLight::LightType::SkyLight, context, parameter
+		);
+
+		FRenderCore::GetInstance()->GetLight()->DrawCall(context);
+	});
 }
 
 void FSceneRenderer::RenderTransparentBasePass(const DirectXThreadContext* context, const Config& config) {

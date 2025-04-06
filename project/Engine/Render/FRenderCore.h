@@ -39,6 +39,8 @@ public:
 
 	FRenderCoreProcess* GetProcess() { return process_.get(); }
 
+	const D3D12_GPU_DESCRIPTOR_HANDLE& GetBRDFLut() const;
+
 	//* singleton *//
 
 	static FRenderCore* GetInstance();
@@ -54,5 +56,9 @@ private:
 	std::unique_ptr<FRenderCoreRaytracing> raytracing_;
 	std::unique_ptr<FRenderCoreLayer>      layer_;
 	std::unique_ptr<FRenderCoreProcess>    process_;
+
+	//* textures *//
+
+	AssetObserver<AssetTexture> brdfLut_;
 
 };

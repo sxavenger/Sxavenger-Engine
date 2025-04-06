@@ -16,8 +16,6 @@
 #include <Engine/Render/Scene/FSceneRenderer.h>
 #include <Engine/Asset/Observer/AssetObserver.h>
 
-#include "Engine/Content/ImageBasedLighting/IBLParameter.h"
-
 ////////////////////////////////////////////////////////////////////////////////////////////
 // BetaSystemGameLoop class
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -47,6 +45,8 @@ private:
 	std::unique_ptr<MonoBehaviour> node_;
 
 	std::unique_ptr<MonoBehaviour> light_;
+
+	std::unique_ptr<MonoBehaviour> skylight_;
 
 	//=========================================================================================
 	// private methods

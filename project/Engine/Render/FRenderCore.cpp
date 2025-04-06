@@ -7,6 +7,7 @@ _DXOBJECT_USING
 //* engine
 #include <Engine/System/Config/SxavengerConfig.h>
 #include <Engine/System/SxavengerSystem.h>
+#include <Engine/Asset/SxavengerAsset.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // FRenderCore class methods
@@ -27,6 +28,8 @@ void FRenderCore::Init() {
 
 	process_ = std::make_unique<FRenderCoreProcess>();
 	process_->Init();
+
+	brdfLut_ = SxavengerAsset::TryImport<AssetTexture>(kPackagesDirectory / "textures/rendering/brdf_lut.png");
 }
 
 void FRenderCore::Term() {
@@ -35,6 +38,10 @@ void FRenderCore::Term() {
 	raytracing_.reset();
 	layer_.reset();
 	process_.reset();
+}
+
+const D3D12_GPU_DESCRIPTOR_HANDLE& FRenderCore::GetBRDFLut() const {
+	return brdfLut_.WaitGet()->GetGPUHandleSRV();
 }
 
 FRenderCore* FRenderCore::GetInstance() {

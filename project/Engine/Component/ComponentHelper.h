@@ -32,6 +32,8 @@ public:
 
 	//* create helper *//
 
+	static std::unique_ptr<MonoBehaviour> CreateMonoBehaviour();
+
 	static std::unique_ptr<MonoBehaviour> CreateTransformBehaviour();
 
 	static std::unique_ptr<MonoBehaviour> CreateStaticModelBehaviour(const std::filesystem::path& filepath);
