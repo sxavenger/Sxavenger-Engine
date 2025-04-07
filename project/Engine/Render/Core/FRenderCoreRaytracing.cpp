@@ -5,73 +5,68 @@ _DXROBJECT_USING
 // include
 //-----------------------------------------------------------------------------------------
 //* engine
+#include <Engine/System/Config/SxavengerConfig.h>
 #include <Engine/System/SxavengerSystem.h>
 
-//=========================================================================================
-// static variables
-//=========================================================================================
-
-const std::filesystem::path FRenderCoreRaytracing::kDirectory_ = "packages/shaders/raytracing";
-
 ////////////////////////////////////////////////////////////////////////////////////////////
-// FSceneRenderer class
+// FRenderCoreRaytracing class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 void FRenderCoreRaytracing::Init() {
-	InitRaygenerationExportGroup();
-	InitMissExportGroup();
-	InitHitgroupExportGroup();
+	CreateRaygeneration();
+	CreateMiss();
+	CreateHitgroup();
 }
 
-void FRenderCoreRaytracing::InitRaygenerationExportGroup() {
+void FRenderCoreRaytracing::CreateRaygeneration() {
 
-	{
-		auto& [blob, expt] = raygenerationExportGroups_[static_cast<uint32_t>(RaygenerationExportType::Default)];
-		blob.Create(kDirectory_ / "reflection/reflectionRaygeneration.hlsl");
+	{ //!< Default
+
+		auto& [blob, expt] = raygenerationExportGroups_[GetIndex(RaygenerationExportType::Default)];
+		blob.Create(kPackagesShaderDirectory / "render/raytracing" / "Default.raygeneration.hlsl");
 
 		expt.ExportRaygeneration(L"mainRaygen");
 		expt.SetBlob(&blob);
 
-		LocalRootSignatureDesc desc = {};
-		desc.SetHandleSRV(0, 0); //!< gDepth
-		desc.SetHandleSRV(1, 1); //!< gNormal
-		desc.SetHandleSRV(2, 2); //!< gPosition
-		desc.SetVirtualCBV(3, 0); //!< gCamera
-
-		expt.CreateRootSignature(SxavengerSystem::GetDxDevice(), desc);
 	}
 }
 
-void FRenderCoreRaytracing::InitMissExportGroup() {
+void FRenderCoreRaytracing::CreateMiss() {
 
-	{
-		auto& [blob, expt] = missExportGroups_[static_cast<uint32_t>(MissExportType::Default)];
-		blob.Create(kDirectory_ / "reflection/reflectionMiss.hlsl");
+	{ //!< Default
+		auto& [blob, expt] = missExportGroups_[GetIndex(MissExportType::Default)];
+		blob.Create(kPackagesShaderDirectory / "render/raytracing" / "Default.miss.hlsl");
 
 		expt.ExportMiss(L"mainMiss");
 		expt.SetBlob(&blob);
 	}
+
 }
 
-void FRenderCoreRaytracing::InitHitgroupExportGroup() {
+void FRenderCoreRaytracing::CreateHitgroup() {
 
-	{
-		auto& [blob, expt] = hitgroupExportGroups_[static_cast<uint32_t>(HitgroupExportType::Geometry)];
-		blob.Create(kDirectory_ / "reflection/reflectionGeometry.hlsl");
+	{ //!< Geometry
+		auto& [blob, expt] = hitgroupExportGroups_[GetIndex(HitgroupExportType::Geometry)];
+		blob.Create(kPackagesShaderDirectory / "render/raytracing/hitgroup" / "Geometry.hitgroup.hlsl");
 
-		ExportGroup::Hitgroup entry = {};
-		entry.closesthit = L"mainGeometryClosesthit";
+		//* hitgroup
+		ExportGroup::Hitgroup hitgroup = {};
+		hitgroup.type       = D3D12_HIT_GROUP_TYPE_TRIANGLES;
+		hitgroup.closesthit = L"mainClosesthit";
+		hitgroup.anyhit     = L"mainAnyhit";
 
-		expt.ExportHitgroup(L"Geometry", entry);
+		expt.ExportHitgroup(L"Geometry", hitgroup);
 		expt.SetBlob(&blob);
 
+		//* root signature
 		LocalRootSignatureDesc desc = {};
-		desc.SetVirtualSRV(0, 0); //!< gVertices
-		desc.SetVirtualSRV(1, 1); //!< gIndices
-		desc.SetHandleSRV(2, 2); //!< gAlbedo
 		desc.SetSamplerLinear(DxObject::SamplerMode::MODE_WRAP, DxObject::ShaderVisibility::VISIBILITY_ALL, 0);
+		desc.SetVirtualSRV(0, 10); //!< gVertices
+		desc.SetVirtualSRV(1, 11); //!< gIndices
+		desc.SetVirtualCBV(2, 0);  //!< gMaterial
 
 		expt.CreateRootSignature(SxavengerSystem::GetDxDevice(), desc);
+
 	}
 
 }

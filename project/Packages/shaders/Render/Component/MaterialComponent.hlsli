@@ -54,12 +54,12 @@ namespace Material {
 				
 				case 1:{
 						Texture2D<float4> texture = ResourceDescriptorHeap[index];
-						return texture.Sample(parameter.samplers, parameter.texcoord).rgb;
+						return texture.SampleLevel(parameter.samplers, parameter.texcoord, 0).rgb;
 					}
 				
 				case 2:{
 						Texture2D<float4> texture = ResourceDescriptorHeap[index];
-						return texture.Sample(parameter.samplers, parameter.texcoord).rgb * color;
+						return texture.SampleLevel(parameter.samplers, parameter.texcoord, 0).rgb * color;
 					}
 			}
 
@@ -92,7 +92,7 @@ namespace Material {
 				
 			} else if (type == 1) {
 				Texture2D<float4> texture = ResourceDescriptorHeap[index];
-				return texture.Sample(parameter.samplers, parameter.texcoord).a;
+				return texture.SampleLevel(parameter.samplers, parameter.texcoord, 0).a;
 			}
 
 			return 0.0f; //!< exception
@@ -124,7 +124,7 @@ namespace Material {
 				
 			} else if (type == 1) {
 				Texture2D<float4> texture = ResourceDescriptorHeap[index];
-				float3 map = texture.Sample(parameter.samplers, parameter.texcoord).xyz;
+				float3 map = texture.SampleLevel(parameter.samplers, parameter.texcoord, 0).xyz;
 				return normalize(mul(map * 2.0f - 1.0f, tbn)); //!< fix...? test plz.
 			}
 
@@ -151,7 +151,7 @@ namespace Material {
 				
 			} else if (type == 1) {
 				Texture2D<float4> texture = ResourceDescriptorHeap[index];
-				return texture.Sample(parameter.samplers, parameter.texcoord).r;
+				return texture.SampleLevel(parameter.samplers, parameter.texcoord, 0).r;
 			}
 
 			return 0.0f; //!< exception

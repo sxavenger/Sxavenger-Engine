@@ -26,7 +26,7 @@ void GlobalRootSignatureDesc::SetHandleUAV(uint32_t index, uint32_t shaderRegist
 }
 
 ComPtr<ID3D12RootSignature> GlobalRootSignatureDesc::CreateGlobalRootSignature(ID3D12Device* device) const {
-	return BaseRootSignatureDesc::CreateRootSignature(device, D3D12_ROOT_SIGNATURE_FLAG_NONE);
+	return BaseRootSignatureDesc::CreateRootSignature(device, D3D12_ROOT_SIGNATURE_FLAG_CBV_SRV_UAV_HEAP_DIRECTLY_INDEXED);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////

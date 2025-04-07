@@ -101,8 +101,7 @@ ComPtr<ID3D12RootSignature> BaseRootSignatureDesc::CreateRootSignature(ID3D12Dev
 
 	D3D12_ROOT_SIGNATURE_DESC1 desc = {};
 	desc.Flags = flags;
-	desc.Flags |= D3D12_ROOT_SIGNATURE_FLAG_CBV_SRV_UAV_HEAP_DIRECTLY_INDEXED; //!< 
-
+	
 	if (!params.empty()) {
 		desc.pParameters   = params.data();
 		desc.NumParameters = static_cast<UINT>(params.size());
@@ -189,7 +188,7 @@ void GraphicsRootSignatureDesc::SetHandleUAV(uint32_t index, ShaderVisibility st
 }
 
 ComPtr<ID3D12RootSignature> GraphicsRootSignatureDesc::CreateGraphicsRootSignature(ID3D12Device* device) const {
-	return BaseRootSignatureDesc::CreateRootSignature(device, D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
+	return BaseRootSignatureDesc::CreateRootSignature(device, D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT | D3D12_ROOT_SIGNATURE_FLAG_CBV_SRV_UAV_HEAP_DIRECTLY_INDEXED);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -217,5 +216,5 @@ void ComputeRootSignatureDesc::SetHandleUAV(uint32_t index, UINT shaderRegister,
 }
 
 ComPtr<ID3D12RootSignature> ComputeRootSignatureDesc::CreateComputeRootSignature(ID3D12Device* device) const {
-	return BaseRootSignatureDesc::CreateRootSignature(device, D3D12_ROOT_SIGNATURE_FLAG_NONE);
+	return BaseRootSignatureDesc::CreateRootSignature(device, D3D12_ROOT_SIGNATURE_FLAG_CBV_SRV_UAV_HEAP_DIRECTLY_INDEXED);
 }

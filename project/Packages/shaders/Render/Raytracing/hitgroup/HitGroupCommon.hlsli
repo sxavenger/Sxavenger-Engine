@@ -46,7 +46,7 @@ Vertex GetWorldVertex(Attribute attribute) {
 	
 	Vertex vertex = GetLocalVertex(attribute);
 	
-	vertex.position = mul(float4(vertex.position.xyz, 1.0f), ObjectToWorld4x3()).xyz;
+	vertex.position = float4(mul(float4(vertex.position.xyz, 1.0f), ObjectToWorld4x3()), 1.0f);
 	vertex.normal   = mul(vertex.normal, (float3x3)ObjectToWorld4x3());
 	
 	return vertex;

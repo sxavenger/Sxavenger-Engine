@@ -9,10 +9,9 @@
 
 //* c++
 #include <array>
-#include <type_traits>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// FRenderCoreRaytracing class
+// FSceneRenderer class
 ////////////////////////////////////////////////////////////////////////////////////////////
 class FRenderCoreRaytracing {
 public:
@@ -23,7 +22,7 @@ public:
 	enum class RaygenerationExportType : uint32_t {
 		Default,
 	};
-	static inline constexpr uint32_t kRaygenerationExportTypeCount = static_cast<uint32_t>(RaygenerationExportType::Default) + 1;
+	static const uint32_t kRaygenerationExportTypeCount = static_cast<uint32_t>(RaygenerationExportType::Default) + 1;
 
 	////////////////////////////////////////////////////////////////////////////////////////////
 	// MissExportType enum class
@@ -31,7 +30,7 @@ public:
 	enum class MissExportType : uint32_t {
 		Default,
 	};
-	static inline constexpr uint32_t kMissExportTypeCount = static_cast<uint32_t>(MissExportType::Default) + 1;
+	static const uint32_t kMissExportTypeCount = static_cast<uint32_t>(MissExportType::Default) + 1;
 
 	////////////////////////////////////////////////////////////////////////////////////////////
 	// HitgroupExportType enum class
@@ -39,7 +38,7 @@ public:
 	enum class HitgroupExportType : uint32_t {
 		Geometry,
 	};
-	static inline constexpr uint32_t kHitgroupExportTypeCount = static_cast<uint32_t>(HitgroupExportType::Geometry) + 1;
+	static const uint32_t kHitgroupExportTypeCount = static_cast<uint32_t>(HitgroupExportType::Geometry) + 1;
 
 public:
 
@@ -52,6 +51,14 @@ public:
 
 	void Init();
 
+	//* getter *//
+
+	const DxrObject::ExportGroup& GetRaygenerationExport(RaygenerationExportType type) const { return raygenerationExportGroups_[static_cast<uint32_t>(type)].second; }
+
+	const DxrObject::ExportGroup& GetMissExport(MissExportType type) const { return missExportGroups_[static_cast<uint32_t>(type)].second; }
+
+	const DxrObject::ExportGroup& GetHitgroupExport(HitgroupExportType type) const { return hitgroupExportGroups_[static_cast<uint32_t>(type)].second; }
+
 private:
 
 	//=========================================================================================
@@ -62,19 +69,14 @@ private:
 	std::array<std::pair<DxrObject::RaytracingBlob, DxrObject::ExportGroup>, kMissExportTypeCount>          missExportGroups_;
 	std::array<std::pair<DxrObject::RaytracingBlob, DxrObject::ExportGroup>, kHitgroupExportTypeCount>      hitgroupExportGroups_;
 
+	static const std::filesystem::path kDirectory_;
+
 	//=========================================================================================
 	// private methods
 	//=========================================================================================
 
-	void CreateRaygeneration();
-
-	void CreateMiss();
-
-	void CreateHitgroup();
-
-	template <typename _Ty>
-	static constexpr std::underlying_type_t<_Ty> GetIndex(const _Ty& _enum) {
-		return static_cast<std::underlying_type_t<_Ty>>(_enum);
-	}
+	void InitRaygenerationExportGroup();
+	void InitMissExportGroup();
+	void InitHitgroupExportGroup();
 
 };

@@ -20,8 +20,8 @@ void FRenderCore::Init() {
 	light_ = std::make_unique<FRenderCoreLight>();
 	light_->Init();
 
-	/*raytracing_ = std::make_unique<FRenderCoreRaytracing>();
-	raytracing_->Init();*/
+	raytracing_ = std::make_unique<FRenderCoreRaytracing>();
+	raytracing_->Init();
 
 	layer_ = std::make_unique<FRenderCoreLayer>();
 	layer_->Init();
