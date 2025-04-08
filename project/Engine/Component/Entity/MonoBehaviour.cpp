@@ -132,6 +132,12 @@ void MonoBehaviour::ShowInspector() {
 
 	ImGui::BeginDisabled(!isRenamable_); //!< 名前変更不可の場合はdisabled
 
+	if (ImGui::Checkbox("## active", &isActive_)) {
+		SetActive(isActive_);
+	}
+
+	ImGui::SameLine();
+
 	if (ImGui::InputText("## name", buf_.data(), buf_.size())) { //!< test mode
 		SetName(buf_);
 	}

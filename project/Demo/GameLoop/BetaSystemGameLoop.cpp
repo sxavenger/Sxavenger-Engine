@@ -60,7 +60,7 @@ void BetaSystemGameLoop::InitSystem() {
 	//mesh_   = ComponentHelper::CreateStaticModelBehaviour("assets/models/foundation.gltf");
 	
 	//light_  = ComponentHelper::CreatePointLightMonoBehaviour();
-	//light_  = ComponentHelper::CreateDirectionalLightMonoBehaviour();
+	light_  = ComponentHelper::CreateDirectionalLightMonoBehaviour();
 
 	//node_ = ComponentHelper::CreateStaticNodeModelBehaviour("assets/models/PBR_Sphere_Test/model/PBR_Sphere.gltf");
 
@@ -69,7 +69,7 @@ void BetaSystemGameLoop::InitSystem() {
 	AssetObserver<AssetTexture> specular = SxavengerAsset::TryImport<AssetTexture>("assets/textures/specularHDR.dds");
 
 	skylight_ = ComponentHelper::CreateMonoBehaviour();
-	skylight_->SetName("skylight");
+	skylight_->SetName("sky light");
 	skylight_->AddComponent<SkyLightComponent>();
 	skylight_->GetComponent<SkyLightComponent>()->GetDiffuseParameter().SetTexture(diffuse);
 	skylight_->GetComponent<SkyLightComponent>()->GetSpecularParameter().SetTexture(specular);

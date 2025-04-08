@@ -60,7 +60,6 @@ void FRenderCoreLight::CreatePipeline() {
 	blend.SrcBlendAlpha         = D3D12_BLEND_ONE;
 	blend.DestBlendAlpha        = D3D12_BLEND_ZERO;
 	blend.BlendOpAlpha          = D3D12_BLEND_OP_ADD;
-	blend.LogicOp               = D3D12_LOGIC_OP_NOOP;
 	blend.RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE_ALL;
 
 	GraphicsPipelineDesc desc2d = {};

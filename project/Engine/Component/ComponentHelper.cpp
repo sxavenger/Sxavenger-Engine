@@ -32,8 +32,6 @@ void ComponentHelper::UpdateTransform() {
 		if (auto component = behaviour->GetComponent<CameraComponent>()) {
 			component->UpdateView();
 		}
-
-		// todo: child update
 	});
 }
 
