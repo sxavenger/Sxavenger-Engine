@@ -68,11 +68,13 @@ void BetaSystemGameLoop::InitSystem() {
 	AssetObserver<AssetTexture> diffuse  = SxavengerAsset::TryImport<AssetTexture>("assets/textures/diffuseHDR.dds");
 	AssetObserver<AssetTexture> specular = SxavengerAsset::TryImport<AssetTexture>("assets/textures/specularHDR.dds");
 
+	skyAtmosphere_.Create({ 1024, 1024 });
+
 	skylight_ = ComponentHelper::CreateMonoBehaviour();
 	skylight_->SetName("sky light");
 	skylight_->AddComponent<SkyLightComponent>();
-	skylight_->GetComponent<SkyLightComponent>()->GetDiffuseParameter().SetTexture(diffuse);
-	skylight_->GetComponent<SkyLightComponent>()->GetSpecularParameter().SetTexture(specular);
+	skylight_->GetComponent<SkyLightComponent>()->GetDiffuseParameter().SetTexture(skyAtmosphere_.GetDescriptorSRV().GetIndex());
+	skylight_->GetComponent<SkyLightComponent>()->GetSpecularParameter().SetTexture(skyAtmosphere_.GetDescriptorSRV().GetIndex(), 1);
 
 }
 
@@ -84,6 +86,8 @@ void BetaSystemGameLoop::UpdateSystem() {
 	//-----------------------------------------------------------------------------------------
 	// Update
 	//-----------------------------------------------------------------------------------------
+
+	skyAtmosphere_.Dispatch(SxavengerSystem::GetMainThreadContext());
 
 	//-----------------------------------------------------------------------------------------
 	// SystemUpdate...?

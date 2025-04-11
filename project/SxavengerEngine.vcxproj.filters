@@ -140,6 +140,7 @@
     <ClCompile Include="Engine\Render\Common\FBaseTexture.cpp" />
     <ClCompile Include="Engine\Component\Components\Light\SkyLightComponent.cpp" />
     <ClCompile Include="Engine\Render\Core\FRenderCoreRaytracing.cpp" />
+    <ClCompile Include="Engine\Render\Scene\Atmosphere\FSkyAtmosphere.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\System\Window\Window.h" />
@@ -295,6 +296,7 @@
     <ClInclude Include="Engine\Render\Common\FBaseTexture.h" />
     <ClInclude Include="Engine\Component\Components\Light\SkyLightComponent.h" />
     <ClInclude Include="Engine\Render\Core\FRenderCoreRaytracing.h" />
+    <ClInclude Include="Engine\Render\Scene\Atmosphere\FSkyAtmosphere.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

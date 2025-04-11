@@ -9,6 +9,10 @@ void SkyLightComponent::DiffuseParameter::Init() {
 	index = NULL;
 }
 
+void SkyLightComponent::DiffuseParameter::SetTexture(uint32_t _index) {
+	index = _index;
+}
+
 void SkyLightComponent::DiffuseParameter::SetTexture(const AssetObserver<AssetTexture>& texture) {
 	index = texture.WaitGet()->GetDescriptorSRV().GetIndex();
 }
@@ -20,6 +24,11 @@ void SkyLightComponent::DiffuseParameter::SetTexture(const AssetObserver<AssetTe
 void SkyLightComponent::SpecularParameter::Init() {
 	index    = NULL;
 	miplevels = 0;
+}
+
+void SkyLightComponent::SpecularParameter::SetTexture(uint32_t _index, uint32_t _miplevels) {
+	index     = _index;
+	miplevels = _miplevels;
 }
 
 void SkyLightComponent::SpecularParameter::SetTexture(const AssetObserver<AssetTexture>& texture) {

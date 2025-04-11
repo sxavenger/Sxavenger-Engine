@@ -3,35 +3,33 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
-//* base
-#include <Engine/System/Runtime/GameLoop/GameLoop.h>
-
 //* engine
-#include <Engine/System/Window/GameWindow.h>
-#include <Engine/Component/Entity/MonoBehaviour.h>
-#include <Engine/Component/Components/Camera/CameraComponent.h>
-#include <Engine/Component/Components/Light/DirectionalLightComponent.h>
-#include <Engine/Render/FPresenter.h>
-#include <Engine/Render/Scene/FScene.h>
-#include <Engine/Render/Scene/FSceneRenderer.h>
-#include <Engine/Asset/Observer/AssetObserver.h>
+#include <Engine/System/DirectX/DxObject/DxObjectCommon.h>
+#include <Engine/System/DirectX/DxObject/DxDescriptor.h>
+#include <Engine/System/DirectX/DxObject/DxComputePipelineState.h>
+#include <Engine/System/DirectX/DirectXContext.h>
 
-#include "Engine/Render/Scene/Atmosphere/FSkyAtmosphere.h"
+//* lib
+#include <Lib/Geometry/Vector2.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// BetaSystemGameLoop class
+// FSkyAtmosphere class
 ////////////////////////////////////////////////////////////////////////////////////////////
-class BetaSystemGameLoop
-	: public GameLoop::Interface {
+class FSkyAtmosphere {
 public:
 
 	//=========================================================================================
-	// public method
+	// public methods
 	//=========================================================================================
 
-	void Init(GameLoop::Context* context) override;
+	FSkyAtmosphere()  = default;
+	~FSkyAtmosphere() = default;
 
-	void Term() override;
+	void Create(const Vector2ui& size);
+
+	void Dispatch(const DirectXThreadContext* context);
+
+	const DxObject::Descriptor& GetDescriptorSRV() const { return cubemapSRV_; }
 
 private:
 
@@ -39,27 +37,24 @@ private:
 	// private variables
 	//=========================================================================================
 
-	std::shared_ptr<GameWindow> main_;
+	//* directX12 *//
 
-	std::unique_ptr<MonoBehaviour> camera_;
+	ComPtr<ID3D12Resource> cubemap_;
+	DxObject::Descriptor cubemapSRV_;
+	DxObject::Descriptor cubemapUAV_;
 
-	std::unique_ptr<MonoBehaviour> mesh_;
+	//* pipeline *//
 
-	std::unique_ptr<MonoBehaviour> light_;
-	std::unique_ptr<MonoBehaviour> skylight_;
+	std::unique_ptr<DxObject::ReflectionComputePipelineState> pipeline_;
 
-	FSkyAtmosphere skyAtmosphere_;
+	//* parameter *//
+
+	Vector2ui size_;
 
 	//=========================================================================================
 	// private methods
 	//=========================================================================================
 
-	void InitSystem();
-
-	void TermSystem();
-
-	void UpdateSystem();
-
-	void DrawSystem();
+	void CreatePipeline();
 
 };

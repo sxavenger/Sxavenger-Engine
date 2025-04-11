@@ -33,6 +33,8 @@ public:
 
 		void Init();
 
+		void SetTexture(uint32_t _index);
+
 		void SetTexture(const AssetObserver<AssetTexture>& texture);
 
 		//=========================================================================================
@@ -54,6 +56,8 @@ public:
 		//=========================================================================================
 
 		void Init();
+
+		void SetTexture(uint32_t _index, uint32_t _miplevels);
 
 		void SetTexture(const AssetObserver<AssetTexture>& texture);
 

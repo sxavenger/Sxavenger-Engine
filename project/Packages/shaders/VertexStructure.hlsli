@@ -10,6 +10,15 @@ struct Vertex {
 	float3 tangent   : TANGENT0;
 	float3 bitangent : BITANGENT0;
 };
-
 typedef Vertex VertexInput;
+
+////////////////////////////////////////////////////////////////////////////////////////////
+// PrimitiveVertex structure
+////////////////////////////////////////////////////////////////////////////////////////////
+struct PrimitiveVertex {
+	float4 position  : POSITION0;
+	float2 texcoord  : TEXCOORD0;
+	float3 normal    : NORMAL0;
+};
+typedef PrimitiveIndex PrimitiveVertexInput;
 
