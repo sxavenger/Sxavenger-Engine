@@ -18,6 +18,83 @@
 class FSkyAtmosphere {
 public:
 
+	////////////////////////////////////////////////////////////////////////////////////////////
+	// AtmosphereMap structure
+	////////////////////////////////////////////////////////////////////////////////////////////
+	struct AtmosphereMap {
+	public:
+
+		//=========================================================================================
+		// public methods
+		//=========================================================================================
+
+		void Create(const Vector2ui& size);
+
+		void Dispatch(const DirectXThreadContext* context);
+
+		//=========================================================================================
+		// public variables
+		//=========================================================================================
+
+		//* directX12 *//
+
+		ComPtr<ID3D12Resource> resource_; //!< cubemap.
+		DxObject::Descriptor descriptorSRV_;
+		DxObject::Descriptor descriptorUAV_;
+
+		//* parameter *//
+
+		Vector2ui size_;
+
+		//* pipeline *//
+
+		std::unique_ptr<DxObject::ReflectionComputePipelineState> pipeline_;
+
+	private:
+
+		//=========================================================================================
+		// private methods
+		//=========================================================================================
+
+		void CreateResource(const Vector2ui& size);
+
+		void CreatePipeline();
+
+	};
+
+	////////////////////////////////////////////////////////////////////////////////////////////
+	// IrradianceMap structure
+	////////////////////////////////////////////////////////////////////////////////////////////
+	struct IrradianceMap {
+	public:
+
+		//=========================================================================================
+		// public methods
+		//=========================================================================================
+
+		void Create(const AtmosphereMap& atmosphere);
+
+		//=========================================================================================
+		// public variables
+		//=========================================================================================
+
+		//* directX12 *//
+
+		ComPtr<ID3D12Resource> resource_;
+		DxObject::Descriptor descriptorSRV_;
+		DxObject::Descriptor descriptorUAV_;
+
+	};
+
+	////////////////////////////////////////////////////////////////////////////////////////////
+	// RadianceMap structure
+	////////////////////////////////////////////////////////////////////////////////////////////
+	struct RadianceMap {
+	public:
+	};
+
+public:
+
 	//=========================================================================================
 	// public methods
 	//=========================================================================================
@@ -27,9 +104,11 @@ public:
 
 	void Create(const Vector2ui& size);
 
-	void Dispatch(const DirectXThreadContext* context);
+	void Update(const DirectXThreadContext* context);
 
-	const DxObject::Descriptor& GetDescriptorSRV() const { return cubemapSRV_; }
+	//* getter *//
+
+	const AtmosphereMap& GetAtmosphere() { return atmosphere_; }
 
 private:
 
@@ -37,24 +116,11 @@ private:
 	// private variables
 	//=========================================================================================
 
-	//* directX12 *//
+	//* map *//
 
-	ComPtr<ID3D12Resource> cubemap_;
-	DxObject::Descriptor cubemapSRV_;
-	DxObject::Descriptor cubemapUAV_;
+	AtmosphereMap atmosphere_ = {};
+	IrradianceMap irradiance_ = {};
 
-	//* pipeline *//
-
-	std::unique_ptr<DxObject::ReflectionComputePipelineState> pipeline_;
-
-	//* parameter *//
-
-	Vector2ui size_;
-
-	//=========================================================================================
-	// private methods
-	//=========================================================================================
-
-	void CreatePipeline();
+	static inline const uint16_t kCubemap_ = 6;
 
 };

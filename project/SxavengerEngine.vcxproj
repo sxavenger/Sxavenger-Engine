@@ -212,6 +212,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="Engine\Component\Components\Light\PointLightComponent.cpp" />
     <ClCompile Include="Engine\Component\Components\Light\SkyLightComponent.cpp" />
     <ClCompile Include="Engine\Component\Components\MeshRenderer\MeshRendererComponent.cpp" />
+    <ClCompile Include="Engine\Component\Components\MeshRenderer\PrimitiveRendererComponent.cpp" />
     <ClCompile Include="Engine\Component\Components\MeshRenderer\SkinnedMeshRendererComponent.cpp" />
     <ClCompile Include="Engine\Component\Components\SpriteRenderer\SpriteRendererComponent.cpp" />
     <ClCompile Include="Engine\Component\Components\Transform\TransformComponent.cpp" />
@@ -222,7 +223,9 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="Engine\Content\Animation\SkinCluster.cpp" />
     <ClCompile Include="Engine\Content\Animation\SkinningPipeline.cpp" />
     <ClCompile Include="Engine\Content\DebugPrimitive\DebugPrimitive.cpp" />
-    <ClCompile Include="Engine\Content\InputMesh\InputMesh.cpp" />
+    <ClCompile Include="Engine\Content\InputGeometry\InputMesh.cpp" />
+    <ClCompile Include="Engine\Content\InputGeometry\InputPrimitiveHelper.cpp" />
+    <ClCompile Include="Engine\Content\InputGeometry\InputPrimitive.cpp" />
     <ClCompile Include="Engine\Content\SxavengerContent.cpp" />
     <ClCompile Include="Engine\Content\TextureBuffer\BaseOffscreenTexture.cpp" />
     <ClCompile Include="Engine\Content\TextureBuffer\DepthTexture.cpp" />
@@ -238,6 +241,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="Engine\Editor\Editors\RenderSceneEditor.cpp" />
     <ClCompile Include="Engine\GameLoop\EditorEngineGameLoop.cpp" />
     <ClCompile Include="Engine\GameLoop\SxavengerEngineGameLoop.cpp" />
+    <ClCompile Include="Engine\Module\Motion\Motion.cpp" />
     <ClCompile Include="Engine\Module\Pipeline\CustomComputePipeline.cpp" />
     <ClCompile Include="Engine\Module\Pipeline\CustomGraphicsPipeline.cpp" />
     <ClCompile Include="Engine\Render\Canvas\FCanvasRenderer.cpp" />
@@ -293,6 +297,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="Engine\System\Runtime\Performance\TimePoint.cpp" />
     <ClCompile Include="Engine\System\SxavengerSystem.cpp" />
     <ClCompile Include="Engine\System\UI\ImGuiController.cpp" />
+    <ClCompile Include="Engine\System\UI\SxImGui.cpp" />
     <ClCompile Include="Engine\System\Utility\Logger.cpp" />
     <ClCompile Include="Engine\System\WinApp\WinApp.cpp" />
     <ClCompile Include="Engine\System\Window\GameWindow.cpp" />
@@ -347,6 +352,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Engine\Component\Components\Light\PointLightComponent.h" />
     <ClInclude Include="Engine\Component\Components\Light\SkyLightComponent.h" />
     <ClInclude Include="Engine\Component\Components\MeshRenderer\MeshRendererComponent.h" />
+    <ClInclude Include="Engine\Component\Components\MeshRenderer\PrimitiveRendererComponent.h" />
     <ClInclude Include="Engine\Component\Components\MeshRenderer\SkinnedMeshRendererComponent.h" />
     <ClInclude Include="Engine\Component\Components\SpriteRenderer\SpriteRendererComponent.h" />
     <ClInclude Include="Engine\Component\Components\Transform\TransformComponent.h" />
@@ -362,7 +368,9 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Engine\Content\InputAssembler\InputAssembler.h" />
     <ClInclude Include="Engine\Content\InputAssembler\LineInputAssembler.h" />
     <ClInclude Include="Engine\Content\InputAssembler\TriangleInputAssembler.h" />
-    <ClInclude Include="Engine\Content\InputMesh\InputMesh.h" />
+    <ClInclude Include="Engine\Content\InputGeometry\InputMesh.h" />
+    <ClInclude Include="Engine\Content\InputGeometry\InputPrimitiveHelper.h" />
+    <ClInclude Include="Engine\Content\InputGeometry\InputPrimitive.h" />
     <ClInclude Include="Engine\Content\SxavengerContent.h" />
     <ClInclude Include="Engine\Content\TextureBuffer\BaseOffscreenTexture.h" />
     <ClInclude Include="Engine\Content\TextureBuffer\DepthTexture.h" />
@@ -378,6 +386,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Engine\Editor\Editors\RenderSceneEditor.h" />
     <ClInclude Include="Engine\GameLoop\EditorEngineGameLoop.h" />
     <ClInclude Include="Engine\GameLoop\SxavengerEngineGameLoop.h" />
+    <ClInclude Include="Engine\Module\Motion\Motion.h" />
     <ClInclude Include="Engine\Module\Pipeline\CustomComputePipeline.h" />
     <ClInclude Include="Engine\Module\Pipeline\CustomGraphicsPipeline.h" />
     <ClInclude Include="Engine\Render\Canvas\FCanvasRenderer.h" />
@@ -437,6 +446,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Engine\System\SxavengerSystem.h" />
     <ClInclude Include="Engine\System\UI\ImGuiController.h" />
     <ClInclude Include="Engine\System\UI\ISystemDebugGui.h" />
+    <ClInclude Include="Engine\System\UI\SxImGui.h" />
     <ClInclude Include="Engine\System\Utility\ComPtr.h" />
     <ClInclude Include="Engine\System\Utility\Logger.h" />
     <ClInclude Include="Engine\System\WinApp\WinApp.h" />
@@ -470,7 +480,6 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Lib\Sxl\SxavengerLibrary.h" />
     <ClInclude Include="Lib\Traits.h" />
     <ClInclude Include="Lib\Transform\Transform.h" />
-    <ClInclude Include="Engine\Content\InputMesh\VertexStructure.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

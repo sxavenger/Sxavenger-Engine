@@ -13,7 +13,7 @@
 #include <Engine/System/DirectX/DxObject/DxBindBuffer.h>
 #include <Engine/System/DirectX/DxrObject/DxrAccelerationStructure.h>
 #include <Engine/Content/Animation/SkinCluster.h>
-#include <Engine/Content/InputMesh/VertexStructure.h>
+#include <Engine/Content/InputGeometry/InputMesh.h>
 #include <Engine/Asset/Assets/Model/Model.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////

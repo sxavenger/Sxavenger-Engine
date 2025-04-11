@@ -74,7 +74,7 @@
     <ClCompile Include="Engine\Content\Animation\Animation.cpp" />
     <ClCompile Include="Engine\Content\Animation\Skeleton.cpp" />
     <ClCompile Include="Engine\Content\Animation\SkinCluster.cpp" />
-    <ClCompile Include="Engine\Content\InputMesh\InputMesh.cpp" />
+    <ClCompile Include="Engine\Content\InputGeometry\InputMesh.cpp" />
     <ClCompile Include="Engine\Asset\Assets\BaseAsset.cpp" />
     <ClCompile Include="Engine\Asset\Assets\Texture\Texture.cpp" />
     <ClCompile Include="Engine\Asset\Assets\Texture\AssetTexture.cpp" />
@@ -140,6 +140,11 @@
     <ClCompile Include="Engine\Render\Common\FBaseTexture.cpp" />
     <ClCompile Include="Engine\Component\Components\Light\SkyLightComponent.cpp" />
     <ClCompile Include="Engine\Render\Core\FRenderCoreRaytracing.cpp" />
+    <ClCompile Include="Engine\Module\Motion\Motion.cpp" />
+    <ClCompile Include="Engine\Content\InputGeometry\InputPrimitive.cpp" />
+    <ClCompile Include="Engine\Component\Components\MeshRenderer\PrimitiveRendererComponent.cpp" />
+    <ClCompile Include="Engine\Content\InputGeometry\InputPrimitiveHelper.cpp" />
+    <ClCompile Include="Engine\System\UI\SxImGui.cpp" />
     <ClCompile Include="Engine\Render\Scene\Atmosphere\FSkyAtmosphere.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -158,7 +163,6 @@
     <ClInclude Include="Engine\System\DirectX\DxObject\DxSwapChain.h" />
     <ClInclude Include="Engine\System\DirectX\DxObject\DxCommandContext.h" />
     <ClInclude Include="Engine\System\DirectX\DxObject\DxDepthStencil.h" />
-    <ClInclude Include="Engine\Content\InputMesh\VertexStructure.h" />
     <ClInclude Include="Lib\CXXAttributeConfig.h" />
     <ClInclude Include="Lib\Environment.h" />
     <ClInclude Include="Engine\System\Window\GameWindowCollection.h" />
@@ -229,7 +233,7 @@
     <ClInclude Include="Engine\Content\InputAssembler\InputAssembler.h" />
     <ClInclude Include="Engine\Content\InputAssembler\LineInputAssembler.h" />
     <ClInclude Include="Engine\Content\InputAssembler\TriangleInputAssembler.h" />
-    <ClInclude Include="Engine\Content\InputMesh\InputMesh.h" />
+    <ClInclude Include="Engine\Content\InputGeometry\InputMesh.h" />
     <ClInclude Include="Engine\Asset\Assets\BaseAsset.h" />
     <ClInclude Include="Engine\Asset\Assets\Texture\Texture.h" />
     <ClInclude Include="Engine\Asset\Assets\Texture\AssetTexture.h" />
@@ -296,6 +300,11 @@
     <ClInclude Include="Engine\Render\Common\FBaseTexture.h" />
     <ClInclude Include="Engine\Component\Components\Light\SkyLightComponent.h" />
     <ClInclude Include="Engine\Render\Core\FRenderCoreRaytracing.h" />
+    <ClInclude Include="Engine\Module\Motion\Motion.h" />
+    <ClInclude Include="Engine\Content\InputGeometry\InputPrimitive.h" />
+    <ClInclude Include="Engine\Component\Components\MeshRenderer\PrimitiveRendererComponent.h" />
+    <ClInclude Include="Engine\Content\InputGeometry\InputPrimitiveHelper.h" />
+    <ClInclude Include="Engine\System\UI\SxImGui.h" />
     <ClInclude Include="Engine\Render\Scene\Atmosphere\FSkyAtmosphere.h" />
   </ItemGroup>
   <ItemGroup>

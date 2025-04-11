@@ -57,7 +57,8 @@ void BetaSystemGameLoop::InitSystem() {
 
 	mesh_   = ComponentHelper::CreateStaticNodeModelBehaviour("assets/models/PBR_Sphere_Test/model/PBR_Sphere.gltf");
 	//mesh_   = ComponentHelper::CreateStaticNodeModelBehaviour("assets/models/sponza/NewSponza_Main_glTF_003.gltf");
-	//mesh_   = ComponentHelper::CreateStaticModelBehaviour("assets/models/foundation.gltf");
+
+	foundation_ = ComponentHelper::CreateStaticModelBehaviour("assets/models/foundation.gltf");
 	
 	//light_  = ComponentHelper::CreatePointLightMonoBehaviour();
 	light_  = ComponentHelper::CreateDirectionalLightMonoBehaviour();
@@ -73,8 +74,8 @@ void BetaSystemGameLoop::InitSystem() {
 	skylight_ = ComponentHelper::CreateMonoBehaviour();
 	skylight_->SetName("sky light");
 	skylight_->AddComponent<SkyLightComponent>();
-	skylight_->GetComponent<SkyLightComponent>()->GetDiffuseParameter().SetTexture(skyAtmosphere_.GetDescriptorSRV().GetIndex());
-	skylight_->GetComponent<SkyLightComponent>()->GetSpecularParameter().SetTexture(skyAtmosphere_.GetDescriptorSRV().GetIndex(), 1);
+	skylight_->GetComponent<SkyLightComponent>()->GetDiffuseParameter().SetTexture(skyAtmosphere_.GetAtmosphere().descriptorSRV_.GetIndex());
+	skylight_->GetComponent<SkyLightComponent>()->GetSpecularParameter().SetTexture(skyAtmosphere_.GetAtmosphere().descriptorSRV_.GetIndex(), 1);
 
 }
 
@@ -87,7 +88,7 @@ void BetaSystemGameLoop::UpdateSystem() {
 	// Update
 	//-----------------------------------------------------------------------------------------
 
-	skyAtmosphere_.Dispatch(SxavengerSystem::GetMainThreadContext());
+	skyAtmosphere_.Update(SxavengerSystem::GetMainThreadContext());
 
 	//-----------------------------------------------------------------------------------------
 	// SystemUpdate...?

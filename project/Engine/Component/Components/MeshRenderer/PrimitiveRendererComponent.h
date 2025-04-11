@@ -8,13 +8,12 @@
 #include "../Transform/TransformComponent.h"
 
 //* engine
-#include <Engine/Content/InputGeometry/InputMesh.h>
-#include <Engine/Asset/Assets/Material/Material.h>
+#include <Engine/Content/InputGeometry/InputPrimitive.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// MeshRendererComponent class
+// PrimitiveRendererComponent class
 ////////////////////////////////////////////////////////////////////////////////////////////
-class MeshRendererComponent final
+class PrimitiveRendererComponent final
 	: public BaseComponent {
 public:
 
@@ -22,25 +21,20 @@ public:
 	// public methods
 	//=========================================================================================
 
-	MeshRendererComponent(MonoBehaviour* behaviour) : BaseComponent(behaviour) {}
-	~MeshRendererComponent() override = default;
+	PrimitiveRendererComponent(MonoBehaviour* behaviour) : BaseComponent(behaviour) {}
+	~PrimitiveRendererComponent() override = default;
 
 	void ShowComponentInspector() override;
 
 	//* setter *//
 
-	void SetMesh(InputMesh* mesh) { mesh_ = mesh; }
-
-	void SetMaterial(Material* material) { material_ = material; }
+	void SetPrimitive(const InputPrimitive* primitive) { primitive_ = primitive; }
 
 	void SetTransform(const TransformComponent* transform) { transform_ = transform; }
 
 	//* getter *//
 
-	const InputMesh* GetMesh() const { return mesh_; }
-	InputMesh* GetMesh() { return mesh_; }
-
-	const Material* GetMaterial() const { return material_; }
+	const InputPrimitive* GetPrimitive() const { return primitive_; }
 
 	const TransformComponent* GetTransform() const;
 
@@ -50,8 +44,8 @@ private:
 	// private variables
 	//=========================================================================================
 
-	InputMesh* mesh_    = nullptr;
-	Material* material_ = nullptr;
+	const InputPrimitive* primitive_ = nullptr;
+	//!< todo: primitive material.
 
 	const TransformComponent* transform_ = nullptr;
 

@@ -1,4 +1,4 @@
-#include "MeshRendererComponent.h"
+#include "PrimitiveRendererComponent.h"
 
 //-----------------------------------------------------------------------------------------
 // include
@@ -7,23 +7,13 @@
 #include "../../Entity/MonoBehaviour.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// MeshRendererComponent class methods
+// PrimitiveRendererComponent class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-void MeshRendererComponent::ShowComponentInspector() {
-	if (ImGui::TreeNode("material")) {
-		if (material_ != nullptr) {
-			material_->SetImGuiCommand();
-
-		} else {
-			ImGui::Text("material is nullptr.");
-		}
-
-		ImGui::TreePop();
-	}
+void PrimitiveRendererComponent::ShowComponentInspector() {
 }
 
-const TransformComponent* MeshRendererComponent::GetTransform() const {
+const TransformComponent* PrimitiveRendererComponent::GetTransform() const {
 	if (transform_ != nullptr) {
 		return transform_;
 	}

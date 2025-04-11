@@ -8,12 +8,28 @@ _DXOBJECT_USING
 #include <Engine/System/SxavengerSystem.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// FSkyAtmosphere class methods
+// AtmosphereMap structure methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-void FSkyAtmosphere::Create(const Vector2ui& size) {
+void FSkyAtmosphere::AtmosphereMap::Create(const Vector2ui& size) {
+	CreateResource(size);
+	CreatePipeline();
+}
 
-	size_ = size;
+void FSkyAtmosphere::AtmosphereMap::Dispatch(const DirectXThreadContext* context) {
+
+	pipeline_->SetPipeline(context->GetDxCommand());
+
+	BindBufferDesc desc = {};
+	desc.SetHandle("gAtmosphere", descriptorUAV_.GetGPUHandle());
+	pipeline_->BindComputeBuffer(context->GetDxCommand(), desc);
+
+	Vector3ui threadGroup = { RoundUp(size_.x, 16), RoundUp(size_.y, 16), 6 };
+	pipeline_->Dispatch(context->GetDxCommand(), threadGroup);
+
+}
+
+void FSkyAtmosphere::AtmosphereMap::CreateResource(const Vector2ui& size) {
 
 	auto device = SxavengerSystem::GetDxDevice()->GetDevice();
 
@@ -25,13 +41,13 @@ void FSkyAtmosphere::Create(const Vector2ui& size) {
 
 		// descの設定
 		D3D12_RESOURCE_DESC desc = {};
+		desc.Dimension        = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
 		desc.Width            = size.x;
 		desc.Height           = size.y;
-		desc.DepthOrArraySize = 6; //!< cubemap
+		desc.DepthOrArraySize = kCubemap_;
 		desc.MipLevels        = 1;
 		desc.Format           = DXGI_FORMAT_R32G32B32A32_FLOAT;
 		desc.SampleDesc.Count = 1;
-		desc.Dimension        = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
 		desc.Flags            = D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS;
 
 		// resourceの生成
@@ -41,75 +57,156 @@ void FSkyAtmosphere::Create(const Vector2ui& size) {
 			&desc,
 			D3D12_RESOURCE_STATE_ALL_SHADER_RESOURCE,
 			nullptr,
-			IID_PPV_ARGS(&cubemap_)
+			IID_PPV_ARGS(&resource_)
 		);
-		Assert(SUCCEEDED(hr), "sky atmosphere cubemap is create failed.");
+		Assert(SUCCEEDED(hr), "atmosphere map create failed.");
 
 	}
 
 	{ //!< SRVの生成
 
 		// handleの取得
-		cubemapSRV_ = SxavengerSystem::GetDescriptor(kDescriptor_SRV);
+		descriptorSRV_ = SxavengerSystem::GetDescriptor(kDescriptor_SRV);
 
 		// descの設定
 		D3D12_SHADER_RESOURCE_VIEW_DESC desc = {};
-		desc.Format                            = DXGI_FORMAT_R32G32B32A32_FLOAT;
-		desc.ViewDimension                     = D3D12_SRV_DIMENSION_TEXTURECUBE;
-		desc.Shader4ComponentMapping           = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
-		desc.TextureCube.MipLevels             = 1;
+		desc.Format                  = DXGI_FORMAT_R32G32B32A32_FLOAT;
+		desc.ViewDimension           = D3D12_SRV_DIMENSION_TEXTURECUBE;
+		desc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
+		desc.TextureCube.MipLevels   = 1;
 
 		// SRVの生成
 		device->CreateShaderResourceView(
-			cubemap_.Get(),
+			resource_.Get(),
 			&desc,
-			cubemapSRV_.GetCPUHandle()
+			descriptorSRV_.GetCPUHandle()
 		);
 	}
 
 	{ //!< UAVの生成
 
 		// handleの取得
-		cubemapUAV_ = SxavengerSystem::GetDescriptor(kDescriptor_UAV);
+		descriptorUAV_ = SxavengerSystem::GetDescriptor(kDescriptor_UAV);
 
 		// descの設定
 		D3D12_UNORDERED_ACCESS_VIEW_DESC desc = {};
-		desc.Format                            = DXGI_FORMAT_R32G32B32A32_FLOAT;
-		desc.ViewDimension                     = D3D12_UAV_DIMENSION_TEXTURE2DARRAY;
-		desc.Texture2DArray.ArraySize          = 6; //!< cubemap
+		desc.Format                   = DXGI_FORMAT_R32G32B32A32_FLOAT;
+		desc.ViewDimension            = D3D12_UAV_DIMENSION_TEXTURE2DARRAY;
+		desc.Texture2DArray.ArraySize = kCubemap_;
 
 		// UAVの生成
 		device->CreateUnorderedAccessView(
-			cubemap_.Get(),
+			resource_.Get(),
 			nullptr,
 			&desc,
-			cubemapUAV_.GetCPUHandle()
+			descriptorUAV_.GetCPUHandle()
 		);
 	}
 
-	CreatePipeline(); //!< Test
+	//* parameterの保存
+	size_ = size;
 }
 
-void FSkyAtmosphere::Dispatch(const DirectXThreadContext* context) {
-
-	pipeline_->SetPipeline(context->GetDxCommand());
-
-	BindBufferDesc desc = {};
-	desc.SetHandle("gCube", cubemapUAV_.GetGPUHandle());
-
-	pipeline_->BindComputeBuffer(context->GetDxCommand(), desc);
-
-	Vector3ui threadGroup = { RoundUp(size_.x, 16), RoundUp(size_.y, 16), 6 };
-
-	pipeline_->Dispatch(context->GetDxCommand(), threadGroup);
-}
-
-void FSkyAtmosphere::CreatePipeline() {
+void FSkyAtmosphere::AtmosphereMap::CreatePipeline() {
 
 	pipeline_ = std::make_unique<DxObject::ReflectionComputePipelineState>();
 	pipeline_->CreateBlob(kPackagesShaderDirectory / "render/atmosphere/skyAtmosphere.cs.hlsl");
 	pipeline_->ReflectionPipeline(SxavengerSystem::GetDxDevice());
 
+}
 
+////////////////////////////////////////////////////////////////////////////////////////////
+// IrradianceMap structure methods
+////////////////////////////////////////////////////////////////////////////////////////////
 
+void FSkyAtmosphere::IrradianceMap::Create(const AtmosphereMap& atmosphere) {
+
+	auto device = SxavengerSystem::GetDxDevice()->GetDevice();
+
+	{ //!< resourceの生成
+
+		// propの設定
+		D3D12_HEAP_PROPERTIES prop = {};
+		prop.Type = D3D12_HEAP_TYPE_DEFAULT;
+
+		// descの設定
+		D3D12_RESOURCE_DESC desc = {};
+		desc.Dimension        = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
+		desc.Width            = atmosphere.size_.x;
+		desc.Height           = atmosphere.size_.y;
+		desc.DepthOrArraySize = kCubemap_;
+		desc.MipLevels        = 1;
+		desc.Format           = DXGI_FORMAT_R32G32B32A32_FLOAT;
+		desc.SampleDesc.Count = 1;
+		desc.Flags            = D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS;
+
+		// resourceの生成
+		auto hr = device->CreateCommittedResource(
+			&prop,
+			D3D12_HEAP_FLAG_NONE,
+			&desc,
+			D3D12_RESOURCE_STATE_ALL_SHADER_RESOURCE,
+			nullptr,
+			IID_PPV_ARGS(&resource_)
+		);
+		Assert(SUCCEEDED(hr), "diffuse environment map create failed.");
+
+	}
+
+	{ //!< SRVの生成
+
+		// handleの取得
+		descriptorSRV_ = SxavengerSystem::GetDescriptor(kDescriptor_SRV);
+
+		// descの設定
+		D3D12_SHADER_RESOURCE_VIEW_DESC desc = {};
+		desc.Format                  = DXGI_FORMAT_R32G32B32A32_FLOAT;
+		desc.ViewDimension           = D3D12_SRV_DIMENSION_TEXTURECUBE;
+		desc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
+		desc.TextureCube.MipLevels   = 1;
+
+		// SRVの生成
+		device->CreateShaderResourceView(
+			resource_.Get(),
+			&desc,
+			descriptorSRV_.GetCPUHandle()
+		);
+	}
+
+	{ //!< UAVの生成
+
+		// handleの取得
+		descriptorUAV_ = SxavengerSystem::GetDescriptor(kDescriptor_UAV);
+
+		// descの設定
+		D3D12_UNORDERED_ACCESS_VIEW_DESC desc = {};
+		desc.Format                   = DXGI_FORMAT_R32G32B32A32_FLOAT;
+		desc.ViewDimension            = D3D12_UAV_DIMENSION_TEXTURE2DARRAY;
+		desc.Texture2DArray.ArraySize = kCubemap_;
+
+		device->CreateUnorderedAccessView(
+			resource_.Get(),
+			nullptr,
+			&desc,
+			descriptorUAV_.GetCPUHandle()
+		);
+	}
+
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////
+// RadianceMap structure methods
+////////////////////////////////////////////////////////////////////////////////////////////
+
+////////////////////////////////////////////////////////////////////////////////////////////
+// FSkyAtmosphere class methods
+////////////////////////////////////////////////////////////////////////////////////////////
+
+void FSkyAtmosphere::Create(const Vector2ui& size) {
+	atmosphere_.Create(size);
+	irradiance_.Create(atmosphere_);
+}
+
+void FSkyAtmosphere::Update(const DirectXThreadContext* context) {
+	atmosphere_.Dispatch(context);
 }

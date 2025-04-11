@@ -16,7 +16,7 @@
 //=========================================================================================
 
 //!< output atmosphere cube map texture.
-RWTexture2DArray<float4> gCube : register(u0);
+RWTexture2DArray<float4> gAtmosphere : register(u0);
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // static const parameter variables
@@ -204,19 +204,16 @@ float3 GetIncidentLight(Ray ray, Sphere atmosphere) {
 void main(uint3 dispatchThreadId : SV_DispatchThreadID) {
 
 	// cube mapのsize
-	uint2 size;
-	{
-		uint dummy;
-		gCube.GetDimensions(size.x, size.y, dummy);
-	}
+	uint3 size;
+	gAtmosphere.GetDimensions(size.x, size.y, size.z);
 
 	// textureサイズのチェック
-	if (any(dispatchThreadId.xy >= size)) {
+	if (any(dispatchThreadId >= size)) {
 		return;
 	}
 
 	uint3 index      = dispatchThreadId;
-	float2 uv        = (float2(dispatchThreadId.xy + 0.5f) / size) * 2.0f - 1.0f; //!< [-1, 1]に変換
+	float2 uv        = (float2(dispatchThreadId.xy + 0.5f) / size.xy) * 2.0f - 1.0f; //!< [-1, 1]に変換
 
 	float3 direction = GetDirection(uv, index.z);
 
@@ -232,6 +229,6 @@ void main(uint3 dispatchThreadId : SV_DispatchThreadID) {
 
 	float3 color = GetIncidentLight(ray, atmosphere);
 
-	gCube[index] = float4(color, 1.0f); //!< 書き込み
+	gAtmosphere[index] = float4(color, 1.0f); //!< 書き込み
 	
 }

@@ -44,6 +44,7 @@ private:
 	std::unique_ptr<MonoBehaviour> camera_;
 
 	std::unique_ptr<MonoBehaviour> mesh_;
+	std::unique_ptr<MonoBehaviour> foundation_;
 
 	std::unique_ptr<MonoBehaviour> light_;
 	std::unique_ptr<MonoBehaviour> skylight_;

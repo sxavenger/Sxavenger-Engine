@@ -107,15 +107,15 @@ void EditorEngine::ShowEditorMenu() {
 			ImGui::EndMenu();
 		}
 
-		if (ImGui::BeginMenu("layout")) {
+		if (ImGui::BeginMenu("style")) {
 			MenuDummy();
 			ImGui::ShowStyleEditor();
 			ImGui::EndMenu();
 		}
 
-		if (ImGui::BeginMenu("other")) {
+		if (ImGui::BeginMenu("layout")) {
 			MenuDummy();
-			ImGui::SeparatorText("other");
+			ImGui::SeparatorText("layout");
 
 			if (ImGui::BeginTable("## other editor", 3, ImGuiTableFlags_ScrollY | ImGuiTableFlags_RowBg | ImGuiTableFlags_Borders)) {
 				ImGui::TableSetupColumn("typeindex");

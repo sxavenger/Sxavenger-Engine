@@ -20,5 +20,5 @@ struct PrimitiveVertex {
 	float2 texcoord  : TEXCOORD0;
 	float3 normal    : NORMAL0;
 };
-typedef PrimitiveIndex PrimitiveVertexInput;
+typedef PrimitiveVertex PrimitiveVertexInput;
 

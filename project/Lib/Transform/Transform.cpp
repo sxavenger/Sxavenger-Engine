@@ -6,6 +6,9 @@
 //* external
 #include <imgui.h>
 
+//* engine
+#include <Engine/System/UI/SxImGui.h>
+
 ////////////////////////////////////////////////////////////////////////////////////////////
 // EulerTransform structure methods
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -30,7 +33,7 @@ Matrix4x4 EulerTransform::ToMatrix() const {
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 void QuaternionTransform::SetImGuiCommand(float granularityTranslate, float granularityRotate, float granularityScale) {
-	ImGui::DragFloat3("translate", &translate.x, granularityTranslate);
+	SxImGui::DragVector3("translate", &translate.x, granularityTranslate);
 
 	Vector3f drag = {};
 	if (ImGui::DragFloat3("## rotation drager", &drag.x, granularityRotate, -1.0f, 1.0f, "", ImGuiSliderFlags_NoInput)) {
@@ -48,8 +51,7 @@ void QuaternionTransform::SetImGuiCommand(float granularityTranslate, float gran
 	ImGui::SameLine();
 	ImGui::Text("rotation");
 
-
-	ImGui::DragFloat3("scale", &scale.x, granularityScale);
+	SxImGui::DragVector3("scale", &scale.x, granularityScale);
 }
 
 Matrix4x4 QuaternionTransform::ToMatrix() const {

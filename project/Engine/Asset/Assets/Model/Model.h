@@ -7,7 +7,7 @@
 #include "../Texture/Texture.h"
 
 //* engine
-#include <Engine/Content/InputMesh/InputMesh.h>
+#include <Engine/Content/InputGeometry/InputMesh.h>
 #include <Engine/Content/Animation/JointWeight.h>
 #include <Engine/Content/Animation/BornNode.h>
 #include <Engine/Content/Animation/Skeleton.h>
