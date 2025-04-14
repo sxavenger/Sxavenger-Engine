@@ -247,8 +247,8 @@ void DebugPrimitive::CreatePrimitive() {
 void DebugPrimitive::CreatePipeline() {
 
 	pipeline_ = std::make_unique<GraphicsPipelineState>();
-	pipeline_->CreateBlob(kPackagesShaderDirectory / "Primitive/debug/debugPrimitive.vs.hlsl", GraphicsShaderType::vs);
-	pipeline_->CreateBlob(kPackagesShaderDirectory / "Primitive/debug/debugPrimitive.ps.hlsl", GraphicsShaderType::ps);
+	pipeline_->CreateBlob(kPackagesShaderDirectory / "render/debug/debugPrimitive.vs.hlsl", GraphicsShaderType::vs);
+	pipeline_->CreateBlob(kPackagesShaderDirectory / "render/debug/debugPrimitive.ps.hlsl", GraphicsShaderType::ps);
 
 	GraphicsRootSignatureDesc rootDesc;
 	rootDesc.SetVirtualCBV(0, ShaderVisibility::VISIBILITY_ALL, 0); //!< camera

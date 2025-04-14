@@ -3,7 +3,8 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
-#include "../../Camera.hlsli"
+//* component
+#include "../../Component/CameraComponent.hlsli"
 
 //=========================================================================================
 // global buffers
@@ -14,8 +15,8 @@ RWTexture2D<float4> gOutput : register(u0, space1);
 RWTexture2D<float>  gDepth  : register(u1, space1);
 
 //* camera
-ConstantBuffer<Camera> gCamera : register(b0, space1);
-static const float4x4 kViewProj = mul(gCamera.view, gCamera.proj);
+ConstantBuffer<CameraComponent> gCamera : register(b0, space1);
+static const float4x4 kViewProj = gCamera.GetViewProj();
 
 //* scene
 RaytracingAccelerationStructure gScene : register(t0, space1);

@@ -3,11 +3,15 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
-#include "../../Camera.hlsli"
-#include "../../Light.hlsli"
-#include "../Component/TransformComponent.hlsli"
-#include "DeferredBuffers.hlsli"
-#include "../BRDFLib.hlsli"
+#include "../DeferredBuffers.hlsli"
+
+//* library
+#include "../../Library/BRDF.hlsli"
+#include "../../Library/Lighting.hlsli"
+
+//* component
+#include "../../Component/CameraComponent.hlsli"
+#include "../../Component/TransformComponent.hlsli"
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Input / Output structure
@@ -30,15 +34,16 @@ struct PSOutput {
 	float4 color : SV_Target0;
 };
 
+
 //=========================================================================================
 // buffers
 //=========================================================================================
 
-ConstantBuffer<Camera> gCamera : register(b10);
-static const float4x4 kViewProj = mul(gCamera.view, gCamera.proj);
+ConstantBuffer<CameraComponent> gCamera : register(b10);
+static const float4x4 kViewProj = gCamera.GetViewProj();
 
 //* t10 ~ t13 is defined in DeferredBuffer.hlsli
-StructuredBuffer<TransformComponent> gTransform : register(t10); //!< Light transform buffer
+StructuredBuffer<TransformComponent> gTransforms : register(t10); //!< Light transform buffer
 
 RaytracingAccelerationStructure gScene : register(t11);
 
@@ -87,11 +92,3 @@ struct InlineShadow {
 
 static const float kTMin = 0.001f;
 static const float kTMax = 10000.0f;
-
-////////////////////////////////////////////////////////////////////////////////////////////
-// Units namespace
-////////////////////////////////////////////////////////////////////////////////////////////
-namespace Units {
-	static const uint Lumen   = 0,
-	                  Candela = 1;
-}

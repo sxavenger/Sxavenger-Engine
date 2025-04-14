@@ -3,15 +3,14 @@
 //-----------------------------------------------------------------------------------------
 #include "LightRender.hlsli"
 
+//* component
+#include "../../Component/DirectionalLightComponent.hlsli"
+
 //=========================================================================================
 // buffers
 //=========================================================================================
 
-struct Parameter {
-	float3 color;
-	float  intensity; //!< lux
-};
-ConstantBuffer<Parameter> gParameter : register(b0);
+ConstantBuffer<DirectionalLightComponent> gParameter : register(b0);
 
 ConstantBuffer<InlineShadow> gShadow : register(b1);
 
@@ -30,8 +29,8 @@ PSOutput main(PSInput input) {
 	surface.GetSurface(input.position.xy);
 
 	//* Lightの情報を取得
-	float3 c_light = gParameter.color * gParameter.intensity * kPi; //!< lightのcolor
-	float3 l       = -gTransform[input.instanceId].GetDirection(); //!< surfaceからlightへの方向ベクトル
+	float3 c_light = gParameter.GetColor(); //!< lightのcolor
+	float3 l       = -gTransforms[input.instanceId].GetDirection(); //!< surfaceからlightへの方向ベクトル
 
 	//* shadow
 	RayDesc desc;

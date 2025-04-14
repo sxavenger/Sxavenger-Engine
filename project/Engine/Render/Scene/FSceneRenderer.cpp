@@ -321,9 +321,9 @@ void FSceneRenderer::LightingPassDirectionalLight(const DirectXThreadContext* co
 		parameter.SetHandle("gMaterial", textures_->GetGBuffer(FRenderTargetTextures::GBufferLayout::Material_AO)->GetGPUHandleSRV());
 
 		// direcitonal light parameter
-		parameter.SetAddress("gTransform", component->GetTransform()->GetGPUVirtualAddress());
-		parameter.SetAddress("gParameter", component->GetParameterBufferAddress());
-		parameter.SetAddress("gShadow",    component->GetShadowBufferAddress());
+		parameter.SetAddress("gTransforms", component->GetTransform()->GetGPUVirtualAddress());
+		parameter.SetAddress("gParameter",  component->GetParameterBufferAddress());
+		parameter.SetAddress("gShadow",     component->GetShadowBufferAddress());
 
 		FRenderCore::GetInstance()->GetLight()->BindGraphicsBuffer(
 			FRenderCoreLight::LightType::Directional, context, parameter
@@ -359,9 +359,9 @@ void FSceneRenderer::LightingPassPointLight(const DirectXThreadContext* context,
 		parameter.SetHandle("gMaterial", textures_->GetGBuffer(FRenderTargetTextures::GBufferLayout::Material_AO)->GetGPUHandleSRV());
 
 		// point light parameter
-		parameter.SetAddress("gTransform", component->GetTransform()->GetGPUVirtualAddress());
-		parameter.SetAddress("gParameter", component->GetParameterBufferAddress());
-		parameter.SetAddress("gShadow",    component->GetShadowBufferAddress());
+		parameter.SetAddress("gTransforms", component->GetTransform()->GetGPUVirtualAddress());
+		parameter.SetAddress("gParameter",  component->GetParameterBufferAddress());
+		parameter.SetAddress("gShadow",     component->GetShadowBufferAddress());
 
 		FRenderCore::GetInstance()->GetLight()->BindGraphicsBuffer(
 			FRenderCoreLight::LightType::Point, context, parameter

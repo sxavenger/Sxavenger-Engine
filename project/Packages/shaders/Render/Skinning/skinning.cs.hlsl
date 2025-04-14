@@ -1,19 +1,23 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
-#include "../VertexStructure.hlsli"
-#include "../Render/Component/TransformComponent.hlsli"
+//* geometry
+#include "../Geometry/GeometryVertex.hlsli"
+
+//* common
+#include "../../Component/TransformComponent.hlsli"
 
 //=========================================================================================
 // config
 //=========================================================================================
+
 #define NUMTHREADS_X 32
 
 //=========================================================================================
 // Input Buffer
 //=========================================================================================
 
-StructuredBuffer<Vertex> gInputVertex         : register(t0);
+StructuredBuffer<MeshVertex> gInputVertex : register(t0);
 StructuredBuffer<TransformComponent> gPalette : register(t1);
 
 struct VertexInfluence {
@@ -31,7 +35,7 @@ ConstantBuffer<SkinningInformation> gInfo : register(b0);
 // Output Buffer
 //=========================================================================================
 
-RWStructuredBuffer<Vertex> gOutputVertex : register(u0);
+RWStructuredBuffer<MeshVertex> gOutputVertex : register(u0);
 
 //=========================================================================================
 // variables
@@ -54,7 +58,7 @@ void main(uint3 dispatchThreadId : SV_DispatchThreadID) {
 	}
 	
 	// 必要な情報の取り出し
-	Vertex          input     = gInputVertex[index];
+	MeshVertex input          = gInputVertex[index];
 	VertexInfluence influence = gInfluence[index];
 	
 	// skiningの影響を受けない場合, そのまま
@@ -64,7 +68,7 @@ void main(uint3 dispatchThreadId : SV_DispatchThreadID) {
 	//}
 
 	// skninng後の頂点を計算
-	Vertex skinned = (Vertex)0;
+	MeshVertex skinned = (MeshVertex)0;
 	
 	// texcoordはそのまま
 	skinned.texcoord = input.texcoord;

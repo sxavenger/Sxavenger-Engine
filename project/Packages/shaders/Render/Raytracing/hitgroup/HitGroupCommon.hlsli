@@ -3,26 +3,29 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
+//* common
 #include "../RaytracingCommon.hlsli"
-#include "../../../VertexStructure.hlsli"
+
+//* geometry
+#include "../../Geometry/GeometryVertex.hlsli"
 
 //=========================================================================================
 // local buffers
 //=========================================================================================
 
-StructuredBuffer<Vertex> gVertices : register(t10);
-StructuredBuffer<uint>   gIndices  : register(t11);
+StructuredBuffer<MeshVertex> gVertices : register(t10);
+StructuredBuffer<uint>       gIndices  : register(t11);
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // common methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-Vertex GetLocalVertex(Attribute attribute) {
+MeshVertex GetLocalVertex(Attribute attribute) {
 
 	const float3 barycentric = attribute.GetBarycentrics();
 	uint vertexId            = PrimitiveIndex() * 3;
 
-	Vertex vertex = (Vertex)0;
+	MeshVertex vertex = (MeshVertex)0;
 
 	for (uint i = 0; i < 3; ++i) {
 		uint index   = gIndices[vertexId + i];
@@ -42,9 +45,9 @@ Vertex GetLocalVertex(Attribute attribute) {
 	return vertex;
 }
 
-Vertex GetWorldVertex(Attribute attribute) {
+MeshVertex GetWorldVertex(Attribute attribute) {
 	
-	Vertex vertex = GetLocalVertex(attribute);
+	MeshVertex vertex = GetLocalVertex(attribute);
 	
 	vertex.position = float4(mul(float4(vertex.position.xyz, 1.0f), ObjectToWorld4x3()), 1.0f);
 	vertex.normal   = mul(vertex.normal, (float3x3)ObjectToWorld4x3());

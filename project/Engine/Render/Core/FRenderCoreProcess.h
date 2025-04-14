@@ -20,7 +20,6 @@ public:
 	enum class ProcessType : uint32_t {
 		NLAO,
 		NLAO_Blur,
-		Atmosphere,
 		Overlay,
 		Bloom,
 		LUT,

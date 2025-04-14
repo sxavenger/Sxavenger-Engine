@@ -14,7 +14,7 @@ _DXOBJECT_USING
 
 void SkinningComputePipeline::Init() {
 	state_ = std::make_unique<ReflectionComputePipelineState>();
-	state_->CreateBlob(kPackagesShaderDirectory / "common/skinning.cs.hlsl");
+	state_->CreateBlob(kPackagesShaderDirectory / "render/skinning/skinning.cs.hlsl");
 	state_->ReflectionPipeline(SxavengerSystem::GetDxDevice());
 }
 

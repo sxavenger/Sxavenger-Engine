@@ -3,13 +3,16 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
+//* geometry
 #include "GeometryVertex.hlsli"
 #include "GeometryRenderTarget.hlsli"
-#include "../../Camera.hlsli"
 
-#include "../Component/TransformComponent.hlsli"
-#include "../Component/Transform2dComponent.hlsli"
-#include "../Component/MaterialComponent.hlsli"
+//* content
+#include "../../Content/Material.hlsli"
+
+//* component
+#include "../../Component/CameraComponent.hlsli"
+#include "../../Component/TransformComponent.hlsli"
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // intermediate structure
@@ -37,9 +40,9 @@ float3x3 GetTangentSpaceMatrix(float3 normal, float3 tangent, float3 bitangent) 
 // common buffer
 //=========================================================================================
 
-ConstantBuffer<Camera> gCamera : register(b10);
+ConstantBuffer<CameraComponent> gCamera : register(b10);
 static const float4x4 kViewProj = gCamera.GetViewProj();
 
-StructuredBuffer<MaterialComponent> gMaterials : register(t10);
+StructuredBuffer<TransformComponent> gTransforms : register(t10);
 
-
+StructuredBuffer<Material> gMaterials : register(t11);

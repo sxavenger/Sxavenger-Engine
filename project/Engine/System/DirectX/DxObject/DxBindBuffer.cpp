@@ -115,27 +115,27 @@ GraphicsRootSignatureDesc BindBufferTable::CreateGraphicsRootSignatureDesc() {
 	for (auto& [name, info] : table_) {
 		switch (info.bindBufferType) {
 			case BindBufferType::kVirtual_CBV:
-				desc.SetVirtualCBV(rootIndex, info.visibility, info.registerNum);
+				desc.SetVirtualCBV(rootIndex, info.visibility, info.registerNum, info.registerSpace);
 				break;
 
 			case BindBufferType::kVirtual_SRV:
-				desc.SetVirtualSRV(rootIndex, info.visibility, info.registerNum);
+				desc.SetVirtualSRV(rootIndex, info.visibility, info.registerNum, info.registerSpace);
 				break;
 
 			case BindBufferType::kVirtual_UAV:
-				desc.SetVirtualUAV(rootIndex, info.visibility, info.registerNum);
+				desc.SetVirtualUAV(rootIndex, info.visibility, info.registerNum, info.registerSpace);
 				break;
 
 			case BindBufferType::kHandle_SRV:
-				desc.SetHandleSRV(rootIndex, info.visibility, info.registerNum);
+				desc.SetHandleSRV(rootIndex, info.visibility, info.registerNum, info.registerSpace);
 				break;
 
 			case BindBufferType::kHandle_UAV:
-				desc.SetHandleUAV(rootIndex, info.visibility, info.registerNum);
+				desc.SetHandleUAV(rootIndex, info.visibility, info.registerNum, info.registerSpace);
 				break;
 
 			case BindBufferType::kSampler:
-				desc.SetSamplerLinear(MODE_WRAP, info.visibility, info.registerNum);
+				desc.SetSamplerLinear(MODE_WRAP, info.visibility, info.registerNum, info.registerSpace);
 				continue;
 				break;
 		}
@@ -155,33 +155,33 @@ GraphicsRootSignatureDesc BindBufferTable::CreateGraphicsRootSignatureDesc(const
 	for (auto& [name, info] : table_) {
 		switch (info.bindBufferType) {
 			case BindBufferType::kVirtual_CBV:
-				desc.SetVirtualCBV(rootIndex, info.visibility, info.registerNum);
+				desc.SetVirtualCBV(rootIndex, info.visibility, info.registerNum, info.registerSpace);
 				break;
 
 			case BindBufferType::kVirtual_SRV:
-				desc.SetVirtualSRV(rootIndex, info.visibility, info.registerNum);
+				desc.SetVirtualSRV(rootIndex, info.visibility, info.registerNum, info.registerSpace);
 				break;
 
 			case BindBufferType::kVirtual_UAV:
-				desc.SetVirtualUAV(rootIndex, info.visibility, info.registerNum);
+				desc.SetVirtualUAV(rootIndex, info.visibility, info.registerNum, info.registerSpace);
 				break;
 
 			case BindBufferType::kHandle_SRV:
-				desc.SetHandleSRV(rootIndex, info.visibility, info.registerNum);
+				desc.SetHandleSRV(rootIndex, info.visibility, info.registerNum, info.registerSpace);
 				break;
 
 			case BindBufferType::kHandle_UAV:
-				desc.SetHandleUAV(rootIndex, info.visibility, info.registerNum);
+				desc.SetHandleUAV(rootIndex, info.visibility, info.registerNum, info.registerSpace);
 				break;
 
 			case BindBufferType::kSampler:
 				if (samplerDesc.Contains(name)) {
 					//!< samplerがある場合はsamplerを設定
-					desc.SetSamplerDesc(samplerDesc.GetSampler(name, info.visibility, info.registerNum));
+					desc.SetSamplerDesc(samplerDesc.GetSampler(name, info.visibility, info.registerNum, info.registerSpace));
 
 				} else {
 					//!< samplerがない場合はデフォルトのsamplerを設定
-					desc.SetSamplerLinear(MODE_WRAP, info.visibility, info.registerNum);
+					desc.SetSamplerLinear(MODE_WRAP, info.visibility, info.registerNum, info.registerSpace);
 				}
 				continue;
 				break;

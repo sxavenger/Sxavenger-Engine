@@ -122,8 +122,8 @@ void ColliderPrimitiveSphere::Render(const DirectXThreadContext* context, Camera
 
 void ColliderPrimitiveSphere::CreatePipeline() {
 	pipeline_ = std::make_unique<DxObject::ReflectionGraphicsPipelineState>();
-	pipeline_->CreateBlob(kPackagesShaderDirectory / "primitive/collider/colliderPrimitive.vs.hlsl", GraphicsShaderType::vs);
-	pipeline_->CreateBlob(kPackagesShaderDirectory / "primitive/collider/colliderPrimitive.ps.hlsl", GraphicsShaderType::ps);
+	pipeline_->CreateBlob(kPackagesShaderDirectory / "render/debug/collider/colliderPrimitive.vs.hlsl", GraphicsShaderType::vs);
+	pipeline_->CreateBlob(kPackagesShaderDirectory / "render/debug/collider/colliderPrimitive.ps.hlsl", GraphicsShaderType::ps);
 	pipeline_->ReflectionRootSignature(SxavengerSystem::GetDxDevice());
 
 	GraphicsPipelineDesc desc = {};

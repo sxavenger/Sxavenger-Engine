@@ -30,15 +30,6 @@ void FRenderCoreProcess::Init() {
 		processes_[static_cast<uint32_t>(ProcessType::NLAO_Blur)] = std::move(process);
 	}
 
-	{ //!< atmosphere
-		auto process = std::make_unique<CustomReflectionComputePipeline>();
-		process->CreateAsset(L"packages/shaders/render/AmbientProcess/Atmosphere.cs.hlsl");
-		process->RegisterBlob();
-		process->ReflectionPipeline(SxavengerSystem::GetDxDevice());
-
-		processes_[static_cast<uint32_t>(ProcessType::Atmosphere)] = std::move(process);
-	}
-
 	{ //!< overlay
 		auto process = std::make_unique<CustomReflectionComputePipeline>();
 		process->CreateAsset(L"packages/shaders/render/PostProcess/Overlay.cs.hlsl");

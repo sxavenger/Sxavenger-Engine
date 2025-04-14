@@ -45,9 +45,9 @@ void FRenderCoreRaytracing::CreateMiss() {
 
 void FRenderCoreRaytracing::CreateHitgroup() {
 
-	{ //!< Geometry
-		auto& [blob, expt] = hitgroupExportGroups_[GetIndex(HitgroupExportType::Geometry)];
-		blob.Create(kPackagesShaderDirectory / "render/raytracing/hitgroup" / "Geometry.hitgroup.hlsl");
+	{ //!< Mesh
+		auto& [blob, expt] = hitgroupExportGroups_[GetIndex(HitgroupExportType::Mesh)];
+		blob.Create(kPackagesShaderDirectory / "render/raytracing/hitgroup" / "Mesh.hitgroup.hlsl");
 
 		//* hitgroup
 		ExportGroup::Hitgroup hitgroup = {};

@@ -2,7 +2,9 @@
 // include
 //-----------------------------------------------------------------------------------------
 #include "PostProcess.hlsli"
-#include "../../Camera.hlsli"
+
+//* component
+#include "../../Component/CameraComponent.hlsli"
 
 //=========================================================================================
 // buffers
@@ -11,7 +13,7 @@
 RWTexture2D<float4> gInput  : register(u0); //!< input texture
 RWTexture2D<float4> gOutput : register(u1); //!< output texture
 
-ConstantBuffer<Camera> gCamera : register(b0);
+ConstantBuffer<CameraComponent> gCamera : register(b0);
 
 struct Parameter {
 	uint2 strength;
@@ -26,18 +28,18 @@ ConstantBuffer<Parameter> gParameter : register(b1);
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 static const float pi_v = 3.14159265359f;
-static const float d    = 0.0001f; //!< 0Š„‘Îô
+static const float d    = 0.0001f; //!< 0å‰²å¯¾ç­–
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // common methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 float FixLinearDepth(float depth) {
-	// ‹tŽË‰es—ñ‚ðŽg—p‚µ‚Äƒrƒ…[‹óŠÔ‚ÌˆÊ’u‚É–ß‚·
+	// é€†å°„å½±è¡Œåˆ—ã‚’ä½¿ç”¨ã—ã¦ãƒ“ãƒ¥ãƒ¼ç©ºé–“ã®ä½ç½®ã«æˆ»ã™
 	float4 clipSpacePos = float4(0.0f, 0.0f, depth, 1.0f);
 	float4 viewSpacePos = mul(clipSpacePos, gCamera.projInv);
 
-	// viewSpacePos.z / viewSpacePos.w ‚ÅüŒ`[“x‚ðŽæ“¾
+	// viewSpacePos.z / viewSpacePos.w ã§ç·šå½¢æ·±åº¦ã‚’å–å¾—
 	return viewSpacePos.z / viewSpacePos.w;
 }
 
@@ -73,13 +75,13 @@ void main(uint3 dispatchThreadId : SV_DispatchThreadID) {
 	float focus = gParameter.focus;
 	float f     = max(gParameter.f, d);
 	
-	// ƒsƒ“ƒg‚©‚ç‚Ì‘Š‘Î‹——£‚ðŒvŽZ
+	// ãƒ”ãƒ³ãƒˆã‹ã‚‰ã®ç›¸å¯¾è·é›¢ã‚’è¨ˆç®—
 	float coc = abs(depth - focus) / depth;
 	
 	float factor = saturate(abs(depth - focus) / focus);
 	
 	float radius = coc * (focus / f);
-	radius *= lerp(1.0, 24.0f, pow(factor, 2.0)); // ‹——£‚É‰ž‚¶‚Ä‚Ú‚©‚µ‚ð‘•
+	radius *= lerp(1.0, 24.0f, pow(factor, 2.0)); // è·é›¢ã«å¿œã˜ã¦ã¼ã‹ã—ã‚’å¢—å¹…
 	
 	float4 color     = (float4)0;
 	float weightSum = 0;

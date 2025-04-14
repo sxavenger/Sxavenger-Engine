@@ -14,7 +14,7 @@ _DXOBJECT_USING
 // static variables
 //=========================================================================================
 
-const std::filesystem::path FRenderCoreGeometry::kDirectory_ = kPackagesShaderDirectory / "render/geometry";
+const std::filesystem::path FRenderCoreGeometry::kDirectory_ = kPackagesShaderDirectory / "render/geometry/mesh";
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // FRenderCoreGeometry class methods
@@ -78,8 +78,8 @@ void FRenderCoreGeometry::CreateDeferred() {
 	{
 		auto& pipeline = deferred[VertexStage::DefaultVS][PixelStage::Albedo];
 		pipeline = std::make_unique<CustomReflectionGraphicsPipeline>();
-		pipeline->CreateAsset(kDirectory_ / "default.vs.hlsl",        GraphicsShaderType::vs);
-		pipeline->CreateAsset(kDirectory_ / "albedoDeferred.ps.hlsl", GraphicsShaderType::ps);
+		pipeline->CreateAsset(kDirectory_ / "Default.vs.hlsl",        GraphicsShaderType::vs);
+		pipeline->CreateAsset(kDirectory_ / "AlbedoDeferred.ps.hlsl", GraphicsShaderType::ps);
 		pipeline->RegisterBlob();
 
 		pipeline->ReflectionRootSignature(SxavengerSystem::GetDxDevice());
@@ -94,8 +94,8 @@ void FRenderCoreGeometry::CreateForward() {
 	{
 		auto& pipeline = forward[VertexStage::DefaultVS][PixelStage::Albedo];
 		pipeline = std::make_unique<CustomReflectionGraphicsPipeline>();
-		pipeline->CreateAsset(kDirectory_ / "default.vs.hlsl", GraphicsShaderType::vs);
-		pipeline->CreateAsset(kDirectory_ / "albedo.ps.hlsl",  GraphicsShaderType::ps);
+		pipeline->CreateAsset(kDirectory_ / "Default.vs.hlsl",        GraphicsShaderType::vs);
+		pipeline->CreateAsset(kDirectory_ / "AlbedoForward.ps.hlsl",  GraphicsShaderType::ps);
 		pipeline->RegisterBlob();
 
 		pipeline->ReflectionRootSignature(SxavengerSystem::GetDxDevice());

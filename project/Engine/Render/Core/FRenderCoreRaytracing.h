@@ -37,9 +37,9 @@ public:
 	// HitgroupExportType enum class
 	////////////////////////////////////////////////////////////////////////////////////////////
 	enum class HitgroupExportType : uint32_t {
-		Geometry,
+		Mesh,
 	};
-	static inline constexpr uint32_t kHitgroupExportTypeCount = static_cast<uint32_t>(HitgroupExportType::Geometry) + 1;
+	static inline constexpr uint32_t kHitgroupExportTypeCount = static_cast<uint32_t>(HitgroupExportType::Mesh) + 1;
 
 public:
 
