@@ -17,7 +17,7 @@
 TextureCube<float4> gEnvironment : register(t0); //!< 環境マップ
 
 //* output
-RWTexture2DArray<float4> gOutput : register(u0); //!< specular environment cube map.
+RWTexture2DArray<float4> gOutput : register(u0); //!< irradiance(diffuse) environment cube map.
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // main
