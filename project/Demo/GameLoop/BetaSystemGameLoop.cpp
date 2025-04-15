@@ -74,9 +74,13 @@ void BetaSystemGameLoop::InitSystem() {
 	skylight_ = ComponentHelper::CreateMonoBehaviour();
 	skylight_->SetName("sky light");
 	skylight_->AddComponent<SkyLightComponent>();
-	skylight_->GetComponent<SkyLightComponent>()->GetDiffuseParameter().SetTexture(skyAtmosphere_.GetAtmosphere().descriptorSRV_.GetIndex());
+	skylight_->GetComponent<SkyLightComponent>()->GetDiffuseParameter().SetTexture(diffuse);
+	skylight_->GetComponent<SkyLightComponent>()->GetSpecularParameter().SetTexture(specular);
+
+	skylight_->GetComponent<SkyLightComponent>()->GetDiffuseParameter().SetTexture(skyAtmosphere_.GetIrradiance().descriptorSRV_.GetIndex());
 	skylight_->GetComponent<SkyLightComponent>()->GetSpecularParameter().SetTexture(skyAtmosphere_.GetAtmosphere().descriptorSRV_.GetIndex(), 1);
 
+	skyAtmosphere_.Update(SxavengerSystem::GetMainThreadContext());
 }
 
 void BetaSystemGameLoop::TermSystem() {
@@ -88,7 +92,7 @@ void BetaSystemGameLoop::UpdateSystem() {
 	// Update
 	//-----------------------------------------------------------------------------------------
 
-	skyAtmosphere_.Update(SxavengerSystem::GetMainThreadContext());
+	//skyAtmosphere_.Update(SxavengerSystem::GetMainThreadContext());
 
 	//-----------------------------------------------------------------------------------------
 	// SystemUpdate...?

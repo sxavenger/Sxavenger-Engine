@@ -19,7 +19,7 @@ GeometryDeferredOutput main(GeometryPSInput input) {
 
 	float3x3 tbn = float3x3(input.tangent, input.bitangent, input.normal);
 
-	MaterialLib::TextureParameter parameter;
+	MaterialLib::TextureSampler parameter;
 	parameter.Set(input.texcoord, gSampler);
 
 	float transparency = gMaterials[input.instanceId].transparency.GetTransparency(parameter);

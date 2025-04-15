@@ -12,7 +12,7 @@ _DXOBJECT_USING
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 void FSkyAtmosphere::AtmosphereMap::Create(const Vector2ui& size) {
-	CreateResource(size);
+	CreateBuffer(size);
 	CreatePipeline();
 }
 
@@ -29,7 +29,7 @@ void FSkyAtmosphere::AtmosphereMap::Dispatch(const DirectXThreadContext* context
 
 }
 
-void FSkyAtmosphere::AtmosphereMap::CreateResource(const Vector2ui& size) {
+void FSkyAtmosphere::AtmosphereMap::CreateBuffer(const Vector2ui& size) {
 
 	auto device = SxavengerSystem::GetDxDevice()->GetDevice();
 
@@ -120,6 +120,25 @@ void FSkyAtmosphere::AtmosphereMap::CreatePipeline() {
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 void FSkyAtmosphere::IrradianceMap::Create(const AtmosphereMap& atmosphere) {
+	CreateBuffer(atmosphere);
+	CreatePipeline();
+}
+
+void FSkyAtmosphere::IrradianceMap::Dispatch(const DirectXThreadContext* context, const AtmosphereMap& atmosphere) {
+
+	pipeline_->SetPipeline(context->GetDxCommand());
+
+	BindBufferDesc desc = {};
+	desc.SetHandle("gEnvironment", atmosphere.descriptorSRV_.GetGPUHandle());
+	desc.SetHandle("gIrrandiance", descriptorUAV_.GetGPUHandle());
+	pipeline_->BindComputeBuffer(context->GetDxCommand(), desc);
+
+	Vector3ui threadGroup = { RoundUp(atmosphere.size_.x, 16), RoundUp(atmosphere.size_.y, 16), 6 };
+	pipeline_->Dispatch(context->GetDxCommand(), threadGroup);
+
+}
+
+void FSkyAtmosphere::IrradianceMap::CreateBuffer(const AtmosphereMap& atmosphere) {
 
 	auto device = SxavengerSystem::GetDxDevice()->GetDevice();
 
@@ -149,7 +168,7 @@ void FSkyAtmosphere::IrradianceMap::Create(const AtmosphereMap& atmosphere) {
 			nullptr,
 			IID_PPV_ARGS(&resource_)
 		);
-		Assert(SUCCEEDED(hr), "diffuse environment map create failed.");
+		Assert(SUCCEEDED(hr), "irradiance environment map create failed.");
 
 	}
 
@@ -191,12 +210,59 @@ void FSkyAtmosphere::IrradianceMap::Create(const AtmosphereMap& atmosphere) {
 			descriptorUAV_.GetCPUHandle()
 		);
 	}
+}
 
+void FSkyAtmosphere::IrradianceMap::CreatePipeline() {
+	pipeline_ = std::make_unique<DxObject::ReflectionComputePipelineState>();
+	pipeline_->CreateBlob(kPackagesShaderDirectory / "render/prefiltered/irradiance.cs.hlsl");
+	pipeline_->ReflectionPipeline(SxavengerSystem::GetDxDevice());
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // RadianceMap structure methods
 ////////////////////////////////////////////////////////////////////////////////////////////
+
+//void FSkyAtmosphere::RadianceMap::Create(const AtmosphereMap& atmosphere) {
+//}
+
+//void FSkyAtmosphere::RadianceMap::Dispatch(const DirectXThreadContext* context, const AtmosphereMap& atmosphere) {
+//}
+
+void FSkyAtmosphere::RadianceMap::CreateBuffer(const AtmosphereMap& atmosphere) {
+
+	auto device = SxavengerSystem::GetDxDevice()->GetDevice();
+
+	{ //!< resourceの生成
+
+		// propの設定
+		D3D12_HEAP_PROPERTIES prop = {};
+		prop.Type = D3D12_HEAP_TYPE_DEFAULT;
+
+		// descの設定
+		D3D12_RESOURCE_DESC desc = {};
+		desc.Dimension        = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
+		desc.Width            = atmosphere.size_.x;
+		desc.Height           = atmosphere.size_.y;
+		desc.DepthOrArraySize = kCubemap_;
+		desc.MipLevels        = kMiplevels_;
+		desc.Format           = DXGI_FORMAT_R32G32B32A32_FLOAT;
+		desc.SampleDesc.Count = 1;
+		desc.Flags            = D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS;
+
+		// resourceの生成
+		auto hr = device->CreateCommittedResource(
+			&prop,
+			D3D12_HEAP_FLAG_NONE,
+			&desc,
+			D3D12_RESOURCE_STATE_ALL_SHADER_RESOURCE,
+			nullptr,
+			IID_PPV_ARGS(&resource_)
+		);
+		Assert(SUCCEEDED(hr), "radiance environment map create failed.");
+
+	}
+
+}
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // FSkyAtmosphere class methods
@@ -209,4 +275,5 @@ void FSkyAtmosphere::Create(const Vector2ui& size) {
 
 void FSkyAtmosphere::Update(const DirectXThreadContext* context) {
 	atmosphere_.Dispatch(context);
+	irradiance_.Dispatch(context, atmosphere_);
 }

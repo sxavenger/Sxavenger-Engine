@@ -6,9 +6,9 @@
 namespace MaterialLib {
 
 	////////////////////////////////////////////////////////////////////////////////////////////
-	// TextureParameter structure
+	// TextureSampler structure
 	////////////////////////////////////////////////////////////////////////////////////////////
-	struct TextureParameter { //!< helper structure.
+	struct TextureSampler { //!< helper structure.
 
 		//=========================================================================================
 		// public variables
@@ -25,7 +25,10 @@ namespace MaterialLib {
 			texcoord = _texcoord;
 			samplers = _samplers;
 		}
-		
+
+		//!< HACK: texture sample functions.
+		//!< - pixel shader: texture.Sample(_samples, _texcoord)
+		//!< - compute shader: texture.SampleLevel(_samples, _texcoord, 0)
 	};
 
 	////////////////////////////////////////////////////////////////////////////////////////////
@@ -47,7 +50,7 @@ namespace MaterialLib {
 		// public methods
 		//=========================================================================================
 
-		float3 GetAlbedo(TextureParameter parameter) {
+		float3 GetAlbedo(TextureSampler parameter) {
 			switch (type) {
 				case 0:
 					return color;
@@ -86,7 +89,7 @@ namespace MaterialLib {
 		// public methods
 		//=========================================================================================
 
-		float GetTransparency(TextureParameter parameter) {
+		float GetTransparency(TextureSampler parameter) {
 			if (type == 0) {
 				return alpha;
 				
@@ -118,7 +121,7 @@ namespace MaterialLib {
 		// public methods
 		//=========================================================================================
 
-		float3 GetNormal(float3 normal, TextureParameter parameter, float3x3 tbn = (float3x3)0) {
+		float3 GetNormal(float3 normal, TextureSampler parameter, float3x3 tbn = (float3x3)0) {
 			if (type == 0) {
 				return normal;
 				
@@ -145,7 +148,7 @@ namespace MaterialLib {
 		
 		uint index;
 
-		float GetValue(TextureParameter parameter) {
+		float GetValue(TextureSampler parameter) {
 			if (type == 0) {
 				return value;
 				

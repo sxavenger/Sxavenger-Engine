@@ -56,7 +56,7 @@ public:
 		// private methods
 		//=========================================================================================
 
-		void CreateResource(const Vector2ui& size);
+		void CreateBuffer(const Vector2ui& size);
 
 		void CreatePipeline();
 
@@ -74,6 +74,8 @@ public:
 
 		void Create(const AtmosphereMap& atmosphere);
 
+		void Dispatch(const DirectXThreadContext* context, const AtmosphereMap& atmosphere);
+
 		//=========================================================================================
 		// public variables
 		//=========================================================================================
@@ -84,6 +86,20 @@ public:
 		DxObject::Descriptor descriptorSRV_;
 		DxObject::Descriptor descriptorUAV_;
 
+		//* pipeline *//
+
+		std::unique_ptr<DxObject::ReflectionComputePipelineState> pipeline_;
+
+	private:
+
+		//=========================================================================================
+		// private methods
+		//=========================================================================================
+
+		void CreateBuffer(const AtmosphereMap& atmosphere);
+
+		void CreatePipeline();
+
 	};
 
 	////////////////////////////////////////////////////////////////////////////////////////////
@@ -91,6 +107,41 @@ public:
 	////////////////////////////////////////////////////////////////////////////////////////////
 	struct RadianceMap {
 	public:
+
+		//=========================================================================================
+		// public methods
+		//=========================================================================================
+
+		void Create(const AtmosphereMap& atmosphere);
+
+		void Dispatch(const DirectXThreadContext* context, const AtmosphereMap& atmosphere);
+
+		//=========================================================================================
+		// public variables
+		//=========================================================================================
+
+		//* parameter *//
+
+		static inline const UINT16 kMiplevels_ = 4;
+
+		//* directX12 *//
+
+		ComPtr<ID3D12Resource> resource_;
+		DxObject::Descriptor descriptorSRV_;
+		std::array<DxObject::Descriptor, kMiplevels_> descriptorUAVs_;
+
+		//* pipeline *//
+
+		std::unique_ptr<DxObject::ReflectionComputePipelineState> pipeline_;
+
+	private:
+
+		//=========================================================================================
+		// private variables
+		//=========================================================================================
+
+		void CreateBuffer(const AtmosphereMap& atmosphere);
+
 	};
 
 public:
@@ -109,6 +160,8 @@ public:
 	//* getter *//
 
 	const AtmosphereMap& GetAtmosphere() { return atmosphere_; }
+
+	const IrradianceMap& GetIrradiance() { return irradiance_; }
 
 private:
 

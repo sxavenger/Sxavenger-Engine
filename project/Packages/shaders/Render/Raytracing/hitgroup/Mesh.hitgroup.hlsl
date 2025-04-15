@@ -30,7 +30,7 @@ void mainClosesthit(inout Payload payload, in Attribute attribute) {
 
 	MeshVertex vertex = GetWorldVertex(attribute);
 
-	MaterialLib::TextureParameter parameter;
+	MaterialLib::TextureSampler parameter;
 	parameter.Set(vertex.texcoord, gSampler);
 	
 	payload.color.rgb = gMaterial.albedo.GetAlbedo(parameter);

@@ -215,8 +215,8 @@ void main(uint3 dispatchThreadId : SV_DispatchThreadID) {
 		return;
 	}
 
-	uint3 index      = dispatchThreadId;
-	float2 uv        = (float2(dispatchThreadId.xy + 0.5f) / size.xy) * 2.0f - 1.0f; //!< [-1, 1]に変換
+	uint3 index = dispatchThreadId;
+	float2 uv   = (float2(dispatchThreadId.xy + 0.5f) / size.xy) * 2.0f - 1.0f; //!< [-1, 1]に変換
 
 	float3 direction = GetDirection(uv, index.z);
 

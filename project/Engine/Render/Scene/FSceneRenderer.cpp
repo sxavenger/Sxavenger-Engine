@@ -92,7 +92,7 @@ void FSceneRenderer::RenderGeometryStaticMeshDefault(const DirectXThreadContext*
 		// renderer componentの取得
 		MeshRendererComponent* renderer = static_cast<MeshRendererComponent*>(component.get());
 
-		if (!renderer->IsView()) {
+		if (!(renderer->IsActive() && renderer->IsView())) {
 			return;
 		}
 

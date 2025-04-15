@@ -17,7 +17,7 @@ GeometryForwardOutput main(GeometryPSInput input) {
 
 	GeometryForwardOutput output = (GeometryForwardOutput)0;
 
-	MaterialLib::TextureParameter parameter;
+	MaterialLib::TextureSampler parameter;
 	parameter.Set(input.texcoord, gSampler);
 
 	output.color.rgb = gMaterials[input.instanceId].albedo.GetAlbedo(parameter);
