@@ -12,20 +12,45 @@
 #include <algorithm>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// Motion class
+// MotionMode enum class
+////////////////////////////////////////////////////////////////////////////////////////////
+enum class MotionMode {
+	Default,
+	Clamp,
+	Wrap,
+	Mirror,
+};
+float GetMotionT(MotionMode mode, float t);
+
+////////////////////////////////////////////////////////////////////////////////////////////
+// MotionT class
 ////////////////////////////////////////////////////////////////////////////////////////////
 template <class _Ty>
-class Motion {
+class MotionT {
 public:
 
 	////////////////////////////////////////////////////////////////////////////////////////////
-	// Mode enum class
+	// Parameter structure
 	////////////////////////////////////////////////////////////////////////////////////////////
-	enum class Mode : uint8_t {
-		Default,
-		Clamp,
-		Wrap,
-		Mirror,
+	struct Parameter {
+	public:
+
+		//=========================================================================================
+		// public variables
+		//=========================================================================================
+
+		_Ty start;
+		_Ty end;
+
+		//* motion *//
+
+		MotionMode mode = MotionMode::Default;
+
+		//* function *//
+
+		std::function<_Ty(const _Ty&, const _Ty&, float)> motionFunc = Lerp;
+		std::function<float(float)> interpolationFunc = LinearInterpolation;
+
 	};
 
 public:
@@ -34,22 +59,26 @@ public:
 	// public methods
 	//=========================================================================================
 
-	Motion() = default;
-	Motion(
-		const _Ty& begin, const _Ty& end,
-		Mode mode = Mode::Clamp, float t = 0.0f,
-		const std::function<_Ty(const _Ty&, const _Ty&, float)>& motionFunc = Lerp, const std::function<float(float)>& interpolationFunc = LinearInterpolation) :
-		begin_(begin), end_(end),
-		mode_(mode), t_(t),
-		motionFunc_(motionFunc), interpolationFunc_(interpolationFunc) {
+	MotionT() = default;
+
+	MotionT(const _Ty& start, const _Ty& end, MotionMode mode = MotionMode::Default)
+		: start_(start), end_(end), mode_(mode) {
+		motionFunc_ = Lerp;
+		interpolationFunc_ = LinearInterpolation;
 	}
 
-	//* motion option *//
+	MotionT(const Parameter& param)
+		: start_(param.start), end_(param.end), mode_(param.mode) {
+		motionFunc_        = param.motionFunc;
+		interpolationFunc_ = param.interpolationFunc;
+	}
 
-	void SetT(float t) { t_ = ApplyT(mode_, t); }
+	//* motion methods *//
 
-	_Ty Get() const;
+	_Ty GetMotion(float t) const;
 
+	//* static methods *//
+	
 	static float LinearInterpolation(float t) {
 		return t;
 	}
@@ -64,44 +93,29 @@ protected:
 	// protected variables
 	//=========================================================================================
 
-	_Ty begin_, end_;
+	_Ty start_;
+	_Ty end_;
 
-	Mode mode_;
-	float t_;
+	//* motion *//
+
+	MotionMode mode_;
+
+	//* function *//
 
 	std::function<_Ty(const _Ty&, const _Ty&, float)> motionFunc_; //!< lerp, slerp, etc...
 	std::function<float(float)> interpolationFunc_;
 
-	//=========================================================================================
-	// protected methods
-	//=========================================================================================
-
-	static float ApplyT(Mode mode, float t);
-
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// Motion class template methods
+// MotionT class template methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 template <class _Ty>
-inline _Ty Motion<_Ty>::Get() const {
-	return motionFunc_(begin_, end_, interpolationFunc_(t_));
-}
-
-template <class _Ty>
-inline float Motion<_Ty>::ApplyT(Mode mode, float t) {
-	switch (mode) {
-		case Mode::Clamp:
-			return std::clamp(t, 0.0f, 1.0f);
-
-		case Mode::Wrap:
-			return std::fmod(t, 1.0f);
-
-		case Mode::Mirror:
-			return 1.0f - std::abs(std::fmod(t, 2.0f) - 1.0f);
-
-		default:
-			return t;
-	}
+_Ty MotionT<_Ty>::GetMotion(float t) const {
+	return motionFunc_(
+		start_,
+		end_,
+		interpolationFunc_(GetMotionT(mode_, t))
+	);
 }

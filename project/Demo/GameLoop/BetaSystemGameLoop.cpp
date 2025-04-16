@@ -19,6 +19,8 @@
 
 #include "Engine/Component/Components/Light/SkyLightComponent.h"
 
+#include "Engine/Module/Motion/Motion.h"
+
 //* c++
 #include <execution>
 
@@ -58,16 +60,14 @@ void BetaSystemGameLoop::InitSystem() {
 	mesh_   = ComponentHelper::CreateStaticNodeModelBehaviour("assets/models/PBR_Sphere_Test/model/PBR_Sphere.gltf");
 	//mesh_   = ComponentHelper::CreateStaticNodeModelBehaviour("assets/models/sponza/NewSponza_Main_glTF_003.gltf");
 
-	foundation_ = ComponentHelper::CreateStaticModelBehaviour("assets/models/foundation.gltf");
+	//foundation_ = ComponentHelper::CreateStaticModelBehaviour("assets/models/foundation.gltf");
 	
 	//light_  = ComponentHelper::CreatePointLightMonoBehaviour();
-	light_  = ComponentHelper::CreateDirectionalLightMonoBehaviour();
-
-	//node_ = ComponentHelper::CreateStaticNodeModelBehaviour("assets/models/PBR_Sphere_Test/model/PBR_Sphere.gltf");
+	//light_  = ComponentHelper::CreateDirectionalLightMonoBehaviour();
 
 	
-	AssetObserver<AssetTexture> diffuse  = SxavengerAsset::TryImport<AssetTexture>("assets/textures/diffuseHDR.dds");
-	AssetObserver<AssetTexture> specular = SxavengerAsset::TryImport<AssetTexture>("assets/textures/specularHDR.dds");
+	/*AssetObserver<AssetTexture> diffuse  = SxavengerAsset::TryImport<AssetTexture>("assets/textures/diffuseHDR.dds");
+	AssetObserver<AssetTexture> specular = SxavengerAsset::TryImport<AssetTexture>("assets/textures/specularHDR.dds");*/
 
 	RunTimeTracker runtime;
 	runtime.Begin();
@@ -101,6 +101,9 @@ void BetaSystemGameLoop::InitSystem() {
 	skylight_->GetComponent<SkyLightComponent>()->GetDiffuseParameter().SetTexture(environmentMap_.GetIrradianceIndex());
 	skylight_->GetComponent<SkyLightComponent>()->GetSpecularParameter().SetTexture(environmentMap_.GetRadianceIndex(), environmentMap_.GetRadianceMiplevel());
 
+	MotionT<Vector3f> motion = { { 1.0f, 2.0f, 3.0f }, { 4.0f, 5.0f, 6.0f } };
+	Vector3f v = motion.GetMotion(0.5f);
+	v;
 }
 
 void BetaSystemGameLoop::TermSystem() {

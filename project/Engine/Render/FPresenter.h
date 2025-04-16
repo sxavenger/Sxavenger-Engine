@@ -4,7 +4,6 @@
 // include
 //-----------------------------------------------------------------------------------------
 //* engine
-#include <Engine/System/DirectX/DxObject/DxDimensionBuffer.h>
 #include <Engine/System/DirectX/DxObject/DxGraphicsPipelineState.h>
 #include <Engine/System/DirectX/DirectXContext.h>
 
@@ -45,7 +44,6 @@ private:
 	// private variables
 	//=========================================================================================
 
-	std::unique_ptr<DxObject::VertexDimensionBuffer<Vertex>>   vb_;
 	std::unique_ptr<DxObject::ReflectionGraphicsPipelineState> pipeline_;
 
 };

@@ -148,6 +148,12 @@ void GraphicsPipelineState::CreateRootSignature(Device* device, GraphicsRootSign
 	CreateDirectXRootSignature(device);
 }
 
+void GraphicsPipelineState::CreateRootSignature(Device* device, GraphicsRootSignatureDesc&& desc, D3D12_ROOT_SIGNATURE_FLAGS flag) {
+	rootSignatureDesc_ = std::move(desc);
+
+	CreateDirectXRootSignature(device, flag);
+}
+
 void GraphicsPipelineState::CreatePipeline(Device* device, const GraphicsPipelineDesc& desc) {
 	pipelineDesc_ = desc;
 
@@ -234,6 +240,10 @@ void GraphicsPipelineState::CreateDirectXRootSignature(Device* device) {
 	rootSignature_ = rootSignatureDesc_.CreateGraphicsRootSignature(device->GetDevice());
 }
 
+void GraphicsPipelineState::CreateDirectXRootSignature(Device* device, D3D12_ROOT_SIGNATURE_FLAGS flag) {
+	rootSignature_ = rootSignatureDesc_.CreateGraphicsRootSignature(device->GetDevice(), flag);
+}
+
 void GraphicsPipelineState::CreateDirectXPipeline(Device* device) {
 	if (isUseMeshShaderPipeline_) {
 
@@ -302,8 +312,7 @@ void GraphicsPipelineState::CreateDirectXPipeline(Device* device) {
 			&desc,
 			IID_PPV_ARGS(&pipeline_)
 		);
-
-		Assert(SUCCEEDED(hr));
+		Assert(SUCCEEDED(hr), "vertex shader pipeline create failed.");
 	}
 }
 
@@ -311,7 +320,26 @@ void GraphicsPipelineState::CreateDirectXPipeline(Device* device) {
 // ReflectionGraphicsPipelineState class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-void ReflectionGraphicsPipelineState::ReflectionRootSignature(Device* device, const std::optional<SamplerBindDesc>& desc) {
+void ReflectionGraphicsPipelineState::ReflectionRootSignature(Device* device) {
+
+	table_.Reset();
+
+	if (isUseMeshShaderPipeline_) {
+		TrySetBlobToTable(GraphicsShaderType::as, ShaderVisibility::VISIBILITY_AMPLIFICATION);
+		TrySetBlobToTable(GraphicsShaderType::ms, ShaderVisibility::VISIBILITY_MESH, true);
+
+	} else {
+		TrySetBlobToTable(GraphicsShaderType::vs, ShaderVisibility::VISIBILITY_VERTEX, true);
+		TrySetBlobToTable(GraphicsShaderType::gs, ShaderVisibility::VISIBILITY_GEOMETRY);
+	}
+
+	TrySetBlobToTable(GraphicsShaderType::ps, ShaderVisibility::VISIBILITY_PIXEL, true);
+
+	rootSignatureDesc_ = table_.CreateGraphicsRootSignatureDesc();
+	CreateDirectXRootSignature(device);
+}
+
+void ReflectionGraphicsPipelineState::ReflectionRootSignature(Device* device, const SamplerBindDesc& desc) {
 
 	table_.Reset();
 
@@ -327,14 +355,27 @@ void ReflectionGraphicsPipelineState::ReflectionRootSignature(Device* device, co
 	TrySetBlobToTable(GraphicsShaderType::ps, ShaderVisibility::VISIBILITY_PIXEL, true);
 
 
-	if (desc.has_value()) {
-		rootSignatureDesc_ = table_.CreateGraphicsRootSignatureDesc(desc.value());
+	rootSignatureDesc_ = table_.CreateGraphicsRootSignatureDesc(desc);
+	CreateDirectXRootSignature(device);
+}
+
+void ReflectionGraphicsPipelineState::ReflectionRootSignature(Device* device, D3D12_ROOT_SIGNATURE_FLAGS flag) {
+	table_.Reset();
+
+	if (isUseMeshShaderPipeline_) {
+		TrySetBlobToTable(GraphicsShaderType::as, ShaderVisibility::VISIBILITY_AMPLIFICATION);
+		TrySetBlobToTable(GraphicsShaderType::ms, ShaderVisibility::VISIBILITY_MESH, true);
 
 	} else {
-		rootSignatureDesc_ = table_.CreateGraphicsRootSignatureDesc();
+		TrySetBlobToTable(GraphicsShaderType::vs, ShaderVisibility::VISIBILITY_VERTEX, true);
+		TrySetBlobToTable(GraphicsShaderType::gs, ShaderVisibility::VISIBILITY_GEOMETRY);
 	}
 
-	CreateDirectXRootSignature(device);
+	TrySetBlobToTable(GraphicsShaderType::ps, ShaderVisibility::VISIBILITY_PIXEL, true);
+
+
+	rootSignatureDesc_ = table_.CreateGraphicsRootSignatureDesc();
+	CreateDirectXRootSignature(device, flag);
 }
 
 void ReflectionGraphicsPipelineState::BindGraphicsBuffer(CommandContext* context, const BindBufferDesc& desc) {

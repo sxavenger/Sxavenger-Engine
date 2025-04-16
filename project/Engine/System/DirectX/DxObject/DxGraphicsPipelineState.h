@@ -127,6 +127,7 @@ public:
 	void SetBlob(const ShaderBlob& blob, GraphicsShaderType type);
 
 	void CreateRootSignature(Device* device, GraphicsRootSignatureDesc&& desc); //!< rootSignatureDescはmove前提
+	void CreateRootSignature(Device* device, GraphicsRootSignatureDesc&& desc, D3D12_ROOT_SIGNATURE_FLAGS flag);
 
 	void CreatePipeline(Device* device, const GraphicsPipelineDesc& desc);
 
@@ -181,6 +182,7 @@ protected:
 	//* methods *//
 
 	void CreateDirectXRootSignature(Device* device);
+	void CreateDirectXRootSignature(Device* device, D3D12_ROOT_SIGNATURE_FLAGS flag);
 
 	void CreateDirectXPipeline(Device* device);
 
@@ -202,7 +204,9 @@ public:
 
 	//* reflection methods *//
 
-	void ReflectionRootSignature(Device* device, const std::optional<SamplerBindDesc>& desc = std::nullopt);
+	void ReflectionRootSignature(Device* device);
+	void ReflectionRootSignature(Device* device, const SamplerBindDesc& desc);
+	void ReflectionRootSignature(Device* device, D3D12_ROOT_SIGNATURE_FLAGS flag);
 
 	void BindGraphicsBuffer(CommandContext* context, const BindBufferDesc& desc);
 
