@@ -65,7 +65,6 @@ void Texture::Load(const DirectXThreadContext* context, const std::filesystem::p
 
 	// metadataの保存
 	metadata_.Assign(metadata);
-
 }
 
 void Texture::Term() {

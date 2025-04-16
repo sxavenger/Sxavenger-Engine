@@ -69,18 +69,38 @@ void BetaSystemGameLoop::InitSystem() {
 	AssetObserver<AssetTexture> diffuse  = SxavengerAsset::TryImport<AssetTexture>("assets/textures/diffuseHDR.dds");
 	AssetObserver<AssetTexture> specular = SxavengerAsset::TryImport<AssetTexture>("assets/textures/specularHDR.dds");
 
-	skyAtmosphere_.Create({ 1024, 1024 });
+	RunTimeTracker runtime;
+	runtime.Begin();
+
+	//skyAtmosphere_.Create({ 1024, 1024 });
+	//skyAtmosphere_.Update(SxavengerSystem::GetMainThreadContext());
+
+	runtime.End();
+	LogRuntime(std::format("[atmosphere runtime]: {}s", runtime.GetDeltaTime<TimeUnit::second>().time));
+
+	AssetObserver<AssetTexture> env = SxavengerAsset::TryImport<AssetTexture>("assets/textures/EnvHDR.dds");
+
+	runtime.Begin();
+
+	environmentMap_.Create(env.WaitGet()->GetSize());
+	environmentMap_.Dispatch(SxavengerSystem::GetMainThreadContext(), env.WaitGet()->GetGPUHandleSRV());
+
+	runtime.End();
+	LogRuntime(std::format("[environment runtime]: {}s", runtime.GetDeltaTime<TimeUnit::second>().time));
 
 	skylight_ = ComponentHelper::CreateMonoBehaviour();
 	skylight_->SetName("sky light");
 	skylight_->AddComponent<SkyLightComponent>();
-	skylight_->GetComponent<SkyLightComponent>()->GetDiffuseParameter().SetTexture(diffuse);
-	skylight_->GetComponent<SkyLightComponent>()->GetSpecularParameter().SetTexture(specular);
 
-	skylight_->GetComponent<SkyLightComponent>()->GetDiffuseParameter().SetTexture(skyAtmosphere_.GetIrradiance().descriptorSRV_.GetIndex());
-	skylight_->GetComponent<SkyLightComponent>()->GetSpecularParameter().SetTexture(skyAtmosphere_.GetAtmosphere().descriptorSRV_.GetIndex(), 1);
+	//skylight_->GetComponent<SkyLightComponent>()->GetDiffuseParameter().SetTexture(diffuse);
+	//skylight_->GetComponent<SkyLightComponent>()->GetSpecularParameter().SetTexture(specular);
 
-	skyAtmosphere_.Update(SxavengerSystem::GetMainThreadContext());
+	//skylight_->GetComponent<SkyLightComponent>()->GetDiffuseParameter().SetTexture(skyAtmosphere_.GetIrradiance().descriptorSRV.GetIndex());
+	//skylight_->GetComponent<SkyLightComponent>()->GetSpecularParameter().SetTexture(skyAtmosphere_.GetRadiance().descriptorSRV.GetIndex(), skyAtmosphere_.GetRadiance().kMiplevels);
+
+	skylight_->GetComponent<SkyLightComponent>()->GetDiffuseParameter().SetTexture(environmentMap_.GetIrradianceIndex());
+	skylight_->GetComponent<SkyLightComponent>()->GetSpecularParameter().SetTexture(environmentMap_.GetRadianceIndex(), environmentMap_.GetRadianceMiplevel());
+
 }
 
 void BetaSystemGameLoop::TermSystem() {

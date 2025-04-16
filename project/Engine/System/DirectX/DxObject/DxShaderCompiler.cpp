@@ -114,6 +114,7 @@ ComPtr<IDxcBlob> ShaderCompiler::Compile(
 	hr = shaderResult->GetOutput(DXC_OUT_OBJECT, IID_PPV_ARGS(&blob), nullptr);
 	Assert(SUCCEEDED(hr));
 
+	EngineThreadLog("[_DXOBJECT]::ShaderCompiler : shader compiled. filepath: " + filepath.generic_string());
 	return blob;
 }
 

@@ -145,7 +145,8 @@
     <ClCompile Include="Engine\Component\Components\MeshRenderer\PrimitiveRendererComponent.cpp" />
     <ClCompile Include="Engine\Content\InputGeometry\InputPrimitiveHelper.cpp" />
     <ClCompile Include="Engine\System\UI\SxImGui.cpp" />
-    <ClCompile Include="Engine\Render\Scene\Atmosphere\FSkyAtmosphere.cpp" />
+    <ClCompile Include="Engine\Render\Scene\Environment\FEnvironmentMap.cpp" />
+    <ClCompile Include="Engine\Render\Scene\Environment\Atmosphere\FSkyAtmosphere.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\System\Window\Window.h" />
@@ -305,7 +306,8 @@
     <ClInclude Include="Engine\Component\Components\MeshRenderer\PrimitiveRendererComponent.h" />
     <ClInclude Include="Engine\Content\InputGeometry\InputPrimitiveHelper.h" />
     <ClInclude Include="Engine\System\UI\SxImGui.h" />
-    <ClInclude Include="Engine\Render\Scene\Atmosphere\FSkyAtmosphere.h" />
+    <ClInclude Include="Engine\Render\Scene\Environment\FEnvironmentMap.h" />
+    <ClInclude Include="Engine\Render\Scene\Environment\Atmosphere\FSkyAtmosphere.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

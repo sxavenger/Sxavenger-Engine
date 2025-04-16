@@ -257,7 +257,8 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="Engine\Render\FPresenter.cpp" />
     <ClCompile Include="Engine\Render\FRenderCore.cpp" />
     <ClCompile Include="Engine\Render\FRenderTargetTextures.cpp" />
-    <ClCompile Include="Engine\Render\Scene\Atmosphere\FSkyAtmosphere.cpp" />
+    <ClCompile Include="Engine\Render\Scene\Environment\Atmosphere\FSkyAtmosphere.cpp" />
+    <ClCompile Include="Engine\Render\Scene\Environment\FEnvironmentMap.cpp" />
     <ClCompile Include="Engine\Render\Scene\FScene.cpp" />
     <ClCompile Include="Engine\Render\Scene\FSceneRenderer.cpp" />
     <ClCompile Include="Engine\System\Config\SxavengerConfig.cpp" />
@@ -402,7 +403,8 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Engine\Render\FPresenter.h" />
     <ClInclude Include="Engine\Render\FRenderCore.h" />
     <ClInclude Include="Engine\Render\FRenderTargetTextures.h" />
-    <ClInclude Include="Engine\Render\Scene\Atmosphere\FSkyAtmosphere.h" />
+    <ClInclude Include="Engine\Render\Scene\Environment\Atmosphere\FSkyAtmosphere.h" />
+    <ClInclude Include="Engine\Render\Scene\Environment\FEnvironmentMap.h" />
     <ClInclude Include="Engine\Render\Scene\FScene.h" />
     <ClInclude Include="Engine\Render\Scene\FSceneRenderer.h" />
     <ClInclude Include="Engine\System\Cinfig\SxavengerDirectory.h" />

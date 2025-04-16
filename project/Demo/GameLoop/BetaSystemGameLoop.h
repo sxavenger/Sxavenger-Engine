@@ -16,7 +16,7 @@
 #include <Engine/Render/Scene/FSceneRenderer.h>
 #include <Engine/Asset/Observer/AssetObserver.h>
 
-#include "Engine/Render/Scene/Atmosphere/FSkyAtmosphere.h"
+#include "Engine/Render/Scene/Environment/Atmosphere/FSkyAtmosphere.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // BetaSystemGameLoop class
@@ -49,6 +49,7 @@ private:
 	std::unique_ptr<MonoBehaviour> light_;
 	std::unique_ptr<MonoBehaviour> skylight_;
 
+	FEnvironmentMap environmentMap_;
 	FSkyAtmosphere skyAtmosphere_;
 
 	//=========================================================================================

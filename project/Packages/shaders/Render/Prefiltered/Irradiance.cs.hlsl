@@ -1,24 +1,8 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
-//* library
-#include "../../Library/Math.hlsli"
-#include "../../Library/Hammersley.hlsli"
-
-////////////////////////////////////////////////////////////////////////////////////////////
-// defines
-////////////////////////////////////////////////////////////////////////////////////////////
-
-#define _NUM_THREADS_X 16
-#define _NUM_THREADS_Y 16
-
-//=========================================================================================
-// buffers
-//=========================================================================================
-
-//* input
-TextureCube<float4> gEnvironment : register(t0); //!< 環境マップ
-SamplerState gEnvironmentSampler : register(s0); //!< 環境マップSampler
+//* perfiltered
+#include "Prefiltered.hlsli"
 
 //* output
 RWTexture2DArray<float4> gIrrandiance : register(u0); //!< irradiance(diffuse) environment cube map.
@@ -32,30 +16,6 @@ static const uint kSampleCount = 1024;
 ////////////////////////////////////////////////////////////////////////////////////////////
 // methods
 ////////////////////////////////////////////////////////////////////////////////////////////
-
-float3 GetDirection(float2 uv, uint face) {
-	switch (face) {
-		case 0:
-			return normalize(float3(1.0f, -uv.y, -uv.x)); //!< +x
-
-		case 1:
-			return normalize(float3(-1.0f, -uv.y, uv.x)); //!< -x
-
-		case 2:
-			return normalize(float3(uv.x, 1.0f, uv.y)); //!< +y
-
-		case 3:
-			return normalize(float3(uv.x, -1.0f, -uv.y)); //!< -y
-
-		case 4:
-			return normalize(float3(uv.x, -uv.y, 1.0f)); //!< +z
-
-		case 5:
-			return normalize(float3(-uv.x, -uv.y, -1.0f)); //!< -z
-	}
-
-	return float3(0.0f, 0.0f, 0.0f); //!< error.
-}
 
 /*
  # reference
@@ -99,15 +59,16 @@ void main(uint3 dispatchThreadId : SV_DispatchThreadID) {
 	uint3 size;
 	gIrrandiance.GetDimensions(size.x, size.y, size.z);
 
-	if (any(dispatchThreadId >= size)) {
+	uint3 index = dispatchThreadId;
+
+	if (any(index >= size)) {
 		return; //!< out of range.
 	}
+	
+	float2 uv        = (float2(dispatchThreadId.xy + 0.5f) / size.xy) * 2.0f - 1.0f; //!< [-1, 1]に変換
+	float3 direction = GetDirection(uv, index.z);
 
-	uint3 index = dispatchThreadId;
-	float2 uv   = (float2(dispatchThreadId.xy + 0.5f) / size.xy) * 2.0f - 1.0f; //!< [-1, 1]に変換
-
-	float3 direction = GetDirection(uv, index.z); //!< Normalとして扱ってみる.
-
-	gIrrandiance[index] = float4(PrefilterIrradiance(direction), 1.0f); //!< 環境マップから色を取得
+	float3 color        = PrefilterIrradiance(direction); //!< directionを(r = v = n)として扱う
+	gIrrandiance[index] = float4(color, 1.0f); //!< 環境マップから色を取得
 	
 }

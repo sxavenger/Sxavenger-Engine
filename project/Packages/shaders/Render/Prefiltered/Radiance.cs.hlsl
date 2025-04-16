@@ -1,31 +1,43 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
-//* library
-#include "../../Library/Math.hlsli"
-#include "../../Library/Hammersley.hlsli"
-
-////////////////////////////////////////////////////////////////////////////////////////////
-// defines
-////////////////////////////////////////////////////////////////////////////////////////////
-
-#define _NUM_THREADS_X 16
-#define _NUM_THREADS_Y 16
+//* perfiltered
+#include "Prefiltered.hlsli"
 
 //=========================================================================================
 // buffers
 //=========================================================================================
 
-//* input
-TextureCube<float4> gEnvironment : register(t0); //!< 環境マップ
-SamplerState gEnvironmentSampler : register(s0); //!< 環境マップSampler
-
 //* output
-//!< HACK: miplevelが4で固定
-RWTexture2DArray<float4> gRadiance0 : register(u0); //!< radiance environment cube map. miplevel 0
-RWTexture2DArray<float4> gRadiance1 : register(u1); //!< radiance environment cube map. miplevel 1
-RWTexture2DArray<float4> gRadiance2 : register(u2); //!< radiance environment cube map. miplevel 2
-RWTexture2DArray<float4> gRadiance3 : register(u3); //!< radiance environment cube map. miplevel 3
+struct OutputBufferIndex {
+
+	//=========================================================================================
+	// public variables
+	//=========================================================================================
+	
+	uint index;
+
+	//=========================================================================================
+	// public methods
+	//=========================================================================================
+
+	RWTexture2DArray<float4> GetRadiance() {
+		return ResourceDescriptorHeap[index];
+	}
+	
+};
+StructuredBuffer<OutputBufferIndex> gIndices : register(t1);
+
+struct Parameter {
+
+	//=========================================================================================
+	// public variables
+	//=========================================================================================
+	
+	uint2 textureSize;
+	uint miplevels;
+};
+ConstantBuffer<Parameter> gParameter : register(b0);
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // constant variables
@@ -37,28 +49,8 @@ static const uint kSampleCount = 1024;
 // methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-float3 GetDirection(float2 uv, uint face) {
-	switch (face) {
-		case 0:
-			return normalize(float3(1.0f, -uv.y, -uv.x)); //!< +x
-
-		case 1:
-			return normalize(float3(-1.0f, -uv.y, uv.x)); //!< -x
-
-		case 2:
-			return normalize(float3(uv.x, 1.0f, uv.y)); //!< +y
-
-		case 3:
-			return normalize(float3(uv.x, -1.0f, -uv.y)); //!< -y
-
-		case 4:
-			return normalize(float3(uv.x, -uv.y, 1.0f)); //!< +z
-
-		case 5:
-			return normalize(float3(-uv.x, -uv.y, -1.0f)); //!< -z
-	}
-
-	return float3(0.0f, 0.0f, 0.0f); //!< error.
+uint2 GetMipSize(uint miplevel) {
+	return uint2(gParameter.textureSize.x >> miplevel, gParameter.textureSize.y >> miplevel);
 }
 
 /*
@@ -113,6 +105,29 @@ float3 PrefilterRadiance(float roughness, float3 r) {
 [numthreads(_NUM_THREADS_X, _NUM_THREADS_Y, 1)]
 void main(uint3 dispatchThreadId : SV_DispatchThreadID) {
 
-	
-	
+	//!< dispatchThreadId.z / 6 を書き込むmiplevelとする.
+	uint miplevel = dispatchThreadId.z / 6;
+	uint face     = dispatchThreadId.z % 6;
+
+	if (gParameter.miplevels <= miplevel) {
+		return; //!< miplevel out of range.
+	}
+
+	uint2 size  = GetMipSize(miplevel); //!< mipLevelに応じたサイズを取得
+	uint2 index = dispatchThreadId.xy;
+
+	if (any(index >= size)) {
+		return; //!< texture out of range.
+	}
+
+	float2 uv        = (float2(index + 0.5f) / size.xy) * 2.0f - 1.0f; //!< [-1, 1]に変換
+	float3 direction = GetDirection(uv, face);
+
+	float roughness = float(miplevel) / float(gParameter.miplevels - 1); //!< roughnessを計算
+
+	float3 color = PrefilterRadiance(roughness, direction); //!< directionを(r = v = n)として扱う
+
+	RWTexture2DArray<float4> gRadiance = gIndices[miplevel].GetRadiance(); //!< RWTexture2DArray<float4>を取得
+	gRadiance[uint3(index, face)] = float4(color, 1.0f);
+
 }
