@@ -1,17 +1,20 @@
 #include "AssetCollection.h"
 
+//-----------------------------------------------------------------------------------------
+// include
+//-----------------------------------------------------------------------------------------
+//* engine
+#include <Engine/System/SxavengerSystem.h>
+
 ////////////////////////////////////////////////////////////////////////////////////////////
 // AssetCollection class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 void AssetCollection::Init() {
-	loader_ = std::make_unique<AsyncThreadLoaderCollection>();
-	loader_->Init();
 	root_.first = "root";
 }
 
 void AssetCollection::Term() {
-	loader_.reset();
 	root_.second.files.Clear();
 	root_.second.folders.Clear();
 }
@@ -134,7 +137,7 @@ std::shared_ptr<AssetTexture> AssetCollection::LoadTexture(FileData& fileData, c
 	file       = asset;
 
 	asset->SetFilepath(filepath);
-	loader_->PushTask(asset);
+	SxavengerSystem::PushTask(AsyncExecution::Compute, asset);
 	return asset;
 }
 
@@ -148,7 +151,7 @@ std::shared_ptr<AssetModel> AssetCollection::LoadModel(FileData& fileData, const
 
 		model->SetFilepath(filepath);
 		model->SetAssimpOption(assimpOptionModel_);
-		loader_->PushTask(model);
+		SxavengerSystem::PushTask(AsyncExecution::Compute, model);
 		return model;
 
 	} else { //!< modelまたはanimatorが存在しない場合
@@ -157,7 +160,7 @@ std::shared_ptr<AssetModel> AssetCollection::LoadModel(FileData& fileData, const
 
 		asset->SetFilepath(filepath);
 		asset->SetAssimpOption(assimpOptionModel_);
-		loader_->PushTask(asset);
+		SxavengerSystem::PushTask(AsyncExecution::Compute, asset);
 		return asset;
 	}
 }
@@ -172,7 +175,7 @@ std::shared_ptr<AssetAnimator> AssetCollection::LoadAnimator(FileData& fileData,
 
 		animator->SetFilepath(filepath);
 		animator->SetAssimpOption(assimpOptionAnimator_);
-		loader_->PushTask(animator);
+		SxavengerSystem::PushTask(AsyncExecution::None, animator);
 		return animator;
 
 	} else { //!< modelまたはanimatorが存在しない場合
@@ -181,7 +184,7 @@ std::shared_ptr<AssetAnimator> AssetCollection::LoadAnimator(FileData& fileData,
 
 		asset->SetFilepath(filepath);
 		asset->SetAssimpOption(assimpOptionAnimator_);
-		loader_->PushTask(asset);
+		SxavengerSystem::PushTask(AsyncExecution::None, asset);
 		return asset;
 	}
 }
@@ -197,7 +200,7 @@ std::shared_ptr<AssetBlob> AssetCollection::LoadBlob(FileData& fileData, const s
 
 	Assert(profile_.has_value(), "profile is not set.");
 	asset->SetProfile(profile_.value());
-	loader_->PushTask(asset);
+	SxavengerSystem::PushTask(AsyncExecution::None, asset);
 	return asset;
 }
 

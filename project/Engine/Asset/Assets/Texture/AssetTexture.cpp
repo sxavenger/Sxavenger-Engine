@@ -11,16 +11,7 @@
 //////////////////////////////////////////////////////////////////////////////////////////////
 
 void AssetTexture::Load(const DirectXThreadContext* context) {
-	if (BaseAsset::IsLoaded()) {
-		return;
-	}
-
-	BaseAsset::SetState(BaseAsset::State::Loading);
-
 	Texture::Load(context, filepath_);
-	context->ExecuteAllAllocators();
-
-	BaseAsset::SetState(BaseAsset::State::Complete);
 }
 
 void AssetTexture::ShowInspector() {

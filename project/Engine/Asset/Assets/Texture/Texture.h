@@ -80,8 +80,6 @@ private:
 	ComPtr<ID3D12Resource> resource_;
 	DxObject::Descriptor   descriptorSRV_;
 
-	ComPtr<ID3D12Resource> intermediate_; // FIXME: 中管リソースを不要に.
-
 	//* parameter *//
 
 	Metadata metadata_;

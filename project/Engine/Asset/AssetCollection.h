@@ -10,9 +10,6 @@
 #include "Assets/Animator/AssetAnimator.h"
 #include "Assets/Blob/AssetBlob.h"
 
-//* other asset adapter
-#include "Thread/AsyncThreadLoader.h"
-
 //* lib
 #include <Lib/Sxl/OptimizedLowerPathMap.h>
 
@@ -114,10 +111,6 @@ private:
 	//* assets *//
 
 	FolderData root_ = {};
-
-	//* thread *//
-
-	std::unique_ptr<AsyncThreadLoaderCollection> loader_ = nullptr;
 
 	//* next load option *//
 

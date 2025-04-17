@@ -5,6 +5,7 @@
 //-----------------------------------------------------------------------------------------
 //* c++
 #include <cstdint>
+#include <string>
 #include <functional>
 
 //-----------------------------------------------------------------------------------------
@@ -28,10 +29,6 @@ public:
 		Completed, // タスクが正常に完了
 	};
 
-	////////////////////////////////////////////////////////////////////////////////////////////
-	// Function enum class
-	////////////////////////////////////////////////////////////////////////////////////////////
-
 public:
 
 	//=========================================================================================
@@ -52,6 +49,10 @@ public:
 
 	void SetStatus(Status status) { status_ = status; }
 
+	const std::string& GetTag() const { return tag_; }
+
+	void SetTag(const std::string& tag) { tag_ = tag; }
+
 private:
 
 	//=========================================================================================
@@ -61,6 +62,8 @@ private:
 	Status status_ = Status::None;
 
 	std::function<void(const AsyncThread*)> function_ = nullptr;
+
+	std::string tag_ = "nuknown task";
 
 	//!< Execute function または function_ のいずれかを使用する
 };

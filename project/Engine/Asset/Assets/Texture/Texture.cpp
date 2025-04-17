@@ -32,7 +32,7 @@ void Texture::Load(const DirectXThreadContext* context, const std::filesystem::p
 
 	// resourceの生成
 	resource_     = CreateTextureResource(device, metadata);
-	intermediate_ = UploadTextureData(resource_.Get(), image, SxavengerSystem::GetDxDevice()->GetDevice(), context->GetCommandList());
+	ComPtr<ID3D12Resource> intermediate = UploadTextureData(resource_.Get(), image, SxavengerSystem::GetDxDevice()->GetDevice(), context->GetCommandList());
 
 	// SRVの生成
 	{
@@ -66,6 +66,7 @@ void Texture::Load(const DirectXThreadContext* context, const std::filesystem::p
 	// metadataの保存
 	metadata_.Assign(metadata);
 
+	context->TransitionAllocator(); //!< もしかしたらExecuteAllallocatorかも
 	EngineThreadLog("texture loaded. filepath: " + filepath.generic_string());
 }
 
@@ -180,7 +181,7 @@ ComPtr<ID3D12Resource> Texture::UploadTextureData(ID3D12Resource* texture, const
 	barrier.Transition.pResource   = texture;
 	barrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
 	barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_COPY_DEST;
-	barrier.Transition.StateAfter  = D3D12_RESOURCE_STATE_GENERIC_READ;
+	barrier.Transition.StateAfter  = D3D12_RESOURCE_STATE_COMMON;
 
 	commandList->ResourceBarrier(1, &barrier);
 

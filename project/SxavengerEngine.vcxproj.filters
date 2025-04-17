@@ -101,7 +101,6 @@
     <ClCompile Include="Engine\Component\Components\Light\LightCommon.cpp" />
     <ClCompile Include="Engine\Asset\Assets\Blob\AssetBlob.cpp" />
     <ClCompile Include="Engine\Component\Components\SpriteRenderer\SpriteRendererComponent.cpp" />
-    <ClCompile Include="Engine\Asset\Thread\AsyncThreadLoader.cpp" />
     <ClCompile Include="Engine\Asset\AssetCollection.cpp" />
     <ClCompile Include="Engine\Asset\Assets\Animator\Animator.cpp" />
     <ClCompile Include="Engine\Asset\Assets\Animator\AssetAnimator.cpp" />
@@ -265,7 +264,6 @@
     <ClInclude Include="Engine\Asset\Assets\Blob\AssetBlob.h" />
     <ClInclude Include="Engine\Component\Components\SpriteRenderer\SpriteRendererComponent.h" />
     <ClInclude Include="Engine\Asset\Observer\AssetObserver.h" />
-    <ClInclude Include="Engine\Asset\Thread\AsyncThreadLoader.h" />
     <ClInclude Include="Engine\Asset\AssetCollection.h" />
     <ClInclude Include="Engine\Asset\Assets\Animator\AssetAnimator.h" />
     <ClInclude Include="Engine\Asset\Assets\Animator\Animator.h" />

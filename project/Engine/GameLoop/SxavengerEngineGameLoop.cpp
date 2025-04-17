@@ -64,6 +64,8 @@ void SxavengerEngineGameLoop::Init(GameLoop::Context* context) {
 }
 
 void SxavengerEngineGameLoop::Term() {
+	SxavengerSystem::ShutdownAsyncThread();
+
 	SxavengerAsset::Term();
 	SxavengerContent::Term();
 	SxavengerSystem::Term();

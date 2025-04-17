@@ -146,6 +146,14 @@ Performance* SxavengerSystemEngine::GetPerformance() {
 	return sPerformance.get();
 }
 
+void SxavengerSystemEngine::PushTask(AsyncExecution execution, const std::shared_ptr<AsyncTask>& task) {
+	sAsyncThreadCollection->PushTask(execution, task);
+}
+
+void SxavengerSystemEngine::ShutdownAsyncThread() {
+	sAsyncThreadCollection->Term();
+}
+
 void SxavengerSystemEngine::BeginImGuiFrame() {
 	sImGuiController->BeginFrame();
 }

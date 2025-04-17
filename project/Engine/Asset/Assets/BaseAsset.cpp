@@ -5,6 +5,7 @@
 //-----------------------------------------------------------------------------------------
 //* engine
 #include <Engine/System/Utility/Logger.h>
+#include <Engine/System/Runtime/Thread/AsyncThread.h>
 
 //* external
 #include <imgui.h>
@@ -16,6 +17,10 @@
 // BaseAsset class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
+void BaseAsset::Execute(const AsyncThread* thread) {
+	Load(thread->GetContext());
+}
+
 void BaseAsset::WaitComplete() const {
 	while (!IsComplete()) {
 		std::this_thread::sleep_for(std::chrono::milliseconds(1));
@@ -23,11 +28,12 @@ void BaseAsset::WaitComplete() const {
 	}
 }
 
+void BaseAsset::SetFilepath(const std::filesystem::path& filepath) {
+	filepath_ = filepath;
+	SetTag(filepath.generic_string());
+}
+
 void BaseAsset::ShowInspector() {
 	ImGui::SeparatorText(filepath_.stem().generic_string().c_str());
 	ImGui::Separator();
-}
-
-bool BaseAsset::IsLoaded() const {
-	return state_ != State::Unloaded;
 }

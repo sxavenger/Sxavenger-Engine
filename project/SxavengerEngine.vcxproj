@@ -196,7 +196,6 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="Engine\Asset\Assets\Texture\AssetTexture.cpp" />
     <ClCompile Include="Engine\Asset\Assets\Texture\Texture.cpp" />
     <ClCompile Include="Engine\Asset\SxavengerAsset.cpp" />
-    <ClCompile Include="Engine\Asset\Thread\AsyncThreadLoader.cpp" />
     <ClCompile Include="Engine\Component\ComponentHelper.cpp" />
     <ClCompile Include="Engine\Component\Components\Armature\ArmatureComponent.cpp" />
     <ClCompile Include="Engine\Component\Components\BaseComponent.cpp" />
@@ -340,7 +339,6 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Engine\Asset\Assets\Texture\Texture.h" />
     <ClInclude Include="Engine\Asset\Observer\AssetObserver.h" />
     <ClInclude Include="Engine\Asset\SxavengerAsset.h" />
-    <ClInclude Include="Engine\Asset\Thread\AsyncThreadLoader.h" />
     <ClInclude Include="Engine\Component\ComponentHelper.h" />
     <ClInclude Include="Engine\Component\Components\Armature\ArmatureComponent.h" />
     <ClInclude Include="Engine\Component\Components\BaseComponent.h" />

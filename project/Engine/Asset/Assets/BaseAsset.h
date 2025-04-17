@@ -5,6 +5,7 @@
 //-----------------------------------------------------------------------------------------
 //* engine
 #include <Engine/System/DirectX/DirectXContext.h>
+#include <Engine/System/Runtime/Thread/AsyncTask.h>
 #include <Engine/Editor/Editors/InspectorEditor.h>
 
 //* lib
@@ -18,18 +19,7 @@
 // BaseAsset class
 ////////////////////////////////////////////////////////////////////////////////////////////
 class BaseAsset
-	: public BaseInspector {
-public:
-
-	////////////////////////////////////////////////////////////////////////////////////////////
-	// State enum class
-	////////////////////////////////////////////////////////////////////////////////////////////
-	enum class State {
-		Unloaded,
-		Loading,
-		Complete
-	};
-
+	: public BaseInspector, public AsyncTask {
 public:
 
 	//=========================================================================================
@@ -41,15 +31,17 @@ public:
 
 	virtual void Load(_MAYBE_UNUSED const DirectXThreadContext* context) = 0;
 
+	void Execute(const AsyncThread* thread) override;
+
 	//* state option *//
 
-	bool IsComplete() const { return state_ == State::Complete; }
+	bool IsComplete() const { return AsyncTask::GetStatus() == AsyncTask::Status::Completed; }
 
 	void WaitComplete() const;
 
 	//* filepath option *//
 
-	void SetFilepath(const std::filesystem::path& filepath) { filepath_ = filepath; }
+	void SetFilepath(const std::filesystem::path& filepath);
 
 	const std::filesystem::path& GetFilepath() const { return filepath_; }
 
@@ -64,24 +56,6 @@ protected:
 	//=========================================================================================
 
 	std::filesystem::path filepath_;
-
-	//=========================================================================================
-	// protected methods
-	//=========================================================================================
-
-	bool IsLoaded() const;
-
-	void SetState(State state) { state_ = state; }
-
-private:
-
-	//=========================================================================================
-	// private variables
-	//=========================================================================================
-
-	//* state *//
-
-	State state_ = State::Unloaded;
 
 };
 

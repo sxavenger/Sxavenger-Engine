@@ -57,6 +57,8 @@ public:
 
 	const DirectXThreadContext* GetContext() const;
 
+	const DirectXThreadContext* RequireContext() const;
+
 	const bool IsTerminated() const { return isTerminated_; }
 
 private:

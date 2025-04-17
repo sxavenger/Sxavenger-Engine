@@ -97,6 +97,14 @@ public:
 	static Performance* GetPerformance();
 
 	//-----------------------------------------------------------------------------------------
+	// Async thread collection option
+	//-----------------------------------------------------------------------------------------
+
+	static void PushTask(AsyncExecution execution, const std::shared_ptr<AsyncTask>& task);
+
+	static void ShutdownAsyncThread();
+
+	//-----------------------------------------------------------------------------------------
 	// imgui controller option
 	//-----------------------------------------------------------------------------------------
 

@@ -43,6 +43,10 @@ void AsyncThread::Shutdown() {
 }
 
 const DirectXThreadContext* AsyncThread::GetContext() const {
+	return context_.get();
+}
+
+const DirectXThreadContext* AsyncThread::RequireContext() const {
 	Assert(context_ != nullptr, "thread type does not create context.");
 	return context_.get();
 }
@@ -113,6 +117,7 @@ void AsyncThreadPool::Create(AsyncExecution execution, size_t size) {
 					}
 
 					task = queue_.front();
+					EngineThreadLog("[AsyncThreadPool]: task poped. tag: " + queue_.front()->GetTag());
 					queue_.pop();
 				}
 
@@ -129,6 +134,7 @@ void AsyncThreadPool::Create(AsyncExecution execution, size_t size) {
 				}
 
 				task->SetStatus(AsyncTask::Status::Completed);
+				EngineThreadLog("[AsyncThread]: task completed. tag: " + task->GetTag());
 			}
 		);
 	}
@@ -155,7 +161,11 @@ void AsyncThreadPool::PushTask(const std::shared_ptr<AsyncTask>& task) {
 		return;
 	}
 
+	std::unique_lock<std::mutex> lock(mutex_);
+
 	task->SetStatus(AsyncTask::Status::Pending);
 	queue_.emplace(task);
+	EngineThreadLog("[AsyncThreadPool]: task pushed. tag: " + task->GetTag());
+
 	condition_.notify_one();
 }
