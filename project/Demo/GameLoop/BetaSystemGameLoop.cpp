@@ -8,7 +8,6 @@
 #include <Engine/Asset/SxavengerAsset.h>
 #include <Engine/Editor/EditorEngine.h>
 #include <Engine/Editor/Editors/DevelopEditor.h>
-#include <Engine/Editor/Editors/HierarchyEditor.h>
 #include <Engine/Render/FMainRender.h>
 #include <Engine/Component/Components/Collider/ColliderComponent.h>
 #include <Engine/Component/Components/Collider/CollisionManager.h>
@@ -19,10 +18,7 @@
 
 #include "Engine/Component/Components/Light/SkyLightComponent.h"
 
-#include "Engine/Module/Motion/Motion.h"
-
-//* c++
-#include <execution>
+#include "Engine/System/Runtime/Thread/AsyncThread.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // BetaSystemGameLoop class methods
@@ -88,6 +84,8 @@ void BetaSystemGameLoop::InitSystem() {
 	runtime.End();
 	LogRuntime(std::format("[environment runtime]: {}s", runtime.GetDeltaTime<TimeUnit::second>().time));
 
+	skyAtmosphere_.Create({ 1024, 1024 });
+
 	skylight_ = ComponentHelper::CreateMonoBehaviour();
 	skylight_->SetName("sky light");
 	skylight_->AddComponent<SkyLightComponent>();
@@ -101,9 +99,6 @@ void BetaSystemGameLoop::InitSystem() {
 	skylight_->GetComponent<SkyLightComponent>()->GetDiffuseParameter().SetTexture(environmentMap_.GetIrradianceIndex());
 	skylight_->GetComponent<SkyLightComponent>()->GetSpecularParameter().SetTexture(environmentMap_.GetRadianceIndex(), environmentMap_.GetRadianceMiplevel());
 
-	MotionT<Vector3f> motion = { { 1.0f, 2.0f, 3.0f }, { 4.0f, 5.0f, 6.0f } };
-	Vector3f v = motion.GetMotion(0.5f);
-	v;
 }
 
 void BetaSystemGameLoop::TermSystem() {
@@ -115,7 +110,7 @@ void BetaSystemGameLoop::UpdateSystem() {
 	// Update
 	//-----------------------------------------------------------------------------------------
 
-	//skyAtmosphere_.Update(SxavengerSystem::GetMainThreadContext());
+	skyAtmosphere_.Update(SxavengerSystem::GetMainThreadContext());
 
 	//-----------------------------------------------------------------------------------------
 	// SystemUpdate...?

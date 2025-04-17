@@ -29,7 +29,7 @@ public:
 	DirectXThreadContext()  = default;
 	~DirectXThreadContext() { Term(); }
 
-	void Init(uint32_t allocatorCount);
+	void Init(uint32_t allocatorCount, D3D12_COMMAND_LIST_TYPE type = D3D12_COMMAND_LIST_TYPE_DIRECT);
 
 	void Term();
 
@@ -54,6 +54,10 @@ private:
 	//* DXOBJECT *//
 
 	std::unique_ptr<DxObject::CommandContext> command_;
+
+	//* parameter *//
+
+	D3D12_COMMAND_LIST_TYPE type_ = D3D12_COMMAND_LIST_TYPE_NONE;
 
 	//=========================================================================================
 	// private methods

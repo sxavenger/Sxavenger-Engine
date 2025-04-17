@@ -5,7 +5,7 @@ _DXOBJECT_USING
 // CommandContext class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-void CommandContext::Init(Device* devices, uint32_t allocatorCount) {
+void CommandContext::Init(Device* devices, uint32_t allocatorCount, D3D12_COMMAND_LIST_TYPE type) {
 
 	ID3D12Device* device = devices->GetDevice();
 
@@ -16,9 +16,9 @@ void CommandContext::Init(Device* devices, uint32_t allocatorCount) {
 	commandAllocators_.resize(allocatorCount_);
 	allocatorFenceValues_.resize(allocatorCount_);
 
-	CreateCommandAllocator(device);
-	CreateCommandQueue(device);
-	CreateCommandList(device);
+	CreateCommandAllocator(device, type);
+	CreateCommandQueue(device, type);
+	CreateCommandList(device, type);
 	CreateFence(device);
 }
 
@@ -45,22 +45,23 @@ void CommandContext::ExecuteAllAllocators() {
 	Reset(currentIndex_);
 }
 
-void CommandContext::CreateCommandAllocator(ID3D12Device* device) {
+void CommandContext::CreateCommandAllocator(ID3D12Device* device, D3D12_COMMAND_LIST_TYPE type) {
 
 
 	// コマンドアロケーターを生成
 	for (uint32_t i = 0; i < allocatorCount_; ++i) {
 		auto hr = device->CreateCommandAllocator(
-			D3D12_COMMAND_LIST_TYPE_DIRECT,
+			type,
 			IID_PPV_ARGS(&commandAllocators_[i])
 		);
 		Assert(SUCCEEDED(hr));
 	}
 }
 
-void CommandContext::CreateCommandQueue(ID3D12Device* device) {
+void CommandContext::CreateCommandQueue(ID3D12Device* device, D3D12_COMMAND_LIST_TYPE type) {
 	// デスクの設定
 	D3D12_COMMAND_QUEUE_DESC desc = {};
+	desc.Type = type;
 
 	// コマンドキューを生成
 	auto hr = device->CreateCommandQueue(
@@ -71,11 +72,11 @@ void CommandContext::CreateCommandQueue(ID3D12Device* device) {
 	Assert(SUCCEEDED(hr));
 }
 
-void CommandContext::CreateCommandList(ID3D12Device* device) {
+void CommandContext::CreateCommandList(ID3D12Device* device, D3D12_COMMAND_LIST_TYPE type) {
 	// コマンドリストを生成
 	auto hr = device->CreateCommandList(
 		0,
-		D3D12_COMMAND_LIST_TYPE_DIRECT,
+		type,
 		commandAllocators_[currentIndex_].Get(),
 		nullptr,
 		IID_PPV_ARGS(&commandList_)

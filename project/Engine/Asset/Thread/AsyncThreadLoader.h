@@ -92,7 +92,7 @@ private:
 
 	//* threads *//
 
-	static const uint8_t kThreadCount_ = 4;
+	static const uint8_t kThreadCount_ = 2;
 	std::array<AsyncThreadLoader, kThreadCount_> threads_;
 
 	bool isExit_ = false;

@@ -11,9 +11,13 @@ _DXOBJECT_USING
 // DirectXThreadContext class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-void DirectXThreadContext::Init(uint32_t allocatorCount) {
+void DirectXThreadContext::Init(uint32_t allocatorCount, D3D12_COMMAND_LIST_TYPE type) {
+
+	// 引数の保存
+	type_ = type;
+
 	command_ = std::make_unique<CommandContext>();
-	command_->Init(SxavengerSystem::GetDxDevice(), allocatorCount);
+	command_->Init(SxavengerSystem::GetDxDevice(), allocatorCount, type);
 	SetDescriptorHeap();
 }
 
@@ -39,6 +43,9 @@ ID3D12CommandQueue* DirectXThreadContext::GetCommandQueue() const {
 }
 
 void DirectXThreadContext::SetDescriptorHeap() const {
+	if (type_ == D3D12_COMMAND_LIST_TYPE_COPY) {
+		return; //!< DirectX12では CopyコマンドリストはDescriptorHeapを変更できない
+	}
 
 	ID3D12DescriptorHeap* descriptorHeaps[] = {
 		SxavengerSystem::GetDxDescriptorHeaps()->GetDescriptorHeap(kDescriptor_CBV_SRV_UAV)

@@ -28,7 +28,7 @@ public:
 	CommandContext()  = default;
 	~CommandContext() { Term(); }
 
-	void Init(Device* device, uint32_t allocatorCount = 1);
+	void Init(Device* device, uint32_t allocatorCount = 1, D3D12_COMMAND_LIST_TYPE type = D3D12_COMMAND_LIST_TYPE_DIRECT);
 
 	void Term();
 
@@ -73,9 +73,9 @@ private:
 	// private methods
 	//=========================================================================================
 
-	void CreateCommandAllocator(ID3D12Device* device);
-	void CreateCommandQueue(ID3D12Device* device);
-	void CreateCommandList(ID3D12Device* device);
+	void CreateCommandAllocator(ID3D12Device* device, D3D12_COMMAND_LIST_TYPE type);
+	void CreateCommandQueue(ID3D12Device* device, D3D12_COMMAND_LIST_TYPE type);
+	void CreateCommandList(ID3D12Device* device, D3D12_COMMAND_LIST_TYPE type);
 	void CreateFence(ID3D12Device* device);
 
 	void Close();
