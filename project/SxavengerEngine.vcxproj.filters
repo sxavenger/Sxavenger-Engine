@@ -149,6 +149,7 @@
     <ClCompile Include="Engine\Render\Scene\Environment\Atmosphere\FSkyAtmosphere.cpp" />
     <ClCompile Include="Engine\System\Runtime\Thread\AsyncTask.cpp" />
     <ClCompile Include="Engine\System\Runtime\Thread\AsyncThread.cpp" />
+    <ClCompile Include="Engine\System\Runtime\Thread\AsyncThreadCollection.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\System\Window\Window.h" />
@@ -312,6 +313,7 @@
     <ClInclude Include="Engine\Render\Scene\Environment\Atmosphere\FSkyAtmosphere.h" />
     <ClInclude Include="Engine\System\Runtime\Thread\AsyncTask.h" />
     <ClInclude Include="Engine\System\Runtime\Thread\AsyncThread.h" />
+    <ClInclude Include="Engine\System\Runtime\Thread\AsyncThreadCollection.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

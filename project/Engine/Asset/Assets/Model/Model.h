@@ -58,6 +58,8 @@ public:
 		enum class TextureType : uint8_t {
 			Diffuse,
 			Bump,
+			Roughness,
+			Metallic,
 		};
 
 	public:
@@ -66,16 +68,16 @@ public:
 		// public methods
 		//=========================================================================================
 
-		void CreateComponent();
+		void Create();
 
 		//=========================================================================================
 		// public variables
 		//=========================================================================================
 
-		std::array<std::shared_ptr<Texture>, static_cast<uint8_t>(TextureType::Bump) + 1> textures_;
+		std::array<std::shared_ptr<Texture>, static_cast<uint8_t>(TextureType::Metallic) + 1> textures_;
 
-		float roughness = 0.0f;
-		float metallic  = 0.0f;
+		float roughness = 1.0f;
+		float metallic  = 1.0f;
 
 	};
 

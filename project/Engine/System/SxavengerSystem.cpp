@@ -5,10 +5,11 @@
 ////////////////////////////////////////////////////////////////////////////////////////////
 namespace {
 	//* system orign
-	static std::unique_ptr<WinApp>                sWinApp            = nullptr; //!< win app system
-	static std::unique_ptr<DirectXCommon>         sDirectXCommon     = nullptr; //!< DirectX12 system
-	static std::unique_ptr<DirectXThreadContext>  sMainThreadContext = nullptr; //!< main thread context
-	static std::unique_ptr<Performance>           sPerformance       = nullptr; //!< performance system
+	static std::unique_ptr<WinApp>                sWinApp                = nullptr; //!< win app system
+	static std::unique_ptr<DirectXCommon>         sDirectXCommon         = nullptr; //!< DirectX12 system
+	static std::unique_ptr<DirectXThreadContext>  sMainThreadContext     = nullptr; //!< main thread context
+	static std::unique_ptr<Performance>           sPerformance           = nullptr; //!< performance system
+	static std::unique_ptr<AsyncThreadCollection> sAsyncThreadCollection = nullptr; //!< async thread system
 
 	//* system user
 	static std::unique_ptr<GameWindowCollection> sWindowCollection  = nullptr; //!< window collection
@@ -35,6 +36,9 @@ void SxavengerSystemEngine::Init() {
 	sMainThreadContext->Init(3); //!< allocator count
 
 	sPerformance = std::make_unique<Performance>();
+
+	sAsyncThreadCollection = std::make_unique<AsyncThreadCollection>();
+	sAsyncThreadCollection->Init();
 
 	sWindowCollection = std::make_unique<GameWindowCollection>();
 	sInput            = std::make_unique<Input>();

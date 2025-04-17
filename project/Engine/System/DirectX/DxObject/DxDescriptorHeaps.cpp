@@ -126,7 +126,7 @@ void DescriptorHeaps::Init(Device* device) {
 	pools_[DescriptorType::kDescriptor_DSV]->Init(device, D3D12_DESCRIPTOR_HEAP_TYPE_DSV, false, 8);
 
 	pools_[DescriptorType::kDescriptor_CBV_SRV_UAV] = std::make_unique<DescriptorPool>();
-	pools_[DescriptorType::kDescriptor_CBV_SRV_UAV]->Init(device, D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, true, 128);
+	pools_[DescriptorType::kDescriptor_CBV_SRV_UAV]->Init(device, D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, true, 256);
 
 	EngineLog("[_DXOBJECT]::DescriptorHeaps complete init.");
 }

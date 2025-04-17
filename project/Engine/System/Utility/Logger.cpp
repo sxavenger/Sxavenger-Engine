@@ -103,9 +103,9 @@ void SxavengerLogger::ExceptionA(const std::string& label, const std::string& de
 	// location
 	std::ostringstream locationMes;
 	locationMes << "[location]" << "  \n";
-	locationMes << " filename: " << location.file_name()     << "  \n";
+	locationMes << " filename: " << location.file_name() << "  \n";
 	locationMes << " function: " << location.function_name() << "  \n";
-	locationMes << " line:     " << location.line()          << "  \n";
+	locationMes << " line:     " << location.line() << "  \n";
 	OutputA("\nError: Sxavenger Engine assertion\n\n" + locationMes.str());
 
 	// label
@@ -146,7 +146,7 @@ void SxavengerLogger::ExceptionA(const std::string& label, const std::string& de
 		NULL,
 		(locationMes.str() + "\n" + labelMes.str()).c_str(),
 		"Sxavenger Engine assertion",
-		MB_TASKMODAL | MB_ICONHAND
+		MB_TASKMODAL | MB_ICONHAND | MB_TOPMOST
 	);
 
 	__debugbreak();
@@ -199,7 +199,7 @@ void SxavengerLogger::ExceptionW(const std::wstring& label, const std::wstring& 
 		NULL,
 		(locationMes.str() + L"\n" + labelMes.str()).c_str(),
 		L"Sxavenger Engine assertion",
-		MB_TASKMODAL | MB_ICONHAND
+		MB_TASKMODAL | MB_ICONHAND | MB_TOPMOST
 	);
 
 	__debugbreak();

@@ -23,20 +23,35 @@
 // AssimpMaterial structure methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-void Model::AssimpMaterial::CreateComponent() {
+void Model::AssimpMaterial::Create() {
 	Material::CreateBuffer();
 
+	// albedo || diffuse
 	if (textures_[static_cast<uint8_t>(TextureType::Diffuse)] != nullptr) {
 		Material::GetBuffer().albedo.SetTexture(textures_[static_cast<uint8_t>(TextureType::Diffuse)]->GetDescriptorSRV().GetIndex());
 		Material::GetBuffer().transparency.SetTexture(textures_[static_cast<uint8_t>(TextureType::Diffuse)]->GetDescriptorSRV().GetIndex());
 	}
 
+	// bump
 	if (textures_[static_cast<uint8_t>(TextureType::Bump)] != nullptr) {
 		Material::GetBuffer().normal.SetTexture(textures_[static_cast<uint8_t>(TextureType::Bump)]->GetDescriptorSRV().GetIndex());
 	}
 
-	Material::GetBuffer().properties.roughness.SetValue(roughness);
-	Material::GetBuffer().properties.metallic.SetValue(metallic);
+	// roughness
+	if (textures_[static_cast<uint8_t>(TextureType::Roughness)] != nullptr) {
+		Material::GetBuffer().properties.roughness.SetTexture(textures_[static_cast<uint8_t>(TextureType::Roughness)]->GetDescriptorSRV().GetIndex());
+
+	} else {
+		Material::GetBuffer().properties.roughness.SetValue(roughness);
+	}
+
+	// metallic
+	if (textures_[static_cast<uint8_t>(TextureType::Metallic)] != nullptr) {
+		Material::GetBuffer().properties.metallic.SetTexture(textures_[static_cast<uint8_t>(TextureType::Metallic)]->GetDescriptorSRV().GetIndex());
+
+	} else {
+		Material::GetBuffer().properties.metallic.SetValue(metallic);
+	}
 }
 
 //=========================================================================================
@@ -379,6 +394,26 @@ void Model::LoadMaterial(const aiScene* aiScene, const DirectXThreadContext* con
 				material.textures_[static_cast<uint8_t>(AssimpMaterial::TextureType::Bump)] = std::make_shared<Texture>();
 				material.textures_[static_cast<uint8_t>(AssimpMaterial::TextureType::Bump)]->Load(context, directory / aiTextureFilepath.C_Str());
 			}
+
+			// roughnessの取得
+			if (aiMaterial->GetTextureCount(aiTextureType_DIFFUSE_ROUGHNESS) != 0) {
+				aiString aiTextureFilepath;
+				aiMaterial->GetTexture(aiTextureType_DIFFUSE_ROUGHNESS, 0, &aiTextureFilepath);
+
+				// データの保存
+				material.textures_[static_cast<uint8_t>(AssimpMaterial::TextureType::Roughness)] = std::make_shared<Texture>();
+				material.textures_[static_cast<uint8_t>(AssimpMaterial::TextureType::Roughness)]->Load(context, directory / aiTextureFilepath.C_Str());
+			}
+
+			// metallicの取得
+			if (aiMaterial->GetTextureCount(aiTextureType_METALNESS) != 0) {
+				aiString aiTextureFilepath;
+				aiMaterial->GetTexture(aiTextureType_METALNESS, 0, &aiTextureFilepath);
+
+				// データの保存
+				material.textures_[static_cast<uint8_t>(AssimpMaterial::TextureType::Metallic)] = std::make_shared<Texture>();
+				material.textures_[static_cast<uint8_t>(AssimpMaterial::TextureType::Metallic)]->Load(context, directory / aiTextureFilepath.C_Str());
+			}
 		}
 
 		{ //!< parameter
@@ -398,7 +433,7 @@ void Model::LoadMaterial(const aiScene* aiScene, const DirectXThreadContext* con
 		}
 
 		{ //!< Component
-			material.CreateComponent();
+			material.Create();
 		}
 	});
 }

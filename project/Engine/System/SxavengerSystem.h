@@ -11,6 +11,7 @@
 #include "Window/GameWindowCollection.h"
 #include "Runtime/Input/Input.h"
 #include "Runtime/Performance/Performance.h"
+#include "Runtime/Thread/AsyncThreadCollection.h"
 #include "UI/ImGuiController.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////////

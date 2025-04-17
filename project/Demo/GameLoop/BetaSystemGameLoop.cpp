@@ -110,7 +110,7 @@ void BetaSystemGameLoop::UpdateSystem() {
 	// Update
 	//-----------------------------------------------------------------------------------------
 
-	skyAtmosphere_.Update(SxavengerSystem::GetMainThreadContext());
+	//skyAtmosphere_.Update(SxavengerSystem::GetMainThreadContext());
 
 	//-----------------------------------------------------------------------------------------
 	// SystemUpdate...?

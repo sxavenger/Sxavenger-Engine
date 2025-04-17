@@ -23,6 +23,7 @@ enum class AsyncExecution : uint8_t {
 	Copy,
 	Compute,
 };
+static inline constexpr uint8_t kAsyncExecutionCount = static_cast<uint8_t>(AsyncExecution::Compute) + 1;
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // AsyncThread class
@@ -82,7 +83,10 @@ private:
 	//=========================================================================================
 
 	static D3D12_COMMAND_LIST_TYPE GetCommandListType(AsyncExecution execution);
+
 	static uint32_t GetAllocatorCount(AsyncExecution execution);
+
+	static std::string GetExecution(AsyncExecution execution);
 
 };
 
@@ -102,7 +106,7 @@ public:
 
 	//* task option *//
 
-	void SetTask(const std::shared_ptr<AsyncTask>& task);
+	void PushTask(const std::shared_ptr<AsyncTask>& task);
 
 private:
 

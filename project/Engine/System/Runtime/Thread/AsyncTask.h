@@ -22,10 +22,10 @@ public:
 	// Status enum class
 	////////////////////////////////////////////////////////////////////////////////////////////
 	enum class Status : uint8_t {
-		 None,      // 初期状態、または未設定
-		 Pending,   // タスクがキューに入り、実行待ち
-		 Running,   // タスクが実行中
-		 Completed, // タスクが正常に完了
+		None,      // 初期状態、または未設定
+		Pending,   // タスクがキューに入り、実行待ち
+		Running,   // タスクが実行中
+		Completed, // タスクが正常に完了
 	};
 
 	////////////////////////////////////////////////////////////////////////////////////////////
@@ -51,9 +51,6 @@ public:
 	void Wait(Status status = Status::Completed) const;
 
 	void SetStatus(Status status) { status_ = status; }
-
-
-
 
 private:
 

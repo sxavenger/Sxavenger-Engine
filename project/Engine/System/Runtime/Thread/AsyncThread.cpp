@@ -12,7 +12,7 @@ void AsyncThread::Create(AsyncExecution execution, const MainFunction& main, con
 	condition_ = condition;
 
 	thread_ = std::thread([this]() {
-		EngineThreadLog("[AsyncThread]: begin thread.");
+		EngineThreadLog("[AsyncThread]: begin thread. " + GetExecution(execution_));
 		while (!isTerminated_ && condition_()) {
 			main_(this);
 		}
@@ -73,6 +73,21 @@ uint32_t AsyncThread::GetAllocatorCount(AsyncExecution execution) {
 	return 0;
 }
 
+std::string AsyncThread::GetExecution(AsyncExecution execution) {
+	switch (execution) {
+		case AsyncExecution::None:
+			return _TO_STRING(AsyncExecution::None);
+
+		case AsyncExecution::Copy:
+			return _TO_STRING(AsyncExecution::Copy);
+
+		case AsyncExecution::Compute:
+			return _TO_STRING(AsyncExecution::Compute);
+	}
+
+	return {}; //!< error case.
+}
+
 ////////////////////////////////////////////////////////////////////////////////////////////
 // AsyncThreadPool class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -108,6 +123,11 @@ void AsyncThreadPool::Create(AsyncExecution execution, size_t size) {
 				// todo: thread log output.
 				task->SetStatus(AsyncTask::Status::Running);
 				task->Execute(th);
+
+				if (auto context = th->GetContext()) {
+					context->ExecuteAllAllocators(); //!< commandの実行
+				}
+
 				task->SetStatus(AsyncTask::Status::Completed);
 			}
 		);
@@ -130,7 +150,7 @@ void AsyncThreadPool::Term() {
 	threads_.clear();
 }
 
-void AsyncThreadPool::SetTask(const std::shared_ptr<AsyncTask>& task) {
+void AsyncThreadPool::PushTask(const std::shared_ptr<AsyncTask>& task) {
 	if (task->GetStatus() != AsyncTask::Status::None) {
 		return;
 	}
