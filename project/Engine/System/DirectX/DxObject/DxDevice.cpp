@@ -58,7 +58,7 @@ void Device::CreateDebugLayer() {
 		//!< PIX起動時以外は自動でonに
 	}
 
-#endif // _DEBUG
+#endif // _DEVELOPMENT
 }
 
 void Device::CreateFactory() {

@@ -19,7 +19,7 @@ void FScene::SetupTopLevelAS(const DirectXThreadContext* context) {
 
 	sComponentStorage->ForEach<MeshRendererComponent>([&](MeshRendererComponent* component) {
 		// todo: std::execution::parに変更
-		if (!component->IsView()) {
+		if (!component->IsView() || !component->IsActive()) {
 			return;
 		}
 

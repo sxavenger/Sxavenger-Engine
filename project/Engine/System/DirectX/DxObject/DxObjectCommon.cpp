@@ -34,7 +34,7 @@ ComPtr<ID3D12Resource> _DXOBJECT CreateBufferResource(
 		&desc,
 		state,
 		nullptr,
-		IID_PPV_ARGS(result.ReleaseAndGetAddressOf())
+		IID_PPV_ARGS(result.GetAddressOf())
 	);
 
 	Assert(SUCCEEDED(hr));

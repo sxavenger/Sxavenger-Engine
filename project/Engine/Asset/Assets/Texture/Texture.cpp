@@ -66,7 +66,7 @@ void Texture::Load(const DirectXThreadContext* context, const std::filesystem::p
 	// metadataの保存
 	metadata_.Assign(metadata);
 
-	context->TransitionAllocator(); //!< もしかしたらExecuteAllallocatorかも
+	context->ExecuteAllAllocators();
 	EngineThreadLog("texture loaded. filepath: " + filepath.generic_string());
 }
 

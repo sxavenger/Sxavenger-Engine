@@ -18,6 +18,7 @@ GeometryDeferredOutput main(GeometryPSInput input) {
 	GeometryDeferredOutput output = (GeometryDeferredOutput)0;
 
 	float3x3 tbn = float3x3(input.tangent, input.bitangent, input.normal);
+	//tbn = transpose(tbn);
 
 	MaterialLib::TextureSampler parameter;
 	parameter.Set(input.texcoord, gSampler);
@@ -29,6 +30,7 @@ GeometryDeferredOutput main(GeometryPSInput input) {
 
 	output.SetAlbedo(gMaterials[input.instanceId].albedo.GetAlbedo(parameter));
 	output.SetNormal(gMaterials[input.instanceId].normal.GetNormal(input.normal, parameter, tbn));
+	output.SetNormal(input.normal);
 	output.SetPosition(input.worldPos);
 	
 	output.SetMaterial(

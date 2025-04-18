@@ -54,12 +54,12 @@ struct GeometryDeferredOutput { //!< FSceneTextures::GBuffers
 	//=========================================================================================
 	
 	void SetNormal(float3 n) {
-		float3 map = n * 0.5f + 0.5f; //!< [-1, 1] -> [0, 1]
+		float3 map = (n + 1.0f) * 0.5f; //!< [-1, 1] -> [0, 1]
 		normal = float4(map, _NOT_USED_1);
 	}
 	
 	void SetMaterial(float roughness, float metallic, float specular) {
-		material_ao.r = roughness;
+		material_ao.r = max(roughness, 0.02f);
 		material_ao.g = metallic;
 		material_ao.b = specular;
 	}
