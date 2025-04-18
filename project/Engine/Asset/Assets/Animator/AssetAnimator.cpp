@@ -6,5 +6,4 @@
 
 void AssetAnimator::Load(_MAYBE_UNUSED const DirectXThreadContext* context) {
 	Animator::Load(filepath_, assimpOption_);
-	context->ExecuteAllAllocators();
 }

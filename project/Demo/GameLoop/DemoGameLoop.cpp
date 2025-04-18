@@ -40,14 +40,34 @@ void DemoGameLoop::Term() {
 }
 
 void DemoGameLoop::InitGame() {
-	main_ = SxavengerSystem::CreateMainWindow(kMainWindowSize, L"demo window").lock();
-	main_->SetIcon("packages/icon/SxavengerEngineSubIcon.ico", { 32, 32 });
+
+	main_ = SxavengerSystem::CreateMainWindow(kMainWindowSize, L"Sxavenger Engine Demo").lock();
+	main_->SetIcon("packages/icon/SxavengerEngineIcon.ico", { 32, 32 });
+
+#ifdef _DEVELOPMENT
+	editor_ = SxavengerSystem::TryCreateSubWindow(kMainWindowSize, L"Editor Window").lock();
+	editor_->SetIcon("packages/icon/SxavengerEngineSubIcon.ico", { 32, 32 });
+#endif
+
+	player_ = std::make_unique<Player>();
+	player_->Load();
+	player_->Awake();
+	player_->Start();
+
+	sampleLight_ = ComponentHelper::CreateDirectionalLightMonoBehaviour();
+
 }
 
 void DemoGameLoop::TermGame() {
 }
 
 void DemoGameLoop::UpdateGame() {
+
+	//-----------------------------------------------------------------------------------------
+	// GameLogic Update
+	//-----------------------------------------------------------------------------------------
+
+	player_->Update();
 
 	//-----------------------------------------------------------------------------------------
 	// SystemUpdate...?
@@ -76,11 +96,19 @@ void DemoGameLoop::DrawGame() {
 
 	FMainRender::GetInstance()->Render(SxavengerSystem::GetMainThreadContext());
 
+#ifdef _DEVELOPMENT
+	editor_->BeginRendering();
+	editor_->ClearWindow();
+
+	SxavengerSystem::RenderImGui();
+
+	editor_->EndRendering();
+#endif
+
 	main_->BeginRendering();
 	main_->ClearWindow();
 
 	FMainRender::GetInstance()->PresentMain(SxavengerSystem::GetMainThreadContext());
-	SxavengerSystem::RenderImGui();
-
+	
 	main_->EndRendering();
 }

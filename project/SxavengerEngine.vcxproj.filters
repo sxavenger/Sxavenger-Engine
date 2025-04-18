@@ -149,6 +149,8 @@
     <ClCompile Include="Engine\System\Runtime\Thread\AsyncTask.cpp" />
     <ClCompile Include="Engine\System\Runtime\Thread\AsyncThread.cpp" />
     <ClCompile Include="Engine\System\Runtime\Thread\AsyncThreadCollection.cpp" />
+    <ClCompile Include="Demo\Entity\Player.cpp" />
+    <ClCompile Include="Engine\Module\GameObject\GameObject.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\System\Window\Window.h" />
@@ -312,6 +314,8 @@
     <ClInclude Include="Engine\System\Runtime\Thread\AsyncTask.h" />
     <ClInclude Include="Engine\System\Runtime\Thread\AsyncThread.h" />
     <ClInclude Include="Engine\System\Runtime\Thread\AsyncThreadCollection.h" />
+    <ClInclude Include="Demo\Entity\Player.h" />
+    <ClInclude Include="Engine\Module\GameObject\GameObject.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

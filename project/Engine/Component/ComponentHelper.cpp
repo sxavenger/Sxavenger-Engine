@@ -35,11 +35,6 @@ void ComponentHelper::UpdateTransform() {
 	});
 }
 
-void ComponentHelper::ApplyAnimation(MonoBehaviour* behaviour, const Animation& animation, TimePointf<TimeUnit::second> time, bool isLoop) {
-	auto child = behaviour->FindChild(ArmatureComponent::kArmatureName);
-	child->GetComponent<ArmatureComponent>()->UpdateAnimation(animation, time, isLoop);
-}
-
 void ComponentHelper::UpdateSkinning() {
 	sComponentStorage->ForEach<SkinnedMeshRendererComponent>([](SkinnedMeshRendererComponent* renderer) {
 		renderer->Skinning();
@@ -95,4 +90,9 @@ std::unique_ptr<MonoBehaviour> ComponentHelper::CreatePointLightMonoBehaviour() 
 	root->AddComponent<PointLightComponent>();
 
 	return root;
+}
+
+void ComponentHelper::ApplyAnimation(MonoBehaviour* behaviour, const Animation& animation, TimePointf<TimeUnit::second> time, bool isLoop) {
+	auto child = behaviour->FindChild(ArmatureComponent::kArmatureName);
+	child->GetComponent<ArmatureComponent>()->UpdateAnimation(animation, time, isLoop);
 }

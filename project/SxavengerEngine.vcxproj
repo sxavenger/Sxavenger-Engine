@@ -183,6 +183,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Demo\Entity\Player.cpp" />
     <ClCompile Include="Demo\GameLoop\BetaSystemGameLoop.cpp" />
     <ClCompile Include="Demo\GameLoop\DemoGameLoop.cpp" />
     <ClCompile Include="Engine\Asset\AssetCollection.cpp" />
@@ -240,6 +241,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="Engine\Editor\Editors\RenderSceneEditor.cpp" />
     <ClCompile Include="Engine\GameLoop\EditorEngineGameLoop.cpp" />
     <ClCompile Include="Engine\GameLoop\SxavengerEngineGameLoop.cpp" />
+    <ClCompile Include="Engine\Module\GameObject\GameObject.cpp" />
     <ClCompile Include="Engine\Module\Motion\Motion.cpp" />
     <ClCompile Include="Engine\Module\Pipeline\CustomComputePipeline.cpp" />
     <ClCompile Include="Engine\Module\Pipeline\CustomGraphicsPipeline.cpp" />
@@ -325,6 +327,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Demo\Entity\Player.h" />
     <ClInclude Include="Demo\GameLoop\BetaSystemGameLoop.h" />
     <ClInclude Include="Demo\GameLoop\DemoGameLoop.h" />
     <ClInclude Include="Engine\Asset\AssetCollection.h" />
@@ -388,6 +391,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Engine\Editor\Editors\RenderSceneEditor.h" />
     <ClInclude Include="Engine\GameLoop\EditorEngineGameLoop.h" />
     <ClInclude Include="Engine\GameLoop\SxavengerEngineGameLoop.h" />
+    <ClInclude Include="Engine\Module\GameObject\GameObject.h" />
     <ClInclude Include="Engine\Module\Motion\Motion.h" />
     <ClInclude Include="Engine\Module\Pipeline\CustomComputePipeline.h" />
     <ClInclude Include="Engine\Module\Pipeline\CustomGraphicsPipeline.h" />

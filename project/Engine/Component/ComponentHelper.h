@@ -21,12 +21,9 @@ public:
 	// public methods
 	//=========================================================================================
 
-	static void UpdateTransform();
+	//* container helper *//
 
-	static void ApplyAnimation(
-		MonoBehaviour* behaviour,
-		const Animation& animation, TimePointf<TimeUnit::second> time, bool isLoop = true
-	);
+	static void UpdateTransform();
 
 	static void UpdateSkinning();
 
@@ -45,6 +42,13 @@ public:
 	static std::unique_ptr<MonoBehaviour> CreateDirectionalLightMonoBehaviour();
 
 	static std::unique_ptr<MonoBehaviour> CreatePointLightMonoBehaviour();
+
+	//* option helper *//
+
+	static void ApplyAnimation(
+		MonoBehaviour* behaviour,
+		const Animation& animation, TimePointf<TimeUnit::second> time, bool isLoop = true
+	);
 
 private:
 };
