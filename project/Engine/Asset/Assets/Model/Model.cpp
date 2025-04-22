@@ -361,8 +361,10 @@ void Model::LoadMaterial(const aiScene* aiScene, const DirectXThreadContext* con
 	// materail数の要素数確保
 	materials_.resize(aiScene->mNumMaterials);
 
+	std::unordered_map<std::filesystem::path, std::shared_ptr<Texture>> textures;
+
 	// materialsの解析
-	std::for_each(std::execution::seq, materials_.begin(), materials_.end(), [this, aiScene, context, &directory](AssimpMaterial& material) {
+	std::for_each(std::execution::seq, materials_.begin(), materials_.end(), [&](AssimpMaterial& material) {
 		size_t materialIndex = &material - &materials_.front(); //!< indexの取得
 
 		// materialの取得
@@ -374,9 +376,16 @@ void Model::LoadMaterial(const aiScene* aiScene, const DirectXThreadContext* con
 				aiString aiTextureFilepath;
 				aiMaterial->GetTexture(aiTextureType_DIFFUSE, 0, &aiTextureFilepath);
 
+				const std::filesystem::path filepath = aiTextureFilepath.C_Str();
+
+				if (!textures.contains(filepath)) {
+					// テクスチャの読み込み
+					textures[filepath] = std::make_shared<Texture>();
+					textures[filepath]->Load(context, directory / filepath);
+				}
+
 				// データの保存
-				material.textures_[static_cast<uint8_t>(AssimpMaterial::TextureType::Diffuse)] = std::make_shared<Texture>();
-				material.textures_[static_cast<uint8_t>(AssimpMaterial::TextureType::Diffuse)]->Load(context, directory / aiTextureFilepath.C_Str());
+				material.textures_[static_cast<uint8_t>(AssimpMaterial::TextureType::Diffuse)] = textures.at(filepath);
 			}
 
 			// normalの取得
@@ -384,17 +393,31 @@ void Model::LoadMaterial(const aiScene* aiScene, const DirectXThreadContext* con
 				aiString aiTextureFilepath;
 				aiMaterial->GetTexture(aiTextureType_HEIGHT, 0, &aiTextureFilepath);
 
+				const std::filesystem::path filepath = aiTextureFilepath.C_Str();
+
+				if (!textures.contains(filepath)) {
+					// テクスチャの読み込み
+					textures[filepath] = std::make_shared<Texture>();
+					textures[filepath]->Load(context, directory / filepath);
+				}
+
 				// データの保存
-				material.textures_[static_cast<uint8_t>(AssimpMaterial::TextureType::Bump)] = std::make_shared<Texture>();
-				material.textures_[static_cast<uint8_t>(AssimpMaterial::TextureType::Bump)]->Load(context, directory / aiTextureFilepath.C_Str());
+				material.textures_[static_cast<uint8_t>(AssimpMaterial::TextureType::Bump)] = textures[filepath];
 
 			} else if (aiMaterial->GetTextureCount(aiTextureType_NORMALS) != 0) { //!< .gltfの場合
 				aiString aiTextureFilepath;
 				aiMaterial->GetTexture(aiTextureType_NORMALS, 0, &aiTextureFilepath);
 
+				const std::filesystem::path filepath = aiTextureFilepath.C_Str();
+
+				if (!textures.contains(filepath)) {
+					// テクスチャの読み込み
+					textures[filepath] = std::make_shared<Texture>();
+					textures[filepath]->Load(context, directory / filepath);
+				}
+
 				// データの保存
-				material.textures_[static_cast<uint8_t>(AssimpMaterial::TextureType::Bump)] = std::make_shared<Texture>();
-				material.textures_[static_cast<uint8_t>(AssimpMaterial::TextureType::Bump)]->Load(context, directory / aiTextureFilepath.C_Str());
+				material.textures_[static_cast<uint8_t>(AssimpMaterial::TextureType::Bump)] = textures[filepath];
 			}
 
 			// roughnessの取得
@@ -402,9 +425,16 @@ void Model::LoadMaterial(const aiScene* aiScene, const DirectXThreadContext* con
 				aiString aiTextureFilepath;
 				aiMaterial->GetTexture(aiTextureType_DIFFUSE_ROUGHNESS, 0, &aiTextureFilepath);
 
+				const std::filesystem::path filepath = aiTextureFilepath.C_Str();
+
+				if (!textures.contains(filepath)) {
+					// テクスチャの読み込み
+					textures[filepath] = std::make_shared<Texture>();
+					textures[filepath]->Load(context, directory / filepath);
+				}
+
 				// データの保存
-				material.textures_[static_cast<uint8_t>(AssimpMaterial::TextureType::Roughness)] = std::make_shared<Texture>();
-				material.textures_[static_cast<uint8_t>(AssimpMaterial::TextureType::Roughness)]->Load(context, directory / aiTextureFilepath.C_Str());
+				material.textures_[static_cast<uint8_t>(AssimpMaterial::TextureType::Roughness)] = textures[filepath];
 			}
 
 			// metallicの取得
@@ -412,9 +442,16 @@ void Model::LoadMaterial(const aiScene* aiScene, const DirectXThreadContext* con
 				aiString aiTextureFilepath;
 				aiMaterial->GetTexture(aiTextureType_METALNESS, 0, &aiTextureFilepath);
 
+				const std::filesystem::path filepath = aiTextureFilepath.C_Str();
+
+				if (!textures.contains(filepath)) {
+					// テクスチャの読み込み
+					textures[filepath] = std::make_shared<Texture>();
+					textures[filepath]->Load(context, directory / filepath);
+				}
+
 				// データの保存
-				material.textures_[static_cast<uint8_t>(AssimpMaterial::TextureType::Metallic)] = std::make_shared<Texture>();
-				material.textures_[static_cast<uint8_t>(AssimpMaterial::TextureType::Metallic)]->Load(context, directory / aiTextureFilepath.C_Str());
+				material.textures_[static_cast<uint8_t>(AssimpMaterial::TextureType::Metallic)] = textures[filepath];
 			}
 		}
 

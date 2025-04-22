@@ -26,7 +26,7 @@ struct DiffuseParameter {
 
 	float4 Sample(SamplerState sample, float3 v) {
 		TextureCube<float4> texture = ResourceDescriptorHeap[index];
-		return texture.Sample(sample, v);
+		return texture.SampleLevel(sample, v, 0);
 	}
 	
 };

@@ -148,13 +148,13 @@ namespace MaterialLib {
 		
 		uint index;
 
-		float GetValue(TextureSampler parameter) {
+		float GetValue(TextureSampler parameter, uint channel = 0) {
 			if (type == 0) {
 				return value;
 				
 			} else if (type == 1) {
 				Texture2D<float4> texture = ResourceDescriptorHeap[index];
-				return texture.SampleLevel(parameter.samplers, parameter.texcoord, 0).r;
+				return texture.SampleLevel(parameter.samplers, parameter.texcoord, 0)[channel];
 			}
 
 			return 0.0f; //!< exception

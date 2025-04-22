@@ -62,8 +62,8 @@ void BetaSystemGameLoop::InitSystem() {
 
 	//foundation_ = ComponentHelper::CreateStaticModelBehaviour("assets/models/foundation.gltf");
 	
-	light_  = ComponentHelper::CreatePointLightMonoBehaviour();
-	//light_  = ComponentHelper::CreateDirectionalLightMonoBehaviour();
+	//light_  = ComponentHelper::CreatePointLightMonoBehaviour();
+	light_  = ComponentHelper::CreateDirectionalLightMonoBehaviour();
 
 	
 	/*AssetObserver<AssetTexture> diffuse  = SxavengerAsset::TryImport<AssetTexture>("assets/textures/diffuseHDR.dds");
@@ -100,11 +100,11 @@ void BetaSystemGameLoop::InitSystem() {
 	//skylight_->GetComponent<SkyLightComponent>()->GetDiffuseParameter().SetTexture(diffuse);
 	//skylight_->GetComponent<SkyLightComponent>()->GetSpecularParameter().SetTexture(specular);
 
-	skylight_->GetComponent<SkyLightComponent>()->GetDiffuseParameter().SetTexture(skyAtmosphere_.GetIrradiance().descriptorSRV.GetIndex());
-	skylight_->GetComponent<SkyLightComponent>()->GetSpecularParameter().SetTexture(skyAtmosphere_.GetRadiance().descriptorSRV.GetIndex(), skyAtmosphere_.GetRadiance().kMiplevels);
+	skylight_->GetComponent<SkyLightComponent>()->GetDiffuseParameter().SetTexture(environmentMap_.GetIrradianceIndex());
+	skylight_->GetComponent<SkyLightComponent>()->GetSpecularParameter().SetTexture(environmentMap_.GetRadianceIndex(), environmentMap_.GetRadianceMiplevel());
 
-	//skylight_->GetComponent<SkyLightComponent>()->GetDiffuseParameter().SetTexture(environmentMap_.GetIrradianceIndex());
-	//skylight_->GetComponent<SkyLightComponent>()->GetSpecularParameter().SetTexture(environmentMap_.GetRadianceIndex(), environmentMap_.GetRadianceMiplevel());
+	//skylight_->GetComponent<SkyLightComponent>()->GetDiffuseParameter().SetTexture(skyAtmosphere_.GetIrradiance().descriptorSRV.GetIndex());
+	//skylight_->GetComponent<SkyLightComponent>()->GetSpecularParameter().SetTexture(skyAtmosphere_.GetRadiance().descriptorSRV.GetIndex(), skyAtmosphere_.GetRadiance().kMiplevels);
 }
 
 void BetaSystemGameLoop::TermSystem() {
