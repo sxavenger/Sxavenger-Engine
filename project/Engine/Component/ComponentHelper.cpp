@@ -11,6 +11,7 @@
 #include "Components/MeshRenderer/SkinnedMeshRendererComponent.h"
 #include "Components/Light/DirectionalLightComponent.h"
 #include "Components/Light/PointLightComponent.h"
+#include "Components/Particle/ParticleComponent.h"
 
 //* engine
 #include <Engine/Asset/SxavengerAsset.h>
@@ -38,6 +39,12 @@ void ComponentHelper::UpdateTransform() {
 void ComponentHelper::UpdateSkinning() {
 	sComponentStorage->ForEach<SkinnedMeshRendererComponent>([](SkinnedMeshRendererComponent* renderer) {
 		renderer->Skinning();
+	});
+}
+
+void ComponentHelper::UpdateParticle() {
+	sComponentStorage->ForEach<ParticleComponent>([](ParticleComponent* particle) {
+		particle->Update();
 	});
 }
 

@@ -27,6 +27,8 @@ public:
 
 	static void UpdateSkinning();
 
+	static void UpdateParticle();
+
 	//* create helper *//
 
 	static std::unique_ptr<MonoBehaviour> CreateMonoBehaviour();

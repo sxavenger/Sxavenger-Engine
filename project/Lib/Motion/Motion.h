@@ -73,6 +73,14 @@ public:
 		interpolationFunc_ = param.interpolationFunc;
 	}
 
+	//* motion option *//
+
+	void SetParameter(const Parameter& param);
+
+	void SetStart(const _Ty& start) { start_ = start; }
+
+	void SetEnd(const _Ty& end) { end_ = end; }
+
 	//* motion methods *//
 
 	_Ty GetMotion(float t) const;
@@ -102,14 +110,23 @@ protected:
 
 	//* function *//
 
-	std::function<_Ty(const _Ty&, const _Ty&, float)> motionFunc_; //!< lerp, slerp, etc...
-	std::function<float(float)> interpolationFunc_;
+	std::function<_Ty(const _Ty&, const _Ty&, float)> motionFunc_ = Lerp; //!< lerp, slerp, etc...
+	std::function<float(float)> interpolationFunc_ = LinearInterpolation;
 
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // MotionT class template methods
 ////////////////////////////////////////////////////////////////////////////////////////////
+
+template <class _Ty>
+inline void MotionT<_Ty>::SetParameter(const Parameter& param) {
+	start_             = param.start;
+	end_               = param.end;
+	mode_              = param.mode;
+	motionFunc_        = param.motionFunc;
+	interpolationFunc_ = param.interpolationFunc;
+}
 
 template <class _Ty>
 _Ty MotionT<_Ty>::GetMotion(float t) const {

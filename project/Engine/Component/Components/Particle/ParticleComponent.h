@@ -9,12 +9,15 @@
 //* engine
 #include <Engine/System/DirectX/DxObject/DxDimensionBuffer.h>
 #include <Engine/System/DirectX/DxObject/DxGraphicsPipelineState.h>
+#include <Engine/System/Runtime/Performance/TimePoint.h>
+#include <Engine/System/Runtime/Performance/DeltaTimePoint.h>
 #include <Engine/Content/InputGeometry/InputPrimitive.h>
 #include <Engine/Component/Components/Camera/CameraComponent.h>
 
 //* lib
 #include <Lib/Geometry/Vector3.h>
 #include <Lib/Transform/Transform.h>
+#include <Lib/Motion/Motion.h>
 
 //* c++
 #include <memory>
@@ -27,7 +30,37 @@
 class ParticleComponent final
 	: public BaseComponent {
 public:
-	//* nothing
+
+	////////////////////////////////////////////////////////////////////////////////////////////
+	// Particle structure
+	////////////////////////////////////////////////////////////////////////////////////////////
+	struct Particle {
+	public:
+
+		//=========================================================================================
+		// public methods
+		//=========================================================================================
+
+		void Update();
+
+		bool IsDelete() const;
+
+		//=========================================================================================
+		// public variables
+		//=========================================================================================
+
+		//* time
+		DeltaTimePointf<TimeUnit::second> time;
+		TimePointf<TimeUnit::second> lifeTime;
+
+		//* transform
+		QuaternionTransform transform;
+		MotionT<Vector3f> velocity;
+
+
+	private:
+	};
+
 public:
 
 	//=========================================================================================
@@ -44,7 +77,7 @@ public:
 
 	void SetPrimitive(InputPrimitive&& primitive);
 
-	void Emit(const Vector3f& position);
+	Particle& Emit(const Vector3f& position);
 
 	void DrawParticle(const DirectXThreadContext* context, const CameraComponent* camera);
 
@@ -73,13 +106,15 @@ private:
 
 	// transforms
 	std::unique_ptr<DxObject::DimensionBuffer<TransformationMatrix>> matrices_;
-	std::list<QuaternionTransform>                                   transforms_;
 
 	// material
 
 
 	// intermediate
 	uint32_t instance_ = 0;
+
+	// element
+	std::list<Particle> particles_;
 
 	//* HACK: pipeline *//
 

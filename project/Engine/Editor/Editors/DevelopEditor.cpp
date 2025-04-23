@@ -40,6 +40,22 @@ void DevelopEditor::ShowWindow() {
 	ShowConsole();
 }
 
+void DevelopEditor::BreakPoint(const std::source_location& location) {
+	isProcessRequired_ = false;
+	processLimit_      = 0;
+
+	std::string locate = "";
+	locate += "[function]: ";
+	locate += location.function_name();
+	locate += "\n";
+
+	locate += "[line]: ";
+	locate += std::to_string(location.line());
+	locate += "\n";
+
+	LogRuntime("[DevelopEditor]: break point called.", locate, SxavengerLogger::Category::Comment);
+}
+
 void DevelopEditor::ShowConfigMenu() {
 	if (ImGui::BeginMenu("config")) {
 		MenuPadding();
@@ -251,9 +267,4 @@ void DevelopEditor::ShowConsole() {
 
 	ImGui::EndChild();
 	ImGui::End();
-}
-
-void DevelopEditor::BreakPoint() {
-	isProcessRequired_ = false;
-	processLimit_      = 0;
 }

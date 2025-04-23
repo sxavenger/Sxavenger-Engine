@@ -139,7 +139,7 @@
     <ClCompile Include="Engine\Render\Common\FBaseTexture.cpp" />
     <ClCompile Include="Engine\Component\Components\Light\SkyLightComponent.cpp" />
     <ClCompile Include="Engine\Render\Core\FRenderCoreRaytracing.cpp" />
-    <ClCompile Include="Engine\Module\Motion\Motion.cpp" />
+    <ClCompile Include="Lib\Motion\Motion.cpp" />
     <ClCompile Include="Engine\Content\InputGeometry\InputPrimitive.cpp" />
     <ClCompile Include="Engine\Content\InputGeometry\InputPrimitiveHelper.cpp" />
     <ClCompile Include="Engine\System\UI\SxImGui.cpp" />
@@ -304,7 +304,7 @@
     <ClInclude Include="Engine\Render\Common\FBaseTexture.h" />
     <ClInclude Include="Engine\Component\Components\Light\SkyLightComponent.h" />
     <ClInclude Include="Engine\Render\Core\FRenderCoreRaytracing.h" />
-    <ClInclude Include="Engine\Module\Motion\Motion.h" />
+    <ClInclude Include="Lib\Motion\Motion.h" />
     <ClInclude Include="Engine\Content\InputGeometry\InputPrimitive.h" />
     <ClInclude Include="Engine\Content\InputGeometry\InputPrimitiveHelper.h" />
     <ClInclude Include="Engine\System\UI\SxImGui.h" />

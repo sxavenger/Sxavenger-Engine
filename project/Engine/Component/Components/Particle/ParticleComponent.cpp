@@ -8,6 +8,23 @@ _DXOBJECT_USING
 #include <Engine/System/SxavengerSystem.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
+// Particle structure methods
+////////////////////////////////////////////////////////////////////////////////////////////
+
+void ParticleComponent::Particle::Update() {
+	// time
+	time.AddDeltaTime();
+	const float t = time.time / lifeTime.time;
+
+	// transform
+	transform.translate += velocity.GetMotion(t);
+}
+
+bool ParticleComponent::Particle::IsDelete() const {
+	return time > lifeTime;
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////
 // ParticleComponent class
 ////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -35,6 +52,18 @@ void ParticleComponent::Init(uint32_t count) {
 }
 
 void ParticleComponent::Update() {
+
+	for (auto itr = particles_.begin(); itr != particles_.end();) {
+		itr->Update();
+
+		if (itr->IsDelete()) {
+			itr = particles_.erase(itr);
+			continue;
+		}
+
+		itr++;
+	}
+
 	AssingBuffer();
 }
 
@@ -42,11 +71,11 @@ void ParticleComponent::SetPrimitive(InputPrimitive&& primitive) {
 	primitive_ = std::move(primitive);
 }
 
-void ParticleComponent::Emit(const Vector3f& position) {
-	QuaternionTransform element = {};
-	element.translate = position;
+ParticleComponent::Particle& ParticleComponent::Emit(const Vector3f& position) {
+	Particle particle = {};
+	particle.transform.translate = position;
 
-	transforms_.emplace_back(element);
+	return particles_.emplace_back(particle);
 }
 
 void ParticleComponent::DrawParticle(const DirectXThreadContext* context, const CameraComponent* camera) {
@@ -69,11 +98,11 @@ void ParticleComponent::DrawParticle(const DirectXThreadContext* context, const 
 
 void ParticleComponent::AssingBuffer() {
 	instance_ = 0;
-	for (const auto& transform : transforms_) {
+	for (const auto& element : particles_) {
 		if (instance_ >= matrices_->GetSize()) {
 			break;
 		}
 
-		matrices_->At(instance_++).Transfer(transform.ToMatrix());
+		matrices_->At(instance_++).Transfer(element.transform.ToMatrix());
 	}
 }

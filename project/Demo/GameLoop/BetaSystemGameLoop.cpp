@@ -119,13 +119,18 @@ void BetaSystemGameLoop::InitSystem() {
 		particle->SetPrimitive(InputPrimitiveHelper::CreatePlane({1, 1}));
 
 		for (uint32_t i = 0; i < count; ++i) {
-			particle->Emit({ i * 0.1f, i * 0.1f , i * 0.1f });
+			auto& element = particle->Emit({ i * 0.1f, i * 0.1f , i * 0.1f });
+
+			element.velocity.SetStart({ 0.1f, 0.1f, 0.1f });
+			element.lifeTime = { 2.0f };
 		}
 
 		particle->Update();
 	}
 
-	
+	sEditorEngine->ExecuteEditorFunction<DevelopEditor>([](DevelopEditor* editor) {
+		editor->BreakPoint();
+	});
 }
 
 void BetaSystemGameLoop::TermSystem() {
@@ -159,6 +164,8 @@ void BetaSystemGameLoop::UpdateSystem() {
 
 	ComponentHelper::UpdateSkinning();
 	// todo: engine側のgameloopに移動.
+
+	ComponentHelper::UpdateParticle();
 
 }
 

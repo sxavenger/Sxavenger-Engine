@@ -8,6 +8,7 @@
 
 //* c++
 #include <optional>
+#include <source_location>
 
 //////////////////////////////////////////////////////////////////////////////////////////
 // DevelopEditor class
@@ -28,6 +29,10 @@ public:
 	void ShowMainMenu() override;
 
 	void ShowWindow() override;
+
+	//* option *//
+
+	void BreakPoint(const std::source_location& location = std::source_location::current());
 
 	//* getter *//
 
@@ -63,9 +68,5 @@ private:
 
 	void ShowPerformanceWindow();
 	void ShowConsole();
-
-	//* sub method *//
-
-	void BreakPoint();
 
 };
