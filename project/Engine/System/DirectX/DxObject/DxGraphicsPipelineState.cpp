@@ -51,17 +51,17 @@ void GraphicsPipelineDesc::SetIndependentBlendEnable(bool isIndependentEnable) {
 
 void GraphicsPipelineDesc::SetPrimitive(PrimitiveType type) {
 	switch (type) {
-		case PrimitiveType::kLineList:
+		case PrimitiveType::LineList:
 			primitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_LINE;
 			primitiveTopology     = D3D_PRIMITIVE_TOPOLOGY_LINELIST;
 			break;
 
-		case PrimitiveType::kLineStrip:
+		case PrimitiveType::LineStrip:
 			primitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_LINE;
 			primitiveTopology     = D3D_PRIMITIVE_TOPOLOGY_LINESTRIP;
 			break;
 
-		case PrimitiveType::kTrianglList:
+		case PrimitiveType::TrianglList:
 			primitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
 			primitiveTopology     = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
 			break;
@@ -101,7 +101,7 @@ void GraphicsPipelineDesc::CreateDefaultDesc() {
 	SetBlendMode(0, BlendMode::kBlendModeNormalSrc);
 	SetIndependentBlendEnable(false);
 
-	SetPrimitive(PrimitiveType::kTrianglList);
+	SetPrimitive(PrimitiveType::TrianglList);
 
 	SetRTVFormat(kOffscreenFormat);
 	SetDSVFormat(kDefaultDepthFormat);

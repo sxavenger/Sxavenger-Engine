@@ -12,9 +12,11 @@
 #include <Engine/Component/Components/Collider/ColliderComponent.h>
 #include <Engine/Component/Components/Collider/CollisionManager.h>
 #include <Engine/Component/Components/SpriteRenderer/SpriteRendererComponent.h>
+#include <Engine/Component/Components/Particle/ParticleComponent.h>
 #include <Engine/Component/ComponentHelper.h>
 #include <Engine/System/Runtime/Performance/DeltaTimePoint.h>
 #include <Engine/Render/FRenderCore.h>
+#include <Engine/Content/InputGeometry/InputPrimitiveHelper.h>
 
 #include "Engine/Component/Components/Light/SkyLightComponent.h"
 
@@ -53,12 +55,12 @@ void BetaSystemGameLoop::InitSystem() {
 
 	camera_ = ComponentHelper::CreateCameraMonoBehaviour();
 
-	meshA_   = ComponentHelper::CreateStaticNodeModelBehaviour("assets/models/PBR_Sphere_Test/model/PBR_Sphere.gltf");
+	//meshA_   = ComponentHelper::CreateStaticNodeModelBehaviour("assets/models/PBR_Sphere_Test/model/PBR_Sphere.gltf");
 	//meshA_   = ComponentHelper::CreateStaticNodeModelBehaviour("assets/models/sponza/NewSponza_Main_glTF_003.gltf");
 	//meshA_   = ComponentHelper::CreateStaticNodeModelBehaviour("assets/models/bricks/bricks.obj");
 	//meshA_   = ComponentHelper::CreateStaticNodeModelBehaviour("assets/models/normal_sphere.obj");
 
-	meshB_ = ComponentHelper::CreateStaticNodeModelBehaviour("assets/models/chessboard/ABeautifulGame.gltf");
+	//meshB_ = ComponentHelper::CreateStaticNodeModelBehaviour("assets/models/chessboard/ABeautifulGame.gltf");
 
 	//foundation_ = ComponentHelper::CreateStaticModelBehaviour("assets/models/foundation.gltf");
 	
@@ -105,6 +107,25 @@ void BetaSystemGameLoop::InitSystem() {
 
 	//skylight_->GetComponent<SkyLightComponent>()->GetDiffuseParameter().SetTexture(skyAtmosphere_.GetIrradiance().descriptorSRV.GetIndex());
 	//skylight_->GetComponent<SkyLightComponent>()->GetSpecularParameter().SetTexture(skyAtmosphere_.GetRadiance().descriptorSRV.GetIndex(), skyAtmosphere_.GetRadiance().kMiplevels);
+
+	{
+		particle_ = std::make_unique<MonoBehaviour>();
+		auto particle = particle_->AddComponent<ParticleComponent>();
+
+		uint32_t count = 12;
+
+		particle->Init(count);
+
+		particle->SetPrimitive(InputPrimitiveHelper::CreatePlane({1, 1}));
+
+		for (uint32_t i = 0; i < count; ++i) {
+			particle->Emit({ i * 0.1f, i * 0.1f , i * 0.1f });
+		}
+
+		particle->Update();
+	}
+
+	
 }
 
 void BetaSystemGameLoop::TermSystem() {

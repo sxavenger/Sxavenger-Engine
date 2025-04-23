@@ -1,28 +1,28 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
-#include "GeometryMesh.hlsli"
+#include "GeometryPrimitive.hlsli"
 
 //=========================================================================================
-// Buffer
+// buffers
 //=========================================================================================
-
-SamplerState gSampler : register(s0);
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // main
 ////////////////////////////////////////////////////////////////////////////////////////////
-[earlydepthstencil]
-GeometryForwardOutput main(GeometryPSInput input) {
+GeometryPSInput main(PrimitiveVertex input, uint instanceId : SV_InstanceID) {
 
-	GeometryForwardOutput output = (GeometryForwardOutput)0;
+	GeometryPSInput output = (GeometryPSInput)0;
+	
+	output.position = mul(gTransforms[instanceId].Transform(input.position), kViewProj);
+	output.worldPos = gTransforms[instanceId].Transform(input.position).xyz;
+	
+	output.texcoord = input.texcoord;
+	
+	output.normal    = normalize(gTransforms[instanceId].TransformNormal(input.normal));
 
-	MaterialLib::TextureSampler parameter;
-	parameter.Set(input.texcoord, gSampler);
-
-	output.color.rgb = gMaterials[input.instanceId].albedo.GetAlbedo(parameter);
-	output.color.a   = gMaterials[input.instanceId].transparency.GetTransparency(parameter);
-
+	output.instanceId = instanceId;
+	
 	return output;
 	
 }

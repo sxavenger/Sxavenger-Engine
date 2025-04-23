@@ -212,8 +212,8 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="Engine\Component\Components\Light\PointLightComponent.cpp" />
     <ClCompile Include="Engine\Component\Components\Light\SkyLightComponent.cpp" />
     <ClCompile Include="Engine\Component\Components\MeshRenderer\MeshRendererComponent.cpp" />
-    <ClCompile Include="Engine\Component\Components\MeshRenderer\PrimitiveRendererComponent.cpp" />
     <ClCompile Include="Engine\Component\Components\MeshRenderer\SkinnedMeshRendererComponent.cpp" />
+    <ClCompile Include="Engine\Component\Components\Particle\ParticleComponent.cpp" />
     <ClCompile Include="Engine\Component\Components\SpriteRenderer\SpriteRendererComponent.cpp" />
     <ClCompile Include="Engine\Component\Components\Transform\TransformComponent.cpp" />
     <ClCompile Include="Engine\Component\Entity\MonoBehaviour.cpp" />
@@ -357,8 +357,8 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Engine\Component\Components\Light\PointLightComponent.h" />
     <ClInclude Include="Engine\Component\Components\Light\SkyLightComponent.h" />
     <ClInclude Include="Engine\Component\Components\MeshRenderer\MeshRendererComponent.h" />
-    <ClInclude Include="Engine\Component\Components\MeshRenderer\PrimitiveRendererComponent.h" />
     <ClInclude Include="Engine\Component\Components\MeshRenderer\SkinnedMeshRendererComponent.h" />
+    <ClInclude Include="Engine\Component\Components\Particle\ParticleComponent.h" />
     <ClInclude Include="Engine\Component\Components\SpriteRenderer\SpriteRendererComponent.h" />
     <ClInclude Include="Engine\Component\Components\Transform\TransformComponent.h" />
     <ClInclude Include="Engine\Component\Entity\MonoBehaviour.h" />

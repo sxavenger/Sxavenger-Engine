@@ -129,7 +129,7 @@ void ColliderPrimitiveSphere::CreatePipeline() {
 	GraphicsPipelineDesc desc = {};
 	desc.CreateDefaultDesc();
 	desc.SetBlendMode(0, BlendMode::kBlendModeNormalSrc);
-	desc.SetPrimitive(PrimitiveType::kLineList);
+	desc.SetPrimitive(PrimitiveType::LineList);
 	desc.SetRTVFormat(0, DXGI_FORMAT_R32G32B32A32_FLOAT);
 
 	pipeline_->CreatePipeline(SxavengerSystem::GetDxDevice(), desc);

@@ -23,7 +23,7 @@ InputPrimitive InputPrimitiveHelper::CreatePlane(const Vector2f& size) {
 	vertex->At(2).position = { -size.x, 0.0f, -size.y, 1.0f };
 	vertex->At(2).texcoord = { 0.0f, 1.0f };
 	
-	vertex->At(3).position = { size.x, 0.0f, size.y, 1.0f };
+	vertex->At(3).position = { size.x, 0.0f, -size.y, 1.0f };
 	vertex->At(3).texcoord = { 1.0f, 1.0f };
 
 	for (uint32_t i = 0; i < 4; ++i) {

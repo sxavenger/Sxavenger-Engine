@@ -44,5 +44,3 @@ ConstantBuffer<CameraComponent> gCamera : register(b10);
 static const float4x4 kViewProj = gCamera.GetViewProj();
 
 StructuredBuffer<TransformComponent> gTransforms : register(t10);
-
-StructuredBuffer<Material> gMaterials : register(t11);

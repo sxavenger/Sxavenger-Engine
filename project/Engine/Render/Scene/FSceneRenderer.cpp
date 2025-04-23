@@ -417,6 +417,7 @@ void FSceneRenderer::RenderTransparentBasePass(const DirectXThreadContext* conte
 	textures_->BeginTransparentBasePass(context);
 
 	RenderTransparentBaseStaticMesh(context, config);
+	RenderTransparentParticle(context, config);
 
 	textures_->EndTransparentBasePass(context);
 }
@@ -456,5 +457,13 @@ void FSceneRenderer::RenderTransparentBaseStaticMesh(const DirectXThreadContext*
 
 		component->GetMesh()->DrawCall(context, 1);
 
+	});
+}
+
+void FSceneRenderer::RenderTransparentParticle(const DirectXThreadContext* context, const Config& config) {
+
+	// componentを取得
+	sComponentStorage->ForEach<ParticleComponent>([&](ParticleComponent* component) {
+		component->DrawParticle(context, config.camera);
 	});
 }

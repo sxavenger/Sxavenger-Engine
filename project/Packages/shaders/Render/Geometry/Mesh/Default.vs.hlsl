@@ -1,7 +1,7 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
-#include "../GeometryPass.hlsli"
+#include "GeometryMesh.hlsli"
 
 //=========================================================================================
 // buffers
@@ -20,7 +20,7 @@ GeometryPSInput main(MeshVertex input, uint instanceId : SV_InstanceID) {
 	output.texcoord = gMaterials[instanceId].transform.Transformation(input.texcoord);
 	
 	output.normal    = normalize(gTransforms[instanceId].TransformNormal(input.normal));
-	output.tangent = normalize(gTransforms[instanceId].TransformNormal(input.tangent));
+	output.tangent   = normalize(gTransforms[instanceId].TransformNormal(input.tangent));
 	output.bitangent = normalize(gTransforms[instanceId].TransformNormal(input.bitangent));
 
 	output.instanceId = instanceId;

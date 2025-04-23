@@ -141,7 +141,6 @@
     <ClCompile Include="Engine\Render\Core\FRenderCoreRaytracing.cpp" />
     <ClCompile Include="Engine\Module\Motion\Motion.cpp" />
     <ClCompile Include="Engine\Content\InputGeometry\InputPrimitive.cpp" />
-    <ClCompile Include="Engine\Component\Components\MeshRenderer\PrimitiveRendererComponent.cpp" />
     <ClCompile Include="Engine\Content\InputGeometry\InputPrimitiveHelper.cpp" />
     <ClCompile Include="Engine\System\UI\SxImGui.cpp" />
     <ClCompile Include="Engine\Render\Scene\Environment\FEnvironmentMap.cpp" />
@@ -151,6 +150,7 @@
     <ClCompile Include="Engine\System\Runtime\Thread\AsyncThreadCollection.cpp" />
     <ClCompile Include="Demo\Entity\Player.cpp" />
     <ClCompile Include="Engine\Module\GameObject\GameObject.cpp" />
+    <ClCompile Include="Engine\Component\Components\Particle\ParticleComponent.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\System\Window\Window.h" />
@@ -306,7 +306,6 @@
     <ClInclude Include="Engine\Render\Core\FRenderCoreRaytracing.h" />
     <ClInclude Include="Engine\Module\Motion\Motion.h" />
     <ClInclude Include="Engine\Content\InputGeometry\InputPrimitive.h" />
-    <ClInclude Include="Engine\Component\Components\MeshRenderer\PrimitiveRendererComponent.h" />
     <ClInclude Include="Engine\Content\InputGeometry\InputPrimitiveHelper.h" />
     <ClInclude Include="Engine\System\UI\SxImGui.h" />
     <ClInclude Include="Engine\Render\Scene\Environment\FEnvironmentMap.h" />
@@ -316,6 +315,7 @@
     <ClInclude Include="Engine\System\Runtime\Thread\AsyncThreadCollection.h" />
     <ClInclude Include="Demo\Entity\Player.h" />
     <ClInclude Include="Engine\Module\GameObject\GameObject.h" />
+    <ClInclude Include="Engine\Component\Components\Particle\ParticleComponent.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

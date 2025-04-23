@@ -1,7 +1,7 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
-#include "GeometryMesh.hlsli"
+#include "GeometryPrimitive.hlsli"
 
 //=========================================================================================
 // Buffer
@@ -17,11 +17,8 @@ GeometryForwardOutput main(GeometryPSInput input) {
 
 	GeometryForwardOutput output = (GeometryForwardOutput)0;
 
-	MaterialLib::TextureSampler parameter;
-	parameter.Set(input.texcoord, gSampler);
-
-	output.color.rgb = gMaterials[input.instanceId].albedo.GetAlbedo(parameter);
-	output.color.a   = gMaterials[input.instanceId].transparency.GetTransparency(parameter);
+	output.color.rgb = float3(1.0f, 1.0f, 1.0f);
+	output.color.a   = 1.0f;
 
 	return output;
 	

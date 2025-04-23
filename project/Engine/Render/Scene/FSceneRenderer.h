@@ -11,12 +11,13 @@
 #include <Engine/System/DirectX/DxObject/DxVectorDimensionBuffer.h>
 #include <Engine/System/DirectX/DirectXContext.h>
 #include <Engine/Component/Components/ComponentStorage.h>
+#include <Engine/Component/Components/Camera/CameraComponent.h>
 #include <Engine/Component/Components/MeshRenderer/MeshRendererComponent.h>
 #include <Engine/Component/Components/MeshRenderer/SkinnedMeshRendererComponent.h>
-#include <Engine/Component/Components/Camera/CameraComponent.h>
 #include <Engine/Component/Components/Light/DirectionalLightComponent.h>
 #include <Engine/Component/Components/Light/PointLightComponent.h>
 #include <Engine/Component/Components/Light/SkyLightComponent.h>
+#include <Engine/Component/Components/Particle/ParticleComponent.h>
 
 //* lib
 #include <Lib/Sxl/Flag.h>
@@ -135,5 +136,6 @@ private:
 
 	void RenderTransparentBasePass(const DirectXThreadContext* context, const Config& config);
 	void RenderTransparentBaseStaticMesh(const DirectXThreadContext* context, const Config& config);
+	void RenderTransparentParticle(const DirectXThreadContext* context, const Config& config);
 
 };
