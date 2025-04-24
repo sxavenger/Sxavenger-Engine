@@ -151,6 +151,9 @@
     <ClCompile Include="Demo\Entity\Player.cpp" />
     <ClCompile Include="Engine\Module\GameObject\GameObject.cpp" />
     <ClCompile Include="Engine\Component\Components\Particle\ParticleComponent.cpp" />
+    <ClCompile Include="Demo\Particle\SmokeParticle.cpp" />
+    <ClCompile Include="Demo\Object\Stage.cpp" />
+    <ClCompile Include="Demo\Particle\RainParticle.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\System\Window\Window.h" />
@@ -316,6 +319,9 @@
     <ClInclude Include="Demo\Entity\Player.h" />
     <ClInclude Include="Engine\Module\GameObject\GameObject.h" />
     <ClInclude Include="Engine\Component\Components\Particle\ParticleComponent.h" />
+    <ClInclude Include="Demo\Particle\SmokeParticle.h" />
+    <ClInclude Include="Demo\Object\Stage.h" />
+    <ClInclude Include="Demo\Particle\RainParticle.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

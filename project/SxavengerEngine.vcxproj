@@ -186,6 +186,9 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="Demo\Entity\Player.cpp" />
     <ClCompile Include="Demo\GameLoop\BetaSystemGameLoop.cpp" />
     <ClCompile Include="Demo\GameLoop\DemoGameLoop.cpp" />
+    <ClCompile Include="Demo\Object\Stage.cpp" />
+    <ClCompile Include="Demo\Particle\RainParticle.cpp" />
+    <ClCompile Include="Demo\Particle\SmokeParticle.cpp" />
     <ClCompile Include="Engine\Asset\AssetCollection.cpp" />
     <ClCompile Include="Engine\Asset\Assets\Animator\Animator.cpp" />
     <ClCompile Include="Engine\Asset\Assets\Animator\AssetAnimator.cpp" />
@@ -330,6 +333,9 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Demo\Entity\Player.h" />
     <ClInclude Include="Demo\GameLoop\BetaSystemGameLoop.h" />
     <ClInclude Include="Demo\GameLoop\DemoGameLoop.h" />
+    <ClInclude Include="Demo\Object\Stage.h" />
+    <ClInclude Include="Demo\Particle\RainParticle.h" />
+    <ClInclude Include="Demo\Particle\SmokeParticle.h" />
     <ClInclude Include="Engine\Asset\AssetCollection.h" />
     <ClInclude Include="Engine\Asset\Assets\Animator\Animator.h" />
     <ClInclude Include="Engine\Asset\Assets\Animator\AssetAnimator.h" />

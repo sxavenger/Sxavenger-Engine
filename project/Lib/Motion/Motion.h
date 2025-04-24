@@ -30,6 +30,14 @@ class MotionT {
 public:
 
 	////////////////////////////////////////////////////////////////////////////////////////////
+	// using
+	////////////////////////////////////////////////////////////////////////////////////////////
+
+	using MotionFunction        = std::function<_Ty(const _Ty&, const _Ty&, float)>;
+	using InterpolationFunction = std::function<float(float)>;
+
+
+	////////////////////////////////////////////////////////////////////////////////////////////
 	// Parameter structure
 	////////////////////////////////////////////////////////////////////////////////////////////
 	struct Parameter {
@@ -81,6 +89,10 @@ public:
 
 	void SetEnd(const _Ty& end) { end_ = end; }
 
+	void SetMotionFunction(const MotionFunction& function) { motionFunc_ = function; }
+
+	void SetInterpolationFunction(const InterpolationFunction& function) { interpolationFunc_ = function; }
+
 	//* motion methods *//
 
 	_Ty GetMotion(float t) const;
@@ -111,7 +123,7 @@ protected:
 	//* function *//
 
 	std::function<_Ty(const _Ty&, const _Ty&, float)> motionFunc_ = Lerp; //!< lerp, slerp, etc...
-	std::function<float(float)> interpolationFunc_ = LinearInterpolation;
+	InterpolationFunction interpolationFunc_ = LinearInterpolation;
 
 };
 

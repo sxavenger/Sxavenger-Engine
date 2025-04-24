@@ -9,6 +9,7 @@
 //* component
 #include <Engine/Component/Components/Transform/TransformComponent.h>
 #include <Engine/Component/Components/Armature/ArmatureComponent.h>
+#include <Engine/Component/Components/Camera/CameraComponent.h>
 #include <Engine/Component/ComponentHelper.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -35,6 +36,18 @@ void Player::Awake() {
 	// component登録
 	MonoBehaviour::AddComponent<TransformComponent>();
 	model_.WaitGet()->CreateSkinnedMeshBehaviour(this);
+
+	camera_ = std::make_unique<MonoBehaviour>();
+	camera_->SetParent(this);
+	camera_->SetName("camera");
+
+	auto camera = camera_->AddComponent<CameraComponent>();
+	camera->SetTag(CameraComponent::Tag::GameCamera);
+
+	auto transform = camera_->AddComponent<TransformComponent>();
+	transform->translate.z = -3.0f;
+	transform->translate.y = 1.5f;
+
 }
 
 void Player::Start() {
@@ -46,6 +59,7 @@ void Player::Start() {
 
 void Player::Update() {
 	animationTime_.AddDeltaTime();
+	UpdateArmature();
 }
 
 void Player::UpdateArmature() {

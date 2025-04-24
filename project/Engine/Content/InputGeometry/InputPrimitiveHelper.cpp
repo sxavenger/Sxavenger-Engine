@@ -37,6 +37,39 @@ InputPrimitive InputPrimitiveHelper::CreatePlane(const Vector2f& size) {
 	return primitive;
 }
 
+InputPrimitive InputPrimitiveHelper::CreatePlaneZForward(const Vector2f& size) {
+	InputPrimitive primitive;
+
+	//!< 4頂点, 2面
+	primitive.Create(4, 2);
+
+	auto vertex = primitive.GetVertex();
+	auto index  = primitive.GetIndex();
+
+	//!< 頂点の設定
+	vertex->At(0).position = { -size.x, size.y, 0.0F, 1.0f };
+	vertex->At(0).texcoord = { 0.0f, 0.0f };
+
+	vertex->At(1).position = { size.x, size.y, 0.0f, 1.0f };
+	vertex->At(1).texcoord = { 1.0f, 0.0f };
+
+	vertex->At(2).position = { -size.x, -size.y, 0.0f, 1.0f };
+	vertex->At(2).texcoord = { 0.0f, 1.0f };
+	
+	vertex->At(3).position = { size.x, -size.y, 0.0f, 1.0f };
+	vertex->At(3).texcoord = { 1.0f, 1.0f };
+
+	for (uint32_t i = 0; i < 4; ++i) {
+		vertex->At(i).normal = { 0.0f, 0.0f, 1.0f };
+	}
+
+	//!< indexの設定
+	index->At(0) = { 0, 1, 2 };
+	index->At(1) = { 1, 3, 2 };
+
+	return primitive;
+}
+
 InputPrimitive InputPrimitiveHelper::CreateCube(const Vector3f& size) {
 	InputPrimitive primitive;
 

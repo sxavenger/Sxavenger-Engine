@@ -65,6 +65,10 @@ private:
 	AnimationType animationType_ = AnimationType::Idle;
 	DeltaTimePointf<TimeUnit::second> animationTime_ = { 0.0f };
 
+	//* camera *//
+
+	std::unique_ptr<MonoBehaviour> camera_;
+
 	//=========================================================================================
 	// private methods
 	//=========================================================================================

@@ -116,7 +116,12 @@ public:
 	//* compound assignment
 	constexpr Color3floating& operator=(const Color3floating& rhs) noexcept = default;
 	constexpr Color3floating& operator=(Color3floating&& rhs) noexcept = default;
-	//!< 演算系のoperatorが必要な場合, 定義する
+	constexpr Color3floating& operator+=(const Color3floating& rhs) noexcept;
+	constexpr Color3floating& operator-=(const Color3floating& rhs) noexcept;
+	constexpr Color3floating& operator*=(const Color3floating& rhs) noexcept;
+	constexpr Color3floating& operator*=(const _Ty& rhs) noexcept;
+	constexpr Color3floating& operator/=(const Color3floating& rhs) noexcept;
+	constexpr Color3floating& operator/=(const _Ty& rhs) noexcept;
 
 	//* cast
 	template <class _U>
@@ -161,6 +166,54 @@ public:
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 template <std::floating_point _Ty>
+constexpr Color3floating<_Ty>& Color3floating<_Ty>::operator+=(const Color3floating& rhs) noexcept {
+	r += rhs.r;
+	g += rhs.g;
+	b += rhs.b;
+	return *this;
+}
+
+template <std::floating_point _Ty>
+constexpr Color3floating<_Ty>& Color3floating<_Ty>::operator-=(const Color3floating& rhs) noexcept {
+	r -= rhs.r;
+	g -= rhs.g;
+	b -= rhs.b;
+	return *this;
+}
+
+template <std::floating_point _Ty>
+constexpr Color3floating<_Ty>& Color3floating<_Ty>::operator*=(const Color3floating& rhs) noexcept {
+	r *= rhs.r;
+	g *= rhs.g;
+	b *= rhs.b;
+	return *this;
+}
+
+template <std::floating_point _Ty>
+constexpr Color3floating<_Ty>& Color3floating<_Ty>::operator*=(const _Ty& rhs) noexcept {
+	r *= rhs;
+	g *= rhs;
+	b *= rhs;
+	return *this;
+}
+
+template <std::floating_point _Ty>
+constexpr Color3floating<_Ty>& Color3floating<_Ty>::operator/=(const Color3floating& rhs) noexcept {
+	r /= rhs.r;
+	g /= rhs.g;
+	b /= rhs.b;
+	return *this;
+}
+
+template <std::floating_point _Ty>
+constexpr Color3floating<_Ty>& Color3floating<_Ty>::operator/=(const _Ty& rhs) noexcept {
+	r /= rhs;
+	g /= rhs;
+	b /= rhs;
+	return *this;
+}
+
+template <std::floating_point _Ty>
 constexpr _Ty& Color3floating<_Ty>::operator[](size_t index) noexcept {
 	return (&r)[index];
 }
@@ -168,6 +221,50 @@ constexpr _Ty& Color3floating<_Ty>::operator[](size_t index) noexcept {
 template <std::floating_point _Ty>
 constexpr const _Ty& Color3floating<_Ty>::operator[](size_t index) const noexcept {
 	return (&r)[index];
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////
+// Color3floating class binary operators
+////////////////////////////////////////////////////////////////////////////////////////////
+
+template <std::floating_point _Ty>
+constexpr Color3floating<_Ty> operator+(const Color3floating<_Ty>& lhs, const Color3floating<_Ty>& rhs) noexcept {
+	return { lhs.r + rhs.r, lhs.g + rhs.g, lhs.b + rhs.b };
+}
+
+template <std::floating_point _Ty>
+constexpr Color3floating<_Ty> operator-(const Color3floating<_Ty>& lhs, const Color3floating<_Ty>& rhs) noexcept {
+	return { lhs.r - rhs.r, lhs.g - rhs.g, lhs.b - rhs.b };
+}
+
+template <std::floating_point _Ty>
+constexpr Color3floating<_Ty> operator*(const Color3floating<_Ty>& lhs, const Color3floating<_Ty>& rhs) noexcept {
+	return { lhs.r * rhs.r, lhs.g * rhs.g, lhs.b * rhs.b };
+}
+
+template <std::floating_point _Ty>
+constexpr Color3floating<_Ty> operator*(const Color3floating<_Ty>& lhs, const _Ty& rhs) noexcept {
+	return { lhs.r * rhs, lhs.g * rhs, lhs.b * rhs };
+}
+
+template <std::floating_point _Ty>
+constexpr Color3floating<_Ty> operator*(const _Ty& lhs, const Color3floating<_Ty>& rhs) noexcept {
+	return { lhs * rhs.r, lhs * rhs.g, lhs * rhs.b };
+}
+
+template <std::floating_point _Ty>
+constexpr Color3floating<_Ty> operator/(const Color3floating<_Ty>& lhs, const Color3floating<_Ty>& rhs) noexcept {
+	return { lhs.r / rhs.r, lhs.g / rhs.g, lhs.b / rhs.b };
+}
+
+template <std::floating_point _Ty>
+constexpr Color3floating<_Ty> operator/(const Color3floating<_Ty>& lhs, const _Ty& rhs) noexcept {
+	return { lhs.r / rhs, lhs.g / rhs, lhs.b / rhs };
+}
+
+template <std::floating_point _Ty>
+constexpr Color3floating<_Ty> operator/(const _Ty& lhs, const Color3floating<_Ty>& rhs) noexcept {
+	return { lhs / rhs.r, lhs / rhs.g, lhs / rhs.b };
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
