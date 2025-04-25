@@ -64,8 +64,8 @@ void BetaSystemGameLoop::InitSystem() {
 
 	//foundation_ = ComponentHelper::CreateStaticModelBehaviour("assets/models/foundation.gltf");
 	
-	//light_  = ComponentHelper::CreatePointLightMonoBehaviour();
-	light_  = ComponentHelper::CreateDirectionalLightMonoBehaviour();
+	light_  = ComponentHelper::CreatePointLightMonoBehaviour();
+	//light_  = ComponentHelper::CreateDirectionalLightMonoBehaviour();
 
 	
 	AssetObserver<AssetTexture> diffuse  = SxavengerAsset::TryImport<AssetTexture>("assets/textures/diffuseHDR.dds");

@@ -44,10 +44,34 @@ PSOutput main(PSInput input) {
 	float3 v = normalize(gCamera.GetPosition() - surface.position);
 
 	//* 計算
-	float3 diffuse  = CalculateDiffuseLambert(surface.normal, l) * surface.albedo * c_light;
-	float3 specular = CalculateSpecularBlinnPhong(surface.normal, l, v) * c_light;
+	float3 h = normalize(l + v);
 
-	output.color.rgb = diffuse;
+	float NdotV = saturate(dot(surface.normal, v)) + kEpsilon; //!< 0除算対策
+	float NdotL = saturate(dot(surface.normal, l)) + kEpsilon; //!< 0除算対策
+	float NdotH = saturate(dot(surface.normal, h));
+	float VdotH = saturate(dot(v, h));
+
+	// f0
+	static const float3 f0 = float3(0.04f, 0.04f, 0.04f); //!< 非金属の場合のf0
+
+	// diffuse Albedo
+	//!< 金属(metallic = 1.0f) -> 0.0f
+	//!< 非金属(metallic = 0.0f) -> albedo * (1.0f - f0)
+	float3 diffuseAlbedo = surface.albedo * (1.0f - f0) * (1.0f - surface.metallic);
+
+	// specular Albedo
+	//!< 金属(metallic = 1.0f) -> f0
+	//!< 非金属(metallic = 0.0f) -> albedo
+	float3 specularAlbedo = lerp(f0, surface.albedo, surface.metallic);
+
+	float3 f = FresnelReflectance(VdotH, specularAlbedo);
+	float d  = DistributionFunction(NdotH, surface.roughness);
+	float g  = GeometricAttenuation(NdotV, NdotL, surface.roughness);
+
+	float3 diffuseBRDF  = DiffuseBRDF(diffuseAlbedo); //!< fresnel値は考慮しない方がsampleに近かった.
+	float3 specularBRDF = SpecularBRDF(f, g, d, NdotL, NdotV);
+
+	output.color.rgb = (diffuseBRDF + specularBRDF) * NdotL * c_light;
 
 	output.color.a = 1.0f;
 	return output;

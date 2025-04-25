@@ -51,8 +51,8 @@ void PointLightComponent::ShowComponentInspector() {
 	}
 
 	std::string format = parameter.unit == Units::Lumen ? "%.3flm" : "%.3fcd";
-	ImGui::DragFloat("intensity", &parameter.intensity, 0.1f, 0.0f, 128.0f, format.c_str());
-	ImGui::DragFloat("radius",  &parameter.radius, 0.1f, 0.0f, 128.0f);
+	ImGui::DragFloat("intensity", &parameter.intensity, 0.1f, 0.0f, std::numeric_limits<float>::max(), format.c_str());
+	ImGui::DragFloat("radius",  &parameter.radius, 0.1f, 0.0f, std::numeric_limits<float>::max());
 
 	LightCommon::ShowCommonInspector();
 

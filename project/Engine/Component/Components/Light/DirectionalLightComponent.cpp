@@ -29,7 +29,7 @@ void DirectionalLightComponent::ShowComponentInspector() {
 	ImGui::ColorEdit3("color",      &parameter.color.r);
 
 	std::string format = "%.3flux";
-	ImGui::DragFloat("intensity", &parameter.intensity, 0.1f, 0.0f, 128.0f, format.c_str());
+	ImGui::DragFloat("intensity", &parameter.intensity, 0.1f, 0.0f, std::numeric_limits<float>::max(), format.c_str());
 
 	LightCommon::ShowCommonInspector();
 
