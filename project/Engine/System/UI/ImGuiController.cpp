@@ -74,6 +74,7 @@ void ImGuiController::Init(Window* main) {
 	if (!std::filesystem::exists(kImGuiLayoutFilepath_) && std::filesystem::exists(kImGuiSampleLayoutFilepath_)) {
 		//!< iniファイルが存在しない場合はコピー
 		std::filesystem::copy(kImGuiSampleLayoutFilepath_, kImGuiLayoutFilepath_, std::filesystem::copy_options::overwrite_existing);
+		EngineLog("[ImGuiController]: imgui layout copyed.");
 	}
 #endif
 
