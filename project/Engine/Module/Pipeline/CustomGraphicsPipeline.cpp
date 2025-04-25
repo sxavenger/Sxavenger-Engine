@@ -17,8 +17,7 @@ void BaseCustomGraphicsPipeline::SetAsset(const std::optional<AssetObserver<Asse
 }
 
 void BaseCustomGraphicsPipeline::CreateAsset(const std::filesystem::path& filepath, DxObject::GraphicsShaderType type) {
-	SxavengerAsset::SetNextCompileProfile(ToProfile(type));
-	AssetObserver<AssetBlob> observer = SxavengerAsset::TryImport<AssetBlob>(filepath);
+	AssetObserver<AssetBlob> observer = SxavengerAsset::TryImport<AssetBlob>(filepath, ToProfile(type));
 	SetAsset(observer, type);
 }
 
@@ -38,7 +37,7 @@ void BaseCustomGraphicsPipeline::ReloadAsset() {
 
 bool BaseCustomGraphicsPipeline::CheckAsset() const {
 	return std::any_of(assets_.begin(), assets_.end(), [](const std::optional<AssetObserver<AssetBlob>>& asset) {
-		return asset.has_value() && asset.value().CheckExpired();
+		return asset.has_value() && asset.value().IsExpired();
 	});
 }
 

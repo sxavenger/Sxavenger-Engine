@@ -25,18 +25,7 @@ public:
 
 	void Load(_MAYBE_UNUSED const DirectXThreadContext* context) override; //!< entry point は L"main"限定
 
-	//* setter *//
-
-	void SetProfile(DxObject::CompileProfile profile) { profile_ = profile; }
+	AsyncExecution GetAsyncExecution() const override { return AsyncExecution::None; }
 	
 private:
-
-	//=========================================================================================
-	// private variables
-	//=========================================================================================
-
-	//* input parameter *//
-
-	std::optional<DxObject::CompileProfile> profile_ = std::nullopt;
-
 };

@@ -60,7 +60,6 @@ void SxavengerEngineGameLoop::Init(GameLoop::Context* context) {
 	SxavengerSystem::Init();
 	SxavengerContent::Init();
 	CreateWhite1x1();
-	SxavengerAsset::Init();
 }
 
 void SxavengerEngineGameLoop::Term() {

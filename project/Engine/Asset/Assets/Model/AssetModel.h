@@ -23,20 +23,9 @@ public:
 
 	void Load(const DirectXThreadContext* context) override;
 
+	AsyncExecution GetAsyncExecution() const override { return AsyncExecution::Compute; }
+
 	void ShowInspector() override;
 
-	//* setter *//
-
-	void SetAssimpOption(uint32_t option) { assimpOption_ = option; }
-
 private:
-
-	//=========================================================================================
-	// private variables
-	//=========================================================================================
-
-	//* input parameter *//
-
-	uint32_t assimpOption_ = Model::GetDefaultAssimpOption();
-
 };

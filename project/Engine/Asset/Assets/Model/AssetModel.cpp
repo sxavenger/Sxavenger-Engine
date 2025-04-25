@@ -5,7 +5,14 @@
 //////////////////////////////////////////////////////////////////////////////////////////////
 
 void AssetModel::Load(const DirectXThreadContext* context) {
-	Model::Load(context, filepath_, assimpOption_);
+
+	uint32_t option = Model::GetDefaultAssimpOption();
+
+	if (param_.has_value()) {
+		param_ = std::any_cast<uint32_t>(param_);
+	}
+
+	Model::Load(context, filepath_, option);
 }
 
 void AssetModel::ShowInspector() {

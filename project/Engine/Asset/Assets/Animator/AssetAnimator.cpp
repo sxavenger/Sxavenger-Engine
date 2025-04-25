@@ -5,5 +5,12 @@
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 void AssetAnimator::Load(_MAYBE_UNUSED const DirectXThreadContext* context) {
-	Animator::Load(filepath_, assimpOption_);
+
+	uint32_t option = 0;
+
+	if (param_.has_value()) {
+		option = std::any_cast<uint32_t>(param_);
+	}
+
+	Animator::Load(filepath_, option);
 }

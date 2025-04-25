@@ -17,8 +17,7 @@ void BaseCustomComputePipeline::SetAsset(const std::optional<AssetObserver<Asset
 }
 
 void BaseCustomComputePipeline::CreateAsset(const std::filesystem::path& filepath) {
-	SxavengerAsset::SetNextCompileProfile(CompileProfile::cs);
-	AssetObserver<AssetBlob> observer = SxavengerAsset::TryImport<AssetBlob>(filepath);
+	AssetObserver<AssetBlob> observer = SxavengerAsset::TryImport<AssetBlob>(filepath, CompileProfile::cs);
 	SetAsset(observer);
 }
 
@@ -33,7 +32,7 @@ void BaseCustomComputePipeline::ReloadAsset() {
 }
 
 bool BaseCustomComputePipeline::CheckAsset() const {
-	return asset_.has_value() && asset_.value().CheckExpired();
+	return asset_.has_value() && asset_.value().IsExpired();
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////

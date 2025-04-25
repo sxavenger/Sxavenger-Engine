@@ -5,7 +5,7 @@
 //-----------------------------------------------------------------------------------------
 //* asset
 #include "../Assets/BaseAsset.h"
-#include "../AssetStorage.h"
+#include "../AssetCollection.h"
 
 //* engine
 #include <Engine/System/Utility/Logger.h>
@@ -37,26 +37,26 @@ public:
 	// public methods
 	//=========================================================================================
 
-	//* observer option *//
+	AssetObserver()  = default;
+	~AssetObserver() = default;
 
-	void Register(const std::shared_ptr<T>& asset);
-
-	void Hotreload();
+	void Register(const std::shared_ptr<T>& asset, AssetCollection* collection = nullptr);
 
 	void Reload();
+	//* 監視対象のassetを再度読み込む(Import(...))
+
+	//* getter *//
 
 	Condition GetCondition() const;
 
-	//* accessor *//
+	bool CheckRegistered() const;
 
-	bool IsRegistered() const;
+	bool CheckExpired() const;
 
-	bool IsExpired() const;
+	std::shared_ptr<T> Get();
+	std::shared_ptr<T> Get() const; //!< todo: 通常版と機能が違うので名前を変える
 
-	std::shared_ptr<T> Acquire();
-	std::shared_ptr<T> WaitAcquire();
-
-	std::shared_ptr<T> Get() const;
+	std::shared_ptr<T> WaitGet();
 	std::shared_ptr<T> WaitGet() const;
 
 private:
@@ -65,40 +65,42 @@ private:
 	// private variables
 	//=========================================================================================
 
-	std::optional<std::weak_ptr<T>> asset_; //!< 監視対象のアセット
+	//* external *//
+
+	AssetCollection* collection_ = nullptr;
+
+	//* asset *//
+
+	std::optional<std::weak_ptr<T>> asset_;
 
 	//* parameter *//
 
 	std::filesystem::path filepath_;
-	std::any param_;
+	//* 再検索のためのfilepath
 
-	//=========================================================================================
-	// private methods
-	//=========================================================================================
-
-	
 };
-
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // AssetObserver class template methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 template <BaseAssetConcept T>
-void AssetObserver<T>::Register(const std::shared_ptr<T>& asset) {
-	asset_    = asset;
-	filepath_ = asset->GetFilepath();
-	param_    = asset->GetParam();
-}
+inline void AssetObserver<T>::Register(const std::shared_ptr<T>& asset, AssetCollection* collection) {
+	asset_ = asset;
 
-template <BaseAssetConcept T>
-inline void AssetObserver<T>::Hotreload() {
-	*this = sAssetStorage->Import<T>(filepath_, param_);
+	std::shared_ptr<BaseAsset> base = asset;
+	filepath_ = base->GetFilepath();
+
+	if (collection != nullptr) {
+		collection_ = collection;
+	}
 }
 
 template <BaseAssetConcept T>
 inline void AssetObserver<T>::Reload() {
-	*this = sAssetStorage->TryImport<T>(filepath_, param_);
+	Assert(GetCondition() != Condition::UnRegistered, "asset is not registered.");
+	Assert(collection_ != nullptr, "collection is not set.");
+	asset_ = collection_->ImportPtr<T>(filepath_);
 }
 
 template <BaseAssetConcept T>
@@ -114,44 +116,45 @@ inline AssetObserver<T>::Condition AssetObserver<T>::GetCondition() const {
 	return Condition::Valid;
 }
 
-template <BaseAssetConcept T>
-inline bool AssetObserver<T>::IsRegistered() const {
+template<BaseAssetConcept T>
+inline bool AssetObserver<T>::CheckRegistered() const {
 	return GetCondition() != Condition::UnRegistered;
 }
 
-template <BaseAssetConcept T>
-inline bool AssetObserver<T>::IsExpired() const {
+template<BaseAssetConcept T>
+inline bool AssetObserver<T>::CheckExpired() const {
 	Condition condition = GetCondition();
 	Assert(condition != Condition::UnRegistered, "asset is not registered.");
-	return condition != Condition::Expired;
+	return condition == Condition::Expired;
 }
 
 template <BaseAssetConcept T>
-inline std::shared_ptr<T> AssetObserver<T>::Acquire() {
+inline std::shared_ptr<T> AssetObserver<T>::Get() {
 	Condition condition = GetCondition();
 	Assert(condition != Condition::UnRegistered, "asset is not registered.");
 
 	if (condition == Condition::Expired) {
-		Reload();
+		Assert(collection_ != nullptr, "collection is not set.");
+		asset_ = collection_->TryImportPtr<T>(filepath_);
 	}
 
-	return (*asset_).lock();
-}
-
-template <BaseAssetConcept T>
-inline std::shared_ptr<T> AssetObserver<T>::WaitAcquire() {
-	std::shared_ptr<T> asset = Acquire();
-	asset->WaitComplete();
-	return asset;
+	return asset_.value().lock();
 }
 
 template <BaseAssetConcept T>
 inline std::shared_ptr<T> AssetObserver<T>::Get() const {
 	Condition condition = GetCondition();
-	Assert(condition != Condition::UnRegistered, "asset is not registered.");
-	Assert(condition != Condition::Expired,      "asset is expired.");
 
-	return (*asset_).lock();
+	Assert(condition == Condition::Valid, "asset is not valid");
+
+	return asset_.value().lock();
+}
+
+template <BaseAssetConcept T>
+inline std::shared_ptr<T> AssetObserver<T>::WaitGet() {
+	std::shared_ptr<T> asset = Get();
+	asset->WaitComplete();
+	return asset;
 }
 
 template <BaseAssetConcept T>
@@ -160,4 +163,3 @@ inline std::shared_ptr<T> AssetObserver<T>::WaitGet() const {
 	asset->WaitComplete();
 	return asset;
 }
-

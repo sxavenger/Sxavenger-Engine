@@ -6,7 +6,7 @@
 //* engine
 #include <Engine/System/Runtime/Input/Input.h>
 #include <Engine/System/Runtime/Performance/DeltaTimePoint.h>
-#include <Engine/Asset/AssetCollection.h>
+#include <Engine/Asset/AssetStorage.h>
 #include <Engine/Asset/Observer/AssetObserver.h>
 #include <Engine/Module/GameObject/GameObject.h>
 

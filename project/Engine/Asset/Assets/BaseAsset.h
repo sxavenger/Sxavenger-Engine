@@ -6,6 +6,7 @@
 //* engine
 #include <Engine/System/DirectX/DirectXContext.h>
 #include <Engine/System/Runtime/Thread/AsyncTask.h>
+#include <Engine/System/Runtime/Thread/AsyncThread.h>
 #include <Engine/Editor/Editors/InspectorEditor.h>
 
 //* lib
@@ -14,6 +15,8 @@
 //* c++
 #include <filesystem>
 #include <concepts>
+#include <optional>
+#include <any>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // BaseAsset class
@@ -31,6 +34,8 @@ public:
 
 	virtual void Load(_MAYBE_UNUSED const DirectXThreadContext* context) = 0;
 
+	virtual AsyncExecution GetAsyncExecution() const = 0;
+
 	void Execute(const AsyncThread* thread) override;
 
 	//* state option *//
@@ -45,6 +50,12 @@ public:
 
 	const std::filesystem::path& GetFilepath() const { return filepath_; }
 
+	//* param option *//
+
+	void SetParam(const std::any& param) { param_ = param; }
+
+	const std::any& GetParam() const { return param_; }
+
 	//* inspector option *//
 
 	virtual void ShowInspector() override;
@@ -56,6 +67,7 @@ protected:
 	//=========================================================================================
 
 	std::filesystem::path filepath_;
+	std::any param_;
 
 };
 

@@ -23,18 +23,7 @@ public:
 
 	void Load(_MAYBE_UNUSED const DirectXThreadContext* context) override;
 
-	//* setter *//
-
-	void SetAssimpOption(uint32_t option) { assimpOption_ = option; }
+	AsyncExecution GetAsyncExecution() const override { return AsyncExecution::None; }
 
 private:
-
-	//=========================================================================================
-	// private variables
-	//=========================================================================================
-
-	//* input parameter *//
-
-	uint32_t assimpOption_ = 0;
-
 };

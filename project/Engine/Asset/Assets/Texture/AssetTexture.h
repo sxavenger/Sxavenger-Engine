@@ -23,6 +23,8 @@ public:
 
 	void Load(const DirectXThreadContext* context) override;
 
+	AsyncExecution GetAsyncExecution() const override { return AsyncExecution::Compute; }
+
 	void ShowInspector() override;
 
 private:

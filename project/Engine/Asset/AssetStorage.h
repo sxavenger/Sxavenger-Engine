@@ -10,8 +10,11 @@
 #include "Assets/Animator/AssetAnimator.h"
 #include "Assets/Blob/AssetBlob.h"
 
+//* engine
+#include <Engine/System/SxavengerSystem.h>
+
 //* lib
-#include <Lib/Sxl/OptimizedLowerPathMap.h>
+#include <Lib/Sxl/OptimizedPathMap.h>
 
 //* c++
 #include <filesystem>
@@ -21,7 +24,7 @@
 ////////////////////////////////////////////////////////////////////////////////////////////
 // forward
 ////////////////////////////////////////////////////////////////////////////////////////////
-template <BaseAssetConcept T>
+template <BaseAssetConcept>
 class AssetObserver;
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -34,9 +37,19 @@ public:
 	// public methods
 	//=========================================================================================
 
-	template <BaseAssetConcept _Ty>
-	void Import(const std::filesystem::path& filepath);
+	void Term();
 
+	//* storage option *//
+
+	template <BaseAssetConcept _Ty>
+	AssetObserver<_Ty> Import(const std::filesystem::path& filepath, const std::any& param = std::any());
+
+	template <BaseAssetConcept _Ty>
+	AssetObserver<_Ty> TryImport(const std::filesystem::path& filepath, const std::any& param = std::any());
+
+	//* singleton *//
+
+	static AssetStorage* GetInstance();
 
 private:
 
@@ -44,7 +57,14 @@ private:
 	// private variables
 	//=========================================================================================
 
-	std::unordered_map<const std::type_info*, Sxl::OptimizedLowerPathMap<std::shared_ptr<BaseAsset>>> storage_;
+	std::unordered_map<const std::type_info*, Sxl::OptimizedPathMap<std::shared_ptr<BaseAsset>>> storage_;
+
+	//=========================================================================================
+	// private methods
+	//=========================================================================================
+
+	template <BaseAssetConcept _Ty>
+	static std::shared_ptr<_Ty> Cast(const std::shared_ptr<BaseAsset>& asset);
 
 };
 
@@ -53,10 +73,43 @@ private:
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 template <BaseAssetConcept _Ty>
-void AssetStorage::Import(const std::filesystem::path& filepath) {
+AssetObserver<_Ty> AssetStorage::Import(const std::filesystem::path& filepath, const std::any& param) {
 	constexpr const std::type_info* type = &typeid(_Ty);
 
-	if () {
+	// assetの作成
+	std::shared_ptr<BaseAsset> asset = std::make_shared<_Ty>();
+	asset->SetFilepath(filepath);
+	asset->SetParam(param);
 
-	}
+	storage_[type].Emplace(filepath, asset);
+	SxavengerSystem::PushTask(asset->GetAsyncExecution(), asset);
+
+	AssetObserver<_Ty> observer;
+	observer.Register(AssetStorage::Cast<_Ty>(asset));
+
+	return observer;
 }
+
+template <BaseAssetConcept _Ty>
+AssetObserver<_Ty> AssetStorage::TryImport(const std::filesystem::path& filepath, const std::any& param) {
+	constexpr const std::type_info* type = &typeid(_Ty);
+
+	if (storage_[type].Contains(filepath)) {
+		AssetObserver<_Ty> observer;
+		observer.Register(AssetStorage::Cast<_Ty>(storage_[type].At(filepath)));
+
+		return observer;
+	}
+
+	return AssetStorage::Import<_Ty>(filepath, param);
+}
+
+template <BaseAssetConcept _Ty>
+inline std::shared_ptr<_Ty> AssetStorage::Cast(const std::shared_ptr<BaseAsset>& asset) {
+	return std::static_pointer_cast<_Ty>(asset);
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////
+// AssetStorage class singleton
+////////////////////////////////////////////////////////////////////////////////////////////
+static AssetStorage* sAssetStorage = AssetStorage::GetInstance();

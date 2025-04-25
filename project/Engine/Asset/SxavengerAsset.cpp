@@ -4,10 +4,6 @@
 // SxavengerAsset class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-void SxavengerAsset::Init() {
-	sAssetCollection->Init();
-}
-
 void SxavengerAsset::Term() {
-	sAssetCollection->Term();
+	sAssetStorage->Term();
 }
