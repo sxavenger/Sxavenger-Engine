@@ -92,6 +92,7 @@ public:
 	void SetSamplerLinear(const std::string& name, SamplerMode mode);
 	void SetSamplerAnisotropic(const std::string& name, SamplerMode mode, uint32_t anisotropic);
 	void SetSamplerPoint(const std::string& name, SamplerMode mode);
+	void SetSamplerDesc(const std::string& name, const D3D12_STATIC_SAMPLER_DESC& desc);
 
 	bool Contains(const std::string& name) const;
 

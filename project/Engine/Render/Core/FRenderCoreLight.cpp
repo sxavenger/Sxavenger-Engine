@@ -106,11 +106,14 @@ void FRenderCoreLight::CreatePipeline() {
 	pipelines_[LightType::Spot]->ReflectionRootSignature(SxavengerSystem::GetDxDevice());
 	pipelines_[LightType::Spot]->CreatePipeline(SxavengerSystem::GetDxDevice(), desc2d);
 
+	SamplerBindDesc desc = {};
+	desc.SetSamplerLinear("gBRDFSampler", SamplerMode::MODE_CLAMP);
+
 	pipelines_[LightType::SkyLight] = std::make_unique<CustomReflectionGraphicsPipeline>();
 	pipelines_[LightType::SkyLight]->CreateAsset(kDirectory_ / "lightRender2d.vs.hlsl", GraphicsShaderType::vs);
 	pipelines_[LightType::SkyLight]->CreateAsset(kDirectory_ / "skyLight.ps.hlsl", GraphicsShaderType::ps);
 	pipelines_[LightType::SkyLight]->RegisterBlob();
-	pipelines_[LightType::SkyLight]->ReflectionRootSignature(SxavengerSystem::GetDxDevice());
+	pipelines_[LightType::SkyLight]->ReflectionRootSignature(SxavengerSystem::GetDxDevice(), desc);
 	pipelines_[LightType::SkyLight]->CreatePipeline(SxavengerSystem::GetDxDevice(), desc2d);
 
 

@@ -32,7 +32,7 @@ public:
 	// DirectXCommon option
 	//-----------------------------------------------------------------------------------------
 
-	static _DXOBJECT Descriptor GetDescriptor(_DXOBJECT DescriptorType type);
+	_NODISCARD static _DXOBJECT Descriptor GetDescriptor(_DXOBJECT DescriptorType type);
 
 	static _DXOBJECT Device* GetDxDevice();
 

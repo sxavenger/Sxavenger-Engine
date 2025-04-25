@@ -73,6 +73,10 @@ void SamplerBindDesc::SetSamplerPoint(const std::string& name, SamplerMode mode)
 	samplers_[name].MaxLOD           = D3D12_FLOAT32_MAX;
 }
 
+void SamplerBindDesc::SetSamplerDesc(const std::string& name, const D3D12_STATIC_SAMPLER_DESC& desc) {
+	samplers_[name] = desc;
+}
+
 bool SamplerBindDesc::Contains(const std::string& name) const {
 	return samplers_.contains(name);
 }

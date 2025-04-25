@@ -153,17 +153,11 @@ void MonoBehaviour::ShowInspector() {
 		}
 	}
 
-	/*ImGui::SeparatorText("json");
+	ImGui::SeparatorText("inspectable");
 
-	if (ImGui::Button("output json")) {
-		OutputJson();
-	}
+	Inspectable();
 
-	ImGui::SameLine();
 
-	if (ImGui::Button("input json")) {
-		InputJson();
-	}*/
 }
 
 void MonoBehaviour::LateUpdate() {

@@ -250,7 +250,7 @@ void DevelopEditor::ShowConsole() {
 
 	//!< todo: filterできるようにする
 	for (const auto& [data, count] : SxavengerLogger::GetStacks() | std::views::filter([](const auto&) { return true; })) {
-		if (count == 0) {
+		if (count == 1) {
 			ImGui::TextColored(colors[static_cast<uint32_t>(data.category)], std::format("{}", data.label).c_str());
 
 		} else {
