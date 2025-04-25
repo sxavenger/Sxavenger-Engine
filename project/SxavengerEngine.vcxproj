@@ -190,6 +190,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="Demo\Particle\RainParticle.cpp" />
     <ClCompile Include="Demo\Particle\SmokeParticle.cpp" />
     <ClCompile Include="Engine\Asset\AssetCollection.cpp" />
+    <ClCompile Include="Engine\Asset\AssetStorage.cpp" />
     <ClCompile Include="Engine\Asset\Assets\Animator\Animator.cpp" />
     <ClCompile Include="Engine\Asset\Assets\Animator\AssetAnimator.cpp" />
     <ClCompile Include="Engine\Asset\Assets\BaseAsset.cpp" />
@@ -319,13 +320,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="Lib\Geometry\Quaternion.cpp" />
     <ClCompile Include="Lib\Sxl\Flag.cpp" />
     <ClCompile Include="Lib\Sxl\Formatter.cpp" />
-    <ClCompile Include="Lib\Sxl\Holder.cpp" />
-    <ClCompile Include="Lib\Sxl\LowerPathMap.cpp" />
-    <ClCompile Include="Lib\Sxl\LowerUnorderedMap.cpp" />
-    <ClCompile Include="Lib\Sxl\OptimizedLowerPathMap.cpp" />
     <ClCompile Include="Lib\Sxl\OptimizedMap.cpp" />
-    <ClCompile Include="Lib\Sxl\OptimizedSet.cpp" />
-    <ClCompile Include="Lib\Sxl\Optional.cpp" />
     <ClCompile Include="Lib\Transform\Transform.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
@@ -337,6 +332,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Demo\Particle\RainParticle.h" />
     <ClInclude Include="Demo\Particle\SmokeParticle.h" />
     <ClInclude Include="Engine\Asset\AssetCollection.h" />
+    <ClInclude Include="Engine\Asset\AssetStorage.h" />
     <ClInclude Include="Engine\Asset\Assets\Animator\Animator.h" />
     <ClInclude Include="Engine\Asset\Assets\Animator\AssetAnimator.h" />
     <ClInclude Include="Engine\Asset\Assets\BaseAsset.h" />
@@ -486,13 +482,8 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Lib\Geometry\VectorComparision.h" />
     <ClInclude Include="Lib\Sxl\Flag.h" />
     <ClInclude Include="Lib\Sxl\Formatter.h" />
-    <ClInclude Include="Lib\Sxl\Holder.h" />
-    <ClInclude Include="Lib\Sxl\LowerPathMap.h" />
-    <ClInclude Include="Lib\Sxl\LowerUnorderedMap.h" />
-    <ClInclude Include="Lib\Sxl\OptimizedLowerPathMap.h" />
     <ClInclude Include="Lib\Sxl\OptimizedMap.h" />
-    <ClInclude Include="Lib\Sxl\OptimizedSet.h" />
-    <ClInclude Include="Lib\Sxl\Optional.h" />
+    <ClInclude Include="Lib\Sxl\OptimizedPathMap.h" />
     <ClInclude Include="Lib\Sxl\SxavengerLibrary.h" />
     <ClInclude Include="Lib\Traits.h" />
     <ClInclude Include="Lib\Transform\Transform.h" />

@@ -61,7 +61,7 @@ Texture2D<float4> gBRDFLut : register(t0);
 
 float3 ApproximateBRDF(float3 diffuseAlbedo, float3 specularAlbedo, float3 n, float3 v, float3 r, float roughness) {
 
-	float NdotV = saturate(dot(n, v)) + kEpsilon;
+	float NdotV = saturate(saturate(dot(n, v)) + kEpsilon);
 
 	const float2 brdf = gBRDFLut.SampleLevel(gSampler, float2(NdotV, 1.0f - roughness), 0).rg;
 
@@ -106,7 +106,7 @@ PSOutput main(PSInput input) {
 	//!< 非金属(metallic = 0.0f) -> albedo
 	float3 specularAlbedo = lerp(f0, surface.albedo, surface.metallic);
 
-	output.color.rgb = ApproximateBRDF(diffuseAlbedo, specularAlbedo, surface.normal, v, r, surface.roughness) * 12;
+	output.color.rgb = ApproximateBRDF(diffuseAlbedo, specularAlbedo, surface.normal, v, r, surface.roughness);
 
 	output.color.a = 1.0f;
 	return output;

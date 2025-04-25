@@ -11,7 +11,7 @@
 #include "Assets/Blob/AssetBlob.h"
 
 //* lib
-#include <Lib/Sxl/OptimizedLowerPathMap.h>
+#include <Lib/Sxl/OptimizedPathMap.h>
 
 //* c++
 #include <filesystem>
@@ -56,8 +56,8 @@ public:
 	using FolderData = std::pair<std::filesystem::path, Folder>;
 
 	struct Folder {
-		Sxl::OptimizedLowerPathMap<FileData>   files;
-		Sxl::OptimizedLowerPathMap<FolderData> folders;
+		Sxl::OptimizedPathMap<FileData>   files;
+		Sxl::OptimizedPathMap<FolderData> folders;
 	};
 
 public:

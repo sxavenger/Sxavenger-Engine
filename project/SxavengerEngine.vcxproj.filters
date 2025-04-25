@@ -35,9 +35,6 @@
     <ClCompile Include="Engine\System\DirectX\DxObject\DxBindBuffer.cpp" />
     <ClCompile Include="Lib\Adapter\Json\IJsonSerializer.cpp" />
     <ClCompile Include="Lib\Sxl\OptimizedMap.cpp" />
-    <ClCompile Include="Lib\Sxl\LowerPathMap.cpp" />
-    <ClCompile Include="Lib\Sxl\LowerUnorderedMap.cpp" />
-    <ClCompile Include="Lib\Sxl\OptimizedSet.cpp" />
     <ClCompile Include="Engine\System\DirectX\DxObject\DxUnorderedDimensionBuffer.cpp" />
     <ClCompile Include="Lib\Sxl\Formatter.cpp" />
     <ClCompile Include="Engine\System\DirectX\DxObject\DxShaderBlob.cpp" />
@@ -46,7 +43,6 @@
     <ClCompile Include="Engine\System\Runtime\GameLoop\GameLoop.cpp" />
     <ClCompile Include="Engine\System\Runtime\Framework\IFramework.cpp" />
     <ClCompile Include="Lib\Transform\Transform.cpp" />
-    <ClCompile Include="Lib\Sxl\OptimizedLowerPathMap.cpp" />
     <ClCompile Include="Engine\System\DirectX\DxrObject\DxrAccelerationStructure.cpp" />
     <ClCompile Include="Engine\System\DirectX\DxrObject\DxrObjectCommon.cpp" />
     <ClCompile Include="Engine\System\Runtime\Performance\Performance.cpp" />
@@ -58,10 +54,8 @@
     <ClCompile Include="Engine\System\DirectX\DxrObject\DxrRaytracingBlob.cpp" />
     <ClCompile Include="Engine\System\DirectX\DxrObject\DxrStateObjectContext.cpp" />
     <ClCompile Include="Engine\System\DirectX\DxrObject\DxrBindBuffer.cpp" />
-    <ClCompile Include="Lib\Sxl\Holder.cpp" />
     <ClCompile Include="Lib\Sxl\Flag.cpp" />
     <ClCompile Include="Engine\System\Config\SxavengerConfig.cpp" />
-    <ClCompile Include="Lib\Sxl\Optional.cpp" />
     <ClCompile Include="Engine\System\DirectX\DxObject\DxVectorDimensionBuffer.cpp" />
     <ClCompile Include="Lib\Easing.cpp" />
     <ClCompile Include="Engine\System\Runtime\Performance\DeltaTimePoint.cpp" />
@@ -154,6 +148,7 @@
     <ClCompile Include="Demo\Particle\SmokeParticle.cpp" />
     <ClCompile Include="Demo\Object\Stage.cpp" />
     <ClCompile Include="Demo\Particle\RainParticle.cpp" />
+    <ClCompile Include="Engine\Asset\AssetStorage.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\System\Window\Window.h" />
@@ -188,9 +183,6 @@
     <ClInclude Include="Engine\System\UI\ISystemDebugGui.h" />
     <ClInclude Include="Lib\Sxl\OptimizedMap.h" />
     <ClInclude Include="Lib\Sxl\SxavengerLibrary.h" />
-    <ClInclude Include="Lib\Sxl\LowerPathMap.h" />
-    <ClInclude Include="Lib\Sxl\LowerUnorderedMap.h" />
-    <ClInclude Include="Lib\Sxl\OptimizedSet.h" />
     <ClInclude Include="Engine\System\DirectX\DxObject\DxUnorderedDimensionBuffer.h" />
     <ClInclude Include="Lib\Sxl\Formatter.h" />
     <ClInclude Include="Engine\System\DirectX\DxObject\DxShaderBlob.h" />
@@ -199,7 +191,6 @@
     <ClInclude Include="Engine\System\Runtime\GameLoop\GameLoop.h" />
     <ClInclude Include="Engine\System\Runtime\Framework\IFramework.h" />
     <ClInclude Include="Lib\Transform\Transform.h" />
-    <ClInclude Include="Lib\Sxl\OptimizedLowerPathMap.h" />
     <ClInclude Include="Engine\System\DirectX\DxrObject\DxrAccelerationStructure.h" />
     <ClInclude Include="Engine\System\DirectX\DxrObject\DxrObjectCommon.h" />
     <ClInclude Include="Engine\System\Runtime\Performance\Performance.h" />
@@ -211,10 +202,8 @@
     <ClInclude Include="Engine\System\DirectX\DxrObject\DxrRaytracingBlob.h" />
     <ClInclude Include="Engine\System\DirectX\DxrObject\DxrStateObjectContext.h" />
     <ClInclude Include="Engine\System\DirectX\DxrObject\DxrBindBuffer.h" />
-    <ClInclude Include="Lib\Sxl\Holder.h" />
     <ClInclude Include="Lib\Sxl\Flag.h" />
     <ClInclude Include="Engine\System\Config\SxavengerConfig.h" />
-    <ClInclude Include="Lib\Sxl\Optional.h" />
     <ClInclude Include="Engine\System\DirectX\DirectXAlignment.h" />
     <ClInclude Include="Lib\Traits.h" />
     <ClInclude Include="Engine\System\DirectX\DxObject\DxVectorDimensionBuffer.h" />
@@ -322,6 +311,8 @@
     <ClInclude Include="Demo\Particle\SmokeParticle.h" />
     <ClInclude Include="Demo\Object\Stage.h" />
     <ClInclude Include="Demo\Particle\RainParticle.h" />
+    <ClInclude Include="Engine\Asset\AssetStorage.h" />
+    <ClInclude Include="Lib\Sxl\OptimizedPathMap.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

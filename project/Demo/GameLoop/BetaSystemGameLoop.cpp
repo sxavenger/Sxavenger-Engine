@@ -55,7 +55,7 @@ void BetaSystemGameLoop::InitSystem() {
 
 	camera_ = ComponentHelper::CreateCameraMonoBehaviour();
 
-	//meshA_   = ComponentHelper::CreateStaticNodeModelBehaviour("assets/models/PBR_Sphere_Test/model/PBR_Sphere.gltf");
+	meshA_   = ComponentHelper::CreateStaticNodeModelBehaviour("assets/models/PBR_Sphere_Test/model/PBR_Sphere.gltf");
 	//meshA_   = ComponentHelper::CreateStaticNodeModelBehaviour("assets/models/sponza/NewSponza_Main_glTF_003.gltf");
 	//meshA_   = ComponentHelper::CreateStaticNodeModelBehaviour("assets/models/bricks/bricks.obj");
 	//meshA_   = ComponentHelper::CreateStaticNodeModelBehaviour("assets/models/normal_sphere.obj");
@@ -68,14 +68,14 @@ void BetaSystemGameLoop::InitSystem() {
 	light_  = ComponentHelper::CreateDirectionalLightMonoBehaviour();
 
 	
-	/*AssetObserver<AssetTexture> diffuse  = SxavengerAsset::TryImport<AssetTexture>("assets/textures/diffuseHDR.dds");
-	AssetObserver<AssetTexture> specular = SxavengerAsset::TryImport<AssetTexture>("assets/textures/specularHDR.dds");*/
+	AssetObserver<AssetTexture> diffuse  = SxavengerAsset::TryImport<AssetTexture>("assets/textures/diffuseHDR.dds");
+	AssetObserver<AssetTexture> specular = SxavengerAsset::TryImport<AssetTexture>("assets/textures/specularHDR.dds");
 
 	RunTimeTracker runtime;
 	runtime.Begin();
 
-	//skyAtmosphere_.Create({ 1024, 1024 });
-	//skyAtmosphere_.Update(SxavengerSystem::GetMainThreadContext());
+	skyAtmosphere_.Create({ 1024, 1024 });
+	skyAtmosphere_.Update(SxavengerSystem::GetMainThreadContext());
 
 	runtime.End();
 	LogRuntime(std::format("[atmosphere runtime]: {}s", runtime.GetDeltaTime<TimeUnit::second>().time));
@@ -92,9 +92,6 @@ void BetaSystemGameLoop::InitSystem() {
 
 	SxavengerSystem::ExecuteAllAllocator();
 
-	skyAtmosphere_.Create({ 1024, 1024 });
-	skyAtmosphere_.Update(SxavengerSystem::GetMainThreadContext());
-
 	skylight_ = ComponentHelper::CreateMonoBehaviour();
 	skylight_->SetName("sky light");
 	skylight_->AddComponent<SkyLightComponent>();
@@ -102,35 +99,12 @@ void BetaSystemGameLoop::InitSystem() {
 	//skylight_->GetComponent<SkyLightComponent>()->GetDiffuseParameter().SetTexture(diffuse);
 	//skylight_->GetComponent<SkyLightComponent>()->GetSpecularParameter().SetTexture(specular);
 
-	skylight_->GetComponent<SkyLightComponent>()->GetDiffuseParameter().SetTexture(environmentMap_.GetIrradianceIndex());
-	skylight_->GetComponent<SkyLightComponent>()->GetSpecularParameter().SetTexture(environmentMap_.GetRadianceIndex(), environmentMap_.GetRadianceMiplevel());
+	//skylight_->GetComponent<SkyLightComponent>()->GetDiffuseParameter().SetTexture(environmentMap_.GetIrradianceIndex());
+	//skylight_->GetComponent<SkyLightComponent>()->GetSpecularParameter().SetTexture(environmentMap_.GetRadianceIndex(), environmentMap_.GetRadianceMiplevel());
 
-	//skylight_->GetComponent<SkyLightComponent>()->GetDiffuseParameter().SetTexture(skyAtmosphere_.GetIrradiance().descriptorSRV.GetIndex());
-	//skylight_->GetComponent<SkyLightComponent>()->GetSpecularParameter().SetTexture(skyAtmosphere_.GetRadiance().descriptorSRV.GetIndex(), skyAtmosphere_.GetRadiance().kMiplevels);
+	skylight_->GetComponent<SkyLightComponent>()->GetDiffuseParameter().SetTexture(skyAtmosphere_.GetIrradiance().descriptorSRV.GetIndex());
+	skylight_->GetComponent<SkyLightComponent>()->GetSpecularParameter().SetTexture(skyAtmosphere_.GetRadiance().descriptorSRV.GetIndex(), skyAtmosphere_.GetRadiance().kMiplevels);
 
-	{
-		particle_ = std::make_unique<MonoBehaviour>();
-		auto particle = particle_->AddComponent<ParticleComponent>();
-
-		uint32_t count = 12;
-
-		particle->Init(count);
-
-		particle->SetPrimitive(InputPrimitiveHelper::CreatePlane({1, 1}));
-
-		for (uint32_t i = 0; i < count; ++i) {
-			auto& element = particle->Emit({ i * 0.1f, i * 0.1f , i * 0.1f });
-
-			element.velocity.SetStart({ 0.1f, 0.1f, 0.1f });
-			element.lifeTime = { 2.0f };
-		}
-
-		particle->Update();
-	}
-
-	sEditorEngine->ExecuteEditorFunction<DevelopEditor>([](DevelopEditor* editor) {
-		editor->BreakPoint();
-	});
 }
 
 void BetaSystemGameLoop::TermSystem() {
