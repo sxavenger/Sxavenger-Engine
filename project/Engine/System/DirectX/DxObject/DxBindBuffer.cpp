@@ -385,10 +385,12 @@ BindBufferType BindBufferTable::ToBindBufferType(D3D_SHADER_INPUT_TYPE type) {
 			break;
 
 		case D3D_SHADER_INPUT_TYPE::D3D_SIT_UAV_RWTYPED:
+		case D3D_SHADER_INPUT_TYPE::D3D_SIT_UAV_RWSTRUCTURED_WITH_COUNTER:
 			return BindBufferType::kHandle_UAV;
 			break;
 
 		case D3D_SHADER_INPUT_TYPE::D3D_SIT_STRUCTURED:
+		case D3D_SHADER_INPUT_TYPE::D3D_SIT_RTACCELERATIONSTRUCTURE:
 			return BindBufferType::kVirtual_SRV;
 			break;
 
@@ -396,12 +398,11 @@ BindBufferType BindBufferTable::ToBindBufferType(D3D_SHADER_INPUT_TYPE type) {
 			return BindBufferType::kVirtual_UAV;
 			break;
 
-		case D3D_SHADER_INPUT_TYPE::D3D_SIT_RTACCELERATIONSTRUCTURE:
-			return BindBufferType::kVirtual_SRV;
+		default:
+			Assert(false, "D3D_SHADER_INPUT_TYPE is undefine.");
 			break;
 	}
 
-	Assert(false, "D3D_SHADER_INPUT_TYPE is undefine.");
 	return {};
 }
 

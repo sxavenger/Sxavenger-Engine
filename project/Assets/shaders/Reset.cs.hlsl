@@ -2,21 +2,12 @@
 // buffers
 //=========================================================================================
 
-struct Data {
-	uint value;
-};
-
-AppendStructuredBuffer<Data> gAppend : register(u0);
-//ConsumeStructuredBuffer<Data> gConsume : register(u1);
+RWStructuredBuffer<uint> gCounter : register(u0);
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // main
 ////////////////////////////////////////////////////////////////////////////////////////////
-[numthreads(2, 1, 1)]
+[numthreads(1, 1, 1)]
 void main(uint3 dispatchThreadId : SV_DispatchThreadID) {
-
-	Data data1 = (Data)0;
-	data1.value = dispatchThreadId.x;
-	gAppend.Append(data1);
-	
+	gCounter[0] = 0;
 }

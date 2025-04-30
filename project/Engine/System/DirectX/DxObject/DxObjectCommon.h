@@ -109,14 +109,14 @@ enum class GraphicsShaderType : uint8_t {
 // common methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-ComPtr<ID3D12Resource> CreateBufferResource(
+_NODISCARD ComPtr<ID3D12Resource> CreateBufferResource(
 	ID3D12Device* device,
 	D3D12_HEAP_TYPE heapType,
 	size_t sizeInBytes,
 	D3D12_RESOURCE_FLAGS flags, D3D12_RESOURCE_STATES state
 );
 
-ComPtr<ID3D12Resource> CreateBufferResource(
+_NODISCARD ComPtr<ID3D12Resource> CreateBufferResource(
 	ID3D12Device* device,
 	size_t sizeInBytes
 );
