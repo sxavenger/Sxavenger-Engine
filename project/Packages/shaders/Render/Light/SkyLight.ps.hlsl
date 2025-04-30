@@ -110,6 +110,18 @@ PSOutput main(PSInput input) {
 
 	output.color.rgb = ApproximateBRDF(diffuseAlbedo, specularAlbedo, surface.normal, v, r, surface.roughness);
 
+	//* shadow
+	InlineShadow shadow;
+	shadow.strength = 0.0f;
+
+	RayDesc desc;
+	desc.Origin    = surface.position;
+	desc.Direction = r;
+	desc.TMin      = kTMin;
+	desc.TMax      = kTMax;
+	
+	output.color.rgb *= shadow.TraceShadow(desc);
+
 	output.color.a = 1.0f;
 	return output;
 }

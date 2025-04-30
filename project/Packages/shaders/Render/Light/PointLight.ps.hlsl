@@ -26,8 +26,8 @@ PSOutput main(PSInput input) {
 
 	//* Lightの情報を取得
 	float3 p_light = gTransforms[input.instanceId].GetPosition(); //!< lightの中心座標
-	float3 l       = normalize(p_light - surface.position);      //!< lightの方向ベクトル
-	float r        = length(p_light - surface.position);         //!< lightとsurfaceの距離
+	float3 l       = normalize(p_light - surface.position);       //!< lightの方向ベクトル
+	float r        = length(p_light - surface.position);          //!< lightとsurfaceの距離
 
 	float3 c_light = gParameter.GetColor(r);
 

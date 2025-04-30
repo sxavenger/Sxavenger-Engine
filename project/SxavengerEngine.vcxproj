@@ -186,6 +186,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="Demo\Entity\Player.cpp" />
     <ClCompile Include="Demo\GameLoop\BetaSystemGameLoop.cpp" />
     <ClCompile Include="Demo\GameLoop\DemoGameLoop.cpp" />
+    <ClCompile Include="Demo\GameLoop\PreviewGameLoop.cpp" />
     <ClCompile Include="Demo\Object\Stage.cpp" />
     <ClCompile Include="Demo\Particle\RainParticle.cpp" />
     <ClCompile Include="Demo\Particle\SmokeParticle.cpp" />
@@ -217,6 +218,8 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="Engine\Component\Components\MeshRenderer\MeshRendererComponent.cpp" />
     <ClCompile Include="Engine\Component\Components\MeshRenderer\SkinnedMeshRendererComponent.cpp" />
     <ClCompile Include="Engine\Component\Components\Particle\ParticleComponent.cpp" />
+    <ClCompile Include="Engine\Component\Components\PostProcessLayer\BasePostProcess.cpp" />
+    <ClCompile Include="Engine\Component\Components\PostProcessLayer\PostProcessLayerComponent.cpp" />
     <ClCompile Include="Engine\Component\Components\SpriteRenderer\SpriteRendererComponent.cpp" />
     <ClCompile Include="Engine\Component\Components\Transform\TransformComponent.cpp" />
     <ClCompile Include="Engine\Component\Entity\MonoBehaviour.cpp" />
@@ -324,6 +327,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Demo\Entity\Player.h" />
     <ClInclude Include="Demo\GameLoop\BetaSystemGameLoop.h" />
     <ClInclude Include="Demo\GameLoop\DemoGameLoop.h" />
+    <ClInclude Include="Demo\GameLoop\PreviewGameLoop.h" />
     <ClInclude Include="Demo\Object\Stage.h" />
     <ClInclude Include="Demo\Particle\RainParticle.h" />
     <ClInclude Include="Demo\Particle\SmokeParticle.h" />
@@ -356,6 +360,8 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Engine\Component\Components\MeshRenderer\MeshRendererComponent.h" />
     <ClInclude Include="Engine\Component\Components\MeshRenderer\SkinnedMeshRendererComponent.h" />
     <ClInclude Include="Engine\Component\Components\Particle\ParticleComponent.h" />
+    <ClInclude Include="Engine\Component\Components\PostProcessLayer\BasePostProcess.h" />
+    <ClInclude Include="Engine\Component\Components\PostProcessLayer\PostProcessLayerComponent.h" />
     <ClInclude Include="Engine\Component\Components\SpriteRenderer\SpriteRendererComponent.h" />
     <ClInclude Include="Engine\Component\Components\Transform\TransformComponent.h" />
     <ClInclude Include="Engine\Component\Entity\MonoBehaviour.h" />

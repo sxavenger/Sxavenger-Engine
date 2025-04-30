@@ -3,30 +3,20 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
-//* base
-#include <Engine/System/Runtime/GameLoop/GameLoop.h>
-
 //* engine
+#include <Engine/System/Runtime/GameLoop/GameLoop.h>
 #include <Engine/System/Window/GameWindow.h>
-#include <Engine/Component/Entity/MonoBehaviour.h>
-#include <Engine/Component/Components/Camera/CameraComponent.h>
-#include <Engine/Component/Components/Light/DirectionalLightComponent.h>
-#include <Engine/Render/FPresenter.h>
-#include <Engine/Render/Scene/FScene.h>
-#include <Engine/Render/Scene/FSceneRenderer.h>
-#include <Engine/Asset/Observer/AssetObserver.h>
-
-#include "Engine/Render/Scene/Environment/Atmosphere/FSkyAtmosphere.h"
+#include <Engine/System/SxavengerSystem.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// BetaSystemGameLoop class
+// PreviewGameLoop class
 ////////////////////////////////////////////////////////////////////////////////////////////
-class BetaSystemGameLoop
+class PreviewGameLoop
 	: public GameLoop::Interface {
 public:
 
 	//=========================================================================================
-	// public method
+	// public methods
 	//=========================================================================================
 
 	void Init(GameLoop::Context* context) override;
@@ -41,32 +31,18 @@ private:
 
 	std::shared_ptr<GameWindow> main_;
 
-	std::unique_ptr<MonoBehaviour> camera_;
-
-	std::unique_ptr<MonoBehaviour> meshA_;
-	std::unique_ptr<MonoBehaviour> meshB_;
-
-	std::unique_ptr<MonoBehaviour> foundation_;
-
-	std::unique_ptr<MonoBehaviour> light_;
-	std::unique_ptr<MonoBehaviour> skylight_;
-
-	std::unique_ptr<MonoBehaviour> particle_;
-
-	FEnvironmentMap environmentMap_;
-
-	FSkyAtmosphere skyAtmosphere_;
+	//* preview *//
 
 	//=========================================================================================
 	// private methods
 	//=========================================================================================
 
-	void InitSystem();
+	void InitGame();
 
-	void TermSystem();
+	void TermGame();
 
-	void UpdateSystem();
+	void UpdateGame();
 
-	void DrawSystem();
+	void DrawGame();
 
 };

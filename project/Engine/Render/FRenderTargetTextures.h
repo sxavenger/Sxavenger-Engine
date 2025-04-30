@@ -105,6 +105,8 @@ private:
 
 	std::unique_ptr<FDepthTexture> depth_;
 
+	//* process texture *//
+
 	//* parameter *//
 
 	Vector2ui size_;
