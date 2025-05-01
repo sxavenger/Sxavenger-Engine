@@ -9,6 +9,7 @@
 
 //* engine
 #include <Engine/System/SxavengerSystem.h>
+#include <Engine/Content/SxavengerContent.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Camera structure methods
@@ -78,6 +79,8 @@ void CameraComponent::ShowComponentInspector() {
 	ImGui::DragFloat("nearZ", &projection_.nearZ, 0.01f);
 	ImGui::DragFloat("farZ", &projection_.farZ, 0.01f);
 	UpdateProj();
+
+	PushLineFrustum();
 }
 
 void CameraComponent::Init() {
@@ -124,4 +127,37 @@ void CameraComponent::UpdateProj() {
 const CameraComponent::Camera& CameraComponent::GetCamera() const {
 	Assert(buffer_ != nullptr, "camera buffer is not craete.");
 	return (*buffer_)[0];
+}
+
+void CameraComponent::PushLineFrustum() {
+	Vector3f frustumPoint[8] = {};
+	Matrix4x4 clipMatrix  = (*buffer_)[0].projInv;
+	Matrix4x4 worldMatrix = (*buffer_)[0].world;
+
+	// far
+	frustumPoint[0] = Matrix4x4::Transform(Matrix4x4::Transform({ -1.0f, -1.0f, 1.0f }, clipMatrix), worldMatrix);
+	frustumPoint[1] = Matrix4x4::Transform(Matrix4x4::Transform({ -1.0f, 1.0f, 1.0f },  clipMatrix), worldMatrix);
+	frustumPoint[2] = Matrix4x4::Transform(Matrix4x4::Transform({ 1.0f, 1.0f, 1.0f },   clipMatrix), worldMatrix);
+	frustumPoint[3] = Matrix4x4::Transform(Matrix4x4::Transform({ 1.0f, -1.0f, 1.0f },  clipMatrix), worldMatrix);
+
+	// near
+	frustumPoint[4] = Matrix4x4::Transform(Matrix4x4::Transform({ -1.0f, -1.0f, 0.0f }, clipMatrix), worldMatrix);
+	frustumPoint[5] = Matrix4x4::Transform(Matrix4x4::Transform({ -1.0f, 1.0f, 0.0f },  clipMatrix), worldMatrix);
+	frustumPoint[6] = Matrix4x4::Transform(Matrix4x4::Transform({ 1.0f, 1.0f, 0.0f },   clipMatrix), worldMatrix);
+	frustumPoint[7] = Matrix4x4::Transform(Matrix4x4::Transform({ 1.0f, -1.0f, 0.0f },  clipMatrix), worldMatrix);
+
+	static const Color4f color = Color4f::Convert(0xFAFA00FF);
+
+	for (uint8_t i = 0; i < 4; ++i) {
+
+		uint8_t nearIndex = i;
+		uint8_t nearNext  = (i + 1) % 4;
+
+		uint8_t farIndex  = nearIndex + 4;
+		uint8_t farNext   = nearNext  + 4;
+
+		SxavengerContent::PushLine(frustumPoint[nearIndex], frustumPoint[nearNext], color);
+		SxavengerContent::PushLine(frustumPoint[farIndex],  frustumPoint[farNext],  color);
+		SxavengerContent::PushLine(frustumPoint[nearIndex], frustumPoint[farIndex],  color);
+	}
 }
