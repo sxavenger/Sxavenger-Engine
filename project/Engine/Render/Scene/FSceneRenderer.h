@@ -18,6 +18,7 @@
 #include <Engine/Component/Components/Light/PointLightComponent.h>
 #include <Engine/Component/Components/Light/SkyLightComponent.h>
 #include <Engine/Component/Components/Particle/ParticleComponent.h>
+#include <Engine/Component/Components/PostProcessLayer/PostProcessLayerComponent.h>
 
 //* lib
 #include <Lib/Sxl/Flag.h>
@@ -38,15 +39,8 @@ public:
 		Error_Textures = 1 << 0,
 		Error_Camera   = 1 << 1,
 
-		//* vvv warning type vvv *//
-		Warning_AmbientProcess = 1 << 2,
-		Warning_PostProcess    = 1 << 3,
-
 		//* vvv error vvv *//
 		Status_Error = Error_Textures | Error_Camera,
-
-		//* vvv warning vvv *//
-		Status_Warning = Warning_AmbientProcess | Warning_PostProcess,
 	};
 
 	////////////////////////////////////////////////////////////////////////////////////////////
@@ -80,6 +74,10 @@ public:
 		//* scene setting *//
 
 		FScene* scene = nullptr;
+
+		//* process setting *//
+
+		bool isEnablePostProcess = true;
 
 	};
 
@@ -137,5 +135,7 @@ private:
 	void RenderTransparentBasePass(const DirectXThreadContext* context, const Config& config);
 	void RenderTransparentBaseStaticMesh(const DirectXThreadContext* context, const Config& config);
 	void RenderTransparentParticle(const DirectXThreadContext* context, const Config& config);
+
+	void PostProcessPass(const DirectXThreadContext* context, const Config& config);
 
 };

@@ -148,6 +148,8 @@
     <ClCompile Include="Engine\Component\Components\PostProcessLayer\PostProcessLayerComponent.cpp" />
     <ClCompile Include="Engine\Component\Components\PostProcessLayer\BasePostProcess.cpp" />
     <ClCompile Include="Demo\GameLoop\PreviewGameLoop.cpp" />
+    <ClCompile Include="Engine\Render\Common\FProcessTexture.cpp" />
+    <ClCompile Include="Engine\Component\Components\PostProcessLayer\PostProcessExposure.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\System\Window\Window.h" />
@@ -314,6 +316,8 @@
     <ClInclude Include="Engine\Component\Components\PostProcessLayer\PostProcessLayerComponent.h" />
     <ClInclude Include="Engine\Component\Components\PostProcessLayer\BasePostProcess.h" />
     <ClInclude Include="Demo\GameLoop\PreviewGameLoop.h" />
+    <ClInclude Include="Engine\Render\Common\FProcessTexture.h" />
+    <ClInclude Include="Engine\Component\Components\PostProcessLayer\PostProcessExposure.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

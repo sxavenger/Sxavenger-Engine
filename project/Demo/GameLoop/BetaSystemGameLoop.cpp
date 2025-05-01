@@ -67,6 +67,9 @@ void BetaSystemGameLoop::InitSystem() {
 	light_  = ComponentHelper::CreatePointLightMonoBehaviour();
 	//light_  = ComponentHelper::CreateDirectionalLightMonoBehaviour();
 
+	skyAtmosphere_.Create({ 1024, 1024 });
+	skyAtmosphere_.Update(SxavengerSystem::GetMainThreadContext());
+
 	skylight_ = ComponentHelper::CreateMonoBehaviour();
 	skylight_->SetName("sky light");
 	skylight_->AddComponent<SkyLightComponent>();
@@ -74,8 +77,8 @@ void BetaSystemGameLoop::InitSystem() {
 	skylight_->GetComponent<SkyLightComponent>()->GetDiffuseParameter().SetTexture(skyAtmosphere_.GetIrradiance().descriptorSRV.GetIndex());
 	skylight_->GetComponent<SkyLightComponent>()->GetSpecularParameter().SetTexture(skyAtmosphere_.GetRadiance().descriptorSRV.GetIndex(), skyAtmosphere_.GetRadiance().kMiplevels);
 
-	
-
+	skylight_->AddComponent<PostProcessLayerComponent>();
+	skylight_->GetComponent<PostProcessLayerComponent>()->AddPostProcess<PostProcessExposure>();
 }
 
 void BetaSystemGameLoop::TermSystem() {

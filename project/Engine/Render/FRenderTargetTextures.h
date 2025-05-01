@@ -6,6 +6,7 @@
 //* render
 #include "Common/FTexture.h"
 #include "Common/FDepthTexture.h"
+#include "Common/FProcessTexture.h"
 
 //* engine
 #include <Engine/System/DirectX/DxObject/DxDimensionBuffer.h>
@@ -75,6 +76,12 @@ public:
 
 	void EndCanvasPass(const DirectXThreadContext* context) const;
 
+	//* process option *//
+
+	void BeginPostProcess(const DirectXThreadContext* context);
+
+	void EndPostProcess(const DirectXThreadContext* context);
+
 	//* getter *//
 
 	const Vector2ui& GetSize() const { return size_; }
@@ -83,7 +90,9 @@ public:
 
 	const FDepthTexture* GetDepth() const { return depth_.get(); }
 
-	const D3D12_GPU_VIRTUAL_ADDRESS& GetParameter() const { return dimension_->GetGPUVirtualAddress(); }
+	FProcessTextures* GetProcessTextures() { return process_.get(); }
+
+	const D3D12_GPU_VIRTUAL_ADDRESS& GetDimension() const { return dimension_->GetGPUVirtualAddress(); }
 
 	static const DXGI_FORMAT GetFormat(GBufferLayout layout) { return kGBufferFormats_[static_cast<size_t>(layout)]; }
 
@@ -106,6 +115,7 @@ private:
 	std::unique_ptr<FDepthTexture> depth_;
 
 	//* process texture *//
+	std::unique_ptr<FProcessTextures> process_;
 
 	//* parameter *//
 

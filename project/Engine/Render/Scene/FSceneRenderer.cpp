@@ -37,6 +37,8 @@ void FSceneRenderer::Render(const DirectXThreadContext* context, const Config& c
 
 	RenderTransparentBasePass(context, conf);
 
+	PostProcessPass(context, conf);
+
 }
 
 void FSceneRenderer::ApplyConfig(Config& config) {
@@ -466,4 +468,21 @@ void FSceneRenderer::RenderTransparentParticle(const DirectXThreadContext* conte
 	sComponentStorage->ForEach<ParticleComponent>([&](ParticleComponent* component) {
 		component->DrawParticle(context, config.camera);
 	});
+}
+
+void FSceneRenderer::PostProcessPass(const DirectXThreadContext* context, const Config& config) {
+	if (!config.isEnablePostProcess) {
+		return;
+	}
+
+	textures_->BeginPostProcess(context);
+
+	// componentを取得
+	sComponentStorage->ForEach<PostProcessLayerComponent>([&](PostProcessLayerComponent* component) {
+		component->Process(context, textures_, config.camera);
+	});
+	//!< HACK: componentのtagなどを作成.
+
+	textures_->EndPostProcess(context);
+
 }

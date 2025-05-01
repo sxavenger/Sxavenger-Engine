@@ -54,7 +54,8 @@ void RenderSceneEditor::ShowWindow() {
 
 void RenderSceneEditor::Render() {
 	FSceneRenderer::Config config = {};
-	config.camera = camera_->GetComponent<CameraComponent>();
+	config.camera              = camera_->GetComponent<CameraComponent>();
+	config.isEnablePostProcess = false;
 
 	renderer_->Render(SxavengerSystem::GetMainThreadContext(), config);
 

@@ -6,13 +6,16 @@
 //* component
 #include "../Camera/CameraComponent.h"
 
+//* engine
+#include <Engine/System/DirectX/DirectXContext.h>
+
 //* c++
 #include <concepts>
 
 //-----------------------------------------------------------------------------------------
 // forward
 //-----------------------------------------------------------------------------------------
-class FTexture;
+class FRenderTargetTextures;
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // BasePostProcess class
@@ -26,11 +29,20 @@ public:
 
 	virtual ~BasePostProcess() = default;
 
-	virtual void Process(
-		FTexture* input, FTexture* output, CameraComponent* component
-	) = 0;
+	virtual void Init() = 0;
 
-private:
+	virtual void Process(const DirectXThreadContext* context, FRenderTargetTextures* textures, const CameraComponent* camera) = 0;
+
+	bool IsEnabled() const { return isEnabled_; }
+
+protected:
+
+	//=========================================================================================
+	// protected variables
+	//=========================================================================================
+
+	bool isEnabled_ = true;
+
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////

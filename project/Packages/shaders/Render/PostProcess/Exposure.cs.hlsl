@@ -39,7 +39,7 @@ void main(uint3 dispatchThreadId : SV_DispatchThreadID) {
 	float4 input = gInput[index];
 	
 	float ev100    = log2((gParameter.f * gParameter.f / gParameter.shutterSpeed) * (100.0f / gParameter.iso));
-	float exposure = 1.0f / exp2(ev100) + gParameter.compensation;
+	float exposure = 1.0f / (exp2(ev100) + gParameter.compensation);
 	float4 output  = input * exposure;
 
 	gOutput[index] = output;

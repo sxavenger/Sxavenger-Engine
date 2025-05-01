@@ -38,7 +38,12 @@ public:
 	D3D12_RESOURCE_BARRIER TransitionEndUnordered() const;
 	void TransitionEndUnordered(const DirectXThreadContext* context) const;
 
-	//!< need user state function...?
+	D3D12_RESOURCE_BARRIER TransitionBeginState(D3D12_RESOURCE_STATES state) const;
+	void TransitionBeginState(const DirectXThreadContext* context, D3D12_RESOURCE_STATES state) const;
+
+
+	D3D12_RESOURCE_BARRIER TransitionEndState(D3D12_RESOURCE_STATES state) const;
+	void TransitionEndState(const DirectXThreadContext* context, D3D12_RESOURCE_STATES state) const;
 
 	//* getter *//
 

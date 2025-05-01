@@ -48,7 +48,7 @@ void FCanvasRenderer::RenderSpriteComponents(const DirectXThreadContext* context
 		sprite->BindAIBuffer(context);
 
 		DxObject::BindBufferDesc parameter = {};
-		parameter.SetAddress("gParameter",        textures_->GetParameter());
+		parameter.SetAddress("gParameter",        textures_->GetDimension());
 		parameter.SetAddress("gTransformation2d", sprite->GetTransform2dBuffer());
 		parameter.SetAddress("gTransformationUV", sprite->GetTransformUVBuffer());
 		parameter.SetHandle("gTexture",           sprite->GetTexture());

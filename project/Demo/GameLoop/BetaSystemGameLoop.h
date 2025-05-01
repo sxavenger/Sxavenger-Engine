@@ -51,10 +51,6 @@ private:
 	std::unique_ptr<MonoBehaviour> light_;
 	std::unique_ptr<MonoBehaviour> skylight_;
 
-	std::unique_ptr<MonoBehaviour> particle_;
-
-	FEnvironmentMap environmentMap_;
-
 	FSkyAtmosphere skyAtmosphere_;
 
 	//=========================================================================================

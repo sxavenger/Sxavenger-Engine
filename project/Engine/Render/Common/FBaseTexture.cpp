@@ -82,3 +82,33 @@ void FBaseTexture::TransitionEndUnordered(const DirectXThreadContext* context) c
 	D3D12_RESOURCE_BARRIER barrier = TransitionEndUnordered();
 	context->GetCommandList()->ResourceBarrier(1, &barrier);
 }
+
+D3D12_RESOURCE_BARRIER FBaseTexture::TransitionBeginState(D3D12_RESOURCE_STATES state) const {
+	D3D12_RESOURCE_BARRIER barrier = {};
+	barrier.Type                   = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+	barrier.Transition.StateBefore = kDefaultState_;
+	barrier.Transition.StateAfter  = state;
+	barrier.Transition.pResource   = GetResource();
+
+	return barrier;
+}
+
+void FBaseTexture::TransitionBeginState(const DirectXThreadContext* context, D3D12_RESOURCE_STATES state) const {
+	D3D12_RESOURCE_BARRIER barrier = TransitionBeginState(state);
+	context->GetCommandList()->ResourceBarrier(1, &barrier);
+}
+
+D3D12_RESOURCE_BARRIER FBaseTexture::TransitionEndState(D3D12_RESOURCE_STATES state) const {
+	D3D12_RESOURCE_BARRIER barrier = {};
+	barrier.Type                   = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+	barrier.Transition.StateBefore = state;
+	barrier.Transition.StateAfter  = kDefaultState_;
+	barrier.Transition.pResource   = GetResource();
+
+	return barrier;
+}
+
+void FBaseTexture::TransitionEndState(const DirectXThreadContext* context, D3D12_RESOURCE_STATES state) const {
+	D3D12_RESOURCE_BARRIER barrier = TransitionEndState(state);
+	context->GetCommandList()->ResourceBarrier(1, &barrier);
+}

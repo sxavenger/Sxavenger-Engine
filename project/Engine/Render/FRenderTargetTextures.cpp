@@ -34,6 +34,9 @@ void FRenderTargetTextures::Create(const Vector2ui& size) {
 	depth_ = std::make_unique<FDepthTexture>();
 	depth_->Create(size);
 
+	process_ = std::make_unique<FProcessTextures>();
+	process_->Create(2, size, DXGI_FORMAT_R32G32B32A32_FLOAT);
+
 	size_ = size;
 
 	dimension_ = std::make_unique<DimensionBuffer<Vector2ui>>();
@@ -196,4 +199,12 @@ void FRenderTargetTextures::EndCanvasPass(const DirectXThreadContext* context) c
 	context->GetCommandList()->ResourceBarrier(_countof(barriers), barriers);
 
 	depth_->TransitionEndRasterizer(context);
+}
+
+void FRenderTargetTextures::BeginPostProcess(const DirectXThreadContext* context) {
+	process_->BeginProcess(context, gBuffers_[static_cast<uint8_t>(GBufferLayout::Main)].get());
+}
+
+void FRenderTargetTextures::EndPostProcess(const DirectXThreadContext* context) {
+	process_->EndProcess(context, gBuffers_[static_cast<uint8_t>(GBufferLayout::Main)].get());
 }

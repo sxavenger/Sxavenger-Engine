@@ -23,6 +23,7 @@ public:
 		Overlay,
 		Bloom,
 		LUT,
+		Exposure,
 		DoF,
 		Vignette,
 	};
