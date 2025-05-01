@@ -5,6 +5,9 @@
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 void PostProcessLayerComponent::ShowComponentInspector() {
+	for (auto& process : processes_) {
+		process->ShowInspectorImGui();
+	}
 }
 
 void PostProcessLayerComponent::Process(const DirectXThreadContext* context, FRenderTargetTextures* textures, const CameraComponent* camera) {

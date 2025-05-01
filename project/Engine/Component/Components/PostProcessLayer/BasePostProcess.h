@@ -33,6 +33,8 @@ public:
 
 	virtual void Process(const DirectXThreadContext* context, FRenderTargetTextures* textures, const CameraComponent* camera) = 0;
 
+	virtual void ShowInspectorImGui() = 0;
+
 	bool IsEnabled() const { return isEnabled_; }
 
 protected:

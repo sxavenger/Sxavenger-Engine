@@ -52,6 +52,8 @@ public:
 
 	void Process(const DirectXThreadContext* context, FRenderTargetTextures* textures, const CameraComponent* camera) override;
 
+	void ShowInspectorImGui() override;
+
 private:
 
 	//=========================================================================================

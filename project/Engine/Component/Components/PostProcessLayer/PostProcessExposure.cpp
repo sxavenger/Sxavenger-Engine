@@ -8,6 +8,9 @@ _DXOBJECT_USING
 #include <Engine/Render/FRenderTargetTextures.h>
 #include <Engine/Render/FRenderCore.h>
 
+//* external
+#include <imgui.h>
+
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Parameter structure methods
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -20,7 +23,10 @@ void PostProcessExposure::Parameter::Init() {
 }
 
 void PostProcessExposure::Parameter::SetImGuiCommand() {
-
+	ImGui::DragFloat("f", &f, 0.01f, 0.0f, std::numeric_limits<float>::max());
+	ImGui::DragFloat("shutter speed [1/s]", &shutterSpeed, 0.01f, 0.0f, std::numeric_limits<float>::max());
+	ImGui::DragFloat("iso", &iso, 0.01f, 0.0f, std::numeric_limits<float>::max());
+	ImGui::DragFloat("compensation", &compensation, 0.01f, 0.0f, std::numeric_limits<float>::max());
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -51,4 +57,15 @@ void PostProcessExposure::Process(const DirectXThreadContext* context, FRenderTa
 	core->Dispatch(context, textures->GetSize());
 
 	camera;
+}
+
+void PostProcessExposure::ShowInspectorImGui() {
+
+	ImGui::Checkbox("## isEnabled", &isEnabled_);
+
+	ImGui::SameLine();
+
+	if (ImGui::CollapsingHeader("Exposure")) {
+		parameter_->At(0).SetImGuiCommand();
+	}
 }
