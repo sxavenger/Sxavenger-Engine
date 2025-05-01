@@ -49,7 +49,7 @@ public:
 
 	//* container option *//
 
-	void NextProcess();
+	void NextProcess(const DirectXThreadContext* context);
 
 	FProcessTexture* GetPrevTexture(uint32_t prev = 1) const;
 

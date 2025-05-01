@@ -1,12 +1,20 @@
 #include "PostProcessLayerComponent.h"
 
+//-----------------------------------------------------------------------------------------
+// include
+//-----------------------------------------------------------------------------------------
+//* external
+#include <imgui.h>
+
 ////////////////////////////////////////////////////////////////////////////////////////////
 // PostProcessLayerComponent class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 void PostProcessLayerComponent::ShowComponentInspector() {
 	for (auto& process : processes_) {
+		ImGui::PushID(static_cast<void*>(process.get()));
 		process->ShowInspectorImGui();
+		ImGui::PopID();
 	}
 }
 

@@ -150,6 +150,7 @@
     <ClCompile Include="Demo\GameLoop\PreviewGameLoop.cpp" />
     <ClCompile Include="Engine\Render\Common\FProcessTexture.cpp" />
     <ClCompile Include="Engine\Component\Components\PostProcessLayer\PostProcessExposure.cpp" />
+    <ClCompile Include="Engine\Component\Components\PostProcessLayer\PostProcessBloom.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\System\Window\Window.h" />
@@ -318,6 +319,7 @@
     <ClInclude Include="Demo\GameLoop\PreviewGameLoop.h" />
     <ClInclude Include="Engine\Render\Common\FProcessTexture.h" />
     <ClInclude Include="Engine\Component\Components\PostProcessLayer\PostProcessExposure.h" />
+    <ClInclude Include="Engine\Component\Components\PostProcessLayer\PostProcessBloom.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

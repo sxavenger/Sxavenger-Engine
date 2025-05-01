@@ -10,6 +10,7 @@
 
 //* process
 #include "PostProcessExposure.h"
+#include "PostProcessBloom.h"
 
 //* engine
 #include <Engine/System/DirectX/DirectXContext.h>

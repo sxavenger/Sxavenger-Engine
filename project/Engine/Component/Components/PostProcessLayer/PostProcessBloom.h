@@ -1,32 +1,44 @@
 #pragma once
+
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
+//* post process
+#include "BasePostProcess.h"
+
 //* engine
-#include <Engine/Module/Pipeline/CustomComputePipeline.h>
+#include <Engine/System/DirectX/DxObject/DxDimensionBuffer.h>
 
 //* c++
-#include <array>
+#include <memory>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// FRenderCoreProcess class
+// PostProcessBloom class
 ////////////////////////////////////////////////////////////////////////////////////////////
-class FRenderCoreProcess {
+class PostProcessBloom
+	: public BasePostProcess {
 public:
 
 	////////////////////////////////////////////////////////////////////////////////////////////
-	// FRenderCoreProcess class
+	// Parameter structure
 	////////////////////////////////////////////////////////////////////////////////////////////
-	enum class ProcessType : uint32_t {
-		NLAO,
-		NLAO_Blur,
-		Bloom,
-		LUT,
-		Exposure,
-		DoF,
-		Vignette,
+	struct Parameter {
+
+		//=========================================================================================
+		// public methods
+		//=========================================================================================
+
+		void Init();
+
+		void SetImGuiCommand();
+
+		//=========================================================================================
+		// public variables
+		//=========================================================================================
+
+		float intensity;
+		float threshold;
 	};
-	static const uint32_t kProcessTypeCount = static_cast<uint32_t>(ProcessType::Vignette) + 1;
 
 public:
 
@@ -34,18 +46,11 @@ public:
 	// public methods
 	//=========================================================================================
 
-	FRenderCoreProcess()  = default;
-	~FRenderCoreProcess() = default;
+	void Init() override;
 
-	void Init();
+	void Process(const DirectXThreadContext* context, FRenderTargetTextures* textures, const CameraComponent* camera) override;
 
-	//* option *//
-
-	void SetPipeline(ProcessType type, const DirectXThreadContext* context);
-
-	void BindComputeBuffer(ProcessType type, const DirectXThreadContext* context, const DxObject::BindBufferDesc& desc);
-
-	void Dispatch(const DirectXThreadContext* context, const Vector2ui& size) const;
+	void ShowInspectorImGui() override;
 
 private:
 
@@ -53,9 +58,6 @@ private:
 	// private variables
 	//=========================================================================================
 
-	std::array<std::unique_ptr<CustomReflectionComputePipeline>, kProcessTypeCount> processes_;
-
-	static const Vector2ui kNumThreadSize_;
-
+	std::unique_ptr<DxObject::DimensionBuffer<Parameter>> parameter_;
 
 };

@@ -13,8 +13,8 @@
 // buffers
 //=========================================================================================
 
-RWTexture2D<float4> gInput  : register(u0); //!< input texture
-RWTexture2D<float4> gOutput : register(u1); //!< output texture
+Texture2D<float4> gInput    : register(t0); //!< input texture
+RWTexture2D<float4> gOutput : register(u0); //!< output texture
 
 struct Parameter {
 	float f;            //!< 絞り

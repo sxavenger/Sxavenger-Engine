@@ -75,3 +75,7 @@ bool SxImGui::DragVector3(const char* label, float v[3], float v_speed, float v_
  
 	return isChanged;
 }
+
+bool SxImGui::DragFloat(const char* label, float* v, float v_speed, const std::optional<float>& v_min, const std::optional<float>& v_max, const char* format, ImGuiSliderFlags flags) {
+	return ImGui::DragFloat(label, v, v_speed, v_min.value_or(std::numeric_limits<float>::min()), v_max.value_or(std::numeric_limits<float>::max()), format, flags);
+}

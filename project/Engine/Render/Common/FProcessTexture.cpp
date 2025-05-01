@@ -66,6 +66,26 @@ void FProcessTexture::Create(const Vector2ui& size, DXGI_FORMAT format) {
 		);
 	}
 
+	{ //!< SRVの生成
+
+		// handleの取得
+		descriptorSRV_ = SxavengerSystem::GetDescriptor(kDescriptor_SRV);
+
+		// descの設定
+		D3D12_SHADER_RESOURCE_VIEW_DESC desc = {};
+		desc.Format                    = format_;
+		desc.ViewDimension             = D3D12_SRV_DIMENSION_TEXTURE2D;
+		desc.Shader4ComponentMapping   = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
+		desc.Texture2D.MipLevels       = 1;
+
+		// SRVの生成
+		device->CreateShaderResourceView(
+			resource_.Get(),
+			&desc,
+			descriptorSRV_.GetCPUHandle()
+		);
+	}
+
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -102,36 +122,16 @@ void FProcessTextures::BeginProcess(const DirectXThreadContext* context, FTextur
 		commandList->ResourceBarrier(2, barriers.data());
 	}
 	
-	
-	{ //!< process textureのunordered設定
-
-		UINT size = static_cast<UINT>(textures_.size());
-		std::vector<D3D12_RESOURCE_BARRIER> barriers(size);
-
-		for (UINT i = 0; i < size; ++i) {
-			barriers[i] = textures_[i]->TransitionBeginUnordered();
-		}
-
-		commandList->ResourceBarrier(size, barriers.data());
-	}
+	//!< process textureのunordered設定
+	textures_[index_]->TransitionBeginUnordered(context);
 }
 
 void FProcessTextures::EndProcess(const DirectXThreadContext* context, FTexture* texture) {
 
 	auto commandList = context->GetCommandList();
 
-	
-	{ //!< process textureのunordered設定
-
-		UINT size = static_cast<UINT>(textures_.size());
-		std::vector<D3D12_RESOURCE_BARRIER> barriers(size);
-
-		for (UINT i = 0; i < size; ++i) {
-			barriers[i] = textures_[i]->TransitionEndUnordered();
-		}
-
-		commandList->ResourceBarrier(size, barriers.data());
-	}
+	//!< process textureのunordered設定
+	textures_[index_]->TransitionEndUnordered(context);
 
 	
 	{ //!< textureのcopy
@@ -149,9 +149,18 @@ void FProcessTextures::EndProcess(const DirectXThreadContext* context, FTexture*
 	}
 }
 
-void FProcessTextures::NextProcess() {
+void FProcessTextures::NextProcess(const DirectXThreadContext* context) {
 	Assert(textures_.size() != NULL, "process texture is null.");
-	index_ = ++index_ % textures_.size();
+	uint32_t prev = index_;
+	uint32_t next = ++index_ % textures_.size();
+
+	std::array<D3D12_RESOURCE_BARRIER, 2> barriers = {};
+	barriers[0] = textures_[prev]->TransitionEndUnordered();
+	barriers[1] = textures_[next]->TransitionBeginUnordered();
+
+	context->GetCommandList()->ResourceBarrier(2, barriers.data());
+
+	index_ = next;
 }
 
 FProcessTexture* FProcessTextures::GetPrevTexture(uint32_t prev) const {
