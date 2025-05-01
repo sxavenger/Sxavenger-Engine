@@ -77,8 +77,8 @@ void BetaSystemGameLoop::InitSystem() {
 	skylight_->GetComponent<SkyLightComponent>()->GetDiffuseParameter().SetTexture(skyAtmosphere_.GetIrradiance().descriptorSRV.GetIndex());
 	skylight_->GetComponent<SkyLightComponent>()->GetSpecularParameter().SetTexture(skyAtmosphere_.GetRadiance().descriptorSRV.GetIndex(), skyAtmosphere_.GetRadiance().kMiplevels);
 
-	skylight_->AddComponent<PostProcessLayerComponent>();
-	skylight_->GetComponent<PostProcessLayerComponent>()->AddPostProcess<PostProcessExposure>();
+	light_->AddComponent<PostProcessLayerComponent>();
+	light_->GetComponent<PostProcessLayerComponent>()->AddPostProcess<PostProcessExposure>();
 }
 
 void BetaSystemGameLoop::TermSystem() {

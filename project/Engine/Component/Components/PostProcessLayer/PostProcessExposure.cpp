@@ -16,17 +16,17 @@ _DXOBJECT_USING
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 void PostProcessExposure::Parameter::Init() {
-	f            = 2.0f;
-	shutterSpeed = 1.0f / 60.0f;
+	f            = 4.0f;
+	shutterSpeed = 60.0f;
 	iso          = 100.0f;
-	compensation = 0.0f;
+	compensation = 1.0f;
 }
 
 void PostProcessExposure::Parameter::SetImGuiCommand() {
 	ImGui::DragFloat("f", &f, 0.01f, 0.0f, std::numeric_limits<float>::max());
 	ImGui::DragFloat("shutter speed [1/s]", &shutterSpeed, 0.01f, 0.0f, std::numeric_limits<float>::max());
-	ImGui::DragFloat("iso", &iso, 0.01f, 0.0f, std::numeric_limits<float>::max());
-	ImGui::DragFloat("compensation", &compensation, 0.01f, 0.0f, std::numeric_limits<float>::max());
+	ImGui::DragFloat("iso", &iso, 1.0f, 0.0f, std::numeric_limits<float>::max());
+	ImGui::DragFloat("compensation", &compensation, 0.01f, -15.0f, 15.0f);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////

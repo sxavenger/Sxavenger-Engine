@@ -36,10 +36,10 @@ public:
 		// public variables
 		//=========================================================================================
 
-		float f;            //!< 絞り(Apreture)
-		float shutterSpeed; //!< シャッタースピード(Shutter Speed) [1/sec]: 1.0f / t
-		float iso;          //!< ISO感度(ISO)
-		float compensation; //!< 露出補正(Exposure Compensation)
+		float f;            //!< 絞り
+		float shutterSpeed; //!< シャッタースピード [1/sec]
+		float iso;          //!< ISO感度
+		float compensation; //!< 露出補正
 	};
 
 public:
