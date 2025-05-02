@@ -82,7 +82,7 @@ ComPtr<IDxcBlob> ShaderCompiler::Compile(
 #ifdef _DEBUG
 	arguments.emplace_back(L"-Od"); //!< 最適化を外しておく
 #else
-	arguments.emplace_back(L"-O2"); //!< 最適化を最大にする
+	arguments.emplace_back(L"-O3"); //!< 最適化を最大にする
 #endif
 
 	//!< entry pointがある場合, 設定

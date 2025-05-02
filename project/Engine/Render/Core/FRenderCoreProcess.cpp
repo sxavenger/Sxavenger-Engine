@@ -70,7 +70,7 @@ void FRenderCoreProcess::Init() {
 		auto process = std::make_unique<CustomReflectionComputePipeline>();
 		process->CreateAsset(L"packages/shaders/render/PostProcess/DoF.cs.hlsl");
 		process->RegisterBlob();
-		process->ReflectionPipeline(SxavengerSystem::GetDxDevice());
+ 		process->ReflectionPipeline(SxavengerSystem::GetDxDevice());
 
 		processes_[static_cast<uint32_t>(ProcessType::DoF)] = std::move(process);
 	}

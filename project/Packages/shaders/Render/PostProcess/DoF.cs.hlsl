@@ -57,8 +57,6 @@ float CalculateCircleOfConfusion(float depth) {
 	return saturate(abs(cocRadius));
 }
 
-
-
 ////////////////////////////////////////////////////////////////////////////////////////////
 // main
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -74,9 +72,7 @@ void main(uint3 dispatchThreadId : SV_DispatchThreadID) {
 	Surface surface;
 	surface.GetSurface(index);
 
-	float depth = FixedViewDepth(surface.depth, index);
-
-	gOutput[index] = float4(depth / (gCamera.far - gCamera.near), 0.0f, 0.0f, 1.0f);
+	gOutput[index] = float4(surface.depth, 0.0f, 0.0f, 1.0f);
 	
 }
 
