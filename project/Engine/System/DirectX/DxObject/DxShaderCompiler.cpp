@@ -91,6 +91,11 @@ ComPtr<IDxcBlob> ShaderCompiler::Compile(
 		arguments.emplace_back(entryPoint.c_str());
 	}
 
+	if (profile == CompileProfile::cs || profile == CompileProfile::lib) { //!< compute shader用のdefineを追加
+		arguments.emplace_back(L"-D");
+		arguments.emplace_back(L"_COMPUTE");
+	}
+
 	// compile
 	ComPtr<IDxcResult> shaderResult;
 	hr = compiler_->Compile(

@@ -122,6 +122,10 @@ void CameraComponent::UpdateProj() {
 
 	// projection から proj matrix を取得
 	buffer_->At(0).TransferProj(projection_.ToProj());
+
+	// projection から near, far の距離を取得
+	buffer_->At(0).nearZ = projection_.nearZ;
+	buffer_->At(0).farZ  = projection_.farZ;
 }
 
 const CameraComponent::Camera& CameraComponent::GetCamera() const {

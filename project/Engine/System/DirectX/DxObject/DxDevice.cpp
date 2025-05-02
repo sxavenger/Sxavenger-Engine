@@ -43,19 +43,14 @@ void Device::Term() {
 void Device::CreateDebugLayer() {
 #ifdef _DEBUG
 
-	bool isLaunchFromPIX = CheckLaunchFromPIX();
+	//bool isLaunchFromPIX = CheckLaunchFromPIX();
 
 	// デバックレイヤーの生成
 	if (SUCCEEDED(D3D12GetDebugInterface(IID_PPV_ARGS(&debugController_)))) {
-		if (!isLaunchFromPIX) {
-			// デバックレイヤーの有効化
-			debugController_->EnableDebugLayer();
-			// GPU側も有効化
-			debugController_->SetEnableGPUBasedValidation(TRUE);
-		}
-
-		EngineLog(std::format("[_DXOBEJCT] Debug Layer : {}", !isLaunchFromPIX));
-		//!< PIX起動時以外は自動でonに
+		// デバックレイヤーの有効化
+		debugController_->EnableDebugLayer();
+		// GPU側も有効化
+		debugController_->SetEnableGPUBasedValidation(TRUE);
 	}
 
 #endif // _DEVELOPMENT

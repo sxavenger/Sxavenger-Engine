@@ -55,6 +55,8 @@ public:
 		Matrix4x4 world;
 		Matrix4x4 proj;
 		Matrix4x4 projInv;
+		float nearZ;
+		float farZ;
 
 	};
 

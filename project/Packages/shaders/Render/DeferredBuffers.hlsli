@@ -46,15 +46,23 @@ struct Surface {
 	float3 albedo;
 	float3 normal;
 
+	float depth;
+
 	float metallic;
 	float specular;
 	float roughness;
 	
 	//* methods *//
 	
-	void GetSurface(uint2 index) {
-		if (GetDepth(index) == 1.0f) {
+	bool GetSurface(uint2 index) {
+
+		depth = GetDepth(index);
+		
+		if (depth == 1.0f) {
+#ifndef _COMPUTE
 			discard; //!< object is not exist.
+#endif
+			return false;
 		}
 		
 		position = GetPosition(index);
@@ -65,6 +73,8 @@ struct Surface {
 		roughness = material.r;
 		metallic  = material.g;
 		specular  = material.b;
+
+		return true;
 	}
 	
 };

@@ -11,6 +11,7 @@
 //* process
 #include "PostProcessExposure.h"
 #include "PostProcessBloom.h"
+#include "PostProcessDoF.h"
 
 //* engine
 #include <Engine/System/DirectX/DirectXContext.h>

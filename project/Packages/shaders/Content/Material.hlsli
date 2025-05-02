@@ -6,6 +6,18 @@
 namespace MaterialLib {
 
 	////////////////////////////////////////////////////////////////////////////////////////////
+	// common methods
+	////////////////////////////////////////////////////////////////////////////////////////////
+
+	float4 SampleTexture(Texture2D<float4> texture, SamplerState sample, float2 texcoord) {
+#ifdef _COMPUTE
+		return texture.SampleLevel(sample, texcoord, 0);
+#else
+		return texture.Sample(sample, texcoord);
+#endif
+	}
+	
+	////////////////////////////////////////////////////////////////////////////////////////////
 	// TextureSampler structure
 	////////////////////////////////////////////////////////////////////////////////////////////
 	struct TextureSampler { //!< helper structure.
@@ -57,12 +69,12 @@ namespace MaterialLib {
 				
 				case 1:{
 						Texture2D<float4> texture = ResourceDescriptorHeap[index];
-						return texture.SampleLevel(parameter.samplers, parameter.texcoord, 0).rgb;
+						return SampleTexture(texture, parameter.samplers, parameter.texcoord).rgb;
 					}
 				
 				case 2:{
 						Texture2D<float4> texture = ResourceDescriptorHeap[index];
-						return texture.SampleLevel(parameter.samplers, parameter.texcoord, 0).rgb * color;
+						return SampleTexture(texture, parameter.samplers, parameter.texcoord).rgb * color;
 					}
 			}
 
@@ -95,7 +107,7 @@ namespace MaterialLib {
 				
 			} else if (type == 1) {
 				Texture2D<float4> texture = ResourceDescriptorHeap[index];
-				return texture.SampleLevel(parameter.samplers, parameter.texcoord, 0).a;
+				return SampleTexture(texture, parameter.samplers, parameter.texcoord).a;
 			}
 
 			return 0.0f; //!< exception
@@ -127,7 +139,7 @@ namespace MaterialLib {
 				
 			} else if (type == 1) {
 				Texture2D<float4> texture = ResourceDescriptorHeap[index];
-				float3 map = texture.SampleLevel(parameter.samplers, parameter.texcoord, 0).xyz;
+				float3 map = SampleTexture(texture, parameter.samplers, parameter.texcoord).xyz;
 				return normalize(mul(map * 2.0f - 1.0f, tbn)); //!< fix...? test plz.
 			}
 
@@ -154,7 +166,7 @@ namespace MaterialLib {
 				
 			} else if (type == 1) {
 				Texture2D<float4> texture = ResourceDescriptorHeap[index];
-				return texture.SampleLevel(parameter.samplers, parameter.texcoord, 0)[channel];
+				return SampleTexture(texture, parameter.samplers, parameter.texcoord)[channel];
 			}
 
 			return 0.0f; //!< exception

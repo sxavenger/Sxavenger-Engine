@@ -80,6 +80,7 @@ void BetaSystemGameLoop::InitSystem() {
 	camera_->AddComponent<PostProcessLayerComponent>();
 	camera_->GetComponent<PostProcessLayerComponent>()->AddPostProcess<PostProcessExposure>();
 	camera_->GetComponent<PostProcessLayerComponent>()->AddPostProcess<PostProcessBloom>();
+	camera_->GetComponent<PostProcessLayerComponent>()->AddPostProcess<PostProcessDoF>();
 }
 
 void BetaSystemGameLoop::TermSystem() {

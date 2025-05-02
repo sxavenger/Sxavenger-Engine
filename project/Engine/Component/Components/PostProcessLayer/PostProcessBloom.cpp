@@ -45,9 +45,12 @@ void PostProcessBloom::Process(const DirectXThreadContext* context, FRenderTarge
 	core->SetPipeline(FRenderCoreProcess::ProcessType::Bloom, context);
 
 	BindBufferDesc desc = {};
+	// common
 	desc.SetAddress("gConfig",    textures->GetDimension());
 	desc.SetHandle("gInput",      textures->GetProcessTextures()->GetPrevTexture()->GetGPUHandleSRV());
 	desc.SetHandle("gOutput",     textures->GetProcessTextures()->GetIndexTexture()->GetGPUHandleUAV());
+
+	// parameter
 	desc.SetAddress("gParameter", parameter_->GetGPUVirtualAddress());
 
 	core->BindComputeBuffer(FRenderCoreProcess::ProcessType::Bloom, context, desc);
