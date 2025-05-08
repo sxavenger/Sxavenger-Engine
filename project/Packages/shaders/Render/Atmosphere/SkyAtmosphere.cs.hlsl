@@ -21,12 +21,17 @@
 //!< output atmosphere cube map texture.
 RWTexture2DArray<float4> gAtmosphere : register(u0);
 
+struct Parameter {
+	float3 direction;
+	float intensity;
+};
+
 ////////////////////////////////////////////////////////////////////////////////////////////
 // static const parameter variables
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 static const uint kNumSamples = 16; //!< サンプリング数
-static const uint kNumScatter = 8; //!< 散乱回数
+static const uint kNumScatter = 8;  //!< 散乱回数
 
 static const float kEarthRadius      = 6360e3; //!< 地球の半径
 static const float kAtmosphereRadius = 6420e3; //!< 大気の半径
@@ -44,6 +49,7 @@ static const float3 kSunDir      = normalize(float3(0.0f, 4.0f, -10.0f)); //!< �
 static const float kSunIntensity = 20.0f; //!< 太陽の強さ
 
 // hack: 文献から引っ張ってくる.
+//- https://youtu.be/SW30QX1wxTY?si=3_Px8GYmHdBZGs90
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // structures

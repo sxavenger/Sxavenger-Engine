@@ -17,14 +17,15 @@ _DXOBJECT_USING
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 void PostProcessDoF::Parameter::Init() {
-	focalLength   = 12.0f;
 	focalDistance = 12.0f;
-	f             = 4.0f;
+
+	isDebugView = false;
 }
 
 void PostProcessDoF::Parameter::SetImGuiCommand() {
-	SxImGui::DragFloat("focal length",   &focalLength, 0.01f, 0.0f);
 	SxImGui::DragFloat("focal distance", &focalDistance, 0.01f, 0.0f);
+
+	ImGui::CheckboxFlags("debug view", &isDebugView, true);
 }
 
 

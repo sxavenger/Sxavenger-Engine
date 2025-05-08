@@ -47,9 +47,11 @@ public:
 
 	void EndProcess(const DirectXThreadContext* context, FTexture* texture);
 
-	//* container option *//
-
 	void NextProcess(const DirectXThreadContext* context);
+
+	void BarrierUAV(const DirectXThreadContext* context);
+
+	//* getter *//
 
 	FProcessTexture* GetPrevTexture(uint32_t prev = 1) const;
 

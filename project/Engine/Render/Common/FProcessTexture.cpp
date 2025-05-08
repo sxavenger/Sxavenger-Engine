@@ -163,6 +163,15 @@ void FProcessTextures::NextProcess(const DirectXThreadContext* context) {
 	index_ = next;
 }
 
+void FProcessTextures::BarrierUAV(const DirectXThreadContext* context) {
+
+	D3D12_RESOURCE_BARRIER barrier = {};
+	barrier.Type          = D3D12_RESOURCE_BARRIER_TYPE_UAV;
+	barrier.UAV.pResource = textures_[index_]->GetResource();
+
+	context->GetCommandList()->ResourceBarrier(1, &barrier);
+}
+
 FProcessTexture* FProcessTextures::GetPrevTexture(uint32_t prev) const {
 	Assert(prev <= textures_.size(), "process texture array size is not exist prev.");
 	return textures_[(index_ + textures_.size() - 1) % textures_.size()].get();

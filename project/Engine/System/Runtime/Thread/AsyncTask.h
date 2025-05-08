@@ -47,6 +47,8 @@ public:
 
 	void Wait(Status status = Status::Completed) const;
 
+	bool IsCompleted() const { return status_ == Status::Completed; }
+
 	void SetStatus(Status status) { status_ = status; }
 
 	const std::string& GetTag() const { return tag_; }

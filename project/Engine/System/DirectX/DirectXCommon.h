@@ -54,7 +54,7 @@ private:
 
 	//* DXOBJECT *//
 
-	static const DxObject::Device::DxLeakChecker leakChecher_;
+	static inline const DxObject::Device::DxLeakChecker leakChecher_ = {};
 
 	std::unique_ptr<DxObject::Device>          device_;
 	std::unique_ptr<DxObject::DescriptorHeaps> descriptorHeaps_;

@@ -36,9 +36,9 @@ public:
 		// public variables
 		//=========================================================================================
 
-		float focalLength;
 		float focalDistance;
-		float f;
+
+		uint32_t isDebugView;
 	};
 
 public:
