@@ -5,11 +5,12 @@
 //-----------------------------------------------------------------------------------------
 //* editor
 #include "../EditorEngine.h"
-//#include "RenderSceneEditor.h"
 #include "InspectorEditor.h"
 
 //* engine
+#include <Engine/Asset/AssetStorage.h>
 #include <Engine/Component/Entity/MonoBehaviourContainer.h>
+#include <Engine/Component/ComponentHelper.h>
 
 //* external
 #include <imgui.h>
@@ -32,11 +33,32 @@ void HierarchyEditor::ShowHierarchyWindow() {
 	BaseEditor::SetNextWindowDocking();
 	ImGui::Begin("Hierarchy ## Hierarchy Editor", nullptr, BaseEditor::GetWindowFlag());
 
+	// hierarchyの表示
 	for (auto& behaviour : sMonoBehaviourContainer->GetContainer()) {
 		HierarchySelectable(behaviour);
 	}
 
+	{
+		ImVec2 position = ImGui::GetWindowPos();
+		ImVec2 size = ImGui::GetWindowSize();
+
+		ImVec2 min = ImGui::GetWindowContentRegionMin();
+		ImVec2 max = ImGui::GetWindowContentRegionMax();
+
+		ImVec2 contentPos = ImVec2(position.x + min.x, position.y + min.y);
+		ImVec2 contentSize = ImVec2(max.x - min.x, max.y - min.y);
+
+		// InvisibleButton をウィンドウ内部の描画領域全体に敷く
+		ImGui::SetCursorScreenPos(contentPos);
+		ImGui::InvisibleButton("##DropTarget", contentSize);
+
+		DragAndDropTarget();
+	}
+
 	ImGui::End();
+}
+
+void HierarchyEditor::LateUpdate() {
 }
 
 void HierarchyEditor::HierarchySelectable(MonoBehaviour* behaviour) {
@@ -99,5 +121,17 @@ bool HierarchyEditor::CheckSelected(MonoBehaviour* behaviour) {
 void HierarchyEditor::SetSelected(MonoBehaviour* behaviour) {
 	if (auto editor = BaseEditor::GetEditorEngine()->GetEditor<InspectorEditor>()) {
 		editor->SetInspector(behaviour);
+	}
+}
+
+void HierarchyEditor::DragAndDropTarget() {
+	if (ImGui::BeginDragDropTarget()) {
+		if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload(typeid(AssetModel).name())) {
+			const char* filepath = static_cast<const char*>(payload->Data);
+
+			behaviours_.emplace_back(ComponentHelper::CreateStaticNodeModelBehaviour(filepath));
+		}
+
+		ImGui::EndDragDropTarget();
 	}
 }

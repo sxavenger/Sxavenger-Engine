@@ -100,11 +100,14 @@ public:
 
 	//* iterators
 
-	iterator begin() noexcept { return map_.begin(); }
-	iterator end() noexcept { return map_.end(); }
+	auto begin() noexcept { return map_.begin(); }
+	auto end() noexcept { return map_.end(); }
 
-	const_iterator cbegin() const noexcept { return map_.cbegin(); }
-	const_iterator cend() const noexcept { return map_.cend(); }
+	auto begin() const noexcept { return map_.begin(); }
+	auto end() const noexcept { return map_.end(); }
+
+	auto cbegin() const noexcept { return map_.cbegin(); }
+	auto cend() const noexcept { return map_.cend(); }
 
 	//* capacity
 

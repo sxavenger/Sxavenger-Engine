@@ -55,14 +55,9 @@ void BetaSystemGameLoop::InitSystem() {
 
 	camera_ = ComponentHelper::CreateCameraMonoBehaviour();
 
-	meshA_   = ComponentHelper::CreateStaticNodeModelBehaviour("assets/models/PBR_Sphere_Test/model/PBR_Sphere.gltf");
-	//meshA_   = ComponentHelper::CreateStaticNodeModelBehaviour("assets/models/sponza/NewSponza_Main_glTF_003.gltf");
-	//meshA_   = ComponentHelper::CreateStaticNodeModelBehaviour("assets/models/bricks/bricks.obj");
-	//meshA_   = ComponentHelper::CreateStaticNodeModelBehaviour("assets/models/normal_sphere.obj");
-
-	meshB_ = ComponentHelper::CreateStaticNodeModelBehaviour("assets/models/chessboard/ABeautifulGame.gltf");
-
-	//foundation_ = ComponentHelper::CreateStaticModelBehaviour("assets/models/foundation.gltf");
+	SxavengerAsset::TryImport<AssetModel>("assets/models/foundation.gltf");
+	SxavengerAsset::TryImport<AssetModel>("assets/models/PBR_Sphere_Test/model/PBR_Sphere.gltf");
+	SxavengerAsset::TryImport<AssetModel>("assets/models/chessboard/ABeautifulGame.gltf");
 	
 	light_  = ComponentHelper::CreatePointLightMonoBehaviour();
 	//light_  = ComponentHelper::CreateDirectionalLightMonoBehaviour();
@@ -77,9 +72,9 @@ void BetaSystemGameLoop::InitSystem() {
 	skylight_->GetComponent<SkyLightComponent>()->GetDiffuseParameter().SetTexture(skyAtmosphere_.GetIrradiance().descriptorSRV.GetIndex());
 	skylight_->GetComponent<SkyLightComponent>()->GetSpecularParameter().SetTexture(skyAtmosphere_.GetRadiance().descriptorSRV.GetIndex(), skyAtmosphere_.GetRadiance().kMiplevels);
 
-	//camera_->AddComponent<PostProcessLayerComponent>();
-	//camera_->GetComponent<PostProcessLayerComponent>()->AddPostProcess<PostProcessExposure>();
-	//camera_->GetComponent<PostProcessLayerComponent>()->AddPostProcess<PostProcessBloom>();
+	camera_->AddComponent<PostProcessLayerComponent>();
+	camera_->GetComponent<PostProcessLayerComponent>()->AddPostProcess<PostProcessExposure>();
+	camera_->GetComponent<PostProcessLayerComponent>()->AddPostProcess<PostProcessBloom>();
 	//camera_->GetComponent<PostProcessLayerComponent>()->AddPostProcess<PostProcessDoF>();
 }
 

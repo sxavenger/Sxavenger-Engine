@@ -6,25 +6,19 @@
 //* editor
 #include "BaseEditor.h"
 
-//* engine
-#include <Engine/Component/Entity/MonoBehaviour.h>
-
-//* lib
-#include <Lib/Geometry/Color4.h>
-
 //////////////////////////////////////////////////////////////////////////////////////////
-// HierarchyEditor class
+// AssetEditor class
 //////////////////////////////////////////////////////////////////////////////////////////
-class HierarchyEditor
+class AssetEditor final
 	: public BaseEditor {
 public:
 
 	//=========================================================================================
-	// public methods
+	// public method
 	//=========================================================================================
 
-	HierarchyEditor(EditorEngine* editor) : BaseEditor(editor) {}
-	~HierarchyEditor() = default;
+	AssetEditor(EditorEngine* editor) : BaseEditor(editor) {}
+	~AssetEditor() = default;
 
 	void Init() override;
 
@@ -32,21 +26,13 @@ public:
 
 	void ShowWindow() override;
 
-	void LateUpdate() override;
-
 private:
 
 	//=========================================================================================
 	// private variables
 	//=========================================================================================
 
-	//* behavior *//
 
-	std::list<std::unique_ptr<MonoBehaviour>> behaviours_;
-
-	//* parameter *//
-
-	const Color4f disableColor_ = { 0.4f, 0.4f, 0.4f, 1.0f };
 
 	//=========================================================================================
 	// private methods
@@ -54,16 +40,6 @@ private:
 
 	//* show imgui component *//
 
-	void ShowHierarchyWindow();
-
-	//* sub method *//
-
-	void HierarchySelectable(MonoBehaviour* behaviour);
-
-	bool CheckSelected(MonoBehaviour* behaviour);
-
-	void SetSelected(MonoBehaviour* behaviour);
-
-	void DragAndDropTarget();
+	void ShowAssetWindow();
 
 };

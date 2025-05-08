@@ -152,6 +152,7 @@
     <ClCompile Include="Engine\Component\Components\PostProcessLayer\PostProcessExposure.cpp" />
     <ClCompile Include="Engine\Component\Components\PostProcessLayer\PostProcessBloom.cpp" />
     <ClCompile Include="Engine\Component\Components\PostProcessLayer\PostProcessDoF.cpp" />
+    <ClCompile Include="Engine\Editor\Editors\AssetEditor.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\System\Window\Window.h" />
@@ -322,6 +323,7 @@
     <ClInclude Include="Engine\Component\Components\PostProcessLayer\PostProcessExposure.h" />
     <ClInclude Include="Engine\Component\Components\PostProcessLayer\PostProcessBloom.h" />
     <ClInclude Include="Engine\Component\Components\PostProcessLayer\PostProcessDoF.h" />
+    <ClInclude Include="Engine\Editor\Editors\AssetEditor.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

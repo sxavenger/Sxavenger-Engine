@@ -147,7 +147,7 @@ void Model::CreateStaticNodeMeshBehaviour(MonoBehaviour* root) {
 	std::unordered_map<uint32_t, TransformComponent*> map;
 
 	// node componentの登録
-	static const std::function<void(MonoBehaviour*, const BornNode&)> nodesFunction = [&](MonoBehaviour* parent, const BornNode& node) {
+	const std::function<void(MonoBehaviour*, const BornNode&)> nodesFunction = [&](MonoBehaviour* parent, const BornNode& node) {
 		auto child = std::make_unique<MonoBehaviour>();
 		child->SetName(node.name);
 

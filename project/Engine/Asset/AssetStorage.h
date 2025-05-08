@@ -33,6 +33,13 @@ class AssetObserver;
 class AssetStorage {
 public:
 
+	////////////////////////////////////////////////////////////////////////////////////////////
+	// using
+	////////////////////////////////////////////////////////////////////////////////////////////
+	using Storage = std::unordered_map<const std::type_info*, Sxl::OptimizedPathMap<std::shared_ptr<BaseAsset>>>;
+
+public:
+
 	//=========================================================================================
 	// public methods
 	//=========================================================================================
@@ -47,6 +54,10 @@ public:
 	template <BaseAssetConcept _Ty>
 	AssetObserver<_Ty> TryImport(const std::filesystem::path& filepath, const std::any& param = std::any());
 
+	//* getter *//
+
+	const Storage& GetStorage() const { return storage_; }
+
 	//* singleton *//
 
 	static AssetStorage* GetInstance();
@@ -57,7 +68,7 @@ private:
 	// private variables
 	//=========================================================================================
 
-	std::unordered_map<const std::type_info*, Sxl::OptimizedPathMap<std::shared_ptr<BaseAsset>>> storage_;
+	Storage storage_;
 
 	//=========================================================================================
 	// private methods

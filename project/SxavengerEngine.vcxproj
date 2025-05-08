@@ -243,6 +243,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="Engine\Content\TextureBuffer\RenderTexture.cpp" />
     <ClCompile Include="Engine\Content\TextureBuffer\UnorderedTexture.cpp" />
     <ClCompile Include="Engine\Editor\EditorEngine.cpp" />
+    <ClCompile Include="Engine\Editor\Editors\AssetEditor.cpp" />
     <ClCompile Include="Engine\Editor\Editors\BaseEditor.cpp" />
     <ClCompile Include="Engine\Editor\Editors\DevelopEditor.cpp" />
     <ClCompile Include="Engine\Editor\Editors\HierarchyEditor.cpp" />
@@ -394,6 +395,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Engine\Content\TextureBuffer\RenderTexture.h" />
     <ClInclude Include="Engine\Content\TextureBuffer\UnorderedTexture.h" />
     <ClInclude Include="Engine\Editor\EditorEngine.h" />
+    <ClInclude Include="Engine\Editor\Editors\AssetEditor.h" />
     <ClInclude Include="Engine\Editor\Editors\BaseEditor.h" />
     <ClInclude Include="Engine\Editor\Editors\DevelopEditor.h" />
     <ClInclude Include="Engine\Editor\Editors\HierarchyEditor.h" />
