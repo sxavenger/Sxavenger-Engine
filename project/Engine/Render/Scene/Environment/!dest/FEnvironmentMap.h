@@ -7,10 +7,8 @@
 #include <Engine/System/DirectX/DxObject/DxObjectCommon.h>
 #include <Engine/System/DirectX/DxObject/DxDescriptor.h>
 #include <Engine/System/DirectX/DxObject/DxComputePipelineState.h>
-#include <Engine/System/DirectX/DxObject/DxResourceStateTracker.h>
 #include <Engine/System/DirectX/DxObject/DxDimensionBuffer.h>
 #include <Engine/System/DirectX/DirectXContext.h>
-#include <Engine/System/Runtime/Thread/AsyncTask.h>
 
 //* lib
 #include <Lib/Geometry/Vector2.h>
@@ -37,11 +35,7 @@ public:
 
 		void Create(const Vector2ui& size);
 
-		void Dispatch(const DirectXThreadContext* context);
-
-		void Commit();
-
-		// todo: main resourceの使用.
+		void Dispatch(const DirectXThreadContext* context, const D3D12_GPU_DESCRIPTOR_HANDLE& environment);
 
 		//=========================================================================================
 		// public variables
@@ -49,19 +43,13 @@ public:
 
 		//* directX12 *//
 
-		DxObject::ResourceStateTracker asyncResource;
-		DxObject::Descriptor asyncDescriptorUAV;
-
-		DxObject::ResourceStateTracker mainResource;
-		DxObject::Descriptor mainDescriptorSRV;
-
-		//* parameter *//
-
-		std::optional<D3D12_GPU_DESCRIPTOR_HANDLE> environment_;
+		ComPtr<ID3D12Resource> resource;
+		DxObject::Descriptor descriptorSRV;
+		DxObject::Descriptor descriptorUAV;
 
 		//* pipeline *//
 
-		std::unique_ptr<DxObject::ReflectionComputePipelineState> pipeline; //!< HACK
+		std::unique_ptr<DxObject::ReflectionComputePipelineState> pipeline;
 
 		//* parameter *//
 
@@ -101,9 +89,7 @@ public:
 
 		void Create(const Vector2ui& _size);
 
-		void Dispatch(const DirectXThreadContext* context);
-
-		void Commit();
+		void Dispatch(const DirectXThreadContext* context, const D3D12_GPU_DESCRIPTOR_HANDLE& environment);
 
 		//=========================================================================================
 		// public variables
@@ -117,24 +103,18 @@ public:
 
 		//* directX12 *//
 
-		DxObject::ResourceStateTracker asyncResource;
-		std::array<DxObject::Descriptor, kMiplevels> asyncDescriptorUAVs;
-
-		DxObject::ResourceStateTracker mainResource;
-		DxObject::Descriptor mainDescriptorSRV;
+		ComPtr<ID3D12Resource> resource;
+		DxObject::Descriptor descriptorSRV;
+		std::array<DxObject::Descriptor, kMiplevels> descriptorUAVs;
 
 		//* dimension buffer *//
 
 		std::unique_ptr<DxObject::DimensionBuffer<uint32_t>> indices;
 		std::unique_ptr<DxObject::DimensionBuffer<Parameter>> parameter;
 
-		//* parameter *//
-
-		std::optional<D3D12_GPU_DESCRIPTOR_HANDLE> environment_;
-
 		//* pipeline *//
 
-		std::unique_ptr<DxObject::ReflectionComputePipelineState> pipeline; //!< HACK
+		std::unique_ptr<DxObject::ReflectionComputePipelineState> pipeline;
 
 	private:
 
@@ -158,13 +138,19 @@ public:
 
 	void Create(const Vector2ui& size);
 
-	void Term();
+	void Dispatch(const DirectXThreadContext* context, const D3D12_GPU_DESCRIPTOR_HANDLE& environment);
 
-	void Update();
+	//* getter *//
 
-	//* async option *//
+	const IrradianceMap& GetIrradiance() const { return irradiance_; }
 
-	void Task(const DirectXThreadContext* context);
+	const RadianceMap& GetRadiance() const { return radiance_; }
+
+	const uint32_t GetIrradianceIndex() const { return irradiance_.descriptorSRV.GetIndex(); }
+
+	const uint32_t GetRadianceIndex() const { return radiance_.descriptorSRV.GetIndex(); }
+
+	static UINT16 GetRadianceMiplevel() { return RadianceMap::kMiplevels; }
 
 private:
 
@@ -172,27 +158,14 @@ private:
 	// private variables
 	//=========================================================================================
 
-	//* parameter *//
-
-	std::optional<D3D12_GPU_DESCRIPTOR_HANDLE> environment_;
-
 	//* map *//
 
 	IrradianceMap irradiance_;
 	RadianceMap   radiance_;
-
-	//* async task *//
-
-	std::shared_ptr<AsyncTask> task_;
 
 	//* parameter *//
 
 	static inline constexpr UINT16 kCubemap_ = 6;
 	static inline constexpr Vector2ui kNumThreads_ = { 16, 16 };
 
-	//=========================================================================================
-	// private variables
-	//=========================================================================================
-
 };
-

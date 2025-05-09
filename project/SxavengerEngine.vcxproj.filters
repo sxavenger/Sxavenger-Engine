@@ -133,8 +133,6 @@
     <ClCompile Include="Engine\Content\InputGeometry\InputPrimitive.cpp" />
     <ClCompile Include="Engine\Content\InputGeometry\InputPrimitiveHelper.cpp" />
     <ClCompile Include="Engine\System\UI\SxImGui.cpp" />
-    <ClCompile Include="Engine\Render\Scene\Environment\FEnvironmentMap.cpp" />
-    <ClCompile Include="Engine\Render\Scene\Environment\Atmosphere\FSkyAtmosphere.cpp" />
     <ClCompile Include="Engine\System\Runtime\Thread\AsyncTask.cpp" />
     <ClCompile Include="Engine\System\Runtime\Thread\AsyncThread.cpp" />
     <ClCompile Include="Engine\System\Runtime\Thread\AsyncThreadCollection.cpp" />
@@ -154,6 +152,8 @@
     <ClCompile Include="Engine\Component\Components\PostProcessLayer\PostProcessDoF.cpp" />
     <ClCompile Include="Engine\Editor\Editors\AssetEditor.cpp" />
     <ClCompile Include="Engine\System\DirectX\DxObject\DxResourceStateTracker.cpp" />
+    <ClCompile Include="Engine\Render\Scene\Environment\FEnvironmentMap.cpp" />
+    <ClCompile Include="Engine\System\UI\SxImGuizmo.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\System\Window\Window.h" />
@@ -304,8 +304,6 @@
     <ClInclude Include="Engine\Content\InputGeometry\InputPrimitive.h" />
     <ClInclude Include="Engine\Content\InputGeometry\InputPrimitiveHelper.h" />
     <ClInclude Include="Engine\System\UI\SxImGui.h" />
-    <ClInclude Include="Engine\Render\Scene\Environment\FEnvironmentMap.h" />
-    <ClInclude Include="Engine\Render\Scene\Environment\Atmosphere\FSkyAtmosphere.h" />
     <ClInclude Include="Engine\System\Runtime\Thread\AsyncTask.h" />
     <ClInclude Include="Engine\System\Runtime\Thread\AsyncThread.h" />
     <ClInclude Include="Engine\System\Runtime\Thread\AsyncThreadCollection.h" />
@@ -326,6 +324,8 @@
     <ClInclude Include="Engine\Component\Components\PostProcessLayer\PostProcessDoF.h" />
     <ClInclude Include="Engine\Editor\Editors\AssetEditor.h" />
     <ClInclude Include="Engine\System\DirectX\DxObject\DxResourceStateTracker.h" />
+    <ClInclude Include="Engine\Render\Scene\Environment\FEnvironmentMap.h" />
+    <ClInclude Include="Engine\System\UI\SxImGuizmo.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

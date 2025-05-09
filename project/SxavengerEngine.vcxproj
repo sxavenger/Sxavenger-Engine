@@ -253,7 +253,9 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="Engine\GameLoop\SxavengerEngineGameLoop.cpp" />
     <ClCompile Include="Engine\Module\GameObject\GameObject.cpp" />
     <ClCompile Include="Engine\Render\Common\FProcessTexture.cpp" />
+    <ClCompile Include="Engine\Render\Scene\Environment\FEnvironmentMap.cpp" />
     <ClCompile Include="Engine\System\DirectX\DxObject\DxResourceStateTracker.cpp" />
+    <ClCompile Include="Engine\System\UI\SxImGuizmo.cpp" />
     <ClCompile Include="Lib\Motion\Motion.cpp" />
     <ClCompile Include="Engine\Module\Pipeline\CustomComputePipeline.cpp" />
     <ClCompile Include="Engine\Module\Pipeline\CustomGraphicsPipeline.cpp" />
@@ -270,8 +272,6 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="Engine\Render\FPresenter.cpp" />
     <ClCompile Include="Engine\Render\FRenderCore.cpp" />
     <ClCompile Include="Engine\Render\FRenderTargetTextures.cpp" />
-    <ClCompile Include="Engine\Render\Scene\Environment\Atmosphere\FSkyAtmosphere.cpp" />
-    <ClCompile Include="Engine\Render\Scene\Environment\FEnvironmentMap.cpp" />
     <ClCompile Include="Engine\Render\Scene\FScene.cpp" />
     <ClCompile Include="Engine\Render\Scene\FSceneRenderer.cpp" />
     <ClCompile Include="Engine\System\Config\SxavengerConfig.cpp" />
@@ -406,7 +406,9 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Engine\GameLoop\SxavengerEngineGameLoop.h" />
     <ClInclude Include="Engine\Module\GameObject\GameObject.h" />
     <ClInclude Include="Engine\Render\Common\FProcessTexture.h" />
+    <ClInclude Include="Engine\Render\Scene\Environment\FEnvironmentMap.h" />
     <ClInclude Include="Engine\System\DirectX\DxObject\DxResourceStateTracker.h" />
+    <ClInclude Include="Engine\System\UI\SxImGuizmo.h" />
     <ClInclude Include="Lib\Motion\Motion.h" />
     <ClInclude Include="Engine\Module\Pipeline\CustomComputePipeline.h" />
     <ClInclude Include="Engine\Module\Pipeline\CustomGraphicsPipeline.h" />
@@ -423,8 +425,6 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Engine\Render\FPresenter.h" />
     <ClInclude Include="Engine\Render\FRenderCore.h" />
     <ClInclude Include="Engine\Render\FRenderTargetTextures.h" />
-    <ClInclude Include="Engine\Render\Scene\Environment\Atmosphere\FSkyAtmosphere.h" />
-    <ClInclude Include="Engine\Render\Scene\Environment\FEnvironmentMap.h" />
     <ClInclude Include="Engine\Render\Scene\FScene.h" />
     <ClInclude Include="Engine\Render\Scene\FSceneRenderer.h" />
     <ClInclude Include="Engine\System\Cinfig\SxavengerDirectory.h" />

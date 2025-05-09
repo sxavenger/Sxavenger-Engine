@@ -7,8 +7,10 @@
 #include <Engine/System/DirectX/DxObject/DxObjectCommon.h>
 #include <Engine/System/DirectX/DxObject/DxDescriptor.h>
 #include <Engine/System/DirectX/DxObject/DxComputePipelineState.h>
+#include <Engine/System/DirectX/DxObject/DxResourceStateTracker.h>
 #include <Engine/System/DirectX/DxObject/DxDimensionBuffer.h>
 #include <Engine/System/DirectX/DirectXContext.h>
+#include <Engine/System/Runtime/Thread/AsyncTask.h>
 
 //* lib
 #include <Lib/Geometry/Vector2.h>
@@ -35,27 +37,47 @@ public:
 
 		void Create(const Vector2ui& size);
 
-		void Dispatch(const DirectXThreadContext* context, const D3D12_GPU_DESCRIPTOR_HANDLE& environment);
+		void Dispatch(const DirectXThreadContext* context);
+
+		void Commit();
+
+		// todo: main resourceの使用.
+
+		//* parameter option *//
+
+		void SetEnvironment(const std::optional<D3D12_GPU_DESCRIPTOR_HANDLE>& handle) { environment_ = handle; }
+
+		const std::optional<D3D12_GPU_DESCRIPTOR_HANDLE>& GetEnvironment() const { return environment_; }
+
+		//* resource option *//
+
+		const DxObject::Descriptor& UseDescriptorSRV(const DirectXThreadContext* context);
+
+	private:
 
 		//=========================================================================================
-		// public variables
+		// private variables
 		//=========================================================================================
 
 		//* directX12 *//
 
-		ComPtr<ID3D12Resource> resource;
-		DxObject::Descriptor descriptorSRV;
-		DxObject::Descriptor descriptorUAV;
+		DxObject::ResourceStateTracker asyncResource;
+		DxObject::Descriptor asyncDescriptorUAV;
+
+		DxObject::ResourceStateTracker mainResource;
+		DxObject::Descriptor mainDescriptorSRV;
+
+		//* parameter *//
+
+		std::optional<D3D12_GPU_DESCRIPTOR_HANDLE> environment_;
 
 		//* pipeline *//
 
-		std::unique_ptr<DxObject::ReflectionComputePipelineState> pipeline;
+		std::unique_ptr<DxObject::ReflectionComputePipelineState> pipeline; //!< HACK
 
 		//* parameter *//
 
 		Vector2ui size;
-
-	private:
 
 		//=========================================================================================
 		// private methods
@@ -89,7 +111,19 @@ public:
 
 		void Create(const Vector2ui& _size);
 
-		void Dispatch(const DirectXThreadContext* context, const D3D12_GPU_DESCRIPTOR_HANDLE& environment);
+		void Dispatch(const DirectXThreadContext* context);
+
+		void Commit();
+
+		//* parameter option *//
+
+		void SetEnvironment(const std::optional<D3D12_GPU_DESCRIPTOR_HANDLE>& handle) { environment_ = handle; }
+
+		const std::optional<D3D12_GPU_DESCRIPTOR_HANDLE>& GetEnvironment() const { return environment_; }
+
+		//* resource option *//
+
+		const DxObject::Descriptor& UseDescriptorSRV(const DirectXThreadContext* context);
 
 		//=========================================================================================
 		// public variables
@@ -99,24 +133,36 @@ public:
 
 		static inline const UINT16 kMiplevels = 4;
 
+	private:
+
+		//=========================================================================================
+		// private variables
+		//=========================================================================================
+
+		//* parameter *//
+
 		Vector2ui size;
 
 		//* directX12 *//
 
-		ComPtr<ID3D12Resource> resource;
-		DxObject::Descriptor descriptorSRV;
-		std::array<DxObject::Descriptor, kMiplevels> descriptorUAVs;
+		DxObject::ResourceStateTracker asyncResource;
+		std::array<DxObject::Descriptor, kMiplevels> asyncDescriptorUAVs;
+
+		DxObject::ResourceStateTracker mainResource;
+		DxObject::Descriptor mainDescriptorSRV;
 
 		//* dimension buffer *//
 
 		std::unique_ptr<DxObject::DimensionBuffer<uint32_t>> indices;
 		std::unique_ptr<DxObject::DimensionBuffer<Parameter>> parameter;
 
+		//* parameter *//
+
+		std::optional<D3D12_GPU_DESCRIPTOR_HANDLE> environment_;
+
 		//* pipeline *//
 
-		std::unique_ptr<DxObject::ReflectionComputePipelineState> pipeline;
-
-	private:
+		std::unique_ptr<DxObject::ReflectionComputePipelineState> pipeline; //!< HACK
 
 		//=========================================================================================
 		// private variables
@@ -138,19 +184,25 @@ public:
 
 	void Create(const Vector2ui& size);
 
-	void Dispatch(const DirectXThreadContext* context, const D3D12_GPU_DESCRIPTOR_HANDLE& environment);
+	void Term();
 
-	//* getter *//
+	void Update();
 
-	const IrradianceMap& GetIrradiance() const { return irradiance_; }
+	//* async option *//
 
-	const RadianceMap& GetRadiance() const { return radiance_; }
+	void Task(const DirectXThreadContext* context);
 
-	const uint32_t GetIrradianceIndex() const { return irradiance_.descriptorSRV.GetIndex(); }
+	//* parameter option *//
 
-	const uint32_t GetRadianceIndex() const { return radiance_.descriptorSRV.GetIndex(); }
+	void SetEnvironment(const D3D12_GPU_DESCRIPTOR_HANDLE& environment) { environment_ = environment; }
 
-	static UINT16 GetRadianceMiplevel() { return RadianceMap::kMiplevels; }
+	//* map option *//
+
+	const DxObject::Descriptor& UseIrradianceDescriptor(const DirectXThreadContext* context);
+
+	uint32_t GetRadianceMiplevels() const { return radiance_.kMiplevels; }
+
+	const DxObject::Descriptor& UseRadianceDescriptor(const DirectXThreadContext* context);
 
 private:
 
@@ -158,14 +210,27 @@ private:
 	// private variables
 	//=========================================================================================
 
+	//* parameter *//
+
+	std::optional<D3D12_GPU_DESCRIPTOR_HANDLE> environment_;
+
 	//* map *//
 
 	IrradianceMap irradiance_;
 	RadianceMap   radiance_;
+
+	//* async task *//
+
+	std::shared_ptr<AsyncTask> task_;
 
 	//* parameter *//
 
 	static inline constexpr UINT16 kCubemap_ = 6;
 	static inline constexpr Vector2ui kNumThreads_ = { 16, 16 };
 
+	//=========================================================================================
+	// private variables
+	//=========================================================================================
+
 };
+

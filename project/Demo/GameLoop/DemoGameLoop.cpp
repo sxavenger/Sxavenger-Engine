@@ -72,18 +72,17 @@ void DemoGameLoop::InitGame() {
 	sampleLight_ = ComponentHelper::CreateDirectionalLightMonoBehaviour();
 	sampleLight_->GetComponent<TransformComponent>()->rotate *= Quaternion::ToQuaternion({ kPi / 4.0f, 0.0f, 0.0f });
 
-	AssetObserver<AssetTexture> env = SxavengerAsset::TryImport<AssetTexture>("assets/textures/EnvHDR.dds");
-	environmentMap_.Create(env.WaitGet()->GetSize());
-	environmentMap_.Dispatch(SxavengerSystem::GetMainThreadContext(), env.WaitGet()->GetGPUHandleSRV());
+	//AssetObserver<AssetTexture> env = SxavengerAsset::TryImport<AssetTexture>("assets/textures/EnvHDR.dds");
+	//environmentMap_.Create(env.WaitGet()->GetSize());
+	//environmentMap_.Dispatch(SxavengerSystem::GetMainThreadContext(), env.WaitGet()->GetGPUHandleSRV());
 
 	SxavengerSystem::ExecuteAllAllocator();
 
-	skylight_ = ComponentHelper::CreateMonoBehaviour();
-	skylight_->SetName("sky light");
-	skylight_->AddComponent<SkyLightComponent>();
-
-	skylight_->GetComponent<SkyLightComponent>()->GetDiffuseParameter().SetTexture(environmentMap_.GetIrradianceIndex());
-	skylight_->GetComponent<SkyLightComponent>()->GetSpecularParameter().SetTexture(environmentMap_.GetRadianceIndex(), environmentMap_.GetRadianceMiplevel());
+	//skylight_ = ComponentHelper::CreateMonoBehaviour();
+	//skylight_->SetName("sky light");
+	//skylight_->AddComponent<SkyLightComponent>();
+	//skylight_->GetComponent<SkyLightComponent>()->GetDiffuseParameter().SetTexture(environmentMap_.GetIrradianceIndex());
+	//skylight_->GetComponent<SkyLightComponent>()->GetSpecularParameter().SetTexture(environmentMap_.GetRadianceIndex(), environmentMap_.GetRadianceMiplevel());
 
 }
 

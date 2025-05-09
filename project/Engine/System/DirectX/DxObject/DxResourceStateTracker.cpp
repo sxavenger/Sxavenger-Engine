@@ -26,6 +26,7 @@ void ResourceStateTracker::TransitionToExpectedState(CommandContext* context, D3
 	barrier.Transition.pResource   = Get();
 	barrier.Transition.StateBefore = state_;
 	barrier.Transition.StateAfter  = state;
+	barrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
 
 	context->GetCommandList()->ResourceBarrier(1, &barrier);
 
