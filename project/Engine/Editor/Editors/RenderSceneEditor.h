@@ -72,6 +72,14 @@ private:
 		Canvas,
 	};
 
+	////////////////////////////////////////////////////////////////////////////////////////////
+	// GuizmoOperation enum class
+	////////////////////////////////////////////////////////////////////////////////////////////
+	enum class GuizmoOperation : uint32_t {
+		Scale     = 1 << 0,
+		Translate = 1 << 1,
+	};
+
 private:
 
 	//=========================================================================================
@@ -121,6 +129,7 @@ private:
 	ImDrawList* canvasWindow_ = nullptr;
 
 	std::optional<GuizmoUsed> guizmoUsed_ = std::nullopt;
+	GuizmoOperation operation_ = GuizmoOperation::Translate;
 
 	//=========================================================================================
 	// private methods
@@ -129,6 +138,7 @@ private:
 	//* show imgui component *//
 
 	void ShowSceneMenu();
+	void ShowGuizmoMenu();
 	void ShowColliderMenu();
 
 	void ShowSceneWindow();

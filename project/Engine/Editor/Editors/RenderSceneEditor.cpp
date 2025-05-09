@@ -4,6 +4,7 @@
 // include
 //-----------------------------------------------------------------------------------------
 //* engine
+#include <Engine/System/UI/SxImGui.h>
 #include <Engine/Content/SxavengerContent.h>
 #include <Engine/Component/Components/Transform/TransformComponent.h>
 #include <Engine/Component/Components/SpriteRenderer/SpriteRendererComponent.h>
@@ -40,6 +41,7 @@ void RenderSceneEditor::ShowMainMenu() {
 		ImGui::SeparatorText("render");
 
 		ShowSceneMenu();
+		ShowGuizmoMenu();
 		ShowColliderMenu();
 		
 		ImGui::EndMenu();
@@ -84,7 +86,16 @@ void RenderSceneEditor::Manipulate(MonoBehaviour* behaviour) {
 
 	ImGuizmo::SetDrawlist(sceneWindow_);
 
-	ImGuizmo::OPERATION operation = ImGuizmo::TRANSLATE; // FIXME: translateしか使えない
+	ImGuizmo::OPERATION operation = ImGuizmo::NONE;
+
+	// todo: flagに変更
+	if (operation_ == GuizmoOperation::Scale) {
+		operation = ImGuizmo::SCALE;
+	}
+
+	if (operation_ == GuizmoOperation::Translate) {
+		operation = ImGuizmo::TRANSLATE;
+	}
 
 	// transform component の取得
 	auto component = behaviour->GetComponent<TransformComponent>();
@@ -130,12 +141,15 @@ void RenderSceneEditor::Manipulate(MonoBehaviour* behaviour) {
 		&transform.scale.x
 	);
 
-	// FIXME: rotate and scale
-	component->GetTransform().translate = transform.translate;
-	//component->GetTransform().rotate    = ToQuaternion2(transform.rotate).Normalize(); 
-	//component->GetTransform().scale     = transform.scale;
-	component->UpdateMatrix();
+	if (operation_ == GuizmoOperation::Scale) {
+		component->GetTransform().scale = transform.scale;
+	}
 
+	if (operation_ == GuizmoOperation::Translate) {
+		component->GetTransform().translate = transform.translate;
+	}
+
+	component->UpdateMatrix();
 }
 
 void RenderSceneEditor::ManipulateCanvas(MonoBehaviour* behaviour) {
@@ -146,7 +160,16 @@ void RenderSceneEditor::ManipulateCanvas(MonoBehaviour* behaviour) {
 	ImGuizmo::SetDrawlist(canvasWindow_);
 	ImGuizmo::SetOrthographic(true);
 
-	ImGuizmo::OPERATION operation = ImGuizmo::TRANSLATE_X | ImGuizmo::TRANSLATE_Y; //!< translate only
+	ImGuizmo::OPERATION operation = ImGuizmo::NONE;
+
+	// todo: flagに変更
+	if (operation_ == GuizmoOperation::Scale) {
+		operation = ImGuizmo::SCALE_X | ImGuizmo::SCALE_Y;
+	}
+
+	if (operation_ == GuizmoOperation::Translate) {
+		operation = ImGuizmo::TRANSLATE_X | ImGuizmo::TRANSLATE_Y;
+	}
 
 	// sprite component の取得
 	auto component = behaviour->GetComponent<SpriteRendererComponent>();
@@ -187,9 +210,13 @@ void RenderSceneEditor::ManipulateCanvas(MonoBehaviour* behaviour) {
 		&transform.scale.x
 	);
 
-	component->GetTransform2d().translate = { transform.translate.x, transform.translate.y };
-	/*component->GetTransform2d().rotate    = transform.rotate.z;
-	component->GetTransform2d().scale     = { transform.scale.x, transform.scale.y };*/
+	if (operation_ == GuizmoOperation::Scale) {
+		component->GetTransform2d().scale = { transform.scale.x, transform.scale.y };
+	}
+
+	if (operation_ == GuizmoOperation::Translate) {
+		component->GetTransform2d().translate = { transform.translate.x, transform.translate.y };
+	}
 
 	ImGuizmo::SetOrthographic(false);
 }
@@ -217,6 +244,19 @@ void RenderSceneEditor::ShowSceneMenu() {
 			ImGui::EndCombo();
 		}
 		
+		ImGui::EndMenu();
+	}
+}
+
+void RenderSceneEditor::ShowGuizmoMenu() {
+	if (ImGui::BeginMenu("guizmo")) {
+		MenuPadding();
+		ImGui::SeparatorText("guizmo");
+
+		SxImGui::RadioButton("translate", &operation_, GuizmoOperation::Translate);
+		ImGui::SameLine();
+		SxImGui::RadioButton("scale", &operation_, GuizmoOperation::Scale);
+
 		ImGui::EndMenu();
 	}
 }

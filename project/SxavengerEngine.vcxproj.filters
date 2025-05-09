@@ -153,6 +153,7 @@
     <ClCompile Include="Engine\Component\Components\PostProcessLayer\PostProcessBloom.cpp" />
     <ClCompile Include="Engine\Component\Components\PostProcessLayer\PostProcessDoF.cpp" />
     <ClCompile Include="Engine\Editor\Editors\AssetEditor.cpp" />
+    <ClCompile Include="Engine\System\DirectX\DxObject\DxResourceStateTracker.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\System\Window\Window.h" />
@@ -324,6 +325,7 @@
     <ClInclude Include="Engine\Component\Components\PostProcessLayer\PostProcessBloom.h" />
     <ClInclude Include="Engine\Component\Components\PostProcessLayer\PostProcessDoF.h" />
     <ClInclude Include="Engine\Editor\Editors\AssetEditor.h" />
+    <ClInclude Include="Engine\System\DirectX\DxObject\DxResourceStateTracker.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

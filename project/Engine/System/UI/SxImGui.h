@@ -25,10 +25,26 @@ namespace SxImGui {
 
 	bool DragFloat(const char* label, float* v, float v_speed = 1.0f, const std::optional<float>& v_min = std::nullopt, const std::optional<float>& v_max = std::nullopt, const char* format = "%.3f", ImGuiSliderFlags flags = ImGuiSliderFlags_None);
 
+	template <class T>
+	bool RadioButton(const char* label, T* v, T v_button);
+
 	//=========================================================================================
 	// option
 	//=========================================================================================
 
 
+}
 
+////////////////////////////////////////////////////////////////////////////////////////////
+// SxImGui namespace template methods
+////////////////////////////////////////////////////////////////////////////////////////////
+
+template <class T>
+bool SxImGui::RadioButton(const char* label, T* v, T v_button) {
+	const bool pressed = ImGui::RadioButton(label, (*v == v_button));
+	if (pressed) {
+		*v = v_button;
+	}
+
+	return pressed;
 }

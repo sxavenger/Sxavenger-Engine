@@ -7,6 +7,7 @@
 #include <Engine/System/DirectX/DxObject/DxObjectCommon.h>
 #include <Engine/System/DirectX/DxObject/DxDescriptor.h>
 #include <Engine/System/DirectX/DxObject/DxComputePipelineState.h>
+#include <Engine/System/DirectX/DxObject/DxResourceStateTracker.h>
 #include <Engine/System/DirectX/DxObject/DxDimensionBuffer.h>
 #include <Engine/System/DirectX/DirectXContext.h>
 #include <Engine/System/Runtime/Thread/AsyncTask.h>
@@ -40,16 +41,18 @@ public:
 
 		void Commit();
 
+		// todo: main resourceの使用.
+
 		//=========================================================================================
 		// public variables
 		//=========================================================================================
 
 		//* directX12 *//
 
-		ComPtr<ID3D12Resource> asyncResource;
+		DxObject::ResourceStateTracker asyncResource;
 		DxObject::Descriptor asyncDescriptorUAV;
 
-		ComPtr<ID3D12Resource> mainResource;
+		DxObject::ResourceStateTracker mainResource;
 		DxObject::Descriptor mainDescriptorSRV;
 
 		//* parameter *//
@@ -100,6 +103,8 @@ public:
 
 		void Dispatch(const DirectXThreadContext* context);
 
+		void Commit();
+
 		//=========================================================================================
 		// public variables
 		//=========================================================================================
@@ -112,10 +117,10 @@ public:
 
 		//* directX12 *//
 
-		ComPtr<ID3D12Resource> asyncResource;
+		DxObject::ResourceStateTracker asyncResource;
 		std::array<DxObject::Descriptor, kMiplevels> asyncDescriptorUAVs;
 
-		ComPtr<ID3D12Resource> mainResource;
+		DxObject::ResourceStateTracker mainResource;
 		DxObject::Descriptor mainDescriptorSRV;
 
 		//* dimension buffer *//

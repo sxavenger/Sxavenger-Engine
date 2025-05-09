@@ -24,6 +24,11 @@ void FEnvironmentMap::IrradianceMap::Dispatch(const DirectXThreadContext* contex
 		return;
 	}
 
+	asyncResource.TransitionToExpectedState(
+		context->GetDxCommand(),
+		D3D12_RESOURCE_STATE_UNORDERED_ACCESS
+	);
+
 	pipeline->SetPipeline(context->GetDxCommand());
 
 	BindBufferDesc desc = {};
@@ -40,10 +45,31 @@ void FEnvironmentMap::IrradianceMap::Commit() {
 	// 条件: Dispatch(...)と同時に呼び出されないように調整する.
 
 	std::shared_ptr<AsyncTask> copyTask = std::make_shared<AsyncTask>();
+	copyTask->SetTag("IrradianceMap::Commit");
 	copyTask->SetFunction([this](const AsyncThread* thread) {
+
+		auto context = thread->RequireContext();
+		
+		// async resourceの状態を変更
+		asyncResource.TransitionToExpectedState(
+			context->GetDxCommand(),
+			D3D12_RESOURCE_STATE_COPY_SOURCE
+		);
+
+		// main resourceの状態を変更
+		mainResource.TransitionToExpectedState(
+			context->GetDxCommand(),
+			D3D12_RESOURCE_STATE_COPY_DEST
+		);
+
+		context->GetCommandList()->CopyResource(
+			mainResource.Get(),
+			asyncResource.Get()
+		);
 
 	});
 
+	SxavengerSystem::PushTask(AsyncExecution::Copy, copyTask);
 	copyTask->Wait();
 }
 
@@ -69,16 +95,16 @@ void FEnvironmentMap::IrradianceMap::CreateBuffer() {
 		desc.Flags            = D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS;
 
 		// resourceの生成
-		auto hr = device->CreateCommittedResource(
+		asyncResource = DxObject::ResourceStateTracker::CreateCommittedResource(
+			SxavengerSystem::GetDxDevice(),
 			&prop,
 			D3D12_HEAP_FLAG_NONE,
 			&desc,
 			D3D12_RESOURCE_STATE_ALL_SHADER_RESOURCE,
-			nullptr,
-			IID_PPV_ARGS(&asyncResource)
+			nullptr
 		);
-		Assert(SUCCEEDED(hr), "async irradiance environment map create failed.");
 
+		asyncResource.SetName(L"IrradianceMap::asyncResource");
 	}
 
 	{ //!< UAVの生成
@@ -118,15 +144,16 @@ void FEnvironmentMap::IrradianceMap::CreateBuffer() {
 		desc.Flags            = D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS;
 
 		// resourceの生成
-		auto hr = device->CreateCommittedResource(
+		mainResource = DxObject::ResourceStateTracker::CreateCommittedResource(
+			SxavengerSystem::GetDxDevice(),
 			&prop,
 			D3D12_HEAP_FLAG_NONE,
 			&desc,
 			D3D12_RESOURCE_STATE_ALL_SHADER_RESOURCE,
-			nullptr,
-			IID_PPV_ARGS(&mainResource)
+			nullptr
 		);
-		Assert(SUCCEEDED(hr), "main irradiance environment map create failed.");
+
+		mainResource.SetName(L"IrradianceMap::mainResource");
 	}
 
 	{ //!< SRVの生成
@@ -174,6 +201,11 @@ void FEnvironmentMap::RadianceMap::Dispatch(const DirectXThreadContext* context)
 		return;
 	}
 
+	asyncResource.TransitionToExpectedState(
+		context->GetDxCommand(),
+		D3D12_RESOURCE_STATE_UNORDERED_ACCESS
+	);
+
 	pipeline->SetPipeline(context->GetDxCommand());
 
 	BindBufferDesc desc = {};
@@ -185,6 +217,37 @@ void FEnvironmentMap::RadianceMap::Dispatch(const DirectXThreadContext* context)
 	Vector3ui threadGroup = { RoundUp(size.x, kNumThreads_.x), RoundUp(size.y, kNumThreads_.y), 6 * kMiplevels };
 	pipeline->Dispatch(context->GetDxCommand(), threadGroup);
 
+}
+
+void FEnvironmentMap::RadianceMap::Commit() {
+	// 条件: Dispatch(...)と同時に呼び出されないように調整する.
+
+	std::shared_ptr<AsyncTask> copyTask = std::make_shared<AsyncTask>();
+	copyTask->SetTag("RadianceMap::Commit");
+	copyTask->SetFunction([this](const AsyncThread* thread) {
+
+		auto context = thread->RequireContext();
+		
+		// async resourceの状���を変更
+		asyncResource.TransitionToExpectedState(
+			context->GetDxCommand(),
+			D3D12_RESOURCE_STATE_COPY_SOURCE
+		);
+
+		// main resourceの状態を変更
+		mainResource.TransitionToExpectedState(
+			context->GetDxCommand(),
+			D3D12_RESOURCE_STATE_COPY_DEST
+		);
+
+		context->GetCommandList()->CopyResource(
+			mainResource.Get(),
+			asyncResource.Get()
+		);
+	});
+
+	SxavengerSystem::PushTask(AsyncExecution::Copy, copyTask);
+	copyTask->Wait();
 }
 
 void FEnvironmentMap::RadianceMap::CreateBuffer() {
@@ -209,16 +272,16 @@ void FEnvironmentMap::RadianceMap::CreateBuffer() {
 		desc.Flags            = D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS;
 
 		// resourceの生成
-		auto hr = device->CreateCommittedResource(
+		asyncResource = DxObject::ResourceStateTracker::CreateCommittedResource(
+			SxavengerSystem::GetDxDevice(),
 			&prop,
 			D3D12_HEAP_FLAG_NONE,
 			&desc,
 			D3D12_RESOURCE_STATE_ALL_SHADER_RESOURCE,
-			nullptr,
-			IID_PPV_ARGS(&asyncResource)
+			nullptr
 		);
-		Assert(SUCCEEDED(hr), "async radiance environment map create failed.");
 
+		asyncResource.SetName(L"RadianceMap::asyncResource");
 	}
 
 	{ //!< UAVの生成
@@ -262,15 +325,16 @@ void FEnvironmentMap::RadianceMap::CreateBuffer() {
 		desc.Flags            = D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS;
 
 		// resourceの生成
-		auto hr = device->CreateCommittedResource(
+		mainResource = DxObject::ResourceStateTracker::CreateCommittedResource(
+			SxavengerSystem::GetDxDevice(),
 			&prop,
 			D3D12_HEAP_FLAG_NONE,
 			&desc,
 			D3D12_RESOURCE_STATE_ALL_SHADER_RESOURCE,
-			nullptr,
-			IID_PPV_ARGS(&mainResource)
+			nullptr
 		);
-		Assert(SUCCEEDED(hr), "main radiance environment map create failed.");
+
+		mainResource.SetName(L"RadianceMap::mainResource");
 
 	}
 
