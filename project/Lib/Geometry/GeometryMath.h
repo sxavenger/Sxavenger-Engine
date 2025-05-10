@@ -5,6 +5,7 @@
 //-----------------------------------------------------------------------------------------
 //* c++
 #include <numbers>
+#include <limits>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // mathematical constants
@@ -20,6 +21,4 @@ constexpr float kDegToRad = kPi / 180.0f;
 
 //* 数値計算における許容誤差
 
-constexpr float kEpsilon = 1.0e-5f;
-
-
+constexpr float kEpsilon = std::numeric_limits<float>::epsilon();

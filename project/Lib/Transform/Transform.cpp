@@ -35,17 +35,10 @@ Matrix4x4 EulerTransform::ToMatrix() const {
 void QuaternionTransform::SetImGuiCommand(float granularityTranslate, float granularityRotate, float granularityScale) {
 	SxImGui::DragVector3("translate", &translate.x, granularityTranslate);
 
-	Vector3f drag = {};
-	if (ImGui::DragFloat3("## rotation drager", &drag.x, granularityRotate, -1.0f, 1.0f, "", ImGuiSliderFlags_NoInput)) {
-		rotate *= Quaternion::AxisAngle({ 1.0f, 0.0f, 0.0f }, drag.x);
-		rotate *= Quaternion::AxisAngle({ 0.0f, 1.0f, 0.0f }, drag.y);
-		rotate *= Quaternion::AxisAngle({ 0.0f, 0.0f, 1.0f }, drag.z);
-	}
 
-	ImGui::SameLine();
-
-	if (ImGui::Button("reset")) {
-		rotate = Quaternion::Identity();
+	Vector3f e = Quaternion::ToEuler(rotate);
+	if (SxImGui::DragVector3("rotate", &e.x, granularityRotate)) {
+		rotate = Quaternion::ToQuaternion(e);
 	}
 
 	ImGui::SameLine();

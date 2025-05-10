@@ -33,22 +33,25 @@ Vector3f Quaternion::RotateVector(const Vector3f& v, const Quaternion& q) noexce
 }
 
 Quaternion Quaternion::ToQuaternion(const Vector3f& euler) noexcept {
-	// 半角に変換
-	float cy = std::cos(euler.y * 0.5f);
-	float sy = std::sin(euler.y * 0.5f);
-	float cp = std::cos(euler.x * 0.5f);
-	float sp = std::sin(euler.x * 0.5f);
-	float cr = std::cos(euler.z * 0.5f);
-	float sr = std::sin(euler.z * 0.5f);
-
-	Quaternion q = {
-		cr * sp * cy + sr * cp * sy,
-		cr * cp * sy - sr * sp * cy,
-		sr * cp * cy - cr * sp * sy,
-		cr * cp * cy + sr * sp * sy,
+	Vector3f c = {
+		std::cos(0.5f * euler.x),
+		std::cos(0.5f * euler.y),
+		std::cos(0.5f * euler.z),
 	};
 
-	return q;
+	Vector3f s = {
+		std::sin(0.5f * euler.x),
+		std::sin(0.5f * euler.y),
+		std::sin(0.5f * euler.z),
+	};
+
+	Quaternion quat = {};
+	quat.w           = c.x * c.y * c.z + s.x * s.y * s.z;
+	quat.imaginary.x = s.x * c.y * c.z - c.x * s.y * s.z;
+	quat.imaginary.y = c.x * s.y * c.z + s.x * c.y * s.z;
+	quat.imaginary.z = c.x * c.y * s.z - s.x * s.y * c.z;
+
+	return quat;
 }
 
 float Quaternion::Dot(const Quaternion& x, const Quaternion& y) noexcept {
@@ -104,6 +107,43 @@ Quaternion Quaternion::LookForward(const Vector3f& forward, const Vector3f& up) 
 
 	Vector3f modifed = Quaternion::RotateVector(kUp3<float>, q);
 	return Quaternion::FromToRotation(modifed, newUp) * q;
+}
+
+Vector3f Quaternion::ToEuler(const Quaternion& q) noexcept {
+	float pitch = 0.0f;
+	float yaw   = 0.0f;
+	float roll  = 0.0f;
+
+	{ //!< pitch
+		float y = 2.0f * (q.imaginary.y * q.imaginary.z + q.w * q.imaginary.x);
+		float x = q.w * q.w - q.imaginary.x * q.imaginary.x - q.imaginary.y * q.imaginary.y + q.imaginary.z * q.imaginary.z;
+
+		if (y <= kEpsilon && x <= kEpsilon) {
+			pitch = std::atan2(q.imaginary.x, q.w) * 2.0f;
+
+		} else {
+			pitch = std::atan2(y, x);
+		}
+	}
+
+	{ //!< roll
+		float y = 2.0f * (q.imaginary.x * q.imaginary.y + q.w * q.imaginary.z);
+		float x = q.w * q.w + q.imaginary.x * q.imaginary.x - q.imaginary.y * q.imaginary.y - q.imaginary.z * q.imaginary.z;
+
+		if (y <= kEpsilon && x <= kEpsilon) {
+			roll = 0.0f;
+
+		} else {
+			roll = std::atan2(y, x);
+		}
+	}
+
+	{ //!< yaw
+		float x = -2.0f * (q.imaginary.x * q.imaginary.z - q.w * q.imaginary.y);
+		yaw = std::asin(std::clamp(x, -1.0f, 1.0f));
+	}
+
+	return { pitch, yaw, roll };
 }
 
 Quaternion Quaternion::Normalize() const noexcept {

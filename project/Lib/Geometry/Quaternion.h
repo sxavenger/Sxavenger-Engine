@@ -72,6 +72,8 @@ public:
 
 	static Quaternion LookForward(const Vector3f& forward, const Vector3f& up = kUnitY3<float>) noexcept;
 
+	static Vector3f ToEuler(const Quaternion& q) noexcept; //!< test
+
 	// todo: formatter
 
 };

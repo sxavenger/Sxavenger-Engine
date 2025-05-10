@@ -6,9 +6,6 @@
 //* c++
 #include <random>
 
-//* engine
-#include <Engine/System/Utility/Logger.h>
-
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Random class
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -20,10 +17,16 @@ public:
 	//=========================================================================================
 
 	template <std::floating_point T = float>
-	static T Generate(T min, T max);
+	static T Generate(T min, T max) {
+		std::uniform_real_distribution<T> dist(min, max);
+		return dist(seed_);
+	}
 
-	template <std::integral T = int>
-	static T Generate(T min, T max);
+	template <std::integral T = int32_t>
+	static T Generate(T min, T max) {
+		std::uniform_int_distribution<T> dist(min, max);
+		return dist(seed_);
+	}
 
 private:
 
@@ -31,17 +34,6 @@ private:
 	// private variables
 	//=========================================================================================
 
-	static std::mt19937 seed_;
+	static inline std::mt19937 seed_ = std::mt19937(std::random_device{}());
+
 };
-
-template <std::floating_point T>
-inline T Random::Generate(T min, T max) {
-	std::uniform_real_distribution<T> dist(min, max);
-	return dist(seed_);
-}
-
-template <std::integral T>
-inline T Random::Generate(T min, T max) {
-	std::uniform_int_distribution<T> dist(min, max);
-	return dist(seed_);
-}

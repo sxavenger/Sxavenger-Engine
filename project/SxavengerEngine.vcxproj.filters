@@ -11,7 +11,6 @@
   <ItemGroup>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Engine\System\Window\Window.cpp" />
-    <ClCompile Include="Lib\Adapter\Random\Random.cpp" />
     <ClCompile Include="Engine\System\Window\GameWindow.cpp" />
     <ClCompile Include="Engine\System\DirectX\DxObject\DxObjectCommon.cpp" />
     <ClCompile Include="Engine\System\Utility\Logger.cpp" />

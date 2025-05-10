@@ -6,6 +6,7 @@ _DXOBJECT_USING
 //-----------------------------------------------------------------------------------------
 //* engine
 #include <Engine/System/SxavengerSystem.h>
+#include <Engine/System/UI/SxImGuizmo.h>
 
 //=========================================================================================
 // static variables
@@ -101,6 +102,7 @@ void ImGuiController::BeginFrame() {
 	ImGui::NewFrame();
 
 	ImGuizmo::BeginFrame();
+	SxImGuizmo::BeginFrame();
 }
 
 void ImGuiController::EndFrame() {

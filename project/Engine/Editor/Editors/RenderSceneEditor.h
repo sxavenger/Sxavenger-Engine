@@ -54,6 +54,8 @@ public:
 
 	void ManipulateCanvas(MonoBehaviour* behaviour);
 
+	void ManipulateSx(MonoBehaviour* behaviour);
+
 private:
 
 	////////////////////////////////////////////////////////////////////////////////////////////
@@ -76,8 +78,9 @@ private:
 	// GuizmoOperation enum class
 	////////////////////////////////////////////////////////////////////////////////////////////
 	enum class GuizmoOperation : uint32_t {
-		Scale     = 1 << 0,
-		Translate = 1 << 1,
+		Scale,
+		Translate,
+		Rotate,
 	};
 
 private:

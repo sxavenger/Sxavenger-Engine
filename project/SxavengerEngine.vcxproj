@@ -322,7 +322,6 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="Engine\System\Window\Window.cpp" />
     <ClCompile Include="Lib\Adapter\Json\IJsonSerializer.cpp" />
     <ClCompile Include="Lib\Adapter\Json\JsonHandler.cpp" />
-    <ClCompile Include="Lib\Adapter\Random\Random.cpp" />
     <ClCompile Include="Lib\Easing.cpp" />
     <ClCompile Include="Lib\Geometry\Matrix4x4.cpp" />
     <ClCompile Include="Lib\Geometry\Quaternion.cpp" />

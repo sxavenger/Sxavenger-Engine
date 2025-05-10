@@ -5,6 +5,7 @@
 //-----------------------------------------------------------------------------------------
 //* engine
 #include <Engine/System/UI/SxImGui.h>
+#include <Engine/System/UI/SxImGuizmo.h>
 #include <Engine/Content/SxavengerContent.h>
 #include <Engine/Component/Components/Transform/TransformComponent.h>
 #include <Engine/Component/Components/SpriteRenderer/SpriteRendererComponent.h>
@@ -97,6 +98,10 @@ void RenderSceneEditor::Manipulate(MonoBehaviour* behaviour) {
 		operation = ImGuizmo::TRANSLATE;
 	}
 
+	if (operation_ == GuizmoOperation::Rotate) {
+		operation = ImGuizmo::ROTATE;
+	}
+
 	// transform component の取得
 	auto component = behaviour->GetComponent<TransformComponent>();
 
@@ -106,7 +111,13 @@ void RenderSceneEditor::Manipulate(MonoBehaviour* behaviour) {
 
 	ImGuizmo::SetRect(sceneRect_.pos.x, sceneRect_.pos.y, sceneRect_.size.x, sceneRect_.size.y);
 
-	Matrix4x4 m = component->GetMatrix();
+	EulerTransform transform = {};
+	transform.scale     = component->GetTransform().scale;
+	transform.translate = component->GetTransform().translate;
+	transform.rotate    = Quaternion::ToEuler(component->GetTransform().rotate);
+
+	Matrix4x4 m = component->GetTransform().ToMatrix();
+	Matrix4x4 delta = Matrix4x4::Identity();
 
 	ImGuizmo::Enable(!component->HasParent());
 
@@ -132,8 +143,6 @@ void RenderSceneEditor::Manipulate(MonoBehaviour* behaviour) {
 		return;
 	}
 
-	EulerTransform transform = {};
-
 	ImGuizmo::DecomposeMatrixToComponents(
 		reinterpret_cast<const float*>(m.m.data()),
 		&transform.translate.x,
@@ -147,6 +156,10 @@ void RenderSceneEditor::Manipulate(MonoBehaviour* behaviour) {
 
 	if (operation_ == GuizmoOperation::Translate) {
 		component->GetTransform().translate = transform.translate;
+	}
+
+	if (operation_ == GuizmoOperation::Rotate) {
+		component->GetTransform().rotate = Quaternion::ToQuaternion(transform.rotate);
 	}
 
 	component->UpdateMatrix();
@@ -221,6 +234,57 @@ void RenderSceneEditor::ManipulateCanvas(MonoBehaviour* behaviour) {
 	ImGuizmo::SetOrthographic(false);
 }
 
+void RenderSceneEditor::ManipulateSx(MonoBehaviour* behaviour) {
+	if (guizmoUsed_.has_value() && guizmoUsed_.value() != GuizmoUsed::Scene) {
+		return;
+	}
+
+	SxImGuizmo::SetDrawlist(sceneWindow_);
+
+	SxImGuizmo::Operation operation = SxImGuizmo::NONE;
+
+	// todo: flagに変更
+	if (operation_ == GuizmoOperation::Scale) {
+		operation = SxImGuizmo::SCALE;
+	}
+
+	if (operation_ == GuizmoOperation::Translate) {
+		operation = SxImGuizmo::TRANSLATE;
+	}
+
+	if (operation_ == GuizmoOperation::Rotate) {
+		operation = SxImGuizmo::ROTATE;
+	}
+
+	// transform component の取得
+	auto component = behaviour->GetComponent<TransformComponent>();
+
+	if (component == nullptr) { //!< transform component が存在してない場合
+		return;
+	}
+
+	SxImGuizmo::SetRect({ sceneRect_.pos.x, sceneRect_.pos.y }, { sceneRect_.size.x, sceneRect_.size.y });
+
+	Matrix4x4 m = component->GetMatrix();
+	//Matrix4x4 delta = Matrix4x4::Identity();
+
+	SxImGuizmo::Enable(!component->HasParent());
+
+	bool isEdit = false;
+
+	isEdit = SxImGuizmo::Manipulate(
+		reinterpret_cast<const float*>(camera_->GetComponent<CameraComponent>()->GetCamera().view.m.data()),
+		reinterpret_cast<const float*>(camera_->GetComponent<CameraComponent>()->GetCamera().proj.m.data()),
+		reinterpret_cast<float*>(m.m.data()),
+		operation,
+		SxImGuizmo::WORLD
+	);
+
+	SxImGuizmo::Enable(true);
+
+	guizmoUsed_ = SxImGuizmo::IsUsing() ? std::optional<GuizmoUsed>{GuizmoUsed::Scene} : std::nullopt;
+}
+
 void RenderSceneEditor::ShowSceneMenu() {
 	if (ImGui::BeginMenu("scene")) {
 		MenuPadding();
@@ -255,7 +319,10 @@ void RenderSceneEditor::ShowGuizmoMenu() {
 
 		SxImGui::RadioButton("translate", &operation_, GuizmoOperation::Translate);
 		ImGui::SameLine();
+		SxImGui::RadioButton("rotate", &operation_, GuizmoOperation::Rotate);
+		ImGui::SameLine();
 		SxImGui::RadioButton("scale", &operation_, GuizmoOperation::Scale);
+		
 
 		ImGui::EndMenu();
 	}
