@@ -433,8 +433,6 @@ namespace SxImGuizmo {
 
 		//* manipulate option *//
 
-		// todo: deltaの追加, matrixではなく, vector || quaterion でやる
-
 		bool HandleTranslation(GizmoOutput& output, Operation op, MoveType& type);
 
 		bool HandleScale(GizmoOutput& output, Operation op, MoveType& type);
@@ -470,9 +468,6 @@ namespace SxImGuizmo {
 		matrix_t mvp;
 		matrix_t mvpLocal; // MVP with full model matrix whereas mMVP's model matrix might only be translation in case of World space edition
 		matrix_t viewProj;
-
-		//Transform source;
-		//Transform delta;
 
 		// my variables
 		ImVec2 prevMousePos;

@@ -62,15 +62,17 @@ void BetaSystemGameLoop::InitSystem() {
 	lightA_  = ComponentHelper::CreatePointLightMonoBehaviour();
 	lightB_  = ComponentHelper::CreateDirectionalLightMonoBehaviour();
 
-	//map.Create({ 1024, 1024 });
-	//map.SetEnvironment(env.WaitGet()->GetGPUHandleSRV());
-	//map.Update();
+	environmentTexture_[0] = SxavengerAsset::TryImport<AssetTexture>("assets/textures/EnvHDR.dds");
+	environmentTexture_[1] = SxavengerAsset::TryImport<AssetTexture>("assets/textures/rostock_laage_airport_4k.dds");
 
-	//skylight_ = ComponentHelper::CreateMonoBehaviour();
-	//skylight_->SetName("sky light");
-	//skylight_->AddComponent<SkyLightComponent>();
-	//skylight_->GetComponent<SkyLightComponent>()->GetDiffuseParameter().SetTexture(map.UseIrradianceDescriptor(SxavengerSystem::GetMainThreadContext()).GetIndex());
-	//skylight_->GetComponent<SkyLightComponent>()->GetSpecularParameter().SetTexture(map.UseRadianceDescriptor(SxavengerSystem::GetMainThreadContext()).GetIndex(), map.GetRadianceMiplevels());
+	map.Create({ 1024, 1024 });
+	map.SetEnvironment(environmentTexture_[index_].WaitGet()->GetGPUHandleSRV());
+
+	skylight_ = ComponentHelper::CreateMonoBehaviour();
+	skylight_->SetName("sky light");
+	skylight_->AddComponent<SkyLightComponent>();
+	skylight_->GetComponent<SkyLightComponent>()->GetDiffuseParameter().SetTexture(map.UseIrradianceDescriptor(SxavengerSystem::GetMainThreadContext()).GetIndex());
+	skylight_->GetComponent<SkyLightComponent>()->GetSpecularParameter().SetTexture(map.UseRadianceDescriptor(SxavengerSystem::GetMainThreadContext()).GetIndex(), map.GetRadianceMiplevels());
 
 	camera_->AddComponent<PostProcessLayerComponent>();
 	camera_->GetComponent<PostProcessLayerComponent>()->AddPostProcess<PostProcessExposure>();
@@ -89,7 +91,12 @@ void BetaSystemGameLoop::UpdateSystem() {
 
 	//skyAtmosphere_.Update(SxavengerSystem::GetMainThreadContext());
 
-	//map.Update();
+	if (SxavengerSystem::IsTriggerKey(KeyId::KEY_F)) {
+		index_ = (index_ + 1) % 2;
+		map.SetEnvironment(environmentTexture_[index_].WaitGet()->GetGPUHandleSRV());
+	}
+
+	map.Update();
 	//skylight_->GetComponent<SkyLightComponent>()->GetDiffuseParameter().SetTexture(map.UseIrradianceDescriptor(SxavengerSystem::GetMainThreadContext()).GetIndex());
 	//skylight_->GetComponent<SkyLightComponent>()->GetSpecularParameter().SetTexture(map.UseRadianceDescriptor(SxavengerSystem::GetMainThreadContext()).GetIndex(), map.GetRadianceMiplevels());
 

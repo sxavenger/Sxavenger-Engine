@@ -188,6 +188,8 @@ public:
 
 	void Update();
 
+	void Commit();
+
 	//* async option *//
 
 	void Task(const DirectXThreadContext* context);
@@ -218,6 +220,8 @@ private:
 
 	IrradianceMap irradiance_;
 	RadianceMap   radiance_;
+
+	bool isCommited_ = false;
 
 	//* async task *//
 

@@ -134,7 +134,7 @@ void FEnvironmentMap::IrradianceMap::CreateBuffer() {
 			&prop,
 			D3D12_HEAP_FLAG_NONE,
 			&desc,
-			D3D12_RESOURCE_STATE_ALL_SHADER_RESOURCE,
+			D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE,
 			nullptr
 		);
 
@@ -345,7 +345,7 @@ void FEnvironmentMap::RadianceMap::CreateBuffer() {
 			&prop,
 			D3D12_HEAP_FLAG_NONE,
 			&desc,
-			D3D12_RESOURCE_STATE_ALL_SHADER_RESOURCE,
+			D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE,
 			nullptr
 		);
 
@@ -475,8 +475,12 @@ void FEnvironmentMap::Term() {
 void FEnvironmentMap::Update() {
 	if (task_->IsCompleted()) {
 		// irrandiance, radince を main thread で使えるようにcopy.
-		irradiance_.Commit();
-		radiance_.Commit();
+		if (!isCommited_) {
+			irradiance_.Commit();
+			radiance_.Commit();
+			isCommited_ = true;
+		}
+		
 
 		// 再度実行が必須か確認
 		bool isNeedExecute = false;
@@ -494,7 +498,11 @@ void FEnvironmentMap::Update() {
 		if (isNeedExecute) {
 			irradiance_.SetEnvironment(environment_);
 			radiance_.SetEnvironment(environment_);
+
+			task_->SetStatus(AsyncTask::Status::None);
 			SxavengerSystem::PushTask(AsyncExecution::Compute, task_);
+
+			isCommited_ = false;
 		}
 	}
 }

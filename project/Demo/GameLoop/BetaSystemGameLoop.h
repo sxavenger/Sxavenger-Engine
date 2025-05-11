@@ -50,6 +50,9 @@ private:
 
 	std::unique_ptr<MonoBehaviour> skylight_;
 
+	uint32_t index_ = 0;
+	AssetObserver<AssetTexture> environmentTexture_[2];
+
 	//FSkyAtmosphere skyAtmosphere_;
 	FEnvironmentMap map;
 
