@@ -76,6 +76,7 @@ public:
 
 		std::array<std::shared_ptr<Texture>, static_cast<uint8_t>(TextureType::Metallic) + 1> textures_;
 
+		Color3f color   = kWhite3<>;
 		float roughness = 1.0f;
 		float metallic  = 1.0f;
 

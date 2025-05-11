@@ -20,6 +20,7 @@
 
 //* external
 #include <imgui.h>
+#include <Engine/System/UI/SxImGuizmo.h>
 
 //* c++
 #include <memory>
@@ -53,8 +54,6 @@ public:
 	void Manipulate(MonoBehaviour* behaviour);
 
 	void ManipulateCanvas(MonoBehaviour* behaviour);
-
-	void ManipulateSx(MonoBehaviour* behaviour);
 
 private:
 
@@ -131,8 +130,9 @@ private:
 	ImDrawList* sceneWindow_  = nullptr;
 	ImDrawList* canvasWindow_ = nullptr;
 
-	std::optional<GuizmoUsed> guizmoUsed_ = std::nullopt;
-	GuizmoOperation operation_ = GuizmoOperation::Translate;
+	std::optional<GuizmoUsed> gizmoUsed_ = std::nullopt;
+	GuizmoOperation gizmoOperation_ = GuizmoOperation::Translate;
+	SxImGuizmo::Mode gizmoMode_ = SxImGuizmo::Mode::World;
 
 	//=========================================================================================
 	// private methods
@@ -141,7 +141,7 @@ private:
 	//* show imgui component *//
 
 	void ShowSceneMenu();
-	void ShowGuizmoMenu();
+	void ShowGizmoMenu();
 	void ShowColliderMenu();
 
 	void ShowSceneWindow();

@@ -41,9 +41,6 @@ void QuaternionTransform::SetImGuiCommand(float granularityTranslate, float gran
 		rotate = Quaternion::ToQuaternion(e);
 	}
 
-	ImGui::SameLine();
-	ImGui::Text("rotation");
-
 	SxImGui::DragVector3("scale", &scale.x, granularityScale);
 }
 

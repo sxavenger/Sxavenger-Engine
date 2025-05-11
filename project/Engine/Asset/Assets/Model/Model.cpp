@@ -30,6 +30,10 @@ void Model::AssimpMaterial::Create() {
 	if (textures_[static_cast<uint8_t>(TextureType::Diffuse)] != nullptr) {
 		Material::GetBuffer().albedo.SetTexture(textures_[static_cast<uint8_t>(TextureType::Diffuse)]->GetDescriptorSRV().GetIndex());
 		Material::GetBuffer().transparency.SetTexture(textures_[static_cast<uint8_t>(TextureType::Diffuse)]->GetDescriptorSRV().GetIndex());
+
+	} else {
+		Material::GetBuffer().albedo.SetValue(color);
+		Material::GetBuffer().transparency.SetValue(1.0f);
 	}
 
 	// bump
@@ -456,6 +460,12 @@ void Model::LoadMaterial(const aiScene* aiScene, const DirectXThreadContext* con
 		}
 
 		{ //!< parameter
+
+			// colorの取得
+			aiColor3D aiColor;
+			if (aiMaterial->Get(AI_MATKEY_COLOR_DIFFUSE, aiColor) == AI_SUCCESS) {
+				material.color = { aiColor.r, aiColor.g, aiColor.b };
+			}
 
 			// roughnessの取得
 			float roughness = 0.0f;

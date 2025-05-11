@@ -42,7 +42,7 @@ void RenderSceneEditor::ShowMainMenu() {
 		ImGui::SeparatorText("render");
 
 		ShowSceneMenu();
-		ShowGuizmoMenu();
+		ShowGizmoMenu();
 		ShowColliderMenu();
 		
 		ImGui::EndMenu();
@@ -81,25 +81,25 @@ void RenderSceneEditor::Render() {
 }
 
 void RenderSceneEditor::Manipulate(MonoBehaviour* behaviour) {
-	if (guizmoUsed_.has_value() && guizmoUsed_.value() != GuizmoUsed::Scene) {
+	if (gizmoUsed_.has_value() && gizmoUsed_.value() != GuizmoUsed::Scene) {
 		return;
 	}
 
-	ImGuizmo::SetDrawlist(sceneWindow_);
+	SxImGuizmo::SetDrawlist(sceneWindow_);
 
-	ImGuizmo::OPERATION operation = ImGuizmo::NONE;
+	SxImGuizmo::Operation operation = SxImGuizmo::NONE;
 
 	// todo: flagに変更
-	if (operation_ == GuizmoOperation::Scale) {
-		operation = ImGuizmo::SCALE;
+	if (gizmoOperation_ == GuizmoOperation::Scale) {
+		operation = SxImGuizmo::SCALE;
 	}
 
-	if (operation_ == GuizmoOperation::Translate) {
-		operation = ImGuizmo::TRANSLATE;
+	if (gizmoOperation_ == GuizmoOperation::Translate) {
+		operation = SxImGuizmo::TRANSLATE;
 	}
 
-	if (operation_ == GuizmoOperation::Rotate) {
-		operation = ImGuizmo::ROTATE;
+	if (gizmoOperation_ == GuizmoOperation::Rotate) {
+		operation = SxImGuizmo::ROTATE;
 	}
 
 	// transform component の取得
@@ -109,31 +109,29 @@ void RenderSceneEditor::Manipulate(MonoBehaviour* behaviour) {
 		return;
 	}
 
-	ImGuizmo::SetRect(sceneRect_.pos.x, sceneRect_.pos.y, sceneRect_.size.x, sceneRect_.size.y);
+	SxImGuizmo::SetRect({ sceneRect_.pos.x, sceneRect_.pos.y }, { sceneRect_.size.x, sceneRect_.size.y });
 
-	EulerTransform transform = {};
-	transform.scale     = component->GetTransform().scale;
-	transform.translate = component->GetTransform().translate;
-	transform.rotate    = Quaternion::ToEuler(component->GetTransform().rotate);
+	Matrix4x4 m = component->GetMatrix();
+	//Matrix4x4 delta = Matrix4x4::Identity();
 
-	Matrix4x4 m = component->GetTransform().ToMatrix();
-	Matrix4x4 delta = Matrix4x4::Identity();
-
-	ImGuizmo::Enable(!component->HasParent());
+	SxImGuizmo::Enable(!component->HasParent());
 
 	bool isEdit = false;
 
-	isEdit = ImGuizmo::Manipulate(
+	SxImGuizmo::GizmoOutput output = {};
+
+	isEdit = SxImGuizmo::Manipulate(
 		reinterpret_cast<const float*>(camera_->GetComponent<CameraComponent>()->GetCamera().view.m.data()),
 		reinterpret_cast<const float*>(camera_->GetComponent<CameraComponent>()->GetCamera().proj.m.data()),
+		reinterpret_cast<float*>(m.m.data()),
+		output,
 		operation,
-		ImGuizmo::WORLD,
-		reinterpret_cast<float*>(m.m.data())
+		gizmoMode_
 	);
 
-	ImGuizmo::Enable(true);
+	SxImGuizmo::Enable(true);
 
-	guizmoUsed_ = ImGuizmo::IsUsing() ? std::optional<GuizmoUsed>{GuizmoUsed::Scene} : std::nullopt;
+	gizmoUsed_ = SxImGuizmo::IsUsing() ? std::optional<GuizmoUsed>{GuizmoUsed::Scene} : std::nullopt;
 
 	if (component->HasParent()) {
 		return;
@@ -143,30 +141,25 @@ void RenderSceneEditor::Manipulate(MonoBehaviour* behaviour) {
 		return;
 	}
 
-	ImGuizmo::DecomposeMatrixToComponents(
-		reinterpret_cast<const float*>(m.m.data()),
-		&transform.translate.x,
-		&transform.rotate.x,
-		&transform.scale.x
-	);
+	switch (output.type) {
+		case SxImGuizmo::GizmoOutput::OutputType::Translation:
+			component->GetTransform().translate += { output.value.x, output.value.y, output.value.z };
+			break;
 
-	if (operation_ == GuizmoOperation::Scale) {
-		component->GetTransform().scale = transform.scale;
-	}
+		case SxImGuizmo::GizmoOutput::OutputType::Scale:
+			component->GetTransform().scale = { output.value.x, output.value.y, output.value.z };
+			break;
 
-	if (operation_ == GuizmoOperation::Translate) {
-		component->GetTransform().translate = transform.translate;
-	}
-
-	if (operation_ == GuizmoOperation::Rotate) {
-		component->GetTransform().rotate = Quaternion::ToQuaternion(transform.rotate);
+		case SxImGuizmo::GizmoOutput::OutputType::Rotation:
+			component->GetTransform().rotate *= Quaternion(output.value.x, output.value.y, output.value.z, output.value.w);
+			break;
 	}
 
 	component->UpdateMatrix();
 }
 
 void RenderSceneEditor::ManipulateCanvas(MonoBehaviour* behaviour) {
-	if (guizmoUsed_.has_value() && guizmoUsed_.value() != GuizmoUsed::Canvas) {
+	if (gizmoUsed_.has_value() && gizmoUsed_.value() != GuizmoUsed::Canvas) {
 		return;
 	}
 
@@ -176,11 +169,11 @@ void RenderSceneEditor::ManipulateCanvas(MonoBehaviour* behaviour) {
 	ImGuizmo::OPERATION operation = ImGuizmo::NONE;
 
 	// todo: flagに変更
-	if (operation_ == GuizmoOperation::Scale) {
+	if (gizmoOperation_ == GuizmoOperation::Scale) {
 		operation = ImGuizmo::SCALE_X | ImGuizmo::SCALE_Y;
 	}
 
-	if (operation_ == GuizmoOperation::Translate) {
+	if (gizmoOperation_ == GuizmoOperation::Translate) {
 		operation = ImGuizmo::TRANSLATE_X | ImGuizmo::TRANSLATE_Y;
 	}
 
@@ -208,7 +201,7 @@ void RenderSceneEditor::ManipulateCanvas(MonoBehaviour* behaviour) {
 		reinterpret_cast<float*>(m.m.data())
 	);
 
-	guizmoUsed_ = ImGuizmo::IsUsing() ? std::optional<GuizmoUsed>{GuizmoUsed::Canvas} : std::nullopt;
+	gizmoUsed_ = ImGuizmo::IsUsing() ? std::optional<GuizmoUsed>{GuizmoUsed::Canvas} : std::nullopt;
 
 	if (!isEdit) {
 		return;
@@ -223,66 +216,15 @@ void RenderSceneEditor::ManipulateCanvas(MonoBehaviour* behaviour) {
 		&transform.scale.x
 	);
 
-	if (operation_ == GuizmoOperation::Scale) {
+	if (gizmoOperation_ == GuizmoOperation::Scale) {
 		component->GetTransform2d().scale = { transform.scale.x, transform.scale.y };
 	}
 
-	if (operation_ == GuizmoOperation::Translate) {
+	if (gizmoOperation_ == GuizmoOperation::Translate) {
 		component->GetTransform2d().translate = { transform.translate.x, transform.translate.y };
 	}
 
 	ImGuizmo::SetOrthographic(false);
-}
-
-void RenderSceneEditor::ManipulateSx(MonoBehaviour* behaviour) {
-	if (guizmoUsed_.has_value() && guizmoUsed_.value() != GuizmoUsed::Scene) {
-		return;
-	}
-
-	SxImGuizmo::SetDrawlist(sceneWindow_);
-
-	SxImGuizmo::Operation operation = SxImGuizmo::NONE;
-
-	// todo: flagに変更
-	if (operation_ == GuizmoOperation::Scale) {
-		operation = SxImGuizmo::SCALE;
-	}
-
-	if (operation_ == GuizmoOperation::Translate) {
-		operation = SxImGuizmo::TRANSLATE;
-	}
-
-	if (operation_ == GuizmoOperation::Rotate) {
-		operation = SxImGuizmo::ROTATE;
-	}
-
-	// transform component の取得
-	auto component = behaviour->GetComponent<TransformComponent>();
-
-	if (component == nullptr) { //!< transform component が存在してない場合
-		return;
-	}
-
-	SxImGuizmo::SetRect({ sceneRect_.pos.x, sceneRect_.pos.y }, { sceneRect_.size.x, sceneRect_.size.y });
-
-	Matrix4x4 m = component->GetMatrix();
-	//Matrix4x4 delta = Matrix4x4::Identity();
-
-	SxImGuizmo::Enable(!component->HasParent());
-
-	bool isEdit = false;
-
-	isEdit = SxImGuizmo::Manipulate(
-		reinterpret_cast<const float*>(camera_->GetComponent<CameraComponent>()->GetCamera().view.m.data()),
-		reinterpret_cast<const float*>(camera_->GetComponent<CameraComponent>()->GetCamera().proj.m.data()),
-		reinterpret_cast<float*>(m.m.data()),
-		operation,
-		SxImGuizmo::WORLD
-	);
-
-	SxImGuizmo::Enable(true);
-
-	guizmoUsed_ = SxImGuizmo::IsUsing() ? std::optional<GuizmoUsed>{GuizmoUsed::Scene} : std::nullopt;
 }
 
 void RenderSceneEditor::ShowSceneMenu() {
@@ -312,17 +254,26 @@ void RenderSceneEditor::ShowSceneMenu() {
 	}
 }
 
-void RenderSceneEditor::ShowGuizmoMenu() {
-	if (ImGui::BeginMenu("guizmo")) {
+void RenderSceneEditor::ShowGizmoMenu() {
+	if (ImGui::BeginMenu("gizmo")) {
 		MenuPadding();
-		ImGui::SeparatorText("guizmo");
+		ImGui::SeparatorText("gizmo");
 
-		SxImGui::RadioButton("translate", &operation_, GuizmoOperation::Translate);
+		ImGui::Text("operation");
+		ImGui::Separator();
+
+		SxImGui::RadioButton("translate", &gizmoOperation_, GuizmoOperation::Translate);
 		ImGui::SameLine();
-		SxImGui::RadioButton("rotate", &operation_, GuizmoOperation::Rotate);
+		SxImGui::RadioButton("rotate", &gizmoOperation_, GuizmoOperation::Rotate);
 		ImGui::SameLine();
-		SxImGui::RadioButton("scale", &operation_, GuizmoOperation::Scale);
-		
+		SxImGui::RadioButton("scale", &gizmoOperation_, GuizmoOperation::Scale);
+
+		ImGui::Text("mode");
+		ImGui::Separator();
+
+		SxImGui::RadioButton("world", &gizmoMode_, SxImGuizmo::World);
+		ImGui::SameLine();
+		SxImGui::RadioButton("local", &gizmoMode_, SxImGuizmo::Local);
 
 		ImGui::EndMenu();
 	}

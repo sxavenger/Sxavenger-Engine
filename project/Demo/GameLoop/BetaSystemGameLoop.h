@@ -44,7 +44,10 @@ private:
 
 	std::unique_ptr<MonoBehaviour> camera_;
 
-	std::unique_ptr<MonoBehaviour> light_;
+	std::unique_ptr<MonoBehaviour> lightA_;
+	std::unique_ptr<MonoBehaviour> lightB_;
+
+
 	std::unique_ptr<MonoBehaviour> skylight_;
 
 	//FSkyAtmosphere skyAtmosphere_;

@@ -55,28 +55,22 @@ void BetaSystemGameLoop::InitSystem() {
 
 	camera_ = ComponentHelper::CreateCameraMonoBehaviour();
 
-	SxavengerAsset::TryImport<AssetModel>("assets/models/foundation.gltf");
+	SxavengerAsset::TryImport<AssetModel>("assets/models/primitive/sample_scene.obj");
 	SxavengerAsset::TryImport<AssetModel>("assets/models/PBR_Sphere_Test/model/PBR_Sphere.gltf");
 	SxavengerAsset::TryImport<AssetModel>("assets/models/chessboard/ABeautifulGame.gltf");
-
-	auto env = SxavengerAsset::TryImport<AssetTexture>("assets/textures/EnvHDR.dds");
-	//SxavengerAsset::TryImport<AssetTexture>("assets/textures/EnvHDR.dds");
 	
-	light_  = ComponentHelper::CreatePointLightMonoBehaviour();
-	//light_  = ComponentHelper::CreateDirectionalLightMonoBehaviour();
+	lightA_  = ComponentHelper::CreatePointLightMonoBehaviour();
+	lightB_  = ComponentHelper::CreateDirectionalLightMonoBehaviour();
 
-	//skyAtmosphere_.Create({ 1024, 1024 });
-	//skyAtmosphere_.Update(SxavengerSystem::GetMainThreadContext());
+	//map.Create({ 1024, 1024 });
+	//map.SetEnvironment(env.WaitGet()->GetGPUHandleSRV());
+	//map.Update();
 
-	map.Create({ 1024, 1024 });
-	map.SetEnvironment(env.WaitGet()->GetGPUHandleSRV());
-	map.Update();
-
-	skylight_ = ComponentHelper::CreateMonoBehaviour();
-	skylight_->SetName("sky light");
-	skylight_->AddComponent<SkyLightComponent>();
-	skylight_->GetComponent<SkyLightComponent>()->GetDiffuseParameter().SetTexture(map.UseIrradianceDescriptor(SxavengerSystem::GetMainThreadContext()).GetIndex());
-	skylight_->GetComponent<SkyLightComponent>()->GetSpecularParameter().SetTexture(map.UseRadianceDescriptor(SxavengerSystem::GetMainThreadContext()).GetIndex(), map.GetRadianceMiplevels());
+	//skylight_ = ComponentHelper::CreateMonoBehaviour();
+	//skylight_->SetName("sky light");
+	//skylight_->AddComponent<SkyLightComponent>();
+	//skylight_->GetComponent<SkyLightComponent>()->GetDiffuseParameter().SetTexture(map.UseIrradianceDescriptor(SxavengerSystem::GetMainThreadContext()).GetIndex());
+	//skylight_->GetComponent<SkyLightComponent>()->GetSpecularParameter().SetTexture(map.UseRadianceDescriptor(SxavengerSystem::GetMainThreadContext()).GetIndex(), map.GetRadianceMiplevels());
 
 	camera_->AddComponent<PostProcessLayerComponent>();
 	camera_->GetComponent<PostProcessLayerComponent>()->AddPostProcess<PostProcessExposure>();
@@ -95,9 +89,9 @@ void BetaSystemGameLoop::UpdateSystem() {
 
 	//skyAtmosphere_.Update(SxavengerSystem::GetMainThreadContext());
 
-	map.Update();
-	skylight_->GetComponent<SkyLightComponent>()->GetDiffuseParameter().SetTexture(map.UseIrradianceDescriptor(SxavengerSystem::GetMainThreadContext()).GetIndex());
-	skylight_->GetComponent<SkyLightComponent>()->GetSpecularParameter().SetTexture(map.UseRadianceDescriptor(SxavengerSystem::GetMainThreadContext()).GetIndex(), map.GetRadianceMiplevels());
+	//map.Update();
+	//skylight_->GetComponent<SkyLightComponent>()->GetDiffuseParameter().SetTexture(map.UseIrradianceDescriptor(SxavengerSystem::GetMainThreadContext()).GetIndex());
+	//skylight_->GetComponent<SkyLightComponent>()->GetSpecularParameter().SetTexture(map.UseRadianceDescriptor(SxavengerSystem::GetMainThreadContext()).GetIndex(), map.GetRadianceMiplevels());
 
 	//-----------------------------------------------------------------------------------------
 	// SystemUpdate...?

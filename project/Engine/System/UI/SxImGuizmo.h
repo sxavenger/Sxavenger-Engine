@@ -133,6 +133,9 @@ namespace SxImGuizmo {
 		static vec_t makeVect(ImVec2 v) { vec_t res; res.x = v.x; res.y = v.y; res.z = 0.f; res.w = 0.f; return res; }
 	};
 
+	vec_t AxisAngle(const vec_t& axis, float angle);
+	vec_t InverseQuat(const vec_t& quat);
+
 	////////////////////////////////////////////////////////////////////////////////////////////
 	// matrix_t structure
 	////////////////////////////////////////////////////////////////////////////////////////////
@@ -344,29 +347,44 @@ namespace SxImGuizmo {
 	// Mode enum
 	////////////////////////////////////////////////////////////////////////////////////////////
 	enum Mode : uint32_t {
-		WORLD,
-		LOCAL
+		World,
+		Local
 	};
 
 	////////////////////////////////////////////////////////////////////////////////////////////
-	// Transform structure
+	// GizmoOutput structure
 	////////////////////////////////////////////////////////////////////////////////////////////
-	struct Transform {
+	struct GizmoOutput {
 	public:
 
-		//=========================================================================================
-		// public methods
-		//=========================================================================================
+		////////////////////////////////////////////////////////////////////////////////////////////
+		// ModifiedType enum class
+		////////////////////////////////////////////////////////////////////////////////////////////
+		enum class OutputType {
+			None,
+			Translation,
+			Rotation,
+			Scale
+		};
+
+	public:
 
 		//=========================================================================================
 		// public variables
 		//=========================================================================================
 
-		vec_t translation;
-		vec_t rotate;
-		vec_t scale;
+		OutputType type = OutputType::None;
+		vec_t value;
 
-		// euler || quaterion
+		//* 戻り値
+		// translation: Vector3();
+		// scale:       Vector3();
+		// rotation:    Quaterion();
+
+		//* originへの合成方法
+		// translation: origin += this;
+		// scale:       origin = this;
+		// rotation:    origin *= this;
 
 	};
 
@@ -388,7 +406,7 @@ namespace SxImGuizmo {
 
 		void ComputeCameraRay();
 
-		void ComputeContext(const float* _view, const float* _proj, float* _matrix, Mode _mode);
+		void ComputeContext(const float* _view, const float* _proj, const float* _matrix, Mode _mode);
 
 		void ComputeColors(std::array<ImU32, 7>& colors, MoveType type, Operation operation);
 
@@ -414,11 +432,11 @@ namespace SxImGuizmo {
 
 		// todo: deltaの追加, matrixではなく, vector || quaterion でやる
 
-		bool HandleTranslation(const float* matrix, Operation op, MoveType& type);
+		bool HandleTranslation(GizmoOutput& output, Operation op, MoveType& type);
 
-		bool HandleScale(Operation op, MoveType& type);
+		bool HandleScale(GizmoOutput& output, Operation op, MoveType& type);
 
-		bool HandleRotation(Operation op, MoveType& type);
+		bool HandleRotation(GizmoOutput& output, Operation op, MoveType& type);
 
 		//* draw option *//
 
@@ -550,7 +568,7 @@ namespace SxImGuizmo {
 	IMGUI_API bool IsUsing();
 
 	// todo: matrix -> objectのsrtに変更
-	IMGUI_API bool Manipulate(const float* view, const float* proj, float* matrix, Operation operation, Mode mode);
+	IMGUI_API bool Manipulate(const float* view, const float* proj, const float* matrix, GizmoOutput& output, Operation operation, Mode mode);
 
 	IMGUI_API Style& GetStyle();
 

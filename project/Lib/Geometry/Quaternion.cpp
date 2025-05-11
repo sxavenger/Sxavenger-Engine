@@ -153,7 +153,7 @@ Quaternion Quaternion::Normalize() const noexcept {
 
 Quaternion Quaternion::Inverse() const noexcept {
 	Quaternion conj = Conjugate();
-	float norm2 = imaginary.x * imaginary.x + imaginary.y * imaginary.y + imaginary.z * imaginary.z + w * w;
+	float norm2 = Vector3f::Dot(imaginary, imaginary) + w * w;
 
 	return { conj.imaginary / norm2, conj.w / norm2 };
 }

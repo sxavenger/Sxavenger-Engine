@@ -174,6 +174,18 @@ void vec_t::TransformVector(const matrix_t& matrix) {
 	w = out.w;
 }
 
+vec_t AxisAngleQuat(const vec_t& axis, float angle) {
+	vec_t i = axis * std::sin(angle * 0.5f);
+	return { i.x, i.y, i.z, std::cos(angle * 0.5f) };
+}
+
+vec_t InverseQuat(const vec_t& quat) {
+	vec_t conj = { -quat.x, -quat.y, -quat.z, quat.w };
+	float norm2 = quat.Dot(quat);
+
+	return { conj.x / norm2, conj.y / norm2, conj.z / norm2, conj.w / norm2 };
+}
+
 float matrix_t::Inverse(const matrix_t& srcMatrix, bool affine) {
 	float det = 0;
 
@@ -476,7 +488,7 @@ void Context::ComputeCameraRay() {
 	rayDir = Normalized(rayEnd - rayOrigin);
 }
 
-void Context::ComputeContext(const float* _view, const float* _proj, float* _matrix, Mode _mode) {
+void Context::ComputeContext(const float* _view, const float* _proj, const float* _matrix, Mode _mode) {
 	mode = _mode;
 	view = *(matrix_t*)_view;
 	proj = *(matrix_t*)_proj;
@@ -485,7 +497,7 @@ void Context::ComputeContext(const float* _view, const float* _proj, float* _mat
 	modelLocal = *(matrix_t*)_matrix;
 	modelLocal.OrthoNormalize();
 
-	if (mode == LOCAL) {
+	if (mode == Mode::Local) {
 		model = modelLocal;
 
 	} else {
@@ -879,12 +891,10 @@ MoveType Context::GetRotationType(Operation op) {
 	return type;
 }
 
-bool Context::HandleTranslation(const float* matrix, Operation op, MoveType& type) {
+bool Context::HandleTranslation(GizmoOutput& output, Operation op, MoveType& type) {
 	if (!Intersects(op, TRANSLATE) || type != MT_NONE) {
 		return false;
 	}
-
-	matrix;
 
 	const ImGuiIO& io = ImGui::GetIO();
 	bool modified     = false;
@@ -917,7 +927,8 @@ bool Context::HandleTranslation(const float* matrix, Operation op, MoveType& typ
 
 		translationLastDelta = delta;
 
-		//vec_t deltaTransform = delta;
+		output.type  = GizmoOutput::OutputType::Translation;
+		output.value = delta;
 
 		if (!io.MouseDown[0]) {
 			isUsing = false;
@@ -967,7 +978,7 @@ bool Context::HandleTranslation(const float* matrix, Operation op, MoveType& typ
 	return modified;
 }
 
-bool Context::HandleScale(Operation op, MoveType& type) {
+bool Context::HandleScale(GizmoOutput& output, Operation op, MoveType& type) {
 
 	if (!Intersects(op, SCALE) || type != MT_NONE || !isMouseOver) {
 		return false;
@@ -1039,10 +1050,11 @@ bool Context::HandleScale(Operation op, MoveType& type) {
 		if (scaleLast != scale) {
 			modified = true;
 		}
+
 		scaleLast = scale;
 
-		//vec_t deltaScale = scale * scaleValueOrigin;
-		// もしかしたらdeltaMatの処理の方が正しいかも
+		output.type  = GizmoOutput::OutputType::Scale;
+		output.value = scale * scaleValueOrigin;
 
 		if (!io.MouseDown[0]) {
 			isUsing = false;
@@ -1055,13 +1067,13 @@ bool Context::HandleScale(Operation op, MoveType& type) {
 	return modified;
 }
 
-bool Context::HandleRotation(Operation op, MoveType& type) {
+bool Context::HandleRotation(GizmoOutput& output, Operation op, MoveType& type) {
 	if (!Intersects(op, ROTATE) || type != MT_NONE || !isMouseOver) {
 		return false;
 	}
 
 	ImGuiIO& io = ImGui::GetIO();
-	bool applyRotationLocaly = mode == LOCAL;
+	bool applyRotationLocaly = mode == Mode::Local;
 	bool modified = false;
 
 	if (!isUsing) {
@@ -1105,16 +1117,30 @@ bool Context::HandleRotation(Operation op, MoveType& type) {
 
 		// skip snap.
 
-		//vec_t rotationAxisLocalSpace;
-		//rotationAxisLocalSpace.TransformVector({ translationPlan.x, translationPlan.y, translationPlan.z, 0.f }, modelInverse);
-		//rotationAxisLocalSpace.Normalize();
+		vec_t rotationAxisLocalSpace;
+		rotationAxisLocalSpace.TransformVector({ translationPlan.x, translationPlan.y, translationPlan.z, 0.f }, modelInverse);
+		rotationAxisLocalSpace.Normalize();
 
-		// TODO: delta rotation
-		if (applyRotationLocaly) {
-			
-		} else {
-			
+		output.type  = GizmoOutput::OutputType::Rotation;
+		
+
+		if (mode == Mode::Local) {
+			output.value = AxisAngleQuat({ rotationAxisLocalSpace.x, rotationAxisLocalSpace.y, rotationAxisLocalSpace.z }, rotationAngle - rotationAngleOrigin);
+
+		} else if (mode == Mode::World) {
+
+
+
+			// FIXME: worldの回転方向が2軸以上だとおかしい
+			output.value = AxisAngleQuat({ rotationAxisLocalSpace.x, rotationAxisLocalSpace.y, rotationAxisLocalSpace.z }, rotationAngleOrigin - rotationAngle);
+			output.value = InverseQuat(output.value);
 		}
+
+		if (rotationAngle != rotationAngleOrigin) {
+			modified = true;
+		}
+
+		rotationAngleOrigin = rotationAngle;
 
 		if (!io.MouseDown[0]) {
 			isUsing   = false;
@@ -1433,9 +1459,11 @@ bool IsUsing() {
 	return (sContext.isUsing && (sContext.GetCurrentId() == sContext.editingId)) || sContext.isUsingBounds;
 }
 
-bool Manipulate(const float* view, const float* proj, float* matrix, Operation operation, Mode mode) {
+bool Manipulate(const float* view, const float* proj, const float* matrix, GizmoOutput& output, Operation operation, Mode mode) {
+	output = {};
+
 	sContext.drawList->PushClipRect(sContext.position, sContext.max, false);
-	sContext.ComputeContext(view, proj, matrix, (operation & SCALE) ? LOCAL : mode);
+	sContext.ComputeContext(view, proj, matrix, (operation & SCALE) ? Mode::Local : mode);
 
 	// behind camera
 	vec_t camSpacePosition;
@@ -1448,9 +1476,9 @@ bool Manipulate(const float* view, const float* proj, float* matrix, Operation o
 	bool manipulated = false;
 
 	if (sContext.isEnable && !sContext.isUsingBounds) {
-		manipulated |= sContext.HandleTranslation(matrix, operation, type);
-		manipulated |= sContext.HandleScale(operation, type);
-		manipulated |= sContext.HandleRotation(operation, type);
+		manipulated |= sContext.HandleTranslation(output, operation, type);
+		manipulated |= sContext.HandleScale(output, operation, type);
+		manipulated |= sContext.HandleRotation(output, operation, type);
 	}
 
 	// skiped local bounds.
