@@ -363,7 +363,8 @@ namespace SxImGuizmo {
 		enum class OutputType {
 			None,
 			Translation,
-			Rotation,
+			RotationLocal,
+			RotationWorld,
 			Scale
 		};
 
@@ -382,10 +383,12 @@ namespace SxImGuizmo {
 		// rotation:    Quaterion();
 
 		//* originへの合成方法
-		// translation: origin += this;
-		// scale:       origin = this;
-		// rotation:    origin *= this;
+		// Translation:   new = origin + this;
+		// Scale:         new = this;
+		// RotationLocal: new = origin * this;
+		// RotationWorld: new = this * origin;
 
+		// rotationを統合したい
 	};
 
 	////////////////////////////////////////////////////////////////////////////////////////////

@@ -1117,23 +1117,22 @@ bool Context::HandleRotation(GizmoOutput& output, Operation op, MoveType& type) 
 
 		// skip snap.
 
-		vec_t rotationAxisLocalSpace;
-		rotationAxisLocalSpace.TransformVector({ translationPlan.x, translationPlan.y, translationPlan.z, 0.f }, modelInverse);
-		rotationAxisLocalSpace.Normalize();
-
-		output.type  = GizmoOutput::OutputType::Rotation;
-		
-
 		if (mode == Mode::Local) {
+			output.type = GizmoOutput::OutputType::RotationLocal;
+
+			vec_t rotationAxisLocalSpace;
+			rotationAxisLocalSpace.TransformVector({ translationPlan.x, translationPlan.y, translationPlan.z, 0.f }, modelInverse);
+			rotationAxisLocalSpace.Normalize();
+
 			output.value = AxisAngleQuat({ rotationAxisLocalSpace.x, rotationAxisLocalSpace.y, rotationAxisLocalSpace.z }, rotationAngle - rotationAngleOrigin);
 
 		} else if (mode == Mode::World) {
+			output.type = GizmoOutput::OutputType::RotationWorld;
 
+			vec_t rotationAxisWorldSpace = { translationPlan.x, translationPlan.y, translationPlan.z };
+			rotationAxisWorldSpace.Normalize();
 
-
-			// FIXME: worldの回転方向が2軸以上だとおかしい
-			output.value = AxisAngleQuat({ rotationAxisLocalSpace.x, rotationAxisLocalSpace.y, rotationAxisLocalSpace.z }, rotationAngleOrigin - rotationAngle);
-			output.value = InverseQuat(output.value);
+			output.value = AxisAngleQuat({ rotationAxisWorldSpace.x, rotationAxisWorldSpace.y, rotationAxisWorldSpace.z }, rotationAngle - rotationAngleOrigin);
 		}
 
 		if (rotationAngle != rotationAngleOrigin) {

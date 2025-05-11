@@ -150,8 +150,12 @@ void RenderSceneEditor::Manipulate(MonoBehaviour* behaviour) {
 			component->GetTransform().scale = { output.value.x, output.value.y, output.value.z };
 			break;
 
-		case SxImGuizmo::GizmoOutput::OutputType::Rotation:
+		case SxImGuizmo::GizmoOutput::OutputType::RotationLocal:
 			component->GetTransform().rotate *= Quaternion(output.value.x, output.value.y, output.value.z, output.value.w);
+			break;
+
+		case SxImGuizmo::GizmoOutput::OutputType::RotationWorld:
+			component->GetTransform().rotate = Quaternion(output.value.x, output.value.y, output.value.z, output.value.w) * component->GetTransform().rotate;
 			break;
 	}
 
