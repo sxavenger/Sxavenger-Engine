@@ -106,11 +106,6 @@ private:
 
 	FRenderTargetTextures* textures_ = nullptr;
 
-	//* geometry pass parameter *//
-
-	std::unique_ptr<DxObject::VectorDimensionBuffer<TransformationMatrix>>     transforms_;
-	std::unique_ptr<DxObject::VectorDimensionBuffer<Material::MaterialBuffer>> materials_;
-
 	//=========================================================================================
 	// private methods
 	//=========================================================================================
@@ -123,7 +118,6 @@ private:
 
 	void RenderGeometryPass(const DirectXThreadContext* context, const Config& config);
 	void RenderGeometryStaticMeshDefault(const DirectXThreadContext* context, const Config& config);
-	void RenderGeometryStaticMesh(const DirectXThreadContext* context, const Config& config);
 	void RenderGeometrySkinnedMesh(const DirectXThreadContext* context, const Config& config);
 
 	void LightingPass(const DirectXThreadContext* context, const Config& config);
@@ -131,6 +125,9 @@ private:
 	void LightingPassDirectionalLight(const DirectXThreadContext* context, const Config& config);
 	void LightingPassPointLight(const DirectXThreadContext* context, const Config& config);
 	void LightingPassSkyLight(const DirectXThreadContext* context, const Config& config);
+
+	void AmbientProcessPass(const DirectXThreadContext* context, const Config& config);
+	void AmbientProcessPassSkyBox(const DirectXThreadContext* context, const Config& config);
 
 	void RenderTransparentBasePass(const DirectXThreadContext* context, const Config& config);
 	void RenderTransparentBaseStaticMesh(const DirectXThreadContext* context, const Config& config);

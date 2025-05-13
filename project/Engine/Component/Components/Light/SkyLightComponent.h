@@ -19,6 +19,7 @@
 ////////////////////////////////////////////////////////////////////////////////////////////
 class SkyLightComponent
 	: public BaseComponent {
+	//!< TODO: FEnvironmentMapをSkyLightComponentに移行する。
 public:
 
 	////////////////////////////////////////////////////////////////////////////////////////////
@@ -95,6 +96,9 @@ public:
 	const SpecularParameter& GetSpecularParameter() const;
 	SpecularParameter& GetSpecularParameter();
 
+	void SetEnvironment(const D3D12_GPU_DESCRIPTOR_HANDLE& texture) { environment_ = texture; }
+	const std::optional<D3D12_GPU_DESCRIPTOR_HANDLE>& GetEnvironment() const { return environment_; }
+
 private:
 
 	//=========================================================================================
@@ -103,5 +107,6 @@ private:
 
 	std::unique_ptr<DxObject::DimensionBuffer<DiffuseParameter>> diffuseParameter_;
 	std::unique_ptr<DxObject::DimensionBuffer<SpecularParameter>> specularParameter_;
+	std::optional<D3D12_GPU_DESCRIPTOR_HANDLE> environment_;
 
 };

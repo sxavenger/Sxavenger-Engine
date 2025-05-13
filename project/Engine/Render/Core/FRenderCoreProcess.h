@@ -18,8 +18,7 @@ public:
 	// FRenderCoreProcess class
 	////////////////////////////////////////////////////////////////////////////////////////////
 	enum class ProcessType : uint32_t {
-		NLAO,
-		NLAO_Blur,
+		Environment,
 		Bloom,
 		LUT,
 		Exposure,
@@ -57,5 +56,10 @@ private:
 
 	static const Vector2ui kNumThreadSize_;
 
+	//=========================================================================================
+	// private methods
+	//=========================================================================================
+
+	void CreatePipeline(ProcessType type, const std::filesystem::path& filepath);
 
 };

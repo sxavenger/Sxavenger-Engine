@@ -71,6 +71,7 @@ void BetaSystemGameLoop::InitSystem() {
 	skylight_ = ComponentHelper::CreateMonoBehaviour();
 	skylight_->SetName("sky light");
 	skylight_->AddComponent<SkyLightComponent>();
+	skylight_->GetComponent<SkyLightComponent>()->SetEnvironment(environmentTexture_[index_].WaitGet()->GetGPUHandleSRV());
 	skylight_->GetComponent<SkyLightComponent>()->GetDiffuseParameter().SetTexture(map.UseIrradianceDescriptor(SxavengerSystem::GetMainThreadContext()).GetIndex());
 	skylight_->GetComponent<SkyLightComponent>()->GetSpecularParameter().SetTexture(map.UseRadianceDescriptor(SxavengerSystem::GetMainThreadContext()).GetIndex(), map.GetRadianceMiplevels());
 
@@ -94,6 +95,7 @@ void BetaSystemGameLoop::UpdateSystem() {
 	if (SxavengerSystem::IsTriggerKey(KeyId::KEY_F)) {
 		index_ = (index_ + 1) % 2;
 		map.SetEnvironment(environmentTexture_[index_].WaitGet()->GetGPUHandleSRV());
+		skylight_->GetComponent<SkyLightComponent>()->SetEnvironment(environmentTexture_[index_].WaitGet()->GetGPUHandleSRV());
 	}
 
 	map.Update();

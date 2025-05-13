@@ -12,23 +12,23 @@ const Vector2ui FRenderCoreProcess::kNumThreadSize_ = { 16, 16 };
 
 void FRenderCoreProcess::Init() {
 
-	{ //!< nlao
-		auto process = std::make_unique<CustomReflectionComputePipeline>();
-		process->CreateAsset(L"packages/shaders/render/AmbientProcess/NLAO.cs.hlsl");
-		process->RegisterBlob();
-		process->ReflectionPipeline(SxavengerSystem::GetDxDevice());
+	//{ //!< nlao
+	//	auto process = std::make_unique<CustomReflectionComputePipeline>();
+	//	process->CreateAsset(L"packages/shaders/render/AmbientProcess/NLAO.cs.hlsl");
+	//	process->RegisterBlob();
+	//	process->ReflectionPipeline(SxavengerSystem::GetDxDevice());
 
-		processes_[static_cast<uint32_t>(ProcessType::NLAO)] = std::move(process);
-	}
+	//	processes_[static_cast<uint32_t>(ProcessType::NLAO)] = std::move(process);
+	//}
 
-	{ //!< nlao blur
-		auto process = std::make_unique<CustomReflectionComputePipeline>();
-		process->CreateAsset(L"packages/shaders/render/AmbientProcess/NLAOBlur.cs.hlsl");
-		process->RegisterBlob();
-		process->ReflectionPipeline(SxavengerSystem::GetDxDevice());
+	//{ //!< nlao blur
+	//	auto process = std::make_unique<CustomReflectionComputePipeline>();
+	//	process->CreateAsset(L"packages/shaders/render/AmbientProcess/NLAOBlur.cs.hlsl");
+	//	process->RegisterBlob();
+	//	process->ReflectionPipeline(SxavengerSystem::GetDxDevice());
 
-		processes_[static_cast<uint32_t>(ProcessType::NLAO_Blur)] = std::move(process);
-	}
+	//	processes_[static_cast<uint32_t>(ProcessType::NLAO_Blur)] = std::move(process);
+	//}
 
 	//{ //!< overlay
 	//	auto process = std::make_unique<CustomReflectionComputePipeline>();
@@ -39,50 +39,23 @@ void FRenderCoreProcess::Init() {
 	//	processes_[static_cast<uint32_t>(ProcessType::Overlay)] = std::move(process);
 	//}
 
-	{ //!< bloom
-		auto process = std::make_unique<CustomReflectionComputePipeline>();
-		process->CreateAsset(L"packages/shaders/render/PostProcess/Bloom.cs.hlsl");
-		process->RegisterBlob();
-		process->ReflectionPipeline(SxavengerSystem::GetDxDevice());
+	//!< environment
+	CreatePipeline(ProcessType::Environment, L"packages/shaders/render/PostProcess/Environment.cs.hlsl");
 
-		processes_[static_cast<uint32_t>(ProcessType::Bloom)] = std::move(process);
-	}
+	//!< bloom
+	CreatePipeline(ProcessType::Bloom, L"packages/shaders/render/PostProcess/Bloom.cs.hlsl");
 
-	{ //!< exposure
-		auto process = std::make_unique<CustomReflectionComputePipeline>();
-		process->CreateAsset(L"packages/shaders/render/PostProcess/Exposure.cs.hlsl");
-		process->RegisterBlob();
-		process->ReflectionPipeline(SxavengerSystem::GetDxDevice());
+	//!< exposure
+	CreatePipeline(ProcessType::Exposure, L"packages/shaders/render/PostProcess/Exposure.cs.hlsl");
 
-		processes_[static_cast<uint32_t>(ProcessType::Exposure)] = std::move(process);
-	}
+	//!< lut
+	CreatePipeline(ProcessType::LUT, L"packages/shaders/render/PostProcess/LUT.cs.hlsl");
 
-	{ //!< lut
-		auto process = std::make_unique<CustomReflectionComputePipeline>();
-		process->CreateAsset(L"packages/shaders/render/PostProcess/LUT.cs.hlsl");
-		process->RegisterBlob();
-		process->ReflectionPipeline(SxavengerSystem::GetDxDevice());
+	//!< dof
+	CreatePipeline(ProcessType::DoF, L"packages/shaders/render/PostProcess/DoF.cs.hlsl");
 
-		processes_[static_cast<uint32_t>(ProcessType::LUT)] = std::move(process);
-	}
-
-	{ //!< dof
-		auto process = std::make_unique<CustomReflectionComputePipeline>();
-		process->CreateAsset(L"packages/shaders/render/PostProcess/DoF.cs.hlsl");
-		process->RegisterBlob();
- 		process->ReflectionPipeline(SxavengerSystem::GetDxDevice());
-
-		processes_[static_cast<uint32_t>(ProcessType::DoF)] = std::move(process);
-	}
-
-	{ //!< vignette
-		auto process = std::make_unique<CustomReflectionComputePipeline>();
-		process->CreateAsset(L"packages/shaders/render/PostProcess/Vignette.cs.hlsl");
-		process->RegisterBlob();
-		process->ReflectionPipeline(SxavengerSystem::GetDxDevice());
-
-		processes_[static_cast<uint32_t>(ProcessType::Vignette)] = std::move(process);
-	}
+	//!< vignette
+	CreatePipeline(ProcessType::Vignette, L"packages/shaders/render/PostProcess/Vignette.cs.hlsl");
 }
 
 void FRenderCoreProcess::SetPipeline(ProcessType type, const DirectXThreadContext* context) {
@@ -95,4 +68,13 @@ void FRenderCoreProcess::BindComputeBuffer(ProcessType type, const DirectXThread
 
 void FRenderCoreProcess::Dispatch(const DirectXThreadContext* context, const Vector2ui& size) const {
 	context->GetCommandList()->Dispatch(DxObject::RoundUp(size.x, kNumThreadSize_.x), DxObject::RoundUp(size.y, kNumThreadSize_.y), 1);
+}
+
+void FRenderCoreProcess::CreatePipeline(ProcessType type, const std::filesystem::path& filepath) {
+	auto process = std::make_unique<CustomReflectionComputePipeline>();
+	process->CreateAsset(filepath);
+	process->RegisterBlob();
+	process->ReflectionPipeline(SxavengerSystem::GetDxDevice());
+
+	processes_[static_cast<uint32_t>(type)] = std::move(process);
 }

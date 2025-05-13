@@ -461,6 +461,7 @@ void FEnvironmentMap::Create(const Vector2ui& size) {
 	radiance_.Create(size);
 
 	task_ = std::make_shared<AsyncTask>();
+	task_->SetTag("prefiltered environment map");
 	task_->SetFunction([this](const AsyncThread* thread) {
 		this->Task(thread->GetContext());
 	});

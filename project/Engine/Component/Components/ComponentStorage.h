@@ -51,6 +51,9 @@ public:
 	template <Component _Ty>
 	void ForEach(const std::function<void(_Ty*)>& func);
 
+	template <Component _Ty>
+	void ForEachActive(const std::function<void(_Ty*)>& func);
+
 	//* getter *//
 
 	template <Component _Ty>
@@ -95,6 +98,17 @@ void ComponentStorage::ForEach(const std::function<void(_Ty*)>& func) {
 
 	for (const auto& component : storage_[type]) {
 		func(static_cast<_Ty*>(component.get()));
+	}
+}
+
+template <Component _Ty>
+void ComponentStorage::ForEachActive(const std::function<void(_Ty*)>& func) {
+	constexpr const std::type_info* type = &typeid(_Ty);
+
+	for (const auto& component : storage_[type]) {
+		if (component->IsActive()) {
+			func(static_cast<_Ty*>(component.get()));
+		}
 	}
 }
 

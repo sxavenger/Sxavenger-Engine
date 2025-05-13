@@ -382,13 +382,13 @@ namespace SxImGuizmo {
 		// scale:       Vector3();
 		// rotation:    Quaterion();
 
-		//* originへの合成方法
+		//* newへの合成方法
 		// Translation:   new = origin + this;
 		// Scale:         new = this;
 		// RotationLocal: new = origin * this;
 		// RotationWorld: new = this * origin;
 
-		// rotationを統合したい
+		// todo: rotationを統合したい
 	};
 
 	////////////////////////////////////////////////////////////////////////////////////////////
