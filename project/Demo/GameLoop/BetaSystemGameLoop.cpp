@@ -62,16 +62,17 @@ void BetaSystemGameLoop::InitSystem() {
 	lightA_  = ComponentHelper::CreatePointLightMonoBehaviour();
 	lightB_  = ComponentHelper::CreateDirectionalLightMonoBehaviour();
 
-	environmentTexture_[0] = SxavengerAsset::TryImport<AssetTexture>("assets/textures/EnvHDR.dds");
-	environmentTexture_[1] = SxavengerAsset::TryImport<AssetTexture>("assets/textures/rostock_laage_airport_4k.dds");
+	environmentTextures_[0] = SxavengerAsset::TryImport<AssetTexture>("assets/textures/textureCube/EnvHDR.dds");
+	environmentTextures_[1] = SxavengerAsset::TryImport<AssetTexture>("assets/textures/textureCube/rostock_laage_airport_4k.dds");
+	environmentTextures_[2] = SxavengerAsset::TryImport<AssetTexture>("assets/textures/textureCube/studio_small_09_4k.dds");
 
 	map.Create({ 1024, 1024 });
-	map.SetEnvironment(environmentTexture_[index_].WaitGet()->GetGPUHandleSRV());
+	map.SetEnvironment(environmentTextures_[index_].WaitGet()->GetGPUHandleSRV());
 
 	skylight_ = ComponentHelper::CreateMonoBehaviour();
 	skylight_->SetName("sky light");
 	skylight_->AddComponent<SkyLightComponent>();
-	skylight_->GetComponent<SkyLightComponent>()->SetEnvironment(environmentTexture_[index_].WaitGet()->GetGPUHandleSRV());
+	skylight_->GetComponent<SkyLightComponent>()->SetEnvironment(environmentTextures_[index_].WaitGet()->GetGPUHandleSRV());
 	skylight_->GetComponent<SkyLightComponent>()->GetDiffuseParameter().SetTexture(map.UseIrradianceDescriptor(SxavengerSystem::GetMainThreadContext()).GetIndex());
 	skylight_->GetComponent<SkyLightComponent>()->GetSpecularParameter().SetTexture(map.UseRadianceDescriptor(SxavengerSystem::GetMainThreadContext()).GetIndex(), map.GetRadianceMiplevels());
 
@@ -93,9 +94,9 @@ void BetaSystemGameLoop::UpdateSystem() {
 	//skyAtmosphere_.Update(SxavengerSystem::GetMainThreadContext());
 
 	if (SxavengerSystem::IsTriggerKey(KeyId::KEY_F)) {
-		index_ = (index_ + 1) % 2;
-		map.SetEnvironment(environmentTexture_[index_].WaitGet()->GetGPUHandleSRV());
-		skylight_->GetComponent<SkyLightComponent>()->SetEnvironment(environmentTexture_[index_].WaitGet()->GetGPUHandleSRV());
+		index_ = (index_ + 1) % environmentTextures_.size();
+		map.SetEnvironment(environmentTextures_[index_].WaitGet()->GetGPUHandleSRV());
+		skylight_->GetComponent<SkyLightComponent>()->SetEnvironment(environmentTextures_[index_].WaitGet()->GetGPUHandleSRV());
 	}
 
 	map.Update();
