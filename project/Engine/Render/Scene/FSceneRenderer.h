@@ -14,8 +14,8 @@
 #include <Engine/Component/Components/Camera/CameraComponent.h>
 #include <Engine/Component/Components/MeshRenderer/MeshRendererComponent.h>
 #include <Engine/Component/Components/MeshRenderer/SkinnedMeshRendererComponent.h>
-#include <Engine/Component/Components/Light/DirectionalLightComponent.h>
-#include <Engine/Component/Components/Light/PointLightComponent.h>
+#include <Engine/Component/Components/Light/Punctual/DirectionalLightComponent.h>
+#include <Engine/Component/Components/Light/Punctual/PointLightComponent.h>
 #include <Engine/Component/Components/Light/SkyLightComponent.h>
 #include <Engine/Component/Components/Particle/ParticleComponent.h>
 #include <Engine/Component/Components/PostProcessLayer/PostProcessLayerComponent.h>

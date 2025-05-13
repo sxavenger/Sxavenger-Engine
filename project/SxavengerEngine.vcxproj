@@ -211,9 +211,9 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="Engine\Component\Components\Collider\CollisionDetection.cpp" />
     <ClCompile Include="Engine\Component\Components\Collider\CollisionManager.cpp" />
     <ClCompile Include="Engine\Component\Components\ComponentStorage.cpp" />
-    <ClCompile Include="Engine\Component\Components\Light\DirectionalLightComponent.cpp" />
+    <ClCompile Include="Engine\Component\Components\Light\Punctual\DirectionalLightComponent.cpp" />
     <ClCompile Include="Engine\Component\Components\Light\LightCommon.cpp" />
-    <ClCompile Include="Engine\Component\Components\Light\PointLightComponent.cpp" />
+    <ClCompile Include="Engine\Component\Components\Light\Punctual\PointLightComponent.cpp" />
     <ClCompile Include="Engine\Component\Components\Light\SkyLightComponent.cpp" />
     <ClCompile Include="Engine\Component\Components\MeshRenderer\MeshRendererComponent.cpp" />
     <ClCompile Include="Engine\Component\Components\MeshRenderer\SkinnedMeshRendererComponent.cpp" />
@@ -358,9 +358,9 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Engine\Component\Components\Collider\CollisionDetection.h" />
     <ClInclude Include="Engine\Component\Components\Collider\CollisionManager.h" />
     <ClInclude Include="Engine\Component\Components\ComponentStorage.h" />
-    <ClInclude Include="Engine\Component\Components\Light\DirectionalLightComponent.h" />
+    <ClInclude Include="Engine\Component\Components\Light\Punctual\DirectionalLightComponent.h" />
     <ClInclude Include="Engine\Component\Components\Light\LightCommon.h" />
-    <ClInclude Include="Engine\Component\Components\Light\PointLightComponent.h" />
+    <ClInclude Include="Engine\Component\Components\Light\Punctual\PointLightComponent.h" />
     <ClInclude Include="Engine\Component\Components\Light\SkyLightComponent.h" />
     <ClInclude Include="Engine\Component\Components\MeshRenderer\MeshRendererComponent.h" />
     <ClInclude Include="Engine\Component\Components\MeshRenderer\SkinnedMeshRendererComponent.h" />

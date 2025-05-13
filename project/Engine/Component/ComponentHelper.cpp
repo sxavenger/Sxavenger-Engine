@@ -9,8 +9,8 @@
 #include "Components/Camera/CameraComponent.h"
 #include "Components/Armature/ArmatureComponent.h"
 #include "Components/MeshRenderer/SkinnedMeshRendererComponent.h"
-#include "Components/Light/DirectionalLightComponent.h"
-#include "Components/Light/PointLightComponent.h"
+#include "Components/Light/Punctual/DirectionalLightComponent.h"
+#include "Components/Light/Punctual/PointLightComponent.h"
 #include "Components/Particle/ParticleComponent.h"
 
 //* engine

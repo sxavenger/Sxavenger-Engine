@@ -5,7 +5,7 @@ _DXOBJECT_USING
 // include
 //-----------------------------------------------------------------------------------------
 //* component
-#include "../../Entity/MonoBehaviour.h"
+#include "../../../Entity/MonoBehaviour.h"
 
 //* engine
 #include <Engine/System/SxavengerSystem.h>

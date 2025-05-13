@@ -10,7 +10,6 @@
 #include <Engine/System/Window/GameWindow.h>
 #include <Engine/Component/Entity/MonoBehaviour.h>
 #include <Engine/Component/Components/Camera/CameraComponent.h>
-#include <Engine/Component/Components/Light/DirectionalLightComponent.h>
 #include <Engine/Render/FPresenter.h>
 #include <Engine/Render/Scene/FScene.h>
 #include <Engine/Render/Scene/FSceneRenderer.h>

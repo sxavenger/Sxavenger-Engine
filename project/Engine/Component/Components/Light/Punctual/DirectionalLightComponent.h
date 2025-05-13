@@ -4,19 +4,19 @@
 // include
 //-----------------------------------------------------------------------------------------
 //* component
-#include "../BaseComponent.h"
-#include "../Transform/TransformComponent.h"
+#include "../../BaseComponent.h"
+#include "../../Transform/TransformComponent.h"
 
 //* light
-#include "LightCommon.h"
+#include "../LightCommon.h"
 
 //* lib
 #include <Lib/Geometry/Color3.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// PointLightComponent class
+// DirectionalLightComponent class
 ////////////////////////////////////////////////////////////////////////////////////////////
-class PointLightComponent
+class DirectionalLightComponent final
 	: public BaseComponent, public LightCommon {
 public:
 
@@ -36,10 +36,8 @@ public:
 		// public variables
 		//=========================================================================================
 
-		Color3f color;
-		Units unit;
-		float intensity;
-		float radius;
+		Color3f color;     //!< color
+		float   intensity; //!< intensity [lux]
 
 	};
 
@@ -49,8 +47,8 @@ public:
 	// public methods
 	//=========================================================================================
 
-	PointLightComponent(MonoBehaviour* behaviour) : BaseComponent(behaviour) { Init(); }
-	virtual ~PointLightComponent() = default;
+	DirectionalLightComponent(MonoBehaviour* behaviour) : BaseComponent(behaviour) { Init(); }
+	virtual ~DirectionalLightComponent() = default;
 
 	virtual void ShowComponentInspector() override;
 

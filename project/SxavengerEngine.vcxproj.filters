@@ -87,7 +87,7 @@
     <ClCompile Include="Engine\Component\Components\Collider\CollisionCallbackCollection.cpp" />
     <ClCompile Include="Engine\Component\Components\Collider\CollisionDetection.cpp" />
     <ClCompile Include="Engine\Component\Components\Collider\CollisionManager.cpp" />
-    <ClCompile Include="Engine\Component\Components\Light\DirectionalLightComponent.cpp" />
+    <ClCompile Include="Engine\Component\Components\Light\Punctual\DirectionalLightComponent.cpp" />
     <ClCompile Include="Engine\Component\Components\Light\LightCommon.cpp" />
     <ClCompile Include="Engine\Asset\Assets\Blob\AssetBlob.cpp" />
     <ClCompile Include="Engine\Component\Components\SpriteRenderer\SpriteRendererComponent.cpp" />
@@ -123,7 +123,7 @@
     <ClCompile Include="Engine\Editor\Editors\HierarchyEditor.cpp" />
     <ClCompile Include="Demo\GameLoop\BetaSystemGameLoop.cpp" />
     <ClCompile Include="Engine\Component\ComponentHelper.cpp" />
-    <ClCompile Include="Engine\Component\Components\Light\PointLightComponent.cpp" />
+    <ClCompile Include="Engine\Component\Components\Light\Punctual\PointLightComponent.cpp" />
     <ClCompile Include="Engine\Content\DebugPrimitive\DebugPrimitive.cpp" />
     <ClCompile Include="Engine\Render\Common\FBaseTexture.cpp" />
     <ClCompile Include="Engine\Component\Components\Light\SkyLightComponent.cpp" />
@@ -257,7 +257,7 @@
     <ClInclude Include="Engine\Component\Components\Collider\CollisionCallbackCollection.h" />
     <ClInclude Include="Engine\Component\Components\Collider\CollisionDetection.h" />
     <ClInclude Include="Engine\Component\Components\Collider\CollisionManager.h" />
-    <ClInclude Include="Engine\Component\Components\Light\DirectionalLightComponent.h" />
+    <ClInclude Include="Engine\Component\Components\Light\Punctual\DirectionalLightComponent.h" />
     <ClInclude Include="Engine\Component\Components\Light\LightCommon.h" />
     <ClInclude Include="Engine\Asset\Assets\Blob\AssetBlob.h" />
     <ClInclude Include="Engine\Component\Components\SpriteRenderer\SpriteRendererComponent.h" />
@@ -294,7 +294,7 @@
     <ClInclude Include="Engine\Editor\Editors\HierarchyEditor.h" />
     <ClInclude Include="Demo\GameLoop\BetaSystemGameLoop.h" />
     <ClInclude Include="Engine\Component\ComponentHelper.h" />
-    <ClInclude Include="Engine\Component\Components\Light\PointLightComponent.h" />
+    <ClInclude Include="Engine\Component\Components\Light\Punctual\PointLightComponent.h" />
     <ClInclude Include="Engine\Content\DebugPrimitive\DebugPrimitive.h" />
     <ClInclude Include="Engine\Render\Common\FBaseTexture.h" />
     <ClInclude Include="Engine\Component\Components\Light\SkyLightComponent.h" />
