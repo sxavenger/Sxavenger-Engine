@@ -85,7 +85,7 @@ void FEnvironmentMap::IrradianceMap::CreateBuffer() {
 		desc.Height           = size.y;
 		desc.DepthOrArraySize = kCubemap_;
 		desc.MipLevels        = 1;
-		desc.Format           = DXGI_FORMAT_R32G32B32A32_FLOAT;
+		desc.Format           = DXGI_FORMAT_R11G11B10_FLOAT;
 		desc.SampleDesc.Count = 1;
 		desc.Flags            = D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS;
 
@@ -109,7 +109,7 @@ void FEnvironmentMap::IrradianceMap::CreateBuffer() {
 
 		// descの設定
 		D3D12_UNORDERED_ACCESS_VIEW_DESC desc = {};
-		desc.Format                   = DXGI_FORMAT_R32G32B32A32_FLOAT;
+		desc.Format                   = DXGI_FORMAT_R11G11B10_FLOAT;
 		desc.ViewDimension            = D3D12_UAV_DIMENSION_TEXTURE2DARRAY;
 		desc.Texture2DArray.ArraySize = kCubemap_;
 
@@ -134,7 +134,7 @@ void FEnvironmentMap::IrradianceMap::CreateBuffer() {
 		desc.Height           = size.y;
 		desc.DepthOrArraySize = kCubemap_;
 		desc.MipLevels        = 1;
-		desc.Format           = DXGI_FORMAT_R32G32B32A32_FLOAT;
+		desc.Format           = DXGI_FORMAT_R11G11B10_FLOAT;
 		desc.SampleDesc.Count = 1;
 		desc.Flags            = D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS;
 
@@ -158,7 +158,7 @@ void FEnvironmentMap::IrradianceMap::CreateBuffer() {
 
 		// descの設定
 		D3D12_SHADER_RESOURCE_VIEW_DESC desc = {};
-		desc.Format                  = DXGI_FORMAT_R32G32B32A32_FLOAT;
+		desc.Format                  = DXGI_FORMAT_R11G11B10_FLOAT;
 		desc.ViewDimension           = D3D12_SRV_DIMENSION_TEXTURECUBE;
 		desc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
 		desc.TextureCube.MipLevels   = 1;
@@ -258,7 +258,7 @@ void FEnvironmentMap::RadianceMap::CreateBuffer() {
 		desc.Height           = size.y;
 		desc.DepthOrArraySize = kCubemap_;
 		desc.MipLevels        = kMiplevels;
-		desc.Format           = DXGI_FORMAT_R32G32B32A32_FLOAT;
+		desc.Format           = DXGI_FORMAT_R11G11B10_FLOAT;
 		desc.SampleDesc.Count = 1;
 		desc.Flags            = D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS;
 
@@ -283,7 +283,7 @@ void FEnvironmentMap::RadianceMap::CreateBuffer() {
 
 			// descの設定
 			D3D12_UNORDERED_ACCESS_VIEW_DESC desc = {};
-			desc.Format                   = DXGI_FORMAT_R32G32B32A32_FLOAT;
+			desc.Format                   = DXGI_FORMAT_R11G11B10_FLOAT;
 			desc.ViewDimension            = D3D12_UAV_DIMENSION_TEXTURE2DARRAY;
 			desc.Texture2DArray.ArraySize = kCubemap_;
 			desc.Texture2DArray.MipSlice  = i;
@@ -311,7 +311,7 @@ void FEnvironmentMap::RadianceMap::CreateBuffer() {
 		desc.Height           = size.y;
 		desc.DepthOrArraySize = kCubemap_;
 		desc.MipLevels        = kMiplevels;
-		desc.Format           = DXGI_FORMAT_R32G32B32A32_FLOAT;
+		desc.Format           = DXGI_FORMAT_R11G11B10_FLOAT;
 		desc.SampleDesc.Count = 1;
 		desc.Flags            = D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS;
 
@@ -336,7 +336,7 @@ void FEnvironmentMap::RadianceMap::CreateBuffer() {
 
 		// descの設定
 		D3D12_SHADER_RESOURCE_VIEW_DESC desc = {};
-		desc.Format                  = DXGI_FORMAT_R32G32B32A32_FLOAT;
+		desc.Format                  = DXGI_FORMAT_R11G11B10_FLOAT;
 		desc.ViewDimension           = D3D12_SRV_DIMENSION_TEXTURECUBE;
 		desc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
 		desc.TextureCube.MipLevels   = kMiplevels;

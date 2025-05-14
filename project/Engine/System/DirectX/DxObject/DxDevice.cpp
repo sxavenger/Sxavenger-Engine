@@ -43,17 +43,20 @@ void Device::Term() {
 void Device::CreateDebugLayer() {
 #ifdef _DEBUG
 
-	//bool isLaunchFromPIX = CheckLaunchFromPIX();
-
 	// デバックレイヤーの生成
 	if (SUCCEEDED(D3D12GetDebugInterface(IID_PPV_ARGS(&debugController_)))) {
-		// デバックレイヤーの有効化
-		debugController_->EnableDebugLayer();
-		// GPU側も有効化
-		debugController_->SetEnableGPUBasedValidation(TRUE);
+		if (SxavengerConfig::GetConfig().enableDebugLayer) {
+			// デバックレイヤーの有効化
+			debugController_->EnableDebugLayer();
+		}
+
+		if (SxavengerConfig::GetConfig().enableGPUBasedValidation) {
+			// GPU側も有効化
+			debugController_->SetEnableGPUBasedValidation(true);
+		}
 	}
 
-#endif // _DEVELOPMENT
+#endif // _DEBUG
 }
 
 void Device::CreateFactory() {

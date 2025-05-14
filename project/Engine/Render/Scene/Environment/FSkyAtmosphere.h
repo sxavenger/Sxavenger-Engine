@@ -4,15 +4,35 @@
 //* environment
 #include "FEnvironmentMap.h"
 
-//* engine
-#include <Engine/System/Runtime/Performance/DeltaTimePoint.h>
-
 ////////////////////////////////////////////////////////////////////////////////////////////
 // FSkyAtmosphere class
 ////////////////////////////////////////////////////////////////////////////////////////////
 class FSkyAtmosphere
 	: public FEnvironmentMap {
 public:
+
+	////////////////////////////////////////////////////////////////////////////////////////////
+	// Parameter structure
+	////////////////////////////////////////////////////////////////////////////////////////////
+	struct Parameter {
+	public:
+
+		//=========================================================================================
+		// public methods
+		//=========================================================================================
+
+		void Init();
+
+		void SetImGuiCommand();
+
+		//=========================================================================================
+		// public variables
+		//=========================================================================================
+
+		Vector3f direction; //!< todo: transform componentから引っ張ってくる?
+		float intensity;
+
+	};
 
 	////////////////////////////////////////////////////////////////////////////////////////////
 	// AtmosphereMap structure
@@ -28,15 +48,24 @@ public:
 
 		void Dispatch(const DirectXThreadContext* context);
 
+		void Commit(const DirectXThreadContext* context);
+
+		//* resource option *//
+
+		const DxObject::Descriptor& UseDescriptorSRV(const DirectXThreadContext* context);
+
 		//=========================================================================================
 		// public variables
 		//=========================================================================================
 
 		//* directX12 *//
 
-		ComPtr<ID3D12Resource> resource; //!< cubemap.
-		DxObject::Descriptor descriptorSRV;
-		DxObject::Descriptor descriptorUAV;
+		DxObject::ResourceStateTracker asyncResource;
+		DxObject::Descriptor asyncDescriptorUAV;
+		DxObject::Descriptor asyncDescriptorSRV;
+
+		DxObject::ResourceStateTracker mainResource;
+		DxObject::Descriptor mainDescriptorSRV;
 
 		//* parameter *//
 
@@ -46,15 +75,21 @@ public:
 
 		std::unique_ptr<DxObject::ReflectionComputePipelineState> pipeline; //!< HACK
 
+		//* buffer *//
+
+		std::unique_ptr<DxObject::DimensionBuffer<Parameter>> parameter_;
+
 	private:
 
 		//=========================================================================================
 		// private methods
 		//=========================================================================================
 
-		void CreateBuffer(const Vector2ui& _size);
+		void CreateBuffer();
 
 		void CreatePipeline();
+
+		void CreateDimensionBuffer();
 
 	};
 
@@ -70,6 +105,10 @@ public:
 
 	void Task(const DirectXThreadContext* context) override;
 
+	//* atmosphere option *//
+
+	const DxObject::Descriptor& UseAtmosphereDescriptor(const DirectXThreadContext* context);
+
 private:
 
 	//=========================================================================================
@@ -79,7 +118,6 @@ private:
 	//* map *//
 
 	AtmosphereMap atmosphere_;
-	DeltaTimePointf<TimeUnit::second> commitTime_;
 
 	//* parameter *//
 

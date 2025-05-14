@@ -61,6 +61,10 @@ void DevelopEditor::ShowConfigMenu() {
 		MenuPadding();
 		ImGui::SeparatorText("config");
 
+		//* device
+		ImGui::Text(std::format("enable debug layer: {}", SxavengerConfig::GetConfig().enableDebugLayer).c_str());
+		ImGui::Text(std::format("enable GPU based validation: {}", SxavengerConfig::GetConfig().enableGPUBasedValidation).c_str());
+
 		//* tearing
 		ImGui::BeginDisabled(!SxavengerConfig::GetSupport().isSupportTearing);
 		ImGui::Checkbox("tearing allow", &SxavengerConfig::FixConfig().isTearingAllowed);

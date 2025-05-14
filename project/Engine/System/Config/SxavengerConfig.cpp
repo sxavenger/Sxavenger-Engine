@@ -14,7 +14,11 @@
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 SxavengerConfig::Config::Config() {
-	//* tiearing 
+	//* device
+	enableDebugLayer         = true;
+	enableGPUBasedValidation = true;
+
+	//* tiearing
 	isTearingAllowed = false;
 
 	//* frame rate lock
@@ -28,6 +32,19 @@ void SxavengerConfig::Config::Load(const std::filesystem::path& filepath) {
 	if (!JsonHandler::LoadFromJson(filepath, data)) {
 		return; //!< fileが見つからなければ初期設定の使用
 	}
+
+	EngineLog("loaded user config. filepath: " + filepath.generic_string());
+
+	//* device
+#ifdef _DEBUG
+	if (data.contains("enableDebugLayer")) {
+		enableDebugLayer = data.at("enableDebugLayer");
+	}
+
+	if (data.contains("enableGPUBasedValidation")) {
+		enableGPUBasedValidation = data.at("enableGPUBasedValidation");
+	}
+#endif
 
 	//* tearing
 	if (data.contains("isTearingAllowed")) {
@@ -63,7 +80,13 @@ void SxavengerConfig::Load() {
 }
 
 void SxavengerConfig::OutputLog() {
+#ifdef _DEBUG
+	EngineLog(std::format("[Config] enableDebugLayer: {}",          config_.enableDebugLayer));
+	EngineLog(std::format("[Config] enableGPUBasedValidation: {}",  config_.enableGPUBasedValidation));
+#endif
+
 	EngineLog(std::format("[Config] tearing: {}",           config_.isTearingAllowed));
+
 	EngineLog(std::format("[Config] frame rate lock: {}",   config_.isLockFrameRate));
 	EngineLog(std::format("[Config] target frame rate: {}", config_.targetFrameRate));
 }

@@ -48,7 +48,11 @@ public:
 		// public variables
 		//=========================================================================================
 
-		//* tiearing 
+		//* device
+		bool enableDebugLayer;
+		bool enableGPUBasedValidation;
+
+		//* tiearing
 		bool isTearingAllowed;
 
 		//* frame rate lock

@@ -1,4 +1,6 @@
 {
+	"enableDebugLayer" : true,
+	"enableGPUBasedValidation": false,
 	"isTearingAllowed": true,
 	"isLockFrameRate": true,
 	"targetFrameRate": 60.0

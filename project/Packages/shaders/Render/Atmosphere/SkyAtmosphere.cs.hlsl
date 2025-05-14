@@ -25,6 +25,7 @@ struct Parameter {
 	float3 direction;
 	float intensity;
 };
+ConstantBuffer<Parameter> gParameter : register(b0);
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // static const parameter variables
@@ -45,8 +46,8 @@ static const float3 kBetaR = float3(5.8e-6, 13.5e-6, 33.1e-6); //!< Rayleighの�
 static const float3 kBetaM = float3(21e-6, 21e-6, 21e-6);      //!< Mieの散乱係数
 
 // todo: parameter.
-static const float3 kSunDir      = normalize(float3(0.0f, 4.0f, -10.0f)); //!< 太陽の方向
-static const float kSunIntensity = 20.0f; //!< 太陽の強さ
+//static const float3 kSunDir      = normalize(float3(0.0f, 4.0f, -10.0f)); //!< 太陽の方向
+//static const float kSunIntensity = 20.0f; //!< 太陽の強さ
 
 // hack: 文献から引っ張ってくる.
 //- https://youtu.be/SW30QX1wxTY?si=3_Px8GYmHdBZGs90
@@ -160,7 +161,7 @@ float3 GetIncidentLight(Ray ray, Sphere atmosphere) {
 	//float marchStep = (distanceFar - distanceNear) / kNumSamples;
 	float marchStep = distanceFar / kNumSamples;
 	
-	float mu = dot(ray.direction, kSunDir);
+	float mu = dot(ray.direction, gParameter.direction);
 	
 	float phaseR = RayleighPhaseFunction(mu);
 	float phaseM = HenyeyGreensteinPhaseFunction(mu);
@@ -184,7 +185,7 @@ float3 GetIncidentLight(Ray ray, Sphere atmosphere) {
 		
 		Ray lightRay = (Ray)0;
 		lightRay.origin    = samplePoint;
-		lightRay.direction = kSunDir;
+		lightRay.direction = gParameter.direction;
 		
 		float opticalDepthLightR = 0.0f;
 		float opticalDepthLightM = 0.0f;
@@ -202,7 +203,7 @@ float3 GetIncidentLight(Ray ray, Sphere atmosphere) {
 		}
 	}
 	
-	return kSunIntensity * (phaseR * sumR * kBetaR + phaseM * sumM * kBetaM);
+	return (phaseR * sumR * kBetaR + phaseM * sumM * kBetaM) * gParameter.intensity;
 }
 
 

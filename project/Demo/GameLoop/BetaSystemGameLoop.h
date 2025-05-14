@@ -52,8 +52,8 @@ private:
 	uint32_t index_ = 0;
 	std::array<AssetObserver<AssetTexture>, 3> environmentTextures_;
 
-	//FSkyAtmosphere map;
-	FEnvironmentMap map;
+	FSkyAtmosphere map;
+	//FEnvironmentMap map;
 
 	//=========================================================================================
 	// private methods
