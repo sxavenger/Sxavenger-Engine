@@ -18,7 +18,7 @@
 #include <Engine/Render/FRenderCore.h>
 #include <Engine/Content/InputGeometry/InputPrimitiveHelper.h>
 
-#include "Engine/Component/Components/Light/SkyLightComponent.h"
+#include "Engine/Component/Components/Light/Environment/SkyLightComponent.h"
 
 #include "Engine/System/Runtime/Thread/AsyncThread.h"
 

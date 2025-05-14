@@ -126,7 +126,7 @@
     <ClCompile Include="Engine\Component\Components\Light\Punctual\PointLightComponent.cpp" />
     <ClCompile Include="Engine\Content\DebugPrimitive\DebugPrimitive.cpp" />
     <ClCompile Include="Engine\Render\Common\FBaseTexture.cpp" />
-    <ClCompile Include="Engine\Component\Components\Light\SkyLightComponent.cpp" />
+    <ClCompile Include="Engine\Component\Components\Light\Environment\SkyLightComponent.cpp" />
     <ClCompile Include="Engine\Render\Core\FRenderCoreRaytracing.cpp" />
     <ClCompile Include="Lib\Motion\Motion.cpp" />
     <ClCompile Include="Engine\Content\InputGeometry\InputPrimitive.cpp" />
@@ -297,7 +297,7 @@
     <ClInclude Include="Engine\Component\Components\Light\Punctual\PointLightComponent.h" />
     <ClInclude Include="Engine\Content\DebugPrimitive\DebugPrimitive.h" />
     <ClInclude Include="Engine\Render\Common\FBaseTexture.h" />
-    <ClInclude Include="Engine\Component\Components\Light\SkyLightComponent.h" />
+    <ClInclude Include="Engine\Component\Components\Light\Environment\SkyLightComponent.h" />
     <ClInclude Include="Engine\Render\Core\FRenderCoreRaytracing.h" />
     <ClInclude Include="Lib\Motion\Motion.h" />
     <ClInclude Include="Engine\Content\InputGeometry\InputPrimitive.h" />
