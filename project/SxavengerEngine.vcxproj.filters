@@ -153,6 +153,8 @@
     <ClCompile Include="Engine\System\DirectX\DxObject\DxResourceStateTracker.cpp" />
     <ClCompile Include="Engine\Render\Scene\Environment\FEnvironmentMap.cpp" />
     <ClCompile Include="Engine\System\UI\SxImGuizmo.cpp" />
+    <ClCompile Include="Engine\Component\Components\Light\Rect\RectLightComponent.cpp" />
+    <ClCompile Include="Engine\Render\Scene\Environment\FSkyAtmosphere.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\System\Window\Window.h" />
@@ -325,6 +327,8 @@
     <ClInclude Include="Engine\System\DirectX\DxObject\DxResourceStateTracker.h" />
     <ClInclude Include="Engine\Render\Scene\Environment\FEnvironmentMap.h" />
     <ClInclude Include="Engine\System\UI\SxImGuizmo.h" />
+    <ClInclude Include="Engine\Component\Components\Light\Rect\RectLightComponent.h" />
+    <ClInclude Include="Engine\Render\Scene\Environment\FSkyAtmosphere.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

@@ -215,6 +215,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="Engine\Component\Components\Light\LightCommon.cpp" />
     <ClCompile Include="Engine\Component\Components\Light\Punctual\PointLightComponent.cpp" />
     <ClCompile Include="Engine\Component\Components\Light\Environment\SkyLightComponent.cpp" />
+    <ClCompile Include="Engine\Component\Components\Light\Rect\RectLightComponent.cpp" />
     <ClCompile Include="Engine\Component\Components\MeshRenderer\MeshRendererComponent.cpp" />
     <ClCompile Include="Engine\Component\Components\MeshRenderer\SkinnedMeshRendererComponent.cpp" />
     <ClCompile Include="Engine\Component\Components\Particle\ParticleComponent.cpp" />
@@ -254,6 +255,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="Engine\Module\GameObject\GameObject.cpp" />
     <ClCompile Include="Engine\Render\Common\FProcessTexture.cpp" />
     <ClCompile Include="Engine\Render\Scene\Environment\FEnvironmentMap.cpp" />
+    <ClCompile Include="Engine\Render\Scene\Environment\FSkyAtmosphere.cpp" />
     <ClCompile Include="Engine\System\DirectX\DxObject\DxResourceStateTracker.cpp" />
     <ClCompile Include="Engine\System\UI\SxImGuizmo.cpp" />
     <ClCompile Include="Lib\Motion\Motion.cpp" />
@@ -362,6 +364,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Engine\Component\Components\Light\LightCommon.h" />
     <ClInclude Include="Engine\Component\Components\Light\Punctual\PointLightComponent.h" />
     <ClInclude Include="Engine\Component\Components\Light\Environment\SkyLightComponent.h" />
+    <ClInclude Include="Engine\Component\Components\Light\Rect\RectLightComponent.h" />
     <ClInclude Include="Engine\Component\Components\MeshRenderer\MeshRendererComponent.h" />
     <ClInclude Include="Engine\Component\Components\MeshRenderer\SkinnedMeshRendererComponent.h" />
     <ClInclude Include="Engine\Component\Components\Particle\ParticleComponent.h" />
@@ -406,6 +409,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Engine\Module\GameObject\GameObject.h" />
     <ClInclude Include="Engine\Render\Common\FProcessTexture.h" />
     <ClInclude Include="Engine\Render\Scene\Environment\FEnvironmentMap.h" />
+    <ClInclude Include="Engine\Render\Scene\Environment\FSkyAtmosphere.h" />
     <ClInclude Include="Engine\System\DirectX\DxObject\DxResourceStateTracker.h" />
     <ClInclude Include="Engine\System\UI\SxImGuizmo.h" />
     <ClInclude Include="Lib\Motion\Motion.h" />

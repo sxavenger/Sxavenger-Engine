@@ -2,7 +2,10 @@
 // include
 //-----------------------------------------------------------------------------------------
 //* environment
-#include "../FEnvironmentMap.h"
+#include "FEnvironmentMap.h"
+
+//* engine
+#include <Engine/System/Runtime/Performance/DeltaTimePoint.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // FSkyAtmosphere class
@@ -41,7 +44,7 @@ public:
 
 		//* pipeline *//
 
-		std::unique_ptr<DxObject::ReflectionComputePipelineState> pipeline;
+		std::unique_ptr<DxObject::ReflectionComputePipelineState> pipeline; //!< HACK
 
 	private:
 
@@ -63,7 +66,9 @@ public:
 
 	void Create(const Vector2ui& size);
 
-	void Update(const DirectXThreadContext* context);
+	void Update(const DirectXThreadContext* context) override;
+
+	void Task(const DirectXThreadContext* context) override;
 
 private:
 
@@ -74,6 +79,7 @@ private:
 	//* map *//
 
 	AtmosphereMap atmosphere_;
+	DeltaTimePointf<TimeUnit::second> commitTime_;
 
 	//* parameter *//
 

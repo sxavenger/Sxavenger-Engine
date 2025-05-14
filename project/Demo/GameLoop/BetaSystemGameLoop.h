@@ -15,7 +15,7 @@
 #include <Engine/Render/Scene/FSceneRenderer.h>
 #include <Engine/Asset/Observer/AssetObserver.h>
 
-//#include "Engine/Render/Scene/Environment/Atmosphere/FSkyAtmosphere.h"
+#include "Engine/Render/Scene/Environment/FSkyAtmosphere.h"
 #include "Engine/Render/Scene/Environment/FEnvironmentMap.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -52,7 +52,7 @@ private:
 	uint32_t index_ = 0;
 	std::array<AssetObserver<AssetTexture>, 3> environmentTextures_;
 
-	//FSkyAtmosphere skyAtmosphere_;
+	//FSkyAtmosphere map;
 	FEnvironmentMap map;
 
 	//=========================================================================================

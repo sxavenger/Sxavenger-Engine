@@ -37,17 +37,9 @@ public:
 
 		void Create(const Vector2ui& size);
 
-		void Dispatch(const DirectXThreadContext* context);
+		void Dispatch(const DirectXThreadContext* context, const D3D12_GPU_DESCRIPTOR_HANDLE& environment);
 
-		void Commit();
-
-		// todo: main resourceの使用.
-
-		//* parameter option *//
-
-		void SetEnvironment(const std::optional<D3D12_GPU_DESCRIPTOR_HANDLE>& handle) { environment_ = handle; }
-
-		const std::optional<D3D12_GPU_DESCRIPTOR_HANDLE>& GetEnvironment() const { return environment_; }
+		void Commit(const DirectXThreadContext* context);
 
 		//* resource option *//
 
@@ -66,10 +58,6 @@ public:
 
 		DxObject::ResourceStateTracker mainResource;
 		DxObject::Descriptor mainDescriptorSRV;
-
-		//* parameter *//
-
-		std::optional<D3D12_GPU_DESCRIPTOR_HANDLE> environment_;
 
 		//* pipeline *//
 
@@ -111,15 +99,9 @@ public:
 
 		void Create(const Vector2ui& _size);
 
-		void Dispatch(const DirectXThreadContext* context);
+		void Dispatch(const DirectXThreadContext* context, const D3D12_GPU_DESCRIPTOR_HANDLE& environment);
 
-		void Commit();
-
-		//* parameter option *//
-
-		void SetEnvironment(const std::optional<D3D12_GPU_DESCRIPTOR_HANDLE>& handle) { environment_ = handle; }
-
-		const std::optional<D3D12_GPU_DESCRIPTOR_HANDLE>& GetEnvironment() const { return environment_; }
+		void Commit(const DirectXThreadContext* context);
 
 		//* resource option *//
 
@@ -156,10 +138,6 @@ public:
 		std::unique_ptr<DxObject::DimensionBuffer<uint32_t>> indices;
 		std::unique_ptr<DxObject::DimensionBuffer<Parameter>> parameter;
 
-		//* parameter *//
-
-		std::optional<D3D12_GPU_DESCRIPTOR_HANDLE> environment_;
-
 		//* pipeline *//
 
 		std::unique_ptr<DxObject::ReflectionComputePipelineState> pipeline; //!< HACK
@@ -186,17 +164,15 @@ public:
 
 	void Term();
 
-	void Update();
-
-	void Commit();
+	virtual void Update(const DirectXThreadContext* context);
 
 	//* async option *//
 
-	void Task(const DirectXThreadContext* context);
+	virtual void Task(const DirectXThreadContext* context);
 
 	//* parameter option *//
 
-	void SetEnvironment(const D3D12_GPU_DESCRIPTOR_HANDLE& environment) { environment_ = environment; }
+	void SetEnvironment(const D3D12_GPU_DESCRIPTOR_HANDLE& environment) { mainEnvironment_ = environment; }
 
 	//* map option *//
 
@@ -206,20 +182,21 @@ public:
 
 	const DxObject::Descriptor& UseRadianceDescriptor(const DirectXThreadContext* context);
 
-private:
+protected:
 
 	//=========================================================================================
-	// private variables
+	// protected variables
 	//=========================================================================================
 
 	//* parameter *//
 
-	std::optional<D3D12_GPU_DESCRIPTOR_HANDLE> environment_;
+	std::optional<D3D12_GPU_DESCRIPTOR_HANDLE> mainEnvironment_;
 
 	//* map *//
 
 	IrradianceMap irradiance_;
 	RadianceMap   radiance_;
+	std::optional<D3D12_GPU_DESCRIPTOR_HANDLE> mapEnvironment_;
 
 	bool isCommited_ = false;
 
@@ -232,9 +209,13 @@ private:
 	static inline constexpr UINT16 kCubemap_ = 6;
 	static inline constexpr Vector2ui kNumThreads_ = { 16, 16 };
 
+private:
+
 	//=========================================================================================
 	// private variables
 	//=========================================================================================
+
+	bool IsNeedExecute();
 
 };
 

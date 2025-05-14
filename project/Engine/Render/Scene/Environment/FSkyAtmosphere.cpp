@@ -125,7 +125,22 @@ void FSkyAtmosphere::Create(const Vector2ui& size) {
 }
 
 void FSkyAtmosphere::Update(const DirectXThreadContext* context) {
+	if (!task_->IsCompleted()) {
+		return;
+	}
+
+	// irrandiance, radince を main thread で使えるようにcopy.
+	irradiance_.Commit(context);
+	radiance_.Commit(context);
+
+	task_->SetStatus(AsyncTask::Status::None);
+	SxavengerSystem::PushTask(AsyncExecution::Compute, task_);
+}
+
+void FSkyAtmosphere::Task(const DirectXThreadContext* context) {
 	atmosphere_.Dispatch(context);
-	FEnvironmentMap::Dispatch(context, atmosphere_.descriptorSRV.GetGPUHandle());
+	mapEnvironment_ = atmosphere_.descriptorSRV.GetGPUHandle();
+
+	FEnvironmentMap::Task(context);
 }
 

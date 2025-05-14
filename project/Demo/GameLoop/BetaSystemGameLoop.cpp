@@ -72,7 +72,7 @@ void BetaSystemGameLoop::InitSystem() {
 	skylight_ = ComponentHelper::CreateMonoBehaviour();
 	skylight_->SetName("sky light");
 	skylight_->AddComponent<SkyLightComponent>();
-	skylight_->GetComponent<SkyLightComponent>()->SetEnvironment(environmentTextures_[index_].WaitGet()->GetGPUHandleSRV());
+	//skylight_->GetComponent<SkyLightComponent>()->SetEnvironment(environmentTextures_[index_].WaitGet()->GetGPUHandleSRV());
 	skylight_->GetComponent<SkyLightComponent>()->GetDiffuseParameter().SetTexture(map.UseIrradianceDescriptor(SxavengerSystem::GetMainThreadContext()).GetIndex());
 	skylight_->GetComponent<SkyLightComponent>()->GetSpecularParameter().SetTexture(map.UseRadianceDescriptor(SxavengerSystem::GetMainThreadContext()).GetIndex(), map.GetRadianceMiplevels());
 
@@ -83,6 +83,7 @@ void BetaSystemGameLoop::InitSystem() {
 }
 
 void BetaSystemGameLoop::TermSystem() {
+	map.Term();
 }
 
 void BetaSystemGameLoop::UpdateSystem() {
@@ -99,9 +100,9 @@ void BetaSystemGameLoop::UpdateSystem() {
 		skylight_->GetComponent<SkyLightComponent>()->SetEnvironment(environmentTextures_[index_].WaitGet()->GetGPUHandleSRV());
 	}
 
-	map.Update();
-	//skylight_->GetComponent<SkyLightComponent>()->GetDiffuseParameter().SetTexture(map.UseIrradianceDescriptor(SxavengerSystem::GetMainThreadContext()).GetIndex());
-	//skylight_->GetComponent<SkyLightComponent>()->GetSpecularParameter().SetTexture(map.UseRadianceDescriptor(SxavengerSystem::GetMainThreadContext()).GetIndex(), map.GetRadianceMiplevels());
+	map.Update(SxavengerSystem::GetMainThreadContext());
+	skylight_->GetComponent<SkyLightComponent>()->GetDiffuseParameter().SetTexture(map.UseIrradianceDescriptor(SxavengerSystem::GetMainThreadContext()).GetIndex());
+	skylight_->GetComponent<SkyLightComponent>()->GetSpecularParameter().SetTexture(map.UseRadianceDescriptor(SxavengerSystem::GetMainThreadContext()).GetIndex(), map.GetRadianceMiplevels());
 
 	//-----------------------------------------------------------------------------------------
 	// SystemUpdate...?

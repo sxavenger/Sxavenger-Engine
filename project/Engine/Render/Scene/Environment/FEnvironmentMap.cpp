@@ -19,11 +19,7 @@ void FEnvironmentMap::IrradianceMap::Create(const Vector2ui& _size) {
 	CreatePipeline();
 }
 
-void FEnvironmentMap::IrradianceMap::Dispatch(const DirectXThreadContext* context) {
-	if (!environment_.has_value()) {
-		return;
-	}
-
+void FEnvironmentMap::IrradianceMap::Dispatch(const DirectXThreadContext* context, const D3D12_GPU_DESCRIPTOR_HANDLE& environment) {
 	asyncResource.TransitionToExpectedState(
 		context->GetDxCommand(),
 		D3D12_RESOURCE_STATE_UNORDERED_ACCESS
@@ -32,7 +28,7 @@ void FEnvironmentMap::IrradianceMap::Dispatch(const DirectXThreadContext* contex
 	pipeline->SetPipeline(context->GetDxCommand());
 
 	BindBufferDesc desc = {};
-	desc.SetHandle("gEnvironment", environment_.value());
+	desc.SetHandle("gEnvironment", environment);
 	desc.SetHandle("gIrrandiance", asyncDescriptorUAV.GetGPUHandle());
 	pipeline->BindComputeBuffer(context->GetDxCommand(), desc);
 
@@ -41,15 +37,8 @@ void FEnvironmentMap::IrradianceMap::Dispatch(const DirectXThreadContext* contex
 
 }
 
-void FEnvironmentMap::IrradianceMap::Commit() {
+void FEnvironmentMap::IrradianceMap::Commit(const DirectXThreadContext* context) {
 	// 条件: Dispatch(...)と同時に呼び出されないように調整する.
-
-	if (!environment_.has_value()) {
-		return;
-	}
-
-	// HACK: main threadでの実行
-	auto context = SxavengerSystem::GetMainThreadContext();
 
 	// async resourceの状態を変更
 	asyncResource.TransitionToExpectedState(
@@ -67,34 +56,6 @@ void FEnvironmentMap::IrradianceMap::Commit() {
 		mainResource.Get(),
 		asyncResource.Get()
 	);
-
-	//std::shared_ptr<AsyncTask> copyTask = std::make_shared<AsyncTask>();
-	//copyTask->SetTag("IrradianceMap::Commit");
-	//copyTask->SetFunction([this](const AsyncThread* thread) {
-
-	//	auto context = thread->RequireContext();
-	//	
-	//	// async resourceの状態を変更
-	//	asyncResource.TransitionToExpectedState(
-	//		context->GetDxCommand(),
-	//		D3D12_RESOURCE_STATE_COPY_SOURCE
-	//	);
-
-	//	// main resourceの状態を変更
-	//	mainResource.TransitionToExpectedState(
-	//		context->GetDxCommand(),
-	//		D3D12_RESOURCE_STATE_COPY_DEST
-	//	);
-
-	//	context->GetCommandList()->CopyResource(
-	//		mainResource.Get(),
-	//		asyncResource.Get()
-	//	);
-
-	//});
-
-	//SxavengerSystem::PushTask(AsyncExecution::Copy, copyTask);
-	//copyTask->Wait();
 }
 
 const DxObject::Descriptor& FEnvironmentMap::IrradianceMap::UseDescriptorSRV(const DirectXThreadContext* context) {
@@ -230,11 +191,7 @@ void FEnvironmentMap::RadianceMap::Create(const Vector2ui& _size) {
 	CreatePipeline();
 }
 
-void FEnvironmentMap::RadianceMap::Dispatch(const DirectXThreadContext* context) {
-	if (!environment_.has_value()) {
-		return;
-	}
-
+void FEnvironmentMap::RadianceMap::Dispatch(const DirectXThreadContext* context, const D3D12_GPU_DESCRIPTOR_HANDLE& environment) {
 	asyncResource.TransitionToExpectedState(
 		context->GetDxCommand(),
 		D3D12_RESOURCE_STATE_UNORDERED_ACCESS
@@ -243,7 +200,7 @@ void FEnvironmentMap::RadianceMap::Dispatch(const DirectXThreadContext* context)
 	pipeline->SetPipeline(context->GetDxCommand());
 
 	BindBufferDesc desc = {};
-	desc.SetHandle("gEnvironment", environment_.value());
+	desc.SetHandle("gEnvironment", environment);
 	desc.SetAddress("gIndices",    indices->GetGPUVirtualAddress());
 	desc.SetAddress("gParameter",  parameter->GetGPUVirtualAddress());
 	pipeline->BindComputeBuffer(context->GetDxCommand(), desc);
@@ -253,15 +210,8 @@ void FEnvironmentMap::RadianceMap::Dispatch(const DirectXThreadContext* context)
 
 }
 
-void FEnvironmentMap::RadianceMap::Commit() {
+void FEnvironmentMap::RadianceMap::Commit(const DirectXThreadContext* context) {
 	// 条件: Dispatch(...)と同時に呼び出されないように調整する.
-
-	if (!environment_.has_value()) {
-		return;
-	}
-
-	// HACK: main threadでの実行
-	auto context = SxavengerSystem::GetMainThreadContext();
 	
 	// async resourceの状態を変更
 	asyncResource.TransitionToExpectedState(
@@ -279,33 +229,6 @@ void FEnvironmentMap::RadianceMap::Commit() {
 		mainResource.Get(),
 		asyncResource.Get()
 	);
-
-	//std::shared_ptr<AsyncTask> copyTask = std::make_shared<AsyncTask>();
-	//copyTask->SetTag("RadianceMap::Commit");
-	//copyTask->SetFunction([this](const AsyncThread* thread) {
-
-	//	auto context = thread->RequireContext();
-	//	
-	//	// async resourceの状態を変更
-	//	asyncResource.TransitionToExpectedState(
-	//		context->GetDxCommand(),
-	//		D3D12_RESOURCE_STATE_COPY_SOURCE
-	//	);
-
-	//	// main resourceの状態を変更
-	//	mainResource.TransitionToExpectedState(
-	//		context->GetDxCommand(),
-	//		D3D12_RESOURCE_STATE_COPY_DEST
-	//	);
-
-	//	context->GetCommandList()->CopyResource(
-	//		mainResource.Get(),
-	//		asyncResource.Get()
-	//	);
-	//});
-
-	//SxavengerSystem::PushTask(AsyncExecution::Copy, copyTask);
-	//copyTask->Wait();
 }
 
 const DxObject::Descriptor& FEnvironmentMap::RadianceMap::UseDescriptorSRV(const DirectXThreadContext* context) {
@@ -473,48 +396,41 @@ void FEnvironmentMap::Term() {
 	task_->Wait();
 }
 
-void FEnvironmentMap::Update() {
+void FEnvironmentMap::Update(const DirectXThreadContext* context) {
 	if (task_->IsCompleted()) {
 		// irrandiance, radince を main thread で使えるようにcopy.
 		if (!isCommited_) {
-			irradiance_.Commit();
-			radiance_.Commit();
+			irradiance_.Commit(context);
+			radiance_.Commit(context);
 			isCommited_ = true;
-		}
-		
-
-		// 再度実行が必須か確認
-		bool isNeedExecute = false;
-
-		if (environment_.has_value()) {
-			if (irradiance_.GetEnvironment().has_value()) {
-				isNeedExecute = (environment_.value().ptr != irradiance_.GetEnvironment().value().ptr);
-
-			} else {
-				isNeedExecute = true;
-			}
 		}
 
 		// 再度taskを実行
-		if (isNeedExecute) {
-			irradiance_.SetEnvironment(environment_);
-			radiance_.SetEnvironment(environment_);
+		/*if (IsNeedExecute()) {
+			mapEnvironment_ = mainEnvironment_;
 
 			task_->SetStatus(AsyncTask::Status::None);
 			SxavengerSystem::PushTask(AsyncExecution::Compute, task_);
 
 			isCommited_ = false;
-		}
+		}*/
+
+		mapEnvironment_ = mainEnvironment_;
+
+		task_->SetStatus(AsyncTask::Status::None);
+		SxavengerSystem::PushTask(AsyncExecution::Compute, task_);
+
+		isCommited_ = false;
 	}
 }
 
 void FEnvironmentMap::Task(const DirectXThreadContext* context) {
-	if (!environment_.has_value()) {
+	if (!mapEnvironment_.has_value()) {
 		return;
 	}
-
-	irradiance_.Dispatch(context);
-	radiance_.Dispatch(context);
+	
+	irradiance_.Dispatch(context, mapEnvironment_.value());
+	radiance_.Dispatch(context, mapEnvironment_.value());
 }
 
 const DxObject::Descriptor& FEnvironmentMap::UseIrradianceDescriptor(const DirectXThreadContext* context) {
@@ -523,4 +439,22 @@ const DxObject::Descriptor& FEnvironmentMap::UseIrradianceDescriptor(const Direc
 
 const DxObject::Descriptor& FEnvironmentMap::UseRadianceDescriptor(const DirectXThreadContext* context) {
 	return radiance_.UseDescriptorSRV(context);
+}
+
+bool FEnvironmentMap::IsNeedExecute() {
+
+	uint8_t state = 0;
+	state |= mainEnvironment_.has_value() << 1;
+	state |= mapEnvironment_.has_value()  << 0;
+
+	switch (state) {
+		case 0b10:
+			return true;
+
+		case 0b11:
+			return (*mapEnvironment_).ptr != (*mainEnvironment_).ptr;
+
+		default:
+			return false;
+	}
 }
