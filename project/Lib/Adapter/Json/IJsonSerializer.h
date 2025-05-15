@@ -27,7 +27,7 @@ public:
 	// public methods
 	//=========================================================================================
 
-	virtual json OutputJson() const = 0;
+	virtual json PerseToJson() const = 0;
 
 	virtual void InputJson(const json& data) = 0;
 

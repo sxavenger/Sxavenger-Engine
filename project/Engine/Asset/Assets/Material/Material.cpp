@@ -293,7 +293,7 @@ void Material::SetImGuiCommand() {
 	}
 }
 
-json Material::OutputJson() const {
+json Material::PerseToJson() const {
 	json root;
 
 	auto& albedo = root["albedo"];

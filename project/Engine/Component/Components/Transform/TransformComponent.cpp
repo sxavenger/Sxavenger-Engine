@@ -14,23 +14,6 @@ _DXOBJECT_USING
 // TransformComponent class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-json TransformComponent::OutputJson() const {
-	json component;
-
-	component["transform"] = transform_.OutputJson();
-
-	return component;
-}
-
-void TransformComponent::InputJson(const json& data) {
-	if (!data.contains(typeid(TransformComponent).name())) {
-		return; //!< component data is not exist.
-	}
-
-	const json& component = data.at(typeid(TransformComponent).name());
-	transform_.InputJson(component.at("transform"));
-}
-
 void TransformComponent::ShowComponentInspector() {
 	transform_.SetImGuiCommand();
 	UpdateMatrix();
@@ -81,4 +64,22 @@ void TransformComponent::TransferGPU() {
 	if (buffer_ != nullptr) {
 		(*buffer_)[0].Transfer(mat_);
 	}
+}
+
+json TransformComponent::PerseToJson() const {
+	json root;
+
+	auto& component = root[typeid(TransformComponent).name()] = json::object();
+	component["transform"] = transform_.PerseToJson();
+
+	return root;
+}
+
+void TransformComponent::InputJson(const json& data) {
+	if (!data.contains(typeid(TransformComponent).name())) {
+		return; //!< component data is not exist.
+	}
+
+	const json& component = data.at(typeid(TransformComponent).name());
+	transform_.InputJson(component.at("transform"));
 }

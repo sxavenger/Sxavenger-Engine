@@ -147,16 +147,20 @@ void MonoBehaviour::ShowInspector() {
 	ImGui::Separator();
 	ImGui::SeparatorText("components");
 
-	for (const auto& [type, component] : GetComponents().GetMap()) {
+	for (const auto& [type, component] : GetComponents()) {
 		if (ImGui::CollapsingHeader(type->name())) {
 			(*component)->ShowComponentInspector();
 		}
 	}
 
 	ImGui::SeparatorText("inspectable");
-
 	Inspectable();
 
+	ImGui::SeparatorText("preview");
+	if (ImGui::Button("prese")) {
+		std::filesystem::path filepath = name_ + ".json";
+		JsonHandler::WriteToJson(filepath, PerseToJson());
+	}
 
 }
 
@@ -169,6 +173,29 @@ void MonoBehaviour::LateUpdate() {
 	sEditorEngine->ExecuteEditorFunction<RenderSceneEditor>([&](RenderSceneEditor* editor) {
 		editor->ManipulateCanvas(this);
 	});
+}
+
+json MonoBehaviour::PerseToJson() const {
+	json root = json::object();
+	//* properties
+	root["name"]        = name_;
+	root["isRenamable"] = isRenamable_;
+	root["isActive"]    = isActive_;
+	root["isView"]      = isView_;
+
+	//* components
+	json& components = root["components"] = json::array();
+	for (const auto& [type, component] : components_) {
+		components.emplace_back((*component)->PerseToJson());
+	}
+
+	//* children
+	json& children = root["children"] = json::array();
+	for (const auto& child : children_) {
+		children.emplace_back(GetElement(child)->PerseToJson());
+	}
+
+	return root;
 }
 
 MonoBehaviour::HierarchyIterator MonoBehaviour::AddHierarchy(HierarchyElement&& child) {

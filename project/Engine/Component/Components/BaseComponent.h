@@ -28,7 +28,7 @@ public:
 	BaseComponent(MonoBehaviour* behaviour) : behaviour_(behaviour) {}
 	virtual ~BaseComponent() = default;
 
-	virtual json OutputJson() const override { return json(); }
+	virtual json PerseToJson() const override { return json(); }
 
 	virtual void InputJson(const json&) override {}
 

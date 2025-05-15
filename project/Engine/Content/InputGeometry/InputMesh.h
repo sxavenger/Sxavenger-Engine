@@ -55,30 +55,32 @@ class InputMesh
 public:
 
 	////////////////////////////////////////////////////////////////////////////////////////////
-	// MeshletInfo structure
-	////////////////////////////////////////////////////////////////////////////////////////////
-	struct MeshletInfo {
-	public:
-
-		//=========================================================================================
-		// public variables
-		//=========================================================================================
-
-		uint32_t meshletCount;
-
-	};
-
-	////////////////////////////////////////////////////////////////////////////////////////////
 	// Meshlet structure
 	////////////////////////////////////////////////////////////////////////////////////////////
 	struct Meshlet {
+	public:
+
+		////////////////////////////////////////////////////////////////////////////////////////////
+		// MeshletInfo structure
+		////////////////////////////////////////////////////////////////////////////////////////////
+		struct MeshletInfo {
+		public:
+
+			//=========================================================================================
+			// public variables
+			//=========================================================================================
+
+			uint32_t meshletCount;
+
+		};
+
 	public:
 
 		//=========================================================================================
 		// public methods
 		//=========================================================================================
 
-		void CreateMeshlet(TriangleInputAssembler<MeshVertexData>* ia);
+		void CreateMeshlet(const TriangleInputAssembler<MeshVertexData>* ia);
 
 		void Dispatch(const DirectXThreadContext* context, UINT instanceCount = 1) const;
 
@@ -114,7 +116,7 @@ public:
 		// public methods
 		//=========================================================================================
 
-		void CreateBottomLevelAS(TriangleInputAssembler<MeshVertexData>* ia, const DirectXThreadContext* context);
+		void CreateBottomLevelAS(const TriangleInputAssembler<MeshVertexData>* ia, const DirectXThreadContext* context);
 
 		//=========================================================================================
 		// public variables

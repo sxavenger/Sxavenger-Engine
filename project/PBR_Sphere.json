@@ -1,0 +1,5043 @@
+{
+	"children": [
+		{
+			"children": [
+				{
+					"children": [],
+					"components": [
+						{
+							"class TransformComponent": {
+								"transform": {
+									"rotate": {
+										"w": 0.7071067094802856,
+										"x": -0.7071068286895752,
+										"y": -0.0,
+										"z": 0.0
+									},
+									"scale": {
+										"x": 1.0,
+										"y": 1.0000001192092896,
+										"z": 1.0000001192092896
+									},
+									"translate": {
+										"x": 0.0,
+										"y": 0.0,
+										"z": -0.0
+									}
+								}
+							}
+						}
+					],
+					"isActive": true,
+					"isRenamable": true,
+					"isView": true,
+					"name": "球"
+				},
+				{
+					"children": [],
+					"components": [
+						{
+							"class TransformComponent": {
+								"transform": {
+									"rotate": {
+										"w": 1.0,
+										"x": -0.0,
+										"y": -0.0,
+										"z": 0.0
+									},
+									"scale": {
+										"x": 1.0,
+										"y": 1.0,
+										"z": 1.0
+									},
+									"translate": {
+										"x": -15.0,
+										"y": -15.0,
+										"z": -0.0
+									}
+								}
+							}
+						}
+					],
+					"isActive": true,
+					"isRenamable": true,
+					"isView": true,
+					"name": "球.001"
+				},
+				{
+					"children": [],
+					"components": [
+						{
+							"class TransformComponent": {
+								"transform": {
+									"rotate": {
+										"w": 1.0,
+										"x": -0.0,
+										"y": -0.0,
+										"z": 0.0
+									},
+									"scale": {
+										"x": 1.0,
+										"y": 1.0,
+										"z": 1.0
+									},
+									"translate": {
+										"x": -12.0,
+										"y": -15.0,
+										"z": -0.0
+									}
+								}
+							}
+						}
+					],
+					"isActive": true,
+					"isRenamable": true,
+					"isView": true,
+					"name": "球.002"
+				},
+				{
+					"children": [],
+					"components": [
+						{
+							"class TransformComponent": {
+								"transform": {
+									"rotate": {
+										"w": 1.0,
+										"x": -0.0,
+										"y": -0.0,
+										"z": 0.0
+									},
+									"scale": {
+										"x": 1.0,
+										"y": 1.0,
+										"z": 1.0
+									},
+									"translate": {
+										"x": -9.0,
+										"y": -15.0,
+										"z": -0.0
+									}
+								}
+							}
+						}
+					],
+					"isActive": true,
+					"isRenamable": true,
+					"isView": true,
+					"name": "球.003"
+				},
+				{
+					"children": [],
+					"components": [
+						{
+							"class TransformComponent": {
+								"transform": {
+									"rotate": {
+										"w": 1.0,
+										"x": -0.0,
+										"y": -0.0,
+										"z": 0.0
+									},
+									"scale": {
+										"x": 1.0,
+										"y": 1.0,
+										"z": 1.0
+									},
+									"translate": {
+										"x": -6.0,
+										"y": -15.0,
+										"z": -0.0
+									}
+								}
+							}
+						}
+					],
+					"isActive": true,
+					"isRenamable": true,
+					"isView": true,
+					"name": "球.004"
+				},
+				{
+					"children": [],
+					"components": [
+						{
+							"class TransformComponent": {
+								"transform": {
+									"rotate": {
+										"w": 1.0,
+										"x": -0.0,
+										"y": -0.0,
+										"z": 0.0
+									},
+									"scale": {
+										"x": 1.0,
+										"y": 1.0,
+										"z": 1.0
+									},
+									"translate": {
+										"x": -3.0,
+										"y": -15.0,
+										"z": -0.0
+									}
+								}
+							}
+						}
+					],
+					"isActive": true,
+					"isRenamable": true,
+					"isView": true,
+					"name": "球.005"
+				},
+				{
+					"children": [],
+					"components": [
+						{
+							"class TransformComponent": {
+								"transform": {
+									"rotate": {
+										"w": 1.0,
+										"x": -0.0,
+										"y": -0.0,
+										"z": 0.0
+									},
+									"scale": {
+										"x": 1.0,
+										"y": 1.0,
+										"z": 1.0
+									},
+									"translate": {
+										"x": 0.0,
+										"y": -15.0,
+										"z": -0.0
+									}
+								}
+							}
+						}
+					],
+					"isActive": true,
+					"isRenamable": true,
+					"isView": true,
+					"name": "球.006"
+				},
+				{
+					"children": [],
+					"components": [
+						{
+							"class TransformComponent": {
+								"transform": {
+									"rotate": {
+										"w": 1.0,
+										"x": -0.0,
+										"y": -0.0,
+										"z": 0.0
+									},
+									"scale": {
+										"x": 1.0,
+										"y": 1.0,
+										"z": 1.0
+									},
+									"translate": {
+										"x": 3.0,
+										"y": -15.0,
+										"z": -0.0
+									}
+								}
+							}
+						}
+					],
+					"isActive": true,
+					"isRenamable": true,
+					"isView": true,
+					"name": "球.007"
+				},
+				{
+					"children": [],
+					"components": [
+						{
+							"class TransformComponent": {
+								"transform": {
+									"rotate": {
+										"w": 1.0,
+										"x": -0.0,
+										"y": -0.0,
+										"z": 0.0
+									},
+									"scale": {
+										"x": 1.0,
+										"y": 1.0,
+										"z": 1.0
+									},
+									"translate": {
+										"x": 6.0,
+										"y": -15.0,
+										"z": -0.0
+									}
+								}
+							}
+						}
+					],
+					"isActive": true,
+					"isRenamable": true,
+					"isView": true,
+					"name": "球.008"
+				},
+				{
+					"children": [],
+					"components": [
+						{
+							"class TransformComponent": {
+								"transform": {
+									"rotate": {
+										"w": 1.0,
+										"x": -0.0,
+										"y": -0.0,
+										"z": 0.0
+									},
+									"scale": {
+										"x": 1.0,
+										"y": 1.0,
+										"z": 1.0
+									},
+									"translate": {
+										"x": 9.0,
+										"y": -15.0,
+										"z": -0.0
+									}
+								}
+							}
+						}
+					],
+					"isActive": true,
+					"isRenamable": true,
+					"isView": true,
+					"name": "球.009"
+				},
+				{
+					"children": [],
+					"components": [
+						{
+							"class TransformComponent": {
+								"transform": {
+									"rotate": {
+										"w": 1.0,
+										"x": -0.0,
+										"y": -0.0,
+										"z": 0.0
+									},
+									"scale": {
+										"x": 1.0,
+										"y": 1.0,
+										"z": 1.0
+									},
+									"translate": {
+										"x": 12.0,
+										"y": -15.0,
+										"z": -0.0
+									}
+								}
+							}
+						}
+					],
+					"isActive": true,
+					"isRenamable": true,
+					"isView": true,
+					"name": "球.010"
+				},
+				{
+					"children": [],
+					"components": [
+						{
+							"class TransformComponent": {
+								"transform": {
+									"rotate": {
+										"w": 1.0,
+										"x": -0.0,
+										"y": -0.0,
+										"z": 0.0
+									},
+									"scale": {
+										"x": 1.0,
+										"y": 1.0,
+										"z": 1.0
+									},
+									"translate": {
+										"x": 15.0,
+										"y": -15.0,
+										"z": -0.0
+									}
+								}
+							}
+						}
+					],
+					"isActive": true,
+					"isRenamable": true,
+					"isView": true,
+					"name": "球.011"
+				},
+				{
+					"children": [],
+					"components": [
+						{
+							"class TransformComponent": {
+								"transform": {
+									"rotate": {
+										"w": 1.0,
+										"x": -0.0,
+										"y": -0.0,
+										"z": 0.0
+									},
+									"scale": {
+										"x": 1.0,
+										"y": 1.0,
+										"z": 1.0
+									},
+									"translate": {
+										"x": -15.0,
+										"y": -12.0,
+										"z": -0.0
+									}
+								}
+							}
+						}
+					],
+					"isActive": true,
+					"isRenamable": true,
+					"isView": true,
+					"name": "球.012"
+				},
+				{
+					"children": [],
+					"components": [
+						{
+							"class TransformComponent": {
+								"transform": {
+									"rotate": {
+										"w": 1.0,
+										"x": -0.0,
+										"y": -0.0,
+										"z": 0.0
+									},
+									"scale": {
+										"x": 1.0,
+										"y": 1.0,
+										"z": 1.0
+									},
+									"translate": {
+										"x": -12.0,
+										"y": -12.0,
+										"z": -0.0
+									}
+								}
+							}
+						}
+					],
+					"isActive": true,
+					"isRenamable": true,
+					"isView": true,
+					"name": "球.013"
+				},
+				{
+					"children": [],
+					"components": [
+						{
+							"class TransformComponent": {
+								"transform": {
+									"rotate": {
+										"w": 1.0,
+										"x": -0.0,
+										"y": -0.0,
+										"z": 0.0
+									},
+									"scale": {
+										"x": 1.0,
+										"y": 1.0,
+										"z": 1.0
+									},
+									"translate": {
+										"x": -9.0,
+										"y": -12.0,
+										"z": -0.0
+									}
+								}
+							}
+						}
+					],
+					"isActive": true,
+					"isRenamable": true,
+					"isView": true,
+					"name": "球.014"
+				},
+				{
+					"children": [],
+					"components": [
+						{
+							"class TransformComponent": {
+								"transform": {
+									"rotate": {
+										"w": 1.0,
+										"x": -0.0,
+										"y": -0.0,
+										"z": 0.0
+									},
+									"scale": {
+										"x": 1.0,
+										"y": 1.0,
+										"z": 1.0
+									},
+									"translate": {
+										"x": -6.0,
+										"y": -12.0,
+										"z": -0.0
+									}
+								}
+							}
+						}
+					],
+					"isActive": true,
+					"isRenamable": true,
+					"isView": true,
+					"name": "球.015"
+				},
+				{
+					"children": [],
+					"components": [
+						{
+							"class TransformComponent": {
+								"transform": {
+									"rotate": {
+										"w": 1.0,
+										"x": -0.0,
+										"y": -0.0,
+										"z": 0.0
+									},
+									"scale": {
+										"x": 1.0,
+										"y": 1.0,
+										"z": 1.0
+									},
+									"translate": {
+										"x": -3.0,
+										"y": -12.0,
+										"z": -0.0
+									}
+								}
+							}
+						}
+					],
+					"isActive": true,
+					"isRenamable": true,
+					"isView": true,
+					"name": "球.016"
+				},
+				{
+					"children": [],
+					"components": [
+						{
+							"class TransformComponent": {
+								"transform": {
+									"rotate": {
+										"w": 1.0,
+										"x": -0.0,
+										"y": -0.0,
+										"z": 0.0
+									},
+									"scale": {
+										"x": 1.0,
+										"y": 1.0,
+										"z": 1.0
+									},
+									"translate": {
+										"x": 0.0,
+										"y": -12.0,
+										"z": -0.0
+									}
+								}
+							}
+						}
+					],
+					"isActive": true,
+					"isRenamable": true,
+					"isView": true,
+					"name": "球.017"
+				},
+				{
+					"children": [],
+					"components": [
+						{
+							"class TransformComponent": {
+								"transform": {
+									"rotate": {
+										"w": 1.0,
+										"x": -0.0,
+										"y": -0.0,
+										"z": 0.0
+									},
+									"scale": {
+										"x": 1.0,
+										"y": 1.0,
+										"z": 1.0
+									},
+									"translate": {
+										"x": 3.0,
+										"y": -12.0,
+										"z": -0.0
+									}
+								}
+							}
+						}
+					],
+					"isActive": true,
+					"isRenamable": true,
+					"isView": true,
+					"name": "球.018"
+				},
+				{
+					"children": [],
+					"components": [
+						{
+							"class TransformComponent": {
+								"transform": {
+									"rotate": {
+										"w": 1.0,
+										"x": -0.0,
+										"y": -0.0,
+										"z": 0.0
+									},
+									"scale": {
+										"x": 1.0,
+										"y": 1.0,
+										"z": 1.0
+									},
+									"translate": {
+										"x": 6.0,
+										"y": -12.0,
+										"z": -0.0
+									}
+								}
+							}
+						}
+					],
+					"isActive": true,
+					"isRenamable": true,
+					"isView": true,
+					"name": "球.019"
+				},
+				{
+					"children": [],
+					"components": [
+						{
+							"class TransformComponent": {
+								"transform": {
+									"rotate": {
+										"w": 1.0,
+										"x": -0.0,
+										"y": -0.0,
+										"z": 0.0
+									},
+									"scale": {
+										"x": 1.0,
+										"y": 1.0,
+										"z": 1.0
+									},
+									"translate": {
+										"x": 9.0,
+										"y": -12.0,
+										"z": -0.0
+									}
+								}
+							}
+						}
+					],
+					"isActive": true,
+					"isRenamable": true,
+					"isView": true,
+					"name": "球.020"
+				},
+				{
+					"children": [],
+					"components": [
+						{
+							"class TransformComponent": {
+								"transform": {
+									"rotate": {
+										"w": 1.0,
+										"x": -0.0,
+										"y": -0.0,
+										"z": 0.0
+									},
+									"scale": {
+										"x": 1.0,
+										"y": 1.0,
+										"z": 1.0
+									},
+									"translate": {
+										"x": 12.0,
+										"y": -12.0,
+										"z": -0.0
+									}
+								}
+							}
+						}
+					],
+					"isActive": true,
+					"isRenamable": true,
+					"isView": true,
+					"name": "球.021"
+				},
+				{
+					"children": [],
+					"components": [
+						{
+							"class TransformComponent": {
+								"transform": {
+									"rotate": {
+										"w": 1.0,
+										"x": -0.0,
+										"y": -0.0,
+										"z": 0.0
+									},
+									"scale": {
+										"x": 1.0,
+										"y": 1.0,
+										"z": 1.0
+									},
+									"translate": {
+										"x": 15.0,
+										"y": -12.0,
+										"z": -0.0
+									}
+								}
+							}
+						}
+					],
+					"isActive": true,
+					"isRenamable": true,
+					"isView": true,
+					"name": "球.022"
+				},
+				{
+					"children": [],
+					"components": [
+						{
+							"class TransformComponent": {
+								"transform": {
+									"rotate": {
+										"w": 1.0,
+										"x": -0.0,
+										"y": -0.0,
+										"z": 0.0
+									},
+									"scale": {
+										"x": 1.0,
+										"y": 1.0,
+										"z": 1.0
+									},
+									"translate": {
+										"x": -15.0,
+										"y": -9.0,
+										"z": -0.0
+									}
+								}
+							}
+						}
+					],
+					"isActive": true,
+					"isRenamable": true,
+					"isView": true,
+					"name": "球.023"
+				},
+				{
+					"children": [],
+					"components": [
+						{
+							"class TransformComponent": {
+								"transform": {
+									"rotate": {
+										"w": 1.0,
+										"x": -0.0,
+										"y": -0.0,
+										"z": 0.0
+									},
+									"scale": {
+										"x": 1.0,
+										"y": 1.0,
+										"z": 1.0
+									},
+									"translate": {
+										"x": -12.0,
+										"y": -9.0,
+										"z": -0.0
+									}
+								}
+							}
+						}
+					],
+					"isActive": true,
+					"isRenamable": true,
+					"isView": true,
+					"name": "球.024"
+				},
+				{
+					"children": [],
+					"components": [
+						{
+							"class TransformComponent": {
+								"transform": {
+									"rotate": {
+										"w": 1.0,
+										"x": -0.0,
+										"y": -0.0,
+										"z": 0.0
+									},
+									"scale": {
+										"x": 1.0,
+										"y": 1.0,
+										"z": 1.0
+									},
+									"translate": {
+										"x": -9.0,
+										"y": -9.0,
+										"z": -0.0
+									}
+								}
+							}
+						}
+					],
+					"isActive": true,
+					"isRenamable": true,
+					"isView": true,
+					"name": "球.025"
+				},
+				{
+					"children": [],
+					"components": [
+						{
+							"class TransformComponent": {
+								"transform": {
+									"rotate": {
+										"w": 1.0,
+										"x": -0.0,
+										"y": -0.0,
+										"z": 0.0
+									},
+									"scale": {
+										"x": 1.0,
+										"y": 1.0,
+										"z": 1.0
+									},
+									"translate": {
+										"x": -6.0,
+										"y": -9.0,
+										"z": -0.0
+									}
+								}
+							}
+						}
+					],
+					"isActive": true,
+					"isRenamable": true,
+					"isView": true,
+					"name": "球.026"
+				},
+				{
+					"children": [],
+					"components": [
+						{
+							"class TransformComponent": {
+								"transform": {
+									"rotate": {
+										"w": 1.0,
+										"x": -0.0,
+										"y": -0.0,
+										"z": 0.0
+									},
+									"scale": {
+										"x": 1.0,
+										"y": 1.0,
+										"z": 1.0
+									},
+									"translate": {
+										"x": -3.0,
+										"y": -9.0,
+										"z": -0.0
+									}
+								}
+							}
+						}
+					],
+					"isActive": true,
+					"isRenamable": true,
+					"isView": true,
+					"name": "球.027"
+				},
+				{
+					"children": [],
+					"components": [
+						{
+							"class TransformComponent": {
+								"transform": {
+									"rotate": {
+										"w": 1.0,
+										"x": -0.0,
+										"y": -0.0,
+										"z": 0.0
+									},
+									"scale": {
+										"x": 1.0,
+										"y": 1.0,
+										"z": 1.0
+									},
+									"translate": {
+										"x": 0.0,
+										"y": -9.0,
+										"z": -0.0
+									}
+								}
+							}
+						}
+					],
+					"isActive": true,
+					"isRenamable": true,
+					"isView": true,
+					"name": "球.028"
+				},
+				{
+					"children": [],
+					"components": [
+						{
+							"class TransformComponent": {
+								"transform": {
+									"rotate": {
+										"w": 1.0,
+										"x": -0.0,
+										"y": -0.0,
+										"z": 0.0
+									},
+									"scale": {
+										"x": 1.0,
+										"y": 1.0,
+										"z": 1.0
+									},
+									"translate": {
+										"x": 3.0,
+										"y": -9.0,
+										"z": -0.0
+									}
+								}
+							}
+						}
+					],
+					"isActive": true,
+					"isRenamable": true,
+					"isView": true,
+					"name": "球.029"
+				},
+				{
+					"children": [],
+					"components": [
+						{
+							"class TransformComponent": {
+								"transform": {
+									"rotate": {
+										"w": 1.0,
+										"x": -0.0,
+										"y": -0.0,
+										"z": 0.0
+									},
+									"scale": {
+										"x": 1.0,
+										"y": 1.0,
+										"z": 1.0
+									},
+									"translate": {
+										"x": 6.0,
+										"y": -9.0,
+										"z": -0.0
+									}
+								}
+							}
+						}
+					],
+					"isActive": true,
+					"isRenamable": true,
+					"isView": true,
+					"name": "球.030"
+				},
+				{
+					"children": [],
+					"components": [
+						{
+							"class TransformComponent": {
+								"transform": {
+									"rotate": {
+										"w": 1.0,
+										"x": -0.0,
+										"y": -0.0,
+										"z": 0.0
+									},
+									"scale": {
+										"x": 1.0,
+										"y": 1.0,
+										"z": 1.0
+									},
+									"translate": {
+										"x": 9.0,
+										"y": -9.0,
+										"z": -0.0
+									}
+								}
+							}
+						}
+					],
+					"isActive": true,
+					"isRenamable": true,
+					"isView": true,
+					"name": "球.031"
+				},
+				{
+					"children": [],
+					"components": [
+						{
+							"class TransformComponent": {
+								"transform": {
+									"rotate": {
+										"w": 1.0,
+										"x": -0.0,
+										"y": -0.0,
+										"z": 0.0
+									},
+									"scale": {
+										"x": 1.0,
+										"y": 1.0,
+										"z": 1.0
+									},
+									"translate": {
+										"x": 12.0,
+										"y": -9.0,
+										"z": -0.0
+									}
+								}
+							}
+						}
+					],
+					"isActive": true,
+					"isRenamable": true,
+					"isView": true,
+					"name": "球.032"
+				},
+				{
+					"children": [],
+					"components": [
+						{
+							"class TransformComponent": {
+								"transform": {
+									"rotate": {
+										"w": 1.0,
+										"x": -0.0,
+										"y": -0.0,
+										"z": 0.0
+									},
+									"scale": {
+										"x": 1.0,
+										"y": 1.0,
+										"z": 1.0
+									},
+									"translate": {
+										"x": 15.0,
+										"y": -9.0,
+										"z": -0.0
+									}
+								}
+							}
+						}
+					],
+					"isActive": true,
+					"isRenamable": true,
+					"isView": true,
+					"name": "球.033"
+				},
+				{
+					"children": [],
+					"components": [
+						{
+							"class TransformComponent": {
+								"transform": {
+									"rotate": {
+										"w": 1.0,
+										"x": -0.0,
+										"y": -0.0,
+										"z": 0.0
+									},
+									"scale": {
+										"x": 1.0,
+										"y": 1.0,
+										"z": 1.0
+									},
+									"translate": {
+										"x": -15.0,
+										"y": -6.0,
+										"z": -0.0
+									}
+								}
+							}
+						}
+					],
+					"isActive": true,
+					"isRenamable": true,
+					"isView": true,
+					"name": "球.034"
+				},
+				{
+					"children": [],
+					"components": [
+						{
+							"class TransformComponent": {
+								"transform": {
+									"rotate": {
+										"w": 1.0,
+										"x": -0.0,
+										"y": -0.0,
+										"z": 0.0
+									},
+									"scale": {
+										"x": 1.0,
+										"y": 1.0,
+										"z": 1.0
+									},
+									"translate": {
+										"x": -12.0,
+										"y": -6.0,
+										"z": -0.0
+									}
+								}
+							}
+						}
+					],
+					"isActive": true,
+					"isRenamable": true,
+					"isView": true,
+					"name": "球.035"
+				},
+				{
+					"children": [],
+					"components": [
+						{
+							"class TransformComponent": {
+								"transform": {
+									"rotate": {
+										"w": 1.0,
+										"x": -0.0,
+										"y": -0.0,
+										"z": 0.0
+									},
+									"scale": {
+										"x": 1.0,
+										"y": 1.0,
+										"z": 1.0
+									},
+									"translate": {
+										"x": -9.0,
+										"y": -6.0,
+										"z": -0.0
+									}
+								}
+							}
+						}
+					],
+					"isActive": true,
+					"isRenamable": true,
+					"isView": true,
+					"name": "球.036"
+				},
+				{
+					"children": [],
+					"components": [
+						{
+							"class TransformComponent": {
+								"transform": {
+									"rotate": {
+										"w": 1.0,
+										"x": -0.0,
+										"y": -0.0,
+										"z": 0.0
+									},
+									"scale": {
+										"x": 1.0,
+										"y": 1.0,
+										"z": 1.0
+									},
+									"translate": {
+										"x": -6.0,
+										"y": -6.0,
+										"z": -0.0
+									}
+								}
+							}
+						}
+					],
+					"isActive": true,
+					"isRenamable": true,
+					"isView": true,
+					"name": "球.037"
+				},
+				{
+					"children": [],
+					"components": [
+						{
+							"class TransformComponent": {
+								"transform": {
+									"rotate": {
+										"w": 1.0,
+										"x": -0.0,
+										"y": -0.0,
+										"z": 0.0
+									},
+									"scale": {
+										"x": 1.0,
+										"y": 1.0,
+										"z": 1.0
+									},
+									"translate": {
+										"x": -3.0,
+										"y": -6.0,
+										"z": -0.0
+									}
+								}
+							}
+						}
+					],
+					"isActive": true,
+					"isRenamable": true,
+					"isView": true,
+					"name": "球.038"
+				},
+				{
+					"children": [],
+					"components": [
+						{
+							"class TransformComponent": {
+								"transform": {
+									"rotate": {
+										"w": 1.0,
+										"x": -0.0,
+										"y": -0.0,
+										"z": 0.0
+									},
+									"scale": {
+										"x": 1.0,
+										"y": 1.0,
+										"z": 1.0
+									},
+									"translate": {
+										"x": 0.0,
+										"y": -6.0,
+										"z": -0.0
+									}
+								}
+							}
+						}
+					],
+					"isActive": true,
+					"isRenamable": true,
+					"isView": true,
+					"name": "球.039"
+				},
+				{
+					"children": [],
+					"components": [
+						{
+							"class TransformComponent": {
+								"transform": {
+									"rotate": {
+										"w": 1.0,
+										"x": -0.0,
+										"y": -0.0,
+										"z": 0.0
+									},
+									"scale": {
+										"x": 1.0,
+										"y": 1.0,
+										"z": 1.0
+									},
+									"translate": {
+										"x": 3.0,
+										"y": -6.0,
+										"z": -0.0
+									}
+								}
+							}
+						}
+					],
+					"isActive": true,
+					"isRenamable": true,
+					"isView": true,
+					"name": "球.040"
+				},
+				{
+					"children": [],
+					"components": [
+						{
+							"class TransformComponent": {
+								"transform": {
+									"rotate": {
+										"w": 1.0,
+										"x": -0.0,
+										"y": -0.0,
+										"z": 0.0
+									},
+									"scale": {
+										"x": 1.0,
+										"y": 1.0,
+										"z": 1.0
+									},
+									"translate": {
+										"x": 6.0,
+										"y": -6.0,
+										"z": -0.0
+									}
+								}
+							}
+						}
+					],
+					"isActive": true,
+					"isRenamable": true,
+					"isView": true,
+					"name": "球.041"
+				},
+				{
+					"children": [],
+					"components": [
+						{
+							"class TransformComponent": {
+								"transform": {
+									"rotate": {
+										"w": 1.0,
+										"x": -0.0,
+										"y": -0.0,
+										"z": 0.0
+									},
+									"scale": {
+										"x": 1.0,
+										"y": 1.0,
+										"z": 1.0
+									},
+									"translate": {
+										"x": 9.0,
+										"y": -6.0,
+										"z": -0.0
+									}
+								}
+							}
+						}
+					],
+					"isActive": true,
+					"isRenamable": true,
+					"isView": true,
+					"name": "球.042"
+				},
+				{
+					"children": [],
+					"components": [
+						{
+							"class TransformComponent": {
+								"transform": {
+									"rotate": {
+										"w": 1.0,
+										"x": -0.0,
+										"y": -0.0,
+										"z": 0.0
+									},
+									"scale": {
+										"x": 1.0,
+										"y": 1.0,
+										"z": 1.0
+									},
+									"translate": {
+										"x": 12.0,
+										"y": -6.0,
+										"z": -0.0
+									}
+								}
+							}
+						}
+					],
+					"isActive": true,
+					"isRenamable": true,
+					"isView": true,
+					"name": "球.043"
+				},
+				{
+					"children": [],
+					"components": [
+						{
+							"class TransformComponent": {
+								"transform": {
+									"rotate": {
+										"w": 1.0,
+										"x": -0.0,
+										"y": -0.0,
+										"z": 0.0
+									},
+									"scale": {
+										"x": 1.0,
+										"y": 1.0,
+										"z": 1.0
+									},
+									"translate": {
+										"x": 15.0,
+										"y": -6.0,
+										"z": -0.0
+									}
+								}
+							}
+						}
+					],
+					"isActive": true,
+					"isRenamable": true,
+					"isView": true,
+					"name": "球.044"
+				},
+				{
+					"children": [],
+					"components": [
+						{
+							"class TransformComponent": {
+								"transform": {
+									"rotate": {
+										"w": 1.0,
+										"x": -0.0,
+										"y": -0.0,
+										"z": 0.0
+									},
+									"scale": {
+										"x": 1.0,
+										"y": 1.0,
+										"z": 1.0
+									},
+									"translate": {
+										"x": -15.0,
+										"y": -3.0,
+										"z": -0.0
+									}
+								}
+							}
+						}
+					],
+					"isActive": true,
+					"isRenamable": true,
+					"isView": true,
+					"name": "球.045"
+				},
+				{
+					"children": [],
+					"components": [
+						{
+							"class TransformComponent": {
+								"transform": {
+									"rotate": {
+										"w": 1.0,
+										"x": -0.0,
+										"y": -0.0,
+										"z": 0.0
+									},
+									"scale": {
+										"x": 1.0,
+										"y": 1.0,
+										"z": 1.0
+									},
+									"translate": {
+										"x": -12.0,
+										"y": -3.0,
+										"z": -0.0
+									}
+								}
+							}
+						}
+					],
+					"isActive": true,
+					"isRenamable": true,
+					"isView": true,
+					"name": "球.046"
+				},
+				{
+					"children": [],
+					"components": [
+						{
+							"class TransformComponent": {
+								"transform": {
+									"rotate": {
+										"w": 1.0,
+										"x": -0.0,
+										"y": -0.0,
+										"z": 0.0
+									},
+									"scale": {
+										"x": 1.0,
+										"y": 1.0,
+										"z": 1.0
+									},
+									"translate": {
+										"x": -9.0,
+										"y": -3.0,
+										"z": -0.0
+									}
+								}
+							}
+						}
+					],
+					"isActive": true,
+					"isRenamable": true,
+					"isView": true,
+					"name": "球.047"
+				},
+				{
+					"children": [],
+					"components": [
+						{
+							"class TransformComponent": {
+								"transform": {
+									"rotate": {
+										"w": 1.0,
+										"x": -0.0,
+										"y": -0.0,
+										"z": 0.0
+									},
+									"scale": {
+										"x": 1.0,
+										"y": 1.0,
+										"z": 1.0
+									},
+									"translate": {
+										"x": -6.0,
+										"y": -3.0,
+										"z": -0.0
+									}
+								}
+							}
+						}
+					],
+					"isActive": true,
+					"isRenamable": true,
+					"isView": true,
+					"name": "球.048"
+				},
+				{
+					"children": [],
+					"components": [
+						{
+							"class TransformComponent": {
+								"transform": {
+									"rotate": {
+										"w": 1.0,
+										"x": -0.0,
+										"y": -0.0,
+										"z": 0.0
+									},
+									"scale": {
+										"x": 1.0,
+										"y": 1.0,
+										"z": 1.0
+									},
+									"translate": {
+										"x": -3.0,
+										"y": -3.0,
+										"z": -0.0
+									}
+								}
+							}
+						}
+					],
+					"isActive": true,
+					"isRenamable": true,
+					"isView": true,
+					"name": "球.049"
+				},
+				{
+					"children": [],
+					"components": [
+						{
+							"class TransformComponent": {
+								"transform": {
+									"rotate": {
+										"w": 1.0,
+										"x": -0.0,
+										"y": -0.0,
+										"z": 0.0
+									},
+									"scale": {
+										"x": 1.0,
+										"y": 1.0,
+										"z": 1.0
+									},
+									"translate": {
+										"x": 0.0,
+										"y": -3.0,
+										"z": -0.0
+									}
+								}
+							}
+						}
+					],
+					"isActive": true,
+					"isRenamable": true,
+					"isView": true,
+					"name": "球.050"
+				},
+				{
+					"children": [],
+					"components": [
+						{
+							"class TransformComponent": {
+								"transform": {
+									"rotate": {
+										"w": 1.0,
+										"x": -0.0,
+										"y": -0.0,
+										"z": 0.0
+									},
+									"scale": {
+										"x": 1.0,
+										"y": 1.0,
+										"z": 1.0
+									},
+									"translate": {
+										"x": 3.0,
+										"y": -3.0,
+										"z": -0.0
+									}
+								}
+							}
+						}
+					],
+					"isActive": true,
+					"isRenamable": true,
+					"isView": true,
+					"name": "球.051"
+				},
+				{
+					"children": [],
+					"components": [
+						{
+							"class TransformComponent": {
+								"transform": {
+									"rotate": {
+										"w": 1.0,
+										"x": -0.0,
+										"y": -0.0,
+										"z": 0.0
+									},
+									"scale": {
+										"x": 1.0,
+										"y": 1.0,
+										"z": 1.0
+									},
+									"translate": {
+										"x": 6.0,
+										"y": -3.0,
+										"z": -0.0
+									}
+								}
+							}
+						}
+					],
+					"isActive": true,
+					"isRenamable": true,
+					"isView": true,
+					"name": "球.052"
+				},
+				{
+					"children": [],
+					"components": [
+						{
+							"class TransformComponent": {
+								"transform": {
+									"rotate": {
+										"w": 1.0,
+										"x": -0.0,
+										"y": -0.0,
+										"z": 0.0
+									},
+									"scale": {
+										"x": 1.0,
+										"y": 1.0,
+										"z": 1.0
+									},
+									"translate": {
+										"x": 9.0,
+										"y": -3.0,
+										"z": -0.0
+									}
+								}
+							}
+						}
+					],
+					"isActive": true,
+					"isRenamable": true,
+					"isView": true,
+					"name": "球.053"
+				},
+				{
+					"children": [],
+					"components": [
+						{
+							"class TransformComponent": {
+								"transform": {
+									"rotate": {
+										"w": 1.0,
+										"x": -0.0,
+										"y": -0.0,
+										"z": 0.0
+									},
+									"scale": {
+										"x": 1.0,
+										"y": 1.0,
+										"z": 1.0
+									},
+									"translate": {
+										"x": 12.0,
+										"y": -3.0,
+										"z": -0.0
+									}
+								}
+							}
+						}
+					],
+					"isActive": true,
+					"isRenamable": true,
+					"isView": true,
+					"name": "球.054"
+				},
+				{
+					"children": [],
+					"components": [
+						{
+							"class TransformComponent": {
+								"transform": {
+									"rotate": {
+										"w": 1.0,
+										"x": -0.0,
+										"y": -0.0,
+										"z": 0.0
+									},
+									"scale": {
+										"x": 1.0,
+										"y": 1.0,
+										"z": 1.0
+									},
+									"translate": {
+										"x": 15.0,
+										"y": -3.0,
+										"z": -0.0
+									}
+								}
+							}
+						}
+					],
+					"isActive": true,
+					"isRenamable": true,
+					"isView": true,
+					"name": "球.055"
+				},
+				{
+					"children": [],
+					"components": [
+						{
+							"class TransformComponent": {
+								"transform": {
+									"rotate": {
+										"w": 1.0,
+										"x": -0.0,
+										"y": -0.0,
+										"z": 0.0
+									},
+									"scale": {
+										"x": 1.0,
+										"y": 1.0,
+										"z": 1.0
+									},
+									"translate": {
+										"x": -15.0,
+										"y": 0.0,
+										"z": -0.0
+									}
+								}
+							}
+						}
+					],
+					"isActive": true,
+					"isRenamable": true,
+					"isView": true,
+					"name": "球.056"
+				},
+				{
+					"children": [],
+					"components": [
+						{
+							"class TransformComponent": {
+								"transform": {
+									"rotate": {
+										"w": 1.0,
+										"x": -0.0,
+										"y": -0.0,
+										"z": 0.0
+									},
+									"scale": {
+										"x": 1.0,
+										"y": 1.0,
+										"z": 1.0
+									},
+									"translate": {
+										"x": -12.0,
+										"y": 0.0,
+										"z": -0.0
+									}
+								}
+							}
+						}
+					],
+					"isActive": true,
+					"isRenamable": true,
+					"isView": true,
+					"name": "球.057"
+				},
+				{
+					"children": [],
+					"components": [
+						{
+							"class TransformComponent": {
+								"transform": {
+									"rotate": {
+										"w": 1.0,
+										"x": -0.0,
+										"y": -0.0,
+										"z": 0.0
+									},
+									"scale": {
+										"x": 1.0,
+										"y": 1.0,
+										"z": 1.0
+									},
+									"translate": {
+										"x": -9.0,
+										"y": 0.0,
+										"z": -0.0
+									}
+								}
+							}
+						}
+					],
+					"isActive": true,
+					"isRenamable": true,
+					"isView": true,
+					"name": "球.058"
+				},
+				{
+					"children": [],
+					"components": [
+						{
+							"class TransformComponent": {
+								"transform": {
+									"rotate": {
+										"w": 1.0,
+										"x": -0.0,
+										"y": -0.0,
+										"z": 0.0
+									},
+									"scale": {
+										"x": 1.0,
+										"y": 1.0,
+										"z": 1.0
+									},
+									"translate": {
+										"x": -6.0,
+										"y": 0.0,
+										"z": -0.0
+									}
+								}
+							}
+						}
+					],
+					"isActive": true,
+					"isRenamable": true,
+					"isView": true,
+					"name": "球.059"
+				},
+				{
+					"children": [],
+					"components": [
+						{
+							"class TransformComponent": {
+								"transform": {
+									"rotate": {
+										"w": 1.0,
+										"x": -0.0,
+										"y": -0.0,
+										"z": 0.0
+									},
+									"scale": {
+										"x": 1.0,
+										"y": 1.0,
+										"z": 1.0
+									},
+									"translate": {
+										"x": -3.0,
+										"y": 0.0,
+										"z": -0.0
+									}
+								}
+							}
+						}
+					],
+					"isActive": true,
+					"isRenamable": true,
+					"isView": true,
+					"name": "球.060"
+				},
+				{
+					"children": [],
+					"components": [
+						{
+							"class TransformComponent": {
+								"transform": {
+									"rotate": {
+										"w": 1.0,
+										"x": -0.0,
+										"y": -0.0,
+										"z": 0.0
+									},
+									"scale": {
+										"x": 1.0,
+										"y": 1.0,
+										"z": 1.0
+									},
+									"translate": {
+										"x": 0.0,
+										"y": 0.0,
+										"z": -0.0
+									}
+								}
+							}
+						}
+					],
+					"isActive": true,
+					"isRenamable": true,
+					"isView": true,
+					"name": "球.061"
+				},
+				{
+					"children": [],
+					"components": [
+						{
+							"class TransformComponent": {
+								"transform": {
+									"rotate": {
+										"w": 1.0,
+										"x": -0.0,
+										"y": -0.0,
+										"z": 0.0
+									},
+									"scale": {
+										"x": 1.0,
+										"y": 1.0,
+										"z": 1.0
+									},
+									"translate": {
+										"x": 3.0,
+										"y": 0.0,
+										"z": -0.0
+									}
+								}
+							}
+						}
+					],
+					"isActive": true,
+					"isRenamable": true,
+					"isView": true,
+					"name": "球.062"
+				},
+				{
+					"children": [],
+					"components": [
+						{
+							"class TransformComponent": {
+								"transform": {
+									"rotate": {
+										"w": 1.0,
+										"x": -0.0,
+										"y": -0.0,
+										"z": 0.0
+									},
+									"scale": {
+										"x": 1.0,
+										"y": 1.0,
+										"z": 1.0
+									},
+									"translate": {
+										"x": 6.0,
+										"y": 0.0,
+										"z": -0.0
+									}
+								}
+							}
+						}
+					],
+					"isActive": true,
+					"isRenamable": true,
+					"isView": true,
+					"name": "球.063"
+				},
+				{
+					"children": [],
+					"components": [
+						{
+							"class TransformComponent": {
+								"transform": {
+									"rotate": {
+										"w": 1.0,
+										"x": -0.0,
+										"y": -0.0,
+										"z": 0.0
+									},
+									"scale": {
+										"x": 1.0,
+										"y": 1.0,
+										"z": 1.0
+									},
+									"translate": {
+										"x": 9.0,
+										"y": 0.0,
+										"z": -0.0
+									}
+								}
+							}
+						}
+					],
+					"isActive": true,
+					"isRenamable": true,
+					"isView": true,
+					"name": "球.064"
+				},
+				{
+					"children": [],
+					"components": [
+						{
+							"class TransformComponent": {
+								"transform": {
+									"rotate": {
+										"w": 1.0,
+										"x": -0.0,
+										"y": -0.0,
+										"z": 0.0
+									},
+									"scale": {
+										"x": 1.0,
+										"y": 1.0,
+										"z": 1.0
+									},
+									"translate": {
+										"x": 12.0,
+										"y": 0.0,
+										"z": -0.0
+									}
+								}
+							}
+						}
+					],
+					"isActive": true,
+					"isRenamable": true,
+					"isView": true,
+					"name": "球.065"
+				},
+				{
+					"children": [],
+					"components": [
+						{
+							"class TransformComponent": {
+								"transform": {
+									"rotate": {
+										"w": 1.0,
+										"x": -0.0,
+										"y": -0.0,
+										"z": 0.0
+									},
+									"scale": {
+										"x": 1.0,
+										"y": 1.0,
+										"z": 1.0
+									},
+									"translate": {
+										"x": 15.0,
+										"y": 0.0,
+										"z": -0.0
+									}
+								}
+							}
+						}
+					],
+					"isActive": true,
+					"isRenamable": true,
+					"isView": true,
+					"name": "球.066"
+				},
+				{
+					"children": [],
+					"components": [
+						{
+							"class TransformComponent": {
+								"transform": {
+									"rotate": {
+										"w": 1.0,
+										"x": -0.0,
+										"y": -0.0,
+										"z": 0.0
+									},
+									"scale": {
+										"x": 1.0,
+										"y": 1.0,
+										"z": 1.0
+									},
+									"translate": {
+										"x": -15.0,
+										"y": 3.0,
+										"z": -0.0
+									}
+								}
+							}
+						}
+					],
+					"isActive": true,
+					"isRenamable": true,
+					"isView": true,
+					"name": "球.067"
+				},
+				{
+					"children": [],
+					"components": [
+						{
+							"class TransformComponent": {
+								"transform": {
+									"rotate": {
+										"w": 1.0,
+										"x": -0.0,
+										"y": -0.0,
+										"z": 0.0
+									},
+									"scale": {
+										"x": 1.0,
+										"y": 1.0,
+										"z": 1.0
+									},
+									"translate": {
+										"x": -12.0,
+										"y": 3.0,
+										"z": -0.0
+									}
+								}
+							}
+						}
+					],
+					"isActive": true,
+					"isRenamable": true,
+					"isView": true,
+					"name": "球.068"
+				},
+				{
+					"children": [],
+					"components": [
+						{
+							"class TransformComponent": {
+								"transform": {
+									"rotate": {
+										"w": 1.0,
+										"x": -0.0,
+										"y": -0.0,
+										"z": 0.0
+									},
+									"scale": {
+										"x": 1.0,
+										"y": 1.0,
+										"z": 1.0
+									},
+									"translate": {
+										"x": -9.0,
+										"y": 3.0,
+										"z": -0.0
+									}
+								}
+							}
+						}
+					],
+					"isActive": true,
+					"isRenamable": true,
+					"isView": true,
+					"name": "球.069"
+				},
+				{
+					"children": [],
+					"components": [
+						{
+							"class TransformComponent": {
+								"transform": {
+									"rotate": {
+										"w": 1.0,
+										"x": -0.0,
+										"y": -0.0,
+										"z": 0.0
+									},
+									"scale": {
+										"x": 1.0,
+										"y": 1.0,
+										"z": 1.0
+									},
+									"translate": {
+										"x": -6.0,
+										"y": 3.0,
+										"z": -0.0
+									}
+								}
+							}
+						}
+					],
+					"isActive": true,
+					"isRenamable": true,
+					"isView": true,
+					"name": "球.070"
+				},
+				{
+					"children": [],
+					"components": [
+						{
+							"class TransformComponent": {
+								"transform": {
+									"rotate": {
+										"w": 1.0,
+										"x": -0.0,
+										"y": -0.0,
+										"z": 0.0
+									},
+									"scale": {
+										"x": 1.0,
+										"y": 1.0,
+										"z": 1.0
+									},
+									"translate": {
+										"x": -3.0,
+										"y": 3.0,
+										"z": -0.0
+									}
+								}
+							}
+						}
+					],
+					"isActive": true,
+					"isRenamable": true,
+					"isView": true,
+					"name": "球.071"
+				},
+				{
+					"children": [],
+					"components": [
+						{
+							"class TransformComponent": {
+								"transform": {
+									"rotate": {
+										"w": 1.0,
+										"x": -0.0,
+										"y": -0.0,
+										"z": 0.0
+									},
+									"scale": {
+										"x": 1.0,
+										"y": 1.0,
+										"z": 1.0
+									},
+									"translate": {
+										"x": 0.0,
+										"y": 3.0,
+										"z": -0.0
+									}
+								}
+							}
+						}
+					],
+					"isActive": true,
+					"isRenamable": true,
+					"isView": true,
+					"name": "球.072"
+				},
+				{
+					"children": [],
+					"components": [
+						{
+							"class TransformComponent": {
+								"transform": {
+									"rotate": {
+										"w": 1.0,
+										"x": -0.0,
+										"y": -0.0,
+										"z": 0.0
+									},
+									"scale": {
+										"x": 1.0,
+										"y": 1.0,
+										"z": 1.0
+									},
+									"translate": {
+										"x": 3.0,
+										"y": 3.0,
+										"z": -0.0
+									}
+								}
+							}
+						}
+					],
+					"isActive": true,
+					"isRenamable": true,
+					"isView": true,
+					"name": "球.073"
+				},
+				{
+					"children": [],
+					"components": [
+						{
+							"class TransformComponent": {
+								"transform": {
+									"rotate": {
+										"w": 1.0,
+										"x": -0.0,
+										"y": -0.0,
+										"z": 0.0
+									},
+									"scale": {
+										"x": 1.0,
+										"y": 1.0,
+										"z": 1.0
+									},
+									"translate": {
+										"x": 6.0,
+										"y": 3.0,
+										"z": -0.0
+									}
+								}
+							}
+						}
+					],
+					"isActive": true,
+					"isRenamable": true,
+					"isView": true,
+					"name": "球.074"
+				},
+				{
+					"children": [],
+					"components": [
+						{
+							"class TransformComponent": {
+								"transform": {
+									"rotate": {
+										"w": 1.0,
+										"x": -0.0,
+										"y": -0.0,
+										"z": 0.0
+									},
+									"scale": {
+										"x": 1.0,
+										"y": 1.0,
+										"z": 1.0
+									},
+									"translate": {
+										"x": 9.0,
+										"y": 3.0,
+										"z": -0.0
+									}
+								}
+							}
+						}
+					],
+					"isActive": true,
+					"isRenamable": true,
+					"isView": true,
+					"name": "球.075"
+				},
+				{
+					"children": [],
+					"components": [
+						{
+							"class TransformComponent": {
+								"transform": {
+									"rotate": {
+										"w": 1.0,
+										"x": -0.0,
+										"y": -0.0,
+										"z": 0.0
+									},
+									"scale": {
+										"x": 1.0,
+										"y": 1.0,
+										"z": 1.0
+									},
+									"translate": {
+										"x": 12.0,
+										"y": 3.0,
+										"z": -0.0
+									}
+								}
+							}
+						}
+					],
+					"isActive": true,
+					"isRenamable": true,
+					"isView": true,
+					"name": "球.076"
+				},
+				{
+					"children": [],
+					"components": [
+						{
+							"class TransformComponent": {
+								"transform": {
+									"rotate": {
+										"w": 1.0,
+										"x": -0.0,
+										"y": -0.0,
+										"z": 0.0
+									},
+									"scale": {
+										"x": 1.0,
+										"y": 1.0,
+										"z": 1.0
+									},
+									"translate": {
+										"x": 15.0,
+										"y": 3.0,
+										"z": -0.0
+									}
+								}
+							}
+						}
+					],
+					"isActive": true,
+					"isRenamable": true,
+					"isView": true,
+					"name": "球.077"
+				},
+				{
+					"children": [],
+					"components": [
+						{
+							"class TransformComponent": {
+								"transform": {
+									"rotate": {
+										"w": 1.0,
+										"x": -0.0,
+										"y": -0.0,
+										"z": 0.0
+									},
+									"scale": {
+										"x": 1.0,
+										"y": 1.0,
+										"z": 1.0
+									},
+									"translate": {
+										"x": -15.0,
+										"y": 6.0,
+										"z": -0.0
+									}
+								}
+							}
+						}
+					],
+					"isActive": true,
+					"isRenamable": true,
+					"isView": true,
+					"name": "球.078"
+				},
+				{
+					"children": [],
+					"components": [
+						{
+							"class TransformComponent": {
+								"transform": {
+									"rotate": {
+										"w": 1.0,
+										"x": -0.0,
+										"y": -0.0,
+										"z": 0.0
+									},
+									"scale": {
+										"x": 1.0,
+										"y": 1.0,
+										"z": 1.0
+									},
+									"translate": {
+										"x": -12.0,
+										"y": 6.0,
+										"z": -0.0
+									}
+								}
+							}
+						}
+					],
+					"isActive": true,
+					"isRenamable": true,
+					"isView": true,
+					"name": "球.079"
+				},
+				{
+					"children": [],
+					"components": [
+						{
+							"class TransformComponent": {
+								"transform": {
+									"rotate": {
+										"w": 1.0,
+										"x": -0.0,
+										"y": -0.0,
+										"z": 0.0
+									},
+									"scale": {
+										"x": 1.0,
+										"y": 1.0,
+										"z": 1.0
+									},
+									"translate": {
+										"x": -9.0,
+										"y": 6.0,
+										"z": -0.0
+									}
+								}
+							}
+						}
+					],
+					"isActive": true,
+					"isRenamable": true,
+					"isView": true,
+					"name": "球.080"
+				},
+				{
+					"children": [],
+					"components": [
+						{
+							"class TransformComponent": {
+								"transform": {
+									"rotate": {
+										"w": 1.0,
+										"x": -0.0,
+										"y": -0.0,
+										"z": 0.0
+									},
+									"scale": {
+										"x": 1.0,
+										"y": 1.0,
+										"z": 1.0
+									},
+									"translate": {
+										"x": -6.0,
+										"y": 6.0,
+										"z": -0.0
+									}
+								}
+							}
+						}
+					],
+					"isActive": true,
+					"isRenamable": true,
+					"isView": true,
+					"name": "球.081"
+				},
+				{
+					"children": [],
+					"components": [
+						{
+							"class TransformComponent": {
+								"transform": {
+									"rotate": {
+										"w": 1.0,
+										"x": -0.0,
+										"y": -0.0,
+										"z": 0.0
+									},
+									"scale": {
+										"x": 1.0,
+										"y": 1.0,
+										"z": 1.0
+									},
+									"translate": {
+										"x": -3.0,
+										"y": 6.0,
+										"z": -0.0
+									}
+								}
+							}
+						}
+					],
+					"isActive": true,
+					"isRenamable": true,
+					"isView": true,
+					"name": "球.082"
+				},
+				{
+					"children": [],
+					"components": [
+						{
+							"class TransformComponent": {
+								"transform": {
+									"rotate": {
+										"w": 1.0,
+										"x": -0.0,
+										"y": -0.0,
+										"z": 0.0
+									},
+									"scale": {
+										"x": 1.0,
+										"y": 1.0,
+										"z": 1.0
+									},
+									"translate": {
+										"x": 0.0,
+										"y": 6.0,
+										"z": -0.0
+									}
+								}
+							}
+						}
+					],
+					"isActive": true,
+					"isRenamable": true,
+					"isView": true,
+					"name": "球.083"
+				},
+				{
+					"children": [],
+					"components": [
+						{
+							"class TransformComponent": {
+								"transform": {
+									"rotate": {
+										"w": 1.0,
+										"x": -0.0,
+										"y": -0.0,
+										"z": 0.0
+									},
+									"scale": {
+										"x": 1.0,
+										"y": 1.0,
+										"z": 1.0
+									},
+									"translate": {
+										"x": 3.0,
+										"y": 6.0,
+										"z": -0.0
+									}
+								}
+							}
+						}
+					],
+					"isActive": true,
+					"isRenamable": true,
+					"isView": true,
+					"name": "球.084"
+				},
+				{
+					"children": [],
+					"components": [
+						{
+							"class TransformComponent": {
+								"transform": {
+									"rotate": {
+										"w": 1.0,
+										"x": -0.0,
+										"y": -0.0,
+										"z": 0.0
+									},
+									"scale": {
+										"x": 1.0,
+										"y": 1.0,
+										"z": 1.0
+									},
+									"translate": {
+										"x": 6.0,
+										"y": 6.0,
+										"z": -0.0
+									}
+								}
+							}
+						}
+					],
+					"isActive": true,
+					"isRenamable": true,
+					"isView": true,
+					"name": "球.085"
+				},
+				{
+					"children": [],
+					"components": [
+						{
+							"class TransformComponent": {
+								"transform": {
+									"rotate": {
+										"w": 1.0,
+										"x": -0.0,
+										"y": -0.0,
+										"z": 0.0
+									},
+									"scale": {
+										"x": 1.0,
+										"y": 1.0,
+										"z": 1.0
+									},
+									"translate": {
+										"x": 9.0,
+										"y": 6.0,
+										"z": -0.0
+									}
+								}
+							}
+						}
+					],
+					"isActive": true,
+					"isRenamable": true,
+					"isView": true,
+					"name": "球.086"
+				},
+				{
+					"children": [],
+					"components": [
+						{
+							"class TransformComponent": {
+								"transform": {
+									"rotate": {
+										"w": 1.0,
+										"x": -0.0,
+										"y": -0.0,
+										"z": 0.0
+									},
+									"scale": {
+										"x": 1.0,
+										"y": 1.0,
+										"z": 1.0
+									},
+									"translate": {
+										"x": 12.0,
+										"y": 6.0,
+										"z": -0.0
+									}
+								}
+							}
+						}
+					],
+					"isActive": true,
+					"isRenamable": true,
+					"isView": true,
+					"name": "球.087"
+				},
+				{
+					"children": [],
+					"components": [
+						{
+							"class TransformComponent": {
+								"transform": {
+									"rotate": {
+										"w": 1.0,
+										"x": -0.0,
+										"y": -0.0,
+										"z": 0.0
+									},
+									"scale": {
+										"x": 1.0,
+										"y": 1.0,
+										"z": 1.0
+									},
+									"translate": {
+										"x": 15.0,
+										"y": 6.0,
+										"z": -0.0
+									}
+								}
+							}
+						}
+					],
+					"isActive": true,
+					"isRenamable": true,
+					"isView": true,
+					"name": "球.088"
+				},
+				{
+					"children": [],
+					"components": [
+						{
+							"class TransformComponent": {
+								"transform": {
+									"rotate": {
+										"w": 1.0,
+										"x": -0.0,
+										"y": -0.0,
+										"z": 0.0
+									},
+									"scale": {
+										"x": 1.0,
+										"y": 1.0,
+										"z": 1.0
+									},
+									"translate": {
+										"x": -15.0,
+										"y": 9.0,
+										"z": -0.0
+									}
+								}
+							}
+						}
+					],
+					"isActive": true,
+					"isRenamable": true,
+					"isView": true,
+					"name": "球.089"
+				},
+				{
+					"children": [],
+					"components": [
+						{
+							"class TransformComponent": {
+								"transform": {
+									"rotate": {
+										"w": 1.0,
+										"x": -0.0,
+										"y": -0.0,
+										"z": 0.0
+									},
+									"scale": {
+										"x": 1.0,
+										"y": 1.0,
+										"z": 1.0
+									},
+									"translate": {
+										"x": -12.0,
+										"y": 9.0,
+										"z": -0.0
+									}
+								}
+							}
+						}
+					],
+					"isActive": true,
+					"isRenamable": true,
+					"isView": true,
+					"name": "球.090"
+				},
+				{
+					"children": [],
+					"components": [
+						{
+							"class TransformComponent": {
+								"transform": {
+									"rotate": {
+										"w": 1.0,
+										"x": -0.0,
+										"y": -0.0,
+										"z": 0.0
+									},
+									"scale": {
+										"x": 1.0,
+										"y": 1.0,
+										"z": 1.0
+									},
+									"translate": {
+										"x": -9.0,
+										"y": 9.0,
+										"z": -0.0
+									}
+								}
+							}
+						}
+					],
+					"isActive": true,
+					"isRenamable": true,
+					"isView": true,
+					"name": "球.091"
+				},
+				{
+					"children": [],
+					"components": [
+						{
+							"class TransformComponent": {
+								"transform": {
+									"rotate": {
+										"w": 1.0,
+										"x": -0.0,
+										"y": -0.0,
+										"z": 0.0
+									},
+									"scale": {
+										"x": 1.0,
+										"y": 1.0,
+										"z": 1.0
+									},
+									"translate": {
+										"x": -6.0,
+										"y": 9.0,
+										"z": -0.0
+									}
+								}
+							}
+						}
+					],
+					"isActive": true,
+					"isRenamable": true,
+					"isView": true,
+					"name": "球.092"
+				},
+				{
+					"children": [],
+					"components": [
+						{
+							"class TransformComponent": {
+								"transform": {
+									"rotate": {
+										"w": 1.0,
+										"x": -0.0,
+										"y": -0.0,
+										"z": 0.0
+									},
+									"scale": {
+										"x": 1.0,
+										"y": 1.0,
+										"z": 1.0
+									},
+									"translate": {
+										"x": -3.0,
+										"y": 9.0,
+										"z": -0.0
+									}
+								}
+							}
+						}
+					],
+					"isActive": true,
+					"isRenamable": true,
+					"isView": true,
+					"name": "球.093"
+				},
+				{
+					"children": [],
+					"components": [
+						{
+							"class TransformComponent": {
+								"transform": {
+									"rotate": {
+										"w": 1.0,
+										"x": -0.0,
+										"y": -0.0,
+										"z": 0.0
+									},
+									"scale": {
+										"x": 1.0,
+										"y": 1.0,
+										"z": 1.0
+									},
+									"translate": {
+										"x": 0.0,
+										"y": 9.0,
+										"z": -0.0
+									}
+								}
+							}
+						}
+					],
+					"isActive": true,
+					"isRenamable": true,
+					"isView": true,
+					"name": "球.094"
+				},
+				{
+					"children": [],
+					"components": [
+						{
+							"class TransformComponent": {
+								"transform": {
+									"rotate": {
+										"w": 1.0,
+										"x": -0.0,
+										"y": -0.0,
+										"z": 0.0
+									},
+									"scale": {
+										"x": 1.0,
+										"y": 1.0,
+										"z": 1.0
+									},
+									"translate": {
+										"x": 3.0,
+										"y": 9.0,
+										"z": -0.0
+									}
+								}
+							}
+						}
+					],
+					"isActive": true,
+					"isRenamable": true,
+					"isView": true,
+					"name": "球.095"
+				},
+				{
+					"children": [],
+					"components": [
+						{
+							"class TransformComponent": {
+								"transform": {
+									"rotate": {
+										"w": 1.0,
+										"x": -0.0,
+										"y": -0.0,
+										"z": 0.0
+									},
+									"scale": {
+										"x": 1.0,
+										"y": 1.0,
+										"z": 1.0
+									},
+									"translate": {
+										"x": 6.0,
+										"y": 9.0,
+										"z": -0.0
+									}
+								}
+							}
+						}
+					],
+					"isActive": true,
+					"isRenamable": true,
+					"isView": true,
+					"name": "球.096"
+				},
+				{
+					"children": [],
+					"components": [
+						{
+							"class TransformComponent": {
+								"transform": {
+									"rotate": {
+										"w": 1.0,
+										"x": -0.0,
+										"y": -0.0,
+										"z": 0.0
+									},
+									"scale": {
+										"x": 1.0,
+										"y": 1.0,
+										"z": 1.0
+									},
+									"translate": {
+										"x": 9.0,
+										"y": 9.0,
+										"z": -0.0
+									}
+								}
+							}
+						}
+					],
+					"isActive": true,
+					"isRenamable": true,
+					"isView": true,
+					"name": "球.097"
+				},
+				{
+					"children": [],
+					"components": [
+						{
+							"class TransformComponent": {
+								"transform": {
+									"rotate": {
+										"w": 1.0,
+										"x": -0.0,
+										"y": -0.0,
+										"z": 0.0
+									},
+									"scale": {
+										"x": 1.0,
+										"y": 1.0,
+										"z": 1.0
+									},
+									"translate": {
+										"x": 12.0,
+										"y": 9.0,
+										"z": -0.0
+									}
+								}
+							}
+						}
+					],
+					"isActive": true,
+					"isRenamable": true,
+					"isView": true,
+					"name": "球.098"
+				},
+				{
+					"children": [],
+					"components": [
+						{
+							"class TransformComponent": {
+								"transform": {
+									"rotate": {
+										"w": 1.0,
+										"x": -0.0,
+										"y": -0.0,
+										"z": 0.0
+									},
+									"scale": {
+										"x": 1.0,
+										"y": 1.0,
+										"z": 1.0
+									},
+									"translate": {
+										"x": 15.0,
+										"y": 9.0,
+										"z": -0.0
+									}
+								}
+							}
+						}
+					],
+					"isActive": true,
+					"isRenamable": true,
+					"isView": true,
+					"name": "球.099"
+				},
+				{
+					"children": [],
+					"components": [
+						{
+							"class TransformComponent": {
+								"transform": {
+									"rotate": {
+										"w": 1.0,
+										"x": -0.0,
+										"y": -0.0,
+										"z": 0.0
+									},
+									"scale": {
+										"x": 1.0,
+										"y": 1.0,
+										"z": 1.0
+									},
+									"translate": {
+										"x": -15.0,
+										"y": 12.0,
+										"z": -0.0
+									}
+								}
+							}
+						}
+					],
+					"isActive": true,
+					"isRenamable": true,
+					"isView": true,
+					"name": "球.100"
+				},
+				{
+					"children": [],
+					"components": [
+						{
+							"class TransformComponent": {
+								"transform": {
+									"rotate": {
+										"w": 1.0,
+										"x": -0.0,
+										"y": -0.0,
+										"z": 0.0
+									},
+									"scale": {
+										"x": 1.0,
+										"y": 1.0,
+										"z": 1.0
+									},
+									"translate": {
+										"x": -12.0,
+										"y": 12.0,
+										"z": -0.0
+									}
+								}
+							}
+						}
+					],
+					"isActive": true,
+					"isRenamable": true,
+					"isView": true,
+					"name": "球.101"
+				},
+				{
+					"children": [],
+					"components": [
+						{
+							"class TransformComponent": {
+								"transform": {
+									"rotate": {
+										"w": 1.0,
+										"x": -0.0,
+										"y": -0.0,
+										"z": 0.0
+									},
+									"scale": {
+										"x": 1.0,
+										"y": 1.0,
+										"z": 1.0
+									},
+									"translate": {
+										"x": -9.0,
+										"y": 12.0,
+										"z": -0.0
+									}
+								}
+							}
+						}
+					],
+					"isActive": true,
+					"isRenamable": true,
+					"isView": true,
+					"name": "球.102"
+				},
+				{
+					"children": [],
+					"components": [
+						{
+							"class TransformComponent": {
+								"transform": {
+									"rotate": {
+										"w": 1.0,
+										"x": -0.0,
+										"y": -0.0,
+										"z": 0.0
+									},
+									"scale": {
+										"x": 1.0,
+										"y": 1.0,
+										"z": 1.0
+									},
+									"translate": {
+										"x": -6.0,
+										"y": 12.0,
+										"z": -0.0
+									}
+								}
+							}
+						}
+					],
+					"isActive": true,
+					"isRenamable": true,
+					"isView": true,
+					"name": "球.103"
+				},
+				{
+					"children": [],
+					"components": [
+						{
+							"class TransformComponent": {
+								"transform": {
+									"rotate": {
+										"w": 1.0,
+										"x": -0.0,
+										"y": -0.0,
+										"z": 0.0
+									},
+									"scale": {
+										"x": 1.0,
+										"y": 1.0,
+										"z": 1.0
+									},
+									"translate": {
+										"x": -3.0,
+										"y": 12.0,
+										"z": -0.0
+									}
+								}
+							}
+						}
+					],
+					"isActive": true,
+					"isRenamable": true,
+					"isView": true,
+					"name": "球.104"
+				},
+				{
+					"children": [],
+					"components": [
+						{
+							"class TransformComponent": {
+								"transform": {
+									"rotate": {
+										"w": 1.0,
+										"x": -0.0,
+										"y": -0.0,
+										"z": 0.0
+									},
+									"scale": {
+										"x": 1.0,
+										"y": 1.0,
+										"z": 1.0
+									},
+									"translate": {
+										"x": 0.0,
+										"y": 12.0,
+										"z": -0.0
+									}
+								}
+							}
+						}
+					],
+					"isActive": true,
+					"isRenamable": true,
+					"isView": true,
+					"name": "球.105"
+				},
+				{
+					"children": [],
+					"components": [
+						{
+							"class TransformComponent": {
+								"transform": {
+									"rotate": {
+										"w": 1.0,
+										"x": -0.0,
+										"y": -0.0,
+										"z": 0.0
+									},
+									"scale": {
+										"x": 1.0,
+										"y": 1.0,
+										"z": 1.0
+									},
+									"translate": {
+										"x": 3.0,
+										"y": 12.0,
+										"z": -0.0
+									}
+								}
+							}
+						}
+					],
+					"isActive": true,
+					"isRenamable": true,
+					"isView": true,
+					"name": "球.106"
+				},
+				{
+					"children": [],
+					"components": [
+						{
+							"class TransformComponent": {
+								"transform": {
+									"rotate": {
+										"w": 1.0,
+										"x": -0.0,
+										"y": -0.0,
+										"z": 0.0
+									},
+									"scale": {
+										"x": 1.0,
+										"y": 1.0,
+										"z": 1.0
+									},
+									"translate": {
+										"x": 6.0,
+										"y": 12.0,
+										"z": -0.0
+									}
+								}
+							}
+						}
+					],
+					"isActive": true,
+					"isRenamable": true,
+					"isView": true,
+					"name": "球.107"
+				},
+				{
+					"children": [],
+					"components": [
+						{
+							"class TransformComponent": {
+								"transform": {
+									"rotate": {
+										"w": 1.0,
+										"x": -0.0,
+										"y": -0.0,
+										"z": 0.0
+									},
+									"scale": {
+										"x": 1.0,
+										"y": 1.0,
+										"z": 1.0
+									},
+									"translate": {
+										"x": 9.0,
+										"y": 12.0,
+										"z": -0.0
+									}
+								}
+							}
+						}
+					],
+					"isActive": true,
+					"isRenamable": true,
+					"isView": true,
+					"name": "球.108"
+				},
+				{
+					"children": [],
+					"components": [
+						{
+							"class TransformComponent": {
+								"transform": {
+									"rotate": {
+										"w": 1.0,
+										"x": -0.0,
+										"y": -0.0,
+										"z": 0.0
+									},
+									"scale": {
+										"x": 1.0,
+										"y": 1.0,
+										"z": 1.0
+									},
+									"translate": {
+										"x": 12.0,
+										"y": 12.0,
+										"z": -0.0
+									}
+								}
+							}
+						}
+					],
+					"isActive": true,
+					"isRenamable": true,
+					"isView": true,
+					"name": "球.109"
+				},
+				{
+					"children": [],
+					"components": [
+						{
+							"class TransformComponent": {
+								"transform": {
+									"rotate": {
+										"w": 1.0,
+										"x": -0.0,
+										"y": -0.0,
+										"z": 0.0
+									},
+									"scale": {
+										"x": 1.0,
+										"y": 1.0,
+										"z": 1.0
+									},
+									"translate": {
+										"x": 15.0,
+										"y": 12.0,
+										"z": -0.0
+									}
+								}
+							}
+						}
+					],
+					"isActive": true,
+					"isRenamable": true,
+					"isView": true,
+					"name": "球.110"
+				},
+				{
+					"children": [],
+					"components": [
+						{
+							"class TransformComponent": {
+								"transform": {
+									"rotate": {
+										"w": 1.0,
+										"x": -0.0,
+										"y": -0.0,
+										"z": 0.0
+									},
+									"scale": {
+										"x": 1.0,
+										"y": 1.0,
+										"z": 1.0
+									},
+									"translate": {
+										"x": -15.0,
+										"y": 15.0,
+										"z": -0.0
+									}
+								}
+							}
+						}
+					],
+					"isActive": true,
+					"isRenamable": true,
+					"isView": true,
+					"name": "球.111"
+				},
+				{
+					"children": [],
+					"components": [
+						{
+							"class TransformComponent": {
+								"transform": {
+									"rotate": {
+										"w": 1.0,
+										"x": -0.0,
+										"y": -0.0,
+										"z": 0.0
+									},
+									"scale": {
+										"x": 1.0,
+										"y": 1.0,
+										"z": 1.0
+									},
+									"translate": {
+										"x": -12.0,
+										"y": 15.0,
+										"z": -0.0
+									}
+								}
+							}
+						}
+					],
+					"isActive": true,
+					"isRenamable": true,
+					"isView": true,
+					"name": "球.112"
+				},
+				{
+					"children": [],
+					"components": [
+						{
+							"class TransformComponent": {
+								"transform": {
+									"rotate": {
+										"w": 1.0,
+										"x": -0.0,
+										"y": -0.0,
+										"z": 0.0
+									},
+									"scale": {
+										"x": 1.0,
+										"y": 1.0,
+										"z": 1.0
+									},
+									"translate": {
+										"x": -9.0,
+										"y": 15.0,
+										"z": -0.0
+									}
+								}
+							}
+						}
+					],
+					"isActive": true,
+					"isRenamable": true,
+					"isView": true,
+					"name": "球.113"
+				},
+				{
+					"children": [],
+					"components": [
+						{
+							"class TransformComponent": {
+								"transform": {
+									"rotate": {
+										"w": 1.0,
+										"x": -0.0,
+										"y": -0.0,
+										"z": 0.0
+									},
+									"scale": {
+										"x": 1.0,
+										"y": 1.0,
+										"z": 1.0
+									},
+									"translate": {
+										"x": -6.0,
+										"y": 15.0,
+										"z": -0.0
+									}
+								}
+							}
+						}
+					],
+					"isActive": true,
+					"isRenamable": true,
+					"isView": true,
+					"name": "球.114"
+				},
+				{
+					"children": [],
+					"components": [
+						{
+							"class TransformComponent": {
+								"transform": {
+									"rotate": {
+										"w": 1.0,
+										"x": -0.0,
+										"y": -0.0,
+										"z": 0.0
+									},
+									"scale": {
+										"x": 1.0,
+										"y": 1.0,
+										"z": 1.0
+									},
+									"translate": {
+										"x": -3.0,
+										"y": 15.0,
+										"z": -0.0
+									}
+								}
+							}
+						}
+					],
+					"isActive": true,
+					"isRenamable": true,
+					"isView": true,
+					"name": "球.115"
+				},
+				{
+					"children": [],
+					"components": [
+						{
+							"class TransformComponent": {
+								"transform": {
+									"rotate": {
+										"w": 1.0,
+										"x": -0.0,
+										"y": -0.0,
+										"z": 0.0
+									},
+									"scale": {
+										"x": 1.0,
+										"y": 1.0,
+										"z": 1.0
+									},
+									"translate": {
+										"x": 0.0,
+										"y": 15.0,
+										"z": -0.0
+									}
+								}
+							}
+						}
+					],
+					"isActive": true,
+					"isRenamable": true,
+					"isView": true,
+					"name": "球.116"
+				},
+				{
+					"children": [],
+					"components": [
+						{
+							"class TransformComponent": {
+								"transform": {
+									"rotate": {
+										"w": 1.0,
+										"x": -0.0,
+										"y": -0.0,
+										"z": 0.0
+									},
+									"scale": {
+										"x": 1.0,
+										"y": 1.0,
+										"z": 1.0
+									},
+									"translate": {
+										"x": 3.0,
+										"y": 15.0,
+										"z": -0.0
+									}
+								}
+							}
+						}
+					],
+					"isActive": true,
+					"isRenamable": true,
+					"isView": true,
+					"name": "球.117"
+				},
+				{
+					"children": [],
+					"components": [
+						{
+							"class TransformComponent": {
+								"transform": {
+									"rotate": {
+										"w": 1.0,
+										"x": -0.0,
+										"y": -0.0,
+										"z": 0.0
+									},
+									"scale": {
+										"x": 1.0,
+										"y": 1.0,
+										"z": 1.0
+									},
+									"translate": {
+										"x": 6.0,
+										"y": 15.0,
+										"z": -0.0
+									}
+								}
+							}
+						}
+					],
+					"isActive": true,
+					"isRenamable": true,
+					"isView": true,
+					"name": "球.118"
+				},
+				{
+					"children": [],
+					"components": [
+						{
+							"class TransformComponent": {
+								"transform": {
+									"rotate": {
+										"w": 1.0,
+										"x": -0.0,
+										"y": -0.0,
+										"z": 0.0
+									},
+									"scale": {
+										"x": 1.0,
+										"y": 1.0,
+										"z": 1.0
+									},
+									"translate": {
+										"x": 9.0,
+										"y": 15.0,
+										"z": -0.0
+									}
+								}
+							}
+						}
+					],
+					"isActive": true,
+					"isRenamable": true,
+					"isView": true,
+					"name": "球.119"
+				},
+				{
+					"children": [],
+					"components": [
+						{
+							"class TransformComponent": {
+								"transform": {
+									"rotate": {
+										"w": 1.0,
+										"x": -0.0,
+										"y": -0.0,
+										"z": 0.0
+									},
+									"scale": {
+										"x": 1.0,
+										"y": 1.0,
+										"z": 1.0
+									},
+									"translate": {
+										"x": 12.0,
+										"y": 15.0,
+										"z": -0.0
+									}
+								}
+							}
+						}
+					],
+					"isActive": true,
+					"isRenamable": true,
+					"isView": true,
+					"name": "球.120"
+				},
+				{
+					"children": [],
+					"components": [
+						{
+							"class TransformComponent": {
+								"transform": {
+									"rotate": {
+										"w": 1.0,
+										"x": -0.0,
+										"y": -0.0,
+										"z": 0.0
+									},
+									"scale": {
+										"x": 1.0,
+										"y": 1.0,
+										"z": 1.0
+									},
+									"translate": {
+										"x": 15.0,
+										"y": 15.0,
+										"z": -0.0
+									}
+								}
+							}
+						}
+					],
+					"isActive": true,
+					"isRenamable": true,
+					"isView": true,
+					"name": "球.121"
+				}
+			],
+			"components": [
+				{
+					"class TransformComponent": {
+						"transform": {
+							"rotate": {
+								"w": 1.0,
+								"x": -0.0,
+								"y": -0.0,
+								"z": 0.0
+							},
+							"scale": {
+								"x": 2.0,
+								"y": 2.0,
+								"z": 2.0
+							},
+							"translate": {
+								"x": 0.0,
+								"y": 0.0,
+								"z": -0.0
+							}
+						}
+					}
+				}
+			],
+			"isActive": true,
+			"isRenamable": true,
+			"isView": true,
+			"name": "ROOT"
+		},
+		{
+			"children": [],
+			"components": [
+				null
+			],
+			"isActive": true,
+			"isRenamable": true,
+			"isView": true,
+			"name": "球"
+		},
+		{
+			"children": [],
+			"components": [
+				null
+			],
+			"isActive": true,
+			"isRenamable": true,
+			"isView": true,
+			"name": "球.001"
+		},
+		{
+			"children": [],
+			"components": [
+				null
+			],
+			"isActive": true,
+			"isRenamable": true,
+			"isView": true,
+			"name": "球.002"
+		},
+		{
+			"children": [],
+			"components": [
+				null
+			],
+			"isActive": true,
+			"isRenamable": true,
+			"isView": true,
+			"name": "球.003"
+		},
+		{
+			"children": [],
+			"components": [
+				null
+			],
+			"isActive": true,
+			"isRenamable": true,
+			"isView": true,
+			"name": "球.004"
+		},
+		{
+			"children": [],
+			"components": [
+				null
+			],
+			"isActive": true,
+			"isRenamable": true,
+			"isView": true,
+			"name": "球.005"
+		},
+		{
+			"children": [],
+			"components": [
+				null
+			],
+			"isActive": true,
+			"isRenamable": true,
+			"isView": true,
+			"name": "球.006"
+		},
+		{
+			"children": [],
+			"components": [
+				null
+			],
+			"isActive": true,
+			"isRenamable": true,
+			"isView": true,
+			"name": "球.007"
+		},
+		{
+			"children": [],
+			"components": [
+				null
+			],
+			"isActive": true,
+			"isRenamable": true,
+			"isView": true,
+			"name": "球.008"
+		},
+		{
+			"children": [],
+			"components": [
+				null
+			],
+			"isActive": true,
+			"isRenamable": true,
+			"isView": true,
+			"name": "球.009"
+		},
+		{
+			"children": [],
+			"components": [
+				null
+			],
+			"isActive": true,
+			"isRenamable": true,
+			"isView": true,
+			"name": "球.010"
+		},
+		{
+			"children": [],
+			"components": [
+				null
+			],
+			"isActive": true,
+			"isRenamable": true,
+			"isView": true,
+			"name": "球.011"
+		},
+		{
+			"children": [],
+			"components": [
+				null
+			],
+			"isActive": true,
+			"isRenamable": true,
+			"isView": true,
+			"name": "球.012"
+		},
+		{
+			"children": [],
+			"components": [
+				null
+			],
+			"isActive": true,
+			"isRenamable": true,
+			"isView": true,
+			"name": "球.013"
+		},
+		{
+			"children": [],
+			"components": [
+				null
+			],
+			"isActive": true,
+			"isRenamable": true,
+			"isView": true,
+			"name": "球.014"
+		},
+		{
+			"children": [],
+			"components": [
+				null
+			],
+			"isActive": true,
+			"isRenamable": true,
+			"isView": true,
+			"name": "球.015"
+		},
+		{
+			"children": [],
+			"components": [
+				null
+			],
+			"isActive": true,
+			"isRenamable": true,
+			"isView": true,
+			"name": "球.016"
+		},
+		{
+			"children": [],
+			"components": [
+				null
+			],
+			"isActive": true,
+			"isRenamable": true,
+			"isView": true,
+			"name": "球.017"
+		},
+		{
+			"children": [],
+			"components": [
+				null
+			],
+			"isActive": true,
+			"isRenamable": true,
+			"isView": true,
+			"name": "球.018"
+		},
+		{
+			"children": [],
+			"components": [
+				null
+			],
+			"isActive": true,
+			"isRenamable": true,
+			"isView": true,
+			"name": "球.019"
+		},
+		{
+			"children": [],
+			"components": [
+				null
+			],
+			"isActive": true,
+			"isRenamable": true,
+			"isView": true,
+			"name": "球.020"
+		},
+		{
+			"children": [],
+			"components": [
+				null
+			],
+			"isActive": true,
+			"isRenamable": true,
+			"isView": true,
+			"name": "球.021"
+		},
+		{
+			"children": [],
+			"components": [
+				null
+			],
+			"isActive": true,
+			"isRenamable": true,
+			"isView": true,
+			"name": "球.022"
+		},
+		{
+			"children": [],
+			"components": [
+				null
+			],
+			"isActive": true,
+			"isRenamable": true,
+			"isView": true,
+			"name": "球.023"
+		},
+		{
+			"children": [],
+			"components": [
+				null
+			],
+			"isActive": true,
+			"isRenamable": true,
+			"isView": true,
+			"name": "球.024"
+		},
+		{
+			"children": [],
+			"components": [
+				null
+			],
+			"isActive": true,
+			"isRenamable": true,
+			"isView": true,
+			"name": "球.025"
+		},
+		{
+			"children": [],
+			"components": [
+				null
+			],
+			"isActive": true,
+			"isRenamable": true,
+			"isView": true,
+			"name": "球.026"
+		},
+		{
+			"children": [],
+			"components": [
+				null
+			],
+			"isActive": true,
+			"isRenamable": true,
+			"isView": true,
+			"name": "球.027"
+		},
+		{
+			"children": [],
+			"components": [
+				null
+			],
+			"isActive": true,
+			"isRenamable": true,
+			"isView": true,
+			"name": "球.028"
+		},
+		{
+			"children": [],
+			"components": [
+				null
+			],
+			"isActive": true,
+			"isRenamable": true,
+			"isView": true,
+			"name": "球.029"
+		},
+		{
+			"children": [],
+			"components": [
+				null
+			],
+			"isActive": true,
+			"isRenamable": true,
+			"isView": true,
+			"name": "球.030"
+		},
+		{
+			"children": [],
+			"components": [
+				null
+			],
+			"isActive": true,
+			"isRenamable": true,
+			"isView": true,
+			"name": "球.031"
+		},
+		{
+			"children": [],
+			"components": [
+				null
+			],
+			"isActive": true,
+			"isRenamable": true,
+			"isView": true,
+			"name": "球.032"
+		},
+		{
+			"children": [],
+			"components": [
+				null
+			],
+			"isActive": true,
+			"isRenamable": true,
+			"isView": true,
+			"name": "球.033"
+		},
+		{
+			"children": [],
+			"components": [
+				null
+			],
+			"isActive": true,
+			"isRenamable": true,
+			"isView": true,
+			"name": "球.034"
+		},
+		{
+			"children": [],
+			"components": [
+				null
+			],
+			"isActive": true,
+			"isRenamable": true,
+			"isView": true,
+			"name": "球.035"
+		},
+		{
+			"children": [],
+			"components": [
+				null
+			],
+			"isActive": true,
+			"isRenamable": true,
+			"isView": true,
+			"name": "球.036"
+		},
+		{
+			"children": [],
+			"components": [
+				null
+			],
+			"isActive": true,
+			"isRenamable": true,
+			"isView": true,
+			"name": "球.037"
+		},
+		{
+			"children": [],
+			"components": [
+				null
+			],
+			"isActive": true,
+			"isRenamable": true,
+			"isView": true,
+			"name": "球.038"
+		},
+		{
+			"children": [],
+			"components": [
+				null
+			],
+			"isActive": true,
+			"isRenamable": true,
+			"isView": true,
+			"name": "球.039"
+		},
+		{
+			"children": [],
+			"components": [
+				null
+			],
+			"isActive": true,
+			"isRenamable": true,
+			"isView": true,
+			"name": "球.040"
+		},
+		{
+			"children": [],
+			"components": [
+				null
+			],
+			"isActive": true,
+			"isRenamable": true,
+			"isView": true,
+			"name": "球.041"
+		},
+		{
+			"children": [],
+			"components": [
+				null
+			],
+			"isActive": true,
+			"isRenamable": true,
+			"isView": true,
+			"name": "球.042"
+		},
+		{
+			"children": [],
+			"components": [
+				null
+			],
+			"isActive": true,
+			"isRenamable": true,
+			"isView": true,
+			"name": "球.043"
+		},
+		{
+			"children": [],
+			"components": [
+				null
+			],
+			"isActive": true,
+			"isRenamable": true,
+			"isView": true,
+			"name": "球.044"
+		},
+		{
+			"children": [],
+			"components": [
+				null
+			],
+			"isActive": true,
+			"isRenamable": true,
+			"isView": true,
+			"name": "球.045"
+		},
+		{
+			"children": [],
+			"components": [
+				null
+			],
+			"isActive": true,
+			"isRenamable": true,
+			"isView": true,
+			"name": "球.046"
+		},
+		{
+			"children": [],
+			"components": [
+				null
+			],
+			"isActive": true,
+			"isRenamable": true,
+			"isView": true,
+			"name": "球.047"
+		},
+		{
+			"children": [],
+			"components": [
+				null
+			],
+			"isActive": true,
+			"isRenamable": true,
+			"isView": true,
+			"name": "球.048"
+		},
+		{
+			"children": [],
+			"components": [
+				null
+			],
+			"isActive": true,
+			"isRenamable": true,
+			"isView": true,
+			"name": "球.049"
+		},
+		{
+			"children": [],
+			"components": [
+				null
+			],
+			"isActive": true,
+			"isRenamable": true,
+			"isView": true,
+			"name": "球.050"
+		},
+		{
+			"children": [],
+			"components": [
+				null
+			],
+			"isActive": true,
+			"isRenamable": true,
+			"isView": true,
+			"name": "球.051"
+		},
+		{
+			"children": [],
+			"components": [
+				null
+			],
+			"isActive": true,
+			"isRenamable": true,
+			"isView": true,
+			"name": "球.052"
+		},
+		{
+			"children": [],
+			"components": [
+				null
+			],
+			"isActive": true,
+			"isRenamable": true,
+			"isView": true,
+			"name": "球.053"
+		},
+		{
+			"children": [],
+			"components": [
+				null
+			],
+			"isActive": true,
+			"isRenamable": true,
+			"isView": true,
+			"name": "球.054"
+		},
+		{
+			"children": [],
+			"components": [
+				null
+			],
+			"isActive": true,
+			"isRenamable": true,
+			"isView": true,
+			"name": "球.055"
+		},
+		{
+			"children": [],
+			"components": [
+				null
+			],
+			"isActive": true,
+			"isRenamable": true,
+			"isView": true,
+			"name": "球.056"
+		},
+		{
+			"children": [],
+			"components": [
+				null
+			],
+			"isActive": true,
+			"isRenamable": true,
+			"isView": true,
+			"name": "球.057"
+		},
+		{
+			"children": [],
+			"components": [
+				null
+			],
+			"isActive": true,
+			"isRenamable": true,
+			"isView": true,
+			"name": "球.058"
+		},
+		{
+			"children": [],
+			"components": [
+				null
+			],
+			"isActive": true,
+			"isRenamable": true,
+			"isView": true,
+			"name": "球.059"
+		},
+		{
+			"children": [],
+			"components": [
+				null
+			],
+			"isActive": true,
+			"isRenamable": true,
+			"isView": true,
+			"name": "球.060"
+		},
+		{
+			"children": [],
+			"components": [
+				null
+			],
+			"isActive": true,
+			"isRenamable": true,
+			"isView": true,
+			"name": "球.061"
+		},
+		{
+			"children": [],
+			"components": [
+				null
+			],
+			"isActive": true,
+			"isRenamable": true,
+			"isView": true,
+			"name": "球.062"
+		},
+		{
+			"children": [],
+			"components": [
+				null
+			],
+			"isActive": true,
+			"isRenamable": true,
+			"isView": true,
+			"name": "球.063"
+		},
+		{
+			"children": [],
+			"components": [
+				null
+			],
+			"isActive": true,
+			"isRenamable": true,
+			"isView": true,
+			"name": "球.064"
+		},
+		{
+			"children": [],
+			"components": [
+				null
+			],
+			"isActive": true,
+			"isRenamable": true,
+			"isView": true,
+			"name": "球.065"
+		},
+		{
+			"children": [],
+			"components": [
+				null
+			],
+			"isActive": true,
+			"isRenamable": true,
+			"isView": true,
+			"name": "球.066"
+		},
+		{
+			"children": [],
+			"components": [
+				null
+			],
+			"isActive": true,
+			"isRenamable": true,
+			"isView": true,
+			"name": "球.067"
+		},
+		{
+			"children": [],
+			"components": [
+				null
+			],
+			"isActive": true,
+			"isRenamable": true,
+			"isView": true,
+			"name": "球.068"
+		},
+		{
+			"children": [],
+			"components": [
+				null
+			],
+			"isActive": true,
+			"isRenamable": true,
+			"isView": true,
+			"name": "球.069"
+		},
+		{
+			"children": [],
+			"components": [
+				null
+			],
+			"isActive": true,
+			"isRenamable": true,
+			"isView": true,
+			"name": "球.070"
+		},
+		{
+			"children": [],
+			"components": [
+				null
+			],
+			"isActive": true,
+			"isRenamable": true,
+			"isView": true,
+			"name": "球.071"
+		},
+		{
+			"children": [],
+			"components": [
+				null
+			],
+			"isActive": true,
+			"isRenamable": true,
+			"isView": true,
+			"name": "球.072"
+		},
+		{
+			"children": [],
+			"components": [
+				null
+			],
+			"isActive": true,
+			"isRenamable": true,
+			"isView": true,
+			"name": "球.073"
+		},
+		{
+			"children": [],
+			"components": [
+				null
+			],
+			"isActive": true,
+			"isRenamable": true,
+			"isView": true,
+			"name": "球.074"
+		},
+		{
+			"children": [],
+			"components": [
+				null
+			],
+			"isActive": true,
+			"isRenamable": true,
+			"isView": true,
+			"name": "球.075"
+		},
+		{
+			"children": [],
+			"components": [
+				null
+			],
+			"isActive": true,
+			"isRenamable": true,
+			"isView": true,
+			"name": "球.076"
+		},
+		{
+			"children": [],
+			"components": [
+				null
+			],
+			"isActive": true,
+			"isRenamable": true,
+			"isView": true,
+			"name": "球.077"
+		},
+		{
+			"children": [],
+			"components": [
+				null
+			],
+			"isActive": true,
+			"isRenamable": true,
+			"isView": true,
+			"name": "球.078"
+		},
+		{
+			"children": [],
+			"components": [
+				null
+			],
+			"isActive": true,
+			"isRenamable": true,
+			"isView": true,
+			"name": "球.079"
+		},
+		{
+			"children": [],
+			"components": [
+				null
+			],
+			"isActive": true,
+			"isRenamable": true,
+			"isView": true,
+			"name": "球.080"
+		},
+		{
+			"children": [],
+			"components": [
+				null
+			],
+			"isActive": true,
+			"isRenamable": true,
+			"isView": true,
+			"name": "球.081"
+		},
+		{
+			"children": [],
+			"components": [
+				null
+			],
+			"isActive": true,
+			"isRenamable": true,
+			"isView": true,
+			"name": "球.082"
+		},
+		{
+			"children": [],
+			"components": [
+				null
+			],
+			"isActive": true,
+			"isRenamable": true,
+			"isView": true,
+			"name": "球.083"
+		},
+		{
+			"children": [],
+			"components": [
+				null
+			],
+			"isActive": true,
+			"isRenamable": true,
+			"isView": true,
+			"name": "球.084"
+		},
+		{
+			"children": [],
+			"components": [
+				null
+			],
+			"isActive": true,
+			"isRenamable": true,
+			"isView": true,
+			"name": "球.085"
+		},
+		{
+			"children": [],
+			"components": [
+				null
+			],
+			"isActive": true,
+			"isRenamable": true,
+			"isView": true,
+			"name": "球.086"
+		},
+		{
+			"children": [],
+			"components": [
+				null
+			],
+			"isActive": true,
+			"isRenamable": true,
+			"isView": true,
+			"name": "球.087"
+		},
+		{
+			"children": [],
+			"components": [
+				null
+			],
+			"isActive": true,
+			"isRenamable": true,
+			"isView": true,
+			"name": "球.088"
+		},
+		{
+			"children": [],
+			"components": [
+				null
+			],
+			"isActive": true,
+			"isRenamable": true,
+			"isView": true,
+			"name": "球.089"
+		},
+		{
+			"children": [],
+			"components": [
+				null
+			],
+			"isActive": true,
+			"isRenamable": true,
+			"isView": true,
+			"name": "球.090"
+		},
+		{
+			"children": [],
+			"components": [
+				null
+			],
+			"isActive": true,
+			"isRenamable": true,
+			"isView": true,
+			"name": "球.091"
+		},
+		{
+			"children": [],
+			"components": [
+				null
+			],
+			"isActive": true,
+			"isRenamable": true,
+			"isView": true,
+			"name": "球.092"
+		},
+		{
+			"children": [],
+			"components": [
+				null
+			],
+			"isActive": true,
+			"isRenamable": true,
+			"isView": true,
+			"name": "球.093"
+		},
+		{
+			"children": [],
+			"components": [
+				null
+			],
+			"isActive": true,
+			"isRenamable": true,
+			"isView": true,
+			"name": "球.094"
+		},
+		{
+			"children": [],
+			"components": [
+				null
+			],
+			"isActive": true,
+			"isRenamable": true,
+			"isView": true,
+			"name": "球.095"
+		},
+		{
+			"children": [],
+			"components": [
+				null
+			],
+			"isActive": true,
+			"isRenamable": true,
+			"isView": true,
+			"name": "球.096"
+		},
+		{
+			"children": [],
+			"components": [
+				null
+			],
+			"isActive": true,
+			"isRenamable": true,
+			"isView": true,
+			"name": "球.097"
+		},
+		{
+			"children": [],
+			"components": [
+				null
+			],
+			"isActive": true,
+			"isRenamable": true,
+			"isView": true,
+			"name": "球.098"
+		},
+		{
+			"children": [],
+			"components": [
+				null
+			],
+			"isActive": true,
+			"isRenamable": true,
+			"isView": true,
+			"name": "球.099"
+		},
+		{
+			"children": [],
+			"components": [
+				null
+			],
+			"isActive": true,
+			"isRenamable": true,
+			"isView": true,
+			"name": "球.100"
+		},
+		{
+			"children": [],
+			"components": [
+				null
+			],
+			"isActive": true,
+			"isRenamable": true,
+			"isView": true,
+			"name": "球.101"
+		},
+		{
+			"children": [],
+			"components": [
+				null
+			],
+			"isActive": true,
+			"isRenamable": true,
+			"isView": true,
+			"name": "球.102"
+		},
+		{
+			"children": [],
+			"components": [
+				null
+			],
+			"isActive": true,
+			"isRenamable": true,
+			"isView": true,
+			"name": "球.103"
+		},
+		{
+			"children": [],
+			"components": [
+				null
+			],
+			"isActive": true,
+			"isRenamable": true,
+			"isView": true,
+			"name": "球.104"
+		},
+		{
+			"children": [],
+			"components": [
+				null
+			],
+			"isActive": true,
+			"isRenamable": true,
+			"isView": true,
+			"name": "球.105"
+		},
+		{
+			"children": [],
+			"components": [
+				null
+			],
+			"isActive": true,
+			"isRenamable": true,
+			"isView": true,
+			"name": "球.106"
+		},
+		{
+			"children": [],
+			"components": [
+				null
+			],
+			"isActive": true,
+			"isRenamable": true,
+			"isView": true,
+			"name": "球.107"
+		},
+		{
+			"children": [],
+			"components": [
+				null
+			],
+			"isActive": true,
+			"isRenamable": true,
+			"isView": true,
+			"name": "球.108"
+		},
+		{
+			"children": [],
+			"components": [
+				null
+			],
+			"isActive": true,
+			"isRenamable": true,
+			"isView": true,
+			"name": "球.109"
+		},
+		{
+			"children": [],
+			"components": [
+				null
+			],
+			"isActive": true,
+			"isRenamable": true,
+			"isView": true,
+			"name": "球.110"
+		},
+		{
+			"children": [],
+			"components": [
+				null
+			],
+			"isActive": true,
+			"isRenamable": true,
+			"isView": true,
+			"name": "球.111"
+		},
+		{
+			"children": [],
+			"components": [
+				null
+			],
+			"isActive": true,
+			"isRenamable": true,
+			"isView": true,
+			"name": "球.112"
+		},
+		{
+			"children": [],
+			"components": [
+				null
+			],
+			"isActive": true,
+			"isRenamable": true,
+			"isView": true,
+			"name": "球.113"
+		},
+		{
+			"children": [],
+			"components": [
+				null
+			],
+			"isActive": true,
+			"isRenamable": true,
+			"isView": true,
+			"name": "球.114"
+		},
+		{
+			"children": [],
+			"components": [
+				null
+			],
+			"isActive": true,
+			"isRenamable": true,
+			"isView": true,
+			"name": "球.115"
+		},
+		{
+			"children": [],
+			"components": [
+				null
+			],
+			"isActive": true,
+			"isRenamable": true,
+			"isView": true,
+			"name": "球.116"
+		},
+		{
+			"children": [],
+			"components": [
+				null
+			],
+			"isActive": true,
+			"isRenamable": true,
+			"isView": true,
+			"name": "球.117"
+		},
+		{
+			"children": [],
+			"components": [
+				null
+			],
+			"isActive": true,
+			"isRenamable": true,
+			"isView": true,
+			"name": "球.118"
+		},
+		{
+			"children": [],
+			"components": [
+				null
+			],
+			"isActive": true,
+			"isRenamable": true,
+			"isView": true,
+			"name": "球.119"
+		},
+		{
+			"children": [],
+			"components": [
+				null
+			],
+			"isActive": true,
+			"isRenamable": true,
+			"isView": true,
+			"name": "球.120"
+		},
+		{
+			"children": [],
+			"components": [
+				null
+			],
+			"isActive": true,
+			"isRenamable": true,
+			"isView": true,
+			"name": "球.121"
+		}
+	],
+	"components": [],
+	"isActive": true,
+	"isRenamable": true,
+	"isView": true,
+	"name": "PBR_Sphere"
+}

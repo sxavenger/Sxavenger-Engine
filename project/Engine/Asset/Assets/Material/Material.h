@@ -329,7 +329,7 @@ public:
 
 	//* json *//
 
-	json OutputJson() const override;
+	json PerseToJson() const override;
 
 	void InputJson(const json& data) override;
 

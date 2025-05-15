@@ -52,7 +52,7 @@ Vector3f QuaternionTransform::GetForward() const {
 	return Quaternion::RotateVector(kForward3<>, rotate);
 }
 
-json QuaternionTransform::OutputJson() const {
+json QuaternionTransform::PerseToJson() const {
 	json data;
 	data["translate"] = GeometryJsonSerializer::ToJson(translate);
 	data["rotate"]    = GeometryJsonSerializer::ToJson(rotate);
@@ -94,7 +94,7 @@ Matrix4x4 Transform2d::ToMatrix() const {
 	return Matrix4x4::MakeAffine({ scale.x, scale.y, 0.0f }, { 0.0f, 0.0f, rotate }, { translate.x, translate.y, 0.0f });
 }
 
-json Transform2d::OutputJson() const {
+json Transform2d::PerseToJson() const {
 	json data;
 	data["translate"] = GeometryJsonSerializer::ToJson(translate);
 	data["rotate"]    = rotate;

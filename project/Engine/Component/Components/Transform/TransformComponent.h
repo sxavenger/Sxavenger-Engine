@@ -30,10 +30,6 @@ public:
 	TransformComponent(MonoBehaviour* behaviour) : BaseComponent(behaviour) { CreateBuffer(); }
 	~TransformComponent() override = default;
 
-	json OutputJson() const override;
-
-	void InputJson(const json& data) override;
-
 	//* component option *//
 
 	void ShowComponentInspector() override;
@@ -56,6 +52,12 @@ public:
 	const Matrix4x4& GetMatrix() const { return mat_; }
 
 	const Vector3f GetPosition() const;
+
+	//* json option *//
+
+	json PerseToJson() const override;
+
+	void InputJson(const json& data) override;
 
 	//=========================================================================================
 	// public variables

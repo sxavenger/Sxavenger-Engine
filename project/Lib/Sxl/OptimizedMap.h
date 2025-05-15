@@ -58,11 +58,11 @@ public:
 
 	bool Empty() const { return map_.empty(); }
 
-	Container::iterator Begin();
-	Container::const_iterator Begin() const;
+	Container::iterator begin();
+	Container::const_iterator begin() const;
 
-	Container::iterator End();
-	Container::const_iterator End() const;
+	Container::iterator end();
+	Container::const_iterator end() const;
 
 	const Container& GetMap() const { return map_; }
 	Container& GetMap() { return map_; }
@@ -139,22 +139,22 @@ inline size_t OptimizedMap<_Key, _Value>::Size() const {
 }
 
 template <class _Key, class _Value>
-inline OptimizedMap<_Key, _Value>::Container::iterator OptimizedMap<_Key, _Value>::Begin() {
+inline OptimizedMap<_Key, _Value>::Container::iterator OptimizedMap<_Key, _Value>::begin() {
 	return map_.begin();
 }
 
 template <class _Key, class _Value>
-inline OptimizedMap<_Key, _Value>::Container::const_iterator OptimizedMap<_Key, _Value>::Begin() const {
+inline OptimizedMap<_Key, _Value>::Container::const_iterator OptimizedMap<_Key, _Value>::begin() const {
 	return map_.begin();
 }
 
 template <class _Key, class _Value>
-inline OptimizedMap<_Key, _Value>::Container::iterator OptimizedMap<_Key, _Value>::End() {
+inline OptimizedMap<_Key, _Value>::Container::iterator OptimizedMap<_Key, _Value>::end() {
 	return map_.end();
 }
 
 template <class _Key, class _Value>
-inline OptimizedMap<_Key, _Value>::Container::const_iterator OptimizedMap<_Key, _Value>::End() const {
+inline OptimizedMap<_Key, _Value>::Container::const_iterator OptimizedMap<_Key, _Value>::end() const {
 	return map_.end();
 }
 

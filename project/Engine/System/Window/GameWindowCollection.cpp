@@ -123,7 +123,7 @@ void GameWindowCollection::SystemDebugGui() {
 }
 
 void GameWindowCollection::RemoveClosedSubWindow() {
-	for (auto it = subWindows_.Begin(); it != subWindows_.End();) {
+	for (auto it = subWindows_.begin(); it != subWindows_.end();) {
 		if (!it->second->IsOpenWindow()) {
 			it = subWindows_.Erase(it);
 			continue;

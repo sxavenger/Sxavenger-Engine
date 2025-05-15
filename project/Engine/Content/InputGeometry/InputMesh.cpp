@@ -18,7 +18,7 @@ void MeshVertexData::Init() {
 // Meshlet structure methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-void InputMesh::Meshlet::CreateMeshlet(TriangleInputAssembler<MeshVertexData>* ia) {
+void InputMesh::Meshlet::CreateMeshlet(const TriangleInputAssembler<MeshVertexData>* ia) {
 	//* InputAssemblerから情報を取得
 	const auto vertex = ia->GetVertex();
 	const auto index  = ia->GetIndex();
@@ -130,7 +130,7 @@ void InputMesh::Meshlet::Dispatch(const DirectXThreadContext* context, UINT inst
 // MeshBottomLevelAS structure methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-void InputMesh::MeshBottomLevelAS::CreateBottomLevelAS(TriangleInputAssembler<MeshVertexData>* ia, const DirectXThreadContext* context) {
+void InputMesh::MeshBottomLevelAS::CreateBottomLevelAS(const TriangleInputAssembler<MeshVertexData>* ia, const DirectXThreadContext* context) {
 	D3D12_RAYTRACING_GEOMETRY_DESC desc = {};
 	desc.Type                                 = D3D12_RAYTRACING_GEOMETRY_TYPE_TRIANGLES;
 	desc.Flags                                = D3D12_RAYTRACING_GEOMETRY_FLAG_NONE;

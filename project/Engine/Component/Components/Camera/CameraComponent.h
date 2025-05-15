@@ -94,7 +94,7 @@ public:
 	CameraComponent(MonoBehaviour* behaviour) : BaseComponent(behaviour) { Init(); }
 	~CameraComponent() override = default;
 
-	json OutputJson() const override;
+	json PerseToJson() const override;
 
 	void InputJson(const json& data) override;
 

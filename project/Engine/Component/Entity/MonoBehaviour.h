@@ -26,7 +26,7 @@
 // MonoBehaviour class
 ////////////////////////////////////////////////////////////////////////////////////////////
 class MonoBehaviour
-	: public BaseInspector {
+	: public BaseInspector, public IJsonSerializer {
 public:
 
 	////////////////////////////////////////////////////////////////////////////////////////////
@@ -156,6 +156,12 @@ public:
 	virtual void ShowInspector() override;
 
 	virtual void LateUpdate() override;
+
+	//* json option *//
+
+	json PerseToJson() const override;
+
+	void InputJson(const json& data) override { data; } //!< todo:
 
 protected:
 

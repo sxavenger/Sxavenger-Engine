@@ -53,7 +53,7 @@ Matrix4x4 CameraComponent::Projection::ToProj() const {
 // CameraComponent class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-json CameraComponent::OutputJson() const {
+json CameraComponent::PerseToJson() const {
 	json component;
 
 	component["sensor"] = GeometryJsonSerializer::ToJson(projection_.sensor);
