@@ -155,6 +155,7 @@
     <ClCompile Include="Engine\System\UI\SxImGuizmo.cpp" />
     <ClCompile Include="Engine\Component\Components\Light\Rect\RectLightComponent.cpp" />
     <ClCompile Include="Engine\Render\Scene\Environment\FSkyAtmosphere.cpp" />
+    <ClCompile Include="Engine\Adapter\Actor\AtmosphereActor.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\System\Window\Window.h" />
@@ -329,6 +330,7 @@
     <ClInclude Include="Engine\System\UI\SxImGuizmo.h" />
     <ClInclude Include="Engine\Component\Components\Light\Rect\RectLightComponent.h" />
     <ClInclude Include="Engine\Render\Scene\Environment\FSkyAtmosphere.h" />
+    <ClInclude Include="Engine\Adapter\Actor\AtmosphereActor.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

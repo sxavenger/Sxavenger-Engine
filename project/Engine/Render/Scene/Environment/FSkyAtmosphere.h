@@ -105,6 +105,8 @@ public:
 
 	void Task(const DirectXThreadContext* context) override;
 
+	void SetImGuiCommand();
+
 	//* atmosphere option *//
 
 	const DxObject::Descriptor& UseAtmosphereDescriptor(const DirectXThreadContext* context);

@@ -256,6 +256,10 @@ void FSkyAtmosphere::Task(const DirectXThreadContext* context) {
 	FEnvironmentMap::Task(context);
 }
 
+void FSkyAtmosphere::SetImGuiCommand() {
+	atmosphere_.parameter_->At(0).SetImGuiCommand();
+}
+
 const DxObject::Descriptor& FSkyAtmosphere::UseAtmosphereDescriptor(const DirectXThreadContext* context) {
 	return atmosphere_.UseDescriptorSRV(context);
 }

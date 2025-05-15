@@ -405,16 +405,6 @@ void FEnvironmentMap::Update(const DirectXThreadContext* context) {
 			isCommited_ = true;
 		}
 
-		// 再度taskを実行
-		/*if (IsNeedExecute()) {
-			mapEnvironment_ = mainEnvironment_;
-
-			task_->SetStatus(AsyncTask::Status::None);
-			SxavengerSystem::PushTask(AsyncExecution::Compute, task_);
-
-			isCommited_ = false;
-		}*/
-
 		mapEnvironment_ = mainEnvironment_;
 
 		task_->SetStatus(AsyncTask::Status::None);
