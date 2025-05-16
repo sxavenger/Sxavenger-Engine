@@ -38,9 +38,13 @@ void PostProcessExposure::Init() {
 	parameter_ = std::make_unique<DimensionBuffer<Parameter>>();
 	parameter_->Create(SxavengerSystem::GetDxDevice(), 1);
 	parameter_->At(0).Init();
+
+	name_ = "Exposure";
 }
 
 void PostProcessExposure::Process(const DirectXThreadContext* context, FRenderTargetTextures* textures, const CameraComponent* camera) {
+	camera;
+
 	auto process = textures->GetProcessTextures();
 	process->NextProcess(context);
 
@@ -59,17 +63,8 @@ void PostProcessExposure::Process(const DirectXThreadContext* context, FRenderTa
 
 	core->BindComputeBuffer(FRenderCoreProcess::ProcessType::Exposure, context, desc);
 	core->Dispatch(context, textures->GetSize());
-
-	camera;
 }
 
 void PostProcessExposure::ShowInspectorImGui() {
-
-	ImGui::Checkbox("## isEnabled", &isEnabled_);
-
-	ImGui::SameLine();
-
-	if (ImGui::CollapsingHeader("Exposure")) {
-		parameter_->At(0).SetImGuiCommand();
-	}
+	parameter_->At(0).SetImGuiCommand();
 }

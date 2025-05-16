@@ -39,18 +39,18 @@ struct Table {
 	//* member *//
 	
 	Point points[4];
-	//!< point‚Íinput‚Ì¸‡‚É•À‚ñ‚Å‚¢‚é‚±‚Æ‚ğ‘O’ñ‚Æ‚µ‚Ä‚¢‚é
+	//!< pointã¯inputã®æ˜‡é †ã«ä¸¦ã‚“ã§ã„ã‚‹ã“ã¨ã‚’å‰æã¨ã—ã¦ã„ã‚‹
 	
 	//* methods *//
 	
 	float GetOutput(float input) {
 		
-		if (input <= points[0].input) { //!< n“_‚æ‚è¬‚³‚¢ê‡
+		if (input <= points[0].input) { //!< å§‹ç‚¹ã‚ˆã‚Šå°ã•ã„å ´åˆ
 			return points[0].output;
 		}
 		
 		
-		if (input >= points[3].input) { //!< I“_‚æ‚è‘å‚«‚¢ê‡
+		if (input >= points[3].input) { //!< çµ‚ç‚¹ã‚ˆã‚Šå¤§ãã„å ´åˆ
 			return points[3].output;
 		}
 		
@@ -62,7 +62,7 @@ struct Table {
 			}
 		}
 		
-		// index‚ÌŒˆ’è
+		// indexã®æ±ºå®š
 		uint index0 = segmentIndex - 1;
 		uint index1 = segmentIndex;
 		uint index2 = segmentIndex + 1;
@@ -77,7 +77,7 @@ struct Table {
 			index3 = index2;
 		}
 		
-		// inputT‚ğƒZƒOƒƒ“ƒg“à‚ÌˆÊ’u‚É³‹K‰»
+		// inputTã‚’ã‚»ã‚°ãƒ¡ãƒ³ãƒˆå†…ã®ä½ç½®ã«æ­£è¦åŒ–
 		float t = (input - points[index1].input) / (points[index2].input - points[index1].input);
 
 		return CatmullRomInterpolation(points[index0].output, points[index1].output, points[index2].output, points[index3].output, t);

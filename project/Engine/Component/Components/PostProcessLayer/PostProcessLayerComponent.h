@@ -12,6 +12,7 @@
 #include "PostProcessExposure.h"
 #include "PostProcessBloom.h"
 #include "PostProcessDoF.h"
+#include "PostProcessTextureLUT.h"
 
 //* engine
 #include <Engine/System/DirectX/DirectXContext.h>
@@ -61,8 +62,9 @@ public:
 
 	//* process option *//
 
-	template <PostProcessConcept T>
-	Iterator AddPostProcess();
+	template <PostProcessConcept _Ty>
+	_Ty* AddPostProcess();
+
 
 private:
 
@@ -80,9 +82,13 @@ private:
 // PostProcessLayerComponent class template methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-template <PostProcessConcept T>
-inline PostProcessLayerComponent::Iterator PostProcessLayerComponent::AddPostProcess() {
-	auto process = std::make_unique<T>();
+template <PostProcessConcept _Ty>
+inline _Ty* PostProcessLayerComponent::AddPostProcess() {
+	auto process = std::make_unique<_Ty>();
 	process->Init();
-	return processes_.emplace(processes_.end(), std::move(process));
+
+	_Ty* result = process.get();
+	processes_.emplace(processes_.end(), std::move(process));
+
+	return result;
 }

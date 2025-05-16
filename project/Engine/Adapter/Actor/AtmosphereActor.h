@@ -44,4 +44,8 @@ private:
 
 	SkyLightComponent* skyLightComponent_;
 
+	//* parameter *//
+
+	bool isUpdateAtmosphere_ = true;
+
 };

@@ -34,6 +34,8 @@ void PostProcessBloom::Init() {
 	parameter_ = std::make_unique<DimensionBuffer<Parameter>>();
 	parameter_->Create(SxavengerSystem::GetDxDevice(), 1);
 	parameter_->At(0).Init();
+
+	name_ = "Bloom";
 }
 
 void PostProcessBloom::Process(const DirectXThreadContext* context, FRenderTargetTextures* textures, const CameraComponent* camera) {
@@ -60,12 +62,5 @@ void PostProcessBloom::Process(const DirectXThreadContext* context, FRenderTarge
 }
 
 void PostProcessBloom::ShowInspectorImGui() {
-
-	ImGui::Checkbox("## isEnabled", &isEnabled_);
-
-	ImGui::SameLine();
-
-	if (ImGui::CollapsingHeader("Bloom")) {
-		parameter_->At(0).SetImGuiCommand();
-	}
+	parameter_->At(0).SetImGuiCommand();
 }

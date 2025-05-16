@@ -119,6 +119,10 @@ void AsyncThreadPool::Create(AsyncExecution execution, size_t size) {
 					task = queue_.front();
 					EngineThreadLog("[AsyncThreadPool]: task poped. tag: " + queue_.front()->GetTag());
 					queue_.pop();
+
+					if (!queue_.empty()) {
+						condition_.notify_one();
+					}
 				}
 
 				if (task->GetStatus() != AsyncTask::Status::Pending) {

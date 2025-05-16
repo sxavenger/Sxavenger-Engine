@@ -11,6 +11,7 @@
 
 //* c++
 #include <concepts>
+#include <string>
 
 //-----------------------------------------------------------------------------------------
 // forward
@@ -36,6 +37,9 @@ public:
 	virtual void ShowInspectorImGui() = 0;
 
 	bool IsEnabled() const { return isEnabled_; }
+	bool& IsEnabled() { return isEnabled_; }
+
+	const std::string& GetName() { return name_; }
 
 protected:
 
@@ -44,6 +48,8 @@ protected:
 	//=========================================================================================
 
 	bool isEnabled_ = true;
+
+	std::string name_ = "base post process";
 
 };
 

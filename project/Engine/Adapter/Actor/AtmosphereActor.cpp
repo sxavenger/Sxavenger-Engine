@@ -20,10 +20,12 @@ void AtmosphereActor::Term() {
 }
 
 void AtmosphereActor::Update() {
-	atmosphere_.Update(SxavengerSystem::GetMainThreadContext());
-	skyLightComponent_->SetEnvironment(atmosphere_.UseAtmosphereDescriptor(SxavengerSystem::GetMainThreadContext()).GetGPUHandle());
-	skyLightComponent_->GetDiffuseParameter().SetTexture(atmosphere_.UseIrradianceDescriptor(SxavengerSystem::GetMainThreadContext()).GetIndex());
-	skyLightComponent_->GetSpecularParameter().SetTexture(atmosphere_.UseRadianceDescriptor(SxavengerSystem::GetMainThreadContext()).GetIndex(), atmosphere_.GetRadianceMiplevels());
+	if (MonoBehaviour::IsActive() && isUpdateAtmosphere_) {
+		atmosphere_.Update(SxavengerSystem::GetMainThreadContext());
+		skyLightComponent_->SetEnvironment(atmosphere_.UseAtmosphereDescriptor(SxavengerSystem::GetMainThreadContext()).GetGPUHandle());
+		skyLightComponent_->GetDiffuseParameter().SetTexture(atmosphere_.UseIrradianceDescriptor(SxavengerSystem::GetMainThreadContext()).GetIndex());
+		skyLightComponent_->GetSpecularParameter().SetTexture(atmosphere_.UseRadianceDescriptor(SxavengerSystem::GetMainThreadContext()).GetIndex(), atmosphere_.GetRadianceMiplevels());
+	}
 }
 
 void AtmosphereActor::Inspectable() {
@@ -31,4 +33,5 @@ void AtmosphereActor::Inspectable() {
 	ImGui::Separator();
 
 	atmosphere_.SetImGuiCommand();
+	ImGui::Checkbox("update atmosphere", &isUpdateAtmosphere_);
 }

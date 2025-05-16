@@ -13,7 +13,15 @@
 void PostProcessLayerComponent::ShowComponentInspector() {
 	for (auto& process : processes_) {
 		ImGui::PushID(static_cast<void*>(process.get()));
-		process->ShowInspectorImGui();
+
+		ImGui::Checkbox("## isEnabled", &process->IsEnabled());
+
+		ImGui::SameLine();
+
+		if (ImGui::CollapsingHeader(process->GetName().c_str())) {
+			process->ShowInspectorImGui();
+		}
+		
 		ImGui::PopID();
 	}
 }

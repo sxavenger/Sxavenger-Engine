@@ -67,20 +67,26 @@ void ComputePipelineState::CreateDirectXPipeline(Device* device) {
 // ReflectionComputePipelineState class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-void ReflectionComputePipelineState::ReflectionPipeline(Device* device, const std::optional<SamplerBindDesc>& desc) {
+void ReflectionComputePipelineState::ReflectionPipeline(Device* device) {
 	table_.Reset();
 	SetBlobToTable();
 
-	if (desc.has_value()) {
-		rootSignatureDesc_ = table_.CreateComputeRootSignatureDesc(desc.value());
-
-	} else {
-		rootSignatureDesc_ = table_.CreateComputeRootSignatureDesc();
-	}
+	rootSignatureDesc_ = table_.CreateComputeRootSignatureDesc();
 
 	CreateDirectXRootSignature(device);
 	CreateDirectXPipeline(device);
 }
+
+void ReflectionComputePipelineState::ReflectionPipeline(Device* device, const SamplerBindDesc& desc) {
+	table_.Reset();
+	SetBlobToTable();
+
+	rootSignatureDesc_ = table_.CreateComputeRootSignatureDesc(desc);
+
+	CreateDirectXRootSignature(device);
+	CreateDirectXPipeline(device);
+}
+
 
 void ReflectionComputePipelineState::BindComputeBuffer(CommandContext* context, const BindBufferDesc& desc) {
 	table_.BindComputeBuffer(context, desc);

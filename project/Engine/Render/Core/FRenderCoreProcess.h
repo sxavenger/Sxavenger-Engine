@@ -21,6 +21,7 @@ public:
 		Environment,
 		Bloom,
 		LUT,
+		TextureLUT,
 		Exposure,
 		DoF,
 		Vignette,
@@ -61,5 +62,6 @@ private:
 	//=========================================================================================
 
 	void CreatePipeline(ProcessType type, const std::filesystem::path& filepath);
+	void CreatePipeline(ProcessType type, const std::filesystem::path& filepath, const DxObject::SamplerBindDesc& desc);
 
 };

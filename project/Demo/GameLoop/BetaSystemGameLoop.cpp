@@ -58,6 +58,7 @@ void BetaSystemGameLoop::InitSystem() {
 	SxavengerAsset::TryImport<AssetModel>("assets/models/primitive/sample_scene.obj");
 	SxavengerAsset::TryImport<AssetModel>("assets/models/PBR_Sphere_Test/model/PBR_Sphere.gltf");
 	SxavengerAsset::TryImport<AssetModel>("assets/models/chessboard/ABeautifulGame.gltf");
+	SxavengerAsset::TryImport<AssetModel>("assets/models/sponza/NewSponza_Main_glTF_003.gltf");
 	
 	lightA_  = ComponentHelper::CreatePointLightMonoBehaviour();
 	lightB_  = ComponentHelper::CreateDirectionalLightMonoBehaviour();
@@ -81,8 +82,13 @@ void BetaSystemGameLoop::InitSystem() {
 	camera_->GetComponent<PostProcessLayerComponent>()->AddPostProcess<PostProcessBloom>();
 	//camera_->GetComponent<PostProcessLayerComponent>()->AddPostProcess<PostProcessDoF>();
 
+	auto texture = SxavengerAsset::TryImport<AssetTexture>("assets/textures/LUT/lut_greenish.png");
+	auto lut = camera_->GetComponent<PostProcessLayerComponent>()->AddPostProcess<PostProcessTextureLUT>();
+	lut->SetLUTTexture(texture, { 16, 16 });
+
 	atmosphere_ = std::make_unique<AtmosphereActor>();
 	atmosphere_->Init({ 1024, 1024 });
+
 }
 
 void BetaSystemGameLoop::TermSystem() {
@@ -94,18 +100,11 @@ void BetaSystemGameLoop::UpdateSystem() {
 	// Update
 	//-----------------------------------------------------------------------------------------
 
-	//skyAtmosphere_.Update(SxavengerSystem::GetMainThreadContext());
-
 	//if (SxavengerSystem::IsTriggerKey(KeyId::KEY_F)) {
 	//	index_ = (index_ + 1) % environmentTextures_.size();
 	//	map.SetEnvironment(environmentTextures_[index_].WaitGet()->GetGPUHandleSRV());
 	//	skylight_->GetComponent<SkyLightComponent>()->SetEnvironment(environmentTextures_[index_].WaitGet()->GetGPUHandleSRV());
 	//}
-
-	/*map.Update(SxavengerSystem::GetMainThreadContext());
-	skylight_->GetComponent<SkyLightComponent>()->SetEnvironment(map.UseAtmosphereDescriptor(SxavengerSystem::GetMainThreadContext()).GetGPUHandle());*/
-	//skylight_->GetComponent<SkyLightComponent>()->GetDiffuseParameter().SetTexture(map.UseIrradianceDescriptor(SxavengerSystem::GetMainThreadContext()).GetIndex());
-	//skylight_->GetComponent<SkyLightComponent>()->GetSpecularParameter().SetTexture(map.UseRadianceDescriptor(SxavengerSystem::GetMainThreadContext()).GetIndex(), map.GetRadianceMiplevels());
 
 	atmosphere_->Update();
 

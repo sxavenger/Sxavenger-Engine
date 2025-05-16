@@ -156,6 +156,7 @@
     <ClCompile Include="Engine\Component\Components\Light\Rect\RectLightComponent.cpp" />
     <ClCompile Include="Engine\Render\Scene\Environment\FSkyAtmosphere.cpp" />
     <ClCompile Include="Engine\Adapter\Actor\AtmosphereActor.cpp" />
+    <ClCompile Include="Engine\Component\Components\PostProcessLayer\PostProcessTextureLUT.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\System\Window\Window.h" />
@@ -331,6 +332,7 @@
     <ClInclude Include="Engine\Component\Components\Light\Rect\RectLightComponent.h" />
     <ClInclude Include="Engine\Render\Scene\Environment\FSkyAtmosphere.h" />
     <ClInclude Include="Engine\Adapter\Actor\AtmosphereActor.h" />
+    <ClInclude Include="Engine\Component\Components\PostProcessLayer\PostProcessTextureLUT.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

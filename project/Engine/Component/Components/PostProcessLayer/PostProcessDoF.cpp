@@ -37,6 +37,8 @@ void PostProcessDoF::Init() {
 	parameter_ = std::make_unique<DimensionBuffer<Parameter>>();
 	parameter_->Create(SxavengerSystem::GetDxDevice(), 1);
 	parameter_->At(0).Init();
+
+	name_ = "Depth of Field";
 }
 
 void PostProcessDoF::Process(const DirectXThreadContext* context, FRenderTargetTextures* textures, const CameraComponent* camera) {
@@ -65,12 +67,5 @@ void PostProcessDoF::Process(const DirectXThreadContext* context, FRenderTargetT
 }
 
 void PostProcessDoF::ShowInspectorImGui() {
-
-	ImGui::Checkbox("## isEnabled", &isEnabled_);
-
-	ImGui::SameLine();
-
-	if (ImGui::CollapsingHeader("DoF")) {
-		parameter_->At(0).SetImGuiCommand();
-	}
+	parameter_->At(0).SetImGuiCommand();
 }

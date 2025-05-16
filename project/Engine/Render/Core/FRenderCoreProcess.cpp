@@ -12,33 +12,6 @@ const Vector2ui FRenderCoreProcess::kNumThreadSize_ = { 16, 16 };
 
 void FRenderCoreProcess::Init() {
 
-	//{ //!< nlao
-	//	auto process = std::make_unique<CustomReflectionComputePipeline>();
-	//	process->CreateAsset(L"packages/shaders/render/AmbientProcess/NLAO.cs.hlsl");
-	//	process->RegisterBlob();
-	//	process->ReflectionPipeline(SxavengerSystem::GetDxDevice());
-
-	//	processes_[static_cast<uint32_t>(ProcessType::NLAO)] = std::move(process);
-	//}
-
-	//{ //!< nlao blur
-	//	auto process = std::make_unique<CustomReflectionComputePipeline>();
-	//	process->CreateAsset(L"packages/shaders/render/AmbientProcess/NLAOBlur.cs.hlsl");
-	//	process->RegisterBlob();
-	//	process->ReflectionPipeline(SxavengerSystem::GetDxDevice());
-
-	//	processes_[static_cast<uint32_t>(ProcessType::NLAO_Blur)] = std::move(process);
-	//}
-
-	//{ //!< overlay
-	//	auto process = std::make_unique<CustomReflectionComputePipeline>();
-	//	process->CreateAsset(L"packages/shaders/render/PostProcess/Overlay.cs.hlsl");
-	//	process->RegisterBlob();
-	//	process->ReflectionPipeline(SxavengerSystem::GetDxDevice());
-
-	//	processes_[static_cast<uint32_t>(ProcessType::Overlay)] = std::move(process);
-	//}
-
 	//!< environment
 	CreatePipeline(ProcessType::Environment, L"packages/shaders/render/PostProcess/Environment.cs.hlsl");
 
@@ -50,6 +23,14 @@ void FRenderCoreProcess::Init() {
 
 	//!< lut
 	CreatePipeline(ProcessType::LUT, L"packages/shaders/render/PostProcess/LUT.cs.hlsl");
+
+	//!< texture lut
+	{
+		DxObject::SamplerBindDesc desc = {};
+		desc.SetSamplerPoint("gLUTSampler", DxObject::SamplerMode::MODE_CLAMP);
+		
+		CreatePipeline(ProcessType::TextureLUT, L"packages/shaders/render/PostProcess/TextureLUT.cs.hlsl", desc);
+	}
 
 	//!< dof
 	CreatePipeline(ProcessType::DoF, L"packages/shaders/render/PostProcess/DoF.cs.hlsl");
@@ -75,6 +56,15 @@ void FRenderCoreProcess::CreatePipeline(ProcessType type, const std::filesystem:
 	process->CreateAsset(filepath);
 	process->RegisterBlob();
 	process->ReflectionPipeline(SxavengerSystem::GetDxDevice());
+
+	processes_[static_cast<uint32_t>(type)] = std::move(process);
+}
+
+void FRenderCoreProcess::CreatePipeline(ProcessType type, const std::filesystem::path& filepath, const DxObject::SamplerBindDesc& desc) {
+	auto process = std::make_unique<CustomReflectionComputePipeline>();
+	process->CreateAsset(filepath);
+	process->RegisterBlob();
+	process->ReflectionPipeline(SxavengerSystem::GetDxDevice(), desc);
 
 	processes_[static_cast<uint32_t>(type)] = std::move(process);
 }

@@ -101,7 +101,9 @@ public:
 
 	//* reflection methods *//
 
-	void ReflectionPipeline(Device* device, const std::optional<SamplerBindDesc>& desc = std::nullopt);
+	void ReflectionPipeline(Device* device);
+
+	void ReflectionPipeline(Device* device, const SamplerBindDesc& desc);
 
 	void BindComputeBuffer(CommandContext* context, const BindBufferDesc& desc);
 

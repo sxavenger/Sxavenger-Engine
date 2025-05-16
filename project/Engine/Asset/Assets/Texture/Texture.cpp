@@ -31,7 +31,7 @@ void Texture::Load(const DirectXThreadContext* context, const std::filesystem::p
 	auto device = SxavengerSystem::GetDxDevice()->GetDevice();
 
 	// resourceの生成
-	resource_     = CreateTextureResource(device, metadata);
+	resource_ = CreateTextureResource(device, metadata);
 	ComPtr<ID3D12Resource> intermediate = UploadTextureData(resource_.Get(), image, SxavengerSystem::GetDxDevice()->GetDevice(), context->GetCommandList());
 
 	// SRVの生成
@@ -98,7 +98,7 @@ DirectX::ScratchImage Texture::LoadTexture(const std::filesystem::path& filepath
 	} else {
 		hr = DirectX::LoadFromWICFile(
 			filepath.generic_wstring().c_str(),
-			DirectX::WIC_FLAGS_FORCE_SRGB,
+			DirectX::WIC_FLAGS_FORCE_RGB,
 			nullptr,
 			image
 		);
