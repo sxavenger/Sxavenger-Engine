@@ -25,8 +25,9 @@ public:
 		Exposure,
 		DoF,
 		Vignette,
+		Tonemap,
 	};
-	static const uint32_t kProcessTypeCount = static_cast<uint32_t>(ProcessType::Vignette) + 1;
+	static const uint32_t kProcessTypeCount = static_cast<uint32_t>(ProcessType::Tonemap) + 1;
 
 public:
 

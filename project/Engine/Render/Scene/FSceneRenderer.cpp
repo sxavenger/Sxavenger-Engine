@@ -41,11 +41,14 @@ void FSceneRenderer::Render(const DirectXThreadContext* context, const Config& c
 
 	PostProcessPass(context, conf);
 
+	CompositingPass(context, conf);
+
 }
 
 void FSceneRenderer::ApplyConfig(Config& config) {
 	if (config.camera == nullptr) { //!< cameraが設定されていない場合, Tagのcameraを取得
 		if (config.tag != CameraComponent::Tag::None) {
+
 			// component storage から tag に一致する camera component を取得.
 			sComponentStorage->ForEach<CameraComponent>([&](CameraComponent* component) {
 				if (component->GetTag() == config.tag) {
@@ -443,5 +446,40 @@ void FSceneRenderer::PostProcessPass(const DirectXThreadContext* context, const 
 	//!< HACK: componentのtagなどを作成.
 
 	textures_->EndPostProcess(context);
+
+}
+
+void FSceneRenderer::CompositingPass(const DirectXThreadContext* context, const Config& config) {
+
+	if (!config.isEnableCompositing) {
+		return;
+	}
+
+	textures_->GetGBuffer(FRenderTargetTextures::GBufferLayout::Main)->TransitionBeginUnordered(context);
+
+	CompositingPassTonemap(context, config);
+
+	textures_->GetGBuffer(FRenderTargetTextures::GBufferLayout::Main)->TransitionEndUnordered(context);
+
+}
+
+void FSceneRenderer::CompositingPassTonemap(const DirectXThreadContext* context, const Config& config) {
+
+	config;
+
+	FRenderCore::GetInstance()->GetProcess()->SetPipeline(
+		FRenderCoreProcess::ProcessType::Tonemap, context
+	);
+
+	DxObject::BindBufferDesc parameter = {};
+	// common
+	parameter.SetAddress("gConfig", textures_->GetDimension());
+	parameter.SetHandle("gTexture", textures_->GetGBuffer(FRenderTargetTextures::GBufferLayout::Main)->GetGPUHandleSRV());
+
+	FRenderCore::GetInstance()->GetProcess()->BindComputeBuffer(
+		FRenderCoreProcess::ProcessType::Tonemap, context, parameter
+	);
+
+	FRenderCore::GetInstance()->GetProcess()->Dispatch(context, textures_->GetSize());
 
 }

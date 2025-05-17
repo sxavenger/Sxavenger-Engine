@@ -29,5 +29,5 @@ RWTexture3D<float4> gOutput : register(u0);
 ////////////////////////////////////////////////////////////////////////////////////////////
 [numthreads(_NUM_THREADS_X, _NUM_THREADS_Y, 1)]
 void main(uint3 dispatchThreadId : SV_DispatchThreadID) {
-	// todo:
+	
 }

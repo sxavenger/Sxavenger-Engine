@@ -79,6 +79,10 @@ public:
 
 		bool isEnablePostProcess = true;
 
+		//* compositing setting *//
+
+		bool isEnableCompositing = true;
+
 	};
 
 public:
@@ -135,4 +139,7 @@ private:
 
 	void PostProcessPass(const DirectXThreadContext* context, const Config& config);
 
+	void CompositingPass(const DirectXThreadContext* context, const Config& config);
+	void CompositingPassTonemap(const DirectXThreadContext* context, const Config& config);
+	
 };

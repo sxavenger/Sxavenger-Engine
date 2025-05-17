@@ -21,16 +21,21 @@ void RenderSceneEditor::Init() {
 
 	checkerboard_ = SxavengerAsset::TryImport<AssetTexture>("packages/textures/checker_black.png");
 
+	camera_ = std::make_unique<MonoBehaviour>();
+	camera_->SetName("editor camera");
+	camera_->AddComponent<TransformComponent>();
+	camera_->AddComponent<CameraComponent>();
+
 	textures_ = std::make_unique<FRenderTargetTextures>();
 	textures_->Create(kMainWindowSize);
 
 	renderer_ = std::make_unique<FSceneRenderer>();
 	renderer_->SetTextures(textures_.get());
 
-	camera_ = std::make_unique<MonoBehaviour>();
-	camera_->SetName("editor camera");
-	camera_->AddComponent<TransformComponent>();
-	camera_->AddComponent<CameraComponent>();
+	config_ = {};
+	config_.camera              = camera_->GetComponent<CameraComponent>();
+	config_.isEnableCompositing = false;
+	config_.isEnablePostProcess = false;
 
 	colliderRenderer_ = std::make_unique<ColliderPrimitiveRenderer>();
 	colliderRenderer_->Init();
@@ -42,6 +47,7 @@ void RenderSceneEditor::ShowMainMenu() {
 		ImGui::SeparatorText("render");
 
 		ShowSceneMenu();
+		ShowSceneConfig();
 		ShowGizmoMenu();
 		ShowColliderMenu();
 		
@@ -56,11 +62,8 @@ void RenderSceneEditor::ShowWindow() {
 }
 
 void RenderSceneEditor::Render() {
-	FSceneRenderer::Config config = {};
-	config.camera              = camera_->GetComponent<CameraComponent>();
-	config.isEnablePostProcess = false;
-
-	renderer_->Render(SxavengerSystem::GetMainThreadContext(), config);
+	
+	renderer_->Render(SxavengerSystem::GetMainThreadContext(), config_);
 
 	//* Debug Render *//
 	textures_->BeginTransparentBasePass(SxavengerSystem::GetMainThreadContext());
@@ -253,6 +256,18 @@ void RenderSceneEditor::ShowSceneMenu() {
 			}
 			ImGui::EndCombo();
 		}
+		
+		ImGui::EndMenu();
+	}
+}
+
+void RenderSceneEditor::ShowSceneConfig() {
+	if (ImGui::BeginMenu("config")) {
+		MenuPadding();
+		ImGui::SeparatorText("config");
+
+		ImGui::Checkbox("enable post process", &config_.isEnablePostProcess);
+		ImGui::Checkbox("enable compositing", &config_.isEnableCompositing);
 		
 		ImGui::EndMenu();
 	}

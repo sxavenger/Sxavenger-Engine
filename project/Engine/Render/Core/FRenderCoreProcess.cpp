@@ -37,6 +37,9 @@ void FRenderCoreProcess::Init() {
 
 	//!< vignette
 	CreatePipeline(ProcessType::Vignette, L"packages/shaders/render/PostProcess/Vignette.cs.hlsl");
+
+	//!< tonemap
+	CreatePipeline(ProcessType::Tonemap, L"packages/shaders/render/PostProcess/Tonemap.cs.hlsl");
 }
 
 void FRenderCoreProcess::SetPipeline(ProcessType type, const DirectXThreadContext* context) {

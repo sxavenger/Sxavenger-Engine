@@ -103,6 +103,8 @@ private:
 	std::unique_ptr<FSceneRenderer>        renderer_; //!< scene renderer
 	std::unique_ptr<MonoBehaviour>         camera_;   //!< scene camera
 
+	FSceneRenderer::Config config_ = {};
+
 	//* parameter *//
 
 	FRenderTargetTextures::GBufferLayout layout_ = FRenderTargetTextures::GBufferLayout::Main;
@@ -141,6 +143,7 @@ private:
 	//* show imgui component *//
 
 	void ShowSceneMenu();
+	void ShowSceneConfig();
 	void ShowGizmoMenu();
 	void ShowColliderMenu();
 
