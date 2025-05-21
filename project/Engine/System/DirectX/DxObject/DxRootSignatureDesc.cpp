@@ -44,6 +44,14 @@ void BaseRootSignatureDesc::SetHandle(uint32_t index, ShaderVisibility stage, D3
 	params.at(index).DescriptorTable.NumDescriptorRanges = 1;
 }
 
+void BaseRootSignatureDesc::Set32bitConstants(uint32_t index, ShaderVisibility stage, UINT num32bit, UINT shaderRegister, UINT registerSpace) {
+	params.at(index).ParameterType            = D3D12_ROOT_PARAMETER_TYPE_32BIT_CONSTANTS;
+	params.at(index).ShaderVisibility         = static_cast<D3D12_SHADER_VISIBILITY>(stage);
+	params.at(index).Constants.Num32BitValues = num32bit;
+	params.at(index).Constants.ShaderRegister = shaderRegister;
+	params.at(index).Constants.RegisterSpace  = registerSpace;
+}
+
 void BaseRootSignatureDesc::SetSamplerDesc(const D3D12_STATIC_SAMPLER_DESC& desc) {
 	uint32_t sampleIndex = static_cast<uint32_t>(samplers.size());
 

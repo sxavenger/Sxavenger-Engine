@@ -1,22 +1,18 @@
-//=========================================================================================
-// buffers
-//=========================================================================================
 
-struct Data {
-	uint value;
+struct A {
+	float a;
+};
+ConstantBuffer<A> gA : register(b0);
+
+cbuffer B : register(b1) {
+	float b;
 };
 
-AppendStructuredBuffer<Data> gAppend : register(u0);
-//ConsumeStructuredBuffer<Data> gConsume : register(u1);
+RWTexture2D<float4> gOut : register(u0);
 
-////////////////////////////////////////////////////////////////////////////////////////////
-// main
-////////////////////////////////////////////////////////////////////////////////////////////
-[numthreads(2, 1, 1)]
-void main(uint3 dispatchThreadId : SV_DispatchThreadID) {
+[numthreads(1, 1, 1)]
+void main() {
 
-	Data data1 = (Data)0;
-	data1.value = dispatchThreadId.x;
-	gAppend.Append(data1);
+	gOut[uint2(1, 1)] = float4(gA.a, b, 0, 1);
 	
 }

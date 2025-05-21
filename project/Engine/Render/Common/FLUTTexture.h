@@ -1,34 +1,34 @@
 #pragma once
+
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
 //* engine
-#include <Engine/Module/Pipeline/CustomComputePipeline.h>
+#include <Engine/System/DirectX/DxObject/DxDimensionBuffer.h>
+#include <Engine/System/DirectX/DxObject/DxDescriptor.h>
+#include <Engine/System/DirectX/DirectXContext.h>
+#include <Engine/Asset/Observer/AssetObserver.h>
+#include <Engine/Asset/Assets/Texture/AssetTexture.h>
+
+//* lib
+#include <Lib/Geometry/Vector2.h>
 
 //* c++
-#include <array>
+#include <memory>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// FRenderCoreProcess class
+// FLUTTexture class
 ////////////////////////////////////////////////////////////////////////////////////////////
-class FRenderCoreProcess {
+class FLUTTexture {
 public:
 
 	////////////////////////////////////////////////////////////////////////////////////////////
-	// FRenderCoreProcess class
+	// Parameter structure
 	////////////////////////////////////////////////////////////////////////////////////////////
-	enum class ProcessType : uint32_t {
-		Environment,
-		Bloom,
-		LUT,
-		TextureLUT,
-		ConvertLUTTexture,
-		Exposure,
-		DoF,
-		Vignette,
-		Tonemap,
+	struct Parameter {
+		Vector2ui size;
+		Vector2ui tile;
 	};
-	static const uint32_t kProcessTypeCount = static_cast<uint32_t>(ProcessType::Tonemap) + 1;
 
 public:
 
@@ -36,18 +36,13 @@ public:
 	// public methods
 	//=========================================================================================
 
-	FRenderCoreProcess()  = default;
-	~FRenderCoreProcess() = default;
+	void Create(const AssetObserver<AssetTexture>& texture, const Vector2ui& tile);
 
-	void Init();
+	void Dispatch(const DirectXThreadContext* context);
 
-	//* option *//
+	//* getter *//
 
-	void SetPipeline(ProcessType type, const DirectXThreadContext* context);
-
-	void BindComputeBuffer(ProcessType type, const DirectXThreadContext* context, const DxObject::BindBufferDesc& desc);
-
-	void Dispatch(const DirectXThreadContext* context, const Vector2ui& size) const;
+	const D3D12_GPU_DESCRIPTOR_HANDLE& GetGPUHandleSRV() const { return descriptorSRV_.GetGPUHandle(); }
 
 private:
 
@@ -55,15 +50,23 @@ private:
 	// private variables
 	//=========================================================================================
 
-	std::array<std::unique_ptr<CustomReflectionComputePipeline>, kProcessTypeCount> processes_;
+	//* 2d texture *//
 
-	static const Vector2ui kNumThreadSize_;
+	std::unique_ptr<DxObject::DimensionBuffer<Parameter>> parameter_;
+	std::shared_ptr<AssetTexture> texture_;
+
+	//* 3d texture *//
+
+	ComPtr<ID3D12Resource> resource_;
+	DxObject::Descriptor descriptorSRV_;
+	DxObject::Descriptor descriptorUAV_;
 
 	//=========================================================================================
 	// private methods
 	//=========================================================================================
 
-	void CreatePipeline(ProcessType type, const std::filesystem::path& filepath);
-	void CreatePipeline(ProcessType type, const std::filesystem::path& filepath, const DxObject::SamplerBindDesc& desc);
+	void CreateResource(const Vector2ui& size, const Vector2ui& tile);
+
+	void CreateBuffer(const Vector2ui& size, const Vector2ui& tile);
 
 };

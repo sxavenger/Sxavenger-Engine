@@ -10,6 +10,7 @@
 #include <Engine/System/DirectX/DxObject/DxDimensionBuffer.h>
 #include <Engine/Asset/Assets/Texture/AssetTexture.h>
 #include <Engine/Asset/Observer/AssetObserver.h>
+#include <Engine/Render/Common/FLUTTexture.h>
 
 //* c++
 #include <memory>
@@ -19,27 +20,6 @@
 ////////////////////////////////////////////////////////////////////////////////////////////
 class PostProcessTextureLUT
 	: public BasePostProcess {
-public:
-
-	////////////////////////////////////////////////////////////////////////////////////////////
-	// Parameter structure
-	////////////////////////////////////////////////////////////////////////////////////////////
-	struct Parameter {
-	public:
-
-		//=========================================================================================
-		// public methods
-		//=========================================================================================
-
-		void Init();
-
-		//=========================================================================================
-		// public variables
-		//=========================================================================================
-
-		Vector2ui tile;
-	};
-
 public:
 
 	//=========================================================================================
@@ -54,10 +34,7 @@ public:
 
 	//* option *//
 
-	void SetLUTTexture(const AssetObserver<AssetTexture>& texture, const Vector2ui& tile) {
-		texture_               = texture;
-		parameter_->At(0).tile = tile;
-	}
+	void CreateTexture(const DirectXThreadContext* context, const AssetObserver<AssetTexture>& texture, const Vector2ui& tile);
 
 private:
 
@@ -65,8 +42,7 @@ private:
 	// private variables
 	//=========================================================================================
 
-	std::unique_ptr<DxObject::DimensionBuffer<Parameter>> parameter_;
-	AssetObserver<AssetTexture> texture_;
+	std::unique_ptr<FLUTTexture> texture_;
 
 };
 

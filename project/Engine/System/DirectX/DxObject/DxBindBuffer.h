@@ -26,7 +26,8 @@ _DXOBJECT_NAMESPACE_BEGIN
 ////////////////////////////////////////////////////////////////////////////////////////////
 // BindBufferType enum class
 ////////////////////////////////////////////////////////////////////////////////////////////
-enum class BindBufferType {
+enum class BindBufferType : uint8_t {
+	k32bitConstants,
 	kVirtual_CBV,
 	kVirtual_SRV,
 	kVirtual_UAV,
@@ -41,6 +42,41 @@ enum class BindBufferType {
 struct BindBufferDesc {
 public:
 
+	////////////////////////////////////////////////////////////////////////////////////////////
+	// Constant32bit structure
+	////////////////////////////////////////////////////////////////////////////////////////////
+	struct Constant32bits {
+	public:
+
+		//=========================================================================================
+		// public variables
+		//=========================================================================================
+
+		UINT num32bit;
+		const void* data;
+
+	};
+
+	////////////////////////////////////////////////////////////////////////////////////////////
+	// using
+	////////////////////////////////////////////////////////////////////////////////////////////
+	using BindBuffer = std::variant<
+		D3D12_GPU_VIRTUAL_ADDRESS,   //!< virtual address
+		D3D12_GPU_DESCRIPTOR_HANDLE, //!< handle
+		Constant32bits               //!< 32bit constant
+	>;
+
+	////////////////////////////////////////////////////////////////////////////////////////////
+	// BufferType enum class
+	////////////////////////////////////////////////////////////////////////////////////////////
+	enum class BufferType : uint8_t {
+		VirtualAddress,
+		Handle,
+		Constant32bits
+	};
+
+public:
+
 	//=========================================================================================
 	// public methods
 	//=========================================================================================
@@ -49,15 +85,17 @@ public:
 
 	void Clear();
 
-	void SetBuffer(const std::string& name, const GPUBuffer& buffer);
 	void SetAddress(const std::string& name, const D3D12_GPU_VIRTUAL_ADDRESS& address);
 	void SetHandle(const std::string& name, const D3D12_GPU_DESCRIPTOR_HANDLE& handle);
+	void Set32bitConstants(const std::string& name, UINT num32bit, const void* data);
 
 	void Merge(const BindBufferDesc& desc);
 
 	//* getter *//
 
 	bool Contains(const std::string& name) const;
+
+	const Constant32bits& Get32bitConstants(const std::string& name) const;
 
 	const D3D12_GPU_VIRTUAL_ADDRESS& GetAddress(const std::string& name) const;
 
@@ -72,7 +110,8 @@ private:
 	//! [unordered_map]
 	//! key:   bufferName
 	//! value: buffer
-	std::unordered_map<std::string, GPUBuffer> container_;
+	std::unordered_map<std::string, BindBuffer> container_;
+	
 
 };
 
@@ -114,6 +153,34 @@ private:
 class BindBufferTable {
 public:
 
+	////////////////////////////////////////////////////////////////////////////////////////////
+	// BindBufferInfo structure
+	////////////////////////////////////////////////////////////////////////////////////////////
+	struct BindBufferInfo {
+	public:
+
+		//=========================================================================================
+		// public methods
+		//=========================================================================================
+		
+		void Create(const D3D12_SHADER_INPUT_BIND_DESC& _desc, ShaderVisibility _visibility);
+
+		//=========================================================================================
+		// public variables
+		//=========================================================================================
+
+		//* member *//
+		std::optional<UINT>   rootParam;
+		ShaderVisibility      visibility;
+		UINT                  registerNum;
+		UINT                  registerSpace;
+		D3D_SHADER_INPUT_TYPE type; //!< debug用
+		BindBufferType        bindBufferType;
+
+	};
+
+public:
+
 	//=========================================================================================
 	// public methods
 	//=========================================================================================
@@ -135,31 +202,6 @@ public:
 
 	void BindGraphicsBuffer(CommandContext* context, const BindBufferDesc& desc);
 	void BindComputeBuffer(CommandContext* context, const BindBufferDesc& desc);
-
-private:
-
-	////////////////////////////////////////////////////////////////////////////////////////////
-	// BindBufferInfo structure
-	////////////////////////////////////////////////////////////////////////////////////////////
-	struct BindBufferInfo {
-		//* member *//
-		std::optional<UINT>   rootParam;
-		ShaderVisibility      visibility;
-		UINT                  registerNum;
-		UINT                  registerSpace;
-		D3D_SHADER_INPUT_TYPE type; //!< debug用
-		BindBufferType        bindBufferType;
-
-		//* methods *//
-		void Create(const D3D12_SHADER_INPUT_BIND_DESC& _desc, ShaderVisibility _visibility) {
-			rootParam      = std::nullopt;
-			visibility     = _visibility;
-			registerNum    = _desc.BindPoint;
-			registerSpace  = _desc.Space;
-			type           = _desc.Type;
-			bindBufferType = ToBindBufferType(_desc.Type);
-		}
-	};
 
 private:
 

@@ -40,6 +40,7 @@ public:
 
 	void SetVirtual(uint32_t index, ShaderVisibility stage, D3D12_ROOT_PARAMETER_TYPE type, UINT shaderRegister, UINT registerSpace = 0);
 	void SetHandle(uint32_t index, ShaderVisibility stage, D3D12_DESCRIPTOR_RANGE_TYPE type, UINT shaderRegister, UINT registerSpace = 0);
+	void Set32bitConstants(uint32_t index, ShaderVisibility stage, UINT num32bit, UINT shaderRegister, UINT registerSpace = 0);
 
 	void SetSamplerDesc(const D3D12_STATIC_SAMPLER_DESC& desc);
 	void SetSamplerLinear(SamplerMode mode, ShaderVisibility stage, UINT shaderRegister, UINT registerSpace = 0);

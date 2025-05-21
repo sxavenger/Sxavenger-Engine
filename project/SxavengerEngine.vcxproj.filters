@@ -158,6 +158,7 @@
     <ClCompile Include="Engine\Adapter\Actor\AtmosphereActor.cpp" />
     <ClCompile Include="Engine\Component\Components\PostProcessLayer\PostProcessTextureLUT.cpp" />
     <ClCompile Include="Engine\Adapter\Actor\SkyLightActor.cpp" />
+    <ClCompile Include="Engine\Render\Common\FLUTTexture.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\System\Window\Window.h" />
@@ -335,6 +336,7 @@
     <ClInclude Include="Engine\Adapter\Actor\AtmosphereActor.h" />
     <ClInclude Include="Engine\Component\Components\PostProcessLayer\PostProcessTextureLUT.h" />
     <ClInclude Include="Engine\Adapter\Actor\SkyLightActor.h" />
+    <ClInclude Include="Engine\Render\Common\FLUTTexture.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

@@ -1,33 +1,46 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
-
-//=========================================================================================
-// define
-//=========================================================================================
-
-#define _NUM_THREADS_X 16
-#define _NUM_THREADS_Y 16
+#include "PostProcess.hlsli"
 
 //=========================================================================================
 // buffers
 //=========================================================================================
 
-Texture2D<float4> gInput : register(t0);
-
 struct Parameter {
-	uint2 tile;
-	// 条件: tileはx軸方向に分割されていること
-	// todo: xy分割両方に対応する
+	uint2 size; //!< texture size
+	uint2 tile; //!< tile一つ分のサイズ
 };
 ConstantBuffer<Parameter> gParameter : register(b0);
+Texture2D<float4> gInput             : register(t0);
 
-RWTexture3D<float4> gOutput : register(u0);
+RWTexture3D<float3> gOutput : register(u0);
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // main
 ////////////////////////////////////////////////////////////////////////////////////////////
-[numthreads(_NUM_THREADS_X, _NUM_THREADS_Y, 1)]
+[numthreads(_NUM_THREADS_X, _NUM_THREADS_Y, 1)] //!< input texture size dispatch.
 void main(uint3 dispatchThreadId : SV_DispatchThreadID) {
+
+	uint2 index = dispatchThreadId.xy;
+
+	if (any(index >= gParameter.size)) {
+		return;
+	}
+
+	float3 color = gInput[index].rgb;
+	
+	const uint2 kTileCount = gParameter.size / gParameter.tile;
+	uint2 tileIndex        = index / gParameter.tile;
+
+	// 3D LUT texture coordinate.z
+	uint3 dimension = uint3(
+		index.x % gParameter.tile.x,
+		index.y % gParameter.tile.y,
+		tileIndex.x + tileIndex.y * kTileCount.x
+	);
+
+	gOutput[dimension] = color;
+	
 	
 }

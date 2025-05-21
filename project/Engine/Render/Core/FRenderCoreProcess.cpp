@@ -27,10 +27,12 @@ void FRenderCoreProcess::Init() {
 	//!< texture lut
 	{
 		DxObject::SamplerBindDesc desc = {};
-		desc.SetSamplerPoint("gLUTSampler", DxObject::SamplerMode::MODE_CLAMP);
+		desc.SetSamplerLinear("gLUTSampler", DxObject::SamplerMode::MODE_CLAMP);
 		
 		CreatePipeline(ProcessType::TextureLUT, L"packages/shaders/render/PostProcess/TextureLUT.cs.hlsl", desc);
 	}
+
+	CreatePipeline(ProcessType::ConvertLUTTexture, L"packages/shaders/render/PostProcess/ConvertLUTTexture.cs.hlsl");
 
 	//!< dof
 	CreatePipeline(ProcessType::DoF, L"packages/shaders/render/PostProcess/DoF.cs.hlsl");

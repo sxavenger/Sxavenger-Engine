@@ -9,16 +9,16 @@ void BindBufferDesc::Clear() {
 	container_.clear();
 }
 
-void BindBufferDesc::SetBuffer(const std::string& name, const GPUBuffer& buffer) {
-	container_[name] = buffer;
-}
-
 void BindBufferDesc::SetAddress(const std::string& name, const D3D12_GPU_VIRTUAL_ADDRESS& address) {
-	SetBuffer(name, address);
+	container_[name] = address;
 }
 
 void BindBufferDesc::SetHandle(const std::string& name, const D3D12_GPU_DESCRIPTOR_HANDLE& handle) {
-	SetBuffer(name, handle);
+	container_[name] = handle;
+}
+
+void BindBufferDesc::Set32bitConstants(const std::string& name, UINT num32bit, const void* data) {
+	container_[name] = Constant32bits{ num32bit, data };
 }
 
 void BindBufferDesc::Merge(const BindBufferDesc& desc) {
@@ -29,6 +29,11 @@ void BindBufferDesc::Merge(const BindBufferDesc& desc) {
 
 bool BindBufferDesc::Contains(const std::string& name) const {
 	return container_.contains(name);
+}
+
+const BindBufferDesc::Constant32bits& BindBufferDesc::Get32bitConstants(const std::string& name) const {
+	Assert(std::holds_alternative<Constant32bits>(container_.at(name)), "type is not same.");
+	return std::get<Constant32bits>(container_.at(name));
 }
 
 const D3D12_GPU_VIRTUAL_ADDRESS& BindBufferDesc::GetAddress(const std::string& name) const {
@@ -90,6 +95,21 @@ D3D12_STATIC_SAMPLER_DESC SamplerBindDesc::GetSampler(const std::string& name, S
 	desc.ShaderVisibility = static_cast<D3D12_SHADER_VISIBILITY>(stage);
 
 	return desc;
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////
+// BindBufferInfo structure methods
+////////////////////////////////////////////////////////////////////////////////////////////
+
+void BindBufferTable::BindBufferInfo::Create(const D3D12_SHADER_INPUT_BIND_DESC& _desc, ShaderVisibility _visibility) {
+	rootParam      = std::nullopt;
+	visibility     = _visibility;
+	registerNum    = _desc.BindPoint;
+	registerSpace  = _desc.Space;
+	type           = _desc.Type;
+	bindBufferType = ToBindBufferType(_desc.Type);
+
+	// todo: 32bitconstantsの設定
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -316,22 +336,31 @@ void BindBufferTable::BindGraphicsBuffer(CommandContext* context, const BindBuff
 
 		Assert(desc.Contains(name), "buffer is not found. buffer name: " + name);
 
+		UINT index = info.rootParam.value();
+
 		switch (info.bindBufferType) {
+			case BindBufferType::k32bitConstants:
+				{
+					const auto& constant = desc.Get32bitConstants(name);
+					commandList->SetGraphicsRoot32BitConstants(index, constant.num32bit, constant.data, 0);
+				}
+				break;
+
 			case BindBufferType::kVirtual_CBV:
-				commandList->SetGraphicsRootConstantBufferView(info.rootParam.value(), desc.GetAddress(name));
+				commandList->SetGraphicsRootConstantBufferView(index, desc.GetAddress(name));
 				break;
 
 			case BindBufferType::kVirtual_SRV:
-				commandList->SetGraphicsRootShaderResourceView(info.rootParam.value(), desc.GetAddress(name));
+				commandList->SetGraphicsRootShaderResourceView(index, desc.GetAddress(name));
 				break;
 
 			case BindBufferType::kVirtual_UAV:
-				commandList->SetGraphicsRootUnorderedAccessView(info.rootParam.value(), desc.GetAddress(name));
+				commandList->SetGraphicsRootUnorderedAccessView(index, desc.GetAddress(name));
 				break;
 
 			case BindBufferType::kHandle_SRV:
 			case BindBufferType::kHandle_UAV:
-				commandList->SetGraphicsRootDescriptorTable(info.rootParam.value(), desc.GetHandle(name));
+				commandList->SetGraphicsRootDescriptorTable(index, desc.GetHandle(name));
 				break;
 		}
 	}
@@ -349,22 +378,31 @@ void BindBufferTable::BindComputeBuffer(CommandContext* context, const BindBuffe
 
 		Assert(desc.Contains(name), "buffer is not found. buffer name: " + name);
 
+		UINT index  = info.rootParam.value();
+
 		switch (info.bindBufferType) {
+			case BindBufferType::k32bitConstants:
+				{
+					const auto& constant = desc.Get32bitConstants(name);
+					commandList->SetComputeRoot32BitConstants(index, constant.num32bit, constant.data, 0);
+				}
+				break;
+
 			case BindBufferType::kVirtual_CBV:
-				commandList->SetComputeRootConstantBufferView(info.rootParam.value(), desc.GetAddress(name));
+				commandList->SetComputeRootConstantBufferView(index, desc.GetAddress(name));
 				break;
 
 			case BindBufferType::kVirtual_SRV:
-				commandList->SetComputeRootShaderResourceView(info.rootParam.value(), desc.GetAddress(name));
+				commandList->SetComputeRootShaderResourceView(index, desc.GetAddress(name));
 				break;
 
 			case BindBufferType::kVirtual_UAV:
-				commandList->SetComputeRootUnorderedAccessView(info.rootParam.value(), desc.GetAddress(name));
+				commandList->SetComputeRootUnorderedAccessView(index, desc.GetAddress(name));
 				break;
 
 			case BindBufferType::kHandle_SRV:
 			case BindBufferType::kHandle_UAV:
-				commandList->SetComputeRootDescriptorTable(info.rootParam.value(), desc.GetHandle(name));
+				commandList->SetComputeRootDescriptorTable(index, desc.GetHandle(name));
 				break;
 		}
 	}
