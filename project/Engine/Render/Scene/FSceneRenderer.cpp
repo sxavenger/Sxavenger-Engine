@@ -446,13 +446,6 @@ void FSceneRenderer::PostProcessPass(const DirectXThreadContext* context, const 
 	//!< HACK: componentのtagなどを作成.
 
 	textures_->EndPostProcess(context);
-
-	{ //!< barrier
-		D3D12_RESOURCE_BARRIER barrier = {};
-		barrier.Type          = D3D12_RESOURCE_BARRIER_TYPE_UAV;
-		barrier.UAV.pResource = textures_->GetGBuffer(FRenderTargetTextures::GBufferLayout::Main)->GetResource();
-		context->GetCommandList()->ResourceBarrier(1, &barrier);
-	}
 }
 
 void FSceneRenderer::CompositeProcessPass(const DirectXThreadContext* context, const Config& config) {
@@ -472,6 +465,13 @@ void FSceneRenderer::CompositeProcessPass(const DirectXThreadContext* context, c
 	//!< HACK: componentのtagなどを作成.
 
 	textures_->GetGBuffer(FRenderTargetTextures::GBufferLayout::Main)->TransitionEndUnordered(context);
+
+	{ //!< barrier
+		D3D12_RESOURCE_BARRIER barrier = {};
+		barrier.Type          = D3D12_RESOURCE_BARRIER_TYPE_UAV;
+		barrier.UAV.pResource = textures_->GetGBuffer(FRenderTargetTextures::GBufferLayout::Main)->GetResource();
+		context->GetCommandList()->ResourceBarrier(1, &barrier);
+	}
 
 }
 
