@@ -32,7 +32,7 @@ void Texture::Load(const DirectXThreadContext* context, const std::filesystem::p
 
 	// resourceの生成
 	resource_ = CreateTextureResource(device, metadata);
-	ComPtr<ID3D12Resource> intermediate = UploadTextureData(resource_.Get(), image, SxavengerSystem::GetDxDevice()->GetDevice(), context->GetCommandList());
+	auto intermediate = UploadTextureData(resource_.Get(), image, SxavengerSystem::GetDxDevice()->GetDevice(), context->GetCommandList());
 
 	// SRVの生成
 	{
@@ -110,27 +110,20 @@ DirectX::ScratchImage Texture::LoadTexture(const std::filesystem::path& filepath
 		return image;
 	}
 
-	const auto& metadata = image.GetMetadata();
+	DirectX::ScratchImage mipImage = {};
 
-	if (metadata.mipLevels > 1) { //!< MipMapがある場合
-		DirectX::ScratchImage mipImage = {};
+	// MipMapの生成
+	hr = DirectX::GenerateMipMaps(
+		image.GetImages(),
+		image.GetImageCount(),
+		image.GetMetadata(),
+		DirectX::TEX_FILTER_SRGB,
+		0,
+		mipImage
+	);
+	Assert(SUCCEEDED(hr), "mip maps create failed.");
 
-		// MipMapの生成
-		hr = DirectX::GenerateMipMaps(
-			image.GetImages(),
-			image.GetImageCount(),
-			image.GetMetadata(),
-			DirectX::TEX_FILTER_SRGB,
-			0,
-			mipImage
-		);
-
-		if (SUCCEEDED(hr)) {
-			return mipImage;
-		}
-	}
-
-	return image;
+	return mipImage;
 }
 
 ComPtr<ID3D12Resource> Texture::CreateTextureResource(ID3D12Device* device, const DirectX::TexMetadata& metadata) {
@@ -152,7 +145,7 @@ ComPtr<ID3D12Resource> Texture::CreateTextureResource(ID3D12Device* device, cons
 	// resourceの生成
 	ComPtr<ID3D12Resource> resource = nullptr;
 
-	device->CreateCommittedResource(
+	auto hr = device->CreateCommittedResource(
 		&prop,
 		D3D12_HEAP_FLAG_NONE,
 		&desc,
@@ -160,6 +153,7 @@ ComPtr<ID3D12Resource> Texture::CreateTextureResource(ID3D12Device* device, cons
 		nullptr,
 		IID_PPV_ARGS(&resource)
 	);
+	Assert(SUCCEEDED(hr), "texture resource create failed.");
 
 	resource->SetName(L"texture");
 	return resource;

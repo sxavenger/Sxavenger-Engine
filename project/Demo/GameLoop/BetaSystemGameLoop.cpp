@@ -59,6 +59,7 @@ void BetaSystemGameLoop::InitSystem() {
 	SxavengerAsset::TryImport<AssetModel>("assets/models/PBR_Sphere_Test/model/PBR_Sphere.gltf");
 	SxavengerAsset::TryImport<AssetModel>("assets/models/chessboard/ABeautifulGame.gltf");
 	SxavengerAsset::TryImport<AssetModel>("assets/models/sponza/NewSponza_Main_glTF_003.gltf");
+	SxavengerAsset::TryImport<AssetModel>("assets/models/sponza_curtains/NewSponza_Curtains_glTF.gltf");
 	
 	lightA_  = ComponentHelper::CreatePointLightMonoBehaviour();
 	lightB_  = ComponentHelper::CreateDirectionalLightMonoBehaviour();
