@@ -182,6 +182,8 @@ public:
 
 	const DxObject::Descriptor& UseRadianceDescriptor(const DirectXThreadContext* context);
 
+	const std::optional<D3D12_GPU_DESCRIPTOR_HANDLE>& GetMapEnvironment() const { return mapEnvironment_; }
+
 protected:
 
 	//=========================================================================================

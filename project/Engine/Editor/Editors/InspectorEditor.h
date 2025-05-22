@@ -20,7 +20,7 @@ public:
 
 	virtual void ShowInspector() = 0;
 
-	virtual void LateUpdate() {}
+	virtual void LateUpdateInspector() {}
 
 private:
 };

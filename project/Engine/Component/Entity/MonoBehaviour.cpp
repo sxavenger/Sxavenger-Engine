@@ -164,7 +164,7 @@ void MonoBehaviour::ShowInspector() {
 
 }
 
-void MonoBehaviour::LateUpdate() {
+void MonoBehaviour::LateUpdateInspector() {
 	// Manipulateの設定
 	sEditorEngine->ExecuteEditorFunction<RenderSceneEditor>([&](RenderSceneEditor* editor) {
 		editor->Manipulate(this);

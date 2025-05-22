@@ -35,7 +35,7 @@ void InspectorEditor::ShowWindow() {
 
 void InspectorEditor::LateUpdate() {
 	if (inspector_) {
-		inspector_->LateUpdate();
+		inspector_->LateUpdateInspector();
 	}
 }
 

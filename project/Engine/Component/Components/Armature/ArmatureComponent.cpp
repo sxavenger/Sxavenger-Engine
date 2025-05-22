@@ -3,8 +3,12 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
+//* component
+#include "../../Entity/MonoBehaviour.h"
+
 //* engine
 #include <Engine/System/Utility/Logger.h>
+#include <Engine/Content/SxavengerContent.h>
 
 //=========================================================================================
 // static cosnt variables
@@ -45,4 +49,7 @@ void ArmatureComponent::TransitionAnimation(
 		animationB, timeB, isLoopB,
 		t
 	);
+}
+
+void ArmatureComponent::ShowComponentInspector() {
 }

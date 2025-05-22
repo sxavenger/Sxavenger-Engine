@@ -97,6 +97,7 @@ public:
 	SpecularParameter& GetSpecularParameter();
 
 	void SetEnvironment(const D3D12_GPU_DESCRIPTOR_HANDLE& texture) { environment_ = texture; }
+	void SetEnvironment(const std::optional<D3D12_GPU_DESCRIPTOR_HANDLE>& texture) { environment_ = texture; }
 	const std::optional<D3D12_GPU_DESCRIPTOR_HANDLE>& GetEnvironment() const { return environment_; }
 
 private:

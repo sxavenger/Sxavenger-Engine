@@ -12,6 +12,7 @@
 #include "Components/Light/Punctual/DirectionalLightComponent.h"
 #include "Components/Light/Punctual/PointLightComponent.h"
 #include "Components/Particle/ParticleComponent.h"
+#include "Components/Light/Environment/SkyLightComponent.h"
 
 //* engine
 #include <Engine/Asset/SxavengerAsset.h>

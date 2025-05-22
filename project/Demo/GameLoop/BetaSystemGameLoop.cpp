@@ -64,28 +64,12 @@ void BetaSystemGameLoop::InitSystem() {
 	lightA_  = ComponentHelper::CreatePointLightMonoBehaviour();
 	lightB_  = ComponentHelper::CreateDirectionalLightMonoBehaviour();
 
-	//environmentTextures_[0] = SxavengerAsset::TryImport<AssetTexture>("assets/textures/textureCube/EnvHDR.dds");
-	//environmentTextures_[1] = SxavengerAsset::TryImport<AssetTexture>("assets/textures/textureCube/rostock_laage_airport_4k.dds");
-	//environmentTextures_[2] = SxavengerAsset::TryImport<AssetTexture>("assets/textures/textureCube/studio_small_09_4k.dds");
-
-	//map.Create({ 1024, 1024 });
-	////map.SetEnvironment(environmentTextures_[index_].WaitGet()->GetGPUHandleSRV());
-
-	//skylight_ = ComponentHelper::CreateMonoBehaviour();
-	//skylight_->SetName("sky light");
-	//skylight_->AddComponent<SkyLightComponent>();
-	//skylight_->GetComponent<SkyLightComponent>()->SetEnvironment(map.UseAtmosphereDescriptor(SxavengerSystem::GetMainThreadContext()).GetGPUHandle());
-	//skylight_->GetComponent<SkyLightComponent>()->GetDiffuseParameter().SetTexture(map.UseIrradianceDescriptor(SxavengerSystem::GetMainThreadContext()).GetIndex());
-	//skylight_->GetComponent<SkyLightComponent>()->GetSpecularParameter().SetTexture(map.UseRadianceDescriptor(SxavengerSystem::GetMainThreadContext()).GetIndex(), map.GetRadianceMiplevels());
-
 	camera_->AddComponent<PostProcessLayerComponent>();
 	camera_->GetComponent<PostProcessLayerComponent>()->AddPostProcess<PostProcessExposure>();
 	camera_->GetComponent<PostProcessLayerComponent>()->AddPostProcess<PostProcessBloom>();
 	//camera_->GetComponent<PostProcessLayerComponent>()->AddPostProcess<PostProcessDoF>();
 
 	camera_->AddComponent<CompositeProcessLayerComponent>();
-	
-
 
 	auto texture = SxavengerAsset::TryImport<AssetTexture>("assets/textures/LUT/lut_greenish.png");
 	auto lut = camera_->GetComponent<CompositeProcessLayerComponent>()->AddPostProcess<CompositeProcessLUT>();
@@ -93,6 +77,11 @@ void BetaSystemGameLoop::InitSystem() {
 
 	atmosphere_ = std::make_unique<AtmosphereActor>();
 	atmosphere_->Init({ 1024, 1024 });
+
+	//skylight_ = std::make_unique<SkyLightActor>();
+	//skylight_->Init({ 1024, 1024 });
+	//skylight_->SetTexture("assets/textures/textureCube/studio_small_09_4k.dds");
+	//skylight_->Update();
 
 }
 
@@ -104,12 +93,6 @@ void BetaSystemGameLoop::UpdateSystem() {
 	//-----------------------------------------------------------------------------------------
 	// Update
 	//-----------------------------------------------------------------------------------------
-
-	//if (SxavengerSystem::IsTriggerKey(KeyId::KEY_F)) {
-	//	index_ = (index_ + 1) % environmentTextures_.size();
-	//	map.SetEnvironment(environmentTextures_[index_].WaitGet()->GetGPUHandleSRV());
-	//	skylight_->GetComponent<SkyLightComponent>()->SetEnvironment(environmentTextures_[index_].WaitGet()->GetGPUHandleSRV());
-	//}
 
 	atmosphere_->Update();
 

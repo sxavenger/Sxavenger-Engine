@@ -155,7 +155,7 @@ public:
 
 	virtual void ShowInspector() override;
 
-	virtual void LateUpdate() override;
+	virtual void LateUpdateInspector() override;
 
 	//* json option *//
 

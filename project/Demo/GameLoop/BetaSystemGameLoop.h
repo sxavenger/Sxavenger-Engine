@@ -16,6 +16,10 @@
 #include <Engine/Asset/Observer/AssetObserver.h>
 
 #include <Engine/Adapter/Actor/AtmosphereActor.h>
+#include <Engine/Adapter/Actor/SkyLightActor.h>
+
+//* demo
+#include <Demo/Entity/Player.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // BetaSystemGameLoop class
@@ -45,10 +49,8 @@ private:
 	std::unique_ptr<MonoBehaviour> lightA_;
 	std::unique_ptr<MonoBehaviour> lightB_;
 
-
-	std::unique_ptr<MonoBehaviour> skylight_;
-
 	std::unique_ptr<AtmosphereActor> atmosphere_;
+	std::unique_ptr<SkyLightActor> skylight_;
 
 	//=========================================================================================
 	// private methods

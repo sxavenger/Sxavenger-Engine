@@ -117,15 +117,6 @@ void Skeleton::ApplyTransitionAnimation(
 		std::optional<QuaternionTransform> transformA = GetTransform(joint.name, animationA, timeA);
 		std::optional<QuaternionTransform> transformB = GetTransform(joint.name, animationB, timeB);
 
-		// 見つからなかった場合, defaultを入れておく
-		/*if (!transformA.has_value()) {
-			transformA = QuaternionTransform();
-		}
-
-		if (!transformB.has_value()) {
-			transformB = QuaternionTransform();
-		}*/
-
 		if (!(transformA.has_value() && transformB.has_value())) {
 			continue;
 		}
