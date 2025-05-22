@@ -82,8 +82,12 @@ void BetaSystemGameLoop::InitSystem() {
 	camera_->GetComponent<PostProcessLayerComponent>()->AddPostProcess<PostProcessBloom>();
 	//camera_->GetComponent<PostProcessLayerComponent>()->AddPostProcess<PostProcessDoF>();
 
+	camera_->AddComponent<CompositeProcessLayerComponent>();
+	
+
+
 	auto texture = SxavengerAsset::TryImport<AssetTexture>("assets/textures/LUT/lut_greenish.png");
-	auto lut = camera_->GetComponent<PostProcessLayerComponent>()->AddPostProcess<PostProcessTextureLUT>();
+	auto lut = camera_->GetComponent<CompositeProcessLayerComponent>()->AddPostProcess<CompositeProcessLUT>();
 	lut->CreateTexture(SxavengerSystem::GetMainThreadContext(), texture, { 16, 16 });
 
 	atmosphere_ = std::make_unique<AtmosphereActor>();

@@ -19,6 +19,7 @@
 #include <Engine/Component/Components/Light/Environment/SkyLightComponent.h>
 #include <Engine/Component/Components/Particle/ParticleComponent.h>
 #include <Engine/Component/Components/PostProcessLayer/PostProcessLayerComponent.h>
+#include <Engine/Component/Components/CompositeProcessLayer/CompositeProcessLayerComponent.h>
 
 //* lib
 #include <Lib/Sxl/Flag.h>
@@ -79,9 +80,9 @@ public:
 
 		bool isEnablePostProcess = true;
 
-		//* compositing setting *//
+		//* composite setting *//
 
-		bool isEnableCompositing = true;
+		bool isEnableComposite = true;
 
 	};
 
@@ -139,7 +140,7 @@ private:
 
 	void PostProcessPass(const DirectXThreadContext* context, const Config& config);
 
-	void CompositingPass(const DirectXThreadContext* context, const Config& config);
-	void CompositingPassTonemap(const DirectXThreadContext* context, const Config& config);
+	void CompositeProcessPass(const DirectXThreadContext* context, const Config& config);
+	void CompositeProcessPassTonemap(const DirectXThreadContext* context, const Config& config);
 	
 };

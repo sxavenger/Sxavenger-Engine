@@ -3,6 +3,7 @@
 // include
 //-----------------------------------------------------------------------------------------
 //* engine
+#include <Engine/System/Config/SxavengerConfig.h>
 #include <Engine/Module/Pipeline/CustomComputePipeline.h>
 
 //* c++
@@ -15,20 +16,28 @@ class FRenderCoreProcess {
 public:
 
 	////////////////////////////////////////////////////////////////////////////////////////////
-	// FRenderCoreProcess class
+	// ProcessType enum class
 	////////////////////////////////////////////////////////////////////////////////////////////
 	enum class ProcessType : uint32_t {
 		Environment,
 		Bloom,
-		LUT,
-		TextureLUT,
-		ConvertLUTTexture,
 		Exposure,
 		DoF,
 		Vignette,
-		Tonemap,
 	};
-	static const uint32_t kProcessTypeCount = static_cast<uint32_t>(ProcessType::Tonemap) + 1;
+	static inline const uint32_t kProcessTypeCount = static_cast<uint32_t>(ProcessType::Vignette) + 1;
+
+	////////////////////////////////////////////////////////////////////////////////////////////
+	// CompositeType enum class
+	////////////////////////////////////////////////////////////////////////////////////////////
+	enum class CompositeType : uint32_t {
+		ColorCurve,
+		ConvertLUTTexture,
+		LUT,
+		Tonemap
+	};
+	static inline const uint32_t kCompositeTypeCount = static_cast<uint32_t>(CompositeType::Tonemap) + 1;
+
 
 public:
 
@@ -41,13 +50,20 @@ public:
 
 	void Init();
 
-	//* option *//
+	void Dispatch(const DirectXThreadContext* context, const Vector2ui& size) const;
+
+	//* process option *//
 
 	void SetPipeline(ProcessType type, const DirectXThreadContext* context);
 
 	void BindComputeBuffer(ProcessType type, const DirectXThreadContext* context, const DxObject::BindBufferDesc& desc);
 
-	void Dispatch(const DirectXThreadContext* context, const Vector2ui& size) const;
+	//* composite option *//
+
+	void SetPipeline(CompositeType type, const DirectXThreadContext* context);
+
+	void BindComputeBuffer(CompositeType type, const DirectXThreadContext* context, const DxObject::BindBufferDesc& desc);
+
 
 private:
 
@@ -56,8 +72,11 @@ private:
 	//=========================================================================================
 
 	std::array<std::unique_ptr<CustomReflectionComputePipeline>, kProcessTypeCount> processes_;
+	std::array<std::unique_ptr<CustomReflectionComputePipeline>, kCompositeTypeCount> composites_;
 
-	static const Vector2ui kNumThreadSize_;
+	static inline const Vector2ui kNumThreadSize_ = { 16, 16 };
+
+	static inline const std::filesystem::path kDirectory_ = kPackagesShaderDirectory / "Render" / "Process";
 
 	//=========================================================================================
 	// private methods
@@ -65,5 +84,8 @@ private:
 
 	void CreatePipeline(ProcessType type, const std::filesystem::path& filepath);
 	void CreatePipeline(ProcessType type, const std::filesystem::path& filepath, const DxObject::SamplerBindDesc& desc);
+
+	void CreatePipeline(CompositeType type, const std::filesystem::path& filepath);
+	void CreatePipeline(CompositeType type, const std::filesystem::path& filepath, const DxObject::SamplerBindDesc& desc);
 
 };

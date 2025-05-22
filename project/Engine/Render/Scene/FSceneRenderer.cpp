@@ -41,7 +41,7 @@ void FSceneRenderer::Render(const DirectXThreadContext* context, const Config& c
 
 	PostProcessPass(context, conf);
 
-	CompositingPass(context, conf);
+	CompositeProcessPass(context, conf);
 
 }
 
@@ -449,26 +449,32 @@ void FSceneRenderer::PostProcessPass(const DirectXThreadContext* context, const 
 
 }
 
-void FSceneRenderer::CompositingPass(const DirectXThreadContext* context, const Config& config) {
+void FSceneRenderer::CompositeProcessPass(const DirectXThreadContext* context, const Config& config) {
 
-	if (!config.isEnableCompositing) {
+	if (!config.isEnableComposite) {
 		return;
 	}
 
 	textures_->GetGBuffer(FRenderTargetTextures::GBufferLayout::Main)->TransitionBeginUnordered(context);
 
-	CompositingPassTonemap(context, config);
+	CompositeProcessPassTonemap(context, config);
+
+	// componentを取得
+	sComponentStorage->ForEachActive<CompositeProcessLayerComponent>([&](CompositeProcessLayerComponent* component) {
+		component->Process(context, textures_);
+	});
+	//!< HACK: componentのtagなどを作成.
 
 	textures_->GetGBuffer(FRenderTargetTextures::GBufferLayout::Main)->TransitionEndUnordered(context);
 
 }
 
-void FSceneRenderer::CompositingPassTonemap(const DirectXThreadContext* context, const Config& config) {
+void FSceneRenderer::CompositeProcessPassTonemap(const DirectXThreadContext* context, const Config& config) {
 
 	config;
 
 	FRenderCore::GetInstance()->GetProcess()->SetPipeline(
-		FRenderCoreProcess::ProcessType::Tonemap, context
+		FRenderCoreProcess::CompositeType::Tonemap, context
 	);
 
 	DxObject::BindBufferDesc parameter = {};
@@ -477,7 +483,7 @@ void FSceneRenderer::CompositingPassTonemap(const DirectXThreadContext* context,
 	parameter.SetHandle("gTexture", textures_->GetGBuffer(FRenderTargetTextures::GBufferLayout::Main)->GetGPUHandleSRV());
 
 	FRenderCore::GetInstance()->GetProcess()->BindComputeBuffer(
-		FRenderCoreProcess::ProcessType::Tonemap, context, parameter
+		FRenderCoreProcess::CompositeType::Tonemap, context, parameter
 	);
 
 	FRenderCore::GetInstance()->GetProcess()->Dispatch(context, textures_->GetSize());

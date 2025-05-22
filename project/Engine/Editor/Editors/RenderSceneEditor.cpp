@@ -34,7 +34,7 @@ void RenderSceneEditor::Init() {
 
 	config_ = {};
 	config_.camera              = camera_->GetComponent<CameraComponent>();
-	config_.isEnableCompositing = false;
+	config_.isEnableComposite   = true;
 	config_.isEnablePostProcess = false;
 
 	colliderRenderer_ = std::make_unique<ColliderPrimitiveRenderer>();
@@ -267,7 +267,7 @@ void RenderSceneEditor::ShowSceneConfig() {
 		ImGui::SeparatorText("config");
 
 		ImGui::Checkbox("enable post process", &config_.isEnablePostProcess);
-		ImGui::Checkbox("enable compositing", &config_.isEnableCompositing);
+		ImGui::Checkbox("enable composite",    &config_.isEnableComposite);
 		
 		ImGui::EndMenu();
 	}

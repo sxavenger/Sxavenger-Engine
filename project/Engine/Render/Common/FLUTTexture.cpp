@@ -24,7 +24,7 @@ void FLUTTexture::Create(const AssetObserver<AssetTexture>& texture, const Vecto
 void FLUTTexture::Dispatch(const DirectXThreadContext* context) {
 
 	FRenderCore::GetInstance()->GetProcess()->SetPipeline(
-		FRenderCoreProcess::ProcessType::ConvertLUTTexture, context
+		FRenderCoreProcess::CompositeType::ConvertLUTTexture, context
 	);
 
 	DxObject::BindBufferDesc parameter = {};
@@ -33,7 +33,7 @@ void FLUTTexture::Dispatch(const DirectXThreadContext* context) {
 	parameter.SetHandle("gOutput",     descriptorUAV_.GetGPUHandle());
 
 	FRenderCore::GetInstance()->GetProcess()->BindComputeBuffer(
-		FRenderCoreProcess::ProcessType::ConvertLUTTexture, context, parameter
+		FRenderCoreProcess::CompositeType::ConvertLUTTexture, context, parameter
 	);
 
 	FRenderCore::GetInstance()->GetProcess()->Dispatch(context, texture_->GetSize());

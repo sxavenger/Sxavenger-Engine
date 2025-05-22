@@ -213,6 +213,8 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="Engine\Component\Components\Collider\CollisionDetection.cpp" />
     <ClCompile Include="Engine\Component\Components\Collider\CollisionManager.cpp" />
     <ClCompile Include="Engine\Component\Components\ComponentStorage.cpp" />
+    <ClCompile Include="Engine\Component\Components\CompositeProcessLayer\CompositeProcessLayerComponent.cpp" />
+    <ClCompile Include="Engine\Component\Components\CompositeProcessLayer\CompositeProcessLUT.cpp" />
     <ClCompile Include="Engine\Component\Components\Light\Punctual\DirectionalLightComponent.cpp" />
     <ClCompile Include="Engine\Component\Components\Light\LightCommon.cpp" />
     <ClCompile Include="Engine\Component\Components\Light\Punctual\PointLightComponent.cpp" />
@@ -221,12 +223,10 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="Engine\Component\Components\MeshRenderer\MeshRendererComponent.cpp" />
     <ClCompile Include="Engine\Component\Components\MeshRenderer\SkinnedMeshRendererComponent.cpp" />
     <ClCompile Include="Engine\Component\Components\Particle\ParticleComponent.cpp" />
-    <ClCompile Include="Engine\Component\Components\PostProcessLayer\BasePostProcess.cpp" />
     <ClCompile Include="Engine\Component\Components\PostProcessLayer\PostProcessBloom.cpp" />
     <ClCompile Include="Engine\Component\Components\PostProcessLayer\PostProcessDoF.cpp" />
     <ClCompile Include="Engine\Component\Components\PostProcessLayer\PostProcessExposure.cpp" />
     <ClCompile Include="Engine\Component\Components\PostProcessLayer\PostProcessLayerComponent.cpp" />
-    <ClCompile Include="Engine\Component\Components\PostProcessLayer\PostProcessTextureLUT.cpp" />
     <ClCompile Include="Engine\Component\Components\SpriteRenderer\SpriteRendererComponent.cpp" />
     <ClCompile Include="Engine\Component\Components\Transform\TransformComponent.cpp" />
     <ClCompile Include="Engine\Component\Entity\MonoBehaviour.cpp" />
@@ -366,6 +366,9 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Engine\Component\Components\Collider\CollisionDetection.h" />
     <ClInclude Include="Engine\Component\Components\Collider\CollisionManager.h" />
     <ClInclude Include="Engine\Component\Components\ComponentStorage.h" />
+    <ClInclude Include="Engine\Component\Components\CompositeProcessLayer\BaseCompositeProcess.h" />
+    <ClInclude Include="Engine\Component\Components\CompositeProcessLayer\CompositeProcessLayerComponent.h" />
+    <ClInclude Include="Engine\Component\Components\CompositeProcessLayer\CompositeProcessLUT.h" />
     <ClInclude Include="Engine\Component\Components\Light\Punctual\DirectionalLightComponent.h" />
     <ClInclude Include="Engine\Component\Components\Light\LightCommon.h" />
     <ClInclude Include="Engine\Component\Components\Light\Punctual\PointLightComponent.h" />
@@ -379,7 +382,6 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Engine\Component\Components\PostProcessLayer\PostProcessDoF.h" />
     <ClInclude Include="Engine\Component\Components\PostProcessLayer\PostProcessExposure.h" />
     <ClInclude Include="Engine\Component\Components\PostProcessLayer\PostProcessLayerComponent.h" />
-    <ClInclude Include="Engine\Component\Components\PostProcessLayer\PostProcessTextureLUT.h" />
     <ClInclude Include="Engine\Component\Components\SpriteRenderer\SpriteRendererComponent.h" />
     <ClInclude Include="Engine\Component\Components\Transform\TransformComponent.h" />
     <ClInclude Include="Engine\Component\Entity\MonoBehaviour.h" />
