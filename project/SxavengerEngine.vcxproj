@@ -191,6 +191,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="Demo\Particle\RainParticle.cpp" />
     <ClCompile Include="Demo\Particle\SmokeParticle.cpp" />
     <ClCompile Include="Engine\Adapter\Actor\AtmosphereActor.cpp" />
+    <ClCompile Include="Engine\Adapter\Actor\ControllableCameraActor.cpp" />
     <ClCompile Include="Engine\Adapter\Actor\SkyLightActor.cpp" />
     <ClCompile Include="Engine\Asset\AssetStorage.cpp" />
     <ClCompile Include="Engine\Asset\Assets\Animator\Animator.cpp" />
@@ -343,6 +344,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Demo\Particle\RainParticle.h" />
     <ClInclude Include="Demo\Particle\SmokeParticle.h" />
     <ClInclude Include="Engine\Adapter\Actor\AtmosphereActor.h" />
+    <ClInclude Include="Engine\Adapter\Actor\ControllableCameraActor.h" />
     <ClInclude Include="Engine\Adapter\Actor\SkyLightActor.h" />
     <ClInclude Include="Engine\Asset\AssetStorage.h" />
     <ClInclude Include="Engine\Asset\Assets\Animator\Animator.h" />

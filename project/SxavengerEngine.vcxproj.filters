@@ -159,6 +159,7 @@
     <ClCompile Include="Engine\Render\Common\FLUTTexture.cpp" />
     <ClCompile Include="Engine\Component\Components\CompositeProcessLayer\CompositeProcessLayerComponent.cpp" />
     <ClCompile Include="Engine\Component\Components\CompositeProcessLayer\CompositeProcessLUT.cpp" />
+    <ClCompile Include="Engine\Adapter\Actor\ControllableCameraActor.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\System\Window\Window.h" />
@@ -339,6 +340,7 @@
     <ClInclude Include="Engine\Component\Components\CompositeProcessLayer\CompositeProcessLayerComponent.h" />
     <ClInclude Include="Engine\Component\Components\CompositeProcessLayer\BaseCompositeProcess.h" />
     <ClInclude Include="Engine\Component\Components\CompositeProcessLayer\CompositeProcessLUT.h" />
+    <ClInclude Include="Engine\Adapter\Actor\ControllableCameraActor.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

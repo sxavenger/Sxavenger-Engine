@@ -58,6 +58,10 @@ public:
 	template <BaseEditorDerived T>
 	void ExecuteEditorFunction(const std::function<void(T*)>& function);
 
+	//* engine option *//
+
+	bool IsEditorDisplay() const { return isEditorDisplay_; }
+
 	//* singleton *//
 
 	static EditorEngine* GetInstance();
@@ -77,7 +81,7 @@ private:
 
 	//* config *//
 
-	bool isEditorDisplay_ = true;
+	bool isEditorDisplay_ = false;
 
 	//* editor *//
 

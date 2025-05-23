@@ -21,6 +21,8 @@ void EditorEngine::Init() {
 	windowFlag_ |= ImGuiWindowFlags_NoCollapse;
 	windowFlag_ |= ImGuiWindowFlags_NoMove;
 	windowFlag_ |= ImGuiWindowFlags_NoResize;
+
+	isEditorDisplay_ = true;
 }
 
 void EditorEngine::Term() {
