@@ -12,6 +12,11 @@ RWTexture2D<float4> gTexture : register(u0); //!< output texture
 Texture3D<float3> gLUTTexture : register(t0); //!< LUT texture
 SamplerState gLUTSampler      : register(s0); //!< sampler state for LUT texture
 
+struct Parameter {
+	float intensity;
+};
+ConstantBuffer<Parameter> gParameter : register(b0);
+
 ////////////////////////////////////////////////////////////////////////////////////////////
 // main
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -27,9 +32,9 @@ void main(uint3 dispatchThreadId : SV_DispatchThreadID) {
 	float4 color = gTexture[index];
 
 	// LUT
-	color.rgb = saturate(color.rgb); //!< clamp to [0, 1]
-	color.rgb = gLUTTexture.SampleLevel(gLUTSampler, color.rgb, 0); //!< sample LUT texture
+	float3 grading = gLUTTexture.SampleLevel(gLUTSampler, saturate(color.rgb), 0); //!< sample LUT texture
 
-	gTexture[index] = color;
+	gTexture[index].rgb = lerp(color.rgb, grading, gParameter.intensity);
+	gTexture[index].a = color.a;
 	
 }

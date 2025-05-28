@@ -56,6 +56,8 @@ private:
 	// private methods
 	//=========================================================================================
 
+	//* game logic *//
+
 	void InitGame();
 
 	void TermGame();
@@ -63,5 +65,9 @@ private:
 	void UpdateGame();
 
 	void DrawGame();
+
+	//* sub methods *//
+
+	void SetCollisionCallback();
 
 };

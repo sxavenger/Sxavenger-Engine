@@ -12,7 +12,11 @@
 #include <Engine/Component/Components/Camera/CameraComponent.h>
 #include <Engine/Component/Components/Collider/ColliderComponent.h>
 #include <Engine/Component/Components/PostProcessLayer/PostProcessLayerComponent.h>
+#include <Engine/Component/Components/CompositeProcessLayer/CompositeProcessLayerComponent.h>
 #include <Engine/Component/ComponentHelper.h>
+
+//* lib
+#include <Lib/Geometry/VectorComparision.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Player class methods
@@ -46,16 +50,24 @@ void Player::Awake() {
 	auto camera = camera_->AddComponent<CameraComponent>();
 	camera->SetTag(CameraComponent::Tag::GameCamera);
 
-	auto process = camera_->AddComponent<PostProcessLayerComponent>();
-	process->AddPostProcess<PostProcessBloom>();
-	process->AddPostProcess<PostProcessDoF>();
+	{
+		auto process = camera_->AddComponent<PostProcessLayerComponent>();
+		process->AddPostProcess<PostProcessBloom>();
+		process->AddPostProcess<PostProcessDoF>();
+	}
+
+	{
+		auto texture = SxavengerAsset::TryImport<AssetTexture>("assets/textures/LUT/lut_greenish.png");
+		auto lut = camera_->AddComponent<CompositeProcessLayerComponent>()->AddPostProcess<CompositeProcessLUT>();
+		lut->CreateTexture(SxavengerSystem::GetMainThreadContext(), texture, { 16, 16 });
+	}
 
 	auto transform = camera_->AddComponent<TransformComponent>();
 	transform->translate.z = -3.0f;
 	transform->translate.y = 1.5f;
 
 	auto collider = MonoBehaviour::AddComponent<ColliderComponent>();
-	collider->SetTag("Player");
+	collider->SetTag("player");
 
 	CollisionBoundings::Capsule capsule = {};
 	capsule.direction = { 0.0f, 1.0f, 0.0f };
@@ -74,6 +86,7 @@ void Player::Start() {
 void Player::Update() {
 	Move();
 	UpdateArmature();
+	UpdateCamera();
 }
 
 void Player::Inspectable() {
@@ -84,7 +97,13 @@ void Player::Inspectable() {
 	SxImGui::DragFloat("speed", &speed_, 0.01f, 0.0f);
 }
 
-void Player::Move() {
+void Player::SetCameraTarget(TransformComponent* target, const TimePointf<TimeUnit::second>& time) {
+	target_ = target;
+	time_ = time;
+	timer_.Reset();
+}
+
+Vector2f Player::GetInputDirection() {
 
 	Vector2f direction = {};
 
@@ -110,16 +129,21 @@ void Player::Move() {
 
 	// todo: gamepadのdirectionを追加
 
-	direction = direction.Normalize();
+	return direction.Normalize();
+}
+
+void Player::Move() {
+
+	Vector2f direction = GetInputDirection();
+
+	if (All(direction == kOrigin2<float>)) {
+		SetAnimationState(AnimationType::Idle);
+		return;
+	}
+
+	SetAnimationState(AnimationType::Walk);
 
 	transform_->translate += Vector3f{ direction.x, 0.0f, direction.y } * speed_;
-
-	if (direction.Length() != 0.0f) {
-		SetAnimationState(AnimationType::Walk);
-
-	} else {
-		SetAnimationState(AnimationType::Idle);
-	}
 
 }
 
@@ -158,6 +182,28 @@ void Player::UpdateArmature() {
 	}
 }
 
+void Player::UpdateCamera() {
+
+	const Quaternion& quat = camera_->GetComponent<TransformComponent>()->rotate;
+
+	if (timer_ >= time_) {
+		camera_->GetComponent<TransformComponent>()->rotate = Quaternion::Slerp(quat, Quaternion::Identity(), 0.4f);
+		return;
+	}
+
+	if (target_ == nullptr) {
+		WarningRuntime("[Player]: nullptr warning", "target is nullptr");
+		return;
+	}
+
+	timer_.AddDeltaTime();
+
+	Vector3f direction = target_->GetPosition() - camera_->GetComponent<TransformComponent>()->GetPosition();
+	direction = direction.Normalize();
+
+	camera_->GetComponent<TransformComponent>()->rotate = Quaternion::Slerp(quat, CalculateDirectionQuaterion(direction), 0.08f);
+}
+
 void Player::SetAnimationState(AnimationType type) {
 	if (type != animationState_.type) {
 		preAnimationState_ = animationState_;
@@ -165,4 +211,16 @@ void Player::SetAnimationState(AnimationType type) {
 		animationState_.type = type;
 		animationState_.time = { 0.0f };
 	}
+}
+
+Quaternion Player::CalculateDirectionQuaterion(const Vector3f& direction) {
+	Vector3f result = {};
+
+	// ロール, ピッチ, ロー回転
+	result.y = std::atan2(direction.x, direction.z);
+
+	float length = Vector3f{ direction.x, 0.0f, direction.z }.Length();
+	result.x = std::atan2(-direction.y, length);
+
+	return Quaternion::ToQuaternion(result);
 }

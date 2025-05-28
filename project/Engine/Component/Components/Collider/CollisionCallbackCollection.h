@@ -44,7 +44,7 @@ public:
 
 	//* functions option *//
 
-	void SetOnCollisionFunctions(const std::string& x, const std::string& y, const OnCollisionCallbacks& functions);
+	void SetOnCollisionFunctions(const std::string& tagA, const std::string& tagB, const OnCollisionCallbacks& functions);
 
 	void CallbackOnCollisionEnter(ColliderComponent* lhs, ColliderComponent* rhs) const;
 	void CallbackOnCollisionExit(ColliderComponent* lhs, ColliderComponent* rhs) const;

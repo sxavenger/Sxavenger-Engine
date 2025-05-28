@@ -4,8 +4,8 @@
 // CollisionCallbackCollection class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-void CollisionCallbackCollection::SetOnCollisionFunctions(const std::string& x, const std::string& y, const OnCollisionCallbacks& functions) {
-	callbacks_[x][y] = functions;
+void CollisionCallbackCollection::SetOnCollisionFunctions(const std::string& tagA, const std::string& tagB, const OnCollisionCallbacks& functions) {
+	callbacks_[tagA][tagB] = functions;
 }
 
 void CollisionCallbackCollection::CallbackOnCollisionEnter(ColliderComponent* lhs, ColliderComponent* rhs) const {

@@ -15,6 +15,9 @@
 #include <Engine/Component/Components/SpriteRenderer/SpriteRendererComponent.h>
 #include <Engine/Component/ComponentHelper.h>
 
+//* lib
+#include <Lib/Adapter/Random/Random.h>
+
 ////////////////////////////////////////////////////////////////////////////////////////////
 // DemoGameLoop class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -74,7 +77,8 @@ void DemoGameLoop::InitGame() {
 
 	skylight_ = std::make_unique<AtmosphereActor>();
 	skylight_->Init({ 1024, 1024 });
-	
+
+	SetCollisionCallback();
 }
 
 void DemoGameLoop::TermGame() {
@@ -131,4 +135,22 @@ void DemoGameLoop::DrawGame() {
 	SxavengerSystem::RenderImGui();
 	
 	main_->EndRendering();
+}
+
+void DemoGameLoop::SetCollisionCallback() {
+	{
+		CollisionCallbackCollection::OnCollisionCallbacks callback = {};
+		callback.enter = [](_MAYBE_UNUSED ColliderComponent* const colliderA, _MAYBE_UNUSED ColliderComponent* const colliderB) {
+			CommentRuntime("on collision enter.");
+
+			auto player = static_cast<Player*>(colliderA->GetBehaviour());
+			player->SetCameraTarget(colliderB->GetTransform(), 4.0f);
+
+			auto particle = static_cast<LeadParticle*>(colliderB->GetBehaviour());
+			particle->SetTarget({ Random::UniformDistribution(-12.0f, 12.0f), 1.5f, Random::UniformDistribution(-12.0f, 12.0f) });
+		};
+
+		sCollisionManager->SetOnCollisionFunctions("player", "lead particle", callback);
+	}
+	
 }

@@ -28,32 +28,50 @@ void LeadParticle::Awake() {
 	transform_ = GameObject::AddComponent<TransformComponent>();
 	SetName("lead particle");
 
-	auto collider = GameObject::AddComponent<ColliderComponent>();
-	collider->SetTag("lead particle");
-	collider->SetColliderBoundingSphere();
+	collider_ = GameObject::AddComponent<ColliderComponent>();
+	collider_->SetTag("lead particle");
+	collider_->SetColliderBoundingSphere();
 }
 
 void LeadParticle::Start() {
 	prePosition_ = transform_->GetPosition();
-	position_    = transform_->GetPosition();
 }
 
 void LeadParticle::Update() {
-	const uint32_t emitCount = 12;
 
-	position_ = transform_->GetPosition();
-
-	for (uint32_t i = 0; i < emitCount; ++i) {
-		Vector3f emitPosition = Vector3f::Lerp(prePosition_, position_, static_cast<float>(i) / (emitCount - 1));
-		Emit(emitPosition);
-	}
-
-	prePosition_ = position_;
+	UpdateEmitter();
+	UpdateEmit();
 }
 
 void LeadParticle::Inspectable() {
 	//SxImGui::DragVector3("min", &min_.x, 0.01f);
 	SxImGui::DragFloat("range", &range_, 0.01f, 0.0f);
+}
+
+void LeadParticle::SetTarget(const Vector3f& target) {
+	targetPosition_ = target;
+}
+
+void LeadParticle::UpdateEmitter() {
+	if (Vector3f::Distance(targetPosition_, transform_->translate) <= 0.5f) {
+		collider_->SetActiveCollider(true);
+		return;
+	}
+
+	collider_->SetActiveCollider(false);
+
+	Vector3f direction = (targetPosition_ - transform_->GetPosition()).Normalize();
+	transform_->translate += direction * speed_;
+}
+
+void LeadParticle::UpdateEmit() {
+	const uint32_t emitCount = 12;
+	for (uint32_t i = 0; i < emitCount; ++i) {
+		Vector3f emitPosition = Vector3f::Lerp(prePosition_, transform_->GetPosition(), static_cast<float>(i) / (emitCount - 1));
+		Emit(emitPosition);
+	}
+
+	prePosition_ = transform_->GetPosition();
 }
 
 void LeadParticle::Emit(const Vector3f& position) {

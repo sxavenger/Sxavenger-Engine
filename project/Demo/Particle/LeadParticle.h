@@ -34,28 +34,38 @@ public:
 
 	void Inspectable() override;
 
+	//* setter *//
+
+	void SetTarget(const Vector3f& target);
+
 private:
 
 	//=========================================================================================
 	// private variables
 	//=========================================================================================
 
-
 	//* component *//
 
 	ParticleComponent* component_  = nullptr;
 	TransformComponent* transform_ = nullptr;
+	ColliderComponent* collider_ = nullptr;
 
 	Vector3f prePosition_;
-	Vector3f position_;
 
 	AssetObserver<AssetTexture> texture_;
 
 	float range_ = 0.5f;
 
+	Vector3f targetPosition_ = {};
+	float speed_ = 0.2f;
+
 	//=========================================================================================
 	// private methods
 	//=========================================================================================
+
+	void UpdateEmitter();
+
+	void UpdateEmit();
 
 	void Emit(const Vector3f& position);
 

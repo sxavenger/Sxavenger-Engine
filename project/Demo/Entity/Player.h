@@ -49,6 +49,10 @@ public:
 
 	void Inspectable() override;
 
+	//* setter *//
+
+	void SetCameraTarget(TransformComponent* target, const TimePointf<TimeUnit::second>& time);
+
 private:
 
 	////////////////////////////////////////////////////////////////////////////////////////////
@@ -92,17 +96,28 @@ private:
 	DeltaTimePointf<TimeUnit::second> animationTransitionTime_;
 
 	//* camera *//
+	// todo: cameraの処理を分ける
 
 	std::unique_ptr<MonoBehaviour> camera_;
+
+	TransformComponent* target_ = nullptr;
+	DeltaTimePointf<TimeUnit::second> timer_;
+	TimePointf<TimeUnit::second> time_;
 
 	//=========================================================================================
 	// private methods
 	//=========================================================================================
 
+	Vector2f GetInputDirection();
+
 	void Move();
 
 	void UpdateArmature();
 
+	void UpdateCamera();
+
 	void SetAnimationState(AnimationType type);
+
+	static Quaternion CalculateDirectionQuaterion(const Vector3f& direction);
 
 };

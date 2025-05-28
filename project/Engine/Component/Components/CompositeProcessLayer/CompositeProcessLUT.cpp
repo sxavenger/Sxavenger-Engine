@@ -13,6 +13,11 @@ _DXOBJECT_USING
 
 void CompositeProcessLUT::Init() {
 	name_ = "LUT";
+
+	parameter_ = std::make_unique<DimensionBuffer<Parameter>>();
+	parameter_->Create(SxavengerSystem::GetDxDevice(), 1);
+	parameter_->At(0).intensity = 1.0f;
+	
 }
 
 void CompositeProcessLUT::Process(const DirectXThreadContext* context, FRenderTargetTextures* textures) {
@@ -33,13 +38,14 @@ void CompositeProcessLUT::Process(const DirectXThreadContext* context, FRenderTa
 
 	// lut
 	desc.SetHandle("gLUTTexture", texture_->GetGPUHandleSRV());
+	desc.SetAddress("gParameter", parameter_->GetGPUVirtualAddress());
 
 	core->BindComputeBuffer(FRenderCoreProcess::CompositeType::LUT, context, desc);
 	core->Dispatch(context, textures->GetSize());
 }
 
 void CompositeProcessLUT::ShowInspectorImGui() {
-	
+	ImGui::DragFloat("intensity", &parameter_->At(0).intensity, 0.01f, 0.0f, 1.0f);
 }
 
 void CompositeProcessLUT::CreateTexture(const DirectXThreadContext* context, const AssetObserver<AssetTexture>& texture, const Vector2ui& tile) {
