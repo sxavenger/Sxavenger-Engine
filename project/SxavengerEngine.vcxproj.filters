@@ -160,6 +160,7 @@
     <ClCompile Include="Engine\Component\Components\CompositeProcessLayer\CompositeProcessLayerComponent.cpp" />
     <ClCompile Include="Engine\Component\Components\CompositeProcessLayer\CompositeProcessLUT.cpp" />
     <ClCompile Include="Engine\Adapter\Actor\ControllableCameraActor.cpp" />
+    <ClCompile Include="Demo\Particle\LeadParticle.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\System\Window\Window.h" />
@@ -341,6 +342,7 @@
     <ClInclude Include="Engine\Component\Components\CompositeProcessLayer\BaseCompositeProcess.h" />
     <ClInclude Include="Engine\Component\Components\CompositeProcessLayer\CompositeProcessLUT.h" />
     <ClInclude Include="Engine\Adapter\Actor\ControllableCameraActor.h" />
+    <ClInclude Include="Demo\Particle\LeadParticle.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

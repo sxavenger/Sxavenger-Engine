@@ -323,8 +323,7 @@ void FSceneRenderer::LightingPassSkyLight(const DirectXThreadContext* context, c
 		parameter.SetAddress("gDiffuseParameter",  component->GetDiffuseParameterBufferAddress());
 		parameter.SetAddress("gSpecularParameter", component->GetSpecularParameterBufferAddress());
 		parameter.SetHandle("gBRDFLut",            FRenderCore::GetInstance()->GetBRDFLut());
-
-		//parameter.SetAddress("gShadow",    component->GetShadowBufferAddress());
+		parameter.SetAddress("gShadow",            component->GetShadowBufferAddress());
 
 		FRenderCore::GetInstance()->GetLight()->BindGraphicsBuffer(
 			FRenderCoreLight::LightType::SkyLight, context, parameter
@@ -486,7 +485,7 @@ void FSceneRenderer::CompositeProcessPassTonemap(const DirectXThreadContext* con
 	DxObject::BindBufferDesc parameter = {};
 	// common
 	parameter.SetAddress("gConfig", textures_->GetDimension());
-	parameter.SetHandle("gTexture", textures_->GetGBuffer(FRenderTargetTextures::GBufferLayout::Main)->GetGPUHandleSRV());
+	parameter.SetHandle("gTexture", textures_->GetGBuffer(FRenderTargetTextures::GBufferLayout::Main)->GetGPUHandleUAV());
 
 	FRenderCore::GetInstance()->GetProcess()->BindComputeBuffer(
 		FRenderCoreProcess::CompositeType::Tonemap, context, parameter

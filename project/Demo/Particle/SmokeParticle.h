@@ -43,7 +43,8 @@ private:
 
 	AssetObserver<AssetTexture> textures_[2];
 
-	
+	Vector3f position_;
+	Vector3f prePosition_;
 
 	//=========================================================================================
 	// private methods
@@ -51,6 +52,6 @@ private:
 
 	void CreateParticle();
 
-	void Emit();
+	void Emit(const Vector3f& position);
 
 };

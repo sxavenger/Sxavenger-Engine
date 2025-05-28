@@ -170,6 +170,8 @@ public:
 
 	virtual void Task(const DirectXThreadContext* context);
 
+	void WaitComplate() const;
+
 	//* parameter option *//
 
 	void SetEnvironment(const D3D12_GPU_DESCRIPTOR_HANDLE& environment) { mainEnvironment_ = environment; }

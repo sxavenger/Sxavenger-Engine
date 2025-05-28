@@ -104,3 +104,8 @@ void ComponentHelper::ApplyAnimation(MonoBehaviour* behaviour, const Animation& 
 	auto child = behaviour->FindChild(ArmatureComponent::kArmatureName);
 	child->GetComponent<ArmatureComponent>()->UpdateAnimation(animation, time, isLoop);
 }
+
+void ComponentHelper::ApplyAnimationTransition(MonoBehaviour* behaviour, const Animation& animationA, TimePointf<TimeUnit::second> timeA, bool isLoopA, const Animation& animationB, TimePointf<TimeUnit::second> timeB, bool isLoopB, float transitionT) {
+	auto child = behaviour->FindChild(ArmatureComponent::kArmatureName);
+	child->GetComponent<ArmatureComponent>()->TransitionAnimation(animationA, timeA, isLoopA, animationB, timeB, isLoopB, transitionT);
+}

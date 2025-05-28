@@ -44,11 +44,6 @@ void DemoGameLoop::InitGame() {
 	main_ = SxavengerSystem::CreateMainWindow(kMainWindowSize, L"Sxavenger Engine Demo").lock();
 	main_->SetIcon("packages/icon/SxavengerEngineIcon.ico", { 32, 32 });
 
-#ifdef _DEVELOPMENT
-	editor_ = SxavengerSystem::TryCreateSubWindow(kMainWindowSize, L"Editor Window").lock();
-	editor_->SetIcon("packages/icon/SxavengerEngineSubIcon.ico", { 32, 32 });
-#endif
-
 	stage_ = std::make_unique<Stage>();
 	stage_->Load();
 	stage_->Awake();
@@ -69,21 +64,17 @@ void DemoGameLoop::InitGame() {
 	rain_->Awake();
 	rain_->Start();
 
+	lead_ = std::make_unique<LeadParticle>();
+	lead_->Load();
+	lead_->Awake();
+	lead_->Start();
+
 	sampleLight_ = ComponentHelper::CreateDirectionalLightMonoBehaviour();
 	sampleLight_->GetComponent<TransformComponent>()->rotate *= Quaternion::ToQuaternion({ kPi / 4.0f, 0.0f, 0.0f });
 
-	//AssetObserver<AssetTexture> env = SxavengerAsset::TryImport<AssetTexture>("assets/textures/EnvHDR.dds");
-	//environmentMap_.Create(env.WaitGet()->GetSize());
-	//environmentMap_.Dispatch(SxavengerSystem::GetMainThreadContext(), env.WaitGet()->GetGPUHandleSRV());
-
-	SxavengerSystem::ExecuteAllAllocator();
-
-	//skylight_ = ComponentHelper::CreateMonoBehaviour();
-	//skylight_->SetName("sky light");
-	//skylight_->AddComponent<SkyLightComponent>();
-	//skylight_->GetComponent<SkyLightComponent>()->GetDiffuseParameter().SetTexture(environmentMap_.GetIrradianceIndex());
-	//skylight_->GetComponent<SkyLightComponent>()->GetSpecularParameter().SetTexture(environmentMap_.GetRadianceIndex(), environmentMap_.GetRadianceMiplevel());
-
+	skylight_ = std::make_unique<AtmosphereActor>();
+	skylight_->Init({ 1024, 1024 });
+	
 }
 
 void DemoGameLoop::TermGame() {
@@ -95,10 +86,13 @@ void DemoGameLoop::UpdateGame() {
 	// GameLogic Update
 	//-----------------------------------------------------------------------------------------
 
+	skylight_->Update();
+
 	player_->Update();
 
 	smoke_->Update();
 	rain_->Update();
+	lead_->Update();
 
 	//-----------------------------------------------------------------------------------------
 	// SystemUpdate...?
@@ -128,13 +122,6 @@ void DemoGameLoop::UpdateGame() {
 void DemoGameLoop::DrawGame() {
 
 	FMainRender::GetInstance()->Render(SxavengerSystem::GetMainThreadContext());
-
-#ifdef _DEVELOPMENT
-	editor_->BeginRendering();
-	editor_->ClearWindow();
-
-	editor_->EndRendering();
-#endif
 
 	main_->BeginRendering();
 	main_->ClearWindow();

@@ -6,13 +6,14 @@
 //* engine
 #include <Engine/System/Runtime/GameLoop/GameLoop.h>
 #include <Engine/System/Window/GameWindow.h>
-#include <Engine/Render/Scene/Environment/FEnvironmentMap.h>
+#include <Engine/Adapter/Actor/AtmosphereActor.h>
 
 //* demo
 #include <Demo/Object/Stage.h>
 #include <Demo/Entity/Player.h>
 #include <Demo/Particle/SmokeParticle.h>
 #include <Demo/Particle/RainParticle.h>
+#include <Demo/Particle/LeadParticle.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // DemoGameLoop class
@@ -37,10 +38,6 @@ private:
 
 	std::shared_ptr<GameWindow> main_;
 
-#ifdef _DEVELOPMENT
-	std::shared_ptr<GameWindow> editor_;
-#endif
-
 	//* game objects *//
 
 	std::unique_ptr<Stage> stage_;
@@ -49,11 +46,11 @@ private:
 
 	std::unique_ptr<SmokeParticle> smoke_;
 	std::unique_ptr<RainParticle> rain_;
+	std::unique_ptr<LeadParticle> lead_;
 
 	std::unique_ptr<MonoBehaviour> sampleLight_;
 
-	FEnvironmentMap environmentMap_;
-	std::unique_ptr<MonoBehaviour> skylight_;
+	std::unique_ptr<AtmosphereActor> skylight_;
 
 	//=========================================================================================
 	// private methods

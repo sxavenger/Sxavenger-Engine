@@ -54,7 +54,7 @@ public:
 	ColliderComponent(MonoBehaviour* behaviour) : BaseComponent(behaviour) {}
 	virtual ~ColliderComponent() = default;
 
-	virtual void ShowComponentInspector() override {}
+	void ShowComponentInspector() override;
 
 	//* bounding option *//
 

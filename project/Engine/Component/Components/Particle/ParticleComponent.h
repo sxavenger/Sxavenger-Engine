@@ -176,7 +176,6 @@ public:
 
 		//* parameter
 		bool isBillboard = false;
-
 	};
 
 public:

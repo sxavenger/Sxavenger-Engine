@@ -21,7 +21,7 @@ void SkyLightActor::Term() {
 	environment_.Term();
 }
 
-void SkyLightActor::Update() {
+void SkyLightActor::Update(bool isWait) {
 	if (!MonoBehaviour::IsActive()) {
 		return;
 	}
@@ -31,6 +31,11 @@ void SkyLightActor::Update() {
 	}
 
 	environment_.Update(SxavengerSystem::GetMainThreadContext());
+
+	if (isWait) {
+		environment_.WaitComplate();
+	}
+
 	skyLightComponent_->SetEnvironment(environment_.GetMapEnvironment());
 	skyLightComponent_->GetDiffuseParameter().SetTexture(environment_.UseIrradianceDescriptor(SxavengerSystem::GetMainThreadContext()).GetIndex());
 	skyLightComponent_->GetSpecularParameter().SetTexture(environment_.UseRadianceDescriptor(SxavengerSystem::GetMainThreadContext()).GetIndex(), environment_.GetRadianceMiplevels());

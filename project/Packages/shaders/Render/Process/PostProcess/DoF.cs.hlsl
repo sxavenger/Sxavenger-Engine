@@ -75,10 +75,7 @@ void main(uint3 dispatchThreadId : SV_DispatchThreadID) {
 	}
 
 	Surface surface;
-	if (!surface.GetSurface(index)) {
-		gOutput[index] = float4(0.0f, 0.0f, 0.0f, 0.0f);
-		return; //!< surface is not exist.
-	}
+	surface.GetSurface(index);
 
 	float delta = CalculateDelta(surface.depth);
 

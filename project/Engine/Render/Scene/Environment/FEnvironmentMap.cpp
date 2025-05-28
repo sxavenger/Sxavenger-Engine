@@ -423,6 +423,10 @@ void FEnvironmentMap::Task(const DirectXThreadContext* context) {
 	radiance_.Dispatch(context, mapEnvironment_.value());
 }
 
+void FEnvironmentMap::WaitComplate() const {
+	task_->Wait();
+}
+
 const DxObject::Descriptor& FEnvironmentMap::UseIrradianceDescriptor(const DirectXThreadContext* context) {
 	return irradiance_.UseDescriptorSRV(context);
 }

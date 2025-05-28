@@ -41,9 +41,12 @@ void SkyLightComponent::SpecularParameter::SetTexture(const AssetObserver<AssetT
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 void SkyLightComponent::ShowComponentInspector() {
+	LightCommon::ShowCommonInspector();
 }
 
 void SkyLightComponent::Init() {
+	LightCommon::CreateShadowBuffer();
+
 	diffuseParameter_ = std::make_unique<DxObject::DimensionBuffer<DiffuseParameter>>();
 	diffuseParameter_->Create(SxavengerSystem::GetDxDevice(), 1);
 	diffuseParameter_->At(0).Init();

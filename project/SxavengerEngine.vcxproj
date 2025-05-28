@@ -188,6 +188,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="Demo\GameLoop\DemoGameLoop.cpp" />
     <ClCompile Include="Demo\GameLoop\PreviewGameLoop.cpp" />
     <ClCompile Include="Demo\Object\Stage.cpp" />
+    <ClCompile Include="Demo\Particle\LeadParticle.cpp" />
     <ClCompile Include="Demo\Particle\RainParticle.cpp" />
     <ClCompile Include="Demo\Particle\SmokeParticle.cpp" />
     <ClCompile Include="Engine\Adapter\Actor\AtmosphereActor.cpp" />
@@ -341,6 +342,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Demo\GameLoop\DemoGameLoop.h" />
     <ClInclude Include="Demo\GameLoop\PreviewGameLoop.h" />
     <ClInclude Include="Demo\Object\Stage.h" />
+    <ClInclude Include="Demo\Particle\LeadParticle.h" />
     <ClInclude Include="Demo\Particle\RainParticle.h" />
     <ClInclude Include="Demo\Particle\SmokeParticle.h" />
     <ClInclude Include="Engine\Adapter\Actor\AtmosphereActor.h" />

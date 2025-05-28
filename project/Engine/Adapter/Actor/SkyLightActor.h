@@ -28,7 +28,7 @@ public:
 
 	void Term();
 
-	void Update();
+	void Update(bool isWait = false);
 
 	void Inspectable() override;
 

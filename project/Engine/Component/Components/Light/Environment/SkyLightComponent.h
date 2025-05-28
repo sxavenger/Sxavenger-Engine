@@ -5,6 +5,7 @@
 //-----------------------------------------------------------------------------------------
 //* component
 #include "../../BaseComponent.h"
+#include "../LightCommon.h"
 
 //* engine
 #include <Engine/System/DirectX/DxObject/DxDimensionBuffer.h>
@@ -18,8 +19,7 @@
 // SkyLightComponent class
 ////////////////////////////////////////////////////////////////////////////////////////////
 class SkyLightComponent
-	: public BaseComponent {
-	//!< TODO: FEnvironmentMapをSkyLightComponentに移行する。
+	: public BaseComponent, public LightCommon {
 public:
 
 	////////////////////////////////////////////////////////////////////////////////////////////

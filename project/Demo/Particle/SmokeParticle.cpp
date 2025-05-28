@@ -28,9 +28,16 @@ void SmokeParticle::Start() {
 }
 
 void SmokeParticle::Update() {
-	for (size_t i = 0; i < 8; ++i) {
-		Emit();
+
+	position_ = GetComponent<TransformComponent>()->translate;
+
+	const size_t kCount = 8;
+	for (size_t i = 0; i < kCount; ++i) {
+		Vector3f emit = Vector3f::Lerp(prePosition_, position_, static_cast<float>(i) / (kCount - 1));
+		Emit(emit);
 	}
+
+	prePosition_ = position_;
 }
 
 void SmokeParticle::CreateParticle() {
@@ -50,22 +57,20 @@ void SmokeParticle::CreateParticle() {
 	subComponents_[0]->Init(1024, BlendMode::kBlendModeNormal);
 	subComponents_[0]->SetPrimitive(InputPrimitiveHelper::CreatePlaneZForward({ 0.4f, 0.4f }));
 
-	//subComponents_[1]->Init(1024, BlendMode::kBlendModeAdd);
-	//subComponents_[1]->SetPrimitive(InputPrimitiveHelper::CreatePlaneZForward({ 0.6f, 0.6f }));
+
+	
 }
 
-void SmokeParticle::Emit() {
-
-	Vector3f position = GetComponent<TransformComponent>()->GetPosition();
+void SmokeParticle::Emit(const Vector3f& position) {
 
 	{
 		ParticleComponent::Element& element = component_->Emit(position);
 
-		float scaler = Random::Generate(1.0f, 1.6f);
+		float scaler = Random::UniformDistribution(1.0f, 1.6f);
 		element.transform.scale = { scaler, scaler, scaler };
 
-		element.velocity.SetStart({ Random::Generate(0.02f, 0.2f), Random::Generate(0.05f, 0.1f), Random::Generate(0.02f, 0.2f) });
-		element.velocity.SetEnd({ Random::Generate(0.01f, 0.02f), 0.0f, 0.0f });
+		element.velocity.SetStart({ Random::UniformDistribution(0.02f, 0.2f), Random::UniformDistribution(0.05f, 0.1f), Random::UniformDistribution(0.02f, 0.2f) });
+		element.velocity.SetEnd({ Random::UniformDistribution(0.01f, 0.02f), 0.0f, 0.0f });
 		element.velocity.SetInterpolationFunction(EaseOutExpo);
 
 		element.size.SetStart({ 0.0f, 0.0f, 0.0f });
@@ -78,9 +83,9 @@ void SmokeParticle::Emit() {
 		element.transparent.SetEnd(0.0f);
 		element.transparent.SetInterpolationFunction(EaseOutCirc);
 
-		element.transparentIndex = textures_[Random::Generate(0, 1)].WaitGet()->GetDescriptorSRV().GetIndex();
+		element.transparentIndex = textures_[Random::UniformDistribution(0, 1)].WaitGet()->GetDescriptorSRV().GetIndex();
 
-		element.lifeTime = { Random::Generate(3.0f, 4.0f) };
+		element.lifeTime = { Random::UniformDistribution(3.0f, 4.0f) };
 
 		element.isBillboard = true;
 	}
@@ -88,11 +93,11 @@ void SmokeParticle::Emit() {
 	{
 		ParticleComponent::Element& element = subComponents_[0]->Emit(position);
 
-		float scaler = Random::Generate(1.0f, 1.2f);
+		float scaler = Random::UniformDistribution(1.0f, 1.2f);
 		element.transform.scale = { scaler, scaler, scaler };
 
-		element.velocity.SetStart({ Random::Generate(0.02f, 0.2f), Random::Generate(0.05f, 0.1f), Random::Generate(0.02f, 0.2f) });
-		element.velocity.SetEnd({ Random::Generate(0.0f, 0.01f), 0.0f, 0.0f });
+		element.velocity.SetStart({ Random::UniformDistribution(0.02f, 0.2f), Random::UniformDistribution(0.05f, 0.1f), Random::UniformDistribution(0.02f, 0.2f) });
+		element.velocity.SetEnd({ Random::UniformDistribution(0.0f, 0.01f), 0.0f, 0.0f });
 		element.velocity.SetInterpolationFunction(EaseOutExpo);
 
 		element.albedo.SetEnd({ 0.1f, 0.1f, 0.1f });
@@ -102,9 +107,9 @@ void SmokeParticle::Emit() {
 		element.transparent.SetEnd(0.0f);
 		element.transparent.SetInterpolationFunction(EaseOutCubic);
 
-		element.transparentIndex = textures_[Random::Generate(0, 1)].WaitGet()->GetDescriptorSRV().GetIndex();
+		element.transparentIndex = textures_[Random::UniformDistribution(0, 1)].WaitGet()->GetDescriptorSRV().GetIndex();
 
-		element.lifeTime = { Random::Generate(2.0f, 4.0f) };
+		element.lifeTime = { Random::UniformDistribution(2.0f, 4.0f) };
 
 		element.isBillboard = true;
 	}

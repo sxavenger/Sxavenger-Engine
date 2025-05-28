@@ -5,11 +5,13 @@
 //-----------------------------------------------------------------------------------------
 //* engine
 #include <Engine/System/SxavengerSystem.h>
+#include <Engine/System/UI/SxImGui.h>
 #include <Engine/Asset/SxavengerAsset.h>
 //* component
-#include <Engine/Component/Components/Transform/TransformComponent.h>
 #include <Engine/Component/Components/Armature/ArmatureComponent.h>
 #include <Engine/Component/Components/Camera/CameraComponent.h>
+#include <Engine/Component/Components/Collider/ColliderComponent.h>
+#include <Engine/Component/Components/PostProcessLayer/PostProcessLayerComponent.h>
 #include <Engine/Component/ComponentHelper.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -34,7 +36,7 @@ void Player::Awake() {
 	MonoBehaviour::SetName("player");
 
 	// component登録
-	MonoBehaviour::AddComponent<TransformComponent>();
+	transform_ = MonoBehaviour::AddComponent<TransformComponent>();
 	model_.WaitGet()->CreateSkinnedMeshBehaviour(this);
 
 	camera_ = std::make_unique<MonoBehaviour>();
@@ -44,27 +46,123 @@ void Player::Awake() {
 	auto camera = camera_->AddComponent<CameraComponent>();
 	camera->SetTag(CameraComponent::Tag::GameCamera);
 
+	auto process = camera_->AddComponent<PostProcessLayerComponent>();
+	process->AddPostProcess<PostProcessBloom>();
+	process->AddPostProcess<PostProcessDoF>();
+
 	auto transform = camera_->AddComponent<TransformComponent>();
 	transform->translate.z = -3.0f;
 	transform->translate.y = 1.5f;
 
+	auto collider = MonoBehaviour::AddComponent<ColliderComponent>();
+	collider->SetTag("Player");
+
+	CollisionBoundings::Capsule capsule = {};
+	capsule.direction = { 0.0f, 1.0f, 0.0f };
+	capsule.radius    = 0.5f;
+	capsule.length    = 2.5f;
+
+	collider->SetColliderBoundingCapsule(capsule);
 }
 
 void Player::Start() {
 	// animation関係の設定
-	animationType_ = AnimationType::Idle;
-	animationTime_ = { 0.0f };
+	SetAnimationState(AnimationType::Idle);
 	UpdateArmature(); //!< animationを一度だけ更新しておく
 }
 
 void Player::Update() {
-	animationTime_.AddDeltaTime();
+	Move();
 	UpdateArmature();
 }
 
+void Player::Inspectable() {
+
+	ImGui::Text("move");
+	ImGui::Separator();
+
+	SxImGui::DragFloat("speed", &speed_, 0.01f, 0.0f);
+}
+
+void Player::Move() {
+
+	Vector2f direction = {};
+
+	//* keyboard inputs *//
+
+	if (keyboard_->IsPress(KeyId::KEY_W)) {
+		direction.y += 1.0f;
+	}
+
+	if (keyboard_->IsPress(KeyId::KEY_S)) {
+		direction.y -= 1.0f;
+	}
+
+	if (keyboard_->IsPress(KeyId::KEY_A)) {
+		direction.x -= 1.0f;
+	}
+
+	if (keyboard_->IsPress(KeyId::KEY_D)) {
+		direction.x += 1.0f;
+	}
+
+	//* gamepad inputs *//
+
+	// todo: gamepadのdirectionを追加
+
+	direction = direction.Normalize();
+
+	transform_->translate += Vector3f{ direction.x, 0.0f, direction.y } * speed_;
+
+	if (direction.Length() != 0.0f) {
+		SetAnimationState(AnimationType::Walk);
+
+	} else {
+		SetAnimationState(AnimationType::Idle);
+	}
+
+}
+
 void Player::UpdateArmature() {
-	ComponentHelper::ApplyAnimation(
-		this,
-		animators_[static_cast<uint8_t>(animationType_)].WaitGet()->GetAnimation(0), animationTime_
-	);
+
+	animationState_.time.AddDeltaTime();
+	const auto& animatorA = animators_[static_cast<uint8_t>(animationState_.type)].WaitGet()->GetAnimation(0);
+
+	if (preAnimationState_.has_value()) {
+
+		animationTransitionTime_.AddDeltaTime();
+
+		float t = animationTransitionTime_.time / 0.5f;
+		t = std::clamp(t, 0.0f, 1.0f);
+
+		const auto& animatorB = animators_[static_cast<uint8_t>((*preAnimationState_).type)].WaitGet()->GetAnimation(0);
+
+		ComponentHelper::ApplyAnimationTransition(
+			this,
+			animatorB, (*preAnimationState_).time, true,
+			animatorA, animationState_.time, true,
+			t
+		);
+
+		if (t >= 1.0f) {
+			preAnimationState_ = std::nullopt;
+		}
+
+	} else {
+
+		ComponentHelper::ApplyAnimation(
+			this,
+			animatorA, animationState_.time, true
+		);
+
+	}
+}
+
+void Player::SetAnimationState(AnimationType type) {
+	if (type != animationState_.type) {
+		preAnimationState_ = animationState_;
+		animationTransitionTime_.Reset();
+		animationState_.type = type;
+		animationState_.time = { 0.0f };
+	}
 }

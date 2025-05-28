@@ -10,6 +10,7 @@ _DXOBJECT_USING
 
 //* engine
 #include <Engine/System/SxavengerSystem.h>
+#include <Engine/Content/SxavengerContent.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // ColliderPrimitiveSphere class methods
@@ -156,7 +157,80 @@ public:
 	}
 
 	void operator()(const CollisionBoundings::Capsule& capsule) {
-		capsule;
+		// todo: 専用のRendererを用意する
+
+		static const uint32_t kSubdivision = 24;
+
+		// カプセルの両端の中心を計算
+		Vector3f topCenter    = position + capsule.direction * (capsule.length * 0.5f);
+		Vector3f bottomCenter = position - capsule.direction * (capsule.length * 0.5f);
+
+		Vector3f arbitrary = (std::abs(capsule.direction.x) < std::abs(capsule.direction.y)) ? Vector3f(1, 0, 0) : Vector3f(0, 1, 0);
+		Vector3f xAxis = Vector3f::Cross(capsule.direction, arbitrary).Normalize(); // 半円の「横」方向
+		Vector3f zAxis = Vector3f::Cross(capsule.direction, xAxis).Normalize();     // 半円の「奥」方向
+
+		const float kLonEvery = kTau / kSubdivision;
+		const float kLatEvery = kPi / kSubdivision;
+
+		// xz軸円
+		for (uint32_t i = 0; i < kSubdivision; ++i) {
+
+			float lon = kLonEvery * i;
+			float x = std::cos(lon) * capsule.radius;
+			float z = std::sin(lon) * capsule.radius;
+
+			float nextX = std::cos(lon + kLonEvery) * capsule.radius;
+			float nextZ = std::sin(lon + kLonEvery) * capsule.radius;
+
+			// 現在の点を計算
+			Vector3f currentPoint = xAxis * x + zAxis * z;
+			Vector3f nextPoint = xAxis * nextX + zAxis * nextZ;
+
+			// 線を描画
+			SxavengerContent::PushLine(currentPoint + topCenter, nextPoint + topCenter, color);
+			SxavengerContent::PushLine(currentPoint + bottomCenter, nextPoint + bottomCenter, color);
+		}
+
+		// xy軸円
+		for (uint32_t i = 0; i < kSubdivision; ++i) {
+			float lat = kLatEvery * i;
+			float x = std::cos(lat) * capsule.radius;
+			float y = std::sin(lat) * capsule.radius;
+
+			float nextX = std::cos(lat + kLatEvery) * capsule.radius;
+			float nextY = std::sin(lat + kLatEvery) * capsule.radius;
+
+			// 現在の点を計算
+			Vector3f currentPoint = xAxis * x + capsule.direction * y;
+			Vector3f nextPoint = xAxis * nextX + capsule.direction * nextY;
+
+			// 線を描画
+			SxavengerContent::PushLine((xAxis * x + capsule.direction * y) + topCenter, (xAxis * nextX + capsule.direction * nextY) + topCenter, color);
+			SxavengerContent::PushLine((xAxis * x - capsule.direction * y) + bottomCenter, (xAxis * nextX - capsule.direction * nextY) + bottomCenter, color);
+		}
+
+		// xy軸円
+		for (uint32_t i = 0; i < kSubdivision; ++i) {
+			float lat = kLatEvery * i;
+			float y = std::sin(lat) * capsule.radius;
+			float z = std::cos(lat) * capsule.radius;
+
+			float nextY = std::sin(lat + kLatEvery) * capsule.radius;
+			float nextZ = std::cos(lat + kLatEvery) * capsule.radius;
+
+			// 現在の点を計算
+			Vector3f currentPoint = zAxis * z + capsule.direction * y;
+			Vector3f nextPoint = zAxis * nextZ + capsule.direction * nextY;
+
+			// 線を描画
+			SxavengerContent::PushLine((zAxis * z + capsule.direction * y) + topCenter, (zAxis * nextZ + capsule.direction * nextY) + topCenter, color);
+			SxavengerContent::PushLine((zAxis * z - capsule.direction * y) + bottomCenter, (zAxis * nextZ - capsule.direction * nextY) + bottomCenter, color);
+		}
+
+		SxavengerContent::PushLine(xAxis * capsule.radius + topCenter, xAxis * capsule.radius + bottomCenter, color);
+		SxavengerContent::PushLine(-xAxis * capsule.radius + topCenter, -xAxis * capsule.radius + bottomCenter, color);
+		SxavengerContent::PushLine(zAxis * capsule.radius + topCenter, zAxis * capsule.radius + bottomCenter, color);
+		SxavengerContent::PushLine(-zAxis * capsule.radius + topCenter, -zAxis * capsule.radius + bottomCenter, color);
 	}
 
 	void operator()(const CollisionBoundings::AABB& aabb) {

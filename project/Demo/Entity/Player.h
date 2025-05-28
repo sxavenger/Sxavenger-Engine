@@ -9,6 +9,8 @@
 #include <Engine/Asset/AssetStorage.h>
 #include <Engine/Asset/Observer/AssetObserver.h>
 #include <Engine/Module/GameObject/GameObject.h>
+//* component
+#include <Engine/Component/Components/Transform/TransformComponent.h>
 
 //* c++
 #include <array>
@@ -43,6 +45,20 @@ public:
 
 	void Update() override;
 
+	//* inspectable *//
+
+	void Inspectable() override;
+
+private:
+
+	////////////////////////////////////////////////////////////////////////////////////////////
+	// AnimationState structure
+	////////////////////////////////////////////////////////////////////////////////////////////
+	struct AnimationState {
+		AnimationType                     type;
+		DeltaTimePointf<TimeUnit::second> time;
+	};
+
 private:
 
 	//=========================================================================================
@@ -54,6 +70,10 @@ private:
 	const KeyboardInput* keyboard_ = nullptr;
 	const GamepadInput* gamepad_   = nullptr;
 
+	//* component *//
+
+	TransformComponent* transform_;
+
 	//* asset *//
 
 	AssetObserver<AssetModel> model_;
@@ -61,9 +81,15 @@ private:
 
 	//* parameter *//
 
+	float speed_ = 0.1f;
+
+	Vector3f velocity_ = {};
+
 	//* animation
-	AnimationType animationType_ = AnimationType::Idle;
-	DeltaTimePointf<TimeUnit::second> animationTime_ = { 0.0f };
+	AnimationState                animationState_;
+	std::optional<AnimationState> preAnimationState_;
+
+	DeltaTimePointf<TimeUnit::second> animationTransitionTime_;
 
 	//* camera *//
 
@@ -73,6 +99,10 @@ private:
 	// private methods
 	//=========================================================================================
 
+	void Move();
+
 	void UpdateArmature();
+
+	void SetAnimationState(AnimationType type);
 
 };

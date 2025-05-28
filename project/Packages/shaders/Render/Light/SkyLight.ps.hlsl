@@ -12,8 +12,6 @@
 
 SamplerState gSampler : register(s0);
 
-SamplerState gBRDFSampler : register(s1);
-
 struct DiffuseParameter {
 
 	//=========================================================================================
@@ -56,6 +54,9 @@ struct SpecularParameter {
 ConstantBuffer<SpecularParameter> gSpecularParameter : register(b1);
 
 Texture2D<float4> gBRDFLut : register(t0);
+SamplerState gBRDFSampler  : register(s1);
+
+ConstantBuffer<InlineShadow> gShadow : register(b2);
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // methods
@@ -93,7 +94,7 @@ PSOutput main(PSInput input) {
 
 	//* Cameraの情報を取得
 	float3 v = normalize(gCamera.GetPosition() - surface.position);
-	float3 r = -normalize(reflect(v, surface.normal));
+	float3 r = reflect(-v, surface.normal);
 
 	// f0
 	static const float3 f0 = float3(0.04f, 0.04f, 0.04f); //!< 非金属の場合のf0
@@ -110,17 +111,14 @@ PSOutput main(PSInput input) {
 
 	output.color.rgb = ApproximateBRDF(diffuseAlbedo, specularAlbedo, surface.normal, v, r, surface.roughness);
 
-	//* shadow
-	InlineShadow shadow;
-	shadow.strength = 0.0f;
-
+	//* 影の計算
 	RayDesc desc;
 	desc.Origin    = surface.position;
 	desc.Direction = r;
 	desc.TMin      = kTMin;
 	desc.TMax      = kTMax;
 	
-	output.color.rgb *= shadow.TraceShadow(desc);
+	//output.color.rgb *= gShadow.TraceShadow(desc);
 
 	output.color.a = 1.0f;
 	return output;

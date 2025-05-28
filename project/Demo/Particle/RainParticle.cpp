@@ -47,8 +47,8 @@ void RainParticle::Emit() {
 
 	{
 
-		position.x += Random::Generate(-12.0f, 12.0f);
-		position.z += Random::Generate(-12.0f, 12.0f);
+		position.x += Random::UniformDistribution(-12.0f, 12.0f);
+		position.z += Random::UniformDistribution(-12.0f, 12.0f);
 
 		ParticleComponent::Element& element = component_->Emit(position);
 		element.velocity.SetStart({ 0.0f, -9.0f, 0.0f });
