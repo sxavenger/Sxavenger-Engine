@@ -45,7 +45,7 @@ void LeadParticle::Update() {
 
 void LeadParticle::Inspectable() {
 	//SxImGui::DragVector3("min", &min_.x, 0.01f);
-	SxImGui::DragFloat("range", &range_, 0.01f, 0.0f);
+	SxImGui::DragFloat("stop range", &stopRange_, 0.01f, 0.0f);
 }
 
 void LeadParticle::SetTarget(const Vector3f& target) {
@@ -55,10 +55,12 @@ void LeadParticle::SetTarget(const Vector3f& target) {
 void LeadParticle::UpdateEmitter() {
 	if (Vector3f::Distance(targetPosition_, transform_->translate) <= 0.5f) {
 		collider_->SetActiveCollider(true);
+		isMove_ = false;
 		return;
 	}
 
 	collider_->SetActiveCollider(false);
+	isMove_ = true;
 
 	Vector3f direction = (targetPosition_ - transform_->GetPosition()).Normalize();
 	transform_->translate += direction * speed_;
@@ -76,18 +78,19 @@ void LeadParticle::UpdateEmit() {
 
 void LeadParticle::Emit(const Vector3f& position) {
 
-	/*Vector3f range = {
-		Random::UniformDistribution(min_.x, max_.x),
-		Random::UniformDistribution(min_.y, max_.y),
-		Random::UniformDistribution(min_.z, max_.z),
-	};*/
-
 	Vector2f angle = {
 		Random::UniformDistribution(-kPi, kPi),
 		Random::UniformDistribution(-kPi, kPi)
 	};
 
-	float radius = Random::NormalDistribution() * range_;
+	if (isMove_) {
+		currentRange_ = std::lerp(currentRange_, moveRange_, 0.01f);
+
+	} else {
+		currentRange_ = std::lerp(currentRange_, stopRange_, 0.01f);
+	}
+
+	float radius = Random::NormalDistribution() * currentRange_;
 
 	Vector3f emit = {
 		std::sin(angle.x) * std::cos(angle.y),

@@ -8,9 +8,9 @@
 #include <Engine/System/Runtime/Performance/DeltaTimePoint.h>
 #include <Engine/Asset/AssetStorage.h>
 #include <Engine/Asset/Observer/AssetObserver.h>
-#include <Engine/Module/GameObject/GameObject.h>
-//* component
 #include <Engine/Component/Components/Transform/TransformComponent.h>
+#include <Engine/Module/GameObject/GameObject.h>
+#include <Engine/Adapter/Actor/PivotCameraActor.h>
 
 //* c++
 #include <array>
@@ -98,7 +98,8 @@ private:
 	//* camera *//
 	// todo: cameraの処理を分ける
 
-	std::unique_ptr<MonoBehaviour> camera_;
+	std::unique_ptr<PivotCameraActor> camera_;
+	Vector3f offset_ = { 0.0f, 1.5f, 0.0f };
 
 	TransformComponent* target_ = nullptr;
 	DeltaTimePointf<TimeUnit::second> timer_;

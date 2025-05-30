@@ -27,7 +27,8 @@ ParticlePSInput main(PrimitiveVertex input, uint instanceId : SV_InstanceID) {
 		// todo: matInvTranspose.
 	}
 	
-	output.position = mul(mul(input.position, mat), kViewProj);
+	output.
+		position = mul(mul(input.position, mat), kViewProj);
 	
 	output.texcoord = input.texcoord;
 	output.normal   = normalize(gTransforms[instanceId].TransformNormal(input.normal));

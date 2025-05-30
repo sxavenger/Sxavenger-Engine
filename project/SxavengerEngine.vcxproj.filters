@@ -161,6 +161,7 @@
     <ClCompile Include="Engine\Component\Components\CompositeProcessLayer\CompositeProcessLUT.cpp" />
     <ClCompile Include="Engine\Adapter\Actor\ControllableCameraActor.cpp" />
     <ClCompile Include="Demo\Particle\LeadParticle.cpp" />
+    <ClCompile Include="Engine\Adapter\Actor\PivotCameraActor.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\System\Window\Window.h" />
@@ -343,6 +344,7 @@
     <ClInclude Include="Engine\Component\Components\CompositeProcessLayer\CompositeProcessLUT.h" />
     <ClInclude Include="Engine\Adapter\Actor\ControllableCameraActor.h" />
     <ClInclude Include="Demo\Particle\LeadParticle.h" />
+    <ClInclude Include="Engine\Adapter\Actor\PivotCameraActor.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

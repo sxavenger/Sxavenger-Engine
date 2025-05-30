@@ -42,7 +42,7 @@ bool SxImGui::DragVector3(const char* label, float v[3], float v_speed, float v_
 		ImGui::PushID(label);
 		ImGui::BeginGroup();
 
-		for (uint32_t i = 0; i < 3; i++) {
+		for (uint32_t i = 0; i < 3; ++i) {
 			ImGui::PushID(i);
 			// 角丸四角形のダミー領域を描画
 			ImGui::Dummy(ImVec2(rectWidth, rectHeight));

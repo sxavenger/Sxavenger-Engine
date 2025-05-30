@@ -55,7 +55,7 @@ void BetaSystemGameLoop::InitSystem() {
 
 	camera_ = ComponentHelper::CreateCameraMonoBehaviour();
 
-	SxavengerAsset::TryImport<AssetModel>("assets/models/primitive/sample_scene.obj");
+	SxavengerAsset::TryImport<AssetModel>("assets/models/scene/scene.gltf");
 	SxavengerAsset::TryImport<AssetModel>("assets/models/PBR_Sphere_Test/model/PBR_Sphere.gltf");
 	SxavengerAsset::TryImport<AssetModel>("assets/models/chessboard/ABeautifulGame.gltf");
 	SxavengerAsset::TryImport<AssetModel>("assets/models/sponza/NewSponza_Main_glTF_003.gltf");

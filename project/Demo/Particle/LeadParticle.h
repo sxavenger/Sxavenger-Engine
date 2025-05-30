@@ -54,10 +54,13 @@ private:
 
 	AssetObserver<AssetTexture> texture_;
 
-	float range_ = 0.5f;
+	float moveRange_ = 0.5f;
+	float stopRange_ = 1.0f;
+	float currentRange_ = stopRange_;
 
 	Vector3f targetPosition_ = {};
 	float speed_ = 0.2f;
+	bool isMove_ = false;
 
 	//=========================================================================================
 	// private methods

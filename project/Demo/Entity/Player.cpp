@@ -17,6 +17,7 @@
 
 //* lib
 #include <Lib/Geometry/VectorComparision.h>
+#include <Lib/Easing.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Player class methods
@@ -43,8 +44,8 @@ void Player::Awake() {
 	transform_ = MonoBehaviour::AddComponent<TransformComponent>();
 	model_.WaitGet()->CreateSkinnedMeshBehaviour(this);
 
-	camera_ = std::make_unique<MonoBehaviour>();
-	camera_->SetParent(this);
+	camera_ = std::make_unique<PivotCameraActor>();
+	camera_->Init();
 	camera_->SetName("camera");
 
 	auto camera = camera_->AddComponent<CameraComponent>();
@@ -52,8 +53,9 @@ void Player::Awake() {
 
 	{
 		auto process = camera_->AddComponent<PostProcessLayerComponent>();
-		process->AddPostProcess<PostProcessBloom>();
+		process->AddPostProcess<PostProcessExposure>();
 		process->AddPostProcess<PostProcessDoF>();
+		process->AddPostProcess<PostProcessBloom>();
 	}
 
 	{
@@ -95,6 +97,9 @@ void Player::Inspectable() {
 	ImGui::Separator();
 
 	SxImGui::DragFloat("speed", &speed_, 0.01f, 0.0f);
+
+	ImGui::Text("camera");
+	SxImGui::DragVector3("offset", &offset_.x, 0.01f);
 }
 
 void Player::SetCameraTarget(TransformComponent* target, const TimePointf<TimeUnit::second>& time) {
@@ -134,17 +139,21 @@ Vector2f Player::GetInputDirection() {
 
 void Player::Move() {
 
-	Vector2f direction = GetInputDirection();
+	Vector2f input = GetInputDirection();
 
-	if (All(direction == kOrigin2<float>)) {
+	if (All(input == kOrigin2<float>)) {
 		SetAnimationState(AnimationType::Idle);
 		return;
 	}
 
 	SetAnimationState(AnimationType::Walk);
 
-	transform_->translate += Vector3f{ direction.x, 0.0f, direction.y } * speed_;
+	Vector3f direction = { input.x, 0.0f, input.y };
+	direction = Quaternion::RotateVector(direction, camera_->GetRotation());
+	direction = Vector3f{ direction.x, 0.0f, direction.z }.Normalize();
 
+	transform_->translate += direction * speed_;
+	transform_->rotate    = Quaternion::Slerp(transform_->rotate, CalculateDirectionQuaterion(direction), 0.1f);
 }
 
 void Player::UpdateArmature() {
@@ -184,10 +193,12 @@ void Player::UpdateArmature() {
 
 void Player::UpdateCamera() {
 
+	camera_->SetPoint(transform_->GetPosition() + offset_);
+
 	const Quaternion& quat = camera_->GetComponent<TransformComponent>()->rotate;
 
 	if (timer_ >= time_) {
-		camera_->GetComponent<TransformComponent>()->rotate = Quaternion::Slerp(quat, Quaternion::Identity(), 0.4f);
+		camera_->Update();
 		return;
 	}
 
@@ -201,7 +212,10 @@ void Player::UpdateCamera() {
 	Vector3f direction = target_->GetPosition() - camera_->GetComponent<TransformComponent>()->GetPosition();
 	direction = direction.Normalize();
 
-	camera_->GetComponent<TransformComponent>()->rotate = Quaternion::Slerp(quat, CalculateDirectionQuaterion(direction), 0.08f);
+	float t = std::lerp(0.0f, 0.4f, EaseOutCubic(timer_.time / time_.time));
+
+	camera_->SetRotation(Quaternion::Slerp(quat, CalculateDirectionQuaterion(direction), t));
+	camera_->Update();
 }
 
 void Player::SetAnimationState(AnimationType type) {
