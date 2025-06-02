@@ -1,4 +1,5 @@
 #include "PreviewGameLoop.h"
+_DXOBJECT_USING
 
 //-----------------------------------------------------------------------------------------
 // include
@@ -6,6 +7,9 @@
 //* engine
 #include <Engine/System/SxavengerSystem.h>
 #include <Engine/Asset/SxavengerAsset.h>
+#include <Engine/Component/Components/Camera/CameraComponent.h>
+#include <Engine/Component/Components/Light/Punctual/PointLightComponent.h>
+#include <Engine/Component/ComponentHelper.h>
 #include <Engine/Editor/EditorEngine.h>
 #include <Engine/Editor/Editors/DevelopEditor.h>
 
@@ -37,53 +41,68 @@ void PreviewGameLoop::Term() {
 
 void PreviewGameLoop::InitGame() {
 
-	main_ = SxavengerSystem::CreateMainWindow(kMainWindowSize, L"sxavenger engine beta window").lock();
+	main_ = SxavengerSystem::CreateMainWindow(kMainWindowSize, L"sxavenger engine preview window", { 0.14f, 0.2f, 0.24f, 1.f }).lock();
 	main_->SetIcon("packages/icon/SxavengerEngineIcon.ico", { 32, 32 });
 
-	pipeline_ = std::make_unique<CustomReflectionComputePipeline>();
-	pipeline_->CreateAsset("assets/shaders/test.cs.hlsl");
-	pipeline_->RegisterBlob();
-	pipeline_->ReflectionPipeline(SxavengerSystem::GetDxDevice());
+	auto device = SxavengerSystem::GetDxDevice()->GetDevice();
+	
+	{ //!< resourceの生成
 
-	pipeline2_ = std::make_unique<CustomReflectionComputePipeline>();
-	pipeline2_->CreateAsset("assets/shaders/reset.cs.hlsl");
-	pipeline2_->RegisterBlob();
-	pipeline2_->ReflectionPipeline(SxavengerSystem::GetDxDevice());
+		// propの設定
+		D3D12_HEAP_PROPERTIES prop = {};
+		prop.Type = D3D12_HEAP_TYPE_DEFAULT;
 
-	static const uint32_t kUnorderedCount = 12;
+		// descの設定
+		D3D12_RESOURCE_DESC desc = {};
+		desc.Width            = size_.x;
+		desc.Height           = size_.y;
+		desc.DepthOrArraySize = static_cast<uint16_t>(size_.z);
+		desc.MipLevels        = 1;
+		desc.Format           = DXGI_FORMAT_R10G10B10A2_UNORM;
+		desc.SampleDesc.Count = 1;
+		desc.Dimension        = D3D12_RESOURCE_DIMENSION_TEXTURE3D;
+		desc.Flags            = D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS;
 
-	{ //!< Append
-
-		append_ = DxObject::CreateBufferResource(
-			SxavengerSystem::GetDxDevice()->GetDevice(),
-			D3D12_HEAP_TYPE_DEFAULT,
-			sizeof(Data) * kUnorderedCount,
-			D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS,
-			D3D12_RESOURCE_STATE_UNORDERED_ACCESS
-		);
-
-		counter_ = DxObject::CreateBufferResource(
-			SxavengerSystem::GetDxDevice()->GetDevice(),
-			D3D12_HEAP_TYPE_DEFAULT,
-			sizeof(uint32_t),
-			D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS,
-			D3D12_RESOURCE_STATE_UNORDERED_ACCESS
-		);
-
-		descriptor_ = SxavengerSystem::GetDescriptor(DxObject::kDescriptor_UAV);
-
-		D3D12_UNORDERED_ACCESS_VIEW_DESC desc = {};
-		desc.ViewDimension               = D3D12_UAV_DIMENSION_BUFFER;
-		desc.Buffer.NumElements          = kUnorderedCount;
-		desc.Buffer.StructureByteStride  = sizeof(Data);
-
-		SxavengerSystem::GetDxDevice()->GetDevice()->CreateUnorderedAccessView(
-			append_.Get(),
-			counter_.Get(),
+		auto hr = device->CreateCommittedResource(
+			&prop,
+			D3D12_HEAP_FLAG_NONE,
 			&desc,
-			descriptor_.GetCPUHandle()
+			D3D12_RESOURCE_STATE_ALL_SHADER_RESOURCE,
+			nullptr,
+			IID_PPV_ARGS(&voxel_)
+		);
+		Assert(SUCCEEDED(hr));
+	}
+
+	{ //!< UAVの生成
+
+		// descriptorの取得
+		descriptorUAV_ = SxavengerSystem::GetDescriptor(kDescriptor_UAV);
+
+		// descの設定
+		D3D12_UNORDERED_ACCESS_VIEW_DESC desc = {};
+		desc.Format          = DXGI_FORMAT_R10G10B10A2_UNORM;
+		desc.ViewDimension   = D3D12_UAV_DIMENSION_TEXTURE3D;
+		desc.Texture3D.WSize = 32;
+
+		device->CreateUnorderedAccessView(
+			voxel_.Get(),
+			nullptr,
+			&desc,
+			descriptorUAV_.GetCPUHandle()
 		);
 	}
+
+	pipeline_.CreateBlob(L"assets/shaders/preview/voxelPointLight.cs.hlsl");
+	pipeline_.ReflectionPipeline(SxavengerSystem::GetDxDevice());
+
+	behaviour_ = std::make_unique<MonoBehaviour>();
+
+	auto camera = behaviour_->AddComponent<CameraComponent>();
+	camera->SetTag(CameraComponent::Tag::GameCamera);
+
+	behaviour_->AddComponent<TransformComponent>();
+	behaviour_->AddComponent<PointLightComponent>();
 }
 
 void PreviewGameLoop::TermGame() {
@@ -91,27 +110,21 @@ void PreviewGameLoop::TermGame() {
 
 void PreviewGameLoop::UpdateGame() {
 
-	//!< reset
-	{
-		pipeline2_->SetPipeline(SxavengerSystem::GetMainThreadContext()->GetDxCommand());
+	ComponentHelper::UpdateTransform();
 
-		DxObject::BindBufferDesc desc = {};
-		desc.SetAddress("gCounter", counter_->GetGPUVirtualAddress());
-		pipeline2_->BindComputeBuffer(SxavengerSystem::GetMainThreadContext()->GetDxCommand(), desc);
-		pipeline2_->Dispatch(SxavengerSystem::GetMainThreadContext()->GetDxCommand(), { 1, 1, 1 });
-	}
+	pipeline_.SetPipeline(SxavengerSystem::GetMainThreadContext()->GetDxCommand());
+
+	DxObject::BindBufferDesc desc = {};
+	desc.SetHandle("gVoxel",       descriptorUAV_.GetGPUHandle());
+	desc.SetAddress("gCamera",     behaviour_->GetComponent<CameraComponent>()->GetGPUVirtualAddress());
+	desc.SetAddress("gPointLight", behaviour_->GetComponent<PointLightComponent>()->GetParameterBufferAddress());
+	desc.SetAddress("gTransform",  behaviour_->GetComponent<TransformComponent>()->GetGPUVirtualAddress());
 	
-	//!< append
-	{
-		pipeline_->SetPipeline(SxavengerSystem::GetMainThreadContext()->GetDxCommand());
-
-		DxObject::BindBufferDesc desc = {};
-		desc.SetHandle("gAppend",  descriptor_.GetGPUHandle());
-		desc.SetHandle("gConsume", descriptor_.GetGPUHandle());
-		pipeline_->BindComputeBuffer(SxavengerSystem::GetMainThreadContext()->GetDxCommand(), desc);
-		pipeline_->Dispatch(SxavengerSystem::GetMainThreadContext()->GetDxCommand(), { 1, 1, 1 });
-	}
-
+	pipeline_.BindComputeBuffer(SxavengerSystem::GetMainThreadContext()->GetDxCommand(), desc);
+	pipeline_.Dispatch(
+		SxavengerSystem::GetMainThreadContext()->GetDxCommand(),
+		{ DxObject::RoundUp(size_.x, 16), DxObject::RoundUp(size_.y, 16), DxObject::RoundUp(size_.z, 1) }
+	);
 }
 
 void PreviewGameLoop::DrawGame() {

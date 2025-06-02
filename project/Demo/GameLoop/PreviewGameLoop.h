@@ -39,17 +39,13 @@ private:
 
 	//* preview *//
 
-	std::unique_ptr<CustomReflectionComputePipeline> pipeline_;
-	std::unique_ptr<CustomReflectionComputePipeline> pipeline2_;
+	DxObject::ReflectionComputePipelineState pipeline_;
 
-	struct Data {
-		uint32_t value;
-	};
+	Vector3ui size_ = { 1280, 720, 32 };
+	ComPtr<ID3D12Resource> voxel_;
+	DxObject::Descriptor descriptorUAV_;
 
-	ComPtr<ID3D12Resource> append_;
-	DxObject::Descriptor descriptor_;
-
-	ComPtr<ID3D12Resource> counter_;
+	std::unique_ptr<MonoBehaviour> behaviour_;
 
 	//=========================================================================================
 	// private methods

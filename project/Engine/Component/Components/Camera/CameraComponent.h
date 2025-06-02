@@ -104,8 +104,6 @@ public:
 
 	//* buffer option *//
 
-	void CreateBuffer();
-
 	const D3D12_GPU_VIRTUAL_ADDRESS& GetGPUVirtualAddress() const;
 
 	//* camera option *//
@@ -137,6 +135,8 @@ private:
 	//=========================================================================================
 	// private methods
 	//=========================================================================================
+
+	void CreateBuffer();
 
 	void PushLineFrustum();
 

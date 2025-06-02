@@ -14,12 +14,9 @@ ConstantBuffer<DirectionalLightComponent> gParameter : register(b0);
 
 ConstantBuffer<InlineShadow> gShadow : register(b1);
 
-#define _USE_PBR
-
 ////////////////////////////////////////////////////////////////////////////////////////////
 // main
 ////////////////////////////////////////////////////////////////////////////////////////////
-#ifdef _USE_PBR
 PSOutput main(PSInput input) {
 
 	PSOutput output = (PSOutput)0;
@@ -79,40 +76,3 @@ PSOutput main(PSInput input) {
 	return output;
 	
 }
-#else
-PSOutput main(PSInput input) {
-
-	PSOutput output = (PSOutput)0;
-	
-	//* Deferred Pass情報の取得
-	Surface surface;
-	surface.GetSurface(input.position.xy);
-	
-	//* Lightの情報を取得
-	float3 l       = -gTransform[input.instanceId].GetDirection(); //!< surfaceからlightへの方向ベクトル
-	float3 c_light = gParameter.color * gParameter.intensity;      //!< lightのcolor
-
-	//* cameraからの方向ベクトルを取得
-	float3 v = normalize(gCamera.GetPosition() - surface.position);
-	
-	//* 計算
-	float3 diffuse = CalculateDiffuseLambert(surface.normal, l) * surface.albedo;
-	
-	RayDesc desc;
-	desc.Origin    = surface.position;
-	desc.Direction = l;
-	desc.TMin      = 0.001f;
-	desc.TMax      = 10000.0f;
-
-	c_light *= gShadow.TraceShadow(desc);
-	// todo: 不必要な場合は、gShadow.TraceShadow()を呼び出さないようにする
-	
-	//* 出力
-	output.color.rgb = diffuse * c_light;
-	// func_unlit() = float3(0.0f, 0.0f, 0.0f), func_lit() = c_surface
-	
-	output.color.a = 1.0f;
-	
-	return output;
-}
-#endif

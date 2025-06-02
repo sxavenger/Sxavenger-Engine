@@ -82,7 +82,6 @@ void BetaSystemGameLoop::InitSystem() {
 	skylight_->Init({ 1024, 1024 });
 	skylight_->SetTexture("assets/textures/textureCube/studio_small_09_4k.dds");
 	skylight_->Update(true);
-
 }
 
 void BetaSystemGameLoop::TermSystem() {

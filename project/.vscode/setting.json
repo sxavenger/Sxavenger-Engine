@@ -1,0 +1,18 @@
+{
+	"editor.tokenColorCustomizations": {
+		"textMateRules": [
+			{
+				"scope": "support.function.hlsl",
+				"settings": {
+					"foreground": "#FF0000"
+				}
+			},
+			{
+				"scope": "support.function",
+				"settings": {
+					"foreground": "#FF0000"
+				}
+			}
+		]
+	}
+}

@@ -90,16 +90,6 @@ void CameraComponent::Init() {
 	UpdateProj();
 }
 
-void CameraComponent::CreateBuffer() {
-	if (buffer_ != nullptr) {
-		return;
-	}
-
-	buffer_ = std::make_unique<DxObject::DimensionBuffer<Camera>>();
-	buffer_->Create(SxavengerSystem::GetDxDevice(), 1);
-	(*buffer_)[0].Init();
-}
-
 const D3D12_GPU_VIRTUAL_ADDRESS& CameraComponent::GetGPUVirtualAddress() const {
 	Assert(buffer_ != nullptr, "camera buffer is not craete.");
 	return buffer_->GetGPUVirtualAddress();
@@ -133,10 +123,21 @@ const CameraComponent::Camera& CameraComponent::GetCamera() const {
 	return (*buffer_)[0];
 }
 
+void CameraComponent::CreateBuffer() {
+	if (buffer_ != nullptr) {
+		return;
+	}
+
+	buffer_ = std::make_unique<DxObject::DimensionBuffer<Camera>>();
+	buffer_->Create(SxavengerSystem::GetDxDevice(), 1);
+	(*buffer_)[0].Init();
+}
+
+
 void CameraComponent::PushLineFrustum() {
 	Vector3f frustumPoint[8] = {};
-	Matrix4x4 clipMatrix  = (*buffer_)[0].projInv;
-	Matrix4x4 worldMatrix = (*buffer_)[0].world;
+	const Matrix4x4& clipMatrix  = (*buffer_)[0].projInv;
+	const Matrix4x4& worldMatrix = (*buffer_)[0].world;
 
 	// far
 	frustumPoint[0] = Matrix4x4::Transform(Matrix4x4::Transform({ -1.0f, -1.0f, 1.0f }, clipMatrix), worldMatrix);
