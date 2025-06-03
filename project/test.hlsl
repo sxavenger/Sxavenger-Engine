@@ -14,6 +14,10 @@ PSOutput main(PSInput input) {
 
 	RayQuery<0> q;
 
+	const float4 main_col   = float4(1.0f, 1.0f, 1.0f, 1.0f);
+	const float4 thard_col  = float4(0.2f, 0.2f, 0.2f, 1.0f);
+	const float4 shadow_col = float4(0.1f, 0.1f, 0.1f, 1.0f);
+
 	if (NdotL >= 0.0f) {
 
 		// 影の計算
@@ -31,12 +35,12 @@ PSOutput main(PSInput input) {
 		);
 
 		if (q.Proceed()) { //!< hit判定
-			float t = q.CommittedRayT();
+			float t = q.CandidateTriangleRayT();
+			output.color = lerp(shadow_col, main_col, saturate(t / 10.0f));
 
-			output.color = lerp(float4(0.1f, 0.1f, 0.1f, 1.0f), float4(1.0f, 1.0f, 1.0f, 1.0f), saturate(t / 10.0f));
+		} else {
+			output.color = main_col;
 		}
-
-		output.color = float4(1.0f, 1.0f, 1.0f, 1.0f);
 		
 	} else {
 
@@ -56,12 +60,11 @@ PSOutput main(PSInput input) {
 
 		
 		if (q.Proceed()) { //!< hit判定
-			float t = q.CommittedRayT();
-
-			output.color = lerp(float4(0.1f, 0.1f, 0.1f, 1.0f), float4(0.5f, 0.5f, 0.5f, 1.0f), saturate(t / 10.0f));
+			float t = q.CandidateTriangleRayT();
+			output.color = lerp(shadow_col, thard_col, saturate(t / 10.0f));
 			
 		} else {
-			output.color = float4(0.1f, 0.1f, 0.1f, 1.0f);
+			output.color = thard_col;
 		}
 	}
 

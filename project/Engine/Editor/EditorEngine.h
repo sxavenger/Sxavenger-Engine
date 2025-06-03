@@ -53,7 +53,7 @@ public:
 	T* GetEditor();
 
 	template <BaseEditorDerived T>
-	T* TryGetEditor();
+	T* RequireEditor();
 
 	template <BaseEditorDerived T>
 	void ExecuteEditorFunction(const std::function<void(T*)>& function);
@@ -137,15 +137,6 @@ inline void EditorEngine::RemoveEditor() {
 
 template <BaseEditorDerived T>
 inline T* EditorEngine::GetEditor() {
-
-	constexpr const std::type_info* type = &typeid(T);
-
-	Assert(editors_.contains(type), "editor is not found.");
-	return static_cast<T*>(editors_.at(type).get());
-}
-
-template <BaseEditorDerived T>
-inline T* EditorEngine::TryGetEditor() {
 #ifdef _DEVELOPMENT
 
 	constexpr const std::type_info* type = &typeid(T);
@@ -159,8 +150,16 @@ inline T* EditorEngine::TryGetEditor() {
 }
 
 template <BaseEditorDerived T>
+inline T* EditorEngine::RequireEditor() {
+	T* editor = this->GetEditor<T>();
+
+	Assert(editor != nullptr, "require editor not registered.");
+	return editor;
+}
+
+template <BaseEditorDerived T>
 inline void EditorEngine::ExecuteEditorFunction(const std::function<void(T*)>& function) {
-	if (auto editor = this->TryGetEditor<T>()) {
+	if (auto editor = this->GetEditor<T>()) {
 		function(editor);
 	}
 }

@@ -41,10 +41,8 @@ void Texture::Load(const DirectXThreadContext* context, const std::filesystem::p
 		desc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
 
 		if (metadata.IsCubemap()) { //!< mipImageがcubeMapの場合
-			desc.ViewDimension                   = D3D12_SRV_DIMENSION_TEXTURECUBE;
-			desc.TextureCube.MostDetailedMip     = 0;
-			desc.TextureCube.MipLevels           = UINT_MAX;
-			desc.TextureCube.ResourceMinLODClamp = 0.0f;
+			desc.ViewDimension         = D3D12_SRV_DIMENSION_TEXTURECUBE;
+			desc.TextureCube.MipLevels = UINT_MAX;
 
 		} else {
 			// それ以外はTexture2D扱い
@@ -95,6 +93,13 @@ DirectX::ScratchImage Texture::LoadTexture(const std::filesystem::path& filepath
 			image
 		);
 
+	} else if (filepath.extension() == ".tga") {
+		hr = DirectX::LoadFromTGAFile(
+			filepath.generic_wstring().c_str(),
+			nullptr,
+			image
+		);
+
 	} else {
 		hr = DirectX::LoadFromWICFile(
 			filepath.generic_wstring().c_str(),
@@ -104,7 +109,7 @@ DirectX::ScratchImage Texture::LoadTexture(const std::filesystem::path& filepath
 		);
 	}
 
-	Assert(SUCCEEDED(hr), "Texture not found. filepath: " + filepath.generic_string());
+	Assert(SUCCEEDED(hr), "texture load failed. filepath: " + filepath.generic_string());
 
 	if (DirectX::IsCompressed(image.GetMetadata().format)) { //!< 圧縮formatかどうか調べる
 		return image;
@@ -121,7 +126,7 @@ DirectX::ScratchImage Texture::LoadTexture(const std::filesystem::path& filepath
 		0,
 		mipImage
 	);
-	Assert(SUCCEEDED(hr), "mip maps create failed.");
+	Assert(SUCCEEDED(hr), "mipmaps create failed.");
 
 	return mipImage;
 }

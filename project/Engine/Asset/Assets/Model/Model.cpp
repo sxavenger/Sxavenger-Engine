@@ -254,12 +254,11 @@ void Model::LoadMesh(const aiScene* aiScene) {
 	// mesh数のメモリ確保
 	meshes_.resize(aiScene->mNumMeshes);
 
-	// meshesの解析
-	std::for_each(std::execution::seq, meshes_.begin(), meshes_.end(), [this, aiScene](AssimpMesh& mesh) {
-		size_t meshIndex = &mesh - &meshes_.front(); //!< indexの取得
+	for (uint32_t meshIndex = 0; meshIndex < aiScene->mNumMeshes; ++meshIndex) {
 
 		// meshの取得
 		const aiMesh* aiMesh = aiScene->mMeshes[meshIndex];
+		AssimpMesh& mesh     = meshes_[meshIndex]; //!< move
 
 		{ //!< name
 			mesh.name = aiMesh->mName.C_Str();
@@ -358,7 +357,7 @@ void Model::LoadMesh(const aiScene* aiScene) {
 		{ //!< material
 			mesh.materialIndex = aiMesh->mMaterialIndex;
 		}
-	});
+	}
 }
 
 void Model::LoadMaterial(const aiScene* aiScene, const DirectXThreadContext* context, const std::filesystem::path& directory) {
@@ -367,12 +366,11 @@ void Model::LoadMaterial(const aiScene* aiScene, const DirectXThreadContext* con
 
 	std::unordered_map<std::filesystem::path, std::shared_ptr<Texture>> textures;
 
-	// materialsの解析
-	std::for_each(std::execution::seq, materials_.begin(), materials_.end(), [&](AssimpMaterial& material) {
-		size_t materialIndex = &material - &materials_.front(); //!< indexの取得
+	for (uint32_t materialIndex = 0; materialIndex < aiScene->mNumMaterials; ++materialIndex) {
 
 		// materialの取得
 		const aiMaterial* aiMaterial = aiScene->mMaterials[materialIndex];
+		AssimpMaterial& material     = materials_[materialIndex];
 
 		{ //!< Texture
 			// diffuseの取得
@@ -484,7 +482,8 @@ void Model::LoadMaterial(const aiScene* aiScene, const DirectXThreadContext* con
 		{ //!< Component
 			material.Create();
 		}
-	});
+	}
+
 }
 
 BornNode Model::ReadNode(aiNode* node) {

@@ -21,7 +21,7 @@ void PreviewGameLoop::Init(GameLoop::Context* context) {
 	context->SetProcess(GameLoop::Process::Init, std::nullopt, [this]() { InitGame(); });
 	context->SetProcess(GameLoop::Process::Term, std::nullopt, [this]() { TermGame(); });
 	context->SetProcess(GameLoop::Process::Update, std::nullopt, [this]() {
-		if (auto develop = sEditorEngine->TryGetEditor<DevelopEditor>()) {
+		if (auto develop = sEditorEngine->GetEditor<DevelopEditor>()) {
 			if (!develop->IsProcessRequired()) {
 				return;
 			}

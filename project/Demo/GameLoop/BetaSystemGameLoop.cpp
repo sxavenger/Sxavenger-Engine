@@ -30,7 +30,7 @@ void BetaSystemGameLoop::Init(GameLoop::Context* context) {
 	context->SetProcess(GameLoop::Process::Init, std::nullopt, [this]() { InitSystem(); });
 	context->SetProcess(GameLoop::Process::Term, std::nullopt, [this]() { TermSystem(); });
 	context->SetProcess(GameLoop::Process::Update, std::nullopt, [this]() {
-		if (auto develop = sEditorEngine->TryGetEditor<DevelopEditor>()) {
+		if (auto develop = sEditorEngine->GetEditor<DevelopEditor>()) {
 			if (!develop->IsProcessRequired()) {
 				return;
 			}
@@ -71,7 +71,8 @@ void BetaSystemGameLoop::InitSystem() {
 
 	camera_->AddComponent<CompositeProcessLayerComponent>();
 
-	auto texture = SxavengerAsset::TryImport<AssetTexture>("assets/textures/LUT/lut_greenish.png");
+	//auto texture = SxavengerAsset::TryImport<AssetTexture>("assets/textures/LUT/lut_greenish.png");
+	auto texture = SxavengerAsset::TryImport<AssetTexture>("assets/textures/LUT/LUT_2StripTable.tga");
 	auto lut = camera_->GetComponent<CompositeProcessLayerComponent>()->AddPostProcess<CompositeProcessLUT>();
 	lut->CreateTexture(SxavengerSystem::GetMainThreadContext(), texture, { 16, 16 });
 
