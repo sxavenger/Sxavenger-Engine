@@ -53,7 +53,7 @@ void Player::Awake() {
 
 	{
 		auto process = camera_->AddComponent<PostProcessLayerComponent>();
-		process->AddPostProcess<PostProcessExposure>();
+		process->AddPostProcess<PostProcessLocalExposure>();
 		process->AddPostProcess<PostProcessDoF>();
 		process->AddPostProcess<PostProcessBloom>();
 	}

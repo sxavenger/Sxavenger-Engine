@@ -14,6 +14,12 @@ void FRenderCoreProcess::Init() {
 	//!< bloom
 	CreatePipeline(ProcessType::Bloom, "PostProcess/Bloom.cs.hlsl");
 
+	//!< auto exposure
+	CreatePipeline(ProcessType::AutoExposureLuminance, "PostProcess/Exposure/AutoExposureLuminance.cs.hlsl");
+	CreatePipeline(ProcessType::AutoExposureAverage,   "PostProcess/Exposure/AutoExposureAverage.cs.hlsl");
+	CreatePipeline(ProcessType::AutoExposureApply,     "PostProcess/Exposure/AutoExposureApply.cs.hlsl");
+
+
 	//!< exposure
 	CreatePipeline(ProcessType::Exposure, "PostProcess/Exposure.cs.hlsl");
 

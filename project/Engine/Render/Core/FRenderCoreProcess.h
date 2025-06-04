@@ -21,6 +21,9 @@ public:
 	enum class ProcessType : uint32_t {
 		Environment,
 		Bloom,
+		AutoExposureLuminance,
+		AutoExposureAverage,
+		AutoExposureApply,
 		Exposure,
 		DoF,
 		Vignette,

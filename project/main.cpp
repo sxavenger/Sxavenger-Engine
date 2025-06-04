@@ -19,18 +19,16 @@
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 	std::unique_ptr<GameLoop::Collection> collection = std::make_unique<GameLoop::Collection>();
-	collection->Push<FeatureLevelGameLoop>();
-	//collection->Push<SxavengerEngineGameLoop>();
-	//collection->Push<EditorEngineGameLoop>();
+	//collection->Push<FeatureLevelGameLoop>();
 	
-	//collection->Push<BetaSystemGameLoop>();
+	collection->Push<SxavengerEngineGameLoop>();
+	collection->Push<EditorEngineGameLoop>();
+	
+	collection->Push<BetaSystemGameLoop>();
 	//collection->Push<DemoGameLoop>();
 	//collection->Push<PreviewGameLoop>();
 
 	collection->Run();
-
-
-
 
 	return 0;
 }

@@ -145,7 +145,7 @@
     <ClCompile Include="Engine\Component\Components\PostProcessLayer\PostProcessLayerComponent.cpp" />
     <ClCompile Include="Demo\GameLoop\PreviewGameLoop.cpp" />
     <ClCompile Include="Engine\Render\Common\FProcessTexture.cpp" />
-    <ClCompile Include="Engine\Component\Components\PostProcessLayer\PostProcessExposure.cpp" />
+    <ClCompile Include="Engine\Component\Components\PostProcessLayer\PostProcessLocalExposure.cpp" />
     <ClCompile Include="Engine\Component\Components\PostProcessLayer\PostProcessBloom.cpp" />
     <ClCompile Include="Engine\Component\Components\PostProcessLayer\PostProcessDoF.cpp" />
     <ClCompile Include="Engine\Editor\Editors\AssetEditor.cpp" />
@@ -163,6 +163,7 @@
     <ClCompile Include="Demo\Particle\LeadParticle.cpp" />
     <ClCompile Include="Engine\Adapter\Actor\PivotCameraActor.cpp" />
     <ClCompile Include="Engine\GameLoop\FeatureLevelGameLoop.cpp" />
+    <ClCompile Include="Engine\Component\Components\PostProcessLayer\PostProcessAutoExposure.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\System\Window\Window.h" />
@@ -328,7 +329,7 @@
     <ClInclude Include="Engine\Component\Components\PostProcessLayer\BasePostProcess.h" />
     <ClInclude Include="Demo\GameLoop\PreviewGameLoop.h" />
     <ClInclude Include="Engine\Render\Common\FProcessTexture.h" />
-    <ClInclude Include="Engine\Component\Components\PostProcessLayer\PostProcessExposure.h" />
+    <ClInclude Include="Engine\Component\Components\PostProcessLayer\PostProcessLocalExposure.h" />
     <ClInclude Include="Engine\Component\Components\PostProcessLayer\PostProcessBloom.h" />
     <ClInclude Include="Engine\Component\Components\PostProcessLayer\PostProcessDoF.h" />
     <ClInclude Include="Engine\Editor\Editors\AssetEditor.h" />
@@ -348,6 +349,7 @@
     <ClInclude Include="Engine\Adapter\Actor\PivotCameraActor.h" />
     <ClInclude Include="Engine\GameLoop\FeatureLevelGameLoop.h" />
     <ClInclude Include="Lib\Sxl\Expected.h" />
+    <ClInclude Include="Engine\Component\Components\PostProcessLayer\PostProcessAutoExposure.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

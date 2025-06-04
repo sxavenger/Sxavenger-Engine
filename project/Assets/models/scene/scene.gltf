@@ -32,7 +32,8 @@
 				14,
 				15,
 				16,
-				17
+				17,
+				18
 			]
 		}
 	],
@@ -211,6 +212,20 @@
 		},
 		{
 			"mesh":11,
+			"name":"Cube.011",
+			"scale":[
+				4,
+				4,
+				4
+			],
+			"translation":[
+				-52.66014099121094,
+				8.715806007385254,
+				55.415367126464844
+			]
+		},
+		{
+			"mesh":12,
 			"name":"Cube.005",
 			"scale":[
 				10,
@@ -224,7 +239,7 @@
 			]
 		},
 		{
-			"mesh":12,
+			"mesh":13,
 			"name":"\u5e8a",
 			"scale":[
 				87.11000061035156,
@@ -238,7 +253,7 @@
 			]
 		},
 		{
-			"mesh":13,
+			"mesh":14,
 			"name":"Cube.006",
 			"scale":[
 				10,
@@ -252,7 +267,7 @@
 			]
 		},
 		{
-			"mesh":14,
+			"mesh":15,
 			"name":"Cube.007",
 			"scale":[
 				10,
@@ -266,7 +281,7 @@
 			]
 		},
 		{
-			"mesh":15,
+			"mesh":16,
 			"name":"Cube.008",
 			"scale":[
 				10,
@@ -280,7 +295,7 @@
 			]
 		},
 		{
-			"mesh":16,
+			"mesh":17,
 			"name":"Cube.009",
 			"scale":[
 				10,
@@ -367,50 +382,14 @@
 			"doubleSided":true,
 			"name":"\u67f1",
 			"normalTexture":{
-				"extensions":{
-					"KHR_texture_transform":{
-						"offset":[
-							0,
-							0.5
-						],
-						"scale":[
-							6,
-							0.5
-						]
-					}
-				},
 				"index":3
 			},
 			"pbrMetallicRoughness":{
 				"baseColorTexture":{
-					"extensions":{
-						"KHR_texture_transform":{
-							"offset":[
-								0,
-								0.5
-							],
-							"scale":[
-								6,
-								0.5
-							]
-						}
-					},
 					"index":4
 				},
 				"metallicFactor":0,
 				"metallicRoughnessTexture":{
-					"extensions":{
-						"KHR_texture_transform":{
-							"offset":[
-								0,
-								0.5
-							],
-							"scale":[
-								6,
-								0.5
-							]
-						}
-					},
 					"index":5
 				}
 			}
@@ -419,6 +398,18 @@
 			"doubleSided":true,
 			"name":"wall.001",
 			"normalTexture":{
+				"extensions":{
+					"KHR_texture_transform":{
+						"offset":[
+							0,
+							-11
+						],
+						"scale":[
+							6,
+							12
+						]
+					}
+				},
 				"index":6
 			},
 			"pbrMetallicRoughness":{
@@ -458,18 +449,6 @@
 			"doubleSided":true,
 			"name":"Floor.001",
 			"normalTexture":{
-				"extensions":{
-					"KHR_texture_transform":{
-						"offset":[
-							0,
-							-11
-						],
-						"scale":[
-							12,
-							12
-						]
-					}
-				},
 				"index":9
 			},
 			"pbrMetallicRoughness":{
@@ -489,18 +468,6 @@
 					"index":10
 				},
 				"metallicRoughnessTexture":{
-					"extensions":{
-						"KHR_texture_transform":{
-							"offset":[
-								0,
-								-11
-							],
-							"scale":[
-								12,
-								12
-							]
-						}
-					},
 					"index":11
 				}
 			}
@@ -510,9 +477,9 @@
 			"name":"Material",
 			"pbrMetallicRoughness":{
 				"baseColorFactor":[
-					0.177582249045372,
-					0.8005756139755249,
-					0.7574671506881714,
+					0.16286319494247437,
+					0.29397526383399963,
+					0.35831713676452637,
 					1
 				],
 				"roughnessFactor":0
@@ -684,7 +651,7 @@
 			]
 		},
 		{
-			"name":"Cube",
+			"name":"Cube.012",
 			"primitives":[
 				{
 					"attributes":{
@@ -697,7 +664,7 @@
 			]
 		},
 		{
-			"name":"Cube.001",
+			"name":"Cube",
 			"primitives":[
 				{
 					"attributes":{
@@ -710,7 +677,7 @@
 			]
 		},
 		{
-			"name":"Cube.014",
+			"name":"Cube.001",
 			"primitives":[
 				{
 					"attributes":{
@@ -723,7 +690,7 @@
 			]
 		},
 		{
-			"name":"Cube.015",
+			"name":"Cube.014",
 			"primitives":[
 				{
 					"attributes":{
@@ -736,7 +703,7 @@
 			]
 		},
 		{
-			"name":"Cube.016",
+			"name":"Cube.015",
 			"primitives":[
 				{
 					"attributes":{
@@ -749,13 +716,26 @@
 			]
 		},
 		{
-			"name":"Cube.017",
+			"name":"Cube.016",
 			"primitives":[
 				{
 					"attributes":{
 						"POSITION":57,
 						"NORMAL":58,
 						"TEXCOORD_0":59
+					},
+					"indices":15
+				}
+			]
+		},
+		{
+			"name":"Cube.017",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":60,
+						"NORMAL":61,
+						"TEXCOORD_0":62
 					},
 					"indices":15
 				}
@@ -816,47 +796,47 @@
 		{
 			"mimeType":"image/png",
 			"name":"asphalt_06_nor_gl_1k",
-			"uri":"asphalt_06_nor_gl_1k.png"
+			"uri":"textures/asphalt_06_nor_gl_1k.png"
 		},
 		{
 			"mimeType":"image/jpeg",
-			"name":"asphalt_06_ao_1k",
-			"uri":"asphalt_06_ao_1k.jpg"
+			"name":"asphalt_06_ao_1k.jpg",
+			"uri":"textures/asphalt_06_ao_1k_jpg.jpg"
 		},
 		{
 			"mimeType":"image/png",
 			"name":"asphalt_06_rough_1k",
-			"uri":"asphalt_06_rough_1k.png"
+			"uri":"textures/asphalt_06_rough_1k.png"
 		},
 		{
 			"mimeType":"image/png",
 			"name":"marble_tiles_nor_gl_1k",
-			"uri":"marble_tiles_nor_gl_1k.png"
+			"uri":"textures/marble_tiles_nor_gl_1k.png"
 		},
 		{
 			"mimeType":"image/png",
-			"name":"marble_tiles_ao_1k",
-			"uri":"marble_tiles_ao_1k.png"
+			"name":"marble_tiles_ao_1k.png",
+			"uri":"textures/marble_tiles_ao_1k_png.png"
 		},
 		{
 			"mimeType":"image/png",
-			"name":"marble_tiles_arm_1k",
-			"uri":"marble_tiles_arm_1k.png"
+			"name":"marble_tiles_arm_1k.png",
+			"uri":"textures/marble_tiles_arm_1k_png.png"
 		},
 		{
 			"mimeType":"image/png",
 			"name":"beige_wall_001_nor_gl_1k",
-			"uri":"beige_wall_001_nor_gl_1k.png"
+			"uri":"textures/beige_wall_001_nor_gl_1k.png"
 		},
 		{
 			"mimeType":"image/png",
-			"name":"beige_wall_001_ao_1k",
-			"uri":"beige_wall_001_ao_1k.png"
+			"name":"beige_wall_001_ao_1k.png",
+			"uri":"textures/beige_wall_001_ao_1k_png.png"
 		},
 		{
 			"mimeType":"image/png",
-			"name":"beige_wall_001_arm_1k",
-			"uri":"beige_wall_001_arm_1k.png"
+			"name":"beige_wall_001_arm_1k.png",
+			"uri":"textures/beige_wall_001_arm_1k_png.png"
 		}
 	],
 	"accessors":[
@@ -1399,6 +1379,34 @@
 			"componentType":5126,
 			"count":24,
 			"type":"VEC2"
+		},
+		{
+			"bufferView":60,
+			"componentType":5126,
+			"count":24,
+			"max":[
+				1,
+				1,
+				1
+			],
+			"min":[
+				-1,
+				-1,
+				-1
+			],
+			"type":"VEC3"
+		},
+		{
+			"bufferView":61,
+			"componentType":5126,
+			"count":24,
+			"type":"VEC3"
+		},
+		{
+			"bufferView":62,
+			"componentType":5126,
+			"count":24,
+			"type":"VEC2"
 		}
 	],
 	"bufferViews":[
@@ -1761,6 +1769,24 @@
 			"byteLength":192,
 			"byteOffset":1219084,
 			"target":34962
+		},
+		{
+			"buffer":0,
+			"byteLength":288,
+			"byteOffset":1219276,
+			"target":34962
+		},
+		{
+			"buffer":0,
+			"byteLength":288,
+			"byteOffset":1219564,
+			"target":34962
+		},
+		{
+			"buffer":0,
+			"byteLength":192,
+			"byteOffset":1219852,
+			"target":34962
 		}
 	],
 	"samplers":[
@@ -1771,7 +1797,7 @@
 	],
 	"buffers":[
 		{
-			"byteLength":1219276,
+			"byteLength":1220044,
 			"uri":"scene.bin"
 		}
 	]

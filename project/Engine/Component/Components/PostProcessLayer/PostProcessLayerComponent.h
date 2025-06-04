@@ -9,7 +9,7 @@
 #include "../Camera/CameraComponent.h"
 
 //* process
-#include "PostProcessExposure.h"
+#include "PostProcessLocalExposure.h"
 #include "PostProcessBloom.h"
 #include "PostProcessDoF.h"
 
