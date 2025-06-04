@@ -72,6 +72,8 @@ public:
 
 		bool isSupportTearing;
 
+		bool isSupportInlineRaytracing;
+
 	};
 
 public:

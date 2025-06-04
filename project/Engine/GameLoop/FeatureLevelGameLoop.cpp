@@ -108,11 +108,14 @@ void FeatureLevelGameLoop::CheckSupport() {
 	
 	{ //!< shader model
 
-		D3D12_FEATURE_DATA_SHADER_MODEL shaderModel = { D3D_HIGHEST_SHADER_MODEL };
-		auto hr = device_->CheckFeatureSupport(D3D12_FEATURE_SHADER_MODEL, &shaderModel, sizeof(D3D12_FEATURE_DATA_SHADER_MODEL));
+		for (uint32_t model = D3D_HIGHEST_SHADER_MODEL; model >= D3D_SHADER_MODEL_5_1; --model) {
+			D3D12_FEATURE_DATA_SHADER_MODEL shaderModel = { D3D_HIGHEST_SHADER_MODEL };
+			auto hr = device_->CheckFeatureSupport(D3D12_FEATURE_SHADER_MODEL, &shaderModel, sizeof(D3D12_FEATURE_DATA_SHADER_MODEL));
 
-		if (SUCCEEDED(hr)) {
-			file_ << std::format("[Feature Support::D3D12_FEATURE_SHADER_MODEL]: 0x{:x}", static_cast<uint32_t>(shaderModel.HighestShaderModel)) << std::endl;
+			if (SUCCEEDED(hr)) {
+				file_ << std::format("[Feature Support::D3D12_FEATURE_SHADER_MODEL]: 0x{:x}", static_cast<uint32_t>(shaderModel.HighestShaderModel)) << std::endl;
+				break;
+			}
 		}
 	}
 

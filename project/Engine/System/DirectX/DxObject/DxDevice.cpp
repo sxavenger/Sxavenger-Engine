@@ -175,9 +175,13 @@ bool Device::CheckRayTracingEnable() {
 	D3D12_FEATURE_DATA_D3D12_OPTIONS5 option = {};
 	auto hr = device_->CheckFeatureSupport(D3D12_FEATURE_D3D12_OPTIONS5, &option, sizeof(option));
 
-	if (FAILED(hr) || option.RaytracingTier < D3D12_RAYTRACING_TIER_1_1) {
-		EngineLog("warning : RayTracing is not supported. D3D12_RAYTRACING_TIER_1_1 or less.");
-		return false; //!< Raytracing 1.1 未満
+	if (FAILED(hr) || option.RaytracingTier < D3D12_RAYTRACING_TIER_1_0) {
+		EngineLog("warning : raytracing is not supported.");
+		return false; //!< Raytracingがサポートされていない
+	}
+
+	if (option.RaytracingTier >= D3D12_RAYTRACING_TIER_1_1) {
+		EngineLog("warning : raytracing is not supported.");
 	}
 	
 	return true;
