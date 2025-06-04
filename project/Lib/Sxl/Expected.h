@@ -7,7 +7,7 @@
 #include "SxavengerLibrary.h"
 
 //* c++
-#include <format>
+#include <stdexcept>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Sxl
@@ -15,26 +15,41 @@
 _SXL_NAMESPACE_BEGIN
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// BaseFormatter structure
+// ExpectedStatus enum class
 ////////////////////////////////////////////////////////////////////////////////////////////
-template <class T>
-struct BaseFormatter {
+enum class ExpectedStatus : bool {
+	None      = false,
+	Exception = true
+};
+
+////////////////////////////////////////////////////////////////////////////////////////////
+// Expected class
+////////////////////////////////////////////////////////////////////////////////////////////
+template <class _Ty, class _Error>
+class Expected {
 public:
 
 	//=========================================================================================
 	// public methods
 	//=========================================================================================
 
-	// デフォルトのフォーマットロジック
-	constexpr auto parse(std::format_parse_context& ctx) {
-		return ctx.begin();
-	}
+	const _Error& What() const {
+		if (status_ != ExpectedStatus::Exception) {
+			throw std::runtime_error("Expected does not contain an error.");
+		}
 
-	// 書式設定のロジックを派生クラスがカスタマイズ
-	template <typename FormatContext>
-	auto format(const T& value, FormatContext& ctx) const {
-		return value.format(ctx); // 派生クラスの format メソッドを呼び出す
-	}
+		return error_;
+	};
+
+private:
+
+	//=========================================================================================
+	// private variables
+	//=========================================================================================
+
+	_Ty value_;
+	_Error error_;
+	ExpectedStatus status_ = ExpectedStatus::None;
 
 };
 

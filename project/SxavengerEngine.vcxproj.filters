@@ -162,6 +162,7 @@
     <ClCompile Include="Engine\Adapter\Actor\ControllableCameraActor.cpp" />
     <ClCompile Include="Demo\Particle\LeadParticle.cpp" />
     <ClCompile Include="Engine\Adapter\Actor\PivotCameraActor.cpp" />
+    <ClCompile Include="Engine\GameLoop\FeatureLevelGameLoop.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\System\Window\Window.h" />
@@ -345,6 +346,8 @@
     <ClInclude Include="Engine\Adapter\Actor\ControllableCameraActor.h" />
     <ClInclude Include="Demo\Particle\LeadParticle.h" />
     <ClInclude Include="Engine\Adapter\Actor\PivotCameraActor.h" />
+    <ClInclude Include="Engine\GameLoop\FeatureLevelGameLoop.h" />
+    <ClInclude Include="Lib\Sxl\Expected.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

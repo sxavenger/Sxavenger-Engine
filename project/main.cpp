@@ -6,6 +6,7 @@
 #include <Engine/System/Runtime/GameLoop/GameLoop.h>
 
 //* gameloop
+#include <Engine/GameLoop/FeatureLevelGameLoop.h>
 #include <Engine/GameLoop/SxavengerEngineGameLoop.h>
 #include <Engine/GameLoop/EditorEngineGameLoop.h>
 #include <Demo/GameLoop/BetaSystemGameLoop.h>
@@ -18,10 +19,11 @@
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 	std::unique_ptr<GameLoop::Collection> collection = std::make_unique<GameLoop::Collection>();
-	collection->Push<SxavengerEngineGameLoop>();
-	collection->Push<EditorEngineGameLoop>();
-
-	collection->Push<BetaSystemGameLoop>();
+	collection->Push<FeatureLevelGameLoop>();
+	//collection->Push<SxavengerEngineGameLoop>();
+	//collection->Push<EditorEngineGameLoop>();
+	
+	//collection->Push<BetaSystemGameLoop>();
 	//collection->Push<DemoGameLoop>();
 	//collection->Push<PreviewGameLoop>();
 
