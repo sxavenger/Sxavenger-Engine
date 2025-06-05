@@ -53,7 +53,9 @@ void BetaSystemGameLoop::InitSystem() {
 	main_ = SxavengerSystem::CreateMainWindow(kMainWindowSize, L"sxavenger engine beta window").lock();
 	main_->SetIcon("packages/icon/SxavengerEngineIcon.ico", { 32, 32 });
 
-	camera_ = ComponentHelper::CreateCameraMonoBehaviour();
+	camera_ = std::make_unique<ControllableCameraActor>();
+	camera_->Init();
+	camera_->GetComponent<CameraComponent>()->SetTag(CameraComponent::Tag::GameCamera);
 
 	SxavengerAsset::TryImport<AssetModel>("assets/models/scene/scene.gltf");
 	SxavengerAsset::TryImport<AssetModel>("assets/models/PBR_Sphere_Test/model/PBR_Sphere.gltf");
@@ -95,6 +97,7 @@ void BetaSystemGameLoop::UpdateSystem() {
 	//-----------------------------------------------------------------------------------------
 
 	//atmosphere_->Update();
+	camera_->Update();
 
 	//-----------------------------------------------------------------------------------------
 	// SystemUpdate...?

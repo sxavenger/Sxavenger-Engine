@@ -338,7 +338,9 @@ void RenderSceneEditor::ShowSceneWindow() {
 		ImGui::SetWindowFocus();
 	}
 
-	if (ImGui::IsWindowFocused()) {
+	isFocusSceneWindow_ = ImGui::IsWindowFocused();
+
+	if (isFocusSceneWindow_) {
 		UpdateCamera();
 	}
 
@@ -367,6 +369,8 @@ void RenderSceneEditor::ShowGameWindow() {
 		FMainRender::GetInstance()->GetTextures()->GetGBuffer(FRenderTargetTextures::GBufferLayout::UI)->GetGPUHandleSRV(),
 		kMainWindowSize
 	);
+
+	isFocusGameWindow_ = ImGui::IsWindowFocused();
 
 	ImGui::End();
 	ImGui::PopStyleVar();

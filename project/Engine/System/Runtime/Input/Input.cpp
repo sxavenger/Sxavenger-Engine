@@ -127,6 +127,7 @@ void MouseInput::Update() {
 	// マウスの入力状態を取得
 	mouseDevice_->GetDeviceState(sizeof(mouse_.first), &mouse_.first);
 
+	ShowCousor(true);
 }
 
 Vector2i MouseInput::GetPosition() const {
@@ -150,6 +151,16 @@ Vector2i MouseInput::GetPosition(const Window* window) const {
 
 Vector2i MouseInput::GetDeltaPosition() const {
 	return { mouse_.first.lX, mouse_.first.lY };
+}
+
+void MouseInput::SetPosition(const Vector2i& position) const {
+	POINT point = { position.x, position.y };
+	ScreenToClient(currentHwnd_, &point);
+	SetCursorPos(point.x, point.y);
+}
+
+void MouseInput::ShowCousor(bool isShow) const {
+	while (isShow ? ShowCursor(isShow) < 0 : ShowCursor(isShow) >= 0) {}
 }
 
 bool MouseInput::IsPress(MouseId id) const {

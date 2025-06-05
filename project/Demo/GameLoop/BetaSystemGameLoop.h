@@ -17,6 +17,7 @@
 
 #include <Engine/Adapter/Actor/AtmosphereActor.h>
 #include <Engine/Adapter/Actor/SkyLightActor.h>
+#include <Engine/Adapter/Actor/ControllableCameraActor.h>
 
 //* demo
 #include <Demo/Entity/Player.h>
@@ -44,7 +45,8 @@ private:
 
 	std::shared_ptr<GameWindow> main_;
 
-	std::unique_ptr<MonoBehaviour> camera_;
+	//std::unique_ptr<MonoBehaviour> camera_;
+	std::unique_ptr<ControllableCameraActor> camera_;
 
 	std::unique_ptr<MonoBehaviour> lightA_;
 	std::unique_ptr<MonoBehaviour> lightB_;

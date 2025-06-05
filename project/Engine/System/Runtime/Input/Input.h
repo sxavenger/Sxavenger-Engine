@@ -124,6 +124,12 @@ public:
 
 	Vector2i GetDeltaPosition() const;
 
+	void SetPosition(const Vector2i& position) const;
+
+	//* cursor option *//
+
+	void ShowCousor(bool isShow) const;
+
 	//* mouse input option *//
 
 	bool IsPress(MouseId id) const;

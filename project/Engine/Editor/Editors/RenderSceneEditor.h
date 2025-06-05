@@ -55,6 +55,12 @@ public:
 
 	void ManipulateCanvas(MonoBehaviour* behaviour);
 
+	//* getter *//
+
+	bool IsFocusGameWindow() const { return isFocusGameWindow_; }
+
+	bool IsForcusSceneWindow() const { return isFocusSceneWindow_; }
+
 private:
 
 	////////////////////////////////////////////////////////////////////////////////////////////
@@ -105,14 +111,12 @@ private:
 
 	FSceneRenderer::Config config_ = {};
 
+	bool isFocusGameWindow_  = false;
+	bool isFocusSceneWindow_ = false;
+
 	//* parameter *//
 
 	FRenderTargetTextures::GBufferLayout layout_ = FRenderTargetTextures::GBufferLayout::Main;
-
-	//* window *//
-
-	std::shared_ptr<GameWindow> window_;
-	// todo: screen window の描画
 
 	//* camera *//
 
