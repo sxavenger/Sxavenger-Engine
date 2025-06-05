@@ -39,7 +39,7 @@ void PostProcessLocalExposure::Init() {
 	parameter_->Create(SxavengerSystem::GetDxDevice(), 1);
 	parameter_->At(0).Init();
 
-	name_ = "Exposure";
+	name_ = "Local Exposure";
 }
 
 void PostProcessLocalExposure::Process(const DirectXThreadContext* context, FRenderTargetTextures* textures, const CameraComponent* camera) {

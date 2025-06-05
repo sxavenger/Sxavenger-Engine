@@ -6,6 +6,7 @@
 //* DXOBJECT
 #include "DxObjectCommon.h"
 #include "DxDimensionBuffer.h"
+#include "DxCommandContext.h"
 
 //* c++
 
@@ -33,6 +34,8 @@ public:
 	void Create(Device* device, uint32_t size);
 
 	void Release();
+
+	void Barrier(CommandContext* context);
 
 private:
 };
@@ -83,6 +86,15 @@ inline void UnorderedDimensionBuffer<T>::Release() {
 	}
 
 	size_ = NULL;
+}
+
+template <class T>
+inline void UnorderedDimensionBuffer<T>::Barrier(CommandContext* context) {
+	D3D12_RESOURCE_BARRIER barrier = {};
+	barrier.Type          = D3D12_RESOURCE_BARRIER_TYPE_UAV;
+	barrier.UAV.pResource = GetResource();
+
+	context->GetCommandList()->ResourceBarrier(1, &barrier);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////

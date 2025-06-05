@@ -96,6 +96,11 @@ ComPtr<IDxcBlob> ShaderCompiler::Compile(
 		arguments.emplace_back(L"_COMPUTE");
 	}
 
+	if (SxavengerConfig::GetSupport().isSupportInlineRaytracing) {
+		arguments.emplace_back(L"-D");
+		arguments.emplace_back(L"_INLINE_RAYTRACING");
+	}
+
 	// compile
 	ComPtr<IDxcResult> shaderResult;
 	hr = compiler_->Compile(

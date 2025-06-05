@@ -26,12 +26,12 @@ void Device::Init() {
 	// サポートの確認
 	Assert(CheckShaderModel(), "shader model is not over kHeighestShaderModel.");
 
-	isRayTracingEnabled_ = CheckRayTracingEnable();
+	isRayTracingEnabled_ = CheckRaytracingEnable();
 	isMeshShaderEnabled_ = CheckMeshShaderEnable();
 
 	// 仮でAssertを出しておく
 	Assert(isRayTracingEnabled_, "Raytracing version failed.");
-	Assert(isMeshShaderEnabled_, "Mesh shader version failed.");
+	//Assert(isMeshShaderEnabled_, "Mesh shader version failed.");
 
 	EngineLog("[_DXOBJECT]::Device complete init.");
 }
@@ -170,8 +170,8 @@ bool Device::CheckShaderModel() {
 	return true;
 }
 
-bool Device::CheckRayTracingEnable() {
-	// RayTracingのサポートのチェック
+bool Device::CheckRaytracingEnable() {
+	// Raytracingのサポートのチェック
 	D3D12_FEATURE_DATA_D3D12_OPTIONS5 option = {};
 	auto hr = device_->CheckFeatureSupport(D3D12_FEATURE_D3D12_OPTIONS5, &option, sizeof(option));
 
@@ -180,10 +180,12 @@ bool Device::CheckRayTracingEnable() {
 		return false; //!< Raytracingがサポートされていない
 	}
 
-	if (option.RaytracingTier >= D3D12_RAYTRACING_TIER_1_1) {
-		EngineLog("warning : raytracing is not supported.");
+	if (option.RaytracingTier < D3D12_RAYTRACING_TIER_1_1) {
+		EngineLog("warning : inline raytracing is not supported.");
+		return true;
 	}
-	
+
+	SxavengerConfig::GetSupport().isSupportInlineRaytracing = true;
 	return true;
 }
 

@@ -28,7 +28,7 @@ void main(uint3 dispatchThreadId : SV_DispatchThreadID) {
 
 	[unroll]
 	for (uint cutoff = (_GROUP_SIZE >> 1); cutoff > 0; cutoff >>= 1) {
-		if (uint(dispatchThreadId.x) < cutoff) {
+		if (dispatchThreadId.x < cutoff) {
 			gHistogramShared[dispatchThreadId.x] += gHistogramShared[dispatchThreadId.x + cutoff];
 		}
 
@@ -43,7 +43,7 @@ void main(uint3 dispatchThreadId : SV_DispatchThreadID) {
 	}
 
 	float weightedLogAverage = (sumHistogram / max(kPixelNum - float(countBin), 1.0f)) - 1.0f;
-	float weightedAvgLum     = exp2(((weightedLogAverage / 254.0) * kLogLuminanceRange) + gParameter.minLogLuminance);
+	float weightedAvgLum     = exp2(((weightedLogAverage / 254.0f) * kLogLuminanceRange) + gParameter.minLogLuminance);
 
 	float lumLastFrame = gAverageLuminance[0];
 	float adaptedLum   = lumLastFrame + (weightedAvgLum - lumLastFrame) * gParameter.timeCoeff;

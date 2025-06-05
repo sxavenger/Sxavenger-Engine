@@ -64,6 +64,7 @@ struct InlineShadow {
 	//=========================================================================================
 
 	float TraceShadow(RayDesc desc) {
+#ifdef _INLINE_RAYTRACING
 		if (strength <= 0.0f) {
 			return 1.0f;
 		}
@@ -80,7 +81,7 @@ struct InlineShadow {
 		if (q.Proceed()) {
 			return 1.0f - strength;
 		}
-
+#endif
 		return 1.0f;
 	}
 	

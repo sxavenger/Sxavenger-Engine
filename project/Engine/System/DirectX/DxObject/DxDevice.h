@@ -91,7 +91,7 @@ private:
 	void CreateInfoQueue();
 
 	bool CheckShaderModel();
-	bool CheckRayTracingEnable();
+	bool CheckRaytracingEnable();
 	bool CheckMeshShaderEnable();
 
 	bool CheckLaunchFromPIX();

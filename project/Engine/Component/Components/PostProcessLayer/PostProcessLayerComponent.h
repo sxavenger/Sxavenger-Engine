@@ -10,6 +10,7 @@
 
 //* process
 #include "PostProcessLocalExposure.h"
+#include "PostProcessAutoExposure.h"
 #include "PostProcessBloom.h"
 #include "PostProcessDoF.h"
 
