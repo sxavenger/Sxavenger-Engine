@@ -76,8 +76,7 @@ float3 ApproximateBRDF(float3 diffuseAlbedo, float3 specularAlbedo, float3 n, fl
 	float3 diffuse = diffuseLight * diffuseAlbedo;
 	float3 specular = specularLight * (specularAlbedo * brdf.r + brdf.g);
 
-	return diffuse + specular;
-	//return float3(brdf.r, brdf.g, 0.0f);
+	return /*diffuse +*/ specular;
 
 }
 

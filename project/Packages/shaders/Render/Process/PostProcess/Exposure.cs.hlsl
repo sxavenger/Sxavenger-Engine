@@ -17,7 +17,7 @@ Texture2D<float4> gInput    : register(t0); //!< input texture
 RWTexture2D<float4> gOutput : register(u0); //!< output texture
 
 struct Parameter {
-	float f;            //!< 絞り
+	float aperture;     //!< 絞り [F値]
 	float shutterSpeed; //!< シャッタースピード(Shutter Speed) [1/sec]
 	float iso;          //!< ISO感度(ISO)
 	float compensation; //!< 露出補正(Exposure Compensation)
@@ -43,9 +43,9 @@ void main(uint3 dispatchThreadId : SV_DispatchThreadID) {
 		return;
 	}
 
-	float t = 1.0f / gParameter.shutterSpeed;
+	float s = 1.0f / gParameter.shutterSpeed;
 	
-	float ev100 = log2((gParameter.f * gParameter.f / t) * (100.0f / gParameter.iso));
+	float ev100 = log2((gParameter.aperture * gParameter.aperture / s) * (100.0f / gParameter.iso));
 	float exposure = 1.0f / exp2(ev100 - gParameter.compensation);
 	float3 output  = input.rgb * exposure;
 

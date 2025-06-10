@@ -66,6 +66,10 @@ public:
 
 	const TransformComponent* GetTransform() const;
 
+	//* serialization option *//
+
+	//virtual json PerseToJson() const override
+
 private:
 
 	//=========================================================================================

@@ -68,7 +68,7 @@ PSOutput main(PSInput input) {
 	float d  = DistributionFunction(NdotH, surface.roughness);
 	float g  = GeometricAttenuation(NdotV, NdotL, surface.roughness);
 
-	float3 diffuseBRDF  = DiffuseBRDF(diffuseAlbedo); //!< fresnel値は考慮しない方がsampleに近かった.
+	float3 diffuseBRDF  = DiffuseBRDF(diffuseAlbedo);
 	float3 specularBRDF = SpecularBRDF(f, g, d, NdotL, NdotV);
 
 	output.color.rgb = (diffuseBRDF + specularBRDF) * NdotL * c_light;

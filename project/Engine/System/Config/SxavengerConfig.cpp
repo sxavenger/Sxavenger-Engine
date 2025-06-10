@@ -24,6 +24,9 @@ SxavengerConfig::Config::Config() {
 	//* frame rate lock
 	isLockFrameRate  = true;
 	targetFrameRate  = 60.0f;
+
+	//* shader optimization
+	isEnableShaderOptimization = true;
 }
 
 void SxavengerConfig::Config::Load(const std::filesystem::path& filepath) {
@@ -59,16 +62,12 @@ void SxavengerConfig::Config::Load(const std::filesystem::path& filepath) {
 	if (data.contains("targetFrameRate")) {
 		targetFrameRate = data.at("targetFrameRate");
 	}
+
+	//* shader optimization
+	if (data.contains("isEnableShaderOptimization")) {
+		isEnableShaderOptimization = data.at("isEnableShaderOptimization");
+	}
 };
-
-//=========================================================================================
-// static const variables
-//=========================================================================================
-
-const std::filesystem::path SxavengerConfig::kConfigFilepath_ = kPackagesDirectory / "config" / "config.json";
-
-SxavengerConfig::Config SxavengerConfig::config_   = {};
-SxavengerConfig::Support SxavengerConfig::support_ = {};
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // SxavengeConfig class methods
@@ -89,4 +88,6 @@ void SxavengerConfig::OutputLog() {
 
 	EngineLog(std::format("[Config] frame rate lock: {}",   config_.isLockFrameRate));
 	EngineLog(std::format("[Config] target frame rate: {}", config_.targetFrameRate));
+
+	EngineLog(std::format("[Config] shader optimization: {}", config_.isEnableShaderOptimization));
 }

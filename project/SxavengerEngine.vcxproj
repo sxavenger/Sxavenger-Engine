@@ -81,6 +81,7 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <TreatWarningAsError>true</TreatWarningAsError>
+      <Optimization>Custom</Optimization>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -261,6 +262,8 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="Engine\GameLoop\EditorEngineGameLoop.cpp" />
     <ClCompile Include="Engine\GameLoop\SxavengerEngineGameLoop.cpp" />
     <ClCompile Include="Engine\Module\GameObject\GameObject.cpp" />
+    <ClCompile Include="Engine\Module\Scene\SceneObject.cpp" />
+    <ClCompile Include="Engine\Module\Scene\SceneObjects.cpp" />
     <ClCompile Include="Engine\Render\Common\FLUTTexture.cpp" />
     <ClCompile Include="Engine\Render\Common\FProcessTexture.cpp" />
     <ClCompile Include="Engine\Render\Scene\Environment\FEnvironmentMap.cpp" />
@@ -426,6 +429,8 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Engine\GameLoop\EditorEngineGameLoop.h" />
     <ClInclude Include="Engine\GameLoop\SxavengerEngineGameLoop.h" />
     <ClInclude Include="Engine\Module\GameObject\GameObject.h" />
+    <ClInclude Include="Engine\Module\Scene\SceneObject.h" />
+    <ClInclude Include="Engine\Module\Scene\SceneObjects.h" />
     <ClInclude Include="Engine\Render\Common\FLUTTexture.h" />
     <ClInclude Include="Engine\Render\Common\FProcessTexture.h" />
     <ClInclude Include="Engine\Render\Scene\Environment\FEnvironmentMap.h" />

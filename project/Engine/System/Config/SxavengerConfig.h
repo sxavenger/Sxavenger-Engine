@@ -58,6 +58,9 @@ public:
 		//* frame rate lock
 		bool isLockFrameRate;
 		float targetFrameRate;
+
+		//* shader optimization
+		bool isEnableShaderOptimization;
 	};
 
 	////////////////////////////////////////////////////////////////////////////////////////////
@@ -98,12 +101,12 @@ private:
 	//=========================================================================================
 
 	//* filepath
-	static const std::filesystem::path kConfigFilepath_;
+	static inline const std::filesystem::path kConfigFilepath_ = kPackagesDirectory / "config" / "config.json";
 
 	//* config
-	static Config config_;
+	static inline Config config_ = {};
 
 	//* support
-	static Support support_;
+	static inline Support support_ = {};
 
 };

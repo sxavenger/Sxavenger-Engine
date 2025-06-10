@@ -37,6 +37,8 @@ GeometryDeferredOutput main(GeometryPSInput input) {
 		gMaterials[input.instanceId].properties.specular.GetValue(parameter)
 	);
 
+	output.SetAO(1.0f);
+
 	return output;
 }
 

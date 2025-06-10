@@ -36,7 +36,7 @@ public:
 		// public variables
 		//=========================================================================================
 
-		float f;            //!< 絞り
+		float aperture;     //!< 絞り [F値]
 		float shutterSpeed; //!< シャッタースピード [1/sec]
 		float iso;          //!< ISO感度
 		float compensation; //!< 露出補正

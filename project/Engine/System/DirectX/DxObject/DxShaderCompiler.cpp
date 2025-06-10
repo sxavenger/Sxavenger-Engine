@@ -79,8 +79,13 @@ ComPtr<IDxcBlob> ShaderCompiler::Compile(
 		L"-Zpr",                                          //!< メモリレイアウトは行優先
 	};
 
-#ifdef _DEBUG
-	arguments.emplace_back(L"-Od"); //!< 最適化を外しておく
+#ifdef _DEVELOPMENT
+	if (SxavengerConfig::GetConfig().isEnableShaderOptimization) {
+		arguments.emplace_back(L"-O3"); //!< 最適化を最大にする
+
+	} else {
+		arguments.emplace_back(L"-Od"); //!< 最適化を外しておく
+	}
 #else
 	arguments.emplace_back(L"-O3"); //!< 最適化を最大にする
 #endif

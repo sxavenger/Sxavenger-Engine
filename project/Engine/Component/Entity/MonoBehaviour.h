@@ -161,9 +161,24 @@ public:
 
 	json PerseToJson() const override;
 
-	void InputJson(const json& data) override { data; } //!< todo:
+	void InputJson(const json& data) override { data; }
 
 protected:
+
+	//=========================================================================================
+	// protected variables
+	//=========================================================================================
+
+	//* name
+	std::string name_ = "new behaviour";
+	bool isRenamable_ = true; //!< systemとして使われない限りtrue.
+
+	//* flag
+	bool isActive_ = true;
+	bool isView_   = true;
+
+	//* components
+	Components components_;
 
 	//=========================================================================================
 	// protected methods
@@ -177,18 +192,7 @@ private:
 	// private variables
 	//=========================================================================================
 
-	//* name
-	std::string name_ = "new behaviour";
-	bool isRenamable_ = true; //!< systemとして使われない限りtrue.
-
 	std::string buf_ = "";
-
-	//* flag
-	bool isActive_ = true;
-	bool isView_   = true;
-
-	//* components
-	Components components_;
 
 	//* hierarchy
 	// parent information

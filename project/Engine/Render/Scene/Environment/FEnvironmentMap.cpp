@@ -95,7 +95,7 @@ void FEnvironmentMap::IrradianceMap::CreateBuffer() {
 			&prop,
 			D3D12_HEAP_FLAG_NONE,
 			&desc,
-			D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE,
+			D3D12_RESOURCE_STATE_UNORDERED_ACCESS,
 			nullptr
 		);
 
@@ -205,7 +205,7 @@ void FEnvironmentMap::RadianceMap::Dispatch(const DirectXThreadContext* context,
 	desc.SetAddress("gParameter",  parameter->GetGPUVirtualAddress());
 	pipeline->BindComputeBuffer(context->GetDxCommand(), desc);
 
-	Vector3ui threadGroup = { RoundUp(size.x, kNumThreads_.x), RoundUp(size.y, kNumThreads_.y), 6 * kMiplevels };
+	Vector3ui threadGroup = { RoundUp(size.x, kNumThreads_.x), RoundUp(size.y, kNumThreads_.y), kCubemap_ * kMiplevels };
 	pipeline->Dispatch(context->GetDxCommand(), threadGroup);
 
 }
@@ -268,7 +268,7 @@ void FEnvironmentMap::RadianceMap::CreateBuffer() {
 			&prop,
 			D3D12_HEAP_FLAG_NONE,
 			&desc,
-			D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE,
+			D3D12_RESOURCE_STATE_UNORDERED_ACCESS,
 			nullptr
 		);
 
@@ -403,14 +403,17 @@ void FEnvironmentMap::Update(const DirectXThreadContext* context) {
 			irradiance_.Commit(context);
 			radiance_.Commit(context);
 			isCommited_ = true;
+			context->TransitionAllocator(); //!< HACK
 		}
 
-		mapEnvironment_ = mainEnvironment_;
+		if (IsNeedExecute()) {
+			mapEnvironment_ = mainEnvironment_;
 
-		task_->SetStatus(AsyncTask::Status::None);
-		SxavengerSystem::PushTask(AsyncExecution::Compute, task_);
+			task_->SetStatus(AsyncTask::Status::None);
+			SxavengerSystem::PushTask(AsyncExecution::Compute, task_);
 
-		isCommited_ = false;
+			isCommited_ = false;
+		}
 	}
 }
 

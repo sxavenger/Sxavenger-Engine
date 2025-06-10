@@ -109,7 +109,7 @@ void main(uint3 dispatchThreadId : SV_DispatchThreadID) {
 	uint miplevel = dispatchThreadId.z / 6;
 	uint face     = dispatchThreadId.z % 6;
 
-	if (gParameter.miplevels <= miplevel) {
+	if (miplevel >= gParameter.miplevels) {
 		return; //!< miplevel out of range.
 	}
 
@@ -126,7 +126,7 @@ void main(uint3 dispatchThreadId : SV_DispatchThreadID) {
 	float roughness = float(miplevel) / float(gParameter.miplevels - 1); //!< roughnessを計算
 
 	float3 color = PrefilterRadiance(roughness, direction); //!< directionを(r = v = n)として扱う
-
+	
 	RWTexture2DArray<float4> gRadiance = gIndices[miplevel].GetRadiance(); //!< RWTexture2DArray<float4>を取得
 	gRadiance[uint3(index, face)] = float4(color, 1.0f);
 

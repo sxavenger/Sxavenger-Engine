@@ -17,14 +17,14 @@ _DXOBJECT_USING
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 void PostProcessLocalExposure::Parameter::Init() {
-	f            = 4.0f;
+	aperture     = 4.0f;
 	shutterSpeed = 60.0f;
 	iso          = 100.0f;
 	compensation = 1.0f;
 }
 
 void PostProcessLocalExposure::Parameter::SetImGuiCommand() {
-	SxImGui::DragFloat("f", &f, 0.01f, 0.0f);
+	SxImGui::DragFloat("aperture", &aperture, 0.01f, 0.0f, std::nullopt, "%.3f F");
 	SxImGui::DragFloat("shutter speed [1/s]", &shutterSpeed, 0.01f, 0.0f);
 	SxImGui::DragFloat("iso", &iso, 1.0f, 0.0f);
 	SxImGui::DragFloat("compensation", &compensation, 0.01f, -15.0f, 15.0f);

@@ -46,9 +46,10 @@ float GeometricAttenuation(float NdotV, float NdotL, float roughness) {
 float DistributionFunction(float NdotH, float roughness) {
 	const float a  = roughness * roughness;
 	const float a2 = a * a;
-	const float NdotH2 = NdotH * NdotH;
 
-	return a2 / (kPi * pow(NdotH2 * (a2 - 1.0f) + 1.0f, 2.0f));
+	float domi = (NdotH * NdotH) * (a2 - 1.0f) + 1.0f;
+
+	return a2 / (kPi * domi * domi);
 }
 
 //! @brief SpecularBRDF

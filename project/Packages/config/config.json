@@ -3,5 +3,6 @@
 	"enableGPUBasedValidation": false,
 	"isTearingAllowed": true,
 	"isLockFrameRate": true,
-	"targetFrameRate": 60.0
+	"targetFrameRate": 60.0,
+	"isEnableShaderOptimization": false
 }

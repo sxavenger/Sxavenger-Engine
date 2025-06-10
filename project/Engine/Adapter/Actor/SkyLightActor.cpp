@@ -34,6 +34,7 @@ void SkyLightActor::Update(bool isWait) {
 
 	if (isWait) {
 		environment_.WaitComplate();
+		environment_.Update(SxavengerSystem::GetMainThreadContext());
 	}
 
 	skyLightComponent_->SetEnvironment(environment_.GetMapEnvironment());

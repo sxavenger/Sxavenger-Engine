@@ -113,7 +113,7 @@ public:
 
 		//* parameter *//
 
-		static inline const UINT16 kMiplevels = 4;
+		static inline const UINT16 kMiplevels = 10;
 
 	private:
 

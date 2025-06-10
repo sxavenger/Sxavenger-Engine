@@ -164,6 +164,8 @@
     <ClCompile Include="Engine\Adapter\Actor\PivotCameraActor.cpp" />
     <ClCompile Include="Engine\GameLoop\FeatureLevelGameLoop.cpp" />
     <ClCompile Include="Engine\Component\Components\PostProcessLayer\PostProcessAutoExposure.cpp" />
+    <ClCompile Include="Engine\Module\Scene\SceneObject.cpp" />
+    <ClCompile Include="Engine\Module\Scene\SceneObjects.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\System\Window\Window.h" />
@@ -350,6 +352,8 @@
     <ClInclude Include="Engine\GameLoop\FeatureLevelGameLoop.h" />
     <ClInclude Include="Lib\Sxl\Expected.h" />
     <ClInclude Include="Engine\Component\Components\PostProcessLayer\PostProcessAutoExposure.h" />
+    <ClInclude Include="Engine\Module\Scene\SceneObject.h" />
+    <ClInclude Include="Engine\Module\Scene\SceneObjects.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />
