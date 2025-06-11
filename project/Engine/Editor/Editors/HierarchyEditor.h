@@ -40,10 +40,6 @@ private:
 	// private variables
 	//=========================================================================================
 
-	//* behavior *//
-
-	std::list<std::unique_ptr<MonoBehaviour>> behaviours_;
-
 	//* parameter *//
 
 	const Color4f disableColor_ = { 0.4f, 0.4f, 0.4f, 1.0f };
@@ -53,6 +49,8 @@ private:
 	//=========================================================================================
 
 	//* show imgui component *//
+
+	void ShowHierarchyMenu();
 
 	void ShowHierarchyWindow();
 

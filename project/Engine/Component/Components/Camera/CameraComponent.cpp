@@ -54,7 +54,7 @@ Matrix4x4 CameraComponent::Projection::ToProj() const {
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 json CameraComponent::PerseToJson() const {
-	json component;
+	json component = json::object();
 
 	component["sensor"] = GeometryJsonSerializer::ToJson(projection_.sensor);
 	component["focal"]  = projection_.focal;
@@ -65,12 +65,10 @@ json CameraComponent::PerseToJson() const {
 }
 
 void CameraComponent::InputJson(const json& data) {
-	const json& component = data.at(typeid(CameraComponent).name());
-
-	projection_.sensor = GeometryJsonSerializer::JsonToVector2f(component.at("sensor"));
-	projection_.focal  = component.at("focal");
-	projection_.nearZ  = component.at("nearZ");
-	projection_.farZ   = component.at("farZ");
+	projection_.sensor = GeometryJsonSerializer::JsonToVector2f(data.at("sensor"));
+	projection_.focal  = data.at("focal");
+	projection_.nearZ  = data.at("nearZ");
+	projection_.farZ   = data.at("farZ");
 }
 
 void CameraComponent::ShowComponentInspector() {

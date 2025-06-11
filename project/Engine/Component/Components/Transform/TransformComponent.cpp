@@ -67,19 +67,12 @@ void TransformComponent::TransferGPU() {
 }
 
 json TransformComponent::PerseToJson() const {
-	json root;
-
-	auto& component = root[typeid(TransformComponent).name()] = json::object();
+	json component = json::object();
 	component["transform"] = transform_.PerseToJson();
 
-	return root;
+	return component;
 }
 
 void TransformComponent::InputJson(const json& data) {
-	if (!data.contains(typeid(TransformComponent).name())) {
-		return; //!< component data is not exist.
-	}
-
-	const json& component = data.at(typeid(TransformComponent).name());
-	transform_.InputJson(component.at("transform"));
+	transform_.InputJson(data.at("transform"));
 }

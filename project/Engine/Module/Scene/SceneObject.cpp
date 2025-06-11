@@ -6,6 +6,10 @@
 //* engine
 #include <Engine/Asset/SxavengerAsset.h>
 #include <Engine/Asset/Observer/AssetObserver.h>
+#include <Engine/Component/Components/Transform/TransformComponent.h>
+
+//* external
+#include <imgui.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // SceneObject class methods
@@ -14,6 +18,16 @@
 void SceneObject::CreateMeshComponent(const std::filesystem::path& filepath) {
 	auto asset = SxavengerAsset::TryImport<AssetModel>(filepath);
 	asset.WaitGet()->CreateStaticNodeMeshBehaviour(this);
+
+	filepath_ = filepath;
+
+	MonoBehaviour::AddComponent<TransformComponent>();
+}
+
+void SceneObject::Inspectable() {
+	if (ImGui::Button("delete")) {
+		isDelete_ = true;
+	}
 }
 
 json SceneObject::PerseToJson() const {
@@ -26,9 +40,9 @@ json SceneObject::PerseToJson() const {
 	root["isView"]      = isView_;
 
 	//* components
-	json& components = root["components"] = json::array();
+	json& components = root["components"] = json::object();
 	for (const auto& [type, component] : components_) {
-		components.emplace_back((*component)->PerseToJson());
+		components[type->name()] = (*component)->PerseToJson();
 	}
 
 	//* parameter
@@ -46,9 +60,14 @@ void SceneObject::InputJson(const json& data) {
 	isView_      = data["isView"];
 
 	//* components
-	// todo:
+	for (const auto& [name, component] : data["components"].items()) {
+		MonoBehaviour::AddComponent(name)->InputJson(component);
+	}
 
 	//* parameter
 	filepath_ = data["filepath"].get<std::string>();
+
+	auto asset = SxavengerAsset::TryImport<AssetModel>(filepath_);
+	asset.WaitGet()->CreateStaticNodeMeshBehaviour(this);
 
 }

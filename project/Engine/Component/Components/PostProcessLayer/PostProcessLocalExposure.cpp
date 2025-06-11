@@ -24,7 +24,7 @@ void PostProcessLocalExposure::Parameter::Init() {
 }
 
 void PostProcessLocalExposure::Parameter::SetImGuiCommand() {
-	SxImGui::DragFloat("aperture", &aperture, 0.01f, 0.0f, std::nullopt, "%.3f F");
+	SxImGui::DragFloat("aperture", &aperture, 0.01f, 0.0f, std::nullopt, "%.3ff");
 	SxImGui::DragFloat("shutter speed [1/s]", &shutterSpeed, 0.01f, 0.0f);
 	SxImGui::DragFloat("iso", &iso, 1.0f, 0.0f);
 	SxImGui::DragFloat("compensation", &compensation, 0.01f, -15.0f, 15.0f);

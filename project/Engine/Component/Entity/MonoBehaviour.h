@@ -94,6 +94,8 @@ public:
 	template <Component _Ty>
 	_Ty* AddComponent();
 
+	BaseComponent* AddComponent(const std::string& component);
+
 	//! @brief componentを削除
 	//! @tparam _Ty 削除するcomponentの型
 	template <Component _Ty>
@@ -101,13 +103,15 @@ public:
 
 	//! @brief componentを取得
 	//! @tparam _Ty 取得するcomponentの型
-	//! @retval componentのptr, 存在しない場合はnullptr
+	//! @retval componentが存在する: componentのptr
+	//! @retval 存在しない場合: nullptr
 	template <Component _Ty>
 	const _Ty* GetComponent() const;
 
 	//! @brief componentを取得
 	//! @tparam _Ty 取得するcomponentの型
-	//! @retval componentのptr, 存在しない場合はnullptr
+	//! @retval componentが存在する: componentのptr
+	//! @retval 存在しない場合: nullptr
 	template <Component _Ty>
 	_Ty* GetComponent();
 

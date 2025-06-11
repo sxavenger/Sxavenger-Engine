@@ -23,6 +23,8 @@ float3 DiffuseBRDF(float3 diffuse) {
 //! @param VdotH: saturate(dot(v, l))
 //! @param f0: f0
 float3 FresnelReflectance(float VdotH, float3 f0) {
+	VdotH = saturate(VdotH + kEpsilon);
+	
 	float exponent = (-5.55473f * VdotH - 6.98316f) * VdotH;
 	return f0 + (1.0f - f0) * exp2(exponent);
 }
@@ -31,6 +33,9 @@ float3 FresnelReflectance(float VdotH, float3 f0) {
 //! @param NdotV: saturate(dot(n, v))
 //! @param NdotL: saturate(dot(n, h))
 float GeometricAttenuation(float NdotV, float NdotL, float roughness) {
+	NdotV = saturate(NdotV + kEpsilon);
+	NdotL = saturate(NdotL + kEpsilon);
+	
 	const float a = roughness * roughness;
 	const float k = a / 2.0f;
 
@@ -44,6 +49,8 @@ float GeometricAttenuation(float NdotV, float NdotL, float roughness) {
 //! @param NdotH: saturate(dot(n, h))
 //! @param roughness: roughness
 float DistributionFunction(float NdotH, float roughness) {
+	NdotH = saturate(NdotH + kEpsilon);
+	
 	const float a  = roughness * roughness;
 	const float a2 = a * a;
 
@@ -59,5 +66,8 @@ float DistributionFunction(float NdotH, float roughness) {
 //! @param NdotL: saturate(dot(n, l))
 //! @param NdotV: saturate(dot(n, v))
 float3 SpecularBRDF(float3 f, float g, float d, float NdotL, float NdotV) {
+	NdotL = saturate(NdotL + kEpsilon);
+	NdotV = saturate(NdotV + kEpsilon);
+	
 	return (f * g * d) / (4.0f * NdotL * NdotV);
 }

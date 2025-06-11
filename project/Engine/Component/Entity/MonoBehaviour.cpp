@@ -73,6 +73,21 @@ void MonoBehaviour::SetName(const std::string& name) {
 	}
 }
 
+BaseComponent* MonoBehaviour::AddComponent(const std::string& component) {
+
+	const std::type_info* type = sComponentStorage->GetComponentInfo(component);
+
+	// componentの追加
+	if (!components_.Contains(type)) {
+		components_[type] = sComponentStorage->RegisterComponent(component, this);
+
+	} else {
+		WarningRuntime("warning | [MonoBehaviour]::AddComponent", "component is already added. component is only one.");
+	}
+
+	return components_[type]->get();
+}
+
 MonoBehaviour* MonoBehaviour::RequireParent() const {
 	Assert(parent_ != nullptr, "parent is not found.");
 	return parent_;
@@ -126,8 +141,8 @@ MonoBehaviour* MonoBehaviour::FindRequireChild(const std::string& name) {
 
 void MonoBehaviour::ShowInspector() {
 	if (buf_.empty()) {
-		buf_.resize(256);
 		buf_ = name_;
+		buf_.resize(128);
 	}
 
 	ImGui::BeginDisabled(!isRenamable_); //!< 名前変更不可の場合はdisabled
@@ -139,7 +154,10 @@ void MonoBehaviour::ShowInspector() {
 	ImGui::SameLine();
 
 	if (ImGui::InputText("## name", buf_.data(), buf_.size())) { //!< test mode
-		SetName(buf_);
+		size_t pos = buf_.find('\0');
+		std::string renamed = buf_;
+		renamed.erase(pos);
+		SetName(renamed);
 	}
 
 	ImGui::EndDisabled();
@@ -156,11 +174,11 @@ void MonoBehaviour::ShowInspector() {
 	ImGui::SeparatorText("inspectable");
 	Inspectable();
 
-	ImGui::SeparatorText("preview");
+	/*ImGui::SeparatorText("preview");
 	if (ImGui::Button("prese")) {
 		std::filesystem::path filepath = name_ + ".json";
 		JsonHandler::WriteToJson(filepath, PerseToJson());
-	}
+	}*/
 
 }
 
