@@ -26,6 +26,8 @@ public:
 
 	void InputJson();
 
+	void Update();
+
 	//* singleton *//
 
 	static SceneObjects* GetInstance();

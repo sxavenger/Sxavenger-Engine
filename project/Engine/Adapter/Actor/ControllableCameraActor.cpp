@@ -39,9 +39,11 @@ bool ControllableCameraActor::CheckNeedUpdate() {
 
 		result = true;
 
-		sEditorEngine->ExecuteEditorFunction<RenderSceneEditor>([&](RenderSceneEditor* editor) {
-			result = editor->IsFocusGameWindow();
-		});
+		if (sEditorEngine->IsEditorDisplay()) {
+			sEditorEngine->ExecuteEditorFunction<RenderSceneEditor>([&](RenderSceneEditor* editor) {
+				result = editor->IsFocusGameWindow();
+			});
+		}
 	}
 
 	return result;

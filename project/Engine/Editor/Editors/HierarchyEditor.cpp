@@ -82,6 +82,7 @@ void HierarchyEditor::ShowHierarchyWindow() {
 }
 
 void HierarchyEditor::LateUpdate() {
+	sSceneObjects->Update();
 }
 
 void HierarchyEditor::HierarchySelectable(MonoBehaviour* behaviour) {

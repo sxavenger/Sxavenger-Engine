@@ -34,6 +34,8 @@ public:
 
 	void InputJson(const json& data) override;
 
+	bool IsDelete() const { return isDelete_; }
+
 private:
 
 	//=========================================================================================

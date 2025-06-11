@@ -56,5 +56,34 @@
 		"isRenamable": true,
 		"isView": true,
 		"name": "PBR sphere"
+	},
+	{
+		"components": {
+			"class TransformComponent": {
+				"transform": {
+					"rotate": {
+						"w": 1.0,
+						"x": 0.0,
+						"y": 0.0,
+						"z": 0.0
+					},
+					"scale": {
+						"x": 2.0,
+						"y": 2.0,
+						"z": 2.0
+					},
+					"translate": {
+						"x": 0.0,
+						"y": 0.0,
+						"z": -15.312104225158691
+					}
+				}
+			}
+		},
+		"filepath": "assets/models/scene/scene.gltf",
+		"isActive": true,
+		"isRenamable": true,
+		"isView": true,
+		"name": "scene"
 	}
 ]

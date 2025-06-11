@@ -32,6 +32,10 @@ void SceneObjects::InputJson() {
 	}
 }
 
+void SceneObjects::Update() {
+	objects_.remove_if([](const std::unique_ptr<SceneObject>& obj) { return obj->IsDelete(); });
+}
+
 SceneObjects* SceneObjects::GetInstance() {
 	static SceneObjects instance;
 	return &instance;
