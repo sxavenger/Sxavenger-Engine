@@ -82,3 +82,12 @@ bool SxImGui::DragVector3(const char* label, float v[3], float v_speed, float v_
 bool SxImGui::DragFloat(const char* label, float* v, float v_speed, const std::optional<float>& v_min, const std::optional<float>& v_max, const char* format, ImGuiSliderFlags flags) {
 	return ImGui::DragFloat(label, v, v_speed, v_min.value_or(std::numeric_limits<float>::min()), v_max.value_or(std::numeric_limits<float>::max()), format, flags);
 }
+
+bool SxImGui::SelectImageButton(const char* id, ImTextureID texture_id, const ImVec2& image_size, bool is_selected) {
+	ImVec4 col = is_selected ? ImGui::GetStyle().Colors[ImGuiCol_HeaderActive] : ImVec4{ 0, 0, 0, 0 };
+	return ImGui::ImageButton(id, texture_id, image_size, { 0, 0 }, { 1, 1 }, col, { 1, 1, 1, 1 });
+}
+
+bool SxImGui::IsDoubleClick() {
+	return ImGui::GetIO().MouseClickedCount[ImGuiMouseButton_Left] == 2;
+}

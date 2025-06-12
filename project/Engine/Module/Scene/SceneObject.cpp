@@ -53,21 +53,23 @@ json SceneObject::PerseToJson() const {
 
 void SceneObject::InputJson(const json& data) {
 
-	//* properties
-	name_        = data["name"].get<std::string>();
-	isRenamable_ = data["isRenamable"];
-	isActive_    = data["isActive"];
-	isView_      = data["isView"];
-
-	//* components
-	for (const auto& [name, component] : data["components"].items()) {
-		MonoBehaviour::AddComponent(name)->InputJson(component);
-	}
-
 	//* parameter
 	filepath_ = data["filepath"].get<std::string>();
 
 	auto asset = SxavengerAsset::TryImport<AssetModel>(filepath_);
 	asset.WaitGet()->CreateStaticNodeMeshBehaviour(this);
+
+	//* properties
+	name_        = data["name"].get<std::string>();
+	isRenamable_ = data["isRenamable"];
+	MonoBehaviour::SetActive(data["isActive"]);
+	isView_      = data["isView"];
+
+	
+
+	//* components
+	for (const auto& [name, component] : data["components"].items()) {
+		MonoBehaviour::AddComponent(name)->InputJson(component);
+	}
 
 }

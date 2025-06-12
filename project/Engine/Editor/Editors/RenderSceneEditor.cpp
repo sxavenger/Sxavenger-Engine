@@ -21,6 +21,10 @@ void RenderSceneEditor::Init() {
 
 	checkerboard_ = SxavengerAsset::TryImport<AssetTexture>("packages/textures/checker_black.png");
 
+	operationTexture_[static_cast<uint32_t>(GuizmoOperation::Translate)] = SxavengerAsset::TryImport<AssetTexture>("packages/textures/icon/operation_translate.png");
+	operationTexture_[static_cast<uint32_t>(GuizmoOperation::Rotate)] = SxavengerAsset::TryImport<AssetTexture>("packages/textures/icon/operation_rotate.png");
+	operationTexture_[static_cast<uint32_t>(GuizmoOperation::Scale)] = SxavengerAsset::TryImport<AssetTexture>("packages/textures/icon/view_cube64.png");
+
 	camera_ = std::make_unique<MonoBehaviour>();
 	camera_->SetName("editor camera");
 	camera_->AddComponent<TransformComponent>();
@@ -208,7 +212,7 @@ void RenderSceneEditor::ManipulateCanvas(MonoBehaviour* behaviour) {
 		reinterpret_cast<float*>(m.m.data())
 	);
 
-	gizmoUsed_ = ImGuizmo::IsUsing() ? std::optional<GuizmoUsed>{GuizmoUsed::Canvas} : std::nullopt;
+	gizmoUsed_ = ImGuizmo::IsUsing() ? std::make_optional<GuizmoUsed>(GuizmoUsed::Canvas) : std::nullopt;
 
 	if (!isEdit) {
 		return;
@@ -232,6 +236,11 @@ void RenderSceneEditor::ManipulateCanvas(MonoBehaviour* behaviour) {
 	}
 
 	ImGuizmo::SetOrthographic(false);
+}
+
+void RenderSceneEditor::SetCameraPoint(const Vector3f& point) {
+	point_ = point;
+	UpdateView();
 }
 
 void RenderSceneEditor::ShowSceneMenu() {
@@ -319,7 +328,32 @@ void RenderSceneEditor::ShowSceneWindow() {
 
 	//* fix window style
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, { 0, 0 });
-	ImGui::Begin("Scene ## Render Scene Editor", nullptr, BaseEditor::GetWindowFlag() | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
+	ImGui::Begin("Scene ## Render Scene Editor", nullptr, BaseEditor::GetWindowFlag() | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse | ImGuiWindowFlags_MenuBar);
+
+	//* menu bar
+	if (ImGui::BeginMenuBar()) {
+
+		ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, { 0, 0 });
+
+		//* gizmo operation menu *//
+		//* translate
+		if (SxImGui::SelectImageButton("## gizmo translate", operationTexture_[static_cast<uint32_t>(GuizmoOperation::Translate)].WaitGet()->GetGPUHandleSRV().ptr, { 16, 16 }, gizmoOperation_ == GuizmoOperation::Translate)) {
+			gizmoOperation_ = GuizmoOperation::Translate;
+		}
+
+		//* rotate
+		if (SxImGui::SelectImageButton("## gizmo rotate", operationTexture_[static_cast<uint32_t>(GuizmoOperation::Rotate)].WaitGet()->GetGPUHandleSRV().ptr, { 16, 16 }, gizmoOperation_ == GuizmoOperation::Rotate)) {
+			gizmoOperation_ = GuizmoOperation::Rotate;
+		}
+
+		//* scale
+		if (SxImGui::SelectImageButton("## gizmo scale", operationTexture_[static_cast<uint32_t>(GuizmoOperation::Scale)].WaitGet()->GetGPUHandleSRV().ptr, { 16, 16 }, gizmoOperation_ == GuizmoOperation::Scale)) {
+			gizmoOperation_ = GuizmoOperation::Scale;
+		}
+
+		ImGui::PopStyleVar();
+		ImGui::EndMenuBar();
+	}
 
 	sceneWindow_ = ImGui::GetWindowDrawList();
 
@@ -471,12 +505,18 @@ void RenderSceneEditor::UpdateCamera() {
 
 	distance_ = std::max(distance_ - mouse->GetDeltaWheel(), 0.0f);
 
+	UpdateView();
+}
+
+void RenderSceneEditor::UpdateView() {
+	auto transform = camera_->GetComponent<TransformComponent>();
+
 	Quaternion r = Quaternion::AxisAngle(kUnitY3<float>, angle_.x) * Quaternion::AxisAngle(kUnitX3<float>, angle_.y);
 
 	Vector3f direciton = Quaternion::RotateVector(kBackward3<float>, r);
 
 	transform->GetTransform().translate = point_ + direciton * distance_;
-	transform->GetTransform().rotate    = r;
+	transform->GetTransform().rotate = r;
 	transform->UpdateMatrix();
 
 	camera_->GetComponent<CameraComponent>()->UpdateView();

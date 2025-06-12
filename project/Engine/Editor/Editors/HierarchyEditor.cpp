@@ -6,8 +6,10 @@
 //* editor
 #include "../EditorEngine.h"
 #include "InspectorEditor.h"
+#include "RenderSceneEditor.h"
 
 //* engine
+#include <Engine/System/UI/SxImGui.h>
 #include <Engine/Asset/AssetStorage.h>
 #include <Engine/Component/Entity/MonoBehaviourContainer.h>
 #include <Engine/Component/ComponentHelper.h>
@@ -94,6 +96,10 @@ void HierarchyEditor::HierarchySelectable(MonoBehaviour* behaviour) {
 		ImGui::PushStyleColor(ImGuiCol_Text, { disableColor_.r, disableColor_.g, disableColor_.b, disableColor_.a });
 	}
 
+	if (isSelect && SxImGui::IsDoubleClick()) {
+		SetSelectedView(behaviour);
+	}
+
 	if (behaviour->GetChildren().empty()) {
 		if (ImGui::Selectable(label.c_str(), isSelect)) {
 			SetSelected(behaviour);
@@ -145,6 +151,14 @@ bool HierarchyEditor::CheckSelected(MonoBehaviour* behaviour) {
 void HierarchyEditor::SetSelected(MonoBehaviour* behaviour) {
 	if (auto editor = BaseEditor::GetEditorEngine()->GetEditor<InspectorEditor>()) {
 		editor->SetInspector(behaviour);
+	}
+}
+
+void HierarchyEditor::SetSelectedView(MonoBehaviour* behaviour) {
+	if (auto transform = behaviour->GetComponent<TransformComponent>()) {
+		if (auto editor = BaseEditor::GetEditorEngine()->GetEditor<RenderSceneEditor>()) {
+			editor->SetCameraPoint(transform->GetPosition());
+		}
 	}
 }
 

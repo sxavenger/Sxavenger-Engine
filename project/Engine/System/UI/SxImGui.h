@@ -25,10 +25,13 @@ namespace SxImGui {
 	template <class T>
 	bool RadioButton(const char* label, T* v, T v_button);
 
+	bool SelectImageButton(const char* id, ImTextureID texture_id, const ImVec2& image_size, bool is_selected);
+
+	bool IsDoubleClick();
+
 	//=========================================================================================
 	// option
 	//=========================================================================================
-
 
 }
 

@@ -49,11 +49,15 @@ public:
 
 	void Render();
 
-	//* manipulator *//
+	//* manipulator option *//
 
 	void Manipulate(MonoBehaviour* behaviour);
 
 	void ManipulateCanvas(MonoBehaviour* behaviour);
+
+	//* camera option *//
+
+	void SetCameraPoint(const Vector3f& point);
 
 	//* getter *//
 
@@ -102,6 +106,9 @@ private:
 	//* texture *//
 
 	AssetObserver<AssetTexture> checkerboard_; //!< checker board texture
+
+	AssetObserver<AssetTexture> operationTexture_[3];
+	AssetObserver<AssetTexture> modeTexture_[2];
 
 	//* renderer *//
 
@@ -160,5 +167,6 @@ private:
 	WindowRect SetImGuiImageFullWindow(const D3D12_GPU_DESCRIPTOR_HANDLE& handle, const Vector2ui& size);
 
 	void UpdateCamera();
+	void UpdateView();
 
 };

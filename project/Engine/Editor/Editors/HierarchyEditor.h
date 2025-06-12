@@ -62,6 +62,8 @@ private:
 
 	void SetSelected(MonoBehaviour* behaviour);
 
+	void SetSelectedView(MonoBehaviour* behaviour);
+
 	void DragAndDropTarget();
 
 };
