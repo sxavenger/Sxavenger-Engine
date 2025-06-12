@@ -96,17 +96,18 @@ void HierarchyEditor::HierarchySelectable(MonoBehaviour* behaviour) {
 		ImGui::PushStyleColor(ImGuiCol_Text, { disableColor_.r, disableColor_.g, disableColor_.b, disableColor_.a });
 	}
 
-	if (isSelect && SxImGui::IsDoubleClick()) {
-		SetSelectedView(behaviour);
-	}
-
 	if (behaviour->GetChildren().empty()) {
 		if (ImGui::Selectable(label.c_str(), isSelect)) {
 			SetSelected(behaviour);
+			isSelect = true;
 		}
 
 		if (!behaviour->IsActive()) {
 			ImGui::PopStyleColor();
+		}
+
+		if (isSelect && SxImGui::IsDoubleClick()) {
+			SetSelectedView(behaviour);
 		}
 
 	} else {
@@ -127,6 +128,11 @@ void HierarchyEditor::HierarchySelectable(MonoBehaviour* behaviour) {
 
 		if (ImGui::IsItemClicked()) {
 			SetSelected(behaviour);
+			isSelect = true;
+		}
+
+		if (isSelect && SxImGui::IsDoubleClick()) {
+			SetSelectedView(behaviour);
 		}
 
 		if (isOpen) {
