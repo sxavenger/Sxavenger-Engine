@@ -54,7 +54,7 @@ void EditorEngine::ShowMainMenu() {
 
 	ShowEditorMenu();
 
-	for (const auto& [typeindex, editor] : editors_) {
+	for (const auto& [type, editor] : editors_) {
 		editor->ShowMainMenu();
 	}
 
@@ -68,13 +68,13 @@ void EditorEngine::ShowWindow() {
 
 	dockingId_ = ImGui::GetID(kEditorName_.c_str());
 
-	for (const auto& [typeindex, editor] : editors_) {
+	for (const auto& [type, editor] : editors_) {
 		if (editor->IsDisplay()) {
 			editor->ShowWindow();
 		}
 	}
 
-	for (const auto& [typeindex, editor] : editors_) {
+	for (const auto& [type, editor] : editors_) {
 		if (editor->IsDisplay()) {
 			editor->LateUpdate();
 		}
@@ -120,7 +120,7 @@ void EditorEngine::ShowEditorMenu() {
 			ImGui::SeparatorText("layout");
 
 			if (ImGui::BeginTable("## other editor", 3, ImGuiTableFlags_ScrollY | ImGuiTableFlags_RowBg | ImGuiTableFlags_Borders)) {
-				ImGui::TableSetupColumn("typeindex");
+				ImGui::TableSetupColumn("type");
 				ImGui::TableSetupColumn("ptr");
 				ImGui::TableSetupColumn("display");
 				ImGui::TableHeadersRow();

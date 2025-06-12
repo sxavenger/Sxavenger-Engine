@@ -82,14 +82,10 @@ void ImGuiController::Init(Window* main) {
 	ImGui::LoadIniSettingsFromDisk(kImGuiLayoutFilepath_.generic_string().c_str());
 
 	isInit_ = true;
-
-	ImNodes::CreateContext();
 }
 
 void ImGuiController::Term() {
 	if (isInit_) {
-		ImNodes::DestroyContext();
-
 		ImGui_ImplDX12_Shutdown();
 		ImGui_ImplWin32_Shutdown();
 		ImGui::DestroyContext();
@@ -221,9 +217,11 @@ void ImGuiController::SetImGuiStyle() {
 	style.Colors[ImGuiCol_PlotLines]     = ToImVec4({ 152, 152, 152, 255 });
 	style.Colors[ImGuiCol_PlotHistogram] = ToImVec4({ 48, 48, 48, 255 });
 
-
 	// docking
 	style.Colors[ImGuiCol_DockingPreview] = ToImVec4({ 125, 125, 125, 200 });
+
+	// treenode
+	style.Colors[ImGuiCol_TreeLines] = ToImVec4({ 48, 48, 48, 255 });
 
 }
 

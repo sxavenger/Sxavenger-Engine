@@ -59,9 +59,11 @@ void HierarchyEditor::ShowHierarchyWindow() {
 	ImGui::Begin("Hierarchy ## Hierarchy Editor", nullptr, BaseEditor::GetWindowFlag());
 
 	// hierarchyの表示
+	ImGui::PushStyleVarY(ImGuiStyleVar_ItemSpacing, 0);
 	for (auto& behaviour : sMonoBehaviourContainer->GetContainer()) {
 		HierarchySelectable(behaviour);
 	}
+	ImGui::PopStyleVar();
 
 	{
 		ImVec2 position = ImGui::GetWindowPos();
@@ -92,58 +94,56 @@ void HierarchyEditor::HierarchySelectable(MonoBehaviour* behaviour) {
 	bool isSelect     = CheckSelected(behaviour);
 	std::string label = std::format("{} # {:p}", behaviour->GetName(), static_cast<const void*>(behaviour));
 
+	bool hasChild = !behaviour->GetChildren().empty();
+
 	if (!behaviour->IsActive()) {
 		ImGui::PushStyleColor(ImGuiCol_Text, { disableColor_.r, disableColor_.g, disableColor_.b, disableColor_.a });
 	}
 
-	if (behaviour->GetChildren().empty()) {
-		if (ImGui::Selectable(label.c_str(), isSelect)) {
-			SetSelected(behaviour);
-			isSelect = true;
-		}
+	ImGuiTreeNodeFlags flags
+		= ImGuiTreeNodeFlags_OpenOnDoubleClick
+		| ImGuiTreeNodeFlags_OpenOnArrow
+		| ImGuiTreeNodeFlags_FramePadding
+		| ImGuiTreeNodeFlags_SpanAllColumns
+		| ImGuiTreeNodeFlags_DrawLinesToNodes;
 
-		if (!behaviour->IsActive()) {
-			ImGui::PopStyleColor();
-		}
-
-		if (isSelect && SxImGui::IsDoubleClick()) {
-			SetSelectedView(behaviour);
-		}
-
-	} else {
-
-		ImGuiTreeNodeFlags flags
-			= ImGuiTreeNodeFlags_OpenOnDoubleClick
-			| ImGuiTreeNodeFlags_OpenOnArrow;
-
-		if (isSelect) {
-			flags |= ImGuiTreeNodeFlags_Selected;
-		}
-
-		bool isOpen = ImGui::TreeNodeEx(label.c_str(), flags);
-
-		if (!behaviour->IsActive()) {
-			ImGui::PopStyleColor();
-		}
-
-		if (ImGui::IsItemClicked()) {
-			SetSelected(behaviour);
-			isSelect = true;
-		}
-
-		if (isSelect && SxImGui::IsDoubleClick()) {
-			SetSelectedView(behaviour);
-		}
-
-		if (isOpen) {
-
-			for (auto& child : behaviour->GetChildren()) {
-				HierarchySelectable(std::visit(MonoBehaviour::GetPtrVisitor{}, child));
-			}
-
-			ImGui::TreePop();
-		}
+	if (isSelect) {
+		flags |= ImGuiTreeNodeFlags_Selected;
 	}
+
+	if (!hasChild) {
+		flags |= ImGuiTreeNodeFlags_Leaf;
+		ImGui::Unindent();
+	}
+
+	bool isOpen = ImGui::TreeNodeEx(label.c_str(), flags);
+
+	if (!hasChild) {
+		ImGui::Indent();
+	}
+	
+
+	if (!behaviour->IsActive()) {
+		ImGui::PopStyleColor();
+	}
+
+	if (ImGui::IsItemClicked()) {
+		SetSelected(behaviour);
+		isSelect = true;
+	}
+
+	if (isSelect && SxImGui::IsDoubleClick()) {
+		SetSelectedView(behaviour);
+	}
+
+	if (isOpen) {
+		for (auto& child : behaviour->GetChildren()) {
+			HierarchySelectable(std::visit(MonoBehaviour::GetPtrVisitor{}, child));
+		}
+
+		ImGui::TreePop();
+	}
+	
 }
 
 bool HierarchyEditor::CheckSelected(MonoBehaviour* behaviour) {
