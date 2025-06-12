@@ -18,10 +18,8 @@ void FRenderCoreProcess::Init() {
 	CreatePipeline(ProcessType::AutoExposureLuminance, "PostProcess/Exposure/AutoExposureLuminance.cs.hlsl");
 	CreatePipeline(ProcessType::AutoExposureAverage,   "PostProcess/Exposure/AutoExposureAverage.cs.hlsl");
 	CreatePipeline(ProcessType::AutoExposureApply,     "PostProcess/Exposure/AutoExposureApply.cs.hlsl");
-
-
-	//!< exposure
-	CreatePipeline(ProcessType::Exposure, "PostProcess/Exposure.cs.hlsl");
+	//!< local exposure
+	CreatePipeline(ProcessType::LocalExposure, "PostProcess/Exposure/LocalExposure.cs.hlsl");
 
 	//!< dof
 	CreatePipeline(ProcessType::DoF, "PostProcess/DoF.cs.hlsl");

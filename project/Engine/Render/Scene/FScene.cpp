@@ -18,7 +18,6 @@ void FScene::SetupTopLevelAS(const DirectXThreadContext* context) {
 	topLevelAS_.BeginSetupInstance();
 
 	sComponentStorage->ForEach<MeshRendererComponent>([&](MeshRendererComponent* component) {
-		// todo: std::execution::parに変更
 		if (!component->IsView() || !component->IsActive()) {
 			return;
 		}
@@ -41,7 +40,6 @@ void FScene::SetupTopLevelAS(const DirectXThreadContext* context) {
 	});
 
 	sComponentStorage->ForEach<SkinnedMeshRendererComponent>([&](SkinnedMeshRendererComponent* component) {
-		// todo: std::execution::parに変更
 		if (!component->IsView()) {
 			return;
 		}

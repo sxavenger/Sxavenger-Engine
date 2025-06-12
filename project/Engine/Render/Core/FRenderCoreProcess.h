@@ -24,7 +24,7 @@ public:
 		AutoExposureLuminance,
 		AutoExposureAverage,
 		AutoExposureApply,
-		Exposure,
+		LocalExposure,
 		DoF,
 		Vignette,
 	};

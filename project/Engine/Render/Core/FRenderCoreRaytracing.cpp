@@ -5,7 +5,6 @@ _DXROBJECT_USING
 // include
 //-----------------------------------------------------------------------------------------
 //* engine
-#include <Engine/System/Config/SxavengerConfig.h>
 #include <Engine/System/SxavengerSystem.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -23,7 +22,7 @@ void FRenderCoreRaytracing::CreateRaygeneration() {
 	{ //!< Default
 
 		auto& [blob, expt] = raygenerationExportGroups_[GetIndex(RaygenerationExportType::Default)];
-		blob.Create(kPackagesShaderDirectory / "render/raytracing" / "Default.raygeneration.hlsl");
+		blob.Create(kDirectory_ / "Default.raygeneration.hlsl");
 
 		expt.ExportRaygeneration(L"mainRaygen");
 		expt.SetBlob(&blob);
@@ -35,7 +34,7 @@ void FRenderCoreRaytracing::CreateMiss() {
 
 	{ //!< Default
 		auto& [blob, expt] = missExportGroups_[GetIndex(MissExportType::Default)];
-		blob.Create(kPackagesShaderDirectory / "render/raytracing" / "Default.miss.hlsl");
+		blob.Create(kDirectory_ / "Default.miss.hlsl");
 
 		expt.ExportMiss(L"mainMiss");
 		expt.SetBlob(&blob);
@@ -47,7 +46,7 @@ void FRenderCoreRaytracing::CreateHitgroup() {
 
 	{ //!< Mesh
 		auto& [blob, expt] = hitgroupExportGroups_[GetIndex(HitgroupExportType::Mesh)];
-		blob.Create(kPackagesShaderDirectory / "render/raytracing/hitgroup" / "Mesh.hitgroup.hlsl");
+		blob.Create(kDirectory_ / "hitgroup" / "Mesh.hitgroup.hlsl");
 
 		//* hitgroup
 		ExportGroup::Hitgroup hitgroup = {};

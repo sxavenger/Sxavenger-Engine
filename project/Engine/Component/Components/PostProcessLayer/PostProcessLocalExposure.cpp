@@ -50,7 +50,7 @@ void PostProcessLocalExposure::Process(const DirectXThreadContext* context, FRen
 
 	auto core = FRenderCore::GetInstance()->GetProcess();
 
-	core->SetPipeline(FRenderCoreProcess::ProcessType::Exposure, context);
+	core->SetPipeline(FRenderCoreProcess::ProcessType::LocalExposure, context);
 
 	BindBufferDesc desc = {};
 	// common
@@ -61,7 +61,7 @@ void PostProcessLocalExposure::Process(const DirectXThreadContext* context, FRen
 	// parameter
 	desc.SetAddress("gParameter", parameter_->GetGPUVirtualAddress());
 
-	core->BindComputeBuffer(FRenderCoreProcess::ProcessType::Exposure, context, desc);
+	core->BindComputeBuffer(FRenderCoreProcess::ProcessType::LocalExposure, context, desc);
 	core->Dispatch(context, textures->GetSize());
 }
 

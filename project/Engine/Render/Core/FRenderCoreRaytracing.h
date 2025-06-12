@@ -6,6 +6,7 @@
 //* engine
 #include <Engine/System/DirectX/DxrObject/DxrExportGroup.h>
 #include <Engine/System/DirectX/DxrObject/DxrRaytracingBlob.h>
+#include <Engine/System/Config/SxavengerConfig.h>
 
 //* c++
 #include <array>
@@ -61,6 +62,8 @@ private:
 	std::array<std::pair<DxrObject::RaytracingBlob, DxrObject::ExportGroup>, kRaygenerationExportTypeCount> raygenerationExportGroups_;
 	std::array<std::pair<DxrObject::RaytracingBlob, DxrObject::ExportGroup>, kMissExportTypeCount>          missExportGroups_;
 	std::array<std::pair<DxrObject::RaytracingBlob, DxrObject::ExportGroup>, kHitgroupExportTypeCount>      hitgroupExportGroups_;
+
+	static inline const std::filesystem::path kDirectory_ = kPackagesShaderDirectory / "render/raytracing";
 
 	//=========================================================================================
 	// private methods
