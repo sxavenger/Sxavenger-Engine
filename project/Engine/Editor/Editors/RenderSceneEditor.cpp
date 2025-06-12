@@ -23,7 +23,10 @@ void RenderSceneEditor::Init() {
 
 	operationTexture_[static_cast<uint32_t>(GuizmoOperation::Translate)] = SxavengerAsset::TryImport<AssetTexture>("packages/textures/icon/operation_translate.png");
 	operationTexture_[static_cast<uint32_t>(GuizmoOperation::Rotate)] = SxavengerAsset::TryImport<AssetTexture>("packages/textures/icon/operation_rotate.png");
-	operationTexture_[static_cast<uint32_t>(GuizmoOperation::Scale)] = SxavengerAsset::TryImport<AssetTexture>("packages/textures/icon/view_cube64.png");
+	operationTexture_[static_cast<uint32_t>(GuizmoOperation::Scale)] = SxavengerAsset::TryImport<AssetTexture>("packages/textures/icon/operation_scale.png");
+
+	modeTexture_[SxImGuizmo::World] = SxavengerAsset::TryImport<AssetTexture>("packages/textures/icon/mode_world.png");
+	modeTexture_[SxImGuizmo::Local] = SxavengerAsset::TryImport<AssetTexture>("packages/textures/icon/mode_local.png");
 
 	camera_ = std::make_unique<MonoBehaviour>();
 	camera_->SetName("editor camera");
@@ -332,23 +335,62 @@ void RenderSceneEditor::ShowSceneWindow() {
 
 	//* menu bar
 	if (ImGui::BeginMenuBar()) {
+		ImGui::PushStyleVarX(ImGuiStyleVar_ItemSpacing, 0);
 
-		ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, { 0, 0 });
+		static ImVec4 kSelectedColor = ImVec4(1.0f, 1.0f, 1.0f, 1.0f);
+		static ImVec4 kNonSelectedColor = ImVec4(0.4f, 0.4f, 0.4f, 1.0f);
 
 		//* gizmo operation menu *//
+		
 		//* translate
-		if (SxImGui::SelectImageButton("## gizmo translate", operationTexture_[static_cast<uint32_t>(GuizmoOperation::Translate)].WaitGet()->GetGPUHandleSRV().ptr, { 16, 16 }, gizmoOperation_ == GuizmoOperation::Translate)) {
+		if (SxImGui::ImageButton(
+				"## gizmo translate",
+				operationTexture_[static_cast<uint32_t>(GuizmoOperation::Translate)].WaitGet()->GetGPUHandleSRV().ptr,
+				{ 16, 16 },
+				gizmoOperation_ == GuizmoOperation::Translate ? kSelectedColor : kNonSelectedColor)) {
 			gizmoOperation_ = GuizmoOperation::Translate;
 		}
 
 		//* rotate
-		if (SxImGui::SelectImageButton("## gizmo rotate", operationTexture_[static_cast<uint32_t>(GuizmoOperation::Rotate)].WaitGet()->GetGPUHandleSRV().ptr, { 16, 16 }, gizmoOperation_ == GuizmoOperation::Rotate)) {
+		if (SxImGui::ImageButton(
+			"## gizmo rotate",
+			operationTexture_[static_cast<uint32_t>(GuizmoOperation::Rotate)].WaitGet()->GetGPUHandleSRV().ptr,
+			{ 16, 16 },
+			gizmoOperation_ == GuizmoOperation::Rotate ? kSelectedColor : kNonSelectedColor)) {
 			gizmoOperation_ = GuizmoOperation::Rotate;
 		}
 
 		//* scale
-		if (SxImGui::SelectImageButton("## gizmo scale", operationTexture_[static_cast<uint32_t>(GuizmoOperation::Scale)].WaitGet()->GetGPUHandleSRV().ptr, { 16, 16 }, gizmoOperation_ == GuizmoOperation::Scale)) {
+		if (SxImGui::ImageButton(
+			"## gizmo scale",
+			operationTexture_[static_cast<uint32_t>(GuizmoOperation::Scale)].WaitGet()->GetGPUHandleSRV().ptr,
+			{ 16, 16 },
+			gizmoOperation_ == GuizmoOperation::Scale ? kSelectedColor : kNonSelectedColor)) {
 			gizmoOperation_ = GuizmoOperation::Scale;
+		}
+
+		ImGui::Dummy({ 8, 0 });
+		ImGui::Separator();
+		ImGui::Dummy({ 8, 0 });
+
+		//* gizmo mode menu *//
+
+		//* world
+		if (SxImGui::ImageButton(
+			"## gizmo world",
+			modeTexture_[SxImGuizmo::World].WaitGet()->GetGPUHandleSRV().ptr,
+			{ 16, 16 },
+			gizmoMode_ == SxImGuizmo::World ? kSelectedColor : kNonSelectedColor)) {
+			gizmoMode_ = SxImGuizmo::World;
+		}
+
+		//* local
+		if (SxImGui::ImageButton(
+			"## gizmo local",
+			modeTexture_[SxImGuizmo::Local].WaitGet()->GetGPUHandleSRV().ptr,
+			{ 16, 16 },
+			gizmoMode_ == SxImGuizmo::Local ? kSelectedColor : kNonSelectedColor)) {
+			gizmoMode_ = SxImGuizmo::Local;
 		}
 
 		ImGui::PopStyleVar();

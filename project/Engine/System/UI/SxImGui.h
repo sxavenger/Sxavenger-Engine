@@ -27,6 +27,8 @@ namespace SxImGui {
 
 	bool SelectImageButton(const char* id, ImTextureID texture_id, const ImVec2& image_size, bool is_selected);
 
+	bool ImageButton(const char* id, ImTextureID texture_id, const ImVec2& image_size, const ImVec4& tint_col = ImVec4(1, 1, 1, 1));
+
 	bool IsDoubleClick();
 
 	//=========================================================================================

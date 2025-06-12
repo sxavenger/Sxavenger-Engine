@@ -84,8 +84,12 @@ bool SxImGui::DragFloat(const char* label, float* v, float v_speed, const std::o
 }
 
 bool SxImGui::SelectImageButton(const char* id, ImTextureID texture_id, const ImVec2& image_size, bool is_selected) {
-	ImVec4 col = is_selected ? ImGui::GetStyle().Colors[ImGuiCol_HeaderActive] : ImVec4{ 0, 0, 0, 0 };
+	ImVec4 col = is_selected ? ImGui::GetStyle().Colors[ImGuiCol_ButtonActive] : ImVec4{ 0, 0, 0, 0 };
 	return ImGui::ImageButton(id, texture_id, image_size, { 0, 0 }, { 1, 1 }, col, { 1, 1, 1, 1 });
+}
+
+bool SxImGui::ImageButton(const char* id, ImTextureID texture_id, const ImVec2& image_size, const ImVec4& tint_col) {
+	return ImGui::ImageButton(id, texture_id, image_size, { 0, 0 }, { 1, 1 }, { 0, 0, 0, 0 }, tint_col);
 }
 
 bool SxImGui::IsDoubleClick() {
