@@ -31,18 +31,15 @@ void FSceneRenderer::Render(const DirectXThreadContext* context, const Config& c
 		return;
 	}
 
-	RenderGeometryPass(context, conf);
+	switch (config.technique) {
+		case GraphicsTechnique::Deferred:
+			RenderTechniqueDeferred(context, conf);
+			break;
 
-	LightingPass(context, conf);
-
-	AmbientProcessPass(context, conf);
-
-	RenderTransparentBasePass(context, conf);
-
-	PostProcessPass(context, conf);
-
-	CompositeProcessPass(context, conf);
-
+		case GraphicsTechnique::Raytracing:
+			RenderTechniqueRaytracing(context, conf);
+			break;
+	}
 }
 
 void FSceneRenderer::ApplyConfig(Config& config) {
@@ -493,4 +490,23 @@ void FSceneRenderer::CompositeProcessPassTonemap(const DirectXThreadContext* con
 
 	FRenderCore::GetInstance()->GetProcess()->Dispatch(context, textures_->GetSize());
 
+}
+
+void FSceneRenderer::RenderTechniqueDeferred(const DirectXThreadContext* context, const Config& config) {
+
+	RenderGeometryPass(context, config);
+
+	LightingPass(context, config);
+
+	AmbientProcessPass(context, config);
+
+	RenderTransparentBasePass(context, config);
+
+	PostProcessPass(context, config);
+
+	CompositeProcessPass(context, config);
+}
+
+void FSceneRenderer::RenderTechniqueRaytracing(const DirectXThreadContext* context, const Config& config) {
+	context, config;
 }

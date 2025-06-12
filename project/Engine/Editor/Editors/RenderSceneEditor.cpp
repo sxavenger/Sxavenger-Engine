@@ -64,8 +64,8 @@ void RenderSceneEditor::ShowMainMenu() {
 
 void RenderSceneEditor::ShowWindow() {
 	ShowGameWindow();
-	ShowSceneWindow();
 	ShowCanvasWindow();
+	ShowSceneWindow();
 }
 
 void RenderSceneEditor::Render() {
@@ -344,10 +344,10 @@ void RenderSceneEditor::ShowSceneWindow() {
 		
 		//* translate
 		if (SxImGui::ImageButton(
-				"## gizmo translate",
-				operationTexture_[static_cast<uint32_t>(GuizmoOperation::Translate)].WaitGet()->GetGPUHandleSRV().ptr,
-				{ 16, 16 },
-				gizmoOperation_ == GuizmoOperation::Translate ? kSelectedColor : kNonSelectedColor)) {
+			"## gizmo translate",
+			operationTexture_[static_cast<uint32_t>(GuizmoOperation::Translate)].WaitGet()->GetGPUHandleSRV().ptr,
+			{ 16, 16 },
+			gizmoOperation_ == GuizmoOperation::Translate ? kSelectedColor : kNonSelectedColor)) {
 			gizmoOperation_ = GuizmoOperation::Translate;
 		}
 

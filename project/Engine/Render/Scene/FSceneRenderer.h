@@ -49,8 +49,8 @@ public:
 	////////////////////////////////////////////////////////////////////////////////////////////
 	enum class GraphicsTechnique : uint8_t {
 		Deferred,
-		//RayTracing, //!< todo
-		//PathTracing,
+		Raytracing, //!< todo
+		//Pathtracing,
 	};
 
 	////////////////////////////////////////////////////////////////////////////////////////////
@@ -142,5 +142,11 @@ private:
 
 	void CompositeProcessPass(const DirectXThreadContext* context, const Config& config);
 	void CompositeProcessPassTonemap(const DirectXThreadContext* context, const Config& config);
-	
+
+	//* technique *//
+
+	void RenderTechniqueDeferred(const DirectXThreadContext* context, const Config& config);
+
+	void RenderTechniqueRaytracing(const DirectXThreadContext* context, const Config& config);
+
 };
