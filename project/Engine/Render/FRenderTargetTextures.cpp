@@ -201,6 +201,25 @@ void FRenderTargetTextures::EndCanvasPass(const DirectXThreadContext* context) c
 	depth_->TransitionEndRasterizer(context);
 }
 
+void FRenderTargetTextures::BeginRaytracingPass(const DirectXThreadContext* context) const {
+	D3D12_RESOURCE_BARRIER barriers[] = {
+		gBuffers_[static_cast<uint8_t>(GBufferLayout::Main)]->TransitionBeginUnordered(),
+	};
+	context->GetCommandList()->ResourceBarrier(_countof(barriers), barriers);
+
+	depth_->TransitionBeginRaytracing(context);
+}
+
+void FRenderTargetTextures::EndRaytracingPass(const DirectXThreadContext* context) const {
+	D3D12_RESOURCE_BARRIER barriers[] = {
+		gBuffers_[static_cast<uint8_t>(GBufferLayout::Main)]->TransitionEndUnordered(),
+	};
+	context->GetCommandList()->ResourceBarrier(_countof(barriers), barriers);
+
+	depth_->TransitionEndRaytracing(context);
+	depth_->CopyRaytracingToRasterizer(context);
+}
+
 void FRenderTargetTextures::BeginPostProcess(const DirectXThreadContext* context) {
 	process_->BeginProcess(context, gBuffers_[static_cast<uint8_t>(GBufferLayout::Main)].get());
 }

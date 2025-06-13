@@ -25,8 +25,8 @@ RaytracingAccelerationStructure gScene : register(t0, space1);
 // config variables
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-static const float kTMin = 0.001f;     // minimum t value for ray intersection
-static const float kTMax = 1000000.0f; // maximum t value for ray intersection
+static const float kTMin = 0.001f;   // minimum t value for ray intersection
+static const float kTMax = 16384.0f; // maximum t value for ray intersection
 
 static const uint kFlag    = RAY_FLAG_CULL_BACK_FACING_TRIANGLES;
 static const uint kRayMask = 0xFF;

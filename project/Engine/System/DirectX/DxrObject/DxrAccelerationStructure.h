@@ -132,6 +132,8 @@ public:
 
 	const std::vector<Instance>& GetInstances() const { return instances_; }
 
+	const size_t GetInstanceDescCount() const { return descs_->GetSize(); }
+
 private:
 
 	//=========================================================================================

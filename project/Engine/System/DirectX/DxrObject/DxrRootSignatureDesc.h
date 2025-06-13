@@ -27,14 +27,14 @@ public:
 
 	//* virtual address *//
 
-	void SetVirtualCBV(uint32_t index, uint32_t shaderRegister);
-	void SetVirtualSRV(uint32_t index, uint32_t shaderRegister);
-	void SetVirtualUAV(uint32_t index, uint32_t shaderRegister);
+	void SetVirtualCBV(uint32_t index, UINT shaderRegister, UINT registerSpace = 0);
+	void SetVirtualSRV(uint32_t index, UINT shaderRegister, UINT registerSpace = 0);
+	void SetVirtualUAV(uint32_t index, UINT shaderRegister, UINT registerSpace = 0);
 
 	//* handle *//
 
-	void SetHandleSRV(uint32_t index, uint32_t shaderRegister);
-	void SetHandleUAV(uint32_t index, uint32_t shaderRegister);
+	void SetHandleSRV(uint32_t index, UINT shaderRegister, UINT registerSpace = 0);
+	void SetHandleUAV(uint32_t index, UINT shaderRegister, UINT registerSpace = 0);
 
 	//* root signature *//
 
@@ -56,14 +56,14 @@ public:
 	
 	//* virtual address *//
 
-	void SetVirtualCBV(uint32_t index, uint32_t shaderRegister);
-	void SetVirtualSRV(uint32_t index, uint32_t shaderRegister);
-	void SetVirtualUAV(uint32_t index, uint32_t shaderRegister);
+	void SetVirtualCBV(uint32_t index, UINT shaderRegister);
+	void SetVirtualSRV(uint32_t index, UINT shaderRegister);
+	void SetVirtualUAV(uint32_t index, UINT shaderRegister);
 
 	//* handle *//
 
-	void SetHandleSRV(uint32_t index, uint32_t shaderRegister);
-	void SetHandleUAV(uint32_t index, uint32_t shaderRegister);
+	void SetHandleSRV(uint32_t index, UINT shaderRegister);
+	void SetHandleUAV(uint32_t index, UINT shaderRegister);
 
 	//* root signature *//
 

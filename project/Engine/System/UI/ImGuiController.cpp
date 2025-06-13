@@ -255,7 +255,7 @@ void ImGuiController::SettingImGui() {
 		io.Fonts->AddFontFromFileTTF(filepath.generic_string().c_str(), 16.0f, &config, ranges);
 	}
 
-	io.Fonts->Build();
+	//io.Fonts->Build();
 
 	{ //!< imguiの書き込み, 読み込みを手動に変更
 		io.IniFilename = NULL;

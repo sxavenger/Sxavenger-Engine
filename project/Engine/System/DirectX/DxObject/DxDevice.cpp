@@ -41,7 +41,7 @@ void Device::Term() {
 }
 
 void Device::CreateDebugLayer() {
-#ifdef _DEBUG
+#ifdef _DEVELOPMENT
 
 	// デバックレイヤーの生成
 	if (SUCCEEDED(D3D12GetDebugInterface(IID_PPV_ARGS(&debugController_)))) {
@@ -56,7 +56,7 @@ void Device::CreateDebugLayer() {
 		}
 	}
 
-#endif // _DEBUG
+#endif // _DEVELOPMENT
 }
 
 void Device::CreateFactory() {

@@ -53,6 +53,10 @@ public:
 
 	void Init();
 
+	const DxrObject::ExportGroup* GetExportGroup(RaygenerationExportType raygeneration) const;
+	const DxrObject::ExportGroup* GetExportGroup(MissExportType miss) const;
+	const DxrObject::ExportGroup* GetExportGroup(HitgroupExportType hitgroup) const;
+
 private:
 
 	//=========================================================================================

@@ -236,6 +236,28 @@ void FDepthTexture::FRaytracingDepth::EndWrite(const DirectXThreadContext* conte
 	context->GetCommandList()->ResourceBarrier(1, &barrier);
 }
 
+void FDepthTexture::FRaytracingDepth::BeginState(const DirectXThreadContext* context, D3D12_RESOURCE_STATES state) const {
+	// barrierの設定
+	D3D12_RESOURCE_BARRIER barrier = {};
+	barrier.Type                   = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+	barrier.Transition.StateBefore = kDefaultResourceState_;
+	barrier.Transition.StateAfter  = state;
+	barrier.Transition.pResource   = resource_.Get();
+
+	context->GetCommandList()->ResourceBarrier(1, &barrier);
+}
+
+void FDepthTexture::FRaytracingDepth::EndState(const DirectXThreadContext* context, D3D12_RESOURCE_STATES state) const {
+	// barrierの設定
+	D3D12_RESOURCE_BARRIER barrier = {};
+	barrier.Type                   = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+	barrier.Transition.StateBefore = state;
+	barrier.Transition.StateAfter  = kDefaultResourceState_;
+	barrier.Transition.pResource   = resource_.Get();
+
+	context->GetCommandList()->ResourceBarrier(1, &barrier);
+}
+
 ////////////////////////////////////////////////////////////////////////////////////////////
 // FDepthTexture class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -276,4 +298,24 @@ void FDepthTexture::TransitionBeginStateRasterizer(const DirectXThreadContext* c
 
 void FDepthTexture::TransitionEndStateRasterizer(const DirectXThreadContext* context, D3D12_RESOURCE_STATES state) const {
 	rasterizer_.EndState(context, state);
+}
+
+
+void FDepthTexture::CopyRaytracingToRasterizer(const DirectXThreadContext* context) const {
+	raytracing_.BeginState(context, D3D12_RESOURCE_STATE_COPY_SOURCE);
+	rasterizer_.BeginState(context, D3D12_RESOURCE_STATE_COPY_DEST);
+
+	// HACK: copy region
+	D3D12_TEXTURE_COPY_LOCATION src = {};
+	src.pResource = raytracing_.resource_.Get();
+	src.Type      = D3D12_TEXTURE_COPY_TYPE_SUBRESOURCE_INDEX;
+
+	D3D12_TEXTURE_COPY_LOCATION dst = {};
+	dst.pResource = rasterizer_.resource_.Get();
+	dst.Type      = D3D12_TEXTURE_COPY_TYPE_SUBRESOURCE_INDEX;
+
+	context->GetCommandList()->CopyTextureRegion(&dst, 0, 0, 0, &src, nullptr);
+
+	raytracing_.EndState(context, D3D12_RESOURCE_STATE_COPY_SOURCE);
+	rasterizer_.EndState(context, D3D12_RESOURCE_STATE_COPY_DEST);
 }

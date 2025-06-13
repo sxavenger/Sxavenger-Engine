@@ -278,8 +278,23 @@ void RenderSceneEditor::ShowSceneConfig() {
 		MenuPadding();
 		ImGui::SeparatorText("config");
 
+		ImGui::Text("process");
+		ImGui::Separator();
 		ImGui::Checkbox("enable post process", &config_.isEnablePostProcess);
 		ImGui::Checkbox("enable composite",    &config_.isEnableComposite);
+
+		ImGui::Text("technique");
+		ImGui::Separator();
+
+		if (ImGui::RadioButton("rasterizer", config_.technique == FSceneRenderer::GraphicsTechnique::Deferred)) {
+			config_.technique = FSceneRenderer::GraphicsTechnique::Deferred;
+		}
+
+		ImGui::SameLine();
+
+		if (ImGui::RadioButton("raytracing(preview)", config_.technique == FSceneRenderer::GraphicsTechnique::Raytracing)) {
+			config_.technique = FSceneRenderer::GraphicsTechnique::Raytracing;
+		}
 		
 		ImGui::EndMenu();
 	}

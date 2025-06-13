@@ -76,6 +76,12 @@ public:
 
 	void EndCanvasPass(const DirectXThreadContext* context) const;
 
+	//* raytracing option *//
+
+	void BeginRaytracingPass(const DirectXThreadContext* context) const;
+
+	void EndRaytracingPass(const DirectXThreadContext* context) const;
+
 	//* process option *//
 
 	void BeginPostProcess(const DirectXThreadContext* context);

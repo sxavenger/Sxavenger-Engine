@@ -51,12 +51,37 @@ void StateObjectContext::CreateStateObject(DxObject::Device* device, const State
 	auto hr = device->GetDevice()->CreateStateObject(
 		stateObjectDesc, IID_PPV_ARGS(&stateObject_)
 	);
-	Assert(SUCCEEDED(hr));
+	Assert(SUCCEEDED(hr), "raytracing state object create failed.");
 	// note: DebugLayer = true でPIXを起動するとここでエラーが発生する.
 
 	// propertiesの取得
 	stateObject_.As(&properties_);
 
+}
+
+void StateObjectContext::CreateStateObject(DxObject::Device* device, StateObjectDesc&& desc) {
+	// descの保存
+	desc_ = std::move(desc);
+
+	// state objectの設定
+	CD3DX12_STATE_OBJECT_DESC stateObjectDesc = {};
+	stateObjectDesc.SetStateObjectType(D3D12_STATE_OBJECT_TYPE_RAYTRACING_PIPELINE);
+
+	// subobjectの設定
+	BindDXGILibrarySubobject(stateObjectDesc);
+	BindGlobalRootSignatureSubobject(stateObjectDesc);
+	BindExportLocalRootSignatureSubobject(stateObjectDesc);
+	BindConfigsSubobject(stateObjectDesc);
+
+	// state objectの生成
+	auto hr = device->GetDevice()->CreateStateObject(
+		stateObjectDesc, IID_PPV_ARGS(&stateObject_)
+	);
+	Assert(SUCCEEDED(hr), "raytracing state object create failed.");
+	// note: DebugLayer = true でPIXを起動するとここでエラーが発生する.
+
+	// propertiesの取得
+	stateObject_.As(&properties_);
 }
 
 void StateObjectContext::UpdateShaderTable(
@@ -82,7 +107,7 @@ void StateObjectContext::UpdateShaderTable(
 	// 使用する各シェーダーの個数より、シェーダーテーブルのサイズを求める.
 	UINT raygenerationSize = static_cast<UINT>(desc_.GetCount(ExportType::Raygeneration)) * raygenerationRecordSize;
 	UINT missSize          = static_cast<UINT>(desc_.GetCount(ExportType::Miss)) * missRecordSize;
-	UINT hitgroupSize      = static_cast<UINT>(toplevelAS->GetInstances().size()) * hitgroupRecordSize;
+	UINT hitgroupSize      = static_cast<UINT>(toplevelAS->GetInstanceDescCount()) * hitgroupRecordSize;
 
 	// 各テーブル開始位置にアライメント調整
 	UINT raygenerationRegion = Alignment(raygenerationSize, kShaderTableAlignment);
@@ -159,7 +184,7 @@ void StateObjectContext::UpdateShaderTable(
 	address += missRegion;
 
 	// hitgroupの設定
-	if (desc_.GetCount(ExportType::Hitgroup) != 0) {
+	if (toplevelAS->GetInstanceDescCount() > 0) {
 		dispatchDesc_.HitGroupTable.StartAddress  = address;
 		dispatchDesc_.HitGroupTable.SizeInBytes   = hitgroupSize;
 		dispatchDesc_.HitGroupTable.StrideInBytes = hitgroupRecordSize;
@@ -168,18 +193,19 @@ void StateObjectContext::UpdateShaderTable(
 	
 }
 
-void StateObjectContext::SetStateObject(DxObject::CommandContext* context) {
+void StateObjectContext::SetStateObject(DxObject::CommandContext* context) const {
 	context->GetCommandList()->SetComputeRootSignature(rootSignature_.Get());
 	context->GetCommandList()->SetPipelineState1(stateObject_.Get());
 }
 
-void StateObjectContext::DispatchRays(DxObject::CommandContext* context, const Vector2ui& size) {
+void StateObjectContext::DispatchRays(DxObject::CommandContext* context, const Vector2ui& size) const {
 
-	dispatchDesc_.Width  = size.x;
-	dispatchDesc_.Height = size.y;
-	dispatchDesc_.Depth  = 1;
+	D3D12_DISPATCH_RAYS_DESC desc = dispatchDesc_;
+	desc.Width  = size.x;
+	desc.Height = size.y;
+	desc.Depth  = 1;
 
-	context->GetCommandList()->DispatchRays(&dispatchDesc_);
+	context->GetCommandList()->DispatchRays(&desc);
 }
 
 void StateObjectContext::BindDXGILibrarySubobject(CD3DX12_STATE_OBJECT_DESC& desc) {

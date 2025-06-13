@@ -79,7 +79,13 @@ public:
 		void BeginWrite(const DirectXThreadContext* context) const;
 
 		//!< Transition to pixel shader resource state.
-		void EndWrite(const DirectXThreadContext* context) const; 
+		void EndWrite(const DirectXThreadContext* context) const;
+
+		//!< Transition to user state
+		void BeginState(const DirectXThreadContext* context, D3D12_RESOURCE_STATES state) const;
+
+		//!< Transition to default resource state.
+		void EndState(const DirectXThreadContext* context, D3D12_RESOURCE_STATES state) const;
 
 		//=========================================================================================
 		// public variables
@@ -117,11 +123,12 @@ public:
 
 	void TransitionEndRaytracing(const DirectXThreadContext* context) const;
 
-	// todo: raytracing -> rasterizer
-
 	void TransitionBeginStateRasterizer(const DirectXThreadContext* context, D3D12_RESOURCE_STATES state) const;
 
 	void TransitionEndStateRasterizer(const DirectXThreadContext* context, D3D12_RESOURCE_STATES state) const;
+
+	// todo: raytracing -> rasterizer
+	void CopyRaytracingToRasterizer(const DirectXThreadContext* context) const;
 
 	//* getter *//
 

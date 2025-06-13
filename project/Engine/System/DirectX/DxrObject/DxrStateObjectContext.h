@@ -109,6 +109,7 @@ public:
 	//* state object option *//
 
 	void CreateStateObject(DxObject::Device* device, const StateObjectDesc& desc);
+	void CreateStateObject(DxObject::Device* device, StateObjectDesc&& desc);
 
 	//* shader table option *//
 
@@ -120,9 +121,9 @@ public:
 
 	//* render option *//
 
-	void SetStateObject(DxObject::CommandContext* context);
+	void SetStateObject(DxObject::CommandContext* context) const;
 
-	void DispatchRays(DxObject::CommandContext* context, const Vector2ui& size);
+	void DispatchRays(DxObject::CommandContext* context, const Vector2ui& size) const;
 
 private:
 

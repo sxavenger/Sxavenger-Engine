@@ -17,6 +17,18 @@ void FRenderCoreRaytracing::Init() {
 	CreateHitgroup();
 }
 
+const DxrObject::ExportGroup* FRenderCoreRaytracing::GetExportGroup(RaygenerationExportType raygeneration) const {
+	return &raygenerationExportGroups_[GetIndex(raygeneration)].second;
+}
+
+const DxrObject::ExportGroup* FRenderCoreRaytracing::GetExportGroup(MissExportType miss) const {
+	return &missExportGroups_[GetIndex(miss)].second;
+}
+
+const DxrObject::ExportGroup* FRenderCoreRaytracing::GetExportGroup(HitgroupExportType hitgroup) const {
+	return &hitgroupExportGroups_[GetIndex(hitgroup)].second;
+}
+
 void FRenderCoreRaytracing::CreateRaygeneration() {
 
 	{ //!< Default
@@ -24,7 +36,7 @@ void FRenderCoreRaytracing::CreateRaygeneration() {
 		auto& [blob, expt] = raygenerationExportGroups_[GetIndex(RaygenerationExportType::Default)];
 		blob.Create(kDirectory_ / "Default.raygeneration.hlsl");
 
-		expt.ExportRaygeneration(L"mainRaygen");
+		expt.ExportRaygeneration(L"mainRaygeneration");
 		expt.SetBlob(&blob);
 
 	}

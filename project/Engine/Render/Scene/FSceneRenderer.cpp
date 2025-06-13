@@ -508,5 +508,19 @@ void FSceneRenderer::RenderTechniqueDeferred(const DirectXThreadContext* context
 }
 
 void FSceneRenderer::RenderTechniqueRaytracing(const DirectXThreadContext* context, const Config& config) {
-	context, config;
+	// preview機能
+
+	textures_->BeginRaytracingPass(context);
+
+	config.scene->GetStateObjectContext().SetStateObject(context->GetDxCommand());
+
+	auto commandList = context->GetCommandList();
+	commandList->SetComputeRootDescriptorTable(0, textures_->GetGBuffer(FRenderTargetTextures::GBufferLayout::Main)->GetGPUHandleUAV());
+	commandList->SetComputeRootDescriptorTable(1, textures_->GetDepth()->GetRaytracingGPUHandleUAV());
+	commandList->SetComputeRootConstantBufferView(2, config.camera->GetGPUVirtualAddress());
+	commandList->SetComputeRootShaderResourceView(3, config.scene->GetTopLevelAS().GetGPUVirtualAddress());
+
+	config.scene->GetStateObjectContext().DispatchRays(context->GetDxCommand(), textures_->GetSize());
+
+	textures_->EndRaytracingPass(context);
 }
