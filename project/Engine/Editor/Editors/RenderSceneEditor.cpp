@@ -57,6 +57,7 @@ void RenderSceneEditor::ShowMainMenu() {
 		ShowSceneConfig();
 		ShowGizmoMenu();
 		ShowColliderMenu();
+		ShowCaptureMenu();
 		
 		ImGui::EndMenu();
 	}
@@ -336,6 +337,23 @@ void RenderSceneEditor::ShowColliderMenu() {
 		ImGui::BeginDisabled(!isRenderCollider_);
 		colliderRenderer_->SetImGuiCommand();
 		ImGui::EndDisabled();
+
+		ImGui::EndMenu();
+	}
+}
+
+void RenderSceneEditor::ShowCaptureMenu() {
+	if (ImGui::BeginMenu("capture")) {
+		MenuPadding();
+		ImGui::SeparatorText("capture");
+
+		if (ImGui::Button("scene window capture")) {
+			textures_->CaptureGBuffer(FRenderTargetTextures::GBufferLayout::Main, SxavengerSystem::GetMainThreadContext(), "capture_scene.png");
+		}
+
+		if (ImGui::Button("game window capture")) {
+			FMainRender::GetInstance()->GetTextures()->CaptureGBuffer(FRenderTargetTextures::GBufferLayout::Main, SxavengerSystem::GetMainThreadContext(), "capture_game.png");
+		}
 
 		ImGui::EndMenu();
 	}

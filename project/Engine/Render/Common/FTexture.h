@@ -20,7 +20,7 @@ public:
 	// public methods
 	//=========================================================================================
 
-	FTexture()  = default;
+	FTexture() = default;
 
 	void Create(const Vector2ui& size, DXGI_FORMAT format = DxObject::kOffscreenFormat);
 

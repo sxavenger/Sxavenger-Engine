@@ -322,6 +322,8 @@ void FSceneRenderer::LightingPassSkyLight(const DirectXThreadContext* context, c
 		parameter.SetHandle("gBRDFLut",            FRenderCore::GetInstance()->GetBRDFLut());
 		parameter.SetAddress("gShadow",            component->GetShadowBufferAddress());
 
+		parameter.SetHandle("gEnvironment",        component->GetEnvironment().value()); //!< DEBUG
+
 		FRenderCore::GetInstance()->GetLight()->BindGraphicsBuffer(
 			FRenderCoreLight::LightType::SkyLight, context, parameter
 		);

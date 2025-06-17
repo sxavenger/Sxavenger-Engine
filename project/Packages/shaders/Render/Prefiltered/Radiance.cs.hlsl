@@ -91,7 +91,7 @@ float3 PrefilterRadiance(float roughness, float3 r) {
 		float NdotL = saturate(dot(n, l)); //!< ライトベクトルと法線ベクトルの内積
 
 		if (NdotL > 0.0f) {
-			color       += NdotL * gEnvironment.SampleLevel(gEnvironmentSampler, l, 0.0f).rgb; //!< 環境マップをサンプリング
+			color       += NdotL * gEnvironment.SampleLevel(gEnvironmentSampler, l, 0).rgb; //!< 環境マップをサンプリング
 			totalWeight += NdotL;
 		}
 	}

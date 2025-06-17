@@ -88,6 +88,10 @@ public:
 
 	void EndPostProcess(const DirectXThreadContext* context);
 
+	//* capture option *//
+
+	void CaptureGBuffer(GBufferLayout layout, const DirectXThreadContext* context, const std::filesystem::path& filepath) const;
+
 	//* getter *//
 
 	const Vector2ui& GetSize() const { return size_; }

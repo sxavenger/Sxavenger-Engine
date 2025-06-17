@@ -419,6 +419,7 @@ constexpr Vector3<_Ty> kLeft3 = -kUnitX3<_Ty>;
 
 using Vector3i  = Vector3<std::int32_t>;
 using Vector3ui = Vector3<std::uint32_t>;
+using Vector3uz = Vector3<std::size_t>;
 
 using Vector3f = Vector3<float>;
 

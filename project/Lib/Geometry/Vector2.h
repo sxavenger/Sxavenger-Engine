@@ -358,5 +358,6 @@ constexpr Vector2<_Ty> kInfinity2 = { std::numeric_limits<_Ty>::infinity(), std:
 
 using Vector2i  = Vector2<std::int32_t>;
 using Vector2ui = Vector2<std::uint32_t>;
+using Vector2uz = Vector2<std::size_t>;
 
 using Vector2f = Vector2<float>;

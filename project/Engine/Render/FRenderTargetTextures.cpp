@@ -6,6 +6,7 @@ _DXOBJECT_USING
 //-----------------------------------------------------------------------------------------
 //* engine
 #include <Engine/System/SxavengerSystem.h>
+#include <Engine/Content/Exporter/TextureExporter.h>
 
 //=========================================================================================
 // static const variables
@@ -226,4 +227,17 @@ void FRenderTargetTextures::BeginPostProcess(const DirectXThreadContext* context
 
 void FRenderTargetTextures::EndPostProcess(const DirectXThreadContext* context) {
 	process_->EndProcess(context, gBuffers_[static_cast<uint8_t>(GBufferLayout::Main)].get());
+}
+
+void FRenderTargetTextures::CaptureGBuffer(GBufferLayout layout, const DirectXThreadContext* context, const std::filesystem::path& filepath) const {
+
+	auto texture = GetGBuffer(layout);
+
+	texture->TransitionBeginState(context, D3D12_RESOURCE_STATE_COPY_SOURCE);
+
+	TextureExporter::Export(
+		context, TextureExporter::TextureDimension::Texture2D, texture->GetResource(), GetFormat(layout), filepath
+	);
+
+	texture->TransitionEndState(context, D3D12_RESOURCE_STATE_COPY_SOURCE);
 }

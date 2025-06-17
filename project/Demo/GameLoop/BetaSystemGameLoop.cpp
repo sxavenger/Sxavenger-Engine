@@ -20,8 +20,6 @@
 
 #include "Engine/Component/Components/Light/Environment/SkyLightComponent.h"
 
-#include "Engine/System/Runtime/Thread/AsyncThread.h"
-
 ////////////////////////////////////////////////////////////////////////////////////////////
 // BetaSystemGameLoop class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -131,9 +129,10 @@ void BetaSystemGameLoop::DrawSystem() {
 
 	main_->BeginRendering();
 	main_->ClearWindow();
-
+	 
 	FMainRender::GetInstance()->PresentMain(SxavengerSystem::GetMainThreadContext());
 	SxavengerSystem::RenderImGui();
 
 	main_->EndRendering();
+
 }

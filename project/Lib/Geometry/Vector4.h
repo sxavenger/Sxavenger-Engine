@@ -192,5 +192,7 @@ constexpr Vector4<_Ty> operator/(const Vector4<_Ty>& lhs, const _Ty& rhs) noexce
 
 using Vector4i  = Vector4<std::int32_t>;
 using Vector4ui = Vector4<std::uint32_t>;
+using Vector4uz = Vector4<std::size_t>;
+
 using Vector4f  = Vector4<float>;
 

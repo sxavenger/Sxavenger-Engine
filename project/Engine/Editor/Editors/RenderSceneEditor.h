@@ -157,6 +157,7 @@ private:
 	void ShowSceneConfig();
 	void ShowGizmoMenu();
 	void ShowColliderMenu();
+	void ShowCaptureMenu();
 
 	void ShowSceneWindow();
 	void ShowGameWindow();

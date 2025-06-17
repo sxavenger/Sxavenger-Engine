@@ -187,6 +187,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="Demo\Entity\Player.cpp" />
     <ClCompile Include="Demo\GameLoop\BetaSystemGameLoop.cpp" />
     <ClCompile Include="Demo\GameLoop\DemoGameLoop.cpp" />
+    <ClCompile Include="Engine\Content\Exporter\TextureExporter.cpp" />
     <ClCompile Include="Engine\Component\Components\PostProcessLayer\PostProcessAutoExposure.cpp" />
     <ClCompile Include="Engine\GameLoop\FeatureLevelGameLoop.cpp" />
     <ClCompile Include="Demo\GameLoop\PreviewGameLoop.cpp" />
@@ -346,6 +347,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Demo\Entity\Player.h" />
     <ClInclude Include="Demo\GameLoop\BetaSystemGameLoop.h" />
     <ClInclude Include="Demo\GameLoop\DemoGameLoop.h" />
+    <ClInclude Include="Engine\Content\Exporter\TextureExporter.h" />
     <ClInclude Include="Engine\Component\Components\PostProcessLayer\PostProcessAutoExposure.h" />
     <ClInclude Include="Engine\GameLoop\FeatureLevelGameLoop.h" />
     <ClInclude Include="Demo\GameLoop\PreviewGameLoop.h" />

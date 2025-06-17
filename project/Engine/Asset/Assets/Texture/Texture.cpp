@@ -78,7 +78,9 @@ DirectX::ScratchImage Texture::LoadTexture(const std::filesystem::path& filepath
 
 	HRESULT hr = {};
 
-	if (filepath.extension() == ".dds") { //!< filenameが".dds"で終わっている場合
+	const std::filesystem::path& extension = filepath.extension();
+
+	if (extension == ".dds") { //!< filenameが".dds"で終わっている場合
 		hr = DirectX::LoadFromDDSFile(
 			filepath.generic_wstring().c_str(),
 			DirectX::DDS_FLAGS_NONE,
@@ -86,14 +88,14 @@ DirectX::ScratchImage Texture::LoadTexture(const std::filesystem::path& filepath
 			image
 		);
 
-	} else if (filepath.extension() == ".hdr") { //!< filenameが".hdr"で終わっている場合
+	} else if (extension == ".hdr") { //!< filenameが".hdr"で終わっている場合
 		hr = DirectX::LoadFromHDRFile(
 			filepath.generic_wstring().c_str(),
 			nullptr,
 			image
 		);
 
-	} else if (filepath.extension() == ".tga") {
+	} else if (extension == ".tga") {
 		hr = DirectX::LoadFromTGAFile(
 			filepath.generic_wstring().c_str(),
 			nullptr,

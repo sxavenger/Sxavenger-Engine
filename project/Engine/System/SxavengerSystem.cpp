@@ -18,10 +18,10 @@ namespace {
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// SxavengerSystemEngine class methods
+// SxavengerSystem class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-void SxavengerSystemEngine::Init() {
+void SxavengerSystem::Init() {
 
 	EngineLog("Engine Version: " + kSxavengerEngineVersion);
 	EngineThreadLog("this thread is main thread.");
@@ -45,34 +45,34 @@ void SxavengerSystemEngine::Init() {
 	sImGuiController  = std::make_unique<ImGuiController>();
 }
 
-void SxavengerSystemEngine::Term() {
+void SxavengerSystem::Term() {
 }
 
-_DXOBJECT Descriptor SxavengerSystemEngine::GetDescriptor(_DXOBJECT DescriptorType type) {
+_DXOBJECT Descriptor SxavengerSystem::GetDescriptor(_DXOBJECT DescriptorType type) {
 	return sDirectXCommon->GetDesriptorHeaps()->GetDescriptor(type);
 }
 
-_DXOBJECT Device* SxavengerSystemEngine::GetDxDevice() {
+_DXOBJECT Device* SxavengerSystem::GetDxDevice() {
 	return sDirectXCommon->GetDevice();
 }
 
-_DXOBJECT DescriptorHeaps* SxavengerSystemEngine::GetDxDescriptorHeaps() {
+_DXOBJECT DescriptorHeaps* SxavengerSystem::GetDxDescriptorHeaps() {
 	return sDirectXCommon->GetDesriptorHeaps();
 }
 
-void SxavengerSystemEngine::TransitionAllocator() {
+void SxavengerSystem::TransitionAllocator() {
 	sMainThreadContext->TransitionAllocator();
 }
 
-void SxavengerSystemEngine::ExecuteAllAllocator() {
+void SxavengerSystem::ExecuteAllAllocator() {
 	sMainThreadContext->ExecuteAllAllocators();
 }
 
-DirectXThreadContext* SxavengerSystemEngine::GetMainThreadContext() {
+DirectXThreadContext* SxavengerSystem::GetMainThreadContext() {
 	return sMainThreadContext.get();
 }
 
-const std::weak_ptr<GameWindow> SxavengerSystemEngine::CreateMainWindow(
+const std::weak_ptr<GameWindow> SxavengerSystem::CreateMainWindow(
 	const Vector2ui& clientSize, const LPCWSTR& name, const Color4f& clearColor) {
 
 	// windowの生成
@@ -85,87 +85,87 @@ const std::weak_ptr<GameWindow> SxavengerSystemEngine::CreateMainWindow(
 	return window;
 }
 
-const std::weak_ptr<GameWindow> SxavengerSystemEngine::TryCreateSubWindow(
+const std::weak_ptr<GameWindow> SxavengerSystem::TryCreateSubWindow(
 	const Vector2ui& clientSize, const LPCWSTR& name, const Color4f& clearColor) {
 	return sWindowCollection->TryCreateSubWindow(clientSize, name, clearColor);
 }
 
-bool SxavengerSystemEngine::ProcessMessage() {
+bool SxavengerSystem::ProcessMessage() {
 	return sWindowCollection->ProcessMessage();
 }
 
-void SxavengerSystemEngine::PresentAllWindow() {
+void SxavengerSystem::PresentAllWindow() {
 	sWindowCollection->PresentAllWindow();
 }
 
-const std::weak_ptr<GameWindow> SxavengerSystemEngine::GetMainWindow() {
+const std::weak_ptr<GameWindow> SxavengerSystem::GetMainWindow() {
 	return sWindowCollection->GetMainWindow();
 }
 
-const GameWindow* SxavengerSystemEngine::GetForcusWindow() {
+const GameWindow* SxavengerSystem::GetForcusWindow() {
 	return sWindowCollection->GetForcusWindow();
 }
 
-GameWindowCollection* SxavengerSystemEngine::GetGameWindowCollection() {
+GameWindowCollection* SxavengerSystem::GetGameWindowCollection() {
 	return sWindowCollection.get();
 }
 
-bool SxavengerSystemEngine::IsPressKey(KeyId id) {
+bool SxavengerSystem::IsPressKey(KeyId id) {
 	return sInput->IsPressKey(id);
 }
 
-bool SxavengerSystemEngine::IsTriggerKey(KeyId id) {
+bool SxavengerSystem::IsTriggerKey(KeyId id) {
 	return  sInput->IsTriggerKey(id);
 }
 
-bool SxavengerSystemEngine::IsReleaseKey(KeyId id) {
+bool SxavengerSystem::IsReleaseKey(KeyId id) {
 	return sInput->IsReleaseKey(id);
 }
 
-Input* SxavengerSystemEngine::GetInput() {
+Input* SxavengerSystem::GetInput() {
 	return sInput.get();
 }
 
-void SxavengerSystemEngine::BeginPerformace() {
+void SxavengerSystem::BeginPerformace() {
 	sPerformance->Begin();
 }
 
-void SxavengerSystemEngine::EndPerformace() {
+void SxavengerSystem::EndPerformace() {
 	sPerformance->End();
 }
 
-TimePointf<TimeUnit::second> SxavengerSystemEngine::GetDeltaTime() {
+TimePointf<TimeUnit::second> SxavengerSystem::GetDeltaTime() {
 	return sPerformance->GetDeltaTime();
 }
 
-void SxavengerSystemEngine::RecordLap(const std::string& name) {
+void SxavengerSystem::RecordLap(const std::string& name) {
 	sPerformance->RecordLap(name);
 }
 
-Performance* SxavengerSystemEngine::GetPerformance() {
+Performance* SxavengerSystem::GetPerformance() {
 	return sPerformance.get();
 }
 
-void SxavengerSystemEngine::PushTask(AsyncExecution execution, const std::shared_ptr<AsyncTask>& task) {
+void SxavengerSystem::PushTask(AsyncExecution execution, const std::shared_ptr<AsyncTask>& task) {
 	sAsyncThreadCollection->PushTask(execution, task);
 }
 
-void SxavengerSystemEngine::ShutdownAsyncThread() {
+void SxavengerSystem::ShutdownAsyncThread() {
 	sAsyncThreadCollection->Term();
 }
 
-void SxavengerSystemEngine::BeginImGuiFrame() {
+void SxavengerSystem::BeginImGuiFrame() {
 	sImGuiController->BeginFrame();
 }
 
-void SxavengerSystemEngine::EndImGuiFrame() {
+void SxavengerSystem::EndImGuiFrame() {
 	sImGuiController->EndFrame();
 }
 
-void SxavengerSystemEngine::RenderImGui(DirectXThreadContext* context) {
+void SxavengerSystem::RenderImGui(DirectXThreadContext* context) {
 	sImGuiController->Render(context);
 }
 
-ImGuiController* SxavengerSystemEngine::GetImGuiController() {
+ImGuiController* SxavengerSystem::GetImGuiController() {
 	return sImGuiController.get();
 }
