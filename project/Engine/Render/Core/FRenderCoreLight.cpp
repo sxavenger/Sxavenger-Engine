@@ -34,7 +34,8 @@ void FRenderCoreLight::DrawCall(const DirectXThreadContext* context) const {
 }
 
 void FRenderCoreLight::SetPipeline(LightType type, const DirectXThreadContext* context, const Vector2ui& size) {
-	pipelines_[type]->SetPipeline(context->GetDxCommand(), size);
+	//pipelines_[type]->SetPipeline(context->GetDxCommand(), size);
+	pipelines_[type]->ReloadAndSetPipeline(context, size);
 }
 
 void FRenderCoreLight::BindGraphicsBuffer(LightType type, const DirectXThreadContext* context, const DxObject::BindBufferDesc& desc) {

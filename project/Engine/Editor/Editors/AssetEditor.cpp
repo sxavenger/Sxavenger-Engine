@@ -3,8 +3,9 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
-//* engine
-#include <Engine/Asset/SxavengerAsset.h>
+//* editor
+#include "../EditorEngine.h"
+#include "InspectorEditor.h"
 
 //////////////////////////////////////////////////////////////////////////////////////////
 // AssetEditor class methods
@@ -31,7 +32,9 @@ void AssetEditor::ShowAssetWindow() {
 		if (ImGui::TreeNode(type->name())) {
 
 			for (const auto& [filepath, asset] : map) {
-				ImGui::Selectable(filepath.generic_string().c_str(), false);
+				if (ImGui::Selectable(filepath.generic_string().c_str(), CheckSelected(asset.get()))) {
+					SetSelected(asset.get());
+				}
 
 				// drag and dropの定義
 				if (ImGui::BeginDragDropSource()) {
@@ -53,4 +56,18 @@ void AssetEditor::ShowAssetWindow() {
 
 	ImGui::End();
 
+}
+
+bool AssetEditor::CheckSelected(BaseAsset* asset) {
+	if (auto editor = BaseEditor::GetEditorEngine()->GetEditor<InspectorEditor>()) {
+		return editor->CheckInspector(asset);
+	}
+
+	return false;
+}
+
+void AssetEditor::SetSelected(BaseAsset* asset) {
+	if (auto editor = BaseEditor::GetEditorEngine()->GetEditor<InspectorEditor>()) {
+		editor->SetInspector(asset);
+	}
 }

@@ -80,7 +80,7 @@ void CustomGraphicsPipeline::CheckAndReload() {
 void CustomReflectionGraphicsPipeline::RegisterBlob() {
 	for (uint8_t i = 0; i < assets_.size(); ++i) {
 		if (assets_[i].has_value()) {
-			SetBlob(*assets_[i].value().WaitGet(), static_cast<GraphicsShaderType>(i));
+			SetBlob(*assets_[i].value().WaitAcquire(), static_cast<GraphicsShaderType>(i));
 
 		} else {
 			blobs_[i] = std::nullopt;

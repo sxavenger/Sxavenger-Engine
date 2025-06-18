@@ -123,7 +123,7 @@ template <BaseAssetConcept T>
 inline bool AssetObserver<T>::IsExpired() const {
 	Condition condition = GetCondition();
 	Exception::Assert(condition != Condition::UnRegistered, "asset is not registered.");
-	return condition != Condition::Expired;
+	return condition == Condition::Expired;
 }
 
 template <BaseAssetConcept T>

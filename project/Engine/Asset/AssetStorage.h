@@ -96,7 +96,7 @@ AssetObserver<_Ty> AssetStorage::Import(const std::filesystem::path& filepath, c
 	asset->SetFilepath(filepath);
 	asset->SetParam(param);
 
-	storage_[type].Emplace(filepath, asset);
+	storage_[type][filepath] = asset;
 	SxavengerSystem::PushTask(asset->GetAsyncExecution(), asset);
 
 	AssetObserver<_Ty> observer;

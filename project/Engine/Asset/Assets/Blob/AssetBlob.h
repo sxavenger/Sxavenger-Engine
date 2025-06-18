@@ -26,6 +26,10 @@ public:
 	void Load(_MAYBE_UNUSED const DirectXThreadContext* context) override; //!< entry point は L"main"限定
 
 	AsyncExecution GetAsyncExecution() const override { return AsyncExecution::None; }
+
+	//* inspector option *//
+
+	void ShowInspector() override;
 	
 private:
 };

@@ -6,6 +6,9 @@
 //* editor
 #include "BaseEditor.h"
 
+//* engine
+#include <Engine/Asset/SxavengerAsset.h>
+
 //////////////////////////////////////////////////////////////////////////////////////////
 // AssetEditor class
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -41,5 +44,11 @@ private:
 	//* show imgui component *//
 
 	void ShowAssetWindow();
+
+	//* helper *//
+
+	void SetSelected(BaseAsset* asset);
+
+	bool CheckSelected(BaseAsset* asset);
 
 };
