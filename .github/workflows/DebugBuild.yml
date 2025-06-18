@@ -1,27 +1,28 @@
 name: "debug build"
-on:
-    push:
-        branches:
-            - "feature/_3.4"
 
-env:
-    # リポジトリのルートディレクトリを基点としたslnのfilepath
-    SOLUTION_FILE_PATH: project/SxavengerEngine.sln
-    # Visual Sudio の構成(Debug || Release)
-    CONFIGURATION: Debug
+on:
+  push:
+    branches:
+      - "feature/_3.4"
 
 jobs:
-    build:
-        runs-on: windows-2022
+  build:
+    runs-on: windows-2022
 
-        steps:
-            - name: Checkout
-              uses: actions/checkout@v4
+    env:
+      # リポジトリのルートディレクトリを基点としたslnのfilepath
+      SOLUTION_FILE_PATH: project/SxavengerEngine.sln
+      # Visual Studio の構成(Debug || Release)
+      CONFIGURATION: Debug
 
-            - name: Add MSBuild to PATH
-              uses: microsoft/setup-msbuild@v2
-              with:
-                msbuild_architecture: x64
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
 
-            - name: Build
-              run: msbuild ${{env.SOLUTION_FILE_PATH}} /p:Platform=x64,Configuration=${{env.CONFIGURATION}}
+      - name: Add MSBuild to PATH
+        uses: microsoft/setup-msbuild@v2
+        with:
+          msbuild_architecture: x64
+
+      - name: Build solution
+        run: msbuild $env:SOLUTION_FILE_PATH /p:Platform=x64 /p:Configuration=$env:CONFIGURATION
