@@ -106,6 +106,7 @@ void ImGuiController::EndFrame() {
 }
 
 void ImGuiController::Render(DirectXThreadContext* context) {
+	context;
 #ifdef _DEVELOPMENT
 	ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(), context->GetCommandList());
 #endif // _DEVELOPMENT
