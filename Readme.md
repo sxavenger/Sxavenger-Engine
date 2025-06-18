@@ -6,5 +6,7 @@
 3.4
 
 ## Build Status
-[![debug build](https://github.com/sxavenger/Sxavenger-Engine/actions/workflows/DebugBuild.yml/badge.svg)](https://github.com/sxavenger/Sxavenger-Engine/actions/workflows/DebugBuild.yml)
-[![release build](https://github.com/sxavenger/Sxavenger-Engine/actions/workflows/ReleaseBuild.yml/badge.svg)](https://github.com/sxavenger/Sxavenger-Engine/actions/workflows/ReleaseBuild.yml)
+- feature/_3.4
+[![debug build](https://github.com/sxavenger/Sxavenger-Engine/actions/workflows/DebugBuild.yml/badge.svg?branch=feature%2F_3.4)](https://github.com/sxavenger/Sxavenger-Engine/actions/workflows/DebugBuild.yml)
+[![develop build](https://github.com/sxavenger/Sxavenger-Engine/actions/workflows/DevelopBuild.yml/badge.svg?branch=feature%2F_3.4)](https://github.com/sxavenger/Sxavenger-Engine/actions/workflows/DevelopBuild.yml)
+[![release build](https://github.com/sxavenger/Sxavenger-Engine/actions/workflows/ReleaseBuild.yml/badge.svg?branch=feature%2F_3.4)](https://github.com/sxavenger/Sxavenger-Engine/actions/workflows/ReleaseBuild.yml)

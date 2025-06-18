@@ -153,8 +153,8 @@ float3 ApproximateBRDF(float3 diffuseAlbedo, float3 specularAlbedo, float3 n, fl
 	float lod = roughness * float(gSpecularParameter.miplevels);
 
 #ifdef _DEBUG_SAMPLE
-	float3 diffuseLight = PrefilterIrradiance(n); //!< 環境マップから色を取得
-	float3 specularLight = PrefilterRadiance(roughness, r); //!< 環境マップから色を取得
+	float3 diffuseLight  = PrefilterIrradiance(n);
+	float3 specularLight = PrefilterRadiance(roughness, r);
 #else
 	float3 diffuseLight  = gDiffuseParameter.Sample(gSampler, n).rgb;
 	float3 specularLight = gSpecularParameter.Sample(gSampler, r, lod).rgb;
