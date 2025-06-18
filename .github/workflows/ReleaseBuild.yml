@@ -2,7 +2,7 @@ name: "release build"
 on:
     push:
         branches:
-            - "3.1"
+            - "featyre/_3.4"
 
 env:
     # リポジトリのルートディレクトリを基点としたslnのfilepath
