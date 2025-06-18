@@ -2,7 +2,7 @@ name: "debug build"
 on:
     push:
         branches:
-            - "featyre/_3.4"
+            - "feature/_3.4"
 
 env:
     # リポジトリのルートディレクトリを基点としたslnのfilepath
