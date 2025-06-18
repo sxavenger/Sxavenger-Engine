@@ -3,6 +3,9 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
+//* utility
+#include "UtilityCommon.h"
+
 //* lib
 #include <Lib/CXXAttributeConfig.h>
 
@@ -13,20 +16,6 @@
 #include <fstream>
 #include <mutex>
 #include <vector>
-
-////////////////////////////////////////////////////////////////////////////////////////////
-// define
-////////////////////////////////////////////////////////////////////////////////////////////
-
-#define _TO_STRING_HELPER(x) #x
-#define _TO_STRING(x) _TO_STRING_HELPER(x)
-
-////////////////////////////////////////////////////////////////////////////////////////////
-// Convert string methods
-////////////////////////////////////////////////////////////////////////////////////////////
-
-std::string  ToString(const std::wstring& str);
-std::wstring ToWString(const std::string& str);
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // SxavengerLogger class
@@ -140,22 +129,35 @@ private:
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// Log methods
+// Logger namespace
 ////////////////////////////////////////////////////////////////////////////////////////////
+namespace Logger {
 
-void Log(const std::string& log);
-void Log(const std::wstring& log);
+	void Log(const std::string& log);
+	void Log(const std::wstring& log);
 
-void EngineLog(const std::string& log);
-void EngineLog(const std::wstring& log);
+	void EngineLog(const std::string& log);
+	void EngineLog(const std::wstring& log);
 
-void EngineThreadLog(const std::string& log);
-void EngineThreadLog(const std::wstring& log);
+	void EngineThreadLog(const std::string& log);
+	void EngineThreadLog(const std::wstring& log);
 
-void Assert(bool expression, const std::string& label = "", const std::string& detail = "", const std::source_location& location = std::source_location::current());
-void AssertW(bool expression, const std::wstring& label = L"", const std::wstring& detail = L"", const std::source_location& location = std::source_location::current());
+	void LogRuntime(const std::string& label, const std::string& detail = "", SxavengerLogger::Category category = SxavengerLogger::Category::None);
+	void CommentRuntime(const std::string& label, const std::string& detail = "");
+	void WarningRuntime(const std::string& label, const std::string& detail = "");
+	void ErrorRuntime(const std::string& label, const std::string& detail = "");
 
-void LogRuntime(const std::string& label, const std::string& detail = "", SxavengerLogger::Category category = SxavengerLogger::Category::None);
-void CommentRuntime(const std::string& label, const std::string& detail = "");
-void WarningRuntime(const std::string& label, const std::string& detail = "");
-void ErrorRuntime(const std::string& label, const std::string& detail = "");
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////
+// Exception namespace
+////////////////////////////////////////////////////////////////////////////////////////////
+namespace Exception {
+
+	void Assert(bool expression, const std::string& label = "", const std::string& detail = "", const std::source_location& location = std::source_location::current());
+	void AssertW(bool expression, const std::wstring& label = L"", const std::wstring& detail = L"", const std::source_location& location = std::source_location::current());
+
+};
+
+
+

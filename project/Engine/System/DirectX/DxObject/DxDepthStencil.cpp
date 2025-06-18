@@ -49,7 +49,7 @@ void DepthStencil::CreateResource(Device* devices, const Vector2ui& size, DXGI_F
 		&clear,
 		IID_PPV_ARGS(&resource_)
 	);
-	Assert(SUCCEEDED(hr));
+	Exception::Assert(SUCCEEDED(hr));
 
 }
 

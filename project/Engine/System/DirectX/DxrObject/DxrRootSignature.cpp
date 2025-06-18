@@ -31,7 +31,7 @@ void LocalRootSignature::CreateTable(const LocalRootSignatureDesc& desc) {
 				break;
 
 			default:
-				Assert(false, "invalid parameter type."); //!< 32bit
+				Exception::Assert(false, "invalid parameter type."); //!< 32bit
 				break;
 		}
 	}

@@ -19,19 +19,19 @@ void WriteBindBufferDesc::SetHandle(uint32_t index, const D3D12_GPU_DESCRIPTOR_H
 }
 
 DxObject::GPUBuffer WriteBindBufferDesc::GetBuffer(uint32_t index) const {
-	Assert(container_[index].has_value(), "buffer is not set.");
+	Exception::Assert(container_[index].has_value(), "buffer is not set.");
 	return container_[index].value();
 }
 
 D3D12_GPU_VIRTUAL_ADDRESS WriteBindBufferDesc::GetAddress(uint32_t index) const {
 	auto buffer = GetBuffer(index);
-	Assert(std::holds_alternative<D3D12_GPU_VIRTUAL_ADDRESS>(buffer), "buffer type different.");
+	Exception::Assert(std::holds_alternative<D3D12_GPU_VIRTUAL_ADDRESS>(buffer), "buffer type different.");
 	return std::get<D3D12_GPU_VIRTUAL_ADDRESS>(buffer);
 }
 
 D3D12_GPU_DESCRIPTOR_HANDLE WriteBindBufferDesc::GetHandle(uint32_t index) const {
 	auto buffer = GetBuffer(index);
-	Assert(std::holds_alternative<D3D12_GPU_DESCRIPTOR_HANDLE>(buffer), "buffer type different.");
+	Exception::Assert(std::holds_alternative<D3D12_GPU_DESCRIPTOR_HANDLE>(buffer), "buffer type different.");
 	return std::get<D3D12_GPU_DESCRIPTOR_HANDLE>(buffer);
 }
 

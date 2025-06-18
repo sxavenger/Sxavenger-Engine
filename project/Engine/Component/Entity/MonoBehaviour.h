@@ -243,7 +243,7 @@ _Ty* MonoBehaviour::AddComponent() {
 		components_[type] = sComponentStorage->RegisterComponent<_Ty>(this);
 		
 	} else {
-		WarningRuntime("warning | [MonoBehaviour]::AddComponent", "component is already added. component is only one.");
+		Logger::WarningRuntime("warning | [MonoBehaviour]::AddComponent", "component is already added. component is only one.");
 	}
 
 	return static_cast<_Ty*>(components_[type]->get());
@@ -318,6 +318,6 @@ _Ty* MonoBehaviour::RequireComponent() {
 	}
 
 	//!< componentが存在しない場合
-	Assert(false, "component is not found. type: " + std::string(type->name()));
+	Exception::Assert(false, "component is not found. type: " + std::string(type->name()));
 	return nullptr;
 }

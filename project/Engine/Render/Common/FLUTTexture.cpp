@@ -68,7 +68,7 @@ void FLUTTexture::CreateResource(const Vector2ui& size, const Vector2ui& tile) {
 			nullptr,
 			IID_PPV_ARGS(&resource_)
 		);
-		Assert(SUCCEEDED(hr), "lut texture create failed.");
+		Exception::Assert(SUCCEEDED(hr), "lut texture create failed.");
 
 		resource_->SetName(L"FLUTTexture");
 	}

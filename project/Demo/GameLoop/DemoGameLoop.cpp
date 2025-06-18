@@ -141,7 +141,7 @@ void DemoGameLoop::SetCollisionCallback() {
 	{
 		CollisionCallbackCollection::OnCollisionCallbacks callback = {};
 		callback.enter = [](_MAYBE_UNUSED ColliderComponent* const colliderA, _MAYBE_UNUSED ColliderComponent* const colliderB) {
-			CommentRuntime("on collision enter.");
+			Logger::CommentRuntime("on collision enter.");
 
 			auto player = static_cast<Player*>(colliderA->GetBehaviour());
 			player->SetCameraTarget(colliderB->GetTransform(), 4.0f);

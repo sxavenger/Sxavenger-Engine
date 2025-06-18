@@ -12,7 +12,7 @@ ShaderCompiler* ShaderBlob::compiler_ = nullptr;
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 void ShaderBlob::Create(const std::filesystem::path& filepath, CompileProfile profile, const std::wstring& entrypoint) {
-	Assert(compiler_ != nullptr, "compiler is not set.");
+	Exception::Assert(compiler_ != nullptr, "compiler is not set.");
 	// blobの生成
 	blob_ = compiler_->Compile(filepath, profile, entrypoint);
 }
@@ -30,6 +30,6 @@ D3D12_SHADER_BYTECODE ShaderBlob::GetBytecode() const {
 }
 
 ComPtr<ID3D12ShaderReflection> ShaderBlob::GetReflection() const {
-	Assert(compiler_ != nullptr, "compiler is not set.");
+	Exception::Assert(compiler_ != nullptr, "compiler is not set.");
 	return compiler_->Reflection(blob_.Get());
 }

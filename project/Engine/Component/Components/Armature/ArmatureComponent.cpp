@@ -21,13 +21,13 @@ const std::string ArmatureComponent::kArmatureName = "Armature";
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 const Skeleton& ArmatureComponent::GetSkeleton() const {
-	Assert(skeleton_.has_value(), "skeleton is not set.");
+	Exception::Assert(skeleton_.has_value(), "skeleton is not set.");
 	return skeleton_.value();
 }
 
 void ArmatureComponent::UpdateAnimation(const Animation& animation, TimePointf<TimeUnit::second> time, bool isLoop) {
 	if (!skeleton_.has_value()) {
-		WarningRuntime("warning | [ArmatureComponent] UpdateAnimation", "skeleton is not set.");
+		Logger::WarningRuntime("warning | [ArmatureComponent] UpdateAnimation", "skeleton is not set.");
 		return;
 	}
 
@@ -40,7 +40,7 @@ void ArmatureComponent::TransitionAnimation(
 	float t) {
 
 	if (!skeleton_.has_value()) {
-		WarningRuntime("warning | [ArmatureComponent] TransitionAnimation", "skeleton is not set.");
+		Logger::WarningRuntime("warning | [ArmatureComponent] TransitionAnimation", "skeleton is not set.");
 		return;
 	}
 

@@ -71,7 +71,7 @@ void PreviewGameLoop::InitGame() {
 			nullptr,
 			IID_PPV_ARGS(&voxel_)
 		);
-		Assert(SUCCEEDED(hr));
+		Exception::Assert(SUCCEEDED(hr));
 	}
 
 	{ //!< UAVの生成

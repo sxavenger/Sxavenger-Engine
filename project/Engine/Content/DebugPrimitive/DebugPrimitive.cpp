@@ -47,7 +47,7 @@ void BaseDebugPrimitive::CreateInputBuffer(uint32_t size) {
 }
 
 void BaseDebugPrimitive::SetVertexBuffer(const Vector3f& position, const Color4f& color) {
-	Assert(inputOffset_ + inputCount_ < input_->GetSize()); //!< indexの超過
+	Exception::Assert(inputOffset_ + inputCount_ < input_->GetSize()); //!< indexの超過
 
 	(*input_)[inputOffset_ + inputCount_].position = { position.x, position.y, position.z, 1.0f };
 	(*input_)[inputOffset_ + inputCount_].color    = color;

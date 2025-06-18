@@ -32,17 +32,17 @@ bool BindBufferDesc::Contains(const std::string& name) const {
 }
 
 const BindBufferDesc::Constant32bits& BindBufferDesc::Get32bitConstants(const std::string& name) const {
-	Assert(std::holds_alternative<Constant32bits>(container_.at(name)), "type is not same.");
+	Exception::Assert(std::holds_alternative<Constant32bits>(container_.at(name)), "type is not same.");
 	return std::get<Constant32bits>(container_.at(name));
 }
 
 const D3D12_GPU_VIRTUAL_ADDRESS& BindBufferDesc::GetAddress(const std::string& name) const {
-	Assert(std::holds_alternative<D3D12_GPU_VIRTUAL_ADDRESS>(container_.at(name)), "type is not same.");
+	Exception::Assert(std::holds_alternative<D3D12_GPU_VIRTUAL_ADDRESS>(container_.at(name)), "type is not same.");
 	return std::get<D3D12_GPU_VIRTUAL_ADDRESS>(container_.at(name));
 }
 
 const D3D12_GPU_DESCRIPTOR_HANDLE& BindBufferDesc::GetHandle(const std::string& name) const {
-	Assert(std::holds_alternative<D3D12_GPU_DESCRIPTOR_HANDLE>(container_.at(name)), "type is not same.");
+	Exception::Assert(std::holds_alternative<D3D12_GPU_DESCRIPTOR_HANDLE>(container_.at(name)), "type is not same.");
 	return std::get<D3D12_GPU_DESCRIPTOR_HANDLE>(container_.at(name));
 }
 
@@ -87,7 +87,7 @@ bool SamplerBindDesc::Contains(const std::string& name) const {
 }
 
 D3D12_STATIC_SAMPLER_DESC SamplerBindDesc::GetSampler(const std::string& name, ShaderVisibility stage, UINT shaderRegister, UINT registerSpace) const {
-	Assert(Contains(name), "sampler is not found. sampler name: " + name);
+	Exception::Assert(Contains(name), "sampler is not found. sampler name: " + name);
 
 	D3D12_STATIC_SAMPLER_DESC desc = samplers_.at(name);
 	desc.ShaderRegister   = shaderRegister;
@@ -230,7 +230,7 @@ ComputeRootSignatureDesc BindBufferTable::CreateComputeRootSignatureDesc() {
 
 	for (auto& [name, info] : table_) {
 
-		Assert(info.visibility == ShaderVisibility::VISIBILITY_ALL, "buffer visibility is not VISIBILITY_ALL");
+		Exception::Assert(info.visibility == ShaderVisibility::VISIBILITY_ALL, "buffer visibility is not VISIBILITY_ALL");
 
 		switch (info.bindBufferType) {
 			case BindBufferType::kVirtual_CBV:
@@ -273,7 +273,7 @@ ComputeRootSignatureDesc BindBufferTable::CreateComputeRootSignatureDesc(const S
 
 	for (auto& [name, info] : table_) {
 
-		Assert(info.visibility == ShaderVisibility::VISIBILITY_ALL, "buffer visibility is not VISIBILITY_ALL");
+		Exception::Assert(info.visibility == ShaderVisibility::VISIBILITY_ALL, "buffer visibility is not VISIBILITY_ALL");
 
 		switch (info.bindBufferType) {
 			case BindBufferType::kVirtual_CBV:
@@ -334,7 +334,7 @@ void BindBufferTable::BindGraphicsBuffer(CommandContext* context, const BindBuff
 			continue;
 		}
 
-		Assert(desc.Contains(name), "buffer is not found. buffer name: " + name);
+		Exception::Assert(desc.Contains(name), "buffer is not found. buffer name: " + name);
 
 		UINT index = info.rootParam.value();
 
@@ -376,7 +376,7 @@ void BindBufferTable::BindComputeBuffer(CommandContext* context, const BindBuffe
 			continue;
 		}
 
-		Assert(desc.Contains(name), "buffer is not found. buffer name: " + name);
+		Exception::Assert(desc.Contains(name), "buffer is not found. buffer name: " + name);
 
 		UINT index  = info.rootParam.value();
 
@@ -437,7 +437,7 @@ BindBufferType BindBufferTable::ToBindBufferType(D3D_SHADER_INPUT_TYPE type) {
 			break;
 
 		default:
-			Assert(false, "D3D_SHADER_INPUT_TYPE is undefine.");
+			Exception::Assert(false, "D3D_SHADER_INPUT_TYPE is undefine.");
 			break;
 	}
 
@@ -454,8 +454,8 @@ void BindBufferTable::InsertBindBuffer(const D3D12_SHADER_INPUT_BIND_DESC& desc,
 		//* visibility all になるかの確認
 		BindBufferInfo& preInfo = table_.at(desc.Name);
 
-		Assert(info.type == preInfo.type, "buffer is conflict.");                                                                       //!< bufferの型が違う.
-		Assert(info.registerNum == preInfo.registerNum && info.registerSpace == preInfo.registerSpace, "buffer is not same register."); //!< register関係が違う
+		Exception::Assert(info.type == preInfo.type, "buffer is conflict.");                                                                       //!< bufferの型が違う.
+		Exception::Assert(info.registerNum == preInfo.registerNum && info.registerSpace == preInfo.registerSpace, "buffer is not same register."); //!< register関係が違う
 
 		// allに変更
 		preInfo.visibility = ShaderVisibility::VISIBILITY_ALL;

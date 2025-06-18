@@ -11,6 +11,6 @@
 //////////////////////////////////////////////////////////////////////////////////////////////
 
 void AssetBlob::Load(_MAYBE_UNUSED const DirectXThreadContext* context) {
-	Assert(param_.has_value(), "profile is not set.");
+	Exception::Assert(param_.has_value(), "profile is not set.");
 	DxObject::ShaderBlob::Create(filepath_, std::any_cast<DxObject::CompileProfile>(param_));
 }

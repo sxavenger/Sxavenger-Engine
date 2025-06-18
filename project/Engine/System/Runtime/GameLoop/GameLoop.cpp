@@ -17,9 +17,9 @@
 
 void GameLoop::Context::Run() {
 
-	Log(std::format("[GameLoop::Context]: Begin Loop. ptr: {:p}", reinterpret_cast<void*>(this)));
+	Logger::Log(std::format("[GameLoop::Context]: Begin Loop. ptr: {:p}", reinterpret_cast<void*>(this)));
 	Loop();
-	Log(std::format("[GameLoop::Context]: End Loop. ptr: {:p}", reinterpret_cast<void*>(this)));
+	Logger::Log(std::format("[GameLoop::Context]: End Loop. ptr: {:p}", reinterpret_cast<void*>(this)));
 
 	Clear();
 }
@@ -44,7 +44,7 @@ uint32_t GameLoop::Context::FindMinLayer(Process process) const {
 }
 
 void GameLoop::Context::RegisterProcess(Process process, uint32_t layer, const ProcessFunction& function) {
-	Assert(!processes_[static_cast<uint8_t>(process)].contains(layer), "state functions is layer conflict."); //!< 重複していないか確認
+	Exception::Assert(!processes_[static_cast<uint8_t>(process)].contains(layer), "state functions is layer conflict."); //!< 重複していないか確認
 	processes_[static_cast<uint8_t>(process)].emplace(layer, function);
 }
 
@@ -81,7 +81,7 @@ void GameLoop::Context::Loop() {
 		}
 
 	} else {
-		Log("[GameLoop::Context] warning: while condition is empty.");
+		Logger::Log("[GameLoop::Context] warning: while condition is empty.");
 		//!< whileを抜ける条件式がないので不適格.
 	}
 

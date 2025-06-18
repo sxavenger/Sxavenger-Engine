@@ -65,7 +65,7 @@ void Texture::Load(const DirectXThreadContext* context, const std::filesystem::p
 	metadata_.Assign(metadata);
 
 	context->ExecuteAllAllocators();
-	EngineThreadLog("texture loaded. filepath: " + filepath.generic_string());
+	Logger::EngineThreadLog("texture loaded. filepath: " + filepath.generic_string());
 }
 
 void Texture::Term() {
@@ -111,7 +111,7 @@ DirectX::ScratchImage Texture::LoadTexture(const std::filesystem::path& filepath
 		);
 	}
 
-	Assert(SUCCEEDED(hr), "texture load failed. filepath: " + filepath.generic_string());
+	Exception::Assert(SUCCEEDED(hr), "texture load failed. filepath: " + filepath.generic_string());
 
 	if (DirectX::IsCompressed(image.GetMetadata().format)) { //!< 圧縮formatかどうか調べる
 		return image;
@@ -128,7 +128,7 @@ DirectX::ScratchImage Texture::LoadTexture(const std::filesystem::path& filepath
 		0,
 		mipImage
 	);
-	Assert(SUCCEEDED(hr), "mipmaps create failed.");
+	Exception::Assert(SUCCEEDED(hr), "mipmaps create failed.");
 
 	return mipImage;
 }
@@ -160,7 +160,7 @@ ComPtr<ID3D12Resource> Texture::CreateTextureResource(ID3D12Device* device, cons
 		nullptr,
 		IID_PPV_ARGS(&resource)
 	);
-	Assert(SUCCEEDED(hr), "texture resource create failed.");
+	Exception::Assert(SUCCEEDED(hr), "texture resource create failed.");
 
 	resource->SetName(L"texture");
 	return resource;

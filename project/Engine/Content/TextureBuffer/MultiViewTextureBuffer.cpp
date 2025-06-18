@@ -45,7 +45,7 @@ void MultiViewTextureBuffer::Term() {
 }
 
 void MultiViewTextureBuffer::TransitionBeginRenderTarget(const DirectXThreadContext* context) {
-	Assert(IsCreatedRTV(), "Not create RTV."); //!< RTVが生成されていない
+	Exception::Assert(IsCreatedRTV(), "Not create RTV."); //!< RTVが生成されていない
 
 	D3D12_RESOURCE_BARRIER barrier = {};
 	barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
@@ -57,7 +57,7 @@ void MultiViewTextureBuffer::TransitionBeginRenderTarget(const DirectXThreadCont
 }
 
 void MultiViewTextureBuffer::TransitionEndRenderTarget(const DirectXThreadContext* context) {
-	Assert(IsCreatedRTV(), "Not create RTV."); //!< RTVが生成されていない
+	Exception::Assert(IsCreatedRTV(), "Not create RTV."); //!< RTVが生成されていない
 
 	D3D12_RESOURCE_BARRIER barrier = {};
 	barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
@@ -69,7 +69,7 @@ void MultiViewTextureBuffer::TransitionEndRenderTarget(const DirectXThreadContex
 }
 
 void MultiViewTextureBuffer::ClearRenderTarget(const DirectXThreadContext* context) {
-	Assert(IsCreatedRTV(), "Not create RTV."); //!< RTVが生成されていない
+	Exception::Assert(IsCreatedRTV(), "Not create RTV."); //!< RTVが生成されていない
 
 	// 画面のクリア
 	context->GetCommandList()->ClearRenderTargetView(
@@ -80,7 +80,7 @@ void MultiViewTextureBuffer::ClearRenderTarget(const DirectXThreadContext* conte
 }
 
 void MultiViewTextureBuffer::TransitionBeginUnordered(const DirectXThreadContext* context) {
-	Assert(IsCreatedUAV(), "Not create UAV."); //!< RTVが生成されていない
+	Exception::Assert(IsCreatedUAV(), "Not create UAV."); //!< RTVが生成されていない
 
 	D3D12_RESOURCE_BARRIER barrier = {};
 	barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
@@ -92,7 +92,7 @@ void MultiViewTextureBuffer::TransitionBeginUnordered(const DirectXThreadContext
 }
 
 void MultiViewTextureBuffer::TransitionEndUnordered(const DirectXThreadContext* context) {
-	Assert(IsCreatedUAV(), "Not create UAV."); //!< RTVが生成されていない
+	Exception::Assert(IsCreatedUAV(), "Not create UAV."); //!< RTVが生成されていない
 
 	D3D12_RESOURCE_BARRIER barrier = {};
 	barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
@@ -104,17 +104,17 @@ void MultiViewTextureBuffer::TransitionEndUnordered(const DirectXThreadContext* 
 }
 
 const D3D12_GPU_DESCRIPTOR_HANDLE& MultiViewTextureBuffer::GetGPUHandleSRV() const {
-	Assert(IsCreatedSRV(), "Not create SRV."); //!< SRVが作成されていない
+	Exception::Assert(IsCreatedSRV(), "Not create SRV."); //!< SRVが作成されていない
 	return descriptors_[ViewType::kSRV].GetGPUHandle();
 }
 
 const D3D12_CPU_DESCRIPTOR_HANDLE& MultiViewTextureBuffer::GetCPUHandleRTV() const {
-	Assert(IsCreatedRTV(), "Not create RTV."); //!< RTVが生成されていない
+	Exception::Assert(IsCreatedRTV(), "Not create RTV."); //!< RTVが生成されていない
 	return descriptors_[ViewType::kRTV].GetCPUHandle();
 }
 
 const D3D12_GPU_DESCRIPTOR_HANDLE& MultiViewTextureBuffer::GetGPUHandleUAV() const {
-	Assert(IsCreatedUAV(), "Not create UAV."); //!< UAVが生成されていない
+	Exception::Assert(IsCreatedUAV(), "Not create UAV."); //!< UAVが生成されていない
 	return descriptors_[ViewType::kUAV].GetGPUHandle();
 }
 

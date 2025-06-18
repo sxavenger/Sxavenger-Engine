@@ -72,7 +72,7 @@ void PointLightComponent::CreateParameterBuffer() {
 }
 
 const D3D12_GPU_VIRTUAL_ADDRESS& PointLightComponent::GetParameterBufferAddress() const {
-	Assert(parameter_ != nullptr, "point light buffer is not create.");
+	Exception::Assert(parameter_ != nullptr, "point light buffer is not create.");
 	return parameter_->GetGPUVirtualAddress();
 }
 

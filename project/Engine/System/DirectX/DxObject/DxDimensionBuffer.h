@@ -214,13 +214,13 @@ inline void DimensionBuffer<T>::Release() {
 
 template <class T>
 inline T& DimensionBuffer<T>::At(size_t index) {
-	Assert(CheckIndex(index), "Dimension Buffer out of range.");
+	Exception::Assert(CheckIndex(index), "Dimension Buffer out of range.");
 	return mappedDatas_[index];
 }
 
 template <class T>
 inline const T& DimensionBuffer<T>::At(size_t index) const {
-	Assert(CheckIndex(index), "Dimension Buffer out of range.");
+	Exception::Assert(CheckIndex(index), "Dimension Buffer out of range.");
 	return mappedDatas_[index];
 }
 
@@ -241,13 +241,13 @@ inline void DimensionBuffer<T>::Fill(const T& value) {
 
 template <class T>
 inline T& DimensionBuffer<T>::operator[](size_t index) {
-	Assert(CheckIndex(index), "Dimension Buffer out of range.");
+	Exception::Assert(CheckIndex(index), "Dimension Buffer out of range.");
 	return mappedDatas_[index];
 }
 
 template <class T>
 inline const T& DimensionBuffer<T>::operator[](size_t index) const {
-	Assert(CheckIndex(index), "Dimension Buffer out of range.");
+	Exception::Assert(CheckIndex(index), "Dimension Buffer out of range.");
 	return mappedDatas_[index];
 }
 

@@ -17,13 +17,13 @@ void KeyboardInput::Init(IDirectInput8* dInput) {
 	auto hr = dInput->CreateDevice(
 		GUID_SysKeyboard, &keyboardDevice_, NULL
 	);
-	Assert(SUCCEEDED(hr));
+	Exception::Assert(SUCCEEDED(hr));
 
 	// 入力データ形式のセット
 	hr = keyboardDevice_->SetDataFormat(
 		&c_dfDIKeyboard // 標準形式
 	);
-	Assert(SUCCEEDED(hr));
+	Exception::Assert(SUCCEEDED(hr));
 
 	flags_ |= DISCL_FOREGROUND;
 	flags_ |= DISCL_NONEXCLUSIVE;
@@ -78,7 +78,7 @@ void KeyboardInput::SetCooperativeLevel(const Window* window) {
 				hwnd,
 				flags_
 			);
-			//Assert(SUCCEEDED(hr)); // HACK:
+			//Exception::Assert(SUCCEEDED(hr)); // HACK:
 
 			currentHwnd_ = hwnd;
 		}
@@ -95,13 +95,13 @@ void MouseInput::Init(IDirectInput8* dInput) {
 	auto hr = dInput->CreateDevice(
 		GUID_SysMouse, &mouseDevice_, NULL
 	);
-	Assert(SUCCEEDED(hr));
+	Exception::Assert(SUCCEEDED(hr));
 
 	// 入力データ形式のセット
 	hr = mouseDevice_->SetDataFormat(
 		&c_dfDIMouse2 // 標準形式
 	);
-	Assert(SUCCEEDED(hr));
+	Exception::Assert(SUCCEEDED(hr));
 
 	flags_ |= DISCL_FOREGROUND;
 	flags_ |= DISCL_NONEXCLUSIVE;
@@ -199,7 +199,7 @@ void MouseInput::SetCooperativeLevel(const Window* window) {
 				hwnd,
 				flags_
 			);
-			//Assert(SUCCEEDED(hr)); // HACK:
+			//Exception::Assert(SUCCEEDED(hr)); // HACK:
 
 			currentHwnd_ = hwnd;
 		}
@@ -311,7 +311,7 @@ void Input::Init(const Window* mainWindow) {
 		DIRECTINPUT_VERSION, IID_IDirectInput8,
 		(void**)&directInput_, nullptr
 	);
-	Assert(SUCCEEDED(hr));
+	Exception::Assert(SUCCEEDED(hr));
 
 	//* dinput *//
 

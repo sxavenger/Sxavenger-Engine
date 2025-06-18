@@ -30,7 +30,7 @@ void TransformComponent::CreateBuffer() {
 }
 
 const D3D12_GPU_VIRTUAL_ADDRESS& TransformComponent::GetGPUVirtualAddress() const {
-	Assert(buffer_ != nullptr, "transform buffer is not craete.");
+	Exception::Assert(buffer_ != nullptr, "transform buffer is not craete.");
 	return buffer_->GetGPUVirtualAddress();
 }
 

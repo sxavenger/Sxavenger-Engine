@@ -16,7 +16,7 @@ void Animator::Load(const std::filesystem::path& filepath, uint32_t assimpOption
 	Assimp::Importer importer; //!< scene保存するため保管
 	const aiScene* aiScene = importer.ReadFile(filepath.generic_string().c_str(), assimpOption);
 
-	Assert(aiScene != nullptr, "animatior load failed. filepath: " + filepath.generic_string(), importer.GetErrorString());
+	Exception::Assert(aiScene != nullptr, "animatior load failed. filepath: " + filepath.generic_string(), importer.GetErrorString());
 
 	animations_.resize(aiScene->mNumAnimations);
 
@@ -25,7 +25,7 @@ void Animator::Load(const std::filesystem::path& filepath, uint32_t assimpOption
 		// animationの取得
 		const aiAnimation* aiAnimation = aiScene->mAnimations[animationIndex];
 
-		Assert(!animationMap_.contains(aiAnimation->mName.C_Str()), "animation name is conflict.");
+		Exception::Assert(!animationMap_.contains(aiAnimation->mName.C_Str()), "animation name is conflict.");
 		
 		// animation name mapping
 		animationMap_.try_emplace(aiAnimation->mName.C_Str(), animationIndex);
@@ -111,6 +111,6 @@ void Animator::LoadTransformAnimation(const aiNodeAnim* aiNodeAnimation, Animati
 }
 
 const uint32_t Animator::GetAnimationIndex(const std::string& name) const {
-	Assert(animationMap_.contains(name), "animation is not found. name: " + name);
+	Exception::Assert(animationMap_.contains(name), "animation is not found. name: " + name);
 	return animationMap_.at(name);
 }

@@ -40,7 +40,7 @@ void ComputePipelineState::Dispatch(CommandContext* context, const Vector3ui& th
 
 D3D12_SHADER_BYTECODE ComputePipelineState::GetBytecode() {
 	if (!blob_.has_value()) {
-		Assert(false, "blob is not set.");  //!< blobが設定されていない
+		Exception::Assert(false, "blob is not set.");  //!< blobが設定されていない
 		return {};
 	}
 
@@ -60,7 +60,7 @@ void ComputePipelineState::CreateDirectXPipeline(Device* device) {
 		&desc,
 		IID_PPV_ARGS(&pipeline_)
 	);
-	Assert(SUCCEEDED(hr));
+	Exception::Assert(SUCCEEDED(hr));
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -94,7 +94,7 @@ void ReflectionComputePipelineState::BindComputeBuffer(CommandContext* context, 
 
 void ReflectionComputePipelineState::SetBlobToTable() {
 	if (!blob_.has_value()) {
-		Assert(false, "blob is not set."); //!< blobが設定されていない.
+		Exception::Assert(false, "blob is not set."); //!< blobが設定されていない.
 		return;
 	}
 

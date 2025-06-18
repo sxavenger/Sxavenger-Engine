@@ -122,14 +122,14 @@ inline bool AssetObserver<T>::IsRegistered() const {
 template <BaseAssetConcept T>
 inline bool AssetObserver<T>::IsExpired() const {
 	Condition condition = GetCondition();
-	Assert(condition != Condition::UnRegistered, "asset is not registered.");
+	Exception::Assert(condition != Condition::UnRegistered, "asset is not registered.");
 	return condition != Condition::Expired;
 }
 
 template <BaseAssetConcept T>
 inline std::shared_ptr<T> AssetObserver<T>::Acquire() {
 	Condition condition = GetCondition();
-	Assert(condition != Condition::UnRegistered, "asset is not registered.");
+	Exception::Assert(condition != Condition::UnRegistered, "asset is not registered.");
 
 	if (condition == Condition::Expired) {
 		Reload();
@@ -148,8 +148,8 @@ inline std::shared_ptr<T> AssetObserver<T>::WaitAcquire() {
 template <BaseAssetConcept T>
 inline std::shared_ptr<T> AssetObserver<T>::Get() const {
 	Condition condition = GetCondition();
-	Assert(condition != Condition::UnRegistered, "asset is not registered.");
-	Assert(condition != Condition::Expired,      "asset is expired.");
+	Exception::Assert(condition != Condition::UnRegistered, "asset is not registered.");
+	Exception::Assert(condition != Condition::Expired,      "asset is expired.");
 
 	return (*asset_).lock();
 }

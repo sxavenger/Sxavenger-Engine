@@ -14,40 +14,6 @@
 #include <sstream>
 #include <thread>
 
-////////////////////////////////////////////////////////////////////////////////////////////
-// Convert string methods
-////////////////////////////////////////////////////////////////////////////////////////////
-
-std::string ToString(const std::wstring& str) {
-	if (str.empty()) {
-		return std::string();
-	}
-
-	auto sizeNeeded = WideCharToMultiByte(CP_UTF8, 0, str.data(), static_cast<int>(str.size()), NULL, 0, NULL, NULL);
-	if (sizeNeeded == 0) {
-		return std::string();
-	}
-	std::string result(sizeNeeded, 0);
-	WideCharToMultiByte(CP_UTF8, 0, str.data(), static_cast<int>(str.size()), result.data(), sizeNeeded, NULL, NULL);
-	return result;
-}
-
-std::wstring ToWString(const std::string& str) {
-
-	if (str.empty()) {
-		return std::wstring();
-	}
-
-	auto sizeNeeded = MultiByteToWideChar(CP_UTF8, 0, reinterpret_cast<const char*>(&str[0]), static_cast<int>(str.size()), NULL, 0);
-	if (sizeNeeded == 0) {
-		return std::wstring();
-	}
-	std::wstring result(sizeNeeded, 0);
-	MultiByteToWideChar(CP_UTF8, 0, reinterpret_cast<const char*>(&str[0]), static_cast<int>(str.size()), &result[0], sizeNeeded);
-	return result;
-
-}
-
 //=========================================================================================
 // static variable
 //=========================================================================================
@@ -239,67 +205,71 @@ void SxavengerLogger::Push(const StackData& data) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// Log methods
+// Logger namespace methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-void Log(const std::string& log) {
+void Logger::Log(const std::string& log) {
 	SxavengerLogger::LogA(log);
 }
 
-void Log(const std::wstring& log) {
+void Logger::Log(const std::wstring& log) {
 	SxavengerLogger::LogW(log);
 }
 
-void EngineLog(const std::string& log) {
+void Logger::EngineLog(const std::string& log) {
 	std::string tag = "[Sxavenger Engine] >> ";
 	SxavengerLogger::LogA(tag + log);
 }
 
-void EngineLog(const std::wstring& log) {
+void Logger::EngineLog(const std::wstring& log) {
 	std::wstring tag = L"[Sxavenger Engine] >> ";
 	SxavengerLogger::LogW(tag + log);
 }
 
-void EngineThreadLog(const std::string& log) {
+void Logger::EngineThreadLog(const std::string& log) {
 	std::ostringstream tag;
 	tag << "[Sxavenger Engine] [thread id: " << std::this_thread::get_id() << "] >> ";
 	SxavengerLogger::LogA(tag.str() + log);
 }
 
-void EngineThreadLog(const std::wstring& log) {
+void Logger::EngineThreadLog(const std::wstring& log) {
 	std::wostringstream tag;
 	tag << L"[Sxavenger Engine] [thread id: " << std::this_thread::get_id() << L"] >> ";
 	SxavengerLogger::LogW(tag.str() + log);
 }
 
-void Assert(bool expression, const std::string& label, const std::string& detail, const std::source_location& location) {
-	if (expression) _LIKELY {
+void Logger::LogRuntime(const std::string& label, const std::string& detail, SxavengerLogger::Category category) {
+	SxavengerLogger::LogRuntimeA(category, label, detail);
+}
+
+void Logger::CommentRuntime(const std::string& label, const std::string& detail) {
+	SxavengerLogger::LogRuntimeA(SxavengerLogger::Category::Comment, label, detail);
+}
+
+void Logger::WarningRuntime(const std::string& label, const std::string& detail) {
+	SxavengerLogger::LogRuntimeA(SxavengerLogger::Category::Warning, label, detail);
+}
+
+void Logger::ErrorRuntime(const std::string& label, const std::string& detail) {
+	SxavengerLogger::LogRuntimeA(SxavengerLogger::Category::Error, label, detail);
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////
+// Exception namespace methods
+////////////////////////////////////////////////////////////////////////////////////////////
+
+void Exception::Assert(bool expression, const std::string& label, const std::string& detail, const std::source_location& location) {
+	if (expression) _LIKELY{
 		return;
 	}
 
 	SxavengerLogger::ExceptionA(label, detail, location);
 }
 
-void AssertW(bool expression, const std::wstring& label, const std::wstring& detail, const std::source_location& location) {
-	if (expression) _LIKELY {
+void Exception::AssertW(bool expression, const std::wstring& label, const std::wstring& detail, const std::source_location& location) {
+	if (expression) _LIKELY{
 		return;
 	}
 
 	SxavengerLogger::ExceptionW(label, detail, location);
-}
-
-void LogRuntime(const std::string& label, const std::string& detail, SxavengerLogger::Category category) {
-	SxavengerLogger::LogRuntimeA(category, label, detail);
-}
-
-void CommentRuntime(const std::string& label, const std::string& detail) {
-	SxavengerLogger::LogRuntimeA(SxavengerLogger::Category::Comment, label, detail);
-}
-
-void WarningRuntime(const std::string& label, const std::string& detail) {
-	SxavengerLogger::LogRuntimeA(SxavengerLogger::Category::Warning, label, detail);
-}
-
-void ErrorRuntime(const std::string& label, const std::string& detail) {
-	SxavengerLogger::LogRuntimeA(SxavengerLogger::Category::Error, label, detail);
 }

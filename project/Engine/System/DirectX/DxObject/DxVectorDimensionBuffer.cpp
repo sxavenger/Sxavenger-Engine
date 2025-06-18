@@ -18,7 +18,7 @@ void BaseVectorDimensionBuffer::Release() {
 }
 
 const D3D12_GPU_VIRTUAL_ADDRESS& BaseVectorDimensionBuffer::GetGPUVirtualAddress() const {
-	Assert(address_.has_value(), "Vector Dimension Buffer not create.");
+	Exception::Assert(address_.has_value(), "Vector Dimension Buffer not create.");
 	return address_.value();
 }
 

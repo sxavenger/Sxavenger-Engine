@@ -118,7 +118,7 @@ void SpriteRendererComponent::DrawCall(const DirectXThreadContext* context) {
 }
 
 const D3D12_GPU_DESCRIPTOR_HANDLE& SpriteRendererComponent::GetTexture() const {
-	Assert(texture_.has_value(), "texture is not set.");
+	Exception::Assert(texture_.has_value(), "texture is not set.");
 	static GetDescriptorVisitor visitor;
 	return std::visit(visitor, texture_.value());
 }

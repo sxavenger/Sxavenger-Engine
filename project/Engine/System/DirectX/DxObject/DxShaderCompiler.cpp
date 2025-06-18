@@ -34,23 +34,23 @@ void ShaderCompiler::Init() {
 	auto hr = DxcCreateInstance(
 		CLSID_DxcUtils, IID_PPV_ARGS(&utils_)
 	);
-	Assert(SUCCEEDED(hr));
+	Exception::Assert(SUCCEEDED(hr));
 
 
 	hr = DxcCreateInstance(
 		CLSID_DxcCompiler, IID_PPV_ARGS(&compiler_)
 	);
-	Assert(SUCCEEDED(hr));
+	Exception::Assert(SUCCEEDED(hr));
 
 	// includeHandleの初期化
 	hr = utils_->CreateDefaultIncludeHandler(&includeHandler_);
-	Assert(SUCCEEDED(hr));
+	Exception::Assert(SUCCEEDED(hr));
 
-	EngineLog("[_DXOBJECT]::ShaderCompiler complete init.");
+	Logger::EngineLog("[_DXOBJECT]::ShaderCompiler complete init.");
 }
 
 void ShaderCompiler::Term() {
-	EngineLog("[_DXOBJECT]::ShaderCompiler term.");
+	Logger::EngineLog("[_DXOBJECT]::ShaderCompiler term.");
 }
 
 ComPtr<IDxcBlob> ShaderCompiler::Compile(
@@ -63,7 +63,7 @@ ComPtr<IDxcBlob> ShaderCompiler::Compile(
 	// hlslファイルを読み込む
 	ComPtr<IDxcBlobEncoding> shaderSource;
 	auto hr = utils_->LoadFile(filepathW.c_str(), nullptr, &shaderSource);
-	Assert(SUCCEEDED(hr), "hlsl not found.", "filepath: " + filepath.generic_string());
+	Exception::Assert(SUCCEEDED(hr), "hlsl not found.", "filepath: " + filepath.generic_string());
 
 	// 読み込んだファイルの内容を設定する
 	DxcBuffer shaderSourceBuffer = {};
@@ -115,21 +115,21 @@ ComPtr<IDxcBlob> ShaderCompiler::Compile(
 		includeHandler_.Get(),
 		IID_PPV_ARGS(&shaderResult)
 	);
-	Assert(SUCCEEDED(hr));
+	Exception::Assert(SUCCEEDED(hr));
 
 	// 警告エラーだった場合, プログラムの停止
 	ComPtr<IDxcBlobUtf8> shaderError;
 	hr = shaderResult->GetOutput(DXC_OUT_ERRORS, IID_PPV_ARGS(&shaderError), nullptr);
 
 	if (shaderError != nullptr && shaderError->GetStringLength() != 0) {
-		Assert(false, "hlsl is compile error. filepath: " + filepath.generic_string(), shaderError->GetStringPointer());
+		Exception::Assert(false, "hlsl is compile error. filepath: " + filepath.generic_string(), shaderError->GetStringPointer());
 	}
 
 	ComPtr<IDxcBlob> blob;
 	hr = shaderResult->GetOutput(DXC_OUT_OBJECT, IID_PPV_ARGS(&blob), nullptr);
-	Assert(SUCCEEDED(hr));
+	Exception::Assert(SUCCEEDED(hr));
 
-	EngineThreadLog("[_DXOBJECT]::ShaderCompiler : shader compiled. filepath: " + filepath.generic_string());
+	Logger::EngineThreadLog("[_DXOBJECT]::ShaderCompiler : shader compiled. filepath: " + filepath.generic_string());
 	return blob;
 }
 
@@ -145,7 +145,7 @@ ComPtr<ID3D12ShaderReflection> ShaderCompiler::Reflection(IDxcBlob* blob) {
 		&buffer,
 		IID_PPV_ARGS(&result)
 	);
-	Assert(SUCCEEDED(hr), "shader reflection is failed.");
+	Exception::Assert(SUCCEEDED(hr), "shader reflection is failed.");
 
 	return result;
 }

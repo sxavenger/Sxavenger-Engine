@@ -23,8 +23,8 @@ namespace {
 
 void SxavengerSystem::Init() {
 
-	EngineLog("Engine Version: " + kSxavengerEngineVersion);
-	EngineThreadLog("this thread is main thread.");
+	Logger::EngineLog("Engine Version: " + kSxavengerEngineVersion);
+	Logger::EngineThreadLog("this thread is main thread.");
 
 	sWinApp = std::make_unique<WinApp>();
 	sWinApp->Init();

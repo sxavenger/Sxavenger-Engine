@@ -69,7 +69,7 @@ void MonoBehaviour::SetName(const std::string& name) {
 		name_ = name;
 
 	} else {
-		WarningRuntime("warning | [MonoBehaviour]::SetName", "behaviour is not renamable.");
+		Logger::WarningRuntime("warning | [MonoBehaviour]::SetName", "behaviour is not renamable.");
 	}
 }
 
@@ -82,19 +82,19 @@ BaseComponent* MonoBehaviour::AddComponent(const std::string& component) {
 		components_[type] = sComponentStorage->RegisterComponent(component, this);
 
 	} else {
-		WarningRuntime("warning | [MonoBehaviour]::AddComponent", "component is already added. component is only one.");
+		Logger::WarningRuntime("warning | [MonoBehaviour]::AddComponent", "component is already added. component is only one.");
 	}
 
 	return components_[type]->get();
 }
 
 MonoBehaviour* MonoBehaviour::RequireParent() const {
-	Assert(parent_ != nullptr, "parent is not found.");
+	Exception::Assert(parent_ != nullptr, "parent is not found.");
 	return parent_;
 }
 
 void MonoBehaviour::SetParent(MonoBehaviour* parent) {
-	Assert(!HasParent(), "behaviour already have parent.");
+	Exception::Assert(!HasParent(), "behaviour already have parent.");
 	parent_   = parent;
 	iterator_ = parent->AddHierarchy(this);
 	ApplyContainerIterator();
@@ -115,7 +115,7 @@ void MonoBehaviour::AddChild(MonoBehaviour* child) {
 
 void MonoBehaviour::AddChild(std::unique_ptr<MonoBehaviour>&& child) {
 	auto ptr = child.get();
-	Assert(!ptr->HasParent(), "behaviour already have parent.");
+	Exception::Assert(!ptr->HasParent(), "behaviour already have parent.");
 	ptr->parent_   = this;
 	ptr->iterator_ = AddHierarchy(std::move(child));
 	ptr->ApplyContainerIterator();
@@ -135,7 +135,7 @@ MonoBehaviour* MonoBehaviour::FindChild(const std::string& name) {
 
 MonoBehaviour* MonoBehaviour::FindRequireChild(const std::string& name) {
 	MonoBehaviour* child = FindChild(name);
-	Assert(child != nullptr, "child is not found. name: " + name);
+	Exception::Assert(child != nullptr, "child is not found. name: " + name);
 	return child;
 }
 

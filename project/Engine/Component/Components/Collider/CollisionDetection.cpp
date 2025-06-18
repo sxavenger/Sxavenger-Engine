@@ -287,6 +287,6 @@ bool CollisionDetection::OBBTo(
 }
 
 bool CollisionDetection::ExceptionUnimplement() {
-	Assert(false, "unimplemented."); //!< 未実装
+	Exception::Assert(false, "unimplemented."); //!< 未実装
 	return false;
 }

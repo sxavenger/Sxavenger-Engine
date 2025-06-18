@@ -12,11 +12,11 @@ void AsyncThread::Create(AsyncExecution execution, const MainFunction& main, con
 	condition_ = condition;
 
 	thread_ = std::thread([this]() {
-		EngineThreadLog("[AsyncThread]: begin thread. " + GetExecution(execution_));
+		Logger::EngineThreadLog("[AsyncThread]: begin thread. " + GetExecution(execution_));
 		while (!isTerminated_ && condition_()) {
 			main_(this);
 		}
-		EngineThreadLog("[AsyncThread]: end thread.");
+		Logger::EngineThreadLog("[AsyncThread]: end thread.");
 	});
 
 	if (execution_ == AsyncExecution::None) {
@@ -47,7 +47,7 @@ const DirectXThreadContext* AsyncThread::GetContext() const {
 }
 
 const DirectXThreadContext* AsyncThread::RequireContext() const {
-	Assert(context_ != nullptr, "thread type does not create context.");
+	Exception::Assert(context_ != nullptr, "thread type does not create context.");
 	return context_.get();
 }
 
@@ -60,7 +60,7 @@ D3D12_COMMAND_LIST_TYPE AsyncThread::GetCommandListType(AsyncExecution execution
 			return D3D12_COMMAND_LIST_TYPE_COMPUTE;
 	}
 
-	Assert(false, "commandlist thread type error.");
+	Exception::Assert(false, "commandlist thread type error.");
 	return D3D12_COMMAND_LIST_TYPE_NONE; //!< error case.
 }
 
@@ -73,7 +73,7 @@ uint32_t AsyncThread::GetAllocatorCount(AsyncExecution execution) {
 			return 2;
 	}
 
-	Assert(false, "commandlist thread type error.");
+	Exception::Assert(false, "commandlist thread type error.");
 	return 0;
 }
 
@@ -117,7 +117,7 @@ void AsyncThreadPool::Create(AsyncExecution execution, size_t size) {
 					}
 
 					task = queue_.front();
-					EngineThreadLog("[AsyncThreadPool]: task poped. tag: " + queue_.front()->GetTag());
+					Logger::EngineThreadLog("[AsyncThreadPool]: task poped. tag: " + queue_.front()->GetTag());
 					queue_.pop();
 
 					if (!queue_.empty()) {
@@ -138,7 +138,7 @@ void AsyncThreadPool::Create(AsyncExecution execution, size_t size) {
 				}
 
 				task->SetStatus(AsyncTask::Status::Completed);
-				EngineThreadLog("[AsyncThread]: task completed. tag: " + task->GetTag());
+				Logger::EngineThreadLog("[AsyncThread]: task completed. tag: " + task->GetTag());
 			}
 		);
 	}
@@ -169,7 +169,7 @@ void AsyncThreadPool::PushTask(const std::shared_ptr<AsyncTask>& task) {
 
 	task->SetStatus(AsyncTask::Status::Pending);
 	queue_.emplace(task);
-	EngineThreadLog("[AsyncThreadPool]: task pushed. tag: " + task->GetTag());
+	Logger::EngineThreadLog("[AsyncThreadPool]: task pushed. tag: " + task->GetTag());
 
 	condition_.notify_one();
 }

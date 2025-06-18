@@ -57,31 +57,31 @@ void SkyLightComponent::Init() {
 }
 
 const D3D12_GPU_VIRTUAL_ADDRESS& SkyLightComponent::GetDiffuseParameterBufferAddress() const {
-	Assert(diffuseParameter_ != nullptr, "sky light diffuse parameter is not create.");
+	Exception::Assert(diffuseParameter_ != nullptr, "sky light diffuse parameter is not create.");
 	return diffuseParameter_->GetGPUVirtualAddress();
 }
 
 const D3D12_GPU_VIRTUAL_ADDRESS& SkyLightComponent::GetSpecularParameterBufferAddress() const {
-	Assert(specularParameter_ != nullptr, "sky light specular parameter is not create.");
+	Exception::Assert(specularParameter_ != nullptr, "sky light specular parameter is not create.");
 	return specularParameter_->GetGPUVirtualAddress();
 }
 
 const SkyLightComponent::DiffuseParameter& SkyLightComponent::GetDiffuseParameter() const {
-	Assert(diffuseParameter_ != nullptr, "sky light diffuse parameter is not create.");
+	Exception::Assert(diffuseParameter_ != nullptr, "sky light diffuse parameter is not create.");
 	return diffuseParameter_->At(0);
 }
 
 SkyLightComponent::DiffuseParameter& SkyLightComponent::GetDiffuseParameter() {
-	Assert(diffuseParameter_ != nullptr, "sky light diffuse parameter is not create.");
+	Exception::Assert(diffuseParameter_ != nullptr, "sky light diffuse parameter is not create.");
 	return diffuseParameter_->At(0);
 }
 
 const SkyLightComponent::SpecularParameter& SkyLightComponent::GetSpecularParameter() const {
-	Assert(specularParameter_ != nullptr, "sky light specular parameter is not create.");
+	Exception::Assert(specularParameter_ != nullptr, "sky light specular parameter is not create.");
 	return specularParameter_->At(0);
 }
 
 SkyLightComponent::SpecularParameter& SkyLightComponent::GetSpecularParameter() {
-	Assert(specularParameter_ != nullptr, "sky light specular parameter is not create.");
+	Exception::Assert(specularParameter_ != nullptr, "sky light specular parameter is not create.");
 	return specularParameter_->At(0);
 }

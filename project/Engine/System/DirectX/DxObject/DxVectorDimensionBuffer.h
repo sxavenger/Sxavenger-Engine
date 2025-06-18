@@ -150,25 +150,25 @@ inline void VectorDimensionBuffer<T>::Reserve(Device* device, uint32_t capacity)
 
 template <class T>
 inline const T& VectorDimensionBuffer<T>::At(size_t index) const {
-	Assert(CheckIndex(index), "index out of range.");
+	Exception::Assert(CheckIndex(index), "index out of range.");
 	return mappedDatas_[index];
 }
 
 template <class T>
 inline T& VectorDimensionBuffer<T>::At(size_t index) {
-	Assert(CheckIndex(index), "index out of range.");
+	Exception::Assert(CheckIndex(index), "index out of range.");
 	return mappedDatas_[index];
 }
 
 template <class T>
 inline const T& VectorDimensionBuffer<T>::operator[](size_t index) const {
-	Assert(CheckIndex(index), "index out of range.");
+	Exception::Assert(CheckIndex(index), "index out of range.");
 	return mappedDatas_[index];
 }
 
 template <class T>
 inline T& VectorDimensionBuffer<T>::operator[](size_t index) {
-	Assert(CheckIndex(index), "index out of range.");
+	Exception::Assert(CheckIndex(index), "index out of range.");
 	return mappedDatas_[index];
 }
 

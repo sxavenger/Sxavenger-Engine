@@ -31,7 +31,7 @@ void Window::Create(const Vector2ui& clientSize, const LPCWSTR name, const HWND 
 
 	// インスタンスハンドルを取得
 	hInst_ = GetModuleHandle(nullptr);
-	Assert(hInst_ != nullptr);
+	Exception::Assert(hInst_ != nullptr);
 
 	// window設定
 	WNDCLASS wc = {};
@@ -43,7 +43,7 @@ void Window::Create(const Vector2ui& clientSize, const LPCWSTR name, const HWND 
 		wc.lpfnWndProc = SubWindowProc;
 	}
 
-	Assert(RegisterClass(&wc));
+	Exception::Assert(RegisterClass(&wc));
 
 	rect_ = {};
 	rect_.right  = clientSize_.x;
@@ -66,7 +66,7 @@ void Window::Create(const Vector2ui& clientSize, const LPCWSTR name, const HWND 
 		hInst_,
 		nullptr
 	);
-	Assert(hwnd_ != nullptr);
+	Exception::Assert(hwnd_ != nullptr);
 
 	// ウィンドウを表示
 	ShowWindow(hwnd_, SW_SHOW);
@@ -89,7 +89,7 @@ void Window::CreateEx(const Vector2ui& clientSize, const LPCWSTR name, const WND
 
 	// インスタンスハンドルを取得
 	hInst_ = GetModuleHandle(nullptr);
-	Assert(hInst_ != nullptr);
+	Exception::Assert(hInst_ != nullptr);
 
 	// window設定
 	WNDCLASS wc = {};
@@ -97,7 +97,7 @@ void Window::CreateEx(const Vector2ui& clientSize, const LPCWSTR name, const WND
 	wc.hInstance     = hInst_;
 	wc.lpfnWndProc   = proc;
 
-	Assert(RegisterClass(&wc));
+	Exception::Assert(RegisterClass(&wc));
 
 	RECT rc = {};
 	rc.right  = clientSize_.x;
@@ -120,7 +120,7 @@ void Window::CreateEx(const Vector2ui& clientSize, const LPCWSTR name, const WND
 		hInst_,
 		nullptr
 	);
-	Assert(hwnd_ != nullptr);
+	Exception::Assert(hwnd_ != nullptr);
 
 	// ウィンドウを表示
 	ShowWindow(hwnd_, SW_SHOW);

@@ -24,7 +24,7 @@ void BaseAsset::Execute(const AsyncThread* thread) {
 void BaseAsset::WaitComplete() const {
 	while (!IsComplete()) {
 		std::this_thread::sleep_for(std::chrono::milliseconds(1));
-		LogRuntime("waiting for asset to complete loading...", "filepath: " + filepath_.generic_string(), SxavengerLogger::Category::Comment);
+		Logger::LogRuntime("waiting for asset to complete loading...", "filepath: " + filepath_.generic_string(), SxavengerLogger::Category::Comment);
 	}
 }
 

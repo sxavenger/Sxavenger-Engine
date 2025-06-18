@@ -11,7 +11,7 @@
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 Vector3f CalculateAnimationCurve(const AnimationCurve<Vector3f>& keyframes, TimePointf<TimeUnit::second> time) {
-	Assert(!keyframes.empty(), "keyframes is empty.");
+	Exception::Assert(!keyframes.empty(), "keyframes is empty.");
 
 	if (keyframes.size() == 1 || time <= keyframes.front().time) {
 		return keyframes.front().value;
@@ -32,7 +32,7 @@ Vector3f CalculateAnimationCurve(const AnimationCurve<Vector3f>& keyframes, Time
 }
 
 Quaternion CalculateAnimationCurve(const AnimationCurve<Quaternion>& keyframes, TimePointf<TimeUnit::second> time) {
-	Assert(!keyframes.empty(), "keyframes is empty.");
+	Exception::Assert(!keyframes.empty(), "keyframes is empty.");
 
 	if (keyframes.size() == 1 || time <= keyframes.front().time) {
 		return keyframes.front().value;

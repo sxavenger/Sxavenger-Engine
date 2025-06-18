@@ -78,8 +78,8 @@ void Model::Load(const DirectXThreadContext* context, const std::filesystem::pat
 	Assimp::Importer importer; //!< scene保存するため保管
 	const aiScene* aiScene = importer.ReadFile(filepath.generic_string().c_str(), assimpOption);
 
-	Assert(aiScene != nullptr, "model load failed. filepath: " + filepath.generic_string(), importer.GetErrorString());
-	Assert(aiScene->HasMeshes(), "model is not mesh.");
+	Exception::Assert(aiScene != nullptr, "model load failed. filepath: " + filepath.generic_string(), importer.GetErrorString());
+	Exception::Assert(aiScene->HasMeshes(), "model is not mesh.");
 
 	LoadMesh(aiScene);
 	LoadMaterial(aiScene, context, filepath.parent_path());
@@ -311,7 +311,7 @@ void Model::LoadMesh(const aiScene* aiScene) {
 				// faceの取得
 				const aiFace& aiFace = aiMesh->mFaces[faceIndex];
 
-				Assert(aiFace.mNumIndices == 3, "mesh is not triangle."); //!< 三角形のみの対応
+				Exception::Assert(aiFace.mNumIndices == 3, "mesh is not triangle."); //!< 三角形のみの対応
 
 				// indexの解析
 				(*index)[faceIndex] = { aiFace.mIndices[0], aiFace.mIndices[2], aiFace.mIndices[1] }; //!< 左手座標系に変換
@@ -533,12 +533,12 @@ void Model::CreateSkeleton() {
 
 bool Model::CheckMeshIndex(uint32_t meshIndex) const {
 	bool expression = meshIndex < meshes_.size();
-	Assert(expression, "mesh index out of range.");
+	Exception::Assert(expression, "mesh index out of range.");
 	return !expression;
 }
 
 bool Model::CheckMaterialIndex(uint32_t materialIndex) const {
 	bool expression = materialIndex < materials_.size();
-	Assert(expression, "material index out of range.");
+	Exception::Assert(expression, "material index out of range.");
 	return !expression;
 }

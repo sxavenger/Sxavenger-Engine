@@ -78,7 +78,7 @@ void SwapChain::CreateSwapChain(Device* device, CommandContext* command, Window*
 		nullptr, nullptr,
 		reinterpret_cast<IDXGISwapChain1**>(swapChain_.GetAddressOf())
 	);
-	Assert(SUCCEEDED(hr));
+	Exception::Assert(SUCCEEDED(hr));
 	
 }
 
@@ -89,7 +89,7 @@ void SwapChain::CreateRTV(Device* device, DescriptorHeaps* descriptorHeaps) {
 		auto hr = swapChain_->GetBuffer(
 			i, IID_PPV_ARGS(&resources_[i])
 		);
-		Assert(SUCCEEDED(hr));
+		Exception::Assert(SUCCEEDED(hr));
 	}
 
 	// RTVの設定

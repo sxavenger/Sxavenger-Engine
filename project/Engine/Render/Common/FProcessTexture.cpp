@@ -42,7 +42,7 @@ void FProcessTexture::Create(const Vector2ui& size, DXGI_FORMAT format) {
 			nullptr,
 			IID_PPV_ARGS(&resource_)
 		);
-		Assert(SUCCEEDED(hr));
+		Exception::Assert(SUCCEEDED(hr));
 
 		resource_->SetName(L"FProcessTexture");
 	}
@@ -101,7 +101,7 @@ void FProcessTextures::Create(uint32_t count, const Vector2ui& size, DXGI_FORMAT
 }
 
 void FProcessTextures::BeginProcess(const DirectXThreadContext* context, FTexture* texture) {
-	Assert(textures_.size() != NULL, "process texture is null.");
+	Exception::Assert(textures_.size() != NULL, "process texture is null.");
 
 	index_ = 0; //!< indexの初期化
 
@@ -150,7 +150,7 @@ void FProcessTextures::EndProcess(const DirectXThreadContext* context, FTexture*
 }
 
 void FProcessTextures::NextProcess(const DirectXThreadContext* context) {
-	Assert(textures_.size() != NULL, "process texture is null.");
+	Exception::Assert(textures_.size() != NULL, "process texture is null.");
 	uint32_t prev = index_;
 	uint32_t next = ++index_ % textures_.size();
 
@@ -173,7 +173,7 @@ void FProcessTextures::BarrierUAV(const DirectXThreadContext* context) {
 }
 
 FProcessTexture* FProcessTextures::GetPrevTexture(uint32_t prev) const {
-	Assert(prev <= textures_.size(), "process texture array size is not exist prev.");
+	Exception::Assert(prev <= textures_.size(), "process texture array size is not exist prev.");
 	return textures_[(index_ + textures_.size() - 1) % textures_.size()].get();
 }
 

@@ -20,7 +20,7 @@ void StateObjectDesc::SetAttributeStride(size_t stride) {
 }
 
 void StateObjectDesc::SetMaxRecursionDepth(uint8_t depth) {
-	Assert(depth > 0 && depth < D3D12_RAYTRACING_MAX_DECLARABLE_TRACE_RECURSION_DEPTH, "recursion depth is out of range.");
+	Exception::Assert(depth > 0 && depth < D3D12_RAYTRACING_MAX_DECLARABLE_TRACE_RECURSION_DEPTH, "recursion depth is out of range.");
 	maxRecursionDepth = depth;
 }
 
@@ -51,7 +51,7 @@ void StateObjectContext::CreateStateObject(DxObject::Device* device, const State
 	auto hr = device->GetDevice()->CreateStateObject(
 		stateObjectDesc, IID_PPV_ARGS(&stateObject_)
 	);
-	Assert(SUCCEEDED(hr), "raytracing state object create failed.");
+	Exception::Assert(SUCCEEDED(hr), "raytracing state object create failed.");
 	// note: DebugLayer = true でPIXを起動するとここでエラーが発生する.
 
 	// propertiesの取得
@@ -77,7 +77,7 @@ void StateObjectContext::CreateStateObject(DxObject::Device* device, StateObject
 	auto hr = device->GetDevice()->CreateStateObject(
 		stateObjectDesc, IID_PPV_ARGS(&stateObject_)
 	);
-	Assert(SUCCEEDED(hr), "raytracing state object create failed.");
+	Exception::Assert(SUCCEEDED(hr), "raytracing state object create failed.");
 	// note: DebugLayer = true でPIXを起動するとここでエラーが発生する.
 
 	// propertiesの取得
@@ -368,7 +368,7 @@ uint8_t* StateObjectContext::WriteExport(uint8_t* dst, UINT size, const ExportGr
 
 	// exportのid書き込み
 	auto id = properties_->GetShaderIdentifier(expt->GetName().c_str());
-	AssertW(id != nullptr, L"export identifier not found. export name: " + expt->GetName());
+	Exception::AssertW(id != nullptr, L"export identifier not found. export name: " + expt->GetName());
 
 	dst += WriteIdentifier(dst, id);
 
@@ -378,7 +378,7 @@ uint8_t* StateObjectContext::WriteExport(uint8_t* dst, UINT size, const ExportGr
 	}
 
 	for (const auto& buffer : expt->GetTable().GetWriteBuffers(*desc)) {
-		Assert(buffer.has_value(), "buffer not has value.", "// maybe system error.");
+		Exception::Assert(buffer.has_value(), "buffer not has value.", "// maybe system error.");
 		const auto& value = buffer.value();
 		
 		if (std::holds_alternative<D3D12_GPU_VIRTUAL_ADDRESS>(value)) {

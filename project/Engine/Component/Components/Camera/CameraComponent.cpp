@@ -89,7 +89,7 @@ void CameraComponent::Init() {
 }
 
 const D3D12_GPU_VIRTUAL_ADDRESS& CameraComponent::GetGPUVirtualAddress() const {
-	Assert(buffer_ != nullptr, "camera buffer is not craete.");
+	Exception::Assert(buffer_ != nullptr, "camera buffer is not craete.");
 	return buffer_->GetGPUVirtualAddress();
 }
 
@@ -117,7 +117,7 @@ void CameraComponent::UpdateProj() {
 }
 
 const CameraComponent::Camera& CameraComponent::GetCamera() const {
-	Assert(buffer_ != nullptr, "camera buffer is not craete.");
+	Exception::Assert(buffer_ != nullptr, "camera buffer is not craete.");
 	return (*buffer_)[0];
 }
 

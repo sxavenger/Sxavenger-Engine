@@ -49,7 +49,7 @@ void TextureExporter::Export(
 			IID_PPV_ARGS(&readback)
 		);
 
-		Assert(SUCCEEDED(hr), "readback resource create failed.");
+		Exception::Assert(SUCCEEDED(hr), "readback resource create failed.");
 	}
 
 	size_t footprintRowpitch = {};
@@ -99,7 +99,7 @@ void TextureExporter::Export(
 
 	ExportTexture(filepath, image);
 
-	CommentRuntime("texture exported.", filepath.generic_string());
+	Logger::CommentRuntime("texture exported.", filepath.generic_string());
 }
 
 DirectX::ScratchImage TextureExporter::GetImage(TextureDimension dimension, DXGI_FORMAT format, const D3D12_RESOURCE_DESC& desc) {
@@ -132,11 +132,11 @@ DirectX::ScratchImage TextureExporter::GetImage(TextureDimension dimension, DXGI
 			break;
 
 		default: //!< exception
-			Assert(false, "[TextureExporter] type is not define.");
+			Exception::Assert(false, "[TextureExporter] type is not define.");
 			break;
 	}
 
-	Assert(SUCCEEDED(hr), "image create failed.");
+	Exception::Assert(SUCCEEDED(hr), "image create failed.");
 	return image;
 }
 
@@ -148,7 +148,7 @@ DirectX::WICCodecs TextureExporter::GetExtensionCodecs(const std::filesystem::pa
 		return DirectX::WIC_CODEC_PNG;
 
 	} else {
-		Assert(false, "[TextureExporter] extension is not define.");
+		Exception::Assert(false, "[TextureExporter] extension is not define.");
 		return {};
 	}
 }

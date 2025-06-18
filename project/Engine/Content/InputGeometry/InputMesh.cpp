@@ -57,7 +57,7 @@ void InputMesh::Meshlet::CreateMeshlet(const TriangleInputAssembler<MeshVertexDa
 			kMaxPrimitives_
 		);
 
-		Assert(SUCCEEDED(hr), "meshlet create failed.");
+		Exception::Assert(SUCCEEDED(hr), "meshlet create failed.");
 
 		// uint8_tから梱包してtriangles(uint32_t)に変換
 		bufferUniqueVertexIndices.reserve(uniqueVertexIB.size() / sizeof(uint32_t));
@@ -83,7 +83,7 @@ void InputMesh::Meshlet::CreateMeshlet(const TriangleInputAssembler<MeshVertexDa
 			bufferCullDatas.data()
 		);
 
-		Assert(SUCCEEDED(hr), "cull data create failed.");
+		Exception::Assert(SUCCEEDED(hr), "cull data create failed.");
 	}
 
 	//!< meshletBufferの生成
@@ -170,11 +170,11 @@ void InputMesh::CreateBottomLevelAS(const DirectXThreadContext* context) {
 }
 
 const InputMesh::Meshlet& InputMesh::GetMeshlet() const {
-	Assert(meshlet_.has_value(), "meshlet is not create.");
+	Exception::Assert(meshlet_.has_value(), "meshlet is not create.");
 	return meshlet_.value();
 }
 
 const InputMesh::MeshBottomLevelAS& InputMesh::GetBottomLevelAS() const {
-	Assert(bottomLevelAS_.has_value(), "bottom level as is not create.");
+	Exception::Assert(bottomLevelAS_.has_value(), "bottom level as is not create.");
 	return bottomLevelAS_.value();
 }

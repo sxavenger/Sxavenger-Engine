@@ -9,6 +9,6 @@ void OffscreenTextureCollection::RegisterTexture(const std::string& name, std::u
 }
 
 const D3D12_GPU_DESCRIPTOR_HANDLE& OffscreenTextureCollection::GetGPUHandleSRV(const std::string& name) const {
-	Assert(textures_.contains(name), "texture is not found. name: " + name);
+	Exception::Assert(textures_.contains(name), "texture is not found. name: " + name);
 	return textures_.at(name)->GetGPUHandleSRV();
 }

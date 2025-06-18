@@ -86,7 +86,7 @@ const std::weak_ptr<GameWindow> GameWindowCollection::TryGetSubWindow(const LPCW
 }
 
 const std::weak_ptr<GameWindow> GameWindowCollection::GetSubWindow(const LPCWSTR& name) const {
-	Assert(subWindows_.Contains(name), "sub winwdow is not found.");
+	Exception::Assert(subWindows_.Contains(name), "sub winwdow is not found.");
 	return subWindows_.At(name);
 }
 

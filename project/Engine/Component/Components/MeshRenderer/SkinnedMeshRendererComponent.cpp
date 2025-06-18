@@ -21,7 +21,7 @@ void SkinnedMeshRendererComponent::InputSkinnedMesh::Create(const DirectXThreadC
 }
 
 void SkinnedMeshRendererComponent::InputSkinnedMesh::UpdateBottomLevelAS(const DirectXThreadContext* context) {
-	Assert(isCreateMesh, "mesh is not created.");
+	Exception::Assert(isCreateMesh, "mesh is not created.");
 	bottomLevelAS.Update(context->GetDxCommand());
 }
 

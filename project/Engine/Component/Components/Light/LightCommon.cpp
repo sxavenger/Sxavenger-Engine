@@ -27,7 +27,7 @@ void LightCommon::CreateShadowBuffer() {
 }
 
 const D3D12_GPU_VIRTUAL_ADDRESS& LightCommon::GetShadowBufferAddress() const {
-	Assert(shadow_ != nullptr, "shadow buffer is not create.");
+	Exception::Assert(shadow_ != nullptr, "shadow buffer is not create.");
 	return shadow_->GetGPUVirtualAddress();
 }
 

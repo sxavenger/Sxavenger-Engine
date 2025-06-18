@@ -40,14 +40,14 @@ void HierarchyEditor::ShowHierarchyMenu() {
 
 		if (ImGui::Button("output")) {
 			sSceneObjects->OutputJson();
-			CommentRuntime("success | output scene");
+			Logger::CommentRuntime("success | output scene");
 		}
 
 		ImGui::SameLine();
 
 		if (ImGui::Button("load")) {
 			sSceneObjects->InputJson();
-			CommentRuntime("success | load scene");
+			Logger::CommentRuntime("success | load scene");
 		}
 
 		ImGui::EndMenu();

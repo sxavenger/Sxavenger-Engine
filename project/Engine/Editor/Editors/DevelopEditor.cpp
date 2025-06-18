@@ -53,7 +53,7 @@ void DevelopEditor::BreakPoint(const std::source_location& location) {
 	locate += std::to_string(location.line());
 	locate += "\n";
 
-	LogRuntime("[DevelopEditor]: break point called.", locate, SxavengerLogger::Category::Comment);
+	Logger::LogRuntime("[DevelopEditor]: break point called.", locate, SxavengerLogger::Category::Comment);
 }
 
 void DevelopEditor::ShowConfigMenu() {

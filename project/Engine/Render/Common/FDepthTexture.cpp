@@ -45,7 +45,7 @@ void FDepthTexture::FRasterizerDepth::Create(const Vector2ui& size) {
 			IID_PPV_ARGS(&resource_)
 		);
 
-		Assert(SUCCEEDED(hr));
+		Exception::Assert(SUCCEEDED(hr));
 
 		resource_->SetName(L"FSceneDepth Rasterizer");
 	}
@@ -184,7 +184,7 @@ void FDepthTexture::FRaytracingDepth::Create(const Vector2ui& size) {
 			IID_PPV_ARGS(&resource_)
 		);
 
-		Assert(SUCCEEDED(hr));
+		Exception::Assert(SUCCEEDED(hr));
 
 		resource_->SetName(L"FSceneDepth Raytracing");
 	}

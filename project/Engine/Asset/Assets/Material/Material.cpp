@@ -246,12 +246,12 @@ void Material::CreateBuffer() {
 }
 
 const Material::MaterialBuffer& Material::GetBuffer() const {
-	Assert(buffer_ != nullptr, "buffer is not create.");
+	Exception::Assert(buffer_ != nullptr, "buffer is not create.");
 	return buffer_->At(0);
 }
 
 Material::MaterialBuffer& Material::GetBuffer() {
-	Assert(buffer_ != nullptr, "buffer is not create.");
+	Exception::Assert(buffer_ != nullptr, "buffer is not create.");
 	return buffer_->At(0);
 }
 
@@ -262,7 +262,7 @@ void Material::Transfer() {
 }
 
 const D3D12_GPU_VIRTUAL_ADDRESS& Material::GetGPUVirtualAddress() const {
-	Assert(buffer_ != nullptr, "buffer is not create.");
+	Exception::Assert(buffer_ != nullptr, "buffer is not create.");
 	return buffer_->GetGPUVirtualAddress();
 }
 

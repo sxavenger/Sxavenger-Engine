@@ -50,7 +50,7 @@ void DirectionalLightComponent::CreateParameterBuffer() {
 }
 
 const D3D12_GPU_VIRTUAL_ADDRESS& DirectionalLightComponent::GetParameterBufferAddress() const {
-	Assert(parameter_ != nullptr, "directional light buffer is not create.");
+	Exception::Assert(parameter_ != nullptr, "directional light buffer is not create.");
 	return parameter_->GetGPUVirtualAddress();
 }
 

@@ -134,7 +134,7 @@ ComPtr<ID3D12RootSignature> BaseRootSignatureDesc::CreateRootSignature(ID3D12Dev
 	);
 
 	if (FAILED(hr)) {
-		Assert(false, "Root Signature create error.", reinterpret_cast<char*>(signatureErrorBlob->GetBufferPointer()));
+		Exception::Assert(false, "Root Signature create error.", reinterpret_cast<char*>(signatureErrorBlob->GetBufferPointer()));
 	}
 
 	ComPtr<ID3D12RootSignature> result;
@@ -145,13 +145,13 @@ ComPtr<ID3D12RootSignature> BaseRootSignatureDesc::CreateRootSignature(ID3D12Dev
 		signatureBlob->GetBufferSize(),
 		IID_PPV_ARGS(&result)
 	);
-	Assert(SUCCEEDED(hr));
+	Exception::Assert(SUCCEEDED(hr));
 
 	return result;
 }
 
 void BaseRootSignatureDesc::AutoResizeParam(uint32_t index) {
-	Assert(index < params.capacity()); //!< reserve分を超えてないか確認
+	Exception::Assert(index < params.capacity()); //!< reserve分を超えてないか確認
 
 	if (index < params.size()) { //!< indexがsize以下ならresizeしない
 		return;
@@ -162,7 +162,7 @@ void BaseRootSignatureDesc::AutoResizeParam(uint32_t index) {
 }
 
 void BaseRootSignatureDesc::AutoResizeSampler(uint32_t index) {
-	Assert(index < samplers.capacity());
+	Exception::Assert(index < samplers.capacity());
 
 	if (index < samplers.size()) { //!< indexがsize以下ならresizeしない
 		return;

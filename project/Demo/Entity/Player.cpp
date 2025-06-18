@@ -203,7 +203,7 @@ void Player::UpdateCamera() {
 	}
 
 	if (target_ == nullptr) {
-		WarningRuntime("[Player]: nullptr warning", "target is nullptr");
+		Logger::WarningRuntime("[Player]: nullptr warning", "target is nullptr");
 		return;
 	}
 

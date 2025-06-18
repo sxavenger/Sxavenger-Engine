@@ -70,17 +70,17 @@ void GraphicsPipelineDesc::SetPrimitive(PrimitiveType type) {
 
 void GraphicsPipelineDesc::SetRTVFormat(DXGI_FORMAT format) {
 	rtvFormats.emplace_back(format);
-	Assert(rtvFormats.size() < D3D12_SIMULTANEOUS_RENDER_TARGET_COUNT, "RTV Format must be within D3D12_SIMULTANEOUS_RENDER_TARGET_COUNT"); //!< RTVの設定限界
+	Exception::Assert(rtvFormats.size() < D3D12_SIMULTANEOUS_RENDER_TARGET_COUNT, "RTV Format must be within D3D12_SIMULTANEOUS_RENDER_TARGET_COUNT"); //!< RTVの設定限界
 }
 
 void GraphicsPipelineDesc::SetRTVFormat(uint8_t index, DXGI_FORMAT format) {
 	rtvFormats[index] = format;
-	Assert(rtvFormats.size() < D3D12_SIMULTANEOUS_RENDER_TARGET_COUNT, "RTV Format must be within D3D12_SIMULTANEOUS_RENDER_TARGET_COUNT"); //!< RTVの設定限界
+	Exception::Assert(rtvFormats.size() < D3D12_SIMULTANEOUS_RENDER_TARGET_COUNT, "RTV Format must be within D3D12_SIMULTANEOUS_RENDER_TARGET_COUNT"); //!< RTVの設定限界
 }
 
 void GraphicsPipelineDesc::SetRTVFormats(uint8_t size, const DXGI_FORMAT formats[]) {
 	rtvFormats.insert(rtvFormats.end(), formats, formats + size);
-	Assert(rtvFormats.size() < D3D12_SIMULTANEOUS_RENDER_TARGET_COUNT, "RTV Format must be within D3D12_SIMULTANEOUS_RENDER_TARGET_COUNT"); //!< RTVの設定限界
+	Exception::Assert(rtvFormats.size() < D3D12_SIMULTANEOUS_RENDER_TARGET_COUNT, "RTV Format must be within D3D12_SIMULTANEOUS_RENDER_TARGET_COUNT"); //!< RTVの設定限界
 }
 
 void GraphicsPipelineDesc::SetDSVFormat(DXGI_FORMAT format) {
@@ -202,7 +202,7 @@ void GraphicsPipelineState::SetExternal(BlendState* blendState) {
 
 D3D12_SHADER_BYTECODE GraphicsPipelineState::GetBytecode(GraphicsShaderType type, bool isRequired) {
 	if (!blobs_[static_cast<uint8_t>(type)].has_value()) {
-		Assert(!isRequired, "required blob is not set."); //!< 絶対的に使用されるblobが設定されていない.
+		Exception::Assert(!isRequired, "required blob is not set."); //!< 絶対的に使用されるblobが設定されていない.
 		return {};
 	}
 
@@ -218,7 +218,7 @@ D3D12_RENDER_TARGET_BLEND_DESC GraphicsPipelineState::GetRenderTargetBlendDesc(c
 		return std::get<D3D12_RENDER_TARGET_BLEND_DESC>(option);
 	}
 
-	Assert(false, "is not define option.");
+	Exception::Assert(false, "is not define option.");
 	return {};
 }
 
@@ -281,7 +281,7 @@ void GraphicsPipelineState::CreateDirectXPipeline(Device* device) {
 			IID_PPV_ARGS(&pipeline_)
 		);
 
-		Assert(SUCCEEDED(hr));
+		Exception::Assert(SUCCEEDED(hr));
 
 	} else {
 
@@ -312,7 +312,7 @@ void GraphicsPipelineState::CreateDirectXPipeline(Device* device) {
 			&desc,
 			IID_PPV_ARGS(&pipeline_)
 		);
-		Assert(SUCCEEDED(hr), "vertex shader pipeline create failed.");
+		Exception::Assert(SUCCEEDED(hr), "vertex shader pipeline create failed.");
 	}
 }
 
@@ -384,7 +384,7 @@ void ReflectionGraphicsPipelineState::BindGraphicsBuffer(CommandContext* context
 
 void ReflectionGraphicsPipelineState::TrySetBlobToTable(GraphicsShaderType type, ShaderVisibility visibility, bool isRequired) {
 	if (!blobs_[static_cast<uint8_t>(type)].has_value()) {
-		Assert(!isRequired, "required blob is not set."); //!< 絶対的に使用されるblobが設定されていない.
+		Exception::Assert(!isRequired, "required blob is not set."); //!< 絶対的に使用されるblobが設定されていない.
 		return; //!< blobが登録されていないのでreturn
 	}
 

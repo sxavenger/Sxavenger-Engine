@@ -89,7 +89,7 @@ void DepthTexture::CreateResource() {
 		IID_PPV_ARGS(&resource_)
 	);
 
-	Assert(SUCCEEDED(hr));
+	Exception::Assert(SUCCEEDED(hr));
 }
 
 void DepthTexture::CreateDSV() {

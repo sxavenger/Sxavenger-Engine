@@ -54,7 +54,7 @@ void CommandContext::CreateCommandAllocator(ID3D12Device* device, D3D12_COMMAND_
 			type,
 			IID_PPV_ARGS(&commandAllocators_[i])
 		);
-		Assert(SUCCEEDED(hr));
+		Exception::Assert(SUCCEEDED(hr));
 	}
 }
 
@@ -69,7 +69,7 @@ void CommandContext::CreateCommandQueue(ID3D12Device* device, D3D12_COMMAND_LIST
 		IID_PPV_ARGS(&commandQueue_)
 	);
 
-	Assert(SUCCEEDED(hr));
+	Exception::Assert(SUCCEEDED(hr));
 }
 
 void CommandContext::CreateCommandList(ID3D12Device* device, D3D12_COMMAND_LIST_TYPE type) {
@@ -81,7 +81,7 @@ void CommandContext::CreateCommandList(ID3D12Device* device, D3D12_COMMAND_LIST_
 		nullptr,
 		IID_PPV_ARGS(&commandList_)
 	);
-	Assert(SUCCEEDED(hr));
+	Exception::Assert(SUCCEEDED(hr));
 	
 }
 
@@ -94,18 +94,18 @@ void CommandContext::CreateFence(ID3D12Device* device) {
 		D3D12_FENCE_FLAG_NONE,
 		IID_PPV_ARGS(&fence_)
 	);
-	Assert(SUCCEEDED(hr));
+	Exception::Assert(SUCCEEDED(hr));
 
 	fenceEvent_ = CreateEvent(
 		NULL, FALSE, FALSE, NULL
 	);
-	Assert(fenceEvent_ != nullptr);
+	Exception::Assert(fenceEvent_ != nullptr);
 }
 
 void CommandContext::Close() {
 
 	auto hr = commandList_->Close();
-	Assert(SUCCEEDED(hr));
+	Exception::Assert(SUCCEEDED(hr));
 
 	ID3D12CommandList* commandLists[] = { commandList_.Get() };
 	commandQueue_->ExecuteCommandLists(1, commandLists);
@@ -137,11 +137,11 @@ void CommandContext::Reset(uint32_t index) {
 
 	// allocatorのリセット
 	auto hr = commandAllocators_[index]->Reset();
-	Assert(SUCCEEDED(hr));
+	Exception::Assert(SUCCEEDED(hr));
 
 	// allocatorをセット
 	hr = commandList_->Reset(commandAllocators_[index].Get(), nullptr);
-	Assert(SUCCEEDED(hr));
+	Exception::Assert(SUCCEEDED(hr));
 
 	// 現在のindexとして設定
 	currentIndex_ = index;

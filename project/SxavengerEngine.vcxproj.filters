@@ -167,6 +167,7 @@
     <ClCompile Include="Engine\Module\Scene\SceneObject.cpp" />
     <ClCompile Include="Engine\Module\Scene\SceneObjects.cpp" />
     <ClCompile Include="Engine\Content\Exporter\TextureExporter.cpp" />
+    <ClCompile Include="Engine\System\Utility\UtilityCommon.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\System\Window\Window.h" />
@@ -356,6 +357,7 @@
     <ClInclude Include="Engine\Module\Scene\SceneObject.h" />
     <ClInclude Include="Engine\Module\Scene\SceneObjects.h" />
     <ClInclude Include="Engine\Content\Exporter\TextureExporter.h" />
+    <ClInclude Include="Engine\System\Utility\UtilityCommon.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />
