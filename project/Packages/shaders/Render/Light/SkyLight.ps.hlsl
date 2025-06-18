@@ -75,18 +75,34 @@ static const uint kSampleCount = 1024; //!< サンプル数
 
 #ifdef _DEBUG_SAMPLE
 
+void TangentSpace(float3 n, out float3 t, out float3 b) {
+	/*
+	# reference
+	 https://jcgt.org/published/0006/01/01/
+	*/
+	float s = (n.z >= 0.0f) ? 1.0f : -1.0f;
+	float a = -1.0f / (s + n.z);
+	float bv = n.x * n.y * a;
+
+	t = float3(1.0f + s * n.x * n.x * a, s * bv, -s * n.x);
+	b = float3(bv, s + n.y * n.y * a, -n.y);
+}
+
 float3 ImportanceSampleGGX(float2 xi, float roughness, float3 n) {
 	float a = roughness * roughness;
 
 	float phi = kTau * xi.x;
+	//float cosTheta = sqrt((1.0f - xi.y) / max(1.0f + (a * a - 1.0f) * xi.y, kEpsilon));
 	float cosTheta = sqrt((1.0f - xi.y) / (1.0f + (a * a - 1.0f) * xi.y));
 	float sinTheta = sqrt(1.0f - cosTheta * cosTheta);
 
-	float3 h = float3(sinTheta * cos(phi), sinTheta * sin(phi), cosTheta); //!< 半径1の円周上にサンプリング
+	float3 h; //!< 半径1の円周上にサンプリング
+	h.x = sinTheta * cos(phi);
+	h.y = sinTheta * sin(phi);
+	h.z = cosTheta;
 
-	float3 up = abs(n.z) < 0.999f ? float3(0.0f, 0.0f, 1.0f) : float3(1.0f, 0.0f, 0.0f);
-	float3 tangentX = normalize(cross(up, n)); //!< 接線ベクトル
-	float3 tangentY = cross(n, tangentX); //!< 接線ベクトル
+	float3 tangentX, tangentY;
+	TangentSpace(n, tangentX, tangentY);
 
 	return normalize(h.x * tangentX + h.y * tangentY + h.z * n);
 }
@@ -102,8 +118,8 @@ float3 PrefilterRadiance(float roughness, float3 r) {
 	for (uint i = 0; i < kSampleCount; ++i) {
 		float2 xi = Hammersley(i, kSampleCount);
 		float3 h = ImportanceSampleGGX(xi, roughness, n); //!< 法線ベクトルをサンプリング
-		float3 l = 2.0f * dot(v, h) * h - v; //!< ライトベクトルを計算
-
+		float3 l = normalize(2.0f * dot(v, h) * h - v); //!< ライトベクトルを計算
+		
 		float NdotL = saturate(dot(n, l)); //!< ライトベクトルと法線ベクトルの内積
 
 		if (NdotL > 0.0f) {
@@ -115,17 +131,20 @@ float3 PrefilterRadiance(float roughness, float3 r) {
 	return color / totalWeight;
 }
 
-float3 ImportanceSampleCosineWieghted(float2 xi, float3 n) {
-	float r = sqrt(xi.x);
+float3 ImportanceSampleLambert(float2 xi, float3 n) {
+
+	float r   = sqrt(xi.x);
 	float phi = kTau * xi.y;
 
-	float3 h = float3(r * cos(phi), r * sin(phi), sqrt(1.0f - xi.x)); //!< 半径1の円周上にサンプリング
+	float3 h;
+	h.x = r * cos(phi);
+	h.y = r * sin(phi);
+	h.z = sqrt(1.0f - xi.x);
 
-	float3 up = abs(n.z) < 0.999f ? float3(0.0f, 0.0f, 1.0f) : float3(1.0f, 0.0f, 0.0f); //!< 上方向を決定
-	float3 tangentX = normalize(cross(up, n)); //!< 接線ベクトル
-	float3 tangentY = cross(n, tangentX); //!< 接線ベクトル
+	float3 tangentX, tangentY;
+	TangentSpace(n, tangentX, tangentY);
 
-	return normalize(h.x * tangentX + h.y * tangentY + h.z * n); //!< 法線ベクトルに変換
+	return normalize(h.x * tangentX + h.y * tangentY + h.z * n);
 }
 
 float3 PrefilterIrradiance(float3 n) {
@@ -134,9 +153,9 @@ float3 PrefilterIrradiance(float3 n) {
 
 	for (uint i = 0; i < kSampleCount; i++) {
 		float2 xi = Hammersley(i, kSampleCount);
-		float3 h = ImportanceSampleCosineWieghted(xi, n); //!< 半径1の円周上にサンプリング
+		float3 l  = ImportanceSampleLambert(xi, n); //!< 半径1の円周上にサンプリング
 
-		color += gEnvironment.SampleLevel(gSampler, h, 0.0f).rgb; //!< 環境マップから色を取得
+		color += gEnvironment.SampleLevel(gSampler, l, 0.0f).rgb; //!< 環境マップから色を取得
 	}
 
 	return color / float(kSampleCount); //!< 平均化
@@ -163,7 +182,7 @@ float3 ApproximateBRDF(float3 diffuseAlbedo, float3 specularAlbedo, float3 n, fl
 	float3 diffuse = diffuseLight * diffuseAlbedo;
 	float3 specular = specularLight * (specularAlbedo * brdf.r + brdf.g);
 
-	return /*diffuse +*/ specular;
+	return diffuse /*+ specular*/;
 
 }
 
