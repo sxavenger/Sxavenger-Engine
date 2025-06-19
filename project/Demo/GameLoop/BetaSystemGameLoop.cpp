@@ -84,6 +84,12 @@ void BetaSystemGameLoop::InitSystem() {
 	skylight_->Init({ 1024, 1024 });
 	skylight_->SetTexture("assets/textures/textureCube/studio_small_09_4k.dds");
 	skylight_->Update(true);
+
+	//offlineSkylight_ = std::make_unique<MonoBehaviour>();
+	//auto light = offlineSkylight_->AddComponent<SkyLightComponent>();
+	//light->GetDiffuseParameter();
+	//light->GetSpecularParameter().SetTexture();
+	//light->SetEnvironment(SxavengerAsset::Import<AssetTexture>("assets/textures/textureCube/studio_small_09_4k.dds").WaitAcquire()->GetGPUHandleSRV());
 }
 
 void BetaSystemGameLoop::TermSystem() {

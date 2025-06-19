@@ -88,7 +88,7 @@ void SxavengerEngineGameLoop::CreateWhite1x1() {
 	compute->Dispatch(SxavengerSystem::GetMainThreadContext()->GetDxCommand(), { 1, 1, 1 });
 
 	white1x1->TransitionEndUnordered(SxavengerSystem::GetMainThreadContext());
-	SxavengerSystem::TransitionAllocator();
+	SxavengerSystem::ExecuteAllAllocator();
 
 	SxavengerContent::RegisterTexture("white1x1", std::move(white1x1));
 }

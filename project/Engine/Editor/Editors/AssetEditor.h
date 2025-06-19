@@ -38,7 +38,7 @@ private:
 
 	//* parameter *//
 
-	std::filesystem::path a;
+	std::optional<std::filesystem::path> selectedDirectory_;
 
 	//=========================================================================================
 	// private methods
@@ -52,8 +52,12 @@ private:
 
 	void SetSelected(BaseAsset* asset);
 
-	bool CheckSelected(BaseAsset* asset);
+	bool CheckSelectedInspector(BaseAsset* asset);
 
-	void ShowAssetDirectory(const std::filesystem::path& path);
+	//* show asset *//
+
+	void ShowAssetDirectoryTable(const std::filesystem::path& path);
+	void ShowAssetDirectoryNode();
+	void ShowAssetLayout();
 
 };

@@ -39,6 +39,8 @@ public:
 
 	using Storage = std::unordered_map<const std::type_info*, Sxl::OptimizedPathMap<std::shared_ptr<BaseAsset>>>;
 
+	using Extensions = std::unordered_map<std::filesystem::path, std::pair<const std::type_info*, std::function<std::shared_ptr<BaseAsset>()>>>;
+
 public:
 
 	//=========================================================================================
@@ -55,6 +57,11 @@ public:
 	template <BaseAssetConcept _Ty>
 	AssetObserver<_Ty> TryImport(const std::filesystem::path& filepath, const std::any& param = std::any());
 
+	//* extension option *//
+
+	template <BaseAssetConcept _Ty>
+	void RegisterExtension(const std::filesystem::path& extension);
+
 	//* getter *//
 
 	const Storage& GetStorage() const { return storage_; }
@@ -70,6 +77,8 @@ private:
 	//=========================================================================================
 
 	Storage storage_;
+
+	Extensions extensions_;
 
 	//=========================================================================================
 	// private methods
@@ -114,6 +123,12 @@ AssetObserver<_Ty> AssetStorage::TryImport(const std::filesystem::path& filepath
 	}
 
 	return AssetStorage::Import<_Ty>(filepath, param);
+}
+
+template <BaseAssetConcept _Ty>
+inline void AssetStorage::RegisterExtension(const std::filesystem::path& extension) {
+	constexpr const std::type_info* type = &typeid(_Ty);
+	extensions_.emplace(extension, std::make_pair(type, []() { return std::make_shared<_Ty>(); }));
 }
 
 template <BaseAssetConcept _Ty>
