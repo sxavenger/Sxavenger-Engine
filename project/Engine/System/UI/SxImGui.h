@@ -31,6 +31,10 @@ namespace SxImGui {
 
 	bool IsDoubleClick();
 
+	void TextClipped(const char* text, float width);
+
+	void TextClippedEx(const char* text, const char* end_text, float width);
+
 	//=========================================================================================
 	// option
 	//=========================================================================================

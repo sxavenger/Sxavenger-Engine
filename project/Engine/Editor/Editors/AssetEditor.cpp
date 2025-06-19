@@ -7,12 +7,16 @@
 #include "../EditorEngine.h"
 #include "InspectorEditor.h"
 
+//* engine
+#include <Engine/System/UI/SxImGui.h>
+
 //////////////////////////////////////////////////////////////////////////////////////////
 // AssetEditor class methods
 //////////////////////////////////////////////////////////////////////////////////////////
 
 void AssetEditor::Init() {
-
+	folderTextures_ = SxavengerAsset::TryImport<AssetTexture>("Packages/textures/icon/folder.png");
+	objectTextures_ = SxavengerAsset::TryImport<AssetTexture>("Packages/textures/icon/unknown_object.png");
 }
 
 void AssetEditor::ShowMainMenu() {
@@ -52,7 +56,9 @@ void AssetEditor::ShowAssetWindow() {
 	ImGui::EndChild();
 	ImGui::PopStyleColor();
 
-	
+	ImGui::DragFloat("icon size", &iconSize_, 1.0f, 16.0f, 128.0f, "%.0f px", ImGuiSliderFlags_AlwaysClamp);
+
+	ImGui::Separator();
 	//!< 廃止予定
 	for (const auto& [type, map] : sAssetStorage->GetStorage()) {
 		if (ImGui::TreeNode(type->name())) {
@@ -86,6 +92,11 @@ void AssetEditor::ShowAssetWindow() {
 
 }
 
+const std::string AssetEditor::ConvertStr(const std::filesystem::path& path) {
+	std::u8string name = path.filename().generic_u8string();
+	return std::string(name.begin(), name.end());
+}
+
 void AssetEditor::SetSelected(BaseAsset* asset) {
 	if (auto editor = BaseEditor::GetEditorEngine()->GetEditor<InspectorEditor>()) {
 		editor->SetInspector(asset);
@@ -98,6 +109,19 @@ bool AssetEditor::CheckSelectedInspector(BaseAsset* asset) {
 	}
 
 	return false;
+}
+
+void AssetEditor::ForEachDirectory(const std::filesystem::path& path, const std::function<void(const std::filesystem::directory_entry&)>& func) {
+
+	// directory only
+	for (const auto& entry : std::filesystem::directory_iterator(path) | std::views::filter([](const std::filesystem::directory_entry& entry) { return entry.is_directory(); })) {
+		func(entry);
+	}
+
+	// file only
+	for (const auto& entry : std::filesystem::directory_iterator(path) | std::views::filter([](const std::filesystem::directory_entry& entry) { return !entry.is_directory(); })) {
+		func(entry);
+	}
 }
 
 
@@ -123,7 +147,7 @@ void AssetEditor::ShowAssetDirectoryTable(const std::filesystem::path& path) {
 		ImGui::Unindent();
 	}
 
-	bool isOpen = ImGui::TreeNodeEx(reinterpret_cast<const char*>(name.c_str()), flags);
+	bool isOpen = ImGui::TreeNodeEx(ConvertStr(path.filename()).c_str(), flags);
 
 	if (!isDirectory) {
 		ImGui::Indent();
@@ -135,9 +159,10 @@ void AssetEditor::ShowAssetDirectoryTable(const std::filesystem::path& path) {
 
 	if (isOpen) {
 		if (isDirectory) {
-			for (const auto& entry : std::filesystem::directory_iterator(path)) {
-				ShowAssetDirectoryTable(entry.path());
-			}
+			ForEachDirectory(
+				path,
+				[this](const std::filesystem::directory_entry& entry) { ShowAssetDirectoryTable(entry.path()); }
+			);
 		}
 
 		ImGui::TreePop();
@@ -164,7 +189,7 @@ void AssetEditor::ShowAssetDirectoryNode() {
 		for (const auto& part : path) {
 			current /= part;
 
-			if (ImGui::Button(current.filename().generic_string().c_str())) {
+			if (ImGui::Button(ConvertStr(current.filename()).c_str())) {
 				select = current;
 			}
 
@@ -194,5 +219,53 @@ void AssetEditor::ShowAssetLayout() {
 
 	const auto& path = selectedDirectory_.value();
 
+	std::optional<std::filesystem::path> select;
 
+	ImVec2 context = ImGui::GetContentRegionAvail();
+
+	size_t space = static_cast<size_t>(context.x) / static_cast<size_t>(iconSize_);
+	size_t count = 0;
+
+	// texture
+	auto folderTex = folderTextures_.WaitAcquire();
+	auto objectTex = objectTextures_.WaitAcquire();
+
+	ForEachDirectory(path, [&](const std::filesystem::directory_entry& entry) {
+		const auto& part = entry.path();
+
+		ImGui::BeginGroup();
+
+		bool isSameLine = (space != 0) && (++count % space != 0);
+
+		if (entry.is_directory()) {
+			if (ImGui::ImageButton(ConvertStr(part).c_str(), folderTex->GetGPUHandleSRV().ptr, { iconSize_, iconSize_ })) {
+				select = part;
+			}
+
+		} else {
+			if (ImGui::ImageButton(ConvertStr(part).c_str(), objectTex->GetGPUHandleSRV().ptr, {iconSize_, iconSize_})) {
+
+			}
+		}
+
+		//ImGui::Text("...");
+		SxImGui::TextClippedEx(ConvertStr(part.filename()).c_str(), "...", iconSize_);
+
+		if (ImGui::IsItemHovered()) {
+			ImGui::BeginTooltip();
+			ImGui::Text(ConvertStr(part.filename()).c_str());
+			ImGui::EndTooltip();
+		}
+
+		ImGui::EndGroup();
+
+		if (isSameLine) {
+			ImGui::SameLine();
+		}
+
+	});
+
+	if (select.has_value()) {
+		selectedDirectory_ = select.value();
+	}
 }

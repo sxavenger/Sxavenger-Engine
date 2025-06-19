@@ -10,6 +10,9 @@
 #include <Engine/System/Config/SxavengerConfig.h>
 #include <Engine/Asset/SxavengerAsset.h>
 
+//* c++
+#include <filesystem>
+
 //////////////////////////////////////////////////////////////////////////////////////////
 // AssetEditor class
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -36,9 +39,16 @@ private:
 	// private variables
 	//=========================================================================================
 
+	std::optional<std::filesystem::path> selectedDirectory_;
+
+	//* textures *//
+
+	AssetObserver<AssetTexture> folderTextures_;
+	AssetObserver<AssetTexture> objectTextures_;
+
 	//* parameter *//
 
-	std::optional<std::filesystem::path> selectedDirectory_;
+	float iconSize_ = 64.0f;
 
 	//=========================================================================================
 	// private methods
@@ -50,9 +60,13 @@ private:
 
 	//* helper *//
 
+	static const std::string ConvertStr(const std::filesystem::path& path);
+
 	void SetSelected(BaseAsset* asset);
 
 	bool CheckSelectedInspector(BaseAsset* asset);
+
+	void ForEachDirectory(const std::filesystem::path& path, const std::function<void(const std::filesystem::directory_entry&)>& func);
 
 	//* show asset *//
 

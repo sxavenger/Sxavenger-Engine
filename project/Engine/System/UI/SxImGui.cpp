@@ -9,6 +9,7 @@
 
 //* c++
 #include <limits>
+#include <algorithm>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // SxImGui namespace methods
@@ -94,4 +95,45 @@ bool SxImGui::ImageButton(const char* id, ImTextureID texture_id, const ImVec2& 
 
 bool SxImGui::IsDoubleClick() {
 	return ImGui::GetIO().MouseClickedCount[ImGuiMouseButton_Left] == 2;
+}
+
+void SxImGui::TextClipped(const char* text, float width) {
+	const ImVec2 beginPos = ImGui::GetCursorScreenPos();
+	const ImVec2 endPos = { beginPos.x + width, beginPos.y + ImGui::GetTextLineHeight() };
+
+	ImGui::RenderTextClipped(beginPos, endPos, text, nullptr, nullptr, {}, nullptr);
+	ImGui::Dummy({ width, ImGui::GetTextLineHeight() });
+}
+
+void SxImGui::TextClippedEx(const char* text, const char* end_text, float width) {
+
+	ImVec2 mainTextSize = ImGui::CalcTextSize(text);
+
+	if (mainTextSize.x < width) { //!< end_textが必要ない場合
+
+		// textの描画
+		const ImVec2 mainTextBeginPos = ImGui::GetCursorScreenPos();
+		const ImVec2 mainTextEndPos = { mainTextBeginPos.x + width, mainTextBeginPos.y + ImGui::GetTextLineHeight() };
+
+		ImGui::RenderTextClipped(mainTextBeginPos, mainTextEndPos, text, nullptr, nullptr, {}, nullptr);
+
+	} else {
+
+		ImVec2 endTextSize = ImGui::CalcTextSize(end_text);
+		endTextSize.x = std::clamp(endTextSize.x, 0.0f, width);
+
+		// textの描画
+		const ImVec2 mainTextBeginPos = ImGui::GetCursorScreenPos();
+		const ImVec2 mainTextEndPos = { mainTextBeginPos.x + width - endTextSize.x, mainTextBeginPos.y + ImGui::GetTextLineHeight() };
+
+		ImGui::RenderTextClipped(mainTextBeginPos, mainTextEndPos, text, nullptr, nullptr, {}, nullptr);
+
+		// end_textの描画
+		const ImVec2 endTextBeginPos = { mainTextEndPos.x, mainTextBeginPos.y };
+		const ImVec2 endTextEndPos = { mainTextEndPos.x + endTextSize.x, mainTextEndPos.y + endTextSize.y };
+
+		ImGui::RenderTextClipped(endTextBeginPos, endTextEndPos, end_text, nullptr, nullptr, {}, nullptr);
+	}
+	
+	ImGui::Dummy({ width, ImGui::GetTextLineHeight() });
 }
