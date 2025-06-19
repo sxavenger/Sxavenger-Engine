@@ -6,7 +6,7 @@
 //* library
 #include "../../Library/BRDF.hlsli"
 
-#define _DEBUG_SAMPLE
+//#define _DEBUG_SAMPLE
 
 #ifdef _DEBUG_SAMPLE
 #include "../../Library/Hammersley.hlsli"

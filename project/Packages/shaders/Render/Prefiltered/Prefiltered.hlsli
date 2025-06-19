@@ -49,3 +49,16 @@ float3 GetDirection(float2 uv, uint face) {
 
 	return float3(0.0f, 0.0f, 0.0f); //!< error.
 }
+
+/*
+# reference
+ https://jcgt.org/published/0006/01/01/
+*/
+void TangentSpace(float3 n, out float3 t, out float3 b) {
+	float s = (n.z >= 0.0f) ? 1.0f : -1.0f;
+	float a = -1.0f / (s + n.z);
+	float bv = n.x * n.y * a;
+
+	t = float3(1.0f + s * n.x * n.x * a, s * bv, -s * n.x);
+	b = float3(bv, s + n.y * n.y * a, -n.y);
+}

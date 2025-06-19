@@ -7,6 +7,7 @@
 #include "BaseEditor.h"
 
 //* engine
+#include <Engine/System/Config/SxavengerConfig.h>
 #include <Engine/Asset/SxavengerAsset.h>
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -35,7 +36,9 @@ private:
 	// private variables
 	//=========================================================================================
 
+	//* parameter *//
 
+	std::filesystem::path a;
 
 	//=========================================================================================
 	// private methods
@@ -50,5 +53,7 @@ private:
 	void SetSelected(BaseAsset* asset);
 
 	bool CheckSelected(BaseAsset* asset);
+
+	void ShowAssetDirectory(const std::filesystem::path& path);
 
 };

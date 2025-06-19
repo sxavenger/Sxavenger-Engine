@@ -36,6 +36,7 @@ public:
 	////////////////////////////////////////////////////////////////////////////////////////////
 	// using
 	////////////////////////////////////////////////////////////////////////////////////////////
+
 	using Storage = std::unordered_map<const std::type_info*, Sxl::OptimizedPathMap<std::shared_ptr<BaseAsset>>>;
 
 public:
@@ -57,10 +58,6 @@ public:
 	//* getter *//
 
 	const Storage& GetStorage() const { return storage_; }
-
-	//* imgui option (drag and drop) *//
-
-	
 
 	//* singleton *//
 

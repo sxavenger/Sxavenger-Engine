@@ -11,7 +11,7 @@ RWTexture2DArray<float4> gIrrandiance : register(u0); //!< irradiance(diffuse) e
 // constant variables
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-static const uint kSampleCount = 2048;
+static const uint kSampleCount = 1;
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // methods
@@ -23,17 +23,20 @@ static const uint kSampleCount = 2048;
 */
 //!< todo: 文献などを参照し, 関数実装.
 
-float3 ImportanceSampleCosineWieghted(float2 xi, float3 n) {
-	float r   = sqrt(xi.x);
+float3 ImportanceSampleLambert(float2 xi, float3 n) {
+
+	float r = sqrt(xi.x);
 	float phi = kTau * xi.y;
 
-	float3 h = float3(r * cos(phi), r * sin(phi), sqrt(1.0f - xi.x)); //!< 半径1の円周上にサンプリング
+	float3 h;
+	h.x = r * cos(phi);
+	h.y = r * sin(phi);
+	h.z = sqrt(1.0f - xi.x);
 
-	float3 up       = abs(n.z) < 0.999f ? float3(0.0f, 0.0f, 1.0f) : float3(1.0f, 0.0f, 0.0f); //!< 上方向を決定
-	float3 tangentX = normalize(cross(up, n)); //!< 接線ベクトル
-	float3 tangentY = cross(n, tangentX); //!< 接線ベクトル
+	float3 tangentX, tangentY;
+	TangentSpace(n, tangentX, tangentY);
 
-	return normalize(h.x * tangentX + h.y * tangentY + h.z * n); //!< 法線ベクトルに変換
+	return normalize(h.x * tangentX + h.y * tangentY + h.z * n);
 }
 
 float3 PrefilterIrradiance(float3 n) {
@@ -42,9 +45,9 @@ float3 PrefilterIrradiance(float3 n) {
 
 	for (uint i = 0; i < kSampleCount; i++) {
 		float2 xi = Hammersley(i, kSampleCount);
-		float3 h  = ImportanceSampleCosineWieghted(xi, n); //!< 半径1の円周上にサンプリング
+		float3 l = ImportanceSampleLambert(xi, n); //!< 半径1の円周上にサンプリング
 
-		color += gEnvironment.SampleLevel(gEnvironmentSampler, h, 0.0f).rgb; //!< 環境マップから色を取得
+		color += gEnvironment.SampleLevel(gEnvironmentSampler, l, 2.0f).rgb; //!< 環境マップから色を取得
 	}
 
 	return color / float(kSampleCount); //!< 平均化

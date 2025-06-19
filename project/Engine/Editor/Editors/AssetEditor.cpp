@@ -27,6 +27,22 @@ void AssetEditor::ShowAssetWindow() {
 	BaseEditor::SetNextWindowDocking();
 	ImGui::Begin("Asset ## Engine Asset Editor", nullptr, BaseEditor::GetWindowFlag());
 
+	//* Asset Directory *//
+
+	ImVec2 context = ImGui::GetContentRegionAvail();
+
+	ImGui::BeginChild("## asset directory", { 160, context.y }, ImGuiChildFlags_ResizeX);
+	ShowAssetDirectory(kAssetsDirectory);
+	ShowAssetDirectory(kPackagesDirectory);
+	ImGui::EndChild();
+
+	ImGui::SameLine();
+
+	//* Asset Layout *//
+
+	ImGui::PushStyleColor(ImGuiCol_ChildBg, ImVec4{ 0.0f, 0.0f, 0.0f, 0.0f });
+	ImGui::BeginChild("## asset layout", { context.x - ImGui::GetCursorPosX(), context.y });
+
 	// todo: layoutの変更
 	for (const auto& [type, map] : sAssetStorage->GetStorage()) {
 		if (ImGui::TreeNode(type->name())) {
@@ -54,6 +70,9 @@ void AssetEditor::ShowAssetWindow() {
 		}
 	}
 
+	ImGui::EndChild();
+	ImGui::PopStyleColor();
+
 	ImGui::End();
 
 }
@@ -64,6 +83,40 @@ bool AssetEditor::CheckSelected(BaseAsset* asset) {
 	}
 
 	return false;
+}
+
+void AssetEditor::ShowAssetDirectory(const std::filesystem::path& path) {
+
+	bool isDirectory   = std::filesystem::is_directory(path);
+	std::u8string name = path.filename().generic_u8string();
+
+	ImGuiTreeNodeFlags flags
+		= ImGuiTreeNodeFlags_OpenOnDoubleClick
+		| ImGuiTreeNodeFlags_OpenOnArrow
+		| ImGuiTreeNodeFlags_FramePadding
+		| ImGuiTreeNodeFlags_SpanAllColumns
+		| ImGuiTreeNodeFlags_DrawLinesToNodes;
+
+	if (!isDirectory) {
+		flags |= ImGuiTreeNodeFlags_Leaf;
+		ImGui::Unindent();
+	}
+
+	bool isOpen = ImGui::TreeNodeEx(reinterpret_cast<const char*>(name.c_str()), flags);
+
+	if (!isDirectory) {
+		ImGui::Indent();
+	}
+
+	if (isOpen) {
+		if (isDirectory) {
+			for (const auto& entry : std::filesystem::directory_iterator(path)) {
+				ShowAssetDirectory(entry.path());
+			}
+		}
+
+		ImGui::TreePop();
+	}
 }
 
 void AssetEditor::SetSelected(BaseAsset* asset) {

@@ -43,7 +43,7 @@ ConstantBuffer<Parameter> gParameter : register(b0);
 // constant variables
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-static const uint kSampleCount = 1024;
+static const uint kSampleCount = 1;
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // methods
@@ -62,15 +62,17 @@ uint2 GetMipSize(uint miplevel) {
 float3 ImportanceSampleGGX(float2 xi, float roughness, float3 n) {
 	float a = roughness * roughness;
 
-	float phi      = kTau * xi.x;
-	float cosTheta = sqrt((1.0f - xi.y) / (1.0f + (a * a - 1.0f) * xi.y));
+	float phi = kTau * xi.x;
+	float cosTheta = sqrt((1.0f - xi.y) / max(1.0f + (a * a - 1.0f) * xi.y, kEpsilon));
 	float sinTheta = sqrt(1.0f - cosTheta * cosTheta);
 
-	float3 h = float3(sinTheta * cos(phi), sinTheta * sin(phi), cosTheta); //!< 半径1の円周上にサンプリング
+	float3 h; //!< 半径1の円周上にサンプリング
+	h.x = sinTheta * cos(phi);
+	h.y = sinTheta * sin(phi);
+	h.z = cosTheta;
 
-	float3 up = abs(n.z) < 0.999f ? float3(0.0f, 0.0f, 1.0f) : float3(1.0f, 0.0f, 0.0f);
-	float3 tangentX = normalize(cross(up, n)); //!< 接線ベクトル
-	float3 tangentY = cross(n, tangentX); //!< 接線ベクトル
+	float3 tangentX, tangentY;
+	TangentSpace(n, tangentX, tangentY);
 
 	return normalize(h.x * tangentX + h.y * tangentY + h.z * n);
 }
@@ -80,18 +82,18 @@ float3 PrefilterRadiance(float roughness, float3 r) {
 	float3 n = r;
 	float3 v = r;
 
-	float3 color      = 0.0f;
+	float3 color = 0.0f;
 	float totalWeight = 0.0f;
 	
 	for (uint i = 0; i < kSampleCount; ++i) {
 		float2 xi = Hammersley(i, kSampleCount);
-		float3 h  = ImportanceSampleGGX(xi, roughness, n); //!< 法線ベクトルをサンプリング
-		float3 l  = 2.0f * dot(v, h) * h - v; //!< ライトベクトルを計算
-
+		float3 h = ImportanceSampleGGX(xi, roughness, n); //!< 法線ベクトルをサンプリング
+		float3 l = normalize(2.0f * dot(v, h) * h - v); //!< ライトベクトルを計算
+		
 		float NdotL = saturate(dot(n, l)); //!< ライトベクトルと法線ベクトルの内積
 
 		if (NdotL > 0.0f) {
-			color       += NdotL * gEnvironment.SampleLevel(gEnvironmentSampler, l, 0).rgb; //!< 環境マップをサンプリング
+			color       += NdotL * gEnvironment.SampleLevel(gEnvironmentSampler, l, 2.0f).rgb; //!< 環境マップをサンプリング
 			totalWeight += NdotL;
 		}
 	}
