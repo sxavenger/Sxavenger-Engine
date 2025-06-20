@@ -38,8 +38,12 @@ public:
 	////////////////////////////////////////////////////////////////////////////////////////////
 
 	using Storage = std::unordered_map<const std::type_info*, Sxl::OptimizedPathMap<std::shared_ptr<BaseAsset>>>;
+	//!< BaseAssetConceptからアクセス可能なAssetのmain storage.
 
 	using Extensions = std::unordered_map<std::filesystem::path, std::pair<const std::type_info*, std::function<std::shared_ptr<BaseAsset>()>>>;
+	//!< 拡張子からのimportを可能にするためのmap
+
+
 
 public:
 
