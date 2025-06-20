@@ -530,6 +530,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Lib\Sxl\Formatter.h" />
     <ClInclude Include="Lib\Sxl\OptimizedMap.h" />
     <ClInclude Include="Lib\Sxl\OptimizedPathMap.h" />
+    <ClInclude Include="Lib\Sxl\OptimizedPathSet.h" />
     <ClInclude Include="Lib\Sxl\SxavengerLibrary.h" />
     <ClInclude Include="Lib\Traits.h" />
     <ClInclude Include="Lib\Transform\Transform.h" />

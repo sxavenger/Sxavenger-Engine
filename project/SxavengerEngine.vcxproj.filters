@@ -358,6 +358,7 @@
     <ClInclude Include="Engine\Module\Scene\SceneObjects.h" />
     <ClInclude Include="Engine\Content\Exporter\TextureExporter.h" />
     <ClInclude Include="Engine\System\Utility\UtilityCommon.h" />
+    <ClInclude Include="Lib\Sxl\OptimizedPathSet.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />
