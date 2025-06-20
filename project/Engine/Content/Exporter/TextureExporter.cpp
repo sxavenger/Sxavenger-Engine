@@ -6,6 +6,9 @@
 //* engine
 #include <Engine/System/SxavengerSystem.h>
 
+//* c++
+#include <span>
+
 ////////////////////////////////////////////////////////////////////////////////////////////
 // TextureExport class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -17,10 +20,17 @@ void TextureExporter::Export(
 
 	auto device = SxavengerSystem::GetDxDevice()->GetDevice();
 
+	// descの取得
 	D3D12_RESOURCE_DESC textureDesc = texture->GetDesc();
 
+	// imageの生成
+	DirectX::ScratchImage image = GetImage(dimension, format, textureDesc);
+	const UINT kImageCount = static_cast<UINT>(image.GetImageCount());
+
+	// image情報の取得
+	std::vector<D3D12_PLACED_SUBRESOURCE_FOOTPRINT> footprints(kImageCount);
 	UINT64 totalBytes = 0;
-	device->GetCopyableFootprints(&textureDesc, 0, 1, 0, nullptr, nullptr, nullptr, &totalBytes);
+	device->GetCopyableFootprints(&textureDesc, 0, kImageCount, 0, footprints.data(), nullptr, nullptr, &totalBytes);
 	
 
 	// read back textureの生成
@@ -52,46 +62,48 @@ void TextureExporter::Export(
 		Exception::Assert(SUCCEEDED(hr), "readback resource create failed.");
 	}
 
-	size_t footprintRowpitch = {};
+	{ //!< readbackへcopy
 
-	{ //!< textureのcopy
+		for (UINT i = 0; i < kImageCount; ++i) {
 
-		// dst
-		D3D12_TEXTURE_COPY_LOCATION dst = {};
-		dst.pResource = readback.Get();
-		dst.Type      = D3D12_TEXTURE_COPY_TYPE_PLACED_FOOTPRINT;
+			D3D12_TEXTURE_COPY_LOCATION dst = {};
+			dst.Type            = D3D12_TEXTURE_COPY_TYPE_PLACED_FOOTPRINT;
+			dst.pResource       = readback.Get();
+			dst.PlacedFootprint = footprints[i];
 
-		device->GetCopyableFootprints(&textureDesc, 0, 1, 0, &dst.PlacedFootprint, nullptr, nullptr, nullptr);
+			D3D12_TEXTURE_COPY_LOCATION src = {};
+			src.Type             = D3D12_TEXTURE_COPY_TYPE_SUBRESOURCE_INDEX;
+			src.pResource        = texture;
+			src.SubresourceIndex = i;
 
-		footprintRowpitch = dst.PlacedFootprint.Footprint.RowPitch;
+			context->GetCommandList()->CopyTextureRegion(&dst, 0, 0, 0, &src, nullptr);
+		}
 
-		// src
-		D3D12_TEXTURE_COPY_LOCATION src = {};
-		src.pResource = texture;
-		src.Type      = D3D12_TEXTURE_COPY_TYPE_SUBRESOURCE_INDEX;
-
-		context->GetCommandList()->CopyTextureRegion(&dst, 0, 0, 0, &src, nullptr);
 		context->ExecuteAllAllocators();
 	}
-
-	// ScratchImageへ変換
-	DirectX::ScratchImage image = GetImage(dimension, format, textureDesc);
 	
 	{ //!< GPUからImageに変更
 
 		// mapping
-		void* map = nullptr;
-		readback->Map(0, nullptr, &map);
+		BYTE* map = nullptr;
+		readback->Map(0, nullptr, reinterpret_cast<void**>(&map));
 
-		const DirectX::Image* img = image.GetImages();
-		BYTE* dst = img->pixels;
-		BYTE* src = reinterpret_cast<BYTE*>(map);
+		std::span<const DirectX::Image> imgs = { image.GetImages(), kImageCount };
 
-		const size_t rowpitch = img->rowPitch;
-		const size_t height   = img->height;
+		for (size_t i = 0; i < kImageCount; ++i) {
 
-		for (size_t y = 0; y < height; ++y) {
-			std::memcpy(dst + y * rowpitch, src + y * footprintRowpitch, rowpitch);
+			const DirectX::Image& img                           = imgs[i];
+			const D3D12_PLACED_SUBRESOURCE_FOOTPRINT& footprint = footprints[i];
+
+			const size_t kRowpitch = img.rowPitch;
+			const size_t kHeight   = img.height;
+
+			BYTE* dst = img.pixels;
+			BYTE* src = map + footprint.Offset;
+
+			for (size_t y = 0; y < kHeight; ++y) {
+				std::memcpy(dst + y * kRowpitch, src + y * footprint.Footprint.RowPitch, kRowpitch);
+			}
 		}
 	
 		readback->Unmap(0, nullptr);
@@ -124,7 +136,7 @@ DirectX::ScratchImage TextureExporter::GetImage(TextureDimension dimension, DXGI
 			break;
 
 		case TextureDimension::TextureCube:
-			hr = image.InitializeCube(format, size.x, size.y, size.z % 6, size.w);
+			hr = image.InitializeCube(format, size.x, size.y, size.z / 6, size.w);
 			break;
 
 		case TextureDimension::Texture3D:
@@ -160,7 +172,7 @@ void TextureExporter::ExportTexture(const std::filesystem::path& filepath, const
 	HRESULT hr = {};
 
 	if (extension == ".dds") {
-		hr = DirectX::SaveToDDSFile(*image.GetImages(), DirectX::DDS_FLAGS_NONE, filepath.generic_wstring().c_str());
+		hr = DirectX::SaveToDDSFile(image.GetImages(), image.GetImageCount(), image.GetMetadata(), DirectX::DDS_FLAGS_NONE, filepath.generic_wstring().c_str());
 
 	} else if (extension == ".tga") {
 		hr = DirectX::SaveToTGAFile(*image.GetImages(), DirectX::TGA_FLAGS_NONE, filepath.generic_wstring().c_str());

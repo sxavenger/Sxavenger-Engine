@@ -41,11 +41,11 @@ private:
 
 	DxObject::ReflectionComputePipelineState pipeline_;
 
-	Vector3ui size_ = { 1280, 720, 32 };
-	ComPtr<ID3D12Resource> voxel_;
+	ComPtr<ID3D12Resource> resource_;
 	DxObject::Descriptor descriptorUAV_;
 
-	std::unique_ptr<MonoBehaviour> behaviour_;
+	Vector3ui size_ = { 512, 512, 6 };
+	
 
 	//=========================================================================================
 	// private methods

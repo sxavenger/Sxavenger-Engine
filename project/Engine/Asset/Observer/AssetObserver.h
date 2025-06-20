@@ -43,7 +43,7 @@ public:
 
 	void Hotreload();
 
-	void Reload();
+	void Reload(); //!< todo: 関数名変更
 
 	Condition GetCondition() const;
 
