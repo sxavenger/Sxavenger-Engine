@@ -71,7 +71,7 @@ void FRenderTargetTextures::ClearTextures(const DirectXThreadContext* context) c
 void FRenderTargetTextures::BeginGeometryPass(const DirectXThreadContext* context) const {
 	D3D12_RESOURCE_BARRIER barriers[] = {
 		gBuffers_[static_cast<uint8_t>(GBufferLayout::Normal)]->TransitionBeginRenderTarget(),
-		gBuffers_[static_cast<uint8_t>(GBufferLayout::Material_AO)]->TransitionBeginRenderTarget(),
+		gBuffers_[static_cast<uint8_t>(GBufferLayout::MaterialARM)]->TransitionBeginRenderTarget(),
 		gBuffers_[static_cast<uint8_t>(GBufferLayout::Albedo)]->TransitionBeginRenderTarget(),
 		gBuffers_[static_cast<uint8_t>(GBufferLayout::Position)]->TransitionBeginRenderTarget(),
 	};
@@ -83,7 +83,7 @@ void FRenderTargetTextures::BeginGeometryPass(const DirectXThreadContext* contex
 	static const uint8_t kGBufferCount = 4;
 	std::array<D3D12_CPU_DESCRIPTOR_HANDLE, kGBufferCount> handles = {};
 	handles[0] = gBuffers_[static_cast<uint8_t>(GBufferLayout::Normal)]->GetCPUHandleRTV();
-	handles[1] = gBuffers_[static_cast<uint8_t>(GBufferLayout::Material_AO)]->GetCPUHandleRTV();
+	handles[1] = gBuffers_[static_cast<uint8_t>(GBufferLayout::MaterialARM)]->GetCPUHandleRTV();
 	handles[2] = gBuffers_[static_cast<uint8_t>(GBufferLayout::Albedo)]->GetCPUHandleRTV();
 	handles[3] = gBuffers_[static_cast<uint8_t>(GBufferLayout::Position)]->GetCPUHandleRTV();
 
@@ -95,7 +95,7 @@ void FRenderTargetTextures::BeginGeometryPass(const DirectXThreadContext* contex
 void FRenderTargetTextures::EndGeometryPass(const DirectXThreadContext* context) const {
 	D3D12_RESOURCE_BARRIER barriers[] = {
 		gBuffers_[static_cast<uint8_t>(GBufferLayout::Normal)]->TransitionEndRenderTarget(),
-		gBuffers_[static_cast<uint8_t>(GBufferLayout::Material_AO)]->TransitionEndRenderTarget(),
+		gBuffers_[static_cast<uint8_t>(GBufferLayout::MaterialARM)]->TransitionEndRenderTarget(),
 		gBuffers_[static_cast<uint8_t>(GBufferLayout::Albedo)]->TransitionEndRenderTarget(),
 		gBuffers_[static_cast<uint8_t>(GBufferLayout::Position)]->TransitionEndRenderTarget(),
 	};
@@ -109,7 +109,7 @@ void FRenderTargetTextures::SetupGeometryPass(const DirectXThreadContext* contex
 	static const uint8_t kGBufferCount = 4;
 	std::array<D3D12_CPU_DESCRIPTOR_HANDLE, kGBufferCount> handles = {};
 	handles[0] = gBuffers_[static_cast<uint8_t>(GBufferLayout::Normal)]->GetCPUHandleRTV();
-	handles[1] = gBuffers_[static_cast<uint8_t>(GBufferLayout::Material_AO)]->GetCPUHandleRTV();
+	handles[1] = gBuffers_[static_cast<uint8_t>(GBufferLayout::MaterialARM)]->GetCPUHandleRTV();
 	handles[2] = gBuffers_[static_cast<uint8_t>(GBufferLayout::Albedo)]->GetCPUHandleRTV();
 	handles[3] = gBuffers_[static_cast<uint8_t>(GBufferLayout::Position)]->GetCPUHandleRTV();
 

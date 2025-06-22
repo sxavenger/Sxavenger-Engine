@@ -214,7 +214,7 @@ void FSceneRenderer::LightingEmpty(const DirectXThreadContext* context, const Co
 	parameter.SetHandle("gAlbedo",   textures_->GetGBuffer(FRenderTargetTextures::GBufferLayout::Albedo)->GetGPUHandleSRV());
 	parameter.SetHandle("gNormal",   textures_->GetGBuffer(FRenderTargetTextures::GBufferLayout::Normal)->GetGPUHandleSRV());
 	parameter.SetHandle("gPosition", textures_->GetGBuffer(FRenderTargetTextures::GBufferLayout::Position)->GetGPUHandleSRV());
-	parameter.SetHandle("gMaterial", textures_->GetGBuffer(FRenderTargetTextures::GBufferLayout::Material_AO)->GetGPUHandleSRV());
+	parameter.SetHandle("gMaterial", textures_->GetGBuffer(FRenderTargetTextures::GBufferLayout::MaterialARM)->GetGPUHandleSRV());
 
 	FRenderCore::GetInstance()->GetLight()->BindGraphicsBuffer(
 		emptyType, context, parameter
@@ -243,7 +243,7 @@ void FSceneRenderer::LightingPassDirectionalLight(const DirectXThreadContext* co
 		parameter.SetHandle("gAlbedo",   textures_->GetGBuffer(FRenderTargetTextures::GBufferLayout::Albedo)->GetGPUHandleSRV());
 		parameter.SetHandle("gNormal",   textures_->GetGBuffer(FRenderTargetTextures::GBufferLayout::Normal)->GetGPUHandleSRV());
 		parameter.SetHandle("gPosition", textures_->GetGBuffer(FRenderTargetTextures::GBufferLayout::Position)->GetGPUHandleSRV());
-		parameter.SetHandle("gMaterial", textures_->GetGBuffer(FRenderTargetTextures::GBufferLayout::Material_AO)->GetGPUHandleSRV());
+		parameter.SetHandle("gMaterial", textures_->GetGBuffer(FRenderTargetTextures::GBufferLayout::MaterialARM)->GetGPUHandleSRV());
 
 		// direcitonal light parameter
 		parameter.SetAddress("gTransforms", component->GetTransform()->GetGPUVirtualAddress());
@@ -278,7 +278,7 @@ void FSceneRenderer::LightingPassPointLight(const DirectXThreadContext* context,
 		parameter.SetHandle("gAlbedo",   textures_->GetGBuffer(FRenderTargetTextures::GBufferLayout::Albedo)->GetGPUHandleSRV());
 		parameter.SetHandle("gNormal",   textures_->GetGBuffer(FRenderTargetTextures::GBufferLayout::Normal)->GetGPUHandleSRV());
 		parameter.SetHandle("gPosition", textures_->GetGBuffer(FRenderTargetTextures::GBufferLayout::Position)->GetGPUHandleSRV());
-		parameter.SetHandle("gMaterial", textures_->GetGBuffer(FRenderTargetTextures::GBufferLayout::Material_AO)->GetGPUHandleSRV());
+		parameter.SetHandle("gMaterial", textures_->GetGBuffer(FRenderTargetTextures::GBufferLayout::MaterialARM)->GetGPUHandleSRV());
 
 		// point light parameter
 		parameter.SetAddress("gTransforms", component->GetTransform()->GetGPUVirtualAddress());
@@ -314,7 +314,7 @@ void FSceneRenderer::LightingPassSkyLight(const DirectXThreadContext* context, c
 		parameter.SetHandle("gAlbedo",   textures_->GetGBuffer(FRenderTargetTextures::GBufferLayout::Albedo)->GetGPUHandleSRV());
 		parameter.SetHandle("gNormal",   textures_->GetGBuffer(FRenderTargetTextures::GBufferLayout::Normal)->GetGPUHandleSRV());
 		parameter.SetHandle("gPosition", textures_->GetGBuffer(FRenderTargetTextures::GBufferLayout::Position)->GetGPUHandleSRV());
-		parameter.SetHandle("gMaterial", textures_->GetGBuffer(FRenderTargetTextures::GBufferLayout::Material_AO)->GetGPUHandleSRV());
+		parameter.SetHandle("gMaterial", textures_->GetGBuffer(FRenderTargetTextures::GBufferLayout::MaterialARM)->GetGPUHandleSRV());
 
 		// sky light parameter
 		parameter.SetAddress("gDiffuseParameter",  component->GetDiffuseParameterBufferAddress());

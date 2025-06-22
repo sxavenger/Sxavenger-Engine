@@ -45,7 +45,7 @@ struct GeometryDeferredOutput { //!< FSceneTextures::GBuffers
 	//=========================================================================================
 	
 	float4 normal      : SV_Target0;
-	float4 material_ao : SV_Target1;
+	float4 materialARM : SV_Target1;
 	float4 albedo      : SV_Target2;
 	float4 position    : SV_Target3;
 	
@@ -58,19 +58,16 @@ struct GeometryDeferredOutput { //!< FSceneTextures::GBuffers
 		normal = float4(map, _NOT_USED_1);
 	}
 	
-	void SetMaterial(float roughness, float metallic, float specular) {
-		material_ao.r = max(roughness, 0.02f);
-		material_ao.g = metallic;
-		material_ao.b = specular;
+	void SetMaterial(float ao, float roughness, float metallic) {
+		materialARM.r = ao;
+		materialARM.g = max(roughness, 0.02f);
+		materialARM.b = metallic;
+		materialARM.a = _NOT_USED_1;
 	}
 	
 	void SetAlbedo(float3 _albedo) {
 		albedo.rgb = _albedo;
 		albedo.a   = _NOT_USED_1;
-	}
-	
-	void SetAO(float ao) {
-		material_ao.a = ao;
 	}
 	
 	void SetPosition(float3 pos) {

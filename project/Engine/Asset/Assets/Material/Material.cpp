@@ -185,24 +185,24 @@ void Material::Property::SetImGuiCommand() {
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 void Material::SurfaceProperties::Init() {
-	metallic.Init();
-	specular.Init();
+	ao.Init();
 	roughness.Init();
+	metallic.Init();
 }
 
 void Material::SurfaceProperties::SetImGuiCommand() {
-	if (ImGui::TreeNode("metallic")) {
-		metallic.SetImGuiCommand();
-		ImGui::TreePop();
-	}
-
-	if (ImGui::TreeNode("specular")) {
-		specular.SetImGuiCommand();
+	if (ImGui::TreeNode("ao")) {
+		ao.SetImGuiCommand();
 		ImGui::TreePop();
 	}
 
 	if (ImGui::TreeNode("roughness")) {
 		roughness.SetImGuiCommand();
+		ImGui::TreePop();
+	}
+
+	if (ImGui::TreeNode("metallic")) {
+		metallic.SetImGuiCommand();
 		ImGui::TreePop();
 	}
 }
@@ -316,9 +316,9 @@ json Material::PerseToJson() const {
 	metallic["value"] = GetBuffer().properties.metallic.value;
 	//metallic["index"] = GetBuffer().properties.metallic.index; //!< todo: textureのfilepathを保存する
 
-	auto& specular = properties["specular"];
-	specular["type"]  = static_cast<uint32_t>(GetBuffer().properties.specular.type);
-	specular["value"] = GetBuffer().properties.specular.value;
+	//auto& specular = properties["specular"];
+	//specular["type"]  = static_cast<uint32_t>(GetBuffer().properties.specular.type);
+	//specular["value"] = GetBuffer().properties.specular.value;
 	//specular["index"] = GetBuffer().properties.specular.index; //!< todo: textureのfilepathを保存する
 
 	auto& roughness = properties["roughness"];
@@ -350,9 +350,9 @@ void Material::InputJson(const json& data) {
 	GetBuffer().properties.metallic.value   = metallic.at("value");
 	//GetBuffer().properties.metallic.index = metallic.at("index");
 
-	const auto& specular = properties.at("specular");
-	GetBuffer().properties.specular.type    = static_cast<Material::Property::Type>(specular.at("type"));
-	GetBuffer().properties.specular.value   = specular.at("value");
+	//const auto& specular = properties.at("specular");
+	//GetBuffer().properties.specular.type    = static_cast<Material::Property::Type>(specular.at("type"));
+	//GetBuffer().properties.specular.value   = specular.at("value");
 	//GetBuffer().properties.specular.index = specular.at("index");
 
 	const auto& roughness = properties.at("roughness");

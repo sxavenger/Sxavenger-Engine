@@ -48,9 +48,9 @@ struct Surface {
 
 	float depth;
 
-	float metallic;
-	float specular;
+	float ao;
 	float roughness;
+	float metallic;
 	
 	//* methods *//
 	
@@ -70,9 +70,9 @@ struct Surface {
 		normal   = GetNormal(index);
 
 		float3 material = GetMaterial(index);
-		roughness = material.r;
-		metallic  = material.g;
-		specular  = material.b;
+		ao        = material.r;
+		roughness = material.g;
+		metallic  = material.b;
 
 		return true;
 	}

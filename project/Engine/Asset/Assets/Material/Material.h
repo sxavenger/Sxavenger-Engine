@@ -228,9 +228,9 @@ public:
 		// public variables
 		//=========================================================================================
 
-		Property metallic;
-		Property specular;
+		Property ao;
 		Property roughness;
+		Property metallic;
 
 	};
 

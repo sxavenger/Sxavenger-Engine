@@ -254,7 +254,7 @@ void RenderSceneEditor::ShowSceneMenu() {
 
 		static const LPCSTR kLayouts[] = {
 			"Normal",
-			"Material_AO",
+			"MaterialARM",
 			"Albedo",
 			"Position",
 			"UI",

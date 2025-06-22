@@ -160,13 +160,19 @@ namespace MaterialLib {
 		
 		uint index;
 
-		float GetValue(TextureSampler parameter, uint channel = 0) {
+		float GetValue(TextureSampler parameter, uint channel = 0, bool isReverse = false) {
 			if (type == 0) {
 				return value;
 				
 			} else if (type == 1) {
 				Texture2D<float4> texture = ResourceDescriptorHeap[index];
-				return SampleTexture(texture, parameter.samplers, parameter.texcoord)[channel];
+				float prop = SampleTexture(texture, parameter.samplers, parameter.texcoord)[channel];
+				
+				if (isReverse) {
+					prop = 1.0f - prop;
+				}
+
+				return prop;
 			}
 
 			return 0.0f; //!< exception
@@ -183,9 +189,9 @@ namespace MaterialLib {
 		// public variables
 		//=========================================================================================
 
-		Property metallic;
-		Property specular;
+		Property ao;
 		Property roughness;
+		Property metallic;
 		
 	};
 

@@ -47,7 +47,7 @@ void FRenderCoreGeometry::CreateDesc() {
 	defferedDesc_.rtvFormats.clear();
 	//!< Geometry
 	defferedDesc_.SetRTVFormat(FRenderTargetTextures::GetFormat(FRenderTargetTextures::GBufferLayout::Normal));
-	defferedDesc_.SetRTVFormat(FRenderTargetTextures::GetFormat(FRenderTargetTextures::GBufferLayout::Material_AO));
+	defferedDesc_.SetRTVFormat(FRenderTargetTextures::GetFormat(FRenderTargetTextures::GBufferLayout::MaterialARM));
 	defferedDesc_.SetRTVFormat(FRenderTargetTextures::GetFormat(FRenderTargetTextures::GBufferLayout::Albedo));
 	defferedDesc_.SetRTVFormat(FRenderTargetTextures::GetFormat(FRenderTargetTextures::GBufferLayout::Position));
 

@@ -22,7 +22,7 @@ public:
 	////////////////////////////////////////////////////////////////////////////////////////////
 	enum class GBufferLayout : uint8_t {
 		Normal,
-		Material_AO,
+		MaterialARM,
 		Albedo,
 		Position, // todo: depthから復元する
 		UI,
@@ -34,12 +34,12 @@ public:
 	//* _NOT_USED_1: 未使用のデータ(初期値1.0f)
 	
 	//* [detail GBuffer Layout]
-	//* Normal:    float3 normal, float _NOT_USED_1                          [DXGI_FORMAT_R10G10B10A2_UNORM]
-	//* Material:  float metallic, float specular, float roughness, float AO [R8G8B8A8_UNORM]
-	//* Albedo_AO: float3 albedo, float _NOT_USED_1                          [R32G32B32A32_FLOAT] //!< HDRのため32bit浮動小数点
-	//* Position:  float3 position, float _NOT_USED_1                        [R32G32B32A32_FLOAT] //!< HDRのため32bit浮動小数点
+	//* Normal:    float3 normal, float _NOT_USED_1                            [DXGI_FORMAT_R10G10B10A2_UNORM]
+	//* Material:  float ao, float roughness, float metallic, float _NOT_USED1 [R8G8B8A8_UNORM]
+	//* Albedo_AO: float3 albedo, float _NOT_USED_1                            [R32G32B32A32_FLOAT] //!< HDRのため32bit浮動小数点
+	//* Position:  float3 position, float _NOT_USED_1                          [R32G32B32A32_FLOAT] //!< HDRのため32bit浮動小数点
 	//* UI: spriteでの使用
-	//* Main:      float4 color                                              [R32G32B32A32_FLOAT] //!< HDRのため32bit浮動小数点
+	//* Main:      float4 color                                                [R32G32B32A32_FLOAT] //!< HDRのため32bit浮動小数点
 
 public:
 

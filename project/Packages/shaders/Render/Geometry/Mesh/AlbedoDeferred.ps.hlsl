@@ -31,13 +31,11 @@ GeometryDeferredOutput main(GeometryPSInput input) {
 	output.SetNormal(gMaterials[input.instanceId].normal.GetNormal(input.normal, parameter, tbn));
 	output.SetPosition(input.worldPos);
 
-	output.SetMaterial( //!< ORM
-		gMaterials[input.instanceId].properties.roughness.GetValue(parameter, 1),
-		gMaterials[input.instanceId].properties.metallic.GetValue(parameter, 2),
-		gMaterials[input.instanceId].properties.specular.GetValue(parameter)
+	output.SetMaterial(
+		0.0f,
+		gMaterials[input.instanceId].properties.roughness.GetValue(parameter, 1, true),
+		gMaterials[input.instanceId].properties.metallic.GetValue(parameter, 2)
 	);
-
-	output.SetAO(1.0f);
 
 	return output;
 }
