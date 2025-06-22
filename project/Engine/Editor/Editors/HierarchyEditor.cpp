@@ -132,7 +132,7 @@ void HierarchyEditor::HierarchySelectable(MonoBehaviour* behaviour) {
 		isSelect = true;
 	}
 
-	if (isSelect && SxImGui::IsDoubleClick()) {
+	if (isSelect && SxImGui::IsDoubleClickItem()) {
 		SetSelectedView(behaviour);
 	}
 

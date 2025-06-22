@@ -16,7 +16,11 @@
 
 void AssetEditor::Init() {
 	folderTextures_ = SxavengerAsset::TryImport<AssetTexture>("Packages/textures/icon/folder.png");
-	objectTextures_ = SxavengerAsset::TryImport<AssetTexture>("Packages/textures/icon/unknown_object.png");
+	fileTexture_    = SxavengerAsset::TryImport<AssetTexture>("Packages/textures/icon/file.png");
+
+	assetTextures_[&typeid(AssetTexture)] = SxavengerAsset::TryImport<AssetTexture>("Packages/textures/icon/texture.png");
+	assetTextures_[&typeid(AssetModel)]   = SxavengerAsset::TryImport<AssetTexture>("Packages/textures/icon/model.png");
+
 }
 
 void AssetEditor::ShowMainMenu() {
@@ -68,17 +72,7 @@ void AssetEditor::ShowAssetWindow() {
 					SetSelected(asset.get());
 				}
 
-				// drag and dropの定義
-				if (ImGui::BeginDragDropSource()) {
-					// payloadを設定
-					ImGui::SetDragDropPayload(type->name(), filepath.generic_string().c_str(), filepath.generic_string().size() + 1);
-
-					// ドラッグ中の表示
-					ImGui::Text(type->name());
-					ImGui::Text(filepath.generic_string().c_str());
-
-					ImGui::EndDragDropSource();
-				}
+				SetDragAndDropSource(type, filepath);
 
 			}
 
@@ -90,6 +84,24 @@ void AssetEditor::ShowAssetWindow() {
 
 	ImGui::PopStyleVar();
 
+}
+
+bool AssetEditor::ImageButton(const std::filesystem::path& path, AssetObserver<AssetTexture>& texture) {
+	return ImGui::ImageButton(ConvertStr(path).c_str(), texture.WaitAcquire()->GetGPUHandleSRV().ptr, { iconSize_, iconSize_ });
+}
+
+void AssetEditor::SetDragAndDropSource(const std::type_info* type, const std::filesystem::path& filepath) {
+	// drag and dropの定義
+	if (ImGui::BeginDragDropSource()) {
+		// payloadを設定
+		ImGui::SetDragDropPayload(type->name(), filepath.generic_string().c_str(), filepath.generic_string().size() + 1);
+
+		// ドラッグ中の表示
+		ImGui::Text(type->name());
+		ImGui::Text(filepath.generic_string().c_str());
+
+		ImGui::EndDragDropSource();
+	}
 }
 
 const std::string AssetEditor::ConvertStr(const std::filesystem::path& path) {
@@ -124,6 +136,20 @@ void AssetEditor::ForEachDirectory(const std::filesystem::path& path, const std:
 	}
 }
 
+bool AssetEditor::OpenShellExecute(const std::filesystem::path& filepath) {
+	HINSTANCE result = ShellExecute(nullptr, L"open", filepath.c_str(), nullptr, nullptr, SW_SHOWNORMAL);
+
+	bool isSuccess = (reinterpret_cast<intptr_t>(result) > 32);
+
+	if (isSuccess) {
+		Logger::CommentRuntime("shell execute.", filepath.generic_string());
+
+	} else {
+		Logger::WarningRuntime("warning | shell execute failed.", filepath.generic_string());
+	}
+
+	return isSuccess;
+}
 
 void AssetEditor::ShowAssetDirectoryTable(const std::filesystem::path& path) {
 
@@ -226,10 +252,6 @@ void AssetEditor::ShowAssetLayout() {
 	size_t space = static_cast<size_t>(context.x) / static_cast<size_t>(iconSize_);
 	size_t count = 0;
 
-	// texture
-	auto folderTex = folderTextures_.WaitAcquire();
-	auto objectTex = objectTextures_.WaitAcquire();
-
 	ForEachDirectory(path, [&](const std::filesystem::directory_entry& entry) {
 		const auto& part = entry.path();
 
@@ -238,17 +260,43 @@ void AssetEditor::ShowAssetLayout() {
 		bool isSameLine = (space != 0) && (++count % space != 0);
 
 		if (entry.is_directory()) {
-			if (ImGui::ImageButton(ConvertStr(part).c_str(), folderTex->GetGPUHandleSRV().ptr, { iconSize_, iconSize_ })) {
+			if (ImageButton(part, folderTextures_)) {
 				select = part;
 			}
 
 		} else {
-			if (ImGui::ImageButton(ConvertStr(part).c_str(), objectTex->GetGPUHandleSRV().ptr, {iconSize_, iconSize_})) {
+			if (sAssetStorage->Contains(part)) { //!< Assetとして読み込まれている場合
+				auto type = sAssetStorage->GetType(part);
 
+				auto& texture = assetTextures_.contains(type)
+					? assetTextures_[type] //!< asset texture
+					: fileTexture_;        //!< unknown asset type
+
+				if (ImageButton(part, texture)) {
+					//
+				}
+
+				SetDragAndDropSource(type, part);
+
+			} else {
+				if (ImageButton(part, fileTexture_)) {
+					//
+				}
+			}
+
+			if (SxImGui::IsDoubleClickItem()) {
+				OpenShellExecute(part);
+			}
+
+			SetSelected(sAssetStorage->GetAsset());
+
+			std::string label = "context menu ##" + part.filename().generic_string();
+			if (ImGui::BeginPopupContextItem(label.c_str(), ImGuiPopupFlags_MouseButtonRight)) {
+				ImGui::Text("test");
+				ImGui::EndPopup();
 			}
 		}
 
-		//ImGui::Text("...");
 		SxImGui::TextClippedEx(ConvertStr(part.filename()).c_str(), "...", iconSize_);
 
 		if (ImGui::IsItemHovered()) {

@@ -29,7 +29,7 @@ namespace SxImGui {
 
 	bool ImageButton(const char* id, ImTextureID texture_id, const ImVec2& image_size, const ImVec4& tint_col = ImVec4(1, 1, 1, 1));
 
-	bool IsDoubleClick();
+	bool IsDoubleClickItem();
 
 	void TextClipped(const char* text, float width);
 

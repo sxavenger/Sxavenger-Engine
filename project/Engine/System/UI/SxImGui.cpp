@@ -93,8 +93,8 @@ bool SxImGui::ImageButton(const char* id, ImTextureID texture_id, const ImVec2& 
 	return ImGui::ImageButton(id, texture_id, image_size, { 0, 0 }, { 1, 1 }, { 0, 0, 0, 0 }, tint_col);
 }
 
-bool SxImGui::IsDoubleClick() {
-	return ImGui::GetIO().MouseClickedCount[ImGuiMouseButton_Left] == 2;
+bool SxImGui::IsDoubleClickItem() {
+	return ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left);
 }
 
 void SxImGui::TextClipped(const char* text, float width) {

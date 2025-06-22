@@ -79,12 +79,12 @@ void SxavengerConfig::Load() {
 }
 
 void SxavengerConfig::OutputLog() {
-#ifdef _DEBUG
+#ifdef _DEVELOPMENT
 	Logger::EngineLog(std::format("[Config] enableDebugLayer: {}",          config_.enableDebugLayer));
 	Logger::EngineLog(std::format("[Config] enableGPUBasedValidation: {}",  config_.enableGPUBasedValidation));
 #endif
 
-	Logger::EngineLog(std::format("[Config] tearing: {}",           config_.isTearingAllowed));
+	Logger::EngineLog(std::format("[Config] tearing: {}", config_.isTearingAllowed));
 
 	Logger::EngineLog(std::format("[Config] frame rate lock: {}",   config_.isLockFrameRate));
 	Logger::EngineLog(std::format("[Config] target frame rate: {}", config_.targetFrameRate));

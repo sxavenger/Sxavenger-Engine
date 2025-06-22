@@ -44,7 +44,9 @@ private:
 	//* textures *//
 
 	AssetObserver<AssetTexture> folderTextures_;
-	AssetObserver<AssetTexture> objectTextures_;
+	AssetObserver<AssetTexture> fileTexture_;
+
+	std::unordered_map<const std::type_info*, AssetObserver<AssetTexture>> assetTextures_;
 
 	//* parameter *//
 
@@ -58,6 +60,12 @@ private:
 
 	void ShowAssetWindow();
 
+	//* imgui helper *//
+
+	bool ImageButton(const std::filesystem::path& path, AssetObserver<AssetTexture>& texture);
+
+	static void SetDragAndDropSource(const std::type_info* type, const std::filesystem::path& filepath);
+
 	//* helper *//
 
 	static const std::string ConvertStr(const std::filesystem::path& path);
@@ -67,6 +75,8 @@ private:
 	bool CheckSelectedInspector(BaseAsset* asset);
 
 	void ForEachDirectory(const std::filesystem::path& path, const std::function<void(const std::filesystem::directory_entry&)>& func);
+
+	static bool OpenShellExecute(const std::filesystem::path& path);
 
 	//* show asset *//
 

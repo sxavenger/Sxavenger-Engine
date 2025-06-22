@@ -123,7 +123,7 @@ public:
 		return map_.insert(x);
 	}
 
-	std::pair<iterator, bool> Intert(value_type&& x) {
+	std::pair<iterator, bool> Insert(value_type&& x) {
 		return map_.insert(std::move(x));
 	}
 

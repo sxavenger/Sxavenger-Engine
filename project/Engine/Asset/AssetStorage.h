@@ -15,6 +15,7 @@
 
 //* lib
 #include <Lib/Sxl/OptimizedPathMap.h>
+#include <Lib/Sxl/OptimizedPathSet.h>
 
 //* c++
 #include <filesystem>
@@ -40,10 +41,11 @@ public:
 	using Storage = std::unordered_map<const std::type_info*, Sxl::OptimizedPathMap<std::shared_ptr<BaseAsset>>>;
 	//!< BaseAssetConceptからアクセス可能なAssetのmain storage.
 
+	using Registry = Sxl::OptimizedPathMap<const std::type_info*>;
+	//!< filepathで読み込まれているかの管理を行うためのmap
+
 	using Extensions = std::unordered_map<std::filesystem::path, std::pair<const std::type_info*, std::function<std::shared_ptr<BaseAsset>()>>>;
 	//!< 拡張子からのimportを可能にするためのmap
-
-
 
 public:
 
@@ -60,6 +62,14 @@ public:
 
 	template <BaseAssetConcept _Ty>
 	AssetObserver<_Ty> TryImport(const std::filesystem::path& filepath, const std::any& param = std::any());
+
+	std::shared_ptr<BaseAsset> GetAsset(const std::type_info* type, const std::filesystem::path& filepath) const;
+
+	//* registry option *//
+
+	bool Contains(const std::filesystem::path& filepath) const;
+
+	const std::type_info* GetType(const std::filesystem::path& filepath) const;
 
 	//* extension option *//
 
@@ -81,6 +91,7 @@ private:
 	//=========================================================================================
 
 	Storage storage_;
+	Registry registry_;
 
 	Extensions extensions_;
 
@@ -108,6 +119,8 @@ AssetObserver<_Ty> AssetStorage::Import(const std::filesystem::path& filepath, c
 
 	storage_[type][filepath] = asset;
 	SxavengerSystem::PushTask(asset->GetAsyncExecution(), asset);
+
+	registry_.Emplace(filepath, type);
 
 	AssetObserver<_Ty> observer;
 	observer.Register(AssetStorage::Cast<_Ty>(asset));

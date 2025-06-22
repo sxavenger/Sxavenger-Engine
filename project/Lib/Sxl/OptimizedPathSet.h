@@ -122,7 +122,7 @@ public:
 		return set_.insert(x);
 	}
 
-	std::pair<iterator, bool> Intert(value_type&& x) {
+	std::pair<iterator, bool> Insert(value_type&& x) {
 		return set_.insert(std::move(x));
 	}
 
@@ -141,10 +141,6 @@ public:
 	template <typename... Args>
 	std::pair<iterator, bool> Emplace(Args&&... args) {
 		return set_.emplace(std::forward<Args>(args)...);
-	}
-
-	iterator Erase(iterator position) {
-		return set_.erase(position);
 	}
 
 	iterator Erase(const_iterator position) {
