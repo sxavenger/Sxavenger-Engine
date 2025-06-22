@@ -76,6 +76,8 @@ public:
 	template <BaseAssetConcept _Ty>
 	void RegisterExtension(const std::filesystem::path& extension);
 
+	void ImportExtension(const std::filesystem::path& filepath);
+
 	//* getter *//
 
 	const Storage& GetStorage() const { return storage_; }
@@ -117,11 +119,14 @@ AssetObserver<_Ty> AssetStorage::Import(const std::filesystem::path& filepath, c
 	asset->SetFilepath(filepath);
 	asset->SetParam(param);
 
+	// storageに登録
 	storage_[type][filepath] = asset;
 	SxavengerSystem::PushTask(asset->GetAsyncExecution(), asset);
 
+	// registryに登録
 	registry_.Emplace(filepath, type);
 
+	// observerの生成
 	AssetObserver<_Ty> observer;
 	observer.Register(AssetStorage::Cast<_Ty>(asset));
 

@@ -76,7 +76,8 @@ private:
 
 	void ForEachDirectory(const std::filesystem::path& path, const std::function<void(const std::filesystem::directory_entry&)>& func);
 
-	static bool OpenShellExecute(const std::filesystem::path& path);
+	static bool OpenShellExecuteApp(const std::filesystem::path& filepath);
+	static bool OpenShellExecuteExplorer(const std::filesystem::path& filepath);
 
 	//* show asset *//
 

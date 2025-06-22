@@ -27,6 +27,34 @@ const std::type_info* AssetStorage::GetType(const std::filesystem::path& filepat
 	return registry_.At(filepath);
 }
 
+void AssetStorage::ImportExtension(const std::filesystem::path& filepath) {
+	if (!std::filesystem::exists(filepath)) {
+		Logger::WarningRuntime("warning | asset extension is not exists.", filepath.generic_string());
+		return;
+	}
+
+	const auto& extension = filepath.extension();
+
+	if (!extensions_.contains(extension)) {
+		Logger::WarningRuntime("warning | asset extension not registered.", filepath.generic_string());
+		return;
+	}
+
+	const auto& [type, function] = extensions_.at(extension);
+
+	// assetの作成
+	std::shared_ptr<BaseAsset> asset = function();
+	asset->SetFilepath(filepath);
+	asset->SetParam({});
+
+	// storageに登録
+	storage_[type][filepath] = asset;
+	SxavengerSystem::PushTask(asset->GetAsyncExecution(), asset);
+
+	// registryに登録
+	registry_.Emplace(filepath, type);
+}
+
 AssetStorage* AssetStorage::GetInstance() {
 	static AssetStorage instance;
 	return &instance;

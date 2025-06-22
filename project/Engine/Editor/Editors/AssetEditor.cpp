@@ -21,6 +21,12 @@ void AssetEditor::Init() {
 	assetTextures_[&typeid(AssetTexture)] = SxavengerAsset::TryImport<AssetTexture>("Packages/textures/icon/texture.png");
 	assetTextures_[&typeid(AssetModel)]   = SxavengerAsset::TryImport<AssetTexture>("Packages/textures/icon/model.png");
 
+	// extensionの登録
+	sAssetStorage->RegisterExtension<AssetTexture>(".png");
+	sAssetStorage->RegisterExtension<AssetTexture>(".jpg");
+	sAssetStorage->RegisterExtension<AssetModel>(".gltf");
+
+
 }
 
 void AssetEditor::ShowMainMenu() {
@@ -136,16 +142,32 @@ void AssetEditor::ForEachDirectory(const std::filesystem::path& path, const std:
 	}
 }
 
-bool AssetEditor::OpenShellExecute(const std::filesystem::path& filepath) {
+bool AssetEditor::OpenShellExecuteApp(const std::filesystem::path& filepath) {
 	HINSTANCE result = ShellExecute(nullptr, L"open", filepath.c_str(), nullptr, nullptr, SW_SHOWNORMAL);
 
 	bool isSuccess = (reinterpret_cast<intptr_t>(result) > 32);
 
 	if (isSuccess) {
-		Logger::CommentRuntime("shell execute.", filepath.generic_string());
+		Logger::CommentRuntime("shell execute application.", filepath.generic_string());
 
 	} else {
-		Logger::WarningRuntime("warning | shell execute failed.", filepath.generic_string());
+		Logger::WarningRuntime("warning | shell execute application failed.", filepath.generic_string());
+	}
+
+	return isSuccess;
+}
+
+bool AssetEditor::OpenShellExecuteExplorer(const std::filesystem::path& filepath) {
+	// FIXME: explorerで開けない
+	HINSTANCE result = ShellExecute(nullptr, L"open", L"explorer.exe", filepath.wstring().c_str(), nullptr, SW_SHOWNORMAL);
+
+	bool isSuccess = (reinterpret_cast<intptr_t>(result) > 32);
+
+	if (isSuccess) {
+		Logger::CommentRuntime("shell execute explorer.", filepath.generic_string());
+
+	} else {
+		Logger::WarningRuntime("warning | shell execute explorer failed.", filepath.generic_string());
 	}
 
 	return isSuccess;
@@ -264,6 +286,18 @@ void AssetEditor::ShowAssetLayout() {
 				select = part;
 			}
 
+			std::string label = "folder context menu ##" + part.filename().generic_string();
+			if (ImGui::BeginPopupContextItem(label.c_str(), ImGuiPopupFlags_MouseButtonRight)) {
+				ImGui::SeparatorText("folder context menu");
+
+				if (ImGui::Selectable("Open in Explorer")) {
+					OpenShellExecuteExplorer(part);
+				}
+
+				ImGui::EndPopup();
+			}
+
+
 		} else {
 			if (sAssetStorage->Contains(part)) { //!< Assetとして読み込まれている場合
 				auto type = sAssetStorage->GetType(part);
@@ -285,12 +319,21 @@ void AssetEditor::ShowAssetLayout() {
 			}
 
 			if (SxImGui::IsDoubleClickItem()) {
-				OpenShellExecute(part);
+				OpenShellExecuteApp(part);
 			}
 
-			std::string label = "context menu ##" + part.filename().generic_string();
+			std::string label = "file context menu ##" + part.filename().generic_string();
 			if (ImGui::BeginPopupContextItem(label.c_str(), ImGuiPopupFlags_MouseButtonRight)) {
-				ImGui::Text("test");
+				ImGui::SeparatorText("file context menu");
+
+				if (ImGui::Selectable("Open in Explorer")) {
+					OpenShellExecuteExplorer(part);
+				}
+
+				if (ImGui::Selectable("Import")) {
+					sAssetStorage->ImportExtension(part);
+				}
+
 				ImGui::EndPopup();
 			}
 		}
