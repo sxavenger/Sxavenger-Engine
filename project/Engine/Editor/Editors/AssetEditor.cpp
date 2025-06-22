@@ -273,7 +273,7 @@ void AssetEditor::ShowAssetLayout() {
 					: fileTexture_;        //!< unknown asset type
 
 				if (ImageButton(part, texture)) {
-					//
+					SetSelected(sAssetStorage->GetAsset(type, part).get());
 				}
 
 				SetDragAndDropSource(type, part);
@@ -287,8 +287,6 @@ void AssetEditor::ShowAssetLayout() {
 			if (SxImGui::IsDoubleClickItem()) {
 				OpenShellExecute(part);
 			}
-
-			SetSelected(sAssetStorage->GetAsset());
 
 			std::string label = "context menu ##" + part.filename().generic_string();
 			if (ImGui::BeginPopupContextItem(label.c_str(), ImGuiPopupFlags_MouseButtonRight)) {
