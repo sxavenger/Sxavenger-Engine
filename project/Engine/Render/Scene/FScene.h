@@ -43,7 +43,13 @@ private:
 	// private variables
 	//=========================================================================================
 
+	//* raytracing parameter *//
+
 	DxrObject::TopLevelAS topLevelAS_;
 	DxrObject::StateObjectContext stateObjectContext_;
+
+	//* light parameter *//
+
+
 
 };

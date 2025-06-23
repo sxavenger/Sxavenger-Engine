@@ -205,8 +205,6 @@ void FSceneRenderer::LightingEmpty(const DirectXThreadContext* context, const Co
 		emptyType, context, textures_->GetSize()
 	);
 
-	FRenderCore::GetInstance()->GetLight()->BindIABuffer(context);
-
 	DxObject::BindBufferDesc parameter = {};
 	// common parameter
 	parameter.SetAddress("gCamera", config.camera->GetGPUVirtualAddress());
@@ -231,8 +229,6 @@ void FSceneRenderer::LightingPassDirectionalLight(const DirectXThreadContext* co
 	FRenderCore::GetInstance()->GetLight()->SetPipeline(
 		FRenderCoreLight::LightType::Directional, context, textures_->GetSize()
 	);
-
-	FRenderCore::GetInstance()->GetLight()->BindIABuffer(context);
 
 	sComponentStorage->ForEachActive<DirectionalLightComponent>([&](DirectionalLightComponent* component) {
 
@@ -266,8 +262,6 @@ void FSceneRenderer::LightingPassPointLight(const DirectXThreadContext* context,
 	FRenderCore::GetInstance()->GetLight()->SetPipeline(
 		FRenderCoreLight::LightType::Point, context, textures_->GetSize()
 	);
-
-	FRenderCore::GetInstance()->GetLight()->BindIABuffer(context);
 
 	sComponentStorage->ForEachActive<PointLightComponent>([&](PointLightComponent* component) {
 
@@ -303,8 +297,6 @@ void FSceneRenderer::LightingPassRectLight(const DirectXThreadContext* context, 
 		FRenderCoreLight::LightType::Rect, context, textures_->GetSize()
 	);
 
-	FRenderCore::GetInstance()->GetLight()->BindIABuffer(context);
-
 	sComponentStorage->ForEachActive<RectLightComponent>([&](RectLightComponent* component) {
 
 		DxObject::BindBufferDesc parameter = {};
@@ -338,8 +330,6 @@ void FSceneRenderer::LightingPassSkyLight(const DirectXThreadContext* context, c
 	FRenderCore::GetInstance()->GetLight()->SetPipeline(
 		FRenderCoreLight::LightType::SkyLight, context, textures_->GetSize()
 	);
-
-	FRenderCore::GetInstance()->GetLight()->BindIABuffer(context);
 
 	sComponentStorage->ForEachActive<SkyLightComponent>([&](SkyLightComponent* component) {
 

@@ -40,9 +40,7 @@ public:
 
 	//* input assembler option *//
 
-	void BindIABuffer(const DirectXThreadContext* context) const;
-
-	void DrawCall(const DirectXThreadContext* context) const;
+	void DrawCall(const DirectXThreadContext* context, UINT instanceCount = 1) const;
 
 	//* pipeline option *//
 
@@ -58,8 +56,6 @@ private:
 
 	//* input assembler *//
 
-	TriangleInputAssembler<Vector2f> ia_;
-	// HACK: 全画面の描画用のIA
 	// TODO: culling.
 
 	//* pipeline *//
@@ -72,7 +68,6 @@ private:
 	// private methods
 	//=========================================================================================
 
-	void CreateInputAssembler();
 	void CreatePipeline();
 
 };
