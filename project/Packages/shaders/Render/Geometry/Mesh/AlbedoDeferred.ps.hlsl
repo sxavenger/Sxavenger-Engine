@@ -33,7 +33,7 @@ GeometryDeferredOutput main(GeometryPSInput input) {
 
 	output.SetMaterial(
 		0.0f,
-		gMaterials[input.instanceId].properties.roughness.GetValue(parameter, 1, true),
+		gMaterials[input.instanceId].properties.roughness.GetValue(parameter, 1),
 		gMaterials[input.instanceId].properties.metallic.GetValue(parameter, 2)
 	);
 

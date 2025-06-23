@@ -160,19 +160,13 @@ namespace MaterialLib {
 		
 		uint index;
 
-		float GetValue(TextureSampler parameter, uint channel = 0, bool isReverse = false) {
+		float GetValue(TextureSampler parameter, uint channel = 0) {
 			if (type == 0) {
 				return value;
 				
 			} else if (type == 1) {
 				Texture2D<float4> texture = ResourceDescriptorHeap[index];
-				float prop = SampleTexture(texture, parameter.samplers, parameter.texcoord)[channel];
-				
-				if (isReverse) {
-					prop = 1.0f - prop;
-				}
-
-				return prop;
+				return SampleTexture(texture, parameter.samplers, parameter.texcoord)[channel];
 			}
 
 			return 0.0f; //!< exception

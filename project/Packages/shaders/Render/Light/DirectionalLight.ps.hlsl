@@ -56,6 +56,7 @@ PSOutput main(PSInput input) {
 	// diffuse Albedo
 	//!< 金属(metallic = 1.0f) -> 0.0f
 	//!< 非金属(metallic = 0.0f) -> albedo * (1.0f - f0)
+	//float3 diffuseAlbedo = surface.albedo * (1.0f - f0) * (1.0f - surface.metallic);
 	float3 diffuseAlbedo = surface.albedo * (1.0f - f0) * (1.0f - surface.metallic);
 
 	// specular Albedo
@@ -63,11 +64,11 @@ PSOutput main(PSInput input) {
 	//!< 非金属(metallic = 0.0f) -> albedo
 	float3 specularAlbedo = lerp(f0, surface.albedo, surface.metallic);
 
-	float3 f = F_SphericalGaussian(VdotH, f0);
+	float3 f = F_SphericalGaussian(VdotH, specularAlbedo);
 	float vh = V_HeightCorrelated(NdotV, NdotL, surface.roughness);
 	float d  = D_GGX(NdotH, surface.roughness);
 
-	float3 diffuseBRDF = DiffuseBRDF(diffuseAlbedo);
+	float3 diffuseBRDF  = DiffuseBRDF(diffuseAlbedo);
 	float3 specularBRDF = SpecularBRDF(f, vh, d);
 
 	output.color.rgb = (diffuseBRDF + specularBRDF) * NdotL * c_light;
