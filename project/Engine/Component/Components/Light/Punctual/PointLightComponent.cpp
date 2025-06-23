@@ -19,7 +19,7 @@ void PointLightComponent::Parameter::Init() {
 	color     = kWhite3<>;
 	unit      = Units::Candela;
 	intensity = 1.0f;
-	radius    = 1.0f;
+	radius    = 8.0f;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////

@@ -1,18 +1,25 @@
+#include "../../Packages/shaders/Library/SDF.hlsli"
 
-struct A {
-	float a;
-};
-ConstantBuffer<A> gA : register(b0);
+RWTexture2D<float4> gOutput : register(u0);
 
-cbuffer B : register(b1) {
-	float b;
-};
+[numthreads(16, 16, 1)]
+void main(uint3 dispatchThreadId : SV_DispatchThreadID) {
 
-RWTexture2D<float4> gOut : register(u0);
+	uint width, height;
+	gOutput.GetDimensions(width, height);
 
-[numthreads(1, 1, 1)]
-void main() {
+	uint2 index = dispatchThreadId.xy;
 
-	gOut[uint2(1, 1)] = float4(gA.a, b, 0, 1);
+	if (any(index >= uint2(width, height))) {
+		return;
+	}
+
+	float2 uv = (float2(index) + 0.5f) / float2(width, height) * 2.0f - 1.0f;
+
+	float3 size = float3(0.5f, 0.5f, 0.5f); //!< Boxのサイズ
+
+	float distance = SDF::Box(float3(uv, 0.0f), size);
+
+	gOutput[index] = float4(distance, -distance, 0.0f, 1.0f);
 	
 }

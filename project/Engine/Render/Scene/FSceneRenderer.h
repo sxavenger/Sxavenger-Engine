@@ -16,6 +16,7 @@
 #include <Engine/Component/Components/MeshRenderer/SkinnedMeshRendererComponent.h>
 #include <Engine/Component/Components/Light/Punctual/DirectionalLightComponent.h>
 #include <Engine/Component/Components/Light/Punctual/PointLightComponent.h>
+#include <Engine/Component/Components/Light/Rect/RectLightComponent.h>
 #include <Engine/Component/Components/Light/Environment/SkyLightComponent.h>
 #include <Engine/Component/Components/Particle/ParticleComponent.h>
 #include <Engine/Component/Components/PostProcessLayer/PostProcessLayerComponent.h>
@@ -129,6 +130,7 @@ private:
 	void LightingEmpty(const DirectXThreadContext* context, const Config& config);
 	void LightingPassDirectionalLight(const DirectXThreadContext* context, const Config& config);
 	void LightingPassPointLight(const DirectXThreadContext* context, const Config& config);
+	void LightingPassRectLight(const DirectXThreadContext* context, const Config& config);
 	void LightingPassSkyLight(const DirectXThreadContext* context, const Config& config);
 
 	void AmbientProcessPass(const DirectXThreadContext* context, const Config& config);

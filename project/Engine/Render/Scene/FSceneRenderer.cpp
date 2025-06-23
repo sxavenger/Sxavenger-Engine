@@ -188,6 +188,9 @@ void FSceneRenderer::LightingPass(const DirectXThreadContext* context, const Con
 	//!< PointLight
 	LightingPassPointLight(context, config);
 
+	//!< RectLight
+	LightingPassRectLight(context, config);
+
 	//!< SkyLight
 	LightingPassSkyLight(context, config);
 
@@ -287,6 +290,42 @@ void FSceneRenderer::LightingPassPointLight(const DirectXThreadContext* context,
 
 		FRenderCore::GetInstance()->GetLight()->BindGraphicsBuffer(
 			FRenderCoreLight::LightType::Point, context, parameter
+		);
+
+		FRenderCore::GetInstance()->GetLight()->DrawCall(context);
+	});
+
+}
+
+void FSceneRenderer::LightingPassRectLight(const DirectXThreadContext* context, const Config& config) {
+
+	FRenderCore::GetInstance()->GetLight()->SetPipeline(
+		FRenderCoreLight::LightType::Rect, context, textures_->GetSize()
+	);
+
+	FRenderCore::GetInstance()->GetLight()->BindIABuffer(context);
+
+	sComponentStorage->ForEachActive<RectLightComponent>([&](RectLightComponent* component) {
+
+		DxObject::BindBufferDesc parameter = {};
+		// common parameter
+		parameter.SetAddress("gCamera", config.camera->GetGPUVirtualAddress());
+		parameter.SetAddress("gScene",  config.scene->GetTopLevelAS().GetGPUVirtualAddress());
+
+		// deferred paraemter
+		parameter.SetHandle("gDepth",    textures_->GetDepth()->GetRasterizerGPUHandleSRV());
+		parameter.SetHandle("gAlbedo",   textures_->GetGBuffer(FRenderTargetTextures::GBufferLayout::Albedo)->GetGPUHandleSRV());
+		parameter.SetHandle("gNormal",   textures_->GetGBuffer(FRenderTargetTextures::GBufferLayout::Normal)->GetGPUHandleSRV());
+		parameter.SetHandle("gPosition", textures_->GetGBuffer(FRenderTargetTextures::GBufferLayout::Position)->GetGPUHandleSRV());
+		parameter.SetHandle("gMaterial", textures_->GetGBuffer(FRenderTargetTextures::GBufferLayout::MaterialARM)->GetGPUHandleSRV());
+
+		// point light parameter
+		parameter.SetAddress("gTransforms", component->GetTransform()->GetGPUVirtualAddress());
+		parameter.SetAddress("gParameter",  component->GetParameterBufferAddress());
+		parameter.SetAddress("gShadow",     component->GetShadowBufferAddress());
+
+		FRenderCore::GetInstance()->GetLight()->BindGraphicsBuffer(
+			FRenderCoreLight::LightType::Rect, context, parameter
 		);
 
 		FRenderCore::GetInstance()->GetLight()->DrawCall(context);

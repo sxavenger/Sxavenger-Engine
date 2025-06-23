@@ -163,6 +163,12 @@ void DebugPrimitive::PushBox(const Vector3f& min, const Vector3f& max, const Col
 	PushLine(v3, v7, color);
 }
 
+void DebugPrimitive::PushCube(const Vector3f& center, const Vector3f& size, const Color4f& color) {
+	Vector3f min = center - size * 0.5f;
+	Vector3f max = center + size * 0.5f;
+	PushBox(min, max, color);
+}
+
 void DebugPrimitive::PushSphere(const Vector3f& center, float radius, const Color4f& color) {
 	static const uint32_t kSubdivision = 1 << 5;          //!< parameter
 	static const float kRoundEvery = kTau / kSubdivision; //!< 1周 / 分割数

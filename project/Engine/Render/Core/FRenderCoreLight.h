@@ -22,6 +22,7 @@ public:
 		Directional,
 		Point,
 		Spot,
+		Rect,
 		SkyLight,
 	};
 	static const uint8_t kLightTypeCount = SkyLight + 1;

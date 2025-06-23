@@ -11,6 +11,7 @@
 #include "Components/MeshRenderer/SkinnedMeshRendererComponent.h"
 #include "Components/Light/Punctual/DirectionalLightComponent.h"
 #include "Components/Light/Punctual/PointLightComponent.h"
+#include "Components/Light/Rect/RectLightComponent.h"
 #include "Components/Particle/ParticleComponent.h"
 #include "Components/Light/Environment/SkyLightComponent.h"
 
@@ -96,6 +97,16 @@ std::unique_ptr<MonoBehaviour> ComponentHelper::CreatePointLightMonoBehaviour() 
 
 	root->AddComponent<TransformComponent>();
 	root->AddComponent<PointLightComponent>();
+
+	return root;
+}
+
+std::unique_ptr<MonoBehaviour> ComponentHelper::CreateRectLightMonoBehaviour() {
+	std::unique_ptr<MonoBehaviour> root = std::make_unique<MonoBehaviour>();
+	root->SetName("rect light");
+
+	root->AddComponent<TransformComponent>();
+	root->AddComponent<RectLightComponent>();
 
 	return root;
 }

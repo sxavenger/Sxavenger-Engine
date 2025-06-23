@@ -116,7 +116,7 @@ public:
 	constexpr Color4floating(const Color4floating& rhs) noexcept = default;
 	constexpr Color4floating(Color4floating&& rhs) noexcept = default;
 
-	constexpr Color4floating(const Color3floating<_Ty>& rhs, _Ty _a) noexcept : r(rhs.r), g(rhs.g), b(rhs.b), a(_a) {};
+	constexpr Color4floating(const Color3floating<_Ty>& _c3, _Ty _a) noexcept : r(_c3.r), g(_c3.g), b(_c3.b), a(_a) {};
 
 	//=========================================================================================
 	// operator

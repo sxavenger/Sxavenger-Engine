@@ -44,8 +44,7 @@ private:
 	ComPtr<ID3D12Resource> resource_;
 	DxObject::Descriptor descriptorUAV_;
 
-	Vector3ui size_ = { 512, 512, 6 };
-	
+	Vector2ui size_ = { 1280, 720 };
 
 	//=========================================================================================
 	// private methods
