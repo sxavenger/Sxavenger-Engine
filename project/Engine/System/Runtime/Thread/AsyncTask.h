@@ -67,5 +67,5 @@ private:
 
 	std::string tag_ = "nuknown task";
 
-	//!< Execute function または function_ のいずれかを使用する
+	//!< Execute function の継承 または function_ のいずれかを使用する
 };
