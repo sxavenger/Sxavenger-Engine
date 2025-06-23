@@ -20,12 +20,12 @@ public:
 	// public methods
 	//=========================================================================================
 
-	UAssetTexture()  = default;
-	~UAssetTexture() { texture_.Term(); }
+	UAssetTexture() = default;
+	~UAssetTexture() override { texture_.Term(); }
 
 	//* --- option *//
 
-	void Load(const DirectXThreadContext* context) override;
+	void Load(const DirectXThreadContext* context);
 
 	//* sasset option *//
 

@@ -97,7 +97,7 @@ public:
 
 	void Fill(const T& value);
 
-	const std::span<T>& GetMappedData() const { return mappedDatas_; }
+	const std::span<T>& GetSpan() const { return mappedDatas_; }
 
 	//=========================================================================================
 	// operator

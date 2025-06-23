@@ -30,10 +30,6 @@ public:
 	UBaseAsset()          = default;
 	virtual ~UBaseAsset() = default;
 
-	//* --- option *//
-
-	virtual void Load(_MAYBE_UNUSED const DirectXThreadContext* context) = 0;
-
 	//* sasset option *//
 
 	virtual json Serialize() const;
