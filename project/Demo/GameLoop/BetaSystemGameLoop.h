@@ -50,7 +50,6 @@ private:
 
 	std::unique_ptr<MonoBehaviour> lightA_;
 	std::unique_ptr<MonoBehaviour> lightB_;
-	std::unique_ptr<MonoBehaviour> lightC_;
 
 	std::unique_ptr<AtmosphereActor> atmosphere_;
 

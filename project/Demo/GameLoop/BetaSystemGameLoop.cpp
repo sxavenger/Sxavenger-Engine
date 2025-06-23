@@ -63,7 +63,6 @@ void BetaSystemGameLoop::InitSystem() {
 	
 	lightA_  = ComponentHelper::CreatePointLightMonoBehaviour();
 	lightB_  = ComponentHelper::CreateDirectionalLightMonoBehaviour();
-	lightC_  = ComponentHelper::CreateRectLightMonoBehaviour();
 
 	camera_->AddComponent<PostProcessLayerComponent>();
 	camera_->GetComponent<PostProcessLayerComponent>()->AddPostProcess<PostProcessAutoExposure>();

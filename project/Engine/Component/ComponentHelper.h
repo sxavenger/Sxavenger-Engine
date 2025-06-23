@@ -45,8 +45,6 @@ public:
 
 	static std::unique_ptr<MonoBehaviour> CreatePointLightMonoBehaviour();
 
-	static std::unique_ptr<MonoBehaviour> CreateRectLightMonoBehaviour();
-
 	//* option helper *//
 
 	static void ApplyAnimation(
