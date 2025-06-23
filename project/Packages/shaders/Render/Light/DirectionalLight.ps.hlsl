@@ -63,12 +63,12 @@ PSOutput main(PSInput input) {
 	//!< 非金属(metallic = 0.0f) -> albedo
 	float3 specularAlbedo = lerp(f0, surface.albedo, surface.metallic);
 
-	float3 f = FresnelReflectance(VdotH, specularAlbedo);
-	float d = DistributionFunction(NdotH, surface.roughness);
-	float g = GeometricAttenuation(NdotV, NdotL, surface.roughness);
+	float3 f = F_SphericalGaussian(VdotH, f0);
+	float vh = V_HeightCorrelated(NdotV, NdotL, surface.roughness);
+	float d  = D_GGX(NdotH, surface.roughness);
 
-	float3 diffuseBRDF  = DiffuseBRDF(diffuseAlbedo); //!< fresnel値は考慮しない方がsampleに近かった.
-	float3 specularBRDF = SpecularBRDF(f, g, d, NdotL, NdotV);
+	float3 diffuseBRDF = DiffuseBRDF(diffuseAlbedo);
+	float3 specularBRDF = SpecularBRDF(f, vh, d);
 
 	output.color.rgb = (diffuseBRDF + specularBRDF) * NdotL * c_light;
 
