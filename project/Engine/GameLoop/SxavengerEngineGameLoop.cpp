@@ -49,11 +49,11 @@ void SxavengerEngineGameLoop::Init(GameLoop::Context* context) {
 	});
 
 	context->SetProcess(GameLoop::Process::End, 0, [this]() {
-		SxavengerSystem::RecordLap("draw [draw logic]");
+		SxavengerSystem::RecordLap("render [draw logic]");
 		SxavengerSystem::PresentAllWindow();
 		SxavengerSystem::ExecuteAllAllocator();
 		SxavengerContent::ResetPrimtive();
-		SxavengerSystem::RecordLap("draw [gpu execution]");
+		SxavengerSystem::RecordLap("render [gpu execution]");
 		SxavengerSystem::EndPerformace();
 	});
 

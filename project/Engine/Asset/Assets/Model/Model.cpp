@@ -66,7 +66,8 @@ const uint32_t Model::kDefaultAssimpOption_
 	= aiProcess_FlipWindingOrder
 	| aiProcess_FlipUVs
 	| aiProcess_Triangulate
-	| aiProcess_CalcTangentSpace;
+	| aiProcess_CalcTangentSpace
+	| aiProcess_ImproveCacheLocality;
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Model class methods
@@ -296,11 +297,11 @@ void Model::LoadMesh(const aiScene* aiScene) {
 					//!< todo: 左手座標系に変換
 					
 					const aiVector3D& tangent = aiMesh->mTangents[element];
-					(*vertex)[element].tangent = { tangent.x, tangent.y, -tangent.z }; //!< 左手座標系に変換
+					(*vertex)[element].tangent = { tangent.x, tangent.y, tangent.z }; //!< 左手座標系に変換
 					//(*vertex)[element].tangent = ConvertNormal(tangent); //!< 左手座標系に変換
 
 					const aiVector3D& bitangent = aiMesh->mBitangents[element];
-					(*vertex)[element].bitangent = { bitangent.x, bitangent.y, -bitangent.z }; //!< 左手座標系に変換
+					(*vertex)[element].bitangent = { bitangent.x, bitangent.y, bitangent.z }; //!< 左手座標系に変換
 					//(*vertex)[element].bitangent = ConvertNormal(bitangent); //!< 左手座標系に変換
 				}
 			}

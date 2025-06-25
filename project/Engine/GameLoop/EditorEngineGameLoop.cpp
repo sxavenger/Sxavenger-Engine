@@ -45,5 +45,7 @@ void EditorEngineGameLoop::UpdateEditor() {
 void EditorEngineGameLoop::RenderEditor() {
 	sEditorEngine->ExecuteEditorFunction<RenderSceneEditor>([&](RenderSceneEditor* editor) {
 		editor->Render();
+		SxavengerSystem::TransitionAllocator();
+		SxavengerSystem::RecordLap("render [editor]");
 	});
 }

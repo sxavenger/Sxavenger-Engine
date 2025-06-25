@@ -69,7 +69,7 @@ PSOutput main(PSInput input) {
 	float  d  = D_GGX(NdotH, surface.roughness);
 
 	float3 diffuseBRDF  = DiffuseBRDF(diffuseAlbedo);
-	float3 specularBRDF = SpecularBRDF(f, vh, d) * specularAlbedo;
+	float3 specularBRDF = SpecularBRDF(f, vh, d);
 
 	output.color.rgb = (diffuseBRDF + specularBRDF) * NdotL * c_light;
 

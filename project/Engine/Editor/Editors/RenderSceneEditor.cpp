@@ -54,7 +54,6 @@ void RenderSceneEditor::ShowMainMenu() {
 		ImGui::SeparatorText("render");
 
 		ShowSceneMenu();
-		ShowSceneConfig();
 		ShowGizmoMenu();
 		ShowColliderMenu();
 		ShowCaptureMenu();
@@ -70,6 +69,9 @@ void RenderSceneEditor::ShowWindow() {
 }
 
 void RenderSceneEditor::Render() {
+	if (!isRender_) {
+		return;
+	}
 	
 	renderer_->Render(SxavengerSystem::GetMainThreadContext(), config_);
 
@@ -252,6 +254,15 @@ void RenderSceneEditor::ShowSceneMenu() {
 		MenuPadding();
 		ImGui::SeparatorText("scene");
 
+		// render
+		ImGui::Checkbox("render scene", &isRender_);
+
+		ImGui::BeginDisabled(!isRender_);
+
+		// layout display
+		ImGui::Text("layout");
+		ImGui::Separator();
+
 		static const LPCSTR kLayouts[] = {
 			"Normal",
 			"MaterialARM",
@@ -269,21 +280,14 @@ void RenderSceneEditor::ShowSceneMenu() {
 			}
 			ImGui::EndCombo();
 		}
-		
-		ImGui::EndMenu();
-	}
-}
 
-void RenderSceneEditor::ShowSceneConfig() {
-	if (ImGui::BeginMenu("config")) {
-		MenuPadding();
-		ImGui::SeparatorText("config");
-
+		// process
 		ImGui::Text("process");
 		ImGui::Separator();
 		ImGui::Checkbox("enable post process", &config_.isEnablePostProcess);
-		ImGui::Checkbox("enable composite",    &config_.isEnableComposite);
+		ImGui::Checkbox("enable composite", &config_.isEnableComposite);
 
+		// technique
 		ImGui::Text("technique");
 		ImGui::Separator();
 
@@ -296,6 +300,8 @@ void RenderSceneEditor::ShowSceneConfig() {
 		if (ImGui::RadioButton("raytracing(preview)", config_.technique == FSceneRenderer::GraphicsTechnique::Raytracing)) {
 			config_.technique = FSceneRenderer::GraphicsTechnique::Raytracing;
 		}
+
+		ImGui::EndDisabled();
 		
 		ImGui::EndMenu();
 	}

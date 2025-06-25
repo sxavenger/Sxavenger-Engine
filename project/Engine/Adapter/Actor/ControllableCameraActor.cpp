@@ -82,8 +82,11 @@ void ControllableCameraActor::Move() {
 	}
 
 	if (keyboard_->IsPress(KeyId::KEY_LSHIFT)) {
-		direction *= 2.0f;
+		direction *= 2.0f * speed_;
 	}
+
+	speed_ += mouse_->GetDeltaWheel() * 0.1f;
+	speed_ = std::clamp(speed_, 1.0f, 2.0f);
 
 	direction *= SxavengerSystem::GetDeltaTime().time;
 

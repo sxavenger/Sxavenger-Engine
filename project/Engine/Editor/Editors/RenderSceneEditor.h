@@ -112,6 +112,8 @@ private:
 
 	//* renderer *//
 
+	bool isRender_ = true;
+
 	std::unique_ptr<FRenderTargetTextures> textures_; //!< debug textures
 	std::unique_ptr<FSceneRenderer>        renderer_; //!< scene renderer
 	std::unique_ptr<MonoBehaviour>         camera_;   //!< scene camera
@@ -154,7 +156,6 @@ private:
 	//* show imgui component *//
 
 	void ShowSceneMenu();
-	void ShowSceneConfig();
 	void ShowGizmoMenu();
 	void ShowColliderMenu();
 	void ShowCaptureMenu();
