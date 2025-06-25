@@ -60,6 +60,8 @@ public:
 
 	const D3D12_GPU_VIRTUAL_ADDRESS& GetParameterBufferAddress() const;
 
+	const Parameter& GetParameter() const;
+
 	//* other component option *//
 
 	const TransformComponent* GetTransform() const;

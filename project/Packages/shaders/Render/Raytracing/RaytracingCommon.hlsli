@@ -5,6 +5,9 @@
 //-----------------------------------------------------------------------------------------
 //* component
 #include "../../Component/CameraComponent.hlsli"
+#include "../../Component/LightComponentCommon.hlsli"
+#include "../../Component/DirectionalLightComponent.hlsli"
+#include "../../Component/TransformComponent.hlsli"
 
 //=========================================================================================
 // global buffers
@@ -20,6 +23,17 @@ static const float4x4 kViewProj = gCamera.GetViewProj();
 
 //* scene
 RaytracingAccelerationStructure gScene : register(t0, space1);
+
+//* light
+struct LightCount {
+	uint count;
+};
+
+//# Directional Light
+ConstantBuffer<LightCount> gDirectionalLightCount                : register(b1, space1);
+StructuredBuffer<TransformComponent> gDirectionalLightTransforms : register(t1, space1);
+StructuredBuffer<DirectionalLightComponent> gDirectionalLights   : register(t2, space1);
+StructuredBuffer<InlineShadow> gDirectionalLightShadows          : register(t3, space1);
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // config variables

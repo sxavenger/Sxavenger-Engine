@@ -31,6 +31,11 @@ const D3D12_GPU_VIRTUAL_ADDRESS& LightCommon::GetShadowBufferAddress() const {
 	return shadow_->GetGPUVirtualAddress();
 }
 
+const LightCommon::InlineShadow& LightCommon::GetShadowParameter() const {
+	Exception::Assert(shadow_ != nullptr, "shadow buffer is not create.");
+	return shadow_->At(0);
+}
+
 void LightCommon::ShowCommonInspector() {
 	ImGui::Separator();
 	auto& shadow = shadow_->At(0);

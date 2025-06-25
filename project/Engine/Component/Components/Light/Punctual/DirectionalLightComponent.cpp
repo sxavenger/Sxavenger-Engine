@@ -54,6 +54,11 @@ const D3D12_GPU_VIRTUAL_ADDRESS& DirectionalLightComponent::GetParameterBufferAd
 	return parameter_->GetGPUVirtualAddress();
 }
 
+const DirectionalLightComponent::Parameter& DirectionalLightComponent::GetParameter() const {
+	Exception::Assert(parameter_ != nullptr, "directional light buffer is not create.");
+	return parameter_->At(0);
+}
+
 const TransformComponent* DirectionalLightComponent::GetTransform() const {
 	return BaseComponent::GetBehaviour()->RequireComponent<TransformComponent>();
 }

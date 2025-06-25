@@ -12,6 +12,7 @@
 //* component
 #include "../../Component/CameraComponent.hlsli"
 #include "../../Component/TransformComponent.hlsli"
+#include "../../Component/LightComponentCommon.hlsli"
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Input / Output structure
@@ -46,46 +47,6 @@ static const float4x4 kViewProj = gCamera.GetViewProj();
 StructuredBuffer<TransformComponent> gTransforms : register(t10); //!< Light transform buffer
 
 RaytracingAccelerationStructure gScene : register(t11);
-
-////////////////////////////////////////////////////////////////////////////////////////////
-// InlineShadow structure
-////////////////////////////////////////////////////////////////////////////////////////////
-struct InlineShadow {
-
-	//=========================================================================================
-	// public variables
-	//=========================================================================================
-
-	float strength;
-	uint  flag;
-
-	//=========================================================================================
-	// public variables
-	//=========================================================================================
-
-	float TraceShadow(RayDesc desc) {
-#ifdef _INLINE_RAYTRACING
-		if (strength <= 0.0f) {
-			return 1.0f;
-		}
-		
-		RayQuery<0> q;
-
-		q.TraceRayInline(
-			gScene,
-			flag,
-			0xFF,
-			desc
-		);
-
-		if (q.Proceed()) {
-			return 1.0f - strength;
-		}
-#endif
-		return 1.0f;
-	}
-	
-};
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // static const variables

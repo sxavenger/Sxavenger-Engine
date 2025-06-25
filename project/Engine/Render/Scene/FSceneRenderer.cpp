@@ -226,35 +226,38 @@ void FSceneRenderer::LightingEmpty(const DirectXThreadContext* context, const Co
 
 void FSceneRenderer::LightingPassDirectionalLight(const DirectXThreadContext* context, const Config& config) {
 
+	uint32_t count = config.scene->directionalLightCount_->At(0);
+
+	if (count == 0) {
+		return;
+	}
+
 	FRenderCore::GetInstance()->GetLight()->SetPipeline(
 		FRenderCoreLight::LightType::Directional, context, textures_->GetSize()
 	);
 
-	sComponentStorage->ForEachActive<DirectionalLightComponent>([&](DirectionalLightComponent* component) {
+	DxObject::BindBufferDesc parameter = {};
+	// common parameter
+	parameter.SetAddress("gCamera", config.camera->GetGPUVirtualAddress());
+	parameter.SetAddress("gScene",  config.scene->GetTopLevelAS().GetGPUVirtualAddress());
 
-		DxObject::BindBufferDesc parameter = {};
-		// common parameter
-		parameter.SetAddress("gCamera", config.camera->GetGPUVirtualAddress());
-		parameter.SetAddress("gScene",  config.scene->GetTopLevelAS().GetGPUVirtualAddress());
+	// deferred paraemter
+	parameter.SetHandle("gDepth",    textures_->GetDepth()->GetRasterizerGPUHandleSRV());
+	parameter.SetHandle("gAlbedo",   textures_->GetGBuffer(FRenderTargetTextures::GBufferLayout::Albedo)->GetGPUHandleSRV());
+	parameter.SetHandle("gNormal",   textures_->GetGBuffer(FRenderTargetTextures::GBufferLayout::Normal)->GetGPUHandleSRV());
+	parameter.SetHandle("gPosition", textures_->GetGBuffer(FRenderTargetTextures::GBufferLayout::Position)->GetGPUHandleSRV());
+	parameter.SetHandle("gMaterial", textures_->GetGBuffer(FRenderTargetTextures::GBufferLayout::MaterialARM)->GetGPUHandleSRV());
 
-		// deferred paraemter
-		parameter.SetHandle("gDepth",    textures_->GetDepth()->GetRasterizerGPUHandleSRV());
-		parameter.SetHandle("gAlbedo",   textures_->GetGBuffer(FRenderTargetTextures::GBufferLayout::Albedo)->GetGPUHandleSRV());
-		parameter.SetHandle("gNormal",   textures_->GetGBuffer(FRenderTargetTextures::GBufferLayout::Normal)->GetGPUHandleSRV());
-		parameter.SetHandle("gPosition", textures_->GetGBuffer(FRenderTargetTextures::GBufferLayout::Position)->GetGPUHandleSRV());
-		parameter.SetHandle("gMaterial", textures_->GetGBuffer(FRenderTargetTextures::GBufferLayout::MaterialARM)->GetGPUHandleSRV());
+	// direcitonal light parameter
+	parameter.SetAddress("gTransforms", config.scene->directionalLightTransforms_->GetGPUVirtualAddress());
+	parameter.SetAddress("gParameters", config.scene->directionalLightParams_->GetGPUVirtualAddress());
+	parameter.SetAddress("gShadows",    config.scene->directionalLightShadowParams_->GetGPUVirtualAddress());
 
-		// direcitonal light parameter
-		parameter.SetAddress("gTransforms", component->GetTransform()->GetGPUVirtualAddress());
-		parameter.SetAddress("gParameter",  component->GetParameterBufferAddress());
-		parameter.SetAddress("gShadow",     component->GetShadowBufferAddress());
+	FRenderCore::GetInstance()->GetLight()->BindGraphicsBuffer(
+		FRenderCoreLight::LightType::Directional, context, parameter
+	);
 
-		FRenderCore::GetInstance()->GetLight()->BindGraphicsBuffer(
-			FRenderCoreLight::LightType::Directional, context, parameter
-		);
-
-		FRenderCore::GetInstance()->GetLight()->DrawCall(context);
-	});
+	FRenderCore::GetInstance()->GetLight()->DrawCall(context, count);
 }
 
 void FSceneRenderer::LightingPassPointLight(const DirectXThreadContext* context, const Config& config) {
@@ -550,6 +553,11 @@ void FSceneRenderer::RenderTechniqueRaytracing(const DirectXThreadContext* conte
 	commandList->SetComputeRootDescriptorTable(1, textures_->GetDepth()->GetRaytracingGPUHandleUAV());
 	commandList->SetComputeRootConstantBufferView(2, config.camera->GetGPUVirtualAddress());
 	commandList->SetComputeRootShaderResourceView(3, config.scene->GetTopLevelAS().GetGPUVirtualAddress());
+
+	commandList->SetComputeRootConstantBufferView(4, config.scene->directionalLightCount_->GetGPUVirtualAddress());
+	commandList->SetComputeRootShaderResourceView(5, config.scene->directionalLightTransforms_->GetGPUVirtualAddress());
+	commandList->SetComputeRootShaderResourceView(6, config.scene->directionalLightParams_->GetGPUVirtualAddress());
+	commandList->SetComputeRootShaderResourceView(6, config.scene->directionalLightShadowParams_->GetGPUVirtualAddress());
 
 	config.scene->GetStateObjectContext().DispatchRays(context->GetDxCommand(), textures_->GetSize());
 

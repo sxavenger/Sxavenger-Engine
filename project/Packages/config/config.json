@@ -1,5 +1,5 @@
 {
-	"enableDebugLayer" : true,
+	"enableDebugLayer" : false,
 	"enableGPUBasedValidation": false,
 	"isTearingAllowed": true,
 	"isLockFrameRate": true,

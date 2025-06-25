@@ -28,6 +28,13 @@ void FScene::Init() {
 		//* scene
 		desc.SetVirtualSRV(3, 0, 1); //!< scene
 
+		//* light
+		//# Directional Light
+		desc.SetVirtualCBV(4, 1, 1); //!< light count
+		desc.SetVirtualSRV(5, 1, 1); //!< light transforms
+		desc.SetVirtualSRV(6, 2, 1); //!< light parameters
+		desc.SetVirtualSRV(7, 3, 1); //!< light shadow parameters
+
 		stateObjectContext_.CreateRootSignature(SxavengerSystem::GetDxDevice(), desc);
 	}
 
@@ -45,6 +52,13 @@ void FScene::Init() {
 		stateObjectContext_.CreateStateObject(SxavengerSystem::GetDxDevice(), std::move(desc));
 	}
 
+	{ //!< light containerの初期化
+		directionalLightCount_ = std::make_unique<DxObject::DimensionBuffer<uint32_t>>();
+		directionalLightCount_->Create(SxavengerSystem::GetDxDevice(), 1);
+		directionalLightTransforms_   = std::make_unique<DxObject::DimensionBuffer<TransformationMatrix>>();
+		directionalLightParams_       = std::make_unique<DxObject::DimensionBuffer<DirectionalLightComponent::Parameter>>();
+		directionalLightShadowParams_ = std::make_unique<DxObject::DimensionBuffer<DirectionalLightComponent::InlineShadow>>();
+	}
 	
 }
 
@@ -111,4 +125,42 @@ void FScene::SetupTopLevelAS(const DirectXThreadContext* context) {
 void FScene::SetupStateObject() {
 	// SetupTopLevelAS()に設定
 	stateObjectContext_.UpdateShaderTable(SxavengerSystem::GetDxDevice(), &topLevelAS_);
+}
+
+void FScene::SetupLightContainer() {
+	SetupDirectionalLight();
+}
+
+void FScene::SetupDirectionalLight() {
+
+	uint32_t count = static_cast<uint32_t>(sComponentStorage->GetActiveComponentCount<DirectionalLightComponent>());
+
+	directionalLightCount_->At(0) = count;
+
+	if (count == 0) {
+		return;
+	}
+
+	if (directionalLightTransforms_->GetSize() < count) {
+		directionalLightTransforms_->Create(SxavengerSystem::GetDxDevice(), count);
+	}
+
+	if (directionalLightParams_->GetSize() < count) {
+		directionalLightParams_->Create(SxavengerSystem::GetDxDevice(), count);
+	}
+
+	if (directionalLightShadowParams_->GetSize() < count) {
+		directionalLightShadowParams_->Create(SxavengerSystem::GetDxDevice(), count);
+	}
+
+	size_t index = 0;
+
+	sComponentStorage->ForEachActive<DirectionalLightComponent>([&](DirectionalLightComponent* component) {
+		directionalLightTransforms_->At(index)   = component->GetTransform()->GetTransformationMatrix();
+		directionalLightParams_->At(index)       = component->GetParameter();
+		directionalLightShadowParams_->At(index) = component->GetShadowParameter();
+
+		index++;
+	});
+
 }

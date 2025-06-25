@@ -49,13 +49,13 @@ PSOutput main(PSInput input) {
 
 	float3 c_light = gSpotLight.color * gSpotLight.intensity * dist * dir;
 	
-	RayDesc ray;
-	ray.Origin    = surface.position;
-	ray.Direction = l;
-	ray.TMin      = kTMin;
-	ray.TMax      = r;
+	RayDesc desc;
+	desc.Origin    = surface.position;
+	desc.Direction = l;
+	desc.TMin      = kTMin;
+	desc.TMax      = r;
 
-	c_light *= gShadow.TraceShadow(ray);
+	c_light *= gShadow.TraceShadow(desc, gScene);
 	
 	//* 出力
 	output.color.rgb = diffuse * c_light * surface.albedo;

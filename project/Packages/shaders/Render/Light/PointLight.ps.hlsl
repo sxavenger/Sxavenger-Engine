@@ -32,13 +32,13 @@ PSOutput main(PSInput input) {
 	float3 c_light = gParameter.GetColor(r);
 
 	// 影の計算
-	RayDesc ray;
-	ray.Origin    = surface.position;
-	ray.Direction = l;
-	ray.TMin      = kTMin;
-	ray.TMax      = r;
+	RayDesc desc;
+	desc.Origin    = surface.position;
+	desc.Direction = l;
+	desc.TMin      = kTMin;
+	desc.TMax = r;
 	
-	c_light *= gShadow.TraceShadow(ray);
+	c_light *= gShadow.TraceShadow(desc, gScene);
 
 	//* Cameraの情報を取得
 	float3 v = normalize(gCamera.GetPosition() - surface.position);

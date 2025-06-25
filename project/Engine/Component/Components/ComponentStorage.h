@@ -66,6 +66,16 @@ public:
 	template <Component _Ty>
 	void ForEachActive(const std::function<void(_Ty*)>& func);
 
+	//* count *//
+
+	template <Component _Ty>
+	size_t GetComponentCount() const;
+	//!< o(1)
+
+	template <Component _Ty>
+	size_t GetActiveComponentCount() const;
+	//!< o(n)
+
 	//* getter *//
 
 	template <Component _Ty>
@@ -131,6 +141,36 @@ void ComponentStorage::ForEachActive(const std::function<void(_Ty*)>& func) {
 			func(static_cast<_Ty*>(component.get()));
 		}
 	}
+}
+
+template <Component _Ty>
+inline size_t ComponentStorage::GetComponentCount() const {
+	constexpr const std::type_info* type = &typeid(_Ty);
+
+	if (!storage_.contains(type)) {
+		return 0;
+	}
+
+	return storage_.at(type).size();
+}
+
+template<Component _Ty>
+inline size_t ComponentStorage::GetActiveComponentCount() const {
+	constexpr const std::type_info* type = &typeid(_Ty);
+
+	if (!storage_.contains(type)) {
+		return 0;
+	}
+
+	size_t count = 0;
+
+	for (const auto& component : storage_.at(type)) {
+		if (component->IsActive()) {
+			count++;
+		}
+	}
+
+	return count;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////

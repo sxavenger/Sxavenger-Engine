@@ -10,9 +10,8 @@
 // buffers
 //=========================================================================================
 
-ConstantBuffer<DirectionalLightComponent> gParameter : register(b0);
-
-ConstantBuffer<InlineShadow> gShadow : register(b1);
+StructuredBuffer<DirectionalLightComponent> gParameters : register(t0);
+StructuredBuffer<InlineShadow> gShadows                 : register(t1);
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // main
@@ -26,7 +25,7 @@ PSOutput main(PSInput input) {
 	surface.GetSurface(input.position.xy);
 
 	//* Lightの情報を取得
-	float3 c_light = gParameter.GetColor(); //!< lightのcolor
+	float3 c_light = gParameters[input.instanceId].GetColor(); //!< lightのcolor
 	float3 l       = -gTransforms[input.instanceId].GetDirection(); //!< surfaceからlightへの方向ベクトル
 
 	//* shadow
@@ -36,7 +35,7 @@ PSOutput main(PSInput input) {
 	desc.TMin      = kTMin;
 	desc.TMax      = kTMax;
 
-	c_light *= gShadow.TraceShadow(desc);
+	c_light *= gShadows[input.instanceId].TraceShadow(desc, gScene);
 	// todo: 不必要な場合は、gShadow.TraceShadow()を呼び出さないようにする
 
 	//* cameraからの方向ベクトルを取得

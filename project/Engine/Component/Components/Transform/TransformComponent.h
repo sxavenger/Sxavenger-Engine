@@ -53,6 +53,10 @@ public:
 
 	const Vector3f GetPosition() const;
 
+	//* transformation option *//
+
+	const TransformationMatrix& GetTransformationMatrix() const;
+
 	//* json option *//
 
 	json PerseToJson() const override;

@@ -43,6 +43,7 @@ void SxavengerEngineGameLoop::Init(GameLoop::Context* context) {
 		SxavengerSystem::EndImGuiFrame();
 		FMainRender::GetInstance()->GetScene()->SetupTopLevelAS(SxavengerSystem::GetMainThreadContext());
 		FMainRender::GetInstance()->GetScene()->SetupStateObject();
+		FMainRender::GetInstance()->GetScene()->SetupLightContainer();
 		SxavengerSystem::TransitionAllocator();
 		SxavengerSystem::RecordLap("update [engine]");
 	});

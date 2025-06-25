@@ -2,8 +2,12 @@
 
 /*
 # reference
-UE4 PBR: https://de45xmedrsdbp.cloudfront.net/Resources/files/2013SiggraphPresentationsNotes-26915738.pdf
-         https://www.unrealengine.com/en-US/blog/physically-based-shading-on-mobile //!< 2014 version.
+> UE4 PBR:
+ https://de45xmedrsdbp.cloudfront.net/Resources/files/2013SiggraphPresentationsNotes-26915738.pdf
+ https://www.unrealengine.com/en-US/blog/physically-based-shading-on-mobile //!< 2014 version.
+> Height-Correlated:
+ https://light11.hatenadiary.com/entry/2020/03/03/195249#Height-Correlated-Smith%E9%96%A2%E6%95%B0
+ https://google.github.io/filament/Filament.md.html#materialsystem/specularbrdf/geometricshadowing(specularg)
 */
 
 //-----------------------------------------------------------------------------------------
@@ -53,10 +57,10 @@ float V_HeightCorrelated(float NdotV, float NdotL, float roughness) {
 	NdotV = saturate(NdotV + kEpsilon);
 	NdotL = saturate(NdotL + kEpsilon);
 
-	float lamda_v = 1.0f / (NdotV + sqrt(a2 + (1.0f - a2) * (NdotV * NdotV)));
-	float lamda_l = 1.0f / (NdotL + sqrt(a2 + (1.0f - a2) * (NdotL * NdotL)));
+	float lamda_v = NdotL * sqrt(NdotV * NdotV * (1.0 - a2) + a2);
+	float lamda_l = NdotV * sqrt(NdotL * NdotL * (1.0 - a2) + a2);
 
-	return lamda_l * lamda_v;
+	return 0.5f / (lamda_v + lamda_l);
 }
 
 //! @brief DistributionFunction(GGX/Trowbridge-Reitz)

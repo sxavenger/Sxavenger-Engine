@@ -65,6 +65,8 @@ public:
 
 	const D3D12_GPU_VIRTUAL_ADDRESS& GetShadowBufferAddress() const;
 
+	const InlineShadow& GetShadowParameter() const;
+
 	//* inspector *//
 
 	void ShowCommonInspector();
