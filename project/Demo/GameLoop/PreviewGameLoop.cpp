@@ -58,9 +58,9 @@ void PreviewGameLoop::InitGame() {
 		D3D12_RESOURCE_DESC desc = {};
 		desc.Width            = size_.x;
 		desc.Height           = size_.y;
-		desc.DepthOrArraySize = 1;
+		desc.DepthOrArraySize = static_cast<uint16_t>(size_.z);
 		desc.MipLevels        = 1;
-		desc.Format           = DXGI_FORMAT_R8G8B8A8_UNORM;
+		desc.Format           = DXGI_FORMAT_R32G32B32A32_FLOAT;
 		desc.SampleDesc.Count = 1;
 		desc.Dimension        = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
 		desc.Flags            = D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS;
@@ -83,8 +83,9 @@ void PreviewGameLoop::InitGame() {
 
 		// descの設定
 		D3D12_UNORDERED_ACCESS_VIEW_DESC desc = {};
-		desc.Format                   = DXGI_FORMAT_R8G8B8A8_UNORM;
-		desc.ViewDimension            = D3D12_UAV_DIMENSION_TEXTURE2D;
+		desc.Format                   = DXGI_FORMAT_R32G32B32A32_FLOAT;
+		desc.ViewDimension            = D3D12_UAV_DIMENSION_TEXTURE2DARRAY;
+		desc.Texture2DArray.ArraySize = static_cast<uint32_t>(size_.z);
 
 		device->CreateUnorderedAccessView(
 			resource_.Get(),
@@ -94,7 +95,7 @@ void PreviewGameLoop::InitGame() {
 		);
 	}
 
-	pipeline_.CreateBlob("assets/shaders/test.cs.hlsl");
+	pipeline_.CreateBlob("assets/shaders/texcube.cs.hlsl");
 	pipeline_.ReflectionPipeline(SxavengerSystem::GetDxDevice());
 
 	// execute pipeline
@@ -106,7 +107,25 @@ void PreviewGameLoop::InitGame() {
 	pipeline_.BindComputeBuffer(SxavengerSystem::GetMainThreadContext()->GetDxCommand(), desc);
 	pipeline_.Dispatch(
 		SxavengerSystem::GetMainThreadContext()->GetDxCommand(),
-		{ DxObject::RoundUp(size_.x, 16), DxObject::RoundUp(size_.y, 16), 1 }
+		{ DxObject::RoundUp(size_.x, 16), DxObject::RoundUp(size_.y, 16), DxObject::RoundUp(size_.z, 1) }
+	);
+
+	D3D12_RESOURCE_BARRIER barrier = {};
+	barrier.Type                   = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+	barrier.Transition.pResource   = resource_.Get();
+	barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_UNORDERED_ACCESS;
+	barrier.Transition.StateAfter  = D3D12_RESOURCE_STATE_COPY_SOURCE;
+	barrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
+
+	SxavengerSystem::GetMainThreadContext()->GetCommandList()->ResourceBarrier(1, &barrier);
+
+	// save
+	TextureExporter::Export(
+		SxavengerSystem::GetMainThreadContext(),
+		TextureExporter::TextureDimension::TextureCube,
+		resource_.Get(),
+		DXGI_FORMAT_R32G32B32A32_FLOAT,
+		"preview_texture.dds"
 	);
 }
 

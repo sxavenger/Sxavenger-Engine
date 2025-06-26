@@ -82,13 +82,13 @@ void ControllableCameraActor::Move() {
 	}
 
 	if (keyboard_->IsPress(KeyId::KEY_LSHIFT)) {
-		direction *= 2.0f * speed_;
+		direction *= 2.0f;
 	}
 
 	speed_ += mouse_->GetDeltaWheel() * 0.1f;
-	speed_ = std::clamp(speed_, 1.0f, 2.0f);
+	speed_ = std::clamp(speed_, 0.1f, 10.0f);
 
-	direction *= SxavengerSystem::GetDeltaTime().time;
+	direction *= speed_ * SxavengerSystem::GetDeltaTime().time;
 
 	auto transform = MonoBehaviour::GetComponent<TransformComponent>();
 	transform->translate += Quaternion::RotateVector({ direction.x, 0.0f, direction.y }, transform->rotate);

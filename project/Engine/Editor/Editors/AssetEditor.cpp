@@ -271,7 +271,7 @@ void AssetEditor::ShowAssetLayout() {
 
 	ImVec2 context = ImGui::GetContentRegionAvail();
 
-	size_t space = static_cast<size_t>(context.x) / static_cast<size_t>(iconSize_);
+	size_t space = static_cast<size_t>(context.x) / static_cast<size_t>(iconSize_ + ImGui::GetStyle().ItemSpacing.x);
 	size_t count = 0;
 
 	ForEachDirectory(path, [&](const std::filesystem::directory_entry& entry) {

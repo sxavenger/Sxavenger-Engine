@@ -22,6 +22,14 @@ class Texture {
 public:
 
 	////////////////////////////////////////////////////////////////////////////////////////////
+	// Encoding enum class
+	////////////////////////////////////////////////////////////////////////////////////////////
+	enum class Encoding : bool {
+		Lightness, //!< sRGB
+		Intensity, //!< R8G8B8A8
+	};
+
+	////////////////////////////////////////////////////////////////////////////////////////////
 	// Metadata structure
 	////////////////////////////////////////////////////////////////////////////////////////////
 	struct Metadata {
@@ -32,6 +40,7 @@ public:
 		//=========================================================================================
 
 		void Assign(const DirectX::TexMetadata& metadata);
+		// todo: resource自体の情報を持たせる.
 
 		//=========================================================================================
 		// public variables
@@ -53,7 +62,7 @@ public:
 	Texture() = default;
 	~Texture() { Term(); }
 
-	void Load(const DirectXThreadContext* context, const std::filesystem::path& filepath);
+	void Load(const DirectXThreadContext* context, const std::filesystem::path& filepath, Encoding encoding);
 
 	void Term();
 
@@ -88,7 +97,7 @@ private:
 	// private methods
 	//=========================================================================================
 
-	static DirectX::ScratchImage LoadTexture(const std::filesystem::path& filepath);
+	static DirectX::ScratchImage LoadTexture(const std::filesystem::path& filepath, Encoding encoding);
 
 	static ComPtr<ID3D12Resource> CreateTextureResource(ID3D12Device* device, const DirectX::TexMetadata& metadata);
 

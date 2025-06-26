@@ -336,7 +336,6 @@
     <ClInclude Include="Lib\Sxl\OptimizedPathMap.h" />
     <ClInclude Include="Engine\Component\Components\PostProcessLayer\PostProcessLayerComponent.h" />
     <ClInclude Include="Engine\Component\Components\PostProcessLayer\BasePostProcess.h" />
-    <ClInclude Include="Demo\GameLoop\PreviewGameLoop.h" />
     <ClInclude Include="Engine\Render\Common\FProcessTexture.h" />
     <ClInclude Include="Engine\Component\Components\PostProcessLayer\PostProcessLocalExposure.h" />
     <ClInclude Include="Engine\Component\Components\PostProcessLayer\PostProcessBloom.h" />
@@ -369,6 +368,7 @@
     <ClInclude Include="Engine\Preview\Asset\UAssetTexture.h" />
     <ClInclude Include="Engine\Preview\Asset\UAssetStaticMesh.h" />
     <ClInclude Include="Engine\Preview\Asset\UAssetMaterial.h" />
+    <ClInclude Include="Demo\GameLoop\PreviewGameLoop.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

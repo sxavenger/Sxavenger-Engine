@@ -23,7 +23,7 @@ GeometryDeferredOutput main(GeometryPSInput input) {
 	parameter.Set(input.texcoord, gSampler);
 
 	float transparency = gMaterials[input.instanceId].transparency.GetTransparency(parameter);
-	if (transparency <= 0.05f) {
+	if (transparency <= 0.1f) {
 		discard;
 	}
 

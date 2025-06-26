@@ -22,9 +22,9 @@ void Texture::Metadata::Assign(const DirectX::TexMetadata& metadata) {
 // Texture class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-void Texture::Load(const DirectXThreadContext* context, const std::filesystem::path& filepath) {
+void Texture::Load(const DirectXThreadContext* context, const std::filesystem::path& filepath, Encoding encoding) {
 
-	DirectX::ScratchImage image = LoadTexture(filepath);
+	DirectX::ScratchImage image = LoadTexture(filepath, encoding);
 	const auto& metadata        = image.GetMetadata();
 
 	// deviceの取得
@@ -72,7 +72,7 @@ void Texture::Term() {
 	descriptorSRV_.Delete();
 }
 
-DirectX::ScratchImage Texture::LoadTexture(const std::filesystem::path& filepath) {
+DirectX::ScratchImage Texture::LoadTexture(const std::filesystem::path& filepath, Encoding encoding) {
 
 	DirectX::ScratchImage image = {};
 
@@ -103,9 +103,20 @@ DirectX::ScratchImage Texture::LoadTexture(const std::filesystem::path& filepath
 		);
 
 	} else {
+
+		DirectX::WIC_FLAGS flags = DirectX::WIC_FLAGS_NONE;
+
+		if (encoding == Encoding::Intensity) {
+			flags = DirectX::WIC_FLAGS_FORCE_RGB;
+
+		} else if (encoding == Encoding::Lightness) {
+			flags = DirectX::WIC_FLAGS_FORCE_SRGB;
+		}
+
+
 		hr = DirectX::LoadFromWICFile(
 			filepath.generic_wstring().c_str(),
-			DirectX::WIC_FLAGS_FORCE_RGB,
+			flags,
 			nullptr,
 			image
 		);
@@ -119,12 +130,18 @@ DirectX::ScratchImage Texture::LoadTexture(const std::filesystem::path& filepath
 
 	DirectX::ScratchImage mipImage = {};
 
-	// MipMapの生成
+	DirectX::TEX_FILTER_FLAGS flags = DirectX::TEX_FILTER_DEFAULT;
+
+	if (encoding == Encoding::Lightness) {
+		flags = DirectX::TEX_FILTER_SRGB;
+	}
+
+	// mipmapの生成
 	hr = DirectX::GenerateMipMaps(
 		image.GetImages(),
 		image.GetImageCount(),
 		image.GetMetadata(),
-		DirectX::TEX_FILTER_SRGB,
+		flags,
 		0,
 		mipImage
 	);

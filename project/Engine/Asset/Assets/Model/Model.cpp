@@ -41,6 +41,11 @@ void Model::AssimpMaterial::Create() {
 		Material::GetBuffer().normal.SetTexture(textures_[static_cast<uint8_t>(TextureType::Bump)]->GetDescriptorSRV().GetIndex());
 	}
 
+	// ambient occlusion
+	if (textures_[static_cast<uint8_t>(TextureType::AmbientOcclusion)] != nullptr) {
+		Material::GetBuffer().properties.ao.SetTexture(textures_[static_cast<uint8_t>(TextureType::AmbientOcclusion)]->GetDescriptorSRV().GetIndex());
+	}
+
 	// roughness
 	if (textures_[static_cast<uint8_t>(TextureType::Roughness)] != nullptr) {
 		Material::GetBuffer().properties.roughness.SetTexture(textures_[static_cast<uint8_t>(TextureType::Roughness)]->GetDescriptorSRV().GetIndex());
@@ -365,7 +370,7 @@ void Model::LoadMaterial(const aiScene* aiScene, const DirectXThreadContext* con
 	// materail数の要素数確保
 	materials_.resize(aiScene->mNumMaterials);
 
-	std::unordered_map<std::filesystem::path, std::shared_ptr<Texture>> textures;
+	std::map<std::filesystem::path, std::shared_ptr<Texture>> textures;
 
 	for (uint32_t materialIndex = 0; materialIndex < aiScene->mNumMaterials; ++materialIndex) {
 
@@ -384,7 +389,7 @@ void Model::LoadMaterial(const aiScene* aiScene, const DirectXThreadContext* con
 				if (!textures.contains(filepath)) {
 					// テクスチャの読み込み
 					textures[filepath] = std::make_shared<Texture>();
-					textures[filepath]->Load(context, directory / filepath);
+					textures[filepath]->Load(context, directory / filepath, Texture::Encoding::Lightness);
 				}
 
 				// データの保存
@@ -401,7 +406,7 @@ void Model::LoadMaterial(const aiScene* aiScene, const DirectXThreadContext* con
 				if (!textures.contains(filepath)) {
 					// テクスチャの読み込み
 					textures[filepath] = std::make_shared<Texture>();
-					textures[filepath]->Load(context, directory / filepath);
+					textures[filepath]->Load(context, directory / filepath, Texture::Encoding::Intensity);
 				}
 
 				// データの保存
@@ -416,7 +421,7 @@ void Model::LoadMaterial(const aiScene* aiScene, const DirectXThreadContext* con
 				if (!textures.contains(filepath)) {
 					// テクスチャの読み込み
 					textures[filepath] = std::make_shared<Texture>();
-					textures[filepath]->Load(context, directory / filepath);
+					textures[filepath]->Load(context, directory / filepath, Texture::Encoding::Intensity);
 				}
 
 				// データの保存
@@ -433,7 +438,7 @@ void Model::LoadMaterial(const aiScene* aiScene, const DirectXThreadContext* con
 				if (!textures.contains(filepath)) {
 					// テクスチャの読み込み
 					textures[filepath] = std::make_shared<Texture>();
-					textures[filepath]->Load(context, directory / filepath);
+					textures[filepath]->Load(context, directory / filepath, Texture::Encoding::Intensity);
 				}
 
 				// データの保存
@@ -450,11 +455,27 @@ void Model::LoadMaterial(const aiScene* aiScene, const DirectXThreadContext* con
 				if (!textures.contains(filepath)) {
 					// テクスチャの読み込み
 					textures[filepath] = std::make_shared<Texture>();
-					textures[filepath]->Load(context, directory / filepath);
+					textures[filepath]->Load(context, directory / filepath, Texture::Encoding::Intensity);
 				}
 
 				// データの保存
 				material.textures_[static_cast<uint8_t>(AssimpMaterial::TextureType::Metallic)] = textures[filepath];
+			}
+
+			// ambient occlusionの取得
+			if (aiMaterial->GetTextureCount(aiTextureType_AMBIENT_OCCLUSION) != 0) {
+				aiString aiTextureFilepath;
+				aiMaterial->GetTexture(aiTextureType_AMBIENT_OCCLUSION, 0, &aiTextureFilepath);
+				const std::filesystem::path filepath = aiTextureFilepath.C_Str();
+
+				if (!textures.contains(filepath)) {
+					// テクスチャの読み込み
+					textures[filepath] = std::make_shared<Texture>();
+					textures[filepath]->Load(context, directory / filepath, Texture::Encoding::Intensity);
+				}
+
+				// データの保存
+				material.textures_[static_cast<uint8_t>(AssimpMaterial::TextureType::AmbientOcclusion)] = textures[filepath];
 			}
 		}
 

@@ -58,6 +58,7 @@ public:
 		enum class TextureType : uint8_t {
 			Diffuse,
 			Bump,
+			AmbientOcclusion,
 			Roughness,
 			Metallic,
 		};
