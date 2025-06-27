@@ -65,6 +65,11 @@ public:
 
 	std::shared_ptr<BaseAsset> GetAsset(const std::type_info* type, const std::filesystem::path& filepath) const;
 
+	//* storage foreach *//
+
+	template <BaseAssetConcept _Ty>
+	void ForEachCompleted(const std::function<void(_Ty*)>& func) const;
+
 	//* registry option *//
 
 	bool Contains(const std::filesystem::path& filepath) const;
@@ -145,6 +150,21 @@ AssetObserver<_Ty> AssetStorage::TryImport(const std::filesystem::path& filepath
 	}
 
 	return AssetStorage::Import<_Ty>(filepath, param);
+}
+
+template<BaseAssetConcept _Ty>
+inline void AssetStorage::ForEachCompleted(const std::function<void(_Ty*)>& func) const {
+	constexpr const std::type_info* type = &typeid(_Ty);
+
+	if (!storage_.contains(type)) {
+		return;
+	}
+
+	for (const auto& [filepath, asset] : storage_.at(type)) {
+		if (asset->IsComplete()) {
+			func(Cast<_Ty>(asset).get());
+		}
+	}
 }
 
 template <BaseAssetConcept _Ty>

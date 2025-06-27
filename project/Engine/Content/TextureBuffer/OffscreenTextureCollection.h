@@ -23,6 +23,8 @@ public:
 
 	void RegisterTexture(const std::string& name, std::unique_ptr<BaseOffscreenTexture>&& texture);
 
+	const DxObject::Descriptor& GetDescriptorSRV(const std::string& name) const;
+
 	const D3D12_GPU_DESCRIPTOR_HANDLE& GetGPUHandleSRV(const std::string& name) const;
 
 private:

@@ -32,6 +32,8 @@ public:
 
 	ID3D12Resource* GetResource() const { return resource_.Get(); }
 
+	const DxObject::Descriptor& GetDescriptorSRV() const { return descriptorSRV_; }
+
 	const D3D12_GPU_DESCRIPTOR_HANDLE& GetGPUHandleSRV() const { return descriptorSRV_.GetGPUHandle(); }
 
 	const Vector2ui& GetSize() const { return size_; }

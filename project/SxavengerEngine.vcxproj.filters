@@ -65,21 +65,15 @@
     <ClCompile Include="Engine\Content\Animation\Skeleton.cpp" />
     <ClCompile Include="Engine\Content\Animation\SkinCluster.cpp" />
     <ClCompile Include="Engine\Content\InputGeometry\InputMesh.cpp" />
-    <ClCompile Include="Engine\Asset\Assets\BaseAsset.cpp" />
-    <ClCompile Include="Engine\Asset\Assets\Texture\Texture.cpp" />
-    <ClCompile Include="Engine\Asset\Assets\Texture\AssetTexture.cpp" />
     <ClCompile Include="Engine\Component\Components\BaseComponent.cpp" />
     <ClCompile Include="Engine\Component\Components\ComponentStorage.cpp" />
     <ClCompile Include="Engine\Component\Entity\MonoBehaviour.cpp" />
     <ClCompile Include="Engine\Component\Entity\MonoBehaviourContainer.cpp" />
     <ClCompile Include="Engine\Component\Components\Transform\TransformComponent.cpp" />
     <ClCompile Include="Engine\Component\Components\Camera\CameraComponent.cpp" />
-    <ClCompile Include="Engine\Asset\Assets\Material\Material.cpp" />
     <ClCompile Include="Lib\Adapter\Json\JsonHandler.cpp" />
     <ClCompile Include="Engine\Component\Components\MeshRenderer\MeshRendererComponent.cpp" />
     <ClCompile Include="Engine\Component\Components\Armature\ArmatureComponent.cpp" />
-    <ClCompile Include="Engine\Asset\Assets\Model\AssetModel.cpp" />
-    <ClCompile Include="Engine\Asset\Assets\Model\Model.cpp" />
     <ClCompile Include="Engine\Component\Components\MeshRenderer\SkinnedMeshRendererComponent.cpp" />
     <ClCompile Include="Engine\Content\Animation\SkinningPipeline.cpp" />
     <ClCompile Include="Engine\Component\Components\Collider\ColliderComponent.cpp" />
@@ -89,11 +83,7 @@
     <ClCompile Include="Engine\Component\Components\Collider\CollisionManager.cpp" />
     <ClCompile Include="Engine\Component\Components\Light\Punctual\DirectionalLightComponent.cpp" />
     <ClCompile Include="Engine\Component\Components\Light\LightCommon.cpp" />
-    <ClCompile Include="Engine\Asset\Assets\Blob\AssetBlob.cpp" />
     <ClCompile Include="Engine\Component\Components\SpriteRenderer\SpriteRendererComponent.cpp" />
-    <ClCompile Include="Engine\Asset\Assets\Animator\Animator.cpp" />
-    <ClCompile Include="Engine\Asset\Assets\Animator\AssetAnimator.cpp" />
-    <ClCompile Include="Engine\Asset\SxavengerAsset.cpp" />
     <ClCompile Include="Engine\GameLoop\SxavengerEngineGameLoop.cpp" />
     <ClCompile Include="Engine\Content\TextureBuffer\BaseOffscreenTexture.cpp" />
     <ClCompile Include="Engine\Content\TextureBuffer\DepthTexture.cpp" />
@@ -141,7 +131,6 @@
     <ClCompile Include="Demo\Particle\SmokeParticle.cpp" />
     <ClCompile Include="Demo\Object\Stage.cpp" />
     <ClCompile Include="Demo\Particle\RainParticle.cpp" />
-    <ClCompile Include="Engine\Asset\AssetStorage.cpp" />
     <ClCompile Include="Engine\Component\Components\PostProcessLayer\PostProcessLayerComponent.cpp" />
     <ClCompile Include="Demo\GameLoop\PreviewGameLoop.cpp" />
     <ClCompile Include="Engine\Render\Common\FProcessTexture.cpp" />
@@ -173,6 +162,17 @@
     <ClCompile Include="Engine\Preview\Asset\UBaseAsset.cpp" />
     <ClCompile Include="Engine\Preview\Asset\UAssetStaticMesh.cpp" />
     <ClCompile Include="Engine\Preview\Asset\UAssetMaterial.cpp" />
+    <ClCompile Include="Engine\Asset\Assets\BaseAsset.cpp" />
+    <ClCompile Include="Engine\Asset\Assets\Texture\AssetTexture.cpp" />
+    <ClCompile Include="Engine\Asset\Assets\Texture\Texture.cpp" />
+    <ClCompile Include="Engine\Content\Material\Material.cpp" />
+    <ClCompile Include="Engine\Asset\Assets\Model\AssetModel.cpp" />
+    <ClCompile Include="Engine\Asset\Assets\Model\Model.cpp" />
+    <ClCompile Include="Engine\Asset\AssetStorage.cpp" />
+    <ClCompile Include="Engine\Asset\SxavengerAsset.cpp" />
+    <ClCompile Include="Engine\Asset\Assets\Blob\AssetBlob.cpp" />
+    <ClCompile Include="Engine\Asset\Assets\Animator\Animator.cpp" />
+    <ClCompile Include="Engine\Asset\Assets\Animator\AssetAnimator.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\System\Window\Window.h" />
@@ -255,21 +255,15 @@
     <ClInclude Include="Engine\Content\InputAssembler\LineInputAssembler.h" />
     <ClInclude Include="Engine\Content\InputAssembler\TriangleInputAssembler.h" />
     <ClInclude Include="Engine\Content\InputGeometry\InputMesh.h" />
-    <ClInclude Include="Engine\Asset\Assets\BaseAsset.h" />
-    <ClInclude Include="Engine\Asset\Assets\Texture\Texture.h" />
-    <ClInclude Include="Engine\Asset\Assets\Texture\AssetTexture.h" />
     <ClInclude Include="Engine\Component\Components\BaseComponent.h" />
     <ClInclude Include="Engine\Component\Components\ComponentStorage.h" />
     <ClInclude Include="Engine\Component\Entity\MonoBehaviour.h" />
     <ClInclude Include="Engine\Component\Entity\MonoBehaviourContainer.h" />
     <ClInclude Include="Engine\Component\Components\Transform\TransformComponent.h" />
     <ClInclude Include="Engine\Component\Components\Camera\CameraComponent.h" />
-    <ClInclude Include="Engine\Asset\Assets\Material\Material.h" />
     <ClInclude Include="Lib\Adapter\Json\JsonHandler.h" />
     <ClInclude Include="Engine\Component\Components\MeshRenderer\MeshRendererComponent.h" />
     <ClInclude Include="Engine\Component\Components\Armature\ArmatureComponent.h" />
-    <ClInclude Include="Engine\Asset\Assets\Model\AssetModel.h" />
-    <ClInclude Include="Engine\Asset\Assets\Model\Model.h" />
     <ClInclude Include="Engine\Component\Components\MeshRenderer\SkinnedMeshRendererComponent.h" />
     <ClInclude Include="Engine\Content\Animation\SkinningPipeline.h" />
     <ClInclude Include="Engine\Component\Components\Collider\ColliderComponent.h" />
@@ -279,12 +273,7 @@
     <ClInclude Include="Engine\Component\Components\Collider\CollisionManager.h" />
     <ClInclude Include="Engine\Component\Components\Light\Punctual\DirectionalLightComponent.h" />
     <ClInclude Include="Engine\Component\Components\Light\LightCommon.h" />
-    <ClInclude Include="Engine\Asset\Assets\Blob\AssetBlob.h" />
     <ClInclude Include="Engine\Component\Components\SpriteRenderer\SpriteRendererComponent.h" />
-    <ClInclude Include="Engine\Asset\Observer\AssetObserver.h" />
-    <ClInclude Include="Engine\Asset\Assets\Animator\AssetAnimator.h" />
-    <ClInclude Include="Engine\Asset\Assets\Animator\Animator.h" />
-    <ClInclude Include="Engine\Asset\SxavengerAsset.h" />
     <ClInclude Include="Engine\GameLoop\SxavengerEngineGameLoop.h" />
     <ClInclude Include="Engine\Content\TextureBuffer\BaseOffscreenTexture.h" />
     <ClInclude Include="Engine\Content\TextureBuffer\DepthTexture.h" />
@@ -332,7 +321,6 @@
     <ClInclude Include="Demo\Particle\SmokeParticle.h" />
     <ClInclude Include="Demo\Object\Stage.h" />
     <ClInclude Include="Demo\Particle\RainParticle.h" />
-    <ClInclude Include="Engine\Asset\AssetStorage.h" />
     <ClInclude Include="Lib\Sxl\OptimizedPathMap.h" />
     <ClInclude Include="Engine\Component\Components\PostProcessLayer\PostProcessLayerComponent.h" />
     <ClInclude Include="Engine\Component\Components\PostProcessLayer\BasePostProcess.h" />
@@ -369,6 +357,18 @@
     <ClInclude Include="Engine\Preview\Asset\UAssetStaticMesh.h" />
     <ClInclude Include="Engine\Preview\Asset\UAssetMaterial.h" />
     <ClInclude Include="Demo\GameLoop\PreviewGameLoop.h" />
+    <ClInclude Include="Engine\Asset\Assets\BaseAsset.h" />
+    <ClInclude Include="Engine\Asset\Assets\Texture\AssetTexture.h" />
+    <ClInclude Include="Engine\Asset\Assets\Texture\Texture.h" />
+    <ClInclude Include="Engine\Content\Material\Material.h" />
+    <ClInclude Include="Engine\Asset\Assets\Model\AssetModel.h" />
+    <ClInclude Include="Engine\Asset\Assets\Model\Model.h" />
+    <ClInclude Include="Engine\Asset\AssetStorage.h" />
+    <ClInclude Include="Engine\Asset\Observer\AssetObserver.h" />
+    <ClInclude Include="Engine\Asset\SxavengerAsset.h" />
+    <ClInclude Include="Engine\Asset\Assets\Blob\AssetBlob.h" />
+    <ClInclude Include="Engine\Asset\Assets\Animator\AssetAnimator.h" />
+    <ClInclude Include="Engine\Asset\Assets\Animator\Animator.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

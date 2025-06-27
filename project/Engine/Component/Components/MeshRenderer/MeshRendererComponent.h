@@ -9,7 +9,7 @@
 
 //* engine
 #include <Engine/Content/InputGeometry/InputMesh.h>
-#include <Engine/Asset/Assets/Material/Material.h>
+#include <Engine/Content/Material/Material.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // MeshRendererComponent class

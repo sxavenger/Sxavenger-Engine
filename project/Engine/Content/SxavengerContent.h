@@ -29,6 +29,8 @@ public:
 
 	static void RegisterTexture(const std::string& name, std::unique_ptr<BaseOffscreenTexture>&& texture);
 
+	static const DxObject::Descriptor& GetDescriptorSRV(const std::string& name);
+
 	static const D3D12_GPU_DESCRIPTOR_HANDLE& GetGPUHandleSRV(const std::string& name);
 
 	//* skinning pipeline option *//

@@ -3,8 +3,8 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
-//* external
-#include <imgui.h>
+//* engine
+#include <Engine/Content/SxavengerContent.h>
 
 //////////////////////////////////////////////////////////////////////////////////////////////
 // AssetTexture class methods
@@ -18,14 +18,27 @@ void AssetTexture::Load(const DirectXThreadContext* context) {
 		encoding = std::any_cast<Texture::Encoding>(param_);
 	}
 
-	Texture::Load(context, filepath_, encoding);
+	texture_.Load(context, filepath_, encoding);
 }
 
 void AssetTexture::ShowInspector() {
 	BaseAsset::ShowInspector();
+}
 
-	ImGui::Image(
-		Texture::GetGPUHandleSRV().ptr,
-		{ static_cast<float>(Texture::GetSize().x), static_cast<float>(Texture::GetSize().y) }
-	);
+const DxObject::Descriptor& AssetTexture::GetDescriptorSRV() const {
+	if (!BaseAsset::IsComplete()) { //!< loadが完了していない場合
+		return SxavengerContent::GetDescriptorSRV("white1x1");
+		// todo: ロード中のtextureを変更
+	}
+
+	return texture_.GetDescriptorSRV();
+}
+
+const D3D12_GPU_DESCRIPTOR_HANDLE& AssetTexture::GetGPUHandleSRV() const {
+	return GetDescriptorSRV().GetGPUHandle();
+}
+
+const Texture& AssetTexture::GetTexture() const {
+	BaseAsset::WaitComplete();
+	return texture_;
 }

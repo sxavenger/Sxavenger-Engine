@@ -3,16 +3,12 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
-//* asset
-#include "../Texture/Texture.h"
-
 //* engine
 #include <Engine/Content/InputGeometry/InputMesh.h>
 #include <Engine/Content/Animation/JointWeight.h>
 #include <Engine/Content/Animation/BornNode.h>
 #include <Engine/Content/Animation/Skeleton.h>
-#include <Engine/Asset/Assets/Material/Material.h>
-#include <Engine/Component/Entity/MonoBehaviour.h>
+#include <Engine/Content/Material/Material.h>
 
 //* external
 #include <assimp/Importer.hpp>
@@ -48,8 +44,7 @@ public:
 	////////////////////////////////////////////////////////////////////////////////////////////
 	// AssimpMaterial structure
 	////////////////////////////////////////////////////////////////////////////////////////////
-	struct AssimpMaterial
-		: public Material {
+	struct AssimpMaterial {
 	public:
 
 		////////////////////////////////////////////////////////////////////////////////////////////
@@ -69,13 +64,17 @@ public:
 		// public methods
 		//=========================================================================================
 
-		void Create();
+		const std::optional<std::filesystem::path>& GetTexture(TextureType type) const { return textures[static_cast<uint8_t>(type)]; }
 
 		//=========================================================================================
 		// public variables
 		//=========================================================================================
 
-		std::array<std::shared_ptr<Texture>, static_cast<uint8_t>(TextureType::Metallic) + 1> textures_;
+		//* texture parameter *//
+
+		std::array<std::optional<std::filesystem::path>, static_cast<uint8_t>(TextureType::Metallic) + 1> textures;
+
+		//* value parameter *//
 
 		Color3f color   = kWhite3<>;
 		float roughness = 1.0f;
@@ -97,19 +96,9 @@ public:
 	//=========================================================================================
 
 	Model()  = default;
-	~Model() { Term(); }
+	~Model() = default;
 
-	void Load(const DirectXThreadContext* context, const std::filesystem::path& filepath, uint32_t assimpOption = kDefaultAssimpOption_);
-
-	void Term();
-
-	//* material option *//
-
-	const MaterialContainer& GetMaterials() const { return materials_; }
-	MaterialContainer& GetMaterials() { return materials_; }
-
-	const AssimpMaterial& GetMaterial(uint32_t index) const;
-	AssimpMaterial& GetMaterial(uint32_t index);
+	void Load(const std::filesystem::path& filepath, uint32_t assimpOption = kDefaultAssimpOption_);
 
 	//* meshes option *//
 
@@ -117,28 +106,19 @@ public:
 	MeshContainer& GetMeshes() { return meshes_; }
 
 	const AssimpMesh& GetMesh(uint32_t index) const;
+	AssimpMesh& GetMesh(uint32_t index);
 
-	//* MonoBehavior option *//
+	//* materials option *//
 
-	std::unique_ptr<MonoBehaviour> CreateStaticMeshBehaviour(const std::string& name = "static mesh");
+	const MaterialContainer& GetMaterials() const { return materials_; }
 
-	void CreateStaticMeshBehaviour(MonoBehaviour* root);
-
-	std::unique_ptr<MonoBehaviour> CreateStaticNodeMeshBehaviour(const std::string& name = "static node mesh");
-
-	void CreateStaticNodeMeshBehaviour(MonoBehaviour* root);
-
-	std::unique_ptr<MonoBehaviour> CreateSkinnedMeshBehaviour(const std::string& name = "skinned mesh");
-
-	void CreateSkinnedMeshBehaviour(MonoBehaviour* root);
-
-	//* root option *//
+	//* node option *//
 
 	const BornNode& GetRoot() const { return root_; }
 
 	const Skeleton& GetSkeleton() const { return skeleton_; }
 
-	//* parameter option *//
+	//* option *//
 
 	static const uint32_t GetDefaultAssimpOption() { return kDefaultAssimpOption_; }
 
@@ -156,30 +136,35 @@ private:
 
 	//* parameter *//
 
-	static const uint32_t kDefaultAssimpOption_;
+	static inline const uint32_t kDefaultAssimpOption_
+		= aiProcess_FlipWindingOrder
+		| aiProcess_FlipUVs
+		| aiProcess_Triangulate
+		| aiProcess_CalcTangentSpace
+		| aiProcess_ImproveCacheLocality;
 
 	//=========================================================================================
 	// private methods
 	//=========================================================================================
 
-	//* sub methods *//
+	//* helper convert methods *//
 
 	static Vector3f ConvertNormal(const aiVector3D& aiVector);
 	static Vector3f ConvertPosition3(const aiVector3D& aiVector);
 	static Vector4f ConvertPosition4(const aiVector3D& aiVector);
 	static Quaternion ConvertQuaternion(const aiQuaternion& aiQuaternion);
 
-	//* mesh methods *//
+	static std::optional<std::filesystem::path> GetTextureFilepath(const aiMaterial* aiMaterial, aiTextureType type, const std::filesystem::path& directory);
 
-	void LoadMesh(const aiScene* aiScene);
+	//* load helper methods *//
 
-	void LoadMaterial(const aiScene* aiScene, const DirectXThreadContext* context, const std::filesystem::path& directory);
+	void LoadMesh(const aiMesh* aiMesh, AssimpMesh& mesh);
+	void LoadMeshes(const aiScene* aiScene);
+
+	void LoadMaterial(const aiMaterial* aiMaterial, const std::filesystem::path& directory, AssimpMaterial& material);
+	void LoadMaterials(const aiScene* aiScene, const std::filesystem::path& directory);
 
 	BornNode ReadNode(aiNode* node);
 
-	void CreateSkeleton();
-
-	bool CheckMeshIndex(uint32_t meshIndex) const;
-	bool CheckMaterialIndex(uint32_t materialIndex) const;
 
 };

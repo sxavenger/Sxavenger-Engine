@@ -32,8 +32,8 @@ void SkyLightComponent::SpecularParameter::SetTexture(uint32_t _index, uint32_t 
 }
 
 void SkyLightComponent::SpecularParameter::SetTexture(const AssetObserver<AssetTexture>& texture) {
-	index     = texture.WaitGet()->GetDescriptorSRV().GetIndex();
-	miplevels = texture.WaitGet()->GetMetadata().miplevels;
+	index     = texture.WaitGet()->GetTexture().GetDescriptorSRV().GetIndex();
+	miplevels = texture.WaitGet()->GetTexture().GetMetadata().miplevels;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////

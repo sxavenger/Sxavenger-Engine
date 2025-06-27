@@ -27,6 +27,10 @@ private:
 	// private methods
 	//=========================================================================================
 
+	//* helper *//
+
 	void CreateWhite1x1();
+
+	void UpdateMaterials();
 
 };

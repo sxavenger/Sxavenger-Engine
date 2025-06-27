@@ -45,6 +45,7 @@ void SxavengerEngineGameLoop::Init(GameLoop::Context* context) {
 		FMainRender::GetInstance()->GetScene()->SetupStateObject();
 		FMainRender::GetInstance()->GetScene()->SetupLightContainer();
 		SxavengerSystem::TransitionAllocator();
+		UpdateMaterials();
 		SxavengerSystem::RecordLap("update [engine]");
 	});
 
@@ -92,4 +93,10 @@ void SxavengerEngineGameLoop::CreateWhite1x1() {
 	SxavengerSystem::ExecuteAllAllocator();
 
 	SxavengerContent::RegisterTexture("white1x1", std::move(white1x1));
+}
+
+void SxavengerEngineGameLoop::UpdateMaterials() {
+	sAssetStorage->ForEachCompleted<AssetModel>([](AssetModel* asset) {
+		asset->UpdateMaterials();
+	});
 }

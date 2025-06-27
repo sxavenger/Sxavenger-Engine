@@ -8,6 +8,11 @@ void OffscreenTextureCollection::RegisterTexture(const std::string& name, std::u
 	textures_[name] = std::move(texture);
 }
 
+const DxObject::Descriptor& OffscreenTextureCollection::GetDescriptorSRV(const std::string& name) const {
+	Exception::Assert(textures_.contains(name), "texture is not found. name: " + name);
+	return textures_.at(name)->GetDescriptorSRV();
+}
+
 const D3D12_GPU_DESCRIPTOR_HANDLE& OffscreenTextureCollection::GetGPUHandleSRV(const std::string& name) const {
 	Exception::Assert(textures_.contains(name), "texture is not found. name: " + name);
 	return textures_.at(name)->GetGPUHandleSRV();

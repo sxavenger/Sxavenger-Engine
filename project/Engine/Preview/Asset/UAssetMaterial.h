@@ -8,7 +8,7 @@
 #include "UAssetTexture.h"
 
 //* engine
-#include <Engine/Asset/Assets/Material/Material.h> //!< 移動予定
+#include <Engine/Content/Material/Material.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // UAssetMaterial class

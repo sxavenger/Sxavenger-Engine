@@ -16,21 +16,19 @@
 #include <memory>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
+// AssetCondition enum class
+////////////////////////////////////////////////////////////////////////////////////////////
+enum class AssetCondition : uint8_t {
+	UnRegistered, //!< 未登録
+	Expired,      //!< 期限切れ
+	Valid         //!< 有効
+};
+
+////////////////////////////////////////////////////////////////////////////////////////////
 // AssetObserver class
 ////////////////////////////////////////////////////////////////////////////////////////////
 template <BaseAssetConcept T>
 class AssetObserver {
-public:
-
-	////////////////////////////////////////////////////////////////////////////////////////////
-	// Condition enum class
-	////////////////////////////////////////////////////////////////////////////////////////////
-	enum class Condition : uint8_t {
-		UnRegistered, //!< 未登録
-		Expired,      //!< 期限切れ
-		Valid         //!< 有効
-	};
-
 public:
 
 	//=========================================================================================
@@ -45,7 +43,7 @@ public:
 
 	void Reload(); //!< todo: 関数名変更
 
-	Condition GetCondition() const;
+	AssetCondition GetCondition() const;
 
 	//* accessor *//
 
@@ -102,36 +100,36 @@ inline void AssetObserver<T>::Reload() {
 }
 
 template <BaseAssetConcept T>
-inline AssetObserver<T>::Condition AssetObserver<T>::GetCondition() const {
+inline AssetCondition AssetObserver<T>::GetCondition() const {
 	if (!asset_.has_value()) {
-		return Condition::UnRegistered;
+		return AssetCondition::UnRegistered;
 	}
 
 	if (asset_.value().expired()) {
-		return Condition::Expired;
+		return AssetCondition::Expired;
 	}
 
-	return Condition::Valid;
+	return AssetCondition::Valid;
 }
 
 template <BaseAssetConcept T>
 inline bool AssetObserver<T>::IsRegistered() const {
-	return GetCondition() != Condition::UnRegistered;
+	return GetCondition() != AssetCondition::UnRegistered;
 }
 
 template <BaseAssetConcept T>
 inline bool AssetObserver<T>::IsExpired() const {
-	Condition condition = GetCondition();
-	Exception::Assert(condition != Condition::UnRegistered, "asset is not registered.");
-	return condition == Condition::Expired;
+	AssetCondition condition = GetCondition();
+	Exception::Assert(condition != AssetCondition::UnRegistered, "asset is not registered.");
+	return condition == AssetCondition::Expired;
 }
 
 template <BaseAssetConcept T>
 inline std::shared_ptr<T> AssetObserver<T>::Acquire() {
-	Condition condition = GetCondition();
-	Exception::Assert(condition != Condition::UnRegistered, "asset is not registered.");
+	AssetCondition condition = GetCondition();
+	Exception::Assert(condition != AssetCondition::UnRegistered, "asset is not registered.");
 
-	if (condition == Condition::Expired) {
+	if (condition == AssetCondition::Expired) {
 		Reload();
 	}
 
@@ -147,9 +145,9 @@ inline std::shared_ptr<T> AssetObserver<T>::WaitAcquire() {
 
 template <BaseAssetConcept T>
 inline std::shared_ptr<T> AssetObserver<T>::Get() const {
-	Condition condition = GetCondition();
-	Exception::Assert(condition != Condition::UnRegistered, "asset is not registered.");
-	Exception::Assert(condition != Condition::Expired,      "asset is expired.");
+	AssetCondition condition = GetCondition();
+	Exception::Assert(condition != AssetCondition::UnRegistered, "asset is not registered.");
+	Exception::Assert(condition != AssetCondition::Expired,      "asset is expired.");
 
 	return (*asset_).lock();
 }

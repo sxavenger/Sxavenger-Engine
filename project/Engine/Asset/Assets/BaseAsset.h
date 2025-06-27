@@ -32,6 +32,8 @@ public:
 	BaseAsset()          = default;
 	virtual ~BaseAsset() = default;
 
+	//* async task option *//
+
 	virtual void Load(_MAYBE_UNUSED const DirectXThreadContext* context) = 0;
 
 	virtual AsyncExecution GetAsyncExecution() const = 0;
@@ -40,17 +42,15 @@ public:
 
 	//* state option *//
 
-	bool IsComplete() const { return AsyncTask::GetStatus() == AsyncTask::Status::Completed; }
+	bool IsComplete() const { return AsyncTask::IsCompleted(); }
 
 	void WaitComplete() const;
 
-	//* filepath option *//
+	//* parameter option *//
 
 	void SetFilepath(const std::filesystem::path& filepath);
 
 	const std::filesystem::path& GetFilepath() const { return filepath_; }
-
-	//* param option *//
 
 	void SetParam(const std::any& param) { param_ = param; }
 
@@ -65,6 +65,8 @@ protected:
 	//=========================================================================================
 	// protected variables
 	//=========================================================================================
+
+	//* parameter *//
 
 	std::filesystem::path filepath_;
 	std::any param_;

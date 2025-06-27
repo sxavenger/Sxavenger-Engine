@@ -17,8 +17,8 @@ void FLUTTexture::Create(const AssetObserver<AssetTexture>& texture, const Vecto
 	// 引数の保存
 	texture_ = texture.WaitGet();
 
-	CreateResource(texture_->GetSize(), tile);
-	CreateBuffer(texture_->GetSize(), tile);
+	CreateResource(texture_->GetTexture().GetSize(), tile);
+	CreateBuffer(texture_->GetTexture().GetSize(), tile);
 }
 
 void FLUTTexture::Dispatch(const DirectXThreadContext* context) {
@@ -36,7 +36,7 @@ void FLUTTexture::Dispatch(const DirectXThreadContext* context) {
 		FRenderCoreProcess::CompositeType::ConvertLUTTexture, context, parameter
 	);
 
-	FRenderCore::GetInstance()->GetProcess()->Dispatch(context, texture_->GetSize());
+	FRenderCore::GetInstance()->GetProcess()->Dispatch(context, texture_->GetTexture().GetSize());
 }
 
 void FLUTTexture::CreateResource(const Vector2ui& size, const Vector2ui& tile) {

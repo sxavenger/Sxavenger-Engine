@@ -24,6 +24,10 @@ void SxavengerContent::RegisterTexture(const std::string& name, std::unique_ptr<
 	collection_->RegisterTexture(name, std::move(texture));
 }
 
+const DxObject::Descriptor& SxavengerContent::GetDescriptorSRV(const std::string& name) {
+	return collection_->GetDescriptorSRV(name);
+}
+
 const D3D12_GPU_DESCRIPTOR_HANDLE& SxavengerContent::GetGPUHandleSRV(const std::string& name) {
 	return collection_->GetGPUHandleSRV(name);
 }
