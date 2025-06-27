@@ -54,7 +54,9 @@ private:
 
 	void ShowHierarchyWindow();
 
-	//* sub method *//
+	//* helper method *//
+
+	void ForEachBehaviourHierarchy(const MonoBehaviour::Hierarchy& hierarchy, const std::function<void(MonoBehaviour*)>& function);
 
 	void HierarchySelectable(MonoBehaviour* behaviour);
 

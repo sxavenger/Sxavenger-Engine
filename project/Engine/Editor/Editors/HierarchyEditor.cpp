@@ -60,9 +60,11 @@ void HierarchyEditor::ShowHierarchyWindow() {
 
 	// hierarchyの表示
 	ImGui::PushStyleVarY(ImGuiStyleVar_ItemSpacing, 0);
+
 	for (auto& behaviour : sMonoBehaviourContainer->GetContainer()) {
 		HierarchySelectable(behaviour);
 	}
+
 	ImGui::PopStyleVar();
 
 	{
@@ -77,7 +79,7 @@ void HierarchyEditor::ShowHierarchyWindow() {
 
 		// InvisibleButton をウィンドウ内部の描画領域全体に敷く
 		ImGui::SetCursorScreenPos(contentPos);
-		ImGui::InvisibleButton("##DropTarget", contentSize);
+		ImGui::InvisibleButton("## DropTarget", contentSize);
 
 		DragAndDropTarget();
 	}
@@ -87,6 +89,24 @@ void HierarchyEditor::ShowHierarchyWindow() {
 
 void HierarchyEditor::LateUpdate() {
 	sSceneObjects->Update();
+}
+
+void HierarchyEditor::ForEachBehaviourHierarchy(const MonoBehaviour::Hierarchy& hierarchy, const std::function<void(MonoBehaviour*)>& function) {
+	// child持ちのbehaviour
+	for (auto& child : hierarchy) {
+		auto ptr = std::visit(MonoBehaviour::GetPtrVisitor{}, child);
+		if (ptr->HasChild()) {
+			function(ptr);
+		}
+	}
+
+	// rootのbehaviour
+	for (auto& child : hierarchy) {
+		auto ptr = std::visit(MonoBehaviour::GetPtrVisitor{}, child);
+		if (!ptr->HasChild()) {
+			function(ptr);
+		}
+	}
 }
 
 void HierarchyEditor::HierarchySelectable(MonoBehaviour* behaviour) {
@@ -137,9 +157,13 @@ void HierarchyEditor::HierarchySelectable(MonoBehaviour* behaviour) {
 	}
 
 	if (isOpen) {
-		for (auto& child : behaviour->GetChildren()) {
+		ForEachBehaviourHierarchy(behaviour->GetChildren(), [this](MonoBehaviour* child) {
+			HierarchySelectable(child);
+		});
+
+		/*for (auto& child : behaviour->GetChildren()) {
 			HierarchySelectable(std::visit(MonoBehaviour::GetPtrVisitor{}, child));
-		}
+		}*/
 
 		ImGui::TreePop();
 	}

@@ -155,6 +155,8 @@ public:
 
 	const Hierarchy& GetChildren() const { return children_; }
 
+	bool HasChild() const { return !children_.empty(); }
+
 	//* inspector option *//
 
 	virtual void ShowInspector() override;
