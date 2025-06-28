@@ -7,7 +7,7 @@
 void UAssetTexture::Load(const DirectXThreadContext* context) {
 	uuid_ = Uuid::Generate();
 	name_ = filepath_.stem().generic_string();
-	texture_.Load(context, filepath_, Texture::Encoding::Lightness);
+	texture_.Load(context, filepath_, Texture::Option{});
 }
 
 json UAssetTexture::Serialize() const {

@@ -22,9 +22,9 @@ void Texture::Metadata::Assign(const DirectX::TexMetadata& metadata) {
 // Texture class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-void Texture::Load(const DirectXThreadContext* context, const std::filesystem::path& filepath, Encoding encoding) {
+void Texture::Load(const DirectXThreadContext* context, const std::filesystem::path& filepath, const Option& option) {
 
-	DirectX::ScratchImage image = LoadTexture(filepath, encoding);
+	DirectX::ScratchImage image = LoadTexture(filepath, option);
 	const auto& metadata        = image.GetMetadata();
 
 	// deviceの取得
@@ -66,88 +66,222 @@ void Texture::Load(const DirectXThreadContext* context, const std::filesystem::p
 
 	context->ExecuteAllAllocators();
 	Logger::EngineThreadLog("texture loaded. filepath: " + filepath.generic_string());
+
 }
 
 void Texture::Term() {
 	descriptorSRV_.Delete();
 }
 
-DirectX::ScratchImage Texture::LoadTexture(const std::filesystem::path& filepath, Encoding encoding) {
+Texture::Encoding Texture::GetFormatEncoding(DXGI_FORMAT format) {
+	return DirectX::IsSRGB(format) ? Encoding::Lightness : Encoding::Intensity;
+}
+
+DirectX::ScratchImage Texture::LoadFromDDSFile(const std::filesystem::path& filepath, const Option& option) {
 
 	DirectX::ScratchImage image = {};
 
-	HRESULT hr = {};
-
-	const std::filesystem::path& extension = filepath.extension();
-
-	if (extension == ".dds") { //!< filenameが".dds"で終わっている場合
-		hr = DirectX::LoadFromDDSFile(
-			filepath.generic_wstring().c_str(),
-			DirectX::DDS_FLAGS_NONE,
-			nullptr,
-			image
-		);
-
-	} else if (extension == ".hdr") { //!< filenameが".hdr"で終わっている場合
-		hr = DirectX::LoadFromHDRFile(
-			filepath.generic_wstring().c_str(),
-			nullptr,
-			image
-		);
-
-	} else if (extension == ".tga") {
-		hr = DirectX::LoadFromTGAFile(
-			filepath.generic_wstring().c_str(),
-			nullptr,
-			image
-		);
-
-	} else {
-
-		DirectX::WIC_FLAGS flags = DirectX::WIC_FLAGS_NONE;
-
-		if (encoding == Encoding::Intensity) {
-			flags = DirectX::WIC_FLAGS_FORCE_RGB;
-
-		} else if (encoding == Encoding::Lightness) {
-			flags = DirectX::WIC_FLAGS_FORCE_SRGB;
-		}
-
-
-		hr = DirectX::LoadFromWICFile(
-			filepath.generic_wstring().c_str(),
-			flags,
-			nullptr,
-			image
-		);
-	}
-
+	// ddsファイルの読み込み
+	auto hr = DirectX::LoadFromDDSFile(
+		filepath.generic_wstring().c_str(),
+		DirectX::DDS_FLAGS_NONE,
+		nullptr,
+		image
+	);
 	Exception::Assert(SUCCEEDED(hr), "texture load failed. filepath: " + filepath.generic_string());
+
+	// encodingの設定と一致しているか確認
+	if (option.encoding != GetFormatEncoding(image.GetMetadata().format)) {
+		Logger::EngineThreadLog("[Texture]: warning | encoding is mismatched. filepath: " + filepath.generic_string());
+	}
 
 	if (DirectX::IsCompressed(image.GetMetadata().format)) { //!< 圧縮formatかどうか調べる
 		return image;
 	}
 
-	DirectX::ScratchImage mipImage = {};
-
-	DirectX::TEX_FILTER_FLAGS flags = DirectX::TEX_FILTER_DEFAULT;
-
-	if (encoding == Encoding::Lightness) {
-		flags = DirectX::TEX_FILTER_SRGB;
+	if (!option.isGenerateMipmap) {
+		return image; //!< mipmapを生成しない場合はここで終了
 	}
 
 	// mipmapの生成
+	DirectX::ScratchImage mipimage = {};
+
+	DirectX::TEX_FILTER_FLAGS flags = DirectX::TEX_FILTER_DEFAULT;
+
+	if (option.encoding == Encoding::Lightness) {
+		flags = DirectX::TEX_FILTER_SRGB;
+	}
+
 	hr = DirectX::GenerateMipMaps(
 		image.GetImages(),
 		image.GetImageCount(),
 		image.GetMetadata(),
 		flags,
 		0,
-		mipImage
+		mipimage
+	);
+
+	return mipimage;
+	
+}
+
+DirectX::ScratchImage Texture::LoadFromHDRFile(const std::filesystem::path& filepath, const Option& option) {
+
+	DirectX::ScratchImage image = {};
+
+	// hdrファイルの読み込み
+	auto hr = DirectX::LoadFromHDRFile(
+		filepath.generic_wstring().c_str(),
+		nullptr,
+		image
+	);
+	Exception::Assert(SUCCEEDED(hr), "texture load failed. filepath: " + filepath.generic_string());
+
+	// encodingの設定と一致しているか確認
+	if (option.encoding != GetFormatEncoding(image.GetMetadata().format)) {
+		Logger::EngineThreadLog("[Texture]: warning | encoding is mismatched. filepath: " + filepath.generic_string());
+	}
+
+	if (!option.isGenerateMipmap) {
+		return image; //!< mipmapを生成しない場合はここで終了
+	}
+
+	// mipmapの生成
+	DirectX::ScratchImage mipimage = {};
+
+	DirectX::TEX_FILTER_FLAGS flags = DirectX::TEX_FILTER_DEFAULT;
+
+	if (option.encoding == Encoding::Lightness) {
+		flags = DirectX::TEX_FILTER_SRGB;
+	}
+
+	hr = DirectX::GenerateMipMaps(
+		image.GetImages(),
+		image.GetImageCount(),
+		image.GetMetadata(),
+		flags,
+		0,
+		mipimage
 	);
 	Exception::Assert(SUCCEEDED(hr), "mipmaps create failed.");
 
-	return mipImage;
+	return mipimage;
+
+}
+
+DirectX::ScratchImage Texture::LoadFromTGAFile(const std::filesystem::path& filepath, const Option& option) {
+
+	DirectX::ScratchImage image = {};
+
+	// tgaファイルの読み込み
+	auto hr = DirectX::LoadFromTGAFile(
+		filepath.generic_wstring().c_str(),
+		nullptr,
+		image
+	);
+	Exception::Assert(SUCCEEDED(hr), "texture load failed. filepath: " + filepath.generic_string());
+
+	// encodingの設定と一致しているか確認
+	if (option.encoding != GetFormatEncoding(image.GetMetadata().format)) {
+		Logger::EngineThreadLog("[Texture]: warning | encoding is mismatched. filepath: " + filepath.generic_string());
+	}
+
+	if (!option.isGenerateMipmap) {
+		return image; //!< mipmapを生成しない場合はここで終了
+	}
+
+	// mipmapの生成
+	DirectX::ScratchImage mipimage = {};
+
+	DirectX::TEX_FILTER_FLAGS flags = DirectX::TEX_FILTER_DEFAULT;
+
+	if (option.encoding == Encoding::Lightness) {
+		flags = DirectX::TEX_FILTER_SRGB;
+	}
+
+	hr = DirectX::GenerateMipMaps(
+		image.GetImages(),
+		image.GetImageCount(),
+		image.GetMetadata(),
+		flags,
+		0,
+		mipimage
+	);
+	Exception::Assert(SUCCEEDED(hr), "mipmaps create failed.");
+
+	return mipimage;
+}
+
+DirectX::ScratchImage Texture::LoadFromWICFile(const std::filesystem::path& filepath, const Option& option) {
+
+	DirectX::ScratchImage image = {};
+
+	DirectX::WIC_FLAGS flags = DirectX::WIC_FLAGS_NONE;
+
+	if (option.encoding == Encoding::Lightness) {
+		flags = DirectX::WIC_FLAGS_FORCE_SRGB | DirectX::WIC_FLAGS_DEFAULT_SRGB;
+
+	} else if (option.encoding == Encoding::Intensity) {
+		flags = DirectX::WIC_FLAGS_FORCE_RGB;
+	}
+
+	// wicファイルの読み込み
+	auto hr = DirectX::LoadFromWICFile(
+		filepath.generic_wstring().c_str(),
+		flags,
+		nullptr,
+		image
+	);
+	Exception::Assert(SUCCEEDED(hr), "texture load failed. filepath: " + filepath.generic_string());
+
+	// encodingの設定と一致しているか確認
+	if (option.encoding != GetFormatEncoding(image.GetMetadata().format)) {
+		Logger::EngineThreadLog("[Texture]: warning | encoding is mismatched. filepath: " + filepath.generic_string());
+	}
+
+	if (!option.isGenerateMipmap) {
+		return image; //!< mipmapを生成しない場合はここで終了
+	}
+
+	// mipmapの生成
+	DirectX::ScratchImage mipimage = {};
+
+	DirectX::TEX_FILTER_FLAGS mipFlags = DirectX::TEX_FILTER_DEFAULT;
+
+	if (option.encoding == Encoding::Lightness) {
+		mipFlags = DirectX::TEX_FILTER_SRGB;
+	}
+
+	hr = DirectX::GenerateMipMaps(
+		image.GetImages(),
+		image.GetImageCount(),
+		image.GetMetadata(),
+		mipFlags,
+		0,
+		mipimage
+	);
+	Exception::Assert(SUCCEEDED(hr), "mipmaps create failed.");
+
+	return mipimage;
+
+}
+
+DirectX::ScratchImage Texture::LoadTexture(const std::filesystem::path& filepath, const Option& option) {
+
+	const std::filesystem::path& extension = filepath.extension();
+
+	if (extension == ".dds") { //!< filenameが".dds"で終わっている場合
+		return LoadFromDDSFile(filepath, option);
+
+	} else if (extension == ".hdr") { //!< filenameが".hdr"で終わっている場合
+		return LoadFromHDRFile(filepath, option);
+
+	} else if (extension == ".tga") { //!< filenameが".tga"で終わっている場合
+		return LoadFromTGAFile(filepath, option);
+
+	} else {
+		return LoadFromWICFile(filepath, option);
+	}
 }
 
 ComPtr<ID3D12Resource> Texture::CreateTextureResource(ID3D12Device* device, const DirectX::TexMetadata& metadata) {
@@ -193,6 +327,7 @@ ComPtr<ID3D12Resource> Texture::UploadTextureData(ID3D12Resource* texture, const
 	UpdateSubresources(commandList, texture, intermediateResource.Get(), 0, 0, UINT(subresource.size()), subresource.data());
 
 	// 転送後は利用できるように D3D12_RESOUCE_STATE_COPY_DESC -> D3D12_RESOUCE_STATE_GENETIC_READ へ変更
+	// todo: copy queueで行わないようにする.
 	D3D12_RESOURCE_BARRIER barrier = {};
 	barrier.Type                   = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
 	barrier.Flags                  = D3D12_RESOURCE_BARRIER_FLAG_NONE;

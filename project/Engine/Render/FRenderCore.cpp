@@ -29,7 +29,7 @@ void FRenderCore::Init() {
 	process_ = std::make_unique<FRenderCoreProcess>();
 	process_->Init();
 
-	brdfLut_ = SxavengerAsset::TryImport<AssetTexture>(kPackagesDirectory / "textures/rendering/brdf_lut.png");
+	brdfLut_ = SxavengerAsset::TryImport<AssetTexture>(kPackagesDirectory / "textures/rendering/brdf_lut.png", Texture::Option{ Texture::Encoding::Intensity, false });
 }
 
 void FRenderCore::Term() {

@@ -34,6 +34,6 @@ void BaseAsset::SetFilepath(const std::filesystem::path& filepath) {
 }
 
 void BaseAsset::ShowInspector() {
-	ImGui::SeparatorText(filepath_.stem().generic_string().c_str());
+	ImGui::SeparatorText(filepath_.filename().generic_string().c_str());
 	ImGui::Separator();
 }

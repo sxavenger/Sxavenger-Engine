@@ -26,9 +26,24 @@ public:
 	////////////////////////////////////////////////////////////////////////////////////////////
 	enum class Encoding : bool {
 		Lightness, //!< sRGB
-		Intensity, //!< R8G8B8A8
+		Intensity,
 	};
 
+	////////////////////////////////////////////////////////////////////////////////////////////
+	// Option structure
+	////////////////////////////////////////////////////////////////////////////////////////////
+	struct Option {
+	public:
+
+		//=========================================================================================
+		// public variables
+		//=========================================================================================
+
+		Encoding encoding     = Encoding::Lightness;
+		bool isGenerateMipmap = true;
+
+	};
+	
 	////////////////////////////////////////////////////////////////////////////////////////////
 	// Metadata structure
 	////////////////////////////////////////////////////////////////////////////////////////////
@@ -62,7 +77,7 @@ public:
 	Texture() = default;
 	~Texture() { Term(); }
 
-	void Load(const DirectXThreadContext* context, const std::filesystem::path& filepath, Encoding encoding);
+	void Load(const DirectXThreadContext* context, const std::filesystem::path& filepath, const Option& option);
 
 	void Term();
 
@@ -77,6 +92,8 @@ public:
 	const Vector2ui& GetSize() const { return metadata_.size; }
 
 	const DXGI_FORMAT GetFormat() const { return metadata_.format; }
+
+	ID3D12Resource* GetResource() const { return resource_.Get(); }
 
 private:
 
@@ -97,7 +114,18 @@ private:
 	// private methods
 	//=========================================================================================
 
-	static DirectX::ScratchImage LoadTexture(const std::filesystem::path& filepath, Encoding encoding);
+	//* encoding helper methods *//
+
+	static Encoding GetFormatEncoding(DXGI_FORMAT format);
+
+	//* texture load helper methods *//
+
+	static DirectX::ScratchImage LoadFromDDSFile(const std::filesystem::path& filepath, const Option& option);
+	static DirectX::ScratchImage LoadFromHDRFile(const std::filesystem::path& filepath, const Option& option);
+	static DirectX::ScratchImage LoadFromTGAFile(const std::filesystem::path& filepath, const Option& option);
+	static DirectX::ScratchImage LoadFromWICFile(const std::filesystem::path& filepath, const Option& option);
+
+	static DirectX::ScratchImage LoadTexture(const std::filesystem::path& filepath, const Option& option);
 
 	static ComPtr<ID3D12Resource> CreateTextureResource(ID3D12Device* device, const DirectX::TexMetadata& metadata);
 

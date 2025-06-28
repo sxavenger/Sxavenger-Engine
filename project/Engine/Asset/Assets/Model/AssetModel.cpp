@@ -77,7 +77,7 @@ void AssetModel::UpdateMaterial(const Model::AssimpMaterial& material, Material*
 
 	// bump
 	if (material.GetTexture(Model::AssimpMaterial::TextureType::Bump).has_value()) {
-		auto observer = sAssetStorage->TryImport<AssetTexture>(material.GetTexture(Model::AssimpMaterial::TextureType::Bump).value(), Texture::Encoding::Intensity);
+		auto observer = sAssetStorage->TryImport<AssetTexture>(material.GetTexture(Model::AssimpMaterial::TextureType::Bump).value(), Texture::Option{ Texture::Encoding::Intensity });
 		auto ptr      = observer.Acquire();
 		parameter.normal.SetTexture(ptr->GetDescriptorSRV().GetIndex());
 		
@@ -85,7 +85,7 @@ void AssetModel::UpdateMaterial(const Model::AssimpMaterial& material, Material*
 
 	// roughness
 	if (material.GetTexture(Model::AssimpMaterial::TextureType::Roughness).has_value()) {
-		auto observer = sAssetStorage->TryImport<AssetTexture>(material.GetTexture(Model::AssimpMaterial::TextureType::Roughness).value(), Texture::Encoding::Intensity);
+		auto observer = sAssetStorage->TryImport<AssetTexture>(material.GetTexture(Model::AssimpMaterial::TextureType::Roughness).value(), Texture::Option{ Texture::Encoding::Intensity });
 		auto ptr      = observer.Acquire();
 		parameter.properties.roughness.SetTexture(ptr->GetDescriptorSRV().GetIndex());
 
@@ -95,7 +95,7 @@ void AssetModel::UpdateMaterial(const Model::AssimpMaterial& material, Material*
 
 	// metallic
 	if (material.GetTexture(Model::AssimpMaterial::TextureType::Metallic).has_value()) {
-		auto observer = sAssetStorage->TryImport<AssetTexture>(material.GetTexture(Model::AssimpMaterial::TextureType::Metallic).value(), Texture::Encoding::Intensity);
+		auto observer = sAssetStorage->TryImport<AssetTexture>(material.GetTexture(Model::AssimpMaterial::TextureType::Metallic).value(), Texture::Option{ Texture::Encoding::Intensity });
 		auto ptr      = observer.Acquire();
 		parameter.properties.metallic.SetTexture(ptr->GetDescriptorSRV().GetIndex());
 
@@ -105,7 +105,7 @@ void AssetModel::UpdateMaterial(const Model::AssimpMaterial& material, Material*
 
 	// ambient occlusion
 	if (material.GetTexture(Model::AssimpMaterial::TextureType::AmbientOcclusion).has_value()) {
-		auto observer = sAssetStorage->TryImport<AssetTexture>(material.GetTexture(Model::AssimpMaterial::TextureType::AmbientOcclusion).value(), Texture::Encoding::Intensity);
+		auto observer = sAssetStorage->TryImport<AssetTexture>(material.GetTexture(Model::AssimpMaterial::TextureType::AmbientOcclusion).value(), Texture::Option{ Texture::Encoding::Intensity });
 		auto ptr      = observer.Acquire();
 		parameter.properties.ao.SetTexture(ptr->GetDescriptorSRV().GetIndex());
 	}
