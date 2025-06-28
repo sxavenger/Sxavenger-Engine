@@ -27,9 +27,10 @@ private:
 	// private methods
 	//=========================================================================================
 
-	//* helper *//
+	//* helper methods *//
 
 	void CreateWhite1x1();
+	void CreateCheckerboard();
 
 	void UpdateMaterials();
 
