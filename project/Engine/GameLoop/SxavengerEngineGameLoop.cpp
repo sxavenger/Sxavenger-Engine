@@ -80,7 +80,7 @@ void SxavengerEngineGameLoop::CreateWhite1x1() {
 	compute->ReflectionPipeline(SxavengerSystem::GetDxDevice());
 
 	std::unique_ptr<UnorderedTexture> white1x1 = std::make_unique<UnorderedTexture>();
-	white1x1->Create({ 1, 1 }, DXGI_FORMAT_R8G8B8A8_UNORM_SRGB);
+	white1x1->Create({ 1, 1 }, DXGI_FORMAT_R8G8B8A8_UNORM);
 	white1x1->TransitionBeginUnordered(SxavengerSystem::GetMainThreadContext());
 	compute->SetPipeline(SxavengerSystem::GetMainThreadContext()->GetDxCommand());
 
@@ -102,7 +102,7 @@ void SxavengerEngineGameLoop::CreateCheckerboard() {
 	compute->ReflectionPipeline(SxavengerSystem::GetDxDevice());
 
 	std::unique_ptr<UnorderedTexture> checker = std::make_unique<UnorderedTexture>();
-	checker->Create({ 256, 256 }, DXGI_FORMAT_R8G8B8A8_UNORM_SRGB);
+	checker->Create({ 256, 256 }, DXGI_FORMAT_R8G8B8A8_UNORM);
 	checker->TransitionBeginUnordered(SxavengerSystem::GetMainThreadContext());
 	compute->SetPipeline(SxavengerSystem::GetMainThreadContext()->GetDxCommand());
 
