@@ -10,9 +10,9 @@
 						"z": 0.0
 					},
 					"scale": {
-						"x": 12.0,
-						"y": 12.0,
-						"z": 12.0
+						"x": 6.0,
+						"y": 6.0,
+						"z": 6.0
 					},
 					"translate": {
 						"x": 0.0,
@@ -22,11 +22,11 @@
 				}
 			}
 		},
-		"filepath": "assets/models/chessboard/ABeautifulGame.gltf",
+		"filepath": "assets/models/tree_sponza/Sponza.gltf",
 		"isActive": true,
 		"isRenamable": true,
 		"isView": true,
-		"name": "chessboard"
+		"name": "sponza"
 	},
 	{
 		"components": {
@@ -45,17 +45,17 @@
 					},
 					"translate": {
 						"x": 0.0,
-						"y": 0.0,
-						"z": 9.954949378967285
+						"y": 17.26959228515625,
+						"z": 2.759178400039673
 					}
 				}
 			}
 		},
-		"filepath": "assets/models/PBR_Sphere_Test/model/PBR_Sphere.gltf",
+		"filepath": "assets/models/PBR_Sphere_Test/Model/PBR_Sphere.gltf",
 		"isActive": true,
 		"isRenamable": true,
 		"isView": true,
-		"name": "PBR sphere"
+		"name": "PBR_Sphere"
 	},
 	{
 		"components": {
@@ -68,22 +68,22 @@
 						"z": 0.0
 					},
 					"scale": {
-						"x": 2.0,
-						"y": 2.0,
-						"z": 2.0
+						"x": 4.0,
+						"y": 4.0,
+						"z": 4.0
 					},
 					"translate": {
-						"x": 0.0,
-						"y": 0.0,
-						"z": -15.312104225158691
+						"x": -20.45981788635254,
+						"y": 1.4896554946899414,
+						"z": 2.9714345932006836
 					}
 				}
 			}
 		},
-		"filepath": "assets/models/scene/scene.gltf",
+		"filepath": "assets/models/macbeth_chart/macbeth_chart_scene.gltf",
 		"isActive": true,
 		"isRenamable": true,
 		"isView": true,
-		"name": "scene"
+		"name": "macbeth_chart"
 	}
 ]
