@@ -36,6 +36,11 @@ const LightCommon::InlineShadow& LightCommon::GetShadowParameter() const {
 	return shadow_->At(0);
 }
 
+LightCommon::InlineShadow& LightCommon::GetShadowParameter() {
+	Exception::Assert(shadow_ != nullptr, "shadow buffer is not create.");
+	return shadow_->At(0);
+}
+
 void LightCommon::ShowCommonInspector() {
 	ImGui::Separator();
 	auto& shadow = shadow_->At(0);

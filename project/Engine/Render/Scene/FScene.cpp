@@ -110,10 +110,10 @@ void FScene::SetupTopLevelAS(const DirectXThreadContext* context) {
 		instance.mat           = component->GetTransform()->GetMatrix();
 
 		//* raytracing export group todo...
-		//instance.expt = FRenderCore::GetInstance()->GetRaytracing()->GetExportGroup(FRenderCoreRaytracing::HitgroupExportType::Mesh);
-		//instance.parameter.SetAddress(0, component->GetMesh().);
-		//instance.parameter.SetAddress(1, component->GetMesh()->GetIndex()->GetGPUVirtualAddress());
-		//instance.parameter.SetAddress(2, component->GetMaterial()->GetGPUVirtualAddress());
+		instance.expt = FRenderCore::GetInstance()->GetRaytracing()->GetExportGroup(FRenderCoreRaytracing::HitgroupExportType::Mesh);
+		instance.parameter.SetAddress(0, component->GetMesh().vertex->GetGPUVirtualAddress());
+		instance.parameter.SetAddress(1, component->GetReferenceMesh()->input.GetIndex()->GetGPUVirtualAddress());
+		instance.parameter.SetAddress(2, component->GetMaterial()->GetGPUVirtualAddress());
 
 		topLevelAS_.AddInstance(instance);
 	});

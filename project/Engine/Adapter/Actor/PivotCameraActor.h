@@ -48,7 +48,7 @@ private:
 	//* parameter *//
 
 	Vector3f point_      = {};
-	Quaternion rotation_ = {};
-	float distance_      = 12.0f;
+	Quaternion rotation_ = Quaternion::Identity();
+	float distance_      = 8.0f;
 
 };

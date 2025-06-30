@@ -14,6 +14,7 @@
 #include <Engine/Component/Components/Collider/CollisionManager.h>
 #include <Engine/Component/Components/SpriteRenderer/SpriteRendererComponent.h>
 #include <Engine/Component/ComponentHelper.h>
+#include <Engine/Module/Scene/SceneObjects.h>
 
 //* lib
 #include <Lib/Adapter/Random/Random.h>
@@ -47,36 +48,22 @@ void DemoGameLoop::InitGame() {
 	main_ = SxavengerSystem::CreateMainWindow(kMainWindowSize, L"Sxavenger Engine Demo").lock();
 	main_->SetIcon("packages/icon/SxavengerEngineIcon.ico", { 32, 32 });
 
-	stage_ = std::make_unique<Stage>();
-	stage_->Load();
-	stage_->Awake();
-	stage_->Start();
-
 	player_ = std::make_unique<Player>();
 	player_->Load();
 	player_->Awake();
 	player_->Start();
 
-	smoke_ = std::make_unique<SmokeParticle>();
-	smoke_->Load();
-	smoke_->Awake();
-	smoke_->Start();
+	light_ = ComponentHelper::CreateDirectionalLightMonoBehaviour();
+	light_->GetComponent<TransformComponent>()->rotate *= Quaternion::ToQuaternion({ kPi / 2.1f, 0.0f, 0.0f });
+	{
+		auto& param = light_->GetComponent<DirectionalLightComponent>()->GetParameter();
+		param.intensity = 3.0f;
 
-	rain_ = std::make_unique<RainParticle>();
-	rain_->Load();
-	rain_->Awake();
-	rain_->Start();
+		auto& shadow = light_->GetComponent<DirectionalLightComponent>()->GetShadowParameter();
+		shadow.strength = 0.85f;
+	}
 
-	lead_ = std::make_unique<LeadParticle>();
-	lead_->Load();
-	lead_->Awake();
-	lead_->Start();
-
-	sampleLight_ = ComponentHelper::CreateDirectionalLightMonoBehaviour();
-	sampleLight_->GetComponent<TransformComponent>()->rotate *= Quaternion::ToQuaternion({ kPi / 4.0f, 0.0f, 0.0f });
-
-	skylight_ = std::make_unique<AtmosphereActor>();
-	skylight_->Init({ 1024, 1024 });
+	sSceneObjects->InputJson();
 
 	SetCollisionCallback();
 }
@@ -90,13 +77,7 @@ void DemoGameLoop::UpdateGame() {
 	// GameLogic Update
 	//-----------------------------------------------------------------------------------------
 
-	skylight_->Update();
-
 	player_->Update();
-
-	smoke_->Update();
-	rain_->Update();
-	lead_->Update();
 
 	//-----------------------------------------------------------------------------------------
 	// SystemUpdate...?
@@ -138,19 +119,4 @@ void DemoGameLoop::DrawGame() {
 }
 
 void DemoGameLoop::SetCollisionCallback() {
-	{
-		CollisionCallbackCollection::OnCollisionCallbacks callback = {};
-		callback.enter = [](_MAYBE_UNUSED ColliderComponent* const colliderA, _MAYBE_UNUSED ColliderComponent* const colliderB) {
-			Logger::CommentRuntime("on collision enter.");
-
-			auto player = static_cast<Player*>(colliderA->GetBehaviour());
-			player->SetCameraTarget(colliderB->GetTransform(), 4.0f);
-
-			auto particle = static_cast<LeadParticle*>(colliderB->GetBehaviour());
-			particle->SetTarget({ Random::UniformDistribution(-12.0f, 12.0f), 1.5f, Random::UniformDistribution(-12.0f, 12.0f) });
-		};
-
-		sCollisionManager->SetOnCollisionFunctions("player", "lead particle", callback);
-	}
-	
 }

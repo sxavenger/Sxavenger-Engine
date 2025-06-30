@@ -53,15 +53,15 @@ void Player::Awake() {
 
 	{
 		auto process = camera_->AddComponent<PostProcessLayerComponent>();
-		process->AddPostProcess<PostProcessLocalExposure>();
-		process->AddPostProcess<PostProcessDoF>();
+		process->AddPostProcess<PostProcessAutoExposure>();
+		//process->AddPostProcess<PostProcessDoF>();
 		process->AddPostProcess<PostProcessBloom>();
 	}
 
 	{
-		auto texture = SxavengerAsset::TryImport<AssetTexture>("assets/textures/LUT/lut_greenish.png");
-		auto lut = camera_->AddComponent<CompositeProcessLayerComponent>()->AddPostProcess<CompositeProcessLUT>();
-		lut->CreateTexture(SxavengerSystem::GetMainThreadContext(), texture, { 16, 16 });
+		//auto texture = SxavengerAsset::TryImport<AssetTexture>("assets/textures/LUT/lut_greenish.png");
+		//auto lut = camera_->AddComponent<CompositeProcessLayerComponent>()->AddPostProcess<CompositeProcessLUT>();
+		//lut->CreateTexture(SxavengerSystem::GetMainThreadContext(), texture, { 16, 16 });
 	}
 
 	auto transform = camera_->AddComponent<TransformComponent>();
@@ -154,6 +154,7 @@ void Player::Move() {
 
 	transform_->translate += direction * speed_;
 	transform_->rotate    = Quaternion::Slerp(transform_->rotate, CalculateDirectionQuaterion(direction), 0.1f);
+	transform_->UpdateMatrix();
 }
 
 void Player::UpdateArmature() {

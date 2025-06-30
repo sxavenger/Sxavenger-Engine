@@ -18,12 +18,12 @@ void SceneObjects::OutputJson() const {
 		}
 	}
 
-	JsonHandler::WriteToJson("test.scene", root);
+	JsonHandler::WriteToJson("assets/scene/test.scene", root);
 }
 
 void SceneObjects::InputJson() {
 	objects_.clear();
-	json root = JsonHandler::LoadFromJson("test.scene");
+	json root = JsonHandler::LoadFromJson("assets/scene/test.scene");
 
 	for (size_t i = 0; i < root.size(); ++i) {
 		std::unique_ptr<SceneObject> obj = std::make_unique<SceneObject>();

@@ -59,6 +59,11 @@ const DirectionalLightComponent::Parameter& DirectionalLightComponent::GetParame
 	return parameter_->At(0);
 }
 
+DirectionalLightComponent::Parameter& DirectionalLightComponent::GetParameter() {
+	Exception::Assert(parameter_ != nullptr, "directional light buffer is not create.");
+	return parameter_->At(0);
+}
+
 const TransformComponent* DirectionalLightComponent::GetTransform() const {
 	return BaseComponent::GetBehaviour()->RequireComponent<TransformComponent>();
 }

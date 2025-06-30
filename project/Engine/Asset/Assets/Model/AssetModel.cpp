@@ -199,18 +199,19 @@ void AssetModel::CreateSkinnedMeshBehaviour(MonoBehaviour* root) {
 	// meshの登録
 	for (auto& mesh : model_.GetMeshes()) {
 		auto child = std::make_unique<MonoBehaviour>();
-		child->SetName(mesh.name);
+		auto ptr = child.get();
+		root->AddChild(std::move(child));
+
+		ptr->SetName(mesh.name);
 
 		// transform component
-		auto transform = child->AddComponent<TransformComponent>();
+		auto transform = ptr->AddComponent<TransformComponent>();
 		transform->CreateBuffer();
 
 		// renderer component
-		auto renderer = child->AddComponent<SkinnedMeshRendererComponent>();
+		auto renderer = ptr->AddComponent<SkinnedMeshRendererComponent>();
 		renderer->CreateMesh(&mesh);
 		renderer->SetMaterial(materials_[mesh.materialIndex.value()].get());
-
-		root->AddChild(std::move(child));
 	}
 }
 

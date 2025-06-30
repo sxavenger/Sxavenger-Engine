@@ -98,6 +98,8 @@ public:
 
 	const Material* GetMaterial() const { return material_; }
 
+	const Model::AssimpMesh* GetReferenceMesh() const { return referenceMesh_; }
+
 	const InputSkinnedMesh& GetMesh() const { return mesh_; }
 	InputSkinnedMesh& GetMesh() { return mesh_; }
 
