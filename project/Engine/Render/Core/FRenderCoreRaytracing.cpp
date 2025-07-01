@@ -74,7 +74,7 @@ void FRenderCoreRaytracing::CreateHitgroup() {
 		desc.SetSamplerLinear(DxObject::SamplerMode::MODE_WRAP, DxObject::ShaderVisibility::VISIBILITY_ALL, 0);
 		desc.SetVirtualSRV(0, 10); //!< gVertices
 		desc.SetVirtualSRV(1, 11); //!< gIndices
-		desc.SetVirtualCBV(2, 0);  //!< gMaterial
+		desc.SetVirtualSRV(2, 0);  //!< gMaterial
 
 		expt.CreateRootSignature(SxavengerSystem::GetDxDevice(), desc);
 

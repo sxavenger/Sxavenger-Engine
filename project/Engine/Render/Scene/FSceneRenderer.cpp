@@ -557,7 +557,7 @@ void FSceneRenderer::RenderTechniqueRaytracing(const DirectXThreadContext* conte
 	commandList->SetComputeRootConstantBufferView(4, config.scene->directionalLightCount_->GetGPUVirtualAddress());
 	commandList->SetComputeRootShaderResourceView(5, config.scene->directionalLightTransforms_->GetGPUVirtualAddress());
 	commandList->SetComputeRootShaderResourceView(6, config.scene->directionalLightParams_->GetGPUVirtualAddress());
-	commandList->SetComputeRootShaderResourceView(6, config.scene->directionalLightShadowParams_->GetGPUVirtualAddress());
+	commandList->SetComputeRootShaderResourceView(7, config.scene->directionalLightShadowParams_->GetGPUVirtualAddress());
 
 	config.scene->GetStateObjectContext().DispatchRays(context->GetDxCommand(), textures_->GetSize());
 

@@ -42,8 +42,8 @@ MeshVertex GetLocalVertex(Attribute attribute) {
 	}
 
 	vertex.normal    = normalize(vertex.normal);
-	//vertex.bitangent = normalize(vertex.bitangent);
-	//vertex.tangent   = normalize(vertex.tangent);
+	vertex.bitangent = normalize(vertex.bitangent);
+	vertex.tangent   = normalize(vertex.tangent);
 
 	return vertex;
 }
@@ -53,7 +53,9 @@ MeshVertex GetWorldVertex(Attribute attribute) {
 	MeshVertex vertex = GetLocalVertex(attribute);
 	
 	vertex.position = float4(mul(float4(vertex.position.xyz, 1.0f), ObjectToWorld4x3()), 1.0f);
-	vertex.normal   = mul(vertex.normal, (float3x3)ObjectToWorld4x3());
+	vertex.normal    = normalize(mul(vertex.normal, (float3x3)ObjectToWorld4x3()));
+	vertex.bitangent = normalize(mul(vertex.bitangent, (float3x3)ObjectToWorld4x3()));
+	vertex.tangent   = normalize(mul(vertex.tangent, (float3x3)ObjectToWorld4x3()));
 	
 	return vertex;
 	
