@@ -63,6 +63,8 @@ void DemoGameLoop::InitGame() {
 		shadow.strength = 0.85f;
 	}
 
+	lightA_ = ComponentHelper::CreatePointLightMonoBehaviour();
+
 	sSceneObjects->InputJson();
 
 	SetCollisionCallback();

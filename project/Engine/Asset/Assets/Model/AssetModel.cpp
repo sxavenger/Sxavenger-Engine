@@ -100,7 +100,7 @@ void AssetModel::UpdateMaterial(const Model::AssimpMaterial& material, Material*
 		parameter.properties.metallic.SetTexture(ptr->GetDescriptorSRV().GetIndex());
 
 	} else {
-		parameter.properties.metallic.SetValue(material.roughness);
+		parameter.properties.metallic.SetValue(material.metallic);
 	}
 
 	// ambient occlusion
