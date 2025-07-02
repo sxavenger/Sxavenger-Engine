@@ -71,8 +71,7 @@ void BetaSystemGameLoop::InitSystem() {
 
 	camera_->AddComponent<CompositeProcessLayerComponent>();
 
-	auto texture = SxavengerAsset::TryImport<AssetTexture>("assets/textures/LUT/lut_greenish.png");
-	//auto texture = SxavengerAsset::TryImport<AssetTexture>("assets/textures/LUT/LUT_2StripTable.tga");
+	auto texture = SxavengerAsset::TryImport<AssetTexture>("assets/textures/LUT/lut_reddish.png", Texture::Option{ Texture::Encoding::Intensity, false });
 	auto lut = camera_->GetComponent<CompositeProcessLayerComponent>()->AddPostProcess<CompositeProcessLUT>();
 	lut->CreateTexture(SxavengerSystem::GetMainThreadContext(), texture, { 16, 16 });
 

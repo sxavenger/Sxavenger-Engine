@@ -32,8 +32,16 @@ void AssetTexture::ShowInspector() {
 		return;
 	}
 
+	const D3D12_RESOURCE_DESC desc = texture_.GetResource()->GetDesc();
+
 	if (ImGui::CollapsingHeader("Texture")) {
-		ShowTexture();
+		if (desc.Dimension == D3D12_RESOURCE_DIMENSION_TEXTURE2D) {
+			ShowTexture();
+
+		} else {
+			ImGui::Text("texture dimension type is not D3D12_RESOURCE_DIMENSION_TEXTURE2D");
+		}
+		
 	}
 
 	if (ImGui::CollapsingHeader("Option")) {
@@ -47,14 +55,19 @@ void AssetTexture::ShowInspector() {
 	}
 
 	if (ImGui::CollapsingHeader("Desc")) {
-		const D3D12_RESOURCE_DESC desc = texture_.GetResource()->GetDesc();
-
 		ImGui::Text("dimension: %s", GetDimension(desc.Dimension).c_str());
 		ImGui::Text("width:     %u", desc.Width);
 		ImGui::Text("height:    %u", desc.Height);
 		ImGui::Text("depth:     %u", desc.DepthOrArraySize);
 		ImGui::Text("miplevels: %u", desc.MipLevels);
 		ImGui::Text("format:    %s", GetFormat(desc.Format).c_str());
+	}
+
+	if (ImGui::CollapsingHeader("Descriptor")) {
+		const DxObject::Descriptor& descriptor = texture_.GetDescriptorSRV();
+
+		ImGui::Text("index:  %u",  descriptor.GetIndex());
+		ImGui::Text("handle: %p", descriptor.GetGPUHandle().ptr);
 	}
 }
 

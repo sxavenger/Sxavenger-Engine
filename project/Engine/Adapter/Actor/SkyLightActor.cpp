@@ -46,6 +46,6 @@ void SkyLightActor::Inspectable() {
 }
 
 void SkyLightActor::SetTexture(const std::filesystem::path& filepath) {
-	texture_ = SxavengerAsset::TryImport<AssetTexture>(filepath);
+	texture_ = SxavengerAsset::TryImport<AssetTexture>(filepath, Texture::Option{ Texture::Encoding::Intensity, false });
 }
 
