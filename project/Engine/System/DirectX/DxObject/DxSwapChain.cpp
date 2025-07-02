@@ -78,7 +78,7 @@ void SwapChain::CreateSwapChain(Device* device, CommandContext* command, Window*
 		nullptr, nullptr,
 		reinterpret_cast<IDXGISwapChain1**>(swapChain_.GetAddressOf())
 	);
-	Exception::Assert(SUCCEEDED(hr));
+	Exception::Assert(SUCCEEDED(hr), "swap chain create failed.");
 	
 }
 

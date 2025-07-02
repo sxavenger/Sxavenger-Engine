@@ -23,7 +23,7 @@ struct DirectionalLightComponent {
 	//=========================================================================================
 
 	float3 GetColor() {
-		return color * intensity;
+		return color * intensity * kPi;
 	}
 	
 };
