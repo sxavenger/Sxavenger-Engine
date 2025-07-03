@@ -26,7 +26,7 @@ public:
 
 	//* async task option *//
 
-	void Load(const DirectXThreadContext* context) override;
+	void Load(_MAYBE_UNUSED const DirectXThreadContext* context) override;
 
 	AsyncExecution GetAsyncExecution() const override { return AsyncExecution::None; }
 

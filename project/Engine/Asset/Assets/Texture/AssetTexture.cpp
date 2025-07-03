@@ -21,7 +21,7 @@ void AssetTexture::Load(const DirectXThreadContext* context) {
 		option = std::any_cast<Texture::Option>(param_);
 	}
 
-	texture_.Load(context, filepath_, option);
+	texture_.Load(context, BaseAsset::GetFilepath(), option);
 }
 
 void AssetTexture::ShowInspector() {

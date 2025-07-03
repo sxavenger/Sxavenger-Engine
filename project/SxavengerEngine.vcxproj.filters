@@ -173,6 +173,7 @@
     <ClCompile Include="Engine\Asset\Assets\Blob\AssetBlob.cpp" />
     <ClCompile Include="Engine\Asset\Assets\Animator\Animator.cpp" />
     <ClCompile Include="Engine\Asset\Assets\Animator\AssetAnimator.cpp" />
+    <ClCompile Include="Engine\Asset\Assets\Scene\AssetScene.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\System\Window\Window.h" />
@@ -369,6 +370,7 @@
     <ClInclude Include="Engine\Asset\Assets\Blob\AssetBlob.h" />
     <ClInclude Include="Engine\Asset\Assets\Animator\AssetAnimator.h" />
     <ClInclude Include="Engine\Asset\Assets\Animator\Animator.h" />
+    <ClInclude Include="Engine\Asset\Assets\Scene\AssetScene.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

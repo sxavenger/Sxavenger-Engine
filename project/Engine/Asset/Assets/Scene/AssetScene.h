@@ -6,31 +6,43 @@
 //* asset
 #include "../BaseAsset.h"
 
-//* engine
-#include <Engine/System/DirectX/DxObject/DxShaderBlob.h>
+//* lib
+#include <Lib/Adapter/Json/JsonHandler.h>
 
 //////////////////////////////////////////////////////////////////////////////////////////////
-// Asset Blob class
+// Asset Scene class
 //////////////////////////////////////////////////////////////////////////////////////////////
-class AssetBlob
-	: public BaseAsset, public DxObject::ShaderBlob {
+class AssetScene
+	: public BaseAsset {
 public:
-	// TODO: has継承変更.
 
 	//=========================================================================================
 	// public methods
 	//=========================================================================================
 
-	AssetBlob()  = default;
-	~AssetBlob() = default;
+	AssetScene()  = default;
+	~AssetScene() = default;
 
-	void Load(_MAYBE_UNUSED const DirectXThreadContext* context) override; //!< entry point は L"main"限定
+	//* async task option *//
+
+	void Load(_MAYBE_UNUSED const DirectXThreadContext* context) override;
 
 	AsyncExecution GetAsyncExecution() const override { return AsyncExecution::None; }
 
 	//* inspector option *//
 
 	void ShowInspector() override;
-	
+
+	//* asset option *//
+
+	const json& GetData() const;
+
 private:
+
+	//=========================================================================================
+	// private variables
+	//=========================================================================================
+
+	json data_;
+
 };

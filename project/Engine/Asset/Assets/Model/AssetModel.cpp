@@ -17,8 +17,7 @@
 // AssetModel class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-void AssetModel::Load(const DirectXThreadContext* context) {
-	context;
+void AssetModel::Load(_MAYBE_UNUSED const DirectXThreadContext* context) {
 
 	uint32_t option = Model::GetDefaultAssimpOption();
 
@@ -26,7 +25,7 @@ void AssetModel::Load(const DirectXThreadContext* context) {
 		option = std::any_cast<uint32_t>(param_);
 	}
 
-	model_.Load(filepath_, option);
+	model_.Load(BaseAsset::GetFilepath(), option);
 	CreateMaterials();
 }
 

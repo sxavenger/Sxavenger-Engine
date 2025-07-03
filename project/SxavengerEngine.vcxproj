@@ -194,6 +194,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="Engine\Asset\Assets\Blob\AssetBlob.cpp" />
     <ClCompile Include="Engine\Asset\Assets\Model\AssetModel.cpp" />
     <ClCompile Include="Engine\Asset\Assets\Model\Model.cpp" />
+    <ClCompile Include="Engine\Asset\Assets\Scene\AssetScene.cpp" />
     <ClCompile Include="Engine\Asset\Assets\Texture\AssetTexture.cpp" />
     <ClCompile Include="Engine\Asset\Assets\Texture\Texture.cpp" />
     <ClCompile Include="Engine\Asset\SxavengerAsset.cpp" />
@@ -361,6 +362,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Engine\Asset\Assets\Blob\AssetBlob.h" />
     <ClInclude Include="Engine\Asset\Assets\Model\AssetModel.h" />
     <ClInclude Include="Engine\Asset\Assets\Model\Model.h" />
+    <ClInclude Include="Engine\Asset\Assets\Scene\AssetScene.h" />
     <ClInclude Include="Engine\Asset\Assets\Texture\AssetTexture.h" />
     <ClInclude Include="Engine\Asset\Assets\Texture\Texture.h" />
     <ClInclude Include="Engine\Asset\Observer\AssetObserver.h" />

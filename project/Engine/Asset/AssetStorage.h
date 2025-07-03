@@ -9,6 +9,7 @@
 #include "Assets/Model/AssetModel.h"
 #include "Assets/Animator/AssetAnimator.h"
 #include "Assets/Blob/AssetBlob.h"
+#include "Assets/Scene/AssetScene.h"
 
 //* engine
 #include <Engine/System/SxavengerSystem.h>

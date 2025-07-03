@@ -20,12 +20,17 @@ void AssetEditor::Init() {
 
 	assetTextures_[&typeid(AssetTexture)] = SxavengerAsset::TryImport<AssetTexture>("Packages/textures/icon/texture.png");
 	assetTextures_[&typeid(AssetModel)]   = SxavengerAsset::TryImport<AssetTexture>("Packages/textures/icon/model.png");
+	assetTextures_[&typeid(AssetBlob)]    = SxavengerAsset::TryImport<AssetTexture>("Packages/textures/icon/shader.png");
+	assetTextures_[&typeid(AssetScene)]   = SxavengerAsset::TryImport<AssetTexture>("Packages/textures/icon/scene.png");
 
 	// extensionの登録
+	// todo: extensionからiconを変更
 	sAssetStorage->RegisterExtension<AssetTexture>(".png");
 	sAssetStorage->RegisterExtension<AssetTexture>(".jpg");
 	sAssetStorage->RegisterExtension<AssetModel>(".gltf");
-
+	sAssetStorage->RegisterExtension<AssetModel>(".obj");
+	sAssetStorage->RegisterExtension<AssetModel>(".fbx");
+	sAssetStorage->RegisterExtension<AssetScene>(".scene");
 
 }
 

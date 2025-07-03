@@ -12,5 +12,5 @@ void AssetAnimator::Load(_MAYBE_UNUSED const DirectXThreadContext* context) {
 		option = std::any_cast<uint32_t>(param_);
 	}
 
-	Animator::Load(filepath_, option);
+	Animator::Load(BaseAsset::GetFilepath(), option);
 }

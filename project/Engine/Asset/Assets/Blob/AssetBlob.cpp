@@ -17,13 +17,13 @@
 
 void AssetBlob::Load(_MAYBE_UNUSED const DirectXThreadContext* context) {
 	Exception::Assert(param_.has_value(), "profile is not set.");
-	DxObject::ShaderBlob::Create(filepath_, std::any_cast<DxObject::CompileProfile>(param_));
+	DxObject::ShaderBlob::Create(BaseAsset::GetFilepath(), std::any_cast<DxObject::CompileProfile>(param_));
 }
 
 void AssetBlob::ShowInspector() {
 	BaseAsset::ShowInspector();
 
 	if (ImGui::Button("reload")) {
-		sAssetStorage->Import<AssetBlob>(filepath_, param_);
+		sAssetStorage->Import<AssetBlob>(BaseAsset::GetFilepath(), BaseAsset::GetParam());
 	}
 }

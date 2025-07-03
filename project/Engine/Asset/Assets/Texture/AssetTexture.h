@@ -33,7 +33,7 @@ public:
 
 	void ShowInspector() override;
 
-	//* getter *//
+	//* asset option *//
 
 	const DxObject::Descriptor& GetDescriptorSRV() const;
 
