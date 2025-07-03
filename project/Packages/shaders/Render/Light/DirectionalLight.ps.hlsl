@@ -71,6 +71,7 @@ PSOutput main(PSInput input) {
 	float3 specularBRDF = SpecularBRDF(f, vh, d);
 
 	output.color.rgb = (diffuseBRDF + specularBRDF) * NdotL * c_light;
+	// todo: specularFactorを追加
 
 	output.color.a = 1.0f;
 	return output;

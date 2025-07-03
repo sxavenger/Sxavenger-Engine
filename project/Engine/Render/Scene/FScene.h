@@ -13,6 +13,7 @@
 #include <Engine/System/DirectX/DxrObject/DxrAccelerationStructure.h>
 #include <Engine/System/DirectX/DxrObject/DxrStateObjectContext.h>
 #include <Engine/System/DirectX/DirectXContext.h>
+#include <Engine/System/DirectX/DirectXAlignment.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // FScene class
@@ -43,6 +44,21 @@ public:
 	void SetupLightContainer();
 
 	void SetupDirectionalLight();
+
+private:
+
+	////////////////////////////////////////////////////////////////////////////////////////////
+	// Payload structure
+	////////////////////////////////////////////////////////////////////////////////////////////
+	_PUSH_GPU_BUFFER_ALIGNAS
+	struct _GPU_BUFFER_ALIGNAS Payload {
+		uint32_t type;
+		uint32_t count;
+
+		float color[4];
+		float depth;
+	};
+	_POP_GPU_BUFFER_ALIGNAS
 
 private:
 

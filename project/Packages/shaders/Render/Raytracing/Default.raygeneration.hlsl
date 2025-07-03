@@ -25,9 +25,7 @@ _RAYGENERATION void mainRaygeneration() {
 	desc.TMin = kTMin;
 	desc.TMax = kTMax;
 
-	Payload payload = (Payload)0;
-
-	TraceRay(payload, desc);
+	Payload payload = TracePrimaryRay(desc);
 
 	gOutput[index] = payload.color;
 	gDepth[index]  = payload.depth;

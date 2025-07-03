@@ -39,7 +39,7 @@ struct LightCount {
 	uint count;
 };
 
-//# Directional Light
+// Directional Light
 ConstantBuffer<LightCount> gDirectionalLightCount                : register(b1, space1);
 StructuredBuffer<TransformComponent> gDirectionalLightTransforms : register(t1, space1);
 StructuredBuffer<DirectionalLightComponent> gDirectionalLights   : register(t2, space1);
@@ -55,6 +55,18 @@ static const float kTMax = 16384.0f; // maximum t value for ray intersection
 static const uint kFlag    = RAY_FLAG_CULL_BACK_FACING_TRIANGLES;
 static const uint kRayMask = 0xFF;
 
+static const uint kMaxRecursionDepth = 4;
+
+////////////////////////////////////////////////////////////////////////////////////////////
+// RayType enum
+////////////////////////////////////////////////////////////////////////////////////////////
+
+namespace RayType {
+	static const uint //!< RayType enum type
+		kPrimary    = 0, //!< primary ray (ex. view camera from raygeneration ray)
+		kReflection = 1; //!< reflection ray
+}
+
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Payload structure
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -63,7 +75,12 @@ struct Payload {
 	//=========================================================================================
 	// public variables
 	//=========================================================================================
+
+	//* common 
 	
+	uint type;  //!< RayType enum type.
+	uint count; //!< hit count
+
 	float4 color;
 	float depth;
 
@@ -71,7 +88,39 @@ struct Payload {
 	// public methods
 	//=========================================================================================
 
+	//* recursion methods *//
+
+	void IncrimentRecursionCount() {
+		count++;
+	}
 	
+	uint GetNextRecursionCount() {
+		return count + 1;
+	}
+
+	bool CheckRecursion() {
+		return count < kMaxRecursionDepth;
+	}
+
+	//* common methods *//
+
+	void Reset() {
+		type  = RayType::kPrimary;
+		count = 0;
+
+		color = float4(0.0f, 0.0f, 0.0f, 0.0f);
+		depth = 1.0f;
+	}
+
+	void TraceRecursionRay(inout Payload payload, RayDesc desc, uint flag = kFlag) {
+		payload.count = GetNextRecursionCount();
+
+		if (payload.CheckRecursion()) {
+			return;
+		}
+		
+		TraceRay(gScene, flag, kRayMask, 0, 1, 0, desc, payload);
+	}
 	
 };
 
@@ -104,6 +153,12 @@ struct Attribute {
 // common methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-void TraceRay(inout Payload payload, RayDesc desc, uint flag = kFlag) {
+Payload TracePrimaryRay(RayDesc desc, uint flag = kFlag) {
+	Payload payload;
+	payload.Reset();
+	payload.IncrimentRecursionCount();
+	
 	TraceRay(gScene, flag, kRayMask, 0, 1, 0, desc, payload);
+
+	return payload;
 }

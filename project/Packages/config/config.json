@@ -1,4 +1,9 @@
 {
+	"//windowTitle": "...",
+	"windowSize": {
+		"width": 1280,
+		"height": 720
+	},
 	"enableDebugLayer" : true,
 	"enableGPUBasedValidation": true,
 	"isTearingAllowed": true,

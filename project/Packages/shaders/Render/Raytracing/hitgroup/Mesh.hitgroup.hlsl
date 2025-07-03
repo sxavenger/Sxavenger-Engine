@@ -81,7 +81,7 @@ _ANYHIT void mainAnyhit(inout Payload payload, in Attribute attribute) {
 	
 	float transparency = gMaterial[0].transparency.GetTransparency(parameter);
 	if (transparency <= 0.1f) {
-		IgnoreHit();
+		IgnoreHit(); //!< 透明度が低い場合は、ヒットを無視する
 	}
 }
 
@@ -106,6 +106,7 @@ _CLOSESTHIT void mainClosesthit(inout Payload payload, in Attribute attribute) {
 	
 	float metallic  = gMaterial[0].properties.metallic.GetValue(parameter);
 	float roughness = gMaterial[0].properties.roughness.GetValue(parameter);
+	// FIXME: materialの値が違う
 
 	payload.color.rgb = float3(0.0f, 0.0f, 0.0f);
 

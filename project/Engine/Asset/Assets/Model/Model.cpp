@@ -206,6 +206,8 @@ void Model::LoadMaterial(const aiMaterial* aiMaterial, const std::filesystem::pa
 		material.metallic = metallic;
 	}
 
+	// todo: specularFactorの設定
+
 }
 
 void Model::LoadMaterials(const aiScene* aiScene, const std::filesystem::path& directory) {

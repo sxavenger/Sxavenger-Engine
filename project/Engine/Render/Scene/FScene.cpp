@@ -46,7 +46,7 @@ void FScene::Init() {
 
 		// 仮paraemter
 		desc.SetAttributeStride(sizeof(float) * 2);
-		desc.SetPayloadStride(sizeof(float) * 5);
+		desc.SetPayloadStride(sizeof(Payload));
 		desc.SetMaxRecursionDepth(4);
 
 		stateObjectContext_.CreateStateObject(SxavengerSystem::GetDxDevice(), std::move(desc));

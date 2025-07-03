@@ -14,6 +14,10 @@
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 SxavengerConfig::Config::Config() {
+	//* window
+	windowSize  = { 1280, 720 };
+	windowTitle = "Sxavenger Engine " + kSxavengerEngineVersion;
+
 	//* device
 	enableDebugLayer         = true;
 	enableGPUBasedValidation = true;
@@ -37,6 +41,33 @@ void SxavengerConfig::Config::Load(const std::filesystem::path& filepath) {
 	}
 
 	Logger::EngineLog("loaded user config. filepath: " + filepath.generic_string());
+
+	//* window
+	if (data.contains("windowSize")) {
+		const auto& size = data.at("windowSize");
+
+		if (size.is_array() && size.size() == 2) {
+			windowSize.x = size[0].get<uint32_t>();
+			windowSize.y = size[1].get<uint32_t>();
+
+		} else if (size.is_object()) {
+			if (size.contains("x") && size.contains("y")) {
+				windowSize.x = size.at("x").get<uint32_t>();
+				windowSize.y = size.at("y").get<uint32_t>();
+
+			} else if (size.contains("width") && size.contains("height")) {
+				windowSize.x = size.at("width").get<uint32_t>();
+				windowSize.y = size.at("height").get<uint32_t>();
+			}
+
+		} else {
+			Logger::EngineLog("[Config] warning | Invalid windowSize format.");
+		}
+	}
+
+	if (data.contains("windowTitle")) {
+		windowTitle = data.at("windowTitle");
+	}
 
 	//* device
 #ifdef _DEBUG
@@ -79,15 +110,24 @@ void SxavengerConfig::Load() {
 }
 
 void SxavengerConfig::OutputLog() {
+
+	//* window
+	Logger::EngineLog(std::format("[Config] windowSize width: {} height: {}", config_.windowSize.x, config_.windowSize.y));
+	Logger::EngineLog(std::format("[Config] windowTitle: {}",                 config_.windowTitle));
+
 #ifdef _DEVELOPMENT
+	//* device
 	Logger::EngineLog(std::format("[Config] enableDebugLayer: {}",          config_.enableDebugLayer));
 	Logger::EngineLog(std::format("[Config] enableGPUBasedValidation: {}",  config_.enableGPUBasedValidation));
 #endif
 
+	//* tearing
 	Logger::EngineLog(std::format("[Config] tearing: {}", config_.isTearingAllowed));
 
+	//* frame rate lock
 	Logger::EngineLog(std::format("[Config] frame rate lock: {}",   config_.isLockFrameRate));
 	Logger::EngineLog(std::format("[Config] target frame rate: {}", config_.targetFrameRate));
 
+	//* shader optimization
 	Logger::EngineLog(std::format("[Config] shader optimization: {}", config_.isEnableShaderOptimization));
 }
