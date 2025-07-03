@@ -65,7 +65,7 @@ void DemoGameLoop::InitGame() {
 
 	lightA_ = ComponentHelper::CreatePointLightMonoBehaviour();
 
-	sSceneObjects->InputJson();
+	//sSceneObjects->InputJson();
 
 	SetCollisionCallback();
 }

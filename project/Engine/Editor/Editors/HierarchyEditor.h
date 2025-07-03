@@ -7,6 +7,7 @@
 #include "BaseEditor.h"
 
 //* engine
+#include <Engine/System/Config/SxavengerConfig.h>
 #include <Engine/Component/Entity/MonoBehaviour.h>
 
 //* lib
@@ -44,6 +45,13 @@ private:
 
 	const Color4f disableColor_ = { 0.4f, 0.4f, 0.4f, 1.0f };
 
+	//* scene parameter *//
+
+	static inline const std::filesystem::path kSceneDirectory_ = kAssetsDirectory / "scene";
+
+	std::filesystem::path sceneFileName_;
+	std::string           sceneNameBuf_;
+
 	//=========================================================================================
 	// private methods
 	//=========================================================================================
@@ -65,7 +73,5 @@ private:
 	void SetSelected(MonoBehaviour* behaviour);
 
 	void SetSelectedView(MonoBehaviour* behaviour);
-
-	void DragAndDropTarget();
 
 };

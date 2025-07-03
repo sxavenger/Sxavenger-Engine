@@ -61,58 +61,27 @@ void AssetEditor::ShowAssetWindow() {
 
 	//* Asset Layout *//
 
-	ImGui::PushStyleColor(ImGuiCol_ChildBg, ImVec4{ 0.0f, 0.0f, 0.0f, 0.0f });
-	ImGui::BeginChild("## asset layout", { context.x - ImGui::GetCursorPosX(), context.y });
+	{
+		ImGui::PushStyleColor(ImGuiCol_ChildBg, ImVec4{ 0.0f, 0.0f, 0.0f, 0.0f });
+		ImGui::BeginChild("## asset layout", { context.x - ImGui::GetCursorPosX(), context.y });
 
-	ShowAssetDirectoryNode();
-	ImGui::Separator();
-	ShowAssetLayout();
+		ShowAssetDirectoryNode();
+		ImGui::Separator();
+		ShowAssetLayout();
 
-	ImGui::EndChild();
-	ImGui::PopStyleColor();
+		ImGui::EndChild();
+		ImGui::PopStyleColor();
+	}
 
 	ImGui::DragFloat("icon size", &iconSize_, 1.0f, 16.0f, 128.0f, "%.0f px", ImGuiSliderFlags_AlwaysClamp);
 
-	ImGui::Separator();
-	//!< 廃止予定
-	for (const auto& [type, map] : sAssetStorage->GetStorage()) {
-		if (ImGui::TreeNode(type->name())) {
-
-			for (const auto& [filepath, asset] : map) {
-				if (ImGui::Selectable(filepath.generic_string().c_str(), CheckSelectedInspector(asset.get()))) {
-					SetSelected(asset.get());
-				}
-
-				SetDragAndDropSource(type, filepath);
-
-			}
-
-			ImGui::TreePop();
-		}
-	}
-
 	ImGui::End();
-
 	ImGui::PopStyleVar();
 
 }
 
 bool AssetEditor::ImageButton(const std::filesystem::path& path, AssetObserver<AssetTexture>& texture) {
 	return ImGui::ImageButton(ConvertStr(path).c_str(), texture.WaitAcquire()->GetGPUHandleSRV().ptr, { iconSize_, iconSize_ });
-}
-
-void AssetEditor::SetDragAndDropSource(const std::type_info* type, const std::filesystem::path& filepath) {
-	// drag and dropの定義
-	if (ImGui::BeginDragDropSource()) {
-		// payloadを設定
-		ImGui::SetDragDropPayload(type->name(), filepath.generic_string().c_str(), filepath.generic_string().size() + 1);
-
-		// ドラッグ中の表示
-		ImGui::Text(type->name());
-		ImGui::Text(filepath.generic_string().c_str());
-
-		ImGui::EndDragDropSource();
-	}
 }
 
 const std::string AssetEditor::ConvertStr(const std::filesystem::path& path) {
@@ -315,7 +284,7 @@ void AssetEditor::ShowAssetLayout() {
 					SetSelected(sAssetStorage->GetAsset(type, part).get());
 				}
 
-				SetDragAndDropSource(type, part);
+				sAssetStorage->DragAndDropSource(type, part);
 
 			} else {
 				if (ImageButton(part, fileTexture_)) {

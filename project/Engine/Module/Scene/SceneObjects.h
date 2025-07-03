@@ -22,9 +22,13 @@ public:
 
 	void AddObject(std::unique_ptr<SceneObject>&& object);
 
-	void OutputJson() const;
+	//* json option *//
 
-	void InputJson();
+	void OutputJson(const std::filesystem::path& filepath) const;
+
+	void InputJson(const json& data);
+
+	void InputJsonFromFilepath(const std::filesystem::path& filepath);
 
 	void Update();
 

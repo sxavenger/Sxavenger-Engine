@@ -7,6 +7,7 @@
 #include "MonoBehaviourContainer.h"
 
 //* engine
+#include <Engine/System/UI/SxImGui.h>
 #include <Engine/Editor/EditorEngine.h>
 #include <Engine/Editor/Editors/RenderSceneEditor.h>
 
@@ -153,12 +154,9 @@ void MonoBehaviour::ShowInspector() {
 
 	ImGui::SameLine();
 
-	if (ImGui::InputText("## name", buf_.data(), buf_.size())) { //!< test mode
-		size_t pos = buf_.find('\0');
-		std::string renamed = buf_;
-		renamed.erase(pos);
-		SetName(renamed);
-	}
+	SxImGui::InputTextFunc("## name", buf_, [this](const std::string& name) {
+		SetName(name);
+	});
 
 	ImGui::EndDisabled();
 

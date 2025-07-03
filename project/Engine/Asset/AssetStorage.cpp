@@ -55,6 +55,48 @@ void AssetStorage::ImportExtension(const std::filesystem::path& filepath) {
 	registry_.Emplace(filepath, type);
 }
 
+void AssetStorage::DragAndDropSource(const std::type_info* type, const std::filesystem::path& filepath) const {
+	if (!storage_.contains(type) || !storage_.at(type).Contains(filepath)) {
+		return;
+	}
+
+	// drag and dropの定義
+	if (ImGui::BeginDragDropSource()) {
+		// payloadを設定
+		ImGui::SetDragDropPayload(type->name(), filepath.generic_string().c_str(), filepath.generic_string().size() + 1);
+
+		// ドラッグ中の表示
+		ImGui::Text(type->name());
+		ImGui::Text(filepath.generic_string().c_str());
+
+		ImGui::EndDragDropSource();
+	}
+}
+
+std::optional<std::filesystem::path> AssetStorage::GetFilepathDragAndDropTarget(const std::type_info* type) const {
+	if (!storage_.contains(type)) {
+		return std::nullopt;
+	}
+
+	if (ImGui::BeginDragDropTarget()) {
+		if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload(type->name())) {
+			return std::filesystem::path(static_cast<const char*>(payload->Data));
+		}
+
+		ImGui::EndDragDropTarget();
+	}
+
+	return std::nullopt;
+}
+
+void AssetStorage::DragAndDropTarget(const std::type_info* type, const std::function<void(const std::filesystem::path&)>& func) const {
+	auto filepath = GetFilepathDragAndDropTarget(type);
+
+	if (filepath.has_value()) {
+		func(filepath.value());
+	}
+}
+
 AssetStorage* AssetStorage::GetInstance() {
 	static AssetStorage instance;
 	return &instance;

@@ -64,8 +64,6 @@ private:
 
 	bool ImageButton(const std::filesystem::path& path, AssetObserver<AssetTexture>& texture);
 
-	static void SetDragAndDropSource(const std::type_info* type, const std::filesystem::path& filepath);
-
 	//* helper *//
 
 	static const std::string ConvertStr(const std::filesystem::path& path);

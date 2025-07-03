@@ -8,6 +8,8 @@
 
 //* c++
 #include <optional>
+#include <string>
+#include <functional>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // SxImGui namespace
@@ -34,6 +36,9 @@ namespace SxImGui {
 	void TextClipped(const char* text, float width);
 
 	void TextClippedEx(const char* text, const char* end_text, float width);
+
+	bool InputText(const char* label, std::string& buf, std::string& dst, ImGuiInputTextFlags flags = ImGuiInputTextFlags_None, ImGuiInputTextCallback callback = NULL, void* user_data = NULL);
+	void InputTextFunc(const char* label, std::string& buf, const std::function<void(const std::string&)>& func, ImGuiInputTextFlags flags = ImGuiInputTextFlags_None, ImGuiInputTextCallback callback = NULL, void* user_data = NULL);
 
 	//=========================================================================================
 	// option

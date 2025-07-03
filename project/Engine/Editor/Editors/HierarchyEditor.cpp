@@ -38,15 +38,24 @@ void HierarchyEditor::ShowHierarchyMenu() {
 		MenuPadding();
 		ImGui::SeparatorText("hierarchy");
 
-		if (ImGui::Button("output")) {
-			sSceneObjects->OutputJson();
-			Logger::CommentRuntime("success | output scene");
+		SxImGui::InputTextFunc("## scene name", sceneNameBuf_, [this](const std::string& buf) {
+			sceneFileName_ = buf;
+		});
+
+		if (ImGui::Button("save")) {
+
+			if (sceneFileName_.extension() != ".scene") {
+				sceneFileName_ = sceneFileName_.replace_extension(".scene");
+			}
+
+			sSceneObjects->OutputJson(kSceneDirectory_ / sceneFileName_);
+			Logger::CommentRuntime("success | save scene");
 		}
 
 		ImGui::SameLine();
 
 		if (ImGui::Button("load")) {
-			sSceneObjects->InputJson();
+			sSceneObjects->InputJsonFromFilepath(kSceneDirectory_ / sceneFileName_);
 			Logger::CommentRuntime("success | load scene");
 		}
 
@@ -69,19 +78,32 @@ void HierarchyEditor::ShowHierarchyWindow() {
 
 	{
 		ImVec2 position = ImGui::GetWindowPos();
-		ImVec2 size = ImGui::GetWindowSize();
+		ImVec2 size     = ImGui::GetWindowSize();
 
 		ImVec2 min = ImGui::GetWindowContentRegionMin();
 		ImVec2 max = ImGui::GetWindowContentRegionMax();
 
-		ImVec2 contentPos = ImVec2(position.x + min.x, position.y + min.y);
+		ImVec2 contentPos  = ImVec2(position.x + min.x, position.y + min.y);
 		ImVec2 contentSize = ImVec2(max.x - min.x, max.y - min.y);
 
 		// InvisibleButton をウィンドウ内部の描画領域全体に敷く
 		ImGui::SetCursorScreenPos(contentPos);
-		ImGui::InvisibleButton("## DropTarget", contentSize);
+		ImGui::InvisibleButton("## DropTarget Model", contentSize);
 
-		DragAndDropTarget();
+		sAssetStorage->DragAndDropTarget(&typeid(AssetModel), [this](const std::filesystem::path& filepath) {
+			std::unique_ptr<SceneObject> object = std::make_unique<SceneObject>();
+			object->CreateMeshComponent(filepath);
+			sSceneObjects->AddObject(std::move(object));
+		});
+
+		ImGui::SetCursorScreenPos(contentPos);
+		ImGui::InvisibleButton("## DropTarget Scene", contentSize);
+
+		sAssetStorage->DragAndDropTarget<AssetScene>([this](const std::shared_ptr<AssetScene>& asset) {
+			sSceneObjects->InputJson(asset->GetData());
+			sceneFileName_ = asset->GetFilepath().filename();
+			sceneNameBuf_  = sceneFileName_.generic_string();
+		});
 	}
 
 	ImGui::End();
@@ -161,10 +183,6 @@ void HierarchyEditor::HierarchySelectable(MonoBehaviour* behaviour) {
 			HierarchySelectable(child);
 		});
 
-		/*for (auto& child : behaviour->GetChildren()) {
-			HierarchySelectable(std::visit(MonoBehaviour::GetPtrVisitor{}, child));
-		}*/
-
 		ImGui::TreePop();
 	}
 	
@@ -189,19 +207,5 @@ void HierarchyEditor::SetSelectedView(MonoBehaviour* behaviour) {
 		if (auto editor = BaseEditor::GetEditorEngine()->GetEditor<RenderSceneEditor>()) {
 			editor->SetCameraPoint(transform->GetPosition());
 		}
-	}
-}
-
-void HierarchyEditor::DragAndDropTarget() {
-	if (ImGui::BeginDragDropTarget()) {
-		if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload(typeid(AssetModel).name())) {
-			const char* filepath = static_cast<const char*>(payload->Data);
-
-			std::unique_ptr<SceneObject> object = std::make_unique<SceneObject>();
-			object->CreateMeshComponent(filepath);
-			sSceneObjects->AddObject(std::move(object));
-		}
-
-		ImGui::EndDragDropTarget();
 	}
 }

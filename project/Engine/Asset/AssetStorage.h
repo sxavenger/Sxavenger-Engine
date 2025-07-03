@@ -66,6 +66,9 @@ public:
 
 	std::shared_ptr<BaseAsset> GetAsset(const std::type_info* type, const std::filesystem::path& filepath) const;
 
+	template <BaseAssetConcept _Ty>
+	std::shared_ptr<_Ty> GetAsset(const std::filesystem::path& filepath) const;
+
 	//* storage foreach *//
 
 	template <BaseAssetConcept _Ty>
@@ -87,6 +90,17 @@ public:
 	//* getter *//
 
 	const Storage& GetStorage() const { return storage_; }
+
+	//* imgui helper *//
+
+	void DragAndDropSource(const std::type_info* type, const std::filesystem::path& filepath) const;
+
+	std::optional<std::filesystem::path> GetFilepathDragAndDropTarget(const std::type_info* type) const;
+
+	void DragAndDropTarget(const std::type_info* type, const std::function<void(const std::filesystem::path&)>& func) const;
+
+	template <BaseAssetConcept _Ty>
+	void DragAndDropTarget(const std::function<void(const std::shared_ptr<_Ty>)>& func) const;
 
 	//* singleton *//
 
@@ -153,6 +167,11 @@ AssetObserver<_Ty> AssetStorage::TryImport(const std::filesystem::path& filepath
 	return AssetStorage::Import<_Ty>(filepath, param);
 }
 
+template <BaseAssetConcept _Ty>
+inline std::shared_ptr<_Ty> AssetStorage::GetAsset(const std::filesystem::path& filepath) const {
+	return Cast<_Ty>(GetAsset(&typeid(_Ty), filepath));
+}
+
 template<BaseAssetConcept _Ty>
 inline void AssetStorage::ForEachCompleted(const std::function<void(_Ty*)>& func) const {
 	constexpr const std::type_info* type = &typeid(_Ty);
@@ -172,6 +191,18 @@ template <BaseAssetConcept _Ty>
 inline void AssetStorage::RegisterExtension(const std::filesystem::path& extension) {
 	constexpr const std::type_info* type = &typeid(_Ty);
 	extensions_.emplace(extension, std::make_pair(type, []() { return std::make_shared<_Ty>(); }));
+}
+
+template <BaseAssetConcept _Ty>
+inline void AssetStorage::DragAndDropTarget(const std::function<void(const std::shared_ptr<_Ty>)>& func) const {
+	auto filepath = GetFilepathDragAndDropTarget(&typeid(_Ty));
+
+	if (!filepath.has_value()) {
+		return;
+	}
+
+	std::shared_ptr<_Ty> asset = GetAsset<_Ty>(filepath.value());
+	func(asset);
 }
 
 template <BaseAssetConcept _Ty>

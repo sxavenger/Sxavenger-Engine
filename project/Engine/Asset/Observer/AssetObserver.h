@@ -57,6 +57,9 @@ public:
 	std::shared_ptr<T> Get() const;
 	std::shared_ptr<T> WaitGet() const;
 
+	// todo: wait関数系の削除.
+	// asset側にwaitするかどうかゆだねるため.
+
 private:
 
 	//=========================================================================================

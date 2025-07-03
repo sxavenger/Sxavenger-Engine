@@ -1,5 +1,11 @@
 #include "SceneObjects.h"
 
+//-----------------------------------------------------------------------------------------
+// include
+//-----------------------------------------------------------------------------------------
+//* engine
+#include <Engine/Asset/SxavengerAsset.h>
+
 ////////////////////////////////////////////////////////////////////////////////////////////
 // SceneObjects class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -8,8 +14,7 @@ void SceneObjects::AddObject(std::unique_ptr<SceneObject>&& object) {
 	objects_.emplace_back(std::move(object));
 }
 
-void SceneObjects::OutputJson() const {
-
+void SceneObjects::OutputJson(const std::filesystem::path& filepath) const {
 	json root = json::array();
 
 	for (const auto& object : objects_) {
@@ -18,18 +23,22 @@ void SceneObjects::OutputJson() const {
 		}
 	}
 
-	JsonHandler::WriteToJson("assets/scene/test.scene", root);
+	JsonHandler::WriteToJson(filepath, root);
 }
 
-void SceneObjects::InputJson() {
+void SceneObjects::InputJson(const json& data) {
 	objects_.clear();
-	json root = JsonHandler::LoadFromJson("assets/scene/test.scene");
 
-	for (size_t i = 0; i < root.size(); ++i) {
+	for (size_t i = 0; i < data.size(); ++i) {
 		std::unique_ptr<SceneObject> obj = std::make_unique<SceneObject>();
-		obj->InputJson(root[i]);
+		obj->InputJson(data[i]);
 		objects_.emplace_back(std::move(obj));
 	}
+}
+
+void SceneObjects::InputJsonFromFilepath(const std::filesystem::path& filepath) {
+	AssetObserver<AssetScene> scene = sAssetStorage->TryImport<AssetScene>(filepath);
+	InputJson(scene.Acquire()->GetData());
 }
 
 void SceneObjects::Update() {

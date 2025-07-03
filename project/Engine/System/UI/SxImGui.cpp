@@ -137,3 +137,37 @@ void SxImGui::TextClippedEx(const char* text, const char* end_text, float width)
 	
 	ImGui::Dummy({ width, ImGui::GetTextLineHeight() });
 }
+
+bool SxImGui::InputText(const char* label, std::string& buf, std::string& dst, ImGuiInputTextFlags flags, ImGuiInputTextCallback callback, void* user_data) {
+	bool isChanged = ImGui::InputText(label, buf.data(), buf.size(), flags, callback, user_data);
+
+	if (isChanged) {
+		size_t pos = buf.find('\0');
+
+		if (pos != std::string::npos) {
+			dst = buf.substr(0, pos);
+
+		} else {
+			dst = buf;
+		}
+	}
+
+	return isChanged;
+}
+
+void SxImGui::InputTextFunc(const char* label, std::string& buf, const std::function<void(const std::string&)>& func, ImGuiInputTextFlags flags, ImGuiInputTextCallback callback, void* user_data) {
+	if (buf.size() < 128) {
+		buf.resize(128); // 初期サイズを設定
+	}
+
+	if (ImGui::InputText(label, buf.data(), buf.size(), flags, callback, user_data)) {
+		size_t pos = buf.find('\0');
+
+		if (pos != std::string::npos) {
+			func(buf.substr(0, pos));
+
+		} else {
+			func(buf);
+		}
+	}
+}
