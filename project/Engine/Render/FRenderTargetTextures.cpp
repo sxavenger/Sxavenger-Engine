@@ -68,6 +68,36 @@ void FRenderTargetTextures::ClearTextures(const DirectXThreadContext* context) c
 	depth_->TransitionEndRasterizer(context);
 }
 
+void FRenderTargetTextures::ClearTexturesPathtracing(const DirectXThreadContext* context) const {
+	//* GBufferのクリア
+	std::array<D3D12_RESOURCE_BARRIER, kGBufferLayoutCount> barriers = {};
+
+	for (uint8_t i = 0; i < kGBufferLayoutCount; ++i) {
+		barriers[i] = gBuffers_[i]->TransitionBeginRenderTarget();
+	}
+
+	context->GetCommandList()->ResourceBarrier(static_cast<UINT>(barriers.size()), barriers.data());
+
+	for (uint8_t i = 0; i < kGBufferLayoutCount; ++i) {
+		if (i == static_cast<uint8_t>(GBufferLayout::Main)) {
+			continue;
+		}
+
+		gBuffers_[i]->ClearRenderTarget(context);
+	}
+
+	for (uint8_t i = 0; i < kGBufferLayoutCount; ++i) {
+		barriers[i] = gBuffers_[i]->TransitionEndRenderTarget();
+	}
+
+	context->GetCommandList()->ResourceBarrier(static_cast<UINT>(barriers.size()), barriers.data());
+
+	//* Depthのクリア
+	depth_->TransitionBeginRasterizer(context);
+	depth_->ClearRasterizerDepth(context);
+	depth_->TransitionEndRasterizer(context);
+}
+
 void FRenderTargetTextures::BeginGeometryPass(const DirectXThreadContext* context) const {
 	D3D12_RESOURCE_BARRIER barriers[] = {
 		gBuffers_[static_cast<uint8_t>(GBufferLayout::Normal)]->TransitionBeginRenderTarget(),
@@ -204,6 +234,8 @@ void FRenderTargetTextures::EndCanvasPass(const DirectXThreadContext* context) c
 
 void FRenderTargetTextures::BeginRaytracingPass(const DirectXThreadContext* context) const {
 	D3D12_RESOURCE_BARRIER barriers[] = {
+		gBuffers_[static_cast<uint8_t>(GBufferLayout::MaterialARM)]->TransitionBeginUnordered(),
+		gBuffers_[static_cast<uint8_t>(GBufferLayout::Normal)]->TransitionBeginUnordered(),
 		gBuffers_[static_cast<uint8_t>(GBufferLayout::Main)]->TransitionBeginUnordered(),
 	};
 	context->GetCommandList()->ResourceBarrier(_countof(barriers), barriers);
@@ -213,6 +245,8 @@ void FRenderTargetTextures::BeginRaytracingPass(const DirectXThreadContext* cont
 
 void FRenderTargetTextures::EndRaytracingPass(const DirectXThreadContext* context) const {
 	D3D12_RESOURCE_BARRIER barriers[] = {
+		gBuffers_[static_cast<uint8_t>(GBufferLayout::MaterialARM)]->TransitionEndUnordered(),
+		gBuffers_[static_cast<uint8_t>(GBufferLayout::Normal)]->TransitionEndUnordered(),
 		gBuffers_[static_cast<uint8_t>(GBufferLayout::Main)]->TransitionEndUnordered(),
 	};
 	context->GetCommandList()->ResourceBarrier(_countof(barriers), barriers);

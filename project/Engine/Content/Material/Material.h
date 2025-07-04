@@ -4,6 +4,7 @@
 // include
 //-----------------------------------------------------------------------------------------
 //* engine
+#include <Engine/System/DirectX/DirectXAlignment.h>
 #include <Engine/System/DirectX/DxObject/DxDimensionBuffer.h>
 
 //* lib

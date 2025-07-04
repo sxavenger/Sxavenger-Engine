@@ -6,7 +6,7 @@
 //* core
 #include "Core/FRenderCoreGeometry.h"
 #include "Core/FRenderCoreLight.h"
-#include "Core/FRenderCoreRaytracing.h"
+#include "Core/FRenderCorePathtracing.h"
 #include "Core/FRenderCoreLayer.h"
 #include "Core/FRenderCoreProcess.h"
 
@@ -33,7 +33,7 @@ public:
 
 	FRenderCoreLight* GetLight() { return light_.get(); }
 
-	FRenderCoreRaytracing* GetRaytracing() { return raytracing_.get(); }
+	FRenderCorePathtracing* GetPathtracing() { return pathtracing_.get(); }
 
 	FRenderCoreLayer* GetLayer() { return layer_.get(); }
 
@@ -51,11 +51,11 @@ private:
 	// private variables
 	//=========================================================================================
 
-	std::unique_ptr<FRenderCoreGeometry>   geometry_;
-	std::unique_ptr<FRenderCoreLight>      light_;
-	std::unique_ptr<FRenderCoreRaytracing> raytracing_;
-	std::unique_ptr<FRenderCoreLayer>      layer_;
-	std::unique_ptr<FRenderCoreProcess>    process_;
+	std::unique_ptr<FRenderCoreGeometry>    geometry_;
+	std::unique_ptr<FRenderCoreLight>       light_;
+	std::unique_ptr<FRenderCorePathtracing> pathtracing_;
+	std::unique_ptr<FRenderCoreLayer>       layer_;
+	std::unique_ptr<FRenderCoreProcess>     process_;
 
 	//* textures *//
 

@@ -24,7 +24,7 @@ void FSceneRenderer::Render(const DirectXThreadContext* context, const Config& c
 
 	// texturesの確認
 	if (!status.Test(Status::Error_Textures)) {
-		textures_->ClearTextures(context);
+		//textures_->ClearTextures(context);
 	}
 
 	if (status.Any(Status::Status_Error)) {
@@ -33,11 +33,17 @@ void FSceneRenderer::Render(const DirectXThreadContext* context, const Config& c
 
 	switch (config.technique) {
 		case GraphicsTechnique::Deferred:
+			textures_->ClearTextures(context);
 			RenderTechniqueDeferred(context, conf);
 			break;
 
-		case GraphicsTechnique::Raytracing:
+		/*case GraphicsTechnique::Raytracing:
 			RenderTechniqueRaytracing(context, conf);
+			break;*/
+
+		case GraphicsTechnique::Pathtracing:
+			//textures_->ClearTexturesPathtracing(context);
+			RenderTechniquePathtracing(context, conf);
 			break;
 	}
 }
@@ -550,16 +556,54 @@ void FSceneRenderer::RenderTechniqueRaytracing(const DirectXThreadContext* conte
 
 	auto commandList = context->GetCommandList();
 	commandList->SetComputeRootDescriptorTable(0, textures_->GetGBuffer(FRenderTargetTextures::GBufferLayout::Main)->GetGPUHandleUAV());
-	commandList->SetComputeRootDescriptorTable(1, textures_->GetDepth()->GetRaytracingGPUHandleUAV());
-	commandList->SetComputeRootConstantBufferView(2, config.camera->GetGPUVirtualAddress());
-	commandList->SetComputeRootShaderResourceView(3, config.scene->GetTopLevelAS().GetGPUVirtualAddress());
+	commandList->SetComputeRootDescriptorTable(1, textures_->GetGBuffer(FRenderTargetTextures::GBufferLayout::Normal)->GetGPUHandleUAV());
+	commandList->SetComputeRootDescriptorTable(2, textures_->GetGBuffer(FRenderTargetTextures::GBufferLayout::MaterialARM)->GetGPUHandleUAV());
+	commandList->SetComputeRootDescriptorTable(3, textures_->GetDepth()->GetRaytracingGPUHandleUAV());
+	commandList->SetComputeRootConstantBufferView(4, config.camera->GetGPUVirtualAddress());
+	commandList->SetComputeRootShaderResourceView(5, config.scene->GetTopLevelAS().GetGPUVirtualAddress());
 
-	commandList->SetComputeRootConstantBufferView(4, config.scene->directionalLightCount_->GetGPUVirtualAddress());
-	commandList->SetComputeRootShaderResourceView(5, config.scene->directionalLightTransforms_->GetGPUVirtualAddress());
-	commandList->SetComputeRootShaderResourceView(6, config.scene->directionalLightParams_->GetGPUVirtualAddress());
-	commandList->SetComputeRootShaderResourceView(7, config.scene->directionalLightShadowParams_->GetGPUVirtualAddress());
+	commandList->SetComputeRootConstantBufferView(6, config.scene->directionalLightCount_->GetGPUVirtualAddress());
+	commandList->SetComputeRootShaderResourceView(7, config.scene->directionalLightTransforms_->GetGPUVirtualAddress());
+	commandList->SetComputeRootShaderResourceView(8, config.scene->directionalLightParams_->GetGPUVirtualAddress());
+	commandList->SetComputeRootShaderResourceView(9, config.scene->directionalLightShadowParams_->GetGPUVirtualAddress());
 
 	config.scene->GetStateObjectContext().DispatchRays(context->GetDxCommand(), textures_->GetSize());
 
 	textures_->EndRaytracingPass(context);
+}
+
+void FSceneRenderer::RenderTechniquePathtracing(const DirectXThreadContext* context, const Config& config) {
+	// preview機能
+
+	if (reservoir_ == nullptr) {
+		reservoir_ = std::make_unique<DxObject::DimensionBuffer<FRenderCorePathtracing::Reservoir>>();
+		reservoir_->Create(SxavengerSystem::GetDxDevice(), 1);
+		reservoir_->At(0).Init();
+
+	} else {
+		reservoir_->At(0).IncrimentFrame();
+	}
+
+	textures_->BeginRaytracingPass(context);
+
+	config.scene->GetStateObjectContext().SetStateObject(context->GetDxCommand());
+
+	auto commandList = context->GetCommandList();
+	commandList->SetComputeRootDescriptorTable(0, textures_->GetGBuffer(FRenderTargetTextures::GBufferLayout::Main)->GetGPUHandleUAV());
+	commandList->SetComputeRootDescriptorTable(1, textures_->GetGBuffer(FRenderTargetTextures::GBufferLayout::Normal)->GetGPUHandleUAV());
+	commandList->SetComputeRootDescriptorTable(2, textures_->GetGBuffer(FRenderTargetTextures::GBufferLayout::MaterialARM)->GetGPUHandleUAV());
+	commandList->SetComputeRootDescriptorTable(3, textures_->GetDepth()->GetRaytracingGPUHandleUAV());
+	commandList->SetComputeRootConstantBufferView(4, config.camera->GetGPUVirtualAddress());
+	commandList->SetComputeRootShaderResourceView(5, config.scene->GetTopLevelAS().GetGPUVirtualAddress());
+	commandList->SetComputeRootConstantBufferView(6, reservoir_->GetGPUVirtualAddress());
+
+	commandList->SetComputeRootConstantBufferView(7, config.scene->directionalLightCount_->GetGPUVirtualAddress());
+	commandList->SetComputeRootShaderResourceView(8, config.scene->directionalLightTransforms_->GetGPUVirtualAddress());
+	commandList->SetComputeRootShaderResourceView(9, config.scene->directionalLightParams_->GetGPUVirtualAddress());
+	commandList->SetComputeRootShaderResourceView(10, config.scene->directionalLightShadowParams_->GetGPUVirtualAddress());
+
+	config.scene->GetStateObjectContext().DispatchRays(context->GetDxCommand(), textures_->GetSize());
+
+	textures_->EndRaytracingPass(context);
+	context->TransitionAllocator();
 }

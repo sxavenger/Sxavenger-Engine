@@ -15,38 +15,43 @@ void FScene::Init() {
 	// TLASの初期化
 	topLevelAS_.Init(SxavengerSystem::GetDxDevice());
 
-	// stateobjectの初期化
+	// path tracing stateobjectの初期化
 	{ //!< global root signatureの生成
 		DxrObject::GlobalRootSignatureDesc desc = {};
 		//* textures
 		desc.SetHandleUAV(0, 0, 1); //!< color
-		desc.SetHandleUAV(1, 1, 1); //!< depth
+		desc.SetHandleUAV(1, 1, 1); //!< normal
+		desc.SetHandleUAV(2, 2, 1); //!< arm
+		desc.SetHandleUAV(3, 3, 1); //!< depth
 
 		//* camera
-		desc.SetVirtualCBV(2, 0, 1); //!< camera
+		desc.SetVirtualCBV(4, 0, 1); //!< camera
 
 		//* scene
-		desc.SetVirtualSRV(3, 0, 1); //!< scene
+		desc.SetVirtualSRV(5, 0, 1); //!< scene
+
+		//* reservoir
+		desc.SetVirtualCBV(6, 1, 1); //!< reservoir
 
 		//* light
 		//# Directional Light
-		desc.SetVirtualCBV(4, 1, 1); //!< light count
-		desc.SetVirtualSRV(5, 1, 1); //!< light transforms
-		desc.SetVirtualSRV(6, 2, 1); //!< light parameters
-		desc.SetVirtualSRV(7, 3, 1); //!< light shadow parameters
+		desc.SetVirtualCBV(7, 2, 1); //!< light count
+		desc.SetVirtualSRV(8, 1, 1); //!< light transforms
+		desc.SetVirtualSRV(9, 2, 1); //!< light parameters
+		desc.SetVirtualSRV(10, 3, 1); //!< light shadow parameters
 
 		stateObjectContext_.CreateRootSignature(SxavengerSystem::GetDxDevice(), desc);
 	}
 
 	{ //!< state objectの生成
 		DxrObject::StateObjectDesc desc = {};
-		desc.AddExport(FRenderCore::GetInstance()->GetRaytracing()->GetExportGroup(FRenderCoreRaytracing::RaygenerationExportType::Default));
-		desc.AddExport(FRenderCore::GetInstance()->GetRaytracing()->GetExportGroup(FRenderCoreRaytracing::MissExportType::Default));
-		desc.AddExport(FRenderCore::GetInstance()->GetRaytracing()->GetExportGroup(FRenderCoreRaytracing::HitgroupExportType::Mesh));
+		desc.AddExport(FRenderCore::GetInstance()->GetPathtracing()->GetExportGroup(FRenderCorePathtracing::RaygenerationExportType::Default));
+		desc.AddExport(FRenderCore::GetInstance()->GetPathtracing()->GetExportGroup(FRenderCorePathtracing::MissExportType::Default));
+		desc.AddExport(FRenderCore::GetInstance()->GetPathtracing()->GetExportGroup(FRenderCorePathtracing::HitgroupExportType::Mesh));
 
 		// 仮paraemter
 		desc.SetAttributeStride(sizeof(float) * 2);
-		desc.SetPayloadStride(sizeof(Payload));
+		desc.SetPayloadStride(56);
 		desc.SetMaxRecursionDepth(4);
 
 		stateObjectContext_.CreateStateObject(SxavengerSystem::GetDxDevice(), std::move(desc));
@@ -84,7 +89,7 @@ void FScene::SetupTopLevelAS(const DirectXThreadContext* context) {
 		instance.instanceId    = 0;
 
 		//* raytracing export group
-		instance.expt = FRenderCore::GetInstance()->GetRaytracing()->GetExportGroup(FRenderCoreRaytracing::HitgroupExportType::Mesh);
+		instance.expt = FRenderCore::GetInstance()->GetPathtracing()->GetExportGroup(FRenderCorePathtracing::HitgroupExportType::Mesh);
 		instance.parameter.SetAddress(0, component->GetMesh()->GetVertex()->GetGPUVirtualAddress());
 		instance.parameter.SetAddress(1, component->GetMesh()->GetIndex()->GetGPUVirtualAddress());
 		instance.parameter.SetAddress(2, component->GetMaterial()->GetGPUVirtualAddress());
@@ -110,7 +115,7 @@ void FScene::SetupTopLevelAS(const DirectXThreadContext* context) {
 		instance.mat           = component->GetTransform()->GetMatrix();
 
 		//* raytracing export group todo...
-		instance.expt = FRenderCore::GetInstance()->GetRaytracing()->GetExportGroup(FRenderCoreRaytracing::HitgroupExportType::Mesh);
+		instance.expt = FRenderCore::GetInstance()->GetPathtracing()->GetExportGroup(FRenderCorePathtracing::HitgroupExportType::Mesh);
 		instance.parameter.SetAddress(0, component->GetMesh().vertex->GetGPUVirtualAddress());
 		instance.parameter.SetAddress(1, component->GetReferenceMesh()->input.GetIndex()->GetGPUVirtualAddress());
 		instance.parameter.SetAddress(2, component->GetMaterial()->GetGPUVirtualAddress());

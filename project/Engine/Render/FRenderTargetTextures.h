@@ -56,6 +56,8 @@ public:
 
 	void ClearTextures(const DirectXThreadContext* context) const;
 
+	void ClearTexturesPathtracing(const DirectXThreadContext* context) const;
+
 	//* deferred option *//
 
 	void BeginGeometryPass(const DirectXThreadContext* context) const;

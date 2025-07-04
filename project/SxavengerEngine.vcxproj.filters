@@ -117,7 +117,6 @@
     <ClCompile Include="Engine\Content\DebugPrimitive\DebugPrimitive.cpp" />
     <ClCompile Include="Engine\Render\Common\FBaseTexture.cpp" />
     <ClCompile Include="Engine\Component\Components\Light\Environment\SkyLightComponent.cpp" />
-    <ClCompile Include="Engine\Render\Core\FRenderCoreRaytracing.cpp" />
     <ClCompile Include="Lib\Motion\Motion.cpp" />
     <ClCompile Include="Engine\Content\InputGeometry\InputPrimitive.cpp" />
     <ClCompile Include="Engine\Content\InputGeometry\InputPrimitiveHelper.cpp" />
@@ -174,6 +173,7 @@
     <ClCompile Include="Engine\Asset\Assets\Animator\Animator.cpp" />
     <ClCompile Include="Engine\Asset\Assets\Animator\AssetAnimator.cpp" />
     <ClCompile Include="Engine\Asset\Assets\Scene\AssetScene.cpp" />
+    <ClCompile Include="Engine\Render\Core\FRenderCorePathtracing.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\System\Window\Window.h" />
@@ -308,7 +308,6 @@
     <ClInclude Include="Engine\Content\DebugPrimitive\DebugPrimitive.h" />
     <ClInclude Include="Engine\Render\Common\FBaseTexture.h" />
     <ClInclude Include="Engine\Component\Components\Light\Environment\SkyLightComponent.h" />
-    <ClInclude Include="Engine\Render\Core\FRenderCoreRaytracing.h" />
     <ClInclude Include="Lib\Motion\Motion.h" />
     <ClInclude Include="Engine\Content\InputGeometry\InputPrimitive.h" />
     <ClInclude Include="Engine\Content\InputGeometry\InputPrimitiveHelper.h" />
@@ -371,6 +370,7 @@
     <ClInclude Include="Engine\Asset\Assets\Animator\AssetAnimator.h" />
     <ClInclude Include="Engine\Asset\Assets\Animator\Animator.h" />
     <ClInclude Include="Engine\Asset\Assets\Scene\AssetScene.h" />
+    <ClInclude Include="Engine\Render\Core\FRenderCorePathtracing.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

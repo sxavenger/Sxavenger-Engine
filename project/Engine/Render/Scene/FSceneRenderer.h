@@ -5,6 +5,7 @@
 //-----------------------------------------------------------------------------------------
 //* render
 #include "../FRenderTargetTextures.h"
+#include "../FRenderCore.h"
 #include "FScene.h"
 
 //* engine
@@ -50,8 +51,8 @@ public:
 	////////////////////////////////////////////////////////////////////////////////////////////
 	enum class GraphicsTechnique : uint8_t {
 		Deferred,
-		Raytracing, //!< todo
-		//Pathtracing,
+		//Raytracing, //!< todo
+		Pathtracing,
 	};
 
 	////////////////////////////////////////////////////////////////////////////////////////////
@@ -112,6 +113,10 @@ private:
 
 	FRenderTargetTextures* textures_ = nullptr;
 
+	//* path tracing parameter *//
+
+	std::unique_ptr<DxObject::DimensionBuffer<FRenderCorePathtracing::Reservoir>> reservoir_;
+
 	//=========================================================================================
 	// private methods
 	//=========================================================================================
@@ -150,5 +155,8 @@ private:
 	void RenderTechniqueDeferred(const DirectXThreadContext* context, const Config& config);
 
 	void RenderTechniqueRaytracing(const DirectXThreadContext* context, const Config& config);
+
+	void RenderTechniquePathtracing(const DirectXThreadContext* context, const Config& config);
+
 
 };

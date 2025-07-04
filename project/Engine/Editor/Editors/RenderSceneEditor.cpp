@@ -297,8 +297,9 @@ void RenderSceneEditor::ShowSceneMenu() {
 
 		ImGui::SameLine();
 
-		if (ImGui::RadioButton("raytracing(preview)", config_.technique == FSceneRenderer::GraphicsTechnique::Raytracing)) {
-			config_.technique = FSceneRenderer::GraphicsTechnique::Raytracing;
+		if (ImGui::RadioButton("pathtracing(preview)", config_.technique == FSceneRenderer::GraphicsTechnique::Pathtracing)) {
+			config_.technique = FSceneRenderer::GraphicsTechnique::Pathtracing;
+			textures_->ClearTextures(SxavengerSystem::GetMainThreadContext());
 		}
 
 		ImGui::EndDisabled();

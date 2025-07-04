@@ -23,7 +23,7 @@
 // global buffers
 //=========================================================================================
 
-//* raytracing output textures.
+//* pathtracing output textures.
 RWTexture2D<float4> gMain        : register(u0, space1);
 RWTexture2D<float4> gNormal      : register(u1, space1);
 RWTexture2D<float4> gMaterialARM : register(u2, space1);
@@ -36,13 +36,26 @@ static const float4x4 kViewProj = gCamera.GetViewProj();
 //* scene
 RaytracingAccelerationStructure gScene : register(t0, space1);
 
+//* pathtracing common
+struct Reservoir {
+	uint sampleCount;
+	uint frameSampleCount;
+	uint currentFrame;
+
+	bool CheckNeedSample() {
+		return frameSampleCount * currentFrame < sampleCount;
+	}
+	
+};
+ConstantBuffer<Reservoir> gReservoir : register(b1, space1);
+
 //* light
 struct LightCount {
 	uint count;
 };
 
 // Directional Light
-ConstantBuffer<LightCount> gDirectionalLightCount                : register(b1, space1);
+ConstantBuffer<LightCount> gDirectionalLightCount                : register(b2, space1);
 StructuredBuffer<TransformComponent> gDirectionalLightTransforms : register(t1, space1);
 StructuredBuffer<DirectionalLightComponent> gDirectionalLights   : register(t2, space1);
 StructuredBuffer<InlineShadow> gDirectionalLightShadows          : register(t3, space1);
@@ -51,13 +64,13 @@ StructuredBuffer<InlineShadow> gDirectionalLightShadows          : register(t3, 
 // config variables
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-static const float kTMin = 0.001f;   // minimum t value for ray intersection
-static const float kTMax = 16384.0f; // maximum t value for ray intersection
+static const float kTMin = 0.001f;   // minimum t
+static const float kTMax = 16384.0f; // maximum t
 
 static const uint kFlag    = RAY_FLAG_CULL_BACK_FACING_TRIANGLES;
 static const uint kRayMask = 0xFF;
 
-static const uint kMaxRecursionDepth = 2;
+static const uint kMaxRecursionDepth = 3;
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // RayType enum
@@ -94,6 +107,12 @@ struct Payload {
 	// public methods
 	//=========================================================================================
 
+	//* ray type methods *//
+
+	bool IsPrimary() {
+		return rayType == RayType::kPrimary;
+	}
+
 	//* recursion methods *//
 
 	void IncrimentRecursionCount() {
@@ -106,6 +125,10 @@ struct Payload {
 
 	bool CheckRecursion() {
 		return count < kMaxRecursionDepth;
+	}
+
+	bool CheckNextRecursion() {
+		return GetNextRecursionCount() < kMaxRecursionDepth;
 	}
 
 	//* primary ray methods *//
@@ -132,11 +155,11 @@ struct Payload {
 	}
 
 	void TraceRecursionRay(inout Payload payload, RayDesc desc, uint flag = kFlag) {
-		payload.count = GetNextRecursionCount();
-
-		if (payload.CheckRecursion()) {
+		if (!CheckNextRecursion()) {
 			return;
 		}
+
+		payload.count = GetNextRecursionCount();
 		
 		TraceRay(gScene, flag, kRayMask, 0, 1, 0, desc, payload);
 	}
@@ -180,4 +203,18 @@ Payload TracePrimaryRay(RayDesc desc, uint flag = kFlag) {
 	TraceRay(gScene, flag, kRayMask, 0, 1, 0, desc, payload);
 
 	return payload;
+}
+
+RayDesc GetPrimaryRayDesc(uint2 index, uint2 dimension) {
+	RayDesc desc;
+	desc.Origin = gCamera.GetPosition();
+	
+	float2 d       = (index.xy + 0.5f) / dimension.xy * 2.0f - 1.0f;
+	float3 target  = mul(float4(d.x, -d.y, 1.0f, 1.0f), gCamera.projInv).xyz;
+	desc.Direction = mul(float4(target, 0.0f), gCamera.world).xyz;
+	
+	desc.TMin = kTMin;
+	desc.TMax = kTMax;
+	
+	return desc;
 }

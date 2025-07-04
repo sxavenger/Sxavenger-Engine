@@ -20,8 +20,8 @@ void FRenderCore::Init() {
 	light_ = std::make_unique<FRenderCoreLight>();
 	light_->Init();
 
-	raytracing_ = std::make_unique<FRenderCoreRaytracing>();
-	raytracing_->Init();
+	pathtracing_ = std::make_unique<FRenderCorePathtracing>();
+	pathtracing_->Init();
 
 	layer_ = std::make_unique<FRenderCoreLayer>();
 	layer_->Init();
@@ -35,7 +35,7 @@ void FRenderCore::Init() {
 void FRenderCore::Term() {
 	geometry_.reset();
 	light_.reset();
-	raytracing_.reset();
+	pathtracing_.reset();
 	layer_.reset();
 	process_.reset();
 }

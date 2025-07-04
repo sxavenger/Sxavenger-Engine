@@ -160,7 +160,7 @@ namespace MaterialLib {
 		
 		uint index;
 
-		float GetValue(TextureSampler parameter, uint channel = 0) {
+		float GetValue(TextureSampler parameter, uint channel) {
 			if (type == 0) {
 				return value;
 				

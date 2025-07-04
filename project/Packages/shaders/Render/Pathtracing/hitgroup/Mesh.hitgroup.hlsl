@@ -3,9 +3,11 @@
 //-----------------------------------------------------------------------------------------
 //* hitgroup
 #include "HitgroupCommon.hlsli"
+#include "ImportanceSample.hlsli"
 
 //* content
 #include "../../../Content/Material.hlsli"
+#include "../../../Library/Hammersley.hlsli"
 
 //=========================================================================================
 // local buffers
@@ -14,6 +16,48 @@
 StructuredBuffer<Material> gMaterial : register(t0);
 //!< FIXME: ConstantBufferで使えるようにする. 多分alignment問題
 SamplerState gSampler : register(s0);
+
+////////////////////////////////////////////////////////////////////////////////////////////
+// Surface structure
+////////////////////////////////////////////////////////////////////////////////////////////
+struct Surface {
+
+	//=========================================================================================
+	// public variables
+	//=========================================================================================
+
+	float3 position;
+	float3 normal;
+	float3 albedo;
+	float roughness;
+	float metallic;
+
+	//=========================================================================================
+	// public methods
+	//=========================================================================================
+
+	void GetSurface(Attribute attribute) {
+		
+		MeshVertex vertex = GetWorldVertex(attribute);
+
+		MaterialLib::TextureSampler parameter;
+		parameter.Set(vertex.texcoord, gSampler);
+
+		position = vertex.position.xyz;
+
+		float3x3 tbn = float3x3(
+			vertex.tangent, 
+			vertex.bitangent, 
+			vertex.normal
+		);
+		normal = gMaterial[0].normal.GetNormal(vertex.normal, parameter, tbn);
+
+		albedo    = gMaterial[0].albedo.GetAlbedo(parameter);
+		roughness = gMaterial[0].properties.roughness.GetValue(parameter, 1);
+		metallic  = gMaterial[0].properties.metallic.GetValue(parameter, 2);
+	}
+	
+};
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // methods
@@ -90,48 +134,56 @@ _ANYHIT void mainAnyhit(inout Payload payload, in Attribute attribute) {
 ////////////////////////////////////////////////////////////////////////////////////////////
 _CLOSESTHIT void mainClosesthit(inout Payload payload, in Attribute attribute) {
 
-	MeshVertex vertex = GetWorldVertex(attribute);
+	Surface surface;
+	surface.GetSurface(attribute);
 
-	MaterialLib::TextureSampler parameter;
-	parameter.Set(vertex.texcoord, gSampler);
+	if (payload.IsPrimary() && gReservoir.currentFrame == 0) { //!< primary初回hit時
+		// parameterの設定
+		payload.SetPrimaryParameter(surface.position, surface.normal, 0.0f, surface.roughness, surface.metallic);
 
-	float3 albedo   = gMaterial[0].albedo.GetAlbedo(parameter);
+		// PrimarySurfaceのLighting計算
+		payload.color = float4(0.0f, 0.0f, 0.0f, 1.0f);
+		
+		for (uint i = 0; i < gDirectionalLightCount.count; ++i) {
+			payload.color.rgb += CalculateDirectionalLight(i, surface.position, surface.normal, surface.albedo, surface.roughness, surface.metallic);
+		}
+	}
 
-	float3x3 tbn = float3x3(
-		vertex.tangent.xyz,
-		vertex.bitangent.xyz,
-		vertex.normal.xyz
-	);
-	float3 normal = gMaterial[0].normal.GetNormal(vertex.normal, parameter, tbn);
+	// 反射レイの処理
+	if (payload.rayType == RayType::kReflection) {
+		payload.color = float4(0.0f, 0.0f, 0.0f, 1.0f);
+		
+		for (uint i = 0; i < gDirectionalLightCount.count; ++i) {
+			payload.color.rgb += CalculateDirectionalLight(i, surface.position, surface.normal, surface.albedo, surface.roughness, surface.metallic);
+		}
+	}
+
+	// パストレース
+	float4 color = float4(0.0f, 0.0f, 0.0f, 0.0f);
+		
+	for (uint i = 0; i < gReservoir.frameSampleCount; ++i) {
+		uint currentSampleNum = gReservoir.currentFrame * gReservoir.frameSampleCount + i;
+		uint2 xi              = Hammersley(currentSampleNum, gReservoir.sampleCount);
+
+		float3 direction = ImportanceSampleLambert(xi, surface.normal);
+
+		RayDesc desc;
+		desc.Origin    = surface.position;
+		desc.Direction = direction;
+		desc.TMin      = kTMin;
+		desc.TMax      = kTMax;
+
+		Payload path;
+		path.Reset();
+		path.rayType = RayType::kReflection;
+
+		payload.TraceRecursionRay(path, desc);
+		color += path.color;
+	}
+
+	color.rgb /= float(gReservoir.sampleCount);
+	payload.color += color;
 	
-	float metallic  = gMaterial[0].properties.metallic.GetValue(parameter, 2);
-	float roughness = gMaterial[0].properties.roughness.GetValue(parameter, 1);
-	// FIXME: materialの値が違う
-
-	for (uint i = 0; i < gDirectionalLightCount.count; ++i) {
-		payload.color.rgb += CalculateDirectionalLight(i, vertex.position.xyz, normal, albedo, roughness, metallic);
-	}
-
-	payload.color.a = 1.0f;
-
-	if (payload.rayType != RayType::kPrimary) {
-		return;
-	}
-
-	//Payload reflection;
-	//reflection.Reset();
-	//reflection.rayType = RayType::kReflection;
-
-	//RayDesc desc;
-	//desc.Origin    = vertex.position.xyz;
-	//desc.Direction = reflect(WorldRayDirection(), normal); //!< 反射ベクトルを計算
-	//desc.TMax      = kTMax;
-	//desc.TMin      = kTMin;
-
-	//payload.TraceRecursionRay(reflection, desc);
-
-	//payload.color.rgb += reflection.color.rgb * (1.0f - roughness); // FIXME: 仮
-
-	payload.SetPrimaryParameter(vertex.position.xyz, normal, 0.0f, roughness, metallic);
+	
 	
 }

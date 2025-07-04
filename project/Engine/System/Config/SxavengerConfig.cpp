@@ -19,8 +19,8 @@ SxavengerConfig::Config::Config() {
 	windowTitle = "Sxavenger Engine " + kSxavengerEngineVersion;
 
 	//* device
-	enableDebugLayer         = true;
-	enableGPUBasedValidation = true;
+	enableDebugLayer         = false;
+	enableGPUBasedValidation = false;
 
 	//* tiearing
 	isTearingAllowed = false;
@@ -70,7 +70,7 @@ void SxavengerConfig::Config::Load(const std::filesystem::path& filepath) {
 	}
 
 	//* device
-#ifdef _DEBUG
+#ifdef _DEVELOPMENT
 	if (data.contains("enableDebugLayer")) {
 		enableDebugLayer = data.at("enableDebugLayer");
 	}
