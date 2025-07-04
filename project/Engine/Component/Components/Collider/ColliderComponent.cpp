@@ -90,7 +90,7 @@ void ColliderComponent::ResetColliderBounding() {
 
 void ColliderComponent::UpdateColliderState() {
 	//!< 次フレームの準備
-	for (auto& [ptr, state] : states_) {
+	for (auto& state : states_ | std::views::values) {
 		state <<= 1; //!< current情報をprevにシフト
 	}
 }

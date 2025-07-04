@@ -6,6 +6,9 @@
 //* engine
 #include <Engine/System/SxavengerSystem.h>
 
+//* c++
+#include <ranges>
+
 //=========================================================================================
 // static variables
 //=========================================================================================
@@ -26,7 +29,7 @@ void EditorEngine::Init() {
 }
 
 void EditorEngine::Term() {
-	for (auto& [typeindex, editor] : editors_) {
+	for (auto& editor : editors_ | std::views::values) {
 		editor.reset();
 	}
 	editors_.clear();
@@ -54,7 +57,7 @@ void EditorEngine::ShowMainMenu() {
 
 	ShowEditorMenu();
 
-	for (const auto& [type, editor] : editors_) {
+	for (const auto& editor : editors_ | std::views::values) {
 		editor->ShowMainMenu();
 	}
 
@@ -68,13 +71,13 @@ void EditorEngine::ShowWindow() {
 
 	dockingId_ = ImGui::GetID(kEditorName_.c_str());
 
-	for (const auto& [type, editor] : editors_) {
+	for (const auto& editor : editors_ | std::views::values) {
 		if (editor->IsDisplay()) {
 			editor->ShowWindow();
 		}
 	}
 
-	for (const auto& [type, editor] : editors_) {
+	for (const auto& editor : editors_ | std::views::values) {
 		if (editor->IsDisplay()) {
 			editor->LateUpdate();
 		}
