@@ -115,7 +115,7 @@ void SxavengerLogger::ExceptionA(const std::string& label, const std::string& de
 		MB_TASKMODAL | MB_ICONHAND | MB_TOPMOST
 	);
 
-	__debugbreak();
+	throw std::runtime_error("sxavenger asset");
 }
 
 void SxavengerLogger::ExceptionW(const std::wstring& label, const std::wstring& detail, const std::source_location& location) {
@@ -168,7 +168,7 @@ void SxavengerLogger::ExceptionW(const std::wstring& label, const std::wstring& 
 		MB_TASKMODAL | MB_ICONHAND | MB_TOPMOST
 	);
 
-	__debugbreak();
+	throw std::runtime_error("sxavenger asset");
 }
 
 void SxavengerLogger::LogRuntimeA(Category category, const std::string& label, const std::string& detail) {
