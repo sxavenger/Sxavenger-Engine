@@ -46,6 +46,10 @@ struct Reservoir {
 	bool CheckNeedSample() {
 		return frameSampleCount * currentFrame < sampleCount;
 	}
+
+	bool IsBeginFrame() {
+		return currentFrame == 0;
+	}
 	
 };
 ConstantBuffer<Reservoir> gReservoir : register(b1, space1);
@@ -85,8 +89,8 @@ static const uint kMaxRecursionDepth = 3;
 
 namespace RayType {
 	static const uint //!< RayType enum type
-		kPrimary    = 0, //!< primary ray (ex. view camera from raygeneration ray)
-		kReflection = 1; //!< reflection ray
+		kPrimary = 0, //!< primary ray (ex. view camera from raygeneration ray)
+		kPath    = 1; //!< path trace ray (ex. diffuse, specular, etc.)
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -109,6 +113,8 @@ struct Payload {
 	float3 normal;
 	float3 arm; //!< ambient, roughness, metallic
 	float depth;
+
+	float3 le;
 
 	//=========================================================================================
 	// public methods
@@ -159,6 +165,8 @@ struct Payload {
 		normal = float3(0.0f, 0.0f, 0.0f);
 		arm    = float3(0.0f, 0.0f, 0.0f);
 		depth  = 1.0f;
+
+		le = 1.0f;
 	}
 
 	void TraceRecursionRay(inout Payload payload, RayDesc desc, uint flag = kFlag) {

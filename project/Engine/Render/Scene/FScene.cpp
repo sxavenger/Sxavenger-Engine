@@ -7,6 +7,9 @@
 #include <Engine/System/SxavengerSystem.h>
 #include <Engine/Render/FRenderCore.h>
 
+//* lib
+#include <Lib/Adapter/Random/Random.h>
+
 ////////////////////////////////////////////////////////////////////////////////////////////
 // FScene class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -57,7 +60,7 @@ void FScene::Init() {
 
 		// 仮paraemter
 		desc.SetAttributeStride(sizeof(float) * 2);
-		desc.SetPayloadStride(56);
+		desc.SetPayloadStride(64);
 		desc.SetMaxRecursionDepth(4);
 
 		stateObjectContext_.CreateStateObject(SxavengerSystem::GetDxDevice(), std::move(desc));

@@ -4,8 +4,8 @@
 		"width": 1280,
 		"height": 720
 	},
-	"enableDebugLayer" : false,
-	"enableGPUBasedValidation": false,
+	"enableDebugLayer" : true,
+	"enableGPUBasedValidation": true,
 	"isTearingAllowed": true,
 	"isLockFrameRate": true,
 	"targetFrameRate": 60.0,
