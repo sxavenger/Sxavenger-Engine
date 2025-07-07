@@ -35,10 +35,16 @@ void FScene::Init() {
 
 		//* light
 		//# Directional Light
-		desc.SetVirtualCBV(7, 2, 1); //!< light count
-		desc.SetVirtualSRV(8, 1, 1); //!< light transforms
-		desc.SetVirtualSRV(9, 2, 1); //!< light parameters
+		desc.SetVirtualCBV(7, 2, 1);  //!< light count
+		desc.SetVirtualSRV(8, 1, 1);  //!< light transforms
+		desc.SetVirtualSRV(9, 2, 1);  //!< light parameters
 		desc.SetVirtualSRV(10, 3, 1); //!< light shadow parameters
+
+		//# Point Light
+		desc.SetVirtualCBV(11, 3, 1); //!< light count
+		desc.SetVirtualSRV(12, 4, 1); //!< light transforms
+		desc.SetVirtualSRV(13, 5, 1); //!< light parameters
+		desc.SetVirtualSRV(14, 6, 1); //!< light shadow parameters
 
 		stateObjectContext_.CreateRootSignature(SxavengerSystem::GetDxDevice(), desc);
 	}
@@ -63,6 +69,13 @@ void FScene::Init() {
 		directionalLightTransforms_   = std::make_unique<DxObject::DimensionBuffer<TransformationMatrix>>();
 		directionalLightParams_       = std::make_unique<DxObject::DimensionBuffer<DirectionalLightComponent::Parameter>>();
 		directionalLightShadowParams_ = std::make_unique<DxObject::DimensionBuffer<DirectionalLightComponent::InlineShadow>>();
+
+		pointLightCount_ = std::make_unique<DxObject::DimensionBuffer<uint32_t>>();
+		pointLightCount_->Create(SxavengerSystem::GetDxDevice(), 1);
+		pointLightTransforms_   = std::make_unique<DxObject::DimensionBuffer<TransformationMatrix>>();
+		pointLightParams_       = std::make_unique<DxObject::DimensionBuffer<PointLightComponent::Parameter>>();
+		pointLightShadowParams_ = std::make_unique<DxObject::DimensionBuffer<PointLightComponent::InlineShadow>>();
+
 	}
 	
 }
@@ -134,6 +147,7 @@ void FScene::SetupStateObject() {
 
 void FScene::SetupLightContainer() {
 	SetupDirectionalLight();
+	SetupPointLight();
 }
 
 void FScene::SetupDirectionalLight() {
@@ -167,5 +181,40 @@ void FScene::SetupDirectionalLight() {
 
 		index++;
 	});
+
+}
+
+void FScene::SetupPointLight() {
+
+	uint32_t count = static_cast<uint32_t>(sComponentStorage->GetActiveComponentCount<PointLightComponent>());
+
+	pointLightCount_->At(0) = count;
+
+	if (count == 0) {
+		return;
+	}
+
+	if (pointLightTransforms_->GetSize() < count) {
+		pointLightTransforms_->Create(SxavengerSystem::GetDxDevice(), count);
+	}
+
+	if (pointLightParams_->GetSize() < count) {
+		pointLightParams_->Create(SxavengerSystem::GetDxDevice(), count);
+	}
+
+	if (pointLightShadowParams_->GetSize() < count) {
+		pointLightShadowParams_->Create(SxavengerSystem::GetDxDevice(), count);
+	}
+
+	size_t index = 0;
+
+	sComponentStorage->ForEachActive<PointLightComponent>([&](PointLightComponent* component) {
+		pointLightTransforms_->At(index)   = component->GetTransform()->GetTransformationMatrix();
+		pointLightParams_->At(index)       = component->GetParameter();
+		pointLightShadowParams_->At(index) = component->GetShadowParameter();
+
+		index++;
+	});
+
 
 }

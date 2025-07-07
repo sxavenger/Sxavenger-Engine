@@ -46,6 +46,8 @@ void FSceneRenderer::Render(const DirectXThreadContext* context, const Config& c
 			RenderTechniquePathtracing(context, conf);
 			break;
 	}
+
+	context->TransitionAllocator();
 }
 
 void FSceneRenderer::ApplyConfig(Config& config) {
@@ -132,7 +134,7 @@ void FSceneRenderer::RenderGeometryStaticMeshDefault(const DirectXThreadContext*
 		renderer->GetMesh()->DrawCall(context, 1);
 	});
 
-	context->TransitionAllocator();
+	//context->TransitionAllocator();
 }
 
 void FSceneRenderer::RenderGeometrySkinnedMesh(const DirectXThreadContext* context, const Config& config) {
@@ -177,7 +179,7 @@ void FSceneRenderer::RenderGeometrySkinnedMesh(const DirectXThreadContext* conte
 
 		renderer->DrawCall(context, 1); //!< instance数は必ず1
 
-		context->ExecuteAllAllocators();
+		//context->ExecuteAllAllocators();
 	});
 }
 
@@ -268,35 +270,38 @@ void FSceneRenderer::LightingPassDirectionalLight(const DirectXThreadContext* co
 
 void FSceneRenderer::LightingPassPointLight(const DirectXThreadContext* context, const Config& config) {
 
+	uint32_t count = config.scene->pointLightCount_->At(0);
+
+	if (count == 0) {
+		return;
+	}
+
 	FRenderCore::GetInstance()->GetLight()->SetPipeline(
 		FRenderCoreLight::LightType::Point, context, textures_->GetSize()
 	);
 
-	sComponentStorage->ForEachActive<PointLightComponent>([&](PointLightComponent* component) {
+	DxObject::BindBufferDesc parameter = {};
+	// common parameter
+	parameter.SetAddress("gCamera", config.camera->GetGPUVirtualAddress());
+	parameter.SetAddress("gScene",  config.scene->GetTopLevelAS().GetGPUVirtualAddress());
 
-		DxObject::BindBufferDesc parameter = {};
-		// common parameter
-		parameter.SetAddress("gCamera", config.camera->GetGPUVirtualAddress());
-		parameter.SetAddress("gScene",  config.scene->GetTopLevelAS().GetGPUVirtualAddress());
+	// deferred paraemter
+	parameter.SetHandle("gDepth",    textures_->GetDepth()->GetRasterizerGPUHandleSRV());
+	parameter.SetHandle("gAlbedo",   textures_->GetGBuffer(FRenderTargetTextures::GBufferLayout::Albedo)->GetGPUHandleSRV());
+	parameter.SetHandle("gNormal",   textures_->GetGBuffer(FRenderTargetTextures::GBufferLayout::Normal)->GetGPUHandleSRV());
+	parameter.SetHandle("gPosition", textures_->GetGBuffer(FRenderTargetTextures::GBufferLayout::Position)->GetGPUHandleSRV());
+	parameter.SetHandle("gMaterial", textures_->GetGBuffer(FRenderTargetTextures::GBufferLayout::MaterialARM)->GetGPUHandleSRV());
 
-		// deferred paraemter
-		parameter.SetHandle("gDepth",    textures_->GetDepth()->GetRasterizerGPUHandleSRV());
-		parameter.SetHandle("gAlbedo",   textures_->GetGBuffer(FRenderTargetTextures::GBufferLayout::Albedo)->GetGPUHandleSRV());
-		parameter.SetHandle("gNormal",   textures_->GetGBuffer(FRenderTargetTextures::GBufferLayout::Normal)->GetGPUHandleSRV());
-		parameter.SetHandle("gPosition", textures_->GetGBuffer(FRenderTargetTextures::GBufferLayout::Position)->GetGPUHandleSRV());
-		parameter.SetHandle("gMaterial", textures_->GetGBuffer(FRenderTargetTextures::GBufferLayout::MaterialARM)->GetGPUHandleSRV());
+	// point light parameter
+	parameter.SetAddress("gTransforms", config.scene->pointLightTransforms_->GetGPUVirtualAddress());
+	parameter.SetAddress("gParameters", config.scene->pointLightParams_->GetGPUVirtualAddress());
+	parameter.SetAddress("gShadows",    config.scene->pointLightShadowParams_->GetGPUVirtualAddress());
 
-		// point light parameter
-		parameter.SetAddress("gTransforms", component->GetTransform()->GetGPUVirtualAddress());
-		parameter.SetAddress("gParameter",  component->GetParameterBufferAddress());
-		parameter.SetAddress("gShadow",     component->GetShadowBufferAddress());
+	FRenderCore::GetInstance()->GetLight()->BindGraphicsBuffer(
+		FRenderCoreLight::LightType::Point, context, parameter
+	);
 
-		FRenderCore::GetInstance()->GetLight()->BindGraphicsBuffer(
-			FRenderCoreLight::LightType::Point, context, parameter
-		);
-
-		FRenderCore::GetInstance()->GetLight()->DrawCall(context);
-	});
+	FRenderCore::GetInstance()->GetLight()->DrawCall(context, count);
 
 }
 
@@ -601,6 +606,11 @@ void FSceneRenderer::RenderTechniquePathtracing(const DirectXThreadContext* cont
 	commandList->SetComputeRootShaderResourceView(8, config.scene->directionalLightTransforms_->GetGPUVirtualAddress());
 	commandList->SetComputeRootShaderResourceView(9, config.scene->directionalLightParams_->GetGPUVirtualAddress());
 	commandList->SetComputeRootShaderResourceView(10, config.scene->directionalLightShadowParams_->GetGPUVirtualAddress());
+
+	commandList->SetComputeRootConstantBufferView(11, config.scene->pointLightCount_->GetGPUVirtualAddress());
+	commandList->SetComputeRootShaderResourceView(12, config.scene->pointLightTransforms_->GetGPUVirtualAddress());
+	commandList->SetComputeRootShaderResourceView(13, config.scene->pointLightParams_->GetGPUVirtualAddress());
+	commandList->SetComputeRootShaderResourceView(14, config.scene->pointLightShadowParams_->GetGPUVirtualAddress());
 
 	config.scene->GetStateObjectContext().DispatchRays(context->GetDxCommand(), textures_->GetSize());
 

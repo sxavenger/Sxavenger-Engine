@@ -76,6 +76,11 @@ const D3D12_GPU_VIRTUAL_ADDRESS& PointLightComponent::GetParameterBufferAddress(
 	return parameter_->GetGPUVirtualAddress();
 }
 
+const PointLightComponent::Parameter& PointLightComponent::GetParameter() const {
+	Exception::Assert(parameter_ != nullptr, "point light buffer is not create.");
+	return parameter_->At(0);
+}
+
 const TransformComponent* PointLightComponent::GetTransform() const {
 	return BaseComponent::GetBehaviour()->RequireComponent<TransformComponent>();
 }

@@ -17,6 +17,7 @@
 #include "../../Component/CameraComponent.hlsli"
 #include "../../Component/LightComponentCommon.hlsli"
 #include "../../Component/DirectionalLightComponent.hlsli"
+#include "../../Component/PointLightComponent.hlsli"
 #include "../../Component/TransformComponent.hlsli"
 
 //=========================================================================================
@@ -59,6 +60,12 @@ ConstantBuffer<LightCount> gDirectionalLightCount                : register(b2, 
 StructuredBuffer<TransformComponent> gDirectionalLightTransforms : register(t1, space1);
 StructuredBuffer<DirectionalLightComponent> gDirectionalLights   : register(t2, space1);
 StructuredBuffer<InlineShadow> gDirectionalLightShadows          : register(t3, space1);
+
+// Point Light
+ConstantBuffer<LightCount> gPointLightCount                : register(b3, space1);
+StructuredBuffer<TransformComponent> gPointLightTransforms : register(t4, space1);
+StructuredBuffer<PointLightComponent> gPointLights         : register(t5, space1);
+StructuredBuffer<InlineShadow> gPointLightShadows          : register(t6, space1);
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // config variables

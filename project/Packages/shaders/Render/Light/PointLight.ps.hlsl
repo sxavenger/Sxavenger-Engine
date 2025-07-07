@@ -10,8 +10,8 @@
 // buffers
 //=========================================================================================
 
-ConstantBuffer<PointLightComponent> gParameter : register(b0);
-ConstantBuffer<InlineShadow> gShadow : register(b1);
+StructuredBuffer<PointLightComponent> gParameters : register(t0);
+StructuredBuffer<InlineShadow> gShadows           : register(t1);
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // main
@@ -29,7 +29,7 @@ PSOutput main(PSInput input) {
 	float3 l       = normalize(p_light - surface.position);       //!< lightの方向ベクトル
 	float r        = length(p_light - surface.position);          //!< lightとsurfaceの距離
 
-	float3 c_light = gParameter.GetColor(r);
+	float3 c_light = gParameters[input.instanceId].GetColor(r);
 
 	// 影の計算
 	RayDesc desc;
@@ -38,7 +38,7 @@ PSOutput main(PSInput input) {
 	desc.TMin      = kTMin;
 	desc.TMax = r;
 	
-	c_light *= gShadow.TraceShadow(desc, gScene);
+	c_light *= gShadows[input.instanceId].TraceShadow(desc, gScene);
 
 	//* Cameraの情報を取得
 	float3 v = normalize(gCamera.GetPosition() - surface.position);
