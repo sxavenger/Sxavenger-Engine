@@ -67,6 +67,12 @@ public:
 
 	const TransformComponent* GetTransform() const;
 
+	//* serialization option *//
+
+	json PerseToJson() const override;
+
+	void InputJson(const json& data) override;
+
 private:
 
 	//=========================================================================================

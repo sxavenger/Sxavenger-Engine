@@ -285,7 +285,7 @@ void RenderSceneEditor::ShowSceneMenu() {
 		ImGui::Text("process");
 		ImGui::Separator();
 		ImGui::Checkbox("enable post process", &config_.isEnablePostProcess);
-		ImGui::Checkbox("enable composite", &config_.isEnableComposite);
+		ImGui::Checkbox("enable composite",    &config_.isEnableComposite);
 
 		// technique
 		ImGui::Text("technique");

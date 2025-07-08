@@ -61,6 +61,7 @@ void BetaSystemGameLoop::InitSystem() {
 	//SxavengerAsset::TryImport<AssetModel>("assets/models/sponza_curtains/NewSponza_Curtains_glTF.gltf");
 
 	camera_->AddComponent<PostProcessLayerComponent>();
+	camera_->GetComponent<PostProcessLayerComponent>()->SetTag(PostProcessLayerComponent::Tag::Global);
 	camera_->GetComponent<PostProcessLayerComponent>()->AddPostProcess<PostProcessAutoExposure>();
 	camera_->GetComponent<PostProcessLayerComponent>()->AddPostProcess<PostProcessLocalExposure>();
 	//camera_->GetComponent<PostProcessLayerComponent>()->AddPostProcess<PostProcessBloom>();
@@ -72,8 +73,8 @@ void BetaSystemGameLoop::InitSystem() {
 	auto lut = camera_->GetComponent<CompositeProcessLayerComponent>()->AddPostProcess<CompositeProcessLUT>();
 	lut->CreateTexture(SxavengerSystem::GetMainThreadContext(), texture, { 16, 16 });
 
-	//atmosphere_ = std::make_unique<AtmosphereActor>();
-	//atmosphere_->Init({ 1024, 1024 });
+	atmosphere_ = std::make_unique<AtmosphereActor>();
+	atmosphere_->Init({ 1024, 1024 });
 
 	//skylight_ = std::make_unique<SkyLightActor>();
 	//skylight_->Init({ 1024, 1024 });
@@ -96,7 +97,7 @@ void BetaSystemGameLoop::UpdateSystem() {
 	// Update
 	//-----------------------------------------------------------------------------------------
 
-	//atmosphere_->Update();
+	atmosphere_->Update();
 	camera_->Update();
 
 	//-----------------------------------------------------------------------------------------

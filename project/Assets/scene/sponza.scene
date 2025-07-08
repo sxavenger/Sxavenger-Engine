@@ -85,5 +85,122 @@
 		"isRenamable": true,
 		"isView": true,
 		"name": "macbeth_chart"
+	},
+	{
+		"components": {
+			"class PointLightComponent": {
+				"color": {
+					"b": 1.0,
+					"g": 1.0,
+					"r": 1.0
+				},
+				"intensity": 233.6999969482422,
+				"radius": 33.5,
+				"unit": 1
+			},
+			"class TransformComponent": {
+				"transform": {
+					"rotate": {
+						"w": 1.0,
+						"x": 0.0,
+						"y": 0.0,
+						"z": 0.0
+					},
+					"scale": {
+						"x": 1.0,
+						"y": 1.0,
+						"z": 1.0
+					},
+					"translate": {
+						"x": 0.0,
+						"y": 10.746804237365723,
+						"z": 5.546891212463379
+					}
+				}
+			}
+		},
+		"filepath": "",
+		"isActive": true,
+		"isRenamable": true,
+		"isView": true,
+		"name": "point light A"
+	},
+	{
+		"components": {
+			"class PointLightComponent": {
+				"color": {
+					"b": 1.0,
+					"g": 1.0,
+					"r": 1.0
+				},
+				"intensity": 96.80000305175781,
+				"radius": 25.200000762939453,
+				"unit": 1
+			},
+			"class TransformComponent": {
+				"transform": {
+					"rotate": {
+						"w": 1.0,
+						"x": 0.0,
+						"y": 0.0,
+						"z": 0.0
+					},
+					"scale": {
+						"x": 1.0,
+						"y": 1.0,
+						"z": 1.0
+					},
+					"translate": {
+						"x": 32.73326873779297,
+						"y": 6.537056922912598,
+						"z": -1.6564640998840332
+					}
+				}
+			}
+		},
+		"filepath": "",
+		"isActive": true,
+		"isRenamable": true,
+		"isView": true,
+		"name": "point light B"
+	},
+	{
+		"components": {
+			"class PointLightComponent": {
+				"color": {
+					"b": 1.0,
+					"g": 1.0,
+					"r": 1.0
+				},
+				"intensity": 85.4000015258789,
+				"radius": 35.29999923706055,
+				"unit": 1
+			},
+			"class TransformComponent": {
+				"transform": {
+					"rotate": {
+						"w": 1.0,
+						"x": 0.0,
+						"y": 0.0,
+						"z": 0.0
+					},
+					"scale": {
+						"x": 1.0,
+						"y": 1.0,
+						"z": 1.0
+					},
+					"translate": {
+						"x": -27.879026412963867,
+						"y": 6.592794895172119,
+						"z": 0.0
+					}
+				}
+			}
+		},
+		"filepath": "",
+		"isActive": true,
+		"isRenamable": true,
+		"isView": true,
+		"name": "point light C"
 	}
 ]

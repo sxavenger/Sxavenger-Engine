@@ -492,9 +492,13 @@ void FSceneRenderer::PostProcessPass(const DirectXThreadContext* context, const 
 
 	// componentを取得
 	sComponentStorage->ForEachActive<PostProcessLayerComponent>([&](PostProcessLayerComponent* component) {
+		if (component->GetTag() != PostProcessLayerComponent::Tag::Global) {
+			return; //!< Global以外のPostProcessLayerComponentは処理しない
+		}
+
 		component->Process(context, textures_, config.camera);
 	});
-	//!< HACK: componentのtagなどを作成.
+	
 
 	textures_->EndPostProcess(context);
 }

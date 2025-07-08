@@ -67,3 +67,21 @@ DirectionalLightComponent::Parameter& DirectionalLightComponent::GetParameter() 
 const TransformComponent* DirectionalLightComponent::GetTransform() const {
 	return BaseComponent::GetBehaviour()->RequireComponent<TransformComponent>();
 }
+
+json DirectionalLightComponent::PerseToJson() const {
+	json data = json::object();
+
+	if (parameter_ == nullptr) {
+		return data;
+	}
+
+	data["color"]     = GeometryJsonSerializer::ToJson(parameter_->At(0).color);
+	data["intensity"] = parameter_->At(0).intensity;
+
+	return data;
+}
+
+void DirectionalLightComponent::InputJson(const json& data) {
+	parameter_->At(0).color     = GeometryJsonSerializer::JsonToColor3f(data["color"]);
+	parameter_->At(0).intensity = data["intensity"].get<float>();
+}

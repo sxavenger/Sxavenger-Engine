@@ -37,7 +37,9 @@ public:
 	// Tag enum class
 	////////////////////////////////////////////////////////////////////////////////////////////
 	enum class Tag {
-		None
+		None,
+		Local,
+		Global
 	};
 
 	////////////////////////////////////////////////////////////////////////////////////////////
@@ -59,6 +61,12 @@ public:
 	void ShowComponentInspector() override;
 
 	void Process(const DirectXThreadContext* context, FRenderTargetTextures* textures, const CameraComponent* camera);
+
+	//* tag option *//
+
+	void SetTag(Tag tag) { tag_ = tag; }
+
+	Tag GetTag() const { return tag_; }
 
 	//* process option *//
 
