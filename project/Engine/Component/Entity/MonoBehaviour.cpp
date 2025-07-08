@@ -164,7 +164,7 @@ void MonoBehaviour::ShowInspector() {
 	ImGui::SeparatorText("components");
 
 	for (const auto& [type, component] : GetComponents()) {
-		if (ImGui::CollapsingHeader(type->name())) {
+		if (ImGui::CollapsingHeader(type->name(), ImGuiTreeNodeFlags_DefaultOpen)) {
 			(*component)->ShowComponentInspector();
 		}
 	}

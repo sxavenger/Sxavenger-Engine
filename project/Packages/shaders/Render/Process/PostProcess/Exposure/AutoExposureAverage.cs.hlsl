@@ -15,7 +15,8 @@ static const uint kPixelNum = gConfig.size.x * gConfig.size.y;
 [numthreads(_GROUP_SIZE, 1, 1)]
 void main(uint3 dispatchThreadId : SV_DispatchThreadID) {
 
-	InterlockedAdd(gHistogram[dispatchThreadId.x], gHistogramShared[dispatchThreadId.x]);
+	gHistogram[dispatchThreadId.x] = gHistogramShared[dispatchThreadId.x];
+	//InterlockedAdd(gHistogram[dispatchThreadId.x], gHistogramShared[dispatchThreadId.x]);
 
 	GroupMemoryBarrierWithGroupSync();
 
@@ -24,7 +25,7 @@ void main(uint3 dispatchThreadId : SV_DispatchThreadID) {
 
 	GroupMemoryBarrierWithGroupSync();
 
-	gHistogram[dispatchThreadId.x] = 0; // reset histogram for next frame
+	//gHistogram[dispatchThreadId.x] = 0; // reset histogram for next frame
 
 	[unroll]
 	for (uint cutoff = (_GROUP_SIZE >> 1); cutoff > 0; cutoff >>= 1) {

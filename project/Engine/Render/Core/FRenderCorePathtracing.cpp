@@ -12,7 +12,7 @@ _DXROBJECT_USING
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 void FRenderCorePathtracing::Reservoir::Init() {
-	sampleCount      = 4096;
+	sampleCount      = 1028;
 	frameSampleCount = 2;
 	currentFrame     = 0;
 }

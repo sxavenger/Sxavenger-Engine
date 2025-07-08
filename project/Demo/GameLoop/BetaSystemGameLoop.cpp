@@ -56,9 +56,6 @@ void BetaSystemGameLoop::InitSystem() {
 	camera_->GetComponent<CameraComponent>()->SetTag(CameraComponent::Tag::GameCamera);
 
 	SxavengerAsset::TryImport<AssetModel>("assets/models/PBR_Sphere_Test/model/PBR_Sphere.gltf");
-	//SxavengerAsset::TryImport<AssetModel>("assets/models/chessboard/ABeautifulGame.gltf");
-	//SxavengerAsset::TryImport<AssetModel>("assets/models/sponza/NewSponza_Main_glTF_003.gltf");
-	//SxavengerAsset::TryImport<AssetModel>("assets/models/sponza_curtains/NewSponza_Curtains_glTF.gltf");
 
 	camera_->AddComponent<PostProcessLayerComponent>();
 	camera_->GetComponent<PostProcessLayerComponent>()->SetTag(PostProcessLayerComponent::Tag::Global);

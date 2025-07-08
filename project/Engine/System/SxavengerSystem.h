@@ -102,6 +102,8 @@ public:
 
 	static void PushTask(AsyncExecution execution, const std::shared_ptr<AsyncTask>& task);
 
+	static void PushTaskAndWait(AsyncExecution execution, const AsyncTask::Function& function);
+
 	static void ShutdownAsyncThread();
 
 	//-----------------------------------------------------------------------------------------

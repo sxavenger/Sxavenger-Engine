@@ -150,6 +150,16 @@ void SxavengerSystem::PushTask(AsyncExecution execution, const std::shared_ptr<A
 	sAsyncThreadCollection->PushTask(execution, task);
 }
 
+void SxavengerSystem::PushTaskAndWait(AsyncExecution execution, const AsyncTask::Function& function) {
+	std::shared_ptr<AsyncTask> task = std::make_shared<AsyncTask>();
+	task->SetFunction(function);
+	task->SetTag("wait task");
+
+	sAsyncThreadCollection->PushTask(execution, task);
+
+	task->Wait();
+}
+
 void SxavengerSystem::ShutdownAsyncThread() {
 	sAsyncThreadCollection->Term();
 }

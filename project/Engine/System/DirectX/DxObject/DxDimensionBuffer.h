@@ -41,6 +41,8 @@ public:
 
 	const size_t GetStride() const { return stride_; }
 
+	const size_t GetByteSize() const { return size_ * stride_; }
+
 protected:
 
 	//=========================================================================================

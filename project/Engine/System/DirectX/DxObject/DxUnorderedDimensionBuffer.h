@@ -67,12 +67,12 @@ inline void UnorderedDimensionBuffer<T>::Create(Device* device, uint32_t size) {
 	size_   = size;
 
 	// resourceの生成
-	resource_ = CreateBufferResource(
+	resource_ = CreateBufferResource(	
 		device->GetDevice(),
 		D3D12_HEAP_TYPE_DEFAULT,
-		size_ * stride_,
+		BaseDimensionBuffer::GetByteSize(),
 		D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS,
-		D3D12_RESOURCE_STATE_COMMON
+		D3D12_RESOURCE_STATE_UNORDERED_ACCESS
 	);
 
 	address_ = resource_->GetGPUVirtualAddress();

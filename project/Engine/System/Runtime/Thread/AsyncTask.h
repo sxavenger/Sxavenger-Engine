@@ -29,6 +29,12 @@ public:
 		Completed, // タスクが正常に完了
 	};
 
+	////////////////////////////////////////////////////////////////////////////////////////////
+	// using
+	////////////////////////////////////////////////////////////////////////////////////////////
+	using Function = std::function<void(const AsyncThread*)>;
+
+
 public:
 
 	//=========================================================================================
@@ -39,7 +45,7 @@ public:
 
 	virtual void Execute(const AsyncThread* thread);
 
-	void SetFunction(const std::function<void(const AsyncThread*)>& function) { function_ = function; }
+	void SetFunction(const Function& function) { function_ = function; }
 
 	//* task option *//
 
@@ -63,7 +69,7 @@ private:
 
 	Status status_ = Status::None;
 
-	std::function<void(const AsyncThread*)> function_ = nullptr;
+	Function function_ = nullptr;
 
 	std::string tag_ = "nuknown task";
 

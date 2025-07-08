@@ -9,6 +9,7 @@
 //* engine
 #include <Engine/System/DirectX/DxObject/DxDimensionBuffer.h>
 #include <Engine/System/DirectX/DxObject/DxUnorderedDimensionBuffer.h>
+#include <Engine/System/DirectX/DxObject/DxReadbackDimensionBuffer.h>
 
 //* c++
 #include <memory>
@@ -68,5 +69,8 @@ private:
 	std::unique_ptr<DxObject::UnorderedDimensionBuffer<uint32_t>> histgram_;
 	std::unique_ptr<DxObject::UnorderedDimensionBuffer<uint32_t>> histgramShared_;
 	std::unique_ptr<DxObject::UnorderedDimensionBuffer<float>>    averageLuminance;
+
+	//* debug
+	std::unique_ptr<DxObject::ReadbackDimensionBuffer<uint32_t>> debugHistgram_;
 
 };

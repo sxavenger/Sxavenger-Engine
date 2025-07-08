@@ -5,6 +5,7 @@ _DXOBJECT_USING
 // include
 //-----------------------------------------------------------------------------------------
 //* engine
+#include <Engine/System/UI/SxImGui.h>
 #include <Engine/System/SxavengerSystem.h>
 #include <Engine/Render/FRenderTargetTextures.h>
 #include <Engine/Render/FRenderCore.h>
@@ -15,8 +16,8 @@ _DXOBJECT_USING
 
 void PostProcessAutoExposure::Parameter::Init() {
 	minLogLuminance = 0.03f;
-	maxLogLuminance = 8.0f;
-	timeCoeff = 0.02f;
+	maxLogLuminance = 20.0f;
+	timeCoeff = 0.1f;
 }
 
 void PostProcessAutoExposure::Parameter::SetImGuiCommand() {
@@ -30,6 +31,8 @@ void PostProcessAutoExposure::Parameter::SetImGuiCommand() {
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 void PostProcessAutoExposure::Init() {
+	name_ = "Auto Exposure";
+
 	parameter_ = std::make_unique<DimensionBuffer<Parameter>>();
 	parameter_->Create(SxavengerSystem::GetDxDevice(), 1);
 	parameter_->At(0).Init();
@@ -43,7 +46,7 @@ void PostProcessAutoExposure::Init() {
 	averageLuminance = std::make_unique<UnorderedDimensionBuffer<float>>();
 	averageLuminance->Create(SxavengerSystem::GetDxDevice(), 1);
 
-	name_ = "Auto Exposure";
+	debugHistgram_ = std::make_unique<ReadbackDimensionBuffer<uint32_t>>();
 }
 
 void PostProcessAutoExposure::Process(const DirectXThreadContext* context, FRenderTargetTextures* textures, const CameraComponent* camera) {
@@ -88,4 +91,26 @@ void PostProcessAutoExposure::Process(const DirectXThreadContext* context, FRend
 
 void PostProcessAutoExposure::ShowInspectorImGui() {
 	parameter_->At(0).SetImGuiCommand();
+
+	ReadbackDimensionBuffer<uint32_t>::Readback(
+		SxavengerSystem::GetDxDevice(),
+		SxavengerSystem::GetMainThreadContext()->GetDxCommand(),
+		histgram_.get(),
+		debugHistgram_.get()
+	);
+
+	auto itr = std::max_element(debugHistgram_->GetSpan().begin(), debugHistgram_->GetSpan().end());
+
+	SxImGui::PlotHistogramFunc(
+		"## histogram",
+		[&](uint32_t index) { return static_cast<float>(debugHistgram_->At(index)) / (*itr); },
+		debugHistgram_->GetSize(),
+		0,
+		NULL,
+		std::nullopt,
+		std::nullopt,
+		ImVec2(ImGui::GetContentRegionAvail().x, 80.0f)
+	);
+
+	
 }

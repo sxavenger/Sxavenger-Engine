@@ -68,10 +68,10 @@ float3 BSDF(float3 albedo, float roughness, float metallic, float3 normal, float
 
 	float3 h = normalize(wi + wo);
 
-	float NdotV = saturate(dot(normal, wo));
-	float NdotL = saturate(dot(normal, wi));
+	float NdotV = saturate(dot(normal, wi));
+	float NdotL = saturate(dot(normal, wo));
 	float NdotH = saturate(dot(normal, h));
-	float VdotH = saturate(dot(wo, h));
+	float VdotH = saturate(dot(wi, h));
 
 	// diffuse Albedo
 	//!< 金属(metallic = 1.0f) -> 0.0f
@@ -188,9 +188,11 @@ _CLOSESTHIT void mainClosesthit(inout Payload payload, in Attribute attribute) {
 	payload.color.a = 1.0f;
 
 	float3 color = float3(0.0f, 0.0f, 0.0f);
-	
-	for (uint i = 0; i < gDirectionalLightCount.count; ++i) {
-		payload.color.rgb += CalculateDirectionalLight(i, surface.position, surface.normal, surface.albedo, surface.roughness, surface.metallic);
+
+	if (gReservoir.IsBeginFrame()) {
+		for (uint i = 0; i < gDirectionalLightCount.count; ++i) {
+			payload.color.rgb += CalculateDirectionalLight(i, surface.position, surface.normal, surface.albedo, surface.roughness, surface.metallic);
+		}
 	}
 
 	//!< 乱数サンプルを生成
@@ -211,7 +213,7 @@ _CLOSESTHIT void mainClosesthit(inout Payload payload, in Attribute attribute) {
 		Payload path = (Payload)0;
 		path.rayType = RayType::kPath;
 
-		float3 fs = BSDF(surface.albedo, surface.roughness, surface.metallic, surface.normal, dir, -WorldRayDirection());
+		float3 fs = BSDF(surface.albedo, surface.roughness, surface.metallic, surface.normal, -dir, WorldRayDirection());
 		float pdf = 1.0f / (4 * kPi); //!< 拡散BRDFのPDFは1/(4π)
 
 		path.le = payload.le * fs / pdf;

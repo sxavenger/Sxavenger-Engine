@@ -33,7 +33,6 @@
     <ClCompile Include="Engine\System\UI\ImGuiController.cpp" />
     <ClCompile Include="Engine\System\DirectX\DxObject\DxBindBuffer.cpp" />
     <ClCompile Include="Lib\Adapter\Json\IJsonSerializer.cpp" />
-    <ClCompile Include="Engine\System\DirectX\DxObject\DxUnorderedDimensionBuffer.cpp" />
     <ClCompile Include="Engine\System\DirectX\DxObject\DxShaderBlob.cpp" />
     <ClCompile Include="Engine\System\DirectX\DxObject\DxGraphicsPipelineState.cpp" />
     <ClCompile Include="Engine\System\DirectX\DxObject\DxComputePipelineState.cpp" />
@@ -365,6 +364,7 @@
     <ClInclude Include="Engine\Asset\Assets\Scene\AssetScene.h" />
     <ClInclude Include="Engine\Render\Core\FRenderCorePathtracing.h" />
     <ClInclude Include="Engine\Content\ContentStorage.h" />
+    <ClInclude Include="Engine\System\DirectX\DxObject\DxReadbackDimensionBuffer.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />
