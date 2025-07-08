@@ -50,6 +50,16 @@ void FSceneRenderer::Render(const DirectXThreadContext* context, const Config& c
 	context->TransitionAllocator();
 }
 
+void FSceneRenderer::ResetReserviour(const DirectXThreadContext* context) {
+	if (reservoir_ != nullptr) {
+		reservoir_->At(0).ResetFrame(); //!< reservoirのリセット
+	}
+
+	if (textures_ != nullptr) {
+		textures_->ClearTextures(context); //!< texturesのリセット
+	}
+}
+
 void FSceneRenderer::ApplyConfig(Config& config) {
 	if (config.camera == nullptr) { //!< cameraが設定されていない場合, Tagのcameraを取得
 		if (config.tag != CameraComponent::Tag::None) {

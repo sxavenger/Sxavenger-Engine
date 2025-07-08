@@ -103,6 +103,10 @@ public:
 
 	void SetTextures(FRenderTargetTextures* textures) { textures_ = textures; }
 
+	//* option *//
+
+	void ResetReserviour(const DirectXThreadContext* context);
+
 private:
 
 	//=========================================================================================

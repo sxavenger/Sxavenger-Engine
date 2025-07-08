@@ -3,9 +3,6 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
-//* uuid
-#include "Uuid.h"
-
 //* engine
 #include <Engine/System/DirectX/DirectXContext.h>
 #include <Engine/System/Runtime/Thread/AsyncTask.h>
@@ -13,6 +10,7 @@
 //* lib
 #include <Lib/CXXAttributeConfig.h>
 #include <Lib/Adapter/Json/IJsonSerializer.h>
+#include <Lib/Adapter/Uuid/Uuid.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // UBaseAsset class

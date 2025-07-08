@@ -299,7 +299,25 @@ void RenderSceneEditor::ShowSceneMenu() {
 
 		if (ImGui::RadioButton("pathtracing(preview)", config_.technique == FSceneRenderer::GraphicsTechnique::Pathtracing)) {
 			config_.technique = FSceneRenderer::GraphicsTechnique::Pathtracing;
-			textures_->ClearTextures(SxavengerSystem::GetMainThreadContext());
+			renderer_->ResetReserviour(SxavengerSystem::GetMainThreadContext());
+		}
+
+		// technique option
+		ImGui::Text("technique option");
+		ImGui::Separator();
+
+		switch (config_.technique) {
+			case FSceneRenderer::GraphicsTechnique::Deferred:
+				
+				break;
+
+			case FSceneRenderer::GraphicsTechnique::Pathtracing:
+
+				if (ImGui::Button("reset reservoir")) {
+					renderer_->ResetReserviour(SxavengerSystem::GetMainThreadContext());
+				}
+				
+				break;
 		}
 
 		ImGui::EndDisabled();

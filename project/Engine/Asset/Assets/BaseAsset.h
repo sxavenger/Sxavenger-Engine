@@ -40,6 +40,10 @@ public:
 
 	void Execute(const AsyncThread* thread) override;
 
+	//* file option *//
+
+	virtual void ApplyParam() {}
+
 	//* state option *//
 
 	bool IsComplete() const { return AsyncTask::IsCompleted(); }
@@ -50,7 +54,9 @@ public:
 
 	void SetFilepath(const std::filesystem::path& filepath);
 
-	const std::filesystem::path& GetFilepath() const { return filepath_; }
+	const std::filesystem::path& GetFilepath() const;
+
+	std::filesystem::path GetConfigFilepath() const;
 
 	void SetParam(const std::any& param) { param_ = param; }
 

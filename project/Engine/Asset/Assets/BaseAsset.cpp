@@ -33,6 +33,17 @@ void BaseAsset::SetFilepath(const std::filesystem::path& filepath) {
 	SetTag(filepath.generic_string());
 }
 
+const std::filesystem::path& BaseAsset::GetFilepath() const {
+	Exception::Assert(!filepath_.empty(), "asset filepath is empty.");
+	return filepath_;
+}
+
+std::filesystem::path BaseAsset::GetConfigFilepath() const {
+	std::filesystem::path path = filepath_;
+	path += ".sasset";
+	return path;
+}
+
 void BaseAsset::ShowInspector() {
 	ImGui::SeparatorText(filepath_.filename().generic_string().c_str());
 	ImGui::Separator();

@@ -21,8 +21,9 @@ void AssetModel::Load(_MAYBE_UNUSED const DirectXThreadContext* context) {
 
 	uint32_t option = Model::GetDefaultAssimpOption();
 
-	if (param_.has_value()) {
+	if (param_.has_value()) { //!< parameter override
 		option = std::any_cast<uint32_t>(param_);
+		 
 	}
 
 	model_.Load(BaseAsset::GetFilepath(), option);
