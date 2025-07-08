@@ -56,9 +56,11 @@ void SceneObject::InputJson(const json& data) {
 	//* parameter
 	filepath_ = data["filepath"].get<std::string>();
 
-	auto asset = SxavengerAsset::TryImport<AssetModel>(filepath_);
-	asset.WaitGet()->CreateStaticNodeMeshBehaviour(this);
-
+	if (!filepath_.empty()) {
+		auto asset = SxavengerAsset::TryImport<AssetModel>(filepath_);
+		asset.WaitGet()->CreateStaticNodeMeshBehaviour(this);
+	}
+	
 	//* properties
 	name_        = data["name"].get<std::string>();
 	isRenamable_ = data["isRenamable"];

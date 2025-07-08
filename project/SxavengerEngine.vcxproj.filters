@@ -156,7 +156,7 @@
     <ClCompile Include="Engine\Module\Scene\SceneObjects.cpp" />
     <ClCompile Include="Engine\Content\Exporter\TextureExporter.cpp" />
     <ClCompile Include="Engine\System\Utility\UtilityCommon.cpp" />
-    <ClCompile Include="Engine\Preview\Asset\Uuid.cpp" />
+    <ClCompile Include="Lib\Adapter\Uuid\Uuid.cpp" />
     <ClCompile Include="Engine\Preview\Asset\UAssetTexture.cpp" />
     <ClCompile Include="Engine\Preview\Asset\UBaseAsset.cpp" />
     <ClCompile Include="Engine\Preview\Asset\UAssetStaticMesh.cpp" />
@@ -352,7 +352,7 @@
     <ClInclude Include="Engine\System\Utility\UtilityCommon.h" />
     <ClInclude Include="Lib\Sxl\OptimizedPathSet.h" />
     <ClInclude Include="Engine\Preview\Asset\UBaseAsset.h" />
-    <ClInclude Include="Engine\Preview\Asset\Uuid.h" />
+    <ClInclude Include="Lib\Adapter\Uuid\Uuid.h" />
     <ClInclude Include="Engine\Preview\Asset\UAssetTexture.h" />
     <ClInclude Include="Engine\Preview\Asset\UAssetStaticMesh.h" />
     <ClInclude Include="Engine\Preview\Asset\UAssetMaterial.h" />

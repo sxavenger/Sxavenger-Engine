@@ -70,7 +70,9 @@ public:
 
 	//* serialization option *//
 
-	//virtual json PerseToJson() const override
+	json PerseToJson() const override;
+
+	void InputJson(const json& data) override;
 
 private:
 

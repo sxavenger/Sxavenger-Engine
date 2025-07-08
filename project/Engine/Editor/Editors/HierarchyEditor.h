@@ -60,6 +60,9 @@ private:
 
 	void ShowHierarchyMenu();
 
+	void ShowActorMenu();
+	void ShowSceneMenu();
+
 	void ShowHierarchyWindow();
 
 	//* helper method *//

@@ -190,22 +190,7 @@ _CLOSESTHIT void mainClosesthit(inout Payload payload, in Attribute attribute) {
 	float3 color = float3(0.0f, 0.0f, 0.0f);
 	
 	for (uint i = 0; i < gDirectionalLightCount.count; ++i) {
-
-		//* Lightの情報を取得
-		float3 c_light = gDirectionalLights[i].GetColor(); //!< lightのcolor
-		float3 l       = -gDirectionalLightTransforms[i].GetDirection(); //!< surfaceからlightへの方向ベクトル
-
-		//* shadow
-		RayDesc desc;
-		desc.Origin    = surface.position;
-		desc.Direction = l;
-		desc.TMin      = kTMin;
-		desc.TMax      = kTMax;
-
-		c_light *= gDirectionalLightShadows[i].TraceShadow(desc, gScene);
-		// todo: 不必要な場合は、gShadow.TraceShadow()を呼び出さないようにする
-		
-		color += BSDF(surface.albedo, surface.roughness, surface.metallic, surface.normal, -WorldRayDirection(), -gDirectionalLightTransforms[i].GetDirection()) * c_light;
+		payload.color.rgb += CalculateDirectionalLight(i, surface.position, surface.normal, surface.albedo, surface.roughness, surface.metallic);
 	}
 
 	//!< 乱数サンプルを生成

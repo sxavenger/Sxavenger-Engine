@@ -23,10 +23,20 @@
 //////////////////////////////////////////////////////////////////////////////////////////
 
 void HierarchyEditor::Init() {
+	sComponentStorage->RegisterFactory<TransformComponent>();
+	sComponentStorage->RegisterFactory<DirectionalLightComponent>();
+	sComponentStorage->RegisterFactory<PointLightComponent>();
 }
 
 void HierarchyEditor::ShowMainMenu() {
 	ShowHierarchyMenu();
+
+	if (ImGui::BeginMenu("hierarchy")) {
+		MenuPadding();
+		ImGui::SeparatorText("hierarchy");
+
+		ImGui::EndMenu();
+	}
 }
 
 void HierarchyEditor::ShowWindow() {
@@ -37,6 +47,50 @@ void HierarchyEditor::ShowHierarchyMenu() {
 	if (ImGui::BeginMenu("hierarchy")) {
 		MenuPadding();
 		ImGui::SeparatorText("hierarchy");
+
+		ShowActorMenu();
+		ShowSceneMenu();
+
+		ImGui::EndMenu();
+	}
+}
+
+void HierarchyEditor::ShowActorMenu() {
+	if (ImGui::BeginMenu("actor")) {
+		MenuPadding();
+		ImGui::SeparatorText("actor");
+
+		ImGui::Text("light");
+		ImGui::Separator();
+
+		if (ImGui::MenuItem("directional light")) {
+			std::unique_ptr<SceneObject> object = std::make_unique<SceneObject>();
+			object->SetName("directional light");
+
+			object->AddComponent<TransformComponent>();
+			object->AddComponent<DirectionalLightComponent>();
+
+			sSceneObjects->AddObject(std::move(object));
+		}
+
+		if (ImGui::MenuItem("point light")) {
+			std::unique_ptr<SceneObject> object = std::make_unique<SceneObject>();
+			object->SetName("point light");
+
+			object->AddComponent<TransformComponent>();
+			object->AddComponent<PointLightComponent>();
+
+			sSceneObjects->AddObject(std::move(object));
+		}
+
+		ImGui::EndMenu();
+	}
+}
+
+void HierarchyEditor::ShowSceneMenu() {
+	if (ImGui::BeginMenu("scene")) {
+		MenuPadding();
+		ImGui::SeparatorText("scene");
 
 		SxImGui::InputTextFunc("## scene name", sceneNameBuf_, [this](const std::string& buf) {
 			sceneFileName_ = buf;
@@ -55,6 +109,11 @@ void HierarchyEditor::ShowHierarchyMenu() {
 		ImGui::SameLine();
 
 		if (ImGui::Button("load")) {
+
+			if (sceneFileName_.extension() != ".scene") {
+				sceneFileName_ = sceneFileName_.replace_extension(".scene");
+			}
+
 			sSceneObjects->InputJsonFromFilepath(kSceneDirectory_ / sceneFileName_);
 			Logger::CommentRuntime("success | load scene");
 		}

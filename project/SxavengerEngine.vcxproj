@@ -270,7 +270,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="Engine\Preview\Asset\UAssetStaticMesh.cpp" />
     <ClCompile Include="Engine\Preview\Asset\UAssetTexture.cpp" />
     <ClCompile Include="Engine\Preview\Asset\UBaseAsset.cpp" />
-    <ClCompile Include="Engine\Preview\Asset\Uuid.cpp" />
+    <ClCompile Include="Lib\Adapter\Uuid\Uuid.cpp" />
     <ClCompile Include="Engine\Render\Common\FLUTTexture.cpp" />
     <ClCompile Include="Engine\Render\Common\FProcessTexture.cpp" />
     <ClCompile Include="Engine\Render\Core\FRenderCorePathtracing.cpp" />
@@ -445,7 +445,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Engine\Preview\Asset\UAssetStaticMesh.h" />
     <ClInclude Include="Engine\Preview\Asset\UBaseAsset.h" />
     <ClInclude Include="Engine\Preview\Asset\UAssetTexture.h" />
-    <ClInclude Include="Engine\Preview\Asset\Uuid.h" />
+    <ClInclude Include="Lib\Adapter\Uuid\Uuid.h" />
     <ClInclude Include="Engine\Render\Common\FLUTTexture.h" />
     <ClInclude Include="Engine\Render\Common\FProcessTexture.h" />
     <ClInclude Include="Engine\Render\Core\FRenderCorePathtracing.h" />

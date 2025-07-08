@@ -59,9 +59,6 @@ void BetaSystemGameLoop::InitSystem() {
 	//SxavengerAsset::TryImport<AssetModel>("assets/models/chessboard/ABeautifulGame.gltf");
 	//SxavengerAsset::TryImport<AssetModel>("assets/models/sponza/NewSponza_Main_glTF_003.gltf");
 	//SxavengerAsset::TryImport<AssetModel>("assets/models/sponza_curtains/NewSponza_Curtains_glTF.gltf");
-	
-	lightA_  = ComponentHelper::CreatePointLightMonoBehaviour();
-	lightB_  = ComponentHelper::CreateDirectionalLightMonoBehaviour();
 
 	camera_->AddComponent<PostProcessLayerComponent>();
 	camera_->GetComponent<PostProcessLayerComponent>()->AddPostProcess<PostProcessAutoExposure>();
@@ -78,10 +75,10 @@ void BetaSystemGameLoop::InitSystem() {
 	//atmosphere_ = std::make_unique<AtmosphereActor>();
 	//atmosphere_->Init({ 1024, 1024 });
 
-	skylight_ = std::make_unique<SkyLightActor>();
-	skylight_->Init({ 1024, 1024 });
-	skylight_->SetTexture("assets/textures/textureCube/studio_small_09_4k.dds");
-	skylight_->Update(true);
+	//skylight_ = std::make_unique<SkyLightActor>();
+	//skylight_->Init({ 1024, 1024 });
+	//skylight_->SetTexture("assets/textures/textureCube/studio_small_09_4k.dds");
+	//skylight_->Update(true);
 
 	offlineSkylight_ = std::make_unique<MonoBehaviour>();
 	auto light = offlineSkylight_->AddComponent<SkyLightComponent>();
