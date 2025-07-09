@@ -43,10 +43,11 @@ void PostProcessAutoExposure::Init() {
 	histgramShared_ = std::make_unique<UnorderedDimensionBuffer<uint32_t>>();
 	histgramShared_->Create(SxavengerSystem::GetDxDevice(), kGroupCount_);
 
-	averageLuminance = std::make_unique<UnorderedDimensionBuffer<float>>();
-	averageLuminance->Create(SxavengerSystem::GetDxDevice(), 1);
+	averageLuminance_ = std::make_unique<UnorderedDimensionBuffer<float>>();
+	averageLuminance_->Create(SxavengerSystem::GetDxDevice(), 1);
 
-	debugHistgram_ = std::make_unique<ReadbackDimensionBuffer<uint32_t>>();
+	debugHistgram_         = std::make_unique<ReadbackDimensionBuffer<uint32_t>>();
+	debugAverageLuminance_ = std::make_unique<ReadbackDimensionBuffer<float>>();
 }
 
 void PostProcessAutoExposure::Process(const DirectXThreadContext* context, FRenderTargetTextures* textures, const CameraComponent* camera) {
@@ -66,7 +67,7 @@ void PostProcessAutoExposure::Process(const DirectXThreadContext* context, FRend
 	// intermediate
 	desc.SetAddress("gHistogram",        histgram_->GetGPUVirtualAddress());
 	desc.SetAddress("gHistogramShared",  histgramShared_->GetGPUVirtualAddress());
-	desc.SetAddress("gAverageLuminance", averageLuminance->GetGPUVirtualAddress());
+	desc.SetAddress("gAverageLuminance", averageLuminance_->GetGPUVirtualAddress());
 
 	// parameter
 	desc.SetAddress("gParameter", parameter_->GetGPUVirtualAddress());
@@ -81,7 +82,7 @@ void PostProcessAutoExposure::Process(const DirectXThreadContext* context, FRend
 	core->BindComputeBuffer(FRenderCoreProcess::ProcessType::AutoExposureAverage, context, desc);
 	context->GetCommandList()->Dispatch(1, 1, 1);
 
-	averageLuminance->Barrier(context->GetDxCommand());
+	averageLuminance_->Barrier(context->GetDxCommand());
 
 	core->SetPipeline(FRenderCoreProcess::ProcessType::AutoExposureApply, context);
 	core->BindComputeBuffer(FRenderCoreProcess::ProcessType::AutoExposureApply, context, desc);
@@ -99,7 +100,18 @@ void PostProcessAutoExposure::ShowInspectorImGui() {
 		debugHistgram_.get()
 	);
 
+	ReadbackDimensionBuffer<float>::Readback(
+		SxavengerSystem::GetDxDevice(),
+		SxavengerSystem::GetMainThreadContext()->GetDxCommand(),
+		averageLuminance_.get(),
+		debugAverageLuminance_.get()
+	);
+
+
 	auto itr = std::max_element(debugHistgram_->GetSpan().begin(), debugHistgram_->GetSpan().end());
+
+	ImVec2 cursor = ImGui::GetCursorPos();
+	ImVec2 size   = { ImGui::GetContentRegionAvail().x, 80.0f };
 
 	SxImGui::PlotHistogramFunc(
 		"## histogram",
@@ -109,7 +121,7 @@ void PostProcessAutoExposure::ShowInspectorImGui() {
 		NULL,
 		std::nullopt,
 		std::nullopt,
-		ImVec2(ImGui::GetContentRegionAvail().x, 80.0f)
+		size
 	);
 
 	

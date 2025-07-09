@@ -68,9 +68,10 @@ private:
 	static inline const uint32_t kGroupCount_ = 256;
 	std::unique_ptr<DxObject::UnorderedDimensionBuffer<uint32_t>> histgram_;
 	std::unique_ptr<DxObject::UnorderedDimensionBuffer<uint32_t>> histgramShared_;
-	std::unique_ptr<DxObject::UnorderedDimensionBuffer<float>>    averageLuminance;
+	std::unique_ptr<DxObject::UnorderedDimensionBuffer<float>>    averageLuminance_;
 
 	//* debug
 	std::unique_ptr<DxObject::ReadbackDimensionBuffer<uint32_t>> debugHistgram_;
+	std::unique_ptr<DxObject::ReadbackDimensionBuffer<float>>    debugAverageLuminance_;
 
 };
