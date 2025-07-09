@@ -48,6 +48,10 @@ void SxavengerContent::PushLine(const Vector3f& v1, const Vector3f& v2, const Co
 	debugPrimitive_->PushLine(v1, v2, color);
 }
 
+void SxavengerContent::PushLineOverlay(const Vector3f& v1, const Vector3f& v2, const Color4f& color) {
+	debugPrimitive_->PushLineOverlay(v1, v2, color);
+}
+
 void SxavengerContent::PushAxis(const Vector3f& center, float length) {
 	debugPrimitive_->PushAxis(center, length);
 }

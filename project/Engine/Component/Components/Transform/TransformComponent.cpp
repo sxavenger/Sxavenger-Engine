@@ -35,7 +35,7 @@ const D3D12_GPU_VIRTUAL_ADDRESS& TransformComponent::GetGPUVirtualAddress() cons
 }
 
 const Vector3f TransformComponent::GetPosition() const {
-	return { mat_.m[3][0], mat_.m[3][1], mat_.m[3][2] };
+	return Matrix4x4::GetTranslation(mat_);
 }
 
 const TransformationMatrix& TransformComponent::GetTransformationMatrix() const {

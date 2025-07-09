@@ -61,4 +61,10 @@ private:
 	//!< hack: animationをここでするのはどうか
 	//!< 理想はanimator componentなどを作ってそこで管理する
 
+	//=========================================================================================
+	// private methods
+	//=========================================================================================
+
+	void PushBornLine(const Matrix4x4& mat, const std::vector<Joint>& joints, const Joint& joint);
+
 };

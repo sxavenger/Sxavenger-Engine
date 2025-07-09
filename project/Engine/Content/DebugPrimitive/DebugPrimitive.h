@@ -129,6 +129,8 @@ public:
 
 	void PushLine(const Vector3f& v1, const Vector3f& v2, const Color4f& color);
 
+	void PushLineOverlay(const Vector3f& v1, const Vector3f& v2, const Color4f& color);
+
 	//* drawer options *//
 
 	void PushGrid(const Vector3f& center, float size);
@@ -142,6 +144,17 @@ public:
 
 private:
 
+	////////////////////////////////////////////////////////////////////////////////////////////
+	// PipelineType enum
+	////////////////////////////////////////////////////////////////////////////////////////////
+	enum PipelineType : uint32_t {
+		kLine,
+		kLineOverlay
+	};
+	static inline const uint32_t kPipelineCount = 2; //!< pipelineの数
+
+private:
+
 	//=========================================================================================
 	// private variables
 	//=========================================================================================
@@ -149,10 +162,11 @@ private:
 	//* primitive *//
 
 	std::unique_ptr<DebugPrimitiveLine> line_;
+	std::unique_ptr<DebugPrimitiveLine> lineOverlay_;
 
 	//* pipeline *//
 
-	std::unique_ptr<DxObject::GraphicsPipelineState> pipeline_;
+	std::array<std::unique_ptr<DxObject::GraphicsPipelineState>, kPipelineCount> pipelines_;
 
 	//=========================================================================================
 	// private methods

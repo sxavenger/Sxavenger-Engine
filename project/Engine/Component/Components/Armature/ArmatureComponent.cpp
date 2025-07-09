@@ -5,9 +5,11 @@
 //-----------------------------------------------------------------------------------------
 //* component
 #include "../../Entity/MonoBehaviour.h"
+#include "../Transform/TransformComponent.h"
 
 //* engine
 #include <Engine/System/Utility/Logger.h>
+#include <Engine/System/UI/SxImGui.h>
 #include <Engine/Content/SxavengerContent.h>
 
 //=========================================================================================
@@ -52,4 +54,35 @@ void ArmatureComponent::TransitionAnimation(
 }
 
 void ArmatureComponent::ShowComponentInspector() {
+	if (!skeleton_.has_value()) {
+		ImGui::TextDisabled("skeleton is not set.");
+		return;
+	}
+
+	const auto& skeleton = GetSkeleton();
+
+	Matrix4x4 mat = Matrix4x4::Identity();
+
+	if (auto parent = BaseComponent::GetBehaviour()->GetParent()) {
+		if (auto component = parent->GetComponent<TransformComponent>()) {
+			mat = component->GetMatrix();
+		}
+	}
+
+	PushBornLine(mat, skeleton.joints, skeleton.joints[skeleton.root]);
+}
+
+void ArmatureComponent::PushBornLine(const Matrix4x4& mat, const std::vector<Joint>& joints, const Joint& joint) {
+
+	Vector3f positionA = Matrix4x4::Transform(Matrix4x4::GetTranslation(joint.skeletonSpaceMatrix), mat);
+
+	for (const auto childIndex : joint.children) {
+
+		const Joint& child = joints[childIndex];
+		Vector3f positionB = Matrix4x4::Transform(Matrix4x4::GetTranslation(child.skeletonSpaceMatrix), mat);
+
+		SxavengerContent::PushLineOverlay(positionA, positionB, { 1.0f, 1.0f, 0.0f, 1.0f });
+
+		PushBornLine(mat, joints, child);
+	}
 }

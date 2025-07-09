@@ -84,17 +84,27 @@ void DebugPrimitive::Term() {
 void DebugPrimitive::DrawToScene(const DirectXThreadContext* context, const CameraComponent* camera) {
 
 	{
-		pipeline_->SetPipeline(context->GetDxCommand());
+		pipelines_[PipelineType::kLine]->SetPipeline(context->GetDxCommand());
 		line_->Draw(context, camera);
+	}
+
+	{
+		pipelines_[PipelineType::kLineOverlay]->SetPipeline(context->GetDxCommand());
+		lineOverlay_->Draw(context, camera);
 	}
 }
 
 void DebugPrimitive::ResetPrimitive() {
 	line_->Reset();
+	lineOverlay_->Reset();
 }
 
 void DebugPrimitive::PushLine(const Vector3f& v1, const Vector3f& v2, const Color4f& color) {
 	line_->PushLine(v1, v2, color);
+}
+
+void DebugPrimitive::PushLineOverlay(const Vector3f& v1, const Vector3f& v2, const Color4f& color) {
+	lineOverlay_->PushLine(v1, v2, color);
 }
 
 void DebugPrimitive::PushGrid(const Vector3f& center, float size) {
@@ -247,35 +257,67 @@ void DebugPrimitive::PushSphere(const Vector3f& center, float radius, const Colo
 }
 
 void DebugPrimitive::CreatePrimitive() {
-	line_ = std::make_unique<DebugPrimitiveLine>();
+	line_        = std::make_unique<DebugPrimitiveLine>();
+	lineOverlay_ = std::make_unique<DebugPrimitiveLine>();
 }
 
 void DebugPrimitive::CreatePipeline() {
 
-	pipeline_ = std::make_unique<GraphicsPipelineState>();
-	pipeline_->CreateBlob(kPackagesShaderDirectory / "render/debug/debugPrimitive.vs.hlsl", GraphicsShaderType::vs);
-	pipeline_->CreateBlob(kPackagesShaderDirectory / "render/debug/debugPrimitive.ps.hlsl", GraphicsShaderType::ps);
+	{
+		auto& pipeline = pipelines_[PipelineType::kLine];
+		pipeline = std::make_unique<GraphicsPipelineState>();
+		pipeline->CreateBlob(kPackagesShaderDirectory / "render/debug/debugPrimitive.vs.hlsl", GraphicsShaderType::vs);
+		pipeline->CreateBlob(kPackagesShaderDirectory / "render/debug/debugPrimitive.ps.hlsl", GraphicsShaderType::ps);
 
-	GraphicsRootSignatureDesc rootDesc;
-	rootDesc.SetVirtualCBV(0, ShaderVisibility::VISIBILITY_ALL, 0); //!< camera
+		GraphicsRootSignatureDesc rootDesc;
+		rootDesc.SetVirtualCBV(0, ShaderVisibility::VISIBILITY_ALL, 0); //!< camera
 
-	pipeline_->CreateRootSignature(SxavengerSystem::GetDxDevice(), std::move(rootDesc));
+		pipeline->CreateRootSignature(SxavengerSystem::GetDxDevice(), std::move(rootDesc));
 
-	GraphicsPipelineDesc desc = {};
-	desc.CreateDefaultDesc();
+		GraphicsPipelineDesc desc = {};
+		desc.CreateDefaultDesc();
 
-	desc.elements.clear();
-	desc.SetElement("POSITION", 0, DXGI_FORMAT_R32G32B32A32_FLOAT);
-	desc.SetElement("COLOR",    0, DXGI_FORMAT_R32G32B32A32_FLOAT);
+		desc.elements.clear();
+		desc.SetElement("POSITION", 0, DXGI_FORMAT_R32G32B32A32_FLOAT);
+		desc.SetElement("COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT);
 
-	desc.SetRasterizer(D3D12_CULL_MODE_NONE, D3D12_FILL_MODE_SOLID);
-	desc.SetPrimitive(PrimitiveType::LineList);
+		desc.SetRasterizer(D3D12_CULL_MODE_NONE, D3D12_FILL_MODE_SOLID);
+		desc.SetPrimitive(PrimitiveType::LineList);
 
-	desc.SetDepthStencil(true);
+		desc.SetDepthStencil(true);
 
-	desc.SetRTVFormat(0, DXGI_FORMAT_R32G32B32A32_FLOAT);
+		desc.SetRTVFormat(0, DXGI_FORMAT_R32G32B32A32_FLOAT);
 
-	pipeline_->CreatePipeline(SxavengerSystem::GetDxDevice(), desc);
+		pipeline->CreatePipeline(SxavengerSystem::GetDxDevice(), desc);
+	}
+
+	{
+		auto& pipeline = pipelines_[PipelineType::kLineOverlay];
+		pipeline = std::make_unique<GraphicsPipelineState>();
+		pipeline->CreateBlob(kPackagesShaderDirectory / "render/debug/debugPrimitive.vs.hlsl", GraphicsShaderType::vs);
+		pipeline->CreateBlob(kPackagesShaderDirectory / "render/debug/debugPrimitive.ps.hlsl", GraphicsShaderType::ps);
+
+		GraphicsRootSignatureDesc rootDesc;
+		rootDesc.SetVirtualCBV(0, ShaderVisibility::VISIBILITY_ALL, 0); //!< camera
+
+		pipeline->CreateRootSignature(SxavengerSystem::GetDxDevice(), std::move(rootDesc));
+
+		GraphicsPipelineDesc desc = {};
+		desc.CreateDefaultDesc();
+
+		desc.elements.clear();
+		desc.SetElement("POSITION", 0, DXGI_FORMAT_R32G32B32A32_FLOAT);
+		desc.SetElement("COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT);
+
+		desc.SetRasterizer(D3D12_CULL_MODE_NONE, D3D12_FILL_MODE_SOLID);
+		desc.SetPrimitive(PrimitiveType::LineList);
+
+		desc.SetDepthStencil(false);
+
+		desc.SetRTVFormat(0, DXGI_FORMAT_R32G32B32A32_FLOAT);
+
+		pipeline->CreatePipeline(SxavengerSystem::GetDxDevice(), desc);
+	}
 
 
 }

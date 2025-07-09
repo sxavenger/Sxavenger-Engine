@@ -53,6 +53,8 @@ private:
 	std::unique_ptr<SkyLightActor> skylight_;
 	std::unique_ptr<MonoBehaviour> offlineSkylight_;
 
+	std::unique_ptr<Player> player_;
+
 	//=========================================================================================
 	// private methods
 	//=========================================================================================

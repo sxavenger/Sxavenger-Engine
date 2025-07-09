@@ -105,25 +105,16 @@ void FSceneRenderer::RenderGeometryPass(const DirectXThreadContext* context, con
 }
 
 void FSceneRenderer::RenderGeometryStaticMeshDefault(const DirectXThreadContext* context, const Config& config) {
-	// mesh renderer container(BaseComponent)の取得
-	auto& container = sComponentStorage->GetComponentContainer<MeshRendererComponent>();
 
 	auto core = FRenderCore::GetInstance()->GetGeometry();
 
-	std::for_each(std::execution::seq, container.begin(), container.end(), [&](auto& component) {
-		// renderer componentの取得
-		MeshRendererComponent* renderer = static_cast<MeshRendererComponent*>(component.get());
+	sComponentStorage->ForEachActive<MeshRendererComponent>([&](MeshRendererComponent* component) {
 
-		if (!(renderer->IsActive() && renderer->IsView())) {
-			return;
+		if (component->GetMaterial()->GetMode() != Material::Mode::Opaque) {
+			return; //!< 透明なジオメトリは別のパスで描画
 		}
 
-		if (renderer->GetMaterial()->GetMode() != Material::Mode::Opaque) {
-			// 透明なジオメトリは別のパスで描画
-			return;
-		}
-
-		renderer->GetMesh()->BindIABuffer(context);
+		component->GetMesh()->BindIABuffer(context);
 
 		// メッシュの描画
 		core->SetPipeline(
@@ -133,15 +124,16 @@ void FSceneRenderer::RenderGeometryStaticMeshDefault(const DirectXThreadContext*
 
 		DxObject::BindBufferDesc parameter = {};
 		parameter.SetAddress("gCamera",     config.camera->GetGPUVirtualAddress());
-		parameter.SetAddress("gTransforms", renderer->GetTransform()->GetGPUVirtualAddress());
-		parameter.SetAddress("gMaterials",  renderer->GetMaterial()->GetGPUVirtualAddress());
+		parameter.SetAddress("gTransforms", component->GetTransform()->GetGPUVirtualAddress());
+		parameter.SetAddress("gMaterials",  component->GetMaterial()->GetGPUVirtualAddress());
 
 		core->BindGraphicsBuffer(
 			FRenderCoreGeometry::Deffered, FRenderCoreGeometry::VertexStage::DefaultVS, FRenderCoreGeometry::PixelStage::Albedo,
 			context, parameter
 		);
 
-		renderer->GetMesh()->DrawCall(context, 1);
+		component->GetMesh()->DrawCall(context, 1);
+
 	});
 
 	//context->TransitionAllocator();
@@ -149,28 +141,15 @@ void FSceneRenderer::RenderGeometryStaticMeshDefault(const DirectXThreadContext*
 
 void FSceneRenderer::RenderGeometrySkinnedMesh(const DirectXThreadContext* context, const Config& config) {
 
-	// mesh renderer container(BaseComponent)の取得
-	auto& container = sComponentStorage->GetComponentContainer<SkinnedMeshRendererComponent>();
-
 	auto core = FRenderCore::GetInstance()->GetGeometry();
 
-	std::for_each(std::execution::seq, container.begin(), container.end(), [&](auto& component) {
-
-		textures_->SetupGeometryPass(context);
-
-		// renderer componentの取得
-		SkinnedMeshRendererComponent* renderer = static_cast<SkinnedMeshRendererComponent*>(component.get());
-
-		if (!renderer->IsView()) {
-			return;
-		}
-
-		if (renderer->GetMaterial()->GetMode() != Material::Mode::Opaque) {
+	sComponentStorage->ForEachActive<SkinnedMeshRendererComponent>([&](SkinnedMeshRendererComponent* component) {
+		
+		if (component->GetMaterial()->GetMode() != Material::Mode::Opaque) {
 			// 透明なジオメトリは別のパスで描画
 			return;
 		}
-
-		renderer->BindIABuffer(context);
+		component->BindIABuffer(context);
 
 		core->SetPipeline(
 			FRenderCoreGeometry::Deffered, FRenderCoreGeometry::VertexStage::DefaultVS, FRenderCoreGeometry::PixelStage::Albedo,
@@ -179,17 +158,15 @@ void FSceneRenderer::RenderGeometrySkinnedMesh(const DirectXThreadContext* conte
 
 		DxObject::BindBufferDesc parameter = {};
 		parameter.SetAddress("gCamera",     config.camera->GetGPUVirtualAddress());
-		parameter.SetAddress("gTransforms", renderer->GetTransform()->GetGPUVirtualAddress());
-		parameter.SetAddress("gMaterials",  renderer->GetMaterial()->GetGPUVirtualAddress());
+		parameter.SetAddress("gTransforms", component->GetTransform()->GetGPUVirtualAddress());
+		parameter.SetAddress("gMaterials",  component->GetMaterial()->GetGPUVirtualAddress());
 
 		core->BindGraphicsBuffer(
 			FRenderCoreGeometry::Deffered, FRenderCoreGeometry::VertexStage::DefaultVS, FRenderCoreGeometry::PixelStage::Albedo,
 			context, parameter
 		);
 
-		renderer->DrawCall(context, 1); //!< instance数は必ず1
-
-		//context->ExecuteAllAllocators();
+		component->DrawCall(context, 1);
 	});
 }
 
