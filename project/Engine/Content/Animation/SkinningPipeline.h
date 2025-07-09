@@ -39,6 +39,10 @@ private:
 
 	std::unique_ptr<DxObject::ReflectionComputePipelineState> state_;
 
-	static const uint32_t kNumthreads_ = 1024;
+	static const uint32_t kNumthreads_ = 32;
 
 };
+
+
+
+

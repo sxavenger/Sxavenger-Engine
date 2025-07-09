@@ -6,7 +6,7 @@
 
 void SkinCluster::UpdatePalette(const Skeleton& skeleton) {
 	for (size_t jointIndex = 0; jointIndex < skeleton.joints.size(); ++jointIndex) {
-		Assert(jointIndex < inverseBindPoseMatrices.size(), "index out of range.");
+		Exception::Assert(jointIndex < inverseBindPoseMatrices.size(), "index out of range.");
 
 		Matrix4x4 mat = inverseBindPoseMatrices[jointIndex] * skeleton.joints[jointIndex].skeletonSpaceMatrix;
 

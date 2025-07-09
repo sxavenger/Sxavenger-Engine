@@ -4,6 +4,10 @@ _DXOBJECT_USING
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
+//* engine
+#include <Engine/System/Config/SxavengerConfig.h>
+
+//* c++
 #include <psapi.h>
 #include <format>
 
@@ -20,47 +24,60 @@ void Device::Init() {
 	CreateInfoQueue();
 
 	// サポートの確認
-	Assert(CheckShaderModel(), "shader model is not over kHeighestShaderModel.");
+	Exception::Assert(CheckShaderModel(), "shader model is not over kHeighestShaderModel.");
 
-	isRayTracingEnabled_ = CheckRayTracingEnable();
+	isRayTracingEnabled_ = CheckRaytracingEnable();
 	isMeshShaderEnabled_ = CheckMeshShaderEnable();
 
-	// 仮でAssertを出しておく
-	Assert(isRayTracingEnabled_, "Raytracing version failed.");
-	Assert(isMeshShaderEnabled_, "Mesh shader version failed.");
+	// 仮でException::Assertを出しておく
+	Exception::Assert(isRayTracingEnabled_, "Raytracing version failed.");
+	//Exception::Assert(isMeshShaderEnabled_, "Mesh shader version failed.");
 
-	EngineLog("[_DXOBJECT]::Device complete init.");
+	Logger::EngineLog("[_DXOBJECT]::Device complete init.");
 }
 
 void Device::Term() {
-	EngineLog("[_DXOBJECT]::Device term.");
+	Logger::EngineLog("[_DXOBJECT]::Device term.");
 }
 
 void Device::CreateDebugLayer() {
-#ifdef _DEBUG
-
-	bool isLaunchFromPIX = CheckLaunchFromPIX();
+#ifdef _DEVELOPMENT
 
 	// デバックレイヤーの生成
 	if (SUCCEEDED(D3D12GetDebugInterface(IID_PPV_ARGS(&debugController_)))) {
-		if (!isLaunchFromPIX) {
+		if (SxavengerConfig::GetConfig().enableDebugLayer) {
 			// デバックレイヤーの有効化
 			debugController_->EnableDebugLayer();
-			// GPU側も有効化
-			debugController_->SetEnableGPUBasedValidation(TRUE);
 		}
 
-		EngineLog(std::format("[_DXOBEJCT] Debug Layer : {}", !isLaunchFromPIX));
-		//!< PIX起動時以外は自動でonに
+		if (SxavengerConfig::GetConfig().enableGPUBasedValidation) {
+			// GPU側も有効化
+			debugController_->SetEnableGPUBasedValidation(true);
+		}
 	}
 
-#endif // _DEBUG
+#endif // _DEVELOPMENT
 }
 
 void Device::CreateFactory() {
 	// DXGIファクトリーの生成
 	auto hr = CreateDXGIFactory(IID_PPV_ARGS(&dxgiFactory_));
-	Assert(SUCCEEDED(hr));
+	Exception::Assert(SUCCEEDED(hr));
+
+	// ティアリングを確認
+	if (SxavengerConfig::GetConfig().isTearingAllowed) {
+		BOOL isTearingSupport_ = false;
+
+		hr = dxgiFactory_->CheckFeatureSupport(DXGI_FEATURE_PRESENT_ALLOW_TEARING, &isTearingSupport_, sizeof(BOOL));
+		Exception::Assert(SUCCEEDED(hr), "check feature support error.");
+
+		if (!isTearingSupport_) {
+			Logger::EngineLog("[_DXOBEJCT] warning: tearing is not supported.");
+		}
+
+		// 設定を反映
+		SxavengerConfig::GetSupport().isSupportTearing = isTearingSupport_;
+	}
 }
 
 void Device::CreateAdapter() {
@@ -72,11 +89,11 @@ void Device::CreateAdapter() {
 		// アダプタ情報を取得
 		DXGI_ADAPTER_DESC3 desc = {};
 		auto hr = useAdapter_->GetDesc3(&desc);
-		Assert(SUCCEEDED(hr));
+		Exception::Assert(SUCCEEDED(hr));
 
 		// ソフトウェアアダプタじゃない場合, 成功
 		if (!(desc.Flags & DXGI_ADAPTER_FLAG3_SOFTWARE)) {
-			EngineLog(std::format(L"[_DXOBEJCT] Use Adapter: {}", desc.Description));
+			Logger::EngineLog(std::format(L"[_DXOBEJCT] Use Adapter: {}", desc.Description));
 			break;
 		}
 
@@ -84,7 +101,7 @@ void Device::CreateAdapter() {
 		useAdapter_ = nullptr;
 	}
 
-	Assert(useAdapter_ != nullptr);
+	Exception::Assert(useAdapter_ != nullptr);
 }
 
 void Device::CreateDevice() {
@@ -102,17 +119,17 @@ void Device::CreateDevice() {
 		auto hr = D3D12CreateDevice(useAdapter_.Get(), featureLevels[i], IID_PPV_ARGS(&device_));
 		if (SUCCEEDED(hr)) {
 			// 生成できたのでログ出力してループを抜ける
-			EngineLog(std::format("[_DXOBEJCT] D3D_FEATURE_LEVEL: {}", featureLevelStrings[i]));
+			Logger::EngineLog(std::format("[_DXOBEJCT] D3D_FEATURE_LEVEL: {}", featureLevelStrings[i]));
 			break;
 		}
 	}
 
-	Assert(device_ != nullptr);
+	Exception::Assert(device_ != nullptr);
 }
 
 void Device::CreateInfoQueue() {
-#ifdef _DEBUG
-// プログラムを停止する機能
+#ifdef _DEVELOPMENT
+	// プログラムを停止する機能
 	{
 		if (SUCCEEDED(device_->QueryInterface(IID_PPV_ARGS(&infoQueue_)))) {
 			// プログラムを停止する種類
@@ -138,7 +155,7 @@ void Device::CreateInfoQueue() {
 			infoQueue_->PushStorageFilter(&filter);
 		}
 	}
-#endif // _DEBUG
+#endif // _DEVELOPMENT
 }
 
 bool Device::CheckShaderModel() {
@@ -146,23 +163,29 @@ bool Device::CheckShaderModel() {
 	auto hr = device_->CheckFeatureSupport(D3D12_FEATURE_SHADER_MODEL, &shaderModel, sizeof(shaderModel));
 
 	if (FAILED(hr) || (shaderModel.HighestShaderModel < DxObject::kHeighestShaderModel)) {
-		EngineLog("Warning : Sxavenger Engine is enviorment shader model 6.6");
-		return false; //!< shader modelが6.5以下しかサポートされてない
+		Logger::EngineLog("warning : Sxavenger Engine is enviorment shader model 6.6");
+		return false; //!< shader modelが6.6以上をサポートしていない
 	}
 
 	return true;
 }
 
-bool Device::CheckRayTracingEnable() {
-	// RayTracingのサポートのチェック
+bool Device::CheckRaytracingEnable() {
+	// Raytracingのサポートのチェック
 	D3D12_FEATURE_DATA_D3D12_OPTIONS5 option = {};
 	auto hr = device_->CheckFeatureSupport(D3D12_FEATURE_D3D12_OPTIONS5, &option, sizeof(option));
 
 	if (FAILED(hr) || option.RaytracingTier < D3D12_RAYTRACING_TIER_1_0) {
-		EngineLog("Warning : RayTracing is not supported.");
-		return false; //!< RayTracingがサポートされていない
+		Logger::EngineLog("warning : raytracing is not supported.");
+		return false; //!< Raytracingがサポートされていない
 	}
-	
+
+	if (option.RaytracingTier < D3D12_RAYTRACING_TIER_1_1) {
+		Logger::EngineLog("warning : inline raytracing is not supported.");
+		return true;
+	}
+
+	SxavengerConfig::GetSupport().isSupportInlineRaytracing = true;
 	return true;
 }
 
@@ -172,7 +195,7 @@ bool Device::CheckMeshShaderEnable() {
 	auto hr = device_->CheckFeatureSupport(D3D12_FEATURE_D3D12_OPTIONS7, &features, sizeof(features));
 
 	if (FAILED(hr) || (features.MeshShaderTier == D3D12_MESH_SHADER_TIER_NOT_SUPPORTED)) {
-		EngineLog("Warning : Mesh Shaders aren't supported.");
+		Logger::EngineLog("warning : mesh shaders aren't supported.");
 		return false; //!< mesh shaderがサポートされてない
 	}
 	

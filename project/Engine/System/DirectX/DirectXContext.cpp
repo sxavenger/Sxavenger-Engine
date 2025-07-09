@@ -11,21 +11,25 @@ _DXOBJECT_USING
 // DirectXThreadContext class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-void DirectXThreadContext::Init(uint32_t allocatorCount) {
+void DirectXThreadContext::Init(uint32_t allocatorCount, D3D12_COMMAND_LIST_TYPE type) {
+
+	// 引数の保存
+	type_ = type;
+
 	command_ = std::make_unique<CommandContext>();
-	command_->Init(SxavengerSystem::GetDxDevice(), allocatorCount);
+	command_->Init(SxavengerSystem::GetDxDevice(), allocatorCount, type);
 	SetDescriptorHeap();
 }
 
 void DirectXThreadContext::Term() {
 }
 
-void DirectXThreadContext::TransitionAllocator() {
+void DirectXThreadContext::TransitionAllocator() const {
 	command_->TransitionAllocator();
 	SetDescriptorHeap();
 }
 
-void DirectXThreadContext::ExecuteAllAllocators() {
+void DirectXThreadContext::ExecuteAllAllocators() const {
 	command_->ExecuteAllAllocators();
 	SetDescriptorHeap();
 }
@@ -38,7 +42,10 @@ ID3D12CommandQueue* DirectXThreadContext::GetCommandQueue() const {
 	return command_->GetCommandQueue();
 }
 
-void DirectXThreadContext::SetDescriptorHeap() {
+void DirectXThreadContext::SetDescriptorHeap() const {
+	if (type_ == D3D12_COMMAND_LIST_TYPE_COPY) {
+		return; //!< DirectX12では CopyコマンドリストはDescriptorHeapを変更できない
+	}
 
 	ID3D12DescriptorHeap* descriptorHeaps[] = {
 		SxavengerSystem::GetDxDescriptorHeaps()->GetDescriptorHeap(kDescriptor_CBV_SRV_UAV)
@@ -51,14 +58,14 @@ void DirectXThreadContext::SetDescriptorHeap() {
 // DirectXWindowContext class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-void DirectXWindowContext::Init(Window* window, DirectXThreadContext* threadContext, const Color4f& clearColor) {
+void DirectXWindowContext::Init(Window* window, DirectXThreadContext* context, const Color4f& clearColor) {
 
 	// 引数の保存
-	threadContext_ = threadContext;
+	threadContext_ = context;
 
 	swapChain_ = std::make_unique<SwapChain>();
 	swapChain_->Init(
-		SxavengerSystem::GetDxDevice(), SxavengerSystem::GetDxDescriptorHeaps(), threadContext_->GetDxCommand(),
+		SxavengerSystem::GetDxDevice(), SxavengerSystem::GetDxDescriptorHeaps(), context->GetDxCommand(),
 		window
 	);
 
@@ -143,7 +150,7 @@ void DirectXWindowContext::Present(bool isTransitonAllocator) {
 	if (isTransitonAllocator) {
 		threadContext_->TransitionAllocator();
 	}
-	swapChain_->Present(1, 0);
+	swapChain_->Present();
 
 	isClearWindow_ = false;
 }

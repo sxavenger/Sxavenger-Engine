@@ -11,7 +11,7 @@ ComPtr<ID3D12Resource> _DXOBJECT CreateBufferResource(
 	size_t sizeInBytes,
 	D3D12_RESOURCE_FLAGS flags, D3D12_RESOURCE_STATES state) {
 
-	Assert(sizeInBytes != 0);
+	Exception::Assert(sizeInBytes != 0);
 
 	ComPtr<ID3D12Resource> result;
 
@@ -34,10 +34,10 @@ ComPtr<ID3D12Resource> _DXOBJECT CreateBufferResource(
 		&desc,
 		state,
 		nullptr,
-		IID_PPV_ARGS(result.ReleaseAndGetAddressOf())
+		IID_PPV_ARGS(result.GetAddressOf())
 	);
 
-	Assert(SUCCEEDED(hr));
+	Exception::Assert(SUCCEEDED(hr));
 
 	return result;
 }
@@ -45,7 +45,7 @@ ComPtr<ID3D12Resource> _DXOBJECT CreateBufferResource(
 ComPtr<ID3D12Resource> _DXOBJECT CreateBufferResource(
 	ID3D12Device* device, size_t sizeInBytes) {
 
-	Assert(sizeInBytes != 0);
+	Exception::Assert(sizeInBytes != 0);
 
 	ComPtr<ID3D12Resource> result;
 
@@ -72,14 +72,14 @@ ComPtr<ID3D12Resource> _DXOBJECT CreateBufferResource(
 		IID_PPV_ARGS(result.GetAddressOf())
 	);
 
-	Assert(SUCCEEDED(hr));
+	Exception::Assert(SUCCEEDED(hr));
 
 	return result;
 
 }
 
 UINT _DXOBJECT RoundUp(UINT round, UINT thread) {
-	Assert(thread > 0);
+	Exception::Assert(thread > 0);
 	return (round + thread - 1) / thread;
 }
 
@@ -105,6 +105,6 @@ CompileProfile _DXOBJECT ToProfile(GraphicsShaderType type) {
 			break;
 	}
 
-	Assert(false, "Graphics Shader Type is undefine.");
+	Exception::Assert(false, "Graphics Shader Type is undefine.");
 	return {};
 }

@@ -1,0 +1,13 @@
+{
+	"//windowTitle": "...",
+	"windowSize": {
+		"width": 1280,
+		"height": 720
+	},
+	"enableDebugLayer" : true,
+	"enableGPUBasedValidation": true,
+	"isTearingAllowed": true,
+	"isLockFrameRate": true,
+	"targetFrameRate": 60.0,
+	"isEnableShaderOptimization": false
+}

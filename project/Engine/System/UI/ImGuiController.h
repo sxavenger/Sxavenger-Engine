@@ -34,7 +34,7 @@ public:
 	ImGuiController()  = default;
 	~ImGuiController() { Term(); }
 
-	void Init(Window* mainWindow);
+	void Init(Window* main);
 
 	void Term();
 
@@ -56,11 +56,12 @@ private:
 	// private variables
 	//=========================================================================================
 
-	//DxObject::Descriptor descriptorSRV_;
-
 	std::list<DxObject::Descriptor> descriptorsSRV_;
 
 	static const std::filesystem::path kImGuiLayoutFilepath_;
+	static const std::filesystem::path kImGuiSampleLayoutFilepath_;
+
+	bool isInit_ = false;
 
 	//=========================================================================================
 	// private methods
@@ -68,5 +69,6 @@ private:
 
 	void SetImGuiStyle();
 	void SettingImGui();
+
 
 };

@@ -5,7 +5,7 @@ _DXOBJECT_USING
 // include
 //-----------------------------------------------------------------------------------------
 //* engine
-#include <Engine/System/Config/SxavengerDirectory.h>
+#include <Engine/System/Config/SxavengerConfig.h>
 
 //* c++
 #include <vector>
@@ -34,38 +34,36 @@ void ShaderCompiler::Init() {
 	auto hr = DxcCreateInstance(
 		CLSID_DxcUtils, IID_PPV_ARGS(&utils_)
 	);
-	Assert(SUCCEEDED(hr));
+	Exception::Assert(SUCCEEDED(hr));
 
 
 	hr = DxcCreateInstance(
 		CLSID_DxcCompiler, IID_PPV_ARGS(&compiler_)
 	);
-	Assert(SUCCEEDED(hr));
+	Exception::Assert(SUCCEEDED(hr));
 
 	// includeHandleの初期化
 	hr = utils_->CreateDefaultIncludeHandler(&includeHandler_);
-	Assert(SUCCEEDED(hr));
+	Exception::Assert(SUCCEEDED(hr));
 
-	EngineLog("[_DXOBJECT]::ShaderCompiler complete init.");
+	Logger::EngineLog("[_DXOBJECT]::ShaderCompiler complete init.");
 }
 
 void ShaderCompiler::Term() {
-	EngineLog("[_DXOBJECT]::ShaderCompiler term.");
+	Logger::EngineLog("[_DXOBJECT]::ShaderCompiler term.");
 }
 
 ComPtr<IDxcBlob> ShaderCompiler::Compile(
-	const std::filesystem::path& filename,
+	const std::filesystem::path& filepath,
 	CompileProfile profile,
 	const std::wstring& entryPoint) {
 
-	// 全体pathの生成
-	std::filesystem::path filepath = kShaderDirectory / filename;
 	std::wstring filepathW = filepath.generic_wstring(); //!< wstringの寿命確保
 
 	// hlslファイルを読み込む
 	ComPtr<IDxcBlobEncoding> shaderSource;
 	auto hr = utils_->LoadFile(filepathW.c_str(), nullptr, &shaderSource);
-	Assert(SUCCEEDED(hr), "hlsl not found.", "filepath: " + filepath.generic_string());
+	Exception::Assert(SUCCEEDED(hr), "hlsl not found.", "filepath: " + filepath.generic_string());
 
 	// 読み込んだファイルの内容を設定する
 	DxcBuffer shaderSourceBuffer = {};
@@ -78,14 +76,34 @@ ComPtr<IDxcBlob> ShaderCompiler::Compile(
 		filepathW.c_str(),                                //!< コンパイル対象のhlslファイルパス
 		L"-T", profiles_[static_cast<uint32_t>(profile)], //!< ShaderProfileの設定
 		L"-Zi", L"-Qembed_debug",                         //!< デバッグ用情報を埋め込む
-		L"-Od",                                           //!< 最適化を外しておく
 		L"-Zpr",                                          //!< メモリレイアウトは行優先
 	};
+
+#ifdef _DEVELOPMENT
+	if (SxavengerConfig::GetConfig().isEnableShaderOptimization) {
+		arguments.emplace_back(L"-O3"); //!< 最適化を最大にする
+
+	} else {
+		arguments.emplace_back(L"-Od"); //!< 最適化を外しておく
+	}
+#else
+	arguments.emplace_back(L"-O3"); //!< 最適化を最大にする
+#endif
 
 	//!< entry pointがある場合, 設定
 	if (!entryPoint.empty()) {
 		arguments.emplace_back(L"-E");
 		arguments.emplace_back(entryPoint.c_str());
+	}
+
+	if (profile == CompileProfile::cs || profile == CompileProfile::lib) { //!< compute shader用のdefineを追加
+		arguments.emplace_back(L"-D");
+		arguments.emplace_back(L"_COMPUTE");
+	}
+
+	if (SxavengerConfig::GetSupport().isSupportInlineRaytracing) {
+		arguments.emplace_back(L"-D");
+		arguments.emplace_back(L"_INLINE_RAYTRACING");
 	}
 
 	// compile
@@ -97,20 +115,21 @@ ComPtr<IDxcBlob> ShaderCompiler::Compile(
 		includeHandler_.Get(),
 		IID_PPV_ARGS(&shaderResult)
 	);
-	Assert(SUCCEEDED(hr));
+	Exception::Assert(SUCCEEDED(hr));
 
 	// 警告エラーだった場合, プログラムの停止
 	ComPtr<IDxcBlobUtf8> shaderError;
 	hr = shaderResult->GetOutput(DXC_OUT_ERRORS, IID_PPV_ARGS(&shaderError), nullptr);
 
 	if (shaderError != nullptr && shaderError->GetStringLength() != 0) {
-		Assert(false, "hlsl is compile error. filepath: " + filepath.generic_string(), shaderError->GetStringPointer());
+		Exception::Assert(false, "hlsl is compile error. filepath: " + filepath.generic_string(), shaderError->GetStringPointer());
 	}
 
 	ComPtr<IDxcBlob> blob;
 	hr = shaderResult->GetOutput(DXC_OUT_OBJECT, IID_PPV_ARGS(&blob), nullptr);
-	Assert(SUCCEEDED(hr));
+	Exception::Assert(SUCCEEDED(hr));
 
+	Logger::EngineThreadLog("[_DXOBJECT]::ShaderCompiler : shader compiled. filepath: " + filepath.generic_string());
 	return blob;
 }
 
@@ -126,7 +145,7 @@ ComPtr<ID3D12ShaderReflection> ShaderCompiler::Reflection(IDxcBlob* blob) {
 		&buffer,
 		IID_PPV_ARGS(&result)
 	);
-	Assert(SUCCEEDED(hr), "shader reflection is failed.");
+	Exception::Assert(SUCCEEDED(hr), "shader reflection is failed.");
 
 	return result;
 }

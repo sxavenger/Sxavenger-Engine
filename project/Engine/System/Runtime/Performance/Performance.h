@@ -3,102 +3,49 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
+//* performance
+#include "TimePoint.h"
+#include "RunTimeTracker.h"
+
+//* engine
+#include <Engine/System/UI/ISystemDebugGui.h>
+
 //* c++
-#include <chrono>
+#include <optional>
 #include <array>
+#include <deque>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// TimeUnit enum class
+// Performance class
 ////////////////////////////////////////////////////////////////////////////////////////////
-enum class TimeUnit : uint8_t {
-	us, //!< マイクロ秒
-	ms, //!< ミリ秒
-	s   //!< 秒
-};
+class Performance
+	: public ISystemDebugGui {
+public:
 
-//-----------------------------------------------------------------------------------------
-// forward
-//-----------------------------------------------------------------------------------------
-template <TimeUnit T>
-class DeltaTimePoint;
+	////////////////////////////////////////////////////////////////////////////////////////////
+	// using
+	////////////////////////////////////////////////////////////////////////////////////////////
 
-////////////////////////////////////////////////////////////////////////////////////////////
-// RunTimeTracker class
-////////////////////////////////////////////////////////////////////////////////////////////
-class RunTimeTracker {
+	using LapContainer = std::deque<std::pair<std::string, TimePointf<TimeUnit::millisecond>>>;
+
 public:
 
 	//=========================================================================================
 	// public methods
 	//=========================================================================================
-
-	RunTimeTracker()  = default;
-	~RunTimeTracker() = default;
 
 	void Begin();
 
 	void End();
 
-	void WaitForFPS(float fps);
+	void RecordLap(const std::string& name);
 
-	template <TimeUnit T>
-	DeltaTimePoint<T> GetDeltaTime() const;
+	void SystemDebugGui() override;
 
-	template <TimeUnit T>
-	DeltaTimePoint<T> GetElapsedTime() const;
+	template <TimeUnit T = TimeUnit::second>
+	TimePointf<T> GetDeltaTime() const { return runtime_.GetDeltaTime<T>(); }
 
-private:
-
-	//=========================================================================================
-	// private variables
-	//=========================================================================================
-
-	//* chrono *//
-
-	std::chrono::steady_clock::time_point reference_;
-
-	//* delta time *//
-
-	float deltaTime_;
-
-	static const std::array<float, static_cast<uint8_t>(TimeUnit::s) + 1> kConversions_;
-
-};
-
-////////////////////////////////////////////////////////////////////////////////////////////
-// RunTimeTracker class template methods
-////////////////////////////////////////////////////////////////////////////////////////////
-
-template<TimeUnit T>
-inline DeltaTimePoint<T> RunTimeTracker::GetDeltaTime() const {
-	return { deltaTime_ * kConversions_[static_cast<uint8_t>(T)] };
-}
-
-template<TimeUnit T>
-inline DeltaTimePoint<T> RunTimeTracker::GetElapsedTime() const {
-	std::chrono::steady_clock::time_point now = std::chrono::steady_clock::now();
-
-	// deltaTimeの書き込み
-	float elapsed = static_cast<float>(std::chrono::duration_cast<std::chrono::microseconds>(now - reference_).count());
-	return { elapsed * kConversions_[static_cast<uint8_t>(T)] };
-}
-
-////////////////////////////////////////////////////////////////////////////////////////////
-// Performance class
-////////////////////////////////////////////////////////////////////////////////////////////
-class Performance {
-public:
-
-	//=========================================================================================
-	// public methods
-	//=========================================================================================
-
-	static void BeginFrame();
-
-	static void EndFrame();
-
-	template <TimeUnit T>
-	static DeltaTimePoint<T> GetDeltaTime();
+	const LapContainer& GetLap() const { return laps_[(lapIndex_ + 1) % lapCount_]; }
 
 private:
 
@@ -106,16 +53,25 @@ private:
 	// private variables
 	//=========================================================================================
 
-	static RunTimeTracker runTimeTracker_;
-	static float lockFPS_;
+	//* run time tracker *//
+
+	RunTimeTracker runtime_;
+
+	//* lap *//
+
+	static const uint8_t lapCount_ = 2;
+	std::array<LapContainer, lapCount_> laps_;
+
+	uint8_t lapIndex_ = 0;
+
+	TimePointf<TimeUnit::second> recordInterval_ = 1.0f;
+	TimePointf<TimeUnit::second> recordedTime_   = {};
+	bool isRecord_ = true;
+
+	//=========================================================================================
+	// private methods
+	//=========================================================================================
+
+	void WaitFrame() const;
 
 };
-
-////////////////////////////////////////////////////////////////////////////////////////////
-// Performance class template methods
-////////////////////////////////////////////////////////////////////////////////////////////
-
-template<TimeUnit T>
-inline DeltaTimePoint<T> Performance::GetDeltaTime() {
-	return runTimeTracker_.GetDeltaTime<T>();
-}

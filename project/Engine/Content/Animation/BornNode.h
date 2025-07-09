@@ -3,8 +3,9 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
-//* engine
-#include <Engine/Module/Transform/Transform.h>
+//* lib
+#include <Lib/Geometry/Matrix4x4.h>
+#include <Lib/Transform/Transform.h>
 
 //* c++
 #include <string>
@@ -19,4 +20,6 @@ struct BornNode {
 
 	std::string name;
 	std::vector<BornNode> children;
+
+	std::vector<uint32_t> meshIndices;
 };

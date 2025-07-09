@@ -5,8 +5,8 @@
 //-----------------------------------------------------------------------------------------
 //* engine
 #include <Engine/System/SxavengerSystem.h>
-#include <Engine/System/DirectX/DirectXContext.h>
 #include <Engine/System/DirectX/DxObject/DxDimensionBuffer.h>
+#include <Engine/System/DirectX/DirectXContext.h>
 
 //* c++
 #include <memory>
@@ -14,7 +14,7 @@
 ////////////////////////////////////////////////////////////////////////////////////////////
 // InputAssembler class
 ////////////////////////////////////////////////////////////////////////////////////////////
-template <class T>
+template <class _Vertex>
 class InputAssembler {
 public:
 
@@ -29,13 +29,15 @@ public:
 
 	void Term();
 
-	void BindIABuffer(DirectXThreadContext* context = SxavengerSystem::GetMainThreadContext()) const;
+	//* bind *//
 
-	void DrawCall(UINT instanceCount = 1, DirectXThreadContext* context = SxavengerSystem::GetMainThreadContext()) const;
+	void BindIABuffer(const DirectXThreadContext* context) const;
+
+	void DrawCall(const DirectXThreadContext* context, UINT instanceCount = 1) const;
 
 	//* getter *//
 
-	DxObject::VertexDimensionBuffer<T>* GetVertex() const { return vertex_.get(); }
+	DxObject::VertexDimensionBuffer<_Vertex>* GetVertex() const { return vertex_.get(); }
 
 	DxObject::IndexDimensionBuffer* GetIndex() const { return index_.get(); }
 
@@ -50,7 +52,7 @@ protected:
 	// protected variables
 	//=========================================================================================
 
-	std::unique_ptr<DxObject::VertexDimensionBuffer<T>> vertex_;
+	std::unique_ptr<DxObject::VertexDimensionBuffer<_Vertex>> vertex_;
 	std::unique_ptr<DxObject::IndexDimensionBuffer>     index_;
 
 };
@@ -59,21 +61,21 @@ protected:
 // InputAssembler class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-template<typename T>
-inline void InputAssembler<T>::Create(uint32_t vertexSize, uint32_t indexSize) {
-	vertex_ = std::make_unique<DxObject::VertexDimensionBuffer<T>>();
+template <class _Vertex>
+inline void InputAssembler<_Vertex>::Create(uint32_t vertexSize, uint32_t indexSize) {
+	vertex_ = std::make_unique<DxObject::VertexDimensionBuffer<_Vertex>>();
 	vertex_->Create(SxavengerSystem::GetDxDevice(), vertexSize);
 
 	index_ = std::make_unique<DxObject::IndexDimensionBuffer>();
 	index_->Create(SxavengerSystem::GetDxDevice(), indexSize);
 }
 
-template<typename T>
-inline void InputAssembler<T>::Term() {
+template <class _Vertex>
+inline void InputAssembler<_Vertex>::Term() {
 }
 
-template<class T>
-inline void InputAssembler<T>::BindIABuffer(DirectXThreadContext* context) const {
+template <class _Vertex>
+inline void InputAssembler<_Vertex>::BindIABuffer(const DirectXThreadContext* context) const {
 
 	auto commandList = context->GetCommandList();
 
@@ -84,13 +86,9 @@ inline void InputAssembler<T>::BindIABuffer(DirectXThreadContext* context) const
 	commandList->IASetIndexBuffer(&ibv);
 }
 
-template<class T>
-inline void InputAssembler<T>::DrawCall(UINT instanceCount, DirectXThreadContext* context) const {
-
-	auto commandList = context->GetCommandList();
-
-	commandList->DrawIndexedInstanced(index_->GetSize(), instanceCount, 0, 0, 0);
-
+template <class _Vertex>
+inline void InputAssembler<_Vertex>::DrawCall(const DirectXThreadContext* context, UINT instanceCount) const {
+	context->GetCommandList()->DrawIndexedInstanced(index_->GetIndexCount(), instanceCount, 0, 0, 0);
 }
 
 

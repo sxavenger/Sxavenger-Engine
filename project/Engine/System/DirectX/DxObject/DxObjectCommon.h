@@ -9,10 +9,14 @@
 
 //* c++
 #include <cstdint>
+#include <variant>
 
-//* System
+//* engine
 #include <Engine/System/Utility/ComPtr.h>
 #include <Engine/System/Utility/Logger.h>
+
+//* lib
+#include <Lib/Geometry/Vector3.h>
 
 //-----------------------------------------------------------------------------------------
 // comment
@@ -33,6 +37,11 @@
 // DXOBJECT Common
 ////////////////////////////////////////////////////////////////////////////////////////////
 _DXOBJECT_NAMESPACE_BEGIN
+
+////////////////////////////////////////////////////////////////////////////////////////////
+// using
+////////////////////////////////////////////////////////////////////////////////////////////
+using GPUBuffer = std::variant<D3D12_GPU_VIRTUAL_ADDRESS, D3D12_GPU_DESCRIPTOR_HANDLE>;
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // ShaderVisibility enum class
@@ -75,7 +84,7 @@ enum DescriptorType : uint32_t {
 ////////////////////////////////////////////////////////////////////////////////////////////
 // CompileProfile enum class
 ////////////////////////////////////////////////////////////////////////////////////////////
-enum class CompileProfile : uint32_t {
+enum class CompileProfile : uint8_t {
 	vs,
 	gs,
 	ms,
@@ -88,7 +97,7 @@ enum class CompileProfile : uint32_t {
 ////////////////////////////////////////////////////////////////////////////////////////////
 // GraphicsShaderType enum class
 ////////////////////////////////////////////////////////////////////////////////////////////
-enum class GraphicsShaderType {
+enum class GraphicsShaderType : uint8_t {
 	vs,
 	gs,
 	ms,
@@ -100,14 +109,14 @@ enum class GraphicsShaderType {
 // common methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-ComPtr<ID3D12Resource> CreateBufferResource(
+_NODISCARD ComPtr<ID3D12Resource> CreateBufferResource(
 	ID3D12Device* device,
 	D3D12_HEAP_TYPE heapType,
 	size_t sizeInBytes,
 	D3D12_RESOURCE_FLAGS flags, D3D12_RESOURCE_STATES state
 );
 
-ComPtr<ID3D12Resource> CreateBufferResource(
+_NODISCARD ComPtr<ID3D12Resource> CreateBufferResource(
 	ID3D12Device* device,
 	size_t sizeInBytes
 );
@@ -126,6 +135,7 @@ static_assert(kHeighestShaderModel >= D3D_SHADER_MODEL_6_5, "mesh shader is 6.5 
 constexpr const DXGI_FORMAT kScreenFormat    = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB; //!< 最終的なスクリーン画面のformat
 constexpr const DXGI_FORMAT kOffscreenFormat = DXGI_FORMAT_R8G8B8A8_UNORM;      //!< offscreenで使われるformat
 
-constexpr const DXGI_FORMAT kDefaultDepthFormat = DXGI_FORMAT_D32_FLOAT_S8X24_UINT;
+constexpr const DXGI_FORMAT kDefaultDepthFormat     = DXGI_FORMAT_D32_FLOAT_S8X24_UINT;
+constexpr const DXGI_FORMAT kDefaultDepthViewFormat = DXGI_FORMAT_R32_FLOAT_X8X24_TYPELESS;
 
 _DXOBJECT_NAMESPACE_END

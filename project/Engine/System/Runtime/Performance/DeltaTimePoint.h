@@ -3,77 +3,50 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
-//*
-#include "Performance.h"
+//* preformace
+#include "TimePoint.h"
 
-template <TimeUnit T>
-class DeltaTimePoint {
+//* engine
+#include <Engine/System/SxavengerSystem.h>
+
+////////////////////////////////////////////////////////////////////////////////////////////
+// DeltaTimePoint class
+////////////////////////////////////////////////////////////////////////////////////////////
+template <TimeUnit _Unit, std::floating_point _Value>
+class DeltaTimePoint
+	: public TimePoint<_Unit, _Value> {
 public:
 
 	//=========================================================================================
 	// public methods
 	//=========================================================================================
 
-	void AddDeltaTime() {
-		*this += Performance::GetDeltaTime<T>();
-	}
+	using TimePoint<_Unit, _Value>::TimePoint; //!< constructorの継承
 
-	void SubtractDeltaTime() {
-		*this -= Performance::GetDeltaTime<T>();
-	}
+	//* delta time option *//
 
-	void Reset() {
-		time = 0.0f;
-	}
+	void AddDeltaTime();
+	void SubtractionDeltaTime();
 
-	DeltaTimePoint Mod(DeltaTimePoint divisor) {
-		return { std::fmod(time, divisor.time) };
-	}
-
-	//=========================================================================================
-	// public operator
-	//=========================================================================================
-
-	void operator=(DeltaTimePoint other) {
-		time = other.time;
-	}
-
-
-	DeltaTimePoint& operator+=(DeltaTimePoint other) {
-		time += other.time;
-		return *this;
-	}
-
-	DeltaTimePoint& operator-=(DeltaTimePoint other) {
-		time -= other.time;
-		return *this;
-	}
-
-	bool operator==(DeltaTimePoint other) const {
-		return time == other.time;
-	}
-
-	bool operator<(DeltaTimePoint other) const {
-		return time < other.time;
-	}
-
-	bool operator<=(DeltaTimePoint other) const {
-		return time <= other.time;
-	}
-
-	bool operator>(DeltaTimePoint other) const {
-		return time > other.time;
-	}
-
-	bool operator>=(DeltaTimePoint other) const {
-		return time >= other.time;
-	}
-
-	//=========================================================================================
-	// public member
-	//=========================================================================================
-
-	float time;
-
-private:
 };
+
+////////////////////////////////////////////////////////////////////////////////////////////
+// DeltaTimePoint class template methods
+////////////////////////////////////////////////////////////////////////////////////////////
+
+template <TimeUnit _Unit, std::floating_point _Value>
+inline void DeltaTimePoint<_Unit, _Value>::AddDeltaTime() {
+	this->time += SxavengerSystem::GetDeltaTime().time;
+}
+
+template <TimeUnit _Unit, std::floating_point _Value>
+inline void DeltaTimePoint<_Unit, _Value>::SubtractionDeltaTime() {
+	this->time -= SxavengerSystem::GetDeltaTime().time;
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////
+// using
+////////////////////////////////////////////////////////////////////////////////////////////
+
+template <TimeUnit _Unit>
+using DeltaTimePointf = DeltaTimePoint<_Unit, float>;

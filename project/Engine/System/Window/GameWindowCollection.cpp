@@ -47,7 +47,7 @@ void GameWindowCollection::Term() {
 bool GameWindowCollection::ProcessMessage() {
 	MSG msg = {};
 
-	if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE)) {
+	while (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE)) {
 		TranslateMessage(&msg);
 		DispatchMessage(&msg);
 	}
@@ -86,13 +86,13 @@ const std::weak_ptr<GameWindow> GameWindowCollection::TryGetSubWindow(const LPCW
 }
 
 const std::weak_ptr<GameWindow> GameWindowCollection::GetSubWindow(const LPCWSTR& name) const {
-	Assert(subWindows_.Contains(name), "sub winwdow is not found.");
+	Exception::Assert(subWindows_.Contains(name), "sub winwdow is not found.");
 	return subWindows_.At(name);
 }
 
 const GameWindow* GameWindowCollection::GetForcusWindow() const {
 	HWND hwnd = GetForegroundWindow();
-
+	 
 	if (hwnd == mainWindow_->GetHwnd()) {
 		return mainWindow_.get();
 	}
@@ -107,6 +107,8 @@ const GameWindow* GameWindowCollection::GetForcusWindow() const {
 }
 
 void GameWindowCollection::SystemDebugGui() {
+	ImGui::Dummy({ 240.0f, 0 });
+
 	ImGui::SeparatorText("main window");
 	if (ImGui::Selectable(ToString(kMainWindowTitle).c_str(), false)) {
 		SetForegroundWindow(mainWindow_->GetHwnd());
@@ -121,7 +123,7 @@ void GameWindowCollection::SystemDebugGui() {
 }
 
 void GameWindowCollection::RemoveClosedSubWindow() {
-	for (auto it = subWindows_.Begin(); it != subWindows_.End();) {
+	for (auto it = subWindows_.begin(); it != subWindows_.end();) {
 		if (!it->second->IsOpenWindow()) {
 			it = subWindows_.Erase(it);
 			continue;

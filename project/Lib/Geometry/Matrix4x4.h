@@ -3,12 +3,14 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
-#include <algorithm>
-#include <cassert>
-
-//* Geomtery
+//* geometry
 #include "Vector3.h"
 #include "Quaternion.h"
+
+//* c++
+#include <cstdint>
+#include <array>
+#include <initializer_list>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Matrix4x4 class
@@ -17,138 +19,167 @@ class Matrix4x4 {
 public:
 
 	//=========================================================================================
-	// methods
+	// constructor
 	//=========================================================================================
 
-	static Matrix4x4 Identity();
+	constexpr Matrix4x4() noexcept = default;
+	constexpr Matrix4x4(const Matrix4x4& rhs) noexcept = default;
+	constexpr Matrix4x4(Matrix4x4&& rhs) noexcept = default;
 
-	// todo: DirectXMathのinverseに変更
-	Matrix4x4 Inverse() const;
-
-	Matrix4x4 Transpose() const;
+	constexpr Matrix4x4(const std::initializer_list<float>& list) noexcept;
+	constexpr Matrix4x4(const std::initializer_list<std::initializer_list<float>>& list) noexcept;
 
 	//=========================================================================================
-	// compound assignment operator
+	// operator
 	//=========================================================================================
 
-	/* Add */
-	Matrix4x4& operator+=(const Matrix4x4& mat) {
-		for (int row = 0; row < 4; row++) {
-			for (int column = 0; column < 4; column++) {
-				m[row][column] += mat.m[row][column];
-			}
-		}
+	//* compound assignment
+	constexpr Matrix4x4& operator=(const Matrix4x4& rhs) noexcept = default;
+	constexpr Matrix4x4& operator=(Matrix4x4&& rhs) noexcept = default;
+	constexpr Matrix4x4& operator+=(const Matrix4x4& rhs) noexcept;
+	constexpr Matrix4x4& operator-=(const Matrix4x4& rhs) noexcept;
+	constexpr Matrix4x4& operator*=(const Matrix4x4& rhs) noexcept;
 
-		return *this;
-	}
-
-	/* Subtract */
-	Matrix4x4& operator-=(const Matrix4x4& mat) {
-		for (int row = 0; row < 4; row++) {
-			for (int column = 0; column < 4; column++) {
-				m[row][column] -= mat.m[row][column];
-			}
-}
-
-		return *this;
-	}
-
-	/* Multiply */
-	Matrix4x4& operator*=(const Matrix4x4& mat) {
-		Matrix4x4 result = { 0.0f };
-
-		for (int row = 0; row < 4; row++) {
-			for (int column = 0; column < 4; column++) {
-				for (int i = 0; i < 4; i++) {
-					result.m[row][column] += m[row][i] * mat.m[i][column];
-				}
-			}
-		}
-
-		std::memcpy(this, &result, sizeof(Matrix4x4));
-		return *this;
-	}
+	//* access
+	//!< c++23以降はoperator[]を作成
 
 	//=========================================================================================
 	// variables
 	//=========================================================================================
 
-	float m[4][4];
+	std::array<std::array<float, 4>, 4> m = {};
+
+	//=========================================================================================
+	// mathmatical methods
+	//=========================================================================================
+
+	//* member methods
+
+	Matrix4x4 Transpose() const noexcept;
+
+	Matrix4x4 Inverse() const noexcept;
+
+	//* static member methods
+
+	static Matrix4x4 Identity() noexcept;
+
+	static Matrix4x4 MakeTranslate(const Vector3f& v) noexcept;
+
+	static Matrix4x4 MakeRotateX(float angle) noexcept;
+	static Matrix4x4 MakeRotateY(float angle) noexcept;
+	static Matrix4x4 MakeRotateZ(float angle) noexcept;
+	static Matrix4x4 MakeRotate(const Vector3f& euler) noexcept;
+	static Matrix4x4 MakeRotate(const Quaternion& q) noexcept;
+
+	static Matrix4x4 MakeScale(const Vector3f& v) noexcept;
+
+	static Matrix4x4 MakeAffine(const Vector3f& scale, const Vector3f& rotate, const Vector3f& translate) noexcept;
+	static Matrix4x4 MakeAffine(const Vector3f& scale, const Quaternion& rotate, const Vector3f& translate) noexcept;
+
+
+	static Matrix4x4 PerspectiveFov(float fov, float aspect, float near, float far) noexcept;
+	static Matrix4x4 Orthographic(float left, float top, float right, float bottom, float near, float far) noexcept;
+	static Matrix4x4 Viewport(float x, float y, float width, float height, float near, float far) noexcept;
+
+
+	static Vector3f Transform(const Vector3f& v, const Matrix4x4& m) noexcept;
+	static Vector3f TransformNormal(const Vector3f& v, const Matrix4x4& m) noexcept;
 
 };
 
-//=========================================================================================
-// binary operator
-//=========================================================================================
+////////////////////////////////////////////////////////////////////////////////////////////
+// Matrix4x4 class constexpr methods
+////////////////////////////////////////////////////////////////////////////////////////////
 
-/* Add */
-inline Matrix4x4 operator+(const Matrix4x4& m1, const Matrix4x4& m2) {
-	Matrix4x4 result;
+constexpr Matrix4x4::Matrix4x4(const std::initializer_list<float>& list) noexcept {
+	for (size_t row = 0; row < 4; ++row) {
+		for (size_t col = 0; col < 4; ++col) {
+			m[row][col] = *(list.begin() + row * 4 + col);
+		}
+	}
+}
 
-	for (int row = 0; row < 4; row++) {
-		for (int column = 0; column < 4; column++) {
-			result.m[row][column] = m1.m[row][column] + m2.m[row][column];
+constexpr Matrix4x4::Matrix4x4(const std::initializer_list<std::initializer_list<float>>& list) noexcept {
+	for (size_t row = 0; row < 4; ++row) {
+		for (size_t col = 0; col < 4; ++col) {
+			m[row][col] = *(list.begin() + row)->begin() + col;
+		}
+	}
+}
+
+constexpr Matrix4x4& Matrix4x4::operator+=(const Matrix4x4& rhs) noexcept {
+	for (size_t row = 0; row < 4; ++row) {
+		for (size_t col = 0; col < 4; ++col) {
+			m[row][col] += rhs.m[row][col];
+		}
+	}
+
+	return *this;
+}
+
+constexpr Matrix4x4& Matrix4x4::operator-=(const Matrix4x4& rhs) noexcept {
+	for (size_t row = 0; row < 4; ++row) {
+		for (size_t col = 0; col < 4; ++col) {
+			m[row][col] -= rhs.m[row][col];
+		}
+	}
+
+	return *this;
+}
+
+constexpr Matrix4x4& Matrix4x4::operator*=(const Matrix4x4& rhs) noexcept {
+	Matrix4x4 result = {};
+
+	for (size_t row = 0; row < 4; ++row) {
+		for (size_t col = 0; col < 4; ++col) {
+			for (size_t i = 0; i < 4; ++i) {
+				result.m[row][col] += m[row][i] * rhs.m[i][col];
+			}
+		}
+	}
+
+	*this = result;
+	return *this;
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////
+// Matrix4x4 class binary operators
+////////////////////////////////////////////////////////////////////////////////////////////
+
+constexpr Matrix4x4 operator+(const Matrix4x4& lhs, const Matrix4x4& rhs) noexcept {
+	Matrix4x4 result = {};
+
+	for (size_t row = 0; row < 4; ++row) {
+		for (size_t col = 0; col < 4; ++col) {
+			result.m[row][col] = lhs.m[row][col] + rhs.m[row][col];
 		}
 	}
 
 	return result;
 }
 
-/* Subtract */
-inline Matrix4x4 operator-(const Matrix4x4& m1, const Matrix4x4& m2) {
-	Matrix4x4 result;
+constexpr Matrix4x4 operator-(const Matrix4x4& lhs, const Matrix4x4& rhs) noexcept {
+	Matrix4x4 result = {};
 
-	for (int row = 0; row < 4; row++) {
-		for (int column = 0; column < 4; column++) {
-			result.m[row][column] = m1.m[row][column] - m2.m[row][column];
+	for (size_t row = 0; row < 4; ++row) {
+		for (size_t col = 0; col < 4; ++col) {
+			result.m[row][col] = lhs.m[row][col] - rhs.m[row][col];
 		}
 	}
 
 	return result;
 }
 
-/* Multiply */
-inline Matrix4x4 operator*(const Matrix4x4& m1, const Matrix4x4& m2) {
-	Matrix4x4 result = { 0.0f };
+constexpr Matrix4x4 operator*(const Matrix4x4& lhs, const Matrix4x4& rhs) noexcept {
+	Matrix4x4 result = {};
 
-	for (int row = 0; row < 4; row++) {
-		for (int column = 0; column < 4; column++) {
-			for (int i = 0; i < 4; i++) {
-				result.m[row][column] += m1.m[row][i] * m2.m[i][column];
+	for (size_t row = 0; row < 4; ++row) {
+		for (size_t col = 0; col < 4; ++col) {
+			for (size_t i = 0; i < 4; ++i) {
+				result.m[row][col] += lhs.m[row][i] * rhs.m[i][col];
 			}
 		}
 	}
 
 	return result;
-}
-
-////////////////////////////////////////////////////////////////////////////////////////////
-// Matrix4x4 methods
-////////////////////////////////////////////////////////////////////////////////////////////
-namespace Matrix {
-
-	//* make *//
-
-	Matrix4x4 MakeScale(const Vector3f& scale);
-
-	Matrix4x4 MakeRotateX(float radian);
-	Matrix4x4 MakeRotateY(float radian);
-	Matrix4x4 MakeRotateZ(float radian);
-	Matrix4x4 MakeRotate(const Vector3f& rotate);
-	Matrix4x4 MakeRotate(const Quaternion& q);
-
-	Matrix4x4 MakeTranslate(const Vector3f& translate);
-
-	Matrix4x4 MakeAffine(const Vector3f& scale, const Vector3f& rotate, const Vector3f& translate);
-	Matrix4x4 MakeAffine(const Vector3f& scale, const Quaternion& rotate, const Vector3f& translate);
-
-	Matrix4x4 MakePerspectiveFov(float fovY, float aspectRatio, float nearClip, float farClip);
-
-	Matrix4x4 MakeOrthographic(float left, float top, float right, float bottom, float nearZ, float farZ);
-
-	Matrix4x4 MakeViewport(float left, float top, float width, float height, float minDepth, float maxDepth);
-
-	//* transform *//
-
-	Vector3f Transform(const Vector3f& v, const Matrix4x4& m);
 }

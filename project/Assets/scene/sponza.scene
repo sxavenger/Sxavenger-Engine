@@ -1,0 +1,282 @@
+[
+	{
+		"components": {
+			"class TransformComponent": {
+				"transform": {
+					"rotate": {
+						"w": 1.0,
+						"x": 0.0,
+						"y": 0.0,
+						"z": 0.0
+					},
+					"scale": {
+						"x": 6.0,
+						"y": 6.0,
+						"z": 6.0
+					},
+					"translate": {
+						"x": 0.0,
+						"y": 0.0,
+						"z": 0.0
+					}
+				}
+			}
+		},
+		"filepath": "assets/models/tree_sponza/Sponza.gltf",
+		"isActive": true,
+		"isRenamable": true,
+		"isView": true,
+		"name": "sponza"
+	},
+	{
+		"components": {
+			"class TransformComponent": {
+				"transform": {
+					"rotate": {
+						"w": 1.0,
+						"x": 0.0,
+						"y": 0.0,
+						"z": 0.0
+					},
+					"scale": {
+						"x": 1.0,
+						"y": 1.0,
+						"z": 1.0
+					},
+					"translate": {
+						"x": 0.0,
+						"y": 17.26959228515625,
+						"z": 2.759178400039673
+					}
+				}
+			}
+		},
+		"filepath": "assets/models/PBR_Sphere_Test/Model/PBR_Sphere.gltf",
+		"isActive": true,
+		"isRenamable": true,
+		"isView": true,
+		"name": "PBR_Sphere"
+	},
+	{
+		"components": {
+			"class TransformComponent": {
+				"transform": {
+					"rotate": {
+						"w": 1.0,
+						"x": 0.0,
+						"y": 0.0,
+						"z": 0.0
+					},
+					"scale": {
+						"x": 4.0,
+						"y": 4.0,
+						"z": 4.0
+					},
+					"translate": {
+						"x": -20.45981788635254,
+						"y": 1.4896554946899414,
+						"z": 2.9714345932006836
+					}
+				}
+			}
+		},
+		"filepath": "assets/models/macbeth_chart/macbeth_chart_scene.gltf",
+		"isActive": true,
+		"isRenamable": true,
+		"isView": true,
+		"name": "macbeth_chart"
+	},
+	{
+		"components": {
+			"class PointLightComponent": {
+				"color": {
+					"b": 1.0,
+					"g": 1.0,
+					"r": 1.0
+				},
+				"intensity": 90.0,
+				"radius": 33.5,
+				"unit": 1
+			},
+			"class TransformComponent": {
+				"transform": {
+					"rotate": {
+						"w": 1.0,
+						"x": 0.0,
+						"y": 0.0,
+						"z": 0.0
+					},
+					"scale": {
+						"x": 1.0,
+						"y": 1.0,
+						"z": 1.0
+					},
+					"translate": {
+						"x": 0.0,
+						"y": 10.746804237365723,
+						"z": 5.546891212463379
+					}
+				}
+			}
+		},
+		"filepath": "",
+		"isActive": true,
+		"isRenamable": true,
+		"isView": true,
+		"name": "point light A"
+	},
+	{
+		"components": {
+			"class PointLightComponent": {
+				"color": {
+					"b": 1.0,
+					"g": 1.0,
+					"r": 1.0
+				},
+				"intensity": 90.0,
+				"radius": 25.200000762939453,
+				"unit": 1
+			},
+			"class TransformComponent": {
+				"transform": {
+					"rotate": {
+						"w": 1.0,
+						"x": 0.0,
+						"y": 0.0,
+						"z": 0.0
+					},
+					"scale": {
+						"x": 1.0,
+						"y": 1.0,
+						"z": 1.0
+					},
+					"translate": {
+						"x": 32.73326873779297,
+						"y": 6.9889092445373535,
+						"z": -1.6564640998840332
+					}
+				}
+			}
+		},
+		"filepath": "",
+		"isActive": true,
+		"isRenamable": true,
+		"isView": true,
+		"name": "point light B"
+	},
+	{
+		"components": {
+			"class PointLightComponent": {
+				"color": {
+					"b": 1.0,
+					"g": 1.0,
+					"r": 1.0
+				},
+				"intensity": 90.0,
+				"radius": 35.29999923706055,
+				"unit": 1
+			},
+			"class TransformComponent": {
+				"transform": {
+					"rotate": {
+						"w": 1.0,
+						"x": 0.0,
+						"y": 0.0,
+						"z": 0.0
+					},
+					"scale": {
+						"x": 1.0,
+						"y": 1.0,
+						"z": 1.0
+					},
+					"translate": {
+						"x": -27.879026412963867,
+						"y": 6.592794895172119,
+						"z": 0.0
+					}
+				}
+			}
+		},
+		"filepath": "",
+		"isActive": true,
+		"isRenamable": true,
+		"isView": true,
+		"name": "point light C"
+	},
+	{
+		"components": {
+			"class DirectionalLightComponent": {
+				"color": {
+					"b": 1.0,
+					"g": 1.0,
+					"r": 1.0
+				},
+				"intensity": 20.0
+			},
+			"class TransformComponent": {
+				"transform": {
+					"rotate": {
+						"w": 0.6974934339523315,
+						"x": 0.6354818940162659,
+						"y": -0.3306003212928772,
+						"z": -0.01921170949935913
+					},
+					"scale": {
+						"x": 1.0,
+						"y": 1.0,
+						"z": 1.0
+					},
+					"translate": {
+						"x": 0.0,
+						"y": 0.0,
+						"z": 0.0
+					}
+				}
+			}
+		},
+		"filepath": "",
+		"isActive": true,
+		"isRenamable": true,
+		"isView": true,
+		"name": "directional light"
+	},
+	{
+		"components": {
+			"class PointLightComponent": {
+				"color": {
+					"b": 1.0,
+					"g": 1.0,
+					"r": 1.0
+				},
+				"intensity": 52.400001525878906,
+				"radius": 23.5,
+				"unit": 1
+			},
+			"class TransformComponent": {
+				"transform": {
+					"rotate": {
+						"w": 0.9928086400032043,
+						"x": -0.11971220374107361,
+						"y": -0.0,
+						"z": 0.0
+					},
+					"scale": {
+						"x": 1.0,
+						"y": 1.0,
+						"z": 1.0
+					},
+					"translate": {
+						"x": -61.87173843383789,
+						"y": 8.722844123840332,
+						"z": 3.445007085800171
+					}
+				}
+			}
+		},
+		"filepath": "",
+		"isActive": true,
+		"isRenamable": true,
+		"isView": true,
+		"name": "point light D"
+	}
+]

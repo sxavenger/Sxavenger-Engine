@@ -3,19 +3,22 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
-//* DXOBJECT
+//* DXOBJECT origin
 #include "DxObject/DxDevice.h"
 #include "DxObject/DxDescriptorHeaps.h"
 #include "DxObject/DxShaderCompiler.h"
-#include "DxObject/DxCompileBlobCollection.h"
 #include "DxObject/DxBlendState.h"
 
 //* DXOBJECT utility
 #include "DxObject/DxDescriptor.h"
 #include "DxObject/DxCommandContext.h"
 #include "DxObject/DxSwapChain.h"
+#include "DxObject/DxShaderBlob.h"
 #include "DxObject/DxGraphicsPipelineState.h"
 #include "DxObject/DxComputePipelineState.h"
+
+//* DXROBJECT utility
+#include "DxrObject/DxrRaytracingBlob.h"
 
 //* c++
 #include <memory>
@@ -43,8 +46,6 @@ public:
 
 	DxObject::DescriptorHeaps* GetDesriptorHeaps() const { return descriptorHeaps_.get(); }
 
-	DxObject::CompileBlobCollection* GetCompileBlobCollection() const { return compileBlobCollection_.get(); }
-
 private:
 
 	//=========================================================================================
@@ -53,12 +54,11 @@ private:
 
 	//* DXOBJECT *//
 
-	static const DxObject::Device::DxLeakChecker leakChecher_;
+	static inline const DxObject::Device::DxLeakChecker leakChecher_ = {};
 
-	std::unique_ptr<DxObject::Device>                device_;
-	std::unique_ptr<DxObject::DescriptorHeaps>       descriptorHeaps_;
-	std::unique_ptr<DxObject::ShaderCompiler>        shaderCompiler_;
-	std::unique_ptr<DxObject::CompileBlobCollection> compileBlobCollection_;
-	std::unique_ptr<DxObject::BlendState>            blendState_;
+	std::unique_ptr<DxObject::Device>          device_;
+	std::unique_ptr<DxObject::DescriptorHeaps> descriptorHeaps_;
+	std::unique_ptr<DxObject::ShaderCompiler>  shaderCompiler_;
+	std::unique_ptr<DxObject::BlendState>      blendState_;
 
 };

@@ -75,7 +75,7 @@ void DescriptorPool::CreateDescriptorHeap(ID3D12Device* device) {
 		&desc, IID_PPV_ARGS(&descriptorHeap_)
 	);
 
-	Assert(SUCCEEDED(hr));
+	Exception::Assert(SUCCEEDED(hr));
 }
 
 uint32_t DescriptorPool::GetCurrentDescriptorIndex() {
@@ -89,7 +89,7 @@ uint32_t DescriptorPool::GetCurrentDescriptorIndex() {
 		return result;
 	}
 
-	Assert(descriptorIndexCount_ < descriptorMaxCount_, "descriptorHeap max count over.");  //!< 作成した分のDescriptorの要素数を超えている
+	Exception::Assert(descriptorIndexCount_ < descriptorMaxCount_, "descriptorHeap max count over.");  //!< 作成した分のDescriptorの要素数を超えている
 
 	// 現在のindexCountを返却
 	result = descriptorIndexCount_;
@@ -126,17 +126,17 @@ void DescriptorHeaps::Init(Device* device) {
 	pools_[DescriptorType::kDescriptor_DSV]->Init(device, D3D12_DESCRIPTOR_HEAP_TYPE_DSV, false, 8);
 
 	pools_[DescriptorType::kDescriptor_CBV_SRV_UAV] = std::make_unique<DescriptorPool>();
-	pools_[DescriptorType::kDescriptor_CBV_SRV_UAV]->Init(device, D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, true, 128);
+	pools_[DescriptorType::kDescriptor_CBV_SRV_UAV]->Init(device, D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, true, 256);
 
-	EngineLog("[_DXOBJECT]::DescriptorHeaps complete init.");
+	Logger::EngineLog("[_DXOBJECT]::DescriptorHeaps complete init.");
 }
 
 void DescriptorHeaps::Term() {
-	EngineLog("[_DXOBJECT]::DescriptorHeaps term.");
+	Logger::EngineLog("[_DXOBJECT]::DescriptorHeaps term.");
 }
 
 Descriptor DescriptorHeaps::GetDescriptor(DescriptorType type) {
-	Assert(type < DescriptorType::kCountOfDescriptorTypeCount, "type is not a valid value.");
+	Exception::Assert(type < DescriptorType::kCountOfDescriptorTypeCount, "type is not a valid value.");
 
 	Descriptor result = pools_.at(type)->GetDescriptor();
 	result.type_      = type;

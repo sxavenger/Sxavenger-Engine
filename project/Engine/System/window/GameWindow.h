@@ -11,12 +11,13 @@
 
 //* lib
 #include <Lib/Geometry/Vector4.h>
+#include <Lib/Geometry/Color4.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // static variables
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-static const Color4f kDefaultGameWindowColor = ToColor4f(0x9BA8A8FF);
+static const Color4f kDefaultGameWindowColor = Color4f::Convert(0x9BA8A8FF);
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // GameWindow class
@@ -31,9 +32,14 @@ public:
 
 	void Create(
 		const Vector2ui& clientSize, const LPCWSTR& name,
-		DirectXThreadContext* threadContext,
+		DirectXThreadContext* context,
 		const HWND& parentHwnd = nullptr, const Color4f& clearColor = kDefaultGameWindowColor
 	);
 
 private:
+
+	//=========================================================================================
+	// private variables
+	//=========================================================================================
+
 };

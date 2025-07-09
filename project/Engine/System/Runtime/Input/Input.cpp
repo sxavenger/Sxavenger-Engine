@@ -17,13 +17,13 @@ void KeyboardInput::Init(IDirectInput8* dInput) {
 	auto hr = dInput->CreateDevice(
 		GUID_SysKeyboard, &keyboardDevice_, NULL
 	);
-	Assert(SUCCEEDED(hr));
+	Exception::Assert(SUCCEEDED(hr));
 
 	// 入力データ形式のセット
 	hr = keyboardDevice_->SetDataFormat(
 		&c_dfDIKeyboard // 標準形式
 	);
-	Assert(SUCCEEDED(hr));
+	Exception::Assert(SUCCEEDED(hr));
 
 	flags_ |= DISCL_FOREGROUND;
 	flags_ |= DISCL_NONEXCLUSIVE;
@@ -78,7 +78,7 @@ void KeyboardInput::SetCooperativeLevel(const Window* window) {
 				hwnd,
 				flags_
 			);
-			//Assert(SUCCEEDED(hr)); // HACK:
+			//Exception::Assert(SUCCEEDED(hr)); // HACK:
 
 			currentHwnd_ = hwnd;
 		}
@@ -95,13 +95,13 @@ void MouseInput::Init(IDirectInput8* dInput) {
 	auto hr = dInput->CreateDevice(
 		GUID_SysMouse, &mouseDevice_, NULL
 	);
-	Assert(SUCCEEDED(hr));
+	Exception::Assert(SUCCEEDED(hr));
 
 	// 入力データ形式のセット
 	hr = mouseDevice_->SetDataFormat(
 		&c_dfDIMouse2 // 標準形式
 	);
-	Assert(SUCCEEDED(hr));
+	Exception::Assert(SUCCEEDED(hr));
 
 	flags_ |= DISCL_FOREGROUND;
 	flags_ |= DISCL_NONEXCLUSIVE;
@@ -127,6 +127,7 @@ void MouseInput::Update() {
 	// マウスの入力状態を取得
 	mouseDevice_->GetDeviceState(sizeof(mouse_.first), &mouse_.first);
 
+	ShowCousor(true);
 }
 
 Vector2i MouseInput::GetPosition() const {
@@ -150,6 +151,16 @@ Vector2i MouseInput::GetPosition(const Window* window) const {
 
 Vector2i MouseInput::GetDeltaPosition() const {
 	return { mouse_.first.lX, mouse_.first.lY };
+}
+
+void MouseInput::SetPosition(const Vector2i& position) const {
+	POINT point = { position.x, position.y };
+	ScreenToClient(currentHwnd_, &point);
+	SetCursorPos(point.x, point.y);
+}
+
+void MouseInput::ShowCousor(bool isShow) const {
+	while (isShow ? ShowCursor(isShow) < 0 : ShowCursor(isShow) >= 0) {}
 }
 
 bool MouseInput::IsPress(MouseId id) const {
@@ -188,13 +199,107 @@ void MouseInput::SetCooperativeLevel(const Window* window) {
 				hwnd,
 				flags_
 			);
-			//Assert(SUCCEEDED(hr)); // HACK:
+			//Exception::Assert(SUCCEEDED(hr)); // HACK:
 
 			currentHwnd_ = hwnd;
 		}
 	}
 }
 
+////////////////////////////////////////////////////////////////////////////////////////////
+// GamepadInput class methods
+////////////////////////////////////////////////////////////////////////////////////////////
+
+void GamepadInput::Init(uint8_t number) {
+	// numberの設定
+	number_ = number;
+}
+
+void GamepadInput::Term() {
+}
+
+void GamepadInput::Update() {
+
+	// 1frame前のコントローラー状態の保存
+	state_.second = state_.first;
+
+	// コントローラーの入力状態を取得
+	auto dr = XInputGetState(number_, &state_.first);
+
+	// 接続状態の更新
+	isConnect_ = (dr == ERROR_SUCCESS);
+	//!< [retval] true: 接続されてる, false: 接続されてない
+
+}
+
+bool GamepadInput::IsPress(GamepadButtonId id) const {
+	const auto& [first, second] = state_;
+	return (first.Gamepad.wButtons & static_cast<uint16_t>(id));
+}
+
+bool GamepadInput::IsPress(GamepadTriggerId id) const {
+	const auto& [first, second] = state_;
+
+	if (id == GamepadTriggerId::TRIGGER_LEFT) {
+		return (first.Gamepad.bLeftTrigger > XINPUT_GAMEPAD_TRIGGER_THRESHOLD);
+
+	} else if (id == GamepadTriggerId::TRIGGER_RIGHT) {
+		return (first.Gamepad.bRightTrigger > XINPUT_GAMEPAD_TRIGGER_THRESHOLD);
+	}
+
+	return {}; //!< error case
+}
+
+bool GamepadInput::IsTrigger(GamepadButtonId id) const {
+	const auto& [first, second] = state_;
+	return (first.Gamepad.wButtons & static_cast<uint16_t>(id)) && !(second.Gamepad.wButtons & static_cast<uint16_t>(id));
+}
+
+bool GamepadInput::IsTrigger(GamepadTriggerId id) const {
+	const auto& [first, second] = state_;
+
+	if (id == GamepadTriggerId::TRIGGER_LEFT) {
+		return (first.Gamepad.bLeftTrigger > XINPUT_GAMEPAD_TRIGGER_THRESHOLD) && !(second.Gamepad.bLeftTrigger > XINPUT_GAMEPAD_TRIGGER_THRESHOLD);
+
+	} else if (id == GamepadTriggerId::TRIGGER_RIGHT) {
+		return (first.Gamepad.bRightTrigger > XINPUT_GAMEPAD_TRIGGER_THRESHOLD) && !(second.Gamepad.bRightTrigger > XINPUT_GAMEPAD_TRIGGER_THRESHOLD);
+	}
+
+	return {}; //!< error case
+}
+
+bool GamepadInput::IsRelease(GamepadButtonId id) const {
+	const auto& [first, second] = state_;
+	return !(first.Gamepad.wButtons & static_cast<uint16_t>(id)) && (second.Gamepad.wButtons & static_cast<uint16_t>(id));
+}
+
+bool GamepadInput::IsRelease(GamepadTriggerId id) const {
+	const auto& [first, second] = state_;
+
+	if (id == GamepadTriggerId::TRIGGER_LEFT) {
+		return !(first.Gamepad.bLeftTrigger > XINPUT_GAMEPAD_TRIGGER_THRESHOLD) && (second.Gamepad.bLeftTrigger > XINPUT_GAMEPAD_TRIGGER_THRESHOLD);
+
+	} else if (id == GamepadTriggerId::TRIGGER_RIGHT) {
+		return !(first.Gamepad.bRightTrigger > XINPUT_GAMEPAD_TRIGGER_THRESHOLD) && (second.Gamepad.bRightTrigger > XINPUT_GAMEPAD_TRIGGER_THRESHOLD);
+	}
+
+	return {}; //!< error case
+}
+
+Vector2i GamepadInput::GetStick(GamepadStickId id) const {
+	if (id == GamepadStickId::STICK_LEFT) {
+		return { state_.first.Gamepad.sThumbLX, state_.first.Gamepad.sThumbLY };
+
+	} else if (id == GamepadStickId::STICK_RIGHT) {
+		return { state_.first.Gamepad.sThumbRX, state_.first.Gamepad.sThumbRY };
+	}
+
+	return {}; //!< error case
+}
+
+Vector2f GamepadInput::GetStickNormalized(GamepadStickId id) const {
+	return static_cast<Vector2f>(GetStick(id)) / static_cast<float>(SHRT_MAX);
+}
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Input class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -206,7 +311,7 @@ void Input::Init(const Window* mainWindow) {
 		DIRECTINPUT_VERSION, IID_IDirectInput8,
 		(void**)&directInput_, nullptr
 	);
-	Assert(SUCCEEDED(hr));
+	Exception::Assert(SUCCEEDED(hr));
 
 	//* dinput *//
 
@@ -215,6 +320,11 @@ void Input::Init(const Window* mainWindow) {
 
 	mouse_ = std::make_unique<MouseInput>();
 	mouse_->Init(directInput_.Get());
+
+	for (uint8_t i = 0; i < XUSER_MAX_COUNT; ++i) {
+		gamepads_[i] = std::make_unique<GamepadInput>();
+		gamepads_[i]->Init(i);
+	}
 }
 
 void Input::Term() {
@@ -223,6 +333,8 @@ void Input::Term() {
 void Input::Update() {
 	keyboard_->Update();
 	mouse_->Update();
+
+	std::for_each(gamepads_.begin(), gamepads_.end(), [](auto& gamepad) { gamepad->Update(); });
 }
 
 bool Input::IsPressKey(KeyId id) {

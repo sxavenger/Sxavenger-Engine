@@ -53,6 +53,15 @@ public:
 
 	const D3D12_GPU_DESCRIPTOR_HANDLE& GetGPUHandle() const;
 
+	const uint32_t GetIndex() const;
+
+	//* operator *//
+
+	Descriptor(Descriptor&&) = default;
+	Descriptor& operator=(Descriptor&&) = default;
+
+	Descriptor(const Descriptor&) = delete;
+	Descriptor& operator=(const Descriptor&) = delete;
 
 private:
 

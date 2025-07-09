@@ -11,6 +11,7 @@
 //* lib
 #include <Lib/Geometry/Vector2.h>
 #include <Lib/Geometry/Vector4.h>
+#include <Lib/Geometry/Color4.h>
 
 //* c++
 #include <memory>
@@ -28,15 +29,15 @@ public:
 	DirectXThreadContext()  = default;
 	~DirectXThreadContext() { Term(); }
 
-	void Init(uint32_t allocatorCount);
+	void Init(uint32_t allocatorCount, D3D12_COMMAND_LIST_TYPE type = D3D12_COMMAND_LIST_TYPE_DIRECT);
 
 	void Term();
 
 	//* command context option *//
 
-	void TransitionAllocator();
+	void TransitionAllocator() const;
 
-	void ExecuteAllAllocators();
+	void ExecuteAllAllocators() const;
 
 	ID3D12GraphicsCommandList6* GetCommandList() const;
 
@@ -54,11 +55,15 @@ private:
 
 	std::unique_ptr<DxObject::CommandContext> command_;
 
+	//* parameter *//
+
+	D3D12_COMMAND_LIST_TYPE type_ = D3D12_COMMAND_LIST_TYPE_NONE;
+
 	//=========================================================================================
 	// private methods
 	//=========================================================================================
 
-	void SetDescriptorHeap();
+	void SetDescriptorHeap() const;
 
 };
 
@@ -75,7 +80,7 @@ public:
 	DirectXWindowContext()  = default;
 	~DirectXWindowContext() { Term(); }
 
-	void Init(Window* window, DirectXThreadContext* threadContext, const Color4f& clearColor);
+	void Init(Window* window, DirectXThreadContext* context, const Color4f& clearColor);
 
 	void Term();
 

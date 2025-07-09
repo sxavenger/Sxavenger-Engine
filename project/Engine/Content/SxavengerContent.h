@@ -4,8 +4,12 @@
 // include
 //-----------------------------------------------------------------------------------------
 //* content
-#include "Texture/TextureCollection.h"
+#include "TextureBuffer/OffscreenTextureCollection.h"
 #include "Animation/SkinningPipeline.h"
+#include "DebugPrimitive/DebugPrimitive.h"
+
+//* c++
+#include <memory>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // SxavengerContent class
@@ -21,26 +25,40 @@ public:
 
 	static void Term();
 
-	//-----------------------------------------------------------------------------------------
-	// TextureCollection option
-	//-----------------------------------------------------------------------------------------
+	//* offscreen texture option *//
 
-	static std::shared_ptr<BaseTexture> TryCreateRenderTextureSafely(const std::string& key, const Vector2ui& size, const Color4f& clearColor = kDefaultTextureClearColor, DXGI_FORMAT format = DxObject::kOffscreenFormat);
-	static std::shared_ptr<RenderTexture> TryCreateRenderTexture(const std::string& key, const Vector2ui& size, const Color4f& clearColor = kDefaultTextureClearColor, DXGI_FORMAT format = DxObject::kOffscreenFormat);
+	static void RegisterTexture(const std::string& name, std::unique_ptr<BaseOffscreenTexture>&& texture);
 
-	static std::shared_ptr<BaseTexture> TryCreateUnorderedTextureSafely(const std::string& key, const Vector2ui& size, DXGI_FORMAT format = DxObject::kOffscreenFormat);
-	static std::shared_ptr<UnorderedTexture> TryCreateUnorderedTexture(const std::string& key, const Vector2ui& size, DXGI_FORMAT format = DxObject::kOffscreenFormat);
+	static const DxObject::Descriptor& GetDescriptorSRV(const std::string& name);
 
-	static const D3D12_GPU_DESCRIPTOR_HANDLE& GetTextureGPUHandleSRV(const std::string& key);
+	static const D3D12_GPU_DESCRIPTOR_HANDLE& GetGPUHandleSRV(const std::string& name);
 
-	//-----------------------------------------------------------------------------------------
-	// Skinning option
-	//-----------------------------------------------------------------------------------------
+	//* skinning pipeline option *//
 
 	static void SetSkinningPipeline(const DirectXThreadContext* context);
 
 	static void DispatchSkinning(const DirectXThreadContext* context, const DxObject::BindBufferDesc& desc, uint32_t vertexSize);
 
+	//* debug primitive option *//
+
+	static void ResetPrimtive();
+
+	static void PushLine(const Vector3f& v1, const Vector3f& v2, const Color4f& color);
+
+	static void PushAxis(const Vector3f& center, float length);
+
+	static void PushSphere(const Vector3f& center, float radius, const Color4f& color);
+
+	static DebugPrimitive* GetDebugPrimitive() { return debugPrimitive_.get(); }
+
 private:
+
+	//=========================================================================================
+	// private variables
+	//=========================================================================================
+
+	static inline std::unique_ptr<OffscreenTextureCollection> collection_;
+	static inline std::unique_ptr<SkinningComputePipeline> skinningPipeline_;
+	static inline std::unique_ptr<DebugPrimitive> debugPrimitive_;
 
 };

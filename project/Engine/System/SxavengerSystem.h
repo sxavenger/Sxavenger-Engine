@@ -4,18 +4,20 @@
 // include
 //-----------------------------------------------------------------------------------------
 //* system
+#include "Config/SxavengerConfig.h"
 #include "WinApp/WinApp.h"
 #include "DirectX/DirectXCommon.h"
 #include "DirectX/DirectXContext.h"
 #include "Window/GameWindowCollection.h"
-#include "Runtime/Thread/Thread.h"
 #include "Runtime/Input/Input.h"
+#include "Runtime/Performance/Performance.h"
+#include "Runtime/Thread/AsyncThreadCollection.h"
 #include "UI/ImGuiController.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// SxavengerSystemEngine class
+// SxavengerSystem class
 ////////////////////////////////////////////////////////////////////////////////////////////
-class SxavengerSystemEngine {
+class SxavengerSystem {
 public:
 
 	//=========================================================================================
@@ -30,13 +32,11 @@ public:
 	// DirectXCommon option
 	//-----------------------------------------------------------------------------------------
 
-	static _DXOBJECT Descriptor GetDescriptor(_DXOBJECT DescriptorType type);
+	_NODISCARD static _DXOBJECT Descriptor GetDescriptor(_DXOBJECT DescriptorType type);
 
 	static _DXOBJECT Device* GetDxDevice();
 
 	static _DXOBJECT DescriptorHeaps* GetDxDescriptorHeaps();
-
-	static _DXOBJECT CompileBlobCollection* GetDxCompileBlobCollection();
 
 	//-----------------------------------------------------------------------------------------
 	// DirectXThreadContext main thread option
@@ -46,19 +46,7 @@ public:
 
 	static void ExecuteAllAllocator();
 
-	//static ID3D12GraphicsCommandList6* GetCommandList();
-
 	static DirectXThreadContext* GetMainThreadContext();
-
-	//-----------------------------------------------------------------------------------------
-	// ThreadCollection option
-	//-----------------------------------------------------------------------------------------
-
-	static void PushTask(const std::shared_ptr<TaskThreadExecution>& task);
-
-	static void TermThreadCollection();
-
-	static ThreadCollection* GetThreadCollection();
 
 	//-----------------------------------------------------------------------------------------
 	// GameWindowCollection option
@@ -95,6 +83,30 @@ public:
 	static Input* GetInput();
 
 	//-----------------------------------------------------------------------------------------
+	// Performance option
+	//-----------------------------------------------------------------------------------------
+
+	static void BeginPerformace();
+
+	static void EndPerformace();
+
+	static TimePointf<TimeUnit::second> GetDeltaTime();
+
+	static void RecordLap(const std::string& name);
+
+	static Performance* GetPerformance();
+
+	//-----------------------------------------------------------------------------------------
+	// Async thread collection option
+	//-----------------------------------------------------------------------------------------
+
+	static void PushTask(AsyncExecution execution, const std::shared_ptr<AsyncTask>& task);
+
+	static void PushTaskAndWait(AsyncExecution execution, const AsyncTask::Function& function);
+
+	static void ShutdownAsyncThread();
+
+	//-----------------------------------------------------------------------------------------
 	// imgui controller option
 	//-----------------------------------------------------------------------------------------
 
@@ -108,9 +120,3 @@ public:
 
 private:
 };
-
-////////////////////////////////////////////////////////////////////////////////////////////
-// using
-////////////////////////////////////////////////////////////////////////////////////////////
-
-using SxavengerSystem = SxavengerSystemEngine;

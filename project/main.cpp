@@ -3,44 +3,32 @@
 //-----------------------------------------------------------------------------------------
 //* engine
 #include <Engine/System/SxavengerSystem.h>
-#include <Engine/System/Runtime/Scene/GameScene.h>
-#include <Engine/Asset/SxavengerAsset.h>
-#include <Engine/Content/SxavengerContent.h>
-#include <Engine/Module/SxavengerModule.h>
+#include <Engine/System/Runtime/GameLoop/GameLoop.h>
 
-// c++
-#include <memory>
+//* gameloop
+#include <Engine/GameLoop/FeatureLevelGameLoop.h>
+#include <Engine/GameLoop/SxavengerEngineGameLoop.h>
+#include <Engine/GameLoop/EditorEngineGameLoop.h>
+#include <Demo/GameLoop/BetaSystemGameLoop.h>
+#include <Demo/GameLoop/DemoGameLoop.h>
+#include <Demo/GameLoop/PreviewGameLoop.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// メイン関数
+// main
 ////////////////////////////////////////////////////////////////////////////////////////////
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
-	//=========================================================================================
-	// sxavenger engine initalize.
-	//=========================================================================================
-	SxavengerSystem::Init();
-	SxavengerAsset::Init();
-	SxavengerContent::Init();
-	SxavengerModule::Init();
+	std::unique_ptr<GameLoop::Collection> collection = std::make_unique<GameLoop::Collection>();
+	//collection->Push<FeatureLevelGameLoop>();
+	
+	collection->Push<SxavengerEngineGameLoop>();
+	collection->Push<EditorEngineGameLoop>();
+	
+	collection->Push<BetaSystemGameLoop>();
+	//collection->Push<DemoGameLoop>();
+	//collection->Push<PreviewGameLoop>();
 
-	//=========================================================================================
-	// game scene run.
-	//=========================================================================================
-	{
-		std::unique_ptr<GameScene> scene = std::make_unique<GameScene>();
-		scene->Run();
-	}
-
-	//=========================================================================================
-	// sxavenger engine term.
-	//=========================================================================================
-	SxavengerSystem::TermThreadCollection();
-
-	SxavengerModule::Term();
-	SxavengerContent::Term();
-	SxavengerAsset::Term();
-	SxavengerSystem::Term();
+	collection->Run();
 
 	return 0;
 }

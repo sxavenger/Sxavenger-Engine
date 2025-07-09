@@ -1,0 +1,70 @@
+[
+	{
+		"components": {
+			"class TransformComponent": {
+				"transform": {
+					"rotate": {
+						"w": 1.0,
+						"x": 0.0,
+						"y": 0.0,
+						"z": 0.0
+					},
+					"scale": {
+						"x": 4.0,
+						"y": 4.0,
+						"z": 4.0
+					},
+					"translate": {
+						"x": 0.0,
+						"y": 0.0,
+						"z": 0.0
+					}
+				}
+			}
+		},
+		"filepath": "assets/models/cornell_box/cornell-box.obj",
+		"isActive": true,
+		"isRenamable": true,
+		"isView": true,
+		"name": "cornell_box"
+	},
+	{
+		"components": {
+			"class PointLightComponent": {
+				"color": {
+					"b": 1.0,
+					"g": 1.0,
+					"r": 1.0
+				},
+				"intensity": 400.0,
+				"radius": 30.899999618530273,
+				"unit": 1
+			},
+			"class TransformComponent": {
+				"transform": {
+					"rotate": {
+						"w": 1.0,
+						"x": 0.0,
+						"y": 0.0,
+						"z": 0.0
+					},
+					"scale": {
+						"x": 1.0,
+						"y": 1.0,
+						"z": 1.0
+					},
+					"translate": {
+						"x": 0.0,
+						"y": 15.997390747070313,
+						"z": 10.887868881225586
+					}
+				}
+			}
+		},
+		"filepath": "",
+		"isActive": true,
+		"isRenamable": true,
+		"isView": true,
+		"name": "point light"
+	}
+]

@@ -10,8 +10,8 @@
 // Animation methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-Vector3f CalculateAnimationCurve(const AnimationCurve<Vector3f>& keyframes, DeltaTimePoint<TimeUnit::s> time) {
-	Assert(!keyframes.empty(), "keyframes is empty.");
+Vector3f CalculateAnimationCurve(const AnimationCurve<Vector3f>& keyframes, TimePointf<TimeUnit::second> time) {
+	Exception::Assert(!keyframes.empty(), "keyframes is empty.");
 
 	if (keyframes.size() == 1 || time <= keyframes.front().time) {
 		return keyframes.front().value;
@@ -24,15 +24,15 @@ Vector3f CalculateAnimationCurve(const AnimationCurve<Vector3f>& keyframes, Delt
 		if (keyframes[i].time <= time && time <= keyframes[nextIndex].time) { //!< timeが範囲内の場合
 			// 範囲内でのtを補間
 			float t = (time.time - keyframes[i].time.time) / (keyframes[nextIndex].time.time - keyframes[i].time.time);
-			return Lerp(keyframes[i].value, keyframes[nextIndex].value, t);
+			return Vector3f::Lerp(keyframes[i].value, keyframes[nextIndex].value, t);
 		}
 	}
 
 	return keyframes.back().value;
 }
 
-Quaternion CalculateAnimationCurve(const AnimationCurve<Quaternion>& keyframes, DeltaTimePoint<TimeUnit::s> time) {
-	Assert(!keyframes.empty(), "keyframes is empty.");
+Quaternion CalculateAnimationCurve(const AnimationCurve<Quaternion>& keyframes, TimePointf<TimeUnit::second> time) {
+	Exception::Assert(!keyframes.empty(), "keyframes is empty.");
 
 	if (keyframes.size() == 1 || time <= keyframes.front().time) {
 		return keyframes.front().value;
@@ -45,7 +45,7 @@ Quaternion CalculateAnimationCurve(const AnimationCurve<Quaternion>& keyframes, 
 		if (keyframes[i].time <= time && time <= keyframes[nextIndex].time) { //!< timeが範囲内の場合
 			// 範囲内でのtを補間
 			float t = (time.time - keyframes[i].time.time) / (keyframes[nextIndex].time.time - keyframes[i].time.time);
-			return Slerp(keyframes[i].value, keyframes[nextIndex].value, t);
+			return Quaternion::Slerp(keyframes[i].value, keyframes[nextIndex].value, t);
 		}
 	}
 

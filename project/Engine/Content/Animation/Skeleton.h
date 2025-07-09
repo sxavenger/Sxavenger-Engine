@@ -3,16 +3,14 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
-//* animation
-#include "Animation.h"
-#include "AnimationGroup.h"
-#include "BornNode.h"
-
 //* engine
-#include <Engine/Module/Transform/Transform.h>
+#include <Engine/Content/Animation/Animation.h>
+#include <Engine/Content/Animation/BornNode.h>
+//#include "AnimationGroup.h"
 
 //* lib
 #include <Lib/Geometry/Matrix4x4.h>
+#include <Lib/Transform/Transform.h>
 
 //* c++
 #include <cstdint>
@@ -49,23 +47,31 @@ struct Skeleton {
 
 	void Create(const BornNode& node);
 
-	void Update(const Animation& animation, DeltaTimePoint<TimeUnit::s> time, bool isLoop = true);
-	void Update(const AnimationGroup& animationGroup, DeltaTimePoint<TimeUnit::s> time, bool isLoop = true);
+	void Update(const Animation& animation, TimePointf<TimeUnit::second> time, bool isLoop = true);
+	//void Update(const AnimationGroup& animationGroup, DeltaTimePoint<TimeUnit::s> time, bool isLoop = true);
 
 	void TransitionAnimation(
-		const Animation& animationA, DeltaTimePoint<TimeUnit::s> timeA,
-		const Animation& animationB, DeltaTimePoint<TimeUnit::s> timeB,
+		const Animation& animationA, TimePointf<TimeUnit::second> timeA, bool isLoopA,
+		const Animation& animationB, TimePointf<TimeUnit::second> timeB, bool isLoopB,
 		float t
 	);
+
+	//* getter *//
+
+	size_t GetJointSize() const { return joints.size(); }
+
+	const bool ContainsJoint(const std::string& name) const { return jointMap.contains(name); }
+
+	const Joint& GetJoint(const std::string& name) const;
 
 	//=========================================================================================
 	// public variables
 	//=========================================================================================
 
-	uint32_t root;
+	std::vector<Joint> joints; //!< 所属してるJoint
 
+	uint32_t root;
 	std::unordered_map<std::string, uint32_t> jointMap; //!< key: joint名, value: index
-	std::vector<Joint>                        joints;   //!< 所属してるJoint
 
 private:
 
@@ -75,13 +81,13 @@ private:
 
 	uint32_t CreateJoint(const BornNode& node, const std::optional<uint32_t>& parent);
 
-	std::optional<QuaternionTransform> GetTransform(const std::string& jointName, const Animation& animation, DeltaTimePoint<TimeUnit::s> time);
+	std::optional<QuaternionTransform> GetTransform(const std::string& jointName, const Animation& animation, TimePointf<TimeUnit::second> time);
 
-	void ApplyAnimation(const Animation& animation, DeltaTimePoint<TimeUnit::s> time);
+	void ApplyAnimation(const Animation& animation, TimePointf<TimeUnit::second> time);
 
 	void ApplyTransitionAnimation(
-		const Animation& animationA, DeltaTimePoint<TimeUnit::s> timeA,
-		const Animation& animationB, DeltaTimePoint<TimeUnit::s> timeB,
+		const Animation& animationA, TimePointf<TimeUnit::second> timeA,
+		const Animation& animationB, TimePointf<TimeUnit::second> timeB,
 		float t
 	);
 

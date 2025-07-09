@@ -4,11 +4,12 @@
 // include
 //-----------------------------------------------------------------------------------------
 //* engine
-#include <Engine/System/Runtime/Performance/DeltaTimePoint.h>
+#include <Engine/System/Runtime/Performance/TimePoint.h>
 
 //* lib
 #include <Lib/Geometry/Vector3.h>
 #include <Lib/Geometry/Quaternion.h>
+#include <Lib/Geometry/GeometryMath.h>
 
 //* c++
 #include <vector>
@@ -20,8 +21,8 @@
 ////////////////////////////////////////////////////////////////////////////////////////////
 template <class T>
 struct Keyframe {
-	DeltaTimePoint<TimeUnit::s> time;  //!< キーフレーム時刻 /*_sec*/
-	T                           value; //!< value
+	TimePointf<TimeUnit::second> time;  //!< キーフレーム時刻 /*_sec*/
+	T                            value; //!< value
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -38,7 +39,7 @@ struct TransformAnimation {
 };
 
 struct Animation {
-	DeltaTimePoint<TimeUnit::s>                         duration;
+	TimePointf<TimeUnit::second>                        duration;
 	std::unordered_map<std::string, TransformAnimation> nodeAnimations; //!< key: node名, value: Nodeのanimation
 };
 
@@ -46,7 +47,7 @@ struct Animation {
 // Animation methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-Vector3f CalculateAnimationCurve(const AnimationCurve<Vector3f>& keyframes, DeltaTimePoint<TimeUnit::s> time);
-Quaternion CalculateAnimationCurve(const AnimationCurve<Quaternion>& keyframes, DeltaTimePoint<TimeUnit::s> time);
+Vector3f CalculateAnimationCurve(const AnimationCurve<Vector3f>& keyframes, TimePointf<TimeUnit::second> time);
+Quaternion CalculateAnimationCurve(const AnimationCurve<Quaternion>& keyframes, TimePointf<TimeUnit::second> time);
 
 

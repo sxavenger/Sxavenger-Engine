@@ -3,147 +3,73 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
-// c++
-#include <cmath>
-#include <algorithm>
-#include "MathLib.h"
-#include "VectorComparison.h"
+//* geometry
+#include "GeometryMath.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// anonymose namespacae
+// Quaternion class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-namespace {
-
-	//! @brief vector結果を出力するための構造体
-	struct ImaginaryVector3 {
-		float x, y, z;
-	};
-
-	//! @brief QuartanionのVector部分のdot演算用関数
-	float DotVector(const Quaternion& q, const Quaternion& r) {
-		return q.x * r.x + q.y * r.y + q.z * r.z;
-	}
-
-	//! @brief QuartanionのVector部分のcross演算用関数
-	ImaginaryVector3 CrossVector(const Quaternion& q, const Quaternion& r) {
-		return {
-			q.y * r.z - q.z * r.y,
-			q.z * r.x - q.x * r.z,
-			q.x * r.y - q.y * r.x
-		};
-	}
+Quaternion Quaternion::Conjugate() const noexcept {
+	return { -imaginary, w };
 }
 
-////////////////////////////////////////////////////////////////////////////////////////////
-// Quaternion methods
-////////////////////////////////////////////////////////////////////////////////////////////
-
-Quaternion Quaternion::Identity() {
-	return { 0.0f, 0.0f, 0.0f, 1.0f };
+float Quaternion::Norm() const noexcept {
+	return std::sqrt(imaginary.x * imaginary.x + imaginary.y * imaginary.y + imaginary.z * imaginary.z + w * w);
 }
 
-Quaternion Quaternion::Conjugate() const {
-	return { -x, -y, -z, w };
+Quaternion Quaternion::Identity() noexcept {
+	return { 0, 0, 0, 1 };
 }
 
-float Quaternion::Norm() const {
-	return std::sqrt(x * x + y * y + z * z + w * w);
+Quaternion Quaternion::AxisAngle(const Vector3f& axis, float angle) noexcept {
+	return { axis * std::sin(angle * 0.5f), std::cos(angle * 0.5f) };
 }
 
-Quaternion Quaternion::Normalize() const {
-	float norm = Norm();
-
-	return { x / norm, y / norm, z / norm, w / norm };
-}
-
-Quaternion Quaternion::Inverse() const {
-	Quaternion conj = Conjugate();
-	float norm2 = x * x + y * y + z * z + w * w;
-
-	return { conj.x / norm2, conj.y / norm2, conj.z / norm2, conj.w / norm2 };
-}
-
-Quaternion& Quaternion::operator*=(const Quaternion& q) {
-
-	Quaternion result;
-
-	ImaginaryVector3 cross = CrossVector(*this, q);
-	float dot              = DotVector(*this, q);
-
-	result.x = cross.x + q.w * x + w * q.x;
-	result.y = cross.y + q.w * y + w * q.y;
-	result.z = cross.z + q.w * z + w * q.z;
-	result.w = w * q.w - dot;
-
-	*this = result;
-	return *this;
-}
-
-Quaternion operator+(const Quaternion& q, const Quaternion& r) {
-	return { q.x + r.x , q.y + r.y, q.z + r.z, q.w + r.w };
-}
-
-Quaternion operator*(const Quaternion& q, const Quaternion& r) {
-
-	Quaternion result;
-
-	ImaginaryVector3 cross = CrossVector(q, r);
-	float dot = DotVector(q, r);
-
-	result.x = cross.x + r.w * q.x + q.w * r.x;
-	result.y = cross.y + r.w * q.y + q.w * r.y;
-	result.z = cross.z + r.w * q.z + q.w * r.z;
-	result.w = q.w * r.w - dot;
-
-	return result;
-}
-
-Quaternion operator*(const Quaternion& q, float scaler) {
-	return { q.x * scaler, q.y * scaler, q.z * scaler, q.w * scaler };
-}
-
-Quaternion operator*(float scaler, const Quaternion& q) {
-	return { q.x * scaler, q.y * scaler, q.z * scaler, q.w * scaler };
-}
-
-float Dot(const Quaternion& q, const Quaternion& r) {
-	return q.x * r.x + q.y * r.y + q.z * r.z + q.w * r.w;
-}
-
-Quaternion MakeAxisAngle(const Vector3f& axis, float angle) {
-
-	Quaternion result;
-
-	result.x = axis.x * std::sin(angle / 2.0f);
-	result.y = axis.y * std::sin(angle / 2.0f);
-	result.z = axis.z * std::sin(angle / 2.0f);
-	result.w = std::cos(angle / 2.0f);
-
-	return result;
-}
-
-Vector3f RotateVector(const Vector3f& v, const Quaternion& q) {
+Vector3f Quaternion::RotateVector(const Vector3f& v, const Quaternion& q) noexcept {
 	Quaternion r = { v.x, v.y, v.z, 0.0f };
 	Quaternion result = q * r * q.Conjugate();
-
-	return { result.x, result.y, result.z };
+	return result.imaginary;
 }
 
-Quaternion Slerp(const Quaternion& q0, const Quaternion& q1, float t) {
+Quaternion Quaternion::ToQuaternion(const Vector3f& euler) noexcept {
+	Vector3f c = {
+		std::cos(0.5f * euler.x),
+		std::cos(0.5f * euler.y),
+		std::cos(0.5f * euler.z),
+	};
 
-	float dot = Dot(q0, q1);
-	Quaternion q = q0;
+	Vector3f s = {
+		std::sin(0.5f * euler.x),
+		std::sin(0.5f * euler.y),
+		std::sin(0.5f * euler.z),
+	};
+
+	Quaternion quat = {};
+	quat.w           = c.x * c.y * c.z + s.x * s.y * s.z;
+	quat.imaginary.x = s.x * c.y * c.z - c.x * s.y * s.z;
+	quat.imaginary.y = c.x * s.y * c.z + s.x * c.y * s.z;
+	quat.imaginary.z = c.x * c.y * s.z - s.x * s.y * c.z;
+
+	return quat;
+}
+
+float Quaternion::Dot(const Quaternion& x, const Quaternion& y) noexcept {
+	return Vector3f::Dot(x.imaginary, y.imaginary) + x.w * y.w;
+}
+
+Quaternion Quaternion::Slerp(const Quaternion& x, const Quaternion& y, float t) noexcept {
+	float dot = Quaternion::Dot(x, y);
+
+	Quaternion q = x;
 
 	if (dot < 0.0f) {
-		q = -q0;
+		q   = -x;
 		dot = -dot;
 	}
 
-	const float epsilon = 0.00005f;
-
-	if (dot >= 1.0f - epsilon) {
-		return (1.0f - t) * q + t * q1;
+	if (dot >= 1.0f - kEpsilon) {
+		return (1.0f - t) * q + t * y;
 	}
 
 	float theta = std::acos(dot);
@@ -151,65 +77,109 @@ Quaternion Slerp(const Quaternion& q0, const Quaternion& q1, float t) {
 	float scaler0 = std::sin(theta * (1.0f - t)) / std::sin(theta);
 	float scaler1 = std::sin(theta * t) / std::sin(theta);
 
-	return scaler0 * q + scaler1 * q1;
-
+	return scaler0 * q + scaler1 * y;
 }
 
-Quaternion ToQuaternion(const Vector3f& euler) {
-	// 半角に変換
-	float cy = cos(euler.y * 0.5f);
-	float sy = sin(euler.y * 0.5f);
-	float cp = cos(euler.x * 0.5f);
-	float sp = sin(euler.x * 0.5f);
-	float cr = cos(euler.z * 0.5f);
-	float sr = sin(euler.z * 0.5f);
+Quaternion Quaternion::FromToRotation(const Vector3f& from, const Vector3f& to) noexcept {
+	float dot = Vector3f::Dot(from, to);
 
-	Quaternion q = {};
-	q.x = cr * sp * cy + sr * cp * sy; // x
-	q.y = cr * cp * sy - sr * sp * cy; // y
-	q.z = sr * cp * cy - cr * sp * sy; // z
-	q.w = cr * cp * cy + sr * sp * sy; // w
+	// fromとtoが同じ方向の場合
+	if (dot >= 1.0f - kEpsilon) {
+		return Quaternion::Identity();
+	}
 
-	return q;
+	// fromとtoが逆方向の場合
+	if (dot <= -1.0f + kEpsilon) {
+		const Vector3f orthogonal = std::abs(from.x) > 1.0f - kEpsilon ? kUnitY3<float> : kUnitX3<float>;
+		return { Vector3f::Cross(from, orthogonal).Normalize(), 0.0f };
+	}
+
+	Vector3f axis = Vector3f::Cross(from, to).Normalize();
+	float angle   = std::acos(dot);
+
+	return Quaternion::AxisAngle(axis, angle);
 }
 
-Quaternion ToQuaternion2(const Vector3f& euler) {
-	 // 半分角を計算
-	float halfPitch = euler.y * 0.5f;
-	float halfYaw = euler.x * 0.5f;
-	float halfRoll = euler.z * 0.5f;
+Quaternion Quaternion::LookForward(const Vector3f& forward, const Vector3f& up) noexcept {
+	Quaternion q = Quaternion::FromToRotation(kForward3<float>, forward);
+	Vector3f right = Vector3f::Cross(up, forward).Normalize();
+	Vector3f newUp = Vector3f::Cross(forward, right);
 
-	// 三角関数を計算
-	float sinPitch = std::sin(halfPitch);
-	float cosPitch = std::cos(halfPitch);
-	float sinYaw = std::sin(halfYaw);
-	float cosYaw = std::cos(halfYaw);
-	float sinRoll = std::sin(halfRoll);
-	float cosRoll = std::cos(halfRoll);
-
-	// 個別クォータニオン
-	Quaternion qPitch(sinPitch, 0.0f, 0.0f, cosPitch);
-	Quaternion qYaw(0.0f, sinYaw, 0.0f, cosYaw);
-	Quaternion qRoll(0.0f, 0.0f, sinRoll, cosRoll);
-
-	// 合成
-	return qYaw * (qPitch * qRoll);
+	Vector3f modifed = Quaternion::RotateVector(kUp3<float>, q);
+	return Quaternion::FromToRotation(modifed, newUp) * q;
 }
 
-Quaternion LookAt(const Vector3f& u, const Vector3f& v) {
-	
-	Vector3f up = Normalize(Cross(u, v));
+Vector3f Quaternion::ToEuler(const Quaternion& q) noexcept {
+	float pitch = 0.0f;
+	float yaw   = 0.0f;
+	float roll  = 0.0f;
 
-	if (All(up == kOrigin3<float>)) {
-		if (u.x != 0.0f || u.y != 0.0f) {
-			up = { u.y, -u.x, 0.0f };
+	{ //!< pitch
+		float y = 2.0f * (q.imaginary.y * q.imaginary.z + q.w * q.imaginary.x);
+		float x = q.w * q.w - q.imaginary.x * q.imaginary.x - q.imaginary.y * q.imaginary.y + q.imaginary.z * q.imaginary.z;
+
+		if (y <= kEpsilon && x <= kEpsilon) {
+			pitch = std::atan2(q.imaginary.x, q.w) * 2.0f;
 
 		} else {
-			up = { u.z, 0.0f, -u.x };
+			pitch = std::atan2(y, x);
 		}
 	}
 
-	float theta = std::acos(Dot(u, v));
+	{ //!< roll
+		float y = 2.0f * (q.imaginary.x * q.imaginary.y + q.w * q.imaginary.z);
+		float x = q.w * q.w + q.imaginary.x * q.imaginary.x - q.imaginary.y * q.imaginary.y - q.imaginary.z * q.imaginary.z;
 
-	return MakeAxisAngle(up, theta);
+		if (y <= kEpsilon && x <= kEpsilon) {
+			roll = 0.0f;
+
+		} else {
+			roll = std::atan2(y, x);
+		}
+	}
+
+	{ //!< yaw
+		float x = -2.0f * (q.imaginary.x * q.imaginary.z - q.w * q.imaginary.y);
+		yaw = std::asin(std::clamp(x, -1.0f, 1.0f));
+	}
+
+	return { pitch, yaw, roll };
+}
+
+Quaternion Quaternion::Normalize() const noexcept {
+	float norm = Norm();
+	return { imaginary / norm, w / norm };
+}
+
+Quaternion Quaternion::Inverse() const noexcept {
+	Quaternion conj = Conjugate();
+	float norm2 = Vector3f::Dot(imaginary, imaginary) + w * w;
+
+	return { conj.imaginary / norm2, conj.w / norm2 };
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////
+// Quaternion class binary operators
+////////////////////////////////////////////////////////////////////////////////////////////
+
+Quaternion operator+(const Quaternion& lhs, const Quaternion& rhs) noexcept {
+	return { lhs.imaginary + rhs.imaginary, lhs.w + rhs.w };
+}
+
+Quaternion operator-(const Quaternion& lhs, const Quaternion& rhs) noexcept {
+	return { lhs.imaginary - rhs.imaginary, lhs.w - rhs.w };
+}
+
+Quaternion operator*(const Quaternion& lhs, const Quaternion& rhs) noexcept {
+	Vector3f cross = Vector3f::Cross(lhs.imaginary, rhs.imaginary);
+	float dot      = Vector3f::Dot(lhs.imaginary, rhs.imaginary);
+	return { cross + rhs.imaginary * lhs.w + lhs.imaginary * rhs.w, lhs.w * rhs.w - dot };
+}
+
+Quaternion operator*(const Quaternion& lhs, float rhs) noexcept {
+	return { lhs.imaginary * rhs, lhs.w * rhs };
+}
+
+Quaternion operator*(float lhs, const Quaternion& rhs) noexcept {
+	return { rhs.imaginary * lhs, rhs.w * lhs };
 }

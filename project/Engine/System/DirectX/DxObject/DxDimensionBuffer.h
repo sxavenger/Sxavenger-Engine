@@ -26,8 +26,10 @@ public:
 	// public methods
 	//=========================================================================================
 
-	BaseDimensionBuffer()  = default;
-	~BaseDimensionBuffer() { Release(); }
+	BaseDimensionBuffer(size_t stride) : stride_(stride) {}
+	virtual ~BaseDimensionBuffer() { Release(); }
+
+	virtual void Release();
 
 	//* getter *//
 
@@ -37,7 +39,9 @@ public:
 
 	const uint32_t GetSize() const { return size_; }
 
-	const uint32_t GetStride() const { return stride_; }
+	const size_t GetStride() const { return stride_; }
+
+	const size_t GetByteSize() const { return size_ * stride_; }
 
 protected:
 
@@ -48,23 +52,22 @@ protected:
 	//* DirectX12 *//
 
 	ComPtr<ID3D12Resource> resource_;
-
 	std::optional<D3D12_GPU_VIRTUAL_ADDRESS> address_ = std::nullopt;
 
 	//* paraemter *//
 
-	uint32_t size_   = NULL;
-	uint32_t stride_ = NULL;
+	uint32_t size_       = NULL;
+	const size_t stride_ = NULL;
 
 	//=========================================================================================
 	// protected methods
 	//=========================================================================================
 
-	void Create(Device* device, uint32_t size, size_t stride);
+	void Create(Device* devices, uint32_t size);
 
-	void Release();
+	void UpdateAddress();
 
-	bool CheckIndex(uint32_t index);
+	bool CheckIndex(size_t index) const;
 
 };
 
@@ -80,27 +83,30 @@ public:
 	// public methods
 	//=========================================================================================
 
-	DimensionBuffer()  = default;
-	~DimensionBuffer() { Release(); }
+	DimensionBuffer() : BaseDimensionBuffer(sizeof(T)) {}
+	virtual ~DimensionBuffer() { Release(); }
 
 	void Create(Device* device, uint32_t size);
 
-	void Release();
+	void Release() override;
 
-	const T& At(uint32_t index) const;
+	T& At(size_t index);
+	const T& At(size_t index) const;
 
 	const T* GetData();
 
-	void Memcpy(const T* value);
+	void Memcpy(const T* data);
 
-	const std::span<T>& GetMappedData() const { return mappedDatas_; }
+	void Fill(const T& value);
+
+	const std::span<T>& GetSpan() const { return mappedDatas_; }
 
 	//=========================================================================================
 	// operator
 	//=========================================================================================
 
-	T& operator[](uint32_t index);
-	const T& operator[](uint32_t index) const;
+	T& operator[](size_t index);
+	const T& operator[](size_t index) const;
 
 private:
 
@@ -140,18 +146,57 @@ public:
 	// public methods
 	//=========================================================================================
 
+	const UINT GetIndexCount() const;
+
 	const D3D12_INDEX_BUFFER_VIEW GetIndexBufferView() const;
 
 private:
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// DimensionBuffer class methods
+// LineIndexDimensionBuffer class
+////////////////////////////////////////////////////////////////////////////////////////////
+class LineIndexDimensionBuffer
+	: public DimensionBuffer<std::pair<UINT, UINT>> {
+public:
+
+	//=========================================================================================
+	// public methods
+	//=========================================================================================
+
+	const UINT GetIndexCount() const;
+
+	const D3D12_INDEX_BUFFER_VIEW GetIndexBufferView() const;
+
+private:
+};
+
+////////////////////////////////////////////////////////////////////////////////////////////
+// TriangleIndexDimensionBuffer class
+////////////////////////////////////////////////////////////////////////////////////////////
+class TriangleIndexDimensionBuffer
+	: public DimensionBuffer<std::tuple<UINT, UINT, UINT>> {
+public:
+
+	//=========================================================================================
+	// public methods
+	//=========================================================================================
+
+	const UINT GetIndexCount() const;
+
+	const D3D12_INDEX_BUFFER_VIEW GetIndexBufferView() const;
+
+private:
+};
+
+
+////////////////////////////////////////////////////////////////////////////////////////////
+// DimensionBuffer class template methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-template<class T>
+template <class T>
 inline void DimensionBuffer<T>::Create(Device* device, uint32_t size) {
-	BaseDimensionBuffer::Create(device, size, sizeof(T));
+	BaseDimensionBuffer::Create(device, size);
 
 	T* mappingTarget = nullptr;
 
@@ -160,54 +205,68 @@ inline void DimensionBuffer<T>::Create(Device* device, uint32_t size) {
 	resource_->SetName(L"dimension buffer");
 
 	mappedDatas_ = { mappingTarget, size_ };
+
 }
 
-template<class T>
+template <class T>
 inline void DimensionBuffer<T>::Release() {
 	BaseDimensionBuffer::Release();
 	mappedDatas_ = {};
 }
 
-template<class T>
-inline const T& DimensionBuffer<T>::At(uint32_t index) const {
-	Assert(CheckIndex(index), "Dimension Buffer out of range.");
+template <class T>
+inline T& DimensionBuffer<T>::At(size_t index) {
+	Exception::Assert(CheckIndex(index), "Dimension Buffer out of range.");
 	return mappedDatas_[index];
 }
 
-template<class T>
+template <class T>
+inline const T& DimensionBuffer<T>::At(size_t index) const {
+	Exception::Assert(CheckIndex(index), "Dimension Buffer out of range.");
+	return mappedDatas_[index];
+}
+
+template <class T>
 inline const T* DimensionBuffer<T>::GetData() {
 	return mappedDatas_.data();
 }
 
-template<class T>
-inline void DimensionBuffer<T>::Memcpy(const T* value) {
-	std::memcpy(mappedDatas_.data(), value, stride_ * size_);
+template <class T>
+inline void DimensionBuffer<T>::Memcpy(const T* data) {
+	std::memcpy(mappedDatas_.data(), data, stride_ * size_);
 }
 
-template<class T>
-inline T& DimensionBuffer<T>::operator[](uint32_t index) {
-	Assert(CheckIndex(index), "Dimension Buffer out of range.");
+template <class T>
+inline void DimensionBuffer<T>::Fill(const T& value) {
+	std::fill(mappedDatas_.begin(), mappedDatas_.end(), value);
+}
+
+template <class T>
+inline T& DimensionBuffer<T>::operator[](size_t index) {
+	Exception::Assert(CheckIndex(index), "Dimension Buffer out of range.");
 	return mappedDatas_[index];
 }
 
-template<class T>
-inline const T& DimensionBuffer<T>::operator[](uint32_t index) const {
-	Assert(CheckIndex(index), "Dimension Buffer out of range.");
+template <class T>
+inline const T& DimensionBuffer<T>::operator[](size_t index) const {
+	Exception::Assert(CheckIndex(index), "Dimension Buffer out of range.");
 	return mappedDatas_[index];
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// VertexDimensionBuffer class methods
+// VertexDimensionBuffer class template methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-template<class T>
+template <class T>
 inline const D3D12_VERTEX_BUFFER_VIEW VertexDimensionBuffer<T>::GetVertexBufferView() const {
 	D3D12_VERTEX_BUFFER_VIEW result = {};
 	result.BufferLocation = this->GetGPUVirtualAddress();
-	result.SizeInBytes    = this->stride_ * this->size_;
-	result.StrideInBytes  = this->stride_;
+	result.SizeInBytes    = static_cast<UINT>(this->stride_ * this->size_);
+	result.StrideInBytes  = static_cast<UINT>(this->stride_);
 
 	return result;
 }
 
 _DXOBJECT_NAMESPACE_END
+
+

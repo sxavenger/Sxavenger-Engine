@@ -1,10 +1,11 @@
 #pragma once
 
 //-----------------------------------------------------------------------------------------
-// include
+// includ
 //-----------------------------------------------------------------------------------------
 //* asset
-#include "Asset.h"
+#include "AssetStorage.h"
+#include "Observer/AssetObserver.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // SxavengerAsset class
@@ -16,17 +17,29 @@ public:
 	// public methods
 	//=========================================================================================
 
-	static void Init();
-
 	static void Term();
 
-	static Asset::Files Import(const std::filesystem::path& filepath);
+	//* import *//
 
-	static std::shared_ptr<AssetTexture> ImportTexture(const std::filesystem::path& filepath);
+	template <BaseAssetConcept T>
+	static AssetObserver<T> Import(const std::filesystem::path& filepath, const std::any& param = std::any());
 
-	static std::shared_ptr<AssetModel> ImportModel(const std::filesystem::path& filepath);
-
-	static Asset* GetAsset();
+	template <BaseAssetConcept T>
+	static AssetObserver<T> TryImport(const std::filesystem::path& filepath, const std::any& param = std::any());
 
 private:
 };
+
+////////////////////////////////////////////////////////////////////////////////////////////
+// SxavengerAsset class template methods
+////////////////////////////////////////////////////////////////////////////////////////////
+
+template <BaseAssetConcept T>
+inline AssetObserver<T> SxavengerAsset::Import(const std::filesystem::path& filepath, const std::any& param) {
+	return sAssetStorage->Import<T>(filepath, param);
+}
+
+template <BaseAssetConcept T>
+inline AssetObserver<T> SxavengerAsset::TryImport(const std::filesystem::path& filepath, const std::any& param) {
+	return sAssetStorage->TryImport<T>(filepath, param);
+}

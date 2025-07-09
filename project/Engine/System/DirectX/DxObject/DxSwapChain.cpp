@@ -1,6 +1,12 @@
 #include "DxSwapChain.h"
 _DXOBJECT_USING
 
+//-----------------------------------------------------------------------------------------
+// include
+//-----------------------------------------------------------------------------------------
+//* engine
+#include <Engine/System/Config/SxavengerConfig.h>
+
 ////////////////////////////////////////////////////////////////////////////////////////////
 // SwapChain class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -19,8 +25,21 @@ void SwapChain::Term() {
 	}
 }
 
-void SwapChain::Present(UINT SyncInterval, UINT Flags) {
-	swapChain_->Present(SyncInterval, Flags);
+void SwapChain::Present() {
+
+	UINT syncInterval = {};
+	UINT flags        = {};
+
+	if (SxavengerConfig::GetConfig().isTearingAllowed && SxavengerConfig::GetSupport().isSupportTearing) {
+		syncInterval = 0;
+		flags        = DXGI_PRESENT_ALLOW_TEARING;
+
+	} else {
+		syncInterval = 1;
+		flags        = 0;
+	}
+
+	swapChain_->Present(syncInterval, flags);
 }
 
 UINT SwapChain::GetCurrentBackBufferIndex() {
@@ -50,6 +69,7 @@ void SwapChain::CreateSwapChain(Device* device, CommandContext* command, Window*
 	desc.BufferUsage      = DXGI_USAGE_RENDER_TARGET_OUTPUT;
 	desc.BufferCount      = kBufferCount_;
 	desc.SwapEffect       = DXGI_SWAP_EFFECT_FLIP_DISCARD;
+	desc.Flags            = DXGI_SWAP_CHAIN_FLAG_ALLOW_TEARING;
 
 	auto hr = device->GetFactory()->CreateSwapChainForHwnd(
 		command->GetCommandQueue(),
@@ -58,7 +78,7 @@ void SwapChain::CreateSwapChain(Device* device, CommandContext* command, Window*
 		nullptr, nullptr,
 		reinterpret_cast<IDXGISwapChain1**>(swapChain_.GetAddressOf())
 	);
-	Assert(SUCCEEDED(hr));
+	Exception::Assert(SUCCEEDED(hr), "swap chain create failed.");
 	
 }
 
@@ -69,7 +89,7 @@ void SwapChain::CreateRTV(Device* device, DescriptorHeaps* descriptorHeaps) {
 		auto hr = swapChain_->GetBuffer(
 			i, IID_PPV_ARGS(&resources_[i])
 		);
-		Assert(SUCCEEDED(hr));
+		Exception::Assert(SUCCEEDED(hr));
 	}
 
 	// RTVの設定

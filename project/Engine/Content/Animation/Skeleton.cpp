@@ -16,25 +16,27 @@ void Skeleton::Create(const BornNode& node) {
 	UpdateMatrix();
 }
 
-void Skeleton::Update(const Animation& animation, DeltaTimePoint<TimeUnit::s> time, bool isLoop) {
+void Skeleton::Update(const Animation& animation, TimePointf<TimeUnit::second> time, bool isLoop) {
 	if (isLoop) {
-		time = time.Mod(animation.duration);
+		time = Mod(time, animation.duration);
 	}
 
 	ApplyAnimation(animation, time);
 	UpdateMatrix();
 }
 
-void Skeleton::Update(const AnimationGroup& animationGroup, DeltaTimePoint<TimeUnit::s> time, bool isLoop) {
-	for (const auto& animation : animationGroup.GetAnimations()) {
-		Update(animation, time, isLoop);
-	}
-}
-
 void Skeleton::TransitionAnimation(
-	const Animation& animationA, DeltaTimePoint<TimeUnit::s> timeA,
-	const Animation& animationB, DeltaTimePoint<TimeUnit::s> timeB,
+	const Animation& animationA, TimePointf<TimeUnit::second> timeA, bool isLoopA,
+	const Animation& animationB, TimePointf<TimeUnit::second> timeB, bool isLoopB,
 	float t) {
+
+	if (isLoopA) {
+		timeA = Mod(timeA, animationA.duration);
+	}
+
+	if (isLoopB) {
+		timeB = Mod(timeB, animationB.duration);
+	}
 
 	ApplyTransitionAnimation(
 		animationA, timeA,
@@ -43,6 +45,10 @@ void Skeleton::TransitionAnimation(
 	);
 
 	UpdateMatrix();
+}
+
+const Joint& Skeleton::GetJoint(const std::string& name) const {
+	return joints[jointMap.at(name)];
 }
 
 uint32_t Skeleton::CreateJoint(const BornNode& node, const std::optional<uint32_t>& parent) {
@@ -69,7 +75,7 @@ uint32_t Skeleton::CreateJoint(const BornNode& node, const std::optional<uint32_
 	return joint.index;
 }
 
-std::optional<QuaternionTransform> Skeleton::GetTransform(const std::string& jointName, const Animation& animation, DeltaTimePoint<TimeUnit::s> time) {
+std::optional<QuaternionTransform> Skeleton::GetTransform(const std::string& jointName, const Animation& animation, TimePointf<TimeUnit::second> time) {
 
 	// 対象のJointのAnimationがあれば, 値の適応
 	if (auto it = animation.nodeAnimations.find(jointName); it != animation.nodeAnimations.end()) { //!< animationに対象のJointがある場
@@ -88,7 +94,7 @@ std::optional<QuaternionTransform> Skeleton::GetTransform(const std::string& joi
 	return std::nullopt;
 }
 
-void Skeleton::ApplyAnimation(const Animation& animation, DeltaTimePoint<TimeUnit::s> time) {
+void Skeleton::ApplyAnimation(const Animation& animation, TimePointf<TimeUnit::second> time) {
 
 	for (auto& joint : joints) {
 
@@ -102,14 +108,18 @@ void Skeleton::ApplyAnimation(const Animation& animation, DeltaTimePoint<TimeUni
 }
 
 void Skeleton::ApplyTransitionAnimation(
-	const Animation& animationA, DeltaTimePoint<TimeUnit::s> timeA,
-	const Animation& animationB, DeltaTimePoint<TimeUnit::s> timeB,
+	const Animation& animationA, TimePointf<TimeUnit::second> timeA,
+	const Animation& animationB, TimePointf<TimeUnit::second> timeB,
 	float t) {
 
 	for (auto& joint : joints) {
 
 		std::optional<QuaternionTransform> transformA = GetTransform(joint.name, animationA, timeA);
 		std::optional<QuaternionTransform> transformB = GetTransform(joint.name, animationB, timeB);
+
+		if (!(transformA.has_value() && transformB.has_value())) {
+			continue;
+		}
 
 		// 見つからなかった場合, defaultを入れておく
 		if (!transformA.has_value()) {
@@ -120,9 +130,9 @@ void Skeleton::ApplyTransitionAnimation(
 			transformB = QuaternionTransform();
 		}
 
-		joint.transform.scale     = Lerp(transformA.value().scale, transformB.value().scale, t);
-		joint.transform.rotate    = Slerp(transformA.value().rotate, transformB.value().rotate, t);
-		joint.transform.translate = Lerp(transformA.value().translate, transformB.value().translate, t);
+		joint.transform.scale     = Vector3f::Lerp(transformA.value().scale, transformB.value().scale, t);
+		joint.transform.rotate    = Quaternion::Slerp(transformA.value().rotate, transformB.value().rotate, t);
+		joint.transform.translate = Vector3f::Lerp(transformA.value().translate, transformB.value().translate, t);
 	}
 }
 
@@ -131,7 +141,7 @@ void Skeleton::UpdateMatrix() {
 	// すべてのJointの更新. 親が若いので(indexが子より親の方が小さいので)通常ループで処理可能
 	for (auto& joint : joints) {
 		// localMatrixの更新
-		joint.localMatrix = Matrix::MakeAffine(joint.transform.scale, joint.transform.rotate, joint.transform.translate);
+		joint.localMatrix = Matrix4x4::MakeAffine(joint.transform.scale, joint.transform.rotate, joint.transform.translate);
 
 		// skeletonSpaceMatrixの更新
 		if (joint.parent.has_value()) { //!< 親がいる場合

@@ -6,21 +6,20 @@ _DXOBJECT_USING
 //-----------------------------------------------------------------------------------------
 //* engine
 #include <Engine/System/SxavengerSystem.h>
+#include <Engine/System/UI/SxImGuizmo.h>
 
 //=========================================================================================
 // static variables
 //=========================================================================================
 
-const std::filesystem::path ImGuiController::kImGuiLayoutFilepath_ = "imgui.ini";
+const std::filesystem::path ImGuiController::kImGuiLayoutFilepath_       = "imgui.ini";
+const std::filesystem::path ImGuiController::kImGuiSampleLayoutFilepath_ = "packages/ini/imgui.ini";
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // ImGuiController class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-void ImGuiController::Init(Window* mainWindow) {
-	// handleの取得
-	//descriptorSRV_ = SxavengerSystem::GetDescriptor(kDescriptor_SRV);
-
+void ImGuiController::Init(Window* main) {
 	// ImGuiの初期化
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
@@ -29,15 +28,7 @@ void ImGuiController::Init(Window* mainWindow) {
 	ImGui::StyleColorsDark();
 	SetImGuiStyle();
 
-	ImGui_ImplWin32_Init(mainWindow->GetHwnd());
-	/*ImGui_ImplDX12_Init(
-		SxavengerSystem::GetDxDevice()->GetDevice(),
-		DxObject::SwapChain::GetBufferCount(),
-		DxObject::kScreenFormat,
-		SxavengerSystem::GetDxDescriptorHeaps()->GetDescriptorHeap(kDescriptor_CBV_SRV_UAV),
-		descriptorSRV_.GetCPUHandle(),
-		descriptorSRV_.GetGPUHandle()
-	);*/
+	ImGui_ImplWin32_Init(main->GetHwnd());
 
 	ImGui_ImplDX12_InitInfo info = {};
 	info.Device            = SxavengerSystem::GetDxDevice()->GetDevice();
@@ -80,16 +71,25 @@ void ImGuiController::Init(Window* mainWindow) {
 	ImGui_ImplDX12_Init(&info);
 
 	// iniの読み込み
-	std::string filepath = kImGuiLayoutFilepath_.generic_string();
-	ImGui::LoadIniSettingsFromDisk(filepath.c_str());
+#ifdef _DEVELOPMENT
+	if (!std::filesystem::exists(kImGuiLayoutFilepath_) && std::filesystem::exists(kImGuiSampleLayoutFilepath_)) {
+		//!< iniファイルが存在しない場合はコピー
+		std::filesystem::copy(kImGuiSampleLayoutFilepath_, kImGuiLayoutFilepath_, std::filesystem::copy_options::overwrite_existing);
+		Logger::EngineLog("[ImGuiController]: imgui layout copyed.");
+	}
+#endif
+
+	ImGui::LoadIniSettingsFromDisk(kImGuiLayoutFilepath_.generic_string().c_str());
+
+	isInit_ = true;
 }
 
 void ImGuiController::Term() {
-	ImGui_ImplDX12_Shutdown();
-	ImGui_ImplWin32_Shutdown();
-	ImGui::DestroyContext();
-
-	//descriptorSRV_.Delete();
+	if (isInit_) {
+		ImGui_ImplDX12_Shutdown();
+		ImGui_ImplWin32_Shutdown();
+		ImGui::DestroyContext();
+	}
 }
 
 void ImGuiController::BeginFrame() {
@@ -98,6 +98,7 @@ void ImGuiController::BeginFrame() {
 	ImGui::NewFrame();
 
 	ImGuizmo::BeginFrame();
+	SxImGuizmo::BeginFrame();
 }
 
 void ImGuiController::EndFrame() {
@@ -105,9 +106,10 @@ void ImGuiController::EndFrame() {
 }
 
 void ImGuiController::Render(DirectXThreadContext* context) {
-#ifdef _DEBUG
+	context;
+#ifdef _DEVELOPMENT
 	ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(), context->GetCommandList());
-#endif // _DEBUG
+#endif // _DEVELOPMENT
 }
 
 void ImGuiController::OutputLayout() {
@@ -140,7 +142,8 @@ void ImGuiController::SetImGuiStyle() {
 	style.DockingSeparatorSize = 1;
 
 	/* borderSize */
-	style.FrameBorderSize = 0.0f;
+	style.FrameBorderSize  = 0.0f;
+	style.WindowBorderSize = 0.0f;
 
 	/* color */
 	// text
@@ -202,21 +205,24 @@ void ImGuiController::SetImGuiStyle() {
 	style.Colors[ImGuiCol_ResizeGripActive]  = ToImVec4({ 79, 79, 79, 242 });
 
 	// tab
-	style.Colors[ImGuiCol_Tab]                       = ToImVec4({ 6, 6, 6, 255 });
+	style.Colors[ImGuiCol_Tab]                       = ToImVec4({ 6, 6, 6, 50 });
 	style.Colors[ImGuiCol_TabHovered]                = ToImVec4({ 75, 75, 75, 255 });
 	style.Colors[ImGuiCol_TabActive]                 = ToImVec4({ 32, 32, 32, 255 });
 	style.Colors[ImGuiCol_TabUnfocused]              = ToImVec4({ 6, 6, 6, 255 });
 	style.Colors[ImGuiCol_TabUnfocusedActive]        = ToImVec4({ 15, 15, 15, 255 });
 	style.Colors[ImGuiCol_TabSelectedOverline]       = ToImVec4({ 51, 51, 51, 255 });
+	style.Colors[ImGuiCol_TabDimmed]                 = ToImVec4({ 10, 10, 10, 0 });
 	style.Colors[ImGuiCol_TabDimmedSelectedOverline] = ToImVec4({ 15, 15, 15, 0 });
 
 	// plot
 	style.Colors[ImGuiCol_PlotLines]     = ToImVec4({ 152, 152, 152, 255 });
 	style.Colors[ImGuiCol_PlotHistogram] = ToImVec4({ 48, 48, 48, 255 });
 
-
 	// docking
 	style.Colors[ImGuiCol_DockingPreview] = ToImVec4({ 125, 125, 125, 200 });
+
+	// treenode
+	style.Colors[ImGuiCol_TreeLines] = ToImVec4({ 48, 48, 48, 255 });
 
 }
 
@@ -227,10 +233,30 @@ void ImGuiController::SettingImGui() {
 	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 	// imgui dockingブランチを参照...
 	
-	{ //!< fontの変更
-		std::string filepath = "packages/font/FiraMono-Regular.ttf";
-		io.Fonts->AddFontFromFileTTF(filepath.c_str(), 14.0f);
+	{ //!< fontの変更 english
+		std::filesystem::path filepath = "packages/font/FiraMono-Regular.ttf";
+		io.Fonts->AddFontFromFileTTF(filepath.generic_string().c_str(), 14.0f);
 	}
+
+	{ //!< fontの変更 japanese
+
+		ImFontConfig config = {};
+		config.MergeMode = true;
+
+		static const ImWchar ranges[] = {
+			static_cast<ImWchar>(0x0020), static_cast<ImWchar>(0x00FF),   //!< Basic Latin + Latin-1 Supplement
+			static_cast<ImWchar>(0x3000), static_cast<ImWchar>(0x30FF),   //!< CJK Symbols and Punctuation + Hiragana + Katakana
+			static_cast<ImWchar>(0x4E00), static_cast<ImWchar>(0x9FAF),   //!< CJK Unified Ideographs
+			static_cast<ImWchar>(0xFF00), static_cast<ImWchar>(0xFFEF),   //!< Half-width characters
+			static_cast<ImWchar>(0x1F000), static_cast<ImWchar>(0x1F02F), //!< Emoticons
+			static_cast<ImWchar>(0)
+		};
+
+		std::filesystem::path filepath = "packages/font/MPLUSRounded1c-Regular.ttf";
+		io.Fonts->AddFontFromFileTTF(filepath.generic_string().c_str(), 16.0f, &config, ranges);
+	}
+
+	//io.Fonts->Build();
 
 	{ //!< imguiの書き込み, 読み込みを手動に変更
 		io.IniFilename = NULL;

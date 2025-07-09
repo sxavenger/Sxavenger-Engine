@@ -40,6 +40,10 @@ public:
 
 	IDXGIFactory7* GetFactory() const { return dxgiFactory_.Get(); }
 
+	//* preview option *//
+
+	
+
 public:
 
 	////////////////////////////////////////////////////////////////////////////////////////////
@@ -91,7 +95,7 @@ private:
 	void CreateInfoQueue();
 
 	bool CheckShaderModel();
-	bool CheckRayTracingEnable();
+	bool CheckRaytracingEnable();
 	bool CheckMeshShaderEnable();
 
 	bool CheckLaunchFromPIX();
