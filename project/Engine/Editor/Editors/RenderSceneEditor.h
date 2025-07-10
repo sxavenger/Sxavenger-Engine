@@ -92,6 +92,15 @@ private:
 		Rotate,
 	};
 
+	////////////////////////////////////////////////////////////////////////////////////////////
+	// Icon enum class
+	////////////////////////////////////////////////////////////////////////////////////////////
+	enum class Icon : uint32_t {
+		DirectionalLight,
+		PointLight,
+		Camera
+	};
+
 private:
 
 	//=========================================================================================
@@ -146,8 +155,12 @@ private:
 	ImDrawList* canvasWindow_ = nullptr;
 
 	std::optional<GuizmoUsed> gizmoUsed_ = std::nullopt;
-	GuizmoOperation gizmoOperation_ = GuizmoOperation::Translate;
-	SxImGuizmo::Mode gizmoMode_ = SxImGuizmo::Mode::World;
+	GuizmoOperation gizmoOperation_      = GuizmoOperation::Translate;
+	SxImGuizmo::Mode gizmoMode_          = SxImGuizmo::Mode::World;
+
+	//* icon *//
+
+	AssetObserver<AssetTexture> icons_[static_cast<uint32_t>(Icon::Camera) + 1];
 
 	//=========================================================================================
 	// private methods
@@ -164,11 +177,17 @@ private:
 	void ShowGameWindow();
 	void ShowCanvasWindow();
 
+	void ShowIconScene();
+
 	//* sub methods *//
 
 	WindowRect SetImGuiImageFullWindow(const D3D12_GPU_DESCRIPTOR_HANDLE& handle, const Vector2ui& size);
 
 	void UpdateCamera();
 	void UpdateView();
+
+	//* helper methods *//
+
+	void RenderIcon(Icon icon, const Vector3f& position, const Color4f& color);
 
 };

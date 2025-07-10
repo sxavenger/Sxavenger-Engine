@@ -136,6 +136,10 @@ const CameraComponent::Camera& CameraComponent::GetCamera() const {
 	return (*buffer_)[0];
 }
 
+Vector3f CameraComponent::CalculateNDCPosition(const Vector3f& point) const {
+	return  Matrix4x4::Transform(point, GetCamera().view * GetCamera().proj);
+}
+
 void CameraComponent::CreateBuffer() {
 	if (buffer_ != nullptr) {
 		return;

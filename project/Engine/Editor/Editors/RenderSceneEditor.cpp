@@ -46,6 +46,10 @@ void RenderSceneEditor::Init() {
 
 	colliderRenderer_ = std::make_unique<ColliderPrimitiveRenderer>();
 	colliderRenderer_->Init();
+
+	icons_[static_cast<uint32_t>(Icon::DirectionalLight)] = SxavengerAsset::TryImport<AssetTexture>("packages/textures/icon/scene_directionalLight.png");
+	icons_[static_cast<uint32_t>(Icon::PointLight)]       = SxavengerAsset::TryImport<AssetTexture>("packages/textures/icon/scene_pointLight.png");
+	icons_[static_cast<uint32_t>(Icon::Camera)]           = SxavengerAsset::TryImport<AssetTexture>("packages/textures/icon/scene_camera.png");
 }
 
 void RenderSceneEditor::ShowMainMenu() {
@@ -66,6 +70,8 @@ void RenderSceneEditor::ShowWindow() {
 	ShowGameWindow();
 	ShowCanvasWindow();
 	ShowSceneWindow();
+
+	ShowIconScene();
 }
 
 void RenderSceneEditor::Render() {
@@ -533,6 +539,43 @@ void RenderSceneEditor::ShowCanvasWindow() {
 	ImGui::PopStyleVar();
 }
 
+void RenderSceneEditor::ShowIconScene() {
+	if (sceneWindow_ == nullptr) {
+		return;
+	}
+
+	sComponentStorage->ForEach<CameraComponent>([this](CameraComponent* component) {
+		if (component == camera_->GetComponent<CameraComponent>()) {
+			return; //!< editor cameraは無視
+		}
+
+		Color4f color = component->IsActive()
+			? Color4f{ 1.0f, 1.0f, 1.0f, 1.0f }
+			: Color4f{ 0.2f, 0.2f, 0.2f, 1.0f };
+	
+		RenderIcon(Icon::Camera, Matrix4x4::GetTranslation(component->GetCamera().world), color);
+	});
+
+	sComponentStorage->ForEach<DirectionalLightComponent>([this](DirectionalLightComponent* component) {
+
+		Color4f color = component->IsActive()
+			? Color4f(component->GetParameter().color, 1.0f)
+			: Color4f{ 0.2f, 0.2f, 0.2f, 1.0f };
+
+		RenderIcon(Icon::DirectionalLight, component->GetTransform()->GetPosition(), color);
+	});
+
+	sComponentStorage->ForEach<PointLightComponent>([this](PointLightComponent* component) {
+
+		Color4f color = component->IsActive()
+			? Color4f(component->GetParameter().color, 1.0f)
+			: Color4f{ 0.2f, 0.2f, 0.2f, 1.0f };
+
+		RenderIcon(Icon::PointLight, component->GetTransform()->GetPosition(), color);
+	});
+
+}
+
 RenderSceneEditor::WindowRect RenderSceneEditor::SetImGuiImageFullWindow(const D3D12_GPU_DESCRIPTOR_HANDLE& handle, const Vector2ui& size) {
 
 	// タブ等を排除した全体のwindowSize計算
@@ -620,4 +663,35 @@ void RenderSceneEditor::UpdateView() {
 	transform->UpdateMatrix();
 
 	camera_->GetComponent<CameraComponent>()->UpdateView();
+}
+
+void RenderSceneEditor::RenderIcon(Icon icon, const Vector3f& position, const Color4f& color) {
+	if (sceneWindow_ == nullptr) {
+		return; icon;
+	}
+
+	Vector3f ndc = camera_->GetComponent<CameraComponent>()->CalculateNDCPosition(position);
+
+	if (Any(ndc < Vector3(-1.0f, -1.0f, 0.0f)) || Any(ndc > Vector3(1.0f, 1.0f, 1.0f))) {
+		return;
+		// FIXME: size込みの判定に変更する
+	}
+
+	Vector2f screen = {
+		(ndc.x + 1.0f) * 0.5f * sceneRect_.size.x,
+		(1.0f - ndc.y) * 0.5f * sceneRect_.size.y
+	};
+
+	const Vector2f kSize  = { 32.0f, 32.0f };
+	const Vector2f kOffset = kSize / 2.0f;
+
+	sceneWindow_->AddImage(
+		icons_[static_cast<uint32_t>(icon)].WaitGet()->GetGPUHandleSRV().ptr,
+		{ sceneRect_.pos.x + screen.x - kOffset.x, sceneRect_.pos.y + screen.y - kOffset.y },
+		{ sceneRect_.pos.x + screen.x + kOffset.x, sceneRect_.pos.y + screen.y + kOffset.y },
+		ImVec2{ 0.0f, 0.0f },
+		ImVec2{ 1.0f, 1.0f },
+		ImColor{ color.r, color.g, color.b, color.a }
+	);
+
 }

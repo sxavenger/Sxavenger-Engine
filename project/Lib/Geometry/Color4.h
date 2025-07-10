@@ -140,6 +140,13 @@ public:
 		};
 	}
 
+	constexpr operator uint32_t() const noexcept {
+		return (static_cast<uint32_t>(r * 255.0f) << 3 * 8) |
+			   (static_cast<uint32_t>(g * 255.0f) << 2 * 8) |
+			   (static_cast<uint32_t>(b * 255.0f) << 1 * 8) |
+			   (static_cast<uint32_t>(a * 255.0f) << 0 * 8);
+	}
+
 	//* access
 	constexpr _Ty& operator[](size_t index) noexcept;
 	constexpr const _Ty& operator[](size_t index) const noexcept;

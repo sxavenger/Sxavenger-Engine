@@ -121,6 +121,10 @@ public:
 
 	const Camera& GetCamera() const;
 
+	//* helper option *//
+
+	Vector3f CalculateNDCPosition(const Vector3f& point) const;
+
 private:
 
 	//=========================================================================================

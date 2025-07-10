@@ -17,3 +17,12 @@ optical size: 48
 
 size: 64
 color: #FFFFFF
+
+### scene icon
+Fill: none || fill
+weight: 400
+grade: 0
+optical size: 48
+
+size: 64
+color: #FFFFFF

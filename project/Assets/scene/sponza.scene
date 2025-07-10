@@ -217,7 +217,7 @@
 					"g": 1.0,
 					"r": 1.0
 				},
-				"intensity": 20.0,
+				"intensity": 17.0,
 				"shadow_flag": 16,
 				"shadow_strength": 1.0
 			},
@@ -288,5 +288,46 @@
 		"isRenamable": true,
 		"isView": true,
 		"name": "point light D"
+	},
+	{
+		"components": {
+			"class PointLightComponent": {
+				"color": {
+					"b": 1.0,
+					"g": 1.0,
+					"r": 1.0
+				},
+				"intensity": 67.80000305175781,
+				"radius": 31.0,
+				"shadow_flag": 16,
+				"shadow_strength": 0.5,
+				"unit": 1
+			},
+			"class TransformComponent": {
+				"transform": {
+					"rotate": {
+						"w": 1.0,
+						"x": 0.0,
+						"y": 0.0,
+						"z": 0.0
+					},
+					"scale": {
+						"x": 1.0,
+						"y": 1.0,
+						"z": 1.0
+					},
+					"translate": {
+						"x": 53.389591217041016,
+						"y": 7.795926094055176,
+						"z": 4.244420051574707
+					}
+				}
+			}
+		},
+		"filepath": "",
+		"isActive": true,
+		"isRenamable": true,
+		"isView": true,
+		"name": "point light E"
 	}
 ]
