@@ -89,6 +89,7 @@ void BetaSystemGameLoop::InitSystem() {
 	player_->Load();
 	player_->Awake();
 	player_->Start();
+
 }
 
 void BetaSystemGameLoop::TermSystem() {
