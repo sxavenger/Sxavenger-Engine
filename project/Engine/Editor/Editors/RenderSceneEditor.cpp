@@ -692,7 +692,7 @@ void RenderSceneEditor::RenderIcon(Icon icon, const Vector3f& position, const Co
 		{ sceneRect_.pos.x + screen.x + kOffset.x, sceneRect_.pos.y + screen.y + kOffset.y + 1.0f },
 		ImVec2{ 0.0f, 0.0f },
 		ImVec2{ 1.0f, 1.0f },
-		ImColor{ 0.04f, 0.04f, 0.04f, 0.8f }
+		ImColor{ 0.01f, 0.01f, 0.01f, 0.8f }
 	);
 
 	// main icon
