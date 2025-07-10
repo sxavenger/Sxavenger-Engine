@@ -54,7 +54,7 @@ void BetaSystemGameLoop::InitSystem() {
 	camera_ = std::make_unique<ControllableCameraActor>();
 	camera_->Init();
 	//camera_->GetComponent<CameraComponent>()->SetTag(CameraComponent::Tag::GameCamera);
-	camera_->GetComponent<CameraComponent>()->SetTag(CameraComponent::Tag::None);
+	camera_->GetComponent<CameraComponent>()->SetTag(CameraComponent::Tag::GameCamera);
 
 	SxavengerAsset::TryImport<AssetModel>("assets/models/PBR_Sphere_Test/model/PBR_Sphere.gltf");
 

@@ -96,6 +96,8 @@
 				},
 				"intensity": 90.0,
 				"radius": 33.5,
+				"shadow_flag": 16,
+				"shadow_strength": 0.5,
 				"unit": 1
 			},
 			"class TransformComponent": {
@@ -113,8 +115,8 @@
 					},
 					"translate": {
 						"x": 0.0,
-						"y": 10.746804237365723,
-						"z": 5.546891212463379
+						"y": 6.648525238037109,
+						"z": 17.982715606689453
 					}
 				}
 			}
@@ -135,6 +137,8 @@
 				},
 				"intensity": 90.0,
 				"radius": 25.200000762939453,
+				"shadow_flag": 16,
+				"shadow_strength": 0.5,
 				"unit": 1
 			},
 			"class TransformComponent": {
@@ -174,6 +178,8 @@
 				},
 				"intensity": 90.0,
 				"radius": 35.29999923706055,
+				"shadow_flag": 16,
+				"shadow_strength": 0.5,
 				"unit": 1
 			},
 			"class TransformComponent": {
@@ -211,7 +217,9 @@
 					"g": 1.0,
 					"r": 1.0
 				},
-				"intensity": 20.0
+				"intensity": 20.0,
+				"shadow_flag": 16,
+				"shadow_strength": 1.0
 			},
 			"class TransformComponent": {
 				"transform": {
@@ -250,6 +258,8 @@
 				},
 				"intensity": 52.400001525878906,
 				"radius": 23.5,
+				"shadow_flag": 16,
+				"shadow_strength": 0.5,
 				"unit": 1
 			},
 			"class TransformComponent": {

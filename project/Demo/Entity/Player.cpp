@@ -49,7 +49,7 @@ void Player::Awake() {
 	camera_->SetName("camera");
 
 	auto camera = camera_->AddComponent<CameraComponent>();
-	camera->SetTag(CameraComponent::Tag::GameCamera);
+	camera->SetTag(CameraComponent::Tag::None);
 
 	{
 		auto process = camera_->AddComponent<PostProcessLayerComponent>();

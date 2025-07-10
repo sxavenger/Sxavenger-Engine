@@ -107,7 +107,6 @@ void PostProcessAutoExposure::ShowInspectorImGui() {
 		debugAverageLuminance_.get()
 	);
 
-
 	auto itr = std::max_element(debugHistgram_->GetSpan().begin(), debugHistgram_->GetSpan().end());
 
 	ImVec2 cursor = ImGui::GetCursorPos();
@@ -123,6 +122,9 @@ void PostProcessAutoExposure::ShowInspectorImGui() {
 		std::nullopt,
 		size
 	);
+
+	//float t = debugAverageLuminance_->At(0) / (parameter_->At(0).maxLogLuminance - parameter_->At(0).minLogLuminance);
+	//ImGui::ProgressBar(t, { ImGui::GetContentRegionAvail().x, 0.0f }, "## luminance");
 
 	
 }
