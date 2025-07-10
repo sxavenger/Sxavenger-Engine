@@ -685,6 +685,17 @@ void RenderSceneEditor::RenderIcon(Icon icon, const Vector3f& position, const Co
 	const Vector2f kSize  = { 32.0f, 32.0f };
 	const Vector2f kOffset = kSize / 2.0f;
 
+	// icon shadow
+	sceneWindow_->AddImage(
+		icons_[static_cast<uint32_t>(icon)].WaitGet()->GetGPUHandleSRV().ptr,
+		{ sceneRect_.pos.x + screen.x - kOffset.x, sceneRect_.pos.y + screen.y - kOffset.y + 1.0f },
+		{ sceneRect_.pos.x + screen.x + kOffset.x, sceneRect_.pos.y + screen.y + kOffset.y + 1.0f },
+		ImVec2{ 0.0f, 0.0f },
+		ImVec2{ 1.0f, 1.0f },
+		ImColor{ 0.04f, 0.04f, 0.04f, 0.8f }
+	);
+
+	// main icon
 	sceneWindow_->AddImage(
 		icons_[static_cast<uint32_t>(icon)].WaitGet()->GetGPUHandleSRV().ptr,
 		{ sceneRect_.pos.x + screen.x - kOffset.x, sceneRect_.pos.y + screen.y - kOffset.y },

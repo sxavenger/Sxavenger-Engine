@@ -160,6 +160,7 @@ private:
 
 	//* icon *//
 
+	bool isShowIcon_ = true;
 	AssetObserver<AssetTexture> icons_[static_cast<uint32_t>(Icon::Camera) + 1];
 
 	//=========================================================================================
