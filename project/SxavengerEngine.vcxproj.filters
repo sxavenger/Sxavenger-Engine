@@ -171,6 +171,7 @@
     <ClCompile Include="Engine\Render\Core\FRenderCorePathtracing.cpp" />
     <ClCompile Include="Engine\Content\ContentStorage.cpp" />
     <ClCompile Include="Engine\Component\Components\Volumetric\VolumetricFogComponent.cpp" />
+    <ClCompile Include="Engine\Adapter\Actor\EmissiveActor.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\System\Window\Window.h" />
@@ -367,6 +368,7 @@
     <ClInclude Include="Engine\Content\ContentStorage.h" />
     <ClInclude Include="Engine\System\DirectX\DxObject\DxReadbackDimensionBuffer.h" />
     <ClInclude Include="Engine\Component\Components\Volumetric\VolumetricFogComponent.h" />
+    <ClInclude Include="Engine\Adapter\Actor\EmissiveActor.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

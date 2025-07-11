@@ -80,7 +80,7 @@ float3 BSDF(float3 albedo, float roughness, float metallic, float3 normal, float
 	float3 diffuseAlbedo = albedo * (1.0f - float3(0.04f, 0.04f, 0.04f)) * (1.0f - metallic);
 
 	// specular Albedo
-	//!< 金属(metallic = 1.0f) -> f0
+	//!< 金属(metallic = 1.0f) -> default-f0
 	//!< 非金属(metallic = 0.0f) -> albedo
 	float3 f0 = lerp(float3(0.04f, 0.04f, 0.04f), albedo, metallic);
 
@@ -180,22 +180,15 @@ _CLOSESTHIT void mainClosesthit(inout Payload payload, in Attribute attribute) {
 		);
 	}
 
+	//!< hit処理
+	payload.color.a = 1.0f;
+
 	if (!gReservoir.CheckNeedSample()) {
 		return; //!< sample数が足りている場合は何もしない.
 	}
 
-	//!< hit処理
-	payload.color.a = 1.0f;
-
-	float3 color = float3(0.0f, 0.0f, 0.0f);
-
-	if (gReservoir.IsBeginFrame()) {
-		for (uint i = 0; i < gDirectionalLightCount.count; ++i) {
-			payload.color.rgb += CalculateDirectionalLight(i, surface.position, surface.normal, surface.albedo, surface.roughness, surface.metallic);
-		}
-	}
-
 	//!< 乱数サンプルを生成
+	float3 color = float3(0.0f, 0.0f, 0.0f);
 	for (uint i = 0; i < gReservoir.frameSampleCount; ++i) {
 		
 		uint currentSampleNum = gReservoir.currentFrame * gReservoir.frameSampleCount + i;
@@ -213,10 +206,10 @@ _CLOSESTHIT void mainClosesthit(inout Payload payload, in Attribute attribute) {
 		Payload path = (Payload)0;
 		path.rayType = RayType::kPath;
 
-		float3 fs = BSDF(surface.albedo, surface.roughness, surface.metallic, surface.normal, -dir, WorldRayDirection());
-		float pdf = 1.0f / (4 * kPi); //!< 拡散BRDFのPDFは1/(4π)
+		float3 brdf = surface.albedo / kPi;
+		float pdf = saturate(dot(surface.normal, dir)) / kPi;
 
-		path.le = payload.le * fs / pdf;
+		path.le = payload.le * brdf / pdf;
 		
 		payload.TraceRecursionRay(path, desc, kFlag);
 		color += path.color.rgb;

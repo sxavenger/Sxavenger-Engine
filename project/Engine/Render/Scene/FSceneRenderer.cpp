@@ -58,6 +58,8 @@ void FSceneRenderer::ResetReserviour(const DirectXThreadContext* context) {
 	if (textures_ != nullptr) {
 		textures_->ClearTextures(context); //!< texturesのリセット
 	}
+
+	isResetReservoir_ = true;
 }
 
 void FSceneRenderer::ApplyConfig(Config& config) {
@@ -578,6 +580,11 @@ void FSceneRenderer::RenderTechniquePathtracing(const DirectXThreadContext* cont
 
 	} else {
 		reservoir_->At(0).IncrimentFrame();
+
+		if (isResetReservoir_) {
+			reservoir_->At(0).ResetFrame(); //!< reservoirのリセット
+			isResetReservoir_ = false;
+		}
 	}
 
 	textures_->BeginRaytracingPass(context);

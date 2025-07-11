@@ -187,6 +187,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="Demo\Entity\Player.cpp" />
     <ClCompile Include="Demo\GameLoop\BetaSystemGameLoop.cpp" />
     <ClCompile Include="Demo\GameLoop\DemoGameLoop.cpp" />
+    <ClCompile Include="Engine\Adapter\Actor\EmissiveActor.cpp" />
     <ClCompile Include="Engine\Asset\AssetStorage.cpp" />
     <ClCompile Include="Engine\Asset\Assets\Animator\Animator.cpp" />
     <ClCompile Include="Engine\Asset\Assets\Animator\AssetAnimator.cpp" />
@@ -352,6 +353,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Demo\GameLoop\BetaSystemGameLoop.h" />
     <ClInclude Include="Demo\GameLoop\DemoGameLoop.h" />
     <ClInclude Include="Demo\GameLoop\PreviewGameLoop.h" />
+    <ClInclude Include="Engine\Adapter\Actor\EmissiveActor.h" />
     <ClInclude Include="Engine\Asset\AssetStorage.h" />
     <ClInclude Include="Engine\Asset\Assets\Animator\Animator.h" />
     <ClInclude Include="Engine\Asset\Assets\Animator\AssetAnimator.h" />

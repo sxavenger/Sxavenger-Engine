@@ -120,6 +120,7 @@ private:
 	//* path tracing parameter *//
 
 	std::unique_ptr<DxObject::DimensionBuffer<FRenderCorePathtracing::Reservoir>> reservoir_;
+	bool isResetReservoir_ = false;
 
 	//=========================================================================================
 	// private methods

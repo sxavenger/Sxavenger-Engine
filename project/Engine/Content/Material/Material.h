@@ -287,6 +287,7 @@ public:
 	enum class Mode : uint8_t {
 		Opaque,      //!< 不透明
 		Translucent, //!< 半透明
+		Emissive
 	};
 
 public:
