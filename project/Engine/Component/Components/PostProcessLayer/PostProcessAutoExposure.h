@@ -42,6 +42,7 @@ public:
 		float minLogLuminance;
 		float maxLogLuminance;
 		float timeCoeff;
+		float compensation;
 
 	};
 
@@ -65,7 +66,7 @@ private:
 
 	std::unique_ptr<DxObject::DimensionBuffer<Parameter>> parameter_;
 
-	static inline const uint32_t kGroupCount_ = 256;
+	static inline const uint32_t kGroupCount_ = 128;
 	std::unique_ptr<DxObject::UnorderedDimensionBuffer<uint32_t>> histgram_;
 	std::unique_ptr<DxObject::UnorderedDimensionBuffer<uint32_t>> histgramShared_;
 	std::unique_ptr<DxObject::UnorderedDimensionBuffer<float>>    averageLuminance_;

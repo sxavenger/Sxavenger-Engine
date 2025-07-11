@@ -18,12 +18,14 @@ void PostProcessAutoExposure::Parameter::Init() {
 	minLogLuminance = 0.03f;
 	maxLogLuminance = 20.0f;
 	timeCoeff = 0.1f;
+	compensation = 0.0f;
 }
 
 void PostProcessAutoExposure::Parameter::SetImGuiCommand() {
 	ImGui::DragFloat("min log luminance", &minLogLuminance, 0.01f);
 	ImGui::DragFloat("max log luminance", &maxLogLuminance, 0.01f);
 	ImGui::SliderFloat("time coeff", &timeCoeff, 0.0f, 1.0f);
+	ImGui::DragFloat("compensation", &compensation, 0.01f);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////

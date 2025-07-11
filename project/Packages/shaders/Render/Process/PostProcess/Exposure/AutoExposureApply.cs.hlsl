@@ -16,7 +16,7 @@ void main(uint3 dispatchThreadId : SV_DispatchThreadID) {
 	}
 
 	float4 input   = gInput[index];
-	float exposure = 1.0f / max(gAverageLuminance[0], 1e-4f);
+	float exposure = 1.0f / (gAverageLuminance[0] * exp2(gParameter.compensation));
 
 	float4 output = float4(0.0f, 0.0f, 0.0f, 0.0f);
 	output.rgb = input.rgb * exposure;
