@@ -27,9 +27,10 @@ public:
 	////////////////////////////////////////////////////////////////////////////////////////////
 	enum class AnimationType : uint8_t {
 		Idle,
-		Walk
+		Walk,
+		Dash,
 	};
-	static inline constexpr uint8_t kNumAnimationType = static_cast<uint8_t>(AnimationType::Walk) + 1;
+	static inline constexpr uint8_t kNumAnimationType = static_cast<uint8_t>(AnimationType::Dash) + 1;
 
 public:
 
@@ -85,7 +86,8 @@ private:
 
 	//* parameter *//
 
-	float speed_ = 0.1f;
+	float walkspeed_ = 0.05f;
+	float dashSpeed_ = 0.1f;
 
 	Vector3f velocity_ = {};
 
@@ -109,7 +111,9 @@ private:
 	// private methods
 	//=========================================================================================
 
-	Vector2f GetInputDirection();
+	Vector2f GetInputDirection() const;
+
+	bool IsInputDush() const;
 
 	void Move();
 
