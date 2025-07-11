@@ -72,7 +72,7 @@ inline void UnorderedDimensionBuffer<T>::Create(Device* device, uint32_t size) {
 		D3D12_HEAP_TYPE_DEFAULT,
 		BaseDimensionBuffer::GetByteSize(),
 		D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS,
-		D3D12_RESOURCE_STATE_UNORDERED_ACCESS
+		D3D12_RESOURCE_STATE_COMMON
 	);
 
 	address_ = resource_->GetGPUVirtualAddress();
