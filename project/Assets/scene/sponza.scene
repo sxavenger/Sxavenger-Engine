@@ -52,7 +52,7 @@
 			}
 		},
 		"filepath": "assets/models/PBR_Sphere_Test/Model/PBR_Sphere.gltf",
-		"isActive": true,
+		"isActive": false,
 		"isRenamable": true,
 		"isView": true,
 		"name": "PBR_Sphere"
@@ -224,10 +224,10 @@
 			"class TransformComponent": {
 				"transform": {
 					"rotate": {
-						"w": 0.6974934339523315,
-						"x": 0.6354818940162659,
-						"y": -0.3306003212928772,
-						"z": -0.01921170949935913
+						"w": 0.6648610234260559,
+						"x": 0.6695477366447449,
+						"y": -0.33114731311798096,
+						"z": -0.0026647597551345825
 					},
 					"scale": {
 						"x": 1.0,
@@ -235,7 +235,7 @@
 						"z": 1.0
 					},
 					"translate": {
-						"x": 0.0,
+						"x": 14.824291229248047,
 						"y": 0.0,
 						"z": 0.0
 					}
@@ -329,5 +329,34 @@
 		"isRenamable": true,
 		"isView": true,
 		"name": "point light E"
+	},
+	{
+		"components": {
+			"class TransformComponent": {
+				"transform": {
+					"rotate": {
+						"w": 1.0,
+						"x": 0.0,
+						"y": 0.0,
+						"z": 0.0
+					},
+					"scale": {
+						"x": 1.0,
+						"y": 1.0,
+						"z": 1.0
+					},
+					"translate": {
+						"x": 0.0,
+						"y": 0.0,
+						"z": 0.0
+					}
+				}
+			}
+		},
+		"filepath": "assets/models/probe_sphere/probe_sphere.gltf",
+		"isActive": true,
+		"isRenamable": true,
+		"isView": true,
+		"name": "probe_sphere"
 	}
 ]

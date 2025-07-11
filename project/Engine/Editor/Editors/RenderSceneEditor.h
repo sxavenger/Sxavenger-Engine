@@ -178,6 +178,7 @@ private:
 	void ShowCanvasWindow();
 
 	void ShowIconScene();
+	void ShowInfoTextScene();
 
 	//* sub methods *//
 

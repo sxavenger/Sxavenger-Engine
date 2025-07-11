@@ -57,7 +57,6 @@ uint32_t Skeleton::CreateJoint(const BornNode& node, const std::optional<uint32_
 
 	joint.name  = node.name;
 	joint.index = static_cast<uint32_t>(joints.size());
-	joints.emplace_back(); //!< 最後に追加
 
 	joint.parent = parent;
 
@@ -65,14 +64,13 @@ uint32_t Skeleton::CreateJoint(const BornNode& node, const std::optional<uint32_
 
 	joint.localMatrix         = node.localMatrix;
 	joint.skeletonSpaceMatrix = Matrix4x4::Identity();
-	
+
+	joints.emplace_back(joint); //!< jointを追加
 
 	for (const auto& child : node.children) {
-		uint32_t index = CreateJoint(child, joint.index);
-		joint.children.emplace_back(index);
+		CreateJoint(child, joint.index);
 	}
 
-	joints[joint.index] = joint;
 	return joint.index;
 }
 

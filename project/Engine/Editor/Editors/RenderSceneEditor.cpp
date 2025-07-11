@@ -70,8 +70,6 @@ void RenderSceneEditor::ShowWindow() {
 	ShowGameWindow();
 	ShowCanvasWindow();
 	ShowSceneWindow();
-
-	ShowIconScene();
 }
 
 void RenderSceneEditor::Render() {
@@ -486,6 +484,11 @@ void RenderSceneEditor::ShowSceneWindow() {
 
 	ImGui::End();
 	ImGui::PopStyleVar();
+
+	//* render scene information *//
+
+	ShowIconScene();
+	ShowInfoTextScene();
 }
 
 void RenderSceneEditor::ShowGameWindow() {
@@ -574,6 +577,29 @@ void RenderSceneEditor::ShowIconScene() {
 		RenderIcon(Icon::PointLight, component->GetTransform()->GetPosition(), color);
 	});
 
+}
+
+void RenderSceneEditor::ShowInfoTextScene() {
+	if (sceneWindow_ == nullptr) {
+		return;
+	}
+
+	static const ImVec2 kPadding = { 4.0f, 4.0f };
+
+	ImVec2 pos = { sceneRect_.pos.x + kPadding.x, sceneRect_.pos.y + sceneRect_.size.y - kPadding.y };
+
+	{ //!< render technique
+
+		static const char* kTechniqueNames[] = {
+			"Deferred Rendering",
+			"Path Tracing (Preview)",
+		};
+
+		ImU32 color = ImGui::GetColorU32(ImGuiCol_Text);
+		pos.y -= ImGui::CalcTextSize(kTechniqueNames[static_cast<uint8_t>(config_.technique)]).y;
+		sceneWindow_->AddText(pos, color, kTechniqueNames[static_cast<uint8_t>(config_.technique)]);
+	}
+	
 }
 
 RenderSceneEditor::WindowRect RenderSceneEditor::SetImGuiImageFullWindow(const D3D12_GPU_DESCRIPTOR_HANDLE& handle, const Vector2ui& size) {

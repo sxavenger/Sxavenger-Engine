@@ -65,6 +65,6 @@ private:
 	// private methods
 	//=========================================================================================
 
-	void PushBornLine(const Matrix4x4& mat, const std::vector<Joint>& joints, const Joint& joint);
+	void PushBornLine(const Matrix4x4& mat, const std::vector<Joint>& joints);
 
 };
