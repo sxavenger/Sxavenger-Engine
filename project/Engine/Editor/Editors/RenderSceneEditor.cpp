@@ -73,6 +73,10 @@ void RenderSceneEditor::ShowWindow() {
 }
 
 void RenderSceneEditor::Render() {
+	if (!BaseEditor::IsDisplay()) {
+		return;
+	}
+
 	if (!isRender_) {
 		return;
 	}

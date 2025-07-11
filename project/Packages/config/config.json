@@ -4,7 +4,7 @@
 		"width": 1280,
 		"height": 720
 	},
-	"enableDebugLayer" : true,
+	"enableDebugLayer" : false,
 	"enableGPUBasedValidation": false,
 	"isTearingAllowed": true,
 	"isLockFrameRate": true,

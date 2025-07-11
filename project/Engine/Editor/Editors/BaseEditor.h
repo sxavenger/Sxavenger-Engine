@@ -34,7 +34,7 @@ public:
 
 	//* getter *//
 
-	bool IsDisplay() const { return isDisplay_; }
+	bool IsDisplay() const;
 
 	bool& GetIsDisplay() { return isDisplay_; }
 

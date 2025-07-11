@@ -13,6 +13,10 @@
 // Base Editor class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
+bool BaseEditor::IsDisplay() const {
+	return editor_->IsEditorDisplay() && isDisplay_;
+}
+
 void BaseEditor::MenuPadding() {
 	ImGui::Dummy({ 240.0f, 0.0f });
 }
