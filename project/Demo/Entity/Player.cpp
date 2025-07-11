@@ -45,35 +45,20 @@ void Player::Awake() {
 	transform_ = MonoBehaviour::AddComponent<TransformComponent>();
 	model_.WaitGet()->CreateSkinnedMeshBehaviour(this);
 
-	camera_ = std::make_unique<PivotCameraActor>();
-	camera_->Init();
-	camera_->SetName("camera");
-
-	auto camera = camera_->AddComponent<CameraComponent>();
-	camera->SetTag(CameraComponent::Tag::None);
-
-	{
-		auto process = camera_->AddComponent<PostProcessLayerComponent>();
-		process->AddPostProcess<PostProcessAutoExposure>();
-		//process->AddPostProcess<PostProcessDoF>();
-		process->AddPostProcess<PostProcessBloom>();
-	}
-
-	{
-		//auto texture = SxavengerAsset::TryImport<AssetTexture>("assets/textures/LUT/lut_greenish.png");
-		//auto lut = camera_->AddComponent<CompositeProcessLayerComponent>()->AddPostProcess<CompositeProcessLUT>();
-		//lut->CreateTexture(SxavengerSystem::GetMainThreadContext(), texture, { 16, 16 });
-	}
-
-	auto transform = camera_->AddComponent<TransformComponent>();
-	transform->translate.z = -3.0f;
-	transform->translate.y = 1.5f;
+	camera_ = std::make_unique<PivotCamera>();
+	camera_->Load();
+	camera_->Awake();
 
 }
 
 void Player::Start() {
+	camera_->Start();
+
+	transform_->scale = { 2.0f, 2.0f, 2.0f };
+
 	// animation関係の設定
 	SetAnimationState(AnimationType::Idle);
+
 	UpdateArmature(); //!< animationを一度だけ更新しておく
 }
 
@@ -90,15 +75,7 @@ void Player::Inspectable() {
 
 	SxImGui::DragFloat("walk speed", &walkspeed_, 0.01f, 0.0f);
 	SxImGui::DragFloat("dash speed", &dashSpeed_, 0.01f, 0.0f);
-
-	ImGui::Text("camera");
-	SxImGui::DragVector3("offset", &offset_.x, 0.01f);
-}
-
-void Player::SetCameraTarget(TransformComponent* target, const TimePointf<TimeUnit::second>& time) {
-	target_ = target;
-	time_ = time;
-	timer_.Reset();
+	
 }
 
 Vector2f Player::GetInputDirection() const {
@@ -242,29 +219,9 @@ void Player::UpdateArmature() {
 
 void Player::UpdateCamera() {
 
-	camera_->SetPoint(transform_->GetPosition() + offset_);
-
-	const Quaternion& quat = camera_->GetComponent<TransformComponent>()->rotate;
-
-	if (timer_ >= time_) {
-		camera_->Update();
-		return;
-	}
-
-	if (target_ == nullptr) {
-		Logger::WarningRuntime("[Player]: nullptr warning", "target is nullptr");
-		return;
-	}
-
-	timer_.AddDeltaTime();
-
-	Vector3f direction = target_->GetPosition() - camera_->GetComponent<TransformComponent>()->GetPosition();
-	direction = direction.Normalize();
-
-	float t = std::lerp(0.0f, 0.4f, EaseOutCubic(timer_.time / time_.time));
-
-	camera_->SetRotation(Quaternion::Slerp(quat, CalculateDirectionQuaterion(direction), t));
+	camera_->SetPoint(transform_->GetPosition());
 	camera_->Update();
+
 }
 
 void Player::SetAnimationState(AnimationType type) {

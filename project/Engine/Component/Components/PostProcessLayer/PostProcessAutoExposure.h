@@ -58,6 +58,11 @@ public:
 
 	void ShowInspectorImGui() override;
 
+	//* getter *//
+
+	const Parameter& GetParameter() const;
+	Parameter& GetParameter();
+
 private:
 
 	//=========================================================================================

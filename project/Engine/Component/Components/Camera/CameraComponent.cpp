@@ -73,12 +73,15 @@ void CameraComponent::InputJson(const json& data) {
 
 void CameraComponent::ShowComponentInspector() {
 
+	ImGui::Text("tag");
+	ImGui::Separator();
+
 	static const char* kCameraTag[] = {
 		"None",
 		"GameCamera"
 	};
 
-	if (ImGui::BeginCombo("tag", kCameraTag[static_cast<uint8_t>(GetTag())])) {
+	if (ImGui::BeginCombo("## tag", kCameraTag[static_cast<uint8_t>(GetTag())])) {
 		for (uint8_t i = 0; i < kTagCount; ++i) {
 			if (ImGui::Selectable(kCameraTag[i], GetTag() == static_cast<Tag>(i))) {
 				SetTag(static_cast<Tag>(i));
@@ -86,6 +89,9 @@ void CameraComponent::ShowComponentInspector() {
 		}
 		ImGui::EndCombo();
 	}
+
+	ImGui::Text("projection");
+	ImGui::Separator();
 
 	ImGui::DragFloat2("sensor", &projection_.sensor.x, 0.01f);
 	ImGui::DragFloat("focal", &projection_.focal, 0.01f);

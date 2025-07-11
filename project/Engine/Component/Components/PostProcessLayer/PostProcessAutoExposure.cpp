@@ -130,3 +130,13 @@ void PostProcessAutoExposure::ShowInspectorImGui() {
 
 	
 }
+
+const PostProcessAutoExposure::Parameter& PostProcessAutoExposure::GetParameter() const {
+	Exception::Assert(parameter_ != nullptr, "auto exposure parameter buffer is not create.");
+	return parameter_->At(0);
+}
+
+PostProcessAutoExposure::Parameter& PostProcessAutoExposure::GetParameter() {
+	Exception::Assert(parameter_ != nullptr, "auto exposure parameter buffer is not create.");
+	return parameter_->At(0);
+}

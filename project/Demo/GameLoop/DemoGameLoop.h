@@ -9,7 +9,6 @@
 #include <Engine/Adapter/Actor/AtmosphereActor.h>
 
 //* demo
-#include <Demo/Object/Stage.h>
 #include <Demo/Entity/Player.h>
 #include <Demo/Particle/SmokeParticle.h>
 #include <Demo/Particle/RainParticle.h>
@@ -42,11 +41,7 @@ private:
 
 	std::unique_ptr<Player> player_;
 
-	std::unique_ptr<MonoBehaviour> light_;
-
-	std::unique_ptr<MonoBehaviour> lightA_;
-	std::unique_ptr<MonoBehaviour> lightB_;
-	std::unique_ptr<MonoBehaviour> lightC_;
+	std::unique_ptr<MonoBehaviour> skylight_;
 
 	//=========================================================================================
 	// private methods

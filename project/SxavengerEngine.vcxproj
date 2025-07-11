@@ -187,6 +187,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="Demo\Entity\Player.cpp" />
     <ClCompile Include="Demo\GameLoop\BetaSystemGameLoop.cpp" />
     <ClCompile Include="Demo\GameLoop\DemoGameLoop.cpp" />
+    <ClCompile Include="Demo\Object\PivotCamera.cpp" />
     <ClCompile Include="Engine\Adapter\Actor\EmissiveActor.cpp" />
     <ClCompile Include="Engine\Asset\AssetStorage.cpp" />
     <ClCompile Include="Engine\Asset\Assets\Animator\Animator.cpp" />
@@ -206,7 +207,6 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="Engine\Content\Material\Material.cpp" />
     <ClCompile Include="Engine\GameLoop\FeatureLevelGameLoop.cpp" />
     <ClCompile Include="Demo\GameLoop\PreviewGameLoop.cpp" />
-    <ClCompile Include="Demo\Object\Stage.cpp" />
     <ClCompile Include="Demo\Particle\LeadParticle.cpp" />
     <ClCompile Include="Demo\Particle\RainParticle.cpp" />
     <ClCompile Include="Demo\Particle\SmokeParticle.cpp" />
@@ -353,6 +353,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Demo\GameLoop\BetaSystemGameLoop.h" />
     <ClInclude Include="Demo\GameLoop\DemoGameLoop.h" />
     <ClInclude Include="Demo\GameLoop\PreviewGameLoop.h" />
+    <ClInclude Include="Demo\Object\PivotCamera.h" />
     <ClInclude Include="Engine\Adapter\Actor\EmissiveActor.h" />
     <ClInclude Include="Engine\Asset\AssetStorage.h" />
     <ClInclude Include="Engine\Asset\Assets\Animator\Animator.h" />
@@ -372,7 +373,6 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Engine\Component\Components\PostProcessLayer\PostProcessAutoExposure.h" />
     <ClInclude Include="Engine\Content\Material\Material.h" />
     <ClInclude Include="Engine\GameLoop\FeatureLevelGameLoop.h" />
-    <ClInclude Include="Demo\Object\Stage.h" />
     <ClInclude Include="Demo\Particle\LeadParticle.h" />
     <ClInclude Include="Demo\Particle\RainParticle.h" />
     <ClInclude Include="Demo\Particle\SmokeParticle.h" />

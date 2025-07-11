@@ -351,8 +351,8 @@ void FSceneRenderer::LightingPassSkyLight(const DirectXThreadContext* context, c
 		// sky light parameter
 		parameter.SetAddress("gDiffuseParameter",  component->GetDiffuseParameterBufferAddress());
 		parameter.SetAddress("gSpecularParameter", component->GetSpecularParameterBufferAddress());
+		parameter.SetAddress("gParameter",         component->GetParameterBufferAddress());
 		parameter.SetHandle("gBRDFLut",            FRenderCore::GetInstance()->GetBRDFLut());
-		parameter.SetAddress("gShadow",            component->GetShadowBufferAddress());
 
 		parameter.SetHandle("gEnvironment",        component->GetEnvironment().value()); //!< DEBUG
 
@@ -391,6 +391,7 @@ void FSceneRenderer::AmbientProcessPassSkyBox(const DirectXThreadContext* contex
 		parameter.SetHandle("gDepth", textures_->GetDepth()->GetRasterizerGPUHandleSRV());
 
 		// environment
+		parameter.SetAddress("gParameter", component->GetParameterBufferAddress());
 		parameter.SetHandle("gEnvironment", (*component->GetEnvironment()));
 
 		// output
