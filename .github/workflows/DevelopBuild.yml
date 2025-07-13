@@ -2,7 +2,7 @@ name: "develop build"
 on:
     push:
         branches:
-            - "feature/_3.4"
+            - "master"
 
 env:
     # リポジトリのルートディレクトリを基点としたslnのfilepath
