@@ -14,7 +14,7 @@
 // define
 //=========================================================================================
 
-#define _GROUP_SIZE 256
+#define _GROUP_SIZE 128
 
 //=========================================================================================
 // buffer
@@ -32,6 +32,7 @@ struct Parameter {
 	float minLogLuminance;
 	float maxLogLuminance;
 	float timeCoeff;
+	float compensation;
 };
 ConstantBuffer<Parameter> gParameter : register(b0); //!< parameter buffer
 

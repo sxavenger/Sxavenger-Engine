@@ -53,6 +53,7 @@ void BetaSystemGameLoop::InitSystem() {
 
 	camera_ = std::make_unique<ControllableCameraActor>();
 	camera_->Init();
+	//camera_->GetComponent<CameraComponent>()->SetTag(CameraComponent::Tag::GameCamera);
 	camera_->GetComponent<CameraComponent>()->SetTag(CameraComponent::Tag::GameCamera);
 
 	SxavengerAsset::TryImport<AssetModel>("assets/models/PBR_Sphere_Test/model/PBR_Sphere.gltf");
@@ -70,8 +71,8 @@ void BetaSystemGameLoop::InitSystem() {
 	auto lut = camera_->GetComponent<CompositeProcessLayerComponent>()->AddPostProcess<CompositeProcessLUT>();
 	lut->CreateTexture(SxavengerSystem::GetMainThreadContext(), texture, { 16, 16 });
 
-	atmosphere_ = std::make_unique<AtmosphereActor>();
-	atmosphere_->Init({ 1024, 1024 });
+	//atmosphere_ = std::make_unique<AtmosphereActor>();
+	//atmosphere_->Init({ 1024, 1024 });
 
 	//skylight_ = std::make_unique<SkyLightActor>();
 	//skylight_->Init({ 1024, 1024 });
@@ -83,6 +84,15 @@ void BetaSystemGameLoop::InitSystem() {
 	light->GetDiffuseParameter().SetTexture(SxavengerAsset::Import<AssetTexture>("assets/textures/textureCube/DebugIrradiance.dds"));
 	light->GetSpecularParameter().SetTexture(SxavengerAsset::Import<AssetTexture>("assets/textures/textureCube/DebugRadiance.dds"));
 	light->SetEnvironment(SxavengerAsset::Import<AssetTexture>("assets/textures/textureCube/DebugEnvironment.dds").WaitAcquire()->GetGPUHandleSRV());
+
+	//player_ = std::make_unique<Player>();
+	//player_->Load();
+	//player_->Awake();
+	//player_->Start();
+
+	emissive_ = std::make_unique<EmissiveActor>();
+	emissive_->Init();
+
 }
 
 void BetaSystemGameLoop::TermSystem() {
@@ -94,8 +104,10 @@ void BetaSystemGameLoop::UpdateSystem() {
 	// Update
 	//-----------------------------------------------------------------------------------------
 
-	atmosphere_->Update();
+	//atmosphere_->Update();
 	camera_->Update();
+
+	//player_->Update();
 
 	//-----------------------------------------------------------------------------------------
 	// SystemUpdate...?

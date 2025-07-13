@@ -17,7 +17,7 @@ void PivotCameraActor::Init() {
 }
 
 void PivotCameraActor::Update() {
-	auto transform = MonoBehaviour::AddComponent<TransformComponent>();
+	auto transform = MonoBehaviour::GetComponent<TransformComponent>();
 
 	Vector3f direction = Quaternion::RotateVector(kBackward3<float>, rotation_);
 	transform->GetTransform().translate = point_ + direction * distance_;

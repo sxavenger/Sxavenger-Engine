@@ -53,21 +53,17 @@ void DemoGameLoop::InitGame() {
 	player_->Awake();
 	player_->Start();
 
-	light_ = ComponentHelper::CreateDirectionalLightMonoBehaviour();
-	light_->GetComponent<TransformComponent>()->rotate *= Quaternion::ToQuaternion({ kPi / 2.1f, 0.0f, 0.0f });
-	{
-		auto& param = light_->GetComponent<DirectionalLightComponent>()->GetParameter();
-		param.intensity = 3.0f;
-
-		auto& shadow = light_->GetComponent<DirectionalLightComponent>()->GetShadowParameter();
-		shadow.strength = 0.85f;
-	}
-
-	lightA_ = ComponentHelper::CreatePointLightMonoBehaviour();
-
-	//sSceneObjects->InputJson();
+	AssetObserver<AssetScene> scene = SxavengerAsset::TryImport<AssetScene>("assets/scene/sponza.scene");
+	sSceneObjects->InputJson(scene.Acquire()->GetData());
 
 	SetCollisionCallback();
+
+	skylight_ = std::make_unique<MonoBehaviour>();
+	auto light = skylight_->AddComponent<SkyLightComponent>();
+	light->GetDiffuseParameter().SetTexture(SxavengerAsset::Import<AssetTexture>("assets/textures/textureCube/sky_irradiance.dds"));
+	light->GetSpecularParameter().SetTexture(SxavengerAsset::Import<AssetTexture>("assets/textures/textureCube/sky_radiance.dds"));
+	light->SetEnvironment(SxavengerAsset::Import<AssetTexture>("assets/textures/textureCube/sky_environment.dds").WaitAcquire()->GetGPUHandleSRV());
+	light->GetParameter().intensity = 0.3f;
 }
 
 void DemoGameLoop::TermGame() {

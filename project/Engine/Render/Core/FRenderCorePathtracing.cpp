@@ -82,9 +82,9 @@ void FRenderCorePathtracing::CreateHitgroup() {
 		ExportGroup::Hitgroup hitgroup = {};
 		hitgroup.type       = D3D12_HIT_GROUP_TYPE_TRIANGLES;
 		hitgroup.closesthit = L"mainClosesthit";
-		//hitgroup.anyhit     = L"mainAnyhit";
+		hitgroup.anyhit     = L"mainAnyhit";
 
-		expt.ExportHitgroup(L"Geometry", hitgroup);
+		expt.ExportHitgroup(L"Mesh", hitgroup);
 		expt.SetBlob(&blob);
 
 		//* root signature
@@ -98,4 +98,28 @@ void FRenderCorePathtracing::CreateHitgroup() {
 
 	}
 
+
+	{ //!< Emissive
+
+		auto& [blob, expt] = hitgroupExportGroups_[GetIndex(HitgroupExportType::Emissive)];
+		blob.Create(kDirectory_ / "hitgroup" / "Emissive.hitgroup.hlsl");
+
+		//* hitgroup
+		ExportGroup::Hitgroup hitgroup = {};
+		hitgroup.type       = D3D12_HIT_GROUP_TYPE_TRIANGLES;
+		hitgroup.closesthit = L"mainEmissiveClosesthit";
+		hitgroup.anyhit     = L"mainEmissiveAnyhit";
+
+		expt.ExportHitgroup(L"Emissive", hitgroup);
+		expt.SetBlob(&blob);
+
+		//* root signature
+		LocalRootSignatureDesc desc = {};
+		desc.SetSamplerLinear(DxObject::SamplerMode::MODE_WRAP, DxObject::ShaderVisibility::VISIBILITY_ALL, 0);
+		desc.SetVirtualSRV(0, 10); //!< gVertices
+		desc.SetVirtualSRV(1, 11); //!< gIndices
+		desc.SetVirtualSRV(2, 0);  //!< gMaterial
+
+		expt.CreateRootSignature(SxavengerSystem::GetDxDevice(), desc);
+	}
 }

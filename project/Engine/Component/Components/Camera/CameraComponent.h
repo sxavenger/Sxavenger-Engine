@@ -30,6 +30,7 @@ public:
 		None,
 		GameCamera,
 	};
+	static inline const uint8_t kTagCount = static_cast<uint8_t>(Tag::GameCamera) + 1;
 
 	////////////////////////////////////////////////////////////////////////////////////////////
 	// Camera structure
@@ -119,6 +120,10 @@ public:
 	//* getter *//
 
 	const Camera& GetCamera() const;
+
+	//* helper option *//
+
+	Vector3f CalculateNDCPosition(const Vector3f& point) const;
 
 private:
 

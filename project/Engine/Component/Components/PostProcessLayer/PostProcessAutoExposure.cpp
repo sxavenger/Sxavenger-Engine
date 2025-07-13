@@ -18,12 +18,14 @@ void PostProcessAutoExposure::Parameter::Init() {
 	minLogLuminance = 0.03f;
 	maxLogLuminance = 20.0f;
 	timeCoeff = 0.1f;
+	compensation = 0.0f;
 }
 
 void PostProcessAutoExposure::Parameter::SetImGuiCommand() {
 	ImGui::DragFloat("min log luminance", &minLogLuminance, 0.01f);
 	ImGui::DragFloat("max log luminance", &maxLogLuminance, 0.01f);
 	ImGui::SliderFloat("time coeff", &timeCoeff, 0.0f, 1.0f);
+	ImGui::DragFloat("compensation", &compensation, 0.01f);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -107,7 +109,6 @@ void PostProcessAutoExposure::ShowInspectorImGui() {
 		debugAverageLuminance_.get()
 	);
 
-
 	auto itr = std::max_element(debugHistgram_->GetSpan().begin(), debugHistgram_->GetSpan().end());
 
 	ImVec2 cursor = ImGui::GetCursorPos();
@@ -124,5 +125,18 @@ void PostProcessAutoExposure::ShowInspectorImGui() {
 		size
 	);
 
+	//float t = debugAverageLuminance_->At(0) / (parameter_->At(0).maxLogLuminance - parameter_->At(0).minLogLuminance);
+	//ImGui::ProgressBar(t, { ImGui::GetContentRegionAvail().x, 0.0f }, "## luminance");
+
 	
+}
+
+const PostProcessAutoExposure::Parameter& PostProcessAutoExposure::GetParameter() const {
+	Exception::Assert(parameter_ != nullptr, "auto exposure parameter buffer is not create.");
+	return parameter_->At(0);
+}
+
+PostProcessAutoExposure::Parameter& PostProcessAutoExposure::GetParameter() {
+	Exception::Assert(parameter_ != nullptr, "auto exposure parameter buffer is not create.");
+	return parameter_->At(0);
 }

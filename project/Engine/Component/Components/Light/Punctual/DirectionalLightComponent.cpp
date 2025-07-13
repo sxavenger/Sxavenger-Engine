@@ -75,13 +75,17 @@ json DirectionalLightComponent::PerseToJson() const {
 		return data;
 	}
 
-	data["color"]     = GeometryJsonSerializer::ToJson(parameter_->At(0).color);
-	data["intensity"] = parameter_->At(0).intensity;
+	data["color"]           = GeometryJsonSerializer::ToJson(parameter_->At(0).color);
+	data["intensity"]       = parameter_->At(0).intensity;
+	data["shadow_strength"] = LightCommon::GetShadowParameter().strength;
+	data["shadow_flag"]     = LightCommon::GetShadowParameter().flag.Get();
 
 	return data;
 }
 
 void DirectionalLightComponent::InputJson(const json& data) {
-	parameter_->At(0).color     = GeometryJsonSerializer::JsonToColor3f(data["color"]);
-	parameter_->At(0).intensity = data["intensity"].get<float>();
+	parameter_->At(0).color                    = GeometryJsonSerializer::JsonToColor3f(data["color"]);
+	parameter_->At(0).intensity                = data["intensity"].get<float>();
+	LightCommon::GetShadowParameter().strength = data["shadow_strength"].get<float>();
+	LightCommon::GetShadowParameter().flag     = data["shadow_flag"].get<uint32_t>();
 }

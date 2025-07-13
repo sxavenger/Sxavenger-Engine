@@ -5,9 +5,11 @@
 //-----------------------------------------------------------------------------------------
 //* component
 #include "../../Entity/MonoBehaviour.h"
+#include "../Transform/TransformComponent.h"
 
 //* engine
 #include <Engine/System/Utility/Logger.h>
+#include <Engine/System/UI/SxImGui.h>
 #include <Engine/Content/SxavengerContent.h>
 
 //=========================================================================================
@@ -52,4 +54,44 @@ void ArmatureComponent::TransitionAnimation(
 }
 
 void ArmatureComponent::ShowComponentInspector() {
+	if (!skeleton_.has_value()) {
+		ImGui::TextDisabled("skeleton is not set.");
+		return;
+	}
+
+	const auto& skeleton = GetSkeleton();
+
+	Matrix4x4 mat = Matrix4x4::Identity();
+
+	if (auto parent = BaseComponent::GetBehaviour()->GetParent()) {
+		if (auto component = parent->GetComponent<TransformComponent>()) {
+			mat = component->GetMatrix();
+		}
+	}
+
+	PushBornLine(mat, skeleton.joints);
+}
+
+void ArmatureComponent::PushBornLine(const Matrix4x4& mat, const std::vector<Joint>& joints) {
+
+	for (const auto& joint : joints) {
+		if (!joint.parent.has_value()) {
+			continue; //!< skip root joint.
+		}
+
+		Vector3f origin = Matrix4x4::Transform(Matrix4x4::GetTranslation(joint.skeletonSpaceMatrix), mat);
+		Vector3f parent = Matrix4x4::Transform(Matrix4x4::GetTranslation(joints[joint.parent.value()].skeletonSpaceMatrix), mat);
+
+		// born line
+		SxavengerContent::PushLineOverlay(origin, parent, { 1.0f, 1.0f, 0.0f, 1.0f });
+
+		Vector3f x = Matrix4x4::Transform(kUnitX3<float> * 4.0f, joint.skeletonSpaceMatrix * mat);
+		Vector3f y = Matrix4x4::Transform(kUnitY3<float> * 4.0f, joint.skeletonSpaceMatrix * mat);
+		Vector3f z = Matrix4x4::Transform(kUnitZ3<float> * 4.0f, joint.skeletonSpaceMatrix * mat);
+
+		// local axis
+		SxavengerContent::PushLineOverlay(origin, x, { 1.0f, 0.0f, 0.0f, 1.0f });
+		SxavengerContent::PushLineOverlay(origin, y, { 0.0f, 1.0f, 0.0f, 1.0f });
+		SxavengerContent::PushLineOverlay(origin, z, { 0.0f, 0.0f, 1.0f, 1.0f });
+	}
 }

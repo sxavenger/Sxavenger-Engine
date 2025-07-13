@@ -57,6 +57,7 @@ void FScene::Init() {
 		desc.AddExport(FRenderCore::GetInstance()->GetPathtracing()->GetExportGroup(FRenderCorePathtracing::RaygenerationExportType::Default));
 		desc.AddExport(FRenderCore::GetInstance()->GetPathtracing()->GetExportGroup(FRenderCorePathtracing::MissExportType::Default));
 		desc.AddExport(FRenderCore::GetInstance()->GetPathtracing()->GetExportGroup(FRenderCorePathtracing::HitgroupExportType::Mesh));
+		desc.AddExport(FRenderCore::GetInstance()->GetPathtracing()->GetExportGroup(FRenderCorePathtracing::HitgroupExportType::Emissive));
 
 		// 仮paraemter
 		desc.SetAttributeStride(sizeof(float) * 2);
@@ -86,37 +87,54 @@ void FScene::Init() {
 void FScene::SetupTopLevelAS(const DirectXThreadContext* context) {
 	topLevelAS_.BeginSetupInstance();
 
-	sComponentStorage->ForEach<MeshRendererComponent>([&](MeshRendererComponent* component) {
-		if (!component->IsView() || !component->IsActive()) {
-			return;
-		}
-
-		// 透過の場合はスキップ
-		if (component->GetMaterial()->GetMode() != Material::Mode::Opaque) {
-			return;
-		}
-
-		component->GetMesh()->CreateBottomLevelAS(context);
-
+	sComponentStorage->ForEachActive<MeshRendererComponent>([&](MeshRendererComponent* component) {
+		
 		DxrObject::TopLevelAS::Instance instance = {};
-		instance.flag          = D3D12_RAYTRACING_INSTANCE_FLAG_NONE;
-		instance.bottomLevelAS = component->GetMesh()->GetBottomLevelAS().bottomLevelAS.get();
-		instance.mat           = component->GetTransform()->GetMatrix();
-		instance.instanceId    = 0;
 
-		//* raytracing export group
-		instance.expt = FRenderCore::GetInstance()->GetPathtracing()->GetExportGroup(FRenderCorePathtracing::HitgroupExportType::Mesh);
-		instance.parameter.SetAddress(0, component->GetMesh()->GetVertex()->GetGPUVirtualAddress());
-		instance.parameter.SetAddress(1, component->GetMesh()->GetIndex()->GetGPUVirtualAddress());
-		instance.parameter.SetAddress(2, component->GetMaterial()->GetGPUVirtualAddress());
+		// instanceの設定
+		switch (component->GetMaterial()->GetMode()) {
+			case Material::Mode::Opaque:
+				component->GetMesh()->CreateBottomLevelAS(context);
+
+				//* instance設定
+				instance.flag          = D3D12_RAYTRACING_INSTANCE_FLAG_NONE;
+				instance.bottomLevelAS = component->GetMesh()->GetBottomLevelAS().bottomLevelAS.get();
+				instance.mat           = component->GetTransform()->GetMatrix();
+				instance.instanceId    = 0;
+
+				//* ExportGroupの設定
+				instance.expt = FRenderCore::GetInstance()->GetPathtracing()->GetExportGroup(FRenderCorePathtracing::HitgroupExportType::Mesh);
+				instance.parameter.SetAddress(0, component->GetMesh()->GetVertex()->GetGPUVirtualAddress());
+				instance.parameter.SetAddress(1, component->GetMesh()->GetIndex()->GetGPUVirtualAddress());
+				instance.parameter.SetAddress(2, component->GetMaterial()->GetGPUVirtualAddress());
+				break;
+				
+
+			case Material::Mode::Emissive:
+				component->GetMesh()->CreateBottomLevelAS(context);
+
+				//* instance設定
+				instance.flag          = D3D12_RAYTRACING_INSTANCE_FLAG_NONE;
+				instance.bottomLevelAS = component->GetMesh()->GetBottomLevelAS().bottomLevelAS.get();
+				instance.mat           = component->GetTransform()->GetMatrix();
+				instance.instanceId    = 0;
+
+				//* ExportGroupの設定
+				instance.expt = FRenderCore::GetInstance()->GetPathtracing()->GetExportGroup(FRenderCorePathtracing::HitgroupExportType::Emissive);
+				instance.parameter.SetAddress(0, component->GetMesh()->GetVertex()->GetGPUVirtualAddress());
+				instance.parameter.SetAddress(1, component->GetMesh()->GetIndex()->GetGPUVirtualAddress());
+				instance.parameter.SetAddress(2, component->GetMaterial()->GetGPUVirtualAddress());
+				break;
+
+			default:
+				Logger::WarningRuntime("warning | [FScene] SetupTopLevelAS", "MeshRendererComponent has unsupported material mode.");
+				return;
+		}
 
 		topLevelAS_.AddInstance(instance);
 	});
 
-	sComponentStorage->ForEach<SkinnedMeshRendererComponent>([&](SkinnedMeshRendererComponent* component) {
-		if (!component->IsView()) {
-			return;
-		}
+	sComponentStorage->ForEachActive<SkinnedMeshRendererComponent>([&](SkinnedMeshRendererComponent* component) {
 
 		// 透過の場合はスキップ
 		if (component->GetMaterial()->GetMode() != Material::Mode::Opaque) {

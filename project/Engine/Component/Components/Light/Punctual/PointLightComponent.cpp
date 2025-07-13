@@ -93,17 +93,21 @@ json PointLightComponent::PerseToJson() const {
 		return data;
 	}
 
-	data["color"]     = GeometryJsonSerializer::ToJson(parameter_->At(0).color);
-	data["unit"]      = static_cast<uint32_t>(parameter_->At(0).unit);
-	data["intensity"] = parameter_->At(0).intensity;
-	data["radius"]    = parameter_->At(0).radius;
+	data["color"]           = GeometryJsonSerializer::ToJson(parameter_->At(0).color);
+	data["unit"]            = static_cast<uint32_t>(parameter_->At(0).unit);
+	data["intensity"]       = parameter_->At(0).intensity;
+	data["radius"]          = parameter_->At(0).radius;
+	data["shadow_strength"] = LightCommon::GetShadowParameter().strength;
+	data["shadow_flag"]     = LightCommon::GetShadowParameter().flag.Get();
 
 	return data;
 }
 
 void PointLightComponent::InputJson(const json& data) {
-	parameter_->At(0).color     = GeometryJsonSerializer::JsonToColor3f(data["color"]);
-	parameter_->At(0).unit      = static_cast<Units>(data["unit"].get<uint32_t>());
-	parameter_->At(0).intensity = data["intensity"].get<float>();
-	parameter_->At(0).radius    = data["radius"].get<float>();
+	parameter_->At(0).color                    = GeometryJsonSerializer::JsonToColor3f(data["color"]);
+	parameter_->At(0).unit                     = static_cast<Units>(data["unit"].get<uint32_t>());
+	parameter_->At(0).intensity                = data["intensity"].get<float>();
+	parameter_->At(0).radius                   = data["radius"].get<float>();
+	LightCommon::GetShadowParameter().strength = data["shadow_strength"].get<float>();
+	LightCommon::GetShadowParameter().flag     = data["shadow_flag"].get<uint32_t>();
 }

@@ -20,6 +20,7 @@ public:
 	////////////////////////////////////////////////////////////////////////////////////////////
 	enum class ProcessType : uint32_t {
 		Environment,
+		VolumetricFog,
 		Bloom,
 		AutoExposureLuminance,
 		AutoExposureAverage,

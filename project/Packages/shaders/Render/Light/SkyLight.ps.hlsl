@@ -59,10 +59,13 @@ struct SpecularParameter {
 };
 ConstantBuffer<SpecularParameter> gSpecularParameter : register(b1);
 
+struct Parameter {
+	float intensity;
+};
+ConstantBuffer<Parameter> gParameter : register(b2);
+
 Texture2D<float4> gBRDFLut : register(t0);
 SamplerState gBRDFSampler  : register(s1);
-
-ConstantBuffer<InlineShadow> gShadow : register(b2);
 
 #ifdef _DEBUG_SAMPLE
 TextureCube<float4> gEnvironment : register(t2, space1);
@@ -175,8 +178,8 @@ float3 ApproximateBRDF(float3 diffuseAlbedo, float3 specularAlbedo, float3 n, fl
 	float3 diffuseLight  = PrefilterIrradiance(n);
 	float3 specularLight = PrefilterRadiance(roughness, r);
 #else
-	float3 diffuseLight  = gDiffuseParameter.Sample(gSampler, n).rgb;
-	float3 specularLight = gSpecularParameter.Sample(gSampler, r, lod).rgb;
+	float3 diffuseLight  = gDiffuseParameter.Sample(gSampler, n).rgb * gParameter.intensity;
+	float3 specularLight = gSpecularParameter.Sample(gSampler, r, lod).rgb * gParameter.intensity;
 #endif
 	
 	float3 diffuse = diffuseLight * diffuseAlbedo;
@@ -215,15 +218,6 @@ PSOutput main(PSInput input) {
 	float3 specularAlbedo = lerp(f0, surface.albedo, surface.metallic);
 
 	output.color.rgb = ApproximateBRDF(diffuseAlbedo, specularAlbedo, surface.normal, v, r, surface.roughness);
-
-	//* 影の計算
-	RayDesc desc;
-	desc.Origin    = surface.position;
-	desc.Direction = r;
-	desc.TMin      = kTMin;
-	desc.TMax      = kTMax;
-	
-	//output.color.rgb *= gShadow.TraceShadow(desc);
 
 	output.color.a = 1.0f;
 	return output;

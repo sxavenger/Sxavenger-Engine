@@ -72,6 +72,27 @@ void CameraComponent::InputJson(const json& data) {
 }
 
 void CameraComponent::ShowComponentInspector() {
+
+	ImGui::Text("tag");
+	ImGui::Separator();
+
+	static const char* kCameraTag[] = {
+		"None",
+		"GameCamera"
+	};
+
+	if (ImGui::BeginCombo("## tag", kCameraTag[static_cast<uint8_t>(GetTag())])) {
+		for (uint8_t i = 0; i < kTagCount; ++i) {
+			if (ImGui::Selectable(kCameraTag[i], GetTag() == static_cast<Tag>(i))) {
+				SetTag(static_cast<Tag>(i));
+			}
+		}
+		ImGui::EndCombo();
+	}
+
+	ImGui::Text("projection");
+	ImGui::Separator();
+
 	ImGui::DragFloat2("sensor", &projection_.sensor.x, 0.01f);
 	ImGui::DragFloat("focal", &projection_.focal, 0.01f);
 	ImGui::DragFloat("nearZ", &projection_.nearZ, 0.01f);
@@ -119,6 +140,10 @@ void CameraComponent::UpdateProj() {
 const CameraComponent::Camera& CameraComponent::GetCamera() const {
 	Exception::Assert(buffer_ != nullptr, "camera buffer is not craete.");
 	return (*buffer_)[0];
+}
+
+Vector3f CameraComponent::CalculateNDCPosition(const Vector3f& point) const {
+	return  Matrix4x4::Transform(point, GetCamera().view * GetCamera().proj);
 }
 
 void CameraComponent::CreateBuffer() {

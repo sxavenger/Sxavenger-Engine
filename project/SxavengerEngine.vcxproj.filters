@@ -127,7 +127,6 @@
     <ClCompile Include="Engine\Module\GameObject\GameObject.cpp" />
     <ClCompile Include="Engine\Component\Components\Particle\ParticleComponent.cpp" />
     <ClCompile Include="Demo\Particle\SmokeParticle.cpp" />
-    <ClCompile Include="Demo\Object\Stage.cpp" />
     <ClCompile Include="Demo\Particle\RainParticle.cpp" />
     <ClCompile Include="Engine\Component\Components\PostProcessLayer\PostProcessLayerComponent.cpp" />
     <ClCompile Include="Demo\GameLoop\PreviewGameLoop.cpp" />
@@ -170,6 +169,9 @@
     <ClCompile Include="Engine\Asset\Assets\Scene\AssetScene.cpp" />
     <ClCompile Include="Engine\Render\Core\FRenderCorePathtracing.cpp" />
     <ClCompile Include="Engine\Content\ContentStorage.cpp" />
+    <ClCompile Include="Engine\Component\Components\Volumetric\VolumetricFogComponent.cpp" />
+    <ClCompile Include="Engine\Adapter\Actor\EmissiveActor.cpp" />
+    <ClCompile Include="Demo\Object\PivotCamera.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\System\Window\Window.h" />
@@ -315,7 +317,6 @@
     <ClInclude Include="Engine\Module\GameObject\GameObject.h" />
     <ClInclude Include="Engine\Component\Components\Particle\ParticleComponent.h" />
     <ClInclude Include="Demo\Particle\SmokeParticle.h" />
-    <ClInclude Include="Demo\Object\Stage.h" />
     <ClInclude Include="Demo\Particle\RainParticle.h" />
     <ClInclude Include="Lib\Sxl\OptimizedPathMap.h" />
     <ClInclude Include="Engine\Component\Components\PostProcessLayer\PostProcessLayerComponent.h" />
@@ -365,6 +366,9 @@
     <ClInclude Include="Engine\Render\Core\FRenderCorePathtracing.h" />
     <ClInclude Include="Engine\Content\ContentStorage.h" />
     <ClInclude Include="Engine\System\DirectX\DxObject\DxReadbackDimensionBuffer.h" />
+    <ClInclude Include="Engine\Component\Components\Volumetric\VolumetricFogComponent.h" />
+    <ClInclude Include="Engine\Adapter\Actor\EmissiveActor.h" />
+    <ClInclude Include="Demo\Object\PivotCamera.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

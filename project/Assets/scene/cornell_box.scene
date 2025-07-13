@@ -38,7 +38,9 @@
 				},
 				"intensity": 400.0,
 				"radius": 30.899999618530273,
-				"unit": 1
+				"unit": 1,
+				"shadow_strength": 0.5,
+				"shadow_flag": 16
 			},
 			"class TransformComponent": {
 				"transform": {

@@ -81,9 +81,10 @@ public:
 	static Matrix4x4 Orthographic(float left, float top, float right, float bottom, float near, float far) noexcept;
 	static Matrix4x4 Viewport(float x, float y, float width, float height, float near, float far) noexcept;
 
-
 	static Vector3f Transform(const Vector3f& v, const Matrix4x4& m) noexcept;
 	static Vector3f TransformNormal(const Vector3f& v, const Matrix4x4& m) noexcept;
+
+	static Vector3f GetTranslation(const Matrix4x4& m) noexcept;
 
 };
 

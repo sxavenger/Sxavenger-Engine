@@ -39,8 +39,9 @@ public:
 	////////////////////////////////////////////////////////////////////////////////////////////
 	enum class HitgroupExportType : uint32_t {
 		Mesh,
+		Emissive,
 	};
-	static inline constexpr uint32_t kHitgroupExportTypeCount = static_cast<uint32_t>(HitgroupExportType::Mesh) + 1;
+	static inline constexpr uint32_t kHitgroupExportTypeCount = static_cast<uint32_t>(HitgroupExportType::Emissive) + 1;
 
 	////////////////////////////////////////////////////////////////////////////////////////////
 	// Reservoir structure

@@ -10,7 +10,9 @@
 #include <Engine/Asset/Observer/AssetObserver.h>
 #include <Engine/Component/Components/Transform/TransformComponent.h>
 #include <Engine/Module/GameObject/GameObject.h>
-#include <Engine/Adapter/Actor/PivotCameraActor.h>
+
+//* demo
+#include <Demo/Object/PivotCamera.h>
 
 //* c++
 #include <array>
@@ -27,9 +29,10 @@ public:
 	////////////////////////////////////////////////////////////////////////////////////////////
 	enum class AnimationType : uint8_t {
 		Idle,
-		Walk
+		Walk,
+		Dash,
 	};
-	static inline constexpr uint8_t kNumAnimationType = static_cast<uint8_t>(AnimationType::Walk) + 1;
+	static inline constexpr uint8_t kNumAnimationType = static_cast<uint8_t>(AnimationType::Dash) + 1;
 
 public:
 
@@ -48,10 +51,6 @@ public:
 	//* inspectable *//
 
 	void Inspectable() override;
-
-	//* setter *//
-
-	void SetCameraTarget(TransformComponent* target, const TimePointf<TimeUnit::second>& time);
 
 private:
 
@@ -85,7 +84,8 @@ private:
 
 	//* parameter *//
 
-	float speed_ = 0.1f;
+	float walkspeed_ = 0.1f;
+	float dashSpeed_ = 0.15f;
 
 	Vector3f velocity_ = {};
 
@@ -96,20 +96,16 @@ private:
 	DeltaTimePointf<TimeUnit::second> animationTransitionTime_;
 
 	//* camera *//
-	// todo: cameraの処理を分ける
 
-	std::unique_ptr<PivotCameraActor> camera_;
-	Vector3f offset_ = { 0.0f, 1.5f, 0.0f };
-
-	TransformComponent* target_ = nullptr;
-	DeltaTimePointf<TimeUnit::second> timer_;
-	TimePointf<TimeUnit::second> time_;
+	std::unique_ptr<PivotCamera> camera_;
 
 	//=========================================================================================
 	// private methods
 	//=========================================================================================
 
-	Vector2f GetInputDirection();
+	Vector2f GetInputDirection() const;
+
+	bool IsInputDush() const;
 
 	void Move();
 

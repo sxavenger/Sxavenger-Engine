@@ -24,6 +24,11 @@ ConstantBuffer<CameraComponent> gCamera : register(b1);
 TextureCube<float4> gEnvironment : register(t0);
 SamplerState gSampler : register(s0);
 
+struct Parameter {
+	float intensity;
+};
+ConstantBuffer<Parameter> gParameter : register(b2);
+
 RWTexture2D<float4> gOutput : register(u0);
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -51,5 +56,8 @@ void main(uint3 dispatchThreadId : SV_DispatchThreadID) {
 	float3 target    = mul(float4(d.x, -d.y, 1.0f, 1.0f), gCamera.projInv).xyz;
 	float3 direction = mul(float4(target, 0.0f), gCamera.world).xyz;
 
-	gOutput[index] = gEnvironment.SampleLevel(gSampler, direction, 0.0f);
+	float4 color = gEnvironment.SampleLevel(gSampler, direction, 0.0f);
+	color.rgb *= gParameter.intensity; // 環境光の強度を調整
+
+	gOutput[index] = color;
 }

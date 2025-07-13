@@ -37,15 +37,27 @@ void SkyLightComponent::SpecularParameter::SetTexture(const AssetObserver<AssetT
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
+// Parameter structure
+////////////////////////////////////////////////////////////////////////////////////////////
+
+void SkyLightComponent::Parameter::Init() {
+	intensity = 1.0f;
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////
 // SkyLightComponent class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 void SkyLightComponent::ShowComponentInspector() {
-	LightCommon::ShowCommonInspector();
+	auto& parameter = GetParameter();
+	ImGui::DragFloat("intensity", &parameter.intensity, 0.01f, 0.0f, std::numeric_limits<float>::max());
 }
 
 void SkyLightComponent::Init() {
-	LightCommon::CreateShadowBuffer();
+
+	parameter_ = std::make_unique<DxObject::DimensionBuffer<Parameter>>();
+	parameter_->Create(SxavengerSystem::GetDxDevice(), 1);
+	parameter_->At(0).Init();
 
 	diffuseParameter_ = std::make_unique<DxObject::DimensionBuffer<DiffuseParameter>>();
 	diffuseParameter_->Create(SxavengerSystem::GetDxDevice(), 1);
@@ -56,6 +68,11 @@ void SkyLightComponent::Init() {
 	specularParameter_->At(0).Init();
 }
 
+const D3D12_GPU_VIRTUAL_ADDRESS& SkyLightComponent::GetParameterBufferAddress() const {
+	Exception::Assert(parameter_ != nullptr, "sky light parameter is not create.");
+	return parameter_->GetGPUVirtualAddress();
+}
+
 const D3D12_GPU_VIRTUAL_ADDRESS& SkyLightComponent::GetDiffuseParameterBufferAddress() const {
 	Exception::Assert(diffuseParameter_ != nullptr, "sky light diffuse parameter is not create.");
 	return diffuseParameter_->GetGPUVirtualAddress();
@@ -64,6 +81,16 @@ const D3D12_GPU_VIRTUAL_ADDRESS& SkyLightComponent::GetDiffuseParameterBufferAdd
 const D3D12_GPU_VIRTUAL_ADDRESS& SkyLightComponent::GetSpecularParameterBufferAddress() const {
 	Exception::Assert(specularParameter_ != nullptr, "sky light specular parameter is not create.");
 	return specularParameter_->GetGPUVirtualAddress();
+}
+
+const SkyLightComponent::Parameter& SkyLightComponent::GetParameter() const {
+	Exception::Assert(parameter_ != nullptr, "sky light parameter is not create.");
+	return parameter_->At(0);
+}
+
+SkyLightComponent::Parameter& SkyLightComponent::GetParameter() {
+	Exception::Assert(parameter_ != nullptr, "sky light parameter is not create.");
+	return parameter_->At(0);
 }
 
 const SkyLightComponent::DiffuseParameter& SkyLightComponent::GetDiffuseParameter() const {

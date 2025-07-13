@@ -19,7 +19,7 @@
 // SkyLightComponent class
 ////////////////////////////////////////////////////////////////////////////////////////////
 class SkyLightComponent
-	: public BaseComponent, public LightCommon {
+	: public BaseComponent {
 public:
 
 	////////////////////////////////////////////////////////////////////////////////////////////
@@ -71,6 +71,26 @@ public:
 
 	};
 
+	////////////////////////////////////////////////////////////////////////////////////////////
+	// Parameter structure
+	////////////////////////////////////////////////////////////////////////////////////////////
+	struct Parameter {
+	public:
+
+		//=========================================================================================
+		// public methods
+		//=========================================================================================
+
+		void Init();
+
+		//=========================================================================================
+		// public varables
+		//=========================================================================================
+
+		float intensity = 1.0f;
+
+	};
+
 public:
 
 	//=========================================================================================
@@ -86,9 +106,14 @@ public:
 
 	//* getter *//
 
+	const D3D12_GPU_VIRTUAL_ADDRESS& GetParameterBufferAddress() const;
+
 	const D3D12_GPU_VIRTUAL_ADDRESS& GetDiffuseParameterBufferAddress() const;
 
 	const D3D12_GPU_VIRTUAL_ADDRESS& GetSpecularParameterBufferAddress() const;
+
+	const Parameter& GetParameter() const;
+	Parameter& GetParameter();
 
 	const DiffuseParameter& GetDiffuseParameter() const;
 	DiffuseParameter& GetDiffuseParameter();
@@ -105,6 +130,8 @@ private:
 	//=========================================================================================
 	// public variables
 	//=========================================================================================
+
+	std::unique_ptr<DxObject::DimensionBuffer<Parameter>> parameter_;
 
 	std::unique_ptr<DxObject::DimensionBuffer<DiffuseParameter>> diffuseParameter_;
 	std::unique_ptr<DxObject::DimensionBuffer<SpecularParameter>> specularParameter_;

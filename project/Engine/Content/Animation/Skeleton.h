@@ -28,7 +28,6 @@ struct Joint {
 	uint32_t index; //!< 自身のindex
 
 	std::optional<uint32_t> parent; //!< 親のJointのindex, いなければnull
-	std::vector<uint32_t> children; //!< 子のJointのindexリスト, いなければ空
 
 	QuaternionTransform transform;
 

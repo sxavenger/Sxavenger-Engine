@@ -230,3 +230,7 @@ Vector3f Matrix4x4::TransformNormal(const Vector3f& v, const Matrix4x4& m) noexc
 
 	return result / w;
 }
+
+Vector3f Matrix4x4::GetTranslation(const Matrix4x4& m) noexcept {
+	return { m.m[3][0], m.m[3][1], m.m[3][2] };
+}

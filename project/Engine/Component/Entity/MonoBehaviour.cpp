@@ -165,7 +165,9 @@ void MonoBehaviour::ShowInspector() {
 
 	for (const auto& [type, component] : GetComponents()) {
 		if (ImGui::CollapsingHeader(type->name(), ImGuiTreeNodeFlags_DefaultOpen)) {
+			ImGui::PushID(type->name());
 			(*component)->ShowComponentInspector();
+			ImGui::PopID();
 		}
 	}
 
