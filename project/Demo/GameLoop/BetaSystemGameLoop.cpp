@@ -85,10 +85,10 @@ void BetaSystemGameLoop::InitSystem() {
 	light->GetSpecularParameter().SetTexture(SxavengerAsset::Import<AssetTexture>("assets/textures/textureCube/DebugRadiance.dds"));
 	light->SetEnvironment(SxavengerAsset::Import<AssetTexture>("assets/textures/textureCube/DebugEnvironment.dds").WaitAcquire()->GetGPUHandleSRV());
 
-	player_ = std::make_unique<Player>();
-	player_->Load();
-	player_->Awake();
-	player_->Start();
+	//player_ = std::make_unique<Player>();
+	//player_->Load();
+	//player_->Awake();
+	//player_->Start();
 
 	emissive_ = std::make_unique<EmissiveActor>();
 	emissive_->Init();
@@ -107,7 +107,7 @@ void BetaSystemGameLoop::UpdateSystem() {
 	//atmosphere_->Update();
 	camera_->Update();
 
-	player_->Update();
+	//player_->Update();
 
 	//-----------------------------------------------------------------------------------------
 	// SystemUpdate...?

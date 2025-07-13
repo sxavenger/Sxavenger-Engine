@@ -88,10 +88,10 @@ float3 BSDF(float3 albedo, float roughness, float metallic, float3 normal, float
 	float vh = V_HeightCorrelated(NdotV, NdotL, roughness);
 	float d  = D_GGX(NdotH, roughness);
 
-	float3 diffuseBRDF  = DiffuseBRDF(diffuseAlbedo);
+	//float3 diffuseBRDF  = DiffuseBRDF(diffuseAlbedo);
 	float3 specularBRDF = SpecularBRDF(f, vh, d);
 
-	return (diffuseBRDF + specularBRDF) * NdotL;
+	return (/*diffuseBRDF + */specularBRDF) * NdotL;
 	
 }
 
@@ -194,25 +194,47 @@ _CLOSESTHIT void mainClosesthit(inout Payload payload, in Attribute attribute) {
 		uint currentSampleNum = gReservoir.currentFrame * gReservoir.frameSampleCount + i;
 		uint2 xi = Hammersley(currentSampleNum, gReservoir.sampleCount);
 
-		// 拡散BRDFのサンプリング
-		float3 dir = ImportanceSampleLambert(xi, surface.normal);
+		{ // 拡散BRDFのサンプリング
+			float3 dir = ImportanceSampleLambert(xi, surface.normal);
 
-		RayDesc desc;
-		desc.Origin    = surface.position;
-		desc.Direction = dir;
-		desc.TMin      = kTMin;
-		desc.TMax      = kTMax;
+			RayDesc desc;
+			desc.Origin = surface.position;
+			desc.Direction = dir;
+			desc.TMin = kTMin;
+			desc.TMax = kTMax;
 
-		Payload path = (Payload)0;
-		path.rayType = RayType::kPath;
+			Payload path = (Payload)0;
+			path.rayType = RayType::kPath;
 
-		float3 brdf = surface.albedo / kPi;
-		float pdf = saturate(dot(surface.normal, dir)) / kPi;
+			float3 brdf = surface.albedo / kPi;
+			float pdf = saturate(dot(surface.normal, dir)) / kPi;
 
-		path.le = payload.le * brdf / pdf;
+			path.le = payload.le * brdf / pdf;
 		
-		payload.TraceRecursionRay(path, desc, kFlag);
-		color += path.color.rgb;
+			payload.TraceRecursionRay(path, desc, kFlag);
+			color += path.color.rgb;
+		}
+
+		{ // 鏡面BRDFのサンプリング
+			float3 dir = ImportanceSampleGGX(xi, surface.roughness, surface.normal);
+
+			RayDesc desc;
+			desc.Origin    = surface.position;
+			desc.Direction = dir;
+			desc.TMin      = kTMin;
+			desc.TMax      = kTMax;
+			
+			Payload path = (Payload)0;
+			path.rayType = RayType::kPath;
+			
+			float3 brdf = BSDF(surface.albedo, surface.roughness, surface.metallic, surface.normal, -desc.Direction, -WorldRayDirection());
+			float pdf   = saturate(dot(surface.normal, dir)) * D_GGX(saturate(dot(surface.normal, dir)), surface.roughness) / kPi;
+			
+			path.le = payload.le * brdf / pdf;
+			payload.TraceRecursionRay(path, desc, kFlag);
+			color += path.color.rgb;
+			
+		}
 	}
 
 	color /= float(gReservoir.sampleCount); //!< 平均化
