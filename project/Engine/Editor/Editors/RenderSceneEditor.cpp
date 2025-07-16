@@ -33,6 +33,9 @@ void RenderSceneEditor::Init() {
 	camera_->AddComponent<TransformComponent>();
 	camera_->AddComponent<CameraComponent>();
 
+	auto camera = camera_->GetComponent<CameraComponent>();
+	camera->GetProjection().focal = 12.0f;
+
 	textures_ = std::make_unique<FRenderTargetTextures>();
 	textures_->Create(kMainWindowSize);
 
