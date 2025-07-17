@@ -191,4 +191,6 @@ private:
 
 	void RenderIcon(Icon icon, const Vector3f& position, const Color4f& color);
 
+	void RenderTextSceneWindow(ImVec2& position, const std::string& text, ImU32 color = ImGui::GetColorU32(ImGuiCol_Text));
+
 };

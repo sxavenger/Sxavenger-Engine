@@ -18,15 +18,14 @@ _RAYGENERATION void mainRaygeneration() {
 	RayDesc desc    = GetPrimaryRayDesc(index, dimension);
 	Payload payload = TracePrimaryRay(desc);
 
-	if (gReservoir.currentFrame == 0) {
-		// texture reset
-		gMain[index]        = float4(0.0f, 0.0f, 0.0f, 0.0f);
-		gNormal[index]      = float4(payload.normal, 1.0f);
-		gMaterialARM[index] = float4(payload.arm, 1.0f);
-		gDepth[index]       = payload.depth;
-
+	if (gReservoir.IsBeginFrame()) {
+		gMain[index] = float4(0.0f, 0.0f, 0.0f, 0.0f);
 	}
-
-	gMain[index] += payload.color;
+	
+	// texture reset
+	gNormal[index]      = float4(payload.normal, 1.0f);
+	gMaterialARM[index] = float4(payload.arm, 1.0f);
+	gDepth[index]       = payload.depth;
+	gMain[index]        += payload.color;
 	
 }
