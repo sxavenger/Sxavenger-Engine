@@ -94,7 +94,7 @@ namespace ACES {
 	};
 
 	//!< sRGB -> XYZ
-	static const float3x3 sRGB_2_XYZ_MAT = {
+	static const float3x3 sRGB_2_XYZ_Matrix = {
 		0.4124564, 0.3575761, 0.1804375,
 		0.2126729, 0.7151522, 0.0721750,
 		0.0193339, 0.1191920, 0.9503041,
@@ -490,7 +490,13 @@ namespace ACES {
 	// Input Device Transformations
 	//=========================================================================================
 
-	
+	//! @brief Input Device Transform[sRGB -> AP0]
+	//! @param[in] sRGB: sRGB color space
+	//! @return: ACES AP0 color space
+	float3 IDT_sRGB(float3 sRGB) {
+		float3 XYZ = mul(sRGB_2_XYZ_Matrix, sRGB);
+		return mul(XYZ_2_AP0_Matrix, XYZ);
+	}
 
 	//=========================================================================================
 	// Reference Rendering Transformations
@@ -562,6 +568,9 @@ namespace ACES {
 
 	//* methods *//
 
+	//! @brief Output Device Transform[OCES -> sRGB D65]
+	//! @param[in] oces: OCES color space
+	//! @return: sRGB D65 color space
 	float3 ODT_sRGB_D65(float3 oces) {
 		// OCES to RGB rendering space
 		float3 rgbPre = mul(AP0_2_AP1_Matrix, oces);

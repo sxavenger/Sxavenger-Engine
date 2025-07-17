@@ -46,87 +46,24 @@ void PreviewGameLoop::InitGame() {
 	main_ = SxavengerSystem::CreateMainWindow(kMainWindowSize, L"sxavenger engine preview window", { 0.14f, 0.2f, 0.24f, 1.f }).lock();
 	main_->SetIcon("packages/icon/SxavengerEngineIcon.ico", { 32, 32 });
 
-	auto device = SxavengerSystem::GetDxDevice()->GetDevice();
-	
-	{ //!< resourceの生成
+	presenter_.Init();
+	texture_.Create(main_->GetSize(), DXGI_FORMAT_R32G32B32A32_FLOAT);
 
-		// propの設定
-		D3D12_HEAP_PROPERTIES prop = {};
-		prop.Type = D3D12_HEAP_TYPE_DEFAULT;
-
-		// descの設定
-		D3D12_RESOURCE_DESC desc = {};
-		desc.Width            = size_.x;
-		desc.Height           = size_.y;
-		desc.DepthOrArraySize = static_cast<uint16_t>(size_.z);
-		desc.MipLevels        = 1;
-		desc.Format           = DXGI_FORMAT_R32G32B32A32_FLOAT;
-		desc.SampleDesc.Count = 1;
-		desc.Dimension        = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
-		desc.Flags            = D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS;
-
-		auto hr = device->CreateCommittedResource(
-			&prop,
-			D3D12_HEAP_FLAG_NONE,
-			&desc,
-			D3D12_RESOURCE_STATE_UNORDERED_ACCESS,
-			nullptr,
-			IID_PPV_ARGS(&resource_)
-		);
-		Exception::Assert(SUCCEEDED(hr));
-	}
-
-	{ //!< UAVの生成
-
-		// descriptorの取得
-		descriptorUAV_ = SxavengerSystem::GetDescriptor(kDescriptor_UAV);
-
-		// descの設定
-		D3D12_UNORDERED_ACCESS_VIEW_DESC desc = {};
-		desc.Format                   = DXGI_FORMAT_R32G32B32A32_FLOAT;
-		desc.ViewDimension            = D3D12_UAV_DIMENSION_TEXTURE2DARRAY;
-		desc.Texture2DArray.ArraySize = static_cast<uint32_t>(size_.z);
-
-		device->CreateUnorderedAccessView(
-			resource_.Get(),
-			nullptr,
-			&desc,
-			descriptorUAV_.GetCPUHandle()
-		);
-	}
-
-	pipeline_.CreateBlob("assets/shaders/texcube.cs.hlsl");
-	pipeline_.ReflectionPipeline(SxavengerSystem::GetDxDevice());
-
-	// execute pipeline
-	pipeline_.SetPipeline(SxavengerSystem::GetMainThreadContext()->GetDxCommand());
-
-	DxObject::BindBufferDesc desc = {};
-	desc.SetHandle("gOutput", descriptorUAV_.GetGPUHandle());
-
-	pipeline_.BindComputeBuffer(SxavengerSystem::GetMainThreadContext()->GetDxCommand(), desc);
-	pipeline_.Dispatch(
-		SxavengerSystem::GetMainThreadContext()->GetDxCommand(),
-		{ DxObject::RoundUp(size_.x, 16), DxObject::RoundUp(size_.y, 16), DxObject::RoundUp(size_.z, 1) }
+	environment_ = SxavengerAsset::TryImport<AssetTexture>(
+		"assets/textures/textureCube/sky_environment.dds",
+		Texture::Option{ Texture::Encoding::Intensity, false }
 	);
 
-	D3D12_RESOURCE_BARRIER barrier = {};
-	barrier.Type                   = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
-	barrier.Transition.pResource   = resource_.Get();
-	barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_UNORDERED_ACCESS;
-	barrier.Transition.StateAfter  = D3D12_RESOURCE_STATE_COPY_SOURCE;
-	barrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
+	pipeline_ = std::make_unique<CustomReflectionComputePipeline>();
+	pipeline_->CreateAsset("assets/shaders/test.cs.hlsl");
+	pipeline_->RegisterBlob();
+	pipeline_->ReflectionPipeline(SxavengerSystem::GetDxDevice());
 
-	SxavengerSystem::GetMainThreadContext()->GetCommandList()->ResourceBarrier(1, &barrier);
+	actor_.Init();
 
-	// save
-	TextureExporter::Export(
-		SxavengerSystem::GetMainThreadContext(),
-		TextureExporter::TextureDimension::TextureCube,
-		resource_.Get(),
-		DXGI_FORMAT_R32G32B32A32_FLOAT,
-		"preview_texture.dds"
-	);
+	parameter_ = std::make_unique<DxObject::DimensionBuffer<uint32_t>>();
+	parameter_->Create(SxavengerSystem::GetDxDevice(), 1);
+	parameter_->At(0) = 0;
 }
 
 void PreviewGameLoop::TermGame() {
@@ -134,7 +71,28 @@ void PreviewGameLoop::TermGame() {
 
 void PreviewGameLoop::UpdateGame() {
 
-	
+	if (SxavengerSystem::IsTriggerKey(KeyId::KEY_SPACE)) {
+		parameter_->At(0)++;
+		parameter_->At(0) %= 2;
+	}
+
+	actor_.Update();
+	ComponentHelper::UpdateTransform();
+
+	texture_.TransitionBeginUnordered(SxavengerSystem::GetMainThreadContext());
+
+	pipeline_->SetPipeline(SxavengerSystem::GetMainThreadContext()->GetDxCommand());
+
+	DxObject::BindBufferDesc desc = {};
+	desc.SetHandle("gOutput",      texture_.GetGPUHandleUAV());
+	desc.SetHandle("gEnvironment", environment_.WaitAcquire()->GetGPUHandleSRV());
+	desc.SetAddress("gCamera",     actor_.GetComponent<CameraComponent>()->GetGPUVirtualAddress());
+	desc.SetAddress("gParameter",  parameter_->GetGPUVirtualAddress());
+	pipeline_->BindComputeBuffer(SxavengerSystem::GetMainThreadContext()->GetDxCommand(), desc);
+
+	pipeline_->Dispatch(SxavengerSystem::GetMainThreadContext()->GetDxCommand(), Vector3ui{ DxObject::RoundUp(texture_.GetSize().x, 16), DxObject::RoundUp(texture_.GetSize().y, 16), 1 });
+
+	texture_.TransitionEndUnordered(SxavengerSystem::GetMainThreadContext());
 }
 
 void PreviewGameLoop::DrawGame() {
@@ -142,6 +100,7 @@ void PreviewGameLoop::DrawGame() {
 	main_->BeginRendering();
 	main_->ClearWindow();
 
+	presenter_.Present(SxavengerSystem::GetMainThreadContext(), main_->GetSize(), texture_.GetGPUHandleSRV());
 	SxavengerSystem::RenderImGui();
 
 	main_->EndRendering();
