@@ -107,6 +107,8 @@ public:
 
 	void ResetReserviour(const DirectXThreadContext* context);
 
+	const uint32_t GetCurrentSampleCount() const;
+
 private:
 
 	//=========================================================================================

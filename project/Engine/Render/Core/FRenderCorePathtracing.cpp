@@ -12,7 +12,7 @@ _DXROBJECT_USING
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 void FRenderCorePathtracing::Reservoir::Init() {
-	sampleCount      = 1028;
+	sampleCount      = 1 << 12;
 	frameSampleCount = 2;
 	currentFrame     = 0;
 }
@@ -23,6 +23,10 @@ void FRenderCorePathtracing::Reservoir::IncrimentFrame() {
 
 void FRenderCorePathtracing::Reservoir::ResetFrame() {
 	currentFrame = 0;
+}
+
+uint32_t FRenderCorePathtracing::Reservoir::GetCurrentSampleCount() const {
+	return std::min(currentFrame * frameSampleCount, sampleCount);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////

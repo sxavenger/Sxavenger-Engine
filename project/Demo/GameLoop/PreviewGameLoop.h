@@ -7,9 +7,11 @@
 #include <Engine/System/Runtime/GameLoop/GameLoop.h>
 #include <Engine/System/Window/GameWindow.h>
 #include <Engine/System/SxavengerSystem.h>
-
-//* preview
+#include <Engine/Asset/SxavengerAsset.h>
+#include <Engine/Render/FRenderTargetTextures.h>
+#include <Engine/Render/FPresenter.h>
 #include <Engine/Module/Pipeline/CustomComputePipeline.h>
+#include <Engine/Adapter/Actor/ControllableCameraActor.h>
 
 //* c++
 #include <memory>
@@ -39,12 +41,16 @@ private:
 
 	//* preview *//
 
-	DxObject::ReflectionComputePipelineState pipeline_;
+	FPresenter presenter_;
+	FTexture texture_;
 
-	ComPtr<ID3D12Resource> resource_;
-	DxObject::Descriptor descriptorUAV_;
+	AssetObserver<AssetTexture> environment_;
 
-	Vector3ui size_ = { 512, 512, 6 };
+	std::unique_ptr<CustomReflectionComputePipeline> pipeline_;
+
+	ControllableCameraActor actor_;
+
+	std::unique_ptr<DxObject::DimensionBuffer<std::pair<uint32_t, float>>> parameter_;
 
 	//=========================================================================================
 	// private methods

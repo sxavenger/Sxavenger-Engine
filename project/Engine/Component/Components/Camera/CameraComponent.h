@@ -121,6 +121,9 @@ public:
 
 	const Camera& GetCamera() const;
 
+	const Projection& GetProjection() const { return projection_; }
+	Projection& GetProjection() { return projection_; }
+
 	//* helper option *//
 
 	Vector3f CalculateNDCPosition(const Vector3f& point) const;

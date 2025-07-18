@@ -3,6 +3,7 @@
 //-----------------------------------------------------------------------------------------
 #include "../../DeferredBuffers.hlsli"
 #include "../../../Component/CameraComponent.hlsli"
+#include "../../../Library/ACES.hlsli"
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // common define
@@ -58,6 +59,7 @@ void main(uint3 dispatchThreadId : SV_DispatchThreadID) {
 
 	float4 color = gEnvironment.SampleLevel(gSampler, direction, 0.0f);
 	color.rgb *= gParameter.intensity; // 環境光の強度を調整
+	color.rgb = ACES::IDT_sRGB_AP1(color.rgb);
 
 	gOutput[index] = color;
 }
