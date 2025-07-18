@@ -61,9 +61,10 @@ void PreviewGameLoop::InitGame() {
 
 	actor_.Init();
 
-	parameter_ = std::make_unique<DxObject::DimensionBuffer<uint32_t>>();
+	parameter_ = std::make_unique<DxObject::DimensionBuffer<std::pair<uint32_t, float>>>();
 	parameter_->Create(SxavengerSystem::GetDxDevice(), 1);
-	parameter_->At(0) = 0;
+	parameter_->At(0).first  = 0;
+	parameter_->At(0).second = 0.0f;
 }
 
 void PreviewGameLoop::TermGame() {
@@ -72,8 +73,16 @@ void PreviewGameLoop::TermGame() {
 void PreviewGameLoop::UpdateGame() {
 
 	if (SxavengerSystem::IsTriggerKey(KeyId::KEY_SPACE)) {
-		parameter_->At(0)++;
-		parameter_->At(0) %= 2;
+		parameter_->At(0).first++;
+		parameter_->At(0).first %= 2;
+	}
+
+	if (SxavengerSystem::IsPressKey(KeyId::KEY_UP)) {
+		parameter_->At(0).second += 0.1f;
+	}
+
+	if (SxavengerSystem::IsPressKey(KeyId::KEY_DOWN)) {
+		parameter_->At(0).second -= 0.1f;
 	}
 
 	actor_.Update();

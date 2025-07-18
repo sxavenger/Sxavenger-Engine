@@ -50,7 +50,7 @@ private:
 
 	ControllableCameraActor actor_;
 
-	std::unique_ptr<DxObject::DimensionBuffer<uint32_t>> parameter_;
+	std::unique_ptr<DxObject::DimensionBuffer<std::pair<uint32_t, float>>> parameter_;
 
 	//=========================================================================================
 	// private methods

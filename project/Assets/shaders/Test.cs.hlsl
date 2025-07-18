@@ -18,6 +18,7 @@ ConstantBuffer<CameraComponent> gCamera : register(b0);
 
 struct Parameter {
 	uint flag;
+	float intensity;
 };
 ConstantBuffer<Parameter> gParameter : register(b1);
 
@@ -40,7 +41,7 @@ void main(uint3 dispatchThreadId : SV_DispatchThreadID) {
 	float3 target    = mul(float4(d.x, -d.y, 1.0f, 1.0f), gCamera.projInv).xyz;
 	float3 direction = mul(float4(target, 0.0f), gCamera.world).xyz;
 
-	float3 color = gEnvironment.SampleLevel(gSampler, direction, 0.0f).rgb;
+	float3 color = gEnvironment.SampleLevel(gSampler, direction, 0.0f).rgb * gParameter.intensity;
 
 	if (gParameter.flag) {
 		float3 aces = ACES::IDT_sRGB(color);
