@@ -493,9 +493,17 @@ namespace ACES {
 	//! @brief Input Device Transform[sRGB -> AP0]
 	//! @param[in] sRGB: sRGB color space
 	//! @return: ACES AP0 color space
-	float3 IDT_sRGB(float3 sRGB) {
+	float3 IDT_sRGB_AP0(float3 sRGB) {
 		float3 XYZ = mul(sRGB_2_XYZ_Matrix, sRGB);
 		return mul(XYZ_2_AP0_Matrix, XYZ);
+	}
+
+	//! @brief Input Device Transform[sRGB -> AP1]
+	//! @param[in] sRGB: sRGB color space
+	//! @return: ACES AP1 color space
+	float3 IDT_sRGB_AP1(float3 sRGB) {
+		float3 XYZ = mul(sRGB_2_XYZ_Matrix, sRGB);
+		return mul(XYZ_2_AP1_Matrix, XYZ);
 	}
 
 	//=========================================================================================
