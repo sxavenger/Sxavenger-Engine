@@ -101,21 +101,6 @@ D3D12_STATIC_SAMPLER_DESC SamplerBindDesc::GetSampler(const std::string& name, S
 // BindBufferInfo structure methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-void BindBufferTable::BindBufferInfo::Create(const D3D12_SHADER_INPUT_BIND_DESC& _desc, ShaderVisibility _visibility) {
-	rootParam      = std::nullopt;
-	visibility     = _visibility;
-	registerNum    = _desc.BindPoint;
-	registerSpace  = _desc.Space;
-	type           = _desc.Type;
-	bindBufferType = ToBindBufferType(_desc.Type);
-
-	if (bindBufferType == BindBufferType::kVirtual_CBV) {
-		
-	}
-
-	// todo: 32bitconstantsの設定
-}
-
 void BindBufferTable::BindBufferInfo::Create(ID3D12ShaderReflection* reflection, const D3D12_SHADER_INPUT_BIND_DESC& _desc, ShaderVisibility _visibility) {
 	rootParam      = std::nullopt;
 	visibility     = _visibility;
@@ -148,7 +133,7 @@ void BindBufferTable::CreateTable(ID3D12ShaderReflection* reflection, ShaderVisi
 		D3D12_SHADER_INPUT_BIND_DESC desc = {};
 		reflection->GetResourceBindingDesc(i, &desc);
 
-		InsertBindBuffer(desc, visibility);
+		InsertBindBuffer(reflection, desc, visibility);
 	}
 }
 
