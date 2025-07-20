@@ -163,7 +163,7 @@ void DevelopEditor::ShowSystemMenu() {
 
 		if (ImGui::BeginMenu("window")) {
 
-			auto windowCollection = SxavengerSystem::GetGameWindowCollection();
+			auto windowCollection = SxavengerSystem::GetWindowCollection();
 			windowCollection->SystemDebugGui();
 
 			ImGui::EndMenu();

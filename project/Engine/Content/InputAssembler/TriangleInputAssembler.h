@@ -6,7 +6,7 @@
 //* engine
 #include <Engine/System/SxavengerSystem.h>
 #include <Engine/System/DirectX/DxObject/DxDimensionBuffer.h>
-#include <Engine/System/DirectX/DirectXContext.h>
+#include <Engine/System/DirectX/Context/DirectXQueueContext.h>
 
 //* c++
 #include <memory>
@@ -31,9 +31,9 @@ public:
 
 	//* bind *//
 
-	void BindIABuffer(const DirectXThreadContext* context) const;
+	void BindIABuffer(const DirectXQueueContext* context) const;
 
-	void DrawCall(const DirectXThreadContext* context, UINT instanceCount = 1) const;
+	void DrawCall(const DirectXQueueContext* context, UINT instanceCount = 1) const;
 
 	//* getter *//
 
@@ -77,7 +77,7 @@ inline void TriangleInputAssembler<_Vertex>::Term() {
 }
 
 template <class _Vertex>
-inline void TriangleInputAssembler<_Vertex>::BindIABuffer(const DirectXThreadContext* context) const {
+inline void TriangleInputAssembler<_Vertex>::BindIABuffer(const DirectXQueueContext* context) const {
 	auto commandList = context->GetCommandList();
 
 	D3D12_VERTEX_BUFFER_VIEW vbv = vertex_->GetVertexBufferView();
@@ -88,6 +88,6 @@ inline void TriangleInputAssembler<_Vertex>::BindIABuffer(const DirectXThreadCon
 }
 
 template <class _Vertex>
-inline void TriangleInputAssembler<_Vertex>::DrawCall(const DirectXThreadContext* context, UINT instanceCount) const {
+inline void TriangleInputAssembler<_Vertex>::DrawCall(const DirectXQueueContext* context, UINT instanceCount) const {
 	context->GetCommandList()->DrawIndexedInstanced(index_->GetIndexCount(), instanceCount, 0, 0, 0);
 }

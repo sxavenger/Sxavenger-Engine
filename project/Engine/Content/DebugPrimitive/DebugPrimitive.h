@@ -6,7 +6,7 @@
 //* engine
 #include <Engine/System/DirectX/DxObject/DxDimensionBuffer.h>
 #include <Engine/System/DirectX/DxObject/DxGraphicsPipelineState.h>
-#include <Engine/System/DirectX/DirectXContext.h>
+#include <Engine/System/DirectX/Context/DirectXQueueContext.h>
 
 //* lib
 #include <Lib/Geometry/Vector4.h>
@@ -34,7 +34,7 @@ public:
 	BaseDebugPrimitive()          = default;
 	virtual ~BaseDebugPrimitive() = default;
 
-	void Draw(const DirectXThreadContext* context, const CameraComponent* camera);
+	void Draw(const DirectXQueueContext* context, const CameraComponent* camera);
 
 	void Reset();
 
@@ -123,7 +123,7 @@ public:
 
 	void Term();
 
-	void DrawToScene(const DirectXThreadContext* context, const CameraComponent* camera);
+	void DrawToScene(const DirectXQueueContext* context, const CameraComponent* camera);
 
 	void ResetPrimitive();
 

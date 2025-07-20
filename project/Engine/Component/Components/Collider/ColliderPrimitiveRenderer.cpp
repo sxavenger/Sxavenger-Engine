@@ -106,7 +106,8 @@ void ColliderPrimitiveSphere::StackBuffer(const Vector3f& position, const Collis
 	index_++;
 }
 
-void ColliderPrimitiveSphere::Render(const DirectXThreadContext* context, CameraComponent* component) {
+void ColliderPrimitiveSphere::Render(const DirectXQueueContext* context, CameraComponent* component) {
+
 	pipeline_->SetPipeline(context->GetDxCommand());
 
 	D3D12_VERTEX_BUFFER_VIEW vbv = vb_->GetVertexBufferView();
@@ -265,7 +266,7 @@ void ColliderPrimitiveRenderer::Term() {
 	sphere_.reset();
 }
 
-void ColliderPrimitiveRenderer::Render(const DirectXThreadContext* context, CameraComponent* component) {
+void ColliderPrimitiveRenderer::Render(const DirectXQueueContext* context, CameraComponent* component) {
 	sphere_->Reset();
 
 	sComponentStorage->ForEach<ColliderComponent>([this](ColliderComponent* collider) {
@@ -285,6 +286,7 @@ void ColliderPrimitiveRenderer::Render(const DirectXThreadContext* context, Came
 		}
 	});
 
+	context->RequestQueue(DirectXQueueContext::RenderQueue::Direct);
 	sphere_->Render(context, component);
 }
 

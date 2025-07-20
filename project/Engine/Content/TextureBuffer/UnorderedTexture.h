@@ -7,7 +7,7 @@
 #include "BaseOffscreenTexture.h"
 
 //* engine
-#include <Engine/System/DirectX/DirectXContext.h>
+#include <Engine/System/DirectX/Context/DirectXQueueContext.h>
 
 //* lib
 #include <Lib/Geometry/Vector4.h>
@@ -26,15 +26,15 @@ public:
 	UnorderedTexture() = default;
 	~UnorderedTexture() { Term(); }
 
-	void Create(const Vector2ui& size, DXGI_FORMAT format = DxObject::kOffscreenFormat);
+	void Create(const Vector2ui& size, DXGI_FORMAT format = DxObject::kDefaultOffscreenFormat);
 
 	void Term();
 
 	//* unordered option *//
 
-	void TransitionBeginUnordered(const DirectXThreadContext* context);
+	void TransitionBeginUnordered(const DirectXQueueContext* context);
 
-	void TransitionEndUnordered(const DirectXThreadContext* context);
+	void TransitionEndUnordered(const DirectXQueueContext* context);
 
 	//* getter *//
 

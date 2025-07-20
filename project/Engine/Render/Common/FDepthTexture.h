@@ -7,7 +7,7 @@
 #include <Engine/System/Utility/ComPtr.h>
 #include <Engine/System/DirectX/DxObject/DxObjectCommon.h>
 #include <Engine/System/DirectX/DxObject/DxDescriptor.h>
-#include <Engine/System/DirectX/DirectXContext.h>
+#include <Engine/System/DirectX/Context/DirectXQueueContext.h>
 
 //* lib
 #include <Lib/Geometry/Vector2.h>
@@ -37,19 +37,19 @@ public:
 		void Delete();
 
 		//!< Transition to depth write state.
-		void BeginWrite(const DirectXThreadContext* context) const;
+		void BeginWrite(const DirectXQueueContext* context) const;
 
 		//!< Transition to default resource state.
-		void EndWrite(const DirectXThreadContext* context) const;
+		void EndWrite(const DirectXQueueContext* context) const;
 
 		//!< Clear depth value.
-		void ClearDepth(const DirectXThreadContext* context) const;
+		void ClearDepth(const DirectXQueueContext* context) const;
 
 		//!< Transition to user state
-		void BeginState(const DirectXThreadContext* context, D3D12_RESOURCE_STATES state) const;
+		void BeginState(const DirectXQueueContext* context, D3D12_RESOURCE_STATES state) const;
 
 		//!< Transition to default resource state.
-		void EndState(const DirectXThreadContext* context, D3D12_RESOURCE_STATES state) const;
+		void EndState(const DirectXQueueContext* context, D3D12_RESOURCE_STATES state) const;
 
 		//=========================================================================================
 		// public variables
@@ -76,16 +76,16 @@ public:
 		void Delete();
 
 		//!< Transition to unordered access state.
-		void BeginWrite(const DirectXThreadContext* context) const;
+		void BeginWrite(const DirectXQueueContext* context) const;
 
 		//!< Transition to pixel shader resource state.
-		void EndWrite(const DirectXThreadContext* context) const;
+		void EndWrite(const DirectXQueueContext* context) const;
 
 		//!< Transition to user state
-		void BeginState(const DirectXThreadContext* context, D3D12_RESOURCE_STATES state) const;
+		void BeginState(const DirectXQueueContext* context, D3D12_RESOURCE_STATES state) const;
 
 		//!< Transition to default resource state.
-		void EndState(const DirectXThreadContext* context, D3D12_RESOURCE_STATES state) const;
+		void EndState(const DirectXQueueContext* context, D3D12_RESOURCE_STATES state) const;
 
 		//=========================================================================================
 		// public variables
@@ -113,22 +113,22 @@ public:
 
 	//* transition option *//
 
-	void TransitionBeginRasterizer(const DirectXThreadContext* context) const;
+	void TransitionBeginRasterizer(const DirectXQueueContext* context) const;
 
-	void TransitionEndRasterizer(const DirectXThreadContext* context) const;
+	void TransitionEndRasterizer(const DirectXQueueContext* context) const;
 
-	void ClearRasterizerDepth(const DirectXThreadContext* context) const;
+	void ClearRasterizerDepth(const DirectXQueueContext* context) const;
 
-	void TransitionBeginRaytracing(const DirectXThreadContext* context) const;
+	void TransitionBeginRaytracing(const DirectXQueueContext* context) const;
 
-	void TransitionEndRaytracing(const DirectXThreadContext* context) const;
+	void TransitionEndRaytracing(const DirectXQueueContext* context) const;
 
-	void TransitionBeginStateRasterizer(const DirectXThreadContext* context, D3D12_RESOURCE_STATES state) const;
+	void TransitionBeginStateRasterizer(const DirectXQueueContext* context, D3D12_RESOURCE_STATES state) const;
 
-	void TransitionEndStateRasterizer(const DirectXThreadContext* context, D3D12_RESOURCE_STATES state) const;
+	void TransitionEndStateRasterizer(const DirectXQueueContext* context, D3D12_RESOURCE_STATES state) const;
 
 	// todo: raytracing -> rasterizer
-	void CopyRaytracingToRasterizer(const DirectXThreadContext* context) const;
+	void CopyRaytracingToRasterizer(const DirectXQueueContext* context) const;
 
 	//* getter *//
 

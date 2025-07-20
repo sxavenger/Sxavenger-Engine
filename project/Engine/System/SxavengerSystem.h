@@ -7,8 +7,9 @@
 #include "Config/SxavengerConfig.h"
 #include "WinApp/WinApp.h"
 #include "DirectX/DirectXCommon.h"
-#include "DirectX/DirectXContext.h"
-#include "Window/GameWindowCollection.h"
+#include "DirectX/Context/DirectXQueueContext.h"
+//#include "DirectX/DirectXContext.h"
+#include "Window/WindowCollection.h"
 #include "Runtime/Input/Input.h"
 #include "Runtime/Performance/Performance.h"
 #include "Runtime/Thread/AsyncThreadCollection.h"
@@ -39,36 +40,34 @@ public:
 	static _DXOBJECT DescriptorHeaps* GetDxDescriptorHeaps();
 
 	//-----------------------------------------------------------------------------------------
-	// DirectXThreadContext main thread option
+	// DirectXQueueContext main thread option
 	//-----------------------------------------------------------------------------------------
 
 	static void TransitionAllocator();
 
 	static void ExecuteAllAllocator();
 
-	static DirectXThreadContext* GetMainThreadContext();
+	static DirectXQueueContext* GetDirectQueueContext();
 
 	//-----------------------------------------------------------------------------------------
 	// GameWindowCollection option
 	//-----------------------------------------------------------------------------------------
 
-	static const std::weak_ptr<GameWindow> CreateMainWindow(
-		const Vector2ui& clientSize, const LPCWSTR& name, const Color4f& clearColor = kDefaultGameWindowColor
+	static const std::weak_ptr<DirectXWindowContext> CreateMainWindow(
+		const Vector2ui& clientSize, const LPCWSTR& name, const Color4f& clearColor = DirectXWindowContext::kDefaultClearColor
 	);
 
-	static const std::weak_ptr<GameWindow> TryCreateSubWindow(
-		const Vector2ui& clientSize, const LPCWSTR& name, const Color4f& clearColor = kDefaultGameWindowColor
+	static const std::weak_ptr<DirectXWindowContext> CreateSubWindow(
+		const Vector2ui& clientSize, const LPCWSTR& name, DirectXWindowContext::ProcessCategory category, const Color4f& clearColor = DirectXWindowContext::kDefaultClearColor
 	);
 
 	static bool ProcessMessage();
 
-	static void PresentAllWindow();
+	static void PresentWindows();
 
-	static const std::weak_ptr<GameWindow> GetMainWindow();
+	static DirectXWindowContext* GetForcusWindow();
 
-	static const GameWindow* GetForcusWindow();
-
-	static GameWindowCollection* GetGameWindowCollection();
+	static WindowCollection* GetWindowCollection();
 
 	//-----------------------------------------------------------------------------------------
 	// Input option
@@ -114,7 +113,7 @@ public:
 
 	static void EndImGuiFrame();
 
-	static void RenderImGui(DirectXThreadContext* context = GetMainThreadContext());
+	static void RenderImGui(DirectXQueueContext* context = GetDirectQueueContext());
 
 	static ImGuiController* GetImGuiController();
 

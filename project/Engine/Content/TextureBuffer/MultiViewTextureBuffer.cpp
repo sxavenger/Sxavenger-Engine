@@ -44,7 +44,7 @@ void MultiViewTextureBuffer::Term() {
 	}
 }
 
-void MultiViewTextureBuffer::TransitionBeginRenderTarget(const DirectXThreadContext* context) {
+void MultiViewTextureBuffer::TransitionBeginRenderTarget(const DirectXQueueContext* context) {
 	Exception::Assert(IsCreatedRTV(), "Not create RTV."); //!< RTVが生成されていない
 
 	D3D12_RESOURCE_BARRIER barrier = {};
@@ -56,7 +56,7 @@ void MultiViewTextureBuffer::TransitionBeginRenderTarget(const DirectXThreadCont
 	context->GetCommandList()->ResourceBarrier(1, &barrier);
 }
 
-void MultiViewTextureBuffer::TransitionEndRenderTarget(const DirectXThreadContext* context) {
+void MultiViewTextureBuffer::TransitionEndRenderTarget(const DirectXQueueContext* context) {
 	Exception::Assert(IsCreatedRTV(), "Not create RTV."); //!< RTVが生成されていない
 
 	D3D12_RESOURCE_BARRIER barrier = {};
@@ -68,7 +68,7 @@ void MultiViewTextureBuffer::TransitionEndRenderTarget(const DirectXThreadContex
 	context->GetCommandList()->ResourceBarrier(1, &barrier);
 }
 
-void MultiViewTextureBuffer::ClearRenderTarget(const DirectXThreadContext* context) {
+void MultiViewTextureBuffer::ClearRenderTarget(const DirectXQueueContext* context) {
 	Exception::Assert(IsCreatedRTV(), "Not create RTV."); //!< RTVが生成されていない
 
 	// 画面のクリア
@@ -79,7 +79,7 @@ void MultiViewTextureBuffer::ClearRenderTarget(const DirectXThreadContext* conte
 	);
 }
 
-void MultiViewTextureBuffer::TransitionBeginUnordered(const DirectXThreadContext* context) {
+void MultiViewTextureBuffer::TransitionBeginUnordered(const DirectXQueueContext* context) {
 	Exception::Assert(IsCreatedUAV(), "Not create UAV."); //!< RTVが生成されていない
 
 	D3D12_RESOURCE_BARRIER barrier = {};
@@ -91,7 +91,7 @@ void MultiViewTextureBuffer::TransitionBeginUnordered(const DirectXThreadContext
 	context->GetCommandList()->ResourceBarrier(1, &barrier);
 }
 
-void MultiViewTextureBuffer::TransitionEndUnordered(const DirectXThreadContext* context) {
+void MultiViewTextureBuffer::TransitionEndUnordered(const DirectXQueueContext* context) {
 	Exception::Assert(IsCreatedUAV(), "Not create UAV."); //!< RTVが生成されていない
 
 	D3D12_RESOURCE_BARRIER barrier = {};

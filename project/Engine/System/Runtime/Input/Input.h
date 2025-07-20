@@ -17,7 +17,7 @@
 
 //* engine
 #include <Engine/System/Utility/ComPtr.h>
-#include <Engine/System/Window/Window.h>
+#include <Engine/System/DirectX/Context/DirectXWindowContext.h>
 
 //* c++
 #include <cstdint>
@@ -94,7 +94,7 @@ private:
 	// private variables
 	//=========================================================================================
 
-	void SetCooperativeLevel(const Window* window);
+	void SetCooperativeLevel(const DirectXWindowContext* window);
 
 };
 
@@ -120,7 +120,7 @@ public:
 	//* mouse position option *//
 
 	Vector2i GetPosition() const;
-	Vector2i GetPosition(const Window* window) const;
+	Vector2i GetPosition(const DirectXWindowContext* window) const;
 
 	Vector2i GetDeltaPosition() const;
 
@@ -168,7 +168,7 @@ private:
 	// private variables
 	//=========================================================================================
 
-	void SetCooperativeLevel(const Window* window);
+	void SetCooperativeLevel(const DirectXWindowContext* window);
 
 };
 
@@ -243,7 +243,7 @@ public:
 	Input() = default;
 	~Input() { Term(); }
 
-	void Init(const Window* mainWindow);
+	void Init(const DirectXWindowContext* mainWindow);
 
 	void Term();
 

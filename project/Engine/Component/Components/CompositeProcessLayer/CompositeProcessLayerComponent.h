@@ -12,7 +12,7 @@
 #include "CompositeProcessLUT.h"
 
 //* engine
-#include <Engine/System/DirectX/DirectXContext.h>
+#include <Engine/System/DirectX/Context/DirectXQueueContext.h>
 
 //* c++
 #include <list>
@@ -50,7 +50,7 @@ public:
 
 	void ShowComponentInspector() override;
 
-	void Process(const DirectXThreadContext* context, FRenderTargetTextures* textures);
+	void Process(const DirectXQueueContext* context, FRenderTargetTextures* textures);
 
 	//* process option *//
 

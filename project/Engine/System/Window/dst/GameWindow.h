@@ -32,7 +32,7 @@ public:
 
 	void Create(
 		const Vector2ui& clientSize, const LPCWSTR& name,
-		DirectXThreadContext* context,
+		DirectXQueueContext* context,
 		const HWND& parentHwnd = nullptr, const Color4f& clearColor = kDefaultGameWindowColor
 	);
 

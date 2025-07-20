@@ -42,7 +42,7 @@ void PostProcessLocalExposure::Init() {
 	name_ = "Local Exposure";
 }
 
-void PostProcessLocalExposure::Process(const DirectXThreadContext* context, FRenderTargetTextures* textures, const CameraComponent* camera) {
+void PostProcessLocalExposure::Process(const DirectXQueueContext* context, FRenderTargetTextures* textures, const CameraComponent* camera) {
 	camera;
 
 	auto process = textures->GetProcessTextures();

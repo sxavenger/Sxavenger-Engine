@@ -7,7 +7,7 @@
 #include "../Camera/CameraComponent.h"
 
 //* engine
-#include <Engine/System/DirectX/DirectXContext.h>
+#include <Engine/System/DirectX/Context/DirectXQueueContext.h>
 
 //* c++
 #include <concepts>
@@ -32,7 +32,7 @@ public:
 
 	virtual void Init() = 0;
 
-	virtual void Process(const DirectXThreadContext* context, FRenderTargetTextures* textures, const CameraComponent* camera) = 0;
+	virtual void Process(const DirectXQueueContext* context, FRenderTargetTextures* textures, const CameraComponent* camera) = 0;
 
 	virtual void ShowInspectorImGui() = 0;
 

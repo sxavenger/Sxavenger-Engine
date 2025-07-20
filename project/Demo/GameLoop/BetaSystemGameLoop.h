@@ -7,7 +7,7 @@
 #include <Engine/System/Runtime/GameLoop/GameLoop.h>
 
 //* engine
-#include <Engine/System/Window/GameWindow.h>
+#include <Engine/System/DirectX/Context/DirectXWindowContext.h>
 #include <Engine/Component/Entity/MonoBehaviour.h>
 #include <Engine/Component/Components/Camera/CameraComponent.h>
 #include <Engine/Render/FPresenter.h>
@@ -44,7 +44,7 @@ private:
 	// private variables
 	//=========================================================================================
 
-	std::shared_ptr<GameWindow> main_;
+	std::shared_ptr<DirectXWindowContext> main_;
 
 	//std::unique_ptr<MonoBehaviour> camera_;
 	std::unique_ptr<ControllableCameraActor> camera_;

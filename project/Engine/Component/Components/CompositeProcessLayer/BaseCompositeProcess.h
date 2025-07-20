@@ -4,7 +4,7 @@
 // include
 //-----------------------------------------------------------------------------------------
 //* engine
-#include <Engine/System/DirectX/DirectXContext.h>
+#include <Engine/System/DirectX/Context/DirectXQueueContext.h>
 #include <Engine/Render/FRenderTargetTextures.h>
 
 //* c++
@@ -25,7 +25,7 @@ public:
 
 	virtual void Init() = 0;
 
-	virtual void Process(const DirectXThreadContext* context, FRenderTargetTextures* textures) = 0;
+	virtual void Process(const DirectXQueueContext* context, FRenderTargetTextures* textures) = 0;
 
 	virtual void ShowInspectorImGui() = 0;
 

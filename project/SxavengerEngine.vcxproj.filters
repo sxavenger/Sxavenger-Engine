@@ -10,8 +10,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="Engine\System\Window\Window.cpp" />
-    <ClCompile Include="Engine\System\Window\GameWindow.cpp" />
     <ClCompile Include="Engine\System\DirectX\DxObject\DxObjectCommon.cpp" />
     <ClCompile Include="Engine\System\Utility\Logger.cpp" />
     <ClCompile Include="Engine\System\DirectX\DxObject\DxDevice.cpp" />
@@ -23,8 +21,6 @@
     <ClCompile Include="Engine\System\DirectX\DxObject\DxSwapChain.cpp" />
     <ClCompile Include="Engine\System\DirectX\DxObject\DxCommandContext.cpp" />
     <ClCompile Include="Engine\System\DirectX\DxObject\DxDepthStencil.cpp" />
-    <ClCompile Include="Engine\System\Window\GameWindowCollection.cpp" />
-    <ClCompile Include="Engine\System\DirectX\DirectXContext.cpp" />
     <ClCompile Include="Engine\System\WinApp\WinApp.cpp" />
     <ClCompile Include="Engine\System\Runtime\Input\Input.cpp" />
     <ClCompile Include="Engine\System\DirectX\DxObject\DxDimensionBuffer.cpp" />
@@ -172,11 +168,12 @@
     <ClCompile Include="Engine\Component\Components\Volumetric\VolumetricFogComponent.cpp" />
     <ClCompile Include="Engine\Adapter\Actor\EmissiveActor.cpp" />
     <ClCompile Include="Demo\Object\PivotCamera.cpp" />
+    <ClCompile Include="Engine\System\DirectX\Context\DirectXQueueContext.cpp" />
+    <ClCompile Include="Engine\System\DirectX\Context\DirectXWindowContext.cpp" />
+    <ClCompile Include="Engine\System\Window\WindowCollection.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Engine\System\Window\Window.h" />
     <ClInclude Include="Lib\Adapter\Random\Random.h" />
-    <ClInclude Include="Engine\System\Window\GameWindow.h" />
     <ClInclude Include="Engine\System\DirectX\DxObject\DxObjectCommon.h" />
     <ClInclude Include="Engine\System\Utility\Logger.h" />
     <ClInclude Include="Engine\System\Utility\ComPtr.h" />
@@ -191,8 +188,6 @@
     <ClInclude Include="Engine\System\DirectX\DxObject\DxDepthStencil.h" />
     <ClInclude Include="Lib\CXXAttributeConfig.h" />
     <ClInclude Include="Lib\Environment.h" />
-    <ClInclude Include="Engine\System\Window\GameWindowCollection.h" />
-    <ClInclude Include="Engine\System\DirectX\DirectXContext.h" />
     <ClInclude Include="Engine\System\WinApp\WinApp.h" />
     <ClInclude Include="Engine\System\Runtime\Input\Input.h" />
     <ClInclude Include="Engine\System\Runtime\Input\InputId.h" />
@@ -369,6 +364,9 @@
     <ClInclude Include="Engine\Component\Components\Volumetric\VolumetricFogComponent.h" />
     <ClInclude Include="Engine\Adapter\Actor\EmissiveActor.h" />
     <ClInclude Include="Demo\Object\PivotCamera.h" />
+    <ClInclude Include="Engine\System\DirectX\Context\DirectXQueueContext.h" />
+    <ClInclude Include="Engine\System\DirectX\Context\DirectXWindowContext.h" />
+    <ClInclude Include="Engine\System\Window\WindowCollection.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

@@ -23,7 +23,7 @@ public:
 
 	//* async task option *//
 
-	void Load(const DirectXThreadContext* context) override;
+	void Load(const DirectXQueueContext* context) override;
 
 	AsyncExecution GetAsyncExecution() const override { return AsyncExecution::Compute; }
 	//!< compute queueで実行

@@ -17,57 +17,6 @@
 #include <memory>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// DirectXThreadContext class
-////////////////////////////////////////////////////////////////////////////////////////////
-class DirectXThreadContext {
-public:
-
-	//=========================================================================================
-	// public methods
-	//=========================================================================================
-
-	DirectXThreadContext()  = default;
-	~DirectXThreadContext() { Term(); }
-
-	void Init(uint32_t allocatorCount, D3D12_COMMAND_LIST_TYPE type = D3D12_COMMAND_LIST_TYPE_DIRECT);
-
-	void Term();
-
-	//* command context option *//
-
-	void TransitionAllocator() const;
-
-	void ExecuteAllAllocators() const;
-
-	ID3D12GraphicsCommandList6* GetCommandList() const;
-
-	ID3D12CommandQueue* GetCommandQueue() const;
-
-	DxObject::CommandContext* GetDxCommand() const { return command_.get(); }
-
-private:
-
-	//=========================================================================================
-	// private variables
-	//=========================================================================================
-
-	//* DXOBJECT *//
-
-	std::unique_ptr<DxObject::CommandContext> command_;
-
-	//* parameter *//
-
-	D3D12_COMMAND_LIST_TYPE type_ = D3D12_COMMAND_LIST_TYPE_NONE;
-
-	//=========================================================================================
-	// private methods
-	//=========================================================================================
-
-	void SetDescriptorHeap() const;
-
-};
-
-////////////////////////////////////////////////////////////////////////////////////////////
 // DirectXWindowContext class
 ////////////////////////////////////////////////////////////////////////////////////////////
 class DirectXWindowContext {
@@ -97,7 +46,7 @@ public:
 private:
 
 	//=========================================================================================
-	// public methods
+	// private variables
 	//=========================================================================================
 
 	//* extrenal *//
@@ -114,5 +63,20 @@ private:
 	Color4f clearColor_ = {};
 
 	bool isClearWindow_ = false;
+
+	DXGI_COLOR_SPACE_TYPE colorSpace_ = DXGI_COLOR_SPACE_RGB_FULL_G22_NONE_P709;
+	float minLuminance_ = 0.0f;
+	float maxLuminance_ = 0.0f;
+
+	//=========================================================================================
+	// private methods
+	//=========================================================================================
+
+	void CheckSupportHDR(const HWND& hwnd);
+
+	static int32_t ComputeIntersectionArea(
+		const Vector2i& leftTopA, const Vector2i& rightBottomA,
+		const Vector2i& leftTopB, const Vector2i& rightBottomB
+	);
 
 };

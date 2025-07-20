@@ -16,7 +16,7 @@ _DXOBJECT_USING
 // BaseDebugPrimitive class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-void BaseDebugPrimitive::Draw(const DirectXThreadContext* context, const CameraComponent* camera) {
+void BaseDebugPrimitive::Draw(const DirectXQueueContext* context, const CameraComponent* camera) {
 	// commandListの取得
 	auto commandList = context->GetCommandList();
 
@@ -81,7 +81,7 @@ void DebugPrimitive::Init() {
 void DebugPrimitive::Term() {
 }
 
-void DebugPrimitive::DrawToScene(const DirectXThreadContext* context, const CameraComponent* camera) {
+void DebugPrimitive::DrawToScene(const DirectXQueueContext* context, const CameraComponent* camera) {
 
 	{
 		pipelines_[PipelineType::kLine]->SetPipeline(context->GetDxCommand());

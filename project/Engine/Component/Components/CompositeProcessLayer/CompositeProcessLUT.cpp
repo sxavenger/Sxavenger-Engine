@@ -20,7 +20,7 @@ void CompositeProcessLUT::Init() {
 	
 }
 
-void CompositeProcessLUT::Process(const DirectXThreadContext* context, FRenderTargetTextures* textures) {
+void CompositeProcessLUT::Process(const DirectXQueueContext* context, FRenderTargetTextures* textures) {
 	if (texture_ == nullptr) {
 		return;
 	}
@@ -48,7 +48,7 @@ void CompositeProcessLUT::ShowInspectorImGui() {
 	ImGui::DragFloat("intensity", &parameter_->At(0).intensity, 0.01f, 0.0f, 1.0f);
 }
 
-void CompositeProcessLUT::CreateTexture(const DirectXThreadContext* context, const AssetObserver<AssetTexture>& texture, const Vector2ui& tile) {
+void CompositeProcessLUT::CreateTexture(const DirectXQueueContext* context, const AssetObserver<AssetTexture>& texture, const Vector2ui& tile) {
 	texture_ = std::make_unique<FLUTTexture>();
 	texture_->Create(texture, tile);
 	texture_->Dispatch(context);

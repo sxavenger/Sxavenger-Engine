@@ -14,7 +14,7 @@
 // FCanvasRenderer class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-void FCanvasRenderer::Render(const DirectXThreadContext* context) {
+void FCanvasRenderer::Render(const DirectXQueueContext* context) {
 	if (!CheckRender()) {
 		return;
 	}
@@ -34,7 +34,7 @@ bool FCanvasRenderer::CheckRender() const {
 	return true;
 }
 
-void FCanvasRenderer::RenderSpriteComponents(const DirectXThreadContext* context) {
+void FCanvasRenderer::RenderSpriteComponents(const DirectXQueueContext* context) {
 
 	FRenderCore::GetInstance()->GetLayer()->SetPipeline(
 		FRenderCoreLayer::PipelineType::Sprite, context, textures_->GetSize()

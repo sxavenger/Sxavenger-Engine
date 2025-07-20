@@ -84,14 +84,14 @@ void RenderSceneEditor::Render() {
 		return;
 	}
 	
-	renderer_->Render(SxavengerSystem::GetMainThreadContext(), config_);
+	renderer_->Render(SxavengerSystem::GetDirectQueueContext(), config_);
 
 	//* Debug Render *//
-	textures_->BeginTransparentBasePass(SxavengerSystem::GetMainThreadContext());
+	textures_->BeginTransparentBasePass(SxavengerSystem::GetDirectQueueContext());
 
 	// todo: draw lines, etc...
 	if (isRenderCollider_) {
-		colliderRenderer_->Render(SxavengerSystem::GetMainThreadContext(), camera_->GetComponent<CameraComponent>());
+		colliderRenderer_->Render(SxavengerSystem::GetDirectQueueContext(), camera_->GetComponent<CameraComponent>());
 	}
 
 	if (isMoveCamera_) {
@@ -99,9 +99,9 @@ void RenderSceneEditor::Render() {
 	}
 
 	CameraComponent* camera = camera_->GetComponent<CameraComponent>();
-	SxavengerContent::GetDebugPrimitive()->DrawToScene(SxavengerSystem::GetMainThreadContext(), camera);
+	SxavengerContent::GetDebugPrimitive()->DrawToScene(SxavengerSystem::GetDirectQueueContext(), camera);
 
-	textures_->EndTransparentBasePass(SxavengerSystem::GetMainThreadContext());
+	textures_->EndTransparentBasePass(SxavengerSystem::GetDirectQueueContext());
 }
 
 void RenderSceneEditor::Manipulate(MonoBehaviour* behaviour) {
@@ -310,7 +310,7 @@ void RenderSceneEditor::ShowSceneMenu() {
 
 		if (ImGui::RadioButton("pathtracing(preview)", config_.technique == FSceneRenderer::GraphicsTechnique::Pathtracing)) {
 			config_.technique = FSceneRenderer::GraphicsTechnique::Pathtracing;
-			renderer_->ResetReserviour(SxavengerSystem::GetMainThreadContext());
+			renderer_->ResetReserviour(SxavengerSystem::GetDirectQueueContext());
 		}
 
 		// technique option
@@ -325,7 +325,7 @@ void RenderSceneEditor::ShowSceneMenu() {
 			case FSceneRenderer::GraphicsTechnique::Pathtracing:
 
 				if (ImGui::Button("reset reservoir")) {
-					renderer_->ResetReserviour(SxavengerSystem::GetMainThreadContext());
+					renderer_->ResetReserviour(SxavengerSystem::GetDirectQueueContext());
 				}
 				
 				break;
@@ -384,11 +384,11 @@ void RenderSceneEditor::ShowCaptureMenu() {
 		ImGui::SeparatorText("capture");
 
 		if (ImGui::Button("scene window capture")) {
-			textures_->CaptureGBuffer(FRenderTargetTextures::GBufferLayout::Main, SxavengerSystem::GetMainThreadContext(), "capture_scene.png");
+			textures_->CaptureGBuffer(FRenderTargetTextures::GBufferLayout::Main, SxavengerSystem::GetDirectQueueContext(), "capture_scene.png");
 		}
 
 		if (ImGui::Button("game window capture")) {
-			FMainRender::GetInstance()->GetTextures()->CaptureGBuffer(FRenderTargetTextures::GBufferLayout::Main, SxavengerSystem::GetMainThreadContext(), "capture_game.png");
+			FMainRender::GetInstance()->GetTextures()->CaptureGBuffer(FRenderTargetTextures::GBufferLayout::Main, SxavengerSystem::GetDirectQueueContext(), "capture_game.png");
 		}
 
 		ImGui::EndMenu();

@@ -38,7 +38,7 @@ void PostProcessBloom::Init() {
 	name_ = "Bloom";
 }
 
-void PostProcessBloom::Process(const DirectXThreadContext* context, FRenderTargetTextures* textures, const CameraComponent* camera) {
+void PostProcessBloom::Process(const DirectXQueueContext* context, FRenderTargetTextures* textures, const CameraComponent* camera) {
 	auto process = textures->GetProcessTextures();
 	process->NextProcess(context);
 

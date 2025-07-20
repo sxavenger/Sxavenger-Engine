@@ -4,7 +4,7 @@
 // Asset Animator class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-void AssetAnimator::Load(_MAYBE_UNUSED const DirectXThreadContext* context) {
+void AssetAnimator::Load(_MAYBE_UNUSED const DirectXQueueContext* context) {
 
 	uint32_t option = 0;
 

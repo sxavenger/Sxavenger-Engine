@@ -10,7 +10,7 @@
 #include <Engine/System/DirectX/DxObject/DxDimensionBuffer.h>
 #include <Engine/System/DirectX/DxObject/DxBindBuffer.h>
 #include <Engine/System/DirectX/DxrObject/DxrAccelerationStructure.h>
-#include <Engine/System/DirectX/DirectXContext.h>
+#include <Engine/System/DirectX/Context/DirectXQueueContext.h>
 
 //* lib
 #include <Lib/Traits.h>
@@ -82,7 +82,7 @@ public:
 
 		void CreateMeshlet(const TriangleInputAssembler<MeshVertexData>* ia);
 
-		void Dispatch(const DirectXThreadContext* context, UINT instanceCount = 1) const;
+		void Dispatch(const DirectXQueueContext* context, UINT instanceCount = 1) const;
 
 		//=========================================================================================
 		// public variables
@@ -116,7 +116,7 @@ public:
 		// public methods
 		//=========================================================================================
 
-		void CreateBottomLevelAS(const TriangleInputAssembler<MeshVertexData>* ia, const DirectXThreadContext* context);
+		void CreateBottomLevelAS(const TriangleInputAssembler<MeshVertexData>* ia, const DirectXQueueContext* context);
 
 		//=========================================================================================
 		// public variables
@@ -137,7 +137,7 @@ public:
 
 	void CreateMeshlet();
 
-	void CreateBottomLevelAS(const DirectXThreadContext* context);
+	void CreateBottomLevelAS(const DirectXQueueContext* context);
 
 	//* getter *//
 

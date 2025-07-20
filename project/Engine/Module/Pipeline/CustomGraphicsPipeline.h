@@ -5,7 +5,7 @@
 //-----------------------------------------------------------------------------------------
 //* engine
 #include <Engine/System/DirectX/DxObject/DxGraphicsPipelineState.h>
-#include <Engine/System/DirectX/DirectXContext.h>
+#include <Engine/System/DirectX/Context/DirectXQueueContext.h>
 
 //* engine
 #include <Engine/Asset/Observer/AssetObserver.h>
@@ -35,8 +35,8 @@ public:
 
 	virtual void RegisterBlob() = 0;
 
-	virtual void ReloadAndSetPipeline(const DirectXThreadContext* context, const D3D12_VIEWPORT& viewport, const D3D12_RECT& rect) = 0;
-	virtual void ReloadAndSetPipeline(const DirectXThreadContext* context, const Vector2ui& windowSize = kMainWindowSize) = 0;
+	virtual void ReloadAndSetPipeline(const DirectXQueueContext* context, const D3D12_VIEWPORT& viewport, const D3D12_RECT& rect) = 0;
+	virtual void ReloadAndSetPipeline(const DirectXQueueContext* context, const Vector2ui& windowSize = kMainWindowSize) = 0;
 
 protected:
 
@@ -72,8 +72,8 @@ public:
 
 	void RegisterBlob() override;
 
-	void ReloadAndSetPipeline(const DirectXThreadContext* context, const D3D12_VIEWPORT& viewport, const D3D12_RECT& rect) override;
-	void ReloadAndSetPipeline(const DirectXThreadContext* context, const Vector2ui& windowSize = kMainWindowSize) override;
+	void ReloadAndSetPipeline(const DirectXQueueContext* context, const D3D12_VIEWPORT& viewport, const D3D12_RECT& rect) override;
+	void ReloadAndSetPipeline(const DirectXQueueContext* context, const Vector2ui& windowSize = kMainWindowSize) override;
 
 private:
 
@@ -101,8 +101,8 @@ public:
 
 	void RegisterBlob() override;
 
-	void ReloadAndSetPipeline(const DirectXThreadContext* context, const D3D12_VIEWPORT& viewport, const D3D12_RECT& rect) override;
-	void ReloadAndSetPipeline(const DirectXThreadContext* context, const Vector2ui& windowSize = kMainWindowSize) override;
+	void ReloadAndSetPipeline(const DirectXQueueContext* context, const D3D12_VIEWPORT& viewport, const D3D12_RECT& rect) override;
+	void ReloadAndSetPipeline(const DirectXQueueContext* context, const Vector2ui& windowSize = kMainWindowSize) override;
 
 private:
 

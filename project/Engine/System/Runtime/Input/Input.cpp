@@ -66,22 +66,23 @@ bool KeyboardInput::IsRelease(KeyId id) const {
 	return !keys_.first[static_cast<uint8_t>(id)] && keys_.second[static_cast<uint8_t>(id)];
 }
 
-void KeyboardInput::SetCooperativeLevel(const Window* window) {
+void KeyboardInput::SetCooperativeLevel(const DirectXWindowContext* window) {
+	if (window == nullptr) {
+		return;
+	}
 
-	if (window != nullptr) {
-		HWND hwnd = window->GetHwnd();
+	HWND hwnd = window->GetHwnd();
 
-		if (hwnd != currentHwnd_) {
-			//* 現在のhwndと違う場合, 再設定
-			// 排他制御レベルのセット
-			keyboardDevice_->SetCooperativeLevel(
-				hwnd,
-				flags_
-			);
-			//Exception::Assert(SUCCEEDED(hr)); // HACK:
+	if (hwnd != currentHwnd_) {
+		//* 現在のhwndと違う場合, 再設定
+		// 排他制御レベルのセット
+		keyboardDevice_->SetCooperativeLevel(
+			hwnd,
+			flags_
+		);
+		//Exception::Assert(SUCCEEDED(hr)); // HACK:
 
-			currentHwnd_ = hwnd;
-		}
+		currentHwnd_ = hwnd;
 	}
 }
 
@@ -138,7 +139,7 @@ Vector2i MouseInput::GetPosition() const {
 	return { point.x, point.y };
 }
 
-Vector2i MouseInput::GetPosition(const Window* window) const {
+Vector2i MouseInput::GetPosition(const DirectXWindowContext* window) const {
 	POINT point = {};
 	GetCursorPos(&point);
 
@@ -187,22 +188,23 @@ bool MouseInput::IsWheelDown() const {
 	return mouse_.first.lZ < 0;
 }
 
-void MouseInput::SetCooperativeLevel(const Window* window) {
+void MouseInput::SetCooperativeLevel(const DirectXWindowContext* window) {
+	if (window == nullptr) {
+		return;
+	}
 
-	if (window != nullptr) {
-		HWND hwnd = window->GetHwnd();
+	HWND hwnd = window->GetHwnd();
 
-		if (hwnd != currentHwnd_) {
-			//* 現在のhwndと違う場合, 再設定
-			// 排他制御レベルのセット
-			mouseDevice_->SetCooperativeLevel(
-				hwnd,
-				flags_
-			);
-			//Exception::Assert(SUCCEEDED(hr)); // HACK:
+	if (hwnd != currentHwnd_) {
+		//* 現在のhwndと違う場合, 再設定
+		// 排他制御レベルのセット
+		mouseDevice_->SetCooperativeLevel(
+			hwnd,
+			flags_
+		);
+		//Exception::Assert(SUCCEEDED(hr)); // HACK:
 
-			currentHwnd_ = hwnd;
-		}
+		currentHwnd_ = hwnd;
 	}
 }
 
@@ -304,10 +306,10 @@ Vector2f GamepadInput::GetStickNormalized(GamepadStickId id) const {
 // Input class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-void Input::Init(const Window* mainWindow) {
+void Input::Init(const DirectXWindowContext* mainWindow) {
 
 	auto hr = DirectInput8Create(
-		mainWindow->GetHInst(),
+		mainWindow->GetHinst(),
 		DIRECTINPUT_VERSION, IID_IDirectInput8,
 		(void**)&directInput_, nullptr
 	);

@@ -21,7 +21,7 @@ void FLUTTexture::Create(const AssetObserver<AssetTexture>& texture, const Vecto
 	CreateBuffer(texture_->GetTexture().GetSize(), tile);
 }
 
-void FLUTTexture::Dispatch(const DirectXThreadContext* context) {
+void FLUTTexture::Dispatch(const DirectXQueueContext* context) {
 
 	FRenderCore::GetInstance()->GetProcess()->SetPipeline(
 		FRenderCoreProcess::CompositeType::ConvertLUTTexture, context

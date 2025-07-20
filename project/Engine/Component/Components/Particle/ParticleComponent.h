@@ -196,7 +196,7 @@ public:
 
 	Element& Emit(const Vector3f& position);
 
-	void DrawParticle(const DirectXThreadContext* context, const CameraComponent* camera);
+	void DrawParticle(const DirectXQueueContext* context, const CameraComponent* camera);
 
 private:
 

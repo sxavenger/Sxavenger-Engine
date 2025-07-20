@@ -10,9 +10,9 @@
 #include <ImGuizmo.h>
 
 //* engine
-#include <Engine/System/Window/Window.h>
-#include <Engine/System/DirectX/DirectXContext.h>
+#include <Engine/System/DirectX/Context/DirectXWindowContext.h>
 #include <Engine/System/DirectX/DxObject/DxDescriptor.h>
+#include <Engine/System/DirectX/Context/DirectXQueueContext.h>
 
 //* lib
 #include <Lib/Geometry/Vector4.h>
@@ -34,7 +34,7 @@ public:
 	ImGuiController()  = default;
 	~ImGuiController() { Term(); }
 
-	void Init(Window* main);
+	void Init(DirectXWindowContext* main);
 
 	void Term();
 
@@ -42,7 +42,7 @@ public:
 
 	void EndFrame();
 
-	void Render(DirectXThreadContext* context);
+	void Render(DirectXQueueContext* context);
 
 	void OutputLayout();
 

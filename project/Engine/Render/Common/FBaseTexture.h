@@ -5,7 +5,7 @@
 //-----------------------------------------------------------------------------------------
 //* engine
 #include <Engine/System/DirectX/DxObject/DxDescriptor.h>
-#include <Engine/System/DirectX/DirectXContext.h>
+#include <Engine/System/DirectX/Context/DirectXQueueContext.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // FBaseTexture class
@@ -25,25 +25,25 @@ public:
 	//* transition *//
 
 	D3D12_RESOURCE_BARRIER TransitionBeginRenderTarget() const;
-	void TransitionBeginRenderTarget(const DirectXThreadContext* context) const;
+	void TransitionBeginRenderTarget(const DirectXQueueContext* context) const;
 
 	D3D12_RESOURCE_BARRIER TransitionEndRenderTarget() const;
-	void TransitionEndRenderTarget(const DirectXThreadContext* context) const;
+	void TransitionEndRenderTarget(const DirectXQueueContext* context) const;
 
-	void ClearRenderTarget(const DirectXThreadContext* context) const;
+	void ClearRenderTarget(const DirectXQueueContext* context) const;
 
 	D3D12_RESOURCE_BARRIER TransitionBeginUnordered() const;
-	void TransitionBeginUnordered(const DirectXThreadContext* context) const;
+	void TransitionBeginUnordered(const DirectXQueueContext* context) const;
 
 	D3D12_RESOURCE_BARRIER TransitionEndUnordered() const;
-	void TransitionEndUnordered(const DirectXThreadContext* context) const;
+	void TransitionEndUnordered(const DirectXQueueContext* context) const;
 
 	D3D12_RESOURCE_BARRIER TransitionBeginState(D3D12_RESOURCE_STATES state) const;
-	void TransitionBeginState(const DirectXThreadContext* context, D3D12_RESOURCE_STATES state) const;
+	void TransitionBeginState(const DirectXQueueContext* context, D3D12_RESOURCE_STATES state) const;
 
 
 	D3D12_RESOURCE_BARRIER TransitionEndState(D3D12_RESOURCE_STATES state) const;
-	void TransitionEndState(const DirectXThreadContext* context, D3D12_RESOURCE_STATES state) const;
+	void TransitionEndState(const DirectXQueueContext* context, D3D12_RESOURCE_STATES state) const;
 
 	//* getter *//
 

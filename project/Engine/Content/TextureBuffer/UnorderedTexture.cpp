@@ -89,7 +89,7 @@ void UnorderedTexture::Term() {
 	descriptorUAV_.Delete();
 }
 
-void UnorderedTexture::TransitionBeginUnordered(const DirectXThreadContext* context) {
+void UnorderedTexture::TransitionBeginUnordered(const DirectXQueueContext* context) {
 	D3D12_RESOURCE_BARRIER barrier = {};
 	barrier.Type                   = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
 	barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
@@ -99,7 +99,7 @@ void UnorderedTexture::TransitionBeginUnordered(const DirectXThreadContext* cont
 	context->GetCommandList()->ResourceBarrier(1, &barrier);
 }
 
-void UnorderedTexture::TransitionEndUnordered(const DirectXThreadContext* context) {
+void UnorderedTexture::TransitionEndUnordered(const DirectXQueueContext* context) {
 	D3D12_RESOURCE_BARRIER barrier = {};
 	barrier.Type                   = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
 	barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_UNORDERED_ACCESS;

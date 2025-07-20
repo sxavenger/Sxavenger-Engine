@@ -4,7 +4,7 @@
 // include
 //-----------------------------------------------------------------------------------------
 //* engine
-#include <Engine/System/DirectX/DirectXContext.h>
+#include <Engine/System/DirectX/Context/DirectXQueueContext.h>
 
 //* external
 #include <DirectXTex.h>
@@ -32,7 +32,7 @@ public:
 	//=========================================================================================
 
 	static void Export(
-		const DirectXThreadContext* context,
+		const DirectXQueueContext* context,
 		TextureDimension dimension, ID3D12Resource* texture, DXGI_FORMAT format,
 		const std::filesystem::path& filepath
 	);

@@ -38,7 +38,7 @@ void FSkyAtmosphere::AtmosphereMap::Create(const Vector2ui& _size) {
 	CreateDimensionBuffer();
 }
 
-void FSkyAtmosphere::AtmosphereMap::Dispatch(const DirectXThreadContext* context) {
+void FSkyAtmosphere::AtmosphereMap::Dispatch(const DirectXQueueContext* context) {
 
 	pipeline->SetPipeline(context->GetDxCommand());
 
@@ -56,7 +56,7 @@ void FSkyAtmosphere::AtmosphereMap::Dispatch(const DirectXThreadContext* context
 
 }
 
-void FSkyAtmosphere::AtmosphereMap::Commit(const DirectXThreadContext* context) {
+void FSkyAtmosphere::AtmosphereMap::Commit(const DirectXQueueContext* context) {
 	// async resourceの状態を変更
 	asyncResource.TransitionToExpectedState(
 		context->GetDxCommand(),
@@ -75,7 +75,7 @@ void FSkyAtmosphere::AtmosphereMap::Commit(const DirectXThreadContext* context) 
 	);
 }
 
-const DxObject::Descriptor& FSkyAtmosphere::AtmosphereMap::UseDescriptorSRV(const DirectXThreadContext* context) {
+const DxObject::Descriptor& FSkyAtmosphere::AtmosphereMap::UseDescriptorSRV(const DirectXQueueContext* context) {
 	// SRVを使える状態に遷移
 	mainResource.TransitionToExpectedState(
 		context->GetDxCommand(),
@@ -233,7 +233,7 @@ void FSkyAtmosphere::Create(const Vector2ui& size) {
 	task_->SetTag("atmosphere and prefilterd map");
 }
 
-void FSkyAtmosphere::Update(const DirectXThreadContext* context) {
+void FSkyAtmosphere::Update(const DirectXQueueContext* context) {
 	if (!task_->IsCompleted()) {
 		return;
 	}
@@ -248,7 +248,7 @@ void FSkyAtmosphere::Update(const DirectXThreadContext* context) {
 	SxavengerSystem::PushTask(AsyncExecution::Compute, task_);
 }
 
-void FSkyAtmosphere::Task(const DirectXThreadContext* context) {
+void FSkyAtmosphere::Task(const DirectXQueueContext* context) {
 	atmosphere_.Dispatch(context);
 	context->TransitionAllocator();
 
@@ -260,7 +260,7 @@ void FSkyAtmosphere::SetImGuiCommand() {
 	atmosphere_.parameter_->At(0).SetImGuiCommand();
 }
 
-const DxObject::Descriptor& FSkyAtmosphere::UseAtmosphereDescriptor(const DirectXThreadContext* context) {
+const DxObject::Descriptor& FSkyAtmosphere::UseAtmosphereDescriptor(const DirectXQueueContext* context) {
 	return atmosphere_.UseDescriptorSRV(context);
 }
 

@@ -84,7 +84,7 @@ void FScene::Init() {
 	
 }
 
-void FScene::SetupTopLevelAS(const DirectXThreadContext* context) {
+void FScene::SetupTopLevelAS(const DirectXQueueContext* context) {
 	topLevelAS_.BeginSetupInstance();
 
 	sComponentStorage->ForEachActive<MeshRendererComponent>([&](MeshRendererComponent* component) {

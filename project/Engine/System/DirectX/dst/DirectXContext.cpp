@@ -8,53 +8,6 @@ _DXOBJECT_USING
 #include <Engine/System/SxavengerSystem.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// DirectXThreadContext class methods
-////////////////////////////////////////////////////////////////////////////////////////////
-
-void DirectXThreadContext::Init(uint32_t allocatorCount, D3D12_COMMAND_LIST_TYPE type) {
-
-	// 引数の保存
-	type_ = type;
-
-	command_ = std::make_unique<CommandContext>();
-	command_->Init(SxavengerSystem::GetDxDevice(), allocatorCount, type);
-	SetDescriptorHeap();
-}
-
-void DirectXThreadContext::Term() {
-}
-
-void DirectXThreadContext::TransitionAllocator() const {
-	command_->TransitionAllocator();
-	SetDescriptorHeap();
-}
-
-void DirectXThreadContext::ExecuteAllAllocators() const {
-	command_->ExecuteAllAllocators();
-	SetDescriptorHeap();
-}
-
-ID3D12GraphicsCommandList6* DirectXThreadContext::GetCommandList() const {
-	return command_->GetCommandList();
-}
-
-ID3D12CommandQueue* DirectXThreadContext::GetCommandQueue() const {
-	return command_->GetCommandQueue();
-}
-
-void DirectXThreadContext::SetDescriptorHeap() const {
-	if (type_ == D3D12_COMMAND_LIST_TYPE_COPY) {
-		return; //!< DirectX12では CopyコマンドリストはDescriptorHeapを変更できない
-	}
-
-	ID3D12DescriptorHeap* descriptorHeaps[] = {
-		SxavengerSystem::GetDxDescriptorHeaps()->GetDescriptorHeap(kDescriptor_CBV_SRV_UAV)
-	};
-
-	command_->GetCommandList()->SetDescriptorHeaps(_countof(descriptorHeaps), descriptorHeaps);
-}
-
-////////////////////////////////////////////////////////////////////////////////////////////
 // DirectXWindowContext class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -153,4 +106,76 @@ void DirectXWindowContext::Present(bool isTransitonAllocator) {
 	swapChain_->Present();
 
 	isClearWindow_ = false;
+}
+
+void DirectXWindowContext::CheckSupportHDR(const HWND& hwnd) {
+
+	if (swapChain_ == nullptr) {
+		Logger::WarningRuntime("[DirectXWindowContext] warning | window is not create.");
+		return; //!< windowが生成されていない.
+	}
+
+	RECT rect = {};
+	GetWindowRect(hwnd, &rect);
+
+	ComPtr<IDXGIOutput> output;
+	std::optional<int32_t> outputArea = std::nullopt;
+
+	// 各displayの確認
+	{
+		ComPtr<IDXGIOutput> current;
+
+		for (UINT i = 0;
+			SxavengerSystem::GetDxDevice()->GetAdapter()->EnumOutputs(i, &current) != DXGI_ERROR_NOT_FOUND;
+			++i) {
+
+			// displayの情報を取得
+			DXGI_OUTPUT_DESC desc = {};
+			auto hr = current->GetDesc(&desc);
+			Exception::Assert(SUCCEEDED(hr), "DXGI_OUTPUT_DESC GetDesc() failed.");
+
+			const Vector2i leftTop     = { desc.DesktopCoordinates.left, desc.DesktopCoordinates.top };
+			const Vector2i rightBottom = { desc.DesktopCoordinates.right, desc.DesktopCoordinates.bottom };
+
+			int32_t currentArea = ComputeIntersectionArea(
+				{ rect.left, rect.top }, { rect.right, rect.bottom },
+				leftTop, rightBottom
+			);
+
+			// displayの位置がウィンドウの位置と重なっているか確認
+			if (currentArea > outputArea.value_or(-1)) {
+				outputArea = currentArea;
+				output     = current;
+			}
+		}
+	}
+	
+	ComPtr<IDXGIOutput6> output6;
+	auto hr = output.As(&output6);
+	if (FAILED(hr)) {
+		Logger::WarningRuntime("[DirectXWindowContext] warning | IDXGIOutput6 is not supported.");
+		return; //!< HDRがサポートされていない
+	}
+
+	DXGI_OUTPUT_DESC1 desc = {};
+	hr = output6->GetDesc1(&desc);
+	if (FAILED(hr)) {
+		Logger::WarningRuntime("[DirectXWindowContext] warning | IDXGIOutput6 GetDesc1() failed.");
+		return; //!< HDRの情報を取得できなかった
+	}
+
+	// HDRのサポートを確認
+	colorSpace_   = desc.ColorSpace;
+	minLuminance_ = desc.MinLuminance;
+	maxLuminance_ = desc.MaxLuminance;
+
+}
+
+int32_t DirectXWindowContext::ComputeIntersectionArea(
+	const Vector2i& leftTopA, const Vector2i& rightBottomA,
+	const Vector2i& leftTopB, const Vector2i& rightBottomB) {
+
+	return std::max(0, std::min(rightBottomA.x, rightBottomB.x) - std::max(leftTopA.x, leftTopB.x))
+		* std::max(0, std::min(rightBottomA.y, rightBottomB.y) - std::max(leftTopA.y, leftTopB.y));
+	
 }

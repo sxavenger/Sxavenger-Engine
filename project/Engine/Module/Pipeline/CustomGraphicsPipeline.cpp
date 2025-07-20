@@ -56,12 +56,12 @@ void CustomGraphicsPipeline::RegisterBlob() {
 	}
 }
 
-void CustomGraphicsPipeline::ReloadAndSetPipeline(const DirectXThreadContext* context, const D3D12_VIEWPORT& viewport, const D3D12_RECT& rect) {
+void CustomGraphicsPipeline::ReloadAndSetPipeline(const DirectXQueueContext* context, const D3D12_VIEWPORT& viewport, const D3D12_RECT& rect) {
 	CheckAndReload();
 	GraphicsPipelineState::SetPipeline(context->GetDxCommand(), viewport, rect);
 }
 
-void CustomGraphicsPipeline::ReloadAndSetPipeline(const DirectXThreadContext* context, const Vector2ui& windowSize) {
+void CustomGraphicsPipeline::ReloadAndSetPipeline(const DirectXQueueContext* context, const Vector2ui& windowSize) {
 	CheckAndReload();
 	GraphicsPipelineState::SetPipeline(context->GetDxCommand(), windowSize);
 }
@@ -88,12 +88,12 @@ void CustomReflectionGraphicsPipeline::RegisterBlob() {
 	}
 }
 
-void CustomReflectionGraphicsPipeline::ReloadAndSetPipeline(const DirectXThreadContext* context, const D3D12_VIEWPORT& viewport, const D3D12_RECT& rect) {
+void CustomReflectionGraphicsPipeline::ReloadAndSetPipeline(const DirectXQueueContext* context, const D3D12_VIEWPORT& viewport, const D3D12_RECT& rect) {
 	CheckAndReload();
 	GraphicsPipelineState::SetPipeline(context->GetDxCommand(), viewport, rect);
 }
 
-void CustomReflectionGraphicsPipeline::ReloadAndSetPipeline(const DirectXThreadContext* context, const Vector2ui& windowSize) {
+void CustomReflectionGraphicsPipeline::ReloadAndSetPipeline(const DirectXQueueContext* context, const Vector2ui& windowSize) {
 	CheckAndReload();
 	GraphicsPipelineState::SetPipeline(context->GetDxCommand(), windowSize);
 }

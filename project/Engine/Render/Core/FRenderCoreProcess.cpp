@@ -48,23 +48,23 @@ void FRenderCoreProcess::Init() {
 
 }
 
-void FRenderCoreProcess::SetPipeline(ProcessType type, const DirectXThreadContext* context) {
+void FRenderCoreProcess::SetPipeline(ProcessType type, const DirectXQueueContext* context) {
 	processes_[static_cast<uint32_t>(type)]->SetPipeline(context->GetDxCommand());
 }
 
-void FRenderCoreProcess::BindComputeBuffer(ProcessType type, const DirectXThreadContext* context, const DxObject::BindBufferDesc& desc) {
+void FRenderCoreProcess::BindComputeBuffer(ProcessType type, const DirectXQueueContext* context, const DxObject::BindBufferDesc& desc) {
 	processes_[static_cast<uint32_t>(type)]->BindComputeBuffer(context->GetDxCommand(), desc);
 }
 
-void FRenderCoreProcess::SetPipeline(CompositeType type, const DirectXThreadContext* context) {
+void FRenderCoreProcess::SetPipeline(CompositeType type, const DirectXQueueContext* context) {
 	composites_[static_cast<uint32_t>(type)]->SetPipeline(context->GetDxCommand());
 }
 
-void FRenderCoreProcess::BindComputeBuffer(CompositeType type, const DirectXThreadContext* context, const DxObject::BindBufferDesc& desc) {
+void FRenderCoreProcess::BindComputeBuffer(CompositeType type, const DirectXQueueContext* context, const DxObject::BindBufferDesc& desc) {
 	composites_[static_cast<uint32_t>(type)]->BindComputeBuffer(context->GetDxCommand(), desc);
 }
 
-void FRenderCoreProcess::Dispatch(const DirectXThreadContext* context, const Vector2ui& size) const {
+void FRenderCoreProcess::Dispatch(const DirectXQueueContext* context, const Vector2ui& size) const {
 	context->GetCommandList()->Dispatch(DxObject::RoundUp(size.x, kNumThreadSize_.x), DxObject::RoundUp(size.y, kNumThreadSize_.y), 1);
 }
 

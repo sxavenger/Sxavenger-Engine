@@ -5,7 +5,7 @@
 //-----------------------------------------------------------------------------------------
 //* engine
 #include <Engine/System/DirectX/DxObject/DxComputePipelineState.h>
-#include <Engine/System/DirectX/DirectXContext.h>
+#include <Engine/System/DirectX/Context/DirectXQueueContext.h>
 
 //* c++
 #include <memory>
@@ -27,9 +27,9 @@ public:
 
 	void Term();
 
-	void SetPipeline(const DirectXThreadContext* context);
+	void SetPipeline(const DirectXQueueContext* context);
 
-	void Dispatch(const DirectXThreadContext* context, const DxObject::BindBufferDesc& desc, uint32_t vertexSize);
+	void Dispatch(const DirectXQueueContext* context, const DxObject::BindBufferDesc& desc, uint32_t vertexSize);
 
 private:
 

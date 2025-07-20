@@ -13,7 +13,7 @@
 // AssetTexture class methods
 //////////////////////////////////////////////////////////////////////////////////////////////
 
-void AssetTexture::Load(const DirectXThreadContext* context) {
+void AssetTexture::Load(const DirectXQueueContext* context) {
 
 	Texture::Option option = {}; //!< default option
 

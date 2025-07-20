@@ -14,7 +14,7 @@
 // FSceneRenderer class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-void FSceneRenderer::Render(const DirectXThreadContext* context, const Config& config) {
+void FSceneRenderer::Render(const DirectXQueueContext* context, const Config& config) {
 
 	//* configの確認
 	Config conf = config;
@@ -50,7 +50,7 @@ void FSceneRenderer::Render(const DirectXThreadContext* context, const Config& c
 	context->TransitionAllocator();
 }
 
-void FSceneRenderer::ResetReserviour(const DirectXThreadContext* context) {
+void FSceneRenderer::ResetReserviour(const DirectXQueueContext* context) {
 	if (reservoir_ != nullptr) {
 		reservoir_->At(0).ResetFrame(); //!< reservoirのリセット
 	}
@@ -105,7 +105,7 @@ Sxl::Flag<FSceneRenderer::Status> FSceneRenderer::CheckStatus(const Config& conf
 	return status;
 }
 
-void FSceneRenderer::RenderGeometryPass(const DirectXThreadContext* context, const Config& config) {
+void FSceneRenderer::RenderGeometryPass(const DirectXQueueContext* context, const Config& config) {
 	textures_->BeginGeometryPass(context);
 
 	RenderGeometryStaticMeshDefault(context, config);
@@ -114,7 +114,7 @@ void FSceneRenderer::RenderGeometryPass(const DirectXThreadContext* context, con
 	textures_->EndGeometryPass(context);
 }
 
-void FSceneRenderer::RenderGeometryStaticMeshDefault(const DirectXThreadContext* context, const Config& config) {
+void FSceneRenderer::RenderGeometryStaticMeshDefault(const DirectXQueueContext* context, const Config& config) {
 
 	auto core = FRenderCore::GetInstance()->GetGeometry();
 
@@ -149,7 +149,7 @@ void FSceneRenderer::RenderGeometryStaticMeshDefault(const DirectXThreadContext*
 	//context->TransitionAllocator();
 }
 
-void FSceneRenderer::RenderGeometrySkinnedMesh(const DirectXThreadContext* context, const Config& config) {
+void FSceneRenderer::RenderGeometrySkinnedMesh(const DirectXQueueContext* context, const Config& config) {
 
 	auto core = FRenderCore::GetInstance()->GetGeometry();
 
@@ -180,7 +180,7 @@ void FSceneRenderer::RenderGeometrySkinnedMesh(const DirectXThreadContext* conte
 	});
 }
 
-void FSceneRenderer::LightingPass(const DirectXThreadContext* context, const Config& config) {
+void FSceneRenderer::LightingPass(const DirectXQueueContext* context, const Config& config) {
 
 	textures_->BeginLightingPass(context);
 
@@ -203,7 +203,7 @@ void FSceneRenderer::LightingPass(const DirectXThreadContext* context, const Con
 
 }
 
-void FSceneRenderer::LightingEmpty(const DirectXThreadContext* context, const Config& config) {
+void FSceneRenderer::LightingEmpty(const DirectXQueueContext* context, const Config& config) {
 	FRenderCoreLight::LightType emptyType = FRenderCoreLight::LightType::Empty;
 
 	FRenderCore::GetInstance()->GetLight()->SetPipeline(
@@ -229,7 +229,7 @@ void FSceneRenderer::LightingEmpty(const DirectXThreadContext* context, const Co
 	FRenderCore::GetInstance()->GetLight()->DrawCall(context);
 }
 
-void FSceneRenderer::LightingPassDirectionalLight(const DirectXThreadContext* context, const Config& config) {
+void FSceneRenderer::LightingPassDirectionalLight(const DirectXQueueContext* context, const Config& config) {
 
 	uint32_t count = config.scene->directionalLightCount_->At(0);
 
@@ -265,7 +265,7 @@ void FSceneRenderer::LightingPassDirectionalLight(const DirectXThreadContext* co
 	FRenderCore::GetInstance()->GetLight()->DrawCall(context, count);
 }
 
-void FSceneRenderer::LightingPassPointLight(const DirectXThreadContext* context, const Config& config) {
+void FSceneRenderer::LightingPassPointLight(const DirectXQueueContext* context, const Config& config) {
 
 	uint32_t count = config.scene->pointLightCount_->At(0);
 
@@ -302,7 +302,7 @@ void FSceneRenderer::LightingPassPointLight(const DirectXThreadContext* context,
 
 }
 
-void FSceneRenderer::LightingPassRectLight(const DirectXThreadContext* context, const Config& config) {
+void FSceneRenderer::LightingPassRectLight(const DirectXQueueContext* context, const Config& config) {
 
 	FRenderCore::GetInstance()->GetLight()->SetPipeline(
 		FRenderCoreLight::LightType::Rect, context, textures_->GetSize()
@@ -336,7 +336,7 @@ void FSceneRenderer::LightingPassRectLight(const DirectXThreadContext* context, 
 
 }
 
-void FSceneRenderer::LightingPassSkyLight(const DirectXThreadContext* context, const Config& config) {
+void FSceneRenderer::LightingPassSkyLight(const DirectXQueueContext* context, const Config& config) {
 
 	FRenderCore::GetInstance()->GetLight()->SetPipeline(
 		FRenderCoreLight::LightType::SkyLight, context, textures_->GetSize()
@@ -372,11 +372,11 @@ void FSceneRenderer::LightingPassSkyLight(const DirectXThreadContext* context, c
 	});
 }
 
-void FSceneRenderer::AmbientProcessPass(const DirectXThreadContext* context, const Config& config) {
+void FSceneRenderer::AmbientProcessPass(const DirectXQueueContext* context, const Config& config) {
 	AmbientProcessPassSkyBox(context, config);
 }
 
-void FSceneRenderer::AmbientProcessPassSkyBox(const DirectXThreadContext* context, const Config& config) {
+void FSceneRenderer::AmbientProcessPassSkyBox(const DirectXQueueContext* context, const Config& config) {
 	// 関数名を変更するかも
 
 	textures_->GetGBuffer(FRenderTargetTextures::GBufferLayout::Main)->TransitionBeginUnordered(context);
@@ -415,7 +415,7 @@ void FSceneRenderer::AmbientProcessPassSkyBox(const DirectXThreadContext* contex
 	textures_->GetGBuffer(FRenderTargetTextures::GBufferLayout::Main)->TransitionEndUnordered(context);
 }
 
-void FSceneRenderer::RenderTransparentBasePass(const DirectXThreadContext* context, const Config& config) {
+void FSceneRenderer::RenderTransparentBasePass(const DirectXQueueContext* context, const Config& config) {
 
 	textures_->BeginTransparentBasePass(context);
 
@@ -425,7 +425,7 @@ void FSceneRenderer::RenderTransparentBasePass(const DirectXThreadContext* conte
 	textures_->EndTransparentBasePass(context);
 }
 
-void FSceneRenderer::RenderTransparentBaseStaticMesh(const DirectXThreadContext* context, const Config& config) {
+void FSceneRenderer::RenderTransparentBaseStaticMesh(const DirectXQueueContext* context, const Config& config) {
 
 	auto core = FRenderCore::GetInstance()->GetGeometry();
 
@@ -463,7 +463,7 @@ void FSceneRenderer::RenderTransparentBaseStaticMesh(const DirectXThreadContext*
 	});
 }
 
-void FSceneRenderer::RenderTransparentParticle(const DirectXThreadContext* context, const Config& config) {
+void FSceneRenderer::RenderTransparentParticle(const DirectXQueueContext* context, const Config& config) {
 
 	// componentを取得
 	sComponentStorage->ForEachActive<ParticleComponent>([&](ParticleComponent* component) {
@@ -471,7 +471,7 @@ void FSceneRenderer::RenderTransparentParticle(const DirectXThreadContext* conte
 	});
 }
 
-void FSceneRenderer::PostProcessPass(const DirectXThreadContext* context, const Config& config) {
+void FSceneRenderer::PostProcessPass(const DirectXQueueContext* context, const Config& config) {
 	if (!config.isEnablePostProcess) {
 		return;
 	}
@@ -491,7 +491,7 @@ void FSceneRenderer::PostProcessPass(const DirectXThreadContext* context, const 
 	textures_->EndPostProcess(context);
 }
 
-void FSceneRenderer::CompositeProcessPass(const DirectXThreadContext* context, const Config& config) {
+void FSceneRenderer::CompositeProcessPass(const DirectXQueueContext* context, const Config& config) {
 
 	if (!config.isEnableComposite) {
 		return;
@@ -518,7 +518,7 @@ void FSceneRenderer::CompositeProcessPass(const DirectXThreadContext* context, c
 
 }
 
-void FSceneRenderer::CompositeProcessPassTonemap(const DirectXThreadContext* context, const Config& config) {
+void FSceneRenderer::CompositeProcessPassTonemap(const DirectXQueueContext* context, const Config& config) {
 
 	config;
 
@@ -539,7 +539,7 @@ void FSceneRenderer::CompositeProcessPassTonemap(const DirectXThreadContext* con
 
 }
 
-void FSceneRenderer::RenderTechniqueDeferred(const DirectXThreadContext* context, const Config& config) {
+void FSceneRenderer::RenderTechniqueDeferred(const DirectXQueueContext* context, const Config& config) {
 
 	RenderGeometryPass(context, config);
 
@@ -554,7 +554,7 @@ void FSceneRenderer::RenderTechniqueDeferred(const DirectXThreadContext* context
 	CompositeProcessPass(context, config);
 }
 
-void FSceneRenderer::RenderTechniqueRaytracing(const DirectXThreadContext* context, const Config& config) {
+void FSceneRenderer::RenderTechniqueRaytracing(const DirectXQueueContext* context, const Config& config) {
 	// preview機能
 
 	textures_->BeginRaytracingPass(context);
@@ -579,7 +579,7 @@ void FSceneRenderer::RenderTechniqueRaytracing(const DirectXThreadContext* conte
 	textures_->EndRaytracingPass(context);
 }
 
-void FSceneRenderer::RenderTechniquePathtracing(const DirectXThreadContext* context, const Config& config) {
+void FSceneRenderer::RenderTechniquePathtracing(const DirectXQueueContext* context, const Config& config) {
 	// preview機能
 
 	if (reservoir_ == nullptr) {

@@ -24,12 +24,12 @@ void FPresenter::Init() {
 	desc.elements.clear();
 
 	desc.SetDepthStencil(false);
-	desc.SetRTVFormat(0, DxObject::kScreenFormat);
+	desc.SetRTVFormat(0, DxObject::kDefaultScreenViewFormat);
 
 	pipeline_->CreatePipeline(SxavengerSystem::GetDxDevice(), desc);
 }
 
-void FPresenter::Present(const DirectXThreadContext* context, const Vector2ui& windowSize, const D3D12_GPU_DESCRIPTOR_HANDLE& handle) {
+void FPresenter::Present(const DirectXQueueContext* context, const Vector2ui& windowSize, const D3D12_GPU_DESCRIPTOR_HANDLE& handle) {
 
 	auto command = context->GetDxCommand();
 

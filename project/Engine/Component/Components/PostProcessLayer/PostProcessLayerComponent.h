@@ -15,7 +15,7 @@
 #include "PostProcessDoF.h"
 
 //* engine
-#include <Engine/System/DirectX/DirectXContext.h>
+#include <Engine/System/DirectX/Context/DirectXQueueContext.h>
 
 //* c++
 #include <list>
@@ -60,7 +60,7 @@ public:
 
 	void ShowComponentInspector() override;
 
-	void Process(const DirectXThreadContext* context, FRenderTargetTextures* textures, const CameraComponent* camera);
+	void Process(const DirectXQueueContext* context, FRenderTargetTextures* textures, const CameraComponent* camera);
 
 	//* tag option *//
 

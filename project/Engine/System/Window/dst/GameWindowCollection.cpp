@@ -20,7 +20,7 @@ const std::weak_ptr<GameWindow> GameWindowCollection::CreateMainWindow(
 	const Vector2ui& clientSize, const LPCWSTR& name, const Color4f& clearColor) {
 
 	mainWindow_ = std::make_unique<GameWindow>();
-	mainWindow_->Create(clientSize, name, SxavengerSystem::GetMainThreadContext(), nullptr, clearColor);
+	mainWindow_->Create(clientSize, name, SxavengerSystem::GetDirectQueueContext(), nullptr, clearColor);
 	return GetMainWindow();
 }
 
@@ -30,7 +30,7 @@ const std::weak_ptr<GameWindow> GameWindowCollection::TryCreateSubWindow(
 	if (!subWindows_.Contains(name)) {
 		//!< containerにない場合, 生成
 		std::shared_ptr<GameWindow> window = std::make_shared<GameWindow>();
-		window->Create(clientSize, name, SxavengerSystem::GetMainThreadContext(), mainWindow_->GetHwnd(), clearColor);
+		window->Create(clientSize, name, SxavengerSystem::GetDirectQueueContext(), mainWindow_->GetHwnd(), clearColor);
 
 		// windowを登録
 		subWindows_.Emplace(name, std::move(window));

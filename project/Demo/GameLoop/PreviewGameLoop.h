@@ -5,7 +5,7 @@
 //-----------------------------------------------------------------------------------------
 //* engine
 #include <Engine/System/Runtime/GameLoop/GameLoop.h>
-#include <Engine/System/Window/GameWindow.h>
+#include <Engine/System/DirectX/Context/DirectXWindowContext.h>
 #include <Engine/System/SxavengerSystem.h>
 #include <Engine/Asset/SxavengerAsset.h>
 #include <Engine/Render/FRenderTargetTextures.h>
@@ -37,7 +37,7 @@ private:
 	// private variables
 	//=========================================================================================
 
-	std::shared_ptr<GameWindow> main_;
+	std::shared_ptr<DirectXWindowContext> main_;
 
 	//* preview *//
 

@@ -41,7 +41,7 @@ void PostProcessDoF::Init() {
 	name_ = "Depth of Field";
 }
 
-void PostProcessDoF::Process(const DirectXThreadContext* context, FRenderTargetTextures* textures, const CameraComponent* camera) {
+void PostProcessDoF::Process(const DirectXQueueContext* context, FRenderTargetTextures* textures, const CameraComponent* camera) {
 	auto process = textures->GetProcessTextures();
 	process->NextProcess(context);
 

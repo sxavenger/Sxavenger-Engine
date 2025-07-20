@@ -24,16 +24,16 @@ void FRenderCoreLight::Init() {
 	CreatePipeline();
 }
 
-void FRenderCoreLight::DrawCall(const DirectXThreadContext* context, UINT instanceCount) const {
+void FRenderCoreLight::DrawCall(const DirectXQueueContext* context, UINT instanceCount) const {
 	context->GetCommandList()->DrawInstanced(3, instanceCount, 0, 0);
 }
 
-void FRenderCoreLight::SetPipeline(LightType type, const DirectXThreadContext* context, const Vector2ui& size) {
+void FRenderCoreLight::SetPipeline(LightType type, const DirectXQueueContext* context, const Vector2ui& size) {
 	//pipelines_[type]->SetPipeline(context->GetDxCommand(), size);
 	pipelines_[type]->ReloadAndSetPipeline(context, size);
 }
 
-void FRenderCoreLight::BindGraphicsBuffer(LightType type, const DirectXThreadContext* context, const DxObject::BindBufferDesc& desc) {
+void FRenderCoreLight::BindGraphicsBuffer(LightType type, const DirectXQueueContext* context, const DxObject::BindBufferDesc& desc) {
 	pipelines_[type]->BindGraphicsBuffer(context->GetDxCommand(), desc);
 }
 

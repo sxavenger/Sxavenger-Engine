@@ -9,7 +9,7 @@
 #include <Engine/System/DirectX/DxObject/DxComputePipelineState.h>
 #include <Engine/System/DirectX/DxObject/DxResourceStateTracker.h>
 #include <Engine/System/DirectX/DxObject/DxDimensionBuffer.h>
-#include <Engine/System/DirectX/DirectXContext.h>
+#include <Engine/System/DirectX/Context/DirectXQueueContext.h>
 #include <Engine/System/Runtime/Thread/AsyncTask.h>
 
 //* lib
@@ -37,13 +37,13 @@ public:
 
 		void Create(const Vector2ui& size);
 
-		void Dispatch(const DirectXThreadContext* context, const D3D12_GPU_DESCRIPTOR_HANDLE& environment);
+		void Dispatch(const DirectXQueueContext* context, const D3D12_GPU_DESCRIPTOR_HANDLE& environment);
 
-		void Commit(const DirectXThreadContext* context);
+		void Commit(const DirectXQueueContext* context);
 
 		//* resource option *//
 
-		const DxObject::Descriptor& UseDescriptorSRV(const DirectXThreadContext* context);
+		const DxObject::Descriptor& UseDescriptorSRV(const DirectXQueueContext* context);
 
 	private:
 
@@ -99,13 +99,13 @@ public:
 
 		void Create(const Vector2ui& _size);
 
-		void Dispatch(const DirectXThreadContext* context, const D3D12_GPU_DESCRIPTOR_HANDLE& environment);
+		void Dispatch(const DirectXQueueContext* context, const D3D12_GPU_DESCRIPTOR_HANDLE& environment);
 
-		void Commit(const DirectXThreadContext* context);
+		void Commit(const DirectXQueueContext* context);
 
 		//* resource option *//
 
-		const DxObject::Descriptor& UseDescriptorSRV(const DirectXThreadContext* context);
+		const DxObject::Descriptor& UseDescriptorSRV(const DirectXQueueContext* context);
 
 		//=========================================================================================
 		// public variables
@@ -164,11 +164,11 @@ public:
 
 	void Term();
 
-	virtual void Update(const DirectXThreadContext* context);
+	virtual void Update(const DirectXQueueContext* context);
 
 	//* async option *//
 
-	virtual void Task(const DirectXThreadContext* context);
+	virtual void Task(const DirectXQueueContext* context);
 
 	void WaitComplate() const;
 
@@ -178,11 +178,11 @@ public:
 
 	//* map option *//
 
-	const DxObject::Descriptor& UseIrradianceDescriptor(const DirectXThreadContext* context);
+	const DxObject::Descriptor& UseIrradianceDescriptor(const DirectXQueueContext* context);
 
 	uint32_t GetRadianceMiplevels() const { return radiance_.kMiplevels; }
 
-	const DxObject::Descriptor& UseRadianceDescriptor(const DirectXThreadContext* context);
+	const DxObject::Descriptor& UseRadianceDescriptor(const DirectXQueueContext* context);
 
 	const std::optional<D3D12_GPU_DESCRIPTOR_HANDLE>& GetMapEnvironment() const { return mapEnvironment_; }
 

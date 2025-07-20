@@ -35,9 +35,9 @@ public:
 
 	//* skinning pipeline option *//
 
-	static void SetSkinningPipeline(const DirectXThreadContext* context);
+	static void SetSkinningPipeline(const DirectXQueueContext* context);
 
-	static void DispatchSkinning(const DirectXThreadContext* context, const DxObject::BindBufferDesc& desc, uint32_t vertexSize);
+	static void DispatchSkinning(const DirectXQueueContext* context, const DxObject::BindBufferDesc& desc, uint32_t vertexSize);
 
 	//* debug primitive option *//
 

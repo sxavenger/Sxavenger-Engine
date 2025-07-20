@@ -26,7 +26,7 @@ void CompositeProcessLayerComponent::ShowComponentInspector() {
 	}
 }
 
-void CompositeProcessLayerComponent::Process(const DirectXThreadContext* context, FRenderTargetTextures* textures) {
+void CompositeProcessLayerComponent::Process(const DirectXQueueContext* context, FRenderTargetTextures* textures) {
 	for (auto& process : processes_) {
 		if (process->IsEnabled()) {
 			process->Process(context, textures);

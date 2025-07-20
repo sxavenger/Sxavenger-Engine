@@ -1,5 +1,11 @@
 #include "FBaseTexture.h"
 
+//-----------------------------------------------------------------------------------------
+// include
+//-----------------------------------------------------------------------------------------
+//* lib
+#include <Lib/Geometry/Color4.h>
+
 ////////////////////////////////////////////////////////////////////////////////////////////
 // FBaseTexture class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -21,7 +27,7 @@ D3D12_RESOURCE_BARRIER FBaseTexture::TransitionBeginRenderTarget() const {
 	return barrier;
 }
 
-void FBaseTexture::TransitionBeginRenderTarget(const DirectXThreadContext* context) const {
+void FBaseTexture::TransitionBeginRenderTarget(const DirectXQueueContext* context) const {
 	D3D12_RESOURCE_BARRIER barrier = TransitionBeginRenderTarget();
 	context->GetCommandList()->ResourceBarrier(1, &barrier);
 }
@@ -37,12 +43,12 @@ D3D12_RESOURCE_BARRIER FBaseTexture::TransitionEndRenderTarget() const {
 	return barrier;
 }
 
-void FBaseTexture::TransitionEndRenderTarget(const DirectXThreadContext* context) const {
+void FBaseTexture::TransitionEndRenderTarget(const DirectXQueueContext* context) const {
 	D3D12_RESOURCE_BARRIER barrier = TransitionEndRenderTarget();
 	context->GetCommandList()->ResourceBarrier(1, &barrier);
 }
 
-void FBaseTexture::ClearRenderTarget(const DirectXThreadContext* context) const {
+void FBaseTexture::ClearRenderTarget(const DirectXQueueContext* context) const {
 	static constexpr Color4f clearColor = { 0.0f, 0.0f, 0.0f, 0.0f };
 
 	context->GetCommandList()->ClearRenderTargetView(
@@ -63,7 +69,7 @@ D3D12_RESOURCE_BARRIER FBaseTexture::TransitionBeginUnordered() const {
 	return barrier;
 }
 
-void FBaseTexture::TransitionBeginUnordered(const DirectXThreadContext* context) const {
+void FBaseTexture::TransitionBeginUnordered(const DirectXQueueContext* context) const {
 	D3D12_RESOURCE_BARRIER barrier = TransitionBeginUnordered();
 	context->GetCommandList()->ResourceBarrier(1, &barrier);
 }
@@ -78,7 +84,7 @@ D3D12_RESOURCE_BARRIER FBaseTexture::TransitionEndUnordered() const {
 	return barrier;
 }
 
-void FBaseTexture::TransitionEndUnordered(const DirectXThreadContext* context) const {
+void FBaseTexture::TransitionEndUnordered(const DirectXQueueContext* context) const {
 	D3D12_RESOURCE_BARRIER barrier = TransitionEndUnordered();
 	context->GetCommandList()->ResourceBarrier(1, &barrier);
 }
@@ -93,7 +99,7 @@ D3D12_RESOURCE_BARRIER FBaseTexture::TransitionBeginState(D3D12_RESOURCE_STATES 
 	return barrier;
 }
 
-void FBaseTexture::TransitionBeginState(const DirectXThreadContext* context, D3D12_RESOURCE_STATES state) const {
+void FBaseTexture::TransitionBeginState(const DirectXQueueContext* context, D3D12_RESOURCE_STATES state) const {
 	D3D12_RESOURCE_BARRIER barrier = TransitionBeginState(state);
 	context->GetCommandList()->ResourceBarrier(1, &barrier);
 }
@@ -108,7 +114,7 @@ D3D12_RESOURCE_BARRIER FBaseTexture::TransitionEndState(D3D12_RESOURCE_STATES st
 	return barrier;
 }
 
-void FBaseTexture::TransitionEndState(const DirectXThreadContext* context, D3D12_RESOURCE_STATES state) const {
+void FBaseTexture::TransitionEndState(const DirectXQueueContext* context, D3D12_RESOURCE_STATES state) const {
 	D3D12_RESOURCE_BARRIER barrier = TransitionEndState(state);
 	context->GetCommandList()->ResourceBarrier(1, &barrier);
 }

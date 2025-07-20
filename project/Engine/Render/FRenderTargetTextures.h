@@ -11,6 +11,9 @@
 //* engine
 #include <Engine/System/DirectX/DxObject/DxDimensionBuffer.h>
 
+//* c++
+#include <array>
+
 ////////////////////////////////////////////////////////////////////////////////////////////
 // FRenderTargetTextures class
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -54,45 +57,45 @@ public:
 
 	//* clear option *//
 
-	void ClearTextures(const DirectXThreadContext* context) const;
+	void ClearTextures(const DirectXQueueContext* context) const;
 
-	void ClearTexturesPathtracing(const DirectXThreadContext* context) const;
+	void ClearTexturesPathtracing(const DirectXQueueContext* context) const;
 
 	//* deferred option *//
 
-	void BeginGeometryPass(const DirectXThreadContext* context) const;
+	void BeginGeometryPass(const DirectXQueueContext* context) const;
 
-	void EndGeometryPass(const DirectXThreadContext* context) const;
+	void EndGeometryPass(const DirectXQueueContext* context) const;
 
-	void SetupGeometryPass(const DirectXThreadContext* context) const;
+	void SetupGeometryPass(const DirectXQueueContext* context) const;
 
-	void BeginLightingPass(const DirectXThreadContext* context) const;
+	void BeginLightingPass(const DirectXQueueContext* context) const;
 
-	void EndLightingPass(const DirectXThreadContext* context) const;
+	void EndLightingPass(const DirectXQueueContext* context) const;
 
-	void BeginTransparentBasePass(const DirectXThreadContext* context) const;
+	void BeginTransparentBasePass(const DirectXQueueContext* context) const;
 
-	void EndTransparentBasePass(const DirectXThreadContext* context) const;
+	void EndTransparentBasePass(const DirectXQueueContext* context) const;
 
-	void BeginCanvasPass(const DirectXThreadContext* context) const;
+	void BeginCanvasPass(const DirectXQueueContext* context) const;
 
-	void EndCanvasPass(const DirectXThreadContext* context) const;
+	void EndCanvasPass(const DirectXQueueContext* context) const;
 
 	//* raytracing option *//
 
-	void BeginRaytracingPass(const DirectXThreadContext* context) const;
+	void BeginRaytracingPass(const DirectXQueueContext* context) const;
 
-	void EndRaytracingPass(const DirectXThreadContext* context) const;
+	void EndRaytracingPass(const DirectXQueueContext* context) const;
 
 	//* process option *//
 
-	void BeginPostProcess(const DirectXThreadContext* context);
+	void BeginPostProcess(const DirectXQueueContext* context);
 
-	void EndPostProcess(const DirectXThreadContext* context);
+	void EndPostProcess(const DirectXQueueContext* context);
 
 	//* capture option *//
 
-	void CaptureGBuffer(GBufferLayout layout, const DirectXThreadContext* context, const std::filesystem::path& filepath) const;
+	void CaptureGBuffer(GBufferLayout layout, const DirectXQueueContext* context, const std::filesystem::path& filepath) const;
 
 	//* getter *//
 

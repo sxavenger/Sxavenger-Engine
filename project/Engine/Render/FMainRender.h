@@ -11,7 +11,7 @@
 #include <Engine/Render/Canvas/FCanvasRenderer.h>
 
 //* engine
-#include <Engine/System/DirectX/DirectXContext.h>
+#include <Engine/System/DirectX/Context/DirectXQueueContext.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // FMainRender class
@@ -32,9 +32,9 @@ public:
 
 	//* option *//
 
-	void Render(const DirectXThreadContext* context);
+	void Render(const DirectXQueueContext* context);
 
-	void PresentMain(const DirectXThreadContext* context);
+	void PresentMain(const DirectXQueueContext* context);
 
 	//* getter *//
 

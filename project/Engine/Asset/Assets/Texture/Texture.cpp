@@ -22,7 +22,9 @@ void Texture::Metadata::Assign(const DirectX::TexMetadata& metadata) {
 // Texture class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-void Texture::Load(const DirectXThreadContext* context, const std::filesystem::path& filepath, const Option& option) {
+void Texture::Load(const DirectXQueueContext* context, const std::filesystem::path& filepath, const Option& option) {
+	context->RequestQueue(DirectXQueueContext::RenderQueue::Compute); //!< ComputeQueue以上を使用
+	// FIXME: CopyQueueを使用するようにする
 
 	DirectX::ScratchImage image = LoadTexture(filepath, option);
 	const auto& metadata        = image.GetMetadata();

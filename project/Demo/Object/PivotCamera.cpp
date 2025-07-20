@@ -46,7 +46,7 @@ void PivotCamera::Awake() {
 
 	auto texture = SxavengerAsset::TryImport<AssetTexture>("assets/textures/LUT/lut_reddish.png", Texture::Option{ Texture::Encoding::Intensity, false });
 	auto lut = MonoBehaviour::GetComponent<CompositeProcessLayerComponent>()->AddPostProcess<CompositeProcessLUT>();
-	lut->CreateTexture(SxavengerSystem::GetMainThreadContext(), texture, { 16, 16 });
+	lut->CreateTexture(SxavengerSystem::GetDirectQueueContext(), texture, { 16, 16 });
 }
 
 void PivotCamera::Start() {

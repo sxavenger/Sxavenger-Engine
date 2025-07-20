@@ -15,7 +15,7 @@
 // Asset Blob class methods
 //////////////////////////////////////////////////////////////////////////////////////////////
 
-void AssetBlob::Load(_MAYBE_UNUSED const DirectXThreadContext* context) {
+void AssetBlob::Load(_MAYBE_UNUSED const DirectXQueueContext* context) {
 	Exception::Assert(param_.has_value(), "profile is not set.");
 	DxObject::ShaderBlob::Create(BaseAsset::GetFilepath(), std::any_cast<DxObject::CompileProfile>(param_));
 }

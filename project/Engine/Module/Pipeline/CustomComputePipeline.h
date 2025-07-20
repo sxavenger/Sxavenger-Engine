@@ -5,7 +5,7 @@
 //-----------------------------------------------------------------------------------------
 //* engine
 #include <Engine/System/DirectX/DxObject/DxComputePipelineState.h>
-#include <Engine/System/DirectX/DirectXContext.h>
+#include <Engine/System/DirectX/Context/DirectXQueueContext.h>
 
 //* engine
 #include <Engine/Asset/Observer/AssetObserver.h>
@@ -28,7 +28,7 @@ public:
 
 	virtual void RegisterBlob() = 0;
 
-	virtual void ReloadAndSetPipeline(const DirectXThreadContext* context) = 0;
+	virtual void ReloadAndSetPipeline(const DirectXQueueContext* context) = 0;
 
 protected:
 
@@ -66,7 +66,7 @@ public:
 
 	void RegisterBlob() override;
 
-	void ReloadAndSetPipeline(const DirectXThreadContext* context) override;
+	void ReloadAndSetPipeline(const DirectXQueueContext* context) override;
 
 private:
 
@@ -96,7 +96,7 @@ public:
 
 	void RegisterBlob() override;
 
-	void ReloadAndSetPipeline(const DirectXThreadContext* context) override;
+	void ReloadAndSetPipeline(const DirectXQueueContext* context) override;
 
 private:
 

@@ -25,11 +25,11 @@ void FRenderCoreLayer::Init() {
 	CreatePipeline();
 }
 
-void FRenderCoreLayer::SetPipeline(PipelineType type, const DirectXThreadContext* context, const Vector2ui& size) const {
+void FRenderCoreLayer::SetPipeline(PipelineType type, const DirectXQueueContext* context, const Vector2ui& size) const {
 	pipelines_[static_cast<uint8_t>(type)]->SetPipeline(context->GetDxCommand(), size);
 }
 
-void FRenderCoreLayer::BindGraphicsBuffer(PipelineType type, const DirectXThreadContext* context, const DxObject::BindBufferDesc& desc) const {
+void FRenderCoreLayer::BindGraphicsBuffer(PipelineType type, const DirectXQueueContext* context, const DxObject::BindBufferDesc& desc) const {
 	pipelines_[static_cast<uint8_t>(type)]->BindGraphicsBuffer(context->GetDxCommand(), desc);
 }
 

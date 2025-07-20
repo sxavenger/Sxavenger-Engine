@@ -17,7 +17,7 @@
 // AssetModel class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-void AssetModel::Load(_MAYBE_UNUSED const DirectXThreadContext* context) {
+void AssetModel::Load(_MAYBE_UNUSED const DirectXQueueContext* context) {
 
 	uint32_t option = Model::GetDefaultAssimpOption();
 

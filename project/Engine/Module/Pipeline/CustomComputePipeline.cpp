@@ -48,7 +48,7 @@ void CustomComputePipeline::RegisterBlob() {
 	}
 }
 
-void CustomComputePipeline::ReloadAndSetPipeline(const DirectXThreadContext* context) {
+void CustomComputePipeline::ReloadAndSetPipeline(const DirectXQueueContext* context) {
 	CheckAndReload();
 	CustomComputePipeline::SetPipeline(context->GetDxCommand());
 }
@@ -73,7 +73,7 @@ void CustomReflectionComputePipeline::RegisterBlob() {
 	}
 }
 
-void CustomReflectionComputePipeline::ReloadAndSetPipeline(const DirectXThreadContext* context) {
+void CustomReflectionComputePipeline::ReloadAndSetPipeline(const DirectXQueueContext* context) {
 	CheckAndReload();
 	ComputePipelineState::SetPipeline(context->GetDxCommand());
 }

@@ -24,12 +24,12 @@ void AsyncThread::Create(AsyncExecution execution, const MainFunction& main, con
 	}
 
 	// contextの作成
-	context_ = std::make_unique<DirectXThreadContext>();
+	context_ = std::make_unique<DirectXQueueContext>();
 
-	D3D12_COMMAND_LIST_TYPE commandListType = GetCommandListType(execution_);
-	uint32_t allocatorCount                 = GetAllocatorCount(execution_);
+	DirectXQueueContext::RenderQueue type = GetRenderQueueType(execution_);
+	uint32_t count                        = GetAllocatorCount(execution_);
 
-	context_->Init(allocatorCount, commandListType);
+	context_->Init(count, type);
 }
 
 void AsyncThread::Shutdown() {
@@ -42,26 +42,26 @@ void AsyncThread::Shutdown() {
 	context_.reset();
 }
 
-const DirectXThreadContext* AsyncThread::GetContext() const {
+const DirectXQueueContext* AsyncThread::GetContext() const {
 	return context_.get();
 }
 
-const DirectXThreadContext* AsyncThread::RequireContext() const {
+const DirectXQueueContext* AsyncThread::RequireContext() const {
 	Exception::Assert(context_ != nullptr, "thread type does not create context.");
 	return context_.get();
 }
 
-D3D12_COMMAND_LIST_TYPE AsyncThread::GetCommandListType(AsyncExecution execution) {
+DirectXQueueContext::RenderQueue AsyncThread::GetRenderQueueType(AsyncExecution execution) {
 	switch (execution) {
 		case AsyncExecution::Copy:
-			return D3D12_COMMAND_LIST_TYPE_COPY;
+			return DirectXQueueContext::RenderQueue::Copy;
 
 		case AsyncExecution::Compute:
-			return D3D12_COMMAND_LIST_TYPE_COMPUTE;
+			return DirectXQueueContext::RenderQueue::Compute;
 	}
 
 	Exception::Assert(false, "commandlist thread type error.");
-	return D3D12_COMMAND_LIST_TYPE_NONE; //!< error case.
+	return DirectXQueueContext::RenderQueue::None; //!< error case.
 }
 
 uint32_t AsyncThread::GetAllocatorCount(AsyncExecution execution) {

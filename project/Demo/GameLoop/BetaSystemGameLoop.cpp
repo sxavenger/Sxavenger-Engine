@@ -69,7 +69,7 @@ void BetaSystemGameLoop::InitSystem() {
 
 	auto texture = SxavengerAsset::TryImport<AssetTexture>("assets/textures/LUT/lut_reddish.png", Texture::Option{ Texture::Encoding::Intensity, false });
 	auto lut = camera_->GetComponent<CompositeProcessLayerComponent>()->AddPostProcess<CompositeProcessLUT>();
-	lut->CreateTexture(SxavengerSystem::GetMainThreadContext(), texture, { 16, 16 });
+	lut->CreateTexture(SxavengerSystem::GetDirectQueueContext(), texture, { 16, 16 });
 
 	//atmosphere_ = std::make_unique<AtmosphereActor>();
 	//atmosphere_->Init({ 1024, 1024 });
@@ -136,14 +136,14 @@ void BetaSystemGameLoop::UpdateSystem() {
 
 void BetaSystemGameLoop::DrawSystem() {
 
-	FMainRender::GetInstance()->Render(SxavengerSystem::GetMainThreadContext());
+	FMainRender::GetInstance()->Render(SxavengerSystem::GetDirectQueueContext());
 
-	main_->BeginRendering();
-	main_->ClearWindow();
+	main_->BeginRenderWindow(SxavengerSystem::GetDirectQueueContext());
+	main_->ClearWindow(SxavengerSystem::GetDirectQueueContext());
 	 
-	FMainRender::GetInstance()->PresentMain(SxavengerSystem::GetMainThreadContext());
+	FMainRender::GetInstance()->PresentMain(SxavengerSystem::GetDirectQueueContext());
 	SxavengerSystem::RenderImGui();
 
-	main_->EndRendering();
+	main_->EndRenderWindow(SxavengerSystem::GetDirectQueueContext());
 
 }

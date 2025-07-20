@@ -52,7 +52,7 @@ void PostProcessAutoExposure::Init() {
 	debugAverageLuminance_ = std::make_unique<ReadbackDimensionBuffer<float>>();
 }
 
-void PostProcessAutoExposure::Process(const DirectXThreadContext* context, FRenderTargetTextures* textures, const CameraComponent* camera) {
+void PostProcessAutoExposure::Process(const DirectXQueueContext* context, FRenderTargetTextures* textures, const CameraComponent* camera) {
 	camera;
 
 	auto process = textures->GetProcessTextures();
@@ -97,14 +97,14 @@ void PostProcessAutoExposure::ShowInspectorImGui() {
 
 	ReadbackDimensionBuffer<uint32_t>::Readback(
 		SxavengerSystem::GetDxDevice(),
-		SxavengerSystem::GetMainThreadContext()->GetDxCommand(),
+		SxavengerSystem::GetDirectQueueContext()->GetDxCommand(),
 		histgram_.get(),
 		debugHistgram_.get()
 	);
 
 	ReadbackDimensionBuffer<float>::Readback(
 		SxavengerSystem::GetDxDevice(),
-		SxavengerSystem::GetMainThreadContext()->GetDxCommand(),
+		SxavengerSystem::GetDirectQueueContext()->GetDxCommand(),
 		averageLuminance_.get(),
 		debugAverageLuminance_.get()
 	);

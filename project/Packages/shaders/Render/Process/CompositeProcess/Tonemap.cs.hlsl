@@ -27,6 +27,7 @@ void main(uint3 dispatchThreadId : SV_DispatchThreadID) {
 	float3 ap0          = mul(ACES::AP1_2_AP0_Matrix, input);
 	float3 oces         = ACES::RRT(ap0);
 	gTexture[index].rgb = ACES::ODT_sRGB_D65(oces);
+	// todo: HDR出力に対応
 	
 
 }

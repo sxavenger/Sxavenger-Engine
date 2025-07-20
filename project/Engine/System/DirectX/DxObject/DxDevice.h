@@ -40,6 +40,8 @@ public:
 
 	IDXGIFactory7* GetFactory() const { return dxgiFactory_.Get(); }
 
+	IDXGIAdapter4* GetAdapter() const { return useAdapter_.Get(); }
+
 	//* preview option *//
 
 	

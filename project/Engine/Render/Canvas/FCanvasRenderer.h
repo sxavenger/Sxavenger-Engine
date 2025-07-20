@@ -18,7 +18,7 @@ public:
 	
 	//* render *//
 
-	void Render(const DirectXThreadContext* context);
+	void Render(const DirectXQueueContext* context);
 
 	//* setter *//
 
@@ -41,6 +41,6 @@ private:
 
 	bool CheckRender() const;
 
-	void RenderSpriteComponents(const DirectXThreadContext* context);
+	void RenderSpriteComponents(const DirectXQueueContext* context);
 
 };

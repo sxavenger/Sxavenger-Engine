@@ -40,13 +40,13 @@ public:
 
 	//* input assembler option *//
 
-	void DrawCall(const DirectXThreadContext* context, UINT instanceCount = 1) const;
+	void DrawCall(const DirectXQueueContext* context, UINT instanceCount = 1) const;
 
 	//* pipeline option *//
 
-	void SetPipeline(LightType type, const DirectXThreadContext* context, const Vector2ui& size);
+	void SetPipeline(LightType type, const DirectXQueueContext* context, const Vector2ui& size);
 
-	void BindGraphicsBuffer(LightType type, const DirectXThreadContext* context, const DxObject::BindBufferDesc& desc);
+	void BindGraphicsBuffer(LightType type, const DirectXQueueContext* context, const DxObject::BindBufferDesc& desc);
 
 private:
 

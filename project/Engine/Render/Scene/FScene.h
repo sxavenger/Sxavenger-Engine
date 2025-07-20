@@ -13,7 +13,7 @@
 //* engine
 #include <Engine/System/DirectX/DxrObject/DxrAccelerationStructure.h>
 #include <Engine/System/DirectX/DxrObject/DxrStateObjectContext.h>
-#include <Engine/System/DirectX/DirectXContext.h>
+#include <Engine/System/DirectX/Context/DirectXQueueContext.h>
 #include <Engine/System/DirectX/DirectXAlignment.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -30,7 +30,7 @@ public:
 
 	//* tlas option *//
 
-	void SetupTopLevelAS(const DirectXThreadContext* context);
+	void SetupTopLevelAS(const DirectXQueueContext* context);
 
 	const DxrObject::TopLevelAS& GetTopLevelAS() const { return topLevelAS_; }
 

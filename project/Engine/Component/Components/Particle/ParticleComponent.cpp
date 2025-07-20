@@ -182,7 +182,7 @@ ParticleComponent::Element& ParticleComponent::Emit(const Vector3f& position) {
 	return elements_.emplace_back(element);
 }
 
-void ParticleComponent::DrawParticle(const DirectXThreadContext* context, const CameraComponent* camera) {
+void ParticleComponent::DrawParticle(const DirectXQueueContext* context, const CameraComponent* camera) {
 	if (!primitive_.has_value()) {
 		return;
 	}

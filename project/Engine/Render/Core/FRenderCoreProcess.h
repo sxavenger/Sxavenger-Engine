@@ -54,19 +54,19 @@ public:
 
 	void Init();
 
-	void Dispatch(const DirectXThreadContext* context, const Vector2ui& size) const;
+	void Dispatch(const DirectXQueueContext* context, const Vector2ui& size) const;
 
 	//* process option *//
 
-	void SetPipeline(ProcessType type, const DirectXThreadContext* context);
+	void SetPipeline(ProcessType type, const DirectXQueueContext* context);
 
-	void BindComputeBuffer(ProcessType type, const DirectXThreadContext* context, const DxObject::BindBufferDesc& desc);
+	void BindComputeBuffer(ProcessType type, const DirectXQueueContext* context, const DxObject::BindBufferDesc& desc);
 
 	//* composite option *//
 
-	void SetPipeline(CompositeType type, const DirectXThreadContext* context);
+	void SetPipeline(CompositeType type, const DirectXQueueContext* context);
 
-	void BindComputeBuffer(CompositeType type, const DirectXThreadContext* context, const DxObject::BindBufferDesc& desc);
+	void BindComputeBuffer(CompositeType type, const DirectXQueueContext* context, const DxObject::BindBufferDesc& desc);
 
 
 private:

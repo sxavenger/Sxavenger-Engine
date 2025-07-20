@@ -4,7 +4,7 @@
 // include
 //-----------------------------------------------------------------------------------------
 //* engine
-#include <Engine/System/DirectX/DirectXContext.h>
+#include <Engine/System/DirectX/Context/DirectXQueueContext.h>
 #include <Engine/Module/Pipeline/CustomGraphicsPipeline.h>
 
 //* lib
@@ -56,12 +56,12 @@ public:
 
 	void SetPipeline(
 		RenderType type, VertexStage vs, PixelStage ps,
-		const DirectXThreadContext* context, const Vector2ui& size
+		const DirectXQueueContext* context, const Vector2ui& size
 	);
 
 	void BindGraphicsBuffer(
 		RenderType type, VertexStage vs, PixelStage ps,
-		const DirectXThreadContext* context, const DxObject::BindBufferDesc& desc
+		const DirectXQueueContext* context, const DxObject::BindBufferDesc& desc
 	);
 
 private:

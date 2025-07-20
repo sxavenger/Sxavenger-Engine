@@ -37,13 +37,13 @@ public:
 
 	void Init() override;
 
-	void Process(const DirectXThreadContext* context, FRenderTargetTextures* textures) override;
+	void Process(const DirectXQueueContext* context, FRenderTargetTextures* textures) override;
 
 	void ShowInspectorImGui() override;
 
 	//* option *//
 
-	void CreateTexture(const DirectXThreadContext* context, const AssetObserver<AssetTexture>& texture, const Vector2ui& tile);
+	void CreateTexture(const DirectXQueueContext* context, const AssetObserver<AssetTexture>& texture, const Vector2ui& tile);
 
 private:
 

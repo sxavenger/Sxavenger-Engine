@@ -103,7 +103,7 @@ void GraphicsPipelineDesc::CreateDefaultDesc() {
 
 	SetPrimitive(PrimitiveType::TrianglList);
 
-	SetRTVFormat(kOffscreenFormat);
+	SetRTVFormat(kDefaultOffscreenFormat);
 	SetDSVFormat(kDefaultDepthFormat);
 }
 

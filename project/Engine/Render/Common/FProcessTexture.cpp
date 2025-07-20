@@ -100,7 +100,7 @@ void FProcessTextures::Create(uint32_t count, const Vector2ui& size, DXGI_FORMAT
 	}
 }
 
-void FProcessTextures::BeginProcess(const DirectXThreadContext* context, FTexture* texture) {
+void FProcessTextures::BeginProcess(const DirectXQueueContext* context, FTexture* texture) {
 	Exception::Assert(textures_.size() != NULL, "process texture is null.");
 
 	index_ = 0; //!< indexの初期化
@@ -126,7 +126,7 @@ void FProcessTextures::BeginProcess(const DirectXThreadContext* context, FTextur
 	textures_[index_]->TransitionBeginUnordered(context);
 }
 
-void FProcessTextures::EndProcess(const DirectXThreadContext* context, FTexture* texture) {
+void FProcessTextures::EndProcess(const DirectXQueueContext* context, FTexture* texture) {
 
 	auto commandList = context->GetCommandList();
 
@@ -149,7 +149,7 @@ void FProcessTextures::EndProcess(const DirectXThreadContext* context, FTexture*
 	}
 }
 
-void FProcessTextures::NextProcess(const DirectXThreadContext* context) {
+void FProcessTextures::NextProcess(const DirectXQueueContext* context) {
 	Exception::Assert(textures_.size() != NULL, "process texture is null.");
 	uint32_t prev = index_;
 	uint32_t next = ++index_ % textures_.size();
@@ -163,7 +163,7 @@ void FProcessTextures::NextProcess(const DirectXThreadContext* context) {
 	index_ = next;
 }
 
-void FProcessTextures::BarrierUAV(const DirectXThreadContext* context) {
+void FProcessTextures::BarrierUAV(const DirectXQueueContext* context) {
 
 	D3D12_RESOURCE_BARRIER barrier = {};
 	barrier.Type          = D3D12_RESOURCE_BARRIER_TYPE_UAV;

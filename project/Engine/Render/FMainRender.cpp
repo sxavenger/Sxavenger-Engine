@@ -27,12 +27,12 @@ void FMainRender::Term() {
 	canvasRenderer_.reset();
 }
 
-void FMainRender::Render(const DirectXThreadContext* context) {
+void FMainRender::Render(const DirectXQueueContext* context) {
 	sceneRenderer_->Render(context);
 	canvasRenderer_->Render(context);
 }
 
-void FMainRender::PresentMain(const DirectXThreadContext* context) {
+void FMainRender::PresentMain(const DirectXQueueContext* context) {
 	presenter_->Present(
 		context, kMainWindowSize,
 		textures_->GetGBuffer(FRenderTargetTextures::GBufferLayout::Main)->GetGPUHandleSRV()

@@ -104,16 +104,16 @@ void DemoGameLoop::UpdateGame() {
 
 void DemoGameLoop::DrawGame() {
 
-	FMainRender::GetInstance()->Render(SxavengerSystem::GetMainThreadContext());
+	FMainRender::GetInstance()->Render(SxavengerSystem::GetDirectQueueContext());
 
-	main_->BeginRendering();
-	main_->ClearWindow();
+	main_->BeginRenderWindow(SxavengerSystem::GetDirectQueueContext());
+	main_->ClearWindow(SxavengerSystem::GetDirectQueueContext());
 
 
-	FMainRender::GetInstance()->PresentMain(SxavengerSystem::GetMainThreadContext());
+	FMainRender::GetInstance()->PresentMain(SxavengerSystem::GetDirectQueueContext());
 	SxavengerSystem::RenderImGui();
 	
-	main_->EndRendering();
+	main_->EndRenderWindow(SxavengerSystem::GetDirectQueueContext());
 }
 
 void DemoGameLoop::SetCollisionCallback() {

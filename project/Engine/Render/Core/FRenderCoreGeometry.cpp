@@ -28,13 +28,13 @@ void FRenderCoreGeometry::Init() {
 
 void FRenderCoreGeometry::SetPipeline(
 	RenderType type, VertexStage vs, PixelStage ps,
-	const DirectXThreadContext* context, const Vector2ui& size) {
+	const DirectXQueueContext* context, const Vector2ui& size) {
 	graphicsPipelines_[type][vs][ps]->SetPipeline(context->GetDxCommand(), size);
 }
 
 void FRenderCoreGeometry::BindGraphicsBuffer(
 	RenderType type, VertexStage vs, PixelStage ps,
-	const DirectXThreadContext* context, const DxObject::BindBufferDesc& desc) {
+	const DirectXQueueContext* context, const DxObject::BindBufferDesc& desc) {
 	graphicsPipelines_[type][vs][ps]->BindGraphicsBuffer(context->GetDxCommand(), desc);
 }
 

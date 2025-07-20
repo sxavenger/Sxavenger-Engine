@@ -104,7 +104,7 @@ void SpriteRendererComponent::SetColor(const Color4f& color) {
 	}
 }
 
-void SpriteRendererComponent::BindAIBuffer(const DirectXThreadContext* context) {
+void SpriteRendererComponent::BindAIBuffer(const DirectXQueueContext* context) {
 	TransferPosition();
 	TransferColor();
 	TransferTexcoord();
@@ -113,7 +113,7 @@ void SpriteRendererComponent::BindAIBuffer(const DirectXThreadContext* context) 
 	ia_.BindIABuffer(context);
 }
 
-void SpriteRendererComponent::DrawCall(const DirectXThreadContext* context) {
+void SpriteRendererComponent::DrawCall(const DirectXQueueContext* context) {
 	ia_.DrawCall(context);
 }
 
