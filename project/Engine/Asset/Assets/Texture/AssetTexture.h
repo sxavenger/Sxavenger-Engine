@@ -56,8 +56,6 @@ private:
 	//* inspector helper methods *//
 
 	static std::string GetEncoding(Texture::Encoding encoding);
-	static std::string GetDimension(D3D12_RESOURCE_DIMENSION dimension);
-	static std::string GetFormat(DXGI_FORMAT format);
 
 	void ShowTexture();
 

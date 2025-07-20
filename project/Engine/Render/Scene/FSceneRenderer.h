@@ -109,6 +109,10 @@ public:
 
 	const uint32_t GetCurrentSampleCount() const;
 
+	//* debug *//
+
+	void DebugGui();
+
 private:
 
 	//=========================================================================================
@@ -124,6 +128,8 @@ private:
 	std::unique_ptr<DxObject::DimensionBuffer<FRenderCorePathtracing::Reservoir>> reservoir_;
 	bool isResetReservoir_ = false;
 
+	std::unique_ptr<DxObject::DimensionBuffer<Vector3f>> test_;
+
 	//=========================================================================================
 	// private methods
 	//=========================================================================================
@@ -132,7 +138,7 @@ private:
 
 	Sxl::Flag<Status> CheckStatus(const Config& config) const;
 
-	//* render *//
+	//* deferred render helper methods *//
 
 	void RenderGeometryPass(const DirectXQueueContext* context, const Config& config);
 	void RenderGeometryStaticMeshDefault(const DirectXQueueContext* context, const Config& config);
@@ -156,6 +162,12 @@ private:
 
 	void CompositeProcessPass(const DirectXQueueContext* context, const Config& config);
 	void CompositeProcessPassTonemap(const DirectXQueueContext* context, const Config& config);
+
+	//* path tracing helper methods *//
+
+	void RenderPathtracingPass(const DirectXQueueContext* context, const Config& config);
+
+	void DenoiserPass(const DirectXQueueContext* context, const Config& config);
 
 	//* technique *//
 

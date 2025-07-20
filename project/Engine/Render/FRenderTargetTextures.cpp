@@ -236,6 +236,7 @@ void FRenderTargetTextures::BeginRaytracingPass(const DirectXQueueContext* conte
 	D3D12_RESOURCE_BARRIER barriers[] = {
 		gBuffers_[static_cast<uint8_t>(GBufferLayout::MaterialARM)]->TransitionBeginUnordered(),
 		gBuffers_[static_cast<uint8_t>(GBufferLayout::Normal)]->TransitionBeginUnordered(),
+		gBuffers_[static_cast<uint8_t>(GBufferLayout::UI)]->TransitionBeginUnordered(), //!< 仮としてUIを使用
 		gBuffers_[static_cast<uint8_t>(GBufferLayout::Main)]->TransitionBeginUnordered(),
 	};
 	context->GetCommandList()->ResourceBarrier(_countof(barriers), barriers);
@@ -247,6 +248,7 @@ void FRenderTargetTextures::EndRaytracingPass(const DirectXQueueContext* context
 	D3D12_RESOURCE_BARRIER barriers[] = {
 		gBuffers_[static_cast<uint8_t>(GBufferLayout::MaterialARM)]->TransitionEndUnordered(),
 		gBuffers_[static_cast<uint8_t>(GBufferLayout::Normal)]->TransitionEndUnordered(),
+		gBuffers_[static_cast<uint8_t>(GBufferLayout::UI)]->TransitionEndUnordered(), //!< 仮としてUIを使用
 		gBuffers_[static_cast<uint8_t>(GBufferLayout::Main)]->TransitionEndUnordered(),
 	};
 	context->GetCommandList()->ResourceBarrier(_countof(barriers), barriers);

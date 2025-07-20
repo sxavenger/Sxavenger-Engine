@@ -88,8 +88,6 @@ private:
 
 	static uint32_t GetAllocatorCount(AsyncExecution execution);
 
-	static std::string GetExecution(AsyncExecution execution);
-
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////

@@ -24,9 +24,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	collection->Push<SxavengerEngineGameLoop>();
 	collection->Push<EditorEngineGameLoop>();
 	
-	//collection->Push<BetaSystemGameLoop>();
+	collection->Push<BetaSystemGameLoop>();
 	//collection->Push<DemoGameLoop>();
-	collection->Push<PreviewGameLoop>();
+	//collection->Push<PreviewGameLoop>();
 
 	collection->Run();
 

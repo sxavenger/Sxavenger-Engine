@@ -31,6 +31,10 @@ struct Parameter {
 };
 ConstantBuffer<Parameter> gParameter : register(b1);
 
+//static const float sigma_n = 1.0f;
+//static const float sigma_z = 0.1f;
+//static const float sigma_s = 0.1f;
+
 //* input texture
 Texture2D<float4> gInput : register(t0);
 
@@ -60,8 +64,11 @@ void main(uint3 dispatchThreadId : SV_DispatchThreadID) {
 	float weight = 0.0f;
 	float4 color = float4(0.0f, 0.0f, 0.0f, 0.0f);
 
-	for (int dx = -2; dx <= 2; ++dx) {
-		for (int dy = -2; dy <= 2; ++dy) {
+	static const int A = 4;
+
+	// test 5x5 neighborhood
+	for (int dx = -A; dx <= A; ++dx) {
+		for (int dy = -A; dy <= A; ++dy) {
 
 			int2 sample_pos = index + int2(dx, dy);
 
@@ -79,7 +86,7 @@ void main(uint3 dispatchThreadId : SV_DispatchThreadID) {
 			float w = exp(exp_w);
 			w *= pow(max(0.0f, dot(surface.normal, sample_surface.normal)), gParameter.sigma_n); //!< 法線
 
-			color  += gInput[index];
+			color  += gInput[sample_pos] * w;
 			weight += w;
 		}
 	}

@@ -1,5 +1,11 @@
 #include "AsyncThread.h"
 
+//-----------------------------------------------------------------------------------------
+// include
+//-----------------------------------------------------------------------------------------
+//* external
+#include <magic_enum.hpp>
+
 ////////////////////////////////////////////////////////////////////////////////////////////
 // AsyncThread class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -12,7 +18,7 @@ void AsyncThread::Create(AsyncExecution execution, const MainFunction& main, con
 	condition_ = condition;
 
 	thread_ = std::thread([this]() {
-		Logger::EngineThreadLog("[AsyncThread]: begin thread. " + GetExecution(execution_));
+		Logger::EngineThreadLog(std::string("[AsyncThread]: begin thread. ") + magic_enum::enum_name(execution_).data());
 		while (!isTerminated_ && condition_()) {
 			main_(this);
 		}
@@ -75,21 +81,6 @@ uint32_t AsyncThread::GetAllocatorCount(AsyncExecution execution) {
 
 	Exception::Assert(false, "commandlist thread type error.");
 	return 0;
-}
-
-std::string AsyncThread::GetExecution(AsyncExecution execution) {
-	switch (execution) {
-		case AsyncExecution::None:
-			return _TO_STRING(AsyncExecution::None);
-
-		case AsyncExecution::Copy:
-			return _TO_STRING(AsyncExecution::Copy);
-
-		case AsyncExecution::Compute:
-			return _TO_STRING(AsyncExecution::Compute);
-	}
-
-	return {}; //!< error case.
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////

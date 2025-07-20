@@ -107,10 +107,6 @@ void PreviewGameLoop::UpdateGame() {
 	pipeline_->Dispatch(SxavengerSystem::GetDirectQueueContext()->GetDxCommand(), Vector3ui{ DxObject::RoundUp(texture_.GetSize().x, 16), DxObject::RoundUp(texture_.GetSize().y, 16), 1 });
 
 	texture_.TransitionEndUnordered(SxavengerSystem::GetDirectQueueContext());
-
-	auto mouse = SxavengerSystem::GetInput()->GetMouseInput();
-	Vector2 position = mouse->GetPosition();
-	Logger::CommentRuntime(std::format("Mouse Position: ({}, {})", position.x, position.y));
 }
 
 void PreviewGameLoop::DrawGame() {

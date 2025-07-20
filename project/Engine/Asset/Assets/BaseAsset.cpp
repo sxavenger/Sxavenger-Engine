@@ -9,6 +9,7 @@
 
 //* external
 #include <imgui.h>
+#include <magic_enum.hpp>
 
 //* c++
 #include <thread>
@@ -46,5 +47,6 @@ std::filesystem::path BaseAsset::GetConfigFilepath() const {
 
 void BaseAsset::ShowInspector() {
 	ImGui::SeparatorText(filepath_.filename().generic_string().c_str());
+	ImGui::Text("status: %s", magic_enum::enum_name(GetStatus()).data());
 	ImGui::Separator();
 }

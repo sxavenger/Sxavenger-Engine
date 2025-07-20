@@ -13,6 +13,9 @@
 #include <Engine/Asset/SxavengerAsset.h>
 #include <Engine/Render/FMainRender.h>
 
+//* externals
+#include <magic_enum.hpp>
+
 ////////////////////////////////////////////////////////////////////////////////////////////
 // RenderSceneEditor class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -22,8 +25,8 @@ void RenderSceneEditor::Init() {
 	checkerboard_ = SxavengerAsset::TryImport<AssetTexture>("packages/textures/checker_black.png");
 
 	operationTexture_[static_cast<uint32_t>(GuizmoOperation::Translate)] = SxavengerAsset::TryImport<AssetTexture>("packages/textures/icon/operation_translate.png");
-	operationTexture_[static_cast<uint32_t>(GuizmoOperation::Rotate)] = SxavengerAsset::TryImport<AssetTexture>("packages/textures/icon/operation_rotate.png");
-	operationTexture_[static_cast<uint32_t>(GuizmoOperation::Scale)] = SxavengerAsset::TryImport<AssetTexture>("packages/textures/icon/operation_scale.png");
+	operationTexture_[static_cast<uint32_t>(GuizmoOperation::Rotate)]    = SxavengerAsset::TryImport<AssetTexture>("packages/textures/icon/operation_rotate.png");
+	operationTexture_[static_cast<uint32_t>(GuizmoOperation::Scale)]     = SxavengerAsset::TryImport<AssetTexture>("packages/textures/icon/operation_scale.png");
 
 	modeTexture_[SxImGuizmo::World] = SxavengerAsset::TryImport<AssetTexture>("packages/textures/icon/mode_world.png");
 	modeTexture_[SxImGuizmo::Local] = SxavengerAsset::TryImport<AssetTexture>("packages/textures/icon/mode_local.png");
@@ -274,21 +277,14 @@ void RenderSceneEditor::ShowSceneMenu() {
 		ImGui::Text("layout");
 		ImGui::Separator();
 
-		static const LPCSTR kLayouts[] = {
-			"Normal",
-			"MaterialARM",
-			"Albedo",
-			"Position",
-			"UI",
-			"Main",
-		};
+		if (ImGui::BeginCombo("GBuffer", magic_enum::enum_name(layout_).data())) {
 
-		if (ImGui::BeginCombo("GBuffer", kLayouts[static_cast<uint8_t>(layout_)])) {
-			for (uint8_t i = 0; i < FRenderTargetTextures::kGBufferLayoutCount; ++i) {
-				if (ImGui::Selectable(kLayouts[i], (i == static_cast<uint8_t>(layout_)))) {
-					layout_ = static_cast<FRenderTargetTextures::GBufferLayout>(i);
+			for (const auto& [value, name] : magic_enum::enum_entries<FRenderTargetTextures::GBufferLayout>()) {
+				if (ImGui::Selectable(name.data(), (value == layout_))) {
+					layout_ = value;
 				}
 			}
+
 			ImGui::EndCombo();
 		}
 
@@ -327,6 +323,8 @@ void RenderSceneEditor::ShowSceneMenu() {
 				if (ImGui::Button("reset reservoir")) {
 					renderer_->ResetReserviour(SxavengerSystem::GetDirectQueueContext());
 				}
+
+				renderer_->DebugGui();
 				
 				break;
 		}

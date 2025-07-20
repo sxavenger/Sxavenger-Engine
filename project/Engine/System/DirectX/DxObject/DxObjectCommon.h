@@ -150,6 +150,7 @@ _NODISCARD ComPtr<ID3D12Resource> CreateBufferResource(
 );
 
 UINT RoundUp(UINT round, UINT thread);
+Vector3ui RoundUp(const Vector3ui& round, const Vector3ui& thread);
 
 CompileProfile ToProfile(GraphicsShaderType type);
 
@@ -160,7 +161,7 @@ CompileProfile ToProfile(GraphicsShaderType type);
 constexpr const D3D_SHADER_MODEL kHeighestShaderModel = D3D_SHADER_MODEL_6_6;
 static_assert(kHeighestShaderModel >= D3D_SHADER_MODEL_6_5, "mesh shader is 6.5 or higher");
 
-constexpr const DXGI_FORMAT kDefaultScreenFormat     = DXGI_FORMAT_R8G8B8A8_UNORM;          //!< スクリーン画面のformat
+constexpr const DXGI_FORMAT kDefaultScreenFormat     = DXGI_FORMAT_R8G8B8A8_UNORM;      //!< スクリーン画面のformat
 constexpr const DXGI_FORMAT kDefaultScreenViewFormat = ConvertToSRGB(kDefaultScreenFormat); //!< 最終的なスクリーン画面のformat
 constexpr const DXGI_FORMAT kDefaultOffscreenFormat  = DXGI_FORMAT_R8G8B8A8_UNORM;          //!< offscreenで使われるformat
 

@@ -185,7 +185,7 @@ _CLOSESTHIT void mainClosesthit(inout Payload payload, in Attribute attribute) {
 
 	payload.color.rgb = float3(0.0f, 0.0f, 0.0f);
 
-	if ((payload.IsPrimary() && gReservoir.IsBeginFrame()) || !payload.IsPrimary()) {
+	if (/*(payload.IsPrimary() && gReservoir.IsBeginFrame()) ||*/ !payload.IsPrimary()) {
 		for (uint i = 0; i < gDirectionalLightCount.count; ++i) {
 			payload.color.rgb += CalculateDirectionalLight(i, surface.position, surface.normal, surface.albedo, surface.roughness, surface.metallic);
 		}
@@ -215,7 +215,7 @@ _CLOSESTHIT void mainClosesthit(inout Payload payload, in Attribute attribute) {
 			path.rayType = RayType::kPath;
 			
 			payload.TraceRecursionRay(path, desc, kFlag);
-			color += dot(surface.normal, dir) * path.color.rgb;
+			color += saturate(dot(surface.normal, dir)) * path.color.rgb / kPi;
 			
 		}
 	}

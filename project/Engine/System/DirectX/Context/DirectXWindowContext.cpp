@@ -28,6 +28,8 @@ void DirectXWindowContext::Init(const Vector2ui size, const std::wstring& name, 
 
 	InitWindow();
 	InitDirectXWindow();
+
+	Logger::EngineLog(std::format(L"[DirectXWindowContext]: show window. name: {}, hwnd: {:p}", name_, static_cast<const void*>(hwnd_)));
 }
 
 void DirectXWindowContext::Close() {
@@ -37,6 +39,7 @@ void DirectXWindowContext::Close() {
 
 	DestroyWindow(hwnd_);
 	CloseWindow(hwnd_);
+	Logger::EngineLog(std::format(L"[DirectXWindowContext]: close window. name: {}, hwnd: {:p}", name_, static_cast<const void*>(hwnd_)));
 
 	if (hinst_ != nullptr) {
 		UnregisterClass(className_.c_str(), hinst_);
@@ -181,13 +184,21 @@ void DirectXWindowContext::Present() {
 
 LRESULT DirectXWindowContext::WindowProcApplication(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
 
-	//auto instance = reinterpret_cast<DirectXWindowContext*>(GetWindowLongPtr(hwnd, GWLP_USERDATA));
+	auto instance = reinterpret_cast<DirectXWindowContext*>(GetWindowLongPtr(hwnd, GWLP_USERDATA));
 
 	if (ImGui_ImplWin32_WndProcHandler(hwnd, msg, wparam, lparam)) {
 		return true;
 	}
 
 	switch (msg) {
+		case WM_CREATE:
+			{
+				auto structure = reinterpret_cast<CREATESTRUCT*>(lparam);
+				auto app = reinterpret_cast<LONG_PTR>(structure->lpCreateParams);
+				SetWindowLongPtr(hwnd, GWLP_USERDATA, app);
+			}
+			break;
+
 		case WM_DESTROY: //!< ウィンドウが破棄された
 			// OSに対して, アプリの終了を伝える
 			PostQuitMessage(0);
@@ -195,7 +206,7 @@ LRESULT DirectXWindowContext::WindowProcApplication(HWND hwnd, UINT msg, WPARAM 
 
 		case WM_MOVE:          //!< windowが移動した
 		case WM_DISPLAYCHANGE: //!< displayの設定が変更された
-			//instance->CheckSupportHDR();
+			instance->CheckSupportHDR();
 			break;
 	}
 
@@ -281,6 +292,11 @@ ComPtr<IDXGIOutput6> DirectXWindowContext::GetOutput6() {
 }
 
 void DirectXWindowContext::CheckSupportHDR() {
+	if (true) {
+		Logger::LogRuntime("called check support hdr.");
+		return;
+	}
+	
 
 	if (swapChain_ == nullptr) {
 		Logger::WarningRuntime("[DirectXWindowContext] warning | window is not create.");
@@ -335,7 +351,7 @@ void DirectXWindowContext::InitWindow() {
 		nullptr,
 		nullptr,
 		hinst_,
-		nullptr
+		this
 	);
 	Exception::Assert(hwnd_ != nullptr);
 
@@ -343,7 +359,7 @@ void DirectXWindowContext::InitWindow() {
 	ShowWindow(hwnd_, SW_SHOW);
 
 	// ウィンドウのプロシージャを設定
-	SetWindowLongPtr(hwnd_, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(this));
+	//SetWindowLongPtr(hwnd_, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(this));
 }
 
 void DirectXWindowContext::InitDirectXWindow() {
