@@ -46,6 +46,11 @@ void PreviewGameLoop::InitGame() {
 	main_ = SxavengerSystem::CreateMainWindow(kMainWindowSize, L"sxavenger engine preview window", { 0.14f, 0.2f, 0.24f, 1.f }).lock();
 	main_->SetIcon("packages/icon/SxavengerEngineIcon.ico", { 32, 32 });
 
+	SxavengerSystem::CreateSubWindow(
+		{ 1280, 720 }, L"sxavenger engine preview sub window", DirectXWindowContext::ProcessCategory::Window,
+		{ 0.14f, 0.2f, 0.24f, 1.f }
+	);
+
 	presenter_.Init();
 	texture_.Create(main_->GetSize(), DXGI_FORMAT_R32G32B32A32_FLOAT);
 
@@ -102,6 +107,10 @@ void PreviewGameLoop::UpdateGame() {
 	pipeline_->Dispatch(SxavengerSystem::GetDirectQueueContext()->GetDxCommand(), Vector3ui{ DxObject::RoundUp(texture_.GetSize().x, 16), DxObject::RoundUp(texture_.GetSize().y, 16), 1 });
 
 	texture_.TransitionEndUnordered(SxavengerSystem::GetDirectQueueContext());
+
+	auto mouse = SxavengerSystem::GetInput()->GetMouseInput();
+	Vector2 position = mouse->GetPosition();
+	Logger::CommentRuntime(std::format("Mouse Position: ({}, {})", position.x, position.y));
 }
 
 void PreviewGameLoop::DrawGame() {
@@ -114,4 +123,3 @@ void PreviewGameLoop::DrawGame() {
 
 	main_->EndRenderWindow(SxavengerSystem::GetDirectQueueContext());
 }
-

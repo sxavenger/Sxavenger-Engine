@@ -204,7 +204,7 @@ LRESULT DirectXWindowContext::WindowProcApplication(HWND hwnd, UINT msg, WPARAM 
 
 LRESULT DirectXWindowContext::WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
 
-	auto instance = reinterpret_cast<DirectXWindowContext*>(GetWindowLongPtr(hwnd, GWLP_USERDATA));
+	//auto instance = reinterpret_cast<DirectXWindowContext*>(GetWindowLongPtr(hwnd, GWLP_USERDATA));
 
 	if (ImGui_ImplWin32_WndProcHandler(hwnd, msg, wparam, lparam)) {
 		return true;
@@ -218,7 +218,7 @@ LRESULT DirectXWindowContext::WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPA
 
 		case WM_MOVE:          //!< windowが移動した
 		case WM_DISPLAYCHANGE: //!< displayの設定が変更された
-			instance->CheckSupportHDR();
+			//instance->CheckSupportHDR();
 			break;
 
 	}
