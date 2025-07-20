@@ -109,7 +109,28 @@ void BindBufferTable::BindBufferInfo::Create(const D3D12_SHADER_INPUT_BIND_DESC&
 	type           = _desc.Type;
 	bindBufferType = ToBindBufferType(_desc.Type);
 
+	if (bindBufferType == BindBufferType::kVirtual_CBV) {
+		
+	}
+
 	// todo: 32bitconstantsの設定
+}
+
+void BindBufferTable::BindBufferInfo::Create(ID3D12ShaderReflection* reflection, const D3D12_SHADER_INPUT_BIND_DESC& _desc, ShaderVisibility _visibility) {
+	rootParam      = std::nullopt;
+	visibility     = _visibility;
+	registerNum    = _desc.BindPoint;
+	registerSpace  = _desc.Space;
+	type           = _desc.Type;
+	bindBufferType = ToBindBufferType(_desc.Type);
+
+	if (bindBufferType == BindBufferType::kVirtual_CBV) {
+		ID3D12ShaderReflectionConstantBuffer* constantbuffer = reflection->GetConstantBufferByName(_desc.Name);
+		D3D12_SHADER_BUFFER_DESC desc = {};
+		constantbuffer->GetDesc(&desc);
+		num32bit = desc.Size / sizeof(UINT);
+	}
+
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -234,7 +255,12 @@ ComputeRootSignatureDesc BindBufferTable::CreateComputeRootSignatureDesc() {
 
 		switch (info.bindBufferType) {
 			case BindBufferType::kVirtual_CBV:
-				desc.SetVirtualCBV(rootIndex, info.registerNum, info.registerSpace);
+				if (std::toupper(name[0])) { //!< "S---" のような名前の場合は32bitConstantsとして設定
+					desc.Set32bitConstants(rootIndex, info.visibility, static_cast<UINT>(info.num32bit), info.registerNum, info.registerSpace);
+					
+				} else { //!< "g---" のような名前の場合はVirtualCBVとして設定
+					desc.SetVirtualCBV(rootIndex, info.registerNum, info.registerSpace);
+				}
 				break;
 
 			case BindBufferType::kVirtual_SRV:
@@ -277,7 +303,12 @@ ComputeRootSignatureDesc BindBufferTable::CreateComputeRootSignatureDesc(const S
 
 		switch (info.bindBufferType) {
 			case BindBufferType::kVirtual_CBV:
-				desc.SetVirtualCBV(rootIndex, info.registerNum, info.registerSpace);
+				if (std::toupper(name[0])) { //!< "S---" のような名前の場合は32bitConstantsとして設定
+					desc.Set32bitConstants(rootIndex, info.visibility, static_cast<UINT>(info.num32bit), info.registerNum, info.registerSpace);
+
+				} else { //!< "g---" のような名前の場合はVirtualCBVとして設定
+					desc.SetVirtualCBV(rootIndex, info.registerNum, info.registerSpace);
+				}
 				break;
 
 			case BindBufferType::kVirtual_SRV:
@@ -444,10 +475,10 @@ BindBufferType BindBufferTable::ToBindBufferType(D3D_SHADER_INPUT_TYPE type) {
 	return {};
 }
 
-void BindBufferTable::InsertBindBuffer(const D3D12_SHADER_INPUT_BIND_DESC& desc, ShaderVisibility visibility) {
+void BindBufferTable::InsertBindBuffer(ID3D12ShaderReflection* reflection, const D3D12_SHADER_INPUT_BIND_DESC& desc, ShaderVisibility visibility) {
 
 	BindBufferInfo info = {};
-	info.Create(desc, visibility);
+	info.Create(reflection, desc, visibility);
 
 	if (table_.contains(desc.Name)) { //!< buffer conflict.
 		// conflictの対応

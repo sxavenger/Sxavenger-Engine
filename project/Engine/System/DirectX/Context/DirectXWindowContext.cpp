@@ -292,10 +292,10 @@ ComPtr<IDXGIOutput6> DirectXWindowContext::GetOutput6() {
 }
 
 void DirectXWindowContext::CheckSupportHDR() {
-	if (true) {
+	/*if (true) {
 		Logger::LogRuntime("called check support hdr.");
 		return;
-	}
+	}*/
 	
 
 	if (swapChain_ == nullptr) {
