@@ -64,7 +64,7 @@ void main(uint3 dispatchThreadId : SV_DispatchThreadID) {
 	float weight = 0.0f;
 	float4 color = float4(0.0f, 0.0f, 0.0f, 0.0f);
 
-	static const int A = 4;
+	static const int A = 3;
 
 	// test 5x5 neighborhood
 	for (int dx = -A; dx <= A; ++dx) {
@@ -81,7 +81,7 @@ void main(uint3 dispatchThreadId : SV_DispatchThreadID) {
 
 			float exp_w = 0.0f;
 			exp_w += -abs(surface.depth - sample_surface.depth) / (gParameter.sigma_z + kEpsilon);                                                   //!< 深度
-			exp_w += -dot(surface.position - sample_surface.position, surface.position - sample_surface.position) / (gParameter.sigma_s + kEpsilon); //!< 空間位置
+			exp_w += -abs(dot(surface.position - sample_surface.position, surface.position - sample_surface.position)) / (gParameter.sigma_s + kEpsilon); //!< 空間位置
 
 			float w = exp(exp_w);
 			w *= pow(max(0.0f, dot(surface.normal, sample_surface.normal)), gParameter.sigma_n); //!< 法線

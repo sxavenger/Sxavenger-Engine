@@ -575,20 +575,21 @@ void FSceneRenderer::RenderPathtracingPass(const DirectXQueueContext* context, c
 	commandList->SetComputeRootDescriptorTable(0, textures_->GetGBuffer(FRenderTargetTextures::GBufferLayout::Main)->GetGPUHandleUAV());
 	commandList->SetComputeRootDescriptorTable(1, textures_->GetGBuffer(FRenderTargetTextures::GBufferLayout::Normal)->GetGPUHandleUAV());
 	commandList->SetComputeRootDescriptorTable(2, textures_->GetGBuffer(FRenderTargetTextures::GBufferLayout::MaterialARM)->GetGPUHandleUAV());
-	commandList->SetComputeRootDescriptorTable(3, textures_->GetDepth()->GetRaytracingGPUHandleUAV());
-	commandList->SetComputeRootConstantBufferView(4, config.camera->GetGPUVirtualAddress());
-	commandList->SetComputeRootShaderResourceView(5, config.scene->GetTopLevelAS().GetGPUVirtualAddress());
-	commandList->SetComputeRootConstantBufferView(6, reservoir_->GetGPUVirtualAddress());
+	commandList->SetComputeRootDescriptorTable(3, textures_->GetGBuffer(FRenderTargetTextures::GBufferLayout::Position)->GetGPUHandleUAV());
+	commandList->SetComputeRootDescriptorTable(4, textures_->GetDepth()->GetRaytracingGPUHandleUAV());
+	commandList->SetComputeRootConstantBufferView(5, config.camera->GetGPUVirtualAddress());
+	commandList->SetComputeRootShaderResourceView(6, config.scene->GetTopLevelAS().GetGPUVirtualAddress());
+	commandList->SetComputeRootConstantBufferView(7, reservoir_->GetGPUVirtualAddress());
 
-	commandList->SetComputeRootConstantBufferView(7, config.scene->directionalLightCount_->GetGPUVirtualAddress());
-	commandList->SetComputeRootShaderResourceView(8, config.scene->directionalLightTransforms_->GetGPUVirtualAddress());
-	commandList->SetComputeRootShaderResourceView(9, config.scene->directionalLightParams_->GetGPUVirtualAddress());
-	commandList->SetComputeRootShaderResourceView(10, config.scene->directionalLightShadowParams_->GetGPUVirtualAddress());
+	commandList->SetComputeRootConstantBufferView(8, config.scene->directionalLightCount_->GetGPUVirtualAddress());
+	commandList->SetComputeRootShaderResourceView(9, config.scene->directionalLightTransforms_->GetGPUVirtualAddress());
+	commandList->SetComputeRootShaderResourceView(10, config.scene->directionalLightParams_->GetGPUVirtualAddress());
+	commandList->SetComputeRootShaderResourceView(11, config.scene->directionalLightShadowParams_->GetGPUVirtualAddress());
 
-	commandList->SetComputeRootConstantBufferView(11, config.scene->pointLightCount_->GetGPUVirtualAddress());
-	commandList->SetComputeRootShaderResourceView(12, config.scene->pointLightTransforms_->GetGPUVirtualAddress());
-	commandList->SetComputeRootShaderResourceView(13, config.scene->pointLightParams_->GetGPUVirtualAddress());
-	commandList->SetComputeRootShaderResourceView(14, config.scene->pointLightShadowParams_->GetGPUVirtualAddress());
+	commandList->SetComputeRootConstantBufferView(12, config.scene->pointLightCount_->GetGPUVirtualAddress());
+	commandList->SetComputeRootShaderResourceView(13, config.scene->pointLightTransforms_->GetGPUVirtualAddress());
+	commandList->SetComputeRootShaderResourceView(14, config.scene->pointLightParams_->GetGPUVirtualAddress());
+	commandList->SetComputeRootShaderResourceView(15, config.scene->pointLightShadowParams_->GetGPUVirtualAddress());
 
 	config.scene->GetStateObjectContext().DispatchRays(context->GetDxCommand(), textures_->GetSize());
 

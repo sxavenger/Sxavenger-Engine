@@ -121,7 +121,7 @@ void SwapChain::SetColorSpace(const DXGI_OUTPUT_DESC1& desc) {
 	);
 	Exception::Assert(SUCCEEDED(hr), "HDR metadata setting failed.");
 
-	Logger::EngineLog(std::format("[_DXOBJECT SwapChain] color space changed: ", magic_enum::enum_name(colorSpace_)));
+	Logger::EngineLog(std::format("[_DXOBJECT SwapChain] color space changed: {}", magic_enum::enum_name(colorSpace_)));
 }
 
 D3D12_RESOURCE_BARRIER SwapChain::GetBackBufferTransitionBarrier(D3D12_RESOURCE_STATES stateBefore, D3D12_RESOURCE_STATES stateAfter) const {
