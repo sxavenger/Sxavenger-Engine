@@ -33,6 +33,8 @@ public:
 
 	void PresentWindows();
 
+	DirectXWindowContext* GetMainWindow() const { return main_.get(); }
+
 	DirectXWindowContext* GetForcusWindow() const;
 
 	//* debug option *//

@@ -14,7 +14,7 @@
 // FSceneRenderer class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-void FSceneRenderer::Render(const DirectXQueueContext* context, const Config& config) {
+void FSceneRenderer::Render(const DirectXQueueContext* context, DirectXWindowContext* window, const Config& config) {
 
 	//* configの確認
 	Config conf = config;
@@ -34,7 +34,7 @@ void FSceneRenderer::Render(const DirectXQueueContext* context, const Config& co
 	switch (config.technique) {
 		case GraphicsTechnique::Deferred:
 			textures_->ClearTextures(context);
-			RenderTechniqueDeferred(context, conf);
+			RenderTechniqueDeferred(context, window, conf);
 			break;
 
 		/*case GraphicsTechnique::Raytracing:
@@ -499,7 +499,7 @@ void FSceneRenderer::PostProcessPass(const DirectXQueueContext* context, const C
 	textures_->EndPostProcess(context);
 }
 
-void FSceneRenderer::CompositeProcessPass(const DirectXQueueContext* context, const Config& config) {
+void FSceneRenderer::CompositeProcessPass(const DirectXQueueContext* context, DirectXWindowContext* window, const Config& config) {
 
 	if (!config.isEnableComposite) {
 		return;
@@ -507,7 +507,7 @@ void FSceneRenderer::CompositeProcessPass(const DirectXQueueContext* context, co
 
 	textures_->GetGBuffer(FRenderTargetTextures::GBufferLayout::Main)->TransitionBeginUnordered(context);
 
-	CompositeProcessPassTonemap(context, config);
+	CompositeProcessPassTonemap(context, window, config);
 
 	// componentを取得
 	sComponentStorage->ForEachActive<CompositeProcessLayerComponent>([&](CompositeProcessLayerComponent* component) {
@@ -526,7 +526,7 @@ void FSceneRenderer::CompositeProcessPass(const DirectXQueueContext* context, co
 
 }
 
-void FSceneRenderer::CompositeProcessPassTonemap(const DirectXQueueContext* context, const Config& config) {
+void FSceneRenderer::CompositeProcessPassTonemap(const DirectXQueueContext* context, DirectXWindowContext* window, const Config& config) {
 
 	config;
 
@@ -538,6 +538,9 @@ void FSceneRenderer::CompositeProcessPassTonemap(const DirectXQueueContext* cont
 	// common
 	parameter.SetAddress("gConfig", textures_->GetDimension());
 	parameter.SetHandle("gTexture", textures_->GetGBuffer(FRenderTargetTextures::GBufferLayout::Main)->GetGPUHandleUAV());
+
+	auto space = window->GetColorSpace();
+	parameter.Set32bitConstants("ColorSpaceBuffer", 1, static_cast<const void*>(&space));
 
 	FRenderCore::GetInstance()->GetProcess()->BindComputeBuffer(
 		FRenderCoreProcess::CompositeType::Tonemap, context, parameter
@@ -637,7 +640,7 @@ void FSceneRenderer::DenoiserPass(const DirectXQueueContext* context, const Conf
 	
 }
 
-void FSceneRenderer::RenderTechniqueDeferred(const DirectXQueueContext* context, const Config& config) {
+void FSceneRenderer::RenderTechniqueDeferred(const DirectXQueueContext* context, DirectXWindowContext* window, const Config& config) {
 
 	RenderGeometryPass(context, config);
 
@@ -649,7 +652,7 @@ void FSceneRenderer::RenderTechniqueDeferred(const DirectXQueueContext* context,
 
 	PostProcessPass(context, config);
 
-	CompositeProcessPass(context, config);
+	CompositeProcessPass(context, window, config);
 }
 
 void FSceneRenderer::RenderTechniqueRaytracing(const DirectXQueueContext* context, const Config& config) {

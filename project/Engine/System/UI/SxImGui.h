@@ -42,6 +42,11 @@ namespace SxImGui {
 
 	void PlotHistogramFunc(const char* label, const std::function<float(int32_t idx)>& func, int32_t values_count, int32_t values_offset = 0, const char* overlay_text = NULL, const std::optional<float>& scale_min = std::nullopt, const std::optional<float>& scale_max = std::nullopt, ImVec2 graph_size = ImVec2(0, 0));
 
+	bool BeginHoveredTooltip(ImGuiHoveredFlags flags = ImGuiHoveredFlags_None);
+
+	void EndHoveredTooltip();
+
+
 	//=========================================================================================
 	// option
 	//=========================================================================================

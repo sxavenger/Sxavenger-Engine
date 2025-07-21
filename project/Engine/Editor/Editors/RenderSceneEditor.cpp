@@ -87,7 +87,7 @@ void RenderSceneEditor::Render() {
 		return;
 	}
 	
-	renderer_->Render(SxavengerSystem::GetDirectQueueContext(), config_);
+	renderer_->Render(SxavengerSystem::GetDirectQueueContext(), SxavengerSystem::GetMainWindow(), config_);
 
 	//* Debug Render *//
 	textures_->BeginTransparentBasePass(SxavengerSystem::GetDirectQueueContext());

@@ -65,6 +65,8 @@ public:
 
 	static void PresentWindows();
 
+	static DirectXWindowContext* GetMainWindow();
+
 	static DirectXWindowContext* GetForcusWindow();
 
 	static WindowCollection* GetWindowCollection();

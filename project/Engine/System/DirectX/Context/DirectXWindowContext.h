@@ -46,15 +46,6 @@ public:
 		Window
 	};
 
-	////////////////////////////////////////////////////////////////////////////////////////////
-	// ColorSpace enum class
-	////////////////////////////////////////////////////////////////////////////////////////////
-	enum class ColorSpace : uint8_t {
-		Rec_709,
-		Rec_2020_1000nit,
-		Rec_2020_2000nit,
-	};
-
 public:
 
 	//=========================================================================================
@@ -96,6 +87,8 @@ public:
 
 	const Vector2ui& GetSize() const { return size_; }
 
+	ProcessCategory GetCategory() const { return category_; }
+
 	//* window getter *//
 
 	const HINSTANCE& GetHinst() const { return hinst_; }
@@ -103,6 +96,10 @@ public:
 	const HWND& GetHwnd() const { return hwnd_; }
 
 	bool IsOpenWindow() const { return hwnd_ != nullptr && IsWindow(hwnd_); }
+
+	//* DirectX getter *//
+
+	const DxObject::SwapChain::ColorSpace GetColorSpace() const;
 
 	//=========================================================================================
 	// public variables
@@ -124,7 +121,6 @@ private:
 	ProcessCategory category_;
 
 	Color4f clearColor_;
-	ColorSpace colorSpace_ = ColorSpace::Rec_709;
 
 	//* windows *//
 

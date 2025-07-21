@@ -24,7 +24,7 @@ public:
 	////////////////////////////////////////////////////////////////////////////////////////////
 	// ColorSpace enum class
 	////////////////////////////////////////////////////////////////////////////////////////////
-	enum class ColorSpace : uint8_t {
+	enum class ColorSpace : uint32_t {
 		Rec_709,
 		Rec_2020_1000nit,
 		Rec_2020_2000nit,
@@ -57,6 +57,8 @@ public:
 	D3D12_RESOURCE_BARRIER GetBackBufferTransitionBarrier(D3D12_RESOURCE_STATES stateBefore, D3D12_RESOURCE_STATES stateAfter) const;
 
 	const D3D12_CPU_DESCRIPTOR_HANDLE& GetBackBufferCPUHandle() const { return descriptorsRTV_[GetCurrentBackBufferIndex()].GetCPUHandle(); }
+
+	const ColorSpace GetColorSpace() const { return colorSpace_; }
 
 	static const UINT GetBufferCount() { return kBufferCount_; }
 

@@ -27,8 +27,8 @@ void FMainRender::Term() {
 	canvasRenderer_.reset();
 }
 
-void FMainRender::Render(const DirectXQueueContext* context) {
-	sceneRenderer_->Render(context);
+void FMainRender::Render(const DirectXQueueContext* context, DirectXWindowContext* window) {
+	sceneRenderer_->Render(context, window);
 	canvasRenderer_->Render(context);
 }
 

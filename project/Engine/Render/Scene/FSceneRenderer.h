@@ -97,7 +97,7 @@ public:
 	FSceneRenderer()  = default;
 	~FSceneRenderer() = default;
 
-	void Render(const DirectXQueueContext* context, const Config& config = {});
+	void Render(const DirectXQueueContext* context, DirectXWindowContext* window, const Config& config = {});
 
 	//* setter *//
 
@@ -160,8 +160,8 @@ private:
 
 	void PostProcessPass(const DirectXQueueContext* context, const Config& config);
 
-	void CompositeProcessPass(const DirectXQueueContext* context, const Config& config);
-	void CompositeProcessPassTonemap(const DirectXQueueContext* context, const Config& config);
+	void CompositeProcessPass(const DirectXQueueContext* context, DirectXWindowContext* window, const Config& config);
+	void CompositeProcessPassTonemap(const DirectXQueueContext* context, DirectXWindowContext* window, const Config& config);
 
 	//* path tracing helper methods *//
 
@@ -171,7 +171,7 @@ private:
 
 	//* technique *//
 
-	void RenderTechniqueDeferred(const DirectXQueueContext* context, const Config& config);
+	void RenderTechniqueDeferred(const DirectXQueueContext* context, DirectXWindowContext* window, const Config& config);
 
 	void RenderTechniqueRaytracing(const DirectXQueueContext* context, const Config& config);
 

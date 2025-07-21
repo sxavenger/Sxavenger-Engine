@@ -32,7 +32,7 @@ public:
 
 	//* option *//
 
-	void Render(const DirectXQueueContext* context);
+	void Render(const DirectXQueueContext* context, DirectXWindowContext* window);
 
 	void PresentMain(const DirectXQueueContext* context);
 

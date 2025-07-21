@@ -696,7 +696,7 @@ namespace ACES {
 	//! @brief Output Device Transform[OCES -> Rec.2020 (1000 cd/m^2)]
 	//! @param[in] oces: OCES color space
 	//! @return: Rec.2020 (1000 cd/m^2) color space
-	float3 ODT_1000nit(float3 oces) {
+	float3 ODT_1000nits(float3 oces) {
 
 		// OCES to RGB rendering space
 		float3 rgbPre = mul(AP0_2_AP1_Matrix, oces);

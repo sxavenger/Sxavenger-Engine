@@ -104,7 +104,7 @@ void DemoGameLoop::UpdateGame() {
 
 void DemoGameLoop::DrawGame() {
 
-	FMainRender::GetInstance()->Render(SxavengerSystem::GetDirectQueueContext());
+	FMainRender::GetInstance()->Render(SxavengerSystem::GetDirectQueueContext(), main_.get());
 
 	main_->BeginRenderWindow(SxavengerSystem::GetDirectQueueContext());
 	main_->ClearWindow(SxavengerSystem::GetDirectQueueContext());

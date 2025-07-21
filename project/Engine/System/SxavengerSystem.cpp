@@ -97,6 +97,10 @@ void SxavengerSystem::PresentWindows() {
 	sWindowCollection->PresentWindows();
 }
 
+DirectXWindowContext* SxavengerSystem::GetMainWindow() {
+	return sWindowCollection->GetMainWindow();
+}
+
 DirectXWindowContext* SxavengerSystem::GetForcusWindow() {
 	return sWindowCollection->GetForcusWindow();
 }

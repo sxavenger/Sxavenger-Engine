@@ -321,3 +321,16 @@ void SxImGui::PlotHistogramFunc(const char* label, const std::function<float(int
 		ImGui::RenderText(ImVec2(frame_bb.Max.x + style.ItemInnerSpacing.x, inner_bb.Min.y), label);
 	}
 }
+
+bool SxImGui::BeginHoveredTooltip(ImGuiHoveredFlags flags) {
+	if (ImGui::IsItemHovered(flags)) {
+		ImGui::BeginTooltip();
+		return true;
+	}
+
+	return false;
+}
+
+void SxImGui::EndHoveredTooltip() {
+	ImGui::EndTooltip();
+}

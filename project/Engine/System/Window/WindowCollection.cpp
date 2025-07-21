@@ -3,8 +3,12 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
+//* engine
+#include <Engine/System/UI/SxImGui.h>
+
 //* external
 #include <imgui.h>
+#include <magic_enum.hpp>
 
 //* c++
 #include <ranges>
@@ -97,6 +101,28 @@ void WindowCollection::SystemDebugGui() {
 	ImGui::SeparatorText("main window");
 	if (ImGui::Selectable(ToString(main_->GetName()).c_str(), main_.get() == current)) {
 		SetForegroundWindow(main_->GetHwnd());
+	}
+
+	if (SxImGui::BeginHoveredTooltip()) {
+
+		ImGui::Text("common info");
+		ImGui::Separator();
+		ImGui::Text("name:     %s",      ToString(main_->GetName()).c_str());
+		ImGui::Text("size:     %u x %u", main_->GetSize().x, main_->GetSize().y);
+		ImGui::Text("category: %s",      magic_enum::enum_name(main_->GetCategory()).data());
+		ImGui::Dummy({ 0, 4 });
+		
+		ImGui::Text("window info");
+		ImGui::Separator();
+		ImGui::Text("hwnd:  0x%p", static_cast<void*>(main_->GetHwnd()));
+		ImGui::Text("hinst: 0x%p", static_cast<void*>(main_->GetHinst()));
+		ImGui::Dummy({ 0, 4 });
+
+		ImGui::Text("DirectX info");
+		ImGui::Separator();
+		ImGui::Text("color space: %s", magic_enum::enum_name(main_->GetColorSpace()).data());
+
+		SxImGui::EndHoveredTooltip();
 	}
 
 	ImGui::SeparatorText("sub window");

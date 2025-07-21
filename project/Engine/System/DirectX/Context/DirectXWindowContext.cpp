@@ -182,6 +182,11 @@ void DirectXWindowContext::Present() {
 	swapChain_->Present();
 }
 
+const DxObject::SwapChain::ColorSpace DirectXWindowContext::GetColorSpace() const {
+	Exception::Assert(swapChain_ != nullptr, "window is not created.");
+	return swapChain_->GetColorSpace();
+}
+
 LRESULT DirectXWindowContext::WindowProcApplication(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
 
 	auto instance = reinterpret_cast<DirectXWindowContext*>(GetWindowLongPtr(hwnd, GWLP_USERDATA));
@@ -292,11 +297,6 @@ ComPtr<IDXGIOutput6> DirectXWindowContext::GetOutput6() {
 }
 
 void DirectXWindowContext::CheckSupportHDR() {
-	/*if (true) {
-		Logger::LogRuntime("called check support hdr.");
-		return;
-	}*/
-	
 
 	if (swapChain_ == nullptr) {
 		Logger::WarningRuntime("[DirectXWindowContext] warning | window is not create.");

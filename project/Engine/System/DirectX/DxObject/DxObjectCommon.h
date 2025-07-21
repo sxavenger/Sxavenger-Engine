@@ -161,9 +161,9 @@ CompileProfile ToProfile(GraphicsShaderType type);
 constexpr const D3D_SHADER_MODEL kHeighestShaderModel = D3D_SHADER_MODEL_6_6;
 static_assert(kHeighestShaderModel >= D3D_SHADER_MODEL_6_5, "mesh shader is 6.5 or higher");
 
-constexpr const DXGI_FORMAT kDefaultScreenFormat     = DXGI_FORMAT_R8G8B8A8_UNORM;      //!< スクリーン画面のformat
+constexpr const DXGI_FORMAT kDefaultScreenFormat     = DXGI_FORMAT_R8G8B8A8_UNORM;          //!< スクリーン画面のformat
 constexpr const DXGI_FORMAT kDefaultScreenViewFormat = ConvertToSRGB(kDefaultScreenFormat); //!< 最終的なスクリーン画面のformat
-constexpr const DXGI_FORMAT kDefaultOffscreenFormat  = DXGI_FORMAT_R8G8B8A8_UNORM;          //!< offscreenで使われるformat
+constexpr const DXGI_FORMAT kDefaultOffscreenFormat  = kDefaultScreenFormat;                //!< offscreenで使われるformat
 
 constexpr const DXGI_FORMAT kDefaultDepthFormat     = DXGI_FORMAT_D32_FLOAT_S8X24_UINT;
 constexpr const DXGI_FORMAT kDefaultDepthViewFormat = DXGI_FORMAT_R32_FLOAT_X8X24_TYPELESS;

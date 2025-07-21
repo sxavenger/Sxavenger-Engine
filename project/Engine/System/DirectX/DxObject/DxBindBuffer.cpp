@@ -109,7 +109,9 @@ void BindBufferTable::BindBufferInfo::Create(ID3D12ShaderReflection* reflection,
 	type           = _desc.Type;
 	bindBufferType = ToBindBufferType(_desc.Type);
 
-	if (bindBufferType == BindBufferType::kVirtual_CBV) {
+	if (bindBufferType == BindBufferType::kVirtual_CBV && std::isupper(_desc.Name[0])) {
+		//!< "G---"から始まるConstantBufferは32bitConstantsに変更
+		bindBufferType = BindBufferType::k32bitConstants;
 		ID3D12ShaderReflectionConstantBuffer* constantbuffer = reflection->GetConstantBufferByName(_desc.Name);
 		D3D12_SHADER_BUFFER_DESC desc = {};
 		constantbuffer->GetDesc(&desc);
@@ -239,13 +241,12 @@ ComputeRootSignatureDesc BindBufferTable::CreateComputeRootSignatureDesc() {
 		Exception::Assert(info.visibility == ShaderVisibility::VISIBILITY_ALL, "buffer visibility is not VISIBILITY_ALL");
 
 		switch (info.bindBufferType) {
+			case BindBufferType::k32bitConstants:
+				desc.Set32bitConstants(rootIndex, info.visibility, static_cast<UINT>(info.num32bit), info.registerNum, info.registerSpace);
+				break;
+
 			case BindBufferType::kVirtual_CBV:
-				if (std::toupper(name[0])) { //!< "S---" のような名前の場合は32bitConstantsとして設定
-					desc.Set32bitConstants(rootIndex, info.visibility, static_cast<UINT>(info.num32bit), info.registerNum, info.registerSpace);
-					
-				} else { //!< "g---" のような名前の場合はVirtualCBVとして設定
-					desc.SetVirtualCBV(rootIndex, info.registerNum, info.registerSpace);
-				}
+				desc.SetVirtualCBV(rootIndex, info.registerNum, info.registerSpace);
 				break;
 
 			case BindBufferType::kVirtual_SRV:
@@ -287,13 +288,12 @@ ComputeRootSignatureDesc BindBufferTable::CreateComputeRootSignatureDesc(const S
 		Exception::Assert(info.visibility == ShaderVisibility::VISIBILITY_ALL, "buffer visibility is not VISIBILITY_ALL");
 
 		switch (info.bindBufferType) {
-			case BindBufferType::kVirtual_CBV:
-				if (std::toupper(name[0])) { //!< "S---" のような名前の場合は32bitConstantsとして設定
-					desc.Set32bitConstants(rootIndex, info.visibility, static_cast<UINT>(info.num32bit), info.registerNum, info.registerSpace);
+			case BindBufferType::k32bitConstants:
+				desc.Set32bitConstants(rootIndex, info.visibility, static_cast<UINT>(info.num32bit), info.registerNum, info.registerSpace);
+				break;
 
-				} else { //!< "g---" のような名前の場合はVirtualCBVとして設定
-					desc.SetVirtualCBV(rootIndex, info.registerNum, info.registerSpace);
-				}
+			case BindBufferType::kVirtual_CBV:
+				desc.SetVirtualCBV(rootIndex, info.registerNum, info.registerSpace);
 				break;
 
 			case BindBufferType::kVirtual_SRV:
