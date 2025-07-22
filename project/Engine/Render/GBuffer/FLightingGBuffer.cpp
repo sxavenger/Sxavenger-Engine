@@ -23,6 +23,11 @@ void FLightingGBuffer::Init(const Vector2ui& size) {
 	for (size_t i = 0; i < kLayoutCount_; ++i) {
 		buffers_[i] = std::make_unique<FBaseTexture>();
 		buffers_[i]->Create(size, kFormats_[i]);
+
+		// nameの設定
+		std::string name = "FLightingGBuffer | ";
+		name += magic_enum::enum_name(static_cast<FLightingGBuffer::Layout>(i));
+		buffers_[i]->GetResource()->SetName(ToWString(name).c_str());
 	}
 }
 
