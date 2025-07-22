@@ -29,6 +29,9 @@ void FRenderCore::Init() {
 	process_ = std::make_unique<FRenderCoreProcess>();
 	process_->Init();
 
+	transition_ = std::make_unique<FRenderCoreTransition>();
+	transition_->Init();
+
 	brdfLut_ = SxavengerAsset::TryImport<AssetTexture>(kPackagesDirectory / "textures/rendering/brdf_lut.png", Texture::Option{ Texture::Encoding::Intensity, false });
 }
 
@@ -38,6 +41,7 @@ void FRenderCore::Term() {
 	pathtracing_.reset();
 	layer_.reset();
 	process_.reset();
+	transition_.reset();
 }
 
 const D3D12_GPU_DESCRIPTOR_HANDLE& FRenderCore::GetBRDFLut() const {

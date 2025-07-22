@@ -4,27 +4,13 @@
 // include
 //-----------------------------------------------------------------------------------------
 //* render
-#include "../FRenderTargetTextures.h"
+#include "../FRenderTargetBuffer.h"
 #include "../FRenderCore.h"
 #include "FScene.h"
 
 //* engine
-#include <Engine/System/DirectX/DxObject/DxVectorDimensionBuffer.h>
-#include <Engine/System/DirectX/Context/DirectXQueueContext.h>
-#include <Engine/Component/Components/ComponentStorage.h>
+//* component
 #include <Engine/Component/Components/Camera/CameraComponent.h>
-#include <Engine/Component/Components/MeshRenderer/MeshRendererComponent.h>
-#include <Engine/Component/Components/MeshRenderer/SkinnedMeshRendererComponent.h>
-#include <Engine/Component/Components/Light/Punctual/DirectionalLightComponent.h>
-#include <Engine/Component/Components/Light/Punctual/PointLightComponent.h>
-#include <Engine/Component/Components/Light/Rect/RectLightComponent.h>
-#include <Engine/Component/Components/Light/Environment/SkyLightComponent.h>
-#include <Engine/Component/Components/Particle/ParticleComponent.h>
-#include <Engine/Component/Components/PostProcessLayer/PostProcessLayerComponent.h>
-#include <Engine/Component/Components/CompositeProcessLayer/CompositeProcessLayerComponent.h>
-
-//* lib
-#include <Lib/Sxl/Flag.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // FSceneRenderer class
@@ -33,26 +19,12 @@ class FSceneRenderer {
 public:
 
 	////////////////////////////////////////////////////////////////////////////////////////////
-	// Status enum class
-	////////////////////////////////////////////////////////////////////////////////////////////
-	enum class Status : uint32_t {
-		Success = 0,
-
-		//* vvv error type vvv *//
-		Error_Textures = 1 << 0,
-		Error_Camera   = 1 << 1,
-
-		//* vvv error vvv *//
-		Status_Error = Error_Textures | Error_Camera,
-	};
-
-	////////////////////////////////////////////////////////////////////////////////////////////
 	// GraphicsTechnique enum class
 	////////////////////////////////////////////////////////////////////////////////////////////
 	enum class GraphicsTechnique : uint8_t {
 		Deferred,
-		//Raytracing, //!< todo
 		Pathtracing,
+		//Raytracing, //!< todo
 	};
 
 	////////////////////////////////////////////////////////////////////////////////////////////
@@ -61,9 +33,35 @@ public:
 	struct Config {
 	public:
 
+		////////////////////////////////////////////////////////////////////////////////////////////
+		// Status enum class
+		////////////////////////////////////////////////////////////////////////////////////////////
+		enum class Status : uint32_t {
+			Success = 0,
+
+			//* vvv error type vvv *//
+			Error_Buffer = 1 << 0,
+			Error_Camera = 1 << 1,
+			Error_Scene  = 1 << 2,
+			Status_Error = Error_Buffer | Error_Camera | Error_Scene,
+
+		};
+
+	public:
+
+		//=========================================================================================
+		// public methods
+		//=========================================================================================
+
+		Sxl::Flag<Status> CheckStatus() const;
+
 		//=========================================================================================
 		// public variables
 		//=========================================================================================
+
+		//* render target buffer *//
+
+		FRenderTargetBuffer* buffer = nullptr;
 
 		//* graphics setting *//
 
@@ -81,11 +79,10 @@ public:
 		//* process setting *//
 
 		bool isEnablePostProcess = true;
+		bool isElableTonemap     = true;
 
-		//* composite setting *//
-
-		bool isEnableComposite = true;
-
+		DxObject::SwapChain::ColorSpace colorSpace = DxObject::SwapChain::ColorSpace::Rec_709;
+		
 	};
 
 public:
@@ -94,24 +91,7 @@ public:
 	// public methods
 	//=========================================================================================
 
-	FSceneRenderer()  = default;
-	~FSceneRenderer() = default;
-
-	void Render(const DirectXQueueContext* context, DirectXWindowContext* window, const Config& config = {});
-
-	//* setter *//
-
-	void SetTextures(FRenderTargetTextures* textures) { textures_ = textures; }
-
-	//* option *//
-
-	void ResetReserviour(const DirectXQueueContext* context);
-
-	const uint32_t GetCurrentSampleCount() const;
-
-	//* debug *//
-
-	void DebugGui();
+	void Render(const DirectXQueueContext* context, const Config& config = {});
 
 private:
 
@@ -119,63 +99,53 @@ private:
 	// private variables
 	//=========================================================================================
 
-	//* textures *//
-
-	FRenderTargetTextures* textures_ = nullptr;
-
-	//* path tracing parameter *//
-
-	std::unique_ptr<DxObject::DimensionBuffer<FRenderCorePathtracing::Reservoir>> reservoir_;
-	bool isResetReservoir_ = false;
-
-	std::unique_ptr<DxObject::DimensionBuffer<Vector3f>> test_;
-
 	//=========================================================================================
 	// private methods
 	//=========================================================================================
 
-	void ApplyConfig(Config& config);
+	//* config helper methods *//
 
-	Sxl::Flag<Status> CheckStatus(const Config& config) const;
+	Config ApplyConfig(const Config& config) const;
 
-	//* deferred render helper methods *//
+	//* base pass helper methods *//
 
-	void RenderGeometryPass(const DirectXQueueContext* context, const Config& config);
-	void RenderGeometryStaticMeshDefault(const DirectXQueueContext* context, const Config& config);
-	void RenderGeometrySkinnedMesh(const DirectXQueueContext* context, const Config& config);
+	void RenderBasePass(const DirectXQueueContext* context, const Config& config);
 
-	void LightingPass(const DirectXQueueContext* context, const Config& config);
-	void LightingEmpty(const DirectXQueueContext* context, const Config& config);
-	void LightingPassDirectionalLight(const DirectXQueueContext* context, const Config& config);
-	void LightingPassPointLight(const DirectXQueueContext* context, const Config& config);
-	void LightingPassRectLight(const DirectXQueueContext* context, const Config& config);
-	void LightingPassSkyLight(const DirectXQueueContext* context, const Config& config);
+	void RenderBasePassStaticMesh(const DirectXQueueContext* context, const Config& config);
+	void RenderBasePassSkinnedMesh(const DirectXQueueContext* context, const Config& config);
 
-	void AmbientProcessPass(const DirectXQueueContext* context, const Config& config);
-	void AmbientProcessPassSkyBox(const DirectXQueueContext* context, const Config& config);
+	//* lighting pass helper methods *//
 
-	void RenderTransparentBasePass(const DirectXQueueContext* context, const Config& config);
-	void RenderTransparentBaseStaticMesh(const DirectXQueueContext* context, const Config& config);
-	void RenderTransparentParticle(const DirectXQueueContext* context, const Config& config);
+	void ProcessLightingPass(const DirectXQueueContext* context, const Config& config);
 
-	void PostProcessPass(const DirectXQueueContext* context, const Config& config);
+	void ProcessLightingPassEmpty(const DirectXQueueContext* context, const Config& config);
+	void ProcessLightingPassDirectionalLight(const DirectXQueueContext* context, const Config& config);
+	void ProcessLightingPassPointLight(const DirectXQueueContext* context, const Config& config);
+	// todo: spot light
+	// todo: rect light
+	void ProcessLightingPassSkyLight(const DirectXQueueContext* context, const Config& config);
 
-	void CompositeProcessPass(const DirectXQueueContext* context, DirectXWindowContext* window, const Config& config);
-	void CompositeProcessPassTonemap(const DirectXQueueContext* context, DirectXWindowContext* window, const Config& config);
+	void LightingPassTransition(const DirectXQueueContext* context, const Config& config);
 
-	//* path tracing helper methods *//
+	//* ambient pass helper methods *//
 
-	void RenderPathtracingPass(const DirectXQueueContext* context, const Config& config);
+	void ProcessAmbientPass(const DirectXQueueContext* context, const Config& config);
 
-	void DenoiserPass(const DirectXQueueContext* context, const Config& config);
+	void ProcessAmbientPassSkyBox(const DirectXQueueContext* context, const Config& config);
 
-	//* technique *//
+	//* transparent pass helper methods *//
 
-	void RenderTechniqueDeferred(const DirectXQueueContext* context, DirectXWindowContext* window, const Config& config);
+	void RenderTransparentPass(const DirectXQueueContext* context, const Config& config);
 
-	void RenderTechniqueRaytracing(const DirectXQueueContext* context, const Config& config);
+	void RenderTransparentPassStaticMesh(const DirectXQueueContext* context, const Config& config);
+	void RenderTransparentPassParticle(const DirectXQueueContext* context, const Config& config);
 
-	void RenderTechniquePathtracing(const DirectXQueueContext* context, const Config& config);
+	//* post process helper methods *//
 
+	void ProcessPostProcessPass(const DirectXQueueContext* context, const Config& config);
+
+	//* tonemap pass helper methods *//
+
+	void ProcessTonemapPass(const DirectXQueueContext* context, const Config& config);
 
 };

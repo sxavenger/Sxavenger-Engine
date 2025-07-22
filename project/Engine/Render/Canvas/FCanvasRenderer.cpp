@@ -19,11 +19,11 @@ void FCanvasRenderer::Render(const DirectXQueueContext* context) {
 		return;
 	}
 
-	textures_->BeginCanvasPass(context);
+	textures_->BeginRenderTargetMainUI(context);
 
 	RenderSpriteComponents(context);
 
-	textures_->EndCanvasPass(context);
+	textures_->EndRenderTargetMainUI(context);
 }
 
 bool FCanvasRenderer::CheckRender() const {
@@ -48,7 +48,7 @@ void FCanvasRenderer::RenderSpriteComponents(const DirectXQueueContext* context)
 		sprite->BindAIBuffer(context);
 
 		DxObject::BindBufferDesc parameter = {};
-		parameter.SetAddress("gParameter",        textures_->GetDimension());
+		parameter.Set32bitConstants("Dimension", 2, &textures_->GetSize());
 		parameter.SetAddress("gTransformation2d", sprite->GetTransform2dBuffer());
 		parameter.SetAddress("gTransformationUV", sprite->GetTransformUVBuffer());
 		parameter.SetHandle("gTexture",           sprite->GetTexture());

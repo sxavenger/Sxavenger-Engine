@@ -1,21 +1,16 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
-#include "../Process.hlsli"
+#include "Transition.hlsli"
 
 //=========================================================================================
 // buffers
 //=========================================================================================
 
-RWTexture2D<float4> gTexture : register(u0); //!< output texture
+Texture2D<float4> gDirect   : register(t0);
+Texture2D<float4> gIndirect : register(t1);
 
-Texture3D<float3> gLUTTexture : register(t0); //!< LUT texture
-SamplerState gLUTSampler      : register(s0); //!< sampler state for LUT texture
-
-struct Parameter {
-	float intensity;
-};
-ConstantBuffer<Parameter> gParameter : register(b0);
+RWTexture2D<float4> gOutput : register(u0);
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // main
@@ -24,17 +19,17 @@ ConstantBuffer<Parameter> gParameter : register(b0);
 void main(uint3 dispatchThreadId : SV_DispatchThreadID) {
 
 	uint2 index = dispatchThreadId.xy;
-	
+
 	if (CheckOverTexture(index)) {
-		return; //!< texture size over
+		return;
 	}
+	
+	float4 direct   = gDirect[index];
+	float4 indirect = gIndirect[index];
 
-	float4 color = gTexture[index];
+	float4 output = direct + indirect;
+	output.a = 1.0f;
 
-	// LUT
-	float3 grading = gLUTTexture.SampleLevel(gLUTSampler, saturate(color.rgb), 0); //!< sample LUT texture
-
-	gTexture[index].rgb = lerp(color.rgb, grading, gParameter.intensity);
-	gTexture[index].a = color.a;
+	gOutput[index] = output;
 	
 }

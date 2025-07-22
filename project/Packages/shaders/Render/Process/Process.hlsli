@@ -16,16 +16,15 @@
 // buffers
 //=========================================================================================
 
-struct Config {
+cbuffer Dimension : register(b10) {
 	uint2 size;
-};
-ConstantBuffer<Config> gConfig : register(b10);
+}
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // common methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 bool CheckOverTexture(uint2 index) {
-	return any(index >= gConfig.size);
+	return any(index >= size);
 }
 

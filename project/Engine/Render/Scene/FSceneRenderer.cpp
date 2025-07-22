@@ -7,83 +7,80 @@
 #include "../FRenderCore.h"
 #include "../FMainRender.h"
 
-//* c++
-#include <execution>
+//* engine
+//* component
+#include <Engine/Component/Components/MeshRenderer/MeshRendererComponent.h>
+#include <Engine/Component/Components/MeshRenderer/SkinnedMeshRendererComponent.h>
+#include <Engine/Component/Components/Light/Punctual/DirectionalLightComponent.h>
+#include <Engine/Component/Components/Light/Punctual/PointLightComponent.h>
+#include <Engine/Component/Components/Light/Rect/RectLightComponent.h>
+#include <Engine/Component/Components/Light/Environment/SkyLightComponent.h>
+#include <Engine/Component/Components/Particle/ParticleComponent.h>
+#include <Engine/Component/Components/PostProcessLayer/PostProcessLayerComponent.h>
+
+////////////////////////////////////////////////////////////////////////////////////////////
+// Config structure methods
+////////////////////////////////////////////////////////////////////////////////////////////
+
+Sxl::Flag<FSceneRenderer::Config::Status> FSceneRenderer::Config::CheckStatus() const {
+	Sxl::Flag<Status> status = Status::Success;
+
+	if (buffer == nullptr) {
+		Logger::WarningRuntime("warning | [FSceneRenderer]::Config::CheckStatus", "buffer is nullptr.");
+		status |= Status::Error_Buffer;
+	}
+
+	if (scene == nullptr) {
+		Logger::WarningRuntime("warning | [FSceneRenderer]::Config::CheckStatus", "scene is nullptr.");
+		status |= Status::Error_Scene;
+	}
+
+	if (camera == nullptr) {
+		Logger::WarningRuntime("warning | [FSceneRenderer]::Config::CheckStatus", "camera is nullptr.");
+		status |= Status::Error_Camera;
+	}
+
+	return status;
+}
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // FSceneRenderer class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-void FSceneRenderer::Render(const DirectXQueueContext* context, DirectXWindowContext* window, const Config& config) {
+void FSceneRenderer::Render(const DirectXQueueContext* context, const Config& _config) {
+	context->RequestQueue(DirectXQueueContext::RenderQueue::Direct); //!< RenderQueueを要求
 
-	//* configの確認
-	Config conf = config;
-	ApplyConfig(conf);
+	// render configの適用, 確認
+	Config config                    = ApplyConfig(_config);
+	Sxl::Flag<Config::Status> status = config.CheckStatus();
 
-	Sxl::Flag<Status> status = CheckStatus(conf);
-
-	// texturesの確認
-	if (!status.Test(Status::Error_Textures)) {
-		//textures_->ClearTextures(context);
-	}
-
-	if (status.Any(Status::Status_Error)) {
+	if (status.Any(Config::Status::Status_Error)) {
+		Logger::ErrorRuntime("error | [FSceneRenderer]::Render", "config is invalid.");
 		return;
 	}
 
 	switch (config.technique) {
 		case GraphicsTechnique::Deferred:
-			textures_->ClearTextures(context);
-			RenderTechniqueDeferred(context, window, conf);
+			RenderBasePass(context, config);
+			ProcessLightingPass(context, config);
+			ProcessAmbientPass(context, config);
+			RenderTransparentPass(context, config);
+			ProcessPostProcessPass(context, config);
+			ProcessTonemapPass(context, config);
 			break;
-
-		/*case GraphicsTechnique::Raytracing:
-			RenderTechniqueRaytracing(context, conf);
-			break;*/
 
 		case GraphicsTechnique::Pathtracing:
-			//textures_->ClearTexturesPathtracing(context);
-			RenderTechniquePathtracing(context, conf);
 			break;
 	}
-
-	context->TransitionAllocator();
 }
 
-void FSceneRenderer::ResetReserviour(const DirectXQueueContext* context) {
-	if (reservoir_ != nullptr) {
-		reservoir_->At(0).ResetFrame(); //!< reservoirのリセット
-	}
+FSceneRenderer::Config FSceneRenderer::ApplyConfig(const Config& _config) const {
+	Config config = _config;
 
-	if (textures_ != nullptr) {
-		textures_->ClearTextures(context); //!< texturesのリセット
-	}
-
-	isResetReservoir_ = true;
-}
-
-const uint32_t FSceneRenderer::GetCurrentSampleCount() const {
-	if (reservoir_ == nullptr) {
-		return 0;
-	}
-
-	return reservoir_->At(0).GetCurrentSampleCount();
-}
-
-void FSceneRenderer::DebugGui() {
-	if (test_ == nullptr) {
-		return;
-	}
-
-	ImGui::DragFloat3("test", &test_->At(0).x, 0.01f, -100.0f, 100.0f);
-}
-
-void FSceneRenderer::ApplyConfig(Config& config) {
 	if (config.camera == nullptr) { //!< cameraが設定されていない場合, Tagのcameraを取得
 		if (config.tag != CameraComponent::Tag::None) {
-
 			// component storage から tag に一致する camera component を取得.
-			sComponentStorage->ForEach<CameraComponent>([&](CameraComponent* component) {
+			sComponentStorage->ForEachActive<CameraComponent>([&](CameraComponent* component) {
 				if (component->GetTag() == config.tag) {
 					config.camera = component;
 				}
@@ -94,37 +91,28 @@ void FSceneRenderer::ApplyConfig(Config& config) {
 	if (config.scene == nullptr) { //!< sceneが設定されていない場合, main renderから取得
 		config.scene = FMainRender::GetInstance()->GetScene();
 	}
+
+	return config;
 }
 
-Sxl::Flag<FSceneRenderer::Status> FSceneRenderer::CheckStatus(const Config& config) const {
+void FSceneRenderer::RenderBasePass(const DirectXQueueContext* context, const Config& config) {
 
-	Sxl::Flag<Status> status = Status::Success;
+	config.buffer->BeginRenderTargetDeferred(context);
 
-	if (textures_ == nullptr) {
-		Logger::WarningRuntime("warning | [FSceneRenderer]::Status", "textures is nullptr.");
-		status |= Status::Error_Textures;
-	}
+	RenderBasePassStaticMesh(context, config);
+	RenderBasePassSkinnedMesh(context, config);
 
-	if (config.camera == nullptr) {
-		Logger::WarningRuntime("warning | [FSceneRenderer]::Status", "camera is nullptr.");
-		status |= Status::Error_Camera;
-	}
+	config.buffer->EndRenderTargetDeferred(context);
 
-	return status;
 }
 
-void FSceneRenderer::RenderGeometryPass(const DirectXQueueContext* context, const Config& config) {
-	textures_->BeginGeometryPass(context);
-
-	RenderGeometryStaticMeshDefault(context, config);
-	RenderGeometrySkinnedMesh(context, config);
-
-	textures_->EndGeometryPass(context);
-}
-
-void FSceneRenderer::RenderGeometryStaticMeshDefault(const DirectXQueueContext* context, const Config& config) {
+void FSceneRenderer::RenderBasePassStaticMesh(const DirectXQueueContext* context, const Config& config) {
 
 	auto core = FRenderCore::GetInstance()->GetGeometry();
+
+	// common parameterの設定
+	DxObject::BindBufferDesc parameter = {};
+	parameter.SetAddress("gCamera", config.camera->GetGPUVirtualAddress());
 
 	sComponentStorage->ForEachActive<MeshRendererComponent>([&](MeshRendererComponent* component) {
 
@@ -137,13 +125,12 @@ void FSceneRenderer::RenderGeometryStaticMeshDefault(const DirectXQueueContext* 
 		// メッシュの描画
 		core->SetPipeline(
 			FRenderCoreGeometry::Deffered, FRenderCoreGeometry::VertexStage::DefaultVS, FRenderCoreGeometry::PixelStage::Albedo,
-			context, textures_->GetSize()
+			context, config.buffer->GetSize()
 		);
 
-		DxObject::BindBufferDesc parameter = {};
-		parameter.SetAddress("gCamera",     config.camera->GetGPUVirtualAddress());
 		parameter.SetAddress("gTransforms", component->GetTransform()->GetGPUVirtualAddress());
 		parameter.SetAddress("gMaterials",  component->GetMaterial()->GetGPUVirtualAddress());
+		//!< todo: materialをConstantBufferに変更する
 
 		core->BindGraphicsBuffer(
 			FRenderCoreGeometry::Deffered, FRenderCoreGeometry::VertexStage::DefaultVS, FRenderCoreGeometry::PixelStage::Albedo,
@@ -154,30 +141,32 @@ void FSceneRenderer::RenderGeometryStaticMeshDefault(const DirectXQueueContext* 
 
 	});
 
-	//context->TransitionAllocator();
 }
 
-void FSceneRenderer::RenderGeometrySkinnedMesh(const DirectXQueueContext* context, const Config& config) {
+void FSceneRenderer::RenderBasePassSkinnedMesh(const DirectXQueueContext* context, const Config& config) {
 
 	auto core = FRenderCore::GetInstance()->GetGeometry();
+
+	// common parameterの設定
+	DxObject::BindBufferDesc parameter = {};
+	parameter.SetAddress("gCamera", config.camera->GetGPUVirtualAddress());
 
 	sComponentStorage->ForEachActive<SkinnedMeshRendererComponent>([&](SkinnedMeshRendererComponent* component) {
 		
 		if (component->GetMaterial()->GetMode() != Material::Mode::Opaque) {
-			// 透明なジオメトリは別のパスで描画
-			return;
+			return; //!< 透明なジオメトリは別のパスで描画
 		}
+
 		component->BindIABuffer(context);
 
 		core->SetPipeline(
 			FRenderCoreGeometry::Deffered, FRenderCoreGeometry::VertexStage::DefaultVS, FRenderCoreGeometry::PixelStage::Albedo,
-			context, textures_->GetSize()
+			context, config.buffer->GetSize()
 		);
 
-		DxObject::BindBufferDesc parameter = {};
-		parameter.SetAddress("gCamera",     config.camera->GetGPUVirtualAddress());
 		parameter.SetAddress("gTransforms", component->GetTransform()->GetGPUVirtualAddress());
 		parameter.SetAddress("gMaterials",  component->GetMaterial()->GetGPUVirtualAddress());
+		//!< todo: materialをConstantBufferに変更する
 
 		core->BindGraphicsBuffer(
 			FRenderCoreGeometry::Deffered, FRenderCoreGeometry::VertexStage::DefaultVS, FRenderCoreGeometry::PixelStage::Albedo,
@@ -186,36 +175,38 @@ void FSceneRenderer::RenderGeometrySkinnedMesh(const DirectXQueueContext* contex
 
 		component->DrawCall(context, 1);
 	});
-}
-
-void FSceneRenderer::LightingPass(const DirectXQueueContext* context, const Config& config) {
-
-	textures_->BeginLightingPass(context);
-
-	//!< EmptyLight
-	LightingEmpty(context, config);
-
-	//!< DirectionalLight
-	LightingPassDirectionalLight(context, config);
-
-	//!< PointLight
-	LightingPassPointLight(context, config);
-
-	//!< RectLight
-	LightingPassRectLight(context, config);
-
-	//!< SkyLight
-	LightingPassSkyLight(context, config);
-
-	textures_->EndLightingPass(context);
 
 }
 
-void FSceneRenderer::LightingEmpty(const DirectXQueueContext* context, const Config& config) {
-	FRenderCoreLight::LightType emptyType = FRenderCoreLight::LightType::Empty;
+void FSceneRenderer::ProcessLightingPass(const DirectXQueueContext* context, const Config& config) {
+
+	//* Direct Lighting
+	config.buffer->BeginRenderTargetLightingDirect(context);
+
+	ProcessLightingPassEmpty(context, config);
+
+	//!< Punctual light
+	ProcessLightingPassDirectionalLight(context, config);
+	ProcessLightingPassPointLight(context, config);
+
+	//!< Area light
+
+	//!< Sky light
+	ProcessLightingPassSkyLight(context, config);
+
+	config.buffer->EndRenderTargetLightingDirect(context);
+
+	//* Indirect Lighting
+	// todo
+
+	LightingPassTransition(context, config);
+
+}
+
+void FSceneRenderer::ProcessLightingPassEmpty(const DirectXQueueContext* context, const Config& config) {
 
 	FRenderCore::GetInstance()->GetLight()->SetPipeline(
-		emptyType, context, textures_->GetSize()
+		FRenderCoreLight::LightType::Empty, context, config.buffer->GetSize()
 	);
 
 	DxObject::BindBufferDesc parameter = {};
@@ -224,20 +215,21 @@ void FSceneRenderer::LightingEmpty(const DirectXQueueContext* context, const Con
 	parameter.SetAddress("gScene",  config.scene->GetTopLevelAS().GetGPUVirtualAddress());
 
 	// deferred paraemter
-	parameter.SetHandle("gDepth",    textures_->GetDepth()->GetRasterizerGPUHandleSRV());
-	parameter.SetHandle("gAlbedo",   textures_->GetGBuffer(FRenderTargetTextures::GBufferLayout::Albedo)->GetGPUHandleSRV());
-	parameter.SetHandle("gNormal",   textures_->GetGBuffer(FRenderTargetTextures::GBufferLayout::Normal)->GetGPUHandleSRV());
-	parameter.SetHandle("gPosition", textures_->GetGBuffer(FRenderTargetTextures::GBufferLayout::Position)->GetGPUHandleSRV());
-	parameter.SetHandle("gMaterial", textures_->GetGBuffer(FRenderTargetTextures::GBufferLayout::MaterialARM)->GetGPUHandleSRV());
+	parameter.SetHandle("gDepth",    config.buffer->GetDepth()->GetRasterizerGPUHandleSRV());
+	parameter.SetHandle("gAlbedo",   config.buffer->GetGBuffer(FDeferredGBuffer::Layout::Albedo)->GetGPUHandleSRV());
+	parameter.SetHandle("gNormal",   config.buffer->GetGBuffer(FDeferredGBuffer::Layout::Normal)->GetGPUHandleSRV());
+	parameter.SetHandle("gMaterial", config.buffer->GetGBuffer(FDeferredGBuffer::Layout::MaterialARM)->GetGPUHandleSRV());
+	parameter.SetHandle("gPosition", config.buffer->GetGBuffer(FDeferredGBuffer::Layout::Position)->GetGPUHandleSRV());
 
 	FRenderCore::GetInstance()->GetLight()->BindGraphicsBuffer(
-		emptyType, context, parameter
+		FRenderCoreLight::LightType::Empty, context, parameter
 	);
 
 	FRenderCore::GetInstance()->GetLight()->DrawCall(context);
+
 }
 
-void FSceneRenderer::LightingPassDirectionalLight(const DirectXQueueContext* context, const Config& config) {
+void FSceneRenderer::ProcessLightingPassDirectionalLight(const DirectXQueueContext* context, const Config& config) {
 
 	uint32_t count = config.scene->directionalLightCount_->At(0);
 
@@ -246,7 +238,7 @@ void FSceneRenderer::LightingPassDirectionalLight(const DirectXQueueContext* con
 	}
 
 	FRenderCore::GetInstance()->GetLight()->SetPipeline(
-		FRenderCoreLight::LightType::Directional, context, textures_->GetSize()
+		FRenderCoreLight::LightType::Directional, context, config.buffer->GetSize()
 	);
 
 	DxObject::BindBufferDesc parameter = {};
@@ -255,11 +247,11 @@ void FSceneRenderer::LightingPassDirectionalLight(const DirectXQueueContext* con
 	parameter.SetAddress("gScene",  config.scene->GetTopLevelAS().GetGPUVirtualAddress());
 
 	// deferred paraemter
-	parameter.SetHandle("gDepth",    textures_->GetDepth()->GetRasterizerGPUHandleSRV());
-	parameter.SetHandle("gAlbedo",   textures_->GetGBuffer(FRenderTargetTextures::GBufferLayout::Albedo)->GetGPUHandleSRV());
-	parameter.SetHandle("gNormal",   textures_->GetGBuffer(FRenderTargetTextures::GBufferLayout::Normal)->GetGPUHandleSRV());
-	parameter.SetHandle("gPosition", textures_->GetGBuffer(FRenderTargetTextures::GBufferLayout::Position)->GetGPUHandleSRV());
-	parameter.SetHandle("gMaterial", textures_->GetGBuffer(FRenderTargetTextures::GBufferLayout::MaterialARM)->GetGPUHandleSRV());
+	parameter.SetHandle("gDepth",    config.buffer->GetDepth()->GetRasterizerGPUHandleSRV());
+	parameter.SetHandle("gAlbedo",   config.buffer->GetGBuffer(FDeferredGBuffer::Layout::Albedo)->GetGPUHandleSRV());
+	parameter.SetHandle("gNormal",   config.buffer->GetGBuffer(FDeferredGBuffer::Layout::Normal)->GetGPUHandleSRV());
+	parameter.SetHandle("gMaterial", config.buffer->GetGBuffer(FDeferredGBuffer::Layout::MaterialARM)->GetGPUHandleSRV());
+	parameter.SetHandle("gPosition", config.buffer->GetGBuffer(FDeferredGBuffer::Layout::Position)->GetGPUHandleSRV());
 
 	// direcitonal light parameter
 	parameter.SetAddress("gTransforms", config.scene->directionalLightTransforms_->GetGPUVirtualAddress());
@@ -271,9 +263,10 @@ void FSceneRenderer::LightingPassDirectionalLight(const DirectXQueueContext* con
 	);
 
 	FRenderCore::GetInstance()->GetLight()->DrawCall(context, count);
+
 }
 
-void FSceneRenderer::LightingPassPointLight(const DirectXQueueContext* context, const Config& config) {
+void FSceneRenderer::ProcessLightingPassPointLight(const DirectXQueueContext* context, const Config& config) {
 
 	uint32_t count = config.scene->pointLightCount_->At(0);
 
@@ -282,7 +275,7 @@ void FSceneRenderer::LightingPassPointLight(const DirectXQueueContext* context, 
 	}
 
 	FRenderCore::GetInstance()->GetLight()->SetPipeline(
-		FRenderCoreLight::LightType::Point, context, textures_->GetSize()
+		FRenderCoreLight::LightType::Point, context, config.buffer->GetSize()
 	);
 
 	DxObject::BindBufferDesc parameter = {};
@@ -291,11 +284,11 @@ void FSceneRenderer::LightingPassPointLight(const DirectXQueueContext* context, 
 	parameter.SetAddress("gScene",  config.scene->GetTopLevelAS().GetGPUVirtualAddress());
 
 	// deferred paraemter
-	parameter.SetHandle("gDepth",    textures_->GetDepth()->GetRasterizerGPUHandleSRV());
-	parameter.SetHandle("gAlbedo",   textures_->GetGBuffer(FRenderTargetTextures::GBufferLayout::Albedo)->GetGPUHandleSRV());
-	parameter.SetHandle("gNormal",   textures_->GetGBuffer(FRenderTargetTextures::GBufferLayout::Normal)->GetGPUHandleSRV());
-	parameter.SetHandle("gPosition", textures_->GetGBuffer(FRenderTargetTextures::GBufferLayout::Position)->GetGPUHandleSRV());
-	parameter.SetHandle("gMaterial", textures_->GetGBuffer(FRenderTargetTextures::GBufferLayout::MaterialARM)->GetGPUHandleSRV());
+	parameter.SetHandle("gDepth",    config.buffer->GetDepth()->GetRasterizerGPUHandleSRV());
+	parameter.SetHandle("gAlbedo",   config.buffer->GetGBuffer(FDeferredGBuffer::Layout::Albedo)->GetGPUHandleSRV());
+	parameter.SetHandle("gNormal",   config.buffer->GetGBuffer(FDeferredGBuffer::Layout::Normal)->GetGPUHandleSRV());
+	parameter.SetHandle("gMaterial", config.buffer->GetGBuffer(FDeferredGBuffer::Layout::MaterialARM)->GetGPUHandleSRV());
+	parameter.SetHandle("gPosition", config.buffer->GetGBuffer(FDeferredGBuffer::Layout::Position)->GetGPUHandleSRV());
 
 	// point light parameter
 	parameter.SetAddress("gTransforms", config.scene->pointLightTransforms_->GetGPUVirtualAddress());
@@ -310,65 +303,33 @@ void FSceneRenderer::LightingPassPointLight(const DirectXQueueContext* context, 
 
 }
 
-void FSceneRenderer::LightingPassRectLight(const DirectXQueueContext* context, const Config& config) {
+void FSceneRenderer::ProcessLightingPassSkyLight(const DirectXQueueContext* context, const Config& config) {
 
 	FRenderCore::GetInstance()->GetLight()->SetPipeline(
-		FRenderCoreLight::LightType::Rect, context, textures_->GetSize()
+		FRenderCoreLight::LightType::SkyLight, context, config.buffer->GetSize()
 	);
 
-	sComponentStorage->ForEachActive<RectLightComponent>([&](RectLightComponent* component) {
+	DxObject::BindBufferDesc parameter = {};
+	// common parameter
+	parameter.SetAddress("gCamera", config.camera->GetGPUVirtualAddress());
+	parameter.SetAddress("gScene",  config.scene->GetTopLevelAS().GetGPUVirtualAddress());
 
-		DxObject::BindBufferDesc parameter = {};
-		// common parameter
-		parameter.SetAddress("gCamera", config.camera->GetGPUVirtualAddress());
-		parameter.SetAddress("gScene",  config.scene->GetTopLevelAS().GetGPUVirtualAddress());
+	// deferred paraemter
+	parameter.SetHandle("gDepth",    config.buffer->GetDepth()->GetRasterizerGPUHandleSRV());
+	parameter.SetHandle("gAlbedo",   config.buffer->GetGBuffer(FDeferredGBuffer::Layout::Albedo)->GetGPUHandleSRV());
+	parameter.SetHandle("gNormal",   config.buffer->GetGBuffer(FDeferredGBuffer::Layout::Normal)->GetGPUHandleSRV());
+	parameter.SetHandle("gMaterial", config.buffer->GetGBuffer(FDeferredGBuffer::Layout::MaterialARM)->GetGPUHandleSRV());
+	parameter.SetHandle("gPosition", config.buffer->GetGBuffer(FDeferredGBuffer::Layout::Position)->GetGPUHandleSRV());
 
-		// deferred paraemter
-		parameter.SetHandle("gDepth",    textures_->GetDepth()->GetRasterizerGPUHandleSRV());
-		parameter.SetHandle("gAlbedo",   textures_->GetGBuffer(FRenderTargetTextures::GBufferLayout::Albedo)->GetGPUHandleSRV());
-		parameter.SetHandle("gNormal",   textures_->GetGBuffer(FRenderTargetTextures::GBufferLayout::Normal)->GetGPUHandleSRV());
-		parameter.SetHandle("gPosition", textures_->GetGBuffer(FRenderTargetTextures::GBufferLayout::Position)->GetGPUHandleSRV());
-		parameter.SetHandle("gMaterial", textures_->GetGBuffer(FRenderTargetTextures::GBufferLayout::MaterialARM)->GetGPUHandleSRV());
-
-		// point light parameter
-		parameter.SetAddress("gTransforms", component->GetTransform()->GetGPUVirtualAddress());
-		parameter.SetAddress("gParameter",  component->GetParameterBufferAddress());
-		parameter.SetAddress("gShadow",     component->GetShadowBufferAddress());
-
-		FRenderCore::GetInstance()->GetLight()->BindGraphicsBuffer(
-			FRenderCoreLight::LightType::Rect, context, parameter
-		);
-
-		FRenderCore::GetInstance()->GetLight()->DrawCall(context);
-	});
-
-}
-
-void FSceneRenderer::LightingPassSkyLight(const DirectXQueueContext* context, const Config& config) {
-
-	FRenderCore::GetInstance()->GetLight()->SetPipeline(
-		FRenderCoreLight::LightType::SkyLight, context, textures_->GetSize()
-	);
+	// BRDF LUT
+	parameter.SetHandle("gBRDFLut", FRenderCore::GetInstance()->GetBRDFLut());
 
 	sComponentStorage->ForEachActive<SkyLightComponent>([&](SkyLightComponent* component) {
-
-		DxObject::BindBufferDesc parameter = {};
-		// common parameter
-		parameter.SetAddress("gCamera", config.camera->GetGPUVirtualAddress());
-		parameter.SetAddress("gScene",  config.scene->GetTopLevelAS().GetGPUVirtualAddress());
-
-		// deferred paraemter
-		parameter.SetHandle("gDepth",    textures_->GetDepth()->GetRasterizerGPUHandleSRV());
-		parameter.SetHandle("gAlbedo",   textures_->GetGBuffer(FRenderTargetTextures::GBufferLayout::Albedo)->GetGPUHandleSRV());
-		parameter.SetHandle("gNormal",   textures_->GetGBuffer(FRenderTargetTextures::GBufferLayout::Normal)->GetGPUHandleSRV());
-		parameter.SetHandle("gPosition", textures_->GetGBuffer(FRenderTargetTextures::GBufferLayout::Position)->GetGPUHandleSRV());
-		parameter.SetHandle("gMaterial", textures_->GetGBuffer(FRenderTargetTextures::GBufferLayout::MaterialARM)->GetGPUHandleSRV());
 
 		// sky light parameter
 		parameter.SetAddress("gDiffuseParameter",  component->GetDiffuseParameterBufferAddress());
 		parameter.SetAddress("gSpecularParameter", component->GetSpecularParameterBufferAddress());
 		parameter.SetAddress("gParameter",         component->GetParameterBufferAddress());
-		parameter.SetHandle("gBRDFLut",            FRenderCore::GetInstance()->GetBRDFLut());
 
 		parameter.SetHandle("gEnvironment",        component->GetEnvironment().value()); //!< DEBUG
 
@@ -378,71 +339,98 @@ void FSceneRenderer::LightingPassSkyLight(const DirectXQueueContext* context, co
 
 		FRenderCore::GetInstance()->GetLight()->DrawCall(context);
 	});
+
 }
 
-void FSceneRenderer::AmbientProcessPass(const DirectXQueueContext* context, const Config& config) {
-	AmbientProcessPassSkyBox(context, config);
+void FSceneRenderer::LightingPassTransition(const DirectXQueueContext* context, const Config& config) {
+
+	config.buffer->BeginUnorderedMainScene(context);
+
+	auto core = FRenderCore::GetInstance()->GetTransition();
+
+	core->SetPipeline(FRenderCoreTransition::Transition::LightingTransition, context);
+
+	DxObject::BindBufferDesc parameter = {};
+	// common parameter
+	parameter.Set32bitConstants("Dimension", 2, &config.buffer->GetSize());
+
+	// input
+	parameter.SetHandle("gDirect",   config.buffer->GetGBuffer(FLightingGBuffer::Layout::Direct)->GetGPUHandleSRV());
+	parameter.SetHandle("gIndirect", config.buffer->GetGBuffer(FLightingGBuffer::Layout::Indirect)->GetGPUHandleSRV());
+
+	// output
+	parameter.SetHandle("gOutput", config.buffer->GetGBuffer(FMainGBuffer::Layout::Scene)->GetGPUHandleUAV());
+
+	core->BindComputeBuffer(FRenderCoreTransition::Transition::LightingTransition, context, parameter);
+	core->Dispatch(context, config.buffer->GetSize());
+
+	config.buffer->EndUnorderedMainScene(context);
+	
 }
 
-void FSceneRenderer::AmbientProcessPassSkyBox(const DirectXQueueContext* context, const Config& config) {
-	// 関数名を変更するかも
+void FSceneRenderer::ProcessAmbientPass(const DirectXQueueContext* context, const Config& config) {
+	ProcessAmbientPassSkyBox(context, config);
+}
 
-	textures_->GetGBuffer(FRenderTargetTextures::GBufferLayout::Main)->TransitionBeginUnordered(context);
+void FSceneRenderer::ProcessAmbientPassSkyBox(const DirectXQueueContext* context, const Config& config) {
+
+	config.buffer->BeginUnorderedMainScene(context);
 
 	FRenderCore::GetInstance()->GetProcess()->SetPipeline(
 		FRenderCoreProcess::ProcessType::Environment, context
 	);
+
+	DxObject::BindBufferDesc parameter = {};
+	// common
+	parameter.Set32bitConstants("Dimension", 2, &config.buffer->GetSize());
+	parameter.SetAddress("gCamera", config.camera->GetGPUVirtualAddress());
+
+	// deferred
+	parameter.SetHandle("gDepth", config.buffer->GetDepth()->GetRasterizerGPUHandleSRV());
 
 	sComponentStorage->ForEachActive<SkyLightComponent>([&](SkyLightComponent* component) {
 		if (!component->GetEnvironment().has_value()) {
 			return;
 		}
 
-		DxObject::BindBufferDesc parameter = {};
-		// common
-		parameter.SetAddress("gConfig", textures_->GetDimension());
-		parameter.SetAddress("gCamera", config.camera->GetGPUVirtualAddress());
-
-		// deferred
-		parameter.SetHandle("gDepth", textures_->GetDepth()->GetRasterizerGPUHandleSRV());
-
 		// environment
 		parameter.SetAddress("gParameter", component->GetParameterBufferAddress());
 		parameter.SetHandle("gEnvironment", (*component->GetEnvironment()));
 
 		// output
-		parameter.SetHandle("gOutput", textures_->GetGBuffer(FRenderTargetTextures::GBufferLayout::Main)->GetGPUHandleUAV());
+		parameter.SetHandle("gOutput", config.buffer->GetGBuffer(FMainGBuffer::Layout::Scene)->GetGPUHandleUAV());
 
 		FRenderCore::GetInstance()->GetProcess()->BindComputeBuffer(
 			FRenderCoreProcess::ProcessType::Environment, context, parameter
 		);
 
-		FRenderCore::GetInstance()->GetProcess()->Dispatch(context, textures_->GetSize());
+		FRenderCore::GetInstance()->GetProcess()->Dispatch(context, config.buffer->GetSize());
 	});
 
-	textures_->GetGBuffer(FRenderTargetTextures::GBufferLayout::Main)->TransitionEndUnordered(context);
+	config.buffer->EndUnorderedMainScene(context);
+
 }
 
-void FSceneRenderer::RenderTransparentBasePass(const DirectXQueueContext* context, const Config& config) {
+void FSceneRenderer::RenderTransparentPass(const DirectXQueueContext* context, const Config& config) {
 
-	textures_->BeginTransparentBasePass(context);
+	config.buffer->BeginRenderTargetMainTransparent(context);
 
-	RenderTransparentBaseStaticMesh(context, config);
-	RenderTransparentParticle(context, config);
+	RenderTransparentPassStaticMesh(context, config);
+	RenderTransparentPassParticle(context, config);
 
-	textures_->EndTransparentBasePass(context);
+	config.buffer->EndRenderTargetMainTransparent(context);
+
 }
 
-void FSceneRenderer::RenderTransparentBaseStaticMesh(const DirectXQueueContext* context, const Config& config) {
+void FSceneRenderer::RenderTransparentPassStaticMesh(const DirectXQueueContext* context, const Config& config) {
 
 	auto core = FRenderCore::GetInstance()->GetGeometry();
 
+	DxObject::BindBufferDesc parameter = {};
+	parameter.SetAddress("gCamera", config.camera->GetGPUVirtualAddress());
+
 	// componentを取得
 	sComponentStorage->ForEachActive<MeshRendererComponent>([&](MeshRendererComponent* component) {
-
-		if (!component->IsView()) {
-			return;
-		}
 
 		if (component->GetMaterial()->GetMode() != Material::Mode::Translucent) {
 			return;
@@ -453,13 +441,12 @@ void FSceneRenderer::RenderTransparentBaseStaticMesh(const DirectXQueueContext* 
 		// メッシュの描画
 		core->SetPipeline(
 			FRenderCoreGeometry::Forward, FRenderCoreGeometry::VertexStage::DefaultVS, FRenderCoreGeometry::PixelStage::Albedo,
-			context, textures_->GetSize()
+			context, config.buffer->GetSize()
 		);
 
-		DxObject::BindBufferDesc parameter = {};
-		parameter.SetAddress("gCamera",     config.camera->GetGPUVirtualAddress());
 		parameter.SetAddress("gTransforms", component->GetTransform()->GetGPUVirtualAddress());
 		parameter.SetAddress("gMaterials",  component->GetMaterial()->GetGPUVirtualAddress());
+		//!< todo: materialをConstantBufferに変更する
 
 		core->BindGraphicsBuffer(
 			FRenderCoreGeometry::Forward, FRenderCoreGeometry::VertexStage::DefaultVS, FRenderCoreGeometry::PixelStage::Albedo,
@@ -467,24 +454,24 @@ void FSceneRenderer::RenderTransparentBaseStaticMesh(const DirectXQueueContext* 
 		);
 
 		component->GetMesh()->DrawCall(context, 1);
-
 	});
 }
 
-void FSceneRenderer::RenderTransparentParticle(const DirectXQueueContext* context, const Config& config) {
+void FSceneRenderer::RenderTransparentPassParticle(const DirectXQueueContext* context, const Config& config) {
 
 	// componentを取得
 	sComponentStorage->ForEachActive<ParticleComponent>([&](ParticleComponent* component) {
 		component->DrawParticle(context, config.camera);
 	});
+
 }
 
-void FSceneRenderer::PostProcessPass(const DirectXQueueContext* context, const Config& config) {
+void FSceneRenderer::ProcessPostProcessPass(const DirectXQueueContext* context, const Config& config) {
 	if (!config.isEnablePostProcess) {
 		return;
 	}
 
-	textures_->BeginPostProcess(context);
+	config.buffer->BeginPostProcess(context);
 
 	// componentを取得
 	sComponentStorage->ForEachActive<PostProcessLayerComponent>([&](PostProcessLayerComponent* component) {
@@ -492,43 +479,18 @@ void FSceneRenderer::PostProcessPass(const DirectXQueueContext* context, const C
 			return; //!< Global以外のPostProcessLayerComponentは処理しない
 		}
 
-		component->Process(context, textures_, config.camera);
+		component->Process(context, config.buffer, config.camera);
 	});
-	
 
-	textures_->EndPostProcess(context);
+
+	config.buffer->EndPostProcess(context);
+
 }
 
-void FSceneRenderer::CompositeProcessPass(const DirectXQueueContext* context, DirectXWindowContext* window, const Config& config) {
-
-	if (!config.isEnableComposite) {
+void FSceneRenderer::ProcessTonemapPass(const DirectXQueueContext* context, const Config& config) {
+	if (!config.isElableTonemap) {
 		return;
 	}
-
-	textures_->GetGBuffer(FRenderTargetTextures::GBufferLayout::Main)->TransitionBeginUnordered(context);
-
-	CompositeProcessPassTonemap(context, window, config);
-
-	// componentを取得
-	sComponentStorage->ForEachActive<CompositeProcessLayerComponent>([&](CompositeProcessLayerComponent* component) {
-		component->Process(context, textures_);
-	});
-	//!< HACK: componentのtagなどを作成.
-
-	textures_->GetGBuffer(FRenderTargetTextures::GBufferLayout::Main)->TransitionEndUnordered(context);
-
-	{ //!< barrier
-		D3D12_RESOURCE_BARRIER barrier = {};
-		barrier.Type          = D3D12_RESOURCE_BARRIER_TYPE_UAV;
-		barrier.UAV.pResource = textures_->GetGBuffer(FRenderTargetTextures::GBufferLayout::Main)->GetResource();
-		context->GetCommandList()->ResourceBarrier(1, &barrier);
-	}
-
-}
-
-void FSceneRenderer::CompositeProcessPassTonemap(const DirectXQueueContext* context, DirectXWindowContext* window, const Config& config) {
-
-	config;
 
 	FRenderCore::GetInstance()->GetProcess()->SetPipeline(
 		FRenderCoreProcess::CompositeType::Tonemap, context
@@ -536,152 +498,15 @@ void FSceneRenderer::CompositeProcessPassTonemap(const DirectXQueueContext* cont
 
 	DxObject::BindBufferDesc parameter = {};
 	// common
-	parameter.SetAddress("gConfig", textures_->GetDimension());
-	parameter.SetHandle("gTexture", textures_->GetGBuffer(FRenderTargetTextures::GBufferLayout::Main)->GetGPUHandleUAV());
+	parameter.Set32bitConstants("Dimension", 2, &config.buffer->GetSize());
+	parameter.SetHandle("gTexture", config.buffer->GetGBuffer(FMainGBuffer::Layout::Scene)->GetGPUHandleUAV());
 
-	auto space = window->GetColorSpace();
-	parameter.Set32bitConstants("ColorSpaceBuffer", 1, static_cast<const void*>(&space));
+	parameter.Set32bitConstants("ColorSpaceBuffer", 1, &config.colorSpace);
 
 	FRenderCore::GetInstance()->GetProcess()->BindComputeBuffer(
 		FRenderCoreProcess::CompositeType::Tonemap, context, parameter
 	);
 
-	FRenderCore::GetInstance()->GetProcess()->Dispatch(context, textures_->GetSize());
+	FRenderCore::GetInstance()->GetProcess()->Dispatch(context, config.buffer->GetSize());
 
-}
-
-void FSceneRenderer::RenderPathtracingPass(const DirectXQueueContext* context, const Config& config) {
-	// preview機能
-
-	if (reservoir_ == nullptr) {
-		reservoir_ = std::make_unique<DxObject::DimensionBuffer<FRenderCorePathtracing::Reservoir>>();
-		reservoir_->Create(SxavengerSystem::GetDxDevice(), 1);
-		reservoir_->At(0).Init();
-
-	} else {
-		reservoir_->At(0).IncrimentFrame();
-
-		if (isResetReservoir_) {
-			reservoir_->At(0).ResetFrame(); //!< reservoirのリセット
-			isResetReservoir_ = false;
-		}
-	}
-
-	textures_->BeginRaytracingPass(context);
-
-	config.scene->GetStateObjectContext().SetStateObject(context->GetDxCommand());
-
-	auto commandList = context->GetCommandList();
-	commandList->SetComputeRootDescriptorTable(0, textures_->GetGBuffer(FRenderTargetTextures::GBufferLayout::Main)->GetGPUHandleUAV());
-	commandList->SetComputeRootDescriptorTable(1, textures_->GetGBuffer(FRenderTargetTextures::GBufferLayout::Normal)->GetGPUHandleUAV());
-	commandList->SetComputeRootDescriptorTable(2, textures_->GetGBuffer(FRenderTargetTextures::GBufferLayout::MaterialARM)->GetGPUHandleUAV());
-	commandList->SetComputeRootDescriptorTable(3, textures_->GetGBuffer(FRenderTargetTextures::GBufferLayout::Position)->GetGPUHandleUAV());
-	commandList->SetComputeRootDescriptorTable(4, textures_->GetDepth()->GetRaytracingGPUHandleUAV());
-	commandList->SetComputeRootConstantBufferView(5, config.camera->GetGPUVirtualAddress());
-	commandList->SetComputeRootShaderResourceView(6, config.scene->GetTopLevelAS().GetGPUVirtualAddress());
-	commandList->SetComputeRootConstantBufferView(7, reservoir_->GetGPUVirtualAddress());
-
-	commandList->SetComputeRootConstantBufferView(8, config.scene->directionalLightCount_->GetGPUVirtualAddress());
-	commandList->SetComputeRootShaderResourceView(9, config.scene->directionalLightTransforms_->GetGPUVirtualAddress());
-	commandList->SetComputeRootShaderResourceView(10, config.scene->directionalLightParams_->GetGPUVirtualAddress());
-	commandList->SetComputeRootShaderResourceView(11, config.scene->directionalLightShadowParams_->GetGPUVirtualAddress());
-
-	commandList->SetComputeRootConstantBufferView(12, config.scene->pointLightCount_->GetGPUVirtualAddress());
-	commandList->SetComputeRootShaderResourceView(13, config.scene->pointLightTransforms_->GetGPUVirtualAddress());
-	commandList->SetComputeRootShaderResourceView(14, config.scene->pointLightParams_->GetGPUVirtualAddress());
-	commandList->SetComputeRootShaderResourceView(15, config.scene->pointLightShadowParams_->GetGPUVirtualAddress());
-
-	config.scene->GetStateObjectContext().DispatchRays(context->GetDxCommand(), textures_->GetSize());
-
-	textures_->EndRaytracingPass(context);
-	context->TransitionAllocator();
-
-}
-
-void FSceneRenderer::DenoiserPass(const DirectXQueueContext* context, const Config& config) {
-	config;
-
-	if (test_ == nullptr) {
-		test_ = std::make_unique<DxObject::DimensionBuffer<Vector3f>>();
-		test_->Create(SxavengerSystem::GetDxDevice(), 1);
-		test_->At(0) = Vector3(0.0f, 0.0f, 0.0f);
-	}
-
-	auto core = FRenderCore::GetInstance()->GetPathtracing();
-
-	textures_->GetGBuffer(FRenderTargetTextures::GBufferLayout::UI)->TransitionBeginUnordered(context);
-
-	core->SetDenoiserPipeline(FRenderCorePathtracing::DenoiserType::EdgeStopping, context);
-
-	DxObject::BindBufferDesc parameter = {};
-	// common
-	parameter.SetAddress("gConfig", textures_->GetDimension());
-
-	// output & input
-	parameter.SetHandle("gOutput", textures_->GetGBuffer(FRenderTargetTextures::GBufferLayout::UI)->GetGPUHandleUAV());
-	parameter.SetHandle("gInput",  textures_->GetGBuffer(FRenderTargetTextures::GBufferLayout::Main)->GetGPUHandleSRV()); //!< 仮
-
-	// textures
-	parameter.SetHandle("gDepth", textures_->GetDepth()->GetRasterizerGPUHandleSRV());
-	parameter.SetHandle("gAlbedo",   textures_->GetGBuffer(FRenderTargetTextures::GBufferLayout::Albedo)->GetGPUHandleSRV());
-	parameter.SetHandle("gNormal",   textures_->GetGBuffer(FRenderTargetTextures::GBufferLayout::Normal)->GetGPUHandleSRV());
-	parameter.SetHandle("gPosition", textures_->GetGBuffer(FRenderTargetTextures::GBufferLayout::Position)->GetGPUHandleSRV());
-	//parameter.SetHandle("gMaterial", textures_->GetGBuffer(FRenderTargetTextures::GBufferLayout::MaterialARM)->GetGPUHandleSRV());
-
-	parameter.SetAddress("gParameter", test_->GetGPUVirtualAddress());
-
-	core->BindDenoiserBuffer(
-		FRenderCorePathtracing::DenoiserType::EdgeStopping, context, parameter
-	);
-
-	core->DispatchDenoiser(context, textures_->GetSize());
-
-
-	textures_->GetGBuffer(FRenderTargetTextures::GBufferLayout::UI)->TransitionEndUnordered(context);
-	
-}
-
-void FSceneRenderer::RenderTechniqueDeferred(const DirectXQueueContext* context, DirectXWindowContext* window, const Config& config) {
-
-	RenderGeometryPass(context, config);
-
-	LightingPass(context, config);
-
-	AmbientProcessPass(context, config);
-
-	RenderTransparentBasePass(context, config);
-
-	PostProcessPass(context, config);
-
-	CompositeProcessPass(context, window, config);
-}
-
-void FSceneRenderer::RenderTechniqueRaytracing(const DirectXQueueContext* context, const Config& config) {
-	// preview機能
-
-	textures_->BeginRaytracingPass(context);
-
-	config.scene->GetStateObjectContext().SetStateObject(context->GetDxCommand());
-
-	auto commandList = context->GetCommandList();
-	commandList->SetComputeRootDescriptorTable(0, textures_->GetGBuffer(FRenderTargetTextures::GBufferLayout::Main)->GetGPUHandleUAV());
-	commandList->SetComputeRootDescriptorTable(1, textures_->GetGBuffer(FRenderTargetTextures::GBufferLayout::Normal)->GetGPUHandleUAV());
-	commandList->SetComputeRootDescriptorTable(2, textures_->GetGBuffer(FRenderTargetTextures::GBufferLayout::MaterialARM)->GetGPUHandleUAV());
-	commandList->SetComputeRootDescriptorTable(3, textures_->GetDepth()->GetRaytracingGPUHandleUAV());
-	commandList->SetComputeRootConstantBufferView(4, config.camera->GetGPUVirtualAddress());
-	commandList->SetComputeRootShaderResourceView(5, config.scene->GetTopLevelAS().GetGPUVirtualAddress());
-
-	commandList->SetComputeRootConstantBufferView(6, config.scene->directionalLightCount_->GetGPUVirtualAddress());
-	commandList->SetComputeRootShaderResourceView(7, config.scene->directionalLightTransforms_->GetGPUVirtualAddress());
-	commandList->SetComputeRootShaderResourceView(8, config.scene->directionalLightParams_->GetGPUVirtualAddress());
-	commandList->SetComputeRootShaderResourceView(9, config.scene->directionalLightShadowParams_->GetGPUVirtualAddress());
-
-	config.scene->GetStateObjectContext().DispatchRays(context->GetDxCommand(), textures_->GetSize());
-
-	textures_->EndRaytracingPass(context);
-}
-
-void FSceneRenderer::RenderTechniquePathtracing(const DirectXQueueContext* context, const Config& config) {
-	RenderPathtracingPass(context, config);
-	DenoiserPass(context, config);
 }

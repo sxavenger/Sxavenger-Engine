@@ -1,26 +1,26 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
-#include "LightRender.hlsli"
+#include "Presenter.hlsli"
 
 //=========================================================================================
-// buffers
+// buffer
 //=========================================================================================
+
+Texture2D<float4> gTexture : register(t0);
+SamplerState gSampler      : register(s0);
+
+// todo: HDRã®å¯¾å¿œ
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // main
 ////////////////////////////////////////////////////////////////////////////////////////////
+[earlydepthstencil]
 PSOutput main(PSInput input) {
 	
 	PSOutput output = (PSOutput)0;
 	
-	//* Deferred Passî•ñ‚Ìæ“¾
-	Surface surface;
-	surface.GetSurface(input.position.xy);
-	
-	output.color.a   = 1.0f;
-	output.color.rgb = surface.albedo;
-	
+	output.color = gTexture.Sample(gSampler, input.texcoord);
+
 	return output;
-	
 }

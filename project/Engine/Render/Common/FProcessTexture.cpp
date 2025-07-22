@@ -100,7 +100,7 @@ void FProcessTextures::Create(uint32_t count, const Vector2ui& size, DXGI_FORMAT
 	}
 }
 
-void FProcessTextures::BeginProcess(const DirectXQueueContext* context, FTexture* texture) {
+void FProcessTextures::BeginProcess(const DirectXQueueContext* context, FBaseTexture* texture) {
 	Exception::Assert(textures_.size() != NULL, "process texture is null.");
 
 	index_ = 0; //!< indexの初期化
@@ -126,7 +126,7 @@ void FProcessTextures::BeginProcess(const DirectXQueueContext* context, FTexture
 	textures_[index_]->TransitionBeginUnordered(context);
 }
 
-void FProcessTextures::EndProcess(const DirectXQueueContext* context, FTexture* texture) {
+void FProcessTextures::EndProcess(const DirectXQueueContext* context, FBaseTexture* texture) {
 
 	auto commandList = context->GetCommandList();
 

@@ -9,6 +9,7 @@
 #include "Core/FRenderCorePathtracing.h"
 #include "Core/FRenderCoreLayer.h"
 #include "Core/FRenderCoreProcess.h"
+#include "Core/FRenderCoreTransition.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // FRenderCore class
@@ -39,6 +40,8 @@ public:
 
 	FRenderCoreProcess* GetProcess() { return process_.get(); }
 
+	FRenderCoreTransition* GetTransition() { return transition_.get(); }
+
 	const D3D12_GPU_DESCRIPTOR_HANDLE& GetBRDFLut() const;
 
 	//* singleton *//
@@ -56,6 +59,7 @@ private:
 	std::unique_ptr<FRenderCorePathtracing> pathtracing_;
 	std::unique_ptr<FRenderCoreLayer>       layer_;
 	std::unique_ptr<FRenderCoreProcess>     process_;
+	std::unique_ptr<FRenderCoreTransition>  transition_;
 
 	//* textures *//
 

@@ -5,8 +5,6 @@
 //-----------------------------------------------------------------------------------------
 //* texture
 #include "FBaseTexture.h"
-#include "FTexture.h"
-
 //* engine
 #include <Engine/System/DirectX/DxObject/DxDescriptor.h>
 #include <Engine/System/DirectX/Context/DirectXQueueContext.h>
@@ -43,9 +41,9 @@ public:
 
 	//* texture option *//
 
-	void BeginProcess(const DirectXQueueContext* context, FTexture* texture);
+	void BeginProcess(const DirectXQueueContext* context, FBaseTexture* texture);
 
-	void EndProcess(const DirectXQueueContext* context, FTexture* texture);
+	void EndProcess(const DirectXQueueContext* context, FBaseTexture* texture);
 
 	void NextProcess(const DirectXQueueContext* context);
 

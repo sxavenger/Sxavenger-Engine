@@ -20,6 +20,8 @@ public:
 	FBaseTexture() = default;
 	virtual ~FBaseTexture() { Term(); }
 
+	void Create(const Vector2ui& size, DXGI_FORMAT format);
+
 	void Term();
 
 	//* transition *//
@@ -41,9 +43,10 @@ public:
 	D3D12_RESOURCE_BARRIER TransitionBeginState(D3D12_RESOURCE_STATES state) const;
 	void TransitionBeginState(const DirectXQueueContext* context, D3D12_RESOURCE_STATES state) const;
 
-
 	D3D12_RESOURCE_BARRIER TransitionEndState(D3D12_RESOURCE_STATES state) const;
 	void TransitionEndState(const DirectXQueueContext* context, D3D12_RESOURCE_STATES state) const;
+
+	void BarrierUAV(const DirectXQueueContext* context) const;
 
 	//* getter *//
 

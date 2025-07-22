@@ -96,11 +96,9 @@
     <ClCompile Include="Engine\Render\Core\FRenderCoreLight.cpp" />
     <ClCompile Include="Engine\Render\Core\FRenderCoreProcess.cpp" />
     <ClCompile Include="Engine\Render\FRenderCore.cpp" />
-    <ClCompile Include="Engine\Render\FRenderTargetTextures.cpp" />
     <ClCompile Include="Engine\Module\Pipeline\CustomComputePipeline.cpp" />
     <ClCompile Include="Engine\Module\Pipeline\CustomGraphicsPipeline.cpp" />
     <ClCompile Include="Engine\Render\Scene\FScene.cpp" />
-    <ClCompile Include="Engine\Render\Scene\FSceneRenderer.cpp" />
     <ClCompile Include="Engine\Render\FMainRender.cpp" />
     <ClCompile Include="Engine\Render\FPresenter.cpp" />
     <ClCompile Include="Engine\Render\Canvas\FCanvasRenderer.cpp" />
@@ -139,8 +137,6 @@
     <ClCompile Include="Engine\Adapter\Actor\AtmosphereActor.cpp" />
     <ClCompile Include="Engine\Adapter\Actor\SkyLightActor.cpp" />
     <ClCompile Include="Engine\Render\Common\FLUTTexture.cpp" />
-    <ClCompile Include="Engine\Component\Components\CompositeProcessLayer\CompositeProcessLayerComponent.cpp" />
-    <ClCompile Include="Engine\Component\Components\CompositeProcessLayer\CompositeProcessLUT.cpp" />
     <ClCompile Include="Engine\Adapter\Actor\ControllableCameraActor.cpp" />
     <ClCompile Include="Demo\Particle\LeadParticle.cpp" />
     <ClCompile Include="Engine\Adapter\Actor\PivotCameraActor.cpp" />
@@ -171,6 +167,13 @@
     <ClCompile Include="Engine\System\DirectX\Context\DirectXQueueContext.cpp" />
     <ClCompile Include="Engine\System\DirectX\Context\DirectXWindowContext.cpp" />
     <ClCompile Include="Engine\System\Window\WindowCollection.cpp" />
+    <ClCompile Include="Engine\Render\Scene\FSceneRenderer.cpp" />
+    <ClCompile Include="Engine\Component\Components\PostProcessLayer\PostProcessLUT.cpp" />
+    <ClCompile Include="Engine\Render\Core\FRenderCoreTransition.cpp" />
+    <ClCompile Include="Engine\Render\FRenderTargetBuffer.cpp" />
+    <ClCompile Include="Engine\Render\GBuffer\FDeferredGBuffer.cpp" />
+    <ClCompile Include="Engine\Render\GBuffer\FLightingGBuffer.cpp" />
+    <ClCompile Include="Engine\Render\GBuffer\FMainGBuffer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Lib\Adapter\Random\Random.h" />
@@ -285,11 +288,9 @@
     <ClInclude Include="Engine\Render\Core\FRenderCoreLight.h" />
     <ClInclude Include="Engine\Render\Core\FRenderCoreProcess.h" />
     <ClInclude Include="Engine\Render\FRenderCore.h" />
-    <ClInclude Include="Engine\Render\FRenderTargetTextures.h" />
     <ClInclude Include="Engine\Module\Pipeline\CustomComputePipeline.h" />
     <ClInclude Include="Engine\Module\Pipeline\CustomGraphicsPipeline.h" />
     <ClInclude Include="Engine\Render\Scene\FScene.h" />
-    <ClInclude Include="Engine\Render\Scene\FSceneRenderer.h" />
     <ClInclude Include="Engine\Render\FMainRender.h" />
     <ClInclude Include="Engine\Render\FPresenter.h" />
     <ClInclude Include="Engine\Render\Canvas\FCanvasRenderer.h" />
@@ -329,9 +330,6 @@
     <ClInclude Include="Engine\Adapter\Actor\AtmosphereActor.h" />
     <ClInclude Include="Engine\Adapter\Actor\SkyLightActor.h" />
     <ClInclude Include="Engine\Render\Common\FLUTTexture.h" />
-    <ClInclude Include="Engine\Component\Components\CompositeProcessLayer\CompositeProcessLayerComponent.h" />
-    <ClInclude Include="Engine\Component\Components\CompositeProcessLayer\BaseCompositeProcess.h" />
-    <ClInclude Include="Engine\Component\Components\CompositeProcessLayer\CompositeProcessLUT.h" />
     <ClInclude Include="Engine\Adapter\Actor\ControllableCameraActor.h" />
     <ClInclude Include="Demo\Particle\LeadParticle.h" />
     <ClInclude Include="Engine\Adapter\Actor\PivotCameraActor.h" />
@@ -367,6 +365,13 @@
     <ClInclude Include="Engine\System\DirectX\Context\DirectXQueueContext.h" />
     <ClInclude Include="Engine\System\DirectX\Context\DirectXWindowContext.h" />
     <ClInclude Include="Engine\System\Window\WindowCollection.h" />
+    <ClInclude Include="Engine\Render\Scene\FSceneRenderer.h" />
+    <ClInclude Include="Engine\Component\Components\PostProcessLayer\PostProcessLUT.h" />
+    <ClInclude Include="Engine\Render\Core\FRenderCoreTransition.h" />
+    <ClInclude Include="Engine\Render\FRenderTargetBuffer.h" />
+    <ClInclude Include="Engine\Render\GBuffer\FDeferredGBuffer.h" />
+    <ClInclude Include="Engine\Render\GBuffer\FLightingGBuffer.h" />
+    <ClInclude Include="Engine\Render\GBuffer\FMainGBuffer.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

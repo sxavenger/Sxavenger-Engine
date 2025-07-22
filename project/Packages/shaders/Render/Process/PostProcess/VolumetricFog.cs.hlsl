@@ -72,7 +72,7 @@ void main(uint3 dispathThreadId : SV_DispatchThreadID) {
 	}
 
 	float depth = FixLinearDepth(gDepth.Load(uint3(index, 0)));
-	float2 d    = (index.xy + 0.5f) / gConfig.size * 2.0f - 1.0f;
+	float2 d    = (index.xy + 0.5f) / size * 2.0f - 1.0f;
 
 	float3 color = float3(0.0f, 0.0f, 0.0f);
 

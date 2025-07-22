@@ -28,16 +28,15 @@ public:
 		LocalExposure,
 		DoF,
 		Vignette,
+		ConvertLUTTexture,
+		LUT,
 	};
-	static inline const uint32_t kProcessTypeCount = static_cast<uint32_t>(ProcessType::Vignette) + 1;
+	static inline const uint32_t kProcessTypeCount = static_cast<uint32_t>(ProcessType::LUT) + 1;
 
 	////////////////////////////////////////////////////////////////////////////////////////////
 	// CompositeType enum class
 	////////////////////////////////////////////////////////////////////////////////////////////
 	enum class CompositeType : uint32_t {
-		ColorCurve,
-		ConvertLUTTexture,
-		LUT,
 		Tonemap
 	};
 	static inline const uint32_t kCompositeTypeCount = static_cast<uint32_t>(CompositeType::Tonemap) + 1;

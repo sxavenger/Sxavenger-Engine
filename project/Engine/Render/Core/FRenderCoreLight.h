@@ -18,11 +18,16 @@ public:
 	////////////////////////////////////////////////////////////////////////////////////////////
 	enum LightType : uint8_t {
 		Empty,
-		AlbedoEmpty,
+
+		//!< Punctual light
 		Directional,
 		Point,
 		Spot,
+
+		//!< Area light
 		Rect,
+
+		//!< Sky light
 		SkyLight,
 	};
 	static const uint8_t kLightTypeCount = SkyLight + 1;

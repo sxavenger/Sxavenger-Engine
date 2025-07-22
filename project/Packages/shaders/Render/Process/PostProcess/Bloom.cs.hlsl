@@ -49,7 +49,7 @@ void main(uint3 dispathThreadId : SV_DispatchThreadID) {
 		for (int y = -kSampleSize.y; y <= kSampleSize.y; ++y) {
 
 			int2 sampleIndex = index.xy + int2(x, y);
-			float2 uv        = float2(sampleIndex) / float2(gConfig.size);
+			float2 uv        = float2(sampleIndex) / float2(size);
 
 			float4 color = max(gInput.SampleLevel(gSampler, uv, 0.0f) - 1.0f, 0.0f);
 			float weight = Gaussian2d(float2(x, y), kSigma);

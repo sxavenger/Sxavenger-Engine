@@ -51,7 +51,6 @@ void PreviewGameLoop::InitGame() {
 		{ 0.14f, 0.2f, 0.24f, 1.f }
 	);
 
-	presenter_.Init();
 	texture_.Create(main_->GetSize(), DXGI_FORMAT_R32G32B32A32_FLOAT);
 
 	environment_ = SxavengerAsset::TryImport<AssetTexture>(
@@ -114,7 +113,7 @@ void PreviewGameLoop::DrawGame() {
 	main_->BeginRenderWindow(SxavengerSystem::GetDirectQueueContext());
 	main_->ClearWindow(SxavengerSystem::GetDirectQueueContext());
 
-	presenter_.Present(SxavengerSystem::GetDirectQueueContext(), main_->GetSize(), texture_.GetGPUHandleSRV());
+	FPresenter::Present(SxavengerSystem::GetDirectQueueContext(), main_->GetSize(), texture_.GetGPUHandleSRV());
 	SxavengerSystem::RenderImGui();
 
 	main_->EndRenderWindow(SxavengerSystem::GetDirectQueueContext());

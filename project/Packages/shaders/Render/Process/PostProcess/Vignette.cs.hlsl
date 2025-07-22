@@ -34,7 +34,7 @@ void main(uint3 dispatchThreadId : SV_DispatchThreadID) {
 
 	float4 input = gInput[index];
 
-	float2 uv     = float2(index) / float2(gConfig.size - 1);
+	float2 uv     = float2(index) / float2(size - 1);
 	float2 center = float2(0.5f, 0.5f);
 
 	float l = length(uv - center) * gParameter.offset;

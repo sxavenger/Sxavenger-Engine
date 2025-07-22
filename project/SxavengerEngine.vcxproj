@@ -200,6 +200,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="Engine\Asset\Assets\Texture\AssetTexture.cpp" />
     <ClCompile Include="Engine\Asset\Assets\Texture\Texture.cpp" />
     <ClCompile Include="Engine\Asset\SxavengerAsset.cpp" />
+    <ClCompile Include="Engine\Component\Components\PostProcessLayer\PostProcessLUT.cpp" />
     <ClCompile Include="Engine\Component\Components\Volumetric\VolumetricFogComponent.cpp" />
     <ClCompile Include="Engine\Content\ContentStorage.cpp" />
     <ClCompile Include="Engine\Content\Exporter\TextureExporter.cpp" />
@@ -224,8 +225,6 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="Engine\Component\Components\Collider\CollisionDetection.cpp" />
     <ClCompile Include="Engine\Component\Components\Collider\CollisionManager.cpp" />
     <ClCompile Include="Engine\Component\Components\ComponentStorage.cpp" />
-    <ClCompile Include="Engine\Component\Components\CompositeProcessLayer\CompositeProcessLayerComponent.cpp" />
-    <ClCompile Include="Engine\Component\Components\CompositeProcessLayer\CompositeProcessLUT.cpp" />
     <ClCompile Include="Engine\Component\Components\Light\Punctual\DirectionalLightComponent.cpp" />
     <ClCompile Include="Engine\Component\Components\Light\LightCommon.cpp" />
     <ClCompile Include="Engine\Component\Components\Light\Punctual\PointLightComponent.cpp" />
@@ -269,6 +268,11 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="Engine\Module\GameObject\GameObject.cpp" />
     <ClCompile Include="Engine\Module\Scene\SceneObject.cpp" />
     <ClCompile Include="Engine\Module\Scene\SceneObjects.cpp" />
+    <ClCompile Include="Engine\Render\Core\FRenderCoreTransition.cpp" />
+    <ClCompile Include="Engine\Render\FRenderTargetBuffer.cpp" />
+    <ClCompile Include="Engine\Render\GBuffer\FDeferredGBuffer.cpp" />
+    <ClCompile Include="Engine\Render\GBuffer\FLightingGBuffer.cpp" />
+    <ClCompile Include="Engine\Render\GBuffer\FMainGBuffer.cpp" />
     <ClCompile Include="Engine\System\DirectX\Context\DirectXQueueContext.cpp" />
     <ClCompile Include="Engine\System\DirectX\Context\DirectXWindowContext.cpp" />
     <ClCompile Include="Engine\System\Window\WindowCollection.cpp" />
@@ -295,7 +299,6 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="Engine\Render\FMainRender.cpp" />
     <ClCompile Include="Engine\Render\FPresenter.cpp" />
     <ClCompile Include="Engine\Render\FRenderCore.cpp" />
-    <ClCompile Include="Engine\Render\FRenderTargetTextures.cpp" />
     <ClCompile Include="Engine\Render\Scene\FScene.cpp" />
     <ClCompile Include="Engine\Render\Scene\FSceneRenderer.cpp" />
     <ClCompile Include="Engine\System\Config\SxavengerConfig.cpp" />
@@ -366,6 +369,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Engine\Asset\Assets\Texture\Texture.h" />
     <ClInclude Include="Engine\Asset\Observer\AssetObserver.h" />
     <ClInclude Include="Engine\Asset\SxavengerAsset.h" />
+    <ClInclude Include="Engine\Component\Components\PostProcessLayer\PostProcessLUT.h" />
     <ClInclude Include="Engine\Component\Components\Volumetric\VolumetricFogComponent.h" />
     <ClInclude Include="Engine\Content\ContentStorage.h" />
     <ClInclude Include="Engine\Content\Exporter\TextureExporter.h" />
@@ -389,9 +393,6 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Engine\Component\Components\Collider\CollisionDetection.h" />
     <ClInclude Include="Engine\Component\Components\Collider\CollisionManager.h" />
     <ClInclude Include="Engine\Component\Components\ComponentStorage.h" />
-    <ClInclude Include="Engine\Component\Components\CompositeProcessLayer\BaseCompositeProcess.h" />
-    <ClInclude Include="Engine\Component\Components\CompositeProcessLayer\CompositeProcessLayerComponent.h" />
-    <ClInclude Include="Engine\Component\Components\CompositeProcessLayer\CompositeProcessLUT.h" />
     <ClInclude Include="Engine\Component\Components\Light\Punctual\DirectionalLightComponent.h" />
     <ClInclude Include="Engine\Component\Components\Light\LightCommon.h" />
     <ClInclude Include="Engine\Component\Components\Light\Punctual\PointLightComponent.h" />
@@ -441,6 +442,11 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Engine\Module\GameObject\GameObject.h" />
     <ClInclude Include="Engine\Module\Scene\SceneObject.h" />
     <ClInclude Include="Engine\Module\Scene\SceneObjects.h" />
+    <ClInclude Include="Engine\Render\Core\FRenderCoreTransition.h" />
+    <ClInclude Include="Engine\Render\FRenderTargetBuffer.h" />
+    <ClInclude Include="Engine\Render\GBuffer\FDeferredGBuffer.h" />
+    <ClInclude Include="Engine\Render\GBuffer\FLightingGBuffer.h" />
+    <ClInclude Include="Engine\Render\GBuffer\FMainGBuffer.h" />
     <ClInclude Include="Engine\System\DirectX\Context\DirectXQueueContext.h" />
     <ClInclude Include="Engine\System\DirectX\Context\DirectXWindowContext.h" />
     <ClInclude Include="Engine\System\DirectX\DxObject\DxReadbackDimensionBuffer.h" />
@@ -468,7 +474,6 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Engine\Render\FMainRender.h" />
     <ClInclude Include="Engine\Render\FPresenter.h" />
     <ClInclude Include="Engine\Render\FRenderCore.h" />
-    <ClInclude Include="Engine\Render\FRenderTargetTextures.h" />
     <ClInclude Include="Engine\Render\Scene\FScene.h" />
     <ClInclude Include="Engine\Render\Scene\FSceneRenderer.h" />
     <ClInclude Include="Engine\System\Cinfig\SxavengerDirectory.h" />
