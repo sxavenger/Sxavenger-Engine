@@ -39,6 +39,9 @@ public:
 	void BeginRenderTargetMainUI(const DirectXQueueContext* context);
 	void EndRenderTargetMainUI(const DirectXQueueContext* context);
 
+	void BeginPostProcess(const DirectXQueueContext* context);
+	void EndPostProcess(const DirectXQueueContext* context);
+
 	//* GBuffer option *//
 
 	FBaseTexture* GetGBuffer(FDeferredGBuffer::Layout layout);

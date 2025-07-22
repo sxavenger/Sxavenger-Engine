@@ -71,6 +71,14 @@ void FRenderTargetBuffer::EndRenderTargetMainUI(const DirectXQueueContext* conte
 	main_.TransitionEndRenderTargetUI(context);
 }
 
+void FRenderTargetBuffer::BeginPostProcess(const DirectXQueueContext* context) {
+	process_->BeginProcess(context, main_.GetGBuffer(FMainGBuffer::Layout::Scene));
+}
+
+void FRenderTargetBuffer::EndPostProcess(const DirectXQueueContext* context) {
+	process_->EndProcess(context, main_.GetGBuffer(FMainGBuffer::Layout::Scene));
+}
+
 FBaseTexture* FRenderTargetBuffer::GetGBuffer(FDeferredGBuffer::Layout layout) {
 	return deferred_.GetGBuffer(layout);
 }

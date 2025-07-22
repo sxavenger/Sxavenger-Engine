@@ -43,7 +43,7 @@ public:
 			Error_Buffer = 1 << 0,
 			Error_Camera = 1 << 1,
 			Error_Scene  = 1 << 2,
-			Status_Error = Error_Buffer | Error_Camera |	Error_Scene,
+			Status_Error = Error_Buffer | Error_Camera | Error_Scene,
 
 		};
 
@@ -127,14 +127,25 @@ private:
 
 	void LightingPassTransition(const DirectXQueueContext* context, const Config& config);
 
-	//* transition helper methods *//
-
-	
-
 	//* ambient pass helper methods *//
 
 	void ProcessAmbientPass(const DirectXQueueContext* context, const Config& config);
 
 	void ProcessAmbientPassSkyBox(const DirectXQueueContext* context, const Config& config);
+
+	//* transparent pass helper methods *//
+
+	void RenderTransparentPass(const DirectXQueueContext* context, const Config& config);
+
+	void RenderTransparentPassStaticMesh(const DirectXQueueContext* context, const Config& config);
+	void RenderTransparentPassParticle(const DirectXQueueContext* context, const Config& config);
+
+	//* post process helper methods *//
+
+	void ProcessPostProcessPass(const DirectXQueueContext* context, const Config& config);
+
+	//* tonemap pass helper methods *//
+
+	void ProcessTonemapPass(const DirectXQueueContext* context, const Config& config);
 
 };
