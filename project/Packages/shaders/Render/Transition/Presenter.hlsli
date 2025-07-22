@@ -1,9 +1,15 @@
-#include "FRenderCorePrimitive.h"
+#pragma once
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// FRenderCorePrimitive class methods
+// Input / Output structure
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-void FRenderCorePrimitive::Init() {
-	CreateDesc();
-}
+struct PSInput {
+	float4 position : SV_POSITION;
+	float2 texcoord : TEXCOORD0;
+};
+
+struct PSOutput {
+	float4 color : SV_TARGET0;
+};
+

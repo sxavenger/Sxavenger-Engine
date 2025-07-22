@@ -5,7 +5,7 @@ _DXOBJECT_USING
 // include
 //-----------------------------------------------------------------------------------------
 //* engine
-#include <Engine/Render/FRenderTargetTextures.h>
+#include <Engine/Render/FRenderTargetBuffer.h>
 #include <Engine/Render/FRenderCore.h>
 #include <Engine/System/UI/SxImGui.h>
 
@@ -41,8 +41,8 @@ void PostProcessDoF::Init() {
 	name_ = "Depth of Field";
 }
 
-void PostProcessDoF::Process(const DirectXQueueContext* context, FRenderTargetTextures* textures, const CameraComponent* camera) {
-	auto process = textures->GetProcessTextures();
+void PostProcessDoF::Process(const DirectXQueueContext* context, FRenderTargetBuffer* buffer, const CameraComponent* camera) {
+	auto process = buffer->GetProcessTextures();
 	process->NextProcess(context);
 
 	auto core = FRenderCore::GetInstance()->GetProcess();
@@ -51,19 +51,21 @@ void PostProcessDoF::Process(const DirectXQueueContext* context, FRenderTargetTe
 
 	BindBufferDesc desc = {};
 	// deferred
-	desc.SetHandle("gDepth", textures->GetDepth()->GetRasterizerGPUHandleSRV());
+	desc.SetHandle("gDepth", buffer->GetDepth()->GetRasterizerGPUHandleSRV());
 
 	// common
-	desc.SetAddress("gConfig", textures->GetDimension());
-	desc.SetHandle("gInput",   textures->GetProcessTextures()->GetPrevTexture()->GetGPUHandleSRV());
-	desc.SetHandle("gOutput",  textures->GetProcessTextures()->GetIndexTexture()->GetGPUHandleUAV());
+	desc.Set32bitConstants("Dimension", 2, &buffer->GetSize());
+
+	//* textures
+	desc.SetHandle("gInput",   process->GetPrevTexture()->GetGPUHandleSRV());
+	desc.SetHandle("gOutput",  process->GetIndexTexture()->GetGPUHandleUAV());
 
 	// parameter
 	desc.SetAddress("gCamera",    camera->GetGPUVirtualAddress());
 	desc.SetAddress("gParameter", parameter_->GetGPUVirtualAddress());
 
 	core->BindComputeBuffer(FRenderCoreProcess::ProcessType::DoF, context, desc);
-	core->Dispatch(context, textures->GetSize());
+	core->Dispatch(context, buffer->GetSize());
 }
 
 void PostProcessDoF::ShowInspectorImGui() {

@@ -4,7 +4,7 @@
 // include
 //-----------------------------------------------------------------------------------------
 //* render
-#include "../FRenderTargetTextures.h"
+#include "../FRenderTargetBuffer.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // FCanvasRenderer class
@@ -22,7 +22,7 @@ public:
 
 	//* setter *//
 
-	void SetTextures(FRenderTargetTextures* textures) { textures_ = textures; }
+	void SetTextures(FRenderTargetBuffer* textures) { textures_ = textures; }
 
 private:
 
@@ -32,7 +32,7 @@ private:
 
 	//* canvas textures *//
 
-	FRenderTargetTextures* textures_ = nullptr;
+	FRenderTargetBuffer* textures_ = nullptr;
 	//!< todo: 2d描画用のテクスチャに設定する
 
 	//=========================================================================================

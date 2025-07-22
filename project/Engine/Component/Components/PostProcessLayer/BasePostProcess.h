@@ -16,7 +16,7 @@
 //-----------------------------------------------------------------------------------------
 // forward
 //-----------------------------------------------------------------------------------------
-class FRenderTargetTextures;
+class FRenderTargetBuffer;
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // BasePostProcess class
@@ -32,7 +32,7 @@ public:
 
 	virtual void Init() = 0;
 
-	virtual void Process(const DirectXQueueContext* context, FRenderTargetTextures* textures, const CameraComponent* camera) = 0;
+	virtual void Process(const DirectXQueueContext* context, FRenderTargetBuffer* buffer, const CameraComponent* camera) = 0;
 
 	virtual void ShowInspectorImGui() = 0;
 

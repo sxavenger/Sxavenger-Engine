@@ -13,6 +13,7 @@
 #include "PostProcessAutoExposure.h"
 #include "PostProcessBloom.h"
 #include "PostProcessDoF.h"
+#include "PostProcessLUT.h"
 
 //* engine
 #include <Engine/System/DirectX/Context/DirectXQueueContext.h>
@@ -24,7 +25,7 @@
 //-----------------------------------------------------------------------------------------
 // forward
 //-----------------------------------------------------------------------------------------
-class FRenderTargetTextures;
+class FRenderTargetBuffer;
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // PostProcessLayerComponent class
@@ -60,7 +61,7 @@ public:
 
 	void ShowComponentInspector() override;
 
-	void Process(const DirectXQueueContext* context, FRenderTargetTextures* textures, const CameraComponent* camera);
+	void Process(const DirectXQueueContext* context, FRenderTargetBuffer* buffer, const CameraComponent* camera);
 
 	//* tag option *//
 

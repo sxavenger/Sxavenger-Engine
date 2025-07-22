@@ -20,9 +20,7 @@ PSOutput main(PSInput input) {
 	
 	PSOutput output = (PSOutput)0;
 	
-	float4 color = gTexture.Sample(gSampler, input.texcoord);
-	
-	output.color = saturate(color); //!< HDRの対応までの暫定処理
+	output.color = gTexture.Sample(gSampler, input.texcoord);
 
 	return output;
 }

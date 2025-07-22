@@ -146,6 +146,10 @@ GraphicsRootSignatureDesc BindBufferTable::CreateGraphicsRootSignatureDesc() {
 
 	for (auto& [name, info] : table_) {
 		switch (info.bindBufferType) {
+			case BindBufferType::k32bitConstants:
+				desc.Set32bitConstants(rootIndex, info.visibility, static_cast<UINT>(info.num32bit), info.registerNum, info.registerSpace);
+				break;
+
 			case BindBufferType::kVirtual_CBV:
 				desc.SetVirtualCBV(rootIndex, info.visibility, info.registerNum, info.registerSpace);
 				break;
@@ -186,6 +190,10 @@ GraphicsRootSignatureDesc BindBufferTable::CreateGraphicsRootSignatureDesc(const
 
 	for (auto& [name, info] : table_) {
 		switch (info.bindBufferType) {
+			case BindBufferType::k32bitConstants:
+				desc.Set32bitConstants(rootIndex, info.visibility, static_cast<UINT>(info.num32bit), info.registerNum, info.registerSpace);
+				break;
+
 			case BindBufferType::kVirtual_CBV:
 				desc.SetVirtualCBV(rootIndex, info.visibility, info.registerNum, info.registerSpace);
 				break;

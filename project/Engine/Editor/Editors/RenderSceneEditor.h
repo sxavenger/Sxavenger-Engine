@@ -11,7 +11,7 @@
 #include <Engine/Component/Components/Collider/ColliderPrimitiveRenderer.h>
 #include <Engine/Asset/Assets/Texture/AssetTexture.h>
 #include <Engine/Asset/Observer/AssetObserver.h>
-#include <Engine/Render/FRenderTargetTextures.h>
+#include <Engine/Render/FRenderTargetBuffer.h>
 #include <Engine/Render/Scene/FSceneRenderer.h>
 
 //* lib
@@ -123,9 +123,9 @@ private:
 
 	bool isRender_ = true;
 
-	std::unique_ptr<FRenderTargetTextures> textures_; //!< debug textures
-	std::unique_ptr<FSceneRenderer>        renderer_; //!< scene renderer
-	std::unique_ptr<MonoBehaviour>         camera_;   //!< scene camera
+	std::unique_ptr<FRenderTargetBuffer> textures_; //!< debug textures
+	std::unique_ptr<FSceneRenderer>      renderer_; //!< scene renderer
+	std::unique_ptr<MonoBehaviour>       camera_;   //!< scene camera
 
 	FSceneRenderer::Config config_ = {};
 
@@ -134,7 +134,7 @@ private:
 
 	//* parameter *//
 
-	FRenderTargetTextures::GBufferLayout layout_ = FRenderTargetTextures::GBufferLayout::Main;
+	//FRenderTargetTextures::GBufferLayout layout_ = FRenderTargetTextures::GBufferLayout::Main;
 
 	//* camera *//
 

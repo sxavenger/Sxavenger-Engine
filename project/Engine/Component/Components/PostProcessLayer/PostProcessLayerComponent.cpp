@@ -45,10 +45,10 @@ void PostProcessLayerComponent::ShowComponentInspector() {
 	}
 }
 
-void PostProcessLayerComponent::Process(const DirectXQueueContext* context, FRenderTargetTextures* textures, const CameraComponent* camera) {
+void PostProcessLayerComponent::Process(const DirectXQueueContext* context, FRenderTargetBuffer* buffer, const CameraComponent* camera) {
 	for (auto& process : processes_) {
 		if (process->IsEnabled()) {
-			process->Process(context, textures, camera);
+			process->Process(context, buffer, camera);
 		}
 	}
 }

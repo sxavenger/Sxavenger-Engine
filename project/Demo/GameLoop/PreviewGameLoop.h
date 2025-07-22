@@ -8,8 +8,8 @@
 #include <Engine/System/DirectX/Context/DirectXWindowContext.h>
 #include <Engine/System/SxavengerSystem.h>
 #include <Engine/Asset/SxavengerAsset.h>
-#include <Engine/Render/FRenderTargetTextures.h>
 #include <Engine/Render/FPresenter.h>
+#include <Engine/Render/Common/FTexture.h>
 #include <Engine/Module/Pipeline/CustomComputePipeline.h>
 #include <Engine/Adapter/Actor/ControllableCameraActor.h>
 
@@ -41,7 +41,6 @@ private:
 
 	//* preview *//
 
-	FPresenter presenter_;
 	FTexture texture_;
 
 	AssetObserver<AssetTexture> environment_;

@@ -30,18 +30,18 @@ void FRenderCoreProcess::Init() {
 	//!< vignette
 	CreatePipeline(ProcessType::Vignette, "PostProcess/Vignette.cs.hlsl");
 
-	//* composite *//
-
 	//!< convert lut texture
-	CreatePipeline(CompositeType::ConvertLUTTexture, "CompositeProcess/ConvertLUTTexture.cs.hlsl");
+	CreatePipeline(ProcessType::ConvertLUTTexture, "PostProcess/ConvertLUTTexture.cs.hlsl");
 
 	//!< lut
 	{
 		DxObject::SamplerBindDesc desc = {};
 		desc.SetSamplerLinear("gLUTSampler", DxObject::SamplerMode::MODE_CLAMP);
 
-		CreatePipeline(CompositeType::LUT, "CompositeProcess/LUT.cs.hlsl", desc);
+		CreatePipeline(ProcessType::LUT, "PostProcess/LUT.cs.hlsl", desc);
 	}
+
+	//* composite *//
 
 	//!< tonemap
 	CreatePipeline(CompositeType::Tonemap, "CompositeProcess/Tonemap.cs.hlsl");

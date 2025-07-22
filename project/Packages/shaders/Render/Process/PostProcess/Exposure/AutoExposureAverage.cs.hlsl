@@ -7,7 +7,7 @@
 // constant
 //=========================================================================================
 
-static const uint kPixelNum = gConfig.size.x * gConfig.size.y;
+static const uint kPixelNum = size.x * size.y;
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // main
