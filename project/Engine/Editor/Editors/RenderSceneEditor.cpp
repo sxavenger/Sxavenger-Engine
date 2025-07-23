@@ -278,16 +278,16 @@ void RenderSceneEditor::ShowSceneMenu() {
 		ImGui::Text("layout");
 		ImGui::Separator();
 
-		//if (ImGui::BeginCombo("GBuffer", magic_enum::enum_name(layout_).data())) {
-		//
-		//	for (const auto& [value, name] : magic_enum::enum_entries<FRenderTargetTextures::GBufferLayout>()) {
-		//		if (ImGui::Selectable(name.data(), (value == layout_))) {
-		//			layout_ = value;
-		//		}
-		//	}
-		//
-		//	ImGui::EndCombo();
-		//}
+		if (ImGui::BeginCombo("GBuffer", magic_enum::enum_name(buffer_).data())) {
+		
+			for (const auto& [value, name] : magic_enum::enum_entries<GBuffer>()) {
+				if (ImGui::Selectable(name.data(), (value == buffer_))) {
+					buffer_ = value;
+				}
+			}
+		
+			ImGui::EndCombo();
+		}
 
 		// process
 		ImGui::Text("process");
@@ -467,15 +467,12 @@ void RenderSceneEditor::ShowSceneWindow() {
 
 	sceneWindow_ = ImGui::GetWindowDrawList();
 
-	SetImGuiImageFullWindow(
+	sceneRect_ = SetImGuiImageFullWindow(
 		checkerboard_.WaitGet()->GetGPUHandleSRV(),
-		kMainWindowSize
+		textures_->GetSize()
 	);
 
-	sceneRect_ = SetImGuiImageFullWindow(
-		textures_->GetGBuffer(FMainGBuffer::Layout::Scene)->GetGPUHandleSRV(),
-		kMainWindowSize
-	);
+	DisplayGBufferTexture(buffer_);
 
 	if (ImGui::IsWindowHovered() && (ImGui::IsMouseClicked(ImGuiMouseButton_Middle) || ImGui::IsMouseClicked(ImGuiMouseButton_Right))) {
 		//!< window hovered 状態で mouse middle click が押された場合, camera操作(forcus)を許可.
@@ -534,12 +531,12 @@ void RenderSceneEditor::ShowCanvasWindow() {
 
 	canvasWindow_ = ImGui::GetWindowDrawList();
 
-	SetImGuiImageFullWindow(
+	canvasRect_ = SetImGuiImageFullWindow(
 		checkerboard_.WaitGet()->GetGPUHandleSRV(),
 		kMainWindowSize
 	);
 
-	canvasRect_ = SetImGuiImageFullWindow(
+	SetImGuiImageFullWindow(
 		FMainRender::GetInstance()->GetTextures()->GetGBuffer(FMainGBuffer::Layout::UI)->GetGPUHandleSRV(),
 		kMainWindowSize
 	);
@@ -607,7 +604,7 @@ void RenderSceneEditor::ShowInfoTextScene() {
 	
 }
 
-RenderSceneEditor::WindowRect RenderSceneEditor::SetImGuiImageFullWindow(const D3D12_GPU_DESCRIPTOR_HANDLE& handle, const Vector2ui& size) {
+RenderSceneEditor::WindowRect RenderSceneEditor::SetImGuiImageFullWindow(const D3D12_GPU_DESCRIPTOR_HANDLE& handle, const Vector2ui& size) const {
 
 	// タブ等を排除した全体のwindowSize計算
 	ImVec2 regionMax = ImGui::GetWindowContentRegionMax();
@@ -694,6 +691,60 @@ void RenderSceneEditor::UpdateView() {
 	transform->UpdateMatrix();
 
 	camera_->GetComponent<CameraComponent>()->UpdateView();
+}
+
+void RenderSceneEditor::DisplayGBufferTexture(GBuffer buffer) const {
+	switch (buffer) {
+		case GBuffer::Scene:
+			SetImGuiImageFullWindow(
+				textures_->GetGBuffer(FMainGBuffer::Layout::Scene)->GetGPUHandleSRV(),
+				textures_->GetSize()
+			);
+			break;
+
+		case GBuffer::Albedo:
+			SetImGuiImageFullWindow(
+				textures_->GetGBuffer(FDeferredGBuffer::Layout::Albedo)->GetGPUHandleSRV(),
+				textures_->GetSize()
+			);
+			break;
+
+		case GBuffer::Normal:
+			SetImGuiImageFullWindow(
+				textures_->GetGBuffer(FDeferredGBuffer::Layout::Normal)->GetGPUHandleSRV(),
+				textures_->GetSize()
+			);
+			break;
+
+		case GBuffer::MaterialARM:
+			SetImGuiImageFullWindow(
+				textures_->GetGBuffer(FDeferredGBuffer::Layout::MaterialARM)->GetGPUHandleSRV(),
+				textures_->GetSize()
+			);
+			break;
+
+		case GBuffer::Position:
+			SetImGuiImageFullWindow(
+				textures_->GetGBuffer(FDeferredGBuffer::Layout::Position)->GetGPUHandleSRV(),
+				textures_->GetSize()
+			);
+			break;
+
+		case GBuffer::Direct:
+			SetImGuiImageFullWindow(
+				textures_->GetGBuffer(FLightingGBuffer::Layout::Direct)->GetGPUHandleSRV(),
+				textures_->GetSize()
+			);
+			break;
+
+		case GBuffer::Indirect:
+			SetImGuiImageFullWindow(
+				textures_->GetGBuffer(FLightingGBuffer::Layout::Indirect)->GetGPUHandleSRV(),
+				textures_->GetSize()
+			);
+			break;
+
+	}
 }
 
 void RenderSceneEditor::RenderIcon(Icon icon, const Vector3f& position, const Color4f& color) {

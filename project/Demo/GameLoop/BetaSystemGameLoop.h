@@ -22,6 +22,7 @@
 
 //* demo
 #include <Demo/Entity/Player.h>
+#include <Demo/Particle/LeadParticle.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // BetaSystemGameLoop class
@@ -57,6 +58,8 @@ private:
 	std::unique_ptr<Player> player_;
 
 	std::unique_ptr<EmissiveActor> emissive_;
+
+	std::unique_ptr<LeadParticle> leadParticle_;
 
 	//=========================================================================================
 	// private methods

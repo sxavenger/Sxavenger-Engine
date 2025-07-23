@@ -62,7 +62,7 @@ void BetaSystemGameLoop::InitSystem() {
 	camera_->AddComponent<PostProcessLayerComponent>();
 	camera_->GetComponent<PostProcessLayerComponent>()->SetTag(PostProcessLayerComponent::Tag::Global);
 	camera_->GetComponent<PostProcessLayerComponent>()->AddPostProcess<PostProcessAutoExposure>();
-	camera_->GetComponent<PostProcessLayerComponent>()->AddPostProcess<PostProcessLocalExposure>();
+	//camera_->GetComponent<PostProcessLayerComponent>()->AddPostProcess<PostProcessLocalExposure>();
 	//camera_->GetComponent<PostProcessLayerComponent>()->AddPostProcess<PostProcessBloom>();
 	//camera_->GetComponent<PostProcessLayerComponent>()->AddPostProcess<PostProcessDoF>();
 
@@ -80,9 +80,13 @@ void BetaSystemGameLoop::InitSystem() {
 
 	offlineSkylight_ = std::make_unique<MonoBehaviour>();
 	auto light = offlineSkylight_->AddComponent<SkyLightComponent>();
-	light->GetDiffuseParameter().SetTexture(SxavengerAsset::Import<AssetTexture>("assets/textures/textureCube/DebugIrradiance.dds"));
-	light->GetSpecularParameter().SetTexture(SxavengerAsset::Import<AssetTexture>("assets/textures/textureCube/DebugRadiance.dds"));
-	light->SetEnvironment(SxavengerAsset::Import<AssetTexture>("assets/textures/textureCube/DebugEnvironment.dds").WaitAcquire()->GetGPUHandleSRV());
+	//light->GetDiffuseParameter().SetTexture(SxavengerAsset::Import<AssetTexture>("assets/textures/textureCube/DebugIrradiance.dds"));
+	//light->GetSpecularParameter().SetTexture(SxavengerAsset::Import<AssetTexture>("assets/textures/textureCube/DebugRadiance.dds"));
+	//light->SetEnvironment(SxavengerAsset::Import<AssetTexture>("assets/textures/textureCube/DebugEnvironment.dds").WaitAcquire()->GetGPUHandleSRV());
+
+	light->GetDiffuseParameter().SetTexture(SxavengerAsset::Import<AssetTexture>("assets/textures/textureCube/sky_irradiance.dds"));
+	light->GetSpecularParameter().SetTexture(SxavengerAsset::Import<AssetTexture>("assets/textures/textureCube/sky_radiance.dds"));
+	light->SetEnvironment(SxavengerAsset::Import<AssetTexture>("assets/textures/textureCube/sky_environment.dds").WaitAcquire()->GetGPUHandleSRV());
 
 	//player_ = std::make_unique<Player>();
 	//player_->Load();
@@ -92,6 +96,10 @@ void BetaSystemGameLoop::InitSystem() {
 	emissive_ = std::make_unique<EmissiveActor>();
 	emissive_->Init();
 
+	leadParticle_ = std::make_unique<LeadParticle>();
+	leadParticle_->Load();
+	leadParticle_->Awake();
+	leadParticle_->Start();
 }
 
 void BetaSystemGameLoop::TermSystem() {
@@ -107,6 +115,8 @@ void BetaSystemGameLoop::UpdateSystem() {
 	camera_->Update();
 
 	//player_->Update();
+
+	leadParticle_->Update();
 
 	//-----------------------------------------------------------------------------------------
 	// SystemUpdate...?

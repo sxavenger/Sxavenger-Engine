@@ -5,6 +5,7 @@
 
 //* library
 #include "../../Library/BRDF.hlsli"
+#include "../../Library/ACES.hlsli"
 
 //#define _DEBUG_SAMPLE
 
@@ -178,8 +179,8 @@ float3 ApproximateBRDF(float3 diffuseAlbedo, float3 specularAlbedo, float3 n, fl
 	float3 diffuseLight  = PrefilterIrradiance(n);
 	float3 specularLight = PrefilterRadiance(roughness, r);
 #else
-	float3 diffuseLight  = gDiffuseParameter.Sample(gSampler, n).rgb * gParameter.intensity;
-	float3 specularLight = gSpecularParameter.Sample(gSampler, r, lod).rgb * gParameter.intensity;
+	float3 diffuseLight  = ACES::IDT_sRGB_AP1(gDiffuseParameter.Sample(gSampler, n).rgb * gParameter.intensity);
+	float3 specularLight = ACES::IDT_sRGB_AP1(gSpecularParameter.Sample(gSampler, r, lod).rgb * gParameter.intensity);
 #endif
 	
 	float3 diffuse = diffuseLight * diffuseAlbedo;

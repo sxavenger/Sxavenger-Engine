@@ -101,6 +101,19 @@ private:
 		Camera
 	};
 
+	////////////////////////////////////////////////////////////////////////////////////////////
+	// GBuffer enum class
+	////////////////////////////////////////////////////////////////////////////////////////////
+	enum class GBuffer : uint32_t {
+		Scene,
+		Albedo,
+		Normal,
+		MaterialARM,
+		Position,
+		Direct,
+		Indirect,
+	};
+
 private:
 
 	//=========================================================================================
@@ -135,6 +148,8 @@ private:
 	//* parameter *//
 
 	//FRenderTargetTextures::GBufferLayout layout_ = FRenderTargetTextures::GBufferLayout::Main;
+
+	GBuffer buffer_ = GBuffer::Scene;
 
 	//* camera *//
 
@@ -182,12 +197,14 @@ private:
 
 	//* sub methods *//
 
-	WindowRect SetImGuiImageFullWindow(const D3D12_GPU_DESCRIPTOR_HANDLE& handle, const Vector2ui& size);
+	WindowRect SetImGuiImageFullWindow(const D3D12_GPU_DESCRIPTOR_HANDLE& handle, const Vector2ui& size) const;
 
 	void UpdateCamera();
 	void UpdateView();
 
 	//* helper methods *//
+
+	void DisplayGBufferTexture(GBuffer buffer) const;
 
 	void RenderIcon(Icon icon, const Vector3f& position, const Color4f& color);
 
