@@ -6,6 +6,7 @@ _DXOBJECT_USING
 //-----------------------------------------------------------------------------------------
 //* external
 #include <imgui.h>
+#include <magic_enum.hpp>
 
 //* c++
 #include <format>
@@ -31,6 +32,8 @@ void DescriptorPool::Init(
 
 	// handleSizeを取得
 	descriptorHandleSize_ = device->GetDescriptorHandleIncrementSize(descriptorHeapType_);
+
+	Logger::EngineLog(std::format("[_DXOBJECT DescriptorPool] descriptor heap type: {}, visibility: {}, count: {}", magic_enum::enum_name(descriptorHeapType), shaderVisible, descriptorMaxCount));
 }
 
 void DescriptorPool::Term() {
@@ -127,7 +130,7 @@ void DescriptorHeaps::Init(Device* device) {
 	pools_[DescriptorType::kDescriptor_CBV_SRV_UAV] = std::make_unique<DescriptorPool>();
 	pools_[DescriptorType::kDescriptor_CBV_SRV_UAV]->Init(device, D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, true, kDescriptorCount_[DescriptorType::kDescriptor_CBV_SRV_UAV]);
 
-	Logger::EngineLog("[_DXOBJECT]::DescriptorHeaps complete init.");
+	Logger::EngineLog("[_DXOBJECT DescriptorHeaps] complete initialize.");
 }
 
 void DescriptorHeaps::Term() {

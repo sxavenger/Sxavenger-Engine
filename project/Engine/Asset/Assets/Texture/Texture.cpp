@@ -70,7 +70,7 @@ void Texture::Load(const DirectXQueueContext* context, const std::filesystem::pa
 	metadata_.Assign(metadata);
 
 	context->ExecuteAllAllocators();
-	Logger::EngineThreadLog("texture loaded. filepath: " + filepath.generic_string() + " encoding: " + magic_enum::enum_name(option.encoding).data());
+	Logger::EngineThreadLog("[Texture] texture loaded. filepath: " + filepath.generic_string() + " encoding: " + magic_enum::enum_name(option.encoding).data());
 
 }
 
