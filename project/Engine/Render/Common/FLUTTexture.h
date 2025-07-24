@@ -37,6 +37,7 @@ public:
 	//=========================================================================================
 
 	void Create(const AssetObserver<AssetTexture>& texture, const Vector2ui& tile);
+	void Create(const std::shared_ptr<AssetTexture>& texture, const Vector2ui& tile);
 
 	void Dispatch(const DirectXQueueContext* context);
 

@@ -44,6 +44,7 @@ public:
 	//* option *//
 
 	void CreateTexture(const DirectXQueueContext* context, const AssetObserver<AssetTexture>& texture, const Vector2ui& tile);
+	void CreateTexture(const DirectXQueueContext* context, const std::shared_ptr<AssetTexture>& texture, const Vector2ui& tile);
 
 private:
 
@@ -53,5 +54,7 @@ private:
 
 	std::unique_ptr<FLUTTexture> texture_;
 	std::unique_ptr<DxObject::DimensionBuffer<Parameter>> parameter_;
+
+	Vector2ui tile_ = {};
 
 };

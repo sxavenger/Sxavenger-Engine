@@ -21,6 +21,15 @@ void FLUTTexture::Create(const AssetObserver<AssetTexture>& texture, const Vecto
 	CreateBuffer(texture_->GetTexture().GetSize(), tile);
 }
 
+void FLUTTexture::Create(const std::shared_ptr<AssetTexture>& texture, const Vector2ui& tile) {
+
+	// 引数の保存
+	texture_ = texture;
+
+	CreateResource(texture_->GetTexture().GetSize(), tile);
+	CreateBuffer(texture_->GetTexture().GetSize(), tile);
+}
+
 void FLUTTexture::Dispatch(const DirectXQueueContext* context) {
 
 	FRenderCore::GetInstance()->GetProcess()->SetPipeline(
