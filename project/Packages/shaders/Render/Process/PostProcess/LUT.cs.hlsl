@@ -38,6 +38,5 @@ void main(uint3 dispatchThreadId : SV_DispatchThreadID) {
 	// todo: 0.0 ~ 1.0 範囲外の対応
 
 	gOutput[index].rgb = lerp(color.rgb, grading, gParameter.intensity);
-	gOutput[index].a   = color.a;
 	
 }

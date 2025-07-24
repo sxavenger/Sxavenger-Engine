@@ -30,9 +30,42 @@ void PostProcessLayerComponent::ShowComponentInspector() {
 	ImGui::Text("post process layer");
 	ImGui::Separator();
 
-	for (auto& process : processes_) {
-		ImGui::PushID(static_cast<void*>(process.get()));
+	// swapに関する設定
+	std::optional<std::pair<bool, Iterator>> swapData = std::nullopt;
+	// nullopt:    swapしない
+	// itr, true:  begin側にswap
+	// itr, false: end側にswap
 
+	for (auto itr = processes_.begin(); itr != processes_.end(); ++itr) {
+		auto process = (*itr).get();
+
+		ImGui::PushID(static_cast<void*>(process));
+
+		// Swap button
+		bool isEnableUp   = (itr != processes_.begin());
+		bool isEnableDown = (itr != std::prev(processes_.end()));
+
+		ImGui::PushStyleVarX(ImGuiStyleVar_ItemSpacing, 0.0f);
+
+		ImGui::BeginDisabled(!isEnableUp);
+		if (ImGui::ArrowButton("## up", ImGuiDir_Up)) {
+			swapData = std::make_pair(true, itr);
+		}
+		ImGui::EndDisabled();
+
+		ImGui::SameLine();
+
+		ImGui::BeginDisabled(!isEnableDown);
+		if (ImGui::ArrowButton("## down", ImGuiDir_Down)) {
+			swapData = std::make_pair(false, itr);
+		}
+		ImGui::EndDisabled();
+
+		ImGui::PopStyleVar();
+
+		ImGui::SameLine();
+
+		// Enable checkbox
 		ImGui::Checkbox("## isEnabled", &process->IsEnabled());
 
 		ImGui::SameLine();
@@ -40,9 +73,25 @@ void PostProcessLayerComponent::ShowComponentInspector() {
 		if (ImGui::CollapsingHeader(process->GetName().c_str())) {
 			process->ShowInspectorImGui();
 		}
-		
+
 		ImGui::PopID();
 	}
+
+	if (swapData.has_value()) {
+		auto& [isUp, itr] = swapData.value();
+
+		if (isUp) {
+			if (itr != processes_.begin()) {
+				std::iter_swap(itr, std::prev(itr));
+			}
+		} else {
+			if (std::next(itr) != processes_.end()) {
+				std::iter_swap(itr, std::next(itr));
+			}
+		}
+	}
+
+	// todo: mouseでの操作を可能にする
 }
 
 void PostProcessLayerComponent::Process(const DirectXQueueContext* context, FRenderTargetBuffer* buffer, const CameraComponent* camera) {

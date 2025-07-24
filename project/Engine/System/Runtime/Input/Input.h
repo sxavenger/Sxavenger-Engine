@@ -90,11 +90,13 @@ private:
 	static const uint32_t kKeyNum_ = 256;
 	InputState<std::array<BYTE, kKeyNum_>> keys_;
 
+	bool isEnableAquire_ = false; //!< Inputが取得可能かどうか
+
 	//=========================================================================================
 	// private variables
 	//=========================================================================================
 
-	void SetCooperativeLevel(const DirectXWindowContext* window);
+	bool SetCooperativeLevel(const DirectXWindowContext* window);
 
 };
 
@@ -164,11 +166,13 @@ private:
 
 	InputState<DIMOUSESTATE2> mouse_;
 
+	bool isEnableAquire_ = false; //!< Inputが取得可能かどうか
+
 	//=========================================================================================
 	// private variables
 	//=========================================================================================
 
-	void SetCooperativeLevel(const DirectXWindowContext* window);
+	bool SetCooperativeLevel(const DirectXWindowContext* window);
 
 };
 

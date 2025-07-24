@@ -39,7 +39,7 @@ void KeyboardInput::Term() {
 
 void KeyboardInput::Update() {
 
-	SetCooperativeLevel(SxavengerSystem::GetForcusWindow());
+	isEnableAquire_ = SetCooperativeLevel(SxavengerSystem::GetForcusWindow());
 
 	// 前frameのkey状態の保存
 	keys_.second = keys_.first;
@@ -55,20 +55,32 @@ void KeyboardInput::Update() {
 }
 
 bool KeyboardInput::IsPress(KeyId id) const {
+	if (!isEnableAquire_) {
+		return false;
+	}
+
 	return keys_.first[static_cast<uint8_t>(id)];
 }
 
 bool KeyboardInput::IsTrigger(KeyId id) const {
+	if (!isEnableAquire_) {
+		return false;
+	}
+
 	return keys_.first[static_cast<uint8_t>(id)] && !keys_.second[static_cast<uint8_t>(id)];
 }
 
 bool KeyboardInput::IsRelease(KeyId id) const {
+	if (!isEnableAquire_) {
+		return false;
+	}
+
 	return !keys_.first[static_cast<uint8_t>(id)] && keys_.second[static_cast<uint8_t>(id)];
 }
 
-void KeyboardInput::SetCooperativeLevel(const DirectXWindowContext* window) {
+bool KeyboardInput::SetCooperativeLevel(const DirectXWindowContext* window) {
 	if (window == nullptr) {
-		return;
+		return false;
 	}
 
 	HWND hwnd = window->GetHwnd();
@@ -84,6 +96,8 @@ void KeyboardInput::SetCooperativeLevel(const DirectXWindowContext* window) {
 
 		currentHwnd_ = hwnd;
 	}
+
+	return true;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -117,7 +131,7 @@ void MouseInput::Term() {
 
 void MouseInput::Update() {
 
-	SetCooperativeLevel(SxavengerSystem::GetForcusWindow());
+	isEnableAquire_ = SetCooperativeLevel(SxavengerSystem::GetForcusWindow());
 
 	// 前frameのmouse状態の保存
 	mouse_.second = mouse_.first;
@@ -132,6 +146,10 @@ void MouseInput::Update() {
 }
 
 Vector2i MouseInput::GetPosition() const {
+	if (!isEnableAquire_) {
+		return {};
+	}
+
 	POINT point = {};
 	GetCursorPos(&point);
 	ScreenToClient(currentHwnd_, &point);
@@ -140,6 +158,10 @@ Vector2i MouseInput::GetPosition() const {
 }
 
 Vector2i MouseInput::GetPosition(const DirectXWindowContext* window) const {
+	if (!isEnableAquire_) {
+		return {};
+	}
+
 	POINT point = {};
 	GetCursorPos(&point);
 
@@ -151,10 +173,18 @@ Vector2i MouseInput::GetPosition(const DirectXWindowContext* window) const {
 }
 
 Vector2i MouseInput::GetDeltaPosition() const {
+	if (!isEnableAquire_) {
+		return {};
+	}
+
 	return { mouse_.first.lX, mouse_.first.lY };
 }
 
 void MouseInput::SetPosition(const Vector2i& position) const {
+	if (!isEnableAquire_) {
+		return;
+	}
+
 	POINT point = { position.x, position.y };
 	ScreenToClient(currentHwnd_, &point);
 	SetCursorPos(point.x, point.y);
@@ -165,32 +195,56 @@ void MouseInput::ShowCousor(bool isShow) const {
 }
 
 bool MouseInput::IsPress(MouseId id) const {
+	if (!isEnableAquire_) {
+		return false;
+	}
+
 	return mouse_.first.rgbButtons[static_cast<uint8_t>(id)];
 }
 
 bool MouseInput::IsTrigger(MouseId id) const {
+	if (!isEnableAquire_) {
+		return false;
+	}
+
 	return mouse_.first.rgbButtons[static_cast<uint8_t>(id)] && !mouse_.second.rgbButtons[static_cast<uint8_t>(id)];;
 }
 
 bool MouseInput::IsRelease(MouseId id) const {
+	if (!isEnableAquire_) {
+		return false;
+	}
+
 	return !mouse_.first.rgbButtons[static_cast<uint8_t>(id)] && mouse_.second.rgbButtons[static_cast<uint8_t>(id)];;
 }
 
 float MouseInput::GetDeltaWheel() const {
+	if (!isEnableAquire_) {
+		return 0.0f;
+	}
+
 	return static_cast<float>(mouse_.first.lZ) / WHEEL_DELTA; //!< wheelの最大値でnormalize
 }
 
 bool MouseInput::IsWheelUp() const {
+	if (!isEnableAquire_) {
+		return false;
+	}
+
 	return mouse_.first.lZ > 0;
 }
 
 bool MouseInput::IsWheelDown() const {
+	if (!isEnableAquire_) {
+		return false;
+	}
+
 	return mouse_.first.lZ < 0;
 }
 
-void MouseInput::SetCooperativeLevel(const DirectXWindowContext* window) {
+bool MouseInput::SetCooperativeLevel(const DirectXWindowContext* window) {
 	if (window == nullptr) {
-		return;
+		return false;
 	}
 
 	HWND hwnd = window->GetHwnd();
@@ -206,6 +260,8 @@ void MouseInput::SetCooperativeLevel(const DirectXWindowContext* window) {
 
 		currentHwnd_ = hwnd;
 	}
+
+	return true;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -336,7 +392,9 @@ void Input::Update() {
 	keyboard_->Update();
 	mouse_->Update();
 
-	std::for_each(gamepads_.begin(), gamepads_.end(), [](auto& gamepad) { gamepad->Update(); });
+	for (auto& gamepad : gamepads_) {
+		gamepad->Update();
+	}
 }
 
 bool Input::IsPressKey(KeyId id) {

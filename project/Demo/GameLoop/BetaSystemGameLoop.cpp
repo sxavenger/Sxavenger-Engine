@@ -64,7 +64,7 @@ void BetaSystemGameLoop::InitSystem() {
 	camera_->GetComponent<PostProcessLayerComponent>()->AddPostProcess<PostProcessAutoExposure>();
 	//camera_->GetComponent<PostProcessLayerComponent>()->AddPostProcess<PostProcessLocalExposure>();
 	//camera_->GetComponent<PostProcessLayerComponent>()->AddPostProcess<PostProcessBloom>();
-	//camera_->GetComponent<PostProcessLayerComponent>()->AddPostProcess<PostProcessDoF>();
+	camera_->GetComponent<PostProcessLayerComponent>()->AddPostProcess<PostProcessDoF>();
 
 	auto texture = SxavengerAsset::TryImport<AssetTexture>("assets/textures/LUT/lut_reddish.png", Texture::Option{ Texture::Encoding::Intensity, false });
 	auto lut = camera_->GetComponent<PostProcessLayerComponent>()->AddPostProcess<PostProcessLUT>();
