@@ -3,6 +3,15 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
+//* component
+#include "../../Entity/MonoBehaviour.h"
+
+//* engine
+#include <Engine/Content/SxavengerContent.h>
+
+//* lib
+#include <Lib/Geometry/VectorComparision.h>
+
 //* external
 #include <imgui.h>
 #include <magic_enum.hpp>
@@ -92,6 +101,18 @@ void PostProcessLayerComponent::ShowComponentInspector() {
 	}
 
 	// todo: mouseでの操作を可能にする
+
+	auto transform = GetTransform();
+
+	if (tag_ == Tag::Volume && transform != nullptr) {
+		//!< volume時, boxの描画
+		Vector3f min = Matrix4x4::Transform({ -0.5f, -0.5f, -0.5f }, transform->GetMatrix());
+		Vector3f max = Matrix4x4::Transform({ 0.5f, 0.5f, 0.5f }, transform->GetMatrix());
+
+		SxavengerContent::PushBox(min, max, Color4f(1.0f, 1.0f, 0.0f, 1.0f));
+	}
+	
+
 }
 
 void PostProcessLayerComponent::Process(const DirectXQueueContext* context, FRenderTargetBuffer* buffer, const CameraComponent* camera) {
@@ -100,4 +121,29 @@ void PostProcessLayerComponent::Process(const DirectXQueueContext* context, FRen
 			process->Process(context, buffer, camera);
 		}
 	}
+}
+
+const TransformComponent* PostProcessLayerComponent::GetTransform() const {
+	return BaseComponent::GetBehaviour()->GetComponent<TransformComponent>();
+}
+
+bool PostProcessLayerComponent::IsInsideVolume(const Vector3f& position) const {
+
+	auto transform = GetTransform();
+
+	if (transform == nullptr) {
+		return false;
+	}
+
+	// boundingの計算と調整
+	Vector3f min = Matrix4x4::Transform({ -0.5f, -0.5f, -0.5f }, transform->GetMatrix());
+	Vector3f max = Matrix4x4::Transform({ 0.5f, 0.5f, 0.5f }, transform->GetMatrix());
+
+	for (size_t i = 0; i < 3; ++i) {
+		if (min[i] > max[i]) {
+			std::swap(min[i], max[i]);
+		}
+	}
+
+	return All(position >= min) && All(position <= max);
 }

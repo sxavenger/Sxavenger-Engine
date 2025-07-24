@@ -104,9 +104,10 @@ private:
 	// Icon enum class
 	////////////////////////////////////////////////////////////////////////////////////////////
 	enum class Icon : uint32_t {
+		Volume,
 		DirectionalLight,
 		PointLight,
-		Camera
+		Camera,
 	};
 
 	////////////////////////////////////////////////////////////////////////////////////////////
@@ -220,7 +221,7 @@ private:
 
 	void DisplayGBufferTexture(GBuffer buffer);
 
-	std::optional<ScreenRect> RenderIcon(Icon icon, const Vector3f& position, const Color4f& color);
+	void RenderIcon(BaseInspector* inspector, Icon icon, const Vector3f& position, const Color4f& color);
 
 	void RenderTextSceneWindow(ImVec2& position, const std::string& text, ImU32 color = ImGui::GetColorU32(ImGuiCol_Text));
 

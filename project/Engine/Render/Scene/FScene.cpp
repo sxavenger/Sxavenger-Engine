@@ -197,7 +197,7 @@ void FScene::SetupDirectionalLight() {
 	size_t index = 0;
 
 	sComponentStorage->ForEachActive<DirectionalLightComponent>([&](DirectionalLightComponent* component) {
-		directionalLightTransforms_->At(index)   = component->GetTransform()->GetTransformationMatrix();
+		directionalLightTransforms_->At(index)   = component->RequireTransform()->GetTransformationMatrix();
 		directionalLightParams_->At(index)       = component->GetParameter();
 		directionalLightShadowParams_->At(index) = component->GetShadowParameter();
 
@@ -231,7 +231,7 @@ void FScene::SetupPointLight() {
 	size_t index = 0;
 
 	sComponentStorage->ForEachActive<PointLightComponent>([&](PointLightComponent* component) {
-		pointLightTransforms_->At(index)   = component->GetTransform()->GetTransformationMatrix();
+		pointLightTransforms_->At(index)   = component->RequireTransform()->GetTransformationMatrix();
 		pointLightParams_->At(index)       = component->GetParameter();
 		pointLightShadowParams_->At(index) = component->GetShadowParameter();
 

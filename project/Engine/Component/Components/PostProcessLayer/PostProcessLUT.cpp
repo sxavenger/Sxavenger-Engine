@@ -60,8 +60,6 @@ void PostProcessLUT::ShowInspectorImGui() {
 	{ //!< parameter
 		ImGui::BeginDisabled(!isEnable);
 
-		ImGui::Text("parameter");
-		ImGui::Separator();
 		ImGui::DragFloat("intensity", &parameter_->At(0).intensity, 0.01f, 0.0f, 1.0f);
 
 		ImGui::EndDisabled();

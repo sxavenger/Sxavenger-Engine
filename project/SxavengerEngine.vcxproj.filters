@@ -174,6 +174,7 @@
     <ClCompile Include="Engine\Render\GBuffer\FDeferredGBuffer.cpp" />
     <ClCompile Include="Engine\Render\GBuffer\FLightingGBuffer.cpp" />
     <ClCompile Include="Engine\Render\GBuffer\FMainGBuffer.cpp" />
+    <ClCompile Include="Engine\Component\Components\PostProcessLayer\PostProcessGrayScale.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Lib\Adapter\Random\Random.h" />
@@ -372,6 +373,7 @@
     <ClInclude Include="Engine\Render\GBuffer\FDeferredGBuffer.h" />
     <ClInclude Include="Engine\Render\GBuffer\FLightingGBuffer.h" />
     <ClInclude Include="Engine\Render\GBuffer\FMainGBuffer.h" />
+    <ClInclude Include="Engine\Component\Components\PostProcessLayer\PostProcessGrayScale.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

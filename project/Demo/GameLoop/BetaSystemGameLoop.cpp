@@ -59,17 +59,6 @@ void BetaSystemGameLoop::InitSystem() {
 
 	SxavengerAsset::TryImport<AssetModel>("assets/models/PBR_Sphere_Test/model/PBR_Sphere.gltf");
 
-	camera_->AddComponent<PostProcessLayerComponent>();
-	camera_->GetComponent<PostProcessLayerComponent>()->SetTag(PostProcessLayerComponent::Tag::Global);
-	camera_->GetComponent<PostProcessLayerComponent>()->AddPostProcess<PostProcessAutoExposure>();
-	//camera_->GetComponent<PostProcessLayerComponent>()->AddPostProcess<PostProcessLocalExposure>();
-	//camera_->GetComponent<PostProcessLayerComponent>()->AddPostProcess<PostProcessBloom>();
-	camera_->GetComponent<PostProcessLayerComponent>()->AddPostProcess<PostProcessDoF>();
-
-	auto texture = SxavengerAsset::TryImport<AssetTexture>("assets/textures/LUT/lut_reddish.png", Texture::Option{ Texture::Encoding::Intensity, false });
-	auto lut = camera_->GetComponent<PostProcessLayerComponent>()->AddPostProcess<PostProcessLUT>();
-	lut->CreateTexture(SxavengerSystem::GetDirectQueueContext(), texture, { 16, 16 });
-
 	//atmosphere_ = std::make_unique<AtmosphereActor>();
 	//atmosphere_->Init({ 1024, 1024 });
 
@@ -100,6 +89,20 @@ void BetaSystemGameLoop::InitSystem() {
 	leadParticle_->Load();
 	leadParticle_->Awake();
 	leadParticle_->Start();
+
+	behaviour_ = std::make_unique<MonoBehaviour>();
+	behaviour_->AddComponent<TransformComponent>();
+	behaviour_->AddComponent<PostProcessLayerComponent>();
+	behaviour_->GetComponent<PostProcessLayerComponent>()->SetTag(PostProcessLayerComponent::Tag::Global);
+	behaviour_->GetComponent<PostProcessLayerComponent>()->AddPostProcess<PostProcessAutoExposure>();
+	//behaviour_->GetComponent<PostProcessLayerComponent>()->AddPostProcess<PostProcessLocalExposure>();
+	//behaviour_->GetComponent<PostProcessLayerComponent>()->AddPostProcess<PostProcessBloom>();
+	behaviour_->GetComponent<PostProcessLayerComponent>()->AddPostProcess<PostProcessDoF>();
+	behaviour_->GetComponent<PostProcessLayerComponent>()->AddPostProcess<PostProcessGrayScale>();
+
+	auto texture = SxavengerAsset::TryImport<AssetTexture>("assets/textures/LUT/lut_reddish.png", Texture::Option{ Texture::Encoding::Intensity, false });
+	auto lut = behaviour_->GetComponent<PostProcessLayerComponent>()->AddPostProcess<PostProcessLUT>();
+	lut->CreateTexture(SxavengerSystem::GetDirectQueueContext(), texture, { 16, 16 });
 }
 
 void BetaSystemGameLoop::TermSystem() {

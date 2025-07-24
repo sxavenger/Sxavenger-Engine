@@ -60,7 +60,7 @@ void PointLightComponent::ShowComponentInspector() {
 	LightCommon::ShowCommonInspector();
 
 	//* push line
-	SxavengerContent::GetDebugPrimitive()->PushSphere(GetTransform()->GetPosition(), parameter.radius, kColor);
+	SxavengerContent::GetDebugPrimitive()->PushSphere(RequireTransform()->GetPosition(), parameter.radius, kColor);
 }
 
 void PointLightComponent::Init() {
@@ -84,7 +84,7 @@ const PointLightComponent::Parameter& PointLightComponent::GetParameter() const 
 	return parameter_->At(0);
 }
 
-const TransformComponent* PointLightComponent::GetTransform() const {
+const TransformComponent* PointLightComponent::RequireTransform() const {
 	return BaseComponent::GetBehaviour()->RequireComponent<TransformComponent>();
 }
 

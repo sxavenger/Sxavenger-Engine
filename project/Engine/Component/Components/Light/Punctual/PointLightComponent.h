@@ -64,9 +64,9 @@ public:
 
 	const Parameter& GetParameter() const;
 
-	//* other component option *//
+	//* behaviour component option *//
 
-	const TransformComponent* GetTransform() const;
+	const TransformComponent* RequireTransform() const;
 
 	//* serialization option *//
 

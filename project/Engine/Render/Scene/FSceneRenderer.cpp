@@ -473,7 +473,7 @@ void FSceneRenderer::ProcessPostProcessPass(const DirectXQueueContext* context, 
 
 	config.buffer->BeginPostProcess(context);
 
-	// componentを取得
+	//!< Global PostProcessの処理
 	sComponentStorage->ForEachActive<PostProcessLayerComponent>([&](PostProcessLayerComponent* component) {
 		if (component->GetTag() != PostProcessLayerComponent::Tag::Global) {
 			return; //!< Global以外のPostProcessLayerComponentは処理しない
@@ -481,6 +481,33 @@ void FSceneRenderer::ProcessPostProcessPass(const DirectXQueueContext* context, 
 
 		component->Process(context, config.buffer, config.camera);
 	});
+
+	// TODO: Volume PostProcessの処理
+	sComponentStorage->ForEachActive<PostProcessLayerComponent>([&](PostProcessLayerComponent* component) {
+		if (component->GetTag() != PostProcessLayerComponent::Tag::Volume) {
+			return; //!< Global以外のPostProcessLayerComponentは処理しない
+		}
+
+		auto transform = component->GetTransform();
+
+		if (transform == nullptr) {
+			Logger::WarningRuntime("warning | [FSceneRenderer]::ProcessPostProcessPass [Volume]", "PostProcessLayerComponent [Volume] has no transform.");
+			return; //!< Transformがない場合は処理しない
+		}
+
+		if (!component->IsInsideVolume(config.camera->GetPosition())) {
+			return;
+		}
+
+		component->Process(context, config.buffer, config.camera);
+	});
+
+	//!< Local Post Processの処理
+	if (auto component = config.camera->GetBehaviour()->GetComponent<PostProcessLayerComponent>()) {
+		if (component->GetTag() == PostProcessLayerComponent::Tag::Local) {
+			component->Process(context, config.buffer, config.camera);
+		}
+	}
 
 
 	config.buffer->EndPostProcess(context);

@@ -12,7 +12,10 @@ void FRenderCoreProcess::Init() {
 	CreatePipeline(ProcessType::Environment, "PostProcess/Environment.cs.hlsl");
 
 	//!< volumetric fog
-	CreatePipeline(ProcessType::VolumetricFog, "PostProcess/volumetricFog.cs.hlsl");
+	//CreatePipeline(ProcessType::VolumetricFog, "PostProcess/volumetricFog.cs.hlsl");
+
+	//!< grayscale
+	CreatePipeline(ProcessType::GrayScale, "PostProcess/GrayScale.cs.hlsl");
 
 	//!< bloom
 	CreatePipeline(ProcessType::Bloom, "PostProcess/Bloom.cs.hlsl");

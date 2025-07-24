@@ -5,15 +5,17 @@
 //-----------------------------------------------------------------------------------------
 //* component
 #include "../BaseComponent.h"
-#include "BasePostProcess.h"
 #include "../Camera/CameraComponent.h"
+#include "../Transform/TransformComponent.h"
 
 //* process
+#include "BasePostProcess.h"
 #include "PostProcessLocalExposure.h"
 #include "PostProcessAutoExposure.h"
 #include "PostProcessBloom.h"
 #include "PostProcessDoF.h"
 #include "PostProcessLUT.h"
+#include "PostProcessGrayScale.h"
 
 //* engine
 #include <Engine/System/DirectX/Context/DirectXQueueContext.h>
@@ -39,8 +41,9 @@ public:
 	////////////////////////////////////////////////////////////////////////////////////////////
 	enum class Tag {
 		None,
+		Global,
+		Volume,
 		Local,
-		Global
 	};
 
 	////////////////////////////////////////////////////////////////////////////////////////////
@@ -74,12 +77,20 @@ public:
 	template <PostProcessConcept _Ty>
 	_Ty* AddPostProcess();
 
+	//* behaviour component option *//
+
+	const TransformComponent* GetTransform() const; //!< volume時のみ使用.
+
+	bool IsInsideVolume(const Vector3f& position) const;
 
 private:
 
 	//=========================================================================================
 	// private variables
 	//=========================================================================================
+
+
+	//* main process *//
 
 	Container processes_;
 

@@ -3,30 +3,50 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
-//* composite process
-#include "BaseCompositeProcess.h"
+//* post process
+#include "BasePostProcess.h"
 
 //* engine
 #include <Engine/System/DirectX/DxObject/DxDimensionBuffer.h>
-#include <Engine/Asset/Assets/Texture/AssetTexture.h>
-#include <Engine/Asset/Observer/AssetObserver.h>
-#include <Engine/Render/Common/FLUTTexture.h>
 
 //* c++
 #include <memory>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// CompositeProcessLUT class
+// PostProcessGrayScale class
 ////////////////////////////////////////////////////////////////////////////////////////////
-class CompositeProcessLUT
-	: public BaseCompositeProcess {
+class PostProcessGrayScale
+	: public BasePostProcess {
 public:
 
 	////////////////////////////////////////////////////////////////////////////////////////////
-	// Parameter class
+	// Type enum class
+	////////////////////////////////////////////////////////////////////////////////////////////
+	enum class Type : uint32_t {
+		GrayScale,
+		Sepia,
+		Manual //!< todo
+	};
+
+	////////////////////////////////////////////////////////////////////////////////////////////
+	// Parameter structure
 	////////////////////////////////////////////////////////////////////////////////////////////
 	struct Parameter {
-		float intensity;
+
+		//=========================================================================================
+		// public methods
+		//=========================================================================================
+
+		void Init();
+
+		void SetImGuiCommand();
+
+		//=========================================================================================
+		// public variables
+		//=========================================================================================
+
+		Type type;
+
 	};
 
 public:
@@ -37,13 +57,9 @@ public:
 
 	void Init() override;
 
-	void Process(const DirectXQueueContext* context, FRenderTargetTextures* textures) override;
+	void Process(const DirectXQueueContext* context, FRenderTargetBuffer* buffer, const CameraComponent* camera) override;
 
 	void ShowInspectorImGui() override;
-
-	//* option *//
-
-	void CreateTexture(const DirectXQueueContext* context, const AssetObserver<AssetTexture>& texture, const Vector2ui& tile);
 
 private:
 
@@ -51,7 +67,6 @@ private:
 	// private variables
 	//=========================================================================================
 
-	std::unique_ptr<FLUTTexture> texture_;
 	std::unique_ptr<DxObject::DimensionBuffer<Parameter>> parameter_;
 
 };
