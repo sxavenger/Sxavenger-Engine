@@ -76,6 +76,14 @@ private:
 	};
 
 	////////////////////////////////////////////////////////////////////////////////////////////
+	// ScreenRect structure
+	////////////////////////////////////////////////////////////////////////////////////////////
+	struct ScreenRect {
+		Vector2f min;
+		Vector2f max;
+	};
+
+	////////////////////////////////////////////////////////////////////////////////////////////
 	// GuizmoEnable enum class
 	////////////////////////////////////////////////////////////////////////////////////////////
 	enum class GuizmoUsed : uint32_t {
@@ -178,6 +186,8 @@ private:
 
 	AssetObserver<AssetTexture> icons_[static_cast<uint32_t>(Icon::Camera) + 1];
 
+	Vector2f iconSize_ = { 32.0f, 32.0f };
+
 	//=========================================================================================
 	// private methods
 	//=========================================================================================
@@ -210,7 +220,7 @@ private:
 
 	void DisplayGBufferTexture(GBuffer buffer);
 
-	void RenderIcon(Icon icon, const Vector3f& position, const Color4f& color);
+	std::optional<ScreenRect> RenderIcon(Icon icon, const Vector3f& position, const Color4f& color);
 
 	void RenderTextSceneWindow(ImVec2& position, const std::string& text, ImU32 color = ImGui::GetColorU32(ImGuiCol_Text));
 

@@ -334,3 +334,7 @@ bool SxImGui::BeginHoveredTooltip(ImGuiHoveredFlags flags) {
 void SxImGui::EndHoveredTooltip() {
 	ImGui::EndTooltip();
 }
+
+bool SxImGui::IsMouseClickedRect(const ImVec2& min, const ImVec2& max, ImGuiMouseButton button) {
+	return ImGui::IsMouseClicked(button) && ImGui::IsMouseHoveringRect(min, max, false);
+}

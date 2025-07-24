@@ -3,6 +3,9 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
+//* editor
+#include "../EditorEngine.h"
+
 //* engine
 #include <Engine/System/UI/SxImGui.h>
 #include <Engine/System/UI/SxImGuizmo.h>
@@ -550,7 +553,10 @@ void RenderSceneEditor::ShowIconScene() {
 		return;
 	}
 
-	sComponentStorage->ForEach<CameraComponent>([this](CameraComponent* component) {
+	// inspector editorの取得
+	auto inspector = BaseEditor::GetEditorEngine()->GetEditor<InspectorEditor>();
+
+	sComponentStorage->ForEach<CameraComponent>([&](CameraComponent* component) {
 		if (component == camera_->GetComponent<CameraComponent>()) {
 			return; //!< editor cameraは無視
 		}
@@ -559,25 +565,53 @@ void RenderSceneEditor::ShowIconScene() {
 			? Color4f{ 1.0f, 1.0f, 1.0f, 1.0f }
 			: Color4f{ 0.2f, 0.2f, 0.2f, 1.0f };
 	
-		RenderIcon(Icon::Camera, Matrix4x4::GetTranslation(component->GetCamera().world), color);
+		std::optional<ScreenRect> rect = RenderIcon(Icon::Camera, Matrix4x4::GetTranslation(component->GetCamera().world), color);
+
+		if (inspector == nullptr || !rect.has_value()) {
+			return; //!< 選択不可能(inspectorが存在しない場合, screenに描画されない場合)
+		}
+
+		// mouseクリックでInspectorに設定
+		if (SxImGui::IsMouseClickedRect({ rect->min.x, rect->min.y }, { rect->max.x, rect->max.y }, ImGuiMouseButton_Left)) {
+			inspector->SetInspector(component->GetBehaviour());
+		}
+
 	});
 
-	sComponentStorage->ForEach<DirectionalLightComponent>([this](DirectionalLightComponent* component) {
+	sComponentStorage->ForEach<DirectionalLightComponent>([&](DirectionalLightComponent* component) {
 
 		Color4f color = component->IsActive()
 			? Color4f(component->GetParameter().color, 1.0f)
 			: Color4f{ 0.2f, 0.2f, 0.2f, 1.0f };
 
-		RenderIcon(Icon::DirectionalLight, component->GetTransform()->GetPosition(), color);
+		std::optional<ScreenRect> rect = RenderIcon(Icon::DirectionalLight, component->GetTransform()->GetPosition(), color);
+
+		if (inspector == nullptr || !rect.has_value()) {
+			return; //!< 選択不可能(inspectorが存在しない場合, screenに描画されない場合)
+		}
+
+		// mouseクリックでInspectorに設定
+		if (SxImGui::IsMouseClickedRect({ rect->min.x, rect->min.y }, { rect->max.x, rect->max.y }, ImGuiMouseButton_Left)) {
+			inspector->SetInspector(component->GetBehaviour());
+		}
 	});
 
-	sComponentStorage->ForEach<PointLightComponent>([this](PointLightComponent* component) {
+	sComponentStorage->ForEach<PointLightComponent>([&](PointLightComponent* component) {
 
 		Color4f color = component->IsActive()
 			? Color4f(component->GetParameter().color, 1.0f)
 			: Color4f{ 0.2f, 0.2f, 0.2f, 1.0f };
 
-		RenderIcon(Icon::PointLight, component->GetTransform()->GetPosition(), color);
+		std::optional<ScreenRect> rect =  RenderIcon(Icon::PointLight, component->GetTransform()->GetPosition(), color);
+
+		if (inspector == nullptr || !rect.has_value()) {
+			return; //!< 選択不可能(inspectorが存在しない場合, screenに描画されない場合)
+		}
+
+		// mouseクリックでInspectorに設定
+		if (SxImGui::IsMouseClickedRect({ rect->min.x, rect->min.y }, { rect->max.x, rect->max.y }, ImGuiMouseButton_Left)) {
+			inspector->SetInspector(component->GetBehaviour());
+		}
 	});
 
 }
@@ -867,15 +901,15 @@ void RenderSceneEditor::DisplayGBufferTexture(GBuffer buffer) {
 	}
 }
 
-void RenderSceneEditor::RenderIcon(Icon icon, const Vector3f& position, const Color4f& color) {
+std::optional<RenderSceneEditor::ScreenRect> RenderSceneEditor::RenderIcon(Icon icon, const Vector3f& position, const Color4f& color) {
 	if (sceneWindow_ == nullptr) {
-		return; icon;
+		return std::nullopt;
 	}
 
 	Vector3f ndc = camera_->GetComponent<CameraComponent>()->CalculateNDCPosition(position);
 
 	if (Any(ndc < Vector3(-1.0f, -1.0f, 0.0f)) || Any(ndc > Vector3(1.0f, 1.0f, 1.0f))) {
-		return;
+		return std::nullopt;
 		// FIXME: size込みの判定に変更する
 	}
 
@@ -884,14 +918,17 @@ void RenderSceneEditor::RenderIcon(Icon icon, const Vector3f& position, const Co
 		(1.0f - ndc.y) * 0.5f * sceneRect_.size.y
 	};
 
-	const Vector2f kSize  = { 32.0f, 32.0f };
-	const Vector2f kOffset = kSize / 2.0f;
+	const Vector2f kOffset = iconSize_ / 2.0f;
+
+	ScreenRect rect = {};
+	rect.min = { sceneRect_.pos.x + screen.x - kOffset.x, sceneRect_.pos.y + screen.y - kOffset.y };
+	rect.max = { sceneRect_.pos.x + screen.x + kOffset.x, sceneRect_.pos.y + screen.y + kOffset.y };
 
 	// icon shadow
 	sceneWindow_->AddImage(
 		icons_[static_cast<uint32_t>(icon)].WaitGet()->GetGPUHandleSRV().ptr,
-		{ sceneRect_.pos.x + screen.x - kOffset.x, sceneRect_.pos.y + screen.y - kOffset.y + 1.0f },
-		{ sceneRect_.pos.x + screen.x + kOffset.x, sceneRect_.pos.y + screen.y + kOffset.y + 1.0f },
+		{ rect.min.x, rect.min.y + 1.0f },
+		{ rect.max.x, rect.max.y + 1.0f },
 		ImVec2{ 0.0f, 0.0f },
 		ImVec2{ 1.0f, 1.0f },
 		ImColor{ 0.01f, 0.01f, 0.01f, color.a * 0.8f }
@@ -900,13 +937,17 @@ void RenderSceneEditor::RenderIcon(Icon icon, const Vector3f& position, const Co
 	// main icon
 	sceneWindow_->AddImage(
 		icons_[static_cast<uint32_t>(icon)].WaitGet()->GetGPUHandleSRV().ptr,
-		{ sceneRect_.pos.x + screen.x - kOffset.x, sceneRect_.pos.y + screen.y - kOffset.y },
-		{ sceneRect_.pos.x + screen.x + kOffset.x, sceneRect_.pos.y + screen.y + kOffset.y },
+		{ rect.min.x, rect.min.y },
+		{ rect.max.x, rect.max.y },
 		ImVec2{ 0.0f, 0.0f },
 		ImVec2{ 1.0f, 1.0f },
 		ImColor{ color.r, color.g, color.b, color.a }
 	);
 
+	// rectの調整
+	rect.min = Vector2f::Max(rect.min, sceneRect_.pos);
+	rect.max = Vector2f::Min(rect.max, sceneRect_.pos + sceneRect_.size);
+	return rect;
 }
 
 void RenderSceneEditor::RenderTextSceneWindow(ImVec2& position, const std::string& text, ImU32 color) {

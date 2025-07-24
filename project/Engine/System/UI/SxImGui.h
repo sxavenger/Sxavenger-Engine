@@ -46,6 +46,7 @@ namespace SxImGui {
 
 	void EndHoveredTooltip();
 
+	bool IsMouseClickedRect(const ImVec2& min, const ImVec2& max, ImGuiMouseButton button = ImGuiMouseButton_Left);
 
 	//=========================================================================================
 	// option
