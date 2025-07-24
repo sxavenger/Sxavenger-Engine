@@ -40,7 +40,8 @@ void RenderSceneEditor::Init() {
 	camera_->AddComponent<CameraComponent>();
 
 	auto camera = camera_->GetComponent<CameraComponent>();
-	camera->GetProjection().focal = 12.0f;
+	camera->GetProjection().focal = 16.0f;
+	camera->UpdateProj();
 
 	textures_ = std::make_unique<FRenderTargetBuffer>();
 	textures_->Create(kMainWindowSize);

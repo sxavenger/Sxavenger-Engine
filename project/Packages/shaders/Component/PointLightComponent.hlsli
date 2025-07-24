@@ -30,11 +30,11 @@ struct PointLightComponent {
 	
 		switch (unit) {
 			case LightUnits::Lumen:
-				radiance = intensity / (4.0f * kPi);
+				radiance = intensity / (4.0f * kPi) * kPi;
 				break;
 
 			case LightUnits::Candela:
-				radiance = intensity;
+				radiance = intensity * kPi;
 				break;
 		};
 
