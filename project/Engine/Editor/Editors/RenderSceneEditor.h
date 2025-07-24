@@ -110,6 +110,7 @@ private:
 		Normal,
 		MaterialARM,
 		Position,
+		Deferred_GBuffer,
 		Direct,
 		Indirect,
 	};
@@ -199,12 +200,14 @@ private:
 
 	WindowRect SetImGuiImageFullWindow(const D3D12_GPU_DESCRIPTOR_HANDLE& handle, const Vector2ui& size) const;
 
+	void SetImGuiImagesFullWindow(const std::vector<std::pair<D3D12_GPU_DESCRIPTOR_HANDLE, GBuffer>>& handles, const Vector2ui& size);
+
 	void UpdateCamera();
 	void UpdateView();
 
 	//* helper methods *//
 
-	void DisplayGBufferTexture(GBuffer buffer) const;
+	void DisplayGBufferTexture(GBuffer buffer);
 
 	void RenderIcon(Icon icon, const Vector3f& position, const Color4f& color);
 

@@ -643,6 +643,61 @@ RenderSceneEditor::WindowRect RenderSceneEditor::SetImGuiImageFullWindow(const D
 	return rect;
 }
 
+void RenderSceneEditor::SetImGuiImagesFullWindow(const std::vector<std::pair<D3D12_GPU_DESCRIPTOR_HANDLE, GBuffer>>& handles, const Vector2ui& size) {
+
+	// タブ等を排除した全体のwindowSize計算
+	ImVec2 regionMax = ImGui::GetWindowContentRegionMax();
+	ImVec2 regionMin = ImGui::GetWindowContentRegionMin();
+	ImVec2 windowSize = { regionMax.x - regionMin.x, regionMax.y - regionMin.y };
+
+	// 画像アス比と分割したWindowアス比の計算
+	float textureAspectRatio = static_cast<float>(size.x) / static_cast<float>(size.y);
+	float windowAspectRatio  = windowSize.x / windowSize.y;
+
+	// 出力する画像サイズの設定
+	ImVec2 displayTextureSize = windowSize;
+
+	// 画像サイズの調整
+	if (textureAspectRatio <= windowAspectRatio) {
+		displayTextureSize.x *= textureAspectRatio / windowAspectRatio;
+	
+	} else {
+		displayTextureSize.y *= windowAspectRatio / textureAspectRatio;
+	}
+
+	// x軸でhandlesの数だけ分割
+	const float kWidthEvery = displayTextureSize.x / static_cast<float>(handles.size());
+	const float kTexcoordEvery    = 1.0f / static_cast<float>(handles.size());
+
+	for (size_t i = 0; i < handles.size(); ++i) {
+
+		// 出力場所の調整
+		ImVec2 leftTop = {
+			(windowSize.x - displayTextureSize.x) * 0.5f + regionMin.x + kWidthEvery * i,
+			(windowSize.y - displayTextureSize.y) * 0.5f + regionMin.y,
+		};
+
+		// imageの描画
+		ImGui::SetCursorPos(leftTop);
+		ImGui::Image(
+			handles[i].first.ptr, { kWidthEvery, displayTextureSize.y },
+			{ kTexcoordEvery * i, 0.0f }, { kTexcoordEvery * (i + 1), 1.0f }
+		);
+
+		// textの描画
+		ImGui::SetCursorPos(leftTop);
+		SxImGui::TextClipped(magic_enum::enum_name(handles[i].second).data(), kWidthEvery);
+
+		// 選択されたら切り替え
+		ImGui::SetCursorPos(leftTop);
+		ImGui::InvisibleButton(magic_enum::enum_name(handles[i].second).data(), { kWidthEvery, displayTextureSize.y });
+
+		if (SxImGui::IsDoubleClickItem()) {
+			buffer_ = handles[i].second;
+		}
+	}
+}
+
 void RenderSceneEditor::UpdateCamera() {
 
 	isMoveCamera_ = false;
@@ -693,7 +748,7 @@ void RenderSceneEditor::UpdateView() {
 	camera_->GetComponent<CameraComponent>()->UpdateView();
 }
 
-void RenderSceneEditor::DisplayGBufferTexture(GBuffer buffer) const {
+void RenderSceneEditor::DisplayGBufferTexture(GBuffer buffer) {
 	switch (buffer) {
 		case GBuffer::Scene:
 			SetImGuiImageFullWindow(
@@ -726,6 +781,18 @@ void RenderSceneEditor::DisplayGBufferTexture(GBuffer buffer) const {
 		case GBuffer::Position:
 			SetImGuiImageFullWindow(
 				textures_->GetGBuffer(FDeferredGBuffer::Layout::Position)->GetGPUHandleSRV(),
+				textures_->GetSize()
+			);
+			break;
+
+		case GBuffer::Deferred_GBuffer:
+			SetImGuiImagesFullWindow(
+				{
+					{ textures_->GetGBuffer(FDeferredGBuffer::Layout::Albedo)->GetGPUHandleSRV(), GBuffer::Albedo },
+					{ textures_->GetGBuffer(FDeferredGBuffer::Layout::Normal)->GetGPUHandleSRV(), GBuffer::Normal },
+					{ textures_->GetGBuffer(FDeferredGBuffer::Layout::MaterialARM)->GetGPUHandleSRV(), GBuffer::MaterialARM },
+					{ textures_->GetGBuffer(FDeferredGBuffer::Layout::Position)->GetGPUHandleSRV(), GBuffer::Position },
+				},
 				textures_->GetSize()
 			);
 			break;
