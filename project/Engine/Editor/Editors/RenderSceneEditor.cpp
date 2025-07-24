@@ -643,7 +643,48 @@ RenderSceneEditor::WindowRect RenderSceneEditor::SetImGuiImageFullWindow(const D
 	return rect;
 }
 
-void RenderSceneEditor::SetImGuiImagesFullWindow(const std::vector<std::pair<D3D12_GPU_DESCRIPTOR_HANDLE, GBuffer>>& handles, const Vector2ui& size) {
+void RenderSceneEditor::SetImGuiImageFullWindowEnable(const D3D12_GPU_DESCRIPTOR_HANDLE& handle, const Vector2ui& size, bool isEnable) {
+
+	// タブ等を排除した全体のwindowSize計算
+	ImVec2 regionMax = ImGui::GetWindowContentRegionMax();
+	ImVec2 regionMin = ImGui::GetWindowContentRegionMin();
+	ImVec2 windowSize = { regionMax.x - regionMin.x, regionMax.y - regionMin.y };
+
+	// 画像アス比と分割したWindowアス比の計算
+	float textureAspectRatio = static_cast<float>(size.x) / static_cast<float>(size.y);
+	float windowAspectRatio  = windowSize.x / windowSize.y;
+
+	// 出力する画像サイズの設定
+	ImVec2 displayTextureSize = windowSize;
+
+	// 画像サイズの調整
+	if (textureAspectRatio <= windowAspectRatio) {
+		displayTextureSize.x *= textureAspectRatio / windowAspectRatio;
+	
+	} else {
+		displayTextureSize.y *= windowAspectRatio / textureAspectRatio;
+	}
+	
+	// 出力場所の調整
+	ImVec2 leftTop = {
+		(windowSize.x - displayTextureSize.x) * 0.5f + regionMin.x,
+		(windowSize.y - displayTextureSize.y) * 0.5f + regionMin.y,
+	};
+
+	ImVec4 tint = isEnable ? ImVec4(1.0f, 1.0f, 1.0f, 1.0f) : ImVec4(0.2f, 0.2f, 0.2f, 1.0f);
+
+	// 画像の描画
+	ImGui::SetCursorPos(leftTop);
+	ImGui::ImageWithBg(
+		handle.ptr, displayTextureSize,
+		{ 0.0f, 0.0f }, { 1.0f, 1.0f },
+		{ 0.0f, 0.0f, 0.0f, 0.0f },
+		tint
+	);
+
+}
+
+void RenderSceneEditor::SetImGuiImagesFullWindowEnable(const std::vector<std::pair<D3D12_GPU_DESCRIPTOR_HANDLE, GBuffer>>& handles, const Vector2ui& size, bool isEnable) {
 
 	// タブ等を排除した全体のwindowSize計算
 	ImVec2 regionMax = ImGui::GetWindowContentRegionMax();
@@ -669,6 +710,8 @@ void RenderSceneEditor::SetImGuiImagesFullWindow(const std::vector<std::pair<D3D
 	const float kWidthEvery = displayTextureSize.x / static_cast<float>(handles.size());
 	const float kTexcoordEvery    = 1.0f / static_cast<float>(handles.size());
 
+	ImVec4 tint = isEnable ? ImVec4(1.0f, 1.0f, 1.0f, 1.0f) : ImVec4(0.2f, 0.2f, 0.2f, 1.0f);
+
 	for (size_t i = 0; i < handles.size(); ++i) {
 
 		// 出力場所の調整
@@ -679,9 +722,11 @@ void RenderSceneEditor::SetImGuiImagesFullWindow(const std::vector<std::pair<D3D
 
 		// imageの描画
 		ImGui::SetCursorPos(leftTop);
-		ImGui::Image(
+		ImGui::ImageWithBg(
 			handles[i].first.ptr, { kWidthEvery, displayTextureSize.y },
-			{ kTexcoordEvery * i, 0.0f }, { kTexcoordEvery * (i + 1), 1.0f }
+			{ kTexcoordEvery * i, 0.0f }, { kTexcoordEvery * (i + 1), 1.0f },
+			{ 0.0f, 0.0f, 0.0f, 0.0f },
+			tint
 		);
 
 		// textの描画
@@ -751,63 +796,71 @@ void RenderSceneEditor::UpdateView() {
 void RenderSceneEditor::DisplayGBufferTexture(GBuffer buffer) {
 	switch (buffer) {
 		case GBuffer::Scene:
-			SetImGuiImageFullWindow(
+			SetImGuiImageFullWindowEnable(
 				textures_->GetGBuffer(FMainGBuffer::Layout::Scene)->GetGPUHandleSRV(),
-				textures_->GetSize()
+				textures_->GetSize(),
+				isRender_
 			);
 			break;
 
 		case GBuffer::Albedo:
-			SetImGuiImageFullWindow(
+			SetImGuiImageFullWindowEnable(
 				textures_->GetGBuffer(FDeferredGBuffer::Layout::Albedo)->GetGPUHandleSRV(),
-				textures_->GetSize()
+				textures_->GetSize(),
+				isRender_
 			);
 			break;
 
 		case GBuffer::Normal:
-			SetImGuiImageFullWindow(
+			SetImGuiImageFullWindowEnable(
 				textures_->GetGBuffer(FDeferredGBuffer::Layout::Normal)->GetGPUHandleSRV(),
-				textures_->GetSize()
+				textures_->GetSize(),
+				isRender_
 			);
 			break;
 
 		case GBuffer::MaterialARM:
-			SetImGuiImageFullWindow(
+			SetImGuiImageFullWindowEnable(
 				textures_->GetGBuffer(FDeferredGBuffer::Layout::MaterialARM)->GetGPUHandleSRV(),
-				textures_->GetSize()
+				textures_->GetSize(),
+				isRender_
 			);
 			break;
 
 		case GBuffer::Position:
-			SetImGuiImageFullWindow(
+			SetImGuiImageFullWindowEnable(
 				textures_->GetGBuffer(FDeferredGBuffer::Layout::Position)->GetGPUHandleSRV(),
-				textures_->GetSize()
+				textures_->GetSize(),
+				isRender_
 			);
 			break;
 
 		case GBuffer::Deferred_GBuffer:
-			SetImGuiImagesFullWindow(
+			SetImGuiImagesFullWindowEnable(
 				{
 					{ textures_->GetGBuffer(FDeferredGBuffer::Layout::Albedo)->GetGPUHandleSRV(), GBuffer::Albedo },
 					{ textures_->GetGBuffer(FDeferredGBuffer::Layout::Normal)->GetGPUHandleSRV(), GBuffer::Normal },
 					{ textures_->GetGBuffer(FDeferredGBuffer::Layout::MaterialARM)->GetGPUHandleSRV(), GBuffer::MaterialARM },
 					{ textures_->GetGBuffer(FDeferredGBuffer::Layout::Position)->GetGPUHandleSRV(), GBuffer::Position },
 				},
-				textures_->GetSize()
+				textures_->GetSize(),
+				isRender_
 			);
 			break;
 
 		case GBuffer::Direct:
-			SetImGuiImageFullWindow(
+			SetImGuiImageFullWindowEnable(
 				textures_->GetGBuffer(FLightingGBuffer::Layout::Direct)->GetGPUHandleSRV(),
-				textures_->GetSize()
+				textures_->GetSize(),
+				isRender_
 			);
 			break;
 
 		case GBuffer::Indirect:
-			SetImGuiImageFullWindow(
+			SetImGuiImageFullWindowEnable(
 				textures_->GetGBuffer(FLightingGBuffer::Layout::Indirect)->GetGPUHandleSRV(),
-				textures_->GetSize()
+				textures_->GetSize(),
+				isRender_
 			);
 			break;
 

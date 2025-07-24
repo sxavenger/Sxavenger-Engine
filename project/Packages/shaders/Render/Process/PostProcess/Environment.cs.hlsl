@@ -34,6 +34,7 @@ void main(uint3 dispatchThreadId : SV_DispatchThreadID) {
 	if (surface.GetSurface(index)) {
 		return; //!< objectが描画されていないとこを描画
 	}
+	// FIXME: Environment描画時, 明らかに負荷がかかる
 
 	float2 d         = (index.xy + 0.5f) / size.xy * 2.0f - 1.0f;
 	float3 target    = mul(float4(d.x, -d.y, 1.0f, 1.0f), gCamera.projInv).xyz;
