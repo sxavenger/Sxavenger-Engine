@@ -63,6 +63,8 @@ public:
 	bool IsEnabled() const { return isEnabled_; }
 	bool& IsEnabled() { return isEnabled_; }
 
+	void SetEnabled(bool isEnabled) { isEnabled_ = isEnabled; }
+
 	const std::string& GetName() { return name_; }
 
 protected:

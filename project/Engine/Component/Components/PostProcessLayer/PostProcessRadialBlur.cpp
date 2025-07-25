@@ -14,7 +14,7 @@ _DXOBJECT_USING
 
 void PostProcessRadialBlur::Parameter::Init() {
 	center   = { 0.0f, 0.0f };
-	intensity = 0.01f;
+	intensity = 0.4f;
 }
 
 void PostProcessRadialBlur::Parameter::SetImGuiCommand() {

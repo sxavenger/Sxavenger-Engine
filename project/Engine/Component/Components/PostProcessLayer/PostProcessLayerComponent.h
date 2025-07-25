@@ -79,6 +79,9 @@ public:
 	template <PostProcessConcept _Ty>
 	_Ty* AddPostProcess();
 
+	template <PostProcessConcept _Ty>
+	_Ty* AddPostProcess(bool isEnable);
+
 	//* behaviour component option *//
 
 	const TransformComponent* GetTransform() const; //!< volume時のみ使用.
@@ -120,6 +123,18 @@ template <PostProcessConcept _Ty>
 inline _Ty* PostProcessLayerComponent::AddPostProcess() {
 	auto process = std::make_unique<_Ty>();
 	process->Init();
+
+	_Ty* result = process.get();
+	processes_.emplace(processes_.end(), std::move(process));
+
+	return result;
+}
+
+template <PostProcessConcept _Ty>
+inline _Ty* PostProcessLayerComponent::AddPostProcess(bool isEnable) {
+	auto process = std::make_unique<_Ty>();
+	process->Init();
+	process->SetEnabled(isEnable);
 
 	_Ty* result = process.get();
 	processes_.emplace(processes_.end(), std::move(process));

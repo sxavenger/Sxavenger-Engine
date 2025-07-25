@@ -13,7 +13,7 @@ _DXOBJECT_USING
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 void PostProcessChromaticAberration::Parameter::Init() {
-	intensity = 0.01f;
+	intensity = 1.0f;
 }
 
 void PostProcessChromaticAberration::Parameter::SetImGuiCommand() {
