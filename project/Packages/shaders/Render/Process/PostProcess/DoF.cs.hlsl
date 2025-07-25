@@ -6,7 +6,7 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
-#include "../Process.hlsli"
+#include "PostProcess.hlsli"
 #include "../../DeferredBuffers.hlsli"
 #include "../../../Library/Gaussian.hlsli"
 

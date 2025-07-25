@@ -377,7 +377,7 @@ void FSceneRenderer::ProcessAmbientPassSkyBox(const DirectXQueueContext* context
 	config.buffer->BeginUnorderedMainScene(context);
 
 	FRenderCore::GetInstance()->GetProcess()->SetPipeline(
-		FRenderCoreProcess::ProcessType::Environment, context
+		FRenderCoreProcess::CompositeType::Environment, context
 	);
 
 	DxObject::BindBufferDesc parameter = {};
@@ -401,7 +401,7 @@ void FSceneRenderer::ProcessAmbientPassSkyBox(const DirectXQueueContext* context
 		parameter.SetHandle("gOutput", config.buffer->GetGBuffer(FMainGBuffer::Layout::Scene)->GetGPUHandleUAV());
 
 		FRenderCore::GetInstance()->GetProcess()->BindComputeBuffer(
-			FRenderCoreProcess::ProcessType::Environment, context, parameter
+			FRenderCoreProcess::CompositeType::Environment, context, parameter
 		);
 
 		FRenderCore::GetInstance()->GetProcess()->Dispatch(context, config.buffer->GetSize());

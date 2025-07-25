@@ -8,9 +8,6 @@ void FRenderCoreProcess::Init() {
 
 	//* process *//
 
-	//!< environment
-	CreatePipeline(ProcessType::Environment, "PostProcess/Environment.cs.hlsl");
-
 	//!< volumetric fog
 	//CreatePipeline(ProcessType::VolumetricFog, "PostProcess/volumetricFog.cs.hlsl");
 
@@ -58,6 +55,9 @@ void FRenderCoreProcess::Init() {
 	}
 
 	//* composite *//
+
+	//!< environment
+	CreatePipeline(CompositeType::Environment, "CompositeProcess/Environment.cs.hlsl");
 
 	//!< tonemap
 	CreatePipeline(CompositeType::Tonemap, "CompositeProcess/Tonemap.cs.hlsl");
