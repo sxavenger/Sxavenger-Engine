@@ -66,7 +66,7 @@ public:
 
 	void ShowComponentInspector() override;
 
-	void Process(const DirectXQueueContext* context, FRenderTargetBuffer* buffer, const CameraComponent* camera);
+	void Process(const DirectXQueueContext* context, const BasePostProcess::ProcessInfo& info);
 
 	//* tag option *//
 

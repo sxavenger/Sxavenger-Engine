@@ -49,7 +49,7 @@ public:
 
 	void Init() override;
 
-	void Process(const DirectXQueueContext* context, FRenderTargetBuffer* buffer, const CameraComponent* camera) override;
+	void Process(const DirectXQueueContext* context, const ProcessInfo& info) override;
 
 	void ShowInspectorImGui() override;
 

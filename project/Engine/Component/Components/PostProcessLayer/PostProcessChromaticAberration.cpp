@@ -32,11 +32,9 @@ void PostProcessChromaticAberration::Init() {
 	name_ = "Chromatic Aberration";
 }
 
-void PostProcessChromaticAberration::Process(const DirectXQueueContext* context, FRenderTargetBuffer* buffer, const CameraComponent* camera) {
+void PostProcessChromaticAberration::Process(const DirectXQueueContext* context, const ProcessInfo& info) {
 
-	camera;
-
-	auto process = buffer->GetProcessTextures();
+	auto process = info.buffer->GetProcessTextures();
 	process->NextProcess(context);
 
 	auto core = FRenderCore::GetInstance()->GetProcess();
@@ -45,7 +43,7 @@ void PostProcessChromaticAberration::Process(const DirectXQueueContext* context,
 
 	BindBufferDesc desc = {};
 	// common
-	desc.Set32bitConstants("Dimension", 2, &buffer->GetSize());
+	desc.Set32bitConstants("Dimension", 2, &info.buffer->GetSize());
 
 	//* textures
 	desc.SetHandle("gInput",  process->GetPrevTexture()->GetGPUHandleSRV());
@@ -55,7 +53,7 @@ void PostProcessChromaticAberration::Process(const DirectXQueueContext* context,
 	desc.SetAddress("gParameter", parameter_->GetGPUVirtualAddress());
 
 	core->BindComputeBuffer(FRenderCoreProcess::ProcessType::ChromaticAberration, context, desc);
-	core->Dispatch(context, buffer->GetSize());
+	core->Dispatch(context, info.buffer->GetSize());
 
 }
 

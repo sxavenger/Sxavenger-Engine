@@ -34,11 +34,9 @@ void PostProcessRadialBlur::Init() {
 	name_ = "Radial Blur";
 }
 
-void PostProcessRadialBlur::Process(const DirectXQueueContext* context, FRenderTargetBuffer* buffer, const CameraComponent* camera) {
+void PostProcessRadialBlur::Process(const DirectXQueueContext* context, const ProcessInfo& info) {
 
-	camera;
-
-	auto process = buffer->GetProcessTextures();
+	auto process = info.buffer->GetProcessTextures();
 	process->NextProcess(context);
 
 	auto core = FRenderCore::GetInstance()->GetProcess();
@@ -47,7 +45,7 @@ void PostProcessRadialBlur::Process(const DirectXQueueContext* context, FRenderT
 
 	BindBufferDesc desc = {};
 	// common
-	desc.Set32bitConstants("Dimension", 2, &buffer->GetSize());
+	desc.Set32bitConstants("Dimension", 2, &info.buffer->GetSize());
 
 	//* textures
 	desc.SetHandle("gInput",  process->GetPrevTexture()->GetGPUHandleSRV());
@@ -57,7 +55,7 @@ void PostProcessRadialBlur::Process(const DirectXQueueContext* context, FRenderT
 	desc.SetAddress("gParameter", parameter_->GetGPUVirtualAddress());
 
 	core->BindComputeBuffer(FRenderCoreProcess::ProcessType::RadialBlur, context, desc);
-	core->Dispatch(context, buffer->GetSize());
+	core->Dispatch(context, info.buffer->GetSize());
 
 }
 

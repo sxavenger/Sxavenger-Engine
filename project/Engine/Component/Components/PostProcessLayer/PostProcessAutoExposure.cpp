@@ -52,16 +52,15 @@ void PostProcessAutoExposure::Init() {
 	debugAverageLuminance_ = std::make_unique<ReadbackDimensionBuffer<float>>();
 }
 
-void PostProcessAutoExposure::Process(const DirectXQueueContext* context, FRenderTargetBuffer* buffer, const CameraComponent* camera) {
-	camera;
+void PostProcessAutoExposure::Process(const DirectXQueueContext* context, const ProcessInfo& info) {
 
-	auto process = buffer->GetProcessTextures();
+	auto process = info.buffer->GetProcessTextures();
 	process->NextProcess(context);
 
 	auto core = FRenderCore::GetInstance()->GetProcess();
 
 	BindBufferDesc desc = {};
-	desc.Set32bitConstants("Dimension", 2, &buffer->GetSize());
+	desc.Set32bitConstants("Dimension", 2, &info.buffer->GetSize());
 
 	// textures
 	desc.SetHandle("gInput",   process->GetPrevTexture()->GetGPUHandleSRV());
@@ -77,7 +76,7 @@ void PostProcessAutoExposure::Process(const DirectXQueueContext* context, FRende
 
 	core->SetPipeline(FRenderCoreProcess::ProcessType::AutoExposureLuminance, context);
 	core->BindComputeBuffer(FRenderCoreProcess::ProcessType::AutoExposureLuminance, context, desc);
-	core->Dispatch(context, buffer->GetSize());
+	core->Dispatch(context, info.buffer->GetSize());
 
 	histgramShared_->Barrier(context->GetDxCommand());
 
@@ -89,7 +88,7 @@ void PostProcessAutoExposure::Process(const DirectXQueueContext* context, FRende
 
 	core->SetPipeline(FRenderCoreProcess::ProcessType::AutoExposureApply, context);
 	core->BindComputeBuffer(FRenderCoreProcess::ProcessType::AutoExposureApply, context, desc);
-	core->Dispatch(context, buffer->GetSize());
+	core->Dispatch(context, info.buffer->GetSize());
 
 }
 

@@ -38,8 +38,8 @@ void PostProcessBloom::Init() {
 	name_ = "Bloom";
 }
 
-void PostProcessBloom::Process(const DirectXQueueContext* context, FRenderTargetBuffer* buffer, const CameraComponent* camera) {
-	auto process = buffer->GetProcessTextures();
+void PostProcessBloom::Process(const DirectXQueueContext* context, const ProcessInfo& info) {
+	auto process = info.buffer->GetProcessTextures();
 	process->NextProcess(context);
 
 	auto core = FRenderCore::GetInstance()->GetProcess();
@@ -48,7 +48,7 @@ void PostProcessBloom::Process(const DirectXQueueContext* context, FRenderTarget
 
 	BindBufferDesc desc = {};
 	// common
-	desc.Set32bitConstants("Dimension", 2, &buffer->GetSize());
+	desc.Set32bitConstants("Dimension", 2, &info.buffer->GetSize());
 
 	//* texture
 	desc.SetHandle("gInput",  process->GetPrevTexture()->GetGPUHandleSRV());
@@ -58,9 +58,7 @@ void PostProcessBloom::Process(const DirectXQueueContext* context, FRenderTarget
 	desc.SetAddress("gParameter", parameter_->GetGPUVirtualAddress());
 
 	core->BindComputeBuffer(FRenderCoreProcess::ProcessType::Bloom, context, desc);
-	core->Dispatch(context, buffer->GetSize());
-
-	camera;
+	core->Dispatch(context, info.buffer->GetSize());
 }
 
 void PostProcessBloom::ShowInspectorImGui() {

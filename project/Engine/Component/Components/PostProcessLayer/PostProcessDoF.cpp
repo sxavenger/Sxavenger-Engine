@@ -41,8 +41,8 @@ void PostProcessDoF::Init() {
 	name_ = "Depth of Field";
 }
 
-void PostProcessDoF::Process(const DirectXQueueContext* context, FRenderTargetBuffer* buffer, const CameraComponent* camera) {
-	auto process = buffer->GetProcessTextures();
+void PostProcessDoF::Process(const DirectXQueueContext* context, const ProcessInfo& info) {
+	auto process = info.buffer->GetProcessTextures();
 	process->NextProcess(context);
 
 	auto core = FRenderCore::GetInstance()->GetProcess();
@@ -51,21 +51,21 @@ void PostProcessDoF::Process(const DirectXQueueContext* context, FRenderTargetBu
 
 	BindBufferDesc desc = {};
 	// deferred
-	desc.SetHandle("gDepth", buffer->GetDepth()->GetRasterizerGPUHandleSRV());
+	desc.SetHandle("gDepth", info.buffer->GetDepth()->GetRasterizerGPUHandleSRV());
 
 	// common
-	desc.Set32bitConstants("Dimension", 2, &buffer->GetSize());
+	desc.Set32bitConstants("Dimension", 2, &info.buffer->GetSize());
 
 	//* textures
 	desc.SetHandle("gInput",   process->GetPrevTexture()->GetGPUHandleSRV());
 	desc.SetHandle("gOutput",  process->GetIndexTexture()->GetGPUHandleUAV());
 
 	// parameter
-	desc.SetAddress("gCamera",    camera->GetGPUVirtualAddress());
+	desc.SetAddress("gCamera",    info.camera->GetGPUVirtualAddress());
 	desc.SetAddress("gParameter", parameter_->GetGPUVirtualAddress());
 
 	core->BindComputeBuffer(FRenderCoreProcess::ProcessType::DoF, context, desc);
-	core->Dispatch(context, buffer->GetSize());
+	core->Dispatch(context, info.buffer->GetSize());
 }
 
 void PostProcessDoF::ShowInspectorImGui() {

@@ -23,12 +23,12 @@ void PostProcessLUT::Init() {
 	parameter_->At(0).intensity = 1.0f;
 }
 
-void PostProcessLUT::Process(const DirectXQueueContext* context, FRenderTargetBuffer* buffer, const CameraComponent* camera) {
+void PostProcessLUT::Process(const DirectXQueueContext* context, const ProcessInfo& info) {
 	if (texture_ == nullptr) {
 		return; //!< textureが設定されていない場合は処理しない
 	}
 
-	auto process = buffer->GetProcessTextures();
+	auto process = info.buffer->GetProcessTextures();
 	process->NextProcess(context);
 
 	auto core = FRenderCore::GetInstance()->GetProcess();
@@ -37,7 +37,7 @@ void PostProcessLUT::Process(const DirectXQueueContext* context, FRenderTargetBu
 
 	BindBufferDesc desc = {};
 	// common
-	desc.Set32bitConstants("Dimension", 2, &buffer->GetSize());
+	desc.Set32bitConstants("Dimension", 2, &info.buffer->GetSize());
 
 	//* textures
 	desc.SetHandle("gInput", process->GetPrevTexture()->GetGPUHandleSRV());
@@ -48,9 +48,7 @@ void PostProcessLUT::Process(const DirectXQueueContext* context, FRenderTargetBu
 	desc.SetAddress("gParameter", parameter_->GetGPUVirtualAddress());
 
 	core->BindComputeBuffer(FRenderCoreProcess::ProcessType::LUT, context, desc);
-	core->Dispatch(context, buffer->GetSize());
-
-	camera;
+	core->Dispatch(context, info.buffer->GetSize());
 }
 
 void PostProcessLUT::ShowInspectorImGui() {

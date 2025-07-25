@@ -24,6 +24,30 @@ class FRenderTargetBuffer;
 class BasePostProcess {
 public:
 
+	////////////////////////////////////////////////////////////////////////////////////////////
+	// ProcessInfo structure
+	////////////////////////////////////////////////////////////////////////////////////////////
+	struct ProcessInfo {
+	public:
+
+		//=========================================================================================
+		// public methods
+		//=========================================================================================
+
+
+		//=========================================================================================
+		// public variables
+		//=========================================================================================
+
+		FRenderTargetBuffer* buffer   = nullptr;
+		const CameraComponent* camera = nullptr;
+
+		float weight = 1.0f;
+
+	};
+
+public:
+
 	//=========================================================================================
 	// public methods
 	//=========================================================================================
@@ -32,7 +56,7 @@ public:
 
 	virtual void Init() = 0;
 
-	virtual void Process(const DirectXQueueContext* context, FRenderTargetBuffer* buffer, const CameraComponent* camera) = 0;
+	virtual void Process(const DirectXQueueContext* context, const ProcessInfo& info) = 0;
 
 	virtual void ShowInspectorImGui() = 0;
 

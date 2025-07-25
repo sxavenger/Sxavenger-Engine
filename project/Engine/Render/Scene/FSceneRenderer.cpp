@@ -473,13 +473,18 @@ void FSceneRenderer::ProcessPostProcessPass(const DirectXQueueContext* context, 
 
 	config.buffer->BeginPostProcess(context);
 
+	BasePostProcess::ProcessInfo info = {};
+	info.buffer = config.buffer;
+	info.camera = config.camera;
+	info.weight = 1.0f;
+
 	//!< Global PostProcessの処理
 	sComponentStorage->ForEachActive<PostProcessLayerComponent>([&](PostProcessLayerComponent* component) {
 		if (component->GetTag() != PostProcessLayerComponent::Tag::Global) {
 			return; //!< Global以外のPostProcessLayerComponentは処理しない
 		}
 
-		component->Process(context, config.buffer, config.camera);
+		component->Process(context, info);
 	});
 
 	// Volume PostProcessの処理
@@ -499,13 +504,15 @@ void FSceneRenderer::ProcessPostProcessPass(const DirectXQueueContext* context, 
 			return; // TODO: 範囲外の場合, 減衰処理を行う
 		}
 
-		component->Process(context, config.buffer, config.camera);
+		component->Process(context, info);
 	});
+
+	info.weight = 1.0f; //!< volume以外のPostProcessLayerComponentはweightを1.0fに設定
 
 	//!< Local Post Processの処理
 	if (auto component = config.camera->GetBehaviour()->GetComponent<PostProcessLayerComponent>()) {
 		if (component->GetTag() == PostProcessLayerComponent::Tag::Local) {
-			component->Process(context, config.buffer, config.camera);
+			component->Process(context, info);
 		}
 	}
 
@@ -535,5 +542,7 @@ void FSceneRenderer::ProcessTonemapPass(const DirectXQueueContext* context, cons
 	);
 
 	FRenderCore::GetInstance()->GetProcess()->Dispatch(context, config.buffer->GetSize());
+
+	config.buffer->GetGBuffer(FMainGBuffer::Layout::Scene)->BarrierUAV(context);
 
 }
