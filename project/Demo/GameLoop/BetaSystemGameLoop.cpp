@@ -93,13 +93,14 @@ void BetaSystemGameLoop::InitSystem() {
 	behaviour_ = std::make_unique<MonoBehaviour>();
 	behaviour_->AddComponent<TransformComponent>();
 	behaviour_->AddComponent<PostProcessLayerComponent>();
-	behaviour_->GetComponent<PostProcessLayerComponent>()->SetTag(PostProcessLayerComponent::Tag::Global);
+	behaviour_->GetComponent<PostProcessLayerComponent>()->SetTag(PostProcessLayerComponent::Tag::None);
 	behaviour_->GetComponent<PostProcessLayerComponent>()->AddPostProcess<PostProcessAutoExposure>();
 	//behaviour_->GetComponent<PostProcessLayerComponent>()->AddPostProcess<PostProcessLocalExposure>();
 	//behaviour_->GetComponent<PostProcessLayerComponent>()->AddPostProcess<PostProcessBloom>();
 	behaviour_->GetComponent<PostProcessLayerComponent>()->AddPostProcess<PostProcessDoF>();
 	behaviour_->GetComponent<PostProcessLayerComponent>()->AddPostProcess<PostProcessGrayScale>();
 	behaviour_->GetComponent<PostProcessLayerComponent>()->AddPostProcess<PostProcessRadialBlur>();
+	behaviour_->GetComponent<PostProcessLayerComponent>()->AddPostProcess<PostProcessChromaticAberration>();
 
 	auto texture = SxavengerAsset::TryImport<AssetTexture>("assets/textures/LUT/lut_reddish.png", Texture::Option{ Texture::Encoding::Intensity, false });
 	auto lut = behaviour_->GetComponent<PostProcessLayerComponent>()->AddPostProcess<PostProcessLUT>();

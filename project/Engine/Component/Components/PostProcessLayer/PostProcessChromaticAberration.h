@@ -13,9 +13,9 @@
 #include <memory>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// PostProcessRadialBlur class
+// PostProcessChromaticAberration class
 ////////////////////////////////////////////////////////////////////////////////////////////
-class PostProcessRadialBlur
+class PostProcessChromaticAberration
 	: public BasePostProcess {
 public:
 
@@ -36,7 +36,6 @@ public:
 		// public variables
 		//=========================================================================================
 
-		Vector2f center;
 		float intensity;
 
 	};

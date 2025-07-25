@@ -17,6 +17,7 @@
 #include "PostProcessLUT.h"
 #include "PostProcessGrayScale.h"
 #include "PostProcessRadialBlur.h"
+#include "PostProcessChromaticAberration.h"
 
 //* engine
 #include <Engine/System/DirectX/Context/DirectXQueueContext.h>

@@ -13,7 +13,6 @@ RWTexture2D<float4> gOutput : register(u0);
 SamplerState gSampler : register(s0);
 
 struct Parameter {
-	float2 center;
 	float intensity;
 };
 ConstantBuffer<Parameter> gParameter : register(b0);
@@ -31,17 +30,15 @@ void main(uint3 dispathThreadId : SV_DispatchThreadID) {
 	}
 
 	float2 uv        = float2(index) / size * 2.0f - 1.0f; // [-1.0 ~ 1.0]
-	float2 direction = uv - gParameter.center;
+	float2 direction = normalize(uv) * gParameter.intensity * 0.01f;
 
 	float4 color = float4(0.0f, 0.0f, 0.0f, 0.0f);
+
+	color.r = gInput.Sample(gSampler, (uv - direction + 1.0f) * 0.5f).r;
+	color.g = gInput.Sample(gSampler, (uv + 1.0f) * 0.5f).g;
+	color.b = gInput.Sample(gSampler, (uv + direction + 1.0f) * 0.5f).b;
+	color.a = gInput[index].a;
 	
-	for (uint i = 0; i < 8; ++i) {
-		float2 texcoord = uv + direction * gParameter.intensity * i;
-		color += gInput.Sample(gSampler, (texcoord + float2(1.0f, 1.0f)) * 0.5f);
-	}
-
-	color *= rcp(8.0f);
-
 	gOutput[index] = color;
 
 }

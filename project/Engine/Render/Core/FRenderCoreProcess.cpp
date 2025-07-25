@@ -30,12 +30,16 @@ void FRenderCoreProcess::Init() {
 	//!< dof
 	CreatePipeline(ProcessType::DoF, "PostProcess/DoF.cs.hlsl");
 
-	//!< radial blur
+	
 	{
 		DxObject::SamplerBindDesc desc = {};
 		desc.SetSamplerLinear("gSampler", DxObject::SamplerMode::MODE_CLAMP);
 
+		//!< radial blur
 		CreatePipeline(ProcessType::RadialBlur, "PostProcess/RadialBlur.cs.hlsl", desc);
+
+		//!< chromatic aberration
+		CreatePipeline(ProcessType::ChromaticAberration, "PostProcess/ChromaticAberration.cs.hlsl", desc);
 	}
 	
 

@@ -1,4 +1,4 @@
-#include "PostProcessRadialBlur.h"
+#include "PostProcessChromaticAberration.h"
 _DXOBJECT_USING
 
 //-----------------------------------------------------------------------------------------
@@ -12,29 +12,27 @@ _DXOBJECT_USING
 // Parameter structure methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-void PostProcessRadialBlur::Parameter::Init() {
-	center   = { 0.0f, 0.0f };
+void PostProcessChromaticAberration::Parameter::Init() {
 	intensity = 0.01f;
 }
 
-void PostProcessRadialBlur::Parameter::SetImGuiCommand() {
-	ImGui::DragFloat2("center", &center.x, 0.01f, -1.0f, 1.0f);
-	ImGui::DragFloat("intensity", &intensity, 0.01f, 0.0f, 10.0f);
+void PostProcessChromaticAberration::Parameter::SetImGuiCommand() {
+	ImGui::DragFloat("intensity", &intensity, 0.01f, 0.0f, 5.0f);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// PostProcessRadialBlur class methods
+// PostProcessChromaticAberration class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-void PostProcessRadialBlur::Init() {
+void PostProcessChromaticAberration::Init() {
 	parameter_ = std::make_unique<DimensionBuffer<Parameter>>();
 	parameter_->Create(SxavengerSystem::GetDxDevice(), 1);
 	parameter_->At(0).Init();
 
-	name_ = "Radial Blur";
+	name_ = "Chromatic Aberration";
 }
 
-void PostProcessRadialBlur::Process(const DirectXQueueContext* context, FRenderTargetBuffer* buffer, const CameraComponent* camera) {
+void PostProcessChromaticAberration::Process(const DirectXQueueContext* context, FRenderTargetBuffer* buffer, const CameraComponent* camera) {
 
 	camera;
 
@@ -43,7 +41,7 @@ void PostProcessRadialBlur::Process(const DirectXQueueContext* context, FRenderT
 
 	auto core = FRenderCore::GetInstance()->GetProcess();
 
-	core->SetPipeline(FRenderCoreProcess::ProcessType::RadialBlur, context);
+	core->SetPipeline(FRenderCoreProcess::ProcessType::ChromaticAberration, context);
 
 	BindBufferDesc desc = {};
 	// common
@@ -56,11 +54,11 @@ void PostProcessRadialBlur::Process(const DirectXQueueContext* context, FRenderT
 	// parameter
 	desc.SetAddress("gParameter", parameter_->GetGPUVirtualAddress());
 
-	core->BindComputeBuffer(FRenderCoreProcess::ProcessType::RadialBlur, context, desc);
+	core->BindComputeBuffer(FRenderCoreProcess::ProcessType::ChromaticAberration, context, desc);
 	core->Dispatch(context, buffer->GetSize());
 
 }
 
-void PostProcessRadialBlur::ShowInspectorImGui() {
+void PostProcessChromaticAberration::ShowInspectorImGui() {
 	parameter_->At(0).SetImGuiCommand();
 }

@@ -200,6 +200,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="Engine\Asset\Assets\Texture\AssetTexture.cpp" />
     <ClCompile Include="Engine\Asset\Assets\Texture\Texture.cpp" />
     <ClCompile Include="Engine\Asset\SxavengerAsset.cpp" />
+    <ClCompile Include="Engine\Component\Components\PostProcessLayer\PostProcessChromaticAberration.cpp" />
     <ClCompile Include="Engine\Component\Components\PostProcessLayer\PostProcessGrayScale.cpp" />
     <ClCompile Include="Engine\Component\Components\PostProcessLayer\PostProcessLUT.cpp" />
     <ClCompile Include="Engine\Component\Components\PostProcessLayer\PostProcessRadialBlur.cpp" />
@@ -371,6 +372,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Engine\Asset\Assets\Texture\Texture.h" />
     <ClInclude Include="Engine\Asset\Observer\AssetObserver.h" />
     <ClInclude Include="Engine\Asset\SxavengerAsset.h" />
+    <ClInclude Include="Engine\Component\Components\PostProcessLayer\PostProcessChromaticAberration.h" />
     <ClInclude Include="Engine\Component\Components\PostProcessLayer\PostProcessGrayScale.h" />
     <ClInclude Include="Engine\Component\Components\PostProcessLayer\PostProcessLUT.h" />
     <ClInclude Include="Engine\Component\Components\PostProcessLayer\PostProcessRadialBlur.h" />

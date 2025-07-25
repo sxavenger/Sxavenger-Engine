@@ -176,6 +176,7 @@
     <ClCompile Include="Engine\Render\GBuffer\FMainGBuffer.cpp" />
     <ClCompile Include="Engine\Component\Components\PostProcessLayer\PostProcessGrayScale.cpp" />
     <ClCompile Include="Engine\Component\Components\PostProcessLayer\PostProcessRadialBlur.cpp" />
+    <ClCompile Include="Engine\Component\Components\PostProcessLayer\PostProcessChromaticAberration.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Lib\Adapter\Random\Random.h" />
@@ -376,6 +377,7 @@
     <ClInclude Include="Engine\Render\GBuffer\FMainGBuffer.h" />
     <ClInclude Include="Engine\Component\Components\PostProcessLayer\PostProcessGrayScale.h" />
     <ClInclude Include="Engine\Component\Components\PostProcessLayer\PostProcessRadialBlur.h" />
+    <ClInclude Include="Engine\Component\Components\PostProcessLayer\PostProcessChromaticAberration.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />
