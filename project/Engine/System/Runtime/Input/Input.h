@@ -17,7 +17,7 @@
 
 //* engine
 #include <Engine/System/Utility/ComPtr.h>
-#include <Engine/System/Window/Window.h>
+#include <Engine/System/DirectX/Context/DirectXWindowContext.h>
 
 //* c++
 #include <cstdint>
@@ -90,11 +90,13 @@ private:
 	static const uint32_t kKeyNum_ = 256;
 	InputState<std::array<BYTE, kKeyNum_>> keys_;
 
+	bool isEnableAquire_ = false; //!< Inputが取得可能かどうか
+
 	//=========================================================================================
 	// private variables
 	//=========================================================================================
 
-	void SetCooperativeLevel(const Window* window);
+	bool SetCooperativeLevel(const DirectXWindowContext* window);
 
 };
 
@@ -120,7 +122,7 @@ public:
 	//* mouse position option *//
 
 	Vector2i GetPosition() const;
-	Vector2i GetPosition(const Window* window) const;
+	Vector2i GetPosition(const DirectXWindowContext* window) const;
 
 	Vector2i GetDeltaPosition() const;
 
@@ -164,11 +166,13 @@ private:
 
 	InputState<DIMOUSESTATE2> mouse_;
 
+	bool isEnableAquire_ = false; //!< Inputが取得可能かどうか
+
 	//=========================================================================================
 	// private variables
 	//=========================================================================================
 
-	void SetCooperativeLevel(const Window* window);
+	bool SetCooperativeLevel(const DirectXWindowContext* window);
 
 };
 
@@ -243,7 +247,7 @@ public:
 	Input() = default;
 	~Input() { Term(); }
 
-	void Init(const Window* mainWindow);
+	void Init(const DirectXWindowContext* mainWindow);
 
 	void Term();
 

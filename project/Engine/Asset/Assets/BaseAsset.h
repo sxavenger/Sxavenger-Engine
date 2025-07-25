@@ -4,7 +4,7 @@
 // include
 //-----------------------------------------------------------------------------------------
 //* engine
-#include <Engine/System/DirectX/DirectXContext.h>
+#include <Engine/System/DirectX/Context/DirectXQueueContext.h>
 #include <Engine/System/Runtime/Thread/AsyncTask.h>
 #include <Engine/System/Runtime/Thread/AsyncThread.h>
 #include <Engine/Editor/Editors/InspectorEditor.h>
@@ -34,7 +34,7 @@ public:
 
 	//* async task option *//
 
-	virtual void Load(_MAYBE_UNUSED const DirectXThreadContext* context) = 0;
+	virtual void Load(_MAYBE_UNUSED const DirectXQueueContext* context) = 0;
 
 	virtual AsyncExecution GetAsyncExecution() const = 0;
 

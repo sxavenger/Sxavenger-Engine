@@ -5,11 +5,12 @@
 //-----------------------------------------------------------------------------------------
 //* engine
 #include <Engine/System/DirectX/DxObject/DxDescriptor.h>
-#include <Engine/System/DirectX/DirectXContext.h>
+#include <Engine/System/DirectX/Context/DirectXQueueContext.h>
 
 //* lib
 #include <Lib/Geometry/Vector2.h>
 #include <Lib/Geometry/Vector4.h>
+#include <Lib/Geometry/Color4.h>
 
 //* c++
 #include <bitset>
@@ -44,19 +45,19 @@ public:
 	~MultiViewTextureBuffer() { Term(); }
 
 	void Create(
-		uint8_t multiViewFlag, const Vector2ui& size, const Color4f& clearColor = {}, DXGI_FORMAT format = DxObject::kOffscreenFormat
+		uint8_t multiViewFlag, const Vector2ui& size, const Color4f& clearColor = {}, DXGI_FORMAT format = DxObject::kDefaultOffscreenFormat
 	);
 
 	void Term();
 
 	//* transition methods *//
 
-	void TransitionBeginRenderTarget(const DirectXThreadContext* context);
-	void TransitionEndRenderTarget(const DirectXThreadContext* context);
-	void ClearRenderTarget(const DirectXThreadContext* context);
+	void TransitionBeginRenderTarget(const DirectXQueueContext* context);
+	void TransitionEndRenderTarget(const DirectXQueueContext* context);
+	void ClearRenderTarget(const DirectXQueueContext* context);
 
-	void TransitionBeginUnordered(const DirectXThreadContext* context);
-	void TransitionEndUnordered(const DirectXThreadContext* context);
+	void TransitionBeginUnordered(const DirectXQueueContext* context);
+	void TransitionEndUnordered(const DirectXQueueContext* context);
 
 	//* getter *//
 

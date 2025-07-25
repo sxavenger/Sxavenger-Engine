@@ -4,7 +4,7 @@
 // include
 //-----------------------------------------------------------------------------------------
 //* render
-#include "../FRenderTargetTextures.h"
+#include "../FRenderTargetBuffer.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // FCanvasRenderer class
@@ -18,11 +18,11 @@ public:
 	
 	//* render *//
 
-	void Render(const DirectXThreadContext* context);
+	void Render(const DirectXQueueContext* context);
 
 	//* setter *//
 
-	void SetTextures(FRenderTargetTextures* textures) { textures_ = textures; }
+	void SetTextures(FRenderTargetBuffer* textures) { textures_ = textures; }
 
 private:
 
@@ -32,7 +32,7 @@ private:
 
 	//* canvas textures *//
 
-	FRenderTargetTextures* textures_ = nullptr;
+	FRenderTargetBuffer* textures_ = nullptr;
 	//!< todo: 2d描画用のテクスチャに設定する
 
 	//=========================================================================================
@@ -41,6 +41,6 @@ private:
 
 	bool CheckRender() const;
 
-	void RenderSpriteComponents(const DirectXThreadContext* context);
+	void RenderSpriteComponents(const DirectXQueueContext* context);
 
 };

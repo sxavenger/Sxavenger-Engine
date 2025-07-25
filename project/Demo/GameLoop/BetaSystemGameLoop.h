@@ -7,7 +7,7 @@
 #include <Engine/System/Runtime/GameLoop/GameLoop.h>
 
 //* engine
-#include <Engine/System/Window/GameWindow.h>
+#include <Engine/System/DirectX/Context/DirectXWindowContext.h>
 #include <Engine/Component/Entity/MonoBehaviour.h>
 #include <Engine/Component/Components/Camera/CameraComponent.h>
 #include <Engine/Render/FPresenter.h>
@@ -22,6 +22,7 @@
 
 //* demo
 #include <Demo/Entity/Player.h>
+#include <Demo/Particle/LeadParticle.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // BetaSystemGameLoop class
@@ -44,7 +45,7 @@ private:
 	// private variables
 	//=========================================================================================
 
-	std::shared_ptr<GameWindow> main_;
+	std::shared_ptr<DirectXWindowContext> main_;
 
 	//std::unique_ptr<MonoBehaviour> camera_;
 	std::unique_ptr<ControllableCameraActor> camera_;
@@ -57,6 +58,10 @@ private:
 	std::unique_ptr<Player> player_;
 
 	std::unique_ptr<EmissiveActor> emissive_;
+
+	std::unique_ptr<LeadParticle> leadParticle_;
+
+	std::unique_ptr<MonoBehaviour> behaviour_;
 
 	//=========================================================================================
 	// private methods

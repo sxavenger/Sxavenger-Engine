@@ -43,7 +43,7 @@ void SxavengerEngineGameLoop::Init(GameLoop::Context* context) {
 	context->SetProcess(GameLoop::Process::Update, std::numeric_limits<uint32_t>::max(), [this]() {
 		SxavengerSystem::RecordLap("update [game logic]");
 		SxavengerSystem::EndImGuiFrame();
-		FMainRender::GetInstance()->GetScene()->SetupTopLevelAS(SxavengerSystem::GetMainThreadContext());
+		FMainRender::GetInstance()->GetScene()->SetupTopLevelAS(SxavengerSystem::GetDirectQueueContext());
 		FMainRender::GetInstance()->GetScene()->SetupStateObject();
 		FMainRender::GetInstance()->GetScene()->SetupLightContainer();
 		SxavengerSystem::TransitionAllocator();
@@ -53,7 +53,8 @@ void SxavengerEngineGameLoop::Init(GameLoop::Context* context) {
 
 	context->SetProcess(GameLoop::Process::End, 0, [this]() {
 		SxavengerSystem::RecordLap("render [draw logic]");
-		SxavengerSystem::PresentAllWindow();
+		SxavengerSystem::TransitionAllocator();
+		SxavengerSystem::PresentWindows();
 		SxavengerSystem::ExecuteAllAllocator();
 		SxavengerContent::ResetPrimtive();
 		SxavengerSystem::RecordLap("render [gpu execution]");
@@ -81,16 +82,16 @@ void SxavengerEngineGameLoop::CreateWhite1x1() {
 
 	std::unique_ptr<UnorderedTexture> white1x1 = std::make_unique<UnorderedTexture>();
 	white1x1->Create({ 1, 1 }, DXGI_FORMAT_R8G8B8A8_UNORM);
-	white1x1->TransitionBeginUnordered(SxavengerSystem::GetMainThreadContext());
-	compute->SetPipeline(SxavengerSystem::GetMainThreadContext()->GetDxCommand());
+	white1x1->TransitionBeginUnordered(SxavengerSystem::GetDirectQueueContext());
+	compute->SetPipeline(SxavengerSystem::GetDirectQueueContext()->GetDxCommand());
 
 	DxObject::BindBufferDesc bind = {};
 	bind.SetHandle("gOutput", white1x1->GetGPUHandleUAV());
-	compute->BindComputeBuffer(SxavengerSystem::GetMainThreadContext()->GetDxCommand(), bind);
+	compute->BindComputeBuffer(SxavengerSystem::GetDirectQueueContext()->GetDxCommand(), bind);
 
-	compute->Dispatch(SxavengerSystem::GetMainThreadContext()->GetDxCommand(), { 1, 1, 1 });
+	compute->Dispatch(SxavengerSystem::GetDirectQueueContext()->GetDxCommand(), { 1, 1, 1 });
 
-	white1x1->TransitionEndUnordered(SxavengerSystem::GetMainThreadContext());
+	white1x1->TransitionEndUnordered(SxavengerSystem::GetDirectQueueContext());
 	SxavengerSystem::ExecuteAllAllocator();
 
 	SxavengerContent::RegisterTexture("white1x1", std::move(white1x1));
@@ -103,16 +104,16 @@ void SxavengerEngineGameLoop::CreateCheckerboard() {
 
 	std::unique_ptr<UnorderedTexture> checker = std::make_unique<UnorderedTexture>();
 	checker->Create({ 256, 256 }, DXGI_FORMAT_R8G8B8A8_UNORM);
-	checker->TransitionBeginUnordered(SxavengerSystem::GetMainThreadContext());
-	compute->SetPipeline(SxavengerSystem::GetMainThreadContext()->GetDxCommand());
+	checker->TransitionBeginUnordered(SxavengerSystem::GetDirectQueueContext());
+	compute->SetPipeline(SxavengerSystem::GetDirectQueueContext()->GetDxCommand());
 
 	DxObject::BindBufferDesc bind = {};
 	bind.SetHandle("gOutput", checker->GetGPUHandleUAV());
-	compute->BindComputeBuffer(SxavengerSystem::GetMainThreadContext()->GetDxCommand(), bind);
+	compute->BindComputeBuffer(SxavengerSystem::GetDirectQueueContext()->GetDxCommand(), bind);
 
-	compute->Dispatch(SxavengerSystem::GetMainThreadContext()->GetDxCommand(), { DxObject::RoundUp(checker->GetSize().x, 16), DxObject::RoundUp(checker->GetSize().y, 16), 1 });
+	compute->Dispatch(SxavengerSystem::GetDirectQueueContext()->GetDxCommand(), { DxObject::RoundUp(checker->GetSize().x, 16), DxObject::RoundUp(checker->GetSize().y, 16), 1 });
 
-	checker->TransitionEndUnordered(SxavengerSystem::GetMainThreadContext());
+	checker->TransitionEndUnordered(SxavengerSystem::GetDirectQueueContext());
 	SxavengerSystem::ExecuteAllAllocator();
 
 	SxavengerContent::RegisterTexture("checkerboard", std::move(checker));

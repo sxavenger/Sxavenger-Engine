@@ -21,11 +21,11 @@ void SkinningComputePipeline::Init() {
 void SkinningComputePipeline::Term() {
 }
 
-void SkinningComputePipeline::SetPipeline(const DirectXThreadContext* context) {
+void SkinningComputePipeline::SetPipeline(const DirectXQueueContext* context) {
 	state_->SetPipeline(context->GetDxCommand());
 }
 
-void SkinningComputePipeline::Dispatch(const DirectXThreadContext* context, const DxObject::BindBufferDesc& desc, uint32_t vertexSize) {
+void SkinningComputePipeline::Dispatch(const DirectXQueueContext* context, const DxObject::BindBufferDesc& desc, uint32_t vertexSize) {
 	state_->BindComputeBuffer(context->GetDxCommand(), desc);
 	state_->Dispatch(context->GetDxCommand(), { RoundUp(vertexSize, kNumthreads_), 1, 1 });
 }

@@ -23,6 +23,7 @@ _RAYGENERATION void mainRaygeneration() {
 	}
 	
 	// texture reset
+	gPosition[index]    = float4(payload.position, 1.0f);
 	gNormal[index]      = float4(payload.normal, 1.0f);
 	gMaterialARM[index] = float4(payload.arm, 1.0f);
 	gDepth[index]       = payload.depth;

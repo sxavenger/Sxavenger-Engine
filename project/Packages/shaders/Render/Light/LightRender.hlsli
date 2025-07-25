@@ -43,7 +43,6 @@ struct PSOutput {
 ConstantBuffer<CameraComponent> gCamera : register(b10);
 static const float4x4 kViewProj = gCamera.GetViewProj();
 
-//* t10 ~ t13 is defined in DeferredBuffer.hlsli
 StructuredBuffer<TransformComponent> gTransforms : register(t10); //!< Light transform buffer
 
 RaytracingAccelerationStructure gScene : register(t11);

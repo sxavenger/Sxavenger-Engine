@@ -3,6 +3,9 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
+//* editor
+#include "../EditorEngine.h"
+
 //* engine
 #include <Engine/System/UI/SxImGui.h>
 #include <Engine/System/UI/SxImGuizmo.h>
@@ -10,8 +13,12 @@
 #include <Engine/Component/Components/Transform/TransformComponent.h>
 #include <Engine/Component/Components/SpriteRenderer/SpriteRendererComponent.h>
 #include <Engine/Component/Components/Camera/CameraComponent.h>
+#include <Engine/Component/Components/PostProcessLayer/PostProcessLayerComponent.h>
 #include <Engine/Asset/SxavengerAsset.h>
 #include <Engine/Render/FMainRender.h>
+
+//* externals
+#include <magic_enum.hpp>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // RenderSceneEditor class methods
@@ -22,8 +29,8 @@ void RenderSceneEditor::Init() {
 	checkerboard_ = SxavengerAsset::TryImport<AssetTexture>("packages/textures/checker_black.png");
 
 	operationTexture_[static_cast<uint32_t>(GuizmoOperation::Translate)] = SxavengerAsset::TryImport<AssetTexture>("packages/textures/icon/operation_translate.png");
-	operationTexture_[static_cast<uint32_t>(GuizmoOperation::Rotate)] = SxavengerAsset::TryImport<AssetTexture>("packages/textures/icon/operation_rotate.png");
-	operationTexture_[static_cast<uint32_t>(GuizmoOperation::Scale)] = SxavengerAsset::TryImport<AssetTexture>("packages/textures/icon/operation_scale.png");
+	operationTexture_[static_cast<uint32_t>(GuizmoOperation::Rotate)]    = SxavengerAsset::TryImport<AssetTexture>("packages/textures/icon/operation_rotate.png");
+	operationTexture_[static_cast<uint32_t>(GuizmoOperation::Scale)]     = SxavengerAsset::TryImport<AssetTexture>("packages/textures/icon/operation_scale.png");
 
 	modeTexture_[SxImGuizmo::World] = SxavengerAsset::TryImport<AssetTexture>("packages/textures/icon/mode_world.png");
 	modeTexture_[SxImGuizmo::Local] = SxavengerAsset::TryImport<AssetTexture>("packages/textures/icon/mode_local.png");
@@ -34,22 +41,24 @@ void RenderSceneEditor::Init() {
 	camera_->AddComponent<CameraComponent>();
 
 	auto camera = camera_->GetComponent<CameraComponent>();
-	camera->GetProjection().focal = 12.0f;
+	camera->GetProjection().focal = 16.0f;
+	camera->UpdateProj();
 
-	textures_ = std::make_unique<FRenderTargetTextures>();
+	textures_ = std::make_unique<FRenderTargetBuffer>();
 	textures_->Create(kMainWindowSize);
 
 	renderer_ = std::make_unique<FSceneRenderer>();
-	renderer_->SetTextures(textures_.get());
 
 	config_ = {};
+	config_.buffer              = textures_.get();
 	config_.camera              = camera_->GetComponent<CameraComponent>();
-	config_.isEnableComposite   = true;
 	config_.isEnablePostProcess = false;
+	config_.isElableTonemap     = true;
 
 	colliderRenderer_ = std::make_unique<ColliderPrimitiveRenderer>();
 	colliderRenderer_->Init();
 
+	icons_[static_cast<uint32_t>(Icon::Volume)]           = SxavengerAsset::TryImport<AssetTexture>("packages/textures/icon/scene_volume.png");
 	icons_[static_cast<uint32_t>(Icon::DirectionalLight)] = SxavengerAsset::TryImport<AssetTexture>("packages/textures/icon/scene_directionalLight.png");
 	icons_[static_cast<uint32_t>(Icon::PointLight)]       = SxavengerAsset::TryImport<AssetTexture>("packages/textures/icon/scene_pointLight.png");
 	icons_[static_cast<uint32_t>(Icon::Camera)]           = SxavengerAsset::TryImport<AssetTexture>("packages/textures/icon/scene_camera.png");
@@ -83,15 +92,16 @@ void RenderSceneEditor::Render() {
 	if (!isRender_) {
 		return;
 	}
-	
-	renderer_->Render(SxavengerSystem::GetMainThreadContext(), config_);
+
+	config_.colorSpace = SxavengerSystem::GetMainWindow()->GetColorSpace();
+	renderer_->Render(SxavengerSystem::GetDirectQueueContext(), config_);
 
 	//* Debug Render *//
-	textures_->BeginTransparentBasePass(SxavengerSystem::GetMainThreadContext());
+	textures_->BeginRenderTargetMainTransparent(SxavengerSystem::GetDirectQueueContext());
 
 	// todo: draw lines, etc...
 	if (isRenderCollider_) {
-		colliderRenderer_->Render(SxavengerSystem::GetMainThreadContext(), camera_->GetComponent<CameraComponent>());
+		colliderRenderer_->Render(SxavengerSystem::GetDirectQueueContext(), camera_->GetComponent<CameraComponent>());
 	}
 
 	if (isMoveCamera_) {
@@ -99,9 +109,9 @@ void RenderSceneEditor::Render() {
 	}
 
 	CameraComponent* camera = camera_->GetComponent<CameraComponent>();
-	SxavengerContent::GetDebugPrimitive()->DrawToScene(SxavengerSystem::GetMainThreadContext(), camera);
+	SxavengerContent::GetDebugPrimitive()->DrawToScene(SxavengerSystem::GetDirectQueueContext(), camera);
 
-	textures_->EndTransparentBasePass(SxavengerSystem::GetMainThreadContext());
+	textures_->EndRenderTargetMainTransparent(SxavengerSystem::GetDirectQueueContext());
 }
 
 void RenderSceneEditor::Manipulate(MonoBehaviour* behaviour) {
@@ -274,21 +284,14 @@ void RenderSceneEditor::ShowSceneMenu() {
 		ImGui::Text("layout");
 		ImGui::Separator();
 
-		static const LPCSTR kLayouts[] = {
-			"Normal",
-			"MaterialARM",
-			"Albedo",
-			"Position",
-			"UI",
-			"Main",
-		};
-
-		if (ImGui::BeginCombo("GBuffer", kLayouts[static_cast<uint8_t>(layout_)])) {
-			for (uint8_t i = 0; i < FRenderTargetTextures::kGBufferLayoutCount; ++i) {
-				if (ImGui::Selectable(kLayouts[i], (i == static_cast<uint8_t>(layout_)))) {
-					layout_ = static_cast<FRenderTargetTextures::GBufferLayout>(i);
+		if (ImGui::BeginCombo("GBuffer", magic_enum::enum_name(buffer_).data())) {
+		
+			for (const auto& [value, name] : magic_enum::enum_entries<GBuffer>()) {
+				if (ImGui::Selectable(name.data(), (value == buffer_))) {
+					buffer_ = value;
 				}
 			}
+		
 			ImGui::EndCombo();
 		}
 
@@ -296,7 +299,7 @@ void RenderSceneEditor::ShowSceneMenu() {
 		ImGui::Text("process");
 		ImGui::Separator();
 		ImGui::Checkbox("enable post process", &config_.isEnablePostProcess);
-		ImGui::Checkbox("enable composite",    &config_.isEnableComposite);
+		ImGui::Checkbox("enable tonemap",      &config_.isElableTonemap);
 
 		// technique
 		ImGui::Text("technique");
@@ -309,8 +312,8 @@ void RenderSceneEditor::ShowSceneMenu() {
 		ImGui::SameLine();
 
 		if (ImGui::RadioButton("pathtracing(preview)", config_.technique == FSceneRenderer::GraphicsTechnique::Pathtracing)) {
-			config_.technique = FSceneRenderer::GraphicsTechnique::Pathtracing;
-			renderer_->ResetReserviour(SxavengerSystem::GetMainThreadContext());
+			//config_.technique = FSceneRenderer::GraphicsTechnique::Pathtracing;
+			//renderer_->ResetReserviour(SxavengerSystem::GetDirectQueueContext());
 		}
 
 		// technique option
@@ -324,9 +327,11 @@ void RenderSceneEditor::ShowSceneMenu() {
 
 			case FSceneRenderer::GraphicsTechnique::Pathtracing:
 
-				if (ImGui::Button("reset reservoir")) {
-					renderer_->ResetReserviour(SxavengerSystem::GetMainThreadContext());
-				}
+				//if (ImGui::Button("reset reservoir")) {
+				//	renderer_->ResetReserviour(SxavengerSystem::GetDirectQueueContext());
+				//}
+				//
+				//renderer_->DebugGui();
 				
 				break;
 		}
@@ -383,13 +388,13 @@ void RenderSceneEditor::ShowCaptureMenu() {
 		MenuPadding();
 		ImGui::SeparatorText("capture");
 
-		if (ImGui::Button("scene window capture")) {
-			textures_->CaptureGBuffer(FRenderTargetTextures::GBufferLayout::Main, SxavengerSystem::GetMainThreadContext(), "capture_scene.png");
-		}
-
-		if (ImGui::Button("game window capture")) {
-			FMainRender::GetInstance()->GetTextures()->CaptureGBuffer(FRenderTargetTextures::GBufferLayout::Main, SxavengerSystem::GetMainThreadContext(), "capture_game.png");
-		}
+		//if (ImGui::Button("scene window capture")) {
+		//	textures_->CaptureGBuffer(FRenderTargetTextures::GBufferLayout::Main, SxavengerSystem::GetDirectQueueContext(), "capture_scene.png");
+		//}
+		//
+		//if (ImGui::Button("game window capture")) {
+		//	FMainRender::GetInstance()->GetTextures()->CaptureGBuffer(FRenderTargetTextures::GBufferLayout::Main, SxavengerSystem::GetDirectQueueContext(), "capture_game.png");
+		//}
 
 		ImGui::EndMenu();
 	}
@@ -468,15 +473,12 @@ void RenderSceneEditor::ShowSceneWindow() {
 
 	sceneWindow_ = ImGui::GetWindowDrawList();
 
-	SetImGuiImageFullWindow(
+	sceneRect_ = SetImGuiImageFullWindow(
 		checkerboard_.WaitGet()->GetGPUHandleSRV(),
-		kMainWindowSize
+		textures_->GetSize()
 	);
 
-	sceneRect_ = SetImGuiImageFullWindow(
-		textures_->GetGBuffer(layout_)->GetGPUHandleSRV(),
-		kMainWindowSize
-	);
+	DisplayGBufferTexture(buffer_);
 
 	if (ImGui::IsWindowHovered() && (ImGui::IsMouseClicked(ImGuiMouseButton_Middle) || ImGui::IsMouseClicked(ImGuiMouseButton_Right))) {
 		//!< window hovered 状態で mouse middle click が押された場合, camera操作(forcus)を許可.
@@ -511,12 +513,12 @@ void RenderSceneEditor::ShowGameWindow() {
 	);
 
 	SetImGuiImageFullWindow(
-		FMainRender::GetInstance()->GetTextures()->GetGBuffer(FRenderTargetTextures::GBufferLayout::Main)->GetGPUHandleSRV(),
+		FMainRender::GetInstance()->GetTextures()->GetGBuffer(FMainGBuffer::Layout::Scene)->GetGPUHandleSRV(),
 		kMainWindowSize
 	);
 
 	SetImGuiImageFullWindow(
-		FMainRender::GetInstance()->GetTextures()->GetGBuffer(FRenderTargetTextures::GBufferLayout::UI)->GetGPUHandleSRV(),
+		FMainRender::GetInstance()->GetTextures()->GetGBuffer(FMainGBuffer::Layout::UI)->GetGPUHandleSRV(),
 		kMainWindowSize
 	);
 
@@ -535,13 +537,13 @@ void RenderSceneEditor::ShowCanvasWindow() {
 
 	canvasWindow_ = ImGui::GetWindowDrawList();
 
-	SetImGuiImageFullWindow(
+	canvasRect_ = SetImGuiImageFullWindow(
 		checkerboard_.WaitGet()->GetGPUHandleSRV(),
 		kMainWindowSize
 	);
 
-	canvasRect_ = SetImGuiImageFullWindow(
-		FMainRender::GetInstance()->GetTextures()->GetGBuffer(FRenderTargetTextures::GBufferLayout::UI)->GetGPUHandleSRV(),
+	SetImGuiImageFullWindow(
+		FMainRender::GetInstance()->GetTextures()->GetGBuffer(FMainGBuffer::Layout::UI)->GetGPUHandleSRV(),
 		kMainWindowSize
 	);
 
@@ -554,34 +556,56 @@ void RenderSceneEditor::ShowIconScene() {
 		return;
 	}
 
-	sComponentStorage->ForEach<CameraComponent>([this](CameraComponent* component) {
+	// Post Process Layer
+	sComponentStorage->ForEach<PostProcessLayerComponent>([&](PostProcessLayerComponent* component) {
+		if (component->GetTag() != PostProcessLayerComponent::Tag::Volume) {
+			return;
+		}
+
+		auto transform = component->GetTransform();
+
+		if (transform == nullptr) {
+			return;
+		}
+
+		Color4f color = component->IsActive()
+			? Color4f{ 1.0f, 1.0f, 1.0f, 1.0f }
+			: Color4f{ 0.2f, 0.2f, 0.2f, 1.0f };
+
+		RenderIcon(component->GetBehaviour(), Icon::Volume, transform->GetPosition(), color);
+	});
+
+	// Directional Light
+	sComponentStorage->ForEach<DirectionalLightComponent>([&](DirectionalLightComponent* component) {
+
+		Color4f color = component->IsActive()
+			? Color4f(component->GetParameter().color, 1.0f)
+			: Color4f{ 0.2f, 0.2f, 0.2f, 1.0f };
+
+		RenderIcon(component->GetBehaviour(), Icon::DirectionalLight, component->RequireTransform()->GetPosition(), color);
+	});
+
+	// Point Light
+	sComponentStorage->ForEach<PointLightComponent>([&](PointLightComponent* component) {
+
+		Color4f color = component->IsActive()
+			? Color4f(component->GetParameter().color, 1.0f)
+			: Color4f{ 0.2f, 0.2f, 0.2f, 1.0f };
+
+		RenderIcon(component->GetBehaviour(), Icon::PointLight, component->RequireTransform()->GetPosition(), color);
+	});
+
+	// Camera
+	sComponentStorage->ForEach<CameraComponent>([&](CameraComponent* component) {
 		if (component == camera_->GetComponent<CameraComponent>()) {
 			return; //!< editor cameraは無視
 		}
 
 		Color4f color = component->IsActive()
 			? Color4f{ 1.0f, 1.0f, 1.0f, 1.0f }
-			: Color4f{ 0.2f, 0.2f, 0.2f, 1.0f };
-	
-		RenderIcon(Icon::Camera, Matrix4x4::GetTranslation(component->GetCamera().world), color);
-	});
+		: Color4f{ 0.2f, 0.2f, 0.2f, 1.0f };
 
-	sComponentStorage->ForEach<DirectionalLightComponent>([this](DirectionalLightComponent* component) {
-
-		Color4f color = component->IsActive()
-			? Color4f(component->GetParameter().color, 1.0f)
-			: Color4f{ 0.2f, 0.2f, 0.2f, 1.0f };
-
-		RenderIcon(Icon::DirectionalLight, component->GetTransform()->GetPosition(), color);
-	});
-
-	sComponentStorage->ForEach<PointLightComponent>([this](PointLightComponent* component) {
-
-		Color4f color = component->IsActive()
-			? Color4f(component->GetParameter().color, 1.0f)
-			: Color4f{ 0.2f, 0.2f, 0.2f, 1.0f };
-
-		RenderIcon(Icon::PointLight, component->GetTransform()->GetPosition(), color);
+		RenderIcon(component->GetBehaviour(), Icon::Camera, Matrix4x4::GetTranslation(component->GetCamera().world), color);
 	});
 
 }
@@ -601,14 +625,14 @@ void RenderSceneEditor::ShowInfoTextScene() {
 			break;
 
 		case FSceneRenderer::GraphicsTechnique::Pathtracing: //!< path tracing
-			RenderTextSceneWindow(position, std::format("sample count: {}", renderer_->GetCurrentSampleCount()));
+			//RenderTextSceneWindow(position, std::format("sample count: {}", renderer_->GetCurrentSampleCount()));
 			RenderTextSceneWindow(position, "Path Tracing (Preview)");
 			break;
 	}
 	
 }
 
-RenderSceneEditor::WindowRect RenderSceneEditor::SetImGuiImageFullWindow(const D3D12_GPU_DESCRIPTOR_HANDLE& handle, const Vector2ui& size) {
+RenderSceneEditor::WindowRect RenderSceneEditor::SetImGuiImageFullWindow(const D3D12_GPU_DESCRIPTOR_HANDLE& handle, const Vector2ui& size) const {
 
 	// タブ等を排除した全体のwindowSize計算
 	ImVec2 regionMax = ImGui::GetWindowContentRegionMax();
@@ -645,6 +669,106 @@ RenderSceneEditor::WindowRect RenderSceneEditor::SetImGuiImageFullWindow(const D
 	rect.size = { displayTextureSize.x, displayTextureSize.y };
 
 	return rect;
+}
+
+void RenderSceneEditor::SetImGuiImageFullWindowEnable(const D3D12_GPU_DESCRIPTOR_HANDLE& handle, const Vector2ui& size, bool isEnable) {
+
+	// タブ等を排除した全体のwindowSize計算
+	ImVec2 regionMax = ImGui::GetWindowContentRegionMax();
+	ImVec2 regionMin = ImGui::GetWindowContentRegionMin();
+	ImVec2 windowSize = { regionMax.x - regionMin.x, regionMax.y - regionMin.y };
+
+	// 画像アス比と分割したWindowアス比の計算
+	float textureAspectRatio = static_cast<float>(size.x) / static_cast<float>(size.y);
+	float windowAspectRatio  = windowSize.x / windowSize.y;
+
+	// 出力する画像サイズの設定
+	ImVec2 displayTextureSize = windowSize;
+
+	// 画像サイズの調整
+	if (textureAspectRatio <= windowAspectRatio) {
+		displayTextureSize.x *= textureAspectRatio / windowAspectRatio;
+	
+	} else {
+		displayTextureSize.y *= windowAspectRatio / textureAspectRatio;
+	}
+	
+	// 出力場所の調整
+	ImVec2 leftTop = {
+		(windowSize.x - displayTextureSize.x) * 0.5f + regionMin.x,
+		(windowSize.y - displayTextureSize.y) * 0.5f + regionMin.y,
+	};
+
+	ImVec4 tint = isEnable ? ImVec4(1.0f, 1.0f, 1.0f, 1.0f) : ImVec4(0.2f, 0.2f, 0.2f, 1.0f);
+
+	// 画像の描画
+	ImGui::SetCursorPos(leftTop);
+	ImGui::ImageWithBg(
+		handle.ptr, displayTextureSize,
+		{ 0.0f, 0.0f }, { 1.0f, 1.0f },
+		{ 0.0f, 0.0f, 0.0f, 0.0f },
+		tint
+	);
+
+}
+
+void RenderSceneEditor::SetImGuiImagesFullWindowEnable(const std::vector<std::pair<D3D12_GPU_DESCRIPTOR_HANDLE, GBuffer>>& handles, const Vector2ui& size, bool isEnable) {
+
+	// タブ等を排除した全体のwindowSize計算
+	ImVec2 regionMax = ImGui::GetWindowContentRegionMax();
+	ImVec2 regionMin = ImGui::GetWindowContentRegionMin();
+	ImVec2 windowSize = { regionMax.x - regionMin.x, regionMax.y - regionMin.y };
+
+	// 画像アス比と分割したWindowアス比の計算
+	float textureAspectRatio = static_cast<float>(size.x) / static_cast<float>(size.y);
+	float windowAspectRatio  = windowSize.x / windowSize.y;
+
+	// 出力する画像サイズの設定
+	ImVec2 displayTextureSize = windowSize;
+
+	// 画像サイズの調整
+	if (textureAspectRatio <= windowAspectRatio) {
+		displayTextureSize.x *= textureAspectRatio / windowAspectRatio;
+	
+	} else {
+		displayTextureSize.y *= windowAspectRatio / textureAspectRatio;
+	}
+
+	// x軸でhandlesの数だけ分割
+	const float kWidthEvery = displayTextureSize.x / static_cast<float>(handles.size());
+	const float kTexcoordEvery    = 1.0f / static_cast<float>(handles.size());
+
+	ImVec4 tint = isEnable ? ImVec4(1.0f, 1.0f, 1.0f, 1.0f) : ImVec4(0.2f, 0.2f, 0.2f, 1.0f);
+
+	for (size_t i = 0; i < handles.size(); ++i) {
+
+		// 出力場所の調整
+		ImVec2 leftTop = {
+			(windowSize.x - displayTextureSize.x) * 0.5f + regionMin.x + kWidthEvery * i,
+			(windowSize.y - displayTextureSize.y) * 0.5f + regionMin.y,
+		};
+
+		// imageの描画
+		ImGui::SetCursorPos(leftTop);
+		ImGui::ImageWithBg(
+			handles[i].first.ptr, { kWidthEvery, displayTextureSize.y },
+			{ kTexcoordEvery * i, 0.0f }, { kTexcoordEvery * (i + 1), 1.0f },
+			{ 0.0f, 0.0f, 0.0f, 0.0f },
+			tint
+		);
+
+		// textの描画
+		ImGui::SetCursorPos(leftTop);
+		SxImGui::TextClipped(magic_enum::enum_name(handles[i].second).data(), kWidthEvery);
+
+		// 選択されたら切り替え
+		ImGui::SetCursorPos(leftTop);
+		ImGui::InvisibleButton(magic_enum::enum_name(handles[i].second).data(), { kWidthEvery, displayTextureSize.y });
+
+		if (SxImGui::IsDoubleClickItem()) {
+			buffer_ = handles[i].second;
+		}
+	}
 }
 
 void RenderSceneEditor::UpdateCamera() {
@@ -697,9 +821,83 @@ void RenderSceneEditor::UpdateView() {
 	camera_->GetComponent<CameraComponent>()->UpdateView();
 }
 
-void RenderSceneEditor::RenderIcon(Icon icon, const Vector3f& position, const Color4f& color) {
+void RenderSceneEditor::DisplayGBufferTexture(GBuffer buffer) {
+	switch (buffer) {
+		case GBuffer::Scene:
+			SetImGuiImageFullWindowEnable(
+				textures_->GetGBuffer(FMainGBuffer::Layout::Scene)->GetGPUHandleSRV(),
+				textures_->GetSize(),
+				isRender_
+			);
+			break;
+
+		case GBuffer::Albedo:
+			SetImGuiImageFullWindowEnable(
+				textures_->GetGBuffer(FDeferredGBuffer::Layout::Albedo)->GetGPUHandleSRV(),
+				textures_->GetSize(),
+				isRender_
+			);
+			break;
+
+		case GBuffer::Normal:
+			SetImGuiImageFullWindowEnable(
+				textures_->GetGBuffer(FDeferredGBuffer::Layout::Normal)->GetGPUHandleSRV(),
+				textures_->GetSize(),
+				isRender_
+			);
+			break;
+
+		case GBuffer::MaterialARM:
+			SetImGuiImageFullWindowEnable(
+				textures_->GetGBuffer(FDeferredGBuffer::Layout::MaterialARM)->GetGPUHandleSRV(),
+				textures_->GetSize(),
+				isRender_
+			);
+			break;
+
+		case GBuffer::Position:
+			SetImGuiImageFullWindowEnable(
+				textures_->GetGBuffer(FDeferredGBuffer::Layout::Position)->GetGPUHandleSRV(),
+				textures_->GetSize(),
+				isRender_
+			);
+			break;
+
+		case GBuffer::Deferred_GBuffer:
+			SetImGuiImagesFullWindowEnable(
+				{
+					{ textures_->GetGBuffer(FDeferredGBuffer::Layout::Albedo)->GetGPUHandleSRV(), GBuffer::Albedo },
+					{ textures_->GetGBuffer(FDeferredGBuffer::Layout::Normal)->GetGPUHandleSRV(), GBuffer::Normal },
+					{ textures_->GetGBuffer(FDeferredGBuffer::Layout::MaterialARM)->GetGPUHandleSRV(), GBuffer::MaterialARM },
+					{ textures_->GetGBuffer(FDeferredGBuffer::Layout::Position)->GetGPUHandleSRV(), GBuffer::Position },
+				},
+				textures_->GetSize(),
+				isRender_
+			);
+			break;
+
+		case GBuffer::Direct:
+			SetImGuiImageFullWindowEnable(
+				textures_->GetGBuffer(FLightingGBuffer::Layout::Direct)->GetGPUHandleSRV(),
+				textures_->GetSize(),
+				isRender_
+			);
+			break;
+
+		case GBuffer::Indirect:
+			SetImGuiImageFullWindowEnable(
+				textures_->GetGBuffer(FLightingGBuffer::Layout::Indirect)->GetGPUHandleSRV(),
+				textures_->GetSize(),
+				isRender_
+			);
+			break;
+
+	}
+}
+
+void RenderSceneEditor::RenderIcon(BaseInspector* inspector, Icon icon, const Vector3f& position, const Color4f& color) {
 	if (sceneWindow_ == nullptr) {
-		return; icon;
+		return;
 	}
 
 	Vector3f ndc = camera_->GetComponent<CameraComponent>()->CalculateNDCPosition(position);
@@ -714,14 +912,17 @@ void RenderSceneEditor::RenderIcon(Icon icon, const Vector3f& position, const Co
 		(1.0f - ndc.y) * 0.5f * sceneRect_.size.y
 	};
 
-	const Vector2f kSize  = { 32.0f, 32.0f };
-	const Vector2f kOffset = kSize / 2.0f;
+	const Vector2f kOffset = iconSize_ / 2.0f;
+
+	ScreenRect rect = {};
+	rect.min = { sceneRect_.pos.x + screen.x - kOffset.x, sceneRect_.pos.y + screen.y - kOffset.y };
+	rect.max = { sceneRect_.pos.x + screen.x + kOffset.x, sceneRect_.pos.y + screen.y + kOffset.y };
 
 	// icon shadow
 	sceneWindow_->AddImage(
 		icons_[static_cast<uint32_t>(icon)].WaitGet()->GetGPUHandleSRV().ptr,
-		{ sceneRect_.pos.x + screen.x - kOffset.x, sceneRect_.pos.y + screen.y - kOffset.y + 1.0f },
-		{ sceneRect_.pos.x + screen.x + kOffset.x, sceneRect_.pos.y + screen.y + kOffset.y + 1.0f },
+		{ rect.min.x, rect.min.y + 1.0f },
+		{ rect.max.x, rect.max.y + 1.0f },
 		ImVec2{ 0.0f, 0.0f },
 		ImVec2{ 1.0f, 1.0f },
 		ImColor{ 0.01f, 0.01f, 0.01f, color.a * 0.8f }
@@ -730,13 +931,27 @@ void RenderSceneEditor::RenderIcon(Icon icon, const Vector3f& position, const Co
 	// main icon
 	sceneWindow_->AddImage(
 		icons_[static_cast<uint32_t>(icon)].WaitGet()->GetGPUHandleSRV().ptr,
-		{ sceneRect_.pos.x + screen.x - kOffset.x, sceneRect_.pos.y + screen.y - kOffset.y },
-		{ sceneRect_.pos.x + screen.x + kOffset.x, sceneRect_.pos.y + screen.y + kOffset.y },
+		{ rect.min.x, rect.min.y },
+		{ rect.max.x, rect.max.y },
 		ImVec2{ 0.0f, 0.0f },
 		ImVec2{ 1.0f, 1.0f },
 		ImColor{ color.r, color.g, color.b, color.a }
 	);
 
+	auto editor = BaseEditor::GetEditorEngine()->GetEditor<InspectorEditor>();
+
+	if (inspector == nullptr || editor == nullptr) {
+		return; //!< 選択不可能(inspectorが未設定, editorが存在しない)
+	}
+
+	// rectの調整
+	rect.min = Vector2f::Max(rect.min, sceneRect_.pos);
+	rect.max = Vector2f::Min(rect.max, sceneRect_.pos + sceneRect_.size);
+
+	// mouseクリックでInspectorに設定
+	if (SxImGui::IsMouseClickedRect({ rect.min.x, rect.min.y }, { rect.max.x, rect.max.y }, ImGuiMouseButton_Left)) {
+		editor->SetInspector(inspector);
+	}
 }
 
 void RenderSceneEditor::RenderTextSceneWindow(ImVec2& position, const std::string& text, ImU32 color) {

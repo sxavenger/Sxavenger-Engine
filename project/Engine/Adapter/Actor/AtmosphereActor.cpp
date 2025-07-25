@@ -21,10 +21,10 @@ void AtmosphereActor::Term() {
 
 void AtmosphereActor::Update() {
 	if (MonoBehaviour::IsActive() && isUpdateAtmosphere_) {
-		atmosphere_.Update(SxavengerSystem::GetMainThreadContext());
-		skyLightComponent_->SetEnvironment(atmosphere_.UseAtmosphereDescriptor(SxavengerSystem::GetMainThreadContext()).GetGPUHandle());
-		skyLightComponent_->GetDiffuseParameter().SetTexture(atmosphere_.UseIrradianceDescriptor(SxavengerSystem::GetMainThreadContext()).GetIndex());
-		skyLightComponent_->GetSpecularParameter().SetTexture(atmosphere_.UseRadianceDescriptor(SxavengerSystem::GetMainThreadContext()).GetIndex(), atmosphere_.GetRadianceMiplevels());
+		atmosphere_.Update(SxavengerSystem::GetDirectQueueContext());
+		skyLightComponent_->SetEnvironment(atmosphere_.UseAtmosphereDescriptor(SxavengerSystem::GetDirectQueueContext()).GetGPUHandle());
+		skyLightComponent_->GetDiffuseParameter().SetTexture(atmosphere_.UseIrradianceDescriptor(SxavengerSystem::GetDirectQueueContext()).GetIndex());
+		skyLightComponent_->GetSpecularParameter().SetTexture(atmosphere_.UseRadianceDescriptor(SxavengerSystem::GetDirectQueueContext()).GetIndex(), atmosphere_.GetRadianceMiplevels());
 	}
 }
 

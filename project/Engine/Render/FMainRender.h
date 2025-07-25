@@ -5,13 +5,13 @@
 //-----------------------------------------------------------------------------------------
 //* render
 #include <Engine/Render/FPresenter.h>
-#include <Engine/Render/FRenderTargetTextures.h>
+#include <Engine/Render/FRenderTargetBuffer.h>
 #include <Engine/Render/Scene/FScene.h>
 #include <Engine/Render/Scene/FSceneRenderer.h>
 #include <Engine/Render/Canvas/FCanvasRenderer.h>
 
 //* engine
-#include <Engine/System/DirectX/DirectXContext.h>
+#include <Engine/System/DirectX/Context/DirectXQueueContext.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // FMainRender class
@@ -32,13 +32,13 @@ public:
 
 	//* option *//
 
-	void Render(const DirectXThreadContext* context);
+	void Render(const DirectXQueueContext* context, DirectXWindowContext* window);
 
-	void PresentMain(const DirectXThreadContext* context);
+	void PresentMain(const DirectXQueueContext* context);
 
 	//* getter *//
 
-	FRenderTargetTextures* GetTextures() const { return textures_.get(); }
+	FRenderTargetBuffer* GetTextures() const { return buffer_.get(); }
 
 	FSceneRenderer* GetRenderer() const { return sceneRenderer_.get(); }
 
@@ -56,11 +56,9 @@ private:
 	// private variables
 	//=========================================================================================
 
-	std::unique_ptr<FPresenter> presenter_;
-
-	std::unique_ptr<FRenderTargetTextures> textures_;
-	std::unique_ptr<FSceneRenderer>        sceneRenderer_;
-	std::unique_ptr<FScene>                scene_;
-	std::unique_ptr<FCanvasRenderer>       canvasRenderer_;
+	std::unique_ptr<FRenderTargetBuffer> buffer_;
+	std::unique_ptr<FSceneRenderer>      sceneRenderer_;
+	std::unique_ptr<FScene>              scene_;
+	std::unique_ptr<FCanvasRenderer>     canvasRenderer_;
 
 };

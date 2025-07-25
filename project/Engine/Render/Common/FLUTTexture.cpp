@@ -21,10 +21,19 @@ void FLUTTexture::Create(const AssetObserver<AssetTexture>& texture, const Vecto
 	CreateBuffer(texture_->GetTexture().GetSize(), tile);
 }
 
-void FLUTTexture::Dispatch(const DirectXThreadContext* context) {
+void FLUTTexture::Create(const std::shared_ptr<AssetTexture>& texture, const Vector2ui& tile) {
+
+	// 引数の保存
+	texture_ = texture;
+
+	CreateResource(texture_->GetTexture().GetSize(), tile);
+	CreateBuffer(texture_->GetTexture().GetSize(), tile);
+}
+
+void FLUTTexture::Dispatch(const DirectXQueueContext* context) {
 
 	FRenderCore::GetInstance()->GetProcess()->SetPipeline(
-		FRenderCoreProcess::CompositeType::ConvertLUTTexture, context
+		FRenderCoreProcess::ProcessType::ConvertLUTTexture, context
 	);
 
 	DxObject::BindBufferDesc parameter = {};
@@ -33,7 +42,7 @@ void FLUTTexture::Dispatch(const DirectXThreadContext* context) {
 	parameter.SetHandle("gOutput",     descriptorUAV_.GetGPUHandle());
 
 	FRenderCore::GetInstance()->GetProcess()->BindComputeBuffer(
-		FRenderCoreProcess::CompositeType::ConvertLUTTexture, context, parameter
+		FRenderCoreProcess::ProcessType::ConvertLUTTexture, context, parameter
 	);
 
 	FRenderCore::GetInstance()->GetProcess()->Dispatch(context, texture_->GetTexture().GetSize());

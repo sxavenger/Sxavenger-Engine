@@ -46,13 +46,13 @@ public:
 
 		void Create(const Vector2ui& _size);
 
-		void Dispatch(const DirectXThreadContext* context);
+		void Dispatch(const DirectXQueueContext* context);
 
-		void Commit(const DirectXThreadContext* context);
+		void Commit(const DirectXQueueContext* context);
 
 		//* resource option *//
 
-		const DxObject::Descriptor& UseDescriptorSRV(const DirectXThreadContext* context);
+		const DxObject::Descriptor& UseDescriptorSRV(const DirectXQueueContext* context);
 
 		//=========================================================================================
 		// public variables
@@ -101,15 +101,15 @@ public:
 
 	void Create(const Vector2ui& size);
 
-	void Update(const DirectXThreadContext* context) override;
+	void Update(const DirectXQueueContext* context) override;
 
-	void Task(const DirectXThreadContext* context) override;
+	void Task(const DirectXQueueContext* context) override;
 
 	void SetImGuiCommand();
 
 	//* atmosphere option *//
 
-	const DxObject::Descriptor& UseAtmosphereDescriptor(const DirectXThreadContext* context);
+	const DxObject::Descriptor& UseAtmosphereDescriptor(const DirectXQueueContext* context);
 
 private:
 

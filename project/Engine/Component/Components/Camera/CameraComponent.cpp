@@ -11,6 +11,9 @@
 #include <Engine/System/SxavengerSystem.h>
 #include <Engine/Content/SxavengerContent.h>
 
+//* external
+#include <magic_enum.hpp>
+
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Camera structure methods
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -76,17 +79,13 @@ void CameraComponent::ShowComponentInspector() {
 	ImGui::Text("tag");
 	ImGui::Separator();
 
-	static const char* kCameraTag[] = {
-		"None",
-		"GameCamera"
-	};
-
-	if (ImGui::BeginCombo("## tag", kCameraTag[static_cast<uint8_t>(GetTag())])) {
-		for (uint8_t i = 0; i < kTagCount; ++i) {
-			if (ImGui::Selectable(kCameraTag[i], GetTag() == static_cast<Tag>(i))) {
-				SetTag(static_cast<Tag>(i));
+	if (ImGui::BeginCombo("## tag", magic_enum::enum_name(GetTag()).data())) {
+		for (const auto& [value, name] : magic_enum::enum_entries<Tag>()) {
+			if (ImGui::Selectable(name.data(), GetTag() == value)) {
+				SetTag(value);
 			}
 		}
+
 		ImGui::EndCombo();
 	}
 
@@ -140,6 +139,11 @@ void CameraComponent::UpdateProj() {
 const CameraComponent::Camera& CameraComponent::GetCamera() const {
 	Exception::Assert(buffer_ != nullptr, "camera buffer is not craete.");
 	return (*buffer_)[0];
+}
+
+Vector3f CameraComponent::GetPosition() const {
+	Exception::Assert(buffer_ != nullptr, "camera buffer is not craete.");
+	return Matrix4x4::GetTranslation((*buffer_)[0].world);
 }
 
 Vector3f CameraComponent::CalculateNDCPosition(const Vector3f& point) const {

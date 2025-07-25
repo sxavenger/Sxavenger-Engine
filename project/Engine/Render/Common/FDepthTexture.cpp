@@ -96,7 +96,7 @@ void FDepthTexture::FRasterizerDepth::Delete() {
 	descriptorSRV_.Delete();
 }
 
-void FDepthTexture::FRasterizerDepth::BeginWrite(const DirectXThreadContext* context) const {
+void FDepthTexture::FRasterizerDepth::BeginWrite(const DirectXQueueContext* context) const {
 	// barrierの設定
 	D3D12_RESOURCE_BARRIER barrier = {};
 	barrier.Type                   = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
@@ -107,7 +107,7 @@ void FDepthTexture::FRasterizerDepth::BeginWrite(const DirectXThreadContext* con
 	context->GetCommandList()->ResourceBarrier(1, &barrier);
 }
 
-void FDepthTexture::FRasterizerDepth::EndWrite(const DirectXThreadContext* context) const {
+void FDepthTexture::FRasterizerDepth::EndWrite(const DirectXQueueContext* context) const {
 	// barrierの設定
 	D3D12_RESOURCE_BARRIER barrier = {};
 	barrier.Type                   = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
@@ -118,7 +118,7 @@ void FDepthTexture::FRasterizerDepth::EndWrite(const DirectXThreadContext* conte
 	context->GetCommandList()->ResourceBarrier(1, &barrier);
 }
 
-void FDepthTexture::FRasterizerDepth::ClearDepth(const DirectXThreadContext* context) const {
+void FDepthTexture::FRasterizerDepth::ClearDepth(const DirectXQueueContext* context) const {
 	// 深度をクリア
 	context->GetCommandList()->ClearDepthStencilView(
 		descriptorDSV_.GetCPUHandle(),
@@ -128,7 +128,7 @@ void FDepthTexture::FRasterizerDepth::ClearDepth(const DirectXThreadContext* con
 	);
 }
 
-void FDepthTexture::FRasterizerDepth::BeginState(const DirectXThreadContext* context, D3D12_RESOURCE_STATES state) const {
+void FDepthTexture::FRasterizerDepth::BeginState(const DirectXQueueContext* context, D3D12_RESOURCE_STATES state) const {
 	// barrierの設定
 	D3D12_RESOURCE_BARRIER barrier = {};
 	barrier.Type                   = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
@@ -139,7 +139,7 @@ void FDepthTexture::FRasterizerDepth::BeginState(const DirectXThreadContext* con
 	context->GetCommandList()->ResourceBarrier(1, &barrier);
 }
 
-void FDepthTexture::FRasterizerDepth::EndState(const DirectXThreadContext* context, D3D12_RESOURCE_STATES state) const {
+void FDepthTexture::FRasterizerDepth::EndState(const DirectXQueueContext* context, D3D12_RESOURCE_STATES state) const {
 	// barrierの設定
 	D3D12_RESOURCE_BARRIER barrier = {};
 	barrier.Type                   = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
@@ -214,7 +214,7 @@ void FDepthTexture::FRaytracingDepth::Delete() {
 	descriptorUAV_.Delete();
 }
 
-void FDepthTexture::FRaytracingDepth::BeginWrite(const DirectXThreadContext* context) const {
+void FDepthTexture::FRaytracingDepth::BeginWrite(const DirectXQueueContext* context) const {
 	// barrierの設定
 	D3D12_RESOURCE_BARRIER barrier = {};
 	barrier.Type                   = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
@@ -225,7 +225,7 @@ void FDepthTexture::FRaytracingDepth::BeginWrite(const DirectXThreadContext* con
 	context->GetCommandList()->ResourceBarrier(1, &barrier);
 }
 
-void FDepthTexture::FRaytracingDepth::EndWrite(const DirectXThreadContext* context) const {
+void FDepthTexture::FRaytracingDepth::EndWrite(const DirectXQueueContext* context) const {
 	// barrierの設定
 	D3D12_RESOURCE_BARRIER barrier = {};
 	barrier.Type                   = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
@@ -236,7 +236,7 @@ void FDepthTexture::FRaytracingDepth::EndWrite(const DirectXThreadContext* conte
 	context->GetCommandList()->ResourceBarrier(1, &barrier);
 }
 
-void FDepthTexture::FRaytracingDepth::BeginState(const DirectXThreadContext* context, D3D12_RESOURCE_STATES state) const {
+void FDepthTexture::FRaytracingDepth::BeginState(const DirectXQueueContext* context, D3D12_RESOURCE_STATES state) const {
 	// barrierの設定
 	D3D12_RESOURCE_BARRIER barrier = {};
 	barrier.Type                   = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
@@ -247,7 +247,7 @@ void FDepthTexture::FRaytracingDepth::BeginState(const DirectXThreadContext* con
 	context->GetCommandList()->ResourceBarrier(1, &barrier);
 }
 
-void FDepthTexture::FRaytracingDepth::EndState(const DirectXThreadContext* context, D3D12_RESOURCE_STATES state) const {
+void FDepthTexture::FRaytracingDepth::EndState(const DirectXQueueContext* context, D3D12_RESOURCE_STATES state) const {
 	// barrierの設定
 	D3D12_RESOURCE_BARRIER barrier = {};
 	barrier.Type                   = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
@@ -272,36 +272,36 @@ void FDepthTexture::Term() {
 	raytracing_.Delete();
 }
 
-void FDepthTexture::TransitionBeginRasterizer(const DirectXThreadContext* context) const {
+void FDepthTexture::TransitionBeginRasterizer(const DirectXQueueContext* context) const {
 	rasterizer_.BeginWrite(context);
 }
 
-void FDepthTexture::TransitionEndRasterizer(const DirectXThreadContext* context) const {
+void FDepthTexture::TransitionEndRasterizer(const DirectXQueueContext* context) const {
 	rasterizer_.EndWrite(context);
 }
 
-void FDepthTexture::ClearRasterizerDepth(const DirectXThreadContext* context) const {
+void FDepthTexture::ClearRasterizerDepth(const DirectXQueueContext* context) const {
 	rasterizer_.ClearDepth(context);
 }
 
-void FDepthTexture::TransitionBeginRaytracing(const DirectXThreadContext* context) const {
+void FDepthTexture::TransitionBeginRaytracing(const DirectXQueueContext* context) const {
 	raytracing_.BeginWrite(context);
 }
 
-void FDepthTexture::TransitionEndRaytracing(const DirectXThreadContext* context) const {
+void FDepthTexture::TransitionEndRaytracing(const DirectXQueueContext* context) const {
 	raytracing_.EndWrite(context);
 }
 
-void FDepthTexture::TransitionBeginStateRasterizer(const DirectXThreadContext* context, D3D12_RESOURCE_STATES state) const {
+void FDepthTexture::TransitionBeginStateRasterizer(const DirectXQueueContext* context, D3D12_RESOURCE_STATES state) const {
 	rasterizer_.BeginState(context, state);
 }
 
-void FDepthTexture::TransitionEndStateRasterizer(const DirectXThreadContext* context, D3D12_RESOURCE_STATES state) const {
+void FDepthTexture::TransitionEndStateRasterizer(const DirectXQueueContext* context, D3D12_RESOURCE_STATES state) const {
 	rasterizer_.EndState(context, state);
 }
 
 
-void FDepthTexture::CopyRaytracingToRasterizer(const DirectXThreadContext* context) const {
+void FDepthTexture::CopyRaytracingToRasterizer(const DirectXQueueContext* context) const {
 	raytracing_.BeginState(context, D3D12_RESOURCE_STATE_COPY_SOURCE);
 	rasterizer_.BeginState(context, D3D12_RESOURCE_STATE_COPY_DEST);
 

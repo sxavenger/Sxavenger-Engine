@@ -44,7 +44,7 @@ void main(uint3 dispatchThreadId : SV_DispatchThreadID) {
 	float3 color = gEnvironment.SampleLevel(gSampler, direction, 0.0f).rgb * gParameter.intensity;
 
 	if (gParameter.flag) {
-		float3 aces = ACES::IDT_sRGB(color);
+		float3 aces = ACES::IDT_sRGB_AP0(color);
 		float3 oces = ACES::RRT(aces);
 		color = ACES::ODT_sRGB_D65(oces);
 	}

@@ -7,7 +7,7 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
-#include "../../Process.hlsli"
+#include "../PostProcess.hlsli"
 
 //=========================================================================================
 // buffers
@@ -38,16 +38,13 @@ void main(uint3 dispatchThreadId : SV_DispatchThreadID) {
 
 	float4 input = gInput[index];
 
-	if (input.a <= 0.0f) {
-		gOutput[index] = input;
-		return;
-	}
-
 	float s = 1.0f / gParameter.shutterSpeed;
 	
 	float ev100 = log2((gParameter.aperture * gParameter.aperture / s) * (100.0f / gParameter.iso));
 	float exposure = 1.0f / exp2(ev100 - gParameter.compensation);
 	float3 output  = input.rgb * exposure;
 
-	gOutput[index] = float4(output, input.a);
+	gOutput[index].rgb = lerp(input.rgb, output, blendWeight);
+	gOutput[index].a   = input.a;
+	
 }

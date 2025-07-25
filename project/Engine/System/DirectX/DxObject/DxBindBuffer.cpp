@@ -101,7 +101,7 @@ D3D12_STATIC_SAMPLER_DESC SamplerBindDesc::GetSampler(const std::string& name, S
 // BindBufferInfo structure methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-void BindBufferTable::BindBufferInfo::Create(const D3D12_SHADER_INPUT_BIND_DESC& _desc, ShaderVisibility _visibility) {
+void BindBufferTable::BindBufferInfo::Create(ID3D12ShaderReflection* reflection, const D3D12_SHADER_INPUT_BIND_DESC& _desc, ShaderVisibility _visibility) {
 	rootParam      = std::nullopt;
 	visibility     = _visibility;
 	registerNum    = _desc.BindPoint;
@@ -109,7 +109,15 @@ void BindBufferTable::BindBufferInfo::Create(const D3D12_SHADER_INPUT_BIND_DESC&
 	type           = _desc.Type;
 	bindBufferType = ToBindBufferType(_desc.Type);
 
-	// todo: 32bitconstantsの設定
+	if (bindBufferType == BindBufferType::kVirtual_CBV && std::isupper(_desc.Name[0])) {
+		//!< "G---"から始まるConstantBufferは32bitConstantsに変更
+		bindBufferType = BindBufferType::k32bitConstants;
+		ID3D12ShaderReflectionConstantBuffer* constantbuffer = reflection->GetConstantBufferByName(_desc.Name);
+		D3D12_SHADER_BUFFER_DESC desc = {};
+		constantbuffer->GetDesc(&desc);
+		num32bit = desc.Size / sizeof(UINT);
+	}
+
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -127,7 +135,7 @@ void BindBufferTable::CreateTable(ID3D12ShaderReflection* reflection, ShaderVisi
 		D3D12_SHADER_INPUT_BIND_DESC desc = {};
 		reflection->GetResourceBindingDesc(i, &desc);
 
-		InsertBindBuffer(desc, visibility);
+		InsertBindBuffer(reflection, desc, visibility);
 	}
 }
 
@@ -138,6 +146,10 @@ GraphicsRootSignatureDesc BindBufferTable::CreateGraphicsRootSignatureDesc() {
 
 	for (auto& [name, info] : table_) {
 		switch (info.bindBufferType) {
+			case BindBufferType::k32bitConstants:
+				desc.Set32bitConstants(rootIndex, info.visibility, static_cast<UINT>(info.num32bit), info.registerNum, info.registerSpace);
+				break;
+
 			case BindBufferType::kVirtual_CBV:
 				desc.SetVirtualCBV(rootIndex, info.visibility, info.registerNum, info.registerSpace);
 				break;
@@ -178,6 +190,10 @@ GraphicsRootSignatureDesc BindBufferTable::CreateGraphicsRootSignatureDesc(const
 
 	for (auto& [name, info] : table_) {
 		switch (info.bindBufferType) {
+			case BindBufferType::k32bitConstants:
+				desc.Set32bitConstants(rootIndex, info.visibility, static_cast<UINT>(info.num32bit), info.registerNum, info.registerSpace);
+				break;
+
 			case BindBufferType::kVirtual_CBV:
 				desc.SetVirtualCBV(rootIndex, info.visibility, info.registerNum, info.registerSpace);
 				break;
@@ -233,6 +249,10 @@ ComputeRootSignatureDesc BindBufferTable::CreateComputeRootSignatureDesc() {
 		Exception::Assert(info.visibility == ShaderVisibility::VISIBILITY_ALL, "buffer visibility is not VISIBILITY_ALL");
 
 		switch (info.bindBufferType) {
+			case BindBufferType::k32bitConstants:
+				desc.Set32bitConstants(rootIndex, info.visibility, static_cast<UINT>(info.num32bit), info.registerNum, info.registerSpace);
+				break;
+
 			case BindBufferType::kVirtual_CBV:
 				desc.SetVirtualCBV(rootIndex, info.registerNum, info.registerSpace);
 				break;
@@ -276,6 +296,10 @@ ComputeRootSignatureDesc BindBufferTable::CreateComputeRootSignatureDesc(const S
 		Exception::Assert(info.visibility == ShaderVisibility::VISIBILITY_ALL, "buffer visibility is not VISIBILITY_ALL");
 
 		switch (info.bindBufferType) {
+			case BindBufferType::k32bitConstants:
+				desc.Set32bitConstants(rootIndex, info.visibility, static_cast<UINT>(info.num32bit), info.registerNum, info.registerSpace);
+				break;
+
 			case BindBufferType::kVirtual_CBV:
 				desc.SetVirtualCBV(rootIndex, info.registerNum, info.registerSpace);
 				break;
@@ -444,10 +468,10 @@ BindBufferType BindBufferTable::ToBindBufferType(D3D_SHADER_INPUT_TYPE type) {
 	return {};
 }
 
-void BindBufferTable::InsertBindBuffer(const D3D12_SHADER_INPUT_BIND_DESC& desc, ShaderVisibility visibility) {
+void BindBufferTable::InsertBindBuffer(ID3D12ShaderReflection* reflection, const D3D12_SHADER_INPUT_BIND_DESC& desc, ShaderVisibility visibility) {
 
 	BindBufferInfo info = {};
-	info.Create(desc, visibility);
+	info.Create(reflection, desc, visibility);
 
 	if (table_.contains(desc.Name)) { //!< buffer conflict.
 		// conflictの対応

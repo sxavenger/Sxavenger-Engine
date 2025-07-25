@@ -6,7 +6,7 @@
 //* engine
 #include <Engine/System/Utility/ComPtr.h>
 #include <Engine/System/DirectX/DxObject/DxDescriptor.h>
-#include <Engine/System/DirectX/DirectXContext.h>
+#include <Engine/System/DirectX/Context/DirectXQueueContext.h>
 
 //* DirectX12
 #include <d3dx12.h>
@@ -77,7 +77,7 @@ public:
 	Texture() = default;
 	~Texture() { Term(); }
 
-	void Load(const DirectXThreadContext* context, const std::filesystem::path& filepath, const Option& option);
+	void Load(const DirectXQueueContext* context, const std::filesystem::path& filepath, const Option& option);
 
 	void Term();
 

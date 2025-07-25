@@ -7,6 +7,9 @@ _DXOBJECT_USING
 //* engine
 #include <Engine/System/Config/SxavengerConfig.h>
 
+//* external
+#include <magic_enum.hpp>
+
 //* c++
 #include <psapi.h>
 #include <format>
@@ -33,11 +36,11 @@ void Device::Init() {
 	Exception::Assert(isRayTracingEnabled_, "Raytracing version failed.");
 	//Exception::Assert(isMeshShaderEnabled_, "Mesh shader version failed.");
 
-	Logger::EngineLog("[_DXOBJECT]::Device complete init.");
+	Logger::EngineLog("[_DXOBJECT Device] complete initialize.");
 }
 
 void Device::Term() {
-	Logger::EngineLog("[_DXOBJECT]::Device term.");
+	Logger::EngineLog("[_DXOBJECT Device] term.");
 }
 
 void Device::CreateDebugLayer() {
@@ -72,7 +75,7 @@ void Device::CreateFactory() {
 		Exception::Assert(SUCCEEDED(hr), "check feature support error.");
 
 		if (!isTearingSupport_) {
-			Logger::EngineLog("[_DXOBEJCT] warning: tearing is not supported.");
+			Logger::EngineLog("[_DXOBEJCT Device] warning | tearing is not supported.");
 		}
 
 		// 設定を反映
@@ -93,7 +96,7 @@ void Device::CreateAdapter() {
 
 		// ソフトウェアアダプタじゃない場合, 成功
 		if (!(desc.Flags & DXGI_ADAPTER_FLAG3_SOFTWARE)) {
-			Logger::EngineLog(std::format(L"[_DXOBEJCT] Use Adapter: {}", desc.Description));
+			Logger::EngineLog(std::format(L"[_DXOBEJCT Device] Use Adapter: {}", desc.Description));
 			break;
 		}
 
@@ -119,7 +122,7 @@ void Device::CreateDevice() {
 		auto hr = D3D12CreateDevice(useAdapter_.Get(), featureLevels[i], IID_PPV_ARGS(&device_));
 		if (SUCCEEDED(hr)) {
 			// 生成できたのでログ出力してループを抜ける
-			Logger::EngineLog(std::format("[_DXOBEJCT] D3D_FEATURE_LEVEL: {}", featureLevelStrings[i]));
+			Logger::EngineLog(std::format("[_DXOBEJCT Device] D3D_FEATURE_LEVEL: {}", featureLevelStrings[i]));
 			break;
 		}
 	}
@@ -162,8 +165,10 @@ bool Device::CheckShaderModel() {
 	D3D12_FEATURE_DATA_SHADER_MODEL shaderModel = { DxObject::kHeighestShaderModel };
 	auto hr = device_->CheckFeatureSupport(D3D12_FEATURE_SHADER_MODEL, &shaderModel, sizeof(shaderModel));
 
+	Logger::EngineLog(std::format("[_DXOBEJCT Device] feature levels: shader model: {}", magic_enum::enum_name(shaderModel.HighestShaderModel)));
+
 	if (FAILED(hr) || (shaderModel.HighestShaderModel < DxObject::kHeighestShaderModel)) {
-		Logger::EngineLog("warning : Sxavenger Engine is enviorment shader model 6.6");
+		Logger::EngineLog("[_DXOBEJCT Device] warning | Sxavenger Engine is enviorment shader model 6.6");
 		return false; //!< shader modelが6.6以上をサポートしていない
 	}
 
@@ -174,6 +179,8 @@ bool Device::CheckRaytracingEnable() {
 	// Raytracingのサポートのチェック
 	D3D12_FEATURE_DATA_D3D12_OPTIONS5 option = {};
 	auto hr = device_->CheckFeatureSupport(D3D12_FEATURE_D3D12_OPTIONS5, &option, sizeof(option));
+
+	Logger::EngineLog(std::format("[_DXOBEJCT Device] feature levels: raytracing tier: {}", magic_enum::enum_name(option.RaytracingTier)));
 
 	if (FAILED(hr) || option.RaytracingTier < D3D12_RAYTRACING_TIER_1_0) {
 		Logger::EngineLog("warning : raytracing is not supported.");
@@ -193,6 +200,8 @@ bool Device::CheckMeshShaderEnable() {
 	// メッシュシェーダーのサポートをチェック
 	D3D12_FEATURE_DATA_D3D12_OPTIONS7 features = {};
 	auto hr = device_->CheckFeatureSupport(D3D12_FEATURE_D3D12_OPTIONS7, &features, sizeof(features));
+
+	Logger::EngineLog(std::format("[_DXOBEJCT Device] feature levels: mesh shader tier: {}", magic_enum::enum_name(features.MeshShaderTier)));
 
 	if (FAILED(hr) || (features.MeshShaderTier == D3D12_MESH_SHADER_TIER_NOT_SUPPORTED)) {
 		Logger::EngineLog("warning : mesh shaders aren't supported.");

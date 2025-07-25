@@ -11,7 +11,7 @@
 #include <Engine/System/DirectX/DxObject/DxGraphicsPipelineState.h>
 #include <Engine/System/DirectX/DxObject/DxDimensionBuffer.h>
 #include <Engine/System/DirectX/DxObject/DxVectorDimensionBuffer.h>
-#include <Engine/System/DirectX/DirectXContext.h>
+#include <Engine/System/DirectX/Context/DirectXQueueContext.h>
 #include <Engine/Component/Components/Camera/CameraComponent.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -30,7 +30,7 @@ public:
 
 	void StackBuffer(const Vector3f& position, const CollisionBoundings::Sphere& sphere, const Color4f& color);
 
-	void Render(const DirectXThreadContext* context, CameraComponent* component);
+	void Render(const DirectXQueueContext* context, CameraComponent* component);
 
 private:
 
@@ -77,7 +77,7 @@ public:
 
 	void StackLine(const Vector3f& x, const Vector3f& y, const Color4f& color);
 
-	void Render(const DirectXThreadContext* context, CameraComponent* component);
+	void Render(const DirectXQueueContext* context, CameraComponent* component);
 
 private:
 
@@ -104,7 +104,7 @@ public:
 
 	void Term();
 
-	void Render(const DirectXThreadContext* context, CameraComponent* component);
+	void Render(const DirectXQueueContext* context, CameraComponent* component);
 
 	void StackSphere(const Vector3f& position, const CollisionBoundings::Sphere& sphere, const Color4f& color);
 

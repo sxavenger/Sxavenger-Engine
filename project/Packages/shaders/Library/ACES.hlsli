@@ -576,6 +576,42 @@ namespace ACES {
 
 	//* methods *//
 
+	// Summary :
+	//  This transform is intended for mapping OCES onto a desktop computer monitor 
+	//  typical of those used in motion picture visual effects production. These 
+	//  monitors may occasionally be referred to as "sRGB" displays, however, the 
+	//  monitor for which this transform is designed does not exactly match the 
+	//  specifications in IEC 61966-2-1:1999.
+	// 
+	//  The assumed observer adapted white is D65, and the viewing environment is 
+	//  that of a dim surround. 
+	//
+	//  The monitor specified is intended to be more typical of those found in 
+	//  visual effects production.
+	//
+	// Device Primaries : 
+	//  Primaries are those specified in Rec. ITU-R BT.709
+	//  CIE 1931 chromaticities:  x         y         Y
+	//              Red:          0.64      0.33
+	//              Green:        0.3       0.6
+	//              Blue:         0.15      0.06
+	//              White:        0.3127    0.329     100 cd/m^2
+	//
+	// Display EOTF :
+	//  The reference electro-optical transfer function specified in 
+	//  IEC 61966-2-1:1999.
+	//
+	// Signal Range:
+	//    This transform outputs full range code values.
+	//
+	// Assumed observer adapted white point:
+	//         CIE 1931 chromaticities:    x            y
+	//                                     0.3127       0.329
+	//
+	// Viewing Environment:
+	//   This ODT has a compensation for viewing environment variables more typical 
+	//   of those associated with video mastering.
+
 	//! @brief Output Device Transform[OCES -> sRGB D65]
 	//! @param[in] oces: OCES color space
 	//! @return: sRGB D65 color space
@@ -628,6 +664,116 @@ namespace ACES {
 		linearCV = saturate(linearCV);
 
 		return linearCV;
+	}
+
+
+	// Summary :
+	//  This transform is intended for mapping OCES onto a Rec.2020 HDR display calibrated 
+	//  to a D65 white point at 1000 cd/m^2. The assumed observer adapted white is 
+	//  D65, and the viewing environment is that of a dim surround. 
+	//
+	// Device Primaries : 
+	//  Primaries are those specified in Rec. ITU-R BT.2020
+	//  CIE 1931 chromaticities:  x         y         Y
+	//              Red:          0.708     0.292
+	//              Green:        0.17      0.797
+	//              Blue:         0.131     0.046
+	//              White:        0.3127    0.329     1000 cd/m^2
+	//
+	// Display EOTF :
+	//  The reference electro-optical transfer function specified in SMPTE ST 
+	//  2084-2014. This transform makes no attempt to address the Annex functions 
+	//  which address integer quantization.
+	//
+	// Assumed observer adapted white point:
+	//         CIE 1931 chromaticities:    x            y
+	//                                     0.3127       0.329
+	//
+	// Viewing Environment:
+	//  This ODT is designed for a viewing environment more typically associated 
+	//  with video mastering.
+
+	//! @brief Output Device Transform[OCES -> Rec.2020 (1000 cd/m^2)]
+	//! @param[in] oces: OCES color space
+	//! @return: Rec.2020 (1000 cd/m^2) color space
+	float3 ODT_1000nits(float3 oces) {
+
+		// OCES to RGB rendering space
+		float3 rgbPre = mul(AP0_2_AP1_Matrix, oces);
+
+		const SegmentedSplineParams_c9 ODT_1000nits = {
+			{-4.9706219331, -3.0293780669, -2.1262, -1.5105, -1.0578, -0.4668, 0.11938, 0.7088134201, 1.2911865799, 1.2911865799}, // coefsLow[10]
+			{0.8089132070, 1.1910867930, 1.5683, 1.9483, 2.3083, 2.6384, 2.8595, 2.9872608805, 3.0127391195, 3.0127391195},        // coefsHigh[10]
+			{segmented_spline_c5_fwd(0.18 * pow(2., -12.)), 0.0001}, // minPoint
+			{segmented_spline_c5_fwd(0.18), 10.0},                   // midPoint  
+			{segmented_spline_c5_fwd(0.18 * pow(2., 10.)), 1000.0},  // maxPoint
+			3.0, // slopeLow
+			0.06 // slopeHigh
+		};
+
+		// Apply the tonescale independently in rendering-space RGB
+		float3 rgbPost;
+		rgbPost[0] = segmented_spline_c9_fwd(rgbPre[0], ODT_1000nits);
+		rgbPost[1] = segmented_spline_c9_fwd(rgbPre[1], ODT_1000nits);
+		rgbPost[2] = segmented_spline_c9_fwd(rgbPre[2], ODT_1000nits);
+
+		// Subtract small offset to allow for a code value of 0
+		rgbPost -= 0.00003507384284432574;
+
+		return rgbPost;
+	}
+
+	// Summary :
+	//  This transform is intended for mapping OCES onto an HDR display calibrated 
+	//  to a D60 white point at 2000 cd/m^2. The assumed observer adapted white is 
+	//  D60, and the viewing environment is that of a dim surround. 
+	//
+	// Device Primaries : 
+	//  CIE 1931 chromaticities:  x         y         Y
+	//              Red:          0.68      0.32
+	//              Green:        0.265     0.69
+	//              Blue:         0.15      0.06
+	//              White:        0.32168   0.33767   2000 cd/m^2
+	//
+	//  Also assumes a black level of 0.005 cd/m^2
+	//
+	// Display EOTF :
+	//  The reference electro-optical transfer function specified in SMPTE ST 
+	//  2084-2014. This transform makes no attempt to address the Annex functions 
+	//  which address integer quantization.
+	//
+	// Assumed observer adapted white point:
+	//         CIE 1931 chromaticities:    x            y
+	//                                     0.32168      0.33767
+	//
+	// Viewing Environment:
+	//  This ODT is designed for a viewing environment more typically associated 
+	//  with video mastering.
+	
+	//! @brief Output Device Transform[OCES -> Rec.2020 (2000 cd/m^2)]
+	//! @param[in] oces: OCES color space
+	//! @return: Rec.2020 (2000 cd/m^2) color space
+	float3 ODT_2000nits(float3 oces) {
+		// OCES to RGB rendering space
+		float3 rgbPre = mul(AP0_2_AP1_Matrix, oces);
+
+		const SegmentedSplineParams_c9 ODT_2000nits = {
+			{-2.3010299957, -2.3010299957, -1.9312000000, -1.5205000000, -1.0578000000, -0.4668000000, 0.1193800000, 0.7088134201, 1.2911865799, 1.2911865799}, // coefsLow[10]
+			{0.8019952042, 1.1980047958, 1.5943000000, 1.9973000000, 2.3783000000, 2.7684000000, 3.0515000000, 3.2746293562, 3.3274306351, 3.3274306351},       // coefsHigh[10]
+			{segmented_spline_c5_fwd(0.18 * pow(2., -12.)), 0.005}, // minPoint
+			{segmented_spline_c5_fwd(0.18), 10.0},                  // midPoint
+			{segmented_spline_c5_fwd(0.18 * pow(2., 11.)), 2000.0}, // maxPoint
+			0.0, // slopeLow
+			0.12 // slopeHigh
+		};
+
+		// Apply the tonescale independently in rendering-space RGB
+		float3 rgbPost;
+		rgbPost[0] = segmented_spline_c9_fwd(rgbPre[0], ODT_2000nits);
+		rgbPost[1] = segmented_spline_c9_fwd(rgbPre[1], ODT_2000nits);
+		rgbPost[2] = segmented_spline_c9_fwd(rgbPre[2], ODT_2000nits);
+
+		return rgbPost;
 	}
 	
 }

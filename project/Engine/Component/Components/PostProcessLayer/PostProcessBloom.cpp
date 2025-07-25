@@ -5,7 +5,7 @@ _DXOBJECT_USING
 // include
 //-----------------------------------------------------------------------------------------
 //* engine
-#include <Engine/Render/FRenderTargetTextures.h>
+#include <Engine/Render/FRenderTargetBuffer.h>
 #include <Engine/Render/FRenderCore.h>
 #include <Engine/System/UI/SxImGui.h>
 
@@ -38,8 +38,8 @@ void PostProcessBloom::Init() {
 	name_ = "Bloom";
 }
 
-void PostProcessBloom::Process(const DirectXThreadContext* context, FRenderTargetTextures* textures, const CameraComponent* camera) {
-	auto process = textures->GetProcessTextures();
+void PostProcessBloom::Process(const DirectXQueueContext* context, const ProcessInfo& info) {
+	auto process = info.buffer->GetProcessTextures();
 	process->NextProcess(context);
 
 	auto core = FRenderCore::GetInstance()->GetProcess();
@@ -48,17 +48,17 @@ void PostProcessBloom::Process(const DirectXThreadContext* context, FRenderTarge
 
 	BindBufferDesc desc = {};
 	// common
-	desc.SetAddress("gConfig",    textures->GetDimension());
-	desc.SetHandle("gInput",      textures->GetProcessTextures()->GetPrevTexture()->GetGPUHandleSRV());
-	desc.SetHandle("gOutput",     textures->GetProcessTextures()->GetIndexTexture()->GetGPUHandleUAV());
+	desc.Set32bitConstants("Dimension", 2, &info.buffer->GetSize());
+
+	//* texture
+	desc.SetHandle("gInput",  process->GetPrevTexture()->GetGPUHandleSRV());
+	desc.SetHandle("gOutput", process->GetIndexTexture()->GetGPUHandleUAV());
 
 	// parameter
 	desc.SetAddress("gParameter", parameter_->GetGPUVirtualAddress());
 
 	core->BindComputeBuffer(FRenderCoreProcess::ProcessType::Bloom, context, desc);
-	core->Dispatch(context, textures->GetSize());
-
-	camera;
+	core->Dispatch(context, info.buffer->GetSize());
 }
 
 void PostProcessBloom::ShowInspectorImGui() {

@@ -24,7 +24,7 @@ public:
 	AssetBlob()  = default;
 	~AssetBlob() = default;
 
-	void Load(_MAYBE_UNUSED const DirectXThreadContext* context) override; //!< entry point は L"main"限定
+	void Load(_MAYBE_UNUSED const DirectXQueueContext* context) override; //!< entry point は L"main"限定
 
 	AsyncExecution GetAsyncExecution() const override { return AsyncExecution::None; }
 

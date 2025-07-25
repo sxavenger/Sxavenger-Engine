@@ -12,7 +12,7 @@ _DXROBJECT_USING
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 void FRenderCorePathtracing::Reservoir::Init() {
-	sampleCount      = 1 << 12;
+	sampleCount      = 512;
 	frameSampleCount = 2;
 	currentFrame     = 0;
 }
@@ -37,6 +37,8 @@ void FRenderCorePathtracing::Init() {
 	CreateRaygeneration();
 	CreateMiss();
 	CreateHitgroup();
+
+	CreateDenoiser();
 }
 
 const DxrObject::ExportGroup* FRenderCorePathtracing::GetExportGroup(RaygenerationExportType raygeneration) const {
@@ -49,6 +51,18 @@ const DxrObject::ExportGroup* FRenderCorePathtracing::GetExportGroup(MissExportT
 
 const DxrObject::ExportGroup* FRenderCorePathtracing::GetExportGroup(HitgroupExportType hitgroup) const {
 	return &hitgroupExportGroups_[GetIndex(hitgroup)].second;
+}
+
+void FRenderCorePathtracing::SetDenoiserPipeline(DenoiserType type, const DirectXQueueContext* context) {
+	denoisers_[GetIndex(type)]->SetPipeline(context->GetDxCommand());
+}
+
+void FRenderCorePathtracing::BindDenoiserBuffer(DenoiserType type, const DirectXQueueContext* context, const DxObject::BindBufferDesc& desc) {
+	denoisers_[GetIndex(type)]->BindComputeBuffer(context->GetDxCommand(), desc);
+}
+
+void FRenderCorePathtracing::DispatchDenoiser(const DirectXQueueContext* context, const Vector2ui& size) {
+	context->GetCommandList()->Dispatch(DxObject::RoundUp(size.x, 16), DxObject::RoundUp(size.y, 16), 1);
 }
 
 void FRenderCorePathtracing::CreateRaygeneration() {
@@ -126,4 +140,17 @@ void FRenderCorePathtracing::CreateHitgroup() {
 
 		expt.CreateRootSignature(SxavengerSystem::GetDxDevice(), desc);
 	}
+}
+
+void FRenderCorePathtracing::CreateDenoiser() {
+
+	{
+		//* EdgeStoping
+		auto& denoiser = denoisers_[GetIndex(DenoiserType::EdgeStopping)];
+		denoiser = std::make_unique<CustomReflectionComputePipeline>();
+		denoiser->CreateAsset(kPackagesShaderDirectory / "render" / "denoiser" / "EdgeStopping.cs.hlsl");
+		denoiser->RegisterBlob();
+		denoiser->ReflectionPipeline(SxavengerSystem::GetDxDevice());
+	}
+
 }

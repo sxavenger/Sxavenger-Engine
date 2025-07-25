@@ -24,7 +24,7 @@ void DepthTexture::Term() {
 	descriptorDSV_.Delete();
 }
 
-void DepthTexture::TransitionBeginDepthWrite(const DirectXThreadContext* context) {
+void DepthTexture::TransitionBeginDepthWrite(const DirectXQueueContext* context) {
 	// barrierの設定
 	D3D12_RESOURCE_BARRIER barrier = {};
 	barrier.Type                   = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
@@ -35,7 +35,7 @@ void DepthTexture::TransitionBeginDepthWrite(const DirectXThreadContext* context
 	context->GetCommandList()->ResourceBarrier(1, &barrier);
 }
 
-void DepthTexture::TransitionEndDepthWrite(const DirectXThreadContext* context) {
+void DepthTexture::TransitionEndDepthWrite(const DirectXQueueContext* context) {
 	// barrierの設定
 	D3D12_RESOURCE_BARRIER barrier = {};
 	barrier.Type                   = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
@@ -46,7 +46,7 @@ void DepthTexture::TransitionEndDepthWrite(const DirectXThreadContext* context) 
 	context->GetCommandList()->ResourceBarrier(1, &barrier);
 }
 
-void DepthTexture::ClearDepth(const DirectXThreadContext* context) {
+void DepthTexture::ClearDepth(const DirectXQueueContext* context) {
 	// 深度をクリア
 	context->GetCommandList()->ClearDepthStencilView(
 		descriptorDSV_.GetCPUHandle(),

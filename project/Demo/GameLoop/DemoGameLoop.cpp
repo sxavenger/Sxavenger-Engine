@@ -13,6 +13,7 @@
 #include <Engine/Component/Components/Collider/ColliderComponent.h>
 #include <Engine/Component/Components/Collider/CollisionManager.h>
 #include <Engine/Component/Components/SpriteRenderer/SpriteRendererComponent.h>
+#include <Engine/Component/Components/PostProcessLayer/PostProcessLayerComponent.h>
 #include <Engine/Component/ComponentHelper.h>
 #include <Engine/Module/Scene/SceneObjects.h>
 
@@ -64,6 +65,20 @@ void DemoGameLoop::InitGame() {
 	light->GetSpecularParameter().SetTexture(SxavengerAsset::Import<AssetTexture>("assets/textures/textureCube/sky_radiance.dds"));
 	light->SetEnvironment(SxavengerAsset::Import<AssetTexture>("assets/textures/textureCube/sky_environment.dds").WaitAcquire()->GetGPUHandleSRV());
 	light->GetParameter().intensity = 0.3f;
+
+	volume_ = std::make_unique<MonoBehaviour>();
+	volume_->SetName("volume");
+	volume_->AddComponent<TransformComponent>();
+	volume_->GetComponent<TransformComponent>()->GetTransform().scale = { 14, 14, 14 };
+	volume_->AddComponent<PostProcessLayerComponent>();
+	volume_->GetComponent<PostProcessLayerComponent>()->SetTag(PostProcessLayerComponent::Tag::Volume);
+
+	volume_->GetComponent<PostProcessLayerComponent>()->AddPostProcess<PostProcessChromaticAberration>();
+	volume_->GetComponent<PostProcessLayerComponent>()->AddPostProcess<PostProcessRadialBlur>();
+
+	auto texture = SxavengerAsset::TryImport<AssetTexture>("assets/textures/LUT/LUT_LateSunsetTable.tga", Texture::Option{ Texture::Encoding::Intensity, false });
+	auto lut = volume_->GetComponent<PostProcessLayerComponent>()->AddPostProcess<PostProcessLUT>();
+	lut->CreateTexture(SxavengerSystem::GetDirectQueueContext(), texture, { 16, 16 });
 }
 
 void DemoGameLoop::TermGame() {
@@ -104,16 +119,16 @@ void DemoGameLoop::UpdateGame() {
 
 void DemoGameLoop::DrawGame() {
 
-	FMainRender::GetInstance()->Render(SxavengerSystem::GetMainThreadContext());
+	FMainRender::GetInstance()->Render(SxavengerSystem::GetDirectQueueContext(), main_.get());
 
-	main_->BeginRendering();
-	main_->ClearWindow();
+	main_->BeginRenderWindow(SxavengerSystem::GetDirectQueueContext());
+	main_->ClearWindow(SxavengerSystem::GetDirectQueueContext());
 
 
-	FMainRender::GetInstance()->PresentMain(SxavengerSystem::GetMainThreadContext());
+	FMainRender::GetInstance()->PresentMain(SxavengerSystem::GetDirectQueueContext());
 	SxavengerSystem::RenderImGui();
 	
-	main_->EndRendering();
+	main_->EndRenderWindow(SxavengerSystem::GetDirectQueueContext());
 }
 
 void DemoGameLoop::SetCollisionCallback() {

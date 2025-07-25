@@ -14,16 +14,16 @@
 // FCanvasRenderer class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-void FCanvasRenderer::Render(const DirectXThreadContext* context) {
+void FCanvasRenderer::Render(const DirectXQueueContext* context) {
 	if (!CheckRender()) {
 		return;
 	}
 
-	textures_->BeginCanvasPass(context);
+	textures_->BeginRenderTargetMainUI(context);
 
 	RenderSpriteComponents(context);
 
-	textures_->EndCanvasPass(context);
+	textures_->EndRenderTargetMainUI(context);
 }
 
 bool FCanvasRenderer::CheckRender() const {
@@ -34,7 +34,7 @@ bool FCanvasRenderer::CheckRender() const {
 	return true;
 }
 
-void FCanvasRenderer::RenderSpriteComponents(const DirectXThreadContext* context) {
+void FCanvasRenderer::RenderSpriteComponents(const DirectXQueueContext* context) {
 
 	FRenderCore::GetInstance()->GetLayer()->SetPipeline(
 		FRenderCoreLayer::PipelineType::Sprite, context, textures_->GetSize()
@@ -48,7 +48,7 @@ void FCanvasRenderer::RenderSpriteComponents(const DirectXThreadContext* context
 		sprite->BindAIBuffer(context);
 
 		DxObject::BindBufferDesc parameter = {};
-		parameter.SetAddress("gParameter",        textures_->GetDimension());
+		parameter.Set32bitConstants("Dimension", 2, &textures_->GetSize());
 		parameter.SetAddress("gTransformation2d", sprite->GetTransform2dBuffer());
 		parameter.SetAddress("gTransformationUV", sprite->GetTransformUVBuffer());
 		parameter.SetHandle("gTexture",           sprite->GetTexture());

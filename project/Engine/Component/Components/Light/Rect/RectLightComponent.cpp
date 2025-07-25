@@ -12,6 +12,9 @@ _DXOBJECT_USING
 #include <Engine/System/SxavengerSystem.h>
 #include <Engine/Content/SxavengerContent.h>
 
+//* externals
+#include <magic_enum.hpp>
+
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Parameter structure methods
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -32,13 +35,12 @@ void RectLightComponent::ShowComponentInspector() {
 	auto& parameter = parameter_->At(0);
 	ImGui::ColorEdit3("color", &parameter.color.x);
 
-	static const char* items[] = { "Lumen", "Candela" };
+	if (ImGui::BeginCombo("unit", magic_enum::enum_name(parameter.unit).data())) {
 
-	if (ImGui::BeginCombo("unit", items[static_cast<uint32_t>(parameter.unit)])) {
-		for (uint32_t i = 0; i < 2; ++i) {
-			if (ImGui::Selectable(items[i], parameter.unit == static_cast<Units>(i))) {
+		for (const auto& [value, name] : magic_enum::enum_entries<Units>()) {
+			if (ImGui::Selectable(name.data(), parameter.unit == value)) {
 				Units preUnit = parameter.unit;
-				parameter.unit = static_cast<Units>(i);
+				parameter.unit = value;
 
 				// intensityの変換
 				if (preUnit == Units::Lumen && parameter.unit == Units::Candela) {
@@ -49,6 +51,7 @@ void RectLightComponent::ShowComponentInspector() {
 				}
 			}
 		}
+
 		ImGui::EndCombo();
 	}
 

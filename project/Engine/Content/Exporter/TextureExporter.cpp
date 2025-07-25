@@ -14,7 +14,7 @@
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 void TextureExporter::Export(
-	const DirectXThreadContext* context,
+	const DirectXQueueContext* context,
 	TextureDimension dimension, ID3D12Resource* texture, DXGI_FORMAT format,
 	const std::filesystem::path& filepath) {
 

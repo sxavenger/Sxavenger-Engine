@@ -7,7 +7,7 @@
 #include "AsyncTask.h"
 
 //* engine
-#include <Engine/System/DirectX/DirectXContext.h>
+#include <Engine/System/DirectX/Context/DirectXQueueContext.h>
 
 //* c++
 #include <thread>
@@ -55,9 +55,9 @@ public:
 
 	//* thread option *//
 
-	const DirectXThreadContext* GetContext() const;
+	const DirectXQueueContext* GetContext() const;
 
-	const DirectXThreadContext* RequireContext() const;
+	const DirectXQueueContext* RequireContext() const;
 
 	const bool IsTerminated() const { return isTerminated_; }
 
@@ -78,17 +78,15 @@ private:
 
 	//* context *//
 
-	std::unique_ptr<DirectXThreadContext> context_;
+	std::unique_ptr<DirectXQueueContext> context_;
 
 	//=========================================================================================
 	// private methods
 	//=========================================================================================
 
-	static D3D12_COMMAND_LIST_TYPE GetCommandListType(AsyncExecution execution);
+	static DirectXQueueContext::RenderQueue GetRenderQueueType(AsyncExecution execution);
 
 	static uint32_t GetAllocatorCount(AsyncExecution execution);
-
-	static std::string GetExecution(AsyncExecution execution);
 
 };
 

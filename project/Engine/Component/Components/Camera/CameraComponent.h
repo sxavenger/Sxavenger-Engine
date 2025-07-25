@@ -124,6 +124,8 @@ public:
 	const Projection& GetProjection() const { return projection_; }
 	Projection& GetProjection() { return projection_; }
 
+	Vector3f GetPosition() const;
+
 	//* helper option *//
 
 	Vector3f CalculateNDCPosition(const Vector3f& point) const;

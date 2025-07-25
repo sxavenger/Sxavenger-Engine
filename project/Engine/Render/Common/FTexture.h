@@ -6,6 +6,9 @@
 //* common
 #include "FBaseTexture.h"
 
+//* engine
+#include <Engine/System/DirectX/DxObject/DxObjectCommon.h>
+
 //* lib
 #include <Lib/Geometry/Vector2.h>
 
@@ -22,7 +25,7 @@ public:
 
 	FTexture() = default;
 
-	void Create(const Vector2ui& size, DXGI_FORMAT format = DxObject::kOffscreenFormat);
+	void Create(const Vector2ui& size, DXGI_FORMAT format = DxObject::kDefaultOffscreenFormat);
 
 	//* getter *//
 

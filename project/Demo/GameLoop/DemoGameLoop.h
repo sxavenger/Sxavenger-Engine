@@ -5,7 +5,7 @@
 //-----------------------------------------------------------------------------------------
 //* engine
 #include <Engine/System/Runtime/GameLoop/GameLoop.h>
-#include <Engine/System/Window/GameWindow.h>
+#include <Engine/System/DirectX/Context/DirectXWindowContext.h>
 #include <Engine/Adapter/Actor/AtmosphereActor.h>
 
 //* demo
@@ -35,13 +35,15 @@ private:
 	// private variables
 	//=========================================================================================
 
-	std::shared_ptr<GameWindow> main_;
+	std::shared_ptr<DirectXWindowContext> main_;
 
 	//* game objects *//
 
 	std::unique_ptr<Player> player_;
 
 	std::unique_ptr<MonoBehaviour> skylight_;
+
+	std::unique_ptr<MonoBehaviour> volume_;
 
 	//=========================================================================================
 	// private methods

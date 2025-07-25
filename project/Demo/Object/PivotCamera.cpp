@@ -8,7 +8,6 @@
 #include <Engine/System/SxavengerSystem.h>
 #include <Engine/Asset/SxavengerAsset.h>
 #include <Engine/Component/Components/PostProcessLayer/PostProcessLayerComponent.h>
-#include <Engine/Component/Components/CompositeProcessLayer/CompositeProcessLayerComponent.h>
 
 //* lib
 #include <Lib/Geometry/VectorComparision.h>
@@ -41,12 +40,6 @@ void PivotCamera::Awake() {
 	auto exposure = process->AddPostProcess<PostProcessAutoExposure>();
 	exposure->GetParameter().compensation    = -2.0f;
 	exposure->GetParameter().minLogLuminance = -1.0f;
-	
-	MonoBehaviour::AddComponent<CompositeProcessLayerComponent>();
-
-	auto texture = SxavengerAsset::TryImport<AssetTexture>("assets/textures/LUT/lut_reddish.png", Texture::Option{ Texture::Encoding::Intensity, false });
-	auto lut = MonoBehaviour::GetComponent<CompositeProcessLayerComponent>()->AddPostProcess<CompositeProcessLUT>();
-	lut->CreateTexture(SxavengerSystem::GetMainThreadContext(), texture, { 16, 16 });
 }
 
 void PivotCamera::Start() {

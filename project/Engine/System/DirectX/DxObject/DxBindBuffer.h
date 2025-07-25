@@ -163,7 +163,7 @@ public:
 		// public methods
 		//=========================================================================================
 		
-		void Create(const D3D12_SHADER_INPUT_BIND_DESC& _desc, ShaderVisibility _visibility);
+		void Create(ID3D12ShaderReflection* reflection, const D3D12_SHADER_INPUT_BIND_DESC& _desc, ShaderVisibility _visibility);
 
 		//=========================================================================================
 		// public variables
@@ -176,6 +176,9 @@ public:
 		UINT                  registerSpace;
 		D3D_SHADER_INPUT_TYPE type; //!< debug用
 		BindBufferType        bindBufferType;
+		size_t                num32bit;
+
+		
 
 	};
 
@@ -220,7 +223,7 @@ private:
 
 	static BindBufferType ToBindBufferType(D3D_SHADER_INPUT_TYPE type);
 
-	void InsertBindBuffer(const D3D12_SHADER_INPUT_BIND_DESC& desc, ShaderVisibility visibility);
+	void InsertBindBuffer(ID3D12ShaderReflection* reflection, const D3D12_SHADER_INPUT_BIND_DESC& desc, ShaderVisibility visibility);
 
 };
 

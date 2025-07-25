@@ -33,9 +33,9 @@ public:
 		// public methods
 		//=========================================================================================
 
-		void Create(const DirectXThreadContext* context, const Model::AssimpMesh* mesh);
+		void Create(const DirectXQueueContext* context, const Model::AssimpMesh* mesh);
 
-		void UpdateBottomLevelAS(const DirectXThreadContext* context);
+		void UpdateBottomLevelAS(const DirectXQueueContext* context);
 
 		const DxrObject::BottomLevelAS* GetBottomLevelAS() const { return &bottomLevelAS; }
 
@@ -68,7 +68,7 @@ public:
 
 		void CreateVetex(const Model::AssimpMesh* mesh);
 
-		void CreateBottomLevelAS(const DirectXThreadContext* context, const Model::AssimpMesh* mesh);
+		void CreateBottomLevelAS(const DirectXQueueContext* context, const Model::AssimpMesh* mesh);
 
 	};
 
@@ -90,9 +90,9 @@ public:
 
 	//* option *//
 
-	void BindIABuffer(const DirectXThreadContext* context) const;
+	void BindIABuffer(const DirectXQueueContext* context) const;
 
-	void DrawCall(const DirectXThreadContext* context, uint32_t instanceCount = 1) const;
+	void DrawCall(const DirectXQueueContext* context, uint32_t instanceCount = 1) const;
 
 	//* getter *//
 

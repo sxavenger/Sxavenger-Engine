@@ -19,7 +19,7 @@ void FEnvironmentMap::IrradianceMap::Create(const Vector2ui& _size) {
 	CreatePipeline();
 }
 
-void FEnvironmentMap::IrradianceMap::Dispatch(const DirectXThreadContext* context, const D3D12_GPU_DESCRIPTOR_HANDLE& environment) {
+void FEnvironmentMap::IrradianceMap::Dispatch(const DirectXQueueContext* context, const D3D12_GPU_DESCRIPTOR_HANDLE& environment) {
 	asyncResource.TransitionToExpectedState(
 		context->GetDxCommand(),
 		D3D12_RESOURCE_STATE_UNORDERED_ACCESS
@@ -37,7 +37,7 @@ void FEnvironmentMap::IrradianceMap::Dispatch(const DirectXThreadContext* contex
 
 }
 
-void FEnvironmentMap::IrradianceMap::Commit(const DirectXThreadContext* context) {
+void FEnvironmentMap::IrradianceMap::Commit(const DirectXQueueContext* context) {
 	// 条件: Dispatch(...)と同時に呼び出されないように調整する.
 
 	// async resourceの状態を変更
@@ -58,7 +58,7 @@ void FEnvironmentMap::IrradianceMap::Commit(const DirectXThreadContext* context)
 	);
 }
 
-const DxObject::Descriptor& FEnvironmentMap::IrradianceMap::UseDescriptorSRV(const DirectXThreadContext* context) {
+const DxObject::Descriptor& FEnvironmentMap::IrradianceMap::UseDescriptorSRV(const DirectXQueueContext* context) {
 	// SRVを使える状態に遷移
 	mainResource.TransitionToExpectedState(
 		context->GetDxCommand(),
@@ -191,7 +191,7 @@ void FEnvironmentMap::RadianceMap::Create(const Vector2ui& _size) {
 	CreatePipeline();
 }
 
-void FEnvironmentMap::RadianceMap::Dispatch(const DirectXThreadContext* context, const D3D12_GPU_DESCRIPTOR_HANDLE& environment) {
+void FEnvironmentMap::RadianceMap::Dispatch(const DirectXQueueContext* context, const D3D12_GPU_DESCRIPTOR_HANDLE& environment) {
 	asyncResource.TransitionToExpectedState(
 		context->GetDxCommand(),
 		D3D12_RESOURCE_STATE_UNORDERED_ACCESS
@@ -210,7 +210,7 @@ void FEnvironmentMap::RadianceMap::Dispatch(const DirectXThreadContext* context,
 
 }
 
-void FEnvironmentMap::RadianceMap::Commit(const DirectXThreadContext* context) {
+void FEnvironmentMap::RadianceMap::Commit(const DirectXQueueContext* context) {
 	// 条件: Dispatch(...)と同時に呼び出されないように調整する.
 	
 	// async resourceの状態を変更
@@ -231,7 +231,7 @@ void FEnvironmentMap::RadianceMap::Commit(const DirectXThreadContext* context) {
 	);
 }
 
-const DxObject::Descriptor& FEnvironmentMap::RadianceMap::UseDescriptorSRV(const DirectXThreadContext* context) {
+const DxObject::Descriptor& FEnvironmentMap::RadianceMap::UseDescriptorSRV(const DirectXQueueContext* context) {
 	// SRVを使える状態に遷移
 	mainResource.TransitionToExpectedState(
 		context->GetDxCommand(),
@@ -396,7 +396,7 @@ void FEnvironmentMap::Term() {
 	task_->Wait();
 }
 
-void FEnvironmentMap::Update(const DirectXThreadContext* context) {
+void FEnvironmentMap::Update(const DirectXQueueContext* context) {
 	if (task_->IsCompleted()) {
 		// irrandiance, radince を main thread で使えるようにcopy.
 		if (!isCommited_) {
@@ -417,7 +417,7 @@ void FEnvironmentMap::Update(const DirectXThreadContext* context) {
 	}
 }
 
-void FEnvironmentMap::Task(const DirectXThreadContext* context) {
+void FEnvironmentMap::Task(const DirectXQueueContext* context) {
 	if (!mapEnvironment_.has_value()) {
 		return;
 	}
@@ -430,11 +430,11 @@ void FEnvironmentMap::WaitComplate() const {
 	task_->Wait();
 }
 
-const DxObject::Descriptor& FEnvironmentMap::UseIrradianceDescriptor(const DirectXThreadContext* context) {
+const DxObject::Descriptor& FEnvironmentMap::UseIrradianceDescriptor(const DirectXQueueContext* context) {
 	return irradiance_.UseDescriptorSRV(context);
 }
 
-const DxObject::Descriptor& FEnvironmentMap::UseRadianceDescriptor(const DirectXThreadContext* context) {
+const DxObject::Descriptor& FEnvironmentMap::UseRadianceDescriptor(const DirectXQueueContext* context) {
 	return radiance_.UseDescriptorSRV(context);
 }
 

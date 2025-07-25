@@ -25,29 +25,30 @@ void FScene::Init() {
 		desc.SetHandleUAV(0, 0, 1); //!< color
 		desc.SetHandleUAV(1, 1, 1); //!< normal
 		desc.SetHandleUAV(2, 2, 1); //!< arm
-		desc.SetHandleUAV(3, 3, 1); //!< depth
+		desc.SetHandleUAV(3, 3, 1); //!< position
+		desc.SetHandleUAV(4, 4, 1); //!< depth
 
 		//* camera
-		desc.SetVirtualCBV(4, 0, 1); //!< camera
+		desc.SetVirtualCBV(5, 0, 1); //!< camera
 
 		//* scene
-		desc.SetVirtualSRV(5, 0, 1); //!< scene
+		desc.SetVirtualSRV(6, 0, 1); //!< scene
 
 		//* reservoir
-		desc.SetVirtualCBV(6, 1, 1); //!< reservoir
+		desc.SetVirtualCBV(7, 1, 1); //!< reservoir
 
 		//* light
 		//# Directional Light
-		desc.SetVirtualCBV(7, 2, 1);  //!< light count
-		desc.SetVirtualSRV(8, 1, 1);  //!< light transforms
-		desc.SetVirtualSRV(9, 2, 1);  //!< light parameters
-		desc.SetVirtualSRV(10, 3, 1); //!< light shadow parameters
+		desc.SetVirtualCBV(8, 2, 1);  //!< light count
+		desc.SetVirtualSRV(9, 1, 1);  //!< light transforms
+		desc.SetVirtualSRV(10, 2, 1); //!< light parameters
+		desc.SetVirtualSRV(11, 3, 1); //!< light shadow parameters
 
 		//# Point Light
-		desc.SetVirtualCBV(11, 3, 1); //!< light count
-		desc.SetVirtualSRV(12, 4, 1); //!< light transforms
-		desc.SetVirtualSRV(13, 5, 1); //!< light parameters
-		desc.SetVirtualSRV(14, 6, 1); //!< light shadow parameters
+		desc.SetVirtualCBV(12, 3, 1); //!< light count
+		desc.SetVirtualSRV(13, 4, 1); //!< light transforms
+		desc.SetVirtualSRV(14, 5, 1); //!< light parameters
+		desc.SetVirtualSRV(15, 6, 1); //!< light shadow parameters
 
 		stateObjectContext_.CreateRootSignature(SxavengerSystem::GetDxDevice(), desc);
 	}
@@ -61,8 +62,8 @@ void FScene::Init() {
 
 		// 仮paraemter
 		desc.SetAttributeStride(sizeof(float) * 2);
-		desc.SetPayloadStride(64);
-		desc.SetMaxRecursionDepth(4);
+		desc.SetPayloadStride(76);
+		desc.SetMaxRecursionDepth(6);
 
 		stateObjectContext_.CreateStateObject(SxavengerSystem::GetDxDevice(), std::move(desc));
 	}
@@ -84,7 +85,7 @@ void FScene::Init() {
 	
 }
 
-void FScene::SetupTopLevelAS(const DirectXThreadContext* context) {
+void FScene::SetupTopLevelAS(const DirectXQueueContext* context) {
 	topLevelAS_.BeginSetupInstance();
 
 	sComponentStorage->ForEachActive<MeshRendererComponent>([&](MeshRendererComponent* component) {
@@ -196,7 +197,7 @@ void FScene::SetupDirectionalLight() {
 	size_t index = 0;
 
 	sComponentStorage->ForEachActive<DirectionalLightComponent>([&](DirectionalLightComponent* component) {
-		directionalLightTransforms_->At(index)   = component->GetTransform()->GetTransformationMatrix();
+		directionalLightTransforms_->At(index)   = component->RequireTransform()->GetTransformationMatrix();
 		directionalLightParams_->At(index)       = component->GetParameter();
 		directionalLightShadowParams_->At(index) = component->GetShadowParameter();
 
@@ -230,7 +231,7 @@ void FScene::SetupPointLight() {
 	size_t index = 0;
 
 	sComponentStorage->ForEachActive<PointLightComponent>([&](PointLightComponent* component) {
-		pointLightTransforms_->At(index)   = component->GetTransform()->GetTransformationMatrix();
+		pointLightTransforms_->At(index)   = component->RequireTransform()->GetTransformationMatrix();
 		pointLightParams_->At(index)       = component->GetParameter();
 		pointLightShadowParams_->At(index) = component->GetShadowParameter();
 

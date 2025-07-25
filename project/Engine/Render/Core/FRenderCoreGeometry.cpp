@@ -5,10 +5,14 @@ _DXOBJECT_USING
 // include
 //-----------------------------------------------------------------------------------------
 //* render
-#include "../FRenderTargetTextures.h"
+#include "../GBuffer/FDeferredGBuffer.h"
+#include "../GBuffer/FMainGBuffer.h"
 
 //* engine
 #include <Engine/System/Config/SxavengerConfig.h>
+
+//* external
+#include <magic_enum.hpp>
 
 //=========================================================================================
 // static variables
@@ -28,13 +32,13 @@ void FRenderCoreGeometry::Init() {
 
 void FRenderCoreGeometry::SetPipeline(
 	RenderType type, VertexStage vs, PixelStage ps,
-	const DirectXThreadContext* context, const Vector2ui& size) {
+	const DirectXQueueContext* context, const Vector2ui& size) {
 	graphicsPipelines_[type][vs][ps]->SetPipeline(context->GetDxCommand(), size);
 }
 
 void FRenderCoreGeometry::BindGraphicsBuffer(
 	RenderType type, VertexStage vs, PixelStage ps,
-	const DirectXThreadContext* context, const DxObject::BindBufferDesc& desc) {
+	const DirectXQueueContext* context, const DxObject::BindBufferDesc& desc) {
 	graphicsPipelines_[type][vs][ps]->BindGraphicsBuffer(context->GetDxCommand(), desc);
 }
 
@@ -45,11 +49,10 @@ void FRenderCoreGeometry::CreateDesc() {
 	defferedDesc_.CreateDefaultDesc();
 
 	defferedDesc_.rtvFormats.clear();
-	//!< Geometry
-	defferedDesc_.SetRTVFormat(FRenderTargetTextures::GetFormat(FRenderTargetTextures::GBufferLayout::Normal));
-	defferedDesc_.SetRTVFormat(FRenderTargetTextures::GetFormat(FRenderTargetTextures::GBufferLayout::MaterialARM));
-	defferedDesc_.SetRTVFormat(FRenderTargetTextures::GetFormat(FRenderTargetTextures::GBufferLayout::Albedo));
-	defferedDesc_.SetRTVFormat(FRenderTargetTextures::GetFormat(FRenderTargetTextures::GBufferLayout::Position));
+	//!< Deferred Buffer
+	for (const auto value : magic_enum::enum_values<FDeferredGBuffer::Layout>()) {
+		defferedDesc_.SetRTVFormat(FDeferredGBuffer::GetFormat(value));
+	}
 
 	D3D12_RENDER_TARGET_BLEND_DESC blend = {};
 	blend.BlendEnable           = true;
@@ -68,7 +71,7 @@ void FRenderCoreGeometry::CreateDesc() {
 	//* forward
 	forwardDesc_ = {};
 	forwardDesc_.CreateDefaultDesc();
-	forwardDesc_.SetRTVFormat(0, DXGI_FORMAT_R32G32B32A32_FLOAT);
+	forwardDesc_.SetRTVFormat(0, FMainGBuffer::kColorFormat);
 }
 
 void FRenderCoreGeometry::CreateDeferred() {

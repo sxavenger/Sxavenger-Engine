@@ -7,6 +7,9 @@ _DXOBJECT_USING
 //* engine
 #include <Engine/System/SxavengerSystem.h>
 
+//* externals
+#include <magic_enum.hpp>
+
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Metadata structure methods
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -22,7 +25,9 @@ void Texture::Metadata::Assign(const DirectX::TexMetadata& metadata) {
 // Texture class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-void Texture::Load(const DirectXThreadContext* context, const std::filesystem::path& filepath, const Option& option) {
+void Texture::Load(const DirectXQueueContext* context, const std::filesystem::path& filepath, const Option& option) {
+	context->RequestQueue(DirectXQueueContext::RenderQueue::Compute); //!< ComputeQueue以上を使用
+	// FIXME: CopyQueueを使用するようにする
 
 	DirectX::ScratchImage image = LoadTexture(filepath, option);
 	const auto& metadata        = image.GetMetadata();
@@ -65,7 +70,7 @@ void Texture::Load(const DirectXThreadContext* context, const std::filesystem::p
 	metadata_.Assign(metadata);
 
 	context->ExecuteAllAllocators();
-	Logger::EngineThreadLog("texture loaded. filepath: " + filepath.generic_string());
+	Logger::EngineThreadLog("[Texture] texture loaded. filepath: " + filepath.generic_string() + " encoding: " + magic_enum::enum_name(option.encoding).data());
 
 }
 

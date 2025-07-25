@@ -7,6 +7,9 @@ _DXOBJECT_USING
 //* engine
 #include <Engine/System/Config/SxavengerConfig.h>
 
+//* external
+#include <magic_enum.hpp>
+
 //* c++
 #include <vector>
 
@@ -46,11 +49,11 @@ void ShaderCompiler::Init() {
 	hr = utils_->CreateDefaultIncludeHandler(&includeHandler_);
 	Exception::Assert(SUCCEEDED(hr));
 
-	Logger::EngineLog("[_DXOBJECT]::ShaderCompiler complete init.");
+	Logger::EngineLog("[_DXOBJECT ShaderCompiler] complete initialize.");
 }
 
 void ShaderCompiler::Term() {
-	Logger::EngineLog("[_DXOBJECT]::ShaderCompiler term.");
+	Logger::EngineLog("[_DXOBJECT ShaderCompiler] term.");
 }
 
 ComPtr<IDxcBlob> ShaderCompiler::Compile(
@@ -129,7 +132,7 @@ ComPtr<IDxcBlob> ShaderCompiler::Compile(
 	hr = shaderResult->GetOutput(DXC_OUT_OBJECT, IID_PPV_ARGS(&blob), nullptr);
 	Exception::Assert(SUCCEEDED(hr));
 
-	Logger::EngineThreadLog("[_DXOBJECT]::ShaderCompiler : shader compiled. filepath: " + filepath.generic_string());
+	Logger::EngineThreadLog(std::format("[_DXOBJECT ShaderCompiler] shader compiled. filepath: {}, profile: {}", filepath.generic_string(), magic_enum::enum_name(profile)));
 	return blob;
 }
 

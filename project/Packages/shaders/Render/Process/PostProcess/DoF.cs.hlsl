@@ -6,7 +6,7 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
-#include "../Process.hlsli"
+#include "PostProcess.hlsli"
 #include "../../DeferredBuffers.hlsli"
 #include "../../../Library/Gaussian.hlsli"
 
@@ -105,7 +105,7 @@ void main(uint3 dispatchThreadId : SV_DispatchThreadID) {
 			int2 sampleIndex  = index.xy + int2(x, y);
 			float sampleDelta = CalculateDelta(gDepth.Load(uint3(sampleIndex, 0)));
 			
-			float2 uv = float2(sampleIndex) / float2(gConfig.size);
+			float2 uv = float2(sampleIndex) / float2(size);
 
 			float4 color = gInput.SampleLevel(gSampler, uv, 0);
 			float weight = Gaussian2d(float2(x, y), kSigma);

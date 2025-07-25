@@ -95,7 +95,7 @@ void RenderTexture::Term() {
 	descriptorRTV_.Delete();
 }
 
-void RenderTexture::TransitionBeginRenderTarget(const DirectXThreadContext* context) {
+void RenderTexture::TransitionBeginRenderTarget(const DirectXQueueContext* context) {
 
 	auto commandList = context->GetCommandList();
 
@@ -108,7 +108,7 @@ void RenderTexture::TransitionBeginRenderTarget(const DirectXThreadContext* cont
 	commandList->ResourceBarrier(1, &barrier);
 }
 
-void RenderTexture::TransitionEndRenderTarget(const DirectXThreadContext* context) {
+void RenderTexture::TransitionEndRenderTarget(const DirectXQueueContext* context) {
 	D3D12_RESOURCE_BARRIER barrier = {};
 	barrier.Type                   = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
 	barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
@@ -118,7 +118,7 @@ void RenderTexture::TransitionEndRenderTarget(const DirectXThreadContext* contex
 	context->GetCommandList()->ResourceBarrier(1, &barrier);
 }
 
-void RenderTexture::ClearRenderTarget(const DirectXThreadContext* context) {
+void RenderTexture::ClearRenderTarget(const DirectXQueueContext* context) {
 	// 画面のクリア
 	context->GetCommandList()->ClearRenderTargetView(
 		descriptorRTV_.GetCPUHandle(),

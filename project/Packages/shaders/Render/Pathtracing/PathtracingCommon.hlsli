@@ -28,7 +28,8 @@
 RWTexture2D<float4> gMain        : register(u0, space1);
 RWTexture2D<float4> gNormal      : register(u1, space1);
 RWTexture2D<float4> gMaterialARM : register(u2, space1);
-RWTexture2D<float>  gDepth       : register(u3, space1);
+RWTexture2D<float4> gPosition    : register(u3, space1);
+RWTexture2D<float>  gDepth       : register(u4, space1);
 
 //* camera
 ConstantBuffer<CameraComponent> gCamera : register(b0, space1);
@@ -112,6 +113,7 @@ struct Payload {
 	float4 color;
 	float3 normal;
 	float3 arm; //!< ambient, roughness, metallic
+	float3 position;
 	float depth;
 
 	float3 le;
@@ -146,9 +148,11 @@ struct Payload {
 
 	//* primary ray methods *//
 
-	void SetPrimaryParameter(float3 position, float3 _normal, float ao, float roughness, float metallic) {
-		float4 d = mul(float4(position, 1.0f), kViewProj);
+	void SetPrimaryParameter(float3 _position, float3 _normal, float ao, float roughness, float metallic) {
+		float4 d = mul(float4(_position, 1.0f), kViewProj);
 		depth = d.z / d.w;
+
+		position = _position;
 
 		normal = (_normal + 1.0f) * 0.5f;
 		arm    = float3(ao, roughness, metallic);

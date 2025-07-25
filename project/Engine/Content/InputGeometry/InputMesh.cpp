@@ -118,7 +118,7 @@ void InputMesh::Meshlet::CreateMeshlet(const TriangleInputAssembler<MeshVertexDa
 	}
 }
 
-void InputMesh::Meshlet::Dispatch(const DirectXThreadContext* context, UINT instanceCount) const {
+void InputMesh::Meshlet::Dispatch(const DirectXQueueContext* context, UINT instanceCount) const {
 	context->GetCommandList()->DispatchMesh(
 		RoundUp(static_cast<UINT>(meshlets->GetSize()), kAmplificationNumthread_),
 		RoundUp(instanceCount, 1),
@@ -130,7 +130,7 @@ void InputMesh::Meshlet::Dispatch(const DirectXThreadContext* context, UINT inst
 // MeshBottomLevelAS structure methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-void InputMesh::MeshBottomLevelAS::CreateBottomLevelAS(const TriangleInputAssembler<MeshVertexData>* ia, const DirectXThreadContext* context) {
+void InputMesh::MeshBottomLevelAS::CreateBottomLevelAS(const TriangleInputAssembler<MeshVertexData>* ia, const DirectXQueueContext* context) {
 	D3D12_RAYTRACING_GEOMETRY_DESC desc = {};
 	desc.Type                                 = D3D12_RAYTRACING_GEOMETRY_TYPE_TRIANGLES;
 	desc.Flags                                = D3D12_RAYTRACING_GEOMETRY_FLAG_NONE;
@@ -160,7 +160,7 @@ void InputMesh::CreateMeshlet() {
 	meshlet_.value().CreateMeshlet(this);
 }
 
-void InputMesh::CreateBottomLevelAS(const DirectXThreadContext* context) {
+void InputMesh::CreateBottomLevelAS(const DirectXQueueContext* context) {
 	if (bottomLevelAS_.has_value()) {
 		return;
 	}

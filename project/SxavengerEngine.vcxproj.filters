@@ -10,8 +10,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="Engine\System\Window\Window.cpp" />
-    <ClCompile Include="Engine\System\Window\GameWindow.cpp" />
     <ClCompile Include="Engine\System\DirectX\DxObject\DxObjectCommon.cpp" />
     <ClCompile Include="Engine\System\Utility\Logger.cpp" />
     <ClCompile Include="Engine\System\DirectX\DxObject\DxDevice.cpp" />
@@ -23,8 +21,6 @@
     <ClCompile Include="Engine\System\DirectX\DxObject\DxSwapChain.cpp" />
     <ClCompile Include="Engine\System\DirectX\DxObject\DxCommandContext.cpp" />
     <ClCompile Include="Engine\System\DirectX\DxObject\DxDepthStencil.cpp" />
-    <ClCompile Include="Engine\System\Window\GameWindowCollection.cpp" />
-    <ClCompile Include="Engine\System\DirectX\DirectXContext.cpp" />
     <ClCompile Include="Engine\System\WinApp\WinApp.cpp" />
     <ClCompile Include="Engine\System\Runtime\Input\Input.cpp" />
     <ClCompile Include="Engine\System\DirectX\DxObject\DxDimensionBuffer.cpp" />
@@ -100,11 +96,9 @@
     <ClCompile Include="Engine\Render\Core\FRenderCoreLight.cpp" />
     <ClCompile Include="Engine\Render\Core\FRenderCoreProcess.cpp" />
     <ClCompile Include="Engine\Render\FRenderCore.cpp" />
-    <ClCompile Include="Engine\Render\FRenderTargetTextures.cpp" />
     <ClCompile Include="Engine\Module\Pipeline\CustomComputePipeline.cpp" />
     <ClCompile Include="Engine\Module\Pipeline\CustomGraphicsPipeline.cpp" />
     <ClCompile Include="Engine\Render\Scene\FScene.cpp" />
-    <ClCompile Include="Engine\Render\Scene\FSceneRenderer.cpp" />
     <ClCompile Include="Engine\Render\FMainRender.cpp" />
     <ClCompile Include="Engine\Render\FPresenter.cpp" />
     <ClCompile Include="Engine\Render\Canvas\FCanvasRenderer.cpp" />
@@ -143,8 +137,6 @@
     <ClCompile Include="Engine\Adapter\Actor\AtmosphereActor.cpp" />
     <ClCompile Include="Engine\Adapter\Actor\SkyLightActor.cpp" />
     <ClCompile Include="Engine\Render\Common\FLUTTexture.cpp" />
-    <ClCompile Include="Engine\Component\Components\CompositeProcessLayer\CompositeProcessLayerComponent.cpp" />
-    <ClCompile Include="Engine\Component\Components\CompositeProcessLayer\CompositeProcessLUT.cpp" />
     <ClCompile Include="Engine\Adapter\Actor\ControllableCameraActor.cpp" />
     <ClCompile Include="Demo\Particle\LeadParticle.cpp" />
     <ClCompile Include="Engine\Adapter\Actor\PivotCameraActor.cpp" />
@@ -172,11 +164,22 @@
     <ClCompile Include="Engine\Component\Components\Volumetric\VolumetricFogComponent.cpp" />
     <ClCompile Include="Engine\Adapter\Actor\EmissiveActor.cpp" />
     <ClCompile Include="Demo\Object\PivotCamera.cpp" />
+    <ClCompile Include="Engine\System\DirectX\Context\DirectXQueueContext.cpp" />
+    <ClCompile Include="Engine\System\DirectX\Context\DirectXWindowContext.cpp" />
+    <ClCompile Include="Engine\System\Window\WindowCollection.cpp" />
+    <ClCompile Include="Engine\Render\Scene\FSceneRenderer.cpp" />
+    <ClCompile Include="Engine\Component\Components\PostProcessLayer\PostProcessLUT.cpp" />
+    <ClCompile Include="Engine\Render\Core\FRenderCoreTransition.cpp" />
+    <ClCompile Include="Engine\Render\FRenderTargetBuffer.cpp" />
+    <ClCompile Include="Engine\Render\GBuffer\FDeferredGBuffer.cpp" />
+    <ClCompile Include="Engine\Render\GBuffer\FLightingGBuffer.cpp" />
+    <ClCompile Include="Engine\Render\GBuffer\FMainGBuffer.cpp" />
+    <ClCompile Include="Engine\Component\Components\PostProcessLayer\PostProcessGrayScale.cpp" />
+    <ClCompile Include="Engine\Component\Components\PostProcessLayer\PostProcessRadialBlur.cpp" />
+    <ClCompile Include="Engine\Component\Components\PostProcessLayer\PostProcessChromaticAberration.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Engine\System\Window\Window.h" />
     <ClInclude Include="Lib\Adapter\Random\Random.h" />
-    <ClInclude Include="Engine\System\Window\GameWindow.h" />
     <ClInclude Include="Engine\System\DirectX\DxObject\DxObjectCommon.h" />
     <ClInclude Include="Engine\System\Utility\Logger.h" />
     <ClInclude Include="Engine\System\Utility\ComPtr.h" />
@@ -191,8 +194,6 @@
     <ClInclude Include="Engine\System\DirectX\DxObject\DxDepthStencil.h" />
     <ClInclude Include="Lib\CXXAttributeConfig.h" />
     <ClInclude Include="Lib\Environment.h" />
-    <ClInclude Include="Engine\System\Window\GameWindowCollection.h" />
-    <ClInclude Include="Engine\System\DirectX\DirectXContext.h" />
     <ClInclude Include="Engine\System\WinApp\WinApp.h" />
     <ClInclude Include="Engine\System\Runtime\Input\Input.h" />
     <ClInclude Include="Engine\System\Runtime\Input\InputId.h" />
@@ -290,11 +291,9 @@
     <ClInclude Include="Engine\Render\Core\FRenderCoreLight.h" />
     <ClInclude Include="Engine\Render\Core\FRenderCoreProcess.h" />
     <ClInclude Include="Engine\Render\FRenderCore.h" />
-    <ClInclude Include="Engine\Render\FRenderTargetTextures.h" />
     <ClInclude Include="Engine\Module\Pipeline\CustomComputePipeline.h" />
     <ClInclude Include="Engine\Module\Pipeline\CustomGraphicsPipeline.h" />
     <ClInclude Include="Engine\Render\Scene\FScene.h" />
-    <ClInclude Include="Engine\Render\Scene\FSceneRenderer.h" />
     <ClInclude Include="Engine\Render\FMainRender.h" />
     <ClInclude Include="Engine\Render\FPresenter.h" />
     <ClInclude Include="Engine\Render\Canvas\FCanvasRenderer.h" />
@@ -334,9 +333,6 @@
     <ClInclude Include="Engine\Adapter\Actor\AtmosphereActor.h" />
     <ClInclude Include="Engine\Adapter\Actor\SkyLightActor.h" />
     <ClInclude Include="Engine\Render\Common\FLUTTexture.h" />
-    <ClInclude Include="Engine\Component\Components\CompositeProcessLayer\CompositeProcessLayerComponent.h" />
-    <ClInclude Include="Engine\Component\Components\CompositeProcessLayer\BaseCompositeProcess.h" />
-    <ClInclude Include="Engine\Component\Components\CompositeProcessLayer\CompositeProcessLUT.h" />
     <ClInclude Include="Engine\Adapter\Actor\ControllableCameraActor.h" />
     <ClInclude Include="Demo\Particle\LeadParticle.h" />
     <ClInclude Include="Engine\Adapter\Actor\PivotCameraActor.h" />
@@ -369,6 +365,19 @@
     <ClInclude Include="Engine\Component\Components\Volumetric\VolumetricFogComponent.h" />
     <ClInclude Include="Engine\Adapter\Actor\EmissiveActor.h" />
     <ClInclude Include="Demo\Object\PivotCamera.h" />
+    <ClInclude Include="Engine\System\DirectX\Context\DirectXQueueContext.h" />
+    <ClInclude Include="Engine\System\DirectX\Context\DirectXWindowContext.h" />
+    <ClInclude Include="Engine\System\Window\WindowCollection.h" />
+    <ClInclude Include="Engine\Render\Scene\FSceneRenderer.h" />
+    <ClInclude Include="Engine\Component\Components\PostProcessLayer\PostProcessLUT.h" />
+    <ClInclude Include="Engine\Render\Core\FRenderCoreTransition.h" />
+    <ClInclude Include="Engine\Render\FRenderTargetBuffer.h" />
+    <ClInclude Include="Engine\Render\GBuffer\FDeferredGBuffer.h" />
+    <ClInclude Include="Engine\Render\GBuffer\FLightingGBuffer.h" />
+    <ClInclude Include="Engine\Render\GBuffer\FMainGBuffer.h" />
+    <ClInclude Include="Engine\Component\Components\PostProcessLayer\PostProcessGrayScale.h" />
+    <ClInclude Include="Engine\Component\Components\PostProcessLayer\PostProcessRadialBlur.h" />
+    <ClInclude Include="Engine\Component\Components\PostProcessLayer\PostProcessChromaticAberration.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

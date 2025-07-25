@@ -7,14 +7,14 @@ namespace {
 	//* system orign
 	static std::unique_ptr<WinApp>                sWinApp                = nullptr; //!< win app system
 	static std::unique_ptr<DirectXCommon>         sDirectXCommon         = nullptr; //!< DirectX12 system
-	static std::unique_ptr<DirectXThreadContext>  sMainThreadContext     = nullptr; //!< main thread context
+	static std::unique_ptr<DirectXQueueContext>   sDirectQueueContext    = nullptr; //!< direct queue context
 	static std::unique_ptr<Performance>           sPerformance           = nullptr; //!< performance system
 	static std::unique_ptr<AsyncThreadCollection> sAsyncThreadCollection = nullptr; //!< async thread system
 
 	//* system user
-	static std::unique_ptr<GameWindowCollection> sWindowCollection  = nullptr; //!< window collection
-	static std::unique_ptr<Input>                sInput             = nullptr; //!< input system
-	static std::unique_ptr<ImGuiController>      sImGuiController   = nullptr; //!< ui system
+	static std::unique_ptr<WindowCollection> sWindowCollection  = nullptr; //!< window collection
+	static std::unique_ptr<Input>            sInput             = nullptr; //!< input system
+	static std::unique_ptr<ImGuiController>  sImGuiController   = nullptr; //!< ui system
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -32,15 +32,15 @@ void SxavengerSystem::Init() {
 	sDirectXCommon = std::make_unique<DirectXCommon>();
 	sDirectXCommon->Init();
 
-	sMainThreadContext = std::make_unique<DirectXThreadContext>();
-	sMainThreadContext->Init(3); //!< allocator count
+	sDirectQueueContext = std::make_unique<DirectXQueueContext>();
+	sDirectQueueContext->Init(3, DirectXQueueContext::RenderQueue::Direct); //!< allocator count
 
 	sPerformance = std::make_unique<Performance>();
 
 	sAsyncThreadCollection = std::make_unique<AsyncThreadCollection>();
 	sAsyncThreadCollection->Init();
 
-	sWindowCollection = std::make_unique<GameWindowCollection>();
+	sWindowCollection = std::make_unique<WindowCollection>();
 	sInput            = std::make_unique<Input>();
 	sImGuiController  = std::make_unique<ImGuiController>();
 }
@@ -61,18 +61,18 @@ _DXOBJECT DescriptorHeaps* SxavengerSystem::GetDxDescriptorHeaps() {
 }
 
 void SxavengerSystem::TransitionAllocator() {
-	sMainThreadContext->TransitionAllocator();
+	sDirectQueueContext->TransitionAllocator();
 }
 
 void SxavengerSystem::ExecuteAllAllocator() {
-	sMainThreadContext->ExecuteAllAllocators();
+	sDirectQueueContext->ExecuteAllAllocators();
 }
 
-DirectXThreadContext* SxavengerSystem::GetMainThreadContext() {
-	return sMainThreadContext.get();
+DirectXQueueContext* SxavengerSystem::GetDirectQueueContext() {
+	return sDirectQueueContext.get();
 }
 
-const std::weak_ptr<GameWindow> SxavengerSystem::CreateMainWindow(
+const std::weak_ptr<DirectXWindowContext> SxavengerSystem::CreateMainWindow(
 	const Vector2ui& clientSize, const LPCWSTR& name, const Color4f& clearColor) {
 
 	// windowの生成
@@ -85,28 +85,27 @@ const std::weak_ptr<GameWindow> SxavengerSystem::CreateMainWindow(
 	return window;
 }
 
-const std::weak_ptr<GameWindow> SxavengerSystem::TryCreateSubWindow(
-	const Vector2ui& clientSize, const LPCWSTR& name, const Color4f& clearColor) {
-	return sWindowCollection->TryCreateSubWindow(clientSize, name, clearColor);
+const std::weak_ptr<DirectXWindowContext> SxavengerSystem::CreateSubWindow(const Vector2ui& clientSize, const LPCWSTR& name, DirectXWindowContext::ProcessCategory category, const Color4f& clearColor) {
+	return sWindowCollection->CreateSubWindow(clientSize, name, category, clearColor);
 }
 
 bool SxavengerSystem::ProcessMessage() {
 	return sWindowCollection->ProcessMessage();
 }
 
-void SxavengerSystem::PresentAllWindow() {
-	sWindowCollection->PresentAllWindow();
+void SxavengerSystem::PresentWindows() {
+	sWindowCollection->PresentWindows();
 }
 
-const std::weak_ptr<GameWindow> SxavengerSystem::GetMainWindow() {
+DirectXWindowContext* SxavengerSystem::GetMainWindow() {
 	return sWindowCollection->GetMainWindow();
 }
 
-const GameWindow* SxavengerSystem::GetForcusWindow() {
+DirectXWindowContext* SxavengerSystem::GetForcusWindow() {
 	return sWindowCollection->GetForcusWindow();
 }
 
-GameWindowCollection* SxavengerSystem::GetGameWindowCollection() {
+WindowCollection* SxavengerSystem::GetWindowCollection() {
 	return sWindowCollection.get();
 }
 
@@ -172,7 +171,7 @@ void SxavengerSystem::EndImGuiFrame() {
 	sImGuiController->EndFrame();
 }
 
-void SxavengerSystem::RenderImGui(DirectXThreadContext* context) {
+void SxavengerSystem::RenderImGui(DirectXQueueContext* context) {
 	sImGuiController->Render(context);
 }
 

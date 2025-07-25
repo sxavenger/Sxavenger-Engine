@@ -146,6 +146,12 @@ private:
 	// private variables
 	//=========================================================================================
 
+	static inline const std::array<UINT, DescriptorType::kCountOfDescriptorTypeCount> kDescriptorCount_ = {
+		24, //!< RTV
+		8,  //!< DSV
+		512 //!< CBV_SRV_UAV
+	};
+
 	std::array<std::unique_ptr<DescriptorPool>, DescriptorType::kCountOfDescriptorTypeCount> pools_;
 
 };

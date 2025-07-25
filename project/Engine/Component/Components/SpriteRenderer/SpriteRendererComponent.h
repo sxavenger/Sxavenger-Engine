@@ -117,9 +117,9 @@ public:
 
 	bool CheckTexture() const { return texture_.has_value(); }
 
-	void BindAIBuffer(const DirectXThreadContext* context);
+	void BindAIBuffer(const DirectXQueueContext* context);
 
-	void DrawCall(const DirectXThreadContext* context);
+	void DrawCall(const DirectXQueueContext* context);
 
 	//* getter *//
 

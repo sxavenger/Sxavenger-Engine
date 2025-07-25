@@ -10,9 +10,6 @@
 #include "DxDescriptorHeaps.h"
 #include "DxCommandContext.h"
 
-//* engine
-#include <Engine/System/Window/Window.h>
-
 ////////////////////////////////////////////////////////////////////////////////////////////
 // DXOBJECT
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -24,6 +21,17 @@ _DXOBJECT_NAMESPACE_BEGIN
 class SwapChain {
 public:
 
+	////////////////////////////////////////////////////////////////////////////////////////////
+	// ColorSpace enum class
+	////////////////////////////////////////////////////////////////////////////////////////////
+	enum class ColorSpace : uint32_t {
+		Rec_709,
+		Rec_2020_1000nit,
+		Rec_2020_2000nit,
+	};
+
+public:
+
 	//=========================================================================================
 	// public methods
 	//=========================================================================================
@@ -33,20 +41,24 @@ public:
 
 	void Init(
 		Device* device, DescriptorHeaps* descriptorHeaps, CommandContext* command,
-		Window* window
+		DXGI_FORMAT format, const Vector2ui& size, const HWND& hwnd
 	);
 
 	void Term();
 
 	void Present();
 
-	UINT GetCurrentBackBufferIndex();
+	UINT GetCurrentBackBufferIndex() const;
+
+	void SetColorSpace(const DXGI_OUTPUT_DESC1& desc);
 
 	//* getter *//
 
 	D3D12_RESOURCE_BARRIER GetBackBufferTransitionBarrier(D3D12_RESOURCE_STATES stateBefore, D3D12_RESOURCE_STATES stateAfter) const;
 
-	const D3D12_CPU_DESCRIPTOR_HANDLE& GetBackBufferCPUHandle() const { return descriptorsRTV_[currentBackBufferIndex_].GetCPUHandle(); }
+	const D3D12_CPU_DESCRIPTOR_HANDLE& GetBackBufferCPUHandle() const { return descriptorsRTV_[GetCurrentBackBufferIndex()].GetCPUHandle(); }
+
+	const ColorSpace GetColorSpace() const { return colorSpace_; }
 
 	static const UINT GetBufferCount() { return kBufferCount_; }
 
@@ -66,14 +78,25 @@ private:
 	ComPtr<ID3D12Resource> resources_[kBufferCount_];
 	DxObject::Descriptor   descriptorsRTV_[kBufferCount_];
 
-	UINT currentBackBufferIndex_ = 0;
+	//* parameter *//
+
+	ColorSpace colorSpace_ = ColorSpace::Rec_709;
 
 	//=========================================================================================
 	// private methods
 	//=========================================================================================
 
-	void CreateSwapChain(Device* device, CommandContext* command, Window* window);
-	void CreateRTV(Device* device, DescriptorHeaps* descriptorHeaps);
+	//* helper methods *//
+
+	static std::optional<ColorSpace> GetColorSpace(const DXGI_OUTPUT_DESC1& desc);
+
+	static UINT16 GetChromaticity(double v);
+
+	//* create methods *//
+
+	void CreateSwapChain(Device* device, CommandContext* command, DXGI_FORMAT format, const Vector2ui& size, const HWND& hwnd);
+
+	void CreateRenderTargetView(Device* device, DescriptorHeaps* descriptorHeaps, DXGI_FORMAT format, bool isSRGB);
 };
 
 _DXOBJECT_NAMESPACE_END

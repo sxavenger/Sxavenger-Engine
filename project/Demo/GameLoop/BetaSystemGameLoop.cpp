@@ -13,6 +13,7 @@
 #include <Engine/Component/Components/Collider/CollisionManager.h>
 #include <Engine/Component/Components/SpriteRenderer/SpriteRendererComponent.h>
 #include <Engine/Component/Components/Particle/ParticleComponent.h>
+#include <Engine/Component/Components/PostProcessLayer/PostProcessLayerComponent.h>
 #include <Engine/Component/ComponentHelper.h>
 #include <Engine/System/Runtime/Performance/DeltaTimePoint.h>
 #include <Engine/Render/FRenderCore.h>
@@ -53,23 +54,9 @@ void BetaSystemGameLoop::InitSystem() {
 
 	camera_ = std::make_unique<ControllableCameraActor>();
 	camera_->Init();
-	//camera_->GetComponent<CameraComponent>()->SetTag(CameraComponent::Tag::GameCamera);
 	camera_->GetComponent<CameraComponent>()->SetTag(CameraComponent::Tag::GameCamera);
 
 	SxavengerAsset::TryImport<AssetModel>("assets/models/PBR_Sphere_Test/model/PBR_Sphere.gltf");
-
-	camera_->AddComponent<PostProcessLayerComponent>();
-	camera_->GetComponent<PostProcessLayerComponent>()->SetTag(PostProcessLayerComponent::Tag::Global);
-	camera_->GetComponent<PostProcessLayerComponent>()->AddPostProcess<PostProcessAutoExposure>();
-	camera_->GetComponent<PostProcessLayerComponent>()->AddPostProcess<PostProcessLocalExposure>();
-	//camera_->GetComponent<PostProcessLayerComponent>()->AddPostProcess<PostProcessBloom>();
-	//camera_->GetComponent<PostProcessLayerComponent>()->AddPostProcess<PostProcessDoF>();
-
-	camera_->AddComponent<CompositeProcessLayerComponent>();
-
-	auto texture = SxavengerAsset::TryImport<AssetTexture>("assets/textures/LUT/lut_reddish.png", Texture::Option{ Texture::Encoding::Intensity, false });
-	auto lut = camera_->GetComponent<CompositeProcessLayerComponent>()->AddPostProcess<CompositeProcessLUT>();
-	lut->CreateTexture(SxavengerSystem::GetMainThreadContext(), texture, { 16, 16 });
 
 	//atmosphere_ = std::make_unique<AtmosphereActor>();
 	//atmosphere_->Init({ 1024, 1024 });
@@ -81,18 +68,42 @@ void BetaSystemGameLoop::InitSystem() {
 
 	offlineSkylight_ = std::make_unique<MonoBehaviour>();
 	auto light = offlineSkylight_->AddComponent<SkyLightComponent>();
-	light->GetDiffuseParameter().SetTexture(SxavengerAsset::Import<AssetTexture>("assets/textures/textureCube/DebugIrradiance.dds"));
-	light->GetSpecularParameter().SetTexture(SxavengerAsset::Import<AssetTexture>("assets/textures/textureCube/DebugRadiance.dds"));
-	light->SetEnvironment(SxavengerAsset::Import<AssetTexture>("assets/textures/textureCube/DebugEnvironment.dds").WaitAcquire()->GetGPUHandleSRV());
+	//light->GetDiffuseParameter().SetTexture(SxavengerAsset::Import<AssetTexture>("assets/textures/textureCube/DebugIrradiance.dds"));
+	//light->GetSpecularParameter().SetTexture(SxavengerAsset::Import<AssetTexture>("assets/textures/textureCube/DebugRadiance.dds"));
+	//light->SetEnvironment(SxavengerAsset::Import<AssetTexture>("assets/textures/textureCube/DebugEnvironment.dds").WaitAcquire()->GetGPUHandleSRV());
 
-	//player_ = std::make_unique<Player>();
-	//player_->Load();
-	//player_->Awake();
-	//player_->Start();
+	light->GetDiffuseParameter().SetTexture(SxavengerAsset::Import<AssetTexture>("assets/textures/textureCube/sky_irradiance.dds"));
+	light->GetSpecularParameter().SetTexture(SxavengerAsset::Import<AssetTexture>("assets/textures/textureCube/sky_radiance.dds"));
+	light->SetEnvironment(SxavengerAsset::Import<AssetTexture>("assets/textures/textureCube/sky_environment.dds").WaitAcquire()->GetGPUHandleSRV());
+
+	player_ = std::make_unique<Player>();
+	player_->Load();
+	player_->Awake();
+	player_->Start();
 
 	emissive_ = std::make_unique<EmissiveActor>();
 	emissive_->Init();
 
+	leadParticle_ = std::make_unique<LeadParticle>();
+	leadParticle_->Load();
+	leadParticle_->Awake();
+	leadParticle_->Start();
+
+	behaviour_ = std::make_unique<MonoBehaviour>();
+	behaviour_->AddComponent<TransformComponent>();
+	behaviour_->AddComponent<PostProcessLayerComponent>();
+	behaviour_->GetComponent<PostProcessLayerComponent>()->SetTag(PostProcessLayerComponent::Tag::None);
+	behaviour_->GetComponent<PostProcessLayerComponent>()->AddPostProcess<PostProcessAutoExposure>();
+	behaviour_->GetComponent<PostProcessLayerComponent>()->AddPostProcess<PostProcessLocalExposure>();
+	//behaviour_->GetComponent<PostProcessLayerComponent>()->AddPostProcess<PostProcessBloom>();
+	behaviour_->GetComponent<PostProcessLayerComponent>()->AddPostProcess<PostProcessDoF>();
+	behaviour_->GetComponent<PostProcessLayerComponent>()->AddPostProcess<PostProcessGrayScale>();
+	behaviour_->GetComponent<PostProcessLayerComponent>()->AddPostProcess<PostProcessChromaticAberration>();
+	behaviour_->GetComponent<PostProcessLayerComponent>()->AddPostProcess<PostProcessRadialBlur>();
+
+	auto texture = SxavengerAsset::TryImport<AssetTexture>("assets/textures/LUT/lut_reddish.png", Texture::Option{ Texture::Encoding::Intensity, false });
+	auto lut = behaviour_->GetComponent<PostProcessLayerComponent>()->AddPostProcess<PostProcessLUT>();
+	lut->CreateTexture(SxavengerSystem::GetDirectQueueContext(), texture, { 16, 16 });
 }
 
 void BetaSystemGameLoop::TermSystem() {
@@ -108,6 +119,8 @@ void BetaSystemGameLoop::UpdateSystem() {
 	camera_->Update();
 
 	//player_->Update();
+
+	leadParticle_->Update();
 
 	//-----------------------------------------------------------------------------------------
 	// SystemUpdate...?
@@ -136,14 +149,14 @@ void BetaSystemGameLoop::UpdateSystem() {
 
 void BetaSystemGameLoop::DrawSystem() {
 
-	FMainRender::GetInstance()->Render(SxavengerSystem::GetMainThreadContext());
+	FMainRender::GetInstance()->Render(SxavengerSystem::GetDirectQueueContext(), main_.get());
 
-	main_->BeginRendering();
-	main_->ClearWindow();
+	main_->BeginRenderWindow(SxavengerSystem::GetDirectQueueContext());
+	main_->ClearWindow(SxavengerSystem::GetDirectQueueContext());
 	 
-	FMainRender::GetInstance()->PresentMain(SxavengerSystem::GetMainThreadContext());
+	FMainRender::GetInstance()->PresentMain(SxavengerSystem::GetDirectQueueContext());
 	SxavengerSystem::RenderImGui();
 
-	main_->EndRendering();
+	main_->EndRenderWindow(SxavengerSystem::GetDirectQueueContext());
 
 }

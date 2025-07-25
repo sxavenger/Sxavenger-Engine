@@ -12,7 +12,6 @@
 #include <Engine/Component/Components/Camera/CameraComponent.h>
 #include <Engine/Component/Components/Collider/ColliderComponent.h>
 #include <Engine/Component/Components/PostProcessLayer/PostProcessLayerComponent.h>
-#include <Engine/Component/Components/CompositeProcessLayer/CompositeProcessLayerComponent.h>
 #include <Engine/Component/ComponentHelper.h>
 
 //* lib

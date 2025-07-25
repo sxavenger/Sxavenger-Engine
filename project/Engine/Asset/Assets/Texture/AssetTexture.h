@@ -23,7 +23,7 @@ public:
 
 	//* async task option *//
 
-	void Load(const DirectXThreadContext* context) override;
+	void Load(const DirectXQueueContext* context) override;
 
 	AsyncExecution GetAsyncExecution() const override { return AsyncExecution::Compute; }
 	//!< compute queueで実行
@@ -56,8 +56,6 @@ private:
 	//* inspector helper methods *//
 
 	static std::string GetEncoding(Texture::Encoding encoding);
-	static std::string GetDimension(D3D12_RESOURCE_DIMENSION dimension);
-	static std::string GetFormat(DXGI_FORMAT format);
 
 	void ShowTexture();
 

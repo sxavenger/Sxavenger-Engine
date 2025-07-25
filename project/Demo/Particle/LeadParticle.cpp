@@ -62,8 +62,8 @@ void LeadParticle::UpdateEmitter() {
 	collider_->SetActiveCollider(false);
 	isMove_ = true;
 
-	Vector3f direction = (targetPosition_ - transform_->GetPosition()).Normalize();
-	transform_->translate += direction * speed_;
+	//Vector3f direction = (targetPosition_ - transform_->GetPosition()).Normalize();
+	//transform_->translate += direction * speed_;
 }
 
 void LeadParticle::UpdateEmit() {

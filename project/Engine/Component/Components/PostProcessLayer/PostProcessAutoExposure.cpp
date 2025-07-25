@@ -7,7 +7,7 @@ _DXOBJECT_USING
 //* engine
 #include <Engine/System/UI/SxImGui.h>
 #include <Engine/System/SxavengerSystem.h>
-#include <Engine/Render/FRenderTargetTextures.h>
+#include <Engine/Render/FRenderTargetBuffer.h>
 #include <Engine/Render/FRenderCore.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -17,8 +17,8 @@ _DXOBJECT_USING
 void PostProcessAutoExposure::Parameter::Init() {
 	minLogLuminance = 0.03f;
 	maxLogLuminance = 20.0f;
-	timeCoeff = 0.1f;
-	compensation = 0.0f;
+	timeCoeff       = 0.1f;
+	compensation    = 0.0f;
 }
 
 void PostProcessAutoExposure::Parameter::SetImGuiCommand() {
@@ -52,19 +52,21 @@ void PostProcessAutoExposure::Init() {
 	debugAverageLuminance_ = std::make_unique<ReadbackDimensionBuffer<float>>();
 }
 
-void PostProcessAutoExposure::Process(const DirectXThreadContext* context, FRenderTargetTextures* textures, const CameraComponent* camera) {
-	camera;
+void PostProcessAutoExposure::Process(const DirectXQueueContext* context, const ProcessInfo& info) {
 
-	auto process = textures->GetProcessTextures();
+	auto process = info.buffer->GetProcessTextures();
 	process->NextProcess(context);
 
 	auto core = FRenderCore::GetInstance()->GetProcess();
 
 	BindBufferDesc desc = {};
+	// common
+	desc.Set32bitConstants("Dimension", 2, &info.buffer->GetSize());
+	desc.Set32bitConstants("Infomation", 1, &info.weight);
+
 	// textures
-	desc.SetAddress("gConfig", textures->GetDimension());
-	desc.SetHandle("gInput",   textures->GetProcessTextures()->GetPrevTexture()->GetGPUHandleSRV());
-	desc.SetHandle("gOutput",  textures->GetProcessTextures()->GetIndexTexture()->GetGPUHandleUAV());
+	desc.SetHandle("gInput",   process->GetPrevTexture()->GetGPUHandleSRV());
+	desc.SetHandle("gOutput",  process->GetIndexTexture()->GetGPUHandleUAV());
 
 	// intermediate
 	desc.SetAddress("gHistogram",        histgram_->GetGPUVirtualAddress());
@@ -76,7 +78,7 @@ void PostProcessAutoExposure::Process(const DirectXThreadContext* context, FRend
 
 	core->SetPipeline(FRenderCoreProcess::ProcessType::AutoExposureLuminance, context);
 	core->BindComputeBuffer(FRenderCoreProcess::ProcessType::AutoExposureLuminance, context, desc);
-	core->Dispatch(context, textures->GetSize());
+	core->Dispatch(context, info.buffer->GetSize());
 
 	histgramShared_->Barrier(context->GetDxCommand());
 
@@ -88,7 +90,7 @@ void PostProcessAutoExposure::Process(const DirectXThreadContext* context, FRend
 
 	core->SetPipeline(FRenderCoreProcess::ProcessType::AutoExposureApply, context);
 	core->BindComputeBuffer(FRenderCoreProcess::ProcessType::AutoExposureApply, context, desc);
-	core->Dispatch(context, textures->GetSize());
+	core->Dispatch(context, info.buffer->GetSize());
 
 }
 
@@ -97,14 +99,14 @@ void PostProcessAutoExposure::ShowInspectorImGui() {
 
 	ReadbackDimensionBuffer<uint32_t>::Readback(
 		SxavengerSystem::GetDxDevice(),
-		SxavengerSystem::GetMainThreadContext()->GetDxCommand(),
+		SxavengerSystem::GetDirectQueueContext()->GetDxCommand(),
 		histgram_.get(),
 		debugHistgram_.get()
 	);
 
 	ReadbackDimensionBuffer<float>::Readback(
 		SxavengerSystem::GetDxDevice(),
-		SxavengerSystem::GetMainThreadContext()->GetDxCommand(),
+		SxavengerSystem::GetDirectQueueContext()->GetDxCommand(),
 		averageLuminance_.get(),
 		debugAverageLuminance_.get()
 	);

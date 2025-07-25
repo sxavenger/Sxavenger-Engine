@@ -5,7 +5,7 @@ _DXOBJECT_USING
 // include
 //-----------------------------------------------------------------------------------------
 //* render
-#include "../FRenderTargetTextures.h"
+#include "../FRenderTargetBuffer.h"
 
 //* engine
 #include <Engine/System/Config/SxavengerConfig.h>
@@ -25,11 +25,11 @@ void FRenderCoreLayer::Init() {
 	CreatePipeline();
 }
 
-void FRenderCoreLayer::SetPipeline(PipelineType type, const DirectXThreadContext* context, const Vector2ui& size) const {
+void FRenderCoreLayer::SetPipeline(PipelineType type, const DirectXQueueContext* context, const Vector2ui& size) const {
 	pipelines_[static_cast<uint8_t>(type)]->SetPipeline(context->GetDxCommand(), size);
 }
 
-void FRenderCoreLayer::BindGraphicsBuffer(PipelineType type, const DirectXThreadContext* context, const DxObject::BindBufferDesc& desc) const {
+void FRenderCoreLayer::BindGraphicsBuffer(PipelineType type, const DirectXQueueContext* context, const DxObject::BindBufferDesc& desc) const {
 	pipelines_[static_cast<uint8_t>(type)]->BindGraphicsBuffer(context->GetDxCommand(), desc);
 }
 
@@ -43,7 +43,7 @@ void FRenderCoreLayer::CreateDesc() {
 	desc_.SetElement("TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT);
 	desc_.SetElement("COLOR", 0,    DXGI_FORMAT_R32G32B32A32_FLOAT);
 
-	desc_.SetRTVFormat(0, FRenderTargetTextures::GetFormat(FRenderTargetTextures::GBufferLayout::UI));
+	desc_.SetRTVFormat(0, FMainGBuffer::GetFormat(FMainGBuffer::Layout::UI));
 
 	//desc_.SetBlendMode(0, BlendMode::kBlendModeNormalSrc);
 

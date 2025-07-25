@@ -5,11 +5,9 @@
 //-----------------------------------------------------------------------------------------
 //* texture
 #include "FBaseTexture.h"
-#include "FTexture.h"
-
 //* engine
 #include <Engine/System/DirectX/DxObject/DxDescriptor.h>
-#include <Engine/System/DirectX/DirectXContext.h>
+#include <Engine/System/DirectX/Context/DirectXQueueContext.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // FProcessTexture class
@@ -24,7 +22,7 @@ public:
 
 	FProcessTexture() = default;
 
-	void Create(const Vector2ui& size, DXGI_FORMAT format = DxObject::kOffscreenFormat);
+	void Create(const Vector2ui& size, DXGI_FORMAT format = DxObject::kDefaultOffscreenFormat);
 
 private:
 };
@@ -39,17 +37,17 @@ public:
 	// public methods
 	//=========================================================================================
 
-	void Create(uint32_t count, const Vector2ui& size, DXGI_FORMAT format = DxObject::kOffscreenFormat);
+	void Create(uint32_t count, const Vector2ui& size, DXGI_FORMAT format = DxObject::kDefaultOffscreenFormat);
 
 	//* texture option *//
 
-	void BeginProcess(const DirectXThreadContext* context, FTexture* texture);
+	void BeginProcess(const DirectXQueueContext* context, FBaseTexture* texture);
 
-	void EndProcess(const DirectXThreadContext* context, FTexture* texture);
+	void EndProcess(const DirectXQueueContext* context, FBaseTexture* texture);
 
-	void NextProcess(const DirectXThreadContext* context);
+	void NextProcess(const DirectXQueueContext* context);
 
-	void BarrierUAV(const DirectXThreadContext* context);
+	void BarrierUAV(const DirectXQueueContext* context);
 
 	//* getter *//
 

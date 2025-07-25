@@ -214,8 +214,12 @@ _CLOSESTHIT void mainClosesthit(inout Payload payload, in Attribute attribute) {
 			Payload path = (Payload)0;
 			path.rayType = RayType::kPath;
 			
-			payload.TraceRecursionRay(path, desc, kFlag);
-			color += dot(surface.normal, dir) * path.color.rgb;
+			payload.TraceRecursionRay(path, desc);
+			color += path.color.rgb;
+			
+		}
+
+		{
 			
 		}
 	}

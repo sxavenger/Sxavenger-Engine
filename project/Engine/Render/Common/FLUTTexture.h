@@ -6,7 +6,7 @@
 //* engine
 #include <Engine/System/DirectX/DxObject/DxDimensionBuffer.h>
 #include <Engine/System/DirectX/DxObject/DxDescriptor.h>
-#include <Engine/System/DirectX/DirectXContext.h>
+#include <Engine/System/DirectX/Context/DirectXQueueContext.h>
 #include <Engine/Asset/Observer/AssetObserver.h>
 #include <Engine/Asset/Assets/Texture/AssetTexture.h>
 
@@ -37,8 +37,9 @@ public:
 	//=========================================================================================
 
 	void Create(const AssetObserver<AssetTexture>& texture, const Vector2ui& tile);
+	void Create(const std::shared_ptr<AssetTexture>& texture, const Vector2ui& tile);
 
-	void Dispatch(const DirectXThreadContext* context);
+	void Dispatch(const DirectXQueueContext* context);
 
 	//* getter *//
 

@@ -19,7 +19,7 @@ const std::filesystem::path ImGuiController::kImGuiSampleLayoutFilepath_ = "pack
 // ImGuiController class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-void ImGuiController::Init(Window* main) {
+void ImGuiController::Init(DirectXWindowContext* main) {
 	// ImGuiの初期化
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
@@ -32,9 +32,9 @@ void ImGuiController::Init(Window* main) {
 
 	ImGui_ImplDX12_InitInfo info = {};
 	info.Device            = SxavengerSystem::GetDxDevice()->GetDevice();
-	info.CommandQueue      = SxavengerSystem::GetMainThreadContext()->GetCommandQueue();
+	info.CommandQueue      = SxavengerSystem::GetDirectQueueContext()->GetCommandQueue();
 	info.NumFramesInFlight = DxObject::SwapChain::GetBufferCount();
-	info.RTVFormat         = DxObject::kScreenFormat;
+	info.RTVFormat         = DxObject::kDefaultScreenViewFormat;
 	info.DSVFormat         = DxObject::kDefaultDepthFormat;
 	info.SrvDescriptorHeap = SxavengerSystem::GetDxDescriptorHeaps()->GetDescriptorHeap(kDescriptor_CBV_SRV_UAV);
 
@@ -105,8 +105,8 @@ void ImGuiController::EndFrame() {
 	ImGui::Render();
 }
 
-void ImGuiController::Render(DirectXThreadContext* context) {
-	context;
+void ImGuiController::Render(DirectXQueueContext* context) {
+	context->RequestQueue(DirectXQueueContext::RenderQueue::Direct);
 #ifdef _DEVELOPMENT
 	ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(), context->GetCommandList());
 #endif // _DEVELOPMENT

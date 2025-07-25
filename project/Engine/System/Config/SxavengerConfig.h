@@ -108,7 +108,8 @@ private:
 	//=========================================================================================
 
 	//* filepath
-	static inline const std::filesystem::path kConfigFilepath_ = kPackagesDirectory / "config" / "config.json";
+	static inline const std::string           kConfigFilename_ = std::string("config_") + std::string(_PROFILE) + std::string(".json");
+	static inline const std::filesystem::path kConfigFilepath_ = kPackagesDirectory / "config" / kConfigFilename_;
 
 	//* config
 	static inline Config config_ = {};

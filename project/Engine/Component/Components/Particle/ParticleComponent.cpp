@@ -7,6 +7,7 @@ _DXOBJECT_USING
 //* engine
 #include <Engine/System/SxavengerSystem.h>
 #include <Engine/Content/SxavengerContent.h>
+#include <Engine/Render/FRenderTargetBuffer.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Albedo structure methods
@@ -148,7 +149,7 @@ void ParticleComponent::Init(uint32_t count, BlendMode mode) {
 	desc.SetDepthStencil(true, D3D12_DEPTH_WRITE_MASK_ZERO);
 	desc.SetBlendMode(0, mode);
 	desc.SetDSVFormat(kDefaultDepthFormat);
-	desc.SetRTVFormat(DXGI_FORMAT_R32G32B32A32_FLOAT);
+	desc.SetRTVFormat(FMainGBuffer::kColorFormat);
 	desc.SetPrimitive(PrimitiveType::TrianglList);
 
 	pipeline_->CreatePipeline(SxavengerSystem::GetDxDevice(), desc);
@@ -182,7 +183,7 @@ ParticleComponent::Element& ParticleComponent::Emit(const Vector3f& position) {
 	return elements_.emplace_back(element);
 }
 
-void ParticleComponent::DrawParticle(const DirectXThreadContext* context, const CameraComponent* camera) {
+void ParticleComponent::DrawParticle(const DirectXQueueContext* context, const CameraComponent* camera) {
 	if (!primitive_.has_value()) {
 		return;
 	}

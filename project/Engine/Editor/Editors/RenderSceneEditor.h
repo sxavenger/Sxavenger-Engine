@@ -11,7 +11,7 @@
 #include <Engine/Component/Components/Collider/ColliderPrimitiveRenderer.h>
 #include <Engine/Asset/Assets/Texture/AssetTexture.h>
 #include <Engine/Asset/Observer/AssetObserver.h>
-#include <Engine/Render/FRenderTargetTextures.h>
+#include <Engine/Render/FRenderTargetBuffer.h>
 #include <Engine/Render/Scene/FSceneRenderer.h>
 
 //* lib
@@ -76,6 +76,14 @@ private:
 	};
 
 	////////////////////////////////////////////////////////////////////////////////////////////
+	// ScreenRect structure
+	////////////////////////////////////////////////////////////////////////////////////////////
+	struct ScreenRect {
+		Vector2f min;
+		Vector2f max;
+	};
+
+	////////////////////////////////////////////////////////////////////////////////////////////
 	// GuizmoEnable enum class
 	////////////////////////////////////////////////////////////////////////////////////////////
 	enum class GuizmoUsed : uint32_t {
@@ -96,9 +104,24 @@ private:
 	// Icon enum class
 	////////////////////////////////////////////////////////////////////////////////////////////
 	enum class Icon : uint32_t {
+		Volume,
 		DirectionalLight,
 		PointLight,
-		Camera
+		Camera,
+	};
+
+	////////////////////////////////////////////////////////////////////////////////////////////
+	// GBuffer enum class
+	////////////////////////////////////////////////////////////////////////////////////////////
+	enum class GBuffer : uint32_t {
+		Scene,
+		Albedo,
+		Normal,
+		MaterialARM,
+		Position,
+		Deferred_GBuffer,
+		Direct,
+		Indirect,
 	};
 
 private:
@@ -123,9 +146,9 @@ private:
 
 	bool isRender_ = true;
 
-	std::unique_ptr<FRenderTargetTextures> textures_; //!< debug textures
-	std::unique_ptr<FSceneRenderer>        renderer_; //!< scene renderer
-	std::unique_ptr<MonoBehaviour>         camera_;   //!< scene camera
+	std::unique_ptr<FRenderTargetBuffer> textures_; //!< debug textures
+	std::unique_ptr<FSceneRenderer>      renderer_; //!< scene renderer
+	std::unique_ptr<MonoBehaviour>       camera_;   //!< scene camera
 
 	FSceneRenderer::Config config_ = {};
 
@@ -134,7 +157,9 @@ private:
 
 	//* parameter *//
 
-	FRenderTargetTextures::GBufferLayout layout_ = FRenderTargetTextures::GBufferLayout::Main;
+	//FRenderTargetTextures::GBufferLayout layout_ = FRenderTargetTextures::GBufferLayout::Main;
+
+	GBuffer buffer_ = GBuffer::Scene;
 
 	//* camera *//
 
@@ -162,6 +187,8 @@ private:
 
 	AssetObserver<AssetTexture> icons_[static_cast<uint32_t>(Icon::Camera) + 1];
 
+	Vector2f iconSize_ = { 32.0f, 32.0f };
+
 	//=========================================================================================
 	// private methods
 	//=========================================================================================
@@ -182,14 +209,19 @@ private:
 
 	//* sub methods *//
 
-	WindowRect SetImGuiImageFullWindow(const D3D12_GPU_DESCRIPTOR_HANDLE& handle, const Vector2ui& size);
+	WindowRect SetImGuiImageFullWindow(const D3D12_GPU_DESCRIPTOR_HANDLE& handle, const Vector2ui& size) const;
+
+	void SetImGuiImageFullWindowEnable(const D3D12_GPU_DESCRIPTOR_HANDLE& handle, const Vector2ui& size, bool isEnable);
+	void SetImGuiImagesFullWindowEnable(const std::vector<std::pair<D3D12_GPU_DESCRIPTOR_HANDLE, GBuffer>>& handles, const Vector2ui& size, bool isEnable);
 
 	void UpdateCamera();
 	void UpdateView();
 
 	//* helper methods *//
 
-	void RenderIcon(Icon icon, const Vector3f& position, const Color4f& color);
+	void DisplayGBufferTexture(GBuffer buffer);
+
+	void RenderIcon(BaseInspector* inspector, Icon icon, const Vector3f& position, const Color4f& color);
 
 	void RenderTextSceneWindow(ImVec2& position, const std::string& text, ImU32 color = ImGui::GetColorU32(ImGuiCol_Text));
 

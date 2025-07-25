@@ -30,16 +30,16 @@ void SkyLightActor::Update(bool isWait) {
 		environment_.SetEnvironment(texture_.WaitAcquire()->GetGPUHandleSRV());
 	}
 
-	environment_.Update(SxavengerSystem::GetMainThreadContext());
+	environment_.Update(SxavengerSystem::GetDirectQueueContext());
 
 	if (isWait) {
 		environment_.WaitComplate();
-		environment_.Update(SxavengerSystem::GetMainThreadContext());
+		environment_.Update(SxavengerSystem::GetDirectQueueContext());
 	}
 
 	skyLightComponent_->SetEnvironment(environment_.GetMapEnvironment());
-	skyLightComponent_->GetDiffuseParameter().SetTexture(environment_.UseIrradianceDescriptor(SxavengerSystem::GetMainThreadContext()).GetIndex());
-	skyLightComponent_->GetSpecularParameter().SetTexture(environment_.UseRadianceDescriptor(SxavengerSystem::GetMainThreadContext()).GetIndex(), environment_.GetRadianceMiplevels());
+	skyLightComponent_->GetDiffuseParameter().SetTexture(environment_.UseIrradianceDescriptor(SxavengerSystem::GetDirectQueueContext()).GetIndex());
+	skyLightComponent_->GetSpecularParameter().SetTexture(environment_.UseRadianceDescriptor(SxavengerSystem::GetDirectQueueContext()).GetIndex(), environment_.GetRadianceMiplevels());
 }
 
 void SkyLightActor::Inspectable() {

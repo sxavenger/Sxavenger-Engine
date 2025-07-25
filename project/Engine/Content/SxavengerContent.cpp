@@ -32,11 +32,11 @@ const D3D12_GPU_DESCRIPTOR_HANDLE& SxavengerContent::GetGPUHandleSRV(const std::
 	return collection_->GetGPUHandleSRV(name);
 }
 
-void SxavengerContent::SetSkinningPipeline(const DirectXThreadContext* context) {
+void SxavengerContent::SetSkinningPipeline(const DirectXQueueContext* context) {
 	skinningPipeline_->SetPipeline(context);
 }
 
-void SxavengerContent::DispatchSkinning(const DirectXThreadContext* context, const DxObject::BindBufferDesc& desc, uint32_t vertexSize) {
+void SxavengerContent::DispatchSkinning(const DirectXQueueContext* context, const DxObject::BindBufferDesc& desc, uint32_t vertexSize) {
 	skinningPipeline_->Dispatch(context, desc, vertexSize);
 }
 
@@ -54,6 +54,10 @@ void SxavengerContent::PushLineOverlay(const Vector3f& v1, const Vector3f& v2, c
 
 void SxavengerContent::PushAxis(const Vector3f& center, float length) {
 	debugPrimitive_->PushAxis(center, length);
+}
+
+void SxavengerContent::PushBox(const Vector3f& min, const Vector3f& max, const Color4f& color) {
+	debugPrimitive_->PushBox(min, max, color);
 }
 
 void SxavengerContent::PushSphere(const Vector3f& center, float radius, const Color4f& color) {

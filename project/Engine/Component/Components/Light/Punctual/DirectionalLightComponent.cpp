@@ -34,8 +34,8 @@ void DirectionalLightComponent::ShowComponentInspector() {
 	LightCommon::ShowCommonInspector();
 
 	//* push line
-	Vector3f dir = GetTransform()->GetTransform().GetForward();
-	SxavengerContent::PushLine(GetTransform()->GetPosition(), GetTransform()->GetPosition() + dir, kColor);
+	Vector3f dir = RequireTransform()->GetTransform().GetForward();
+	SxavengerContent::PushLine(RequireTransform()->GetPosition(), RequireTransform()->GetPosition() + dir, kColor);
 }
 
 void DirectionalLightComponent::Init() {
@@ -64,7 +64,7 @@ DirectionalLightComponent::Parameter& DirectionalLightComponent::GetParameter() 
 	return parameter_->At(0);
 }
 
-const TransformComponent* DirectionalLightComponent::GetTransform() const {
+const TransformComponent* DirectionalLightComponent::RequireTransform() const {
 	return BaseComponent::GetBehaviour()->RequireComponent<TransformComponent>();
 }
 

@@ -35,9 +35,9 @@ public:
 
 	//* skinning pipeline option *//
 
-	static void SetSkinningPipeline(const DirectXThreadContext* context);
+	static void SetSkinningPipeline(const DirectXQueueContext* context);
 
-	static void DispatchSkinning(const DirectXThreadContext* context, const DxObject::BindBufferDesc& desc, uint32_t vertexSize);
+	static void DispatchSkinning(const DirectXQueueContext* context, const DxObject::BindBufferDesc& desc, uint32_t vertexSize);
 
 	//* debug primitive option *//
 
@@ -48,6 +48,8 @@ public:
 	static void PushLineOverlay(const Vector3f& v1, const Vector3f& v2, const Color4f& color);
 
 	static void PushAxis(const Vector3f& center, float length);
+
+	static void PushBox(const Vector3f& min, const Vector3f& max, const Color4f& color);
 
 	static void PushSphere(const Vector3f& center, float radius, const Color4f& color);
 

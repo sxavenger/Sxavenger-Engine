@@ -7,10 +7,11 @@
 #include "BaseOffscreenTexture.h"
 
 //* engine
-#include <Engine/System/DirectX/DirectXContext.h>
+#include <Engine/System/DirectX/Context/DirectXQueueContext.h>
 
 //* lib
 #include <Lib/Geometry/Vector4.h>
+#include <Lib/Geometry/Color4.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // RenderTexture class
@@ -26,17 +27,17 @@ public:
 	RenderTexture()  = default;
 	~RenderTexture() { Term(); }
 
-	void Create(const Vector2ui& size, const Color4f& clearColor = kDefaultClearColor, DXGI_FORMAT format = DxObject::kOffscreenFormat);
+	void Create(const Vector2ui& size, const Color4f& clearColor = kDefaultClearColor, DXGI_FORMAT format = DxObject::kDefaultOffscreenFormat);
 
 	void Term();
 
 	//* render option *//
 
-	void TransitionBeginRenderTarget(const DirectXThreadContext* context);
+	void TransitionBeginRenderTarget(const DirectXQueueContext* context);
 
-	void TransitionEndRenderTarget(const DirectXThreadContext* context);
+	void TransitionEndRenderTarget(const DirectXQueueContext* context);
 
-	void ClearRenderTarget(const DirectXThreadContext* context);
+	void ClearRenderTarget(const DirectXQueueContext* context);
 
 	//* getter *//
 

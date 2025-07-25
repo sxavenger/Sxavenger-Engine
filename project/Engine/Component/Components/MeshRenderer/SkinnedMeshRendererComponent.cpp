@@ -14,13 +14,13 @@ _DXOBJECT_USING
 // InputSkinnedMesh structure methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-void SkinnedMeshRendererComponent::InputSkinnedMesh::Create(const DirectXThreadContext* context, const Model::AssimpMesh* mesh) {
+void SkinnedMeshRendererComponent::InputSkinnedMesh::Create(const DirectXQueueContext* context, const Model::AssimpMesh* mesh) {
 	CreateVetex(mesh);
 	CreateBottomLevelAS(context, mesh);
 	isCreateMesh = true;
 }
 
-void SkinnedMeshRendererComponent::InputSkinnedMesh::UpdateBottomLevelAS(const DirectXThreadContext* context) {
+void SkinnedMeshRendererComponent::InputSkinnedMesh::UpdateBottomLevelAS(const DirectXQueueContext* context) {
 	Exception::Assert(isCreateMesh, "mesh is not created.");
 	bottomLevelAS.Update(context->GetDxCommand());
 }
@@ -30,7 +30,7 @@ void SkinnedMeshRendererComponent::InputSkinnedMesh::CreateVetex(const Model::As
 	vertex->Create(SxavengerSystem::GetDxDevice(), mesh->input.GetVertex()->GetSize());
 }
 
-void SkinnedMeshRendererComponent::InputSkinnedMesh::CreateBottomLevelAS(const DirectXThreadContext* context, const Model::AssimpMesh* mesh) {
+void SkinnedMeshRendererComponent::InputSkinnedMesh::CreateBottomLevelAS(const DirectXQueueContext* context, const Model::AssimpMesh* mesh) {
 	D3D12_RAYTRACING_GEOMETRY_DESC desc = {};
 	desc.Type                                 = D3D12_RAYTRACING_GEOMETRY_TYPE_TRIANGLES;
 	desc.Flags                                = D3D12_RAYTRACING_GEOMETRY_FLAG_NONE;
@@ -53,7 +53,7 @@ void SkinnedMeshRendererComponent::CreateMesh(const Model::AssimpMesh* mesh) {
 	// reference先のmeshを保持
 	referenceMesh_ = mesh;
 
-	mesh_.Create(SxavengerSystem::GetMainThreadContext(), referenceMesh_);
+	mesh_.Create(SxavengerSystem::GetDirectQueueContext(), referenceMesh_);
 	CreateCluster();
 }
 
@@ -62,7 +62,7 @@ void SkinnedMeshRendererComponent::Skinning() {
 	cluster_.UpdatePalette(GetArmatureComponent()->GetSkeleton());
 
 	//* compute shader skinning *//
-	SxavengerContent::SetSkinningPipeline(SxavengerSystem::GetMainThreadContext());
+	SxavengerContent::SetSkinningPipeline(SxavengerSystem::GetDirectQueueContext());
 
 	DxObject::BindBufferDesc parameter = {};
 	parameter.SetAddress("gInputVertex",  referenceMesh_->input.GetVertex()->GetGPUVirtualAddress());
@@ -71,10 +71,10 @@ void SkinnedMeshRendererComponent::Skinning() {
 	parameter.SetAddress("gInfo",         cluster_.info->GetGPUVirtualAddress());
 	parameter.SetAddress("gOutputVertex", mesh_.vertex->GetGPUVirtualAddress());
 
-	SxavengerContent::DispatchSkinning(SxavengerSystem::GetMainThreadContext(), parameter, cluster_.info->At(0));
+	SxavengerContent::DispatchSkinning(SxavengerSystem::GetDirectQueueContext(), parameter, cluster_.info->At(0));
 }
 
-void SkinnedMeshRendererComponent::BindIABuffer(const DirectXThreadContext* context) const {
+void SkinnedMeshRendererComponent::BindIABuffer(const DirectXQueueContext* context) const {
 	auto commandList = context->GetCommandList();
 
 	D3D12_VERTEX_BUFFER_VIEW vbv = mesh_.vertex->GetVertexBufferView();
@@ -84,7 +84,7 @@ void SkinnedMeshRendererComponent::BindIABuffer(const DirectXThreadContext* cont
 	commandList->IASetIndexBuffer(&ibv);
 }
 
-void SkinnedMeshRendererComponent::DrawCall(const DirectXThreadContext* context, uint32_t instanceCount) const {
+void SkinnedMeshRendererComponent::DrawCall(const DirectXQueueContext* context, uint32_t instanceCount) const {
 	context->GetCommandList()->DrawIndexedInstanced(referenceMesh_->input.GetIndex()->GetIndexCount(), instanceCount, 0, 0, 0);
 }
 

@@ -45,6 +45,7 @@ void BaseRootSignatureDesc::SetHandle(uint32_t index, ShaderVisibility stage, D3
 }
 
 void BaseRootSignatureDesc::Set32bitConstants(uint32_t index, ShaderVisibility stage, UINT num32bit, UINT shaderRegister, UINT registerSpace) {
+	AutoResizeParam(index);
 	params.at(index).ParameterType            = D3D12_ROOT_PARAMETER_TYPE_32BIT_CONSTANTS;
 	params.at(index).ShaderVisibility         = static_cast<D3D12_SHADER_VISIBILITY>(stage);
 	params.at(index).Constants.Num32BitValues = num32bit;

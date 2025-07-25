@@ -7,7 +7,7 @@
 #include "BaseOffscreenTexture.h"
 
 //* engine
-#include <Engine/System/DirectX/DirectXContext.h>
+#include <Engine/System/DirectX/Context/DirectXQueueContext.h>
 
 //* lib
 #include <Lib/Geometry/Vector4.h>
@@ -33,11 +33,11 @@ public:
 
 	//* depth option *//
 
-	void TransitionBeginDepthWrite(const DirectXThreadContext* context);
+	void TransitionBeginDepthWrite(const DirectXQueueContext* context);
 
-	void TransitionEndDepthWrite(const DirectXThreadContext* context);
+	void TransitionEndDepthWrite(const DirectXQueueContext* context);
 
-	void ClearDepth(const DirectXThreadContext* context);
+	void ClearDepth(const DirectXQueueContext* context);
 
 	//* getter *//
 

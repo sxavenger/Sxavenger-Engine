@@ -6,6 +6,7 @@ _DXOBJECT_USING
 //-----------------------------------------------------------------------------------------
 //* external
 #include <imgui.h>
+#include <magic_enum.hpp>
 
 //* c++
 #include <format>
@@ -31,6 +32,8 @@ void DescriptorPool::Init(
 
 	// handleSizeを取得
 	descriptorHandleSize_ = device->GetDescriptorHandleIncrementSize(descriptorHeapType_);
+
+	Logger::EngineLog(std::format("[_DXOBJECT DescriptorPool] descriptor heap type: {}, visibility: {}, count: {}", magic_enum::enum_name(descriptorHeapType), shaderVisible, descriptorMaxCount));
 }
 
 void DescriptorPool::Term() {
@@ -119,15 +122,15 @@ D3D12_GPU_DESCRIPTOR_HANDLE DescriptorPool::GetGPUDescriptorHandle(uint32_t inde
 void DescriptorHeaps::Init(Device* device) {
 
 	pools_[DescriptorType::kDescriptor_RTV] = std::make_unique<DescriptorPool>();
-	pools_[DescriptorType::kDescriptor_RTV]->Init(device, D3D12_DESCRIPTOR_HEAP_TYPE_RTV, false, 24);
+	pools_[DescriptorType::kDescriptor_RTV]->Init(device, D3D12_DESCRIPTOR_HEAP_TYPE_RTV, false, kDescriptorCount_[DescriptorType::kDescriptor_RTV]);
 
 	pools_[DescriptorType::kDescriptor_DSV] = std::make_unique<DescriptorPool>();
-	pools_[DescriptorType::kDescriptor_DSV]->Init(device, D3D12_DESCRIPTOR_HEAP_TYPE_DSV, false, 8);
+	pools_[DescriptorType::kDescriptor_DSV]->Init(device, D3D12_DESCRIPTOR_HEAP_TYPE_DSV, false, kDescriptorCount_[DescriptorType::kDescriptor_DSV]);
 
 	pools_[DescriptorType::kDescriptor_CBV_SRV_UAV] = std::make_unique<DescriptorPool>();
-	pools_[DescriptorType::kDescriptor_CBV_SRV_UAV]->Init(device, D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, true, 512);
+	pools_[DescriptorType::kDescriptor_CBV_SRV_UAV]->Init(device, D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, true, kDescriptorCount_[DescriptorType::kDescriptor_CBV_SRV_UAV]);
 
-	Logger::EngineLog("[_DXOBJECT]::DescriptorHeaps complete init.");
+	Logger::EngineLog("[_DXOBJECT DescriptorHeaps] complete initialize.");
 }
 
 void DescriptorHeaps::Term() {

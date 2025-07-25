@@ -8,11 +8,11 @@ void FRenderCoreProcess::Init() {
 
 	//* process *//
 
-	//!< environment
-	CreatePipeline(ProcessType::Environment, "PostProcess/Environment.cs.hlsl");
-
 	//!< volumetric fog
-	CreatePipeline(ProcessType::VolumetricFog, "PostProcess/volumetricFog.cs.hlsl");
+	//CreatePipeline(ProcessType::VolumetricFog, "PostProcess/volumetricFog.cs.hlsl");
+
+	//!< grayscale
+	CreatePipeline(ProcessType::GrayScale, "PostProcess/GrayScale.cs.hlsl");
 
 	//!< bloom
 	CreatePipeline(ProcessType::Bloom, "PostProcess/Bloom.cs.hlsl");
@@ -27,44 +27,60 @@ void FRenderCoreProcess::Init() {
 	//!< dof
 	CreatePipeline(ProcessType::DoF, "PostProcess/DoF.cs.hlsl");
 
+	
+	{
+		DxObject::SamplerBindDesc desc = {};
+		desc.SetSamplerLinear("gSampler", DxObject::SamplerMode::MODE_CLAMP);
+
+		//!< radial blur
+		CreatePipeline(ProcessType::RadialBlur, "PostProcess/RadialBlur.cs.hlsl", desc);
+
+		//!< chromatic aberration
+		CreatePipeline(ProcessType::ChromaticAberration, "PostProcess/ChromaticAberration.cs.hlsl", desc);
+	}
+	
+
 	//!< vignette
 	CreatePipeline(ProcessType::Vignette, "PostProcess/Vignette.cs.hlsl");
 
-	//* composite *//
-
 	//!< convert lut texture
-	CreatePipeline(CompositeType::ConvertLUTTexture, "CompositeProcess/ConvertLUTTexture.cs.hlsl");
+	CreatePipeline(ProcessType::ConvertLUTTexture, "PostProcess/ConvertLUTTexture.cs.hlsl");
 
 	//!< lut
 	{
 		DxObject::SamplerBindDesc desc = {};
 		desc.SetSamplerLinear("gLUTSampler", DxObject::SamplerMode::MODE_CLAMP);
 
-		CreatePipeline(CompositeType::LUT, "CompositeProcess/LUT.cs.hlsl", desc);
+		CreatePipeline(ProcessType::LUT, "PostProcess/LUT.cs.hlsl", desc);
 	}
+
+	//* composite *//
+
+	//!< environment
+	CreatePipeline(CompositeType::Environment, "CompositeProcess/Environment.cs.hlsl");
 
 	//!< tonemap
 	CreatePipeline(CompositeType::Tonemap, "CompositeProcess/Tonemap.cs.hlsl");
 
 }
 
-void FRenderCoreProcess::SetPipeline(ProcessType type, const DirectXThreadContext* context) {
+void FRenderCoreProcess::SetPipeline(ProcessType type, const DirectXQueueContext* context) {
 	processes_[static_cast<uint32_t>(type)]->SetPipeline(context->GetDxCommand());
 }
 
-void FRenderCoreProcess::BindComputeBuffer(ProcessType type, const DirectXThreadContext* context, const DxObject::BindBufferDesc& desc) {
+void FRenderCoreProcess::BindComputeBuffer(ProcessType type, const DirectXQueueContext* context, const DxObject::BindBufferDesc& desc) {
 	processes_[static_cast<uint32_t>(type)]->BindComputeBuffer(context->GetDxCommand(), desc);
 }
 
-void FRenderCoreProcess::SetPipeline(CompositeType type, const DirectXThreadContext* context) {
+void FRenderCoreProcess::SetPipeline(CompositeType type, const DirectXQueueContext* context) {
 	composites_[static_cast<uint32_t>(type)]->SetPipeline(context->GetDxCommand());
 }
 
-void FRenderCoreProcess::BindComputeBuffer(CompositeType type, const DirectXThreadContext* context, const DxObject::BindBufferDesc& desc) {
+void FRenderCoreProcess::BindComputeBuffer(CompositeType type, const DirectXQueueContext* context, const DxObject::BindBufferDesc& desc) {
 	composites_[static_cast<uint32_t>(type)]->BindComputeBuffer(context->GetDxCommand(), desc);
 }
 
-void FRenderCoreProcess::Dispatch(const DirectXThreadContext* context, const Vector2ui& size) const {
+void FRenderCoreProcess::Dispatch(const DirectXQueueContext* context, const Vector2ui& size) const {
 	context->GetCommandList()->Dispatch(DxObject::RoundUp(size.x, kNumThreadSize_.x), DxObject::RoundUp(size.y, kNumThreadSize_.y), 1);
 }
 

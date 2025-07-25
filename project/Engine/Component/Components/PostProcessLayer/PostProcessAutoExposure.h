@@ -44,6 +44,8 @@ public:
 		float timeCoeff;
 		float compensation;
 
+		// todo: up, downでparameterを変える
+
 	};
 
 public:
@@ -54,7 +56,7 @@ public:
 
 	void Init() override;
 
-	void Process(const DirectXThreadContext* context, FRenderTargetTextures* textures, const CameraComponent* camera) override;
+	void Process(const DirectXQueueContext* context, const ProcessInfo& info) override;
 
 	void ShowInspectorImGui() override;
 

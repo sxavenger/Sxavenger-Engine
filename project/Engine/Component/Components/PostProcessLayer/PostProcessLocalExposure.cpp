@@ -5,7 +5,7 @@ _DXOBJECT_USING
 // include
 //-----------------------------------------------------------------------------------------
 //* engine
-#include <Engine/Render/FRenderTargetTextures.h>
+#include <Engine/Render/FRenderTargetBuffer.h>
 #include <Engine/Render/FRenderCore.h>
 #include <Engine/System/UI/SxImGui.h>
 
@@ -42,10 +42,8 @@ void PostProcessLocalExposure::Init() {
 	name_ = "Local Exposure";
 }
 
-void PostProcessLocalExposure::Process(const DirectXThreadContext* context, FRenderTargetTextures* textures, const CameraComponent* camera) {
-	camera;
-
-	auto process = textures->GetProcessTextures();
+void PostProcessLocalExposure::Process(const DirectXQueueContext* context, const ProcessInfo& info) {
+	auto process = info.buffer->GetProcessTextures();
 	process->NextProcess(context);
 
 	auto core = FRenderCore::GetInstance()->GetProcess();
@@ -54,15 +52,18 @@ void PostProcessLocalExposure::Process(const DirectXThreadContext* context, FRen
 
 	BindBufferDesc desc = {};
 	// common
-	desc.SetAddress("gConfig",    textures->GetDimension());
-	desc.SetHandle("gInput",      textures->GetProcessTextures()->GetPrevTexture()->GetGPUHandleSRV());
-	desc.SetHandle("gOutput",     textures->GetProcessTextures()->GetIndexTexture()->GetGPUHandleUAV());
+	desc.Set32bitConstants("Dimension", 2, &info.buffer->GetSize());
+	desc.Set32bitConstants("Infomation", 1, &info.weight);
+
+	//* textures
+	desc.SetHandle("gInput",      process->GetPrevTexture()->GetGPUHandleSRV());
+	desc.SetHandle("gOutput",     process->GetIndexTexture()->GetGPUHandleUAV());
 
 	// parameter
 	desc.SetAddress("gParameter", parameter_->GetGPUVirtualAddress());
 
 	core->BindComputeBuffer(FRenderCoreProcess::ProcessType::LocalExposure, context, desc);
-	core->Dispatch(context, textures->GetSize());
+	core->Dispatch(context, info.buffer->GetSize());
 }
 
 void PostProcessLocalExposure::ShowInspectorImGui() {

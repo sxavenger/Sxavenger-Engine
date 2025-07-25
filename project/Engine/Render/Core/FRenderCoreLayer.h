@@ -33,9 +33,9 @@ public:
 
 	//* pipeline option *//
 
-	void SetPipeline(PipelineType type, const DirectXThreadContext* context, const Vector2ui& size) const;
+	void SetPipeline(PipelineType type, const DirectXQueueContext* context, const Vector2ui& size) const;
 
-	void BindGraphicsBuffer(PipelineType type, const DirectXThreadContext* context, const DxObject::BindBufferDesc& desc) const;
+	void BindGraphicsBuffer(PipelineType type, const DirectXQueueContext* context, const DxObject::BindBufferDesc& desc) const;
 
 private:
 

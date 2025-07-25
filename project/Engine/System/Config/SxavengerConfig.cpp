@@ -37,10 +37,11 @@ void SxavengerConfig::Config::Load(const std::filesystem::path& filepath) {
 	json data;
 
 	if (!JsonHandler::LoadFromJson(filepath, data)) {
+		Logger::EngineLog("[Config] warning | user config load failed. request filepath: " + filepath.generic_string());
 		return; //!< fileが見つからなければ初期設定の使用
 	}
 
-	Logger::EngineLog("loaded user config. filepath: " + filepath.generic_string());
+	Logger::EngineLog("[Config] loaded user config. filepath: " + filepath.generic_string());
 
 	//* window
 	if (data.contains("windowSize")) {
@@ -61,7 +62,7 @@ void SxavengerConfig::Config::Load(const std::filesystem::path& filepath) {
 			}
 
 		} else {
-			Logger::EngineLog("[Config] warning | Invalid windowSize format.");
+			Logger::EngineLog("[Config] warning | Invalid window size format.");
 		}
 	}
 

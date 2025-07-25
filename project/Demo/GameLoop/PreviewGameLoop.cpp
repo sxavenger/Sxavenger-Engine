@@ -46,7 +46,11 @@ void PreviewGameLoop::InitGame() {
 	main_ = SxavengerSystem::CreateMainWindow(kMainWindowSize, L"sxavenger engine preview window", { 0.14f, 0.2f, 0.24f, 1.f }).lock();
 	main_->SetIcon("packages/icon/SxavengerEngineIcon.ico", { 32, 32 });
 
-	presenter_.Init();
+	SxavengerSystem::CreateSubWindow(
+		{ 1280, 720 }, L"sxavenger engine preview sub window", DirectXWindowContext::ProcessCategory::Window,
+		{ 0.14f, 0.2f, 0.24f, 1.f }
+	);
+
 	texture_.Create(main_->GetSize(), DXGI_FORMAT_R32G32B32A32_FLOAT);
 
 	environment_ = SxavengerAsset::TryImport<AssetTexture>(
@@ -88,30 +92,29 @@ void PreviewGameLoop::UpdateGame() {
 	actor_.Update();
 	ComponentHelper::UpdateTransform();
 
-	texture_.TransitionBeginUnordered(SxavengerSystem::GetMainThreadContext());
+	texture_.TransitionBeginUnordered(SxavengerSystem::GetDirectQueueContext());
 
-	pipeline_->SetPipeline(SxavengerSystem::GetMainThreadContext()->GetDxCommand());
+	pipeline_->SetPipeline(SxavengerSystem::GetDirectQueueContext()->GetDxCommand());
 
 	DxObject::BindBufferDesc desc = {};
 	desc.SetHandle("gOutput",      texture_.GetGPUHandleUAV());
 	desc.SetHandle("gEnvironment", environment_.WaitAcquire()->GetGPUHandleSRV());
 	desc.SetAddress("gCamera",     actor_.GetComponent<CameraComponent>()->GetGPUVirtualAddress());
 	desc.SetAddress("gParameter",  parameter_->GetGPUVirtualAddress());
-	pipeline_->BindComputeBuffer(SxavengerSystem::GetMainThreadContext()->GetDxCommand(), desc);
+	pipeline_->BindComputeBuffer(SxavengerSystem::GetDirectQueueContext()->GetDxCommand(), desc);
 
-	pipeline_->Dispatch(SxavengerSystem::GetMainThreadContext()->GetDxCommand(), Vector3ui{ DxObject::RoundUp(texture_.GetSize().x, 16), DxObject::RoundUp(texture_.GetSize().y, 16), 1 });
+	pipeline_->Dispatch(SxavengerSystem::GetDirectQueueContext()->GetDxCommand(), Vector3ui{ DxObject::RoundUp(texture_.GetSize().x, 16), DxObject::RoundUp(texture_.GetSize().y, 16), 1 });
 
-	texture_.TransitionEndUnordered(SxavengerSystem::GetMainThreadContext());
+	texture_.TransitionEndUnordered(SxavengerSystem::GetDirectQueueContext());
 }
 
 void PreviewGameLoop::DrawGame() {
 
-	main_->BeginRendering();
-	main_->ClearWindow();
+	main_->BeginRenderWindow(SxavengerSystem::GetDirectQueueContext());
+	main_->ClearWindow(SxavengerSystem::GetDirectQueueContext());
 
-	presenter_.Present(SxavengerSystem::GetMainThreadContext(), main_->GetSize(), texture_.GetGPUHandleSRV());
+	FPresenter::Present(SxavengerSystem::GetDirectQueueContext(), main_->GetSize(), texture_.GetGPUHandleSRV());
 	SxavengerSystem::RenderImGui();
 
-	main_->EndRendering();
+	main_->EndRenderWindow(SxavengerSystem::GetDirectQueueContext());
 }
-

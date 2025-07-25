@@ -31,10 +31,9 @@ struct PSOutput {
 Texture2D<float4> gTexture : register(t10);
 SamplerState gSampler      : register(s10);
 
-struct Parameter {
+cbuffer Dimension : register(b10) {
 	uint2 size;
-};
-ConstantBuffer<Parameter> gParameter : register(b10);
+}
 
 struct Transformation2d {
 
