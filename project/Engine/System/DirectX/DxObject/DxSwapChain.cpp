@@ -166,6 +166,7 @@ void SwapChain::CreateSwapChain(Device* device, CommandContext* command, DXGI_FO
 	desc.BufferCount      = kBufferCount_;
 	desc.SwapEffect       = DXGI_SWAP_EFFECT_FLIP_DISCARD;
 	desc.Flags            = DXGI_SWAP_CHAIN_FLAG_ALLOW_TEARING;
+	desc.Scaling          = DXGI_SCALING_NONE;
 
 	auto hr = device->GetFactory()->CreateSwapChainForHwnd(
 		command->GetCommandQueue(),

@@ -109,7 +109,7 @@ void PostProcessLayerComponent::ShowComponentInspector() {
 		Vector3f min = Matrix4x4::Transform({ -0.5f, -0.5f, -0.5f }, transform->GetMatrix());
 		Vector3f max = Matrix4x4::Transform({ 0.5f, 0.5f, 0.5f }, transform->GetMatrix());
 
-		SxavengerContent::PushBox(min, max, Color4f(1.0f, 1.0f, 0.0f, 1.0f));
+		SxavengerContent::PushBox(min, max, Color4f(0.92f, 0.63f, 0.08f, 1.0f));
 	}
 	
 

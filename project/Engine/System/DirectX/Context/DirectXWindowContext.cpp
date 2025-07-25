@@ -343,7 +343,7 @@ void DirectXWindowContext::InitWindow() {
 	hwnd_ = CreateWindow(
 		wc.lpszClassName,
 		name_.c_str(),
-		WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX, //!< windowのサイズの固定
+		WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX | WS_MAXIMIZEBOX, //!< windowのサイズの固定
 		CW_USEDEFAULT,
 		CW_USEDEFAULT,
 		rect_.right - rect_.left,
