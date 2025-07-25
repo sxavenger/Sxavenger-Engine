@@ -30,6 +30,15 @@ void FRenderCoreProcess::Init() {
 	//!< dof
 	CreatePipeline(ProcessType::DoF, "PostProcess/DoF.cs.hlsl");
 
+	//!< radial blur
+	{
+		DxObject::SamplerBindDesc desc = {};
+		desc.SetSamplerLinear("gSampler", DxObject::SamplerMode::MODE_CLAMP);
+
+		CreatePipeline(ProcessType::RadialBlur, "PostProcess/RadialBlur.cs.hlsl", desc);
+	}
+	
+
 	//!< vignette
 	CreatePipeline(ProcessType::Vignette, "PostProcess/Vignette.cs.hlsl");
 

@@ -16,6 +16,7 @@
 #include "PostProcessDoF.h"
 #include "PostProcessLUT.h"
 #include "PostProcessGrayScale.h"
+#include "PostProcessRadialBlur.h"
 
 //* engine
 #include <Engine/System/DirectX/Context/DirectXQueueContext.h>

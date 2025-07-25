@@ -27,6 +27,7 @@ public:
 		AutoExposureApply,
 		LocalExposure,
 		DoF,
+		RadialBlur,
 		Vignette,
 		ConvertLUTTexture,
 		LUT,

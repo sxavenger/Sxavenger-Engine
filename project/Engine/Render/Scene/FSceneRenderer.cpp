@@ -482,7 +482,7 @@ void FSceneRenderer::ProcessPostProcessPass(const DirectXQueueContext* context, 
 		component->Process(context, config.buffer, config.camera);
 	});
 
-	// TODO: Volume PostProcessの処理
+	// Volume PostProcessの処理
 	sComponentStorage->ForEachActive<PostProcessLayerComponent>([&](PostProcessLayerComponent* component) {
 		if (component->GetTag() != PostProcessLayerComponent::Tag::Volume) {
 			return; //!< Global以外のPostProcessLayerComponentは処理しない
@@ -496,7 +496,7 @@ void FSceneRenderer::ProcessPostProcessPass(const DirectXQueueContext* context, 
 		}
 
 		if (!component->IsInsideVolume(config.camera->GetPosition())) {
-			return;
+			return; // TODO: 範囲外の場合, 減衰処理を行う
 		}
 
 		component->Process(context, config.buffer, config.camera);
