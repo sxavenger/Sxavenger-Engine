@@ -38,13 +38,14 @@ void main(uint3 dispathThreadId : SV_DispatchThreadID) {
 		return;
 	}
 
-	float4 color = gInput[index];
+	float3 input = gInput[index].rgb;
+	float3 color = input;
 
 	switch (gParameter.type) {
 		case Type::kGrayScale:
 			{
-				float3 v = dot(color.rgb, ACES::AP1_RGB2Y);
-				color.rgb = float3(v);
+				float3 v = dot(input, ACES::AP1_RGB2Y);
+				color = float3(v);
 			}
 			break;
 		
@@ -55,13 +56,14 @@ void main(uint3 dispathThreadId : SV_DispatchThreadID) {
 					0.349f, 0.686f, 0.168f,
 					0.272f, 0.534f, 0.131f
 				);
-				color.rgb = mul(sepia, color.rgb);
+				color = mul(sepia, input);
 			}
 			break;
 
 		// todo: manual
 	}
 
-	gOutput[index] = color;
+	gOutput[index].rgb = lerp(input, color, blendWeight);
+	gOutput[index].a   = gInput[index].a;
 	
 }

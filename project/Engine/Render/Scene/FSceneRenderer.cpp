@@ -476,7 +476,6 @@ void FSceneRenderer::ProcessPostProcessPass(const DirectXQueueContext* context, 
 	BasePostProcess::ProcessInfo info = {};
 	info.buffer = config.buffer;
 	info.camera = config.camera;
-	info.weight = 1.0f;
 
 	//!< Global PostProcessの処理
 	sComponentStorage->ForEachActive<PostProcessLayerComponent>([&](PostProcessLayerComponent* component) {
@@ -500,14 +499,15 @@ void FSceneRenderer::ProcessPostProcessPass(const DirectXQueueContext* context, 
 			return; //!< Transformがない場合は処理しない
 		}
 
-		if (!component->IsInsideVolume(config.camera->GetPosition())) {
-			return; // TODO: 範囲外の場合, 減衰処理を行う
+		BasePostProcess::ProcessInfo parameter = info;
+		parameter.weight = component->CalculateVolumeWeight(config.camera->GetPosition());
+
+		if (parameter.weight <= 0.0f) {
+			return; //!< 重みが0以下の場合は処理しない
 		}
 
-		component->Process(context, info);
+		component->Process(context, parameter);
 	});
-
-	info.weight = 1.0f; //!< volume以外のPostProcessLayerComponentはweightを1.0fに設定
 
 	//!< Local Post Processの処理
 	if (auto component = config.camera->GetBehaviour()->GetComponent<PostProcessLayerComponent>()) {

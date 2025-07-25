@@ -10,6 +10,6 @@
 //=========================================================================================
 
 cbuffer Infomation : register(b11) {
-	float weight; //!< blend weight
+	float blendWeight; //!< blend weight
 }
 

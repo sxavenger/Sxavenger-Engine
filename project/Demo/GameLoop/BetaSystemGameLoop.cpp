@@ -54,7 +54,6 @@ void BetaSystemGameLoop::InitSystem() {
 
 	camera_ = std::make_unique<ControllableCameraActor>();
 	camera_->Init();
-	//camera_->GetComponent<CameraComponent>()->SetTag(CameraComponent::Tag::GameCamera);
 	camera_->GetComponent<CameraComponent>()->SetTag(CameraComponent::Tag::GameCamera);
 
 	SxavengerAsset::TryImport<AssetModel>("assets/models/PBR_Sphere_Test/model/PBR_Sphere.gltf");
@@ -77,10 +76,10 @@ void BetaSystemGameLoop::InitSystem() {
 	light->GetSpecularParameter().SetTexture(SxavengerAsset::Import<AssetTexture>("assets/textures/textureCube/sky_radiance.dds"));
 	light->SetEnvironment(SxavengerAsset::Import<AssetTexture>("assets/textures/textureCube/sky_environment.dds").WaitAcquire()->GetGPUHandleSRV());
 
-	//player_ = std::make_unique<Player>();
-	//player_->Load();
-	//player_->Awake();
-	//player_->Start();
+	player_ = std::make_unique<Player>();
+	player_->Load();
+	player_->Awake();
+	player_->Start();
 
 	emissive_ = std::make_unique<EmissiveActor>();
 	emissive_->Init();
@@ -95,7 +94,7 @@ void BetaSystemGameLoop::InitSystem() {
 	behaviour_->AddComponent<PostProcessLayerComponent>();
 	behaviour_->GetComponent<PostProcessLayerComponent>()->SetTag(PostProcessLayerComponent::Tag::None);
 	behaviour_->GetComponent<PostProcessLayerComponent>()->AddPostProcess<PostProcessAutoExposure>();
-	//behaviour_->GetComponent<PostProcessLayerComponent>()->AddPostProcess<PostProcessLocalExposure>();
+	behaviour_->GetComponent<PostProcessLayerComponent>()->AddPostProcess<PostProcessLocalExposure>();
 	//behaviour_->GetComponent<PostProcessLayerComponent>()->AddPostProcess<PostProcessBloom>();
 	behaviour_->GetComponent<PostProcessLayerComponent>()->AddPostProcess<PostProcessDoF>();
 	behaviour_->GetComponent<PostProcessLayerComponent>()->AddPostProcess<PostProcessGrayScale>();

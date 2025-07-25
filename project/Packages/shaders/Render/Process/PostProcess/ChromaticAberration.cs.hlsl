@@ -44,7 +44,7 @@ void main(uint3 dispathThreadId : SV_DispatchThreadID) {
 	}
 
 	float2 uv        = float2(index) / size * 2.0f - 1.0f; // [-1.0 ~ 1.0]
-	float2 direction = normalize(uv) * gParameter.GetIntensity();
+	float2 direction = normalize(uv) * gParameter.GetIntensity() * blendWeight;
 
 	float distance = saturate(length(uv));
 

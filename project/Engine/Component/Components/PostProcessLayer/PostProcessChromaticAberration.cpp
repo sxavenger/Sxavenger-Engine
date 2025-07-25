@@ -44,6 +44,7 @@ void PostProcessChromaticAberration::Process(const DirectXQueueContext* context,
 	BindBufferDesc desc = {};
 	// common
 	desc.Set32bitConstants("Dimension", 2, &info.buffer->GetSize());
+	desc.Set32bitConstants("Infomation", 1, &info.weight);
 
 	//* textures
 	desc.SetHandle("gInput",  process->GetPrevTexture()->GetGPUHandleSRV());

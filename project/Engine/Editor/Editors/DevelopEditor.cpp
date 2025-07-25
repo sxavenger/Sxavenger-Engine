@@ -253,7 +253,7 @@ void DevelopEditor::ShowConsole() {
 	ImGui::BeginChild(ImGui::GetID((void*)0), ImGui::GetContentRegionAvail(), ImGuiChildFlags_Border, ImGuiWindowFlags_AlwaysVerticalScrollbar);
 
 	//!< todo: filterできるようにする
-	for (const auto& [data, count] : SxavengerLogger::GetStacks() | std::views::filter([](const auto&) { return true; })) {
+	for (const auto& [data, count] : SxavengerLogger::GetStacks() | std::views::reverse | std::views::filter([](const auto&) { return true; })) {
 		if (count == 1) {
 			ImGui::TextColored(colors[static_cast<uint32_t>(data.category)], std::format("{}", data.label).c_str());
 

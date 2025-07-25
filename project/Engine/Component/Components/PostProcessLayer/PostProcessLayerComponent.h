@@ -83,7 +83,7 @@ public:
 
 	const TransformComponent* GetTransform() const; //!< volume時のみ使用.
 
-	bool IsInsideVolume(const Vector3f& position) const;
+	float CalculateVolumeWeight(const Vector3f& position) const;
 
 private:
 
@@ -91,12 +91,24 @@ private:
 	// private variables
 	//=========================================================================================
 
-
 	//* main process *//
 
 	Container processes_;
 
 	Tag tag_ = Tag::None;
+
+	//* volume parameter *//
+
+	float blendRadius = 1.0f;
+	float blendWeight = 1.0f;
+
+	//=========================================================================================
+	// private methods
+	//=========================================================================================
+
+	std::optional<std::pair<Vector3f, Vector3f>> GetVolumeBox() const;
+
+	bool IsInsideVolume(const Vector3f& position) const;
 
 };
 

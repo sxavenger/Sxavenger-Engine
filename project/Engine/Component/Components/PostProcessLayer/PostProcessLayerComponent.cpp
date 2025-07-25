@@ -7,6 +7,7 @@
 #include "../../Entity/MonoBehaviour.h"
 
 //* engine
+#include <Engine/System/UI/SxImGui.h>
 #include <Engine/Content/SxavengerContent.h>
 
 //* lib
@@ -102,9 +103,21 @@ void PostProcessLayerComponent::ShowComponentInspector() {
 
 	// todo: mouseでの操作を可能にする
 
+	ImGui::Text("volume parameter");
+	ImGui::Separator();
+
+	bool isVolume = (tag_ == Tag::Volume);
+
+	ImGui::BeginDisabled(!isVolume);
+
+	SxImGui::DragFloat("blend radius", &blendRadius, 0.01f, 0.0f, std::nullopt);
+	SxImGui::DragFloat("blend weight", &blendWeight, 0.01f, 0.0f, 1.0f);
+
+	ImGui::EndDisabled();
+
 	auto transform = GetTransform();
 
-	if (tag_ == Tag::Volume && transform != nullptr) {
+	if (isVolume && transform != nullptr) {
 		//!< volume時, boxの描画
 		Vector3f min = Matrix4x4::Transform({ -0.5f, -0.5f, -0.5f }, transform->GetMatrix());
 		Vector3f max = Matrix4x4::Transform({ 0.5f, 0.5f, 0.5f }, transform->GetMatrix());
@@ -125,6 +138,53 @@ void PostProcessLayerComponent::Process(const DirectXQueueContext* context, cons
 
 const TransformComponent* PostProcessLayerComponent::GetTransform() const {
 	return BaseComponent::GetBehaviour()->GetComponent<TransformComponent>();
+}
+
+float PostProcessLayerComponent::CalculateVolumeWeight(const Vector3f& position) const {
+
+	auto volume = GetVolumeBox();
+
+	if (!volume.has_value()) {
+		return 0.0f; //!< volume boxが存在しない.
+	}
+
+	const auto& [min, max] = volume.value();
+
+	if (All(position >= min) && All(position <= max)) { //!< volume内にある場合
+		return 1.0f;
+	}
+
+	if (blendRadius <= 0.0f || blendWeight <= 0.0f) {
+		// parameterが無効値.
+		return 0.0f;
+	}
+
+	Vector3f closest = Vector3f::Clamp(position, min, max);
+
+	float distance = (position - closest).Length();
+	float t        = 1.0f - std::clamp(distance / blendRadius, 0.0f, 1.0f);
+
+	return std::clamp(t * blendWeight, 0.0f, 1.0f);
+}
+
+std::optional<std::pair<Vector3f, Vector3f>> PostProcessLayerComponent::GetVolumeBox() const {
+	auto transform = GetTransform();
+
+	if (transform == nullptr) {
+		return std::nullopt;
+	}
+
+	// boundingの計算と調整
+	Vector3f min = Matrix4x4::Transform({ -0.5f, -0.5f, -0.5f }, transform->GetMatrix());
+	Vector3f max = Matrix4x4::Transform({ 0.5f, 0.5f, 0.5f }, transform->GetMatrix());
+
+	for (size_t i = 0; i < 3; ++i) {
+		if (min[i] > max[i]) {
+			std::swap(min[i], max[i]);
+		}
+	}
+
+	return std::make_pair(min, max);
 }
 
 bool PostProcessLayerComponent::IsInsideVolume(const Vector3f& position) const {

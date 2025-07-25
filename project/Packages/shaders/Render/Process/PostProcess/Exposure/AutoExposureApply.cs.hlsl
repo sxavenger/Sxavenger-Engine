@@ -22,5 +22,7 @@ void main(uint3 dispatchThreadId : SV_DispatchThreadID) {
 	output.rgb = input.rgb * exposure;
 	output.a   = input.a;
 
-	gOutput[index] = output;
+	gOutput[index].rgb = lerp(input.rgb, output.rgb, blendWeight);
+	gOutput[index].a = input.a;
+
 }
