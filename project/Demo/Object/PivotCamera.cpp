@@ -40,6 +40,8 @@ void PivotCamera::Awake() {
 	auto exposure = process->AddPostProcess<PostProcessAutoExposure>();
 	exposure->GetParameter().compensation    = -2.0f;
 	exposure->GetParameter().minLogLuminance = -1.0f;
+
+	process->AddPostProcess<PostProcessBloom>();
 }
 
 void PivotCamera::Start() {

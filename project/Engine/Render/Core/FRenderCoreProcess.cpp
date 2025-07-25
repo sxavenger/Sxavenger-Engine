@@ -14,9 +14,6 @@ void FRenderCoreProcess::Init() {
 	//!< grayscale
 	CreatePipeline(ProcessType::GrayScale, "PostProcess/GrayScale.cs.hlsl");
 
-	//!< bloom
-	CreatePipeline(ProcessType::Bloom, "PostProcess/Bloom.cs.hlsl");
-
 	//!< auto exposure
 	CreatePipeline(ProcessType::AutoExposureLuminance, "PostProcess/Exposure/AutoExposureLuminance.cs.hlsl");
 	CreatePipeline(ProcessType::AutoExposureAverage,   "PostProcess/Exposure/AutoExposureAverage.cs.hlsl");
@@ -31,6 +28,9 @@ void FRenderCoreProcess::Init() {
 	{
 		DxObject::SamplerBindDesc desc = {};
 		desc.SetSamplerLinear("gSampler", DxObject::SamplerMode::MODE_CLAMP);
+
+		//!< bloom
+		CreatePipeline(ProcessType::Bloom, "PostProcess/Bloom.cs.hlsl", desc);
 
 		//!< radial blur
 		CreatePipeline(ProcessType::RadialBlur, "PostProcess/RadialBlur.cs.hlsl", desc);

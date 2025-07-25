@@ -76,7 +76,7 @@ void DemoGameLoop::InitGame() {
 	volume_->GetComponent<PostProcessLayerComponent>()->AddPostProcess<PostProcessChromaticAberration>();
 	volume_->GetComponent<PostProcessLayerComponent>()->AddPostProcess<PostProcessRadialBlur>();
 
-	auto texture = SxavengerAsset::TryImport<AssetTexture>("assets/textures/LUT/LUT_LateSunsetTable.tga", Texture::Option{ Texture::Encoding::Intensity, false });
+	auto texture = SxavengerAsset::TryImport<AssetTexture>("assets/textures/LUT/lut_reddish.png", Texture::Option{ Texture::Encoding::Intensity, false });
 	auto lut = volume_->GetComponent<PostProcessLayerComponent>()->AddPostProcess<PostProcessLUT>();
 	lut->CreateTexture(SxavengerSystem::GetDirectQueueContext(), texture, { 16, 16 });
 }
