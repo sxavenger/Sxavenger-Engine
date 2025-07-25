@@ -1,10 +1,7 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
-#include "../Process.hlsli"
-
-//* library
-#include "../../../Library/Blend.hlsli"
+#include "PostProcess.hlsli"
 
 //=========================================================================================
 // buffers
@@ -14,9 +11,9 @@ RWTexture2D<float4> gInput  : register(u0); //!< input texture
 RWTexture2D<float4> gOutput : register(u1); //!< output texture
 
 struct Parameter {
-	float4 color;
-	float offset;
-	float power;
+	float3 color;
+	float2 center;
+	float exponent;
 };
 ConstantBuffer<Parameter> gParameter : register(b0);
 
@@ -34,16 +31,11 @@ void main(uint3 dispatchThreadId : SV_DispatchThreadID) {
 
 	float4 input = gInput[index];
 
-	float2 uv     = float2(index) / float2(size - 1);
-	float2 center = float2(0.5f, 0.5f);
+	float2 uv      = float2(index) / float2(size) * 2.0f - 1.0f; // [-1.0 ~ 1.0]
+	float distance = length(uv - gParameter.center);
 
-	float l = length(uv - center) * gParameter.offset;
-	float t = 1.0 - saturate(l * 2.0f); //!< [0.0 ~ 1.0]
+	float t = pow(saturate(distance), gParameter.exponent);
 
-	float v = pow(t, gParameter.power);
-
-	float4 color = BlendNormalAlpha(float4(gParameter.color.rgb, 1.0f - v), input);
-	//!< todo: blend modeおかしい
-
-	gOutput[index] = color;
+	
+	//gOutput[index] = color;
 }

@@ -40,10 +40,6 @@ void PivotCamera::Awake() {
 	auto exposure = process->AddPostProcess<PostProcessAutoExposure>();
 	exposure->GetParameter().compensation    = -2.0f;
 	exposure->GetParameter().minLogLuminance = -1.0f;
-
-	auto texture = SxavengerAsset::TryImport<AssetTexture>("assets/textures/LUT/lut_reddish.png", Texture::Option{ Texture::Encoding::Intensity, false });
-	auto lut     = process->AddPostProcess<PostProcessLUT>();
-	lut->CreateTexture(SxavengerSystem::GetDirectQueueContext(), texture, { 16, 16 });
 }
 
 void PivotCamera::Start() {
