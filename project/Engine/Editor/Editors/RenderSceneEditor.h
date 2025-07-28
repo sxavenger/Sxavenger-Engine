@@ -116,11 +116,11 @@ private:
 	enum class GBuffer : uint32_t {
 		Scene,
 		Deferred_GBuffer,
+		Lighting_GBuffer,
 		Albedo,
 		Normal,
 		MaterialARM,
 		Position,
-		Lighting_GBuffer,
 		Direct,
 		Indirect,
 	};
@@ -207,6 +207,8 @@ private:
 
 	void ShowIconScene();
 	void ShowInfoTextScene();
+
+	void UpdateKeyShortcut();
 
 	//* sub methods *//
 

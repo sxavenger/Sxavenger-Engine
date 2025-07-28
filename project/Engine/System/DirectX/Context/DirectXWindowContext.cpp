@@ -196,6 +196,9 @@ LRESULT DirectXWindowContext::WindowProcApplication(HWND hwnd, UINT msg, WPARAM 
 	}
 
 	switch (msg) {
+		case WM_SYSCHAR:
+			return 0;
+
 		case WM_CREATE:
 			{
 				auto structure = reinterpret_cast<CREATESTRUCT*>(lparam);
@@ -227,6 +230,9 @@ LRESULT DirectXWindowContext::WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPA
 	}
 
 	switch (msg) {
+		case WM_SYSCHAR:
+			return 0;
+
 		case WM_CLOSE: //!< windowが終了した
 			// windowの破棄
 			DestroyWindow(hwnd);

@@ -79,6 +79,8 @@ void RenderSceneEditor::ShowMainMenu() {
 }
 
 void RenderSceneEditor::ShowWindow() {
+	UpdateKeyShortcut();
+
 	ShowGameWindow();
 	ShowCanvasWindow();
 	ShowSceneWindow();
@@ -295,6 +297,8 @@ void RenderSceneEditor::ShowSceneMenu() {
 			ImGui::EndCombo();
 		}
 
+		SxImGui::HelpMarker("(!)", "[alt] + [up] || [down]");
+
 		// process
 		ImGui::Text("process");
 		ImGui::Separator();
@@ -305,10 +309,11 @@ void RenderSceneEditor::ShowSceneMenu() {
 		ImGui::Separator();
 		ImGui::Checkbox("enable indirect lighting", &config_.isEnableIndirectLighting);
 
-		ImGui::BeginDisabled(!config_.isEnableIndirectLighting);
 		if (ImGui::Button("reset resourviour")) {
 			renderer_->ResetReservoir();
 		}
+
+		ImGui::BeginDisabled(!config_.isEnableIndirectLighting);
 		ImGui::Text("sample count: %u", renderer_->GetReservoirSampleCount());
 		ImGui::EndDisabled();
 
@@ -609,6 +614,36 @@ void RenderSceneEditor::ShowInfoTextScene() {
 	
 }
 
+void RenderSceneEditor::UpdateKeyShortcut() {
+
+	// bufferの切り替え
+	if (SxavengerSystem::IsPressKey(KeyId::KEY_LALT) && SxavengerSystem::IsTriggerKey(KeyId::KEY_UP)) { //!< left alt + Up
+		if (buffer_ > GBuffer::Scene) {
+			buffer_ = static_cast<GBuffer>(static_cast<uint32_t>(buffer_) - 1);
+		}
+	}
+
+	if (SxavengerSystem::IsPressKey(KeyId::KEY_LALT) && SxavengerSystem::IsTriggerKey(KeyId::KEY_DOWN)) { //!< left alt + Down
+		if (buffer_ < GBuffer::Indirect) {
+			buffer_ = static_cast<GBuffer>(static_cast<uint32_t>(buffer_) + 1);
+		}
+
+	}
+
+	if (SxavengerSystem::IsPressKey(KeyId::KEY_LALT) && SxavengerSystem::IsTriggerKey(KeyId::KEY_1)) { //!< left alt + 1
+		buffer_ = GBuffer::Scene;
+	}
+
+	if (SxavengerSystem::IsPressKey(KeyId::KEY_LALT) && SxavengerSystem::IsTriggerKey(KeyId::KEY_2)) { //!< left alt + 2
+		buffer_ = GBuffer::Deferred_GBuffer;
+	}
+
+	if (SxavengerSystem::IsPressKey(KeyId::KEY_LALT) && SxavengerSystem::IsTriggerKey(KeyId::KEY_3)) { //!< left alt + 3
+		buffer_ = GBuffer::Lighting_GBuffer;
+	}
+
+}
+
 RenderSceneEditor::WindowRect RenderSceneEditor::SetImGuiImageFullWindow(const D3D12_GPU_DESCRIPTOR_HANDLE& handle, const Vector2ui& size) const {
 
 	// タブ等を排除した全体のwindowSize計算
@@ -821,6 +856,17 @@ void RenderSceneEditor::DisplayGBufferTexture(GBuffer buffer) {
 			);
 			break;
 
+		case GBuffer::Lighting_GBuffer:
+			SetImGuiImagesFullWindowEnable(
+				{
+					{ textures_->GetGBuffer(FLightingGBuffer::Layout::Direct)->GetGPUHandleSRV(),   GBuffer::Direct },
+					{ textures_->GetGBuffer(FLightingGBuffer::Layout::Indirect)->GetGPUHandleSRV(), GBuffer::Indirect },
+				},
+				textures_->GetSize(),
+				isRender_
+			);
+			break;
+
 		case GBuffer::Albedo:
 			SetImGuiImageFullWindowEnable(
 				textures_->GetGBuffer(FDeferredGBuffer::Layout::Albedo)->GetGPUHandleSRV(),
@@ -848,17 +894,6 @@ void RenderSceneEditor::DisplayGBufferTexture(GBuffer buffer) {
 		case GBuffer::Position:
 			SetImGuiImageFullWindowEnable(
 				textures_->GetGBuffer(FDeferredGBuffer::Layout::Position)->GetGPUHandleSRV(),
-				textures_->GetSize(),
-				isRender_
-			);
-			break;
-
-		case GBuffer::Lighting_GBuffer:
-			SetImGuiImagesFullWindowEnable(
-				{
-					{ textures_->GetGBuffer(FLightingGBuffer::Layout::Direct)->GetGPUHandleSRV(),   GBuffer::Direct },
-					{ textures_->GetGBuffer(FLightingGBuffer::Layout::Indirect)->GetGPUHandleSRV(), GBuffer::Indirect },
-				},
 				textures_->GetSize(),
 				isRender_
 			);
