@@ -44,12 +44,12 @@ void SxavengerContent::ResetPrimtive() {
 	debugPrimitive_->ResetPrimitive();
 }
 
-void SxavengerContent::PushLine(const Vector3f& v1, const Vector3f& v2, const Color4f& color) {
-	debugPrimitive_->PushLine(v1, v2, color);
+void SxavengerContent::PushLine(const Vector3f& v1, const Vector3f& v2, const Color4f& color, float thickness) {
+	debugPrimitive_->PushLine(v1, v2, color, thickness);
 }
 
-void SxavengerContent::PushLineOverlay(const Vector3f& v1, const Vector3f& v2, const Color4f& color) {
-	debugPrimitive_->PushLineOverlay(v1, v2, color);
+void SxavengerContent::PushLineOverlay(const Vector3f& v1, const Vector3f& v2, const Color4f& color, float thickness) {
+	debugPrimitive_->PushLineOverlay(v1, v2, color, thickness);
 }
 
 void SxavengerContent::PushAxis(const Vector3f& center, float length) {

@@ -1,17 +1,18 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
-#include "DebugPrimitive.hlsli"
+#include "PrimitiveLine.hlsli"
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // main
 ////////////////////////////////////////////////////////////////////////////////////////////
-VSOutput main(VSInput input) {
+GSInput main(VSInput input) {
 
-	VSOutput output;
+	GSInput output;
 
-	output.position = mul(input.position, viewProj);
-	output.color    = input.color;
+	output.position  = mul(input.position, kViewProj);
+	output.color     = input.color;
+	output.thickness = input.thickness;
 
 	return output;
 	

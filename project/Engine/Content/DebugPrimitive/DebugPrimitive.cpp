@@ -43,11 +43,12 @@ void BaseDebugPrimitive::CreateInputBuffer(uint32_t size) {
 	input_->Create(SxavengerSystem::GetDxDevice(), size);
 }
 
-void BaseDebugPrimitive::SetVertexBuffer(const Vector3f& position, const Color4f& color) {
+void BaseDebugPrimitive::SetVertexBuffer(const Vector3f& position, const Color4f& color, float thickness) {
 	Exception::Assert(inputOffset_ + inputCount_ < input_->GetSize()); //!< indexの超過
 
-	(*input_)[inputOffset_ + inputCount_].position = { position.x, position.y, position.z, 1.0f };
-	(*input_)[inputOffset_ + inputCount_].color    = color;
+	(*input_)[inputOffset_ + inputCount_].position  = { position.x, position.y, position.z, 1.0f };
+	(*input_)[inputOffset_ + inputCount_].color     = color;
+	(*input_)[inputOffset_ + inputCount_].thickness = thickness;
 
 	// 登録したので
 	inputCount_++;
@@ -61,9 +62,9 @@ void DebugPrimitiveLine::Init() {
 	BaseDebugPrimitive::CreateInputBuffer(kMaxLineNum_ * kVertexNum_);
 }
 
-void DebugPrimitiveLine::PushLine(const Vector3f& v1, const Vector3f& v2, const Color4f& color) {
-	BaseDebugPrimitive::SetVertexBuffer(v1, color);
-	BaseDebugPrimitive::SetVertexBuffer(v2, color);
+void DebugPrimitiveLine::PushLine(const Vector3f& v1, const Vector3f& v2, const Color4f& color, float thickness) {
+	BaseDebugPrimitive::SetVertexBuffer(v1, color, thickness);
+	BaseDebugPrimitive::SetVertexBuffer(v2, color, thickness);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -109,12 +110,12 @@ void DebugPrimitive::ResetPrimitive() {
 	lineOverlay_->Reset();
 }
 
-void DebugPrimitive::PushLine(const Vector3f& v1, const Vector3f& v2, const Color4f& color) {
-	line_->PushLine(v1, v2, color);
+void DebugPrimitive::PushLine(const Vector3f& v1, const Vector3f& v2, const Color4f& color, float thickness) {
+	line_->PushLine(v1, v2, color, thickness);
 }
 
-void DebugPrimitive::PushLineOverlay(const Vector3f& v1, const Vector3f& v2, const Color4f& color) {
-	lineOverlay_->PushLine(v1, v2, color);
+void DebugPrimitive::PushLineOverlay(const Vector3f& v1, const Vector3f& v2, const Color4f& color, float thickness) {
+	lineOverlay_->PushLine(v1, v2, color, thickness);
 }
 
 void DebugPrimitive::PushGrid(const Vector3f& center, float size) {
@@ -148,9 +149,9 @@ void DebugPrimitive::PushGrid(const Vector3f& center, float size) {
 }
 
 void DebugPrimitive::PushAxis(const Vector3f& center, float length) {
-	PushLine(center, center + Vector3f(length, 0.0f, 0.0f), Color4f::Convert(0xFA0000FF)); //!< x軸
-	PushLine(center, center + Vector3f(0.0f, length, 0.0f), Color4f::Convert(0x00FA00FF)); //!< y軸
-	PushLine(center, center + Vector3f(0.0f, 0.0f, length), Color4f::Convert(0x0000FAFF)); //!< z軸
+	PushLine(center, center + Vector3f(length, 0.0f, 0.0f), Color4f::Convert(0xFA0000FF), 0.6f); //!< x軸
+	PushLine(center, center + Vector3f(0.0f, length, 0.0f), Color4f::Convert(0x00FA00FF), 0.6f); //!< y軸
+	PushLine(center, center + Vector3f(0.0f, 0.0f, length), Color4f::Convert(0x0000FAFF), 0.6f); //!< z軸
 }
 
 void DebugPrimitive::PushBox(const Vector3f& min, const Vector3f& max, const Color4f& color) {
@@ -165,22 +166,22 @@ void DebugPrimitive::PushBox(const Vector3f& min, const Vector3f& max, const Col
 	Vector3f v7 = { min.x, max.y, max.z };
 
 	// 下部の四角形
-	PushLine(v0, v1, color);
-	PushLine(v1, v2, color);
-	PushLine(v2, v3, color);
-	PushLine(v3, v0, color);
+	PushLine(v0, v1, color, 0.6f);
+	PushLine(v1, v2, color, 0.6f);
+	PushLine(v2, v3, color, 0.6f);
+	PushLine(v3, v0, color, 0.6f);
 
 	// 上部の四角形
-	PushLine(v4, v5, color);
-	PushLine(v5, v6, color);
-	PushLine(v6, v7, color);
-	PushLine(v7, v4, color);
+	PushLine(v4, v5, color, 0.6f);
+	PushLine(v5, v6, color, 0.6f);
+	PushLine(v6, v7, color, 0.6f);
+	PushLine(v7, v4, color, 0.6f);
 
 	// 側面の線
-	PushLine(v0, v4, color);
-	PushLine(v1, v5, color);
-	PushLine(v2, v6, color);
-	PushLine(v3, v7, color);
+	PushLine(v0, v4, color, 0.6f);
+	PushLine(v1, v5, color, 0.6f);
+	PushLine(v2, v6, color, 0.6f);
+	PushLine(v3, v7, color, 0.6f);
 }
 
 void DebugPrimitive::PushCube(const Vector3f& center, const Vector3f& size, const Color4f& color) {
@@ -276,9 +277,9 @@ void DebugPrimitive::CreatePipeline() {
 	{
 		auto& pipeline = pipelines_[PipelineType::kLine];
 		pipeline = std::make_unique<ReflectionGraphicsPipelineState>();
-		pipeline->CreateBlob(kPackagesShaderDirectory / "render/debug/debugPrimitive.vs.hlsl",     GraphicsShaderType::vs);
-		pipeline->CreateBlob(kPackagesShaderDirectory / "render/debug/debugPrimitiveLine.gs.hlsl", GraphicsShaderType::gs);
-		pipeline->CreateBlob(kPackagesShaderDirectory / "render/debug/debugPrimitive.ps.hlsl",     GraphicsShaderType::ps);
+		pipeline->CreateBlob(kPackagesShaderDirectory / "render/debug/line/PrimitiveLine.vs.hlsl", GraphicsShaderType::vs);
+		pipeline->CreateBlob(kPackagesShaderDirectory / "render/debug/line/PrimitiveLine.gs.hlsl", GraphicsShaderType::gs);
+		pipeline->CreateBlob(kPackagesShaderDirectory / "render/debug/line/PrimitiveLine.ps.hlsl", GraphicsShaderType::ps);
 
 		pipeline->ReflectionRootSignature(SxavengerSystem::GetDxDevice());
 
@@ -286,8 +287,9 @@ void DebugPrimitive::CreatePipeline() {
 		desc.CreateDefaultDesc();
 
 		desc.elements.clear();
-		desc.SetElement("POSITION", 0, DXGI_FORMAT_R32G32B32A32_FLOAT);
+		desc.SetElement("POSITION", 0,  DXGI_FORMAT_R32G32B32A32_FLOAT);
 		desc.SetElement("COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT);
+		desc.SetElement("THICKNESS", 0, DXGI_FORMAT_R32_FLOAT);
 
 		desc.SetRasterizer(D3D12_CULL_MODE_NONE, D3D12_FILL_MODE_SOLID);
 		desc.SetPrimitive(PrimitiveType::LineList);
@@ -302,9 +304,9 @@ void DebugPrimitive::CreatePipeline() {
 	{
 		auto& pipeline = pipelines_[PipelineType::kLineOverlay];
 		pipeline = std::make_unique<ReflectionGraphicsPipelineState>();
-		pipeline->CreateBlob(kPackagesShaderDirectory / "render/debug/debugPrimitive.vs.hlsl",     GraphicsShaderType::vs);
-		pipeline->CreateBlob(kPackagesShaderDirectory / "render/debug/debugPrimitiveLine.gs.hlsl", GraphicsShaderType::gs);
-		pipeline->CreateBlob(kPackagesShaderDirectory / "render/debug/debugPrimitive.ps.hlsl",     GraphicsShaderType::ps);
+		pipeline->CreateBlob(kPackagesShaderDirectory / "render/debug/line/PrimitiveLine.vs.hlsl", GraphicsShaderType::vs);
+		pipeline->CreateBlob(kPackagesShaderDirectory / "render/debug/line/PrimitiveLine.gs.hlsl", GraphicsShaderType::gs);
+		pipeline->CreateBlob(kPackagesShaderDirectory / "render/debug/line/PrimitiveLine.ps.hlsl", GraphicsShaderType::ps);
 
 		pipeline->ReflectionRootSignature(SxavengerSystem::GetDxDevice());
 
@@ -314,6 +316,7 @@ void DebugPrimitive::CreatePipeline() {
 		desc.elements.clear();
 		desc.SetElement("POSITION", 0, DXGI_FORMAT_R32G32B32A32_FLOAT);
 		desc.SetElement("COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT);
+		desc.SetElement("THICKNESS", 0, DXGI_FORMAT_R32_FLOAT);
 
 		desc.SetRasterizer(D3D12_CULL_MODE_NONE, D3D12_FILL_MODE_SOLID);
 		desc.SetPrimitive(PrimitiveType::LineList);

@@ -48,6 +48,7 @@ protected:
 	struct PrimitiveInput {
 		Vector4f position;
 		Color4f  color;
+		float thickness;
 	};
 
 protected:
@@ -71,7 +72,7 @@ protected:
 
 	void CreateInputBuffer(uint32_t size);
 
-	void SetVertexBuffer(const Vector3f& position, const Color4f& color);
+	void SetVertexBuffer(const Vector3f& position, const Color4f& color, float thickness);
 
 };
 
@@ -91,7 +92,7 @@ public:
 
 	void Init();
 
-	void PushLine(const Vector3f& v1, const Vector3f& v2, const Color4f& color);
+	void PushLine(const Vector3f& v1, const Vector3f& v2, const Color4f& color, float thickness = 0.0f);
 
 private:
 
@@ -127,9 +128,9 @@ public:
 
 	void ResetPrimitive();
 
-	void PushLine(const Vector3f& v1, const Vector3f& v2, const Color4f& color);
+	void PushLine(const Vector3f& v1, const Vector3f& v2, const Color4f& color, float thickness = 0.0f);
 
-	void PushLineOverlay(const Vector3f& v1, const Vector3f& v2, const Color4f& color);
+	void PushLineOverlay(const Vector3f& v1, const Vector3f& v2, const Color4f& color, float thickness = 0.0f);
 
 	//* drawer options *//
 

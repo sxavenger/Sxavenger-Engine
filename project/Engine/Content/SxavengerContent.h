@@ -43,9 +43,9 @@ public:
 
 	static void ResetPrimtive();
 
-	static void PushLine(const Vector3f& v1, const Vector3f& v2, const Color4f& color);
+	static void PushLine(const Vector3f& v1, const Vector3f& v2, const Color4f& color, float thickness = 0.0f);
 
-	static void PushLineOverlay(const Vector3f& v1, const Vector3f& v2, const Color4f& color);
+	static void PushLineOverlay(const Vector3f& v1, const Vector3f& v2, const Color4f& color, float thickness = 0.0f);
 
 	static void PushAxis(const Vector3f& center, float length);
 

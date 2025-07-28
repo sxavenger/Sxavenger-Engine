@@ -188,8 +188,8 @@ void CameraComponent::PushLineFrustum() {
 		uint8_t nearIndex = farIndex + 4;
 		uint8_t nearNext  = farNext + 4;
 
-		SxavengerContent::PushLine(frustumPoint[nearIndex], frustumPoint[nearNext], color);
-		SxavengerContent::PushLine(frustumPoint[farIndex],  frustumPoint[farNext],  color);
-		SxavengerContent::PushLine(frustumPoint[nearIndex], frustumPoint[farIndex],  color);
+		SxavengerContent::PushLine(frustumPoint[nearIndex], frustumPoint[nearNext], color, 0.6f);
+		SxavengerContent::PushLine(frustumPoint[farIndex],  frustumPoint[farNext],  color, 0.6f);
+		SxavengerContent::PushLine(frustumPoint[nearIndex], frustumPoint[farIndex], color, 0.6f);
 	}
 }

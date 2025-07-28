@@ -539,10 +539,7 @@ void RenderSceneEditor::ShowIconScene() {
 
 	// Post Process Layer
 	sComponentStorage->ForEach<PostProcessLayerComponent>([&](PostProcessLayerComponent* component) {
-		if (component->GetTag() != PostProcessLayerComponent::Tag::Volume) {
-			return;
-		}
-
+		
 		auto transform = component->GetTransform();
 
 		if (transform == nullptr) {
