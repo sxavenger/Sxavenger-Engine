@@ -30,6 +30,9 @@ public:
 	void BeginRenderTargetLightingDirect(const DirectXQueueContext* context);
 	void EndRenderTargetLightingDirect(const DirectXQueueContext* context);
 
+	void BeginUnorderedLightingIndirect(const DirectXQueueContext* context);
+	void EndUnorderedLightingIndirect(const DirectXQueueContext* context);
+
 	void BeginUnorderedMainScene(const DirectXQueueContext* context);
 	void EndUnorderedMainScene(const DirectXQueueContext* context);
 

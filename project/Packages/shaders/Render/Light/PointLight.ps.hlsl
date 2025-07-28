@@ -46,8 +46,8 @@ PSOutput main(PSInput input) {
 	//* 計算
 	float3 h = normalize(l + v);
 
-	float NdotV = saturate(dot(surface.normal, v)) + kEpsilon; //!< 0除算対策
-	float NdotL = saturate(dot(surface.normal, l)) + kEpsilon; //!< 0除算対策
+	float NdotV = saturate(dot(surface.normal, v)); //!< 0除算対策
+	float NdotL = saturate(dot(surface.normal, l)); //!< 0除算対策
 	float NdotH = saturate(dot(surface.normal, h));
 	float VdotH = saturate(dot(v, h));
 

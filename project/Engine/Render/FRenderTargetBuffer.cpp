@@ -44,6 +44,14 @@ void FRenderTargetBuffer::EndRenderTargetLightingDirect(const DirectXQueueContex
 	lighting_.TransitionEndRenderTargetDirect(context);
 }
 
+void FRenderTargetBuffer::BeginUnorderedLightingIndirect(const DirectXQueueContext* context) {
+	lighting_.TransitionBeginUnorderedIndirect(context);
+}
+
+void FRenderTargetBuffer::EndUnorderedLightingIndirect(const DirectXQueueContext* context) {
+	lighting_.TransitionEndUnorderedIndirect(context);
+}
+
 void FRenderTargetBuffer::BeginUnorderedMainScene(const DirectXQueueContext* context) {
 	main_.TransitionBeginUnorderedScene(context);
 }

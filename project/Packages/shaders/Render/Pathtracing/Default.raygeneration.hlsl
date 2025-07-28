@@ -54,7 +54,9 @@ _RAYGENERATION void mainRaygeneration() {
 
 	diffuse_indirect /= sampleCount; //!< 平均化
 
-	float4 indirect = diffuse_indirect;
+	float4 indirect = float4(0.0f, 0.0f, 0.0f, 0.0f);
+	indirect.rgb += diffuse_indirect.rgb * surface.albedo / kPi;
+	indirect.a   += diffuse_indirect.a > 0.0f ? 1.0f : 0.0f;
 	
 	gIndirect[index] += indirect;
 	

@@ -301,40 +301,16 @@ void RenderSceneEditor::ShowSceneMenu() {
 		ImGui::Checkbox("enable post process", &config_.isEnablePostProcess);
 		ImGui::Checkbox("enable tonemap",      &config_.isElableTonemap);
 
-		// technique
-		ImGui::Text("technique");
+		ImGui::Text("lighting");
 		ImGui::Separator();
+		ImGui::Checkbox("enable indirect lighting", &config_.isEnableIndirectLighting);
 
-		if (ImGui::RadioButton("rasterizer", config_.technique == FSceneRenderer::GraphicsTechnique::Deferred)) {
-			config_.technique = FSceneRenderer::GraphicsTechnique::Deferred;
+		ImGui::BeginDisabled(!config_.isEnableIndirectLighting);
+		if (ImGui::Button("reset resourviour")) {
+			renderer_->ResetReservoir();
 		}
-
-		ImGui::SameLine();
-
-		if (ImGui::RadioButton("pathtracing(preview)", config_.technique == FSceneRenderer::GraphicsTechnique::Pathtracing)) {
-			//config_.technique = FSceneRenderer::GraphicsTechnique::Pathtracing;
-			//renderer_->ResetReserviour(SxavengerSystem::GetDirectQueueContext());
-		}
-
-		// technique option
-		ImGui::Text("technique option");
-		ImGui::Separator();
-
-		switch (config_.technique) {
-			case FSceneRenderer::GraphicsTechnique::Deferred:
-				
-				break;
-
-			case FSceneRenderer::GraphicsTechnique::Pathtracing:
-
-				//if (ImGui::Button("reset reservoir")) {
-				//	renderer_->ResetReserviour(SxavengerSystem::GetDirectQueueContext());
-				//}
-				//
-				//renderer_->DebugGui();
-				
-				break;
-		}
+		ImGui::Text("sample count: %u", renderer_->GetReservoirSampleCount());
+		ImGui::EndDisabled();
 
 		ImGui::EndDisabled();
 		
@@ -621,12 +597,13 @@ void RenderSceneEditor::ShowInfoTextScene() {
 
 	switch (config_.technique) {
 		case FSceneRenderer::GraphicsTechnique::Deferred: //!< deferred rendering
-			RenderTextSceneWindow(position, "Deferred Rendering");
+			RenderTextSceneWindow(position, std::format("GBuffer | {}", magic_enum::enum_name(buffer_)));
+			RenderTextSceneWindow(position, "> Deferred Rendering");
 			break;
 
 		case FSceneRenderer::GraphicsTechnique::Pathtracing: //!< path tracing
 			//RenderTextSceneWindow(position, std::format("sample count: {}", renderer_->GetCurrentSampleCount()));
-			RenderTextSceneWindow(position, "Path Tracing (Preview)");
+			RenderTextSceneWindow(position, "> Path Tracing (Preview)");
 			break;
 	}
 	
@@ -831,6 +808,19 @@ void RenderSceneEditor::DisplayGBufferTexture(GBuffer buffer) {
 			);
 			break;
 
+		case GBuffer::Deferred_GBuffer:
+			SetImGuiImagesFullWindowEnable(
+				{
+					{ textures_->GetGBuffer(FDeferredGBuffer::Layout::Albedo)->GetGPUHandleSRV(),      GBuffer::Albedo },
+					{ textures_->GetGBuffer(FDeferredGBuffer::Layout::Normal)->GetGPUHandleSRV(),      GBuffer::Normal },
+					{ textures_->GetGBuffer(FDeferredGBuffer::Layout::MaterialARM)->GetGPUHandleSRV(), GBuffer::MaterialARM },
+					{ textures_->GetGBuffer(FDeferredGBuffer::Layout::Position)->GetGPUHandleSRV(),    GBuffer::Position },
+				},
+				textures_->GetSize(),
+				isRender_
+			);
+			break;
+
 		case GBuffer::Albedo:
 			SetImGuiImageFullWindowEnable(
 				textures_->GetGBuffer(FDeferredGBuffer::Layout::Albedo)->GetGPUHandleSRV(),
@@ -863,13 +853,11 @@ void RenderSceneEditor::DisplayGBufferTexture(GBuffer buffer) {
 			);
 			break;
 
-		case GBuffer::Deferred_GBuffer:
+		case GBuffer::Lighting_GBuffer:
 			SetImGuiImagesFullWindowEnable(
 				{
-					{ textures_->GetGBuffer(FDeferredGBuffer::Layout::Albedo)->GetGPUHandleSRV(), GBuffer::Albedo },
-					{ textures_->GetGBuffer(FDeferredGBuffer::Layout::Normal)->GetGPUHandleSRV(), GBuffer::Normal },
-					{ textures_->GetGBuffer(FDeferredGBuffer::Layout::MaterialARM)->GetGPUHandleSRV(), GBuffer::MaterialARM },
-					{ textures_->GetGBuffer(FDeferredGBuffer::Layout::Position)->GetGPUHandleSRV(), GBuffer::Position },
+					{ textures_->GetGBuffer(FLightingGBuffer::Layout::Direct)->GetGPUHandleSRV(),   GBuffer::Direct },
+					{ textures_->GetGBuffer(FLightingGBuffer::Layout::Indirect)->GetGPUHandleSRV(), GBuffer::Indirect },
 				},
 				textures_->GetSize(),
 				isRender_

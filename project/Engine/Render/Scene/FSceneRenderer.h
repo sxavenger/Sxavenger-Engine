@@ -76,6 +76,10 @@ public:
 
 		FScene* scene = nullptr;
 
+		//* lighting setting *//
+
+		bool isEnableIndirectLighting = false;
+
 		//* process setting *//
 
 		bool isEnablePostProcess = true;
@@ -93,11 +97,19 @@ public:
 
 	void Render(const DirectXQueueContext* context, const Config& config = {});
 
+	//* resourviour
+
+	void ResetReservoir();
+
+	uint32_t GetReservoirSampleCount() const;
+
 private:
 
 	//=========================================================================================
 	// private variables
 	//=========================================================================================
+
+	std::optional<FRenderCorePathtracing::Reservoir> reservoir_;
 
 	//=========================================================================================
 	// private methods
@@ -124,6 +136,8 @@ private:
 	// todo: spot light
 	// todo: rect light
 	void ProcessLightingPassSkyLight(const DirectXQueueContext* context, const Config& config);
+
+	void ProcessLightingPassIndirect(const DirectXQueueContext* context, const Config& config);
 
 	void LightingPassTransition(const DirectXQueueContext* context, const Config& config);
 

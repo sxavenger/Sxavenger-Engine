@@ -115,11 +115,12 @@ private:
 	////////////////////////////////////////////////////////////////////////////////////////////
 	enum class GBuffer : uint32_t {
 		Scene,
+		Deferred_GBuffer,
 		Albedo,
 		Normal,
 		MaterialARM,
 		Position,
-		Deferred_GBuffer,
+		Lighting_GBuffer,
 		Direct,
 		Indirect,
 	};

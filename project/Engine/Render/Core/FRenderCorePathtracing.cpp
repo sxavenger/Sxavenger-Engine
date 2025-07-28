@@ -11,12 +11,6 @@ _DXROBJECT_USING
 // Reservoir structure methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-void FRenderCorePathtracing::Reservoir::Init() {
-	sampleCount      = 512;
-	frameSampleCount = 2;
-	currentFrame     = 0;
-}
-
 void FRenderCorePathtracing::Reservoir::IncrimentFrame() {
 	currentFrame++;
 }
@@ -26,7 +20,7 @@ void FRenderCorePathtracing::Reservoir::ResetFrame() {
 }
 
 uint32_t FRenderCorePathtracing::Reservoir::GetCurrentSampleCount() const {
-	return std::min(currentFrame * frameSampleCount, sampleCount);
+	return std::min(currentFrame * sampleStep, sampleCount);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
