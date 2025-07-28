@@ -9,8 +9,13 @@
 //=========================================================================================
 // Buffer
 //=========================================================================================
+
 ConstantBuffer<CameraComponent> gCamera : register(b0);
 static const float4x4 viewProj = gCamera.GetViewProj();
+
+cbuffer Infomation : register(b1) {
+	uint2 size;
+};
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Input / Output structure

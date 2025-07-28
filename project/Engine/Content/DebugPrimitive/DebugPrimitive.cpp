@@ -16,16 +16,13 @@ _DXOBJECT_USING
 // BaseDebugPrimitive class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-void BaseDebugPrimitive::Draw(const DirectXQueueContext* context, const CameraComponent* camera) {
+void BaseDebugPrimitive::Draw(const DirectXQueueContext* context) {
 	// commandListの取得
 	auto commandList = context->GetCommandList();
 
 	// 登録されたinputの描画
 	const D3D12_VERTEX_BUFFER_VIEW vbv = input_->GetVertexBufferView();
-
 	commandList->IASetVertexBuffers(0, 1, &vbv);
-	commandList->SetGraphicsRootConstantBufferView(0, camera->GetGPUVirtualAddress());
-
 	commandList->DrawInstanced(inputCount_, 1, inputOffset_, 0);
 
 	CountBufferOffset();
@@ -84,13 +81,26 @@ void DebugPrimitive::Term() {
 void DebugPrimitive::DrawToScene(const DirectXQueueContext* context, const CameraComponent* camera) {
 
 	{
+		BindBufferDesc desc = {};
+		desc.SetAddress("gCamera", camera->GetGPUVirtualAddress());
+		desc.Set32bitConstants("Infomation", 2, &kMainWindowSize);
+
 		pipelines_[PipelineType::kLine]->SetPipeline(context->GetDxCommand());
-		line_->Draw(context, camera);
+		pipelines_[PipelineType::kLine]->BindGraphicsBuffer(context->GetDxCommand(), desc);
+
+		line_->Draw(context);
 	}
 
 	{
+
+		BindBufferDesc desc = {};
+		desc.SetAddress("gCamera", camera->GetGPUVirtualAddress());
+		desc.Set32bitConstants("Infomation", 2, &kMainWindowSize);
+
 		pipelines_[PipelineType::kLineOverlay]->SetPipeline(context->GetDxCommand());
-		lineOverlay_->Draw(context, camera);
+		pipelines_[PipelineType::kLine]->BindGraphicsBuffer(context->GetDxCommand(), desc);
+
+		lineOverlay_->Draw(context);
 	}
 }
 
@@ -265,14 +275,12 @@ void DebugPrimitive::CreatePipeline() {
 
 	{
 		auto& pipeline = pipelines_[PipelineType::kLine];
-		pipeline = std::make_unique<GraphicsPipelineState>();
-		pipeline->CreateBlob(kPackagesShaderDirectory / "render/debug/debugPrimitive.vs.hlsl", GraphicsShaderType::vs);
-		pipeline->CreateBlob(kPackagesShaderDirectory / "render/debug/debugPrimitive.ps.hlsl", GraphicsShaderType::ps);
+		pipeline = std::make_unique<ReflectionGraphicsPipelineState>();
+		pipeline->CreateBlob(kPackagesShaderDirectory / "render/debug/debugPrimitive.vs.hlsl",     GraphicsShaderType::vs);
+		pipeline->CreateBlob(kPackagesShaderDirectory / "render/debug/debugPrimitiveLine.gs.hlsl", GraphicsShaderType::gs);
+		pipeline->CreateBlob(kPackagesShaderDirectory / "render/debug/debugPrimitive.ps.hlsl",     GraphicsShaderType::ps);
 
-		GraphicsRootSignatureDesc rootDesc;
-		rootDesc.SetVirtualCBV(0, ShaderVisibility::VISIBILITY_ALL, 0); //!< camera
-
-		pipeline->CreateRootSignature(SxavengerSystem::GetDxDevice(), std::move(rootDesc));
+		pipeline->ReflectionRootSignature(SxavengerSystem::GetDxDevice());
 
 		GraphicsPipelineDesc desc = {};
 		desc.CreateDefaultDesc();
@@ -293,14 +301,12 @@ void DebugPrimitive::CreatePipeline() {
 
 	{
 		auto& pipeline = pipelines_[PipelineType::kLineOverlay];
-		pipeline = std::make_unique<GraphicsPipelineState>();
-		pipeline->CreateBlob(kPackagesShaderDirectory / "render/debug/debugPrimitive.vs.hlsl", GraphicsShaderType::vs);
-		pipeline->CreateBlob(kPackagesShaderDirectory / "render/debug/debugPrimitive.ps.hlsl", GraphicsShaderType::ps);
+		pipeline = std::make_unique<ReflectionGraphicsPipelineState>();
+		pipeline->CreateBlob(kPackagesShaderDirectory / "render/debug/debugPrimitive.vs.hlsl",     GraphicsShaderType::vs);
+		pipeline->CreateBlob(kPackagesShaderDirectory / "render/debug/debugPrimitiveLine.gs.hlsl", GraphicsShaderType::gs);
+		pipeline->CreateBlob(kPackagesShaderDirectory / "render/debug/debugPrimitive.ps.hlsl",     GraphicsShaderType::ps);
 
-		GraphicsRootSignatureDesc rootDesc;
-		rootDesc.SetVirtualCBV(0, ShaderVisibility::VISIBILITY_ALL, 0); //!< camera
-
-		pipeline->CreateRootSignature(SxavengerSystem::GetDxDevice(), std::move(rootDesc));
+		pipeline->ReflectionRootSignature(SxavengerSystem::GetDxDevice());
 
 		GraphicsPipelineDesc desc = {};
 		desc.CreateDefaultDesc();

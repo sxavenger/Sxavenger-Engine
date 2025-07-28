@@ -3,7 +3,6 @@
 //-----------------------------------------------------------------------------------------
 //* hitgroup
 #include "HitgroupCommon.hlsli"
-#include "ImportanceSample.hlsli"
 
 //* content
 #include "../../../Content/Material.hlsli"
@@ -28,6 +27,7 @@ struct Surface {
 	float3 position;
 	float3 normal;
 	float3 albedo;
+	float ao;
 	float roughness;
 	float metallic;
 
@@ -42,16 +42,17 @@ struct Surface {
 		MaterialLib::TextureSampler parameter;
 		parameter.Set(vertex.texcoord, gSampler);
 
+		albedo   = gMaterial[0].albedo.GetAlbedo(parameter);
 		position = vertex.position.xyz;
 
 		float3x3 tbn = float3x3(
-			vertex.tangent, 
-			vertex.bitangent, 
+			vertex.tangent,
+			vertex.bitangent,
 			vertex.normal
 		);
 		normal = gMaterial[0].normal.GetNormal(vertex.normal, parameter, tbn);
 
-		albedo    = gMaterial[0].albedo.GetAlbedo(parameter);
+		ao        = gMaterial[0].properties.ao.GetValue(parameter, 0);
 		roughness = gMaterial[0].properties.roughness.GetValue(parameter, 1);
 		metallic  = gMaterial[0].properties.metallic.GetValue(parameter, 2);
 	}
@@ -86,20 +87,7 @@ _CLOSESTHIT void mainEmissiveClosesthit(inout Payload payload, in Attribute attr
 	Surface surface;
 	surface.GetSurface(attribute);
 
-	if (payload.IsPrimary()) {
-		// primaryの場合の処理
-		payload.SetPrimaryParameter(
-			surface.position, 
-			surface.normal, 
-			0.0f, //!< ambient occlusionは未実装
-			surface.roughness, 
-			surface.metallic
-		);
-	}
-
-	//!< hit処理
-	payload.color.a = 1.0f;
-
-	payload.color.rgb += surface.albedo * payload.le;
+	payload.indirect.a   = 1.0f;
+	payload.indirect.rgb = surface.albedo;
 	
 }

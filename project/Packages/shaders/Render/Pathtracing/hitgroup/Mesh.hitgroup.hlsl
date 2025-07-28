@@ -3,12 +3,9 @@
 //-----------------------------------------------------------------------------------------
 //* hitgroup
 #include "HitgroupCommon.hlsli"
-#include "ImportanceSample.hlsli"
 
 //* content
 #include "../../../Content/Material.hlsli"
-#include "../../../Library/Hammersley.hlsli"
-#include "../../../Library/BRDF.hlsli"
 
 //=========================================================================================
 // local buffers
@@ -30,6 +27,7 @@ struct Surface {
 	float3 position;
 	float3 normal;
 	float3 albedo;
+	float ao;
 	float roughness;
 	float metallic;
 
@@ -44,16 +42,17 @@ struct Surface {
 		MaterialLib::TextureSampler parameter;
 		parameter.Set(vertex.texcoord, gSampler);
 
+		albedo   = gMaterial[0].albedo.GetAlbedo(parameter);
 		position = vertex.position.xyz;
 
 		float3x3 tbn = float3x3(
-			vertex.tangent, 
-			vertex.bitangent, 
+			vertex.tangent,
+			vertex.bitangent,
 			vertex.normal
 		);
 		normal = gMaterial[0].normal.GetNormal(vertex.normal, parameter, tbn);
 
-		albedo    = gMaterial[0].albedo.GetAlbedo(parameter);
+		ao        = gMaterial[0].properties.ao.GetValue(parameter, 0);
 		roughness = gMaterial[0].properties.roughness.GetValue(parameter, 1);
 		metallic  = gMaterial[0].properties.metallic.GetValue(parameter, 2);
 	}
@@ -64,40 +63,9 @@ struct Surface {
 // methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-float3 BSDF(float3 albedo, float roughness, float metallic, float3 normal, float3 wi, float3 wo) {
-
-	float3 h = normalize(wi + wo);
-
-	float NdotV = saturate(dot(normal, wi));
-	float NdotL = saturate(dot(normal, wo));
-	float NdotH = saturate(dot(normal, h));
-	float VdotH = saturate(dot(wi, h));
-
-	// diffuse Albedo
-	//!< 金属(metallic = 1.0f) -> 0.0f
-	//!< 非金属(metallic = 0.0f) -> albedo * (1.0f - f0)
-	//float3 diffuseAlbedo = surface.albedo * (1.0f - f0) * (1.0f - surface.metallic);
-	float3 diffuseAlbedo = albedo * (1.0f - float3(0.04f, 0.04f, 0.04f)) * (1.0f - metallic);
-
-	// specular Albedo
-	//!< 金属(metallic = 1.0f) -> default-f0
-	//!< 非金属(metallic = 0.0f) -> albedo
-	float3 f0 = lerp(float3(0.04f, 0.04f, 0.04f), albedo, metallic);
-
-	float3 f = F_SphericalGaussian(VdotH, f0);
-	float vh = V_HeightCorrelated(NdotV, NdotL, roughness);
-	float d  = D_GGX(NdotH, roughness);
-
-	//float3 diffuseBRDF  = DiffuseBRDF(diffuseAlbedo);
-	float3 specularBRDF = SpecularBRDF(f, vh, d);
-
-	return (/*diffuseBRDF + */specularBRDF) * NdotL;
-	
-}
-
 float3 CalculateDirectionalLight(uint index, float3 position, float3 normal, float3 albedo, float roughness, float metallic) {
 	//* Lightの情報を取得
-	float3 c_light = gDirectionalLights[index].GetColor(); //!< lightのcolor
+	float3 c_light = gDirectionalLights[index].GetColor();               //!< lightのcolor
 	float3 l       = -gDirectionalLightTransforms[index].GetDirection(); //!< surfaceからlightへの方向ベクトル
 
 	//* shadow
@@ -169,62 +137,11 @@ _CLOSESTHIT void mainClosesthit(inout Payload payload, in Attribute attribute) {
 	Surface surface;
 	surface.GetSurface(attribute);
 
-	if (payload.IsPrimary()) {
-		// primaryの場合の処理
-		payload.SetPrimaryParameter(
-			surface.position, 
-			surface.normal, 
-			0.0f, //!< ambient occlusionは未実装
-			surface.roughness, 
-			surface.metallic
-		);
+	payload.indirect.rgb = float3(0.0f, 0.0f, 0.0f);
+	payload.indirect.a   = 1.0f;
+
+	for (uint i = 0; i < gDirectionalLightCount.count; ++i) {
+		payload.indirect.rgb += CalculateDirectionalLight(i, surface.position, surface.normal, surface.albedo, surface.roughness, surface.metallic);
 	}
-
-	//!< hit処理
-	payload.color.a = 1.0f;
-
-	payload.color.rgb = float3(0.0f, 0.0f, 0.0f);
-
-	if ((payload.IsPrimary() && gReservoir.IsBeginFrame()) || !payload.IsPrimary()) {
-		for (uint i = 0; i < gDirectionalLightCount.count; ++i) {
-			payload.color.rgb += CalculateDirectionalLight(i, surface.position, surface.normal, surface.albedo, surface.roughness, surface.metallic);
-		}
-	}
-
-	if (!gReservoir.CheckNeedSample()) {
-		return; //!< sample数が足りている場合は何もしない.
-	}
-
-	//!< 乱数サンプルを生成
-	float3 color = float3(0.0f, 0.0f, 0.0f);
-	for (uint i = 0; i < gReservoir.frameSampleCount; ++i) {
-		
-		uint currentSampleNum = gReservoir.currentFrame * gReservoir.frameSampleCount + i;
-		uint2 xi = Hammersley(currentSampleNum, gReservoir.sampleCount);
-
-		{ // 鏡面BRDFのサンプリング
-			float3 dir = ImportanceSampleLambert(xi, surface.normal);
-
-			RayDesc desc;
-			desc.Origin    = surface.position;
-			desc.Direction = dir;
-			desc.TMin      = kTMin;
-			desc.TMax      = kTMax;
-			
-			Payload path = (Payload)0;
-			path.rayType = RayType::kPath;
-			
-			payload.TraceRecursionRay(path, desc);
-			color += path.color.rgb;
-			
-		}
-
-		{
-			
-		}
-	}
-
-	color /= float(gReservoir.sampleCount); //!< 平均化
-	payload.color.rgb += color * (surface.albedo / kPi);
 	
 }

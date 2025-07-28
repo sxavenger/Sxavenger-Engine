@@ -12,7 +12,7 @@
 ////////////////////////////////////////////////////////////////////////////////////////////
 _MISS void mainMiss(inout Payload payload) {
 
-	payload.color = float4(0.0f, 0.0f, 0.0f, 0.0f);
-	payload.depth = 1.0f;
+	// 仮の値を設定
+	payload.indirect = float4(0.0f, 0.0f, 0.0f, 1.0f);
 	
 }

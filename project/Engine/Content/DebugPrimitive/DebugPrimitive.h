@@ -34,7 +34,7 @@ public:
 	BaseDebugPrimitive()          = default;
 	virtual ~BaseDebugPrimitive() = default;
 
-	void Draw(const DirectXQueueContext* context, const CameraComponent* camera);
+	void Draw(const DirectXQueueContext* context);
 
 	void Reset();
 
@@ -166,7 +166,7 @@ private:
 
 	//* pipeline *//
 
-	std::array<std::unique_ptr<DxObject::GraphicsPipelineState>, kPipelineCount> pipelines_;
+	std::array<std::unique_ptr<DxObject::ReflectionGraphicsPipelineState>, kPipelineCount> pipelines_;
 
 	//=========================================================================================
 	// private methods

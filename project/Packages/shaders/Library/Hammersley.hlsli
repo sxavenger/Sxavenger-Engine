@@ -18,6 +18,6 @@ uint Reversebits(uint x) {
 	return bits;
 }
 
-float2 Hammersley(uint i, uint N) {
-	return float2(float(i) / float(N), float(reversebits(i)) * 2.3283064365386963e-10);
+float2 Hammersley(uint i, uint n) {
+	return float2(float(i) / float(n), reversebits(i) * 2.3283064365386963e-10);
 }

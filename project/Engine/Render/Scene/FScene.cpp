@@ -21,34 +21,37 @@ void FScene::Init() {
 	// path tracing stateobjectの初期化
 	{ //!< global root signatureの生成
 		DxrObject::GlobalRootSignatureDesc desc = {};
-		//* textures
-		desc.SetHandleUAV(0, 0, 1); //!< color
-		desc.SetHandleUAV(1, 1, 1); //!< normal
-		desc.SetHandleUAV(2, 2, 1); //!< arm
-		desc.SetHandleUAV(3, 3, 1); //!< position
-		desc.SetHandleUAV(4, 4, 1); //!< depth
-
-		//* camera
-		desc.SetVirtualCBV(5, 0, 1); //!< camera
+		//* lighting textures
+		desc.SetHandleUAV(0, 0, 1); //!< gIndirect
 
 		//* scene
-		desc.SetVirtualSRV(6, 0, 1); //!< scene
+		desc.SetVirtualSRV(1, 0, 1); //!< gScene
 
-		//* reservoir
-		desc.SetVirtualCBV(7, 1, 1); //!< reservoir
+		//* deferred textures
+		desc.SetHandleSRV(2, 1, 1); //!< gAlbedo
+		desc.SetHandleSRV(3, 2, 1); //!< gNormal
+		desc.SetHandleSRV(4, 3, 1); //!< gMaterialARM
+		desc.SetHandleSRV(5, 4, 1); //!< gPosition
+		desc.SetHandleSRV(6, 5, 1); //!< gDepth
+
+		//* camera
+		desc.SetVirtualCBV(7, 0, 1); //!< gCamera
+
+		//* reserviour
+		desc.Set32bitConstants(8, DxObject::ShaderVisibility::VISIBILITY_ALL, 3, 1, 1); //!< Reserviour
 
 		//* light
-		//# Directional Light
-		desc.SetVirtualCBV(8, 2, 1);  //!< light count
-		desc.SetVirtualSRV(9, 1, 1);  //!< light transforms
-		desc.SetVirtualSRV(10, 2, 1); //!< light parameters
-		desc.SetVirtualSRV(11, 3, 1); //!< light shadow parameters
+		// Directional Light
+		desc.SetVirtualCBV(9, 2, 2);  //!< gDirectionalLightCount
+		desc.SetVirtualSRV(10, 1, 2); //!< gDirectionalLightTransforms
+		desc.SetVirtualSRV(11, 2, 2); //!< gDirectionalLights
+		desc.SetVirtualSRV(12, 3, 2); //!< gDirectionalLightShadows
 
-		//# Point Light
-		desc.SetVirtualCBV(12, 3, 1); //!< light count
-		desc.SetVirtualSRV(13, 4, 1); //!< light transforms
-		desc.SetVirtualSRV(14, 5, 1); //!< light parameters
-		desc.SetVirtualSRV(15, 6, 1); //!< light shadow parameters
+		// Point Light
+		desc.SetVirtualCBV(13, 3, 2); //!< gPointLightCount
+		desc.SetVirtualSRV(14, 4, 2); //!< gPointLightTransforms
+		desc.SetVirtualSRV(15, 5, 2); //!< gPointLights
+		desc.SetVirtualSRV(16, 6, 2); //!< gPointLightShadows
 
 		stateObjectContext_.CreateRootSignature(SxavengerSystem::GetDxDevice(), desc);
 	}
@@ -62,8 +65,8 @@ void FScene::Init() {
 
 		// 仮paraemter
 		desc.SetAttributeStride(sizeof(float) * 2);
-		desc.SetPayloadStride(76);
-		desc.SetMaxRecursionDepth(6);
+		desc.SetPayloadStride(sizeof(float) * 5);
+		desc.SetMaxRecursionDepth(3);
 
 		stateObjectContext_.CreateStateObject(SxavengerSystem::GetDxDevice(), std::move(desc));
 	}
