@@ -11,6 +11,7 @@ _DXOBJECT_USING
 
 //* lib
 #include <Lib/Geometry/GeometryMath.h>
+#include <Lib/Geometry/VectorComparision.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // BaseDebugPrimitive class methods
@@ -62,7 +63,7 @@ void DebugPrimitivePoint::Init() {
 	BaseDebugPrimitive::CreateInputBuffer(kMaxPointNum_);
 }
 
-void DebugPrimitivePoint::PushLPoint(const Vector3f& v, const Color4f& color, float thickness) {
+void DebugPrimitivePoint::PushPoint(const Vector3f& v, const Color4f& color, float thickness) {
 	BaseDebugPrimitive::SetVertexBuffer(v, color, thickness);
 }
 
@@ -115,6 +116,17 @@ void DebugPrimitive::DrawToScene(const DirectXQueueContext* context, const Camer
 		lineOverlay_->Draw(context);
 	}
 
+	{ //!< Point
+		BindBufferDesc desc = {};
+		desc.SetAddress("gCamera", camera->GetGPUVirtualAddress());
+		desc.Set32bitConstants("Infomation", 2, &kMainWindowSize);
+
+		pipelines_[static_cast<uint32_t>(PipelineType::Point)]->SetPipeline(context->GetDxCommand());
+		pipelines_[static_cast<uint32_t>(PipelineType::Point)]->BindGraphicsBuffer(context->GetDxCommand(), desc);
+
+		point_->Draw(context);
+	}
+
 	{ //!< Point Overlay
 		BindBufferDesc desc = {};
 		desc.SetAddress("gCamera", camera->GetGPUVirtualAddress());
@@ -130,6 +142,7 @@ void DebugPrimitive::DrawToScene(const DirectXQueueContext* context, const Camer
 void DebugPrimitive::ResetPrimitive() {
 	line_->Reset();
 	lineOverlay_->Reset();
+	point_->Reset();
 	pointOverlay_->Reset();
 }
 
@@ -141,8 +154,12 @@ void DebugPrimitive::PushLineOverlay(const Vector3f& v1, const Vector3f& v2, con
 	lineOverlay_->PushLine(v1, v2, color, thickness);
 }
 
+void DebugPrimitive::PushPoint(const Vector3f& v, const Color4f& color, float thickness) {
+	point_->PushPoint(v, color, thickness);
+}
+
 void DebugPrimitive::PushPointOverlay(const Vector3f& v, const Color4f& color, float thickness) {
-	pointOverlay_->PushLPoint(v, color, thickness);
+	pointOverlay_->PushPoint(v, color, thickness);
 }
 
 void DebugPrimitive::PushGrid(const Vector3f& center, float size) {
@@ -175,17 +192,65 @@ void DebugPrimitive::PushGrid(const Vector3f& center, float size) {
 	}
 }
 
-void DebugPrimitive::PushGrid(const CameraComponent* camera) {
+void DebugPrimitive::PushGrid(const CameraComponent* camera, const Vector2f& size, float radius) {
 
-	Vector2f points[4] = { //!< 描画されるNDC座標
-		{ -1.0f,  1.0f }, //!< 左上
-		{  1.0f,  1.0f }, //!< 右上
-		{ -1.0f, -1.0f }, //!< 左下
-		{  1.0f, -1.0f }, //!< 右下
-	};
+	Vector3f positions[2] = {};
 
-	camera;
+	for (size_t i = 0; i < 2; ++i) {
+		Vector3f target = Matrix4x4::Transform({ 0.0f, 0.0f, static_cast<float>(i) }, camera->GetCamera().projInv);
+		positions[i]    = Matrix4x4::Transform(target, camera->GetCamera().world);;
+	}
+
+	// 画面中心の地面の位置を計算
+	Vector3f direction = positions[1] - positions[0];
+
+	if (direction.y == 0.0f) {
+		return;
+	}
+
+	float t = -positions[0].y / direction.y;
+
+	if (t < 0.0f || t > 1.0f) {
+		return;
+	}
+
+	Vector3f point = positions[0] + direction * t;
+	const Vector3f& position = camera->GetPosition();
+
+	Vector3f min = point - Vector3f({ size.x * 0.5f, 0.0f, size.y * 0.5f });
+	Vector3f max = point + Vector3f({ size.x * 0.5f, 0.0f, size.y * 0.5f });
+
+	float alpha = 1.0f;
+
+	float distance = (point - position).Length();
+
+	if (distance > radius) {
+		alpha = 1.0f - std::clamp(distance - radius / 12.0f, 0.0f, 1.0f) ;
+	}
+
+
+	// x軸の線
+	for (int32_t i = static_cast<int32_t>(min.z); i <= static_cast<int32_t>(max.z); ++i) {
+
+		float thickness = (i == 0) ? 1.0f : 0.1f;
+		Color4f color   = (i % 5 == 0) ? Color4f::Convert(0x202020FF) : Color4f::Convert(0x909090FF);
+		color.a         = alpha;
+
+		PushLine({ min.x, 0.0f, static_cast<float>(i) }, { max.x, 0.0f, static_cast<float>(i) }, color, thickness);
+	}
+
+	// z軸の線
+	for (int32_t i = static_cast<int32_t>(min.x); i <= static_cast<int32_t>(max.x); ++i) {
+
+		float thickness = (i == 0) ? 1.0f : 0.1f;
+		Color4f color   = (i % 5 == 0) ? Color4f::Convert(0x202020FF) : Color4f::Convert(0x909090FF);
+		color.a         = alpha;
+
+		PushLine({ static_cast<float>(i), 0.0f, min.z }, { static_cast<float>(i), 0.0f, max.z }, color, thickness);
+	}
+
 }
+	
 
 void DebugPrimitive::PushAxis(const Vector3f& center, float length) {
 	PushLine(center, center + Vector3f(length, 0.0f, 0.0f), Color4f::Convert(0xFA0000FF), 0.6f); //!< x軸
@@ -310,6 +375,7 @@ void DebugPrimitive::CreatePrimitive() {
 	line_        = std::make_unique<DebugPrimitiveLine>();
 	lineOverlay_ = std::make_unique<DebugPrimitiveLine>();
 
+	point_        = std::make_unique<DebugPrimitivePoint>();
 	pointOverlay_ = std::make_unique<DebugPrimitivePoint>();
 }
 
@@ -338,6 +404,7 @@ void DebugPrimitive::CreatePipeline() {
 		desc.SetDepthStencil(true);
 
 		desc.SetRTVFormat(0, DXGI_FORMAT_R16G16B16A16_FLOAT);
+		desc.SetBlendMode(0, BlendMode::kBlendModeNormal_AlphaMax);
 
 		pipeline->CreatePipeline(SxavengerSystem::GetDxDevice(), desc);
 	}
@@ -365,6 +432,35 @@ void DebugPrimitive::CreatePipeline() {
 		desc.SetDepthStencil(false);
 
 		desc.SetRTVFormat(0, DXGI_FORMAT_R16G16B16A16_FLOAT);
+		desc.SetBlendMode(0, BlendMode::kBlendModeNormal_AlphaMax);
+
+		pipeline->CreatePipeline(SxavengerSystem::GetDxDevice(), desc);
+	}
+
+	{
+		auto& pipeline = pipelines_[static_cast<uint32_t>(PipelineType::Point)];
+		pipeline = std::make_unique<ReflectionGraphicsPipelineState>();
+		pipeline->CreateBlob(kPackagesShaderDirectory / "render/debug/Point/PrimitivePoint.vs.hlsl", GraphicsShaderType::vs);
+		pipeline->CreateBlob(kPackagesShaderDirectory / "render/debug/Point/PrimitivePoint.gs.hlsl", GraphicsShaderType::gs);
+		pipeline->CreateBlob(kPackagesShaderDirectory / "render/debug/Point/PrimitivePoint.ps.hlsl", GraphicsShaderType::ps);
+
+		pipeline->ReflectionRootSignature(SxavengerSystem::GetDxDevice());
+
+		GraphicsPipelineDesc desc = {};
+		desc.CreateDefaultDesc();
+
+		desc.elements.clear();
+		desc.SetElement("POSITION", 0, DXGI_FORMAT_R32G32B32A32_FLOAT);
+		desc.SetElement("COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT);
+		desc.SetElement("THICKNESS", 0, DXGI_FORMAT_R32_FLOAT);
+
+		desc.SetRasterizer(D3D12_CULL_MODE_NONE, D3D12_FILL_MODE_SOLID);
+		desc.SetPrimitive(PrimitiveType::PointList);
+
+		desc.SetDepthStencil(true);
+
+		desc.SetRTVFormat(0, DXGI_FORMAT_R16G16B16A16_FLOAT);
+		desc.SetBlendMode(0, BlendMode::kBlendModeNormal_AlphaMax);
 
 		pipeline->CreatePipeline(SxavengerSystem::GetDxDevice(), desc);
 	}
@@ -392,6 +488,7 @@ void DebugPrimitive::CreatePipeline() {
 		desc.SetDepthStencil(false);
 
 		desc.SetRTVFormat(0, DXGI_FORMAT_R16G16B16A16_FLOAT);
+		desc.SetBlendMode(0, BlendMode::kBlendModeNormal_AlphaMax);
 
 		pipeline->CreatePipeline(SxavengerSystem::GetDxDevice(), desc);
 

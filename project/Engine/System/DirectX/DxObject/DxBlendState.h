@@ -13,13 +13,13 @@
 // BlendMode enum class
 ////////////////////////////////////////////////////////////////////////////////////////////
 enum class BlendMode : uint32_t {
-	kBlendModeNone,      //!< ブレンドなし
-	kBlendModeNormal,    //!< 通常αブレンド
-	kBlendModeNormalSrc, //!< 通常αブレンド SrcAlpha優先
-	kBlendModeAdd,       //!< 加算
-	kBlendModeSubtract,  //!< 減算
-	kBlendModeMultiply,  //!< 乗算
-	kBlendModeScreen     //!< スクリーン
+	kBlendModeNone,            //!< ブレンドなし
+	kBlendModeNormal,          //!< 通常αブレンド
+	kBlendModeNormal_AlphaMax, //!< αブレンド(アルファ最大)
+	kBlendModeAdd,             //!< 加算
+	kBlendModeSubtract,        //!< 減算
+	kBlendModeMultiply,        //!< 乗算
+	kBlendModeScreen           //!< スクリーン
 };
 
 

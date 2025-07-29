@@ -95,7 +95,7 @@ public:
 
 	void Init();
 
-	void PushLPoint(const Vector3f& v, const Color4f& color, float thickness = 0.0f);
+	void PushPoint(const Vector3f& v, const Color4f& color, float thickness = 0.0f);
 
 private:
 
@@ -165,12 +165,14 @@ public:
 
 	void PushLineOverlay(const Vector3f& v1, const Vector3f& v2, const Color4f& color, float thickness = 0.0f);
 
+	void PushPoint(const Vector3f& v, const Color4f& color, float thickness = 0.0f);
+
 	void PushPointOverlay(const Vector3f& v, const Color4f& color, float thickness = 0.0f);
 
 	//* drawer options *//
 
 	void PushGrid(const Vector3f& center, float size);
-	void PushGrid(const CameraComponent* camera);
+	void PushGrid(const CameraComponent* camera, const Vector2f& size, float radius);
 
 	void PushAxis(const Vector3f& center, float length);
 
@@ -187,6 +189,7 @@ private:
 	enum class PipelineType : uint32_t {
 		Line,
 		LineOverlay,
+		Point,
 		PointOverlay
 	};
 	static inline const size_t kPipelineCount = magic_enum::enum_count<PipelineType>();
@@ -201,6 +204,7 @@ private:
 
 	std::unique_ptr<DebugPrimitiveLine> line_;
 	std::unique_ptr<DebugPrimitiveLine> lineOverlay_;
+	std::unique_ptr<DebugPrimitivePoint> point_;
 	std::unique_ptr<DebugPrimitivePoint> pointOverlay_;
 
 	//* pipeline *//

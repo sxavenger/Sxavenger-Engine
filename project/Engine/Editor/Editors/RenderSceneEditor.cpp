@@ -102,13 +102,7 @@ void RenderSceneEditor::Render() {
 	textures_->BeginRenderTargetMainTransparent(SxavengerSystem::GetDirectQueueContext());
 
 	CameraComponent* camera = camera_->GetComponent<CameraComponent>();
-
-	// test
-	sComponentStorage->ForEach<CameraComponent>([&](CameraComponent* component) {
-		if (component->GetTag() == CameraComponent::Tag::GameCamera) {
-			SxavengerContent::PushGrid(component);
-		}
-	});
+	SxavengerContent::PushGrid(camera, { 64, 64 }, 64);
 
 	if (isRenderCollider_) {
 		colliderRenderer_->Render(SxavengerSystem::GetDirectQueueContext(), camera_->GetComponent<CameraComponent>());
