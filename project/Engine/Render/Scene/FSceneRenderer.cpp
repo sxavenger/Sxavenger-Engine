@@ -213,6 +213,7 @@ void FSceneRenderer::ProcessLightingPass(const DirectXQueueContext* context, con
 
 	if (config.isEnableIndirectLighting) { //* Indirect Lighting
 		ProcessLightingPassIndirect(context, config);
+		ProcessLightingPassIndirectDenoiser(context, config);
 	}
 	
 
@@ -410,6 +411,41 @@ void FSceneRenderer::ProcessLightingPassIndirect(const DirectXQueueContext* cont
 
 
 	config.buffer->EndUnorderedLightingIndirect(context);
+
+}
+
+void FSceneRenderer::ProcessLightingPassIndirectDenoiser(const DirectXQueueContext* context, const Config& config) {
+
+	config.buffer->BeginProcessDenoiser(context);
+
+	auto textures = config.buffer->GetProcessTextures();
+
+	{ //!< Edge stopping function.
+
+		auto core = FRenderCore::GetInstance()->GetPathtracing();
+
+		core->SetDenoiserPipeline(FRenderCorePathtracing::DenoiserType::EdgeStopping, context);
+
+		DxObject::BindBufferDesc desc = {};
+		//* common parameter
+		desc.Set32bitConstants("Dimension", 2, &config.buffer->GetSize());
+
+		//* textures
+		desc.SetHandle("gOutput",   textures->GetIndexTexture()->GetGPUHandleUAV());
+		desc.SetHandle("gIndirect", config.buffer->GetGBuffer(FLightingGBuffer::Layout::Indirect)->GetGPUHandleSRV());
+
+		//* deferred textures
+		desc.SetHandle("gAlbedo",   config.buffer->GetGBuffer(FDeferredGBuffer::Layout::Albedo)->GetGPUHandleSRV());
+		desc.SetHandle("gNormal",   config.buffer->GetGBuffer(FDeferredGBuffer::Layout::Normal)->GetGPUHandleSRV());
+		desc.SetHandle("gMaterial", config.buffer->GetGBuffer(FDeferredGBuffer::Layout::MaterialARM)->GetGPUHandleSRV());
+		desc.SetHandle("gPosition", config.buffer->GetGBuffer(FDeferredGBuffer::Layout::Position)->GetGPUHandleSRV());
+		desc.SetHandle("gDepth",    config.buffer->GetDepth()->GetRasterizerGPUHandleSRV());
+
+		core->BindDenoiserBuffer(FRenderCorePathtracing::DenoiserType::EdgeStopping, context, desc);
+		core->DispatchDenoiser(context, config.buffer->GetSize());
+	}
+
+	config.buffer->EndProcessDenoiser(context);
 
 }
 

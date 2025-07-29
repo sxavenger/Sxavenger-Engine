@@ -138,6 +138,7 @@ private:
 	void ProcessLightingPassSkyLight(const DirectXQueueContext* context, const Config& config);
 
 	void ProcessLightingPassIndirect(const DirectXQueueContext* context, const Config& config);
+	void ProcessLightingPassIndirectDenoiser(const DirectXQueueContext* context, const Config& config);
 
 	void LightingPassTransition(const DirectXQueueContext* context, const Config& config);
 

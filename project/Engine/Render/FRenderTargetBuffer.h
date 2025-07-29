@@ -45,6 +45,9 @@ public:
 	void BeginPostProcess(const DirectXQueueContext* context);
 	void EndPostProcess(const DirectXQueueContext* context);
 
+	void BeginProcessDenoiser(const DirectXQueueContext* context);
+	void EndProcessDenoiser(const DirectXQueueContext* context);
+
 	//* GBuffer option *//
 
 	FBaseTexture* GetGBuffer(FDeferredGBuffer::Layout layout);
