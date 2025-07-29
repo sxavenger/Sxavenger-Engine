@@ -55,6 +55,18 @@ void BaseDebugPrimitive::SetVertexBuffer(const Vector3f& position, const Color4f
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
+// DebugPrimitivePoint class methods
+////////////////////////////////////////////////////////////////////////////////////////////
+
+void DebugPrimitivePoint::Init() {
+	BaseDebugPrimitive::CreateInputBuffer(kMaxPointNum_);
+}
+
+void DebugPrimitivePoint::PushLPoint(const Vector3f& v, const Color4f& color, float thickness) {
+	BaseDebugPrimitive::SetVertexBuffer(v, color, thickness);
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////
 // DebugPrimitiveLine class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -81,33 +93,44 @@ void DebugPrimitive::Term() {
 
 void DebugPrimitive::DrawToScene(const DirectXQueueContext* context, const CameraComponent* camera) {
 
-	{
+	{ //!< Line
 		BindBufferDesc desc = {};
 		desc.SetAddress("gCamera", camera->GetGPUVirtualAddress());
 		desc.Set32bitConstants("Infomation", 2, &kMainWindowSize);
 
-		pipelines_[PipelineType::kLine]->SetPipeline(context->GetDxCommand());
-		pipelines_[PipelineType::kLine]->BindGraphicsBuffer(context->GetDxCommand(), desc);
+		pipelines_[static_cast<uint32_t>(PipelineType::Line)]->SetPipeline(context->GetDxCommand());
+		pipelines_[static_cast<uint32_t>(PipelineType::Line)]->BindGraphicsBuffer(context->GetDxCommand(), desc);
 
 		line_->Draw(context);
 	}
 
-	{
-
+	{ //!< Line Overlay
 		BindBufferDesc desc = {};
 		desc.SetAddress("gCamera", camera->GetGPUVirtualAddress());
 		desc.Set32bitConstants("Infomation", 2, &kMainWindowSize);
 
-		pipelines_[PipelineType::kLineOverlay]->SetPipeline(context->GetDxCommand());
-		pipelines_[PipelineType::kLine]->BindGraphicsBuffer(context->GetDxCommand(), desc);
+		pipelines_[static_cast<uint32_t>(PipelineType::LineOverlay)]->SetPipeline(context->GetDxCommand());
+		pipelines_[static_cast<uint32_t>(PipelineType::LineOverlay)]->BindGraphicsBuffer(context->GetDxCommand(), desc);
 
 		lineOverlay_->Draw(context);
+	}
+
+	{ //!< Point Overlay
+		BindBufferDesc desc = {};
+		desc.SetAddress("gCamera", camera->GetGPUVirtualAddress());
+		desc.Set32bitConstants("Infomation", 2, &kMainWindowSize);
+
+		pipelines_[static_cast<uint32_t>(PipelineType::PointOverlay)]->SetPipeline(context->GetDxCommand());
+		pipelines_[static_cast<uint32_t>(PipelineType::PointOverlay)]->BindGraphicsBuffer(context->GetDxCommand(), desc);
+
+		pointOverlay_->Draw(context);
 	}
 }
 
 void DebugPrimitive::ResetPrimitive() {
 	line_->Reset();
 	lineOverlay_->Reset();
+	pointOverlay_->Reset();
 }
 
 void DebugPrimitive::PushLine(const Vector3f& v1, const Vector3f& v2, const Color4f& color, float thickness) {
@@ -116,6 +139,10 @@ void DebugPrimitive::PushLine(const Vector3f& v1, const Vector3f& v2, const Colo
 
 void DebugPrimitive::PushLineOverlay(const Vector3f& v1, const Vector3f& v2, const Color4f& color, float thickness) {
 	lineOverlay_->PushLine(v1, v2, color, thickness);
+}
+
+void DebugPrimitive::PushPointOverlay(const Vector3f& v, const Color4f& color, float thickness) {
+	pointOverlay_->PushLPoint(v, color, thickness);
 }
 
 void DebugPrimitive::PushGrid(const Vector3f& center, float size) {
@@ -146,6 +173,18 @@ void DebugPrimitive::PushGrid(const Vector3f& center, float size) {
 			color
 		);
 	}
+}
+
+void DebugPrimitive::PushGrid(const CameraComponent* camera) {
+
+	Vector2f points[4] = { //!< 描画されるNDC座標
+		{ -1.0f,  1.0f }, //!< 左上
+		{  1.0f,  1.0f }, //!< 右上
+		{ -1.0f, -1.0f }, //!< 左下
+		{  1.0f, -1.0f }, //!< 右下
+	};
+
+	camera;
 }
 
 void DebugPrimitive::PushAxis(const Vector3f& center, float length) {
@@ -270,16 +309,18 @@ void DebugPrimitive::PushSphere(const Vector3f& center, float radius, const Colo
 void DebugPrimitive::CreatePrimitive() {
 	line_        = std::make_unique<DebugPrimitiveLine>();
 	lineOverlay_ = std::make_unique<DebugPrimitiveLine>();
+
+	pointOverlay_ = std::make_unique<DebugPrimitivePoint>();
 }
 
 void DebugPrimitive::CreatePipeline() {
 
 	{
-		auto& pipeline = pipelines_[PipelineType::kLine];
+		auto& pipeline = pipelines_[static_cast<uint32_t>(PipelineType::Line)];
 		pipeline = std::make_unique<ReflectionGraphicsPipelineState>();
-		pipeline->CreateBlob(kPackagesShaderDirectory / "render/debug/line/PrimitiveLine.vs.hlsl", GraphicsShaderType::vs);
-		pipeline->CreateBlob(kPackagesShaderDirectory / "render/debug/line/PrimitiveLine.gs.hlsl", GraphicsShaderType::gs);
-		pipeline->CreateBlob(kPackagesShaderDirectory / "render/debug/line/PrimitiveLine.ps.hlsl", GraphicsShaderType::ps);
+		pipeline->CreateBlob(kPackagesShaderDirectory / "render/debug/Line/PrimitiveLine.vs.hlsl", GraphicsShaderType::vs);
+		pipeline->CreateBlob(kPackagesShaderDirectory / "render/debug/Line/PrimitiveLine.gs.hlsl", GraphicsShaderType::gs);
+		pipeline->CreateBlob(kPackagesShaderDirectory / "render/debug/Line/PrimitiveLine.ps.hlsl", GraphicsShaderType::ps);
 
 		pipeline->ReflectionRootSignature(SxavengerSystem::GetDxDevice());
 
@@ -302,11 +343,11 @@ void DebugPrimitive::CreatePipeline() {
 	}
 
 	{
-		auto& pipeline = pipelines_[PipelineType::kLineOverlay];
+		auto& pipeline = pipelines_[static_cast<uint32_t>(PipelineType::LineOverlay)];
 		pipeline = std::make_unique<ReflectionGraphicsPipelineState>();
-		pipeline->CreateBlob(kPackagesShaderDirectory / "render/debug/line/PrimitiveLine.vs.hlsl", GraphicsShaderType::vs);
-		pipeline->CreateBlob(kPackagesShaderDirectory / "render/debug/line/PrimitiveLine.gs.hlsl", GraphicsShaderType::gs);
-		pipeline->CreateBlob(kPackagesShaderDirectory / "render/debug/line/PrimitiveLine.ps.hlsl", GraphicsShaderType::ps);
+		pipeline->CreateBlob(kPackagesShaderDirectory / "render/debug/Line/PrimitiveLine.vs.hlsl", GraphicsShaderType::vs);
+		pipeline->CreateBlob(kPackagesShaderDirectory / "render/debug/Line/PrimitiveLine.gs.hlsl", GraphicsShaderType::gs);
+		pipeline->CreateBlob(kPackagesShaderDirectory / "render/debug/Line/PrimitiveLine.ps.hlsl", GraphicsShaderType::ps);
 
 		pipeline->ReflectionRootSignature(SxavengerSystem::GetDxDevice());
 
@@ -328,5 +369,32 @@ void DebugPrimitive::CreatePipeline() {
 		pipeline->CreatePipeline(SxavengerSystem::GetDxDevice(), desc);
 	}
 
+	{
+		auto& pipeline = pipelines_[static_cast<uint32_t>(PipelineType::PointOverlay)];
+		pipeline = std::make_unique<ReflectionGraphicsPipelineState>();
+		pipeline->CreateBlob(kPackagesShaderDirectory / "render/debug/Point/PrimitivePoint.vs.hlsl", GraphicsShaderType::vs);
+		pipeline->CreateBlob(kPackagesShaderDirectory / "render/debug/Point/PrimitivePoint.gs.hlsl", GraphicsShaderType::gs);
+		pipeline->CreateBlob(kPackagesShaderDirectory / "render/debug/Point/PrimitivePoint.ps.hlsl", GraphicsShaderType::ps);
+
+		pipeline->ReflectionRootSignature(SxavengerSystem::GetDxDevice());
+
+		GraphicsPipelineDesc desc = {};
+		desc.CreateDefaultDesc();
+
+		desc.elements.clear();
+		desc.SetElement("POSITION", 0, DXGI_FORMAT_R32G32B32A32_FLOAT);
+		desc.SetElement("COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT);
+		desc.SetElement("THICKNESS", 0, DXGI_FORMAT_R32_FLOAT);
+
+		desc.SetRasterizer(D3D12_CULL_MODE_NONE, D3D12_FILL_MODE_SOLID);
+		desc.SetPrimitive(PrimitiveType::PointList);
+
+		desc.SetDepthStencil(false);
+
+		desc.SetRTVFormat(0, DXGI_FORMAT_R16G16B16A16_FLOAT);
+
+		pipeline->CreatePipeline(SxavengerSystem::GetDxDevice(), desc);
+
+	}
 
 }

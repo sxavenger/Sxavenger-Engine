@@ -51,6 +51,11 @@ void GraphicsPipelineDesc::SetIndependentBlendEnable(bool isIndependentEnable) {
 
 void GraphicsPipelineDesc::SetPrimitive(PrimitiveType type) {
 	switch (type) {
+		case PrimitiveType::PointList:
+			primitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_POINT;
+			primitiveTopology     = D3D_PRIMITIVE_TOPOLOGY_POINTLIST;
+			break;
+
 		case PrimitiveType::LineList:
 			primitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_LINE;
 			primitiveTopology     = D3D_PRIMITIVE_TOPOLOGY_LINELIST;

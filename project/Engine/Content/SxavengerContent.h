@@ -47,11 +47,15 @@ public:
 
 	static void PushLineOverlay(const Vector3f& v1, const Vector3f& v2, const Color4f& color, float thickness = 0.0f);
 
+	static void PushPointOverlay(const Vector3f& v, const Color4f& color, float thickness = 0.0f);
+
 	static void PushAxis(const Vector3f& center, float length);
 
 	static void PushBox(const Vector3f& min, const Vector3f& max, const Color4f& color);
 
 	static void PushSphere(const Vector3f& center, float radius, const Color4f& color);
+
+	static void PushGrid(const CameraComponent* camera);
 
 	static DebugPrimitive* GetDebugPrimitive() { return debugPrimitive_.get(); }
 

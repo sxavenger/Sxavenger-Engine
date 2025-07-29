@@ -101,7 +101,15 @@ void RenderSceneEditor::Render() {
 	//* Debug Render *//
 	textures_->BeginRenderTargetMainTransparent(SxavengerSystem::GetDirectQueueContext());
 
-	// todo: draw lines, etc...
+	CameraComponent* camera = camera_->GetComponent<CameraComponent>();
+
+	// test
+	sComponentStorage->ForEach<CameraComponent>([&](CameraComponent* component) {
+		if (component->GetTag() == CameraComponent::Tag::GameCamera) {
+			SxavengerContent::PushGrid(component);
+		}
+	});
+
 	if (isRenderCollider_) {
 		colliderRenderer_->Render(SxavengerSystem::GetDirectQueueContext(), camera_->GetComponent<CameraComponent>());
 	}
@@ -110,7 +118,6 @@ void RenderSceneEditor::Render() {
 		SxavengerContent::PushAxis(point_, 1.0f);
 	}
 
-	CameraComponent* camera = camera_->GetComponent<CameraComponent>();
 	SxavengerContent::GetDebugPrimitive()->DrawToScene(SxavengerSystem::GetDirectQueueContext(), camera);
 
 	textures_->EndRenderTargetMainTransparent(SxavengerSystem::GetDirectQueueContext());
