@@ -143,6 +143,7 @@ private:
 
 	AssetObserver<AssetTexture> operationTexture_[3];
 	AssetObserver<AssetTexture> modeTexture_[2];
+	AssetObserver<AssetTexture> gridTexture_;
 
 	//* renderer *//
 
@@ -159,8 +160,6 @@ private:
 
 	//* parameter *//
 
-	//FRenderTargetTextures::GBufferLayout layout_ = FRenderTargetTextures::GBufferLayout::Main;
-
 	GBuffer buffer_ = GBuffer::Scene;
 
 	//* camera *//
@@ -175,6 +174,10 @@ private:
 
 	std::unique_ptr<ColliderPrimitiveRenderer> colliderRenderer_;
 	bool isRenderCollider_ = true;
+
+	//* grid *//
+
+	bool isRenderGrid_ = true;
 
 	//* imgui *//
 

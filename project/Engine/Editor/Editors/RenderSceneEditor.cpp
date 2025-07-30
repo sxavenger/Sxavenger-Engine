@@ -35,6 +35,8 @@ void RenderSceneEditor::Init() {
 	modeTexture_[SxImGuizmo::World] = SxavengerAsset::TryImport<AssetTexture>("packages/textures/icon/mode_world.png");
 	modeTexture_[SxImGuizmo::Local] = SxavengerAsset::TryImport<AssetTexture>("packages/textures/icon/mode_local.png");
 
+	gridTexture_ = SxavengerAsset::TryImport<AssetTexture>("packages/textures/icon/grid.png");
+
 	camera_ = std::make_unique<MonoBehaviour>();
 	camera_->SetName("editor camera");
 	camera_->AddComponent<TransformComponent>();
@@ -102,8 +104,11 @@ void RenderSceneEditor::Render() {
 	textures_->BeginRenderTargetMainTransparent(SxavengerSystem::GetDirectQueueContext());
 
 	CameraComponent* camera = camera_->GetComponent<CameraComponent>();
-	SxavengerContent::PushGrid(camera, { 64, 64 }, 64);
 
+	if (isRenderGrid_) {
+		SxavengerContent::PushGrid(camera, { 64, 64 }, 64);
+	}
+	
 	if (isRenderCollider_) {
 		colliderRenderer_->Render(SxavengerSystem::GetDirectQueueContext(), camera_->GetComponent<CameraComponent>());
 	}
@@ -448,6 +453,20 @@ void RenderSceneEditor::ShowSceneWindow() {
 			{ 16, 16 },
 			gizmoMode_ == SxImGuizmo::Local ? kSelectedColor : kNonSelectedColor)) {
 			gizmoMode_ = SxImGuizmo::Local;
+		}
+
+		ImGui::Dummy({ 8, 0 });
+		ImGui::Separator();
+		ImGui::Dummy({ 8, 0 });
+
+		//* grid menu *//
+
+		if (SxImGui::ImageButton(
+			"## grid",
+			gridTexture_.WaitGet()->GetGPUHandleSRV().ptr,
+			{ 16, 16 },
+			isRenderGrid_ ? kSelectedColor : kNonSelectedColor)) {
+			isRenderGrid_ = !isRenderGrid_;
 		}
 
 		ImGui::PopStyleVar();
