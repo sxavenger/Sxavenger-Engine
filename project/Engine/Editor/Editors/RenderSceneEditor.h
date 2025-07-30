@@ -123,6 +123,7 @@ private:
 		Position,
 		Direct,
 		Indirect,
+		Indirect_Reservoir,
 	};
 
 private:

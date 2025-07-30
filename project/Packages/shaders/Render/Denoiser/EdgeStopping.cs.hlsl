@@ -19,16 +19,15 @@
 //* output texture
 RWTexture2D<float4> gOutput : register(u0);
 
-//struct Parameter {
-//	float sigma_n;
-//	float sigma_z;
-//	float sigma_s;
-//};
-//ConstantBuffer<Parameter> gParameter : register(b1);
+cbuffer Parameter : register(b1) { //!< test
+	float sigma_n;
+	float sigma_z;
+	float sigma_s;
+};
 
-static const float sigma_n = 1.0f;
-static const float sigma_z = 0.1f;
-static const float sigma_s = 0.1f;
+//static const float sigma_n = 1.0f;
+//static const float sigma_z = 0.1f;
+//static const float sigma_s = 0.1f;
 
 //* input texture
 Texture2D<float4> gIndirect : register(t0);

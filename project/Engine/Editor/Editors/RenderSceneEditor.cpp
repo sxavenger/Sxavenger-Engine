@@ -316,6 +316,7 @@ void RenderSceneEditor::ShowSceneMenu() {
 
 		ImGui::BeginDisabled(!config_.isEnableIndirectLighting);
 		ImGui::Text("sample count: %u", renderer_->GetReservoirSampleCount());
+		renderer_->DebugGui(); //!< HACK
 		ImGui::EndDisabled();
 
 		ImGui::EndDisabled();
@@ -622,7 +623,7 @@ void RenderSceneEditor::UpdateKeyShortcut() {
 	}
 
 	if (SxavengerSystem::IsPressKey(KeyId::KEY_LALT) && SxavengerSystem::IsTriggerKey(KeyId::KEY_DOWN)) { //!< left alt + Down
-		if (buffer_ < GBuffer::Indirect) {
+		if (buffer_ < GBuffer::Indirect_Reservoir) {
 			buffer_ = static_cast<GBuffer>(static_cast<uint32_t>(buffer_) + 1);
 		}
 
@@ -908,6 +909,14 @@ void RenderSceneEditor::DisplayGBufferTexture(GBuffer buffer) {
 		case GBuffer::Indirect:
 			SetImGuiImageFullWindowEnable(
 				textures_->GetGBuffer(FLightingGBuffer::Layout::Indirect)->GetGPUHandleSRV(),
+				textures_->GetSize(),
+				isRender_
+			);
+			break;
+
+		case GBuffer::Indirect_Reservoir:
+			SetImGuiImageFullWindowEnable(
+				textures_->GetGBuffer(FLightingGBuffer::Layout::Indirect_Reservoir)->GetGPUHandleSRV(),
 				textures_->GetSize(),
 				isRender_
 			);

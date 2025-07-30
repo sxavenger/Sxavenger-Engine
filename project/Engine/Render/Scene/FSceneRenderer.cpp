@@ -86,6 +86,10 @@ uint32_t FSceneRenderer::GetReservoirSampleCount() const {
 	return reservoir_.value().GetCurrentSampleCount();
 }
 
+void FSceneRenderer::DebugGui() {
+	ImGui::DragFloat3("Test", &test_.x, 0.01f);
+}
+
 FSceneRenderer::Config FSceneRenderer::ApplyConfig(const Config& _config) const {
 	Config config = _config;
 
@@ -376,7 +380,7 @@ void FSceneRenderer::ProcessLightingPassIndirect(const DirectXQueueContext* cont
 	config.buffer->BeginUnorderedLightingIndirect(context);
 
 	//* lighting texture
-	commandList->SetComputeRootDescriptorTable(0, config.buffer->GetGBuffer(FLightingGBuffer::Layout::Indirect)->GetGPUHandleUAV());
+	commandList->SetComputeRootDescriptorTable(0, config.buffer->GetGBuffer(FLightingGBuffer::Layout::Indirect_Reservoir)->GetGPUHandleUAV());
 
 	//* scene
 	commandList->SetComputeRootShaderResourceView(1, config.scene->GetTopLevelAS().GetGPUVirtualAddress());
@@ -432,7 +436,10 @@ void FSceneRenderer::ProcessLightingPassIndirectDenoiser(const DirectXQueueConte
 
 		//* textures
 		desc.SetHandle("gOutput",   textures->GetIndexTexture()->GetGPUHandleUAV());
-		desc.SetHandle("gIndirect", config.buffer->GetGBuffer(FLightingGBuffer::Layout::Indirect)->GetGPUHandleSRV());
+		desc.SetHandle("gIndirect", config.buffer->GetGBuffer(FLightingGBuffer::Layout::Indirect_Reservoir)->GetGPUHandleSRV());
+
+		//* parameter
+		desc.Set32bitConstants("Parameter", 3, &test_);
 
 		//* deferred textures
 		desc.SetHandle("gAlbedo",   config.buffer->GetGBuffer(FDeferredGBuffer::Layout::Albedo)->GetGPUHandleSRV());
