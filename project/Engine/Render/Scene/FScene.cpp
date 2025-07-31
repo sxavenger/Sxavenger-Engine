@@ -53,6 +53,10 @@ void FScene::Init() {
 		desc.SetVirtualSRV(15, 5, 2); //!< gPointLights
 		desc.SetVirtualSRV(16, 6, 2); //!< gPointLightShadows
 
+		// Sky Light
+		desc.SetHandleSRV(17, 7, 2);                                                                  //!< gSkyLight
+		desc.SetSamplerLinear(DxObject::MODE_WRAP, DxObject::ShaderVisibility::VISIBILITY_ALL, 0, 2); //!< gSampler
+
 		stateObjectContext_.CreateRootSignature(SxavengerSystem::GetDxDevice(), desc);
 	}
 

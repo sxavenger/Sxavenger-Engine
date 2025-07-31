@@ -326,6 +326,9 @@ void FSceneRenderer::ProcessLightingPassPointLight(const DirectXQueueContext* co
 }
 
 void FSceneRenderer::ProcessLightingPassSkyLight(const DirectXQueueContext* context, const Config& config) {
+	if (config.isEnableIndirectLighting) {
+		return; //!< Indirect Lightingで処理するため, スキップ
+	}
 
 	FRenderCore::GetInstance()->GetLight()->SetPipeline(
 		FRenderCoreLight::LightType::SkyLight, context, config.buffer->GetSize()
@@ -373,6 +376,8 @@ void FSceneRenderer::ProcessLightingPassIndirect(const DirectXQueueContext* cont
 		reservoir_ = FRenderCorePathtracing::Reservoir{};
 	}
 
+
+
 	config.scene->GetStateObjectContext().SetStateObject(context->GetDxCommand());
 
 	auto commandList = context->GetCommandList();
@@ -410,6 +415,13 @@ void FSceneRenderer::ProcessLightingPassIndirect(const DirectXQueueContext* cont
 	commandList->SetComputeRootShaderResourceView(14, config.scene->pointLightTransforms_->GetGPUVirtualAddress());
 	commandList->SetComputeRootShaderResourceView(15, config.scene->pointLightParams_->GetGPUVirtualAddress());
 	commandList->SetComputeRootShaderResourceView(16, config.scene->pointLightShadowParams_->GetGPUVirtualAddress());
+
+	// Sky Light
+	std::optional<D3D12_GPU_DESCRIPTOR_HANDLE> handle = std::nullopt;
+	sComponentStorage->ForEachActive<SkyLightComponent>([&](SkyLightComponent* component) {
+		handle = component->GetEnvironment();
+	});
+	commandList->SetComputeRootDescriptorTable(17, handle.value_or(D3D12_GPU_DESCRIPTOR_HANDLE{}));
 
 	config.scene->GetStateObjectContext().DispatchRays(context->GetDxCommand(), config.buffer->GetSize());
 

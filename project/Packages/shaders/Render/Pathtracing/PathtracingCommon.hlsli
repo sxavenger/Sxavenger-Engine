@@ -89,6 +89,10 @@ StructuredBuffer<TransformComponent> gPointLightTransforms : register(t4, space2
 StructuredBuffer<PointLightComponent> gPointLights         : register(t5, space2);
 StructuredBuffer<InlineShadow> gPointLightShadows          : register(t6, space2);
 
+// Sky Light
+TextureCube<float4> gSkyLight : register(t7, space2);
+SamplerState gSkySampler      : register(s0, space2);
+
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Config variables
 ////////////////////////////////////////////////////////////////////////////////////////////
