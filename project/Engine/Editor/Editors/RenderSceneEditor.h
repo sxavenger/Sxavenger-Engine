@@ -222,6 +222,7 @@ private:
 	void SetImGuiImagesFullWindowEnable(const std::vector<std::pair<D3D12_GPU_DESCRIPTOR_HANDLE, GBuffer>>& handles, const Vector2ui& size, bool isEnable);
 
 	void UpdateCamera();
+	void ShowCameraInfomation(const WindowRect& rect);
 	void UpdateView();
 
 	//* helper methods *//

@@ -46,29 +46,10 @@ void PreviewGameLoop::InitGame() {
 	main_ = SxavengerSystem::CreateMainWindow(kMainWindowSize, L"sxavenger engine preview window", { 0.14f, 0.2f, 0.24f, 1.f }).lock();
 	main_->SetIcon("packages/icon/SxavengerEngineIcon.ico", { 32, 32 });
 
-	SxavengerSystem::CreateSubWindow(
-		{ 1280, 720 }, L"sxavenger engine preview sub window", DirectXWindowContext::ProcessCategory::Window,
-		{ 0.14f, 0.2f, 0.24f, 1.f }
-	);
+	buffer_.Create(SxavengerSystem::GetDxDevice(), SxavengerSystem::GetDxDescriptorHeaps(), 1024, 2);
 
-	texture_.Create(main_->GetSize(), DXGI_FORMAT_R32G32B32A32_FLOAT);
-
-	environment_ = SxavengerAsset::TryImport<AssetTexture>(
-		"assets/textures/textureCube/sky_environment.dds",
-		Texture::Option{ Texture::Encoding::Intensity, false }
-	);
-
-	pipeline_ = std::make_unique<CustomReflectionComputePipeline>();
-	pipeline_->CreateAsset("assets/shaders/test.cs.hlsl");
-	pipeline_->RegisterBlob();
-	pipeline_->ReflectionPipeline(SxavengerSystem::GetDxDevice());
-
-	actor_.Init();
-
-	parameter_ = std::make_unique<DxObject::DimensionBuffer<std::pair<uint32_t, float>>>();
-	parameter_->Create(SxavengerSystem::GetDxDevice(), 1);
-	parameter_->At(0).first  = 0;
-	parameter_->At(0).second = 0.0f;
+	pipeline_.CreateBlob("assets/shaders/test.cs.hlsl");
+	pipeline_.ReflectionPipeline(SxavengerSystem::GetDxDevice());
 }
 
 void PreviewGameLoop::TermGame() {
@@ -76,36 +57,16 @@ void PreviewGameLoop::TermGame() {
 
 void PreviewGameLoop::UpdateGame() {
 
-	if (SxavengerSystem::IsTriggerKey(KeyId::KEY_SPACE)) {
-		parameter_->At(0).first++;
-		parameter_->At(0).first %= 2;
-	}
-
-	if (SxavengerSystem::IsPressKey(KeyId::KEY_UP)) {
-		parameter_->At(0).second += 0.1f;
-	}
-
-	if (SxavengerSystem::IsPressKey(KeyId::KEY_DOWN)) {
-		parameter_->At(0).second -= 0.1f;
-	}
-
-	actor_.Update();
-	ComponentHelper::UpdateTransform();
-
-	texture_.TransitionBeginUnordered(SxavengerSystem::GetDirectQueueContext());
-
-	pipeline_->SetPipeline(SxavengerSystem::GetDirectQueueContext()->GetDxCommand());
+	pipeline_.SetPipeline(SxavengerSystem::GetDirectQueueContext()->GetDxCommand());
 
 	DxObject::BindBufferDesc desc = {};
-	desc.SetHandle("gOutput",      texture_.GetGPUHandleUAV());
-	desc.SetHandle("gEnvironment", environment_.WaitAcquire()->GetGPUHandleSRV());
-	desc.SetAddress("gCamera",     actor_.GetComponent<CameraComponent>()->GetGPUVirtualAddress());
-	desc.SetAddress("gParameter",  parameter_->GetGPUVirtualAddress());
-	pipeline_->BindComputeBuffer(SxavengerSystem::GetDirectQueueContext()->GetDxCommand(), desc);
+	desc.SetHandle("gAppend",   buffer_.GetAppendCousumeGPUHandleUAV());
+	desc.SetHandle("gConsume",  buffer_.GetAppendCousumeGPUHandleUAV());
+	desc.SetAddress("gCounter", buffer_.GetCounterGPUVirtualAddress());
 
-	pipeline_->Dispatch(SxavengerSystem::GetDirectQueueContext()->GetDxCommand(), Vector3ui{ DxObject::RoundUp(texture_.GetSize().x, 16), DxObject::RoundUp(texture_.GetSize().y, 16), 1 });
-
-	texture_.TransitionEndUnordered(SxavengerSystem::GetDirectQueueContext());
+	pipeline_.BindComputeBuffer(SxavengerSystem::GetDirectQueueContext()->GetDxCommand(), desc);
+	pipeline_.Dispatch(SxavengerSystem::GetDirectQueueContext()->GetDxCommand(), { 1, 1, 1 });
+	
 }
 
 void PreviewGameLoop::DrawGame() {
@@ -113,7 +74,7 @@ void PreviewGameLoop::DrawGame() {
 	main_->BeginRenderWindow(SxavengerSystem::GetDirectQueueContext());
 	main_->ClearWindow(SxavengerSystem::GetDirectQueueContext());
 
-	FPresenter::Present(SxavengerSystem::GetDirectQueueContext(), main_->GetSize(), texture_.GetGPUHandleSRV());
+	//FPresenter::Present(SxavengerSystem::GetDirectQueueContext(), main_->GetSize(), texture_.GetGPUHandleSRV());
 	SxavengerSystem::RenderImGui();
 
 	main_->EndRenderWindow(SxavengerSystem::GetDirectQueueContext());

@@ -200,6 +200,9 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="Engine\Asset\Assets\Texture\AssetTexture.cpp" />
     <ClCompile Include="Engine\Asset\Assets\Texture\Texture.cpp" />
     <ClCompile Include="Engine\Asset\SxavengerAsset.cpp" />
+    <ClCompile Include="Engine\Component\Components\Particle\EmitterComponent.cpp" />
+    <ClCompile Include="Engine\Component\Components\Particle\GPUParticleComponent.cpp" />
+    <ClCompile Include="Engine\Component\Components\Particle\ParticleConfig.cpp" />
     <ClCompile Include="Engine\Component\Components\PostProcessLayer\PostProcessChromaticAberration.cpp" />
     <ClCompile Include="Engine\Component\Components\PostProcessLayer\PostProcessGrayScale.cpp" />
     <ClCompile Include="Engine\Component\Components\PostProcessLayer\PostProcessLUT.cpp" />
@@ -278,6 +281,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="Engine\Render\GBuffer\FMainGBuffer.cpp" />
     <ClCompile Include="Engine\System\DirectX\Context\DirectXQueueContext.cpp" />
     <ClCompile Include="Engine\System\DirectX\Context\DirectXWindowContext.cpp" />
+    <ClCompile Include="Engine\System\DirectX\DxObject\DxAppendConsumeBuffer.cpp" />
     <ClCompile Include="Engine\System\Window\WindowCollection.cpp" />
     <ClCompile Include="Lib\Adapter\Uuid\Uuid.cpp" />
     <ClCompile Include="Engine\Render\Common\FLUTTexture.cpp" />
@@ -372,6 +376,9 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Engine\Asset\Assets\Texture\Texture.h" />
     <ClInclude Include="Engine\Asset\Observer\AssetObserver.h" />
     <ClInclude Include="Engine\Asset\SxavengerAsset.h" />
+    <ClInclude Include="Engine\Component\Components\Particle\EmitterComponent.h" />
+    <ClInclude Include="Engine\Component\Components\Particle\GPUParticleComponent.h" />
+    <ClInclude Include="Engine\Component\Components\Particle\ParticleConfig.h" />
     <ClInclude Include="Engine\Component\Components\PostProcessLayer\PostProcessChromaticAberration.h" />
     <ClInclude Include="Engine\Component\Components\PostProcessLayer\PostProcessGrayScale.h" />
     <ClInclude Include="Engine\Component\Components\PostProcessLayer\PostProcessLUT.h" />
@@ -455,6 +462,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Engine\Render\GBuffer\FMainGBuffer.h" />
     <ClInclude Include="Engine\System\DirectX\Context\DirectXQueueContext.h" />
     <ClInclude Include="Engine\System\DirectX\Context\DirectXWindowContext.h" />
+    <ClInclude Include="Engine\System\DirectX\DxObject\DxAppendConsumeBuffer.h" />
     <ClInclude Include="Engine\System\DirectX\DxObject\DxReadbackDimensionBuffer.h" />
     <ClInclude Include="Engine\System\Window\WindowCollection.h" />
     <ClInclude Include="Lib\Adapter\Uuid\Uuid.h" />

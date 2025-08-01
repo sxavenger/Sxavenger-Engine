@@ -39,6 +39,8 @@ public:
 
 	const uint32_t GetSize() const { return size_; }
 
+	const uint32_t& GetDimension() const { return size_; }
+
 	const size_t GetStride() const { return stride_; }
 
 	const size_t GetByteSize() const { return size_ * stride_; }

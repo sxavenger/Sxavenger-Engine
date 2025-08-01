@@ -837,6 +837,17 @@ void RenderSceneEditor::UpdateCamera() {
 	UpdateView();
 }
 
+void RenderSceneEditor::ShowCameraInfomation(const WindowRect& rect) {
+
+	ImVec2 cursol = ImGui::GetCursorPos();
+
+	ImGui::SetCursorPos({ rect.pos.x + rect.size.x * 0.5f, rect.pos.y + rect.size.y * 0.5f });
+	ImGui::Text("TestA");
+	ImGui::Text("TestB");
+
+	ImGui::SetCursorPos(cursol);
+}
+
 void RenderSceneEditor::UpdateView() {
 	auto transform = camera_->GetComponent<TransformComponent>();
 

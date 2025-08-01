@@ -15,6 +15,8 @@
 #include <Engine/Component/Components/SpriteRenderer/SpriteRendererComponent.h>
 #include <Engine/Component/Components/Particle/ParticleComponent.h>
 #include <Engine/Component/Components/PostProcessLayer/PostProcessLayerComponent.h>
+#include <Engine/Component/Components/Particle/GPUParticleComponent.h>
+#include <Engine/Component/Components/Particle/EmitterComponent.h>
 #include <Engine/Component/ComponentHelper.h>
 #include <Engine/System/Runtime/Performance/DeltaTimePoint.h>
 #include <Engine/Render/FRenderCore.h>
@@ -105,6 +107,13 @@ void BetaSystemGameLoop::InitSystem() {
 	auto texture = SxavengerAsset::TryImport<AssetTexture>("assets/textures/LUT/lut_reddish.png", Texture::Option{ Texture::Encoding::Intensity, false });
 	auto lut = behaviour_->GetComponent<PostProcessLayerComponent>()->AddPostProcess<PostProcessLUT>();
 	lut->CreateTexture(SxavengerSystem::GetDirectQueueContext(), texture, { 16, 16 });
+
+	particle_ = std::make_unique<MonoBehaviour>();
+	particle_->AddComponent<TransformComponent>();
+	particle_->AddComponent<EmitterComponent>();
+	particle_->AddComponent<GPUParticleComponent>();
+	particle_->GetComponent<GPUParticleComponent>()->Create(1024);
+	particle_->GetComponent<GPUParticleComponent>()->SetPrimitive(InputPrimitiveHelper::CreatePlaneZForward({ 1, 1 }));
 }
 
 void BetaSystemGameLoop::TermSystem() {
@@ -122,6 +131,10 @@ void BetaSystemGameLoop::UpdateSystem() {
 	//player_->Update();
 
 	//leadParticle_->Update();
+
+	particle_->GetComponent<EmitterComponent>()->Update(SxavengerSystem::GetDirectQueueContext());
+
+	particle_->GetComponent<GPUParticleComponent>()->Update(SxavengerSystem::GetDirectQueueContext());
 
 	//-----------------------------------------------------------------------------------------
 	// SystemUpdate...?

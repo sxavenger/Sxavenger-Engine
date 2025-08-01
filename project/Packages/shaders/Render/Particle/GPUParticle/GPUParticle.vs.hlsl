@@ -1,7 +1,7 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
-#include "ParticlePass.hlsli"
+#include "GPUParticlePass.hlsli"
 
 //=========================================================================================
 // buffers
@@ -14,24 +14,37 @@ ParticlePSInput main(PrimitiveVertex input, uint instanceId : SV_InstanceID) {
 
 	ParticlePSInput output = (ParticlePSInput)0;
 
-	float4x4 mat = gTransforms[instanceId].mat;
-	// todo: matInvTranspose.
+	GPUParticleComponent particle = gParticles[instanceId];
 
-	if (gParticles[instanceId].isBillboard) {
-		float4x4 world = gCamera.world;
+	float4x4 mat = (float4x4)0;
+
+	if (gConfig.isBillboard) {
 		
-		//!< 制約: cameraにscale成分を入れない
-		mat = float4x4(world[0], world[1], world[2], mat[3]);
-		// todo: matInvTranspose.
+		float4x4 camera = gCamera.world;
+
+		mat = float4x4(
+			normalize(camera[0]),
+			normalize(camera[1]),
+			normalize(camera[2]),
+			float4(particle.translate, 1.0f)
+		);
+
+		// TODO: Position Billboard
+		// TODO: Coordinate Billboard
+
+	} else {
+		// todo: billboardではない場合の処理
 	}
-	
-	output.position = mul(mul(input.position, mat), kViewProj);
-	
+
+	mat[0] *= particle.scale.x;
+	mat[1] *= particle.scale.y;
+	mat[2] *= particle.scale.z;
+
+	output.position = mul(input.position, mul(mat, kViewProj));
+	output.normal   = normalize(mul(input.normal, (float3x3)mat)); // todo: inverse transpose
 	output.texcoord = input.texcoord;
-	output.normal   = normalize(gTransforms[instanceId].TransformNormal(input.normal));
 
 	output.instanceId = instanceId;
-	
+
 	return output;
-	
 }

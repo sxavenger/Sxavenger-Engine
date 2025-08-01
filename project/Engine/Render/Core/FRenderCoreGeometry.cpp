@@ -14,32 +14,21 @@ _DXOBJECT_USING
 //* external
 #include <magic_enum.hpp>
 
-//=========================================================================================
-// static variables
-//=========================================================================================
-
-const std::filesystem::path FRenderCoreGeometry::kDirectory_ = kPackagesShaderDirectory / "render/geometry/mesh";
-
 ////////////////////////////////////////////////////////////////////////////////////////////
 // FRenderCoreGeometry class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 void FRenderCoreGeometry::Init() {
 	CreateDesc();
-	CreateDeferred();
-	CreateForward();
+	CreatePipeline();
 }
 
-void FRenderCoreGeometry::SetPipeline(
-	RenderType type, VertexStage vs, PixelStage ps,
-	const DirectXQueueContext* context, const Vector2ui& size) {
-	graphicsPipelines_[type][vs][ps]->SetPipeline(context->GetDxCommand(), size);
+void FRenderCoreGeometry::SetPipeline(Type type, const DirectXQueueContext* context, const Vector2ui& size) {
+	pipelines_[static_cast<uint32_t>(type)]->SetPipeline(context->GetDxCommand(), size);
 }
 
-void FRenderCoreGeometry::BindGraphicsBuffer(
-	RenderType type, VertexStage vs, PixelStage ps,
-	const DirectXQueueContext* context, const DxObject::BindBufferDesc& desc) {
-	graphicsPipelines_[type][vs][ps]->BindGraphicsBuffer(context->GetDxCommand(), desc);
+void FRenderCoreGeometry::BindGraphicsBuffer(Type type, const DirectXQueueContext* context, const DxObject::BindBufferDesc& desc) {
+	pipelines_[static_cast<uint32_t>(type)]->BindGraphicsBuffer(context->GetDxCommand(), desc);
 }
 
 void FRenderCoreGeometry::CreateDesc() {
@@ -74,34 +63,65 @@ void FRenderCoreGeometry::CreateDesc() {
 	forwardDesc_.SetRTVFormat(0, FMainGBuffer::kColorFormat);
 }
 
-void FRenderCoreGeometry::CreateDeferred() {
-
-	auto& deferred = graphicsPipelines_[RenderType::Deffered];
+void FRenderCoreGeometry::CreatePipeline() {
 
 	{
-		auto& pipeline = deferred[VertexStage::DefaultVS][PixelStage::Albedo];
-		pipeline = std::make_unique<CustomReflectionGraphicsPipeline>();
-		pipeline->CreateAsset(kDirectory_ / "Default.vs.hlsl",        GraphicsShaderType::vs);
-		pipeline->CreateAsset(kDirectory_ / "AlbedoDeferred.ps.hlsl", GraphicsShaderType::ps);
+		auto pipeline = std::make_unique<CustomReflectionGraphicsPipeline>();
+		//* blob
+		pipeline->CreateAsset(kDirectory_ / "Geometry" / "Mesh" / "Default.vs.hlsl", GraphicsShaderType::vs);
+		pipeline->CreateAsset(kDirectory_ / "Geometry" / "Mesh" / "Forward.ps.hlsl", GraphicsShaderType::ps);
 		pipeline->RegisterBlob();
 
+		//* root signature
 		pipeline->ReflectionRootSignature(SxavengerSystem::GetDxDevice());
-		pipeline->CreatePipeline(SxavengerSystem::GetDxDevice(), defferedDesc_);
-	}
-}
 
-void FRenderCoreGeometry::CreateForward() {
-	
-	auto& forward = graphicsPipelines_[RenderType::Forward];
-
-	{
-		auto& pipeline = forward[VertexStage::DefaultVS][PixelStage::Albedo];
-		pipeline = std::make_unique<CustomReflectionGraphicsPipeline>();
-		pipeline->CreateAsset(kDirectory_ / "Default.vs.hlsl",        GraphicsShaderType::vs);
-		pipeline->CreateAsset(kDirectory_ / "AlbedoForward.ps.hlsl",  GraphicsShaderType::ps);
-		pipeline->RegisterBlob();
-
-		pipeline->ReflectionRootSignature(SxavengerSystem::GetDxDevice());
+		//* pipeline
 		pipeline->CreatePipeline(SxavengerSystem::GetDxDevice(), forwardDesc_);
+
+		pipelines_[static_cast<uint32_t>(Type::Forward_MeshVS)] = std::move(pipeline);
+	}
+
+	{
+		auto pipeline = std::make_unique<CustomReflectionGraphicsPipeline>();
+		//* blob
+		pipeline->CreateAsset(kDirectory_ / "Geometry" / "Mesh" / "Default.vs.hlsl", GraphicsShaderType::vs);
+		pipeline->CreateAsset(kDirectory_ / "Geometry" / "Mesh" / "Deferred.ps.hlsl", GraphicsShaderType::ps);
+		pipeline->RegisterBlob();
+
+		//* root signature
+		pipeline->ReflectionRootSignature(SxavengerSystem::GetDxDevice());
+
+		//* pipeline
+		pipeline->CreatePipeline(SxavengerSystem::GetDxDevice(), defferedDesc_);
+
+		pipelines_[static_cast<uint32_t>(Type::Deferred_MeshVS)] = std::move(pipeline);
+	}
+
+	{
+		auto pipeline = std::make_unique<CustomReflectionGraphicsPipeline>();
+		pipeline->CreateAsset(kDirectory_ / "Particle" / "GPUParticle" / "GPUParticle.vs.hlsl", GraphicsShaderType::vs);
+		pipeline->CreateAsset(kDirectory_ / "Particle" / "GPUParticle" / "GPUParticle.ps.hlsl", GraphicsShaderType::ps);
+		pipeline->RegisterBlob();
+
+		//* root signature
+		pipeline->ReflectionRootSignature(SxavengerSystem::GetDxDevice());
+
+		//* pipeline
+		GraphicsPipelineDesc desc = forwardDesc_;
+		desc.ClearElement();
+		desc.SetElement("POSITION", 0, DXGI_FORMAT_R32G32B32A32_FLOAT);
+		desc.SetElement("TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT);
+		desc.SetElement("NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT);
+
+		desc.SetRasterizer(D3D12_CULL_MODE_NONE, D3D12_FILL_MODE_SOLID);
+		desc.SetDepthStencil(true, D3D12_DEPTH_WRITE_MASK_ZERO);
+		desc.SetBlendMode(0, BlendMode::kBlendModeAdd);
+		
+		desc.SetRTVFormat(FMainGBuffer::kColorFormat);
+
+		pipeline->CreatePipeline(SxavengerSystem::GetDxDevice(), defferedDesc_);
+
+		pipelines_[static_cast<uint32_t>(Type::Forward_GPUParticleVS)] = std::move(pipeline);
+
 	}
 }

@@ -16,6 +16,7 @@
 #include <Engine/Component/Components/Light/Rect/RectLightComponent.h>
 #include <Engine/Component/Components/Light/Environment/SkyLightComponent.h>
 #include <Engine/Component/Components/Particle/ParticleComponent.h>
+#include <Engine/Component/Components/Particle/GPUParticleComponent.h>
 #include <Engine/Component/Components/PostProcessLayer/PostProcessLayerComponent.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -125,6 +126,7 @@ void FSceneRenderer::RenderBasePass(const DirectXQueueContext* context, const Co
 void FSceneRenderer::RenderBasePassStaticMesh(const DirectXQueueContext* context, const Config& config) {
 
 	auto core = FRenderCore::GetInstance()->GetGeometry();
+	core->SetPipeline(FRenderCoreGeometry::Type::Deferred_MeshVS, context, config.buffer->GetSize());
 
 	// common parameterの設定
 	DxObject::BindBufferDesc parameter = {};
@@ -136,22 +138,14 @@ void FSceneRenderer::RenderBasePassStaticMesh(const DirectXQueueContext* context
 			return; //!< 透明なジオメトリは別のパスで描画
 		}
 
-		component->GetMesh()->BindIABuffer(context);
-
 		// メッシュの描画
-		core->SetPipeline(
-			FRenderCoreGeometry::Deffered, FRenderCoreGeometry::VertexStage::DefaultVS, FRenderCoreGeometry::PixelStage::Albedo,
-			context, config.buffer->GetSize()
-		);
+		component->GetMesh()->BindIABuffer(context);
 
 		parameter.SetAddress("gTransforms", component->GetTransform()->GetGPUVirtualAddress());
 		parameter.SetAddress("gMaterials",  component->GetMaterial()->GetGPUVirtualAddress());
 		//!< todo: materialをConstantBufferに変更する
 
-		core->BindGraphicsBuffer(
-			FRenderCoreGeometry::Deffered, FRenderCoreGeometry::VertexStage::DefaultVS, FRenderCoreGeometry::PixelStage::Albedo,
-			context, parameter
-		);
+		core->BindGraphicsBuffer(FRenderCoreGeometry::Type::Deferred_MeshVS, context, parameter);
 
 		component->GetMesh()->DrawCall(context, 1);
 
@@ -162,6 +156,7 @@ void FSceneRenderer::RenderBasePassStaticMesh(const DirectXQueueContext* context
 void FSceneRenderer::RenderBasePassSkinnedMesh(const DirectXQueueContext* context, const Config& config) {
 
 	auto core = FRenderCore::GetInstance()->GetGeometry();
+	core->SetPipeline(FRenderCoreGeometry::Type::Deferred_MeshVS, context, config.buffer->GetSize());
 
 	// common parameterの設定
 	DxObject::BindBufferDesc parameter = {};
@@ -173,21 +168,14 @@ void FSceneRenderer::RenderBasePassSkinnedMesh(const DirectXQueueContext* contex
 			return; //!< 透明なジオメトリは別のパスで描画
 		}
 
+		// メッシュの描画
 		component->BindIABuffer(context);
-
-		core->SetPipeline(
-			FRenderCoreGeometry::Deffered, FRenderCoreGeometry::VertexStage::DefaultVS, FRenderCoreGeometry::PixelStage::Albedo,
-			context, config.buffer->GetSize()
-		);
 
 		parameter.SetAddress("gTransforms", component->GetTransform()->GetGPUVirtualAddress());
 		parameter.SetAddress("gMaterials",  component->GetMaterial()->GetGPUVirtualAddress());
 		//!< todo: materialをConstantBufferに変更する
 
-		core->BindGraphicsBuffer(
-			FRenderCoreGeometry::Deffered, FRenderCoreGeometry::VertexStage::DefaultVS, FRenderCoreGeometry::PixelStage::Albedo,
-			context, parameter
-		);
+		core->BindGraphicsBuffer(FRenderCoreGeometry::Type::Deferred_MeshVS, context, parameter);
 
 		component->DrawCall(context, 1);
 	});
@@ -551,6 +539,7 @@ void FSceneRenderer::RenderTransparentPass(const DirectXQueueContext* context, c
 void FSceneRenderer::RenderTransparentPassStaticMesh(const DirectXQueueContext* context, const Config& config) {
 
 	auto core = FRenderCore::GetInstance()->GetGeometry();
+	core->SetPipeline(FRenderCoreGeometry::Type::Forward_MeshVS, context, config.buffer->GetSize());
 
 	DxObject::BindBufferDesc parameter = {};
 	parameter.SetAddress("gCamera", config.camera->GetGPUVirtualAddress());
@@ -562,22 +551,15 @@ void FSceneRenderer::RenderTransparentPassStaticMesh(const DirectXQueueContext* 
 			return;
 		}
 
-		component->GetMesh()->BindIABuffer(context);
-
 		// メッシュの描画
-		core->SetPipeline(
-			FRenderCoreGeometry::Forward, FRenderCoreGeometry::VertexStage::DefaultVS, FRenderCoreGeometry::PixelStage::Albedo,
-			context, config.buffer->GetSize()
-		);
+		component->GetMesh()->BindIABuffer(context);
 
 		parameter.SetAddress("gTransforms", component->GetTransform()->GetGPUVirtualAddress());
 		parameter.SetAddress("gMaterials",  component->GetMaterial()->GetGPUVirtualAddress());
 		//!< todo: materialをConstantBufferに変更する
 
-		core->BindGraphicsBuffer(
-			FRenderCoreGeometry::Forward, FRenderCoreGeometry::VertexStage::DefaultVS, FRenderCoreGeometry::PixelStage::Albedo,
-			context, parameter
-		);
+		core->BindGraphicsBuffer(FRenderCoreGeometry::Type::Forward_MeshVS, context, parameter);
+
 
 		component->GetMesh()->DrawCall(context, 1);
 	});
@@ -585,11 +567,35 @@ void FSceneRenderer::RenderTransparentPassStaticMesh(const DirectXQueueContext* 
 
 void FSceneRenderer::RenderTransparentPassParticle(const DirectXQueueContext* context, const Config& config) {
 
+	auto core = FRenderCore::GetInstance()->GetGeometry();
+
 	// componentを取得
 	sComponentStorage->ForEachActive<ParticleComponent>([&](ParticleComponent* component) {
 		component->DrawParticle(context, config.camera);
+		// todo: rendererで描画
 	});
 
+	core->SetPipeline(FRenderCoreGeometry::Type::Forward_GPUParticleVS, context, config.buffer->GetSize());
+
+	sComponentStorage->ForEachActive<GPUParticleComponent>([&](GPUParticleComponent* component) {
+		if (!component->HasPritimive()) {
+			return;
+		}
+
+		component->BindIABuffer(context);
+
+		DxObject::BindBufferDesc parameter = {};
+		//* common
+		parameter.SetAddress("gCamera", config.camera->GetGPUVirtualAddress());
+
+		//* particle
+		parameter.SetAddress("gConfig",    component->GetConfig().GetGPUVirtualAddress());
+		parameter.SetAddress("gParticles", component->GetGPUVirtualAddress());
+
+		core->BindGraphicsBuffer(FRenderCoreGeometry::Type::Forward_GPUParticleVS, context, parameter);
+
+		component->DrawCall(context);
+	});
 }
 
 void FSceneRenderer::ProcessPostProcessPass(const DirectXQueueContext* context, const Config& config) {

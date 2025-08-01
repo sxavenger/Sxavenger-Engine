@@ -177,6 +177,10 @@
     <ClCompile Include="Engine\Component\Components\PostProcessLayer\PostProcessGrayScale.cpp" />
     <ClCompile Include="Engine\Component\Components\PostProcessLayer\PostProcessRadialBlur.cpp" />
     <ClCompile Include="Engine\Component\Components\PostProcessLayer\PostProcessChromaticAberration.cpp" />
+    <ClCompile Include="Engine\Component\Components\Particle\GPUParticleComponent.cpp" />
+    <ClCompile Include="Engine\Component\Components\Particle\EmitterComponent.cpp" />
+    <ClCompile Include="Engine\Component\Components\Particle\ParticleConfig.cpp" />
+    <ClCompile Include="Engine\System\DirectX\DxObject\DxAppendConsumeBuffer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Lib\Adapter\Random\Random.h" />
@@ -378,6 +382,10 @@
     <ClInclude Include="Engine\Component\Components\PostProcessLayer\PostProcessGrayScale.h" />
     <ClInclude Include="Engine\Component\Components\PostProcessLayer\PostProcessRadialBlur.h" />
     <ClInclude Include="Engine\Component\Components\PostProcessLayer\PostProcessChromaticAberration.h" />
+    <ClInclude Include="Engine\Component\Components\Particle\GPUParticleComponent.h" />
+    <ClInclude Include="Engine\Component\Components\Particle\EmitterComponent.h" />
+    <ClInclude Include="Engine\Component\Components\Particle\ParticleConfig.h" />
+    <ClInclude Include="Engine\System\DirectX\DxObject\DxAppendConsumeBuffer.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

@@ -61,6 +61,8 @@ public:
 
 	constexpr void Reset() { time = static_cast<_Value>(0); }
 
+	static TimePoint Mod(TimePoint left, TimePoint right) { return { std::fmod(left.time, right.time) };}
+
 	//=========================================================================================
 	// operator
 	//=========================================================================================
