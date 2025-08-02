@@ -60,6 +60,7 @@ void FRenderCoreGeometry::CreateDesc() {
 	//* forward
 	forwardDesc_ = {};
 	forwardDesc_.CreateDefaultDesc();
+	forwardDesc_.SetBlendMode(0, BlendMode::kBlendModeNormal_AlphaMax);
 	forwardDesc_.SetRTVFormat(0, FMainGBuffer::kColorFormat);
 }
 
@@ -119,7 +120,7 @@ void FRenderCoreGeometry::CreatePipeline() {
 		
 		desc.SetRTVFormat(FMainGBuffer::kColorFormat);
 
-		pipeline->CreatePipeline(SxavengerSystem::GetDxDevice(), defferedDesc_);
+		pipeline->CreatePipeline(SxavengerSystem::GetDxDevice(), desc);
 
 		pipelines_[static_cast<uint32_t>(Type::Forward_GPUParticleVS)] = std::move(pipeline);
 

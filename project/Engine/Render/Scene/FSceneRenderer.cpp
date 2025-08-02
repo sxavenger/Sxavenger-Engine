@@ -592,6 +592,9 @@ void FSceneRenderer::RenderTransparentPassParticle(const DirectXQueueContext* co
 		parameter.SetAddress("gConfig",    component->GetConfig().GetGPUVirtualAddress());
 		parameter.SetAddress("gParticles", component->GetGPUVirtualAddress());
 
+		//* texture
+		parameter.SetHandle("gDirect", config.buffer->GetGBuffer(FLightingGBuffer::Layout::Direct)->GetGPUHandleSRV());
+
 		core->BindGraphicsBuffer(FRenderCoreGeometry::Type::Forward_GPUParticleVS, context, parameter);
 
 		component->DrawCall(context);

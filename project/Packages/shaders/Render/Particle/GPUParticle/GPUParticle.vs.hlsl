@@ -44,6 +44,11 @@ ParticlePSInput main(PrimitiveVertex input, uint instanceId : SV_InstanceID) {
 	output.normal   = normalize(mul(input.normal, (float3x3)mat)); // todo: inverse transpose
 	output.texcoord = input.texcoord;
 
+	float4 proj = mul(float4(input.position.xyz * 0.1f, 1.0f), mul(mat, kViewProj));
+	output.projection = proj.xy / proj.w;
+	output.projection = (output.projection + 1.0f) * 0.5f;
+	output.projection.y = 1.0f - output.projection.y;
+
 	output.instanceId = instanceId;
 
 	return output;

@@ -10,10 +10,13 @@
 #include <Engine/Editor/EditorEngine.h>
 #include <Engine/Editor/Editors/DevelopEditor.h>
 #include <Engine/Render/FMainRender.h>
+#include <Engine/Content/InputGeometry/InputPrimitiveHelper.h>
 #include <Engine/Component/Components/Collider/ColliderComponent.h>
 #include <Engine/Component/Components/Collider/CollisionManager.h>
 #include <Engine/Component/Components/SpriteRenderer/SpriteRendererComponent.h>
 #include <Engine/Component/Components/PostProcessLayer/PostProcessLayerComponent.h>
+#include <Engine/Component/Components/Particle/EmitterComponent.h>
+#include <Engine/Component/Components/Particle/GPUParticleComponent.h>
 #include <Engine/Component/ComponentHelper.h>
 #include <Engine/Module/Scene/SceneObjects.h>
 
@@ -79,6 +82,15 @@ void DemoGameLoop::InitGame() {
 	auto texture = SxavengerAsset::TryImport<AssetTexture>("assets/textures/LUT/lut_reddish.png", Texture::Option{ Texture::Encoding::Intensity, false });
 	auto lut = volume_->GetComponent<PostProcessLayerComponent>()->AddPostProcess<PostProcessLUT>();
 	lut->CreateTexture(SxavengerSystem::GetDirectQueueContext(), texture, { 16, 16 });
+
+	particle_ = std::make_unique<MonoBehaviour>();
+	particle_->AddComponent<TransformComponent>();
+	particle_->GetComponent<TransformComponent>()->translate.y = 3.0f;
+	particle_->AddComponent<EmitterComponent>();
+	particle_->AddComponent<GPUParticleComponent>();
+	particle_->GetComponent<GPUParticleComponent>()->Create(1 << 15);
+	particle_->GetComponent<GPUParticleComponent>()->SetPrimitive(InputPrimitiveHelper::CreatePlaneZForward({ 1, 1 }));
+	particle_->GetComponent<GPUParticleComponent>()->GetConfig().At(0).albedo.SetTexture(SxavengerAsset::TryImport<AssetTexture>("assets/textures/smoke1.png").WaitAcquire()->GetDescriptorSRV().GetIndex());
 }
 
 void DemoGameLoop::TermGame() {
@@ -91,6 +103,9 @@ void DemoGameLoop::UpdateGame() {
 	//-----------------------------------------------------------------------------------------
 
 	player_->Update();
+
+	particle_->GetComponent<EmitterComponent>()->Update(SxavengerSystem::GetDirectQueueContext());
+	particle_->GetComponent<GPUParticleComponent>()->Update(SxavengerSystem::GetDirectQueueContext());
 
 	//-----------------------------------------------------------------------------------------
 	// SystemUpdate...?

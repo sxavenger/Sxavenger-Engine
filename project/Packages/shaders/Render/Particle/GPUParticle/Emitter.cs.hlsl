@@ -78,11 +78,14 @@ void main() {
 		}
 		
 		GPUParticleComponent element = (GPUParticleComponent)0;
-		element.scale       = random.Random3d() * float3(0.2f, 0.2f, 0.2f);
-		element.translate   = gTransform.GetPosition() + random.Random3d() * float3(0.2f, 0.2f, 0.2f);
-		element.albedo      = float3(float(index) / dimension, 1.0f, 1.0f);
+		element.scale       = random.Random1d() * 2.0f;
+
+		float3 size = float3(12.0f, 4.0f, 12.0f);
+		
+		element.translate = gTransform.GetPosition() + lerp(-size * 0.5f, size * 0.5f, random.Random3d());
+		element.albedo      = float3(1.0f, 1.0f, 1.0f);
 		element.transparent = 1.0f;
-		element.lifeTime    = 2.0f;
+		element.lifeTime    = 2.0f + random.Random1d() * 2.0f;
 
 		gParticles[index] = element;
 	}

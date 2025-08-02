@@ -51,5 +51,7 @@ void main(uint3 dispatchThreadId : SV_DispatchThreadID) {
 	// test
 	element.transparent = 1.0f - saturate(element.timer / element.lifeTime);
 
+	element.translate.y += 0.02f;
+
 	gParticles[index] = element;
 }

@@ -112,8 +112,9 @@ void BetaSystemGameLoop::InitSystem() {
 	particle_->AddComponent<TransformComponent>();
 	particle_->AddComponent<EmitterComponent>();
 	particle_->AddComponent<GPUParticleComponent>();
-	particle_->GetComponent<GPUParticleComponent>()->Create(1024);
+	particle_->GetComponent<GPUParticleComponent>()->Create(1 << 15);
 	particle_->GetComponent<GPUParticleComponent>()->SetPrimitive(InputPrimitiveHelper::CreatePlaneZForward({ 1, 1 }));
+	particle_->GetComponent<GPUParticleComponent>()->GetConfig().At(0).albedo.SetTexture(SxavengerAsset::TryImport<AssetTexture>("assets/textures/smoke1.png").WaitAcquire()->GetDescriptorSRV().GetIndex());
 }
 
 void BetaSystemGameLoop::TermSystem() {
