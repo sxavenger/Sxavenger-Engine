@@ -63,6 +63,7 @@ void DemoGameLoop::InitGame() {
 	SetCollisionCallback();
 
 	skylight_ = std::make_unique<MonoBehaviour>();
+	skylight_->SetName("skylight");
 	auto light = skylight_->AddComponent<SkyLightComponent>();
 	light->GetDiffuseParameter().SetTexture(SxavengerAsset::Import<AssetTexture>("assets/textures/textureCube/sky_irradiance.dds"));
 	light->GetSpecularParameter().SetTexture(SxavengerAsset::Import<AssetTexture>("assets/textures/textureCube/sky_radiance.dds"));
@@ -82,15 +83,6 @@ void DemoGameLoop::InitGame() {
 	auto texture = SxavengerAsset::TryImport<AssetTexture>("assets/textures/LUT/lut_reddish.png", Texture::Option{ Texture::Encoding::Intensity, false });
 	auto lut = volume_->GetComponent<PostProcessLayerComponent>()->AddPostProcess<PostProcessLUT>();
 	lut->CreateTexture(SxavengerSystem::GetDirectQueueContext(), texture, { 16, 16 });
-
-	particle_ = std::make_unique<MonoBehaviour>();
-	particle_->AddComponent<TransformComponent>();
-	particle_->GetComponent<TransformComponent>()->translate.y = 3.0f;
-	particle_->AddComponent<EmitterComponent>();
-	particle_->AddComponent<GPUParticleComponent>();
-	particle_->GetComponent<GPUParticleComponent>()->Create(1 << 15);
-	particle_->GetComponent<GPUParticleComponent>()->SetPrimitive(InputPrimitiveHelper::CreatePlaneZForward({ 1, 1 }));
-	particle_->GetComponent<GPUParticleComponent>()->GetConfig().At(0).albedo.SetTexture(SxavengerAsset::TryImport<AssetTexture>("assets/textures/smoke1.png").WaitAcquire()->GetDescriptorSRV().GetIndex());
 }
 
 void DemoGameLoop::TermGame() {
@@ -103,9 +95,6 @@ void DemoGameLoop::UpdateGame() {
 	//-----------------------------------------------------------------------------------------
 
 	player_->Update();
-
-	particle_->GetComponent<EmitterComponent>()->Update(SxavengerSystem::GetDirectQueueContext());
-	particle_->GetComponent<GPUParticleComponent>()->Update(SxavengerSystem::GetDirectQueueContext());
 
 	//-----------------------------------------------------------------------------------------
 	// SystemUpdate...?

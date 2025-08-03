@@ -547,7 +547,7 @@ void FSceneRenderer::RenderTransparentPassStaticMesh(const DirectXQueueContext* 
 	// componentを取得
 	sComponentStorage->ForEachActive<MeshRendererComponent>([&](MeshRendererComponent* component) {
 
-		if (component->GetMaterial()->GetMode() != Material::Mode::Translucent) {
+		if (component->GetMaterial()->GetMode() == Material::Mode::Opaque) {
 			return;
 		}
 
