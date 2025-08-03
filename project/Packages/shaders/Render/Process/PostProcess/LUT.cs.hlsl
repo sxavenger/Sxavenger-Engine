@@ -35,7 +35,7 @@ void main(uint3 dispatchThreadId : SV_DispatchThreadID) {
 	// LUT
 	float3 grading = gLUTTexture.SampleLevel(gLUTSampler, saturate(color.rgb), 0); //!< sample LUT texture
 
-	// todo: 0.0 ~ 1.0 範囲外の対応
+	// todo: HDR Lutを実装
 
 	gOutput[index].rgb = lerp(color.rgb, grading, gParameter.intensity * blendWeight);
 	

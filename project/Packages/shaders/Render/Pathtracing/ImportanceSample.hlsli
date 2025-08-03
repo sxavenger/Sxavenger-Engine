@@ -4,7 +4,7 @@
 // include
 //-----------------------------------------------------------------------------------------
 //* library
-#include "../../../Library/Math.hlsli"
+#include "../../Library/Math.hlsli"
 
 void TangentSpace(float3 n, out float3 t, out float3 b) {
 	float s = (n.z >= 0.0f) ? 1.0f : -1.0f;

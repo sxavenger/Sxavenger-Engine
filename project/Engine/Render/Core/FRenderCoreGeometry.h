@@ -10,6 +10,9 @@
 //* lib
 #include <Lib/Geometry/Vector2.h>
 
+//* external
+#include <magic_enum.hpp>
+
 ////////////////////////////////////////////////////////////////////////////////////////////
 // FRenderCoreGeometry class
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -17,29 +20,14 @@ class FRenderCoreGeometry {
 public:
 
 	////////////////////////////////////////////////////////////////////////////////////////////
-	// RenderType enum
+	// Type enum class
 	////////////////////////////////////////////////////////////////////////////////////////////
-	enum RenderType {
-		Forward,
-		Deffered,
+	enum class Type : uint32_t {
+		Forward_MeshVS,
+		Deferred_MeshVS,
+		Forward_CPUParticleVS,
+		Forward_GPUParticleVS,
 	};
-	static const size_t kRenderTypeCount = Deffered + 1;
-
-	////////////////////////////////////////////////////////////////////////////////////////////
-	// VertexStage enum
-	////////////////////////////////////////////////////////////////////////////////////////////
-	enum VertexStage {
-		DefaultVS,
-	};
-	static const size_t kVertexStageCount = DefaultVS + 1;
-
-	////////////////////////////////////////////////////////////////////////////////////////////
-	// PixelStage enum
-	////////////////////////////////////////////////////////////////////////////////////////////
-	enum PixelStage {
-		Albedo,
-	};
-	static const size_t kPixelStageCount = Albedo + 1;
 
 public:
 
@@ -54,15 +42,9 @@ public:
 
 	//* pipeline option *//
 
-	void SetPipeline(
-		RenderType type, VertexStage vs, PixelStage ps,
-		const DirectXQueueContext* context, const Vector2ui& size
-	);
+	void SetPipeline(Type type, const DirectXQueueContext* context, const Vector2ui& size);
 
-	void BindGraphicsBuffer(
-		RenderType type, VertexStage vs, PixelStage ps,
-		const DirectXQueueContext* context, const DxObject::BindBufferDesc& desc
-	);
+	void BindGraphicsBuffer(Type type, const DirectXQueueContext* context, const DxObject::BindBufferDesc& desc);
 
 private:
 
@@ -72,14 +54,14 @@ private:
 
 	//* graphics pipeline *//
 
-	std::array<std::array<std::array<std::unique_ptr<CustomReflectionGraphicsPipeline>, kPixelStageCount>, kVertexStageCount>, kRenderTypeCount> graphicsPipelines_;
+	std::array<std::unique_ptr<CustomReflectionGraphicsPipeline>, magic_enum::enum_count<Type>()> pipelines_;
 
 	DxObject::GraphicsPipelineDesc defferedDesc_ = {};
 	DxObject::GraphicsPipelineDesc forwardDesc_  = {};
 
 	//* directory *//
 
-	static const std::filesystem::path kDirectory_;
+	static inline const std::filesystem::path kDirectory_ = kPackagesShaderDirectory / "render";
 
 	//=========================================================================================
 	// private methods
@@ -87,7 +69,6 @@ private:
 
 	void CreateDesc();
 
-	void CreateDeferred();
+	void CreatePipeline();
 
-	void CreateForward();
 };

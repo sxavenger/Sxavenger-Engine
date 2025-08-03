@@ -35,6 +35,8 @@ void RenderSceneEditor::Init() {
 	modeTexture_[SxImGuizmo::World] = SxavengerAsset::TryImport<AssetTexture>("packages/textures/icon/mode_world.png");
 	modeTexture_[SxImGuizmo::Local] = SxavengerAsset::TryImport<AssetTexture>("packages/textures/icon/mode_local.png");
 
+	gridTexture_ = SxavengerAsset::TryImport<AssetTexture>("packages/textures/icon/grid.png");
+
 	camera_ = std::make_unique<MonoBehaviour>();
 	camera_->SetName("editor camera");
 	camera_->AddComponent<TransformComponent>();
@@ -79,6 +81,8 @@ void RenderSceneEditor::ShowMainMenu() {
 }
 
 void RenderSceneEditor::ShowWindow() {
+	UpdateKeyShortcut();
+
 	ShowGameWindow();
 	ShowCanvasWindow();
 	ShowSceneWindow();
@@ -99,7 +103,12 @@ void RenderSceneEditor::Render() {
 	//* Debug Render *//
 	textures_->BeginRenderTargetMainTransparent(SxavengerSystem::GetDirectQueueContext());
 
-	// todo: draw lines, etc...
+	CameraComponent* camera = camera_->GetComponent<CameraComponent>();
+
+	if (isRenderGrid_) {
+		SxavengerContent::PushGrid(camera, { 64, 64 }, 64);
+	}
+	
 	if (isRenderCollider_) {
 		colliderRenderer_->Render(SxavengerSystem::GetDirectQueueContext(), camera_->GetComponent<CameraComponent>());
 	}
@@ -108,7 +117,6 @@ void RenderSceneEditor::Render() {
 		SxavengerContent::PushAxis(point_, 1.0f);
 	}
 
-	CameraComponent* camera = camera_->GetComponent<CameraComponent>();
 	SxavengerContent::GetDebugPrimitive()->DrawToScene(SxavengerSystem::GetDirectQueueContext(), camera);
 
 	textures_->EndRenderTargetMainTransparent(SxavengerSystem::GetDirectQueueContext());
@@ -295,46 +303,26 @@ void RenderSceneEditor::ShowSceneMenu() {
 			ImGui::EndCombo();
 		}
 
+		SxImGui::HelpMarker("(!)", "[alt] + [up] || [down]");
+
 		// process
 		ImGui::Text("process");
 		ImGui::Separator();
 		ImGui::Checkbox("enable post process", &config_.isEnablePostProcess);
 		ImGui::Checkbox("enable tonemap",      &config_.isElableTonemap);
 
-		// technique
-		ImGui::Text("technique");
+		ImGui::Text("lighting");
 		ImGui::Separator();
+		ImGui::Checkbox("enable indirect lighting", &config_.isEnableIndirectLighting);
 
-		if (ImGui::RadioButton("rasterizer", config_.technique == FSceneRenderer::GraphicsTechnique::Deferred)) {
-			config_.technique = FSceneRenderer::GraphicsTechnique::Deferred;
+		if (ImGui::Button("reset resourviour")) {
+			renderer_->ResetReservoir();
 		}
 
-		ImGui::SameLine();
-
-		if (ImGui::RadioButton("pathtracing(preview)", config_.technique == FSceneRenderer::GraphicsTechnique::Pathtracing)) {
-			//config_.technique = FSceneRenderer::GraphicsTechnique::Pathtracing;
-			//renderer_->ResetReserviour(SxavengerSystem::GetDirectQueueContext());
-		}
-
-		// technique option
-		ImGui::Text("technique option");
-		ImGui::Separator();
-
-		switch (config_.technique) {
-			case FSceneRenderer::GraphicsTechnique::Deferred:
-				
-				break;
-
-			case FSceneRenderer::GraphicsTechnique::Pathtracing:
-
-				//if (ImGui::Button("reset reservoir")) {
-				//	renderer_->ResetReserviour(SxavengerSystem::GetDirectQueueContext());
-				//}
-				//
-				//renderer_->DebugGui();
-				
-				break;
-		}
+		ImGui::BeginDisabled(!config_.isEnableIndirectLighting);
+		ImGui::Text("sample count: %u", renderer_->GetReservoirSampleCount());
+		renderer_->DebugGui(); //!< HACK
+		ImGui::EndDisabled();
 
 		ImGui::EndDisabled();
 		
@@ -467,6 +455,20 @@ void RenderSceneEditor::ShowSceneWindow() {
 			gizmoMode_ = SxImGuizmo::Local;
 		}
 
+		ImGui::Dummy({ 8, 0 });
+		ImGui::Separator();
+		ImGui::Dummy({ 8, 0 });
+
+		//* grid menu *//
+
+		if (SxImGui::ImageButton(
+			"## grid",
+			gridTexture_.WaitGet()->GetGPUHandleSRV().ptr,
+			{ 16, 16 },
+			isRenderGrid_ ? kSelectedColor : kNonSelectedColor)) {
+			isRenderGrid_ = !isRenderGrid_;
+		}
+
 		ImGui::PopStyleVar();
 		ImGui::EndMenuBar();
 	}
@@ -558,10 +560,7 @@ void RenderSceneEditor::ShowIconScene() {
 
 	// Post Process Layer
 	sComponentStorage->ForEach<PostProcessLayerComponent>([&](PostProcessLayerComponent* component) {
-		if (component->GetTag() != PostProcessLayerComponent::Tag::Volume) {
-			return;
-		}
-
+		
 		auto transform = component->GetTransform();
 
 		if (transform == nullptr) {
@@ -621,15 +620,46 @@ void RenderSceneEditor::ShowInfoTextScene() {
 
 	switch (config_.technique) {
 		case FSceneRenderer::GraphicsTechnique::Deferred: //!< deferred rendering
-			RenderTextSceneWindow(position, "Deferred Rendering");
+			RenderTextSceneWindow(position, std::format("GBuffer | {}", magic_enum::enum_name(buffer_)));
+			RenderTextSceneWindow(position, "> Deferred Rendering");
 			break;
 
 		case FSceneRenderer::GraphicsTechnique::Pathtracing: //!< path tracing
 			//RenderTextSceneWindow(position, std::format("sample count: {}", renderer_->GetCurrentSampleCount()));
-			RenderTextSceneWindow(position, "Path Tracing (Preview)");
+			RenderTextSceneWindow(position, "> Path Tracing (Preview)");
 			break;
 	}
 	
+}
+
+void RenderSceneEditor::UpdateKeyShortcut() {
+
+	// bufferの切り替え
+	if (SxavengerSystem::IsPressKey(KeyId::KEY_LALT) && SxavengerSystem::IsTriggerKey(KeyId::KEY_UP)) { //!< left alt + Up
+		if (buffer_ > GBuffer::Scene) {
+			buffer_ = static_cast<GBuffer>(static_cast<uint32_t>(buffer_) - 1);
+		}
+	}
+
+	if (SxavengerSystem::IsPressKey(KeyId::KEY_LALT) && SxavengerSystem::IsTriggerKey(KeyId::KEY_DOWN)) { //!< left alt + Down
+		if (buffer_ < GBuffer::Indirect_Reservoir) {
+			buffer_ = static_cast<GBuffer>(static_cast<uint32_t>(buffer_) + 1);
+		}
+
+	}
+
+	if (SxavengerSystem::IsPressKey(KeyId::KEY_LALT) && SxavengerSystem::IsTriggerKey(KeyId::KEY_1)) { //!< left alt + 1
+		buffer_ = GBuffer::Scene;
+	}
+
+	if (SxavengerSystem::IsPressKey(KeyId::KEY_LALT) && SxavengerSystem::IsTriggerKey(KeyId::KEY_2)) { //!< left alt + 2
+		buffer_ = GBuffer::Deferred_GBuffer;
+	}
+
+	if (SxavengerSystem::IsPressKey(KeyId::KEY_LALT) && SxavengerSystem::IsTriggerKey(KeyId::KEY_3)) { //!< left alt + 3
+		buffer_ = GBuffer::Lighting_GBuffer;
+	}
+
 }
 
 RenderSceneEditor::WindowRect RenderSceneEditor::SetImGuiImageFullWindow(const D3D12_GPU_DESCRIPTOR_HANDLE& handle, const Vector2ui& size) const {
@@ -807,6 +837,17 @@ void RenderSceneEditor::UpdateCamera() {
 	UpdateView();
 }
 
+void RenderSceneEditor::ShowCameraInfomation(const WindowRect& rect) {
+
+	ImVec2 cursol = ImGui::GetCursorPos();
+
+	ImGui::SetCursorPos({ rect.pos.x + rect.size.x * 0.5f, rect.pos.y + rect.size.y * 0.5f });
+	ImGui::Text("TestA");
+	ImGui::Text("TestB");
+
+	ImGui::SetCursorPos(cursol);
+}
+
 void RenderSceneEditor::UpdateView() {
 	auto transform = camera_->GetComponent<TransformComponent>();
 
@@ -826,6 +867,30 @@ void RenderSceneEditor::DisplayGBufferTexture(GBuffer buffer) {
 		case GBuffer::Scene:
 			SetImGuiImageFullWindowEnable(
 				textures_->GetGBuffer(FMainGBuffer::Layout::Scene)->GetGPUHandleSRV(),
+				textures_->GetSize(),
+				isRender_
+			);
+			break;
+
+		case GBuffer::Deferred_GBuffer:
+			SetImGuiImagesFullWindowEnable(
+				{
+					{ textures_->GetGBuffer(FDeferredGBuffer::Layout::Albedo)->GetGPUHandleSRV(),      GBuffer::Albedo },
+					{ textures_->GetGBuffer(FDeferredGBuffer::Layout::Normal)->GetGPUHandleSRV(),      GBuffer::Normal },
+					{ textures_->GetGBuffer(FDeferredGBuffer::Layout::MaterialARM)->GetGPUHandleSRV(), GBuffer::MaterialARM },
+					{ textures_->GetGBuffer(FDeferredGBuffer::Layout::Position)->GetGPUHandleSRV(),    GBuffer::Position },
+				},
+				textures_->GetSize(),
+				isRender_
+			);
+			break;
+
+		case GBuffer::Lighting_GBuffer:
+			SetImGuiImagesFullWindowEnable(
+				{
+					{ textures_->GetGBuffer(FLightingGBuffer::Layout::Direct)->GetGPUHandleSRV(),   GBuffer::Direct },
+					{ textures_->GetGBuffer(FLightingGBuffer::Layout::Indirect)->GetGPUHandleSRV(), GBuffer::Indirect },
+				},
 				textures_->GetSize(),
 				isRender_
 			);
@@ -863,19 +928,6 @@ void RenderSceneEditor::DisplayGBufferTexture(GBuffer buffer) {
 			);
 			break;
 
-		case GBuffer::Deferred_GBuffer:
-			SetImGuiImagesFullWindowEnable(
-				{
-					{ textures_->GetGBuffer(FDeferredGBuffer::Layout::Albedo)->GetGPUHandleSRV(), GBuffer::Albedo },
-					{ textures_->GetGBuffer(FDeferredGBuffer::Layout::Normal)->GetGPUHandleSRV(), GBuffer::Normal },
-					{ textures_->GetGBuffer(FDeferredGBuffer::Layout::MaterialARM)->GetGPUHandleSRV(), GBuffer::MaterialARM },
-					{ textures_->GetGBuffer(FDeferredGBuffer::Layout::Position)->GetGPUHandleSRV(), GBuffer::Position },
-				},
-				textures_->GetSize(),
-				isRender_
-			);
-			break;
-
 		case GBuffer::Direct:
 			SetImGuiImageFullWindowEnable(
 				textures_->GetGBuffer(FLightingGBuffer::Layout::Direct)->GetGPUHandleSRV(),
@@ -887,6 +939,14 @@ void RenderSceneEditor::DisplayGBufferTexture(GBuffer buffer) {
 		case GBuffer::Indirect:
 			SetImGuiImageFullWindowEnable(
 				textures_->GetGBuffer(FLightingGBuffer::Layout::Indirect)->GetGPUHandleSRV(),
+				textures_->GetSize(),
+				isRender_
+			);
+			break;
+
+		case GBuffer::Indirect_Reservoir:
+			SetImGuiImageFullWindowEnable(
+				textures_->GetGBuffer(FLightingGBuffer::Layout::Indirect_Reservoir)->GetGPUHandleSRV(),
 				textures_->GetSize(),
 				isRender_
 			);

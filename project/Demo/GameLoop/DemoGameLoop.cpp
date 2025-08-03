@@ -10,10 +10,13 @@
 #include <Engine/Editor/EditorEngine.h>
 #include <Engine/Editor/Editors/DevelopEditor.h>
 #include <Engine/Render/FMainRender.h>
+#include <Engine/Content/InputGeometry/InputPrimitiveHelper.h>
 #include <Engine/Component/Components/Collider/ColliderComponent.h>
 #include <Engine/Component/Components/Collider/CollisionManager.h>
 #include <Engine/Component/Components/SpriteRenderer/SpriteRendererComponent.h>
 #include <Engine/Component/Components/PostProcessLayer/PostProcessLayerComponent.h>
+#include <Engine/Component/Components/Particle/EmitterComponent.h>
+#include <Engine/Component/Components/Particle/GPUParticleComponent.h>
 #include <Engine/Component/ComponentHelper.h>
 #include <Engine/Module/Scene/SceneObjects.h>
 
@@ -60,6 +63,7 @@ void DemoGameLoop::InitGame() {
 	SetCollisionCallback();
 
 	skylight_ = std::make_unique<MonoBehaviour>();
+	skylight_->SetName("skylight");
 	auto light = skylight_->AddComponent<SkyLightComponent>();
 	light->GetDiffuseParameter().SetTexture(SxavengerAsset::Import<AssetTexture>("assets/textures/textureCube/sky_irradiance.dds"));
 	light->GetSpecularParameter().SetTexture(SxavengerAsset::Import<AssetTexture>("assets/textures/textureCube/sky_radiance.dds"));

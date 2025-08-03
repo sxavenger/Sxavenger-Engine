@@ -47,7 +47,7 @@ InputPrimitive InputPrimitiveHelper::CreatePlaneZForward(const Vector2f& size) {
 	auto index  = primitive.GetIndex();
 
 	//!< 頂点の設定
-	vertex->At(0).position = { -size.x, size.y, 0.0F, 1.0f };
+	vertex->At(0).position = { -size.x, size.y, 0.0f, 1.0f };
 	vertex->At(0).texcoord = { 0.0f, 0.0f };
 
 	vertex->At(1).position = { size.x, size.y, 0.0f, 1.0f };
@@ -64,8 +64,8 @@ InputPrimitive InputPrimitiveHelper::CreatePlaneZForward(const Vector2f& size) {
 	}
 
 	//!< indexの設定
-	index->At(0) = { 0, 1, 2 };
-	index->At(1) = { 1, 3, 2 };
+	index->At(0) = { 0, 2, 1 };
+	index->At(1) = { 1, 2, 3 };
 
 	return primitive;
 }

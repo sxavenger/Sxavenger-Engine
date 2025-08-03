@@ -13,6 +13,10 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
+//* library
+#include "../../Library/Hammersley.hlsli"
+#include "ImportanceSample.hlsli"
+
 //* component
 #include "../../Component/CameraComponent.hlsli"
 #include "../../Component/LightComponentCommon.hlsli"
@@ -24,28 +28,42 @@
 // global buffers
 //=========================================================================================
 
-//* pathtracing output textures.
-RWTexture2D<float4> gMain        : register(u0, space1);
-RWTexture2D<float4> gNormal      : register(u1, space1);
-RWTexture2D<float4> gMaterialARM : register(u2, space1);
-RWTexture2D<float4> gPosition    : register(u3, space1);
-RWTexture2D<float>  gDepth       : register(u4, space1);
-
-//* camera
-ConstantBuffer<CameraComponent> gCamera : register(b0, space1);
-static const float4x4 kViewProj = gCamera.GetViewProj();
+//* lighting textures
+RWTexture2D<float4> gIndirect : register(u0, space1);
 
 //* scene
 RaytracingAccelerationStructure gScene : register(t0, space1);
 
-//* pathtracing common
-struct Reservoir {
+//* deferred textures
+Texture2D<float4> gAlbedo      : register(t1, space1);
+Texture2D<float4> gNormal      : register(t2, space1);
+Texture2D<float4> gMaterialARM : register(t3, space1);
+Texture2D<float4> gPosition    : register(t4, space1);
+Texture2D<float>  gDepth       : register(t5, space1);
+
+//* camera
+ConstantBuffer<CameraComponent> gCamera : register(b0, space1);
+
+////////////////////////////////////////////////////////////////////////////////////////////
+// Reservoir cbuffer 32bitconstants.
+////////////////////////////////////////////////////////////////////////////////////////////
+cbuffer Reservoir : register(b1, space1) {
+
+	//=========================================================================================
+	// public variables
+	//=========================================================================================
+	
 	uint sampleCount;
-	uint frameSampleCount;
+	
+	uint sampleStep;
 	uint currentFrame;
 
+	//=========================================================================================
+	// public methods
+	//=========================================================================================
+
 	bool CheckNeedSample() {
-		return frameSampleCount * currentFrame < sampleCount;
+		return sampleStep * currentFrame < sampleCount;
 	}
 
 	bool IsBeginFrame() {
@@ -53,7 +71,6 @@ struct Reservoir {
 	}
 	
 };
-ConstantBuffer<Reservoir> gReservoir : register(b1, space1);
 
 //* light
 struct LightCount {
@@ -61,23 +78,28 @@ struct LightCount {
 };
 
 // Directional Light
-ConstantBuffer<LightCount> gDirectionalLightCount                : register(b2, space1);
-StructuredBuffer<TransformComponent> gDirectionalLightTransforms : register(t1, space1);
-StructuredBuffer<DirectionalLightComponent> gDirectionalLights   : register(t2, space1);
-StructuredBuffer<InlineShadow> gDirectionalLightShadows          : register(t3, space1);
+ConstantBuffer<LightCount> gDirectionalLightCount                : register(b2, space2);
+StructuredBuffer<TransformComponent> gDirectionalLightTransforms : register(t1, space2);
+StructuredBuffer<DirectionalLightComponent> gDirectionalLights   : register(t2, space2);
+StructuredBuffer<InlineShadow> gDirectionalLightShadows          : register(t3, space2);
 
 // Point Light
-ConstantBuffer<LightCount> gPointLightCount                : register(b3, space1);
-StructuredBuffer<TransformComponent> gPointLightTransforms : register(t4, space1);
-StructuredBuffer<PointLightComponent> gPointLights         : register(t5, space1);
-StructuredBuffer<InlineShadow> gPointLightShadows          : register(t6, space1);
+ConstantBuffer<LightCount> gPointLightCount                : register(b3, space2);
+StructuredBuffer<TransformComponent> gPointLightTransforms : register(t4, space2);
+StructuredBuffer<PointLightComponent> gPointLights         : register(t5, space2);
+StructuredBuffer<InlineShadow> gPointLightShadows          : register(t6, space2);
+
+// Sky Light
+TextureCube<float4> gSkyLight : register(t7, space2);
+SamplerState gSkySampler      : register(s0, space2);
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// config variables
+// Config variables
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-static const float kTMin = 0.001f;   // minimum t
-static const float kTMax = 16384.0f; // maximum t
+
+static const float kTMin = 0.001f;
+static const float kTMax = 16384.0f;
 
 static const uint kFlag    = RAY_FLAG_CULL_BACK_FACING_TRIANGLES;
 static const uint kRayMask = 0xFF;
@@ -85,14 +107,47 @@ static const uint kRayMask = 0xFF;
 static const uint kMaxRecursionDepth = 3;
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// RayType enum
+// DeferredSurface structure
 ////////////////////////////////////////////////////////////////////////////////////////////
+struct DeferredSurface {
 
-namespace RayType {
-	static const uint //!< RayType enum type
-		kPrimary = 0, //!< primary ray (ex. view camera from raygeneration ray)
-		kPath    = 1; //!< path trace ray (ex. diffuse, specular, etc.)
-}
+	//=========================================================================================
+	// public variables
+	//=========================================================================================
+
+	float depth;
+	float3 albedo;
+	float3 normal;
+	float3 position;
+	
+	float roughness;
+	float metallic;
+
+	//=========================================================================================
+	// public methods
+	//=========================================================================================
+
+	bool GetSurface(uint2 index) {
+
+		depth = gDepth[index];
+
+		if (depth == 1.0f) {
+			return false;
+		}
+
+		albedo   = gAlbedo[index].rgb;
+		normal   = normalize(gNormal[index].rgb * 2.0f - 1.0f);
+		position = gPosition[index].xyz;
+
+		float3 material = gMaterialARM[index].rgb;
+		// r channel: ambient
+		roughness = material.g;
+		metallic  = material.b;
+
+		return true;
+	}
+	
+};
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Payload structure
@@ -103,84 +158,48 @@ struct Payload {
 	// public variables
 	//=========================================================================================
 
-	//* common 
+	//* ray primary
+
+	uint count;
+
+	//* parameter
+
+	float4 indirect;
 	
-	uint rayType; //!< RayType enum type.
-	uint count; //!< hit count
-
-	//* primary output variables
-
-	float4 color;
-	float3 normal;
-	float3 arm; //!< ambient, roughness, metallic
-	float3 position;
-	float depth;
-
-	float3 le;
-
 	//=========================================================================================
 	// public methods
 	//=========================================================================================
 
-	//* ray type methods *//
-
-	bool IsPrimary() {
-		return rayType == RayType::kPrimary;
+	void Reset() {
+		count    = 0;
+		indirect = float4(0.0f, 0.0f, 0.0f, 0.0f);
 	}
 
 	//* recursion methods *//
 
-	void IncrimentRecursionCount() {
-		count++;
-	}
-	
 	uint GetNextRecursionCount() {
 		return count + 1;
-	}
-
-	bool CheckRecursion() {
-		return count < kMaxRecursionDepth;
 	}
 
 	bool CheckNextRecursion() {
 		return GetNextRecursionCount() < kMaxRecursionDepth;
 	}
 
-	//* primary ray methods *//
-
-	void SetPrimaryParameter(float3 _position, float3 _normal, float ao, float roughness, float metallic) {
-		float4 d = mul(float4(_position, 1.0f), kViewProj);
-		depth = d.z / d.w;
-
-		position = _position;
-
-		normal = (_normal + 1.0f) * 0.5f;
-		arm    = float3(ao, roughness, metallic);
+	void IncrimentRecursionCount() {
+		count++;
 	}
 
-	//* common methods *//
+	//* recursion ray methods *//
 
-	void Reset() {
-		rayType  = RayType::kPrimary;
-		
-		count = 0;
-
-		color  = float4(0.0f, 0.0f, 0.0f, 0.0f);
-		normal = float3(0.0f, 0.0f, 0.0f);
-		arm    = float3(0.0f, 0.0f, 0.0f);
-		depth  = 1.0f;
-
-		le = 1.0f;
-	}
-
-	void TraceRecursionRay(inout Payload payload, RayDesc desc, uint flag = kFlag) {
+	bool TraceRecursionRay(inout Payload recursion, RayDesc desc, uint flag = kFlag) {
 		if (!CheckNextRecursion()) {
-			return;
+			return false;
 		}
 
-		payload.count = GetNextRecursionCount();
-		
-		TraceRay(gScene, flag, kRayMask, 0, 1, 0, desc, payload);
+		recursion.count = GetNextRecursionCount();
+		TraceRay(gScene, flag, kRayMask, 0, 1, 0, desc, recursion);
+
+		return true;
 	}
 	
 };
@@ -222,18 +241,4 @@ Payload TracePrimaryRay(RayDesc desc, uint flag = kFlag) {
 	TraceRay(gScene, flag, kRayMask, 0, 1, 0, desc, payload);
 
 	return payload;
-}
-
-RayDesc GetPrimaryRayDesc(uint2 index, uint2 dimension) {
-	RayDesc desc;
-	desc.Origin = gCamera.GetPosition();
-	
-	float2 d       = (index.xy + 0.5f) / dimension.xy * 2.0f - 1.0f;
-	float3 target  = mul(float4(d.x, -d.y, 1.0f, 1.0f), gCamera.projInv).xyz;
-	desc.Direction = mul(float4(target, 0.0f), gCamera.world).xyz;
-	
-	desc.TMin = kTMin;
-	desc.TMax = kTMax;
-	
-	return desc;
 }

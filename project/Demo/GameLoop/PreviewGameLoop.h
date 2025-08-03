@@ -5,6 +5,7 @@
 //-----------------------------------------------------------------------------------------
 //* engine
 #include <Engine/System/Runtime/GameLoop/GameLoop.h>
+#include <Engine/System/DirectX/DxObject/DxAppendConsumeBuffer.h>
 #include <Engine/System/DirectX/Context/DirectXWindowContext.h>
 #include <Engine/System/SxavengerSystem.h>
 #include <Engine/Asset/SxavengerAsset.h>
@@ -41,15 +42,9 @@ private:
 
 	//* preview *//
 
-	FTexture texture_;
+	DxObject::AppendConsumeBuffer<UINT> buffer_;
 
-	AssetObserver<AssetTexture> environment_;
-
-	std::unique_ptr<CustomReflectionComputePipeline> pipeline_;
-
-	ControllableCameraActor actor_;
-
-	std::unique_ptr<DxObject::DimensionBuffer<std::pair<uint32_t, float>>> parameter_;
+	DxObject::ReflectionComputePipelineState pipeline_;
 
 	//=========================================================================================
 	// private methods

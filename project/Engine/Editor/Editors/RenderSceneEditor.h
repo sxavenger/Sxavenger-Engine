@@ -115,13 +115,15 @@ private:
 	////////////////////////////////////////////////////////////////////////////////////////////
 	enum class GBuffer : uint32_t {
 		Scene,
+		Deferred_GBuffer,
+		Lighting_GBuffer,
 		Albedo,
 		Normal,
 		MaterialARM,
 		Position,
-		Deferred_GBuffer,
 		Direct,
 		Indirect,
+		Indirect_Reservoir,
 	};
 
 private:
@@ -141,6 +143,7 @@ private:
 
 	AssetObserver<AssetTexture> operationTexture_[3];
 	AssetObserver<AssetTexture> modeTexture_[2];
+	AssetObserver<AssetTexture> gridTexture_;
 
 	//* renderer *//
 
@@ -157,8 +160,6 @@ private:
 
 	//* parameter *//
 
-	//FRenderTargetTextures::GBufferLayout layout_ = FRenderTargetTextures::GBufferLayout::Main;
-
 	GBuffer buffer_ = GBuffer::Scene;
 
 	//* camera *//
@@ -173,6 +174,10 @@ private:
 
 	std::unique_ptr<ColliderPrimitiveRenderer> colliderRenderer_;
 	bool isRenderCollider_ = true;
+
+	//* grid *//
+
+	bool isRenderGrid_ = true;
 
 	//* imgui *//
 
@@ -207,6 +212,8 @@ private:
 	void ShowIconScene();
 	void ShowInfoTextScene();
 
+	void UpdateKeyShortcut();
+
 	//* sub methods *//
 
 	WindowRect SetImGuiImageFullWindow(const D3D12_GPU_DESCRIPTOR_HANDLE& handle, const Vector2ui& size) const;
@@ -215,6 +222,7 @@ private:
 	void SetImGuiImagesFullWindowEnable(const std::vector<std::pair<D3D12_GPU_DESCRIPTOR_HANDLE, GBuffer>>& handles, const Vector2ui& size, bool isEnable);
 
 	void UpdateCamera();
+	void ShowCameraInfomation(const WindowRect& rect);
 	void UpdateView();
 
 	//* helper methods *//

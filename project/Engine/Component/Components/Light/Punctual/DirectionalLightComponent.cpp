@@ -35,7 +35,7 @@ void DirectionalLightComponent::ShowComponentInspector() {
 
 	//* push line
 	Vector3f dir = RequireTransform()->GetTransform().GetForward();
-	SxavengerContent::PushLine(RequireTransform()->GetPosition(), RequireTransform()->GetPosition() + dir, kColor);
+	SxavengerContent::PushLine(RequireTransform()->GetPosition(), RequireTransform()->GetPosition() + dir, kColor, 0.6f);
 }
 
 void DirectionalLightComponent::Init() {

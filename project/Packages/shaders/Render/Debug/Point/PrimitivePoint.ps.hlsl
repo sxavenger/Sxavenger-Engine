@@ -1,18 +1,16 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
-#include "DebugPrimitive.hlsli"
+#include "../Primitive.hlsli"
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // main
 ////////////////////////////////////////////////////////////////////////////////////////////
-VSOutput main(VSInput input) {
+PSOutput main(PSInput input) {
 
-	VSOutput output;
+	PSOutput output;
 
-	output.position = mul(input.position, viewProj);
-	output.color    = input.color;
+	output.color = input.color;
 
 	return output;
-	
 }

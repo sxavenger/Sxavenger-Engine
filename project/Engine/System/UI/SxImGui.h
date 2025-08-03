@@ -65,6 +65,9 @@ namespace SxImGui {
 	template <typename T>
 	bool DragType2(const char* label, T* v, float v_speed = 1.0f, const std::optional<T>& v_min = std::nullopt, const std::optional<T>& v_max = std::nullopt, const char* format = GetImGuiFormat<T>(), ImGuiSliderFlags flags = ImGuiSliderFlags_None);
 
+	void HelpMarker(const char* label, const char* text, bool isSameline = true);
+
+
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////

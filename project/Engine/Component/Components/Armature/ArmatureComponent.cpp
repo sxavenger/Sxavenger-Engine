@@ -83,15 +83,18 @@ void ArmatureComponent::PushBornLine(const Matrix4x4& mat, const std::vector<Joi
 		Vector3f parent = Matrix4x4::Transform(Matrix4x4::GetTranslation(joints[joint.parent.value()].skeletonSpaceMatrix), mat);
 
 		// born line
-		SxavengerContent::PushLineOverlay(origin, parent, { 1.0f, 1.0f, 0.0f, 1.0f });
+		SxavengerContent::PushLineOverlay(origin, parent, Color4f::Convert(0xFAFA00FF), 0.4f);
 
 		Vector3f x = Matrix4x4::Transform(kUnitX3<float> * 4.0f, joint.skeletonSpaceMatrix * mat);
 		Vector3f y = Matrix4x4::Transform(kUnitY3<float> * 4.0f, joint.skeletonSpaceMatrix * mat);
 		Vector3f z = Matrix4x4::Transform(kUnitZ3<float> * 4.0f, joint.skeletonSpaceMatrix * mat);
 
 		// local axis
-		SxavengerContent::PushLineOverlay(origin, x, { 1.0f, 0.0f, 0.0f, 1.0f });
-		SxavengerContent::PushLineOverlay(origin, y, { 0.0f, 1.0f, 0.0f, 1.0f });
-		SxavengerContent::PushLineOverlay(origin, z, { 0.0f, 0.0f, 1.0f, 1.0f });
+		SxavengerContent::PushLineOverlay(origin, x, Color4f::Convert(0xFA0000FF), 0.4f);
+		SxavengerContent::PushLineOverlay(origin, y, Color4f::Convert(0x00FA00FF), 0.4f);
+		SxavengerContent::PushLineOverlay(origin, z, Color4f::Convert(0x0000FAFF), 0.4f);
+
+		// point
+		SxavengerContent::PushPointOverlay(origin, Color4f::Convert(0xFAFAFAFF), 4.0f);
 	}
 }

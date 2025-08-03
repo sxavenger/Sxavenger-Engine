@@ -222,7 +222,7 @@ Vector3f Matrix4x4::TransformNormal(const Vector3f& v, const Matrix4x4& m) noexc
 		result[vi] = v[0] * m.m[0][vi] + v[1] * m.m[1][vi] + v[2] * m.m[2][vi];
 	}
 
-	float w = v[0] * m.m[0][3] + v[1] * m.m[1][3] + v[2] * m.m[2][3];
+	float w = v[0] * m.m[0][3] + v[1] * m.m[1][3] + v[2] * m.m[2][3] + m.m[3][3];
 
 	if (w == 0.0f) {
 		return {};

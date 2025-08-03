@@ -44,12 +44,20 @@ void SxavengerContent::ResetPrimtive() {
 	debugPrimitive_->ResetPrimitive();
 }
 
-void SxavengerContent::PushLine(const Vector3f& v1, const Vector3f& v2, const Color4f& color) {
-	debugPrimitive_->PushLine(v1, v2, color);
+void SxavengerContent::PushLine(const Vector3f& v1, const Vector3f& v2, const Color4f& color, float thickness) {
+	debugPrimitive_->PushLine(v1, v2, color, thickness);
 }
 
-void SxavengerContent::PushLineOverlay(const Vector3f& v1, const Vector3f& v2, const Color4f& color) {
-	debugPrimitive_->PushLineOverlay(v1, v2, color);
+void SxavengerContent::PushLineOverlay(const Vector3f& v1, const Vector3f& v2, const Color4f& color, float thickness) {
+	debugPrimitive_->PushLineOverlay(v1, v2, color, thickness);
+}
+
+void SxavengerContent::PushPoint(const Vector3f& v, const Color4f& color, float thickness) {
+	debugPrimitive_->PushPoint(v, color, thickness);
+}
+
+void SxavengerContent::PushPointOverlay(const Vector3f& v, const Color4f& color, float thickness) {
+	debugPrimitive_->PushPointOverlay(v, color, thickness);
 }
 
 void SxavengerContent::PushAxis(const Vector3f& center, float length) {
@@ -62,4 +70,8 @@ void SxavengerContent::PushBox(const Vector3f& min, const Vector3f& max, const C
 
 void SxavengerContent::PushSphere(const Vector3f& center, float radius, const Color4f& color) {
 	debugPrimitive_->PushSphere(center, radius, color);
+}
+
+void SxavengerContent::PushGrid(const CameraComponent* camera, const Vector2f& size, float radius) {
+	debugPrimitive_->PushGrid(camera, size, radius);
 }

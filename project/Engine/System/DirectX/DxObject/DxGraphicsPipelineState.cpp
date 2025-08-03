@@ -51,6 +51,11 @@ void GraphicsPipelineDesc::SetIndependentBlendEnable(bool isIndependentEnable) {
 
 void GraphicsPipelineDesc::SetPrimitive(PrimitiveType type) {
 	switch (type) {
+		case PrimitiveType::PointList:
+			primitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_POINT;
+			primitiveTopology     = D3D_PRIMITIVE_TOPOLOGY_POINTLIST;
+			break;
+
 		case PrimitiveType::LineList:
 			primitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_LINE;
 			primitiveTopology     = D3D_PRIMITIVE_TOPOLOGY_LINELIST;
@@ -98,7 +103,7 @@ void GraphicsPipelineDesc::CreateDefaultDesc() {
 	SetRasterizer(D3D12_CULL_MODE_BACK, D3D12_FILL_MODE_SOLID);
 	SetDepthStencil(true);
 
-	SetBlendMode(0, BlendMode::kBlendModeNormalSrc);
+	SetBlendMode(0, BlendMode::kBlendModeNormal);
 	SetIndependentBlendEnable(false);
 
 	SetPrimitive(PrimitiveType::TrianglList);

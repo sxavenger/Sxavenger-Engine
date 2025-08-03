@@ -338,3 +338,17 @@ void SxImGui::EndHoveredTooltip() {
 bool SxImGui::IsMouseClickedRect(const ImVec2& min, const ImVec2& max, ImGuiMouseButton button) {
 	return ImGui::IsMouseClicked(button) && ImGui::IsMouseHoveringRect(min, max, false);
 }
+
+void SxImGui::HelpMarker(const char* label, const char* text, bool isSameline) {
+	if (isSameline) {
+		ImGui::SameLine();
+	}
+
+	ImGui::TextDisabled(label);
+	if (ImGui::BeginItemTooltip()) {
+		ImGui::PushTextWrapPos(ImGui::GetFontSize() * 35.0f);
+		ImGui::TextUnformatted(text);
+		ImGui::PopTextWrapPos();
+		ImGui::EndTooltip();
+	}
+}

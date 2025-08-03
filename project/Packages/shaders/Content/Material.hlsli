@@ -1,5 +1,10 @@
 #pragma once
 
+//-----------------------------------------------------------------------------------------
+// include
+//-----------------------------------------------------------------------------------------
+#include "../Library/ACES.hlsli"
+
 ////////////////////////////////////////////////////////////////////////////////////////////
 // MaterialData namespace
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -63,22 +68,30 @@ namespace MaterialLib {
 		//=========================================================================================
 
 		float3 GetAlbedo(TextureSampler parameter) {
+
+			float3 output = float3(0.0f, 0.0f, 0.0f);
+
 			switch (type) {
 				case 0:
-					return color;
+					output = color;
+					break;
 				
-				case 1:{
+				case 1:
+					{
 						Texture2D<float4> texture = ResourceDescriptorHeap[index];
-						return SampleTexture(texture, parameter.samplers, parameter.texcoord).rgb;
+						output = SampleTexture(texture, parameter.samplers, parameter.texcoord).rgb;
 					}
+					break;
 				
-				case 2:{
+				case 2:
+					{
 						Texture2D<float4> texture = ResourceDescriptorHeap[index];
-						return SampleTexture(texture, parameter.samplers, parameter.texcoord).rgb * color;
+						output = SampleTexture(texture, parameter.samplers, parameter.texcoord).rgb * color;
 					}
+					break;
 			}
 
-			return (float3)0; //!< exception
+			return ACES::IDT_sRGB_AP1(output);
 		}
 	};
 

@@ -1,10 +1,5 @@
 #pragma once
 
-//-----------------------------------------------------------------------------------------
-// include
-//-----------------------------------------------------------------------------------------
-#include "../../Library/ACES.hlsli"
-
 ////////////////////////////////////////////////////////////////////////////////////////////
 // common defines
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -70,8 +65,8 @@ struct GeometryDeferredOutput { //!< FSceneTextures::GBuffers
 		materialARM.a = _NOT_USED_1;
 	}
 	
-	void SetAlbedo(float3 _albedo) {
-		albedo.rgb = ACES::IDT_sRGB_AP1(_albedo);
+	void SetAlbedo(float3 _albedo /*AP1*/) {
+		albedo.rgb = _albedo;
 		albedo.a   = _NOT_USED_1;
 	}
 	

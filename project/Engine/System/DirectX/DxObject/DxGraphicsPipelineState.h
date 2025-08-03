@@ -35,6 +35,7 @@ using BlendOption = std::variant<BlendMode, D3D12_RENDER_TARGET_BLEND_DESC>;
 // PrimitiveType enum
 ////////////////////////////////////////////////////////////////////////////////////////////
 enum class PrimitiveType {
+	PointList,
 	LineList,
 	LineStrip,
 	TrianglList,

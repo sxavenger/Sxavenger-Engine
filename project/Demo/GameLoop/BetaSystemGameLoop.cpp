@@ -5,6 +5,7 @@
 //-----------------------------------------------------------------------------------------
 //* engine
 #include <Engine/System/SxavengerSystem.h>
+#include <Engine/Content/SxavengerContent.h>
 #include <Engine/Asset/SxavengerAsset.h>
 #include <Engine/Editor/EditorEngine.h>
 #include <Engine/Editor/Editors/DevelopEditor.h>
@@ -14,6 +15,8 @@
 #include <Engine/Component/Components/SpriteRenderer/SpriteRendererComponent.h>
 #include <Engine/Component/Components/Particle/ParticleComponent.h>
 #include <Engine/Component/Components/PostProcessLayer/PostProcessLayerComponent.h>
+#include <Engine/Component/Components/Particle/GPUParticleComponent.h>
+#include <Engine/Component/Components/Particle/EmitterComponent.h>
 #include <Engine/Component/ComponentHelper.h>
 #include <Engine/System/Runtime/Performance/DeltaTimePoint.h>
 #include <Engine/Render/FRenderCore.h>
@@ -76,28 +79,28 @@ void BetaSystemGameLoop::InitSystem() {
 	light->GetSpecularParameter().SetTexture(SxavengerAsset::Import<AssetTexture>("assets/textures/textureCube/sky_radiance.dds"));
 	light->SetEnvironment(SxavengerAsset::Import<AssetTexture>("assets/textures/textureCube/sky_environment.dds").WaitAcquire()->GetGPUHandleSRV());
 
-	player_ = std::make_unique<Player>();
-	player_->Load();
-	player_->Awake();
-	player_->Start();
+	//player_ = std::make_unique<Player>();
+	//player_->Load();
+	//player_->Awake();
+	//player_->Start();
 
 	emissive_ = std::make_unique<EmissiveActor>();
 	emissive_->Init();
 
-	leadParticle_ = std::make_unique<LeadParticle>();
-	leadParticle_->Load();
-	leadParticle_->Awake();
-	leadParticle_->Start();
+	//leadParticle_ = std::make_unique<LeadParticle>();
+	//leadParticle_->Load();
+	//leadParticle_->Awake();
+	//leadParticle_->Start();
 
 	behaviour_ = std::make_unique<MonoBehaviour>();
 	behaviour_->AddComponent<TransformComponent>();
 	behaviour_->AddComponent<PostProcessLayerComponent>();
 	behaviour_->GetComponent<PostProcessLayerComponent>()->SetTag(PostProcessLayerComponent::Tag::None);
 	behaviour_->GetComponent<PostProcessLayerComponent>()->AddPostProcess<PostProcessAutoExposure>();
-	behaviour_->GetComponent<PostProcessLayerComponent>()->AddPostProcess<PostProcessLocalExposure>();
+	//behaviour_->GetComponent<PostProcessLayerComponent>()->AddPostProcess<PostProcessLocalExposure>();
 	//behaviour_->GetComponent<PostProcessLayerComponent>()->AddPostProcess<PostProcessBloom>();
-	behaviour_->GetComponent<PostProcessLayerComponent>()->AddPostProcess<PostProcessDoF>();
-	behaviour_->GetComponent<PostProcessLayerComponent>()->AddPostProcess<PostProcessGrayScale>();
+	//behaviour_->GetComponent<PostProcessLayerComponent>()->AddPostProcess<PostProcessDoF>();
+	//behaviour_->GetComponent<PostProcessLayerComponent>()->AddPostProcess<PostProcessGrayScale>();
 	behaviour_->GetComponent<PostProcessLayerComponent>()->AddPostProcess<PostProcessChromaticAberration>();
 	behaviour_->GetComponent<PostProcessLayerComponent>()->AddPostProcess<PostProcessRadialBlur>();
 
@@ -120,7 +123,7 @@ void BetaSystemGameLoop::UpdateSystem() {
 
 	//player_->Update();
 
-	leadParticle_->Update();
+	//leadParticle_->Update();
 
 	//-----------------------------------------------------------------------------------------
 	// SystemUpdate...?

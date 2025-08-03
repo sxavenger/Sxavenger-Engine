@@ -44,6 +44,14 @@ void FRenderTargetBuffer::EndRenderTargetLightingDirect(const DirectXQueueContex
 	lighting_.TransitionEndRenderTargetDirect(context);
 }
 
+void FRenderTargetBuffer::BeginUnorderedLightingIndirect(const DirectXQueueContext* context) {
+	lighting_.TransitionBeginUnorderedIndirect(context);
+}
+
+void FRenderTargetBuffer::EndUnorderedLightingIndirect(const DirectXQueueContext* context) {
+	lighting_.TransitionEndUnorderedIndirect(context);
+}
+
 void FRenderTargetBuffer::BeginUnorderedMainScene(const DirectXQueueContext* context) {
 	main_.TransitionBeginUnorderedScene(context);
 }
@@ -77,6 +85,14 @@ void FRenderTargetBuffer::BeginPostProcess(const DirectXQueueContext* context) {
 
 void FRenderTargetBuffer::EndPostProcess(const DirectXQueueContext* context) {
 	process_->EndProcess(context, main_.GetGBuffer(FMainGBuffer::Layout::Scene));
+}
+
+void FRenderTargetBuffer::BeginProcessDenoiser(const DirectXQueueContext* context) {
+	process_->BeginProcess(context, lighting_.GetGBuffer(FLightingGBuffer::Layout::Indirect));
+}
+
+void FRenderTargetBuffer::EndProcessDenoiser(const DirectXQueueContext* context) {
+	process_->EndProcess(context, lighting_.GetGBuffer(FLightingGBuffer::Layout::Indirect));
 }
 
 FBaseTexture* FRenderTargetBuffer::GetGBuffer(FDeferredGBuffer::Layout layout) {
