@@ -87,6 +87,11 @@ uint32_t FSceneRenderer::GetReservoirSampleCount() const {
 	return reservoir_.value().GetCurrentSampleCount();
 }
 
+uint32_t FSceneRenderer::GetSamleCount() const {
+	FRenderCorePathtracing::Reservoir reservoir;
+	return reservoir.sampleCount;
+}
+
 void FSceneRenderer::DebugGui() {
 	ImGui::DragFloat3("Test", &test_.x, 0.01f);
 }

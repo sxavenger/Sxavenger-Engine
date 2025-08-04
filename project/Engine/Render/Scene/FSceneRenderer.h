@@ -103,6 +103,8 @@ public:
 
 	uint32_t GetReservoirSampleCount() const;
 
+	uint32_t GetSamleCount() const;
+
 	void DebugGui(); //!< HACK
 
 private:
@@ -112,7 +114,7 @@ private:
 	//=========================================================================================
 
 	std::optional<FRenderCorePathtracing::Reservoir> reservoir_;
-	Vector3f test_ = { 1.0f, 0.1f, 0.1f };
+	Vector3f test_ = { 128.0f, 0.1f, 0.1f };
 
 	//=========================================================================================
 	// private methods
