@@ -3,6 +3,9 @@
 //-----------------------------------------------------------------------------------------
 #include "PathtracingCommon.hlsli"
 
+//* library
+#include "../../Library/ACES.hlsli"
+
 //=========================================================================================
 // local buffers
 //=========================================================================================
@@ -12,7 +15,8 @@
 ////////////////////////////////////////////////////////////////////////////////////////////
 _MISS void mainMiss(inout Payload payload) {
 
-	// 仮の値を設定
-	payload.indirect = gSkyLight.SampleLevel(gSkySampler, WorldRayDirection(), 0);
+	float4 color = gSkyLight.SampleLevel(gSkySampler, WorldRayDirection(), 0);
+	payload.indirect = float4(ACES::IDT_sRGB_AP1(color.rgb), color.a);
+	
 	
 }
