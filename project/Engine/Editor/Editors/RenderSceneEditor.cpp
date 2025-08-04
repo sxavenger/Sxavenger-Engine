@@ -64,6 +64,8 @@ void RenderSceneEditor::Init() {
 	icons_[static_cast<uint32_t>(Icon::DirectionalLight)] = SxavengerAsset::TryImport<AssetTexture>("packages/textures/icon/scene_directionalLight.png");
 	icons_[static_cast<uint32_t>(Icon::PointLight)]       = SxavengerAsset::TryImport<AssetTexture>("packages/textures/icon/scene_pointLight.png");
 	icons_[static_cast<uint32_t>(Icon::Camera)]           = SxavengerAsset::TryImport<AssetTexture>("packages/textures/icon/scene_camera.png");
+	
+
 }
 
 void RenderSceneEditor::ShowMainMenu() {

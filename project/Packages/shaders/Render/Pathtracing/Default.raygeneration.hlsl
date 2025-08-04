@@ -40,7 +40,7 @@ _RAYGENERATION void mainRaygeneration() {
 	for (uint i = 0; i < sampleStep; ++i) {
 
 		uint currentSampleIndex = sampleStep * currentFrame + i;
-		uint2 xi = Hammersley(currentSampleIndex, sampleCount);
+		float2 xi = Hammersley(currentSampleIndex, sampleCount);
 
 		static const float3 kMinFrenel = float3(0.04f, 0.04f, 0.04f); //!< 非金属の最小Frenel値
 

@@ -103,6 +103,8 @@ public:
 
 	uint32_t GetReservoirSampleCount() const;
 
+	uint32_t GetSamleCount() const;
+
 	void DebugGui(); //!< HACK
 
 private:

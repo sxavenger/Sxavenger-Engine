@@ -61,16 +61,16 @@ cbuffer Reservoir : register(b1, space1) {
 	//=========================================================================================
 	// public methods
 	//=========================================================================================
-
-	bool CheckNeedSample() {
-		return sampleStep * currentFrame < sampleCount;
-	}
-
-	bool IsBeginFrame() {
-		return currentFrame == 0;
-	}
 	
 };
+
+bool CheckNeedSample() {
+	return sampleStep * currentFrame < sampleCount;
+}
+
+bool IsBeginFrame() {
+	return currentFrame == 0;
+}
 
 //* light
 struct LightCount {
