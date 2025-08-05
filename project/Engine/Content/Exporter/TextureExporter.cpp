@@ -24,7 +24,7 @@ void TextureExporter::Export(
 	D3D12_RESOURCE_DESC textureDesc = texture->GetDesc();
 
 	// imageの生成
-	DirectX::ScratchImage image = GetImage(dimension, format, textureDesc);
+	DirectX::ScratchImage image = GetImage(dimension, textureDesc.Format, textureDesc);
 	const UINT kImageCount = static_cast<UINT>(image.GetImageCount());
 
 	// image情報の取得
@@ -107,6 +107,22 @@ void TextureExporter::Export(
 		}
 	
 		readback->Unmap(0, nullptr);
+	}
+
+	// imageのformat変換
+	if (format != image.GetMetadata().format) {
+
+		DirectX::ScratchImage converted = {};
+
+		auto hr = DirectX::Convert(
+			image.GetImages(), image.GetImageCount(), image.GetMetadata(),
+			format, DirectX::TEX_FILTER_DEFAULT, DirectX::TEX_THRESHOLD_DEFAULT,
+			converted
+		);
+
+		Exception::Assert(SUCCEEDED(hr), "image convert failed.");
+
+		image = std::move(converted);
 	}
 
 	ExportTexture(filepath, image);

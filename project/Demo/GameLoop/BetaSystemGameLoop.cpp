@@ -104,6 +104,10 @@ void BetaSystemGameLoop::InitSystem() {
 	behaviour_->GetComponent<PostProcessLayerComponent>()->AddPostProcess<PostProcessChromaticAberration>();
 	behaviour_->GetComponent<PostProcessLayerComponent>()->AddPostProcess<PostProcessRadialBlur>();
 
+	SxavengerAsset::TryImport<AssetTexture>("assets/textures/LUT/lut_greenish.png", Texture::Option{ Texture::Encoding::Intensity, false });
+	SxavengerAsset::TryImport<AssetTexture>("assets/textures/LUT/lut_reddish.png", Texture::Option{ Texture::Encoding::Intensity, false });
+	SxavengerAsset::TryImport<AssetTexture>("assets/textures/LUT/lut_sepia.png", Texture::Option{ Texture::Encoding::Intensity, false });
+
 	auto texture = SxavengerAsset::TryImport<AssetTexture>("assets/textures/LUT/lut_reddish.png", Texture::Option{ Texture::Encoding::Intensity, false });
 	auto lut = behaviour_->GetComponent<PostProcessLayerComponent>()->AddPostProcess<PostProcessLUT>();
 	lut->CreateTexture(SxavengerSystem::GetDirectQueueContext(), texture, { 16, 16 });

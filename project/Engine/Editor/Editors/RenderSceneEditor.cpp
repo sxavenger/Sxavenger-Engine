@@ -9,6 +9,7 @@
 //* engine
 #include <Engine/System/UI/SxImGui.h>
 #include <Engine/System/UI/SxImGuizmo.h>
+#include <Engine/Content/Exporter/TextureExporter.h>
 #include <Engine/Content/SxavengerContent.h>
 #include <Engine/Component/Components/Transform/TransformComponent.h>
 #include <Engine/Component/Components/SpriteRenderer/SpriteRendererComponent.h>
@@ -378,10 +379,16 @@ void RenderSceneEditor::ShowCaptureMenu() {
 		MenuPadding();
 		ImGui::SeparatorText("capture");
 
-		//if (ImGui::Button("scene window capture")) {
-		//	textures_->CaptureGBuffer(FRenderTargetTextures::GBufferLayout::Main, SxavengerSystem::GetDirectQueueContext(), "capture_scene.png");
-		//}
-		//
+		if (ImGui::Button("scene window capture")) {
+			TextureExporter::Export(
+				SxavengerSystem::GetDirectQueueContext(),
+				TextureExporter::TextureDimension::Texture2D,
+				textures_->GetGBuffer(FMainGBuffer::Layout::Scene)->GetResource(),
+				DxObject::kDefaultScreenViewFormat,
+				"capture_scene.png"
+			);
+		}
+		
 		//if (ImGui::Button("game window capture")) {
 		//	FMainRender::GetInstance()->GetTextures()->CaptureGBuffer(FRenderTargetTextures::GBufferLayout::Main, SxavengerSystem::GetDirectQueueContext(), "capture_game.png");
 		//}
