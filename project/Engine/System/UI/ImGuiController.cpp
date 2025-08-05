@@ -133,7 +133,7 @@ void ImGuiController::SetImGuiStyle() {
 
 	// rounding
 	style.WindowRounding    = 3;
-	style.FrameRounding     = 2;
+	style.FrameRounding     = 1;
 	style.GrabRounding      = 2;
 	style.ScrollbarRounding = 0;
 	style.TabRounding       = 2;

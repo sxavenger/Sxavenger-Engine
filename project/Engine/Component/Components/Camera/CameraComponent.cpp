@@ -76,10 +76,7 @@ void CameraComponent::InputJson(const json& data) {
 
 void CameraComponent::ShowComponentInspector() {
 
-	ImGui::Text("tag");
-	ImGui::Separator();
-
-	if (ImGui::BeginCombo("## tag", magic_enum::enum_name(GetTag()).data())) {
+	if (ImGui::BeginCombo("tag", magic_enum::enum_name(GetTag()).data())) {
 		for (const auto& [value, name] : magic_enum::enum_entries<Tag>()) {
 			if (ImGui::Selectable(name.data(), GetTag() == value)) {
 				SetTag(value);
@@ -89,14 +86,13 @@ void CameraComponent::ShowComponentInspector() {
 		ImGui::EndCombo();
 	}
 
-	ImGui::Text("projection");
-	ImGui::Separator();
-
-	ImGui::DragFloat2("sensor", &projection_.sensor.x, 0.01f);
-	ImGui::DragFloat("focal", &projection_.focal, 0.01f);
-	ImGui::DragFloat("nearZ", &projection_.nearZ, 0.01f);
-	ImGui::DragFloat("farZ", &projection_.farZ, 0.01f);
-	UpdateProj();
+	if (ImGui::TreeNodeEx("projection", ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_NoAutoOpenOnLog | ImGuiTreeNodeFlags_NoTreePushOnOpen)) {
+		ImGui::DragFloat2("sensor", &projection_.sensor.x, 0.01f);
+		ImGui::DragFloat("focal",   &projection_.focal, 0.01f);
+		ImGui::DragFloat("nearZ",   &projection_.nearZ, 0.01f);
+		ImGui::DragFloat("farZ",    &projection_.farZ, 0.01f);
+		UpdateProj();
+	}
 
 	PushLineFrustum();
 }

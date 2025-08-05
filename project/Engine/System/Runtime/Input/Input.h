@@ -144,6 +144,8 @@ public:
 
 	float GetDeltaWheel() const;
 
+	bool IsWheel() const;
+
 	bool IsWheelUp() const;
 
 	bool IsWheelDown() const;

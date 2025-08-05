@@ -46,6 +46,7 @@ void RenderSceneEditor::Init() {
 	auto camera = camera_->GetComponent<CameraComponent>();
 	camera->GetProjection().focal = 16.0f;
 	camera->UpdateProj();
+	UpdateView();
 
 	textures_ = std::make_unique<FRenderTargetBuffer>();
 	textures_->Create(kMainWindowSize);
@@ -841,9 +842,15 @@ void RenderSceneEditor::UpdateCamera() {
 		isMoveCamera_ = true;
 	}
 
-	distance_ = std::max(distance_ - mouse->GetDeltaWheel(), 0.0f);
+	if (mouse->IsWheel()) {
+		distance_ = std::max(distance_ - mouse->GetDeltaWheel(), 0.0f);
+		isMoveCamera_ = true;
+	}
 
-	UpdateView();
+	if (isMoveCamera_) {
+		UpdateView();
+		renderer_->ResetReservoir();
+	}
 }
 
 void RenderSceneEditor::ShowCameraInfomation(const WindowRect& rect) {

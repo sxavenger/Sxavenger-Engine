@@ -3,6 +3,9 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
+//* mesh renderer
+#include "MeshRendererCommon.h"
+
 //* component
 #include "../BaseComponent.h"
 #include "../Transform/TransformComponent.h"
@@ -10,6 +13,9 @@
 //* engine
 #include <Engine/Content/InputGeometry/InputMesh.h>
 #include <Engine/Content/Material/Material.h>
+
+//* lib
+#include <Lib/Sxl/Flag.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // MeshRendererComponent class
@@ -50,9 +56,15 @@ private:
 	// private variables
 	//=========================================================================================
 
+	//* parameter *//
+
 	InputMesh* mesh_    = nullptr;
 	Material* material_ = nullptr;
 
-	const TransformComponent* transform_ = nullptr;
+	const TransformComponent* transform_ = nullptr; //!< override用
+
+	//* config *//
+
+	Sxl::Flag<MeshInstanceMask> mask_ = MeshInstanceMask::Default;
 
 };

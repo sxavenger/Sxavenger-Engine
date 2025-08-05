@@ -82,7 +82,7 @@ void TextureExporter::Export(
 		context->ExecuteAllAllocators();
 	}
 	
-	{ //!< GPUからImageに変更
+	{ //!< BufferからImageに変更
 
 		// mapping
 		BYTE* map = nullptr;

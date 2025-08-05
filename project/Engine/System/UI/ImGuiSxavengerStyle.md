@@ -7,7 +7,7 @@
 
 > Rounding
 	- Window    = 3
-	- Frame     = 2
+	- Frame     = 1
 	- Grab      = 2
 	- Scrollbar = 0
 	- Tab       = 2

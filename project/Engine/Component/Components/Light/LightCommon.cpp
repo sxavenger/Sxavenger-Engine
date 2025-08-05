@@ -42,8 +42,10 @@ LightCommon::InlineShadow& LightCommon::GetShadowParameter() {
 }
 
 void LightCommon::ShowCommonInspector() {
-	ImGui::Separator();
-	auto& shadow = shadow_->At(0);
-	ImGui::SliderFloat("shadow strength", &shadow.strength, 0.0f, 1.0f);
-	ImGui::CheckboxFlags("cull back face", &shadow.flag.Get(), D3D12_RAY_FLAG_CULL_BACK_FACING_TRIANGLES);
+	if (ImGui::TreeNodeEx("shadow", ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_NoAutoOpenOnLog | ImGuiTreeNodeFlags_NoTreePushOnOpen)) {
+
+		auto& shadow = shadow_->At(0);
+		ImGui::SliderFloat("shadow strength",  &shadow.strength, 0.0f, 1.0f);
+		ImGui::CheckboxFlags("cull back face", &shadow.flag.Get(), D3D12_RAY_FLAG_CULL_BACK_FACING_TRIANGLES);
+	}
 }

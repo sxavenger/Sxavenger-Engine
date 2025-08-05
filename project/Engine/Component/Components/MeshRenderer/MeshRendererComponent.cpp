@@ -11,15 +11,14 @@
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 void MeshRendererComponent::ShowComponentInspector() {
-	if (ImGui::TreeNode("material")) {
+
+	if (ImGui::TreeNodeEx("material", ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_NoAutoOpenOnLog | ImGuiTreeNodeFlags_NoTreePushOnOpen)) {
 		if (material_ != nullptr) {
 			material_->SetImGuiCommand();
 
 		} else {
 			ImGui::Text("material is nullptr.");
 		}
-
-		ImGui::TreePop();
 	}
 }
 

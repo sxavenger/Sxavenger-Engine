@@ -20,51 +20,51 @@
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 void ColliderComponent::ShowComponentInspector() {
-	ImGui::Text("boundings");
-	ImGui::Separator();
-
 	if (!bounding_.has_value()) {
 		ImGui::TextDisabled("bounding not set...");
 		return;
 	}
 
-	auto& bounding = bounding_.value();
+	if (ImGui::TreeNodeEx("bounding", ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_NoAutoOpenOnLog | ImGuiTreeNodeFlags_NoTreePushOnOpen)) {
 
-	// boundingの型の判定
-	if (std::holds_alternative<CollisionBoundings::Sphere>(bounding)) { //!< sphereの場合
-		auto& sphere = std::get<CollisionBoundings::Sphere>(bounding);
+		auto& bounding = bounding_.value();
 
-		ImGui::Text("Boundings: Sphere");
-		SxImGui::DragFloat("radius", &sphere.radius, 0.01f, 0.0f);
+		// boundingの型の判定
+		if (std::holds_alternative<CollisionBoundings::Sphere>(bounding)) { //!< sphereの場合
+			auto& sphere = std::get<CollisionBoundings::Sphere>(bounding);
 
-	} else if (std::holds_alternative<CollisionBoundings::Capsule>(bounding)) {
-		auto& capsule = std::get<CollisionBoundings::Capsule>(bounding);
+			ImGui::Text("Boundings: Sphere");
+			SxImGui::DragFloat("radius", &sphere.radius, 0.01f, 0.0f);
 
-		ImGui::Text("Boundings: Capsule");
+		} else if (std::holds_alternative<CollisionBoundings::Capsule>(bounding)) {
+			auto& capsule = std::get<CollisionBoundings::Capsule>(bounding);
 
-		if (SxImGui::DragVector3("direction", &capsule.direction.x, 0.01f)) {
-			capsule.direction = capsule.direction.Normalize();
+			ImGui::Text("Boundings: Capsule");
+
+			if (SxImGui::DragVector3("direction", &capsule.direction.x, 0.01f)) {
+				capsule.direction = capsule.direction.Normalize();
+			}
+
+			SxImGui::DragFloat("radius", &capsule.radius, 0.01f, 0.0f);
+			SxImGui::DragFloat("length", &capsule.length, 0.01f, 0.0f);
+
+		} else if (std::holds_alternative<CollisionBoundings::AABB>(bounding)) { //!< AABBの場合
+			auto& aabb = std::get<CollisionBoundings::AABB>(bounding);
+
+			ImGui::Text("Boundings: AABB");
+			ImGui::DragFloat3("max", &aabb.max.x, 0.01f);
+			ImGui::DragFloat3("min", &aabb.min.x, 0.01f);
+
+			// minがmaxを上回らないようclamp
+			aabb.min.x = (std::min)(aabb.min.x, aabb.max.x);
+			aabb.max.x = (std::max)(aabb.min.x, aabb.max.x);
+
+			aabb.min.y = (std::min)(aabb.min.y, aabb.max.y);
+			aabb.max.y = (std::max)(aabb.min.y, aabb.max.y);
+
+			aabb.min.z = (std::min)(aabb.min.z, aabb.max.z);
+			aabb.max.z = (std::max)(aabb.min.z, aabb.max.z);
 		}
-
-		SxImGui::DragFloat("radius", &capsule.radius, 0.01f, 0.0f);
-		SxImGui::DragFloat("length", &capsule.length, 0.01f, 0.0f);
-
-	} else if (std::holds_alternative<CollisionBoundings::AABB>(bounding)) { //!< AABBの場合
-		auto& aabb = std::get<CollisionBoundings::AABB>(bounding);
-
-		ImGui::Text("Boundings: AABB");
-		ImGui::DragFloat3("max", &aabb.max.x, 0.01f);
-		ImGui::DragFloat3("min", &aabb.min.x, 0.01f);
-
-		// minがmaxを上回らないようclamp
-		aabb.min.x = (std::min)(aabb.min.x, aabb.max.x);
-		aabb.max.x = (std::max)(aabb.min.x, aabb.max.x);
-
-		aabb.min.y = (std::min)(aabb.min.y, aabb.max.y);
-		aabb.max.y = (std::max)(aabb.min.y, aabb.max.y);
-
-		aabb.min.z = (std::min)(aabb.min.z, aabb.max.z);
-		aabb.max.z = (std::max)(aabb.min.z, aabb.max.z);
 	}
 }
 
