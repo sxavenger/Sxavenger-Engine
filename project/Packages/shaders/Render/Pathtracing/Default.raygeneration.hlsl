@@ -18,10 +18,6 @@ _RAYGENERATION void mainRaygeneration() {
 	uint2 index     = DispatchRaysIndex().xy;
 	uint2 dimension = DispatchRaysDimensions().xy;
 
-	if (IsBeginFrame()) {
-		gIndirect[index] = float4(0.0f, 0.0f, 0.0f, 0.0f);
-	}
-
 	if (!CheckNeedSample()) {
 		return; //!< これ以上のsampleは不必要
 	}
@@ -100,13 +96,25 @@ _RAYGENERATION void mainRaygeneration() {
 		}
 	}
 
-	diffuse_indirect.rgb  /= sampleCount; //!< 平均化
-	specular_indirect.rgb /= sampleCount;
+	//diffuse_indirect.rgb  /= sampleCount; //!< 平均化
+	//specular_indirect.rgb /= sampleCount;
 
-	float4 indirect = float4(0.0f, 0.0f, 0.0f, 0.0f);
-	indirect.rgb    = diffuse_indirect.rgb + specular_indirect.rgb;
-	indirect.a      = saturate(diffuse_indirect.a + specular_indirect.a);
+	//float4 indirect = float4(0.0f, 0.0f, 0.0f, 0.0f);
+	//indirect.rgb    = diffuse_indirect.rgb + specular_indirect.rgb;
+	//indirect.a      = saturate(diffuse_indirect.a + specular_indirect.a);
 	
-	gIndirect[index] += indirect;
+	//gIndirect[index] += indirect;
+
+	uint prev    = sampleStep * currentFrame;
+	uint current = prev + sampleStep;
+
+	diffuse_indirect.rgb  /= current;
+	specular_indirect.rgb /= current;
+
+	float4 indirect = gIndirect[index];
+	indirect *= float(prev) / float(current);
+	indirect.rgb += diffuse_indirect.rgb + specular_indirect.rgb;
+	indirect.a    = saturate(indirect.a + diffuse_indirect.a + specular_indirect.a);
 	
+	gIndirect[index] = indirect;
 }
