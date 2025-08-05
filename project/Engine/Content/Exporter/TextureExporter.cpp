@@ -24,7 +24,7 @@ void TextureExporter::Export(
 	D3D12_RESOURCE_DESC textureDesc = texture->GetDesc();
 
 	// imageの生成
-	DirectX::ScratchImage image = GetImage(dimension, textureDesc.Format, textureDesc);
+	DirectX::ScratchImage image = GetImage(dimension, textureDesc);
 	const UINT kImageCount = static_cast<UINT>(image.GetImageCount());
 
 	// image情報の取得
@@ -130,7 +130,7 @@ void TextureExporter::Export(
 	Logger::CommentRuntime("texture exported.", filepath.generic_string());
 }
 
-DirectX::ScratchImage TextureExporter::GetImage(TextureDimension dimension, DXGI_FORMAT format, const D3D12_RESOURCE_DESC& desc) {
+DirectX::ScratchImage TextureExporter::GetImage(TextureDimension dimension, const D3D12_RESOURCE_DESC& desc) {
 
 	HRESULT hr = {};
 	DirectX::ScratchImage image = {};
@@ -141,6 +141,7 @@ DirectX::ScratchImage TextureExporter::GetImage(TextureDimension dimension, DXGI
 	size.z = static_cast<size_t>(desc.DepthOrArraySize);
 	size.w = static_cast<size_t>(desc.MipLevels);
 
+	DXGI_FORMAT format = desc.Format;
 
 	switch (dimension) {
 		case TextureDimension::Texture1D:

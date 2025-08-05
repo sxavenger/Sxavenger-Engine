@@ -43,7 +43,7 @@ private:
 	// private methods
 	//=========================================================================================
 
-	static DirectX::ScratchImage GetImage(TextureDimension dimension, DXGI_FORMAT format, const D3D12_RESOURCE_DESC& desc);
+	static DirectX::ScratchImage GetImage(TextureDimension dimension, const D3D12_RESOURCE_DESC& desc);
 
 	static DirectX::WICCodecs GetExtensionCodecs(const std::filesystem::path& extension);
 
