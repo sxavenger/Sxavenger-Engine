@@ -67,6 +67,8 @@ namespace SxImGui {
 
 	void HelpMarker(const char* label, const char* text, bool isSameline = true);
 
+	template <typename T>
+	bool CheckBoxFlags(const char* label, T* flags, T flags_value);
 
 }
 
@@ -134,4 +136,25 @@ template <typename T>
 bool SxImGui::DragType2(const char* label, T* v, float v_speed, const std::optional<T>& v_min, const std::optional<T>& v_max, const char* format, ImGuiSliderFlags flags) {
 	std::pair<T, T> range = { v_min.value_or(std::numeric_limits<T>::min()), v_max.value_or(std::numeric_limits<T>::max()) };
 	return ImGui::DragScalarN(label, GetImGuiDataType<T>(), v, 2, v_speed, &range.first, &range.second, format, flags);
+}
+
+template <typename T>
+bool SxImGui::CheckBoxFlags(const char* label, T* flags, T flags_value) {
+
+	bool all_on = (*flags & flags_value) == flags_value;
+	//bool any_on = (*flags & flags_value) != 0;
+	bool pressed = false;
+
+	pressed = ImGui::Checkbox(label, &all_on);
+
+	if (pressed) {
+		if (all_on) {
+			*flags |= flags_value;
+
+		} else {
+			*flags &= ~flags_value;
+		}
+	}
+
+	return pressed;
 }

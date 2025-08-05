@@ -200,7 +200,6 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="Engine\Asset\Assets\Texture\AssetTexture.cpp" />
     <ClCompile Include="Engine\Asset\Assets\Texture\Texture.cpp" />
     <ClCompile Include="Engine\Asset\SxavengerAsset.cpp" />
-    <ClCompile Include="Engine\Component\Components\MeshRenderer\MeshRendererCommon.cpp" />
     <ClCompile Include="Engine\Component\Components\Particle\EmitterComponent.cpp" />
     <ClCompile Include="Engine\Component\Components\Particle\GPUParticleComponent.cpp" />
     <ClCompile Include="Engine\Component\Components\Particle\ParticleConfig.cpp" />

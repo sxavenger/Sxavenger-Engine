@@ -181,7 +181,6 @@
     <ClCompile Include="Engine\Component\Components\Particle\EmitterComponent.cpp" />
     <ClCompile Include="Engine\Component\Components\Particle\ParticleConfig.cpp" />
     <ClCompile Include="Engine\System\DirectX\DxObject\DxAppendConsumeBuffer.cpp" />
-    <ClCompile Include="Engine\Component\Components\MeshRenderer\MeshRendererCommon.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Lib\Adapter\Random\Random.h" />

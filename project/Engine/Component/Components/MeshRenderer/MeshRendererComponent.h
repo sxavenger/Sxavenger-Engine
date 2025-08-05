@@ -50,6 +50,8 @@ public:
 
 	const TransformComponent* GetTransform() const;
 
+	uint8_t GetMask() const { return mask_.Get(); }
+
 private:
 
 	//=========================================================================================

@@ -11,8 +11,7 @@
 ////////////////////////////////////////////////////////////////////////////////////////////
 enum class MeshInstanceMask : uint8_t {
 	None       = 0,
-	Mesh       = 1 << 0,
-	Shadow     = 1 << 1,
+	Shadow     = 1 << 0,
 
 	Default    = 0xFF
 };

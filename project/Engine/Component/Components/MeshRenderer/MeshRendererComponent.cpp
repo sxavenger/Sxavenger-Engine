@@ -6,11 +6,16 @@
 //* component
 #include "../../Entity/MonoBehaviour.h"
 
+//* engine
+#include <Engine/System/UI/SxImGui.h>
+
 ////////////////////////////////////////////////////////////////////////////////////////////
 // MeshRendererComponent class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 void MeshRendererComponent::ShowComponentInspector() {
+
+	SxImGui::CheckBoxFlags("cast shadow", &mask_.Get(), static_cast<uint8_t>(MeshInstanceMask::Shadow));
 
 	if (ImGui::TreeNodeEx("material", ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_NoAutoOpenOnLog | ImGuiTreeNodeFlags_NoTreePushOnOpen)) {
 		if (material_ != nullptr) {

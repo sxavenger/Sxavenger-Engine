@@ -109,6 +109,7 @@ void FScene::SetupTopLevelAS(const DirectXQueueContext* context) {
 				instance.bottomLevelAS = component->GetMesh()->GetBottomLevelAS().bottomLevelAS.get();
 				instance.mat           = component->GetTransform()->GetMatrix();
 				instance.instanceId    = 0;
+				instance.instanceMask  = component->GetMask();
 
 				//* ExportGroupの設定
 				instance.expt = FRenderCore::GetInstance()->GetPathtracing()->GetExportGroup(FRenderCorePathtracing::HitgroupExportType::Mesh);
@@ -126,6 +127,7 @@ void FScene::SetupTopLevelAS(const DirectXQueueContext* context) {
 				instance.bottomLevelAS = component->GetMesh()->GetBottomLevelAS().bottomLevelAS.get();
 				instance.mat           = component->GetTransform()->GetMatrix();
 				instance.instanceId    = 0;
+				instance.instanceMask  = component->GetMask();
 
 				//* ExportGroupの設定
 				instance.expt = FRenderCore::GetInstance()->GetPathtracing()->GetExportGroup(FRenderCorePathtracing::HitgroupExportType::Emissive);
@@ -155,6 +157,8 @@ void FScene::SetupTopLevelAS(const DirectXQueueContext* context) {
 		instance.flag          = D3D12_RAYTRACING_INSTANCE_FLAG_NONE;
 		instance.bottomLevelAS = component->GetMesh().GetBottomLevelAS();
 		instance.mat           = component->GetTransform()->GetMatrix();
+		instance.instanceId    = 0;
+		instance.instanceMask  = component->GetMask();
 
 		//* raytracing export group todo...
 		instance.expt = FRenderCore::GetInstance()->GetPathtracing()->GetExportGroup(FRenderCorePathtracing::HitgroupExportType::Mesh);

@@ -3,6 +3,9 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
+//* mesh renderer
+#include "MeshRendererCommon.h"
+
 //* component
 #include "../BaseComponent.h"
 #include "../Transform/TransformComponent.h"
@@ -105,6 +108,8 @@ public:
 
 	const TransformComponent* GetTransform() const;
 
+	uint8_t GetMask() const { return mask_.Get(); }
+
 private:
 
 	//=========================================================================================
@@ -119,6 +124,8 @@ private:
 
 	InputSkinnedMesh mesh_;
 	SkinCluster cluster_;
+
+	Sxl::Flag<MeshInstanceMask> mask_ = MeshInstanceMask::Default;
 
 	//!< todo: instance描画
 
