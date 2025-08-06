@@ -29,9 +29,7 @@ _RAYGENERATION void mainRaygeneration() {
 		return; // surfaceが存在しない
 	}
 
-	Xorshift::Random random;
-	random.seed = index.x * index.y + index.y;
-	uint offset = random.Random1d() % sampleCount;
+	uint offset = Xorshift::xorshift32(index.x * index.y + index.y) % sampleCount;
 
 	// primary trace.
 
@@ -105,15 +103,6 @@ _RAYGENERATION void mainRaygeneration() {
 
 		// todo: pdfを考慮する.
 	}
-
-	//diffuse_indirect.rgb  /= sampleCount; //!< 平均化
-	//specular_indirect.rgb /= sampleCount;
-
-	//float4 indirect = float4(0.0f, 0.0f, 0.0f, 0.0f);
-	//indirect.rgb    = diffuse_indirect.rgb + specular_indirect.rgb;
-	//indirect.a      = saturate(diffuse_indirect.a + specular_indirect.a);
-	
-	//gIndirect[index] += indirect;
 
 	uint prev    = sampleStep * currentFrame;
 	uint current = prev + sampleStep;
