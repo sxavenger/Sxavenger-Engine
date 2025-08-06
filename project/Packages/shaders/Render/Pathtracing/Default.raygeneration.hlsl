@@ -5,6 +5,7 @@
 
 //* lib
 #include "../../Library/BRDF.hlsli"
+#include "../../Library/Random.hlsli"
 
 //=========================================================================================
 // local buffers
@@ -28,15 +29,22 @@ _RAYGENERATION void mainRaygeneration() {
 		return; // surfaceが存在しない
 	}
 
+	Xorshift::Random random;
+	random.seed = index.x * index.y + index.y;
+	uint offset = random.Random1d() % sampleCount;
+
 	// primary trace.
 
 	float4 diffuse_indirect  = float4(0.0f, 0.0f, 0.0f, 0.0f);
 	float4 specular_indirect = float4(0.0f, 0.0f, 0.0f, 0.0f);
-	
+
 	for (uint i = 0; i < sampleStep; ++i) {
 
-		uint currentSampleIndex = sampleStep * currentFrame + i;
-		float2 xi = Hammersley(currentSampleIndex, sampleCount);
+		uint currentSampleIndex   = sampleStep * currentFrame + i;
+		uint randamizeSampleIndex = (currentSampleIndex + offset) % sampleCount;
+		//!< 各threadが異なるサンプルを取得するためのインデックス計算
+		
+		float2 xi = Hammersley(randamizeSampleIndex, sampleCount);
 
 		static const float3 kMinFrenel = float3(0.04f, 0.04f, 0.04f); //!< 非金属の最小Frenel値
 
@@ -94,6 +102,8 @@ _RAYGENERATION void mainRaygeneration() {
 			specular_indirect.rgb += specularBRDF * payload.indirect.rgb * NdotL;
 			specular_indirect.a   += payload.indirect.a > 0.0f ? 1.0f : 0.0f;
 		}
+
+		// todo: pdfを考慮する.
 	}
 
 	//diffuse_indirect.rgb  /= sampleCount; //!< 平均化
