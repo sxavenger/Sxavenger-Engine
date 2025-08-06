@@ -42,9 +42,9 @@ private:
 
 	//* preview *//
 
-	DxObject::AppendConsumeBuffer<UINT> buffer_;
+	FTexture texture_;
 
-	DxObject::ReflectionComputePipelineState pipeline_;
+	CustomReflectionComputePipeline pipeline_;
 
 	//=========================================================================================
 	// private methods
