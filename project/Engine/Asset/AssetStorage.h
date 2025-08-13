@@ -97,6 +97,9 @@ public:
 
 	std::optional<std::filesystem::path> GetFilepathDragAndDropTarget(const std::type_info* type) const;
 
+	template <BaseAssetConcept _Ty>
+	std::optional<std::filesystem::path> GetFilepathDragAndDropTarget() const;
+
 	void DragAndDropTarget(const std::type_info* type, const std::function<void(const std::filesystem::path&)>& func) const;
 
 	template <BaseAssetConcept _Ty>
@@ -194,8 +197,13 @@ inline void AssetStorage::RegisterExtension(const std::filesystem::path& extensi
 }
 
 template <BaseAssetConcept _Ty>
+inline std::optional<std::filesystem::path> AssetStorage::GetFilepathDragAndDropTarget() const {
+	return GetFilepathDragAndDropTarget(&typeid(_Ty));
+}
+
+template <BaseAssetConcept _Ty>
 inline void AssetStorage::DragAndDropTarget(const std::function<void(const std::shared_ptr<_Ty>)>& func) const {
-	auto filepath = GetFilepathDragAndDropTarget(&typeid(_Ty));
+	auto filepath = GetFilepathDragAndDropTarget<_Ty>();
 
 	if (!filepath.has_value()) {
 		return;

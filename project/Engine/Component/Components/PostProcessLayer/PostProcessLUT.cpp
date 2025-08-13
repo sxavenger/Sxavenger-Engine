@@ -65,6 +65,15 @@ void PostProcessLUT::ShowInspectorImGui() {
 	}
 
 	// todo: tileをなんやかんや...
+	{
+		SxImGui::InputScalarN<uint32_t, 2>("tile", &tile_.x);
+
+		auto filepath = sAssetStorage->GetFilepathDragAndDropTarget<AssetTexture>();
+
+		if (filepath.has_value()) {
+			CreateTexture(SxavengerSystem::GetDirectQueueContext(), sAssetStorage->TryImport<AssetTexture>(filepath.value(), Texture::Option{Texture::Encoding::Intensity, false}), tile_);
+		}
+	}
 }
 
 void PostProcessLUT::CreateTexture(const DirectXQueueContext* context, const AssetObserver<AssetTexture>& texture, const Vector2ui& tile) {

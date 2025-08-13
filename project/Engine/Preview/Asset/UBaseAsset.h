@@ -4,7 +4,7 @@
 // include
 //-----------------------------------------------------------------------------------------
 //* engine
-#include <Engine/System/DirectX/DirectXContext.h>
+#include <Engine/System/DirectX/Context/DirectXQueueContext.h>
 #include <Engine/System/Runtime/Thread/AsyncTask.h>
 
 //* lib
@@ -28,11 +28,13 @@ public:
 	UBaseAsset()          = default;
 	virtual ~UBaseAsset() = default;
 
-	//* sasset option *//
+	//* uasset option *//
 
 	virtual json Serialize() const;
 
 	virtual void Deserialize(const json& data);
+
+	const Uuid& GetUuid() const { return uuid_; }
 
 	//* async task option *//
 

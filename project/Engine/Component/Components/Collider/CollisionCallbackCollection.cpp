@@ -8,6 +8,18 @@ void CollisionCallbackCollection::SetOnCollisionFunctions(const std::string& tag
 	callbacks_[tagA][tagB] = functions;
 }
 
+void CollisionCallbackCollection::SetOnCollisionFunctionEnter(const std::string& tagA, const std::string& tagB, const OnCollisionFunction& function) {
+	callbacks_[tagA][tagB] = OnCollisionCallbacks{ function, nullptr, nullptr };
+}
+
+void CollisionCallbackCollection::SetOnCollisionFunctionExit(const std::string& tagA, const std::string& tagB, const OnCollisionFunction& function) {
+	callbacks_[tagA][tagB] = OnCollisionCallbacks{ nullptr, function, nullptr };
+}
+
+void CollisionCallbackCollection::SetOnCollisionFunctionStay(const std::string& tagA, const std::string& tagB, const OnCollisionFunction& function) {
+	callbacks_[tagA][tagB] = OnCollisionCallbacks{ nullptr, nullptr, function };
+}
+
 void CollisionCallbackCollection::CallbackOnCollisionEnter(ColliderComponent* lhs, ColliderComponent* rhs) const {
 	if (!callbacks_.contains(lhs->GetTag()) || !callbacks_.at(lhs->GetTag()).contains(rhs->GetTag())) {
 		return;

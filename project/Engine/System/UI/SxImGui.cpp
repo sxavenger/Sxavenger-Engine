@@ -203,6 +203,28 @@ void SxImGui::InputTextFunc(const char* label, std::string& buf, const std::func
 	}
 }
 
+bool SxImGui::InputText(const char* label, std::string& dst, ImGuiInputTextFlags flags) {
+	static std::string buf(128, '\0'); // バッファの初期化
+	bool isChanged = ImGui::InputText(label, buf.data(), buf.size(), flags);
+
+	if (!ImGui::IsItemActive()) {
+		buf = dst;
+		buf.resize(128, '\0'); // バッファのサイズをリセット
+	}
+
+	if (isChanged) {
+		size_t pos = buf.find('\0');
+
+		if (pos != std::string::npos) {
+			dst = buf.substr(0, pos);
+		} else {
+			dst = buf;
+		}
+	}
+
+	return isChanged;
+}
+
 void SxImGui::PlotHistogramFunc(const char* label, const std::function<float(int32_t idx)>& func, int32_t values_count, int32_t values_offset, const char* overlay_text, const std::optional<float>& scale_min, const std::optional<float>& scale_max, ImVec2 graph_size) {
 
 	ImGuiContext& g     = *GImGui;

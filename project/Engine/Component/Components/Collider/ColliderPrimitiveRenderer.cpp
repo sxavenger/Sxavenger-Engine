@@ -235,7 +235,11 @@ public:
 	}
 
 	void operator()(const CollisionBoundings::AABB& aabb) {
-		aabb;
+		SxavengerContent::PushBox(
+			position + aabb.min,
+			position + aabb.max,
+			color
+		);
 	}
 
 	void operator()(const CollisionBoundings::OBB& obb) {

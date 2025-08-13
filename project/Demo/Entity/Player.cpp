@@ -44,10 +44,18 @@ void Player::Awake() {
 	transform_ = MonoBehaviour::AddComponent<TransformComponent>();
 	model_.WaitGet()->CreateSkinnedMeshBehaviour(this);
 
+	auto collider = MonoBehaviour::AddComponent<ColliderComponent>();
+	collider->SetTag("Player");
+	collider->SetColliderBoundingAABB(
+		CollisionBoundings::AABB{
+			.min = { -0.5f, 0.0f, -0.5f },
+			.max = { 0.5f, 2.0f, 0.5f }
+		}
+	);
+
 	camera_ = std::make_unique<PivotCamera>();
 	camera_->Load();
 	camera_->Awake();
-
 }
 
 void Player::Start() {

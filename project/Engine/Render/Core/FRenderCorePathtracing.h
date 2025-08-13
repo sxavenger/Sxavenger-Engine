@@ -72,7 +72,7 @@ public:
 		// public variables
 		//=========================================================================================
 
-		uint32_t sampleCount  = 512;      //!< 合計sample数
+		uint32_t sampleCount  = 128;      //!< 合計sample数
 		uint32_t sampleStep   = 1;        //!< frameごとのsample数
 		uint32_t currentFrame = 0;        //!< 現在のframe
 

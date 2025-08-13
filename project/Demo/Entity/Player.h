@@ -98,6 +98,7 @@ private:
 	//* camera *//
 
 	std::unique_ptr<PivotCamera> camera_;
+	//!< ここにcameraは存在してはいけない.
 
 	//=========================================================================================
 	// private methods

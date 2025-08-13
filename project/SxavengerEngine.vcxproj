@@ -200,6 +200,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="Engine\Asset\Assets\Texture\AssetTexture.cpp" />
     <ClCompile Include="Engine\Asset\Assets\Texture\Texture.cpp" />
     <ClCompile Include="Engine\Asset\SxavengerAsset.cpp" />
+    <ClCompile Include="Engine\Component\Components\Collider\CollisionHelper.cpp" />
     <ClCompile Include="Engine\Component\Components\Particle\EmitterComponent.cpp" />
     <ClCompile Include="Engine\Component\Components\Particle\GPUParticleComponent.cpp" />
     <ClCompile Include="Engine\Component\Components\Particle\ParticleConfig.cpp" />
@@ -274,6 +275,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="Engine\Module\GameObject\GameObject.cpp" />
     <ClCompile Include="Engine\Module\Scene\SceneObject.cpp" />
     <ClCompile Include="Engine\Module\Scene\SceneObjects.cpp" />
+    <ClCompile Include="Engine\Preview\Asset\UBaseAsset.cpp" />
     <ClCompile Include="Engine\Render\Core\FRenderCoreTransition.cpp" />
     <ClCompile Include="Engine\Render\FRenderTargetBuffer.cpp" />
     <ClCompile Include="Engine\Render\GBuffer\FDeferredGBuffer.cpp" />
@@ -376,6 +378,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Engine\Asset\Assets\Texture\Texture.h" />
     <ClInclude Include="Engine\Asset\Observer\AssetObserver.h" />
     <ClInclude Include="Engine\Asset\SxavengerAsset.h" />
+    <ClInclude Include="Engine\Component\Components\Collider\CollisionHelper.h" />
     <ClInclude Include="Engine\Component\Components\MeshRenderer\MeshRendererCommon.h" />
     <ClInclude Include="Engine\Component\Components\Particle\EmitterComponent.h" />
     <ClInclude Include="Engine\Component\Components\Particle\GPUParticleComponent.h" />
@@ -456,6 +459,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Engine\Module\GameObject\GameObject.h" />
     <ClInclude Include="Engine\Module\Scene\SceneObject.h" />
     <ClInclude Include="Engine\Module\Scene\SceneObjects.h" />
+    <ClInclude Include="Engine\Preview\Asset\UBaseAsset.h" />
     <ClInclude Include="Engine\Render\Core\FRenderCoreTransition.h" />
     <ClInclude Include="Engine\Render\FRenderTargetBuffer.h" />
     <ClInclude Include="Engine\Render\GBuffer\FDeferredGBuffer.h" />

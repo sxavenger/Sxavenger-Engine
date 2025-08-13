@@ -46,6 +46,10 @@ public:
 
 	void SetOnCollisionFunctions(const std::string& tagA, const std::string& tagB, const OnCollisionCallbacks& functions);
 
+	void SetOnCollisionFunctionEnter(const std::string& tagA, const std::string& tagB, const OnCollisionFunction& function);
+	void SetOnCollisionFunctionExit(const std::string& tagA, const std::string& tagB, const OnCollisionFunction& function);
+	void SetOnCollisionFunctionStay(const std::string& tagA, const std::string& tagB, const OnCollisionFunction& function);
+
 	void CallbackOnCollisionEnter(ColliderComponent* lhs, ColliderComponent* rhs) const;
 	void CallbackOnCollisionExit(ColliderComponent* lhs, ColliderComponent* rhs) const;
 	void CallbackOnCollisionStay(ColliderComponent* lhs, ColliderComponent* rhs) const;

@@ -181,6 +181,8 @@
     <ClCompile Include="Engine\Component\Components\Particle\EmitterComponent.cpp" />
     <ClCompile Include="Engine\Component\Components\Particle\ParticleConfig.cpp" />
     <ClCompile Include="Engine\System\DirectX\DxObject\DxAppendConsumeBuffer.cpp" />
+    <ClCompile Include="Engine\Preview\Asset\UBaseAsset.cpp" />
+    <ClCompile Include="Engine\Component\Components\Collider\CollisionHelper.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Lib\Adapter\Random\Random.h" />
@@ -387,6 +389,8 @@
     <ClInclude Include="Engine\Component\Components\Particle\ParticleConfig.h" />
     <ClInclude Include="Engine\System\DirectX\DxObject\DxAppendConsumeBuffer.h" />
     <ClInclude Include="Engine\Component\Components\MeshRenderer\MeshRendererCommon.h" />
+    <ClInclude Include="Engine\Preview\Asset\UBaseAsset.h" />
+    <ClInclude Include="Engine\Component\Components\Collider\CollisionHelper.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

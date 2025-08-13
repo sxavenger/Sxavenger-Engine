@@ -158,6 +158,10 @@ void MonoBehaviour::ShowInspector() {
 		SetName(name);
 	});
 
+	if (SxImGui::InputText("test", name_)) {
+		SetName(name_);
+	}
+
 	ImGui::EndDisabled();
 
 	ImGui::Separator();

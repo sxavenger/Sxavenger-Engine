@@ -25,45 +25,62 @@ void ColliderComponent::ShowComponentInspector() {
 		return;
 	}
 
-	if (ImGui::TreeNodeEx("bounding", ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_NoAutoOpenOnLog | ImGuiTreeNodeFlags_NoTreePushOnOpen)) {
+	if (ImGui::CollapsingHeader("bounding", ImGuiTreeNodeFlags_DefaultOpen)) {
 
 		auto& bounding = bounding_.value();
 
-		// boundingの型の判定
-		if (std::holds_alternative<CollisionBoundings::Sphere>(bounding)) { //!< sphereの場合
-			auto& sphere = std::get<CollisionBoundings::Sphere>(bounding);
+		switch (bounding.index()) {
+			case 0: //!< Sphere
+				{
+					auto& sphere = std::get<CollisionBoundings::Sphere>(bounding);
 
-			ImGui::Text("Boundings: Sphere");
-			SxImGui::DragFloat("radius", &sphere.radius, 0.01f, 0.0f);
+					ImGui::Text("Boundings: Sphere");
+					SxImGui::DragFloat("radius", &sphere.radius, 0.01f, 0.0f);
+				}
+				break;
 
-		} else if (std::holds_alternative<CollisionBoundings::Capsule>(bounding)) {
-			auto& capsule = std::get<CollisionBoundings::Capsule>(bounding);
+			case 1: //!< Capsule
+				{
+					auto& capsule = std::get<CollisionBoundings::Capsule>(bounding);
 
-			ImGui::Text("Boundings: Capsule");
+					ImGui::Text("Boundings: Capsule");
 
-			if (SxImGui::DragVector3("direction", &capsule.direction.x, 0.01f)) {
-				capsule.direction = capsule.direction.Normalize();
-			}
+					if (SxImGui::DragVector3("direction", &capsule.direction.x, 0.01f)) {
+						capsule.direction = capsule.direction.Normalize();
+					}
 
-			SxImGui::DragFloat("radius", &capsule.radius, 0.01f, 0.0f);
-			SxImGui::DragFloat("length", &capsule.length, 0.01f, 0.0f);
+					SxImGui::DragFloat("radius", &capsule.radius, 0.01f, 0.0f);
+					SxImGui::DragFloat("length", &capsule.length, 0.01f, 0.0f);
+				}
+				break;
 
-		} else if (std::holds_alternative<CollisionBoundings::AABB>(bounding)) { //!< AABBの場合
-			auto& aabb = std::get<CollisionBoundings::AABB>(bounding);
+			case 2: //!< AABB
+				{
+					auto& aabb = std::get<CollisionBoundings::AABB>(bounding);
 
-			ImGui::Text("Boundings: AABB");
-			ImGui::DragFloat3("max", &aabb.max.x, 0.01f);
-			ImGui::DragFloat3("min", &aabb.min.x, 0.01f);
+					ImGui::Text("Boundings: AABB");
+					ImGui::DragFloat3("max", &aabb.max.x, 0.01f);
+					ImGui::DragFloat3("min", &aabb.min.x, 0.01f);
 
-			// minがmaxを上回らないようclamp
-			aabb.min.x = (std::min)(aabb.min.x, aabb.max.x);
-			aabb.max.x = (std::max)(aabb.min.x, aabb.max.x);
+					// minがmaxを上回らないようclamp
+					aabb.min.x = (std::min)(aabb.min.x, aabb.max.x);
+					aabb.max.x = (std::max)(aabb.min.x, aabb.max.x);
 
-			aabb.min.y = (std::min)(aabb.min.y, aabb.max.y);
-			aabb.max.y = (std::max)(aabb.min.y, aabb.max.y);
+					aabb.min.y = (std::min)(aabb.min.y, aabb.max.y);
+					aabb.max.y = (std::max)(aabb.min.y, aabb.max.y);
 
-			aabb.min.z = (std::min)(aabb.min.z, aabb.max.z);
-			aabb.max.z = (std::max)(aabb.min.z, aabb.max.z);
+					aabb.min.z = (std::min)(aabb.min.z, aabb.max.z);
+					aabb.max.z = (std::max)(aabb.min.z, aabb.max.z);
+				}
+				break;
+
+			case 3: //!< OBB
+				ImGui::Text("Boundings: OBB");
+				break;
+
+			default:
+				ImGui::Text("Unknown bounding type");
+				break;
 		}
 	}
 }

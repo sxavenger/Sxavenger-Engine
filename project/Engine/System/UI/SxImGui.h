@@ -51,6 +51,8 @@ namespace SxImGui {
 	bool InputText(const char* label, std::string& buf, std::string& dst, ImGuiInputTextFlags flags = ImGuiInputTextFlags_None, ImGuiInputTextCallback callback = NULL, void* user_data = NULL);
 	void InputTextFunc(const char* label, std::string& buf, const std::function<void(const std::string&)>& func, ImGuiInputTextFlags flags = ImGuiInputTextFlags_None, ImGuiInputTextCallback callback = NULL, void* user_data = NULL);
 
+	bool InputText(const char* label, std::string& dst, ImGuiInputTextFlags flags = ImGuiInputTextFlags_None);
+
 	void PlotHistogramFunc(const char* label, const std::function<float(int32_t idx)>& func, int32_t values_count, int32_t values_offset = 0, const char* overlay_text = NULL, const std::optional<float>& scale_min = std::nullopt, const std::optional<float>& scale_max = std::nullopt, ImVec2 graph_size = ImVec2(0, 0));
 
 	bool BeginHoveredTooltip(ImGuiHoveredFlags flags = ImGuiHoveredFlags_None);
@@ -64,6 +66,9 @@ namespace SxImGui {
 
 	template <typename T>
 	bool DragType2(const char* label, T* v, float v_speed = 1.0f, const std::optional<T>& v_min = std::nullopt, const std::optional<T>& v_max = std::nullopt, const char* format = GetImGuiFormat<T>(), ImGuiSliderFlags flags = ImGuiSliderFlags_None);
+
+	template <typename T, int32_t N>
+	bool InputScalarN(const char* label, T* v, const char* format = GetImGuiFormat<T>(), ImGuiInputTextFlags flags = ImGuiInputTextFlags_None);
 
 	void HelpMarker(const char* label, const char* text, bool isSameline = true);
 
@@ -136,6 +141,11 @@ template <typename T>
 bool SxImGui::DragType2(const char* label, T* v, float v_speed, const std::optional<T>& v_min, const std::optional<T>& v_max, const char* format, ImGuiSliderFlags flags) {
 	std::pair<T, T> range = { v_min.value_or(std::numeric_limits<T>::min()), v_max.value_or(std::numeric_limits<T>::max()) };
 	return ImGui::DragScalarN(label, GetImGuiDataType<T>(), v, 2, v_speed, &range.first, &range.second, format, flags);
+}
+
+template<typename T, int32_t N>
+bool SxImGui::InputScalarN(const char* label, T* v, const char* format, ImGuiInputTextFlags flags) {
+	return ImGui::InputScalarN(label, GetImGuiDataType<T>(), v, N, NULL, NULL, format, flags);
 }
 
 template <typename T>
