@@ -275,7 +275,6 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="Engine\Module\GameObject\GameObject.cpp" />
     <ClCompile Include="Engine\Module\Scene\SceneObject.cpp" />
     <ClCompile Include="Engine\Module\Scene\SceneObjects.cpp" />
-    <ClCompile Include="Engine\Preview\Asset\UBaseAsset.cpp" />
     <ClCompile Include="Engine\Render\Core\FRenderCoreTransition.cpp" />
     <ClCompile Include="Engine\Render\FRenderTargetBuffer.cpp" />
     <ClCompile Include="Engine\Render\GBuffer\FDeferredGBuffer.cpp" />
@@ -284,6 +283,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="Engine\System\DirectX\Context\DirectXQueueContext.cpp" />
     <ClCompile Include="Engine\System\DirectX\Context\DirectXWindowContext.cpp" />
     <ClCompile Include="Engine\System\DirectX\DxObject\DxAppendConsumeBuffer.cpp" />
+    <ClCompile Include="Engine\System\DirectX\DxObject\DxResourceTracker.cpp" />
     <ClCompile Include="Engine\System\Window\WindowCollection.cpp" />
     <ClCompile Include="Lib\Adapter\Uuid\Uuid.cpp" />
     <ClCompile Include="Engine\Render\Common\FLUTTexture.cpp" />
@@ -459,7 +459,6 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Engine\Module\GameObject\GameObject.h" />
     <ClInclude Include="Engine\Module\Scene\SceneObject.h" />
     <ClInclude Include="Engine\Module\Scene\SceneObjects.h" />
-    <ClInclude Include="Engine\Preview\Asset\UBaseAsset.h" />
     <ClInclude Include="Engine\Render\Core\FRenderCoreTransition.h" />
     <ClInclude Include="Engine\Render\FRenderTargetBuffer.h" />
     <ClInclude Include="Engine\Render\GBuffer\FDeferredGBuffer.h" />
@@ -469,6 +468,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Engine\System\DirectX\Context\DirectXWindowContext.h" />
     <ClInclude Include="Engine\System\DirectX\DxObject\DxAppendConsumeBuffer.h" />
     <ClInclude Include="Engine\System\DirectX\DxObject\DxReadbackDimensionBuffer.h" />
+    <ClInclude Include="Engine\System\DirectX\DxObject\DxResourceTracker.h" />
     <ClInclude Include="Engine\System\Window\WindowCollection.h" />
     <ClInclude Include="Lib\Adapter\Uuid\Uuid.h" />
     <ClInclude Include="Engine\Render\Common\FLUTTexture.h" />
