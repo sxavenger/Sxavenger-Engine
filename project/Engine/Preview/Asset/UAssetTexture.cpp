@@ -72,6 +72,7 @@ void UAssetTexture::Setup(const DirectXQueueContext* context, const DirectX::Scr
 	context->ExecuteAllAllocators();
 
 	UBaseAsset::Complete();
+	Logger::EngineThreadLog(std::format("[UAssetTexture]: texture setup complete. uuid: {}", UBaseAsset::GetId().Serialize()));
 }
 
 void UAssetTexture::Reset() {

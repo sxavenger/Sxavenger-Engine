@@ -36,12 +36,12 @@ public:
 
 template <TimeUnit _Unit, std::floating_point _Value>
 inline void DeltaTimePoint<_Unit, _Value>::AddDeltaTime() {
-	this->time += SxavengerSystem::GetDeltaTime().time;
+	this->time += static_cast<_Value>(SxavengerSystem::GetDeltaTime().time);
 }
 
 template <TimeUnit _Unit, std::floating_point _Value>
 inline void DeltaTimePoint<_Unit, _Value>::SubtractionDeltaTime() {
-	this->time -= SxavengerSystem::GetDeltaTime().time;
+	this->time -= static_cast<_Value>(SxavengerSystem::GetDeltaTime().time);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -50,3 +50,6 @@ inline void DeltaTimePoint<_Unit, _Value>::SubtractionDeltaTime() {
 
 template <TimeUnit _Unit>
 using DeltaTimePointf = DeltaTimePoint<_Unit, float>;
+
+template <TimeUnit _Unit>
+using DeltaTimePointd = DeltaTimePoint<_Unit, double>;

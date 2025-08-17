@@ -27,7 +27,7 @@ public:
 	// public methods
 	//=========================================================================================
 
-	UBaseContent()          = default;
+	UBaseContent() = default;
 	virtual ~UBaseContent() = default;
 
 	//* async task option *//

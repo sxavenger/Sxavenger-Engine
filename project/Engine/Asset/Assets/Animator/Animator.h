@@ -38,8 +38,8 @@ public:
 	const Animation& GetAnimation(uint32_t index) const { return animations_[index]; }
 	const Animation& GetAnimation(const std::string& name) const;
 
-	const TimePointf<TimeUnit::second> GetDurationTime(uint32_t index) const { return animations_[index].duration; }
-	const TimePointf<TimeUnit::second> GetDurationTime(const std::string& name) const;
+	const TimePointd<TimeUnit::second> GetDurationTime(uint32_t index) const { return animations_[index].duration; }
+	const TimePointd<TimeUnit::second> GetDurationTime(const std::string& name) const;
 
 	const std::vector<Animation>& GetAnimations() const { return animations_; }
 
@@ -58,7 +58,7 @@ private:
 	// private methods
 	//=========================================================================================
 
-	static TimePointf<TimeUnit::second> GetTime(double time, double ticksPerSeconds);
+	static TimePointd<TimeUnit::second> GetTime(double time, double ticksPerSeconds);
 
 	void LoadTransformAnimation(const aiNodeAnim* aiNodeAnimation, Animation& animation, double tickPerSeconds);
 

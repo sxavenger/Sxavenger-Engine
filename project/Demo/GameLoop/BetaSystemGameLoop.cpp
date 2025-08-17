@@ -24,6 +24,8 @@
 
 #include "Engine/Component/Components/Light/Environment/SkyLightComponent.h"
 
+#include "Engine/Preview/Content/UContentStorage.h"
+
 ////////////////////////////////////////////////////////////////////////////////////////////
 // BetaSystemGameLoop class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -111,6 +113,8 @@ void BetaSystemGameLoop::InitSystem() {
 	auto texture = SxavengerAsset::TryImport<AssetTexture>("assets/textures/LUT/lut_reddish.png", Texture::Option{ Texture::Encoding::Intensity, false });
 	auto lut = behaviour_->GetComponent<PostProcessLayerComponent>()->AddPostProcess<PostProcessLUT>();
 	lut->CreateTexture(SxavengerSystem::GetDirectQueueContext(), texture, { 16, 16 });
+
+	sUContentStorage->Import<UContentModel>("Assets/models/tree_sponza2/sponza.gltf");
 }
 
 void BetaSystemGameLoop::TermSystem() {

@@ -282,6 +282,7 @@ void UAssetMaterial::Setup(const aiMaterial* material, const std::filesystem::pa
 	// todo: specularFactorの設定
 
 	UBaseAsset::Complete();
+	Logger::EngineThreadLog(std::format("[UAssetMaterial]: material setup complete. uuid: {}", UBaseAsset::GetId().Serialize()));
 }
 
 void UAssetMaterial::Update() {

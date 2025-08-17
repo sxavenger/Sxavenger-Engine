@@ -27,14 +27,14 @@ public:
 	void End();
 
 	template <TimeUnit _Unit>
-	TimePointf<_Unit> GetDeltaTime() const;
+	TimePointd<_Unit> GetDeltaTime() const;
 
 	template <TimeUnit _Unit>
-	TimePointf<_Unit> GetElapsedTime() const;
+	TimePointd<_Unit> GetElapsedTime() const;
 
 	const std::chrono::steady_clock::time_point& GetReference() const { return reference_; }
 
-	void SetDeltaTime(const TimePointf<TimeUnit::microsecond>& time) { deltaTime_ = time; }
+	void SetDeltaTime(const TimePointd<TimeUnit::microsecond>& time) { deltaTime_ = time; }
 
 protected:
 
@@ -46,7 +46,7 @@ protected:
 
 	std::chrono::steady_clock::time_point reference_;
 
-	TimePointf<TimeUnit::microsecond> deltaTime_;
+	TimePointd<TimeUnit::microsecond> deltaTime_;
 
 };
 
@@ -55,16 +55,16 @@ protected:
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 template <TimeUnit _Unit>
-inline TimePointf<_Unit> RunTimeTracker::GetDeltaTime() const {
+inline TimePointd<_Unit> RunTimeTracker::GetDeltaTime() const {
 	return deltaTime_;
 }
 
-template<TimeUnit _Unit>
-inline TimePointf<_Unit> RunTimeTracker::GetElapsedTime() const {
+template <TimeUnit _Unit>
+inline TimePointd<_Unit> RunTimeTracker::GetElapsedTime() const {
 	auto now = std::chrono::steady_clock::now();
 
 	auto duration = std::chrono::duration_cast<std::chrono::microseconds>(now - reference_);
-	TimePointf<TimeUnit::microsecond> elapsed = { static_cast<float>(duration.count()) };
+	TimePointd<TimeUnit::microsecond> elapsed = { static_cast<double>(duration.count()) };
 
 	return elapsed;
 }

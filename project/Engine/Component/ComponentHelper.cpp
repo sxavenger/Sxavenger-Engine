@@ -101,12 +101,12 @@ std::unique_ptr<MonoBehaviour> ComponentHelper::CreatePointLightMonoBehaviour() 
 	return root;
 }
 
-void ComponentHelper::ApplyAnimation(MonoBehaviour* behaviour, const Animation& animation, TimePointf<TimeUnit::second> time, bool isLoop) {
+void ComponentHelper::ApplyAnimation(MonoBehaviour* behaviour, const Animation& animation, TimePointd<TimeUnit::second> time, bool isLoop) {
 	auto child = behaviour->FindChild(ArmatureComponent::kArmatureName);
 	child->GetComponent<ArmatureComponent>()->UpdateAnimation(animation, time, isLoop);
 }
 
-void ComponentHelper::ApplyAnimationTransition(MonoBehaviour* behaviour, const Animation& animationA, TimePointf<TimeUnit::second> timeA, bool isLoopA, const Animation& animationB, TimePointf<TimeUnit::second> timeB, bool isLoopB, float transitionT) {
+void ComponentHelper::ApplyAnimationTransition(MonoBehaviour* behaviour, const Animation& animationA, TimePointd<TimeUnit::second> timeA, bool isLoopA, const Animation& animationB, TimePointd<TimeUnit::second> timeB, bool isLoopB, float transitionT) {
 	auto child = behaviour->FindChild(ArmatureComponent::kArmatureName);
 	child->GetComponent<ArmatureComponent>()->TransitionAnimation(animationA, timeA, isLoopA, animationB, timeB, isLoopB, transitionT);
 }

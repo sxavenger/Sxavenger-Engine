@@ -198,7 +198,7 @@ void Player::UpdateArmature() {
 
 		animationTransitionTime_.AddDeltaTime();
 
-		float t = animationTransitionTime_.time / 0.5f;
+		float t = static_cast<float>(animationTransitionTime_.time / 0.5);
 		t = std::clamp(t, 0.0f, 1.0f);
 
 		const auto& animatorB = animators_[static_cast<uint8_t>((*preAnimationState_).type)].WaitGet()->GetAnimation(0);

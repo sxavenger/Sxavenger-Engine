@@ -134,7 +134,7 @@ void SxavengerSystem::EndPerformace() {
 	sPerformance->End();
 }
 
-TimePointf<TimeUnit::second> SxavengerSystem::GetDeltaTime() {
+TimePointd<TimeUnit::second> SxavengerSystem::GetDeltaTime() {
 	return sPerformance->GetDeltaTime();
 }
 

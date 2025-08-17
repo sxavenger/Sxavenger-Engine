@@ -16,7 +16,7 @@ void Skeleton::Create(const BornNode& node) {
 	UpdateMatrix();
 }
 
-void Skeleton::Update(const Animation& animation, TimePointf<TimeUnit::second> time, bool isLoop) {
+void Skeleton::Update(const Animation& animation, TimePointd<TimeUnit::second> time, bool isLoop) {
 	if (isLoop) {
 		time = Mod(time, animation.duration);
 	}
@@ -26,8 +26,8 @@ void Skeleton::Update(const Animation& animation, TimePointf<TimeUnit::second> t
 }
 
 void Skeleton::TransitionAnimation(
-	const Animation& animationA, TimePointf<TimeUnit::second> timeA, bool isLoopA,
-	const Animation& animationB, TimePointf<TimeUnit::second> timeB, bool isLoopB,
+	const Animation& animationA, TimePointd<TimeUnit::second> timeA, bool isLoopA,
+	const Animation& animationB, TimePointd<TimeUnit::second> timeB, bool isLoopB,
 	float t) {
 
 	if (isLoopA) {
@@ -74,7 +74,7 @@ uint32_t Skeleton::CreateJoint(const BornNode& node, const std::optional<uint32_
 	return joint.index;
 }
 
-std::optional<QuaternionTransform> Skeleton::GetTransform(const std::string& jointName, const Animation& animation, TimePointf<TimeUnit::second> time) {
+std::optional<QuaternionTransform> Skeleton::GetTransform(const std::string& jointName, const Animation& animation, TimePointd<TimeUnit::second> time) {
 
 	// 対象のJointのAnimationがあれば, 値の適応
 	if (auto it = animation.nodeAnimations.find(jointName); it != animation.nodeAnimations.end()) { //!< animationに対象のJointがある場
@@ -93,7 +93,7 @@ std::optional<QuaternionTransform> Skeleton::GetTransform(const std::string& joi
 	return std::nullopt;
 }
 
-void Skeleton::ApplyAnimation(const Animation& animation, TimePointf<TimeUnit::second> time) {
+void Skeleton::ApplyAnimation(const Animation& animation, TimePointd<TimeUnit::second> time) {
 
 	for (auto& joint : joints) {
 
@@ -107,8 +107,8 @@ void Skeleton::ApplyAnimation(const Animation& animation, TimePointf<TimeUnit::s
 }
 
 void Skeleton::ApplyTransitionAnimation(
-	const Animation& animationA, TimePointf<TimeUnit::second> timeA,
-	const Animation& animationB, TimePointf<TimeUnit::second> timeB,
+	const Animation& animationA, TimePointd<TimeUnit::second> timeA,
+	const Animation& animationB, TimePointd<TimeUnit::second> timeB,
 	float t) {
 
 	for (auto& joint : joints) {

@@ -16,9 +16,6 @@
 void UContentModel::AsyncLoad(_MAYBE_UNUSED const DirectXQueueContext* context) {
 	UBaseContent::CheckExist();
 
-	// idを取得
-	GetUuid();
-
 	uint32_t option
 		= aiProcess_FlipWindingOrder
 		| aiProcess_FlipUVs

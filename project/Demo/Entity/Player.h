@@ -59,7 +59,7 @@ private:
 	////////////////////////////////////////////////////////////////////////////////////////////
 	struct AnimationState {
 		AnimationType                     type;
-		DeltaTimePointf<TimeUnit::second> time;
+		DeltaTimePointd<TimeUnit::second> time;
 	};
 
 private:
@@ -93,7 +93,7 @@ private:
 	AnimationState                animationState_;
 	std::optional<AnimationState> preAnimationState_;
 
-	DeltaTimePointf<TimeUnit::second> animationTransitionTime_;
+	DeltaTimePointd<TimeUnit::second> animationTransitionTime_;
 
 	//* camera *//
 

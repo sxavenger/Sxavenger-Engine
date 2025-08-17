@@ -6,6 +6,9 @@
 //* uasset
 #include "UBaseAsset.h"
 
+//* engine
+#include <Engine/Content/Animation/Animation.h>
+
 //* lib
 #include <Lib/Adapter/Uuid/Uuid.h>
 
@@ -35,5 +38,15 @@ private:
 	//=========================================================================================
 	// private variables
 	//=========================================================================================
+
+	Animation animation_;
+
+	//=========================================================================================
+	// private methods
+	//=========================================================================================
+
+	static TimePointd<TimeUnit::second> GetTime(double time, double ticksPerSeconds);
+
+	void LoadTransformAnimation(const aiNodeAnim* aiNodeAnimation, double tickPerSeconds);
 
 };

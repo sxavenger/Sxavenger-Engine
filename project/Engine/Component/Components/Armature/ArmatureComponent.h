@@ -28,11 +28,11 @@ public:
 
 	void SetSkeleton(const Skeleton& skeleton) { skeleton_ = skeleton; }
 
-	void UpdateAnimation(const Animation& animation, TimePointf<TimeUnit::second> time, bool isLoop = true);
+	void UpdateAnimation(const Animation& animation, TimePointd<TimeUnit::second> time, bool isLoop = true);
 
 	void TransitionAnimation(
-		const Animation& animationA, TimePointf<TimeUnit::second> timeA, bool isLoopA,
-		const Animation& animationB, TimePointf<TimeUnit::second> timeB, bool isLoopB,
+		const Animation& animationA, TimePointd<TimeUnit::second> timeA, bool isLoopA,
+		const Animation& animationB, TimePointd<TimeUnit::second> timeB, bool isLoopB,
 		float t
 	);
 

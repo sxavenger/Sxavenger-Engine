@@ -27,7 +27,7 @@ const Skeleton& ArmatureComponent::GetSkeleton() const {
 	return skeleton_.value();
 }
 
-void ArmatureComponent::UpdateAnimation(const Animation& animation, TimePointf<TimeUnit::second> time, bool isLoop) {
+void ArmatureComponent::UpdateAnimation(const Animation& animation, TimePointd<TimeUnit::second> time, bool isLoop) {
 	if (!skeleton_.has_value()) {
 		Logger::WarningRuntime("warning | [ArmatureComponent] UpdateAnimation", "skeleton is not set.");
 		return;
@@ -37,8 +37,8 @@ void ArmatureComponent::UpdateAnimation(const Animation& animation, TimePointf<T
 }
 
 void ArmatureComponent::TransitionAnimation(
-	const Animation& animationA, TimePointf<TimeUnit::second> timeA, bool isLoopA,
-	const Animation& animationB, TimePointf<TimeUnit::second> timeB, bool isLoopB,
+	const Animation& animationA, TimePointd<TimeUnit::second> timeA, bool isLoopA,
+	const Animation& animationB, TimePointd<TimeUnit::second> timeB, bool isLoopB,
 	float t) {
 
 	if (!skeleton_.has_value()) {

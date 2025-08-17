@@ -49,13 +49,13 @@ public:
 
 	static void ApplyAnimation(
 		MonoBehaviour* behaviour,
-		const Animation& animation, TimePointf<TimeUnit::second> time, bool isLoop = true
+		const Animation& animation, TimePointd<TimeUnit::second> time, bool isLoop = true
 	);
 
 	static void ApplyAnimationTransition(
 		MonoBehaviour* behaviour,
-		const Animation& animationA, TimePointf<TimeUnit::second> timeA, bool isLoopA,
-		const Animation& animationB, TimePointf<TimeUnit::second> timeB, bool isLoopB,
+		const Animation& animationA, TimePointd<TimeUnit::second> timeA, bool isLoopA,
+		const Animation& animationB, TimePointd<TimeUnit::second> timeB, bool isLoopB,
 		float transitionT
 	);
 

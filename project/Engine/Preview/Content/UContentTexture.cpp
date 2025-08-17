@@ -16,9 +16,6 @@
 void UContentTexture::AsyncLoad(_MAYBE_UNUSED const DirectXQueueContext* context) {
 	UBaseContent::CheckExist();
 
-	// idを取得
-	GetUuid();
-
 	Option option = {}; //!< default option
 
 	if (param_.has_value()) {
@@ -29,6 +26,9 @@ void UContentTexture::AsyncLoad(_MAYBE_UNUSED const DirectXQueueContext* context
 }
 
 void UContentTexture::Load(const DirectXQueueContext* context, const std::filesystem::path& filepath, const Option& option) {
+	// idを取得
+	GetUuid();
+
 	// imageの読み込み
 	DirectX::ScratchImage image = LoadTexture(filepath, option);
 

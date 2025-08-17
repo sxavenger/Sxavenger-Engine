@@ -16,9 +16,6 @@
 void UContentAnimation::AsyncLoad(_MAYBE_UNUSED const DirectXQueueContext* context) {
 	UBaseContent::CheckExist();
 
-	// idを取得
-	GetUuid();
-
 	uint32_t option = 0; //!< default option
 
 	if (param_.has_value()) {
