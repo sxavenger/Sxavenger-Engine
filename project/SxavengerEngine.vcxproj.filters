@@ -183,6 +183,16 @@
     <ClCompile Include="Engine\System\DirectX\DxObject\DxAppendConsumeBuffer.cpp" />
     <ClCompile Include="Engine\Component\Components\Collider\CollisionHelper.cpp" />
     <ClCompile Include="Engine\System\DirectX\DxObject\DxResourceTracker.cpp" />
+    <ClCompile Include="Engine\Preview\Asset\UAssetAnimation.cpp" />
+    <ClCompile Include="Engine\Preview\Asset\UAssetMaterial.cpp" />
+    <ClCompile Include="Engine\Preview\Asset\UAssetMesh.cpp" />
+    <ClCompile Include="Engine\Preview\Asset\UAssetStorage.cpp" />
+    <ClCompile Include="Engine\Preview\Asset\UAssetTexture.cpp" />
+    <ClCompile Include="Engine\Preview\Content\UBaseContent.cpp" />
+    <ClCompile Include="Engine\Preview\Content\UContentAnimation.cpp" />
+    <ClCompile Include="Engine\Preview\Content\UContentModel.cpp" />
+    <ClCompile Include="Engine\Preview\Content\UContentStorage.cpp" />
+    <ClCompile Include="Engine\Preview\Content\UContentTexture.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Lib\Adapter\Random\Random.h" />
@@ -391,6 +401,17 @@
     <ClInclude Include="Engine\Component\Components\MeshRenderer\MeshRendererCommon.h" />
     <ClInclude Include="Engine\Component\Components\Collider\CollisionHelper.h" />
     <ClInclude Include="Engine\System\DirectX\DxObject\DxResourceTracker.h" />
+    <ClInclude Include="Engine\Preview\Asset\UAssetAnimation.h" />
+    <ClInclude Include="Engine\Preview\Asset\UAssetMaterial.h" />
+    <ClInclude Include="Engine\Preview\Asset\UAssetMesh.h" />
+    <ClInclude Include="Engine\Preview\Asset\UAssetStorage.h" />
+    <ClInclude Include="Engine\Preview\Asset\UAssetTexture.h" />
+    <ClInclude Include="Engine\Preview\Asset\UBaseAsset.h" />
+    <ClInclude Include="Engine\Preview\Content\UBaseContent.h" />
+    <ClInclude Include="Engine\Preview\Content\UContentAnimation.h" />
+    <ClInclude Include="Engine\Preview\Content\UContentModel.h" />
+    <ClInclude Include="Engine\Preview\Content\UContentStorage.h" />
+    <ClInclude Include="Engine\Preview\Content\UContentTexture.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

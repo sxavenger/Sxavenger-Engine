@@ -75,7 +75,6 @@ void AssetTexture::ShowInspector() {
 const DxObject::Descriptor& AssetTexture::GetDescriptorSRV() const {
 	if (!BaseAsset::IsComplete()) { //!< loadが完了していない場合
 		return SxavengerContent::GetDescriptorSRV("checkerboard");
-		// todo: ロード中のtextureを変更
 	}
 
 	return texture_.GetDescriptorSRV();

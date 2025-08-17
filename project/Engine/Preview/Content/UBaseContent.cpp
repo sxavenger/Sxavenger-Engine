@@ -1,4 +1,4 @@
-#include "BaseAsset.h"
+#include "UBaseContent.h"
 
 //-----------------------------------------------------------------------------------------
 // include
@@ -11,36 +11,43 @@
 #include <imgui.h>
 #include <magic_enum.hpp>
 
-//* c++
-#include <thread>
-
 ////////////////////////////////////////////////////////////////////////////////////////////
-// BaseAsset class methods
+// UBaseContent class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-void BaseAsset::Execute(const AsyncThread* thread) {
-	Load(thread->GetContext());
+void UBaseContent::Execute(const AsyncThread* thread) {
+	AsyncLoad(thread->GetContext());
 }
 
-void BaseAsset::WaitComplete() const {
+void UBaseContent::WaitComplete() const {
 	while (!IsComplete()) {
 		std::this_thread::sleep_for(std::chrono::milliseconds(1));
-		Logger::LogRuntime("waiting for asset to complete loading...", "filepath: " + filepath_.generic_string(), SxavengerLogger::Category::Comment);
+		Logger::LogRuntime("waiting for content to complete loading...", "filepath: " + filepath_.generic_string(), SxavengerLogger::Category::Comment);
 	}
 }
 
-void BaseAsset::SetFilepath(const std::filesystem::path& filepath) {
+void UBaseContent::SetFilepath(const std::filesystem::path& filepath) {
 	filepath_ = filepath;
-	SetTag(filepath.generic_string());
+	AsyncTask::SetTag(filepath.generic_string());
 }
 
-const std::filesystem::path& BaseAsset::GetFilepath() const {
+const std::filesystem::path& UBaseContent::GetFilepath() const {
 	Exception::Assert(!filepath_.empty(), "asset filepath is empty.");
 	return filepath_;
 }
 
-void BaseAsset::ShowInspector() {
+void UBaseContent::ShowInspector() {
 	ImGui::SeparatorText(filepath_.filename().generic_string().c_str());
 	ImGui::Text("status: %s", magic_enum::enum_name(GetStatus()).data());
 	ImGui::Separator();
+}
+
+void UBaseContent::CheckExist() const {
+	Exception::Assert(std::filesystem::exists(GetFilepath()), "File does not exist: " + GetFilepath().generic_string());
+}
+
+std::filesystem::path UBaseContent::GetContentPath() const {
+	std::filesystem::path filepath = GetFilepath();
+	filepath += ".ucontent";
+	return filepath;
 }

@@ -10,18 +10,16 @@
 #include <Engine/Editor/Editors/InspectorEditor.h>
 
 //* lib
-#include <Lib/CXXAttributeConfig.h>
+#include <Lib/Adapter/Uuid/Uuid.h>
 
 //* c++
 #include <filesystem>
-#include <concepts>
-#include <optional>
 #include <any>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// BaseAsset class
+// UBaseContent class
 ////////////////////////////////////////////////////////////////////////////////////////////
-class BaseAsset
+class UBaseContent
 	: public BaseInspector, public AsyncTask {
 public:
 
@@ -29,20 +27,16 @@ public:
 	// public methods
 	//=========================================================================================
 
-	BaseAsset()          = default;
-	virtual ~BaseAsset() = default;
+	UBaseContent()          = default;
+	virtual ~UBaseContent() = default;
 
 	//* async task option *//
 
-	virtual void Load(_MAYBE_UNUSED const DirectXQueueContext* context) = 0;
+	virtual void AsyncLoad(_MAYBE_UNUSED const DirectXQueueContext* context) = 0;
 
 	virtual AsyncExecution GetAsyncExecution() const = 0;
 
 	void Execute(const AsyncThread* thread) override;
-
-	//* file option *//
-
-	virtual void ApplyParam() {}
 
 	//* state option *//
 
@@ -70,10 +64,18 @@ protected:
 	// protected variables
 	//=========================================================================================
 
-	//* parameter *//
+	std::filesystem::path filepath_; //!< content filepath.
+	std::any param_;                 //!< content parameter.
 
-	std::filesystem::path filepath_;
-	std::any param_;
+	//=========================================================================================
+	// protected methods
+	//=========================================================================================
+
+	//* helper method *//
+
+	void CheckExist() const;
+
+	std::filesystem::path GetContentPath() const;
 
 };
 
@@ -81,4 +83,4 @@ protected:
 // concept
 ////////////////////////////////////////////////////////////////////////////////////////////
 template <class T>
-concept BaseAssetConcept = std::derived_from<T, BaseAsset>;
+concept UContentConcept = std::derived_from<T, UBaseContent> && !std::is_same_v<T, UBaseContent>;
