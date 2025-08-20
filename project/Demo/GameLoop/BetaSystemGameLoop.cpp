@@ -110,6 +110,7 @@ void BetaSystemGameLoop::InitSystem() {
 	auto lut = behaviour_->GetComponent<PostProcessLayerComponent>()->AddPostProcess<PostProcessLUT>();
 	lut->CreateTexture(SxavengerSystem::GetDirectQueueContext(), texture, { 16, 16 });
 
+	mesh_ = ComponentHelper::CreateStaticMeshBehaviour(sUContentStorage->Import<UContentModel>("assets/models/PBR_Sphere_Test/model/PBR_Sphere.gltf"));
 }
 
 void BetaSystemGameLoop::TermSystem() {

@@ -50,11 +50,11 @@ public:
 
 	//* getter *//
 
-	const InputMesh& GetInputMesh() const { return input_; }
-	InputMesh& GetInputMesh() { return input_; }
+	const InputMesh& GetInputMesh() const;
+	InputMesh& GetInputMesh();
 
-	const InputMesh::InputVertex* GetInputVertex() const { return input_.GetVertex(); }
-	const InputMesh::InputIndex* GetInputIndex() const { return input_.GetIndex(); }
+	const InputMesh::InputVertex* GetInputVertex() const { return GetInputMesh().GetVertex(); }
+	const InputMesh::InputIndex* GetInputIndex() const { return GetInputMesh().GetIndex(); }
 
 	const std::unordered_map<std::string, JointWeightData>& GetJointWeights() const { return jointWeights_; }
 

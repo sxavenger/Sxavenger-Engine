@@ -56,6 +56,7 @@ private:
 	//std::unique_ptr<LeadParticle> leadParticle_;
 
 	std::unique_ptr<MonoBehaviour> behaviour_;
+	std::unique_ptr<MonoBehaviour> mesh_;
 
 	//=========================================================================================
 	// private methods

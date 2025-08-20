@@ -9,6 +9,7 @@
 //* c++
 #include <concepts>
 #include <optional>
+#include <thread>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // UBaseAsset class
@@ -53,6 +54,12 @@ protected:
 	//=========================================================================================
 
 	void Complete() { status_ = Status::Complete; }
+
+	void WaitComplete() const {
+		while (!IsComplete()) {
+			std::this_thread::sleep_for(std::chrono::milliseconds(1)); //!< 完了を待つ
+		}
+	}
 
 private:
 

@@ -131,6 +131,8 @@ void ComponentHelper::CreateStaticMeshBehaviour(MonoBehaviour* root, const std::
 }
 
 std::unique_ptr<MonoBehaviour> ComponentHelper::CreateStaticMeshBehaviour(const std::shared_ptr<UContentModel>& model) {
+	model->WaitComplete();
+
 	auto root = std::make_unique<MonoBehaviour>();
 	root->SetName(model->GetFilepath().stem().string());
 
@@ -140,6 +142,8 @@ std::unique_ptr<MonoBehaviour> ComponentHelper::CreateStaticMeshBehaviour(const 
 }
 
 void ComponentHelper::CreateSkinnedMeshBehaviour(MonoBehaviour* root, const std::shared_ptr<UContentModel>& model) {
+	model->WaitComplete();
+
 	{ //!< ArmatureComponent
 		auto armature = std::make_unique<MonoBehaviour>();
 		armature->SetName(ArmatureComponent::kArmatureName);
@@ -172,6 +176,8 @@ void ComponentHelper::CreateSkinnedMeshBehaviour(MonoBehaviour* root, const std:
 }
 
 std::unique_ptr<MonoBehaviour> ComponentHelper::CreateSkinnedMeshBehaviour(const std::shared_ptr<UContentModel>& model) {
+	model->WaitComplete();
+
 	auto root = std::make_unique<MonoBehaviour>();
 	root->SetName(model->GetFilepath().stem().string());
 

@@ -108,6 +108,16 @@ void UAssetMesh::DrawCall(const DirectXQueueContext* context, UINT instanceCount
 	input_.DrawCall(context, instanceCount);
 }
 
+const InputMesh& UAssetMesh::GetInputMesh() const {
+	UBaseAsset::WaitComplete();
+	return input_;
+}
+
+InputMesh& UAssetMesh::GetInputMesh() {
+	UBaseAsset::WaitComplete();
+	return input_;
+}
+
 Vector3f UAssetMesh::ConvertNormal(const aiVector3D& aiVector) {
 	return { aiVector.x, aiVector.y, -aiVector.z }; //!< 左手座標系に変換
 }

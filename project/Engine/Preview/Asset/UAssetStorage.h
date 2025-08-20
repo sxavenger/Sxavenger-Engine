@@ -40,6 +40,8 @@ public:
 	// public methods
 	//=========================================================================================
 
+	void Term() { storage_.clear(); }
+
 	//* storage option *//
 
 	template <UAssetConcept T>
