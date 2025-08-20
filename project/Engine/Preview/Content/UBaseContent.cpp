@@ -22,7 +22,7 @@ void UBaseContent::Execute(const AsyncThread* thread) {
 void UBaseContent::WaitComplete() const {
 	while (!IsComplete()) {
 		std::this_thread::sleep_for(std::chrono::milliseconds(1));
-		Logger::LogRuntime("waiting for content to complete loading...", "filepath: " + filepath_.generic_string(), SxavengerLogger::Category::Comment);
+		Logger::LogRuntime("[UBaseContent]: waiting for content to complete loading...", "filepath: " + filepath_.generic_string(), SxavengerLogger::Category::Comment);
 	}
 }
 

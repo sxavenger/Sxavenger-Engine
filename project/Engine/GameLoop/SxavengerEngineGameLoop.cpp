@@ -31,6 +31,8 @@ void SxavengerEngineGameLoop::Init(GameLoop::Context* context) {
 	context->SetProcess(GameLoop::Process::Term, std::nullopt, [this]() {
 		FMainRender::GetInstance()->Term();
 		FRenderCore::GetInstance()->Term();
+
+		SxavengerSystem::ShutdownAsyncThread();
 	});
 
 	context->SetProcess(GameLoop::Process::Begin, 0, [this]() {
@@ -67,8 +69,6 @@ void SxavengerEngineGameLoop::Init(GameLoop::Context* context) {
 }
 
 void SxavengerEngineGameLoop::Term() {
-	SxavengerSystem::ShutdownAsyncThread();
-
 	sUAssetStorage->Term();
 	sUContentStorage->Term();
 	SxavengerContent::Term();
