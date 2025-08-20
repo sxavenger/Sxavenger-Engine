@@ -19,10 +19,11 @@
 
 //* component
 #include "../../Component/CameraComponent.hlsli"
+#include "../../Component/TransformComponent.hlsli"
 #include "../../Component/LightComponentCommon.hlsli"
 #include "../../Component/DirectionalLightComponent.hlsli"
 #include "../../Component/PointLightComponent.hlsli"
-#include "../../Component/TransformComponent.hlsli"
+#include "../../Component/SkyLightComponent.hlsli"
 
 //=========================================================================================
 // global buffers
@@ -90,8 +91,8 @@ StructuredBuffer<PointLightComponent> gPointLights         : register(t5, space2
 StructuredBuffer<InlineShadow> gPointLightShadows          : register(t6, space2);
 
 // Sky Light
-TextureCube<float4> gSkyLight : register(t7, space2);
-SamplerState gSkySampler      : register(s0, space2);
+ConstantBuffer<SkyLightComponent> gSkyLight : register(b4, space2);
+SamplerState gSkySampler                    : register(s0, space2);
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Config variables

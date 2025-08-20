@@ -40,9 +40,15 @@ public:
 
 	AsyncExecution GetAsyncExecution() const { return AsyncExecution::None; }
 
+	void AttachUuid() override;
+
 	//* content option *//
 
 	void Load(const std::filesystem::path& filepath, uint32_t assimpOption);
+
+	//* getter *//
+
+	const Uuid& GetAnimation(size_t index) const { return animations_[index]; }
 
 private:
 
@@ -60,6 +66,6 @@ private:
 
 	void GetUuid();
 
-	void LoadAnimations(const aiScene* aiScene, const std::filesystem::path& filepath);
+	void LoadAnimations(const aiScene* aiScene);
 
 };

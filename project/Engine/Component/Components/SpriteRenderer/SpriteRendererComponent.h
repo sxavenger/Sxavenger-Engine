@@ -9,8 +9,8 @@
 //* engine
 #include <Engine/System/DirectX/DxObject/DxDimensionBuffer.h>
 #include <Engine/Content/InputAssembler/TriangleInputAssembler.h>
-#include <Engine/Asset/Observer/AssetObserver.h>
-#include <Engine/Asset/Assets/Texture/AssetTexture.h>
+#include <Engine/Preview/Asset/UAssetTexture.h>
+#include <Engine/Preview/Asset/UAssetParameter.h>
 
 //* lib
 #include <Lib/Geometry/Color4.h>
@@ -31,7 +31,7 @@ public:
 	////////////////////////////////////////////////////////////////////////////////////////////
 	// using
 	////////////////////////////////////////////////////////////////////////////////////////////
-	using Texture = std::variant<D3D12_GPU_DESCRIPTOR_HANDLE, AssetObserver<AssetTexture>>;
+	using Texture = std::variant<D3D12_GPU_DESCRIPTOR_HANDLE, UAssetParameter<UAssetTexture>>;
 
 	////////////////////////////////////////////////////////////////////////////////////////////
 	// Transformation2d structure
@@ -81,7 +81,7 @@ public:
 	struct GetDescriptorVisitor {
 	public:
 		const D3D12_GPU_DESCRIPTOR_HANDLE& operator()(const D3D12_GPU_DESCRIPTOR_HANDLE& handle);
-		const D3D12_GPU_DESCRIPTOR_HANDLE& operator()(const AssetObserver<AssetTexture>& observer);
+		const D3D12_GPU_DESCRIPTOR_HANDLE& operator()(const UAssetParameter<UAssetTexture>& parameter);
 	};
 
 public:
@@ -100,7 +100,7 @@ public:
 	//* sprite option *//
 
 	void SetTexture(const D3D12_GPU_DESCRIPTOR_HANDLE& handle) { texture_ = handle; }
-	void SetTexture(const AssetObserver<AssetTexture>& observer) { texture_ = observer; }
+	void SetTexture(const UAssetParameter<UAssetTexture>& parameter) { texture_ = parameter; }
 
 	void SetPosition(const Vector2f& position);
 	void SetRotate(float rotate);

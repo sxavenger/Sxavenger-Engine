@@ -14,10 +14,14 @@
 //* engine
 #include <Engine/System/DirectX/DxObject/DxUnorderedDimensionBuffer.h>
 #include <Engine/System/DirectX/DxObject/DxBindBuffer.h>
-#include <Engine/System/DirectX/DxrObject/DxrAccelerationStructure.h>
 #include <Engine/Content/Animation/SkinCluster.h>
-#include <Engine/Content/InputGeometry/InputMesh.h>
-#include <Engine/Asset/Assets/Model/Model.h>
+#include <Engine/Preview/Asset/UAssetMesh.h>
+#include <Engine/Preview/Asset/UAssetMaterial.h>
+#include <Engine/Preview/Asset/UAssetParameter.h>
+
+//* lib
+#include <Lib/Sxl/Flag.h>
+#include <Lib/Adapter/Uuid/Uuid.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // SkinnedMeshRendererComponent class
@@ -32,11 +36,19 @@ public:
 	struct InputSkinnedMesh {
 	public:
 
+		////////////////////////////////////////////////////////////////////////////////////////////
+		// using
+		////////////////////////////////////////////////////////////////////////////////////////////
+
+		using InputUnorderedVertex = DxObject::VertexUnorderedDimensionBuffer<MeshVertexData>;
+
+	public:
+
 		//=========================================================================================
 		// public methods
 		//=========================================================================================
 
-		void Create(const DirectXQueueContext* context, const Model::AssimpMesh* mesh);
+		void Create(const DirectXQueueContext* context, const std::shared_ptr<UAssetMesh>& mesh);
 
 		void UpdateBottomLevelAS(const DirectXQueueContext* context);
 
@@ -48,7 +60,7 @@ public:
 
 		//* input mesh vertex *//
 
-		std::unique_ptr<DxObject::VertexUnorderedDimensionBuffer<MeshVertexData>> vertex;
+		std::unique_ptr<InputUnorderedVertex> vertex;
 		//std::unique_ptr<> index;
 
 	private:
@@ -69,9 +81,9 @@ public:
 		// private methods
 		//=========================================================================================
 
-		void CreateVetex(const Model::AssimpMesh* mesh);
+		void CreateVetex(const std::shared_ptr<UAssetMesh>& mesh);
 
-		void CreateBottomLevelAS(const DirectXQueueContext* context, const Model::AssimpMesh* mesh);
+		void CreateBottomLevelAS(const DirectXQueueContext* context, const std::shared_ptr<UAssetMesh>& mesh);
 
 	};
 
@@ -85,11 +97,14 @@ public:
 	SkinnedMeshRendererComponent(MonoBehaviour* behaviour) : BaseComponent(behaviour) {}
 	~SkinnedMeshRendererComponent() override = default;
 
-	void CreateMesh(const Model::AssimpMesh* mesh);
+	void CreateMesh(const Uuid& referenceMesh);
+	void CreateMesh(const std::shared_ptr<UAssetMesh>& referenceMesh);
 
-	void SetMaterial(const Material* material) { material_ = material; }
+	void SetMaterial(const Uuid& material) { material_ = material; }
 
 	void Skinning();
+
+	void Update(const DirectXQueueContext* context);
 
 	//* option *//
 
@@ -99,12 +114,12 @@ public:
 
 	//* getter *//
 
-	const Material* GetMaterial() const { return material_; }
+	std::shared_ptr<UAssetMaterial> GetMaterial() const;
 
-	const Model::AssimpMesh* GetReferenceMesh() const { return referenceMesh_; }
+	const InputSkinnedMesh::InputUnorderedVertex* GetInputVertex() const { return mesh_.vertex.get(); }
+	const InputMesh::InputIndex* GetInputIndex() const { return referenceMesh_.Require()->GetInputIndex(); }
 
-	const InputSkinnedMesh& GetMesh() const { return mesh_; }
-	InputSkinnedMesh& GetMesh() { return mesh_; }
+	const DxrObject::BottomLevelAS* GetBottomLevelAS() const { return mesh_.GetBottomLevelAS(); }
 
 	const TransformComponent* GetTransform() const;
 
@@ -118,9 +133,8 @@ private:
 
 	//* reference *//
 
-	const Model::AssimpMesh* referenceMesh_;
-
-	const Material* material_; //!< materialのkeyを持たせてそれを設定させる...?
+	UAssetParameter<UAssetMesh> referenceMesh_;
+	UAssetParameter<UAssetMaterial> material_;
 
 	InputSkinnedMesh mesh_;
 	SkinCluster cluster_;

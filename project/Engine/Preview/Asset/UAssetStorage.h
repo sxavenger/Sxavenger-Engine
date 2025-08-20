@@ -9,6 +9,7 @@
 #include "UAssetMesh.h"
 #include "UAssetMaterial.h"
 #include "UAssetAnimation.h"
+#include "UAssetSkeleton.h"
 
 //* lib
 #include <Lib/Adapter/Uuid/Uuid.h>
@@ -17,6 +18,7 @@
 #include <unordered_map>
 #include <memory>
 #include <typeinfo>
+#include <functional>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // UAssetStorage class
@@ -45,6 +47,9 @@ public:
 
 	template <UAssetConcept T>
 	std::shared_ptr<T> GetAsset(const Uuid& id) const;
+
+	template <UAssetConcept T>
+	void ForEach(const std::function<void(T* const)>& function) const;
 
 	//* table option *//
 
@@ -81,6 +86,11 @@ private:
 		return storage_.contains(type) && storage_.at(type).contains(id);
 	}
 
+	template <UAssetConcept T>
+	static std::shared_ptr<T> Cast(const std::shared_ptr<UBaseAsset>& asset) {
+		return std::static_pointer_cast<T>(asset);
+	}
+
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -103,8 +113,26 @@ inline std::shared_ptr<T> UAssetStorage::GetAsset(const Uuid& id) const {
 	if (!Contains(type, id)) {
 		return nullptr; //!< Assetが存在しない場合はnullptrを返す
 	}
+	// todo: ここをwaitにさせる...?
 
-	return std::static_pointer_cast<T>(storage_.at(type).at(id)); //!< Assetを取得
+	return UAssetStorage::Cast<T>(storage_.at(type).at(id)); //!< Assetを取得
+}
+
+template <UAssetConcept T>
+void UAssetStorage::ForEach(const std::function<void(T* const)>& function) const {
+	constexpr const std::type_info* type = &typeid(T);
+
+	if (!storage_.contains(type)) {
+		return; //!< Assetが存在しない場合は何もしない
+	}
+
+	for (const auto& [id, asset] : storage_.at(type)) {
+		if (!asset->IsComplete()) {
+			continue; //!< Assetが未完了の場合はスキップ
+		}
+
+		function(UAssetStorage::Cast<T>(asset).get());
+	}
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////

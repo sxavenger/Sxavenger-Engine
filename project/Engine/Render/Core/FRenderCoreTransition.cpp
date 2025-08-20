@@ -44,7 +44,7 @@ void FRenderCoreTransition::CreatePresent() {
 void FRenderCoreTransition::CreateTransition(Transition transition, const std::filesystem::path& filepath) {
 	auto& pipeline = transitions_[static_cast<size_t>(transition)];
 	pipeline = std::make_unique<CustomReflectionComputePipeline>();
-	pipeline->CreateAsset(filepath);
+	pipeline->CreateContent(filepath);
 	pipeline->RegisterBlob();
 	pipeline->ReflectionPipeline(SxavengerSystem::GetDxDevice());
 }

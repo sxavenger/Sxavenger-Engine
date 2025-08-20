@@ -59,6 +59,8 @@ public:
 
 	AsyncExecution GetAsyncExecution() const { return AsyncExecution::Compute; }
 
+	void AttachUuid() override;
+
 	//* content option *//
 
 	void Load(const DirectXQueueContext* context, const std::filesystem::path& filepath, const Option& option);

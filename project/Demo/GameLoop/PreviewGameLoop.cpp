@@ -6,7 +6,6 @@ _DXOBJECT_USING
 //-----------------------------------------------------------------------------------------
 //* engine
 #include <Engine/System/SxavengerSystem.h>
-#include <Engine/Asset/SxavengerAsset.h>
 #include <Engine/Component/Components/Camera/CameraComponent.h>
 #include <Engine/Component/Components/Light/Punctual/PointLightComponent.h>
 #include <Engine/Component/ComponentHelper.h>
@@ -48,7 +47,7 @@ void PreviewGameLoop::InitGame() {
 
 	texture_.Create({ 16, 16 });
 
-	pipeline_.CreateAsset("assets/shaders/test.cs.hlsl");
+	pipeline_.CreateContent("assets/shaders/test.cs.hlsl");
 	pipeline_.RegisterBlob();
 	pipeline_.ReflectionPipeline(SxavengerSystem::GetDxDevice());
 }

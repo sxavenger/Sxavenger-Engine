@@ -25,13 +25,17 @@ void UContentAnimation::AsyncLoad(_MAYBE_UNUSED const DirectXQueueContext* conte
 	Load(UBaseContent::GetFilepath(), option);
 }
 
-void UContentAnimation::Load(const std::filesystem::path& filepath, uint32_t assimpOption) {
+void UContentAnimation::AttachUuid() {
+	UBaseContent::CheckExist();
 
 	// sceneの取得
-	Assimp::Importer importer; //!< scene保存するため保管
-	const aiScene* aiScene = importer.ReadFile(filepath.generic_string().c_str(), assimpOption);
+	Assimp::Importer importer;
+	const aiScene* aiScene = importer.ReadFile(UBaseContent::GetFilepath().generic_string().c_str(), 0);
 
-	// todo: Assert
+	if (aiScene == nullptr) {
+		Exception::Assert(false, "animation load failed. filepath: " + UBaseContent::GetFilepath().generic_string(), importer.GetErrorString());
+		return;
+	}
 
 	// idのサイズを確保
 	animations_.resize(aiScene->mNumAnimations);
@@ -39,8 +43,30 @@ void UContentAnimation::Load(const std::filesystem::path& filepath, uint32_t ass
 	// idを取得
 	GetUuid();
 
+	// storageに登録
+	for (size_t i = 0; i < animations_.size(); ++i) {
+		auto asset = std::make_shared<UAssetAnimation>(animations_[i]);
+		sUAssetStorage->Register(asset, UBaseContent::GetFilepath());
+	}
+
+}
+
+void UContentAnimation::Load(const std::filesystem::path& filepath, uint32_t assimpOption) {
+
+	// sceneの取得
+	Assimp::Importer importer;
+	const aiScene* aiScene = importer.ReadFile(filepath.generic_string().c_str(), assimpOption);
+
+	if (aiScene == nullptr) {
+		Exception::Assert(false, "animation load failed. filepath: " + filepath.generic_string(), importer.GetErrorString());
+		return;
+	}
+
+	// idのサイズを確保
+	animations_.resize(aiScene->mNumAnimations);
+
 	// Animationの読み込み
-	LoadAnimations(aiScene, filepath);
+	LoadAnimations(aiScene);
 }
 
 void UContentAnimation::GetUuid() {
@@ -76,16 +102,14 @@ void UContentAnimation::GetUuid() {
 	
 }
 
-void UContentAnimation::LoadAnimations(const aiScene* aiScene, const std::filesystem::path& filepath) {
+void UContentAnimation::LoadAnimations(const aiScene* aiScene) {
 
 	for (size_t i = 0; i < aiScene->mNumAnimations; ++i) {
 		// animationの取得
 		const aiAnimation* animation = aiScene->mAnimations[i];
 
 		// assetの生成
-		auto asset = std::make_shared<UAssetAnimation>(animations_[i]);
-		UAssetStorage::GetInstance()->Register(asset, filepath);
-
+		auto asset = sUAssetStorage->GetAsset<UAssetAnimation>(animations_[i]);
 		asset->Setup(animation);
 	}
 

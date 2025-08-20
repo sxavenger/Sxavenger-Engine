@@ -9,10 +9,13 @@
 //* engine
 #include <Engine/Component/Entity/MonoBehaviour.h>
 #include <Engine/Component/Components/Collider/ColliderPrimitiveRenderer.h>
-#include <Engine/Asset/Assets/Texture/AssetTexture.h>
-#include <Engine/Asset/Observer/AssetObserver.h>
 #include <Engine/Render/FRenderTargetBuffer.h>
 #include <Engine/Render/Scene/FSceneRenderer.h>
+//#include <Engine/Preview/Content/UContentTexture.h>
+//#include <Engine/Preview/Content/UContentStorage.h>
+
+#include <Engine/Preview/Asset/UAssetTexture.h>
+#include <Engine/Preview/Asset/UAssetParameter.h>
 
 //* lib
 #include <Lib/Geometry/Vector2.h>
@@ -142,11 +145,11 @@ private:
 
 	//* texture *//
 
-	AssetObserver<AssetTexture> checkerboard_; //!< checker board texture
+	UAssetParameter<UAssetTexture> checkerboard_; //!< checker board texture
 
-	AssetObserver<AssetTexture> operationTexture_[3];
-	AssetObserver<AssetTexture> modeTexture_[2];
-	AssetObserver<AssetTexture> gridTexture_;
+	UAssetParameter<UAssetTexture> operationTexture_[3];
+	UAssetParameter<UAssetTexture> modeTexture_[2];
+	UAssetParameter<UAssetTexture> gridTexture_;
 
 	//* renderer *//
 
@@ -193,7 +196,7 @@ private:
 
 	//* icon *//
 
-	AssetObserver<AssetTexture> icons_[static_cast<uint32_t>(Icon::Camera) + 1];
+	UAssetParameter<UAssetTexture> icons_[static_cast<uint32_t>(Icon::Camera) + 1];
 
 	Vector2f iconSize_ = { 32.0f, 32.0f };
 

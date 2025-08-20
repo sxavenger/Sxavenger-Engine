@@ -20,10 +20,6 @@ public:
 	SceneObject()  = default;
 	~SceneObject() = default;
 
-	//* asset option *//
-
-	void CreateMeshComponent(const std::filesystem::path& filepath);
-
 	//* behaviour option *//
 
 	void Inspectable() override;

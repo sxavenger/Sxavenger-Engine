@@ -120,8 +120,6 @@
     <ClCompile Include="Demo\Entity\Player.cpp" />
     <ClCompile Include="Engine\Module\GameObject\GameObject.cpp" />
     <ClCompile Include="Engine\Component\Components\Particle\ParticleComponent.cpp" />
-    <ClCompile Include="Demo\Particle\SmokeParticle.cpp" />
-    <ClCompile Include="Demo\Particle\RainParticle.cpp" />
     <ClCompile Include="Engine\Component\Components\PostProcessLayer\PostProcessLayerComponent.cpp" />
     <ClCompile Include="Demo\GameLoop\PreviewGameLoop.cpp" />
     <ClCompile Include="Engine\Render\Common\FProcessTexture.cpp" />
@@ -138,7 +136,6 @@
     <ClCompile Include="Engine\Adapter\Actor\SkyLightActor.cpp" />
     <ClCompile Include="Engine\Render\Common\FLUTTexture.cpp" />
     <ClCompile Include="Engine\Adapter\Actor\ControllableCameraActor.cpp" />
-    <ClCompile Include="Demo\Particle\LeadParticle.cpp" />
     <ClCompile Include="Engine\Adapter\Actor\PivotCameraActor.cpp" />
     <ClCompile Include="Engine\GameLoop\FeatureLevelGameLoop.cpp" />
     <ClCompile Include="Engine\Component\Components\PostProcessLayer\PostProcessAutoExposure.cpp" />
@@ -147,22 +144,9 @@
     <ClCompile Include="Engine\Content\Exporter\TextureExporter.cpp" />
     <ClCompile Include="Engine\System\Utility\UtilityCommon.cpp" />
     <ClCompile Include="Lib\Adapter\Uuid\Uuid.cpp" />
-    <ClCompile Include="Engine\Asset\Assets\BaseAsset.cpp" />
-    <ClCompile Include="Engine\Asset\Assets\Texture\AssetTexture.cpp" />
-    <ClCompile Include="Engine\Asset\Assets\Texture\Texture.cpp" />
     <ClCompile Include="Engine\Content\Material\Material.cpp" />
-    <ClCompile Include="Engine\Asset\Assets\Model\AssetModel.cpp" />
-    <ClCompile Include="Engine\Asset\Assets\Model\Model.cpp" />
-    <ClCompile Include="Engine\Asset\AssetStorage.cpp" />
-    <ClCompile Include="Engine\Asset\SxavengerAsset.cpp" />
-    <ClCompile Include="Engine\Asset\Assets\Blob\AssetBlob.cpp" />
-    <ClCompile Include="Engine\Asset\Assets\Animator\Animator.cpp" />
-    <ClCompile Include="Engine\Asset\Assets\Animator\AssetAnimator.cpp" />
-    <ClCompile Include="Engine\Asset\Assets\Scene\AssetScene.cpp" />
     <ClCompile Include="Engine\Render\Core\FRenderCorePathtracing.cpp" />
-    <ClCompile Include="Engine\Content\ContentStorage.cpp" />
     <ClCompile Include="Engine\Component\Components\Volumetric\VolumetricFogComponent.cpp" />
-    <ClCompile Include="Engine\Adapter\Actor\EmissiveActor.cpp" />
     <ClCompile Include="Demo\Object\PivotCamera.cpp" />
     <ClCompile Include="Engine\System\DirectX\Context\DirectXQueueContext.cpp" />
     <ClCompile Include="Engine\System\DirectX\Context\DirectXWindowContext.cpp" />
@@ -193,6 +177,8 @@
     <ClCompile Include="Engine\Preview\Content\UContentModel.cpp" />
     <ClCompile Include="Engine\Preview\Content\UContentStorage.cpp" />
     <ClCompile Include="Engine\Preview\Content\UContentTexture.cpp" />
+    <ClCompile Include="Engine\Preview\Asset\UAssetSkeleton.cpp" />
+    <ClCompile Include="Engine\Preview\Content\UContentBlob.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Lib\Adapter\Random\Random.h" />
@@ -331,8 +317,6 @@
     <ClInclude Include="Demo\Entity\Player.h" />
     <ClInclude Include="Engine\Module\GameObject\GameObject.h" />
     <ClInclude Include="Engine\Component\Components\Particle\ParticleComponent.h" />
-    <ClInclude Include="Demo\Particle\SmokeParticle.h" />
-    <ClInclude Include="Demo\Particle\RainParticle.h" />
     <ClInclude Include="Lib\Sxl\OptimizedPathMap.h" />
     <ClInclude Include="Engine\Component\Components\PostProcessLayer\PostProcessLayerComponent.h" />
     <ClInclude Include="Engine\Component\Components\PostProcessLayer\BasePostProcess.h" />
@@ -350,7 +334,6 @@
     <ClInclude Include="Engine\Adapter\Actor\SkyLightActor.h" />
     <ClInclude Include="Engine\Render\Common\FLUTTexture.h" />
     <ClInclude Include="Engine\Adapter\Actor\ControllableCameraActor.h" />
-    <ClInclude Include="Demo\Particle\LeadParticle.h" />
     <ClInclude Include="Engine\Adapter\Actor\PivotCameraActor.h" />
     <ClInclude Include="Engine\GameLoop\FeatureLevelGameLoop.h" />
     <ClInclude Include="Lib\Sxl\Expected.h" />
@@ -362,24 +345,10 @@
     <ClInclude Include="Lib\Sxl\OptimizedPathSet.h" />
     <ClInclude Include="Lib\Adapter\Uuid\Uuid.h" />
     <ClInclude Include="Demo\GameLoop\PreviewGameLoop.h" />
-    <ClInclude Include="Engine\Asset\Assets\BaseAsset.h" />
-    <ClInclude Include="Engine\Asset\Assets\Texture\AssetTexture.h" />
-    <ClInclude Include="Engine\Asset\Assets\Texture\Texture.h" />
     <ClInclude Include="Engine\Content\Material\Material.h" />
-    <ClInclude Include="Engine\Asset\Assets\Model\AssetModel.h" />
-    <ClInclude Include="Engine\Asset\Assets\Model\Model.h" />
-    <ClInclude Include="Engine\Asset\AssetStorage.h" />
-    <ClInclude Include="Engine\Asset\Observer\AssetObserver.h" />
-    <ClInclude Include="Engine\Asset\SxavengerAsset.h" />
-    <ClInclude Include="Engine\Asset\Assets\Blob\AssetBlob.h" />
-    <ClInclude Include="Engine\Asset\Assets\Animator\AssetAnimator.h" />
-    <ClInclude Include="Engine\Asset\Assets\Animator\Animator.h" />
-    <ClInclude Include="Engine\Asset\Assets\Scene\AssetScene.h" />
     <ClInclude Include="Engine\Render\Core\FRenderCorePathtracing.h" />
-    <ClInclude Include="Engine\Content\ContentStorage.h" />
     <ClInclude Include="Engine\System\DirectX\DxObject\DxReadbackDimensionBuffer.h" />
     <ClInclude Include="Engine\Component\Components\Volumetric\VolumetricFogComponent.h" />
-    <ClInclude Include="Engine\Adapter\Actor\EmissiveActor.h" />
     <ClInclude Include="Demo\Object\PivotCamera.h" />
     <ClInclude Include="Engine\System\DirectX\Context\DirectXQueueContext.h" />
     <ClInclude Include="Engine\System\DirectX\Context\DirectXWindowContext.h" />
@@ -412,6 +381,10 @@
     <ClInclude Include="Engine\Preview\Content\UContentModel.h" />
     <ClInclude Include="Engine\Preview\Content\UContentStorage.h" />
     <ClInclude Include="Engine\Preview\Content\UContentTexture.h" />
+    <ClInclude Include="Engine\Preview\Asset\UAssetSkeleton.h" />
+    <ClInclude Include="Engine\Preview\Content\UContentObserver.h" />
+    <ClInclude Include="Engine\Preview\Content\UContentBlob.h" />
+    <ClInclude Include="Engine\Preview\Asset\UAssetParameter.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

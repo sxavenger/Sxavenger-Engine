@@ -10,9 +10,6 @@
 
 //* demo
 #include <Demo/Entity/Player.h>
-#include <Demo/Particle/SmokeParticle.h>
-#include <Demo/Particle/RainParticle.h>
-#include <Demo/Particle/LeadParticle.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // DemoGameLoop class

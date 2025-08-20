@@ -8,8 +8,8 @@
 #include <Engine/System/DirectX/Context/DirectXQueueContext.h>
 
 //* engine
-#include <Engine/Asset/Observer/AssetObserver.h>
-#include <Engine/Asset/Assets/Blob/AssetBlob.h>
+#include <Engine/Preview/Content/UContentBlob.h>
+#include <Engine/Preview/Content/UContentObserver.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Base CustomComputePipeline class
@@ -19,12 +19,12 @@ public:
 
 	//* asset option *//
 
-	void SetAsset(const std::optional<AssetObserver<AssetBlob>>& blob);
-	void CreateAsset(const std::filesystem::path& filepath);
+	void SetContent(const std::shared_ptr<UContentBlob>& blob);
+	void CreateContent(const std::filesystem::path& filepath);
 
-	void ClearAsset();
+	void ClearContent();
 
-	void ReloadAsset();
+	void ReloadContent();
 
 	virtual void RegisterBlob() = 0;
 
@@ -36,7 +36,7 @@ protected:
 	// protected variables
 	//=========================================================================================
 
-	std::optional<AssetObserver<AssetBlob>> asset_;
+	std::optional<UContentObserver<UContentBlob>> content_;
 
 	//=========================================================================================
 	// protected methods

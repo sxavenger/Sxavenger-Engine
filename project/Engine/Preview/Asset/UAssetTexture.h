@@ -65,6 +65,8 @@ public:
 
 	const D3D12_GPU_DESCRIPTOR_HANDLE& GetGPUHandleSRV() const;
 
+	const Metadata& GetMetadata() const { return metadata_; }
+
 private:
 
 	//=========================================================================================

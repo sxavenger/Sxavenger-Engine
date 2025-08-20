@@ -33,6 +33,10 @@ public:
 
 	void Setup(const aiAnimation* animation);
 
+	//* getter *//
+
+	const Animation& GetAnimation() const { return animation_; }
+
 private:
 
 	//=========================================================================================

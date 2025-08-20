@@ -4,7 +4,7 @@
 // UAssetMesh class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-void UAssetMesh::Setup(const aiMesh* mesh, const Uuid& material) {
+void UAssetMesh::Setup(const aiMesh* mesh) {
 
 	// meshの解析
 	// nameの設定
@@ -92,11 +92,20 @@ void UAssetMesh::Setup(const aiMesh* mesh, const Uuid& material) {
 		}
 	}
 
-	// materialの保存
-	material_ = material;
-
 	UBaseAsset::Complete();
 	Logger::EngineThreadLog(std::format("[UAssetMesh]: mesh setup complete. uuid: {}", UBaseAsset::GetId().Serialize()));
+}
+
+void UAssetMesh::Update(const DirectXQueueContext* context) {
+	input_.CreateBottomLevelAS(context);
+}
+
+void UAssetMesh::BindIABuffer(const DirectXQueueContext* context) const {
+	input_.BindIABuffer(context);
+}
+
+void UAssetMesh::DrawCall(const DirectXQueueContext* context, UINT instanceCount) const {
+	input_.DrawCall(context, instanceCount);
 }
 
 Vector3f UAssetMesh::ConvertNormal(const aiVector3D& aiVector) {

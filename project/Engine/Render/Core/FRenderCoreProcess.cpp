@@ -86,7 +86,7 @@ void FRenderCoreProcess::Dispatch(const DirectXQueueContext* context, const Vect
 
 void FRenderCoreProcess::CreatePipeline(ProcessType type, const std::filesystem::path& filepath) {
 	auto process = std::make_unique<CustomReflectionComputePipeline>();
-	process->CreateAsset(kDirectory_ / filepath);
+	process->CreateContent(kDirectory_ / filepath);
 	process->RegisterBlob();
 	process->ReflectionPipeline(SxavengerSystem::GetDxDevice());
 
@@ -95,7 +95,7 @@ void FRenderCoreProcess::CreatePipeline(ProcessType type, const std::filesystem:
 
 void FRenderCoreProcess::CreatePipeline(ProcessType type, const std::filesystem::path& filepath, const DxObject::SamplerBindDesc& desc) {
 	auto process = std::make_unique<CustomReflectionComputePipeline>();
-	process->CreateAsset(kDirectory_ / filepath);
+	process->CreateContent(kDirectory_ / filepath);
 	process->RegisterBlob();
 	process->ReflectionPipeline(SxavengerSystem::GetDxDevice(), desc);
 
@@ -104,7 +104,7 @@ void FRenderCoreProcess::CreatePipeline(ProcessType type, const std::filesystem:
 
 void FRenderCoreProcess::CreatePipeline(CompositeType type, const std::filesystem::path& filepath) {
 	auto process = std::make_unique<CustomReflectionComputePipeline>();
-	process->CreateAsset(kDirectory_ / filepath);
+	process->CreateContent(kDirectory_ / filepath);
 	process->RegisterBlob();
 	process->ReflectionPipeline(SxavengerSystem::GetDxDevice());
 
@@ -113,7 +113,7 @@ void FRenderCoreProcess::CreatePipeline(CompositeType type, const std::filesyste
 
 void FRenderCoreProcess::CreatePipeline(CompositeType type, const std::filesystem::path& filepath, const DxObject::SamplerBindDesc& desc) {
 	auto process = std::make_unique<CustomReflectionComputePipeline>();
-	process->CreateAsset(kDirectory_ / filepath);
+	process->CreateContent(kDirectory_ / filepath);
 	process->RegisterBlob();
 	process->ReflectionPipeline(SxavengerSystem::GetDxDevice(), desc);
 

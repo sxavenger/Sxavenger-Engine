@@ -4,7 +4,6 @@
 // include
 //-----------------------------------------------------------------------------------------
 //* engine
-#include <Engine/Asset/SxavengerAsset.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // SceneObjects class methods
@@ -37,8 +36,9 @@ void SceneObjects::InputJson(const json& data) {
 }
 
 void SceneObjects::InputJsonFromFilepath(const std::filesystem::path& filepath) {
-	AssetObserver<AssetScene> scene = sAssetStorage->TryImport<AssetScene>(filepath);
-	InputJson(scene.Acquire()->GetData());
+	filepath;
+	//AssetObserver<AssetScene> scene = sAssetStorage->TryImport<AssetScene>(filepath);
+	//InputJson(scene.Acquire()->GetData());
 }
 
 void SceneObjects::Update() {

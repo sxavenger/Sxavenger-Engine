@@ -63,31 +63,15 @@ void PostProcessLUT::ShowInspectorImGui() {
 
 		ImGui::EndDisabled();
 	}
-
-	// todo: tileをなんやかんや...
-	{
-		SxImGui::InputScalarN<uint32_t, 2>("tile", &tile_.x);
-
-		auto filepath = sAssetStorage->GetFilepathDragAndDropTarget<AssetTexture>();
-
-		if (filepath.has_value()) {
-			CreateTexture(SxavengerSystem::GetDirectQueueContext(), sAssetStorage->TryImport<AssetTexture>(filepath.value(), Texture::Option{Texture::Encoding::Intensity, false}), tile_);
-		}
-	}
 }
 
-void PostProcessLUT::CreateTexture(const DirectXQueueContext* context, const AssetObserver<AssetTexture>& texture, const Vector2ui& tile) {
+void PostProcessLUT::CreateTexture(const DirectXQueueContext* context, const UAssetParameter<UAssetTexture>& texture, const Vector2ui& tile) {
+
+	// 引数の保存
+	referenceTexture_ = texture;
+	tile_             = tile;
+
 	texture_ = std::make_unique<FLUTTexture>();
-	texture_->Create(texture, tile);
+	texture_->Create(referenceTexture_.WaitRequire(), tile_);
 	texture_->Dispatch(context);
-
-	tile_ = tile;
-}
-
-void PostProcessLUT::CreateTexture(const DirectXQueueContext* context, const std::shared_ptr<AssetTexture>& texture, const Vector2ui& tile) {
-	texture_ = std::make_unique<FLUTTexture>();
-	texture_->Create(texture, tile);
-	texture_->Dispatch(context);
-
-	tile_ = tile;
 }

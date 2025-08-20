@@ -38,6 +38,10 @@ public:
 
 	void Execute(const AsyncThread* thread) override;
 
+	//* uuid option *//
+
+	virtual void AttachUuid() = 0;
+
 	//* state option *//
 
 	bool IsComplete() const { return AsyncTask::IsCompleted(); }

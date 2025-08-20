@@ -6,33 +6,33 @@ _DXOBJECT_USING
 //-----------------------------------------------------------------------------------------
 //* engine
 #include <Engine/System/SxavengerSystem.h>
-#include <Engine/Asset/SxavengerAsset.h>
+#include <Engine/Preview/Content/UContentStorage.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Base CustomComputePipeline class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-void BaseCustomComputePipeline::SetAsset(const std::optional<AssetObserver<AssetBlob>>& blob) {
-	asset_ = blob;
+void BaseCustomComputePipeline::SetContent(const std::shared_ptr<UContentBlob>& blob) {
+	content_.emplace() = blob;
 }
 
-void BaseCustomComputePipeline::CreateAsset(const std::filesystem::path& filepath) {
-	AssetObserver<AssetBlob> observer = SxavengerAsset::TryImport<AssetBlob>(filepath, CompileProfile::cs);
-	SetAsset(observer);
+void BaseCustomComputePipeline::CreateContent(const std::filesystem::path& filepath) {
+	std::shared_ptr<UContentBlob> blob = sUContentStorage->Import<UContentBlob>(filepath, CompileProfile::cs);
+	SetContent(blob);
 }
 
-void BaseCustomComputePipeline::ClearAsset() {
-	asset_ = std::nullopt;
+void BaseCustomComputePipeline::ClearContent() {
+	content_ = std::nullopt;
 }
 
-void BaseCustomComputePipeline::ReloadAsset() {
-	if (asset_.has_value()) {
-		asset_.value().Reload();
+void BaseCustomComputePipeline::ReloadContent() {
+	if (content_.has_value()) {
+		content_.value().Reload();
 	}
 }
 
 bool BaseCustomComputePipeline::CheckAsset() const {
-	return asset_.has_value() && asset_.value().IsExpired();
+	return content_.has_value() && content_.value().IsExpired();
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -40,8 +40,8 @@ bool BaseCustomComputePipeline::CheckAsset() const {
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 void CustomComputePipeline::RegisterBlob() {
-	if (asset_.has_value()) {
-		SetBlob(*asset_.value().WaitGet());
+	if (content_.has_value()) {
+		SetBlob(content_.value().WaitGet()->GetBlob());
 
 	} else {
 		blob_ = std::nullopt;
@@ -65,8 +65,8 @@ void CustomComputePipeline::CheckAndReload() {
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 void CustomReflectionComputePipeline::RegisterBlob() {
-	if (asset_.has_value()) {
-		SetBlob(*asset_.value().WaitGet());
+	if (content_.has_value()) {
+		SetBlob(content_.value().WaitGet()->GetBlob());
 
 	} else {
 		blob_ = std::nullopt;

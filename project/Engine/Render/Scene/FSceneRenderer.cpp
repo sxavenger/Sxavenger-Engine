@@ -18,6 +18,7 @@
 #include <Engine/Component/Components/Particle/ParticleComponent.h>
 #include <Engine/Component/Components/Particle/GPUParticleComponent.h>
 #include <Engine/Component/Components/PostProcessLayer/PostProcessLayerComponent.h>
+#include <Engine/Component/Entity/MonoBehaviour.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Config structure methods
@@ -139,20 +140,23 @@ void FSceneRenderer::RenderBasePassStaticMesh(const DirectXQueueContext* context
 
 	sComponentStorage->ForEachActive<MeshRendererComponent>([&](MeshRendererComponent* component) {
 
-		if (component->GetMaterial()->GetMode() != Material::Mode::Opaque) {
+		auto mesh     = component->GetMesh();
+		auto material = component->GetMaterial();
+
+		if (material->GetMode() != UAssetMaterial::Mode::Opaque) {
 			return; //!< 透明なジオメトリは別のパスで描画
 		}
 
 		// メッシュの描画
-		component->GetMesh()->BindIABuffer(context);
+		mesh->BindIABuffer(context);
 
 		parameter.SetAddress("gTransforms", component->GetTransform()->GetGPUVirtualAddress());
-		parameter.SetAddress("gMaterials",  component->GetMaterial()->GetGPUVirtualAddress());
+		parameter.SetAddress("gMaterials", material->GetGPUVirtualAddress());
 		//!< todo: materialをConstantBufferに変更する
 
 		core->BindGraphicsBuffer(FRenderCoreGeometry::Type::Deferred_MeshVS, context, parameter);
 
-		component->GetMesh()->DrawCall(context, 1);
+		mesh->DrawCall(context, 1);
 
 	});
 
@@ -168,8 +172,10 @@ void FSceneRenderer::RenderBasePassSkinnedMesh(const DirectXQueueContext* contex
 	parameter.SetAddress("gCamera", config.camera->GetGPUVirtualAddress());
 
 	sComponentStorage->ForEachActive<SkinnedMeshRendererComponent>([&](SkinnedMeshRendererComponent* component) {
+
+		auto material = component->GetMaterial();
 		
-		if (component->GetMaterial()->GetMode() != Material::Mode::Opaque) {
+		if (material->GetMode() != UAssetMaterial::Mode::Opaque) {
 			return; //!< 透明なジオメトリは別のパスで描画
 		}
 
@@ -177,7 +183,7 @@ void FSceneRenderer::RenderBasePassSkinnedMesh(const DirectXQueueContext* contex
 		component->BindIABuffer(context);
 
 		parameter.SetAddress("gTransforms", component->GetTransform()->GetGPUVirtualAddress());
-		parameter.SetAddress("gMaterials",  component->GetMaterial()->GetGPUVirtualAddress());
+		parameter.SetAddress("gMaterials",  material->GetGPUVirtualAddress());
 		//!< todo: materialをConstantBufferに変更する
 
 		core->BindGraphicsBuffer(FRenderCoreGeometry::Type::Deferred_MeshVS, context, parameter);
@@ -330,12 +336,12 @@ void FSceneRenderer::ProcessLightingPassSkyLight(const DirectXQueueContext* cont
 	DxObject::BindBufferDesc parameter = {};
 	// common parameter
 	parameter.SetAddress("gCamera", config.camera->GetGPUVirtualAddress());
-	parameter.SetAddress("gScene",  config.scene->GetTopLevelAS().GetGPUVirtualAddress());
+	parameter.SetAddress("gScene", config.scene->GetTopLevelAS().GetGPUVirtualAddress());
 
 	// deferred paraemter
-	parameter.SetHandle("gDepth",    config.buffer->GetDepth()->GetRasterizerGPUHandleSRV());
-	parameter.SetHandle("gAlbedo",   config.buffer->GetGBuffer(FDeferredGBuffer::Layout::Albedo)->GetGPUHandleSRV());
-	parameter.SetHandle("gNormal",   config.buffer->GetGBuffer(FDeferredGBuffer::Layout::Normal)->GetGPUHandleSRV());
+	parameter.SetHandle("gDepth", config.buffer->GetDepth()->GetRasterizerGPUHandleSRV());
+	parameter.SetHandle("gAlbedo", config.buffer->GetGBuffer(FDeferredGBuffer::Layout::Albedo)->GetGPUHandleSRV());
+	parameter.SetHandle("gNormal", config.buffer->GetGBuffer(FDeferredGBuffer::Layout::Normal)->GetGPUHandleSRV());
 	parameter.SetHandle("gMaterial", config.buffer->GetGBuffer(FDeferredGBuffer::Layout::MaterialARM)->GetGPUHandleSRV());
 	parameter.SetHandle("gPosition", config.buffer->GetGBuffer(FDeferredGBuffer::Layout::Position)->GetGPUHandleSRV());
 
@@ -344,12 +350,12 @@ void FSceneRenderer::ProcessLightingPassSkyLight(const DirectXQueueContext* cont
 
 	sComponentStorage->ForEachActive<SkyLightComponent>([&](SkyLightComponent* component) {
 
-		// sky light parameter
-		parameter.SetAddress("gDiffuseParameter",  component->GetDiffuseParameterBufferAddress());
-		parameter.SetAddress("gSpecularParameter", component->GetSpecularParameterBufferAddress());
-		parameter.SetAddress("gParameter",         component->GetParameterBufferAddress());
+		if (!component->IsEnableIrradiance() || !component->IsEnableRadiance()) {
+			return; //!< IrradianceやRadianceが設定されていない場合はスキップ
+		}
 
-		parameter.SetHandle("gEnvironment",        component->GetEnvironment().value()); //!< DEBUG
+		// sky light parameter
+		parameter.SetAddress("gParameter", component->GetGPUVirtualAddress());
 
 		FRenderCore::GetInstance()->GetLight()->BindGraphicsBuffer(
 			FRenderCoreLight::LightType::SkyLight, context, parameter
@@ -410,11 +416,11 @@ void FSceneRenderer::ProcessLightingPassIndirect(const DirectXQueueContext* cont
 	commandList->SetComputeRootShaderResourceView(16, config.scene->pointLightShadowParams_->GetGPUVirtualAddress());
 
 	// Sky Light
-	std::optional<D3D12_GPU_DESCRIPTOR_HANDLE> handle = std::nullopt;
+	std::optional<D3D12_GPU_VIRTUAL_ADDRESS> address = std::nullopt;
 	sComponentStorage->ForEachActive<SkyLightComponent>([&](SkyLightComponent* component) {
-		handle = component->GetEnvironment();
+		address = component->GetGPUVirtualAddress();
 	});
-	commandList->SetComputeRootDescriptorTable(17, handle.value_or(D3D12_GPU_DESCRIPTOR_HANDLE{}));
+	commandList->SetComputeRootConstantBufferView(17, address.value_or(D3D12_GPU_VIRTUAL_ADDRESS{}));
 
 	config.scene->GetStateObjectContext().DispatchRays(context->GetDxCommand(), config.buffer->GetSize());
 
@@ -508,13 +514,12 @@ void FSceneRenderer::ProcessAmbientPassSkyBox(const DirectXQueueContext* context
 	parameter.SetHandle("gDepth", config.buffer->GetDepth()->GetRasterizerGPUHandleSRV());
 
 	sComponentStorage->ForEachActive<SkyLightComponent>([&](SkyLightComponent* component) {
-		if (!component->GetEnvironment().has_value()) {
-			return;
+		if (!component->IsEnableEnvironment()) {
+			return; //!< Environmentが設定されていない場合はスキップ
 		}
 
 		// environment
-		parameter.SetAddress("gParameter", component->GetParameterBufferAddress());
-		parameter.SetHandle("gEnvironment", (*component->GetEnvironment()));
+		parameter.SetAddress("gParameter", component->GetGPUVirtualAddress());
 
 		// output
 		parameter.SetHandle("gOutput", config.buffer->GetGBuffer(FMainGBuffer::Layout::Scene)->GetGPUHandleUAV());
@@ -552,21 +557,24 @@ void FSceneRenderer::RenderTransparentPassStaticMesh(const DirectXQueueContext* 
 	// componentを取得
 	sComponentStorage->ForEachActive<MeshRendererComponent>([&](MeshRendererComponent* component) {
 
-		if (component->GetMaterial()->GetMode() == Material::Mode::Opaque) {
+		auto mesh     = component->GetMesh();
+		auto material = component->GetMaterial();
+
+		if (material->GetMode() == UAssetMaterial::Mode::Opaque) {
 			return;
 		}
 
 		// メッシュの描画
-		component->GetMesh()->BindIABuffer(context);
+		mesh->BindIABuffer(context);
 
 		parameter.SetAddress("gTransforms", component->GetTransform()->GetGPUVirtualAddress());
-		parameter.SetAddress("gMaterials",  component->GetMaterial()->GetGPUVirtualAddress());
+		parameter.SetAddress("gMaterials",  material->GetGPUVirtualAddress());
 		//!< todo: materialをConstantBufferに変更する
 
 		core->BindGraphicsBuffer(FRenderCoreGeometry::Type::Forward_MeshVS, context, parameter);
 
 
-		component->GetMesh()->DrawCall(context, 1);
+		mesh->DrawCall(context, 1);
 	});
 }
 

@@ -142,7 +142,7 @@ void FRenderCorePathtracing::CreateDenoiser() {
 		//* EdgeStoping
 		auto& denoiser = denoisers_[GetIndex(DenoiserType::EdgeStopping)];
 		denoiser = std::make_unique<CustomReflectionComputePipeline>();
-		denoiser->CreateAsset(kPackagesShaderDirectory / "render" / "denoiser" / "EdgeStopping.cs.hlsl");
+		denoiser->CreateContent(kPackagesShaderDirectory / "render" / "denoiser" / "EdgeStopping.cs.hlsl");
 		denoiser->RegisterBlob();
 		denoiser->ReflectionPipeline(SxavengerSystem::GetDxDevice());
 	}

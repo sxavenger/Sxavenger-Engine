@@ -10,6 +10,7 @@
 //* engine
 #include <Engine/System/Runtime/Performance/TimePoint.h>
 #include <Engine/Content/Animation/Animation.h>
+#include <Engine/Preview/Content/UContentModel.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // ComponentHelper class
@@ -31,19 +32,25 @@ public:
 
 	//* create helper *//
 
+	//* base
 	static std::unique_ptr<MonoBehaviour> CreateMonoBehaviour();
 
 	static std::unique_ptr<MonoBehaviour> CreateTransformBehaviour();
 
-	static std::unique_ptr<MonoBehaviour> CreateStaticModelBehaviour(const std::filesystem::path& filepath);
-
-	static std::unique_ptr<MonoBehaviour> CreateStaticNodeModelBehaviour(const std::filesystem::path& filepath);
-
+	//* camera
 	static std::unique_ptr<MonoBehaviour> CreateCameraMonoBehaviour();
 
+	//* light
 	static std::unique_ptr<MonoBehaviour> CreateDirectionalLightMonoBehaviour();
 
 	static std::unique_ptr<MonoBehaviour> CreatePointLightMonoBehaviour();
+
+	//* mesh
+	static void CreateStaticMeshBehaviour(MonoBehaviour* root, const std::shared_ptr<UContentModel>& model);
+	static std::unique_ptr<MonoBehaviour> CreateStaticMeshBehaviour(const std::shared_ptr<UContentModel>& model);
+
+	static void CreateSkinnedMeshBehaviour(MonoBehaviour* root, const std::shared_ptr<UContentModel>& model);
+	static std::unique_ptr<MonoBehaviour> CreateSkinnedMeshBehaviour(const std::shared_ptr<UContentModel>& model);
 
 	//* option helper *//
 

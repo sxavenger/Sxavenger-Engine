@@ -315,6 +315,8 @@ public:
 
 	const D3D12_GPU_VIRTUAL_ADDRESS& GetGPUVirtualAddress() const;
 
+	Mode GetMode() const { return mode_; }
+
 private:
 
 	//=========================================================================================

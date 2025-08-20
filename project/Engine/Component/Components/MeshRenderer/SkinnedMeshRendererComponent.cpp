@@ -8,13 +8,15 @@ _DXOBJECT_USING
 #include "../../Entity/MonoBehaviour.h"
 
 //* engine
+#include <Engine/System/SxavengerSystem.h>
 #include <Engine/Content/SxavengerContent.h>
+#include <Engine/Preview/Asset/UAssetStorage.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // InputSkinnedMesh structure methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-void SkinnedMeshRendererComponent::InputSkinnedMesh::Create(const DirectXQueueContext* context, const Model::AssimpMesh* mesh) {
+void SkinnedMeshRendererComponent::InputSkinnedMesh::Create(const DirectXQueueContext* context, const std::shared_ptr<UAssetMesh>& mesh) {
 	CreateVetex(mesh);
 	CreateBottomLevelAS(context, mesh);
 	isCreateMesh = true;
@@ -25,12 +27,12 @@ void SkinnedMeshRendererComponent::InputSkinnedMesh::UpdateBottomLevelAS(const D
 	bottomLevelAS.Update(context->GetDxCommand());
 }
 
-void SkinnedMeshRendererComponent::InputSkinnedMesh::CreateVetex(const Model::AssimpMesh* mesh) {
+void SkinnedMeshRendererComponent::InputSkinnedMesh::CreateVetex(const std::shared_ptr<UAssetMesh>& mesh) {
 	vertex = std::make_unique<VertexUnorderedDimensionBuffer<MeshVertexData>>();
-	vertex->Create(SxavengerSystem::GetDxDevice(), mesh->input.GetVertex()->GetSize());
+	vertex->Create(SxavengerSystem::GetDxDevice(), mesh->GetInputVertex()->GetSize());
 }
 
-void SkinnedMeshRendererComponent::InputSkinnedMesh::CreateBottomLevelAS(const DirectXQueueContext* context, const Model::AssimpMesh* mesh) {
+void SkinnedMeshRendererComponent::InputSkinnedMesh::CreateBottomLevelAS(const DirectXQueueContext* context, const std::shared_ptr<UAssetMesh>& mesh) {
 	D3D12_RAYTRACING_GEOMETRY_DESC desc = {};
 	desc.Type                                 = D3D12_RAYTRACING_GEOMETRY_TYPE_TRIANGLES;
 	desc.Flags                                = D3D12_RAYTRACING_GEOMETRY_FLAG_NONE;
@@ -38,8 +40,8 @@ void SkinnedMeshRendererComponent::InputSkinnedMesh::CreateBottomLevelAS(const D
 	desc.Triangles.VertexBuffer.StrideInBytes = vertex->GetStride();
 	desc.Triangles.VertexCount                = vertex->GetSize();
 	desc.Triangles.VertexFormat               = DXGI_FORMAT_R32G32B32_FLOAT;
-	desc.Triangles.IndexBuffer                = mesh->input.GetIndex()->GetGPUVirtualAddress();
-	desc.Triangles.IndexCount                 = mesh->input.GetIndex()->GetIndexCount();
+	desc.Triangles.IndexBuffer                = mesh->GetInputIndex()->GetGPUVirtualAddress();
+	desc.Triangles.IndexCount                 = mesh->GetInputIndex()->GetIndexCount();
 	desc.Triangles.IndexFormat                = DXGI_FORMAT_R32_UINT;
 
 	bottomLevelAS.Build(SxavengerSystem::GetDxDevice(), context->GetDxCommand(), desc);
@@ -49,11 +51,19 @@ void SkinnedMeshRendererComponent::InputSkinnedMesh::CreateBottomLevelAS(const D
 // SkinnedMeshRendererComponent class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-void SkinnedMeshRendererComponent::CreateMesh(const Model::AssimpMesh* mesh) {
-	// reference先のmeshを保持
-	referenceMesh_ = mesh;
+void SkinnedMeshRendererComponent::CreateMesh(const Uuid& referenceMesh) {
+	// 参照先のmeshを保持
+	referenceMesh_ = referenceMesh;
 
-	mesh_.Create(SxavengerSystem::GetDirectQueueContext(), referenceMesh_);
+	mesh_.Create(SxavengerSystem::GetDirectQueueContext(), referenceMesh_.Get());
+	CreateCluster();
+}
+
+void SkinnedMeshRendererComponent::CreateMesh(const std::shared_ptr<UAssetMesh>& referenceMesh) {
+	// 参照先のmeshを保持
+	referenceMesh_ = referenceMesh;
+
+	mesh_.Create(SxavengerSystem::GetDirectQueueContext(), referenceMesh_.Get());
 	CreateCluster();
 }
 
@@ -65,7 +75,7 @@ void SkinnedMeshRendererComponent::Skinning() {
 	SxavengerContent::SetSkinningPipeline(SxavengerSystem::GetDirectQueueContext());
 
 	DxObject::BindBufferDesc parameter = {};
-	parameter.SetAddress("gInputVertex",  referenceMesh_->input.GetVertex()->GetGPUVirtualAddress());
+	parameter.SetAddress("gInputVertex",  referenceMesh_.Require()->GetInputVertex()->GetGPUVirtualAddress());
 	parameter.SetAddress("gPalette",      cluster_.palette->GetGPUVirtualAddress());
 	parameter.SetAddress("gInfluence",    cluster_.influence->GetGPUVirtualAddress());
 	parameter.SetAddress("gInfo",         cluster_.info->GetGPUVirtualAddress());
@@ -74,18 +84,26 @@ void SkinnedMeshRendererComponent::Skinning() {
 	SxavengerContent::DispatchSkinning(SxavengerSystem::GetDirectQueueContext(), parameter, cluster_.info->At(0));
 }
 
+void SkinnedMeshRendererComponent::Update(const DirectXQueueContext* context) {
+	mesh_.UpdateBottomLevelAS(context);
+}
+
 void SkinnedMeshRendererComponent::BindIABuffer(const DirectXQueueContext* context) const {
 	auto commandList = context->GetCommandList();
 
 	D3D12_VERTEX_BUFFER_VIEW vbv = mesh_.vertex->GetVertexBufferView();
-	D3D12_INDEX_BUFFER_VIEW  ibv = referenceMesh_->input.GetIndex()->GetIndexBufferView();
+	D3D12_INDEX_BUFFER_VIEW  ibv = referenceMesh_.Require()->GetInputIndex()->GetIndexBufferView();
 
 	commandList->IASetVertexBuffers(0, 1, &vbv);
 	commandList->IASetIndexBuffer(&ibv);
 }
 
 void SkinnedMeshRendererComponent::DrawCall(const DirectXQueueContext* context, uint32_t instanceCount) const {
-	context->GetCommandList()->DrawIndexedInstanced(referenceMesh_->input.GetIndex()->GetIndexCount(), instanceCount, 0, 0, 0);
+	context->GetCommandList()->DrawIndexedInstanced(referenceMesh_.Require()->GetInputIndex()->GetIndexCount(), instanceCount, 0, 0, 0);
+}
+
+std::shared_ptr<UAssetMaterial> SkinnedMeshRendererComponent::GetMaterial() const {
+	return material_.Require();
 }
 
 const TransformComponent* SkinnedMeshRendererComponent::GetTransform() const {
@@ -93,7 +111,7 @@ const TransformComponent* SkinnedMeshRendererComponent::GetTransform() const {
 }
 
 void SkinnedMeshRendererComponent::CreateCluster() {
-	const uint32_t kVertexSize = referenceMesh_->input.GetVertex()->GetSize();
+	const uint32_t kVertexSize = referenceMesh_.Require()->GetInputVertex()->GetSize();
 
 	//* info
 	cluster_.info = std::make_unique<DimensionBuffer<uint32_t>>();
@@ -116,7 +134,7 @@ void SkinnedMeshRendererComponent::CreateCluster() {
 	cluster_.inverseBindPoseMatrices.resize(kJointSize);
 	std::generate(cluster_.inverseBindPoseMatrices.begin(), cluster_.inverseBindPoseMatrices.end(), Matrix4x4::Identity);
 
-	for (const auto& [name, jointWeight] : referenceMesh_->jointWeights) {
+	for (const auto& [name, jointWeight] : referenceMesh_.Require()->GetJointWeights()) {
 		if (!skeleton.jointMap.contains(name)) {
 			continue; //!< この名前のJointは存在しない
 		}

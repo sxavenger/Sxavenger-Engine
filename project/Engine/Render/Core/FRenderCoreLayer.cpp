@@ -67,8 +67,8 @@ void FRenderCoreLayer::CreatePipeline() {
 	{
 		auto& pipeline = pipelines_[static_cast<uint8_t>(PipelineType::Sprite)];
 		pipeline = std::make_unique<CustomReflectionGraphicsPipeline>();
-		pipeline->CreateAsset(kDirectory_ / "sprite.vs.hlsl", GraphicsShaderType::vs);
-		pipeline->CreateAsset(kDirectory_ / "sprite.ps.hlsl", GraphicsShaderType::ps);
+		pipeline->CreateContent(kDirectory_ / "sprite.vs.hlsl", GraphicsShaderType::vs);
+		pipeline->CreateContent(kDirectory_ / "sprite.ps.hlsl", GraphicsShaderType::ps);
 		pipeline->RegisterBlob();
 
 		pipeline->ReflectionRootSignature(SxavengerSystem::GetDxDevice());

@@ -6,38 +6,37 @@ _DXOBJECT_USING
 //-----------------------------------------------------------------------------------------
 //* engine
 #include <Engine/System/SxavengerSystem.h>
-#include <Engine/Asset/SxavengerAsset.h>
+#include <Engine/Preview/Content/UContentStorage.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Base CustomGraphicsPipeline class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-void BaseCustomGraphicsPipeline::SetAsset(const std::optional<AssetObserver<AssetBlob>>& blob, DxObject::GraphicsShaderType type) {
-	assets_[static_cast<uint8_t>(type)] = blob;
+
+void BaseCustomGraphicsPipeline::SetContent(const std::shared_ptr<UContentBlob>& blob, DxObject::GraphicsShaderType type) {
+	contents_[static_cast<uint8_t>(type)].emplace() = blob;
 }
 
-void BaseCustomGraphicsPipeline::CreateAsset(const std::filesystem::path& filepath, DxObject::GraphicsShaderType type) {
-	AssetObserver<AssetBlob> observer = SxavengerAsset::TryImport<AssetBlob>(filepath, ToProfile(type));
-	SetAsset(observer, type);
+void BaseCustomGraphicsPipeline::CreateContent(const std::filesystem::path& filepath, DxObject::GraphicsShaderType type) {
+	std::shared_ptr<UContentBlob> blob = sUContentStorage->Import<UContentBlob>(filepath, ToProfile(type));
+	SetContent(blob, type);
 }
 
-void BaseCustomGraphicsPipeline::ClearAsset() {
-	for (uint8_t i = 0; i < assets_.size(); ++i) {
-		assets_[i] = std::nullopt;
-	}
+void BaseCustomGraphicsPipeline::ClearContent() {
+	std::generate(contents_.begin(), contents_.end(), []() { return std::nullopt; });
 }
 
-void BaseCustomGraphicsPipeline::ReloadAsset() {
-	for (uint8_t i = 0; i < assets_.size(); ++i) {
-		if (assets_[i].has_value()) {
-			assets_[i].value().Reload();
+void BaseCustomGraphicsPipeline::ReloadContent() {
+	for (uint8_t i = 0; i < contents_.size(); ++i) {
+		if (contents_[i].has_value()) {
+			(*contents_[i]).Reload();
 		}
 	}
 }
 
 bool BaseCustomGraphicsPipeline::CheckAsset() const {
-	return std::any_of(assets_.begin(), assets_.end(), [](const std::optional<AssetObserver<AssetBlob>>& asset) {
-		return asset.has_value() && asset.value().IsExpired();
+	return std::any_of(contents_.begin(), contents_.end(), [](const std::optional<UContentObserver<UContentBlob>>& asset) {
+		return asset.has_value() && (*asset).IsExpired();
 	});
 }
 
@@ -46,9 +45,9 @@ bool BaseCustomGraphicsPipeline::CheckAsset() const {
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 void CustomGraphicsPipeline::RegisterBlob() {
-	for (uint8_t i = 0; i < assets_.size(); ++i) {
-		if (assets_[i].has_value()) {
-			SetBlob(*assets_[i].value().WaitGet(), static_cast<GraphicsShaderType>(i));
+	for (uint8_t i = 0; i < contents_.size(); ++i) {
+		if (contents_[i].has_value()) {
+			SetBlob((*contents_[i]).WaitGet()->GetBlob(), static_cast<GraphicsShaderType>(i));
 
 		} else {
 			blobs_[i] = std::nullopt;
@@ -78,9 +77,9 @@ void CustomGraphicsPipeline::CheckAndReload() {
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 void CustomReflectionGraphicsPipeline::RegisterBlob() {
-	for (uint8_t i = 0; i < assets_.size(); ++i) {
-		if (assets_[i].has_value()) {
-			SetBlob(*assets_[i].value().WaitAcquire(), static_cast<GraphicsShaderType>(i));
+	for (uint8_t i = 0; i < contents_.size(); ++i) {
+		if (contents_[i].has_value()) {
+			SetBlob((*contents_[i]).WaitAcquire()->GetBlob(), static_cast<GraphicsShaderType>(i));
 
 		} else {
 			blobs_[i] = std::nullopt;

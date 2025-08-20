@@ -6,7 +6,6 @@
 //-----------------------------------------------------------------------------------------
 //* engine
 #include <Engine/System/SxavengerSystem.h>
-#include <Engine/Asset/SxavengerAsset.h>
 #include <Engine/Editor/EditorEngine.h>
 #include <Engine/Editor/Editors/DevelopEditor.h>
 #include <Engine/Render/FMainRender.h>
@@ -57,18 +56,18 @@ void DemoGameLoop::InitGame() {
 	player_->Awake();
 	player_->Start();
 
-	AssetObserver<AssetScene> scene = SxavengerAsset::TryImport<AssetScene>("assets/scene/sponza.scene");
-	sSceneObjects->InputJson(scene.Acquire()->GetData());
+	//AssetObserver<AssetScene> scene = SxavengerAsset::TryImport<AssetScene>("assets/scene/sponza.scene");
+	//sSceneObjects->InputJson(scene.Acquire()->GetData());
 
 	SetCollisionCallback();
 
 	skylight_ = std::make_unique<MonoBehaviour>();
 	skylight_->SetName("skylight");
 	auto light = skylight_->AddComponent<SkyLightComponent>();
-	light->GetDiffuseParameter().SetTexture(SxavengerAsset::Import<AssetTexture>("assets/textures/textureCube/sky_irradiance.dds"));
-	light->GetSpecularParameter().SetTexture(SxavengerAsset::Import<AssetTexture>("assets/textures/textureCube/sky_radiance.dds"));
-	light->SetEnvironment(SxavengerAsset::Import<AssetTexture>("assets/textures/textureCube/sky_environment.dds").WaitAcquire()->GetGPUHandleSRV());
-	light->GetParameter().intensity = 0.3f;
+	light->SetIrradiance(sUContentStorage->Import<UContentTexture>("assets/textures/textureCube/sky_irradiance.dds")->GetId());
+	light->SetRadiance(sUContentStorage->Import<UContentTexture>("assets/textures/textureCube/sky_radiance.dds")->GetId());
+	light->SetEnvironment(sUContentStorage->Import<UContentTexture>("assets/textures/textureCube/sky_environment.dds")->GetId());
+	light->SetIntensity(0.3f);
 
 	volume_ = std::make_unique<MonoBehaviour>();
 	volume_->SetName("volume");
@@ -80,7 +79,7 @@ void DemoGameLoop::InitGame() {
 	volume_->GetComponent<PostProcessLayerComponent>()->AddPostProcess<PostProcessChromaticAberration>();
 	volume_->GetComponent<PostProcessLayerComponent>()->AddPostProcess<PostProcessRadialBlur>();
 
-	auto texture = SxavengerAsset::TryImport<AssetTexture>("assets/textures/LUT/lut_reddish.png", Texture::Option{ Texture::Encoding::Intensity, false });
+	const auto& texture = sUContentStorage->Import<UContentTexture>("assets/textures/LUT/lut_reddish.png", UContentTexture::Option{ UContentTexture::Encoding::Intensity, false })->GetId();
 	auto lut = volume_->GetComponent<PostProcessLayerComponent>()->AddPostProcess<PostProcessLUT>();
 	lut->CreateTexture(SxavengerSystem::GetDirectQueueContext(), texture, { 16, 16 });
 

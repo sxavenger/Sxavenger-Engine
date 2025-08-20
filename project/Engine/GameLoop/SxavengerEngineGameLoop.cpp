@@ -6,7 +6,6 @@
 //* engine
 #include <Engine/System/SxavengerSystem.h>
 #include <Engine/Content/SxavengerContent.h>
-#include <Engine/Asset/SxavengerAsset.h>
 #include <Engine/Render/FRenderCore.h>
 #include <Engine/Render/FMainRender.h>
 
@@ -70,7 +69,6 @@ void SxavengerEngineGameLoop::Init(GameLoop::Context* context) {
 void SxavengerEngineGameLoop::Term() {
 	SxavengerSystem::ShutdownAsyncThread();
 
-	SxavengerAsset::Term();
 	SxavengerContent::Term();
 	SxavengerSystem::Term();
 }
@@ -120,7 +118,7 @@ void SxavengerEngineGameLoop::CreateCheckerboard() {
 }
 
 void SxavengerEngineGameLoop::UpdateMaterials() {
-	sAssetStorage->ForEachCompleted<AssetModel>([](AssetModel* asset) {
-		asset->UpdateMaterials();
+	sUAssetStorage->ForEach<UAssetMaterial>([](UAssetMaterial* asset) {
+		asset->Update();
 	});
 }

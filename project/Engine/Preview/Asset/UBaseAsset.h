@@ -31,9 +31,14 @@ public:
 	//=========================================================================================
 
 	UBaseAsset(const Uuid& id) : id_(id) {}
+	UBaseAsset(const std::nullopt_t&) : id_(std::nullopt) {}
 	virtual ~UBaseAsset() = default;
 
-	const Uuid& GetId() const { return id_; }
+	bool HasId() const { return id_.has_value(); }
+
+	const Uuid& GetId() const { return id_.value(); } //!< todo exceptionの追加
+
+	bool IsComplete() const { return status_ == Status::Complete; }
 
 protected:
 
@@ -47,8 +52,6 @@ protected:
 	// protected methods
 	//=========================================================================================
 
-	bool IsComplete() const { return status_ == Status::Complete; }
-
 	void Complete() { status_ = Status::Complete; }
 
 private:
@@ -57,7 +60,7 @@ private:
 	// private variables
 	//=========================================================================================
 
-	const Uuid id_;
+	const std::optional<Uuid> id_;
 
 };
 

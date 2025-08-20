@@ -91,6 +91,10 @@ const DxObject::Descriptor& UAssetTexture::GetDescriptorSRV() const {
 	return descriptorSRV_;
 }
 
+const D3D12_GPU_DESCRIPTOR_HANDLE& UAssetTexture::GetGPUHandleSRV() const {
+	return GetDescriptorSRV().GetGPUHandle();
+}
+
 ComPtr<ID3D12Resource> UAssetTexture::CreateTextureResource(const DirectX::TexMetadata& metadata) const {
 	// propの設定
 	D3D12_HEAP_PROPERTIES prop = {};

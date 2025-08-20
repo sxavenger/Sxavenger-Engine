@@ -8,11 +8,13 @@
 #include "UContentTexture.h"
 #include "UContentModel.h"
 #include "UContentAnimation.h"
+#include "UContentBlob.h"
 
 //* engine
 #include <Engine/System/SxavengerSystem.h>
 
 //* lib
+#include <Lib/Sxl/OptimizedPathMap.h>
 #include <Lib/Adapter/Uuid/Uuid.h>
 
 //* c++
@@ -30,7 +32,7 @@ public:
 	// using
 	////////////////////////////////////////////////////////////////////////////////////////////
 
-	using Storage = std::unordered_map<const std::type_info*, std::unordered_map<std::filesystem::path, std::shared_ptr<UBaseContent>>>;
+	using Storage = std::unordered_map<const std::type_info*, Sxl::OptimizedPathMap<std::shared_ptr<UBaseContent>>>;
 
 public:
 
@@ -48,6 +50,10 @@ public:
 
 	template <UContentConcept T>
 	std::shared_ptr<T> GetContent(const std::filesystem::path& filepath) const;
+
+	std::shared_ptr<UBaseContent> GetContent(const std::type_info* type, const std::filesystem::path& filepath) const;
+
+	const std::type_info* GetType(const std::filesystem::path& filepath) const;
 	
 	//* singleton *//
 
@@ -83,7 +89,7 @@ inline std::shared_ptr<T> UContentStorage::Import(const std::filesystem::path& f
 	constexpr const std::type_info* type = &typeid(T);
 
 	if (!Contains(type, filepath)) {
-		this->Reload<T>(filepath, param); //!< Contentが存在しない場合は、読み込みを行う
+		return this->Reload<T>(filepath, param); //!< Contentが存在しない場合は、読み込みを行う
 	}
 
 	return UContentStorage::Cast<T>(storage_[type][filepath]);
@@ -97,12 +103,13 @@ inline std::shared_ptr<T> UContentStorage::Reload(const std::filesystem::path& f
 	std::shared_ptr<UBaseContent> content = std::make_shared<T>();
 	content->SetFilepath(filepath);
 	content->SetParam(param);
+	content->AttachUuid(); //!< uuidの設定
 
 	SxavengerSystem::PushTask(content->GetAsyncExecution(), content);
 
 	// contentをstorageに登録
 	storage_[type][filepath] = content;
-	return UContentStorage::Cast<T>(storage_[type][filepath]);
+	return UContentStorage::Cast<T>(content);
 }
 
 template <UContentConcept T>

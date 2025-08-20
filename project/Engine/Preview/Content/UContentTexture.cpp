@@ -25,17 +25,23 @@ void UContentTexture::AsyncLoad(_MAYBE_UNUSED const DirectXQueueContext* context
 	Load(context, UBaseContent::GetFilepath(), option);
 }
 
-void UContentTexture::Load(const DirectXQueueContext* context, const std::filesystem::path& filepath, const Option& option) {
+void UContentTexture::AttachUuid() {
+	UBaseContent::CheckExist();
+
 	// idを取得
 	GetUuid();
 
+	// storageに登録
+	auto asset = std::make_shared<UAssetTexture>(id_);
+	sUAssetStorage->Register(asset, UBaseContent::GetFilepath());
+}
+
+void UContentTexture::Load(const DirectXQueueContext* context, const std::filesystem::path& filepath, const Option& option) {
 	// imageの読み込み
 	DirectX::ScratchImage image = LoadTexture(filepath, option);
 
 	// assetの生成
-	auto asset = std::make_shared<UAssetTexture>(id_);
-	sUAssetStorage->Register(asset, filepath);
-
+	auto asset = sUAssetStorage->GetAsset<UAssetTexture>(id_);
 	asset->Setup(context, image);
 };
 

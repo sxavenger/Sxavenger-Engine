@@ -20,8 +20,8 @@ const D3D12_GPU_DESCRIPTOR_HANDLE& SpriteRendererComponent::GetDescriptorVisitor
 	return handle;
 }
 
-const D3D12_GPU_DESCRIPTOR_HANDLE& SpriteRendererComponent::GetDescriptorVisitor::operator()(const AssetObserver<AssetTexture>& observer) {
-	return observer.WaitGet()->GetGPUHandleSRV();
+const D3D12_GPU_DESCRIPTOR_HANDLE& SpriteRendererComponent::GetDescriptorVisitor::operator()(const UAssetParameter<UAssetTexture>& parameter) {
+	return parameter.WaitGet()->GetGPUHandleSRV();
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////

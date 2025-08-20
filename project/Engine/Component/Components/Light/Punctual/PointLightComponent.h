@@ -56,7 +56,7 @@ public:
 
 	void Init();
 
-	//* buffer option *//
+	//* component option *//
 
 	void CreateParameterBuffer();
 

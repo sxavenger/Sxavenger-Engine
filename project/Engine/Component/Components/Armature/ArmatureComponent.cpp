@@ -22,18 +22,18 @@ const std::string ArmatureComponent::kArmatureName = "Armature";
 // ArmatureComponent class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-const Skeleton& ArmatureComponent::GetSkeleton() const {
-	Exception::Assert(skeleton_.has_value(), "skeleton is not set.");
-	return skeleton_.value();
+void ArmatureComponent::SetSkeleton(const Uuid& skeleton) {
+	referenceSkeleton_ = skeleton;
+	skeleton_          = referenceSkeleton_.WaitRequire()->GetSkeleton();
 }
 
 void ArmatureComponent::UpdateAnimation(const Animation& animation, TimePointd<TimeUnit::second> time, bool isLoop) {
-	if (!skeleton_.has_value()) {
-		Logger::WarningRuntime("warning | [ArmatureComponent] UpdateAnimation", "skeleton is not set.");
+	if (referenceSkeleton_.Empty()) {
+		Logger::WarningRuntime("warning | [ArmatureComponent] UpdateAnimation", "reference skeleton is empty.");
 		return;
 	}
 
-	skeleton_.value().Update(animation, time, isLoop);
+	skeleton_.Update(animation, time, isLoop);
 }
 
 void ArmatureComponent::TransitionAnimation(
@@ -41,12 +41,12 @@ void ArmatureComponent::TransitionAnimation(
 	const Animation& animationB, TimePointd<TimeUnit::second> timeB, bool isLoopB,
 	float t) {
 
-	if (!skeleton_.has_value()) {
-		Logger::WarningRuntime("warning | [ArmatureComponent] TransitionAnimation", "skeleton is not set.");
+	if (referenceSkeleton_.Empty()) {
+		Logger::WarningRuntime("warning | [ArmatureComponent] TransitionAnimation", "reference skeleton is empty.");
 		return;
 	}
 
-	skeleton_.value().TransitionAnimation(
+	skeleton_.TransitionAnimation(
 		animationA, timeA, isLoopA,
 		animationB, timeB, isLoopB,
 		t
@@ -54,12 +54,10 @@ void ArmatureComponent::TransitionAnimation(
 }
 
 void ArmatureComponent::ShowComponentInspector() {
-	if (!skeleton_.has_value()) {
-		ImGui::TextDisabled("skeleton is not set.");
+	if (referenceSkeleton_.Empty()) {
+		ImGui::TextDisabled("reference skeleton is empty.");
 		return;
 	}
-
-	const auto& skeleton = GetSkeleton();
 
 	Matrix4x4 mat = Matrix4x4::Identity();
 
@@ -69,7 +67,7 @@ void ArmatureComponent::ShowComponentInspector() {
 		}
 	}
 
-	PushBornLine(mat, skeleton.joints);
+	PushBornLine(mat, skeleton_.joints);
 }
 
 void ArmatureComponent::PushBornLine(const Matrix4x4& mat, const std::vector<Joint>& joints) {

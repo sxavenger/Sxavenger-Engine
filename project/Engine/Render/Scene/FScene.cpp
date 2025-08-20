@@ -54,7 +54,7 @@ void FScene::Init() {
 		desc.SetVirtualSRV(16, 6, 2); //!< gPointLightShadows
 
 		// Sky Light
-		desc.SetHandleSRV(17, 7, 2);                                                                  //!< gSkyLight
+		desc.SetVirtualCBV(17, 4, 2);                                                                 //!< gSkyLight
 		desc.SetSamplerLinear(DxObject::MODE_WRAP, DxObject::ShaderVisibility::VISIBILITY_ALL, 0, 2); //!< gSampler
 
 		stateObjectContext_.CreateRootSignature(SxavengerSystem::GetDxDevice(), desc);
@@ -96,44 +96,25 @@ void FScene::SetupTopLevelAS(const DirectXQueueContext* context) {
 	topLevelAS_.BeginSetupInstance();
 
 	sComponentStorage->ForEachActive<MeshRendererComponent>([&](MeshRendererComponent* component) {
-		
-		DxrObject::TopLevelAS::Instance instance = {};
+		if (!component->IsEnabled()) {
+			return; //!< material or meshが設定されていない場合はスキップ
+			// todo: missing material を用意する
+		}
 
-		// instanceの設定
-		switch (component->GetMaterial()->GetMode()) {
-			case Material::Mode::Opaque:
-				component->GetMesh()->CreateBottomLevelAS(context);
+		std::shared_ptr<UAssetMesh> mesh         = component->GetMesh();
+		std::shared_ptr<UAssetMaterial> material = component->GetMaterial();
 
-				//* instance設定
-				instance.flag          = D3D12_RAYTRACING_INSTANCE_FLAG_NONE;
-				instance.bottomLevelAS = component->GetMesh()->GetBottomLevelAS().bottomLevelAS.get();
-				instance.mat           = component->GetTransform()->GetMatrix();
-				instance.instanceId    = 0;
-				instance.instanceMask  = component->GetMask();
+		mesh->Update(context); //!< meshの更新
 
-				//* ExportGroupの設定
-				instance.expt = FRenderCore::GetInstance()->GetPathtracing()->GetExportGroup(FRenderCorePathtracing::HitgroupExportType::Mesh);
-				instance.parameter.SetAddress(0, component->GetMesh()->GetVertex()->GetGPUVirtualAddress());
-				instance.parameter.SetAddress(1, component->GetMesh()->GetIndex()->GetGPUVirtualAddress());
-				instance.parameter.SetAddress(2, component->GetMaterial()->GetGPUVirtualAddress());
+		FRenderCorePathtracing::HitgroupExportType type = {};
+
+		switch (material->GetMode()) {
+			case UAssetMaterial::Mode::Opaque:
+				type = FRenderCorePathtracing::HitgroupExportType::Mesh;
 				break;
-				
 
-			case Material::Mode::Emissive:
-				component->GetMesh()->CreateBottomLevelAS(context);
-
-				//* instance設定
-				instance.flag          = D3D12_RAYTRACING_INSTANCE_FLAG_NONE;
-				instance.bottomLevelAS = component->GetMesh()->GetBottomLevelAS().bottomLevelAS.get();
-				instance.mat           = component->GetTransform()->GetMatrix();
-				instance.instanceId    = 0;
-				instance.instanceMask  = component->GetMask();
-
-				//* ExportGroupの設定
-				instance.expt = FRenderCore::GetInstance()->GetPathtracing()->GetExportGroup(FRenderCorePathtracing::HitgroupExportType::Emissive);
-				instance.parameter.SetAddress(0, component->GetMesh()->GetVertex()->GetGPUVirtualAddress());
-				instance.parameter.SetAddress(1, component->GetMesh()->GetIndex()->GetGPUVirtualAddress());
-				instance.parameter.SetAddress(2, component->GetMaterial()->GetGPUVirtualAddress());
+			case UAssetMaterial::Mode::Emissive:
+				type = FRenderCorePathtracing::HitgroupExportType::Emissive;
 				break;
 
 			default:
@@ -141,30 +122,60 @@ void FScene::SetupTopLevelAS(const DirectXQueueContext* context) {
 				return;
 		}
 
+		// instanceの設定
+		DxrObject::TopLevelAS::Instance instance = {};
+
+		instance.flag          = D3D12_RAYTRACING_INSTANCE_FLAG_NONE;
+		instance.bottomLevelAS = mesh->GetInputMesh().GetBottomLevelAS().Get();
+		instance.mat           = component->GetTransform()->GetMatrix();
+		instance.instanceMask  = component->GetMask();
+		instance.instanceId    = 0;
+
+		//* ExportGroupの設定
+		instance.expt = FRenderCore::GetInstance()->GetPathtracing()->GetExportGroup(type);
+		instance.parameter.SetAddress(0, mesh->GetInputVertex()->GetGPUVirtualAddress());
+		instance.parameter.SetAddress(1, mesh->GetInputIndex()->GetGPUVirtualAddress());
+		instance.parameter.SetAddress(2, material->GetGPUVirtualAddress());
+
 		topLevelAS_.AddInstance(instance);
 	});
 
 	sComponentStorage->ForEachActive<SkinnedMeshRendererComponent>([&](SkinnedMeshRendererComponent* component) {
 
-		// 透過の場合はスキップ
-		if (component->GetMaterial()->GetMode() != Material::Mode::Opaque) {
-			return;
+		std::shared_ptr<UAssetMaterial> material = component->GetMaterial();
+
+		component->Update(context); //!< meshの更新
+
+		FRenderCorePathtracing::HitgroupExportType type = {};
+
+		switch (material->GetMode()) {
+			case UAssetMaterial::Mode::Opaque:
+				type = FRenderCorePathtracing::HitgroupExportType::Mesh;
+				break;
+
+			case UAssetMaterial::Mode::Emissive:
+				type = FRenderCorePathtracing::HitgroupExportType::Emissive;
+				break;
+
+			default:
+				Logger::WarningRuntime("warning | [FScene] SetupTopLevelAS", "MeshRendererComponent has unsupported material mode.");
+				return;
 		}
 
-		component->GetMesh().UpdateBottomLevelAS(context);
-
+		// instanceの設定
 		DxrObject::TopLevelAS::Instance instance = {};
-		instance.flag          = D3D12_RAYTRACING_INSTANCE_FLAG_NONE;
-		instance.bottomLevelAS = component->GetMesh().GetBottomLevelAS();
-		instance.mat           = component->GetTransform()->GetMatrix();
-		instance.instanceId    = 0;
-		instance.instanceMask  = component->GetMask();
 
-		//* raytracing export group todo...
-		instance.expt = FRenderCore::GetInstance()->GetPathtracing()->GetExportGroup(FRenderCorePathtracing::HitgroupExportType::Mesh);
-		instance.parameter.SetAddress(0, component->GetMesh().vertex->GetGPUVirtualAddress());
-		instance.parameter.SetAddress(1, component->GetReferenceMesh()->input.GetIndex()->GetGPUVirtualAddress());
-		instance.parameter.SetAddress(2, component->GetMaterial()->GetGPUVirtualAddress());
+		instance.flag          = D3D12_RAYTRACING_INSTANCE_FLAG_NONE;
+		instance.bottomLevelAS = component->GetBottomLevelAS();
+		instance.mat           = component->GetTransform()->GetMatrix();
+		instance.instanceMask  = component->GetMask();
+		instance.instanceId    = 0;
+
+		//* ExportGroupの設定
+		instance.expt = FRenderCore::GetInstance()->GetPathtracing()->GetExportGroup(type);
+		instance.parameter.SetAddress(0, component->GetInputVertex()->GetGPUVirtualAddress());
+		instance.parameter.SetAddress(1, component->GetInputIndex()->GetGPUVirtualAddress());
+		instance.parameter.SetAddress(2, material->GetGPUVirtualAddress());
 
 		topLevelAS_.AddInstance(instance);
 	});

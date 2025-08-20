@@ -7,6 +7,7 @@
 #include "UBaseAsset.h"
 
 //* engine
+#include <Engine/System/DirectX/Context/DirectXQueueContext.h>
 #include <Engine/Content/InputGeometry/InputMesh.h>
 #include <Engine/Content/Animation/JointWeight.h>
 
@@ -37,7 +38,27 @@ public:
 	UAssetMesh(const Uuid& id) : UBaseAsset(id) {}
 	~UAssetMesh() override = default;
 
-	void Setup(const aiMesh* mesh, const Uuid& material);
+	void Setup(const aiMesh* mesh);
+
+	void Update(const DirectXQueueContext* context);
+
+	//* asset option *//
+
+	void BindIABuffer(const DirectXQueueContext* context) const;
+
+	void DrawCall(const DirectXQueueContext* context, UINT instanceCount = 1) const;
+
+	//* getter *//
+
+	const InputMesh& GetInputMesh() const { return input_; }
+	InputMesh& GetInputMesh() { return input_; }
+
+	const InputMesh::InputVertex* GetInputVertex() const { return input_.GetVertex(); }
+	const InputMesh::InputIndex* GetInputIndex() const { return input_.GetIndex(); }
+
+	const std::unordered_map<std::string, JointWeightData>& GetJointWeights() const { return jointWeights_; }
+
+	const std::string& GetName() const { return name_; }
 
 private:
 
@@ -50,9 +71,6 @@ private:
 	std::optional<uint32_t>                          materialIndex_;
 	std::unordered_map<std::string, JointWeightData> jointWeights_;
 	std::string                                      name_;
-
-	//* material data
-	Uuid material_;
 
 	//=========================================================================================
 	// private methods

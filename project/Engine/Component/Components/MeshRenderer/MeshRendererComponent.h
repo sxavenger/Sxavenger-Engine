@@ -11,11 +11,15 @@
 #include "../Transform/TransformComponent.h"
 
 //* engine
-#include <Engine/Content/InputGeometry/InputMesh.h>
-#include <Engine/Content/Material/Material.h>
+#include <Engine/Preview/Asset/UAssetMesh.h>
+#include <Engine/Preview/Asset/UAssetMaterial.h>
+#include <Engine/Preview/Asset/UAssetParameter.h>
 
 //* lib
 #include <Lib/Sxl/Flag.h>
+
+//* c++
+#include <optional>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // MeshRendererComponent class
@@ -35,18 +39,20 @@ public:
 
 	//* setter *//
 
-	void SetMesh(InputMesh* mesh) { mesh_ = mesh; }
+	void SetMesh(const Uuid& mesh) { mesh_ = mesh; }
+	void SetMesh(const std::shared_ptr<UAssetMesh>& mesh) { mesh_ = mesh; }
 
-	void SetMaterial(Material* material) { material_ = material; }
+	void SetMaterial(const Uuid& material) { material_ = material; }
+	void SetMaterial(const std::shared_ptr<UAssetMaterial>& material) { material_ = material; }
 
 	void SetTransform(const TransformComponent* transform) { transform_ = transform; }
 
 	//* getter *//
 
-	const InputMesh* GetMesh() const { return mesh_; }
-	InputMesh* GetMesh() { return mesh_; }
+	bool IsEnabled() const { return !mesh_.Empty() && !material_.Empty(); }
 
-	const Material* GetMaterial() const { return material_; }
+	std::shared_ptr<UAssetMesh> GetMesh() const;
+	std::shared_ptr<UAssetMaterial> GetMaterial() const;
 
 	const TransformComponent* GetTransform() const;
 
@@ -60,8 +66,8 @@ private:
 
 	//* parameter *//
 
-	InputMesh* mesh_    = nullptr;
-	Material* material_ = nullptr;
+	UAssetParameter<UAssetMesh> mesh_;
+	UAssetParameter<UAssetMaterial> material_;
 
 	const TransformComponent* transform_ = nullptr; //!< override用
 

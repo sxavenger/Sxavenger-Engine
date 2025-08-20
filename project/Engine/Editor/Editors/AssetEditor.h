@@ -8,7 +8,9 @@
 
 //* engine
 #include <Engine/System/Config/SxavengerConfig.h>
-#include <Engine/Asset/SxavengerAsset.h>
+#include <Engine/Preview/Content/UBaseContent.h>
+#include <Engine/Preview/Asset/UAssetTexture.h>
+#include <Engine/Preview/Asset/UAssetParameter.h>
 
 //* c++
 #include <filesystem>
@@ -43,10 +45,10 @@ private:
 
 	//* textures *//
 
-	AssetObserver<AssetTexture> folderTextures_;
-	AssetObserver<AssetTexture> fileTexture_;
+	UAssetParameter<UAssetTexture> folderTextures_;
+	UAssetParameter<UAssetTexture> fileTexture_;
 
-	std::unordered_map<const std::type_info*, AssetObserver<AssetTexture>> assetTextures_;
+	std::unordered_map<const std::type_info*, UAssetParameter<UAssetTexture>> assetTextures_;
 
 	//* parameter *//
 
@@ -62,15 +64,15 @@ private:
 
 	//* imgui helper *//
 
-	bool ImageButton(const std::filesystem::path& path, AssetObserver<AssetTexture>& texture);
+	bool ImageButton(const std::filesystem::path& path, const UAssetParameter<UAssetTexture>& texture);
 
 	//* helper *//
 
 	static const std::string ConvertStr(const std::filesystem::path& path);
 
-	void SetSelected(BaseAsset* asset);
+	void SetSelected(UBaseContent* content);
 
-	bool CheckSelectedInspector(BaseAsset* asset);
+	bool CheckSelectedInspector(UBaseContent* content);
 
 	void ForEachDirectory(const std::filesystem::path& path, const std::function<void(const std::filesystem::directory_entry&)>& func);
 

@@ -4,8 +4,6 @@
 // include
 //-----------------------------------------------------------------------------------------
 //* engine
-#include <Engine/Asset/SxavengerAsset.h>
-#include <Engine/Asset/Observer/AssetObserver.h>
 #include <Engine/Component/Components/Transform/TransformComponent.h>
 
 //* external
@@ -14,15 +12,6 @@
 ////////////////////////////////////////////////////////////////////////////////////////////
 // SceneObject class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
-
-void SceneObject::CreateMeshComponent(const std::filesystem::path& filepath) {
-	auto asset = SxavengerAsset::TryImport<AssetModel>(filepath);
-	asset.WaitGet()->CreateStaticNodeMeshBehaviour(this);
-
-	filepath_ = filepath;
-
-	MonoBehaviour::AddComponent<TransformComponent>();
-}
 
 void SceneObject::Inspectable() {
 	if (ImGui::Button("delete")) {
@@ -52,26 +41,28 @@ json SceneObject::PerseToJson() const {
 }
 
 void SceneObject::InputJson(const json& data) {
+	data;
+	// todo:
 
-	//* parameter
-	filepath_ = data["filepath"].get<std::string>();
+	////* parameter
+	//filepath_ = data["filepath"].get<std::string>();
 
-	if (!filepath_.empty()) {
-		auto asset = SxavengerAsset::TryImport<AssetModel>(filepath_);
-		asset.WaitGet()->CreateStaticNodeMeshBehaviour(this);
-	}
-	
-	//* properties
-	name_        = data["name"].get<std::string>();
-	isRenamable_ = data["isRenamable"];
-	MonoBehaviour::SetActive(data["isActive"]);
-	isView_      = data["isView"];
+	//if (!filepath_.empty()) {
+	//	auto asset = SxavengerAsset::TryImport<AssetModel>(filepath_);
+	//	asset.WaitGet()->CreateStaticNodeMeshBehaviour(this);
+	//}
+	//
+	////* properties
+	//name_        = data["name"].get<std::string>();
+	//isRenamable_ = data["isRenamable"];
+	//MonoBehaviour::SetActive(data["isActive"]);
+	//isView_      = data["isView"];
 
-	
+	//
 
-	//* components
-	for (const auto& [name, component] : data["components"].items()) {
-		MonoBehaviour::AddComponent(name)->InputJson(component);
-	}
+	////* components
+	//for (const auto& [name, component] : data["components"].items()) {
+	//	MonoBehaviour::AddComponent(name)->InputJson(component);
+	//}
 
 }

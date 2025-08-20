@@ -6,7 +6,6 @@
 //* engine
 #include <Engine/System/UI/SxImGui.h>
 #include <Engine/System/SxavengerSystem.h>
-#include <Engine/Asset/SxavengerAsset.h>
 #include <Engine/Component/Components/PostProcessLayer/PostProcessLayerComponent.h>
 
 //* lib

@@ -10,7 +10,6 @@
 
 //* engine
 #include <Engine/System/UI/SxImGui.h>
-#include <Engine/Asset/AssetStorage.h>
 #include <Engine/Component/Entity/MonoBehaviourContainer.h>
 #include <Engine/Component/ComponentHelper.h>
 #include <Engine/Module/Scene/SceneObjects.h>
@@ -149,20 +148,20 @@ void HierarchyEditor::ShowHierarchyWindow() {
 		ImGui::SetCursorScreenPos(contentPos);
 		ImGui::InvisibleButton("## DropTarget Model", contentSize);
 
-		sAssetStorage->DragAndDropTarget(&typeid(AssetModel), [this](const std::filesystem::path& filepath) {
+		/*sAssetStorage->DragAndDropTarget(&typeid(AssetModel), [this](const std::filesystem::path& filepath) {
 			std::unique_ptr<SceneObject> object = std::make_unique<SceneObject>();
 			object->CreateMeshComponent(filepath);
 			sSceneObjects->AddObject(std::move(object));
-		});
+		});*/
 
 		ImGui::SetCursorScreenPos(contentPos);
 		ImGui::InvisibleButton("## DropTarget Scene", contentSize);
 
-		sAssetStorage->DragAndDropTarget<AssetScene>([this](const std::shared_ptr<AssetScene>& asset) {
+		/*sAssetStorage->DragAndDropTarget<AssetScene>([this](const std::shared_ptr<AssetScene>& asset) {
 			sSceneObjects->InputJson(asset->GetData());
 			sceneFileName_ = asset->GetFilepath().filename();
 			sceneNameBuf_  = sceneFileName_.generic_string();
-		});
+		});*/
 	}
 
 	ImGui::End();

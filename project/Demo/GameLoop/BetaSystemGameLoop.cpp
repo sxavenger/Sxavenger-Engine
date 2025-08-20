@@ -6,7 +6,6 @@
 //* engine
 #include <Engine/System/SxavengerSystem.h>
 #include <Engine/Content/SxavengerContent.h>
-#include <Engine/Asset/SxavengerAsset.h>
 #include <Engine/Editor/EditorEngine.h>
 #include <Engine/Editor/Editors/DevelopEditor.h>
 #include <Engine/Render/FMainRender.h>
@@ -61,7 +60,7 @@ void BetaSystemGameLoop::InitSystem() {
 	camera_->Init();
 	camera_->GetComponent<CameraComponent>()->SetTag(CameraComponent::Tag::GameCamera);
 
-	SxavengerAsset::TryImport<AssetModel>("assets/models/PBR_Sphere_Test/model/PBR_Sphere.gltf");
+	//SxavengerAsset::TryImport<AssetModel>("assets/models/PBR_Sphere_Test/model/PBR_Sphere.gltf");
 
 	//atmosphere_ = std::make_unique<AtmosphereActor>();
 	//atmosphere_->Init({ 1024, 1024 });
@@ -77,17 +76,14 @@ void BetaSystemGameLoop::InitSystem() {
 	//light->GetSpecularParameter().SetTexture(SxavengerAsset::Import<AssetTexture>("assets/textures/textureCube/DebugRadiance.dds"));
 	//light->SetEnvironment(SxavengerAsset::Import<AssetTexture>("assets/textures/textureCube/DebugEnvironment.dds").WaitAcquire()->GetGPUHandleSRV());
 
-	light->GetDiffuseParameter().SetTexture(SxavengerAsset::Import<AssetTexture>("assets/textures/textureCube/sky_irradiance.dds"));
-	light->GetSpecularParameter().SetTexture(SxavengerAsset::Import<AssetTexture>("assets/textures/textureCube/sky_radiance.dds"));
-	light->SetEnvironment(SxavengerAsset::Import<AssetTexture>("assets/textures/textureCube/sky_environment.dds").WaitAcquire()->GetGPUHandleSRV());
+	light->SetIrradiance(sUContentStorage->Import<UContentTexture>("assets/textures/textureCube/sky_irradiance.dds")->GetId());
+	light->SetRadiance(sUContentStorage->Import<UContentTexture>("assets/textures/textureCube/sky_radiance.dds")->GetId());
+	light->SetEnvironment(sUContentStorage->Import<UContentTexture>("assets/textures/textureCube/sky_environment.dds")->GetId());
 
 	//player_ = std::make_unique<Player>();
 	//player_->Load();
 	//player_->Awake();
 	//player_->Start();
-
-	emissive_ = std::make_unique<EmissiveActor>();
-	emissive_->Init();
 
 	//leadParticle_ = std::make_unique<LeadParticle>();
 	//leadParticle_->Load();
@@ -106,15 +102,14 @@ void BetaSystemGameLoop::InitSystem() {
 	behaviour_->GetComponent<PostProcessLayerComponent>()->AddPostProcess<PostProcessChromaticAberration>();
 	behaviour_->GetComponent<PostProcessLayerComponent>()->AddPostProcess<PostProcessRadialBlur>();
 
-	SxavengerAsset::TryImport<AssetTexture>("assets/textures/LUT/lut_greenish.png", Texture::Option{ Texture::Encoding::Intensity, false });
-	SxavengerAsset::TryImport<AssetTexture>("assets/textures/LUT/lut_reddish.png", Texture::Option{ Texture::Encoding::Intensity, false });
-	SxavengerAsset::TryImport<AssetTexture>("assets/textures/LUT/lut_sepia.png", Texture::Option{ Texture::Encoding::Intensity, false });
+	//SxavengerAsset::TryImport<AssetTexture>("assets/textures/LUT/lut_greenish.png", Texture::Option{ Texture::Encoding::Intensity, false });
+	//SxavengerAsset::TryImport<AssetTexture>("assets/textures/LUT/lut_reddish.png", Texture::Option{ Texture::Encoding::Intensity, false });
+	//SxavengerAsset::TryImport<AssetTexture>("assets/textures/LUT/lut_sepia.png", Texture::Option{ Texture::Encoding::Intensity, false });
 
-	auto texture = SxavengerAsset::TryImport<AssetTexture>("assets/textures/LUT/lut_reddish.png", Texture::Option{ Texture::Encoding::Intensity, false });
+	const auto& texture = sUContentStorage->Import<UContentTexture>("assets/textures/LUT/lut_reddish.png", UContentTexture::Option{ UContentTexture::Encoding::Intensity, false })->GetId();
 	auto lut = behaviour_->GetComponent<PostProcessLayerComponent>()->AddPostProcess<PostProcessLUT>();
 	lut->CreateTexture(SxavengerSystem::GetDirectQueueContext(), texture, { 16, 16 });
 
-	sUContentStorage->Import<UContentModel>("Assets/models/tree_sponza2/sponza.gltf");
 }
 
 void BetaSystemGameLoop::TermSystem() {

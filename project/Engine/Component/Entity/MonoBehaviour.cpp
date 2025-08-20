@@ -199,6 +199,7 @@ void MonoBehaviour::LateUpdateInspector() {
 
 json MonoBehaviour::PerseToJson() const {
 	json root = json::object();
+
 	//* properties
 	root["name"]        = name_;
 	root["isRenamable"] = isRenamable_;

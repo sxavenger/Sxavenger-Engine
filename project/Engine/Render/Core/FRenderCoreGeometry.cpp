@@ -69,8 +69,8 @@ void FRenderCoreGeometry::CreatePipeline() {
 	{
 		auto pipeline = std::make_unique<CustomReflectionGraphicsPipeline>();
 		//* blob
-		pipeline->CreateAsset(kDirectory_ / "Geometry" / "Mesh" / "Default.vs.hlsl", GraphicsShaderType::vs);
-		pipeline->CreateAsset(kDirectory_ / "Geometry" / "Mesh" / "Forward.ps.hlsl", GraphicsShaderType::ps);
+		pipeline->CreateContent(kDirectory_ / "Geometry" / "Mesh" / "Default.vs.hlsl", GraphicsShaderType::vs);
+		pipeline->CreateContent(kDirectory_ / "Geometry" / "Mesh" / "Forward.ps.hlsl", GraphicsShaderType::ps);
 		pipeline->RegisterBlob();
 
 		//* root signature
@@ -85,8 +85,8 @@ void FRenderCoreGeometry::CreatePipeline() {
 	{
 		auto pipeline = std::make_unique<CustomReflectionGraphicsPipeline>();
 		//* blob
-		pipeline->CreateAsset(kDirectory_ / "Geometry" / "Mesh" / "Default.vs.hlsl", GraphicsShaderType::vs);
-		pipeline->CreateAsset(kDirectory_ / "Geometry" / "Mesh" / "Deferred.ps.hlsl", GraphicsShaderType::ps);
+		pipeline->CreateContent(kDirectory_ / "Geometry" / "Mesh" / "Default.vs.hlsl", GraphicsShaderType::vs);
+		pipeline->CreateContent(kDirectory_ / "Geometry" / "Mesh" / "Deferred.ps.hlsl", GraphicsShaderType::ps);
 		pipeline->RegisterBlob();
 
 		//* root signature
@@ -100,8 +100,8 @@ void FRenderCoreGeometry::CreatePipeline() {
 
 	{
 		auto pipeline = std::make_unique<CustomReflectionGraphicsPipeline>();
-		pipeline->CreateAsset(kDirectory_ / "Particle" / "GPUParticle" / "GPUParticle.vs.hlsl", GraphicsShaderType::vs);
-		pipeline->CreateAsset(kDirectory_ / "Particle" / "GPUParticle" / "GPUParticle.ps.hlsl", GraphicsShaderType::ps);
+		pipeline->CreateContent(kDirectory_ / "Particle" / "GPUParticle" / "GPUParticle.vs.hlsl", GraphicsShaderType::vs);
+		pipeline->CreateContent(kDirectory_ / "Particle" / "GPUParticle" / "GPUParticle.ps.hlsl", GraphicsShaderType::ps);
 		pipeline->RegisterBlob();
 
 		//* root signature
