@@ -92,7 +92,7 @@ json PointLightComponent::PerseToJson() const {
 	json data = json::object();
 
 	data["color"]           = GeometryJsonSerializer::ToJson(parameter_->At(0).color);
-	data["unit"]            = static_cast<uint32_t>(parameter_->At(0).unit);
+	data["unit"]            = magic_enum::enum_name(parameter_->At(0).unit);
 	data["intensity"]       = parameter_->At(0).intensity;
 	data["radius"]          = parameter_->At(0).radius;
 	data["shadow_strength"] = LightCommon::GetShadowParameter().strength;
@@ -103,7 +103,7 @@ json PointLightComponent::PerseToJson() const {
 
 void PointLightComponent::InputJson(const json& data) {
 	parameter_->At(0).color                    = GeometryJsonSerializer::JsonToColor3f(data["color"]);
-	parameter_->At(0).unit                     = static_cast<Units>(data["unit"].get<uint32_t>());
+	parameter_->At(0).unit                     = magic_enum::enum_cast<Units>(data["unit"].get<std::string>()).value_or(Units::Candela);
 	parameter_->At(0).intensity                = data["intensity"].get<float>();
 	parameter_->At(0).radius                   = data["radius"].get<float>();
 	LightCommon::GetShadowParameter().strength = data["shadow_strength"].get<float>();
