@@ -56,6 +56,10 @@ public:
 	std::shared_ptr<UBaseContent> GetContent(const std::type_info* type, const std::filesystem::path& filepath) const;
 
 	const std::type_info* GetType(const std::filesystem::path& filepath) const;
+
+	//* imgui option *//
+
+	void DragAndDropSource(const std::type_info* type, const std::filesystem::path& filepath);
 	
 	//* singleton *//
 

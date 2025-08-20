@@ -42,8 +42,8 @@ public:
 	//=========================================================================================
 
 	UAssetParameter() = default;
-	UAssetParameter(const std::shared_ptr<T>& asset) : parameter_(asset) {}
-	UAssetParameter(const Uuid& id) : parameter_(id) {}
+	UAssetParameter(const std::shared_ptr<T>& asset) { Set(asset); }
+	UAssetParameter(const Uuid& id) { Set(id); }
 
 	bool Empty() const { return std::holds_alternative<std::monostate>(parameter_); }
 

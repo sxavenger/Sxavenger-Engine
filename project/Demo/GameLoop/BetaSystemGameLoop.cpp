@@ -111,6 +111,7 @@ void BetaSystemGameLoop::InitSystem() {
 	lut->CreateTexture(SxavengerSystem::GetDirectQueueContext(), texture, { 16, 16 });
 
 	mesh_ = ComponentHelper::CreateStaticMeshBehaviour(sUContentStorage->Import<UContentModel>("assets/models/PBR_Sphere_Test/model/PBR_Sphere.gltf"));
+	JsonHandler::WriteToJson("test.json", mesh_->PerseToJson());
 }
 
 void BetaSystemGameLoop::TermSystem() {
