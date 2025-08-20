@@ -89,12 +89,7 @@ const TransformComponent* PointLightComponent::RequireTransform() const {
 }
 
 json PointLightComponent::PerseToJson() const {
-
 	json data = json::object();
-
-	if (parameter_ == nullptr) {
-		return data;
-	}
 
 	data["color"]           = GeometryJsonSerializer::ToJson(parameter_->At(0).color);
 	data["unit"]            = static_cast<uint32_t>(parameter_->At(0).unit);

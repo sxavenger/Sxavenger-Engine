@@ -45,8 +45,6 @@ public:
 	void SetMaterial(const Uuid& material) { material_ = material; }
 	void SetMaterial(const std::shared_ptr<UAssetMaterial>& material) { material_ = material; }
 
-	void SetTransform(const TransformComponent* transform) { transform_ = transform; }
-
 	//* getter *//
 
 	bool IsEnabled() const { return !mesh_.Empty() && !material_.Empty(); }
@@ -57,6 +55,12 @@ public:
 	const TransformComponent* GetTransform() const;
 
 	uint8_t GetMask() const { return mask_.Get(); }
+
+	//* json option *//
+
+	json PerseToJson() const override;
+
+	void InputJson(const json& data) override;
 
 private:
 
@@ -69,7 +73,6 @@ private:
 	UAssetParameter<UAssetMesh> mesh_;
 	UAssetParameter<UAssetMaterial> material_;
 
-	const TransformComponent* transform_ = nullptr; //!< override用
 
 	//* config *//
 

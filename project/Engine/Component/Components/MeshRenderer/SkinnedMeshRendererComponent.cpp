@@ -110,6 +110,20 @@ const TransformComponent* SkinnedMeshRendererComponent::GetTransform() const {
 	return BaseComponent::GetBehaviour()->RequireComponent<TransformComponent>();
 }
 
+json SkinnedMeshRendererComponent::PerseToJson() const {
+	json data = json::object();
+
+	data["referenceMesh"] = referenceMesh_.Serialize();
+	data["material"]      = material_.Serialize();
+	data["mask"]          = mask_.Get();
+
+	return data;
+}
+
+void SkinnedMeshRendererComponent::InputJson(const json& data) {
+	data;
+}
+
 void SkinnedMeshRendererComponent::CreateCluster() {
 	const uint32_t kVertexSize = referenceMesh_.Require()->GetInputVertex()->GetSize();
 

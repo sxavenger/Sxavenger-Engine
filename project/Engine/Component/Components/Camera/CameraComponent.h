@@ -95,10 +95,6 @@ public:
 	CameraComponent(MonoBehaviour* behaviour) : BaseComponent(behaviour) { Init(); }
 	~CameraComponent() override = default;
 
-	json PerseToJson() const override;
-
-	void InputJson(const json& data) override;
-
 	void ShowComponentInspector() override;
 
 	void Init();
@@ -129,6 +125,12 @@ public:
 	//* helper option *//
 
 	Vector3f CalculateNDCPosition(const Vector3f& point) const;
+
+	//* json option *//
+
+	json PerseToJson() const override;
+
+	void InputJson(const json& data) override;
 
 private:
 

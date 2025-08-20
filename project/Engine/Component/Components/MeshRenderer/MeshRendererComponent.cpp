@@ -29,11 +29,21 @@ void MeshRendererComponent::ShowComponentInspector() {
 }
 
 const TransformComponent* MeshRendererComponent::GetTransform() const {
-	if (transform_ != nullptr) {
-		return transform_;
-	}
-
 	return BaseComponent::GetBehaviour()->RequireComponent<TransformComponent>(); //!< TransformComponentが必要
+}
+
+json MeshRendererComponent::PerseToJson() const {
+	json data = json::object();
+
+	data["mesh"]     = mesh_.Serialize();
+	data["material"] = material_.Serialize();
+	data["mask"]     = mask_.Get();
+
+	return data;
+}
+
+void MeshRendererComponent::InputJson(const json& data) {
+	data;
 }
 
 std::shared_ptr<UAssetMesh> MeshRendererComponent::GetMesh() const {

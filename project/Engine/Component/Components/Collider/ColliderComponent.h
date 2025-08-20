@@ -95,9 +95,9 @@ public:
 
 	//* active option *//
 
-	void SetActiveCollider(bool isActive) { isActive_ = isActive; }
+	void SetEnable(bool isEnable) { isEnable_ = isEnable; }
 
-	bool IsActive() const { return isActive_ && BaseComponent::IsActive(); }
+	bool IsEnable() const { return isEnable_; }
 
 	//* other component option *//
 
@@ -109,9 +109,7 @@ private:
 	// private variables
 	//=========================================================================================
 
-	//* active *//
-
-	bool isActive_ = true;
+	bool isEnable_ = true;
 
 	//* tag *//
 
@@ -120,6 +118,7 @@ private:
 	//* boundings *//
 
 	std::optional<CollisionBoundings::Boundings> bounding_;
+	// fixme: optionalを外すべきか検討
 
 	//* states *//
 

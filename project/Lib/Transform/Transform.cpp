@@ -53,7 +53,7 @@ Vector3f QuaternionTransform::GetForward() const {
 }
 
 json QuaternionTransform::PerseToJson() const {
-	json data;
+	json data = json::object();
 	data["translate"] = GeometryJsonSerializer::ToJson(translate);
 	data["rotate"]    = GeometryJsonSerializer::ToJson(rotate);
 	data["scale"]     = GeometryJsonSerializer::ToJson(scale);

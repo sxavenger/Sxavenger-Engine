@@ -125,6 +125,12 @@ public:
 
 	uint8_t GetMask() const { return mask_.Get(); }
 
+	//* json option *//
+
+	json PerseToJson() const override;
+
+	void InputJson(const json& data) override;
+
 private:
 
 	//=========================================================================================

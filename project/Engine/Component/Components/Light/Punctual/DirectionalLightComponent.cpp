@@ -71,10 +71,6 @@ const TransformComponent* DirectionalLightComponent::RequireTransform() const {
 json DirectionalLightComponent::PerseToJson() const {
 	json data = json::object();
 
-	if (parameter_ == nullptr) {
-		return data;
-	}
-
 	data["color"]           = GeometryJsonSerializer::ToJson(parameter_->At(0).color);
 	data["intensity"]       = parameter_->At(0).intensity;
 	data["shadow_strength"] = LightCommon::GetShadowParameter().strength;

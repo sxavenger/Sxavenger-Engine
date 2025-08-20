@@ -208,8 +208,11 @@ json MonoBehaviour::PerseToJson() const {
 
 	//* components
 	json& components = root["components"] = json::array();
-	for (const auto& component : components_ | std::views::values) {
-		components.emplace_back((*component)->PerseToJson());
+	for (const auto& [type, component] : components_) {
+		json data         = (*component)->PerseToJson();
+		data["component"] = type->name();
+
+		components.emplace_back(data);
 	}
 
 	//* children

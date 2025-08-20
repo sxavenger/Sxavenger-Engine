@@ -64,14 +64,18 @@ json CameraComponent::PerseToJson() const {
 	component["nearZ"]  = projection_.nearZ;
 	component["farZ"]   = projection_.farZ;
 
+	component["tag"] = magic_enum::enum_name(GetTag());
+
 	return component;
 }
 
 void CameraComponent::InputJson(const json& data) {
 	projection_.sensor = GeometryJsonSerializer::JsonToVector2f(data.at("sensor"));
-	projection_.focal  = data.at("focal");
-	projection_.nearZ  = data.at("nearZ");
-	projection_.farZ   = data.at("farZ");
+	projection_.focal  = data.at("focal").get<float>();
+	projection_.nearZ  = data.at("nearZ").get<float>();
+	projection_.farZ   = data.at("farZ").get<float>();
+
+	tag_ = magic_enum::enum_cast<Tag>(data.at("tag").get<std::string>()).value();
 }
 
 void CameraComponent::ShowComponentInspector() {

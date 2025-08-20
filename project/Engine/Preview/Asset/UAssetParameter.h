@@ -49,7 +49,7 @@ public:
 
 	void Reset() { parameter_ = std::monostate{}; }
 
-	void Set(const std::shared_ptr<T>& asset) { parameter_ = asset; }
+	void Set(const std::shared_ptr<T>& asset);
 	void Set(const Uuid& id) { parameter_ = id; }
 
 	std::shared_ptr<T> Get() const;
@@ -57,7 +57,7 @@ public:
 	std::shared_ptr<T> Require() const;
 	std::shared_ptr<T> WaitRequire() const;
 
-	std::optional<std::string> Serialize() const;
+	json Serialize() const;
 
 	//* operator *//
 
@@ -81,11 +81,22 @@ private:
 	void Wait() const;
 	// hack: UBaseAsset側に移動する可能性あり
 
+	std::optional<std::string> GetStr() const;
+
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // UAssetParameter class template methods
 ////////////////////////////////////////////////////////////////////////////////////////////
+
+template <UAssetConcept T>
+inline void UAssetParameter<T>::Set(const std::shared_ptr<T>& asset) {
+	if (asset->HasId()) {
+		parameter_ = asset->GetId(); //!< UAssetのidをセット
+	}
+
+	parameter_ = asset; //!< userが作成したUAssetをセット
+}
 
 template <UAssetConcept T>
 inline std::shared_ptr<T> UAssetParameter<T>::Get() const {
@@ -121,12 +132,22 @@ inline std::shared_ptr<T> UAssetParameter<T>::WaitRequire() const {
 }
 
 template <UAssetConcept T>
-inline std::optional<std::string> UAssetParameter<T>::Serialize() const {
+inline json UAssetParameter<T>::Serialize() const {
 	switch (parameter_.index()) {
 		case 1: //!< Uuid
 			return std::get<Uuid>(parameter_).Serialize();
-			//!< UuidのみSerialize可能
 
+		default:
+			return nullptr;
+	}
+}
+
+template <UAssetConcept T>
+inline std::optional<std::string> UAssetParameter<T>::GetStr() const {
+	switch (parameter_.index()) {
+		case 1: //!< Uuid
+			return std::get<Uuid>(parameter_).Serialize();
+		
 		default:
 			return std::nullopt;
 	}
@@ -142,6 +163,6 @@ inline void UAssetParameter<T>::Wait() const {
 
 	while (!asset->IsComplete()) {
 		std::this_thread::sleep_for(std::chrono::milliseconds(1));
-		Logger::CommentRuntime(std::format("[UAssetParameter]: waiting for asset completion. id: {}", Serialize().value_or("null")));
+		Logger::CommentRuntime(std::format("[UAssetParameter]: waiting for asset completion. id: {}", GetStr().value_or("null")));
 	}
 }
