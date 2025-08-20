@@ -146,7 +146,6 @@
     <ClCompile Include="Lib\Adapter\Uuid\Uuid.cpp" />
     <ClCompile Include="Engine\Content\Material\Material.cpp" />
     <ClCompile Include="Engine\Render\Core\FRenderCorePathtracing.cpp" />
-    <ClCompile Include="Engine\Component\Components\Volumetric\VolumetricFogComponent.cpp" />
     <ClCompile Include="Demo\Object\PivotCamera.cpp" />
     <ClCompile Include="Engine\System\DirectX\Context\DirectXQueueContext.cpp" />
     <ClCompile Include="Engine\System\DirectX\Context\DirectXWindowContext.cpp" />
@@ -348,7 +347,6 @@
     <ClInclude Include="Engine\Content\Material\Material.h" />
     <ClInclude Include="Engine\Render\Core\FRenderCorePathtracing.h" />
     <ClInclude Include="Engine\System\DirectX\DxObject\DxReadbackDimensionBuffer.h" />
-    <ClInclude Include="Engine\Component\Components\Volumetric\VolumetricFogComponent.h" />
     <ClInclude Include="Demo\Object\PivotCamera.h" />
     <ClInclude Include="Engine\System\DirectX\Context\DirectXQueueContext.h" />
     <ClInclude Include="Engine\System\DirectX\Context\DirectXWindowContext.h" />

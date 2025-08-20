@@ -196,7 +196,6 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="Engine\Component\Components\PostProcessLayer\PostProcessGrayScale.cpp" />
     <ClCompile Include="Engine\Component\Components\PostProcessLayer\PostProcessLUT.cpp" />
     <ClCompile Include="Engine\Component\Components\PostProcessLayer\PostProcessRadialBlur.cpp" />
-    <ClCompile Include="Engine\Component\Components\Volumetric\VolumetricFogComponent.cpp" />
     <ClCompile Include="Engine\Content\Exporter\TextureExporter.cpp" />
     <ClCompile Include="Engine\Component\Components\PostProcessLayer\PostProcessAutoExposure.cpp" />
     <ClCompile Include="Engine\Content\Material\Material.cpp" />
@@ -370,7 +369,6 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Engine\Component\Components\PostProcessLayer\PostProcessGrayScale.h" />
     <ClInclude Include="Engine\Component\Components\PostProcessLayer\PostProcessLUT.h" />
     <ClInclude Include="Engine\Component\Components\PostProcessLayer\PostProcessRadialBlur.h" />
-    <ClInclude Include="Engine\Component\Components\Volumetric\VolumetricFogComponent.h" />
     <ClInclude Include="Engine\Content\Exporter\TextureExporter.h" />
     <ClInclude Include="Engine\Component\Components\PostProcessLayer\PostProcessAutoExposure.h" />
     <ClInclude Include="Engine\Content\Material\Material.h" />
