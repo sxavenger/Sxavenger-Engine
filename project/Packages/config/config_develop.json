@@ -9,5 +9,5 @@
 	"isTearingAllowed": true,
 	"isLockFrameRate": true,
 	"targetFrameRate": 60.0,
-	"isEnableShaderOptimization": true
+	"isEnableShaderOptimization": false
 }

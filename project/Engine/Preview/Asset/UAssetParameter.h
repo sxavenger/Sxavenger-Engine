@@ -109,9 +109,7 @@ inline std::shared_ptr<T> UAssetParameter<T>::WaitGet() const {
 
 template <UAssetConcept T>
 inline std::shared_ptr<T> UAssetParameter<T>::Require() const {
-	if (Empty()) {
-		Exception::Assert(false, "UAssetParameter is empty.");
-	}
+	Exception::Assert(!Empty(), "UAssetParameter is empty.");
 
 	return Get();
 }

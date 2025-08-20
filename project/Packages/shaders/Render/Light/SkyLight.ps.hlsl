@@ -35,14 +35,14 @@ float3 ApproximateBRDF(float3 diffuseAlbedo, float3 specularAlbedo, float3 n, fl
 
 	const float2 brdf = gBRDFLut.SampleLevel(gBRDFSampler, saturate(float2(NdotV, 1.0f - roughness)), 0).rg;
 
-	float3 diffuseLight  = ACES::IDT_sRGB_AP1(gParameter.GetIrradiance(gSampler, n).rgb);
-	float3 specularLight = ACES::IDT_sRGB_AP1(gParameter.GetRadiance(gSampler, n, roughness).rgb);
+	float3 diffuseLight  = ACES::IDT_sRGB_AP1(gParameter.GetIrradiance(gSampler, r).rgb);
+	float3 specularLight = ACES::IDT_sRGB_AP1(gParameter.GetRadiance(gSampler, r, roughness).rgb);
 	
-	float3 diffuse = diffuseLight * diffuseAlbedo;
+	float3 diffuse  = diffuseLight * diffuseAlbedo;
 	float3 specular = specularLight * (specularAlbedo * brdf.r + brdf.g);
 
 	return diffuse + specular;
-
+	// FIXME: unreal engineの結果とずれている...?
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
