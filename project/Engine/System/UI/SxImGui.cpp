@@ -204,7 +204,14 @@ void SxImGui::InputTextFunc(const char* label, std::string& buf, const std::func
 }
 
 bool SxImGui::InputText(const char* label, std::string& dst, ImGuiInputTextFlags flags) {
-	static std::string buf(128, '\0'); // バッファの初期化
+	static std::unordered_map<const char*, std::string> buffers;
+
+	if (!buffers.contains(label)) {
+		buffers.emplace(label, std::string(128, '\0'));
+	}
+
+	std::string& buf = buffers[label];
+
 	bool isChanged = ImGui::InputText(label, buf.data(), buf.size(), flags);
 
 	if (!ImGui::IsItemActive()) {

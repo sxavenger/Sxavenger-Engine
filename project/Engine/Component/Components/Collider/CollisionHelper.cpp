@@ -5,20 +5,20 @@
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 Vector3f CollisionHelper::PushBackAABB(ColliderComponent* target, ColliderComponent* source) {
-	if (!std::holds_alternative<CollisionBoundings::AABB>(*target->GetBoundings())) {
+	if (!std::holds_alternative<CollisionBoundings::AABB>(target->GetBoundings())) {
 		return {}; // target is not AABB
 	}
 
-	if (!std::holds_alternative<CollisionBoundings::AABB>(*source->GetBoundings())) {
+	if (!std::holds_alternative<CollisionBoundings::AABB>(source->GetBoundings())) {
 		return {}; // source is not AABB
 	}
 
-	const auto& targetAABB     = std::get<CollisionBoundings::AABB>(*target->GetBoundings());
-	auto targetTransform       = target->GetTransform();
+	const auto& targetAABB     = std::get<CollisionBoundings::AABB>(target->GetBoundings());
+	auto targetTransform       = target->RequireTransform();
 	const auto& targetPosition = targetTransform->GetPosition();
 
-	auto& sourceAABB           = std::get<CollisionBoundings::AABB>(*source->GetBoundings());
-	auto sourceTransform       = source->GetTransform();
+	auto& sourceAABB           = std::get<CollisionBoundings::AABB>(source->GetBoundings());
+	auto sourceTransform       = source->RequireTransform();
 	const auto& sourcePosition = sourceTransform->GetPosition();
 
 	Vector3f pushback = {}; //!< 押し戻し量

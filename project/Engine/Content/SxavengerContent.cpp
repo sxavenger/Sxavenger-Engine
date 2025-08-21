@@ -64,8 +64,8 @@ void SxavengerContent::PushAxis(const Vector3f& center, float length) {
 	debugPrimitive_->PushAxis(center, length);
 }
 
-void SxavengerContent::PushBox(const Vector3f& min, const Vector3f& max, const Color4f& color) {
-	debugPrimitive_->PushBox(min, max, color);
+void SxavengerContent::PushBox(const Vector3f& min, const Vector3f& max, const Color4f& color, float thickness) {
+	debugPrimitive_->PushBox(min, max, color, thickness);
 }
 
 void SxavengerContent::PushSphere(const Vector3f& center, float radius, const Color4f& color) {

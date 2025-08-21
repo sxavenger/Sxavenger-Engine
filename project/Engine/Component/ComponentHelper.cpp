@@ -15,6 +15,7 @@
 //#include "Components/Light/Rect/RectLightComponent.h" -> FIXME
 #include "Components/Particle/ParticleComponent.h"
 #include "Components/Light/Environment/SkyLightComponent.h"
+#include "Components/Collider/ColliderComponent.h"
 
 //* c++
 #include <execution>
@@ -220,4 +221,5 @@ void ComponentHelper::RegisterComponents() {
 	sComponentStorage->RegisterFactory<PointLightComponent>();
 	sComponentStorage->RegisterFactory<ParticleComponent>();
 	sComponentStorage->RegisterFactory<SkyLightComponent>();
+	sComponentStorage->RegisterFactory<ColliderComponent>();
 }

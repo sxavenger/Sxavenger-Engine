@@ -18,6 +18,9 @@
 #include <Engine/Render/FMainRender.h>
 #include <Engine/Preview/Asset/UAssetStorage.h>
 
+//* lib
+#include <Lib/Geometry/VectorComparision.h>
+
 //* externals
 #include <magic_enum.hpp>
 
@@ -59,9 +62,6 @@ void RenderSceneEditor::Init() {
 	config_.isEnablePostProcess = false;
 	config_.isElableTonemap     = true;
 
-	colliderRenderer_ = std::make_unique<ColliderPrimitiveRenderer>();
-	colliderRenderer_->Init();
-
 	icons_[static_cast<uint32_t>(Icon::Volume)]           = sUContentStorage->Import<UContentTexture>("packages/textures/icon/scene_volume.png")->GetId();
 	icons_[static_cast<uint32_t>(Icon::DirectionalLight)] = sUContentStorage->Import<UContentTexture>("packages/textures/icon/scene_directionalLight.png")->GetId();
 	icons_[static_cast<uint32_t>(Icon::PointLight)]       = sUContentStorage->Import<UContentTexture>("packages/textures/icon/scene_pointLight.png")->GetId();
@@ -77,7 +77,6 @@ void RenderSceneEditor::ShowMainMenu() {
 
 		ShowSceneMenu();
 		ShowGizmoMenu();
-		ShowColliderMenu();
 		ShowCaptureMenu();
 		
 		ImGui::EndMenu();
@@ -111,10 +110,6 @@ void RenderSceneEditor::Render() {
 
 	if (isRenderGrid_) {
 		SxavengerContent::PushGrid(camera, { 64, 64 }, 64);
-	}
-	
-	if (isRenderCollider_) {
-		colliderRenderer_->Render(SxavengerSystem::GetDirectQueueContext(), camera_->GetComponent<CameraComponent>());
 	}
 
 	if (isMoveCamera_) {
@@ -354,22 +349,6 @@ void RenderSceneEditor::ShowGizmoMenu() {
 		SxImGui::RadioButton("world", &gizmoMode_, SxImGuizmo::World);
 		ImGui::SameLine();
 		SxImGui::RadioButton("local", &gizmoMode_, SxImGuizmo::Local);
-
-		ImGui::EndMenu();
-	}
-}
-
-void RenderSceneEditor::ShowColliderMenu() {
-	if (ImGui::BeginMenu("collider")) {
-		MenuPadding();
-		ImGui::SeparatorText("collider");
-
-		ImGui::Checkbox("render", &isRenderCollider_);
-		ImGui::Separator();
-
-		ImGui::BeginDisabled(!isRenderCollider_);
-		colliderRenderer_->SetImGuiCommand();
-		ImGui::EndDisabled();
 
 		ImGui::EndMenu();
 	}

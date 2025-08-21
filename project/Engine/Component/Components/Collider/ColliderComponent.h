@@ -66,9 +66,7 @@ public:
 
 	void SetColliderBoundingOBB(const CollisionBoundings::OBB& obb = { .orientation = Quaternion::Identity(), .size = { 1.0f, 1.0f, 1.0f } });
 
-	void ResetColliderBounding();
-
-	const std::optional<CollisionBoundings::Boundings>& GetBoundings() const { return bounding_; }
+	const CollisionBoundings::Boundings& GetBoundings() const { return bounding_; }
 
 	//* collision state option *//
 
@@ -101,7 +99,33 @@ public:
 
 	//* other component option *//
 
-	TransformComponent* GetTransform() const;
+	TransformComponent* RequireTransform() const;
+
+private:
+
+	////////////////////////////////////////////////////////////////////////////////////////////
+	// BoundingPrimitiveLine structure
+	////////////////////////////////////////////////////////////////////////////////////////////
+	struct BoundingPrimitiveLine {
+	public:
+
+		//=========================================================================================
+		// public methods
+		//=========================================================================================
+
+		void operator()(const CollisionBoundings::Sphere& sphere);
+		void operator()(const CollisionBoundings::Capsule& capsule);
+		void operator()(const CollisionBoundings::AABB& aabb);
+		void operator()(const CollisionBoundings::OBB& obb);
+
+		//=========================================================================================
+		// public variables
+		//=========================================================================================
+
+		Vector3f position = {};
+		Color4f color     = {};
+
+	};
 
 private:
 
@@ -117,8 +141,7 @@ private:
 
 	//* boundings *//
 
-	std::optional<CollisionBoundings::Boundings> bounding_;
-	// fixme: optionalを外すべきか検討
+	CollisionBoundings::Boundings bounding_ = CollisionBoundings::Sphere{ 1.0f };
 
 	//* states *//
 
@@ -127,5 +150,12 @@ private:
 	//! value: state
 	std::unordered_map<ColliderComponent*, CollisionStatesBit> states_;
 
+	//=========================================================================================
+	// private methods
+	//=========================================================================================
+
+	//* helper methods *//
+
+	void PushBoundingLine() const;
 
 };

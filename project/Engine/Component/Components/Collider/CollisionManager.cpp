@@ -33,11 +33,7 @@ void CollisionManager::CheckCollision() {
 		}
 
 		// boundingを取得
-		const std::optional<CollisionBoundings::Boundings>& boundingA = colliderA->GetBoundings();
-
-		if (!boundingA.has_value()) {
-			return; //!< boundingが設定されていない場合
-		}
+		const CollisionBoundings::Boundings& boundingA = colliderA->GetBoundings();
 
 		for (auto itrB = std::next(itrA); itrB != container.end(); ++itrB) {
 			ColliderComponent* colliderB = static_cast<ColliderComponent*>(itrB->get());
@@ -47,11 +43,7 @@ void CollisionManager::CheckCollision() {
 			}
 
 			// boundingを取得
-			const std::optional<CollisionBoundings::Boundings>& boundingB = colliderB->GetBoundings();
-
-			if (!boundingB.has_value()) {
-				return; //!< boundingが設定されていない場合
-			}
+			const CollisionBoundings::Boundings& boundingB = colliderB->GetBoundings();
 
 			//* 当たり判定 *//
 
@@ -61,8 +53,8 @@ void CollisionManager::CheckCollision() {
 
 			// bounding同士の当たり判定
 			bool isCollision = CollisionDetection::CheckCollision(
-				colliderA->GetTransform()->GetPosition(), boundingA.value(),
-				colliderB->GetTransform()->GetPosition(), boundingB.value()
+				colliderA->RequireTransform()->GetPosition(), boundingA,
+				colliderB->RequireTransform()->GetPosition(), boundingB
 			);
 
 			if (!isCollision) {

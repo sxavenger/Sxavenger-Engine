@@ -258,7 +258,7 @@ void DebugPrimitive::PushAxis(const Vector3f& center, float length) {
 	PushLine(center, center + Vector3f(0.0f, 0.0f, length), Color4f::Convert(0x0000FAFF), 0.6f); //!< z軸
 }
 
-void DebugPrimitive::PushBox(const Vector3f& min, const Vector3f& max, const Color4f& color) {
+void DebugPrimitive::PushBox(const Vector3f& min, const Vector3f& max, const Color4f& color, float thickness) {
 	// ボックスの頂点を計算
 	Vector3f v0 = { min.x, min.y, min.z };
 	Vector3f v1 = { max.x, min.y, min.z };
@@ -270,28 +270,28 @@ void DebugPrimitive::PushBox(const Vector3f& min, const Vector3f& max, const Col
 	Vector3f v7 = { min.x, max.y, max.z };
 
 	// 下部の四角形
-	PushLine(v0, v1, color, 0.6f);
-	PushLine(v1, v2, color, 0.6f);
-	PushLine(v2, v3, color, 0.6f);
-	PushLine(v3, v0, color, 0.6f);
+	PushLine(v0, v1, color, thickness);
+	PushLine(v1, v2, color, thickness);
+	PushLine(v2, v3, color, thickness);
+	PushLine(v3, v0, color, thickness);
 
 	// 上部の四角形
-	PushLine(v4, v5, color, 0.6f);
-	PushLine(v5, v6, color, 0.6f);
-	PushLine(v6, v7, color, 0.6f);
-	PushLine(v7, v4, color, 0.6f);
+	PushLine(v4, v5, color, thickness);
+	PushLine(v5, v6, color, thickness);
+	PushLine(v6, v7, color, thickness);
+	PushLine(v7, v4, color, thickness);
 
 	// 側面の線
-	PushLine(v0, v4, color, 0.6f);
-	PushLine(v1, v5, color, 0.6f);
-	PushLine(v2, v6, color, 0.6f);
-	PushLine(v3, v7, color, 0.6f);
+	PushLine(v0, v4, color, thickness);
+	PushLine(v1, v5, color, thickness);
+	PushLine(v2, v6, color, thickness);
+	PushLine(v3, v7, color, thickness);
 }
 
-void DebugPrimitive::PushCube(const Vector3f& center, const Vector3f& size, const Color4f& color) {
+void DebugPrimitive::PushCube(const Vector3f& center, const Vector3f& size, const Color4f& color, float thickness) {
 	Vector3f min = center - size * 0.5f;
 	Vector3f max = center + size * 0.5f;
-	PushBox(min, max, color);
+	PushBox(min, max, color, thickness);
 }
 
 void DebugPrimitive::PushSphere(const Vector3f& center, float radius, const Color4f& color) {

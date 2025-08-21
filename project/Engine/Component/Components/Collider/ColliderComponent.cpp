@@ -11,78 +11,192 @@
 
 //* engine
 #include <Engine/System/UI/SxImGui.h>
+#include <Engine/Content/SxavengerContent.h>
 
 //* external
 #include <imgui.h>
+#include <magic_enum.hpp>
+
+////////////////////////////////////////////////////////////////////////////////////////////
+// BoundingPrimitiveLine structure methods
+////////////////////////////////////////////////////////////////////////////////////////////
+
+void ColliderComponent::BoundingPrimitiveLine::operator()(const CollisionBoundings::Sphere& sphere) {
+	SxavengerContent::PushSphere(
+		position,
+		sphere.radius,
+		color
+	);
+}
+
+void ColliderComponent::BoundingPrimitiveLine::operator()(const CollisionBoundings::Capsule& capsule) {
+	static const uint32_t kSubdivision = 24;
+
+	// カプセルの両端の中心を計算
+	Vector3f topCenter = position + capsule.direction * (capsule.length * 0.5f);
+	Vector3f bottomCenter = position - capsule.direction * (capsule.length * 0.5f);
+
+	Vector3f arbitrary = (std::abs(capsule.direction.x) < std::abs(capsule.direction.y)) ? Vector3f(1, 0, 0) : Vector3f(0, 1, 0);
+	Vector3f xAxis = Vector3f::Cross(capsule.direction, arbitrary).Normalize(); // 半円の「横」方向
+	Vector3f zAxis = Vector3f::Cross(capsule.direction, xAxis).Normalize();     // 半円の「奥」方向
+
+	const float kLonEvery = kTau / kSubdivision;
+	const float kLatEvery = kPi / kSubdivision;
+
+	// xz軸円
+	for (uint32_t i = 0; i < kSubdivision; ++i) {
+
+		float lon = kLonEvery * i;
+		float x = std::cos(lon) * capsule.radius;
+		float z = std::sin(lon) * capsule.radius;
+
+		float nextX = std::cos(lon + kLonEvery) * capsule.radius;
+		float nextZ = std::sin(lon + kLonEvery) * capsule.radius;
+
+		// 現在の点を計算
+		Vector3f currentPoint = xAxis * x + zAxis * z;
+		Vector3f nextPoint = xAxis * nextX + zAxis * nextZ;
+
+		// 線を描画
+		SxavengerContent::PushLine(currentPoint + topCenter, nextPoint + topCenter, color);
+		SxavengerContent::PushLine(currentPoint + bottomCenter, nextPoint + bottomCenter, color);
+	}
+
+	// xy軸円
+	for (uint32_t i = 0; i < kSubdivision; ++i) {
+		float lat = kLatEvery * i;
+		float x = std::cos(lat) * capsule.radius;
+		float y = std::sin(lat) * capsule.radius;
+
+		float nextX = std::cos(lat + kLatEvery) * capsule.radius;
+		float nextY = std::sin(lat + kLatEvery) * capsule.radius;
+
+		// 現在の点を計算
+		Vector3f currentPoint = xAxis * x + capsule.direction * y;
+		Vector3f nextPoint = xAxis * nextX + capsule.direction * nextY;
+
+		// 線を描画
+		SxavengerContent::PushLine((xAxis * x + capsule.direction * y) + topCenter, (xAxis * nextX + capsule.direction * nextY) + topCenter, color);
+		SxavengerContent::PushLine((xAxis * x - capsule.direction * y) + bottomCenter, (xAxis * nextX - capsule.direction * nextY) + bottomCenter, color);
+	}
+
+	// xy軸円
+	for (uint32_t i = 0; i < kSubdivision; ++i) {
+		float lat = kLatEvery * i;
+		float y = std::sin(lat) * capsule.radius;
+		float z = std::cos(lat) * capsule.radius;
+
+		float nextY = std::sin(lat + kLatEvery) * capsule.radius;
+		float nextZ = std::cos(lat + kLatEvery) * capsule.radius;
+
+		// 現在の点を計算
+		Vector3f currentPoint = zAxis * z + capsule.direction * y;
+		Vector3f nextPoint = zAxis * nextZ + capsule.direction * nextY;
+
+		// 線を描画
+		SxavengerContent::PushLine((zAxis * z + capsule.direction * y) + topCenter, (zAxis * nextZ + capsule.direction * nextY) + topCenter, color);
+		SxavengerContent::PushLine((zAxis * z - capsule.direction * y) + bottomCenter, (zAxis * nextZ - capsule.direction * nextY) + bottomCenter, color);
+	}
+
+	SxavengerContent::PushLine(xAxis * capsule.radius + topCenter, xAxis * capsule.radius + bottomCenter, color);
+	SxavengerContent::PushLine(-xAxis * capsule.radius + topCenter, -xAxis * capsule.radius + bottomCenter, color);
+	SxavengerContent::PushLine(zAxis * capsule.radius + topCenter, zAxis * capsule.radius + bottomCenter, color);
+	SxavengerContent::PushLine(-zAxis * capsule.radius + topCenter, -zAxis * capsule.radius + bottomCenter, color);
+}
+
+void ColliderComponent::BoundingPrimitiveLine::operator()(const CollisionBoundings::AABB& aabb) {
+	SxavengerContent::PushBox(
+		position + aabb.min,
+		position + aabb.max,
+		color
+	);
+}
+
+void ColliderComponent::BoundingPrimitiveLine::operator()(const CollisionBoundings::OBB& obb) {
+	obb; // TODO:
+}
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // ColliderComponent class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 void ColliderComponent::ShowComponentInspector() {
-	if (!bounding_.has_value()) {
-		ImGui::TextDisabled("bounding not set...");
-		return;
-	}
 
-	if (ImGui::CollapsingHeader("bounding", ImGuiTreeNodeFlags_DefaultOpen)) {
+	ImGui::Checkbox("## enable", &isEnable_);
 
-		auto& bounding = bounding_.value();
+	ImGui::SameLine();
 
-		switch (bounding.index()) {
-			case 0: //!< Sphere
-				{
-					auto& sphere = std::get<CollisionBoundings::Sphere>(bounding);
+	SxImGui::InputText("tag", tag_);
 
-					ImGui::Text("Boundings: Sphere");
-					SxImGui::DragFloat("radius", &sphere.radius, 0.01f, 0.0f);
+	if (ImGui::BeginCombo("bounding", magic_enum::enum_name(static_cast<CollisionBoundings::BoundingType>(bounding_.index())).data())) {
+		for (const auto& [value, name] : magic_enum::enum_entries<CollisionBoundings::BoundingType>()) {
+			if (ImGui::Selectable(name.data(), bounding_.index() == static_cast<size_t>(value))) {
+				switch (value) {
+					case CollisionBoundings::BoundingType::Sphere:
+						SetColliderBoundingSphere();
+						break;
+					case CollisionBoundings::BoundingType::Capsule:
+						SetColliderBoundingCapsule();
+						break;
+					case CollisionBoundings::BoundingType::AABB:
+						SetColliderBoundingAABB();
+						break;
+					case CollisionBoundings::BoundingType::OBB:
+						SetColliderBoundingOBB();
+						break;
 				}
-				break;
-
-			case 1: //!< Capsule
-				{
-					auto& capsule = std::get<CollisionBoundings::Capsule>(bounding);
-
-					ImGui::Text("Boundings: Capsule");
-
-					if (SxImGui::DragVector3("direction", &capsule.direction.x, 0.01f)) {
-						capsule.direction = capsule.direction.Normalize();
-					}
-
-					SxImGui::DragFloat("radius", &capsule.radius, 0.01f, 0.0f);
-					SxImGui::DragFloat("length", &capsule.length, 0.01f, 0.0f);
-				}
-				break;
-
-			case 2: //!< AABB
-				{
-					auto& aabb = std::get<CollisionBoundings::AABB>(bounding);
-
-					ImGui::Text("Boundings: AABB");
-					ImGui::DragFloat3("max", &aabb.max.x, 0.01f);
-					ImGui::DragFloat3("min", &aabb.min.x, 0.01f);
-
-					// minがmaxを上回らないようclamp
-					aabb.min.x = (std::min)(aabb.min.x, aabb.max.x);
-					aabb.max.x = (std::max)(aabb.min.x, aabb.max.x);
-
-					aabb.min.y = (std::min)(aabb.min.y, aabb.max.y);
-					aabb.max.y = (std::max)(aabb.min.y, aabb.max.y);
-
-					aabb.min.z = (std::min)(aabb.min.z, aabb.max.z);
-					aabb.max.z = (std::max)(aabb.min.z, aabb.max.z);
-				}
-				break;
-
-			case 3: //!< OBB
-				ImGui::Text("Boundings: OBB");
-				break;
-
-			default:
-				ImGui::Text("Unknown bounding type");
-				break;
+			}
 		}
+
+		ImGui::EndCombo();
 	}
+
+	switch (bounding_.index()) {
+		case static_cast<size_t>(CollisionBoundings::BoundingType::Sphere):
+		{
+			auto& sphere = std::get<CollisionBoundings::Sphere>(bounding_);
+
+			SxImGui::DragFloat("radius", &sphere.radius, 0.01f, 0.0f);
+		}
+		break;
+
+		case static_cast<size_t>(CollisionBoundings::BoundingType::Capsule):
+		{
+			auto& capsule = std::get<CollisionBoundings::Capsule>(bounding_);
+
+			if (SxImGui::DragVector3("direction", &capsule.direction.x, 0.01f)) {
+				capsule.direction = capsule.direction.Normalize();
+			}
+
+			SxImGui::DragFloat("radius", &capsule.radius, 0.01f, 0.0f);
+			SxImGui::DragFloat("length", &capsule.length, 0.01f, 0.0f);
+		}
+		break;
+
+		case static_cast<size_t>(CollisionBoundings::BoundingType::AABB):
+		{
+			auto& aabb = std::get<CollisionBoundings::AABB>(bounding_);
+
+			ImGui::DragFloat3("max", &aabb.max.x, 0.01f);
+			ImGui::DragFloat3("min", &aabb.min.x, 0.01f);
+
+			// minがmaxを上回らないようclamp
+			aabb.min.x = (std::min)(aabb.min.x, aabb.max.x);
+			aabb.max.x = (std::max)(aabb.min.x, aabb.max.x);
+
+			aabb.min.y = (std::min)(aabb.min.y, aabb.max.y);
+			aabb.max.y = (std::max)(aabb.min.y, aabb.max.y);
+
+			aabb.min.z = (std::min)(aabb.min.z, aabb.max.z);
+			aabb.max.z = (std::max)(aabb.min.z, aabb.max.z);
+		}
+		break;
+
+		case static_cast<size_t>(CollisionBoundings::BoundingType::OBB):
+			break;
+	}
+
+	PushBoundingLine();
 }
 
 void ColliderComponent::SetColliderBoundingSphere(const CollisionBoundings::Sphere& sphere) {
@@ -99,10 +213,6 @@ void ColliderComponent::SetColliderBoundingAABB(const CollisionBoundings::AABB& 
 
 void ColliderComponent::SetColliderBoundingOBB(const CollisionBoundings::OBB& obb) {
 	bounding_ = obb;
-}
-
-void ColliderComponent::ResetColliderBounding() {
-	bounding_ = std::nullopt;
 }
 
 void ColliderComponent::UpdateColliderState() {
@@ -156,6 +266,14 @@ void ColliderComponent::SetCollisionState(
 
 }
 
-TransformComponent* ColliderComponent::GetTransform() const {
+TransformComponent* ColliderComponent::RequireTransform() const {
 	return BaseComponent::GetBehaviour()->RequireComponent<TransformComponent>();
+}
+
+void ColliderComponent::PushBoundingLine() const {
+	BoundingPrimitiveLine line;
+	line.position = RequireTransform()->GetPosition();
+	line.color    = isEnable_ ? Color4f{ 1.0f, 1.0f, 0.0f, 1.0f } : Color4f{ 0.4f, 0.4f, 0.4f, 1.0f };
+
+	std::visit(line, bounding_);
 }

@@ -8,12 +8,8 @@
 
 //* engine
 #include <Engine/Component/Entity/MonoBehaviour.h>
-#include <Engine/Component/Components/Collider/ColliderPrimitiveRenderer.h>
 #include <Engine/Render/FRenderTargetBuffer.h>
 #include <Engine/Render/Scene/FSceneRenderer.h>
-//#include <Engine/Preview/Content/UContentTexture.h>
-//#include <Engine/Preview/Content/UContentStorage.h>
-
 #include <Engine/Preview/Asset/UAssetTexture.h>
 #include <Engine/Preview/Asset/UAssetParameter.h>
 
@@ -176,11 +172,6 @@ private:
 
 	bool isMoveCamera_ = false;
 
-	//* collider *//
-
-	std::unique_ptr<ColliderPrimitiveRenderer> colliderRenderer_;
-	bool isRenderCollider_ = true;
-
 	//* grid *//
 
 	bool isRenderGrid_ = true;
@@ -208,7 +199,6 @@ private:
 
 	void ShowSceneMenu();
 	void ShowGizmoMenu();
-	void ShowColliderMenu();
 	void ShowCaptureMenu();
 
 	void ShowSceneWindow();

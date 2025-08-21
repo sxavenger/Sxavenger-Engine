@@ -72,7 +72,6 @@
     <ClCompile Include="Engine\Component\Components\MeshRenderer\SkinnedMeshRendererComponent.cpp" />
     <ClCompile Include="Engine\Content\Animation\SkinningPipeline.cpp" />
     <ClCompile Include="Engine\Component\Components\Collider\ColliderComponent.cpp" />
-    <ClCompile Include="Engine\Component\Components\Collider\ColliderPrimitiveRenderer.cpp" />
     <ClCompile Include="Engine\Component\Components\Collider\CollisionCallbackCollection.cpp" />
     <ClCompile Include="Engine\Component\Components\Collider\CollisionDetection.cpp" />
     <ClCompile Include="Engine\Component\Components\Collider\CollisionManager.cpp" />
@@ -268,7 +267,6 @@
     <ClInclude Include="Engine\Component\Components\MeshRenderer\SkinnedMeshRendererComponent.h" />
     <ClInclude Include="Engine\Content\Animation\SkinningPipeline.h" />
     <ClInclude Include="Engine\Component\Components\Collider\ColliderComponent.h" />
-    <ClInclude Include="Engine\Component\Components\Collider\ColliderPrimitiveRenderer.h" />
     <ClInclude Include="Engine\Component\Components\Collider\CollisionCallbackCollection.h" />
     <ClInclude Include="Engine\Component\Components\Collider\CollisionDetection.h" />
     <ClInclude Include="Engine\Component\Components\Collider\CollisionManager.h" />
