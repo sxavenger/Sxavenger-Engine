@@ -104,18 +104,6 @@ void HierarchyEditor::ShowSceneMenu() {
 			sceneFileName_ = buf;
 		});
 
-		if (ImGui::Button("save")) {
-
-			if (sceneFileName_.extension() != ".scene") {
-				sceneFileName_ = sceneFileName_.replace_extension(".scene");
-			}
-
-			sSceneObjects->OutputJson(kSceneDirectory_ / sceneFileName_);
-			Logger::CommentRuntime("success | save scene");
-		}
-
-		ImGui::SameLine();
-
 		if (ImGui::Button("load")) {
 
 			if (sceneFileName_.extension() != ".scene") {
@@ -124,6 +112,18 @@ void HierarchyEditor::ShowSceneMenu() {
 
 			sSceneObjects->InputJsonFromFilepath(kSceneDirectory_ / sceneFileName_);
 			Logger::CommentRuntime("success | load scene");
+		}
+
+		ImGui::SameLine();
+
+		if (ImGui::Button("save")) {
+
+			if (sceneFileName_.extension() != ".scene") {
+				sceneFileName_ = sceneFileName_.replace_extension(".scene");
+			}
+
+			sSceneObjects->OutputJson(kSceneDirectory_ / sceneFileName_);
+			Logger::CommentRuntime("success | save scene");
 		}
 
 		ImGui::EndMenu();

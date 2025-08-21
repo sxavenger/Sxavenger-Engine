@@ -99,6 +99,8 @@ void UAssetMesh::Setup(const aiMesh* mesh) {
 void UAssetMesh::Update(const DirectXQueueContext* context) {
 	UBaseAsset::WaitComplete();
 	input_.CreateBottomLevelAS(context);
+
+	// todo: 仮meshの追加
 }
 
 void UAssetMesh::BindIABuffer(const DirectXQueueContext* context) const {

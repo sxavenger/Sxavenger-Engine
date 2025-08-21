@@ -110,7 +110,7 @@ void BetaSystemGameLoop::InitSystem() {
 	auto lut = behaviour_->GetComponent<PostProcessLayerComponent>()->AddPostProcess<PostProcessLUT>();
 	lut->CreateTexture(SxavengerSystem::GetDirectQueueContext(), texture, { 16, 16 });
 
-	sUContentStorage->Import<UContentModel>("assets/models/tree_sponza/sponza.gltf");
+	//sUContentStorage->Import<UContentModel>("assets/models/tree_sponza/sponza.gltf");
 }
 
 void BetaSystemGameLoop::TermSystem() {
