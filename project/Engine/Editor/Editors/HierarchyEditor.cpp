@@ -171,11 +171,12 @@ void HierarchyEditor::ShowHierarchyWindow() {
 		ImGui::SetCursorScreenPos(contentPos);
 		ImGui::InvisibleButton("## DropTarget Scene", contentSize);
 
-		/*sAssetStorage->DragAndDropTarget<AssetScene>([this](const std::shared_ptr<AssetScene>& asset) {
-			sSceneObjects->InputJson(asset->GetData());
-			sceneFileName_ = asset->GetFilepath().filename();
+		sUContentStorage->DragAndDropTargetContentFunc<UContentScene>([this](const std::shared_ptr<UContentScene>& content) {
+			content->WaitComplete(); // contentの読み込みを待つ
+			sSceneObjects->InputJson(content->GetData());
+			sceneFileName_ = content->GetFilepath().filename();
 			sceneNameBuf_  = sceneFileName_.generic_string();
-		});*/
+		});
 	}
 
 	ImGui::End();
