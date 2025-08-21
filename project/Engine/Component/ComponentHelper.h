@@ -32,17 +32,20 @@ public:
 
 	//* create helper *//
 
-	//* base
+	//* common
 	static std::unique_ptr<MonoBehaviour> CreateMonoBehaviour();
 
-	static std::unique_ptr<MonoBehaviour> CreateTransformBehaviour();
+	static void CreateTransformMonoBehaviour(MonoBehaviour* root);
+	static std::unique_ptr<MonoBehaviour> CreateTransformMonoBehaviour();
 
 	//* camera
 	static std::unique_ptr<MonoBehaviour> CreateCameraMonoBehaviour();
 
 	//* light
+	static void CreateDirectionalLightMonoBehaviour(MonoBehaviour* root);
 	static std::unique_ptr<MonoBehaviour> CreateDirectionalLightMonoBehaviour();
 
+	static void CreatePointLightMonoBehaviour(MonoBehaviour* root);
 	static std::unique_ptr<MonoBehaviour> CreatePointLightMonoBehaviour();
 
 	//* mesh

@@ -22,9 +22,6 @@
 //////////////////////////////////////////////////////////////////////////////////////////
 
 void HierarchyEditor::Init() {
-	sComponentStorage->RegisterFactory<TransformComponent>();
-	sComponentStorage->RegisterFactory<DirectionalLightComponent>();
-	sComponentStorage->RegisterFactory<PointLightComponent>();
 }
 
 void HierarchyEditor::ShowMainMenu() {
@@ -59,25 +56,37 @@ void HierarchyEditor::ShowActorMenu() {
 		MenuPadding();
 		ImGui::SeparatorText("actor");
 
-		ImGui::Text("light");
+		ImGui::Text("Common");
 		ImGui::Separator();
 
-		if (ImGui::MenuItem("directional light")) {
+		if (ImGui::MenuItem("Behaviour")) {
 			std::unique_ptr<SceneObject> object = std::make_unique<SceneObject>();
-			object->SetName("directional light");
+			object->SetName("behaviour");
 
-			object->AddComponent<TransformComponent>();
-			object->AddComponent<DirectionalLightComponent>();
+			ComponentHelper::CreateTransformMonoBehaviour(object.get());
 
 			sSceneObjects->AddObject(std::move(object));
 		}
 
-		if (ImGui::MenuItem("point light")) {
-			std::unique_ptr<SceneObject> object = std::make_unique<SceneObject>();
-			object->SetName("point light");
+		ImGui::Dummy({ 0, 4 });
 
-			object->AddComponent<TransformComponent>();
-			object->AddComponent<PointLightComponent>();
+		ImGui::Text("Punctual Light");
+		ImGui::Separator();
+
+		if (ImGui::MenuItem("Directional Light")) {
+			std::unique_ptr<SceneObject> object = std::make_unique<SceneObject>();
+			object->SetName("Directional Light");
+
+			ComponentHelper::CreateDirectionalLightMonoBehaviour(object.get());
+
+			sSceneObjects->AddObject(std::move(object));
+		}
+
+		if (ImGui::MenuItem("Point Light")) {
+			std::unique_ptr<SceneObject> object = std::make_unique<SceneObject>();
+			object->SetName("Point Light");
+
+			ComponentHelper::CreatePointLightMonoBehaviour(object.get());
 
 			sSceneObjects->AddObject(std::move(object));
 		}

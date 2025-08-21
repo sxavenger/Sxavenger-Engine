@@ -3746,9 +3746,9 @@
 				"component": "class TransformComponent",
 				"transform": {
 					"rotate": {
-						"w": 1.0,
+						"w": 0.7071067690849304,
 						"x": 0.0,
-						"y": 0.0,
+						"y": 0.7071067690849304,
 						"z": 0.0
 					},
 					"scale": {

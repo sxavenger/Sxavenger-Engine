@@ -177,6 +177,7 @@
     <ClCompile Include="Engine\Preview\Content\UContentTexture.cpp" />
     <ClCompile Include="Engine\Preview\Asset\UAssetSkeleton.cpp" />
     <ClCompile Include="Engine\Preview\Content\UContentBlob.cpp" />
+    <ClCompile Include="Engine\Preview\Content\UContentScene.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Lib\Adapter\Random\Random.h" />
@@ -381,6 +382,7 @@
     <ClInclude Include="Engine\Preview\Content\UContentObserver.h" />
     <ClInclude Include="Engine\Preview\Content\UContentBlob.h" />
     <ClInclude Include="Engine\Preview\Asset\UAssetParameter.h" />
+    <ClInclude Include="Engine\Preview\Content\UContentScene.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

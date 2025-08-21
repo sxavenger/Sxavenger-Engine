@@ -9,6 +9,7 @@
 #include "UContentModel.h"
 #include "UContentAnimation.h"
 #include "UContentBlob.h"
+#include "UContentScene.h"
 
 //* engine
 #include <Engine/System/SxavengerSystem.h>

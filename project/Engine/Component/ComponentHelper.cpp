@@ -52,10 +52,16 @@ std::unique_ptr<MonoBehaviour> ComponentHelper::CreateMonoBehaviour() {
 	return std::make_unique<MonoBehaviour>();
 }
 
-std::unique_ptr<MonoBehaviour> ComponentHelper::CreateTransformBehaviour() {
-	std::unique_ptr<MonoBehaviour> root = std::make_unique<MonoBehaviour>();
-	root->SetName("transform");
+void ComponentHelper::CreateTransformMonoBehaviour(MonoBehaviour* root) {
 	root->AddComponent<TransformComponent>();
+}
+
+std::unique_ptr<MonoBehaviour> ComponentHelper::CreateTransformMonoBehaviour() {
+	std::unique_ptr<MonoBehaviour> root = std::make_unique<MonoBehaviour>();
+	root->SetName("behaviour");
+
+	ComponentHelper::CreateTransformMonoBehaviour(root.get());
+	
 	return root;
 }
 
@@ -69,22 +75,34 @@ std::unique_ptr<MonoBehaviour> ComponentHelper::CreateCameraMonoBehaviour() {
 	return root;
 }
 
-std::unique_ptr<MonoBehaviour> ComponentHelper::CreateDirectionalLightMonoBehaviour() {
-	std::unique_ptr<MonoBehaviour> root = std::make_unique<MonoBehaviour>();
-	root->SetName("directional light");
-
+void ComponentHelper::CreateDirectionalLightMonoBehaviour(MonoBehaviour* root) {
 	root->AddComponent<TransformComponent>();
 	root->AddComponent<DirectionalLightComponent>();
+
+	// todo: 適切なparameterを設定する
+}
+
+std::unique_ptr<MonoBehaviour> ComponentHelper::CreateDirectionalLightMonoBehaviour() {
+	std::unique_ptr<MonoBehaviour> root = std::make_unique<MonoBehaviour>();
+	root->SetName("Directional Light");
+
+	ComponentHelper::CreateDirectionalLightMonoBehaviour(root.get());
 
 	return root;
 }
 
-std::unique_ptr<MonoBehaviour> ComponentHelper::CreatePointLightMonoBehaviour() {
-	std::unique_ptr<MonoBehaviour> root = std::make_unique<MonoBehaviour>();
-	root->SetName("point light");
-
+void ComponentHelper::CreatePointLightMonoBehaviour(MonoBehaviour* root) {
 	root->AddComponent<TransformComponent>();
 	root->AddComponent<PointLightComponent>();
+
+	// todo: 適切なparameterを設定する
+}
+
+std::unique_ptr<MonoBehaviour> ComponentHelper::CreatePointLightMonoBehaviour() {
+	std::unique_ptr<MonoBehaviour> root = std::make_unique<MonoBehaviour>();
+	root->SetName("Point Light");
+
+	ComponentHelper::CreatePointLightMonoBehaviour(root.get());
 
 	return root;
 }

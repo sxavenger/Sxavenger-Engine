@@ -138,11 +138,10 @@ private:
 	// private variables
 	//=========================================================================================
 
-	Tag tag_ = Tag::None;
+	Tag tag_               = Tag::None;
+	Projection projection_ = {};
 
 	std::unique_ptr<DxObject::DimensionBuffer<Camera>> buffer_;
-
-	Projection projection_ = {};
 
 	//=========================================================================================
 	// private methods
