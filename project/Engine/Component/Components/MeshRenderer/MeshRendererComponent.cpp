@@ -17,6 +17,7 @@
 
 void MeshRendererComponent::ShowComponentInspector() {
 
+	ImGui::Checkbox("enable", &isEnable_);
 	SxImGui::CheckBoxFlags("cast shadow", &mask_.Get(), static_cast<uint8_t>(MeshInstanceMask::Shadow));
 
 	/*if (ImGui::TreeNodeEx("material", ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_NoAutoOpenOnLog | ImGuiTreeNodeFlags_NoTreePushOnOpen)) {
@@ -39,6 +40,7 @@ json MeshRendererComponent::PerseToJson() const {
 	data["mesh"]     = mesh_.Serialize();
 	data["material"] = material_.Serialize();
 	data["mask"]     = mask_.Get();
+	data["isEnable"] = isEnable_;
 
 	return data;
 }
@@ -63,7 +65,8 @@ void MeshRendererComponent::InputJson(const json& data) {
 	mesh_     = mesh;
 	material_ = material;
 
-	mask_ = static_cast<MeshInstanceMask>(data["mask"].get<uint8_t>());
+	mask_     = static_cast<MeshInstanceMask>(data["mask"].get<uint8_t>());
+	isEnable_ = data["isEnable"].get<bool>();
 }
 
 std::shared_ptr<UAssetMesh> MeshRendererComponent::GetMesh() const {
