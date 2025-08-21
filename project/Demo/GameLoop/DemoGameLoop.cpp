@@ -56,9 +56,6 @@ void DemoGameLoop::InitGame() {
 	player_->Awake();
 	player_->Start();
 
-	//AssetObserver<AssetScene> scene = SxavengerAsset::TryImport<AssetScene>("assets/scene/sponza.scene");
-	//sSceneObjects->InputJson(scene.Acquire()->GetData());
-
 	SetCollisionCallback();
 
 	skylight_ = std::make_unique<MonoBehaviour>();
@@ -83,15 +80,7 @@ void DemoGameLoop::InitGame() {
 	auto lut = volume_->GetComponent<PostProcessLayerComponent>()->AddPostProcess<PostProcessLUT>();
 	lut->CreateTexture(SxavengerSystem::GetDirectQueueContext(), texture, { 16, 16 });
 
-	// test
-	auto collider = volume_->AddComponent<ColliderComponent>();
-	collider->SetTag("Wall");
-	collider->SetColliderBoundingAABB(
-		CollisionBoundings::AABB{
-			.min = { -7.0f, -7.0f, -7.0f },
-			.max = { 7.0f, 7.0f, 7.0f }
-		}
-	);
+	sSceneObjects->InputJsonFromFilepath("assets/scene/collision_sponza.scene");
 }
 
 void DemoGameLoop::TermGame() {

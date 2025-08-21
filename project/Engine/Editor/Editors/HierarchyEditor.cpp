@@ -236,11 +236,12 @@ void HierarchyEditor::HierarchySelectable(MonoBehaviour* behaviour) {
 	if (!hasChild) {
 		ImGui::Indent();
 	}
-	
 
 	if (!behaviour->IsActive()) {
 		ImGui::PopStyleColor();
 	}
+
+	//* event
 
 	if (ImGui::IsItemClicked()) {
 		SetSelected(behaviour);
@@ -249,6 +250,26 @@ void HierarchyEditor::HierarchySelectable(MonoBehaviour* behaviour) {
 
 	if (isSelect && SxImGui::IsDoubleClickItem()) {
 		SetSelectedView(behaviour);
+	}
+
+	if (ImGui::BeginPopupContextItem(std::format("hierarchy behaviour context menu # {:p}", static_cast<const void*>(behaviour)).c_str())) {
+		ImGui::PopStyleVar();
+
+		ImGui::SeparatorText("behaviour context menu");
+		ImGui::Text("name: %s", behaviour->GetName().c_str());
+
+		ImGui::Separator();
+
+		if (ImGui::MenuItem("Add Child")) {
+			std::unique_ptr<MonoBehaviour> child = ComponentHelper::CreateTransformMonoBehaviour();
+			behaviour->AddChild(std::move(child));
+		}
+
+		// TODO: Removeの追加
+
+		ImGui::EndPopup();
+
+		ImGui::PushStyleVarY(ImGuiStyleVar_ItemSpacing, 0);
 	}
 
 	if (isOpen) {

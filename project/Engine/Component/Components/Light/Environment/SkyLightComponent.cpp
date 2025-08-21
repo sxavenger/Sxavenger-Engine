@@ -6,6 +6,7 @@ _DXOBJECT_USING
 //-----------------------------------------------------------------------------------------
 //* engine
 #include <Engine/System/SxavengerSystem.h>
+#include <Engine/System/UI/SxImGui.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Parameter structure methods
@@ -43,6 +44,11 @@ void SkyLightComponent::Parameter::SetRadiance(uint32_t _index, uint32_t _mipmap
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 void SkyLightComponent::ShowComponentInspector() {
+	SxImGui::DragFloat("intensity", &parameter_->At(0).intensity, 0.01f, 0.0f);
+
+	ImGui::RadioButton("Environment", parameter_->At(0).flags.Test(SkyLightComponent::Flag::Environment));
+	ImGui::RadioButton("Irradiance",  parameter_->At(0).flags.Test(SkyLightComponent::Flag::Irradiance));
+	ImGui::RadioButton("Radiance",    parameter_->At(0).flags.Test(SkyLightComponent::Flag::Radiance));
 }
 
 void SkyLightComponent::Init() {

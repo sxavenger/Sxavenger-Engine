@@ -153,7 +153,6 @@ void RenderSceneEditor::Manipulate(MonoBehaviour* behaviour) {
 	SxImGuizmo::SetRect({ sceneRect_.pos.x, sceneRect_.pos.y }, { sceneRect_.size.x, sceneRect_.size.y });
 
 	Matrix4x4 m = component->GetMatrix();
-	//Matrix4x4 delta = Matrix4x4::Identity();
 
 	SxImGuizmo::Enable(!component->HasParent());
 
