@@ -110,8 +110,8 @@ void BetaSystemGameLoop::InitSystem() {
 	auto lut = behaviour_->GetComponent<PostProcessLayerComponent>()->AddPostProcess<PostProcessLUT>();
 	lut->CreateTexture(SxavengerSystem::GetDirectQueueContext(), texture, { 16, 16 });
 
-	mesh_ = ComponentHelper::CreateStaticMeshBehaviour(sUContentStorage->Import<UContentModel>("assets/models/PBR_Sphere_Test/model/PBR_Sphere.gltf"));
-	JsonHandler::WriteToJson("test.json", mesh_->PerseToJson());
+	//mesh_ = ComponentHelper::CreateStaticMeshBehaviour(sUContentStorage->Import<UContentModel>("assets/models/PBR_Sphere_Test/model/PBR_Sphere.gltf"));
+	//JsonHandler::WriteToJson("test.json", mesh_->PerseToJson());
 
 	mesh2_ = std::make_unique<MonoBehaviour>();
 	mesh2_->InputJson(JsonHandler::LoadFromJson("test.json"));

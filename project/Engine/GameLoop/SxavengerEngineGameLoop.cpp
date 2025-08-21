@@ -25,6 +25,7 @@ void SxavengerEngineGameLoop::Init(GameLoop::Context* context) {
 		CreateCheckerboard();
 
 		ComponentHelper::RegisterComponents();
+		sUAssetStorage->Deserialize();
 	});
 
 	context->SetProcess(GameLoop::Process::Init, std::numeric_limits<uint32_t>::max(), [this]() {
@@ -36,6 +37,8 @@ void SxavengerEngineGameLoop::Init(GameLoop::Context* context) {
 		FRenderCore::GetInstance()->Term();
 
 		SxavengerSystem::ShutdownAsyncThread();
+
+		sUAssetStorage->Serialize();
 	});
 
 	context->SetProcess(GameLoop::Process::Begin, 0, [this]() {

@@ -97,6 +97,7 @@ void UAssetMesh::Setup(const aiMesh* mesh) {
 }
 
 void UAssetMesh::Update(const DirectXQueueContext* context) {
+	UBaseAsset::WaitComplete();
 	input_.CreateBottomLevelAS(context);
 }
 

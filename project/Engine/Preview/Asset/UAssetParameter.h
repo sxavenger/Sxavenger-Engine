@@ -30,6 +30,8 @@ public:
 	// using
 	////////////////////////////////////////////////////////////////////////////////////////////
 
+	using UAssetType = T;
+
 	using Parameter = std::variant<std::monostate, Uuid, std::shared_ptr<T>>;
 	//! monostate: 空の状態
 	//! Uuid: uassetのid

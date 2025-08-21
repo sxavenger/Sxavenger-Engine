@@ -11,6 +11,9 @@
 #include "UAssetAnimation.h"
 #include "UAssetSkeleton.h"
 
+//* engine
+#include <Engine/System/Config/SxavengerConfig.h>
+
 //* lib
 #include <Lib/Adapter/Uuid/Uuid.h>
 
@@ -53,6 +56,9 @@ public:
 	template <UAssetConcept T>
 	void ForEach(const std::function<void(T* const)>& function) const;
 
+	template <UAssetConcept T>
+	bool Contains(const Uuid& id) const { return Contains(&typeid(T), id); }
+
 	//* table option *//
 
 	void Serialize() const;
@@ -68,7 +74,7 @@ public:
 private:
 
 	//=========================================================================================
-	// public vaariables
+	// private vaariables
 	//=========================================================================================
 
 	//* storage *//
@@ -78,10 +84,10 @@ private:
 	//* table *//
 
 	IdTable table_;
-	static inline const std::filesystem::path kTableFilepath_ = "asset_table.uasset";
+	static inline const std::filesystem::path kTableFilepath_ = kPackagesDirectory / "intermediate" / "asset_table.uasset";
 
 	//=========================================================================================
-	// public methods
+	// private methods
 	//=========================================================================================
 
 	bool Contains(const std::type_info* type, const Uuid& id) const {
