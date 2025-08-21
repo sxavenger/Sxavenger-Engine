@@ -89,6 +89,17 @@ BaseComponent* MonoBehaviour::AddComponent(const std::string& component) {
 	return components_[type]->get();
 }
 
+void MonoBehaviour::RemoveComponent(const std::type_info* type) {
+	// componentの削除
+	if (components_.Contains(type)) {
+		sComponentStorage->UnregisterComponent(type, components_[type]);
+		components_.Erase(type);
+
+	} else {
+		Logger::WarningRuntime("warning | [MonoBehaviour]::RemoveComponent", "component is not found. type: " + std::string(type->name()));
+	}
+}
+
 MonoBehaviour* MonoBehaviour::RequireParent() const {
 	Exception::Assert(parent_ != nullptr, "parent is not found.");
 	return parent_;
@@ -149,10 +160,6 @@ void MonoBehaviour::ShowInspector() {
 
 	ImGui::SameLine();
 
-	/*SxImGui::InputTextFunc("## name", buf_, [this](const std::string& name) {
-		SetName(name);
-	});*/
-
 	SxImGui::InputText("## name", name_);
 
 	ImGui::EndDisabled();
@@ -160,22 +167,52 @@ void MonoBehaviour::ShowInspector() {
 	ImGui::Separator();
 	ImGui::SeparatorText("components");
 
+	std::list<const std::type_info*> deleteComponent;
+
 	for (const auto& [type, component] : GetComponents()) {
-		if (ImGui::CollapsingHeader(type->name(), ImGuiTreeNodeFlags_DefaultOpen)) {
-			ImGui::PushID(type->name());
-			(*component)->ShowComponentInspector();
-			ImGui::PopID();
+		ImGui::PushID(type->name());
+
+		if (ImGui::Button(":")) {
+			deleteComponent.push_back(type);
 		}
+
+		ImGui::SameLine();
+
+		// ???: child window に変更...?
+		if (ImGui::CollapsingHeader(type->name(), ImGuiTreeNodeFlags_DefaultOpen)) {
+			(*component)->ShowComponentInspector();
+		}
+
+		ImGui::PopID();
+	}
+
+	for (const auto& type : deleteComponent) {
+		RemoveComponent(type);
+	}
+
+	//* componentの追加
+	//!< 中央に配置
+	ImGui::Dummy(ImVec2(0.0f, 4.0f)); // 上にスペースを追加
+	const ImVec2 size = { 160, 0 }; //!< y軸は自動調整
+	ImGui::SetCursorPosX((ImGui::GetContentRegionAvail().x - size.x) * 0.5f);
+
+	if (ImGui::Button("Add Component", size)) {
+		ImGui::OpenPopup("## Add Component Popup");
+	}
+
+	if (ImGui::BeginPopup("## Add Component Popup")) {
+		ImGui::SeparatorText("Add Component Command");
+		for (const auto& name : sComponentStorage->GetFactory() | std::views::keys) {
+			if (ImGui::MenuItem(name.c_str())) {
+				AddComponent(name);
+			}
+		}
+
+		ImGui::EndPopup();
 	}
 
 	ImGui::SeparatorText("inspectable");
 	Inspectable();
-
-	/*ImGui::SeparatorText("preview");
-	if (ImGui::Button("prese")) {
-		std::filesystem::path filepath = name_ + ".json";
-		JsonHandler::WriteToJson(filepath, PerseToJson());
-	}*/
 
 }
 

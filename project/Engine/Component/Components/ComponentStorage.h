@@ -58,6 +58,8 @@ public:
 
 	const std::type_info* GetComponentInfo(const std::string& component) const;
 
+	const Factory& GetFactory() const { return factory_; }
+
 	//* for each *//
 
 	template <Component _Ty>

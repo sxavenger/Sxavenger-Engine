@@ -101,6 +101,8 @@ public:
 	template <Component _Ty>
 	void RemoveComponent();
 
+	void RemoveComponent(const std::type_info* type);
+
 	//! @brief componentを取得
 	//! @tparam _Ty 取得するcomponentの型
 	//! @retval componentが存在する: componentのptr
@@ -260,7 +262,7 @@ void MonoBehaviour::RemoveComponent() {
 		components_.Erase(type);
 
 	} else {
-		WarningRuntime("warning | [MonoBehaviour]::RemoveComponent", "component is not found. type: " + std::string(type->name()));
+		Logger::WarningRuntime("warning | [MonoBehaviour]::RemoveComponent", "component is not found. type: " + std::string(type->name()));
 	}
 }
 
