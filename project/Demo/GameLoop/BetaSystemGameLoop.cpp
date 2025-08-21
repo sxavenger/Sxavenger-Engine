@@ -102,22 +102,15 @@ void BetaSystemGameLoop::InitSystem() {
 	behaviour_->GetComponent<PostProcessLayerComponent>()->AddPostProcess<PostProcessChromaticAberration>();
 	behaviour_->GetComponent<PostProcessLayerComponent>()->AddPostProcess<PostProcessRadialBlur>();
 
-	//SxavengerAsset::TryImport<AssetTexture>("assets/textures/LUT/lut_greenish.png", Texture::Option{ Texture::Encoding::Intensity, false });
-	//SxavengerAsset::TryImport<AssetTexture>("assets/textures/LUT/lut_reddish.png", Texture::Option{ Texture::Encoding::Intensity, false });
-	//SxavengerAsset::TryImport<AssetTexture>("assets/textures/LUT/lut_sepia.png", Texture::Option{ Texture::Encoding::Intensity, false });
+	sUContentStorage->Import<UContentTexture>("assets/textures/LUT/lut_greenish.png", UContentTexture::Option{ UContentTexture::Encoding::Intensity, false });
+	sUContentStorage->Import<UContentTexture>("assets/textures/LUT/lut_reddish.png", UContentTexture::Option{ UContentTexture::Encoding::Intensity, false });
+	sUContentStorage->Import<UContentTexture>("assets/textures/LUT/lut_sepia.png", UContentTexture::Option{ UContentTexture::Encoding::Intensity, false });
 
 	const auto& texture = sUContentStorage->Import<UContentTexture>("assets/textures/LUT/lut_reddish.png", UContentTexture::Option{ UContentTexture::Encoding::Intensity, false })->GetId();
 	auto lut = behaviour_->GetComponent<PostProcessLayerComponent>()->AddPostProcess<PostProcessLUT>();
 	lut->CreateTexture(SxavengerSystem::GetDirectQueueContext(), texture, { 16, 16 });
 
-	/*mesh_ = ComponentHelper::CreateStaticMeshBehaviour(sUContentStorage->Import<UContentModel>("assets/models/PBR_Sphere_Test/model/PBR_Sphere.gltf"));
-	mesh_->AddComponent<TransformComponent>();
-	mesh_->AddComponent<ColliderComponent>();
-
-	JsonHandler::WriteToJson("test.json", mesh_->PerseToJson());*/
-
-	mesh2_ = std::make_unique<MonoBehaviour>();
-	mesh2_->InputJson(JsonHandler::LoadFromJson("test.json"));
+	sUContentStorage->Import<UContentModel>("assets/models/tree_sponza/sponza.gltf");
 }
 
 void BetaSystemGameLoop::TermSystem() {

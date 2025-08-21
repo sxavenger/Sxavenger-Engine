@@ -62,6 +62,10 @@ public:
 
 	virtual void ShowInspector() override;
 
+	//* extension option *//
+
+	static const std::filesystem::path& GetContentExtension() { return kContentExtension_; }
+
 protected:
 
 	//=========================================================================================
@@ -80,6 +84,14 @@ protected:
 	void CheckExist() const;
 
 	std::filesystem::path GetContentPath() const;
+
+private:
+
+	//=========================================================================================
+	// private variables
+	//=========================================================================================
+
+	static const inline std::filesystem::path kContentExtension_ = ".ucontent";
 
 };
 

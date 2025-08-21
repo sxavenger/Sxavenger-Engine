@@ -246,20 +246,20 @@ void UAssetMaterial::Setup(const aiMaterial* material, const std::filesystem::pa
 
 	// normalの取得
 	if (material->GetTextureCount(aiTextureType_HEIGHT) != 0) { //!< .objの場合
-		textures_[static_cast<uint8_t>(TextureType::Bump)] = GetTextureId(material, aiTextureType_HEIGHT, directory);
+		textures_[static_cast<uint8_t>(TextureType::Bump)] = GetTextureId(material, aiTextureType_HEIGHT, directory, true);
 
 	} else if (material->GetTextureCount(aiTextureType_NORMALS) != 0) { //!< .gltfの場合
-		textures_[static_cast<uint8_t>(TextureType::Bump)] = GetTextureId(material, aiTextureType_NORMALS, directory);
+		textures_[static_cast<uint8_t>(TextureType::Bump)] = GetTextureId(material, aiTextureType_NORMALS, directory, true);
 	}
 
 	// roughnessの取得
-	textures_[static_cast<uint8_t>(TextureType::Roughness)] = GetTextureId(material, aiTextureType_DIFFUSE_ROUGHNESS, directory);
+	textures_[static_cast<uint8_t>(TextureType::Roughness)] = GetTextureId(material, aiTextureType_DIFFUSE_ROUGHNESS, directory, true);
 
 	// metallicの取得
-	textures_[static_cast<uint8_t>(TextureType::Metallic)] = GetTextureId(material, aiTextureType_METALNESS, directory);
+	textures_[static_cast<uint8_t>(TextureType::Metallic)] = GetTextureId(material, aiTextureType_METALNESS, directory, true);
 
 	// ambient occlusionの取得
-	textures_[static_cast<uint8_t>(TextureType::AmbientOcclusion)] = GetTextureId(material, aiTextureType_AMBIENT_OCCLUSION, directory);
+	textures_[static_cast<uint8_t>(TextureType::AmbientOcclusion)] = GetTextureId(material, aiTextureType_AMBIENT_OCCLUSION, directory, true);
 
 	// colorの取得
 	aiColor3D color;
@@ -342,7 +342,7 @@ const D3D12_GPU_VIRTUAL_ADDRESS& UAssetMaterial::GetGPUVirtualAddress() const {
 	return buffer_->GetGPUVirtualAddress();
 }
 
-std::optional<Uuid> UAssetMaterial::GetTextureId(const aiMaterial* aiMaterial, aiTextureType type, const std::filesystem::path& directory) {
+std::optional<Uuid> UAssetMaterial::GetTextureId(const aiMaterial* aiMaterial, aiTextureType type, const std::filesystem::path& directory, bool isIntensity) {
 	if (aiMaterial->GetTextureCount(type) == 0) {
 		return std::nullopt; //!< テクスチャが存在しない場合はnulloptを返す
 	}
@@ -352,7 +352,9 @@ std::optional<Uuid> UAssetMaterial::GetTextureId(const aiMaterial* aiMaterial, a
 
 	std::filesystem::path filepath = directory / part.C_Str();
 
-	return sUContentStorage->Import<UContentTexture>(filepath)->GetId(); //!< UContentStorageからIdを取得して返す
+	UContentTexture::Option option = isIntensity ? UContentTexture::Option{ UContentTexture::Encoding::Intensity, true } : UContentTexture::Option{ UContentTexture::Encoding::Lightness, true };
+
+	return sUContentStorage->Import<UContentTexture>(filepath, option)->GetId(); //!< UContentStorageからIdを取得して返す
 }
 
 void UAssetMaterial::CreateBuffer() {

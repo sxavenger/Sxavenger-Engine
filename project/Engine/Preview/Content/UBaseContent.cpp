@@ -48,6 +48,6 @@ void UBaseContent::CheckExist() const {
 
 std::filesystem::path UBaseContent::GetContentPath() const {
 	std::filesystem::path filepath = GetFilepath();
-	filepath += ".ucontent";
+	filepath += kContentExtension_;
 	return filepath;
 }

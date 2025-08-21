@@ -253,9 +253,9 @@ void DebugPrimitive::PushGrid(const CameraComponent* camera, const Vector2f& siz
 	
 
 void DebugPrimitive::PushAxis(const Vector3f& center, float length) {
-	PushLine(center, center + Vector3f(length, 0.0f, 0.0f), Color4f::Convert(0xFA0000FF), 0.6f); //!< x軸
-	PushLine(center, center + Vector3f(0.0f, length, 0.0f), Color4f::Convert(0x00FA00FF), 0.6f); //!< y軸
-	PushLine(center, center + Vector3f(0.0f, 0.0f, length), Color4f::Convert(0x0000FAFF), 0.6f); //!< z軸
+	PushLine(center - Vector3f(length, 0.0f, 0.0f), center + Vector3f(length, 0.0f, 0.0f), Color4f::Convert(0xFA0000FF), 0.6f); //!< x軸
+	PushLine(center - Vector3f(0.0f, length, 0.0f), center + Vector3f(0.0f, length, 0.0f), Color4f::Convert(0x00FA00FF), 0.6f); //!< y軸
+	PushLine(center - Vector3f(0.0f, 0.0f, length), center + Vector3f(0.0f, 0.0f, length), Color4f::Convert(0x0000FAFF), 0.6f); //!< z軸
 }
 
 void DebugPrimitive::PushBox(const Vector3f& min, const Vector3f& max, const Color4f& color, float thickness) {

@@ -113,6 +113,10 @@ void AssetEditor::ForEachDirectory(const std::filesystem::path& path, const std:
 
 	// file only
 	for (const auto& entry : std::filesystem::directory_iterator(path) | std::views::filter([](const std::filesystem::directory_entry& entry) { return !entry.is_directory(); })) {
+		if (entry.path().extension() == UBaseContent::GetContentExtension()) {
+			continue; // contentファイルは除外
+		}
+
 		func(entry);
 	}
 }
@@ -284,7 +288,8 @@ void AssetEditor::ShowAssetLayout() {
 					SetSelected(sUContentStorage->GetContent(type, part).get());
 				}
 
-				//sAssetStorage->DragAndDropSource(type, part);
+				// sourceの設定
+				sUContentStorage->DragAndDropSource(type, part);
 
 			} else {
 				if (ImageButton(part, fileTexture_)) {

@@ -145,14 +145,19 @@ void HierarchyEditor::ShowHierarchyWindow() {
 		ImVec2 contentSize = ImVec2(max.x - min.x, max.y - min.y);
 
 		// InvisibleButton をウィンドウ内部の描画領域全体に敷く
-		ImGui::SetCursorScreenPos(contentPos);
-		ImGui::InvisibleButton("## DropTarget Model", contentSize);
 
-		/*sAssetStorage->DragAndDropTarget(&typeid(AssetModel), [this](const std::filesystem::path& filepath) {
+		//* UContentModel
+		ImGui::SetCursorScreenPos(contentPos);
+		ImGui::InvisibleButton("## DropTarget UContentModel", contentSize);
+
+		sUContentStorage->DragAndDropTargetContentFunc<UContentModel>([this](const std::shared_ptr<UContentModel>& content) {
 			std::unique_ptr<SceneObject> object = std::make_unique<SceneObject>();
-			object->CreateMeshComponent(filepath);
+			object->SetName(content->GetFilepath().stem().generic_string());
+
+			ComponentHelper::CreateStaticMeshBehaviour(object.get(), content);
+
 			sSceneObjects->AddObject(std::move(object));
-		});*/
+		});
 
 		ImGui::SetCursorScreenPos(contentPos);
 		ImGui::InvisibleButton("## DropTarget Scene", contentSize);

@@ -59,7 +59,15 @@ public:
 
 	//* imgui option *//
 
-	void DragAndDropSource(const std::type_info* type, const std::filesystem::path& filepath);
+	static void DragAndDropSource(const std::type_info* type, const std::filesystem::path& filepath);
+
+	static std::optional<std::filesystem::path> DragAndDropTargetFilepath(const std::type_info* type);
+
+	template <UContentConcept T>
+	std::shared_ptr<T> DragAndDropTargetContent();
+
+	template <UContentConcept T>
+	void DragAndDropTargetContentFunc(const std::function<void(const std::shared_ptr<T>&)>& function);
 	
 	//* singleton *//
 
@@ -126,7 +134,31 @@ inline std::shared_ptr<T> UContentStorage::GetContent(const std::filesystem::pat
 		return nullptr; //!< Contentが存在しない
 	}
 
-	return UContentStorage::Cast<T>(storage_.at(type).at(filepath)); //!< Contentを取得
+	return UContentStorage::Cast<T>(storage_.at(type).At(filepath)); //!< Contentを取得
+}
+
+template <UContentConcept T>
+inline std::shared_ptr<T> UContentStorage::DragAndDropTargetContent() {
+	constexpr const std::type_info* type = &typeid(T);
+
+	std::optional<std::filesystem::path> filepath = UContentStorage::DragAndDropTargetFilepath(type);
+
+	if (!filepath.has_value()) {
+		return nullptr;
+	}
+
+	return this->Import<T>(filepath.value());
+}
+
+template<UContentConcept T>
+inline void UContentStorage::DragAndDropTargetContentFunc(const std::function<void(const std::shared_ptr<T>&)>& function) {
+	std::shared_ptr<T> content = this->DragAndDropTargetContent<T>();
+
+	if (content == nullptr) {
+		return;
+	}
+
+	function(content);
 }
 
 template <UContentConcept T>

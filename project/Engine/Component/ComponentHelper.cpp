@@ -90,6 +90,7 @@ std::unique_ptr<MonoBehaviour> ComponentHelper::CreatePointLightMonoBehaviour() 
 }
 
 void ComponentHelper::CreateStaticMeshBehaviour(MonoBehaviour* root, const std::shared_ptr<UContentModel>& model) {
+	model->WaitComplete();
 
 	// modelのnodeから階層構造を作成
 	const std::function<void(MonoBehaviour*, const BornNode&)> function = [&](MonoBehaviour* parent, const BornNode& node) {
@@ -145,8 +146,6 @@ void ComponentHelper::CreateStaticMeshBehaviour(MonoBehaviour* root, const std::
 }
 
 std::unique_ptr<MonoBehaviour> ComponentHelper::CreateStaticMeshBehaviour(const std::shared_ptr<UContentModel>& model) {
-	model->WaitComplete();
-
 	auto root = std::make_unique<MonoBehaviour>();
 	root->SetName(model->GetFilepath().stem().string());
 
@@ -190,8 +189,6 @@ void ComponentHelper::CreateSkinnedMeshBehaviour(MonoBehaviour* root, const std:
 }
 
 std::unique_ptr<MonoBehaviour> ComponentHelper::CreateSkinnedMeshBehaviour(const std::shared_ptr<UContentModel>& model) {
-	model->WaitComplete();
-
 	auto root = std::make_unique<MonoBehaviour>();
 	root->SetName(model->GetFilepath().stem().string());
 

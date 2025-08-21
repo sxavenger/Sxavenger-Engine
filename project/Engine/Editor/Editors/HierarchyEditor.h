@@ -43,7 +43,7 @@ private:
 
 	//* parameter *//
 
-	const Color4f disableColor_ = { 0.4f, 0.4f, 0.4f, 1.0f };
+	static inline const Color4f disableColor_ = { 0.4f, 0.4f, 0.4f, 1.0f };
 
 	//* scene parameter *//
 

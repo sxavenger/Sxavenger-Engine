@@ -349,7 +349,7 @@ private:
 
 	//* helper methods *//
 
-	static std::optional<Uuid> GetTextureId(const aiMaterial* aiMaterial, aiTextureType type, const std::filesystem::path& directory);
+	static std::optional<Uuid> GetTextureId(const aiMaterial* aiMaterial, aiTextureType type, const std::filesystem::path& directory, bool isIntensity = false);
 
 	void CreateBuffer();
 
