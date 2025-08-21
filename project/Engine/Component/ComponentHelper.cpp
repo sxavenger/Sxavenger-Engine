@@ -99,24 +99,37 @@ void ComponentHelper::CreateStaticMeshBehaviour(MonoBehaviour* root, const std::
 		auto transform = child->AddComponent<TransformComponent>();
 		transform->GetTransform() = node.transform;
 
-		// componentが一つしか付けられないので苦肉の策
-		for (auto& meshIndex : node.meshIndices) {
+		if (node.meshIndices.size() == 1) {
+			// componentが1つの場合, そのままMeshRendererComponentを追加
+			const uint32_t meshIndex = node.meshIndices.front();
 
 			auto mesh     = sUAssetStorage->GetAsset<UAssetMesh>(model->GetMeshId(meshIndex));
 			auto material = sUAssetStorage->GetAsset<UAssetMaterial>(model->GetMeshToMaterialId(meshIndex));
 
-			auto behaviour = std::make_unique<MonoBehaviour>();
-			behaviour->SetName(mesh->GetName());
-
-			//!< transform component の追加
-			behaviour->AddComponent<TransformComponent>();
-
-			//!< mesh renderer component の追加
-			auto renderer = behaviour->AddComponent<MeshRendererComponent>();
+			auto renderer = child->AddComponent<MeshRendererComponent>();
 			renderer->SetMesh(mesh->GetId());
 			renderer->SetMaterial(material->GetId());
 
-			child->AddChild(std::move(behaviour));
+		} else {
+			// componentが一つしか付けられないので苦肉の策
+			for (auto& meshIndex : node.meshIndices) {
+
+				auto mesh     = sUAssetStorage->GetAsset<UAssetMesh>(model->GetMeshId(meshIndex));
+				auto material = sUAssetStorage->GetAsset<UAssetMaterial>(model->GetMeshToMaterialId(meshIndex));
+
+				auto behaviour = std::make_unique<MonoBehaviour>();
+				behaviour->SetName(mesh->GetName());
+
+				//!< transform component の追加
+				behaviour->AddComponent<TransformComponent>();
+
+				//!< mesh renderer component の追加
+				auto renderer = behaviour->AddComponent<MeshRendererComponent>();
+				renderer->SetMesh(mesh->GetId());
+				renderer->SetMaterial(material->GetId());
+
+				child->AddChild(std::move(behaviour));
+			}
 		}
 
 		// 再帰的に登録
@@ -195,4 +208,16 @@ void ComponentHelper::ApplyAnimation(MonoBehaviour* behaviour, const Animation& 
 void ComponentHelper::ApplyAnimationTransition(MonoBehaviour* behaviour, const Animation& animationA, TimePointd<TimeUnit::second> timeA, bool isLoopA, const Animation& animationB, TimePointd<TimeUnit::second> timeB, bool isLoopB, float transitionT) {
 	auto child = behaviour->FindChild(ArmatureComponent::kArmatureName);
 	child->GetComponent<ArmatureComponent>()->TransitionAnimation(animationA, timeA, isLoopA, animationB, timeB, isLoopB, transitionT);
+}
+
+void ComponentHelper::RegisterComponents() {
+	sComponentStorage->RegisterFactory<TransformComponent>();
+	sComponentStorage->RegisterFactory<CameraComponent>();
+	sComponentStorage->RegisterFactory<ArmatureComponent>();
+	sComponentStorage->RegisterFactory<MeshRendererComponent>();
+	sComponentStorage->RegisterFactory<SkinnedMeshRendererComponent>();
+	sComponentStorage->RegisterFactory<DirectionalLightComponent>();
+	sComponentStorage->RegisterFactory<PointLightComponent>();
+	sComponentStorage->RegisterFactory<ParticleComponent>();
+	sComponentStorage->RegisterFactory<SkyLightComponent>();
 }

@@ -167,7 +167,7 @@ public:
 
 	json PerseToJson() const override;
 
-	void InputJson(const json& data) override { data; }
+	void InputJson(const json& data) override;
 
 protected:
 
@@ -197,8 +197,6 @@ private:
 	//=========================================================================================
 	// private variables
 	//=========================================================================================
-
-	std::string buf_ = "";
 
 	//* hierarchy
 	// parent information

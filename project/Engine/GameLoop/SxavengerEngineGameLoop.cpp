@@ -8,6 +8,7 @@
 #include <Engine/Content/SxavengerContent.h>
 #include <Engine/Render/FRenderCore.h>
 #include <Engine/Render/FMainRender.h>
+#include <Engine/Component/ComponentHelper.h>
 
 //* c++
 #include <limits>
@@ -22,6 +23,8 @@ void SxavengerEngineGameLoop::Init(GameLoop::Context* context) {
 		FMainRender::GetInstance()->Init();
 		CreateWhite1x1();
 		CreateCheckerboard();
+
+		ComponentHelper::RegisterComponents();
 	});
 
 	context->SetProcess(GameLoop::Process::Init, std::numeric_limits<uint32_t>::max(), [this]() {

@@ -141,11 +141,6 @@ MonoBehaviour* MonoBehaviour::FindRequireChild(const std::string& name) {
 }
 
 void MonoBehaviour::ShowInspector() {
-	if (buf_.empty()) {
-		buf_ = name_;
-		buf_.resize(128);
-	}
-
 	ImGui::BeginDisabled(!isRenamable_); //!< 名前変更不可の場合はdisabled
 
 	if (ImGui::Checkbox("## active", &isActive_)) {
@@ -154,13 +149,11 @@ void MonoBehaviour::ShowInspector() {
 
 	ImGui::SameLine();
 
-	SxImGui::InputTextFunc("## name", buf_, [this](const std::string& name) {
+	/*SxImGui::InputTextFunc("## name", buf_, [this](const std::string& name) {
 		SetName(name);
-	});
+	});*/
 
-	if (SxImGui::InputText("test", name_)) {
-		SetName(name_);
-	}
+	SxImGui::InputText("## name", name_);
 
 	ImGui::EndDisabled();
 
@@ -222,6 +215,35 @@ json MonoBehaviour::PerseToJson() const {
 	}
 
 	return root;
+}
+
+void MonoBehaviour::InputJson(const json& data) {
+
+	name_        = data.value("name", "new behaviour");
+	isRenamable_ = data.value("isRenamable", true);
+	isActive_    = data.value("isActive", true);
+	isView_      = data.value("isView", true);
+
+	//* components
+	components_.Clear();
+	for (const auto& componentData : data["components"]) {
+		std::string name = componentData.value("component", "");
+
+		if (name.empty()) {
+			continue;
+		}
+
+		BaseComponent* component = AddComponent(name);
+		component->InputJson(componentData);
+	}
+
+	//* children
+	for (const auto& childData : data["children"]) {
+		std::unique_ptr<MonoBehaviour> child = std::make_unique<MonoBehaviour>();
+		child->InputJson(childData);
+		AddChild(std::move(child));
+	}
+
 }
 
 MonoBehaviour::HierarchyIterator MonoBehaviour::AddHierarchy(HierarchyElement&& child) {

@@ -66,5 +66,9 @@ public:
 		float transitionT
 	);
 
+	//* storage helper *//
+
+	static void RegisterComponents();
+
 private:
 };

@@ -139,6 +139,9 @@ void FSceneRenderer::RenderBasePassStaticMesh(const DirectXQueueContext* context
 	parameter.SetAddress("gCamera", config.camera->GetGPUVirtualAddress());
 
 	sComponentStorage->ForEachActive<MeshRendererComponent>([&](MeshRendererComponent* component) {
+		if (!component->IsEnabled()) {
+			return; //!< 不適格component.
+		}
 
 		auto mesh     = component->GetMesh();
 		auto material = component->GetMaterial();
@@ -172,7 +175,6 @@ void FSceneRenderer::RenderBasePassSkinnedMesh(const DirectXQueueContext* contex
 	parameter.SetAddress("gCamera", config.camera->GetGPUVirtualAddress());
 
 	sComponentStorage->ForEachActive<SkinnedMeshRendererComponent>([&](SkinnedMeshRendererComponent* component) {
-
 		auto material = component->GetMaterial();
 		
 		if (material->GetMode() != UAssetMaterial::Mode::Opaque) {
@@ -556,6 +558,9 @@ void FSceneRenderer::RenderTransparentPassStaticMesh(const DirectXQueueContext* 
 
 	// componentを取得
 	sComponentStorage->ForEachActive<MeshRendererComponent>([&](MeshRendererComponent* component) {
+		if (!component->IsEnabled()) {
+			return; //!< 不適格component.
+		}
 
 		auto mesh     = component->GetMesh();
 		auto material = component->GetMaterial();
