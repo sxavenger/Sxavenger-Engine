@@ -66,6 +66,8 @@ public:
 
 	void SetColliderBoundingOBB(const CollisionBoundings::OBB& obb = { .orientation = Quaternion::Identity(), .size = { 1.0f, 1.0f, 1.0f } });
 
+	void SetColliderBounding(const CollisionBoundings::Boundings& bounding) { bounding_ = bounding; }
+
 	const CollisionBoundings::Boundings& GetBoundings() const { return bounding_; }
 
 	//* collision state option *//
@@ -100,6 +102,12 @@ public:
 	//* other component option *//
 
 	TransformComponent* RequireTransform() const;
+
+	//* json option *//
+
+	json PerseToJson() const override;
+
+	void InputJson(const json& data) override;
 
 private:
 

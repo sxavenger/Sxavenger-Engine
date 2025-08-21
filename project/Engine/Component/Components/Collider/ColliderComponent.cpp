@@ -153,46 +153,56 @@ void ColliderComponent::ShowComponentInspector() {
 
 	switch (bounding_.index()) {
 		case static_cast<size_t>(CollisionBoundings::BoundingType::Sphere):
-		{
-			auto& sphere = std::get<CollisionBoundings::Sphere>(bounding_);
+			{
+				auto& sphere = std::get<CollisionBoundings::Sphere>(bounding_);
 
-			SxImGui::DragFloat("radius", &sphere.radius, 0.01f, 0.0f);
-		}
-		break;
+				SxImGui::DragFloat("radius", &sphere.radius, 0.01f, 0.0f);
+			}
+			break;
 
 		case static_cast<size_t>(CollisionBoundings::BoundingType::Capsule):
-		{
-			auto& capsule = std::get<CollisionBoundings::Capsule>(bounding_);
+			{
+				auto& capsule = std::get<CollisionBoundings::Capsule>(bounding_);
 
-			if (SxImGui::DragVector3("direction", &capsule.direction.x, 0.01f)) {
-				capsule.direction = capsule.direction.Normalize();
+				if (SxImGui::DragVector3("direction", &capsule.direction.x, 0.01f)) {
+					capsule.direction = capsule.direction.Normalize();
+				}
+
+				SxImGui::DragFloat("radius", &capsule.radius, 0.01f, 0.0f);
+				SxImGui::DragFloat("length", &capsule.length, 0.01f, 0.0f);
 			}
-
-			SxImGui::DragFloat("radius", &capsule.radius, 0.01f, 0.0f);
-			SxImGui::DragFloat("length", &capsule.length, 0.01f, 0.0f);
-		}
-		break;
+			break;
 
 		case static_cast<size_t>(CollisionBoundings::BoundingType::AABB):
-		{
-			auto& aabb = std::get<CollisionBoundings::AABB>(bounding_);
+			{
+				auto& aabb = std::get<CollisionBoundings::AABB>(bounding_);
 
-			ImGui::DragFloat3("max", &aabb.max.x, 0.01f);
-			ImGui::DragFloat3("min", &aabb.min.x, 0.01f);
+				ImGui::DragFloat3("max", &aabb.max.x, 0.01f);
+				ImGui::DragFloat3("min", &aabb.min.x, 0.01f);
 
-			// minがmaxを上回らないようclamp
-			aabb.min.x = (std::min)(aabb.min.x, aabb.max.x);
-			aabb.max.x = (std::max)(aabb.min.x, aabb.max.x);
+				// minがmaxを上回らないようclamp
+				aabb.min.x = (std::min)(aabb.min.x, aabb.max.x);
+				aabb.max.x = (std::max)(aabb.min.x, aabb.max.x);
 
-			aabb.min.y = (std::min)(aabb.min.y, aabb.max.y);
-			aabb.max.y = (std::max)(aabb.min.y, aabb.max.y);
+				aabb.min.y = (std::min)(aabb.min.y, aabb.max.y);
+				aabb.max.y = (std::max)(aabb.min.y, aabb.max.y);
 
-			aabb.min.z = (std::min)(aabb.min.z, aabb.max.z);
-			aabb.max.z = (std::max)(aabb.min.z, aabb.max.z);
-		}
-		break;
+				aabb.min.z = (std::min)(aabb.min.z, aabb.max.z);
+				aabb.max.z = (std::max)(aabb.min.z, aabb.max.z);
+			}
+			break;
 
 		case static_cast<size_t>(CollisionBoundings::BoundingType::OBB):
+			{
+				auto& obb = std::get<CollisionBoundings::OBB>(bounding_);
+
+				Vector3f e = Quaternion::ToEuler(obb.orientation);
+				if (ImGui::DragFloat3("rotate", &e.x, 0.01f)) {
+					obb.orientation = Quaternion::ToQuaternion(e);
+				}
+
+				ImGui::DragFloat3("size", &obb.size.x, 0.01f);
+			}
 			break;
 	}
 
@@ -270,8 +280,109 @@ TransformComponent* ColliderComponent::RequireTransform() const {
 	return BaseComponent::GetBehaviour()->RequireComponent<TransformComponent>();
 }
 
+json ColliderComponent::PerseToJson() const {
+	json data = json::object();
+
+	data["tag"]      = tag_;
+	data["isEnable"] = isEnable_;
+
+	json& bounding = data["bounding"] = json::object();
+
+	bounding["type"] = magic_enum::enum_name(static_cast<CollisionBoundings::BoundingType>(bounding_.index()));
+
+	switch (bounding_.index()) {
+		case static_cast<size_t>(CollisionBoundings::BoundingType::Sphere):
+			{
+				const auto& sphere = std::get<CollisionBoundings::Sphere>(bounding_);
+
+				bounding["radius"] = sphere.radius;
+			}
+			break;
+
+		case static_cast<size_t>(CollisionBoundings::BoundingType::Capsule):
+			{
+				const auto& capsule = std::get<CollisionBoundings::Capsule>(bounding_);
+
+				bounding["direction"] = GeometryJsonSerializer::ToJson(capsule.direction);
+				bounding["radius"]    = capsule.radius;
+				bounding["length"]    = capsule.length;
+			}
+			break;
+
+		case static_cast<size_t>(CollisionBoundings::BoundingType::AABB):
+			{
+				const auto& aabb = std::get<CollisionBoundings::AABB>(bounding_);
+
+				bounding["min"] = GeometryJsonSerializer::ToJson(aabb.min);
+				bounding["max"] = GeometryJsonSerializer::ToJson(aabb.max);
+			}
+			break;
+
+		case static_cast<size_t>(CollisionBoundings::BoundingType::OBB):
+			{
+				const auto& obb = std::get<CollisionBoundings::OBB>(bounding_);
+
+				bounding["orientation"] = GeometryJsonSerializer::ToJson(obb.orientation);
+				bounding["size"]        = GeometryJsonSerializer::ToJson(obb.size);
+			}
+			break;
+	}
+
+	return data;
+}
+
+void ColliderComponent::InputJson(const json& data) {
+	tag_      = data.value("tag", tag_);
+	isEnable_ = data.value("isEnable", isEnable_);
+
+	const auto& bounding = data["bounding"];
+	const auto type      = magic_enum::enum_cast<CollisionBoundings::BoundingType>(bounding["type"].get<std::string>()).value();
+
+	switch (type) {
+		case CollisionBoundings::BoundingType::Sphere:
+			{
+				CollisionBoundings::Sphere sphere = {};
+				sphere.radius = bounding["radius"].get<float>();
+
+				SetColliderBounding(sphere);
+			}
+			break;
+
+		case CollisionBoundings::BoundingType::Capsule:
+			{
+				CollisionBoundings::Capsule capsule = {};
+				capsule.direction = GeometryJsonSerializer::JsonToVector3f(bounding["direction"]);
+				capsule.radius    = bounding["radius"].get<float>();
+				capsule.length    = bounding["length"].get<float>();
+
+				SetColliderBounding(capsule);
+			}
+			break;
+
+		case CollisionBoundings::BoundingType::AABB:
+			{
+				CollisionBoundings::AABB aabb = {};
+				aabb.min = GeometryJsonSerializer::JsonToVector3f(bounding["min"]);
+				aabb.max = GeometryJsonSerializer::JsonToVector3f(bounding["max"]);
+
+				SetColliderBounding(aabb);
+			}
+			break;
+
+		case CollisionBoundings::BoundingType::OBB:
+			{
+				CollisionBoundings::OBB obb = {};
+				obb.orientation = GeometryJsonSerializer::JsonToQuaternion(bounding["orientation"]);
+				obb.size        = GeometryJsonSerializer::JsonToVector3f(bounding["size"]);
+
+				SetColliderBounding(obb);
+			}
+			break;
+	}
+}
+
 void ColliderComponent::PushBoundingLine() const {
-	BoundingPrimitiveLine line;
+	BoundingPrimitiveLine line = {};
 	line.position = RequireTransform()->GetPosition();
 	line.color    = isEnable_ ? Color4f{ 1.0f, 1.0f, 0.0f, 1.0f } : Color4f{ 0.4f, 0.4f, 0.4f, 1.0f };
 
