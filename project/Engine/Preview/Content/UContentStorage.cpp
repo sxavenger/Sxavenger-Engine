@@ -10,6 +10,23 @@
 // UContentStorage class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
+void UContentStorage::Emplace(const std::type_info* type, const std::shared_ptr<UBaseContent>& content) {
+	content->AttachUuid();
+
+	SxavengerSystem::PushTask(content->GetAsyncExecution(), content);
+
+	storage_[type][content->GetFilepath()] = content;
+}
+
+void UContentStorage::TryEmplace(const std::type_info* type, const std::shared_ptr<UBaseContent>& content) {
+	if (Contains(type, content->GetFilepath())) {
+		Logger::CommentRuntime("[UAssetStorage]: content is already registered in storage.", content->GetFilepath().generic_string());
+		return;
+	}
+
+	Emplace(type, content);
+}
+
 std::shared_ptr<UBaseContent> UContentStorage::GetContent(const std::type_info* type, const std::filesystem::path& filepath) const {
 	if (!Contains(type, filepath)) {
 		Exception::Assert(false, "content is not registered in storage.");

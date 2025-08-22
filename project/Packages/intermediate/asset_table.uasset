@@ -51,6 +51,10 @@
 		"assets/models/tree_sponza/7268504077753552595.jpg",
 		"class UAssetTexture"
 	],
+	"0339a424-dab6-4b2d-958264dfb4053cf7": [
+		"assets/models/macbeth_chart/Color_checker.png",
+		"class UAssetTexture"
+	],
 	"040ef8e4-eec2-400e-9693358a6716a895": [
 		"assets/models/PBR_Sphere_Test/model/PBR_Sphere.gltf",
 		"class UAssetMaterial"
@@ -295,6 +299,10 @@
 		"assets/models/tree_sponza/sponza.gltf",
 		"class UAssetMesh"
 	],
+	"2d9f4a23-4168-47f5-a18d9139a9e36152": [
+		"assets/models/macbeth_chart/macbeth_chart_scene.gltf",
+		"class UAssetMesh"
+	],
 	"2db5c593-cbc7-4e1b-ba8c325931dfead0": [
 		"assets/models/PBR_Sphere_Test/model/PBR_Sphere.gltf",
 		"class UAssetMaterial"
@@ -366,6 +374,10 @@
 	"36aa37ef-2a5d-488b-a4041acf9903b3fc": [
 		"assets/models/PBR_Sphere_Test/model/PBR_Sphere.gltf",
 		"class UAssetMaterial"
+	],
+	"36ea2dae-857a-426f-bafcaf251ad5b021": [
+		"Packages/textures/icon/scene.png",
+		"class UAssetTexture"
 	],
 	"37392eb9-cde9-4a0f-9ec6229940403e0b": [
 		"assets/models/PBR_Sphere_Test/model/PBR_Sphere.gltf",
@@ -723,6 +735,10 @@
 		"assets/models/PBR_Sphere_Test/model/PBR_Sphere.gltf",
 		"class UAssetMesh"
 	],
+	"66c4405c-4863-4a1d-8e79fb6c10024ecc": [
+		"assets/models/macbeth_chart/macbeth_chart_scene.gltf",
+		"class UAssetMaterial"
+	],
 	"67005ffe-d6df-444d-873a456418bab266": [
 		"assets/models/tree_sponza/sponza.gltf",
 		"class UAssetMesh"
@@ -827,6 +843,10 @@
 		"assets/models/tree_sponza/sponza.gltf",
 		"class UAssetMesh"
 	],
+	"74014eb2-67de-4b36-bc8a59a1786670dc": [
+		"assets/models/macbeth_chart/macbeth_chart_scene.gltf",
+		"class UAssetMesh"
+	],
 	"742d093a-8a53-4574-b408467fade12b33": [
 		"assets/models/human/idle.gltf",
 		"class UAssetAnimation"
@@ -842,6 +862,10 @@
 	"75256a2a-0f17-486f-b3bcb4375ab5d8ee": [
 		"assets/models/PBR_Sphere_Test/model/PBR_Sphere.gltf",
 		"class UAssetMaterial"
+	],
+	"757e0880-8ab9-4b53-b8d8dada2aee2a94": [
+		"assets/models/macbeth_chart/macbeth_chart_scene.gltf",
+		"class UAssetMesh"
 	],
 	"75c473e2-6b8b-4fab-ae71bc290eaca0ce": [
 		"assets/models/PBR_Sphere_Test/model/PBR_Sphere.gltf",
@@ -955,9 +979,17 @@
 		"assets/models/PBR_Sphere_Test/model/PBR_Sphere.gltf",
 		"class UAssetMesh"
 	],
+	"84fc8f95-21bb-482e-bc6d7ff6bdd18d8d": [
+		"assets/models/probe_sphere/probe_sphere.gltf",
+		"class UAssetMaterial"
+	],
 	"85fc6d59-2575-45de-b5c45f9b366dc1b7": [
 		"assets/models/PBR_Sphere_Test/model/PBR_Sphere.gltf",
 		"class UAssetMaterial"
+	],
+	"866709ce-0e24-4578-9210e4a9c179c5e2": [
+		"assets/models/probe_sphere/probe_sphere.gltf",
+		"class UAssetSkeleton"
 	],
 	"8732233f-d7e6-4f95-af373d39199f5154": [
 		"assets/models/tree_sponza/2374361008830720677.jpg",
@@ -982,6 +1014,10 @@
 	"89281672-c146-409e-8a802b7c904e39c9": [
 		"assets/textures/textureCube/sky_irradiance.dds",
 		"class UAssetTexture"
+	],
+	"89806823-6aab-40c9-ba1551579ca1da20": [
+		"assets/models/macbeth_chart/macbeth_chart_scene.gltf",
+		"class UAssetSkeleton"
 	],
 	"89a4ee2e-077a-4d76-ae6b246984e955a8": [
 		"assets/models/tree_sponza/sponza.gltf",
@@ -1303,6 +1339,10 @@
 		"assets/models/PBR_Sphere_Test/model/PBR_Sphere.gltf",
 		"class UAssetMesh"
 	],
+	"afcacd88-88b9-4161-a7ca55a49a9d6791": [
+		"assets/models/probe_sphere/probe_sphere.gltf",
+		"class UAssetMaterial"
+	],
 	"b10031ac-f91b-4807-8ca7064b8d992ce4": [
 		"assets/models/PBR_Sphere_Test/model/PBR_Sphere.gltf",
 		"class UAssetMesh"
@@ -1343,6 +1383,10 @@
 		"assets/models/PBR_Sphere_Test/model/PBR_Sphere.gltf",
 		"class UAssetMaterial"
 	],
+	"b6f98a59-8076-40d6-a8f0b3d2f281dd44": [
+		"assets/models/macbeth_chart/macbeth_chart_scene.gltf",
+		"class UAssetMaterial"
+	],
 	"b7fd04aa-8385-4a25-b12aaa2c85c46a30": [
 		"assets/models/PBR_Sphere_Test/model/PBR_Sphere.gltf",
 		"class UAssetMaterial"
@@ -1358,6 +1402,10 @@
 	"b8813cb1-8e6a-4961-b9b2c86c61b6e57c": [
 		"assets/models/PBR_Sphere_Test/model/PBR_Sphere.gltf",
 		"class UAssetMesh"
+	],
+	"b8f2a2d4-c1ed-48eb-8db9c48a538724b9": [
+		"assets/models/macbeth_chart/macbeth_chart_scene.gltf",
+		"class UAssetMaterial"
 	],
 	"b91f9d4a-661d-4110-b3b87f5ca9862b2f": [
 		"assets/models/tree_sponza/sponza.gltf",
@@ -1467,6 +1515,10 @@
 		"Packages/textures/icon/texture.png",
 		"class UAssetTexture"
 	],
+	"c93749a0-b905-4cd7-a4303e4d5a4a9df1": [
+		"assets/models/macbeth_chart/macbeth_chart_scene.gltf",
+		"class UAssetMaterial"
+	],
 	"ca8ddc71-4147-45b1-ad56ea4f1c7998e1": [
 		"assets/models/PBR_Sphere_Test/model/PBR_Sphere.gltf",
 		"class UAssetMaterial"
@@ -1509,6 +1561,10 @@
 	],
 	"ce8746f9-e80f-4c3b-88ca1da06761c2c5": [
 		"assets/models/tree_sponza/sponza.gltf",
+		"class UAssetMaterial"
+	],
+	"ceb466ec-ce49-4631-95b47b6d565fe57b": [
+		"assets/models/macbeth_chart/macbeth_chart_scene.gltf",
 		"class UAssetMaterial"
 	],
 	"cec0cd0c-de6d-45a2-b560c1acdde91afb": [
@@ -1623,6 +1679,10 @@
 		"assets/models/tree_sponza/sponza.gltf",
 		"class UAssetMesh"
 	],
+	"dbbd64ac-79db-4629-9fc2b9a80d9fcdca": [
+		"assets/models/macbeth_chart/macbeth_chart_scene.gltf",
+		"class UAssetMesh"
+	],
 	"dc7aa94c-257c-4073-86ea26c4a8888c39": [
 		"assets/models/PBR_Sphere_Test/model/PBR_Sphere.gltf",
 		"class UAssetMaterial"
@@ -1686,6 +1746,10 @@
 	"e3acadc7-bac9-45c7-860382699c514e8c": [
 		"assets/models/PBR_Sphere_Test/model/PBR_Sphere.gltf",
 		"class UAssetMaterial"
+	],
+	"e3b19591-a6e9-4c50-88f529ac1241d249": [
+		"assets/models/probe_sphere/probe_sphere.gltf",
+		"class UAssetMesh"
 	],
 	"e3d43c83-63ff-4b9c-b543fe7a54b2f61d": [
 		"assets/models/PBR_Sphere_Test/model/PBR_Sphere.gltf",
@@ -1783,6 +1847,10 @@
 		"assets/models/PBR_Sphere_Test/model/PBR_Sphere.gltf",
 		"class UAssetMaterial"
 	],
+	"ee895a17-91b6-4f25-b8beb13a6590385b": [
+		"assets/models/macbeth_chart/macbeth_chart_scene.gltf",
+		"class UAssetMesh"
+	],
 	"ef15dcc0-6202-4fd0-a94de1f7f62ffc3d": [
 		"assets/models/tree_sponza/sponza.gltf",
 		"class UAssetSkeleton"
@@ -1866,6 +1934,10 @@
 	"f8e7f793-2643-4839-9f1353f895ad8311": [
 		"assets/models/PBR_Sphere_Test/model/PBR_Sphere.gltf",
 		"class UAssetMesh"
+	],
+	"f917aeb0-2f7e-41a9-a03a5f930233f334": [
+		"assets/models/macbeth_chart/macbeth_chart_scene.gltf",
+		"class UAssetMaterial"
 	],
 	"f9fafabd-e7e5-4a3e-a4f3c4110287e585": [
 		"assets/models/PBR_Sphere_Test/model/PBR_Sphere.gltf",

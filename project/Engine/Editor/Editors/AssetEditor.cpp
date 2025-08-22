@@ -22,16 +22,18 @@ void AssetEditor::Init() {
 	assetTextures_[&typeid(UContentTexture)] = sUContentStorage->Import<UContentTexture>("Packages/textures/icon/texture.png")->GetId();
 	assetTextures_[&typeid(UContentModel)]   = sUContentStorage->Import<UContentTexture>("Packages/textures/icon/model.png")->GetId();
 	assetTextures_[&typeid(UContentBlob)]    = sUContentStorage->Import<UContentTexture>("Packages/textures/icon/shader.png")->GetId();
-	//assetTextures_[&typeid(UContentScene)]   = SxavengerAsset::TryImport<AssetTexture>("Packages/textures/icon/scene.png");
+	assetTextures_[&typeid(UContentScene)]   = sUContentStorage->Import<UContentTexture>("Packages/textures/icon/scene.png")->GetId();
 
 	// extensionの登録
 	// todo: extensionからiconを変更
-	//sAssetStorage->RegisterExtension<AssetTexture>(".png");
-	//sAssetStorage->RegisterExtension<AssetTexture>(".jpg");
-	//sAssetStorage->RegisterExtension<AssetModel>(".gltf");
-	//sAssetStorage->RegisterExtension<AssetModel>(".obj");
-	//sAssetStorage->RegisterExtension<AssetModel>(".fbx");
-	//sAssetStorage->RegisterExtension<AssetScene>(".scene");
+	RegisterExtension<UContentTexture>(".png");
+	RegisterExtension<UContentTexture>(".jpg");
+	RegisterExtension<UContentTexture>(".jpeg");
+	RegisterExtension<UContentTexture>(".tga");
+	RegisterExtension<UContentModel>(".gltf");
+	RegisterExtension<UContentModel>(".obj");
+	RegisterExtension<UContentModel>(".fbx");
+	RegisterExtension<UContentScene>(".scene");
 
 }
 
@@ -310,7 +312,12 @@ void AssetEditor::ShowAssetLayout() {
 				}
 
 				if (ImGui::Selectable("Import")) {
-					//sAssetStorage->ImportExtension(part);
+					if (extensions_.contains(part.extension())) {
+						const auto& [type, function] = extensions_.at(part.extension());
+
+						std::shared_ptr<UBaseContent> content = function(part);
+						sUContentStorage->TryEmplace(type, content);
+					}
 				}
 
 				ImGui::EndPopup();

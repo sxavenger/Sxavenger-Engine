@@ -4274,5 +4274,459 @@
 		"isRenamable": true,
 		"isView": true,
 		"name": "Point Light"
+	},
+	{
+		"children": [
+			{
+				"children": [],
+				"components": [
+					{
+						"component": "class TransformComponent",
+						"transform": {
+							"rotate": {
+								"w": 1.0,
+								"x": -0.0,
+								"y": -0.0,
+								"z": 0.0
+							},
+							"scale": {
+								"x": 1.0,
+								"y": 1.0,
+								"z": 1.0
+							},
+							"translate": {
+								"x": -20.0,
+								"y": -20.0,
+								"z": -20.0
+							}
+						}
+					},
+					{
+						"component": "class MeshRendererComponent",
+						"isEnable": true,
+						"mask": 255,
+						"material": "afcacd88-88b9-4161-a7ca55a49a9d6791",
+						"mesh": "e3b19591-a6e9-4c50-88f529ac1241d249"
+					}
+				],
+				"isActive": true,
+				"isRenamable": true,
+				"isView": true,
+				"name": "sphere"
+			}
+		],
+		"components": [
+			{
+				"component": "class TransformComponent",
+				"transform": {
+					"rotate": {
+						"w": 1.0,
+						"x": 0.0,
+						"y": 0.0,
+						"z": 0.0
+					},
+					"scale": {
+						"x": 1.0,
+						"y": 1.0,
+						"z": 1.0
+					},
+					"translate": {
+						"x": 0.0,
+						"y": 12.708992958068848,
+						"z": 0.0
+					}
+				}
+			}
+		],
+		"isActive": true,
+		"isRenamable": true,
+		"isView": true,
+		"name": "probe_sphere"
+	},
+	{
+		"children": [
+			{
+				"children": [
+					{
+						"children": [],
+						"components": [
+							{
+								"component": "class TransformComponent",
+								"transform": {
+									"rotate": {
+										"w": 1.0,
+										"x": -0.0,
+										"y": -0.0,
+										"z": 0.0
+									},
+									"scale": {
+										"x": 1.0,
+										"y": 1.0,
+										"z": 1.0
+									},
+									"translate": {
+										"x": -2.0,
+										"y": 0.8999999761581421,
+										"z": -0.0
+									}
+								}
+							}
+						],
+						"isActive": true,
+						"isRenamable": true,
+						"isView": true,
+						"name": "Brush0"
+					},
+					{
+						"children": [],
+						"components": [
+							{
+								"component": "class TransformComponent",
+								"transform": {
+									"rotate": {
+										"w": 1.0,
+										"x": -0.0,
+										"y": -0.0,
+										"z": 0.0
+									},
+									"scale": {
+										"x": 1.0,
+										"y": 1.0,
+										"z": 1.0
+									},
+									"translate": {
+										"x": 0.0,
+										"y": 0.0,
+										"z": -0.0
+									}
+								}
+							}
+						],
+						"isActive": true,
+						"isRenamable": true,
+						"isView": true,
+						"name": "DefaultPhysicsVolume0"
+					},
+					{
+						"children": [],
+						"components": [
+							{
+								"component": "class TransformComponent",
+								"transform": {
+									"rotate": {
+										"w": 1.0,
+										"x": -0.0,
+										"y": -0.0,
+										"z": 0.0
+									},
+									"scale": {
+										"x": 1.0,
+										"y": 1.0,
+										"z": 1.0
+									},
+									"translate": {
+										"x": 0.0,
+										"y": 0.0,
+										"z": -0.0
+									}
+								}
+							}
+						],
+						"isActive": true,
+						"isRenamable": true,
+						"isView": true,
+						"name": "AbstractNavData-Default"
+					},
+					{
+						"children": [
+							{
+								"children": [],
+								"components": [
+									{
+										"component": "class TransformComponent",
+										"transform": {
+											"rotate": {
+												"w": 1.0,
+												"x": 0.0,
+												"y": 0.0,
+												"z": 0.0
+											},
+											"scale": {
+												"x": 1.0,
+												"y": 1.0,
+												"z": 1.0
+											},
+											"translate": {
+												"x": 0.0,
+												"y": 0.0,
+												"z": 0.0
+											}
+										}
+									},
+									{
+										"component": "class MeshRendererComponent",
+										"isEnable": true,
+										"mask": 255,
+										"material": "c93749a0-b905-4cd7-a4303e4d5a4a9df1",
+										"mesh": "757e0880-8ab9-4b53-b8d8dada2aee2a94"
+									}
+								],
+								"isActive": true,
+								"isRenamable": true,
+								"isView": true,
+								"name": "SM_ColorCalibrator-0"
+							},
+							{
+								"children": [],
+								"components": [
+									{
+										"component": "class TransformComponent",
+										"transform": {
+											"rotate": {
+												"w": 1.0,
+												"x": 0.0,
+												"y": 0.0,
+												"z": 0.0
+											},
+											"scale": {
+												"x": 1.0,
+												"y": 1.0,
+												"z": 1.0
+											},
+											"translate": {
+												"x": 0.0,
+												"y": 0.0,
+												"z": 0.0
+											}
+										}
+									},
+									{
+										"component": "class MeshRendererComponent",
+										"isEnable": true,
+										"mask": 255,
+										"material": "ceb466ec-ce49-4631-95b47b6d565fe57b",
+										"mesh": "2d9f4a23-4168-47f5-a18d9139a9e36152"
+									}
+								],
+								"isActive": true,
+								"isRenamable": true,
+								"isView": true,
+								"name": "SM_ColorCalibrator-1"
+							},
+							{
+								"children": [],
+								"components": [
+									{
+										"component": "class TransformComponent",
+										"transform": {
+											"rotate": {
+												"w": 1.0,
+												"x": 0.0,
+												"y": 0.0,
+												"z": 0.0
+											},
+											"scale": {
+												"x": 1.0,
+												"y": 1.0,
+												"z": 1.0
+											},
+											"translate": {
+												"x": 0.0,
+												"y": 0.0,
+												"z": 0.0
+											}
+										}
+									},
+									{
+										"component": "class MeshRendererComponent",
+										"isEnable": true,
+										"mask": 255,
+										"material": "b6f98a59-8076-40d6-a8f0b3d2f281dd44",
+										"mesh": "dbbd64ac-79db-4629-9fc2b9a80d9fcdca"
+									}
+								],
+								"isActive": true,
+								"isRenamable": true,
+								"isView": true,
+								"name": "SM_ColorCalibrator-2"
+							},
+							{
+								"children": [],
+								"components": [
+									{
+										"component": "class TransformComponent",
+										"transform": {
+											"rotate": {
+												"w": 1.0,
+												"x": 0.0,
+												"y": 0.0,
+												"z": 0.0
+											},
+											"scale": {
+												"x": 1.0,
+												"y": 1.0,
+												"z": 1.0
+											},
+											"translate": {
+												"x": 0.0,
+												"y": 0.0,
+												"z": 0.0
+											}
+										}
+									},
+									{
+										"component": "class MeshRendererComponent",
+										"isEnable": true,
+										"mask": 255,
+										"material": "66c4405c-4863-4a1d-8e79fb6c10024ecc",
+										"mesh": "ee895a17-91b6-4f25-b8beb13a6590385b"
+									}
+								],
+								"isActive": true,
+								"isRenamable": true,
+								"isView": true,
+								"name": "SM_ColorCalibrator-3"
+							},
+							{
+								"children": [],
+								"components": [
+									{
+										"component": "class TransformComponent",
+										"transform": {
+											"rotate": {
+												"w": 1.0,
+												"x": 0.0,
+												"y": 0.0,
+												"z": 0.0
+											},
+											"scale": {
+												"x": 1.0,
+												"y": 1.0,
+												"z": 1.0
+											},
+											"translate": {
+												"x": 0.0,
+												"y": 0.0,
+												"z": 0.0
+											}
+										}
+									},
+									{
+										"component": "class MeshRendererComponent",
+										"isEnable": true,
+										"mask": 255,
+										"material": "f917aeb0-2f7e-41a9-a03a5f930233f334",
+										"mesh": "74014eb2-67de-4b36-bc8a59a1786670dc"
+									}
+								],
+								"isActive": true,
+								"isRenamable": true,
+								"isView": true,
+								"name": "SM_ColorCalibrator-4"
+							}
+						],
+						"components": [
+							{
+								"component": "class TransformComponent",
+								"transform": {
+									"rotate": {
+										"w": 1.0,
+										"x": -0.0,
+										"y": -0.0,
+										"z": 0.0
+									},
+									"scale": {
+										"x": 1.0,
+										"y": 1.0,
+										"z": 1.0
+									},
+									"translate": {
+										"x": 0.0,
+										"y": 0.0,
+										"z": -0.0
+									}
+								}
+							}
+						],
+						"isActive": true,
+						"isRenamable": true,
+						"isView": true,
+						"name": "SM_ColorCalibrator"
+					}
+				],
+				"components": [
+					{
+						"component": "class TransformComponent",
+						"transform": {
+							"rotate": {
+								"w": 1.0,
+								"x": -0.0,
+								"y": -0.0,
+								"z": 0.0
+							},
+							"scale": {
+								"x": 1.0,
+								"y": 1.0,
+								"z": 1.0
+							},
+							"translate": {
+								"x": 0.0,
+								"y": 0.0,
+								"z": -0.0
+							}
+						}
+					},
+					{
+						"bounding": {
+							"max": {
+								"x": 0.6000000238418579,
+								"y": 1.0,
+								"z": 0.6000000238418579
+							},
+							"min": {
+								"x": -0.6000000238418579,
+								"y": -1.0,
+								"z": -0.6000000238418579
+							},
+							"type": "AABB"
+						},
+						"component": "class ColliderComponent",
+						"isEnable": true,
+						"tag": "Wall"
+					}
+				],
+				"isActive": true,
+				"isRenamable": true,
+				"isView": true,
+				"name": "ROOT"
+			}
+		],
+		"components": [
+			{
+				"component": "class TransformComponent",
+				"transform": {
+					"rotate": {
+						"w": 1.0,
+						"x": 0.0,
+						"y": 0.0,
+						"z": 0.0
+					},
+					"scale": {
+						"x": 2.0,
+						"y": 2.0,
+						"z": 2.0
+					},
+					"translate": {
+						"x": -0.4329972267150879,
+						"y": 0.7220884561538696,
+						"z": -13.644977569580078
+					}
+				}
+			}
+		],
+		"isActive": true,
+		"isRenamable": true,
+		"isView": true,
+		"name": "macbeth_chart_scene"
 	}
 ]

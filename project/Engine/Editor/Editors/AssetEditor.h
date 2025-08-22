@@ -54,6 +54,13 @@ private:
 
 	float iconSize_ = 64.0f;
 
+	//* extension *//
+
+	std::unordered_map<
+		std::filesystem::path,
+		std::pair<const std::type_info*, std::function<std::shared_ptr<UBaseContent>(const std::filesystem::path&)>>
+	> extensions_;
+
 	//=========================================================================================
 	// private methods
 	//=========================================================================================
@@ -79,6 +86,9 @@ private:
 	static bool OpenShellExecuteApp(const std::filesystem::path& filepath);
 	static bool OpenShellExecuteExplorer(const std::filesystem::path& filepath);
 
+	template <UContentConcept T>
+	void RegisterExtension(const std::filesystem::path& extension);
+
 	//* show asset *//
 
 	void ShowAssetDirectoryTable(const std::filesystem::path& path);
@@ -86,3 +96,21 @@ private:
 	void ShowAssetLayout();
 
 };
+
+//////////////////////////////////////////////////////////////////////////////////////////
+// AssetEditor class template methods
+//////////////////////////////////////////////////////////////////////////////////////////
+
+template <UContentConcept T>
+inline void AssetEditor::RegisterExtension(const std::filesystem::path& extension) {
+	extensions_.emplace(
+		extension,
+		std::make_pair(&typeid(T),
+		[](const std::filesystem::path& filepath) -> std::shared_ptr<UBaseContent> {
+			std::shared_ptr<UBaseContent> content = std::make_shared<T>();
+			content->SetFilepath(filepath);
+
+			return content;
+		})
+	);
+}

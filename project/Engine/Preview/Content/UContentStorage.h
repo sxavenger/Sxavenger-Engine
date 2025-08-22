@@ -51,6 +51,10 @@ public:
 	template <UContentConcept T>
 	std::shared_ptr<T> Reload(const std::filesystem::path& filepath, const std::any& param = std::any());
 
+	void Emplace(const std::type_info* type, const std::shared_ptr<UBaseContent>& content);
+
+	void TryEmplace(const std::type_info* type, const std::shared_ptr<UBaseContent>& content);
+
 	template <UContentConcept T>
 	std::shared_ptr<T> GetContent(const std::filesystem::path& filepath) const;
 
@@ -114,16 +118,11 @@ template <UContentConcept T>
 inline std::shared_ptr<T> UContentStorage::Reload(const std::filesystem::path& filepath, const std::any& param) {
 	constexpr const std::type_info* type = &typeid(T);
 
-	// contentの作成と読み込み
 	std::shared_ptr<UBaseContent> content = std::make_shared<T>();
 	content->SetFilepath(filepath);
 	content->SetParam(param);
-	content->AttachUuid(); //!< uuidの設定
+	this->Emplace(type, content);
 
-	SxavengerSystem::PushTask(content->GetAsyncExecution(), content);
-
-	// contentをstorageに登録
-	storage_[type][filepath] = content;
 	return UContentStorage::Cast<T>(content);
 }
 
