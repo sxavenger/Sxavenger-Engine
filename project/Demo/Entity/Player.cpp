@@ -11,6 +11,7 @@
 #include <Engine/Component/Components/Collider/ColliderComponent.h>
 #include <Engine/Component/Components/PostProcessLayer/PostProcessLayerComponent.h>
 #include <Engine/Component/ComponentHelper.h>
+#include <Engine/Render/FMainRender.h>
 #include <Engine/Preview/Content/UContentStorage.h>
 
 //* lib
@@ -173,6 +174,10 @@ void Player::Move() {
 
 	transform_->translate += velocity_;
 	transform_->UpdateMatrix();
+
+	if (All(velocity_ == kOrigin3<float>)) {
+		FMainRender::GetInstance()->GetRenderer()->ResetReservoir();
+	}
 
 	// animationの更新
 	float length = velocity_.Length();

@@ -4190,5 +4190,89 @@
 		"isRenamable": true,
 		"isView": true,
 		"name": "walls"
+	},
+	{
+		"children": [],
+		"components": [
+			{
+				"component": "class TransformComponent",
+				"transform": {
+					"rotate": {
+						"w": 0.8299363255500793,
+						"x": 0.5437480211257935,
+						"y": 0.10428588837385178,
+						"z": -0.06832446902990341
+					},
+					"scale": {
+						"x": 1.0,
+						"y": 1.0,
+						"z": 1.0
+					},
+					"translate": {
+						"x": 1.723642110824585,
+						"y": 0.0,
+						"z": 3.725290298461914e-09
+					}
+				}
+			},
+			{
+				"color": {
+					"b": 1.0,
+					"g": 1.0,
+					"r": 1.0
+				},
+				"component": "class DirectionalLightComponent",
+				"intensity": 40.0,
+				"shadow_flag": 16,
+				"shadow_strength": 1.0
+			}
+		],
+		"isActive": true,
+		"isRenamable": true,
+		"isView": true,
+		"name": "Directional Light"
+	},
+	{
+		"children": [],
+		"components": [
+			{
+				"component": "class TransformComponent",
+				"transform": {
+					"rotate": {
+						"w": 1.0,
+						"x": 0.0,
+						"y": 0.0,
+						"z": 0.0
+					},
+					"scale": {
+						"x": 1.0,
+						"y": 1.0,
+						"z": 1.0
+					},
+					"translate": {
+						"x": -8.975747108459473,
+						"y": 1.0497043132781982,
+						"z": 0.009418485686182976
+					}
+				}
+			},
+			{
+				"color": {
+					"b": 1.0,
+					"g": 1.0,
+					"r": 1.0
+				},
+				"component": "class PointLightComponent",
+				"intensity": 1.0,
+				"radius": 8.0,
+				"shadow_flag": 16,
+				"shadow_strength": 0.5,
+				"unit": "Candela"
+			}
+		],
+		"isActive": false,
+		"isRenamable": true,
+		"isView": true,
+		"name": "Point Light"
 	}
 ]

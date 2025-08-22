@@ -189,6 +189,10 @@ void FScene::SetupStateObject() {
 	stateObjectContext_.UpdateShaderTable(SxavengerSystem::GetDxDevice(), &topLevelAS_);
 }
 
+void FScene::ResetReservoir() {
+	isResetReservoir_ = true;
+}
+
 void FScene::SetupLightContainer() {
 	SetupDirectionalLight();
 	SetupPointLight();

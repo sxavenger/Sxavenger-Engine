@@ -40,6 +40,10 @@ public:
 
 	const DxrObject::StateObjectContext& GetStateObjectContext() const { return stateObjectContext_; }
 
+	void ResetReservoir();
+
+	const bool IsResetReservoir() const { return isResetReservoir_; }
+
 	//* light container option * //
 
 	void SetupLightContainer();
@@ -57,6 +61,8 @@ private:
 
 	DxrObject::TopLevelAS topLevelAS_;
 	DxrObject::StateObjectContext stateObjectContext_;
+
+	bool isResetReservoir_ = false; //!< raytracingのreservioirをリセットするかどうか
 
 	//* light container *//
 

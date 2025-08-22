@@ -77,7 +77,7 @@ void FSceneRenderer::Render(const DirectXQueueContext* context, const Config& _c
 }
 
 void FSceneRenderer::ResetReservoir() {
-	reservoir_ = std::nullopt;
+	reservoir_ = std::nullopt; //!< reservoirをリセット
 }
 
 uint32_t FSceneRenderer::GetReservoirSampleCount() const {
@@ -338,12 +338,12 @@ void FSceneRenderer::ProcessLightingPassSkyLight(const DirectXQueueContext* cont
 	DxObject::BindBufferDesc parameter = {};
 	// common parameter
 	parameter.SetAddress("gCamera", config.camera->GetGPUVirtualAddress());
-	parameter.SetAddress("gScene", config.scene->GetTopLevelAS().GetGPUVirtualAddress());
+	parameter.SetAddress("gScene",  config.scene->GetTopLevelAS().GetGPUVirtualAddress());
 
 	// deferred paraemter
-	parameter.SetHandle("gDepth", config.buffer->GetDepth()->GetRasterizerGPUHandleSRV());
-	parameter.SetHandle("gAlbedo", config.buffer->GetGBuffer(FDeferredGBuffer::Layout::Albedo)->GetGPUHandleSRV());
-	parameter.SetHandle("gNormal", config.buffer->GetGBuffer(FDeferredGBuffer::Layout::Normal)->GetGPUHandleSRV());
+	parameter.SetHandle("gDepth",    config.buffer->GetDepth()->GetRasterizerGPUHandleSRV());
+	parameter.SetHandle("gAlbedo",   config.buffer->GetGBuffer(FDeferredGBuffer::Layout::Albedo)->GetGPUHandleSRV());
+	parameter.SetHandle("gNormal",   config.buffer->GetGBuffer(FDeferredGBuffer::Layout::Normal)->GetGPUHandleSRV());
 	parameter.SetHandle("gMaterial", config.buffer->GetGBuffer(FDeferredGBuffer::Layout::MaterialARM)->GetGPUHandleSRV());
 	parameter.SetHandle("gPosition", config.buffer->GetGBuffer(FDeferredGBuffer::Layout::Position)->GetGPUHandleSRV());
 
@@ -370,6 +370,7 @@ void FSceneRenderer::ProcessLightingPassSkyLight(const DirectXQueueContext* cont
 
 void FSceneRenderer::ProcessLightingPassIndirect(const DirectXQueueContext* context, const Config& config) {
 
+	// RenderごとのReservoirを更新
 	if (reservoir_.has_value()) {
 		(*reservoir_).IncrimentFrame();
 
@@ -377,7 +378,15 @@ void FSceneRenderer::ProcessLightingPassIndirect(const DirectXQueueContext* cont
 		reservoir_ = FRenderCorePathtracing::Reservoir{};
 	}
 
+	auto& reservoir = reservoir_.value();
 
+	// Scene全体のReservoirを更新
+	if (config.scene->IsResetReservoir()) {
+		reservoir.ResetFrame();
+
+	} else {
+		reservoir.IncrimentFrame();
+	}
 
 	config.scene->GetStateObjectContext().SetStateObject(context->GetDxCommand());
 
@@ -402,7 +411,7 @@ void FSceneRenderer::ProcessLightingPassIndirect(const DirectXQueueContext* cont
 	commandList->SetComputeRootConstantBufferView(7, config.camera->GetGPUVirtualAddress());
 
 	//* reserviour
-	commandList->SetComputeRoot32BitConstants(8, 3, &(reservoir_.value()), 0);
+	commandList->SetComputeRoot32BitConstants(8, 3, &reservoir, 0);
 
 	//* light
 	// Directional Light
