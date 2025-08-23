@@ -29,7 +29,7 @@ _RAYGENERATION void mainRaygeneration() {
 		return; // surfaceが存在しない
 	}
 
-	uint offset = Xorshift::xorshift32(index.x * index.y + index.y) % sampleCount;
+	uint offset = Xorshift::xorshift32(index.x * index.y) % sampleCount;
 
 	// primary trace.
 

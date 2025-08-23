@@ -426,6 +426,8 @@ void FSceneRenderer::ProcessLightingPassIndirect(const DirectXQueueContext* cont
 	commandList->SetComputeRootShaderResourceView(15, config.scene->pointLightParams_->GetGPUVirtualAddress());
 	commandList->SetComputeRootShaderResourceView(16, config.scene->pointLightShadowParams_->GetGPUVirtualAddress());
 
+	// todo: light関係のバインドの見直し
+
 	// Sky Light
 	std::optional<D3D12_GPU_VIRTUAL_ADDRESS> address = std::nullopt;
 	sComponentStorage->ForEachActive<SkyLightComponent>([&](SkyLightComponent* component) {

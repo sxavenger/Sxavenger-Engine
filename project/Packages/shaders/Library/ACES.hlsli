@@ -512,7 +512,7 @@ namespace ACES {
 
 	//* constant variables *//
 
-	//!< RTT Glow
+	//!< RRT Glow
 	static const float RRT_GLOW_GAIN = 0.05;
 	static const float RRT_GLOW_MID  = 0.08;
 
