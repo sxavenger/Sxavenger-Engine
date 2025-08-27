@@ -178,6 +178,8 @@
     <ClCompile Include="Engine\Preview\Asset\UAssetSkeleton.cpp" />
     <ClCompile Include="Engine\Preview\Content\UContentBlob.cpp" />
     <ClCompile Include="Engine\Preview\Content\UContentScene.cpp" />
+    <ClCompile Include="Engine\Preview\Content\UContentFont.cpp" />
+    <ClCompile Include="Engine\Preview\Asset\UAssetFont.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Lib\Adapter\Random\Random.h" />
@@ -383,6 +385,8 @@
     <ClInclude Include="Engine\Preview\Content\UContentBlob.h" />
     <ClInclude Include="Engine\Preview\Asset\UAssetParameter.h" />
     <ClInclude Include="Engine\Preview\Content\UContentScene.h" />
+    <ClInclude Include="Engine\Preview\Content\UContentFont.h" />
+    <ClInclude Include="Engine\Preview\Asset\UAssetFont.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

@@ -38,6 +38,7 @@ private:
 
 	std::unique_ptr<Player> player_;
 
+	std::unique_ptr<AtmosphereActor> atmosphere_;
 	std::unique_ptr<MonoBehaviour> skylight_;
 
 	std::unique_ptr<MonoBehaviour> volume_;

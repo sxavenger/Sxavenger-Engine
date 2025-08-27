@@ -57,6 +57,9 @@ void DemoGameLoop::InitGame() {
 
 	SetCollisionCallback();
 
+	//atmosphere_ = std::make_unique<AtmosphereActor>();
+	//atmosphere_->Init({ 1024, 1024 });
+
 	skylight_ = std::make_unique<MonoBehaviour>();
 	skylight_->SetName("skylight");
 	auto light = skylight_->AddComponent<SkyLightComponent>();
@@ -83,6 +86,7 @@ void DemoGameLoop::InitGame() {
 
 	//auto& config = FMainRender::GetInstance()->GetConfig();
 	//config.isEnableIndirectLighting = true;
+
 }
 
 void DemoGameLoop::TermGame() {
@@ -94,6 +98,7 @@ void DemoGameLoop::UpdateGame() {
 	// GameLogic Update
 	//-----------------------------------------------------------------------------------------
 
+	//atmosphere_->Update();
 	player_->Update();
 
 	//-----------------------------------------------------------------------------------------

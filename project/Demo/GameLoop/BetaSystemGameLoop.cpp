@@ -72,10 +72,6 @@ void BetaSystemGameLoop::InitSystem() {
 
 	offlineSkylight_ = std::make_unique<MonoBehaviour>();
 	auto light = offlineSkylight_->AddComponent<SkyLightComponent>();
-	//light->GetDiffuseParameter().SetTexture(SxavengerAsset::Import<AssetTexture>("assets/textures/textureCube/DebugIrradiance.dds"));
-	//light->GetSpecularParameter().SetTexture(SxavengerAsset::Import<AssetTexture>("assets/textures/textureCube/DebugRadiance.dds"));
-	//light->SetEnvironment(SxavengerAsset::Import<AssetTexture>("assets/textures/textureCube/DebugEnvironment.dds").WaitAcquire()->GetGPUHandleSRV());
-
 	light->SetIrradiance(sUContentStorage->Import<UContentTexture>("assets/textures/textureCube/sky_irradiance.dds")->GetId());
 	light->SetRadiance(sUContentStorage->Import<UContentTexture>("assets/textures/textureCube/sky_radiance.dds")->GetId());
 	light->SetEnvironment(sUContentStorage->Import<UContentTexture>("assets/textures/textureCube/sky_environment.dds")->GetId());
