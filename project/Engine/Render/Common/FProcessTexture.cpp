@@ -4,6 +4,9 @@ _DXOBJECT_USING
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
+//* core
+#include <Engine/Render/FRenderCore.h>
+
 //* engine
 #include <Engine/System/SxavengerSystem.h>
 
@@ -13,9 +16,8 @@ _DXOBJECT_USING
 
 void FProcessTexture::Create(const Vector2ui& size, DXGI_FORMAT format) {
 
+	// deviceの取り出し
 	auto device = SxavengerSystem::GetDxDevice()->GetDevice();
-
-	format_ = format;
 
 	{ //!< resourceの生成
 
@@ -27,43 +29,24 @@ void FProcessTexture::Create(const Vector2ui& size, DXGI_FORMAT format) {
 		D3D12_RESOURCE_DESC desc = {};
 		desc.Width            = size.x;
 		desc.Height           = size.y;
-		desc.MipLevels        = 1;
+		desc.MipLevels        = kMipLevels;
 		desc.DepthOrArraySize = 1;
-		desc.Format           = format_;
+		desc.Format           = format;
 		desc.SampleDesc.Count = 1;
 		desc.Dimension        = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
-		desc.Flags            = D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS;
+		desc.Flags            = D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET | D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS;
 
 		auto hr = device->CreateCommittedResource(
 			&prop,
 			D3D12_HEAP_FLAG_NONE,
 			&desc,
-			kDefaultState_,
+			kDefaultState,
 			nullptr,
 			IID_PPV_ARGS(&resource_)
 		);
 		Exception::Assert(SUCCEEDED(hr));
 
 		resource_->SetName(L"FProcessTexture");
-	}
-
-	{ //!< UAVの生成
-
-		// handleの取得
-		descriptorUAV_ = SxavengerSystem::GetDescriptor(kDescriptor_UAV);
-
-		// descの設定
-		D3D12_UNORDERED_ACCESS_VIEW_DESC desc = {};
-		desc.Format        = format_;
-		desc.ViewDimension = D3D12_UAV_DIMENSION_TEXTURE2D;
-
-		// UAVの生成
-		device->CreateUnorderedAccessView(
-			resource_.Get(),
-			nullptr,
-			&desc,
-			descriptorUAV_.GetCPUHandle()
-		);
 	}
 
 	{ //!< SRVの生成
@@ -73,10 +56,10 @@ void FProcessTexture::Create(const Vector2ui& size, DXGI_FORMAT format) {
 
 		// descの設定
 		D3D12_SHADER_RESOURCE_VIEW_DESC desc = {};
-		desc.Format                    = format_;
+		desc.Format                    = format;
 		desc.ViewDimension             = D3D12_SRV_DIMENSION_TEXTURE2D;
 		desc.Shader4ComponentMapping   = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
-		desc.Texture2D.MipLevels       = 1;
+		desc.Texture2D.MipLevels       = kMipLevels;
 
 		// SRVの生成
 		device->CreateShaderResourceView(
@@ -86,97 +69,214 @@ void FProcessTexture::Create(const Vector2ui& size, DXGI_FORMAT format) {
 		);
 	}
 
+	for (uint32_t i = 0; i < kMipLevels; ++i) { //!< UAVの生成
+
+		// handleの取得
+		descriptorsUAV_[i] = SxavengerSystem::GetDescriptor(kDescriptor_UAV);
+
+		// descの設定
+		D3D12_UNORDERED_ACCESS_VIEW_DESC desc = {};
+		desc.Format             = format;
+		desc.ViewDimension      = D3D12_UAV_DIMENSION_TEXTURE2D;
+		desc.Texture2D.MipSlice = i;
+
+		// UAVの生成
+		device->CreateUnorderedAccessView(
+			resource_.Get(),
+			nullptr,
+			&desc,
+			descriptorsUAV_[i].GetCPUHandle()
+		);
+	}
+
+	// 引数の保存
+	size_   = size;
 }
 
-////////////////////////////////////////////////////////////////////////////////////////////
-// FProcessTextures class methods
-////////////////////////////////////////////////////////////////////////////////////////////
-
-void FProcessTextures::Create(uint32_t count, const Vector2ui& size, DXGI_FORMAT format) {
-	textures_.resize(count);
-	for (auto& texture : textures_) {
-		texture = std::make_unique<FProcessTexture>();
-		texture->Create(size, format);
+void FProcessTexture::Term() {
+	resource_.Reset();
+	descriptorSRV_.Delete();
+	for (auto& descriptorUAV : descriptorsUAV_) {
+		descriptorUAV.Delete();
 	}
 }
 
-void FProcessTextures::BeginProcess(const DirectXQueueContext* context, FBaseTexture* texture) {
-	Exception::Assert(textures_.size() != NULL, "process texture is null.");
+D3D12_RESOURCE_BARRIER FProcessTexture::TransitionBeginUnordered() const {
+	D3D12_RESOURCE_BARRIER barrier = {};
+	barrier.Type                   = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+	barrier.Transition.pResource   = resource_.Get();
+	barrier.Transition.StateBefore = kDefaultState;
+	barrier.Transition.StateAfter  = D3D12_RESOURCE_STATE_UNORDERED_ACCESS;
+	barrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
 
-	index_ = 0; //!< indexの初期化
+	return barrier;
+}
 
+void FProcessTexture::TransitionBeginUnordered(const DirectXQueueContext* context) const {
+	D3D12_RESOURCE_BARRIER barrier = TransitionBeginUnordered();
+	context->GetCommandList()->ResourceBarrier(1, &barrier);
+}
+
+D3D12_RESOURCE_BARRIER FProcessTexture::TransitionEndUnordered() const {
+	D3D12_RESOURCE_BARRIER barrier = {};
+	barrier.Type                   = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+	barrier.Transition.pResource   = resource_.Get();
+	barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_UNORDERED_ACCESS;
+	barrier.Transition.StateAfter  = kDefaultState;
+	barrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
+
+	return barrier;
+}
+
+void FProcessTexture::TransitionEndUnordered(const DirectXQueueContext* context) const {
+	D3D12_RESOURCE_BARRIER barrier = TransitionEndUnordered();
+	context->GetCommandList()->ResourceBarrier(1, &barrier);
+}
+
+D3D12_RESOURCE_BARRIER FProcessTexture::TransitionBeginState(D3D12_RESOURCE_STATES state) const {
+	D3D12_RESOURCE_BARRIER barrier = {};
+	barrier.Type                   = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+	barrier.Transition.pResource   = resource_.Get();
+	barrier.Transition.StateBefore = kDefaultState;
+	barrier.Transition.StateAfter  = state;
+	barrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
+
+	return barrier;
+}
+
+void FProcessTexture::TransitionBeginState(const DirectXQueueContext* context, D3D12_RESOURCE_STATES state) const {
+	D3D12_RESOURCE_BARRIER barrier = TransitionBeginState(state);
+	context->GetCommandList()->ResourceBarrier(1, &barrier);
+}
+
+D3D12_RESOURCE_BARRIER FProcessTexture::TransitionEndState(D3D12_RESOURCE_STATES state) const {
+	D3D12_RESOURCE_BARRIER barrier = {};
+	barrier.Type                   = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+	barrier.Transition.pResource   = resource_.Get();
+	barrier.Transition.StateBefore = state;
+	barrier.Transition.StateAfter  = kDefaultState;
+	barrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
+
+	return barrier;
+}
+
+void FProcessTexture::TransitionEndState(const DirectXQueueContext* context, D3D12_RESOURCE_STATES state) const {
+	D3D12_RESOURCE_BARRIER barrier = TransitionEndState(state);
+	context->GetCommandList()->ResourceBarrier(1, &barrier);
+}
+
+void FProcessTexture::BarrierUAV(const DirectXQueueContext* context) const {
+	D3D12_RESOURCE_BARRIER barrier = {};
+	barrier.Type                   = D3D12_RESOURCE_BARRIER_TYPE_UAV;
+	barrier.UAV.pResource          = resource_.Get();
+
+	context->GetCommandList()->ResourceBarrier(1, &barrier);
+}
+
+void FProcessTexture::GenerateMipmap(const DirectXQueueContext* context) {
+
+	auto core = FRenderCore::GetInstance()->GetTransition();
+	core->SetPipeline(FRenderCoreTransition::Transition::MipmapTransition, context);
+
+	for (uint32_t i = 1; i < kMipLevels; ++i) {
+
+		Vector2ui dimension = {
+			std::max(size_.x >> i, 1u),
+			std::max(size_.y >> i, 1u)
+		};
+
+		BindBufferDesc desc = {};
+		desc.Set32bitConstants("Dimension", 2, &dimension);
+		desc.SetHandle("gInput",  descriptorsUAV_[i - 1].GetGPUHandle());
+		desc.SetHandle("gOutput", descriptorsUAV_[i].GetGPUHandle());
+
+		core->BindComputeBuffer(FRenderCoreTransition::Transition::MipmapTransition, context, desc);
+		core->Dispatch(context, dimension);
+
+		// BarrierUAV(context);
+		//!< 多分いる?
+	}
+}
+
+const D3D12_GPU_DESCRIPTOR_HANDLE& FProcessTexture::GetGPUHandleUAV(uint32_t mipLevel) const {
+	Exception::Assert(mipLevel < kMipLevels, "FProcessTexture::GetGPUHandleUAV: mipLevel is out of range.");
+	return descriptorsUAV_.at(mipLevel).GetGPUHandle();
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////
+// FProcessTextureCollection class methods
+////////////////////////////////////////////////////////////////////////////////////////////
+
+void FProcessTextureCollection::Create(uint32_t count, const Vector2ui& size, DXGI_FORMAT format) {
+	textures_.resize(count);
+
+	std::generate(textures_.begin(), textures_.end(), [&]() {
+		std::unique_ptr<FProcessTexture> texture = std::make_unique<FProcessTexture>();
+		texture->Create(size, format);
+		return texture;
+	});
+}
+
+void FProcessTextureCollection::BeginProcess(const DirectXQueueContext* context, FBaseTexture* texture) {
+
+	// commandListの取得
 	auto commandList = context->GetCommandList();
+
+	// indexの初期化
+	currentIndex_ = 0;
 
 	
 	{ //!< textureのcopy
 
 		std::array<D3D12_RESOURCE_BARRIER, 2> barriers = {};
 		barriers[0] = texture->TransitionBeginState(D3D12_RESOURCE_STATE_COPY_SOURCE);
-		barriers[1] = textures_[index_]->TransitionBeginState(D3D12_RESOURCE_STATE_COPY_DEST);
+		barriers[1] = textures_[currentIndex_]->TransitionBeginState(D3D12_RESOURCE_STATE_COPY_DEST);
 		commandList->ResourceBarrier(2, barriers.data());
 
-		commandList->CopyResource(textures_[index_]->GetResource(), texture->GetResource());
+		commandList->CopyResource(textures_[currentIndex_]->GetResource(), texture->GetResource());
 
 		barriers[0] = texture->TransitionEndState(D3D12_RESOURCE_STATE_COPY_SOURCE);
-		barriers[1] = textures_[index_]->TransitionEndState(D3D12_RESOURCE_STATE_COPY_DEST);
+		barriers[1] = textures_[currentIndex_]->TransitionEndState(D3D12_RESOURCE_STATE_COPY_DEST);
 		commandList->ResourceBarrier(2, barriers.data());
 	}
-	
-	//!< process textureのunordered設定
-	textures_[index_]->TransitionBeginUnordered(context);
 }
 
-void FProcessTextures::EndProcess(const DirectXQueueContext* context, FBaseTexture* texture) {
-
+void FProcessTextureCollection::EndProcess(const DirectXQueueContext* context, FBaseTexture* texture) {
 	auto commandList = context->GetCommandList();
 
-	//!< process textureのunordered設定
-	textures_[index_]->TransitionEndUnordered(context);
+	FProcessTexture* current = GetCurrentTexture();
 
-	
 	{ //!< textureのcopy
 
 		std::array<D3D12_RESOURCE_BARRIER, 2> barriers = {};
 		barriers[0] = texture->TransitionBeginState(D3D12_RESOURCE_STATE_COPY_DEST);
-		barriers[1] = textures_[index_]->TransitionBeginState(D3D12_RESOURCE_STATE_COPY_SOURCE);
+		barriers[1] = current->TransitionBeginState(D3D12_RESOURCE_STATE_COPY_SOURCE);
 		commandList->ResourceBarrier(2, barriers.data());
 
-		commandList->CopyResource(texture->GetResource(), textures_[index_]->GetResource());
+		commandList->CopyResource(texture->GetResource(), current->GetResource());
 
 		barriers[0] = texture->TransitionEndState(D3D12_RESOURCE_STATE_COPY_DEST);
-		barriers[1] = textures_[index_]->TransitionEndState(D3D12_RESOURCE_STATE_COPY_SOURCE);
+		barriers[1] = current->TransitionEndState(D3D12_RESOURCE_STATE_COPY_SOURCE);
 		commandList->ResourceBarrier(2, barriers.data());
 	}
 }
 
-void FProcessTextures::NextProcess(const DirectXQueueContext* context) {
-	Exception::Assert(textures_.size() != NULL, "process texture is null.");
-	uint32_t prev = index_;
-	uint32_t next = ++index_ % textures_.size();
+void FProcessTextureCollection::NextProcess(uint32_t count) {
+	//uint32_t prev = currentIndex_;
+	uint32_t next = (currentIndex_ + count) % textures_.size();
 
-	std::array<D3D12_RESOURCE_BARRIER, 2> barriers = {};
-	barriers[0] = textures_[prev]->TransitionEndUnordered();
-	barriers[1] = textures_[next]->TransitionBeginUnordered();
-
-	context->GetCommandList()->ResourceBarrier(2, barriers.data());
-
-	index_ = next;
+	currentIndex_ = next;
 }
 
-void FProcessTextures::BarrierUAV(const DirectXQueueContext* context) {
-
-	D3D12_RESOURCE_BARRIER barrier = {};
-	barrier.Type          = D3D12_RESOURCE_BARRIER_TYPE_UAV;
-	barrier.UAV.pResource = textures_[index_]->GetResource();
-
-	context->GetCommandList()->ResourceBarrier(1, &barrier);
+void FProcessTextureCollection::BarrierUAV(const DirectXQueueContext* context) const {
+	textures_[currentIndex_]->BarrierUAV(context);
 }
 
-FProcessTexture* FProcessTextures::GetPrevTexture(uint32_t prev) const {
+FProcessTexture* FProcessTextureCollection::GetPrevTexture(uint32_t prev) const {
 	Exception::Assert(prev <= textures_.size(), "process texture array size is not exist prev.");
-	return textures_[(index_ + textures_.size() - 1) % textures_.size()].get();
+	return textures_[(currentIndex_ + textures_.size() - prev) % textures_.size()].get();
 }
 
-FProcessTexture* FProcessTextures::GetIndexTexture() const {
-	return textures_[index_].get();
+FProcessTexture* FProcessTextureCollection::GetCurrentTexture() const {
+	return textures_[currentIndex_].get();
 }

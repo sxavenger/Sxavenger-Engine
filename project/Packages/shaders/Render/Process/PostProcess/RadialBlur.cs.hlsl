@@ -50,7 +50,7 @@ void main(uint3 dispathThreadId : SV_DispatchThreadID) {
 	
 	for (uint i = 0; i < 8; ++i) {
 		float2 texcoord = uv + direction * (gParameter.GetIntensity() * blendWeight) * i;
-		color += gInput.Sample(gSampler, (texcoord + float2(1.0f, 1.0f)) * 0.5f);
+		color += gInput.SampleLevel(gSampler, (texcoord + float2(1.0f, 1.0f)) * 0.5f, 0);
 	}
 
 	color *= rcp(8.0f);

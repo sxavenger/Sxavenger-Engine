@@ -8,6 +8,7 @@ void FRenderCoreTransition::Init() {
 	CreatePresent();
 
 	CreateTransition(Transition::LightingTransition, kDirectory_ / "LightingTransition.cs.hlsl");
+	CreateTransition(Transition::MipmapTransition,   kDirectory_ / "MipmapTransition.cs.hlsl");
 }
 
 void FRenderCoreTransition::SetPipeline(Transition transition, const DirectXQueueContext* context) {

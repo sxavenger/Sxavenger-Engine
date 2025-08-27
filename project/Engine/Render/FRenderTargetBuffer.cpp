@@ -16,7 +16,7 @@ void FRenderTargetBuffer::Create(const Vector2ui& size) {
 	depth_ = std::make_unique<FDepthTexture>();
 	depth_->Create(size_);
 
-	process_ = std::make_unique<FProcessTextures>();
+	process_ = std::make_unique<FProcessTextureCollection>();
 	process_->Create(2, size_, FMainGBuffer::kColorFormat);
 }
 

@@ -456,7 +456,7 @@ void FSceneRenderer::ProcessLightingPassIndirectDenoiser(const DirectXQueueConte
 		desc.Set32bitConstants("Dimension", 2, &config.buffer->GetSize());
 
 		//* textures
-		desc.SetHandle("gOutput",   textures->GetIndexTexture()->GetGPUHandleUAV());
+		desc.SetHandle("gOutput",   textures->GetCurrentTexture()->GetGPUHandleUAV());
 		desc.SetHandle("gIndirect", config.buffer->GetGBuffer(FLightingGBuffer::Layout::Indirect_Reservoir)->GetGPUHandleSRV());
 
 		//* parameter

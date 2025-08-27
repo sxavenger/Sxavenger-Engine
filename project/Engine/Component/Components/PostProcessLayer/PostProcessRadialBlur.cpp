@@ -37,7 +37,8 @@ void PostProcessRadialBlur::Init() {
 void PostProcessRadialBlur::Process(const DirectXQueueContext* context, const ProcessInfo& info) {
 
 	auto process = info.buffer->GetProcessTextures();
-	process->NextProcess(context);
+	process->NextProcess();
+	process->GetCurrentTexture()->TransitionBeginUnordered(context);
 
 	auto core = FRenderCore::GetInstance()->GetProcess();
 
@@ -50,7 +51,7 @@ void PostProcessRadialBlur::Process(const DirectXQueueContext* context, const Pr
 
 	//* textures
 	desc.SetHandle("gInput",  process->GetPrevTexture()->GetGPUHandleSRV());
-	desc.SetHandle("gOutput", process->GetIndexTexture()->GetGPUHandleUAV());
+	desc.SetHandle("gOutput", process->GetCurrentTexture()->GetGPUHandleUAV());
 
 	// parameter
 	desc.SetAddress("gParameter", parameter_->GetGPUVirtualAddress());
@@ -58,6 +59,7 @@ void PostProcessRadialBlur::Process(const DirectXQueueContext* context, const Pr
 	core->BindComputeBuffer(FRenderCoreProcess::ProcessType::RadialBlur, context, desc);
 	core->Dispatch(context, info.buffer->GetSize());
 
+	process->GetCurrentTexture()->TransitionEndUnordered(context);
 }
 
 void PostProcessRadialBlur::ShowInspectorImGui() {

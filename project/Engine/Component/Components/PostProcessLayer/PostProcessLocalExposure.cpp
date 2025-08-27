@@ -44,7 +44,8 @@ void PostProcessLocalExposure::Init() {
 
 void PostProcessLocalExposure::Process(const DirectXQueueContext* context, const ProcessInfo& info) {
 	auto process = info.buffer->GetProcessTextures();
-	process->NextProcess(context);
+	process->NextProcess();
+	process->GetCurrentTexture()->TransitionBeginUnordered(context);
 
 	auto core = FRenderCore::GetInstance()->GetProcess();
 
@@ -56,14 +57,16 @@ void PostProcessLocalExposure::Process(const DirectXQueueContext* context, const
 	desc.Set32bitConstants("Infomation", 1, &info.weight);
 
 	//* textures
-	desc.SetHandle("gInput",      process->GetPrevTexture()->GetGPUHandleSRV());
-	desc.SetHandle("gOutput",     process->GetIndexTexture()->GetGPUHandleUAV());
+	desc.SetHandle("gInput",  process->GetPrevTexture()->GetGPUHandleSRV());
+	desc.SetHandle("gOutput", process->GetCurrentTexture()->GetGPUHandleUAV());
 
 	// parameter
 	desc.SetAddress("gParameter", parameter_->GetGPUVirtualAddress());
 
 	core->BindComputeBuffer(FRenderCoreProcess::ProcessType::LocalExposure, context, desc);
 	core->Dispatch(context, info.buffer->GetSize());
+
+	process->GetCurrentTexture()->TransitionEndUnordered(context);
 }
 
 void PostProcessLocalExposure::ShowInspectorImGui() {

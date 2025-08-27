@@ -60,7 +60,7 @@ public:
 
 	//* process texture option *//
 
-	FProcessTextures* GetProcessTextures() { return process_.get(); }
+	FProcessTextureCollection* GetProcessTextures() { return process_.get(); }
 
 	//* parameter option *//
 
@@ -84,7 +84,7 @@ private:
 
 	//* process texture *//
 
-	std::unique_ptr<FProcessTextures> process_;
+	std::unique_ptr<FProcessTextureCollection> process_;
 
 	//* parameter *//
 

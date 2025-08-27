@@ -29,7 +29,8 @@ void PostProcessLUT::Process(const DirectXQueueContext* context, const ProcessIn
 	}
 
 	auto process = info.buffer->GetProcessTextures();
-	process->NextProcess(context);
+	process->NextProcess();
+	process->GetCurrentTexture()->TransitionBeginUnordered(context);
 
 	auto core = FRenderCore::GetInstance()->GetProcess();
 
@@ -42,7 +43,7 @@ void PostProcessLUT::Process(const DirectXQueueContext* context, const ProcessIn
 
 	//* textures
 	desc.SetHandle("gInput", process->GetPrevTexture()->GetGPUHandleSRV());
-	desc.SetHandle("gOutput", process->GetIndexTexture()->GetGPUHandleUAV());
+	desc.SetHandle("gOutput", process->GetCurrentTexture()->GetGPUHandleUAV());
 
 	// lut
 	desc.SetHandle("gLUTTexture", texture_->GetGPUHandleSRV());
@@ -50,6 +51,8 @@ void PostProcessLUT::Process(const DirectXQueueContext* context, const ProcessIn
 
 	core->BindComputeBuffer(FRenderCoreProcess::ProcessType::LUT, context, desc);
 	core->Dispatch(context, info.buffer->GetSize());
+
+	process->GetCurrentTexture()->TransitionEndUnordered(context);
 }
 
 void PostProcessLUT::ShowInspectorImGui() {
