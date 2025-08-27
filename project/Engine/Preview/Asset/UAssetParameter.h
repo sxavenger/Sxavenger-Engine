@@ -61,6 +61,8 @@ public:
 
 	json Serialize() const;
 
+	std::optional<std::string> GetStr() const;
+
 	//* operator *//
 
 	void operator=(const std::monostate&) { Reset(); }
@@ -82,8 +84,6 @@ private:
 
 	void Wait() const;
 	// hack: UBaseAsset側に移動する可能性あり
-
-	std::optional<std::string> GetStr() const;
 
 };
 

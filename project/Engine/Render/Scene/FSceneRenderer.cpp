@@ -371,10 +371,7 @@ void FSceneRenderer::ProcessLightingPassSkyLight(const DirectXQueueContext* cont
 void FSceneRenderer::ProcessLightingPassIndirect(const DirectXQueueContext* context, const Config& config) {
 
 	// RenderごとのReservoirを更新
-	if (reservoir_.has_value()) {
-		(*reservoir_).IncrimentFrame();
-
-	} else {
+	if (!reservoir_.has_value()) {
 		reservoir_ = FRenderCorePathtracing::Reservoir{};
 	}
 

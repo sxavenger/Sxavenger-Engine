@@ -46,6 +46,8 @@ public:
 
 	FCanvasRenderer* GetCanvas() const { return canvasRenderer_.get(); }
 
+	FSceneRenderer::Config& GetConfig() { return config_; }
+
 	//* singleton *//
 
 	static FMainRender* GetInstance();
@@ -60,5 +62,7 @@ private:
 	std::unique_ptr<FSceneRenderer>      sceneRenderer_;
 	std::unique_ptr<FScene>              scene_;
 	std::unique_ptr<FCanvasRenderer>     canvasRenderer_;
+
+	FSceneRenderer::Config config_ = {};
 
 };

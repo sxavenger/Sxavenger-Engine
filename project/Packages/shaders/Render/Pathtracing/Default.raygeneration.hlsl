@@ -16,8 +16,11 @@
 ////////////////////////////////////////////////////////////////////////////////////////////
 _RAYGENERATION void mainRaygeneration() {
 
-	uint2 index     = DispatchRaysIndex().xy;
+	uint2 index = DispatchRaysIndex().xy;
 	uint2 dimension = DispatchRaysDimensions().xy;
+
+	uint type = DispatchRaysDimensions().z;
+	// todo: diffuseとspecularで2thread構成にする.
 
 	if (!CheckNeedSample()) {
 		return; //!< これ以上のsampleは不必要
@@ -29,16 +32,16 @@ _RAYGENERATION void mainRaygeneration() {
 		return; // surfaceが存在しない
 	}
 
-	uint offset = Xorshift::xorshift32(index.x * index.y) % sampleCount;
+	uint offset = Xorshift::xorshift32(index.x * index.y);
 
 	// primary trace.
 
-	float4 diffuse_indirect  = float4(0.0f, 0.0f, 0.0f, 0.0f);
+	float4 diffuse_indirect = float4(0.0f, 0.0f, 0.0f, 0.0f);
 	float4 specular_indirect = float4(0.0f, 0.0f, 0.0f, 0.0f);
 
 	for (uint i = 0; i < sampleStep; ++i) {
 
-		uint currentSampleIndex   = sampleStep * currentFrame + i;
+		uint currentSampleIndex = sampleStep * currentFrame + i;
 		uint randamizeSampleIndex = (currentSampleIndex + offset) % sampleCount;
 		//!< 各threadが異なるサンプルを取得するためのインデックス計算
 		
@@ -52,10 +55,10 @@ _RAYGENERATION void mainRaygeneration() {
 		{ //!< Diffuseサンプリング
 
 			RayDesc desc;
-			desc.Origin    = surface.position;
+			desc.Origin = surface.position;
 			desc.Direction = ImportanceSampleLambert(xi, surface.normal);
-			desc.TMin      = kTMin;
-			desc.TMax      = kTMax;
+			desc.TMin = kTMin;
+			desc.TMax = kTMax;
 
 			Payload payload = TracePrimaryRay(desc);
 
@@ -65,19 +68,23 @@ _RAYGENERATION void mainRaygeneration() {
 			float NdotL = saturate(dot(surface.normal, desc.Direction));
 
 			float3 diffuseAlbedo = surface.albedo * (1.0f - kMinFrenel) * (1.0f - surface.metallic);
-			float3 diffuseBRDF   = DiffuseBRDF(diffuseAlbedo);
+			float3 diffuseBRDF = DiffuseBRDF(diffuseAlbedo);
 
-			diffuse_indirect.rgb += diffuseBRDF * payload.indirect.rgb * NdotL;
-			diffuse_indirect.a   += payload.indirect.a > 0.0f ? 1.0f : 0.0f;
+			float pdf = NdotL / kPi;
+
+			if (pdf > 0.0f) {
+				diffuse_indirect.rgb += diffuseBRDF * payload.indirect.rgb * (NdotL / pdf);
+				diffuse_indirect.a += payload.indirect.a > 0.0f ? 1.0f : 0.0f;
+			}
 		}
 
 		{ //!< Specularサンプル
 
 			RayDesc desc;
-			desc.Origin    = surface.position;
+			desc.Origin = surface.position;
 			desc.Direction = ImportanceSampleGGX(xi, surface.roughness, surface.normal);
-			desc.TMin      = kTMin;
-			desc.TMax      = kTMax;
+			desc.TMin = kTMin;
+			desc.TMax = kTMax;
 
 			Payload payload = TracePrimaryRay(desc);
 
@@ -93,27 +100,30 @@ _RAYGENERATION void mainRaygeneration() {
 
 			float3 f = F_SphericalGaussian(VdotH, specularAlbedo);
 			float vh = V_HeightCorrelated(NdotV, NdotL, surface.roughness);
-			float d  = D_GGX(NdotH, surface.roughness);
+			float d = D_GGX(NdotH, surface.roughness);
 
 			float3 specularBRDF = SpecularBRDF(f, vh, d);
 
-			specular_indirect.rgb += specularBRDF * payload.indirect.rgb * NdotL;
-			specular_indirect.a   += payload.indirect.a > 0.0f ? 1.0f : 0.0f;
-		}
+			float pdf = D_GGX(NdotH, surface.roughness) * NdotH / (4.0f * VdotH + kEpsilon);
 
-		// todo: pdfを考慮する.
+			if (pdf > 0.0f && NdotL > 0.0f) {
+				specular_indirect.rgb += specularBRDF * payload.indirect.rgb * (NdotL / pdf);
+				specular_indirect.a += payload.indirect.a > 0.0f ? 1.0f : 0.0f;
+			}
+		}
 	}
 
-	uint prev    = sampleStep * currentFrame;
+	uint prev = sampleStep * currentFrame;
 	uint current = prev + sampleStep;
 
-	diffuse_indirect.rgb  /= current;
+	diffuse_indirect.rgb /= current;
 	specular_indirect.rgb /= current;
 
 	float4 indirect = gIndirect[index];
 	indirect *= float(prev) / float(current);
 	indirect.rgb += diffuse_indirect.rgb + specular_indirect.rgb;
-	indirect.a    = saturate(indirect.a + diffuse_indirect.a + specular_indirect.a);
+	indirect.a = saturate(indirect.a + diffuse_indirect.a + specular_indirect.a);
 	
 	gIndirect[index] = indirect;
+	
 }

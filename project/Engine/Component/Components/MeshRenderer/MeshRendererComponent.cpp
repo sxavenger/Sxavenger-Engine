@@ -20,14 +20,23 @@ void MeshRendererComponent::ShowComponentInspector() {
 	ImGui::Checkbox("enable", &isEnable_);
 	SxImGui::CheckBoxFlags("cast shadow", &mask_.Get(), static_cast<uint8_t>(MeshInstanceMask::Shadow));
 
-	/*if (ImGui::TreeNodeEx("material", ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_NoAutoOpenOnLog | ImGuiTreeNodeFlags_NoTreePushOnOpen)) {
-		if (material_ != nullptr) {
-			material_->SetImGuiCommand();
-
-		} else {
-			ImGui::Text("material is nullptr.");
+	if (ImGui::BeginCombo("mesh", mesh_.GetStr().value_or("null").c_str())) {
+		for (const auto& id : sUAssetStorage->GetAssetStorage<UAssetMesh>() | std::views::keys) {
+			if (ImGui::Selectable(id.Serialize().c_str(), mesh_.Get()->GetId() == id)) {
+				mesh_ = id; //!< 選択されたmeshを設定
+			}
 		}
-	}*/
+		ImGui::EndCombo();
+	}
+
+	if (ImGui::BeginCombo("material", material_.GetStr().value_or("null").c_str())) {
+		for (const auto& id : sUAssetStorage->GetAssetStorage<UAssetMaterial>() | std::views::keys) {
+			if (ImGui::Selectable(id.Serialize().c_str(), material_.Get()->GetId() == id)) {
+				material_ = id; //!< 選択されたmaterialを設定
+			}
+		}
+		ImGui::EndCombo();
+	}
 }
 
 const TransformComponent* MeshRendererComponent::GetTransform() const {

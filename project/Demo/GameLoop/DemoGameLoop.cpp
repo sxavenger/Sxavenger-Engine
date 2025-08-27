@@ -1,4 +1,3 @@
-//[DemoGameLoop.cpp]
 #include "DemoGameLoop.h"
 
 //-----------------------------------------------------------------------------------------
@@ -81,6 +80,9 @@ void DemoGameLoop::InitGame() {
 	lut->CreateTexture(SxavengerSystem::GetDirectQueueContext(), texture, { 16, 16 });
 
 	sSceneObjects->InputJsonFromFilepath("assets/scene/collision_sponza.scene");
+
+	//auto& config = FMainRender::GetInstance()->GetConfig();
+	//config.isEnableIndirectLighting = true;
 }
 
 void DemoGameLoop::TermGame() {

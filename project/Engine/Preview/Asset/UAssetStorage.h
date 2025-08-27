@@ -59,6 +59,9 @@ public:
 	template <UAssetConcept T>
 	bool Contains(const Uuid& id) const { return Contains(&typeid(T), id); }
 
+	template <UAssetConcept T>
+	const std::unordered_map<Uuid, std::shared_ptr<UBaseAsset>>& GetAssetStorage();
+
 	//* table option *//
 
 	void Serialize() const;
@@ -141,6 +144,12 @@ void UAssetStorage::ForEach(const std::function<void(T* const)>& function) const
 
 		function(UAssetStorage::Cast<T>(asset).get());
 	}
+}
+
+template<UAssetConcept T>
+inline const std::unordered_map<Uuid, std::shared_ptr<UBaseAsset>>& UAssetStorage::GetAssetStorage() {
+	constexpr const std::type_info* type = &typeid(T);
+	return storage_[type]; //!< Assetのストレージを返す
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////

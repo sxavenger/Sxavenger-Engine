@@ -322,6 +322,24 @@ void RenderSceneEditor::ShowSceneMenu() {
 		renderer_->DebugGui(); //!< HACK
 		ImGui::EndDisabled();
 
+		if (ImGui::Button("capture indirect")) {
+			TextureExporter::Export(
+				SxavengerSystem::GetDirectQueueContext(),
+				TextureExporter::TextureDimension::Texture2D,
+				textures_->GetGBuffer(FLightingGBuffer::Layout::Indirect)->GetResource(),
+				DxObject::kDefaultScreenViewFormat,
+				"capture_indirect.png"
+			);
+
+			TextureExporter::Export(
+				SxavengerSystem::GetDirectQueueContext(),
+				TextureExporter::TextureDimension::Texture2D,
+				textures_->GetGBuffer(FLightingGBuffer::Layout::Indirect_Reservoir)->GetResource(),
+				DxObject::kDefaultScreenViewFormat,
+				"capture_indirect_reservoir.png"
+			);
+		}
+
 		ImGui::EndDisabled();
 		
 		ImGui::EndMenu();

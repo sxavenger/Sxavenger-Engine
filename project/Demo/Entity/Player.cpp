@@ -175,7 +175,7 @@ void Player::Move() {
 	transform_->translate += velocity_;
 	transform_->UpdateMatrix();
 
-	if (All(velocity_ == kOrigin3<float>)) {
+	if (Any(velocity_ != kOrigin3<float>)) { //!< 
 		FMainRender::GetInstance()->GetRenderer()->ResetReservoir();
 	}
 

@@ -26,7 +26,7 @@ void FMainRender::Term() {
 
 void FMainRender::Render(const DirectXQueueContext* context, DirectXWindowContext* window) {
 
-	FSceneRenderer::Config config = {};
+	FSceneRenderer::Config config = config_;
 	config.buffer     = buffer_.get();
 	config.colorSpace = window->GetColorSpace();
 
