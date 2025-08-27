@@ -79,19 +79,19 @@ namespace MaterialLib {
 				case 1:
 					{
 						Texture2D<float4> texture = ResourceDescriptorHeap[index];
-						output = SampleTexture(texture, parameter.samplers, parameter.texcoord).rgb;
+						output = ACES::IDT_sRGB_AP1(SampleTexture(texture, parameter.samplers, parameter.texcoord).rgb);
 					}
 					break;
 				
 				case 2:
 					{
 						Texture2D<float4> texture = ResourceDescriptorHeap[index];
-						output = SampleTexture(texture, parameter.samplers, parameter.texcoord).rgb * color;
+						output = ACES::IDT_sRGB_AP1(SampleTexture(texture, parameter.samplers, parameter.texcoord).rgb) * color;
 					}
 					break;
 			}
 
-			return ACES::IDT_sRGB_AP1(output);
+			return output;
 		}
 	};
 
