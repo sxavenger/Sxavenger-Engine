@@ -127,7 +127,7 @@ void main(uint3 dispatchThreadId : SV_DispatchThreadID) {
 
 			float lod = i / float(kRecursionCount - 1);
 			
-			variance  += gIndirect.SampleLevel(gSampler, uv, lod * 4).rgb / sample_surface.albedo * w;
+			variance  += gIndirect.SampleLevel(gSampler, uv, 6).rgb / sample_surface.albedo * w;
 			weight    += w;
 		}
 	}

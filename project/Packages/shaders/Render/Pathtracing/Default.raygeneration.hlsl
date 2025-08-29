@@ -59,10 +59,10 @@ _RAYGENERATION void mainRaygeneration() {
 		{ //!< Diffuseサンプリング
 
 			RayDesc desc;
-			desc.Origin = surface.position;
+			desc.Origin    = surface.position;
 			desc.Direction = ImportanceSampleLambert(xi, surface.normal);
-			desc.TMin = kTMin;
-			desc.TMax = kTMax;
+			desc.TMin      = kTMin;
+			desc.TMax      = kTMax;
 
 			Payload payload = TracePrimaryRay(desc);
 
@@ -72,23 +72,23 @@ _RAYGENERATION void mainRaygeneration() {
 			float NdotL = saturate(dot(surface.normal, desc.Direction));
 
 			float3 diffuseAlbedo = surface.albedo * (1.0f - kMinFrenel) * (1.0f - surface.metallic);
-			float3 diffuseBRDF = DiffuseBRDF(diffuseAlbedo);
+			float3 diffuseBRDF   = DiffuseBRDF(diffuseAlbedo);
 
 			float pdf = NdotL / kPi;
 
 			if (pdf > 0.0f) {
 				diffuse_indirect.rgb += diffuseBRDF * payload.indirect.rgb * (NdotL / pdf);
-				diffuse_indirect.a += payload.indirect.a > 0.0f ? 1.0f : 0.0f;
+				diffuse_indirect.a   += payload.indirect.a > 0.0f ? 1.0f : 0.0f;
 			}
 		}
 
 		{ //!< Specularサンプル
 
 			RayDesc desc;
-			desc.Origin = surface.position;
+			desc.Origin    = surface.position;
 			desc.Direction = ImportanceSampleGGX(xi, surface.roughness, surface.normal);
-			desc.TMin = kTMin;
-			desc.TMax = kTMax;
+			desc.TMin      = kTMin;
+			desc.TMax      = kTMax;
 
 			Payload payload = TracePrimaryRay(desc);
 
@@ -104,7 +104,7 @@ _RAYGENERATION void mainRaygeneration() {
 
 			float3 f = F_SphericalGaussian(VdotH, specularAlbedo);
 			float vh = V_HeightCorrelated(NdotV, NdotL, surface.roughness);
-			float d = D_GGX(NdotH, surface.roughness);
+			float d  = D_GGX(NdotH, surface.roughness);
 
 			float3 specularBRDF = SpecularBRDF(f, vh, d);
 
@@ -117,7 +117,7 @@ _RAYGENERATION void mainRaygeneration() {
 		}
 	}
 
-	uint prev = sampleStep * currentFrame;
+	uint prev    = sampleStep * currentFrame;
 	uint current = prev + sampleStep;
 
 	diffuse_indirect.rgb /= current;

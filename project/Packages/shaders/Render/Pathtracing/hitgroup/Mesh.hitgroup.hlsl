@@ -55,6 +55,8 @@ struct Surface {
 		ao        = gMaterial[0].properties.ao.GetValue(parameter, 0);
 		roughness = gMaterial[0].properties.roughness.GetValue(parameter, 1);
 		metallic  = gMaterial[0].properties.metallic.GetValue(parameter, 2);
+
+		roughness = max(roughness, 0.02f); //!< 0.0fだと計算が不安定になるので、最低値を設定する
 	}
 	
 };
