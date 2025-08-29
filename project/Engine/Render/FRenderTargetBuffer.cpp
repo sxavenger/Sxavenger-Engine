@@ -17,7 +17,7 @@ void FRenderTargetBuffer::Create(const Vector2ui& size) {
 	depth_->Create(size_);
 
 	process_ = std::make_unique<FProcessTextureCollection>();
-	process_->Create(2, size_, FMainGBuffer::kColorFormat);
+	process_->Create(3, size_, FMainGBuffer::kColorFormat);
 }
 
 void FRenderTargetBuffer::BeginRenderTargetDeferred(const DirectXQueueContext* context) {
@@ -88,7 +88,7 @@ void FRenderTargetBuffer::EndPostProcess(const DirectXQueueContext* context) {
 }
 
 void FRenderTargetBuffer::BeginProcessDenoiser(const DirectXQueueContext* context) {
-	process_->BeginProcess(context, lighting_.GetGBuffer(FLightingGBuffer::Layout::Indirect));
+	process_->BeginProcess(context, lighting_.GetGBuffer(FLightingGBuffer::Layout::Indirect_Reservoir));
 }
 
 void FRenderTargetBuffer::EndProcessDenoiser(const DirectXQueueContext* context) {

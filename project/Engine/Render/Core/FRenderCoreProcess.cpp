@@ -30,7 +30,8 @@ void FRenderCoreProcess::Init() {
 		desc.SetSamplerLinear("gSampler", DxObject::SamplerMode::MODE_CLAMP);
 
 		//!< bloom
-		CreatePipeline(ProcessType::Bloom, "PostProcess/Bloom.cs.hlsl", desc);
+		CreatePipeline(ProcessType::BloomLuminance, "PostProcess/Bloom/BloomLuminance.cs.hlsl", desc);
+		CreatePipeline(ProcessType::BloomApply,     "PostProcess/Bloom/BloomApply.cs.hlsl",     desc);
 
 		//!< radial blur
 		CreatePipeline(ProcessType::RadialBlur, "PostProcess/RadialBlur.cs.hlsl", desc);

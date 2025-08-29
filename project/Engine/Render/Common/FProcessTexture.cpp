@@ -193,8 +193,7 @@ void FProcessTexture::GenerateMipmap(const DirectXQueueContext* context) {
 		core->BindComputeBuffer(FRenderCoreTransition::Transition::MipmapTransition, context, desc);
 		core->Dispatch(context, dimension);
 
-		// BarrierUAV(context);
-		//!< 多分いる?
+		BarrierUAV(context);
 	}
 }
 
@@ -233,7 +232,18 @@ void FProcessTextureCollection::BeginProcess(const DirectXQueueContext* context,
 		barriers[1] = textures_[currentIndex_]->TransitionBeginState(D3D12_RESOURCE_STATE_COPY_DEST);
 		commandList->ResourceBarrier(2, barriers.data());
 
-		commandList->CopyResource(textures_[currentIndex_]->GetResource(), texture->GetResource());
+		// mip0のみcopy
+		D3D12_TEXTURE_COPY_LOCATION src = {};
+		src.pResource        = texture->GetResource();
+		src.Type             = D3D12_TEXTURE_COPY_TYPE_SUBRESOURCE_INDEX;
+		src.SubresourceIndex = 0;
+
+		D3D12_TEXTURE_COPY_LOCATION dst = {};
+		dst.pResource        = textures_[currentIndex_]->GetResource();
+		dst.Type             = D3D12_TEXTURE_COPY_TYPE_SUBRESOURCE_INDEX;
+		dst.SubresourceIndex = 0;
+
+		commandList->CopyTextureRegion(&dst, 0, 0, 0, &src, nullptr);
 
 		barriers[0] = texture->TransitionEndState(D3D12_RESOURCE_STATE_COPY_SOURCE);
 		barriers[1] = textures_[currentIndex_]->TransitionEndState(D3D12_RESOURCE_STATE_COPY_DEST);
@@ -253,7 +263,18 @@ void FProcessTextureCollection::EndProcess(const DirectXQueueContext* context, F
 		barriers[1] = current->TransitionBeginState(D3D12_RESOURCE_STATE_COPY_SOURCE);
 		commandList->ResourceBarrier(2, barriers.data());
 
-		commandList->CopyResource(texture->GetResource(), current->GetResource());
+		// mip0のみcopy
+		D3D12_TEXTURE_COPY_LOCATION src = {};
+		src.pResource        = current->GetResource();
+		src.Type             = D3D12_TEXTURE_COPY_TYPE_SUBRESOURCE_INDEX;
+		src.SubresourceIndex = 0;
+
+		D3D12_TEXTURE_COPY_LOCATION dst = {};
+		dst.pResource        = texture->GetResource();
+		dst.Type             = D3D12_TEXTURE_COPY_TYPE_SUBRESOURCE_INDEX;
+		dst.SubresourceIndex = 0;
+
+		commandList->CopyTextureRegion(&dst, 0, 0, 0, &src, nullptr);
 
 		barriers[0] = texture->TransitionEndState(D3D12_RESOURCE_STATE_COPY_DEST);
 		barriers[1] = current->TransitionEndState(D3D12_RESOURCE_STATE_COPY_SOURCE);
@@ -279,4 +300,8 @@ FProcessTexture* FProcessTextureCollection::GetPrevTexture(uint32_t prev) const 
 
 FProcessTexture* FProcessTextureCollection::GetCurrentTexture() const {
 	return textures_[currentIndex_].get();
+}
+
+void FProcessTextureCollection::ReqiureCount(uint32_t count) {
+	Exception::Assert(count <= textures_.size(), "process texture array size is not exist.");
 }

@@ -78,9 +78,13 @@ void DemoGameLoop::InitGame() {
 	volume_->GetComponent<PostProcessLayerComponent>()->AddPostProcess<PostProcessChromaticAberration>();
 	volume_->GetComponent<PostProcessLayerComponent>()->AddPostProcess<PostProcessRadialBlur>();
 
-	const auto& texture = sUContentStorage->Import<UContentTexture>("assets/textures/LUT/lut_reddish.png", UContentTexture::Option{ UContentTexture::Encoding::Intensity, false })->GetId();
+	sUContentStorage->Import<UContentTexture>("assets/textures/LUT/lut_reddish.png",  UContentTexture::Option{ UContentTexture::Encoding::Intensity, false });
+	sUContentStorage->Import<UContentTexture>("assets/textures/LUT/lut_sepia.png",    UContentTexture::Option{ UContentTexture::Encoding::Intensity, false });
+	sUContentStorage->Import<UContentTexture>("assets/textures/LUT/lut_greenish.png", UContentTexture::Option{ UContentTexture::Encoding::Intensity, false });
+
+	const auto& texture = sUContentStorage->Import<UContentTexture>("assets/textures/LUT/lut_reddish.png", UContentTexture::Option{ UContentTexture::Encoding::Intensity, false });
 	auto lut = volume_->GetComponent<PostProcessLayerComponent>()->AddPostProcess<PostProcessLUT>();
-	lut->CreateTexture(SxavengerSystem::GetDirectQueueContext(), texture, { 16, 16 });
+	lut->CreateTexture(SxavengerSystem::GetDirectQueueContext(), texture->GetId(), {16, 16});
 
 	sSceneObjects->InputJsonFromFilepath("assets/scene/collision_sponza.scene");
 

@@ -370,19 +370,14 @@ void FSceneRenderer::ProcessLightingPassSkyLight(const DirectXQueueContext* cont
 
 void FSceneRenderer::ProcessLightingPassIndirect(const DirectXQueueContext* context, const Config& config) {
 
-	// RenderごとのReservoirを更新
-	if (!reservoir_.has_value()) {
+	bool isReset = config.scene->IsResetReservoir() || !reservoir_.has_value();
+
+	// Reservoirを更新
+	if (isReset) {
 		reservoir_ = FRenderCorePathtracing::Reservoir{};
-	}
-
-	auto& reservoir = reservoir_.value();
-
-	// Scene全体のReservoirを更新
-	if (config.scene->IsResetReservoir()) {
-		reservoir.ResetFrame();
 
 	} else {
-		reservoir.IncrimentFrame();
+		(*reservoir_).IncrimentFrame();
 	}
 
 	config.scene->GetStateObjectContext().SetStateObject(context->GetDxCommand());
@@ -408,7 +403,7 @@ void FSceneRenderer::ProcessLightingPassIndirect(const DirectXQueueContext* cont
 	commandList->SetComputeRootConstantBufferView(7, config.camera->GetGPUVirtualAddress());
 
 	//* reserviour
-	commandList->SetComputeRoot32BitConstants(8, 3, &reservoir, 0);
+	commandList->SetComputeRoot32BitConstants(8, 3, &reservoir_.value(), 0);
 
 	//* light
 	// Directional Light
@@ -443,9 +438,18 @@ void FSceneRenderer::ProcessLightingPassIndirectDenoiser(const DirectXQueueConte
 
 	config.buffer->BeginProcessDenoiser(context);
 
-	auto textures = config.buffer->GetProcessTextures();
+	auto process = config.buffer->GetProcessTextures();
+
+	{ //!< mipmap generation.
+		process->GetCurrentTexture()->TransitionBeginUnordered(context);
+		process->GetCurrentTexture()->GenerateMipmap(context);
+		process->GetCurrentTexture()->TransitionEndUnordered(context);
+	}
 
 	{ //!< Edge stopping function.
+
+		process->NextProcess();
+		process->GetCurrentTexture()->TransitionBeginUnordered(context);
 
 		auto core = FRenderCore::GetInstance()->GetPathtracing();
 
@@ -456,8 +460,8 @@ void FSceneRenderer::ProcessLightingPassIndirectDenoiser(const DirectXQueueConte
 		desc.Set32bitConstants("Dimension", 2, &config.buffer->GetSize());
 
 		//* textures
-		desc.SetHandle("gOutput",   textures->GetCurrentTexture()->GetGPUHandleUAV());
-		desc.SetHandle("gIndirect", config.buffer->GetGBuffer(FLightingGBuffer::Layout::Indirect_Reservoir)->GetGPUHandleSRV());
+		desc.SetHandle("gOutput",   process->GetCurrentTexture()->GetGPUHandleUAV());
+		desc.SetHandle("gIndirect", process->GetPrevTexture()->GetGPUHandleSRV());
 
 		//* parameter
 		desc.Set32bitConstants("Parameter", 3, &test_);
@@ -471,6 +475,8 @@ void FSceneRenderer::ProcessLightingPassIndirectDenoiser(const DirectXQueueConte
 
 		core->BindDenoiserBuffer(FRenderCorePathtracing::DenoiserType::EdgeStopping, context, desc);
 		core->DispatchDenoiser(context, config.buffer->GetSize());
+
+		process->GetCurrentTexture()->TransitionEndUnordered(context);
 	}
 
 	config.buffer->EndProcessDenoiser(context);

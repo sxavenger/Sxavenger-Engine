@@ -17,6 +17,10 @@ void FLUTTexture::Create(const std::shared_ptr<UAssetTexture>& texture, const Ve
 	// 引数の保存
 	texture_ = texture;
 
+	if (texture_->GetMetadata().IsLightness()) {
+		Logger::EngineLog("[FLUTTexture] warning | lut texture is lightness(sRGB) format.");
+	}
+
 	parameter_.size = texture_->GetMetadata().size;
 	parameter_.tile = tile;
 

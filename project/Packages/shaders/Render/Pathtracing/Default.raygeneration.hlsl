@@ -26,6 +26,10 @@ _RAYGENERATION void mainRaygeneration() {
 		return; //!< これ以上のsampleは不必要
 	}
 
+	if (IsBeginFrame()) {
+		gIndirect[index] = float4(0.0f, 0.0f, 0.0f, 0.0f);
+	}
+
 	DeferredSurface surface;
 	if (!surface.GetSurface(index)) {
 		gIndirect[index] = float4(0.0f, 0.0f, 0.0f, 0.0f);
@@ -122,8 +126,14 @@ _RAYGENERATION void mainRaygeneration() {
 	float4 indirect = gIndirect[index];
 	indirect *= float(prev) / float(current);
 	indirect.rgb += diffuse_indirect.rgb + specular_indirect.rgb;
-	indirect.a = saturate(indirect.a + diffuse_indirect.a + specular_indirect.a);
+	indirect.a  = saturate(indirect.a + diffuse_indirect.a + specular_indirect.a);
 	
 	gIndirect[index] = indirect;
+
+	//float4 indirect = float4(0.0f, 0.0f, 0.0f, 0.0f);
+	//indirect.rgb = diffuse_indirect.rgb + specular_indirect.rgb;
+	//indirect.a   = saturate(diffuse_indirect.a + specular_indirect.a);
+
+	//gIndirect[index] += indirect / float(sampleCount);
 	
 }

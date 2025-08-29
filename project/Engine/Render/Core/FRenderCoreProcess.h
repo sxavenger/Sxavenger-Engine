@@ -20,7 +20,8 @@ public:
 	////////////////////////////////////////////////////////////////////////////////////////////
 	enum class ProcessType : uint32_t {
 		GrayScale,
-		Bloom,
+		BloomLuminance,
+		BloomApply,
 		AutoExposureLuminance,
 		AutoExposureAverage,
 		AutoExposureApply,

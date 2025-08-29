@@ -121,7 +121,13 @@ void main(uint3 dispatchThreadId : SV_DispatchThreadID) {
 			w *= CalculateNormalWeight(surface.normal, sample_surface.normal); //!< 法線
 			w *= Gaussian2D(offsets[j] * i, 1.0f); //!< ガウシアン
 			
-			variance  += gIndirect[sample_pos].rgb / sample_surface.albedo * w;
+			//variance  += gIndirect[sample_pos].rgb / sample_surface.albedo * w;
+
+			float2 uv = float2(sample_pos) / float2(size);
+
+			float lod = i / float(kRecursionCount - 1);
+			
+			variance  += gIndirect.SampleLevel(gSampler, uv, lod * 4).rgb / sample_surface.albedo * w;
 			weight    += w;
 		}
 	}

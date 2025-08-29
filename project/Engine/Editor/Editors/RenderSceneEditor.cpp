@@ -385,10 +385,33 @@ void RenderSceneEditor::ShowCaptureMenu() {
 				"capture_scene.png"
 			);
 		}
-		
-		//if (ImGui::Button("game window capture")) {
-		//	FMainRender::GetInstance()->GetTextures()->CaptureGBuffer(FRenderTargetTextures::GBufferLayout::Main, SxavengerSystem::GetDirectQueueContext(), "capture_game.png");
-		//}
+
+		if (ImGui::Button("game window capture")) {
+			TextureExporter::Export(
+				SxavengerSystem::GetDirectQueueContext(),
+				TextureExporter::TextureDimension::Texture2D,
+				FMainRender::GetInstance()->GetTextures()->GetGBuffer(FMainGBuffer::Layout::Scene)->GetResource(),
+				DxObject::kDefaultScreenViewFormat,
+				"game_scene.png"
+			);
+		}
+
+		if (ImGui::Button("[DEBUG] process")) {
+
+			auto process = textures_->GetProcessTextures();
+
+			process->GetCurrentTexture()->TransitionBeginUnordered(SxavengerSystem::GetDirectQueueContext());
+			process->GetCurrentTexture()->GenerateMipmap(SxavengerSystem::GetDirectQueueContext());
+			process->GetCurrentTexture()->TransitionEndUnordered(SxavengerSystem::GetDirectQueueContext());
+
+			TextureExporter::Export(
+				SxavengerSystem::GetDirectQueueContext(),
+				TextureExporter::TextureDimension::Texture2D,
+				process->GetCurrentTexture()->GetResource(),
+				DxObject::kDefaultScreenViewFormat,
+				"debug_process.dds"
+			);
+		}
 
 		ImGui::EndMenu();
 	}

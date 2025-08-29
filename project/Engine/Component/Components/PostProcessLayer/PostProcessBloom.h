@@ -38,6 +38,8 @@ public:
 
 		float intensity;
 		float threshold;
+		float radius;
+
 	};
 
 public:

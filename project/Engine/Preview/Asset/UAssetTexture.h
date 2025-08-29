@@ -34,6 +34,8 @@ public:
 		void Assign(const DirectX::TexMetadata& metadata);
 		// todo: resource自体の情報を持たせる.
 
+		bool IsLightness() const { return DirectX::IsSRGB(format); }
+
 		//=========================================================================================
 		// public variables
 		//=========================================================================================

@@ -66,6 +66,46 @@ void PostProcessLUT::ShowInspectorImGui() {
 
 		ImGui::EndDisabled();
 	}
+
+	{ //!< infomation
+
+		SxImGui::InputScalarN<uint32_t, 2>("tile", &tile_.x);
+
+		if (referenceTexture_.Empty()) {
+
+			Vector2ui size  = { 16, 256 };
+			Vector2f region = { ImGui::GetContentRegionAvail().x, ImGui::GetContentRegionAvail().y };
+
+			// テクスチャの表示サイズを計算
+			float scale          = std::min(region.x / size.x, region.y / size.y);
+			Vector2f displaySize = { size.x * scale, size.y * scale };
+
+			ImGui::InvisibleButton("texture", ImVec2(displaySize.x, displaySize.y));
+			
+		} else {
+			auto texture = referenceTexture_.WaitGet();
+
+			Vector2ui size = texture->GetMetadata().size;
+			Vector2f region = { ImGui::GetContentRegionAvail().x, ImGui::GetContentRegionAvail().y };
+
+			ImVec2 cursor = ImGui::GetCursorPos();
+
+			// テクスチャの表示サイズを計算
+			float scale = std::min(region.x / size.x, region.y / size.y);
+			Vector2f displaySize = { size.x * scale, size.y * scale };
+
+			ImGui::Image(texture->GetGPUHandleSRV().ptr, ImVec2(displaySize.x, displaySize.y));
+
+			ImGui::SetCursorPos(cursor);
+
+			ImGui::InvisibleButton("texture", ImVec2(displaySize.x, displaySize.y));
+		}
+
+		sUContentStorage->DragAndDropTargetContentFunc<UContentTexture>([this](const std::shared_ptr<UContentTexture>& content) {
+			content->WaitComplete(); // contentの読み込みを待つ
+			CreateTexture(SxavengerSystem::GetDirectQueueContext(), content->GetId(), tile_);
+		});
+	}
 }
 
 void PostProcessLUT::CreateTexture(const DirectXQueueContext* context, const UAssetParameter<UAssetTexture>& texture, const Vector2ui& tile) {

@@ -66,7 +66,7 @@ private:
 
 	//* parameter *//
 
-	static inline const uint32_t kMipLevels                 = 4;
+	static inline const uint32_t kMipLevels                 = 6;
 	static inline const D3D12_RESOURCE_STATES kDefaultState = D3D12_RESOURCE_STATE_ALL_SHADER_RESOURCE;
 
 	Vector2ui size_;
@@ -110,6 +110,8 @@ public:
 	FProcessTexture* GetPrevTexture(uint32_t prev = 1) const;
 
 	FProcessTexture* GetCurrentTexture() const;
+
+	void ReqiureCount(uint32_t count);
 
 private:
 
