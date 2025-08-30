@@ -40,7 +40,7 @@ void main(uint3 dispatchThreadId : SV_DispatchThreadID) {
 	sub_checker += (sub_position.y / sub_size.y);
 	uint sub_color = sub_checker % 2;
 
-	uint color_index = (main_checker << 1) | sub_color;
+	uint color_index = (main_color << 1) | sub_color;
 
 	gOutput[dispatchThreadId.xy] = kColor[color_index];
 	

@@ -9,6 +9,7 @@
 #include <Engine/Render/FRenderCore.h>
 #include <Engine/Render/FMainRender.h>
 #include <Engine/Component/ComponentHelper.h>
+#include <Engine/Content/Exporter/TextureExporter.h>
 
 //* c++
 #include <limits>

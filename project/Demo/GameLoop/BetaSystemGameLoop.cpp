@@ -105,8 +105,6 @@ void BetaSystemGameLoop::InitSystem() {
 	const auto& texture = sUContentStorage->Import<UContentTexture>("assets/textures/LUT/lut_reddish.png", UContentTexture::Option{ UContentTexture::Encoding::Intensity, false })->GetId();
 	auto lut = behaviour_->GetComponent<PostProcessLayerComponent>()->AddPostProcess<PostProcessLUT>();
 	lut->CreateTexture(SxavengerSystem::GetDirectQueueContext(), texture, { 16, 16 });
-
-	//sUContentStorage->Import<UContentModel>("assets/models/tree_sponza/sponza.gltf");
 }
 
 void BetaSystemGameLoop::TermSystem() {
