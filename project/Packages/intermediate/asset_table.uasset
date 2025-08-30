@@ -155,6 +155,10 @@
 		"assets/models/PBR_Sphere_Test/model/PBR_Sphere.gltf",
 		"class UAssetMaterial"
 	],
+	"15cd9bdb-f61f-4401-952aaacd69e1a206": [
+		"assets/models/Desert_Terrain/SM_Desert_Terrain.gltf",
+		"class UAssetSkeleton"
+	],
 	"17a8e1d2-4710-43c8-94547b9877bb7d43": [
 		"assets/textures/textureCube/sky_environment.dds",
 		"class UAssetTexture"
@@ -198,6 +202,10 @@
 	"1cf69c9a-0eb3-4c6c-b84609f03931e21d": [
 		"assets/models/tree_sponza/sponza.gltf",
 		"class UAssetMaterial"
+	],
+	"1cfa6740-a78a-4a9c-8e5fad0ccbc38256": [
+		"assets/models/Desert_Terrain/textures/T_Desert_Terrain_1_Normal.png",
+		"class UAssetTexture"
 	],
 	"1d467b4b-94ea-4db2-a6daf540da8e4f6d": [
 		"assets/models/PBR_Sphere_Test/model/PBR_Sphere.gltf",
@@ -483,6 +491,10 @@
 		"assets/models/PBR_Sphere_Test/model/PBR_Sphere.gltf",
 		"class UAssetMesh"
 	],
+	"41febc88-12ae-4d69-8b95f0cca9b50a0b": [
+		"assets/models/Desert_Terrain/SM_Desert_Terrain.gltf",
+		"class UAssetMaterial"
+	],
 	"4200ec44-86ee-42c9-9b36615572ce36fe": [
 		"assets/models/tree_sponza/sponza.gltf",
 		"class UAssetMesh"
@@ -675,6 +687,10 @@
 		"assets/models/PBR_Sphere_Test/model/PBR_Sphere.gltf",
 		"class UAssetMesh"
 	],
+	"5e8558f9-6b0e-467b-a4526298dc98d844": [
+		"assets/models/Desert_Terrain/SM_Desert_Terrain.gltf",
+		"class UAssetMaterial"
+	],
 	"5f451cc8-117d-477c-ba78038bf60c0aaa": [
 		"assets/models/PBR_Sphere_Test/model/PBR_Sphere.gltf",
 		"class UAssetMesh"
@@ -722,6 +738,10 @@
 	"64092a8d-a144-42b6-9adb735d775b4564": [
 		"assets/models/PBR_Sphere_Test/model/PBR_Sphere.gltf",
 		"class UAssetMesh"
+	],
+	"6507b8bb-aa18-41a5-83d542de24b66f6b": [
+		"assets/models/Desert_Terrain/textures/MI_Desert_Terrain_1_BaseColor.png",
+		"class UAssetTexture"
 	],
 	"6534f447-7542-47c3-aa45e82ca85116e8": [
 		"assets/models/tree_sponza/sponza.gltf",
@@ -855,6 +875,10 @@
 		"assets/models/tree_sponza/sponza.gltf",
 		"class UAssetMaterial"
 	],
+	"749c8d52-41ae-4c57-b06fefa6bb17038a": [
+		"assets/models/Desert_Terrain/textures/MI_Desert_Terrain_1_MetallicRoughness.png",
+		"class UAssetTexture"
+	],
 	"75158515-5490-433a-a13d5767aef317e3": [
 		"assets/models/tree_sponza/sponza.gltf",
 		"class UAssetMesh"
@@ -889,6 +913,10 @@
 	],
 	"77ef6729-fb01-4d93-9887fb967b3336fc": [
 		"assets/models/PBR_Sphere_Test/model/PBR_Sphere.gltf",
+		"class UAssetMesh"
+	],
+	"78908338-6c03-473c-999943e3868c09c5": [
+		"assets/models/Desert_Terrain/SM_Desert_Terrain.gltf",
 		"class UAssetMesh"
 	],
 	"78fbccad-b34f-496b-868abbcd395b6ca3": [
@@ -1151,6 +1179,10 @@
 		"assets/models/tree_sponza/sponza.gltf",
 		"class UAssetMaterial"
 	],
+	"99bcc3d2-8aaa-4743-96c52916847b2d57": [
+		"assets/models/Desert_Terrain/SM_Desert_Terrain.gltf",
+		"class UAssetMaterial"
+	],
 	"99d71ec4-2a8b-422f-9d5cb7be42fd9ef6": [
 		"assets/models/PBR_Sphere_Test/model/PBR_Sphere.gltf",
 		"class UAssetMesh"
@@ -1303,6 +1335,10 @@
 		"assets/models/PBR_Sphere_Test/model/PBR_Sphere.gltf",
 		"class UAssetMaterial"
 	],
+	"ab7a15ed-78b3-4a70-a20dfaa834315fde": [
+		"assets/models/Desert_Terrain/SM_Desert_Terrain.gltf",
+		"class UAssetMesh"
+	],
 	"ac1bc7d3-3bae-410c-9968519c5fd41c0f": [
 		"assets/models/PBR_Sphere_Test/model/PBR_Sphere.gltf",
 		"class UAssetMesh"
@@ -1346,6 +1382,10 @@
 	"b10031ac-f91b-4807-8ca7064b8d992ce4": [
 		"assets/models/PBR_Sphere_Test/model/PBR_Sphere.gltf",
 		"class UAssetMesh"
+	],
+	"b113cec2-7255-47bc-a18d2805593ba94c": [
+		"assets/models/Desert_Terrain/textures/MI_Desert_Terrain_6_MetallicRoughness.png",
+		"class UAssetTexture"
 	],
 	"b21175a3-9421-4303-a19eb879a6120af4": [
 		"assets/models/tree_sponza/white.png",
@@ -1474,6 +1514,10 @@
 	"c2003a9e-a14d-4ce9-97d921122ea07cd8": [
 		"assets/models/tree_sponza/sponza.gltf",
 		"class UAssetMaterial"
+	],
+	"c20fa095-03e9-4fe5-89a49545f491a96a": [
+		"assets/models/Desert_Terrain/textures/T_Desert_Terrain_6_Normal.png",
+		"class UAssetTexture"
 	],
 	"c226ca15-8c5a-49db-b374bfa8206c4173": [
 		"assets/models/PBR_Sphere_Test/model/PBR_Sphere.gltf",
@@ -1846,6 +1890,10 @@
 	"ece56dc9-833b-4e31-80b0dea5adf8fca4": [
 		"assets/models/PBR_Sphere_Test/model/PBR_Sphere.gltf",
 		"class UAssetMaterial"
+	],
+	"ed0855e1-75af-48e1-946f25f73a908823": [
+		"assets/models/Desert_Terrain/textures/MI_Desert_Terrain_6_BaseColor.png",
+		"class UAssetTexture"
 	],
 	"ee895a17-91b6-4f25-b8beb13a6590385b": [
 		"assets/models/macbeth_chart/macbeth_chart_scene.gltf",

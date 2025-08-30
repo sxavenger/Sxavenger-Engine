@@ -111,7 +111,7 @@ void HierarchyEditor::ShowSceneMenu() {
 			}
 
 			sSceneObjects->InputJsonFromFilepath(kSceneDirectory_ / sceneFileName_);
-			Logger::CommentRuntime("success | load scene");
+			Logger::CommentRuntime("[HierarchyEditor] success | load scene.");
 		}
 
 		ImGui::SameLine();
@@ -123,7 +123,14 @@ void HierarchyEditor::ShowSceneMenu() {
 			}
 
 			sSceneObjects->OutputJson(kSceneDirectory_ / sceneFileName_);
-			Logger::CommentRuntime("success | save scene");
+			Logger::CommentRuntime("[HierarchyEditor] success | save scene.");
+		}
+
+		if (ImGui::Button("clear")) {
+			sSceneObjects->Clear();
+			sceneFileName_.clear();
+			sceneNameBuf_.clear();
+			Logger::CommentRuntime("[HierarchyEditor] clear scene.");
 		}
 
 		ImGui::EndMenu();

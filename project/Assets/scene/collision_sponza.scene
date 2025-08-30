@@ -4250,9 +4250,9 @@
 						"z": 1.0
 					},
 					"translate": {
-						"x": -8.975747108459473,
-						"y": 1.0497043132781982,
-						"z": 0.009418485686182976
+						"x": -7.68964958190918,
+						"y": 2.3690507411956787,
+						"z": 13.13115406036377
 					}
 				}
 			},
@@ -4263,10 +4263,10 @@
 					"r": 1.0
 				},
 				"component": "class PointLightComponent",
-				"intensity": 1.0,
+				"intensity": 60.0,
 				"radius": 8.0,
 				"shadow_flag": 16,
-				"shadow_strength": 0.5,
+				"shadow_strength": 1.0,
 				"unit": "Candela"
 			}
 		],

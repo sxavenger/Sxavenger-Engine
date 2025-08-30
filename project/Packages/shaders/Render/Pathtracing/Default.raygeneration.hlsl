@@ -112,7 +112,7 @@ _RAYGENERATION void mainRaygeneration() {
 
 			if (pdf > 0.0f && NdotL > 0.0f) {
 				specular_indirect.rgb += specularBRDF * payload.indirect.rgb * (NdotL / pdf);
-				specular_indirect.a += payload.indirect.a > 0.0f ? 1.0f : 0.0f;
+				specular_indirect.a   += payload.indirect.a > 0.0f ? 1.0f : 0.0f;
 			}
 		}
 	}
@@ -120,13 +120,13 @@ _RAYGENERATION void mainRaygeneration() {
 	uint prev    = sampleStep * currentFrame;
 	uint current = prev + sampleStep;
 
-	diffuse_indirect.rgb /= current;
+	diffuse_indirect.rgb  /= current;
 	specular_indirect.rgb /= current;
 
 	float4 indirect = gIndirect[index];
 	indirect *= float(prev) / float(current);
 	indirect.rgb += diffuse_indirect.rgb + specular_indirect.rgb;
-	indirect.a  = saturate(indirect.a + diffuse_indirect.a + specular_indirect.a);
+	indirect.a    = saturate(indirect.a + diffuse_indirect.a + specular_indirect.a);
 	
 	gIndirect[index] = indirect;
 
