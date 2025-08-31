@@ -89,7 +89,7 @@ void main(uint3 dispatchThreadId : SV_DispatchThreadID) {
 	surface.GetSurface(index);
 
 	float weight    = 1.0f;
-	float3 variance = gIndirect[index].rgb / surface.albedo;
+	float3 variance = gIndirect[index].rgb;
 
 	//!< A-Trousを採用
 	
@@ -120,20 +120,18 @@ void main(uint3 dispatchThreadId : SV_DispatchThreadID) {
 			float w = exp(exp_w);
 			w *= CalculateNormalWeight(surface.normal, sample_surface.normal); //!< 法線
 			w *= Gaussian2D(offsets[j] * i, 1.0f); //!< ガウシアン
-			
-			//variance  += gIndirect[sample_pos].rgb / sample_surface.albedo * w;
 
 			float2 uv = float2(sample_pos) / float2(size);
 
 			float lod = i / float(kRecursionCount - 1) * 6;
 			
-			variance  += gIndirect.SampleLevel(gSampler, uv, i).rgb / sample_surface.albedo * w;
+			variance  += gIndirect.SampleLevel(gSampler, uv, i).rgb * w;
 			weight    += w;
 		}
 	}
 
 	variance /= weight;
 
-	gOutput[index].rgb = variance * surface.albedo;
+	gOutput[index].rgb = variance;
 	gOutput[index].a   = gIndirect[index].a;
 }
