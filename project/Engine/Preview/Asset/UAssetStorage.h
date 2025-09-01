@@ -10,6 +10,7 @@
 #include "UAssetMaterial.h"
 #include "UAssetAnimation.h"
 #include "UAssetSkeleton.h"
+#include "UAssetFont.h"
 
 //* engine
 #include <Engine/System/Config/SxavengerConfig.h>

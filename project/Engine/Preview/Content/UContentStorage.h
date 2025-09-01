@@ -10,6 +10,7 @@
 #include "UContentAnimation.h"
 #include "UContentBlob.h"
 #include "UContentScene.h"
+#include "UContentFont.h"
 
 //* engine
 #include <Engine/System/SxavengerSystem.h>

@@ -34,6 +34,7 @@ void AssetEditor::Init() {
 	RegisterExtension<UContentModel>(".obj");
 	RegisterExtension<UContentModel>(".fbx");
 	RegisterExtension<UContentScene>(".scene");
+	RegisterExtension<UContentFont>(".ttf");
 
 }
 

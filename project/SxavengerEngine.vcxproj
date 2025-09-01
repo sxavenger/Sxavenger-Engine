@@ -258,6 +258,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="Engine\Module\Scene\SceneObject.cpp" />
     <ClCompile Include="Engine\Module\Scene\SceneObjects.cpp" />
     <ClCompile Include="Engine\Preview\Asset\UAssetAnimation.cpp" />
+    <ClCompile Include="Engine\Preview\Asset\UAssetFont.cpp" />
     <ClCompile Include="Engine\Preview\Asset\UAssetMaterial.cpp" />
     <ClCompile Include="Engine\Preview\Asset\UAssetMesh.cpp" />
     <ClCompile Include="Engine\Preview\Asset\UAssetSkeleton.cpp" />
@@ -267,6 +268,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="Engine\Preview\Content\UBaseContent.cpp" />
     <ClCompile Include="Engine\Preview\Content\UContentAnimation.cpp" />
     <ClCompile Include="Engine\Preview\Content\UContentBlob.cpp" />
+    <ClCompile Include="Engine\Preview\Content\UContentFont.cpp" />
     <ClCompile Include="Engine\Preview\Content\UContentModel.cpp" />
     <ClCompile Include="Engine\Preview\Content\UContentScene.cpp" />
     <ClCompile Include="Engine\Preview\Content\UContentStorage.cpp" />
@@ -281,6 +283,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="Engine\System\DirectX\DxObject\DxAppendConsumeBuffer.cpp" />
     <ClCompile Include="Engine\System\DirectX\DxObject\DxResourceTracker.cpp" />
     <ClCompile Include="Engine\System\Window\WindowCollection.cpp" />
+    <ClCompile Include="externals\stb\Stb_include.cpp" />
     <ClCompile Include="Lib\Adapter\Uuid\Uuid.cpp" />
     <ClCompile Include="Engine\Render\Common\FLUTTexture.cpp" />
     <ClCompile Include="Engine\Render\Common\FProcessTexture.cpp" />
@@ -437,6 +440,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Engine\Module\Scene\SceneObject.h" />
     <ClInclude Include="Engine\Module\Scene\SceneObjects.h" />
     <ClInclude Include="Engine\Preview\Asset\UAssetAnimation.h" />
+    <ClInclude Include="Engine\Preview\Asset\UAssetFont.h" />
     <ClInclude Include="Engine\Preview\Asset\UAssetMaterial.h" />
     <ClInclude Include="Engine\Preview\Asset\UAssetMesh.h" />
     <ClInclude Include="Engine\Preview\Asset\UAssetParameter.h" />
@@ -447,6 +451,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Engine\Preview\Content\UBaseContent.h" />
     <ClInclude Include="Engine\Preview\Content\UContentAnimation.h" />
     <ClInclude Include="Engine\Preview\Content\UContentBlob.h" />
+    <ClInclude Include="Engine\Preview\Content\UContentFont.h" />
     <ClInclude Include="Engine\Preview\Content\UContentModel.h" />
     <ClInclude Include="Engine\Preview\Content\UContentObserver.h" />
     <ClInclude Include="Engine\Preview\Content\UContentScene.h" />

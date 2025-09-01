@@ -56,8 +56,6 @@ void UContentTexture::Load(const DirectXQueueContext* context, const std::filesy
 };
 
 void UContentTexture::GetUuid() {
-	//!< multi threadにする場合, thread safeにする必要がある.
-
 	std::filesystem::path filepath = UBaseContent::GetContentPath();
 
 	if (JsonHandler::CheckExist(filepath)) {

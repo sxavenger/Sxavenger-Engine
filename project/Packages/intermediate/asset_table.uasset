@@ -235,6 +235,10 @@
 		"assets/models/PBR_Sphere_Test/model/PBR_Sphere.gltf",
 		"class UAssetMesh"
 	],
+	"2211a5b6-4aec-4e4b-9da39116d70ad86d": [
+		"assets/font/MPLUSRounded1c-Regular.ttf",
+		"class UAssetFont"
+	],
 	"2231625b-f12f-487d-8da5e4d4d6f1e16b": [
 		"assets/models/tree_sponza/sponza.gltf",
 		"class UAssetMesh"
@@ -1578,6 +1582,10 @@
 	"cb9e70df-f7c3-4c6f-91dfba1800c5ad68": [
 		"assets/models/tree_sponza/11490520546946913238.jpg",
 		"class UAssetTexture"
+	],
+	"cbf3ba7f-9c44-45dd-a02d51fbf574034d": [
+		"assets/font/FiraMono-Regular.ttf",
+		"class UAssetFont"
 	],
 	"cc8dfa25-609f-4d24-908549cabc006ab8": [
 		"assets/models/tree_sponza/2185409758123873465.jpg",

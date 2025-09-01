@@ -37,9 +37,7 @@ void UAssetTexture::Setup(const DirectXQueueContext* context, const DirectX::Scr
 	resource_         = CreateTextureResource(metadata);
 	auto intermediate = UploadTextureData(context, resource_.Get(), image);
 
-	
-	// SRVの生成
-	{
+	{ //!< SRVの生成
 		D3D12_SHADER_RESOURCE_VIEW_DESC desc = {};
 		desc.Format                  = metadata.format;
 		desc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
