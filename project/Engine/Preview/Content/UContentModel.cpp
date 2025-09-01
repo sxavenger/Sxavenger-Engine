@@ -68,6 +68,35 @@ void UContentModel::AttachUuid() {
 	
 }
 
+void UContentModel::ShowInspector() {
+	UBaseContent::ShowInspector();
+
+	// mesh
+	if (ImGui::CollapsingHeader("meshes ## header", ImGuiTreeNodeFlags_DefaultOpen)) {
+		for (size_t i = 0; i < meshes_.size(); ++i) {
+			if (ImGui::Button(std::format("mesh {}", i).c_str())) {
+				UBaseContent::SelectInspector(sUAssetStorage->GetAsset<UAssetMesh>(meshes_[i]).get());
+			}
+		}
+	}
+
+	// material
+	if (ImGui::CollapsingHeader("materials ## header", ImGuiTreeNodeFlags_DefaultOpen)) {
+		for (size_t i = 0; i < materials_.size(); ++i) {
+			if (ImGui::Button(std::format("material {}", i).c_str())) {
+				UBaseContent::SelectInspector(sUAssetStorage->GetAsset<UAssetMaterial>(materials_[i]).get());
+			}
+		}
+	}
+
+	// skeleton
+	if (ImGui::CollapsingHeader("skeleton ## header", ImGuiTreeNodeFlags_DefaultOpen)) {
+		if (ImGui::Button("skeleton")) {
+			UBaseContent::SelectInspector(sUAssetStorage->GetAsset<UAssetSkeleton>(skeleton_).get());
+		}
+	}
+}
+
 void UContentModel::Load(const std::filesystem::path& filepath, uint32_t assimpOption) {
 
 	// sceneの取得

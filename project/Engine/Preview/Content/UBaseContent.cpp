@@ -6,6 +6,7 @@
 //* engine
 #include <Engine/System/Utility/Logger.h>
 #include <Engine/System/Runtime/Thread/AsyncThread.h>
+#include <Engine/Editor/EditorEngine.h>
 
 //* external
 #include <imgui.h>
@@ -50,4 +51,10 @@ std::filesystem::path UBaseContent::GetContentPath() const {
 	std::filesystem::path filepath = GetFilepath();
 	filepath += kContentExtension_;
 	return filepath;
+}
+
+void UBaseContent::SelectInspector(UBaseAsset* asset) {
+	if (auto editor = sEditorEngine->GetEditor<InspectorEditor>()) {
+		editor->SetInspector(asset);
+	}
 }

@@ -61,6 +61,10 @@ public:
 
 	void AttachUuid() override;
 
+	//* inspector option *//
+
+	void ShowInspector() override;
+
 	//* content option *//
 
 	void Load(const DirectXQueueContext* context, const std::filesystem::path& filepath, const Option& option);
@@ -82,6 +86,10 @@ private:
 	//* helper methods *//
 
 	void GetUuid();
+
+	Option GetOption();
+
+	static std::string GetEncoding(Encoding encoding);
 
 	//* texture load helper methods *//
 

@@ -13,6 +13,9 @@ _DXOBJECT_USING
 //* engine
 #include <Engine/System/SxavengerSystem.h>
 
+//* external
+#include <magic_enum.hpp>
+
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Albedo structure methods
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -335,7 +338,43 @@ void UAssetMaterial::Update() {
 		parameter.properties.ao.SetTexture(texture->GetDescriptorSRV().GetIndex());
 	}
 
-};
+}
+
+void UAssetMaterial::Copy(const UAssetMaterial& material) {
+
+	textures_ = material.textures_;
+
+	color_     = material.color_;
+	roughness_ = material.roughness_;
+	metallic_  = material.metallic_;
+
+	transform_ = material.transform_;
+
+	mode_ = material.mode_;
+
+	buffer_->At(0) = material.buffer_->At(0);
+}
+
+void UAssetMaterial::ShowInspector() {
+	UBaseAsset::ShowInspector();
+
+	if (!UBaseAsset::IsComplete()) { //!< loadが完了していない場合
+		ImGui::Text("loading...");
+		return;
+	}
+
+	if (ImGui::BeginCombo("mode", magic_enum::enum_name(mode_).data())) {
+		for (const auto& [value, name] : magic_enum::enum_entries<Mode>()) {
+			if (ImGui::Selectable(name.data(), mode_ == value)) {
+				mode_ = value;
+			}
+		}
+		ImGui::EndCombo();
+	}
+
+
+
+}
 
 const D3D12_GPU_VIRTUAL_ADDRESS& UAssetMaterial::GetGPUVirtualAddress() const {
 	Exception::Assert(buffer_ != nullptr, "buffer is not create.");

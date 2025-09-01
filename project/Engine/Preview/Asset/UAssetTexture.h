@@ -41,6 +41,7 @@ public:
 		//=========================================================================================
 
 		Vector2ui size;
+		uint32_t depth;
 		uint32_t miplevels;
 		DXGI_FORMAT format;
 		bool isCubemap;
@@ -59,6 +60,10 @@ public:
 	void Setup(const DirectXQueueContext* context, const DirectX::ScratchImage& image);
 
 	void Reset();
+
+	//* inspector option *//
+
+	void ShowInspector() override;
 
 	//* getter *//
 	// multi-threadで使用するために, 読み込み時の仮Textureを返すように作成.
@@ -88,7 +93,13 @@ private:
 	// private methods
 	//=========================================================================================
 
+	//* texture helper methods *//
+
 	ComPtr<ID3D12Resource> CreateTextureResource(const DirectX::TexMetadata& metadata) const;
 	ComPtr<ID3D12Resource> UploadTextureData(const DirectXQueueContext* context, ID3D12Resource* texture, const DirectX::ScratchImage& image) const;
+
+	//* imgui helper methods *//
+
+	void ShowTexture();
 
 };

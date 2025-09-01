@@ -7,6 +7,7 @@
 #include <Engine/System/DirectX/Context/DirectXQueueContext.h>
 #include <Engine/System/Runtime/Thread/AsyncTask.h>
 #include <Engine/System/Runtime/Thread/AsyncThread.h>
+#include <Engine/Preview/Asset/UBaseAsset.h>
 #include <Engine/Editor/Editors/InspectorEditor.h>
 
 //* lib
@@ -84,6 +85,8 @@ protected:
 	void CheckExist() const;
 
 	std::filesystem::path GetContentPath() const;
+
+	static void SelectInspector(UBaseAsset* asset);
 
 private:
 

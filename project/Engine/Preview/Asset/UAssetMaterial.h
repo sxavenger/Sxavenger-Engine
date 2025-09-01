@@ -311,6 +311,12 @@ public:
 
 	void Update();
 
+	void Copy(const UAssetMaterial& material);
+
+	//* inspector *//
+
+	void ShowInspector() override;
+
 	//* getter *//
 
 	const D3D12_GPU_VIRTUAL_ADDRESS& GetGPUVirtualAddress() const;

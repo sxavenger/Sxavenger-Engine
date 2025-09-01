@@ -95,6 +95,41 @@ const D3D12_GPU_DESCRIPTOR_HANDLE& UAssetTexture::GetGPUHandleSRV() const {
 	return GetDescriptorSRV().GetGPUHandle();
 }
 
+void UAssetTexture::ShowInspector() {
+	UBaseAsset::ShowInspector();
+
+	if (!UBaseAsset::IsComplete()) { //!< loadが完了していない場合
+		ImGui::Text("loading...");
+		return;
+	}
+
+	const D3D12_RESOURCE_DESC desc = resource_->GetDesc();
+
+	if (ImGui::CollapsingHeader("Texture", ImGuiTreeNodeFlags_DefaultOpen)) {
+		if (desc.Dimension == D3D12_RESOURCE_DIMENSION_TEXTURE2D) {
+			ShowTexture();
+
+		} else {
+			ImGui::Text("texture dimension type is not D3D12_RESOURCE_DIMENSION_TEXTURE2D");
+		}
+
+	}
+
+	if (ImGui::CollapsingHeader("Desc", ImGuiTreeNodeFlags_DefaultOpen)) {
+		ImGui::Text("dimension: %s", magic_enum::enum_name(desc.Dimension).data());
+		ImGui::Text("width:     %u", desc.Width);
+		ImGui::Text("height:    %u", desc.Height);
+		ImGui::Text("depth:     %u", desc.DepthOrArraySize);
+		ImGui::Text("miplevels: %u", desc.MipLevels);
+		ImGui::Text("format:    %s", magic_enum::enum_name(desc.Format).data());
+	}
+
+	if (ImGui::CollapsingHeader("Descriptor", ImGuiTreeNodeFlags_DefaultOpen)) {
+		ImGui::Text("index:  %u",   descriptorSRV_.GetIndex());
+		ImGui::Text("handle: 0x%p", descriptorSRV_.GetGPUHandle().ptr);
+	}
+}
+
 ComPtr<ID3D12Resource> UAssetTexture::CreateTextureResource(const DirectX::TexMetadata& metadata) const {
 	// propの設定
 	D3D12_HEAP_PROPERTIES prop = {};
@@ -154,4 +189,13 @@ ComPtr<ID3D12Resource> UAssetTexture::UploadTextureData(const DirectXQueueContex
 	intermediateResource->SetName(L"UAsset | intermediate upload resource");
 	return intermediateResource;
 	
+}
+
+void UAssetTexture::ShowTexture() {
+	Vector2f region = { ImGui::GetContentRegionAvail().x, ImGui::GetContentRegionAvail().y };
+
+	// テクスチャの表示サイズを計算
+	float scale = std::min(region.x / metadata_.size.x, region.y / metadata_.size.y);
+
+	ImGui::Image(descriptorSRV_.GetGPUHandle().ptr, ImVec2(metadata_.size.x * scale, metadata_.size.y * scale));
 }

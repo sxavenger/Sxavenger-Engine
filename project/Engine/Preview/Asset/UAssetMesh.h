@@ -42,6 +42,10 @@ public:
 
 	void Update(const DirectXQueueContext* context);
 
+	//* inspector option *//
+
+	void ShowInspector() override;
+
 	//* asset option *//
 
 	void BindIABuffer(const DirectXQueueContext* context) const;

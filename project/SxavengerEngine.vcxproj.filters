@@ -178,6 +178,7 @@
     <ClCompile Include="Engine\Preview\Asset\UAssetSkeleton.cpp" />
     <ClCompile Include="Engine\Preview\Content\UContentBlob.cpp" />
     <ClCompile Include="Engine\Preview\Content\UContentScene.cpp" />
+    <ClCompile Include="Engine\Preview\Asset\UBaseAsset.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Lib\Adapter\Random\Random.h" />

@@ -3,6 +3,9 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
+//* engine
+#include <Engine/Editor/Editors/InspectorEditor.h>
+
 //* lib
 #include <Lib/Adapter/Uuid/Uuid.h>
 
@@ -14,7 +17,8 @@
 ////////////////////////////////////////////////////////////////////////////////////////////
 // UBaseAsset class
 ////////////////////////////////////////////////////////////////////////////////////////////
-class UBaseAsset {
+class UBaseAsset
+	: public BaseInspector {
 public:
 
 	////////////////////////////////////////////////////////////////////////////////////////////
@@ -35,11 +39,17 @@ public:
 	UBaseAsset(const std::nullopt_t&) : id_(std::nullopt) {}
 	virtual ~UBaseAsset() = default;
 
+	//* asset option *//
+
 	bool HasId() const { return id_.has_value(); }
 
 	const Uuid& GetId() const { return id_.value(); } //!< todo exceptionの追加
 
 	bool IsComplete() const { return status_ == Status::Complete; }
+
+	//* inspector *//
+
+	virtual void ShowInspector() override;
 
 protected:
 
@@ -55,11 +65,7 @@ protected:
 
 	void Complete() { status_ = Status::Complete; }
 
-	void WaitComplete() const {
-		while (!IsComplete()) {
-			std::this_thread::sleep_for(std::chrono::milliseconds(1)); //!< 完了を待つ
-		}
-	}
+	void WaitComplete() const;
 
 private:
 
@@ -68,6 +74,12 @@ private:
 	//=========================================================================================
 
 	const std::optional<Uuid> id_;
+
+	//=========================================================================================
+	// private methods
+	//=========================================================================================
+
+	std::string GetStr() const;
 
 };
 

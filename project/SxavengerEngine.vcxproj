@@ -263,6 +263,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="Engine\Preview\Asset\UAssetSkeleton.cpp" />
     <ClCompile Include="Engine\Preview\Asset\UAssetStorage.cpp" />
     <ClCompile Include="Engine\Preview\Asset\UAssetTexture.cpp" />
+    <ClCompile Include="Engine\Preview\Asset\UBaseAsset.cpp" />
     <ClCompile Include="Engine\Preview\Content\UBaseContent.cpp" />
     <ClCompile Include="Engine\Preview\Content\UContentAnimation.cpp" />
     <ClCompile Include="Engine\Preview\Content\UContentBlob.cpp" />

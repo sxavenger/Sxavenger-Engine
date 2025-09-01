@@ -103,6 +103,19 @@ void UAssetMesh::Update(const DirectXQueueContext* context) {
 	// todo: 仮meshの追加
 }
 
+void UAssetMesh::ShowInspector() {
+	UBaseAsset::ShowInspector();
+
+	if (!UBaseAsset::IsComplete()) {
+		ImGui::Text("loading...");
+		return;
+	}
+
+	ImGui::Text("name:         %s", name_.c_str());
+	ImGui::Text("vertex count: %u", input_.GetVertex()->GetSize());
+	ImGui::Text("index count:  %u", input_.GetIndex()->GetSize());
+}
+
 void UAssetMesh::BindIABuffer(const DirectXQueueContext* context) const {
 	input_.BindIABuffer(context);
 }

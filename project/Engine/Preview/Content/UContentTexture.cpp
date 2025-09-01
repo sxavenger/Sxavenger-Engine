@@ -16,11 +16,7 @@
 void UContentTexture::AsyncLoad(_MAYBE_UNUSED const DirectXQueueContext* context) {
 	UBaseContent::CheckExist();
 
-	Option option = {}; //!< default option
-
-	if (param_.has_value()) {
-		option = std::any_cast<Option>(param_);
-	}
+	Option option = GetOption();
 
 	Load(context, UBaseContent::GetFilepath(), option);
 }
@@ -34,6 +30,20 @@ void UContentTexture::AttachUuid() {
 	// storageに登録
 	auto asset = std::make_shared<UAssetTexture>(id_);
 	sUAssetStorage->Register(asset, UBaseContent::GetFilepath());
+}
+
+void UContentTexture::ShowInspector() {
+	UBaseContent::ShowInspector();
+
+	Option option = GetOption();
+
+	if (ImGui::CollapsingHeader("Option", ImGuiTreeNodeFlags_DefaultOpen)) {
+		ImGui::Text("encoding: %s", GetEncoding(option.encoding).c_str());
+	}
+
+	if (ImGui::Button("Texture")) {
+		UBaseContent::SelectInspector(sUAssetStorage->GetAsset<UAssetTexture>(id_).get());
+	}
 }
 
 void UContentTexture::Load(const DirectXQueueContext* context, const std::filesystem::path& filepath, const Option& option) {
@@ -63,6 +73,23 @@ void UContentTexture::GetUuid() {
 		data["id"] = id_.Serialize();
 
 		JsonHandler::WriteToJson(filepath, data);
+	}
+}
+
+UContentTexture::Option UContentTexture::GetOption() {
+	if (param_.has_value()) {
+		return std::any_cast<Option>(param_);
+	}
+
+	return Option{}; //!< default option.
+}
+
+std::string UContentTexture::GetEncoding(Encoding encoding) {
+	switch (encoding) {
+		case Encoding::Lightness: return "Lightness (sRGB)";
+		case Encoding::Intensity: return "Intensity";
+
+		default: return "Unknown";
 	}
 }
 

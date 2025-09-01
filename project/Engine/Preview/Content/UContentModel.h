@@ -50,6 +50,10 @@ public:
 
 	void AttachUuid() override;
 
+	//* inspector option *//
+
+	void ShowInspector() override;
+
 	//* content option *//
 
 	void Load(const std::filesystem::path& filepath, uint32_t assimpOption);
