@@ -1445,6 +1445,10 @@ void SetRect(const ImVec2& position, const ImVec2& size) {
 	sContext.displayRatio = size.x / size.y;
 }
 
+void SetOrthographic(bool isOrthographic) {
+	sContext.isOrthographic = isOrthographic;
+}
+
 void Enable(bool enable) {
 	sContext.isEnable = enable;
 

@@ -6,6 +6,7 @@
 //* component
 #include "Components/ComponentStorage.h"
 #include "Components/Transform/TransformComponent.h"
+#include "Components/Transform/RectTransformComponent.h"
 #include "Components/Camera/CameraComponent.h"
 #include "Components/Armature/ArmatureComponent.h"
 #include "Components/MeshRenderer/MeshRendererComponent.h"
@@ -32,6 +33,10 @@ void ComponentHelper::UpdateTransform() {
 
 		if (auto component = behaviour->GetComponent<CameraComponent>()) {
 			component->UpdateView();
+		}
+
+		if (auto component = behaviour->GetComponent<RectTransformComponent>()) {
+			component->UpdateMatrix();
 		}
 	});
 }

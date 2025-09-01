@@ -196,8 +196,11 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="Engine\Component\Components\PostProcessLayer\PostProcessGrayScale.cpp" />
     <ClCompile Include="Engine\Component\Components\PostProcessLayer\PostProcessLUT.cpp" />
     <ClCompile Include="Engine\Component\Components\PostProcessLayer\PostProcessRadialBlur.cpp" />
+    <ClCompile Include="Engine\Component\Components\TextRenderer\TextRendererComponent.cpp" />
+    <ClCompile Include="Engine\Component\Components\Transform\RectTransformComponent.cpp" />
     <ClCompile Include="Engine\Content\Exporter\TextureExporter.cpp" />
     <ClCompile Include="Engine\Component\Components\PostProcessLayer\PostProcessAutoExposure.cpp" />
+    <ClCompile Include="Engine\Content\InputGeometry\InputUIVertex.cpp" />
     <ClCompile Include="Engine\Content\Material\Material.cpp" />
     <ClCompile Include="Engine\GameLoop\FeatureLevelGameLoop.cpp" />
     <ClCompile Include="Demo\GameLoop\PreviewGameLoop.cpp" />
@@ -373,8 +376,11 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Engine\Component\Components\PostProcessLayer\PostProcessGrayScale.h" />
     <ClInclude Include="Engine\Component\Components\PostProcessLayer\PostProcessLUT.h" />
     <ClInclude Include="Engine\Component\Components\PostProcessLayer\PostProcessRadialBlur.h" />
+    <ClInclude Include="Engine\Component\Components\TextRenderer\TextRendererComponent.h" />
+    <ClInclude Include="Engine\Component\Components\Transform\RectTransformComponent.h" />
     <ClInclude Include="Engine\Content\Exporter\TextureExporter.h" />
     <ClInclude Include="Engine\Component\Components\PostProcessLayer\PostProcessAutoExposure.h" />
+    <ClInclude Include="Engine\Content\InputGeometry\InputUIVertex.h" />
     <ClInclude Include="Engine\Content\Material\Material.h" />
     <ClInclude Include="Engine\GameLoop\FeatureLevelGameLoop.h" />
     <ClInclude Include="Engine\Adapter\Actor\AtmosphereActor.h" />

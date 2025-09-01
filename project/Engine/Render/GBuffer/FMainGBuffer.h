@@ -51,7 +51,7 @@ public:
 
 	//* UI transition option *//
 
-	void TransitionBeginRenderTargetUI(const DirectXQueueContext* context);
+	void TransitionBeginRenderTargetUI(const DirectXQueueContext* context, const D3D12_CPU_DESCRIPTOR_HANDLE& depthStencilHandle);
 
 	void TransitionEndRenderTargetUI(const DirectXQueueContext* context);
 

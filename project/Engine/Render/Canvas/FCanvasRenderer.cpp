@@ -9,6 +9,7 @@
 //* engine
 #include <Engine/Component/Components/ComponentStorage.h>
 #include <Engine/Component/Components/SpriteRenderer/SpriteRendererComponent.h>
+#include <Engine/Component/Components/TextRenderer/TextRendererComponent.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // FCanvasRenderer class methods
@@ -22,6 +23,7 @@ void FCanvasRenderer::Render(const DirectXQueueContext* context) {
 	textures_->BeginRenderTargetMainUI(context);
 
 	RenderSpriteComponents(context);
+	RenderTextComponent(context);
 
 	textures_->EndRenderTargetMainUI(context);
 }
@@ -37,7 +39,7 @@ bool FCanvasRenderer::CheckRender() const {
 void FCanvasRenderer::RenderSpriteComponents(const DirectXQueueContext* context) {
 
 	FRenderCore::GetInstance()->GetLayer()->SetPipeline(
-		FRenderCoreLayer::PipelineType::Sprite, context, textures_->GetSize()
+		FRenderCoreLayer::Type::Sprite, context, textures_->GetSize()
 	);
 
 	sComponentStorage->ForEach<SpriteRendererComponent>([&](SpriteRendererComponent* sprite) {
@@ -54,10 +56,40 @@ void FCanvasRenderer::RenderSpriteComponents(const DirectXQueueContext* context)
 		parameter.SetHandle("gTexture",           sprite->GetTexture());
 
 		FRenderCore::GetInstance()->GetLayer()->BindGraphicsBuffer(
-			FRenderCoreLayer::PipelineType::Sprite, context, parameter
+			FRenderCoreLayer::Type::Sprite, context, parameter
 		);
 
 		sprite->DrawCall(context);
+	});
+
+}
+
+void FCanvasRenderer::RenderTextComponent(const DirectXQueueContext* context) {
+
+	FRenderCore::GetInstance()->GetLayer()->SetPipeline(
+		FRenderCoreLayer::Type::Text, context, textures_->GetSize()
+	);
+
+	sComponentStorage->ForEachActive<TextRendererComponent>([&](TextRendererComponent* component) {
+		if (!component->IsEnable()) {
+			return;
+		}
+
+		component->PerseText();
+		// todo: engine側のupdateでやるようにする
+
+		component->BindIABuffer(context);
+
+		DxObject::BindBufferDesc desc = {};
+		desc.Set32bitConstants("Dimension", 2, &textures_->GetSize());
+		desc.SetAddress("gTransform", component->GetRectTransform()->GetGPUVirtualAddress());
+		desc.SetHandle("gFont",       component->GetFont()->GetGPUHandleSRV());
+
+		FRenderCore::GetInstance()->GetLayer()->BindGraphicsBuffer(
+			FRenderCoreLayer::Type::Text, context, desc
+		);
+
+		component->DrawCall(context);
 	});
 
 }

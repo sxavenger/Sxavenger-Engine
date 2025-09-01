@@ -107,3 +107,18 @@ void Transform2d::InputJson(const json& data) {
 	rotate    = data.at("rotate");
 	scale     = GeometryJsonSerializer::JsonToVector2f(data.at("scale"));
 }
+
+////////////////////////////////////////////////////////////////////////////////////////////
+// RectTransform structure methods
+////////////////////////////////////////////////////////////////////////////////////////////
+
+Matrix4x4 RectTransform::ToMatrix() const {
+	Matrix4x4 mat = Matrix4x4::Identity();
+
+	mat *= Matrix4x4::MakeTranslate({ -pivot.x, -pivot.y, 0.0f }); //!< pivotの原点移動
+	mat *= Matrix4x4::MakeAffine({ scale.x, scale.y, 1.0f }, { 0.0f, 0.0f, rotate }, {}); //!< スケール・回転
+	mat *= Matrix4x4::MakeTranslate({ pivot.x, pivot.y, 0.0f }); //!< pivotの原点復帰
+	mat *= Matrix4x4::MakeTranslate({ translate.x, translate.y, priority });
+
+	return mat;
+}

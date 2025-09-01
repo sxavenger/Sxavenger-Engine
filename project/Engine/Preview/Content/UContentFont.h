@@ -41,6 +41,8 @@ public:
 
 	void Load(const DirectXQueueContext* context, const std::filesystem::path& filepath);
 
+	const Uuid& GetId() const { return id_; }
+
 private:
 
 	//=========================================================================================

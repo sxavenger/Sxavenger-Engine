@@ -68,11 +68,23 @@ void FMainGBuffer::TransitionEndUnorderedScene(const DirectXQueueContext* contex
 	context->GetCommandList()->ResourceBarrier(static_cast<UINT>(barriers.size()), barriers.data());
 }
 
-void FMainGBuffer::TransitionBeginRenderTargetUI(const DirectXQueueContext* context) {
+void FMainGBuffer::TransitionBeginRenderTargetUI(const DirectXQueueContext* context, const D3D12_CPU_DESCRIPTOR_HANDLE& depthStencilHandle) {
+
+	auto commandList = context->GetCommandList();
+
 	std::array<D3D12_RESOURCE_BARRIER, 1> barriers = {};
 	barriers[0] = buffers_[static_cast<size_t>(Layout::UI)]->TransitionBeginRenderTarget();
 
-	context->GetCommandList()->ResourceBarrier(static_cast<UINT>(barriers.size()), barriers.data());
+	commandList->ResourceBarrier(static_cast<UINT>(barriers.size()), barriers.data());
+
+	std::array<D3D12_CPU_DESCRIPTOR_HANDLE, 1> handles = {};
+	handles[0] = buffers_[static_cast<size_t>(Layout::UI)]->GetCPUHandleRTV();
+
+	commandList->OMSetRenderTargets(
+		static_cast<UINT>(handles.size()), handles.data(), false,
+		&depthStencilHandle
+	);
+
 }
 
 void FMainGBuffer::TransitionEndRenderTargetUI(const DirectXQueueContext* context) {

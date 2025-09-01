@@ -14,10 +14,13 @@ _DXOBJECT_USING
 
 void UAssetFont::Setup(const DirectXQueueContext* context, const stbtt_fontinfo& info, float size) {
 
+	// 引数の保存
+	fontSize_ = size;
+
 	float scale = stbtt_ScaleForPixelHeight(&info, size);
 
-	int32_t ascent, descent, lineGap;
-	stbtt_GetFontVMetrics(&info, &ascent, &descent, &lineGap);
+	int32_t lineGap;
+	stbtt_GetFontVMetrics(&info, &ascent_, &descent_, &lineGap);
 	// ascent:  文字の上端からベースラインまでの距離
 	// descent: 文字の下端からベースラインまでの距離（負の値）
 	// lineGap: 行間の追加スペース
@@ -32,6 +35,18 @@ void UAssetFont::Setup(const DirectXQueueContext* context, const stbtt_fontinfo&
 
 	UBaseAsset::Complete();
 	Logger::EngineThreadLog(std::format("[UAssetFont]: font setup complete. uuid: {}", UBaseAsset::GetId().Serialize()));
+}
+
+const DxObject::Descriptor& UAssetFont::GetDescriptorSRV() const {
+	return descriptorSRV_;
+}
+
+const D3D12_GPU_DESCRIPTOR_HANDLE& UAssetFont::GetGPUHandleSRV() const {
+	return GetDescriptorSRV().GetGPUHandle();
+}
+
+const UAssetFont::GlyphInfo& UAssetFont::GetGlyphInfo(wchar_t c) const {
+	return glyphs_.at(c);
 }
 
 void UAssetFont::ShowInspector() {

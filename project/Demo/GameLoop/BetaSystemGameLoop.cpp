@@ -16,6 +16,8 @@
 #include <Engine/Component/Components/PostProcessLayer/PostProcessLayerComponent.h>
 #include <Engine/Component/Components/Particle/GPUParticleComponent.h>
 #include <Engine/Component/Components/Particle/EmitterComponent.h>
+#include <Engine/Component/Components/Transform/RectTransformComponent.h>
+#include <Engine/Component/Components/TextRenderer/TextRendererComponent.h>
 #include <Engine/Component/ComponentHelper.h>
 #include <Engine/System/Runtime/Performance/DeltaTimePoint.h>
 #include <Engine/Render/FRenderCore.h>
@@ -105,6 +107,14 @@ void BetaSystemGameLoop::InitSystem() {
 	const auto& texture = sUContentStorage->Import<UContentTexture>("assets/textures/LUT/lut_reddish.png", UContentTexture::Option{ UContentTexture::Encoding::Intensity, false })->GetId();
 	auto lut = behaviour_->GetComponent<PostProcessLayerComponent>()->AddPostProcess<PostProcessLUT>();
 	lut->CreateTexture(SxavengerSystem::GetDirectQueueContext(), texture, { 16, 16 });
+
+	auto t = behaviour_->AddComponent<RectTransformComponent>();
+	auto text = behaviour_->AddComponent<TextRendererComponent>();
+
+	text->SetFont(sUContentStorage->Import<UContentFont>("assets/font/MPLUSRounded1c-Regular.ttf")->GetId());
+	text->SetText(L"Sxavenger Engine");
+
+	t->GetTransform().translate = { 200.0f, 200.0f };
 }
 
 void BetaSystemGameLoop::TermSystem() {

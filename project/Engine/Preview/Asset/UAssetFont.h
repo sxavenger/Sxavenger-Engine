@@ -54,11 +54,21 @@ public:
 
 	void Setup(const DirectXQueueContext* context, const stbtt_fontinfo& info, float size);
 
-	const GlyphInfo& GetGlyphInfo(wchar_t c);
-
 	//* inspector *//
 
 	void ShowInspector() override;
+
+	//* getter *//
+
+	const DxObject::Descriptor& GetDescriptorSRV() const;
+
+	const D3D12_GPU_DESCRIPTOR_HANDLE& GetGPUHandleSRV() const;
+
+	float GetFontSize() const { return fontSize_; }
+
+	const GlyphInfo& GetGlyphInfo(wchar_t c) const;
+
+
 
 private:
 
@@ -77,10 +87,16 @@ private:
 	int32_t maxHeight_ = 0;
 
 	std::vector<uint8_t> atlasData_;
+	//!< todo: 中間データとして持たせるので削除する
 
 	//* parameter *//
 
 	static inline const Vector2ui kAtlasSize = { 1024, 1024 };
+
+	float fontSize_ = NULL;
+
+	int32_t ascent_  = NULL;
+	int32_t descent_ = NULL;
 
 	std::unordered_map<wchar_t, GlyphInfo> glyphs_;
 	//!< wchar_tごとのglyph情報

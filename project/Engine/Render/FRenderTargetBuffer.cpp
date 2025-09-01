@@ -71,11 +71,13 @@ void FRenderTargetBuffer::EndRenderTargetMainTransparent(const DirectXQueueConte
 }
 
 void FRenderTargetBuffer::BeginRenderTargetMainUI(const DirectXQueueContext* context) {
-	main_.TransitionBeginRenderTargetUI(context);
+	depth_->TransitionBeginRasterizer(context);
+	main_.TransitionBeginRenderTargetUI(context, depth_->GetRasterizerCPUHandleDSV());
 	main_.ClearRenderTargetUI(context);
 }
 
 void FRenderTargetBuffer::EndRenderTargetMainUI(const DirectXQueueContext* context) {
+	depth_->TransitionEndRasterizer(context);
 	main_.TransitionEndRenderTargetUI(context);
 }
 

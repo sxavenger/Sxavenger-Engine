@@ -3,45 +3,53 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
-//* render
-#include "../FRenderTargetBuffer.h"
+//* content
+#include "../InputAssembler/TriangleInputAssembler.h"
+
+//* lib
+#include <Lib/Traits.h>
+#include <Lib/Geometry/Vector2.h>
+#include <Lib/Geometry/Vector3.h>
+#include <Lib/Geometry/Color4.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// FCanvasRenderer class
+// UIVertexData structure
 ////////////////////////////////////////////////////////////////////////////////////////////
-class FCanvasRenderer {
+struct UIVertexData {
 public:
 
 	//=========================================================================================
 	// public methods
 	//=========================================================================================
-	
-	//* render *//
 
-	void Render(const DirectXQueueContext* context);
-
-	//* setter *//
-
-	void SetTextures(FRenderTargetBuffer* textures) { textures_ = textures; }
-
-private:
+	void Init();
 
 	//=========================================================================================
-	// private variables
+	// public variables
 	//=========================================================================================
 
-	//* canvas textures *//
-
-	FRenderTargetBuffer* textures_ = nullptr;
-	//!< todo: 2d描画用のテクスチャに設定する
-
-	//=========================================================================================
-	// private methods
-	//=========================================================================================
-
-	bool CheckRender() const;
-
-	void RenderSpriteComponents(const DirectXQueueContext* context);
-	void RenderTextComponent(const DirectXQueueContext* context);
+	Vector3f position = kOrigin3<float>;
+	Vector2f texcoord = kOrigin2<float>;
+	Color4f  color    = { 0, 0, 0, 0 };
 
 };
+
+////////////////////////////////////////////////////////////////////////////////////////////
+// InputUIVertex class
+////////////////////////////////////////////////////////////////////////////////////////////
+class InputUIVertex
+	: public TriangleInputAssembler<UIVertexData> {
+public:
+
+	//=========================================================================================
+	// public methods
+	//=========================================================================================
+
+	InputUIVertex()  = default;
+	~InputUIVertex() = default;
+
+	_DELETE_COPY(InputUIVertex)
+	_DEFAULT_MOVE(InputUIVertex)
+
+};
+

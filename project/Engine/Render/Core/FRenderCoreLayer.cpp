@@ -25,11 +25,11 @@ void FRenderCoreLayer::Init() {
 	CreatePipeline();
 }
 
-void FRenderCoreLayer::SetPipeline(PipelineType type, const DirectXQueueContext* context, const Vector2ui& size) const {
+void FRenderCoreLayer::SetPipeline(Type type, const DirectXQueueContext* context, const Vector2ui& size) const {
 	pipelines_[static_cast<uint8_t>(type)]->SetPipeline(context->GetDxCommand(), size);
 }
 
-void FRenderCoreLayer::BindGraphicsBuffer(PipelineType type, const DirectXQueueContext* context, const DxObject::BindBufferDesc& desc) const {
+void FRenderCoreLayer::BindGraphicsBuffer(Type type, const DirectXQueueContext* context, const DxObject::BindBufferDesc& desc) const {
 	pipelines_[static_cast<uint8_t>(type)]->BindGraphicsBuffer(context->GetDxCommand(), desc);
 }
 
@@ -65,10 +65,21 @@ void FRenderCoreLayer::CreateDesc() {
 void FRenderCoreLayer::CreatePipeline() {
 
 	{
-		auto& pipeline = pipelines_[static_cast<uint8_t>(PipelineType::Sprite)];
+		auto& pipeline = pipelines_[static_cast<uint8_t>(Type::Sprite)];
 		pipeline = std::make_unique<CustomReflectionGraphicsPipeline>();
 		pipeline->CreateContent(kDirectory_ / "sprite.vs.hlsl", GraphicsShaderType::vs);
 		pipeline->CreateContent(kDirectory_ / "sprite.ps.hlsl", GraphicsShaderType::ps);
+		pipeline->RegisterBlob();
+
+		pipeline->ReflectionRootSignature(SxavengerSystem::GetDxDevice());
+		pipeline->CreatePipeline(SxavengerSystem::GetDxDevice(), desc_);
+	}
+
+	{
+		auto& pipeline = pipelines_[static_cast<uint8_t>(Type::Text)];
+		pipeline = std::make_unique<CustomReflectionGraphicsPipeline>();
+		pipeline->CreateContent(kDirectory_ / "text.vs.hlsl", GraphicsShaderType::vs);
+		pipeline->CreateContent(kDirectory_ / "text.ps.hlsl", GraphicsShaderType::ps);
 		pipeline->RegisterBlob();
 
 		pipeline->ReflectionRootSignature(SxavengerSystem::GetDxDevice());

@@ -12,7 +12,7 @@
 #include <Engine/Content/Exporter/TextureExporter.h>
 #include <Engine/Content/SxavengerContent.h>
 #include <Engine/Component/Components/Transform/TransformComponent.h>
-#include <Engine/Component/Components/SpriteRenderer/SpriteRendererComponent.h>
+#include <Engine/Component/Components/Transform/RectTransformComponent.h>
 #include <Engine/Component/Components/Camera/CameraComponent.h>
 #include <Engine/Component/Components/PostProcessLayer/PostProcessLayerComponent.h>
 #include <Engine/Render/FMainRender.h>
@@ -156,11 +156,9 @@ void RenderSceneEditor::Manipulate(MonoBehaviour* behaviour) {
 
 	SxImGuizmo::Enable(!component->HasParent());
 
-	bool isEdit = false;
-
 	SxImGuizmo::GizmoOutput output = {};
 
-	isEdit = SxImGuizmo::Manipulate(
+	bool isEdit = SxImGuizmo::Manipulate(
 		reinterpret_cast<const float*>(camera_->GetComponent<CameraComponent>()->GetCamera().view.m.data()),
 		reinterpret_cast<const float*>(camera_->GetComponent<CameraComponent>()->GetCamera().proj.m.data()),
 		reinterpret_cast<float*>(m.m.data()),
@@ -171,7 +169,7 @@ void RenderSceneEditor::Manipulate(MonoBehaviour* behaviour) {
 
 	SxImGuizmo::Enable(true);
 
-	gizmoUsed_ = SxImGuizmo::IsUsing() ? std::optional<GuizmoUsed>{GuizmoUsed::Scene} : std::nullopt;
+	gizmoUsed_ = SxImGuizmo::IsUsing() ? std::make_optional(GuizmoUsed::Scene) : std::nullopt;
 
 	if (component->HasParent()) {
 		return;
@@ -207,68 +205,76 @@ void RenderSceneEditor::ManipulateCanvas(MonoBehaviour* behaviour) {
 		return;
 	}
 
-	ImGuizmo::SetDrawlist(canvasWindow_);
-	ImGuizmo::SetOrthographic(true);
+	SxImGuizmo::SetDrawlist(canvasWindow_);
+	SxImGuizmo::SetOrthographic(true);
 
-	ImGuizmo::OPERATION operation = ImGuizmo::NONE;
+	SxImGuizmo::Operation operation = SxImGuizmo::NONE;
 
 	// todo: flagに変更
 	if (gizmoOperation_ == GuizmoOperation::Scale) {
-		operation = ImGuizmo::SCALE_X | ImGuizmo::SCALE_Y;
+		operation = SxImGuizmo::SCALE_X | SxImGuizmo::SCALE_Y;
 	}
 
 	if (gizmoOperation_ == GuizmoOperation::Translate) {
-		operation = ImGuizmo::TRANSLATE_X | ImGuizmo::TRANSLATE_Y;
+		operation = SxImGuizmo::TRANSLATE_X | SxImGuizmo::TRANSLATE_Y;
 	}
 
-	// sprite component の取得
-	auto component = behaviour->GetComponent<SpriteRendererComponent>();
+	if (gizmoOperation_ == GuizmoOperation::Rotate) {
+		operation = SxImGuizmo::ROTATE_Z;
+	}
+
+	// rect transform component の取得
+	auto component = behaviour->GetComponent<RectTransformComponent>();
 
 	if (component == nullptr) {
 		return;
 	}
 
-	ImGuizmo::SetRect(canvasRect_.pos.x, canvasRect_.pos.y, canvasRect_.size.x, canvasRect_.size.y);
+	SxImGuizmo::SetRect({ canvasRect_.pos.x, canvasRect_.pos.y }, { canvasRect_.size.x, canvasRect_.size.y });
 
-	Matrix4x4 m = component->GetTransform2d().ToMatrix();
+	Matrix4x4 m = component->GetMatrix();
+
+	SxImGuizmo::Enable(!component->HasParent());
+
+	SxImGuizmo::GizmoOutput output = {};
 
 	static const Matrix4x4 view = Matrix4x4::Identity();
-	static const Matrix4x4 proj = Matrix4x4::Orthographic(0.0f, 0.0f, static_cast<float>(kMainWindowSize.x), static_cast<float>(kMainWindowSize.y), 0.0f, 128.0f);
+	static const Matrix4x4 proj = Matrix4x4::Orthographic(0.0f, 0.0f, static_cast<float>(textures_->GetSize().x), static_cast<float>(textures_->GetSize().y), 0.0f, 128.0f);
 
-	bool isEdit = false;
-
-	isEdit = ImGuizmo::Manipulate(
+	bool isEdit = SxImGuizmo::Manipulate(
 		reinterpret_cast<const float*>(view.m.data()),
 		reinterpret_cast<const float*>(proj.m.data()),
+		reinterpret_cast<float*>(m.m.data()),
+		output,
 		operation,
-		ImGuizmo::WORLD,
-		reinterpret_cast<float*>(m.m.data())
+		SxImGuizmo::Mode::World
 	);
 
-	gizmoUsed_ = ImGuizmo::IsUsing() ? std::make_optional<GuizmoUsed>(GuizmoUsed::Canvas) : std::nullopt;
+	SxImGuizmo::Enable(true);
+
+	gizmoUsed_ = SxImGuizmo::IsUsing() ? std::make_optional(GuizmoUsed::Canvas) : std::nullopt;
+
+	if (component->HasParent()) {
+		return;
+	}
 
 	if (!isEdit) {
 		return;
 	}
 
-	EulerTransform transform = {};
+	switch (output.type) {
+		case SxImGuizmo::GizmoOutput::OutputType::Translation:
+			component->GetTransform().translate += { output.value.x, output.value.y };
+			break;
 
-	ImGuizmo::DecomposeMatrixToComponents(
-		reinterpret_cast<const float*>(m.m.data()),
-		&transform.translate.x,
-		&transform.rotate.x,
-		&transform.scale.x
-	);
+		case SxImGuizmo::GizmoOutput::OutputType::Scale:
+			component->GetTransform().scale = { output.value.x, output.value.y };
+			break;
 
-	if (gizmoOperation_ == GuizmoOperation::Scale) {
-		component->GetTransform2d().scale = { transform.scale.x, transform.scale.y };
+		// todo: rotate
 	}
 
-	if (gizmoOperation_ == GuizmoOperation::Translate) {
-		component->GetTransform2d().translate = { transform.translate.x, transform.translate.y };
-	}
-
-	ImGuizmo::SetOrthographic(false);
+	component->UpdateMatrix();
 }
 
 void RenderSceneEditor::SetCameraPoint(const Vector3f& point) {
