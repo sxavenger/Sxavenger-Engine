@@ -121,11 +121,13 @@ void PivotCamera::Rotation() {
 			-kUnit2<float> * maxSpeed_,
 			kUnit2<float> * maxSpeed_
 		);
-
-		FMainRender::GetInstance()->GetRenderer()->ResetReservoir();
 	}
 
 	angle_ += speed_;
+
+	if (Any(speed_ != kOrigin2<float>)) {
+		FMainRender::GetInstance()->GetRenderer()->ResetReservoir();
+	}
 
 	angle_.x = std::fmod(angle_.x, kPi * 2.0f);
 	angle_.y = std::clamp(angle_.y, -kPi / 4.0f, kPi / 2.5f);
