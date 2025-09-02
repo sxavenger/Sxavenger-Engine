@@ -77,7 +77,6 @@
     <ClCompile Include="Engine\Component\Components\Collider\CollisionManager.cpp" />
     <ClCompile Include="Engine\Component\Components\Light\Punctual\DirectionalLightComponent.cpp" />
     <ClCompile Include="Engine\Component\Components\Light\LightCommon.cpp" />
-    <ClCompile Include="Engine\Component\Components\SpriteRenderer\SpriteRendererComponent.cpp" />
     <ClCompile Include="Engine\GameLoop\SxavengerEngineGameLoop.cpp" />
     <ClCompile Include="Engine\Content\TextureBuffer\BaseOffscreenTexture.cpp" />
     <ClCompile Include="Engine\Content\TextureBuffer\DepthTexture.cpp" />
@@ -185,6 +184,7 @@
     <ClCompile Include="Engine\Component\Components\TextRenderer\TextRendererComponent.cpp" />
     <ClCompile Include="Engine\Content\InputGeometry\InputUIVertex.cpp" />
     <ClCompile Include="Engine\Component\Components\Transform\RectTransformComponent.cpp" />
+    <ClCompile Include="Engine\Component\Components\SpriteRenderer\SpriteRendererComponent.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Lib\Adapter\Random\Random.h" />
@@ -280,7 +280,6 @@
     <ClInclude Include="Engine\Component\Components\Collider\CollisionManager.h" />
     <ClInclude Include="Engine\Component\Components\Light\Punctual\DirectionalLightComponent.h" />
     <ClInclude Include="Engine\Component\Components\Light\LightCommon.h" />
-    <ClInclude Include="Engine\Component\Components\SpriteRenderer\SpriteRendererComponent.h" />
     <ClInclude Include="Engine\GameLoop\SxavengerEngineGameLoop.h" />
     <ClInclude Include="Engine\Content\TextureBuffer\BaseOffscreenTexture.h" />
     <ClInclude Include="Engine\Content\TextureBuffer\DepthTexture.h" />
@@ -395,6 +394,7 @@
     <ClInclude Include="Engine\Component\Components\TextRenderer\TextRendererComponent.h" />
     <ClInclude Include="Engine\Content\InputGeometry\InputUIVertex.h" />
     <ClInclude Include="Engine\Component\Components\Transform\RectTransformComponent.h" />
+    <ClInclude Include="Engine\Component\Components\SpriteRenderer\SpriteRendererComponent.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

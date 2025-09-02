@@ -37,7 +37,7 @@ public:
 
 	void SetFont(const UAssetParameter<UAssetFont>& font) { font_ = font; }
 
-	//* buffer option *//
+	//* render option *//
 
 	void PerseText();
 

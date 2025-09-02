@@ -11,6 +11,8 @@
 #include "Components/Armature/ArmatureComponent.h"
 #include "Components/MeshRenderer/MeshRendererComponent.h"
 #include "Components/MeshRenderer/SkinnedMeshRendererComponent.h"
+#include "Components/SpriteRenderer/SpriteRendererComponent.h"
+#include "Components/TextRenderer/TextRendererComponent.h"
 #include "Components/Light/Punctual/DirectionalLightComponent.h"
 #include "Components/Light/Punctual/PointLightComponent.h"
 //#include "Components/Light/Rect/RectLightComponent.h" -> FIXME
@@ -233,10 +235,13 @@ void ComponentHelper::ApplyAnimationTransition(MonoBehaviour* behaviour, const A
 
 void ComponentHelper::RegisterComponents() {
 	sComponentStorage->RegisterFactory<TransformComponent>();
+	sComponentStorage->RegisterFactory<RectTransformComponent>();
 	sComponentStorage->RegisterFactory<CameraComponent>();
 	sComponentStorage->RegisterFactory<ArmatureComponent>();
 	sComponentStorage->RegisterFactory<MeshRendererComponent>();
 	sComponentStorage->RegisterFactory<SkinnedMeshRendererComponent>();
+	sComponentStorage->RegisterFactory<SpriteRendererComponent>();
+	sComponentStorage->RegisterFactory<TextRendererComponent>();
 	sComponentStorage->RegisterFactory<DirectionalLightComponent>();
 	sComponentStorage->RegisterFactory<PointLightComponent>();
 	sComponentStorage->RegisterFactory<ParticleComponent>();

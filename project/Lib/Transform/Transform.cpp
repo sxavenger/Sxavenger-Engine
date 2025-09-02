@@ -113,10 +113,14 @@ void Transform2d::InputJson(const json& data) {
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 void RectTransform::SetImGuiCommand(float granularityTranslate, float granularityScale) {
-	SxImGui::DragVector2("pivot",     &pivot.x, 0.01f, 0.0f, 1.0f, "%.2f");
 	SxImGui::DragVector2("translate", &translate.x, granularityTranslate);
 	ImGui::SliderAngle("rotate",      &rotate);
 	SxImGui::DragVector2("scale",     &scale.x, granularityScale);
+
+	ImGui::Separator();
+
+	SxImGui::DragVector2("pivot",  &pivot.x, 0.01f, 0.0f, 1.0f, "%.2f");
+	SxImGui::DragFloat("priority", &priority, 0.01f, 0.0f);
 }
 
 Matrix4x4 RectTransform::ToMatrix() const {

@@ -41,7 +41,7 @@ private:
 
 	bool CheckRender() const;
 
-	void RenderSpriteComponents(const DirectXQueueContext* context);
+	void RenderSpriteComponent(const DirectXQueueContext* context);
 	void RenderTextComponent(const DirectXQueueContext* context);
 
 };

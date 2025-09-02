@@ -196,6 +196,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="Engine\Component\Components\PostProcessLayer\PostProcessGrayScale.cpp" />
     <ClCompile Include="Engine\Component\Components\PostProcessLayer\PostProcessLUT.cpp" />
     <ClCompile Include="Engine\Component\Components\PostProcessLayer\PostProcessRadialBlur.cpp" />
+    <ClCompile Include="Engine\Component\Components\SpriteRenderer\SpriteRendererComponent.cpp" />
     <ClCompile Include="Engine\Component\Components\TextRenderer\TextRendererComponent.cpp" />
     <ClCompile Include="Engine\Component\Components\Transform\RectTransformComponent.cpp" />
     <ClCompile Include="Engine\Content\Exporter\TextureExporter.cpp" />
@@ -229,7 +230,6 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="Engine\Component\Components\PostProcessLayer\PostProcessDoF.cpp" />
     <ClCompile Include="Engine\Component\Components\PostProcessLayer\PostProcessLocalExposure.cpp" />
     <ClCompile Include="Engine\Component\Components\PostProcessLayer\PostProcessLayerComponent.cpp" />
-    <ClCompile Include="Engine\Component\Components\SpriteRenderer\SpriteRendererComponent.cpp" />
     <ClCompile Include="Engine\Component\Components\Transform\TransformComponent.cpp" />
     <ClCompile Include="Engine\Component\Entity\MonoBehaviour.cpp" />
     <ClCompile Include="Engine\Component\Entity\MonoBehaviourContainer.cpp" />
@@ -376,6 +376,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Engine\Component\Components\PostProcessLayer\PostProcessGrayScale.h" />
     <ClInclude Include="Engine\Component\Components\PostProcessLayer\PostProcessLUT.h" />
     <ClInclude Include="Engine\Component\Components\PostProcessLayer\PostProcessRadialBlur.h" />
+    <ClInclude Include="Engine\Component\Components\SpriteRenderer\SpriteRendererComponent.h" />
     <ClInclude Include="Engine\Component\Components\TextRenderer\TextRendererComponent.h" />
     <ClInclude Include="Engine\Component\Components\Transform\RectTransformComponent.h" />
     <ClInclude Include="Engine\Content\Exporter\TextureExporter.h" />
@@ -409,7 +410,6 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Engine\Component\Components\PostProcessLayer\PostProcessDoF.h" />
     <ClInclude Include="Engine\Component\Components\PostProcessLayer\PostProcessLocalExposure.h" />
     <ClInclude Include="Engine\Component\Components\PostProcessLayer\PostProcessLayerComponent.h" />
-    <ClInclude Include="Engine\Component\Components\SpriteRenderer\SpriteRendererComponent.h" />
     <ClInclude Include="Engine\Component\Components\Transform\TransformComponent.h" />
     <ClInclude Include="Engine\Component\Entity\MonoBehaviour.h" />
     <ClInclude Include="Engine\Component\Entity\MonoBehaviourContainer.h" />

@@ -7,6 +7,7 @@
 #include "../FRenderCore.h"
 
 //* engine
+#include <Engine/Content/SxavengerContent.h>
 #include <Engine/Component/Components/ComponentStorage.h>
 #include <Engine/Component/Components/SpriteRenderer/SpriteRendererComponent.h>
 #include <Engine/Component/Components/TextRenderer/TextRendererComponent.h>
@@ -22,7 +23,7 @@ void FCanvasRenderer::Render(const DirectXQueueContext* context) {
 
 	textures_->BeginRenderTargetMainUI(context);
 
-	RenderSpriteComponents(context);
+	RenderSpriteComponent(context);
 	RenderTextComponent(context);
 
 	textures_->EndRenderTargetMainUI(context);
@@ -36,30 +37,34 @@ bool FCanvasRenderer::CheckRender() const {
 	return true;
 }
 
-void FCanvasRenderer::RenderSpriteComponents(const DirectXQueueContext* context) {
+void FCanvasRenderer::RenderSpriteComponent(const DirectXQueueContext* context) {
 
 	FRenderCore::GetInstance()->GetLayer()->SetPipeline(
 		FRenderCoreLayer::Type::Sprite, context, textures_->GetSize()
 	);
 
-	sComponentStorage->ForEach<SpriteRendererComponent>([&](SpriteRendererComponent* sprite) {
-		if (!sprite->CheckTexture()) {
+	sComponentStorage->ForEachActive<SpriteRendererComponent>([&](SpriteRendererComponent* component) {
+		if (!component->IsEnable()) {
 			return;
 		}
 
-		sprite->BindAIBuffer(context);
+		component->BindAIBuffer(context);
+
+		D3D12_GPU_DESCRIPTOR_HANDLE handle = component->GetTextureParameter().Empty()
+			? SxavengerContent::GetGPUHandleSRV("white1x1")
+			: component->GetTextureParameter().WaitRequire()->GetGPUHandleSRV();
 
 		DxObject::BindBufferDesc parameter = {};
 		parameter.Set32bitConstants("Dimension", 2, &textures_->GetSize());
-		parameter.SetAddress("gTransformation2d", sprite->GetTransform2dBuffer());
-		parameter.SetAddress("gTransformationUV", sprite->GetTransformUVBuffer());
-		parameter.SetHandle("gTexture",           sprite->GetTexture());
+		parameter.SetAddress("gTransform",        component->GetRectTransform()->GetGPUVirtualAddress());
+		parameter.SetAddress("gTransformationUV", component->GetGPUVirtualAddressUV());
+		parameter.SetHandle("gTexture",           handle);
 
 		FRenderCore::GetInstance()->GetLayer()->BindGraphicsBuffer(
 			FRenderCoreLayer::Type::Sprite, context, parameter
 		);
 
-		sprite->DrawCall(context);
+		component->DrawCall(context);
 	});
 
 }

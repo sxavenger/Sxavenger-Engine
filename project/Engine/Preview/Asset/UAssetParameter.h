@@ -44,6 +44,7 @@ public:
 	//=========================================================================================
 
 	UAssetParameter() = default;
+	UAssetParameter(const std::nullptr_t) { Reset(); }
 	UAssetParameter(const std::shared_ptr<T>& asset) { Set(asset); }
 	UAssetParameter(const Uuid& id) { Set(id); }
 
@@ -65,7 +66,8 @@ public:
 
 	//* operator *//
 
-	void operator=(const std::monostate&) { Reset(); }
+	void operator=(const std::monostate) { Reset(); }
+	void operator=(const std::nullptr_t) { Reset(); }
 	void operator=(const std::shared_ptr<T>& asset) { Set(asset); }
 	void operator=(const Uuid& id) { Set(id); }
 	void operator=(const UAssetParameter<T>& other) { parameter_ = other.parameter_; }
