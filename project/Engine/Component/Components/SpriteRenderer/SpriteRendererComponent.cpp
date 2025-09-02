@@ -9,6 +9,7 @@ _DXOBJECT_USING
 
 //* engine
 #include <Engine/System/UI/SxImGui.h>
+#include <Engine/Preview/Content/UContentStorage.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // SpriteRendererComponent class methods
@@ -43,10 +44,27 @@ void SpriteRendererComponent::ShowComponentInspector() {
 		ImGui::EndCombo();
 	}
 
+	sUContentStorage->DragAndDropTargetContentFunc<UContentTexture>([this](const std::shared_ptr<UContentTexture>& content) {
+		content->WaitComplete();
+		texture_ = content->GetId();
+	});
+
 	ImGui::SameLine();
 
 	if (ImGui::Button("reset")) {
 		texture_ = nullptr;
+	}
+
+	auto vertices = input_.GetVertex();
+
+	if (ImGui::ColorEdit4("color", &vertices->At(0).color.r)) {
+		SetColor(vertices->At(0).color);
+	}
+
+	if (ImGui::CollapsingHeader("vertex color")) {
+		for (uint8_t i = 0; i < magic_enum::enum_count<VertexPoint>(); ++i) {
+			ImGui::ColorEdit4(magic_enum::enum_name(static_cast<VertexPoint>(i)).data(), &vertices->At(i).color.r);
+		}
 	}
 
 	// textureの描画
@@ -96,14 +114,6 @@ void SpriteRendererComponent::TransferPosition() {
 	Vector2f leftTop     = Vector2f{ 0.0f, 0.0f };
 	Vector2f rightBottom = Vector2f{ 1.0f, 1.0f };
 
-	if (isFlip2d_.test(0)) {
-		std::swap(leftTop.x, rightBottom.x);
-	}
-
-	if (isFlip2d_.test(1)) {
-		std::swap(leftTop.y, rightBottom.y);
-	}
-
 	auto vertices = input_.GetVertex();
 
 	vertices->At(static_cast<uint8_t>(VertexPoint::LeftTop)).position     = { leftTop.x, leftTop.y, 0.0f };
@@ -115,14 +125,6 @@ void SpriteRendererComponent::TransferPosition() {
 void SpriteRendererComponent::TransferTexcoord() {
 	Vector2f leftTop     = Vector2f{ 0.0f, 0.0f };
 	Vector2f rightBottom = Vector2f{ 1.0f, 1.0f };
-
-	if (isFlip2d_.test(0)) {
-		std::swap(leftTop.x, rightBottom.x);
-	}
-
-	if (isFlip2d_.test(1)) {
-		std::swap(leftTop.y, rightBottom.y);
-	}
 
 	auto vertices = input_.GetVertex();
 

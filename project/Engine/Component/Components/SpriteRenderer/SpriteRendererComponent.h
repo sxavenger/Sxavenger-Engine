@@ -97,9 +97,6 @@ private:
 	// todo: unityを参考にして使いやすくする.
 	// filedとか
 
-	std::bitset<2> isFlip2d_ = {}; //!< x, y
-	std::bitset<2> isFlipUV_ = {}; //!< x, y
-
 	UAssetParameter<UAssetTexture> texture_ = nullptr;
 
 	//=========================================================================================
