@@ -5,6 +5,7 @@ _DXOBJECT_USING
 // include
 //-----------------------------------------------------------------------------------------
 //* engine
+#include <Engine/System/UI/SxImGui.h>
 #include <Engine/System/SxavengerSystem.h>
 #include <Engine/Content/SxavengerContent.h>
 
@@ -105,7 +106,7 @@ void UAssetTexture::ShowInspector() {
 
 	if (ImGui::CollapsingHeader("Texture", ImGuiTreeNodeFlags_DefaultOpen)) {
 		if (desc.Dimension == D3D12_RESOURCE_DIMENSION_TEXTURE2D) {
-			ShowTexture();
+			SxImGui::Image(descriptorSRV_.GetGPUHandle().ptr, ImVec2{ static_cast<float>(metadata_.size.x), static_cast<float>(metadata_.size.y) });
 
 		} else {
 			ImGui::Text("texture dimension type is not D3D12_RESOURCE_DIMENSION_TEXTURE2D");
@@ -187,13 +188,4 @@ ComPtr<ID3D12Resource> UAssetTexture::UploadTextureData(const DirectXQueueContex
 	intermediateResource->SetName(L"UAsset | intermediate upload resource");
 	return intermediateResource;
 	
-}
-
-void UAssetTexture::ShowTexture() {
-	Vector2f region = { ImGui::GetContentRegionAvail().x, ImGui::GetContentRegionAvail().y };
-
-	// テクスチャの表示サイズを計算
-	float scale = std::min(region.x / metadata_.size.x, region.y / metadata_.size.y);
-
-	ImGui::Image(descriptorSRV_.GetGPUHandle().ptr, ImVec2(metadata_.size.x * scale, metadata_.size.y * scale));
 }

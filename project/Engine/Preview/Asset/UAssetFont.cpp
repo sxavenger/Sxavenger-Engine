@@ -6,6 +6,7 @@ _DXOBJECT_USING
 //-----------------------------------------------------------------------------------------
 //* engine
 #include <Engine/System/Utility/Logger.h>
+#include <Engine/System/UI/SxImGui.h>
 #include <Engine/System/SxavengerSystem.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -58,7 +59,7 @@ void UAssetFont::ShowInspector() {
 	}
 
 	ImGui::Text("Font Atlas Texture");
-	ShowTexture();
+	SxImGui::Image(descriptorSRV_.GetGPUHandle().ptr, ImVec2{ static_cast<float>(kAtlasSize.x), static_cast<float>(kAtlasSize.y) });
 }
 
 void UAssetFont::CreateAtlasTexture() {
@@ -228,13 +229,4 @@ void UAssetFont::UploadAtlasData(const DirectXQueueContext* context) {
 
 	// commandの実行
 	context->ExecuteAllAllocators();
-}
-
-void UAssetFont::ShowTexture() {
-	Vector2f region = { ImGui::GetContentRegionAvail().x, ImGui::GetContentRegionAvail().y };
-
-	// テクスチャの表示サイズを計算
-	float scale = std::min(region.x / static_cast<float>(kAtlasSize.x), region.y / static_cast<float>(kAtlasSize.x));
-
-	ImGui::Image(descriptorSRV_.GetGPUHandle().ptr, ImVec2(kAtlasSize.x * scale, kAtlasSize.y * scale));
 }

@@ -77,6 +77,8 @@ namespace SxImGui {
 	template <typename T>
 	bool CheckBoxFlags(const char* label, T* flags, T flags_value);
 
+	void Image(ImTextureRef handle, const ImVec2& size);
+
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////

@@ -62,7 +62,7 @@ public:
 
 	json Serialize() const;
 
-	std::optional<std::string> GetStr() const;
+	std::string GetStr() const;
 
 	//* operator *//
 
@@ -71,6 +71,9 @@ public:
 	void operator=(const std::shared_ptr<T>& asset) { Set(asset); }
 	void operator=(const Uuid& id) { Set(id); }
 	void operator=(const UAssetParameter<T>& other) { parameter_ = other.parameter_; }
+
+	bool operator==(const UAssetParameter<T>& other) const { return parameter_ == other.parameter_; }
+	bool operator==(const Uuid& id) const;
 
 private:
 
@@ -147,13 +150,13 @@ inline json UAssetParameter<T>::Serialize() const {
 }
 
 template <UAssetConcept T>
-inline std::optional<std::string> UAssetParameter<T>::GetStr() const {
+inline std::string UAssetParameter<T>::GetStr() const {
 	switch (parameter_.index()) {
 		case 1: //!< Uuid
 			return std::get<Uuid>(parameter_).Serialize();
 		
 		default:
-			return std::nullopt;
+			return "null";
 	}
 }
 
@@ -167,6 +170,15 @@ inline void UAssetParameter<T>::Wait() const {
 
 	while (!asset->IsComplete()) {
 		std::this_thread::sleep_for(std::chrono::milliseconds(1));
-		Logger::CommentRuntime(std::format("[UAssetParameter]: waiting for asset completion. id: {}", GetStr().value_or("null")));
+		Logger::CommentRuntime(std::format("[UAssetParameter]: waiting for asset completion. id: {}", GetStr()));
 	}
+}
+
+template <UAssetConcept T>
+bool UAssetParameter<T>::operator==(const Uuid& id) const {
+	if (std::holds_alternative<Uuid>(parameter_)) {
+		return std::get<Uuid>(parameter_) == id;
+	}
+
+	return false;
 }

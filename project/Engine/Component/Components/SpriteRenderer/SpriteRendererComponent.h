@@ -109,4 +109,8 @@ private:
 	void TransferPosition();
 	void TransferTexcoord();
 
+	//* imgui helper methods *//
+
+	void ShowTexture();
+
 };

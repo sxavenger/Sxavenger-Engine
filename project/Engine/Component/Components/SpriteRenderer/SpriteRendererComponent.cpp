@@ -7,6 +7,9 @@ _DXOBJECT_USING
 //* component
 #include "../../Entity/MonoBehaviour.h"
 
+//* engine
+#include <Engine/System/UI/SxImGui.h>
+
 ////////////////////////////////////////////////////////////////////////////////////////////
 // SpriteRendererComponent class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -25,6 +28,37 @@ void SpriteRendererComponent::CreateBuffer() {
 }
 
 void SpriteRendererComponent::ShowComponentInspector() {
+
+	ImGui::Checkbox("## enable", &isEnable_);
+
+	ImGui::SameLine();
+
+	if (ImGui::BeginCombo("## texture", texture_.GetStr().c_str())) {
+		for (const auto& id : sUAssetStorage->GetAssetStorage<UAssetTexture>() | std::views::keys) {
+			if (ImGui::Selectable(id.Serialize().c_str(), texture_ == id)) {
+				texture_ = id; //!< 選択されたtextureを設定
+				// todo: 2d texture以外は設定しない
+			}
+		}
+		ImGui::EndCombo();
+	}
+
+	ImGui::SameLine();
+
+	if (ImGui::Button("reset")) {
+		texture_ = nullptr;
+	}
+
+	// textureの描画
+	if (texture_.Empty()) {
+		return;
+	}
+
+	ImGui::Separator();
+	ImGui::Separator();
+
+	ShowTexture();
+
 }
 
 void SpriteRendererComponent::SetVertexColor(const Color4f& color, VertexPoint point) {
@@ -96,4 +130,13 @@ void SpriteRendererComponent::TransferTexcoord() {
 	vertices->At(static_cast<uint8_t>(VertexPoint::RightTop)).texcoord    = { rightBottom.x, leftTop.y };
 	vertices->At(static_cast<uint8_t>(VertexPoint::LeftBottom)).texcoord  = { leftTop.x, rightBottom.y };
 	vertices->At(static_cast<uint8_t>(VertexPoint::RightBottom)).texcoord = { rightBottom.x, rightBottom.y };
+}
+
+void SpriteRendererComponent::ShowTexture() {
+
+	const std::shared_ptr<UAssetTexture> texture = texture_.WaitRequire();
+
+	Vector2ui size = texture->GetMetadata().size;
+
+	SxImGui::Image(texture->GetGPUHandleSRV().ptr, ImVec2{ static_cast<float>(size.x), static_cast<float>(size.y) });
 }

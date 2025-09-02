@@ -449,3 +449,27 @@ void SxImGui::HelpMarker(const char* label, const char* text, bool isSameline) {
 		ImGui::EndTooltip();
 	}
 }
+
+void SxImGui::Image(ImTextureRef handle, const ImVec2& size) {
+	// タブ等を排除した全体のwindowSize計算
+	ImVec2 regionMax  = ImGui::GetWindowContentRegionMax();
+	ImVec2 regionMin  = ImGui::GetWindowContentRegionMin();
+	ImVec2 windowSize = { regionMax.x - regionMin.x, regionMax.y - regionMin.y };
+
+	// 画像アス比と分割したWindowアス比の計算
+	float textureAspectRatio = static_cast<float>(size.x) / static_cast<float>(size.y);
+	float windowAspectRatio  = windowSize.x / windowSize.y;
+
+	// 出力する画像サイズの設定
+	ImVec2 displayTextureSize = windowSize;
+
+	// 画像サイズの調整
+	if (textureAspectRatio <= windowAspectRatio) {
+		displayTextureSize.x *= textureAspectRatio / windowAspectRatio;
+
+	} else {
+		displayTextureSize.y *= windowAspectRatio / textureAspectRatio;
+	}
+
+	ImGui::Image(handle, displayTextureSize);
+}

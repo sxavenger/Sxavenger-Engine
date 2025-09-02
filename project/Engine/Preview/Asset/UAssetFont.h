@@ -115,8 +115,4 @@ private:
 
 	void UploadAtlasData(const DirectXQueueContext* context);
 
-	//* imgui helper methods *//
-
-	void ShowTexture();
-
 };

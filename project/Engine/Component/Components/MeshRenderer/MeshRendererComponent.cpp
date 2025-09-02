@@ -20,18 +20,18 @@ void MeshRendererComponent::ShowComponentInspector() {
 	ImGui::Checkbox("enable", &isEnable_);
 	SxImGui::CheckBoxFlags("cast shadow", &mask_.Get(), static_cast<uint8_t>(MeshInstanceMask::Shadow));
 
-	if (ImGui::BeginCombo("mesh", mesh_.GetStr().value_or("null").c_str())) {
+	if (ImGui::BeginCombo("mesh", mesh_.GetStr().c_str())) {
 		for (const auto& id : sUAssetStorage->GetAssetStorage<UAssetMesh>() | std::views::keys) {
-			if (ImGui::Selectable(id.Serialize().c_str(), mesh_.Get()->GetId() == id)) {
+			if (ImGui::Selectable(id.Serialize().c_str(), mesh_ == id)) {
 				mesh_ = id; //!< 選択されたmeshを設定
 			}
 		}
 		ImGui::EndCombo();
 	}
 
-	if (ImGui::BeginCombo("material", material_.GetStr().value_or("null").c_str())) {
+	if (ImGui::BeginCombo("material", material_.GetStr().c_str())) {
 		for (const auto& id : sUAssetStorage->GetAssetStorage<UAssetMaterial>() | std::views::keys) {
-			if (ImGui::Selectable(id.Serialize().c_str(), material_.Get()->GetId() == id)) {
+			if (ImGui::Selectable(id.Serialize().c_str(), material_ == id)) {
 				material_ = id; //!< 選択されたmaterialを設定
 			}
 		}
