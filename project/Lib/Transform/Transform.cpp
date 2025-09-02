@@ -95,7 +95,7 @@ Matrix4x4 Transform2d::ToMatrix() const {
 }
 
 json Transform2d::PerseToJson() const {
-	json data;
+	json data = json::object();
 	data["translate"] = GeometryJsonSerializer::ToJson(translate);
 	data["rotate"]    = rotate;
 	data["scale"]     = GeometryJsonSerializer::ToJson(scale);
@@ -137,4 +137,22 @@ Matrix4x4 RectTransform::ToMatrixPivot() const {
 
 Matrix4x4 RectTransform::ToMatrix() const {
 	return Matrix4x4::MakeAffine({ scale.x, scale.y, 1.0f }, { 0.0f, 0.0f, rotate }, { translate.x, translate.y, priority });
+}
+
+json RectTransform::PerseToJson() const {
+	json data = json::object();
+	data["translate"] = GeometryJsonSerializer::ToJson(translate);
+	data["rotate"]    = rotate;
+	data["scale"]     = GeometryJsonSerializer::ToJson(scale);
+	data["pivot"]     = GeometryJsonSerializer::ToJson(pivot);
+	data["priority"]  = priority;
+	return data;
+}
+
+void RectTransform::InputJson(const json& data) {
+	translate = GeometryJsonSerializer::JsonToVector2f(data.at("translate"));
+	rotate    = data.at("rotate");
+	scale     = GeometryJsonSerializer::JsonToVector2f(data.at("scale"));
+	pivot     = GeometryJsonSerializer::JsonToVector2f(data.at("pivot"));
+	priority = data.at("priority");
 }

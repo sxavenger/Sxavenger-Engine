@@ -55,6 +55,12 @@ public:
 
 	const RectTransformComponent* GetRectTransform() const;
 
+	//* json option *//
+
+	json PerseToJson() const override;
+
+	void InputJson(const json& data) override;
+
 private:
 
 	//=========================================================================================

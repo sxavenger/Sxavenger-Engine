@@ -77,6 +77,12 @@ public:
 
 	const RectTransformComponent* GetRectTransform() const;
 
+	//* json option *//
+
+	json PerseToJson() const override;
+
+	void InputJson(const json& data) override;
+
 private:
 
 	//=========================================================================================
@@ -88,6 +94,8 @@ private:
 	//* input assembler *//
 
 	InputUIVertex input_;
+
+	std::array<Color4f, magic_enum::enum_count<VertexPoint>()> color_ = {};
 
 	//* transform buffer *//
 
@@ -105,6 +113,7 @@ private:
 
 	void TransferPosition();
 	void TransferTexcoord();
+	void TransferColor();
 
 	//* imgui helper methods *//
 

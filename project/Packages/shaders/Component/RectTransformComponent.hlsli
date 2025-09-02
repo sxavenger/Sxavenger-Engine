@@ -15,8 +15,8 @@ struct RectTransformComponent {
 	// public methods
 	//=========================================================================================
 
-	float2 Transform(float2 v) {
-		return mul(float4(v, 0.0f, 1.0f), mat).xy;
+	float3 Transform(float2 v) {
+		return mul(float4(v, 1.0f, 1.0f), mat).xyz;
 	}
 	
 };

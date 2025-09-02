@@ -20,12 +20,11 @@ void SpriteRendererComponent::CreateBuffer() {
 	input_.GetIndex()->At(0) = { 0, 1, 2 };
 	input_.GetIndex()->At(1) = { 2, 1, 3 };
 
-	// 頂点の初期化
-	input_.GetVertex()->Fill(UIVertexData{ .color = kWhite4<float> });
-
 	bufferUV_ = std::make_unique<DimensionBuffer<Matrix4x4>>();
 	bufferUV_->Create(SxavengerSystem::GetDxDevice(), 1);
 	bufferUV_->At(0) = Matrix4x4::Identity();
+
+	color_.fill(kWhite4<float>);
 }
 
 void SpriteRendererComponent::ShowComponentInspector() {
@@ -55,15 +54,13 @@ void SpriteRendererComponent::ShowComponentInspector() {
 		texture_ = nullptr;
 	}
 
-	auto vertices = input_.GetVertex();
-
-	if (ImGui::ColorEdit4("color", &vertices->At(0).color.r)) {
-		SetColor(vertices->At(0).color);
+	if (ImGui::ColorEdit4("color", &color_[0].r)) {
+		SetColor(color_[0]);
 	}
 
 	if (ImGui::CollapsingHeader("vertex color")) {
 		for (uint8_t i = 0; i < magic_enum::enum_count<VertexPoint>(); ++i) {
-			ImGui::ColorEdit4(magic_enum::enum_name(static_cast<VertexPoint>(i)).data(), &vertices->At(i).color.r);
+			ImGui::ColorEdit4(magic_enum::enum_name(static_cast<VertexPoint>(i)).data(), &color_[i].r);
 		}
 	}
 
@@ -80,7 +77,7 @@ void SpriteRendererComponent::ShowComponentInspector() {
 }
 
 void SpriteRendererComponent::SetVertexColor(const Color4f& color, VertexPoint point) {
-	input_.GetVertex()->At(static_cast<size_t>(point)).color = color;
+	color_[static_cast<uint8_t>(point)] = color;
 }
 
 void SpriteRendererComponent::SetColor(const Color4f& color) {
@@ -94,6 +91,7 @@ void SpriteRendererComponent::BindAIBuffer(const DirectXQueueContext* context) {
 	// 頂点の更新
 	TransferPosition();
 	TransferTexcoord();
+	TransferColor();
 
 	// uv変換行列を更新
 	bufferUV_->At(0) = transformUV_.ToMatrix();
@@ -107,6 +105,41 @@ void SpriteRendererComponent::DrawCall(const DirectXQueueContext* context) {
 
 const RectTransformComponent* SpriteRendererComponent::GetRectTransform() const {
 	return BaseComponent::GetBehaviour()->RequireComponent<RectTransformComponent>();
+}
+
+json SpriteRendererComponent::PerseToJson() const {
+	json component = json::object();
+	component["isEnable"]    = isEnable_;
+	component["transformUV"] = transformUV_.PerseToJson();
+	component["texture"]     = texture_.Serialize();
+
+	for (uint8_t i = 0; i < magic_enum::enum_count<VertexPoint>(); ++i) {
+		component["color"][magic_enum::enum_name(static_cast<VertexPoint>(i)).data()] = GeometryJsonSerializer::ToJson(color_[i]);
+	}
+
+	return component;
+}
+
+void SpriteRendererComponent::InputJson(const json& data) {
+	isEnable_    = data.at("isEnable").get<bool>();
+	transformUV_.InputJson(data.at("transformUV"));
+
+	if (!data["texture"].is_null()) {
+		Uuid texture = Uuid::Deserialize(data["texture"].get<std::string>());
+
+		// textureのuuidが存在しない場合は, tableから読み込み
+
+		if (!sUAssetStorage->Contains<UAssetTexture>(texture)) {
+			const auto& filepath = sUAssetStorage->GetFilepath(texture);
+			sUContentStorage->Import<UContentModel>(filepath);
+		}
+
+		texture_ = texture;
+	}
+
+	for (uint8_t i = 0; i < magic_enum::enum_count<VertexPoint>(); ++i) {
+		color_[i] = GeometryJsonSerializer::JsonToColor4f(data.at("color").at(magic_enum::enum_name(static_cast<VertexPoint>(i)).data()));
+	}
 }
 
 void SpriteRendererComponent::TransferPosition() {
@@ -132,6 +165,15 @@ void SpriteRendererComponent::TransferTexcoord() {
 	vertices->At(static_cast<uint8_t>(VertexPoint::RightTop)).texcoord    = { rightBottom.x, leftTop.y };
 	vertices->At(static_cast<uint8_t>(VertexPoint::LeftBottom)).texcoord  = { leftTop.x, rightBottom.y };
 	vertices->At(static_cast<uint8_t>(VertexPoint::RightBottom)).texcoord = { rightBottom.x, rightBottom.y };
+}
+
+void SpriteRendererComponent::TransferColor() {
+	auto vertices = input_.GetVertex();
+
+	vertices->At(static_cast<uint8_t>(VertexPoint::LeftTop)).color     = color_[static_cast<uint8_t>(VertexPoint::LeftTop)];
+	vertices->At(static_cast<uint8_t>(VertexPoint::RightTop)).color    = color_[static_cast<uint8_t>(VertexPoint::RightTop)];
+	vertices->At(static_cast<uint8_t>(VertexPoint::LeftBottom)).color  = color_[static_cast<uint8_t>(VertexPoint::LeftBottom)];
+	vertices->At(static_cast<uint8_t>(VertexPoint::RightBottom)).color = color_[static_cast<uint8_t>(VertexPoint::RightBottom)];
 }
 
 void SpriteRendererComponent::ShowTexture() {

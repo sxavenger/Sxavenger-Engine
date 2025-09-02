@@ -133,9 +133,9 @@ public:
 
 	Matrix4x4 ToMatrix() const;
 
-	json PerseToJson() const override { return json(); }
+	json PerseToJson() const override;
 
-	void InputJson(const json& data) override { data; }
+	void InputJson(const json& data) override;
 
 	//=========================================================================================
 	// public variables

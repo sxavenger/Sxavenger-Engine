@@ -6,6 +6,11 @@
 //* component
 #include "../../Entity/MonoBehaviour.h"
 
+//* engine
+#include <Engine/System/UI/SxImGui.h>
+#include <Engine/Preview/Content/UContentStorage.h>
+#include <Engine/Preview/Asset/UAssetStorage.h>
+
 ////////////////////////////////////////////////////////////////////////////////////////////
 // TextRendererComponent class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -27,6 +32,24 @@ void TextRendererComponent::CreateBuffer() {
 }
 
 void TextRendererComponent::ShowComponentInspector() {
+	SxImGui::InputTextFunc("## Text Box", ToString(text_), [this](const std::string& str) {
+		SetText(ToWString(str));
+	});
+	// TODO: MultilineInputTextFuncを使用する
+
+	if (ImGui::BeginCombo("font", font_.GetStr().c_str())) {
+		for (const auto& id : sUAssetStorage->GetAssetStorage<UAssetFont>() | std::views::keys) {
+			if (ImGui::Selectable(id.Serialize().c_str(), font_ == id)) {
+				font_ = id; //!< 選択されたfontを設定
+			}
+		}
+		ImGui::EndCombo();
+	}
+
+	sUContentStorage->DragAndDropTargetContentFunc<UContentFont>([this](const std::shared_ptr<UContentFont>& content) {
+		content->WaitComplete();
+		font_ = content->GetId();
+	});
 
 }
 
@@ -117,4 +140,28 @@ void TextRendererComponent::DrawCall(const DirectXQueueContext* context) {
 
 const RectTransformComponent* TextRendererComponent::GetRectTransform() const {
 	return BaseComponent::GetBehaviour()->GetComponent<RectTransformComponent>();
+}
+
+json TextRendererComponent::PerseToJson() const {
+	json component = json::object();
+	component["text"] = ToString(text_);
+	component["font"] = font_.Serialize();
+
+	return component;
+}
+
+void TextRendererComponent::InputJson(const json& data) {
+	if (!data["text"].is_null()) {
+		text_ = ToWString(data["text"].get<std::string>());
+	}
+
+	Uuid font = Uuid::Deserialize(data["font"].get<std::string>());
+
+	// fontのuuidが存在しない場合は, tableから読み込み
+	if (!sUAssetStorage->Contains<UAssetFont>(font)) {
+		const auto& filepath = sUAssetStorage->GetFilepath(font);
+		sUContentStorage->Import<UContentFont>(filepath);
+	}
+
+	font_ = font;
 }

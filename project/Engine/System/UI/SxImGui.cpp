@@ -11,6 +11,9 @@
 #include <limits>
 #include <algorithm>
 
+////////////////////////////////////////////////////////////////////////////////////////////
+// (anonymous) namespace operators
+////////////////////////////////////////////////////////////////////////////////////////////
 #ifndef IMGUI_DEFINE_MATH_OPERATORS
 namespace {
 // ImVec2 operators
@@ -41,6 +44,13 @@ static inline bool    operator==(const ImVec4& lhs, const ImVec4& rhs)  { return
 static inline bool    operator!=(const ImVec4& lhs, const ImVec4& rhs)  { return lhs.x != rhs.x || lhs.y != rhs.y || lhs.z != rhs.z || lhs.w != rhs.w; }
 }
 #endif // IMGUI_DEFINE_MATH_OPERATORS
+
+////////////////////////////////////////////////////////////////////////////////////////////
+// (anonymous) namespace
+////////////////////////////////////////////////////////////////////////////////////////////
+namespace {
+	static std::unordered_map<const char*, std::string> buffers;
+}
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // SxImGui namespace methods
@@ -272,8 +282,6 @@ void SxImGui::InputTextFunc(const char* label, std::string& buf, const std::func
 }
 
 bool SxImGui::InputText(const char* label, std::string& dst, ImGuiInputTextFlags flags) {
-	static std::unordered_map<const char*, std::string> buffers;
-
 	if (!buffers.contains(label)) {
 		buffers.emplace(label, std::string(128, '\0'));
 	}
@@ -289,12 +297,56 @@ bool SxImGui::InputText(const char* label, std::string& dst, ImGuiInputTextFlags
 
 	if (isChanged) {
 		size_t pos = buf.find('\0');
+		dst        = (pos != std::string::npos ? buf.substr(0, pos) : buf);
+	}
 
-		if (pos != std::string::npos) {
-			dst = buf.substr(0, pos);
-		} else {
-			dst = buf;
-		}
+	return isChanged;
+}
+
+bool SxImGui::InputTextFunc(const char* label, const std::string& dst, const std::function<void(const std::string&)>& func, ImGuiInputTextFlags flags) {
+	if (!buffers.contains(label)) {
+		buffers.emplace(label, std::string(128, '\0'));
+	}
+
+	std::string& buf = buffers[label];
+
+	bool isChanged = ImGui::InputText(label, buf.data(), buf.size(), flags);
+
+	if (!ImGui::IsItemActive()) {
+		buf = dst;
+		buf.resize(128, '\0'); // バッファのサイズをリセット
+	}
+
+	if (isChanged) {
+		size_t pos = buf.find('\0');
+		std::string str = (pos != std::string::npos ? buf.substr(0, pos) : buf);
+
+		func(str);
+	}
+
+	return isChanged;
+}
+
+bool SxImGui::MultilineInputTextFunc(const char* label, const std::string& dst, const std::function<void(const std::string&)>& func, const ImVec2& size, ImGuiInputTextFlags flags) {
+	if (!buffers.contains(label)) {
+		buffers.emplace(label, std::string(128, '\0'));
+	}
+
+	std::string& buf = buffers[label];
+
+	bool isChanged = ImGui::InputTextMultiline(label, buf.data(), buf.size(), size, flags);
+	// FIXME: 入力を受け付けてくれない
+
+	if (!ImGui::IsItemActive()) {
+		buf = dst;
+		buf.resize(128, '\0'); // バッファのサイズをリセット
+	}
+
+	if (isChanged) {
+		size_t pos      = buf.find('\0');
+		std::string str = (pos != std::string::npos ? buf.substr(0, pos) : buf);
+
+		func(str);
 	}
 
 	return isChanged;

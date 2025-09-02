@@ -54,6 +54,9 @@ namespace SxImGui {
 	void InputTextFunc(const char* label, std::string& buf, const std::function<void(const std::string&)>& func, ImGuiInputTextFlags flags = ImGuiInputTextFlags_None, ImGuiInputTextCallback callback = NULL, void* user_data = NULL);
 
 	bool InputText(const char* label, std::string& dst, ImGuiInputTextFlags flags = ImGuiInputTextFlags_None);
+	bool InputTextFunc(const char* label, const std::string& dst, const std::function<void(const std::string&)>& func, ImGuiInputTextFlags flags = ImGuiInputTextFlags_None);
+
+	bool MultilineInputTextFunc(const char* label, const std::string& dst, const std::function<void(const std::string&)>& func, const ImVec2& size = ImVec2(0, 0), ImGuiInputTextFlags flags = ImGuiInputTextFlags_None);
 
 	void PlotHistogramFunc(const char* label, const std::function<float(int32_t idx)>& func, int32_t values_count, int32_t values_offset = 0, const char* overlay_text = NULL, const std::optional<float>& scale_min = std::nullopt, const std::optional<float>& scale_max = std::nullopt, ImVec2 graph_size = ImVec2(0, 0));
 
