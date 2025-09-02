@@ -60,15 +60,18 @@ void UContentStorage::DragAndDropSource(const std::type_info* type, const std::f
 }
 
 std::optional<std::filesystem::path> UContentStorage::DragAndDropTargetFilepath(const std::type_info* type) {
+
+	std::optional<std::filesystem::path> result = std::nullopt;
+
 	if (ImGui::BeginDragDropTarget()) {
 		if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload(type->name())) {
-			return std::filesystem::path(static_cast<const char*>(payload->Data));
+			result = std::filesystem::path(static_cast<const char*>(payload->Data));
 		}
 
 		ImGui::EndDragDropTarget();
 	}
 
-	return std::nullopt;
+	return result;
 }
 
 UContentStorage* UContentStorage::GetInstance() {
