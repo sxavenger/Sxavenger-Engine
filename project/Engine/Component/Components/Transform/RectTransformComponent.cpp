@@ -15,6 +15,8 @@ _DXOBJECT_USING
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 void RectTransformComponent::ShowComponentInspector() {
+	transform_.SetImGuiCommand();
+	UpdateMatrix();
 }
 
 void RectTransformComponent::CreateBuffer() {

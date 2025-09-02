@@ -127,6 +127,8 @@ public:
 	// public methods
 	//=========================================================================================
 
+	void SetImGuiCommand(float granularityTranslate = 0.01f, float granularityScale = 0.01f);
+
 	Matrix4x4 ToMatrix() const;
 
 	json PerseToJson() const override { return json(); }

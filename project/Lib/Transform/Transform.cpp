@@ -112,12 +112,20 @@ void Transform2d::InputJson(const json& data) {
 // RectTransform structure methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
+void RectTransform::SetImGuiCommand(float granularityTranslate, float granularityScale) {
+	SxImGui::DragVector2("pivot",     &pivot.x, 0.01f, 0.0f, 1.0f, "%.2f");
+	SxImGui::DragVector2("translate", &translate.x, granularityTranslate);
+	ImGui::SliderAngle("rotate",      &rotate);
+	SxImGui::DragVector2("scale",     &scale.x, granularityScale);
+}
+
 Matrix4x4 RectTransform::ToMatrix() const {
 	Matrix4x4 mat = Matrix4x4::Identity();
 
-	mat *= Matrix4x4::MakeTranslate({ -pivot.x, -pivot.y, 0.0f }); //!< pivotの原点移動
-	mat *= Matrix4x4::MakeAffine({ scale.x, scale.y, 1.0f }, { 0.0f, 0.0f, rotate }, {}); //!< スケール・回転
-	mat *= Matrix4x4::MakeTranslate({ pivot.x, pivot.y, 0.0f }); //!< pivotの原点復帰
+	mat *= Matrix4x4::MakeTranslate({ -pivot.x, -pivot.y, 0.0f });
+	mat *= Matrix4x4::MakeScale({ scale.x, scale.y, 1.0f });
+	mat *= Matrix4x4::MakeRotateZ(rotate);
+	mat *= Matrix4x4::MakeTranslate({ pivot.x, pivot.y, 0.0f });
 	mat *= Matrix4x4::MakeTranslate({ translate.x, translate.y, priority });
 
 	return mat;
