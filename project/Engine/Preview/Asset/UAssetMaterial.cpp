@@ -364,6 +364,15 @@ void UAssetMaterial::Copy(const UAssetMaterial& material) {
 	buffer_->At(0) = material.buffer_->At(0);
 }
 
+void UAssetMaterial::Wait() {
+	for (const auto& textureId : textures_) {
+		if (textureId.has_value()) {
+			auto texture = sUAssetStorage->GetAsset<UAssetTexture>(textureId.value());
+			texture->WaitComplete();
+		}
+	}
+}
+
 void UAssetMaterial::ShowInspector() {
 	UBaseAsset::ShowInspector();
 

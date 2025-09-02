@@ -316,6 +316,8 @@ public:
 
 	void Copy(const UAssetMaterial& material);
 
+	void Wait();
+
 	//* inspector *//
 
 	void ShowInspector() override;

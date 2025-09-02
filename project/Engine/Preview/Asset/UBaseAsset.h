@@ -47,6 +47,8 @@ public:
 
 	bool IsComplete() const { return status_ == Status::Complete; }
 
+	void WaitComplete() const;
+
 	//* inspector *//
 
 	virtual void ShowInspector() override;
@@ -64,8 +66,6 @@ protected:
 	//=========================================================================================
 
 	void Complete() { status_ = Status::Complete; }
-
-	void WaitComplete() const;
 
 private:
 
