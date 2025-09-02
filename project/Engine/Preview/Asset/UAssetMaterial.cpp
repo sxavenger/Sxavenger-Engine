@@ -21,25 +21,34 @@ _DXOBJECT_USING
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 void UAssetMaterial::Albedo::Init() {
-	type = Type::Value;
+	type  = Type::Value;
 	color = kWhite3<float>;
 	index = NULL;
 }
 
 void UAssetMaterial::Albedo::SetValue(const Color3f& _color) {
-	type = Type::Value;
+	type  = Type::Value;
 	color = _color;
 }
 
 void UAssetMaterial::Albedo::SetTexture(uint32_t _index) {
-	type = Type::Texture;
+	type  = Type::Texture;
 	index = _index;
 }
 
-void UAssetMaterial::Albedo::SetMultiply(const Color3f& _color, const std::optional<uint32_t>& _index) {
-	type = Type::Multiply;
+void UAssetMaterial::Albedo::SetValueMultiply(const Color3f& _color) {
+	if (type != Type::Texture) { 
+		SetValue(_color); //!< Textureが設定されていない場合はValueとして設定
+		return;
+	}
+
+	type  = Type::Multiply;
 	color = _color;
-	index = _index.value_or(NULL);
+}
+
+void UAssetMaterial::Albedo::SetTextureMultiply(uint32_t _index) {
+	type  = Type::Multiply;
+	index = _index;
 }
 
 void UAssetMaterial::Albedo::SetImGuiCommand() {
@@ -379,6 +388,16 @@ void UAssetMaterial::ShowInspector() {
 const D3D12_GPU_VIRTUAL_ADDRESS& UAssetMaterial::GetGPUVirtualAddress() const {
 	Exception::Assert(buffer_ != nullptr, "buffer is not create.");
 	return buffer_->GetGPUVirtualAddress();
+}
+
+const UAssetMaterial::MaterialBuffer& UAssetMaterial::GetBuffer() const {
+	Exception::Assert(buffer_ != nullptr, "buffer is not create.");
+	return buffer_->At(0);
+}
+
+UAssetMaterial::MaterialBuffer& UAssetMaterial::GetBuffer() {
+	Exception::Assert(buffer_ != nullptr, "buffer is not create.");
+	return buffer_->At(0);
 }
 
 std::optional<Uuid> UAssetMaterial::GetTextureId(const aiMaterial* aiMaterial, aiTextureType type, const std::filesystem::path& directory, bool isIntensity) {

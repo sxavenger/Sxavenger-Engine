@@ -151,6 +151,13 @@ MonoBehaviour* MonoBehaviour::FindRequireChild(const std::string& name) {
 	return child;
 }
 
+void MonoBehaviour::ForEachChild(const std::function<void(MonoBehaviour*)>& function) {
+	for (const auto& child : children_) {
+		MonoBehaviour* ptr = GetElement(child);
+		function(ptr);
+	}
+}
+
 void MonoBehaviour::ShowInspector() {
 	ImGui::BeginDisabled(!isRenamable_); //!< 名前変更不可の場合はdisabled
 

@@ -248,3 +248,51 @@ void ComponentHelper::RegisterComponents() {
 	sComponentStorage->RegisterFactory<SkyLightComponent>();
 	sComponentStorage->RegisterFactory<ColliderComponent>();
 }
+
+void ComponentHelper::ForEachBehaviour(MonoBehaviour* behaviour, const std::function<void(MonoBehaviour*)>& function) {
+	function(behaviour);
+
+	behaviour->ForEachChild([&](MonoBehaviour* child) {
+		ComponentHelper::ForEachBehaviour(child, function);
+	});
+}
+
+void ComponentHelper::DetachBehaviourMaterial(MonoBehaviour* root) {
+
+	ComponentHelper::ForEachBehaviour(root, [](MonoBehaviour* behaviour) {
+		if (auto component = behaviour->GetComponent<MeshRendererComponent>()) {
+			std::shared_ptr<UAssetMaterial> material = std::make_shared<UAssetMaterial>(std::nullopt);
+			std::shared_ptr<UAssetMaterial> reference = component->GetMaterial();
+
+			material->Copy(*reference);
+
+			component->SetMaterial(material);
+		}
+
+		if (auto component = behaviour->GetComponent<SkinnedMeshRendererComponent>()) {
+			std::shared_ptr<UAssetMaterial> material = std::make_shared<UAssetMaterial>(std::nullopt);
+			std::shared_ptr<UAssetMaterial> reference = component->GetMaterial();
+
+			material->Copy(*reference);
+
+			component->SetMaterial(material);
+		}
+	});
+}
+
+void ComponentHelper::ModifyBehaviourMaterial(MonoBehaviour* root, const std::function<void(UAssetMaterial*)>& function) {
+	// material parameterがptrであるcomponentに対してfunctionを実行
+	ComponentHelper::ForEachBehaviour(root, [&](MonoBehaviour* behaviour) {
+		if (auto component = behaviour->GetComponent<MeshRendererComponent>()) {
+			if (component->GetMaterialParameter().GetState() == UAssetParameter<UAssetMaterial>::State::Ptr) {
+				function(component->GetMaterial().get());
+			}
+		}
+
+		if (auto component = behaviour->GetComponent<SkinnedMeshRendererComponent>()) {
+			if (component->GetMaterialParameter().GetState() == UAssetParameter<UAssetMaterial>::State::Ptr) {
+				function(component->GetMaterial().get());
+			}
+		}
+	});
+}

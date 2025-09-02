@@ -81,7 +81,9 @@ public:
 
 		void SetTexture(uint32_t _index);
 
-		void SetMultiply(const Color3f& _color, const std::optional<uint32_t>& _index = std::nullopt);
+		void SetValueMultiply(const Color3f& _color);
+
+		void SetTextureMultiply(uint32_t _index);
 
 		//* debug *//
 
@@ -305,6 +307,7 @@ public:
 	//=========================================================================================
 
 	UAssetMaterial(const Uuid& id) : UBaseAsset(id) { CreateBuffer(); }
+	UAssetMaterial(std::nullopt_t) : UBaseAsset(std::nullopt) { CreateBuffer(); }
 	~UAssetMaterial() override = default;
 
 	void Setup(const aiMaterial* material, const std::filesystem::path& directory);
@@ -322,6 +325,9 @@ public:
 	const D3D12_GPU_VIRTUAL_ADDRESS& GetGPUVirtualAddress() const;
 
 	Mode GetMode() const { return mode_; }
+
+	const MaterialBuffer& GetBuffer() const;
+	MaterialBuffer& GetBuffer();
 
 private:
 

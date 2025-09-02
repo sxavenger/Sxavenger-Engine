@@ -100,7 +100,8 @@ public:
 	void CreateMesh(const Uuid& referenceMesh);
 	void CreateMesh(const std::shared_ptr<UAssetMesh>& referenceMesh);
 
-	void SetMaterial(const Uuid& material) { material_ = material; }
+	void SetMaterial(const Uuid& id) { material_ = id; }
+	void SetMaterial(const std::shared_ptr<UAssetMaterial>& material) { material_ = material; }
 
 	void Skinning();
 
@@ -115,6 +116,7 @@ public:
 	//* getter *//
 
 	std::shared_ptr<UAssetMaterial> GetMaterial() const;
+	const UAssetParameter<UAssetMaterial>& GetMaterialParameter() const { return material_; }
 
 	const InputSkinnedMesh::InputUnorderedVertex* GetInputVertex() const { return mesh_.vertex.get(); }
 	const InputMesh::InputIndex* GetInputIndex() const { return referenceMesh_.Require()->GetInputIndex(); }

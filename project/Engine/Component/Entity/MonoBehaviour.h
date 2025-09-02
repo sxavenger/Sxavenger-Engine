@@ -159,6 +159,8 @@ public:
 
 	bool HasChild() const { return !children_.empty(); }
 
+	void ForEachChild(const std::function<void(MonoBehaviour*)>& function);
+
 	//* inspector option *//
 
 	virtual void ShowInspector() override;

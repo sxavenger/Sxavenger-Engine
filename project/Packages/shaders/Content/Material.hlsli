@@ -20,6 +20,8 @@ namespace MaterialLib {
 #else
 		return texture.Sample(sample, texcoord);
 #endif
+		//!< - pixel shader: texture.Sample(_samples, _texcoord)
+		//!< - compute shader: texture.SampleLevel(_samples, _texcoord, 0)
 	}
 	
 	////////////////////////////////////////////////////////////////////////////////////////////
@@ -42,10 +44,6 @@ namespace MaterialLib {
 			texcoord = _texcoord;
 			samplers = _samplers;
 		}
-
-		//!< HACK: texture sample functions.
-		//!< - pixel shader: texture.Sample(_samples, _texcoord)
-		//!< - compute shader: texture.SampleLevel(_samples, _texcoord, 0)
 	};
 
 	////////////////////////////////////////////////////////////////////////////////////////////
@@ -79,19 +77,19 @@ namespace MaterialLib {
 				case 1:
 					{
 						Texture2D<float4> texture = ResourceDescriptorHeap[index];
-						output = ACES::IDT_sRGB_AP1(SampleTexture(texture, parameter.samplers, parameter.texcoord).rgb);
+						output = SampleTexture(texture, parameter.samplers, parameter.texcoord).rgb;
 					}
 					break;
 				
 				case 2:
 					{
 						Texture2D<float4> texture = ResourceDescriptorHeap[index];
-						output = ACES::IDT_sRGB_AP1(SampleTexture(texture, parameter.samplers, parameter.texcoord).rgb) * color;
+						output = SampleTexture(texture, parameter.samplers, parameter.texcoord).rgb * color;
 					}
 					break;
 			}
 
-			return output;
+			return ACES::IDT_sRGB_AP1(output);
 		}
 	};
 

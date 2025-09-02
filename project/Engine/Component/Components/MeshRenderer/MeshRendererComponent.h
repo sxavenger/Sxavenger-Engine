@@ -52,6 +52,9 @@ public:
 	std::shared_ptr<UAssetMesh> GetMesh() const;
 	std::shared_ptr<UAssetMaterial> GetMaterial() const;
 
+	const UAssetParameter<UAssetMesh>& GetMeshParameter() const { return mesh_; }
+	const UAssetParameter<UAssetMaterial>& GetMaterialParameter() const { return material_; }
+
 	const TransformComponent* GetTransform() const;
 
 	uint8_t GetMask() const { return mask_.Get(); }

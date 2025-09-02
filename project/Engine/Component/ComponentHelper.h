@@ -11,6 +11,7 @@
 #include <Engine/System/Runtime/Performance/TimePoint.h>
 #include <Engine/Content/Animation/Animation.h>
 #include <Engine/Preview/Content/UContentModel.h>
+#include <Engine/Preview/Asset/UAssetMaterial.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // ComponentHelper class
@@ -72,6 +73,18 @@ public:
 	//* storage helper *//
 
 	static void RegisterComponents();
+
+	//* behaviour helper *//
+
+	static void ForEachBehaviour(MonoBehaviour* behaviour, const std::function<void(MonoBehaviour*)>& function);
+
+	//* render helper *//
+
+	static void DetachBehaviourMaterial(MonoBehaviour* root);
+
+	static void ModifyBehaviourMaterial(MonoBehaviour* root, const std::function<void(UAssetMaterial*)>& function);
+
+	
 
 private:
 };

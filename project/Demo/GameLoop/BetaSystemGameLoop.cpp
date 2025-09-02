@@ -78,10 +78,10 @@ void BetaSystemGameLoop::InitSystem() {
 	light->SetRadiance(sUContentStorage->Import<UContentTexture>("assets/textures/textureCube/sky_radiance.dds")->GetId());
 	light->SetEnvironment(sUContentStorage->Import<UContentTexture>("assets/textures/textureCube/sky_environment.dds")->GetId());
 
-	//player_ = std::make_unique<Player>();
-	//player_->Load();
-	//player_->Awake();
-	//player_->Start();
+	player_ = std::make_unique<Player>();
+	player_->Load();
+	player_->Awake();
+	player_->Start();
 
 	//leadParticle_ = std::make_unique<LeadParticle>();
 	//leadParticle_->Load();
@@ -115,6 +115,11 @@ void BetaSystemGameLoop::InitSystem() {
 	text->SetText(L"Sxavenger Engine");
 
 	t->GetTransform().translate = { 200.0f, 200.0f };
+
+	ComponentHelper::DetachBehaviourMaterial(player_.get());
+	ComponentHelper::ModifyBehaviourMaterial(player_.get(), [](UAssetMaterial* material) {
+		material->GetBuffer().albedo.SetValueMultiply({ 1.0f, 0.0f, 0.0f });
+	});
 }
 
 void BetaSystemGameLoop::TermSystem() {
@@ -129,7 +134,7 @@ void BetaSystemGameLoop::UpdateSystem() {
 	//atmosphere_->Update();
 	camera_->Update();
 
-	//player_->Update();
+	player_->Update();
 
 	//leadParticle_->Update();
 

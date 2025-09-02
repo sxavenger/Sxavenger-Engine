@@ -32,10 +32,19 @@ public:
 
 	using UAssetType = T;
 
+	////////////////////////////////////////////////////////////////////////////////////////////
+	// Parameter variant
+	////////////////////////////////////////////////////////////////////////////////////////////
 	using Parameter = std::variant<std::monostate, Uuid, std::shared_ptr<T>>;
 	//! monostate: 空の状態
 	//! Uuid: uassetのid
 	//! std::shared_ptr<T>: userが作成したuasset
+
+	enum class State : uint8_t {
+		Monostate, //!< monostate:          空の状態
+		Uuid,      //!< Uuid:               uassetのid
+		Ptr,       //!< std::shared_ptr<T>: userが作成したuasset
+	};
 
 public:
 
@@ -48,7 +57,9 @@ public:
 	UAssetParameter(const std::shared_ptr<T>& asset) { Set(asset); }
 	UAssetParameter(const Uuid& id) { Set(id); }
 
-	bool Empty() const { return std::holds_alternative<std::monostate>(parameter_); }
+	State GetState() const;
+
+	bool Empty() const { return GetState() == State::Monostate; }
 
 	void Reset() { parameter_ = std::monostate{}; }
 
@@ -96,6 +107,11 @@ private:
 // UAssetParameter class template methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
+template<UAssetConcept T>
+inline UAssetParameter<T>::State UAssetParameter<T>::GetState() const {
+	return static_cast<State>(parameter_.index());
+}
+
 template <UAssetConcept T>
 inline void UAssetParameter<T>::Set(const std::shared_ptr<T>& asset) {
 	if (asset->HasId()) {
@@ -107,15 +123,15 @@ inline void UAssetParameter<T>::Set(const std::shared_ptr<T>& asset) {
 
 template <UAssetConcept T>
 inline std::shared_ptr<T> UAssetParameter<T>::Get() const {
-	switch (parameter_.index()) {
-		default:
-			return nullptr;
-
-		case 1: //!< Uuid
+	switch (GetState()) {
+		case State::Uuid:
 			return sUAssetStorage->GetAsset<T>(std::get<Uuid>(parameter_));
 
-		case 2: //!< std::shared_ptr<T>
+		case State::Ptr: //!< std::shared_ptr<T>
 			return std::get<std::shared_ptr<T>>(parameter_);
+
+		default:
+			return nullptr;
 	}
 }
 
@@ -140,8 +156,8 @@ inline std::shared_ptr<T> UAssetParameter<T>::WaitRequire() const {
 
 template <UAssetConcept T>
 inline json UAssetParameter<T>::Serialize() const {
-	switch (parameter_.index()) {
-		case 1: //!< Uuid
+	switch (GetState()) {
+		case State::Uuid:
 			return std::get<Uuid>(parameter_).Serialize();
 
 		default:
@@ -151,9 +167,12 @@ inline json UAssetParameter<T>::Serialize() const {
 
 template <UAssetConcept T>
 inline std::string UAssetParameter<T>::GetStr() const {
-	switch (parameter_.index()) {
-		case 1: //!< Uuid
+	switch (GetState()) {
+		case State::Uuid:
 			return std::get<Uuid>(parameter_).Serialize();
+
+		case State::Ptr:
+			return "Ptr";
 		
 		default:
 			return "null";
