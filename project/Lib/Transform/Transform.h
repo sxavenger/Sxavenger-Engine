@@ -127,7 +127,9 @@ public:
 	// public methods
 	//=========================================================================================
 
-	void SetImGuiCommand(float granularityTranslate = 0.01f, float granularityScale = 0.01f);
+	void SetImGuiCommand(float granularityTranslate = 1.0f, float granularityScale = 1.0f);
+
+	Matrix4x4 ToMatrixPivot() const;
 
 	Matrix4x4 ToMatrix() const;
 

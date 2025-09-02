@@ -232,7 +232,7 @@ void RenderSceneEditor::ManipulateCanvas(MonoBehaviour* behaviour) {
 
 	SxImGuizmo::SetRect({ canvasRect_.pos.x, canvasRect_.pos.y }, { canvasRect_.size.x, canvasRect_.size.y });
 
-	Matrix4x4 m = component->GetMatrix();
+	Matrix4x4 m = component->GetTransform().ToMatrix();
 
 	SxImGuizmo::Enable(!component->HasParent());
 

@@ -123,7 +123,7 @@ void RectTransform::SetImGuiCommand(float granularityTranslate, float granularit
 	SxImGui::DragFloat("priority", &priority, 0.01f, 0.0f);
 }
 
-Matrix4x4 RectTransform::ToMatrix() const {
+Matrix4x4 RectTransform::ToMatrixPivot() const {
 	Matrix4x4 mat = Matrix4x4::Identity();
 
 	mat *= Matrix4x4::MakeTranslate({ -pivot.x, -pivot.y, 0.0f });
@@ -133,4 +133,8 @@ Matrix4x4 RectTransform::ToMatrix() const {
 	mat *= Matrix4x4::MakeTranslate({ translate.x, translate.y, priority });
 
 	return mat;
+}
+
+Matrix4x4 RectTransform::ToMatrix() const {
+	return Matrix4x4::MakeAffine({ scale.x, scale.y, 1.0f }, { 0.0f, 0.0f, rotate }, { translate.x, translate.y, priority });
 }

@@ -35,7 +35,7 @@ const D3D12_GPU_VIRTUAL_ADDRESS& RectTransformComponent::GetGPUVirtualAddress() 
 }
 
 void RectTransformComponent::UpdateMatrix() {
-	mat_ = transform_.ToMatrix();
+	mat_ = transform_.ToMatrixPivot();
 
 	if (auto parent = BaseComponent::GetBehaviour()->GetParent()) {
 		if (auto component = parent->GetComponent<RectTransformComponent>()) {
