@@ -263,6 +263,9 @@ void ComponentHelper::DetachBehaviourMaterial(MonoBehaviour* root) {
 		if (auto component = behaviour->GetComponent<MeshRendererComponent>()) {
 			std::shared_ptr<UAssetMaterial> material = std::make_shared<UAssetMaterial>(std::nullopt);
 			std::shared_ptr<UAssetMaterial> reference = component->GetMaterial();
+			reference->WaitComplete();
+			reference->Wait();
+			reference->Update();
 
 			material->Copy(*reference);
 
@@ -272,6 +275,9 @@ void ComponentHelper::DetachBehaviourMaterial(MonoBehaviour* root) {
 		if (auto component = behaviour->GetComponent<SkinnedMeshRendererComponent>()) {
 			std::shared_ptr<UAssetMaterial> material = std::make_shared<UAssetMaterial>(std::nullopt);
 			std::shared_ptr<UAssetMaterial> reference = component->GetMaterial();
+			reference->WaitComplete();
+			reference->Wait();
+			reference->Update();
 
 			material->Copy(*reference);
 

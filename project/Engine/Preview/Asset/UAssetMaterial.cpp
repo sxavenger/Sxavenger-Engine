@@ -37,7 +37,7 @@ void UAssetMaterial::Albedo::SetTexture(uint32_t _index) {
 }
 
 void UAssetMaterial::Albedo::SetValueMultiply(const Color3f& _color) {
-	if (type != Type::Texture) { 
+	if (type == Type::Value) {
 		SetValue(_color); //!< Textureが設定されていない場合はValueとして設定
 		return;
 	}
