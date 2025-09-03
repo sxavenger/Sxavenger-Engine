@@ -71,17 +71,17 @@ const TransformComponent* DirectionalLightComponent::RequireTransform() const {
 json DirectionalLightComponent::PerseToJson() const {
 	json data = json::object();
 
-	data["color"]           = GeometryJsonSerializer::ToJson(parameter_->At(0).color);
-	data["intensity"]       = parameter_->At(0).intensity;
-	data["shadow_strength"] = LightCommon::GetShadowParameter().strength;
-	data["shadow_flag"]     = LightCommon::GetShadowParameter().flag.Get();
+	data["color"]           = JsonSerializeFormatter<Color3f>::Serialize(parameter_->At(0).color);
+	data["intensity"]       = JsonSerializeFormatter<float>::Serialize(parameter_->At(0).intensity);
+	data["shadow_strength"] = JsonSerializeFormatter<float>::Serialize(LightCommon::GetShadowParameter().strength);
+	data["shadow_flag"]     = JsonSerializeFormatter<uint32_t>::Serialize(LightCommon::GetShadowParameter().flag.Get());
 
 	return data;
 }
 
 void DirectionalLightComponent::InputJson(const json& data) {
-	parameter_->At(0).color                    = GeometryJsonSerializer::JsonToColor3f(data["color"]);
-	parameter_->At(0).intensity                = data["intensity"].get<float>();
-	LightCommon::GetShadowParameter().strength = data["shadow_strength"].get<float>();
-	LightCommon::GetShadowParameter().flag     = data["shadow_flag"].get<uint32_t>();
+	parameter_->At(0).color                    = JsonSerializeFormatter<Color3f>::Deserialize(data["color"]);
+	parameter_->At(0).intensity                = JsonSerializeFormatter<float>::Deserialize(data["intensity"]);
+	LightCommon::GetShadowParameter().strength = JsonSerializeFormatter<float>::Deserialize(data["shadow_strength"]);
+	LightCommon::GetShadowParameter().flag     = JsonSerializeFormatter<uint32_t>::Deserialize(data["shadow_flag"]);
 }

@@ -202,7 +202,6 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="Engine\Content\Exporter\TextureExporter.cpp" />
     <ClCompile Include="Engine\Component\Components\PostProcessLayer\PostProcessAutoExposure.cpp" />
     <ClCompile Include="Engine\Content\InputGeometry\InputUIVertex.cpp" />
-    <ClCompile Include="Engine\Content\Material\Material.cpp" />
     <ClCompile Include="Engine\GameLoop\FeatureLevelGameLoop.cpp" />
     <ClCompile Include="Demo\GameLoop\PreviewGameLoop.cpp" />
     <ClCompile Include="Engine\Adapter\Actor\AtmosphereActor.cpp" />
@@ -353,7 +352,6 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="Engine\System\UI\SxImGui.cpp" />
     <ClCompile Include="Engine\System\Utility\Logger.cpp" />
     <ClCompile Include="Engine\System\WinApp\WinApp.cpp" />
-    <ClCompile Include="Lib\Adapter\Json\IJsonSerializer.cpp" />
     <ClCompile Include="Lib\Adapter\Json\JsonHandler.cpp" />
     <ClCompile Include="Lib\Easing.cpp" />
     <ClCompile Include="Lib\Geometry\Matrix4x4.cpp" />
@@ -382,7 +380,6 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Engine\Content\Exporter\TextureExporter.h" />
     <ClInclude Include="Engine\Component\Components\PostProcessLayer\PostProcessAutoExposure.h" />
     <ClInclude Include="Engine\Content\InputGeometry\InputUIVertex.h" />
-    <ClInclude Include="Engine\Content\Material\Material.h" />
     <ClInclude Include="Engine\GameLoop\FeatureLevelGameLoop.h" />
     <ClInclude Include="Engine\Adapter\Actor\AtmosphereActor.h" />
     <ClInclude Include="Engine\Adapter\Actor\ControllableCameraActor.h" />
@@ -474,6 +471,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Engine\System\DirectX\DxObject\DxReadbackDimensionBuffer.h" />
     <ClInclude Include="Engine\System\DirectX\DxObject\DxResourceTracker.h" />
     <ClInclude Include="Engine\System\Window\WindowCollection.h" />
+    <ClInclude Include="Lib\Adapter\Json\JsonSerializer.h" />
     <ClInclude Include="Lib\Adapter\Uuid\Uuid.h" />
     <ClInclude Include="Engine\Render\Common\FLUTTexture.h" />
     <ClInclude Include="Engine\Render\Common\FProcessTexture.h" />
@@ -546,7 +544,6 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Engine\System\Utility\ComPtr.h" />
     <ClInclude Include="Engine\System\Utility\Logger.h" />
     <ClInclude Include="Engine\System\WinApp\WinApp.h" />
-    <ClInclude Include="Lib\Adapter\Json\IJsonSerializer.h" />
     <ClInclude Include="Lib\Adapter\Json\JsonHandler.h" />
     <ClInclude Include="Lib\Adapter\Random\Random.h" />
     <ClInclude Include="Lib\CXXAttributeConfig.h" />

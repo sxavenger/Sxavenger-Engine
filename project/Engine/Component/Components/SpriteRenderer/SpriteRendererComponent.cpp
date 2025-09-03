@@ -109,23 +109,23 @@ const RectTransformComponent* SpriteRendererComponent::GetRectTransform() const 
 
 json SpriteRendererComponent::PerseToJson() const {
 	json component = json::object();
-	component["isEnable"]    = isEnable_;
+	component["isEnable"]    = JsonSerializeFormatter<bool>::Serialize(isEnable_);
 	component["transformUV"] = transformUV_.PerseToJson();
 	component["texture"]     = texture_.Serialize();
 
 	for (uint8_t i = 0; i < magic_enum::enum_count<VertexPoint>(); ++i) {
-		component["color"][magic_enum::enum_name(static_cast<VertexPoint>(i)).data()] = GeometryJsonSerializer::ToJson(color_[i]);
+		component["color"][magic_enum::enum_name(static_cast<VertexPoint>(i)).data()] = JsonSerializeFormatter<Color4f>::Serialize(color_[i]);
 	}
 
 	return component;
 }
 
 void SpriteRendererComponent::InputJson(const json& data) {
-	isEnable_    = data.at("isEnable").get<bool>();
+	isEnable_    = JsonSerializeFormatter<bool>::Deserialize(data.at("isEnable"));
 	transformUV_.InputJson(data.at("transformUV"));
 
 	if (!data["texture"].is_null()) {
-		Uuid texture = Uuid::Deserialize(data["texture"].get<std::string>());
+		Uuid texture = Uuid::Deserialize(JsonSerializeFormatter<std::string>::Deserialize(data.at("texture")));
 
 		// textureのuuidが存在しない場合は, tableから読み込み
 
@@ -138,7 +138,7 @@ void SpriteRendererComponent::InputJson(const json& data) {
 	}
 
 	for (uint8_t i = 0; i < magic_enum::enum_count<VertexPoint>(); ++i) {
-		color_[i] = GeometryJsonSerializer::JsonToColor4f(data.at("color").at(magic_enum::enum_name(static_cast<VertexPoint>(i)).data()));
+		color_[i] = JsonSerializeFormatter<Color4f>::Deserialize(data.at("color").at(magic_enum::enum_name(static_cast<VertexPoint>(i)).data()));
 	}
 }
 

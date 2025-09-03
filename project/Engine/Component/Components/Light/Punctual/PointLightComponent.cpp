@@ -91,21 +91,21 @@ const TransformComponent* PointLightComponent::RequireTransform() const {
 json PointLightComponent::PerseToJson() const {
 	json data = json::object();
 
-	data["color"]           = GeometryJsonSerializer::ToJson(parameter_->At(0).color);
+	data["color"]           = JsonSerializeFormatter<Color3f>::Serialize(parameter_->At(0).color);
 	data["unit"]            = magic_enum::enum_name(parameter_->At(0).unit);
-	data["intensity"]       = parameter_->At(0).intensity;
-	data["radius"]          = parameter_->At(0).radius;
-	data["shadow_strength"] = LightCommon::GetShadowParameter().strength;
-	data["shadow_flag"]     = LightCommon::GetShadowParameter().flag.Get();
+	data["intensity"]       = JsonSerializeFormatter<float>::Serialize(parameter_->At(0).intensity);
+	data["radius"]          = JsonSerializeFormatter<float>::Serialize(parameter_->At(0).radius);
+	data["shadow_strength"] = JsonSerializeFormatter<float>::Serialize(LightCommon::GetShadowParameter().strength);
+	data["shadow_flag"]     = JsonSerializeFormatter<uint32_t>::Serialize(LightCommon::GetShadowParameter().flag.Get());
 
 	return data;
 }
 
 void PointLightComponent::InputJson(const json& data) {
-	parameter_->At(0).color                    = GeometryJsonSerializer::JsonToColor3f(data["color"]);
-	parameter_->At(0).unit                     = magic_enum::enum_cast<Units>(data["unit"].get<std::string>()).value_or(Units::Candela);
-	parameter_->At(0).intensity                = data["intensity"].get<float>();
-	parameter_->At(0).radius                   = data["radius"].get<float>();
-	LightCommon::GetShadowParameter().strength = data["shadow_strength"].get<float>();
-	LightCommon::GetShadowParameter().flag     = data["shadow_flag"].get<uint32_t>();
+	parameter_->At(0).color                    = JsonSerializeFormatter<Color3f>::Deserialize(data["color"]);
+	parameter_->At(0).unit                     = magic_enum::enum_cast<Units>(JsonSerializeFormatter<std::string>::Deserialize(data["unit"])).value();
+	parameter_->At(0).intensity                = JsonSerializeFormatter<float>::Deserialize(data["intensity"]);
+	parameter_->At(0).radius                   = JsonSerializeFormatter<float>::Deserialize(data["radius"]);
+	LightCommon::GetShadowParameter().strength = JsonSerializeFormatter<float>::Deserialize(data["shadow_strength"]);
+	LightCommon::GetShadowParameter().flag     = JsonSerializeFormatter<uint32_t>::Deserialize(data["shadow_flag"]);
 }

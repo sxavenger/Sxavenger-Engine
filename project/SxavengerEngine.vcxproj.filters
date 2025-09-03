@@ -28,7 +28,6 @@
     <ClCompile Include="Engine\System\DirectX\DxObject\DxBlendState.cpp" />
     <ClCompile Include="Engine\System\UI\ImGuiController.cpp" />
     <ClCompile Include="Engine\System\DirectX\DxObject\DxBindBuffer.cpp" />
-    <ClCompile Include="Lib\Adapter\Json\IJsonSerializer.cpp" />
     <ClCompile Include="Engine\System\DirectX\DxObject\DxShaderBlob.cpp" />
     <ClCompile Include="Engine\System\DirectX\DxObject\DxGraphicsPipelineState.cpp" />
     <ClCompile Include="Engine\System\DirectX\DxObject\DxComputePipelineState.cpp" />
@@ -142,7 +141,6 @@
     <ClCompile Include="Engine\Content\Exporter\TextureExporter.cpp" />
     <ClCompile Include="Engine\System\Utility\UtilityCommon.cpp" />
     <ClCompile Include="Lib\Adapter\Uuid\Uuid.cpp" />
-    <ClCompile Include="Engine\Content\Material\Material.cpp" />
     <ClCompile Include="Engine\Render\Core\FRenderCorePathtracing.cpp" />
     <ClCompile Include="Demo\Object\PivotCamera.cpp" />
     <ClCompile Include="Engine\System\DirectX\Context\DirectXQueueContext.cpp" />
@@ -210,7 +208,6 @@
     <ClInclude Include="Engine\System\Cinfig\SxavengerDirectory.h" />
     <ClInclude Include="Engine\System\DirectX\DxObject\DxBlendState.h" />
     <ClInclude Include="Engine\System\UI\ImGuiController.h" />
-    <ClInclude Include="Lib\Adapter\Json\IJsonSerializer.h" />
     <ClInclude Include="Engine\System\DirectX\DxObject\DxBindBuffer.h" />
     <ClInclude Include="Engine\System\UI\ISystemDebugGui.h" />
     <ClInclude Include="Lib\Sxl\OptimizedMap.h" />
@@ -349,7 +346,6 @@
     <ClInclude Include="Lib\Sxl\OptimizedPathSet.h" />
     <ClInclude Include="Lib\Adapter\Uuid\Uuid.h" />
     <ClInclude Include="Demo\GameLoop\PreviewGameLoop.h" />
-    <ClInclude Include="Engine\Content\Material\Material.h" />
     <ClInclude Include="Engine\Render\Core\FRenderCorePathtracing.h" />
     <ClInclude Include="Engine\System\DirectX\DxObject\DxReadbackDimensionBuffer.h" />
     <ClInclude Include="Demo\Object\PivotCamera.h" />
@@ -395,6 +391,7 @@
     <ClInclude Include="Engine\Content\InputGeometry\InputUIVertex.h" />
     <ClInclude Include="Engine\Component\Components\Transform\RectTransformComponent.h" />
     <ClInclude Include="Engine\Component\Components\SpriteRenderer\SpriteRendererComponent.h" />
+    <ClInclude Include="Lib\Adapter\Json\JsonSerializer.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

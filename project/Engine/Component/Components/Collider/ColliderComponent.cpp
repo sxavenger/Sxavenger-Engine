@@ -283,8 +283,8 @@ TransformComponent* ColliderComponent::RequireTransform() const {
 json ColliderComponent::PerseToJson() const {
 	json data = json::object();
 
-	data["tag"]      = tag_;
-	data["isEnable"] = isEnable_;
+	data["isEnable"] = JsonSerializeFormatter<bool>::Serialize(isEnable_);
+	data["tag"]      = JsonSerializeFormatter<std::string>::Serialize(tag_);
 
 	json& bounding = data["bounding"] = json::object();
 
@@ -303,9 +303,9 @@ json ColliderComponent::PerseToJson() const {
 			{
 				const auto& capsule = std::get<CollisionBoundings::Capsule>(bounding_);
 
-				bounding["direction"] = GeometryJsonSerializer::ToJson(capsule.direction);
-				bounding["radius"]    = capsule.radius;
-				bounding["length"]    = capsule.length;
+				bounding["direction"] = JsonSerializeFormatter<Vector3f>::Serialize(capsule.direction);
+				bounding["radius"]    = JsonSerializeFormatter<float>::Serialize(capsule.radius);
+				bounding["length"]    = JsonSerializeFormatter<float>::Serialize(capsule.length);
 			}
 			break;
 
@@ -313,8 +313,8 @@ json ColliderComponent::PerseToJson() const {
 			{
 				const auto& aabb = std::get<CollisionBoundings::AABB>(bounding_);
 
-				bounding["min"] = GeometryJsonSerializer::ToJson(aabb.min);
-				bounding["max"] = GeometryJsonSerializer::ToJson(aabb.max);
+				bounding["min"] = JsonSerializeFormatter<Vector3f>::Serialize(aabb.min);
+				bounding["max"] = JsonSerializeFormatter<Vector3f>::Serialize(aabb.max);
 			}
 			break;
 
@@ -322,8 +322,8 @@ json ColliderComponent::PerseToJson() const {
 			{
 				const auto& obb = std::get<CollisionBoundings::OBB>(bounding_);
 
-				bounding["orientation"] = GeometryJsonSerializer::ToJson(obb.orientation);
-				bounding["size"]        = GeometryJsonSerializer::ToJson(obb.size);
+				bounding["orientation"] = JsonSerializeFormatter<Quaternion>::Serialize(obb.orientation);
+				bounding["size"]        = JsonSerializeFormatter<Vector3f>::Serialize(obb.size);
 			}
 			break;
 	}
@@ -332,17 +332,17 @@ json ColliderComponent::PerseToJson() const {
 }
 
 void ColliderComponent::InputJson(const json& data) {
-	tag_      = data.value("tag", tag_);
-	isEnable_ = data.value("isEnable", isEnable_);
+	tag_      = JsonSerializeFormatter<std::string>::Deserialize(data["tag"]);
+	isEnable_ = JsonSerializeFormatter<bool>::Deserialize(data["isEnable"]);
 
 	const auto& bounding = data["bounding"];
-	const auto type      = magic_enum::enum_cast<CollisionBoundings::BoundingType>(bounding["type"].get<std::string>()).value();
+	const auto type      = magic_enum::enum_cast<CollisionBoundings::BoundingType>(JsonSerializeFormatter<std::string>::Deserialize(bounding.at("type"))).value();
 
 	switch (type) {
 		case CollisionBoundings::BoundingType::Sphere:
 			{
 				CollisionBoundings::Sphere sphere = {};
-				sphere.radius = bounding["radius"].get<float>();
+				sphere.radius = JsonSerializeFormatter<float>::Deserialize(bounding["radius"]);
 
 				SetColliderBounding(sphere);
 			}
@@ -351,9 +351,9 @@ void ColliderComponent::InputJson(const json& data) {
 		case CollisionBoundings::BoundingType::Capsule:
 			{
 				CollisionBoundings::Capsule capsule = {};
-				capsule.direction = GeometryJsonSerializer::JsonToVector3f(bounding["direction"]);
-				capsule.radius    = bounding["radius"].get<float>();
-				capsule.length    = bounding["length"].get<float>();
+				capsule.direction = JsonSerializeFormatter<Vector3f>::Deserialize(bounding["direction"]);
+				capsule.radius    = JsonSerializeFormatter<float>::Deserialize(bounding["radius"]);
+				capsule.length    = JsonSerializeFormatter<float>::Deserialize(bounding["length"]);
 
 				SetColliderBounding(capsule);
 			}
@@ -362,8 +362,8 @@ void ColliderComponent::InputJson(const json& data) {
 		case CollisionBoundings::BoundingType::AABB:
 			{
 				CollisionBoundings::AABB aabb = {};
-				aabb.min = GeometryJsonSerializer::JsonToVector3f(bounding["min"]);
-				aabb.max = GeometryJsonSerializer::JsonToVector3f(bounding["max"]);
+				aabb.min = JsonSerializeFormatter<Vector3f>::Deserialize(bounding["min"]);
+				aabb.max = JsonSerializeFormatter<Vector3f>::Deserialize(bounding["max"]);
 
 				SetColliderBounding(aabb);
 			}
@@ -372,8 +372,8 @@ void ColliderComponent::InputJson(const json& data) {
 		case CollisionBoundings::BoundingType::OBB:
 			{
 				CollisionBoundings::OBB obb = {};
-				obb.orientation = GeometryJsonSerializer::JsonToQuaternion(bounding["orientation"]);
-				obb.size        = GeometryJsonSerializer::JsonToVector3f(bounding["size"]);
+				obb.orientation = JsonSerializeFormatter<Quaternion>::Deserialize(bounding["orientation"]);
+				obb.size        = JsonSerializeFormatter<Vector3f>::Deserialize(bounding["size"]);
 
 				SetColliderBounding(obb);
 			}

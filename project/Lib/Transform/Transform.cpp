@@ -54,16 +54,16 @@ Vector3f QuaternionTransform::GetForward() const {
 
 json QuaternionTransform::PerseToJson() const {
 	json data = json::object();
-	data["translate"] = GeometryJsonSerializer::ToJson(translate);
-	data["rotate"]    = GeometryJsonSerializer::ToJson(rotate);
-	data["scale"]     = GeometryJsonSerializer::ToJson(scale);
+	data["translate"] = JsonSerializeFormatter<Vector3f>::Serialize(translate);
+	data["rotate"]    = JsonSerializeFormatter<Quaternion>::Serialize(rotate);
+	data["scale"]     = JsonSerializeFormatter<Vector3f>::Serialize(scale);
 	return data;
 }
 
 void QuaternionTransform::InputJson(const json& data) {
-	translate = GeometryJsonSerializer::JsonToVector3f(data.at("translate"));
-	rotate    = GeometryJsonSerializer::JsonToQuaternion(data.at("rotate"));
-	scale     = GeometryJsonSerializer::JsonToVector3f(data.at("scale"));
+	translate = JsonSerializeFormatter<Vector3f>::Deserialize(data.at("translate"));
+	rotate    = JsonSerializeFormatter<Quaternion>::Deserialize(data.at("rotate"));
+	scale     = JsonSerializeFormatter<Vector3f>::Deserialize(data.at("scale"));
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -96,16 +96,16 @@ Matrix4x4 Transform2d::ToMatrix() const {
 
 json Transform2d::PerseToJson() const {
 	json data = json::object();
-	data["translate"] = GeometryJsonSerializer::ToJson(translate);
-	data["rotate"]    = rotate;
-	data["scale"]     = GeometryJsonSerializer::ToJson(scale);
+	data["translate"] = JsonSerializeFormatter<Vector2f>::Serialize(translate);
+	data["rotate"]    = JsonSerializeFormatter<float>::Serialize(rotate);
+	data["scale"]     = JsonSerializeFormatter<Vector2f>::Serialize(scale);
 	return data;
 }
 
 void Transform2d::InputJson(const json& data) {
-	translate = GeometryJsonSerializer::JsonToVector2f(data.at("translate"));
-	rotate    = data.at("rotate");
-	scale     = GeometryJsonSerializer::JsonToVector2f(data.at("scale"));
+	translate = JsonSerializeFormatter<Vector2f>::Deserialize(data.at("translate"));
+	rotate    = JsonSerializeFormatter<float>::Deserialize(data.at("rotate"));
+	scale     = JsonSerializeFormatter<Vector2f>::Deserialize(data.at("scale"));
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -141,18 +141,18 @@ Matrix4x4 RectTransform::ToMatrix() const {
 
 json RectTransform::PerseToJson() const {
 	json data = json::object();
-	data["translate"] = GeometryJsonSerializer::ToJson(translate);
-	data["rotate"]    = rotate;
-	data["scale"]     = GeometryJsonSerializer::ToJson(scale);
-	data["pivot"]     = GeometryJsonSerializer::ToJson(pivot);
-	data["priority"]  = priority;
+	data["translate"] = JsonSerializeFormatter<Vector2f>::Serialize(translate);
+	data["rotate"]    = JsonSerializeFormatter<float>::Serialize(rotate);
+	data["scale"]     = JsonSerializeFormatter<Vector2f>::Serialize(scale);
+	data["pivot"]     = JsonSerializeFormatter<Vector2f>::Serialize(pivot);
+	data["priority"]  = JsonSerializeFormatter<float>::Serialize(priority);
 	return data;
 }
 
 void RectTransform::InputJson(const json& data) {
-	translate = GeometryJsonSerializer::JsonToVector2f(data.at("translate"));
-	rotate    = data.at("rotate");
-	scale     = GeometryJsonSerializer::JsonToVector2f(data.at("scale"));
-	pivot     = GeometryJsonSerializer::JsonToVector2f(data.at("pivot"));
-	priority = data.at("priority");
+	translate = JsonSerializeFormatter<Vector2f>::Deserialize(data.at("translate"));
+	rotate    = JsonSerializeFormatter<float>::Deserialize(data.at("rotate"));
+	scale     = JsonSerializeFormatter<Vector2f>::Deserialize(data.at("scale"));
+	pivot     = JsonSerializeFormatter<Vector2f>::Deserialize(data.at("pivot"));
+	priority  = JsonSerializeFormatter<float>::Deserialize(data.at("priority"));
 }

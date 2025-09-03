@@ -59,10 +59,10 @@ Matrix4x4 CameraComponent::Projection::ToProj() const {
 json CameraComponent::PerseToJson() const {
 	json component = json::object();
 
-	component["sensor"] = GeometryJsonSerializer::ToJson(projection_.sensor);
-	component["focal"]  = projection_.focal;
-	component["nearZ"]  = projection_.nearZ;
-	component["farZ"]   = projection_.farZ;
+	component["sensor"] = JsonSerializeFormatter<Vector2f>::Serialize(projection_.sensor);
+	component["focal"]  = JsonSerializeFormatter<float>::Serialize(projection_.focal);
+	component["nearZ"]  = JsonSerializeFormatter<float>::Serialize(projection_.nearZ);
+	component["farZ"]   = JsonSerializeFormatter<float>::Serialize(projection_.farZ);
 
 	component["tag"] = magic_enum::enum_name(GetTag());
 
@@ -70,12 +70,12 @@ json CameraComponent::PerseToJson() const {
 }
 
 void CameraComponent::InputJson(const json& data) {
-	projection_.sensor = GeometryJsonSerializer::JsonToVector2f(data.at("sensor"));
-	projection_.focal  = data.at("focal").get<float>();
-	projection_.nearZ  = data.at("nearZ").get<float>();
-	projection_.farZ   = data.at("farZ").get<float>();
+	projection_.sensor = JsonSerializeFormatter<Vector2f>::Deserialize(data.at("sensor"));
+	projection_.focal  = JsonSerializeFormatter<float>::Deserialize(data.at("focal"));
+	projection_.nearZ  = JsonSerializeFormatter<float>::Deserialize(data.at("nearZ"));
+	projection_.farZ   = JsonSerializeFormatter<float>::Deserialize(data.at("farZ"));
 
-	tag_ = magic_enum::enum_cast<Tag>(data.at("tag").get<std::string>()).value();
+	tag_ = magic_enum::enum_cast<Tag>(JsonSerializeFormatter<std::string>::Deserialize(data.at("tag"))).value();
 }
 
 void CameraComponent::ShowComponentInspector() {

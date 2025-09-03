@@ -9,7 +9,7 @@
 #include <Lib/Geometry/Quaternion.h>
 #include <Lib/Geometry/Matrix4x4.h>
 #include <Lib/Geometry/GeometryMath.h>
-#include <Lib/Adapter/Json/IJsonSerializer.h>
+#include <Lib/Adapter/Json/JsonSerializer.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // EulerTransform structure
