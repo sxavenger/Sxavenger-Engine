@@ -116,10 +116,7 @@ void BetaSystemGameLoop::InitSystem() {
 
 	t->GetTransform().translate = { 200.0f, 200.0f };
 
-	ComponentHelper::DetachBehaviourMaterial(player_.get());
-	ComponentHelper::ModifyBehaviourMaterial(player_.get(), [](UAssetMaterial* material) {
-		material->GetBuffer().albedo.SetValueMultiply({ 1.0f, 0.0f, 0.0f });
-	});
+	parameter_ = std::make_unique<ParameterActor>();
 }
 
 void BetaSystemGameLoop::TermSystem() {

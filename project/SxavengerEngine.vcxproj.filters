@@ -183,6 +183,7 @@
     <ClCompile Include="Engine\Content\InputGeometry\InputUIVertex.cpp" />
     <ClCompile Include="Engine\Component\Components\Transform\RectTransformComponent.cpp" />
     <ClCompile Include="Engine\Component\Components\SpriteRenderer\SpriteRendererComponent.cpp" />
+    <ClCompile Include="Engine\Adapter\Actor\ParameterActor.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Lib\Adapter\Random\Random.h" />
@@ -392,6 +393,9 @@
     <ClInclude Include="Engine\Component\Components\Transform\RectTransformComponent.h" />
     <ClInclude Include="Engine\Component\Components\SpriteRenderer\SpriteRendererComponent.h" />
     <ClInclude Include="Lib\Adapter\Json\JsonSerializer.h" />
+    <ClInclude Include="Engine\Adapter\Parameter\SerializeGui.h" />
+    <ClInclude Include="Engine\Adapter\Parameter\SerializeParameter.h" />
+    <ClInclude Include="Engine\Adapter\Actor\ParameterActor.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

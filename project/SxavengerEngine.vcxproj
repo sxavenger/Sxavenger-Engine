@@ -188,6 +188,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="Demo\GameLoop\BetaSystemGameLoop.cpp" />
     <ClCompile Include="Demo\GameLoop\DemoGameLoop.cpp" />
     <ClCompile Include="Demo\Object\PivotCamera.cpp" />
+    <ClCompile Include="Engine\Adapter\Actor\ParameterActor.cpp" />
     <ClCompile Include="Engine\Component\Components\Collider\CollisionHelper.cpp" />
     <ClCompile Include="Engine\Component\Components\Particle\EmitterComponent.cpp" />
     <ClCompile Include="Engine\Component\Components\Particle\GPUParticleComponent.cpp" />
@@ -365,6 +366,9 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Demo\GameLoop\DemoGameLoop.h" />
     <ClInclude Include="Demo\GameLoop\PreviewGameLoop.h" />
     <ClInclude Include="Demo\Object\PivotCamera.h" />
+    <ClInclude Include="Engine\Adapter\Actor\ParameterActor.h" />
+    <ClInclude Include="Engine\Adapter\Parameter\SerializeGui.h" />
+    <ClInclude Include="Engine\Adapter\Parameter\SerializeParameter.h" />
     <ClInclude Include="Engine\Component\Components\Collider\CollisionHelper.h" />
     <ClInclude Include="Engine\Component\Components\MeshRenderer\MeshRendererCommon.h" />
     <ClInclude Include="Engine\Component\Components\Particle\EmitterComponent.h" />
