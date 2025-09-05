@@ -57,7 +57,7 @@ void CollisionCallbackCollection::CallbackOnCollisionStay(ColliderComponent* lhs
 }
 
 bool CollisionCallbackCollection::CheckRegistered(ColliderComponent* lhs, ColliderComponent* rhs) const {
-	return Contains(lhs->GetTag(), rhs->GetTag());
+	return Contains(lhs->GetTag(), rhs->GetTag()) || Contains(rhs->GetTag(), lhs->GetTag());
 }
 
 bool CollisionCallbackCollection::Contains(const std::string& tagA, const std::string& tagB) const {

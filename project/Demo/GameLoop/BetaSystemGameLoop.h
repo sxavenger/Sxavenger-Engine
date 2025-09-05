@@ -60,6 +60,9 @@ private:
 
 	std::unique_ptr<ParameterActor> parameter_;
 
+	std::unique_ptr<MonoBehaviour> colliderA_;
+	std::unique_ptr<MonoBehaviour> colliderB_;
+
 	//=========================================================================================
 	// private methods
 	//=========================================================================================

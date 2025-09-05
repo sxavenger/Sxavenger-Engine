@@ -117,6 +117,25 @@ void BetaSystemGameLoop::InitSystem() {
 	t->GetTransform().translate = { 200.0f, 200.0f };
 
 	parameter_ = std::make_unique<ParameterActor>();
+
+	colliderA_ = std::make_unique<MonoBehaviour>();
+	colliderA_->AddComponent<TransformComponent>();
+	auto colA = colliderA_->AddComponent<ColliderComponent>();
+	colA->SetTag("A");
+	colA->SetColliderBoundingSphere();
+
+	colliderB_ = std::make_unique<MonoBehaviour>();
+	colliderB_->AddComponent<TransformComponent>();
+	auto colB = colliderB_->AddComponent<ColliderComponent>();
+	colB->SetTag("B");
+	colB->SetColliderBoundingAABB();
+
+	sCollisionManager->SetOnCollisionFunctionEnter(
+		"B", "A",
+		[](ColliderComponent* a, ColliderComponent* b) {
+			Logger::CommentRuntime("info | [BetaSystemGameLoop]::OnCollisionEnter", std::format("collider {} enter collider {}", a->GetTag(), b->GetTag()));
+		}
+	);
 }
 
 void BetaSystemGameLoop::TermSystem() {
