@@ -202,6 +202,10 @@ void SxavengerLogger::Push(const StackData& data) {
 	} else {
 		stacks_.back().second++;
 	}
+
+	while (stacks_.size() > kMaxStackSize) {
+		stacks_.pop_front();
+	}
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
