@@ -32,7 +32,7 @@ public:
 	// public methods
 	//=========================================================================================
 
-	static bool CheckBox(SerializeParameter<bool>& param) {
+	static bool Checkbox(SerializeParameter<bool>& param) {
 
 		std::string label = "## " + param.Label();
 
