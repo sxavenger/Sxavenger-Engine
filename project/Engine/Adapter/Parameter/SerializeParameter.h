@@ -39,12 +39,11 @@ public:
 	SerializeParameter(const std::string& label, const T& value = T(), const std::source_location& location = std::source_location::current())
 		: label_(label), current_(std::filesystem::path(location.file_name()).filename()) {
 		//!< parameterの読み込み
-		Read(value);
+		defaultValue_ = value;
+		Read();
 	}
 
 	void Read();
-
-	void Read(const T& right);
 
 	void Save() const;
 
@@ -68,6 +67,7 @@ private:
 	//=========================================================================================
 
 	T value_;
+	T defaultValue_ = T();
 
 	const std::string label_;
 	const std::filesystem::path current_;
@@ -89,31 +89,14 @@ inline void SerializeParameter<T>::Read() {
 	std::filesystem::path filepath = GetFilepath();
 
 	if (!std::filesystem::exists(filepath)) {
+		value_ = defaultValue_;
 		return;
 	}
 
 	json data = JsonHandler::LoadFromJson(filepath);
 
 	if (!data.contains(label_)) {
-		return;
-	}
-
-	value_ = JsonSerializeFormatter<T>::Deserialize(data[label_]);
-}
-
-template <typename T>
-inline void SerializeParameter<T>::Read(const T& right) {
-	std::filesystem::path filepath = GetFilepath();
-
-	if (!std::filesystem::exists(filepath)) {
-		value_ = right;
-		return;
-	}
-
-	json data = JsonHandler::LoadFromJson(filepath);
-
-	if (!data.contains(label_)) {
-		value_ = right;
+		value_ = defaultValue_;
 		return;
 	}
 
