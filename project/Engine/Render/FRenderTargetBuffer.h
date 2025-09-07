@@ -9,6 +9,7 @@
 #include "GBuffer/FMainGBuffer.h"
 #include "Common/FDepthTexture.h"
 #include "Common/FProcessTexture.h"
+#include "Common/FPriorityTexture.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // FRenderTargetBuffer class
@@ -58,6 +59,8 @@ public:
 
 	FDepthTexture* GetDepth() { return depth_.get(); }
 
+	FPriorityTexture* GetPriority() { return priority_.get(); }
+
 	//* process texture option *//
 
 	FProcessTextureCollection* GetProcessTextures() { return process_.get(); }
@@ -81,6 +84,7 @@ private:
 	//* depth stencil parameter *//
 
 	std::unique_ptr<FDepthTexture> depth_;
+	std::unique_ptr<FPriorityTexture> priority_;
 
 	//* process texture *//
 

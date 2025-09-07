@@ -276,6 +276,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="Engine\Preview\Content\UContentScene.cpp" />
     <ClCompile Include="Engine\Preview\Content\UContentStorage.cpp" />
     <ClCompile Include="Engine\Preview\Content\UContentTexture.cpp" />
+    <ClCompile Include="Engine\Render\Common\FPriorityTexture.cpp" />
     <ClCompile Include="Engine\Render\Core\FRenderCoreTransition.cpp" />
     <ClCompile Include="Engine\Render\FRenderTargetBuffer.cpp" />
     <ClCompile Include="Engine\Render\GBuffer\FDeferredGBuffer.cpp" />
@@ -464,6 +465,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Engine\Preview\Content\UContentScene.h" />
     <ClInclude Include="Engine\Preview\Content\UContentStorage.h" />
     <ClInclude Include="Engine\Preview\Content\UContentTexture.h" />
+    <ClInclude Include="Engine\Render\Common\FPriorityTexture.h" />
     <ClInclude Include="Engine\Render\Core\FRenderCoreTransition.h" />
     <ClInclude Include="Engine\Render\FRenderTargetBuffer.h" />
     <ClInclude Include="Engine\Render\GBuffer\FDeferredGBuffer.h" />

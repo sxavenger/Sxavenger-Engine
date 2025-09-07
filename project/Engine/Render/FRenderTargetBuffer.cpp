@@ -16,6 +16,9 @@ void FRenderTargetBuffer::Create(const Vector2ui& size) {
 	depth_ = std::make_unique<FDepthTexture>();
 	depth_->Create(size_);
 
+	priority_ = std::make_unique<FPriorityTexture>();
+	priority_->Create(size_);
+
 	process_ = std::make_unique<FProcessTextureCollection>();
 	process_->Create(3, size_, FMainGBuffer::kColorFormat);
 }
@@ -71,13 +74,12 @@ void FRenderTargetBuffer::EndRenderTargetMainTransparent(const DirectXQueueConte
 }
 
 void FRenderTargetBuffer::BeginRenderTargetMainUI(const DirectXQueueContext* context) {
-	depth_->TransitionBeginRasterizer(context);
-	main_.TransitionBeginRenderTargetUI(context, depth_->GetRasterizerCPUHandleDSV());
+	main_.TransitionBeginRenderTargetUI(context, priority_->GetCPUHandleDSV());
 	main_.ClearRenderTargetUI(context);
+	priority_->ClearDepth(context);
 }
 
 void FRenderTargetBuffer::EndRenderTargetMainUI(const DirectXQueueContext* context) {
-	depth_->TransitionEndRasterizer(context);
 	main_.TransitionEndRenderTargetUI(context);
 }
 

@@ -184,6 +184,7 @@
     <ClCompile Include="Engine\Component\Components\Transform\RectTransformComponent.cpp" />
     <ClCompile Include="Engine\Component\Components\SpriteRenderer\SpriteRendererComponent.cpp" />
     <ClCompile Include="Engine\Adapter\Actor\ParameterActor.cpp" />
+    <ClCompile Include="Engine\Render\Common\FPriorityTexture.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Lib\Adapter\Random\Random.h" />
@@ -396,6 +397,7 @@
     <ClInclude Include="Engine\Adapter\Parameter\SerializeGui.h" />
     <ClInclude Include="Engine\Adapter\Parameter\SerializeParameter.h" />
     <ClInclude Include="Engine\Adapter\Actor\ParameterActor.h" />
+    <ClInclude Include="Engine\Render\Common\FPriorityTexture.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />
