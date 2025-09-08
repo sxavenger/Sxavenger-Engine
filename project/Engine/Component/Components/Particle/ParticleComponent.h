@@ -219,7 +219,7 @@ private:
 	std::unique_ptr<DxObject::DimensionBuffer<TransformationMatrix>> matrices_;
 
 	// particle
-	std::unique_ptr< DxObject::DimensionBuffer<Particle>> particles_;
+	std::unique_ptr<DxObject::DimensionBuffer<Particle>> particles_;
 
 
 	// intermediate
