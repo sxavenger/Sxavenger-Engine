@@ -11,6 +11,7 @@ _DXOBJECT_USING
 #include <Engine/System/SxavengerSystem.h>
 #include <Engine/Content/SxavengerContent.h>
 #include <Engine/Preview/Asset/UAssetStorage.h>
+#include <Engine/Preview/Content/UContentStorage.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // InputSkinnedMesh structure methods
@@ -121,7 +122,27 @@ json SkinnedMeshRendererComponent::PerseToJson() const {
 }
 
 void SkinnedMeshRendererComponent::InputJson(const json& data) {
-	data;
+
+	Uuid referenceMesh = Uuid::Deserialize(data["referenceMesh"].get<std::string>());
+	Uuid material = Uuid::Deserialize(data["material"].get<std::string>());
+
+	// referenceMesh, materialのuuidが存在しない場合は, tableから読み込み
+
+	if (!sUAssetStorage->Contains<UAssetMesh>(referenceMesh)) {
+		const auto& filepath = sUAssetStorage->GetFilepath(referenceMesh);
+		sUContentStorage->Import<UContentModel>(filepath);
+	}
+
+	if (!sUAssetStorage->Contains<UAssetMesh>(material)) {
+		const auto& filepath = sUAssetStorage->GetFilepath(material);
+		sUContentStorage->Import<UContentModel>(filepath);
+	}
+
+	CreateMesh(referenceMesh);
+	material_ = material;
+
+	mask_ = static_cast<MeshInstanceMask>(data["mask"].get<uint8_t>());
+	
 }
 
 void SkinnedMeshRendererComponent::CreateCluster() {

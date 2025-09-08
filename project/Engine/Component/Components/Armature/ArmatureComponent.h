@@ -44,6 +44,13 @@ public:
 
 	void ShowComponentInspector() override;
 
+	//* json option *//
+
+	json PerseToJson() const override;
+
+	void InputJson(const json& data) override;
+
+
 	//=========================================================================================
 	// public variables
 	//=========================================================================================

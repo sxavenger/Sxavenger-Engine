@@ -119,7 +119,7 @@ void UContentModel::Load(const std::filesystem::path& filepath, uint32_t assimpO
 	LoadMaterials(aiScene, filepath);
 
 	// nodeの読み込み
-	LoadSkeleton(aiScene, filepath);
+	LoadSkeleton(aiScene);
 }
 
 void UContentModel::GetUuid() {
@@ -179,7 +179,7 @@ void UContentModel::LoadMeshes(const aiScene* aiScene) {
 		// meshの取得
 		const aiMesh* mesh = aiScene->mMeshes[i];
 
-		// assetの生成
+		// assetの取得
 		auto asset = sUAssetStorage->GetAsset<UAssetMesh>(meshes_[i]);
 		asset->Setup(mesh);
 
@@ -193,7 +193,7 @@ void UContentModel::LoadMaterials(const aiScene* aiScene, const std::filesystem:
 		// materialの取得
 		const aiMaterial* material = aiScene->mMaterials[i];
 
-		// assetの生成
+		// assetの取得
 		auto asset = sUAssetStorage->GetAsset<UAssetMaterial>(materials_[i]);
 		asset->Setup(material, filepath.parent_path());
 	}
@@ -240,13 +240,12 @@ BornNode UContentModel::ReadNode(aiNode* node) {
 	return result;
 }
 
-void UContentModel::LoadSkeleton(const aiScene* aiScene, const std::filesystem::path& filepath) {
+void UContentModel::LoadSkeleton(const aiScene* aiScene) {
 	// nodeの読み込み
 	root_ = ReadNode(aiScene->mRootNode);
 
-	auto asset = std::make_shared<UAssetSkeleton>(skeleton_);
-	sUAssetStorage->Register(asset, filepath);
-
+	// assetの取得
+	auto asset = sUAssetStorage->GetAsset<UAssetSkeleton>(skeleton_);
 	asset->Setup(root_);
 }
 

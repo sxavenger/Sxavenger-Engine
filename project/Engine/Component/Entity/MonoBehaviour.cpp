@@ -284,8 +284,9 @@ void MonoBehaviour::InputJson(const json& data) {
 	//* children
 	for (const auto& childData : data["children"]) {
 		std::unique_ptr<MonoBehaviour> child = std::make_unique<MonoBehaviour>();
-		child->InputJson(childData);
+		MonoBehaviour* ptr = child.get();
 		AddChild(std::move(child));
+		ptr->InputJson(childData);
 	}
 
 }

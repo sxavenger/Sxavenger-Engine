@@ -11,6 +11,8 @@
 #include <Engine/System/Utility/Logger.h>
 #include <Engine/System/UI/SxImGui.h>
 #include <Engine/Content/SxavengerContent.h>
+#include <Engine/Preview/Asset/UAssetStorage.h>
+#include <Engine/Preview/Content/UContentStorage.h>
 
 //=========================================================================================
 // static cosnt variables
@@ -68,6 +70,26 @@ void ArmatureComponent::ShowComponentInspector() {
 	}
 
 	PushBornLine(mat, skeleton_.joints);
+}
+
+json ArmatureComponent::PerseToJson() const {
+	json data = json::object();
+	data["skeleton"] = referenceSkeleton_.Serialize();
+	return data;
+}
+
+void ArmatureComponent::InputJson(const json& data) {
+
+	Uuid skeleton = Uuid::Deserialize(data["skeleton"].get<std::string>());
+
+	// skeletonのuuidが存在しない場合は, tableから読み込み
+
+	if (!sUAssetStorage->Contains<UAssetSkeleton>(skeleton)) {
+		const auto& filepath = sUAssetStorage->GetFilepath(skeleton);
+		sUContentStorage->Import<UContentModel>(filepath);
+	}
+
+	SetSkeleton(skeleton);
 }
 
 void ArmatureComponent::PushBornLine(const Matrix4x4& mat, const std::vector<Joint>& joints) {

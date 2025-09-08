@@ -103,6 +103,6 @@ private:
 	void LoadMaterials(const aiScene* aiScene, const std::filesystem::path& filepath);
 
 	BornNode ReadNode(aiNode* node);
-	void LoadSkeleton(const aiScene* aiScene, const std::filesystem::path& filepath);
+	void LoadSkeleton(const aiScene* aiScene);
 
 };
