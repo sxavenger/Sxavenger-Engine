@@ -74,6 +74,7 @@ void CameraComponent::InputJson(const json& data) {
 	projection_.focal  = JsonSerializeFormatter<float>::Deserialize(data.at("focal"));
 	projection_.nearZ  = JsonSerializeFormatter<float>::Deserialize(data.at("nearZ"));
 	projection_.farZ   = JsonSerializeFormatter<float>::Deserialize(data.at("farZ"));
+	UpdateProj();
 
 	tag_ = magic_enum::enum_cast<Tag>(JsonSerializeFormatter<std::string>::Deserialize(data.at("tag"))).value();
 }
