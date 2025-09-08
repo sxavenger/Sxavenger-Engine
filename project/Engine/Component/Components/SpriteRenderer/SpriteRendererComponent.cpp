@@ -131,7 +131,7 @@ void SpriteRendererComponent::InputJson(const json& data) {
 
 		if (!sUAssetStorage->Contains<UAssetTexture>(texture)) {
 			const auto& filepath = sUAssetStorage->GetFilepath(texture);
-			sUContentStorage->Import<UContentModel>(filepath);
+			sUContentStorage->Import<UContentTexture>(filepath);
 		}
 
 		texture_ = texture;
