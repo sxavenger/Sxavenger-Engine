@@ -11,6 +11,7 @@
 #include "UAssetAnimation.h"
 #include "UAssetSkeleton.h"
 #include "UAssetFont.h"
+#include "UAssetAudioClip.h"
 
 //* engine
 #include <Engine/System/Config/SxavengerConfig.h>

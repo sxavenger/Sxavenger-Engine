@@ -14,3 +14,6 @@
 //! https://cpprefjp.github.io/lang/cpp20/likely_and_unlikely_attributes.html
 #define _LIKELY   [[likely]]
 #define _UNLIKELY [[unlikely]]
+
+//! https://cpprefjp.github.io/lang/cpp11/attributes.html
+#define _NORETURN [[noreturn]]

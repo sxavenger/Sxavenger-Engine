@@ -11,6 +11,7 @@
 #include "UContentBlob.h"
 #include "UContentScene.h"
 #include "UContentFont.h"
+#include "UContentAudio.h"
 
 //* engine
 #include <Engine/System/SxavengerSystem.h>

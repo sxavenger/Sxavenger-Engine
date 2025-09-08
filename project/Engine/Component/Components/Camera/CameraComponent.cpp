@@ -150,6 +150,10 @@ Vector3f CameraComponent::CalculateNDCPosition(const Vector3f& point) const {
 	return Matrix4x4::Transform(point, GetCamera().view * GetCamera().proj);
 }
 
+Vector3f CameraComponent::CalculateWorldPosition(const Vector3f& ndc) const {
+	return Matrix4x4::Transform(ndc, GetCamera().projInv * GetCamera().world);
+}
+
 void CameraComponent::CreateBuffer() {
 	if (buffer_ != nullptr) {
 		return;

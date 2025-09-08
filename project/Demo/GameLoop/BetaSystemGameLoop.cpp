@@ -18,6 +18,7 @@
 #include <Engine/Component/Components/Particle/EmitterComponent.h>
 #include <Engine/Component/Components/Transform/RectTransformComponent.h>
 #include <Engine/Component/Components/TextRenderer/TextRendererComponent.h>
+#include <Engine/Component/Components/Audio/AudioSourceComponent.h>
 #include <Engine/Component/ComponentHelper.h>
 #include <Engine/System/Runtime/Performance/DeltaTimePoint.h>
 #include <Engine/Render/FRenderCore.h>
@@ -136,6 +137,11 @@ void BetaSystemGameLoop::InitSystem() {
 			Logger::CommentRuntime("info | [BetaSystemGameLoop]::OnCollisionEnter", std::format("collider {} enter collider {}", a->GetTag(), b->GetTag()));
 		}
 	);
+
+	auto audio = colliderB_->AddComponent<AudioSourceComponent>();
+	audio->SetAudio(sUContentStorage->Import<UContentAudio>("assets/sounds/fanfare.wav")->GetId());
+	audio->SetLoop(true);
+	audio->Play();
 }
 
 void BetaSystemGameLoop::TermSystem() {

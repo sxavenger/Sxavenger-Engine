@@ -79,8 +79,8 @@ public:
 	static void LogA(const std::string& log);
 	static void LogW(const std::wstring& log);
 
-	static void ExceptionA(const std::string& label, const std::string& detail, const std::source_location& location);
-	static void ExceptionW(const std::wstring& label, const std::wstring& detail, const std::source_location& location);
+	_NORETURN static void ExceptionA(const std::string& label, const std::string& detail, const std::source_location& location);
+	_NORETURN static void ExceptionW(const std::wstring& label, const std::wstring& detail, const std::source_location& location);
 
 	//* runtime log methods *//
 

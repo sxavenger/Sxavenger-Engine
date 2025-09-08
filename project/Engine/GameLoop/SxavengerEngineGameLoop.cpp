@@ -8,6 +8,7 @@
 #include <Engine/Content/SxavengerContent.h>
 #include <Engine/Render/FRenderCore.h>
 #include <Engine/Render/FMainRender.h>
+#include <Engine/Component/Components/Audio/AudioController.h>
 #include <Engine/Component/ComponentHelper.h>
 #include <Engine/Content/Exporter/TextureExporter.h>
 
@@ -25,8 +26,10 @@ void SxavengerEngineGameLoop::Init(GameLoop::Context* context) {
 		CreateWhite1x1();
 		CreateCheckerboard();
 
-		ComponentHelper::RegisterComponents();
 		sUAssetStorage->Deserialize();
+
+		ComponentHelper::RegisterComponents();
+		sAudioController->Init();
 	});
 
 	context->SetProcess(GameLoop::Process::Init, std::numeric_limits<uint32_t>::max(), [this]() {
@@ -76,6 +79,7 @@ void SxavengerEngineGameLoop::Init(GameLoop::Context* context) {
 }
 
 void SxavengerEngineGameLoop::Term() {
+	sAudioController->Term();
 	sUAssetStorage->Term();
 	sUContentStorage->Term();
 	SxavengerContent::Term();

@@ -189,6 +189,8 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="Demo\GameLoop\DemoGameLoop.cpp" />
     <ClCompile Include="Demo\Object\PivotCamera.cpp" />
     <ClCompile Include="Engine\Adapter\Actor\ParameterActor.cpp" />
+    <ClCompile Include="Engine\Component\Components\Audio\AudioController.cpp" />
+    <ClCompile Include="Engine\Component\Components\Audio\AudioSourceComponent.cpp" />
     <ClCompile Include="Engine\Component\Components\Collider\CollisionHelper.cpp" />
     <ClCompile Include="Engine\Component\Components\Particle\EmitterComponent.cpp" />
     <ClCompile Include="Engine\Component\Components\Particle\GPUParticleComponent.cpp" />
@@ -203,6 +205,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="Engine\Content\Exporter\TextureExporter.cpp" />
     <ClCompile Include="Engine\Component\Components\PostProcessLayer\PostProcessAutoExposure.cpp" />
     <ClCompile Include="Engine\Content\InputGeometry\InputUIVertex.cpp" />
+    <ClCompile Include="Engine\Editor\Editors\AudioEditor.cpp" />
     <ClCompile Include="Engine\GameLoop\FeatureLevelGameLoop.cpp" />
     <ClCompile Include="Demo\GameLoop\PreviewGameLoop.cpp" />
     <ClCompile Include="Engine\Adapter\Actor\AtmosphereActor.cpp" />
@@ -261,6 +264,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="Engine\Module\Scene\SceneObject.cpp" />
     <ClCompile Include="Engine\Module\Scene\SceneObjects.cpp" />
     <ClCompile Include="Engine\Preview\Asset\UAssetAnimation.cpp" />
+    <ClCompile Include="Engine\Preview\Asset\UAssetAudioClip.cpp" />
     <ClCompile Include="Engine\Preview\Asset\UAssetFont.cpp" />
     <ClCompile Include="Engine\Preview\Asset\UAssetMaterial.cpp" />
     <ClCompile Include="Engine\Preview\Asset\UAssetMesh.cpp" />
@@ -270,6 +274,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="Engine\Preview\Asset\UBaseAsset.cpp" />
     <ClCompile Include="Engine\Preview\Content\UBaseContent.cpp" />
     <ClCompile Include="Engine\Preview\Content\UContentAnimation.cpp" />
+    <ClCompile Include="Engine\Preview\Content\UContentAudio.cpp" />
     <ClCompile Include="Engine\Preview\Content\UContentBlob.cpp" />
     <ClCompile Include="Engine\Preview\Content\UContentFont.cpp" />
     <ClCompile Include="Engine\Preview\Content\UContentModel.cpp" />
@@ -370,6 +375,8 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Engine\Adapter\Actor\ParameterActor.h" />
     <ClInclude Include="Engine\Adapter\Parameter\SerializeGui.h" />
     <ClInclude Include="Engine\Adapter\Parameter\SerializeParameter.h" />
+    <ClInclude Include="Engine\Component\Components\Audio\AudioController.h" />
+    <ClInclude Include="Engine\Component\Components\Audio\AudioSourceComponent.h" />
     <ClInclude Include="Engine\Component\Components\Collider\CollisionHelper.h" />
     <ClInclude Include="Engine\Component\Components\MeshRenderer\MeshRendererCommon.h" />
     <ClInclude Include="Engine\Component\Components\Particle\EmitterComponent.h" />
@@ -385,6 +392,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Engine\Content\Exporter\TextureExporter.h" />
     <ClInclude Include="Engine\Component\Components\PostProcessLayer\PostProcessAutoExposure.h" />
     <ClInclude Include="Engine\Content\InputGeometry\InputUIVertex.h" />
+    <ClInclude Include="Engine\Editor\Editors\AudioEditor.h" />
     <ClInclude Include="Engine\GameLoop\FeatureLevelGameLoop.h" />
     <ClInclude Include="Engine\Adapter\Actor\AtmosphereActor.h" />
     <ClInclude Include="Engine\Adapter\Actor\ControllableCameraActor.h" />
@@ -448,6 +456,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Engine\Module\Scene\SceneObject.h" />
     <ClInclude Include="Engine\Module\Scene\SceneObjects.h" />
     <ClInclude Include="Engine\Preview\Asset\UAssetAnimation.h" />
+    <ClInclude Include="Engine\Preview\Asset\UAssetAudioClip.h" />
     <ClInclude Include="Engine\Preview\Asset\UAssetFont.h" />
     <ClInclude Include="Engine\Preview\Asset\UAssetMaterial.h" />
     <ClInclude Include="Engine\Preview\Asset\UAssetMesh.h" />
@@ -458,6 +467,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Engine\Preview\Asset\UBaseAsset.h" />
     <ClInclude Include="Engine\Preview\Content\UBaseContent.h" />
     <ClInclude Include="Engine\Preview\Content\UContentAnimation.h" />
+    <ClInclude Include="Engine\Preview\Content\UContentAudio.h" />
     <ClInclude Include="Engine\Preview\Content\UContentBlob.h" />
     <ClInclude Include="Engine\Preview\Content\UContentFont.h" />
     <ClInclude Include="Engine\Preview\Content\UContentModel.h" />

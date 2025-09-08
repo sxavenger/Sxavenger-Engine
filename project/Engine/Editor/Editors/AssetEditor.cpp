@@ -35,6 +35,8 @@ void AssetEditor::Init() {
 	RegisterExtension<UContentModel>(".fbx");
 	RegisterExtension<UContentScene>(".scene");
 	RegisterExtension<UContentFont>(".ttf");
+	RegisterExtension<UContentAudio>(".wav");
+	RegisterExtension<UContentAudio>(".mp3");
 
 }
 

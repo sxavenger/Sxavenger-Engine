@@ -126,6 +126,8 @@ public:
 
 	Vector3f CalculateNDCPosition(const Vector3f& point) const;
 
+	Vector3f CalculateWorldPosition(const Vector3f& ndc) const;
+
 	//* json option *//
 
 	json PerseToJson() const override;

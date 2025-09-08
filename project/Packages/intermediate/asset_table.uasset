@@ -1935,6 +1935,10 @@
 		"assets/models/PBR_Sphere_Test/model/PBR_Sphere.gltf",
 		"class UAssetMesh"
 	],
+	"f33a7764-673b-40c3-8795179e4bc94691": [
+		"assets/sounds/fanfare.wav",
+		"class UAssetAudioClip"
+	],
 	"f401fafc-3b84-43d5-bd3f6b3a98af9d2f": [
 		"packages/textures/icon/scene_camera.png",
 		"class UAssetTexture"
