@@ -137,11 +137,6 @@ void BetaSystemGameLoop::InitSystem() {
 			Logger::CommentRuntime("info | [BetaSystemGameLoop]::OnCollisionEnter", std::format("collider {} enter collider {}", a->GetTag(), b->GetTag()));
 		}
 	);
-
-	auto audio = colliderB_->AddComponent<AudioSourceComponent>();
-	audio->SetAudio(sUContentStorage->Import<UContentAudio>("assets/sounds/fanfare.wav")->GetId());
-	audio->SetLoop(true);
-	audio->Play();
 }
 
 void BetaSystemGameLoop::TermSystem() {

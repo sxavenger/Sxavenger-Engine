@@ -27,6 +27,7 @@ void UAssetStorage::Serialize() const {
 	}
 
 	JsonHandler::WriteToJson(kTableFilepath_, data);
+	Logger::EngineLog("[UAssetStorage]: asset storage uuid table serialized.");
 }
 
 void UAssetStorage::Deserialize() {
@@ -42,12 +43,12 @@ void UAssetStorage::Deserialize() {
 			items[1].get<std::string>()  //!< type name
 		);
 	}
+
+	Logger::EngineLog("[UAssetStorage]: asset storage uuid table deserialized.");
 }
 
 const std::filesystem::path& UAssetStorage::GetFilepath(const Uuid& id) const {
-	if (!table_.contains(id)) {
-		throw std::runtime_error("Asset with the given ID does not exist.");
-	}
+	Exception::Assert(table_.contains(id), "asset storage uuid table does not exist. uuid: " + id.Serialize());
 
 	return table_.at(id).first;
 }
