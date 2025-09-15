@@ -175,10 +175,6 @@ void Player::Move() {
 	transform_->translate += velocity_;
 	transform_->UpdateMatrix();
 
-	if (Any(velocity_ != kOrigin3<float>)) { //!< 
-		FMainRender::GetInstance()->GetRenderer()->ResetReservoir();
-	}
-
 	// animationの更新
 	float length = velocity_.Length();
 

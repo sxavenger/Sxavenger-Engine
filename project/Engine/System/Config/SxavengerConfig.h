@@ -59,6 +59,11 @@ public:
 		bool enableDebugLayer;
 		bool enableGPUBasedValidation;
 
+		//* descriptor heap
+		uint32_t descriptorCount_SRV_CBV_UAV;
+		uint32_t descriptorCount_RTV;
+		uint32_t descriptorCount_DSV;
+
 		//* tiearing
 		bool isTearingAllowed;
 

@@ -9,7 +9,7 @@
 //* engine
 #include <Engine/Component/Entity/MonoBehaviour.h>
 #include <Engine/Render/FRenderTargetBuffer.h>
-#include <Engine/Render/Scene/FSceneRenderer.h>
+#include <Engine/Render/Pass/FBaseRenderPass.h>
 #include <Engine/Preview/Asset/UAssetTexture.h>
 #include <Engine/Preview/Asset/UAssetParameter.h>
 
@@ -152,10 +152,9 @@ private:
 	bool isRender_ = true;
 
 	std::unique_ptr<FRenderTargetBuffer> textures_; //!< debug textures
-	std::unique_ptr<FSceneRenderer>      renderer_; //!< scene renderer
 	std::unique_ptr<MonoBehaviour>       camera_;   //!< scene camera
 
-	FSceneRenderer::Config config_ = {};
+	FBaseRenderPass::Config config_ = {};
 
 	bool isFocusGameWindow_  = false;
 	bool isFocusSceneWindow_ = false;
@@ -206,7 +205,6 @@ private:
 	void ShowCanvasWindow();
 
 	void ShowIconScene();
-	void ShowInfoTextScene();
 
 	void UpdateKeyShortcut();
 

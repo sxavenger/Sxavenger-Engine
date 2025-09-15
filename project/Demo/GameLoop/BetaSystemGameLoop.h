@@ -12,7 +12,6 @@
 #include <Engine/Component/Components/Camera/CameraComponent.h>
 #include <Engine/Render/FPresenter.h>
 #include <Engine/Render/Scene/FScene.h>
-#include <Engine/Render/Scene/FSceneRenderer.h>
 
 #include <Engine/Adapter/Actor/AtmosphereActor.h>
 #include <Engine/Adapter/Actor/SkyLightActor.h>

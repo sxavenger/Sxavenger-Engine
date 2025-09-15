@@ -1,4 +1,4 @@
-#include "FCanvasRenderer.h"
+#include "FRenderPassCanvas.h"
 
 //-----------------------------------------------------------------------------------------
 // include
@@ -12,35 +12,25 @@
 #include <Engine/Component/Components/SpriteRenderer/SpriteRendererComponent.h>
 #include <Engine/Component/Components/TextRenderer/TextRendererComponent.h>
 
+
 ////////////////////////////////////////////////////////////////////////////////////////////
-// FCanvasRenderer class methods
+// FRenderPassCanvas class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-void FCanvasRenderer::Render(const DirectXQueueContext* context) {
-	if (!CheckRender()) {
-		return;
-	}
+void FRenderPassCanvas::Render(const DirectXQueueContext* context, const Config& config) {
+	config.buffer->BeginRenderTargetMainUI(context);
 
-	textures_->BeginRenderTargetMainUI(context);
+	PassSprite(context, config);
 
-	RenderSpriteComponent(context);
-	RenderTextComponent(context);
+	PassText(context, config);
 
-	textures_->EndRenderTargetMainUI(context);
+	config.buffer->EndRenderTargetMainUI(context);
 }
 
-bool FCanvasRenderer::CheckRender() const {
-	if (textures_ == nullptr) {
-		return false;
-	}
-
-	return true;
-}
-
-void FCanvasRenderer::RenderSpriteComponent(const DirectXQueueContext* context) {
+void FRenderPassCanvas::PassSprite(const DirectXQueueContext* context, const Config& config) {
 
 	FRenderCore::GetInstance()->GetLayer()->SetPipeline(
-		FRenderCoreLayer::Type::Sprite, context, textures_->GetSize()
+		FRenderCoreLayer::Type::Sprite, context, config.buffer->GetSize()
 	);
 
 	sComponentStorage->ForEachActive<SpriteRendererComponent>([&](SpriteRendererComponent* component) {
@@ -55,7 +45,7 @@ void FCanvasRenderer::RenderSpriteComponent(const DirectXQueueContext* context) 
 			: component->GetTextureParameter().WaitRequire()->GetGPUHandleSRV();
 
 		DxObject::BindBufferDesc parameter = {};
-		parameter.Set32bitConstants("Dimension", 2, &textures_->GetSize());
+		parameter.Set32bitConstants("Dimension", 2, &config.buffer->GetSize());
 		parameter.SetAddress("gTransform",        component->GetRectTransform()->GetGPUVirtualAddress());
 		parameter.SetAddress("gTransformationUV", component->GetGPUVirtualAddressUV());
 		parameter.SetHandle("gTexture",           handle);
@@ -69,10 +59,10 @@ void FCanvasRenderer::RenderSpriteComponent(const DirectXQueueContext* context) 
 
 }
 
-void FCanvasRenderer::RenderTextComponent(const DirectXQueueContext* context) {
+void FRenderPassCanvas::PassText(const DirectXQueueContext* context, const Config& config) {
 
 	FRenderCore::GetInstance()->GetLayer()->SetPipeline(
-		FRenderCoreLayer::Type::Text, context, textures_->GetSize()
+		FRenderCoreLayer::Type::Text, context, config.buffer->GetSize()
 	);
 
 	sComponentStorage->ForEachActive<TextRendererComponent>([&](TextRendererComponent* component) {
@@ -86,7 +76,7 @@ void FCanvasRenderer::RenderTextComponent(const DirectXQueueContext* context) {
 		component->BindIABuffer(context);
 
 		DxObject::BindBufferDesc desc = {};
-		desc.Set32bitConstants("Dimension", 2, &textures_->GetSize());
+		desc.Set32bitConstants("Dimension", 2, &config.buffer->GetSize());
 		desc.SetAddress("gTransform", component->GetRectTransform()->GetGPUVirtualAddress());
 		desc.SetHandle("gFont",       component->GetFont()->GetGPUHandleSRV());
 

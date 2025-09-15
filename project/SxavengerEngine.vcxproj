@@ -287,6 +287,13 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="Engine\Render\GBuffer\FDeferredGBuffer.cpp" />
     <ClCompile Include="Engine\Render\GBuffer\FLightingGBuffer.cpp" />
     <ClCompile Include="Engine\Render\GBuffer\FMainGBuffer.cpp" />
+    <ClCompile Include="Engine\Render\Pass\FBaseRenderPass.cpp" />
+    <ClCompile Include="Engine\Render\Pass\FRenderPassCanvas.cpp" />
+    <ClCompile Include="Engine\Render\Pass\FRenderPassContext.cpp" />
+    <ClCompile Include="Engine\Render\Pass\FRenderPassDeferredBase.cpp" />
+    <ClCompile Include="Engine\Render\Pass\FRenderPassDeferredLighting.cpp" />
+    <ClCompile Include="Engine\Render\Pass\FRenderPassPostProcess.cpp" />
+    <ClCompile Include="Engine\Render\Pass\FRenderPassTonemap.cpp" />
     <ClCompile Include="Engine\System\DirectX\Context\DirectXQueueContext.cpp" />
     <ClCompile Include="Engine\System\DirectX\Context\DirectXWindowContext.cpp" />
     <ClCompile Include="Engine\System\DirectX\DxObject\DxAppendConsumeBuffer.cpp" />
@@ -305,7 +312,6 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="Lib\Motion\Motion.cpp" />
     <ClCompile Include="Engine\Module\Pipeline\CustomComputePipeline.cpp" />
     <ClCompile Include="Engine\Module\Pipeline\CustomGraphicsPipeline.cpp" />
-    <ClCompile Include="Engine\Render\Canvas\FCanvasRenderer.cpp" />
     <ClCompile Include="Engine\Render\Common\FBaseTexture.cpp" />
     <ClCompile Include="Engine\Render\Common\FDepthTexture.cpp" />
     <ClCompile Include="Engine\Render\Common\FTexture.cpp" />
@@ -317,7 +323,6 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="Engine\Render\FPresenter.cpp" />
     <ClCompile Include="Engine\Render\FRenderCore.cpp" />
     <ClCompile Include="Engine\Render\Scene\FScene.cpp" />
-    <ClCompile Include="Engine\Render\Scene\FSceneRenderer.cpp" />
     <ClCompile Include="Engine\System\Config\SxavengerConfig.cpp" />
     <ClCompile Include="Engine\System\DirectX\DirectXCommon.cpp" />
     <ClCompile Include="Engine\System\DirectX\DxObject\DxBindBuffer.cpp" />
@@ -481,6 +486,13 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Engine\Render\GBuffer\FDeferredGBuffer.h" />
     <ClInclude Include="Engine\Render\GBuffer\FLightingGBuffer.h" />
     <ClInclude Include="Engine\Render\GBuffer\FMainGBuffer.h" />
+    <ClInclude Include="Engine\Render\Pass\FBaseRenderPass.h" />
+    <ClInclude Include="Engine\Render\Pass\FRenderPassCanvas.h" />
+    <ClInclude Include="Engine\Render\Pass\FRenderPassContext.h" />
+    <ClInclude Include="Engine\Render\Pass\FRenderPassDeferredBase.h" />
+    <ClInclude Include="Engine\Render\Pass\FRenderPassDeferredLighting.h" />
+    <ClInclude Include="Engine\Render\Pass\FRenderPassPostProcess.h" />
+    <ClInclude Include="Engine\Render\Pass\FRenderPassTonemap.h" />
     <ClInclude Include="Engine\System\DirectX\Context\DirectXQueueContext.h" />
     <ClInclude Include="Engine\System\DirectX\Context\DirectXWindowContext.h" />
     <ClInclude Include="Engine\System\DirectX\DxObject\DxAppendConsumeBuffer.h" />
@@ -500,7 +512,6 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Lib\Motion\Motion.h" />
     <ClInclude Include="Engine\Module\Pipeline\CustomComputePipeline.h" />
     <ClInclude Include="Engine\Module\Pipeline\CustomGraphicsPipeline.h" />
-    <ClInclude Include="Engine\Render\Canvas\FCanvasRenderer.h" />
     <ClInclude Include="Engine\Render\Common\FBaseTexture.h" />
     <ClInclude Include="Engine\Render\Common\FDepthTexture.h" />
     <ClInclude Include="Engine\Render\Common\FTexture.h" />
@@ -512,7 +523,6 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Engine\Render\FPresenter.h" />
     <ClInclude Include="Engine\Render\FRenderCore.h" />
     <ClInclude Include="Engine\Render\Scene\FScene.h" />
-    <ClInclude Include="Engine\Render\Scene\FSceneRenderer.h" />
     <ClInclude Include="Engine\System\Cinfig\SxavengerDirectory.h" />
     <ClInclude Include="Engine\System\Config\SxavengerConfig.h" />
     <ClInclude Include="Engine\System\DirectX\DirectXAlignment.h" />

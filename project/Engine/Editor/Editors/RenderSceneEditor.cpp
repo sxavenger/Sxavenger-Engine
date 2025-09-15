@@ -17,6 +17,7 @@
 #include <Engine/Component/Components/PostProcessLayer/PostProcessLayerComponent.h>
 #include <Engine/Render/FMainRender.h>
 #include <Engine/Preview/Asset/UAssetStorage.h>
+#include <Engine/Preview/Content/UContentStorage.h>
 
 //* lib
 #include <Lib/Geometry/VectorComparision.h>
@@ -53,8 +54,6 @@ void RenderSceneEditor::Init() {
 
 	textures_ = std::make_unique<FRenderTargetBuffer>();
 	textures_->Create(kMainWindowSize);
-
-	renderer_ = std::make_unique<FSceneRenderer>();
 
 	config_ = {};
 	config_.buffer              = textures_.get();
@@ -101,7 +100,7 @@ void RenderSceneEditor::Render() {
 	}
 
 	config_.colorSpace = SxavengerSystem::GetMainWindow()->GetColorSpace();
-	renderer_->Render(SxavengerSystem::GetDirectQueueContext(), config_);
+	FMainRender::GetInstance()->GetContext()->Render(SxavengerSystem::GetDirectQueueContext(), config_);
 
 	//* Debug Render *//
 	textures_->BeginRenderTargetMainTransparent(SxavengerSystem::GetDirectQueueContext());
@@ -119,6 +118,7 @@ void RenderSceneEditor::Render() {
 	SxavengerContent::GetDebugPrimitive()->DrawToScene(SxavengerSystem::GetDirectQueueContext(), camera);
 
 	textures_->EndRenderTargetMainTransparent(SxavengerSystem::GetDirectQueueContext());
+	textures_->SwapBuffers();
 }
 
 void RenderSceneEditor::Manipulate(MonoBehaviour* behaviour) {
@@ -318,15 +318,6 @@ void RenderSceneEditor::ShowSceneMenu() {
 		ImGui::Text("lighting");
 		ImGui::Separator();
 		ImGui::Checkbox("enable indirect lighting", &config_.isEnableIndirectLighting);
-
-		if (ImGui::Button("reset resourviour")) {
-			renderer_->ResetReservoir();
-		}
-
-		ImGui::BeginDisabled(!config_.isEnableIndirectLighting);
-		ImGui::Text("sample count: %u", renderer_->GetReservoirSampleCount());
-		renderer_->DebugGui(); //!< HACK
-		ImGui::EndDisabled();
 
 		if (ImGui::Button("capture indirect")) {
 			TextureExporter::Export(
@@ -534,7 +525,6 @@ void RenderSceneEditor::ShowSceneWindow() {
 	//* render scene information *//
 
 	ShowIconScene();
-	ShowInfoTextScene();
 }
 
 void RenderSceneEditor::ShowGameWindow() {
@@ -642,29 +632,6 @@ void RenderSceneEditor::ShowIconScene() {
 		RenderIcon(component->GetBehaviour(), Icon::Camera, Matrix4x4::GetTranslation(component->GetCamera().world), color);
 	});
 
-}
-
-void RenderSceneEditor::ShowInfoTextScene() {
-	if (sceneWindow_ == nullptr) {
-		return;
-	}
-
-	static const ImVec2 kPadding = { 4.0f, 4.0f };
-
-	ImVec2 position = { sceneRect_.pos.x + kPadding.x, sceneRect_.pos.y + sceneRect_.size.y - kPadding.y };
-
-	switch (config_.technique) {
-		case FSceneRenderer::GraphicsTechnique::Deferred: //!< deferred rendering
-			RenderTextSceneWindow(position, std::format("GBuffer | {}", magic_enum::enum_name(buffer_)));
-			RenderTextSceneWindow(position, "> Deferred Rendering");
-			break;
-
-		case FSceneRenderer::GraphicsTechnique::Pathtracing: //!< path tracing
-			//RenderTextSceneWindow(position, std::format("sample count: {}", renderer_->GetCurrentSampleCount()));
-			RenderTextSceneWindow(position, "> Path Tracing (Preview)");
-			break;
-	}
-	
 }
 
 void RenderSceneEditor::UpdateKeyShortcut() {
@@ -874,7 +841,6 @@ void RenderSceneEditor::UpdateCamera() {
 
 	if (isMoveCamera_) {
 		UpdateView();
-		renderer_->ResetReservoir();
 	}
 }
 

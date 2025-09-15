@@ -36,7 +36,7 @@ PSOutput main(PSInput input) {
 	desc.Origin    = surface.position;
 	desc.Direction = l;
 	desc.TMin      = kTMin;
-	desc.TMax = r;
+	desc.TMax      = r;
 	
 	c_light *= gShadows[input.instanceId].TraceShadow(desc, gScene);
 

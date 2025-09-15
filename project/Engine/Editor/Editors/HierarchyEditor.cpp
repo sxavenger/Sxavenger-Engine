@@ -13,6 +13,7 @@
 #include <Engine/Component/Entity/MonoBehaviourContainer.h>
 #include <Engine/Component/ComponentHelper.h>
 #include <Engine/Module/Scene/SceneObjects.h>
+#include <Engine/Preview/Content/UContentStorage.h>
 
 //* external
 #include <imgui.h>

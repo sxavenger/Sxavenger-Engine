@@ -49,11 +49,19 @@ public:
 	void BeginProcessDenoiser(const DirectXQueueContext* context);
 	void EndProcessDenoiser(const DirectXQueueContext* context);
 
+	void SwapBuffers();
+
 	//* GBuffer option *//
 
 	FBaseTexture* GetGBuffer(FDeferredGBuffer::Layout layout);
 	FBaseTexture* GetGBuffer(FLightingGBuffer::Layout layout);
 	FBaseTexture* GetGBuffer(FMainGBuffer::Layout layout);
+
+	FDeferredGBuffer& GetDeferredGBuffer() { return deferred_; }
+
+	FLightingGBuffer& GetLightingGBuffer() { return lighting_; }
+
+	FMainGBuffer& GetMainGBuffer() { return main_; }
 
 	//* depth stencil option *//
 

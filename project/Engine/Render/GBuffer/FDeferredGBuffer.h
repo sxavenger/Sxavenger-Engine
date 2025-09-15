@@ -26,7 +26,7 @@ public:
 		Normal,
 		MaterialARM,
 		Position, //!< Hack: depthから復元できるように調整
-		//Velocity,
+		Velocity
 	};
 
 	//- Format
@@ -59,6 +59,8 @@ public:
 
 	void TransitionEndUnordered(const DirectXQueueContext* context);
 
+	void SwapBuffers();
+
 	//* getter *//
 
 	FBaseTexture* GetGBuffer(Layout layout) const;
@@ -75,6 +77,8 @@ private:
 
 	static const std::array<DXGI_FORMAT, kLayoutCount_> kFormats_;
 
-	std::array<std::unique_ptr<FBaseTexture>, kLayoutCount_> buffers_ = {};
+	std::array<std::array<std::unique_ptr<FBaseTexture>, kLayoutCount_>, 2> buffers_ = {};
+	size_t currentBufferIndex_ = 0;
+	// double buffering で 過去フレームの情報を保持できるようにする
 
 };

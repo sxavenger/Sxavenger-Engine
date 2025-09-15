@@ -4,6 +4,9 @@ _DXOBJECT_USING
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
+//* engine
+#include <Engine/System/Config/SxavengerConfig.h>
+
 //* external
 #include <imgui.h>
 #include <magic_enum.hpp>
@@ -122,13 +125,13 @@ D3D12_GPU_DESCRIPTOR_HANDLE DescriptorPool::GetGPUDescriptorHandle(uint32_t inde
 void DescriptorHeaps::Init(Device* device) {
 
 	pools_[DescriptorType::kDescriptor_RTV] = std::make_unique<DescriptorPool>();
-	pools_[DescriptorType::kDescriptor_RTV]->Init(device, D3D12_DESCRIPTOR_HEAP_TYPE_RTV, false, kDescriptorCount_[DescriptorType::kDescriptor_RTV]);
+	pools_[DescriptorType::kDescriptor_RTV]->Init(device, D3D12_DESCRIPTOR_HEAP_TYPE_RTV, false, SxavengerConfig::GetConfig().descriptorCount_RTV);
 
 	pools_[DescriptorType::kDescriptor_DSV] = std::make_unique<DescriptorPool>();
-	pools_[DescriptorType::kDescriptor_DSV]->Init(device, D3D12_DESCRIPTOR_HEAP_TYPE_DSV, false, kDescriptorCount_[DescriptorType::kDescriptor_DSV]);
+	pools_[DescriptorType::kDescriptor_DSV]->Init(device, D3D12_DESCRIPTOR_HEAP_TYPE_DSV, false, SxavengerConfig::GetConfig().descriptorCount_DSV);
 
 	pools_[DescriptorType::kDescriptor_CBV_SRV_UAV] = std::make_unique<DescriptorPool>();
-	pools_[DescriptorType::kDescriptor_CBV_SRV_UAV]->Init(device, D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, true, kDescriptorCount_[DescriptorType::kDescriptor_CBV_SRV_UAV]);
+	pools_[DescriptorType::kDescriptor_CBV_SRV_UAV]->Init(device, D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, true, SxavengerConfig::GetConfig().descriptorCount_SRV_CBV_UAV);
 
 	Logger::EngineLog("[_DXOBJECT DescriptorHeaps] complete initialize.");
 }

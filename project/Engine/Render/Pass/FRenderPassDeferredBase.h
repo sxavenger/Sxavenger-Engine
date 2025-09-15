@@ -4,44 +4,35 @@
 // include
 //-----------------------------------------------------------------------------------------
 //* render
-#include "../FRenderTargetBuffer.h"
+#include "FBaseRenderPass.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// FCanvasRenderer class
+// FRenderPassDeferredBase class
 ////////////////////////////////////////////////////////////////////////////////////////////
-class FCanvasRenderer {
+class FRenderPassDeferredBase
+	: public FBaseRenderPass {
 public:
 
 	//=========================================================================================
 	// public methods
 	//=========================================================================================
-	
-	//* render *//
 
-	void Render(const DirectXQueueContext* context);
+	FRenderPassDeferredBase()           = default;
+	~FRenderPassDeferredBase() override = default;
 
-	//* setter *//
-
-	void SetTextures(FRenderTargetBuffer* textures) { textures_ = textures; }
+	void Render(const DirectXQueueContext* context, const Config& config) override;
 
 private:
-
-	//=========================================================================================
-	// private variables
-	//=========================================================================================
-
-	//* canvas textures *//
-
-	FRenderTargetBuffer* textures_ = nullptr;
-	//!< todo: 2d描画用のテクスチャに設定する
 
 	//=========================================================================================
 	// private methods
 	//=========================================================================================
 
-	bool CheckRender() const;
+	void PassStaticMesh(const DirectXQueueContext* context, const Config& config);
 
-	void RenderSpriteComponent(const DirectXQueueContext* context);
-	void RenderTextComponent(const DirectXQueueContext* context);
+	void PassSkinnedMesh(const DirectXQueueContext* context, const Config& config);
+
+
+	void PassVelocity(const DirectXQueueContext* context, const Config& config);
 
 };

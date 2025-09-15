@@ -4,11 +4,10 @@
 // include
 //-----------------------------------------------------------------------------------------
 //* render
-#include <Engine/Render/FPresenter.h>
-#include <Engine/Render/FRenderTargetBuffer.h>
-#include <Engine/Render/Scene/FScene.h>
-#include <Engine/Render/Scene/FSceneRenderer.h>
-#include <Engine/Render/Canvas/FCanvasRenderer.h>
+#include "FPresenter.h"
+#include "FRenderTargetBuffer.h"
+#include "Scene/FScene.h"
+#include "Pass/FRenderPassContext.h"
 
 //* engine
 #include <Engine/System/DirectX/Context/DirectXQueueContext.h>
@@ -40,13 +39,11 @@ public:
 
 	FRenderTargetBuffer* GetTextures() const { return buffer_.get(); }
 
-	FSceneRenderer* GetRenderer() const { return sceneRenderer_.get(); }
-
 	FScene* GetScene() const { return scene_.get(); }
 
-	FCanvasRenderer* GetCanvas() const { return canvasRenderer_.get(); }
+	FRenderPassContext* GetContext() const { return context_.get(); }
 
-	FSceneRenderer::Config& GetConfig() { return config_; }
+	FBaseRenderPass::Config& GetConfig() { return config_; }
 
 	//* singleton *//
 
@@ -59,10 +56,10 @@ private:
 	//=========================================================================================
 
 	std::unique_ptr<FRenderTargetBuffer> buffer_;
-	std::unique_ptr<FSceneRenderer>      sceneRenderer_;
 	std::unique_ptr<FScene>              scene_;
-	std::unique_ptr<FCanvasRenderer>     canvasRenderer_;
 
-	FSceneRenderer::Config config_ = {};
+	std::unique_ptr<FRenderPassContext> context_;
+
+	FBaseRenderPass::Config config_ = {};
 
 };
