@@ -225,7 +225,6 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="Engine\Component\Components\Light\LightCommon.cpp" />
     <ClCompile Include="Engine\Component\Components\Light\Punctual\PointLightComponent.cpp" />
     <ClCompile Include="Engine\Component\Components\Light\Environment\SkyLightComponent.cpp" />
-    <ClCompile Include="Engine\Component\Components\Light\Rect\RectLightComponent.cpp" />
     <ClCompile Include="Engine\Component\Components\MeshRenderer\MeshRendererComponent.cpp" />
     <ClCompile Include="Engine\Component\Components\MeshRenderer\SkinnedMeshRendererComponent.cpp" />
     <ClCompile Include="Engine\Component\Components\Particle\ParticleComponent.cpp" />
@@ -416,7 +415,6 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Engine\Component\Components\Light\LightCommon.h" />
     <ClInclude Include="Engine\Component\Components\Light\Punctual\PointLightComponent.h" />
     <ClInclude Include="Engine\Component\Components\Light\Environment\SkyLightComponent.h" />
-    <ClInclude Include="Engine\Component\Components\Light\Rect\RectLightComponent.h" />
     <ClInclude Include="Engine\Component\Components\MeshRenderer\MeshRendererComponent.h" />
     <ClInclude Include="Engine\Component\Components\MeshRenderer\SkinnedMeshRendererComponent.h" />
     <ClInclude Include="Engine\Component\Components\Particle\ParticleComponent.h" />

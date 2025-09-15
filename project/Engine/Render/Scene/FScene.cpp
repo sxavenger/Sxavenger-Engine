@@ -80,13 +80,11 @@ void FScene::Init() {
 		directionalLightCount_->Create(SxavengerSystem::GetDxDevice(), 1);
 		directionalLightTransforms_   = std::make_unique<DxObject::DimensionBuffer<TransformationMatrix>>();
 		directionalLightParams_       = std::make_unique<DxObject::DimensionBuffer<DirectionalLightComponent::Parameter>>();
-		directionalLightShadowParams_ = std::make_unique<DxObject::DimensionBuffer<DirectionalLightComponent::InlineShadow>>();
 
 		pointLightCount_ = std::make_unique<DxObject::DimensionBuffer<uint32_t>>();
 		pointLightCount_->Create(SxavengerSystem::GetDxDevice(), 1);
 		pointLightTransforms_   = std::make_unique<DxObject::DimensionBuffer<TransformationMatrix>>();
 		pointLightParams_       = std::make_unique<DxObject::DimensionBuffer<PointLightComponent::Parameter>>();
-		pointLightShadowParams_ = std::make_unique<DxObject::DimensionBuffer<PointLightComponent::InlineShadow>>();
 
 	}
 	
@@ -216,16 +214,11 @@ void FScene::SetupDirectionalLight() {
 		directionalLightParams_->Create(SxavengerSystem::GetDxDevice(), count);
 	}
 
-	if (directionalLightShadowParams_->GetSize() < count) {
-		directionalLightShadowParams_->Create(SxavengerSystem::GetDxDevice(), count);
-	}
-
 	size_t index = 0;
 
 	sComponentStorage->ForEachActive<DirectionalLightComponent>([&](DirectionalLightComponent* component) {
 		directionalLightTransforms_->At(index)   = component->RequireTransform()->GetTransformationMatrix();
 		directionalLightParams_->At(index)       = component->GetParameter();
-		directionalLightShadowParams_->At(index) = component->GetShadowParameter();
 
 		index++;
 	});
@@ -250,16 +243,11 @@ void FScene::SetupPointLight() {
 		pointLightParams_->Create(SxavengerSystem::GetDxDevice(), count);
 	}
 
-	if (pointLightShadowParams_->GetSize() < count) {
-		pointLightShadowParams_->Create(SxavengerSystem::GetDxDevice(), count);
-	}
-
 	size_t index = 0;
 
 	sComponentStorage->ForEachActive<PointLightComponent>([&](PointLightComponent* component) {
 		pointLightTransforms_->At(index)   = component->RequireTransform()->GetTransformationMatrix();
 		pointLightParams_->At(index)       = component->GetParameter();
-		pointLightShadowParams_->At(index) = component->GetShadowParameter();
 
 		index++;
 	});

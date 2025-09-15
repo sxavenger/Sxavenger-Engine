@@ -19,8 +19,9 @@ _DXOBJECT_USING
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 void PointLightComponent::Parameter::Init() {
+	shadow.Init();
 	color     = kWhite3<>;
-	unit      = Units::Candela;
+	unit      = LightCommon::Units::Candela;
 	intensity = 1.0f;
 	radius    = 8.0f;
 }
@@ -35,16 +36,16 @@ void PointLightComponent::ShowComponentInspector() {
 
 	if (ImGui::BeginCombo("unit", magic_enum::enum_name(parameter.unit).data())) {
 
-		for (const auto& [value, name] : magic_enum::enum_entries<Units>()) {
+		for (const auto& [value, name] : magic_enum::enum_entries<LightCommon::Units>()) {
 			if (ImGui::Selectable(name.data(), parameter.unit == value)) {
-				Units preUnit = parameter.unit;
+				LightCommon::Units preUnit = parameter.unit;
 				parameter.unit = value;
 
 				// intensityの変換
-				if (preUnit == Units::Lumen && parameter.unit == Units::Candela) {
+				if (preUnit == LightCommon::Units::Lumen && parameter.unit == LightCommon::Units::Candela) {
 					parameter.intensity /= 4.0f * kPi; //!< lumen to candela
 
-				} else if (preUnit == Units::Candela && parameter.unit == Units::Lumen) {
+				} else if (preUnit == LightCommon::Units::Candela && parameter.unit == LightCommon::Units::Lumen) {
 					parameter.intensity *= 4.0f * kPi; //!< candela to lumen
 				}
 			}
@@ -53,28 +54,23 @@ void PointLightComponent::ShowComponentInspector() {
 		ImGui::EndCombo();
 	}
 
-	std::string format = parameter.unit == Units::Lumen ? "%.3flm" : "%.3fcd";
+	std::string format = (parameter.unit == LightCommon::Units::Lumen ? "%.3flm" : "%.3fcd");
 	ImGui::DragFloat("intensity", &parameter.intensity, 0.1f, 0.0f, std::numeric_limits<float>::max(), format.c_str());
 	ImGui::DragFloat("radius",  &parameter.radius, 0.1f, 0.0f, std::numeric_limits<float>::max());
 
-	LightCommon::ShowCommonInspector();
+	parameter.shadow.ShowInspector();
 
 	//* push line
-	SxavengerContent::GetDebugPrimitive()->PushSphere(RequireTransform()->GetPosition(), parameter.radius, kColor);
+	SxavengerContent::GetDebugPrimitive()->PushSphere(RequireTransform()->GetPosition(), parameter.radius, Color4f{ parameter.color, 1.0f });
 }
 
 void PointLightComponent::Init() {
-	CreateParameterBuffer();
-	LightCommon::CreateShadowBuffer();
-}
-
-void PointLightComponent::CreateParameterBuffer() {
 	parameter_ = std::make_unique<DimensionBuffer<Parameter>>();
 	parameter_->Create(SxavengerSystem::GetDxDevice(), 1);
 	parameter_->At(0).Init();
 }
 
-const D3D12_GPU_VIRTUAL_ADDRESS& PointLightComponent::GetParameterBufferAddress() const {
+const D3D12_GPU_VIRTUAL_ADDRESS& PointLightComponent::GetGPUVirtualAddress() const {
 	Exception::Assert(parameter_ != nullptr, "point light buffer is not create.");
 	return parameter_->GetGPUVirtualAddress();
 }
@@ -95,17 +91,17 @@ json PointLightComponent::PerseToJson() const {
 	data["unit"]            = magic_enum::enum_name(parameter_->At(0).unit);
 	data["intensity"]       = JsonSerializeFormatter<float>::Serialize(parameter_->At(0).intensity);
 	data["radius"]          = JsonSerializeFormatter<float>::Serialize(parameter_->At(0).radius);
-	data["shadow_strength"] = JsonSerializeFormatter<float>::Serialize(LightCommon::GetShadowParameter().strength);
-	data["shadow_flag"]     = JsonSerializeFormatter<uint32_t>::Serialize(LightCommon::GetShadowParameter().flag.Get());
+	data["shadow_strength"] = JsonSerializeFormatter<float>::Serialize(parameter_->At(0).shadow.strength);
+	data["shadow_flag"]     = JsonSerializeFormatter<uint32_t>::Serialize(parameter_->At(0).shadow.flag.Get());
 
 	return data;
 }
 
 void PointLightComponent::InputJson(const json& data) {
-	parameter_->At(0).color                    = JsonSerializeFormatter<Color3f>::Deserialize(data["color"]);
-	parameter_->At(0).unit                     = magic_enum::enum_cast<Units>(JsonSerializeFormatter<std::string>::Deserialize(data["unit"])).value();
-	parameter_->At(0).intensity                = JsonSerializeFormatter<float>::Deserialize(data["intensity"]);
-	parameter_->At(0).radius                   = JsonSerializeFormatter<float>::Deserialize(data["radius"]);
-	LightCommon::GetShadowParameter().strength = JsonSerializeFormatter<float>::Deserialize(data["shadow_strength"]);
-	LightCommon::GetShadowParameter().flag     = JsonSerializeFormatter<uint32_t>::Deserialize(data["shadow_flag"]);
+	parameter_->At(0).color           = JsonSerializeFormatter<Color3f>::Deserialize(data["color"]);
+	parameter_->At(0).unit            = magic_enum::enum_cast<LightCommon::Units>(JsonSerializeFormatter<std::string>::Deserialize(data["unit"])).value();
+	parameter_->At(0).intensity       = JsonSerializeFormatter<float>::Deserialize(data["intensity"]);
+	parameter_->At(0).radius          = JsonSerializeFormatter<float>::Deserialize(data["radius"]);
+	parameter_->At(0).shadow.strength = JsonSerializeFormatter<float>::Deserialize(data["shadow_strength"]);
+	parameter_->At(0).shadow.flag     = JsonSerializeFormatter<uint32_t>::Deserialize(data["shadow_flag"]);
 }

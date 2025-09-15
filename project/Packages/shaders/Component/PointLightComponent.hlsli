@@ -3,6 +3,9 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
+//* component
+#include "LightComponentCommon.hlsli"
+
 //* library
 #include "../Library/Math.hlsli"
 #include "../Library/Photometry.hlsli"
@@ -15,6 +18,8 @@ struct PointLightComponent {
 	//=========================================================================================
 	// public variables
 	//=========================================================================================
+
+	InlineShadow shadow;
 
 	float3 color;
 	LightUnits::Type unit;

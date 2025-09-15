@@ -11,7 +11,6 @@
 //=========================================================================================
 
 StructuredBuffer<PointLightComponent> gParameters : register(t0);
-StructuredBuffer<InlineShadow> gShadows           : register(t1);
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // main
@@ -38,7 +37,7 @@ PSOutput main(PSInput input) {
 	desc.TMin      = kTMin;
 	desc.TMax      = r;
 	
-	c_light *= gShadows[input.instanceId].TraceShadow(desc, gScene);
+	c_light *= gParameters[input.instanceId].shadow.TraceShadow(desc, gScene);
 
 	//* Cameraの情報を取得
 	float3 v = normalize(gCamera.GetPosition() - surface.position);

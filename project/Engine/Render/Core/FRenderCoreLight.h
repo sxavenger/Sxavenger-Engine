@@ -22,10 +22,10 @@ public:
 		//!< Punctual light
 		Directional,
 		Point,
-		Spot,
+		//Spot,
 
 		//!< Area light
-		Rect,
+		//Rect,
 
 		//!< Sky light
 		SkyLight,

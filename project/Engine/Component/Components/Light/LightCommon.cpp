@@ -16,36 +16,9 @@ void LightCommon::InlineShadow::Init() {
 	flag     = D3D12_RAY_FLAG_CULL_BACK_FACING_TRIANGLES;
 }
 
-////////////////////////////////////////////////////////////////////////////////////////////
-// LightCommon class methods
-////////////////////////////////////////////////////////////////////////////////////////////
-
-void LightCommon::CreateShadowBuffer() {
-	shadow_ = std::make_unique<DimensionBuffer<InlineShadow>>();
-	shadow_->Create(SxavengerSystem::GetDxDevice(), 1);
-	shadow_->At(0).Init();
-}
-
-const D3D12_GPU_VIRTUAL_ADDRESS& LightCommon::GetShadowBufferAddress() const {
-	Exception::Assert(shadow_ != nullptr, "shadow buffer is not create.");
-	return shadow_->GetGPUVirtualAddress();
-}
-
-const LightCommon::InlineShadow& LightCommon::GetShadowParameter() const {
-	Exception::Assert(shadow_ != nullptr, "shadow buffer is not create.");
-	return shadow_->At(0);
-}
-
-LightCommon::InlineShadow& LightCommon::GetShadowParameter() {
-	Exception::Assert(shadow_ != nullptr, "shadow buffer is not create.");
-	return shadow_->At(0);
-}
-
-void LightCommon::ShowCommonInspector() {
+void LightCommon::InlineShadow::ShowInspector() {
 	if (ImGui::TreeNodeEx("shadow", ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_NoAutoOpenOnLog | ImGuiTreeNodeFlags_NoTreePushOnOpen)) {
-
-		auto& shadow = shadow_->At(0);
-		ImGui::SliderFloat("shadow strength",  &shadow.strength, 0.0f, 1.0f);
-		ImGui::CheckboxFlags("cull back face", &shadow.flag.Get(), D3D12_RAY_FLAG_CULL_BACK_FACING_TRIANGLES);
+		ImGui::SliderFloat("strength",         &strength, 0.0f, 1.0f);
+		ImGui::CheckboxFlags("cull back face", &flag.Get(), D3D12_RAY_FLAG_CULL_BACK_FACING_TRIANGLES);
 	}
 }

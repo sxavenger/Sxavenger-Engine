@@ -93,8 +93,7 @@ void FRenderPassDeferredLighting::PassDirectionalLight(const DirectXQueueContext
 	sComponentStorage->ForEachActive<DirectionalLightComponent>([&](DirectionalLightComponent* component) {
 
 		parameter.SetAddress("gTransforms", component->RequireTransform()->GetGPUVirtualAddress());
-		parameter.SetAddress("gParameters", component->GetParameterBufferAddress());
-		parameter.SetAddress("gShadows",    component->GetShadowBufferAddress());
+		parameter.SetAddress("gParameters", component->GetGPUVirtualAddress());
 
 		// TODO: Parameterの中にShadowを含める
 
@@ -129,8 +128,7 @@ void FRenderPassDeferredLighting::PassPointLight(const DirectXQueueContext* cont
 	sComponentStorage->ForEachActive<PointLightComponent>([&](PointLightComponent* component) {
 
 		parameter.SetAddress("gTransforms", component->RequireTransform()->GetGPUVirtualAddress());
-		parameter.SetAddress("gParameters", component->GetParameterBufferAddress());
-		parameter.SetAddress("gShadows",    component->GetShadowBufferAddress());
+		parameter.SetAddress("gParameters", component->GetGPUVirtualAddress());
 
 		FRenderCore::GetInstance()->GetLight()->BindGraphicsBuffer(
 			FRenderCoreLight::LightType::Point, context, parameter

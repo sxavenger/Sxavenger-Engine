@@ -17,7 +17,7 @@
 // PointLightComponent class
 ////////////////////////////////////////////////////////////////////////////////////////////
 class PointLightComponent
-	: public BaseComponent, public LightCommon {
+	: public BaseComponent {
 public:
 
 	////////////////////////////////////////////////////////////////////////////////////////////
@@ -36,8 +36,10 @@ public:
 		// public variables
 		//=========================================================================================
 
+		LightCommon::InlineShadow shadow;
+
 		Color3f color;
-		Units unit;
+		LightCommon::Units unit;
 		float intensity;
 		float radius;
 
@@ -58,9 +60,7 @@ public:
 
 	//* component option *//
 
-	void CreateParameterBuffer();
-
-	const D3D12_GPU_VIRTUAL_ADDRESS& GetParameterBufferAddress() const;
+	const D3D12_GPU_VIRTUAL_ADDRESS& GetGPUVirtualAddress() const;
 
 	const Parameter& GetParameter() const;
 

@@ -12,7 +12,6 @@
 //* component
 #include "../../Component/CameraComponent.hlsli"
 #include "../../Component/TransformComponent.hlsli"
-#include "../../Component/LightComponentCommon.hlsli"
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Input / Output structure
