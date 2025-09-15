@@ -21,7 +21,7 @@ void FRenderPassDeferredLighting::Render(const DirectXQueueContext* context, con
 	// DepthをPipelineで参照する形に変更
 
 	{ //* Direct Lighting
-		config.buffer->BeginRenderTargetLightingDirect(context);
+		BeginPassDirectLighting(context, config.buffer);
 
 		PassEmpty(context, config);
 
@@ -33,7 +33,7 @@ void FRenderPassDeferredLighting::Render(const DirectXQueueContext* context, con
 		//!< Sky light
 		PassSkyLight(context, config);
 
-		config.buffer->EndRenderTargetLightingDirect(context);
+		EndPassDirectLighting(context, config.buffer);
 	}
 
 
@@ -46,6 +46,39 @@ void FRenderPassDeferredLighting::Render(const DirectXQueueContext* context, con
 
 }
 
+void FRenderPassDeferredLighting::BeginPassDirectLighting(const DirectXQueueContext* context, FRenderTargetBuffer* buffer) {
+	FDepthTexture* depth = buffer->GetDepth();
+	depth->TransitionBeginRasterizer(context);
+
+	FBaseTexture* direct = buffer->GetGBuffer(FLightingGBuffer::Layout::Direct);
+	direct->TransitionBeginRenderTarget(context);
+
+	auto commandList = context->GetCommandList();
+
+	std::array<D3D12_RESOURCE_BARRIER, 1> barriers = {};
+	barriers[0] = direct->TransitionBeginRenderTarget();
+
+	commandList->ResourceBarrier(static_cast<UINT>(barriers.size()), barriers.data());
+
+	std::array<D3D12_CPU_DESCRIPTOR_HANDLE, 1> handles = {};
+	handles[0] = direct->GetCPUHandleRTV();
+
+	commandList->OMSetRenderTargets(
+		static_cast<UINT>(handles.size()), handles.data(), false,
+		&depth->GetRasterizerCPUHandleDSV()
+	);
+
+	direct->ClearRenderTarget(context);
+}
+
+void FRenderPassDeferredLighting::EndPassDirectLighting(const DirectXQueueContext* context, FRenderTargetBuffer* buffer) {
+	FDepthTexture* depth = buffer->GetDepth();
+	depth->TransitionEndRasterizer(context);
+
+	FBaseTexture* direct = buffer->GetGBuffer(FLightingGBuffer::Layout::Direct);
+	direct->TransitionEndRenderTarget(context);
+}
+
 void FRenderPassDeferredLighting::PassEmpty(const DirectXQueueContext* context, const Config& config) {
 
 	FRenderCore::GetInstance()->GetLight()->SetPipeline(
@@ -56,9 +89,9 @@ void FRenderPassDeferredLighting::PassEmpty(const DirectXQueueContext* context, 
 	// common parameter
 	parameter.SetAddress("gCamera", config.camera->GetGPUVirtualAddress());
 	parameter.SetAddress("gScene",  config.scene->GetTopLevelAS().GetGPUVirtualAddress());
+	parameter.Set32bitConstants("Dimension", 2, &config.buffer->GetSize());
 
 	// deferred paraemter
-	parameter.SetHandle("gDepth",    config.buffer->GetDepth()->GetRasterizerGPUHandleSRV());
 	parameter.SetHandle("gAlbedo",   config.buffer->GetGBuffer(FDeferredGBuffer::Layout::Albedo)->GetGPUHandleSRV());
 	parameter.SetHandle("gNormal",   config.buffer->GetGBuffer(FDeferredGBuffer::Layout::Normal)->GetGPUHandleSRV());
 	parameter.SetHandle("gMaterial", config.buffer->GetGBuffer(FDeferredGBuffer::Layout::MaterialARM)->GetGPUHandleSRV());
@@ -82,9 +115,9 @@ void FRenderPassDeferredLighting::PassDirectionalLight(const DirectXQueueContext
 	// common parameter
 	parameter.SetAddress("gCamera", config.camera->GetGPUVirtualAddress());
 	parameter.SetAddress("gScene", config.scene->GetTopLevelAS().GetGPUVirtualAddress());
+	parameter.Set32bitConstants("Dimension", 2, &config.buffer->GetSize());
 
 	// deferred paraemter
-	parameter.SetHandle("gDepth", config.buffer->GetDepth()->GetRasterizerGPUHandleSRV());
 	parameter.SetHandle("gAlbedo", config.buffer->GetGBuffer(FDeferredGBuffer::Layout::Albedo)->GetGPUHandleSRV());
 	parameter.SetHandle("gNormal", config.buffer->GetGBuffer(FDeferredGBuffer::Layout::Normal)->GetGPUHandleSRV());
 	parameter.SetHandle("gMaterial", config.buffer->GetGBuffer(FDeferredGBuffer::Layout::MaterialARM)->GetGPUHandleSRV());
@@ -117,9 +150,9 @@ void FRenderPassDeferredLighting::PassPointLight(const DirectXQueueContext* cont
 	// common parameter
 	parameter.SetAddress("gCamera", config.camera->GetGPUVirtualAddress());
 	parameter.SetAddress("gScene",  config.scene->GetTopLevelAS().GetGPUVirtualAddress());
+	parameter.Set32bitConstants("Dimension", 2, &config.buffer->GetSize());
 
 	// deferred paraemter
-	parameter.SetHandle("gDepth",    config.buffer->GetDepth()->GetRasterizerGPUHandleSRV());
 	parameter.SetHandle("gAlbedo",   config.buffer->GetGBuffer(FDeferredGBuffer::Layout::Albedo)->GetGPUHandleSRV());
 	parameter.SetHandle("gNormal",   config.buffer->GetGBuffer(FDeferredGBuffer::Layout::Normal)->GetGPUHandleSRV());
 	parameter.SetHandle("gMaterial", config.buffer->GetGBuffer(FDeferredGBuffer::Layout::MaterialARM)->GetGPUHandleSRV());
@@ -146,17 +179,13 @@ void FRenderPassDeferredLighting::PassSkyLight(const DirectXQueueContext* contex
 		return; //!< Indirect Lightingで処理するため, スキップ
 	}
 
-	FRenderCore::GetInstance()->GetLight()->SetPipeline(
-		FRenderCoreLight::LightType::SkyLight, context, config.buffer->GetSize()
-	);
-
 	DxObject::BindBufferDesc parameter = {};
 	// common parameter
 	parameter.SetAddress("gCamera", config.camera->GetGPUVirtualAddress());
 	parameter.SetAddress("gScene",  config.scene->GetTopLevelAS().GetGPUVirtualAddress());
+	parameter.Set32bitConstants("Dimension", 2, &config.buffer->GetSize());
 
 	// deferred paraemter
-	parameter.SetHandle("gDepth",    config.buffer->GetDepth()->GetRasterizerGPUHandleSRV());
 	parameter.SetHandle("gAlbedo",   config.buffer->GetGBuffer(FDeferredGBuffer::Layout::Albedo)->GetGPUHandleSRV());
 	parameter.SetHandle("gNormal",   config.buffer->GetGBuffer(FDeferredGBuffer::Layout::Normal)->GetGPUHandleSRV());
 	parameter.SetHandle("gMaterial", config.buffer->GetGBuffer(FDeferredGBuffer::Layout::MaterialARM)->GetGPUHandleSRV());
@@ -164,6 +193,11 @@ void FRenderPassDeferredLighting::PassSkyLight(const DirectXQueueContext* contex
 
 	// BRDF LUT
 	parameter.SetHandle("gBRDFLut", FRenderCore::GetInstance()->GetBRDFLut());
+
+	//* Irradiance/Radiance
+	FRenderCore::GetInstance()->GetLight()->SetPipeline(
+		FRenderCoreLight::LightType::SkyLight, context, config.buffer->GetSize()
+	);
 
 	sComponentStorage->ForEachActive<SkyLightComponent>([&](SkyLightComponent* component) {
 
@@ -181,7 +215,27 @@ void FRenderPassDeferredLighting::PassSkyLight(const DirectXQueueContext* contex
 		FRenderCore::GetInstance()->GetLight()->DrawCall(context);
 	});
 
-	// TODO: 背景にskyboxを描画する
+	//* Environment
+	FRenderCore::GetInstance()->GetLight()->SetPipeline(
+		FRenderCoreLight::LightType::SkyLightEnvironment, context, config.buffer->GetSize()
+	);
+
+	sComponentStorage->ForEachActive<SkyLightComponent>([&](SkyLightComponent* component) {
+
+		if (!component->IsEnableEnvironment()) {
+			return; //!< Environmentが設定されていない場合はスキップ
+		}
+
+		// sky light parameter
+		parameter.SetAddress("gParameter", component->GetGPUVirtualAddress());
+
+		FRenderCore::GetInstance()->GetLight()->BindGraphicsBuffer(
+			FRenderCoreLight::LightType::SkyLightEnvironment, context, parameter
+		);
+
+		FRenderCore::GetInstance()->GetLight()->DrawCall(context);
+
+	});
 
 }
 

@@ -10,10 +10,6 @@
 //* component
 #include "../../Component/SkyLightComponent.hlsli"
 
-#ifdef _DEBUG_SAMPLE
-#include "../../Library/Hammersley.hlsli"
-#endif
-
 //=========================================================================================
 // buffers
 //=========================================================================================

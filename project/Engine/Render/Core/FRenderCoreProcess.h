@@ -39,7 +39,6 @@ public:
 	// CompositeType enum class
 	////////////////////////////////////////////////////////////////////////////////////////////
 	enum class CompositeType : uint32_t {
-		Environment,
 		Tonemap
 	};
 	static inline const uint32_t kCompositeTypeCount = static_cast<uint32_t>(CompositeType::Tonemap) + 1;

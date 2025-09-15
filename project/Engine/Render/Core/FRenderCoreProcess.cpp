@@ -57,9 +57,6 @@ void FRenderCoreProcess::Init() {
 
 	//* composite *//
 
-	//!< environment
-	CreatePipeline(CompositeType::Environment, "CompositeProcess/Environment.cs.hlsl");
-
 	//!< tonemap
 	CreatePipeline(CompositeType::Tonemap, "CompositeProcess/Tonemap.cs.hlsl");
 
