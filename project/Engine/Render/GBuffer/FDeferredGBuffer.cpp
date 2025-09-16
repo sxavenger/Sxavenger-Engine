@@ -34,10 +34,6 @@ void FDeferredGBuffer::Init(const Vector2ui& size) {
 			buffers_[i][j]->GetResource()->SetName(ToWString(name).c_str());
 		}
 	}
-
-	for (size_t i = 0; i < kLayoutCount_; ++i) {
-		
-	}
 }
 
 void FDeferredGBuffer::TransitionBeginRenderTarget(const DirectXQueueContext* context, const D3D12_CPU_DESCRIPTOR_HANDLE& depthStencilHandle) {
@@ -101,6 +97,11 @@ void FDeferredGBuffer::SwapBuffers() {
 
 FBaseTexture* FDeferredGBuffer::GetGBuffer(Layout layout) const {
 	return buffers_[currentBufferIndex_][static_cast<size_t>(layout)].get();
+}
+
+FBaseTexture* FDeferredGBuffer::GetPrevGBuffer(Layout layout) const {
+	size_t prevIndex = (currentBufferIndex_ + buffers_.size() - 1) % buffers_.size();
+	return buffers_[prevIndex][static_cast<size_t>(layout)].get();
 }
 
 DXGI_FORMAT FDeferredGBuffer::GetFormat(Layout layout) {

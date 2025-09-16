@@ -194,6 +194,7 @@
     <ClCompile Include="Engine\Render\Pass\FRenderPassPostProcess.cpp" />
     <ClCompile Include="Engine\Render\Pass\FRenderPassTonemap.cpp" />
     <ClCompile Include="Engine\Render\Pass\FRenderPassCanvas.cpp" />
+    <ClCompile Include="Engine\Component\Components\PostProcessLayer\PostProcessMotionBlur.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Lib\Adapter\Random\Random.h" />
@@ -416,6 +417,7 @@
     <ClInclude Include="Engine\Render\Pass\FRenderPassPostProcess.h" />
     <ClInclude Include="Engine\Render\Pass\FRenderPassTonemap.h" />
     <ClInclude Include="Engine\Render\Pass\FRenderPassCanvas.h" />
+    <ClInclude Include="Engine\Component\Components\PostProcessLayer\PostProcessMotionBlur.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

@@ -28,6 +28,7 @@ public:
 		LocalExposure,
 		DoF,
 		RadialBlur,
+		MotionBlur,
 		ChromaticAberration,
 		Vignette,
 		ConvertLUTTexture,

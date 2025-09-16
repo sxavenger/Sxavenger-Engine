@@ -65,7 +65,7 @@ void DescriptorPool::DeleteDescriptor(Descriptor& descriptor) {
 	// TODO: multi thread 用にmutexを用意
 	
 	//!< 空き配列に挿入
-	descriptorDeletedIndices_.emplace(descriptor.index_);
+	descriptorFreeIndices_.emplace(descriptor.index_);
 	descriptor.Reset();
 }
 
@@ -87,15 +87,15 @@ void DescriptorPool::CreateDescriptorHeap(ID3D12Device* device) {
 uint32_t DescriptorPool::GetCurrentDescriptorIndex() {
 	uint32_t result = 0;
 
-	if (!descriptorDeletedIndices_.empty()) { //!< 空きindexがある場合
+	if (!descriptorFreeIndices_.empty()) { //!< 空きindexがある場合
 		// 先頭の空きindexの取得
-		result = descriptorDeletedIndices_.front(); 
-		descriptorDeletedIndices_.pop();
+		result = descriptorFreeIndices_.front();
+		descriptorFreeIndices_.pop();
 
 		return result;
 	}
 
-	Exception::Assert(descriptorIndexCount_ < descriptorMaxCount_, "descriptorHeap max count over.");  //!< 作成した分のDescriptorの要素数を超えている
+	Exception::Assert(descriptorIndexCount_ < descriptorMaxCount_, std::format("descriptor heap max count over. type: {}", magic_enum::enum_name(descriptorHeapType_).data()));  //!< 作成した分のDescriptorの要素数を超えている
 
 	// 現在のindexCountを返却
 	result = descriptorIndexCount_;

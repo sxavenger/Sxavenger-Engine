@@ -17,13 +17,86 @@
 
 void FRenderPassDeferredBase::Render(const DirectXQueueContext* context, const Config& config) {
 
-	config.buffer->BeginRenderTargetDeferred(context);
+	{ //!< Render Target Pass
+		BeginPassRenderTarget(context, config.buffer);
 
-	PassStaticMesh(context, config);
+		PassStaticMesh(context, config);
 
-	PassSkinnedMesh(context, config);
+		PassSkinnedMesh(context, config);
 
-	config.buffer->EndRenderTargetDeferred(context);
+		EndPassRenderTarget(context, config.buffer);
+	}
+	
+	{ //!< Velocity Pass
+		BeginPassVelocity(context, config.buffer);
+
+		PassVelocity(context, config);
+
+		EndPassVelocity(context, config.buffer);
+	}
+}
+
+void FRenderPassDeferredBase::BeginPassRenderTarget(const DirectXQueueContext* context, FRenderTargetBuffer* buffer) {
+
+	auto commandList = context->GetCommandList();
+
+	std::array<FBaseTexture*, 4> buffers = {
+		buffer->GetGBuffer(FDeferredGBuffer::Layout::Albedo),
+		buffer->GetGBuffer(FDeferredGBuffer::Layout::Normal),
+		buffer->GetGBuffer(FDeferredGBuffer::Layout::MaterialARM),
+		buffer->GetGBuffer(FDeferredGBuffer::Layout::Position)
+	};
+
+	FDepthTexture* depth = buffer->GetDepth();
+
+	std::array<D3D12_RESOURCE_BARRIER, 4> barriers = {};
+	for (size_t i = 0; i < buffers.size(); ++i) {
+		barriers[i] = buffers[i]->TransitionBeginRenderTarget();
+	}
+
+	commandList->ResourceBarrier(static_cast<UINT>(barriers.size()), barriers.data());
+
+	depth->TransitionBeginRasterizer(context);
+
+	std::array<D3D12_CPU_DESCRIPTOR_HANDLE, 4> handles = {};
+	for (size_t i = 0; i < buffers.size(); ++i) {
+		handles[i] = buffers[i]->GetCPUHandleRTV();
+	}
+
+	commandList->OMSetRenderTargets(
+		static_cast<UINT>(handles.size()), handles.data(), false,
+		&depth->GetRasterizerCPUHandleDSV()
+	);
+
+	for (size_t i = 0; i < buffers.size(); ++i) {
+		buffers[i]->ClearRenderTarget(context);
+	}
+
+	depth->ClearRasterizerDepth(context);
+
+}
+
+void FRenderPassDeferredBase::EndPassRenderTarget(const DirectXQueueContext* context, FRenderTargetBuffer* buffer) {
+
+	auto commandList = context->GetCommandList();
+
+	std::array<FBaseTexture*, 4> buffers = {
+		buffer->GetGBuffer(FDeferredGBuffer::Layout::Albedo),
+		buffer->GetGBuffer(FDeferredGBuffer::Layout::Normal),
+		buffer->GetGBuffer(FDeferredGBuffer::Layout::MaterialARM),
+		buffer->GetGBuffer(FDeferredGBuffer::Layout::Position)
+	};
+
+	FDepthTexture* depth = buffer->GetDepth();
+
+	depth->TransitionEndRasterizer(context);
+
+	std::array<D3D12_RESOURCE_BARRIER, 4> barriers = {};
+	for (size_t i = 0; i < buffers.size(); ++i) {
+		barriers[i] = buffers[i]->TransitionEndRenderTarget();
+	}
+
+	commandList->ResourceBarrier(static_cast<UINT>(barriers.size()), barriers.data());
 
 }
 
@@ -98,5 +171,37 @@ void FRenderPassDeferredBase::PassSkinnedMesh(const DirectXQueueContext* context
 	
 
 	});
+
+}
+
+void FRenderPassDeferredBase::BeginPassVelocity(const DirectXQueueContext* context, FRenderTargetBuffer* buffer) {
+
+	FBaseTexture* velocity = buffer->GetGBuffer(FDeferredGBuffer::Layout::Velocity);
+	velocity->TransitionBeginUnordered(context);
+
+}
+
+void FRenderPassDeferredBase::EndPassVelocity(const DirectXQueueContext* context, FRenderTargetBuffer* buffer) {
+
+	FBaseTexture* velocity = buffer->GetGBuffer(FDeferredGBuffer::Layout::Velocity);
+	velocity->TransitionEndUnordered(context);
+
+}
+
+void FRenderPassDeferredBase::PassVelocity(const DirectXQueueContext* context, const Config& config) {
+
+	auto core = FRenderCore::GetInstance()->GetTransition();
+	core->SetPipeline(FRenderCoreTransition::Transition::VelocityTransition, context);
+
+	DxObject::BindBufferDesc parameter = {};
+	parameter.Set32bitConstants("Dimension", 2, &config.buffer->GetSize());
+	parameter.SetHandle("gPosition",     config.buffer->GetDeferredGBuffer().GetGBuffer(FDeferredGBuffer::Layout::Position)->GetGPUHandleSRV());
+	parameter.SetHandle("gPrevPosition", config.buffer->GetDeferredGBuffer().GetPrevGBuffer(FDeferredGBuffer::Layout::Position)->GetGPUHandleSRV());
+	parameter.SetAddress("gCamera",      config.camera->GetGPUVirtualAddress());
+
+	parameter.SetHandle("gVelocity", config.buffer->GetGBuffer(FDeferredGBuffer::Layout::Velocity)->GetGPUHandleUAV());
+
+	core->BindComputeBuffer(FRenderCoreTransition::Transition::VelocityTransition, context, parameter);
+	core->Dispatch(context, config.buffer->GetSize());
 
 }

@@ -65,6 +65,8 @@ public:
 
 	FBaseTexture* GetGBuffer(Layout layout) const;
 
+	FBaseTexture* GetPrevGBuffer(Layout layout) const;
+
 	static DXGI_FORMAT GetFormat(Layout layout);
 
 private:

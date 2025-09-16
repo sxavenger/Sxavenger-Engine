@@ -123,6 +123,7 @@ private:
 		Normal,
 		MaterialARM,
 		Position,
+		Velocity,
 		Direct,
 		Indirect,
 		Indirect_Reservoir,

@@ -47,18 +47,14 @@ void FRenderPassDeferredLighting::Render(const DirectXQueueContext* context, con
 }
 
 void FRenderPassDeferredLighting::BeginPassDirectLighting(const DirectXQueueContext* context, FRenderTargetBuffer* buffer) {
+
+	auto commandList = context->GetCommandList();
+
 	FDepthTexture* depth = buffer->GetDepth();
 	depth->TransitionBeginRasterizer(context);
 
 	FBaseTexture* direct = buffer->GetGBuffer(FLightingGBuffer::Layout::Direct);
 	direct->TransitionBeginRenderTarget(context);
-
-	auto commandList = context->GetCommandList();
-
-	std::array<D3D12_RESOURCE_BARRIER, 1> barriers = {};
-	barriers[0] = direct->TransitionBeginRenderTarget();
-
-	commandList->ResourceBarrier(static_cast<UINT>(barriers.size()), barriers.data());
 
 	std::array<D3D12_CPU_DESCRIPTOR_HANDLE, 1> handles = {};
 	handles[0] = direct->GetCPUHandleRTV();

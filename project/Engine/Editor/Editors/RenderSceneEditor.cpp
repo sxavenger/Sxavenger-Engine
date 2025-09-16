@@ -83,6 +83,8 @@ void RenderSceneEditor::ShowMainMenu() {
 }
 
 void RenderSceneEditor::ShowWindow() {
+	textures_->SwapBuffers();
+
 	UpdateKeyShortcut();
 
 	ShowGameWindow();
@@ -118,7 +120,6 @@ void RenderSceneEditor::Render() {
 	SxavengerContent::GetDebugPrimitive()->DrawToScene(SxavengerSystem::GetDirectQueueContext(), camera);
 
 	textures_->EndRenderTargetMainTransparent(SxavengerSystem::GetDirectQueueContext());
-	textures_->SwapBuffers();
 }
 
 void RenderSceneEditor::Manipulate(MonoBehaviour* behaviour) {
@@ -886,6 +887,7 @@ void RenderSceneEditor::DisplayGBufferTexture(GBuffer buffer) {
 					{ textures_->GetGBuffer(FDeferredGBuffer::Layout::Normal)->GetGPUHandleSRV(),      GBuffer::Normal },
 					{ textures_->GetGBuffer(FDeferredGBuffer::Layout::MaterialARM)->GetGPUHandleSRV(), GBuffer::MaterialARM },
 					{ textures_->GetGBuffer(FDeferredGBuffer::Layout::Position)->GetGPUHandleSRV(),    GBuffer::Position },
+					{ textures_->GetGBuffer(FDeferredGBuffer::Layout::Velocity)->GetGPUHandleSRV(),    GBuffer::Velocity }
 				},
 				textures_->GetSize(),
 				isRender_
@@ -930,6 +932,14 @@ void RenderSceneEditor::DisplayGBufferTexture(GBuffer buffer) {
 		case GBuffer::Position:
 			SetImGuiImageFullWindowEnable(
 				textures_->GetGBuffer(FDeferredGBuffer::Layout::Position)->GetGPUHandleSRV(),
+				textures_->GetSize(),
+				isRender_
+			);
+			break;
+
+		case GBuffer::Velocity:
+			SetImGuiImageFullWindowEnable(
+				textures_->GetGBuffer(FDeferredGBuffer::Layout::Velocity)->GetGPUHandleSRV(),
 				textures_->GetSize(),
 				isRender_
 			);

@@ -21,7 +21,6 @@ void FRenderPassContext::Render(const DirectXQueueContext* context, const FBaseR
 	for (const auto& pass : passes_) {
 		pass->Render(context, conf);
 	}
-
 }
 
 void FRenderPassContext::Emplace(std::unique_ptr<FBaseRenderPass>&& pass) {

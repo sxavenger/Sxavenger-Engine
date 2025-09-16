@@ -47,6 +47,7 @@ void FMainRender::Render(const DirectXQueueContext* context, DirectXWindowContex
 	config.scene      = scene_.get();
 
 	context_->Render(context, config);
+
 }
 
 void FMainRender::PresentMain(const DirectXQueueContext* context) {
@@ -59,6 +60,8 @@ void FMainRender::PresentMain(const DirectXQueueContext* context) {
 		context, kMainWindowSize,
 		buffer_->GetGBuffer(FMainGBuffer::Layout::UI)->GetGPUHandleSRV()
 	);
+
+	buffer_->SwapBuffers(); //!< TODO: SwapBuffersのタイミングを考慮
 }
 
 FMainRender* FMainRender::GetInstance() {

@@ -36,6 +36,9 @@ void FRenderCoreProcess::Init() {
 		//!< radial blur
 		CreatePipeline(ProcessType::RadialBlur, "PostProcess/RadialBlur.cs.hlsl", desc);
 
+		//!< motion blur
+		CreatePipeline(ProcessType::MotionBlur, "PostProcess/MotionBlur.cs.hlsl", desc);
+
 		//!< chromatic aberration
 		CreatePipeline(ProcessType::ChromaticAberration, "PostProcess/ChromaticAberration.cs.hlsl", desc);
 	}
