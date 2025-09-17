@@ -6,6 +6,7 @@
 //* engine
 #include <Engine/System/DirectX/DxrObject/DxrExportGroup.h>
 #include <Engine/System/DirectX/DxrObject/DxrRaytracingBlob.h>
+#include <Engine/System/DirectX/DxrObject/DxrStateObjectContext.h>
 #include <Engine/System/Config/SxavengerConfig.h>
 #include <Engine/Module/Pipeline/CustomComputePipeline.h>
 
@@ -103,6 +104,10 @@ public:
 
 	void DispatchDenoiser(const DirectXQueueContext* context, const Vector2ui& size);
 
+	//* context option *//
+
+	void UpdateShaderTable(const DxrObject::TopLevelAS* topLevelAS);
+
 private:
 
 	//=========================================================================================
@@ -116,6 +121,10 @@ private:
 	std::array<std::pair<DxrObject::RaytracingBlob, DxrObject::ExportGroup>, kHitgroupExportTypeCount>      hitgroupExportGroups_;
 
 	static inline const std::filesystem::path kDirectory_ = kPackagesShaderDirectory / "render/pathtracing";
+
+	//* context *//
+
+	std::unique_ptr<DxrObject::StateObjectContext> context_;
 
 	//* denoiser *//
 
@@ -132,6 +141,8 @@ private:
 	void CreateHitgroup();
 
 	void CreateDenoiser();
+
+	void CreateContext();
 
 	template <typename _Ty>
 	static constexpr std::underlying_type_t<_Ty> GetIndex(const _Ty& _enum) {

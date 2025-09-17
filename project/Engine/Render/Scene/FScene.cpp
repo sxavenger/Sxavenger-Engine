@@ -18,63 +18,6 @@ void FScene::Init() {
 	// TLASの初期化
 	topLevelAS_.Init(SxavengerSystem::GetDxDevice());
 
-	// path tracing stateobjectの初期化
-	{ //!< global root signatureの生成
-		DxrObject::GlobalRootSignatureDesc desc = {};
-		//* lighting textures
-		desc.SetHandleUAV(0, 0, 1); //!< gIndirect
-
-		//* scene
-		desc.SetVirtualSRV(1, 0, 1); //!< gScene
-
-		//* deferred textures
-		desc.SetHandleSRV(2, 1, 1); //!< gAlbedo
-		desc.SetHandleSRV(3, 2, 1); //!< gNormal
-		desc.SetHandleSRV(4, 3, 1); //!< gMaterialARM
-		desc.SetHandleSRV(5, 4, 1); //!< gPosition
-		desc.SetHandleSRV(6, 5, 1); //!< gDepth
-
-		//* camera
-		desc.SetVirtualCBV(7, 0, 1); //!< gCamera
-
-		//* reserviour
-		desc.Set32bitConstants(8, DxObject::ShaderVisibility::VISIBILITY_ALL, 3, 1, 1); //!< Reserviour
-
-		//* light
-		// Directional Light
-		desc.SetVirtualCBV(9, 2, 2);  //!< gDirectionalLightCount
-		desc.SetVirtualSRV(10, 1, 2); //!< gDirectionalLightTransforms
-		desc.SetVirtualSRV(11, 2, 2); //!< gDirectionalLights
-		desc.SetVirtualSRV(12, 3, 2); //!< gDirectionalLightShadows
-
-		// Point Light
-		desc.SetVirtualCBV(13, 3, 2); //!< gPointLightCount
-		desc.SetVirtualSRV(14, 4, 2); //!< gPointLightTransforms
-		desc.SetVirtualSRV(15, 5, 2); //!< gPointLights
-		desc.SetVirtualSRV(16, 6, 2); //!< gPointLightShadows
-
-		// Sky Light
-		desc.SetVirtualCBV(17, 4, 2);                                                                 //!< gSkyLight
-		desc.SetSamplerLinear(DxObject::MODE_WRAP, DxObject::ShaderVisibility::VISIBILITY_ALL, 0, 2); //!< gSampler
-
-		stateObjectContext_.CreateRootSignature(SxavengerSystem::GetDxDevice(), desc);
-	}
-
-	{ //!< state objectの生成
-		DxrObject::StateObjectDesc desc = {};
-		desc.AddExport(FRenderCore::GetInstance()->GetPathtracing()->GetExportGroup(FRenderCorePathtracing::RaygenerationExportType::Default));
-		desc.AddExport(FRenderCore::GetInstance()->GetPathtracing()->GetExportGroup(FRenderCorePathtracing::MissExportType::Default));
-		desc.AddExport(FRenderCore::GetInstance()->GetPathtracing()->GetExportGroup(FRenderCorePathtracing::HitgroupExportType::Mesh));
-		desc.AddExport(FRenderCore::GetInstance()->GetPathtracing()->GetExportGroup(FRenderCorePathtracing::HitgroupExportType::Emissive));
-
-		// 仮paraemter
-		desc.SetAttributeStride(sizeof(float) * 2);
-		desc.SetPayloadStride(sizeof(float) * 5);
-		desc.SetMaxRecursionDepth(3);
-
-		stateObjectContext_.CreateStateObject(SxavengerSystem::GetDxDevice(), std::move(desc));
-	}
-
 	{ //!< light containerの初期化
 		directionalLightCount_ = std::make_unique<DxObject::DimensionBuffer<uint32_t>>();
 		directionalLightCount_->Create(SxavengerSystem::GetDxDevice(), 1);
@@ -183,12 +126,8 @@ void FScene::SetupTopLevelAS(const DirectXQueueContext* context) {
 }
 
 void FScene::SetupStateObject() {
-	// SetupTopLevelAS()に設定
-	stateObjectContext_.UpdateShaderTable(SxavengerSystem::GetDxDevice(), &topLevelAS_);
-}
-
-void FScene::ResetReservoir() {
-	isResetReservoir_ = true;
+	// TopLevelASに設定
+	FRenderCore::GetInstance()->GetPathtracing()->UpdateShaderTable(&topLevelAS_);
 }
 
 void FScene::SetupLightContainer() {
