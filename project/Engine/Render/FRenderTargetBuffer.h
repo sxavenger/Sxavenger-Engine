@@ -11,10 +11,27 @@
 #include "Common/FProcessTexture.h"
 #include "Common/FPriorityTexture.h"
 
+//* engine
+#include <Engine/System/DirectX/DxObject/DxDimensionBuffer.h>
+
 ////////////////////////////////////////////////////////////////////////////////////////////
 // FRenderTargetBuffer class
 ////////////////////////////////////////////////////////////////////////////////////////////
 class FRenderTargetBuffer {
+public:
+
+	////////////////////////////////////////////////////////////////////////////////////////////
+	// DeferredBufferIndex structure
+	////////////////////////////////////////////////////////////////////////////////////////////
+	struct DeferredBufferIndex {
+		uint32_t albedo;
+		uint32_t normal;
+		uint32_t materialARM;
+		uint32_t position;
+		uint32_t velocity;
+		uint32_t depth;
+	};
+
 public:
 
 	//=========================================================================================
@@ -102,5 +119,13 @@ private:
 
 	Vector2ui size_;
 	//!< "Dimension" 32bitConstants で使用
+
+	std::unique_ptr<DxObject::DimensionBuffer<DeferredBufferIndex>> index_;
+
+	//=========================================================================================
+	// private methods
+	//=========================================================================================
+
+	void AttachIndex();
 
 };

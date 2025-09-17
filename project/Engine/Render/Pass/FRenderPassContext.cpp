@@ -14,7 +14,7 @@ void FRenderPassContext::Render(const DirectXQueueContext* context, const FBaseR
 
 	FBaseRenderPass::Config conf = FRenderPassContext::ApplyConfig(config);
 
-	if (conf.GetStatus().Any(FBaseRenderPass::Config::Status::Error_GBuffer)) {
+	if (conf.CheckStatus(FBaseRenderPass::Config::Status::Error_GBuffer)) {
 		return; //!< configが不適格
 	}
 
@@ -45,5 +45,6 @@ FBaseRenderPass::Config FRenderPassContext::ApplyConfig(const FBaseRenderPass::C
 		config.scene = FMainRender::GetInstance()->GetScene();
 	}
 
+	config.AttachStatus(); //!< statusの更新
 	return config;
 }

@@ -29,6 +29,8 @@ public:
 		Velocity
 	};
 
+	static inline const size_t kLayoutCount = magic_enum::enum_count<Layout>();
+
 	//- Format
 	// Albedo:      [FMainGBuffer::ColorFormat]      float3 albedo, float NOT_USED
 	// Normal:      [DXGI_FORMAT_R10G10B10A2_UNORM]  float3 normal, float NOT_USED
@@ -59,7 +61,12 @@ public:
 
 	void TransitionEndUnordered(const DirectXQueueContext* context);
 
+	//* option *//
+
 	void SwapBuffers();
+
+	void ForEach(const std::function<void(FBaseTexture*)>& funciton);
+	void ForEach(const std::function<void(size_t, FBaseTexture*)>& funciton);
 
 	//* getter *//
 
@@ -75,11 +82,9 @@ private:
 	// private variables
 	//=========================================================================================
 
-	static inline const size_t kLayoutCount_ = magic_enum::enum_count<Layout>();
+	static const std::array<DXGI_FORMAT, kLayoutCount> kFormats_;
 
-	static const std::array<DXGI_FORMAT, kLayoutCount_> kFormats_;
-
-	std::array<std::array<std::unique_ptr<FBaseTexture>, kLayoutCount_>, 2> buffers_ = {};
+	std::array<std::array<std::unique_ptr<FBaseTexture>, kLayoutCount>, 2> buffers_ = {};
 	size_t currentBufferIndex_ = 0;
 	// double buffering で 過去フレームの情報を保持できるようにする
 

@@ -24,6 +24,7 @@ public:
 	enum class Layout : uint8_t {
 		Direct,
 		Indirect_Reservoir,
+		Indirect_Moment,
 		Indirect,
 		// Direct Diffuse, Direct Specular, Indirect Diffuse, Indirect Specular に分割するかも
 	};

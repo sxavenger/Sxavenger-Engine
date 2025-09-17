@@ -9,7 +9,7 @@
 // Config structure methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-void FBaseRenderPass::Config::CheckStatus() {
+void FBaseRenderPass::Config::AttachStatus() {
 
 	status = Status::Success;
 
@@ -30,4 +30,6 @@ void FBaseRenderPass::Config::CheckStatus() {
 
 }
 
-
+bool FBaseRenderPass::Config::CheckStatus(Status status) const {
+	return this->status.Any(status);
+}

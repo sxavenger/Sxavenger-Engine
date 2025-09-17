@@ -134,6 +134,7 @@ public:
 
 	const D3D12_CPU_DESCRIPTOR_HANDLE& GetRasterizerCPUHandleDSV() const { return rasterizer_.descriptorDSV_.GetCPUHandle(); }
 
+	const DxObject::Descriptor& GetRasterizerDescriptorSRV() const { return rasterizer_.descriptorSRV_; }
 	const D3D12_GPU_DESCRIPTOR_HANDLE& GetRasterizerGPUHandleSRV() const { return rasterizer_.descriptorSRV_.GetGPUHandle(); }
 
 	const D3D12_GPU_DESCRIPTOR_HANDLE& GetRaytracingGPUHandleUAV() const { return raytracing_.descriptorUAV_.GetGPUHandle(); }

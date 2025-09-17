@@ -56,6 +56,7 @@ public:
 
 	const D3D12_GPU_DESCRIPTOR_HANDLE& GetGPUHandleUAV() const { return descriptorUAV_.GetGPUHandle(); }
 
+	const DxObject::Descriptor& GetDescriptorSRV() const { return descriptorSRV_; }
 	const D3D12_GPU_DESCRIPTOR_HANDLE& GetGPUHandleSRV() const { return descriptorSRV_.GetGPUHandle(); }
 
 	const DXGI_FORMAT& GetFormat() const { return format_; }

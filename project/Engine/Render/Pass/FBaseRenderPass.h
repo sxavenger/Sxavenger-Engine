@@ -37,6 +37,8 @@ public:
 			Warning_Camera  = 1 << 1,
 			Warning_Scene   = 1 << 2,
 
+
+			Geometry_Warning = Warning_Camera | Warning_Scene,
 		};
 
 	public:
@@ -45,9 +47,9 @@ public:
 		// public methods
 		//=========================================================================================
 
-		void CheckStatus();
-
-		const Sxl::Flag<Status>& GetStatus() const { return status; }
+		void AttachStatus();
+		
+		bool CheckStatus(Status status) const;
 
 		//=========================================================================================
 		// public variables

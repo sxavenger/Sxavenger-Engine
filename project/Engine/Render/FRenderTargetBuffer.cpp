@@ -1,4 +1,11 @@
 #include "FRenderTargetBuffer.h"
+_DXOBJECT_USING
+
+//-----------------------------------------------------------------------------------------
+// include
+//-----------------------------------------------------------------------------------------
+//* engine
+#include <Engine/System/SxavengerSystem.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // FRenderTargetBuffer class methods
@@ -21,6 +28,10 @@ void FRenderTargetBuffer::Create(const Vector2ui& size) {
 
 	process_ = std::make_unique<FProcessTextureCollection>();
 	process_->Create(3, size_, FMainGBuffer::kColorFormat);
+
+	index_ = std::make_unique<DimensionBuffer<DeferredBufferIndex>>();
+	index_->Create(SxavengerSystem::GetDxDevice(), 1);
+	AttachIndex();
 }
 
 void FRenderTargetBuffer::BeginRenderTargetDeferred(const DirectXQueueContext* context) {
@@ -101,6 +112,7 @@ void FRenderTargetBuffer::EndProcessDenoiser(const DirectXQueueContext* context)
 
 void FRenderTargetBuffer::SwapBuffers() {
 	deferred_.SwapBuffers();
+	AttachIndex();
 }
 
 FBaseTexture* FRenderTargetBuffer::GetGBuffer(FDeferredGBuffer::Layout layout) {
@@ -113,4 +125,13 @@ FBaseTexture* FRenderTargetBuffer::GetGBuffer(FLightingGBuffer::Layout layout) {
 
 FBaseTexture* FRenderTargetBuffer::GetGBuffer(FMainGBuffer::Layout layout) {
 	return main_.GetGBuffer(layout);
+}
+
+void FRenderTargetBuffer::AttachIndex() {
+	auto& parameter = index_->At(0);
+	parameter.albedo      = GetGBuffer(FDeferredGBuffer::Layout::Albedo)->GetDescriptorSRV().GetIndex();
+	parameter.normal      = GetGBuffer(FDeferredGBuffer::Layout::Normal)->GetDescriptorSRV().GetIndex();
+	parameter.materialARM = GetGBuffer(FDeferredGBuffer::Layout::MaterialARM)->GetDescriptorSRV().GetIndex();
+	parameter.position    = GetGBuffer(FDeferredGBuffer::Layout::Position)->GetDescriptorSRV().GetIndex();
+	parameter.depth       = depth_->GetRasterizerDescriptorSRV().GetIndex();
 }

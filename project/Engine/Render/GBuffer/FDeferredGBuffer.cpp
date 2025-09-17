@@ -10,7 +10,7 @@
 // static const variables
 //=========================================================================================
 
-const std::array<DXGI_FORMAT, FDeferredGBuffer::kLayoutCount_> FDeferredGBuffer::kFormats_ = {
+const std::array<DXGI_FORMAT, FDeferredGBuffer::kLayoutCount> FDeferredGBuffer::kFormats_ = {
 	FMainGBuffer::kColorFormat,     //!< Albedo
 	DXGI_FORMAT_R10G10B10A2_UNORM,  //!< Normal
 	DXGI_FORMAT_R8G8B8A8_UNORM,     //!< MaterialARM
@@ -24,7 +24,7 @@ const std::array<DXGI_FORMAT, FDeferredGBuffer::kLayoutCount_> FDeferredGBuffer:
 
 void FDeferredGBuffer::Init(const Vector2ui& size) {
 	for (size_t i = 0; i < buffers_.size(); ++i) {
-		for (size_t j = 0; j < kLayoutCount_; ++j) {
+		for (size_t j = 0; j < kLayoutCount; ++j) {
 			buffers_[i][j] = std::make_unique<FBaseTexture>();
 			buffers_[i][j]->Create(size, kFormats_[j]);
 
@@ -40,15 +40,15 @@ void FDeferredGBuffer::TransitionBeginRenderTarget(const DirectXQueueContext* co
 
 	auto commandList = context->GetCommandList();
 
-	std::array<D3D12_RESOURCE_BARRIER, kLayoutCount_> barriers = {};
-	for (size_t i = 0; i < kLayoutCount_; ++i) {
+	std::array<D3D12_RESOURCE_BARRIER, kLayoutCount> barriers = {};
+	for (size_t i = 0; i < kLayoutCount; ++i) {
 		barriers[i] = buffers_[currentBufferIndex_][i]->TransitionBeginRenderTarget();
 	}
 
 	commandList->ResourceBarrier(static_cast<UINT>(barriers.size()), barriers.data());
 
-	std::array<D3D12_CPU_DESCRIPTOR_HANDLE, kLayoutCount_> handles = {};
-	for (size_t i = 0; i < kLayoutCount_; ++i) {
+	std::array<D3D12_CPU_DESCRIPTOR_HANDLE, kLayoutCount> handles = {};
+	for (size_t i = 0; i < kLayoutCount; ++i) {
 		handles[i] = buffers_[currentBufferIndex_][i]->GetCPUHandleRTV();
 	}
 
@@ -59,8 +59,8 @@ void FDeferredGBuffer::TransitionBeginRenderTarget(const DirectXQueueContext* co
 }
 
 void FDeferredGBuffer::TransitionEndRenderTarget(const DirectXQueueContext* context) {
-	std::array<D3D12_RESOURCE_BARRIER, kLayoutCount_> barriers = {};
-	for (size_t i = 0; i < kLayoutCount_; ++i) {
+	std::array<D3D12_RESOURCE_BARRIER, kLayoutCount> barriers = {};
+	for (size_t i = 0; i < kLayoutCount; ++i) {
 		barriers[i] = buffers_[currentBufferIndex_][i]->TransitionEndRenderTarget();
 	}
 
@@ -68,14 +68,14 @@ void FDeferredGBuffer::TransitionEndRenderTarget(const DirectXQueueContext* cont
 }
 
 void FDeferredGBuffer::ClearRenderTarget(const DirectXQueueContext* context) {
-	for (size_t i = 0; i < kLayoutCount_; ++i) {
+	for (size_t i = 0; i < kLayoutCount; ++i) {
 		buffers_[currentBufferIndex_][i]->ClearRenderTarget(context);
 	}
 }
 
 void FDeferredGBuffer::TransitionBeginUnordered(const DirectXQueueContext* context) {
-	std::array<D3D12_RESOURCE_BARRIER, kLayoutCount_> barriers = {};
-	for (size_t i = 0; i < kLayoutCount_; ++i) {
+	std::array<D3D12_RESOURCE_BARRIER, kLayoutCount> barriers = {};
+	for (size_t i = 0; i < kLayoutCount; ++i) {
 		barriers[i] = buffers_[currentBufferIndex_][i]->TransitionBeginUnordered();
 	}
 
@@ -83,8 +83,8 @@ void FDeferredGBuffer::TransitionBeginUnordered(const DirectXQueueContext* conte
 }
 
 void FDeferredGBuffer::TransitionEndUnordered(const DirectXQueueContext* context) {
-	std::array<D3D12_RESOURCE_BARRIER, kLayoutCount_> barriers = {};
-	for (size_t i = 0; i < kLayoutCount_; ++i) {
+	std::array<D3D12_RESOURCE_BARRIER, kLayoutCount> barriers = {};
+	for (size_t i = 0; i < kLayoutCount; ++i) {
 		barriers[i] = buffers_[currentBufferIndex_][i]->TransitionEndUnordered();
 	}
 
@@ -93,6 +93,18 @@ void FDeferredGBuffer::TransitionEndUnordered(const DirectXQueueContext* context
 
 void FDeferredGBuffer::SwapBuffers() {
 	currentBufferIndex_ = (currentBufferIndex_ + 1) % buffers_.size();
+}
+
+void FDeferredGBuffer::ForEach(const std::function<void(FBaseTexture*)>& function) {
+	for (size_t i = 0; i < kLayoutCount; ++i) {
+		function(buffers_[currentBufferIndex_][i].get());
+	}
+}
+
+void FDeferredGBuffer::ForEach(const std::function<void(size_t, FBaseTexture*)>& function) {
+	for (size_t i = 0; i < kLayoutCount; ++i) {
+		function(i, buffers_[currentBufferIndex_][i].get());
+	}
 }
 
 FBaseTexture* FDeferredGBuffer::GetGBuffer(Layout layout) const {

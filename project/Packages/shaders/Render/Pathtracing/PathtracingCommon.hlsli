@@ -25,39 +25,39 @@
 #include "../../Component/PointLightComponent.hlsli"
 #include "../../Component/SkyLightComponent.hlsli"
 
+//* common
+#include "../DeferredBufferIndex.hlsli"
+
 //=========================================================================================
 // global buffers
 //=========================================================================================
 
 //* lighting textures
-RWTexture2D<float4> gIndirect : register(u0, space1);
+RWTexture2D<float4> gIndirect     : register(u0, space1);
+RWTexture2D<uint> gIndirectMoment : register(u1, space1);
 
 //* scene
 RaytracingAccelerationStructure gScene : register(t0, space1);
 
-//* deferred textures
-Texture2D<float4> gAlbedo      : register(t1, space1);
-Texture2D<float4> gNormal      : register(t2, space1);
-Texture2D<float4> gMaterialARM : register(t3, space1);
-Texture2D<float4> gPosition    : register(t4, space1);
-Texture2D<float>  gDepth       : register(t5, space1);
+//* deferred index
+ConstantBuffer<DeferredBufferIndexConstantBuffer> gDeferredBufferIndex : register(b0, space1);
+
 
 //* camera
-ConstantBuffer<CameraComponent> gCamera : register(b0, space1);
+ConstantBuffer<CameraComponent> gCamera : register(b1, space1);
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// Reservoir cbuffer 32bitconstants.
+// Config cbuffer 32bitconstants.
 ////////////////////////////////////////////////////////////////////////////////////////////
-cbuffer Reservoir : register(b1, space1) {
+cbuffer Config : register(b2, space1) {
 
 	//=========================================================================================
 	// public variables
 	//=========================================================================================
 	
-	uint sampleCount;
-	
-	uint sampleStep;
-	uint currentFrame;
+	uint maxSampleCount;
+	uint samplesPerFrame;
+	uint isResetMoment;
 
 	//=========================================================================================
 	// public methods
@@ -65,33 +65,25 @@ cbuffer Reservoir : register(b1, space1) {
 	
 };
 
-bool CheckNeedSample() {
-	return sampleStep * currentFrame < sampleCount;
-}
-
-bool IsBeginFrame() {
-	return currentFrame == 0;
-}
-
 //* light
 struct LightCount {
 	uint count;
 };
 
 // Directional Light
-ConstantBuffer<LightCount> gDirectionalLightCount                : register(b2, space2);
-StructuredBuffer<TransformComponent> gDirectionalLightTransforms : register(t1, space2);
-StructuredBuffer<DirectionalLightComponent> gDirectionalLights   : register(t2, space2);
-StructuredBuffer<InlineShadow> gDirectionalLightShadows          : register(t3, space2);
+ConstantBuffer<LightCount> gDirectionalLightCount                : register(b0, space2);
+StructuredBuffer<TransformComponent> gDirectionalLightTransforms : register(t0, space2);
+StructuredBuffer<DirectionalLightComponent> gDirectionalLights   : register(t1, space2);
+StructuredBuffer<InlineShadow> gDirectionalLightShadows          : register(t2, space2);
 
 // Point Light
-ConstantBuffer<LightCount> gPointLightCount                : register(b3, space2);
-StructuredBuffer<TransformComponent> gPointLightTransforms : register(t4, space2);
-StructuredBuffer<PointLightComponent> gPointLights         : register(t5, space2);
-StructuredBuffer<InlineShadow> gPointLightShadows          : register(t6, space2);
+ConstantBuffer<LightCount> gPointLightCount                : register(b1, space2);
+StructuredBuffer<TransformComponent> gPointLightTransforms : register(t3, space2);
+StructuredBuffer<PointLightComponent> gPointLights         : register(t4, space2);
+StructuredBuffer<InlineShadow> gPointLightShadows          : register(t5, space2);
 
 // Sky Light
-ConstantBuffer<SkyLightComponent> gSkyLight : register(b4, space2);
+ConstantBuffer<SkyLightComponent> gSkyLight : register(b2, space2);
 SamplerState gSkySampler                    : register(s0, space2);
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -106,49 +98,6 @@ static const uint kFlag    = RAY_FLAG_CULL_BACK_FACING_TRIANGLES;
 static const uint kRayMask = 0xFF;
 
 static const uint kMaxRecursionDepth = 3;
-
-////////////////////////////////////////////////////////////////////////////////////////////
-// DeferredSurface structure
-////////////////////////////////////////////////////////////////////////////////////////////
-struct DeferredSurface {
-
-	//=========================================================================================
-	// public variables
-	//=========================================================================================
-
-	float depth;
-	float3 albedo;
-	float3 normal;
-	float3 position;
-	
-	float roughness;
-	float metallic;
-
-	//=========================================================================================
-	// public methods
-	//=========================================================================================
-
-	bool GetSurface(uint2 index) {
-
-		depth = gDepth[index];
-
-		if (depth == 1.0f) {
-			return false;
-		}
-
-		albedo   = gAlbedo[index].rgb;
-		normal   = normalize(gNormal[index].rgb * 2.0f - 1.0f);
-		position = gPosition[index].xyz;
-
-		float3 material = gMaterialARM[index].rgb;
-		// r channel: ambient
-		roughness = material.g;
-		metallic  = material.b;
-
-		return true;
-	}
-	
-};
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Payload structure

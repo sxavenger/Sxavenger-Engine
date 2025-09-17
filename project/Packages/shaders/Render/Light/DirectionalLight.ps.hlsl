@@ -49,19 +49,17 @@ PSOutput main(PSInput input) {
 	float NdotH = saturate(dot(surface.normal, h));
 	float VdotH = saturate(dot(v, h));
 
-	// f0
-	static const float3 f0 = float3(0.04f, 0.04f, 0.04f); //!< 非金属の場合のf0
+	static const float3 kMinFrenel = float3(0.04f, 0.04f, 0.04f); //!< 非金属の最小Frenel値
 
 	// diffuse Albedo
 	//!< 金属(metallic = 1.0f) -> 0.0f
-	//!< 非金属(metallic = 0.0f) -> albedo * (1.0f - f0)
-	//float3 diffuseAlbedo = surface.albedo * (1.0f - f0) * (1.0f - surface.metallic);
-	float3 diffuseAlbedo = surface.albedo * (1.0f - f0) * (1.0f - surface.metallic);
+	//!< 非金属(metallic = 0.0f) -> albedo * (1.0f - kMinFrenel)
+	float3 diffuseAlbedo = surface.albedo * (1.0f - kMinFrenel) * (1.0f - surface.metallic);
 
 	// specular Albedo
-	//!< 金属(metallic = 1.0f) -> f0
+	//!< 金属(metallic = 1.0f) -> kMinFrenel
 	//!< 非金属(metallic = 0.0f) -> albedo
-	float3 specularAlbedo = lerp(f0, surface.albedo, surface.metallic);
+	float3 specularAlbedo = lerp(kMinFrenel, surface.albedo, surface.metallic);
 
 	float3 f = F_SphericalGaussian(VdotH, specularAlbedo);
 	float vh = V_HeightCorrelated(NdotV, NdotL, surface.roughness);

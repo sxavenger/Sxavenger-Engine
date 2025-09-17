@@ -17,6 +17,12 @@
 
 void FRenderPassDeferredBase::Render(const DirectXQueueContext* context, const Config& config) {
 
+	// waning処理
+	if (config.CheckStatus(FBaseRenderPass::Config::Status::Geometry_Warning)) {
+		ClearPass(context, config.buffer);
+		return;
+	}
+
 	{ //!< Render Target Pass
 		BeginPassRenderTarget(context, config.buffer);
 
@@ -98,6 +104,42 @@ void FRenderPassDeferredBase::EndPassRenderTarget(const DirectXQueueContext* con
 
 	commandList->ResourceBarrier(static_cast<UINT>(barriers.size()), barriers.data());
 
+}
+
+void FRenderPassDeferredBase::ClearPass(const DirectXQueueContext* context, FRenderTargetBuffer* buffer) {
+
+	auto commandList = context->GetCommandList();
+
+	FDepthTexture* depth = buffer->GetDepth();
+
+	//* RenderTargetへtransition *//
+
+	std::array<D3D12_RESOURCE_BARRIER, FDeferredGBuffer::kLayoutCount> barriers = {};
+	buffer->GetDeferredGBuffer().ForEach([&](size_t i, FBaseTexture* texture) {
+		barriers[i] = texture->TransitionBeginRenderTarget();
+	});
+
+	commandList->ResourceBarrier(static_cast<UINT>(barriers.size()), barriers.data());
+
+	depth->TransitionBeginRasterizer(context);
+
+	//* clear *//
+
+	buffer->GetDeferredGBuffer().ForEach([&](FBaseTexture* texture) {
+		texture->ClearRenderTarget(context);
+	});
+
+	depth->ClearRasterizerDepth(context);
+
+	//* default stateへtransition *//
+
+	depth->TransitionEndRasterizer(context);
+
+	buffer->GetDeferredGBuffer().ForEach([&](size_t i, FBaseTexture* texture) {
+		barriers[i] = texture->TransitionEndRenderTarget();
+	});
+
+	commandList->ResourceBarrier(static_cast<UINT>(barriers.size()), barriers.data());
 }
 
 void FRenderPassDeferredBase::PassStaticMesh(const DirectXQueueContext* context, const Config& config) {

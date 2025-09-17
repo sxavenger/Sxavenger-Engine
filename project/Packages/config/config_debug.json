@@ -7,7 +7,7 @@
 	"enableDebugLayer": true,
 	"enableGPUBasedValidation": true,
 	"descriptorCount": {
-		"RTV": 32,
+		"RTV": 64,
 		"DSV": 8,
 		"SRV_CBV_UAV": 512
 	},
