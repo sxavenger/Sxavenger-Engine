@@ -21,13 +21,30 @@ void FScene::Init() {
 	{ //!< light containerの初期化
 		directionalLightCount_ = std::make_unique<DxObject::DimensionBuffer<uint32_t>>();
 		directionalLightCount_->Create(SxavengerSystem::GetDxDevice(), 1);
+
 		directionalLightTransforms_   = std::make_unique<DxObject::DimensionBuffer<TransformationMatrix>>();
+		directionalLightTransforms_->Create(SxavengerSystem::GetDxDevice(), 1);
+
 		directionalLightParams_       = std::make_unique<DxObject::DimensionBuffer<DirectionalLightComponent::Parameter>>();
+		directionalLightParams_->Create(SxavengerSystem::GetDxDevice(), 1);
 
 		pointLightCount_ = std::make_unique<DxObject::DimensionBuffer<uint32_t>>();
 		pointLightCount_->Create(SxavengerSystem::GetDxDevice(), 1);
+
 		pointLightTransforms_   = std::make_unique<DxObject::DimensionBuffer<TransformationMatrix>>();
+		pointLightTransforms_->Create(SxavengerSystem::GetDxDevice(), 1);
+
 		pointLightParams_       = std::make_unique<DxObject::DimensionBuffer<PointLightComponent::Parameter>>();
+		pointLightParams_->Create(SxavengerSystem::GetDxDevice(), 1);
+
+		spotLightCount_ = std::make_unique<DxObject::DimensionBuffer<uint32_t>>();
+		spotLightCount_->Create(SxavengerSystem::GetDxDevice(), 1);
+
+		spotLightTransforms_ = std::make_unique<DxObject::DimensionBuffer<TransformationMatrix>>();
+		spotLightTransforms_->Create(SxavengerSystem::GetDxDevice(), 1);
+
+		spotLightParams_ = std::make_unique<DxObject::DimensionBuffer<SpotLightComponent::Parameter>>();
+		spotLightParams_->Create(SxavengerSystem::GetDxDevice(), 1);
 
 	}
 	
@@ -133,6 +150,7 @@ void FScene::SetupStateObject() {
 void FScene::SetupLightContainer() {
 	SetupDirectionalLight();
 	SetupPointLight();
+	SetupSpotLight();
 }
 
 void FScene::SetupDirectionalLight() {
@@ -191,5 +209,34 @@ void FScene::SetupPointLight() {
 		index++;
 	});
 
+
+}
+
+void FScene::SetupSpotLight() {
+
+	uint32_t count = static_cast<uint32_t>(sComponentStorage->GetActiveComponentCount<SpotLightComponent>());
+
+	spotLightCount_->At(0) = count;
+
+	if (count == 0) {
+		return;
+	}
+
+	if (spotLightTransforms_->GetSize() < count) {
+		spotLightTransforms_->Create(SxavengerSystem::GetDxDevice(), count);
+	}
+
+	if (spotLightParams_->GetSize() < count) {
+		spotLightParams_->Create(SxavengerSystem::GetDxDevice(), count);
+	}
+
+	size_t index = 0;
+
+	sComponentStorage->ForEachActive<SpotLightComponent>([&](SpotLightComponent* component) {
+		spotLightTransforms_->At(index)   = component->RequireTransform()->GetTransformationMatrix();
+		spotLightParams_->At(index)       = component->GetParameter();
+
+		index++;
+	});
 
 }

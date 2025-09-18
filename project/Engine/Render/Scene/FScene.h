@@ -9,6 +9,7 @@
 #include <Engine/Component/Components/MeshRenderer/SkinnedMeshRendererComponent.h>
 #include <Engine/Component/Components/Light/Punctual/DirectionalLightComponent.h>
 #include <Engine/Component/Components/Light/Punctual/PointLightComponent.h>
+#include <Engine/Component/Components/Light/Punctual/SpotLightComponent.h>
 
 //* engine
 #include <Engine/System/DirectX/DxrObject/DxrAccelerationStructure.h>
@@ -44,6 +45,7 @@ public:
 
 	void SetupDirectionalLight();
 	void SetupPointLight();
+	void SetupSpotLight();
 
 private:
 
@@ -57,13 +59,17 @@ private:
 
 	//* light container *//
 
-	std::unique_ptr<DxObject::DimensionBuffer<uint32_t>>                                directionalLightCount_;
-	std::unique_ptr<DxObject::DimensionBuffer<TransformationMatrix>>                    directionalLightTransforms_;
-	std::unique_ptr<DxObject::DimensionBuffer<DirectionalLightComponent::Parameter>>    directionalLightParams_;
+	std::unique_ptr<DxObject::DimensionBuffer<uint32_t>>                             directionalLightCount_;
+	std::unique_ptr<DxObject::DimensionBuffer<TransformationMatrix>>                 directionalLightTransforms_;
+	std::unique_ptr<DxObject::DimensionBuffer<DirectionalLightComponent::Parameter>> directionalLightParams_;
 
-	std::unique_ptr<DxObject::DimensionBuffer<uint32_t>>                          pointLightCount_;
-	std::unique_ptr<DxObject::DimensionBuffer<TransformationMatrix>>              pointLightTransforms_;
-	std::unique_ptr<DxObject::DimensionBuffer<PointLightComponent::Parameter>>    pointLightParams_;
+	std::unique_ptr<DxObject::DimensionBuffer<uint32_t>>                       pointLightCount_;
+	std::unique_ptr<DxObject::DimensionBuffer<TransformationMatrix>>           pointLightTransforms_;
+	std::unique_ptr<DxObject::DimensionBuffer<PointLightComponent::Parameter>> pointLightParams_;
+
+	std::unique_ptr<DxObject::DimensionBuffer<uint32_t>>                      spotLightCount_;
+	std::unique_ptr<DxObject::DimensionBuffer<TransformationMatrix>>          spotLightTransforms_;
+	std::unique_ptr<DxObject::DimensionBuffer<SpotLightComponent::Parameter>> spotLightParams_;
 
 	//=========================================================================================
 	// friend class

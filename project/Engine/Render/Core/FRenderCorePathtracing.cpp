@@ -180,8 +180,13 @@ void FRenderCorePathtracing::CreateContext() {
 		desc.SetVirtualSRV(10, 2, 2); //!< gPointLightTransforms
 		desc.SetVirtualSRV(11, 3, 2); //!< gPointLights
 
+		// Spot Light
+		desc.SetVirtualCBV(12, 2, 2); //!< gSpotLightCount
+		desc.SetVirtualSRV(13, 4, 2); //!< gSpotLightTransforms
+		desc.SetVirtualSRV(14, 5, 2); //!< gSpotLights
+
 		// Sky Light
-		desc.SetVirtualCBV(12, 2, 2);                                                                 //!< gSkyLight
+		desc.SetVirtualCBV(15, 3, 2);                                                                 //!< gSkyLight
 		desc.SetSamplerLinear(DxObject::MODE_WRAP, DxObject::ShaderVisibility::VISIBILITY_ALL, 0, 2); //!< gSampler
 
 		context_->CreateRootSignature(SxavengerSystem::GetDxDevice(), desc);

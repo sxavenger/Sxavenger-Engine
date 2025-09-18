@@ -276,10 +276,6 @@ void FRenderPassDeferredLighting::PassSpotLight(const DirectXQueueContext* conte
 
 void FRenderPassDeferredLighting::PassSkyLight(const DirectXQueueContext* context, const Config& config) {
 
-	if (config.isEnableIndirectLighting) {
-		return; //!< Indirect Lightingで処理するため, スキップ
-	}
-
 	DxObject::BindBufferDesc parameter = {};
 	// common parameter
 	parameter.SetAddress("gCamera", config.camera->GetGPUVirtualAddress());
@@ -295,26 +291,30 @@ void FRenderPassDeferredLighting::PassSkyLight(const DirectXQueueContext* contex
 	// BRDF LUT
 	parameter.SetHandle("gBRDFLut", FRenderCore::GetInstance()->GetBRDFLut());
 
-	//* Irradiance/Radiance
-	FRenderCore::GetInstance()->GetLight()->SetPipeline(
-		FRenderCoreLight::LightType::SkyLight, context, config.buffer->GetSize()
-	);
+	if (!config.isEnableIndirectLighting) {
+		//!< IndirectLightingが有効な場合はIndirectLightPassで処理する
 
-	sComponentStorage->ForEachActive<SkyLightComponent>([&](SkyLightComponent* component) {
-
-		if (!component->IsEnableIrradiance() || !component->IsEnableRadiance()) {
-			return; //!< IrradianceやRadianceが設定されていない場合はスキップ
-		}
-
-		// sky light parameter
-		parameter.SetAddress("gParameter", component->GetGPUVirtualAddress());
-
-		FRenderCore::GetInstance()->GetLight()->BindGraphicsBuffer(
-			FRenderCoreLight::LightType::SkyLight, context, parameter
+		//* Irradiance/Radiance
+		FRenderCore::GetInstance()->GetLight()->SetPipeline(
+			FRenderCoreLight::LightType::SkyLight, context, config.buffer->GetSize()
 		);
 
-		FRenderCore::GetInstance()->GetLight()->DrawCall(context);
-	});
+		sComponentStorage->ForEachActive<SkyLightComponent>([&](SkyLightComponent* component) {
+
+			if (!component->IsEnableIrradiance() || !component->IsEnableRadiance()) {
+				return; //!< IrradianceやRadianceが設定されていない場合はスキップ
+			}
+
+			// sky light parameter
+			parameter.SetAddress("gParameter", component->GetGPUVirtualAddress());
+
+			FRenderCore::GetInstance()->GetLight()->BindGraphicsBuffer(
+				FRenderCoreLight::LightType::SkyLight, context, parameter
+			);
+
+			FRenderCore::GetInstance()->GetLight()->DrawCall(context);
+		});
+	}
 
 	//* Environment
 	FRenderCore::GetInstance()->GetLight()->SetPipeline(
@@ -375,9 +375,14 @@ void FRenderPassDeferredLighting::PassIndirectLight(const DirectXQueueContext* c
 	commandList->SetComputeRootShaderResourceView(10, config.scene->pointLightTransforms_->GetGPUVirtualAddress());
 	commandList->SetComputeRootShaderResourceView(11, config.scene->pointLightParams_->GetGPUVirtualAddress());
 
+	// Spot Light
+	commandList->SetComputeRootConstantBufferView(12, config.scene->spotLightCount_->GetGPUVirtualAddress());
+	commandList->SetComputeRootShaderResourceView(13, config.scene->spotLightTransforms_->GetGPUVirtualAddress());
+	commandList->SetComputeRootShaderResourceView(14, config.scene->spotLightParams_->GetGPUVirtualAddress());
+
 	// Sky Light
 	sComponentStorage->ForEachActive<SkyLightComponent>([&](SkyLightComponent* component) {
-		commandList->SetComputeRootConstantBufferView(12, component->GetGPUVirtualAddress());
+		commandList->SetComputeRootConstantBufferView(15, component->GetGPUVirtualAddress());
 	});
 	
 

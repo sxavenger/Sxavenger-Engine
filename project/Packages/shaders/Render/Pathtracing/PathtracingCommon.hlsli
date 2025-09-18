@@ -23,6 +23,7 @@
 #include "../../Component/LightComponentCommon.hlsli"
 #include "../../Component/DirectionalLightComponent.hlsli"
 #include "../../Component/PointLightComponent.hlsli"
+#include "../../Component/SpotLightComponent.hlsli"
 #include "../../Component/SkyLightComponent.hlsli"
 
 //* common
@@ -80,8 +81,13 @@ ConstantBuffer<LightCount> gPointLightCount                : register(b1, space2
 StructuredBuffer<TransformComponent> gPointLightTransforms : register(t2, space2);
 StructuredBuffer<PointLightComponent> gPointLights         : register(t3, space2);
 
+// Spot Light
+ConstantBuffer<LightCount> gSpotLightCount                : register(b2, space2);
+StructuredBuffer<TransformComponent> gSpotLightTransforms : register(t4, space2);
+StructuredBuffer<SpotLightComponent> gSpotLights         : register(t5, space2);
+
 // Sky Light
-ConstantBuffer<SkyLightComponent> gSkyLight : register(b2, space2);
+ConstantBuffer<SkyLightComponent> gSkyLight : register(b3, space2);
 SamplerState gSkySampler                    : register(s0, space2);
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -90,7 +96,7 @@ SamplerState gSkySampler                    : register(s0, space2);
 
 
 static const float kTMin = 0.001f;
-static const float kTMax = 16384.0f;
+static const float kTMax = 10000.0f;
 
 static const uint kFlag    = RAY_FLAG_CULL_BACK_FACING_TRIANGLES;
 static const uint kRayMask = 0xFF;
