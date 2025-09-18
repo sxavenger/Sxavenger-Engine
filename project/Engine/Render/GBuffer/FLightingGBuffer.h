@@ -5,6 +5,7 @@
 //-----------------------------------------------------------------------------------------
 //* render
 #include "../Common/FBaseTexture.h"
+#include "../Core/FRenderCorePathtracing.h"
 
 //* engine
 #include <Engine/System/DirectX/Context/DirectXQueueContext.h>
@@ -70,6 +71,8 @@ public:
 
 	static DXGI_FORMAT GetFormat(Layout layout);
 
+	FRenderCorePathtracing::Config& GetConfig() { return config_; }
+
 private:
 
 	//=========================================================================================
@@ -81,5 +84,7 @@ private:
 	static const std::array<DXGI_FORMAT, kLayoutCount_> kFormats_;
 
 	std::array<std::unique_ptr<FBaseTexture>, kLayoutCount_> buffers_ = {};
+
+	FRenderCorePathtracing::Config config_ = {};
 
 };

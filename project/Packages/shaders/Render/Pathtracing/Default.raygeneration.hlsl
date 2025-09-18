@@ -47,7 +47,7 @@ _RAYGENERATION void mainRaygeneration() {
 	float4 diffuse_indirect  = float4(0.0f, 0.0f, 0.0f, 0.0f);
 	float4 specular_indirect = float4(0.0f, 0.0f, 0.0f, 0.0f);
 
-	for (uint i = 0; i < min(samplesPerFrame, samplesPerFrame - moment); ++i) {
+	for (uint i = 0; i < min(samplesPerFrame, maxSampleCount - moment); ++i) {
 
 		uint currentSampleIndex   = moment + i;
 		uint randamizeSampleIndex = (currentSampleIndex + offset) % maxSampleCount;
@@ -122,7 +122,7 @@ _RAYGENERATION void mainRaygeneration() {
 	}
 
 	uint prev    = moment;
-	uint current = moment + min(samplesPerFrame, samplesPerFrame - moment);
+	uint current = moment + min(samplesPerFrame, maxSampleCount - moment);
 
 	diffuse_indirect.rgb  /= current;
 	specular_indirect.rgb /= current;

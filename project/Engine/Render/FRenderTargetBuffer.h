@@ -80,6 +80,8 @@ public:
 
 	FMainGBuffer& GetMainGBuffer() { return main_; }
 
+	const D3D12_GPU_VIRTUAL_ADDRESS& GetIndexBufferAddress() const;
+
 	//* depth stencil option *//
 
 	FDepthTexture* GetDepth() { return depth_.get(); }

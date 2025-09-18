@@ -30,6 +30,6 @@ void FBaseRenderPass::Config::AttachStatus() {
 
 }
 
-bool FBaseRenderPass::Config::CheckStatus(Status status) const {
-	return this->status.Any(status);
+bool FBaseRenderPass::Config::CheckStatus(Status _status) const {
+	return status.Any(_status);
 }

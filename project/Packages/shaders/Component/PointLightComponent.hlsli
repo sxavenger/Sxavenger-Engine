@@ -51,5 +51,9 @@ struct PointLightComponent {
 	float3 GetColor(float r) {
 		return color * GetRadiance(r);
 	}
+
+	float TraceShadow(RayDesc desc, RaytracingAccelerationStructure scene) {
+		return shadow.TraceShadow(desc, scene);
+	}
 	
 };

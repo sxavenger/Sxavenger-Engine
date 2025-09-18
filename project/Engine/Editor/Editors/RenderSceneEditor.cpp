@@ -525,6 +525,7 @@ void RenderSceneEditor::ShowSceneWindow() {
 
 	//* render scene information *//
 
+	ShowInfoTextScene();
 	ShowIconScene();
 }
 
@@ -577,6 +578,23 @@ void RenderSceneEditor::ShowCanvasWindow() {
 
 	ImGui::End();
 	ImGui::PopStyleVar();
+}
+
+void RenderSceneEditor::ShowInfoTextScene() {
+	if (sceneWindow_ == nullptr) {
+		return;
+	}
+
+	static const ImVec2 kPadding = { 4.0f, 4.0f };
+
+	ImVec2 position = { sceneRect_.pos.x + kPadding.x, sceneRect_.pos.y + sceneRect_.size.y - kPadding.y };
+
+	RenderTextSceneWindow(position, std::format(" isEnableTonemap:          {}", config_.isElableTonemap));
+	RenderTextSceneWindow(position, std::format(" isEnablePostProcess:      {}", config_.isEnablePostProcess));
+	RenderTextSceneWindow(position, std::format(" isEnableIndirectLighting: {}", config_.isEnableIndirectLighting));
+	RenderTextSceneWindow(position, std::format("> Config"));
+	RenderTextSceneWindow(position, std::format("GBuffer | {}", magic_enum::enum_name(buffer_)));
+
 }
 
 void RenderSceneEditor::ShowIconScene() {

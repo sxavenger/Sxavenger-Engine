@@ -54,28 +54,24 @@ public:
 	static inline constexpr uint32_t kDenoiserTypeCount = static_cast<uint32_t>(DenoiserType::EdgeStopping) + 1;
 
 	////////////////////////////////////////////////////////////////////////////////////////////
-	// Reservoir structure
+	// Config structure
 	////////////////////////////////////////////////////////////////////////////////////////////
-	struct Reservoir { // -> Config
+	struct Config {
 	public:
 
 		//=========================================================================================
 		// public methods
 		//=========================================================================================
 
-		void IncrimentFrame();
-
-		void ResetFrame();
-
-		uint32_t GetCurrentSampleCount() const;
+		void Update();
 
 		//=========================================================================================
 		// public variables
 		//=========================================================================================
 
-		uint32_t sampleCount  = 256; //!< 合計sample数
-		uint32_t sampleStep   = 1;   //!< frameごとのsample数
-		uint32_t currentFrame = 0;   //!< 現在のframe
+		uint32_t maxSampleCount  = 256; //!< 合計sample数
+		uint32_t samplesPerFrame = 1;  //!< frameごとのsample数
+		uint32_t isResetMoment   = true; //!< sampleをリセットするか
 
 	};
 
@@ -107,6 +103,8 @@ public:
 	//* context option *//
 
 	void UpdateShaderTable(const DxrObject::TopLevelAS* topLevelAS);
+
+	DxrObject::StateObjectContext* GetContext() const { return context_.get(); }
 
 private:
 

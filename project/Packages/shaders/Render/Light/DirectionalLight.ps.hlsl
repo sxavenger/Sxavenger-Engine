@@ -35,7 +35,7 @@ PSOutput main(PSInput input) {
 	desc.TMin      = kTMin;
 	desc.TMax      = kTMax;
 
-	c_light *= gParameters[input.instanceId].shadow.TraceShadow(desc, gScene);
+	c_light *= gParameters[input.instanceId].TraceShadow(desc, gScene);
 	// todo: 不必要な場合は、gShadow.TraceShadow()を呼び出さないようにする
 
 	//* cameraからの方向ベクトルを取得

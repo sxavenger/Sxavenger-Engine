@@ -77,7 +77,7 @@ float3 CalculateDirectionalLight(uint index, Surface surface) {
 	desc.TMin      = kTMin;
 	desc.TMax      = kTMax;
 
-	c_light *= gDirectionalLightShadows[index].TraceShadow(desc, gScene);
+	c_light *= gDirectionalLights[index].TraceShadow(desc, gScene);
 	// todo: 不必要な場合は、gShadow.TraceShadow()を呼び出さないようにする
 
 	//* cameraからの方向ベクトルを取得
@@ -131,7 +131,7 @@ float3 CalculatePointLight(uint index, Surface surface) {
 	desc.TMin      = kTMin;
 	desc.TMax      = r;
 	
-	c_light *= gPointLightShadows[index].TraceShadow(desc, gScene);
+	c_light *= gPointLights[index].TraceShadow(desc, gScene);
 
 	//* Cameraの情報を取得
 	float3 v = normalize(gCamera.GetPosition() - surface.position);

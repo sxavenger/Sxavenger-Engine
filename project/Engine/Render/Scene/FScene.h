@@ -69,6 +69,6 @@ private:
 	// friend class
 	//=========================================================================================
 	//!< HACK
-	friend class FSceneRenderer;
+	friend class FRenderPassDeferredLighting;
 
 };

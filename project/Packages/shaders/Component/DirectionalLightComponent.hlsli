@@ -30,5 +30,9 @@ struct DirectionalLightComponent {
 	float3 GetColor() {
 		return color * intensity * kPi;
 	}
+
+	float TraceShadow(RayDesc desc, RaytracingAccelerationStructure scene) {
+		return shadow.TraceShadow(desc, scene);
+	}
 	
 };

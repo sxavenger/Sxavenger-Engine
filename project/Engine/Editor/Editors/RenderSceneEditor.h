@@ -205,6 +205,7 @@ private:
 	void ShowGameWindow();
 	void ShowCanvasWindow();
 
+	void ShowInfoTextScene();
 	void ShowIconScene();
 
 	void UpdateKeyShortcut();

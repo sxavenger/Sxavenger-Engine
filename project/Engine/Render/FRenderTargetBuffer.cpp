@@ -127,6 +127,10 @@ FBaseTexture* FRenderTargetBuffer::GetGBuffer(FMainGBuffer::Layout layout) {
 	return main_.GetGBuffer(layout);
 }
 
+const D3D12_GPU_VIRTUAL_ADDRESS& FRenderTargetBuffer::GetIndexBufferAddress() const {
+	return index_->GetGPUVirtualAddress();
+}
+
 void FRenderTargetBuffer::AttachIndex() {
 	auto& parameter = index_->At(0);
 	parameter.albedo      = GetGBuffer(FDeferredGBuffer::Layout::Albedo)->GetDescriptorSRV().GetIndex();

@@ -11,16 +11,8 @@ _DXROBJECT_USING
 // Reservoir structure methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-void FRenderCorePathtracing::Reservoir::IncrimentFrame() {
-	currentFrame++;
-}
-
-void FRenderCorePathtracing::Reservoir::ResetFrame() {
-	currentFrame = 0;
-}
-
-uint32_t FRenderCorePathtracing::Reservoir::GetCurrentSampleCount() const {
-	return std::min(currentFrame * sampleStep, sampleCount);
+void FRenderCorePathtracing::Config::Update() {
+	isResetMoment = false;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -179,19 +171,17 @@ void FRenderCorePathtracing::CreateContext() {
 
 		//* light
 		// Directional Light
-		desc.SetVirtualCBV(6, 0, 2);  //!< gDirectionalLightCount
+		desc.SetVirtualCBV(6, 0, 2); //!< gDirectionalLightCount
 		desc.SetVirtualSRV(7, 0, 2); //!< gDirectionalLightTransforms
 		desc.SetVirtualSRV(8, 1, 2); //!< gDirectionalLights
-		desc.SetVirtualSRV(9, 2, 2); //!< gDirectionalLightShadows
 
 		// Point Light
-		desc.SetVirtualCBV(10, 1, 2); //!< gPointLightCount
-		desc.SetVirtualSRV(11, 3, 2); //!< gPointLightTransforms
-		desc.SetVirtualSRV(12, 4, 2); //!< gPointLights
-		desc.SetVirtualSRV(13, 5, 2); //!< gPointLightShadows
+		desc.SetVirtualCBV(9, 1, 2);  //!< gPointLightCount
+		desc.SetVirtualSRV(10, 2, 2); //!< gPointLightTransforms
+		desc.SetVirtualSRV(11, 3, 2); //!< gPointLights
 
 		// Sky Light
-		desc.SetVirtualCBV(14, 2, 2);                                                                 //!< gSkyLight
+		desc.SetVirtualCBV(12, 2, 2);                                                                 //!< gSkyLight
 		desc.SetSamplerLinear(DxObject::MODE_WRAP, DxObject::ShaderVisibility::VISIBILITY_ALL, 0, 2); //!< gSampler
 
 		context_->CreateRootSignature(SxavengerSystem::GetDxDevice(), desc);

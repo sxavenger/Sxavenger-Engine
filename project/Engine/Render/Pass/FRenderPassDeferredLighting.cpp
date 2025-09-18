@@ -17,8 +17,7 @@
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 void FRenderPassDeferredLighting::Render(const DirectXQueueContext* context, const Config& config) {
-	// TODO: ShaderとPipelineの調整
-	// DepthをPipelineで参照する形に変更
+	// TODO: Geometry Warningの際の処理を追加
 
 	{ //* Direct Lighting
 		BeginPassDirectLighting(context, config.buffer);
@@ -37,10 +36,21 @@ void FRenderPassDeferredLighting::Render(const DirectXQueueContext* context, con
 	}
 
 
-	//if (config.isEnableIndirectLighting) { //* Indirect Lighting
-	//	ProcessLightingPassIndirect(context, config);
-	//	ProcessLightingPassIndirectDenoiser(context, config);
-	//}
+	if (config.isEnableIndirectLighting) { //* Indirect Lighting
+
+		BeginPassIndirectLighting(context, config.buffer);
+
+		PassIndirectLight(context, config);
+
+		EndPassIndirectLighting(context, config.buffer);
+
+
+
+	} else {
+
+
+
+	}
 
 	LightingPassTransition(context, config);
 
@@ -73,6 +83,42 @@ void FRenderPassDeferredLighting::EndPassDirectLighting(const DirectXQueueContex
 
 	FBaseTexture* direct = buffer->GetGBuffer(FLightingGBuffer::Layout::Direct);
 	direct->TransitionEndRenderTarget(context);
+}
+
+void FRenderPassDeferredLighting::BeginPassIndirectLighting(const DirectXQueueContext* context, FRenderTargetBuffer* buffer) {
+
+	auto commandList = context->GetCommandList();
+
+	std::array<FBaseTexture*, 2> buffers = {
+		buffer->GetGBuffer(FLightingGBuffer::Layout::Indirect_Reservoir),
+		buffer->GetGBuffer(FLightingGBuffer::Layout::Indirect_Moment)
+	};
+
+	std::array<D3D12_RESOURCE_BARRIER, 2> barriers = {};
+	for (size_t i = 0; i < buffers.size(); ++i) {
+		barriers[i] = buffers[i]->TransitionBeginUnordered();
+	}
+
+	commandList->ResourceBarrier(static_cast<UINT>(barriers.size()), barriers.data());
+
+}
+
+void FRenderPassDeferredLighting::EndPassIndirectLighting(const DirectXQueueContext* context, FRenderTargetBuffer* buffer) {
+
+	auto commandList = context->GetCommandList();
+
+	std::array<FBaseTexture*, 2> buffers = {
+		buffer->GetGBuffer(FLightingGBuffer::Layout::Indirect_Reservoir),
+		buffer->GetGBuffer(FLightingGBuffer::Layout::Indirect_Moment)
+	};
+
+	std::array<D3D12_RESOURCE_BARRIER, 2> barriers = {};
+	for (size_t i = 0; i < buffers.size(); ++i) {
+		barriers[i] = buffers[i]->TransitionEndUnordered();
+	}
+
+	commandList->ResourceBarrier(static_cast<UINT>(barriers.size()), barriers.data());
+
 }
 
 void FRenderPassDeferredLighting::PassEmpty(const DirectXQueueContext* context, const Config& config) {
@@ -232,6 +278,52 @@ void FRenderPassDeferredLighting::PassSkyLight(const DirectXQueueContext* contex
 		FRenderCore::GetInstance()->GetLight()->DrawCall(context);
 
 	});
+
+}
+
+void FRenderPassDeferredLighting::PassIndirectLight(const DirectXQueueContext* context, const Config& config) {
+
+	// TODO: Config
+
+	FRenderCore::GetInstance()->GetPathtracing()->GetContext()->SetStateObject(context->GetDxCommand());
+
+	auto commandList = context->GetCommandList();
+
+	//* lighting texture
+	commandList->SetComputeRootDescriptorTable(0, config.buffer->GetGBuffer(FLightingGBuffer::Layout::Indirect_Reservoir)->GetGPUHandleUAV());
+	commandList->SetComputeRootDescriptorTable(1, config.buffer->GetGBuffer(FLightingGBuffer::Layout::Indirect_Moment)->GetGPUHandleUAV());
+
+	//* scene
+	commandList->SetComputeRootShaderResourceView(2, config.scene->GetTopLevelAS().GetGPUVirtualAddress());
+
+	//* deferred textures
+	commandList->SetComputeRootConstantBufferView(3, config.buffer->GetIndexBufferAddress());
+
+	//* camera
+	commandList->SetComputeRootConstantBufferView(4, config.camera->GetGPUVirtualAddress());
+
+	// TODO: config
+	commandList->SetComputeRoot32BitConstants(5, 3, &config.buffer->GetLightingGBuffer().GetConfig(), 0);
+
+	//* light
+	// Directional Light
+	commandList->SetComputeRootConstantBufferView(6, config.scene->directionalLightCount_->GetGPUVirtualAddress());
+	commandList->SetComputeRootShaderResourceView(7, config.scene->directionalLightTransforms_->GetGPUVirtualAddress());
+	commandList->SetComputeRootShaderResourceView(8, config.scene->directionalLightParams_->GetGPUVirtualAddress());
+
+	// Point Light
+	commandList->SetComputeRootConstantBufferView(9,  config.scene->pointLightCount_->GetGPUVirtualAddress());
+	commandList->SetComputeRootShaderResourceView(10, config.scene->pointLightTransforms_->GetGPUVirtualAddress());
+	commandList->SetComputeRootShaderResourceView(11, config.scene->pointLightParams_->GetGPUVirtualAddress());
+
+	// Sky Light
+	sComponentStorage->ForEachActive<SkyLightComponent>([&](SkyLightComponent* component) {
+		commandList->SetComputeRootConstantBufferView(12, component->GetGPUVirtualAddress());
+	});
+	
+
+	FRenderCore::GetInstance()->GetPathtracing()->GetContext()->DispatchRays(context->GetDxCommand(), config.buffer->GetSize());
+	config.buffer->GetLightingGBuffer().GetConfig().Update();
 
 }
 

@@ -74,13 +74,11 @@ struct LightCount {
 ConstantBuffer<LightCount> gDirectionalLightCount                : register(b0, space2);
 StructuredBuffer<TransformComponent> gDirectionalLightTransforms : register(t0, space2);
 StructuredBuffer<DirectionalLightComponent> gDirectionalLights   : register(t1, space2);
-StructuredBuffer<InlineShadow> gDirectionalLightShadows          : register(t2, space2);
 
 // Point Light
 ConstantBuffer<LightCount> gPointLightCount                : register(b1, space2);
-StructuredBuffer<TransformComponent> gPointLightTransforms : register(t3, space2);
-StructuredBuffer<PointLightComponent> gPointLights         : register(t4, space2);
-StructuredBuffer<InlineShadow> gPointLightShadows          : register(t5, space2);
+StructuredBuffer<TransformComponent> gPointLightTransforms : register(t2, space2);
+StructuredBuffer<PointLightComponent> gPointLights         : register(t3, space2);
 
 // Sky Light
 ConstantBuffer<SkyLightComponent> gSkyLight : register(b2, space2);
