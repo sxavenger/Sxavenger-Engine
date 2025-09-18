@@ -59,6 +59,8 @@ public:
 
 	static void PushGrid(const CameraComponent* camera, const Vector2f& size, float radius);
 
+	static void PushCone(const Vector3f& center, const Vector3f& direction, float radius, float angle, const Color4f& color);
+
 	static DebugPrimitive* GetDebugPrimitive() { return debugPrimitive_.get(); }
 
 private:

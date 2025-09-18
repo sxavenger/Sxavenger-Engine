@@ -38,6 +38,10 @@ const Vector3f TransformComponent::GetPosition() const {
 	return Matrix4x4::GetTranslation(mat_);
 }
 
+const Vector3f TransformComponent::GetDirection() const {
+	return transform_.GetForward();
+}
+
 const TransformationMatrix& TransformComponent::GetTransformationMatrix() const {
 	Exception::Assert(buffer_ != nullptr, "transform buffer is not craete.");
 	return (*buffer_)[0];

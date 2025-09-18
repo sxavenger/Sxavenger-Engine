@@ -371,6 +371,46 @@ void DebugPrimitive::PushSphere(const Vector3f& center, float radius, const Colo
 	}
 }
 
+void DebugPrimitive::PushCone(const Vector3f& center, const Vector3f& direction, float radius, float angle, const Color4f& color) {
+
+	static const uint32_t kSubdivision = 16; //!< parameter
+	static const float kRoundEvery     = kTau / kSubdivision; //!< 1周 / 分割数
+	
+	// 外周線
+
+	float s = (direction.z >= 0.0f) ? 1.0f : -1.0f;
+	float a = -1.0f / (s + direction.z);
+	float bv = direction.x * direction.y * a;
+
+	Vector3f t = Vector3f{ 1.0f + s * direction.x * direction.x * a, s * bv, -s * direction.x };
+	Vector3f b = Vector3f{ bv, s + direction.y * direction.y * a, -direction.y };
+
+	for (uint32_t i = 0; i < kSubdivision; ++i) {
+
+		float theta = kRoundEvery * i;
+
+		Vector3f h1 = {
+			std::cos(theta) * std::sin(angle) * radius,
+			std::sin(theta) * std::sin(angle) * radius,
+			std::cos(angle) * radius
+		};
+
+		Vector3f p1 = h1.x * t + h1.y * b + h1.z * direction;
+
+		Vector3f h2 = {
+			std::cos(theta + kRoundEvery) * std::sin(angle) * radius,
+			std::sin(theta + kRoundEvery) * std::sin(angle) * radius,
+			std::cos(angle) * radius
+		};
+
+		Vector3f p2 = h2.x * t + h2.y * b + h2.z * direction;
+
+		PushLine(center, center + p1, color);
+		PushLine(center + p1, center + p2, color);
+	}
+
+}
+
 void DebugPrimitive::CreatePrimitive() {
 	line_        = std::make_unique<DebugPrimitiveLine>();
 	lineOverlay_ = std::make_unique<DebugPrimitiveLine>();

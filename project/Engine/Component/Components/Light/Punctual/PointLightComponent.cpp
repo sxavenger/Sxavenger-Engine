@@ -53,7 +53,7 @@ void PointLightComponent::ShowComponentInspector() {
 	parameter.shadow.ShowInspector();
 
 	//* push line
-	SxavengerContent::GetDebugPrimitive()->PushSphere(RequireTransform()->GetPosition(), parameter.radius, Color4f{ parameter.color, 1.0f });
+	SxavengerContent::PushSphere(RequireTransform()->GetPosition(), parameter.radius, Color4f{ parameter.color, 1.0f });
 }
 
 void PointLightComponent::Init() {

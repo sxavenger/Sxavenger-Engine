@@ -57,7 +57,7 @@ void SpotLightComponent::ShowComponentInspector() {
 
 	//* push line
 
-	// TODO
+	SxavengerContent::PushCone(RequireTransform()->GetPosition(), RequireTransform()->GetDirection(), parameter.radius, parameter.coneAngle.y, Color4f{ parameter.color, 1.0f });
 }
 
 void SpotLightComponent::Init() {

@@ -259,6 +259,7 @@ void ComponentHelper::RegisterComponents() {
 	sComponentStorage->RegisterFactory<TextRendererComponent>();
 	sComponentStorage->RegisterFactory<DirectionalLightComponent>();
 	sComponentStorage->RegisterFactory<PointLightComponent>();
+	sComponentStorage->RegisterFactory<SpotLightComponent>();
 	sComponentStorage->RegisterFactory<ParticleComponent>();
 	sComponentStorage->RegisterFactory<SkyLightComponent>();
 	sComponentStorage->RegisterFactory<ColliderComponent>();

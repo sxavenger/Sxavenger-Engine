@@ -14,6 +14,9 @@
 #include <Engine/Component/Components/Transform/TransformComponent.h>
 #include <Engine/Component/Components/Transform/RectTransformComponent.h>
 #include <Engine/Component/Components/Camera/CameraComponent.h>
+#include <Engine/Component/Components/Light/Punctual/DirectionalLightComponent.h>
+#include <Engine/Component/Components/Light/Punctual/PointLightComponent.h>
+#include <Engine/Component/Components/Light/Punctual/SpotLightComponent.h>
 #include <Engine/Component/Components/PostProcessLayer/PostProcessLayerComponent.h>
 #include <Engine/Render/FMainRender.h>
 #include <Engine/Preview/Asset/UAssetStorage.h>
@@ -64,6 +67,7 @@ void RenderSceneEditor::Init() {
 	icons_[static_cast<uint32_t>(Icon::Volume)]           = sUContentStorage->Import<UContentTexture>("packages/textures/icon/scene_volume.png")->GetId();
 	icons_[static_cast<uint32_t>(Icon::DirectionalLight)] = sUContentStorage->Import<UContentTexture>("packages/textures/icon/scene_directionalLight.png")->GetId();
 	icons_[static_cast<uint32_t>(Icon::PointLight)]       = sUContentStorage->Import<UContentTexture>("packages/textures/icon/scene_pointLight.png")->GetId();
+	icons_[static_cast<uint32_t>(Icon::SpotLight)]        = sUContentStorage->Import<UContentTexture>("packages/textures/icon/scene_spotLight.png")->GetId();
 	icons_[static_cast<uint32_t>(Icon::Camera)]           = sUContentStorage->Import<UContentTexture>("packages/textures/icon/scene_camera.png")->GetId();
 	
 
@@ -525,8 +529,8 @@ void RenderSceneEditor::ShowSceneWindow() {
 
 	//* render scene information *//
 
-	ShowInfoTextScene();
 	ShowIconScene();
+	ShowInfoTextScene();
 }
 
 void RenderSceneEditor::ShowGameWindow() {
@@ -636,6 +640,16 @@ void RenderSceneEditor::ShowIconScene() {
 			: Color4f{ 0.2f, 0.2f, 0.2f, 1.0f };
 
 		RenderIcon(component->GetBehaviour(), Icon::PointLight, component->RequireTransform()->GetPosition(), color);
+	});
+
+	// Spot Light
+	sComponentStorage->ForEach<SpotLightComponent>([&](SpotLightComponent* component) {
+
+		Color4f color = component->IsActive()
+			? Color4f(component->GetParameter().color, 1.0f)
+			: Color4f{ 0.2f, 0.2f, 0.2f, 1.0f };
+
+		RenderIcon(component->GetBehaviour(), Icon::SpotLight, component->RequireTransform()->GetPosition(), color);
 	});
 
 	// Camera

@@ -24711,17 +24711,6 @@
 		"children": [],
 		"components": [
 			{
-				"color": {
-					"b": 1.0,
-					"g": 1.0,
-					"r": 1.0
-				},
-				"component": "class DirectionalLightComponent",
-				"intensity": 20.0,
-				"shadow_flag": 0,
-				"shadow_strength": 1.0
-			},
-			{
 				"component": "class TransformComponent",
 				"transform": {
 					"rotate": {
@@ -24741,9 +24730,20 @@
 						"z": 0.0
 					}
 				}
+			},
+			{
+				"color": {
+					"b": 1.0,
+					"g": 1.0,
+					"r": 1.0
+				},
+				"component": "class DirectionalLightComponent",
+				"intensity": 20.0,
+				"shadow_flag": 0,
+				"shadow_strength": 1.0
 			}
 		],
-		"isActive": true,
+		"isActive": false,
 		"isRenamable": true,
 		"isView": true,
 		"name": "Directional Light"
@@ -24781,17 +24781,17 @@
 							"r": 1.0
 						},
 						"component": "class PointLightComponent",
-						"intensity": 10.0,
+						"intensity": 5.0,
 						"radius": 10.0,
 						"shadow_flag": 16,
 						"shadow_strength": 1.0,
-						"unit": "Candela"
+						"unit": "Lumen"
 					}
 				],
 				"isActive": true,
 				"isRenamable": true,
 				"isView": true,
-				"name": "PointLight[5]"
+				"name": "PointLight[0]"
 			},
 			{
 				"children": [],
@@ -24824,17 +24824,17 @@
 							"r": 1.0
 						},
 						"component": "class PointLightComponent",
-						"intensity": 10.0,
+						"intensity": 5.0,
 						"radius": 10.0,
 						"shadow_flag": 16,
 						"shadow_strength": 1.0,
-						"unit": "Candela"
+						"unit": "Lumen"
 					}
 				],
 				"isActive": true,
 				"isRenamable": true,
 				"isView": true,
-				"name": "PointLight[6]"
+				"name": "PointLight[1]"
 			},
 			{
 				"children": [],
@@ -24867,17 +24867,17 @@
 							"r": 1.0
 						},
 						"component": "class PointLightComponent",
-						"intensity": 10.0,
+						"intensity": 5.0,
 						"radius": 10.0,
 						"shadow_flag": 16,
 						"shadow_strength": 1.0,
-						"unit": "Candela"
+						"unit": "Lumen"
 					}
 				],
 				"isActive": true,
 				"isRenamable": true,
 				"isView": true,
-				"name": "PointLight[7]"
+				"name": "PointLight[2]"
 			},
 			{
 				"children": [],
@@ -24910,17 +24910,17 @@
 							"r": 1.0
 						},
 						"component": "class PointLightComponent",
-						"intensity": 10.0,
+						"intensity": 5.0,
 						"radius": 10.0,
 						"shadow_flag": 16,
 						"shadow_strength": 1.0,
-						"unit": "Candela"
+						"unit": "Lumen"
 					}
 				],
 				"isActive": true,
 				"isRenamable": true,
 				"isView": true,
-				"name": "PointLight[8]"
+				"name": "PointLight[3]"
 			},
 			{
 				"children": [],
@@ -24953,17 +24953,17 @@
 							"r": 1.0
 						},
 						"component": "class PointLightComponent",
-						"intensity": 10.0,
+						"intensity": 5.0,
 						"radius": 10.0,
 						"shadow_flag": 16,
 						"shadow_strength": 1.0,
-						"unit": "Candela"
+						"unit": "Lumen"
 					}
 				],
 				"isActive": true,
 				"isRenamable": true,
 				"isView": true,
-				"name": "PointLight[9]"
+				"name": "PointLight[4]"
 			}
 		],
 		"components": [],
@@ -24971,5 +24971,390 @@
 		"isRenamable": true,
 		"isView": true,
 		"name": "Light Red"
+	},
+	{
+		"children": [
+			{
+				"children": [],
+				"components": [
+					{
+						"component": "class TransformComponent",
+						"transform": {
+							"rotate": {
+								"w": 0.7071067690849304,
+								"x": 0.7071067690849304,
+								"y": 0.0,
+								"z": 0.0
+							},
+							"scale": {
+								"x": 1.0,
+								"y": 1.0,
+								"z": 1.0
+							},
+							"translate": {
+								"x": -18.8005313873291,
+								"y": 21.334836959838867,
+								"z": -26.343936920166016
+							}
+						}
+					},
+					{
+						"color": {
+							"b": 1.0,
+							"g": 1.0,
+							"r": 1.0
+						},
+						"component": "class SpotLightComponent",
+						"coneAngle": {
+							"x": 0.0,
+							"y": 0.6000000238418579
+						},
+						"intensity": 15.0,
+						"radius": 48.0,
+						"shadow_flag": 16,
+						"shadow_strength": 1.0,
+						"unit": "Lumen"
+					}
+				],
+				"isActive": true,
+				"isRenamable": true,
+				"isView": true,
+				"name": "SpotLight[0]"
+			},
+			{
+				"children": [],
+				"components": [
+					{
+						"component": "class TransformComponent",
+						"transform": {
+							"rotate": {
+								"w": 0.7070347666740417,
+								"x": 0.7071787714958191,
+								"y": 0.0,
+								"z": 0.0
+							},
+							"scale": {
+								"x": 1.0,
+								"y": 1.0,
+								"z": 1.0
+							},
+							"translate": {
+								"x": -18.801000595092773,
+								"y": 21.334999084472656,
+								"z": -35.902313232421875
+							}
+						}
+					},
+					{
+						"color": {
+							"b": 1.0,
+							"g": 1.0,
+							"r": 1.0
+						},
+						"component": "class SpotLightComponent",
+						"coneAngle": {
+							"x": 0.0,
+							"y": 0.6000000238418579
+						},
+						"intensity": 15.0,
+						"radius": 48.0,
+						"shadow_flag": 16,
+						"shadow_strength": 1.0,
+						"unit": "Lumen"
+					}
+				],
+				"isActive": true,
+				"isRenamable": true,
+				"isView": true,
+				"name": "SpotLight[1]"
+			},
+			{
+				"children": [],
+				"components": [
+					{
+						"component": "class TransformComponent",
+						"transform": {
+							"rotate": {
+								"w": 0.7070347666740417,
+								"x": 0.7071787714958191,
+								"y": 0.0,
+								"z": 0.0
+							},
+							"scale": {
+								"x": 1.0,
+								"y": 1.0,
+								"z": 1.0
+							},
+							"translate": {
+								"x": -18.801000595092773,
+								"y": 21.334999084472656,
+								"z": -60.265140533447266
+							}
+						}
+					},
+					{
+						"color": {
+							"b": 1.0,
+							"g": 1.0,
+							"r": 1.0
+						},
+						"component": "class SpotLightComponent",
+						"coneAngle": {
+							"x": 0.0,
+							"y": 0.6000000238418579
+						},
+						"intensity": 15.0,
+						"radius": 48.0,
+						"shadow_flag": 16,
+						"shadow_strength": 1.0,
+						"unit": "Lumen"
+					}
+				],
+				"isActive": true,
+				"isRenamable": true,
+				"isView": true,
+				"name": "SpotLight[2]"
+			},
+			{
+				"children": [],
+				"components": [
+					{
+						"component": "class TransformComponent",
+						"transform": {
+							"rotate": {
+								"w": 0.7070347666740417,
+								"x": 0.7071787714958191,
+								"y": 0.0,
+								"z": 0.0
+							},
+							"scale": {
+								"x": 1.0,
+								"y": 1.0,
+								"z": 1.0
+							},
+							"translate": {
+								"x": -18.801000595092773,
+								"y": 21.334999084472656,
+								"z": -68.7153549194336
+							}
+						}
+					},
+					{
+						"color": {
+							"b": 1.0,
+							"g": 1.0,
+							"r": 1.0
+						},
+						"component": "class SpotLightComponent",
+						"coneAngle": {
+							"x": 0.0,
+							"y": 0.6000000238418579
+						},
+						"intensity": 15.0,
+						"radius": 48.0,
+						"shadow_flag": 16,
+						"shadow_strength": 1.0,
+						"unit": "Lumen"
+					}
+				],
+				"isActive": true,
+				"isRenamable": true,
+				"isView": true,
+				"name": "SpotLight[3]"
+			},
+			{
+				"children": [],
+				"components": [
+					{
+						"component": "class TransformComponent",
+						"transform": {
+							"rotate": {
+								"w": 0.7070347666740417,
+								"x": 0.7071787714958191,
+								"y": 0.0,
+								"z": 0.0
+							},
+							"scale": {
+								"x": 1.0,
+								"y": 1.0,
+								"z": 1.0
+							},
+							"translate": {
+								"x": -18.801000595092773,
+								"y": 21.334999084472656,
+								"z": -93.28820037841797
+							}
+						}
+					},
+					{
+						"color": {
+							"b": 1.0,
+							"g": 1.0,
+							"r": 1.0
+						},
+						"component": "class SpotLightComponent",
+						"coneAngle": {
+							"x": 0.0,
+							"y": 0.6000000238418579
+						},
+						"intensity": 15.0,
+						"radius": 48.0,
+						"shadow_flag": 16,
+						"shadow_strength": 1.0,
+						"unit": "Lumen"
+					}
+				],
+				"isActive": true,
+				"isRenamable": true,
+				"isView": true,
+				"name": "SpotLight[4]"
+			},
+			{
+				"children": [],
+				"components": [
+					{
+						"component": "class TransformComponent",
+						"transform": {
+							"rotate": {
+								"w": 0.7070347666740417,
+								"x": 0.7071787714958191,
+								"y": 0.0,
+								"z": 0.0
+							},
+							"scale": {
+								"x": 1.0,
+								"y": 1.0,
+								"z": 1.0
+							},
+							"translate": {
+								"x": -18.801000595092773,
+								"y": 21.334999084472656,
+								"z": -103.28997039794922
+							}
+						}
+					},
+					{
+						"color": {
+							"b": 1.0,
+							"g": 1.0,
+							"r": 1.0
+						},
+						"component": "class SpotLightComponent",
+						"coneAngle": {
+							"x": 0.0,
+							"y": 0.6000000238418579
+						},
+						"intensity": 15.0,
+						"radius": 48.0,
+						"shadow_flag": 16,
+						"shadow_strength": 1.0,
+						"unit": "Lumen"
+					}
+				],
+				"isActive": true,
+				"isRenamable": true,
+				"isView": true,
+				"name": "SpotLight[5]"
+			},
+			{
+				"children": [],
+				"components": [
+					{
+						"component": "class TransformComponent",
+						"transform": {
+							"rotate": {
+								"w": 0.7070347666740417,
+								"x": 0.7071787714958191,
+								"y": 0.0,
+								"z": 0.0
+							},
+							"scale": {
+								"x": 1.0,
+								"y": 1.0,
+								"z": 1.0
+							},
+							"translate": {
+								"x": -29.808000564575195,
+								"y": 21.334999084472656,
+								"z": -21.288972854614258
+							}
+						}
+					},
+					{
+						"color": {
+							"b": 1.0,
+							"g": 1.0,
+							"r": 1.0
+						},
+						"component": "class SpotLightComponent",
+						"coneAngle": {
+							"x": 0.0,
+							"y": 0.6000000238418579
+						},
+						"intensity": 15.0,
+						"radius": 48.0,
+						"shadow_flag": 16,
+						"shadow_strength": 1.0,
+						"unit": "Lumen"
+					}
+				],
+				"isActive": true,
+				"isRenamable": true,
+				"isView": true,
+				"name": "SpotLight[6]"
+			},
+			{
+				"children": [],
+				"components": [
+					{
+						"component": "class TransformComponent",
+						"transform": {
+							"rotate": {
+								"w": 0.7070347666740417,
+								"x": 0.7071787714958191,
+								"y": 0.0,
+								"z": 0.0
+							},
+							"scale": {
+								"x": 1.0,
+								"y": 1.0,
+								"z": 1.0
+							},
+							"translate": {
+								"x": -29.808208465576172,
+								"y": 21.334999084472656,
+								"z": -109.31197357177734
+							}
+						}
+					},
+					{
+						"color": {
+							"b": 1.0,
+							"g": 1.0,
+							"r": 1.0
+						},
+						"component": "class SpotLightComponent",
+						"coneAngle": {
+							"x": 0.0,
+							"y": 0.6000000238418579
+						},
+						"intensity": 15.0,
+						"radius": 48.0,
+						"shadow_flag": 16,
+						"shadow_strength": 1.0,
+						"unit": "Lumen"
+					}
+				],
+				"isActive": true,
+				"isRenamable": true,
+				"isView": true,
+				"name": "SpotLight[7]"
+			}
+		],
+		"components": [],
+		"isActive": true,
+		"isRenamable": true,
+		"isView": true,
+		"name": "Ceiling Orange"
 	}
 ]

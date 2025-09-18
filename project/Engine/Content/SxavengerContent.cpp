@@ -75,3 +75,7 @@ void SxavengerContent::PushSphere(const Vector3f& center, float radius, const Co
 void SxavengerContent::PushGrid(const CameraComponent* camera, const Vector2f& size, float radius) {
 	debugPrimitive_->PushGrid(camera, size, radius);
 }
+
+void SxavengerContent::PushCone(const Vector3f& center, const Vector3f& direction, float radius, float angle, const Color4f& color) {
+	debugPrimitive_->PushCone(center, direction, radius, angle, color);
+}

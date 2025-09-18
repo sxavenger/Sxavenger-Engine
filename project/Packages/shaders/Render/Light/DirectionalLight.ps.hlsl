@@ -25,8 +25,6 @@ PSOutput main(PSInput input) {
 	surface.GetSurface(input.position.xy);
 
 	//* Lightの情報を取得
-	float3 color_mask = gParameters[input.instanceId].GetColorMask();
-	float light_mask  = gParameters[input.instanceId].GetLightMask(gScene, gTransforms[input.instanceId].GetDirection(), surface.position);
 	float3 l          = gParameters[input.instanceId].GetDirectionFromSurface(gTransforms[input.instanceId].GetDirection()); //!< lightの方向ベクトル
 
 	//* cameraからの方向ベクトルを取得
@@ -39,6 +37,10 @@ PSOutput main(PSInput input) {
 	float NdotL = saturate(dot(surface.normal, l));
 	float NdotH = saturate(dot(surface.normal, h));
 	float VdotH = saturate(dot(v, h));
+
+	if (NdotL <= 0.0f) {
+		discard;
+	}
 
 	static const float3 kMinFrenel = float3(0.04f, 0.04f, 0.04f); //!< 非金属の最小Frenel値
 
@@ -59,6 +61,10 @@ PSOutput main(PSInput input) {
 	float3 diffuseBRDF  = DiffuseBRDF(diffuseAlbedo);
 	float3 specularBRDF = SpecularBRDF(f, vh, d);
 
+	//* Lightの影響範囲
+	float3 color_mask = gParameters[input.instanceId].GetColorMask();
+	float light_mask  = gParameters[input.instanceId].GetLightMask(gScene, gTransforms[input.instanceId].GetDirection(), surface.position);
+	
 	output.color.rgb = (diffuseBRDF + specularBRDF) * NdotL * color_mask * light_mask;
 	// todo: specularFactorを追加
 

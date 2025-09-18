@@ -1223,6 +1223,10 @@
 		"assets/models/probe_sphere/probe_sphere.gltf",
 		"class UAssetSkeleton"
 	],
+	"86c63f0c-cc90-4c10-bc47741404f84006": [
+		"packages/textures/icon/scene_spotLight.png",
+		"class UAssetTexture"
+	],
 	"8732233f-d7e6-4f95-af373d39199f5154": [
 		"assets/models/tree_sponza/2374361008830720677.jpg",
 		"class UAssetTexture"

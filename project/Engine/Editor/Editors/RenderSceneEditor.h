@@ -109,6 +109,7 @@ private:
 		Volume,
 		DirectionalLight,
 		PointLight,
+		SpotLight,
 		Camera,
 	};
 

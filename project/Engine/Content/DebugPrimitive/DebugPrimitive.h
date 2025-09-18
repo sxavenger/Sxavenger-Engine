@@ -185,6 +185,8 @@ public:
 
 	void PushSphere(const Vector3f& center, float radius, const Color4f& color);
 
+	void PushCone(const Vector3f& center, const Vector3f& direction, float radius, float angle, const Color4f& color);
+
 private:
 
 	////////////////////////////////////////////////////////////////////////////////////////////
