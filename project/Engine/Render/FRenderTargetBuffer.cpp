@@ -104,6 +104,7 @@ void FRenderTargetBuffer::EndPostProcess(const DirectXQueueContext* context) {
 
 void FRenderTargetBuffer::BeginProcessDenoiser(const DirectXQueueContext* context) {
 	process_->BeginProcess(context, lighting_.GetGBuffer(FLightingGBuffer::Layout::Indirect_Reservoir));
+	process_->GetCurrentTexture()->GenerateMipmap(context);
 }
 
 void FRenderTargetBuffer::EndProcessDenoiser(const DirectXQueueContext* context) {

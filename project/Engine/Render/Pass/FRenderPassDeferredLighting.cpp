@@ -38,13 +38,22 @@ void FRenderPassDeferredLighting::Render(const DirectXQueueContext* context, con
 
 	if (config.isEnableIndirectLighting) { //* Indirect Lighting
 
-		BeginPassIndirectLighting(context, config.buffer);
+		{
+			BeginPassIndirectLighting(context, config.buffer);
 
-		PassIndirectLight(context, config);
+			PassIndirectLight(context, config);
 
-		EndPassIndirectLighting(context, config.buffer);
+			EndPassIndirectLighting(context, config.buffer);
+		}
+		
+		{
+			BeginPassIndirectDenoiser(context, config.buffer);
 
+			PassIndirectDenoiser(context, config);
 
+			EndPassIndirectDenoiser(context, config.buffer);
+		}
+		
 
 	} else {
 
@@ -118,6 +127,18 @@ void FRenderPassDeferredLighting::EndPassIndirectLighting(const DirectXQueueCont
 	}
 
 	commandList->ResourceBarrier(static_cast<UINT>(barriers.size()), barriers.data());
+
+}
+
+void FRenderPassDeferredLighting::BeginPassIndirectDenoiser(const DirectXQueueContext* context, FRenderTargetBuffer* buffer) {
+
+	buffer->BeginProcessDenoiser(context);
+
+}
+
+void FRenderPassDeferredLighting::EndPassIndirectDenoiser(const DirectXQueueContext* context, FRenderTargetBuffer* buffer) {
+
+	buffer->EndProcessDenoiser(context);
 
 }
 
@@ -324,6 +345,38 @@ void FRenderPassDeferredLighting::PassIndirectLight(const DirectXQueueContext* c
 
 	FRenderCore::GetInstance()->GetPathtracing()->GetContext()->DispatchRays(context->GetDxCommand(), config.buffer->GetSize());
 	config.buffer->GetLightingGBuffer().GetConfig().Update();
+
+}
+
+void FRenderPassDeferredLighting::PassIndirectDenoiser(const DirectXQueueContext* context, const Config& config) {
+
+	auto textures = config.buffer->GetProcessTextures();
+
+	{ //!< Edge stopping function.
+		textures->NextProcess();
+
+		auto core = FRenderCore::GetInstance()->GetPathtracing();
+
+		core->SetDenoiserPipeline(FRenderCorePathtracing::DenoiserType::EdgeStopping, context);
+
+		DxObject::BindBufferDesc desc = {};
+		//* common parameter
+		desc.Set32bitConstants("Dimension", 2, &config.buffer->GetSize());
+
+		//* textures
+		desc.SetHandle("gOutput",   textures->GetCurrentTexture()->GetGPUHandleUAV());
+		desc.SetHandle("gIndirect", textures->GetPrevTexture()->GetGPUHandleSRV());
+
+		//* parameter
+		static const Vector3f test = { 128.0f, 0.1f, 0.1f };
+		desc.Set32bitConstants("Parameter", 3, &test);
+
+		//* deferred textures
+		desc.SetAddress("gDeferredBufferIndex", config.buffer->GetIndexBufferAddress());
+
+		core->BindDenoiserBuffer(FRenderCorePathtracing::DenoiserType::EdgeStopping, context, desc);
+		core->DispatchDenoiser(context, config.buffer->GetSize());
+	}
 
 }
 

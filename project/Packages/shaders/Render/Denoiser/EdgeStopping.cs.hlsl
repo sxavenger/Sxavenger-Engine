@@ -2,7 +2,7 @@
 // include
 //-----------------------------------------------------------------------------------------
 #include "Denoiser.hlsli"
-#include "../DeferredBuffers.hlsli"
+#include "../DeferredBufferIndex.hlsli"
 #include "../../Library/Math.hlsli"
 #include "../../Library/ACES.hlsli"
 
@@ -33,6 +33,8 @@ cbuffer Parameter : register(b1) { //!< test
 //* input texture
 Texture2D<float4> gIndirect : register(t0);
 SamplerState gSampler       : register(s0);
+
+ConstantBuffer<DeferredBufferIndexConstantBuffer> gDeferredBufferIndex : register(b0);
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // methods
@@ -85,8 +87,8 @@ void main(uint3 dispatchThreadId : SV_DispatchThreadID) {
 		return;
 	}
 
-	Surface surface;
-	surface.GetSurface(index);
+	DeferredSurface surface;
+	surface.GetSurface(gDeferredBufferIndex.Get(), index);
 
 	float weight    = 1.0f;
 	float3 variance = gIndirect[index].rgb;
@@ -110,8 +112,8 @@ void main(uint3 dispatchThreadId : SV_DispatchThreadID) {
 				continue;
 			}
 
-			Surface sample_surface;
-			sample_surface.GetSurface(sample_pos);
+			DeferredSurface sample_surface;
+			sample_surface.GetSurface(gDeferredBufferIndex.Get(), sample_pos);
 
 			float exp_w = 0.0f;
 			exp_w += CalculateExpDepthWeight(surface.depth, sample_surface.depth);                  //!< 深度
