@@ -25,7 +25,7 @@ public:
 		//!< Punctual light
 		Directional,
 		Point,
-		//Spot,
+		Spot,
 
 		//!< Area light
 		//Rect,

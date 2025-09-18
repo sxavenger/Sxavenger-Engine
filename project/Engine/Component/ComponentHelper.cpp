@@ -15,6 +15,7 @@
 #include "Components/TextRenderer/TextRendererComponent.h"
 #include "Components/Light/Punctual/DirectionalLightComponent.h"
 #include "Components/Light/Punctual/PointLightComponent.h"
+#include "Components/Light/Punctual/SpotLightComponent.h"
 //#include "Components/Light/Rect/RectLightComponent.h" -> FIXME
 #include "Components/Particle/ParticleComponent.h"
 #include "Components/Light/Environment/SkyLightComponent.h"
@@ -110,6 +111,20 @@ std::unique_ptr<MonoBehaviour> ComponentHelper::CreatePointLightMonoBehaviour() 
 	root->SetName("Point Light");
 
 	ComponentHelper::CreatePointLightMonoBehaviour(root.get());
+
+	return root;
+}
+
+void ComponentHelper::CreateSpotLightMonoBehaviour(MonoBehaviour* root) {
+	root->AddComponent<TransformComponent>();
+	root->AddComponent<SpotLightComponent>();
+}
+
+std::unique_ptr<MonoBehaviour> ComponentHelper::CreateSpotLightMonoBehaviour() {
+	std::unique_ptr<MonoBehaviour> root = std::make_unique<MonoBehaviour>();
+	root->SetName("Spot Light");
+
+	ComponentHelper::CreateSpotLightMonoBehaviour(root.get());
 
 	return root;
 }

@@ -25,21 +25,12 @@ PSOutput main(PSInput input) {
 	surface.GetSurface(input.position.xy);
 
 	//* Lightの情報を取得
-	float3 c_light = gParameters[input.instanceId].GetColor(); //!< lightのcolor
-	float3 l       = -gTransforms[input.instanceId].GetDirection(); //!< surfaceからlightへの方向ベクトル
-
-	//* shadow
-	RayDesc desc;
-	desc.Origin    = surface.position;
-	desc.Direction = l;
-	desc.TMin      = kTMin;
-	desc.TMax      = kTMax;
-
-	c_light *= gParameters[input.instanceId].TraceShadow(desc, gScene);
-	// todo: 不必要な場合は、gShadow.TraceShadow()を呼び出さないようにする
+	float3 color_mask = gParameters[input.instanceId].GetColorMask();
+	float light_mask  = gParameters[input.instanceId].GetLightMask(gScene, gTransforms[input.instanceId].GetDirection(), surface.position);
+	float3 l          = gParameters[input.instanceId].GetDirectionFromSurface(gTransforms[input.instanceId].GetDirection()); //!< lightの方向ベクトル
 
 	//* cameraからの方向ベクトルを取得
-	float3 v = normalize(gCamera.GetPosition() - surface.position);
+	float3 v = normalize(gCamera.GetPosition() - surface.position); //!< cameraからの方向ベクトルを取得
 
 	//* 計算
 	float3 h = normalize(l + v);
@@ -68,7 +59,7 @@ PSOutput main(PSInput input) {
 	float3 diffuseBRDF  = DiffuseBRDF(diffuseAlbedo);
 	float3 specularBRDF = SpecularBRDF(f, vh, d);
 
-	output.color.rgb = (diffuseBRDF + specularBRDF) * NdotL * c_light;
+	output.color.rgb = (diffuseBRDF + specularBRDF) * NdotL * color_mask * light_mask;
 	// todo: specularFactorを追加
 
 	output.color.a = 1.0f;

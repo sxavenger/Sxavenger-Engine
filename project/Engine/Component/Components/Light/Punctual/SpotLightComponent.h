@@ -1,5 +1,7 @@
 #pragma once
 
+#pragma once
+
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
@@ -14,9 +16,9 @@
 #include <Lib/Geometry/Color3.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// PointLightComponent class
+// SpotLightComponent class
 ////////////////////////////////////////////////////////////////////////////////////////////
-class PointLightComponent
+class SpotLightComponent
 	: public BaseComponent {
 public:
 
@@ -42,6 +44,7 @@ public:
 		LightCommon::Units unit;
 		float intensity;
 		float radius;
+		Vector2f coneAngle; // x: inner, y: outer
 
 	};
 
@@ -51,8 +54,8 @@ public:
 	// public methods
 	//=========================================================================================
 
-	PointLightComponent(MonoBehaviour* behaviour) : BaseComponent(behaviour) { Init(); }
-	virtual ~PointLightComponent() = default;
+	SpotLightComponent(MonoBehaviour* behaviour) : BaseComponent(behaviour) { Init(); }
+	virtual ~SpotLightComponent() = default;
 
 	virtual void ShowComponentInspector() override;
 

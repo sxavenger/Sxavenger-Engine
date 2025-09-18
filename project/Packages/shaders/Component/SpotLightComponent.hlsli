@@ -11,9 +11,9 @@
 #include "../Library/Photometry.hlsli"
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// PointLightComponent structure
+// SpotLightComponent structure
 ////////////////////////////////////////////////////////////////////////////////////////////
-struct PointLightComponent {
+struct SpotLightComponent {
 	
 	//=========================================================================================
 	// public variables
@@ -25,7 +25,11 @@ struct PointLightComponent {
 	LightUnits::Type unit;
 	float intensity;
 	float radius;
+	float2 coneAngle; // x: inner, y: outer
+	//!< CONSTRAINT: 0 <= inner < outer <= pi/4
 	
+	//!< unreal engine is angle range [0 ~ 80]
+
 	//=========================================================================================
 	// public methods
 	//=========================================================================================
@@ -34,24 +38,30 @@ struct PointLightComponent {
 		return normalize(light_position - surface_position);
 	}
 
-	float GetLightMask(RaytracingAccelerationStructure scene, float3 light_position, float3 surface_position) {
+	float GetLightMask(RaytracingAccelerationStructure scene, float3 light_position, float3 light_direction, float3 surface_position) {
 		
 		float distance = length(light_position - surface_position);
 		float3 l       = GetDirectionFromSurface(light_position, surface_position);
-		
+
 		float attenuation_distance = Square(saturate(1.0f - Square(distance / radius))) / (Square(distance) + 1.0f);
+
+		float cosInnerCone = cos(coneAngle.x);
+		float cosOuterCone = cos(coneAngle.y);
+		
+		float attenuation_angle = Square(saturate((dot(l, -light_direction) - cosOuterCone) / (cosInnerCone - cosOuterCone)));
 
 		static const float kTMin = 0.001f;
 		static const float kTMax = 10000.0f;
 
 		RayDesc desc;
-		desc.Origin    = surface_position;
+		desc.Origin = surface_position;
 		desc.Direction = l;
-		desc.TMin      = kTMin;
-		desc.TMax      = distance;
+		desc.TMin = kTMin;
+		desc.TMax = distance;
 		float attenuation_shadow = shadow.TraceShadow(desc, scene);
+
+		return attenuation_distance * attenuation_angle * attenuation_shadow;
 		
-		return attenuation_distance * attenuation_shadow;
 	}
 
 	float GetIntensity() {
@@ -63,7 +73,7 @@ struct PointLightComponent {
 
 		switch (unit) {
 			case LightUnits::Lumen:
-				radiance = GetIntensity() / (kPi * 4.0f);
+				radiance = GetIntensity() / (2.0f * kPi * (1.0f - cos(coneAngle.y)));
 				break;
 
 			case LightUnits::Candela:

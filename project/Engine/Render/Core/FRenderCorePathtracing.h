@@ -69,8 +69,8 @@ public:
 		// public variables
 		//=========================================================================================
 
-		uint32_t maxSampleCount  = 256; //!< 合計sample数
-		uint32_t samplesPerFrame = 1;  //!< frameごとのsample数
+		uint32_t maxSampleCount  = 1024; //!< 合計sample数
+		uint32_t samplesPerFrame = 1;    //!< frameごとのsample数
 		uint32_t isResetMoment   = true; //!< sampleをリセットするか
 
 	};

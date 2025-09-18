@@ -46,6 +46,8 @@ private:
 
 	void PassPointLight(const DirectXQueueContext* context, const Config& config);
 
+	void PassSpotLight(const DirectXQueueContext* context, const Config& config);
+
 	void PassSkyLight(const DirectXQueueContext* context, const Config& config);
 
 	void PassIndirectLight(const DirectXQueueContext* context, const Config& config);

@@ -49,6 +49,9 @@ public:
 	static void CreatePointLightMonoBehaviour(MonoBehaviour* root);
 	static std::unique_ptr<MonoBehaviour> CreatePointLightMonoBehaviour();
 
+	static void CreateSpotLightMonoBehaviour(MonoBehaviour* root);
+	static std::unique_ptr<MonoBehaviour> CreateSpotLightMonoBehaviour();
+
 	//* mesh
 	static void CreateStaticMeshBehaviour(MonoBehaviour* root, const std::shared_ptr<UContentModel>& model);
 	static std::unique_ptr<MonoBehaviour> CreateStaticMeshBehaviour(const std::shared_ptr<UContentModel>& model);

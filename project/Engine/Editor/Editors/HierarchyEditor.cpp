@@ -92,6 +92,15 @@ void HierarchyEditor::ShowActorMenu() {
 			sSceneObjects->AddObject(std::move(object));
 		}
 
+		if (ImGui::MenuItem("Spot Light")) {
+			std::unique_ptr<SceneObject> object = std::make_unique<SceneObject>();
+			object->SetName("Spot Light");
+
+			ComponentHelper::CreateSpotLightMonoBehaviour(object.get());
+
+			sSceneObjects->AddObject(std::move(object));
+		}
+
 		ImGui::EndMenu();
 	}
 }

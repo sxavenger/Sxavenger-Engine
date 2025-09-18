@@ -87,14 +87,14 @@ void FRenderCoreLight::CreatePipeline() {
 	pipelines_[LightType::Point]->ReflectionRootSignature(SxavengerSystem::GetDxDevice());
 	pipelines_[LightType::Point]->CreatePipeline(SxavengerSystem::GetDxDevice(), desc_front);
 
-	/*pipelines_[LightType::Spot] = std::make_unique<CustomReflectionGraphicsPipeline>();
+	pipelines_[LightType::Spot] = std::make_unique<CustomReflectionGraphicsPipeline>();
 	pipelines_[LightType::Spot]->CreateContent(kDirectory_ / "lightRender2d.vs.hlsl", GraphicsShaderType::vs);
 	pipelines_[LightType::Spot]->CreateContent(kDirectory_ / "SpotLight.ps.hlsl",     GraphicsShaderType::ps);
 	pipelines_[LightType::Spot]->RegisterBlob();
 	pipelines_[LightType::Spot]->ReflectionRootSignature(SxavengerSystem::GetDxDevice());
 	pipelines_[LightType::Spot]->CreatePipeline(SxavengerSystem::GetDxDevice(), desc_front);
 
-	pipelines_[LightType::Rect] = std::make_unique<CustomReflectionGraphicsPipeline>();
+	/*pipelines_[LightType::Rect] = std::make_unique<CustomReflectionGraphicsPipeline>();
 	pipelines_[LightType::Rect]->CreateContent(kDirectory_ / "lightRender2d.vs.hlsl", GraphicsShaderType::vs);
 	pipelines_[LightType::Rect]->CreateContent(kDirectory_ / "RectLight.ps.hlsl",     GraphicsShaderType::ps);
 	pipelines_[LightType::Rect]->RegisterBlob();

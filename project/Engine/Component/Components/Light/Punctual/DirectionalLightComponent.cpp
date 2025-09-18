@@ -8,6 +8,7 @@ _DXOBJECT_USING
 #include "../../../Entity/MonoBehaviour.h"
 
 //* engine
+#include <Engine/System/UI/SxImGui.h>
 #include <Engine/System/SxavengerSystem.h>
 #include <Engine/Content/SxavengerContent.h>
 
@@ -18,7 +19,7 @@ _DXOBJECT_USING
 void DirectionalLightComponent::Parameter::Init() {
 	shadow.Init();
 	color     = kWhite3<>;
-	intensity = 1.0f;
+	intensity = 10.0f;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -30,7 +31,7 @@ void DirectionalLightComponent::ShowComponentInspector() {
 	ImGui::ColorEdit3("color", &parameter.color.r);
 
 	std::string format = "%.3flux";
-	ImGui::DragFloat("intensity", &parameter.intensity, 0.1f, 0.0f, std::numeric_limits<float>::max(), format.c_str());
+	SxImGui::DragFloat("intensity", &parameter.intensity, 0.1f, 0.0f, std::nullopt, format.c_str());
 
 	parameter.shadow.ShowInspector();
 

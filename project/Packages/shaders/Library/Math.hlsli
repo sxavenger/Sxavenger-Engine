@@ -15,4 +15,8 @@ static const float kTauInv = 1.0f / kTau;
 
 static const float kEpsilon = 1.0e-6f;
 
+float Square(float x) {
+	return x * x;
+}
+
 #endif

@@ -67,21 +67,12 @@ struct Surface {
 
 float3 CalculateDirectionalLight(uint index, Surface surface) {
 	//* Lightの情報を取得
-	float3 c_light = gDirectionalLights[index].GetColor();               //!< lightのcolor
-	float3 l       = -gDirectionalLightTransforms[index].GetDirection(); //!< surfaceからlightへの方向ベクトル
-
-	//* shadow
-	RayDesc desc;
-	desc.Origin    = surface.position;
-	desc.Direction = l;
-	desc.TMin      = kTMin;
-	desc.TMax      = kTMax;
-
-	c_light *= gDirectionalLights[index].TraceShadow(desc, gScene);
-	// todo: 不必要な場合は、gShadow.TraceShadow()を呼び出さないようにする
+	float3 color_mask = gDirectionalLights[index].GetColorMask();
+	float light_mask  = gDirectionalLights[index].GetLightMask(gScene, gDirectionalLightTransforms[index].GetDirection(), surface.position);
+	float3 l          = gDirectionalLights[index].GetDirectionFromSurface(gDirectionalLightTransforms[index].GetDirection()); //!< lightの方向ベクトル
 
 	//* cameraからの方向ベクトルを取得
-	float3 v = normalize(gCamera.GetPosition() - surface.position);
+	float3 v = normalize(gCamera.GetPosition() - surface.position); //!< cameraからの方向ベクトルを取得
 
 	//* 計算
 	float3 h = normalize(l + v);
@@ -91,19 +82,17 @@ float3 CalculateDirectionalLight(uint index, Surface surface) {
 	float NdotH = saturate(dot(surface.normal, h));
 	float VdotH = saturate(dot(v, h));
 
-	// f0
-	static const float3 f0 = float3(0.04f, 0.04f, 0.04f); //!< 非金属の場合のf0
+	static const float3 kMinFrenel = float3(0.04f, 0.04f, 0.04f); //!< 非金属の最小Frenel値
 
 	// diffuse Albedo
 	//!< 金属(metallic = 1.0f) -> 0.0f
-	//!< 非金属(metallic = 0.0f) -> albedo * (1.0f - f0)
-	//float3 diffuseAlbedo = surface.albedo * (1.0f - f0) * (1.0f - surface.metallic);
-	float3 diffuseAlbedo = surface.albedo * (1.0f - f0) * (1.0f - surface.metallic);
+	//!< 非金属(metallic = 0.0f) -> albedo * (1.0f - kMinFrenel)
+	float3 diffuseAlbedo = surface.albedo * (1.0f - kMinFrenel) * (1.0f - surface.metallic);
 
 	// specular Albedo
-	//!< 金属(metallic = 1.0f) -> f0
+	//!< 金属(metallic = 1.0f) -> kMinFrenel
 	//!< 非金属(metallic = 0.0f) -> albedo
-	float3 specularAlbedo = lerp(f0, surface.albedo, surface.metallic);
+	float3 specularAlbedo = lerp(kMinFrenel, surface.albedo, surface.metallic);
 
 	float3 f = F_SphericalGaussian(VdotH, specularAlbedo);
 	float vh = V_HeightCorrelated(NdotV, NdotL, surface.roughness);
@@ -112,29 +101,18 @@ float3 CalculateDirectionalLight(uint index, Surface surface) {
 	float3 diffuseBRDF  = DiffuseBRDF(diffuseAlbedo);
 	float3 specularBRDF = SpecularBRDF(f, vh, d);
 
-	return (diffuseBRDF + specularBRDF) * NdotL * c_light;
+	return (diffuseBRDF + specularBRDF) * NdotL * color_mask * light_mask;
 }
 
 float3 CalculatePointLight(uint index, Surface surface) {
 
 	//* Lightの情報を取得
-	float3 p_light = gPointLightTransforms[index].GetPosition(); //!< lightの中心座標
-	float3 l       = normalize(p_light - surface.position);      //!< lightの方向ベクトル
-	float r        = length(p_light - surface.position);         //!< lightとsurfaceの距離
-
-	float3 c_light = gPointLights[index].GetColor(r);
-
-	// 影の計算
-	RayDesc desc;
-	desc.Origin    = surface.position;
-	desc.Direction = l;
-	desc.TMin      = kTMin;
-	desc.TMax      = r;
-	
-	c_light *= gPointLights[index].TraceShadow(desc, gScene);
+	float3 color_mask = gPointLights[index].GetColorMask();
+	float light_mask  = gPointLights[index].GetLightMask(gScene, gPointLightTransforms[index].GetPosition(), surface.position);
+	float3 l          = gPointLights[index].GetDirectionFromSurface(gPointLightTransforms[index].GetPosition(), surface.position); //!< lightの方向ベクトル
 
 	//* Cameraの情報を取得
-	float3 v = normalize(gCamera.GetPosition() - surface.position);
+	float3 v = normalize(gCamera.GetPosition() - surface.position); //!< cameraからの方向ベクトルを取得
 
 	//* 計算
 	float3 h = normalize(l + v);
@@ -144,18 +122,17 @@ float3 CalculatePointLight(uint index, Surface surface) {
 	float NdotH = saturate(dot(surface.normal, h));
 	float VdotH = saturate(dot(v, h));
 
-	// f0
-	static const float3 f0 = float3(0.04f, 0.04f, 0.04f); //!< 非金属の場合のf0
+	static const float3 kMinFrenel = float3(0.04f, 0.04f, 0.04f); //!< 非金属の最小Frenel値
 
 	// diffuse Albedo
 	//!< 金属(metallic = 1.0f) -> 0.0f
-	//!< 非金属(metallic = 0.0f) -> albedo * (1.0f - f0)
-	float3 diffuseAlbedo = surface.albedo * (1.0f - f0) * (1.0f - surface.metallic);
+	//!< 非金属(metallic = 0.0f) -> albedo * (1.0f - kMinFrenel)
+	float3 diffuseAlbedo = surface.albedo * (1.0f - kMinFrenel) * (1.0f - surface.metallic);
 
 	// specular Albedo
-	//!< 金属(metallic = 1.0f) -> f0
+	//!< 金属(metallic = 1.0f) -> kMinFrenel
 	//!< 非金属(metallic = 0.0f) -> albedo
-	float3 specularAlbedo = lerp(f0, surface.albedo, surface.metallic);
+	float3 specularAlbedo = lerp(kMinFrenel, surface.albedo, surface.metallic);
 
 	float3 f  = F_SphericalGaussian(VdotH, specularAlbedo);
 	float  vh = V_HeightCorrelated(NdotV, NdotL, surface.roughness);
@@ -164,7 +141,7 @@ float3 CalculatePointLight(uint index, Surface surface) {
 	float3 diffuseBRDF  = DiffuseBRDF(diffuseAlbedo);
 	float3 specularBRDF = SpecularBRDF(f, vh, d);
 
-	return (diffuseBRDF + specularBRDF) * NdotL * c_light;
+	return (diffuseBRDF + specularBRDF) * NdotL * color_mask * light_mask;
 	
 }
 

@@ -10,6 +10,7 @@
 #include <Engine/Component/Components/ComponentStorage.h>
 #include <Engine/Component/Components/Light/Punctual/DirectionalLightComponent.h>
 #include <Engine/Component/Components/Light/Punctual/PointLightComponent.h>
+#include <Engine/Component/Components/Light/Punctual/SpotLightComponent.h>
 #include <Engine/Component/Components/Light/Environment/SkyLightComponent.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -31,7 +32,7 @@ void FRenderPassDeferredLighting::Render(const DirectXQueueContext* context, con
 		//!< Punctual light
 		PassDirectionalLight(context, config);
 		PassPointLight(context, config);
-		// todo: Spot Light
+		PassSpotLight(context, config);
 
 		//!< Sky light
 		PassSkyLight(context, config);
@@ -232,6 +233,39 @@ void FRenderPassDeferredLighting::PassPointLight(const DirectXQueueContext* cont
 
 		FRenderCore::GetInstance()->GetLight()->BindGraphicsBuffer(
 			FRenderCoreLight::LightType::Point, context, parameter
+		);
+
+		FRenderCore::GetInstance()->GetLight()->DrawCall(context, 1);
+
+	});
+
+}
+
+void FRenderPassDeferredLighting::PassSpotLight(const DirectXQueueContext* context, const Config& config) {
+
+	FRenderCore::GetInstance()->GetLight()->SetPipeline(
+		FRenderCoreLight::LightType::Spot, context, config.buffer->GetSize()
+	);
+
+	DxObject::BindBufferDesc parameter = {};
+	// common parameter
+	parameter.SetAddress("gCamera", config.camera->GetGPUVirtualAddress());
+	parameter.SetAddress("gScene",  config.scene->GetTopLevelAS().GetGPUVirtualAddress());
+	parameter.Set32bitConstants("Dimension", 2, &config.buffer->GetSize());
+
+	// deferred paraemter
+	parameter.SetHandle("gAlbedo",   config.buffer->GetGBuffer(FDeferredGBuffer::Layout::Albedo)->GetGPUHandleSRV());
+	parameter.SetHandle("gNormal",   config.buffer->GetGBuffer(FDeferredGBuffer::Layout::Normal)->GetGPUHandleSRV());
+	parameter.SetHandle("gMaterial", config.buffer->GetGBuffer(FDeferredGBuffer::Layout::MaterialARM)->GetGPUHandleSRV());
+	parameter.SetHandle("gPosition", config.buffer->GetGBuffer(FDeferredGBuffer::Layout::Position)->GetGPUHandleSRV());
+
+	sComponentStorage->ForEachActive<SpotLightComponent>([&](SpotLightComponent* component) {
+
+		parameter.SetAddress("gTransforms", component->RequireTransform()->GetGPUVirtualAddress());
+		parameter.SetAddress("gParameters", component->GetGPUVirtualAddress());
+
+		FRenderCore::GetInstance()->GetLight()->BindGraphicsBuffer(
+			FRenderCoreLight::LightType::Spot, context, parameter
 		);
 
 		FRenderCore::GetInstance()->GetLight()->DrawCall(context, 1);

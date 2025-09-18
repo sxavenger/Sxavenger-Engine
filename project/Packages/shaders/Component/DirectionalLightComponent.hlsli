@@ -27,12 +27,37 @@ struct DirectionalLightComponent {
 	// public methods
 	//=========================================================================================
 
-	float3 GetColor() {
-		return color * intensity * kPi;
+	float3 GetDirectionFromSurface(float3 light_direction) {
+		return -light_direction;
 	}
 
-	float TraceShadow(RayDesc desc, RaytracingAccelerationStructure scene) {
-		return shadow.TraceShadow(desc, scene);
+	float GetLightMask(RaytracingAccelerationStructure scene, float3 light_direction, float3 surface_position) {
+
+		float3 l = GetDirectionFromSurface(light_direction);
+
+		static const float kTMin = 0.001f;
+		static const float kTMax = 10000.0f;
+
+		RayDesc desc;
+		desc.Origin    = surface_position;
+		desc.Direction = l;
+		desc.TMin      = kTMin;
+		desc.TMax      = kTMax;
+		float attenuation_shadow = shadow.TraceShadow(desc, scene);
+		
+		return attenuation_shadow;
+	}
+
+	float GetIntensity() {
+		return intensity * kPi;
+	}
+
+	float GetRadiance() {
+		return GetIntensity();
+	}
+
+	float3 GetColorMask() {
+		return color * GetRadiance();
 	}
 	
 };
