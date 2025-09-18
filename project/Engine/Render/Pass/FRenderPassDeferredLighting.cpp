@@ -17,7 +17,11 @@
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 void FRenderPassDeferredLighting::Render(const DirectXQueueContext* context, const Config& config) {
-	// TODO: Geometry Warningの際の処理を追加
+	
+	if (config.CheckStatus(Config::Status::Geometry_Warning)) {
+		// TODO: Geometry Warningの際の処理を追加
+		return;
+	}
 
 	{ //* Direct Lighting
 		BeginPassDirectLighting(context, config.buffer);

@@ -18,6 +18,10 @@ void FRenderPassPostProcess::Render(const DirectXQueueContext* context, const Co
 		return;
 	}
 
+	if (config.CheckStatus(FBaseRenderPass::Config::Status::Geometry_Warning)) {
+		return;
+	}
+
 	config.buffer->BeginPostProcess(context);
 
 	BasePostProcess::ProcessInfo info = {};

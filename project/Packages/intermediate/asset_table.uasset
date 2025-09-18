@@ -23,6 +23,10 @@
 		"assets/models/PBR_Sphere_Test/model/PBR_Sphere.gltf",
 		"class UAssetMaterial"
 	],
+	"01605d7a-6b25-4c12-b5f0d909171f4a3c": [
+		"assets/models/Metoro/Metoro.gltf",
+		"class UAssetMaterial"
+	],
 	"019822dd-bb10-4239-9f17d09cd503d237": [
 		"assets/models/tree_sponza/sponza.gltf",
 		"class UAssetMesh"
@@ -55,6 +59,10 @@
 		"assets/models/macbeth_chart/Color_checker.png",
 		"class UAssetTexture"
 	],
+	"039e7662-a16d-4ebe-8c2dff0c0666e6fb": [
+		"assets/models/Metoro/Metoro.gltf",
+		"class UAssetMaterial"
+	],
 	"040ef8e4-eec2-400e-9693358a6716a895": [
 		"assets/models/PBR_Sphere_Test/model/PBR_Sphere.gltf",
 		"class UAssetMaterial"
@@ -67,6 +75,10 @@
 		"assets/models/PBR_Sphere_Test/model/PBR_Sphere.gltf",
 		"class UAssetMaterial"
 	],
+	"067a9454-da52-4cf3-a7593b4dbe1b35d3": [
+		"assets/models/Metoro/Metoro.gltf",
+		"class UAssetMesh"
+	],
 	"06aa23d4-16c2-4883-b78ba019d2e7eee5": [
 		"assets/models/PBR_Sphere_Test/model/PBR_Sphere.gltf",
 		"class UAssetMaterial"
@@ -77,6 +89,10 @@
 	],
 	"08500397-626d-4543-ba4347a6102f4e2a": [
 		"assets/models/tree_sponza/sponza.gltf",
+		"class UAssetMesh"
+	],
+	"087431a6-0443-4a72-9fb4df4840765592": [
+		"assets/models/Metoro/Metoro.gltf",
 		"class UAssetMesh"
 	],
 	"08b9614a-809e-41f6-98fe3da747d633ec": [
@@ -95,8 +111,24 @@
 		"assets/models/PBR_Sphere_Test/model/PBR_Sphere.gltf",
 		"class UAssetMaterial"
 	],
+	"09ba48ab-9110-466f-a97a3f1603455f52": [
+		"assets/models/Metoro/Metoro.gltf",
+		"class UAssetMesh"
+	],
 	"0a1d39d2-6b4d-40a4-a2f80e7b3c34f19d": [
 		"assets/models/PBR_Sphere_Test/model/PBR_Sphere.gltf",
+		"class UAssetMesh"
+	],
+	"0a9322a6-2d5d-461c-a87ea0969718a3d9": [
+		"assets/models/Metoro/textures/MI_Metal_Normal.png",
+		"class UAssetTexture"
+	],
+	"0ab6c515-332b-48de-bb295295f3366457": [
+		"assets/models/Metoro/Metoro.gltf",
+		"class UAssetMesh"
+	],
+	"0ad03409-ca9c-4834-8b18596a257436c5": [
+		"assets/models/Metoro/Metoro.gltf",
 		"class UAssetMesh"
 	],
 	"0bd72e71-765b-46cf-be831f3ea3e593a0": [
@@ -123,12 +155,20 @@
 		"assets/models/PBR_Sphere_Test/model/PBR_Sphere.gltf",
 		"class UAssetMaterial"
 	],
+	"0f8d74c0-82b9-4b77-b609c8f993c5ef7f": [
+		"assets/models/Metoro/Metoro.gltf",
+		"class UAssetMesh"
+	],
 	"107285c1-30c5-4359-bfa43bd450a0bfe1": [
 		"assets/models/tree_sponza/8006627369776289000.png",
 		"class UAssetTexture"
 	],
 	"107b94eb-2a7a-4405-9f863afaebeabe67": [
 		"assets/models/tree_sponza/3827035219084910048.jpg",
+		"class UAssetTexture"
+	],
+	"10cc8bd6-00f2-4dbb-a6a101d1d1bc9734": [
+		"assets/models/Metoro/textures/MI_Guidelights_BaseColor.png",
 		"class UAssetTexture"
 	],
 	"112821ad-7eca-4bc6-a62bdf62c88d94b4": [
@@ -138,6 +178,10 @@
 	"12407285-f105-4d21-9b9c622dc7829c51": [
 		"assets/models/PBR_Sphere_Test/model/PBR_Sphere.gltf",
 		"class UAssetMesh"
+	],
+	"12f07a11-3814-4f3b-a46be2c961716875": [
+		"assets/models/Metoro/textures/MI_Concrete_2_Normal.png",
+		"class UAssetTexture"
 	],
 	"12f280ba-b41c-461f-9f8475acfefcff16": [
 		"assets/models/tree_sponza/sponza.gltf",
@@ -166,6 +210,10 @@
 	"18961ae0-f604-4cff-9cd38d18cf7f1caf": [
 		"assets/models/tree_sponza/sponza.gltf",
 		"class UAssetMesh"
+	],
+	"19281964-6339-4294-beae13de78658b4b": [
+		"assets/models/Metoro/textures/T_Wirestuff_Rusty_Normal.png",
+		"class UAssetTexture"
 	],
 	"19ea3b94-c203-433d-b879880c34f35576": [
 		"assets/models/tree_sponza/sponza.gltf",
@@ -223,13 +271,29 @@
 		"assets/models/PBR_Sphere_Test/model/PBR_Sphere.gltf",
 		"class UAssetMaterial"
 	],
+	"1e9b28ef-a438-4395-921b77d9668cbd05": [
+		"assets/models/Metoro/Metoro.gltf",
+		"class UAssetMesh"
+	],
 	"1f39a4c5-6ae8-4e30-b9b44955d2cda79b": [
 		"assets/models/PBR_Sphere_Test/model/PBR_Sphere.gltf",
+		"class UAssetMesh"
+	],
+	"202e9275-6a19-412f-99225a02ee7a5b32": [
+		"assets/models/Metoro/Metoro.gltf",
 		"class UAssetMesh"
 	],
 	"209bb25e-f087-47a5-9d944bf2e4fccb4c": [
 		"assets/models/tree_sponza/14118779221266351425.jpg",
 		"class UAssetTexture"
+	],
+	"20f21eea-cb40-4e1d-8d07a6a7eda57100": [
+		"assets/models/Metoro/Metoro.gltf",
+		"class UAssetMesh"
+	],
+	"21155e15-9ece-4dd8-b4fabcd1c913949c": [
+		"assets/models/Metoro/Metoro.gltf",
+		"class UAssetMaterial"
 	],
 	"214a39be-a3f9-4020-9ec2e4a3a4fcf9e7": [
 		"assets/models/PBR_Sphere_Test/model/PBR_Sphere.gltf",
@@ -242,6 +306,10 @@
 	"2231625b-f12f-487d-8da5e4d4d6f1e16b": [
 		"assets/models/tree_sponza/sponza.gltf",
 		"class UAssetMesh"
+	],
+	"22bce614-72cb-49ec-878f2feb8a46183d": [
+		"assets/models/Metoro/Metoro.gltf",
+		"class UAssetMaterial"
 	],
 	"22bd457e-1626-48da-a6c3ba989008e70b": [
 		"assets/models/PBR_Sphere_Test/model/PBR_Sphere.gltf",
@@ -275,12 +343,20 @@
 		"assets/models/tree_sponza/4871783166746854860.jpg",
 		"class UAssetTexture"
 	],
+	"25ab65e1-5b47-4739-abf68c5d4e0a2afc": [
+		"assets/models/Metoro/textures/MI_Metal_MetallicRoughness.png",
+		"class UAssetTexture"
+	],
 	"264f64f1-2f32-4576-adab874f7b16da24": [
 		"assets/models/tree_sponza/14650633544276105767.jpg",
 		"class UAssetTexture"
 	],
 	"26a2cfeb-6e67-4781-afe41a3c33d5247d": [
 		"assets/models/PBR_Sphere_Test/model/PBR_Sphere.gltf",
+		"class UAssetMesh"
+	],
+	"26edb56e-643b-4e4d-a4e56e91b0f0b13a": [
+		"assets/models/Metoro/Metoro.gltf",
 		"class UAssetMesh"
 	],
 	"274fe9bd-e175-4599-836b707c04922b3a": [
@@ -295,9 +371,17 @@
 		"assets/models/PBR_Sphere_Test/model/PBR_Sphere.gltf",
 		"class UAssetMesh"
 	],
+	"290e4c2d-8877-4161-a46c66cf48e9fc4c": [
+		"assets/models/Metoro/Metoro.gltf",
+		"class UAssetMaterial"
+	],
 	"2a2a0a8e-8d76-48f4-9af9838d3fd7418c": [
 		"assets/models/PBR_Sphere_Test/model/PBR_Sphere.gltf",
 		"class UAssetMesh"
+	],
+	"2c318744-cc39-4e83-b93d82367bfbe3e4": [
+		"assets/models/Metoro/textures/MI_Metal_BaseColor.png",
+		"class UAssetTexture"
 	],
 	"2d2f10da-fec3-49a3-bb937cbb805ad0b4": [
 		"assets/models/PBR_Sphere_Test/model/PBR_Sphere.gltf",
@@ -327,12 +411,20 @@
 		"assets/models/tree_sponza/sponza.gltf",
 		"class UAssetMesh"
 	],
+	"2e654b93-faf2-41f0-88a60a9ddbabffe9": [
+		"assets/models/Metoro/textures/MI_Sign_BaseColor.png",
+		"class UAssetTexture"
+	],
 	"2e80e125-b5ff-447e-8ca8c47ed483fe4e": [
 		"assets/models/PBR_Sphere_Test/model/PBR_Sphere.gltf",
 		"class UAssetMaterial"
 	],
 	"2ecaf15b-5358-4c5d-82882cc26df8047a": [
 		"assets/models/PBR_Sphere_Test/model/PBR_Sphere.gltf",
+		"class UAssetMesh"
+	],
+	"2ed5da5f-4ad6-4bd0-9587ca391b59935d": [
+		"assets/models/Metoro/Metoro.gltf",
 		"class UAssetMesh"
 	],
 	"2ef5227a-cdf9-4109-81f2c1de774198ad": [
@@ -367,9 +459,17 @@
 		"assets/models/PBR_Sphere_Test/model/PBR_Sphere.gltf",
 		"class UAssetMesh"
 	],
+	"33870f87-23d3-407c-8303a9c20ffe8d13": [
+		"assets/models/Metoro/Metoro.gltf",
+		"class UAssetMesh"
+	],
 	"33b2fad7-cb6d-4256-90d60ddb5b4c3036": [
 		"assets/models/tree_sponza/sponza.gltf",
 		"class UAssetMesh"
+	],
+	"3444fd34-ca2f-4b2e-90c1c95e8d140900": [
+		"assets/models/Metoro/textures/MI_Wires_Occlusion-MI_Wires_MetallicRoughness.png",
+		"class UAssetTexture"
 	],
 	"34e8bcab-c7b6-48fe-848bae4fa74757ec": [
 		"assets/models/tree_sponza/2411100444841994089.jpg",
@@ -379,13 +479,25 @@
 		"assets/models/PBR_Sphere_Test/model/PBR_Sphere.gltf",
 		"class UAssetMesh"
 	],
+	"35cc5f2d-9671-4f44-88b7c75db878feba": [
+		"assets/models/Metoro/Metoro.gltf",
+		"class UAssetMesh"
+	],
 	"35f7bb4b-13e1-48e4-a8b23315e356bd56": [
 		"assets/models/PBR_Sphere_Test/model/PBR_Sphere.gltf",
 		"class UAssetMaterial"
 	],
+	"3636475a-8c3d-4d6a-a7b2564b96b74087": [
+		"assets/models/Metoro/Metoro.gltf",
+		"class UAssetMesh"
+	],
 	"36aa37ef-2a5d-488b-a4041acf9903b3fc": [
 		"assets/models/PBR_Sphere_Test/model/PBR_Sphere.gltf",
 		"class UAssetMaterial"
+	],
+	"36bfd95f-1646-455a-b7961352b29d3e15": [
+		"assets/models/Metoro/Metoro.gltf",
+		"class UAssetMesh"
 	],
 	"36ea2dae-857a-426f-bafcaf251ad5b021": [
 		"Packages/textures/icon/scene.png",
@@ -407,6 +519,10 @@
 		"assets/models/PBR_Sphere_Test/model/PBR_Sphere.gltf",
 		"class UAssetMesh"
 	],
+	"388159a4-36bf-4fbb-8e59c472b5020302": [
+		"assets/models/Metoro/Metoro.gltf",
+		"class UAssetSkeleton"
+	],
 	"388f40c2-32c3-4402-a5f2a55e7f3cdc8c": [
 		"assets/models/tree_sponza/sponza.gltf",
 		"class UAssetMesh"
@@ -421,6 +537,10 @@
 	],
 	"39165173-1bce-43e1-86a17b5b409fe431": [
 		"assets/models/PBR_Sphere_Test/model/PBR_Sphere.gltf",
+		"class UAssetMaterial"
+	],
+	"3aaf2400-2e69-4c81-bfc93f0cf683dd82": [
+		"assets/models/Metoro/Metoro.gltf",
 		"class UAssetMaterial"
 	],
 	"3b9ab8b1-b918-48f0-8cf409b5983d0033": [
@@ -439,6 +559,10 @@
 		"assets/models/PBR_Sphere_Test/model/PBR_Sphere.gltf",
 		"class UAssetMaterial"
 	],
+	"3cccd196-c325-43ed-ad4b276094ee0727": [
+		"assets/models/Metoro/textures/WorldGridMaterial_BaseColor.png",
+		"class UAssetTexture"
+	],
 	"3d0e906c-f642-46fe-a47dfaeb9f1a6b04": [
 		"assets/models/PBR_Sphere_Test/model/PBR_Sphere.gltf",
 		"class UAssetMesh"
@@ -455,6 +579,10 @@
 		"assets/models/PBR_Sphere_Test/model/PBR_Sphere.gltf",
 		"class UAssetMesh"
 	],
+	"3e2e3229-096c-4bc7-97ead706618c97da": [
+		"assets/models/Metoro/Metoro.gltf",
+		"class UAssetMesh"
+	],
 	"3e45cd2d-0c5c-4f81-924f32747230d536": [
 		"assets/models/PBR_Sphere_Test/model/PBR_Sphere.gltf",
 		"class UAssetMaterial"
@@ -462,6 +590,10 @@
 	"3e4f8c8b-e40a-42a6-bbc3f74b4f75e8cc": [
 		"assets/models/PBR_Sphere_Test/model/PBR_Sphere.gltf",
 		"class UAssetMesh"
+	],
+	"3e9fa66c-395a-4ab5-bcd058c606410b30": [
+		"assets/models/Metoro/textures/T_Fusebox_N.png",
+		"class UAssetTexture"
 	],
 	"3f511a75-dc1d-4bbd-995db3dfcac43bee": [
 		"assets/models/tree_sponza/8481240838833932244.jpg",
@@ -571,6 +703,14 @@
 		"assets/models/human/dash.gltf",
 		"class UAssetAnimation"
 	],
+	"4d65d85d-b174-4aef-ae29e3aaf74d70d7": [
+		"assets/models/Metoro/Metoro.gltf",
+		"class UAssetMesh"
+	],
+	"4e45193d-fc1a-40de-933e499aa8666428": [
+		"assets/models/Metoro/Metoro.gltf",
+		"class UAssetMesh"
+	],
 	"4ee6fa0b-cef4-4553-b05c5983af49eac7": [
 		"assets/models/tree_sponza/sponza.gltf",
 		"class UAssetMesh"
@@ -627,6 +767,10 @@
 		"assets/models/tree_sponza/sponza.gltf",
 		"class UAssetMesh"
 	],
+	"54aa2924-5ddc-465f-9747dcd784ca7a2d": [
+		"assets/models/Metoro/textures/MI_Concrete_3_BaseColor.png",
+		"class UAssetTexture"
+	],
 	"54ad8d27-617d-4656-be93cfb087991d8e": [
 		"assets/models/PBR_Sphere_Test/model/PBR_Sphere.gltf",
 		"class UAssetMesh"
@@ -642,6 +786,10 @@
 	"57512ca0-2a61-4894-91cb4ecd09f1588b": [
 		"assets/models/tree_sponza/6772804448157695701.jpg",
 		"class UAssetTexture"
+	],
+	"57628910-3d44-4f4b-b2dc6f26d0332f96": [
+		"assets/models/Metoro/Metoro.gltf",
+		"class UAssetMesh"
 	],
 	"578391a2-7d35-47fb-a734c7d969bccc45": [
 		"assets/models/PBR_Sphere_Test/model/PBR_Sphere.gltf",
@@ -683,6 +831,10 @@
 		"assets/models/PBR_Sphere_Test/model/PBR_Sphere.gltf",
 		"class UAssetMesh"
 	],
+	"5cf643fd-9cf9-440f-8f975089d5f63cd6": [
+		"assets/models/Metoro/textures/T_Fences_Default_Normal.png",
+		"class UAssetTexture"
+	],
 	"5d27df27-a1f7-4297-9de50118537e36aa": [
 		"assets/models/human/idle.gltf",
 		"class UAssetMaterial"
@@ -707,9 +859,17 @@
 		"Packages/textures/icon/file.png",
 		"class UAssetTexture"
 	],
+	"5fc4b313-7be7-447a-b323525473c1fa87": [
+		"assets/models/Metoro/Metoro.gltf",
+		"class UAssetMesh"
+	],
 	"5fc77043-af0f-4ad3-9a805b8617688fb9": [
 		"assets/models/tree_sponza/14170708867020035030.jpg",
 		"class UAssetTexture"
+	],
+	"5fe2e009-c429-410d-a77c24d4dc15e896": [
+		"assets/models/Metoro/Metoro.gltf",
+		"class UAssetMesh"
 	],
 	"6022879c-5e5d-42ba-923fcfffd39160e4": [
 		"assets/models/tree_sponza/sponza.gltf",
@@ -743,12 +903,20 @@
 		"assets/models/PBR_Sphere_Test/model/PBR_Sphere.gltf",
 		"class UAssetMesh"
 	],
+	"6465c71d-77aa-4dac-af2689ff0e578cb7": [
+		"assets/models/Metoro/Metoro.gltf",
+		"class UAssetMaterial"
+	],
 	"6507b8bb-aa18-41a5-83d542de24b66f6b": [
 		"assets/models/Desert_Terrain/textures/MI_Desert_Terrain_1_BaseColor.png",
 		"class UAssetTexture"
 	],
 	"6534f447-7542-47c3-aa45e82ca85116e8": [
 		"assets/models/tree_sponza/sponza.gltf",
+		"class UAssetMesh"
+	],
+	"6617a48a-c58d-4a5d-86712abcd08a158d": [
+		"assets/models/Metoro/Metoro.gltf",
 		"class UAssetMesh"
 	],
 	"6667bf6b-fad2-42cd-a1060ae2c8b14a22": [
@@ -811,9 +979,17 @@
 		"packages/textures/icon/operation_rotate.png",
 		"class UAssetTexture"
 	],
+	"6d00ce8a-6bc2-4736-bb800b97c6fff960": [
+		"assets/models/Metoro/Metoro.gltf",
+		"class UAssetMesh"
+	],
 	"6d3f38f2-6b22-445b-a9436460aa79dc97": [
 		"assets/textures/LUT/lut_sepia.png",
 		"class UAssetTexture"
+	],
+	"6d9b717f-a522-4656-964587e4bce3de9e": [
+		"assets/models/Metoro/Metoro.gltf",
+		"class UAssetMesh"
 	],
 	"6e239309-9521-4490-a674778535a48619": [
 		"assets/models/tree_sponza/sponza.gltf",
@@ -850,6 +1026,10 @@
 	"710c8c16-b3ff-4eb7-94960d3057fb4bc7": [
 		"assets/models/tree_sponza/8750083169368950601.jpg",
 		"class UAssetTexture"
+	],
+	"715b292e-15d5-4b13-989894fcbeff2f5b": [
+		"assets/models/Metoro/Metoro.gltf",
+		"class UAssetMaterial"
 	],
 	"720445d7-471e-4191-8eb664981db056d9": [
 		"assets/models/PBR_Sphere_Test/model/PBR_Sphere.gltf",
@@ -899,6 +1079,10 @@
 		"assets/models/PBR_Sphere_Test/model/PBR_Sphere.gltf",
 		"class UAssetMesh"
 	],
+	"75e94525-37c5-451d-8bf3d8372412b53e": [
+		"assets/models/Metoro/Metoro.gltf",
+		"class UAssetMesh"
+	],
 	"7618efee-dbbf-471d-b54e20de6567c8b6": [
 		"assets/models/tree_sponza/sponza.gltf",
 		"class UAssetMesh"
@@ -918,6 +1102,10 @@
 	"77ef6729-fb01-4d93-9887fb967b3336fc": [
 		"assets/models/PBR_Sphere_Test/model/PBR_Sphere.gltf",
 		"class UAssetMesh"
+	],
+	"77f96ad2-95f3-4397-b70887fd3bb3942c": [
+		"assets/models/Metoro/Metoro.gltf",
+		"class UAssetMaterial"
 	],
 	"78908338-6c03-473c-999943e3868c09c5": [
 		"assets/models/Desert_Terrain/SM_Desert_Terrain.gltf",
@@ -987,6 +1175,10 @@
 		"assets/models/tree_sponza/2775690330959970771.jpg",
 		"class UAssetTexture"
 	],
+	"80f06480-961d-42ff-aeba2096b3f112e9": [
+		"assets/models/Metoro/textures/MI_Guidelights_Occlusion-MI_Guidelights_MetallicRoughness.png",
+		"class UAssetTexture"
+	],
 	"811f959a-e746-40fe-b236b9f0cfc0a884": [
 		"assets/models/tree_sponza/sponza.gltf",
 		"class UAssetMesh"
@@ -1005,6 +1197,14 @@
 	],
 	"82b8a522-2e98-4e96-9eecaee15935e663": [
 		"assets/models/PBR_Sphere_Test/model/PBR_Sphere.gltf",
+		"class UAssetMesh"
+	],
+	"83bfa27a-9401-4f98-be9f2d77697f5184": [
+		"assets/models/Metoro/Metoro.gltf",
+		"class UAssetMesh"
+	],
+	"83e0b72f-cb22-47b5-86df354b53e8905b": [
+		"assets/models/Metoro/Metoro.gltf",
 		"class UAssetMesh"
 	],
 	"84528aae-a5ae-44b3-851d8192aeb16bed": [
@@ -1034,6 +1234,10 @@
 	"87cf9b51-c40f-4dab-b1bf247e2cc579d1": [
 		"assets/models/PBR_Sphere_Test/model/PBR_Sphere.gltf",
 		"class UAssetMesh"
+	],
+	"884bc822-fca0-4fb3-9e80aedf1419cd8f": [
+		"assets/models/Metoro/textures/WorldGridMaterial_MetallicRoughness.png",
+		"class UAssetTexture"
 	],
 	"88fba112-2399-4706-ab0d2ffca19ed0ce": [
 		"assets/models/PBR_Sphere_Test/model/PBR_Sphere.gltf",
@@ -1103,6 +1307,10 @@
 		"assets/models/PBR_Sphere_Test/model/PBR_Sphere.gltf",
 		"class UAssetMaterial"
 	],
+	"913a4ac5-555a-4c0d-acc3a91d8097675f": [
+		"assets/models/Metoro/Metoro.gltf",
+		"class UAssetMesh"
+	],
 	"91470fd1-b249-4819-bafd9b11936127f8": [
 		"assets/models/tree_sponza/sponza.gltf",
 		"class UAssetMesh"
@@ -1155,6 +1363,10 @@
 		"assets/models/human/idle.gltf",
 		"class UAssetMesh"
 	],
+	"95ec8041-d038-4deb-ade2b2570f7c90c5": [
+		"assets/models/Metoro/textures/MI_Fences_Occlusion-MI_Fences_MetallicRoughness.png",
+		"class UAssetTexture"
+	],
 	"96a56114-7d72-4396-875e5de040ab08d3": [
 		"assets/models/PBR_Sphere_Test/model/PBR_Sphere.gltf",
 		"class UAssetMaterial"
@@ -1179,9 +1391,21 @@
 		"assets/models/tree_sponza/sponza.gltf",
 		"class UAssetMaterial"
 	],
+	"97fd6973-a0f1-4504-92dbd3adb281ba7d": [
+		"assets/models/Metoro/Metoro.gltf",
+		"class UAssetMesh"
+	],
+	"9850fd96-cdef-4701-b373ce9626432581": [
+		"assets/models/Metoro/Metoro.gltf",
+		"class UAssetMaterial"
+	],
 	"98bb1ee5-98d5-48f7-b50589718d6577a7": [
 		"assets/models/tree_sponza/sponza.gltf",
 		"class UAssetMaterial"
+	],
+	"9912c903-bfb9-43a0-80bd270ee89a94cd": [
+		"assets/models/Metoro/textures/WorldGridMaterial_Normal.png",
+		"class UAssetTexture"
 	],
 	"99bcc3d2-8aaa-4743-96c52916847b2d57": [
 		"assets/models/Desert_Terrain/SM_Desert_Terrain.gltf",
@@ -1193,6 +1417,10 @@
 	],
 	"9ac7e356-7dea-46f2-b4a0143cd4d11814": [
 		"assets/models/PBR_Sphere_Test/model/PBR_Sphere.gltf",
+		"class UAssetMaterial"
+	],
+	"9b71ef3a-c5f9-40da-a0acd0ed705c86bd": [
+		"assets/models/Metoro/Metoro.gltf",
 		"class UAssetMaterial"
 	],
 	"9ce568cd-7acf-4471-8c09e5d4cdfce401": [
@@ -1215,12 +1443,24 @@
 		"packages/textures/icon/mode_world.png",
 		"class UAssetTexture"
 	],
+	"9f4e3e97-68d1-4a0f-ae7776666c5aac5d": [
+		"assets/models/Metoro/textures/MI_Concrete_2_BaseColor.png",
+		"class UAssetTexture"
+	],
 	"9fb161b7-eec5-4738-88840dd100495d0f": [
 		"assets/models/tree_sponza/sponza.gltf",
 		"class UAssetMesh"
 	],
 	"9fc436b6-0271-4bea-b4e304e2e938dbef": [
 		"packages/textures/icon/grid.png",
+		"class UAssetTexture"
+	],
+	"a018da97-ad51-4821-bf01381f4f1bca81": [
+		"assets/models/Metoro/Metoro.gltf",
+		"class UAssetMesh"
+	],
+	"a09b6b89-9f73-47ae-8266b886bcfd1637": [
+		"assets/models/Metoro/textures/MI_Concrete_1_Normal.png",
 		"class UAssetTexture"
 	],
 	"a0fbcd0d-3b53-42af-836180dad58a78e8": [
@@ -1271,6 +1511,10 @@
 		"assets/models/PBR_Sphere_Test/model/PBR_Sphere.gltf",
 		"class UAssetMaterial"
 	],
+	"a5a38c82-1a15-42ec-8759aacfd599731f": [
+		"assets/models/Metoro/Metoro.gltf",
+		"class UAssetMesh"
+	],
 	"a5a9fddb-eb6b-491a-9f9a6cb7f1f0d598": [
 		"assets/models/PBR_Sphere_Test/model/PBR_Sphere.gltf",
 		"class UAssetMesh"
@@ -1305,6 +1549,10 @@
 	],
 	"a8330ca3-cbce-428e-a5585f636617571f": [
 		"assets/models/PBR_Sphere_Test/model/PBR_Sphere.gltf",
+		"class UAssetMesh"
+	],
+	"a8515f31-e375-4b8c-97a5b0184585b597": [
+		"assets/models/Metoro/Metoro.gltf",
 		"class UAssetMesh"
 	],
 	"a85c3fa7-fdc5-4a0f-a035f628fab5adac": [
@@ -1389,6 +1637,10 @@
 	],
 	"b113cec2-7255-47bc-a18d2805593ba94c": [
 		"assets/models/Desert_Terrain/textures/MI_Desert_Terrain_6_MetallicRoughness.png",
+		"class UAssetTexture"
+	],
+	"b145d268-0a3e-43af-aaee4957d27dc1ac": [
+		"assets/models/Metoro/textures/MI_Concrete_1_MetallicRoughness.png",
 		"class UAssetTexture"
 	],
 	"b21175a3-9421-4303-a19eb879a6120af4": [
@@ -1487,6 +1739,10 @@
 		"assets/models/PBR_Sphere_Test/model/PBR_Sphere.gltf",
 		"class UAssetMaterial"
 	],
+	"bc604a66-3ebb-4adb-b157a8aea42befbd": [
+		"assets/models/Metoro/Metoro.gltf",
+		"class UAssetMesh"
+	],
 	"bded5ebf-86f8-4e16-8f5bd0d0bd1b5191": [
 		"assets/models/tree_sponza/1219024358953944284.jpg",
 		"class UAssetTexture"
@@ -1498,6 +1754,10 @@
 	"beaaff7c-35d3-49b1-8199b24f4729eee5": [
 		"assets/models/tree_sponza/sponza.gltf",
 		"class UAssetMaterial"
+	],
+	"bfb88765-6143-4b78-86452fbfb45c7e9b": [
+		"assets/models/Metoro/textures/MI_Concrete_3_MetallicRoughness.png",
+		"class UAssetTexture"
 	],
 	"bfccb3cf-e796-41ef-8adccabc7d946b6d": [
 		"assets/models/PBR_Sphere_Test/model/PBR_Sphere.gltf",
@@ -1527,6 +1787,10 @@
 		"assets/models/PBR_Sphere_Test/model/PBR_Sphere.gltf",
 		"class UAssetMesh"
 	],
+	"c34cc18b-b5bc-4e7c-be82706c1d6f7c8e": [
+		"assets/models/Metoro/Metoro.gltf",
+		"class UAssetMesh"
+	],
 	"c3b0dda4-a2ec-4625-be2ebd8c7e659d10": [
 		"assets/models/PBR_Sphere_Test/model/PBR_Sphere.gltf",
 		"class UAssetMaterial"
@@ -1543,6 +1807,10 @@
 		"assets/models/PBR_Sphere_Test/model/PBR_Sphere.gltf",
 		"class UAssetMesh"
 	],
+	"c47fb739-fade-45ca-8ae6b737e72c7a61": [
+		"assets/models/Metoro/textures/MI_Sign_Occlusion-MI_Sign_MetallicRoughness.png",
+		"class UAssetTexture"
+	],
 	"c48a79b7-497b-46db-b0e8620069f7dc73": [
 		"assets/models/tree_sponza/sponza.gltf",
 		"class UAssetMesh"
@@ -1554,6 +1822,10 @@
 	"c5f9863a-41e3-43b3-8a572e74a0854202": [
 		"assets/models/PBR_Sphere_Test/model/PBR_Sphere.gltf",
 		"class UAssetMaterial"
+	],
+	"c799cf3e-975c-4ee4-91e288340811f9c1": [
+		"assets/models/Metoro/textures/T_Sign_Default_Normal.png",
+		"class UAssetTexture"
 	],
 	"c7a1d07c-30a1-4cc0-99d945493a0a3328": [
 		"assets/models/PBR_Sphere_Test/model/PBR_Sphere.gltf",
@@ -1625,6 +1897,22 @@
 	],
 	"cf060f11-0b33-402f-b6aa11509dd9446a": [
 		"assets/models/PBR_Sphere_Test/model/PBR_Sphere.gltf",
+		"class UAssetMesh"
+	],
+	"cfce9c0e-f141-425d-b06632868d4c5fcd": [
+		"assets/models/Metoro/textures/MI_Concrete_3_Normal.png",
+		"class UAssetTexture"
+	],
+	"d00d4b6c-6d6f-432e-8e7a5eb3cc46617f": [
+		"assets/models/Metoro/textures/MI_Wires_BaseColor.png",
+		"class UAssetTexture"
+	],
+	"d0ce6dc9-5987-40c4-936f35e2ea871c34": [
+		"assets/models/Metoro/Metoro.gltf",
+		"class UAssetMesh"
+	],
+	"d0d64668-ae26-4bb8-a58994981a335fee": [
+		"assets/models/Metoro/Metoro.gltf",
 		"class UAssetMesh"
 	],
 	"d0dafddf-6d16-43f9-b8df674fa5e96531": [
@@ -1702,6 +1990,10 @@
 	"d5aeae66-27e0-49c6-a6e2e5021c64d9b2": [
 		"assets/models/PBR_Sphere_Test/model/PBR_Sphere.gltf",
 		"class UAssetMaterial"
+	],
+	"d6799525-fac7-4888-a608cc76ae2ada08": [
+		"assets/models/Metoro/Metoro.gltf",
+		"class UAssetMesh"
 	],
 	"d6e2cc5b-d1e3-4042-ae08c51455b79cad": [
 		"assets/models/tree_sponza/sponza.gltf",
@@ -1783,6 +2075,10 @@
 		"assets/models/PBR_Sphere_Test/model/PBR_Sphere.gltf",
 		"class UAssetMesh"
 	],
+	"e23d0e63-baee-4c31-a9410fd38c1b24dc": [
+		"assets/models/Metoro/Metoro.gltf",
+		"class UAssetMaterial"
+	],
 	"e23fcdb8-f0a8-4d21-a31ea14a376ededc": [
 		"assets/models/tree_sponza/sponza.gltf",
 		"class UAssetMesh"
@@ -1827,8 +2123,16 @@
 		"assets/models/PBR_Sphere_Test/model/PBR_Sphere.gltf",
 		"class UAssetMaterial"
 	],
+	"e575f8d3-8e2e-483c-a06f7a91ad74a5bc": [
+		"assets/models/Metoro/Metoro.gltf",
+		"class UAssetMaterial"
+	],
 	"e5ed7ec9-dfd7-4cec-976d326728960bb0": [
 		"assets/models/PBR_Sphere_Test/model/PBR_Sphere.gltf",
+		"class UAssetMesh"
+	],
+	"e5f26311-d13d-4fe7-b748deb5eb4bd135": [
+		"assets/models/Metoro/Metoro.gltf",
 		"class UAssetMesh"
 	],
 	"e639a04f-5008-4a66-9025a00cc32298e4": [
@@ -1859,6 +2163,10 @@
 		"assets/models/tree_sponza/sponza.gltf",
 		"class UAssetMesh"
 	],
+	"e88a2ae8-440e-470f-9a374891fcdb11e4": [
+		"assets/models/Metoro/textures/MI_Fences_BaseColor.png",
+		"class UAssetTexture"
+	],
 	"e93f7a67-6b86-4cb4-925a6ab841fe0ea2": [
 		"Packages/textures/icon/shader.png",
 		"class UAssetTexture"
@@ -1879,6 +2187,18 @@
 		"assets/models/tree_sponza/sponza.gltf",
 		"class UAssetMesh"
 	],
+	"ebdf2436-c068-4711-a2d39230e87e4df8": [
+		"assets/models/Metoro/Metoro.gltf",
+		"class UAssetMesh"
+	],
+	"ebe8e1ae-3a6e-48d5-bed3e43dacd3ce46": [
+		"assets/models/Metoro/Metoro.gltf",
+		"class UAssetMesh"
+	],
+	"ebebd8ae-3b8e-4f93-96cdb87fcd1a4832": [
+		"assets/models/Metoro/textures/MI_Concrete_2_MetallicRoughness.png",
+		"class UAssetTexture"
+	],
 	"ebecd687-0bfc-4546-a3f24cab251c3f90": [
 		"assets/models/tree_sponza/sponza.gltf",
 		"class UAssetMesh"
@@ -1895,13 +2215,25 @@
 		"assets/models/tree_sponza/sponza.gltf",
 		"class UAssetMesh"
 	],
+	"ecc71f9f-5023-4ec1-9ca6cf39048dff3b": [
+		"assets/models/Metoro/textures/M_Fusebox_BaseColor.png",
+		"class UAssetTexture"
+	],
 	"ece56dc9-833b-4e31-80b0dea5adf8fca4": [
 		"assets/models/PBR_Sphere_Test/model/PBR_Sphere.gltf",
 		"class UAssetMaterial"
 	],
+	"ecf76ca8-84df-4daf-866e7c4001ce26ef": [
+		"assets/models/Metoro/Metoro.gltf",
+		"class UAssetMesh"
+	],
 	"ed0855e1-75af-48e1-946f25f73a908823": [
 		"assets/models/Desert_Terrain/textures/MI_Desert_Terrain_6_BaseColor.png",
 		"class UAssetTexture"
+	],
+	"ede0c279-dbcd-4921-898a6ac76fe6f872": [
+		"assets/models/Metoro/Metoro.gltf",
+		"class UAssetMaterial"
 	],
 	"ee895a17-91b6-4f25-b8beb13a6590385b": [
 		"assets/models/macbeth_chart/macbeth_chart_scene.gltf",
@@ -1931,6 +2263,10 @@
 		"assets/models/PBR_Sphere_Test/model/PBR_Sphere.gltf",
 		"class UAssetMaterial"
 	],
+	"f2f45452-ef61-4abc-a14a73bbc9274758": [
+		"assets/models/Metoro/Metoro.gltf",
+		"class UAssetMesh"
+	],
 	"f339ae46-2412-4943-994a4ba7327c05d3": [
 		"assets/models/PBR_Sphere_Test/model/PBR_Sphere.gltf",
 		"class UAssetMesh"
@@ -1954,6 +2290,10 @@
 	"f4e02664-8a31-42de-b9fe369b577b2d9d": [
 		"assets/models/PBR_Sphere_Test/model/PBR_Sphere.gltf",
 		"class UAssetMaterial"
+	],
+	"f4e90bfc-a3cb-4952-bb772c35d9bfa9a4": [
+		"assets/models/Metoro/textures/MI_Concrete_1_BaseColor.png",
+		"class UAssetTexture"
 	],
 	"f53b9ecf-8c44-4706-9aca64a70d5680ab": [
 		"assets/models/PBR_Sphere_Test/model/PBR_Sphere.gltf",
@@ -1986,6 +2326,10 @@
 	"f82a66cb-51db-4b6c-a4190002a451c7a4": [
 		"assets/models/PBR_Sphere_Test/model/PBR_Sphere.gltf",
 		"class UAssetMaterial"
+	],
+	"f82e0022-1737-462a-a900363644390678": [
+		"assets/models/Metoro/textures/M_Fusebox_Occlusion-M_Fusebox_MetallicRoughness.png",
+		"class UAssetTexture"
 	],
 	"f85433ad-6dc9-40db-aeec633a6c030e55": [
 		"assets/models/tree_sponza/sponza.gltf",
@@ -2030,6 +2374,10 @@
 	"fdc99499-8450-4f3d-95d0027e2dd8ce69": [
 		"assets/models/PBR_Sphere_Test/model/PBR_Sphere.gltf",
 		"class UAssetMesh"
+	],
+	"fdf35810-d103-4bf3-86016357be21333b": [
+		"assets/models/Metoro/textures/T_GuideLights_Default_Normal.png",
+		"class UAssetTexture"
 	],
 	"fe18cdf9-2f30-41fe-a634203ad788fea1": [
 		"assets/models/tree_sponza/11968150294050148237.jpg",
