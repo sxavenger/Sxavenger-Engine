@@ -24,10 +24,8 @@ public:
 	// public methods
 	//=========================================================================================
 
-	TextRendererComponent(MonoBehaviour* behaviour) : BaseComponent(behaviour) { CreateBuffer(); }
+	TextRendererComponent(MonoBehaviour* behaviour);
 	~TextRendererComponent() override = default;
-
-	void CreateBuffer();
 
 	void ShowComponentInspector() override;
 

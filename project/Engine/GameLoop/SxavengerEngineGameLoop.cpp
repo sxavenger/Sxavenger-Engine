@@ -49,6 +49,7 @@ void SxavengerEngineGameLoop::Init(GameLoop::Context* context) {
 		SxavengerSystem::BeginPerformace();
 		SxavengerSystem::GetInput()->Update();
 		SxavengerSystem::BeginImGuiFrame();
+		ComponentHelper::BeginFrame();
 	});
 
 	context->SetProcess(GameLoop::Process::Update, std::numeric_limits<uint32_t>::max(), [this]() {

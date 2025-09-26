@@ -51,12 +51,10 @@ public:
 	// public methods
 	//=========================================================================================
 
-	PointLightComponent(MonoBehaviour* behaviour) : BaseComponent(behaviour) { Init(); }
-	virtual ~PointLightComponent() = default;
+	PointLightComponent(MonoBehaviour* behaviour);
+	~PointLightComponent() override = default;
 
-	virtual void ShowComponentInspector() override;
-
-	void Init();
+	void ShowComponentInspector() override;
 
 	//* component option *//
 

@@ -26,6 +26,14 @@ void DirectionalLightComponent::Parameter::Init() {
 // DirectionalLightComponent class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
+DirectionalLightComponent::DirectionalLightComponent(MonoBehaviour* behaviour)
+	: BaseComponent(behaviour) {
+
+	parameter_ = std::make_unique<DimensionBuffer<Parameter>>();
+	parameter_->Create(SxavengerSystem::GetDxDevice(), 1);
+	parameter_->At(0).Init();
+}
+
 void DirectionalLightComponent::ShowComponentInspector() {
 	auto& parameter = parameter_->At(0);
 	ImGui::ColorEdit3("color", &parameter.color.r);
@@ -38,12 +46,6 @@ void DirectionalLightComponent::ShowComponentInspector() {
 	//* push line
 	Vector3f dir = RequireTransform()->GetTransform().GetForward();
 	SxavengerContent::PushLine(RequireTransform()->GetPosition(), RequireTransform()->GetPosition() + dir, Color4f{ parameter.color, 1.0f }, 0.6f);
-}
-
-void DirectionalLightComponent::Init() {
-	parameter_ = std::make_unique<DimensionBuffer<Parameter>>();
-	parameter_->Create(SxavengerSystem::GetDxDevice(), 1);
-	parameter_->At(0).Init();
 }
 
 const D3D12_GPU_VIRTUAL_ADDRESS& DirectionalLightComponent::GetGPUVirtualAddress() const {

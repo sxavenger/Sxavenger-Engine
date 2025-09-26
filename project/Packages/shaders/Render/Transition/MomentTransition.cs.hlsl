@@ -2,38 +2,33 @@
 // include
 //-----------------------------------------------------------------------------------------
 #include "Transition.hlsli"
-
-//* component
 #include "../../Component/CameraComponent.hlsli"
 
 //=========================================================================================
 // buffers
 //=========================================================================================
 
-Texture2D<float4> gPosition : register(t0);
+RWTexture2D<uint> gMoment    : register(u0);
+RWTexture2D<float> gIndirect : register(u1);
 
-ConstantBuffer<CameraComponent> gCurrentCamera : register(b0);
-ConstantBuffer<CameraComponent> gPrevCamera    : register(b1);
+Texture2D<float4> gVelocity : register(t0);
 
-RWTexture2D<float4> gVelocity : register(u0);
+ConstantBuffer<CameraComponent> gCamera : register(b0);
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // main
 ////////////////////////////////////////////////////////////////////////////////////////////
 [numthreads(_NUM_THREADS_X, _NUM_THREADS_Y, 1)]
 void main(uint3 dispatchThreadId : SV_DispatchThreadID) {
-	
+
 	uint2 index = dispatchThreadId.xy;
 
 	if (CheckOverTexture(index)) {
 		return;
 	}
 
-	float3 position = gPosition.Load(uint3(index, 0)).xyz;
+	
 
-	float2 current = gCurrentCamera.CalculateNDCPosition(position);
-	float2 prev    = gPrevCamera.CalculateNDCPosition(position);
-
-	gVelocity[index] = float4(current - prev, 0.0f, 1.0f);
+	
 	
 }

@@ -87,8 +87,6 @@ void RenderSceneEditor::ShowMainMenu() {
 }
 
 void RenderSceneEditor::ShowWindow() {
-	textures_->SwapBuffers();
-
 	UpdateKeyShortcut();
 
 	ShowGameWindow();

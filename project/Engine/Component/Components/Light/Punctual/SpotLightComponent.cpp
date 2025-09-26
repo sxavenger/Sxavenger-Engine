@@ -32,6 +32,14 @@ void SpotLightComponent::Parameter::Init() {
 // SpotLightComponent class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
+SpotLightComponent::SpotLightComponent(MonoBehaviour* behaviour)
+	: BaseComponent(behaviour) {
+
+	parameter_ = std::make_unique<DimensionBuffer<Parameter>>();
+	parameter_->Create(SxavengerSystem::GetDxDevice(), 1);
+	parameter_->At(0).Init();
+}
+
 void SpotLightComponent::ShowComponentInspector() {
 	auto& parameter = parameter_->At(0);
 	ImGui::ColorEdit3("color", &parameter.color.x);
@@ -58,12 +66,6 @@ void SpotLightComponent::ShowComponentInspector() {
 	//* push line
 
 	SxavengerContent::PushCone(RequireTransform()->GetPosition(), RequireTransform()->GetDirection(), parameter.radius, parameter.coneAngle.y, Color4f{ parameter.color, 1.0f });
-}
-
-void SpotLightComponent::Init() {
-	parameter_ = std::make_unique<DimensionBuffer<Parameter>>();
-	parameter_->Create(SxavengerSystem::GetDxDevice(), 1);
-	parameter_->At(0).Init();
 }
 
 const D3D12_GPU_VIRTUAL_ADDRESS& SpotLightComponent::GetGPUVirtualAddress() const {

@@ -31,6 +31,14 @@ void PointLightComponent::Parameter::Init() {
 // PointLightComponent class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
+PointLightComponent::PointLightComponent(MonoBehaviour* behaviour)
+	: BaseComponent(behaviour) {
+
+	parameter_ = std::make_unique<DimensionBuffer<Parameter>>();
+	parameter_->Create(SxavengerSystem::GetDxDevice(), 1);
+	parameter_->At(0).Init();
+}
+
 void PointLightComponent::ShowComponentInspector() {
 	auto& parameter = parameter_->At(0);
 	ImGui::ColorEdit3("color", &parameter.color.x);
@@ -54,12 +62,6 @@ void PointLightComponent::ShowComponentInspector() {
 
 	//* push line
 	SxavengerContent::PushSphere(RequireTransform()->GetPosition(), parameter.radius, Color4f{ parameter.color, 1.0f });
-}
-
-void PointLightComponent::Init() {
-	parameter_ = std::make_unique<DimensionBuffer<Parameter>>();
-	parameter_->Create(SxavengerSystem::GetDxDevice(), 1);
-	parameter_->At(0).Init();
 }
 
 const D3D12_GPU_VIRTUAL_ADDRESS& PointLightComponent::GetGPUVirtualAddress() const {

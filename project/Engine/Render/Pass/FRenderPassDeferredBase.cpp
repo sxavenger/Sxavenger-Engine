@@ -237,9 +237,9 @@ void FRenderPassDeferredBase::PassVelocity(const DirectXQueueContext* context, c
 
 	DxObject::BindBufferDesc parameter = {};
 	parameter.Set32bitConstants("Dimension", 2, &config.buffer->GetSize());
-	parameter.SetHandle("gPosition",     config.buffer->GetDeferredGBuffer().GetGBuffer(FDeferredGBuffer::Layout::Position)->GetGPUHandleSRV());
-	parameter.SetHandle("gPrevPosition", config.buffer->GetDeferredGBuffer().GetPrevGBuffer(FDeferredGBuffer::Layout::Position)->GetGPUHandleSRV());
-	parameter.SetAddress("gCamera",      config.camera->GetGPUVirtualAddress());
+	parameter.SetHandle("gPosition",       config.buffer->GetDeferredGBuffer().GetGBuffer(FDeferredGBuffer::Layout::Position)->GetGPUHandleSRV());
+	parameter.SetAddress("gCurrentCamera", config.camera->GetGPUVirtualAddress());
+	parameter.SetAddress("gPrevCamera",    config.camera->GetPrevGPUVirtualAddress());
 
 	parameter.SetHandle("gVelocity", config.buffer->GetGBuffer(FDeferredGBuffer::Layout::Velocity)->GetGPUHandleUAV());
 

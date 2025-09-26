@@ -111,11 +111,6 @@ void FRenderTargetBuffer::EndProcessDenoiser(const DirectXQueueContext* context)
 	process_->EndProcess(context, lighting_.GetGBuffer(FLightingGBuffer::Layout::Indirect));
 }
 
-void FRenderTargetBuffer::SwapBuffers() {
-	deferred_.SwapBuffers();
-	AttachIndex();
-}
-
 FBaseTexture* FRenderTargetBuffer::GetGBuffer(FDeferredGBuffer::Layout layout) {
 	return deferred_.GetGBuffer(layout);
 }

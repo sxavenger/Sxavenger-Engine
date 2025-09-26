@@ -30,7 +30,7 @@ struct Parameter {
 	//=========================================================================================
 
 	float GetIntensity() {
-		return intensity * 0.01f;
+		return intensity;
 	}
 	
 };
@@ -50,21 +50,21 @@ void main(uint3 dispathThreadId : SV_DispatchThreadID) {
 
 	float2 uv = float2(index) / size * 2.0f - 1.0f; // [-1.0 ~ 1.0]
 
-	float3 velocity = -gVelocity.Load(uint3(index, 0)).xyz;
+	float2 velocity = -gVelocity.Load(uint3(index, 0)).xy;
 	
 	float4 color = gInput.Load(uint3(index, 0));
 	float weight = 1.0f;
 
 	static const uint kSampleCount = 8;
 
-	float2 v = velocity.xy / kSampleCount;
+	float2 v = velocity / kSampleCount;
 	
 	for (uint i = 1; i < 8; ++i) {
 
 		// ガウス関数
-		float w = exp(-float(i * i) / (8.0f));
+		float w = exp(-float(i * i) / (4.0f));
 		
-		float2 texcoord = uv + (v * i) /** (gParameter.GetIntensity() * blendWeight)*/;
+		float2 texcoord = uv + (v * i) * (gParameter.GetIntensity() * blendWeight);
 		color += gInput.SampleLevel(gSampler, (texcoord + 1.0f) * 0.5f, 0) * w;
 		weight += w;
 	}

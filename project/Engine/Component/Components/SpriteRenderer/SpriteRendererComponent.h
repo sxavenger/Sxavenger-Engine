@@ -46,12 +46,10 @@ public:
 	// public methods
 	//=========================================================================================
 
-	SpriteRendererComponent(MonoBehaviour* behaviour) : BaseComponent(behaviour) { CreateBuffer(); }
+	SpriteRendererComponent(MonoBehaviour* behaviour);
 	~SpriteRendererComponent() override = default;
 
-	void CreateBuffer();
-
-	virtual void ShowComponentInspector() override;
+	void ShowComponentInspector() override;
 
 	//* component option *//
 

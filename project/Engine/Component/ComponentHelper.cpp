@@ -28,6 +28,12 @@
 // ComponentHelper class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
+void ComponentHelper::BeginFrame() {
+	sComponentStorage->ForEach<CameraComponent>([](CameraComponent* component) {
+		component->SwapBuffer();
+	});
+}
+
 void ComponentHelper::UpdateTransform() {
 	sMonoBehaviourContainer->ForEach(std::execution::seq, [](MonoBehaviour* behaviour) {
 		if (auto component = behaviour->GetComponent<TransformComponent>()) {
@@ -36,6 +42,7 @@ void ComponentHelper::UpdateTransform() {
 
 		if (auto component = behaviour->GetComponent<CameraComponent>()) {
 			component->UpdateView();
+			component->UpdateProj();
 		}
 
 		if (auto component = behaviour->GetComponent<RectTransformComponent>()) {

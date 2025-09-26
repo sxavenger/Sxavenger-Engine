@@ -15,11 +15,13 @@
 // TextRendererComponent class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-void TextRendererComponent::CreateBuffer() {
+TextRendererComponent::TextRendererComponent(MonoBehaviour* behaviour)
+	: BaseComponent(behaviour) {
+
 	input_.Create(static_cast<uint32_t>(kMaxTextLength * 4), static_cast<uint32_t>(kMaxTextLength * 2));
 
 	auto vertices = input_.GetVertex();
-	auto indices  = input_.GetIndex();
+	auto indices = input_.GetIndex();
 
 	// vertexの初期化
 	vertices->Fill(UIVertexData{});

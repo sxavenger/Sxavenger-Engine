@@ -66,8 +66,6 @@ public:
 	void BeginProcessDenoiser(const DirectXQueueContext* context);
 	void EndProcessDenoiser(const DirectXQueueContext* context);
 
-	void SwapBuffers();
-
 	//* GBuffer option *//
 
 	FBaseTexture* GetGBuffer(FDeferredGBuffer::Layout layout);

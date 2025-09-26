@@ -79,6 +79,15 @@ void CameraComponent::InputJson(const json& data) {
 	tag_ = magic_enum::enum_cast<Tag>(JsonSerializeFormatter<std::string>::Deserialize(data.at("tag"))).value();
 }
 
+CameraComponent::CameraComponent(MonoBehaviour* behaviour)
+	: BaseComponent(behaviour) {
+
+	CreateBuffer();
+
+	projection_.Init();
+	UpdateProj();
+}
+
 void CameraComponent::ShowComponentInspector() {
 
 	if (ImGui::BeginCombo("tag", magic_enum::enum_name(GetTag()).data())) {
@@ -102,49 +111,52 @@ void CameraComponent::ShowComponentInspector() {
 	PushLineFrustum();
 }
 
-void CameraComponent::Init() {
-	CreateBuffer();
-
-	projection_.Init();
-	UpdateProj();
+const D3D12_GPU_VIRTUAL_ADDRESS& CameraComponent::GetGPUVirtualAddress() const {
+	Exception::Assert(buffers_[currentIndex_] != nullptr, "camera buffer is not craete.");
+	return buffers_[currentIndex_]->GetGPUVirtualAddress();
 }
 
-const D3D12_GPU_VIRTUAL_ADDRESS& CameraComponent::GetGPUVirtualAddress() const {
-	Exception::Assert(buffer_ != nullptr, "camera buffer is not craete.");
-	return buffer_->GetGPUVirtualAddress();
+const D3D12_GPU_VIRTUAL_ADDRESS& CameraComponent::GetPrevGPUVirtualAddress() const {
+	size_t prevIndex = (currentIndex_ + buffers_.size() - 1) % buffers_.size();
+	Exception::Assert(buffers_[prevIndex] != nullptr, "camera buffer is not craete.");
+	return buffers_[prevIndex]->GetGPUVirtualAddress();
+}
+
+void CameraComponent::SwapBuffer() {
+	currentIndex_ = (currentIndex_ + 1) % buffers_.size();
 }
 
 void CameraComponent::UpdateView() {
-	if (buffer_ == nullptr) {
+	if (buffers_[currentIndex_] == nullptr) {
 		return;
 	}
 
 	// transform component から view matrix を取得
 	auto transform = BaseComponent::GetBehaviour()->RequireComponent<TransformComponent>();
-	buffer_->At(0).TransferView(transform->GetMatrix());
+	buffers_[currentIndex_]->At(0).TransferView(transform->GetMatrix());
 }
 
 void CameraComponent::UpdateProj() {
-	if (buffer_ == nullptr) {
+	if (buffers_[currentIndex_] == nullptr) {
 		return;
 	}
 
 	// projection から proj matrix を取得
-	buffer_->At(0).TransferProj(projection_.ToProj());
+	buffers_[currentIndex_]->At(0).TransferProj(projection_.ToProj());
 
 	// projection から near, far の距離を取得
-	buffer_->At(0).nearZ = projection_.nearZ;
-	buffer_->At(0).farZ  = projection_.farZ;
+	buffers_[currentIndex_]->At(0).nearZ = projection_.nearZ;
+	buffers_[currentIndex_]->At(0).farZ  = projection_.farZ;
 }
 
 const CameraComponent::Camera& CameraComponent::GetCamera() const {
-	Exception::Assert(buffer_ != nullptr, "camera buffer is not craete.");
-	return (*buffer_)[0];
+	Exception::Assert(buffers_[currentIndex_] != nullptr, "camera buffer is not craete.");
+	return (*buffers_[currentIndex_])[0];
 }
 
 Vector3f CameraComponent::GetPosition() const {
-	Exception::Assert(buffer_ != nullptr, "camera buffer is not craete.");
-	return Matrix4x4::GetTranslation((*buffer_)[0].world);
+	Exception::Assert(buffers_[currentIndex_] != nullptr, "camera buffer is not craete.");
+	return Matrix4x4::GetTranslation((*buffers_[currentIndex_])[0].world);
 }
 
 Vector3f CameraComponent::CalculateNDCPosition(const Vector3f& point) const {
@@ -156,20 +168,18 @@ Vector3f CameraComponent::CalculateWorldPosition(const Vector3f& ndc) const {
 }
 
 void CameraComponent::CreateBuffer() {
-	if (buffer_ != nullptr) {
-		return;
+	for (size_t i = 0; i < buffers_.size(); ++i) {
+		buffers_[i] = std::make_unique<DxObject::DimensionBuffer<Camera>>();
+		buffers_[i]->Create(SxavengerSystem::GetDxDevice(), 1);
+		(*buffers_[i])[0].Init();
 	}
-
-	buffer_ = std::make_unique<DxObject::DimensionBuffer<Camera>>();
-	buffer_->Create(SxavengerSystem::GetDxDevice(), 1);
-	(*buffer_)[0].Init();
 }
 
 
 void CameraComponent::PushLineFrustum() {
 	Vector3f frustumPoint[8] = {};
-	const Matrix4x4& clipMatrix  = (*buffer_)[0].projInv;
-	const Matrix4x4& worldMatrix = (*buffer_)[0].world;
+	const Matrix4x4& clipMatrix  = (*buffers_[currentIndex_])[0].projInv;
+	const Matrix4x4& worldMatrix = (*buffers_[currentIndex_])[0].world;
 
 	// far
 	frustumPoint[0] = Matrix4x4::Transform(Matrix4x4::Transform({ -1.0f, -1.0f, 1.0f }, clipMatrix), worldMatrix);

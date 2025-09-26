@@ -92,16 +92,18 @@ public:
 	// public methods
 	//=========================================================================================
 
-	CameraComponent(MonoBehaviour* behaviour) : BaseComponent(behaviour) { Init(); }
+	CameraComponent(MonoBehaviour* behaviour);
 	~CameraComponent() override = default;
 
 	void ShowComponentInspector() override;
 
-	void Init();
-
 	//* buffer option *//
 
 	const D3D12_GPU_VIRTUAL_ADDRESS& GetGPUVirtualAddress() const;
+
+	const D3D12_GPU_VIRTUAL_ADDRESS& GetPrevGPUVirtualAddress() const;
+
+	void SwapBuffer();
 
 	//* camera option *//
 
@@ -143,7 +145,8 @@ private:
 	Tag tag_               = Tag::None;
 	Projection projection_ = {};
 
-	std::unique_ptr<DxObject::DimensionBuffer<Camera>> buffer_;
+	std::array<std::unique_ptr<DxObject::DimensionBuffer<Camera>>, 2> buffers_;
+	size_t currentIndex_ = 0;
 
 	//=========================================================================================
 	// private methods

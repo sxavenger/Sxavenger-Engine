@@ -63,16 +63,12 @@ public:
 
 	//* option *//
 
-	void SwapBuffers();
-
 	void ForEach(const std::function<void(FBaseTexture*)>& funciton);
 	void ForEach(const std::function<void(size_t, FBaseTexture*)>& funciton);
 
 	//* getter *//
 
 	FBaseTexture* GetGBuffer(Layout layout) const;
-
-	FBaseTexture* GetPrevGBuffer(Layout layout) const;
 
 	static DXGI_FORMAT GetFormat(Layout layout);
 
@@ -84,8 +80,6 @@ private:
 
 	static const std::array<DXGI_FORMAT, kLayoutCount> kFormats_;
 
-	std::array<std::array<std::unique_ptr<FBaseTexture>, kLayoutCount>, 2> buffers_ = {};
-	size_t currentBufferIndex_ = 0;
-	// double buffering で 過去フレームの情報を保持できるようにする
+	std::array<std::unique_ptr<FBaseTexture>, kLayoutCount> buffers_ = {};
 
 };

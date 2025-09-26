@@ -23,6 +23,10 @@ public:
 	// public methods
 	//=========================================================================================
 
+	//* game loop helper *//
+
+	static void BeginFrame();
+
 	//* container helper *//
 
 	static void UpdateTransform();

@@ -60,8 +60,6 @@ void FMainRender::PresentMain(const DirectXQueueContext* context) {
 		context, kMainWindowSize,
 		buffer_->GetGBuffer(FMainGBuffer::Layout::UI)->GetGPUHandleSRV()
 	);
-
-	buffer_->SwapBuffers(); //!< TODO: SwapBuffersのタイミングを考慮
 }
 
 FMainRender* FMainRender::GetInstance() {

@@ -15,7 +15,9 @@ _DXOBJECT_USING
 // SpriteRendererComponent class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-void SpriteRendererComponent::CreateBuffer() {
+SpriteRendererComponent::SpriteRendererComponent(MonoBehaviour* behaviour)
+	: BaseComponent(behaviour) {
+
 	input_.Create(4, 2);
 	input_.GetIndex()->At(0) = { 0, 1, 2 };
 	input_.GetIndex()->At(1) = { 2, 1, 3 };

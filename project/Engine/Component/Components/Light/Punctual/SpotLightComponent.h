@@ -52,12 +52,10 @@ public:
 	// public methods
 	//=========================================================================================
 
-	SpotLightComponent(MonoBehaviour* behaviour) : BaseComponent(behaviour) { Init(); }
-	virtual ~SpotLightComponent() = default;
+	SpotLightComponent(MonoBehaviour* behaviour);
+	~SpotLightComponent() override = default;
 
-	virtual void ShowComponentInspector() override;
-
-	void Init();
+	void ShowComponentInspector() override;
 
 	//* component option *//
 

@@ -342,8 +342,6 @@ void FRenderPassDeferredLighting::PassSkyLight(const DirectXQueueContext* contex
 
 void FRenderPassDeferredLighting::PassIndirectLight(const DirectXQueueContext* context, const Config& config) {
 
-	// TODO: Config
-
 	FRenderCore::GetInstance()->GetPathtracing()->GetContext()->SetStateObject(context->GetDxCommand());
 
 	auto commandList = context->GetCommandList();
@@ -361,7 +359,7 @@ void FRenderPassDeferredLighting::PassIndirectLight(const DirectXQueueContext* c
 	//* camera
 	commandList->SetComputeRootConstantBufferView(4, config.camera->GetGPUVirtualAddress());
 
-	// TODO: config
+	//* config
 	commandList->SetComputeRoot32BitConstants(5, 3, &config.buffer->GetLightingGBuffer().GetConfig(), 0);
 
 	//* light
