@@ -52,6 +52,8 @@ private:
 	std::filesystem::path sceneFileName_;
 	std::string           sceneNameBuf_;
 
+	std::string hierarchyBuf_;
+
 	//=========================================================================================
 	// private methods
 	//=========================================================================================
@@ -70,6 +72,9 @@ private:
 	void ForEachBehaviourHierarchy(const MonoBehaviour::Hierarchy& hierarchy, const std::function<void(MonoBehaviour*)>& function);
 
 	void HierarchySelectable(MonoBehaviour* behaviour);
+
+	bool HierarchyFilter(MonoBehaviour* behaviour, const std::string& filter);
+	void HierarchySelectableFilter(MonoBehaviour* behaviour, const std::string& filter);
 
 	bool CheckSelected(MonoBehaviour* behaviour);
 

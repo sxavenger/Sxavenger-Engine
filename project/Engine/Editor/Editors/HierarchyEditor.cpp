@@ -151,11 +151,25 @@ void HierarchyEditor::ShowHierarchyWindow() {
 	BaseEditor::SetNextWindowDocking();
 	ImGui::Begin("Hierarchy ## Hierarchy Editor", nullptr, BaseEditor::GetWindowFlag());
 
+	SxImGui::InputText("## hierarchy filter", hierarchyBuf_);
+
+	ImGui::Separator();
+
 	// hierarchyの表示
 	ImGui::PushStyleVarY(ImGuiStyleVar_ItemSpacing, 0);
 
-	for (auto& behaviour : sMonoBehaviourContainer->GetContainer()) {
-		HierarchySelectable(behaviour);
+	if (hierarchyBuf_.empty()) {
+		//!< 通常表示
+		for (auto& behaviour : sMonoBehaviourContainer->GetContainer()) {
+			HierarchySelectable(behaviour);
+		}
+		
+	} else {
+		//!< フィルター表示
+		for (auto& behaviour : sMonoBehaviourContainer->GetContainer()) {
+			HierarchySelectableFilter(behaviour, hierarchyBuf_);
+		}
+
 	}
 
 	ImGui::PopStyleVar();
@@ -297,6 +311,100 @@ void HierarchyEditor::HierarchySelectable(MonoBehaviour* behaviour) {
 		ImGui::TreePop();
 	}
 	
+}
+
+bool HierarchyEditor::HierarchyFilter(MonoBehaviour* behaviour, const std::string& filter) {
+	// 自身とfilterの比較
+	bool result = (behaviour->GetName().find(filter) != std::string::npos);
+
+	// childとfilterの比較
+	ForEachBehaviourHierarchy(behaviour->GetChildren(), [&](MonoBehaviour* child) {
+		result |= HierarchyFilter(child, filter);
+	});
+
+	return result;
+}
+
+void HierarchyEditor::HierarchySelectableFilter(MonoBehaviour* behaviour, const std::string& filter) {
+
+	if (!HierarchyFilter(behaviour, filter)) {
+		return;
+	}
+
+	bool isSelect     = CheckSelected(behaviour);
+	std::string label = std::format("{} # {:p}", behaviour->GetName(), static_cast<const void*>(behaviour));
+
+	bool hasChild = !behaviour->GetChildren().empty();
+
+	if (!behaviour->IsActive()) {
+		ImGui::PushStyleColor(ImGuiCol_Text, { disableColor_.r, disableColor_.g, disableColor_.b, disableColor_.a });
+	}
+
+	ImGuiTreeNodeFlags flags
+		= ImGuiTreeNodeFlags_OpenOnDoubleClick
+		| ImGuiTreeNodeFlags_OpenOnArrow
+		| ImGuiTreeNodeFlags_FramePadding
+		| ImGuiTreeNodeFlags_SpanAllColumns
+		| ImGuiTreeNodeFlags_DrawLinesToNodes;
+
+	if (isSelect) {
+		flags |= ImGuiTreeNodeFlags_Selected;
+	}
+
+	if (!hasChild) {
+		flags |= ImGuiTreeNodeFlags_Leaf;
+		ImGui::Unindent();
+	}
+
+	bool isOpen = ImGui::TreeNodeEx(label.c_str(), flags);
+
+	if (!hasChild) {
+		ImGui::Indent();
+	}
+
+	if (!behaviour->IsActive()) {
+		ImGui::PopStyleColor();
+	}
+
+	//* event
+
+	if (ImGui::IsItemClicked()) {
+		SetSelected(behaviour);
+		isSelect = true;
+	}
+
+	if (isSelect && SxImGui::IsDoubleClickItem()) {
+		SetSelectedView(behaviour);
+	}
+
+	if (ImGui::BeginPopupContextItem(std::format("hierarchy behaviour context menu # {:p}", static_cast<const void*>(behaviour)).c_str())) {
+		ImGui::PopStyleVar();
+
+		ImGui::SeparatorText("behaviour context menu");
+		ImGui::Text("name: %s", behaviour->GetName().c_str());
+
+		ImGui::Separator();
+
+		if (ImGui::MenuItem("Add Child")) {
+			std::unique_ptr<MonoBehaviour> child = ComponentHelper::CreateTransformMonoBehaviour();
+			behaviour->AddChild(std::move(child));
+		}
+
+		// TODO: Removeの追加
+
+		ImGui::EndPopup();
+
+		ImGui::PushStyleVarY(ImGuiStyleVar_ItemSpacing, 0);
+	}
+
+	if (isOpen) {
+		ForEachBehaviourHierarchy(behaviour->GetChildren(), [&](MonoBehaviour* child) {
+			HierarchySelectableFilter(child, filter);
+		});
+
+		ImGui::TreePop();
+	}
+
 }
 
 bool HierarchyEditor::CheckSelected(MonoBehaviour* behaviour) {
