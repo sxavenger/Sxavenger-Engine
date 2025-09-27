@@ -48,9 +48,11 @@ void main(uint3 dispathThreadId : SV_DispatchThreadID) {
 		return;
 	}
 
-	float2 uv = float2(index) / size * 2.0f - 1.0f; // [-1.0 ~ 1.0]
+	float2 uv = float2(index) / size; // [0.0 ~ 1.0]
 
 	float2 velocity = -gVelocity.Load(uint3(index, 0)).xy;
+	velocity   *= 0.5f;  //!< uvの範囲に統一
+	velocity.y *= -1.0f; //!< y軸反転
 	
 	float4 color = gInput.Load(uint3(index, 0));
 	float weight = 1.0f;
@@ -65,7 +67,8 @@ void main(uint3 dispathThreadId : SV_DispatchThreadID) {
 		float w = exp(-float(i * i) / (4.0f));
 		
 		float2 texcoord = uv + (v * i) * (gParameter.GetIntensity() * blendWeight);
-		color += gInput.SampleLevel(gSampler, (texcoord + 1.0f) * 0.5f, 0) * w;
+		
+		color  += gInput.SampleLevel(gSampler, texcoord, 0) * w;
 		weight += w;
 	}
 

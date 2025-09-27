@@ -50,7 +50,7 @@ private:
 
 	void PassSkyLight(const DirectXQueueContext* context, const Config& config);
 
-	void PassIndirectMoment(const DirectXQueueContext* context, const Config& config);
+	void PassIndirectMomentTranslate(const DirectXQueueContext* context, const Config& config);
 
 	void PassIndirectLight(const DirectXQueueContext* context, const Config& config);
 

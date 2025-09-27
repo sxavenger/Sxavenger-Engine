@@ -43,8 +43,13 @@ void FRenderPassDeferredLighting::Render(const DirectXQueueContext* context, con
 
 	if (config.isEnableIndirectLighting) { //* Indirect Lighting
 
+		config.buffer->GetLightingGBuffer().CopyGBufferToIntermediate(context, FLightingGBuffer::Layout::Indirect_Reservoir);
+		config.buffer->GetLightingGBuffer().CopyGBufferToIntermediate(context, FLightingGBuffer::Layout::Indirect_Moment);
+
 		{
 			BeginPassIndirectLighting(context, config.buffer);
+
+			PassIndirectMomentTranslate(context, config);
 
 			PassIndirectLight(context, config);
 
@@ -337,6 +342,26 @@ void FRenderPassDeferredLighting::PassSkyLight(const DirectXQueueContext* contex
 		FRenderCore::GetInstance()->GetLight()->DrawCall(context);
 
 	});
+
+}
+
+void FRenderPassDeferredLighting::PassIndirectMomentTranslate(const DirectXQueueContext* context, const Config& config) {
+
+	auto core = FRenderCore::GetInstance()->GetTransition();
+	core->SetPipeline(FRenderCoreTransition::Transition::MomentTransition, context);
+
+	DxObject::BindBufferDesc parameter = {};
+	parameter.Set32bitConstants("Dimension", 2, &config.buffer->GetSize());
+
+	parameter.SetHandle("gMoment",             config.buffer->GetGBuffer(FLightingGBuffer::Layout::Indirect_Moment)->GetGPUHandleUAV());
+	parameter.SetHandle("gReservoir",          config.buffer->GetGBuffer(FLightingGBuffer::Layout::Indirect_Reservoir)->GetGPUHandleSRV());
+	parameter.SetHandle("gReferenceMoment",    config.buffer->GetLightingGBuffer().GetIntermediate(FLightingGBuffer::Layout::Indirect_Moment)->GetGPUHandleSRV());
+	parameter.SetHandle("gReferenceReservoir", config.buffer->GetLightingGBuffer().GetIntermediate(FLightingGBuffer::Layout::Indirect_Reservoir)->GetGPUHandleSRV());
+
+	parameter.SetHandle("gVelocity", config.buffer->GetGBuffer(FDeferredGBuffer::Layout::Velocity)->GetGPUHandleUAV());
+
+	core->BindComputeBuffer(FRenderCoreTransition::Transition::MomentTransition, context, parameter);
+	core->Dispatch(context, config.buffer->GetSize());
 
 }
 

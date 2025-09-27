@@ -31,6 +31,16 @@ void FLightingGBuffer::Init(const Vector2ui& size) {
 		name += magic_enum::enum_name(static_cast<FLightingGBuffer::Layout>(i));
 		buffers_[i]->GetResource()->SetName(ToWString(name).c_str());
 	}
+
+	for (size_t i = 0; i < kLayoutCount_; ++i) {
+		intermediate_[i] = std::make_unique<FBaseTexture>();
+		intermediate_[i]->Create(size, kFormats_[i]);
+
+		// nameの設定
+		std::string name = "FLightingGBuffer Intermediate | ";
+		name += magic_enum::enum_name(static_cast<FLightingGBuffer::Layout>(i));
+		intermediate_[i]->GetResource()->SetName(ToWString(name).c_str());
+	}
 }
 
 void FLightingGBuffer::TransitionBeginRenderTargetDirect(const DirectXQueueContext* context) {
@@ -108,8 +118,55 @@ void FLightingGBuffer::TransitionEndUnorderedIndirect(const DirectXQueueContext*
 	context->GetCommandList()->ResourceBarrier(static_cast<UINT>(barriers.size()), barriers.data());
 }
 
+void FLightingGBuffer::CopyIntermediateToGBuffer(const DirectXQueueContext* context, Layout layout) {
+
+	auto commandList = context->GetCommandList();
+
+	std::array<D3D12_RESOURCE_BARRIER, 2> barriers = {};
+	barriers[0] = intermediate_[static_cast<size_t>(layout)]->TransitionBeginState(D3D12_RESOURCE_STATE_COPY_SOURCE);
+	barriers[1] = buffers_[static_cast<size_t>(layout)]->TransitionBeginState(D3D12_RESOURCE_STATE_COPY_DEST);
+
+	commandList->ResourceBarrier(static_cast<UINT>(barriers.size()), barriers.data());
+
+	commandList->CopyResource(
+		buffers_[static_cast<size_t>(layout)]->GetResource(),
+		intermediate_[static_cast<size_t>(layout)]->GetResource()
+	);
+
+	barriers[0] = intermediate_[static_cast<size_t>(layout)]->TransitionEndState(D3D12_RESOURCE_STATE_COPY_SOURCE);
+	barriers[1] = buffers_[static_cast<size_t>(layout)]->TransitionEndState(D3D12_RESOURCE_STATE_COPY_DEST);
+
+	commandList->ResourceBarrier(static_cast<UINT>(barriers.size()), barriers.data());
+}
+
+void FLightingGBuffer::CopyGBufferToIntermediate(const DirectXQueueContext* context, Layout layout) {
+
+	auto commandList = context->GetCommandList();
+
+	std::array<D3D12_RESOURCE_BARRIER, 2> barriers = {};
+	barriers[0] = buffers_[static_cast<size_t>(layout)]->TransitionBeginState(D3D12_RESOURCE_STATE_COPY_SOURCE);
+	barriers[1] = intermediate_[static_cast<size_t>(layout)]->TransitionBeginState(D3D12_RESOURCE_STATE_COPY_DEST);
+
+	commandList->ResourceBarrier(static_cast<UINT>(barriers.size()), barriers.data());
+
+	commandList->CopyResource(
+		intermediate_[static_cast<size_t>(layout)]->GetResource(),
+		buffers_[static_cast<size_t>(layout)]->GetResource()
+	);
+
+	barriers[0] = buffers_[static_cast<size_t>(layout)]->TransitionEndState(D3D12_RESOURCE_STATE_COPY_SOURCE);
+	barriers[1] = intermediate_[static_cast<size_t>(layout)]->TransitionEndState(D3D12_RESOURCE_STATE_COPY_DEST);
+
+	commandList->ResourceBarrier(static_cast<UINT>(barriers.size()), barriers.data());
+
+}
+
 FBaseTexture* FLightingGBuffer::GetGBuffer(Layout layout) const {
 	return buffers_[static_cast<size_t>(layout)].get();
+}
+
+FBaseTexture* FLightingGBuffer::GetIntermediate(Layout layout) const {
+	return intermediate_[static_cast<size_t>(layout)].get();
 }
 
 DXGI_FORMAT FLightingGBuffer::GetFormat(Layout layout) {

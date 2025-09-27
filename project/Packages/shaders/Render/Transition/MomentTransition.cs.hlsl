@@ -8,12 +8,13 @@
 // buffers
 //=========================================================================================
 
-RWTexture2D<uint> gMoment    : register(u0);
-RWTexture2D<float> gIndirect : register(u1);
+RWTexture2D<uint> gMoment      : register(u0);
+RWTexture2D<float4> gReservoir : register(u1);
+
+Texture2D<uint> gReferenceMoment      : register(t1);
+Texture2D<float4> gReferenceReservoir : register(t2);
 
 Texture2D<float4> gVelocity : register(t0);
-
-ConstantBuffer<CameraComponent> gCamera : register(b0);
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // main
@@ -27,8 +28,25 @@ void main(uint3 dispatchThreadId : SV_DispatchThreadID) {
 		return;
 	}
 
+	float2 velocity = -gVelocity.Load(uint3(index, 0)).xy;
+	velocity   *= 0.5f;  //!< uvの範囲に統一
+	velocity.y *= -1.0f; //!< y軸反転
 	
+	float2 uv       = float2(index) / size; // [0.0 ~ 1.0]
+
+	float2 x = uv + velocity;
+
+	float4 reservoir = float4(0, 0, 0, 0);
+	uint   moment   = 0;
 
 	
+	if (all(x >= 0.0f) && all(x <= 1.0f)) {
+		// pixelが範囲内の場合, 前の情報を格納
+		reservoir = gReferenceReservoir.Load(uint3(x * size, 0));
+		moment    = gReferenceMoment.Load(uint3(x * size, 0));
+	}
+
+	gReservoir[index] = reservoir;
+	gMoment[index]    = moment;
 	
 }

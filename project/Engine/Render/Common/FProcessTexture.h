@@ -48,6 +48,10 @@ public:
 
 	void GenerateMipmap(const DirectXQueueContext* context);
 
+	void CopySource(const DirectXQueueContext* context, FBaseTexture* texture);
+
+	void CopyDest(const DirectXQueueContext* context, FBaseTexture* texture);
+
 	//* getter *//
 
 	ID3D12Resource* GetResource() const { return resource_.Get(); }

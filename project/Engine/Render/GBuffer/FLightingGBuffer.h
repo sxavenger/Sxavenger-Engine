@@ -65,9 +65,14 @@ public:
 
 	void TransitionEndUnorderedIndirect(const DirectXQueueContext* context);
 
+	void CopyIntermediateToGBuffer(const DirectXQueueContext* context, Layout layout);
+
+	void CopyGBufferToIntermediate(const DirectXQueueContext* context, Layout layout);
+
 	//* getter *//
 
 	FBaseTexture* GetGBuffer(Layout layout) const;
+	FBaseTexture* GetIntermediate(Layout layout) const;
 
 	static DXGI_FORMAT GetFormat(Layout layout);
 
@@ -83,7 +88,8 @@ private:
 
 	static const std::array<DXGI_FORMAT, kLayoutCount_> kFormats_;
 
-	std::array<std::unique_ptr<FBaseTexture>, kLayoutCount_> buffers_ = {};
+	std::array<std::unique_ptr<FBaseTexture>, kLayoutCount_> buffers_      = {};
+	std::array<std::unique_ptr<FBaseTexture>, kLayoutCount_> intermediate_ = {};
 
 	FRenderCorePathtracing::Config config_ = {};
 

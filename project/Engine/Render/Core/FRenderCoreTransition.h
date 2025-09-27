@@ -27,6 +27,7 @@ public:
 		LightingTransition,
 		MipmapTransition,
 		VelocityTransition,
+		MomentTransition,
 	};
 
 public:

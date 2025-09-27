@@ -34,7 +34,7 @@ void FProcessTexture::Create(const Vector2ui& size, DXGI_FORMAT format) {
 		desc.Format           = format;
 		desc.SampleDesc.Count = 1;
 		desc.Dimension        = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
-		desc.Flags            = D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET | D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS;
+		desc.Flags            = D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS;
 
 		auto hr = device->CreateCommittedResource(
 			&prop,
@@ -195,6 +195,70 @@ void FProcessTexture::GenerateMipmap(const DirectXQueueContext* context) {
 
 		BarrierUAV(context);
 	}
+}
+
+void FProcessTexture::CopySource(const DirectXQueueContext* context, FBaseTexture* texture) {
+
+	// commandListの取得
+	auto commandList = context->GetCommandList();
+
+	{ //!< textureのcopy
+
+		std::array<D3D12_RESOURCE_BARRIER, 2> barriers = {};
+		barriers[0] = texture->TransitionBeginState(D3D12_RESOURCE_STATE_COPY_DEST);
+		barriers[1] = this->TransitionBeginState(D3D12_RESOURCE_STATE_COPY_SOURCE);
+		commandList->ResourceBarrier(2, barriers.data());
+
+		// mip0のみcopy
+		D3D12_TEXTURE_COPY_LOCATION src = {};
+		src.pResource        = this->GetResource();
+		src.Type             = D3D12_TEXTURE_COPY_TYPE_SUBRESOURCE_INDEX;
+		src.SubresourceIndex = 0;
+
+		D3D12_TEXTURE_COPY_LOCATION dst = {};
+		dst.pResource        = texture->GetResource();
+		dst.Type             = D3D12_TEXTURE_COPY_TYPE_SUBRESOURCE_INDEX;
+		dst.SubresourceIndex = 0;
+
+		commandList->CopyTextureRegion(&dst, 0, 0, 0, &src, nullptr);
+
+		barriers[0] = texture->TransitionEndState(D3D12_RESOURCE_STATE_COPY_DEST);
+		barriers[1] = this->TransitionEndState(D3D12_RESOURCE_STATE_COPY_SOURCE);
+		commandList->ResourceBarrier(2, barriers.data());
+	}
+
+}
+
+void FProcessTexture::CopyDest(const DirectXQueueContext* context, FBaseTexture* texture) {
+
+	// commandListの取得
+	auto commandList = context->GetCommandList();
+	
+	{ //!< textureのcopy
+
+		std::array<D3D12_RESOURCE_BARRIER, 2> barriers = {};
+		barriers[0] = texture->TransitionBeginState(D3D12_RESOURCE_STATE_COPY_SOURCE);
+		barriers[1] = this->TransitionBeginState(D3D12_RESOURCE_STATE_COPY_DEST);
+		commandList->ResourceBarrier(2, barriers.data());
+
+		// mip0のみcopy
+		D3D12_TEXTURE_COPY_LOCATION src = {};
+		src.pResource        = texture->GetResource();
+		src.Type             = D3D12_TEXTURE_COPY_TYPE_SUBRESOURCE_INDEX;
+		src.SubresourceIndex = 0;
+
+		D3D12_TEXTURE_COPY_LOCATION dst = {};
+		dst.pResource        = this->GetResource();
+		dst.Type             = D3D12_TEXTURE_COPY_TYPE_SUBRESOURCE_INDEX;
+		dst.SubresourceIndex = 0;
+
+		commandList->CopyTextureRegion(&dst, 0, 0, 0, &src, nullptr);
+
+		barriers[0] = texture->TransitionEndState(D3D12_RESOURCE_STATE_COPY_SOURCE);
+		barriers[1] = this->TransitionEndState(D3D12_RESOURCE_STATE_COPY_DEST);
+		commandList->ResourceBarrier(2, barriers.data());
+	}
+
 }
 
 const D3D12_GPU_DESCRIPTOR_HANDLE& FProcessTexture::GetGPUHandleUAV(uint32_t mipLevel) const {
