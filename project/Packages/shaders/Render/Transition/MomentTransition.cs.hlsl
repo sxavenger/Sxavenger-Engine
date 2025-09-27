@@ -34,16 +34,17 @@ void main(uint3 dispatchThreadId : SV_DispatchThreadID) {
 	
 	float2 uv       = float2(index) / size; // [0.0 ~ 1.0]
 
-	float2 x = uv + velocity;
+	float2 x           = uv + velocity;
+	uint2 sample_index = uint2(x * size);
 
 	float4 reservoir = float4(0, 0, 0, 0);
 	uint   moment   = 0;
 
 	
-	if (all(x >= 0.0f) && all(x <= 1.0f)) {
+	if (all(sample_index >= 0) && all(sample_index < size)) {
 		// pixelが範囲内の場合, 前の情報を格納
-		reservoir = gReferenceReservoir.Load(uint3(x * size, 0));
-		moment    = gReferenceMoment.Load(uint3(x * size, 0));
+		reservoir = gReferenceReservoir.Load(uint3(sample_index, 0));
+		moment    = gReferenceMoment.Load(uint3(sample_index, 0));
 	}
 
 	gReservoir[index] = reservoir;

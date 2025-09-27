@@ -20,7 +20,8 @@
 void FRenderPassDeferredLighting::Render(const DirectXQueueContext* context, const Config& config) {
 	
 	if (config.CheckStatus(Config::Status::Geometry_Warning)) {
-		// TODO: Geometry Warningの際の処理を追加
+		ClearPassDirect(context, config.buffer);
+		ClearPassIndirect(context, config.buffer);
 		return;
 	}
 
@@ -67,8 +68,7 @@ void FRenderPassDeferredLighting::Render(const DirectXQueueContext* context, con
 
 	} else {
 
-
-
+		ClearPassIndirect(context, config.buffer);
 	}
 
 	LightingPassTransition(context, config);
@@ -149,6 +149,44 @@ void FRenderPassDeferredLighting::BeginPassIndirectDenoiser(const DirectXQueueCo
 void FRenderPassDeferredLighting::EndPassIndirectDenoiser(const DirectXQueueContext* context, FRenderTargetBuffer* buffer) {
 
 	buffer->EndProcessDenoiser(context);
+
+}
+
+void FRenderPassDeferredLighting::ClearPassDirect(const DirectXQueueContext* context, FRenderTargetBuffer* buffer) {
+
+	FBaseTexture* direct = buffer->GetGBuffer(FLightingGBuffer::Layout::Direct);
+	direct->TransitionBeginRenderTarget(context);
+	direct->ClearRenderTarget(context);
+	direct->TransitionEndRenderTarget(context);
+
+}
+
+void FRenderPassDeferredLighting::ClearPassIndirect(const DirectXQueueContext* context, FRenderTargetBuffer* buffer) {
+
+	auto commandList = context->GetCommandList();
+
+	std::array<FBaseTexture*, 3> buffers = {
+		buffer->GetGBuffer(FLightingGBuffer::Layout::Indirect_Reservoir),
+		buffer->GetGBuffer(FLightingGBuffer::Layout::Indirect_Moment),
+		buffer->GetGBuffer(FLightingGBuffer::Layout::Indirect)
+	};
+
+	std::array<D3D12_RESOURCE_BARRIER, 3> barriers = {};
+	for (size_t i = 0; i < buffers.size(); ++i) {
+		barriers[i] = buffers[i]->TransitionBeginRenderTarget();
+	}
+
+	commandList->ResourceBarrier(static_cast<UINT>(barriers.size()), barriers.data());
+
+	for (size_t i = 0; i < buffers.size(); ++i) {
+		buffers[i]->ClearRenderTarget(context);
+	}
+
+	for (size_t i = 0; i < buffers.size(); ++i) {
+		barriers[i] = buffers[i]->TransitionEndRenderTarget();
+	}
+
+	commandList->ResourceBarrier(static_cast<UINT>(barriers.size()), barriers.data());
 
 }
 
