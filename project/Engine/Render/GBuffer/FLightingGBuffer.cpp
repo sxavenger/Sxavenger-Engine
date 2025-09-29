@@ -13,7 +13,7 @@
 const std::array<DXGI_FORMAT, FLightingGBuffer::kLayoutCount_> FLightingGBuffer::kFormats_ = {
 	FMainGBuffer::kColorFormat, //!< Direct
 	FMainGBuffer::kColorFormat, //!< Indirect_Reservoir
-	DXGI_FORMAT_R32_UINT,       //!< Indirect_Moment
+	DXGI_FORMAT_R32G32_UINT,    //!< Indirect_Moment
 	FMainGBuffer::kColorFormat, //!< Indirect
 };
 

@@ -51,8 +51,7 @@ void main(uint3 dispathThreadId : SV_DispatchThreadID) {
 	float2 uv = float2(index) / size; // [0.0 ~ 1.0]
 
 	float2 velocity = -gVelocity.Load(uint3(index, 0)).xy;
-	velocity   *= 0.5f;  //!< uvの範囲に統一
-	velocity.y *= -1.0f; //!< y軸反転
+	velocity *= 0.5f;  //!< uvの範囲に統一
 	
 	float4 color = gInput.Load(uint3(index, 0));
 	float weight = 1.0f;

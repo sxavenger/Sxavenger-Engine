@@ -34,6 +34,9 @@ void main(uint3 dispatchThreadId : SV_DispatchThreadID) {
 	float2 current = gCurrentCamera.CalculateNDCPosition(position);
 	float2 prev    = gPrevCamera.CalculateNDCPosition(position);
 
-	gVelocity[index] = float4(current - prev, 0.0f, 1.0f);
+	float2 delta = current - prev;
+	delta.y *= -1.0f; //!< y軸反転
+
+	gVelocity[index] = float4(delta, 0.0f, 1.0f);
 	
 }

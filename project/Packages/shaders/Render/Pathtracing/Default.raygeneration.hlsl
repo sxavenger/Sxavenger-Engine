@@ -22,35 +22,37 @@ _RAYGENERATION void mainRaygeneration() {
 	uint type = DispatchRaysDimensions().z;
 	// todo: diffuseとspecularで2thread構成にする.
 
-	uint moment = gIndirectMoment[index];
+	uint2 moment = gMoment[index];
 
 	if (isResetMoment) {
 		//!< 蓄積のリセット
-		gIndirect[index]       = float4(0.0f, 0.0f, 0.0f, 0.0f);
-		gIndirectMoment[index] = moment = 0;
+		gReservoir[index] = float4(0.0f, 0.0f, 0.0f, 0.0f);
+		gMoment[index]    = moment = uint2(0, Xorshift::xorshift32(index.x * index.y)); //!< moment.x : 現在のsample数, moment.y : xiのoffset
 	}
 
-	if (moment >= maxSampleCount) {
+	if (moment.x >= maxSampleCount) {
 		return; //!< これ以上のsampleは不必要
+	}
+
+	if (moment.y == 0) {
+		moment.y = Xorshift::xorshift32(index.x * index.y); //!< xiのoffsetを初期化
 	}
 
 	DeferredSurface surface;
 	if (!surface.GetSurface(gDeferredBufferIndex.Get(), index)) {
-		gIndirect[index] = float4(0.0f, 0.0f, 0.0f, 0.0f);
+		gReservoir[index] = float4(0.0f, 0.0f, 0.0f, 0.0f);
 		return; // surfaceが存在しない
 	}
-
-	uint offset = Xorshift::xorshift32(index.x * index.y);
 
 	// primary trace.
 
 	float4 diffuse_indirect  = float4(0.0f, 0.0f, 0.0f, 0.0f);
 	float4 specular_indirect = float4(0.0f, 0.0f, 0.0f, 0.0f);
 
-	for (uint i = 0; i < min(samplesPerFrame, maxSampleCount - moment); ++i) {
+	for (uint i = 0; i < min(samplesPerFrame, maxSampleCount - moment.x); ++i) {
 
-		uint currentSampleIndex   = moment + i;
-		uint randamizeSampleIndex = (currentSampleIndex + offset) % maxSampleCount;
+		uint currentSampleIndex   = moment.x + i;
+		uint randamizeSampleIndex = (currentSampleIndex + moment.y) % maxSampleCount;
 		//!< 各threadが異なるサンプルを取得するためのインデックス計算
 		
 		float2 xi = Hammersley(randamizeSampleIndex, maxSampleCount);
@@ -121,17 +123,17 @@ _RAYGENERATION void mainRaygeneration() {
 		}
 	}
 
-	uint prev    = moment;
-	uint current = moment + min(samplesPerFrame, maxSampleCount - moment);
+	uint prev    = moment.x;
+	uint current = moment.x + min(samplesPerFrame, maxSampleCount - moment.x);
 
 	diffuse_indirect.rgb  /= current;
 	specular_indirect.rgb /= current;
 
-	float4 indirect = gIndirect[index] * float(prev) / float(current); //!< 蓄積されている値を現在のsample数に合わせてスケーリング
+	float4 indirect = gReservoir[index] * float(prev) / float(current); //!< 蓄積されている値を現在のsample数に合わせてスケーリング
 	indirect.rgb += diffuse_indirect.rgb + specular_indirect.rgb;
 	indirect.a    = saturate(indirect.a + diffuse_indirect.a + specular_indirect.a);
 	
-	gIndirect[index]       = indirect;
-	gIndirectMoment[index] = current;
+	gReservoir[index] = indirect;
+	gMoment[index]    = uint2(current, moment.y);
 	
 }

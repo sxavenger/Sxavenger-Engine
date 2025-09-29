@@ -34,8 +34,8 @@
 //=========================================================================================
 
 //* lighting textures
-RWTexture2D<float4> gIndirect     : register(u0, space1);
-RWTexture2D<uint> gIndirectMoment : register(u1, space1);
+RWTexture2D<float4> gReservoir : register(u0, space1);
+RWTexture2D<uint2> gMoment     : register(u1, space1);
 
 //* scene
 RaytracingAccelerationStructure gScene : register(t0, space1);
