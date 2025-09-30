@@ -71,8 +71,8 @@ float3 CalculateDirectionalLight(uint index, Surface surface) {
 	float light_mask  = gDirectionalLights[index].GetLightMask(gScene, gDirectionalLightTransforms[index].GetDirection(), surface.position);
 	float3 l          = gDirectionalLights[index].GetDirectionFromSurface(gDirectionalLightTransforms[index].GetDirection()); //!< lightの方向ベクトル
 
-	//* cameraからの方向ベクトルを取得
-	float3 v = normalize(gCamera.GetPosition() - surface.position); //!< cameraからの方向ベクトルを取得
+	//* Viewの情報を取得
+	float3 v = normalize(-WorldRayDirection()); //!< viewからの方向ベクトルを取得
 
 	//* 計算
 	float3 h = normalize(l + v);
@@ -111,8 +111,8 @@ float3 CalculatePointLight(uint index, Surface surface) {
 	float light_mask  = gPointLights[index].GetLightMask(gScene, gPointLightTransforms[index].GetPosition(), surface.position);
 	float3 l          = gPointLights[index].GetDirectionFromSurface(gPointLightTransforms[index].GetPosition(), surface.position); //!< lightの方向ベクトル
 
-	//* Cameraの情報を取得
-	float3 v = normalize(gCamera.GetPosition() - surface.position); //!< cameraからの方向ベクトルを取得
+	//* Viewの情報を取得
+	float3 v = normalize(-WorldRayDirection()); //!< viewからの方向ベクトルを取得
 
 	//* 計算
 	float3 h = normalize(l + v);
@@ -152,8 +152,8 @@ float3 CalculateSpotLight(uint index, Surface surface) {
 	float light_mask  = gSpotLights[index].GetLightMask(gScene, gSpotLightTransforms[index].GetPosition(), gSpotLightTransforms[index].GetDirection(), surface.position);
 	float3 l          = gSpotLights[index].GetDirectionFromSurface(gSpotLightTransforms[index].GetPosition(), surface.position); //!< lightの方向ベクトル
 
-	//* Cameraの情報を取得
-	float3 v = normalize(gCamera.GetPosition() - surface.position); //!< cameraからの方向ベクトルを取得
+	//* Viewの情報を取得
+	float3 v = normalize(-WorldRayDirection()); //!< viewからの方向ベクトルを取得
 
 	//* 計算
 	float3 h = normalize(l + v);
@@ -210,19 +210,20 @@ _CLOSESTHIT void mainClosesthit(inout Payload payload, in Attribute attribute) {
 	Surface surface;
 	surface.GetSurface(attribute);
 
-	payload.indirect.rgb = float3(0.0f, 0.0f, 0.0f);
-	payload.indirect.a   = 1.0f;
+	float3 indirect = float3(0.0f, 0.0f, 0.0f);
 
 	for (uint i = 0; i < gDirectionalLightCount.count; ++i) {
-		payload.indirect.rgb += CalculateDirectionalLight(i, surface);
+		indirect += CalculateDirectionalLight(i, surface);
 	}
 
 	for (uint i = 0; i < gPointLightCount.count; ++i) {
-		payload.indirect.rgb += CalculatePointLight(i, surface);
+		indirect += CalculatePointLight(i, surface);
 	}
 
 	for (uint i = 0; i < gSpotLightCount.count; ++i) {
-		payload.indirect.rgb += CalculateSpotLight(i, surface);
+		indirect += CalculateSpotLight(i, surface);
 	}
+
+	payload.indirect = float4(indirect, 1.0f);
 	
 }

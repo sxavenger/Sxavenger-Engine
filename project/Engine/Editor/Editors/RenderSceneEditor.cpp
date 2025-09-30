@@ -839,8 +839,10 @@ void RenderSceneEditor::UpdateCamera() {
 	isMoveCamera_ = false;
 
 	auto mouse     = SxavengerSystem::GetInput()->GetMouseInput();
+	auto keyboard  = SxavengerSystem::GetInput()->GetKeyboardInput();
 	auto transform = camera_->GetComponent<TransformComponent>();
 
+	// mouseによる回転
 	if (mouse->IsPress(MouseId::MOUSE_MIDDLE)) {
 		Vector2f delta = mouse->GetDeltaPosition();
 		static const Vector2f kSensitivity = { 0.01f, 0.01f };
@@ -852,6 +854,7 @@ void RenderSceneEditor::UpdateCamera() {
 		isMoveCamera_ = true;
 	}
 
+	// mouseによる移動
 	if (mouse->IsPress(MouseId::MOUSE_RIGHT)) {
 		Vector2f delta = mouse->GetDeltaPosition();
 		static const Vector2f kSensitivity = { 0.01f, 0.01f };
@@ -868,6 +871,45 @@ void RenderSceneEditor::UpdateCamera() {
 	if (mouse->IsWheel()) {
 		distance_ = std::max(distance_ - mouse->GetDeltaWheel(), 0.0f);
 		isMoveCamera_ = true;
+	}
+
+	if (mouse->IsPress(MouseId::MOUSE_RIGHT)) {
+
+		Vector3f direction = {};
+
+		// keyboardによる移動
+		if (keyboard->IsPress(KeyId::KEY_W)) {
+			direction.z += 1.0f;
+		}
+
+		if (keyboard->IsPress(KeyId::KEY_S)) {
+			direction.z -= 1.0f;
+		}
+
+		if (keyboard->IsPress(KeyId::KEY_A)) {
+			direction.x -= 1.0f;
+		}
+
+		if (keyboard->IsPress(KeyId::KEY_D)) {
+			direction.x += 1.0f;
+		}
+
+		// TODO: y軸移動の追加
+
+		if (Any(direction != kOrigin3<float>)) {
+			direction = direction.Normalize();
+
+			Vector3f forward = Quaternion::RotateVector(kUnitZ3<float>, transform->GetTransform().rotate);
+			Vector3f right   = Quaternion::RotateVector(kUnitX3<float>, transform->GetTransform().rotate);
+			Vector3f up      = Quaternion::RotateVector(kUnitY3<float>, transform->GetTransform().rotate);
+
+			static const float kMoveSpeed = 0.1f;
+
+			point_ += (forward * direction.z + right * direction.x) * kMoveSpeed;
+
+			isMoveCamera_ = true;
+		}
+
 	}
 
 	if (isMoveCamera_) {

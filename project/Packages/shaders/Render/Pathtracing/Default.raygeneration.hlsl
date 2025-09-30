@@ -71,7 +71,6 @@ _RAYGENERATION void mainRaygeneration() {
 			desc.TMax      = kTMax;
 
 			Payload payload = TracePrimaryRay(desc);
-
 			// Li(...) = payload.indirect;
 
 			//* 計算
@@ -88,39 +87,39 @@ _RAYGENERATION void mainRaygeneration() {
 			}
 		}
 
-		{ //!< Specularサンプル
+		//{ //!< Specularサンプル
 
-			RayDesc desc;
-			desc.Origin    = surface.position;
-			desc.Direction = ImportanceSampleGGX(xi, surface.roughness, surface.normal);
-			desc.TMin      = kTMin;
-			desc.TMax      = kTMax;
+		//	RayDesc desc;
+		//	desc.Origin    = surface.position;
+		//	desc.Direction = ImportanceSampleGGX(xi, surface.roughness, surface.normal);
+		//	desc.TMin      = kTMin;
+		//	desc.TMax      = kTMax;
 
-			Payload payload = TracePrimaryRay(desc);
+		//	Payload payload = TracePrimaryRay(desc);
 
-			//* 計算
-			float3 h = normalize(v + desc.Direction);
+		//	//* 計算
+		//	float3 h = normalize(v + desc.Direction);
 
-			float NdotV = saturate(dot(surface.normal, v));
-			float NdotL = saturate(dot(surface.normal, desc.Direction));
-			float NdotH = saturate(dot(surface.normal, h));
-			float VdotH = saturate(dot(v, h));
+		//	float NdotV = saturate(dot(surface.normal, v));
+		//	float NdotL = saturate(dot(surface.normal, desc.Direction));
+		//	float NdotH = saturate(dot(surface.normal, h));
+		//	float VdotH = saturate(dot(v, h));
 
-			float3 specularAlbedo = lerp(kMinFrenel, surface.albedo, surface.metallic);
+		//	float3 specularAlbedo = lerp(kMinFrenel, surface.albedo, surface.metallic);
 
-			float3 f = F_SphericalGaussian(VdotH, specularAlbedo);
-			float vh = V_HeightCorrelated(NdotV, NdotL, surface.roughness);
-			float d  = D_GGX(NdotH, surface.roughness);
+		//	float3 f = F_SphericalGaussian(VdotH, specularAlbedo);
+		//	float vh = V_HeightCorrelated(NdotV, NdotL, surface.roughness);
+		//	float d  = D_GGX(NdotH, surface.roughness);
 
-			float3 specularBRDF = SpecularBRDF(f, vh, d);
+		//	float3 specularBRDF = SpecularBRDF(f, vh, d);
 
-			float pdf = D_GGX(NdotH, surface.roughness) * NdotH / (4.0f * VdotH + kEpsilon);
+		//	float pdf = d * NdotH / (4.0f * VdotH + kEpsilon);
 
-			if (pdf > 0.0f && NdotL > 0.0f) {
-				specular_indirect.rgb += specularBRDF * payload.indirect.rgb * (NdotL / pdf);
-				specular_indirect.a   += payload.indirect.a > 0.0f ? 1.0f : 0.0f;
-			}
-		}
+		//	if (pdf > 0.0f && NdotL > 0.0f) {
+		//		specular_indirect.rgb += specularBRDF * payload.indirect.rgb * (NdotL / pdf);
+		//		specular_indirect.a   += payload.indirect.a > 0.0f ? 1.0f : 0.0f;
+		//	}
+		//}
 	}
 
 	uint prev    = moment.x;
