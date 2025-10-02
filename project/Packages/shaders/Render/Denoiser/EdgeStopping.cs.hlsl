@@ -95,7 +95,7 @@ void main(uint3 dispatchThreadId : SV_DispatchThreadID) {
 
 	//!< A-Trousを採用
 	
-	static const uint kRecursionCount = 3;
+	static const uint kRecursionCount = 4;
 
 	for (uint i = 0; i < kRecursionCount; ++i) {
 		
@@ -113,9 +113,11 @@ void main(uint3 dispatchThreadId : SV_DispatchThreadID) {
 			}
 
 			DeferredSurface sample_surface;
-			sample_surface.GetSurface(gDeferredBufferIndex.Get(), sample_pos);
+			if (!sample_surface.GetSurface(gDeferredBufferIndex.Get(), sample_pos)) {
+				continue;
+			}
 
-			float exp_w = 0.0f;
+				float exp_w = 0.0f;
 			exp_w += CalculateExpDepthWeight(surface.depth, sample_surface.depth);                  //!< 深度
 			exp_w += CalculateExpPositionWeight(surface.position.xyz, sample_surface.position.xyz); //!< 空間情報
 

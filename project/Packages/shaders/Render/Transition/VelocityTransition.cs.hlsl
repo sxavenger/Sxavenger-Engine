@@ -31,12 +31,12 @@ void main(uint3 dispatchThreadId : SV_DispatchThreadID) {
 
 	float3 position = gPosition.Load(uint3(index, 0)).xyz;
 
-	float2 current = gCurrentCamera.CalculateNDCPosition(position);
-	float2 prev    = gPrevCamera.CalculateNDCPosition(position);
+	float3 current = gCurrentCamera.CalculateNDCPosition(position);
+	float3 prev    = gPrevCamera.CalculateNDCPosition(position);
 
-	float2 delta = current - prev;
+	float3 delta = current - prev;
 	delta.y *= -1.0f; //!< y軸反転
 
-	gVelocity[index] = float4(delta, 0.0f, 1.0f);
+	gVelocity[index] = float4(delta, 1.0f);
 	
 }

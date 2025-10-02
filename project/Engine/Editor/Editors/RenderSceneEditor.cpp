@@ -903,7 +903,7 @@ void RenderSceneEditor::UpdateCamera() {
 			Vector3f right   = Quaternion::RotateVector(kUnitX3<float>, transform->GetTransform().rotate);
 			Vector3f up      = Quaternion::RotateVector(kUnitY3<float>, transform->GetTransform().rotate);
 
-			static const float kMoveSpeed = 0.1f;
+			static const float kMoveSpeed = 1.0f;
 
 			point_ += (forward * direction.z + right * direction.x) * kMoveSpeed;
 

@@ -82,7 +82,7 @@ _RAYGENERATION void mainRaygeneration() {
 			float pdf = NdotL / kPi;
 
 			if (pdf > 0.0f) {
-				diffuse_indirect.rgb += diffuseBRDF * payload.indirect.rgb * (NdotL / pdf);
+				diffuse_indirect.rgb += diffuseBRDF * payload.indirect.rgb * kPi;
 				diffuse_indirect.a   += payload.indirect.a > 0.0f ? 1.0f : 0.0f;
 			}
 		}
@@ -125,12 +125,11 @@ _RAYGENERATION void mainRaygeneration() {
 	uint prev    = moment.x;
 	uint current = moment.x + min(samplesPerFrame, maxSampleCount - moment.x);
 
-	diffuse_indirect.rgb  /= current;
-	specular_indirect.rgb /= current;
-
-	float4 indirect = gReservoir[index] * float(prev) / float(current); //!< 蓄積されている値を現在のsample数に合わせてスケーリング
-	indirect.rgb += diffuse_indirect.rgb + specular_indirect.rgb;
-	indirect.a    = saturate(indirect.a + diffuse_indirect.a + specular_indirect.a);
+	float4 indirect = gReservoir[index] * float(prev);
+	
+	indirect.rgb += (diffuse_indirect.rgb + specular_indirect.rgb);
+	indirect.rgb /= float(current);
+	indirect.a   = saturate(indirect.a + diffuse_indirect.a + specular_indirect.a);
 	
 	gReservoir[index] = indirect;
 	gMoment[index]    = uint2(current, moment.y);
