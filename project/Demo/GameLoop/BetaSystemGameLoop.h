@@ -19,9 +19,6 @@
 #include <Engine/Adapter/Actor/ParameterActor.h>
 #include <Engine/Adapter/Actor/PerformanceActor.h>
 
-//* demo
-#include <Demo/Entity/Player.h>
-
 ////////////////////////////////////////////////////////////////////////////////////////////
 // BetaSystemGameLoop class
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -51,8 +48,6 @@ private:
 
 	std::unique_ptr<SkyLightActor> skylight_;
 	std::unique_ptr<MonoBehaviour> offlineSkylight_;
-
-	std::unique_ptr<Player> player_;
 
 	//std::unique_ptr<LeadParticle> leadParticle_;
 

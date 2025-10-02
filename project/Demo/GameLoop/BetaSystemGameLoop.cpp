@@ -79,11 +79,6 @@ void BetaSystemGameLoop::InitSystem() {
 	light->SetRadiance(sUContentStorage->Import<UContentTexture>("assets/textures/textureCube/sky_radiance.dds")->GetId());
 	light->SetEnvironment(sUContentStorage->Import<UContentTexture>("assets/textures/textureCube/sky_environment.dds")->GetId());
 
-	player_ = std::make_unique<Player>();
-	player_->Load();
-	player_->Awake();
-	player_->Start();
-
 	//leadParticle_ = std::make_unique<LeadParticle>();
 	//leadParticle_->Load();
 	//leadParticle_->Awake();
@@ -154,8 +149,6 @@ void BetaSystemGameLoop::UpdateSystem() {
 
 	//atmosphere_->Update();
 	camera_->Update();
-
-	player_->Update();
 
 	performance_->Update();
 
