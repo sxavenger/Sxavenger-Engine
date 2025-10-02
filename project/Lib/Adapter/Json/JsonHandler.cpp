@@ -50,7 +50,22 @@ void JsonHandler::WriteToJson(const std::filesystem::path& filepath, const json&
 	}
 
 	ofs << std::setfill('\t') << std::setw(1) << data << std::endl;
-	ofs.close();
+}
+
+void JsonHandler::OverwriteToJson(const std::filesystem::path& filepath, const json& data) {
+	json exist;
+	JsonHandler::LoadFromJson(filepath, exist);
+
+	exist.merge_patch(data);
+
+	std::ofstream ofs(filepath);
+
+	if (!ofs.is_open()) {
+		throw std::runtime_error("JsonHandler::OverwriteToJson() : file open error.");
+		return;
+	}
+
+	ofs << std::setfill('\t') << std::setw(1) << exist << std::endl;
 }
 
 bool JsonHandler::CheckExist(const std::filesystem::path& filepath) {

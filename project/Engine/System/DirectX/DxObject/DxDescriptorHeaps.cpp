@@ -4,6 +4,9 @@ _DXOBJECT_USING
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
+//* engine
+#include <Engine/System/Config/SxavengerConfig.h>
+
 //* external
 #include <imgui.h>
 #include <magic_enum.hpp>
@@ -62,7 +65,7 @@ void DescriptorPool::DeleteDescriptor(Descriptor& descriptor) {
 	// TODO: multi thread 用にmutexを用意
 	
 	//!< 空き配列に挿入
-	descriptorDeletedIndices_.emplace(descriptor.index_);
+	descriptorFreeIndices_.emplace(descriptor.index_);
 	descriptor.Reset();
 }
 
@@ -84,15 +87,15 @@ void DescriptorPool::CreateDescriptorHeap(ID3D12Device* device) {
 uint32_t DescriptorPool::GetCurrentDescriptorIndex() {
 	uint32_t result = 0;
 
-	if (!descriptorDeletedIndices_.empty()) { //!< 空きindexがある場合
+	if (!descriptorFreeIndices_.empty()) { //!< 空きindexがある場合
 		// 先頭の空きindexの取得
-		result = descriptorDeletedIndices_.front(); 
-		descriptorDeletedIndices_.pop();
+		result = descriptorFreeIndices_.front();
+		descriptorFreeIndices_.pop();
 
 		return result;
 	}
 
-	Exception::Assert(descriptorIndexCount_ < descriptorMaxCount_, "descriptorHeap max count over.");  //!< 作成した分のDescriptorの要素数を超えている
+	Exception::Assert(descriptorIndexCount_ < descriptorMaxCount_, std::format("descriptor heap max count over. type: {}", magic_enum::enum_name(descriptorHeapType_).data()));  //!< 作成した分のDescriptorの要素数を超えている
 
 	// 現在のindexCountを返却
 	result = descriptorIndexCount_;
@@ -122,13 +125,13 @@ D3D12_GPU_DESCRIPTOR_HANDLE DescriptorPool::GetGPUDescriptorHandle(uint32_t inde
 void DescriptorHeaps::Init(Device* device) {
 
 	pools_[DescriptorType::kDescriptor_RTV] = std::make_unique<DescriptorPool>();
-	pools_[DescriptorType::kDescriptor_RTV]->Init(device, D3D12_DESCRIPTOR_HEAP_TYPE_RTV, false, kDescriptorCount_[DescriptorType::kDescriptor_RTV]);
+	pools_[DescriptorType::kDescriptor_RTV]->Init(device, D3D12_DESCRIPTOR_HEAP_TYPE_RTV, false, SxavengerConfig::GetConfig().descriptorCount_RTV);
 
 	pools_[DescriptorType::kDescriptor_DSV] = std::make_unique<DescriptorPool>();
-	pools_[DescriptorType::kDescriptor_DSV]->Init(device, D3D12_DESCRIPTOR_HEAP_TYPE_DSV, false, kDescriptorCount_[DescriptorType::kDescriptor_DSV]);
+	pools_[DescriptorType::kDescriptor_DSV]->Init(device, D3D12_DESCRIPTOR_HEAP_TYPE_DSV, false, SxavengerConfig::GetConfig().descriptorCount_DSV);
 
 	pools_[DescriptorType::kDescriptor_CBV_SRV_UAV] = std::make_unique<DescriptorPool>();
-	pools_[DescriptorType::kDescriptor_CBV_SRV_UAV]->Init(device, D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, true, kDescriptorCount_[DescriptorType::kDescriptor_CBV_SRV_UAV]);
+	pools_[DescriptorType::kDescriptor_CBV_SRV_UAV]->Init(device, D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, true, SxavengerConfig::GetConfig().descriptorCount_SRV_CBV_UAV);
 
 	Logger::EngineLog("[_DXOBJECT DescriptorHeaps] complete initialize.");
 }

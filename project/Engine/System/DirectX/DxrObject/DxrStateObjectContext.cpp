@@ -116,7 +116,7 @@ void StateObjectContext::UpdateShaderTable(
 	// 合計したtableのサイズ
 	UINT tableSize = raygenerationRegion + missRegion + hitgroupRegion;
 
-	if (tableSize > shaderTableStride_) { //!< tableのサイズが大きい場合
+	if (tableSize > shaderTableStride_ || shaderTable_ == nullptr) { //!< tableのサイズが大きい場合
 		shaderTableStride_ = tableSize;
 		shaderTable_.Reset();
 

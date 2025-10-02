@@ -17,7 +17,7 @@
 // PointLightComponent class
 ////////////////////////////////////////////////////////////////////////////////////////////
 class PointLightComponent
-	: public BaseComponent, public LightCommon {
+	: public BaseComponent {
 public:
 
 	////////////////////////////////////////////////////////////////////////////////////////////
@@ -36,8 +36,10 @@ public:
 		// public variables
 		//=========================================================================================
 
+		LightCommon::InlineShadow shadow;
+
 		Color3f color;
-		Units unit;
+		LightCommon::Units unit;
 		float intensity;
 		float radius;
 
@@ -49,18 +51,16 @@ public:
 	// public methods
 	//=========================================================================================
 
-	PointLightComponent(MonoBehaviour* behaviour) : BaseComponent(behaviour) { Init(); }
-	virtual ~PointLightComponent() = default;
+	PointLightComponent(MonoBehaviour* behaviour);
+	~PointLightComponent() override = default;
 
-	virtual void ShowComponentInspector() override;
+	void ShowComponentInspector() override;
 
-	void Init();
+	//* component option *//
 
-	//* buffer option *//
+	const D3D12_GPU_VIRTUAL_ADDRESS& GetGPUVirtualAddress() const;
 
-	void CreateParameterBuffer();
-
-	const D3D12_GPU_VIRTUAL_ADDRESS& GetParameterBufferAddress() const;
+	void SetUnit(LightCommon::Units unit);
 
 	const Parameter& GetParameter() const;
 

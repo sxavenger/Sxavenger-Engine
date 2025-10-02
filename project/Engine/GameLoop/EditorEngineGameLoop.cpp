@@ -10,6 +10,7 @@
 #include <Engine/Editor/Editors/RenderSceneEditor.h>
 #include <Engine/Editor/Editors/HierarchyEditor.h>
 #include <Engine/Editor/Editors/AssetEditor.h>
+#include <Engine/Editor/Editors/AudioEditor.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // EditorEngineGameLoop class
@@ -32,6 +33,7 @@ void EditorEngineGameLoop::InitEditor() {
 	sEditorEngine->RegisterEditor<RenderSceneEditor>();
 	sEditorEngine->RegisterEditor<HierarchyEditor>();
 	sEditorEngine->RegisterEditor<AssetEditor>();
+	sEditorEngine->RegisterEditor<AudioEditor>();
 }
 
 void EditorEngineGameLoop::TermEditor() {

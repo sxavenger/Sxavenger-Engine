@@ -4,7 +4,7 @@
 // include
 //-----------------------------------------------------------------------------------------
 //* lib
-#include <Lib/Adapter/Json/IJsonSerializer.h>
+#include <Lib/Adapter/Json/JsonSerializer.h>
 
 //* c++
 #include <concepts>

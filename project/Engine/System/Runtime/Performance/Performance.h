@@ -26,7 +26,7 @@ public:
 	// using
 	////////////////////////////////////////////////////////////////////////////////////////////
 
-	using LapContainer = std::deque<std::pair<std::string, TimePointf<TimeUnit::millisecond>>>;
+	using LapContainer = std::deque<std::pair<std::string, TimePointd<TimeUnit::millisecond>>>;
 
 public:
 
@@ -43,7 +43,7 @@ public:
 	void SystemDebugGui() override;
 
 	template <TimeUnit T = TimeUnit::second>
-	TimePointf<T> GetDeltaTime() const { return runtime_.GetDeltaTime<T>(); }
+	TimePointd<T> GetDeltaTime() const { return runtime_.GetDeltaTime<T>(); }
 
 	const LapContainer& GetLap() const { return laps_[(lapIndex_ + 1) % lapCount_]; }
 
@@ -64,8 +64,8 @@ private:
 
 	uint8_t lapIndex_ = 0;
 
-	TimePointf<TimeUnit::second> recordInterval_ = 1.0f;
-	TimePointf<TimeUnit::second> recordedTime_   = {};
+	TimePointd<TimeUnit::second> recordInterval_ = 1.0f;
+	TimePointd<TimeUnit::second> recordedTime_   = {};
 	bool isRecord_ = true;
 
 	//=========================================================================================

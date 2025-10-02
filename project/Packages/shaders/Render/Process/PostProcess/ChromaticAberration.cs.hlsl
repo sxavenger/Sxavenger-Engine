@@ -50,9 +50,9 @@ void main(uint3 dispathThreadId : SV_DispatchThreadID) {
 
 	float4 color = float4(0.0f, 0.0f, 0.0f, 0.0f);
 
-	color.r = gInput.Sample(gSampler, (uv - direction * distance + 1.0f) * 0.5f).r;
-	color.g = gInput.Sample(gSampler, (uv + 1.0f) * 0.5f).g;
-	color.b = gInput.Sample(gSampler, (uv + direction * distance + 1.0f) * 0.5f).b;
+	color.r = gInput.SampleLevel(gSampler, (uv - direction * distance + 1.0f) * 0.5f, 0).r;
+	color.g = gInput.SampleLevel(gSampler, (uv + 1.0f) * 0.5f, 0).g;
+	color.b = gInput.SampleLevel(gSampler, (uv + direction * distance + 1.0f) * 0.5f, 0).b;
 	color.a = gInput[index].a;
 	
 	gOutput[index] = color;

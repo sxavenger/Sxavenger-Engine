@@ -83,8 +83,8 @@ private:
 
 	//* export parameters *//
 
-	std::array<std::unordered_set<const DxrObject::ExportGroup*>, kExportTypeCount> exports_;
-	std::array<size_t, kExportTypeCount>                                            maxStrides_;
+	std::array<std::unordered_set<const DxrObject::ExportGroup*>, kExportTypeCount> exports_ = {};
+	std::array<size_t, kExportTypeCount>                                            maxStrides_ = {};
 	
 
 };
@@ -144,6 +144,8 @@ private:
 
 	ComPtr<ID3D12Resource> shaderTable_;
 	UINT                   shaderTableStride_ = NULL;
+
+	// fixme: shader tableとstate objectを分けるべきか？
 
 	//* desc *//
 

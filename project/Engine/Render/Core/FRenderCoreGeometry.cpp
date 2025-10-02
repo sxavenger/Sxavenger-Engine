@@ -38,10 +38,12 @@ void FRenderCoreGeometry::CreateDesc() {
 	defferedDesc_.CreateDefaultDesc();
 
 	defferedDesc_.rtvFormats.clear();
+
 	//!< Deferred Buffer
-	for (const auto value : magic_enum::enum_values<FDeferredGBuffer::Layout>()) {
-		defferedDesc_.SetRTVFormat(FDeferredGBuffer::GetFormat(value));
-	}
+	defferedDesc_.SetRTVFormat(FDeferredGBuffer::GetFormat(FDeferredGBuffer::Layout::Albedo));
+	defferedDesc_.SetRTVFormat(FDeferredGBuffer::GetFormat(FDeferredGBuffer::Layout::Normal));
+	defferedDesc_.SetRTVFormat(FDeferredGBuffer::GetFormat(FDeferredGBuffer::Layout::MaterialARM));
+	defferedDesc_.SetRTVFormat(FDeferredGBuffer::GetFormat(FDeferredGBuffer::Layout::Position));
 
 	D3D12_RENDER_TARGET_BLEND_DESC blend = {};
 	blend.BlendEnable           = true;
@@ -69,8 +71,8 @@ void FRenderCoreGeometry::CreatePipeline() {
 	{
 		auto pipeline = std::make_unique<CustomReflectionGraphicsPipeline>();
 		//* blob
-		pipeline->CreateAsset(kDirectory_ / "Geometry" / "Mesh" / "Default.vs.hlsl", GraphicsShaderType::vs);
-		pipeline->CreateAsset(kDirectory_ / "Geometry" / "Mesh" / "Forward.ps.hlsl", GraphicsShaderType::ps);
+		pipeline->CreateContent(kDirectory_ / "Geometry" / "Mesh" / "Default.vs.hlsl", GraphicsShaderType::vs);
+		pipeline->CreateContent(kDirectory_ / "Geometry" / "Mesh" / "Forward.ps.hlsl", GraphicsShaderType::ps);
 		pipeline->RegisterBlob();
 
 		//* root signature
@@ -85,8 +87,8 @@ void FRenderCoreGeometry::CreatePipeline() {
 	{
 		auto pipeline = std::make_unique<CustomReflectionGraphicsPipeline>();
 		//* blob
-		pipeline->CreateAsset(kDirectory_ / "Geometry" / "Mesh" / "Default.vs.hlsl", GraphicsShaderType::vs);
-		pipeline->CreateAsset(kDirectory_ / "Geometry" / "Mesh" / "Deferred.ps.hlsl", GraphicsShaderType::ps);
+		pipeline->CreateContent(kDirectory_ / "Geometry" / "Mesh" / "Default.vs.hlsl",  GraphicsShaderType::vs);
+		pipeline->CreateContent(kDirectory_ / "Geometry" / "Mesh" / "Deferred.ps.hlsl", GraphicsShaderType::ps);
 		pipeline->RegisterBlob();
 
 		//* root signature
@@ -100,8 +102,8 @@ void FRenderCoreGeometry::CreatePipeline() {
 
 	{
 		auto pipeline = std::make_unique<CustomReflectionGraphicsPipeline>();
-		pipeline->CreateAsset(kDirectory_ / "Particle" / "GPUParticle" / "GPUParticle.vs.hlsl", GraphicsShaderType::vs);
-		pipeline->CreateAsset(kDirectory_ / "Particle" / "GPUParticle" / "GPUParticle.ps.hlsl", GraphicsShaderType::ps);
+		pipeline->CreateContent(kDirectory_ / "Particle" / "GPUParticle" / "GPUParticle.vs.hlsl", GraphicsShaderType::vs);
+		pipeline->CreateContent(kDirectory_ / "Particle" / "GPUParticle" / "GPUParticle.ps.hlsl", GraphicsShaderType::ps);
 		pipeline->RegisterBlob();
 
 		//* root signature

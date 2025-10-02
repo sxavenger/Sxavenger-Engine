@@ -12,11 +12,18 @@
 #include <Engine/Content/Exporter/TextureExporter.h>
 #include <Engine/Content/SxavengerContent.h>
 #include <Engine/Component/Components/Transform/TransformComponent.h>
-#include <Engine/Component/Components/SpriteRenderer/SpriteRendererComponent.h>
+#include <Engine/Component/Components/Transform/RectTransformComponent.h>
 #include <Engine/Component/Components/Camera/CameraComponent.h>
+#include <Engine/Component/Components/Light/Punctual/DirectionalLightComponent.h>
+#include <Engine/Component/Components/Light/Punctual/PointLightComponent.h>
+#include <Engine/Component/Components/Light/Punctual/SpotLightComponent.h>
 #include <Engine/Component/Components/PostProcessLayer/PostProcessLayerComponent.h>
-#include <Engine/Asset/SxavengerAsset.h>
 #include <Engine/Render/FMainRender.h>
+#include <Engine/Preview/Asset/UAssetStorage.h>
+#include <Engine/Preview/Content/UContentStorage.h>
+
+//* lib
+#include <Lib/Geometry/VectorComparision.h>
 
 //* externals
 #include <magic_enum.hpp>
@@ -27,16 +34,16 @@
 
 void RenderSceneEditor::Init() {
 
-	checkerboard_ = SxavengerAsset::TryImport<AssetTexture>("packages/textures/checker_black.png");
+	checkerboard_ = sUContentStorage->Import<UContentTexture>("packages/textures/checker_black.png")->GetId();
 
-	operationTexture_[static_cast<uint32_t>(GuizmoOperation::Translate)] = SxavengerAsset::TryImport<AssetTexture>("packages/textures/icon/operation_translate.png");
-	operationTexture_[static_cast<uint32_t>(GuizmoOperation::Rotate)]    = SxavengerAsset::TryImport<AssetTexture>("packages/textures/icon/operation_rotate.png");
-	operationTexture_[static_cast<uint32_t>(GuizmoOperation::Scale)]     = SxavengerAsset::TryImport<AssetTexture>("packages/textures/icon/operation_scale.png");
+	operationTexture_[static_cast<uint32_t>(GuizmoOperation::Translate)] = sUContentStorage->Import<UContentTexture>("packages/textures/icon/operation_translate.png")->GetId();
+	operationTexture_[static_cast<uint32_t>(GuizmoOperation::Rotate)]    = sUContentStorage->Import<UContentTexture>("packages/textures/icon/operation_rotate.png")->GetId();
+	operationTexture_[static_cast<uint32_t>(GuizmoOperation::Scale)]     = sUContentStorage->Import<UContentTexture>("packages/textures/icon/operation_scale.png")->GetId();
 
-	modeTexture_[SxImGuizmo::World] = SxavengerAsset::TryImport<AssetTexture>("packages/textures/icon/mode_world.png");
-	modeTexture_[SxImGuizmo::Local] = SxavengerAsset::TryImport<AssetTexture>("packages/textures/icon/mode_local.png");
+	modeTexture_[SxImGuizmo::World] = sUContentStorage->Import<UContentTexture>("packages/textures/icon/mode_world.png")->GetId();
+	modeTexture_[SxImGuizmo::Local] = sUContentStorage->Import<UContentTexture>("packages/textures/icon/mode_local.png")->GetId();
 
-	gridTexture_ = SxavengerAsset::TryImport<AssetTexture>("packages/textures/icon/grid.png");
+	gridTexture_ = sUContentStorage->Import<UContentTexture>("packages/textures/icon/grid.png")->GetId();
 
 	camera_ = std::make_unique<MonoBehaviour>();
 	camera_->SetName("editor camera");
@@ -51,21 +58,17 @@ void RenderSceneEditor::Init() {
 	textures_ = std::make_unique<FRenderTargetBuffer>();
 	textures_->Create(kMainWindowSize);
 
-	renderer_ = std::make_unique<FSceneRenderer>();
-
 	config_ = {};
 	config_.buffer              = textures_.get();
 	config_.camera              = camera_->GetComponent<CameraComponent>();
 	config_.isEnablePostProcess = false;
-	config_.isElableTonemap     = true;
+	config_.isEnableTonemap     = true;
 
-	colliderRenderer_ = std::make_unique<ColliderPrimitiveRenderer>();
-	colliderRenderer_->Init();
-
-	icons_[static_cast<uint32_t>(Icon::Volume)]           = SxavengerAsset::TryImport<AssetTexture>("packages/textures/icon/scene_volume.png");
-	icons_[static_cast<uint32_t>(Icon::DirectionalLight)] = SxavengerAsset::TryImport<AssetTexture>("packages/textures/icon/scene_directionalLight.png");
-	icons_[static_cast<uint32_t>(Icon::PointLight)]       = SxavengerAsset::TryImport<AssetTexture>("packages/textures/icon/scene_pointLight.png");
-	icons_[static_cast<uint32_t>(Icon::Camera)]           = SxavengerAsset::TryImport<AssetTexture>("packages/textures/icon/scene_camera.png");
+	icons_[static_cast<uint32_t>(Icon::Volume)]           = sUContentStorage->Import<UContentTexture>("packages/textures/icon/scene_volume.png")->GetId();
+	icons_[static_cast<uint32_t>(Icon::DirectionalLight)] = sUContentStorage->Import<UContentTexture>("packages/textures/icon/scene_directionalLight.png")->GetId();
+	icons_[static_cast<uint32_t>(Icon::PointLight)]       = sUContentStorage->Import<UContentTexture>("packages/textures/icon/scene_pointLight.png")->GetId();
+	icons_[static_cast<uint32_t>(Icon::SpotLight)]        = sUContentStorage->Import<UContentTexture>("packages/textures/icon/scene_spotLight.png")->GetId();
+	icons_[static_cast<uint32_t>(Icon::Camera)]           = sUContentStorage->Import<UContentTexture>("packages/textures/icon/scene_camera.png")->GetId();
 	
 
 }
@@ -76,8 +79,8 @@ void RenderSceneEditor::ShowMainMenu() {
 		ImGui::SeparatorText("render");
 
 		ShowSceneMenu();
+		ShowGameMenu();
 		ShowGizmoMenu();
-		ShowColliderMenu();
 		ShowCaptureMenu();
 		
 		ImGui::EndMenu();
@@ -102,7 +105,7 @@ void RenderSceneEditor::Render() {
 	}
 
 	config_.colorSpace = SxavengerSystem::GetMainWindow()->GetColorSpace();
-	renderer_->Render(SxavengerSystem::GetDirectQueueContext(), config_);
+	FMainRender::GetInstance()->GetContext()->Render(SxavengerSystem::GetDirectQueueContext(), config_);
 
 	//* Debug Render *//
 	textures_->BeginRenderTargetMainTransparent(SxavengerSystem::GetDirectQueueContext());
@@ -111,10 +114,6 @@ void RenderSceneEditor::Render() {
 
 	if (isRenderGrid_) {
 		SxavengerContent::PushGrid(camera, { 64, 64 }, 64);
-	}
-	
-	if (isRenderCollider_) {
-		colliderRenderer_->Render(SxavengerSystem::GetDirectQueueContext(), camera_->GetComponent<CameraComponent>());
 	}
 
 	if (isMoveCamera_) {
@@ -158,15 +157,12 @@ void RenderSceneEditor::Manipulate(MonoBehaviour* behaviour) {
 	SxImGuizmo::SetRect({ sceneRect_.pos.x, sceneRect_.pos.y }, { sceneRect_.size.x, sceneRect_.size.y });
 
 	Matrix4x4 m = component->GetMatrix();
-	//Matrix4x4 delta = Matrix4x4::Identity();
 
 	SxImGuizmo::Enable(!component->HasParent());
 
-	bool isEdit = false;
-
 	SxImGuizmo::GizmoOutput output = {};
 
-	isEdit = SxImGuizmo::Manipulate(
+	bool isEdit = SxImGuizmo::Manipulate(
 		reinterpret_cast<const float*>(camera_->GetComponent<CameraComponent>()->GetCamera().view.m.data()),
 		reinterpret_cast<const float*>(camera_->GetComponent<CameraComponent>()->GetCamera().proj.m.data()),
 		reinterpret_cast<float*>(m.m.data()),
@@ -177,7 +173,7 @@ void RenderSceneEditor::Manipulate(MonoBehaviour* behaviour) {
 
 	SxImGuizmo::Enable(true);
 
-	gizmoUsed_ = SxImGuizmo::IsUsing() ? std::optional<GuizmoUsed>{GuizmoUsed::Scene} : std::nullopt;
+	gizmoUsed_ = SxImGuizmo::IsUsing() ? std::make_optional(GuizmoUsed::Scene) : std::nullopt;
 
 	if (component->HasParent()) {
 		return;
@@ -213,68 +209,76 @@ void RenderSceneEditor::ManipulateCanvas(MonoBehaviour* behaviour) {
 		return;
 	}
 
-	ImGuizmo::SetDrawlist(canvasWindow_);
-	ImGuizmo::SetOrthographic(true);
+	SxImGuizmo::SetDrawlist(canvasWindow_);
+	SxImGuizmo::SetOrthographic(true);
 
-	ImGuizmo::OPERATION operation = ImGuizmo::NONE;
+	SxImGuizmo::Operation operation = SxImGuizmo::NONE;
 
 	// todo: flagに変更
 	if (gizmoOperation_ == GuizmoOperation::Scale) {
-		operation = ImGuizmo::SCALE_X | ImGuizmo::SCALE_Y;
+		operation = SxImGuizmo::SCALE_X | SxImGuizmo::SCALE_Y;
 	}
 
 	if (gizmoOperation_ == GuizmoOperation::Translate) {
-		operation = ImGuizmo::TRANSLATE_X | ImGuizmo::TRANSLATE_Y;
+		operation = SxImGuizmo::TRANSLATE_X | SxImGuizmo::TRANSLATE_Y;
 	}
 
-	// sprite component の取得
-	auto component = behaviour->GetComponent<SpriteRendererComponent>();
+	if (gizmoOperation_ == GuizmoOperation::Rotate) {
+		operation = SxImGuizmo::ROTATE_Z;
+	}
+
+	// rect transform component の取得
+	auto component = behaviour->GetComponent<RectTransformComponent>();
 
 	if (component == nullptr) {
 		return;
 	}
 
-	ImGuizmo::SetRect(canvasRect_.pos.x, canvasRect_.pos.y, canvasRect_.size.x, canvasRect_.size.y);
+	SxImGuizmo::SetRect({ canvasRect_.pos.x, canvasRect_.pos.y }, { canvasRect_.size.x, canvasRect_.size.y });
 
-	Matrix4x4 m = component->GetTransform2d().ToMatrix();
+	Matrix4x4 m = component->GetTransform().ToMatrix();
+
+	SxImGuizmo::Enable(!component->HasParent());
+
+	SxImGuizmo::GizmoOutput output = {};
 
 	static const Matrix4x4 view = Matrix4x4::Identity();
-	static const Matrix4x4 proj = Matrix4x4::Orthographic(0.0f, 0.0f, static_cast<float>(kMainWindowSize.x), static_cast<float>(kMainWindowSize.y), 0.0f, 128.0f);
+	static const Matrix4x4 proj = Matrix4x4::Orthographic(0.0f, 0.0f, static_cast<float>(textures_->GetSize().x), static_cast<float>(textures_->GetSize().y), 0.0f, 128.0f);
 
-	bool isEdit = false;
-
-	isEdit = ImGuizmo::Manipulate(
+	bool isEdit = SxImGuizmo::Manipulate(
 		reinterpret_cast<const float*>(view.m.data()),
 		reinterpret_cast<const float*>(proj.m.data()),
+		reinterpret_cast<float*>(m.m.data()),
+		output,
 		operation,
-		ImGuizmo::WORLD,
-		reinterpret_cast<float*>(m.m.data())
+		SxImGuizmo::Mode::World
 	);
 
-	gizmoUsed_ = ImGuizmo::IsUsing() ? std::make_optional<GuizmoUsed>(GuizmoUsed::Canvas) : std::nullopt;
+	SxImGuizmo::Enable(true);
+
+	gizmoUsed_ = SxImGuizmo::IsUsing() ? std::make_optional(GuizmoUsed::Canvas) : std::nullopt;
+
+	if (component->HasParent()) {
+		return;
+	}
 
 	if (!isEdit) {
 		return;
 	}
 
-	EulerTransform transform = {};
+	switch (output.type) {
+		case SxImGuizmo::GizmoOutput::OutputType::Translation:
+			component->GetTransform().translate += { output.value.x, output.value.y };
+			break;
 
-	ImGuizmo::DecomposeMatrixToComponents(
-		reinterpret_cast<const float*>(m.m.data()),
-		&transform.translate.x,
-		&transform.rotate.x,
-		&transform.scale.x
-	);
+		case SxImGuizmo::GizmoOutput::OutputType::Scale:
+			component->GetTransform().scale = { output.value.x, output.value.y };
+			break;
 
-	if (gizmoOperation_ == GuizmoOperation::Scale) {
-		component->GetTransform2d().scale = { transform.scale.x, transform.scale.y };
+		// todo: rotate
 	}
 
-	if (gizmoOperation_ == GuizmoOperation::Translate) {
-		component->GetTransform2d().translate = { transform.translate.x, transform.translate.y };
-	}
-
-	ImGuizmo::SetOrthographic(false);
+	component->UpdateMatrix();
 }
 
 void RenderSceneEditor::SetCameraPoint(const Vector3f& point) {
@@ -313,23 +317,53 @@ void RenderSceneEditor::ShowSceneMenu() {
 		ImGui::Text("process");
 		ImGui::Separator();
 		ImGui::Checkbox("enable post process", &config_.isEnablePostProcess);
-		ImGui::Checkbox("enable tonemap",      &config_.isElableTonemap);
+		ImGui::Checkbox("enable tonemap",      &config_.isEnableTonemap);
 
 		ImGui::Text("lighting");
 		ImGui::Separator();
 		ImGui::Checkbox("enable indirect lighting", &config_.isEnableIndirectLighting);
 
-		if (ImGui::Button("reset resourviour")) {
-			renderer_->ResetReservoir();
-		}
+		if (ImGui::Button("capture indirect")) {
+			TextureExporter::Export(
+				SxavengerSystem::GetDirectQueueContext(),
+				TextureExporter::TextureDimension::Texture2D,
+				textures_->GetGBuffer(FLightingGBuffer::Layout::Indirect)->GetResource(),
+				DxObject::kDefaultScreenViewFormat,
+				"capture_indirect.png"
+			);
 
-		ImGui::BeginDisabled(!config_.isEnableIndirectLighting);
-		ImGui::Text("sample count: %u", renderer_->GetReservoirSampleCount());
-		renderer_->DebugGui(); //!< HACK
-		ImGui::EndDisabled();
+			TextureExporter::Export(
+				SxavengerSystem::GetDirectQueueContext(),
+				TextureExporter::TextureDimension::Texture2D,
+				textures_->GetGBuffer(FLightingGBuffer::Layout::Indirect_Reservoir)->GetResource(),
+				DxObject::kDefaultScreenViewFormat,
+				"capture_indirect_reservoir.png"
+			);
+		}
 
 		ImGui::EndDisabled();
 		
+		ImGui::EndMenu();
+	}
+}
+
+void RenderSceneEditor::ShowGameMenu() {
+	if (ImGui::BeginMenu("game")) {
+		MenuPadding();
+		ImGui::SeparatorText("game");
+
+		FBaseRenderPass::Config& config = FMainRender::GetInstance()->GetConfig();
+
+		// process
+		ImGui::Text("process");
+		ImGui::Separator();
+		ImGui::Checkbox("enable post process", &config.isEnablePostProcess);
+		ImGui::Checkbox("enable tonemap",      &config.isEnableTonemap);
+
+		ImGui::Text("lighting");
+		ImGui::Separator();
+		ImGui::Checkbox("enable indirect lighting", &config.isEnableIndirectLighting);
+
 		ImGui::EndMenu();
 	}
 }
@@ -359,22 +393,6 @@ void RenderSceneEditor::ShowGizmoMenu() {
 	}
 }
 
-void RenderSceneEditor::ShowColliderMenu() {
-	if (ImGui::BeginMenu("collider")) {
-		MenuPadding();
-		ImGui::SeparatorText("collider");
-
-		ImGui::Checkbox("render", &isRenderCollider_);
-		ImGui::Separator();
-
-		ImGui::BeginDisabled(!isRenderCollider_);
-		colliderRenderer_->SetImGuiCommand();
-		ImGui::EndDisabled();
-
-		ImGui::EndMenu();
-	}
-}
-
 void RenderSceneEditor::ShowCaptureMenu() {
 	if (ImGui::BeginMenu("capture")) {
 		MenuPadding();
@@ -389,10 +407,33 @@ void RenderSceneEditor::ShowCaptureMenu() {
 				"capture_scene.png"
 			);
 		}
-		
-		//if (ImGui::Button("game window capture")) {
-		//	FMainRender::GetInstance()->GetTextures()->CaptureGBuffer(FRenderTargetTextures::GBufferLayout::Main, SxavengerSystem::GetDirectQueueContext(), "capture_game.png");
-		//}
+
+		if (ImGui::Button("game window capture")) {
+			TextureExporter::Export(
+				SxavengerSystem::GetDirectQueueContext(),
+				TextureExporter::TextureDimension::Texture2D,
+				FMainRender::GetInstance()->GetTextures()->GetGBuffer(FMainGBuffer::Layout::Scene)->GetResource(),
+				DxObject::kDefaultScreenViewFormat,
+				"game_scene.png"
+			);
+		}
+
+		if (ImGui::Button("[DEBUG] process")) {
+
+			auto process = textures_->GetProcessTextures();
+
+			process->GetCurrentTexture()->TransitionBeginUnordered(SxavengerSystem::GetDirectQueueContext());
+			process->GetCurrentTexture()->GenerateMipmap(SxavengerSystem::GetDirectQueueContext());
+			process->GetCurrentTexture()->TransitionEndUnordered(SxavengerSystem::GetDirectQueueContext());
+
+			TextureExporter::Export(
+				SxavengerSystem::GetDirectQueueContext(),
+				TextureExporter::TextureDimension::Texture2D,
+				process->GetCurrentTexture()->GetResource(),
+				DxObject::kDefaultScreenViewFormat,
+				"debug_process.dds"
+			);
+		}
 
 		ImGui::EndMenu();
 	}
@@ -417,7 +458,7 @@ void RenderSceneEditor::ShowSceneWindow() {
 		//* translate
 		if (SxImGui::ImageButton(
 			"## gizmo translate",
-			operationTexture_[static_cast<uint32_t>(GuizmoOperation::Translate)].WaitGet()->GetGPUHandleSRV().ptr,
+			operationTexture_[static_cast<uint32_t>(GuizmoOperation::Translate)].Get()->GetGPUHandleSRV().ptr,
 			{ 16, 16 },
 			gizmoOperation_ == GuizmoOperation::Translate ? kSelectedColor : kNonSelectedColor)) {
 			gizmoOperation_ = GuizmoOperation::Translate;
@@ -426,7 +467,7 @@ void RenderSceneEditor::ShowSceneWindow() {
 		//* rotate
 		if (SxImGui::ImageButton(
 			"## gizmo rotate",
-			operationTexture_[static_cast<uint32_t>(GuizmoOperation::Rotate)].WaitGet()->GetGPUHandleSRV().ptr,
+			operationTexture_[static_cast<uint32_t>(GuizmoOperation::Rotate)].Get()->GetGPUHandleSRV().ptr,
 			{ 16, 16 },
 			gizmoOperation_ == GuizmoOperation::Rotate ? kSelectedColor : kNonSelectedColor)) {
 			gizmoOperation_ = GuizmoOperation::Rotate;
@@ -435,7 +476,7 @@ void RenderSceneEditor::ShowSceneWindow() {
 		//* scale
 		if (SxImGui::ImageButton(
 			"## gizmo scale",
-			operationTexture_[static_cast<uint32_t>(GuizmoOperation::Scale)].WaitGet()->GetGPUHandleSRV().ptr,
+			operationTexture_[static_cast<uint32_t>(GuizmoOperation::Scale)].Get()->GetGPUHandleSRV().ptr,
 			{ 16, 16 },
 			gizmoOperation_ == GuizmoOperation::Scale ? kSelectedColor : kNonSelectedColor)) {
 			gizmoOperation_ = GuizmoOperation::Scale;
@@ -450,7 +491,7 @@ void RenderSceneEditor::ShowSceneWindow() {
 		//* world
 		if (SxImGui::ImageButton(
 			"## gizmo world",
-			modeTexture_[SxImGuizmo::World].WaitGet()->GetGPUHandleSRV().ptr,
+			modeTexture_[SxImGuizmo::World].Get()->GetGPUHandleSRV().ptr,
 			{ 16, 16 },
 			gizmoMode_ == SxImGuizmo::World ? kSelectedColor : kNonSelectedColor)) {
 			gizmoMode_ = SxImGuizmo::World;
@@ -459,7 +500,7 @@ void RenderSceneEditor::ShowSceneWindow() {
 		//* local
 		if (SxImGui::ImageButton(
 			"## gizmo local",
-			modeTexture_[SxImGuizmo::Local].WaitGet()->GetGPUHandleSRV().ptr,
+			modeTexture_[SxImGuizmo::Local].Get()->GetGPUHandleSRV().ptr,
 			{ 16, 16 },
 			gizmoMode_ == SxImGuizmo::Local ? kSelectedColor : kNonSelectedColor)) {
 			gizmoMode_ = SxImGuizmo::Local;
@@ -473,7 +514,7 @@ void RenderSceneEditor::ShowSceneWindow() {
 
 		if (SxImGui::ImageButton(
 			"## grid",
-			gridTexture_.WaitGet()->GetGPUHandleSRV().ptr,
+			gridTexture_.Get()->GetGPUHandleSRV().ptr,
 			{ 16, 16 },
 			isRenderGrid_ ? kSelectedColor : kNonSelectedColor)) {
 			isRenderGrid_ = !isRenderGrid_;
@@ -486,7 +527,7 @@ void RenderSceneEditor::ShowSceneWindow() {
 	sceneWindow_ = ImGui::GetWindowDrawList();
 
 	sceneRect_ = SetImGuiImageFullWindow(
-		checkerboard_.WaitGet()->GetGPUHandleSRV(),
+		checkerboard_.Get()->GetGPUHandleSRV(),
 		textures_->GetSize()
 	);
 
@@ -520,7 +561,7 @@ void RenderSceneEditor::ShowGameWindow() {
 	ImGui::Begin("Game ## Render Scene Editor", nullptr, BaseEditor::GetWindowFlag() | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
 
 	SetImGuiImageFullWindow(
-		checkerboard_.WaitGet()->GetGPUHandleSRV(),
+		checkerboard_.Get()->GetGPUHandleSRV(),
 		kMainWindowSize
 	);
 
@@ -550,7 +591,7 @@ void RenderSceneEditor::ShowCanvasWindow() {
 	canvasWindow_ = ImGui::GetWindowDrawList();
 
 	canvasRect_ = SetImGuiImageFullWindow(
-		checkerboard_.WaitGet()->GetGPUHandleSRV(),
+		checkerboard_.Get()->GetGPUHandleSRV(),
 		kMainWindowSize
 	);
 
@@ -561,6 +602,23 @@ void RenderSceneEditor::ShowCanvasWindow() {
 
 	ImGui::End();
 	ImGui::PopStyleVar();
+}
+
+void RenderSceneEditor::ShowInfoTextScene() {
+	if (sceneWindow_ == nullptr) {
+		return;
+	}
+
+	static const ImVec2 kPadding = { 4.0f, 4.0f };
+
+	ImVec2 position = { sceneRect_.pos.x + kPadding.x, sceneRect_.pos.y + sceneRect_.size.y - kPadding.y };
+
+	RenderTextSceneWindow(position, std::format(" isEnableTonemap:          {}", config_.isEnableTonemap));
+	RenderTextSceneWindow(position, std::format(" isEnablePostProcess:      {}", config_.isEnablePostProcess));
+	RenderTextSceneWindow(position, std::format(" isEnableIndirectLighting: {}", config_.isEnableIndirectLighting));
+	RenderTextSceneWindow(position, std::format("> Config"));
+	RenderTextSceneWindow(position, std::format("GBuffer | {}", magic_enum::enum_name(buffer_)));
+
 }
 
 void RenderSceneEditor::ShowIconScene() {
@@ -604,6 +662,16 @@ void RenderSceneEditor::ShowIconScene() {
 		RenderIcon(component->GetBehaviour(), Icon::PointLight, component->RequireTransform()->GetPosition(), color);
 	});
 
+	// Spot Light
+	sComponentStorage->ForEach<SpotLightComponent>([&](SpotLightComponent* component) {
+
+		Color4f color = component->IsActive()
+			? Color4f(component->GetParameter().color, 1.0f)
+			: Color4f{ 0.2f, 0.2f, 0.2f, 1.0f };
+
+		RenderIcon(component->GetBehaviour(), Icon::SpotLight, component->RequireTransform()->GetPosition(), color);
+	});
+
 	// Camera
 	sComponentStorage->ForEach<CameraComponent>([&](CameraComponent* component) {
 		if (component == camera_->GetComponent<CameraComponent>()) {
@@ -617,29 +685,6 @@ void RenderSceneEditor::ShowIconScene() {
 		RenderIcon(component->GetBehaviour(), Icon::Camera, Matrix4x4::GetTranslation(component->GetCamera().world), color);
 	});
 
-}
-
-void RenderSceneEditor::ShowInfoTextScene() {
-	if (sceneWindow_ == nullptr) {
-		return;
-	}
-
-	static const ImVec2 kPadding = { 4.0f, 4.0f };
-
-	ImVec2 position = { sceneRect_.pos.x + kPadding.x, sceneRect_.pos.y + sceneRect_.size.y - kPadding.y };
-
-	switch (config_.technique) {
-		case FSceneRenderer::GraphicsTechnique::Deferred: //!< deferred rendering
-			RenderTextSceneWindow(position, std::format("GBuffer | {}", magic_enum::enum_name(buffer_)));
-			RenderTextSceneWindow(position, "> Deferred Rendering");
-			break;
-
-		case FSceneRenderer::GraphicsTechnique::Pathtracing: //!< path tracing
-			//RenderTextSceneWindow(position, std::format("sample count: {}", renderer_->GetCurrentSampleCount()));
-			RenderTextSceneWindow(position, "> Path Tracing (Preview)");
-			break;
-	}
-	
 }
 
 void RenderSceneEditor::UpdateKeyShortcut() {
@@ -816,8 +861,10 @@ void RenderSceneEditor::UpdateCamera() {
 	isMoveCamera_ = false;
 
 	auto mouse     = SxavengerSystem::GetInput()->GetMouseInput();
+	auto keyboard  = SxavengerSystem::GetInput()->GetKeyboardInput();
 	auto transform = camera_->GetComponent<TransformComponent>();
 
+	// mouseによる回転
 	if (mouse->IsPress(MouseId::MOUSE_MIDDLE)) {
 		Vector2f delta = mouse->GetDeltaPosition();
 		static const Vector2f kSensitivity = { 0.01f, 0.01f };
@@ -829,6 +876,7 @@ void RenderSceneEditor::UpdateCamera() {
 		isMoveCamera_ = true;
 	}
 
+	// mouseによる移動
 	if (mouse->IsPress(MouseId::MOUSE_RIGHT)) {
 		Vector2f delta = mouse->GetDeltaPosition();
 		static const Vector2f kSensitivity = { 0.01f, 0.01f };
@@ -847,9 +895,47 @@ void RenderSceneEditor::UpdateCamera() {
 		isMoveCamera_ = true;
 	}
 
+	if (mouse->IsPress(MouseId::MOUSE_RIGHT)) {
+
+		Vector3f direction = {};
+
+		// keyboardによる移動
+		if (keyboard->IsPress(KeyId::KEY_W)) {
+			direction.z += 1.0f;
+		}
+
+		if (keyboard->IsPress(KeyId::KEY_S)) {
+			direction.z -= 1.0f;
+		}
+
+		if (keyboard->IsPress(KeyId::KEY_A)) {
+			direction.x -= 1.0f;
+		}
+
+		if (keyboard->IsPress(KeyId::KEY_D)) {
+			direction.x += 1.0f;
+		}
+
+		// TODO: y軸移動の追加
+
+		if (Any(direction != kOrigin3<float>)) {
+			direction = direction.Normalize();
+
+			Vector3f forward = Quaternion::RotateVector(kUnitZ3<float>, transform->GetTransform().rotate);
+			Vector3f right   = Quaternion::RotateVector(kUnitX3<float>, transform->GetTransform().rotate);
+			Vector3f up      = Quaternion::RotateVector(kUnitY3<float>, transform->GetTransform().rotate);
+
+			static const float kMoveSpeed = 1.0f;
+
+			point_ += (forward * direction.z + right * direction.x) * kMoveSpeed;
+
+			isMoveCamera_ = true;
+		}
+
+	}
+
 	if (isMoveCamera_) {
 		UpdateView();
-		renderer_->ResetReservoir();
 	}
 }
 
@@ -895,6 +981,7 @@ void RenderSceneEditor::DisplayGBufferTexture(GBuffer buffer) {
 					{ textures_->GetGBuffer(FDeferredGBuffer::Layout::Normal)->GetGPUHandleSRV(),      GBuffer::Normal },
 					{ textures_->GetGBuffer(FDeferredGBuffer::Layout::MaterialARM)->GetGPUHandleSRV(), GBuffer::MaterialARM },
 					{ textures_->GetGBuffer(FDeferredGBuffer::Layout::Position)->GetGPUHandleSRV(),    GBuffer::Position },
+					{ textures_->GetGBuffer(FDeferredGBuffer::Layout::Velocity)->GetGPUHandleSRV(),    GBuffer::Velocity }
 				},
 				textures_->GetSize(),
 				isRender_
@@ -939,6 +1026,14 @@ void RenderSceneEditor::DisplayGBufferTexture(GBuffer buffer) {
 		case GBuffer::Position:
 			SetImGuiImageFullWindowEnable(
 				textures_->GetGBuffer(FDeferredGBuffer::Layout::Position)->GetGPUHandleSRV(),
+				textures_->GetSize(),
+				isRender_
+			);
+			break;
+
+		case GBuffer::Velocity:
+			SetImGuiImageFullWindowEnable(
+				textures_->GetGBuffer(FDeferredGBuffer::Layout::Velocity)->GetGPUHandleSRV(),
 				textures_->GetSize(),
 				isRender_
 			);
@@ -996,7 +1091,7 @@ void RenderSceneEditor::RenderIcon(BaseInspector* inspector, Icon icon, const Ve
 
 	// icon shadow
 	sceneWindow_->AddImage(
-		icons_[static_cast<uint32_t>(icon)].WaitGet()->GetGPUHandleSRV().ptr,
+		icons_[static_cast<uint32_t>(icon)].Get()->GetGPUHandleSRV().ptr,
 		{ rect.min.x, rect.min.y + 1.0f },
 		{ rect.max.x, rect.max.y + 1.0f },
 		ImVec2{ 0.0f, 0.0f },
@@ -1006,7 +1101,7 @@ void RenderSceneEditor::RenderIcon(BaseInspector* inspector, Icon icon, const Ve
 
 	// main icon
 	sceneWindow_->AddImage(
-		icons_[static_cast<uint32_t>(icon)].WaitGet()->GetGPUHandleSRV().ptr,
+		icons_[static_cast<uint32_t>(icon)].Get()->GetGPUHandleSRV().ptr,
 		{ rect.min.x, rect.min.y },
 		{ rect.max.x, rect.max.y },
 		ImVec2{ 0.0f, 0.0f },

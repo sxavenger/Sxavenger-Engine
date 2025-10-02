@@ -15,7 +15,7 @@
 #include <filesystem>
 #include <fstream>
 #include <mutex>
-#include <vector>
+#include <deque>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // SxavengerLogger class
@@ -64,7 +64,7 @@ public:
 	////////////////////////////////////////////////////////////////////////////////////////////
 	// using
 	////////////////////////////////////////////////////////////////////////////////////////////
-	using Container = std::vector<std::pair<StackData, size_t>>;
+	using Container = std::deque<std::pair<StackData, size_t>>;
 
 public:
 
@@ -79,8 +79,8 @@ public:
 	static void LogA(const std::string& log);
 	static void LogW(const std::wstring& log);
 
-	static void ExceptionA(const std::string& label, const std::string& detail, const std::source_location& location);
-	static void ExceptionW(const std::wstring& label, const std::wstring& detail, const std::source_location& location);
+	_NORETURN static void ExceptionA(const std::string& label, const std::string& detail, const std::source_location& location);
+	_NORETURN static void ExceptionW(const std::wstring& label, const std::wstring& detail, const std::source_location& location);
 
 	//* runtime log methods *//
 
@@ -105,6 +105,7 @@ private:
 
 	//* log stacks *//
 
+	static inline const size_t kMaxStackSize = 128;
 	static Container stacks_;
 
 	//=========================================================================================

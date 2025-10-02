@@ -15,8 +15,6 @@
 ////////////////////////////////////////////////////////////////////////////////////////////
 _MISS void mainMiss(inout Payload payload) {
 
-	float4 color = gSkyLight.SampleLevel(gSkySampler, WorldRayDirection(), 0);
-	payload.indirect = float4(ACES::IDT_sRGB_AP1(color.rgb), color.a);
-	
+	payload.indirect = gSkyLight.GetEnvironment(gSkySampler, WorldRayDirection());
 	
 }

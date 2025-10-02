@@ -17,6 +17,7 @@
 #include "PostProcessLUT.h"
 #include "PostProcessGrayScale.h"
 #include "PostProcessRadialBlur.h"
+#include "PostProcessMotionBlur.h"
 #include "PostProcessChromaticAberration.h"
 
 //* engine
@@ -61,7 +62,7 @@ public:
 	// public methods
 	//=========================================================================================
 
-	PostProcessLayerComponent(MonoBehaviour* behaviour) : BaseComponent(behaviour) { }
+	PostProcessLayerComponent(MonoBehaviour* behaviour) : BaseComponent(behaviour) {}
 	~PostProcessLayerComponent() override = default;
 
 	void ShowComponentInspector() override;

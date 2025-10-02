@@ -38,26 +38,24 @@ public:
 	//* compound assignment
 	constexpr Vector3& operator=(const Vector3& rhs) noexcept = default;
 	constexpr Vector3& operator=(Vector3&& rhs) noexcept = default;
-	constexpr Vector3& operator+=(const Vector3& rhs) noexcept;
-	constexpr Vector3& operator-=(const Vector3& rhs) noexcept;
-	constexpr Vector3& operator*=(const Vector3& rhs) noexcept;
-	constexpr Vector3& operator*=(const _Ty& rhs) noexcept;
-	constexpr Vector3& operator/=(const Vector3& rhs) noexcept;
-	constexpr Vector3& operator/=(const _Ty& rhs) noexcept;
+	constexpr Vector3& operator+=(const Vector3& rhs) noexcept { x += rhs.x; y += rhs.y; z += rhs.z; return *this; }
+	constexpr Vector3& operator-=(const Vector3& rhs) noexcept { x -= rhs.x; y -= rhs.y; z -= rhs.z; return *this; }
+	constexpr Vector3& operator*=(const Vector3& rhs) noexcept { x *= rhs.x; y *= rhs.y; z *= rhs.z; return *this; }
+	constexpr Vector3& operator*=(const _Ty rhs) noexcept { x *= rhs; y *= rhs; z *= rhs; return *this; }
+	constexpr Vector3& operator/=(const Vector3& rhs) noexcept { x /= rhs.x; y /= rhs.y; z /= rhs.z; return *this; }
+	constexpr Vector3& operator/=(const _Ty rhs) noexcept { x /= rhs; y /= rhs; z /= rhs; return *this; }
 
 	//* cast
 	template <class _U>
-	constexpr operator Vector3<_U>() const noexcept {
-		return { static_cast<_U>(x), static_cast<_U>(y), static_cast<_U>(z) };
-	}
+	constexpr operator Vector3<_U>() const noexcept { return { static_cast<_U>(x), static_cast<_U>(y), static_cast<_U>(z) }; }
 
 	//* unary
-	constexpr Vector3 operator+() const noexcept;
-	constexpr Vector3 operator-() const noexcept;
+	constexpr Vector3 operator+() const noexcept { return *this; }
+	constexpr Vector3 operator-() const noexcept { return { -x, -y, -z }; }
 
 	//* access
-	constexpr _Ty& operator[](size_t index) noexcept;
-	constexpr const _Ty& operator[](size_t index) const noexcept;
+	constexpr _Ty& operator[](size_t index) noexcept { return (&x)[index]; }
+	constexpr const _Ty& operator[](size_t index) const noexcept { return (&x)[index]; }
 
 	//=========================================================================================
 	// variables
@@ -66,117 +64,6 @@ public:
 	_Ty x, y, z;
 
 };
-
-////////////////////////////////////////////////////////////////////////////////////////////
-// Vector3 class template methods
-////////////////////////////////////////////////////////////////////////////////////////////
-
-template <class _Ty>
-constexpr Vector3<_Ty>& Vector3<_Ty>::operator+=(const Vector3& rhs) noexcept {
-	x += rhs.x;
-	y += rhs.y;
-	z += rhs.z;
-	return *this;
-}
-
-template <class _Ty>
-constexpr Vector3<_Ty>& Vector3<_Ty>::operator-=(const Vector3& rhs) noexcept {
-	x -= rhs.x;
-	y -= rhs.y;
-	z -= rhs.z;
-	return *this;
-}
-
-template <class _Ty>
-constexpr Vector3<_Ty>& Vector3<_Ty>::operator*=(const Vector3& rhs) noexcept {
-	x *= rhs.x;
-	y *= rhs.y;
-	z *= rhs.z;
-	return *this;
-}
-
-template <class _Ty>
-constexpr Vector3<_Ty>& Vector3<_Ty>::operator*=(const _Ty& rhs) noexcept {
-	x *= rhs;
-	y *= rhs;
-	z *= rhs;
-	return *this;
-}
-
-template <class _Ty>
-constexpr Vector3<_Ty>& Vector3<_Ty>::operator/=(const Vector3& rhs) noexcept {
-	x /= rhs.x;
-	y /= rhs.y;
-	z /= rhs.z;
-	return *this;
-}
-
-template <class _Ty>
-constexpr Vector3<_Ty>& Vector3<_Ty>::operator/=(const _Ty& rhs) noexcept {
-	x /= rhs;
-	y /= rhs;
-	z /= rhs;
-	return *this;
-}
-
-template <class _Ty>
-constexpr Vector3<_Ty> Vector3<_Ty>::operator+() const noexcept {
-	return *this;
-}
-
-template <class _Ty>
-constexpr Vector3<_Ty> Vector3<_Ty>::operator-() const noexcept {
-	return { -x, -y, -z };
-}
-
-template <class _Ty>
-constexpr _Ty& Vector3<_Ty>::operator[](size_t index) noexcept {
-	return (&x)[index];
-}
-
-template <class _Ty>
-constexpr const _Ty& Vector3<_Ty>::operator[](size_t index) const noexcept {
-	return (&x)[index];
-}
-
-////////////////////////////////////////////////////////////////////////////////////////////
-// Vector3 class binary operators
-////////////////////////////////////////////////////////////////////////////////////////////
-
-template <class _Ty>
-constexpr Vector3<_Ty> operator+(const Vector3<_Ty>& lhs, const Vector3<_Ty>& rhs) noexcept {
-	return { lhs.x + rhs.x, lhs.y + rhs.y, lhs.z + rhs.z };
-}
-
-template <class _Ty>
-constexpr Vector3<_Ty> operator-(const Vector3<_Ty>& lhs, const Vector3<_Ty>& rhs) noexcept {
-	return { lhs.x - rhs.x, lhs.y - rhs.y, lhs.z - rhs.z };
-}
-
-template <class _Ty>
-constexpr Vector3<_Ty> operator*(const Vector3<_Ty>& lhs, const Vector3<_Ty>& rhs) noexcept {
-	return { lhs.x * rhs.x, lhs.y * rhs.y, lhs.z * rhs.z };
-}
-
-template <class _Ty>
-constexpr Vector3<_Ty> operator*(const Vector3<_Ty>& lhs, const _Ty& rhs) noexcept {
-	return { lhs.x * rhs, lhs.y * rhs, lhs.z * rhs };
-}
-
-template <class _Ty>
-constexpr Vector3<_Ty> operator*(const _Ty& lhs, const Vector3<_Ty>& rhs) noexcept {
-	return { lhs * rhs.x, lhs * rhs.y, lhs * rhs.z };
-}
-
-template <class _Ty>
-constexpr Vector3<_Ty> operator/(const Vector3<_Ty>& lhs, const Vector3<_Ty>& rhs) noexcept {
-	return { lhs.x / rhs.x, lhs.y / rhs.y, lhs.z / rhs.z };
-}
-
-template <class _Ty>
-constexpr Vector3<_Ty> operator/(const Vector3<_Ty>& lhs, const _Ty& rhs) noexcept {
-	return { lhs.x / rhs, lhs.y / rhs, lhs.z / rhs };
-}
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Vector3 - floating_point class
@@ -202,26 +89,24 @@ public:
 	//* compound assignment
 	constexpr Vector3& operator=(const Vector3& rhs) noexcept = default;
 	constexpr Vector3& operator=(Vector3&& rhs) noexcept = default;
-	constexpr Vector3& operator+=(const Vector3& rhs) noexcept;
-	constexpr Vector3& operator-=(const Vector3& rhs) noexcept;
-	constexpr Vector3& operator*=(const Vector3& rhs) noexcept;
-	constexpr Vector3& operator*=(const _Ty& rhs) noexcept;
-	constexpr Vector3& operator/=(const Vector3& rhs) noexcept;
-	constexpr Vector3& operator/=(const _Ty& rhs) noexcept;
+	constexpr Vector3& operator+=(const Vector3& rhs) noexcept { x += rhs.x; y += rhs.y; z += rhs.z; return *this; }
+	constexpr Vector3& operator-=(const Vector3& rhs) noexcept { x -= rhs.x; y -= rhs.y; z -= rhs.z; return *this; }
+	constexpr Vector3& operator*=(const Vector3& rhs) noexcept { x *= rhs.x; y *= rhs.y; z *= rhs.z; return *this; }
+	constexpr Vector3& operator*=(const _Ty rhs) noexcept { x *= rhs; y *= rhs; z *= rhs; return *this; }
+	constexpr Vector3& operator/=(const Vector3& rhs) noexcept { x /= rhs.x; y /= rhs.y; z /= rhs.z; return *this; }
+	constexpr Vector3& operator/=(const _Ty rhs) noexcept { x /= rhs; y /= rhs; z /= rhs; return *this; }
 
 	//* cast
 	template <class _U>
-	operator Vector3<_U>() const noexcept {
-		return { static_cast<_U>(x), static_cast<_U>(y), static_cast<_U>(z) };
-	}
+	operator Vector3<_U>() const noexcept { return { static_cast<_U>(x), static_cast<_U>(y), static_cast<_U>(z) }; }
 
 	//* unary
-	constexpr Vector3 operator+() const noexcept;
-	constexpr Vector3 operator-() const noexcept;
+	constexpr Vector3 operator+() const noexcept { return *this; }
+	constexpr Vector3 operator-() const noexcept { return { -x, -y, -z }; }
 
 	//* access
-	constexpr _Ty& operator[](size_t index) noexcept;
-	constexpr const _Ty& operator[](size_t index) const noexcept;
+	constexpr _Ty& operator[](size_t index) noexcept { return (&x)[index]; }
+	constexpr const _Ty& operator[](size_t index) const noexcept { return (&x)[index]; }
 
 	//=========================================================================================
 	// variables
@@ -304,75 +189,42 @@ public:
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// Vector3 - floating_point class template methods
+// Vector3 class binary operators
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-template <std::floating_point _Ty>
-constexpr Vector3<_Ty>& Vector3<_Ty>::operator+=(const Vector3& rhs) noexcept {
-	x += rhs.x;
-	y += rhs.y;
-	z += rhs.z;
-	return *this;
+template <class _Ty>
+constexpr Vector3<_Ty> operator+(const Vector3<_Ty>& lhs, const Vector3<_Ty>& rhs) noexcept {
+	return { lhs.x + rhs.x, lhs.y + rhs.y, lhs.z + rhs.z };
 }
 
-template <std::floating_point _Ty>
-constexpr Vector3<_Ty>& Vector3<_Ty>::operator-=(const Vector3& rhs) noexcept {
-	x -= rhs.x;
-	y -= rhs.y;
-	z -= rhs.z;
-	return *this;
+template <class _Ty>
+constexpr Vector3<_Ty> operator-(const Vector3<_Ty>& lhs, const Vector3<_Ty>& rhs) noexcept {
+	return { lhs.x - rhs.x, lhs.y - rhs.y, lhs.z - rhs.z };
 }
 
-template <std::floating_point _Ty>
-constexpr Vector3<_Ty>& Vector3<_Ty>::operator*=(const Vector3& rhs) noexcept {
-	x *= rhs.x;
-	y *= rhs.y;
-	z *= rhs.z;
-	return *this;
+template <class _Ty>
+constexpr Vector3<_Ty> operator*(const Vector3<_Ty>& lhs, const Vector3<_Ty>& rhs) noexcept {
+	return { lhs.x * rhs.x, lhs.y * rhs.y, lhs.z * rhs.z };
 }
 
-template <std::floating_point _Ty>
-constexpr Vector3<_Ty>& Vector3<_Ty>::operator*=(const _Ty& rhs) noexcept {
-	x *= rhs;
-	y *= rhs;
-	z *= rhs;
-	return *this;
+template <class _Ty>
+constexpr Vector3<_Ty> operator*(const Vector3<_Ty>& lhs, const _Ty rhs) noexcept {
+	return { lhs.x * rhs, lhs.y * rhs, lhs.z * rhs };
 }
 
-template <std::floating_point _Ty>
-constexpr Vector3<_Ty>& Vector3<_Ty>::operator/=(const Vector3& rhs) noexcept {
-	x /= rhs.x;
-	y /= rhs.y;
-	z /= rhs.z;
-	return *this;
+template <class _Ty>
+constexpr Vector3<_Ty> operator*(const _Ty lhs, const Vector3<_Ty>& rhs) noexcept {
+	return { lhs * rhs.x, lhs * rhs.y, lhs * rhs.z };
 }
 
-template <std::floating_point _Ty>
-constexpr Vector3<_Ty>& Vector3<_Ty>::operator/=(const _Ty& rhs) noexcept {
-	x /= rhs;
-	y /= rhs;
-	z /= rhs;
-	return *this;
+template <class _Ty>
+constexpr Vector3<_Ty> operator/(const Vector3<_Ty>& lhs, const Vector3<_Ty>& rhs) noexcept {
+	return { lhs.x / rhs.x, lhs.y / rhs.y, lhs.z / rhs.z };
 }
 
-template <std::floating_point _Ty>
-constexpr Vector3<_Ty> Vector3<_Ty>::operator+() const noexcept {
-	return *this;
-}
-
-template <std::floating_point _Ty>
-constexpr Vector3<_Ty> Vector3<_Ty>::operator-() const noexcept {
-	return { -x, -y, -z };
-}
-
-template <std::floating_point _Ty>
-constexpr _Ty& Vector3<_Ty>::operator[](size_t index) noexcept {
-	return (&x)[index];
-}
-
-template <std::floating_point _Ty>
-constexpr const _Ty& Vector3<_Ty>::operator[](size_t index) const noexcept {
-	return (&x)[index];
+template <class _Ty>
+constexpr Vector3<_Ty> operator/(const Vector3<_Ty>& lhs, const _Ty rhs) noexcept {
+	return { lhs.x / rhs, lhs.y / rhs, lhs.z / rhs };
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////

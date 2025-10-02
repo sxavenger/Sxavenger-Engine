@@ -104,4 +104,22 @@ public:
 
 };
 
+#define _ENUM_FLAG_OPERATORS(T) \
+	inline constexpr T operator|(T a, T b) { \
+		using U = std::underlying_type_t<T>; \
+		return static_cast<T>(static_cast<U>(a) | static_cast<U>(b)); \
+	} \
+	inline constexpr T operator&(T a, T b) { \
+		using U = std::underlying_type_t<T>; \
+		return static_cast<T>(static_cast<U>(a) & static_cast<U>(b)); \
+	} \
+	inline constexpr T operator^(T a, T b) { \
+		using U = std::underlying_type_t<T>; \
+		return static_cast<T>(static_cast<U>(a) ^ static_cast<U>(b)); \
+	} \
+	inline constexpr T operator~(T a) { \
+		using U = std::underlying_type_t<T>; \
+		return static_cast<T>(~static_cast<U>(a)); \
+	} \
+
 _SXL_NAMESPACE_END

@@ -65,7 +65,7 @@ void SxavengerLogger::LogW(const std::wstring& log) {
 #endif
 }
 
-void SxavengerLogger::ExceptionA(const std::string& label, const std::string& detail, const std::source_location& location) {
+_NORETURN void SxavengerLogger::ExceptionA(const std::string& label, const std::string& detail, const std::source_location& location) {
 	// location
 	std::ostringstream locationMes;
 	locationMes << "[location]" << "  \n";
@@ -115,10 +115,10 @@ void SxavengerLogger::ExceptionA(const std::string& label, const std::string& de
 		MB_TASKMODAL | MB_ICONHAND | MB_TOPMOST
 	);
 
-	throw std::runtime_error("sxavenger asset");
+	__debugbreak();
 }
 
-void SxavengerLogger::ExceptionW(const std::wstring& label, const std::wstring& detail, const std::source_location& location) {
+_NORETURN void SxavengerLogger::ExceptionW(const std::wstring& label, const std::wstring& detail, const std::source_location& location) {
 	// location
 	std::wostringstream locationMes;
 	locationMes << "[location]" << "  \n";
@@ -168,7 +168,7 @@ void SxavengerLogger::ExceptionW(const std::wstring& label, const std::wstring& 
 		MB_TASKMODAL | MB_ICONHAND | MB_TOPMOST
 	);
 
-	throw std::runtime_error("sxavenger asset");
+	__debugbreak();
 }
 
 void SxavengerLogger::LogRuntimeA(Category category, const std::string& label, const std::string& detail) {
@@ -201,6 +201,10 @@ void SxavengerLogger::Push(const StackData& data) {
 
 	} else {
 		stacks_.back().second++;
+	}
+
+	while (stacks_.size() > kMaxStackSize) {
+		stacks_.pop_front();
 	}
 }
 
@@ -259,7 +263,7 @@ void Logger::ErrorRuntime(const std::string& label, const std::string& detail) {
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 void Exception::Assert(bool expression, const std::string& label, const std::string& detail, const std::source_location& location) {
-	if (expression) _LIKELY{
+	if (expression) _LIKELY {
 		return;
 	}
 
@@ -267,7 +271,7 @@ void Exception::Assert(bool expression, const std::string& label, const std::str
 }
 
 void Exception::AssertW(bool expression, const std::wstring& label, const std::wstring& detail, const std::source_location& location) {
-	if (expression) _LIKELY{
+	if (expression) _LIKELY {
 		return;
 	}
 

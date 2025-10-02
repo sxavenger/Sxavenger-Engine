@@ -6,6 +6,9 @@
 //* editors
 #include "Editors/BaseEditor.h"
 
+//* engine
+#include <Engine/System/Utility/Logger.h>
+
 //* external
 #include <imgui.h>
 
@@ -153,7 +156,7 @@ template <BaseEditorDerived T>
 inline T* EditorEngine::RequireEditor() {
 	T* editor = this->GetEditor<T>();
 
-	Assert(editor != nullptr, "require editor not registered.");
+	Exception::Assert(editor != nullptr, "require editor not registered.");
 	return editor;
 }
 

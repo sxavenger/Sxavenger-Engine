@@ -6,9 +6,11 @@
 //* engine
 #include <Engine/System/SxavengerSystem.h>
 #include <Engine/Content/SxavengerContent.h>
-#include <Engine/Asset/SxavengerAsset.h>
 #include <Engine/Render/FRenderCore.h>
 #include <Engine/Render/FMainRender.h>
+#include <Engine/Component/Components/Audio/AudioController.h>
+#include <Engine/Component/ComponentHelper.h>
+#include <Engine/Content/Exporter/TextureExporter.h>
 
 //* c++
 #include <limits>
@@ -23,6 +25,11 @@ void SxavengerEngineGameLoop::Init(GameLoop::Context* context) {
 		FMainRender::GetInstance()->Init();
 		CreateWhite1x1();
 		CreateCheckerboard();
+
+		sUAssetStorage->Deserialize();
+
+		ComponentHelper::RegisterComponents();
+		sAudioController->Init();
 	});
 
 	context->SetProcess(GameLoop::Process::Init, std::numeric_limits<uint32_t>::max(), [this]() {
@@ -32,12 +39,17 @@ void SxavengerEngineGameLoop::Init(GameLoop::Context* context) {
 	context->SetProcess(GameLoop::Process::Term, std::nullopt, [this]() {
 		FMainRender::GetInstance()->Term();
 		FRenderCore::GetInstance()->Term();
+
+		SxavengerSystem::ShutdownAsyncThread();
+
+		sUAssetStorage->Serialize();
 	});
 
 	context->SetProcess(GameLoop::Process::Begin, 0, [this]() {
 		SxavengerSystem::BeginPerformace();
 		SxavengerSystem::GetInput()->Update();
 		SxavengerSystem::BeginImGuiFrame();
+		ComponentHelper::BeginFrame();
 	});
 
 	context->SetProcess(GameLoop::Process::Update, std::numeric_limits<uint32_t>::max(), [this]() {
@@ -68,9 +80,9 @@ void SxavengerEngineGameLoop::Init(GameLoop::Context* context) {
 }
 
 void SxavengerEngineGameLoop::Term() {
-	SxavengerSystem::ShutdownAsyncThread();
-
-	SxavengerAsset::Term();
+	sAudioController->Term();
+	sUAssetStorage->Term();
+	sUContentStorage->Term();
 	SxavengerContent::Term();
 	SxavengerSystem::Term();
 }
@@ -120,7 +132,7 @@ void SxavengerEngineGameLoop::CreateCheckerboard() {
 }
 
 void SxavengerEngineGameLoop::UpdateMaterials() {
-	sAssetStorage->ForEachCompleted<AssetModel>([](AssetModel* asset) {
-		asset->UpdateMaterials();
+	sUAssetStorage->ForEach<UAssetMaterial>([](UAssetMaterial* asset) {
+		asset->Update();
 	});
 }

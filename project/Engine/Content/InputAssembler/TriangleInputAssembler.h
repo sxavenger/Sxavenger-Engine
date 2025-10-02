@@ -18,6 +18,15 @@ template <class _Vertex>
 class TriangleInputAssembler {
 public:
 
+	////////////////////////////////////////////////////////////////////////////////////////////
+	// using
+	////////////////////////////////////////////////////////////////////////////////////////////
+
+	using InputVertex = DxObject::VertexDimensionBuffer<_Vertex>;
+	using InputIndex  = DxObject::TriangleIndexDimensionBuffer;
+
+public:
+
 	//=========================================================================================
 	// public methods
 	//=========================================================================================
@@ -39,9 +48,9 @@ public:
 
 	bool IsCreate() const { return vertex_ != nullptr && index_ != nullptr; }
 
-	DxObject::VertexDimensionBuffer<_Vertex>* GetVertex() const { return vertex_.get(); }
+	InputVertex* GetVertex() const { return vertex_.get(); }
 
-	DxObject::TriangleIndexDimensionBuffer* GetIndex() const { return index_.get(); }
+	InputIndex* GetIndex() const { return index_.get(); }
 
 	//* operator *//
 
@@ -54,8 +63,8 @@ protected:
 	// protected variables
 	//=========================================================================================
 
-	std::unique_ptr<DxObject::VertexDimensionBuffer<_Vertex>> vertex_;
-	std::unique_ptr<DxObject::TriangleIndexDimensionBuffer>   index_;
+	std::unique_ptr<InputVertex> vertex_;
+	std::unique_ptr<InputIndex>  index_;
 
 };
 

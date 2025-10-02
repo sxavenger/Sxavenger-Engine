@@ -6,6 +6,7 @@
 //* engine
 #include <Engine/System/DirectX/DxrObject/DxrExportGroup.h>
 #include <Engine/System/DirectX/DxrObject/DxrRaytracingBlob.h>
+#include <Engine/System/DirectX/DxrObject/DxrStateObjectContext.h>
 #include <Engine/System/Config/SxavengerConfig.h>
 #include <Engine/Module/Pipeline/CustomComputePipeline.h>
 
@@ -53,28 +54,24 @@ public:
 	static inline constexpr uint32_t kDenoiserTypeCount = static_cast<uint32_t>(DenoiserType::EdgeStopping) + 1;
 
 	////////////////////////////////////////////////////////////////////////////////////////////
-	// Reservoir structure
+	// Config structure
 	////////////////////////////////////////////////////////////////////////////////////////////
-	struct Reservoir {
+	struct Config {
 	public:
 
 		//=========================================================================================
 		// public methods
 		//=========================================================================================
 
-		void IncrimentFrame();
-
-		void ResetFrame();
-
-		uint32_t GetCurrentSampleCount() const;
+		void Update();
 
 		//=========================================================================================
 		// public variables
 		//=========================================================================================
 
-		uint32_t sampleCount  = 128;      //!< 合計sample数
-		uint32_t sampleStep   = 1;        //!< frameごとのsample数
-		uint32_t currentFrame = 0;        //!< 現在のframe
+		uint32_t maxSampleCount  = 1024; //!< 合計sample数
+		uint32_t samplesPerFrame = 1;    //!< frameごとのsample数
+		uint32_t isResetMoment   = true; //!< sampleをリセットするか
 
 	};
 
@@ -103,6 +100,12 @@ public:
 
 	void DispatchDenoiser(const DirectXQueueContext* context, const Vector2ui& size);
 
+	//* context option *//
+
+	void UpdateShaderTable(const DxrObject::TopLevelAS* topLevelAS);
+
+	DxrObject::StateObjectContext* GetContext() const { return context_.get(); }
+
 private:
 
 	//=========================================================================================
@@ -116,6 +119,10 @@ private:
 	std::array<std::pair<DxrObject::RaytracingBlob, DxrObject::ExportGroup>, kHitgroupExportTypeCount>      hitgroupExportGroups_;
 
 	static inline const std::filesystem::path kDirectory_ = kPackagesShaderDirectory / "render/pathtracing";
+
+	//* context *//
+
+	std::unique_ptr<DxrObject::StateObjectContext> context_;
 
 	//* denoiser *//
 
@@ -132,6 +139,8 @@ private:
 	void CreateHitgroup();
 
 	void CreateDenoiser();
+
+	void CreateContext();
 
 	template <typename _Ty>
 	static constexpr std::underlying_type_t<_Ty> GetIndex(const _Ty& _enum) {

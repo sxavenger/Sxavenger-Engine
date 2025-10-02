@@ -43,7 +43,8 @@ void PostProcessDoF::Init() {
 
 void PostProcessDoF::Process(const DirectXQueueContext* context, const ProcessInfo& info) {
 	auto process = info.buffer->GetProcessTextures();
-	process->NextProcess(context);
+	process->NextProcess();
+	process->GetCurrentTexture()->TransitionBeginUnordered(context);
 
 	auto core = FRenderCore::GetInstance()->GetProcess();
 
@@ -58,7 +59,7 @@ void PostProcessDoF::Process(const DirectXQueueContext* context, const ProcessIn
 
 	//* textures
 	desc.SetHandle("gInput",   process->GetPrevTexture()->GetGPUHandleSRV());
-	desc.SetHandle("gOutput",  process->GetIndexTexture()->GetGPUHandleUAV());
+	desc.SetHandle("gOutput",  process->GetCurrentTexture()->GetGPUHandleUAV());
 
 	// parameter
 	desc.SetAddress("gCamera",    info.camera->GetGPUVirtualAddress());
@@ -66,6 +67,8 @@ void PostProcessDoF::Process(const DirectXQueueContext* context, const ProcessIn
 
 	core->BindComputeBuffer(FRenderCoreProcess::ProcessType::DoF, context, desc);
 	core->Dispatch(context, info.buffer->GetSize());
+
+	process->GetCurrentTexture()->TransitionEndUnordered(context);
 }
 
 void PostProcessDoF::ShowInspectorImGui() {

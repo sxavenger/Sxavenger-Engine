@@ -27,5 +27,11 @@ struct CameraComponent {
 	float4x4 GetViewProj() {
 		return mul(view, proj);
 	}
+
+	float3 CalculateNDCPosition(float3 position) {
+		float4 clip = mul(float4(position, 1.0f), GetViewProj());
+		clip /= clip.w; //!< perspective divide
+		return clip.xyz;
+	}
 	
 };

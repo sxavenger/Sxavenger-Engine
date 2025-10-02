@@ -37,7 +37,7 @@ void GPUParticleComponent::Update(const DirectXQueueContext* context) {
 	desc.SetHandle("gAppendFreeIndex", freeList_->GetAppendCousumeGPUHandleUAV());
 
 	//* time
-	float time = SxavengerSystem::GetDeltaTime().time;
+	float time = static_cast<float>(SxavengerSystem::GetDeltaTime().time);
 	desc.Set32bitConstants("Time", 1, &time);
 
 	pipeline_->BindComputeBuffer(context->GetDxCommand(), desc);

@@ -47,7 +47,8 @@ void PostProcessGrayScale::Init() {
 void PostProcessGrayScale::Process(const DirectXQueueContext* context, const ProcessInfo& info) {
 
 	auto process = info.buffer->GetProcessTextures();
-	process->NextProcess(context);
+	process->NextProcess();
+	process->GetCurrentTexture()->TransitionBeginUnordered(context);
 
 	auto core = FRenderCore::GetInstance()->GetProcess();
 
@@ -60,13 +61,15 @@ void PostProcessGrayScale::Process(const DirectXQueueContext* context, const Pro
 
 	//* textures
 	desc.SetHandle("gInput",  process->GetPrevTexture()->GetGPUHandleSRV());
-	desc.SetHandle("gOutput", process->GetIndexTexture()->GetGPUHandleUAV());
+	desc.SetHandle("gOutput", process->GetCurrentTexture()->GetGPUHandleUAV());
 
 	// parameter
 	desc.SetAddress("gParameter", parameter_->GetGPUVirtualAddress());
 
 	core->BindComputeBuffer(FRenderCoreProcess::ProcessType::GrayScale, context, desc);
 	core->Dispatch(context, info.buffer->GetSize());
+
+	process->GetCurrentTexture()->TransitionEndUnordered(context);
 }
 
 void PostProcessGrayScale::ShowInspectorImGui() {

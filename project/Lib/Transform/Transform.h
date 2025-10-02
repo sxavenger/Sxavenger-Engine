@@ -9,7 +9,7 @@
 #include <Lib/Geometry/Quaternion.h>
 #include <Lib/Geometry/Matrix4x4.h>
 #include <Lib/Geometry/GeometryMath.h>
-#include <Lib/Adapter/Json/IJsonSerializer.h>
+#include <Lib/Adapter/Json/JsonSerializer.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // EulerTransform structure
@@ -20,9 +20,6 @@ public:
 	//=========================================================================================
 	// public methods
 	//=========================================================================================
-
-	EulerTransform()  = default;
-	~EulerTransform() = default;
 
 	void SetImGuiCommand(float granularityTranslate = 0.01f, float granularityRotate = 1.0f, float granularityScale = 0.01f);
 
@@ -47,9 +44,6 @@ public:
 	//=========================================================================================
 	// public methods
 	//=========================================================================================
-
-	QuaternionTransform()  = default;
-	~QuaternionTransform() = default;
 
 	void SetImGuiCommand(float granularityTranslate = 0.01f, float granularityRotate = 0.01f, float granularityScale = 0.01f);
 
@@ -81,9 +75,6 @@ struct TransformationMatrix {
 	// public methods
 	//=========================================================================================
 
-	TransformationMatrix()  = default;
-	~TransformationMatrix() = default;
-
 	void Init();
 
 	void Transfer(const Matrix4x4& _mat);
@@ -107,9 +98,6 @@ public:
 	// public methods
 	//=========================================================================================
 
-	Transform2d()  = default;
-	~Transform2d() = default;
-
 	void SetImGuiCommand(float granularityTranslate = 0.01f, float granularityScale = 0.01f);
 
 	Matrix4x4 ToMatrix() const;
@@ -125,5 +113,40 @@ public:
 	Vector2f scale     = kUnit2<float>;
 	float    rotate    = 0.0f;
 	Vector2f translate = kOrigin2<float>;
+
+};
+
+////////////////////////////////////////////////////////////////////////////////////////////
+// RectTransform structure
+////////////////////////////////////////////////////////////////////////////////////////////
+struct RectTransform
+	: public IJsonSerializer {
+public:
+
+	//=========================================================================================
+	// public methods
+	//=========================================================================================
+
+	void SetImGuiCommand(float granularityTranslate = 1.0f, float granularityScale = 1.0f);
+
+	Matrix4x4 ToMatrixPivot() const;
+
+	Matrix4x4 ToMatrix() const;
+
+	json PerseToJson() const override;
+
+	void InputJson(const json& data) override;
+
+	//=========================================================================================
+	// public variables
+	//=========================================================================================
+
+	Vector2f scale     = kUnit2<float>;
+	float    rotate    = 0.0f;
+	Vector2f translate = kOrigin2<float>;
+
+	float priority = 0.0f; //!< z-order
+
+	Vector2f pivot = kUnit2<float> / 2.0f;
 
 };

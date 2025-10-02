@@ -6,13 +6,13 @@
 //* engine
 #include <Engine/System/SxavengerSystem.h>
 #include <Engine/System/UI/SxImGui.h>
-#include <Engine/Asset/SxavengerAsset.h>
-//* component
 #include <Engine/Component/Components/Armature/ArmatureComponent.h>
 #include <Engine/Component/Components/Camera/CameraComponent.h>
 #include <Engine/Component/Components/Collider/ColliderComponent.h>
 #include <Engine/Component/Components/PostProcessLayer/PostProcessLayerComponent.h>
 #include <Engine/Component/ComponentHelper.h>
+#include <Engine/Render/FMainRender.h>
+#include <Engine/Preview/Content/UContentStorage.h>
 
 //* lib
 #include <Lib/Geometry/VectorComparision.h>
@@ -24,12 +24,12 @@
 
 void Player::Load() {
 	// modelの読み込み
-	model_ = SxavengerAsset::TryImport<AssetModel>("assets/models/human/idle.gltf");
+	model_ = sUContentStorage->Import<UContentModel>("assets/models/human/idle.gltf");
 
 	// animatorの読み込み
-	animators_[static_cast<uint8_t>(AnimationType::Idle)] = SxavengerAsset::TryImport<AssetAnimator>("assets/models/human/idle.gltf");
-	animators_[static_cast<uint8_t>(AnimationType::Walk)] = SxavengerAsset::TryImport<AssetAnimator>("assets/models/human/walking.gltf");
-	animators_[static_cast<uint8_t>(AnimationType::Dash)] = SxavengerAsset::TryImport<AssetAnimator>("assets/models/human/dash.gltf");
+	animators_[static_cast<uint8_t>(AnimationType::Idle)] = sUContentStorage->Import<UContentAnimation>("assets/models/human/idle.gltf");
+	animators_[static_cast<uint8_t>(AnimationType::Walk)] = sUContentStorage->Import<UContentAnimation>("assets/models/human/walking.gltf");
+	animators_[static_cast<uint8_t>(AnimationType::Dash)] = sUContentStorage->Import<UContentAnimation>("assets/models/human/dash.gltf");
 }
 
 void Player::Awake() {
@@ -42,7 +42,7 @@ void Player::Awake() {
 
 	// component登録
 	transform_ = MonoBehaviour::AddComponent<TransformComponent>();
-	model_.WaitGet()->CreateSkinnedMeshBehaviour(this);
+	ComponentHelper::CreateSkinnedMeshBehaviour(this, model_.WaitGet());
 
 	auto collider = MonoBehaviour::AddComponent<ColliderComponent>();
 	collider->SetTag("Player");
@@ -192,21 +192,21 @@ void Player::Move() {
 void Player::UpdateArmature() {
 
 	animationState_.time.AddDeltaTime();
-	const auto& animatorA = animators_[static_cast<uint8_t>(animationState_.type)].WaitGet()->GetAnimation(0);
+	UAssetParameter<UAssetAnimation> animationA = animators_[static_cast<uint8_t>(animationState_.type)].WaitGet()->GetAnimation(0);
 
 	if (preAnimationState_.has_value()) {
 
 		animationTransitionTime_.AddDeltaTime();
 
-		float t = animationTransitionTime_.time / 0.5f;
+		float t = static_cast<float>(animationTransitionTime_.time / 0.5);
 		t = std::clamp(t, 0.0f, 1.0f);
 
-		const auto& animatorB = animators_[static_cast<uint8_t>((*preAnimationState_).type)].WaitGet()->GetAnimation(0);
+		UAssetParameter<UAssetAnimation> animationB = animators_[static_cast<uint8_t>((*preAnimationState_).type)].WaitGet()->GetAnimation(0);
 
 		ComponentHelper::ApplyAnimationTransition(
 			this,
-			animatorB, (*preAnimationState_).time, true,
-			animatorA, animationState_.time, true,
+			animationB.WaitRequire()->GetAnimation(), (*preAnimationState_).time, true,
+			animationA.WaitRequire()->GetAnimation(), animationState_.time, true,
 			t
 		);
 
@@ -218,7 +218,7 @@ void Player::UpdateArmature() {
 
 		ComponentHelper::ApplyAnimation(
 			this,
-			animatorA, animationState_.time, true
+			animationA.WaitRequire()->GetAnimation(), animationState_.time, true
 		);
 
 	}

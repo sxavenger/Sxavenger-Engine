@@ -20,6 +20,8 @@ namespace MaterialLib {
 #else
 		return texture.Sample(sample, texcoord);
 #endif
+		//!< - pixel shader: texture.Sample(_samples, _texcoord)
+		//!< - compute shader: texture.SampleLevel(_samples, _texcoord, 0)
 	}
 	
 	////////////////////////////////////////////////////////////////////////////////////////////
@@ -42,10 +44,6 @@ namespace MaterialLib {
 			texcoord = _texcoord;
 			samplers = _samplers;
 		}
-
-		//!< HACK: texture sample functions.
-		//!< - pixel shader: texture.Sample(_samples, _texcoord)
-		//!< - compute shader: texture.SampleLevel(_samples, _texcoord, 0)
 	};
 
 	////////////////////////////////////////////////////////////////////////////////////////////

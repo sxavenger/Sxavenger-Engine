@@ -6,7 +6,6 @@
 //* engine
 #include <Engine/System/SxavengerSystem.h>
 #include <Engine/Content/SxavengerContent.h>
-#include <Engine/Asset/SxavengerAsset.h>
 #include <Engine/Editor/EditorEngine.h>
 #include <Engine/Editor/Editors/DevelopEditor.h>
 #include <Engine/Render/FMainRender.h>
@@ -17,12 +16,17 @@
 #include <Engine/Component/Components/PostProcessLayer/PostProcessLayerComponent.h>
 #include <Engine/Component/Components/Particle/GPUParticleComponent.h>
 #include <Engine/Component/Components/Particle/EmitterComponent.h>
+#include <Engine/Component/Components/Transform/RectTransformComponent.h>
+#include <Engine/Component/Components/TextRenderer/TextRendererComponent.h>
+#include <Engine/Component/Components/Audio/AudioSourceComponent.h>
 #include <Engine/Component/ComponentHelper.h>
 #include <Engine/System/Runtime/Performance/DeltaTimePoint.h>
 #include <Engine/Render/FRenderCore.h>
 #include <Engine/Content/InputGeometry/InputPrimitiveHelper.h>
 
 #include "Engine/Component/Components/Light/Environment/SkyLightComponent.h"
+
+#include "Engine/Preview/Content/UContentStorage.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // BetaSystemGameLoop class methods
@@ -59,7 +63,7 @@ void BetaSystemGameLoop::InitSystem() {
 	camera_->Init();
 	camera_->GetComponent<CameraComponent>()->SetTag(CameraComponent::Tag::GameCamera);
 
-	SxavengerAsset::TryImport<AssetModel>("assets/models/PBR_Sphere_Test/model/PBR_Sphere.gltf");
+	//SxavengerAsset::TryImport<AssetModel>("assets/models/PBR_Sphere_Test/model/PBR_Sphere.gltf");
 
 	//atmosphere_ = std::make_unique<AtmosphereActor>();
 	//atmosphere_->Init({ 1024, 1024 });
@@ -71,21 +75,14 @@ void BetaSystemGameLoop::InitSystem() {
 
 	offlineSkylight_ = std::make_unique<MonoBehaviour>();
 	auto light = offlineSkylight_->AddComponent<SkyLightComponent>();
-	//light->GetDiffuseParameter().SetTexture(SxavengerAsset::Import<AssetTexture>("assets/textures/textureCube/DebugIrradiance.dds"));
-	//light->GetSpecularParameter().SetTexture(SxavengerAsset::Import<AssetTexture>("assets/textures/textureCube/DebugRadiance.dds"));
-	//light->SetEnvironment(SxavengerAsset::Import<AssetTexture>("assets/textures/textureCube/DebugEnvironment.dds").WaitAcquire()->GetGPUHandleSRV());
+	light->SetIrradiance(sUContentStorage->Import<UContentTexture>("assets/textures/textureCube/sky_irradiance.dds")->GetId());
+	light->SetRadiance(sUContentStorage->Import<UContentTexture>("assets/textures/textureCube/sky_radiance.dds")->GetId());
+	light->SetEnvironment(sUContentStorage->Import<UContentTexture>("assets/textures/textureCube/sky_environment.dds")->GetId());
 
-	light->GetDiffuseParameter().SetTexture(SxavengerAsset::Import<AssetTexture>("assets/textures/textureCube/sky_irradiance.dds"));
-	light->GetSpecularParameter().SetTexture(SxavengerAsset::Import<AssetTexture>("assets/textures/textureCube/sky_radiance.dds"));
-	light->SetEnvironment(SxavengerAsset::Import<AssetTexture>("assets/textures/textureCube/sky_environment.dds").WaitAcquire()->GetGPUHandleSRV());
-
-	//player_ = std::make_unique<Player>();
-	//player_->Load();
-	//player_->Awake();
-	//player_->Start();
-
-	emissive_ = std::make_unique<EmissiveActor>();
-	emissive_->Init();
+	player_ = std::make_unique<Player>();
+	player_->Load();
+	player_->Awake();
+	player_->Start();
 
 	//leadParticle_ = std::make_unique<LeadParticle>();
 	//leadParticle_->Load();
@@ -103,14 +100,44 @@ void BetaSystemGameLoop::InitSystem() {
 	//behaviour_->GetComponent<PostProcessLayerComponent>()->AddPostProcess<PostProcessGrayScale>();
 	behaviour_->GetComponent<PostProcessLayerComponent>()->AddPostProcess<PostProcessChromaticAberration>();
 	behaviour_->GetComponent<PostProcessLayerComponent>()->AddPostProcess<PostProcessRadialBlur>();
+	behaviour_->GetComponent<PostProcessLayerComponent>()->AddPostProcess<PostProcessMotionBlur>();
 
-	SxavengerAsset::TryImport<AssetTexture>("assets/textures/LUT/lut_greenish.png", Texture::Option{ Texture::Encoding::Intensity, false });
-	SxavengerAsset::TryImport<AssetTexture>("assets/textures/LUT/lut_reddish.png", Texture::Option{ Texture::Encoding::Intensity, false });
-	SxavengerAsset::TryImport<AssetTexture>("assets/textures/LUT/lut_sepia.png", Texture::Option{ Texture::Encoding::Intensity, false });
+	sUContentStorage->Import<UContentTexture>("assets/textures/LUT/lut_greenish.png", UContentTexture::Option{ UContentTexture::Encoding::Intensity, false });
+	sUContentStorage->Import<UContentTexture>("assets/textures/LUT/lut_reddish.png", UContentTexture::Option{ UContentTexture::Encoding::Intensity, false });
+	sUContentStorage->Import<UContentTexture>("assets/textures/LUT/lut_sepia.png", UContentTexture::Option{ UContentTexture::Encoding::Intensity, false });
 
-	auto texture = SxavengerAsset::TryImport<AssetTexture>("assets/textures/LUT/lut_reddish.png", Texture::Option{ Texture::Encoding::Intensity, false });
+	const auto& texture = sUContentStorage->Import<UContentTexture>("assets/textures/LUT/lut_reddish.png", UContentTexture::Option{ UContentTexture::Encoding::Intensity, false })->GetId();
 	auto lut = behaviour_->GetComponent<PostProcessLayerComponent>()->AddPostProcess<PostProcessLUT>();
 	lut->CreateTexture(SxavengerSystem::GetDirectQueueContext(), texture, { 16, 16 });
+
+	auto t = behaviour_->AddComponent<RectTransformComponent>();
+	auto text = behaviour_->AddComponent<TextRendererComponent>();
+
+	text->SetFont(sUContentStorage->Import<UContentFont>("assets/font/MPLUSRounded1c-Regular.ttf")->GetId());
+	text->SetText(L"Sxavenger Engine");
+
+	t->GetTransform().translate = { 200.0f, 200.0f };
+
+	parameter_ = std::make_unique<ParameterActor>();
+
+	colliderA_ = std::make_unique<MonoBehaviour>();
+	colliderA_->AddComponent<TransformComponent>();
+	auto colA = colliderA_->AddComponent<ColliderComponent>();
+	colA->SetTag("A");
+	colA->SetColliderBoundingSphere();
+
+	colliderB_ = std::make_unique<MonoBehaviour>();
+	colliderB_->AddComponent<TransformComponent>();
+	auto colB = colliderB_->AddComponent<ColliderComponent>();
+	colB->SetTag("B");
+	colB->SetColliderBoundingAABB();
+
+	sCollisionManager->SetOnCollisionFunctionEnter(
+		"B", "A",
+		[](ColliderComponent* a, ColliderComponent* b) {
+			Logger::CommentRuntime("info | [BetaSystemGameLoop]::OnCollisionEnter", std::format("collider {} enter collider {}", a->GetTag(), b->GetTag()));
+		}
+	);
 }
 
 void BetaSystemGameLoop::TermSystem() {
@@ -125,7 +152,7 @@ void BetaSystemGameLoop::UpdateSystem() {
 	//atmosphere_->Update();
 	camera_->Update();
 
-	//player_->Update();
+	player_->Update();
 
 	//leadParticle_->Update();
 

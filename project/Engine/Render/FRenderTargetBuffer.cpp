@@ -1,4 +1,11 @@
 #include "FRenderTargetBuffer.h"
+_DXOBJECT_USING
+
+//-----------------------------------------------------------------------------------------
+// include
+//-----------------------------------------------------------------------------------------
+//* engine
+#include <Engine/System/SxavengerSystem.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // FRenderTargetBuffer class methods
@@ -16,8 +23,15 @@ void FRenderTargetBuffer::Create(const Vector2ui& size) {
 	depth_ = std::make_unique<FDepthTexture>();
 	depth_->Create(size_);
 
-	process_ = std::make_unique<FProcessTextures>();
-	process_->Create(2, size_, FMainGBuffer::kColorFormat);
+	priority_ = std::make_unique<FPriorityTexture>();
+	priority_->Create(size_);
+
+	process_ = std::make_unique<FProcessTextureCollection>();
+	process_->Create(3, size_, FMainGBuffer::kColorFormat);
+
+	index_ = std::make_unique<DimensionBuffer<DeferredBufferIndex>>();
+	index_->Create(SxavengerSystem::GetDxDevice(), 1);
+	AttachIndex();
 }
 
 void FRenderTargetBuffer::BeginRenderTargetDeferred(const DirectXQueueContext* context) {
@@ -71,8 +85,9 @@ void FRenderTargetBuffer::EndRenderTargetMainTransparent(const DirectXQueueConte
 }
 
 void FRenderTargetBuffer::BeginRenderTargetMainUI(const DirectXQueueContext* context) {
-	main_.TransitionBeginRenderTargetUI(context);
+	main_.TransitionBeginRenderTargetUI(context, priority_->GetCPUHandleDSV());
 	main_.ClearRenderTargetUI(context);
+	priority_->ClearDepth(context);
 }
 
 void FRenderTargetBuffer::EndRenderTargetMainUI(const DirectXQueueContext* context) {
@@ -88,7 +103,8 @@ void FRenderTargetBuffer::EndPostProcess(const DirectXQueueContext* context) {
 }
 
 void FRenderTargetBuffer::BeginProcessDenoiser(const DirectXQueueContext* context) {
-	process_->BeginProcess(context, lighting_.GetGBuffer(FLightingGBuffer::Layout::Indirect));
+	process_->BeginProcess(context, lighting_.GetGBuffer(FLightingGBuffer::Layout::Indirect_Reservoir));
+	process_->GetCurrentTexture()->GenerateMipmap(context);
 }
 
 void FRenderTargetBuffer::EndProcessDenoiser(const DirectXQueueContext* context) {
@@ -105,4 +121,17 @@ FBaseTexture* FRenderTargetBuffer::GetGBuffer(FLightingGBuffer::Layout layout) {
 
 FBaseTexture* FRenderTargetBuffer::GetGBuffer(FMainGBuffer::Layout layout) {
 	return main_.GetGBuffer(layout);
+}
+
+const D3D12_GPU_VIRTUAL_ADDRESS& FRenderTargetBuffer::GetIndexBufferAddress() const {
+	return index_->GetGPUVirtualAddress();
+}
+
+void FRenderTargetBuffer::AttachIndex() {
+	auto& parameter = index_->At(0);
+	parameter.albedo      = GetGBuffer(FDeferredGBuffer::Layout::Albedo)->GetDescriptorSRV().GetIndex();
+	parameter.normal      = GetGBuffer(FDeferredGBuffer::Layout::Normal)->GetDescriptorSRV().GetIndex();
+	parameter.materialARM = GetGBuffer(FDeferredGBuffer::Layout::MaterialARM)->GetDescriptorSRV().GetIndex();
+	parameter.position    = GetGBuffer(FDeferredGBuffer::Layout::Position)->GetDescriptorSRV().GetIndex();
+	parameter.depth       = depth_->GetRasterizerDescriptorSRV().GetIndex();
 }

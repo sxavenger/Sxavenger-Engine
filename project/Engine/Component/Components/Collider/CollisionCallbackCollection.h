@@ -72,6 +72,8 @@ private:
 	// private methods
 	//=========================================================================================
 
+	bool Contains(const std::string& tagA, const std::string& tagB) const;
+
 	static std::pair<std::string, std::string> Sort(const std::string& x, const std::string& y);
 	static std::pair<ColliderComponent*, ColliderComponent*> Sort(ColliderComponent* x, ColliderComponent* y);
 

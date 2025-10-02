@@ -561,6 +561,8 @@ namespace SxImGuizmo {
 
 	IMGUI_API void SetRect(const ImVec2& position, const ImVec2& size);
 
+	IMGUI_API void SetOrthographic(bool orthographic);
+
 	IMGUI_API void Enable(bool enable);
 
 	IMGUI_API bool IsUsing();

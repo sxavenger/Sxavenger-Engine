@@ -6,10 +6,11 @@
 //* engine
 #include <Engine/System/Runtime/Input/Input.h>
 #include <Engine/System/Runtime/Performance/DeltaTimePoint.h>
-#include <Engine/Asset/AssetStorage.h>
-#include <Engine/Asset/Observer/AssetObserver.h>
 #include <Engine/Component/Components/Transform/TransformComponent.h>
 #include <Engine/Module/GameObject/GameObject.h>
+#include <Engine/Preview/Content/UContentModel.h>
+#include <Engine/Preview/Content/UContentAnimation.h>
+#include <Engine/Preview/Content/UContentObserver.h>
 
 //* demo
 #include <Demo/Object/PivotCamera.h>
@@ -59,7 +60,7 @@ private:
 	////////////////////////////////////////////////////////////////////////////////////////////
 	struct AnimationState {
 		AnimationType                     type;
-		DeltaTimePointf<TimeUnit::second> time;
+		DeltaTimePointd<TimeUnit::second> time;
 	};
 
 private:
@@ -79,8 +80,8 @@ private:
 
 	//* asset *//
 
-	AssetObserver<AssetModel> model_;
-	std::array<AssetObserver<AssetAnimator>, kNumAnimationType> animators_;
+	UContentObserver<UContentModel> model_;
+	std::array<UContentObserver<UContentAnimation>, kNumAnimationType> animators_;
 
 	//* parameter *//
 
@@ -93,7 +94,7 @@ private:
 	AnimationState                animationState_;
 	std::optional<AnimationState> preAnimationState_;
 
-	DeltaTimePointf<TimeUnit::second> animationTransitionTime_;
+	DeltaTimePointd<TimeUnit::second> animationTransitionTime_;
 
 	//* camera *//
 

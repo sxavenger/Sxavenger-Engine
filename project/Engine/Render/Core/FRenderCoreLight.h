@@ -7,6 +7,9 @@
 #include <Engine/Content/InputAssembler/TriangleInputAssembler.h>
 #include <Engine/Module/Pipeline/CustomGraphicsPipeline.h>
 
+//* external
+#include <magic_enum.hpp>
+
 ////////////////////////////////////////////////////////////////////////////////////////////
 // FRenderCoreLight class
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -25,12 +28,12 @@ public:
 		Spot,
 
 		//!< Area light
-		Rect,
+		//Rect,
 
 		//!< Sky light
 		SkyLight,
+		SkyLightEnvironment,
 	};
-	static const uint8_t kLightTypeCount = SkyLight + 1;
 
 public:
 
@@ -65,7 +68,7 @@ private:
 
 	//* pipeline *//
 
-	std::array<std::unique_ptr<CustomReflectionGraphicsPipeline>, kLightTypeCount> pipelines_;
+	std::array<std::unique_ptr<CustomReflectionGraphicsPipeline>, magic_enum::enum_count<LightType>()> pipelines_;
 
 	static const std::filesystem::path kDirectory_;
 

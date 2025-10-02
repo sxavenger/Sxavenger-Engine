@@ -10,11 +10,12 @@
 // static const variables
 //=========================================================================================
 
-const std::array<DXGI_FORMAT, FDeferredGBuffer::kLayoutCount_> FDeferredGBuffer::kFormats_ = {
+const std::array<DXGI_FORMAT, FDeferredGBuffer::kLayoutCount> FDeferredGBuffer::kFormats_ = {
 	FMainGBuffer::kColorFormat,     //!< Albedo
 	DXGI_FORMAT_R10G10B10A2_UNORM,  //!< Normal
 	DXGI_FORMAT_R8G8B8A8_UNORM,     //!< MaterialARM
 	DXGI_FORMAT_R32G32B32A32_FLOAT, //!< Position
+	DXGI_FORMAT_R16G16B16A16_FLOAT  //!< Velocity
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -22,14 +23,14 @@ const std::array<DXGI_FORMAT, FDeferredGBuffer::kLayoutCount_> FDeferredGBuffer:
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 void FDeferredGBuffer::Init(const Vector2ui& size) {
-	for (size_t i = 0; i < kLayoutCount_; ++i) {
-		buffers_[i] = std::make_unique<FBaseTexture>();
-		buffers_[i]->Create(size, kFormats_[i]);
+	for (size_t j = 0; j < kLayoutCount; ++j) {
+		buffers_[j] = std::make_unique<FBaseTexture>();
+		buffers_[j]->Create(size, kFormats_[j]);
 
 		// nameの設定
 		std::string name = "FDeferredGBuffer | ";
-		name += magic_enum::enum_name(static_cast<FDeferredGBuffer::Layout>(i));
-		buffers_[i]->GetResource()->SetName(ToWString(name).c_str());
+		name += magic_enum::enum_name(static_cast<FDeferredGBuffer::Layout>(j));
+		buffers_[j]->GetResource()->SetName(ToWString(name).c_str());
 	}
 }
 
@@ -37,15 +38,15 @@ void FDeferredGBuffer::TransitionBeginRenderTarget(const DirectXQueueContext* co
 
 	auto commandList = context->GetCommandList();
 
-	std::array<D3D12_RESOURCE_BARRIER, kLayoutCount_> barriers = {};
-	for (size_t i = 0; i < kLayoutCount_; ++i) {
+	std::array<D3D12_RESOURCE_BARRIER, kLayoutCount> barriers = {};
+	for (size_t i = 0; i < kLayoutCount; ++i) {
 		barriers[i] = buffers_[i]->TransitionBeginRenderTarget();
 	}
 
 	commandList->ResourceBarrier(static_cast<UINT>(barriers.size()), barriers.data());
 
-	std::array<D3D12_CPU_DESCRIPTOR_HANDLE, kLayoutCount_> handles = {};
-	for (size_t i = 0; i < kLayoutCount_; ++i) {
+	std::array<D3D12_CPU_DESCRIPTOR_HANDLE, kLayoutCount> handles = {};
+	for (size_t i = 0; i < kLayoutCount; ++i) {
 		handles[i] = buffers_[i]->GetCPUHandleRTV();
 	}
 
@@ -56,8 +57,8 @@ void FDeferredGBuffer::TransitionBeginRenderTarget(const DirectXQueueContext* co
 }
 
 void FDeferredGBuffer::TransitionEndRenderTarget(const DirectXQueueContext* context) {
-	std::array<D3D12_RESOURCE_BARRIER, kLayoutCount_> barriers = {};
-	for (size_t i = 0; i < kLayoutCount_; ++i) {
+	std::array<D3D12_RESOURCE_BARRIER, kLayoutCount> barriers = {};
+	for (size_t i = 0; i < kLayoutCount; ++i) {
 		barriers[i] = buffers_[i]->TransitionEndRenderTarget();
 	}
 
@@ -65,14 +66,14 @@ void FDeferredGBuffer::TransitionEndRenderTarget(const DirectXQueueContext* cont
 }
 
 void FDeferredGBuffer::ClearRenderTarget(const DirectXQueueContext* context) {
-	for (size_t i = 0; i < kLayoutCount_; ++i) {
+	for (size_t i = 0; i < kLayoutCount; ++i) {
 		buffers_[i]->ClearRenderTarget(context);
 	}
 }
 
 void FDeferredGBuffer::TransitionBeginUnordered(const DirectXQueueContext* context) {
-	std::array<D3D12_RESOURCE_BARRIER, kLayoutCount_> barriers = {};
-	for (size_t i = 0; i < kLayoutCount_; ++i) {
+	std::array<D3D12_RESOURCE_BARRIER, kLayoutCount> barriers = {};
+	for (size_t i = 0; i < kLayoutCount; ++i) {
 		barriers[i] = buffers_[i]->TransitionBeginUnordered();
 	}
 
@@ -80,12 +81,24 @@ void FDeferredGBuffer::TransitionBeginUnordered(const DirectXQueueContext* conte
 }
 
 void FDeferredGBuffer::TransitionEndUnordered(const DirectXQueueContext* context) {
-	std::array<D3D12_RESOURCE_BARRIER, kLayoutCount_> barriers = {};
-	for (size_t i = 0; i < kLayoutCount_; ++i) {
+	std::array<D3D12_RESOURCE_BARRIER, kLayoutCount> barriers = {};
+	for (size_t i = 0; i < kLayoutCount; ++i) {
 		barriers[i] = buffers_[i]->TransitionEndUnordered();
 	}
 
 	context->GetCommandList()->ResourceBarrier(static_cast<UINT>(barriers.size()), barriers.data());
+}
+
+void FDeferredGBuffer::ForEach(const std::function<void(FBaseTexture*)>& function) {
+	for (size_t i = 0; i < kLayoutCount; ++i) {
+		function(buffers_[i].get());
+	}
+}
+
+void FDeferredGBuffer::ForEach(const std::function<void(size_t, FBaseTexture*)>& function) {
+	for (size_t i = 0; i < kLayoutCount; ++i) {
+		function(i, buffers_[i].get());
+	}
 }
 
 FBaseTexture* FDeferredGBuffer::GetGBuffer(Layout layout) const {

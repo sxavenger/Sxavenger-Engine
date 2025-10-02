@@ -55,7 +55,8 @@ void PostProcessAutoExposure::Init() {
 void PostProcessAutoExposure::Process(const DirectXQueueContext* context, const ProcessInfo& info) {
 
 	auto process = info.buffer->GetProcessTextures();
-	process->NextProcess(context);
+	process->NextProcess();
+	process->GetCurrentTexture()->TransitionBeginUnordered(context);
 
 	auto core = FRenderCore::GetInstance()->GetProcess();
 
@@ -66,7 +67,7 @@ void PostProcessAutoExposure::Process(const DirectXQueueContext* context, const 
 
 	// textures
 	desc.SetHandle("gInput",   process->GetPrevTexture()->GetGPUHandleSRV());
-	desc.SetHandle("gOutput",  process->GetIndexTexture()->GetGPUHandleUAV());
+	desc.SetHandle("gOutput",  process->GetCurrentTexture()->GetGPUHandleUAV());
 
 	// intermediate
 	desc.SetAddress("gHistogram",        histgram_->GetGPUVirtualAddress());
@@ -92,6 +93,7 @@ void PostProcessAutoExposure::Process(const DirectXQueueContext* context, const 
 	core->BindComputeBuffer(FRenderCoreProcess::ProcessType::AutoExposureApply, context, desc);
 	core->Dispatch(context, info.buffer->GetSize());
 
+	process->GetCurrentTexture()->TransitionEndUnordered(context);
 }
 
 void PostProcessAutoExposure::ShowInspectorImGui() {

@@ -10,7 +10,7 @@
 // Animation methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-Vector3f CalculateAnimationCurve(const AnimationCurve<Vector3f>& keyframes, TimePointf<TimeUnit::second> time) {
+Vector3f CalculateAnimationCurve(const AnimationCurve<Vector3f>& keyframes, TimePointd<TimeUnit::second> time) {
 	Exception::Assert(!keyframes.empty(), "keyframes is empty.");
 
 	if (keyframes.size() == 1 || time <= keyframes.front().time) {
@@ -23,15 +23,15 @@ Vector3f CalculateAnimationCurve(const AnimationCurve<Vector3f>& keyframes, Time
 
 		if (keyframes[i].time <= time && time <= keyframes[nextIndex].time) { //!< timeが範囲内の場合
 			// 範囲内でのtを補間
-			float t = (time.time - keyframes[i].time.time) / (keyframes[nextIndex].time.time - keyframes[i].time.time);
-			return Vector3f::Lerp(keyframes[i].value, keyframes[nextIndex].value, t);
+			double t = (time.time - keyframes[i].time.time) / (keyframes[nextIndex].time.time - keyframes[i].time.time);
+			return Vector3f::Lerp(keyframes[i].value, keyframes[nextIndex].value, static_cast<float>(t));
 		}
 	}
 
 	return keyframes.back().value;
 }
 
-Quaternion CalculateAnimationCurve(const AnimationCurve<Quaternion>& keyframes, TimePointf<TimeUnit::second> time) {
+Quaternion CalculateAnimationCurve(const AnimationCurve<Quaternion>& keyframes, TimePointd<TimeUnit::second> time) {
 	Exception::Assert(!keyframes.empty(), "keyframes is empty.");
 
 	if (keyframes.size() == 1 || time <= keyframes.front().time) {
@@ -44,8 +44,8 @@ Quaternion CalculateAnimationCurve(const AnimationCurve<Quaternion>& keyframes, 
 
 		if (keyframes[i].time <= time && time <= keyframes[nextIndex].time) { //!< timeが範囲内の場合
 			// 範囲内でのtを補間
-			float t = (time.time - keyframes[i].time.time) / (keyframes[nextIndex].time.time - keyframes[i].time.time);
-			return Quaternion::Slerp(keyframes[i].value, keyframes[nextIndex].value, t);
+			double t = (time.time - keyframes[i].time.time) / (keyframes[nextIndex].time.time - keyframes[i].time.time);
+			return Quaternion::Slerp(keyframes[i].value, keyframes[nextIndex].value, static_cast<float>(t));
 		}
 	}
 

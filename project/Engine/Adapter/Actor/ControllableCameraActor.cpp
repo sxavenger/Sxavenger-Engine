@@ -88,7 +88,7 @@ void ControllableCameraActor::Move() {
 	speed_ += mouse_->GetDeltaWheel() * 0.1f;
 	speed_ = std::clamp(speed_, 0.1f, 10.0f);
 
-	direction *= speed_ * SxavengerSystem::GetDeltaTime().time;
+	direction *= speed_ * static_cast<float>(SxavengerSystem::GetDeltaTime().time);
 
 	auto transform = MonoBehaviour::GetComponent<TransformComponent>();
 	transform->translate += Quaternion::RotateVector({ direction.x, 0.0f, direction.y }, transform->rotate);

@@ -8,11 +8,10 @@
 
 //* engine
 #include <Engine/Component/Entity/MonoBehaviour.h>
-#include <Engine/Component/Components/Collider/ColliderPrimitiveRenderer.h>
-#include <Engine/Asset/Assets/Texture/AssetTexture.h>
-#include <Engine/Asset/Observer/AssetObserver.h>
 #include <Engine/Render/FRenderTargetBuffer.h>
-#include <Engine/Render/Scene/FSceneRenderer.h>
+#include <Engine/Render/Pass/FBaseRenderPass.h>
+#include <Engine/Preview/Asset/UAssetTexture.h>
+#include <Engine/Preview/Asset/UAssetParameter.h>
 
 //* lib
 #include <Lib/Geometry/Vector2.h>
@@ -110,6 +109,7 @@ private:
 		Volume,
 		DirectionalLight,
 		PointLight,
+		SpotLight,
 		Camera,
 	};
 
@@ -124,6 +124,7 @@ private:
 		Normal,
 		MaterialARM,
 		Position,
+		Velocity,
 		Direct,
 		Indirect,
 		Indirect_Reservoir,
@@ -142,21 +143,20 @@ private:
 
 	//* texture *//
 
-	AssetObserver<AssetTexture> checkerboard_; //!< checker board texture
+	UAssetParameter<UAssetTexture> checkerboard_; //!< checker board texture
 
-	AssetObserver<AssetTexture> operationTexture_[3];
-	AssetObserver<AssetTexture> modeTexture_[2];
-	AssetObserver<AssetTexture> gridTexture_;
+	UAssetParameter<UAssetTexture> operationTexture_[3];
+	UAssetParameter<UAssetTexture> modeTexture_[2];
+	UAssetParameter<UAssetTexture> gridTexture_;
 
 	//* renderer *//
 
 	bool isRender_ = true;
 
 	std::unique_ptr<FRenderTargetBuffer> textures_; //!< debug textures
-	std::unique_ptr<FSceneRenderer>      renderer_; //!< scene renderer
 	std::unique_ptr<MonoBehaviour>       camera_;   //!< scene camera
 
-	FSceneRenderer::Config config_ = {};
+	FBaseRenderPass::Config config_ = {};
 
 	bool isFocusGameWindow_  = false;
 	bool isFocusSceneWindow_ = false;
@@ -173,11 +173,6 @@ private:
 
 	bool isMoveCamera_ = false;
 
-	//* collider *//
-
-	std::unique_ptr<ColliderPrimitiveRenderer> colliderRenderer_;
-	bool isRenderCollider_ = true;
-
 	//* grid *//
 
 	bool isRenderGrid_ = true;
@@ -193,7 +188,7 @@ private:
 
 	//* icon *//
 
-	AssetObserver<AssetTexture> icons_[static_cast<uint32_t>(Icon::Camera) + 1];
+	UAssetParameter<UAssetTexture> icons_[static_cast<uint32_t>(Icon::Camera) + 1];
 
 	Vector2f iconSize_ = { 32.0f, 32.0f };
 
@@ -204,16 +199,16 @@ private:
 	//* show imgui component *//
 
 	void ShowSceneMenu();
+	void ShowGameMenu();
 	void ShowGizmoMenu();
-	void ShowColliderMenu();
 	void ShowCaptureMenu();
 
 	void ShowSceneWindow();
 	void ShowGameWindow();
 	void ShowCanvasWindow();
 
-	void ShowIconScene();
 	void ShowInfoTextScene();
+	void ShowIconScene();
 
 	void UpdateKeyShortcut();
 

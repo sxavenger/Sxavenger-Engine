@@ -35,7 +35,8 @@ void PostProcessChromaticAberration::Init() {
 void PostProcessChromaticAberration::Process(const DirectXQueueContext* context, const ProcessInfo& info) {
 
 	auto process = info.buffer->GetProcessTextures();
-	process->NextProcess(context);
+	process->NextProcess();
+	process->GetCurrentTexture()->TransitionBeginUnordered(context);
 
 	auto core = FRenderCore::GetInstance()->GetProcess();
 
@@ -48,7 +49,7 @@ void PostProcessChromaticAberration::Process(const DirectXQueueContext* context,
 
 	//* textures
 	desc.SetHandle("gInput",  process->GetPrevTexture()->GetGPUHandleSRV());
-	desc.SetHandle("gOutput", process->GetIndexTexture()->GetGPUHandleUAV());
+	desc.SetHandle("gOutput", process->GetCurrentTexture()->GetGPUHandleUAV());
 
 	// parameter
 	desc.SetAddress("gParameter", parameter_->GetGPUVirtualAddress());
@@ -56,6 +57,7 @@ void PostProcessChromaticAberration::Process(const DirectXQueueContext* context,
 	core->BindComputeBuffer(FRenderCoreProcess::ProcessType::ChromaticAberration, context, desc);
 	core->Dispatch(context, info.buffer->GetSize());
 
+	process->GetCurrentTexture()->TransitionEndUnordered(context);
 }
 
 void PostProcessChromaticAberration::ShowInspectorImGui() {
