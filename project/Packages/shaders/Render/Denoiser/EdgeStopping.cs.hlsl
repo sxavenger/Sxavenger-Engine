@@ -88,9 +88,11 @@ void main(uint3 dispatchThreadId : SV_DispatchThreadID) {
 	}
 
 	DeferredSurface surface;
-	surface.GetSurface(gDeferredBufferIndex.Get(), index);
+	if (!surface.GetSurface(gDeferredBufferIndex.Get(), index)) {
+		return;
+	}
 
-	float weight    = 1.0f;
+	float weight = 1.0f;
 	float3 variance = gIndirect[index].rgb;
 
 	//!< A-Trousを採用

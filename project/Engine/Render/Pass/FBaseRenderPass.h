@@ -77,7 +77,7 @@ public:
 
 		bool isEnableIndirectLighting = false;
 		bool isEnablePostProcess      = true;
-		bool isElableTonemap          = true;
+		bool isEnableTonemap          = true;
 		// todo: optionをflagで管理する
 
 	private:

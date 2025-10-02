@@ -62,7 +62,7 @@ void RenderSceneEditor::Init() {
 	config_.buffer              = textures_.get();
 	config_.camera              = camera_->GetComponent<CameraComponent>();
 	config_.isEnablePostProcess = false;
-	config_.isElableTonemap     = true;
+	config_.isEnableTonemap     = true;
 
 	icons_[static_cast<uint32_t>(Icon::Volume)]           = sUContentStorage->Import<UContentTexture>("packages/textures/icon/scene_volume.png")->GetId();
 	icons_[static_cast<uint32_t>(Icon::DirectionalLight)] = sUContentStorage->Import<UContentTexture>("packages/textures/icon/scene_directionalLight.png")->GetId();
@@ -79,6 +79,7 @@ void RenderSceneEditor::ShowMainMenu() {
 		ImGui::SeparatorText("render");
 
 		ShowSceneMenu();
+		ShowGameMenu();
 		ShowGizmoMenu();
 		ShowCaptureMenu();
 		
@@ -316,7 +317,7 @@ void RenderSceneEditor::ShowSceneMenu() {
 		ImGui::Text("process");
 		ImGui::Separator();
 		ImGui::Checkbox("enable post process", &config_.isEnablePostProcess);
-		ImGui::Checkbox("enable tonemap",      &config_.isElableTonemap);
+		ImGui::Checkbox("enable tonemap",      &config_.isEnableTonemap);
 
 		ImGui::Text("lighting");
 		ImGui::Separator();
@@ -342,6 +343,27 @@ void RenderSceneEditor::ShowSceneMenu() {
 
 		ImGui::EndDisabled();
 		
+		ImGui::EndMenu();
+	}
+}
+
+void RenderSceneEditor::ShowGameMenu() {
+	if (ImGui::BeginMenu("game")) {
+		MenuPadding();
+		ImGui::SeparatorText("game");
+
+		FBaseRenderPass::Config& config = FMainRender::GetInstance()->GetConfig();
+
+		// process
+		ImGui::Text("process");
+		ImGui::Separator();
+		ImGui::Checkbox("enable post process", &config.isEnablePostProcess);
+		ImGui::Checkbox("enable tonemap",      &config.isEnableTonemap);
+
+		ImGui::Text("lighting");
+		ImGui::Separator();
+		ImGui::Checkbox("enable indirect lighting", &config.isEnableIndirectLighting);
+
 		ImGui::EndMenu();
 	}
 }
@@ -591,7 +613,7 @@ void RenderSceneEditor::ShowInfoTextScene() {
 
 	ImVec2 position = { sceneRect_.pos.x + kPadding.x, sceneRect_.pos.y + sceneRect_.size.y - kPadding.y };
 
-	RenderTextSceneWindow(position, std::format(" isEnableTonemap:          {}", config_.isElableTonemap));
+	RenderTextSceneWindow(position, std::format(" isEnableTonemap:          {}", config_.isEnableTonemap));
 	RenderTextSceneWindow(position, std::format(" isEnablePostProcess:      {}", config_.isEnablePostProcess));
 	RenderTextSceneWindow(position, std::format(" isEnableIndirectLighting: {}", config_.isEnableIndirectLighting));
 	RenderTextSceneWindow(position, std::format("> Config"));

@@ -199,6 +199,7 @@ private:
 	//* show imgui component *//
 
 	void ShowSceneMenu();
+	void ShowGameMenu();
 	void ShowGizmoMenu();
 	void ShowCaptureMenu();
 
