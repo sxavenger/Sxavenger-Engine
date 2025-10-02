@@ -138,6 +138,9 @@ void BetaSystemGameLoop::InitSystem() {
 			Logger::CommentRuntime("info | [BetaSystemGameLoop]::OnCollisionEnter", std::format("collider {} enter collider {}", a->GetTag(), b->GetTag()));
 		}
 	);
+
+	performance_ = std::make_unique<PerformanceActor>();
+	performance_->Init();
 }
 
 void BetaSystemGameLoop::TermSystem() {
@@ -153,6 +156,8 @@ void BetaSystemGameLoop::UpdateSystem() {
 	camera_->Update();
 
 	player_->Update();
+
+	performance_->Update();
 
 	//leadParticle_->Update();
 

@@ -186,7 +186,7 @@ void MouseInput::SetPosition(const Vector2i& position) const {
 	}
 
 	POINT point = { position.x, position.y };
-	ScreenToClient(currentHwnd_, &point);
+	ClientToScreen(currentHwnd_, &point);
 	SetCursorPos(point.x, point.y);
 }
 

@@ -18,5 +18,16 @@ struct RectTransformComponent {
 	float3 Transform(float2 v) {
 		return mul(float4(v, 1.0f, 1.0f), mat).xyz;
 	}
+
+	float3 TransformNormalize(float2 v) {
+		float4x4 m = float4x4(
+				normalize(mat[0]),
+				normalize(mat[1]),
+				normalize(mat[2]),
+				mat[3]
+			);
+
+		return mul(float4(v, 1.0f, 1.0f), m).xyz;
+	}
 	
 };

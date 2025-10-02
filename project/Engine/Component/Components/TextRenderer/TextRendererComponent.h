@@ -35,6 +35,10 @@ public:
 
 	void SetFont(const UAssetParameter<UAssetFont>& font) { font_ = font; }
 
+	void SetSize(float size) { size_ = size; }
+
+	void SetColor(const Color4f& color) { color_ = color; }
+
 	//* render option *//
 
 	void PerseText();
@@ -48,6 +52,8 @@ public:
 	bool IsEnable() const { return !text_.empty() && !font_.Empty(); }
 
 	const std::shared_ptr<UAssetFont> GetFont() const { return font_.WaitRequire(); }
+
+	float GetFontSizeRatio() const;
 
 	//* behaviour option *//
 
@@ -65,15 +71,19 @@ private:
 	// private variables
 	//=========================================================================================
 
-	//* text *//
 
 	std::wstring text_;
-	InputUIVertex input_;
 
 	UAssetParameter<UAssetFont> font_;
+
+	Color4f color_ = kWhite4<float>;
+
+	float size_ = 12.0f;
 
 	//* parameter *//
 
 	static const inline size_t kMaxTextLength = 256;
+
+	InputUIVertex input_;
 
 };

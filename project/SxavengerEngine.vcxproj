@@ -189,6 +189,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="Demo\GameLoop\DemoGameLoop.cpp" />
     <ClCompile Include="Demo\Object\PivotCamera.cpp" />
     <ClCompile Include="Engine\Adapter\Actor\ParameterActor.cpp" />
+    <ClCompile Include="Engine\Adapter\Actor\PerformanceActor.cpp" />
     <ClCompile Include="Engine\Component\Components\Audio\AudioController.cpp" />
     <ClCompile Include="Engine\Component\Components\Audio\AudioSourceComponent.cpp" />
     <ClCompile Include="Engine\Component\Components\Collider\CollisionHelper.cpp" />
@@ -379,6 +380,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Demo\GameLoop\PreviewGameLoop.h" />
     <ClInclude Include="Demo\Object\PivotCamera.h" />
     <ClInclude Include="Engine\Adapter\Actor\ParameterActor.h" />
+    <ClInclude Include="Engine\Adapter\Actor\PerformanceActor.h" />
     <ClInclude Include="Engine\Adapter\Parameter\SerializeGui.h" />
     <ClInclude Include="Engine\Adapter\Parameter\SerializeParameter.h" />
     <ClInclude Include="Engine\Component\Components\Audio\AudioController.h" />

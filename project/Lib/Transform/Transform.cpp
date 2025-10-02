@@ -115,7 +115,7 @@ void Transform2d::InputJson(const json& data) {
 void RectTransform::SetImGuiCommand(float granularityTranslate, float granularityScale) {
 	SxImGui::DragVector2("translate", &translate.x, granularityTranslate);
 	ImGui::SliderAngle("rotate",      &rotate);
-	SxImGui::DragVector2("scale",     &scale.x, granularityScale);
+	SxImGui::DragVector2("scale",     &scale.x, granularityScale, 0.0f, std::numeric_limits<float>::max());
 
 	ImGui::Separator();
 

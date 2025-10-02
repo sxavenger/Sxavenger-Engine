@@ -43,6 +43,15 @@ void FLUTTexture::Dispatch(const DirectXQueueContext* context) {
 	);
 
 	FRenderCore::GetInstance()->GetProcess()->Dispatch(context, texture_->GetMetadata().size);
+
+	D3D12_RESOURCE_BARRIER barrier = {};
+	barrier.Type                   = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+	barrier.Transition.pResource   = resource_.Get();
+	barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_UNORDERED_ACCESS;
+	barrier.Transition.StateAfter  = D3D12_RESOURCE_STATE_ALL_SHADER_RESOURCE;
+
+	context->GetCommandList()->ResourceBarrier(1, &barrier);
+
 }
 
 void FLUTTexture::CreateResource(const Vector2ui& size, const Vector2ui& tile) {
@@ -70,7 +79,7 @@ void FLUTTexture::CreateResource(const Vector2ui& size, const Vector2ui& tile) {
 			&prop,
 			D3D12_HEAP_FLAG_NONE,
 			&desc,
-			D3D12_RESOURCE_STATE_ALL_SHADER_RESOURCE,
+			D3D12_RESOURCE_STATE_UNORDERED_ACCESS, //!< すぐ書き込みを行うためUAVで開始
 			nullptr,
 			IID_PPV_ARGS(&resource_)
 		);

@@ -20,6 +20,8 @@ void FRenderPassTonemap::Render(const DirectXQueueContext* context, const Config
 		FRenderCoreProcess::CompositeType::Tonemap, context
 	);
 
+	config.buffer->GetGBuffer(FMainGBuffer::Layout::Scene)->TransitionBeginUnordered(context);
+
 	DxObject::BindBufferDesc parameter = {};
 	// common
 	parameter.Set32bitConstants("Dimension", 2, &config.buffer->GetSize());
@@ -33,7 +35,7 @@ void FRenderPassTonemap::Render(const DirectXQueueContext* context, const Config
 
 	FRenderCore::GetInstance()->GetProcess()->Dispatch(context, config.buffer->GetSize());
 
-	config.buffer->GetGBuffer(FMainGBuffer::Layout::Scene)->BarrierUAV(context);
+	config.buffer->GetGBuffer(FMainGBuffer::Layout::Scene)->TransitionEndUnordered(context);
 
 	// TODO: slope, toe, shoulder... をparameterで調整可能に
 

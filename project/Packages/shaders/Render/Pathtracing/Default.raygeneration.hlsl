@@ -49,6 +49,8 @@ _RAYGENERATION void mainRaygeneration() {
 	float4 diffuse_indirect  = float4(0.0f, 0.0f, 0.0f, 0.0f);
 	float4 specular_indirect = float4(0.0f, 0.0f, 0.0f, 0.0f);
 
+	// TODO: view依存をなくし, カメラ移動に対応する.
+
 	for (uint i = 0; i < min(samplesPerFrame, maxSampleCount - moment.x); ++i) {
 
 		uint currentSampleIndex   = moment.x + i;
@@ -122,14 +124,19 @@ _RAYGENERATION void mainRaygeneration() {
 		//}
 	}
 
-	uint prev    = moment.x;
+	uint prev = moment.x;
 	uint current = moment.x + min(samplesPerFrame, maxSampleCount - moment.x);
 
-	float4 indirect = gReservoir[index] * float(prev);
+	//float4 indirect = gReservoir[index] * float(prev);
 	
-	indirect.rgb += (diffuse_indirect.rgb + specular_indirect.rgb);
-	indirect.rgb /= float(current);
-	indirect.a   = saturate(indirect.a + diffuse_indirect.a + specular_indirect.a);
+	//indirect.rgb += (diffuse_indirect.rgb + specular_indirect.rgb);
+	//indirect.rgb /= float(current);
+	//indirect.a   = saturate(indirect.a + diffuse_indirect.a + specular_indirect.a);
+
+	float4 indirect = gReservoir[index];
+
+	indirect.rgb += (diffuse_indirect.rgb + specular_indirect.rgb) / float(maxSampleCount);
+	indirect.a    = 1.0f;
 	
 	gReservoir[index] = indirect;
 	gMoment[index]    = uint2(current, moment.y);

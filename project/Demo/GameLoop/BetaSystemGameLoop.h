@@ -17,6 +17,7 @@
 #include <Engine/Adapter/Actor/SkyLightActor.h>
 #include <Engine/Adapter/Actor/ControllableCameraActor.h>
 #include <Engine/Adapter/Actor/ParameterActor.h>
+#include <Engine/Adapter/Actor/PerformanceActor.h>
 
 //* demo
 #include <Demo/Entity/Player.h>
@@ -61,6 +62,8 @@ private:
 
 	std::unique_ptr<MonoBehaviour> colliderA_;
 	std::unique_ptr<MonoBehaviour> colliderB_;
+
+	std::unique_ptr<PerformanceActor> performance_;
 
 	//=========================================================================================
 	// private methods

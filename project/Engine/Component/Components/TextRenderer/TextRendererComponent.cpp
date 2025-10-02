@@ -21,7 +21,7 @@ TextRendererComponent::TextRendererComponent(MonoBehaviour* behaviour)
 	input_.Create(static_cast<uint32_t>(kMaxTextLength * 4), static_cast<uint32_t>(kMaxTextLength * 2));
 
 	auto vertices = input_.GetVertex();
-	auto indices = input_.GetIndex();
+	auto indices  = input_.GetIndex();
 
 	// vertexの初期化
 	vertices->Fill(UIVertexData{});
@@ -53,6 +53,8 @@ void TextRendererComponent::ShowComponentInspector() {
 		font_ = content->GetId();
 	});
 
+	ImGui::ColorEdit4("color", &color_.r);
+	SxImGui::DragScalarN<float, 1>("size", &size_, 0.1f, 0.0f, 100.0f, "%.1f");
 }
 
 void TextRendererComponent::SetText(const std::wstring& text) {
@@ -72,10 +74,16 @@ void TextRendererComponent::PerseText() {
 	// fontの取得
 	const std::shared_ptr<UAssetFont> font = font_.WaitRequire();
 
-	Vector2f cursor = {};
+	const RectTransformComponent* component = GetRectTransform();
+	Vector2f scale = component->GetTransform().scale;
+
+	Vector2f cursor = { 0, font->GetFontSize() };
 	size_t index    = 0;
 
 	auto vertices = input_.GetVertex();
+
+	// vertexの初期化
+	vertices->Fill(UIVertexData{});
 
 	// textの解析
 	for (wchar_t c : text_) {
@@ -100,29 +108,41 @@ void TextRendererComponent::PerseText() {
 		Vector2f position = cursor + glyph.offset;
 		Vector2f size     = glyph.size;
 
-		// todo: pivot, anchorの設定
+		Vector2f rect = (position + size) * GetFontSizeRatio();
+
+		if (rect.x > scale.x) {
+			// 範囲外に出る場合は, 改行して描画
+			cursor.x = 0;
+			cursor.y += font->GetFontSize();
+
+			// 再計算
+			position = cursor + glyph.offset;
+			rect     = (position + size) * GetFontSizeRatio();
+		}
+
+		if (rect.y > scale.y) {
+			// 範囲外に出る場合は, 描画終了
+			break;
+		}
 
 		//!< vertexの設定
-		vertices->At(index + 0).position = { position, 0.0f };
+		vertices->At(index + 0).position = Vector3f{ position, 0.0f } * GetFontSizeRatio();
 		vertices->At(index + 0).texcoord = glyph.uv[0];
-		vertices->At(index + 0).color    = { 1.0f, 1.0f, 1.0f, 1.0f };
+		vertices->At(index + 0).color    = color_;
 
-		vertices->At(index + 1).position = { position + Vector2f(size.x, 0.0f), 0.0f };
+		vertices->At(index + 1).position = Vector3f{ position + Vector2f(size.x, 0.0f), 0.0f } * GetFontSizeRatio();
 		vertices->At(index + 1).texcoord = { glyph.uv[1].x, glyph.uv[0].y };
-		vertices->At(index + 1).color    = { 1.0f, 1.0f, 1.0f, 1.0f };
+		vertices->At(index + 1).color    = color_;
 
-		vertices->At(index + 2).position = { position + size, 0.0f };
+		vertices->At(index + 2).position = Vector3f{ position + size, 0.0f } * GetFontSizeRatio();
 		vertices->At(index + 2).texcoord = glyph.uv[1];
-		vertices->At(index + 2).color    = { 1.0f, 1.0f, 1.0f, 1.0f };
+		vertices->At(index + 2).color    = color_;
 
-		vertices->At(index + 3).position = { position + Vector2f(0.0f, size.y), 0.0f };
+		vertices->At(index + 3).position = Vector3f{ position + Vector2f(0.0f, size.y), 0.0f } * GetFontSizeRatio();
 		vertices->At(index + 3).texcoord = { glyph.uv[0].x, glyph.uv[1].y };
-		vertices->At(index + 3).color    = { 1.0f, 1.0f, 1.0f, 1.0f };
+		vertices->At(index + 3).color    = color_;
 
 		index += 4;
-
-		// todo: priorityの設定
-		// todo: colorの設定
 
 		cursor.x += glyph.advance;
 
@@ -140,14 +160,19 @@ void TextRendererComponent::DrawCall(const DirectXQueueContext* context) {
 	context->GetCommandList()->DrawIndexedInstanced(static_cast<UINT>(text_.size() * 6), 1, 0, 0, 0);
 }
 
+float TextRendererComponent::GetFontSizeRatio() const {
+	return size_ / GetFont()->GetFontSize();
+}
+
 const RectTransformComponent* TextRendererComponent::GetRectTransform() const {
 	return BaseComponent::GetBehaviour()->GetComponent<RectTransformComponent>();
 }
 
 json TextRendererComponent::PerseToJson() const {
 	json component = json::object();
-	component["text"] = ToString(text_);
-	component["font"] = font_.Serialize();
+	component["text"]  = ToString(text_);
+	component["font"]  = font_.Serialize();
+	component["color"] = JsonSerializeFormatter<Color4f>::Serialize(color_);
 
 	return component;
 }
@@ -166,4 +191,6 @@ void TextRendererComponent::InputJson(const json& data) {
 	}
 
 	font_ = font;
+
+	color_ = JsonSerializeFormatter<Color4f>::Deserialize(data["color"]);
 }
