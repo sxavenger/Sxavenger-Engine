@@ -62,7 +62,7 @@ project "SxavengerEngine"
 		"../project/Demo/**.cpp",
 	}
 
-	-- ファイルの除外
+	-- ファイルの除外(!xxx)
 	removefiles  {
 		"../project/Lib/!*/**.cpp",
 		"../project/Lib/!*/**.h",
