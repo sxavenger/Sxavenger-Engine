@@ -173,7 +173,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ProjectReference Include="externals\DirectXMesh\DirectXMesh_Desktop_2022.vcxproj">
+    <ProjectReference Include="externals\DirectXMesh\DirectXMesh_Desktop_2022_Win10.vcxproj">
       <Project>{6857f086-f6fe-4150-9ed7-7446f1c1c220}</Project>
     </ProjectReference>
     <ProjectReference Include="externals\DirectXTex\DirectXTex_Desktop_2022_Win10.vcxproj">
