@@ -87,6 +87,8 @@ public:
 
 	//* render helper *//
 
+	static void AttachMeshEnable(MonoBehaviour* root, bool isEnable);
+
 	static void DetachBehaviourMaterial(MonoBehaviour* root);
 
 	static void ModifyBehaviourMaterial(MonoBehaviour* root, const std::function<void(UAssetMaterial*)>& function);

@@ -97,6 +97,8 @@ public:
 	SkinnedMeshRendererComponent(MonoBehaviour* behaviour) : BaseComponent(behaviour) {}
 	~SkinnedMeshRendererComponent() override = default;
 
+	void ShowComponentInspector() override;
+
 	void CreateMesh(const Uuid& referenceMesh);
 	void CreateMesh(const std::shared_ptr<UAssetMesh>& referenceMesh);
 
@@ -113,6 +115,8 @@ public:
 
 	void DrawCall(const DirectXQueueContext* context, uint32_t instanceCount = 1) const;
 
+	void SetEnable(bool isEnable = true) { isEnable_ = isEnable; }
+
 	//* getter *//
 
 	std::shared_ptr<UAssetMaterial> GetMaterial() const;
@@ -126,6 +130,8 @@ public:
 	const TransformComponent* GetTransform() const;
 
 	uint8_t GetMask() const { return mask_.Get(); }
+
+	bool IsEnable() const { return !material_.Empty() && isEnable_;}
 
 	//* json option *//
 
@@ -148,6 +154,8 @@ private:
 	SkinCluster cluster_;
 
 	Sxl::Flag<MeshInstanceMask> mask_ = MeshInstanceMask::Default;
+
+	bool isEnable_ = true;
 
 	//!< todo: instance描画
 

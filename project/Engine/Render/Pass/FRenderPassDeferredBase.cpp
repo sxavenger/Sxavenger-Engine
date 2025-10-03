@@ -152,7 +152,7 @@ void FRenderPassDeferredBase::PassStaticMesh(const DirectXQueueContext* context,
 	parameter.SetAddress("gCamera", config.camera->GetGPUVirtualAddress());
 
 	sComponentStorage->ForEachActive<MeshRendererComponent>([&](MeshRendererComponent* component) {
-		if (!component->IsEnabled()) {
+		if (!component->IsEnable()) {
 			return; //!< 不適格component.
 		}
 
@@ -191,6 +191,9 @@ void FRenderPassDeferredBase::PassSkinnedMesh(const DirectXQueueContext* context
 	parameter.SetAddress("gCamera", config.camera->GetGPUVirtualAddress());
 
 	sComponentStorage->ForEachActive<SkinnedMeshRendererComponent>([&](SkinnedMeshRendererComponent* component) {
+		if (!component->IsEnable()) {
+			return; //!< 不適格component.
+		}
 
 		auto transform = component->GetTransform();
 

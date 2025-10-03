@@ -4198,10 +4198,10 @@
 				"component": "class TransformComponent",
 				"transform": {
 					"rotate": {
-						"w": 0.8299363255500793,
-						"x": 0.5437480211257935,
-						"y": 0.10428588837385178,
-						"z": -0.06832446902990341
+						"w": 0.7293524742126465,
+						"x": 0.6726820468902588,
+						"y": 0.09164708107709885,
+						"z": -0.0845256894826889
 					},
 					"scale": {
 						"x": 1.0,
@@ -4209,9 +4209,9 @@
 						"z": 1.0
 					},
 					"translate": {
-						"x": 1.723642110824585,
-						"y": 0.0,
-						"z": 3.725290298461914e-09
+						"x": 3.974559783935547,
+						"y": 2.6672708988189697,
+						"z": 1.450573205947876
 					}
 				}
 			},
@@ -4222,7 +4222,7 @@
 					"r": 1.0
 				},
 				"component": "class DirectionalLightComponent",
-				"intensity": 40.0,
+				"intensity": 10.0,
 				"shadow_flag": 16,
 				"shadow_strength": 1.0
 			}
@@ -4231,49 +4231,6 @@
 		"isRenamable": true,
 		"isView": true,
 		"name": "Directional Light"
-	},
-	{
-		"children": [],
-		"components": [
-			{
-				"component": "class TransformComponent",
-				"transform": {
-					"rotate": {
-						"w": 1.0,
-						"x": 0.0,
-						"y": 0.0,
-						"z": 0.0
-					},
-					"scale": {
-						"x": 1.0,
-						"y": 1.0,
-						"z": 1.0
-					},
-					"translate": {
-						"x": -7.68964958190918,
-						"y": 2.3690507411956787,
-						"z": 13.13115406036377
-					}
-				}
-			},
-			{
-				"color": {
-					"b": 1.0,
-					"g": 1.0,
-					"r": 1.0
-				},
-				"component": "class PointLightComponent",
-				"intensity": 60.0,
-				"radius": 8.0,
-				"shadow_flag": 16,
-				"shadow_strength": 1.0,
-				"unit": "Candela"
-			}
-		],
-		"isActive": true,
-		"isRenamable": true,
-		"isView": true,
-		"name": "Point Light"
 	},
 	{
 		"children": [
@@ -4304,7 +4261,7 @@
 					{
 						"component": "class MeshRendererComponent",
 						"isEnable": true,
-						"mask": 255,
+						"mask": 254,
 						"material": "afcacd88-88b9-4161-a7ca55a49a9d6791",
 						"mesh": "e3b19591-a6e9-4c50-88f529ac1241d249"
 					}
@@ -9304,5 +9261,297 @@
 		"isRenamable": true,
 		"isView": true,
 		"name": "PBR_Sphere"
+	},
+	{
+		"children": [
+			{
+				"children": [],
+				"components": [
+					{
+						"component": "class TransformComponent",
+						"transform": {
+							"rotate": {
+								"w": 0.17560653388500214,
+								"x": 0.6883156895637512,
+								"y": -0.17399270832538605,
+								"z": 0.6819900274276733
+							},
+							"scale": {
+								"x": 1.0,
+								"y": 1.0,
+								"z": 1.0
+							},
+							"translate": {
+								"x": -15.5,
+								"y": 11.0,
+								"z": 25.9431095123291
+							}
+						}
+					},
+					{
+						"color": {
+							"b": 1.0,
+							"g": 1.0,
+							"r": 1.0
+						},
+						"component": "class SpotLightComponent",
+						"coneAngle": {
+							"x": 0.20000000298023224,
+							"y": 0.5
+						},
+						"intensity": 1000.0,
+						"radius": 65.0,
+						"shadow_flag": 16,
+						"shadow_strength": 1.0,
+						"unit": "Lumen"
+					}
+				],
+				"isActive": true,
+				"isRenamable": true,
+				"isView": true,
+				"name": "Spot Light[0]"
+			},
+			{
+				"children": [],
+				"components": [
+					{
+						"component": "class TransformComponent",
+						"transform": {
+							"rotate": {
+								"w": 0.1821994185447693,
+								"x": 0.6820568442344666,
+								"y": -0.1827840656042099,
+								"z": 0.6842454671859741
+							},
+							"scale": {
+								"x": 1.0,
+								"y": 1.0,
+								"z": 1.0
+							},
+							"translate": {
+								"x": -15.5,
+								"y": 11.0,
+								"z": 14.017205238342285
+							}
+						}
+					},
+					{
+						"color": {
+							"b": 1.0,
+							"g": 1.0,
+							"r": 1.0
+						},
+						"component": "class SpotLightComponent",
+						"coneAngle": {
+							"x": 0.20000000298023224,
+							"y": 0.5
+						},
+						"intensity": 1000.0,
+						"radius": 65.0,
+						"shadow_flag": 16,
+						"shadow_strength": 1.0,
+						"unit": "Lumen"
+					}
+				],
+				"isActive": true,
+				"isRenamable": true,
+				"isView": true,
+				"name": "Spot Light[1]"
+			},
+			{
+				"children": [],
+				"components": [
+					{
+						"component": "class TransformComponent",
+						"transform": {
+							"rotate": {
+								"w": 0.6940597295761108,
+								"x": 0.15229658782482147,
+								"y": 0.6872727870941162,
+								"z": -0.1508074253797531
+							},
+							"scale": {
+								"x": 1.0,
+								"y": 1.0,
+								"z": 1.0
+							},
+							"translate": {
+								"x": -15.5,
+								"y": 11.0,
+								"z": 2.1044135093688965
+							}
+						}
+					},
+					{
+						"color": {
+							"b": 1.0,
+							"g": 1.0,
+							"r": 1.0
+						},
+						"component": "class SpotLightComponent",
+						"coneAngle": {
+							"x": 0.0,
+							"y": 0.6079999804496765
+						},
+						"intensity": 1000.0,
+						"radius": 60.0,
+						"shadow_flag": 16,
+						"shadow_strength": 1.0,
+						"unit": "Lumen"
+					}
+				],
+				"isActive": true,
+				"isRenamable": true,
+				"isView": true,
+				"name": "Spot Light[2]"
+			},
+			{
+				"children": [],
+				"components": [
+					{
+						"component": "class TransformComponent",
+						"transform": {
+							"rotate": {
+								"w": 0.6834214329719543,
+								"x": 0.18547236919403076,
+								"y": 0.6814220547676086,
+								"z": -0.18492978811264038
+							},
+							"scale": {
+								"x": 1.0,
+								"y": 1.0,
+								"z": 1.0
+							},
+							"translate": {
+								"x": -15.571065902709961,
+								"y": 11.0,
+								"z": -9.669312477111816
+							}
+						}
+					},
+					{
+						"color": {
+							"b": 1.0,
+							"g": 1.0,
+							"r": 1.0
+						},
+						"component": "class SpotLightComponent",
+						"coneAngle": {
+							"x": 0.0,
+							"y": 0.46799999475479126
+						},
+						"intensity": 1000.0,
+						"radius": 60.0,
+						"shadow_flag": 16,
+						"shadow_strength": 1.0,
+						"unit": "Lumen"
+					}
+				],
+				"isActive": true,
+				"isRenamable": true,
+				"isView": true,
+				"name": "Spot Light[3]"
+			}
+		],
+		"components": [],
+		"isActive": true,
+		"isRenamable": true,
+		"isView": true,
+		"name": "Light Container"
+	},
+	{
+		"children": [
+			{
+				"children": [],
+				"components": [
+					{
+						"component": "class TransformComponent",
+						"transform": {
+							"rotate": {
+								"w": 1.0,
+								"x": 0.0,
+								"y": 0.0,
+								"z": 0.0
+							},
+							"scale": {
+								"x": 1.0,
+								"y": 1.0,
+								"z": 1.0
+							},
+							"translate": {
+								"x": -1.281699776649475,
+								"y": 14.342178344726563,
+								"z": 15.173163414001465
+							}
+						}
+					},
+					{
+						"color": {
+							"b": 1.0,
+							"g": 1.0,
+							"r": 1.0
+						},
+						"component": "class PointLightComponent",
+						"intensity": 7.0,
+						"radius": 31.299999237060547,
+						"shadow_flag": 16,
+						"shadow_strength": 0.0,
+						"unit": "Candela"
+					}
+				],
+				"isActive": true,
+				"isRenamable": true,
+				"isView": true,
+				"name": "Point Light[0]"
+			},
+			{
+				"children": [],
+				"components": [
+					{
+						"component": "class TransformComponent",
+						"transform": {
+							"rotate": {
+								"w": 1.0,
+								"x": 0.0,
+								"y": 0.0,
+								"z": 0.0
+							},
+							"scale": {
+								"x": 1.0,
+								"y": 1.0,
+								"z": 1.0
+							},
+							"translate": {
+								"x": -0.27157658338546753,
+								"y": 11.420243263244629,
+								"z": -11.400537490844727
+							}
+						}
+					},
+					{
+						"color": {
+							"b": 1.0,
+							"g": 1.0,
+							"r": 1.0
+						},
+						"component": "class PointLightComponent",
+						"intensity": 7.0,
+						"radius": 25.600000381469727,
+						"shadow_flag": 16,
+						"shadow_strength": 0.0,
+						"unit": "Candela"
+					}
+				],
+				"isActive": true,
+				"isRenamable": true,
+				"isView": true,
+				"name": "Point Light[1]"
+			}
+		],
+		"components": [],
+		"isActive": true,
+		"isRenamable": true,
+		"isView": true,
+		"name": "Environment Light"
 	}
 ]
