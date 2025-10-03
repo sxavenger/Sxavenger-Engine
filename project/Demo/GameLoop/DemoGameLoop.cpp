@@ -55,7 +55,7 @@ void DemoGameLoop::InitGame() {
 		light->SetIrradiance(sUContentStorage->Import<UContentTexture>("assets/textures/textureCube/sky_irradiance.dds")->GetId());
 		light->SetRadiance(sUContentStorage->Import<UContentTexture>("assets/textures/textureCube/sky_radiance.dds")->GetId());
 		light->SetEnvironment(sUContentStorage->Import<UContentTexture>("assets/textures/textureCube/sky_environment.dds")->GetId());
-		light->SetIntensity(0.3f);
+		light->SetIntensity(1.0f);
 	}
 
 	{ //!< performance

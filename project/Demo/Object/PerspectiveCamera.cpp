@@ -5,6 +5,7 @@
 //-----------------------------------------------------------------------------------------
 //* engine
 #include <Engine/System/SxavengerSystem.h>
+#include <Engine/Component/Components/PostProcessLayer/PostProcessLayerComponent.h>
 #include <Engine/Editor/EditorEngine.h>
 #include <Engine/Editor/Editors/RenderSceneEditor.h>
 
@@ -25,6 +26,12 @@ void PerspectiveCamera::Awake() {
 	camera_    = MonoBehaviour::AddComponent<CameraComponent>();
 
 	camera_->SetTag(CameraComponent::Tag::GameCamera);
+
+	auto process = MonoBehaviour::AddComponent<PostProcessLayerComponent>();
+	process->SetTag(PostProcessLayerComponent::Tag::Local);
+	process->AddPostProcess<PostProcessAutoExposure>();
+	process->AddPostProcess<PostProcessLocalExposure>(false);
+	process->AddPostProcess<PostProcessBloom>();
 
 }
 
@@ -85,6 +92,13 @@ void PerspectiveCamera::InputFirstPerson() {
 	mouse_->SetPosition(static_cast<Vector2i>(kMainWindowSize) / 2);
 	mouse_->ShowCousor(false);
 
+	// ホイールでfocus距離を変更
+	float wheel = mouse_->GetDeltaWheel();
+
+	if (wheel != 0.0f) {
+		camera_->GetProjection().focal += wheel;
+		camera_->GetProjection().focal = Clamp(camera_->GetProjection().focal, 12.0f, 40.0f);
+	}
 }
 
 void PerspectiveCamera::UpdateFirstPersonView() {

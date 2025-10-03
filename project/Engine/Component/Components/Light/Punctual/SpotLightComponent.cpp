@@ -59,7 +59,7 @@ void SpotLightComponent::ShowComponentInspector() {
 	SxImGui::DragFloat("intensity",        &parameter.intensity, 0.1f, 0.0f, std::nullopt, format.c_str());
 	SxImGui::DragFloat("radius",           &parameter.radius, 0.1f, 0.0f);
 	SxImGui::DragFloat("inner cone angle", &parameter.coneAngle.x, 0.01f, 0.0f, parameter.coneAngle.y);
-	SxImGui::DragFloat("outer cone angle", &parameter.coneAngle.y, 0.01f, 0.0f, kDegToRad * 80.0f);
+	SxImGui::DragFloat("outer cone angle", &parameter.coneAngle.y, 0.01f, parameter.coneAngle.x, kDegToRad * 80.0f);
 
 	parameter.shadow.ShowInspector();
 
