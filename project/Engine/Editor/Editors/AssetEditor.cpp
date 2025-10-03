@@ -9,28 +9,34 @@
 
 //* engine
 #include <Engine/System/UI/SxImGui.h>
+#include <Engine/Preview/Content/UContentStorage.h>
 
 //////////////////////////////////////////////////////////////////////////////////////////
 // AssetEditor class methods
 //////////////////////////////////////////////////////////////////////////////////////////
 
 void AssetEditor::Init() {
-	folderTextures_ = SxavengerAsset::TryImport<AssetTexture>("Packages/textures/icon/folder.png");
-	fileTexture_    = SxavengerAsset::TryImport<AssetTexture>("Packages/textures/icon/file.png");
+	folderTextures_ = sUContentStorage->Import<UContentTexture>("Packages/textures/icon/folder.png")->GetId();
+	fileTexture_    = sUContentStorage->Import<UContentTexture>("Packages/textures/icon/file.png")->GetId();
 
-	assetTextures_[&typeid(AssetTexture)] = SxavengerAsset::TryImport<AssetTexture>("Packages/textures/icon/texture.png");
-	assetTextures_[&typeid(AssetModel)]   = SxavengerAsset::TryImport<AssetTexture>("Packages/textures/icon/model.png");
-	assetTextures_[&typeid(AssetBlob)]    = SxavengerAsset::TryImport<AssetTexture>("Packages/textures/icon/shader.png");
-	assetTextures_[&typeid(AssetScene)]   = SxavengerAsset::TryImport<AssetTexture>("Packages/textures/icon/scene.png");
+	assetTextures_[&typeid(UContentTexture)] = sUContentStorage->Import<UContentTexture>("Packages/textures/icon/texture.png")->GetId();
+	assetTextures_[&typeid(UContentModel)]   = sUContentStorage->Import<UContentTexture>("Packages/textures/icon/model.png")->GetId();
+	assetTextures_[&typeid(UContentBlob)]    = sUContentStorage->Import<UContentTexture>("Packages/textures/icon/shader.png")->GetId();
+	assetTextures_[&typeid(UContentScene)]   = sUContentStorage->Import<UContentTexture>("Packages/textures/icon/scene.png")->GetId();
 
 	// extensionの登録
 	// todo: extensionからiconを変更
-	sAssetStorage->RegisterExtension<AssetTexture>(".png");
-	sAssetStorage->RegisterExtension<AssetTexture>(".jpg");
-	sAssetStorage->RegisterExtension<AssetModel>(".gltf");
-	sAssetStorage->RegisterExtension<AssetModel>(".obj");
-	sAssetStorage->RegisterExtension<AssetModel>(".fbx");
-	sAssetStorage->RegisterExtension<AssetScene>(".scene");
+	RegisterExtension<UContentTexture>(".png");
+	RegisterExtension<UContentTexture>(".jpg");
+	RegisterExtension<UContentTexture>(".jpeg");
+	RegisterExtension<UContentTexture>(".tga");
+	RegisterExtension<UContentModel>(".gltf");
+	RegisterExtension<UContentModel>(".obj");
+	RegisterExtension<UContentModel>(".fbx");
+	RegisterExtension<UContentScene>(".scene");
+	RegisterExtension<UContentFont>(".ttf");
+	RegisterExtension<UContentAudio>(".wav");
+	RegisterExtension<UContentAudio>(".mp3");
 
 }
 
@@ -80,8 +86,8 @@ void AssetEditor::ShowAssetWindow() {
 
 }
 
-bool AssetEditor::ImageButton(const std::filesystem::path& path, AssetObserver<AssetTexture>& texture) {
-	return ImGui::ImageButton(ConvertStr(path).c_str(), texture.WaitAcquire()->GetGPUHandleSRV().ptr, { iconSize_, iconSize_ });
+bool AssetEditor::ImageButton(const std::filesystem::path& path, const UAssetParameter<UAssetTexture>& texture) {
+	return ImGui::ImageButton(ConvertStr(path).c_str(), texture.WaitRequire()->GetGPUHandleSRV().ptr, { iconSize_, iconSize_ });
 }
 
 const std::string AssetEditor::ConvertStr(const std::filesystem::path& path) {
@@ -89,15 +95,15 @@ const std::string AssetEditor::ConvertStr(const std::filesystem::path& path) {
 	return std::string(name.begin(), name.end());
 }
 
-void AssetEditor::SetSelected(BaseAsset* asset) {
+void AssetEditor::SetSelected(UBaseContent* content) {
 	if (auto editor = BaseEditor::GetEditorEngine()->GetEditor<InspectorEditor>()) {
-		editor->SetInspector(asset);
+		editor->SetInspector(content);
 	}
 }
 
-bool AssetEditor::CheckSelectedInspector(BaseAsset* asset) {
+bool AssetEditor::CheckSelectedInspector(UBaseContent* content) {
 	if (auto editor = BaseEditor::GetEditorEngine()->GetEditor<InspectorEditor>()) {
-		return editor->CheckInspector(asset);
+		return editor->CheckInspector(content);
 	}
 
 	return false;
@@ -112,6 +118,10 @@ void AssetEditor::ForEachDirectory(const std::filesystem::path& path, const std:
 
 	// file only
 	for (const auto& entry : std::filesystem::directory_iterator(path) | std::views::filter([](const std::filesystem::directory_entry& entry) { return !entry.is_directory(); })) {
+		if (entry.path().extension() == UBaseContent::GetContentExtension()) {
+			continue; // contentファイルは除外
+		}
+
 		func(entry);
 	}
 }
@@ -273,18 +283,18 @@ void AssetEditor::ShowAssetLayout() {
 
 
 		} else {
-			if (sAssetStorage->Contains(part)) { //!< Assetとして読み込まれている場合
-				auto type = sAssetStorage->GetType(part);
+			if (auto type = sUContentStorage->GetType(part)) { //!< Assetとして読み込まれている場合
 
 				auto& texture = assetTextures_.contains(type)
 					? assetTextures_[type] //!< asset texture
 					: fileTexture_;        //!< unknown asset type
 
 				if (ImageButton(part, texture)) {
-					SetSelected(sAssetStorage->GetAsset(type, part).get());
+					SetSelected(sUContentStorage->GetContent(type, part).get());
 				}
 
-				sAssetStorage->DragAndDropSource(type, part);
+				// sourceの設定
+				sUContentStorage->DragAndDropSource(type, part);
 
 			} else {
 				if (ImageButton(part, fileTexture_)) {
@@ -305,7 +315,12 @@ void AssetEditor::ShowAssetLayout() {
 				}
 
 				if (ImGui::Selectable("Import")) {
-					sAssetStorage->ImportExtension(part);
+					if (extensions_.contains(part.extension())) {
+						const auto& [type, function] = extensions_.at(part.extension());
+
+						std::shared_ptr<UBaseContent> content = function(part);
+						sUContentStorage->TryEmplace(type, content);
+					}
 				}
 
 				ImGui::EndPopup();

@@ -46,12 +46,12 @@ struct Skeleton {
 
 	void Create(const BornNode& node);
 
-	void Update(const Animation& animation, TimePointf<TimeUnit::second> time, bool isLoop = true);
+	void Update(const Animation& animation, TimePointd<TimeUnit::second> time, bool isLoop = true);
 	//void Update(const AnimationGroup& animationGroup, DeltaTimePoint<TimeUnit::s> time, bool isLoop = true);
 
 	void TransitionAnimation(
-		const Animation& animationA, TimePointf<TimeUnit::second> timeA, bool isLoopA,
-		const Animation& animationB, TimePointf<TimeUnit::second> timeB, bool isLoopB,
+		const Animation& animationA, TimePointd<TimeUnit::second> timeA, bool isLoopA,
+		const Animation& animationB, TimePointd<TimeUnit::second> timeB, bool isLoopB,
 		float t
 	);
 
@@ -80,13 +80,13 @@ private:
 
 	uint32_t CreateJoint(const BornNode& node, const std::optional<uint32_t>& parent);
 
-	std::optional<QuaternionTransform> GetTransform(const std::string& jointName, const Animation& animation, TimePointf<TimeUnit::second> time);
+	std::optional<QuaternionTransform> GetTransform(const std::string& jointName, const Animation& animation, TimePointd<TimeUnit::second> time);
 
-	void ApplyAnimation(const Animation& animation, TimePointf<TimeUnit::second> time);
+	void ApplyAnimation(const Animation& animation, TimePointd<TimeUnit::second> time);
 
 	void ApplyTransitionAnimation(
-		const Animation& animationA, TimePointf<TimeUnit::second> timeA,
-		const Animation& animationB, TimePointf<TimeUnit::second> timeB,
+		const Animation& animationA, TimePointd<TimeUnit::second> timeA,
+		const Animation& animationB, TimePointd<TimeUnit::second> timeB,
 		float t
 	);
 

@@ -186,7 +186,7 @@ void MouseInput::SetPosition(const Vector2i& position) const {
 	}
 
 	POINT point = { position.x, position.y };
-	ScreenToClient(currentHwnd_, &point);
+	ClientToScreen(currentHwnd_, &point);
 	SetCursorPos(point.x, point.y);
 }
 
@@ -224,6 +224,10 @@ float MouseInput::GetDeltaWheel() const {
 	}
 
 	return static_cast<float>(mouse_.first.lZ) / WHEEL_DELTA; //!< wheelの最大値でnormalize
+}
+
+bool MouseInput::IsWheel() const {
+	return mouse_.first.lZ != 0;
 }
 
 bool MouseInput::IsWheelUp() const {

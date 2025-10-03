@@ -108,3 +108,11 @@ void UnorderedTexture::TransitionEndUnordered(const DirectXQueueContext* context
 
 	context->GetCommandList()->ResourceBarrier(1, &barrier);
 }
+
+void UnorderedTexture::Barrier(const DirectXQueueContext* context) {
+	D3D12_RESOURCE_BARRIER barrier = {};
+	barrier.Type                   = D3D12_RESOURCE_BARRIER_TYPE_UAV;
+	barrier.UAV.pResource          = resource_.Get();
+
+	context->GetCommandList()->ResourceBarrier(1, &barrier);
+}

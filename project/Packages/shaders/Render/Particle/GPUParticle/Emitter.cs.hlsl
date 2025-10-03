@@ -67,7 +67,7 @@ bool GetFreeIndex(out uint index) {
 [numthreads(1, 1, 1)]
 void main() {
 
-	Random random;
+	WhiteNoise::Random random;
 	random.seed = gEmitter.seed;
 
 	for (uint i = 0; i < gEmitter.count; i++) {

@@ -8,6 +8,8 @@
 
 //* engine
 #include <Engine/Content/Animation/Skeleton.h>
+#include <Engine/Preview/Asset/UAssetSkeleton.h>
+#include <Engine/Preview/Asset/UAssetParameter.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // ArmatureComponent class
@@ -26,23 +28,28 @@ public:
 
 	//* armature option *//
 
-	void SetSkeleton(const Skeleton& skeleton) { skeleton_ = skeleton; }
+	void SetSkeleton(const Uuid& skeleton);
 
-	void UpdateAnimation(const Animation& animation, TimePointf<TimeUnit::second> time, bool isLoop = true);
+	void UpdateAnimation(const Animation& animation, TimePointd<TimeUnit::second> time, bool isLoop = true);
 
 	void TransitionAnimation(
-		const Animation& animationA, TimePointf<TimeUnit::second> timeA, bool isLoopA,
-		const Animation& animationB, TimePointf<TimeUnit::second> timeB, bool isLoopB,
+		const Animation& animationA, TimePointd<TimeUnit::second> timeA, bool isLoopA,
+		const Animation& animationB, TimePointd<TimeUnit::second> timeB, bool isLoopB,
 		float t
 	);
 
-	//* getter *//
-
-	const Skeleton& GetSkeleton() const;
+	const Skeleton& GetSkeleton() const { return skeleton_; }
 
 	//* inspector *//
 
 	void ShowComponentInspector() override;
+
+	//* json option *//
+
+	json PerseToJson() const override;
+
+	void InputJson(const json& data) override;
+
 
 	//=========================================================================================
 	// public variables
@@ -56,10 +63,11 @@ private:
 	// private variables
 	//=========================================================================================
 
-	std::optional<Skeleton> skeleton_;
+	UAssetParameter<UAssetSkeleton> referenceSkeleton_;
+	Skeleton skeleton_;
+
 
 	//!< hack: animationをここでするのはどうか
-	//!< 理想はanimator componentなどを作ってそこで管理する
 
 	//=========================================================================================
 	// private methods

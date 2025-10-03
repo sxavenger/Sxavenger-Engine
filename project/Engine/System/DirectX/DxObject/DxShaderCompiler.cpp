@@ -83,18 +83,15 @@ ComPtr<IDxcBlob> ShaderCompiler::Compile(
 	};
 
 #ifdef _DEVELOPMENT
-	if (SxavengerConfig::GetConfig().isEnableShaderOptimization) {
-		arguments.emplace_back(L"-O3"); //!< 最適化を最大にする
-
-	} else {
-		arguments.emplace_back(L"-Od"); //!< 最適化を外しておく
-	}
+	arguments.emplace_back(
+		SxavengerConfig::GetConfig().isEnableShaderOptimization ? L"-O3" : L"-Od"
+	);
 #else
+	// releaseではoption関わらず最適化
 	arguments.emplace_back(L"-O3"); //!< 最適化を最大にする
 #endif
 
-	//!< entry pointがある場合, 設定
-	if (!entryPoint.empty()) {
+	if (!entryPoint.empty()) { //!< entry pointがある場合, 設定
 		arguments.emplace_back(L"-E");
 		arguments.emplace_back(entryPoint.c_str());
 	}

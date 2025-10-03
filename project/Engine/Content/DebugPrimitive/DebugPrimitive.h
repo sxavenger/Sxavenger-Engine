@@ -180,10 +180,12 @@ public:
 
 	void PushAxis(const Vector3f& center, float length);
 
-	void PushBox(const Vector3f& min, const Vector3f& max, const Color4f& color);
-	void PushCube(const Vector3f& center, const Vector3f& size, const Color4f& color);
+	void PushBox(const Vector3f& min, const Vector3f& max, const Color4f& color, float thickness = 0.0f);
+	void PushCube(const Vector3f& center, const Vector3f& size, const Color4f& color, float thickness = 0.0f);
 
 	void PushSphere(const Vector3f& center, float radius, const Color4f& color);
+
+	void PushCone(const Vector3f& center, const Vector3f& direction, float radius, float angle, const Color4f& color);
 
 private:
 

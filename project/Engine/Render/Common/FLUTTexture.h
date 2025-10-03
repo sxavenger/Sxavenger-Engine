@@ -7,8 +7,7 @@
 #include <Engine/System/DirectX/DxObject/DxDimensionBuffer.h>
 #include <Engine/System/DirectX/DxObject/DxDescriptor.h>
 #include <Engine/System/DirectX/Context/DirectXQueueContext.h>
-#include <Engine/Asset/Observer/AssetObserver.h>
-#include <Engine/Asset/Assets/Texture/AssetTexture.h>
+#include <Engine/Preview/Asset/UAssetTexture.h>
 
 //* lib
 #include <Lib/Geometry/Vector2.h>
@@ -36,8 +35,7 @@ public:
 	// public methods
 	//=========================================================================================
 
-	void Create(const AssetObserver<AssetTexture>& texture, const Vector2ui& tile);
-	void Create(const std::shared_ptr<AssetTexture>& texture, const Vector2ui& tile);
+	void Create(const std::shared_ptr<UAssetTexture>& texture, const Vector2ui& tile);
 
 	void Dispatch(const DirectXQueueContext* context);
 
@@ -53,8 +51,8 @@ private:
 
 	//* 2d texture *//
 
-	std::unique_ptr<DxObject::DimensionBuffer<Parameter>> parameter_;
-	std::shared_ptr<AssetTexture> texture_;
+	Parameter parameter_;
+	std::shared_ptr<UAssetTexture> texture_;
 
 	//* 3d texture *//
 
@@ -67,7 +65,5 @@ private:
 	//=========================================================================================
 
 	void CreateResource(const Vector2ui& size, const Vector2ui& tile);
-
-	void CreateBuffer(const Vector2ui& size, const Vector2ui& tile);
 
 };

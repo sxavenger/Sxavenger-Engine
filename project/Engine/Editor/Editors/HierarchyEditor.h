@@ -43,7 +43,7 @@ private:
 
 	//* parameter *//
 
-	const Color4f disableColor_ = { 0.4f, 0.4f, 0.4f, 1.0f };
+	static inline const Color4f disableColor_ = { 0.4f, 0.4f, 0.4f, 1.0f };
 
 	//* scene parameter *//
 
@@ -51,6 +51,8 @@ private:
 
 	std::filesystem::path sceneFileName_;
 	std::string           sceneNameBuf_;
+
+	std::string hierarchyBuf_;
 
 	//=========================================================================================
 	// private methods
@@ -70,6 +72,9 @@ private:
 	void ForEachBehaviourHierarchy(const MonoBehaviour::Hierarchy& hierarchy, const std::function<void(MonoBehaviour*)>& function);
 
 	void HierarchySelectable(MonoBehaviour* behaviour);
+
+	bool HierarchyFilter(MonoBehaviour* behaviour, const std::string& filter);
+	void HierarchySelectableFilter(MonoBehaviour* behaviour, const std::string& filter);
 
 	bool CheckSelected(MonoBehaviour* behaviour);
 

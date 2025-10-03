@@ -8,8 +8,20 @@ void CollisionCallbackCollection::SetOnCollisionFunctions(const std::string& tag
 	callbacks_[tagA][tagB] = functions;
 }
 
+void CollisionCallbackCollection::SetOnCollisionFunctionEnter(const std::string& tagA, const std::string& tagB, const OnCollisionFunction& function) {
+	callbacks_[tagA][tagB].enter = function;
+}
+
+void CollisionCallbackCollection::SetOnCollisionFunctionExit(const std::string& tagA, const std::string& tagB, const OnCollisionFunction& function) {
+	callbacks_[tagA][tagB].exit = function;
+}
+
+void CollisionCallbackCollection::SetOnCollisionFunctionStay(const std::string& tagA, const std::string& tagB, const OnCollisionFunction& function) {
+	callbacks_[tagA][tagB].stay = function;
+}
+
 void CollisionCallbackCollection::CallbackOnCollisionEnter(ColliderComponent* lhs, ColliderComponent* rhs) const {
-	if (!callbacks_.contains(lhs->GetTag()) || !callbacks_.at(lhs->GetTag()).contains(rhs->GetTag())) {
+	if (!Contains(lhs->GetTag(), rhs->GetTag())) {
 		return;
 	}
 	
@@ -21,7 +33,7 @@ void CollisionCallbackCollection::CallbackOnCollisionEnter(ColliderComponent* lh
 }
 
 void CollisionCallbackCollection::CallbackOnCollisionExit(ColliderComponent* lhs, ColliderComponent* rhs) const {
-	if (!callbacks_.contains(lhs->GetTag()) || !callbacks_.at(lhs->GetTag()).contains(rhs->GetTag())) {
+	if (!Contains(lhs->GetTag(), rhs->GetTag())) {
 		return;
 	}
 
@@ -33,7 +45,7 @@ void CollisionCallbackCollection::CallbackOnCollisionExit(ColliderComponent* lhs
 }
 
 void CollisionCallbackCollection::CallbackOnCollisionStay(ColliderComponent* lhs, ColliderComponent* rhs) const {
-	if (!callbacks_.contains(lhs->GetTag()) || !callbacks_.at(lhs->GetTag()).contains(rhs->GetTag())) {
+	if (!Contains(lhs->GetTag(), rhs->GetTag())) {
 		return;
 	}
 
@@ -45,15 +57,11 @@ void CollisionCallbackCollection::CallbackOnCollisionStay(ColliderComponent* lhs
 }
 
 bool CollisionCallbackCollection::CheckRegistered(ColliderComponent* lhs, ColliderComponent* rhs) const {
-	if (callbacks_.contains(lhs->GetTag()) && callbacks_.at(lhs->GetTag()).contains(rhs->GetTag())) {
-		return true;
-	}
+	return Contains(lhs->GetTag(), rhs->GetTag()) || Contains(rhs->GetTag(), lhs->GetTag());
+}
 
-	if (callbacks_.contains(rhs->GetTag()) && callbacks_.at(rhs->GetTag()).contains(lhs->GetTag())) {
-		return true;
-	}
-
-	return false;
+bool CollisionCallbackCollection::Contains(const std::string& tagA, const std::string& tagB) const {
+	return callbacks_.contains(tagA) && callbacks_.at(tagA).contains(tagB);
 }
 
 std::pair<std::string, std::string> CollisionCallbackCollection::Sort(const std::string& x, const std::string& y) {

@@ -3,24 +3,19 @@
 //-----------------------------------------------------------------------------------------
 #include "LightRender.hlsli"
 
+//* component
+#include "../../Component/SpotLightComponent.hlsli"
+
 //=========================================================================================
 // buffers
 //=========================================================================================
 
-struct SpotLight {
-	float3 color;
-	float intensity;
-	float distance;
-	float falloff; //!< theta_p
-	float angle;   //!< theta_u
-};
-ConstantBuffer<SpotLight> gSpotLight : register(b0);
-
-ConstantBuffer<InlineShadow> gShadow : register(b1);
+StructuredBuffer<SpotLightComponent> gParameters : register(t0);
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // main
 ////////////////////////////////////////////////////////////////////////////////////////////
+[earlydepthstencil]
 PSOutput main(PSInput input) {
 
 	PSOutput output = (PSOutput)0;
@@ -28,42 +23,55 @@ PSOutput main(PSInput input) {
 	//* Deferred Pass情報の取得
 	Surface surface;
 	surface.GetSurface(input.position.xy);
-	
+
 	//* Lightの情報を取得
-	float3 p_light = gTransforms[input.instanceId].GetPosition(); //!< lightの中心座標
-	
+	float3 l = gParameters[input.instanceId].GetDirectionFromSurface(gTransforms[input.instanceId].GetPosition(), surface.position); //!< lightの方向ベクトル
+
+	//* Cameraの情報を取得
+	float3 v = normalize(gCamera.GetPosition() - surface.position);
+
 	//* 計算
-	//!< func_diffuse(n, l)
-	float3 l      = normalize(p_light - surface.position); //!< lightの方向ベクトル
-	float diffuse = CalculateDiffuseHalfLambert(surface.normal, l);
-	
-	//!< func_dist(r) = func_win(r);
-	float r    = length(p_light - surface.position); //!< lightとsurfaceの距離
-	float dist = pow(max(1.0f - pow(r / gSpotLight.distance, 4.0f), 0.0f), 2.0f); //!< dist = func_win(r);
-	
-	//!< func_dir(l)
-	float theta_s = dot(-l, gTransforms[input.instanceId].GetDirection());
-	float t       = saturate((theta_s - gSpotLight.angle) / (gSpotLight.falloff - gSpotLight.angle));
-	//float dir     = t * t;
-	float dir     = t * t * (3.0f - 2.0f * t); //!< smoothstep
+	float3 h = normalize(l + v);
 
-	float3 c_light = gSpotLight.color * gSpotLight.intensity * dist * dir;
-	
-	RayDesc desc;
-	desc.Origin    = surface.position;
-	desc.Direction = l;
-	desc.TMin      = kTMin;
-	desc.TMax      = r;
+	float NdotV = saturate(dot(surface.normal, v));
+	float NdotL = saturate(dot(surface.normal, l));
+	float NdotH = saturate(dot(surface.normal, h));
+	float VdotH = saturate(dot(v, h));
 
-	c_light *= gShadow.TraceShadow(desc, gScene);
-	
-	//* 出力
-	output.color.rgb = diffuse * c_light * surface.albedo;
-	// func_unlit() = float3(0.0f, 0.0f, 0.0f), func_lit() = c_surface
-	
+	if (NdotL <= 0.0f) {
+		discard;
+	}
+
+	static const float3 kMinFrenel = float3(0.04f, 0.04f, 0.04f); //!< 非金属の最小Frenel値
+
+	// diffuse Albedo
+	//!< 金属(metallic = 1.0f) -> 0.0f
+	//!< 非金属(metallic = 0.0f) -> albedo * (1.0f - kMinFrenel)
+	float3 diffuseAlbedo = surface.albedo * (1.0f - kMinFrenel) * (1.0f - surface.metallic);
+
+	// specular Albedo
+	//!< 金属(metallic = 1.0f) -> kMinFrenel
+	//!< 非金属(metallic = 0.0f) -> albedo
+	float3 specularAlbedo = lerp(kMinFrenel, surface.albedo, surface.metallic);
+
+	float3 f  = F_SphericalGaussian(VdotH, specularAlbedo);
+	float  vh = V_HeightCorrelated(NdotV, NdotL, surface.roughness);
+	float  d  = D_GGX(NdotH, surface.roughness);
+
+	float3 diffuseBRDF  = DiffuseBRDF(diffuseAlbedo);
+	float3 specularBRDF = SpecularBRDF(f, vh, d);
+
+	//* Lightの影響範囲
+	float3 color_mask = gParameters[input.instanceId].GetColorMask();
+	float light_mask  = gParameters[input.instanceId].GetLightMask(gScene, gTransforms[input.instanceId].GetPosition(), gTransforms[input.instanceId].GetDirection(), surface.position);
+
+	output.color.rgb = (diffuseBRDF + specularBRDF) * NdotL * color_mask * light_mask;
+	// todo: specularFactorを追加
+
 	output.color.a = 1.0f;
-	
 	return output;
 	
+	
 }
+
 

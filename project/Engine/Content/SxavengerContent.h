@@ -53,11 +53,13 @@ public:
 
 	static void PushAxis(const Vector3f& center, float length);
 
-	static void PushBox(const Vector3f& min, const Vector3f& max, const Color4f& color);
+	static void PushBox(const Vector3f& min, const Vector3f& max, const Color4f& color, float thickness = 0.0f);
 
 	static void PushSphere(const Vector3f& center, float radius, const Color4f& color);
 
 	static void PushGrid(const CameraComponent* camera, const Vector2f& size, float radius);
+
+	static void PushCone(const Vector3f& center, const Vector3f& direction, float radius, float angle, const Color4f& color);
 
 	static DebugPrimitive* GetDebugPrimitive() { return debugPrimitive_.get(); }
 

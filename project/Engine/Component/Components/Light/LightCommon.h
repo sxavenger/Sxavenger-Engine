@@ -14,10 +14,9 @@
 #include <memory>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// LightCommon class
+// LightCommon namespace
 ////////////////////////////////////////////////////////////////////////////////////////////
-class LightCommon {
-public:
+namespace LightCommon {
 
 	////////////////////////////////////////////////////////////////////////////////////////////
 	// Units enum class
@@ -39,6 +38,8 @@ public:
 
 		void Init();
 
+		void ShowInspector();
+
 		//=========================================================================================
 		// public variables
 		//=========================================================================================
@@ -49,38 +50,4 @@ public:
 		// todo: soft shadow
 		// strength自体を削除したい.
 	};
-	
-public:
-
-	//=========================================================================================
-	// public methods
-	//=========================================================================================
-
-	LightCommon()          = default;
-	virtual ~LightCommon() = default;
-
-	//* buffer option *//
-
-	void CreateShadowBuffer();
-
-	const D3D12_GPU_VIRTUAL_ADDRESS& GetShadowBufferAddress() const;
-
-	const InlineShadow& GetShadowParameter() const;
-	InlineShadow& GetShadowParameter();
-
-	//* inspector *//
-
-	void ShowCommonInspector();
-
-protected:
-
-	//=========================================================================================
-	// protected variables
-	//=========================================================================================
-
-	std::unique_ptr<DxObject::DimensionBuffer<InlineShadow>> shadow_;
-
-	static inline const Color4f kColor = Color4f::Convert(0xABCCC4FF);
-	// b9cdc6
-
-};
+}

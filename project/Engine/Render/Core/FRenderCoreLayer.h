@@ -6,6 +6,9 @@
 //* engine
 #include <Engine/Module/Pipeline/CustomGraphicsPipeline.h>
 
+//* external
+#include <magic_enum.hpp>
+
 ////////////////////////////////////////////////////////////////////////////////////////////
 // FRenderCoreLight class
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -13,12 +16,12 @@ class FRenderCoreLayer {
 public:
 
 	////////////////////////////////////////////////////////////////////////////////////////////
-	// PipelineType enum class
+	// Type enum class
 	////////////////////////////////////////////////////////////////////////////////////////////
-	enum class PipelineType : uint8_t {
+	enum class Type : uint8_t {
 		Sprite,
+		Text
 	};
-	static const uint8_t kPipelineTypeCount = static_cast<uint8_t>(PipelineType::Sprite) + 1;
 
 public:
 
@@ -33,9 +36,9 @@ public:
 
 	//* pipeline option *//
 
-	void SetPipeline(PipelineType type, const DirectXQueueContext* context, const Vector2ui& size) const;
+	void SetPipeline(Type type, const DirectXQueueContext* context, const Vector2ui& size) const;
 
-	void BindGraphicsBuffer(PipelineType type, const DirectXQueueContext* context, const DxObject::BindBufferDesc& desc) const;
+	void BindGraphicsBuffer(Type type, const DirectXQueueContext* context, const DxObject::BindBufferDesc& desc) const;
 
 private:
 
@@ -45,7 +48,7 @@ private:
 
 	DxObject::GraphicsPipelineDesc desc_;
 
-	std::array<std::unique_ptr<CustomReflectionGraphicsPipeline>, kPipelineTypeCount> pipelines_;
+	std::array<std::unique_ptr<CustomReflectionGraphicsPipeline>, magic_enum::enum_count<Type>()> pipelines_;
 
 	static const std::filesystem::path kDirectory_;
 

@@ -29,7 +29,8 @@ void PostProcessLUT::Process(const DirectXQueueContext* context, const ProcessIn
 	}
 
 	auto process = info.buffer->GetProcessTextures();
-	process->NextProcess(context);
+	process->NextProcess();
+	process->GetCurrentTexture()->TransitionBeginUnordered(context);
 
 	auto core = FRenderCore::GetInstance()->GetProcess();
 
@@ -42,7 +43,7 @@ void PostProcessLUT::Process(const DirectXQueueContext* context, const ProcessIn
 
 	//* textures
 	desc.SetHandle("gInput", process->GetPrevTexture()->GetGPUHandleSRV());
-	desc.SetHandle("gOutput", process->GetIndexTexture()->GetGPUHandleUAV());
+	desc.SetHandle("gOutput", process->GetCurrentTexture()->GetGPUHandleUAV());
 
 	// lut
 	desc.SetHandle("gLUTTexture", texture_->GetGPUHandleSRV());
@@ -50,6 +51,8 @@ void PostProcessLUT::Process(const DirectXQueueContext* context, const ProcessIn
 
 	core->BindComputeBuffer(FRenderCoreProcess::ProcessType::LUT, context, desc);
 	core->Dispatch(context, info.buffer->GetSize());
+
+	process->GetCurrentTexture()->TransitionEndUnordered(context);
 }
 
 void PostProcessLUT::ShowInspectorImGui() {
@@ -64,21 +67,81 @@ void PostProcessLUT::ShowInspectorImGui() {
 		ImGui::EndDisabled();
 	}
 
-	// todo: tileをなんやかんや...
+	{ //!< infomation
+
+		SxImGui::InputScalarN<uint32_t, 2>("tile", &tile_.x);
+
+		ImVec2 target = {};
+
+		if (referenceTexture_.Empty()) {
+
+			Vector2ui size  = { 16, 256 };
+			ImVec2 region   = ImGui::GetContentRegionAvail();
+
+			// 画像アス比と分割したWindowアス比の計算
+			float textureAspectRatio = static_cast<float>(size.x) / static_cast<float>(size.y);
+			float windowAspectRatio  = region.x / region.y;
+
+			// 出力する画像サイズの設定
+			ImVec2 displayTextureSize = region;
+
+			// 画像サイズの調整
+			if (textureAspectRatio <= windowAspectRatio) {
+				displayTextureSize.x *= textureAspectRatio / windowAspectRatio;
+
+			} else {
+				displayTextureSize.y *= windowAspectRatio / textureAspectRatio;
+			}
+
+			target = displayTextureSize;
+			
+		} else {
+
+			auto texture = referenceTexture_.WaitGet();
+
+			ImVec2 cursor = ImGui::GetCursorPos();
+
+			ImVec2 region = ImGui::GetContentRegionAvail();
+			Vector2f size = static_cast<Vector2f>(texture->GetMetadata().size);
+
+			// 画像アス比と分割したWindowアス比の計算
+			float textureAspectRatio = static_cast<float>(size.x) / static_cast<float>(size.y);
+			float windowAspectRatio  = region.x / region.y;
+
+			// 出力する画像サイズの設定
+			ImVec2 displayTextureSize = region;
+
+			// 画像サイズの調整
+			if (textureAspectRatio <= windowAspectRatio) {
+				displayTextureSize.x *= textureAspectRatio / windowAspectRatio;
+
+			} else {
+				displayTextureSize.y *= windowAspectRatio / textureAspectRatio;
+			}
+
+			ImGui::Image(texture->GetGPUHandleSRV().ptr, displayTextureSize);
+
+			target = displayTextureSize;
+
+			ImGui::SetCursorPos(cursor);
+		}
+
+		ImGui::InvisibleButton("## lut texture drag and drop", target);
+
+		sUContentStorage->DragAndDropTargetContentFunc<UContentTexture>([this](const std::shared_ptr<UContentTexture>& content) {
+			content->WaitComplete(); // contentの読み込みを待つ
+			CreateTexture(SxavengerSystem::GetDirectQueueContext(), content->GetId(), tile_);
+		});
+	}
 }
 
-void PostProcessLUT::CreateTexture(const DirectXQueueContext* context, const AssetObserver<AssetTexture>& texture, const Vector2ui& tile) {
+void PostProcessLUT::CreateTexture(const DirectXQueueContext* context, const UAssetParameter<UAssetTexture>& texture, const Vector2ui& tile) {
+
+	// 引数の保存
+	referenceTexture_ = texture;
+	tile_             = tile;
+
 	texture_ = std::make_unique<FLUTTexture>();
-	texture_->Create(texture, tile);
+	texture_->Create(referenceTexture_.WaitRequire(), tile_);
 	texture_->Dispatch(context);
-
-	tile_ = tile;
-}
-
-void PostProcessLUT::CreateTexture(const DirectXQueueContext* context, const std::shared_ptr<AssetTexture>& texture, const Vector2ui& tile) {
-	texture_ = std::make_unique<FLUTTexture>();
-	texture_->Create(texture, tile);
-	texture_->Dispatch(context);
-
-	tile_ = tile;
 }

@@ -30,10 +30,14 @@ void FRenderCoreProcess::Init() {
 		desc.SetSamplerLinear("gSampler", DxObject::SamplerMode::MODE_CLAMP);
 
 		//!< bloom
-		CreatePipeline(ProcessType::Bloom, "PostProcess/Bloom.cs.hlsl", desc);
+		CreatePipeline(ProcessType::BloomLuminance, "PostProcess/Bloom/BloomLuminance.cs.hlsl", desc);
+		CreatePipeline(ProcessType::BloomApply,     "PostProcess/Bloom/BloomApply.cs.hlsl",     desc);
 
 		//!< radial blur
 		CreatePipeline(ProcessType::RadialBlur, "PostProcess/RadialBlur.cs.hlsl", desc);
+
+		//!< motion blur
+		CreatePipeline(ProcessType::MotionBlur, "PostProcess/MotionBlur.cs.hlsl", desc);
 
 		//!< chromatic aberration
 		CreatePipeline(ProcessType::ChromaticAberration, "PostProcess/ChromaticAberration.cs.hlsl", desc);
@@ -55,9 +59,6 @@ void FRenderCoreProcess::Init() {
 	}
 
 	//* composite *//
-
-	//!< environment
-	CreatePipeline(CompositeType::Environment, "CompositeProcess/Environment.cs.hlsl");
 
 	//!< tonemap
 	CreatePipeline(CompositeType::Tonemap, "CompositeProcess/Tonemap.cs.hlsl");
@@ -86,7 +87,7 @@ void FRenderCoreProcess::Dispatch(const DirectXQueueContext* context, const Vect
 
 void FRenderCoreProcess::CreatePipeline(ProcessType type, const std::filesystem::path& filepath) {
 	auto process = std::make_unique<CustomReflectionComputePipeline>();
-	process->CreateAsset(kDirectory_ / filepath);
+	process->CreateContent(kDirectory_ / filepath);
 	process->RegisterBlob();
 	process->ReflectionPipeline(SxavengerSystem::GetDxDevice());
 
@@ -95,7 +96,7 @@ void FRenderCoreProcess::CreatePipeline(ProcessType type, const std::filesystem:
 
 void FRenderCoreProcess::CreatePipeline(ProcessType type, const std::filesystem::path& filepath, const DxObject::SamplerBindDesc& desc) {
 	auto process = std::make_unique<CustomReflectionComputePipeline>();
-	process->CreateAsset(kDirectory_ / filepath);
+	process->CreateContent(kDirectory_ / filepath);
 	process->RegisterBlob();
 	process->ReflectionPipeline(SxavengerSystem::GetDxDevice(), desc);
 
@@ -104,7 +105,7 @@ void FRenderCoreProcess::CreatePipeline(ProcessType type, const std::filesystem:
 
 void FRenderCoreProcess::CreatePipeline(CompositeType type, const std::filesystem::path& filepath) {
 	auto process = std::make_unique<CustomReflectionComputePipeline>();
-	process->CreateAsset(kDirectory_ / filepath);
+	process->CreateContent(kDirectory_ / filepath);
 	process->RegisterBlob();
 	process->ReflectionPipeline(SxavengerSystem::GetDxDevice());
 
@@ -113,7 +114,7 @@ void FRenderCoreProcess::CreatePipeline(CompositeType type, const std::filesyste
 
 void FRenderCoreProcess::CreatePipeline(CompositeType type, const std::filesystem::path& filepath, const DxObject::SamplerBindDesc& desc) {
 	auto process = std::make_unique<CustomReflectionComputePipeline>();
-	process->CreateAsset(kDirectory_ / filepath);
+	process->CreateContent(kDirectory_ / filepath);
 	process->RegisterBlob();
 	process->ReflectionPipeline(SxavengerSystem::GetDxDevice(), desc);
 

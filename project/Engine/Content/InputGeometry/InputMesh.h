@@ -118,6 +118,8 @@ public:
 
 		void CreateBottomLevelAS(const TriangleInputAssembler<MeshVertexData>* ia, const DirectXQueueContext* context);
 
+		const DxrObject::BottomLevelAS* Get() const { return bottomLevelAS.get(); }
+
 		//=========================================================================================
 		// public variables
 		//=========================================================================================

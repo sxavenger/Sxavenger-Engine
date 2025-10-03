@@ -22,6 +22,8 @@ public:
 
 	void AddObject(std::unique_ptr<SceneObject>&& object);
 
+	void Clear() { objects_.clear(); }
+
 	//* json option *//
 
 	void OutputJson(const std::filesystem::path& filepath) const;

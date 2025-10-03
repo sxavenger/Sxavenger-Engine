@@ -3,6 +3,8 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
+//* component
+#include "../../Component/RectTransformComponent.hlsli"
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Input / Output structure
@@ -35,6 +37,8 @@ cbuffer Dimension : register(b10) {
 	uint2 size;
 }
 
+ConstantBuffer<RectTransformComponent> gTransform : register(b11);
+
 struct Transformation2d {
 
 	//=========================================================================================
@@ -52,6 +56,5 @@ struct Transformation2d {
 	}
 	
 };
-ConstantBuffer<Transformation2d> gTransformation2d : register(b11);
 ConstantBuffer<Transformation2d> gTransformationUV : register(b12);
 

@@ -18,6 +18,10 @@ float GetDepth(uint2 index) {
 	return gDepth.Load(uint3(index, 0));
 }
 
+float GetDepthSample(float2 uv, SamplerState sample) {
+	return gDepth.Sample(sample, uv);
+}
+
 float3 GetAlbedo(uint2 index) {
 	return gAlbedo.Load(uint3(index, 0)).rgb;
 }

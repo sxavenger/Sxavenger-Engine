@@ -4,7 +4,6 @@
 // include
 //-----------------------------------------------------------------------------------------
 //* engine
-#include <Engine/Asset/SxavengerAsset.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // SkyLightActor class methods
@@ -12,9 +11,9 @@
 
 void SkyLightActor::Init(const Vector2f& size) {
 	environment_.Create(size);
-	skyLightComponent_ = AddComponent<SkyLightComponent>();
+	skyLightComponent_ = MonoBehaviour::AddComponent<SkyLightComponent>();
 
-	SetName("sky light actor");
+	MonoBehaviour::SetName("sky light actor");
 }
 
 void SkyLightActor::Term() {
@@ -26,9 +25,11 @@ void SkyLightActor::Update(bool isWait) {
 		return;
 	}
 
-	if (texture_.IsRegistered()) {
-		environment_.SetEnvironment(texture_.WaitAcquire()->GetGPUHandleSRV());
+	if (texture_.Empty()) {
+		return;
 	}
+
+	environment_.SetEnvironment(texture_.WaitRequire()->GetGPUHandleSRV());
 
 	environment_.Update(SxavengerSystem::GetDirectQueueContext());
 
@@ -37,15 +38,15 @@ void SkyLightActor::Update(bool isWait) {
 		environment_.Update(SxavengerSystem::GetDirectQueueContext());
 	}
 
-	skyLightComponent_->SetEnvironment(environment_.GetMapEnvironment());
-	skyLightComponent_->GetDiffuseParameter().SetTexture(environment_.UseIrradianceDescriptor(SxavengerSystem::GetDirectQueueContext()).GetIndex());
-	skyLightComponent_->GetSpecularParameter().SetTexture(environment_.UseRadianceDescriptor(SxavengerSystem::GetDirectQueueContext()).GetIndex(), environment_.GetRadianceMiplevels());
+	skyLightComponent_->SetEnvironment(texture_.WaitRequire());
+	skyLightComponent_->SetIrradiance(environment_.UseIrradianceDescriptor(SxavengerSystem::GetDirectQueueContext()));
+	skyLightComponent_->SetRadiance(environment_.UseRadianceDescriptor(SxavengerSystem::GetDirectQueueContext()), environment_.GetRadianceMiplevels());
 }
 
 void SkyLightActor::Inspectable() {
 }
 
-void SkyLightActor::SetTexture(const std::filesystem::path& filepath) {
-	texture_ = SxavengerAsset::TryImport<AssetTexture>(filepath, Texture::Option{ Texture::Encoding::Intensity, false });
+void SkyLightActor::SetTexture(const UAssetParameter<UAssetTexture>& texture) {
+	texture_ = texture;
 }
 

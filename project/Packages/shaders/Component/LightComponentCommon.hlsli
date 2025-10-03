@@ -27,7 +27,7 @@ struct InlineShadow {
 		q.TraceRayInline(
 			scene,
 			flag,
-			0xFF,
+			0b01,
 			desc
 		);
 

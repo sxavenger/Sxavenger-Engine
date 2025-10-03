@@ -7,7 +7,7 @@ _DXOBJECT_USING
 //* engine
 #include <Engine/System/Config/SxavengerConfig.h>
 #include <Engine/System/SxavengerSystem.h>
-#include <Engine/Asset/SxavengerAsset.h>
+#include <Engine/Preview/Content/UContentStorage.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // FRenderCore class methods
@@ -32,7 +32,7 @@ void FRenderCore::Init() {
 	transition_ = std::make_unique<FRenderCoreTransition>();
 	transition_->Init();
 
-	brdfLut_ = SxavengerAsset::TryImport<AssetTexture>(kPackagesDirectory / "textures/rendering/brdf_lut.png", Texture::Option{ Texture::Encoding::Intensity, false });
+	brdfLut_ = sUContentStorage->Import<UContentTexture>(kPackagesDirectory / "textures/rendering/brdf_lut.png", UContentTexture::Option{ UContentTexture::Encoding::Intensity, false })->GetId();
 }
 
 void FRenderCore::Term() {

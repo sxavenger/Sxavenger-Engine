@@ -20,13 +20,15 @@ public:
 	////////////////////////////////////////////////////////////////////////////////////////////
 	enum class ProcessType : uint32_t {
 		GrayScale,
-		Bloom,
+		BloomLuminance,
+		BloomApply,
 		AutoExposureLuminance,
 		AutoExposureAverage,
 		AutoExposureApply,
 		LocalExposure,
 		DoF,
 		RadialBlur,
+		MotionBlur,
 		ChromaticAberration,
 		Vignette,
 		ConvertLUTTexture,
@@ -38,7 +40,6 @@ public:
 	// CompositeType enum class
 	////////////////////////////////////////////////////////////////////////////////////////////
 	enum class CompositeType : uint32_t {
-		Environment,
 		Tonemap
 	};
 	static inline const uint32_t kCompositeTypeCount = static_cast<uint32_t>(CompositeType::Tonemap) + 1;

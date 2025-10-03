@@ -17,7 +17,7 @@
 // DirectionalLightComponent class
 ////////////////////////////////////////////////////////////////////////////////////////////
 class DirectionalLightComponent final
-	: public BaseComponent, public LightCommon {
+	: public BaseComponent {
 public:
 
 	////////////////////////////////////////////////////////////////////////////////////////////
@@ -36,8 +36,10 @@ public:
 		// public variables
 		//=========================================================================================
 
-		Color3f color;     //!< color
-		float   intensity; //!< intensity [lux]
+		LightCommon::InlineShadow shadow;
+
+		Color3f color;
+		float   intensity; //!< [lux]
 
 	};
 
@@ -47,18 +49,14 @@ public:
 	// public methods
 	//=========================================================================================
 
-	DirectionalLightComponent(MonoBehaviour* behaviour) : BaseComponent(behaviour) { Init(); }
-	virtual ~DirectionalLightComponent() = default;
+	DirectionalLightComponent(MonoBehaviour* behaviour);
+	~DirectionalLightComponent() override = default;
 
-	virtual void ShowComponentInspector() override;
+	void ShowComponentInspector() override;
 
-	void Init();
+	//* component option *//
 
-	//* buffer option *//
-
-	void CreateParameterBuffer();
-
-	const D3D12_GPU_VIRTUAL_ADDRESS& GetParameterBufferAddress() const;
+	const D3D12_GPU_VIRTUAL_ADDRESS& GetGPUVirtualAddress() const;
 
 	const Parameter& GetParameter() const;
 	Parameter& GetParameter();

@@ -59,7 +59,7 @@ public:
 	}
 
 	const uint32_t GetUsedDescriptorsCount() const {
-		return static_cast<uint32_t>(descriptorIndexCount_ - descriptorDeletedIndices_.size());
+		return static_cast<uint32_t>(descriptorIndexCount_ - descriptorFreeIndices_.size());
 	}
 
 private:
@@ -79,7 +79,7 @@ private:
 	uint32_t descriptorMaxCount_;   //!< descriptorの最大数
 	uint32_t descriptorIndexCount_ = 0;
 	
-	std::queue<uint32_t> descriptorDeletedIndices_; //!< 動的に消されたDescriptorのIndexの格納先
+	std::queue<uint32_t> descriptorFreeIndices_; //!< 動的に消されたDescriptorのIndexの格納先
 
 	//* config *//
 
@@ -145,12 +145,6 @@ private:
 	//=========================================================================================
 	// private variables
 	//=========================================================================================
-
-	static inline const std::array<UINT, DescriptorType::kCountOfDescriptorTypeCount> kDescriptorCount_ = {
-		24, //!< RTV
-		8,  //!< DSV
-		512 //!< CBV_SRV_UAV
-	};
 
 	std::array<std::unique_ptr<DescriptorPool>, DescriptorType::kCountOfDescriptorTypeCount> pools_;
 

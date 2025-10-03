@@ -18,75 +18,33 @@ void FScene::Init() {
 	// TLASの初期化
 	topLevelAS_.Init(SxavengerSystem::GetDxDevice());
 
-	// path tracing stateobjectの初期化
-	{ //!< global root signatureの生成
-		DxrObject::GlobalRootSignatureDesc desc = {};
-		//* lighting textures
-		desc.SetHandleUAV(0, 0, 1); //!< gIndirect
-
-		//* scene
-		desc.SetVirtualSRV(1, 0, 1); //!< gScene
-
-		//* deferred textures
-		desc.SetHandleSRV(2, 1, 1); //!< gAlbedo
-		desc.SetHandleSRV(3, 2, 1); //!< gNormal
-		desc.SetHandleSRV(4, 3, 1); //!< gMaterialARM
-		desc.SetHandleSRV(5, 4, 1); //!< gPosition
-		desc.SetHandleSRV(6, 5, 1); //!< gDepth
-
-		//* camera
-		desc.SetVirtualCBV(7, 0, 1); //!< gCamera
-
-		//* reserviour
-		desc.Set32bitConstants(8, DxObject::ShaderVisibility::VISIBILITY_ALL, 3, 1, 1); //!< Reserviour
-
-		//* light
-		// Directional Light
-		desc.SetVirtualCBV(9, 2, 2);  //!< gDirectionalLightCount
-		desc.SetVirtualSRV(10, 1, 2); //!< gDirectionalLightTransforms
-		desc.SetVirtualSRV(11, 2, 2); //!< gDirectionalLights
-		desc.SetVirtualSRV(12, 3, 2); //!< gDirectionalLightShadows
-
-		// Point Light
-		desc.SetVirtualCBV(13, 3, 2); //!< gPointLightCount
-		desc.SetVirtualSRV(14, 4, 2); //!< gPointLightTransforms
-		desc.SetVirtualSRV(15, 5, 2); //!< gPointLights
-		desc.SetVirtualSRV(16, 6, 2); //!< gPointLightShadows
-
-		// Sky Light
-		desc.SetHandleSRV(17, 7, 2);                                                                  //!< gSkyLight
-		desc.SetSamplerLinear(DxObject::MODE_WRAP, DxObject::ShaderVisibility::VISIBILITY_ALL, 0, 2); //!< gSampler
-
-		stateObjectContext_.CreateRootSignature(SxavengerSystem::GetDxDevice(), desc);
-	}
-
-	{ //!< state objectの生成
-		DxrObject::StateObjectDesc desc = {};
-		desc.AddExport(FRenderCore::GetInstance()->GetPathtracing()->GetExportGroup(FRenderCorePathtracing::RaygenerationExportType::Default));
-		desc.AddExport(FRenderCore::GetInstance()->GetPathtracing()->GetExportGroup(FRenderCorePathtracing::MissExportType::Default));
-		desc.AddExport(FRenderCore::GetInstance()->GetPathtracing()->GetExportGroup(FRenderCorePathtracing::HitgroupExportType::Mesh));
-		desc.AddExport(FRenderCore::GetInstance()->GetPathtracing()->GetExportGroup(FRenderCorePathtracing::HitgroupExportType::Emissive));
-
-		// 仮paraemter
-		desc.SetAttributeStride(sizeof(float) * 2);
-		desc.SetPayloadStride(sizeof(float) * 5);
-		desc.SetMaxRecursionDepth(3);
-
-		stateObjectContext_.CreateStateObject(SxavengerSystem::GetDxDevice(), std::move(desc));
-	}
-
 	{ //!< light containerの初期化
 		directionalLightCount_ = std::make_unique<DxObject::DimensionBuffer<uint32_t>>();
 		directionalLightCount_->Create(SxavengerSystem::GetDxDevice(), 1);
+
 		directionalLightTransforms_   = std::make_unique<DxObject::DimensionBuffer<TransformationMatrix>>();
+		directionalLightTransforms_->Create(SxavengerSystem::GetDxDevice(), 1);
+
 		directionalLightParams_       = std::make_unique<DxObject::DimensionBuffer<DirectionalLightComponent::Parameter>>();
-		directionalLightShadowParams_ = std::make_unique<DxObject::DimensionBuffer<DirectionalLightComponent::InlineShadow>>();
+		directionalLightParams_->Create(SxavengerSystem::GetDxDevice(), 1);
 
 		pointLightCount_ = std::make_unique<DxObject::DimensionBuffer<uint32_t>>();
 		pointLightCount_->Create(SxavengerSystem::GetDxDevice(), 1);
+
 		pointLightTransforms_   = std::make_unique<DxObject::DimensionBuffer<TransformationMatrix>>();
+		pointLightTransforms_->Create(SxavengerSystem::GetDxDevice(), 1);
+
 		pointLightParams_       = std::make_unique<DxObject::DimensionBuffer<PointLightComponent::Parameter>>();
-		pointLightShadowParams_ = std::make_unique<DxObject::DimensionBuffer<PointLightComponent::InlineShadow>>();
+		pointLightParams_->Create(SxavengerSystem::GetDxDevice(), 1);
+
+		spotLightCount_ = std::make_unique<DxObject::DimensionBuffer<uint32_t>>();
+		spotLightCount_->Create(SxavengerSystem::GetDxDevice(), 1);
+
+		spotLightTransforms_ = std::make_unique<DxObject::DimensionBuffer<TransformationMatrix>>();
+		spotLightTransforms_->Create(SxavengerSystem::GetDxDevice(), 1);
+
+		spotLightParams_ = std::make_unique<DxObject::DimensionBuffer<SpotLightComponent::Parameter>>();
+		spotLightParams_->Create(SxavengerSystem::GetDxDevice(), 1);
 
 	}
 	
@@ -96,42 +54,25 @@ void FScene::SetupTopLevelAS(const DirectXQueueContext* context) {
 	topLevelAS_.BeginSetupInstance();
 
 	sComponentStorage->ForEachActive<MeshRendererComponent>([&](MeshRendererComponent* component) {
-		
-		DxrObject::TopLevelAS::Instance instance = {};
+		if (!component->IsEnabled()) {
+			return; //!< material or meshが設定されていない場合はスキップ
+			// todo: missing material を用意する
+		}
 
-		// instanceの設定
-		switch (component->GetMaterial()->GetMode()) {
-			case Material::Mode::Opaque:
-				component->GetMesh()->CreateBottomLevelAS(context);
+		std::shared_ptr<UAssetMesh> mesh         = component->GetMesh();
+		std::shared_ptr<UAssetMaterial> material = component->GetMaterial();
 
-				//* instance設定
-				instance.flag          = D3D12_RAYTRACING_INSTANCE_FLAG_NONE;
-				instance.bottomLevelAS = component->GetMesh()->GetBottomLevelAS().bottomLevelAS.get();
-				instance.mat           = component->GetTransform()->GetMatrix();
-				instance.instanceId    = 0;
+		mesh->Update(context); //!< meshの更新
 
-				//* ExportGroupの設定
-				instance.expt = FRenderCore::GetInstance()->GetPathtracing()->GetExportGroup(FRenderCorePathtracing::HitgroupExportType::Mesh);
-				instance.parameter.SetAddress(0, component->GetMesh()->GetVertex()->GetGPUVirtualAddress());
-				instance.parameter.SetAddress(1, component->GetMesh()->GetIndex()->GetGPUVirtualAddress());
-				instance.parameter.SetAddress(2, component->GetMaterial()->GetGPUVirtualAddress());
+		FRenderCorePathtracing::HitgroupExportType type = {};
+
+		switch (material->GetMode()) {
+			case UAssetMaterial::Mode::Opaque:
+				type = FRenderCorePathtracing::HitgroupExportType::Mesh;
 				break;
-				
 
-			case Material::Mode::Emissive:
-				component->GetMesh()->CreateBottomLevelAS(context);
-
-				//* instance設定
-				instance.flag          = D3D12_RAYTRACING_INSTANCE_FLAG_NONE;
-				instance.bottomLevelAS = component->GetMesh()->GetBottomLevelAS().bottomLevelAS.get();
-				instance.mat           = component->GetTransform()->GetMatrix();
-				instance.instanceId    = 0;
-
-				//* ExportGroupの設定
-				instance.expt = FRenderCore::GetInstance()->GetPathtracing()->GetExportGroup(FRenderCorePathtracing::HitgroupExportType::Emissive);
-				instance.parameter.SetAddress(0, component->GetMesh()->GetVertex()->GetGPUVirtualAddress());
-				instance.parameter.SetAddress(1, component->GetMesh()->GetIndex()->GetGPUVirtualAddress());
-				instance.parameter.SetAddress(2, component->GetMaterial()->GetGPUVirtualAddress());
+			case UAssetMaterial::Mode::Emissive:
+				type = FRenderCorePathtracing::HitgroupExportType::Emissive;
 				break;
 
 			default:
@@ -139,28 +80,60 @@ void FScene::SetupTopLevelAS(const DirectXQueueContext* context) {
 				return;
 		}
 
+		// instanceの設定
+		DxrObject::TopLevelAS::Instance instance = {};
+
+		instance.flag          = D3D12_RAYTRACING_INSTANCE_FLAG_NONE;
+		instance.bottomLevelAS = mesh->GetInputMesh().GetBottomLevelAS().Get();
+		instance.mat           = component->GetTransform()->GetMatrix();
+		instance.instanceMask  = component->GetMask();
+		instance.instanceId    = 0;
+
+		//* ExportGroupの設定
+		instance.expt = FRenderCore::GetInstance()->GetPathtracing()->GetExportGroup(type);
+		instance.parameter.SetAddress(0, mesh->GetInputVertex()->GetGPUVirtualAddress());
+		instance.parameter.SetAddress(1, mesh->GetInputIndex()->GetGPUVirtualAddress());
+		instance.parameter.SetAddress(2, material->GetGPUVirtualAddress());
+
 		topLevelAS_.AddInstance(instance);
 	});
 
 	sComponentStorage->ForEachActive<SkinnedMeshRendererComponent>([&](SkinnedMeshRendererComponent* component) {
 
-		// 透過の場合はスキップ
-		if (component->GetMaterial()->GetMode() != Material::Mode::Opaque) {
-			return;
+		std::shared_ptr<UAssetMaterial> material = component->GetMaterial();
+
+		component->Update(context); //!< meshの更新
+
+		FRenderCorePathtracing::HitgroupExportType type = {};
+
+		switch (material->GetMode()) {
+			case UAssetMaterial::Mode::Opaque:
+				type = FRenderCorePathtracing::HitgroupExportType::Mesh;
+				break;
+
+			case UAssetMaterial::Mode::Emissive:
+				type = FRenderCorePathtracing::HitgroupExportType::Emissive;
+				break;
+
+			default:
+				Logger::WarningRuntime("warning | [FScene] SetupTopLevelAS", "MeshRendererComponent has unsupported material mode.");
+				return;
 		}
 
-		component->GetMesh().UpdateBottomLevelAS(context);
-
+		// instanceの設定
 		DxrObject::TopLevelAS::Instance instance = {};
-		instance.flag          = D3D12_RAYTRACING_INSTANCE_FLAG_NONE;
-		instance.bottomLevelAS = component->GetMesh().GetBottomLevelAS();
-		instance.mat           = component->GetTransform()->GetMatrix();
 
-		//* raytracing export group todo...
-		instance.expt = FRenderCore::GetInstance()->GetPathtracing()->GetExportGroup(FRenderCorePathtracing::HitgroupExportType::Mesh);
-		instance.parameter.SetAddress(0, component->GetMesh().vertex->GetGPUVirtualAddress());
-		instance.parameter.SetAddress(1, component->GetReferenceMesh()->input.GetIndex()->GetGPUVirtualAddress());
-		instance.parameter.SetAddress(2, component->GetMaterial()->GetGPUVirtualAddress());
+		instance.flag          = D3D12_RAYTRACING_INSTANCE_FLAG_NONE;
+		instance.bottomLevelAS = component->GetBottomLevelAS();
+		instance.mat           = component->GetTransform()->GetMatrix();
+		instance.instanceMask  = component->GetMask();
+		instance.instanceId    = 0;
+
+		//* ExportGroupの設定
+		instance.expt = FRenderCore::GetInstance()->GetPathtracing()->GetExportGroup(type);
+		instance.parameter.SetAddress(0, component->GetInputVertex()->GetGPUVirtualAddress());
+		instance.parameter.SetAddress(1, component->GetInputIndex()->GetGPUVirtualAddress());
+		instance.parameter.SetAddress(2, material->GetGPUVirtualAddress());
 
 		topLevelAS_.AddInstance(instance);
 	});
@@ -170,13 +143,14 @@ void FScene::SetupTopLevelAS(const DirectXQueueContext* context) {
 }
 
 void FScene::SetupStateObject() {
-	// SetupTopLevelAS()に設定
-	stateObjectContext_.UpdateShaderTable(SxavengerSystem::GetDxDevice(), &topLevelAS_);
+	// TopLevelASに設定
+	FRenderCore::GetInstance()->GetPathtracing()->UpdateShaderTable(&topLevelAS_);
 }
 
 void FScene::SetupLightContainer() {
 	SetupDirectionalLight();
 	SetupPointLight();
+	SetupSpotLight();
 }
 
 void FScene::SetupDirectionalLight() {
@@ -197,16 +171,11 @@ void FScene::SetupDirectionalLight() {
 		directionalLightParams_->Create(SxavengerSystem::GetDxDevice(), count);
 	}
 
-	if (directionalLightShadowParams_->GetSize() < count) {
-		directionalLightShadowParams_->Create(SxavengerSystem::GetDxDevice(), count);
-	}
-
 	size_t index = 0;
 
 	sComponentStorage->ForEachActive<DirectionalLightComponent>([&](DirectionalLightComponent* component) {
 		directionalLightTransforms_->At(index)   = component->RequireTransform()->GetTransformationMatrix();
 		directionalLightParams_->At(index)       = component->GetParameter();
-		directionalLightShadowParams_->At(index) = component->GetShadowParameter();
 
 		index++;
 	});
@@ -231,19 +200,43 @@ void FScene::SetupPointLight() {
 		pointLightParams_->Create(SxavengerSystem::GetDxDevice(), count);
 	}
 
-	if (pointLightShadowParams_->GetSize() < count) {
-		pointLightShadowParams_->Create(SxavengerSystem::GetDxDevice(), count);
-	}
-
 	size_t index = 0;
 
 	sComponentStorage->ForEachActive<PointLightComponent>([&](PointLightComponent* component) {
 		pointLightTransforms_->At(index)   = component->RequireTransform()->GetTransformationMatrix();
 		pointLightParams_->At(index)       = component->GetParameter();
-		pointLightShadowParams_->At(index) = component->GetShadowParameter();
 
 		index++;
 	});
 
+
+}
+
+void FScene::SetupSpotLight() {
+
+	uint32_t count = static_cast<uint32_t>(sComponentStorage->GetActiveComponentCount<SpotLightComponent>());
+
+	spotLightCount_->At(0) = count;
+
+	if (count == 0) {
+		return;
+	}
+
+	if (spotLightTransforms_->GetSize() < count) {
+		spotLightTransforms_->Create(SxavengerSystem::GetDxDevice(), count);
+	}
+
+	if (spotLightParams_->GetSize() < count) {
+		spotLightParams_->Create(SxavengerSystem::GetDxDevice(), count);
+	}
+
+	size_t index = 0;
+
+	sComponentStorage->ForEachActive<SpotLightComponent>([&](SpotLightComponent* component) {
+		spotLightTransforms_->At(index)   = component->RequireTransform()->GetTransformationMatrix();
+		spotLightParams_->At(index)       = component->GetParameter();
+
+		index++;
+	});
 
 }

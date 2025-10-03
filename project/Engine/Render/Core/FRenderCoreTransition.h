@@ -24,7 +24,10 @@ public:
 	// Transition enum class
 	////////////////////////////////////////////////////////////////////////////////////////////
 	enum class Transition : uint8_t {
-		LightingTransition
+		LightingTransition,
+		MipmapTransition,
+		VelocityTransition,
+		MomentTransition,
 	};
 
 public:

@@ -12,17 +12,12 @@
 #include <Engine/Component/Components/Camera/CameraComponent.h>
 #include <Engine/Render/FPresenter.h>
 #include <Engine/Render/Scene/FScene.h>
-#include <Engine/Render/Scene/FSceneRenderer.h>
-#include <Engine/Asset/Observer/AssetObserver.h>
 
 #include <Engine/Adapter/Actor/AtmosphereActor.h>
 #include <Engine/Adapter/Actor/SkyLightActor.h>
 #include <Engine/Adapter/Actor/ControllableCameraActor.h>
-#include <Engine/Adapter/Actor/EmissiveActor.h>
-
-//* demo
-#include <Demo/Entity/Player.h>
-#include <Demo/Particle/LeadParticle.h>
+#include <Engine/Adapter/Actor/ParameterActor.h>
+#include <Engine/Adapter/Actor/PerformanceActor.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // BetaSystemGameLoop class
@@ -47,7 +42,6 @@ private:
 
 	std::shared_ptr<DirectXWindowContext> main_;
 
-	//std::unique_ptr<MonoBehaviour> camera_;
 	std::unique_ptr<ControllableCameraActor> camera_;
 
 	std::unique_ptr<AtmosphereActor> atmosphere_;
@@ -55,13 +49,16 @@ private:
 	std::unique_ptr<SkyLightActor> skylight_;
 	std::unique_ptr<MonoBehaviour> offlineSkylight_;
 
-	std::unique_ptr<Player> player_;
-
-	std::unique_ptr<EmissiveActor> emissive_;
-
-	std::unique_ptr<LeadParticle> leadParticle_;
+	//std::unique_ptr<LeadParticle> leadParticle_;
 
 	std::unique_ptr<MonoBehaviour> behaviour_;
+
+	std::unique_ptr<ParameterActor> parameter_;
+
+	std::unique_ptr<MonoBehaviour> colliderA_;
+	std::unique_ptr<MonoBehaviour> colliderB_;
+
+	std::unique_ptr<PerformanceActor> performance_;
 
 	//=========================================================================================
 	// private methods

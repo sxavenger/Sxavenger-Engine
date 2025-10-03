@@ -9,8 +9,11 @@
 
 //* engine
 #include <Engine/System/DirectX/DxObject/DxDimensionBuffer.h>
-#include <Engine/Asset/Observer/AssetObserver.h>
-#include <Engine/Asset/Assets/Texture/AssetTexture.h>
+#include <Engine/Preview/Asset/UAssetTexture.h>
+#include <Engine/Preview/Asset/UAssetParameter.h>
+
+//* lib
+#include <Lib/Sxl/Flag.h>
 
 //* c++
 #include <memory>
@@ -23,54 +26,15 @@ class SkyLightComponent
 public:
 
 	////////////////////////////////////////////////////////////////////////////////////////////
-	// DiffuseParameter structure
+	// Flag enum class
 	////////////////////////////////////////////////////////////////////////////////////////////
-	struct DiffuseParameter {
-	public:
-
-		//=========================================================================================
-		// public methods
-		//=========================================================================================
-
-		void Init();
-
-		void SetTexture(uint32_t _index);
-
-		void SetTexture(const AssetObserver<AssetTexture>& texture);
-
-		//=========================================================================================
-		// public variables
-		//=========================================================================================
-
-		uint32_t index = NULL;
-
+	enum class Flag : uint32_t {
+		None        = 0,
+		Environment = 1 << 0, //!< Environment map
+		Irradiance  = 1 << 1, //!< Irradiance map
+		Radiance    = 1 << 2, //!< Radiance map
 	};
-
-	////////////////////////////////////////////////////////////////////////////////////////////
-	// SpecularParameter structure
-	////////////////////////////////////////////////////////////////////////////////////////////
-	struct SpecularParameter {
-	public:
-
-		//=========================================================================================
-		// public methods
-		//=========================================================================================
-
-		void Init();
-
-		void SetTexture(uint32_t _index, uint32_t _miplevels);
-
-		void SetTexture(const AssetObserver<AssetTexture>& texture);
-
-		//=========================================================================================
-		// public variables
-		//=========================================================================================
-
-		uint32_t index     = NULL;
-		uint32_t miplevels = 0;
-
-	};
-
+	
 	////////////////////////////////////////////////////////////////////////////////////////////
 	// Parameter structure
 	////////////////////////////////////////////////////////////////////////////////////////////
@@ -83,11 +47,24 @@ public:
 
 		void Init();
 
+		void SetEnvironment(uint32_t _index);
+
+		void SetIrradiance(uint32_t _index);
+
+		void SetRadiance(uint32_t _index, uint32_t _mipmaps = 0);
+
 		//=========================================================================================
-		// public varables
+		// public variables
 		//=========================================================================================
 
-		float intensity = 1.0f;
+		Sxl::Flag<Flag> flags;
+
+		uint32_t environmentIndex;
+		uint32_t irradianceIndex;
+		uint32_t radianceIndex;
+
+		float intensity;
+		uint32_t radianceMipmaps;
 
 	};
 
@@ -104,26 +81,28 @@ public:
 
 	void Init();
 
+	//* component option *//
+
+	void SetEnvironment(const UAssetParameter<UAssetTexture>& texture);
+	void SetEnvironment(const DxObject::Descriptor& texture);
+
+	void SetIrradiance(const UAssetParameter<UAssetTexture>& texture);
+	void SetIrradiance(const DxObject::Descriptor& texture);
+
+	void SetRadiance(const UAssetParameter<UAssetTexture>& texture);
+	void SetRadiance(const DxObject::Descriptor& texture, uint32_t mipmaps = 0);
+
+	void SetIntensity(float intensity);
+
 	//* getter *//
 
-	const D3D12_GPU_VIRTUAL_ADDRESS& GetParameterBufferAddress() const;
+	const D3D12_GPU_VIRTUAL_ADDRESS& GetGPUVirtualAddress() const;
 
-	const D3D12_GPU_VIRTUAL_ADDRESS& GetDiffuseParameterBufferAddress() const;
+	bool IsEnableEnvironment() const;
 
-	const D3D12_GPU_VIRTUAL_ADDRESS& GetSpecularParameterBufferAddress() const;
+	bool IsEnableIrradiance() const;
 
-	const Parameter& GetParameter() const;
-	Parameter& GetParameter();
-
-	const DiffuseParameter& GetDiffuseParameter() const;
-	DiffuseParameter& GetDiffuseParameter();
-
-	const SpecularParameter& GetSpecularParameter() const;
-	SpecularParameter& GetSpecularParameter();
-
-	void SetEnvironment(const D3D12_GPU_DESCRIPTOR_HANDLE& texture) { environment_ = texture; }
-	void SetEnvironment(const std::optional<D3D12_GPU_DESCRIPTOR_HANDLE>& texture) { environment_ = texture; }
-	const std::optional<D3D12_GPU_DESCRIPTOR_HANDLE>& GetEnvironment() const { return environment_; }
+	bool IsEnableRadiance() const;
 
 private:
 
@@ -133,8 +112,9 @@ private:
 
 	std::unique_ptr<DxObject::DimensionBuffer<Parameter>> parameter_;
 
-	std::unique_ptr<DxObject::DimensionBuffer<DiffuseParameter>> diffuseParameter_;
-	std::unique_ptr<DxObject::DimensionBuffer<SpecularParameter>> specularParameter_;
-	std::optional<D3D12_GPU_DESCRIPTOR_HANDLE> environment_;
+	//* serialize用
+	UAssetParameter<UAssetTexture> environment_;
+	UAssetParameter<UAssetTexture> irradiance_;
+	UAssetParameter<UAssetTexture> radiance_;
 
 };

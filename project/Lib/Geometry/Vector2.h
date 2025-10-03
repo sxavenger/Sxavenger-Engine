@@ -36,26 +36,24 @@ public:
 	//* compound assignment
 	constexpr Vector2& operator=(const Vector2& rhs) noexcept = default;
 	constexpr Vector2& operator=(Vector2&& rhs) noexcept = default;
-	constexpr Vector2& operator+=(const Vector2& rhs) noexcept;
-	constexpr Vector2& operator-=(const Vector2& rhs) noexcept;
-	constexpr Vector2& operator*=(const Vector2& rhs) noexcept;
-	constexpr Vector2& operator*=(const _Ty& rhs) noexcept;
-	constexpr Vector2& operator/=(const Vector2& rhs) noexcept;
-	constexpr Vector2& operator/=(const _Ty& rhs) noexcept;
+	constexpr Vector2& operator+=(const Vector2& rhs) noexcept { x += rhs.x; y += rhs.y; return *this; }
+	constexpr Vector2& operator-=(const Vector2& rhs) noexcept { x -= rhs.x; y -= rhs.y; return *this; }
+	constexpr Vector2& operator*=(const Vector2& rhs) noexcept { x *= rhs.x; y *= rhs.y; return *this; }
+	constexpr Vector2& operator*=(const _Ty rhs) noexcept { x *= rhs; y *= rhs; return *this; }
+	constexpr Vector2& operator/=(const Vector2& rhs) noexcept { x /= rhs.x; y /= rhs.y; return *this; }
+	constexpr Vector2& operator/=(const _Ty rhs) noexcept { x /= rhs; y /= rhs; return *this; }
 
 	//* cast
 	template <class _U>
-	constexpr operator Vector2<_U>() const noexcept {
-		return { static_cast<_U>(x), static_cast<_U>(y) };
-	}
+	constexpr operator Vector2<_U>() const noexcept { return { static_cast<_U>(x), static_cast<_U>(y) }; }
 
 	//* unary
-	constexpr Vector2 operator+() const noexcept;
-	constexpr Vector2 operator-() const noexcept;
+	constexpr Vector2 operator+() const noexcept { return *this; }
+	constexpr Vector2 operator-() const noexcept { return { -x, -y }; }
 
 	//* access
-	constexpr _Ty& operator[](size_t index) noexcept;
-	constexpr const _Ty& operator[](size_t index) const noexcept;
+	constexpr _Ty& operator[](size_t index) noexcept { return (&x)[index]; }
+	constexpr const _Ty& operator[](size_t index) const noexcept { return (&x)[index]; }
 
 	//=========================================================================================
 	// variables
@@ -66,111 +64,6 @@ public:
 	// todo: formatter
 
 };
-
-////////////////////////////////////////////////////////////////////////////////////////////
-// Vector2 class template methods
-////////////////////////////////////////////////////////////////////////////////////////////
-
-template <class _Ty>
-constexpr Vector2<_Ty>& Vector2<_Ty>::operator+=(const Vector2& rhs) noexcept {
-	x += rhs.x;
-	y += rhs.y;
-	return *this;
-}
-
-template <class _Ty>
-constexpr Vector2<_Ty>& Vector2<_Ty>::operator-=(const Vector2& rhs) noexcept {
-	x -= rhs.x;
-	y -= rhs.y;
-	return *this;
-}
-
-template <class _Ty>
-constexpr Vector2<_Ty>& Vector2<_Ty>::operator*=(const Vector2& rhs) noexcept {
-	x *= rhs.x;
-	y *= rhs.y;
-	return *this;
-}
-
-template <class _Ty>
-constexpr Vector2<_Ty>& Vector2<_Ty>::operator*=(const _Ty& rhs) noexcept {
-	x *= rhs;
-	y *= rhs;
-	return *this;
-}
-
-template <class _Ty>
-constexpr Vector2<_Ty>& Vector2<_Ty>::operator/=(const Vector2& rhs) noexcept {
-	x /= rhs.x;
-	y /= rhs.y;
-	return *this;
-}
-
-template <class _Ty>
-constexpr Vector2<_Ty>& Vector2<_Ty>::operator/=(const _Ty& rhs) noexcept {
-	x /= rhs;
-	y /= rhs;
-	return *this;
-}
-
-template <class _Ty>
-constexpr Vector2<_Ty> Vector2<_Ty>::operator+() const noexcept {
-	return *this;
-}
-
-template <class _Ty>
-constexpr Vector2<_Ty> Vector2<_Ty>::operator-() const noexcept {
-	return { -x, -y };
-}
-
-template <class _Ty>
-constexpr _Ty& Vector2<_Ty>::operator[](size_t index) noexcept {
-	return (&x)[index];
-}
-
-template <class _Ty>
-constexpr const _Ty& Vector2<_Ty>::operator[](size_t index) const noexcept {
-	return (&x)[index];
-}
-
-////////////////////////////////////////////////////////////////////////////////////////////
-// Vector2 class binary operators
-////////////////////////////////////////////////////////////////////////////////////////////
-
-template <class _Ty>
-constexpr Vector2<_Ty> operator+(const Vector2<_Ty>& lhs, const Vector2<_Ty>& rhs) noexcept {
-	return { lhs.x + rhs.x, lhs.y + rhs.y };
-}
-
-template <class _Ty>
-constexpr Vector2<_Ty> operator-(const Vector2<_Ty>& lhs, const Vector2<_Ty>& rhs) noexcept {
-	return { lhs.x - rhs.x, lhs.y - rhs.y };
-}
-
-template <class _Ty>
-constexpr Vector2<_Ty> operator*(const Vector2<_Ty>& lhs, const Vector2<_Ty>& rhs) noexcept {
-	return { lhs.x * rhs.x, lhs.y * rhs.y };
-}
-
-template <class _Ty>
-constexpr Vector2<_Ty> operator*(const Vector2<_Ty>& lhs, const _Ty& rhs) noexcept {
-	return { lhs.x * rhs, lhs.y * rhs };
-}
-
-template <class _Ty>
-constexpr Vector2<_Ty> operator*(const _Ty& lhs, const Vector2<_Ty>& rhs) noexcept {
-	return { lhs * rhs.x, lhs * rhs.y };
-}
-
-template <class _Ty>
-constexpr Vector2<_Ty> operator/(const Vector2<_Ty>& lhs, const Vector2<_Ty>& rhs) noexcept {
-	return { lhs.x / rhs.x, lhs.y / rhs.y };
-}
-
-template <class _Ty>
-constexpr Vector2<_Ty> operator/(const Vector2<_Ty>& lhs, const _Ty& rhs) noexcept {
-	return { lhs.x / rhs, lhs.y / rhs };
-}
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Vector2 - floating_point class
@@ -194,26 +87,24 @@ public:
 	//* compound assignment
 	constexpr Vector2& operator=(const Vector2& rhs) noexcept = default;
 	constexpr Vector2& operator=(Vector2&& rhs) noexcept = default;
-	constexpr Vector2& operator+=(const Vector2& rhs) noexcept;
-	constexpr Vector2& operator-=(const Vector2& rhs) noexcept;
-	constexpr Vector2& operator*=(const Vector2& rhs) noexcept;
-	constexpr Vector2& operator*=(const _Ty& rhs) noexcept;
-	constexpr Vector2& operator/=(const Vector2& rhs) noexcept;
-	constexpr Vector2& operator/=(const _Ty& rhs) noexcept;
+	constexpr Vector2& operator+=(const Vector2& rhs) noexcept { x += rhs.x; y += rhs.y; return *this; }
+	constexpr Vector2& operator-=(const Vector2& rhs) noexcept { x -= rhs.x; y -= rhs.y; return *this; }
+	constexpr Vector2& operator*=(const Vector2& rhs) noexcept { x *= rhs.x; y *= rhs.y; return *this; }
+	constexpr Vector2& operator*=(const _Ty rhs) noexcept { x *= rhs; y *= rhs; return *this; }
+	constexpr Vector2& operator/=(const Vector2& rhs) noexcept { x /= rhs.x; y /= rhs.y; return *this; }
+	constexpr Vector2& operator/=(const _Ty rhs) noexcept { x /= rhs; y /= rhs; return *this; }
 
 	//* cast
 	template <class _U>
-	operator Vector2<_U>() const noexcept {
-		return { static_cast<_U>(x), static_cast<_U>(y) };
-	}
+	operator Vector2<_U>() const noexcept { return { static_cast<_U>(x), static_cast<_U>(y) }; }
 
 	//* unary
-	constexpr Vector2 operator+() const noexcept;
-	constexpr Vector2 operator-() const noexcept;
+	constexpr Vector2 operator+() const noexcept { return *this; }
+	constexpr Vector2 operator-() const noexcept { return { -x, -y }; }
 
 	//* access
-	constexpr _Ty& operator[](size_t index) noexcept;
-	constexpr const _Ty& operator[](size_t index) const noexcept;
+	constexpr _Ty& operator[](size_t index) noexcept { return (&x)[index]; }
+	constexpr const _Ty& operator[](size_t index) const noexcept { return (&x)[index]; }
 
 	//=========================================================================================
 	// variables
@@ -270,70 +161,44 @@ public:
 	}
 
 };
+
 ////////////////////////////////////////////////////////////////////////////////////////////
-// Vector2 - floating_point class template methods
+// Vector2 class binary operators
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-template <std::floating_point _Ty>
-constexpr Vector2<_Ty>& Vector2<_Ty>::operator+=(const Vector2& rhs) noexcept {
-	x += rhs.x;
-	y += rhs.y;
-	return *this;
+template <class _Ty>
+constexpr Vector2<_Ty> operator+(const Vector2<_Ty>& lhs, const Vector2<_Ty>& rhs) noexcept {
+	return { lhs.x + rhs.x, lhs.y + rhs.y };
 }
 
-template <std::floating_point _Ty>
-constexpr Vector2<_Ty>& Vector2<_Ty>::operator-=(const Vector2& rhs) noexcept {
-	x -= rhs.x;
-	y -= rhs.y;
-	return *this;
+template <class _Ty>
+constexpr Vector2<_Ty> operator-(const Vector2<_Ty>& lhs, const Vector2<_Ty>& rhs) noexcept {
+	return { lhs.x - rhs.x, lhs.y - rhs.y };
 }
 
-template <std::floating_point _Ty>
-constexpr Vector2<_Ty>& Vector2<_Ty>::operator*=(const Vector2& rhs) noexcept {
-	x *= rhs.x;
-	y *= rhs.y;
-	return *this;
+template <class _Ty>
+constexpr Vector2<_Ty> operator*(const Vector2<_Ty>& lhs, const Vector2<_Ty>& rhs) noexcept {
+	return { lhs.x * rhs.x, lhs.y * rhs.y };
 }
 
-template <std::floating_point _Ty>
-constexpr Vector2<_Ty>& Vector2<_Ty>::operator*=(const _Ty& rhs) noexcept {
-	x *= rhs;
-	y *= rhs;
-	return *this;
+template <class _Ty>
+constexpr Vector2<_Ty> operator*(const Vector2<_Ty>& lhs, const _Ty& rhs) noexcept {
+	return { lhs.x * rhs, lhs.y * rhs };
 }
 
-template <std::floating_point _Ty>
-constexpr Vector2<_Ty>& Vector2<_Ty>::operator/=(const Vector2& rhs) noexcept {
-	x /= rhs.x;
-	y /= rhs.y;
-	return *this;
+template <class _Ty>
+constexpr Vector2<_Ty> operator*(const _Ty& lhs, const Vector2<_Ty>& rhs) noexcept {
+	return { lhs * rhs.x, lhs * rhs.y };
 }
 
-template <std::floating_point _Ty>
-constexpr Vector2<_Ty>& Vector2<_Ty>::operator/=(const _Ty& rhs) noexcept {
-	x /= rhs;
-	y /= rhs;
-	return *this;
+template <class _Ty>
+constexpr Vector2<_Ty> operator/(const Vector2<_Ty>& lhs, const Vector2<_Ty>& rhs) noexcept {
+	return { lhs.x / rhs.x, lhs.y / rhs.y };
 }
 
-template <std::floating_point _Ty>
-constexpr Vector2<_Ty> Vector2<_Ty>::operator+() const noexcept {
-	return *this;
-}
-
-template <std::floating_point _Ty>
-constexpr Vector2<_Ty> Vector2<_Ty>::operator-() const noexcept {
-	return { -x, -y };
-}
-
-template <std::floating_point _Ty>
-constexpr _Ty& Vector2<_Ty>::operator[](size_t index) noexcept {
-	return (&x)[index];
-}
-
-template <std::floating_point _Ty>
-constexpr const _Ty& Vector2<_Ty>::operator[](size_t index) const noexcept {
-	return (&x)[index];
+template <class _Ty>
+constexpr Vector2<_Ty> operator/(const Vector2<_Ty>& lhs, const _Ty& rhs) noexcept {
+	return { lhs.x / rhs, lhs.y / rhs };
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////

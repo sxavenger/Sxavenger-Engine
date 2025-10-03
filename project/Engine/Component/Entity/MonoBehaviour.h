@@ -101,6 +101,8 @@ public:
 	template <Component _Ty>
 	void RemoveComponent();
 
+	void RemoveComponent(const std::type_info* type);
+
 	//! @brief componentを取得
 	//! @tparam _Ty 取得するcomponentの型
 	//! @retval componentが存在する: componentのptr
@@ -157,6 +159,8 @@ public:
 
 	bool HasChild() const { return !children_.empty(); }
 
+	void ForEachChild(const std::function<void(MonoBehaviour*)>& function);
+
 	//* inspector option *//
 
 	virtual void ShowInspector() override;
@@ -167,7 +171,7 @@ public:
 
 	json PerseToJson() const override;
 
-	void InputJson(const json& data) override { data; }
+	void InputJson(const json& data) override;
 
 protected:
 
@@ -197,8 +201,6 @@ private:
 	//=========================================================================================
 	// private variables
 	//=========================================================================================
-
-	std::string buf_ = "";
 
 	//* hierarchy
 	// parent information
@@ -262,7 +264,7 @@ void MonoBehaviour::RemoveComponent() {
 		components_.Erase(type);
 
 	} else {
-		WarningRuntime("warning | [MonoBehaviour]::RemoveComponent", "component is not found. type: " + std::string(type->name()));
+		Logger::WarningRuntime("warning | [MonoBehaviour]::RemoveComponent", "component is not found. type: " + std::string(type->name()));
 	}
 }
 

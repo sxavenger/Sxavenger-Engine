@@ -92,20 +92,18 @@ public:
 	// public methods
 	//=========================================================================================
 
-	CameraComponent(MonoBehaviour* behaviour) : BaseComponent(behaviour) { Init(); }
+	CameraComponent(MonoBehaviour* behaviour);
 	~CameraComponent() override = default;
 
-	json PerseToJson() const override;
-
-	void InputJson(const json& data) override;
-
 	void ShowComponentInspector() override;
-
-	void Init();
 
 	//* buffer option *//
 
 	const D3D12_GPU_VIRTUAL_ADDRESS& GetGPUVirtualAddress() const;
+
+	const D3D12_GPU_VIRTUAL_ADDRESS& GetPrevGPUVirtualAddress() const;
+
+	void SwapBuffer();
 
 	//* camera option *//
 
@@ -130,17 +128,25 @@ public:
 
 	Vector3f CalculateNDCPosition(const Vector3f& point) const;
 
+	Vector3f CalculateWorldPosition(const Vector3f& ndc) const;
+
+	//* json option *//
+
+	json PerseToJson() const override;
+
+	void InputJson(const json& data) override;
+
 private:
 
 	//=========================================================================================
 	// private variables
 	//=========================================================================================
 
-	Tag tag_ = Tag::None;
-
-	std::unique_ptr<DxObject::DimensionBuffer<Camera>> buffer_;
-
+	Tag tag_               = Tag::None;
 	Projection projection_ = {};
+
+	std::array<std::unique_ptr<DxObject::DimensionBuffer<Camera>>, 2> buffers_;
+	size_t currentIndex_ = 0;
 
 	//=========================================================================================
 	// private methods

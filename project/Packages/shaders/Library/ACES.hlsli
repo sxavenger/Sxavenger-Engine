@@ -4,6 +4,9 @@
  
 */
 
+#ifndef ACES_HLSL_INCLUDED
+#define ACES_HLSL_INCLUDED
+
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
@@ -13,6 +16,7 @@
 // ACES namespace
 ////////////////////////////////////////////////////////////////////////////////////////////
 namespace ACES {
+	// todo: ACES 2.0
 
 	//=========================================================================================
 	// Color conversiom
@@ -512,7 +516,7 @@ namespace ACES {
 
 	//* constant variables *//
 
-	//!< RTT Glow
+	//!< RRT Glow
 	static const float RRT_GLOW_GAIN = 0.05;
 	static const float RRT_GLOW_MID  = 0.08;
 
@@ -787,3 +791,6 @@ namespace ACES {
 	↓ ODT（Output Device Transform）
  Display RGB（sRGB, HDR, etc.）
 */
+
+#endif //!< ACES_HLSL_INCLUDED
+

@@ -219,7 +219,7 @@ bool TopLevelAS::UpdateInstanceBuffer(DxObject::Device* device) {
 
 	for (uint32_t i = 0; i < instances_.size(); ++i) {
 		(*descs_)[i].Flags                               = instances_[i].flag.Get();
-		(*descs_)[i].InstanceMask                        = 0xFF;
+		(*descs_)[i].InstanceMask                        = instances_[i].instanceMask;
 		(*descs_)[i].AccelerationStructure               = instances_[i].bottomLevelAS->GetGPUVirtualAddress();
 		(*descs_)[i].InstanceID                          = instances_[i].instanceId;
 		(*descs_)[i].InstanceContributionToHitGroupIndex = i; // HACK: 完全に同じobjectの場合, この値は同じになる

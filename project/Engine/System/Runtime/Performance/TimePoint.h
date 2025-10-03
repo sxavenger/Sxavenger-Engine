@@ -78,6 +78,11 @@ public:
 		return TimePoint<_UnitU, _Value>(time * ConvertTimeUtil<_Unit, _UnitU, _Value>());
 	}
 
+	template <std::floating_point _ValueU>
+	constexpr operator TimePoint<_Unit, _ValueU>() const {
+		return TimePoint<_Unit, _ValueU>(static_cast<_ValueU>(time));
+	}
+
 	constexpr bool operator==(const TimePoint& right) const { return time == right.time; }
 	constexpr bool operator!=(const TimePoint& right) const { return time != right.time; }
 

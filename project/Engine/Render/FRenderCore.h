@@ -11,6 +11,10 @@
 #include "Core/FRenderCoreProcess.h"
 #include "Core/FRenderCoreTransition.h"
 
+//* engine
+#include <Engine/Preview/Asset/UAssetTexture.h>
+#include <Engine/Preview/Asset/UAssetParameter.h>
+
 ////////////////////////////////////////////////////////////////////////////////////////////
 // FRenderCore class
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -63,6 +67,6 @@ private:
 
 	//* textures *//
 
-	AssetObserver<AssetTexture> brdfLut_;
+	UAssetParameter<UAssetTexture> brdfLut_;
 
 };

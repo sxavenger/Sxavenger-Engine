@@ -23,10 +23,7 @@
 
 void PostProcessLayerComponent::ShowComponentInspector() {
 
-	ImGui::Text("tag");
-	ImGui::Separator();
-
-	if (ImGui::BeginCombo("## tag", magic_enum::enum_name(GetTag()).data())) {
+	if (ImGui::BeginCombo("tag", magic_enum::enum_name(GetTag()).data())) {
 
 		for (const auto& [value, name] : magic_enum::enum_entries<Tag>()) {
 			if (ImGui::Selectable(name.data(), GetTag() == value)) {
@@ -37,84 +34,83 @@ void PostProcessLayerComponent::ShowComponentInspector() {
 		ImGui::EndCombo();
 	}
 
-	ImGui::Text("post process layer");
-	ImGui::Separator();
+	if (ImGui::TreeNodeEx("process layer", ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_NoAutoOpenOnLog | ImGuiTreeNodeFlags_NoTreePushOnOpen)) {
 
-	// swapに関する設定
-	std::optional<std::pair<bool, Iterator>> swapData = std::nullopt;
-	// nullopt:    swapしない
-	// itr, true:  begin側にswap
-	// itr, false: end側にswap
+		// swapに関する設定
+		std::optional<std::pair<bool, Iterator>> swapData = std::nullopt;
+		// nullopt:    swapしない
+		// itr, true:  begin側にswap
+		// itr, false: end側にswap
 
-	for (auto itr = processes_.begin(); itr != processes_.end(); ++itr) {
-		auto process = (*itr).get();
+		for (auto itr = processes_.begin(); itr != processes_.end(); ++itr) {
+			auto process = (*itr).get();
 
-		ImGui::PushID(static_cast<void*>(process));
+			ImGui::PushID(static_cast<void*>(process));
 
-		// Swap button
-		bool isEnableUp   = (itr != processes_.begin());
-		bool isEnableDown = (itr != std::prev(processes_.end()));
+			// Swap button
+			bool isEnableUp = (itr != processes_.begin());
+			bool isEnableDown = (itr != std::prev(processes_.end()));
 
-		ImGui::PushStyleVarX(ImGuiStyleVar_ItemSpacing, 0.0f);
+			ImGui::PushStyleVarX(ImGuiStyleVar_ItemSpacing, 0.0f);
 
-		ImGui::BeginDisabled(!isEnableUp);
-		if (ImGui::ArrowButton("## up", ImGuiDir_Up)) {
-			swapData = std::make_pair(true, itr);
-		}
-		ImGui::EndDisabled();
-
-		ImGui::SameLine();
-
-		ImGui::BeginDisabled(!isEnableDown);
-		if (ImGui::ArrowButton("## down", ImGuiDir_Down)) {
-			swapData = std::make_pair(false, itr);
-		}
-		ImGui::EndDisabled();
-
-		ImGui::PopStyleVar();
-
-		ImGui::SameLine();
-
-		// Enable checkbox
-		ImGui::Checkbox("## isEnabled", &process->IsEnabled());
-
-		ImGui::SameLine();
-
-		if (ImGui::CollapsingHeader(process->GetName().c_str())) {
-			process->ShowInspectorImGui();
-		}
-
-		ImGui::PopID();
-	}
-
-	if (swapData.has_value()) {
-		auto& [isUp, itr] = swapData.value();
-
-		if (isUp) {
-			if (itr != processes_.begin()) {
-				std::iter_swap(itr, std::prev(itr));
+			ImGui::BeginDisabled(!isEnableUp);
+			if (ImGui::ArrowButton("## up", ImGuiDir_Up)) {
+				swapData = std::make_pair(true, itr);
 			}
-		} else {
-			if (std::next(itr) != processes_.end()) {
-				std::iter_swap(itr, std::next(itr));
+			ImGui::EndDisabled();
+
+			ImGui::SameLine();
+
+			ImGui::BeginDisabled(!isEnableDown);
+			if (ImGui::ArrowButton("## down", ImGuiDir_Down)) {
+				swapData = std::make_pair(false, itr);
+			}
+			ImGui::EndDisabled();
+
+			ImGui::PopStyleVar();
+
+			ImGui::SameLine();
+
+			// Enable checkbox
+			ImGui::Checkbox("## isEnabled", &process->IsEnabled());
+
+			ImGui::SameLine();
+
+			if (ImGui::CollapsingHeader(process->GetName().c_str())) {
+				process->ShowInspectorImGui();
+			}
+
+			ImGui::PopID();
+		}
+
+		if (swapData.has_value()) {
+			auto& [isUp, itr] = swapData.value();
+
+			if (isUp) {
+				if (itr != processes_.begin()) {
+					std::iter_swap(itr, std::prev(itr));
+				}
+			} else {
+				if (std::next(itr) != processes_.end()) {
+					std::iter_swap(itr, std::next(itr));
+				}
 			}
 		}
 	}
 
 	// todo: mouseでの操作を可能にする
-
-	ImGui::Text("volume parameter");
-	ImGui::Separator();
-
 	bool isVolume = (tag_ == Tag::Volume);
 
-	ImGui::BeginDisabled(!isVolume);
+	if (ImGui::TreeNodeEx("volume", ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_NoAutoOpenOnLog | ImGuiTreeNodeFlags_NoTreePushOnOpen)) {
 
-	SxImGui::DragFloat("blend radius", &blendRadius, 0.01f, 0.0f, std::nullopt);
-	SxImGui::DragFloat("blend weight", &blendWeight, 0.01f, 0.0f, 1.0f);
+		ImGui::BeginDisabled(!isVolume);
 
-	ImGui::EndDisabled();
+		SxImGui::DragFloat("blend radius", &blendRadius, 0.01f, 0.0f, std::nullopt);
+		SxImGui::DragFloat("blend weight", &blendWeight, 0.01f, 0.0f, 1.0f);
 
+		ImGui::EndDisabled();
+	}
+	
 	auto transform = GetTransform();
 
 	if (isVolume && transform != nullptr) {
@@ -122,10 +118,8 @@ void PostProcessLayerComponent::ShowComponentInspector() {
 		Vector3f min = Matrix4x4::Transform({ -0.5f, -0.5f, -0.5f }, transform->GetMatrix());
 		Vector3f max = Matrix4x4::Transform({ 0.5f, 0.5f, 0.5f }, transform->GetMatrix());
 
-		SxavengerContent::PushBox(min, max, Color4f(0.92f, 0.63f, 0.08f, 1.0f));
+		SxavengerContent::PushBox(min, max, Color4f(0.92f, 0.63f, 0.08f, 1.0f), 0.6f);
 	}
-	
-
 }
 
 void PostProcessLayerComponent::Process(const DirectXQueueContext* context, const BasePostProcess::ProcessInfo& info) {

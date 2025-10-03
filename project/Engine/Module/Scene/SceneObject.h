@@ -20,19 +20,11 @@ public:
 	SceneObject()  = default;
 	~SceneObject() = default;
 
-	//* asset option *//
-
-	void CreateMeshComponent(const std::filesystem::path& filepath);
-
 	//* behaviour option *//
 
 	void Inspectable() override;
 
 	//* serialize option *//
-
-	json PerseToJson() const override;
-
-	void InputJson(const json& data) override;
 
 	bool IsDelete() const { return isDelete_; }
 

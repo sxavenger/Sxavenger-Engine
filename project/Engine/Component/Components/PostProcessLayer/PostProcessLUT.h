@@ -8,9 +8,9 @@
 
 //* engine
 #include <Engine/System/DirectX/DxObject/DxDimensionBuffer.h>
-#include <Engine/Asset/Assets/Texture/AssetTexture.h>
-#include <Engine/Asset/Observer/AssetObserver.h>
 #include <Engine/Render/Common/FLUTTexture.h>
+#include <Engine/Preview/Asset/UAssetTexture.h>
+#include <Engine/Preview/Asset/UAssetParameter.h>
 
 //* c++
 #include <memory>
@@ -43,14 +43,15 @@ public:
 
 	//* option *//
 
-	void CreateTexture(const DirectXQueueContext* context, const AssetObserver<AssetTexture>& texture, const Vector2ui& tile);
-	void CreateTexture(const DirectXQueueContext* context, const std::shared_ptr<AssetTexture>& texture, const Vector2ui& tile);
+	void CreateTexture(const DirectXQueueContext* context, const UAssetParameter<UAssetTexture>& texture, const Vector2ui& tile);
 
 private:
 
 	//=========================================================================================
 	// private variables
 	//=========================================================================================
+
+	UAssetParameter<UAssetTexture> referenceTexture_;
 
 	std::unique_ptr<FLUTTexture> texture_;
 	std::unique_ptr<DxObject::DimensionBuffer<Parameter>> parameter_;

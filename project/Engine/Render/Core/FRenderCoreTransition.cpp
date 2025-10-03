@@ -8,6 +8,9 @@ void FRenderCoreTransition::Init() {
 	CreatePresent();
 
 	CreateTransition(Transition::LightingTransition, kDirectory_ / "LightingTransition.cs.hlsl");
+	CreateTransition(Transition::MipmapTransition,   kDirectory_ / "MipmapTransition.cs.hlsl");
+	CreateTransition(Transition::VelocityTransition, kDirectory_ / "VelocityTransition.cs.hlsl");
+	CreateTransition(Transition::MomentTransition,   kDirectory_ / "MomentTransition.cs.hlsl");
 }
 
 void FRenderCoreTransition::SetPipeline(Transition transition, const DirectXQueueContext* context) {
@@ -44,7 +47,7 @@ void FRenderCoreTransition::CreatePresent() {
 void FRenderCoreTransition::CreateTransition(Transition transition, const std::filesystem::path& filepath) {
 	auto& pipeline = transitions_[static_cast<size_t>(transition)];
 	pipeline = std::make_unique<CustomReflectionComputePipeline>();
-	pipeline->CreateAsset(filepath);
+	pipeline->CreateContent(filepath);
 	pipeline->RegisterBlob();
 	pipeline->ReflectionPipeline(SxavengerSystem::GetDxDevice());
 }

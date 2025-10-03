@@ -36,6 +36,8 @@ public:
 
 	void TransitionEndUnordered(const DirectXQueueContext* context);
 
+	void Barrier(const DirectXQueueContext* context);
+
 	//* getter *//
 
 	const D3D12_GPU_DESCRIPTOR_HANDLE& GetGPUHandleUAV() const { return descriptorUAV_.GetGPUHandle(); }

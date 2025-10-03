@@ -66,9 +66,9 @@ public:
 
 	void SetColliderBoundingOBB(const CollisionBoundings::OBB& obb = { .orientation = Quaternion::Identity(), .size = { 1.0f, 1.0f, 1.0f } });
 
-	void ResetColliderBounding();
+	void SetColliderBounding(const CollisionBoundings::Boundings& bounding) { bounding_ = bounding; }
 
-	const std::optional<CollisionBoundings::Boundings>& GetBoundings() const { return bounding_; }
+	const CollisionBoundings::Boundings& GetBoundings() const { return bounding_; }
 
 	//* collision state option *//
 
@@ -95,13 +95,45 @@ public:
 
 	//* active option *//
 
-	void SetActiveCollider(bool isActive) { isActive_ = isActive; }
+	void SetEnable(bool isEnable) { isEnable_ = isEnable; }
 
-	bool IsActive() const { return isActive_ && BaseComponent::IsActive(); }
+	bool IsEnable() const { return isEnable_; }
 
 	//* other component option *//
 
-	TransformComponent* GetTransform() const;
+	TransformComponent* RequireTransform() const;
+
+	//* json option *//
+
+	json PerseToJson() const override;
+
+	void InputJson(const json& data) override;
+
+private:
+
+	////////////////////////////////////////////////////////////////////////////////////////////
+	// BoundingPrimitiveLine structure
+	////////////////////////////////////////////////////////////////////////////////////////////
+	struct BoundingPrimitiveLine {
+	public:
+
+		//=========================================================================================
+		// public methods
+		//=========================================================================================
+
+		void operator()(const CollisionBoundings::Sphere& sphere);
+		void operator()(const CollisionBoundings::Capsule& capsule);
+		void operator()(const CollisionBoundings::AABB& aabb);
+		void operator()(const CollisionBoundings::OBB& obb);
+
+		//=========================================================================================
+		// public variables
+		//=========================================================================================
+
+		Vector3f position = {};
+		Color4f color     = {};
+
+	};
 
 private:
 
@@ -109,9 +141,7 @@ private:
 	// private variables
 	//=========================================================================================
 
-	//* active *//
-
-	bool isActive_ = true;
+	bool isEnable_ = true;
 
 	//* tag *//
 
@@ -119,7 +149,7 @@ private:
 
 	//* boundings *//
 
-	std::optional<CollisionBoundings::Boundings> bounding_;
+	CollisionBoundings::Boundings bounding_ = CollisionBoundings::Sphere{ 1.0f };
 
 	//* states *//
 
@@ -128,5 +158,12 @@ private:
 	//! value: state
 	std::unordered_map<ColliderComponent*, CollisionStatesBit> states_;
 
+	//=========================================================================================
+	// private methods
+	//=========================================================================================
+
+	//* helper methods *//
+
+	void PushBoundingLine() const;
 
 };

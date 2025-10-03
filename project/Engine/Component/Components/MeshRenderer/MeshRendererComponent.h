@@ -3,13 +3,23 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
+//* mesh renderer
+#include "MeshRendererCommon.h"
+
 //* component
 #include "../BaseComponent.h"
 #include "../Transform/TransformComponent.h"
 
 //* engine
-#include <Engine/Content/InputGeometry/InputMesh.h>
-#include <Engine/Content/Material/Material.h>
+#include <Engine/Preview/Asset/UAssetMesh.h>
+#include <Engine/Preview/Asset/UAssetMaterial.h>
+#include <Engine/Preview/Asset/UAssetParameter.h>
+
+//* lib
+#include <Lib/Sxl/Flag.h>
+
+//* c++
+#include <optional>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // MeshRendererComponent class
@@ -29,20 +39,31 @@ public:
 
 	//* setter *//
 
-	void SetMesh(InputMesh* mesh) { mesh_ = mesh; }
+	void SetMesh(const Uuid& mesh) { mesh_ = mesh; }
+	void SetMesh(const std::shared_ptr<UAssetMesh>& mesh) { mesh_ = mesh; }
 
-	void SetMaterial(Material* material) { material_ = material; }
-
-	void SetTransform(const TransformComponent* transform) { transform_ = transform; }
+	void SetMaterial(const Uuid& material) { material_ = material; }
+	void SetMaterial(const std::shared_ptr<UAssetMaterial>& material) { material_ = material; }
 
 	//* getter *//
 
-	const InputMesh* GetMesh() const { return mesh_; }
-	InputMesh* GetMesh() { return mesh_; }
+	bool IsEnabled() const { return !mesh_.Empty() && !material_.Empty() && isEnable_; }
 
-	const Material* GetMaterial() const { return material_; }
+	std::shared_ptr<UAssetMesh> GetMesh() const;
+	std::shared_ptr<UAssetMaterial> GetMaterial() const;
+
+	const UAssetParameter<UAssetMesh>& GetMeshParameter() const { return mesh_; }
+	const UAssetParameter<UAssetMaterial>& GetMaterialParameter() const { return material_; }
 
 	const TransformComponent* GetTransform() const;
+
+	uint8_t GetMask() const { return mask_.Get(); }
+
+	//* json option *//
+
+	json PerseToJson() const override;
+
+	void InputJson(const json& data) override;
 
 private:
 
@@ -50,9 +71,15 @@ private:
 	// private variables
 	//=========================================================================================
 
-	InputMesh* mesh_    = nullptr;
-	Material* material_ = nullptr;
+	bool isEnable_ = true;
 
-	const TransformComponent* transform_ = nullptr;
+	//* parameter *//
+
+	UAssetParameter<UAssetMesh> mesh_;
+	UAssetParameter<UAssetMaterial> material_;
+
+	//* config *//
+
+	Sxl::Flag<MeshInstanceMask> mask_ = MeshInstanceMask::Default;
 
 };

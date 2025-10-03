@@ -16,7 +16,7 @@
 void TextureExporter::Export(
 	const DirectXQueueContext* context,
 	TextureDimension dimension, ID3D12Resource* texture, DXGI_FORMAT format,
-	const std::filesystem::path& filepath) {
+	const std::filesystem::path& filename) {
 
 	auto device = SxavengerSystem::GetDxDevice()->GetDevice();
 
@@ -24,7 +24,7 @@ void TextureExporter::Export(
 	D3D12_RESOURCE_DESC textureDesc = texture->GetDesc();
 
 	// imageの生成
-	DirectX::ScratchImage image = GetImage(dimension, format, textureDesc);
+	DirectX::ScratchImage image = GetImage(dimension, textureDesc);
 	const UINT kImageCount = static_cast<UINT>(image.GetImageCount());
 
 	// image情報の取得
@@ -82,7 +82,7 @@ void TextureExporter::Export(
 		context->ExecuteAllAllocators();
 	}
 	
-	{ //!< GPUからImageに変更
+	{ //!< BufferからImageに変更
 
 		// mapping
 		BYTE* map = nullptr;
@@ -109,12 +109,28 @@ void TextureExporter::Export(
 		readback->Unmap(0, nullptr);
 	}
 
-	ExportTexture(filepath, image);
+	// imageのformat変換
+	if (format != image.GetMetadata().format) {
 
-	Logger::CommentRuntime("texture exported.", filepath.generic_string());
+		DirectX::ScratchImage converted = {};
+
+		auto hr = DirectX::Convert(
+			image.GetImages(), image.GetImageCount(), image.GetMetadata(),
+			format, DirectX::TEX_FILTER_DEFAULT, DirectX::TEX_THRESHOLD_DEFAULT,
+			converted
+		);
+
+		Exception::Assert(SUCCEEDED(hr), "image convert failed.");
+
+		image = std::move(converted);
+	}
+
+	ExportTexture(filename, image);
+
+	Logger::CommentRuntime("texture exported.", filename.generic_string());
 }
 
-DirectX::ScratchImage TextureExporter::GetImage(TextureDimension dimension, DXGI_FORMAT format, const D3D12_RESOURCE_DESC& desc) {
+DirectX::ScratchImage TextureExporter::GetImage(TextureDimension dimension, const D3D12_RESOURCE_DESC& desc) {
 
 	HRESULT hr = {};
 	DirectX::ScratchImage image = {};
@@ -125,6 +141,7 @@ DirectX::ScratchImage TextureExporter::GetImage(TextureDimension dimension, DXGI
 	size.z = static_cast<size_t>(desc.DepthOrArraySize);
 	size.w = static_cast<size_t>(desc.MipLevels);
 
+	DXGI_FORMAT format = desc.Format;
 
 	switch (dimension) {
 		case TextureDimension::Texture1D:
@@ -165,9 +182,12 @@ DirectX::WICCodecs TextureExporter::GetExtensionCodecs(const std::filesystem::pa
 	}
 }
 
-void TextureExporter::ExportTexture(const std::filesystem::path& filepath, const DirectX::ScratchImage& image) {
+void TextureExporter::ExportTexture(const std::filesystem::path& filename, const DirectX::ScratchImage& image) {
 
-	const std::filesystem::path& extension = filepath.extension();
+	const std::filesystem::path& extension = filename.extension();
+	const std::filesystem::path filepath  = "Capture" / filename;
+
+	CreateFolder();
 
 	HRESULT hr = {};
 
@@ -179,5 +199,11 @@ void TextureExporter::ExportTexture(const std::filesystem::path& filepath, const
 
 	} else {
 		hr = DirectX::SaveToWICFile(*image.GetImages(), DirectX::WIC_FLAGS_NONE, DirectX::GetWICCodec(GetExtensionCodecs(extension)), filepath.generic_wstring().c_str());
+	}
+}
+
+void TextureExporter::CreateFolder() {
+	if (!std::filesystem::exists("Capture")) {
+		std::filesystem::create_directory("Capture");
 	}
 }

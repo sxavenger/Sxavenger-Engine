@@ -53,6 +53,8 @@ public:
 
 	const Vector3f GetPosition() const;
 
+	const Vector3f GetDirection() const;
+
 	//* transformation option *//
 
 	const TransformationMatrix& GetTransformationMatrix() const;

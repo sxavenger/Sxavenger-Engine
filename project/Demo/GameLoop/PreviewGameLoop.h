@@ -8,7 +8,6 @@
 #include <Engine/System/DirectX/DxObject/DxAppendConsumeBuffer.h>
 #include <Engine/System/DirectX/Context/DirectXWindowContext.h>
 #include <Engine/System/SxavengerSystem.h>
-#include <Engine/Asset/SxavengerAsset.h>
 #include <Engine/Render/FPresenter.h>
 #include <Engine/Render/Common/FTexture.h>
 #include <Engine/Module/Pipeline/CustomComputePipeline.h>
@@ -42,9 +41,9 @@ private:
 
 	//* preview *//
 
-	DxObject::AppendConsumeBuffer<UINT> buffer_;
+	FTexture texture_;
 
-	DxObject::ReflectionComputePipelineState pipeline_;
+	CustomReflectionComputePipeline pipeline_;
 
 	//=========================================================================================
 	// private methods

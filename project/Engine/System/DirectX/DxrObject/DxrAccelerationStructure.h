@@ -100,11 +100,11 @@ public:
 		Matrix4x4                                  mat;
 		UINT                                       instanceId;
 		Sxl::Flag<D3D12_RAYTRACING_INSTANCE_FLAGS> flag;
+		uint8_t                                    instanceMask = 0xFF;
 
 		//* table書き込み
 		const ExportGroup*  expt;
 		WriteBindBufferDesc parameter;
-		//!< DXR1.1では不使用
 	};
 
 public:

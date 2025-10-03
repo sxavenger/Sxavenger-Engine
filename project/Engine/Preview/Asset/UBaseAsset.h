@@ -4,41 +4,54 @@
 // include
 //-----------------------------------------------------------------------------------------
 //* engine
-#include <Engine/System/DirectX/DirectXContext.h>
-#include <Engine/System/Runtime/Thread/AsyncTask.h>
+#include <Engine/Editor/Editors/InspectorEditor.h>
 
 //* lib
-#include <Lib/CXXAttributeConfig.h>
-#include <Lib/Adapter/Json/IJsonSerializer.h>
 #include <Lib/Adapter/Uuid/Uuid.h>
+
+//* c++
+#include <concepts>
+#include <optional>
+#include <thread>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // UBaseAsset class
 ////////////////////////////////////////////////////////////////////////////////////////////
 class UBaseAsset
-	: public AsyncTask {
+	: public BaseInspector {
+public:
+
+	////////////////////////////////////////////////////////////////////////////////////////////
+	// Status enum class
+	////////////////////////////////////////////////////////////////////////////////////////////
+	enum class Status : uint8_t {
+		None,     //!< 初期状態
+		Complete, //!< Setupが完了した状態
+	};
+
 public:
 
 	//=========================================================================================
 	// public methods
 	//=========================================================================================
 
-	//* constructor & destructor *//
-
-	UBaseAsset()          = default;
+	UBaseAsset(const Uuid& id) : id_(id) {}
+	UBaseAsset(const std::nullopt_t&) : id_(std::nullopt) {}
 	virtual ~UBaseAsset() = default;
 
-	//* sasset option *//
+	//* asset option *//
 
-	virtual json Serialize() const;
+	bool HasId() const { return id_.has_value(); }
 
-	virtual void Deserialize(const json& data);
+	const Uuid& GetId() const { return id_.value(); } //!< todo exceptionの追加
 
-	//* async task option *//
-
-	bool IsComplete() const { return AsyncTask::GetStatus() == AsyncTask::Status::Completed; }
+	bool IsComplete() const { return status_ == Status::Complete; }
 
 	void WaitComplete() const;
+
+	//* inspector *//
+
+	virtual void ShowInspector() override;
 
 protected:
 
@@ -46,15 +59,32 @@ protected:
 	// protected variables
 	//=========================================================================================
 
-	//* common *//
+	Status status_ = Status::None;
 
-	Uuid uuid_;
-	std::string name_;
+	//=========================================================================================
+	// protected methods
+	//=========================================================================================
 
-	/* note: load方法
-	 - contentでのfilepathからのロード
-	 - .sassetファイルからのロード
-		-> CommandContextが必要な場合(ex. texture)
-	 > 拡張子で判断可能
-	*/
+	void Complete() { status_ = Status::Complete; }
+
+private:
+
+	//=========================================================================================
+	// private variables
+	//=========================================================================================
+
+	const std::optional<Uuid> id_;
+
+	//=========================================================================================
+	// private methods
+	//=========================================================================================
+
+	std::string GetStr() const;
+
 };
+
+////////////////////////////////////////////////////////////////////////////////////////////
+// concept
+////////////////////////////////////////////////////////////////////////////////////////////
+template <class T>
+concept UAssetConcept = std::derived_from<T, UBaseAsset> && !std::is_same_v<T, UBaseAsset>;

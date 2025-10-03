@@ -91,7 +91,7 @@ public:
 
 	static void EndPerformace();
 
-	static TimePointf<TimeUnit::second> GetDeltaTime();
+	static TimePointd<TimeUnit::second> GetDeltaTime();
 
 	static void RecordLap(const std::string& name);
 

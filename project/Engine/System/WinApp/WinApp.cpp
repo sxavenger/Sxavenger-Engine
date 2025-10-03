@@ -7,8 +7,12 @@
 void WinApp::Init() {
 	CoInitializeEx(0, COINIT_MULTITHREADED);
 	timeBeginPeriod(1);
+
+	MFStartup(MF_VERSION, MFSTARTUP_NOSOCKET);
 }
 
 void WinApp::Term() {
+	MFShutdown();
+	
 	CoUninitialize();
 }

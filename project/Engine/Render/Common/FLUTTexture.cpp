@@ -12,22 +12,19 @@ _DXOBJECT_USING
 // FLUTTexture class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-void FLUTTexture::Create(const AssetObserver<AssetTexture>& texture, const Vector2ui& tile) {
-
-	// 引数の保存
-	texture_ = texture.WaitGet();
-
-	CreateResource(texture_->GetTexture().GetSize(), tile);
-	CreateBuffer(texture_->GetTexture().GetSize(), tile);
-}
-
-void FLUTTexture::Create(const std::shared_ptr<AssetTexture>& texture, const Vector2ui& tile) {
+void FLUTTexture::Create(const std::shared_ptr<UAssetTexture>& texture, const Vector2ui& tile) {
 
 	// 引数の保存
 	texture_ = texture;
 
-	CreateResource(texture_->GetTexture().GetSize(), tile);
-	CreateBuffer(texture_->GetTexture().GetSize(), tile);
+	if (texture_->GetMetadata().IsLightness()) {
+		Logger::EngineLog("[FLUTTexture] warning | lut texture is lightness(sRGB) format.");
+	}
+
+	parameter_.size = texture_->GetMetadata().size;
+	parameter_.tile = tile;
+
+	CreateResource(texture_->GetMetadata().size, tile);
 }
 
 void FLUTTexture::Dispatch(const DirectXQueueContext* context) {
@@ -36,16 +33,25 @@ void FLUTTexture::Dispatch(const DirectXQueueContext* context) {
 		FRenderCoreProcess::ProcessType::ConvertLUTTexture, context
 	);
 
-	DxObject::BindBufferDesc parameter = {};
-	parameter.SetAddress("gParameter", parameter_->GetGPUVirtualAddress());
-	parameter.SetHandle("gInput",      texture_->GetGPUHandleSRV());
-	parameter.SetHandle("gOutput",     descriptorUAV_.GetGPUHandle());
+	DxObject::BindBufferDesc desc = {};
+	desc.Set32bitConstants("Parameter", 4, static_cast<const void*>(&parameter_));
+	desc.SetHandle("gInput",               texture_->GetGPUHandleSRV());
+	desc.SetHandle("gOutput",              descriptorUAV_.GetGPUHandle());
 
 	FRenderCore::GetInstance()->GetProcess()->BindComputeBuffer(
-		FRenderCoreProcess::ProcessType::ConvertLUTTexture, context, parameter
+		FRenderCoreProcess::ProcessType::ConvertLUTTexture, context, desc
 	);
 
-	FRenderCore::GetInstance()->GetProcess()->Dispatch(context, texture_->GetTexture().GetSize());
+	FRenderCore::GetInstance()->GetProcess()->Dispatch(context, texture_->GetMetadata().size);
+
+	D3D12_RESOURCE_BARRIER barrier = {};
+	barrier.Type                   = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+	barrier.Transition.pResource   = resource_.Get();
+	barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_UNORDERED_ACCESS;
+	barrier.Transition.StateAfter  = D3D12_RESOURCE_STATE_ALL_SHADER_RESOURCE;
+
+	context->GetCommandList()->ResourceBarrier(1, &barrier);
+
 }
 
 void FLUTTexture::CreateResource(const Vector2ui& size, const Vector2ui& tile) {
@@ -73,7 +79,7 @@ void FLUTTexture::CreateResource(const Vector2ui& size, const Vector2ui& tile) {
 			&prop,
 			D3D12_HEAP_FLAG_NONE,
 			&desc,
-			D3D12_RESOURCE_STATE_ALL_SHADER_RESOURCE,
+			D3D12_RESOURCE_STATE_UNORDERED_ACCESS, //!< すぐ書き込みを行うためUAVで開始
 			nullptr,
 			IID_PPV_ARGS(&resource_)
 		);
@@ -120,11 +126,3 @@ void FLUTTexture::CreateResource(const Vector2ui& size, const Vector2ui& tile) {
 		);
 	}
 }
-
-void FLUTTexture::CreateBuffer(const Vector2ui& size, const Vector2ui& tile) {
-	parameter_ = std::make_unique<DimensionBuffer<Parameter>>();
-	parameter_->Create(SxavengerSystem::GetDxDevice(), 1);
-	parameter_->At(0).size = size;
-	parameter_->At(0).tile = tile;
-}
-

@@ -30,6 +30,8 @@ public:
 
 	static void WriteToJson(const std::filesystem::path& filepath, const json& data);
 
+	static void OverwriteToJson(const std::filesystem::path& filepath, const json& data);
+
 	static bool CheckExist(const std::filesystem::path& filepath);
 
 };

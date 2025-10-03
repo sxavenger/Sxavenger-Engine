@@ -8,8 +8,8 @@
 #include <Engine/System/DirectX/Context/DirectXQueueContext.h>
 
 //* engine
-#include <Engine/Asset/Observer/AssetObserver.h>
-#include <Engine/Asset/Assets/Blob/AssetBlob.h>
+#include <Engine/Preview/Content/UContentBlob.h>
+#include <Engine/Preview/Content/UContentObserver.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Base CustomGraphicsPipeline class
@@ -26,12 +26,12 @@ public:
 
 	//* asset option *//
 
-	void SetAsset(const std::optional<AssetObserver<AssetBlob>>& blob, DxObject::GraphicsShaderType type);
-	void CreateAsset(const std::filesystem::path& filepath, DxObject::GraphicsShaderType type);
+	void SetContent(const std::shared_ptr<UContentBlob>& blob, DxObject::GraphicsShaderType type);
+	void CreateContent(const std::filesystem::path& filepath, DxObject::GraphicsShaderType type);
 
-	void ClearAsset();
+	void ClearContent();
 
-	void ReloadAsset();
+	void ReloadContent();
 
 	virtual void RegisterBlob() = 0;
 
@@ -44,7 +44,7 @@ protected:
 	// protected variables
 	//=========================================================================================
 
-	std::array<std::optional<AssetObserver<AssetBlob>>, static_cast<uint8_t>(DxObject::GraphicsShaderType::ps) + 1> assets_;
+	std::array<std::optional<UContentObserver<UContentBlob>>, static_cast<uint8_t>(DxObject::GraphicsShaderType::ps) + 1> contents_;
 
 	//=========================================================================================
 	// protected methods

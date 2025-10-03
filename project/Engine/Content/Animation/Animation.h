@@ -21,7 +21,7 @@
 ////////////////////////////////////////////////////////////////////////////////////////////
 template <class T>
 struct Keyframe {
-	TimePointf<TimeUnit::second> time;  //!< キーフレーム時刻 /*_sec*/
+	TimePointd<TimeUnit::second> time;  //!< キーフレーム時刻 /*_sec*/
 	T                            value; //!< value
 };
 
@@ -39,7 +39,7 @@ struct TransformAnimation {
 };
 
 struct Animation {
-	TimePointf<TimeUnit::second>                        duration;
+	TimePointd<TimeUnit::second>                        duration;
 	std::unordered_map<std::string, TransformAnimation> nodeAnimations; //!< key: node名, value: Nodeのanimation
 };
 
@@ -47,7 +47,7 @@ struct Animation {
 // Animation methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-Vector3f CalculateAnimationCurve(const AnimationCurve<Vector3f>& keyframes, TimePointf<TimeUnit::second> time);
-Quaternion CalculateAnimationCurve(const AnimationCurve<Quaternion>& keyframes, TimePointf<TimeUnit::second> time);
+Vector3f CalculateAnimationCurve(const AnimationCurve<Vector3f>& keyframes, TimePointd<TimeUnit::second> time);
+Quaternion CalculateAnimationCurve(const AnimationCurve<Quaternion>& keyframes, TimePointd<TimeUnit::second> time);
 
 
