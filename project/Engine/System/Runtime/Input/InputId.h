@@ -5,6 +5,7 @@
 //-----------------------------------------------------------------------------------------
 //* input
 #include <dinput.h>
+#include <Xinput.h>
 
 //* c++
 #include <cstdint>
@@ -172,7 +173,7 @@ enum class GamepadButtonId : uint16_t {
 	BUTTON_LB = XINPUT_GAMEPAD_LEFT_SHOULDER,
 	BUTTON_RB = XINPUT_GAMEPAD_RIGHT_SHOULDER,
 
-	//* Special Buttons
+	//* Special Buttonsk
 	BUTTON_BACK  = XINPUT_GAMEPAD_BACK,
 	BUTTON_START = XINPUT_GAMEPAD_START,
 

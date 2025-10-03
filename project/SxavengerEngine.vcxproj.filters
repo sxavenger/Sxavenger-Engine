@@ -113,7 +113,6 @@
     <ClCompile Include="Engine\System\Runtime\Thread\AsyncTask.cpp" />
     <ClCompile Include="Engine\System\Runtime\Thread\AsyncThread.cpp" />
     <ClCompile Include="Engine\System\Runtime\Thread\AsyncThreadCollection.cpp" />
-    <ClCompile Include="Demo\Entity\Player.cpp" />
     <ClCompile Include="Engine\Module\GameObject\GameObject.cpp" />
     <ClCompile Include="Engine\Component\Components\Particle\ParticleComponent.cpp" />
     <ClCompile Include="Engine\Component\Components\PostProcessLayer\PostProcessLayerComponent.cpp" />
@@ -140,7 +139,6 @@
     <ClCompile Include="Engine\System\Utility\UtilityCommon.cpp" />
     <ClCompile Include="Lib\Adapter\Uuid\Uuid.cpp" />
     <ClCompile Include="Engine\Render\Core\FRenderCorePathtracing.cpp" />
-    <ClCompile Include="Demo\Object\PivotCamera.cpp" />
     <ClCompile Include="Engine\System\DirectX\Context\DirectXQueueContext.cpp" />
     <ClCompile Include="Engine\System\DirectX\Context\DirectXWindowContext.cpp" />
     <ClCompile Include="Engine\System\Window\WindowCollection.cpp" />
@@ -328,7 +326,6 @@
     <ClInclude Include="Engine\System\Runtime\Thread\AsyncTask.h" />
     <ClInclude Include="Engine\System\Runtime\Thread\AsyncThread.h" />
     <ClInclude Include="Engine\System\Runtime\Thread\AsyncThreadCollection.h" />
-    <ClInclude Include="Demo\Entity\Player.h" />
     <ClInclude Include="Engine\Module\GameObject\GameObject.h" />
     <ClInclude Include="Engine\Component\Components\Particle\ParticleComponent.h" />
     <ClInclude Include="Lib\Sxl\OptimizedPathMap.h" />
@@ -360,7 +357,6 @@
     <ClInclude Include="Demo\GameLoop\PreviewGameLoop.h" />
     <ClInclude Include="Engine\Render\Core\FRenderCorePathtracing.h" />
     <ClInclude Include="Engine\System\DirectX\DxObject\DxReadbackDimensionBuffer.h" />
-    <ClInclude Include="Demo\Object\PivotCamera.h" />
     <ClInclude Include="Engine\System\DirectX\Context\DirectXQueueContext.h" />
     <ClInclude Include="Engine\System\DirectX\Context\DirectXWindowContext.h" />
     <ClInclude Include="Engine\System\Window\WindowCollection.h" />

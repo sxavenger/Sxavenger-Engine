@@ -50,10 +50,10 @@ void DemoGameLoop::InitGame() {
 	main_ = SxavengerSystem::CreateMainWindow(kMainWindowSize, L"Sxavenger Engine Demo").lock();
 	main_->SetIcon("packages/icon/SxavengerEngineIcon.ico", { 32, 32 });
 
-	player_ = std::make_unique<Player>();
-	player_->Load();
-	player_->Awake();
-	player_->Start();
+	//player_ = std::make_unique<Player>();
+	//player_->Load();
+	//player_->Awake();
+	//player_->Start();
 
 	SetCollisionCallback();
 
@@ -103,7 +103,7 @@ void DemoGameLoop::UpdateGame() {
 	//-----------------------------------------------------------------------------------------
 
 	//atmosphere_->Update();
-	player_->Update();
+	//player_->Update();
 
 	//-----------------------------------------------------------------------------------------
 	// SystemUpdate...?

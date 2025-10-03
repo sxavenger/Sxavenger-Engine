@@ -8,9 +8,6 @@
 #include <Engine/System/DirectX/Context/DirectXWindowContext.h>
 #include <Engine/Adapter/Actor/AtmosphereActor.h>
 
-//* demo
-#include <Demo/Entity/Player.h>
-
 ////////////////////////////////////////////////////////////////////////////////////////////
 // DemoGameLoop class
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -36,7 +33,7 @@ private:
 
 	//* game objects *//
 
-	std::unique_ptr<Player> player_;
+	//std::unique_ptr<Player> player_;
 
 	std::unique_ptr<AtmosphereActor> atmosphere_;
 	std::unique_ptr<MonoBehaviour> skylight_;

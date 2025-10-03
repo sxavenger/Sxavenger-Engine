@@ -8,16 +8,19 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
-//* input
-#include <dinput.h>
-#include <Xinput.h>
-
 //* id
 #include "InputId.h"
 
 //* engine
 #include <Engine/System/Utility/ComPtr.h>
 #include <Engine/System/DirectX/Context/DirectXWindowContext.h>
+
+//* lib
+#include <lib/Sxl/Flag.h>
+
+//* input
+#include <dinput.h>
+#include <Xinput.h>
 
 //* c++
 #include <cstdint>
@@ -242,6 +245,20 @@ private:
 class Input {
 public:
 
+	////////////////////////////////////////////////////////////////////////////////////////////
+	// InputDirection enum class
+	////////////////////////////////////////////////////////////////////////////////////////////
+	enum class InputDirection : size_t {
+		None           = 0,
+		Keyboard_WASD  = 1 << 0,
+		Keyboard_Arrow = 1 << 1,
+		Gamepad_LStick = 1 << 2,
+		Gamepad_RStick = 1 << 3,
+		Gamepad_DPad   = 1 << 4,
+	};
+
+public:
+
 	//=========================================================================================
 	// public methods
 	//=========================================================================================
@@ -262,6 +279,10 @@ public:
 	bool IsTriggerKey(KeyId id);
 
 	bool IsReleaseKey(KeyId id);
+
+	//* input option *//
+
+	Vector2f GetInputDirection() const;
 
 	//* getter *//
 
@@ -292,3 +313,4 @@ private:
 
 };
 
+_ENUM_FLAG_OPERATORS(Input::InputDirection);
