@@ -184,8 +184,10 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Demo\Entity\Player.cpp" />
     <ClCompile Include="Demo\GameLoop\BetaSystemGameLoop.cpp" />
     <ClCompile Include="Demo\GameLoop\DemoGameLoop.cpp" />
+    <ClCompile Include="Demo\Object\PerspectiveCamera.cpp" />
     <ClCompile Include="Engine\Adapter\Actor\ParameterActor.cpp" />
     <ClCompile Include="Engine\Adapter\Actor\PerformanceActor.cpp" />
     <ClCompile Include="Engine\Component\Components\Audio\AudioController.cpp" />
@@ -372,9 +374,11 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Demo\Entity\Player.h" />
     <ClInclude Include="Demo\GameLoop\BetaSystemGameLoop.h" />
     <ClInclude Include="Demo\GameLoop\DemoGameLoop.h" />
     <ClInclude Include="Demo\GameLoop\PreviewGameLoop.h" />
+    <ClInclude Include="Demo\Object\PerspectiveCamera.h" />
     <ClInclude Include="Engine\Adapter\Actor\ParameterActor.h" />
     <ClInclude Include="Engine\Adapter\Actor\PerformanceActor.h" />
     <ClInclude Include="Engine\Adapter\Parameter\SerializeGui.h" />

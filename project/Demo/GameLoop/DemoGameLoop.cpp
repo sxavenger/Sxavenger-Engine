@@ -8,13 +8,9 @@
 #include <Engine/Editor/EditorEngine.h>
 #include <Engine/Editor/Editors/DevelopEditor.h>
 #include <Engine/Render/FMainRender.h>
-#include <Engine/Content/InputGeometry/InputPrimitiveHelper.h>
+#include <Engine/Component/Components/Light/Environment/SkyLightComponent.h>
 #include <Engine/Component/Components/Collider/ColliderComponent.h>
 #include <Engine/Component/Components/Collider/CollisionManager.h>
-#include <Engine/Component/Components/SpriteRenderer/SpriteRendererComponent.h>
-#include <Engine/Component/Components/PostProcessLayer/PostProcessLayerComponent.h>
-#include <Engine/Component/Components/Particle/EmitterComponent.h>
-#include <Engine/Component/Components/Particle/GPUParticleComponent.h>
 #include <Engine/Component/ComponentHelper.h>
 #include <Engine/Module/Scene/SceneObjects.h>
 
@@ -50,41 +46,39 @@ void DemoGameLoop::InitGame() {
 	main_ = SxavengerSystem::CreateMainWindow(kMainWindowSize, L"Sxavenger Engine Demo").lock();
 	main_->SetIcon("packages/icon/SxavengerEngineIcon.ico", { 32, 32 });
 
-	//player_ = std::make_unique<Player>();
-	//player_->Load();
-	//player_->Awake();
-	//player_->Start();
-
 	SetCollisionCallback();
 
-	//atmosphere_ = std::make_unique<AtmosphereActor>();
-	//atmosphere_->Init({ 1024, 1024 });
+	{ //!< skylight
+		skylight_ = std::make_unique<MonoBehaviour>();
+		skylight_->SetName("skylight");
+		auto light = skylight_->AddComponent<SkyLightComponent>();
+		light->SetIrradiance(sUContentStorage->Import<UContentTexture>("assets/textures/textureCube/sky_irradiance.dds")->GetId());
+		light->SetRadiance(sUContentStorage->Import<UContentTexture>("assets/textures/textureCube/sky_radiance.dds")->GetId());
+		light->SetEnvironment(sUContentStorage->Import<UContentTexture>("assets/textures/textureCube/sky_environment.dds")->GetId());
+		light->SetIntensity(0.3f);
+	}
 
-	skylight_ = std::make_unique<MonoBehaviour>();
-	skylight_->SetName("skylight");
-	auto light = skylight_->AddComponent<SkyLightComponent>();
-	light->SetIrradiance(sUContentStorage->Import<UContentTexture>("assets/textures/textureCube/sky_irradiance.dds")->GetId());
-	light->SetRadiance(sUContentStorage->Import<UContentTexture>("assets/textures/textureCube/sky_radiance.dds")->GetId());
-	light->SetEnvironment(sUContentStorage->Import<UContentTexture>("assets/textures/textureCube/sky_environment.dds")->GetId());
-	light->SetIntensity(0.3f);
+	{ //!< performance
+		performance_ = std::make_unique<PerformanceActor>();
+		performance_->Init({ 8.0f, 8.0f });
+	}
 
-	volume_ = std::make_unique<MonoBehaviour>();
-	volume_->SetName("volume");
-	volume_->AddComponent<TransformComponent>();
-	volume_->GetComponent<TransformComponent>()->GetTransform().scale = { 14, 14, 14 };
-	volume_->AddComponent<PostProcessLayerComponent>();
-	volume_->GetComponent<PostProcessLayerComponent>()->SetTag(PostProcessLayerComponent::Tag::Volume);
+	{ //!< camera
+		camera_ = std::make_unique<PerspectiveCamera>();
+		camera_->Load();
+		camera_->Awake();
+		camera_->Start();
+	}
 
-	volume_->GetComponent<PostProcessLayerComponent>()->AddPostProcess<PostProcessChromaticAberration>();
-	volume_->GetComponent<PostProcessLayerComponent>()->AddPostProcess<PostProcessRadialBlur>();
+	{ //!< player
+		player_ = std::make_unique<Player>();
+		player_->Load();
+		player_->Awake();
+		player_->Start();
+	}
 
-	sUContentStorage->Import<UContentTexture>("assets/textures/LUT/lut_reddish.png",  UContentTexture::Option{ UContentTexture::Encoding::Intensity, false });
-	sUContentStorage->Import<UContentTexture>("assets/textures/LUT/lut_sepia.png",    UContentTexture::Option{ UContentTexture::Encoding::Intensity, false });
-	sUContentStorage->Import<UContentTexture>("assets/textures/LUT/lut_greenish.png", UContentTexture::Option{ UContentTexture::Encoding::Intensity, false });
-
-	const auto& texture = sUContentStorage->Import<UContentTexture>("assets/textures/LUT/lut_reddish.png", UContentTexture::Option{ UContentTexture::Encoding::Intensity, false });
-	auto lut = volume_->GetComponent<PostProcessLayerComponent>()->AddPostProcess<PostProcessLUT>();
-	lut->CreateTexture(SxavengerSystem::GetDirectQueueContext(), texture->GetId(), {16, 16});
+	camera_->SetSubject(player_->GetComponent<TransformComponent>());
+	player_->SetCamera(camera_.get());
 
 	sSceneObjects->InputJsonFromFilepath("assets/scene/collision_sponza.scene");
 
@@ -102,8 +96,10 @@ void DemoGameLoop::UpdateGame() {
 	// GameLogic Update
 	//-----------------------------------------------------------------------------------------
 
-	//atmosphere_->Update();
-	//player_->Update();
+	performance_->Update();
+
+	player_->Update();
+	camera_->Update();
 
 	//-----------------------------------------------------------------------------------------
 	// SystemUpdate...?
@@ -150,6 +146,12 @@ void DemoGameLoop::SetCollisionCallback() {
 		"Player", "Wall",
 		[](_MAYBE_UNUSED ColliderComponent* const player, _MAYBE_UNUSED ColliderComponent* const wall) {
 		CollisionHelper::PushBackAABB(player, wall);
+	});
+
+	sCollisionManager->SetOnCollisionFunctionStay(
+		"Cube", "Wall",
+		[](_MAYBE_UNUSED ColliderComponent* const cube, _MAYBE_UNUSED ColliderComponent* const wall) {
+			CollisionHelper::PushBackAABB(cube, wall);
 	});
 
 }

@@ -195,6 +195,8 @@
     <ClCompile Include="Engine\Component\Components\PostProcessLayer\PostProcessMotionBlur.cpp" />
     <ClCompile Include="Engine\Component\Components\Light\Punctual\SpotLightComponent.cpp" />
     <ClCompile Include="Engine\Adapter\Actor\PerformanceActor.cpp" />
+    <ClCompile Include="Demo\Object\PerspectiveCamera.cpp" />
+    <ClCompile Include="Demo\Entity\Player.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Lib\Adapter\Random\Random.h" />
@@ -418,6 +420,8 @@
     <ClInclude Include="Engine\Component\Components\PostProcessLayer\PostProcessMotionBlur.h" />
     <ClInclude Include="Engine\Component\Components\Light\Punctual\SpotLightComponent.h" />
     <ClInclude Include="Engine\Adapter\Actor\PerformanceActor.h" />
+    <ClInclude Include="Demo\Object\PerspectiveCamera.h" />
+    <ClInclude Include="Demo\Entity\Player.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />

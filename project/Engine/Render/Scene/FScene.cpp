@@ -54,7 +54,7 @@ void FScene::SetupTopLevelAS(const DirectXQueueContext* context) {
 	topLevelAS_.BeginSetupInstance();
 
 	sComponentStorage->ForEachActive<MeshRendererComponent>([&](MeshRendererComponent* component) {
-		if (!component->IsEnabled()) {
+		if (!component->IsEnable()) { //!< 不適格component
 			return; //!< material or meshが設定されていない場合はスキップ
 			// todo: missing material を用意する
 		}
@@ -99,6 +99,10 @@ void FScene::SetupTopLevelAS(const DirectXQueueContext* context) {
 	});
 
 	sComponentStorage->ForEachActive<SkinnedMeshRendererComponent>([&](SkinnedMeshRendererComponent* component) {
+		if (!component->IsEnable()) { //!< 不適格component
+			return; //!< material or meshが設定されていない場合はスキップ
+			// todo: missing material を用意する
+		}
 
 		std::shared_ptr<UAssetMaterial> material = component->GetMaterial();
 
