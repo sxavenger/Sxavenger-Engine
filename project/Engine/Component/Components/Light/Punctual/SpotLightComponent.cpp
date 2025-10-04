@@ -91,6 +91,11 @@ void SpotLightComponent::SetUnit(LightCommon::Units unit) {
 	parameter.unit = unit;
 }
 
+SpotLightComponent::Parameter& SpotLightComponent::GetParameter() {
+	Exception::Assert(parameter_ != nullptr, "spot light buffer is not create.");
+	return parameter_->At(0);
+}
+
 const SpotLightComponent::Parameter& SpotLightComponent::GetParameter() const {
 	Exception::Assert(parameter_ != nullptr, "spot light buffer is not create.");
 	return parameter_->At(0);

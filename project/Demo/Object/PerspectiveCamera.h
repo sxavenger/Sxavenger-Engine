@@ -52,6 +52,10 @@ public:
 
 	Perspective GetPerspective() const { return perspective_; }
 
+	Vector3f GetForward() const;
+
+	Vector3f GetPosition() const { return transform_->GetPosition(); }
+
 private:
 
 	//=========================================================================================
@@ -71,6 +75,10 @@ private:
 	//* external *//
 
 	TransformComponent* subject_ = nullptr;
+
+	//* children *//
+
+	std::unique_ptr<MonoBehaviour> light_;
 
 	//* parameter *//
 

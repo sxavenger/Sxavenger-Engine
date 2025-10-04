@@ -25,7 +25,7 @@ void FMainRender::Init() {
 	context_ = std::make_unique<FRenderPassContext>();
 	context_->Add<FRenderPassDeferredBase>();
 	context_->Add<FRenderPassDeferredLighting>();
-	//context_->Add<FRenderPassForwardTransparent>(); //!< TODO: 実装
+	context_->Add<FRenderPassForwardTransparent>();
 	context_->Add<FRenderPassPostProcess>();
 	context_->Add<FRenderPassTonemap>();
 	context_->Add<FRenderPassCanvas>();

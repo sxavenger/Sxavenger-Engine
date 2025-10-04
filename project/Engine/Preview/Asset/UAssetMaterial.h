@@ -322,6 +322,10 @@ public:
 
 	void ShowInspector() override;
 
+	//* option *//
+
+	void SetMode(Mode mode) { mode_ = mode; }
+
 	//* getter *//
 
 	const D3D12_GPU_VIRTUAL_ADDRESS& GetGPUVirtualAddress() const;

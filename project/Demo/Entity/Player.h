@@ -91,6 +91,10 @@ private:
 	UContentObserver<UContentModel> model_;
 	std::array<UContentObserver<UContentAnimation>, magic_enum::enum_count<AnimationType>()> animators_;
 
+	//* children *//
+
+	std::unique_ptr<MonoBehaviour> light_;
+
 	//* parameter *//
 
 	SerializeParameter<float> walkspeed_{ "walk speed", 0.1f };

@@ -45,7 +45,6 @@ void Player::Awake() {
 		}
 	);
 
-
 }
 
 void Player::Start() {
@@ -153,6 +152,7 @@ void Player::Move() {
 		}
 
 		transform_->rotate = Quaternion::Slerp(transform_->rotate, CalculateDirectionQuaterion(direction), 0.2f);
+		
 	}
 
 	transform_->translate += velocity_ * SxavengerSystem::GetDeltaTimef().time;

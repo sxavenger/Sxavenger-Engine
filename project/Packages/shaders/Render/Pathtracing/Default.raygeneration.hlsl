@@ -49,8 +49,6 @@ _RAYGENERATION void mainRaygeneration() {
 	float4 diffuse_indirect  = float4(0.0f, 0.0f, 0.0f, 0.0f);
 	float4 specular_indirect = float4(0.0f, 0.0f, 0.0f, 0.0f);
 
-	// TODO: view依存をなくし, カメラ移動に対応する.
-
 	for (uint i = 0; i < min(samplesPerFrame, maxSampleCount - moment.x); ++i) {
 
 		uint currentSampleIndex   = moment.x + i;
@@ -88,6 +86,8 @@ _RAYGENERATION void mainRaygeneration() {
 				diffuse_indirect.a   += payload.indirect.a > 0.0f ? 1.0f : 0.0f;
 			}
 		}
+
+		// TODO: view依存をなくし, カメラ移動に対応する.
 
 		//{ //!< Specularサンプル
 

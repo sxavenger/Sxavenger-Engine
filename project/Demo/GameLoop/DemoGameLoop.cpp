@@ -55,7 +55,7 @@ void DemoGameLoop::InitGame() {
 		light->SetIrradiance(sUContentStorage->Import<UContentTexture>("assets/textures/textureCube/sky_irradiance.dds")->GetId());
 		light->SetRadiance(sUContentStorage->Import<UContentTexture>("assets/textures/textureCube/sky_radiance.dds")->GetId());
 		light->SetEnvironment(sUContentStorage->Import<UContentTexture>("assets/textures/textureCube/sky_environment.dds")->GetId());
-		light->SetIntensity(1.0f);
+		light->SetIntensity(3.0f);
 	}
 
 	{ //!< performance
@@ -77,8 +77,16 @@ void DemoGameLoop::InitGame() {
 		player_->Start();
 	}
 
+	{ //!< cubes
+		cubes_ = std::make_unique<EmissiveCubes>();
+		cubes_->Load();
+		cubes_->Awake();
+		cubes_->Start();
+	}
+
 	camera_->SetSubject(player_->GetComponent<TransformComponent>());
 	player_->SetCamera(camera_.get());
+	cubes_->SetCamera(camera_.get());
 
 	sSceneObjects->InputJsonFromFilepath("assets/scene/collision_sponza.scene");
 
@@ -100,6 +108,9 @@ void DemoGameLoop::UpdateGame() {
 
 	player_->Update();
 	camera_->Update();
+
+	cubes_->Update();
+
 
 	//-----------------------------------------------------------------------------------------
 	// SystemUpdate...?

@@ -11,6 +11,7 @@
 //* demo
 #include <Demo/Object/PerspectiveCamera.h>
 #include <Demo/Entity/Player.h>
+#include <Demo/Object/EmissiveCubes.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // DemoGameLoop class
@@ -43,6 +44,8 @@ private:
 
 	std::unique_ptr<PerspectiveCamera> camera_;
 	std::unique_ptr<Player> player_;
+
+	std::unique_ptr<EmissiveCubes> cubes_;
 
 	//=========================================================================================
 	// private methods

@@ -6,6 +6,7 @@
 //* engine
 #include <Engine/System/SxavengerSystem.h>
 #include <Engine/Component/Components/PostProcessLayer/PostProcessLayerComponent.h>
+#include <Engine/Component/ComponentHelper.h>
 #include <Engine/Editor/EditorEngine.h>
 #include <Engine/Editor/Editors/RenderSceneEditor.h>
 
@@ -29,13 +30,36 @@ void PerspectiveCamera::Awake() {
 
 	auto process = MonoBehaviour::AddComponent<PostProcessLayerComponent>();
 	process->SetTag(PostProcessLayerComponent::Tag::Local);
-	process->AddPostProcess<PostProcessAutoExposure>();
+
+	{
+		auto exposure = process->AddPostProcess<PostProcessAutoExposure>();
+		exposure->GetParameter().minLogLuminance = -10.0f;
+		exposure->GetParameter().maxLogLuminance = 20.0f;
+		exposure->GetParameter().compensation    = -6.0f;
+	}
+	
 	process->AddPostProcess<PostProcessLocalExposure>(false);
 	process->AddPostProcess<PostProcessBloom>();
+
+	{
+		light_ = ComponentHelper::CreateSpotLightMonoBehaviour();
+		MonoBehaviour::AddChild(light_.get());
+
+		auto light = light_->GetComponent<SpotLightComponent>();
+		light->GetParameter().color           = Color3f::Convert(0xF3EAD6);
+		light->GetParameter().unit            = LightCommon::Units::Lumen;
+		light->GetParameter().intensity       = 10.0f;
+		light->GetParameter().radius          = 10000.0f;
+		light->GetParameter().coneAngle       = { 0.0f, 0.356f };
+		light->GetParameter().shadow.strength = 1.0f;
+	}
+	
 
 }
 
 void PerspectiveCamera::Start() {
+
+	camera_->GetProjection().focal = 12.0f;
 
 	perspective_ = Perspective::FirstPerson;
 	UpdateFirstPersonView();
@@ -62,6 +86,10 @@ void PerspectiveCamera::Inspectable() {
 
 	SerializeGuiFormatter<float>::DragScalar3(offset_, 0.1f);
 
+}
+
+Vector3f PerspectiveCamera::GetForward() const {
+	return transform_->GetTransform().GetForward();
 }
 
 void PerspectiveCamera::InputFirstPerson() {
