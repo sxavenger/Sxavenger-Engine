@@ -78,6 +78,11 @@ void PerspectiveCamera::Update() {
 	}
 
 	UpdateView();
+
+	// lightの更新
+	if (keyboard_->IsTrigger(KeyId::KEY_L)) {
+		light_->SetActive(!light_->IsActive());
+	}
 }
 
 void PerspectiveCamera::Inspectable() {

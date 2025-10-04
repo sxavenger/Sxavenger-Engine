@@ -146,8 +146,6 @@ void TextRendererComponent::PerseText() {
 
 		cursor.x += glyph.advance;
 
-		// todo: 範囲を作成
-
 	}
 
 }

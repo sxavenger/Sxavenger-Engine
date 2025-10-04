@@ -11,6 +11,8 @@
 #include <Engine/Component/Components/Light/Environment/SkyLightComponent.h>
 #include <Engine/Component/Components/Collider/ColliderComponent.h>
 #include <Engine/Component/Components/Collider/CollisionManager.h>
+#include <Engine/Component/Components/Transform/RectTransformComponent.h>
+#include <Engine/Component/Components/TextRenderer/TextRendererComponent.h>
 #include <Engine/Component/ComponentHelper.h>
 #include <Engine/Module/Scene/SceneObjects.h>
 
@@ -36,6 +38,7 @@ void DemoGameLoop::Init(GameLoop::Context* context) {
 	context->SetProcess(GameLoop::Process::Render, std::nullopt, [this]() { DrawGame(); });
 
 	context->SetCondition([this]() { return !SxavengerSystem::ProcessMessage(); });
+	context->SetCondition([this]() { return SxavengerSystem::IsPressKey(KeyId::KEY_ESCAPE); });
 }
 
 void DemoGameLoop::Term() {
@@ -60,7 +63,7 @@ void DemoGameLoop::InitGame() {
 
 	{ //!< performance
 		performance_ = std::make_unique<PerformanceActor>();
-		performance_->Init({ 8.0f, 8.0f });
+		performance_->Init({ 1190.0f, 0.0f });
 	}
 
 	{ //!< camera
@@ -88,10 +91,47 @@ void DemoGameLoop::InitGame() {
 	player_->SetCamera(camera_.get());
 	cubes_->SetCamera(camera_.get());
 
-	sSceneObjects->InputJsonFromFilepath("assets/scene/collision_sponza.scene");
+	{
+		demoText_ = std::make_unique<MonoBehaviour>();
+		demoText_->SetName("demo text");
+		auto& transform = demoText_->AddComponent<RectTransformComponent>()->GetTransform();
+		transform.scale     = { 400.0f, 50.0f };
+		transform.pivot     = { 0.0f, 0.0f };
+		transform.translate = { 16.0f, 0.0f };
 
-	//auto& config = FMainRender::GetInstance()->GetConfig();
-	//config.isEnableIndirectLighting = true;
+		auto text = demoText_->AddComponent<TextRendererComponent>();
+		text->SetFont(sUContentStorage->Import<UContentFont>("assets/font/MPLUSRounded1c-Regular.ttf")->GetId());
+		text->SetSize(32.0f);
+		text->SetText(L"Sxavenger Engine Demo : Sponza");
+	}
+
+	{
+		text_ = std::make_unique<MonoBehaviour>();
+		text_->SetName("text");
+
+		auto& transform = text_->AddComponent<RectTransformComponent>()->GetTransform();
+		transform.scale     = { 400.0f, 200.0f };
+		transform.pivot     = { 0.0f, 1.0f };
+		transform.translate = { 16.0f, 760.0f };
+
+		auto text = text_->AddComponent<TextRendererComponent>();
+		text->SetFont(sUContentStorage->Import<UContentFont>("assets/font/MPLUSRounded1c-Regular.ttf")->GetId());
+		text->SetSize(20.0f);
+
+		std::wstring t = L"";
+		t += L"[WASD]            : いどう\n";
+		t += L"[LSHIFT] + [WASD] : ダッシュ\n";
+		t += L"[みぎクリック]      : してんいどう\n";
+		t += L"[F]               : Cubeをもつ\n";
+		t += L"[L]               : ライトをつける/けす\n";
+		t += L"[P]               : パストレーシングモード\n";
+		t += L"[ESC]             : ゲームしゅうりょう\n";
+
+		text->SetText(t);
+	}
+	
+
+	sSceneObjects->InputJsonFromFilepath("assets/scene/collision_sponza.scene");
 
 }
 
@@ -103,6 +143,11 @@ void DemoGameLoop::UpdateGame() {
 	//-----------------------------------------------------------------------------------------
 	// GameLogic Update
 	//-----------------------------------------------------------------------------------------
+
+	if (SxavengerSystem::IsTriggerKey(KeyId::KEY_P)) {
+		auto& config = FMainRender::GetInstance()->GetConfig();
+		config.isEnableIndirectLighting = !config.isEnableIndirectLighting;
+	}
 
 	performance_->Update();
 

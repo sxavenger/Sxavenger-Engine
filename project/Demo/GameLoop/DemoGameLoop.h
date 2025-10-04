@@ -47,6 +47,9 @@ private:
 
 	std::unique_ptr<EmissiveCubes> cubes_;
 
+	std::unique_ptr<MonoBehaviour> demoText_;
+	std::unique_ptr<MonoBehaviour> text_;
+
 	//=========================================================================================
 	// private methods
 	//=========================================================================================
