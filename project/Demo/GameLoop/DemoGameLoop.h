@@ -6,7 +6,12 @@
 //* engine
 #include <Engine/System/Runtime/GameLoop/GameLoop.h>
 #include <Engine/System/DirectX/Context/DirectXWindowContext.h>
-#include <Engine/Adapter/Actor/AtmosphereActor.h>
+#include <Engine/Adapter/Actor/PerformanceActor.h>
+
+//* demo
+#include <Demo/Object/PerspectiveCamera.h>
+#include <Demo/Entity/Player.h>
+#include <Demo/Object/EmissiveCubes.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // DemoGameLoop class
@@ -33,12 +38,17 @@ private:
 
 	//* game objects *//
 
-	//std::unique_ptr<Player> player_;
-
-	std::unique_ptr<AtmosphereActor> atmosphere_;
 	std::unique_ptr<MonoBehaviour> skylight_;
 
-	std::unique_ptr<MonoBehaviour> volume_;
+	std::unique_ptr<PerformanceActor> performance_;
+
+	std::unique_ptr<PerspectiveCamera> camera_;
+	std::unique_ptr<Player> player_;
+
+	std::unique_ptr<EmissiveCubes> cubes_;
+
+	std::unique_ptr<MonoBehaviour> demoText_;
+	std::unique_ptr<MonoBehaviour> text_;
 
 	//=========================================================================================
 	// private methods

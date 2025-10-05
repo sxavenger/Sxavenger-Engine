@@ -45,9 +45,11 @@ public:
 	void SetMaterial(const Uuid& material) { material_ = material; }
 	void SetMaterial(const std::shared_ptr<UAssetMaterial>& material) { material_ = material; }
 
+	void SetEnable(bool isEnable = true) { isEnable_ = isEnable; }
+
 	//* getter *//
 
-	bool IsEnabled() const { return !mesh_.Empty() && !material_.Empty() && isEnable_; }
+	bool IsEnable() const { return !mesh_.Empty() && !material_.Empty() && isEnable_; }
 
 	std::shared_ptr<UAssetMesh> GetMesh() const;
 	std::shared_ptr<UAssetMaterial> GetMaterial() const;

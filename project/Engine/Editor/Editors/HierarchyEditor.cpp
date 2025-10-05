@@ -27,13 +27,6 @@ void HierarchyEditor::Init() {
 
 void HierarchyEditor::ShowMainMenu() {
 	ShowHierarchyMenu();
-
-	if (ImGui::BeginMenu("hierarchy")) {
-		MenuPadding();
-		ImGui::SeparatorText("hierarchy");
-
-		ImGui::EndMenu();
-	}
 }
 
 void HierarchyEditor::ShowWindow() {

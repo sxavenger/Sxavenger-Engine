@@ -63,6 +63,7 @@ public:
 
 	void SetUnit(LightCommon::Units unit);
 
+	Parameter& GetParameter();
 	const Parameter& GetParameter() const;
 
 	//* behaviour component option *//

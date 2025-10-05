@@ -8,6 +8,7 @@ _DXOBJECT_USING
 #include "../../Entity/MonoBehaviour.h"
 
 //* engine
+#include <Engine/System/UI/SxImGui.h>
 #include <Engine/System/SxavengerSystem.h>
 #include <Engine/Content/SxavengerContent.h>
 #include <Engine/Preview/Asset/UAssetStorage.h>
@@ -51,6 +52,11 @@ void SkinnedMeshRendererComponent::InputSkinnedMesh::CreateBottomLevelAS(const D
 ////////////////////////////////////////////////////////////////////////////////////////////
 // SkinnedMeshRendererComponent class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
+
+void SkinnedMeshRendererComponent::ShowComponentInspector() {
+	ImGui::Checkbox("enable", &isEnable_);
+	SxImGui::CheckBoxFlags("cast shadow", &mask_.Get(), static_cast<uint8_t>(MeshInstanceMask::Shadow));
+}
 
 void SkinnedMeshRendererComponent::CreateMesh(const Uuid& referenceMesh) {
 	// 参照先のmeshを保持
@@ -116,6 +122,7 @@ json SkinnedMeshRendererComponent::PerseToJson() const {
 
 	data["referenceMesh"] = referenceMesh_.Serialize();
 	data["material"]      = material_.Serialize();
+	data["isEnable"]      = isEnable_;
 	data["mask"]          = mask_.Get();
 
 	return data;
@@ -123,8 +130,8 @@ json SkinnedMeshRendererComponent::PerseToJson() const {
 
 void SkinnedMeshRendererComponent::InputJson(const json& data) {
 
-	Uuid referenceMesh = Uuid::Deserialize(data["referenceMesh"].get<std::string>());
-	Uuid material = Uuid::Deserialize(data["material"].get<std::string>());
+	Uuid referenceMesh = Uuid::Deserialize(JsonSerializeFormatter<std::string>::Deserialize(data["referenceMesh"]));
+	Uuid material      = Uuid::Deserialize(JsonSerializeFormatter<std::string>::Deserialize(data["material"]));
 
 	// referenceMesh, materialのuuidが存在しない場合は, tableから読み込み
 
@@ -141,7 +148,8 @@ void SkinnedMeshRendererComponent::InputJson(const json& data) {
 	CreateMesh(referenceMesh);
 	material_ = material;
 
-	mask_ = static_cast<MeshInstanceMask>(data["mask"].get<uint8_t>());
+	mask_     = static_cast<MeshInstanceMask>(JsonSerializeFormatter<uint8_t>::Deserialize(data["mask"]));
+	isEnable_ = JsonSerializeFormatter<bool>::Deserialize(data["isEnable"]);
 	
 }
 

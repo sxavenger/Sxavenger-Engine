@@ -47,6 +47,7 @@ const D3D12_GPU_DESCRIPTOR_HANDLE& UAssetFont::GetGPUHandleSRV() const {
 }
 
 const UAssetFont::GlyphInfo& UAssetFont::GetGlyphInfo(wchar_t c) const {
+	Exception::AssertW(glyphs_.contains(c), std::format(L"glyph not found. wchar_t: {}", c));
 	return glyphs_.at(c);
 }
 
@@ -123,6 +124,8 @@ void UAssetFont::LoadGlyph(const stbtt_fontinfo& info, float scale) {
 	for (wchar_t c = L'ア'; c <= L'ン'; ++c) {
 		glyphs_[c] = GenerateGlyphInfo(info, scale, c);
 	}
+
+	glyphs_[L'ー'] = GenerateGlyphInfo(info, scale, L'ー');
 }
 
 UAssetFont::GlyphInfo UAssetFont::GenerateGlyphInfo(const stbtt_fontinfo& info, float scale, wchar_t c) {

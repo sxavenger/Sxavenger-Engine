@@ -157,7 +157,17 @@ public:
 		_Ty b, z;
 	};
 
-	// todo: formatter
+	//=========================================================================================
+	// methods
+	//=========================================================================================
+
+	static constexpr Color3floating Convert(std::uint32_t code) {
+		return {
+			static_cast<_Ty>((code >> 2 * 8) & 0xFF) / 255.0f,
+			static_cast<_Ty>((code >> 1 * 8) & 0xFF) / 255.0f,
+			static_cast<_Ty>((code >> 0 * 8) & 0xFF) / 255.0f
+		};
+	}
 
 };
 

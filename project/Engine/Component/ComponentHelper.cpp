@@ -280,6 +280,18 @@ void ComponentHelper::ForEachBehaviour(MonoBehaviour* behaviour, const std::func
 	});
 }
 
+void ComponentHelper::AttachMeshEnable(MonoBehaviour* root, bool isEnable) {
+	ComponentHelper::ForEachBehaviour(root, [isEnable](MonoBehaviour* behaviour) {
+		if (auto component = behaviour->GetComponent<MeshRendererComponent>()) {
+			component->SetEnable(isEnable);
+		}
+
+		if (auto component = behaviour->GetComponent<SkinnedMeshRendererComponent>()) {
+			component->SetEnable(isEnable);
+		}
+	});
+}
+
 void ComponentHelper::DetachBehaviourMaterial(MonoBehaviour* root) {
 
 	ComponentHelper::ForEachBehaviour(root, [](MonoBehaviour* behaviour) {

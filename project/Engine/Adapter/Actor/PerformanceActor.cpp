@@ -21,7 +21,7 @@ void PerformanceActor::Init(const Vector2f& position) {
 	transform.scale     = { 128.0f, 33.0f };
 
 	text_->SetFont(sUContentStorage->Import<UContentFont>("assets/font/MPLUSRounded1c-Regular.ttf")->GetId());
-	text_->SetSize(32.0f);
+	text_->SetSize(24.0f);
 	text_->SetText(L"---");
 }
 
