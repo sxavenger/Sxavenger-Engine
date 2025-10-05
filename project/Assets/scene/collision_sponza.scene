@@ -3878,24 +3878,6 @@
 				"children": [],
 				"components": [
 					{
-						"bounding": {
-							"max": {
-								"x": 1.100000023841858,
-								"y": 10.0,
-								"z": 33.43000030517578
-							},
-							"min": {
-								"x": -1.399999976158142,
-								"y": -0.5,
-								"z": -29.239999771118164
-							},
-							"type": "AABB"
-						},
-						"component": "class ColliderComponent",
-						"isEnable": true,
-						"tag": "Wall"
-					},
-					{
 						"component": "class TransformComponent",
 						"transform": {
 							"rotate": {
@@ -3915,16 +3897,7 @@
 								"z": 0.0
 							}
 						}
-					}
-				],
-				"isActive": true,
-				"isRenamable": true,
-				"isView": true,
-				"name": "left wall[0]"
-			},
-			{
-				"children": [],
-				"components": [
+					},
 					{
 						"bounding": {
 							"max": {
@@ -3942,7 +3915,16 @@
 						"component": "class ColliderComponent",
 						"isEnable": true,
 						"tag": "Wall"
-					},
+					}
+				],
+				"isActive": true,
+				"isRenamable": true,
+				"isView": true,
+				"name": "left wall[0]"
+			},
+			{
+				"children": [],
+				"components": [
 					{
 						"component": "class TransformComponent",
 						"transform": {
@@ -3963,6 +3945,24 @@
 								"z": 0.0
 							}
 						}
+					},
+					{
+						"bounding": {
+							"max": {
+								"x": 1.100000023841858,
+								"y": 10.0,
+								"z": 33.43000030517578
+							},
+							"min": {
+								"x": -1.399999976158142,
+								"y": -0.5,
+								"z": -29.239999771118164
+							},
+							"type": "AABB"
+						},
+						"component": "class ColliderComponent",
+						"isEnable": true,
+						"tag": "Wall"
 					}
 				],
 				"isActive": true,
@@ -3973,24 +3973,6 @@
 			{
 				"children": [],
 				"components": [
-					{
-						"bounding": {
-							"max": {
-								"x": 0.5,
-								"y": 10.0,
-								"z": 46.0
-							},
-							"min": {
-								"x": -0.5,
-								"y": -0.5,
-								"z": -44.0
-							},
-							"type": "AABB"
-						},
-						"component": "class ColliderComponent",
-						"isEnable": true,
-						"tag": "Wall"
-					},
 					{
 						"component": "class TransformComponent",
 						"transform": {
@@ -4011,16 +3993,7 @@
 								"z": 0.0
 							}
 						}
-					}
-				],
-				"isActive": true,
-				"isRenamable": true,
-				"isView": true,
-				"name": "left wall[1]"
-			},
-			{
-				"children": [],
-				"components": [
+					},
 					{
 						"bounding": {
 							"max": {
@@ -4038,7 +4011,16 @@
 						"component": "class ColliderComponent",
 						"isEnable": true,
 						"tag": "Wall"
-					},
+					}
+				],
+				"isActive": true,
+				"isRenamable": true,
+				"isView": true,
+				"name": "left wall[1]"
+			},
+			{
+				"children": [],
+				"components": [
 					{
 						"component": "class TransformComponent",
 						"transform": {
@@ -4059,6 +4041,24 @@
 								"z": 0.0
 							}
 						}
+					},
+					{
+						"bounding": {
+							"max": {
+								"x": 0.5,
+								"y": 10.0,
+								"z": 46.0
+							},
+							"min": {
+								"x": -0.5,
+								"y": -0.5,
+								"z": -44.0
+							},
+							"type": "AABB"
+						},
+						"component": "class ColliderComponent",
+						"isEnable": true,
+						"tag": "Wall"
 					}
 				],
 				"isActive": true,
@@ -4069,24 +4069,6 @@
 			{
 				"children": [],
 				"components": [
-					{
-						"bounding": {
-							"max": {
-								"x": 21.0,
-								"y": 10.0,
-								"z": 0.5
-							},
-							"min": {
-								"x": -19.0,
-								"y": -0.5,
-								"z": -0.5
-							},
-							"type": "AABB"
-						},
-						"component": "class ColliderComponent",
-						"isEnable": true,
-						"tag": "Wall"
-					},
 					{
 						"component": "class TransformComponent",
 						"transform": {
@@ -4107,16 +4089,7 @@
 								"z": 46.0
 							}
 						}
-					}
-				],
-				"isActive": true,
-				"isRenamable": true,
-				"isView": true,
-				"name": "front wall[0]"
-			},
-			{
-				"children": [],
-				"components": [
+					},
 					{
 						"bounding": {
 							"max": {
@@ -4134,7 +4107,16 @@
 						"component": "class ColliderComponent",
 						"isEnable": true,
 						"tag": "Wall"
-					},
+					}
+				],
+				"isActive": true,
+				"isRenamable": true,
+				"isView": true,
+				"name": "front wall[0]"
+			},
+			{
+				"children": [],
+				"components": [
 					{
 						"component": "class TransformComponent",
 						"transform": {
@@ -4155,6 +4137,24 @@
 								"z": -42.0
 							}
 						}
+					},
+					{
+						"bounding": {
+							"max": {
+								"x": 21.0,
+								"y": 10.0,
+								"z": 0.5
+							},
+							"min": {
+								"x": -19.0,
+								"y": -0.5,
+								"z": -0.5
+							},
+							"type": "AABB"
+						},
+						"component": "class ColliderComponent",
+						"isEnable": true,
+						"tag": "Wall"
 					}
 				],
 				"isActive": true,
@@ -4198,10 +4198,10 @@
 				"component": "class TransformComponent",
 				"transform": {
 					"rotate": {
-						"w": 0.8867168426513672,
-						"x": 0.41744905710220337,
-						"y": 0.17974652349948883,
-						"z": -0.08462084084749222
+						"w": 0.3778579831123352,
+						"x": 0.9042974710464478,
+						"y": 0.07659577578306198,
+						"z": -0.18330997228622437
 					},
 					"scale": {
 						"x": 1.0,
@@ -4613,24 +4613,6 @@
 				],
 				"components": [
 					{
-						"bounding": {
-							"max": {
-								"x": 0.6000000238418579,
-								"y": 1.0,
-								"z": 0.6000000238418579
-							},
-							"min": {
-								"x": -0.6000000238418579,
-								"y": -1.0,
-								"z": -0.6000000238418579
-							},
-							"type": "AABB"
-						},
-						"component": "class ColliderComponent",
-						"isEnable": true,
-						"tag": "Wall"
-					},
-					{
 						"component": "class TransformComponent",
 						"transform": {
 							"rotate": {
@@ -4650,6 +4632,24 @@
 								"z": -0.0
 							}
 						}
+					},
+					{
+						"bounding": {
+							"max": {
+								"x": 0.6000000238418579,
+								"y": 1.0,
+								"z": 0.6000000238418579
+							},
+							"min": {
+								"x": -0.6000000238418579,
+								"y": -1.0,
+								"z": -0.6000000238418579
+							},
+							"type": "AABB"
+						},
+						"component": "class ColliderComponent",
+						"isEnable": true,
+						"tag": "Wall"
 					}
 				],
 				"isActive": true,
@@ -9553,5 +9553,73 @@
 		"isRenamable": true,
 		"isView": true,
 		"name": "Environment Light"
+	},
+	{
+		"children": [
+			{
+				"children": [],
+				"components": [
+					{
+						"component": "class TransformComponent",
+						"transform": {
+							"rotate": {
+								"w": 0.0,
+								"x": -1.0,
+								"y": -0.0,
+								"z": 0.0
+							},
+							"scale": {
+								"x": 1.0,
+								"y": 1.0,
+								"z": 1.0
+							},
+							"translate": {
+								"x": 0.0,
+								"y": 0.0,
+								"z": -0.0
+							}
+						}
+					},
+					{
+						"component": "class MeshRendererComponent",
+						"isEnable": true,
+						"mask": 255,
+						"material": "24c8266b-a998-48df-9c4d80858ceca625",
+						"mesh": "b588a232-ffb6-4019-98d370d53e9c5397"
+					}
+				],
+				"isActive": true,
+				"isRenamable": true,
+				"isView": true,
+				"name": "SM_Desert_Terrain"
+			}
+		],
+		"components": [
+			{
+				"component": "class TransformComponent",
+				"transform": {
+					"rotate": {
+						"w": 4.63287033198867e-05,
+						"x": 1.0,
+						"y": 0.0,
+						"z": 0.0
+					},
+					"scale": {
+						"x": 6.0,
+						"y": 0.30000001192092896,
+						"z": 6.0
+					},
+					"translate": {
+						"x": -0.12451362609863281,
+						"y": 0.0,
+						"z": -2.9917755126953125
+					}
+				}
+			}
+		],
+		"isActive": true,
+		"isRenamable": true,
+		"isView": true,
+		"name": "Desert_Terrain"
 	}
 ]

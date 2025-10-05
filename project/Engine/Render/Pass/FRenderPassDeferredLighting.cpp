@@ -392,11 +392,11 @@ void FRenderPassDeferredLighting::PassIndirectMomentTranslate(const DirectXQueue
 	parameter.Set32bitConstants("Dimension", 2, &config.buffer->GetSize());
 
 	parameter.SetHandle("gMoment",             config.buffer->GetGBuffer(FLightingGBuffer::Layout::Indirect_Moment)->GetGPUHandleUAV());
-	parameter.SetHandle("gReservoir",          config.buffer->GetGBuffer(FLightingGBuffer::Layout::Indirect_Reservoir)->GetGPUHandleSRV());
+	parameter.SetHandle("gReservoir",          config.buffer->GetGBuffer(FLightingGBuffer::Layout::Indirect_Reservoir)->GetGPUHandleUAV());
 	parameter.SetHandle("gReferenceMoment",    config.buffer->GetLightingGBuffer().GetIntermediate(FLightingGBuffer::Layout::Indirect_Moment)->GetGPUHandleSRV());
 	parameter.SetHandle("gReferenceReservoir", config.buffer->GetLightingGBuffer().GetIntermediate(FLightingGBuffer::Layout::Indirect_Reservoir)->GetGPUHandleSRV());
 
-	parameter.SetHandle("gVelocity", config.buffer->GetGBuffer(FDeferredGBuffer::Layout::Velocity)->GetGPUHandleUAV());
+	parameter.SetHandle("gVelocity", config.buffer->GetGBuffer(FDeferredGBuffer::Layout::Velocity)->GetGPUHandleSRV());
 
 	core->BindComputeBuffer(FRenderCoreTransition::Transition::MomentTransition, context, parameter);
 	core->Dispatch(context, config.buffer->GetSize());

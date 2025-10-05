@@ -103,6 +103,10 @@
 		"assets/models/tree_sponza/715093869573992647.jpg",
 		"class UAssetTexture"
 	],
+	"08dca366-7a76-4d2a-b836ae27fd51740c": [
+		"assets/models/Desert_Terrain/Desert_Terrain.gltf",
+		"class UAssetSkeleton"
+	],
 	"08f15e06-a9a1-48c4-aa93e96e833426d3": [
 		"assets/models/tree_sponza/sponza.gltf",
 		"class UAssetMesh"
@@ -182,6 +186,10 @@
 	"12407285-f105-4d21-9b9c622dc7829c51": [
 		"assets/models/PBR_Sphere_Test/model/PBR_Sphere.gltf",
 		"class UAssetMesh"
+	],
+	"124734f0-a8fe-40bf-8c6236ebfbb23a80": [
+		"assets/models/Desert_Terrain/textures/MI_Desert_Terrain_1_MetallicRoughness.png",
+		"class UAssetTexture"
 	],
 	"12f07a11-3814-4f3b-a46be2c961716875": [
 		"assets/models/Metoro/textures/MI_Concrete_2_Normal.png",
@@ -350,6 +358,10 @@
 	"2404c5ed-3e5e-491e-a3aa38a55e6abdba": [
 		"assets/models/tree_sponza/sponza.gltf",
 		"class UAssetMesh"
+	],
+	"24c8266b-a998-48df-9c4d80858ceca625": [
+		"assets/models/Desert_Terrain/Desert_Terrain.gltf",
+		"class UAssetMaterial"
 	],
 	"25520c66-8bab-4059-88467529b014830c": [
 		"assets/models/PBR_Sphere_Test/model/PBR_Sphere.gltf",
@@ -987,6 +999,10 @@
 		"assets/models/tree_sponza/9288698199695299068.jpg",
 		"class UAssetTexture"
 	],
+	"6bfad0c7-e5c1-43c0-baf99464fcee756f": [
+		"assets/models/Desert_Terrain/textures/MI_Desert_Terrain_1_BaseColor.png",
+		"class UAssetTexture"
+	],
 	"6c0429f0-70d9-4533-81afef506c135906": [
 		"assets/models/PBR_Sphere_Test/model/PBR_Sphere.gltf",
 		"class UAssetMaterial"
@@ -1282,6 +1298,10 @@
 	"89a4ee2e-077a-4d76-ae6b246984e955a8": [
 		"assets/models/tree_sponza/sponza.gltf",
 		"class UAssetMesh"
+	],
+	"8a2c5b5a-5fb3-42e5-97f03b57ccf83d7e": [
+		"assets/models/Desert_Terrain/textures/T_Desert_Terrain_1_Normal.png",
+		"class UAssetTexture"
 	],
 	"8a68936a-40e0-480d-ab9bd5bb1a7e9a26": [
 		"assets/models/PBR_Sphere_Test/model/PBR_Sphere.gltf",
@@ -1698,6 +1718,10 @@
 	"b53bca00-9431-421e-bfc3e2b2c126c161": [
 		"assets/models/PBR_Sphere_Test/model/PBR_Sphere.gltf",
 		"class UAssetMaterial"
+	],
+	"b588a232-ffb6-4019-98d370d53e9c5397": [
+		"assets/models/Desert_Terrain/Desert_Terrain.gltf",
+		"class UAssetMesh"
 	],
 	"b5d86d3e-e4fa-4436-92f33a7c6b4fbb61": [
 		"assets/models/PBR_Sphere_Test/model/PBR_Sphere.gltf",
@@ -2345,6 +2369,10 @@
 	],
 	"f549b53b-c7ff-4c33-a8a35821e6a0546d": [
 		"assets/models/tree_sponza/sponza.gltf",
+		"class UAssetMaterial"
+	],
+	"f54ca040-c68a-4e61-8252b63080cba800": [
+		"assets/models/Desert_Terrain/Desert_Terrain.gltf",
 		"class UAssetMaterial"
 	],
 	"f5732a5b-3c15-4fb0-8413f4c3c4aed245": [
