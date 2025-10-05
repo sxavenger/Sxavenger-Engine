@@ -5,6 +5,7 @@
 //-----------------------------------------------------------------------------------------
 //* engine
 #include <Engine/Component/Components/Collider/ColliderComponent.h>
+#include <Engine/Component/Components/PostProcessLayer/PostProcessLayerComponent.h>
 #include <Engine/Component/ComponentHelper.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -36,6 +37,12 @@ void EmissiveCubes::Awake() {
 
 		cubes_[i]->AddComponent<TransformComponent>();
 		cubes_[i]->AddComponent<ColliderComponent>();
+
+		auto process = cubes_[i]->AddComponent<PostProcessLayerComponent>();
+		process->AddPostProcess<PostProcessChromaticAberration>();
+		process->AddPostProcess<PostProcessRadialBlur>();
+
+		process->SetTag(PostProcessLayerComponent::Tag::Volume);
 
 		MonoBehaviour::AddChild(cubes_[i].get());
 	}
