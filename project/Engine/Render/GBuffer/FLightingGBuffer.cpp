@@ -11,10 +11,11 @@
 //=========================================================================================
 
 const std::array<DXGI_FORMAT, FLightingGBuffer::kLayoutCount_> FLightingGBuffer::kFormats_ = {
-	FMainGBuffer::kColorFormat, //!< Direct
-	FMainGBuffer::kColorFormat, //!< Indirect_Reservoir
-	DXGI_FORMAT_R32G32_UINT,    //!< Indirect_Moment
-	FMainGBuffer::kColorFormat, //!< Indirect
+	FMainGBuffer::kColorFormat,    //!< Direct
+	FMainGBuffer::kColorFormat,    //!< Indirect_Reservoir_Diffuse
+	FMainGBuffer::kColorFormat,    //!< Indirect_Reservoir_Specular
+	DXGI_FORMAT_R32G32B32A32_UINT, //!< Indirect_Moment
+	FMainGBuffer::kColorFormat,    //!< Indirect
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -102,20 +103,6 @@ void FLightingGBuffer::TransitionEndRenderTargetIndirect(const DirectXQueueConte
 
 void FLightingGBuffer::ClearRenderTargetIndirect(const DirectXQueueContext* context) {
 	buffers_[static_cast<size_t>(Layout::Indirect)]->ClearRenderTarget(context);
-}
-
-void FLightingGBuffer::TransitionBeginUnorderedIndirect(const DirectXQueueContext* context) {
-	std::array<D3D12_RESOURCE_BARRIER, 1> barriers = {};
-	barriers[0] = buffers_[static_cast<size_t>(Layout::Indirect_Reservoir)]->TransitionBeginUnordered();
-
-	context->GetCommandList()->ResourceBarrier(static_cast<UINT>(barriers.size()), barriers.data());
-}
-
-void FLightingGBuffer::TransitionEndUnorderedIndirect(const DirectXQueueContext* context) {
-	std::array<D3D12_RESOURCE_BARRIER, 1> barriers = {};
-	barriers[0] = buffers_[static_cast<size_t>(Layout::Indirect_Reservoir)]->TransitionEndUnordered();
-
-	context->GetCommandList()->ResourceBarrier(static_cast<UINT>(barriers.size()), barriers.data());
 }
 
 void FLightingGBuffer::CopyIntermediateToGBuffer(const DirectXQueueContext* context, Layout layout) {

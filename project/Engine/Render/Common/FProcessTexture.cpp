@@ -315,6 +315,42 @@ void FProcessTextureCollection::BeginProcess(const DirectXQueueContext* context,
 	}
 }
 
+void FProcessTextureCollection::BeginProcess(const DirectXQueueContext* context, const std::vector<FBaseTexture*>& textures) {
+	Exception::Assert(textures.size() <= textures_.size(), "FProcessTextureCollection::BeginProcess: textures is empty.");
+
+	// commandListの取得
+	auto commandList = context->GetCommandList();
+
+	// indexの初期化
+	currentIndex_ = static_cast<uint32_t>(textures.size() - 1);
+
+	for (size_t i = 0; i < textures.size(); ++i) { //!< textureのcopy
+
+		std::array<D3D12_RESOURCE_BARRIER, 2> barriers = {};
+		barriers[0] = textures[i]->TransitionBeginState(D3D12_RESOURCE_STATE_COPY_SOURCE);
+		barriers[1] = textures_[i]->TransitionBeginState(D3D12_RESOURCE_STATE_COPY_DEST);
+		commandList->ResourceBarrier(2, barriers.data());
+
+		// mip0のみcopy
+		D3D12_TEXTURE_COPY_LOCATION src = {};
+		src.pResource        = textures[i]->GetResource();
+		src.Type             = D3D12_TEXTURE_COPY_TYPE_SUBRESOURCE_INDEX;
+		src.SubresourceIndex = 0;
+
+		D3D12_TEXTURE_COPY_LOCATION dst = {};
+		dst.pResource        = textures_[i]->GetResource();
+		dst.Type             = D3D12_TEXTURE_COPY_TYPE_SUBRESOURCE_INDEX;
+		dst.SubresourceIndex = 0;
+
+		commandList->CopyTextureRegion(&dst, 0, 0, 0, &src, nullptr);
+
+		barriers[0] = textures[i]->TransitionEndState(D3D12_RESOURCE_STATE_COPY_SOURCE);
+		barriers[1] = textures_[i]->TransitionEndState(D3D12_RESOURCE_STATE_COPY_DEST);
+		commandList->ResourceBarrier(2, barriers.data());
+	}
+
+}
+
 void FProcessTextureCollection::EndProcess(const DirectXQueueContext* context, FBaseTexture* texture) {
 	auto commandList = context->GetCommandList();
 

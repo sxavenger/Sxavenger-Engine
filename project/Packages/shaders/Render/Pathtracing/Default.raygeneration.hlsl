@@ -22,47 +22,44 @@ _RAYGENERATION void mainRaygeneration() {
 	uint type = DispatchRaysDimensions().z;
 	// todo: diffuseとspecularで2thread構成にする.
 
-	uint2 moment = gMoment[index];
+	uint3 moment = gMoment[index].xyz;
 
 	if (isResetMoment) {
 		//!< 蓄積のリセット
-		gReservoir[index] = float4(0.0f, 0.0f, 0.0f, 0.0f);
-		gMoment[index]    = moment = uint2(0, Xorshift::xorshift32(index.x * index.y)); //!< moment.x : 現在のsample数, moment.y : xiのoffset
+		gReservoirDiffuse[index]  = float4(0.0f, 0.0f, 0.0f, 0.0f);
+		gReservoirSpecular[index] = float4(0.0f, 0.0f, 0.0f, 0.0f);
+		gMoment[index].xyz        = moment = uint3(Xorshift::xorshift32(index.x * index.y), 0, 0);
+		// x: Hammerselyのoffset y: sample数(diffuse) z: sample数(specular, 継承不可)
 	}
 
-	if (moment.x >= maxSampleCount) {
-		return; //!< これ以上のsampleは不必要
-	}
-
-	if (moment.y == 0) {
-		moment.y = Xorshift::xorshift32(index.x * index.y); //!< xiのoffsetを初期化
+	if (moment.x == 0) {
+		moment.x = Xorshift::xorshift32(index.x * index.y); //!< xiのoffsetを初期化
 	}
 
 	DeferredSurface surface;
 	if (!surface.GetSurface(gDeferredBufferIndex.Get(), index)) {
-		gReservoir[index] = float4(0.0f, 0.0f, 0.0f, 0.0f);
+		gReservoirDiffuse[index]  = float4(0.0f, 0.0f, 0.0f, 0.0f);
+		gReservoirSpecular[index] = float4(0.0f, 0.0f, 0.0f, 0.0f);
+		gMoment[index].xyz        = moment = uint3(Xorshift::xorshift32(index.x * index.y), 0, 0);
 		return; // surfaceが存在しない
 	}
 
-	// primary trace.
+	static const float3 kMinFrenel = float3(0.04f, 0.04f, 0.04f); //!< 非金属の最小Frenel値
 
-	float4 diffuse_indirect  = float4(0.0f, 0.0f, 0.0f, 0.0f);
-	float4 specular_indirect = float4(0.0f, 0.0f, 0.0f, 0.0f);
+	//* cameraからの方向ベクトルを取得
+	float3 v = normalize(gCamera.GetPosition() - surface.position);
 
-	for (uint i = 0; i < min(samplesPerFrame, maxSampleCount - moment.x); ++i) {
+	if (moment.y < maxSampleCount) { //!< diffuse primary trace
 
-		uint currentSampleIndex   = moment.x + i;
-		uint randamizeSampleIndex = (currentSampleIndex + moment.y) % maxSampleCount;
-		//!< 各threadが異なるサンプルを取得するためのインデックス計算
-		
-		float2 xi = Hammersley(randamizeSampleIndex, maxSampleCount);
+		float4 diffuse_indirect = float4(0.0f, 0.0f, 0.0f, 0.0f);
 
-		static const float3 kMinFrenel = float3(0.04f, 0.04f, 0.04f); //!< 非金属の最小Frenel値
+		for (uint i = 0; i < min(samplesPerFrame, maxSampleCount - moment.y); ++i) {
 
-		//* cameraからの方向ベクトルを取得
-		float3 v = normalize(gCamera.GetPosition() - surface.position);
-
-		{ //!< Diffuseサンプリング
+			uint currentSampleIndex   = moment.y + i;
+			uint randamizeSampleIndex = (currentSampleIndex + moment.x) % maxSampleCount;
+			//!< 各threadが異なるサンプルを取得するためのインデックス計算
+			
+			float2 xi = Hammersley(GetSampleIndex(randamizeSampleIndex), maxSampleCount);
 
 			RayDesc desc;
 			desc.Origin    = surface.position;
@@ -87,58 +84,74 @@ _RAYGENERATION void mainRaygeneration() {
 			}
 		}
 
-		// TODO: view依存をなくし, カメラ移動に対応する.
+		uint prev    = moment.y;
+		uint current = moment.y + min(samplesPerFrame, maxSampleCount - moment.y);
 
-		//{ //!< Specularサンプル
+		float4 reservoir_diffuse = gReservoirDiffuse[index] * float(prev) / float(current);
+		reservoir_diffuse.rgb   += diffuse_indirect.rgb / float(current);
+		reservoir_diffuse.a      = 1.0f;
 
-		//	RayDesc desc;
-		//	desc.Origin    = surface.position;
-		//	desc.Direction = ImportanceSampleGGX(xi, surface.roughness, surface.normal);
-		//	desc.TMin      = kTMin;
-		//	desc.TMax      = kTMax;
-
-		//	Payload payload = TracePrimaryRay(desc);
-
-		//	//* 計算
-		//	float3 h = normalize(v + desc.Direction);
-
-		//	float NdotV = saturate(dot(surface.normal, v));
-		//	float NdotL = saturate(dot(surface.normal, desc.Direction));
-		//	float NdotH = saturate(dot(surface.normal, h));
-		//	float VdotH = saturate(dot(v, h));
-
-		//	float3 specularAlbedo = lerp(kMinFrenel, surface.albedo, surface.metallic);
-
-		//	float3 f = F_SphericalGaussian(VdotH, specularAlbedo);
-		//	float vh = V_HeightCorrelated(NdotV, NdotL, surface.roughness);
-		//	float d  = D_GGX(NdotH, surface.roughness);
-
-		//	float3 specularBRDF = SpecularBRDF(f, vh, d);
-
-		//	float pdf = d * NdotH / (4.0f * VdotH + kEpsilon);
-
-		//	if (pdf > 0.0f && NdotL > 0.0f) {
-		//		specular_indirect.rgb += specularBRDF * payload.indirect.rgb * (NdotL / pdf);
-		//		specular_indirect.a   += payload.indirect.a > 0.0f ? 1.0f : 0.0f;
-		//	}
-		//}
+		gReservoirDiffuse[index] = reservoir_diffuse;
+		
+		moment.y = current;
 	}
 
-	uint prev    = moment.x;
-	uint current = moment.x + min(samplesPerFrame, maxSampleCount - moment.x);
+	if (moment.z < maxSampleCount) { //!< specular primary trace
 
-	float4 indirect = gReservoir[index] * float(prev);
+		float4 specular_indirect = float4(0.0f, 0.0f, 0.0f, 0.0f);
+
+		for (uint j = 0; j < min(samplesPerFrame, maxSampleCount - moment.z); ++j) {
+
+			uint currentSampleIndex   = moment.z + j;
+			uint randamizeSampleIndex = (currentSampleIndex + moment.x) % maxSampleCount;
+			//!< 各threadが異なるサンプルを取得するためのインデックス計算
+			
+			float2 xi = Hammersley(GetSampleIndex(randamizeSampleIndex), maxSampleCount);
+
+			RayDesc desc;
+			desc.Origin    = surface.position;
+			desc.Direction = ImportanceSampleGGX(xi, surface.roughness, surface.normal);
+			desc.TMin      = kTMin;
+			desc.TMax      = kTMax;
+
+			Payload payload = TracePrimaryRay(desc);
+
+			//* 計算
+			float3 h = normalize(v + desc.Direction);
+
+			float NdotV = saturate(dot(surface.normal, v));
+			float NdotL = saturate(dot(surface.normal, desc.Direction));
+			float NdotH = saturate(dot(surface.normal, h));
+			float VdotH = saturate(dot(v, h));
+
+			float3 specularAlbedo = lerp(kMinFrenel, surface.albedo, surface.metallic);
+
+			float3 f = F_SphericalGaussian(VdotH, specularAlbedo);
+			float vh = V_HeightCorrelated(NdotV, NdotL, surface.roughness);
+			float d  = D_GGX(NdotH, surface.roughness);
+
+			float3 specularBRDF = SpecularBRDF(f, vh, d);
+
+			float pdf = d * NdotH / (4.0f * VdotH + kEpsilon);
+
+			if (pdf > 0.0f && NdotL > 0.0f) {
+				specular_indirect.rgb += specularBRDF * payload.indirect.rgb * (NdotL / pdf);
+				specular_indirect.a   += payload.indirect.a > 0.0f ? 1.0f : 0.0f;
+			}
+		}
+
+		uint prev    = moment.z;
+		uint current = moment.z + min(samplesPerFrame, maxSampleCount - moment.z);
+
+		float4 reservoir_specular = gReservoirSpecular[index];
+		reservoir_specular.rgb   += specular_indirect.rgb / float(current);
+		reservoir_specular.a      = 1.0f;
+
+		gReservoirSpecular[index] = reservoir_specular;
+
+		moment.z = current;
+	}
 	
-	indirect.rgb += (diffuse_indirect.rgb + specular_indirect.rgb);
-	indirect.rgb /= float(current);
-	indirect.a = saturate(indirect.a + diffuse_indirect.a + specular_indirect.a);
-
-	//float4 indirect = gReservoir[index];
-
-	//indirect.rgb += (diffuse_indirect.rgb + specular_indirect.rgb) / float(maxSampleCount);
-	//indirect.a    = 1.0f;
-	
-	gReservoir[index] = indirect;
-	gMoment[index]    = uint2(current, moment.y);
+	gMoment[index].xyz = moment;
 	
 }

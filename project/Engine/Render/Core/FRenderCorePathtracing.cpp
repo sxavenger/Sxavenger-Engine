@@ -154,39 +154,40 @@ void FRenderCorePathtracing::CreateContext() {
 	{ //!< global root signatureの生成
 		DxrObject::GlobalRootSignatureDesc desc = {};
 		//* lighting textures
-		desc.SetHandleUAV(0, 0, 1); //!< gIndirect
-		desc.SetHandleUAV(1, 1, 1); //!< gIndirectSampleCount
+		desc.SetHandleUAV(0, 0, 1); //!< gReservoirDiffuse
+		desc.SetHandleUAV(1, 1, 1); //!< gReservoirSpecular
+		desc.SetHandleUAV(2, 2, 1); //!< gIndirectMoment
 
 		//* scene
-		desc.SetVirtualSRV(2, 0, 1); //!< gScene
+		desc.SetVirtualSRV(3, 0, 1); //!< gScene
 
 		//* deferred textures
-		desc.SetVirtualCBV(3, 0, 1); //!< gDeferredBufferIndex
+		desc.SetVirtualCBV(4, 0, 1); //!< gDeferredBufferIndex
 
 		//* camera
-		desc.SetVirtualCBV(4, 1, 1); //!< gCamera
+		desc.SetVirtualCBV(5, 1, 1); //!< gCamera
 
 		//* config
-		desc.Set32bitConstants(5, DxObject::ShaderVisibility::VISIBILITY_ALL, 3, 2, 1); //!< Config
+		desc.Set32bitConstants(6, DxObject::ShaderVisibility::VISIBILITY_ALL, 3, 2, 1); //!< Config
 
 		//* light
 		// Directional Light
-		desc.SetVirtualCBV(6, 0, 2); //!< gDirectionalLightCount
-		desc.SetVirtualSRV(7, 0, 2); //!< gDirectionalLightTransforms
-		desc.SetVirtualSRV(8, 1, 2); //!< gDirectionalLights
+		desc.SetVirtualCBV(7, 0, 2); //!< gDirectionalLightCount
+		desc.SetVirtualSRV(8, 0, 2); //!< gDirectionalLightTransforms
+		desc.SetVirtualSRV(9, 1, 2); //!< gDirectionalLights
 
 		// Point Light
-		desc.SetVirtualCBV(9, 1, 2);  //!< gPointLightCount
-		desc.SetVirtualSRV(10, 2, 2); //!< gPointLightTransforms
-		desc.SetVirtualSRV(11, 3, 2); //!< gPointLights
+		desc.SetVirtualCBV(10, 1, 2);  //!< gPointLightCount
+		desc.SetVirtualSRV(11, 2, 2); //!< gPointLightTransforms
+		desc.SetVirtualSRV(12, 3, 2); //!< gPointLights
 
 		// Spot Light
-		desc.SetVirtualCBV(12, 2, 2); //!< gSpotLightCount
-		desc.SetVirtualSRV(13, 4, 2); //!< gSpotLightTransforms
-		desc.SetVirtualSRV(14, 5, 2); //!< gSpotLights
+		desc.SetVirtualCBV(13, 2, 2); //!< gSpotLightCount
+		desc.SetVirtualSRV(14, 4, 2); //!< gSpotLightTransforms
+		desc.SetVirtualSRV(15, 5, 2); //!< gSpotLights
 
 		// Sky Light
-		desc.SetVirtualCBV(15, 3, 2);                                                                 //!< gSkyLight
+		desc.SetVirtualCBV(16, 3, 2);                                                                 //!< gSkyLight
 		desc.SetSamplerLinear(DxObject::MODE_WRAP, DxObject::ShaderVisibility::VISIBILITY_ALL, 0, 2); //!< gSampler
 
 		context_->CreateRootSignature(SxavengerSystem::GetDxDevice(), desc);

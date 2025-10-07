@@ -323,24 +323,6 @@ void RenderSceneEditor::ShowSceneMenu() {
 		ImGui::Separator();
 		ImGui::Checkbox("enable indirect lighting", &config_.isEnableIndirectLighting);
 
-		if (ImGui::Button("capture indirect")) {
-			TextureExporter::Export(
-				SxavengerSystem::GetDirectQueueContext(),
-				TextureExporter::TextureDimension::Texture2D,
-				textures_->GetGBuffer(FLightingGBuffer::Layout::Indirect)->GetResource(),
-				DxObject::kDefaultScreenViewFormat,
-				"capture_indirect.png"
-			);
-
-			TextureExporter::Export(
-				SxavengerSystem::GetDirectQueueContext(),
-				TextureExporter::TextureDimension::Texture2D,
-				textures_->GetGBuffer(FLightingGBuffer::Layout::Indirect_Reservoir)->GetResource(),
-				DxObject::kDefaultScreenViewFormat,
-				"capture_indirect_reservoir.png"
-			);
-		}
-
 		ImGui::EndDisabled();
 		
 		ImGui::EndMenu();
@@ -999,6 +981,17 @@ void RenderSceneEditor::DisplayGBufferTexture(GBuffer buffer) {
 			);
 			break;
 
+		case GBuffer::Indirect_Reservoir:
+			SetImGuiImagesFullWindowEnable(
+				{
+					{ textures_->GetGBuffer(FLightingGBuffer::Layout::Indirect_Reservoir_Diffuse)->GetGPUHandleSRV(),  GBuffer::Indirect_Reservoir_Diffuse },
+					{ textures_->GetGBuffer(FLightingGBuffer::Layout::Indirect_Reservoir_Specular)->GetGPUHandleSRV(), GBuffer::Indirect_Reservoir_Specular },
+				},
+				textures_->GetSize(),
+				isRender_
+			);
+			break;
+
 		case GBuffer::Albedo:
 			SetImGuiImageFullWindowEnable(
 				textures_->GetGBuffer(FDeferredGBuffer::Layout::Albedo)->GetGPUHandleSRV(),
@@ -1055,14 +1048,21 @@ void RenderSceneEditor::DisplayGBufferTexture(GBuffer buffer) {
 			);
 			break;
 
-		case GBuffer::Indirect_Reservoir:
+		case GBuffer::Indirect_Reservoir_Diffuse:
 			SetImGuiImageFullWindowEnable(
-				textures_->GetGBuffer(FLightingGBuffer::Layout::Indirect_Reservoir)->GetGPUHandleSRV(),
+				textures_->GetGBuffer(FLightingGBuffer::Layout::Indirect_Reservoir_Diffuse)->GetGPUHandleSRV(),
 				textures_->GetSize(),
 				isRender_
 			);
 			break;
 
+		case GBuffer::Indirect_Reservoir_Specular:
+			SetImGuiImageFullWindowEnable(
+				textures_->GetGBuffer(FLightingGBuffer::Layout::Indirect_Reservoir_Specular)->GetGPUHandleSRV(),
+				textures_->GetSize(),
+				isRender_
+			);
+			break;
 	}
 }
 

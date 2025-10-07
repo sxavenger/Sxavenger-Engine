@@ -34,8 +34,9 @@
 //=========================================================================================
 
 //* lighting textures
-RWTexture2D<float4> gReservoir : register(u0, space1);
-RWTexture2D<uint2> gMoment     : register(u1, space1);
+RWTexture2D<float4> gReservoirDiffuse  : register(u0, space1);
+RWTexture2D<float4> gReservoirSpecular : register(u1, space1);
+RWTexture2D<uint4> gMoment             : register(u2, space1);
 
 //* scene
 RaytracingAccelerationStructure gScene : register(t0, space1);
@@ -195,4 +196,11 @@ Payload TracePrimaryRay(RayDesc desc, uint flag = kFlag) {
 	TraceRay(gScene, flag, kRayMask, 0, 1, 0, desc, payload);
 
 	return payload;
+}
+
+uint GetSampleIndex(uint index) {
+	static const uint kDivision = maxSampleCount / 16;
+	uint divisionIndex = kDivision * index;
+	
+	return (divisionIndex % maxSampleCount) + (divisionIndex / maxSampleCount);
 }
