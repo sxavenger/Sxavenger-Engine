@@ -45,7 +45,7 @@ void FRenderPassDeferredLighting::Render(const DirectXQueueContext* context, con
 	if (config.isEnableIndirectLighting) { //* Indirect Lighting
 
 		config.buffer->GetLightingGBuffer().CopyGBufferToIntermediate(context, FLightingGBuffer::Layout::Indirect_Reservoir_Diffuse);
-		//config.buffer->GetLightingGBuffer().CopyGBufferToIntermediate(context, FLightingGBuffer::Layout::Indirect_Reservoir_Specular);
+		config.buffer->GetLightingGBuffer().CopyGBufferToIntermediate(context, FLightingGBuffer::Layout::Indirect_Reservoir_Specular);
 		config.buffer->GetLightingGBuffer().CopyGBufferToIntermediate(context, FLightingGBuffer::Layout::Indirect_Moment);
 
 		{
