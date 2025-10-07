@@ -249,6 +249,9 @@
     <ClInclude Include="Demo\GameLoop\PreviewGameLoop.h">
       <Filter>Demo\GameLoop</Filter>
     </ClInclude>
+    <ClInclude Include="Demo\Object\EmissiveCubes.h">
+      <Filter>Demo\Object</Filter>
+    </ClInclude>
     <ClInclude Include="Demo\Object\PerspectiveCamera.h">
       <Filter>Demo\Object</Filter>
     </ClInclude>
@@ -924,7 +927,6 @@
     <ClInclude Include="Lib\Transform\Transform.h">
       <Filter>Lib\Transform</Filter>
     </ClInclude>
-    <ClInclude Include="Demo\Object\EmissiveCubes.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Demo\Entity\Player.cpp">
@@ -938,6 +940,9 @@
     </ClCompile>
     <ClCompile Include="Demo\GameLoop\PreviewGameLoop.cpp">
       <Filter>Demo\GameLoop</Filter>
+    </ClCompile>
+    <ClCompile Include="Demo\Object\EmissiveCubes.cpp">
+      <Filter>Demo\Object</Filter>
     </ClCompile>
     <ClCompile Include="Demo\Object\PerspectiveCamera.cpp">
       <Filter>Demo\Object</Filter>
@@ -1510,6 +1515,5 @@
       <Filter>externals\stb</Filter>
     </ClCompile>
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="Demo\Object\EmissiveCubes.cpp" />
   </ItemGroup>
 </Project>

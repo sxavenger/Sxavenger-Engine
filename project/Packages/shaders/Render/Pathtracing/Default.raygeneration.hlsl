@@ -124,7 +124,7 @@ _RAYGENERATION void mainRaygeneration() {
 		//}
 	}
 
-	uint prev = moment.x;
+	uint prev    = moment.x;
 	uint current = moment.x + min(samplesPerFrame, maxSampleCount - moment.x);
 
 	float4 indirect = gReservoir[index] * float(prev);
