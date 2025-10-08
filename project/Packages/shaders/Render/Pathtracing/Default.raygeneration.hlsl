@@ -132,7 +132,7 @@ _RAYGENERATION void mainRaygeneration() {
 
 			float3 specularBRDF = SpecularBRDF(f, vh, d);
 
-			float pdf = d * NdotH / (4.0f * VdotH + kEpsilon);
+			float pdf = d * NdotH / max(4.0f * VdotH, kEpsilon);
 
 			if (pdf > 0.0f && NdotL > 0.0f) {
 				specular_indirect.rgb += specularBRDF * payload.indirect.rgb * (NdotL / pdf);
@@ -144,7 +144,7 @@ _RAYGENERATION void mainRaygeneration() {
 		uint current = moment.z + min(samplesPerFrame, maxSampleCount - moment.z);
 
 		float4 reservoir_specular = gReservoirSpecular[index];
-		reservoir_specular.rgb   += specular_indirect.rgb / float(current);
+		reservoir_specular.rgb   += specular_indirect.rgb / float(maxSampleCount);
 		reservoir_specular.a      = 1.0f;
 
 		gReservoirSpecular[index] = reservoir_specular;

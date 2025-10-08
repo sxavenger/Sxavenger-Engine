@@ -44,8 +44,7 @@ void FDepthTexture::FRasterizerDepth::Create(const Vector2ui& size) {
 			&clear,
 			IID_PPV_ARGS(&resource_)
 		);
-
-		Exception::Assert(SUCCEEDED(hr));
+		DxObject::Assert(hr, L"depth stencil texture create failed.");
 
 		resource_->SetName(L"FSceneDepth Rasterizer");
 	}
@@ -183,8 +182,7 @@ void FDepthTexture::FRaytracingDepth::Create(const Vector2ui& size) {
 			nullptr,
 			IID_PPV_ARGS(&resource_)
 		);
-
-		Exception::Assert(SUCCEEDED(hr));
+		DxObject::Assert(hr, L"unordered access texture create failed.");
 
 		resource_->SetName(L"FSceneDepth Raytracing");
 	}

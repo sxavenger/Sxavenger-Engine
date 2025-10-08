@@ -59,7 +59,7 @@ void TextureExporter::Export(
 			IID_PPV_ARGS(&readback)
 		);
 
-		Exception::Assert(SUCCEEDED(hr), "readback resource create failed.");
+		DxObject::Assert(hr, L"readback resource create failed.");
 	}
 
 	{ //!< readbackへcopy
@@ -120,7 +120,7 @@ void TextureExporter::Export(
 			converted
 		);
 
-		Exception::Assert(SUCCEEDED(hr), "image convert failed.");
+		DxObject::Assert(hr, L"image convert failed.");
 
 		image = std::move(converted);
 	}
@@ -165,7 +165,7 @@ DirectX::ScratchImage TextureExporter::GetImage(TextureDimension dimension, cons
 			break;
 	}
 
-	Exception::Assert(SUCCEEDED(hr), "image create failed.");
+	DxObject::Assert(hr, L"image create failed.");
 	return image;
 }
 

@@ -146,7 +146,7 @@ ComPtr<ID3D12RootSignature> BaseRootSignatureDesc::CreateRootSignature(ID3D12Dev
 		signatureBlob->GetBufferSize(),
 		IID_PPV_ARGS(&result)
 	);
-	Exception::Assert(SUCCEEDED(hr));
+	DxObject::Assert(hr, L"root signature create failed.");
 
 	return result;
 }

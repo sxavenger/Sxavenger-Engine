@@ -49,7 +49,7 @@ void DepthStencil::CreateResource(Device* devices, const Vector2ui& size, DXGI_F
 		&clear,
 		IID_PPV_ARGS(&resource_)
 	);
-	Exception::Assert(SUCCEEDED(hr));
+	DxObject::Assert(hr, L"depth stencil resource create failed.");
 
 }
 

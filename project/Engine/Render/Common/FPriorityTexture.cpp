@@ -46,7 +46,7 @@ void FPriorityTexture::Create(const Vector2ui& size) {
 			&clear,
 			IID_PPV_ARGS(&resource_)
 		);
-		Exception::Assert(SUCCEEDED(hr));
+		DxObject::Assert(hr, L"depth stencil texture create failed.");
 
 		resource_->SetName(L"FPriorityTexture | Depth");
 	}

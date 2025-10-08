@@ -43,6 +43,16 @@ void Device::Term() {
 	Logger::EngineLog("[_DXOBJECT Device] term.");
 }
 
+void Device::CheckDeviceStatus() const {
+	auto hr = device_->GetDeviceRemovedReason();
+
+	if (SUCCEEDED(hr)) {
+		return; //!< 正常
+	}
+
+	DxObject::Assert(hr, L"device removed.");
+}
+
 void Device::CreateDebugLayer() {
 #ifdef _DEVELOPMENT
 
@@ -65,14 +75,14 @@ void Device::CreateDebugLayer() {
 void Device::CreateFactory() {
 	// DXGIファクトリーの生成
 	auto hr = CreateDXGIFactory(IID_PPV_ARGS(&dxgiFactory_));
-	Exception::Assert(SUCCEEDED(hr));
+	DxObject::Assert(hr, L"factory create failed.");
 
 	// ティアリングを確認
 	if (SxavengerConfig::GetConfig().isTearingAllowed) {
 		BOOL isTearingSupport_ = false;
 
 		hr = dxgiFactory_->CheckFeatureSupport(DXGI_FEATURE_PRESENT_ALLOW_TEARING, &isTearingSupport_, sizeof(BOOL));
-		Exception::Assert(SUCCEEDED(hr), "check feature support error.");
+		DxObject::Assert(hr, L"check feature support error.");
 
 		if (!isTearingSupport_) {
 			Logger::EngineLog("[_DXOBEJCT Device] warning | tearing is not supported.");
@@ -92,7 +102,7 @@ void Device::CreateAdapter() {
 		// アダプタ情報を取得
 		DXGI_ADAPTER_DESC3 desc = {};
 		auto hr = useAdapter_->GetDesc3(&desc);
-		Exception::Assert(SUCCEEDED(hr));
+		DxObject::Assert(hr, L"adapter failed.");
 
 		// ソフトウェアアダプタじゃない場合, 成功
 		if (!(desc.Flags & DXGI_ADAPTER_FLAG3_SOFTWARE)) {
@@ -104,7 +114,7 @@ void Device::CreateAdapter() {
 		useAdapter_ = nullptr;
 	}
 
-	Exception::Assert(useAdapter_ != nullptr);
+	Exception::Assert(useAdapter_ != nullptr, "adapter not found.");
 }
 
 void Device::CreateDevice() {
@@ -127,7 +137,7 @@ void Device::CreateDevice() {
 		}
 	}
 
-	Exception::Assert(device_ != nullptr);
+	Exception::Assert(device_ != nullptr, "device create failed.");
 }
 
 void Device::CreateInfoQueue() {

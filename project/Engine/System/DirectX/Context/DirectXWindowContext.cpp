@@ -284,7 +284,7 @@ ComPtr<IDXGIOutput6> DirectXWindowContext::GetOutput6() {
 		// displayの情報を取得
 		DXGI_OUTPUT_DESC desc = {};
 		auto hr = current->GetDesc(&desc);
-		Exception::Assert(SUCCEEDED(hr), "DXGI_OUTPUT_DESC GetDesc() failed.");
+		DxObject::Assert(hr, L"DXGI_OUTPUT_DESC GetDesc() failed.");
 
 		int32_t currentArea = ComputeIntersectionArea(rect_, desc.DesktopCoordinates);
 
@@ -297,7 +297,7 @@ ComPtr<IDXGIOutput6> DirectXWindowContext::GetOutput6() {
 
 	ComPtr<IDXGIOutput6> output6;
 	auto hr = output.As(&output6);
-	Exception::Assert(SUCCEEDED(hr), "IDXGIOutput6 QueryInterface() failed.");
+	DxObject::Assert(hr, L"IDXGIOutput6 QueryInterface() failed.");
 
 	return output6;
 }
@@ -317,7 +317,7 @@ void DirectXWindowContext::CheckSupportHDR() {
 
 	DXGI_OUTPUT_DESC1 desc = {};
 	auto hr = output6->GetDesc1(&desc);
-	Exception::Assert(SUCCEEDED(hr), "IDXGIOutput6 GetDesc1() failed.");
+	DxObject::Assert(hr, L"IDXGIOutput6 GetDesc1() failed.");
 
 	swapChain_->SetColorSpace(desc);
 }

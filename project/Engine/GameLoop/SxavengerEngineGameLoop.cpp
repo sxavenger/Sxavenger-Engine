@@ -46,6 +46,7 @@ void SxavengerEngineGameLoop::Init(GameLoop::Context* context) {
 	});
 
 	context->SetProcess(GameLoop::Process::Begin, 0, [this]() {
+		SxavengerSystem::GetDxDevice()->CheckDeviceStatus();
 		SxavengerSystem::BeginPerformace();
 		SxavengerSystem::GetInput()->Update();
 		SxavengerSystem::BeginImGuiFrame();

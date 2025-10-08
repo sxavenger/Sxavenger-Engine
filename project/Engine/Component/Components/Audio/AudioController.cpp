@@ -5,6 +5,7 @@
 //-----------------------------------------------------------------------------------------
 //* engine
 #include <Engine/System/Utility/Logger.h>
+#include <Engine/System/DirectX/DirectXCommon.h>
 
 //////////////////////////////////////////////////////////////////////////////////////////////
 // AudioController class methods
@@ -13,14 +14,14 @@
 void AudioController::Init() {
 
 	auto hr = XAudio2Create(&xaudio_, 0, XAUDIO2_DEFAULT_PROCESSOR);
-	Exception::Assert(SUCCEEDED(hr), "IXAudio2 create failed.");
+	DxObject::Assert(hr, L"IXAudio2 create failed.");
 
 	hr = xaudio_->CreateMasteringVoice(&master_, XAUDIO2_DEFAULT_CHANNELS, XAUDIO2_DEFAULT_SAMPLERATE);
-	Exception::Assert(SUCCEEDED(hr), "IXAudio2MasteringVoice create failed.");
+	DxObject::Assert(hr, L"IXAudio2MasteringVoice create failed.");
 
 	for (auto tag : magic_enum::enum_values<AudioSourceComponent::Tag>()) {
 		hr = xaudio_->CreateSubmixVoice(&submix_[static_cast<size_t>(tag)], kDefaultInputChannel, kDefaultSampleRate);
-		Exception::Assert(SUCCEEDED(hr), "IXAudio2SubmixVoice create failed.");
+		DxObject::Assert(hr, L"IXAudio2SubmixVoice create failed.");
 	}
 
 }
@@ -50,7 +51,7 @@ IXAudio2SourceVoice* AudioController::CreateSource(AudioSourceComponent::Tag tag
 	list.pSends    = &descriptor;
 
 	auto hr = xaudio_->CreateSourceVoice(&source, &format, 0, XAUDIO2_DEFAULT_FREQ_RATIO, nullptr, &list);
-	Exception::Assert(SUCCEEDED(hr), "IXAudio2SourceVoice create failed.");
+	DxObject::Assert(hr, L"IXAudio2SourceVoice create failed.");
 
 	return source;
 }

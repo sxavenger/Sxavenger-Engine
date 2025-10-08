@@ -89,7 +89,7 @@ void UAssetFont::CreateAtlasTexture() {
 			nullptr,
 			IID_PPV_ARGS(&resource_)
 		);
-		Exception::Assert(SUCCEEDED(hr), "font atlas texture resource create failed.");
+		DxObject::Assert(SUCCEEDED(hr), L"font atlas texture resource create failed.");
 
 		resource_->SetName(L"UAsset | Font Atlas Texture");
 	}
@@ -195,7 +195,7 @@ void UAssetFont::UploadAtlasData(const DirectXQueueContext* context) {
 	{ //!< dataの書き込み
 		void* data;
 		auto hr = intermediate->Map(0, nullptr, &data);
-		Exception::Assert(SUCCEEDED(hr), "resource mapping failed.");
+		DxObject::Assert(SUCCEEDED(hr), L"resource mapping failed.");
 
 		std::memcpy(data, atlasData_.data(), bufferSize);
 
