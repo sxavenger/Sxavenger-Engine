@@ -57,7 +57,7 @@ void InputMesh::Meshlet::CreateMeshlet(const TriangleInputAssembler<MeshVertexDa
 			kMaxPrimitives_
 		);
 
-		Exception::Assert(SUCCEEDED(hr), "meshlet create failed.");
+		DxObject::Assert(hr, L"meshlet create failed.");
 
 		// uint8_tから梱包してtriangles(uint32_t)に変換
 		bufferUniqueVertexIndices.reserve(uniqueVertexIB.size() / sizeof(uint32_t));
@@ -83,7 +83,8 @@ void InputMesh::Meshlet::CreateMeshlet(const TriangleInputAssembler<MeshVertexDa
 			bufferCullDatas.data()
 		);
 
-		Exception::Assert(SUCCEEDED(hr), "cull data create failed.");
+		DxObject::Assert(hr, L"cull data create failed.");
+
 	}
 
 	//!< meshletBufferの生成

@@ -48,6 +48,6 @@ DxObject::ResourceStateTracker ResourceStateTracker::CreateCommittedResource(DxO
 
 	result.state_ = state;
 
-	Exception::Assert(SUCCEEDED(hr), "resource state tracker create committed resource failed.");
+	DxObject::Assert(hr, L"resource state tracker create committed resource failed.");
 	return result;
 }

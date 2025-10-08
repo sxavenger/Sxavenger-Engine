@@ -37,17 +37,17 @@ void ShaderCompiler::Init() {
 	auto hr = DxcCreateInstance(
 		CLSID_DxcUtils, IID_PPV_ARGS(&utils_)
 	);
-	Exception::Assert(SUCCEEDED(hr));
+	DxObject::Assert(hr, L"dxc utils create failed.");
 
 
 	hr = DxcCreateInstance(
 		CLSID_DxcCompiler, IID_PPV_ARGS(&compiler_)
 	);
-	Exception::Assert(SUCCEEDED(hr));
+	DxObject::Assert(hr, L"dxc compiler create failed.");
 
 	// includeHandleの初期化
 	hr = utils_->CreateDefaultIncludeHandler(&includeHandler_);
-	Exception::Assert(SUCCEEDED(hr));
+	DxObject::Assert(hr, L"dxc include handler create failed.");
 
 	Logger::EngineLog("[_DXOBJECT ShaderCompiler] complete initialize.");
 }
@@ -115,7 +115,7 @@ ComPtr<IDxcBlob> ShaderCompiler::Compile(
 		includeHandler_.Get(),
 		IID_PPV_ARGS(&shaderResult)
 	);
-	Exception::Assert(SUCCEEDED(hr));
+	DxObject::Assert(hr, L"shader compile failed.");
 
 	// 警告エラーだった場合, プログラムの停止
 	ComPtr<IDxcBlobUtf8> shaderError;
@@ -127,7 +127,7 @@ ComPtr<IDxcBlob> ShaderCompiler::Compile(
 
 	ComPtr<IDxcBlob> blob;
 	hr = shaderResult->GetOutput(DXC_OUT_OBJECT, IID_PPV_ARGS(&blob), nullptr);
-	Exception::Assert(SUCCEEDED(hr));
+	DxObject::Assert(hr, L"shader compile failed.");
 
 	Logger::EngineThreadLog(std::format("[_DXOBJECT ShaderCompiler] shader compiled. filepath: {}, profile: {}", filepath.generic_string(), magic_enum::enum_name(profile)));
 	return blob;
@@ -145,7 +145,7 @@ ComPtr<ID3D12ShaderReflection> ShaderCompiler::Reflection(IDxcBlob* blob) {
 		&buffer,
 		IID_PPV_ARGS(&result)
 	);
-	Exception::Assert(SUCCEEDED(hr), "shader reflection is failed.");
+	DxObject::Assert(hr, L"shader reflection is failed.");
 
 	return result;
 }

@@ -17,7 +17,7 @@ AudioSourceComponent::AudioHandle::~AudioHandle() {
 
 void AudioSourceComponent::AudioHandle::Play() {
 	auto hr = source->Start();
-	Exception::Assert(SUCCEEDED(hr), "IXAudio2SourceVoice start failed.");
+	DxObject::Assert(hr, L"IXAudio2SourceVoice start failed.");
 }
 
 void AudioSourceComponent::AudioHandle::Stop() {
@@ -47,7 +47,7 @@ void AudioSourceComponent::Play() {
 	buf.LoopCount  = isLoop_ ? XAUDIO2_LOOP_INFINITE : 0;
 
 	auto hr = source->SubmitSourceBuffer(&buf);
-	Exception::Assert(SUCCEEDED(hr), "IXAudio2SourceVoice submit buffer failed.");
+	DxObject::Assert(hr, L"IXAudio2SourceVoice submit buffer failed.");
 
 	handle_ = std::make_unique<AudioHandle>(source);
 	handle_->SetVolume(volume_);
@@ -74,13 +74,13 @@ void AudioSourceComponent::PlayOneShot(const std::optional<UAssetParameter<UAsse
 	buf.Flags      = XAUDIO2_END_OF_STREAM;
 
 	auto hr = source->SubmitSourceBuffer(&buf);
-	Exception::Assert(SUCCEEDED(hr), "IXAudio2SourceVoice submit buffer failed.");
+	DxObject::Assert(hr, L"IXAudio2SourceVoice submit buffer failed.");
 
 	// 音量の設定
 	source->SetVolume(volume_);
 
 	hr = source->Start();
-	Exception::Assert(SUCCEEDED(hr), "IXAudio2SourceVoice start failed.");
+	DxObject::Assert(hr, L"IXAudio2SourceVoice start failed.");
 
 }
 

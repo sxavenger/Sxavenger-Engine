@@ -51,8 +51,7 @@ void StateObjectContext::CreateStateObject(DxObject::Device* device, const State
 	auto hr = device->GetDevice()->CreateStateObject(
 		stateObjectDesc, IID_PPV_ARGS(&stateObject_)
 	);
-	Exception::Assert(SUCCEEDED(hr), "raytracing state object create failed.");
-	// note: DebugLayer = true でPIXを起動するとここでエラーが発生する.
+	DxObject::Assert(hr, L"raytracing state object create failed.");
 
 	// propertiesの取得
 	stateObject_.As(&properties_);
@@ -77,7 +76,7 @@ void StateObjectContext::CreateStateObject(DxObject::Device* device, StateObject
 	auto hr = device->GetDevice()->CreateStateObject(
 		stateObjectDesc, IID_PPV_ARGS(&stateObject_)
 	);
-	Exception::Assert(SUCCEEDED(hr), "raytracing state object create failed.");
+	DxObject::Assert(hr, L"raytracing state object create failed.");
 
 	// propertiesの取得
 	stateObject_.As(&properties_);

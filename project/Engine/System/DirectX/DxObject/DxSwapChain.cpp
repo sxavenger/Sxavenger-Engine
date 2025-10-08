@@ -62,7 +62,7 @@ void SwapChain::SetColorSpace(const DXGI_OUTPUT_DESC1& desc) {
 
 	// 色空間の設定
 	auto hr = swapChain_->SetColorSpace1(desc.ColorSpace);
-	Exception::Assert(SUCCEEDED(hr), "Color Space setting failed.");
+	DxObject::Assert(hr, L"Color Space setting failed.");
 
 	DXGI_HDR_METADATA_HDR10 metadata = {};
 
@@ -119,7 +119,7 @@ void SwapChain::SetColorSpace(const DXGI_OUTPUT_DESC1& desc) {
 	hr = swapChain_->SetHDRMetaData(
 		DXGI_HDR_METADATA_TYPE_HDR10, sizeof(metadata), &metadata
 	);
-	Exception::Assert(SUCCEEDED(hr), "HDR metadata setting failed.");
+	DxObject::Assert(hr, L"HDR metadata setting failed.");
 
 	Logger::EngineLog(std::format("[_DXOBJECT SwapChain] color space changed: {}", magic_enum::enum_name(colorSpace_)));
 }
@@ -175,7 +175,7 @@ void SwapChain::CreateSwapChain(Device* device, CommandContext* command, DXGI_FO
 		nullptr, nullptr,
 		reinterpret_cast<IDXGISwapChain1**>(swapChain_.GetAddressOf())
 	);
-	Exception::Assert(SUCCEEDED(hr), "swap chain create failed.");
+	DxObject::Assert(hr, L"swap chain create failed.");
 
 }
 
@@ -186,7 +186,7 @@ void SwapChain::CreateRenderTargetView(Device* device, DescriptorHeaps* descript
 		auto hr = swapChain_->GetBuffer(
 			i, IID_PPV_ARGS(&resources_[i])
 		);
-		Exception::Assert(SUCCEEDED(hr));
+		DxObject::Assert(hr, L"swap chain get buffer failed.");
 	}
 
 	if (isSRGB) {

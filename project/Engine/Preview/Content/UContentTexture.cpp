@@ -102,7 +102,7 @@ DirectX::ScratchImage UContentTexture::LoadFromDDSFile(const std::filesystem::pa
 		nullptr,
 		image
 	);
-	Exception::Assert(SUCCEEDED(hr), "texture load failed. filepath: " + filepath.generic_string());
+	DxObject::Assert(SUCCEEDED(hr), L"texture load failed. filepath: " + filepath.generic_wstring());
 
 	// encodingの設定と一致しているか確認
 	if (option.encoding != GetFormatEncoding(image.GetMetadata().format)) {
@@ -149,7 +149,7 @@ DirectX::ScratchImage UContentTexture::LoadFromHDRFile(const std::filesystem::pa
 		nullptr,
 		image
 	);
-	Exception::Assert(SUCCEEDED(hr), "texture load failed. filepath: " + filepath.generic_string());
+	DxObject::Assert(SUCCEEDED(hr), L"texture load failed. filepath: " + filepath.generic_wstring());
 
 	// encodingの設定と一致しているか確認
 	if (option.encoding != GetFormatEncoding(image.GetMetadata().format)) {
@@ -177,7 +177,7 @@ DirectX::ScratchImage UContentTexture::LoadFromHDRFile(const std::filesystem::pa
 		0,
 		mipimage
 	);
-	Exception::Assert(SUCCEEDED(hr), "mipmaps create failed.");
+	DxObject::Assert(SUCCEEDED(hr), L"mipmaps create failed. filepath: " + filepath.generic_wstring());
 
 	return mipimage;
 
@@ -193,7 +193,7 @@ DirectX::ScratchImage UContentTexture::LoadFromTGAFile(const std::filesystem::pa
 		nullptr,
 		image
 	);
-	Exception::Assert(SUCCEEDED(hr), "texture load failed. filepath: " + filepath.generic_string());
+	DxObject::Assert(SUCCEEDED(hr), L"texture load failed. filepath: " + filepath.generic_wstring());
 
 	// encodingの設定と一致しているか確認
 	if (option.encoding != GetFormatEncoding(image.GetMetadata().format)) {
@@ -221,7 +221,7 @@ DirectX::ScratchImage UContentTexture::LoadFromTGAFile(const std::filesystem::pa
 		0,
 		mipimage
 	);
-	Exception::Assert(SUCCEEDED(hr), "mipmaps create failed.");
+	DxObject::Assert(SUCCEEDED(hr), L"mipmaps create failed. filepath: " + filepath.generic_wstring());
 
 	return mipimage;
 }
@@ -246,7 +246,7 @@ DirectX::ScratchImage UContentTexture::LoadFromWICFile(const std::filesystem::pa
 		nullptr,
 		image
 	);
-	Exception::Assert(SUCCEEDED(hr), "texture load failed. filepath: " + filepath.generic_string());
+	DxObject::Assert(SUCCEEDED(hr), L"texture load failed. filepath: " + filepath.generic_wstring());
 
 	// encodingの設定と一致しているか確認
 	if (option.encoding != GetFormatEncoding(image.GetMetadata().format)) {
@@ -274,7 +274,7 @@ DirectX::ScratchImage UContentTexture::LoadFromWICFile(const std::filesystem::pa
 		0,
 		mipimage
 	);
-	Exception::Assert(SUCCEEDED(hr), "mipmaps create failed.");
+	DxObject::Assert(SUCCEEDED(hr), L"mipmaps create failed. filepath: " + filepath.generic_wstring());
 
 	return mipimage;
 

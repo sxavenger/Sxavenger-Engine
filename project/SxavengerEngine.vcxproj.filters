@@ -927,6 +927,7 @@
     <ClInclude Include="Lib\Transform\Transform.h">
       <Filter>Lib\Transform</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\System\DirectX\DxObject\DxResourceStorage.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Demo\Entity\Player.cpp">
@@ -1515,5 +1516,6 @@
       <Filter>externals\stb</Filter>
     </ClCompile>
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Engine\System\DirectX\DxObject\DxResourceStorage.cpp" />
   </ItemGroup>
 </Project>

@@ -25,6 +25,8 @@ _DXOBJECT_NAMESPACE_BEGIN
 class Device {
 public:
 
+public:
+
 	//=========================================================================================
 	// public methods
 	//=========================================================================================
@@ -36,13 +38,17 @@ public:
 
 	void Term();
 
+	//* option *//
+
+	void CheckDeviceStatus() const;
+
+	//* getter *//
+
 	ID3D12Device8* GetDevice() const { return device_.Get(); }
 
 	IDXGIFactory7* GetFactory() const { return dxgiFactory_.Get(); }
 
 	IDXGIAdapter4* GetAdapter() const { return useAdapter_.Get(); }
-
-	//* preview option *//
 
 	
 

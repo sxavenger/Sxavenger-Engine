@@ -44,7 +44,7 @@ void FProcessTexture::Create(const Vector2ui& size, DXGI_FORMAT format) {
 			nullptr,
 			IID_PPV_ARGS(&resource_)
 		);
-		Exception::Assert(SUCCEEDED(hr));
+		DxObject::Assert(hr, L"unordered texture create failed.");
 
 		resource_->SetName(L"FProcessTexture");
 	}

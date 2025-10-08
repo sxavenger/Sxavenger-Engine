@@ -54,7 +54,7 @@ void CommandContext::CreateCommandAllocator(ID3D12Device* device, D3D12_COMMAND_
 			type,
 			IID_PPV_ARGS(&commandAllocators_[i])
 		);
-		Exception::Assert(SUCCEEDED(hr));
+		DxObject::Assert(hr, L"command allocator create failed.");
 	}
 }
 
@@ -68,8 +68,7 @@ void CommandContext::CreateCommandQueue(ID3D12Device* device, D3D12_COMMAND_LIST
 		&desc,
 		IID_PPV_ARGS(&commandQueue_)
 	);
-
-	Exception::Assert(SUCCEEDED(hr));
+	DxObject::Assert(hr, L"command queue create failed.");
 }
 
 void CommandContext::CreateCommandList(ID3D12Device* device, D3D12_COMMAND_LIST_TYPE type) {
@@ -81,7 +80,7 @@ void CommandContext::CreateCommandList(ID3D12Device* device, D3D12_COMMAND_LIST_
 		nullptr,
 		IID_PPV_ARGS(&commandList_)
 	);
-	Exception::Assert(SUCCEEDED(hr));
+	DxObject::Assert(hr, L"command list create failed.");
 	
 }
 
@@ -94,18 +93,18 @@ void CommandContext::CreateFence(ID3D12Device* device) {
 		D3D12_FENCE_FLAG_NONE,
 		IID_PPV_ARGS(&fence_)
 	);
-	Exception::Assert(SUCCEEDED(hr));
+	DxObject::Assert(hr, L"fence create failed.");
 
 	fenceEvent_ = CreateEvent(
 		NULL, FALSE, FALSE, NULL
 	);
-	Exception::Assert(fenceEvent_ != nullptr);
+	Exception::Assert(fenceEvent_ != nullptr, "fence event is nullptr.");
 }
 
 void CommandContext::Close() {
 
 	auto hr = commandList_->Close();
-	Exception::Assert(SUCCEEDED(hr));
+	DxObject::Assert(hr, L"command list close failed.");
 
 	ID3D12CommandList* commandLists[] = { commandList_.Get() };
 	commandQueue_->ExecuteCommandLists(1, commandLists);
@@ -137,11 +136,11 @@ void CommandContext::Reset(uint32_t index) {
 
 	// allocatorのリセット
 	auto hr = commandAllocators_[index]->Reset();
-	Exception::Assert(SUCCEEDED(hr));
+	DxObject::Assert(hr, L"command allocator reset failed.");
 
 	// allocatorをセット
 	hr = commandList_->Reset(commandAllocators_[index].Get(), nullptr);
-	Exception::Assert(SUCCEEDED(hr));
+	DxObject::Assert(hr, L"command list reset failed.");
 
 	// 現在のindexとして設定
 	currentIndex_ = index;

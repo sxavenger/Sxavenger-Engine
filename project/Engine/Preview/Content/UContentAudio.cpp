@@ -39,7 +39,7 @@ void UContentAudio::Load(const std::filesystem::path& filepath) {
 	ComPtr<IMFSourceReader> reader;
 	auto hr = MFCreateSourceReaderFromURL(filepath.generic_wstring().c_str(), nullptr, &reader);
 
-	Exception::Assert(SUCCEEDED(hr), "IMFSourceReader create failed.");
+	DxObject::Assert(SUCCEEDED(hr), L"IMFSourceReader create failed.");
 
 	// assetの設定
 	auto asset = sUAssetStorage->GetAsset<UAssetAudioClip>(id_);

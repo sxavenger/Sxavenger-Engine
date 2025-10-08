@@ -154,6 +154,8 @@ Vector3ui RoundUp(const Vector3ui& round, const Vector3ui& thread);
 
 CompileProfile ToProfile(GraphicsShaderType type);
 
+void Assert(HRESULT hr, const std::wstring& label, const std::source_location& location = std::source_location::current());
+
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Configs
 ////////////////////////////////////////////////////////////////////////////////////////////
