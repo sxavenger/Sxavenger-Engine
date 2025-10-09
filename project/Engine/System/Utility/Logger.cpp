@@ -69,9 +69,9 @@ _NORETURN void SxavengerLogger::ExceptionA(const std::string& label, const std::
 	// location
 	std::ostringstream locationMes;
 	locationMes << "[location]" << "  \n";
-	locationMes << " filename: " << location.file_name() << "  \n";
+	locationMes << " filename: " << location.file_name()     << "  \n";
 	locationMes << " function: " << location.function_name() << "  \n";
-	locationMes << " line:     " << location.line() << "  \n";
+	locationMes << " line:     " << location.line()          << "  \n";
 	OutputA("\n[Error ExceptionA]: Sxavenger Engine Exception.\n\n" + locationMes.str());
 
 	// label
@@ -122,9 +122,9 @@ _NORETURN void SxavengerLogger::ExceptionW(const std::wstring& label, const std:
 	// location
 	std::wostringstream locationMes;
 	locationMes << "[location]" << "  \n";
-	locationMes << " filename: " << location.file_name() << "  \n";
+	locationMes << " filename: " << location.file_name()     << "  \n";
 	locationMes << " function: " << location.function_name() << "  \n";
-	locationMes << " line:     " << location.line() << "  \n";
+	locationMes << " line:     " << location.line()          << "  \n";
 	OutputW(L"\n[Error ExceptionW]: Sxavenger Engine Exception.\n\n" + locationMes.str());
 
 	// label
