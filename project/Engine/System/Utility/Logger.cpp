@@ -72,7 +72,7 @@ _NORETURN void SxavengerLogger::ExceptionA(const std::string& label, const std::
 	locationMes << " filename: " << location.file_name() << "  \n";
 	locationMes << " function: " << location.function_name() << "  \n";
 	locationMes << " line:     " << location.line() << "  \n";
-	OutputA("\nError: Sxavenger Engine assertion\n\n" + locationMes.str());
+	OutputA("\n[Error ExceptionA]: Sxavenger Engine Exception.\n\n" + locationMes.str());
 
 	// label
 	std::ostringstream labelMes;
@@ -111,7 +111,7 @@ _NORETURN void SxavengerLogger::ExceptionA(const std::string& label, const std::
 	MessageBoxA(
 		NULL,
 		(locationMes.str() + "\n" + labelMes.str()).c_str(),
-		"Sxavenger Engine assertion",
+		"Sxavenger Engine Exception",
 		MB_TASKMODAL | MB_ICONHAND | MB_TOPMOST
 	);
 
@@ -125,7 +125,7 @@ _NORETURN void SxavengerLogger::ExceptionW(const std::wstring& label, const std:
 	locationMes << " filename: " << location.file_name() << "  \n";
 	locationMes << " function: " << location.function_name() << "  \n";
 	locationMes << " line:     " << location.line() << "  \n";
-	OutputW(std::wstring(L"\nError: Sxavenger Engine assertion\n\n" + locationMes.str()).c_str());
+	OutputW(L"\n[Error ExceptionW]: Sxavenger Engine Exception.\n\n" + locationMes.str());
 
 	// label
 	std::wostringstream labelMes;
@@ -164,7 +164,7 @@ _NORETURN void SxavengerLogger::ExceptionW(const std::wstring& label, const std:
 	MessageBoxW(
 		NULL,
 		(locationMes.str() + L"\n" + labelMes.str()).c_str(),
-		L"Sxavenger Engine assertion",
+		L"Sxavenger Engine Exception",
 		MB_TASKMODAL | MB_ICONHAND | MB_TOPMOST
 	);
 
