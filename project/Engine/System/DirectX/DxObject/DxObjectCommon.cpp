@@ -1,6 +1,12 @@
 #include "DxObjectCommon.h"
 _DXOBJECT_USING
 
+//-----------------------------------------------------------------------------------------
+// include
+//-----------------------------------------------------------------------------------------
+//* windows
+#include <comdef.h>
+
 ////////////////////////////////////////////////////////////////////////////////////////////
 // methods
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -36,8 +42,7 @@ ComPtr<ID3D12Resource> _DXOBJECT CreateBufferResource(
 		nullptr,
 		IID_PPV_ARGS(result.GetAddressOf())
 	);
-
-	Exception::Assert(SUCCEEDED(hr));
+	DxObject::Assert(hr, L"resource create failed.");
 
 	return result;
 }
@@ -71,8 +76,7 @@ ComPtr<ID3D12Resource> _DXOBJECT CreateBufferResource(
 		nullptr,
 		IID_PPV_ARGS(result.GetAddressOf())
 	);
-
-	Exception::Assert(SUCCEEDED(hr));
+	DxObject::Assert(hr, L"resource create failed.");
 
 	return result;
 
@@ -111,4 +115,8 @@ CompileProfile _DXOBJECT ToProfile(GraphicsShaderType type) {
 
 	Exception::Assert(false, "Graphics Shader Type is undefine.");
 	return {};
+}
+
+void _DXOBJECT Assert(HRESULT hr, const std::wstring& label, const std::source_location& location) {
+	Exception::AssertW(SUCCEEDED(hr), label, std::format(L"_com_error: {}", _com_error(hr).ErrorMessage()), location);
 }

@@ -17,13 +17,13 @@ void KeyboardInput::Init(IDirectInput8* dInput) {
 	auto hr = dInput->CreateDevice(
 		GUID_SysKeyboard, &keyboardDevice_, NULL
 	);
-	Exception::Assert(SUCCEEDED(hr));
+	DxObject::Assert(hr, L"keyboard device create failed.");
 
 	// 入力データ形式のセット
 	hr = keyboardDevice_->SetDataFormat(
 		&c_dfDIKeyboard // 標準形式
 	);
-	Exception::Assert(SUCCEEDED(hr));
+	DxObject::Assert(hr, L"keyboard set data format failed.");
 
 	flags_ |= DISCL_FOREGROUND;
 	flags_ |= DISCL_NONEXCLUSIVE;
@@ -373,7 +373,7 @@ void Input::Init(const DirectXWindowContext* mainWindow) {
 		DIRECTINPUT_VERSION, IID_IDirectInput8,
 		(void**)&directInput_, nullptr
 	);
-	Exception::Assert(SUCCEEDED(hr));
+	DxObject::Assert(hr, L"DirectInput8Create failed.");
 
 	//* dinput *//
 

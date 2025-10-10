@@ -47,7 +47,7 @@ void FTexture::Create(const Vector2ui& size, DXGI_FORMAT format) {
 			&clearValue,
 			IID_PPV_ARGS(&resource_)
 		);
-		Exception::Assert(SUCCEEDED(hr));
+		DxObject::Assert(hr, L"texture create failed.");
 
 
 		resource_->SetName(L"FTexture");

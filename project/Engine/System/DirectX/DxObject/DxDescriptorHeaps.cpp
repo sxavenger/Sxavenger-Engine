@@ -80,8 +80,7 @@ void DescriptorPool::CreateDescriptorHeap(ID3D12Device* device) {
 	auto hr = device->CreateDescriptorHeap(
 		&desc, IID_PPV_ARGS(&descriptorHeap_)
 	);
-
-	Exception::Assert(SUCCEEDED(hr));
+	DxObject::Assert(hr, L"descriptor heap create failed.");
 }
 
 uint32_t DescriptorPool::GetCurrentDescriptorIndex() {

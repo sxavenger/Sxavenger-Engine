@@ -80,7 +80,7 @@ float3 ImportanceSampleGGX(float2 xi, float roughness, float3 n) {
 float3 PrefilterRadiance(float roughness, float3 r) {
 	// 観測者が物体の真上から見下ろしていることを前提(v = n = r);
 	float3 n = r;
-	float3 v = r;
+	float3 v = r; 
 
 	float3 color = 0.0f;
 	float totalWeight = 0.0f;

@@ -24,10 +24,10 @@ public:
 	////////////////////////////////////////////////////////////////////////////////////////////
 	enum class Layout : uint8_t {
 		Direct,
-		Indirect_Reservoir,
+		Indirect_Reservoir_Diffuse,
+		Indirect_Reservoir_Specular,
 		Indirect_Moment,
 		Indirect,
-		// Direct Diffuse, Direct Specular, Indirect Diffuse, Indirect Specular に分割するかも
 	};
 
 public:
@@ -60,10 +60,6 @@ public:
 	void TransitionEndRenderTargetIndirect(const DirectXQueueContext* context);
 
 	void ClearRenderTargetIndirect(const DirectXQueueContext* context);
-
-	void TransitionBeginUnorderedIndirect(const DirectXQueueContext* context);
-
-	void TransitionEndUnorderedIndirect(const DirectXQueueContext* context);
 
 	void CopyIntermediateToGBuffer(const DirectXQueueContext* context, Layout layout);
 

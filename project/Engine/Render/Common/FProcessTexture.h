@@ -103,6 +103,8 @@ public:
 
 	void BeginProcess(const DirectXQueueContext* context, FBaseTexture* texture);
 
+	void BeginProcess(const DirectXQueueContext* context, const std::vector<FBaseTexture*>& textures);
+
 	void EndProcess(const DirectXQueueContext* context, FBaseTexture* texture);
 
 	//* process option *//

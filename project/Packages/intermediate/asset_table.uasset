@@ -103,6 +103,10 @@
 		"assets/models/tree_sponza/715093869573992647.jpg",
 		"class UAssetTexture"
 	],
+	"08dca366-7a76-4d2a-b836ae27fd51740c": [
+		"assets/models/Desert_Terrain/Desert_Terrain.gltf",
+		"class UAssetSkeleton"
+	],
 	"08f15e06-a9a1-48c4-aa93e96e833426d3": [
 		"assets/models/tree_sponza/sponza.gltf",
 		"class UAssetMesh"
@@ -138,6 +142,10 @@
 	"0bd72e71-765b-46cf-be831f3ea3e593a0": [
 		"assets/models/tree_sponza/8747919177698443163.jpg",
 		"class UAssetTexture"
+	],
+	"0d447600-2433-4ff1-8916f13296665845": [
+		"assets/models/cornell_box/cornell-box.obj",
+		"class UAssetSkeleton"
 	],
 	"0dd89ee9-e1db-44ef-a77d547721f86a76": [
 		"assets/models/PBR_Sphere_Test/model/PBR_Sphere.gltf",
@@ -182,6 +190,10 @@
 	"12407285-f105-4d21-9b9c622dc7829c51": [
 		"assets/models/PBR_Sphere_Test/model/PBR_Sphere.gltf",
 		"class UAssetMesh"
+	],
+	"124734f0-a8fe-40bf-8c6236ebfbb23a80": [
+		"assets/models/Desert_Terrain/textures/MI_Desert_Terrain_1_MetallicRoughness.png",
+		"class UAssetTexture"
 	],
 	"12f07a11-3814-4f3b-a46be2c961716875": [
 		"assets/models/Metoro/textures/MI_Concrete_2_Normal.png",
@@ -351,6 +363,10 @@
 		"assets/models/tree_sponza/sponza.gltf",
 		"class UAssetMesh"
 	],
+	"24c8266b-a998-48df-9c4d80858ceca625": [
+		"assets/models/Desert_Terrain/Desert_Terrain.gltf",
+		"class UAssetMaterial"
+	],
 	"25520c66-8bab-4059-88467529b014830c": [
 		"assets/models/PBR_Sphere_Test/model/PBR_Sphere.gltf",
 		"class UAssetMaterial"
@@ -386,6 +402,10 @@
 	"27b42052-ebde-4eab-b73bb0c1a7f5db2c": [
 		"assets/models/PBR_Sphere_Test/model/PBR_Sphere.gltf",
 		"class UAssetMesh"
+	],
+	"2859e4dd-9b71-4074-b7c7d30f3a4d3278": [
+		"assets/models/cornell_box/cornell-box.obj",
+		"class UAssetMaterial"
 	],
 	"290e4c2d-8877-4161-a46c66cf48e9fc4c": [
 		"assets/models/Metoro/Metoro.gltf",
@@ -667,6 +687,10 @@
 		"assets/models/tree_sponza/sponza.gltf",
 		"class UAssetMesh"
 	],
+	"4501acac-b628-4bfb-a695c71629700024": [
+		"assets/models/cornell_box/cornell-box.obj",
+		"class UAssetMesh"
+	],
 	"45cf71ac-b603-474f-b53641047ee164da": [
 		"assets/models/PBR_Sphere_Test/model/PBR_Sphere.gltf",
 		"class UAssetMaterial"
@@ -831,6 +855,10 @@
 		"packages/textures/icon/scene_directionalLight.png",
 		"class UAssetTexture"
 	],
+	"59a8101c-8b33-4497-9fa6f50d3ed6e5d7": [
+		"assets/models/cornell_box/cornell-box.obj",
+		"class UAssetMesh"
+	],
 	"5a384289-22e7-49af-ac22b35718443920": [
 		"assets/models/tree_sponza/6593109234861095314.jpg",
 		"class UAssetTexture"
@@ -890,6 +918,10 @@
 	"5fe2e009-c429-410d-a77c24d4dc15e896": [
 		"assets/models/Metoro/Metoro.gltf",
 		"class UAssetMesh"
+	],
+	"5fec9f2f-2eeb-492a-ba82d97f4f6458b0": [
+		"assets/models/cornell_box/cornell-box.obj",
+		"class UAssetMaterial"
 	],
 	"6022879c-5e5d-42ba-923fcfffd39160e4": [
 		"assets/models/tree_sponza/sponza.gltf",
@@ -985,6 +1017,10 @@
 	],
 	"6b39f65f-3f35-4a95-830eb5d92090390a": [
 		"assets/models/tree_sponza/9288698199695299068.jpg",
+		"class UAssetTexture"
+	],
+	"6bfad0c7-e5c1-43c0-baf99464fcee756f": [
+		"assets/models/Desert_Terrain/textures/MI_Desert_Terrain_1_BaseColor.png",
 		"class UAssetTexture"
 	],
 	"6c0429f0-70d9-4533-81afef506c135906": [
@@ -1283,6 +1319,10 @@
 		"assets/models/tree_sponza/sponza.gltf",
 		"class UAssetMesh"
 	],
+	"8a2c5b5a-5fb3-42e5-97f03b57ccf83d7e": [
+		"assets/models/Desert_Terrain/textures/T_Desert_Terrain_1_Normal.png",
+		"class UAssetTexture"
+	],
 	"8a68936a-40e0-480d-ab9bd5bb1a7e9a26": [
 		"assets/models/PBR_Sphere_Test/model/PBR_Sphere.gltf",
 		"class UAssetMaterial"
@@ -1503,6 +1543,10 @@
 		"assets/models/tree_sponza/sponza.gltf",
 		"class UAssetMesh"
 	],
+	"a2306ac2-bebc-44f6-8bf3bb4d02d1a50a": [
+		"assets/models/cornell_box/cornell-box.obj",
+		"class UAssetMaterial"
+	],
 	"a24ab4a7-111a-41e2-953aaedbc4335cc2": [
 		"assets/models/tree_sponza/sponza.gltf",
 		"class UAssetMesh"
@@ -1594,6 +1638,10 @@
 	"a903e9ad-3560-4495-bc8397e4fa663e80": [
 		"assets/models/PBR_Sphere_Test/model/PBR_Sphere.gltf",
 		"class UAssetMaterial"
+	],
+	"a97a3628-4e0f-4f35-b69bc154003c4efd": [
+		"assets/models/cornell_box/cornell-box.obj",
+		"class UAssetMesh"
 	],
 	"a9c7a4ca-bb31-4d60-bcb5d53477f6bd9c": [
 		"assets/models/tree_sponza/sponza.gltf",
@@ -1699,6 +1747,10 @@
 		"assets/models/PBR_Sphere_Test/model/PBR_Sphere.gltf",
 		"class UAssetMaterial"
 	],
+	"b588a232-ffb6-4019-98d370d53e9c5397": [
+		"assets/models/Desert_Terrain/Desert_Terrain.gltf",
+		"class UAssetMesh"
+	],
 	"b5d86d3e-e4fa-4436-92f33a7c6b4fbb61": [
 		"assets/models/PBR_Sphere_Test/model/PBR_Sphere.gltf",
 		"class UAssetMaterial"
@@ -1803,6 +1855,10 @@
 		"assets/models/tree_sponza/sponza.gltf",
 		"class UAssetMesh"
 	],
+	"c1d89899-e3aa-4e08-9a4e35abde147b8f": [
+		"assets/models/cornell_box/cornell-box.obj",
+		"class UAssetMesh"
+	],
 	"c2003a9e-a14d-4ce9-97d921122ea07cd8": [
 		"assets/models/tree_sponza/sponza.gltf",
 		"class UAssetMaterial"
@@ -1866,6 +1922,10 @@
 	"c93749a0-b905-4cd7-a4303e4d5a4a9df1": [
 		"assets/models/macbeth_chart/macbeth_chart_scene.gltf",
 		"class UAssetMaterial"
+	],
+	"c9a3c70a-47e6-4522-ae074fc0ab90fa72": [
+		"assets/models/cornell_box/cornell-box.obj",
+		"class UAssetMesh"
 	],
 	"ca8ddc71-4147-45b1-ad56ea4f1c7998e1": [
 		"assets/models/PBR_Sphere_Test/model/PBR_Sphere.gltf",
@@ -2039,6 +2099,10 @@
 		"assets/models/tree_sponza/sponza.gltf",
 		"class UAssetMesh"
 	],
+	"d86a11b9-fa19-424c-b63cdb9f08bd1a51": [
+		"assets/models/cornell_box/cornell-box.obj",
+		"class UAssetMaterial"
+	],
 	"d8777c19-cfa7-4bd7-94065751c96cc1a5": [
 		"assets/models/primitive/cube.obj",
 		"class UAssetMaterial"
@@ -2122,6 +2186,10 @@
 	"e23fcdb8-f0a8-4d21-a31ea14a376ededc": [
 		"assets/models/tree_sponza/sponza.gltf",
 		"class UAssetMesh"
+	],
+	"e27df201-a761-4c73-bfc66655fef04016": [
+		"assets/models/cornell_box/cornell-box.obj",
+		"class UAssetMaterial"
 	],
 	"e2e9e502-cf32-4563-a2c90c90482dfe60": [
 		"assets/models/tree_sponza/sponza.gltf",
@@ -2303,6 +2371,10 @@
 		"assets/models/PBR_Sphere_Test/model/PBR_Sphere.gltf",
 		"class UAssetMesh"
 	],
+	"f19429f1-8f33-4afb-8f8e45edf4104aed": [
+		"assets/models/cornell_box/cornell-box.obj",
+		"class UAssetMesh"
+	],
 	"f1ded71c-c639-4e62-821965467189791e": [
 		"assets/models/PBR_Sphere_Test/model/PBR_Sphere.gltf",
 		"class UAssetMaterial"
@@ -2318,6 +2390,10 @@
 	"f33a7764-673b-40c3-8795179e4bc94691": [
 		"assets/sounds/fanfare.wav",
 		"class UAssetAudioClip"
+	],
+	"f38f3b58-26fd-42b3-8952b14e5ea37e8a": [
+		"assets/models/cornell_box/cornell-box.obj",
+		"class UAssetMesh"
 	],
 	"f401fafc-3b84-43d5-bd3f6b3a98af9d2f": [
 		"packages/textures/icon/scene_camera.png",
@@ -2345,6 +2421,10 @@
 	],
 	"f549b53b-c7ff-4c33-a8a35821e6a0546d": [
 		"assets/models/tree_sponza/sponza.gltf",
+		"class UAssetMaterial"
+	],
+	"f54ca040-c68a-4e61-8252b63080cba800": [
+		"assets/models/Desert_Terrain/Desert_Terrain.gltf",
 		"class UAssetMaterial"
 	],
 	"f5732a5b-3c15-4fb0-8413f4c3c4aed245": [
@@ -2430,5 +2510,9 @@
 	"fe858e2e-911e-444e-8ac44084d27af00c": [
 		"assets/models/tree_sponza/4477655471536070370.jpg",
 		"class UAssetTexture"
+	],
+	"ffb67055-779c-4114-8cf3a8966a492fe6": [
+		"assets/models/cornell_box/cornell-box.obj",
+		"class UAssetMesh"
 	]
 }

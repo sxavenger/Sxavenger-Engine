@@ -120,6 +120,7 @@ private:
 		Scene,
 		Deferred_GBuffer,
 		Lighting_GBuffer,
+		Indirect_Reservoir,
 		Albedo,
 		Normal,
 		MaterialARM,
@@ -127,7 +128,8 @@ private:
 		Velocity,
 		Direct,
 		Indirect,
-		Indirect_Reservoir,
+		Indirect_Reservoir_Diffuse,
+		Indirect_Reservoir_Specular,
 	};
 
 private:

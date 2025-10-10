@@ -31,14 +31,24 @@ cbuffer Parameter : register(b1) { //!< test
 //static const float sigma_s = 0.1f;
 
 //* input texture
-Texture2D<float4> gIndirect : register(t0);
-SamplerState gSampler       : register(s0);
+Texture2D<float4> gReservoirDiffuse  : register(t0);
+Texture2D<float4> gReservoirSpecular : register(t1);
+SamplerState gSampler                : register(s0);
 
 ConstantBuffer<DeferredBufferIndexConstantBuffer> gDeferredBufferIndex : register(b0);
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // methods
 ////////////////////////////////////////////////////////////////////////////////////////////
+
+float4 GetIndirectReservoir(uint2 index) {
+	return gReservoirDiffuse[index] + gReservoirSpecular[index];
+}
+
+float4 SampleIndirectReservoir(float2 uv, float lod) {
+	return gReservoirDiffuse.SampleLevel(gSampler, uv, lod) + gReservoirSpecular.SampleLevel(gSampler, uv, lod);
+
+}
 
 float CalculateExpDepthWeight(float p, float q) {
 	const float sigma_z = 0.1f;
@@ -89,11 +99,12 @@ void main(uint3 dispatchThreadId : SV_DispatchThreadID) {
 
 	DeferredSurface surface;
 	if (!surface.GetSurface(gDeferredBufferIndex.Get(), index)) {
+		gOutput[index] = float4(0.0f, 0.0f, 0.0f, 0.0f);
 		return;
 	}
 
-	float weight = 1.0f;
-	float3 variance = gIndirect[index].rgb;
+	float weight    = 1.0f;
+	float3 variance = GetIndirectReservoir(index).rgb;
 
 	//!< A-Trousを採用
 	
@@ -131,7 +142,7 @@ void main(uint3 dispatchThreadId : SV_DispatchThreadID) {
 
 			float lod = i / float(kRecursionCount - 1) * 6;
 			
-			variance  += gIndirect.SampleLevel(gSampler, uv, i).rgb * w;
+			variance  += SampleIndirectReservoir(uv, lod).rgb * w;
 			weight    += w;
 		}
 	}
@@ -139,5 +150,5 @@ void main(uint3 dispatchThreadId : SV_DispatchThreadID) {
 	variance /= weight;
 
 	gOutput[index].rgb = variance;
-	gOutput[index].a   = gIndirect[index].a;
+	gOutput[index].a   = 1.0f;
 }

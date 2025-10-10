@@ -155,7 +155,7 @@ ComPtr<ID3D12Resource> UAssetTexture::CreateTextureResource(const DirectX::TexMe
 		nullptr,
 		IID_PPV_ARGS(&resource)
 	);
-	Exception::Assert(SUCCEEDED(hr), "texture resource create failed.");
+	DxObject::Assert(SUCCEEDED(hr), L"texture resource create failed.");
 
 	resource->SetName(L"UAsset | Texture");
 	return resource;

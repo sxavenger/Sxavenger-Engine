@@ -1,8 +1,14 @@
 -------------------------------------------------------------------------------------------
+-- os
+-------------------------------------------------------------------------------------------
+-- 先頭で作業ディレクトリをprojectに変更
+os.chdir(_SCRIPT_DIR .. "/../project")
+
+-------------------------------------------------------------------------------------------
 -- main solution
 -------------------------------------------------------------------------------------------
 workspace "SxavengerEngine"
-	location "../project/"
+	location ""
 	configurations { "Debug", "Develop", "Release" }
 	platforms { "x64" }
 	toolset "v143"
@@ -17,21 +23,21 @@ workspace "SxavengerEngine"
 	--- 外部projectの登録 ---
 	-- DirectXTex
 	externalproject "DirectXTex"
-		location "../project/externals/DirectXTex"
+		location "externals/DirectXTex"
 		filename "DirectXTex_Desktop_2022_Win10"
 		kind "StaticLib"
 		language "C++"
 
 	-- DirectXMesh
 	externalproject "DirectXMesh"
-		location "../project/externals/DirectXMesh"
+		location "externals/DirectXMesh"
 		filename "DirectXMesh_Desktop_2022_Win10"
 		kind "StaticLib"
 		language "C++"
 	
 	-- imgui
 	externalproject "imgui"
-		location "../project/externals/imgui"
+		location "externals/imgui"
 		filename "imgui"
 		kind "StaticLib"
 		language "C++"
@@ -49,33 +55,33 @@ project "SxavengerEngine"
 
 	-- ファイルの追加
 	files {
-		"../project/*.cpp",
-		"../project/*.h",
+		"*.cpp",
+		"*.h",
 
-		"../project/externals/stb/Stb_include.cpp",
+		"externals/stb/Stb_include.cpp",
 
-		"../project/Lib/**.h",
-		"../project/Lib/**.cpp",
-		"../project/Engine/**.h",
-		"../project/Engine/**.cpp",
-		"../project/Demo/**.h",
-		"../project/Demo/**.cpp",
+		"Lib/**.h",
+		"Lib/**.cpp",
+		"Engine/**.h",
+		"Engine/**.cpp",
+		"Demo/**.h",
+		"Demo/**.cpp",
 	}
 
 	-- ファイルの除外(!xxx)
 	removefiles  {
-		"../project/Lib/!*/**.cpp",
-		"../project/Lib/!*/**.h",
-		"../project/Lib/**/!*/**.h",
-		"../project/Lib/**/!*/**.cpp",
-		"../project/Engine/!*/**.cpp",
-		"../project/Engine/!*/**.h",
-		"../project/Engine/**/!*/**.h",
-		"../project/Engine/**/!*/**.cpp",
-		"../project/Demo/!*/**.cpp",
-		"../project/Demo/!*/**.h",
-		"../project/Demo/**/!*/**.h",
-		"../project/Demo/**/!*/**.cpp",
+		"Lib/!*/**.cpp",
+		"Lib/!*/**.h",
+		"Lib/**/!*/**.h",
+		"Lib/**/!*/**.cpp",
+		"Engine/!*/**.cpp",
+		"Engine/!*/**.h",
+		"Engine/**/!*/**.h",
+		"Engine/**/!*/**.cpp",
+		"Demo/!*/**.cpp",
+		"Demo/!*/**.h",
+		"Demo/**/!*/**.h",
+		"Demo/**/!*/**.cpp",
 	}
 
 	-- 追加include

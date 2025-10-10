@@ -29,4 +29,3 @@ void DirectXCommon::Init() {
 void DirectXCommon::Term() {
 }
 
-

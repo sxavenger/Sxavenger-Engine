@@ -60,7 +60,7 @@ void ComputePipelineState::CreateDirectXPipeline(Device* device) {
 		&desc,
 		IID_PPV_ARGS(&pipeline_)
 	);
-	Exception::Assert(SUCCEEDED(hr));
+	DxObject::Assert(hr, L"compute pipeline state create failed.");
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////

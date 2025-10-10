@@ -285,8 +285,7 @@ void GraphicsPipelineState::CreateDirectXPipeline(Device* device) {
 			&descStream,
 			IID_PPV_ARGS(&pipeline_)
 		);
-
-		Exception::Assert(SUCCEEDED(hr));
+		DxObject::Assert(hr, L"mesh shader pipeline create failed.");
 
 	} else {
 
@@ -317,7 +316,7 @@ void GraphicsPipelineState::CreateDirectXPipeline(Device* device) {
 			&desc,
 			IID_PPV_ARGS(&pipeline_)
 		);
-		Exception::Assert(SUCCEEDED(hr), "vertex shader pipeline create failed.");
+		DxObject::Assert(hr, L"vertex shader pipeline create failed.");
 	}
 }
 
