@@ -11,6 +11,7 @@
 //* c++
 #include <list>
 #include <array>
+#include <queue>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // DXOBJECT
@@ -28,27 +29,56 @@ class ResourceStorage;
 class ResourceBuffer {
 public:
 
+	////////////////////////////////////////////////////////////////////////////////////////////
+	// using
+	////////////////////////////////////////////////////////////////////////////////////////////
+
+	using Container = std::list<std::shared_ptr<ResourceBuffer>>;
+	using Iterator  = Container::iterator;
+
+	////////////////////////////////////////////////////////////////////////////////////////////
+	// Buffer structure
+	////////////////////////////////////////////////////////////////////////////////////////////
+	struct Buffer {
+	public:
+
+		//=========================================================================================
+		// public methods
+		//=========================================================================================
+
+		void AssignAddress();
+
+		//=========================================================================================
+		// public variables
+		//=========================================================================================
+
+		ComPtr<ID3D12Resource> resource;
+		std::optional<D3D12_GPU_VIRTUAL_ADDRESS> address;
+
+	};
+
+public:
+
 	//=========================================================================================
 	// public methods
 	//=========================================================================================
 
-	ResourceBuffer(const ResourceStorage* storage) : storage_(storage) {}
+	ResourceBuffer() = delete;
+	ResourceBuffer(const ResourceStorage* storage, const Iterator& iterator) : storage_(storage), iterator_(iterator) {}
+
 	~ResourceBuffer() = default;
 
 	//* resource option *//
-
-	void CreateCommittedResource(
-		Device* device,
-		const D3D12_HEAP_PROPERTIES& prop,
-		const D3D12_RESOURCE_DESC& desc,
-		D3D12_RESOURCE_STATES state = D3D12_RESOURCE_STATE_COMMON,
-		std::optional<D3D12_CLEAR_VALUE> clearValue = std::nullopt
-	);
 
 	void SetName(const std::wstring& name);
 
 	ID3D12Resource* Get(size_t index) const;
 	ID3D12Resource* Get() const;
+
+	const D3D12_GPU_VIRTUAL_ADDRESS& GetGPUVirtualAddress(size_t index) const;
+	const D3D12_GPU_VIRTUAL_ADDRESS& GetGPUVirtualAddress() const;
+
+	//* container option *//
 
 	//=========================================================================================
 	// public variables
@@ -64,11 +94,25 @@ private:
 
 	//* directx12 *//
 
-	std::array<ComPtr<ID3D12Resource>, kSwapBufferCount> buffers_;
+	std::array<Buffer, kSwapBufferCount> buffers_;
 
 	//* external *//
 
 	const ResourceStorage* storage_;
+	const Iterator iterator_;
+
+	//=========================================================================================
+	// private methods
+	//=========================================================================================
+
+	void CreateCommittedResource(
+		Device* device,
+		const D3D12_HEAP_PROPERTIES& prop,
+		const D3D12_RESOURCE_DESC& desc,
+		D3D12_RESOURCE_STATES state                        = D3D12_RESOURCE_STATE_COMMON,
+		D3D12_HEAP_FLAGS flags                             = D3D12_HEAP_FLAG_NONE,
+		const std::optional<D3D12_CLEAR_VALUE>& clearValue = std::nullopt
+	);
 
 };
 
@@ -82,7 +126,13 @@ public:
 	// public methods
 	//=========================================================================================
 
-	//* option *//
+	//* container option *//
+
+	std::shared_ptr<ResourceBuffer> CreateBuffer();
+
+	void Delete(const ResourceBuffer::Iterator& iterator);
+
+	void Destroy();
 
 	void SwapBuffer();
 
@@ -98,7 +148,9 @@ private:
 
 	//* container *//
 
-	std::list<std::shared_ptr<ResourceBuffer>> container_;
+	ResourceBuffer::Container container_;
+
+	std::queue<ResourceBuffer::Iterator> destroyQueue_;
 
 	//* parameter *//
 

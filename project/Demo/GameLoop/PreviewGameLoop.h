@@ -41,9 +41,7 @@ private:
 
 	//* preview *//
 
-	FTexture texture_;
-
-	CustomReflectionComputePipeline pipeline_;
+	
 
 	//=========================================================================================
 	// private methods
