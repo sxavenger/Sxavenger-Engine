@@ -80,6 +80,6 @@ private:
 	// private variables
 	//=========================================================================================
 
-	std::unique_ptr<DxObject::DimensionBuffer<Parameter>> parameter_;
+	std::unique_ptr<DxObject::ConstantBuffer<Parameter>> parameter_;
 
 };

@@ -113,7 +113,6 @@ void CommandContext::Close() {
 void CommandContext::Signal() {
 	fenceValue_++;
 	commandQueue_->Signal(fence_.Get(), fenceValue_);
-
 	allocatorFenceValues_[currentIndex_] = fenceValue_;
 }
 
@@ -127,7 +126,6 @@ void CommandContext::WaitGPU(uint32_t index) {
 		// イベントを待機
 		WaitForSingleObject(fenceEvent_, INFINITE);
 	}
-
 }
 
 void CommandContext::Reset(uint32_t index) {

@@ -27,9 +27,10 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	collection->Push<EditorEngineGameLoop>();
 #endif
 	
-	//collection->Push<BetaSystemGameLoop>();
+	collection->Push<BetaSystemGameLoop>();
 	//collection->Push<DemoGameLoop>();
-	collection->Push<PreviewGameLoop>();
+
+	//collection->Push<PreviewGameLoop>();
 
 	collection->Run();
 

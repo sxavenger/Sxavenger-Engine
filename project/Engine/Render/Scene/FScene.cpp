@@ -143,7 +143,6 @@ void FScene::SetupTopLevelAS(const DirectXQueueContext* context) {
 	});
 
 	topLevelAS_.EndSetupInstance(SxavengerSystem::GetDxDevice(), context->GetDxCommand());
-	context->TransitionAllocator();
 }
 
 void FScene::SetupStateObject() {

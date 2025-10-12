@@ -25,9 +25,9 @@ void PostProcessMotionBlur::Parameter::SetImGuiCommand() {
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 void PostProcessMotionBlur::Init() {
-	parameter_ = std::make_unique<DimensionBuffer<Parameter>>();
-	parameter_->Create(SxavengerSystem::GetDxDevice(), 1);
-	parameter_->At(0).Init();
+	parameter_ = std::make_unique<ConstantBuffer<Parameter>>();
+	parameter_->Create(SxavengerSystem::GetDxDevice());
+	parameter_->At().Init();
 
 	name_ = "Motion Blur";
 }
@@ -65,5 +65,5 @@ void PostProcessMotionBlur::Process(const DirectXQueueContext* context, const Pr
 }
 
 void PostProcessMotionBlur::ShowInspectorImGui() {
-	parameter_->At(0).SetImGuiCommand();
+	parameter_->At().SetImGuiCommand();
 }

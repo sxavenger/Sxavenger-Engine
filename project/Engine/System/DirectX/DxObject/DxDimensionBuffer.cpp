@@ -7,7 +7,6 @@ _DXOBJECT_USING
 
 void BaseDimensionBuffer::Release() {
 	if (resource_ != nullptr) {
-		resource_->Unmap(0, nullptr);
 		resource_.Reset();
 		address_ = std::nullopt;
 	}
@@ -34,11 +33,8 @@ void BaseDimensionBuffer::Create(Device* devices, uint32_t size) {
 		size_ * stride_
 	);
 
-	UpdateAddress();
-}
-
-void BaseDimensionBuffer::UpdateAddress() {
-	address_ = (resource_ != nullptr) ? std::optional<D3D12_GPU_VIRTUAL_ADDRESS>{ resource_->GetGPUVirtualAddress() } : std::nullopt;
+	// addressの更新
+	address_ = resource_->GetGPUVirtualAddress();
 }
 
 bool BaseDimensionBuffer::CheckIndex(size_t index) const {

@@ -34,13 +34,13 @@ void PointLightComponent::Parameter::Init() {
 PointLightComponent::PointLightComponent(MonoBehaviour* behaviour)
 	: BaseComponent(behaviour) {
 
-	parameter_ = std::make_unique<DimensionBuffer<Parameter>>();
-	parameter_->Create(SxavengerSystem::GetDxDevice(), 1);
-	parameter_->At(0).Init();
+	parameter_ = std::make_unique<ConstantBuffer<Parameter>>();
+	parameter_->Create(SxavengerSystem::GetDxDevice());
+	parameter_->At().Init();
 }
 
 void PointLightComponent::ShowComponentInspector() {
-	auto& parameter = parameter_->At(0);
+	auto& parameter = parameter_->At();
 	ImGui::ColorEdit3("color", &parameter.color.x);
 
 	if (ImGui::BeginCombo("unit", magic_enum::enum_name(parameter.unit).data())) {
@@ -70,7 +70,7 @@ const D3D12_GPU_VIRTUAL_ADDRESS& PointLightComponent::GetGPUVirtualAddress() con
 }
 
 void PointLightComponent::SetUnit(LightCommon::Units unit) {
-	auto& parameter = parameter_->At(0);
+	auto& parameter = parameter_->At();
 
 	if (parameter.unit == unit) {
 		return;
@@ -89,7 +89,7 @@ void PointLightComponent::SetUnit(LightCommon::Units unit) {
 
 const PointLightComponent::Parameter& PointLightComponent::GetParameter() const {
 	Exception::Assert(parameter_ != nullptr, "point light buffer is not create.");
-	return parameter_->At(0);
+	return parameter_->At();
 }
 
 const TransformComponent* PointLightComponent::RequireTransform() const {
@@ -99,21 +99,21 @@ const TransformComponent* PointLightComponent::RequireTransform() const {
 json PointLightComponent::PerseToJson() const {
 	json data = json::object();
 
-	data["color"]           = JsonSerializeFormatter<Color3f>::Serialize(parameter_->At(0).color);
-	data["unit"]            = magic_enum::enum_name(parameter_->At(0).unit);
-	data["intensity"]       = JsonSerializeFormatter<float>::Serialize(parameter_->At(0).intensity);
-	data["radius"]          = JsonSerializeFormatter<float>::Serialize(parameter_->At(0).radius);
-	data["shadow_strength"] = JsonSerializeFormatter<float>::Serialize(parameter_->At(0).shadow.strength);
-	data["shadow_flag"]     = JsonSerializeFormatter<uint32_t>::Serialize(parameter_->At(0).shadow.flag.Get());
+	data["color"]           = JsonSerializeFormatter<Color3f>::Serialize(parameter_->At().color);
+	data["unit"]            = magic_enum::enum_name(parameter_->At().unit);
+	data["intensity"]       = JsonSerializeFormatter<float>::Serialize(parameter_->At().intensity);
+	data["radius"]          = JsonSerializeFormatter<float>::Serialize(parameter_->At().radius);
+	data["shadow_strength"] = JsonSerializeFormatter<float>::Serialize(parameter_->At().shadow.strength);
+	data["shadow_flag"]     = JsonSerializeFormatter<uint32_t>::Serialize(parameter_->At().shadow.flag.Get());
 
 	return data;
 }
 
 void PointLightComponent::InputJson(const json& data) {
-	parameter_->At(0).color           = JsonSerializeFormatter<Color3f>::Deserialize(data["color"]);
-	parameter_->At(0).unit            = magic_enum::enum_cast<LightCommon::Units>(JsonSerializeFormatter<std::string>::Deserialize(data["unit"])).value();
-	parameter_->At(0).intensity       = JsonSerializeFormatter<float>::Deserialize(data["intensity"]);
-	parameter_->At(0).radius          = JsonSerializeFormatter<float>::Deserialize(data["radius"]);
-	parameter_->At(0).shadow.strength = JsonSerializeFormatter<float>::Deserialize(data["shadow_strength"]);
-	parameter_->At(0).shadow.flag     = JsonSerializeFormatter<uint32_t>::Deserialize(data["shadow_flag"]);
+	parameter_->At().color           = JsonSerializeFormatter<Color3f>::Deserialize(data["color"]);
+	parameter_->At().unit            = magic_enum::enum_cast<LightCommon::Units>(JsonSerializeFormatter<std::string>::Deserialize(data["unit"])).value();
+	parameter_->At().intensity       = JsonSerializeFormatter<float>::Deserialize(data["intensity"]);
+	parameter_->At().radius          = JsonSerializeFormatter<float>::Deserialize(data["radius"]);
+	parameter_->At().shadow.strength = JsonSerializeFormatter<float>::Deserialize(data["shadow_strength"]);
+	parameter_->At().shadow.flag     = JsonSerializeFormatter<uint32_t>::Deserialize(data["shadow_flag"]);
 }

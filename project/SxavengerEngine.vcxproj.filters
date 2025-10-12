@@ -723,7 +723,7 @@
     <ClInclude Include="Engine\System\DirectX\DxObject\DxDevice.h">
       <Filter>Engine\System\DirectX\DxObject</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\System\DirectX\DxObject\DxDimensionBuffer.h">
+    <ClInclude Include="Engine\System\DirectX\DxObject\DxResourceDimensionBuffer.h">
       <Filter>Engine\System\DirectX\DxObject</Filter>
     </ClInclude>
     <ClInclude Include="Engine\System\DirectX\DxObject\DxGraphicsPipelineState.h">
@@ -930,6 +930,9 @@
     <ClInclude Include="Lib\Transform\Transform.h">
       <Filter>Lib\Transform</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\System\DirectX\DxObject\DxConstantBuffer.h" />
+    <ClInclude Include="Engine\System\DirectX\DxObject\DxDimensionBuffer.h" />
+    <ClInclude Include="Lib\Sxl\Utility.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Demo\Entity\Player.cpp">
@@ -1382,7 +1385,7 @@
     <ClCompile Include="Engine\System\DirectX\DxObject\DxDevice.cpp">
       <Filter>Engine\System\DirectX\DxObject</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\System\DirectX\DxObject\DxDimensionBuffer.cpp">
+    <ClCompile Include="Engine\System\DirectX\DxObject\DxResourceDimensionBuffer.cpp">
       <Filter>Engine\System\DirectX\DxObject</Filter>
     </ClCompile>
     <ClCompile Include="Engine\System\DirectX\DxObject\DxGraphicsPipelineState.cpp">
@@ -1521,5 +1524,7 @@
       <Filter>externals\stb</Filter>
     </ClCompile>
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Engine\System\DirectX\DxObject\DxConstantBuffer.cpp" />
+    <ClCompile Include="Engine\System\DirectX\DxObject\DxDimensionBuffer.cpp" />
   </ItemGroup>
 </Project>

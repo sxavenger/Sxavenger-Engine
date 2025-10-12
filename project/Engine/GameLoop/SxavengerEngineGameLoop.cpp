@@ -4,13 +4,13 @@
 // include
 //-----------------------------------------------------------------------------------------
 //* engine
+#include <Engine/System/DirectX/DxObject/DxResourceStorage.h>
 #include <Engine/System/SxavengerSystem.h>
 #include <Engine/Content/SxavengerContent.h>
 #include <Engine/Render/FRenderCore.h>
 #include <Engine/Render/FMainRender.h>
 #include <Engine/Component/Components/Audio/AudioController.h>
 #include <Engine/Component/ComponentHelper.h>
-#include <Engine/Content/Exporter/TextureExporter.h>
 
 //* c++
 #include <limits>
@@ -41,6 +41,7 @@ void SxavengerEngineGameLoop::Init(GameLoop::Context* context) {
 		FRenderCore::GetInstance()->Term();
 
 		SxavengerSystem::ShutdownAsyncThread();
+		SxavengerSystem::ExecuteAllAllocator();
 
 		sUAssetStorage->Serialize();
 	});
@@ -59,7 +60,6 @@ void SxavengerEngineGameLoop::Init(GameLoop::Context* context) {
 		FMainRender::GetInstance()->GetScene()->SetupTopLevelAS(SxavengerSystem::GetDirectQueueContext());
 		FMainRender::GetInstance()->GetScene()->SetupStateObject();
 		FMainRender::GetInstance()->GetScene()->SetupLightContainer();
-		SxavengerSystem::TransitionAllocator();
 		UpdateMaterials();
 		SxavengerSystem::RecordLap("update [engine]");
 	});
@@ -68,8 +68,9 @@ void SxavengerEngineGameLoop::Init(GameLoop::Context* context) {
 		SxavengerSystem::RecordLap("render [draw logic]");
 		SxavengerSystem::TransitionAllocator();
 		SxavengerSystem::PresentWindows();
-		SxavengerSystem::ExecuteAllAllocator();
 		SxavengerContent::ResetPrimtive();
+		DxObject::ResourceStorage::GetInstance()->Destroy();
+		DxObject::ResourceStorage::GetInstance()->SwapBuffer();
 		SxavengerSystem::RecordLap("render [gpu execution]");
 		SxavengerSystem::EndPerformace();
 	});

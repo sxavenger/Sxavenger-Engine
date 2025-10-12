@@ -1,109 +1,86 @@
 #include "DxBlendState.h"
 _DXOBJECT_USING
 
-////////////////////////////////////////////////////////////////////////////////////////////
-// BlendState class methods
-////////////////////////////////////////////////////////////////////////////////////////////
+//=========================================================================================
+// static const variables
+//=========================================================================================
 
-void BlendState::Init() {
+std::array<D3D12_RENDER_TARGET_BLEND_DESC, magic_enum::enum_count<BlendMode>()> BlendState::descs_ = {
+	D3D12_RENDER_TARGET_BLEND_DESC{ //!< None
+		.RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE_ALL
+	},
 
-	{ //!< None
-		D3D12_RENDER_TARGET_BLEND_DESC desc = {};
-		desc.RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE_ALL;
+	D3D12_RENDER_TARGET_BLEND_DESC{ //!< Normal
+		// SrcColor * SrcAlpha + DestColor * (1 - SrcAlpha)
+		.BlendEnable           = true,
+		.SrcBlend              = D3D12_BLEND_SRC_ALPHA,
+		.DestBlend             = D3D12_BLEND_INV_SRC_ALPHA,
+		.BlendOp               = D3D12_BLEND_OP_ADD,
+		.SrcBlendAlpha         = D3D12_BLEND_ONE,
+		.DestBlendAlpha        = D3D12_BLEND_ONE,
+		.BlendOpAlpha          = D3D12_BLEND_OP_ADD,
+		.RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE_ALL
+		
+	},
 
-		descs_[static_cast<uint32_t>(BlendMode::kBlendModeNone)] = desc;
-	}
+	D3D12_RENDER_TARGET_BLEND_DESC{ //!< Normal_AlphaMax
+		// SrcColor * SrcAlpha + DestColor * (1 - SrcAlpha)
+		.BlendEnable           = true,
+		.SrcBlend              = D3D12_BLEND_SRC_ALPHA,
+		.DestBlend             = D3D12_BLEND_INV_SRC_ALPHA,
+		.BlendOp               = D3D12_BLEND_OP_ADD,
+		.SrcBlendAlpha         = D3D12_BLEND_ONE,
+		.DestBlendAlpha        = D3D12_BLEND_ONE,
+		.BlendOpAlpha          = D3D12_BLEND_OP_MAX,
+		.RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE_ALL
+	},
 
-	{ //!< Normal
-		D3D12_RENDER_TARGET_BLEND_DESC desc = {};
-		desc.RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE_ALL;
-		desc.BlendEnable           = true;
-		desc.SrcBlend              = D3D12_BLEND_SRC_ALPHA;
-		desc.BlendOp               = D3D12_BLEND_OP_ADD;
-		desc.DestBlend             = D3D12_BLEND_INV_SRC_ALPHA;
-		desc.SrcBlendAlpha         = D3D12_BLEND_ONE;
-		desc.BlendOpAlpha          = D3D12_BLEND_OP_ADD;
-		desc.DestBlendAlpha        = D3D12_BLEND_ONE;
+	D3D12_RENDER_TARGET_BLEND_DESC{ //!< Add
+		// (SrcColor * SrcAlpha) + DestColor
+		.BlendEnable           = true,
+		.SrcBlend              = D3D12_BLEND_SRC_ALPHA,
+		.DestBlend             = D3D12_BLEND_ONE,
+		.BlendOp               = D3D12_BLEND_OP_ADD,
+		.SrcBlendAlpha         = D3D12_BLEND_ZERO,
+		.DestBlendAlpha        = D3D12_BLEND_ONE,
+		.BlendOpAlpha          = D3D12_BLEND_OP_ADD,
+		.RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE_ALL
+	},
 
-		// SrcColor * SrcAlpha + DestColor * (1.0f - SrcAlpha)
-		descs_[static_cast<uint32_t>(BlendMode::kBlendModeNormal)] = desc;
-	}
+	D3D12_RENDER_TARGET_BLEND_DESC{ //!< Subtract
+		// DestColor - (SrcColor * SrcAlpha)
+		.BlendEnable           = true,
+		.SrcBlend              = D3D12_BLEND_SRC_ALPHA,
+		.DestBlend             = D3D12_BLEND_ONE,
+		.BlendOp               = D3D12_BLEND_OP_REV_SUBTRACT,
+		.SrcBlendAlpha         = D3D12_BLEND_ZERO,
+		.DestBlendAlpha        = D3D12_BLEND_ONE,
+		.BlendOpAlpha          = D3D12_BLEND_OP_ADD,
+		.RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE_ALL
+	},
 
-	{ //!< Normal Src
-		D3D12_RENDER_TARGET_BLEND_DESC desc = {};
-		desc.RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE_ALL;
-		desc.BlendEnable           = true;
-		desc.SrcBlend              = D3D12_BLEND_SRC_ALPHA;
-		desc.BlendOp               = D3D12_BLEND_OP_ADD;
-		desc.DestBlend             = D3D12_BLEND_INV_SRC_ALPHA;
-		desc.SrcBlendAlpha         = D3D12_BLEND_ONE;
-		desc.BlendOpAlpha          = D3D12_BLEND_OP_MAX;
-		desc.DestBlendAlpha        = D3D12_BLEND_ONE;
-
-		// SrcColor * SrcAlpha + DestColor * (1.0f - SrcAlpha)
-		descs_[static_cast<uint32_t>(BlendMode::kBlendModeNormal_AlphaMax)] = desc;
-	}
-
-	{ //!< Add
-		D3D12_RENDER_TARGET_BLEND_DESC desc = {};
-		desc.RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE_ALL;
-		desc.BlendEnable           = true;
-		desc.SrcBlend              = D3D12_BLEND_SRC_ALPHA;
-		desc.BlendOp               = D3D12_BLEND_OP_ADD;
-		desc.DestBlend             = D3D12_BLEND_ONE;
-		desc.SrcBlendAlpha         = D3D12_BLEND_ZERO;
-		desc.BlendOpAlpha          = D3D12_BLEND_OP_ADD;
-		desc.DestBlendAlpha        = D3D12_BLEND_ONE;
-
-		// SrcColor * SrcAlpha + DestColor
-		descs_[static_cast<uint32_t>(BlendMode::kBlendModeAdd)] = desc;
-	}
-
-	{ //!< Subtract
-		D3D12_RENDER_TARGET_BLEND_DESC desc = {};
-		desc.RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE_ALL;
-		desc.BlendEnable           = true;
-		desc.SrcBlend              = D3D12_BLEND_SRC_ALPHA;
-		desc.BlendOp               = D3D12_BLEND_OP_REV_SUBTRACT;
-		desc.DestBlend             = D3D12_BLEND_ONE;
-		desc.SrcBlendAlpha         = D3D12_BLEND_ZERO;
-		desc.BlendOpAlpha          = D3D12_BLEND_OP_ADD;
-		desc.DestBlendAlpha        = D3D12_BLEND_ONE;
-
-		// DestColor - SrcColor * SrcAlpha
-		descs_[static_cast<uint32_t>(BlendMode::kBlendModeSubtract)] = desc;
-	}
-
-	{ //!< Multiply
-		D3D12_RENDER_TARGET_BLEND_DESC desc = {};
-		desc.RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE_ALL;
-		desc.BlendEnable           = true;
-		desc.SrcBlend              = D3D12_BLEND_ZERO;
-		desc.BlendOp               = D3D12_BLEND_OP_ADD;
-		desc.DestBlend             = D3D12_BLEND_SRC_COLOR;
-		desc.SrcBlendAlpha         = D3D12_BLEND_ZERO;
-		desc.BlendOpAlpha          = D3D12_BLEND_OP_ADD;
-		desc.DestBlendAlpha        = D3D12_BLEND_ONE;
-
+	D3D12_RENDER_TARGET_BLEND_DESC{ //!< Multiply
 		// SrcColor * DestColor
-		descs_[static_cast<uint32_t>(BlendMode::kBlendModeMultiply)] = desc;
+		.BlendEnable           = true,
+		.SrcBlend              = D3D12_BLEND_ZERO,
+		.DestBlend             = D3D12_BLEND_SRC_COLOR,
+		.BlendOp               = D3D12_BLEND_OP_ADD,
+		.SrcBlendAlpha         = D3D12_BLEND_ZERO,
+		.DestBlendAlpha        = D3D12_BLEND_ONE,
+		.BlendOpAlpha          = D3D12_BLEND_OP_ADD,
+		.RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE_ALL
+	},
+
+	D3D12_RENDER_TARGET_BLEND_DESC{ //!< Screen
+		// (1 - DescColor) * SrcColor + DescColor
+		.BlendEnable           = true,
+		.SrcBlend              = D3D12_BLEND_INV_DEST_COLOR,
+		.DestBlend             = D3D12_BLEND_ONE,
+		.BlendOp               = D3D12_BLEND_OP_ADD,
+		.SrcBlendAlpha         = D3D12_BLEND_ZERO,
+		.DestBlendAlpha        = D3D12_BLEND_ONE,
+		.BlendOpAlpha          = D3D12_BLEND_OP_ADD,
+		.RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE_ALL
 	}
 
-	{ //!< Screen
-		D3D12_RENDER_TARGET_BLEND_DESC desc = {};
-		desc.RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE_ALL;
-		desc.BlendEnable           = true;
-		desc.SrcBlend              = D3D12_BLEND_INV_DEST_COLOR;
-		desc.BlendOp               = D3D12_BLEND_OP_ADD;
-		desc.DestBlend             = D3D12_BLEND_ONE;
-		desc.SrcBlendAlpha         = D3D12_BLEND_ZERO;
-		desc.BlendOpAlpha          = D3D12_BLEND_OP_ADD;
-		desc.DestBlendAlpha        = D3D12_BLEND_ONE;
-
-		// (1.0f - DescColor) * SrcColor + DescColor
-		descs_[static_cast<uint32_t>(BlendMode::kBlendModeScreen)] = desc;
-	}
-}
-
-void BlendState::Term() {
-}
+};

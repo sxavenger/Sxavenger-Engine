@@ -24,9 +24,9 @@ void RectTransformComponent::CreateBuffer() {
 		return;
 	}
 
-	buffer_ = std::make_unique<DimensionBuffer<Matrix4x4>>();
-	buffer_->Create(SxavengerSystem::GetDxDevice(), 1);
-	(*buffer_)[0] = Matrix4x4::Identity();
+	buffer_ = std::make_unique<ConstantBuffer<Matrix4x4>>();
+	buffer_->Create(SxavengerSystem::GetDxDevice());
+	buffer_->At() = Matrix4x4::Identity();
 }
 
 const D3D12_GPU_VIRTUAL_ADDRESS& RectTransformComponent::GetGPUVirtualAddress() const {
@@ -74,6 +74,6 @@ void RectTransformComponent::InputJson(const json& data) {
 
 void RectTransformComponent::TransferGPU() {
 	if (buffer_ != nullptr) {
-		(*buffer_)[0] = mat_;
+		buffer_->At() = mat_;
 	}
 }
