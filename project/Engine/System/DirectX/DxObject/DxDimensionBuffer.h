@@ -10,6 +10,7 @@
 //* c++
 #include <optional>
 #include <span>
+#include <array>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // DXOBJECT
@@ -95,7 +96,7 @@ public:
 	T& At(size_t index);
 	const T& At(size_t index) const;
 
-	const T* GetData();
+	const T* GetData() const;
 
 	void Memcpy(const T* data);
 
@@ -159,7 +160,7 @@ private:
 // LineIndexDimensionBuffer class
 ////////////////////////////////////////////////////////////////////////////////////////////
 class LineIndexDimensionBuffer
-	: public DimensionBuffer<std::pair<UINT, UINT>> {
+	: public DimensionBuffer<std::array<UINT, 2>> {
 public:
 
 	//=========================================================================================
@@ -167,6 +168,8 @@ public:
 	//=========================================================================================
 
 	const UINT GetIndexCount() const;
+
+	const UINT* GetIndexData() const;
 
 	const D3D12_INDEX_BUFFER_VIEW GetIndexBufferView() const;
 
@@ -177,7 +180,7 @@ private:
 // TriangleIndexDimensionBuffer class
 ////////////////////////////////////////////////////////////////////////////////////////////
 class TriangleIndexDimensionBuffer
-	: public DimensionBuffer<std::tuple<UINT, UINT, UINT>> {
+	: public DimensionBuffer<std::array<UINT, 3>> {
 public:
 
 	//=========================================================================================
@@ -185,6 +188,8 @@ public:
 	//=========================================================================================
 
 	const UINT GetIndexCount() const;
+
+	const UINT* GetIndexData() const;
 
 	const D3D12_INDEX_BUFFER_VIEW GetIndexBufferView() const;
 
@@ -235,7 +240,7 @@ inline const T& DimensionBuffer<T>::At(size_t index) const {
 }
 
 template <class T>
-inline const T* DimensionBuffer<T>::GetData() {
+inline const T* DimensionBuffer<T>::GetData() const {
 	return datas_.data();
 }
 

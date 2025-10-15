@@ -933,6 +933,7 @@
     <ClInclude Include="Engine\System\DirectX\DxObject\DxConstantBuffer.h" />
     <ClInclude Include="Engine\System\DirectX\DxObject\DxDimensionBuffer.h" />
     <ClInclude Include="Lib\Sxl\Utility.h" />
+    <ClInclude Include="externals\meshoptimizer\meshoptimizer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Demo\Entity\Player.cpp">
@@ -1526,5 +1527,21 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Engine\System\DirectX\DxObject\DxConstantBuffer.cpp" />
     <ClCompile Include="Engine\System\DirectX\DxObject\DxDimensionBuffer.cpp" />
+    <ClCompile Include="externals\meshoptimizer\vfetchoptimizer.cpp" />
+    <ClCompile Include="externals\meshoptimizer\partition.cpp" />
+    <ClCompile Include="externals\meshoptimizer\quantization.cpp" />
+    <ClCompile Include="externals\meshoptimizer\rasterizer.cpp" />
+    <ClCompile Include="externals\meshoptimizer\simplifier.cpp" />
+    <ClCompile Include="externals\meshoptimizer\spatialorder.cpp" />
+    <ClCompile Include="externals\meshoptimizer\stripifier.cpp" />
+    <ClCompile Include="externals\meshoptimizer\vcacheoptimizer.cpp" />
+    <ClCompile Include="externals\meshoptimizer\vertexcodec.cpp" />
+    <ClCompile Include="externals\meshoptimizer\vertexfilter.cpp" />
+    <ClCompile Include="externals\meshoptimizer\overdrawoptimizer.cpp" />
+    <ClCompile Include="externals\meshoptimizer\indexgenerator.cpp" />
+    <ClCompile Include="externals\meshoptimizer\allocator.cpp" />
+    <ClCompile Include="externals\meshoptimizer\clusterizer.cpp" />
+    <ClCompile Include="externals\meshoptimizer\indexanalyzer.cpp" />
+    <ClCompile Include="externals\meshoptimizer\indexcodec.cpp" />
   </ItemGroup>
 </Project>

@@ -8,6 +8,7 @@
 
 //* engine
 #include <Engine/System/DirectX/DxObject/DxDimensionBuffer.h>
+#include <Engine/System/DirectX/DxObject/DxConstantBuffer.h>
 #include <Engine/System/DirectX/DxObject/DxBindBuffer.h>
 #include <Engine/System/DirectX/DxrObject/DxrAccelerationStructure.h>
 #include <Engine/System/DirectX/Context/DirectXQueueContext.h>
@@ -18,8 +19,8 @@
 #include <Lib/Geometry/Vector3.h>
 #include <Lib/Geometry/Vector4.h>
 
-//* DirectX
-#include <DirectXMesh.h>
+//* externals
+#include <externals/DirectXMesh/DirectXMesh.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // MeshVertexData structure
@@ -61,17 +62,24 @@ public:
 	public:
 
 		////////////////////////////////////////////////////////////////////////////////////////////
-		// MeshletInfo structure
+		// MeshletTriangle structure
 		////////////////////////////////////////////////////////////////////////////////////////////
-		struct MeshletInfo {
-		public:
+		struct MeshletTriangle {
+			uint32_t i0      : 10;
+			uint32_t i1      : 10;
+			uint32_t i2      : 10;
+			//!< 1頂点当たり10bit(uint8_t)で表現
+		};
 
-			//=========================================================================================
-			// public variables
-			//=========================================================================================
-
-			uint32_t meshletCount;
-
+		////////////////////////////////////////////////////////////////////////////////////////////
+		// MeshletData structure
+		////////////////////////////////////////////////////////////////////////////////////////////
+		struct MeshletData {
+			uint32_t vertexOffset;
+			uint32_t triangleOffset;
+			uint32_t vertexCount;
+			uint32_t triangleCount;
+			//!< meshopt_Meshlet と同じレイアウトで作成する
 		};
 
 	public:
@@ -88,20 +96,18 @@ public:
 		// public variables
 		//=========================================================================================
 
-		//* info
-		std::unique_ptr<DxObject::DimensionBuffer<MeshletInfo>> info;
+		uint32_t meshletCount;
 
 		//* meshlet
-		std::unique_ptr<DxObject::DimensionBuffer<uint32_t>>                 uniqueVertexIndices;
-		std::unique_ptr<DxObject::DimensionBuffer<DirectX::MeshletTriangle>> primitiveIndices;
-		std::unique_ptr<DxObject::DimensionBuffer<DirectX::Meshlet>>         meshlets;
+		std::unique_ptr<DxObject::DimensionBuffer<uint32_t>>        uniqueVertexIndices;
+		std::unique_ptr<DxObject::DimensionBuffer<MeshletTriangle>> primitiveIndices;
+		std::unique_ptr<DxObject::DimensionBuffer<MeshletData>>     meshlets;
 
-		//* cull data
-		std::unique_ptr<DxObject::DimensionBuffer<DirectX::CullData>> cullDatas;
+		// TODO: culldataを生成.
 
 		//* parameter
-		static constexpr uint32_t kMaxVertices_        = 64;
-		static constexpr uint32_t kMaxPrimitives_      = 128;
+		static constexpr size_t kMaxVertices_          = 64;
+		static constexpr size_t kMaxPrimitives_        = 128;
 		static constexpr UINT kAmplificationNumthread_ = 32;
 
 	};
@@ -139,7 +145,11 @@ public:
 
 	void CreateMeshlet();
 
+	bool IsCreateMeshlet() const { return meshlet_.has_value(); }
+
 	void CreateBottomLevelAS(const DirectXQueueContext* context);
+
+	bool IsCreateBottomLevelAS() const { return bottomLevelAS_.has_value(); }
 
 	//* getter *//
 

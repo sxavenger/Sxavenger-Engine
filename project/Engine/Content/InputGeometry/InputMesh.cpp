@@ -1,6 +1,11 @@
 #include "InputMesh.h"
 _DXOBJECT_USING
 
+//-----------------------------------------------------------------------------------------
+// include
+//-----------------------------------------------------------------------------------------
+#include <externals/meshoptimizer/meshoptimizer.h>
+
 ////////////////////////////////////////////////////////////////////////////////////////////
 // MeshVertexData structure methods
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -18,6 +23,107 @@ void MeshVertexData::Init() {
 // Meshlet structure methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
+//void InputMesh::Meshlet::CreateMeshletOld(const TriangleInputAssembler<MeshVertexData>* ia) {
+//	//* InputAssemblerから情報を取得
+//	const auto vertex = ia->GetVertex();
+//	const auto index  = ia->GetIndex();
+//
+//	//!< bufferが増えるので最適化は除外
+//
+//	//!< bufferで使う構造体
+//	// meshlet情報
+//	std::vector<DirectX::Meshlet>         bufferMeshlets;
+//	std::vector<uint32_t>                 bufferUniqueVertexIndices;
+//	std::vector<DirectX::MeshletTriangle> bufferPrimitiveIndices;
+//
+//	// cullData情報
+//	std::vector<DirectX::CullData> bufferCullDatas;
+//
+//	// positionを別構造体へ
+//	std::vector<DirectX::XMFLOAT3> positions; // todo: 別構造体に移さなくてもいいようにする
+//	positions.resize(vertex->GetSize());
+//
+//	for (uint32_t i = 0; i < vertex->GetSize(); ++i) {
+//		positions[i] = { vertex->At(i).position.x, vertex->At(i).position.y, vertex->At(i).position.z };
+//	}
+//
+//	{ // meshletの情報の生成
+//
+//		std::vector<uint8_t> uniqueVertexIB;
+//
+//		auto hr = DirectX::ComputeMeshlets(
+//			reinterpret_cast<const UINT*>(index->GetData()), index->GetSize(), //!< HACK: ここはuint32_tでないといけない
+//			positions.data(), positions.size(),
+//			nullptr,
+//			bufferMeshlets,
+//			uniqueVertexIB,
+//			bufferPrimitiveIndices,
+//			kMaxVertices_,
+//			kMaxPrimitives_
+//		);
+//
+//		DxObject::Assert(hr, L"meshlet create failed.");
+//
+//		// uint8_tから梱包してtriangles(uint32_t)に変換
+//		bufferUniqueVertexIndices.reserve(uniqueVertexIB.size() / sizeof(uint32_t));
+//
+//		const uint32_t* datas  = reinterpret_cast<const uint32_t*>(uniqueVertexIB.data());
+//		const size_t kDataSize = uniqueVertexIB.size() / sizeof(uint32_t);
+//
+//		for (size_t i = 0; i < kDataSize; ++i) {
+//			bufferUniqueVertexIndices.emplace_back(datas[i]);
+//		}
+//	}
+//
+//	// cullData情報の生成
+//	{
+//		// メモリの確保
+//		bufferCullDatas.resize(bufferMeshlets.size());
+//
+//		auto hr = DirectX::ComputeCullData(
+//			positions.data(), positions.size(),
+//			bufferMeshlets.data(), bufferMeshlets.size(),
+//			bufferUniqueVertexIndices.data(), bufferUniqueVertexIndices.size(),
+//			bufferPrimitiveIndices.data(), bufferPrimitiveIndices.size(),
+//			bufferCullDatas.data()
+//		);
+//
+//		DxObject::Assert(hr, L"cull data create failed.");
+//
+//	}
+//
+//	//!< meshletBufferの生成
+//	{
+//		// _DXOBJECT Deviceの取り出し
+//		auto device = SxavengerSystem::GetDxDevice();
+//
+//		// mesh情報を初期化
+//		info = std::make_unique<ConstantBuffer<MeshletInfo>>();
+//		info->Create(device);
+//		info->At().meshletCount = static_cast<uint32_t>(bufferMeshlets.size());
+//
+//		// uniqueVertexIndicesの初期化
+//		uniqueVertexIndices = std::make_unique<DimensionBuffer<uint32_t>>();
+//		uniqueVertexIndices->Create(device, static_cast<uint32_t>(bufferUniqueVertexIndices.size()));
+//		uniqueVertexIndices->Memcpy(bufferUniqueVertexIndices.data());
+//
+//		// primitiveIndicesの初期化
+//		primitiveIndices = std::make_unique<DimensionBuffer<DirectX::MeshletTriangle>>();
+//		primitiveIndices->Create(device, static_cast<uint32_t>(bufferPrimitiveIndices.size()));
+//		primitiveIndices->Memcpy(bufferPrimitiveIndices.data());
+//
+//		// meshletsの初期化
+//		meshlets = std::make_unique<DimensionBuffer<DirectX::Meshlet>>();
+//		meshlets->Create(device, static_cast<uint32_t>(bufferMeshlets.size()));
+//		meshlets->Memcpy(bufferMeshlets.data());
+//
+//		// cullDataの初期化
+//		cullDatas = std::make_unique<DimensionBuffer<DirectX::CullData>>();
+//		cullDatas->Create(device, static_cast<uint32_t>(bufferCullDatas.size()));
+//		cullDatas->Memcpy(bufferCullDatas.data());
+//	}
+//}
+
 void InputMesh::Meshlet::CreateMeshlet(const TriangleInputAssembler<MeshVertexData>* ia) {
 	//* InputAssemblerから情報を取得
 	const auto vertex = ia->GetVertex();
@@ -25,98 +131,86 @@ void InputMesh::Meshlet::CreateMeshlet(const TriangleInputAssembler<MeshVertexDa
 
 	//!< bufferが増えるので最適化は除外
 
-	//!< bufferで使う構造体
-	// meshlet情報
-	std::vector<DirectX::Meshlet>         bufferMeshlets;
-	std::vector<uint32_t>                 bufferUniqueVertexIndices;
-	std::vector<DirectX::MeshletTriangle> bufferPrimitiveIndices;
+	// メッシュレットの最大個数を見積もり
+	const size_t kMaxMeshletCount = meshopt_buildMeshletsBound(index->GetIndexCount(), kMaxVertices_, kMaxPrimitives_);
 
-	// cullData情報
-	std::vector<DirectX::CullData> bufferCullDatas;
+	std::vector<meshopt_Meshlet> meshlet(kMaxMeshletCount);
+	std::vector<uint32_t>        meshletVertex(kMaxMeshletCount * kMaxVertices_);
+	std::vector<uint8_t>         meshletPrimitives(kMaxMeshletCount * kMaxPrimitives_);
 
-	// positionを別構造体へ
-	std::vector<DirectX::XMFLOAT3> positions; // todo: 別構造体に移さなくてもいいようにする
-	positions.resize(vertex->GetSize());
+	meshletCount = static_cast<uint32_t>(meshopt_buildMeshlets(
+		meshlet.data(),
+		meshletVertex.data(),
+		meshletPrimitives.data(),
+		index->GetIndexData(),
+		index->GetIndexCount(),
+		&vertex->GetData()->position.x,
+		vertex->GetSize(),
+		vertex->GetStride(),
+		kMaxVertices_,
+		kMaxPrimitives_,
+		NULL
+	));
 
-	for (uint32_t i = 0; i < vertex->GetSize(); ++i) {
-		positions[i] = { vertex->At(i).position.x, vertex->At(i).position.y, vertex->At(i).position.z };
-	}
+	std::vector<uint32_t> _uniqueVertexIndices;
+	_uniqueVertexIndices.reserve(meshletCount * kMaxVertices_);
 
-	{ // meshletの情報の生成
+	std::vector<MeshletTriangle> _primitiveIndices;
+	_primitiveIndices.reserve(meshletCount * kMaxPrimitives_);
 
-		std::vector<uint8_t> uniqueVertexIB;
+	std::vector<MeshletData> _meshlet;
+	_meshlet.reserve(meshletCount);
 
-		auto hr = DirectX::ComputeMeshlets(
-			reinterpret_cast<const UINT*>(index->GetData()), index->GetSize(), //!< HACK: ここはuint32_tでないといけない
-			positions.data(), positions.size(),
-			nullptr,
-			bufferMeshlets,
-			uniqueVertexIB,
-			bufferPrimitiveIndices,
-			kMaxVertices_,
-			kMaxPrimitives_
-		);
+	for (size_t i = 0; i < meshletCount; ++i) {
 
-		DxObject::Assert(hr, L"meshlet create failed.");
+		const auto& m = meshlet[i];
 
-		// uint8_tから梱包してtriangles(uint32_t)に変換
-		bufferUniqueVertexIndices.reserve(uniqueVertexIB.size() / sizeof(uint32_t));
+		uint32_t vertexOffset   = static_cast<uint32_t>(_uniqueVertexIndices.size());
+		uint32_t triangleOffset = static_cast<uint32_t>(_primitiveIndices.size());
 
-		const uint32_t* datas  = reinterpret_cast<const uint32_t*>(uniqueVertexIB.data());
-		const size_t kDataSize = uniqueVertexIB.size() / sizeof(uint32_t);
-
-		for (size_t i = 0; i < kDataSize; ++i) {
-			bufferUniqueVertexIndices.emplace_back(datas[i]);
+		for (uint32_t j = 0; j < m.vertex_count; ++j) {
+			_uniqueVertexIndices.emplace_back(meshletVertex[m.vertex_offset + j]);
 		}
+
+		for (uint32_t j = 0; j < m.triangle_count; ++j) {
+			uint32_t triangleIndex = m.triangle_offset + j * 3;
+
+			MeshletTriangle triangle = {};
+			triangle.i0 = meshletPrimitives[triangleIndex + 0];
+			triangle.i1 = meshletPrimitives[triangleIndex + 1];
+			triangle.i2 = meshletPrimitives[triangleIndex + 2];
+
+			_primitiveIndices.emplace_back(triangle);
+		}
+
+		MeshletData data = {};
+		data.vertexCount    = m.vertex_count;
+		data.triangleCount  = m.triangle_count;
+		data.vertexOffset   = vertexOffset;
+		data.triangleOffset = triangleOffset;
+
+		_meshlet.emplace_back(data);
+
 	}
 
-	// cullData情報の生成
-	{
-		// メモリの確保
-		bufferCullDatas.resize(bufferMeshlets.size());
-
-		auto hr = DirectX::ComputeCullData(
-			positions.data(), positions.size(),
-			bufferMeshlets.data(), bufferMeshlets.size(),
-			bufferUniqueVertexIndices.data(), bufferUniqueVertexIndices.size(),
-			bufferPrimitiveIndices.data(), bufferPrimitiveIndices.size(),
-			bufferCullDatas.data()
-		);
-
-		DxObject::Assert(hr, L"cull data create failed.");
-
-	}
-
-	//!< meshletBufferの生成
 	{
 		// _DXOBJECT Deviceの取り出し
 		auto device = SxavengerSystem::GetDxDevice();
 
-		// mesh情報を初期化
-		info = std::make_unique<DimensionBuffer<MeshletInfo>>();
-		info->Create(device, 1);
-		info->At(0).meshletCount = static_cast<uint32_t>(bufferMeshlets.size());
+		meshlets = std::make_unique<DimensionBuffer<MeshletData>>();
+		meshlets->Create(device, static_cast<uint32_t>(meshletCount));
+		meshlets->Memcpy(_meshlet.data());
 
-		// uniqueVertexIndicesの初期化
 		uniqueVertexIndices = std::make_unique<DimensionBuffer<uint32_t>>();
-		uniqueVertexIndices->Create(device, static_cast<uint32_t>(bufferUniqueVertexIndices.size()));
-		uniqueVertexIndices->Memcpy(bufferUniqueVertexIndices.data());
+		uniqueVertexIndices->Create(device, static_cast<uint32_t>(_uniqueVertexIndices.size()));
+		uniqueVertexIndices->Memcpy(_uniqueVertexIndices.data());
 
-		// primitiveIndicesの初期化
-		primitiveIndices = std::make_unique<DimensionBuffer<DirectX::MeshletTriangle>>();
-		primitiveIndices->Create(device, static_cast<uint32_t>(bufferPrimitiveIndices.size()));
-		primitiveIndices->Memcpy(bufferPrimitiveIndices.data());
+		primitiveIndices = std::make_unique<DimensionBuffer<MeshletTriangle>>();
+		primitiveIndices->Create(device, static_cast<uint32_t>(_primitiveIndices.size()));
+		primitiveIndices->Memcpy(_primitiveIndices.data());
 
-		// meshletsの初期化
-		meshlets = std::make_unique<DimensionBuffer<DirectX::Meshlet>>();
-		meshlets->Create(device, static_cast<uint32_t>(bufferMeshlets.size()));
-		meshlets->Memcpy(bufferMeshlets.data());
-
-		// cullDataの初期化
-		cullDatas = std::make_unique<DimensionBuffer<DirectX::CullData>>();
-		cullDatas->Create(device, static_cast<uint32_t>(bufferCullDatas.size()));
-		cullDatas->Memcpy(bufferCullDatas.data());
 	}
+
 }
 
 void InputMesh::Meshlet::Dispatch(const DirectXQueueContext* context, UINT instanceCount) const {
@@ -153,19 +247,11 @@ void InputMesh::MeshBottomLevelAS::CreateBottomLevelAS(const TriangleInputAssemb
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 void InputMesh::CreateMeshlet() {
-	if (meshlet_.has_value()) {
-		return;
-	}
-
 	meshlet_ = Meshlet();
-	meshlet_.value().CreateMeshlet(this);
+	(*meshlet_).CreateMeshlet(this);
 }
 
 void InputMesh::CreateBottomLevelAS(const DirectXQueueContext* context) {
-	if (bottomLevelAS_.has_value()) {
-		return;
-	}
-
 	bottomLevelAS_ = MeshBottomLevelAS();
 	bottomLevelAS_.value().CreateBottomLevelAS(this, context);
 }

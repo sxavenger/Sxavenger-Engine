@@ -3,11 +3,19 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
-//* geometry
-#include "../GeometryPass.hlsli"
+#include "GeometryMesh.hlsli"
+#include "../../../Library/Meshlet.hlsli"
 
 //=========================================================================================
-// buffer
+// Visibility All buffers
 //=========================================================================================
 
-StructuredBuffer<Material> gMaterials : register(t0, space1);
+cbuffer Information : register(b10) {
+	uint meshletCount;
+}
+
+StructuredBuffer<MeshVertex> gVertices : register(t10);
+StructuredBuffer<uint> gIndices        : register(t11);
+StructuredBuffer<Meshlet> gMeshlets    : register(t12);
+StructuredBuffer<uint> gPrimitives     : register(t13);
+

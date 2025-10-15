@@ -67,11 +67,13 @@ void SxavengerEngineGameLoop::Init(GameLoop::Context* context) {
 	context->SetProcess(GameLoop::Process::End, 0, [this]() {
 		SxavengerSystem::RecordLap("render [draw logic]");
 		SxavengerSystem::TransitionAllocator();
+		//SxavengerSystem::ExecuteAllAllocator();
 		SxavengerSystem::PresentWindows();
+		SxavengerSystem::RecordLap("render [gpu execution]");
 		SxavengerContent::ResetPrimtive();
 		DxObject::ResourceStorage::GetInstance()->Destroy();
 		DxObject::ResourceStorage::GetInstance()->SwapBuffer();
-		SxavengerSystem::RecordLap("render [gpu execution]");
+		SxavengerSystem::RecordLap("end []");
 		SxavengerSystem::EndPerformace();
 	});
 

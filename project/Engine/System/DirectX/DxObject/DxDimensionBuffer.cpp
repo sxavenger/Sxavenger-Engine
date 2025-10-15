@@ -53,7 +53,7 @@ const D3D12_INDEX_BUFFER_VIEW IndexDimensionBuffer::GetIndexBufferView() const {
 	D3D12_INDEX_BUFFER_VIEW result = {};
 	result.Format         = DXGI_FORMAT_R32_UINT;
 	result.BufferLocation = GetGPUVirtualAddress();
-	result.SizeInBytes    = static_cast<UINT>(stride_ * size_);
+	result.SizeInBytes    = static_cast<UINT>(GetByteSize());
 	return result;
 }
 
@@ -65,11 +65,15 @@ const UINT LineIndexDimensionBuffer::GetIndexCount() const {
 	return size_ * 2;
 }
 
+const UINT* LineIndexDimensionBuffer::GetIndexData() const {
+	return reinterpret_cast<const UINT*>(GetData());
+}
+
 const D3D12_INDEX_BUFFER_VIEW LineIndexDimensionBuffer::GetIndexBufferView() const {
 	D3D12_INDEX_BUFFER_VIEW result = {};
 	result.Format         = DXGI_FORMAT_R32_UINT;
 	result.BufferLocation = GetGPUVirtualAddress();
-	result.SizeInBytes    = static_cast<UINT>(stride_ * size_);
+	result.SizeInBytes    = static_cast<UINT>(GetByteSize());
 	return result;
 }
 
@@ -81,10 +85,14 @@ const UINT TriangleIndexDimensionBuffer::GetIndexCount() const {
 	return size_ * 3;
 }
 
+const UINT* TriangleIndexDimensionBuffer::GetIndexData() const {
+	return reinterpret_cast<const UINT*>(GetData());
+}
+
 const D3D12_INDEX_BUFFER_VIEW TriangleIndexDimensionBuffer::GetIndexBufferView() const {
 	D3D12_INDEX_BUFFER_VIEW result = {};
 	result.Format         = DXGI_FORMAT_R32_UINT;
 	result.BufferLocation = GetGPUVirtualAddress();
-	result.SizeInBytes    = static_cast<UINT>(stride_ * size_);
+	result.SizeInBytes    = static_cast<UINT>(GetByteSize());
 	return result;
 }
