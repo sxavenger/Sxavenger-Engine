@@ -480,6 +480,9 @@ void FRenderPassDeferredLighting::PassIndirectDenoiser(const DirectXQueueContext
 		desc.SetHandle("gOutput",   textures->GetCurrentTexture()->GetGPUHandleUAV());
 		desc.SetHandle("gReservoirDiffuse",  textures->GetPrevTexture(1)->GetGPUHandleSRV());
 		desc.SetHandle("gReservoirSpecular", textures->GetPrevTexture(2)->GetGPUHandleSRV());
+		desc.SetHandle("gMoment",            config.buffer->GetGBuffer(FLightingGBuffer::Layout::Indirect_Moment)->GetGPUHandleSRV());
+
+		desc.Set32bitConstants("Config", 3, &config.buffer->GetLightingGBuffer().GetConfig());
 
 		//* parameter
 		static const Vector3f test = { 128.0f, 0.1f, 0.1f };

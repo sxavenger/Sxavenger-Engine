@@ -122,7 +122,6 @@ void DemoGameLoop::InitGame() {
 		t += L"[WASD]            : いどう\n";
 		t += L"[LSHIFT] + [WASD] : ダッシュ\n";
 		t += L"[みぎクリック]      : してんいどう\n";
-		t += L"[F]               : Cubeをもつ\n";
 		t += L"[L]               : ライトをつける/けす\n";
 		t += L"[P]               : パストレーシングモード\n";
 		t += L"[ESC]             : ゲームしゅうりょう\n";
@@ -204,10 +203,17 @@ void DemoGameLoop::SetCollisionCallback() {
 		CollisionHelper::PushBackAABB(player, wall);
 	});
 
-	sCollisionManager->SetOnCollisionFunctionStay(
+	/*sCollisionManager->SetOnCollisionFunctionStay(
 		"Cube", "Wall",
 		[](_MAYBE_UNUSED ColliderComponent* const cube, _MAYBE_UNUSED ColliderComponent* const wall) {
 			CollisionHelper::PushBackAABB(cube, wall);
+	});*/
+
+	sCollisionManager->SetOnCollisionFunctionStay(
+		"Cube", "Player",
+		[](_MAYBE_UNUSED ColliderComponent* const cube, _MAYBE_UNUSED ColliderComponent* const player) {
+		// 取得状態へ遷移.
+		cube->GetBehaviour()->SetActive(false);
 	});
 
 }
