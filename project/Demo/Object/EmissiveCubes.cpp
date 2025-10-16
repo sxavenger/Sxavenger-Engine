@@ -6,6 +6,8 @@
 //* engine
 #include <Engine/Component/Components/Collider/ColliderComponent.h>
 #include <Engine/Component/Components/PostProcessLayer/PostProcessLayerComponent.h>
+#include <Engine/Component/Components/Transform/RectTransformComponent.h>
+#include <Engine/Component/Components/TextRenderer/TextRendererComponent.h>
 #include <Engine/Component/ComponentHelper.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -21,6 +23,12 @@ void EmissiveCubes::Awake() {
 	keyboard_ = SxavengerSystem::GetInput()->GetKeyboardInput();
 
 	MonoBehaviour::SetName("emissive cubes");
+
+	MonoBehaviour::AddComponent<RectTransformComponent>();
+	auto text = MonoBehaviour::AddComponent<TextRendererComponent>();
+	text->SetFont(sUContentStorage->Import<UContentFont>("assets/font/MPLUSRounded1c-Regular.ttf")->GetId());
+	text->SetSize(20.0f);
+	
 
 	for (size_t i = 0; i < cubes_.size(); ++i) {
 		cubes_[i] = std::make_unique<MonoBehaviour>();
@@ -65,4 +73,14 @@ void EmissiveCubes::Start() {
 }
 
 void EmissiveCubes::Update() {
+
+	size_t count = 0;
+
+	for (size_t i = 0; i < cubes_.size(); ++i) {
+		count += cubes_[i]->IsActive();
+	}
+
+	auto text = MonoBehaviour::GetComponent<TextRendererComponent>();
+	text->SetText(std::format(L"{} / {}", count, cubes_.size()));
+
 }

@@ -71,12 +71,15 @@ namespace
         _In_ IWICBitmap* src,
         _In_ TEX_FILTER_FLAGS filter,
         _In_ const WICPixelFormatGUID& desiredPixelFormat,
-        _Deref_out_ IWICBitmap** dest) noexcept
+        __RPC__deref_out_opt /* needed to match WIC annotation */ IWICBitmap** dest) noexcept
     {
-        if (!pWIC || !src || !dest)
+        if (!dest)
             return E_POINTER;
 
         *dest = nullptr;
+
+        if (!pWIC || !src)
+            return E_POINTER;
 
         WICPixelFormatGUID actualPixelFormat;
         HRESULT hr = src->GetPixelFormat(&actualPixelFormat);
@@ -454,16 +457,12 @@ HRESULT DirectX::Internal::ResizeSeparateColorAndAlpha(
             }
             else
             {
-            #if(_WIN32_WINNT >= _WIN32_WINNT_WIN8) || defined(_WIN7_PLATFORM_UPDATE)
                 if (iswic2)
                 {
                     colorBytesInPixel = colorBytesPerPixel = 12;
                     colorPixelFormat = GUID_WICPixelFormat96bppRGBFloat;
                 }
                 else
-                #else
-                UNREFERENCED_PARAMETER(iswic2);
-            #endif
                 {
                     colorBytesInPixel = 12;
                     colorBytesPerPixel = 16;
@@ -1147,7 +1146,7 @@ namespace
 
             for (size_t y = 0; y < nheight; ++y)
             {
-                auto const& toY = lfY[y];
+                const auto& toY = lfY[y];
 
                 if (toY.u0 != u0)
                 {
@@ -1177,7 +1176,7 @@ namespace
 
                 for (size_t x = 0; x < nwidth; ++x)
                 {
-                    auto const& toX = lfX[x];
+                    const auto& toX = lfX[x];
 
                     BILINEAR_INTERPOLATE(target[x], toX, toY, row0, row1)
                 }
@@ -1270,7 +1269,7 @@ namespace
 
             for (size_t y = 0; y < nheight; ++y)
             {
-                auto const& toY = cfY[y];
+                const auto& toY = cfY[y];
 
                 // Scanline 1
                 if (toY.u0 != u0)
@@ -1361,7 +1360,7 @@ namespace
 
                 for (size_t x = 0; x < nwidth; ++x)
                 {
-                    auto const& toX = cfX[x];
+                    const auto& toX = cfX[x];
 
                     XMVECTOR C0, C1, C2, C3;
 
@@ -1615,6 +1614,9 @@ namespace
         if (!baseImages || !depth)
             return E_INVALIDARG;
 
+        if (depth > INT16_MAX)
+            return E_INVALIDARG;
+
         assert(levels > 1);
 
         const size_t width = baseImages[0].width;
@@ -1664,6 +1666,9 @@ namespace
     HRESULT Generate3DMipsPointFilter(size_t depth, size_t levels, const ScratchImage& mipChain) noexcept
     {
         if (!depth || !mipChain.GetImages())
+            return E_INVALIDARG;
+
+        if (depth > INT16_MAX)
             return E_INVALIDARG;
 
         // This assumes that the base images are already placed into the mipChain at the top level... (see _Setup3DMips)
@@ -1812,6 +1817,9 @@ namespace
         using namespace DirectX::Filters;
 
         if (!depth || !mipChain.GetImages())
+            return E_INVALIDARG;
+
+        if (depth > INT16_MAX)
             return E_INVALIDARG;
 
         // This assumes that the base images are already placed into the mipChain at the top level... (see _Setup3DMips)
@@ -1988,6 +1996,9 @@ namespace
         if (!depth || !mipChain.GetImages())
             return E_INVALIDARG;
 
+        if (depth > INT16_MAX)
+            return E_INVALIDARG;
+
         // This assumes that the base images are already placed into the mipChain at the top level... (see _Setup3DMips)
 
         assert(levels > 1);
@@ -2039,7 +2050,7 @@ namespace
 
                 for (size_t slice = 0; slice < ndepth; ++slice)
                 {
-                    auto const& toZ = lfZ[slice];
+                    const auto& toZ = lfZ[slice];
 
                     const Image* srca = mipChain.GetImage(level - 1, 0, toZ.u0);
                     const Image* srcb = mipChain.GetImage(level - 1, 0, toZ.u1);
@@ -2057,7 +2068,7 @@ namespace
 
                     for (size_t y = 0; y < nheight; ++y)
                     {
-                        auto const& toY = lfY[y];
+                        const auto& toY = lfY[y];
 
                         if (toY.u0 != u0)
                         {
@@ -2090,7 +2101,7 @@ namespace
 
                         for (size_t x = 0; x < nwidth; ++x)
                         {
-                            auto const& toX = lfX[x];
+                            const auto& toX = lfX[x];
 
                             TRILINEAR_INTERPOLATE(target[x], toX, toY, toZ, urow0, urow1, vrow0, vrow1)
                         }
@@ -2120,7 +2131,7 @@ namespace
 
                 for (size_t y = 0; y < nheight; ++y)
                 {
-                    auto const& toY = lfY[y];
+                    const auto& toY = lfY[y];
 
                     if (toY.u0 != u0)
                     {
@@ -2150,7 +2161,7 @@ namespace
 
                     for (size_t x = 0; x < nwidth; ++x)
                     {
-                        auto const& toX = lfX[x];
+                        const auto& toX = lfX[x];
 
                         BILINEAR_INTERPOLATE(target[x], toX, toY, urow0, urow1)
                     }
@@ -2181,6 +2192,9 @@ namespace
         using namespace DirectX::Filters;
 
         if (!depth || !mipChain.GetImages())
+            return E_INVALIDARG;
+
+        if (depth > INT16_MAX)
             return E_INVALIDARG;
 
         // This assumes that the base images are already placed into the mipChain at the top level... (see _Setup3DMips)
@@ -2246,7 +2260,7 @@ namespace
 
                 for (size_t slice = 0; slice < ndepth; ++slice)
                 {
-                    auto const& toZ = cfZ[slice];
+                    const auto& toZ = cfZ[slice];
 
                     const Image* srca = mipChain.GetImage(level - 1, 0, toZ.u0);
                     const Image* srcb = mipChain.GetImage(level - 1, 0, toZ.u1);
@@ -2268,7 +2282,7 @@ namespace
 
                     for (size_t y = 0; y < nheight; ++y)
                     {
-                        auto const& toY = cfY[y];
+                        const auto& toY = cfY[y];
 
                         // Scanline 1
                         if (toY.u0 != u0)
@@ -2389,7 +2403,7 @@ namespace
 
                         for (size_t x = 0; x < nwidth; ++x)
                         {
-                            auto const& toX = cfX[x];
+                            const auto& toX = cfX[x];
 
                             XMVECTOR D[4];
 
@@ -2434,7 +2448,7 @@ namespace
 
                 for (size_t y = 0; y < nheight; ++y)
                 {
-                    auto const& toY = cfY[y];
+                    const auto& toY = cfY[y];
 
                     // Scanline 1
                     if (toY.u0 != u0)
@@ -2525,7 +2539,7 @@ namespace
 
                     for (size_t x = 0; x < nwidth; ++x)
                     {
-                        auto const& toX = cfX[x];
+                        const auto& toX = cfX[x];
 
                         XMVECTOR C0, C1, C2, C3;
                         CUBIC_INTERPOLATE(C0, toX.x, urow[0][toX.u0], urow[0][toX.u1], urow[0][toX.u2], urow[0][toX.u3]);
@@ -2562,6 +2576,9 @@ namespace
         using namespace DirectX::Filters;
 
         if (!depth || !mipChain.GetImages())
+            return E_INVALIDARG;
+
+        if (depth > INT16_MAX)
             return E_INVALIDARG;
 
         // This assumes that the base images are already placed into the mipChain at the top level... (see _Setup3DMips)
@@ -2934,7 +2951,7 @@ HRESULT DirectX::GenerateMipMaps(
         mdata.mipLevels = levels;
         mdata.format = baseImage.format;
 
-        unsigned long filter_select = (filter & TEX_FILTER_MODE_MASK);
+        uint32_t filter_select = (filter & TEX_FILTER_MODE_MASK);
         if (!filter_select)
         {
             // Default filter choice
@@ -3149,7 +3166,7 @@ HRESULT DirectX::GenerateMipMaps(
         TexMetadata mdata2 = metadata;
         mdata2.mipLevels = levels;
 
-        unsigned long filter_select = (filter & TEX_FILTER_MODE_MASK);
+        uint32_t filter_select = (filter & TEX_FILTER_MODE_MASK);
         if (!filter_select)
         {
             // Default filter choice
@@ -3244,6 +3261,9 @@ HRESULT DirectX::GenerateMipMaps3D(
     if (!baseImages || !depth)
         return E_INVALIDARG;
 
+    if (depth > INT16_MAX)
+        return E_INVALIDARG;
+
     if (filter & TEX_FILTER_FORCE_WIC)
         return HRESULT_E_NOT_SUPPORTED;
 
@@ -3276,7 +3296,7 @@ HRESULT DirectX::GenerateMipMaps3D(
 
     HRESULT hr = E_UNEXPECTED;
 
-    unsigned long filter_select = (filter & TEX_FILTER_MODE_MASK);
+    uint32_t filter_select = (filter & TEX_FILTER_MODE_MASK);
     if (!filter_select)
     {
         // Default filter choice
@@ -3352,6 +3372,9 @@ HRESULT DirectX::GenerateMipMaps3D(
     if (!srcImages || !nimages || !IsValid(metadata.format))
         return E_INVALIDARG;
 
+    if (levels > INT16_MAX)
+        return E_INVALIDARG;
+
     if (filter & TEX_FILTER_FORCE_WIC)
         return HRESULT_E_NOT_SUPPORTED;
 
@@ -3392,7 +3415,7 @@ HRESULT DirectX::GenerateMipMaps3D(
 
     static_assert(TEX_FILTER_POINT == 0x100000, "TEX_FILTER_ flag values don't match TEX_FILTER_MODE_MASK");
 
-    unsigned long filter_select = (filter & TEX_FILTER_MODE_MASK);
+    uint32_t filter_select = (filter & TEX_FILTER_MODE_MASK);
     if (!filter_select)
     {
         // Default filter choice

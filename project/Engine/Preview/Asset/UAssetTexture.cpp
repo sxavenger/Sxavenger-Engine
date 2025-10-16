@@ -83,7 +83,6 @@ void UAssetTexture::Update(const DirectXQueueContext* context) {
 
 	D3D12_RESOURCE_BARRIER barrier = {};
 	barrier.Type                   = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
-	barrier.Flags                  = D3D12_RESOURCE_BARRIER_FLAG_NONE;
 	barrier.Transition.pResource   = resource_.Get();
 	barrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
 	barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_COPY_DEST;
@@ -158,7 +157,7 @@ ComPtr<ID3D12Resource> UAssetTexture::CreateTextureResource(const DirectX::TexMe
 	D3D12_RESOURCE_DESC desc = {};
 	desc.Dimension        = static_cast<D3D12_RESOURCE_DIMENSION>(metadata.dimension);
 	desc.Width            = static_cast<UINT>(metadata.width);
-	desc.Height           = static_cast<UINT>(metadata.height);
+	desc.Height           = static_cast<UINT>(metadata.heigh
 	desc.MipLevels        = static_cast<UINT16>(metadata.mipLevels);
 	desc.DepthOrArraySize = static_cast<UINT16>(metadata.arraySize);
 	desc.Format           = metadata.format;
@@ -175,7 +174,7 @@ ComPtr<ID3D12Resource> UAssetTexture::CreateTextureResource(const DirectX::TexMe
 		nullptr,
 		IID_PPV_ARGS(&resource)
 	);
-	DxObject::Assert(SUCCEEDED(hr), L"texture resource create failed.");
+	DxObject::Assert(hr, L"texture resource create failed.");
 
 	resource->SetName(L"UAsset | Texture");
 	return resource;
@@ -190,7 +189,8 @@ ComPtr<ID3D12Resource> UAssetTexture::UploadTextureData(const DirectXQueueContex
 	DirectX::PrepareUpload(device, image.GetImages(), image.GetImageCount(), image.GetMetadata(), subresource);
 
 	uint64_t intermediateSize = GetRequiredIntermediateSize(texture, 0, UINT(subresource.size()));
-	ComPtr<ID3D12Resource> intermediateResource = CreateBufferResource(device, intermediateSize);
+	ComPtr<ID3D12Resource> intermediateResource = CreateBufferResource(device, D3D12_HEAP_TYPE_UPLOAD, intermediateSize, D3D12_RESOURCE_FLAG_NONE, D3D12_RESOURCE_STATE_COPY_SOURCE);
+
 	UpdateSubresources(commandList, texture, intermediateResource.Get(), 0, 0, UINT(subresource.size()), subresource.data());
 
 	intermediateResource->SetName(L"UAsset | intermediate upload resource");

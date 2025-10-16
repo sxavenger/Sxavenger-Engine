@@ -19,9 +19,12 @@ void AsyncThread::Create(AsyncExecution execution, const MainFunction& main, con
 
 	thread_ = std::thread([this]() {
 		Logger::EngineThreadLog(std::string("[AsyncThread] begin thread. execution: ") + magic_enum::enum_name(execution_).data());
+
+		// main loop
 		while (!isTerminated_ && condition_()) {
 			main_(this);
 		}
+
 		Logger::EngineThreadLog("[AsyncThread] end thread.");
 	});
 
@@ -36,7 +39,10 @@ void AsyncThread::Create(AsyncExecution execution, const MainFunction& main, con
 	uint32_t count                        = GetAllocatorCount(execution_);
 
 	context_->Init(count, type);
-	context_->SetName(L"Async Thread");
+
+	std::wstringstream id;
+	id << thread_.get_id();
+	context_->SetName(std::format(L"Async Thread [id: {}]", id.str()));
 }
 
 void AsyncThread::Shutdown() {

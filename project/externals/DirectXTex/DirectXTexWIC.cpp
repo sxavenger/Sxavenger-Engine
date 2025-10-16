@@ -25,6 +25,12 @@ namespace
         const GUID&     source;
         const GUID&     target;
         TEX_ALPHA_MODE  alphaMode;
+
+        constexpr WICConvert(const GUID& src, const GUID& tgt, TEX_ALPHA_MODE mode) noexcept :
+            source(src),
+            target(tgt),
+            alphaMode(mode)
+        {}
     };
 
     constexpr WICConvert g_WICConvert[] =
@@ -76,11 +82,9 @@ namespace
         { GUID_WICPixelFormat40bppCMYKAlpha,        GUID_WICPixelFormat32bppRGBA, TEX_ALPHA_MODE_UNKNOWN }, // DXGI_FORMAT_R8G8B8A8_UNORM
         { GUID_WICPixelFormat80bppCMYKAlpha,        GUID_WICPixelFormat64bppRGBA, TEX_ALPHA_MODE_UNKNOWN }, // DXGI_FORMAT_R16G16B16A16_UNORM
 
-    #if (_WIN32_WINNT >= _WIN32_WINNT_WIN8) || defined(_WIN7_PLATFORM_UPDATE)
         { GUID_WICPixelFormat32bppRGB,              GUID_WICPixelFormat32bppRGBA, TEX_ALPHA_MODE_OPAQUE }, // DXGI_FORMAT_R8G8B8A8_UNORM
         { GUID_WICPixelFormat64bppRGB,              GUID_WICPixelFormat64bppRGBA, TEX_ALPHA_MODE_OPAQUE }, // DXGI_FORMAT_R16G16B16A16_UNORM
         { GUID_WICPixelFormat64bppPRGBAHalf,        GUID_WICPixelFormat64bppRGBAHalf, TEX_ALPHA_MODE_UNKNOWN }, // DXGI_FORMAT_R16G16B16A16_FLOAT
-    #endif
 
         // We don't support n-channel formats
     };
@@ -106,7 +110,6 @@ namespace
         {
             if (memcmp(&GUID_WICPixelFormat96bppRGBFixedPoint, &pixelFormat, sizeof(WICPixelFormatGUID)) == 0)
             {
-            #if (_WIN32_WINNT >= _WIN32_WINNT_WIN8) || defined(_WIN7_PLATFORM_UPDATE)
                 if (iswic2)
                 {
                     if (pConvert)
@@ -114,9 +117,6 @@ namespace
                     format = DXGI_FORMAT_R32G32B32_FLOAT;
                 }
                 else
-                #else
-                UNREFERENCED_PARAMETER(iswic2);
-            #endif
                 {
                     if (pConvert)
                         memcpy_s(pConvert, sizeof(WICPixelFormatGUID), &GUID_WICPixelFormat128bppRGBAFloat, sizeof(GUID));
@@ -203,7 +203,7 @@ namespace
             m_streamEOF(0),
             mRefCount(1)
         {
-            assert(mBlob.GetBufferPointer() && mBlob.GetBufferSize() > 0);
+            assert(mBlob.GetConstBufferPointer() && mBlob.GetBufferSize() > 0);
         }
 
     public:
@@ -249,7 +249,7 @@ namespace
         HRESULT STDMETHODCALLTYPE Read(void* pv, ULONG cb, ULONG* pcbRead) override
         {
             size_t maxRead = m_streamEOF - m_streamPosition;
-            auto ptr = static_cast<const uint8_t*>(mBlob.GetBufferPointer());
+            auto ptr = mBlob.GetBufferPointer();
             if (cb > maxRead)
             {
                 const uint64_t pos = uint64_t(m_streamPosition) + uint64_t(maxRead);
@@ -319,7 +319,7 @@ namespace
             if (pos > UINT32_MAX)
                 return HRESULT_E_ARITHMETIC_OVERFLOW;
 
-            auto ptr = static_cast<uint8_t*>(mBlob.GetBufferPointer());
+            auto ptr = mBlob.GetBufferPointer();
             memcpy(&ptr[m_streamPosition], pv, cb);
 
             m_streamPosition = static_cast<size_t>(pos);
@@ -342,7 +342,7 @@ namespace
 
             if (blobSize >= size.LowPart)
             {
-                auto ptr = static_cast<uint8_t*>(mBlob.GetBufferPointer());
+                auto ptr = mBlob.GetBufferPointer();
                 if (m_streamEOF < size.LowPart)
                 {
                     memset(&ptr[m_streamEOF], 0, size.LowPart - m_streamEOF);
@@ -362,7 +362,7 @@ namespace
                 if (FAILED(hr))
                     return hr;
 
-                auto ptr = static_cast<uint8_t*>(mBlob.GetBufferPointer());
+                auto ptr = mBlob.GetBufferPointer();
                 if (m_streamEOF < size.LowPart)
                 {
                     memset(&ptr[m_streamEOF], 0, size.LowPart - m_streamEOF);
@@ -525,7 +525,7 @@ namespace
         _In_ IWICBitmapFrameDecode *frame,
         _Out_ TexMetadata& metadata,
         _Out_opt_ WICPixelFormatGUID* pConvert,
-        _In_opt_ std::function<void(IWICMetadataQueryReader*)> getMQR)
+        _In_ std::function<void(IWICMetadataQueryReader*)> getMQR)
     {
         if (!decoder || !frame)
             return E_POINTER;
@@ -1079,7 +1079,7 @@ namespace
         _In_ REFGUID containerFormat,
         _Inout_ IStream* stream,
         _In_opt_ const GUID* targetFormat,
-        _In_opt_ std::function<void(IPropertyBag2*)> setCustomProps)
+        _In_ std::function<void(IPropertyBag2*)> setCustomProps)
     {
         if (!stream)
             return E_INVALIDARG;
@@ -1144,7 +1144,7 @@ namespace
         _In_ REFGUID containerFormat,
         _Inout_ IStream* stream,
         _In_opt_ const GUID* targetFormat,
-        _In_opt_ std::function<void(IPropertyBag2*)> setCustomProps)
+        _In_ std::function<void(IPropertyBag2*)> setCustomProps)
     {
         if (!stream || nimages < 2)
             return E_INVALIDARG;
@@ -1216,7 +1216,7 @@ namespace
 //-------------------------------------------------------------------------------------
 _Use_decl_annotations_
 HRESULT DirectX::GetMetadataFromWICMemory(
-    const void* pSource,
+    const uint8_t* pSource,
     size_t size,
     WIC_FLAGS flags,
     TexMetadata& metadata,
@@ -1239,7 +1239,7 @@ HRESULT DirectX::GetMetadataFromWICMemory(
     if (FAILED(hr))
         return hr;
 
-    hr = stream->InitializeFromMemory(static_cast<BYTE*>(const_cast<void*>(pSource)),
+    hr = stream->InitializeFromMemory(static_cast<BYTE*>(const_cast<uint8_t*>(pSource)),
         static_cast<UINT>(size));
     if (FAILED(hr))
         return hr;
@@ -1307,7 +1307,7 @@ HRESULT DirectX::GetMetadataFromWICFile(
 //-------------------------------------------------------------------------------------
 _Use_decl_annotations_
 HRESULT DirectX::LoadFromWICMemory(
-    const void* pSource,
+    const uint8_t* pSource,
     size_t size,
     WIC_FLAGS flags,
     TexMetadata* metadata,
@@ -1333,7 +1333,7 @@ HRESULT DirectX::LoadFromWICMemory(
     if (FAILED(hr))
         return hr;
 
-    hr = stream->InitializeFromMemory(static_cast<uint8_t*>(const_cast<void*>(pSource)), static_cast<DWORD>(size));
+    hr = stream->InitializeFromMemory(static_cast<uint8_t*>(const_cast<uint8_t*>(pSource)), static_cast<DWORD>(size));
     if (FAILED(hr))
         return hr;
 
@@ -1617,3 +1617,56 @@ HRESULT DirectX::SaveToWICFile(
 
     return S_OK;
 }
+
+
+//--------------------------------------------------------------------------------------
+// Adapters for /Zc:wchar_t- clients
+
+#if defined(_MSC_VER) && !defined(_NATIVE_WCHAR_T_DEFINED)
+
+namespace DirectX
+{
+    HRESULT __cdecl GetMetadataFromWICFile(
+        _In_z_ const __wchar_t* szFile,
+        _In_ WIC_FLAGS flags,
+        _Out_ TexMetadata& metadata,
+        _In_ std::function<void __cdecl(IWICMetadataQueryReader*)> getMQR)
+    {
+        return GetMetadataFromWICFile(reinterpret_cast<const unsigned short*>(szFile), flags, metadata, getMQR);
+    }
+
+    HRESULT __cdecl LoadFromWICFile(
+        _In_z_ const __wchar_t* szFile,
+        _In_ WIC_FLAGS flags,
+        _Out_opt_ TexMetadata* metadata,
+        _Out_ ScratchImage& image,
+        _In_ std::function<void __cdecl(IWICMetadataQueryReader*)> getMQR)
+    {
+        return LoadFromWICFile(reinterpret_cast<const unsigned short*>(szFile), flags, metadata, image, getMQR);
+    }
+
+    HRESULT __cdecl SaveToWICFile(
+        _In_ const Image& image,
+        _In_ WIC_FLAGS flags,
+        _In_ REFGUID guidContainerFormat,
+        _In_z_ const __wchar_t* szFile,
+        _In_opt_ const GUID* targetFormat,
+        _In_ std::function<void __cdecl(IPropertyBag2*)> setCustomProps)
+    {
+        return SaveToWICFile(image, flags, guidContainerFormat, reinterpret_cast<const unsigned short*>(szFile), targetFormat, setCustomProps);
+    }
+
+    HRESULT __cdecl SaveToWICFile(
+        _In_count_(nimages) const Image* images,
+        _In_ size_t nimages,
+        _In_ WIC_FLAGS flags,
+        _In_ REFGUID guidContainerFormat,
+        _In_z_ const __wchar_t* szFile,
+        _In_opt_ const GUID* targetFormat,
+        _In_ std::function<void __cdecl(IPropertyBag2*)> setCustomProps)
+    {
+        return SaveToWICFile(images, nimages, flags, guidContainerFormat, reinterpret_cast<const unsigned short*>(szFile), targetFormat, setCustomProps);
+    }
+}
+
+#endif // !_NATIVE_WCHAR_T_DEFINED
