@@ -157,7 +157,7 @@ ComPtr<ID3D12Resource> UAssetTexture::CreateTextureResource(const DirectX::TexMe
 	D3D12_RESOURCE_DESC desc = {};
 	desc.Dimension        = static_cast<D3D12_RESOURCE_DIMENSION>(metadata.dimension);
 	desc.Width            = static_cast<UINT>(metadata.width);
-	desc.Height           = static_cast<UINT>(metadata.heigh
+	desc.Height           = static_cast<UINT>(metadata.height);
 	desc.MipLevels        = static_cast<UINT16>(metadata.mipLevels);
 	desc.DepthOrArraySize = static_cast<UINT16>(metadata.arraySize);
 	desc.Format           = metadata.format;
