@@ -60,7 +60,7 @@ void SxavengerEngineGameLoop::Init(GameLoop::Context* context) {
 		FMainRender::GetInstance()->GetScene()->SetupTopLevelAS(SxavengerSystem::GetDirectQueueContext());
 		FMainRender::GetInstance()->GetScene()->SetupStateObject();
 		FMainRender::GetInstance()->GetScene()->SetupLightContainer();
-		UpdateMaterials();
+		UpdateAsset();
 		SxavengerSystem::RecordLap("update [engine]");
 	});
 
@@ -135,8 +135,12 @@ void SxavengerEngineGameLoop::CreateCheckerboard() {
 	SxavengerContent::RegisterTexture("checkerboard", std::move(checker));
 }
 
-void SxavengerEngineGameLoop::UpdateMaterials() {
+void SxavengerEngineGameLoop::UpdateAsset() {
 	sUAssetStorage->ForEach<UAssetMaterial>([](UAssetMaterial* asset) {
 		asset->Update();
+	});
+
+	sUAssetStorage->ForEach<UAssetTexture>([](UAssetTexture* asset) {
+		asset->Update(SxavengerSystem::GetDirectQueueContext());
 	});
 }

@@ -59,6 +59,8 @@ public:
 
 	void Setup(const DirectXQueueContext* context, const DirectX::ScratchImage& image);
 
+	void Update(const DirectXQueueContext* context);
+
 	void Reset();
 
 	//* inspector option *//
@@ -84,6 +86,8 @@ private:
 
 	ComPtr<ID3D12Resource> resource_;
 	DxObject::Descriptor   descriptorSRV_;
+
+	bool isTransition_ = false;
 
 	//* parameter *//
 

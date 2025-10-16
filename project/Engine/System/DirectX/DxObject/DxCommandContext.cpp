@@ -25,6 +25,15 @@ void CommandContext::Init(Device* devices, uint32_t allocatorCount, D3D12_COMMAN
 void CommandContext::Term() {
 }
 
+void CommandContext::SetName(const std::wstring& name) const {
+	commandList_->SetName(std::format(L"{} | command list", name).c_str());
+	commandQueue_->SetName(std::format(L"{} | command queue", name).c_str());
+
+	for (uint32_t i = 0; i < allocatorCount_; ++i) {
+		commandAllocators_[i]->SetName(std::format(L"{} | command allocator [{}]", name, i).c_str());
+	}
+}
+
 void CommandContext::TransitionAllocator() {
 
 	Close();

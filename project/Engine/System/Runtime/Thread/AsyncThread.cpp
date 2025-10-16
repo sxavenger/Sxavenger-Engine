@@ -36,6 +36,7 @@ void AsyncThread::Create(AsyncExecution execution, const MainFunction& main, con
 	uint32_t count                        = GetAllocatorCount(execution_);
 
 	context_->Init(count, type);
+	context_->SetName(L"Async Thread");
 }
 
 void AsyncThread::Shutdown() {

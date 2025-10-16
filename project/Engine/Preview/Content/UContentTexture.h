@@ -57,7 +57,7 @@ public:
 
 	void AsyncLoad(_MAYBE_UNUSED const DirectXQueueContext* context) override;
 
-	AsyncExecution GetAsyncExecution() const { return AsyncExecution::Compute; }
+	AsyncExecution GetAsyncExecution() const { return AsyncExecution::Copy; }
 
 	void AttachUuid() override;
 

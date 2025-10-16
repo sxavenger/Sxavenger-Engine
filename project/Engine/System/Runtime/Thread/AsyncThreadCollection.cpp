@@ -7,8 +7,8 @@
 void AsyncThreadCollection::Init() {
 	// thread pool の生成
 	pools_[static_cast<uint8_t>(AsyncExecution::None)].Create(AsyncExecution::None, 2);
-	pools_[static_cast<uint8_t>(AsyncExecution::Copy)].Create(AsyncExecution::Copy, 1);
-	pools_[static_cast<uint8_t>(AsyncExecution::Compute)].Create(AsyncExecution::Compute, 3);
+	pools_[static_cast<uint8_t>(AsyncExecution::Copy)].Create(AsyncExecution::Copy, 3);
+	pools_[static_cast<uint8_t>(AsyncExecution::Compute)].Create(AsyncExecution::Compute, 1);
 }
 
 void AsyncThreadCollection::Term() {
