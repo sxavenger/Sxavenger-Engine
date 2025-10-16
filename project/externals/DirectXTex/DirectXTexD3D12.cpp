@@ -88,6 +88,9 @@ namespace
                 res.SlicePitch = res.RowPitch * static_cast<PT>(height);
             }
             break;
+
+        default:
+            break;
         }
     }
 
@@ -121,14 +124,19 @@ namespace
         _In_ ID3D12CommandQueue* pCommandQ,
         _In_ ID3D12Resource* pSource,
         const D3D12_RESOURCE_DESC& desc,
-        ComPtr<ID3D12Resource>& pStaging,
+        _COM_Outptr_ ID3D12Resource** pStaging,
         std::unique_ptr<uint8_t[]>& layoutBuff,
         UINT& numberOfPlanes,
         UINT& numberOfResources,
         D3D12_RESOURCE_STATES beforeState,
         D3D12_RESOURCE_STATES afterState) noexcept
     {
-        if (!pCommandQ || !pSource)
+        if (pStaging)
+        {
+            *pStaging = nullptr;
+        }
+
+        if (!pCommandQ || !pSource || !pStaging)
             return E_INVALIDARG;
 
         numberOfPlanes = D3D12GetFormatPlaneCount(device, desc.Format);
@@ -170,7 +178,8 @@ namespace
         if (SUCCEEDED(hr) && sourceHeapProperties.Type == D3D12_HEAP_TYPE_READBACK)
         {
             // Handle case where the source is already a staging texture we can use directly
-            pStaging = pSource;
+            *pStaging = pSource;
+            pSource->AddRef();
             return S_OK;
         }
 
@@ -208,8 +217,11 @@ namespace
         bufferDesc.SampleDesc.Count = 1;
 
         ComPtr<ID3D12Resource> copySource(pSource);
+        D3D12_RESOURCE_STATES beforeStateSource = beforeState;
         if (desc.SampleDesc.Count > 1)
         {
+            TransitionResource(commandList.Get(), pSource, beforeState, D3D12_RESOURCE_STATE_RESOLVE_SOURCE);
+
             // MSAA content must be resolved before being copied to a staging texture
             auto descCopy = desc;
             descCopy.SampleDesc.Count = 1;
@@ -221,7 +233,7 @@ namespace
                 &defaultHeapProperties,
                 D3D12_HEAP_FLAG_NONE,
                 &descCopy,
-                D3D12_RESOURCE_STATE_COPY_DEST,
+                D3D12_RESOURCE_STATE_RESOLVE_DEST,
                 nullptr,
                 IID_GRAPHICS_PPV_ARGS(pTemp.GetAddressOf()));
             if (FAILED(hr))
@@ -258,6 +270,11 @@ namespace
             }
 
             copySource = pTemp;
+            beforeState = D3D12_RESOURCE_STATE_RESOLVE_DEST;
+        }
+        else
+        {
+            beforeStateSource = D3D12_RESOURCE_STATE_COPY_SOURCE;
         }
 
         // Create a staging texture
@@ -267,25 +284,25 @@ namespace
             &bufferDesc,
             D3D12_RESOURCE_STATE_COPY_DEST,
             nullptr,
-            IID_GRAPHICS_PPV_ARGS(pStaging.GetAddressOf()));
+            IID_GRAPHICS_PPV_ARGS(pStaging));
         if (FAILED(hr))
             return hr;
 
-        assert(pStaging);
+        assert(*pStaging);
 
         // Transition the resource if necessary
-        TransitionResource(commandList.Get(), pSource, beforeState, D3D12_RESOURCE_STATE_COPY_SOURCE);
+        TransitionResource(commandList.Get(), copySource.Get(), beforeState, D3D12_RESOURCE_STATE_COPY_SOURCE);
 
         // Get the copy target location
         for (UINT j = 0; j < numberOfResources; ++j)
         {
-            const CD3DX12_TEXTURE_COPY_LOCATION copyDest(pStaging.Get(), pLayout[j]);
+            const CD3DX12_TEXTURE_COPY_LOCATION copyDest(*pStaging, pLayout[j]);
             const CD3DX12_TEXTURE_COPY_LOCATION copySrc(copySource.Get(), j);
             commandList->CopyTextureRegion(&copyDest, 0, 0, 0, &copySrc, nullptr);
         }
 
-        // Transition the resource to the next state
-        TransitionResource(commandList.Get(), pSource, D3D12_RESOURCE_STATE_COPY_SOURCE, afterState);
+        // Transition the source resource to the next state
+        TransitionResource(commandList.Get(), pSource, beforeStateSource, afterState);
 
         hr = commandList->Close();
         if (FAILED(hr))
@@ -338,7 +355,7 @@ bool DirectX::IsSupportedTexture(
     const size_t iWidth = metadata.width;
     const size_t iHeight = metadata.height;
 
-    switch (fmt)
+    switch (static_cast<int>(fmt))
     {
     case DXGI_FORMAT_NV12:
     case DXGI_FORMAT_P010:
@@ -721,10 +738,10 @@ HRESULT DirectX::CaptureTexture(
     pCommandQueue->GetDevice(IID_GRAPHICS_PPV_ARGS(device.GetAddressOf()));
 
 #if defined(_MSC_VER) || !defined(_WIN32)
-    auto const desc = pSource->GetDesc();
+    const auto desc = pSource->GetDesc();
 #else
     D3D12_RESOURCE_DESC tmpDesc;
-    auto const& desc = *pSource->GetDesc(&tmpDesc);
+    const auto& desc = *pSource->GetDesc(&tmpDesc);
 #endif
 
     ComPtr<ID3D12Resource> pStaging;
@@ -734,7 +751,7 @@ HRESULT DirectX::CaptureTexture(
         pCommandQueue,
         pSource,
         desc,
-        pStaging,
+        pStaging.GetAddressOf(),
         layoutBuff,
         numberOfPlanes,
         numberOfResources,
@@ -812,7 +829,7 @@ HRESULT DirectX::CaptureTexture(
         return E_FAIL;
     }
 
-    BYTE* pData;
+    BYTE* pData = nullptr;
     hr = pStaging->Map(0, nullptr, reinterpret_cast<void**>(&pData));
     if (FAILED(hr))
     {

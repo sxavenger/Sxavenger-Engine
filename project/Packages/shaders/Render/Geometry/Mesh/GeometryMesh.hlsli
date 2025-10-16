@@ -10,4 +10,4 @@
 // buffer
 //=========================================================================================
 
-StructuredBuffer<Material> gMaterials : register(t11);
+StructuredBuffer<Material> gMaterials : register(t0, space1);

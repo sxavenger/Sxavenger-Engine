@@ -35,9 +35,9 @@ void PostProcessAutoExposure::Parameter::SetImGuiCommand() {
 void PostProcessAutoExposure::Init() {
 	name_ = "Auto Exposure";
 
-	parameter_ = std::make_unique<DimensionBuffer<Parameter>>();
-	parameter_->Create(SxavengerSystem::GetDxDevice(), 1);
-	parameter_->At(0).Init();
+	parameter_ = std::make_unique<ConstantBuffer<Parameter>>();
+	parameter_->Create(SxavengerSystem::GetDxDevice());
+	parameter_->At().Init();
 
 	histgram_ = std::make_unique<UnorderedDimensionBuffer<uint32_t>>();
 	histgram_->Create(SxavengerSystem::GetDxDevice(), kGroupCount_);
@@ -97,7 +97,7 @@ void PostProcessAutoExposure::Process(const DirectXQueueContext* context, const 
 }
 
 void PostProcessAutoExposure::ShowInspectorImGui() {
-	parameter_->At(0).SetImGuiCommand();
+	parameter_->At().SetImGuiCommand();
 
 	ReadbackDimensionBuffer<uint32_t>::Readback(
 		SxavengerSystem::GetDxDevice(),
@@ -129,7 +129,7 @@ void PostProcessAutoExposure::ShowInspectorImGui() {
 		size
 	);
 
-	//float t = debugAverageLuminance_->At(0) / (parameter_->At(0).maxLogLuminance - parameter_->At(0).minLogLuminance);
+	//float t = debugAverageLuminance_->At(0) / (parameter_->At().maxLogLuminance - parameter_->At().minLogLuminance);
 	//ImGui::ProgressBar(t, { ImGui::GetContentRegionAvail().x, 0.0f }, "## luminance");
 
 	
@@ -137,10 +137,10 @@ void PostProcessAutoExposure::ShowInspectorImGui() {
 
 const PostProcessAutoExposure::Parameter& PostProcessAutoExposure::GetParameter() const {
 	Exception::Assert(parameter_ != nullptr, "auto exposure parameter buffer is not create.");
-	return parameter_->At(0);
+	return parameter_->At();
 }
 
 PostProcessAutoExposure::Parameter& PostProcessAutoExposure::GetParameter() {
 	Exception::Assert(parameter_ != nullptr, "auto exposure parameter buffer is not create.");
-	return parameter_->At(0);
+	return parameter_->At();
 }

@@ -7,7 +7,7 @@
 #include "../BaseComponent.h"
 
 //* engine
-#include <Engine/System/DirectX/DxObject/DxDimensionBuffer.h>
+#include <Engine/System/DirectX/DxObject/DxConstantBuffer.h>
 
 //* lib
 #include <Lib/Geometry/Matrix4x4.h>
@@ -88,7 +88,7 @@ private:
 
 	//* buffer *//
 
-	std::unique_ptr<DxObject::DimensionBuffer<TransformationMatrix>> buffer_;
+	std::unique_ptr<DxObject::ConstantBuffer<TransformationMatrix>> buffer_;
 
 	//=========================================================================================
 	// private methods

@@ -7,7 +7,7 @@
 #include "../BaseComponent.h"
 
 //* engine
-#include <Engine/System/DirectX/DxObject/DxDimensionBuffer.h>
+#include <Engine/System/DirectX/DxObject/DxConstantBuffer.h>
 
 //* lib
 #include <Lib/Geometry/Vector2.h>
@@ -145,7 +145,7 @@ private:
 	Tag tag_               = Tag::None;
 	Projection projection_ = {};
 
-	std::array<std::unique_ptr<DxObject::DimensionBuffer<Camera>>, 2> buffers_;
+	std::array<std::unique_ptr<DxObject::ConstantBuffer<Camera>>, 2> buffers_;
 	size_t currentIndex_ = 0;
 
 	//=========================================================================================

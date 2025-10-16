@@ -8,6 +8,7 @@
 
 //* engine
 #include <Engine/System/DirectX/DxObject/DxDimensionBuffer.h>
+#include <Engine/System/DirectX/DxObject/DxConstantBuffer.h>
 #include <Engine/System/DirectX/DxObject/DxUnorderedDimensionBuffer.h>
 #include <Engine/System/DirectX/DxObject/DxReadbackDimensionBuffer.h>
 
@@ -71,7 +72,7 @@ private:
 	// private variables
 	//=========================================================================================
 
-	std::unique_ptr<DxObject::DimensionBuffer<Parameter>> parameter_;
+	std::unique_ptr<DxObject::ConstantBuffer<Parameter>> parameter_;
 
 	static inline const uint32_t kGroupCount_ = 128;
 	std::unique_ptr<DxObject::UnorderedDimensionBuffer<uint32_t>> histgram_;

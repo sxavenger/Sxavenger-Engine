@@ -232,6 +232,9 @@
     <Filter Include="externals">
       <UniqueIdentifier>{9B5E5A7B-07C9-0EF2-5007-C097BCB0EC46}</UniqueIdentifier>
     </Filter>
+    <Filter Include="externals\meshoptimizer">
+      <UniqueIdentifier>{BA959FAD-26CD-E744-2FD7-4B689B8D0E3E}</UniqueIdentifier>
+    </Filter>
     <Filter Include="externals\stb">
       <UniqueIdentifier>{73F26948-DFB2-E57E-A8ED-2EFC146D2A5B}</UniqueIdentifier>
     </Filter>
@@ -711,6 +714,9 @@
     <ClInclude Include="Engine\System\DirectX\DxObject\DxComputePipelineState.h">
       <Filter>Engine\System\DirectX\DxObject</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\System\DirectX\DxObject\DxConstantBuffer.h">
+      <Filter>Engine\System\DirectX\DxObject</Filter>
+    </ClInclude>
     <ClInclude Include="Engine\System\DirectX\DxObject\DxDepthStencil.h">
       <Filter>Engine\System\DirectX\DxObject</Filter>
     </ClInclude>
@@ -733,6 +739,9 @@
       <Filter>Engine\System\DirectX\DxObject</Filter>
     </ClInclude>
     <ClInclude Include="Engine\System\DirectX\DxObject\DxReadbackDimensionBuffer.h">
+      <Filter>Engine\System\DirectX\DxObject</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\System\DirectX\DxObject\DxResourceDimensionBuffer.h">
       <Filter>Engine\System\DirectX\DxObject</Filter>
     </ClInclude>
     <ClInclude Include="Engine\System\DirectX\DxObject\DxResourceStateTracker.h">
@@ -924,11 +933,17 @@
     <ClInclude Include="Lib\Sxl\SxavengerLibrary.h">
       <Filter>Lib\Sxl</Filter>
     </ClInclude>
+    <ClInclude Include="Lib\Sxl\Utility.h">
+      <Filter>Lib\Sxl</Filter>
+    </ClInclude>
     <ClInclude Include="Lib\Traits.h">
       <Filter>Lib</Filter>
     </ClInclude>
     <ClInclude Include="Lib\Transform\Transform.h">
       <Filter>Lib\Transform</Filter>
+    </ClInclude>
+    <ClInclude Include="externals\meshoptimizer\meshoptimizer.h">
+      <Filter>externals\meshoptimizer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1370,6 +1385,9 @@
     <ClCompile Include="Engine\System\DirectX\DxObject\DxComputePipelineState.cpp">
       <Filter>Engine\System\DirectX\DxObject</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\System\DirectX\DxObject\DxConstantBuffer.cpp">
+      <Filter>Engine\System\DirectX\DxObject</Filter>
+    </ClCompile>
     <ClCompile Include="Engine\System\DirectX\DxObject\DxDepthStencil.cpp">
       <Filter>Engine\System\DirectX\DxObject</Filter>
     </ClCompile>
@@ -1389,6 +1407,9 @@
       <Filter>Engine\System\DirectX\DxObject</Filter>
     </ClCompile>
     <ClCompile Include="Engine\System\DirectX\DxObject\DxObjectCommon.cpp">
+      <Filter>Engine\System\DirectX\DxObject</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\System\DirectX\DxObject\DxResourceDimensionBuffer.cpp">
       <Filter>Engine\System\DirectX\DxObject</Filter>
     </ClCompile>
     <ClCompile Include="Engine\System\DirectX\DxObject\DxResourceStateTracker.cpp">
@@ -1516,6 +1537,54 @@
     </ClCompile>
     <ClCompile Include="Lib\Transform\Transform.cpp">
       <Filter>Lib\Transform</Filter>
+    </ClCompile>
+    <ClCompile Include="externals\meshoptimizer\allocator.cpp">
+      <Filter>externals\meshoptimizer</Filter>
+    </ClCompile>
+    <ClCompile Include="externals\meshoptimizer\clusterizer.cpp">
+      <Filter>externals\meshoptimizer</Filter>
+    </ClCompile>
+    <ClCompile Include="externals\meshoptimizer\indexanalyzer.cpp">
+      <Filter>externals\meshoptimizer</Filter>
+    </ClCompile>
+    <ClCompile Include="externals\meshoptimizer\indexcodec.cpp">
+      <Filter>externals\meshoptimizer</Filter>
+    </ClCompile>
+    <ClCompile Include="externals\meshoptimizer\indexgenerator.cpp">
+      <Filter>externals\meshoptimizer</Filter>
+    </ClCompile>
+    <ClCompile Include="externals\meshoptimizer\overdrawoptimizer.cpp">
+      <Filter>externals\meshoptimizer</Filter>
+    </ClCompile>
+    <ClCompile Include="externals\meshoptimizer\partition.cpp">
+      <Filter>externals\meshoptimizer</Filter>
+    </ClCompile>
+    <ClCompile Include="externals\meshoptimizer\quantization.cpp">
+      <Filter>externals\meshoptimizer</Filter>
+    </ClCompile>
+    <ClCompile Include="externals\meshoptimizer\rasterizer.cpp">
+      <Filter>externals\meshoptimizer</Filter>
+    </ClCompile>
+    <ClCompile Include="externals\meshoptimizer\simplifier.cpp">
+      <Filter>externals\meshoptimizer</Filter>
+    </ClCompile>
+    <ClCompile Include="externals\meshoptimizer\spatialorder.cpp">
+      <Filter>externals\meshoptimizer</Filter>
+    </ClCompile>
+    <ClCompile Include="externals\meshoptimizer\stripifier.cpp">
+      <Filter>externals\meshoptimizer</Filter>
+    </ClCompile>
+    <ClCompile Include="externals\meshoptimizer\vcacheoptimizer.cpp">
+      <Filter>externals\meshoptimizer</Filter>
+    </ClCompile>
+    <ClCompile Include="externals\meshoptimizer\vertexcodec.cpp">
+      <Filter>externals\meshoptimizer</Filter>
+    </ClCompile>
+    <ClCompile Include="externals\meshoptimizer\vertexfilter.cpp">
+      <Filter>externals\meshoptimizer</Filter>
+    </ClCompile>
+    <ClCompile Include="externals\meshoptimizer\vfetchoptimizer.cpp">
+      <Filter>externals\meshoptimizer</Filter>
     </ClCompile>
     <ClCompile Include="externals\stb\Stb_include.cpp">
       <Filter>externals\stb</Filter>

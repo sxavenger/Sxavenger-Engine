@@ -33,6 +33,8 @@ public:
 
 	void Init(uint32_t allocator, RenderQueue type);
 
+	void SetName(const std::wstring& name) const;
+
 	//* context option *//
 
 	void TransitionAllocator() const;

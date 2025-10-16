@@ -64,7 +64,7 @@ public:
 	//=========================================================================================
 
 	ResourceBuffer() = delete;
-	ResourceBuffer(const ResourceStorage* storage, const Iterator& iterator) : storage_(storage), iterator_(iterator) {}
+	ResourceBuffer(const Iterator& iterator) : iterator_(iterator) {}
 
 	~ResourceBuffer() = default;
 
@@ -72,13 +72,13 @@ public:
 
 	void SetName(const std::wstring& name);
 
+	//* getter *//
+
 	ID3D12Resource* Get(size_t index) const;
 	ID3D12Resource* Get() const;
 
 	const D3D12_GPU_VIRTUAL_ADDRESS& GetGPUVirtualAddress(size_t index) const;
 	const D3D12_GPU_VIRTUAL_ADDRESS& GetGPUVirtualAddress() const;
-
-	//* container option *//
 
 	//=========================================================================================
 	// public variables
@@ -98,7 +98,6 @@ private:
 
 	//* external *//
 
-	const ResourceStorage* storage_;
 	const Iterator iterator_;
 
 	//=========================================================================================
@@ -114,6 +113,11 @@ private:
 		const std::optional<D3D12_CLEAR_VALUE>& clearValue = std::nullopt
 	);
 
+	//-----------------------------------------------------------------------------------------
+	// friend
+	//-----------------------------------------------------------------------------------------
+	friend class ResourceStorage;
+
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -128,9 +132,16 @@ public:
 
 	//* container option *//
 
-	std::shared_ptr<ResourceBuffer> CreateBuffer();
+	std::shared_ptr<ResourceBuffer> CreateCommittedResource(
+		Device* device,
+		const D3D12_HEAP_PROPERTIES& prop,
+		const D3D12_RESOURCE_DESC& desc,
+		D3D12_RESOURCE_STATES state                        = D3D12_RESOURCE_STATE_COMMON,
+		D3D12_HEAP_FLAGS flags                             = D3D12_HEAP_FLAG_NONE,
+		const std::optional<D3D12_CLEAR_VALUE>& clearValue = std::nullopt
+	);
 
-	void Delete(const ResourceBuffer::Iterator& iterator);
+	void Delete(const std::shared_ptr<ResourceBuffer>& resource);
 
 	void Destroy();
 
@@ -138,7 +149,9 @@ public:
 
 	//* getter *//
 
-	size_t GetBufferIndex() const { return bufferIndex_; }
+	size_t GetBackBufferIndex() const { return backBufferIndex_; }
+
+	static ResourceStorage* GetInstance();
 
 private:
 
@@ -154,7 +167,15 @@ private:
 
 	//* parameter *//
 
-	size_t bufferIndex_ = 0;
+	size_t backBufferIndex_ = 0;
+	//!< front buffer: GPU使用中(書き込み不可)
+	//!< back buffer:  書き込み可能
+
+	//=========================================================================================
+	// private methods
+	//=========================================================================================
+
+	std::shared_ptr<ResourceBuffer> RegisterResource();
 
 };
 

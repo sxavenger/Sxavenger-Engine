@@ -1,4 +1,5 @@
 #include "CameraComponent.h"
+_DXOBJECT_USING
 
 //-----------------------------------------------------------------------------------------
 // include
@@ -133,7 +134,7 @@ void CameraComponent::UpdateView() {
 
 	// transform component から view matrix を取得
 	auto transform = BaseComponent::GetBehaviour()->RequireComponent<TransformComponent>();
-	buffers_[currentIndex_]->At(0).TransferView(transform->GetMatrix());
+	buffers_[currentIndex_]->At().TransferView(transform->GetMatrix());
 }
 
 void CameraComponent::UpdateProj() {
@@ -142,21 +143,21 @@ void CameraComponent::UpdateProj() {
 	}
 
 	// projection から proj matrix を取得
-	buffers_[currentIndex_]->At(0).TransferProj(projection_.ToProj());
+	buffers_[currentIndex_]->At().TransferProj(projection_.ToProj());
 
 	// projection から near, far の距離を取得
-	buffers_[currentIndex_]->At(0).nearZ = projection_.nearZ;
-	buffers_[currentIndex_]->At(0).farZ  = projection_.farZ;
+	buffers_[currentIndex_]->At().nearZ = projection_.nearZ;
+	buffers_[currentIndex_]->At().farZ  = projection_.farZ;
 }
 
 const CameraComponent::Camera& CameraComponent::GetCamera() const {
 	Exception::Assert(buffers_[currentIndex_] != nullptr, "camera buffer is not craete.");
-	return (*buffers_[currentIndex_])[0];
+	return buffers_[currentIndex_]->At();
 }
 
 Vector3f CameraComponent::GetPosition() const {
 	Exception::Assert(buffers_[currentIndex_] != nullptr, "camera buffer is not craete.");
-	return Matrix4x4::GetTranslation((*buffers_[currentIndex_])[0].world);
+	return Matrix4x4::GetTranslation(buffers_[currentIndex_]->At().world);
 }
 
 Vector3f CameraComponent::CalculateNDCPosition(const Vector3f& point) const {
@@ -169,17 +170,17 @@ Vector3f CameraComponent::CalculateWorldPosition(const Vector3f& ndc) const {
 
 void CameraComponent::CreateBuffer() {
 	for (size_t i = 0; i < buffers_.size(); ++i) {
-		buffers_[i] = std::make_unique<DxObject::DimensionBuffer<Camera>>();
-		buffers_[i]->Create(SxavengerSystem::GetDxDevice(), 1);
-		(*buffers_[i])[0].Init();
+		buffers_[i] = std::make_unique<ConstantBuffer<Camera>>();
+		buffers_[i]->Create(SxavengerSystem::GetDxDevice());
+		buffers_[i]->At().Init();
 	}
 }
 
 
 void CameraComponent::PushLineFrustum() {
 	Vector3f frustumPoint[8] = {};
-	const Matrix4x4& clipMatrix  = (*buffers_[currentIndex_])[0].projInv;
-	const Matrix4x4& worldMatrix = (*buffers_[currentIndex_])[0].world;
+	const Matrix4x4& clipMatrix  = buffers_[currentIndex_]->At().projInv;
+	const Matrix4x4& worldMatrix = buffers_[currentIndex_]->At().world;
 
 	// far
 	frustumPoint[0] = Matrix4x4::Transform(Matrix4x4::Transform({ -1.0f, -1.0f, 1.0f }, clipMatrix), worldMatrix);

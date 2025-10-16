@@ -34,7 +34,8 @@ void SxavengerSystem::Init() {
 	sDirectXCommon->Init();
 
 	sDirectQueueContext = std::make_unique<DirectXQueueContext>();
-	sDirectQueueContext->Init(3, DirectXQueueContext::RenderQueue::Direct); //!< allocator count
+	sDirectQueueContext->Init(2, DirectXQueueContext::RenderQueue::Direct); //!< allocator count
+	sDirectQueueContext->SetName(L"main");
 
 	sPerformance = std::make_unique<Performance>();
 

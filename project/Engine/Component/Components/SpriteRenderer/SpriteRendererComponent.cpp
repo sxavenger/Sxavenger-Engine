@@ -22,9 +22,9 @@ SpriteRendererComponent::SpriteRendererComponent(MonoBehaviour* behaviour)
 	input_.GetIndex()->At(0) = { 0, 1, 2 };
 	input_.GetIndex()->At(1) = { 2, 1, 3 };
 
-	bufferUV_ = std::make_unique<DimensionBuffer<Matrix4x4>>();
-	bufferUV_->Create(SxavengerSystem::GetDxDevice(), 1);
-	bufferUV_->At(0) = Matrix4x4::Identity();
+	bufferUV_ = std::make_unique<ConstantBuffer<Matrix4x4>>();
+	bufferUV_->Create(SxavengerSystem::GetDxDevice());
+	bufferUV_->At() = Matrix4x4::Identity();
 
 	color_.fill(kWhite4<float>);
 }
@@ -96,7 +96,7 @@ void SpriteRendererComponent::BindAIBuffer(const DirectXQueueContext* context) {
 	TransferColor();
 
 	// uv変換行列を更新
-	bufferUV_->At(0) = transformUV_.ToMatrix();
+	bufferUV_->At() = transformUV_.ToMatrix();
 	
 	input_.BindIABuffer(context);
 }

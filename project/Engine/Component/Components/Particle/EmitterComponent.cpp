@@ -15,16 +15,21 @@ _DXOBJECT_USING
 #include <Lib/Adapter/Random/Random.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// Emitter structure methods
+// Sphere structure methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-void EmitterComponent::Emitter::Init() {
-	count  = 64;
-	radius = 1.0f;
-}
+Vector3f EmitterComponent::Sphere::Emit() const {
+	float r        = Random::NormalDistributionRange(0.0f, radius);
+	Vector2f angle = {
+		Random::UniformDistribution(0.0f, kTau),
+		Random::UniformDistribution(0.0f, kTau)
+	};
 
-void EmitterComponent::Emitter::Seed() {
-	seed = { Random::UniformDistribution<float>(0.0f, 1.0f), Random::UniformDistribution<float>(0.0f, 1.0f), Random::UniformDistribution<float>(0.0f, 1.0f) };
+	return {
+		r * std::cos(angle.y) * std::cos(angle.x),
+		r * std::sin(angle.y),
+		r * std::cos(angle.y) * std::sin(angle.x)
+	};
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -32,13 +37,6 @@ void EmitterComponent::Emitter::Seed() {
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 void EmitterComponent::Init() {
-	emitter_ = std::make_unique<DimensionBuffer<Emitter>>();
-	emitter_->Create(SxavengerSystem::GetDxDevice(), 1);
-	emitter_->At(0).Init();
-
-	pipeline_ = std::make_unique<ReflectionComputePipelineState>();
-	pipeline_->CreateBlob(kPackagesShaderDirectory / "render/Particle/GPUParticle/emitter.cs.hlsl");
-	pipeline_->ReflectionPipeline(SxavengerSystem::GetDxDevice());
 }
 
 void EmitterComponent::Update(const DirectXQueueContext* context) {
@@ -51,40 +49,8 @@ void EmitterComponent::Update(const DirectXQueueContext* context) {
 
 	timer_ = { TimePointf<TimeUnit::second>::Mod(timer_, time_).time };
 
-	// emit処理
-	EmitGPUParticle(context);
-
-}
-
-void EmitterComponent::EmitGPUParticle(const DirectXQueueContext* context) {
-
-	auto component = GetBehaviour()->GetComponent<GPUParticleComponent>();
-
-	if (component == nullptr) {
-		return;
-	}
-
-	emitter_->At(0).Seed();
-
-	// todo: pipelineの設定
-	pipeline_->SetPipeline(context->GetDxCommand());
-
-	BindBufferDesc desc = {};
-	//* emitter
-	desc.SetAddress("gEmitter",   emitter_->GetGPUVirtualAddress());
-	desc.SetAddress("gTransform", RequireTransform()->GetGPUVirtualAddress());
-
-	//* particle
-	desc.SetAddress("gParticles", component->buffer_->GetGPUVirtualAddress());
-	desc.Set32bitConstants("Dimension", 1, &component->buffer_->GetDimension());
-	
-	//* free list
-	desc.SetHandle("gConsumeFreeIndex", component->freeList_->GetAppendCousumeGPUHandleUAV());
-	desc.SetAddress("gCounter",         component->freeList_->GetCounterGPUVirtualAddress());
-
-	pipeline_->BindComputeBuffer(context->GetDxCommand(), desc);
-	pipeline_->Dispatch(context->GetDxCommand(), { 1, 1, 1 });
-	
+	// TODO: パーティクルの生成処理
+	context;
 }
 
 const TransformComponent* EmitterComponent::RequireTransform() const {

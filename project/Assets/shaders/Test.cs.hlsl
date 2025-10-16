@@ -1,40 +1,27 @@
-//-----------------------------------------------------------------------------------------
-// include
-//-----------------------------------------------------------------------------------------
-
 //=========================================================================================
 // buffers
 //=========================================================================================
 
-RWTexture2D<float4> gOutput : register(u0);
+RWTexture2D<float4> gTexture : register(u0);
 
-Texture2D<float4> gDummy : register(t0);
-SamplerState gSampler : register(s0);
-
-////////////////////////////////////////////////////////////////////////////////////////////
-// methods
-////////////////////////////////////////////////////////////////////////////////////////////
-
-uint2 GetDimension() {
-	uint2 size;
-	gOutput.GetDimensions(size.x, size.y);
-	return size;
-}
+struct Parameter {
+	float4 color;
+};
+ConstantBuffer<Parameter> gParameter : register(b0);
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // main
 ////////////////////////////////////////////////////////////////////////////////////////////
-[numthreads(16, 16, 1)]
+[numthreads(8, 8, 1)]
 void main(uint3 dispatchThreadId : SV_DispatchThreadID) {
 
-	uint2 index = dispatchThreadId.xy;
+	uint width, height;
+	gTexture.GetDimensions(width, height);
 
-	if (any(index >= GetDimension())) {
+	if (any(dispatchThreadId.xy >= uint2(width, height))) {
 		return;
 	}
 
-	float2 uv = float2(index) / float2(GetDimension());
-
-	gOutput[index] = gDummy.SampleLevel(gSampler, uv, 0);
+	gTexture[dispatchThreadId.xy] = gParameter.color;
 	
 }

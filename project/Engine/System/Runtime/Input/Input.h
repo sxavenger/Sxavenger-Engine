@@ -245,20 +245,6 @@ private:
 class Input {
 public:
 
-	////////////////////////////////////////////////////////////////////////////////////////////
-	// InputDirection enum class
-	////////////////////////////////////////////////////////////////////////////////////////////
-	enum class InputDirection : size_t {
-		None           = 0,
-		Keyboard_WASD  = 1 << 0,
-		Keyboard_Arrow = 1 << 1,
-		Gamepad_LStick = 1 << 2,
-		Gamepad_RStick = 1 << 3,
-		Gamepad_DPad   = 1 << 4,
-	};
-
-public:
-
 	//=========================================================================================
 	// public methods
 	//=========================================================================================
@@ -312,5 +298,3 @@ private:
 	std::array<std::unique_ptr<GamepadInput>, XUSER_MAX_COUNT> gamepads_;
 
 };
-
-_ENUM_FLAG_OPERATORS(Input::InputDirection);

@@ -38,19 +38,11 @@ public:
 
 	ComPtr<ID3D12ShaderReflection> GetReflection() const;
 
-	//* external *//
-
-	static void SetExternal(ShaderCompiler* compiler) { compiler_ = compiler; }
-
 private:
 
 	//=========================================================================================
 	// private variables
 	//=========================================================================================
-
-	//* external *//
-
-	static ShaderCompiler* compiler_;
 
 	//* blob *//
 

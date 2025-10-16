@@ -50,14 +50,19 @@ struct SpotLightComponent {
 		
 		float attenuation_angle = Square(saturate((dot(l, -light_direction) - cosOuterCone) / (cosInnerCone - cosOuterCone)));
 
+		if (attenuation_distance * attenuation_angle <= 0.0f) {
+			return 0.0f;
+		}
+
 		static const float kTMin = 0.001f;
 		static const float kTMax = 10000.0f;
 
 		RayDesc desc;
-		desc.Origin = surface_position;
+		desc.Origin    = surface_position;
 		desc.Direction = l;
-		desc.TMin = kTMin;
-		desc.TMax = distance;
+		desc.TMin      = kTMin;
+		desc.TMax      = distance;
+		
 		float attenuation_shadow = shadow.TraceShadow(desc, scene);
 
 		return attenuation_distance * attenuation_angle * attenuation_shadow;

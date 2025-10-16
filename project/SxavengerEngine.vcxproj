@@ -324,6 +324,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Engine\System\DirectX\DxObject\DxBlendState.h" />
     <ClInclude Include="Engine\System\DirectX\DxObject\DxCommandContext.h" />
     <ClInclude Include="Engine\System\DirectX\DxObject\DxComputePipelineState.h" />
+    <ClInclude Include="Engine\System\DirectX\DxObject\DxConstantBuffer.h" />
     <ClInclude Include="Engine\System\DirectX\DxObject\DxDepthStencil.h" />
     <ClInclude Include="Engine\System\DirectX\DxObject\DxDescriptor.h" />
     <ClInclude Include="Engine\System\DirectX\DxObject\DxDescriptorHeaps.h" />
@@ -332,6 +333,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Engine\System\DirectX\DxObject\DxGraphicsPipelineState.h" />
     <ClInclude Include="Engine\System\DirectX\DxObject\DxObjectCommon.h" />
     <ClInclude Include="Engine\System\DirectX\DxObject\DxReadbackDimensionBuffer.h" />
+    <ClInclude Include="Engine\System\DirectX\DxObject\DxResourceDimensionBuffer.h" />
     <ClInclude Include="Engine\System\DirectX\DxObject\DxResourceStateTracker.h" />
     <ClInclude Include="Engine\System\DirectX\DxObject\DxResourceStorage.h" />
     <ClInclude Include="Engine\System\DirectX\DxObject\DxResourceTracker.h" />
@@ -395,8 +397,10 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Lib\Sxl\OptimizedPathMap.h" />
     <ClInclude Include="Lib\Sxl\OptimizedPathSet.h" />
     <ClInclude Include="Lib\Sxl\SxavengerLibrary.h" />
+    <ClInclude Include="Lib\Sxl\Utility.h" />
     <ClInclude Include="Lib\Traits.h" />
     <ClInclude Include="Lib\Transform\Transform.h" />
+    <ClInclude Include="externals\meshoptimizer\meshoptimizer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Demo\Entity\Player.cpp" />
@@ -545,6 +549,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="Engine\System\DirectX\DxObject\DxBlendState.cpp" />
     <ClCompile Include="Engine\System\DirectX\DxObject\DxCommandContext.cpp" />
     <ClCompile Include="Engine\System\DirectX\DxObject\DxComputePipelineState.cpp" />
+    <ClCompile Include="Engine\System\DirectX\DxObject\DxConstantBuffer.cpp" />
     <ClCompile Include="Engine\System\DirectX\DxObject\DxDepthStencil.cpp" />
     <ClCompile Include="Engine\System\DirectX\DxObject\DxDescriptor.cpp" />
     <ClCompile Include="Engine\System\DirectX\DxObject\DxDescriptorHeaps.cpp" />
@@ -552,6 +557,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="Engine\System\DirectX\DxObject\DxDimensionBuffer.cpp" />
     <ClCompile Include="Engine\System\DirectX\DxObject\DxGraphicsPipelineState.cpp" />
     <ClCompile Include="Engine\System\DirectX\DxObject\DxObjectCommon.cpp" />
+    <ClCompile Include="Engine\System\DirectX\DxObject\DxResourceDimensionBuffer.cpp" />
     <ClCompile Include="Engine\System\DirectX\DxObject\DxResourceStateTracker.cpp" />
     <ClCompile Include="Engine\System\DirectX\DxObject\DxResourceStorage.cpp" />
     <ClCompile Include="Engine\System\DirectX\DxObject\DxResourceTracker.cpp" />
@@ -594,6 +600,22 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="Lib\Geometry\Quaternion.cpp" />
     <ClCompile Include="Lib\Motion\Motion.cpp" />
     <ClCompile Include="Lib\Transform\Transform.cpp" />
+    <ClCompile Include="externals\meshoptimizer\allocator.cpp" />
+    <ClCompile Include="externals\meshoptimizer\clusterizer.cpp" />
+    <ClCompile Include="externals\meshoptimizer\indexanalyzer.cpp" />
+    <ClCompile Include="externals\meshoptimizer\indexcodec.cpp" />
+    <ClCompile Include="externals\meshoptimizer\indexgenerator.cpp" />
+    <ClCompile Include="externals\meshoptimizer\overdrawoptimizer.cpp" />
+    <ClCompile Include="externals\meshoptimizer\partition.cpp" />
+    <ClCompile Include="externals\meshoptimizer\quantization.cpp" />
+    <ClCompile Include="externals\meshoptimizer\rasterizer.cpp" />
+    <ClCompile Include="externals\meshoptimizer\simplifier.cpp" />
+    <ClCompile Include="externals\meshoptimizer\spatialorder.cpp" />
+    <ClCompile Include="externals\meshoptimizer\stripifier.cpp" />
+    <ClCompile Include="externals\meshoptimizer\vcacheoptimizer.cpp" />
+    <ClCompile Include="externals\meshoptimizer\vertexcodec.cpp" />
+    <ClCompile Include="externals\meshoptimizer\vertexfilter.cpp" />
+    <ClCompile Include="externals\meshoptimizer\vfetchoptimizer.cpp" />
     <ClCompile Include="externals\stb\Stb_include.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>

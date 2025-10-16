@@ -27,6 +27,10 @@ void DirectXQueueContext::Init(uint32_t allocator, RenderQueue type) {
 	SetDescriptorHeap();
 }
 
+void DirectXQueueContext::SetName(const std::wstring& name) const {
+	context_->SetName(std::format(L"{} | {}", name, ToWString(magic_enum::enum_name(type_))));
+}
+
 void DirectXQueueContext::TransitionAllocator() const {
 	if (context_ == nullptr) {
 		return;

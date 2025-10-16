@@ -4,13 +4,13 @@
 // include
 //-----------------------------------------------------------------------------------------
 //* engine
+#include <Engine/System/DirectX/DxObject/DxResourceStorage.h>
 #include <Engine/System/SxavengerSystem.h>
 #include <Engine/Content/SxavengerContent.h>
 #include <Engine/Render/FRenderCore.h>
 #include <Engine/Render/FMainRender.h>
 #include <Engine/Component/Components/Audio/AudioController.h>
 #include <Engine/Component/ComponentHelper.h>
-#include <Engine/Content/Exporter/TextureExporter.h>
 
 //* c++
 #include <limits>
@@ -41,6 +41,7 @@ void SxavengerEngineGameLoop::Init(GameLoop::Context* context) {
 		FRenderCore::GetInstance()->Term();
 
 		SxavengerSystem::ShutdownAsyncThread();
+		SxavengerSystem::ExecuteAllAllocator();
 
 		sUAssetStorage->Serialize();
 	});
@@ -59,18 +60,20 @@ void SxavengerEngineGameLoop::Init(GameLoop::Context* context) {
 		FMainRender::GetInstance()->GetScene()->SetupTopLevelAS(SxavengerSystem::GetDirectQueueContext());
 		FMainRender::GetInstance()->GetScene()->SetupStateObject();
 		FMainRender::GetInstance()->GetScene()->SetupLightContainer();
-		SxavengerSystem::TransitionAllocator();
-		UpdateMaterials();
+		UpdateAsset();
 		SxavengerSystem::RecordLap("update [engine]");
 	});
 
 	context->SetProcess(GameLoop::Process::End, 0, [this]() {
 		SxavengerSystem::RecordLap("render [draw logic]");
-		SxavengerSystem::TransitionAllocator();
-		SxavengerSystem::PresentWindows();
+		//SxavengerSystem::TransitionAllocator();
 		SxavengerSystem::ExecuteAllAllocator();
-		SxavengerContent::ResetPrimtive();
+		SxavengerSystem::PresentWindows();
 		SxavengerSystem::RecordLap("render [gpu execution]");
+		SxavengerContent::ResetPrimtive();
+		DxObject::ResourceStorage::GetInstance()->Destroy();
+		DxObject::ResourceStorage::GetInstance()->SwapBuffer();
+		SxavengerSystem::RecordLap("end []");
 		SxavengerSystem::EndPerformace();
 	});
 
@@ -132,8 +135,12 @@ void SxavengerEngineGameLoop::CreateCheckerboard() {
 	SxavengerContent::RegisterTexture("checkerboard", std::move(checker));
 }
 
-void SxavengerEngineGameLoop::UpdateMaterials() {
+void SxavengerEngineGameLoop::UpdateAsset() {
 	sUAssetStorage->ForEach<UAssetMaterial>([](UAssetMaterial* asset) {
 		asset->Update();
+	});
+
+	sUAssetStorage->ForEach<UAssetTexture>([](UAssetTexture* asset) {
+		asset->Update(SxavengerSystem::GetDirectQueueContext());
 	});
 }

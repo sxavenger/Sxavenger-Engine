@@ -21,30 +21,26 @@ class EmitterComponent final
 public:
 
 	////////////////////////////////////////////////////////////////////////////////////////////
-	// Emitter structure
+	// Sphere structure
 	////////////////////////////////////////////////////////////////////////////////////////////
-	struct Emitter {
-		//!< Sphere Emitter想定
-		// TODO: 他のEmitterも実装する
+	struct Sphere {
 	public:
 
 		//=========================================================================================
 		// public methods
 		//=========================================================================================
 
-		void Init();
-
-		void Seed();
+		Vector3f Emit() const;
 
 		//=========================================================================================
 		// public variables
 		//=========================================================================================
 
-		Vector3f seed;
-		uint32_t count;
-		float radius;
+		float radius = 1.0f;
 
 	};
+
+
 
 public:
 
@@ -67,23 +63,12 @@ private:
 	// private variables
 	//=========================================================================================
 
-	std::unique_ptr<DxObject::DimensionBuffer<Emitter>> emitter_;
-
 	TimePointf<TimeUnit::second> time_       = {};
 	DeltaTimePointf<TimeUnit::second> timer_ = {};
-
-
-	std::unique_ptr<DxObject::ReflectionComputePipelineState> pipeline_; //!< HACK
-
 
 	//=========================================================================================
 	// private methods
 	//=========================================================================================
-
-	void EmitGPUParticle(const DirectXQueueContext* context);
-	void EmitCPUParticle();
-
-	//* helepr methods *//
 
 	const TransformComponent* RequireTransform() const;
 

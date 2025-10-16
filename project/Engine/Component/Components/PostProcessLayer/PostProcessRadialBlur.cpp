@@ -27,9 +27,9 @@ void PostProcessRadialBlur::Parameter::SetImGuiCommand() {
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 void PostProcessRadialBlur::Init() {
-	parameter_ = std::make_unique<DimensionBuffer<Parameter>>();
-	parameter_->Create(SxavengerSystem::GetDxDevice(), 1);
-	parameter_->At(0).Init();
+	parameter_ = std::make_unique<ConstantBuffer<Parameter>>();
+	parameter_->Create(SxavengerSystem::GetDxDevice());
+	parameter_->At().Init();
 
 	name_ = "Radial Blur";
 }
@@ -63,5 +63,5 @@ void PostProcessRadialBlur::Process(const DirectXQueueContext* context, const Pr
 }
 
 void PostProcessRadialBlur::ShowInspectorImGui() {
-	parameter_->At(0).SetImGuiCommand();
+	parameter_->At().SetImGuiCommand();
 }

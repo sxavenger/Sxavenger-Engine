@@ -1,20 +1,13 @@
 #include "DxShaderBlob.h"
 _DXOBJECT_USING
 
-//=========================================================================================
-// static variables
-//=========================================================================================
-
-ShaderCompiler* ShaderBlob::compiler_ = nullptr;
-
 ////////////////////////////////////////////////////////////////////////////////////////////
 // ShaderBlob class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 void ShaderBlob::Create(const std::filesystem::path& filepath, CompileProfile profile, const std::wstring& entrypoint) {
-	Exception::Assert(compiler_ != nullptr, "compiler is not set.");
 	// blobの生成
-	blob_ = compiler_->Compile(filepath, profile, entrypoint);
+	blob_ = ShaderCompiler::GetInstance()->Compile(filepath, profile, entrypoint);
 }
 
 D3D12_SHADER_BYTECODE ShaderBlob::GetBytecode() const {
@@ -30,6 +23,5 @@ D3D12_SHADER_BYTECODE ShaderBlob::GetBytecode() const {
 }
 
 ComPtr<ID3D12ShaderReflection> ShaderBlob::GetReflection() const {
-	Exception::Assert(compiler_ != nullptr, "compiler is not set.");
-	return compiler_->Reflection(blob_.Get());
+	return ShaderCompiler::GetInstance()->Reflection(blob_.Get());
 }

@@ -18,9 +18,9 @@ _DXOBJECT_USING
 void PostProcessLUT::Init() {
 	name_ = "LUT";
 
-	parameter_ = std::make_unique<DimensionBuffer<Parameter>>();
-	parameter_->Create(SxavengerSystem::GetDxDevice(), 1);
-	parameter_->At(0).intensity = 1.0f;
+	parameter_ = std::make_unique<ConstantBuffer<Parameter>>();
+	parameter_->Create(SxavengerSystem::GetDxDevice());
+	parameter_->At().intensity = 1.0f;
 }
 
 void PostProcessLUT::Process(const DirectXQueueContext* context, const ProcessInfo& info) {
@@ -62,7 +62,7 @@ void PostProcessLUT::ShowInspectorImGui() {
 	{ //!< parameter
 		ImGui::BeginDisabled(!isEnable);
 
-		ImGui::DragFloat("intensity", &parameter_->At(0).intensity, 0.01f, 0.0f, 1.0f);
+		ImGui::DragFloat("intensity", &parameter_->At().intensity, 0.01f, 0.0f, 1.0f);
 
 		ImGui::EndDisabled();
 	}

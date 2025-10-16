@@ -8,7 +8,7 @@
 #include "../LightCommon.h"
 
 //* engine
-#include <Engine/System/DirectX/DxObject/DxDimensionBuffer.h>
+#include <Engine/System/DirectX/DxObject/DxConstantBuffer.h>
 #include <Engine/Preview/Asset/UAssetTexture.h>
 #include <Engine/Preview/Asset/UAssetParameter.h>
 
@@ -110,7 +110,7 @@ private:
 	// public variables
 	//=========================================================================================
 
-	std::unique_ptr<DxObject::DimensionBuffer<Parameter>> parameter_;
+	std::unique_ptr<DxObject::ConstantBuffer<Parameter>> parameter_;
 
 	//* serialize用
 	UAssetParameter<UAssetTexture> environment_;

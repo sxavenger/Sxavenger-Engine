@@ -56,7 +56,7 @@ void UAssetMesh::Setup(const aiMesh* mesh) {
 		Exception::Assert(aiFace.mNumIndices == 3, "mesh is not triangle."); //!< 三角形のみの対応
 
 		// indexの解析
-		(*index)[faceIndex] = { aiFace.mIndices[0], aiFace.mIndices[2], aiFace.mIndices[1] }; //!< 左手座標系に変換
+		(*index)[faceIndex] = { aiFace.mIndices[1], aiFace.mIndices[2], aiFace.mIndices[0] }; //!< 左手座標系に変換
 	}
 
 	// skinClusterの解析
@@ -98,7 +98,14 @@ void UAssetMesh::Setup(const aiMesh* mesh) {
 
 void UAssetMesh::Update(const DirectXQueueContext* context) {
 	UBaseAsset::WaitComplete();
-	input_.CreateBottomLevelAS(context);
+
+	if (!input_.IsCreateBottomLevelAS()) {
+		input_.CreateBottomLevelAS(context);
+	}
+
+	if (!input_.IsCreateMeshlet()) {
+		input_.CreateMeshlet();
+	}
 
 	// todo: 仮meshの追加
 }

@@ -7,7 +7,7 @@
 #include "BasePostProcess.h"
 
 //* engine
-#include <Engine/System/DirectX/DxObject/DxDimensionBuffer.h>
+#include <Engine/System/DirectX/DxObject/DxConstantBuffer.h>
 #include <Engine/Render/Common/FLUTTexture.h>
 #include <Engine/Preview/Asset/UAssetTexture.h>
 #include <Engine/Preview/Asset/UAssetParameter.h>
@@ -54,7 +54,7 @@ private:
 	UAssetParameter<UAssetTexture> referenceTexture_;
 
 	std::unique_ptr<FLUTTexture> texture_;
-	std::unique_ptr<DxObject::DimensionBuffer<Parameter>> parameter_;
+	std::unique_ptr<DxObject::ConstantBuffer<Parameter>> parameter_;
 
 	Vector2ui tile_ = {};
 

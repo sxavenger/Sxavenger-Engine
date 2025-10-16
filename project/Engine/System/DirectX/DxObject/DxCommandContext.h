@@ -32,6 +32,8 @@ public:
 
 	void Term();
 
+	void SetName(const std::wstring& name) const;
+
 	//* command option *//
 
 	void TransitionAllocator();

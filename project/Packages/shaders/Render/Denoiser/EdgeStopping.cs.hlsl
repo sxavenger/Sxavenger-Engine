@@ -33,9 +33,25 @@ cbuffer Parameter : register(b1) { //!< test
 //* input texture
 Texture2D<float4> gReservoirDiffuse  : register(t0);
 Texture2D<float4> gReservoirSpecular : register(t1);
+Texture2D<uint3> gMoment             : register(t2);
 SamplerState gSampler                : register(s0);
 
 ConstantBuffer<DeferredBufferIndexConstantBuffer> gDeferredBufferIndex : register(b0);
+
+////////////////////////////////////////////////////////////////////////////////////////////
+// Config cbuffer 32bitconstants.
+////////////////////////////////////////////////////////////////////////////////////////////
+cbuffer Config : register(b2, space1) {
+
+	//=========================================================================================
+	// public variables
+	//=========================================================================================
+	
+	uint maxSampleCount;
+	uint samplesPerFrame;
+	uint isResetMoment;
+	
+};
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // methods
@@ -47,6 +63,10 @@ float4 GetIndirectReservoir(uint2 index) {
 
 float4 SampleIndirectReservoir(float2 uv, float lod) {
 	return gReservoirDiffuse.SampleLevel(gSampler, uv, lod) + gReservoirSpecular.SampleLevel(gSampler, uv, lod);
+}
+
+float4 SampleIndirectReservoir(float2 uv, float lod_diffuse, float lod_specular) {
+	return gReservoirDiffuse.SampleLevel(gSampler, uv, lod_diffuse) + gReservoirSpecular.SampleLevel(gSampler, uv, lod_specular);
 
 }
 
@@ -104,7 +124,7 @@ void main(uint3 dispatchThreadId : SV_DispatchThreadID) {
 	}
 
 	float weight    = 1.0f;
-	float3 variance = GetIndirectReservoir(index).rgb;
+	float3 variance = SampleIndirectReservoir(float2(index) / float2(size), 0.0f).rgb;
 
 	//!< A-Trousを採用
 	
@@ -130,7 +150,7 @@ void main(uint3 dispatchThreadId : SV_DispatchThreadID) {
 				continue;
 			}
 
-				float exp_w = 0.0f;
+			float exp_w = 0.0f;
 			exp_w += CalculateExpDepthWeight(surface.depth, sample_surface.depth);                  //!< 深度
 			exp_w += CalculateExpPositionWeight(surface.position.xyz, sample_surface.position.xyz); //!< 空間情報
 
@@ -140,10 +160,13 @@ void main(uint3 dispatchThreadId : SV_DispatchThreadID) {
 
 			float2 uv = float2(sample_pos) / float2(size);
 
-			float lod = i / float(kRecursionCount - 1) * 6;
+			float2 lod = float2(
+				(1.0f - float(gMoment[sample_pos].y) / maxSampleCount) * i / float(kRecursionCount - 1.0f) * 6.0f,
+				(1.0f - float(gMoment[sample_pos].z) / maxSampleCount) * i / float(kRecursionCount - 1.0f) * 6.0f
+			);
 			
-			variance  += SampleIndirectReservoir(uv, lod).rgb * w;
-			weight    += w;
+			variance += SampleIndirectReservoir(uv, lod.x, lod.y).rgb * w;
+			weight   += w;
 		}
 	}
 

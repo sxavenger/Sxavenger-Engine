@@ -3,7 +3,7 @@ _DXOBJECT_USING
 _DXROBJECT_USING
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// DirectXContext class methods
+// DirectXCommon class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 void DirectXCommon::Init() {
@@ -14,16 +14,7 @@ void DirectXCommon::Init() {
 	descriptorHeaps_ = std::make_unique<DescriptorHeaps>();
 	descriptorHeaps_->Init(device_.get());
 
-	shaderCompiler_ = std::make_unique<ShaderCompiler>();
-	shaderCompiler_->Init();
-
-	blendState_ = std::make_unique<BlendState>();
-	blendState_->Init();
-
-	ShaderBlob::SetExternal(shaderCompiler_.get());
-	GraphicsPipelineState::SetExternal(blendState_.get());
-
-	RaytracingBlob::SetExternal(shaderCompiler_.get());
+	ShaderCompiler::GetInstance()->Init();
 }
 
 void DirectXCommon::Term() {

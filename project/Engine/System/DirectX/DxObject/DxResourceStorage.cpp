@@ -31,7 +31,7 @@ ID3D12Resource* ResourceBuffer::Get(size_t index) const {
 }
 
 ID3D12Resource* ResourceBuffer::Get() const {
-	return Get(storage_->GetBufferIndex());
+	return Get(ResourceStorage::GetInstance()->GetBackBufferIndex());
 }
 
 const D3D12_GPU_VIRTUAL_ADDRESS& ResourceBuffer::GetGPUVirtualAddress(size_t index) const {
@@ -41,7 +41,7 @@ const D3D12_GPU_VIRTUAL_ADDRESS& ResourceBuffer::GetGPUVirtualAddress(size_t ind
 }
 
 const D3D12_GPU_VIRTUAL_ADDRESS& ResourceBuffer::GetGPUVirtualAddress() const {
-	return GetGPUVirtualAddress(storage_->GetBufferIndex());
+	return GetGPUVirtualAddress(ResourceStorage::GetInstance()->GetBackBufferIndex());
 }
 
 void ResourceBuffer::CreateCommittedResource(
@@ -72,13 +72,15 @@ void ResourceBuffer::CreateCommittedResource(
 // ResourceStorage class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-std::shared_ptr<ResourceBuffer> ResourceStorage::CreateBuffer() {
-	 container_.emplace_back(std::make_shared<ResourceBuffer>(this, container_.end()));
-	 return container_.back();
+std::shared_ptr<ResourceBuffer> ResourceStorage::CreateCommittedResource(Device* device, const D3D12_HEAP_PROPERTIES& prop, const D3D12_RESOURCE_DESC& desc, D3D12_RESOURCE_STATES state, D3D12_HEAP_FLAGS flags, const std::optional<D3D12_CLEAR_VALUE>& clearValue) {
+	std::shared_ptr<ResourceBuffer> buffer = RegisterResource();
+	buffer->CreateCommittedResource(device, prop, desc, state, flags, clearValue);
+
+	return buffer;
 }
 
-void ResourceStorage::Delete(const ResourceBuffer::Iterator& iterator) {
-	destroyQueue_.emplace(iterator);
+void ResourceStorage::Delete(const std::shared_ptr<ResourceBuffer>& resource) {
+	destroyQueue_.emplace(resource->iterator_);
 }
 
 void ResourceStorage::Destroy() {
@@ -89,5 +91,16 @@ void ResourceStorage::Destroy() {
 }
 
 void ResourceStorage::SwapBuffer() {
-	bufferIndex_ = (bufferIndex_ + 1) % ResourceBuffer::kSwapBufferCount;
+	backBufferIndex_ = ++backBufferIndex_ % ResourceBuffer::kSwapBufferCount;
+}
+
+ResourceStorage* ResourceStorage::GetInstance() {
+	static ResourceStorage instance;
+	return &instance;
+}
+
+std::shared_ptr<ResourceBuffer> ResourceStorage::RegisterResource() {
+	auto iterator = container_.emplace(container_.end(), nullptr);
+	(*iterator) = std::make_shared<ResourceBuffer>(iterator);
+	return (*iterator);
 }

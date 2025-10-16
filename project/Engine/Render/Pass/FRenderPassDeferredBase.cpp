@@ -145,7 +145,7 @@ void FRenderPassDeferredBase::ClearPass(const DirectXQueueContext* context, FRen
 void FRenderPassDeferredBase::PassStaticMesh(const DirectXQueueContext* context, const Config& config) {
 
 	auto core = FRenderCore::GetInstance()->GetGeometry();
-	core->SetPipeline(FRenderCoreGeometry::Type::Deferred_MeshVS, context, config.buffer->GetSize());
+	core->SetPipeline(FRenderCoreGeometry::Type::Deferred_MeshMS, context, config.buffer->GetSize());
 
 	// common parameterの設定
 	DxObject::BindBufferDesc parameter = {};
@@ -161,21 +161,24 @@ void FRenderPassDeferredBase::PassStaticMesh(const DirectXQueueContext* context,
 		auto mesh     = component->GetMesh();
 		auto material = component->GetMaterial();
 
+		const auto& meshlet = mesh->GetInputMesh().GetMeshlet();
+
 		if (material->GetMode() != UAssetMaterial::Mode::Opaque) {
 			return; //!< 透明なジオメトリは別のパスで描画
 		}
 
-		// メッシュの描画
-		mesh->BindIABuffer(context);
-
 		parameter.SetAddress("gTransforms", transform->GetGPUVirtualAddress());
 		parameter.SetAddress("gMaterials",  material->GetGPUVirtualAddress());
 		//!< todo: materialをConstantBufferに変更する
-		 
-		core->BindGraphicsBuffer(FRenderCoreGeometry::Type::Deferred_MeshVS, context, parameter);
 
-		mesh->DrawCall(context, 1);
-		//!< todo: インスタンス描画対応
+		parameter.Set32bitConstants("Information", 1, &meshlet.meshletCount);
+		parameter.SetAddress("gVertices",   mesh->GetInputVertex()->GetGPUVirtualAddress());
+		parameter.SetAddress("gIndices",    meshlet.uniqueVertexIndices->GetGPUVirtualAddress());
+		parameter.SetAddress("gMeshlets",   meshlet.meshlets->GetGPUVirtualAddress());
+		parameter.SetAddress("gPrimitives", meshlet.primitiveIndices->GetGPUVirtualAddress());
+		 
+		core->BindGraphicsBuffer(FRenderCoreGeometry::Type::Deferred_MeshMS, context, parameter);
+		meshlet.Dispatch(context, 1);
 
 	});
 

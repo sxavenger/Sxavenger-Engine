@@ -10,6 +10,7 @@
 //* c++
 #include <optional>
 #include <span>
+#include <array>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // DXOBJECT
@@ -29,7 +30,7 @@ public:
 	BaseDimensionBuffer(size_t stride) : stride_(stride) {}
 	virtual ~BaseDimensionBuffer() { Release(); }
 
-	virtual void Release();
+	void Release();
 
 	//* getter *//
 
@@ -67,8 +68,6 @@ protected:
 
 	void Create(Device* devices, uint32_t size);
 
-	void UpdateAddress();
-
 	bool CheckIndex(size_t index) const;
 
 };
@@ -86,22 +85,24 @@ public:
 	//=========================================================================================
 
 	DimensionBuffer() : BaseDimensionBuffer(sizeof(T)) {}
-	virtual ~DimensionBuffer() { Release(); }
+	~DimensionBuffer() override { Unmap(); }
 
 	void Create(Device* device, uint32_t size);
 
-	void Release() override;
+	void Map();
+
+	void Unmap();
 
 	T& At(size_t index);
 	const T& At(size_t index) const;
 
-	const T* GetData();
+	const T* GetData() const;
 
 	void Memcpy(const T* data);
 
 	void Fill(const T& value);
 
-	const std::span<T>& GetSpan() const { return mappedDatas_; }
+	const std::span<T>& GetSpan() const { return datas_; }
 
 	//=========================================================================================
 	// operator
@@ -116,7 +117,7 @@ private:
 	// private variables
 	//=========================================================================================
 
-	std::span<T> mappedDatas_;
+	std::span<T> datas_;
 
 };
 
@@ -159,7 +160,7 @@ private:
 // LineIndexDimensionBuffer class
 ////////////////////////////////////////////////////////////////////////////////////////////
 class LineIndexDimensionBuffer
-	: public DimensionBuffer<std::pair<UINT, UINT>> {
+	: public DimensionBuffer<std::array<UINT, 2>> {
 public:
 
 	//=========================================================================================
@@ -167,6 +168,8 @@ public:
 	//=========================================================================================
 
 	const UINT GetIndexCount() const;
+
+	const UINT* GetIndexData() const;
 
 	const D3D12_INDEX_BUFFER_VIEW GetIndexBufferView() const;
 
@@ -177,7 +180,7 @@ private:
 // TriangleIndexDimensionBuffer class
 ////////////////////////////////////////////////////////////////////////////////////////////
 class TriangleIndexDimensionBuffer
-	: public DimensionBuffer<std::tuple<UINT, UINT, UINT>> {
+	: public DimensionBuffer<std::array<UINT, 3>> {
 public:
 
 	//=========================================================================================
@@ -185,6 +188,8 @@ public:
 	//=========================================================================================
 
 	const UINT GetIndexCount() const;
+
+	const UINT* GetIndexData() const;
 
 	const D3D12_INDEX_BUFFER_VIEW GetIndexBufferView() const;
 
@@ -199,60 +204,66 @@ private:
 template <class T>
 inline void DimensionBuffer<T>::Create(Device* device, uint32_t size) {
 	BaseDimensionBuffer::Create(device, size);
+	resource_->SetName(L"Dimension Buffer");
 
-	T* mappingTarget = nullptr;
-
-	// resourceをマッピング
-	resource_->Map(0, nullptr, reinterpret_cast<void**>(&mappingTarget));
-	resource_->SetName(L"dimension buffer");
-
-	mappedDatas_ = { mappingTarget, size_ };
-
+	Map();
 }
 
 template <class T>
-inline void DimensionBuffer<T>::Release() {
-	BaseDimensionBuffer::Release();
-	mappedDatas_ = {};
+inline void DimensionBuffer<T>::Map() {
+	T* target = nullptr;
+
+	// resourceをマッピング
+	resource_->Map(0, nullptr, reinterpret_cast<void**>(&target));
+	datas_ = { target, size_ };
+}
+
+template <class T>
+inline void DimensionBuffer<T>::Unmap() {
+	if (resource_ != nullptr) {
+		resource_->Unmap(0, nullptr);
+	}
+
+	datas_ = {};
 }
 
 template <class T>
 inline T& DimensionBuffer<T>::At(size_t index) {
 	Exception::Assert(CheckIndex(index), "Dimension Buffer out of range.");
-	return mappedDatas_[index];
+	return datas_[index];
 }
 
 template <class T>
 inline const T& DimensionBuffer<T>::At(size_t index) const {
 	Exception::Assert(CheckIndex(index), "Dimension Buffer out of range.");
-	return mappedDatas_[index];
+	return datas_[index];
 }
 
 template <class T>
-inline const T* DimensionBuffer<T>::GetData() {
-	return mappedDatas_.data();
+inline const T* DimensionBuffer<T>::GetData() const {
+	return datas_.data();
 }
 
 template <class T>
 inline void DimensionBuffer<T>::Memcpy(const T* data) {
-	std::memcpy(mappedDatas_.data(), data, stride_ * size_);
+	std::memcpy(datas_.data(), data, stride_ * size_);
 }
 
 template <class T>
 inline void DimensionBuffer<T>::Fill(const T& value) {
-	std::fill(mappedDatas_.begin(), mappedDatas_.end(), value);
+	std::fill(datas_.begin(), datas_.end(), value);
 }
 
 template <class T>
 inline T& DimensionBuffer<T>::operator[](size_t index) {
 	Exception::Assert(CheckIndex(index), "Dimension Buffer out of range.");
-	return mappedDatas_[index];
+	return datas_[index];
 }
 
 template <class T>
 inline const T& DimensionBuffer<T>::operator[](size_t index) const {
 	Exception::Assert(CheckIndex(index), "Dimension Buffer out of range.");
-	return mappedDatas_[index];
+	return datas_[index];
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////

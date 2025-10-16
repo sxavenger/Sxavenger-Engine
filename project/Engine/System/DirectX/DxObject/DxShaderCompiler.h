@@ -34,9 +34,6 @@ public:
 	// public methods
 	//=========================================================================================
 
-	ShaderCompiler()  = default;
-	~ShaderCompiler() { Term(); }
-
 	void Init();
 
 	void Term();
@@ -50,6 +47,8 @@ public:
 	);
 
 	ComPtr<ID3D12ShaderReflection> Reflection(IDxcBlob* blob);
+
+	static ShaderCompiler* GetInstance();
 
 private:
 

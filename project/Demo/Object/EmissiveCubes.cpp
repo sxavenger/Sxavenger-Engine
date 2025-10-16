@@ -6,6 +6,8 @@
 //* engine
 #include <Engine/Component/Components/Collider/ColliderComponent.h>
 #include <Engine/Component/Components/PostProcessLayer/PostProcessLayerComponent.h>
+#include <Engine/Component/Components/Transform/RectTransformComponent.h>
+#include <Engine/Component/Components/TextRenderer/TextRendererComponent.h>
 #include <Engine/Component/ComponentHelper.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -21,6 +23,12 @@ void EmissiveCubes::Awake() {
 	keyboard_ = SxavengerSystem::GetInput()->GetKeyboardInput();
 
 	MonoBehaviour::SetName("emissive cubes");
+
+	MonoBehaviour::AddComponent<RectTransformComponent>();
+	auto text = MonoBehaviour::AddComponent<TextRendererComponent>();
+	text->SetFont(sUContentStorage->Import<UContentFont>("assets/font/MPLUSRounded1c-Regular.ttf")->GetId());
+	text->SetSize(20.0f);
+	
 
 	for (size_t i = 0; i < cubes_.size(); ++i) {
 		cubes_[i] = std::make_unique<MonoBehaviour>();
@@ -60,44 +68,19 @@ void EmissiveCubes::Start() {
 
 		auto collider = cubes_[i]->GetComponent<ColliderComponent>();
 		collider->SetColliderBoundingSphere({ .radius = 0.5f });
-		collider->SetTag("cube");
+		collider->SetTag("Cube");
 	}
 }
 
 void EmissiveCubes::Update() {
-	if (camera_ == nullptr) {
-		return;
+
+	size_t count = 0;
+
+	for (size_t i = 0; i < cubes_.size(); ++i) {
+		count += cubes_[i]->IsActive();
 	}
 
-	if (keyboard_->IsPress(KeyId::KEY_F)) { //!< インタラクト
-		std::optional<std::pair<size_t, float>> nearest = std::nullopt;
-
-		static const float range = 4.0f;
-
-		// 最も近いキューブを探す
-		for (size_t i = 0; i < cubes_.size(); ++i) {
-
-			auto transform = cubes_[i]->GetComponent<TransformComponent>();
-			float distance = Vector3f::Distance(transform->GetPosition(), camera_->GetPosition());
-
-			if (distance > range) {
-				continue; //!< 遠すぎる
-			}
-
-			if (nearest.has_value()) {
-				if (nearest->second > distance) {
-					nearest = std::make_pair(i, distance);
-				}
-			} else {
-				nearest = std::make_pair(i, distance);
-			}
-
-		}
-
-		if (nearest.has_value()) {
-			auto transform = cubes_[nearest->first]->GetComponent<TransformComponent>();
-			transform->translate = camera_->GetPosition() + camera_->GetForward() * range / 2.0f;
-		}
-	}
+	auto text = MonoBehaviour::GetComponent<TextRendererComponent>();
+	text->SetText(std::format(L"{} / {}", count, cubes_.size()));
 
 }
