@@ -112,6 +112,7 @@ void PostProcessAutoExposure::ShowInspectorImGui() {
 		averageLuminance_.get(),
 		debugAverageLuminance_.get()
 	);
+	SxavengerSystem::ExecuteAllAllocator();
 
 	auto itr = std::max_element(debugHistgram_->GetSpan().begin(), debugHistgram_->GetSpan().end());
 
@@ -120,7 +121,7 @@ void PostProcessAutoExposure::ShowInspectorImGui() {
 
 	SxImGui::PlotHistogramFunc(
 		"## histogram",
-		[&](uint32_t index) { return static_cast<float>(debugHistgram_->At(index)) / (*itr); },
+		[&](uint32_t index) { return (*itr) != 0.0f ? static_cast<float>(debugHistgram_->At(index)) / (*itr) : 0.0f; },
 		debugHistgram_->GetSize(),
 		0,
 		NULL,

@@ -92,6 +92,8 @@ void UAssetMesh::Setup(const aiMesh* mesh) {
 		}
 	}
 
+	input_.CreateMeshlet();
+
 	UBaseAsset::Complete();
 	Logger::EngineThreadLog(std::format("[UAssetMesh]: mesh setup complete. uuid: {}", UBaseAsset::GetId().Serialize()));
 }
@@ -101,10 +103,6 @@ void UAssetMesh::Update(const DirectXQueueContext* context) {
 
 	if (!input_.IsCreateBottomLevelAS()) {
 		input_.CreateBottomLevelAS(context);
-	}
-
-	if (!input_.IsCreateMeshlet()) {
-		input_.CreateMeshlet();
 	}
 
 	// todo: 仮meshの追加
