@@ -89,7 +89,7 @@ void DepthTexture::CreateResource() {
 		IID_PPV_ARGS(&resource_)
 	);
 
-	DxObject::Assert(SUCCEEDED(hr), L"depth stencil texture create failed.");
+	DxObject::Assert(hr, L"depth stencil texture create failed.");
 }
 
 void DepthTexture::CreateDSV() {

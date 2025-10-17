@@ -243,7 +243,7 @@
     <ClInclude Include="Demo\Entity\Player.h">
       <Filter>Demo\Entity</Filter>
     </ClInclude>
-    <ClInclude Include="Demo\GameLoop\BetaSystemGameLoop.h">
+    <ClInclude Include="Engine\GameLoop\BetaSystemGameLoop.h">
       <Filter>Demo\GameLoop</Filter>
     </ClInclude>
     <ClInclude Include="Demo\GameLoop\DemoGameLoop.h">
@@ -950,7 +950,7 @@
     <ClCompile Include="Demo\Entity\Player.cpp">
       <Filter>Demo\Entity</Filter>
     </ClCompile>
-    <ClCompile Include="Demo\GameLoop\BetaSystemGameLoop.cpp">
+    <ClCompile Include="Engine\GameLoop\BetaSystemGameLoop.cpp">
       <Filter>Demo\GameLoop</Filter>
     </ClCompile>
     <ClCompile Include="Demo\GameLoop\DemoGameLoop.cpp">

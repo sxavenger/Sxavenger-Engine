@@ -27,11 +27,9 @@ void KeyboardInput::Init(IDirectInput8* dInput) {
 
 	flags_ |= DISCL_FOREGROUND;
 	flags_ |= DISCL_NONEXCLUSIVE;
-	/*flags_ |= DISCL_NOWINKEY;*/
 
 	//* DISCL_FOREGROUND   -> 画面が手前にある場合のみ入力を受け付け
 	//* DISCL_NONEXCLUSIVE -> デバイスをこのアプリで占有しない
-	//* DISCL_NOWINKEY     -> Windowsキーの無効化
 }
 
 void KeyboardInput::Term() {
@@ -273,6 +271,8 @@ bool MouseInput::SetCooperativeLevel(const DirectXWindowContext* window) {
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 void GamepadInput::Init(uint8_t number) {
+	Exception::Assert(number < XUSER_MAX_COUNT, "Gamepad number is out of range.");
+
 	// numberの設定
 	number_ = number;
 }
@@ -377,15 +377,11 @@ void Input::Init(const DirectXWindowContext* mainWindow) {
 
 	//* dinput *//
 
-	keyboard_ = std::make_unique<KeyboardInput>();
-	keyboard_->Init(directInput_.Get());
-
-	mouse_ = std::make_unique<MouseInput>();
-	mouse_->Init(directInput_.Get());
+	keyboard_ = std::make_unique<KeyboardInput>(directInput_.Get());
+	mouse_    = std::make_unique<MouseInput>(directInput_.Get());
 
 	for (uint8_t i = 0; i < XUSER_MAX_COUNT; ++i) {
-		gamepads_[i] = std::make_unique<GamepadInput>();
-		gamepads_[i]->Init(i);
+		gamepads_[i] = std::make_unique<GamepadInput>(i);
 	}
 }
 

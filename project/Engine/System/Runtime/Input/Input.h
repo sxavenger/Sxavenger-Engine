@@ -58,6 +58,7 @@ public:
 	//=========================================================================================
 
 	KeyboardInput() = default;
+	KeyboardInput(IDirectInput8* dInput) { Init(dInput); }
 	~KeyboardInput() { Term(); }
 
 	void Init(IDirectInput8* dInput);
@@ -114,6 +115,7 @@ public:
 	//=========================================================================================
 
 	MouseInput()  = default;
+	MouseInput(IDirectInput8* dInput) { Init(dInput); }
 	~MouseInput() { Term(); }
 
 	void Init(IDirectInput8* dInput);
@@ -192,6 +194,7 @@ public:
 	//=========================================================================================
 
 	GamepadInput() = default;
+	GamepadInput(uint8_t number) { Init(number); }
 	~GamepadInput() { Term(); }
 
 	void Init(uint8_t number);
@@ -266,10 +269,6 @@ public:
 
 	bool IsReleaseKey(KeyId id);
 
-	//* input option *//
-
-	Vector2f GetInputDirection() const;
-
 	//* getter *//
 
 	const KeyboardInput* GetKeyboardInput() const { return keyboard_.get(); }
@@ -296,5 +295,8 @@ private:
 	//* xinput *//
 
 	std::array<std::unique_ptr<GamepadInput>, XUSER_MAX_COUNT> gamepads_;
+
+
+	// todo: stringからinput取得する仕組みを作る
 
 };

@@ -44,12 +44,8 @@ private:
 
 	std::unique_ptr<ControllableCameraActor> camera_;
 
-	std::unique_ptr<AtmosphereActor> atmosphere_;
-
 	std::unique_ptr<SkyLightActor> skylight_;
 	std::unique_ptr<MonoBehaviour> offlineSkylight_;
-
-	//std::unique_ptr<LeadParticle> leadParticle_;
 
 	std::unique_ptr<MonoBehaviour> behaviour_;
 

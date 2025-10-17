@@ -167,7 +167,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Demo\Entity\Player.h" />
-    <ClInclude Include="Demo\GameLoop\BetaSystemGameLoop.h" />
+    <ClInclude Include="Engine\GameLoop\BetaSystemGameLoop.h" />
     <ClInclude Include="Demo\GameLoop\DemoGameLoop.h" />
     <ClInclude Include="Demo\GameLoop\PreviewGameLoop.h" />
     <ClInclude Include="Demo\Object\EmissiveCubes.h" />
@@ -404,7 +404,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Demo\Entity\Player.cpp" />
-    <ClCompile Include="Demo\GameLoop\BetaSystemGameLoop.cpp" />
+    <ClCompile Include="Engine\GameLoop\BetaSystemGameLoop.cpp" />
     <ClCompile Include="Demo\GameLoop\DemoGameLoop.cpp" />
     <ClCompile Include="Demo\GameLoop\PreviewGameLoop.cpp" />
     <ClCompile Include="Demo\Object\EmissiveCubes.cpp" />

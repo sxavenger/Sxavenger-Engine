@@ -63,16 +63,6 @@ void BetaSystemGameLoop::InitSystem() {
 	camera_->Init();
 	camera_->GetComponent<CameraComponent>()->SetTag(CameraComponent::Tag::GameCamera);
 
-	//SxavengerAsset::TryImport<AssetModel>("assets/models/PBR_Sphere_Test/model/PBR_Sphere.gltf");
-
-	//atmosphere_ = std::make_unique<AtmosphereActor>();
-	//atmosphere_->Init({ 1024, 1024 });
-
-	//skylight_ = std::make_unique<SkyLightActor>();
-	//skylight_->Init({ 1024, 1024 });
-	//skylight_->SetTexture("assets/textures/textureCube/studio_small_09_4k.dds");
-	//skylight_->Update(true);
-
 	offlineSkylight_ = std::make_unique<MonoBehaviour>();
 	auto light = offlineSkylight_->AddComponent<SkyLightComponent>();
 	light->SetIrradiance(sUContentStorage->Import<UContentTexture>("assets/textures/textureCube/sky_irradiance.dds")->GetId());
@@ -90,9 +80,6 @@ void BetaSystemGameLoop::InitSystem() {
 	behaviour_->GetComponent<PostProcessLayerComponent>()->SetTag(PostProcessLayerComponent::Tag::None);
 	behaviour_->GetComponent<PostProcessLayerComponent>()->AddPostProcess<PostProcessAutoExposure>();
 	behaviour_->GetComponent<PostProcessLayerComponent>()->AddPostProcess<PostProcessLocalExposure>(false);
-	//behaviour_->GetComponent<PostProcessLayerComponent>()->AddPostProcess<PostProcessBloom>();
-	//behaviour_->GetComponent<PostProcessLayerComponent>()->AddPostProcess<PostProcessDoF>();
-	//behaviour_->GetComponent<PostProcessLayerComponent>()->AddPostProcess<PostProcessGrayScale>();
 	behaviour_->GetComponent<PostProcessLayerComponent>()->AddPostProcess<PostProcessChromaticAberration>();
 	behaviour_->GetComponent<PostProcessLayerComponent>()->AddPostProcess<PostProcessRadialBlur>();
 	behaviour_->GetComponent<PostProcessLayerComponent>()->AddPostProcess<PostProcessMotionBlur>();
