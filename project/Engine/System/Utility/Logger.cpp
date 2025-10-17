@@ -91,9 +91,16 @@ _NORETURN void SxavengerLogger::ExceptionA(const std::string& label, const std::
 	}
 
 	// thread
+	std::thread::id id = std::this_thread::get_id();
 	std::ostringstream threadMes;
 	threadMes << "[thread]" << "  \n";
-	threadMes << " id: " << std::this_thread::get_id() << "\n";
+
+	if (SxavengerLogger::IsMainThread(id)) {
+		threadMes << " main thread\n";
+
+	} else {
+		threadMes << " id: " << id << "\n";
+	}
 	OutputA(threadMes.str());
 
 #ifdef _OUTPUT_SXAVENGER_LOG_FILE
@@ -144,9 +151,16 @@ _NORETURN void SxavengerLogger::ExceptionW(const std::wstring& label, const std:
 	}
 
 	// thread
+	std::thread::id id = std::this_thread::get_id();
 	std::wostringstream threadMes;
 	threadMes << "[thread]" << "  \n";
-	threadMes << " id: " << std::this_thread::get_id() << "\n";
+
+	if (SxavengerLogger::IsMainThread(id)) {
+		threadMes << " main thread\n";
+
+	} else {
+		threadMes << " id: " << id << "\n";
+	}
 	OutputW(threadMes.str());
 
 #ifdef _OUTPUT_SXAVENGER_LOG_FILE
@@ -231,14 +245,35 @@ void Logger::EngineLog(const std::wstring& log) {
 }
 
 void Logger::EngineThreadLog(const std::string& log) {
+	std::thread::id id = std::this_thread::get_id();
+
 	std::ostringstream tag;
-	tag << "[Sxavenger Engine] [thread id: " << std::this_thread::get_id() << "] >> ";
+	tag << "[Sxavenger Engine] ";
+
+	if (SxavengerLogger::IsMainThread(id)) {
+		tag << "[main thread] >> ";
+
+	} else {
+		tag << "[thread id: " << id << "] >> ";
+	}
+
 	SxavengerLogger::LogA(tag.str() + log);
+
 }
 
 void Logger::EngineThreadLog(const std::wstring& log) {
+	std::thread::id id = std::this_thread::get_id();
+
 	std::wostringstream tag;
-	tag << L"[Sxavenger Engine] [thread id: " << std::this_thread::get_id() << L"] >> ";
+	tag << L"[Sxavenger Engine] ";
+
+	if (SxavengerLogger::IsMainThread(id)) {
+		tag << L"[main thread] >> ";
+
+	} else {
+		tag << L"[thread id: " << id << L"] >> ";
+	}
+
 	SxavengerLogger::LogW(tag.str() + log);
 }
 

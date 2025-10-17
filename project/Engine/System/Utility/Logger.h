@@ -88,6 +88,11 @@ public:
 
 	static const Container& GetStacks() { return stacks_; }
 
+	//* thread check *//
+
+	static bool IsMainThread() { return std::this_thread::get_id() == kMainThreadId_; }
+	static bool IsMainThread(const std::thread::id& id) { return id == kMainThreadId_; }
+
 private:
 
 	//=========================================================================================
@@ -97,6 +102,10 @@ private:
 	//* thread safety *//
 
 	static std::mutex mutex_;
+
+	//* thread id *//
+
+	static inline const std::thread::id kMainThreadId_ = std::this_thread::get_id();
 
 	//* file output parameter *//
 
