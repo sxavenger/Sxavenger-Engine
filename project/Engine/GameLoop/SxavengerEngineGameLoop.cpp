@@ -40,7 +40,7 @@ void SxavengerEngineGameLoop::Init(GameLoop::Context* context) {
 		FMainRender::GetInstance()->Term();
 		FRenderCore::GetInstance()->Term();
 
-		SxavengerSystem::ShutdownAsyncThread();
+		SxavengerSystem::Shutdown();
 		SxavengerSystem::ExecuteAllAllocator();
 
 		sUAssetStorage->Serialize();

@@ -14,9 +14,13 @@
 //* engine
 #include <Engine/System/Utility/ComPtr.h>
 #include <Engine/System/DirectX/Context/DirectXWindowContext.h>
+#include <Engine/System/UI/ISystemDebugGui.h>
 
 //* lib
 #include <lib/Sxl/Flag.h>
+
+//* externals
+#include <magic_enum.hpp>
 
 //* input
 #include <dinput.h>
@@ -38,19 +42,59 @@
 #pragma comment(lib, "Xinput.lib")
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// using
+// InputType enum class
 ////////////////////////////////////////////////////////////////////////////////////////////
+enum class InputType : uint8_t {
+	Main_Current,
+	Main_Previous,
+	Async_Stack,
+};
 
-//! [pair]
-//! first:  現在frameのInput状態
-//! second: 前frameのInput状態
-template <typename T>
-using InputState = std::pair<T, T>;
+////////////////////////////////////////////////////////////////////////////////////////////
+// InputState enum class
+////////////////////////////////////////////////////////////////////////////////////////////
+enum class InputState : size_t {
+};
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // KeyboardInput class
 ////////////////////////////////////////////////////////////////////////////////////////////
-class KeyboardInput {
+class KeyboardInput
+	: public ISystemDebugGui {
+public:
+
+	////////////////////////////////////////////////////////////////////////////////////////////
+	// using
+	////////////////////////////////////////////////////////////////////////////////////////////
+
+	static const size_t kKeyCount = 256; //!< keyの数
+	using KeyInput = std::array<BYTE, kKeyCount>; //!< key input data type
+
+	////////////////////////////////////////////////////////////////////////////////////////////
+	// InputData structure
+	////////////////////////////////////////////////////////////////////////////////////////////
+	struct InputData {
+	public:
+
+		//=========================================================================================
+		// public methods
+		//=========================================================================================
+
+		void Clear() { *this = InputData(); }
+
+		bool IsEnableAcquire() const { return isEnableAcquire; }
+
+		bool GetKey(KeyId id) const { return keys.at(static_cast<uint8_t>(id)); }
+
+		//=========================================================================================
+		// public variables
+		//=========================================================================================
+
+		bool isEnableAcquire = false; //!< inputが取得可能かどうか
+		KeyInput keys        = {};    //!< keyの状態
+
+	};
+
 public:
 
 	//=========================================================================================
@@ -59,13 +103,12 @@ public:
 
 	KeyboardInput() = default;
 	KeyboardInput(IDirectInput8* dInput) { Init(dInput); }
-	~KeyboardInput() { Term(); }
 
 	void Init(IDirectInput8* dInput);
 
-	void Term();
+	void AsyncUpdate();
 
-	void Update();
+	void UpdateInputState();
 
 	//* keyboard input option *//
 
@@ -74,6 +117,10 @@ public:
 	bool IsTrigger(KeyId id) const;
 
 	bool IsRelease(KeyId id) const;
+
+	//* debug gui *//
+
+	void SystemDebugGui() override;
 
 private:
 
@@ -91,11 +138,9 @@ private:
 
 	//* member *//
 
-	static const uint32_t kKeyNum_ = 256;
-	InputState<std::array<BYTE, kKeyNum_>> keys_;
+	std::array<InputData, magic_enum::enum_count<InputType>()> inputs_;
 
-	bool isEnableAquire_ = false; //!< Inputが取得可能かどうか
-
+	
 	//=========================================================================================
 	// private variables
 	//=========================================================================================
@@ -107,7 +152,42 @@ private:
 ////////////////////////////////////////////////////////////////////////////////////////////
 // MouseInput class
 ////////////////////////////////////////////////////////////////////////////////////////////
-class MouseInput {
+class MouseInput
+	: public ISystemDebugGui {
+public:
+
+	////////////////////////////////////////////////////////////////////////////////////////////
+	// InputData structure
+	////////////////////////////////////////////////////////////////////////////////////////////
+	struct InputData {
+	public:
+
+		//=========================================================================================
+		// public methods
+		//=========================================================================================
+
+		void Clear() { *this = InputData(); }
+
+		bool IsEnableAcquire() const { return isEnableAcquire; }
+
+		Vector2i GetDeltaPosition() const { return { mouse.lX, mouse.lY }; }
+
+		int32_t GetDeltaWheel() const { return mouse.lZ; }
+		bool IsWheel() const { return mouse.lZ != 0; }
+		bool IsWheelUp() const { return mouse.lZ > 0; }
+		bool IsWheelDown() const { return mouse.lZ < 0; }
+
+		bool GetButton(MouseId id) const { return mouse.rgbButtons[static_cast<uint8_t>(id)]; }
+
+		//=========================================================================================
+		// public variables
+		//=========================================================================================
+
+		bool isEnableAcquire = false; //!< inputが取得可能かどうか
+		DIMOUSESTATE2 mouse  = {};    //!< mouse input data
+
+	};
+
 public:
 
 	//=========================================================================================
@@ -116,13 +196,12 @@ public:
 
 	MouseInput()  = default;
 	MouseInput(IDirectInput8* dInput) { Init(dInput); }
-	~MouseInput() { Term(); }
 
 	void Init(IDirectInput8* dInput);
 
-	void Term();
+	void AsyncUpdate();
 
-	void Update();
+	void UpdateInputState();
 
 	//* mouse position option *//
 
@@ -147,13 +226,19 @@ public:
 
 	//* mouse wheel *//
 
-	float GetDeltaWheel() const;
+	int32_t GetDeltaWheel() const;
+
+	float GetDeltaWheelNormalized() const;
 
 	bool IsWheel() const;
 
 	bool IsWheelUp() const;
 
 	bool IsWheelDown() const;
+
+	//* debug gui *//
+
+	void SystemDebugGui() override;
 
 private:
 
@@ -171,9 +256,7 @@ private:
 
 	//* member *//
 
-	InputState<DIMOUSESTATE2> mouse_;
-
-	bool isEnableAquire_ = false; //!< Inputが取得可能かどうか
+	std::array<InputData, magic_enum::enum_count<InputType>()> inputs_;
 
 	//=========================================================================================
 	// private variables
@@ -186,7 +269,38 @@ private:
 ////////////////////////////////////////////////////////////////////////////////////////////
 // GamepadInput class
 ////////////////////////////////////////////////////////////////////////////////////////////
-class GamepadInput {
+class GamepadInput
+	: public ISystemDebugGui {
+public:
+
+	////////////////////////////////////////////////////////////////////////////////////////////
+	// InputData structure
+	////////////////////////////////////////////////////////////////////////////////////////////
+	struct InputData {
+	public:
+
+		//=========================================================================================
+		// public methods
+		//=========================================================================================
+
+		void Clear() { *this = InputData(); }
+
+		bool IsConnect() const { return isConnect; }
+
+		bool GetButton(GamepadButtonId id) const { return (xinput.Gamepad.wButtons & static_cast<uint16_t>(id)) != 0; }
+		bool GetButton(GamepadTriggerId id) const;
+
+		Vector2i GetStick(GamepadStickId id) const;
+
+		//=========================================================================================
+		// public variables
+		//=========================================================================================
+
+		bool isConnect      = false; //!< gamepadが接続されているかどうか
+		XINPUT_STATE xinput = {};    //!< xinput state
+
+	};
+
 public:
 
 	//=========================================================================================
@@ -195,17 +309,16 @@ public:
 
 	GamepadInput() = default;
 	GamepadInput(uint8_t number) { Init(number); }
-	~GamepadInput() { Term(); }
 
 	void Init(uint8_t number);
 
-	void Term();
+	void AsyncUpdate();
 
-	void Update();
+	void UpdateInputState();
 
 	//* gamepad state option *//
 
-	bool IsConnect() const { return isConnect_; }
+	bool IsConnect() const;
 
 	//* gamepad input option *//
 
@@ -223,6 +336,10 @@ public:
 	Vector2i GetStick(GamepadStickId id) const;
 	Vector2f GetStickNormalized(GamepadStickId id) const;
 
+	//* debug gui *//
+
+	void SystemDebugGui() override;
+
 private:
 
 	//=========================================================================================
@@ -235,9 +352,7 @@ private:
 
 	//* state *//
 
-	InputState<XINPUT_STATE> state_;
-
-	bool isConnect_ = false;
+	std::array<InputData, magic_enum::enum_count<InputType>()> inputs_;
 
 };
 
@@ -245,7 +360,8 @@ private:
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Input class
 ////////////////////////////////////////////////////////////////////////////////////////////
-class Input {
+class Input
+	: public ISystemDebugGui {
 public:
 
 	//=========================================================================================
@@ -253,11 +369,10 @@ public:
 	//=========================================================================================
 
 	Input() = default;
-	~Input() { Term(); }
 
 	void Init(const DirectXWindowContext* mainWindow);
 
-	void Term();
+	void Shutdown();
 
 	void Update();
 
@@ -277,11 +392,20 @@ public:
 
 	const GamepadInput* GetGamepadInput(uint8_t number) const { return gamepads_[number].get(); }
 
+	//* debug gui *//
+
+	void SystemDebugGui() override;
+
 private:
 
 	//=========================================================================================
 	// private variables
 	//=========================================================================================
+
+	std::thread thread_;
+	std::mutex mutex_;
+
+	bool isTerminate_ = false;
 
 	//* directInput *//
 

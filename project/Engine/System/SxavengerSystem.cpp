@@ -50,6 +50,11 @@ void SxavengerSystem::Init() {
 void SxavengerSystem::Term() {
 }
 
+void SxavengerSystem::Shutdown() {
+	sAsyncThreadCollection->Term();
+	sInput->Shutdown();
+}
+
 _DXOBJECT Descriptor SxavengerSystem::GetDescriptor(_DXOBJECT DescriptorType type) {
 	return sDirectXCommon->GetDesriptorHeaps()->GetDescriptor(type);
 }
@@ -165,8 +170,8 @@ void SxavengerSystem::PushTaskAndWait(AsyncExecution execution, const AsyncTask:
 	task->Wait();
 }
 
-void SxavengerSystem::ShutdownAsyncThread() {
-	sAsyncThreadCollection->Term();
+AsyncThreadCollection* SxavengerSystem::GetAsyncThreadCollection() {
+	return sAsyncThreadCollection.get();
 }
 
 void SxavengerSystem::BeginImGuiFrame() {

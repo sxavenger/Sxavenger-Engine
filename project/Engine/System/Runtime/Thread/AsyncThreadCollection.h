@@ -7,13 +7,17 @@
 #include "AsyncTask.h"
 #include "AsyncThread.h"
 
+//* engine
+#include <Engine/System/UI/ISystemDebugGui.h>
+
 //* c++
 #include <array>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // AsyncThreadCollection class
 ////////////////////////////////////////////////////////////////////////////////////////////
-class AsyncThreadCollection {
+class AsyncThreadCollection
+	: public ISystemDebugGui {
 public:
 
 	//=========================================================================================
@@ -30,6 +34,10 @@ public:
 	//* task option *//
 
 	void PushTask(AsyncExecution execution, const std::shared_ptr<AsyncTask>& task);
+
+	//* debug gui *//
+
+	void SystemDebugGui() override;
 
 private:
 

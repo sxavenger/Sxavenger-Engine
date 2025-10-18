@@ -126,7 +126,7 @@ void PerspectiveCamera::InputFirstPerson() {
 	mouse_->ShowCousor(false);
 
 	// ホイールでfocus距離を変更
-	float wheel = mouse_->GetDeltaWheel();
+	float wheel = mouse_->GetDeltaWheelNormalized();
 
 	if (wheel != 0.0f) {
 		camera_->GetProjection().focal += wheel;

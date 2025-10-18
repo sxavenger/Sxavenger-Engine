@@ -30,6 +30,7 @@ void DevelopEditor::ShowMainMenu() {
 		ShowProcessMenu();
 		ShowSystemMenu();
 		ShowThreadMenu();
+		ShowInputMenu();
 
 		ImGui::EndMenu();
 	}
@@ -154,18 +155,13 @@ void DevelopEditor::ShowSystemMenu() {
 
 		if (ImGui::BeginMenu("descriptor")) {
 			MenuPadding();
-
-			auto descriptorHeaps = SxavengerSystem::GetDxDescriptorHeaps();
-			descriptorHeaps->SystemDebugGui();
-
+			SxavengerSystem::GetDxDescriptorHeaps()->SystemDebugGui();
 			ImGui::EndMenu();
 		}
 
 		if (ImGui::BeginMenu("window")) {
-
-			auto windowCollection = SxavengerSystem::GetWindowCollection();
-			windowCollection->SystemDebugGui();
-
+			MenuPadding();
+			SxavengerSystem::GetWindowCollection()->SystemDebugGui();
 			ImGui::EndMenu();
 		}
 
@@ -176,10 +172,15 @@ void DevelopEditor::ShowSystemMenu() {
 void DevelopEditor::ShowThreadMenu() {
 	if (ImGui::BeginMenu("thread")) {
 		MenuPadding();
+		SxavengerSystem::GetAsyncThreadCollection()->SystemDebugGui();
+		ImGui::EndMenu();
+	}
+}
 
-		/*auto collection = SxavengerAsset::GetCollection();
-		collection->SystemDebugGui();*/
-
+void DevelopEditor::ShowInputMenu() {
+	if (ImGui::BeginMenu("input")) {
+		MenuPadding();
+		SxavengerSystem::GetInput()->SystemDebugGui();
 		ImGui::EndMenu();
 	}
 }

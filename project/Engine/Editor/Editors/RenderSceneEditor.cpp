@@ -873,7 +873,7 @@ void RenderSceneEditor::UpdateCamera() {
 	}
 
 	if (mouse->IsWheel()) {
-		distance_ = std::max(distance_ - mouse->GetDeltaWheel(), 0.0f);
+		distance_ = std::max(distance_ - mouse->GetDeltaWheelNormalized(), 0.0f);
 		isMoveCamera_ = true;
 	}
 

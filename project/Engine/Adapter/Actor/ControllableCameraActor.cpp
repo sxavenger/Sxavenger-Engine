@@ -85,7 +85,7 @@ void ControllableCameraActor::Move() {
 		direction *= 2.0f;
 	}
 
-	speed_ += mouse_->GetDeltaWheel() * 0.1f;
+	speed_ += mouse_->GetDeltaWheelNormalized() * 0.1f;
 	speed_ = std::clamp(speed_, 0.1f, 10.0f);
 
 	direction *= speed_ * static_cast<float>(SxavengerSystem::GetDeltaTime().time);

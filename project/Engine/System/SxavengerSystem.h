@@ -29,6 +29,8 @@ public:
 
 	static void Term();
 
+	static void Shutdown();
+
 	//-----------------------------------------------------------------------------------------
 	// DirectXCommon option
 	//-----------------------------------------------------------------------------------------
@@ -106,7 +108,7 @@ public:
 
 	static void PushTaskAndWait(AsyncExecution execution, const AsyncTask::Function& function);
 
-	static void ShutdownAsyncThread();
+	static AsyncThreadCollection* GetAsyncThreadCollection();
 
 	//-----------------------------------------------------------------------------------------
 	// imgui controller option
