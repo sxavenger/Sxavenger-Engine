@@ -6,6 +6,9 @@
 //* geometry
 #include "Vector3.h"
 
+//* sxl
+#include <Lib/Sxl/Formatter.h>
+
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Quaternion class
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -74,7 +77,14 @@ public:
 
 	static Vector3f ToEuler(const Quaternion& q) noexcept; //!< test
 
-	// todo: formatter
+	//=========================================================================================
+	// formatter
+	//=========================================================================================
+
+	template <typename FormatContext>
+	auto format(FormatContext& ctx) const {
+		return std::format_to(ctx.out(), "({}, {}, {}, {})", imaginary.x, imaginary.y, imaginary.z, w);
+	}
 
 };
 
@@ -111,6 +121,12 @@ constexpr Quaternion Quaternion::operator+() const noexcept {
 constexpr Quaternion Quaternion::operator-() const noexcept {
 	return { -imaginary, -w };
 }
+
+////////////////////////////////////////////////////////////////////////////////////////////
+// Quaternion formatter structure
+////////////////////////////////////////////////////////////////////////////////////////////
+template <>
+struct std::formatter<Quaternion> : Sxl::BaseFormatter<Quaternion> {};
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Quaternion class binary operators
