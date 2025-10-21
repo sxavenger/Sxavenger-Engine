@@ -9,6 +9,7 @@
 ////////////////////////////////////////////////////////////////////////////////////////////
 // DirectXQueueContext class
 ////////////////////////////////////////////////////////////////////////////////////////////
+//! @brief DirectXのCommand関係を管理するクラス
 class DirectXQueueContext {
 public:
 
@@ -16,10 +17,10 @@ public:
 	// RenderQueue enum class
 	////////////////////////////////////////////////////////////////////////////////////////////
 	enum class RenderQueue : uint8_t {
-		None,
-		Copy,
-		Compute,
-		Direct
+		None,    //!< CommandQueueを作成しない
+		Copy,    //!< D3D12_COMMAND_LIST_TYPE_COPY
+		Compute, //!< D3D12_COMMAND_LIST_TYPE_COMPUTE
+		Direct   //!< D3D12_COMMAND_LIST_TYPE_DIRECT
 	};
 
 public:

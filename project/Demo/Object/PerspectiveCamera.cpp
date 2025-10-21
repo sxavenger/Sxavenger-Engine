@@ -26,7 +26,7 @@ void PerspectiveCamera::Awake() {
 	transform_ = MonoBehaviour::AddComponent<TransformComponent>();
 	camera_    = MonoBehaviour::AddComponent<CameraComponent>();
 
-	camera_->SetTag(CameraComponent::Tag::GameCamera);
+	camera_->SetTag(CameraComponent::Tag::Game);
 
 	auto process = MonoBehaviour::AddComponent<PostProcessLayerComponent>();
 	process->SetTag(PostProcessLayerComponent::Tag::Local);

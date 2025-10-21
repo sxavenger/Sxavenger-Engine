@@ -61,7 +61,7 @@ void BetaSystemGameLoop::InitSystem() {
 
 	camera_ = std::make_unique<ControllableCameraActor>();
 	camera_->Init();
-	camera_->GetComponent<CameraComponent>()->SetTag(CameraComponent::Tag::GameCamera);
+	camera_->GetComponent<CameraComponent>()->SetTag(CameraComponent::Tag::Game);
 
 	offlineSkylight_ = std::make_unique<MonoBehaviour>();
 	auto light = offlineSkylight_->AddComponent<SkyLightComponent>();
@@ -100,29 +100,14 @@ void BetaSystemGameLoop::InitSystem() {
 
 	t->GetTransform().translate = { 200.0f, 200.0f };
 
-	parameter_ = std::make_unique<ParameterActor>();
-
-	colliderA_ = std::make_unique<MonoBehaviour>();
-	colliderA_->AddComponent<TransformComponent>();
-	auto colA = colliderA_->AddComponent<ColliderComponent>();
-	colA->SetTag("A");
-	colA->SetColliderBoundingSphere();
-
-	colliderB_ = std::make_unique<MonoBehaviour>();
-	colliderB_->AddComponent<TransformComponent>();
-	auto colB = colliderB_->AddComponent<ColliderComponent>();
-	colB->SetTag("B");
-	colB->SetColliderBoundingAABB();
-
-	sCollisionManager->SetOnCollisionFunctionEnter(
-		"B", "A",
-		[](ColliderComponent* a, ColliderComponent* b) {
-			Logger::CommentRuntime("info | [BetaSystemGameLoop]::OnCollisionEnter", std::format("collider {} enter collider {}", a->GetTag(), b->GetTag()));
-		}
-	);
-
 	performance_ = std::make_unique<PerformanceActor>();
 	performance_->Init();
+
+	//* test *//
+
+	texture_.Create(kMainWindowSize * 16u, DXGI_FORMAT_R32G32B32A32_FLOAT);
+	pipeline_.CreateBlob(kAssetsDirectory / "shaders" / "test.cs.hlsl");
+	pipeline_.ReflectionPipeline(SxavengerSystem::GetDxDevice());
 }
 
 void BetaSystemGameLoop::TermSystem() {
@@ -177,5 +162,30 @@ void BetaSystemGameLoop::DrawSystem() {
 	SxavengerSystem::RenderImGui();
 
 	main_->EndRenderWindow(SxavengerSystem::GetDirectQueueContext());
+
+	//* test *//
+
+	{
+
+		FRenderTargetBuffer* buffer = FMainRender::GetInstance()->GetTextures();
+		FScene*              scene  = FMainRender::GetInstance()->GetScene();
+
+		texture_.TransitionBeginUnordered(SxavengerSystem::GetDirectQueueContext());
+
+		pipeline_.SetPipeline(SxavengerSystem::GetDirectQueueContext()->GetDxCommand());
+
+		DxObject::BindBufferDesc desc = {};
+		desc.SetAddress("gScene", scene->GetTopLevelAS().GetGPUVirtualAddress());
+		desc.SetHandle("gDirect", buffer->GetGBuffer(FLightingGBuffer::Layout::Direct)->GetGPUHandleSRV());
+		desc.SetHandle("gOutput", texture_.GetGPUHandleUAV());
+		desc.SetAddress("gDeferredBufferIndex", buffer->GetIndexBufferAddress());
+		desc.SetAddress("gCamera", ComponentHelper::GetCameraComponent(CameraComponent::Tag::Game)->GetGPUVirtualAddress());
+
+		pipeline_.BindComputeBuffer(SxavengerSystem::GetDirectQueueContext()->GetDxCommand(), desc);
+		pipeline_.Dispatch(SxavengerSystem::GetDirectQueueContext()->GetDxCommand(), { DxObject::RoundUp(kMainWindowSize.x, 32), DxObject::RoundUp(kMainWindowSize.y, 32), 1});
+
+		texture_.TransitionEndUnordered(SxavengerSystem::GetDirectQueueContext());
+		
+	}
 
 }

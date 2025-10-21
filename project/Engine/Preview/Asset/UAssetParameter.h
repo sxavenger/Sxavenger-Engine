@@ -189,7 +189,7 @@ inline void UAssetParameter<T>::Wait() const {
 
 	while (!asset->IsComplete()) {
 		std::this_thread::sleep_for(std::chrono::milliseconds(1));
-		Logger::CommentRuntime(std::format("[UAssetParameter]: waiting for asset completion. id: {}", GetStr()));
+		Logger::CommentRuntime("[UAssetParameter]", std::format("waiting for asset completion. id: {}", GetStr()));
 	}
 }
 

@@ -7,6 +7,9 @@
 #include "Entity/MonoBehaviour.h"
 #include "Entity/MonoBehaviourContainer.h"
 
+//* component
+#include "Components/Camera/CameraComponent.h"
+
 //* engine
 #include <Engine/System/Runtime/Performance/TimePoint.h>
 #include <Engine/Content/Animation/Animation.h>
@@ -93,7 +96,9 @@ public:
 
 	static void ModifyBehaviourMaterial(MonoBehaviour* root, const std::function<void(UAssetMaterial*)>& function);
 
-	
+	//* component helper *//
+
+	static CameraComponent* GetCameraComponent(CameraComponent::Tag tag);
 
 private:
 };

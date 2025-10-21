@@ -51,6 +51,7 @@ void RenderSceneEditor::Init() {
 	camera_->AddComponent<CameraComponent>();
 
 	auto camera = camera_->GetComponent<CameraComponent>();
+	camera->SetTag(CameraComponent::Tag::Editor);
 	camera->GetProjection().focal = 16.0f;
 	camera->UpdateProj();
 	UpdateView();
@@ -60,7 +61,7 @@ void RenderSceneEditor::Init() {
 
 	config_ = {};
 	config_.buffer              = textures_.get();
-	config_.camera              = camera_->GetComponent<CameraComponent>();
+	config_.tag                 = CameraComponent::Tag::Editor;
 	config_.isEnablePostProcess = false;
 	config_.isEnableTonemap     = true;
 

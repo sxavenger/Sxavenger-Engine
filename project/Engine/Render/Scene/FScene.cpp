@@ -76,7 +76,7 @@ void FScene::SetupTopLevelAS(const DirectXQueueContext* context) {
 				break;
 
 			default:
-				Logger::WarningRuntime("warning | [FScene] SetupTopLevelAS", "MeshRendererComponent has unsupported material mode.");
+				Logger::WarningRuntime("[FScene]", "MeshRendererComponent has unsupported material mode.");
 				return;
 		}
 
@@ -120,7 +120,7 @@ void FScene::SetupTopLevelAS(const DirectXQueueContext* context) {
 				break;
 
 			default:
-				Logger::WarningRuntime("warning | [FScene] SetupTopLevelAS", "MeshRendererComponent has unsupported material mode.");
+				Logger::WarningRuntime("[FScene]", "MeshRendererComponent has unsupported material mode.");
 				return;
 		}
 

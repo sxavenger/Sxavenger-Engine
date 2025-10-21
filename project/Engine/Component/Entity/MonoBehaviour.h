@@ -65,6 +65,7 @@ public:
 	// public methods
 	//=========================================================================================
 
+	
 	MonoBehaviour();
 	virtual ~MonoBehaviour();
 
@@ -73,10 +74,6 @@ public:
 	void SetActive(bool isActive);
 
 	bool IsActive() const { return isActive_; }
-
-	void SetView(bool isView);
-
-	bool IsView() const { return isView_; }
 
 	//* name option *//
 
@@ -185,7 +182,6 @@ protected:
 
 	//* flag
 	bool isActive_ = true;
-	bool isView_   = true;
 
 	//* components
 	Components components_;
@@ -247,7 +243,7 @@ _Ty* MonoBehaviour::AddComponent() {
 		components_[type] = sComponentStorage->RegisterComponent<_Ty>(this);
 		
 	} else {
-		Logger::WarningRuntime("warning | [MonoBehaviour]::AddComponent", "component is already added. component is only one.");
+		Logger::WarningRuntime("[MonoBehaviour]", "component is already added. component is only one.");
 	}
 
 	return static_cast<_Ty*>(components_[type]->get());
@@ -264,7 +260,7 @@ void MonoBehaviour::RemoveComponent() {
 		components_.Erase(type);
 
 	} else {
-		Logger::WarningRuntime("warning | [MonoBehaviour]::RemoveComponent", "component is not found. type: " + std::string(type->name()));
+		Logger::WarningRuntime("[MonoBehaviour]", "component is not found. \n type: " + std::string(type->name()));
 	}
 }
 

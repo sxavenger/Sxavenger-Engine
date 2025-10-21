@@ -15,7 +15,7 @@
 //-----------------------------------------------------------------------------------------
 //* library
 #include "../../Library/Hammersley.hlsli"
-#include "ImportanceSample.hlsli"
+#include "../../Library/ImportanceSample.hlsli"
 
 //* component
 #include "../../Component/CameraComponent.hlsli"

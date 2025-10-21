@@ -19,6 +19,8 @@
 #include <Engine/Adapter/Actor/ParameterActor.h>
 #include <Engine/Adapter/Actor/PerformanceActor.h>
 
+#include "Engine/Render/Common/FBaseTexture.h"
+
 ////////////////////////////////////////////////////////////////////////////////////////////
 // BetaSystemGameLoop class
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -49,12 +51,12 @@ private:
 
 	std::unique_ptr<MonoBehaviour> behaviour_;
 
-	std::unique_ptr<ParameterActor> parameter_;
-
-	std::unique_ptr<MonoBehaviour> colliderA_;
-	std::unique_ptr<MonoBehaviour> colliderB_;
-
 	std::unique_ptr<PerformanceActor> performance_;
+
+	//* test *//
+
+	FBaseTexture texture_;
+	DxObject::ReflectionComputePipelineState pipeline_;
 
 	//=========================================================================================
 	// private methods

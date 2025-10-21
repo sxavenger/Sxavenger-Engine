@@ -127,7 +127,7 @@ void TextureExporter::Export(
 
 	ExportTexture(filename, image);
 
-	Logger::CommentRuntime("texture exported.", filename.generic_string());
+	Logger::CommentRuntime("[TextureExporter]", "texture exported. \n filepath: " + filename.generic_string());
 }
 
 DirectX::ScratchImage TextureExporter::GetImage(TextureDimension dimension, const D3D12_RESOURCE_DESC& desc) {

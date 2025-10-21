@@ -26,6 +26,7 @@
 ////////////////////////////////////////////////////////////////////////////////////////////
 // DirectXCommon class
 ////////////////////////////////////////////////////////////////////////////////////////////
+//! @brief DirectX共通部分の管理クラス.
 class DirectXCommon {
 public:
 
@@ -58,7 +59,5 @@ private:
 
 	std::unique_ptr<DxObject::Device>          device_;
 	std::unique_ptr<DxObject::DescriptorHeaps> descriptorHeaps_;
-	std::unique_ptr<DxObject::ShaderCompiler>  shaderCompiler_;
-	std::unique_ptr<DxObject::BlendState>      blendState_;
 
 };

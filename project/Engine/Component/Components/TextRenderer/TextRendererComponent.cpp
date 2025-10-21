@@ -67,7 +67,7 @@ void TextRendererComponent::PerseText() {
 	}
 
 	if (font_.Empty()) {
-		Logger::WarningRuntime("[TextRendererComponent] warning | font is not set.");
+		Logger::WarningRuntime("[TextRendererComponent]", "font is not set.");
 		return;
 	}
 
