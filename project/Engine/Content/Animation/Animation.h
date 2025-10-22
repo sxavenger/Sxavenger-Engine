@@ -21,8 +21,15 @@
 ////////////////////////////////////////////////////////////////////////////////////////////
 template <class T>
 struct Keyframe {
+public:
+
+	//=========================================================================================
+	// public variables
+	//=========================================================================================
+
 	TimePointd<TimeUnit::second> time;  //!< キーフレーム時刻 /*_sec*/
 	T                            value; //!< value
+
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -33,12 +40,24 @@ template <class T>
 using AnimationCurve = std::vector<Keyframe<T>>;
 
 struct TransformAnimation {
+public:
+
+	//=========================================================================================
+	// public variables
+	//=========================================================================================
+
 	AnimationCurve<Vector3f>   scale;
 	AnimationCurve<Quaternion> rotate;
 	AnimationCurve<Vector3f>   translate;
 };
 
 struct Animation {
+public:
+
+	//=========================================================================================
+	// public variables
+	//=========================================================================================
+
 	TimePointd<TimeUnit::second>                        duration;
 	std::unordered_map<std::string, TransformAnimation> nodeAnimations; //!< key: node名, value: Nodeのanimation
 };

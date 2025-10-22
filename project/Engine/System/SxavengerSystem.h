@@ -8,7 +8,6 @@
 #include "WinApp/WinApp.h"
 #include "DirectX/DirectXCommon.h"
 #include "DirectX/Context/DirectXQueueContext.h"
-//#include "DirectX/DirectXContext.h"
 #include "Window/WindowCollection.h"
 #include "Runtime/Input/Input.h"
 #include "Runtime/Performance/Performance.h"
