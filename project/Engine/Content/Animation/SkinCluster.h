@@ -19,17 +19,12 @@
 #include <vector>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// VertexInfluence structure
+// Influence structure
 ////////////////////////////////////////////////////////////////////////////////////////////
+
+static const uint32_t kInfluenceCount = 4;
+
 struct VertexInfluence {
-public:
-
-	//=========================================================================================
-	// public variables
-	//=========================================================================================
-
-	static const uint32_t kInfluenceCount = 4;
-
 	std::array<float,   kInfluenceCount> weights;
 	std::array<int32_t, kInfluenceCount> jointIndices;
 };
@@ -38,7 +33,6 @@ public:
 // SkinCluster structure
 ////////////////////////////////////////////////////////////////////////////////////////////
 struct SkinCluster {
-public:
 
 	//=========================================================================================
 	// public methods

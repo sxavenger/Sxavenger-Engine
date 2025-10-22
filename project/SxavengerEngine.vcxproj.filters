@@ -471,6 +471,9 @@
     <ClInclude Include="Engine\Content\TextureBuffer\DepthTexture.h">
       <Filter>Engine\Content\TextureBuffer</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\Content\TextureBuffer\MultiViewTextureBuffer.h">
+      <Filter>Engine\Content\TextureBuffer</Filter>
+    </ClInclude>
     <ClInclude Include="Engine\Content\TextureBuffer\OffscreenTextureCollection.h">
       <Filter>Engine\Content\TextureBuffer</Filter>
     </ClInclude>
@@ -741,6 +744,12 @@
     <ClInclude Include="Engine\System\DirectX\DxObject\DxResourceStateTracker.h">
       <Filter>Engine\System\DirectX\DxObject</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\System\DirectX\DxObject\DxResourceStorage.h">
+      <Filter>Engine\System\DirectX\DxObject</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\System\DirectX\DxObject\DxResourceTracker.h">
+      <Filter>Engine\System\DirectX\DxObject</Filter>
+    </ClInclude>
     <ClInclude Include="Engine\System\DirectX\DxObject\DxRootSignatureDesc.h">
       <Filter>Engine\System\DirectX\DxObject</Filter>
     </ClInclude>
@@ -754,6 +763,9 @@
       <Filter>Engine\System\DirectX\DxObject</Filter>
     </ClInclude>
     <ClInclude Include="Engine\System\DirectX\DxObject\DxUnorderedDimensionBuffer.h">
+      <Filter>Engine\System\DirectX\DxObject</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\System\DirectX\DxObject\DxVectorDimensionBuffer.h">
       <Filter>Engine\System\DirectX\DxObject</Filter>
     </ClInclude>
     <ClInclude Include="Engine\System\DirectX\DxrObject\DxrAccelerationStructure.h">
@@ -1136,6 +1148,9 @@
     <ClCompile Include="Engine\Content\TextureBuffer\DepthTexture.cpp">
       <Filter>Engine\Content\TextureBuffer</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\Content\TextureBuffer\MultiViewTextureBuffer.cpp">
+      <Filter>Engine\Content\TextureBuffer</Filter>
+    </ClCompile>
     <ClCompile Include="Engine\Content\TextureBuffer\OffscreenTextureCollection.cpp">
       <Filter>Engine\Content\TextureBuffer</Filter>
     </ClCompile>
@@ -1394,6 +1409,12 @@
     <ClCompile Include="Engine\System\DirectX\DxObject\DxResourceStateTracker.cpp">
       <Filter>Engine\System\DirectX\DxObject</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\System\DirectX\DxObject\DxResourceStorage.cpp">
+      <Filter>Engine\System\DirectX\DxObject</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\System\DirectX\DxObject\DxResourceTracker.cpp">
+      <Filter>Engine\System\DirectX\DxObject</Filter>
+    </ClCompile>
     <ClCompile Include="Engine\System\DirectX\DxObject\DxRootSignatureDesc.cpp">
       <Filter>Engine\System\DirectX\DxObject</Filter>
     </ClCompile>
@@ -1404,6 +1425,9 @@
       <Filter>Engine\System\DirectX\DxObject</Filter>
     </ClCompile>
     <ClCompile Include="Engine\System\DirectX\DxObject\DxSwapChain.cpp">
+      <Filter>Engine\System\DirectX\DxObject</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\System\DirectX\DxObject\DxVectorDimensionBuffer.cpp">
       <Filter>Engine\System\DirectX\DxObject</Filter>
     </ClCompile>
     <ClCompile Include="Engine\System\DirectX\DxrObject\DxrAccelerationStructure.cpp">

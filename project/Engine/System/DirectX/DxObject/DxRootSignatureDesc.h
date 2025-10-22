@@ -89,7 +89,6 @@ protected:
 ////////////////////////////////////////////////////////////////////////////////////////////
 // GraphicsRootSignatureDesc structure
 ////////////////////////////////////////////////////////////////////////////////////////////
-//! @brief Graphics用RootSignature構造体.
 struct GraphicsRootSignatureDesc
 	: public BaseRootSignatureDesc {
 public:
@@ -109,7 +108,6 @@ public:
 	void SetHandleSRV(uint32_t index, ShaderVisibility stage, UINT shaderRegister, UINT registerSpace = 0);
 	void SetHandleUAV(uint32_t index, ShaderVisibility stage, UINT shaderRegister, UINT registerSpace = 0);
 
-
 	ComPtr<ID3D12RootSignature> CreateGraphicsRootSignature(
 		ID3D12Device* device,
 		D3D12_ROOT_SIGNATURE_FLAGS flag = D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT | D3D12_ROOT_SIGNATURE_FLAG_CBV_SRV_UAV_HEAP_DIRECTLY_INDEXED
@@ -120,7 +118,6 @@ public:
 ////////////////////////////////////////////////////////////////////////////////////////////
 // ComputeRootSignatureDesc structure
 ////////////////////////////////////////////////////////////////////////////////////////////
-//! @brief Compute用RootSignature構造体.
 struct ComputeRootSignatureDesc
 	: public BaseRootSignatureDesc {
 public:
@@ -139,7 +136,6 @@ public:
 
 	void SetHandleSRV(uint32_t index, UINT shaderRegister, UINT registerSpace = 0);
 	void SetHandleUAV(uint32_t index, UINT shaderRegister, UINT registerSpace = 0);
-
 
 	ComPtr<ID3D12RootSignature> CreateComputeRootSignature(ID3D12Device* device) const;
 
