@@ -45,7 +45,6 @@ cbuffer Config : register(b2, space1) {
 	
 	uint maxSampleCount;
 	uint samplesPerFrame;
-	uint isResetMoment;
 	
 };
 
@@ -152,7 +151,7 @@ void main(uint3 dispatchThreadId : SV_DispatchThreadID) {
 
 			float w = exp(exp_w);
 			w *= CalculateNormalWeight(surface.normal, sample_surface.normal); //!< 法線
-			w *= Gaussian2D(offsets[j] * i, 1.0f); //!< ガウシアン
+			//w *= Gaussian2D(offsets[j] * i, 1.0f); //!< ガウシアン
 
 			float2 uv = float2(sample_pos) / float2(size);
 
@@ -161,7 +160,7 @@ void main(uint3 dispatchThreadId : SV_DispatchThreadID) {
 				(1.0f - float(gMoment[sample_pos].z) / maxSampleCount) * i / float(kRecursionCount - 1.0f) * 6.0f
 			);
 			
-			variance += SampleIndirectReservoir(uv, lod.x, lod.y).rgb * w;
+			variance += SampleIndirectReservoir(uv, 0.0f).rgb * w;
 			weight   += w;
 		}
 	}

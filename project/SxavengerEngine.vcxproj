@@ -288,7 +288,6 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Engine\Render\Common\FLUTTexture.h" />
     <ClInclude Include="Engine\Render\Common\FPriorityTexture.h" />
     <ClInclude Include="Engine\Render\Common\FProcessTexture.h" />
-    <ClInclude Include="Engine\Render\Common\FTexture.h" />
     <ClInclude Include="Engine\Render\Core\FRenderCoreGeometry.h" />
     <ClInclude Include="Engine\Render\Core\FRenderCoreLayer.h" />
     <ClInclude Include="Engine\Render\Core\FRenderCoreLight.h" />
@@ -514,7 +513,6 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="Engine\Render\Common\FLUTTexture.cpp" />
     <ClCompile Include="Engine\Render\Common\FPriorityTexture.cpp" />
     <ClCompile Include="Engine\Render\Common\FProcessTexture.cpp" />
-    <ClCompile Include="Engine\Render\Common\FTexture.cpp" />
     <ClCompile Include="Engine\Render\Core\FRenderCoreGeometry.cpp" />
     <ClCompile Include="Engine\Render\Core\FRenderCoreLayer.cpp" />
     <ClCompile Include="Engine\Render\Core\FRenderCoreLight.cpp" />

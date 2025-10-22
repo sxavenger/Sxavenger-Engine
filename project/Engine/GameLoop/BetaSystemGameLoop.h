@@ -53,11 +53,6 @@ private:
 
 	std::unique_ptr<PerformanceActor> performance_;
 
-	//* test *//
-
-	FBaseTexture texture_;
-	DxObject::ReflectionComputePipelineState pipeline_;
-
 	//=========================================================================================
 	// private methods
 	//=========================================================================================

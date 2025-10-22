@@ -16,6 +16,7 @@
 //* library
 #include "../../Library/Hammersley.hlsli"
 #include "../../Library/ImportanceSample.hlsli"
+#include "../../Library/Random.hlsli"
 
 //* component
 #include "../../Component/CameraComponent.hlsli"
@@ -36,7 +37,9 @@
 //* lighting textures
 RWTexture2D<float4> gReservoirDiffuse  : register(u0, space1);
 RWTexture2D<float4> gReservoirSpecular : register(u1, space1);
-RWTexture2D<uint4> gMoment             : register(u2, space1);
+RWTexture2D<float4> gAtlasDiffuse      : register(u2, space1);
+RWTexture2D<float4> gAtlasSpecular     : register(u3, space1);
+RWTexture2D<uint4> gMoment             : register(u4, space1);
 
 //* scene
 RaytracingAccelerationStructure gScene : register(t0, space1);
@@ -59,7 +62,6 @@ cbuffer Config : register(b2, space1) {
 	
 	uint maxSampleCount;
 	uint samplesPerFrame;
-	uint isResetMoment;
 
 	//=========================================================================================
 	// public methods
@@ -94,7 +96,6 @@ SamplerState gSkySampler                    : register(s0, space2);
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Config variables
 ////////////////////////////////////////////////////////////////////////////////////////////
-
 
 static const float kTMin = 0.001f;
 static const float kTMax = 10000.0f;
@@ -188,6 +189,17 @@ struct Attribute {
 // common methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
+uint GetOffset(uint2 index) {
+	return Xorshift::xorshift32(index.x * index.y + 1);
+}
+
+uint CalculateRandamizeSampleValue(uint currentSampleIndex, uint offset) {
+	static const uint kDivision = maxSampleCount / 16;
+	uint divisionIndex = kDivision * ((currentSampleIndex + offset) % maxSampleCount);
+	
+	return (divisionIndex % maxSampleCount) + (divisionIndex / maxSampleCount);
+}
+
 Payload TracePrimaryRay(RayDesc desc, uint flag = kFlag) {
 	Payload payload;
 	payload.Reset();
@@ -196,11 +208,4 @@ Payload TracePrimaryRay(RayDesc desc, uint flag = kFlag) {
 	TraceRay(gScene, flag, kRayMask, 0, 1, 0, desc, payload);
 
 	return payload;
-}
-
-uint GetSampleIndex(uint index) {
-	static const uint kDivision = maxSampleCount / 16;
-	uint divisionIndex = kDivision * index;
-	
-	return (divisionIndex % maxSampleCount) + (divisionIndex / maxSampleCount);
 }

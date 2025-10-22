@@ -21,6 +21,7 @@ void FBaseTexture::Create(const Vector2ui& size, DXGI_FORMAT format) {
 
 	// 引数の保存
 	format_ = format;
+	size_   = size;
 
 	{ //!< resourceの生成
 

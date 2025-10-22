@@ -105,9 +105,6 @@ void BetaSystemGameLoop::InitSystem() {
 
 	//* test *//
 
-	texture_.Create(kMainWindowSize * 16u, DXGI_FORMAT_R32G32B32A32_FLOAT);
-	pipeline_.CreateBlob(kAssetsDirectory / "shaders" / "test.cs.hlsl");
-	pipeline_.ReflectionPipeline(SxavengerSystem::GetDxDevice());
 }
 
 void BetaSystemGameLoop::TermSystem() {
@@ -164,28 +161,5 @@ void BetaSystemGameLoop::DrawSystem() {
 	main_->EndRenderWindow(SxavengerSystem::GetDirectQueueContext());
 
 	//* test *//
-
-	{
-
-		FRenderTargetBuffer* buffer = FMainRender::GetInstance()->GetTextures();
-		FScene*              scene  = FMainRender::GetInstance()->GetScene();
-
-		texture_.TransitionBeginUnordered(SxavengerSystem::GetDirectQueueContext());
-
-		pipeline_.SetPipeline(SxavengerSystem::GetDirectQueueContext()->GetDxCommand());
-
-		DxObject::BindBufferDesc desc = {};
-		desc.SetAddress("gScene", scene->GetTopLevelAS().GetGPUVirtualAddress());
-		desc.SetHandle("gDirect", buffer->GetGBuffer(FLightingGBuffer::Layout::Direct)->GetGPUHandleSRV());
-		desc.SetHandle("gOutput", texture_.GetGPUHandleUAV());
-		desc.SetAddress("gDeferredBufferIndex", buffer->GetIndexBufferAddress());
-		desc.SetAddress("gCamera", ComponentHelper::GetCameraComponent(CameraComponent::Tag::Game)->GetGPUVirtualAddress());
-
-		pipeline_.BindComputeBuffer(SxavengerSystem::GetDirectQueueContext()->GetDxCommand(), desc);
-		pipeline_.Dispatch(SxavengerSystem::GetDirectQueueContext()->GetDxCommand(), { DxObject::RoundUp(kMainWindowSize.x, 32), DxObject::RoundUp(kMainWindowSize.y, 32), 1});
-
-		texture_.TransitionEndUnordered(SxavengerSystem::GetDirectQueueContext());
-		
-	}
 
 }

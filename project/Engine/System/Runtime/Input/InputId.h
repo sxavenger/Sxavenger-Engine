@@ -154,24 +154,14 @@ enum class MouseId : uint8_t {
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// GamepadButtonId enum Class
+// GamepadButtonId enum class
 ////////////////////////////////////////////////////////////////////////////////////////////
-enum class GamepadButtonId : uint16_t {
+enum class GamepadButtonId : uint32_t {
 	//* Directional Pad (D-Pad)
 	DPAD_UP    = XINPUT_GAMEPAD_DPAD_UP,
 	DPAD_DOWN  = XINPUT_GAMEPAD_DPAD_DOWN,
 	DPAD_LEFT  = XINPUT_GAMEPAD_DPAD_LEFT,
 	DPAD_RIGHT = XINPUT_GAMEPAD_DPAD_RIGHT,
-
-	//* Face Buttons
-	BUTTON_A = XINPUT_GAMEPAD_A,
-	BUTTON_B = XINPUT_GAMEPAD_B,
-	BUTTON_X = XINPUT_GAMEPAD_X,
-	BUTTON_Y = XINPUT_GAMEPAD_Y,
-
-	//* Shoulder Buttons
-	BUTTON_LB = XINPUT_GAMEPAD_LEFT_SHOULDER,
-	BUTTON_RB = XINPUT_GAMEPAD_RIGHT_SHOULDER,
 
 	//* Special Buttonsk
 	BUTTON_BACK  = XINPUT_GAMEPAD_BACK,
@@ -180,10 +170,20 @@ enum class GamepadButtonId : uint16_t {
 	//* Thumbstick Buttons
 	BUTTON_LS = XINPUT_GAMEPAD_LEFT_THUMB,
 	BUTTON_RS = XINPUT_GAMEPAD_RIGHT_THUMB,
+
+	//* Shoulder Buttons
+	BUTTON_LB = XINPUT_GAMEPAD_LEFT_SHOULDER,
+	BUTTON_RB = XINPUT_GAMEPAD_RIGHT_SHOULDER,
+
+	//* Face Buttons
+	BUTTON_A = XINPUT_GAMEPAD_A,
+	BUTTON_B = XINPUT_GAMEPAD_B,
+	BUTTON_X = XINPUT_GAMEPAD_X,
+	BUTTON_Y = XINPUT_GAMEPAD_Y,
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// GamepadTriggerId enum Class
+// GamepadTriggerId enum class
 ////////////////////////////////////////////////////////////////////////////////////////////
 enum class GamepadTriggerId : uint8_t {
 	TRIGGER_LEFT,
@@ -191,7 +191,7 @@ enum class GamepadTriggerId : uint8_t {
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// GamepadStickId enum Class
+// GamepadStickId enum class
 ////////////////////////////////////////////////////////////////////////////////////////////
 enum class GamepadStickId : uint8_t {
 	STICK_LEFT,

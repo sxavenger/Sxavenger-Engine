@@ -606,9 +606,6 @@
     <ClInclude Include="Engine\Render\Common\FProcessTexture.h">
       <Filter>Engine\Render\Common</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Render\Common\FTexture.h">
-      <Filter>Engine\Render\Common</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\Render\Core\FRenderCoreGeometry.h">
       <Filter>Engine\Render\Core</Filter>
     </ClInclude>
@@ -1278,9 +1275,6 @@
       <Filter>Engine\Render\Common</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Render\Common\FProcessTexture.cpp">
-      <Filter>Engine\Render\Common</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\Render\Common\FTexture.cpp">
       <Filter>Engine\Render\Common</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Render\Core\FRenderCoreGeometry.cpp">

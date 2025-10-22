@@ -674,13 +674,13 @@ void RenderSceneEditor::UpdateKeyShortcut() {
 
 	// bufferの切り替え
 	if (SxavengerSystem::IsPressKey(KeyId::KEY_LALT) && SxavengerSystem::IsTriggerKey(KeyId::KEY_UP)) { //!< left alt + Up
-		if (buffer_ > GBuffer::Scene) {
+		if (buffer_ > static_cast<GBuffer>(0)) {
 			buffer_ = static_cast<GBuffer>(static_cast<uint32_t>(buffer_) - 1);
 		}
 	}
 
 	if (SxavengerSystem::IsPressKey(KeyId::KEY_LALT) && SxavengerSystem::IsTriggerKey(KeyId::KEY_DOWN)) { //!< left alt + Down
-		if (buffer_ < GBuffer::Indirect_Reservoir) {
+		if (static_cast<uint32_t>(buffer_) < magic_enum::enum_count<GBuffer>()) {
 			buffer_ = static_cast<GBuffer>(static_cast<uint32_t>(buffer_) + 1);
 		}
 
