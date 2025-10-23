@@ -7,6 +7,9 @@
 #include <dinput.h>
 #include <Xinput.h>
 
+//* external
+#include <magic_enum.hpp>
+
 //* c++
 #include <cstdint>
 
@@ -180,6 +183,36 @@ enum class GamepadButtonId : uint32_t {
 	BUTTON_B = XINPUT_GAMEPAD_B,
 	BUTTON_X = XINPUT_GAMEPAD_X,
 	BUTTON_Y = XINPUT_GAMEPAD_Y,
+};
+
+template <> //!< magic_enumの範囲を調整
+struct magic_enum::customize::enum_range<GamepadButtonId> {
+	static constexpr auto min = XINPUT_GAMEPAD_DPAD_UP;
+	static constexpr auto max = XINPUT_GAMEPAD_Y;
+};
+
+template<>
+constexpr magic_enum::customize::customize_t magic_enum::customize::enum_name<GamepadButtonId>(GamepadButtonId value) noexcept {
+	switch (value) {
+		case GamepadButtonId::DPAD_UP:
+		case GamepadButtonId::DPAD_DOWN:
+		case GamepadButtonId::DPAD_LEFT:
+		case GamepadButtonId::DPAD_RIGHT:
+		case GamepadButtonId::BUTTON_BACK:
+		case GamepadButtonId::BUTTON_START:
+		case GamepadButtonId::BUTTON_LS:
+		case GamepadButtonId::BUTTON_RS:
+		case GamepadButtonId::BUTTON_LB:
+		case GamepadButtonId::BUTTON_RB:
+		case GamepadButtonId::BUTTON_A:
+		case GamepadButtonId::BUTTON_B:
+		case GamepadButtonId::BUTTON_X:
+		case GamepadButtonId::BUTTON_Y:
+			return default_tag;
+
+		default:
+			return invalid_tag;
+	}
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////
