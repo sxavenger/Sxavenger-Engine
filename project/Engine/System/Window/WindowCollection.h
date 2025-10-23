@@ -30,12 +30,18 @@ public:
 
 	//* window option *//
 
+	//! @brief メッセージ処理
+	//! @retval true  メッセージが存在する
+	//! @retval false windowが閉じられた
 	bool ProcessMessage();
 
+	//! @brief 全てのwindowのPresent実行.
 	void PresentWindows();
 
+	//! @brief メインウィンドウの取得
 	DirectXWindowContext* GetMainWindow() const { return main_.get(); }
 
+	//! @brief フォーカスされているウィンドウの取得
 	DirectXWindowContext* GetForcusWindow() const;
 
 	//* debug option *//

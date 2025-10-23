@@ -126,6 +126,18 @@ bool SxavengerSystem::IsReleaseKey(KeyId id) {
 	return sInput->IsReleaseKey(id);
 }
 
+const KeyboardInput* SxavengerSystem::GetKeyboardInput() {
+	return sInput->GetKeyboardInput();
+}
+
+const MouseInput* SxavengerSystem::GetMouseInput() {
+	return sInput->GetMouseInput();
+}
+
+const GamepadInput* SxavengerSystem::GetGamepadInput(uint8_t number) {
+	return sInput->GetGamepadInput(number);
+}
+
 Input* SxavengerSystem::GetInput() {
 	return sInput.get();
 }

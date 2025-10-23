@@ -28,6 +28,7 @@ public:
 
 	static void Term();
 
+	//! @brief 非同期threadの終了処理
 	static void Shutdown();
 
 	//-----------------------------------------------------------------------------------------
@@ -44,8 +45,10 @@ public:
 	// DirectXQueueContext main thread option
 	//-----------------------------------------------------------------------------------------
 
+	//! @brief DirectQueueのAllocatorを遷移
 	static void TransitionAllocator();
 
+	//! @brief DirectQueueの全てのAllocatorを実行
 	static void ExecuteAllAllocator();
 
 	static DirectXQueueContext* GetDirectQueueContext();
@@ -62,12 +65,18 @@ public:
 		const Vector2ui& clientSize, const LPCWSTR& name, DirectXWindowContext::ProcessCategory category, const Color4f& clearColor = DirectXWindowContext::kDefaultClearColor
 	);
 
+	//! @brief メッセージ処理
+	//! @retval true  メッセージが存在する
+	//! @retval false windowが閉じられた
 	static bool ProcessMessage();
 
+	//! @brief 全てのwindowのPresent実行.
 	static void PresentWindows();
 
+	//! @brief メインウィンドウの取得
 	static DirectXWindowContext* GetMainWindow();
 
+	//! @brief フォーカスされているウィンドウの取得
 	static DirectXWindowContext* GetForcusWindow();
 
 	static WindowCollection* GetWindowCollection();
@@ -81,6 +90,12 @@ public:
 	static bool IsTriggerKey(KeyId id);
 
 	static bool IsReleaseKey(KeyId id);
+
+	static const KeyboardInput* GetKeyboardInput();
+
+	static const MouseInput* GetMouseInput();
+
+	static const GamepadInput* GetGamepadInput(uint8_t number);
 
 	static Input* GetInput();
 
@@ -103,8 +118,15 @@ public:
 	// Async thread collection option
 	//-----------------------------------------------------------------------------------------
 
+	//! @brief 非同期タスクを追加
+	//! @param[in] execution 実行するスレッド
+	//! @param[in] task      実行するタスク
 	static void PushTask(AsyncExecution execution, const std::shared_ptr<AsyncTask>& task);
 
+	//! @brief 非同期タスクを追加
+	//! @param[in] execution 実行するスレッド
+	//! @param[in] function 実行する関数
+	//! @note functionなのでTaskの完了を待機.
 	static void PushTaskAndWait(AsyncExecution execution, const AsyncTask::Function& function);
 
 	static AsyncThreadCollection* GetAsyncThreadCollection();
