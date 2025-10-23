@@ -16,7 +16,6 @@
 #include <Engine/Adapter/Actor/AtmosphereActor.h>
 #include <Engine/Adapter/Actor/SkyLightActor.h>
 #include <Engine/Adapter/Actor/ControllableCameraActor.h>
-#include <Engine/Adapter/Actor/ParameterActor.h>
 #include <Engine/Adapter/Actor/PerformanceActor.h>
 
 #include "Engine/Render/Common/FBaseTexture.h"
@@ -24,6 +23,7 @@
 ////////////////////////////////////////////////////////////////////////////////////////////
 // BetaSystemGameLoop class
 ////////////////////////////////////////////////////////////////////////////////////////////
+//! @brief 機能検証用GameLoopクラス	
 class BetaSystemGameLoop
 	: public GameLoop::Interface {
 public:
