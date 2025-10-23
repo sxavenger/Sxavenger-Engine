@@ -468,9 +468,6 @@
     <ClInclude Include="Engine\Content\TextureBuffer\DepthTexture.h">
       <Filter>Engine\Content\TextureBuffer</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Content\TextureBuffer\MultiViewTextureBuffer.h">
-      <Filter>Engine\Content\TextureBuffer</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\Content\TextureBuffer\OffscreenTextureCollection.h">
       <Filter>Engine\Content\TextureBuffer</Filter>
     </ClInclude>
@@ -1134,9 +1131,6 @@
       <Filter>Engine\Content\TextureBuffer</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Content\TextureBuffer\DepthTexture.cpp">
-      <Filter>Engine\Content\TextureBuffer</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\Content\TextureBuffer\MultiViewTextureBuffer.cpp">
       <Filter>Engine\Content\TextureBuffer</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Content\TextureBuffer\OffscreenTextureCollection.cpp">

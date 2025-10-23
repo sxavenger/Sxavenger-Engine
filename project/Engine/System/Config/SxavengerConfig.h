@@ -98,8 +98,11 @@ public:
 	// public methods
 	//=========================================================================================
 
+	//! @brief Configを読み込む
+	//! @note [構成プロパティ]から設定を読み込む
 	static void Load();
 
+	//! @brief ログに設定情報を出力する
 	static void OutputLog();
 
 	static const Config& GetConfig() { return config_; }

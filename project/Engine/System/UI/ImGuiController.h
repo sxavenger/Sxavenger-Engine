@@ -43,8 +43,10 @@ public:
 
 	void EndFrame();
 
+	//! @brief ImGuiの描画処理を行う
 	void Render(DirectXQueueContext* context);
 
+	//! brief ImGuiのレイアウトを出力
 	void OutputLayout();
 
 	//* convert *//

@@ -38,12 +38,19 @@ public:
 
 	//* context option *//
 
+	//! @brief Commandの実行/Allocatorの遷移を行う
 	void TransitionAllocator() const;
 
+	//! @brief 全てのAllocatorを実行する
 	void ExecuteAllAllocators() const;
 
+	//! @brief 指定したRenderQueueが対応されているか確認する
+	//! @retval true  実行可能
+	//! @retval false 実行不可能
 	bool IsSupportQueue(RenderQueue type) const;
 
+	//! @brief 指定したRenderQueueを要求する
+	//! @throw 指定したRenderQueueが対応されていない場合に例外をスローする
 	void RequestQueue(RenderQueue type) const;
 
 	DxObject::CommandContext* GetDxCommand() const;

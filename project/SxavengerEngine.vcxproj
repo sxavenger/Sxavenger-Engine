@@ -242,7 +242,6 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Engine\Content\SxavengerContent.h" />
     <ClInclude Include="Engine\Content\TextureBuffer\BaseOffscreenTexture.h" />
     <ClInclude Include="Engine\Content\TextureBuffer\DepthTexture.h" />
-    <ClInclude Include="Engine\Content\TextureBuffer\MultiViewTextureBuffer.h" />
     <ClInclude Include="Engine\Content\TextureBuffer\OffscreenTextureCollection.h" />
     <ClInclude Include="Engine\Content\TextureBuffer\RenderTexture.h" />
     <ClInclude Include="Engine\Content\TextureBuffer\UnorderedTexture.h" />
@@ -466,7 +465,6 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="Engine\Content\SxavengerContent.cpp" />
     <ClCompile Include="Engine\Content\TextureBuffer\BaseOffscreenTexture.cpp" />
     <ClCompile Include="Engine\Content\TextureBuffer\DepthTexture.cpp" />
-    <ClCompile Include="Engine\Content\TextureBuffer\MultiViewTextureBuffer.cpp" />
     <ClCompile Include="Engine\Content\TextureBuffer\OffscreenTextureCollection.cpp" />
     <ClCompile Include="Engine\Content\TextureBuffer\RenderTexture.cpp" />
     <ClCompile Include="Engine\Content\TextureBuffer\UnorderedTexture.cpp" />

@@ -39,9 +39,6 @@ void Performance::RecordLap(const std::string& name) {
 	}
 }
 
-void Performance::SystemDebugGui() {
-}
-
 void Performance::WaitFrame() const {
 	if (!SxavengerConfig::GetConfig().isLockFrameRate) {
 		return;

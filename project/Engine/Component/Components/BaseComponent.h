@@ -35,12 +35,16 @@ public:
 
 	//* component option *//
 
+	//! @brief inspectorにcomponent固有の情報を表示する
 	virtual void ShowComponentInspector() {}
 
 	//* behaviour option *//
 
+	//! @brief componentが所属するbehaviourを取得
+	//! @return componentが所属するbehaviourのptr
 	MonoBehaviour* GetBehaviour() const;
 
+	//! @brief componentが有効か確認(entityがActiveかどうか)
 	bool IsActive() const;
 
 private:

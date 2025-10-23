@@ -29,6 +29,7 @@ static inline constexpr uint8_t kAsyncExecutionCount = static_cast<uint8_t>(Asyn
 ////////////////////////////////////////////////////////////////////////////////////////////
 // AsyncThread class
 ////////////////////////////////////////////////////////////////////////////////////////////
+//! @brief 非同期スレッドクラス.
 class AsyncThread {
 public:
 
@@ -58,8 +59,7 @@ public:
 		const MainFunction& main, const ConditionFunction& condition = []() { return true; }
 	);
 
-	void SetTerminate(bool isTerminate = true) { isTerminated_ = isTerminate; }
-
+	//! @brief threadを終了する
 	void Shutdown();
 
 	//* thread option *//
@@ -70,7 +70,11 @@ public:
 
 	const DirectXQueueContext* GetContext() const;
 
+	//! @brief threadのcontextを要求する
+	//! @throw contextが存在しない場合(AsyncExecution::None)に例外をスローする
 	const DirectXQueueContext* RequireContext() const;
+
+	void SetTerminate(bool isTerminate = true) { isTerminated_ = isTerminate; }
 
 	const bool IsTerminated() const { return isTerminated_; }
 

@@ -126,7 +126,7 @@ void FRenderPassForwardTransparent::PassStaticMesh(const DirectXQueueContext* co
 			return; //!< 不適格component.
 		}
 
-		auto transform = component->GetTransform();
+		auto transform = component->RequireTransform();
 
 		auto mesh     = component->GetMesh();
 		auto material = component->GetMaterial();
@@ -165,7 +165,7 @@ void FRenderPassForwardTransparent::PassSkinnedMesh(const DirectXQueueContext* c
 			return; //!< 不適格component.
 		}
 
-		auto transform = component->GetTransform();
+		auto transform = component->RequireTransform();
 
 		auto mesh     = component->GetMesh();
 		auto material = component->GetMaterial();

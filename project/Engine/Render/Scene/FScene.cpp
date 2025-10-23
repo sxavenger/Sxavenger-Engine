@@ -85,7 +85,7 @@ void FScene::SetupTopLevelAS(const DirectXQueueContext* context) {
 
 		instance.flag          = D3D12_RAYTRACING_INSTANCE_FLAG_NONE;
 		instance.bottomLevelAS = mesh->GetInputMesh().GetBottomLevelAS().Get();
-		instance.mat           = component->GetTransform()->GetMatrix();
+		instance.mat           = component->RequireTransform()->GetMatrix();
 		instance.instanceMask  = component->GetMask();
 		instance.instanceId    = 0;
 
@@ -129,7 +129,7 @@ void FScene::SetupTopLevelAS(const DirectXQueueContext* context) {
 
 		instance.flag          = D3D12_RAYTRACING_INSTANCE_FLAG_NONE;
 		instance.bottomLevelAS = component->GetBottomLevelAS();
-		instance.mat           = component->GetTransform()->GetMatrix();
+		instance.mat           = component->RequireTransform()->GetMatrix();
 		instance.instanceMask  = component->GetMask();
 		instance.instanceId    = 0;
 

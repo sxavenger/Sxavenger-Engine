@@ -14,19 +14,15 @@ _DXOBJECT_USING
 // RectTransformComponent class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-void RectTransformComponent::ShowComponentInspector() {
-	transform_.SetImGuiCommand();
-	UpdateMatrix();
-}
-
-void RectTransformComponent::CreateBuffer() {
-	if (buffer_ != nullptr) {
-		return;
-	}
-
+RectTransformComponent::RectTransformComponent(MonoBehaviour* behaviour) : BaseComponent(behaviour) {
 	buffer_ = std::make_unique<ConstantBuffer<Matrix4x4>>();
 	buffer_->Create(SxavengerSystem::GetDxDevice());
 	buffer_->At() = Matrix4x4::Identity();
+}
+
+void RectTransformComponent::ShowComponentInspector() {
+	transform_.SetImGuiCommand();
+	UpdateMatrix();
 }
 
 const D3D12_GPU_VIRTUAL_ADDRESS& RectTransformComponent::GetGPUVirtualAddress() const {

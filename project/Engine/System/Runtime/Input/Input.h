@@ -115,6 +115,7 @@ public:
 
 	//* debug gui *//
 
+	//! @brief デバッグGUIの表示
 	void SystemDebugGui() override;
 
 private:
@@ -201,11 +202,16 @@ public:
 
 	//* mouse position option *//
 
+	//! @brief マウスの位置を取得する(フォーカスされているwindow基準)
 	Vector2i GetPosition() const;
+
+	//! @brief マウスの位置を取得する(指定したwindow基準)
 	Vector2i GetPosition(const DirectXWindowContext* window) const;
 
+	//! @brief マウスの移動量を取得する
 	Vector2i GetDeltaPosition() const;
 
+	//! @brief マウスの位置を設定する(フォーカスされているwindow基準)
 	void SetPosition(const Vector2i& position) const;
 
 	//* cursor option *//
@@ -234,6 +240,7 @@ public:
 
 	//* debug gui *//
 
+	//! @brief デバッグGUIの表示
 	void SystemDebugGui() override;
 
 private:
@@ -315,6 +322,7 @@ public:
 
 	//* gamepad state option *//
 
+	//! @brief コントローラーが接続されているか確認する
 	bool IsConnect() const;
 
 	//* gamepad input option *//
@@ -331,10 +339,14 @@ public:
 	//* gamepad stick option *//
 
 	Vector2i GetStick(GamepadStickId id) const;
+
+	//! @brief スティックの値を正規化して取得する
+	//! @return 正規化されたスティックの値
 	Vector2f GetStickNormalized(GamepadStickId id) const;
 
 	//* debug gui *//
 
+	//! @brief デバッグGUIの表示
 	void SystemDebugGui() override;
 
 private:
@@ -392,6 +404,7 @@ public:
 
 	//* debug gui *//
 
+	//! @brief デバッグGUIの表示
 	void SystemDebugGui() override;
 
 private:

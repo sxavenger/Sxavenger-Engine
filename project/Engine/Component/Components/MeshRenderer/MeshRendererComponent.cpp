@@ -39,8 +39,8 @@ void MeshRendererComponent::ShowComponentInspector() {
 	}
 }
 
-const TransformComponent* MeshRendererComponent::GetTransform() const {
-	return BaseComponent::GetBehaviour()->RequireComponent<TransformComponent>(); //!< TransformComponentが必要
+const TransformComponent* MeshRendererComponent::RequireTransform() const {
+	return BaseComponent::GetBehaviour()->RequireComponent<TransformComponent>();
 }
 
 json MeshRendererComponent::PerseToJson() const {
