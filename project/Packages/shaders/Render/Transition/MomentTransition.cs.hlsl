@@ -13,9 +13,9 @@ RWTexture2D<uint3> gMoment             : register(u0);
 RWTexture2D<float4> gReservoirDiffuse  : register(u1);
 RWTexture2D<float4> gReservoirSpecular : register(u2);
 
-Texture2D<uint3> gReferenceMoment             : register(t1);
-Texture2D<float4> gReferenceReservoirDiffuse  : register(t2);
-Texture2D<float4> gReferenceReservoirSpecular : register(t3);
+//Texture2D<uint3> gReferenceMoment             : register(t1);
+//Texture2D<float4> gReferenceReservoirDiffuse  : register(t2);
+//Texture2D<float4> gReferenceReservoirSpecular : register(t3);
 
 Texture2D<float4> gVelocity : register(t0);
 
@@ -47,15 +47,15 @@ void main(uint3 dispatchThreadId : SV_DispatchThreadID) {
 	//!< x: Hammerselyのoffset y: sample数(diffuse) z: sample数(specular, 継承不可)
 
 	if (all(velocity.xy == 0.0)) {
-		reservoir_specular = gReferenceReservoirSpecular.Load(uint3(index, 0));
-		moment.z           = gReferenceMoment.Load(uint3(index, 0)).z;
+		//reservoir_specular = gReferenceReservoirSpecular.Load(uint3(index, 0));
+		//moment.z           = gReferenceMoment.Load(uint3(index, 0)).z;
 	}
 
 	
 	if (all(x >= 0.0f) && all(x <= 1.0f) && velocity.z <= 0.0f) {
 		//!< pixelが範囲内の場合, 前の情報を格納
-		reservoir_diffuse = gReferenceReservoirDiffuse.Load(uint3(sample_index, 0));
-		moment.xy         = gReferenceMoment.Load(uint3(sample_index, 0)).xy;
+		//reservoir_diffuse = gReferenceReservoirDiffuse.Load(uint3(sample_index, 0));
+		//moment.xy         = gReferenceMoment.Load(uint3(sample_index, 0)).xy;
 
 		// z値が0以外の場合, scaling関係でnoiseになってしまうのでリセットさせる
 	}

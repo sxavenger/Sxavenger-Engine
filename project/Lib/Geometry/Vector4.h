@@ -7,6 +7,9 @@
 #include "Vector2.h"
 #include "Vector3.h"
 
+//* sxl
+#include <Lib/Sxl/Formatter.h>
+
 //* c++
 #include <cstdint>
 #include <concepts>
@@ -66,6 +69,15 @@ public:
 	//=========================================================================================
 
 	_Ty x, y, z, w;
+
+	//=========================================================================================
+	// formatter
+	//=========================================================================================
+
+	template <typename FormatContext>
+	auto format(FormatContext& ctx) const {
+		return std::format_to(ctx.out(), "({}, {}, {}, {})", x, y, z, w);
+	}
 
 };
 
@@ -185,6 +197,12 @@ template <class _Ty>
 constexpr Vector4<_Ty> operator/(const Vector4<_Ty>& lhs, const _Ty& rhs) noexcept {
 	return { lhs.x / rhs, lhs.y / rhs, lhs.z / rhs, lhs.w / rhs };
 }
+
+////////////////////////////////////////////////////////////////////////////////////////////
+// Vector4 formatter structure
+////////////////////////////////////////////////////////////////////////////////////////////
+template <class T>
+struct std::formatter<Vector4<T>> : Sxl::BaseFormatter<Vector4<T>> {};
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // using

@@ -160,8 +160,6 @@ inline void ReadbackDimensionBuffer<T>::Readback(Device* device, CommandContext*
 	// barrierを設定
 	std::swap(barrier.Transition.StateBefore, barrier.Transition.StateAfter);
 	commandList->ResourceBarrier(1, &barrier);
-
-	context->ExecuteAllAllocators();
 }
 
 _DXOBJECT_NAMESPACE_END

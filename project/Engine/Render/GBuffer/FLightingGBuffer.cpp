@@ -6,12 +6,17 @@
 //* GBuffer
 #include "FMainGBuffer.h"
 
+//* render
+#include "../Core/FRenderCorePathtracing.h"
+
 //=========================================================================================
 // static const variables
 //=========================================================================================
 
 const std::array<DXGI_FORMAT, FLightingGBuffer::kLayoutCount_> FLightingGBuffer::kFormats_ = {
 	FMainGBuffer::kColorFormat,    //!< Direct
+	FMainGBuffer::kColorFormat,    //!< Indirect_Atlas_Diffuse
+	FMainGBuffer::kColorFormat,    //!< Indirect_Atlas_Specular
 	FMainGBuffer::kColorFormat,    //!< Indirect_Reservoir_Diffuse
 	FMainGBuffer::kColorFormat,    //!< Indirect_Reservoir_Specular
 	DXGI_FORMAT_R32G32B32A32_UINT, //!< Indirect_Moment
@@ -23,25 +28,24 @@ const std::array<DXGI_FORMAT, FLightingGBuffer::kLayoutCount_> FLightingGBuffer:
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 void FLightingGBuffer::Init(const Vector2ui& size) {
-	for (size_t i = 0; i < kLayoutCount_; ++i) {
-		buffers_[i] = std::make_unique<FBaseTexture>();
-		buffers_[i]->Create(size, kFormats_[i]);
 
-		// nameの設定
-		std::string name = "FLightingGBuffer | ";
-		name += magic_enum::enum_name(static_cast<FLightingGBuffer::Layout>(i));
-		buffers_[i]->GetResource()->SetName(ToWString(name).c_str());
-	}
+	//!< 最終Lighting結果格納用
+	buffers_[static_cast<uint8_t>(Layout::Direct)]   = std::make_unique<FBaseTexture>(size, GetFormat(Layout::Direct));
+	buffers_[static_cast<uint8_t>(Layout::Indirect)] = std::make_unique<FBaseTexture>(size, GetFormat(Layout::Indirect));
 
-	for (size_t i = 0; i < kLayoutCount_; ++i) {
-		intermediate_[i] = std::make_unique<FBaseTexture>();
-		intermediate_[i]->Create(size, kFormats_[i]);
+	downsize_ = size / 4u;
 
-		// nameの設定
-		std::string name = "FLightingGBuffer Intermediate | ";
-		name += magic_enum::enum_name(static_cast<FLightingGBuffer::Layout>(i));
-		intermediate_[i]->GetResource()->SetName(ToWString(name).c_str());
-	}
+	//!< Indirect結果格納用
+	buffers_[static_cast<uint8_t>(Layout::Indirect_Reservoir_Diffuse)]  = std::make_unique<FBaseTexture>(downsize_, GetFormat(Layout::Indirect_Reservoir_Diffuse));
+	buffers_[static_cast<uint8_t>(Layout::Indirect_Reservoir_Specular)] = std::make_unique<FBaseTexture>(downsize_, GetFormat(Layout::Indirect_Reservoir_Specular));
+	buffers_[static_cast<uint8_t>(Layout::Indirect_Moment)]             = std::make_unique<FBaseTexture>(downsize_, GetFormat(Layout::Indirect_Moment));
+
+	atlas_ = GetAtlasSize(config_.maxSampleCount);
+
+	//!< Indirect Atlas
+	buffers_[static_cast<uint8_t>(Layout::Indirect_Atlas_Diffuse)]  = std::make_unique<FBaseTexture>(downsize_ * atlas_, GetFormat(Layout::Indirect_Atlas_Diffuse));
+	buffers_[static_cast<uint8_t>(Layout::Indirect_Atlas_Specular)] = std::make_unique<FBaseTexture>(downsize_ * atlas_, GetFormat(Layout::Indirect_Atlas_Specular));
+	
 }
 
 void FLightingGBuffer::TransitionBeginRenderTargetDirect(const DirectXQueueContext* context) {
@@ -105,57 +109,19 @@ void FLightingGBuffer::ClearRenderTargetIndirect(const DirectXQueueContext* cont
 	buffers_[static_cast<size_t>(Layout::Indirect)]->ClearRenderTarget(context);
 }
 
-void FLightingGBuffer::CopyIntermediateToGBuffer(const DirectXQueueContext* context, Layout layout) {
-
-	auto commandList = context->GetCommandList();
-
-	std::array<D3D12_RESOURCE_BARRIER, 2> barriers = {};
-	barriers[0] = intermediate_[static_cast<size_t>(layout)]->TransitionBeginState(D3D12_RESOURCE_STATE_COPY_SOURCE);
-	barriers[1] = buffers_[static_cast<size_t>(layout)]->TransitionBeginState(D3D12_RESOURCE_STATE_COPY_DEST);
-
-	commandList->ResourceBarrier(static_cast<UINT>(barriers.size()), barriers.data());
-
-	commandList->CopyResource(
-		buffers_[static_cast<size_t>(layout)]->GetResource(),
-		intermediate_[static_cast<size_t>(layout)]->GetResource()
-	);
-
-	barriers[0] = intermediate_[static_cast<size_t>(layout)]->TransitionEndState(D3D12_RESOURCE_STATE_COPY_SOURCE);
-	barriers[1] = buffers_[static_cast<size_t>(layout)]->TransitionEndState(D3D12_RESOURCE_STATE_COPY_DEST);
-
-	commandList->ResourceBarrier(static_cast<UINT>(barriers.size()), barriers.data());
-}
-
-void FLightingGBuffer::CopyGBufferToIntermediate(const DirectXQueueContext* context, Layout layout) {
-
-	auto commandList = context->GetCommandList();
-
-	std::array<D3D12_RESOURCE_BARRIER, 2> barriers = {};
-	barriers[0] = buffers_[static_cast<size_t>(layout)]->TransitionBeginState(D3D12_RESOURCE_STATE_COPY_SOURCE);
-	barriers[1] = intermediate_[static_cast<size_t>(layout)]->TransitionBeginState(D3D12_RESOURCE_STATE_COPY_DEST);
-
-	commandList->ResourceBarrier(static_cast<UINT>(barriers.size()), barriers.data());
-
-	commandList->CopyResource(
-		intermediate_[static_cast<size_t>(layout)]->GetResource(),
-		buffers_[static_cast<size_t>(layout)]->GetResource()
-	);
-
-	barriers[0] = buffers_[static_cast<size_t>(layout)]->TransitionEndState(D3D12_RESOURCE_STATE_COPY_SOURCE);
-	barriers[1] = intermediate_[static_cast<size_t>(layout)]->TransitionEndState(D3D12_RESOURCE_STATE_COPY_DEST);
-
-	commandList->ResourceBarrier(static_cast<UINT>(barriers.size()), barriers.data());
-
-}
-
 FBaseTexture* FLightingGBuffer::GetGBuffer(Layout layout) const {
 	return buffers_[static_cast<size_t>(layout)].get();
 }
 
-FBaseTexture* FLightingGBuffer::GetIntermediate(Layout layout) const {
-	return intermediate_[static_cast<size_t>(layout)].get();
-}
-
 DXGI_FORMAT FLightingGBuffer::GetFormat(Layout layout) {
 	return kFormats_[static_cast<size_t>(layout)];
+}
+
+uint32_t FLightingGBuffer::GetAtlasSize(uint32_t sampleCount) {
+	uint32_t r = static_cast<uint32_t>(std::sqrt(sampleCount));
+	Exception::Assert(sampleCount == r * r, "sample count invalid value.", "[max sample count ^ 0.5]");
+	//!< [max sample count ^ 0.5]の値が整数になる必要がある
+
+	return r;
+
 }

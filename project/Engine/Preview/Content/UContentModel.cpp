@@ -112,11 +112,11 @@ void UContentModel::Load(const std::filesystem::path& filepath, uint32_t assimpO
 	meshes_.resize(aiScene->mNumMeshes);
 	materials_.resize(aiScene->mNumMaterials);
 
-	// meshの読み込み
-	LoadMeshes(aiScene);
-
 	// materialの読み込み
 	LoadMaterials(aiScene, filepath);
+
+	// meshの読み込み
+	LoadMeshes(aiScene);
 
 	// nodeの読み込み
 	LoadSkeleton(aiScene);

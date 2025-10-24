@@ -1,5 +1,12 @@
 #include "AsyncThreadCollection.h"
 
+//-----------------------------------------------------------------------------------------
+// include
+//-----------------------------------------------------------------------------------------
+//* externals
+#include <magic_enum.hpp>
+#include <imgui.h>
+
 ////////////////////////////////////////////////////////////////////////////////////////////
 // AsyncThreadCollection class
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -19,4 +26,12 @@ void AsyncThreadCollection::Term() {
 
 void AsyncThreadCollection::PushTask(AsyncExecution execution, const std::shared_ptr<AsyncTask>& task) {
 	pools_[static_cast<uint8_t>(execution)].PushTask(task);
+}
+
+void AsyncThreadCollection::SystemDebugGui() {
+	// thread pool ごとの情報表示
+	for (uint8_t i = 0; i < kAsyncExecutionCount; ++i) {
+		ImGui::SeparatorText(std::format("Async Thread Pool [{}]", magic_enum::enum_name(static_cast<AsyncExecution>(i))).c_str());
+		pools_[i].SystemDebugGui();
+	}
 }

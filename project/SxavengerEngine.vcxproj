@@ -167,14 +167,13 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Demo\Entity\Player.h" />
-    <ClInclude Include="Demo\GameLoop\BetaSystemGameLoop.h" />
+    <ClInclude Include="Engine\GameLoop\BetaSystemGameLoop.h" />
     <ClInclude Include="Demo\GameLoop\DemoGameLoop.h" />
     <ClInclude Include="Demo\GameLoop\PreviewGameLoop.h" />
     <ClInclude Include="Demo\Object\EmissiveCubes.h" />
     <ClInclude Include="Demo\Object\PerspectiveCamera.h" />
     <ClInclude Include="Engine\Adapter\Actor\AtmosphereActor.h" />
     <ClInclude Include="Engine\Adapter\Actor\ControllableCameraActor.h" />
-    <ClInclude Include="Engine\Adapter\Actor\ParameterActor.h" />
     <ClInclude Include="Engine\Adapter\Actor\PerformanceActor.h" />
     <ClInclude Include="Engine\Adapter\Actor\PivotCameraActor.h" />
     <ClInclude Include="Engine\Adapter\Actor\SkyLightActor.h" />
@@ -243,7 +242,6 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Engine\Content\SxavengerContent.h" />
     <ClInclude Include="Engine\Content\TextureBuffer\BaseOffscreenTexture.h" />
     <ClInclude Include="Engine\Content\TextureBuffer\DepthTexture.h" />
-    <ClInclude Include="Engine\Content\TextureBuffer\MultiViewTextureBuffer.h" />
     <ClInclude Include="Engine\Content\TextureBuffer\OffscreenTextureCollection.h" />
     <ClInclude Include="Engine\Content\TextureBuffer\RenderTexture.h" />
     <ClInclude Include="Engine\Content\TextureBuffer\UnorderedTexture.h" />
@@ -288,7 +286,6 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Engine\Render\Common\FLUTTexture.h" />
     <ClInclude Include="Engine\Render\Common\FPriorityTexture.h" />
     <ClInclude Include="Engine\Render\Common\FProcessTexture.h" />
-    <ClInclude Include="Engine\Render\Common\FTexture.h" />
     <ClInclude Include="Engine\Render\Core\FRenderCoreGeometry.h" />
     <ClInclude Include="Engine\Render\Core\FRenderCoreLayer.h" />
     <ClInclude Include="Engine\Render\Core\FRenderCoreLight.h" />
@@ -336,13 +333,11 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Engine\System\DirectX\DxObject\DxResourceDimensionBuffer.h" />
     <ClInclude Include="Engine\System\DirectX\DxObject\DxResourceStateTracker.h" />
     <ClInclude Include="Engine\System\DirectX\DxObject\DxResourceStorage.h" />
-    <ClInclude Include="Engine\System\DirectX\DxObject\DxResourceTracker.h" />
     <ClInclude Include="Engine\System\DirectX\DxObject\DxRootSignatureDesc.h" />
     <ClInclude Include="Engine\System\DirectX\DxObject\DxShaderBlob.h" />
     <ClInclude Include="Engine\System\DirectX\DxObject\DxShaderCompiler.h" />
     <ClInclude Include="Engine\System\DirectX\DxObject\DxSwapChain.h" />
     <ClInclude Include="Engine\System\DirectX\DxObject\DxUnorderedDimensionBuffer.h" />
-    <ClInclude Include="Engine\System\DirectX\DxObject\DxVectorDimensionBuffer.h" />
     <ClInclude Include="Engine\System\DirectX\DxrObject\DxrAccelerationStructure.h" />
     <ClInclude Include="Engine\System\DirectX\DxrObject\DxrBindBuffer.h" />
     <ClInclude Include="Engine\System\DirectX\DxrObject\DxrExportGroup.h" />
@@ -404,14 +399,13 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Demo\Entity\Player.cpp" />
-    <ClCompile Include="Demo\GameLoop\BetaSystemGameLoop.cpp" />
+    <ClCompile Include="Engine\GameLoop\BetaSystemGameLoop.cpp" />
     <ClCompile Include="Demo\GameLoop\DemoGameLoop.cpp" />
     <ClCompile Include="Demo\GameLoop\PreviewGameLoop.cpp" />
     <ClCompile Include="Demo\Object\EmissiveCubes.cpp" />
     <ClCompile Include="Demo\Object\PerspectiveCamera.cpp" />
     <ClCompile Include="Engine\Adapter\Actor\AtmosphereActor.cpp" />
     <ClCompile Include="Engine\Adapter\Actor\ControllableCameraActor.cpp" />
-    <ClCompile Include="Engine\Adapter\Actor\ParameterActor.cpp" />
     <ClCompile Include="Engine\Adapter\Actor\PerformanceActor.cpp" />
     <ClCompile Include="Engine\Adapter\Actor\PivotCameraActor.cpp" />
     <ClCompile Include="Engine\Adapter\Actor\SkyLightActor.cpp" />
@@ -471,7 +465,6 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="Engine\Content\SxavengerContent.cpp" />
     <ClCompile Include="Engine\Content\TextureBuffer\BaseOffscreenTexture.cpp" />
     <ClCompile Include="Engine\Content\TextureBuffer\DepthTexture.cpp" />
-    <ClCompile Include="Engine\Content\TextureBuffer\MultiViewTextureBuffer.cpp" />
     <ClCompile Include="Engine\Content\TextureBuffer\OffscreenTextureCollection.cpp" />
     <ClCompile Include="Engine\Content\TextureBuffer\RenderTexture.cpp" />
     <ClCompile Include="Engine\Content\TextureBuffer\UnorderedTexture.cpp" />
@@ -514,7 +507,6 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="Engine\Render\Common\FLUTTexture.cpp" />
     <ClCompile Include="Engine\Render\Common\FPriorityTexture.cpp" />
     <ClCompile Include="Engine\Render\Common\FProcessTexture.cpp" />
-    <ClCompile Include="Engine\Render\Common\FTexture.cpp" />
     <ClCompile Include="Engine\Render\Core\FRenderCoreGeometry.cpp" />
     <ClCompile Include="Engine\Render\Core\FRenderCoreLayer.cpp" />
     <ClCompile Include="Engine\Render\Core\FRenderCoreLight.cpp" />
@@ -560,12 +552,10 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="Engine\System\DirectX\DxObject\DxResourceDimensionBuffer.cpp" />
     <ClCompile Include="Engine\System\DirectX\DxObject\DxResourceStateTracker.cpp" />
     <ClCompile Include="Engine\System\DirectX\DxObject\DxResourceStorage.cpp" />
-    <ClCompile Include="Engine\System\DirectX\DxObject\DxResourceTracker.cpp" />
     <ClCompile Include="Engine\System\DirectX\DxObject\DxRootSignatureDesc.cpp" />
     <ClCompile Include="Engine\System\DirectX\DxObject\DxShaderBlob.cpp" />
     <ClCompile Include="Engine\System\DirectX\DxObject\DxShaderCompiler.cpp" />
     <ClCompile Include="Engine\System\DirectX\DxObject\DxSwapChain.cpp" />
-    <ClCompile Include="Engine\System\DirectX\DxObject\DxVectorDimensionBuffer.cpp" />
     <ClCompile Include="Engine\System\DirectX\DxrObject\DxrAccelerationStructure.cpp" />
     <ClCompile Include="Engine\System\DirectX\DxrObject\DxrBindBuffer.cpp" />
     <ClCompile Include="Engine\System\DirectX\DxrObject\DxrExportGroup.cpp" />

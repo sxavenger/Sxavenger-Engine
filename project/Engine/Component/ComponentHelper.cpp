@@ -16,7 +16,6 @@
 #include "Components/Light/Punctual/DirectionalLightComponent.h"
 #include "Components/Light/Punctual/PointLightComponent.h"
 #include "Components/Light/Punctual/SpotLightComponent.h"
-//#include "Components/Light/Rect/RectLightComponent.h" -> FIXME
 #include "Components/Particle/ParticleComponent.h"
 #include "Components/Light/Environment/SkyLightComponent.h"
 #include "Components/Collider/ColliderComponent.h"
@@ -85,7 +84,7 @@ std::unique_ptr<MonoBehaviour> ComponentHelper::CreateCameraMonoBehaviour() {
 	root->SetName("camera");
 
 	root->AddComponent<TransformComponent>();
-	root->AddComponent<CameraComponent>()->SetTag(CameraComponent::Tag::GameCamera);
+	root->AddComponent<CameraComponent>();
 
 	return root;
 }
@@ -336,4 +335,17 @@ void ComponentHelper::ModifyBehaviourMaterial(MonoBehaviour* root, const std::fu
 			}
 		}
 	});
+}
+
+CameraComponent* ComponentHelper::GetCameraComponent(CameraComponent::Tag tag) {
+
+	CameraComponent* camera = nullptr;
+
+	sComponentStorage->ForEachActive<CameraComponent>([&](CameraComponent* component) {
+		if (component->GetTag() == tag) {
+			camera = component;
+		}
+	});
+
+	return camera;
 }

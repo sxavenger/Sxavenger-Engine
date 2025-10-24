@@ -24,6 +24,8 @@ public:
 	////////////////////////////////////////////////////////////////////////////////////////////
 	enum class Layout : uint8_t {
 		Direct,
+		Indirect_Atlas_Diffuse,
+		Indirect_Atlas_Specular,
 		Indirect_Reservoir_Diffuse,
 		Indirect_Reservoir_Specular,
 		Indirect_Moment,
@@ -61,14 +63,9 @@ public:
 
 	void ClearRenderTargetIndirect(const DirectXQueueContext* context);
 
-	void CopyIntermediateToGBuffer(const DirectXQueueContext* context, Layout layout);
-
-	void CopyGBufferToIntermediate(const DirectXQueueContext* context, Layout layout);
-
 	//* getter *//
 
 	FBaseTexture* GetGBuffer(Layout layout) const;
-	FBaseTexture* GetIntermediate(Layout layout) const;
 
 	static DXGI_FORMAT GetFormat(Layout layout);
 
@@ -82,11 +79,26 @@ private:
 
 	static inline const size_t kLayoutCount_ = magic_enum::enum_count<Layout>();
 
+	//* format *//
+
 	static const std::array<DXGI_FORMAT, kLayoutCount_> kFormats_;
 
+	//* buffer *//
+
 	std::array<std::unique_ptr<FBaseTexture>, kLayoutCount_> buffers_      = {};
-	std::array<std::unique_ptr<FBaseTexture>, kLayoutCount_> intermediate_ = {};
+	//std::array<std::unique_ptr<FBaseTexture>, kLayoutCount_> intermediate_ = {};
+
+	//* parameter *//
 
 	FRenderCorePathtracing::Config config_ = {};
+
+	Vector2ui downsize_ = {};
+	uint32_t atlas_     = NULL;
+
+	//=========================================================================================
+	// private methods
+	//=========================================================================================
+
+	static uint32_t GetAtlasSize(uint32_t sampleCount);
 
 };

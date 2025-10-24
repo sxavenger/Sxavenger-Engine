@@ -46,18 +46,33 @@ public:
 
 	//* editor option *//
 
+	//! @brief Editorの登録
+	//! @tparam T 登録するEditorの型
 	template <BaseEditorDerived T>
 	void RegisterEditor();
 
+	//! @brief Editorの削除
+	//! @tparam T 削除するEditorの型
 	template <BaseEditorDerived T>
 	void RemoveEditor();
 
+	//! @brief Editorの取得
+	//! @tparam T 取得するEditorの型
+	//! @retval ptr     取得したEditor
+	//! @retval nullptr 登録されていない
 	template <BaseEditorDerived T>
 	T* GetEditor();
 
+	//! @brief Editorの取得
+	//! @tparam T 取得するEditorの型
+	//! @throw Editorが登録されていない場合, 例外スローする.
 	template <BaseEditorDerived T>
 	T* RequireEditor();
 
+	//! @brief Editorに対して関数を実行
+	//! @tparam T 対象のEditorの型
+	//! @param function 実行関数
+	//! @note Editorが登録されていない場合, 何も実行されない.
 	template <BaseEditorDerived T>
 	void ExecuteEditorFunction(const std::function<void(T*)>& function);
 
@@ -75,7 +90,7 @@ private:
 	// private variables
 	//=========================================================================================
 
-	static const std::string kEditorName_;
+	static inline const std::string kEditorName_ = "Sxavenger Engine Editor";
 
 	//* imgui *//
 

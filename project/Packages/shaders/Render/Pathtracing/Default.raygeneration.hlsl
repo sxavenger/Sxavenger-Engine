@@ -5,7 +5,6 @@
 
 //* lib
 #include "../../Library/BRDF.hlsli"
-#include "../../Library/Random.hlsli"
 
 //=========================================================================================
 // local buffers
@@ -19,28 +18,23 @@ _RAYGENERATION void mainRaygeneration() {
 	uint2 index     = DispatchRaysIndex().xy;
 	uint2 dimension = DispatchRaysDimensions().xy;
 
-	uint type = DispatchRaysDimensions().z;
-	// todo: diffuseとspecularで2thread構成にする.
+	static const uint kDownSample = 4;
+	static const uint kAtlas      = 16;
+	// TODO: atlasのサイズを変更できるようにする
+
+	uint2 surface_index = index * kDownSample;
 
 	uint3 moment = gMoment[index].xyz;
 
-	if (isResetMoment) {
-		//!< 蓄積のリセット
-		gReservoirDiffuse[index]  = float4(0.0f, 0.0f, 0.0f, 0.0f);
-		gReservoirSpecular[index] = float4(0.0f, 0.0f, 0.0f, 0.0f);
-		gMoment[index].xyz        = moment = uint3(Xorshift::xorshift32(index.x * index.y), 0, 0);
-		// x: Hammerselyのoffset y: sample数(diffuse) z: sample数(specular, 継承不可)
-	}
-
 	if (moment.x == 0) {
-		moment.x = Xorshift::xorshift32(index.x * index.y); //!< xiのoffsetを初期化
+		moment.x = GetOffset(index);
 	}
 
 	DeferredSurface surface;
-	if (!surface.GetSurface(gDeferredBufferIndex.Get(), index)) {
+	if (!surface.GetSurface(gDeferredBufferIndex.Get(), surface_index)) {
 		gReservoirDiffuse[index]  = float4(0.0f, 0.0f, 0.0f, 0.0f);
 		gReservoirSpecular[index] = float4(0.0f, 0.0f, 0.0f, 0.0f);
-		gMoment[index].xyz        = moment = uint3(Xorshift::xorshift32(index.x * index.y), 0, 0);
+		gMoment[index].xyz        = uint3(GetOffset(index), 0, 0);
 		return; // surfaceが存在しない
 	}
 
@@ -49,18 +43,16 @@ _RAYGENERATION void mainRaygeneration() {
 	//* cameraからの方向ベクトルを取得
 	float3 v = normalize(gCamera.GetPosition() - surface.position);
 
-	if (moment.y < maxSampleCount) { //!< diffuse primary trace
+	for (uint i = 0; i < samplesPerFrame; ++i) {
 
-		float4 diffuse_indirect = float4(0.0f, 0.0f, 0.0f, 0.0f);
-
-		for (uint i = 0; i < min(samplesPerFrame, maxSampleCount - moment.y); ++i) {
-
-			uint currentSampleIndex   = moment.y + i;
-			uint randamizeSampleIndex = (currentSampleIndex + moment.x) % maxSampleCount;
+		{ //!< diffuse
+			float3 diffuse_indirect = float3(0.0f, 0.0f, 0.0f);
+		
+			uint currentSampleIndex = (moment.y + i) % maxSampleCount;
+			float2 xi = Hammersley(CalculateRandamizeSampleValue(currentSampleIndex, moment.x), maxSampleCount);
 			//!< 各threadが異なるサンプルを取得するためのインデックス計算
-			
-			float2 xi = Hammersley(GetSampleIndex(randamizeSampleIndex), maxSampleCount);
 
+			//!< Li(...)の取得
 			RayDesc desc;
 			desc.Origin    = surface.position;
 			desc.Direction = ImportanceSampleLambert(xi, surface.normal);
@@ -68,45 +60,34 @@ _RAYGENERATION void mainRaygeneration() {
 			desc.TMax      = kTMax;
 
 			Payload payload = TracePrimaryRay(desc);
-			// Li(...) = payload.indirect;
 
-			//* 計算
+			//!< 計算
 			float NdotL = saturate(dot(surface.normal, desc.Direction));
 
 			float3 diffuseAlbedo = surface.albedo * (1.0f - kMinFrenel) * (1.0f - surface.metallic);
 			float3 diffuseBRDF   = DiffuseBRDF(diffuseAlbedo);
 
-			float pdf = NdotL / kPi;
-
-			if (pdf > 0.0f) {
-				diffuse_indirect.rgb += diffuseBRDF * payload.indirect.rgb * kPi;
-				diffuse_indirect.a   += payload.indirect.a > 0.0f ? 1.0f : 0.0f;
+			if (NdotL > 0.0f) {
+				diffuse_indirect += diffuseBRDF * payload.indirect.rgb * kPi;
 			}
+
+			//!< atlasへの書き込み
+			uint2 atlasIndex = index * kAtlas + uint2(currentSampleIndex / kAtlas, currentSampleIndex % kAtlas);
+
+			float3 prev_diffuse_indirect = gAtlasDiffuse[atlasIndex].rgb;
+			gAtlasDiffuse[atlasIndex]    = float4(diffuse_indirect, 1.0f);
+
+			//!< reservoirの更新
+			gReservoirDiffuse[index].rgb += (diffuse_indirect - prev_diffuse_indirect) / float(maxSampleCount);
+			gReservoirDiffuse[index].a    = 1.0f;
 		}
 
-		uint prev    = moment.y;
-		uint current = moment.y + min(samplesPerFrame, maxSampleCount - moment.y);
+		{
+			float3 specular_indirect = float3(0.0f, 0.0f, 0.0f);
 
-		float4 reservoir_diffuse = gReservoirDiffuse[index] * float(prev) / float(current);
-		reservoir_diffuse.rgb   += diffuse_indirect.rgb / float(current);
-		reservoir_diffuse.a      = 1.0f;
-
-		gReservoirDiffuse[index] = reservoir_diffuse;
-		
-		moment.y = current;
-	}
-
-	if (moment.z < maxSampleCount) { //!< specular primary trace
-
-		float4 specular_indirect = float4(0.0f, 0.0f, 0.0f, 0.0f);
-
-		for (uint j = 0; j < min(samplesPerFrame, maxSampleCount - moment.z); ++j) {
-
-			uint currentSampleIndex   = moment.z + j;
-			uint randamizeSampleIndex = (currentSampleIndex + moment.x) % maxSampleCount;
+			uint currentSampleIndex = (moment.z + i) % maxSampleCount;
+			float2 xi = Hammersley(CalculateRandamizeSampleValue(currentSampleIndex, moment.x), maxSampleCount);
 			//!< 各threadが異なるサンプルを取得するためのインデックス計算
-			
-			float2 xi = Hammersley(GetSampleIndex(randamizeSampleIndex), maxSampleCount);
 
 			RayDesc desc;
 			desc.Origin    = surface.position;
@@ -116,7 +97,7 @@ _RAYGENERATION void mainRaygeneration() {
 
 			Payload payload = TracePrimaryRay(desc);
 
-			//* 計算
+			//!< 計算
 			float3 h = normalize(v + desc.Direction);
 
 			float NdotV = saturate(dot(surface.normal, v));
@@ -136,22 +117,23 @@ _RAYGENERATION void mainRaygeneration() {
 
 			if (pdf > 0.0f && NdotL > 0.0f) {
 				specular_indirect.rgb += specularBRDF * payload.indirect.rgb * (NdotL / pdf);
-				specular_indirect.a   += payload.indirect.a > 0.0f ? 1.0f : 0.0f;
 			}
+
+			//!< atlasへの書き込み
+			uint2 atlasIndex = index * kAtlas + uint2(currentSampleIndex / kAtlas, currentSampleIndex % kAtlas);
+
+			float3 prev_specular_indirect = gAtlasSpecular[atlasIndex].rgb;
+			gAtlasSpecular[atlasIndex]   = float4(specular_indirect, 1.0f);
+
+			//!< reservoirの更新
+			gReservoirSpecular[index].rgb += (specular_indirect - prev_specular_indirect) / float(maxSampleCount);
+			gReservoirSpecular[index].a    = 1.0f;
 		}
 
-		uint prev    = moment.z;
-		uint current = moment.z + min(samplesPerFrame, maxSampleCount - moment.z);
-
-		float4 reservoir_specular = gReservoirSpecular[index];
-		reservoir_specular.rgb   += specular_indirect.rgb / float(maxSampleCount);
-		reservoir_specular.a      = 1.0f;
-
-		gReservoirSpecular[index] = reservoir_specular;
-
-		moment.z = current;
 	}
-	
+
+	moment.y = (moment.y + samplesPerFrame) % maxSampleCount;
+	moment.z = (moment.z + samplesPerFrame) % maxSampleCount;
+
 	gMoment[index].xyz = moment;
-	
 }

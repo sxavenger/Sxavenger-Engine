@@ -14,19 +14,15 @@ _DXOBJECT_USING
 // TransformComponent class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-void TransformComponent::ShowComponentInspector() {
-	transform_.SetImGuiCommand();
-	UpdateMatrix();
-}
-
-void TransformComponent::CreateBuffer() {
-	if (buffer_ != nullptr) {
-		return;
-	}
-
+TransformComponent::TransformComponent(MonoBehaviour* behaviour) : BaseComponent(behaviour) {
 	buffer_ = std::make_unique<ConstantBuffer<TransformationMatrix>>();
 	buffer_->Create(SxavengerSystem::GetDxDevice());
 	buffer_->At().Init();
+}
+
+void TransformComponent::ShowComponentInspector() {
+	transform_.SetImGuiCommand();
+	UpdateMatrix();
 }
 
 const D3D12_GPU_VIRTUAL_ADDRESS& TransformComponent::GetGPUVirtualAddress() const {

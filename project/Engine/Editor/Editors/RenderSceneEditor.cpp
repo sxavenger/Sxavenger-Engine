@@ -51,6 +51,7 @@ void RenderSceneEditor::Init() {
 	camera_->AddComponent<CameraComponent>();
 
 	auto camera = camera_->GetComponent<CameraComponent>();
+	camera->SetTag(CameraComponent::Tag::Editor);
 	camera->GetProjection().focal = 16.0f;
 	camera->UpdateProj();
 	UpdateView();
@@ -60,7 +61,7 @@ void RenderSceneEditor::Init() {
 
 	config_ = {};
 	config_.buffer              = textures_.get();
-	config_.camera              = camera_->GetComponent<CameraComponent>();
+	config_.tag                 = CameraComponent::Tag::Editor;
 	config_.isEnablePostProcess = false;
 	config_.isEnableTonemap     = true;
 
@@ -673,13 +674,13 @@ void RenderSceneEditor::UpdateKeyShortcut() {
 
 	// bufferの切り替え
 	if (SxavengerSystem::IsPressKey(KeyId::KEY_LALT) && SxavengerSystem::IsTriggerKey(KeyId::KEY_UP)) { //!< left alt + Up
-		if (buffer_ > GBuffer::Scene) {
+		if (buffer_ > static_cast<GBuffer>(0)) {
 			buffer_ = static_cast<GBuffer>(static_cast<uint32_t>(buffer_) - 1);
 		}
 	}
 
 	if (SxavengerSystem::IsPressKey(KeyId::KEY_LALT) && SxavengerSystem::IsTriggerKey(KeyId::KEY_DOWN)) { //!< left alt + Down
-		if (buffer_ < GBuffer::Indirect_Reservoir) {
+		if (static_cast<uint32_t>(buffer_) < magic_enum::enum_count<GBuffer>()) {
 			buffer_ = static_cast<GBuffer>(static_cast<uint32_t>(buffer_) + 1);
 		}
 
@@ -873,7 +874,7 @@ void RenderSceneEditor::UpdateCamera() {
 	}
 
 	if (mouse->IsWheel()) {
-		distance_ = std::max(distance_ - mouse->GetDeltaWheel(), 0.0f);
+		distance_ = std::max(distance_ - mouse->GetDeltaWheelNormalized(), 0.0f);
 		isMoveCamera_ = true;
 	}
 

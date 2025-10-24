@@ -16,6 +16,7 @@
 ////////////////////////////////////////////////////////////////////////////////////////////
 // TextRendererComponent class
 ////////////////////////////////////////////////////////////////////////////////////////////
+//! @brief テキスト描画component.
 class TextRendererComponent final
 	: public BaseComponent {
 public:
@@ -53,6 +54,7 @@ public:
 
 	const std::shared_ptr<UAssetFont> GetFont() const { return font_.WaitRequire(); }
 
+	//! @brief AssetのFontSizeとParameterのFonstSize比率を取得
 	float GetFontSizeRatio() const;
 
 	//* behaviour option *//

@@ -9,6 +9,7 @@
 ////////////////////////////////////////////////////////////////////////////////////////////
 // DirectXQueueContext class
 ////////////////////////////////////////////////////////////////////////////////////////////
+//! @brief DirectXのCommand関係を管理するクラス
 class DirectXQueueContext {
 public:
 
@@ -16,10 +17,10 @@ public:
 	// RenderQueue enum class
 	////////////////////////////////////////////////////////////////////////////////////////////
 	enum class RenderQueue : uint8_t {
-		None,
-		Copy,
-		Compute,
-		Direct
+		None,    //!< CommandQueueを作成しない
+		Copy,    //!< D3D12_COMMAND_LIST_TYPE_COPY
+		Compute, //!< D3D12_COMMAND_LIST_TYPE_COMPUTE
+		Direct   //!< D3D12_COMMAND_LIST_TYPE_DIRECT
 	};
 
 public:
@@ -37,12 +38,19 @@ public:
 
 	//* context option *//
 
+	//! @brief Commandの実行/Allocatorの遷移を行う
 	void TransitionAllocator() const;
 
+	//! @brief 全てのAllocatorを実行する
 	void ExecuteAllAllocators() const;
 
+	//! @brief 指定したRenderQueueが対応されているか確認する
+	//! @retval true  実行可能
+	//! @retval false 実行不可能
 	bool IsSupportQueue(RenderQueue type) const;
 
+	//! @brief 指定したRenderQueueを要求する
+	//! @throw 指定したRenderQueueが対応されていない場合に例外をスローする
 	void RequestQueue(RenderQueue type) const;
 
 	DxObject::CommandContext* GetDxCommand() const;

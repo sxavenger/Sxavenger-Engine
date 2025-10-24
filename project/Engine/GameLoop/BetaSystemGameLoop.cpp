@@ -61,17 +61,7 @@ void BetaSystemGameLoop::InitSystem() {
 
 	camera_ = std::make_unique<ControllableCameraActor>();
 	camera_->Init();
-	camera_->GetComponent<CameraComponent>()->SetTag(CameraComponent::Tag::GameCamera);
-
-	//SxavengerAsset::TryImport<AssetModel>("assets/models/PBR_Sphere_Test/model/PBR_Sphere.gltf");
-
-	//atmosphere_ = std::make_unique<AtmosphereActor>();
-	//atmosphere_->Init({ 1024, 1024 });
-
-	//skylight_ = std::make_unique<SkyLightActor>();
-	//skylight_->Init({ 1024, 1024 });
-	//skylight_->SetTexture("assets/textures/textureCube/studio_small_09_4k.dds");
-	//skylight_->Update(true);
+	camera_->GetComponent<CameraComponent>()->SetTag(CameraComponent::Tag::Game);
 
 	offlineSkylight_ = std::make_unique<MonoBehaviour>();
 	auto light = offlineSkylight_->AddComponent<SkyLightComponent>();
@@ -90,9 +80,6 @@ void BetaSystemGameLoop::InitSystem() {
 	behaviour_->GetComponent<PostProcessLayerComponent>()->SetTag(PostProcessLayerComponent::Tag::None);
 	behaviour_->GetComponent<PostProcessLayerComponent>()->AddPostProcess<PostProcessAutoExposure>();
 	behaviour_->GetComponent<PostProcessLayerComponent>()->AddPostProcess<PostProcessLocalExposure>(false);
-	//behaviour_->GetComponent<PostProcessLayerComponent>()->AddPostProcess<PostProcessBloom>();
-	//behaviour_->GetComponent<PostProcessLayerComponent>()->AddPostProcess<PostProcessDoF>();
-	//behaviour_->GetComponent<PostProcessLayerComponent>()->AddPostProcess<PostProcessGrayScale>();
 	behaviour_->GetComponent<PostProcessLayerComponent>()->AddPostProcess<PostProcessChromaticAberration>();
 	behaviour_->GetComponent<PostProcessLayerComponent>()->AddPostProcess<PostProcessRadialBlur>();
 	behaviour_->GetComponent<PostProcessLayerComponent>()->AddPostProcess<PostProcessMotionBlur>();
@@ -113,29 +100,11 @@ void BetaSystemGameLoop::InitSystem() {
 
 	t->GetTransform().translate = { 200.0f, 200.0f };
 
-	parameter_ = std::make_unique<ParameterActor>();
-
-	colliderA_ = std::make_unique<MonoBehaviour>();
-	colliderA_->AddComponent<TransformComponent>();
-	auto colA = colliderA_->AddComponent<ColliderComponent>();
-	colA->SetTag("A");
-	colA->SetColliderBoundingSphere();
-
-	colliderB_ = std::make_unique<MonoBehaviour>();
-	colliderB_->AddComponent<TransformComponent>();
-	auto colB = colliderB_->AddComponent<ColliderComponent>();
-	colB->SetTag("B");
-	colB->SetColliderBoundingAABB();
-
-	sCollisionManager->SetOnCollisionFunctionEnter(
-		"B", "A",
-		[](ColliderComponent* a, ColliderComponent* b) {
-			Logger::CommentRuntime("info | [BetaSystemGameLoop]::OnCollisionEnter", std::format("collider {} enter collider {}", a->GetTag(), b->GetTag()));
-		}
-	);
-
 	performance_ = std::make_unique<PerformanceActor>();
 	performance_->Init();
+
+	//* test *//
+
 }
 
 void BetaSystemGameLoop::TermSystem() {
@@ -190,5 +159,7 @@ void BetaSystemGameLoop::DrawSystem() {
 	SxavengerSystem::RenderImGui();
 
 	main_->EndRenderWindow(SxavengerSystem::GetDirectQueueContext());
+
+	//* test *//
 
 }

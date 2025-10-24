@@ -36,10 +36,6 @@ private:
 
 	void EndPassIndirectLighting(const DirectXQueueContext* context, FRenderTargetBuffer* buffer);
 
-	void BeginPassIndirectDenoiser(const DirectXQueueContext* context, FRenderTargetBuffer* buffer);
-
-	void EndPassIndirectDenoiser(const DirectXQueueContext* context, FRenderTargetBuffer* buffer);
-
 	void ClearPassDirect(const DirectXQueueContext* context, FRenderTargetBuffer* buffer);
 
 	void ClearPassIndirect(const DirectXQueueContext* context, FRenderTargetBuffer* buffer);

@@ -86,7 +86,7 @@ void PreviewGameLoop::TermEngine() {
 	FRenderCore::GetInstance()->Term();
 
 	SxavengerSystem::ExecuteAllAllocator();
-	SxavengerSystem::ShutdownAsyncThread();
+	SxavengerSystem::Shutdown();
 }
 
 void PreviewGameLoop::TermGame() {

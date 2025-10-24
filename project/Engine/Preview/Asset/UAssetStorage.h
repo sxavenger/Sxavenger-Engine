@@ -49,15 +49,32 @@ public:
 
 	//* storage option *//
 
+	//! @brief Assetの登録
+	//! @tparam T Assetの型
+	//! @param[in] asset 登録するAssetの共有ポインタ
+	//! @param[in] filepath Assetのファイルパス
 	template <UAssetConcept T>
 	void Register(const std::shared_ptr<T>& asset, const std::filesystem::path& filepath);
 
+	//! @brief Assetの取得
+	//! @tparam T Assetの型
+	//! @param[in] id Assetのuuid
+	//! @retval ptr     取得したAssetの共有ポインタ
+	//! @retval nullptr Assetが存在しない場合
 	template <UAssetConcept T>
 	std::shared_ptr<T> GetAsset(const Uuid& id) const;
 
+	//! @brief Assetの全要素に対して関数を実行
+	//! @tparam T Assetの型
+	//! @param[in] function 実行する関数
 	template <UAssetConcept T>
 	void ForEach(const std::function<void(T* const)>& function) const;
 
+	//! @brief Assetの存在確認
+	//! @tparam T Assetの型
+	//! @param[in] id Assetのuuid
+	//! @retval true  Assetが存在する場合
+	//! @retval false Assetが存在しない場合
 	template <UAssetConcept T>
 	bool Contains(const Uuid& id) const { return Contains(&typeid(T), id); }
 

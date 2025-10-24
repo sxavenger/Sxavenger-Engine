@@ -243,7 +243,7 @@
     <ClInclude Include="Demo\Entity\Player.h">
       <Filter>Demo\Entity</Filter>
     </ClInclude>
-    <ClInclude Include="Demo\GameLoop\BetaSystemGameLoop.h">
+    <ClInclude Include="Engine\GameLoop\BetaSystemGameLoop.h">
       <Filter>Demo\GameLoop</Filter>
     </ClInclude>
     <ClInclude Include="Demo\GameLoop\DemoGameLoop.h">
@@ -262,9 +262,6 @@
       <Filter>Engine\Adapter\Actor</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Adapter\Actor\ControllableCameraActor.h">
-      <Filter>Engine\Adapter\Actor</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Adapter\Actor\ParameterActor.h">
       <Filter>Engine\Adapter\Actor</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Adapter\Actor\PerformanceActor.h">
@@ -471,9 +468,6 @@
     <ClInclude Include="Engine\Content\TextureBuffer\DepthTexture.h">
       <Filter>Engine\Content\TextureBuffer</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Content\TextureBuffer\MultiViewTextureBuffer.h">
-      <Filter>Engine\Content\TextureBuffer</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\Content\TextureBuffer\OffscreenTextureCollection.h">
       <Filter>Engine\Content\TextureBuffer</Filter>
     </ClInclude>
@@ -604,9 +598,6 @@
       <Filter>Engine\Render\Common</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Render\Common\FProcessTexture.h">
-      <Filter>Engine\Render\Common</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Render\Common\FTexture.h">
       <Filter>Engine\Render\Common</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Render\Core\FRenderCoreGeometry.h">
@@ -750,9 +741,6 @@
     <ClInclude Include="Engine\System\DirectX\DxObject\DxResourceStorage.h">
       <Filter>Engine\System\DirectX\DxObject</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\System\DirectX\DxObject\DxResourceTracker.h">
-      <Filter>Engine\System\DirectX\DxObject</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\System\DirectX\DxObject\DxRootSignatureDesc.h">
       <Filter>Engine\System\DirectX\DxObject</Filter>
     </ClInclude>
@@ -766,9 +754,6 @@
       <Filter>Engine\System\DirectX\DxObject</Filter>
     </ClInclude>
     <ClInclude Include="Engine\System\DirectX\DxObject\DxUnorderedDimensionBuffer.h">
-      <Filter>Engine\System\DirectX\DxObject</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\System\DirectX\DxObject\DxVectorDimensionBuffer.h">
       <Filter>Engine\System\DirectX\DxObject</Filter>
     </ClInclude>
     <ClInclude Include="Engine\System\DirectX\DxrObject\DxrAccelerationStructure.h">
@@ -950,7 +935,7 @@
     <ClCompile Include="Demo\Entity\Player.cpp">
       <Filter>Demo\Entity</Filter>
     </ClCompile>
-    <ClCompile Include="Demo\GameLoop\BetaSystemGameLoop.cpp">
+    <ClCompile Include="Engine\GameLoop\BetaSystemGameLoop.cpp">
       <Filter>Demo\GameLoop</Filter>
     </ClCompile>
     <ClCompile Include="Demo\GameLoop\DemoGameLoop.cpp">
@@ -969,9 +954,6 @@
       <Filter>Engine\Adapter\Actor</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Adapter\Actor\ControllableCameraActor.cpp">
-      <Filter>Engine\Adapter\Actor</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\Adapter\Actor\ParameterActor.cpp">
       <Filter>Engine\Adapter\Actor</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Adapter\Actor\PerformanceActor.cpp">
@@ -1151,9 +1133,6 @@
     <ClCompile Include="Engine\Content\TextureBuffer\DepthTexture.cpp">
       <Filter>Engine\Content\TextureBuffer</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Content\TextureBuffer\MultiViewTextureBuffer.cpp">
-      <Filter>Engine\Content\TextureBuffer</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\Content\TextureBuffer\OffscreenTextureCollection.cpp">
       <Filter>Engine\Content\TextureBuffer</Filter>
     </ClCompile>
@@ -1278,9 +1257,6 @@
       <Filter>Engine\Render\Common</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Render\Common\FProcessTexture.cpp">
-      <Filter>Engine\Render\Common</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\Render\Common\FTexture.cpp">
       <Filter>Engine\Render\Common</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Render\Core\FRenderCoreGeometry.cpp">
@@ -1418,9 +1394,6 @@
     <ClCompile Include="Engine\System\DirectX\DxObject\DxResourceStorage.cpp">
       <Filter>Engine\System\DirectX\DxObject</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\System\DirectX\DxObject\DxResourceTracker.cpp">
-      <Filter>Engine\System\DirectX\DxObject</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\System\DirectX\DxObject\DxRootSignatureDesc.cpp">
       <Filter>Engine\System\DirectX\DxObject</Filter>
     </ClCompile>
@@ -1431,9 +1404,6 @@
       <Filter>Engine\System\DirectX\DxObject</Filter>
     </ClCompile>
     <ClCompile Include="Engine\System\DirectX\DxObject\DxSwapChain.cpp">
-      <Filter>Engine\System\DirectX\DxObject</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\System\DirectX\DxObject\DxVectorDimensionBuffer.cpp">
       <Filter>Engine\System\DirectX\DxObject</Filter>
     </ClCompile>
     <ClCompile Include="Engine\System\DirectX\DxrObject\DxrAccelerationStructure.cpp">

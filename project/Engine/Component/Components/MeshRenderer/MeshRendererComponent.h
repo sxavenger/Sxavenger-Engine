@@ -24,6 +24,7 @@
 ////////////////////////////////////////////////////////////////////////////////////////////
 // MeshRendererComponent class
 ////////////////////////////////////////////////////////////////////////////////////////////
+//! @brief 3Dメッシュの描画component.
 class MeshRendererComponent final
 	: public BaseComponent {
 public:
@@ -57,9 +58,13 @@ public:
 	const UAssetParameter<UAssetMesh>& GetMeshParameter() const { return mesh_; }
 	const UAssetParameter<UAssetMaterial>& GetMaterialParameter() const { return material_; }
 
-	const TransformComponent* GetTransform() const;
-
 	uint8_t GetMask() const { return mask_.Get(); }
+
+	//* behaviour option *//
+
+	//! @brief TransformComponentを取得
+	//! @throw TransformComponentがEntityに存在しない場合に例外をスローする
+	const TransformComponent* RequireTransform() const;
 
 	//* json option *//
 

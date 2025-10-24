@@ -30,6 +30,7 @@ static const std::filesystem::path kAssetsModelDirectory    = kAssetsDirectory /
 ////////////////////////////////////////////////////////////////////////////////////////////
 // SxavengeConfig class
 ////////////////////////////////////////////////////////////////////////////////////////////
+//! @brief アプリケーション設定とサポート情報を管理する静的ユーティリティクラス.
 class SxavengerConfig {
 public:
 
@@ -97,8 +98,11 @@ public:
 	// public methods
 	//=========================================================================================
 
+	//! @brief Configを読み込む
+	//! @note [構成プロパティ]から設定を読み込む
 	static void Load();
 
+	//! @brief ログに設定情報を出力する
 	static void OutputLog();
 
 	static const Config& GetConfig() { return config_; }

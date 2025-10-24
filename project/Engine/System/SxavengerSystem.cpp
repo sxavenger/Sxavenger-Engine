@@ -24,8 +24,6 @@ namespace {
 void SxavengerSystem::Init() {
 
 	Logger::EngineLog("Engine Version: " + kSxavengerEngineVersion);
-	Logger::EngineLog(std::format("Build Profile: {}", _PROFILE));
-	Logger::EngineThreadLog("this thread is main thread.");
 
 	sWinApp = std::make_unique<WinApp>();
 	sWinApp->Init();
@@ -34,7 +32,7 @@ void SxavengerSystem::Init() {
 	sDirectXCommon->Init();
 
 	sDirectQueueContext = std::make_unique<DirectXQueueContext>();
-	sDirectQueueContext->Init(2, DirectXQueueContext::RenderQueue::Direct); //!< allocator count
+	sDirectQueueContext->Init(2, DirectXQueueContext::RenderQueue::Direct);
 	sDirectQueueContext->SetName(L"main");
 
 	sPerformance = std::make_unique<Performance>();
@@ -48,6 +46,11 @@ void SxavengerSystem::Init() {
 }
 
 void SxavengerSystem::Term() {
+}
+
+void SxavengerSystem::Shutdown() {
+	sAsyncThreadCollection->Term();
+	sInput->Shutdown();
 }
 
 _DXOBJECT Descriptor SxavengerSystem::GetDescriptor(_DXOBJECT DescriptorType type) {
@@ -123,6 +126,18 @@ bool SxavengerSystem::IsReleaseKey(KeyId id) {
 	return sInput->IsReleaseKey(id);
 }
 
+const KeyboardInput* SxavengerSystem::GetKeyboardInput() {
+	return sInput->GetKeyboardInput();
+}
+
+const MouseInput* SxavengerSystem::GetMouseInput() {
+	return sInput->GetMouseInput();
+}
+
+const GamepadInput* SxavengerSystem::GetGamepadInput(uint8_t number) {
+	return sInput->GetGamepadInput(number);
+}
+
 Input* SxavengerSystem::GetInput() {
 	return sInput.get();
 }
@@ -165,8 +180,8 @@ void SxavengerSystem::PushTaskAndWait(AsyncExecution execution, const AsyncTask:
 	task->Wait();
 }
 
-void SxavengerSystem::ShutdownAsyncThread() {
-	sAsyncThreadCollection->Term();
+AsyncThreadCollection* SxavengerSystem::GetAsyncThreadCollection() {
+	return sAsyncThreadCollection.get();
 }
 
 void SxavengerSystem::BeginImGuiFrame() {

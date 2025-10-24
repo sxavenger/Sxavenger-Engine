@@ -61,7 +61,14 @@ public:
 
 	_Ty x, y;
 
-	// todo: formatter
+	//=========================================================================================
+	// formatter
+	//=========================================================================================
+
+	template <typename FormatContext>
+	auto format(FormatContext& ctx) const {
+		return std::format_to(ctx.out(), "({}, {})", x, y);
+	}
 
 };
 
@@ -200,6 +207,12 @@ template <class _Ty>
 constexpr Vector2<_Ty> operator/(const Vector2<_Ty>& lhs, const _Ty& rhs) noexcept {
 	return { lhs.x / rhs, lhs.y / rhs };
 }
+
+////////////////////////////////////////////////////////////////////////////////////////////
+// Vector2 formatter structure
+////////////////////////////////////////////////////////////////////////////////////////////
+template <class T>
+struct std::formatter<Vector2<T>> : Sxl::BaseFormatter<Vector2<T>> {};
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // constexpr constants

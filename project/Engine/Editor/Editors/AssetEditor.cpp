@@ -132,10 +132,10 @@ bool AssetEditor::OpenShellExecuteApp(const std::filesystem::path& filepath) {
 	bool isSuccess = (reinterpret_cast<intptr_t>(result) > 32);
 
 	if (isSuccess) {
-		Logger::CommentRuntime("shell execute application.", filepath.generic_string());
+		Logger::CommentRuntime("[AssetEditor]", "shell execute application. \n filepath: " + filepath.generic_string());
 
 	} else {
-		Logger::WarningRuntime("warning | shell execute application failed.", filepath.generic_string());
+		Logger::WarningRuntime("[AssetEditor]", "shell execute application failed. \n filepath: " + filepath.generic_string());
 	}
 
 	return isSuccess;
@@ -148,10 +148,10 @@ bool AssetEditor::OpenShellExecuteExplorer(const std::filesystem::path& filepath
 	bool isSuccess = (reinterpret_cast<intptr_t>(result) > 32);
 
 	if (isSuccess) {
-		Logger::CommentRuntime("shell execute explorer.", filepath.generic_string());
+		Logger::CommentRuntime("[AssetEditor]", "shell execute explorer. \n filepath: " + filepath.generic_string());
 
 	} else {
-		Logger::WarningRuntime("warning | shell execute explorer failed.", filepath.generic_string());
+		Logger::WarningRuntime("[AssetEditor]", "shell execute explorer failed. \n filepath: " + filepath.generic_string());
 	}
 
 	return isSuccess;

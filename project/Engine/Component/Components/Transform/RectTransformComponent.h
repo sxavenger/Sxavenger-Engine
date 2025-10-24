@@ -19,6 +19,7 @@
 ////////////////////////////////////////////////////////////////////////////////////////////
 // RectTransformComponent class
 ////////////////////////////////////////////////////////////////////////////////////////////
+//! @brief 2D空間の変換情報component.
 class RectTransformComponent final
 	: public BaseComponent {
 public:
@@ -27,7 +28,7 @@ public:
 	// public methods
 	//=========================================================================================
 
-	RectTransformComponent(MonoBehaviour* behaviour) : BaseComponent(behaviour) { CreateBuffer(); }
+	RectTransformComponent(MonoBehaviour* behaviour);
 	~RectTransformComponent() override = default;
 
 	//* component option *//
@@ -36,14 +37,14 @@ public:
 
 	//* buffer option *//
 
-	void CreateBuffer();
-
 	const D3D12_GPU_VIRTUAL_ADDRESS& GetGPUVirtualAddress() const;
 
 	//* transform option *//
 
+	//! @brief 行列を更新
 	void UpdateMatrix();
 
+	//! @brief 親が存在するか確認
 	bool HasParent() const;
 
 	RectTransform& GetTransform() { return transform_; }

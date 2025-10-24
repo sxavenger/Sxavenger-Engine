@@ -20,6 +20,7 @@
 ////////////////////////////////////////////////////////////////////////////////////////////
 // GameLoop namespace
 ////////////////////////////////////////////////////////////////////////////////////////////
+//! @brief Applicationの実行ループを管理する名前空間.
 namespace GameLoop {
 
 	////////////////////////////////////////////////////////////////////////////////////////////
@@ -45,7 +46,8 @@ namespace GameLoop {
 	////////////////////////////////////////////////////////////////////////////////////////////
 
 	using ProcessFunction   = std::function<void()>;
-	using ConditionFunction = std::function<bool()>; //!< true: break loop
+	using ConditionFunction = std::function<bool()>;
+	//!< true: break loop
 
 	////////////////////////////////////////////////////////////////////////////////////////////
 	// State Array using
@@ -56,6 +58,7 @@ namespace GameLoop {
 	////////////////////////////////////////////////////////////////////////////////////////////
 	// Context class
 	////////////////////////////////////////////////////////////////////////////////////////////
+	//! @brief GameLoopのContextクラス.
 	class Context
 		: public IFramework {
 	public:
@@ -69,8 +72,14 @@ namespace GameLoop {
 
 		virtual void Run() override;
 
+		//! @brief GameLoopの処理を登録する
+		//! @param[in] process  実行する箇所
+		//! @param[in] layer    処理順序
+		//! @param[in] function 処理内容
 		void SetProcess(Process process, const std::optional<uint32_t>& layer, const ProcessFunction& function);
 
+		//! @brief GameLoopの終了条件を登録する
+		//! @param[in] func 終了条件
 		void SetCondition(const ConditionFunction& func) { conditions_.emplace_back(func); }
 
 	private:
@@ -133,9 +142,11 @@ namespace GameLoop {
 		// public method
 		//=========================================================================================
 
+		//! @brief 処理Interfaceを追加する
 		template <InterfaceConcept T>
 		void Push();
 
+		//! @brief 実行
 		void Run() override;
 
 	private:

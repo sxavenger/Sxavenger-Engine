@@ -65,6 +65,7 @@ public:
 	// public methods
 	//=========================================================================================
 
+	
 	MonoBehaviour();
 	virtual ~MonoBehaviour();
 
@@ -73,10 +74,6 @@ public:
 	void SetActive(bool isActive);
 
 	bool IsActive() const { return isActive_; }
-
-	void SetView(bool isView);
-
-	bool IsView() const { return isView_; }
 
 	//* name option *//
 
@@ -94,6 +91,9 @@ public:
 	template <Component _Ty>
 	_Ty* AddComponent();
 
+	//! @brief componentを追加
+	//! @param[in] component 追加するcomponentの名前
+	//! @return 追加したcomponentの基底ptr
 	BaseComponent* AddComponent(const std::string& component);
 
 	//! @brief componentを削除
@@ -101,6 +101,8 @@ public:
 	template <Component _Ty>
 	void RemoveComponent();
 
+	//! @brief componentを削除
+	//! @param[in] type 削除するcomponentの型情報
 	void RemoveComponent(const std::type_info* type);
 
 	//! @brief componentを取得
@@ -119,13 +121,15 @@ public:
 
 	//! @brief componentを取得
 	//! @tparam _Ty 取得するcomponentの型
-	//! @return componentのptr(存在しない場合はAssert)
+	//! @return componentのptr
+	//! @throw componentが存在しない場合に例外をスローする
 	template <Component _Ty>
 	const _Ty* RequireComponent() const;
 
 	//! @brief componentを取得
 	//! @tparam _Ty 取得するcomponentの型
-	//! @return componentのptr(存在しない場合はAssert)
+	//! @return componentのptr
+	//! @throw componentが存在しない場合に例外をスローする
 	template <Component _Ty>
 	_Ty* RequireComponent();
 
@@ -135,30 +139,55 @@ public:
 	//* hierarchy option *//
 	//* parent
 
+	//! @brief parent関係を設定
+	//! @param[in] parent 設定するparent
 	void SetParent(MonoBehaviour* parent);
 
+	//! @brief parent関係を削除
 	void RemoveParent();
 
+	//! @brief parentを取得
 	MonoBehaviour* GetParent() const { return parent_; }
 
+	//! @brief parentを取得
+	//! @throw parentが存在しない場合に例外をスローする
 	MonoBehaviour* RequireParent() const;
 
+	//! @brief parentが存在するか確認
+	//! @retval true  存在する
+	//! @retval false 存在しない
 	bool HasParent() const { return parent_ != nullptr; }
 
 	//* children
 
+	//! @brief childを追加
+	//! @param[in] child 追加するchild(所有権なし)
 	void AddChild(MonoBehaviour* child);
 
+	//! @brief childを追加
+	//! @param[in] child 追加するchild(所有権あり)
 	void AddChild(std::unique_ptr<MonoBehaviour>&& child);
 
+	//! @brief 名前からchildを検索
+	//! @param[in] name 取得するchildの名前
+	//! @retval ptr     存在する
+	//! @retval nullptr 存在しない
+	//! @note 自身のchildrenから探索 o(n)
 	MonoBehaviour* FindChild(const std::string& name);
 
+	//! @brief 名前からchildを検索
+	//! @param[in] name 取得するchildの名前
+	//! @throw childが存在しない場合に例外をスローする
+	//! @note 自身のchildrenから探索 o(n)
 	MonoBehaviour* FindRequireChild(const std::string& name);
 
 	const Hierarchy& GetChildren() const { return children_; }
 
+	//! @brief childが存在するか確認
 	bool HasChild() const { return !children_.empty(); }
 
+	//! @brief 全てのchildに対して関数を実行
+	//! @param function 実行関数
 	void ForEachChild(const std::function<void(MonoBehaviour*)>& function);
 
 	//* inspector option *//
@@ -185,7 +214,6 @@ protected:
 
 	//* flag
 	bool isActive_ = true;
-	bool isView_   = true;
 
 	//* components
 	Components components_;
@@ -247,7 +275,7 @@ _Ty* MonoBehaviour::AddComponent() {
 		components_[type] = sComponentStorage->RegisterComponent<_Ty>(this);
 		
 	} else {
-		Logger::WarningRuntime("warning | [MonoBehaviour]::AddComponent", "component is already added. component is only one.");
+		Logger::WarningRuntime("[MonoBehaviour]", "component is already added. component is only one.");
 	}
 
 	return static_cast<_Ty*>(components_[type]->get());
@@ -264,7 +292,7 @@ void MonoBehaviour::RemoveComponent() {
 		components_.Erase(type);
 
 	} else {
-		Logger::WarningRuntime("warning | [MonoBehaviour]::RemoveComponent", "component is not found. type: " + std::string(type->name()));
+		Logger::WarningRuntime("[MonoBehaviour]", "component is not found. \n type: " + std::string(type->name()));
 	}
 }
 

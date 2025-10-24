@@ -9,7 +9,7 @@
 #include <Engine/GameLoop/FeatureLevelGameLoop.h>
 #include <Engine/GameLoop/SxavengerEngineGameLoop.h>
 #include <Engine/GameLoop/EditorEngineGameLoop.h>
-#include <Demo/GameLoop/BetaSystemGameLoop.h>
+#include <Engine/GameLoop/BetaSystemGameLoop.h>
 #include <Demo/GameLoop/DemoGameLoop.h>
 #include <Demo/GameLoop/PreviewGameLoop.h>
 
@@ -27,10 +27,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	collection->Push<EditorEngineGameLoop>();
 #endif
 	
-	//collection->Push<BetaSystemGameLoop>();
-	collection->Push<DemoGameLoop>();
-
+	collection->Push<BetaSystemGameLoop>();
 	//collection->Push<PreviewGameLoop>();
+	//collection->Push<DemoGameLoop>();
 
 	collection->Run();
 

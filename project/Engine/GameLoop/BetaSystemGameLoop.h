@@ -16,12 +16,14 @@
 #include <Engine/Adapter/Actor/AtmosphereActor.h>
 #include <Engine/Adapter/Actor/SkyLightActor.h>
 #include <Engine/Adapter/Actor/ControllableCameraActor.h>
-#include <Engine/Adapter/Actor/ParameterActor.h>
 #include <Engine/Adapter/Actor/PerformanceActor.h>
+
+#include "Engine/Render/Common/FBaseTexture.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // BetaSystemGameLoop class
 ////////////////////////////////////////////////////////////////////////////////////////////
+//! @brief 機能検証用GameLoopクラス	
 class BetaSystemGameLoop
 	: public GameLoop::Interface {
 public:
@@ -44,19 +46,10 @@ private:
 
 	std::unique_ptr<ControllableCameraActor> camera_;
 
-	std::unique_ptr<AtmosphereActor> atmosphere_;
-
 	std::unique_ptr<SkyLightActor> skylight_;
 	std::unique_ptr<MonoBehaviour> offlineSkylight_;
 
-	//std::unique_ptr<LeadParticle> leadParticle_;
-
 	std::unique_ptr<MonoBehaviour> behaviour_;
-
-	std::unique_ptr<ParameterActor> parameter_;
-
-	std::unique_ptr<MonoBehaviour> colliderA_;
-	std::unique_ptr<MonoBehaviour> colliderB_;
 
 	std::unique_ptr<PerformanceActor> performance_;
 

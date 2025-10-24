@@ -30,6 +30,7 @@ void DevelopEditor::ShowMainMenu() {
 		ShowProcessMenu();
 		ShowSystemMenu();
 		ShowThreadMenu();
+		ShowInputMenu();
 
 		ImGui::EndMenu();
 	}
@@ -53,7 +54,7 @@ void DevelopEditor::BreakPoint(const std::source_location& location) {
 	locate += std::to_string(location.line());
 	locate += "\n";
 
-	Logger::LogRuntime("[DevelopEditor]: break point called.", locate, SxavengerLogger::Category::Comment);
+	Logger::CommentRuntime("[DevelopEditor]" , "break point called. \n locate: " + locate);
 }
 
 void DevelopEditor::ShowConfigMenu() {
@@ -154,18 +155,13 @@ void DevelopEditor::ShowSystemMenu() {
 
 		if (ImGui::BeginMenu("descriptor")) {
 			MenuPadding();
-
-			auto descriptorHeaps = SxavengerSystem::GetDxDescriptorHeaps();
-			descriptorHeaps->SystemDebugGui();
-
+			SxavengerSystem::GetDxDescriptorHeaps()->SystemDebugGui();
 			ImGui::EndMenu();
 		}
 
 		if (ImGui::BeginMenu("window")) {
-
-			auto windowCollection = SxavengerSystem::GetWindowCollection();
-			windowCollection->SystemDebugGui();
-
+			MenuPadding();
+			SxavengerSystem::GetWindowCollection()->SystemDebugGui();
 			ImGui::EndMenu();
 		}
 
@@ -176,10 +172,15 @@ void DevelopEditor::ShowSystemMenu() {
 void DevelopEditor::ShowThreadMenu() {
 	if (ImGui::BeginMenu("thread")) {
 		MenuPadding();
+		SxavengerSystem::GetAsyncThreadCollection()->SystemDebugGui();
+		ImGui::EndMenu();
+	}
+}
 
-		/*auto collection = SxavengerAsset::GetCollection();
-		collection->SystemDebugGui();*/
-
+void DevelopEditor::ShowInputMenu() {
+	if (ImGui::BeginMenu("input")) {
+		MenuPadding();
+		SxavengerSystem::GetInput()->SystemDebugGui();
 		ImGui::EndMenu();
 	}
 }
@@ -249,26 +250,29 @@ void DevelopEditor::ShowConsole() {
 		ImColor(250, 0, 0, 255),
 	};
 
-	//* console log *//
-	ImGui::BeginChild(ImGui::GetID((void*)0), ImGui::GetContentRegionAvail(), ImGuiChildFlags_Border, ImGuiWindowFlags_AlwaysVerticalScrollbar);
+	if (ImGui::BeginTable("## console table", 2, ImGuiTableFlags_ScrollY | ImGuiTableFlags_ScrollX | ImGuiTableFlags_BordersH)) {
 
-	//!< todo: filterできるようにする
-	for (const auto& [data, count] : SxavengerLogger::GetStacks() | std::views::reverse | std::views::filter([](const auto&) { return true; })) {
-		if (count == 1) {
-			ImGui::TextColored(colors[static_cast<uint32_t>(data.category)], std::format("{}", data.label).c_str());
+		ImGui::TableSetupColumn("label");
+		ImGui::TableSetupColumn("detail");
+		ImGui::TableHeadersRow();
 
-		} else {
-			ImGui::TextColored(colors[static_cast<uint32_t>(data.category)], std::format("{} [x{}]", data.label, count).c_str());
-		}
-		
-		if (!data.detail.empty()) {
-			if (ImGui::BeginItemTooltip()) {
-				ImGui::Text(data.detail.c_str());
-				ImGui::EndTooltip();
+		for (const auto& [data, count] : SxavengerLogger::GetStacks() | std::views::reverse | std::views::filter([](const auto&) { return true; })) {
+			// TODO: Filter機能実装
+			ImGui::TableNextRow();
+
+			{ //!< label
+				ImGui::TableNextColumn();
+				ImGui::TextColored(colors[static_cast<uint32_t>(data.category)], data.label.c_str());
+			}
+
+			{ //!< detail
+				ImGui::TableNextColumn();
+				ImGui::Text(std::format("{} [x{}]", data.detail, count).c_str());
 			}
 		}
+
+		ImGui::EndTable();
 	}
 
-	ImGui::EndChild();
 	ImGui::End();
 }

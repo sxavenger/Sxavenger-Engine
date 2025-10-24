@@ -18,6 +18,7 @@ public:
 	//=========================================================================================
 
 	FBaseTexture() = default;
+	FBaseTexture(const Vector2ui& size, DXGI_FORMAT format) { Create(size, format); }
 	virtual ~FBaseTexture() { Term(); }
 
 	void Create(const Vector2ui& size, DXGI_FORMAT format);
@@ -63,6 +64,8 @@ public:
 
 	static const D3D12_RESOURCE_STATES GetDefaultState() { return kDefaultState_; }
 
+	const Vector2ui& GetSize() const { return size_; }
+
 protected:
 
 	//=========================================================================================
@@ -78,6 +81,8 @@ protected:
 	DxObject::Descriptor descriptorRTV_;
 
 	//* parameter *//
+
+	Vector2ui size_;
 
 	DXGI_FORMAT format_;
 

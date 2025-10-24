@@ -26,6 +26,7 @@
 ////////////////////////////////////////////////////////////////////////////////////////////
 // SkinnedMeshRendererComponent class
 ////////////////////////////////////////////////////////////////////////////////////////////
+//! @brief Animation付きメッシュ描画component.
 class SkinnedMeshRendererComponent final
 	: public BaseComponent {
 public:
@@ -105,6 +106,7 @@ public:
 	void SetMaterial(const Uuid& id) { material_ = id; }
 	void SetMaterial(const std::shared_ptr<UAssetMaterial>& material) { material_ = material; }
 
+	//! @brief スキニング処理を行う
 	void Skinning();
 
 	void Update(const DirectXQueueContext* context);
@@ -127,11 +129,15 @@ public:
 
 	const DxrObject::BottomLevelAS* GetBottomLevelAS() const { return mesh_.GetBottomLevelAS(); }
 
-	const TransformComponent* GetTransform() const;
-
 	uint8_t GetMask() const { return mask_.Get(); }
 
 	bool IsEnable() const { return !material_.Empty() && isEnable_;}
+
+	//* behaviour option *//
+
+	//! @brief TransformComponentを取得
+	//! @throw TransformComponentがEntityに存在しない場合に例外をスローする
+	const TransformComponent* RequireTransform() const;
 
 	//* json option *//
 

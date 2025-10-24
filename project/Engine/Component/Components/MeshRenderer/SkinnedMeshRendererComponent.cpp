@@ -113,7 +113,7 @@ std::shared_ptr<UAssetMaterial> SkinnedMeshRendererComponent::GetMaterial() cons
 	return material_.Require();
 }
 
-const TransformComponent* SkinnedMeshRendererComponent::GetTransform() const {
+const TransformComponent* SkinnedMeshRendererComponent::RequireTransform() const {
 	return BaseComponent::GetBehaviour()->RequireComponent<TransformComponent>();
 }
 
@@ -190,7 +190,7 @@ void SkinnedMeshRendererComponent::CreateCluster() {
 			auto& currentInfluence = (*cluster_.influence)[vertexWeight.vertexIndex];
 
 			// weightの格納
-			for (size_t i = 0; i < kInfluenceCount; ++i) {
+			for (size_t i = 0; i < VertexInfluence::kInfluenceCount; ++i) {
 				if (currentInfluence.weights[i] == 0.0f) {
 					currentInfluence.weights[i]      = vertexWeight.weight;
 					currentInfluence.jointIndices[i] = jointIndex;

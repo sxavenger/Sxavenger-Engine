@@ -113,14 +113,14 @@ void PostProcessAutoExposure::ShowInspectorImGui() {
 		debugAverageLuminance_.get()
 	);
 
-	auto itr = std::max_element(debugHistgram_->GetSpan().begin(), debugHistgram_->GetSpan().end());
+	uint32_t sum = std::accumulate(debugHistgram_->GetSpan().begin(), debugHistgram_->GetSpan().end(), 0);
 
 	ImVec2 cursor = ImGui::GetCursorPos();
 	ImVec2 size   = { ImGui::GetContentRegionAvail().x, 80.0f };
 
 	SxImGui::PlotHistogramFunc(
 		"## histogram",
-		[&](uint32_t index) { return static_cast<float>(debugHistgram_->At(index)) / (*itr); },
+		[&](uint32_t index) { return sum != 0 ? static_cast<float>(debugHistgram_->At(index)) / static_cast<float>(sum) : 0; },
 		debugHistgram_->GetSize(),
 		0,
 		NULL,

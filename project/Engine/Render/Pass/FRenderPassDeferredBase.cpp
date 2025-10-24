@@ -156,7 +156,7 @@ void FRenderPassDeferredBase::PassStaticMesh(const DirectXQueueContext* context,
 			return; //!< 不適格component.
 		}
 
-		auto transform = component->GetTransform();
+		auto transform = component->RequireTransform();
 
 		auto mesh     = component->GetMesh();
 		auto material = component->GetMaterial();
@@ -198,7 +198,7 @@ void FRenderPassDeferredBase::PassSkinnedMesh(const DirectXQueueContext* context
 			return; //!< 不適格component.
 		}
 
-		auto transform = component->GetTransform();
+		auto transform = component->RequireTransform();
 
 		auto material = component->GetMaterial();
 		

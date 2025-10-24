@@ -16,6 +16,7 @@
 ////////////////////////////////////////////////////////////////////////////////////////////
 // ComponentStorage class
 ////////////////////////////////////////////////////////////////////////////////////////////
+//! @brief componentの格納/管理クラス
 class ComponentStorage {
 public:
 
@@ -41,19 +42,34 @@ public:
 
 	//* storage option *//
 
+	//! @brief componentを登録
+	//! @tparam _Ty componentの型
+	//! @param[in] behavior componentを所有するEntity
+	//! @return 登録したcomponentのiterator
 	template <Component _Ty>
 	ComponentIterator RegisterComponent(MonoBehaviour* behavior);
 
+	//! @brief componentを登録解除
+	//! @tparam _Ty componentの型
+	//! @param[in] iterator 登録解除するcomponentのiterator
 	template <Component _Ty>
 	void UnregisterComponent(const ComponentIterator& iterator);
 
+	//! @brief componentを登録解除
+	//! @param[in] type 登録解除するcomponentの型情報
+	//! @param[in] iterator 登録解除するcomponentのiterator
 	void UnregisterComponent(const std::type_info* type, const ComponentIterator& iterator);
 
 	//* factory option *//
 
+	//! @brief componentのfactoryを登録
 	template <Component _Ty>
-	void RegisterFactory(); //!< todo: register componentと被るので名前変更
+	void RegisterFactory();
 
+	//! @brief componentを登録
+	//! @param[in] component componentの名前
+	//! @param[in] behavior componentを所有するEntity
+	//! @return 登録したcomponentのiterator
 	ComponentIterator RegisterComponent(const std::string& component, MonoBehaviour* behavior);
 
 	const std::type_info* GetComponentInfo(const std::string& component) const;
@@ -62,21 +78,33 @@ public:
 
 	//* for each *//
 
+	//! @brief 全てのcomponentに対してfuncを実行する
+	//! @tparam _Ty componentの型
+	//! @param func 実行関数
 	template <Component _Ty>
 	void ForEach(const std::function<void(_Ty*)>& func);
 
+	//! @brief Activeなcomponentに対してfuncを実行する
+	//! @tparam _Ty componentの型
+	//! @param func 実行関数
 	template <Component _Ty>
 	void ForEachActive(const std::function<void(_Ty*)>& func);
 
 	//* count *//
 
+	//! @brief componentの数を取得
+	//! @tparam _Ty componentの型
+	//! @return componentの数
+	//! @note: 計算量 o(1)
 	template <Component _Ty>
 	size_t GetComponentCount() const;
-	//!< o(1)
 
+	//! @brief Activeなcomponentの数を取得
+	//! @tparam _Ty componentの型
+	//! @return Activeなcomponentの数
+	//! @note: 計算量 o(n)
 	template <Component _Ty>
 	size_t GetActiveComponentCount() const;
-	//!< o(n)
 
 	//* getter *//
 

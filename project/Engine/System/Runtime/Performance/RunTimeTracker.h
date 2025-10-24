@@ -26,9 +26,13 @@ public:
 
 	void End();
 
+	//! @brief DeltaTimeを取得する
+	//! @return BeginとEndの間の時間
 	template <TimeUnit _Unit>
 	TimePointd<_Unit> GetDeltaTime() const;
 
+	//! @brief 経過時間を取得する
+	//! @return Beginからの経過時間
 	template <TimeUnit _Unit>
 	TimePointd<_Unit> GetElapsedTime() const;
 
