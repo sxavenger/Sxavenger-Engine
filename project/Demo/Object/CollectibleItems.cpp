@@ -1,4 +1,4 @@
-#include "EmissiveCubes.h"
+#include "CollectibleItems.h"
 
 //-----------------------------------------------------------------------------------------
 // include
@@ -11,40 +11,33 @@
 #include <Engine/Component/ComponentHelper.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// EmissiveCubes class methods
+// CollectibleItems class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-void EmissiveCubes::Load() {
+void CollectibleItems::Load() {
 	model_ = sUContentStorage->Import<UContentModel>("assets/models/primitive/cube_skeleton.obj");
 }
 
-void EmissiveCubes::Awake() {
-
-	keyboard_ = SxavengerSystem::GetInput()->GetKeyboardInput();
-
-	MonoBehaviour::SetName("emissive cubes");
-
-	MonoBehaviour::AddComponent<RectTransformComponent>();
-	auto text = MonoBehaviour::AddComponent<TextRendererComponent>();
-	text->SetFont(sUContentStorage->Import<UContentFont>("assets/font/MPLUSRounded1c-Regular.ttf")->GetId());
-	text->SetSize(20.0f);
-	
+void CollectibleItems::Awake() {
+	MonoBehaviour::SetName("collectible items");
 
 	for (size_t i = 0; i < cubes_.size(); ++i) {
 		cubes_[i] = std::make_unique<MonoBehaviour>();
-		cubes_[i]->SetName("emissive cube");
-	
+		cubes_[i]->SetName("collectible item");
+
 		ComponentHelper::CreateStaticMeshBehaviour(cubes_[i].get(), model_.Get());
 
 		ComponentHelper::DetachBehaviourMaterial(cubes_[i].get());
 		ComponentHelper::ModifyBehaviourMaterial(cubes_[i].get(), [this, i](UAssetMaterial* material) {
-			material->SetMode(UAssetMaterial::Mode::Emissive);
+			material->SetMode(UAssetMaterial::Mode::Opaque);
 			material->GetBuffer().albedo.SetValue(colors_[i]);
-			//material->GetBuffer().transparency.SetValue(0.8f);
 		});
 
 		cubes_[i]->AddComponent<TransformComponent>();
-		cubes_[i]->AddComponent<ColliderComponent>();
+
+		auto collider = cubes_[i]->AddComponent<ColliderComponent>();
+		collider->SetColliderBoundingSphere();
+		collider->SetTag("item");
 
 		auto process = cubes_[i]->AddComponent<PostProcessLayerComponent>();
 		process->AddPostProcess<PostProcessChromaticAberration>();
@@ -54,33 +47,22 @@ void EmissiveCubes::Awake() {
 
 		MonoBehaviour::AddChild(cubes_[i].get());
 	}
+
 }
 
-void EmissiveCubes::Start() {
+void CollectibleItems::Start() {
 	for (size_t i = 0; i < cubes_.size(); ++i) {
 		auto transform = cubes_[i]->GetComponent<TransformComponent>();
+
+		// TODO: 外部ファイルから読み込み
 		transform->scale = { 0.4f, 0.4f, 0.4f };
 		transform->translate = {
 			5.0f * std::cos(kTau * static_cast<float>(i) / static_cast<float>(cubes_.size())),
 			0.4f,
 			5.0f * std::sin(kTau * static_cast<float>(i) / static_cast<float>(cubes_.size()))
 		};
-
-		auto collider = cubes_[i]->GetComponent<ColliderComponent>();
-		collider->SetColliderBoundingSphere({ .radius = 0.5f });
-		collider->SetTag("Cube");
 	}
 }
 
-void EmissiveCubes::Update() {
-
-	size_t count = 0;
-
-	for (size_t i = 0; i < cubes_.size(); ++i) {
-		count += cubes_[i]->IsActive();
-	}
-
-	auto text = MonoBehaviour::GetComponent<TextRendererComponent>();
-	text->SetText(std::format(L"{} / {}", count, cubes_.size()));
-
+void CollectibleItems::Update() {
 }

@@ -49,6 +49,7 @@ void Player::Awake() {
 
 void Player::Start() {
 	transform_->translate = { 0.0f, 0.0f, 0.0f };
+	UpdateArmature();
 }
 
 void Player::Update() {

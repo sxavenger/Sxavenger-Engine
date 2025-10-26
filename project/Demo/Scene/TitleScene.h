@@ -4,26 +4,22 @@
 // include
 //-----------------------------------------------------------------------------------------
 //* engine
-#include <Engine/System/Runtime/GameLoop/GameLoop.h>
-#include <Engine/System/DirectX/Context/DirectXWindowContext.h>
-#include <Engine/Adapter/Scene/SceneFactory.h>
-#include <Engine/Adapter/Scene/SceneController.h>
+#include <Engine/Adapter/Scene/BaseScene.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// DemoGameLoop class
+// TitleScene class
 ////////////////////////////////////////////////////////////////////////////////////////////
-//! @brief Demo用GameLoop実装クラス.
-class DemoGameLoop
-	: public GameLoop::Interface {
+class TitleScene
+	: public BaseScene {
 public:
 
 	//=========================================================================================
 	// public methods
 	//=========================================================================================
 
-	void Init(GameLoop::Context* context) override;
+	void Init() override;
 
-	void Term() override;
+	void Update() override;
 
 private:
 
@@ -31,23 +27,6 @@ private:
 	// private variables
 	//=========================================================================================
 
-	std::shared_ptr<DirectXWindowContext> main_;
-
-	std::unique_ptr<SceneFactory> factory_;
-	std::unique_ptr<SceneController> controller_;
-
-	//=========================================================================================
-	// private methods
-	//=========================================================================================
-
-	//* game logic *//
-
-	void InitGame();
-
-	void TermGame();
-
-	void UpdateGame();
-
-	void DrawGame();
+	
 
 };

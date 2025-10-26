@@ -4,40 +4,30 @@
 // include
 //-----------------------------------------------------------------------------------------
 //* scene
-#include "BaseScene.h"
-#include "SceneFactory.h"
+#include <Engine/Adapter/Scene/BaseScene.h>
 
-//* c++
-#include <memory>
-#include <deque>
+//* engine
+#include <Engine/Adapter/Actor/PerformanceActor.h>
+
+//* demo
+#include <Demo/Object/PerspectiveCamera.h>
+#include <Demo/Entity/Player.h>
+#include <Demo/Object/CollectibleItems.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// SceneController class
+// GameScene class
 ////////////////////////////////////////////////////////////////////////////////////////////
-class SceneController {
+class GameScene
+	: public BaseScene {
 public:
 
 	//=========================================================================================
 	// public methods
 	//=========================================================================================
 
-	void Init(std::unique_ptr<const SceneFactory>&& factory);
+	void Init() override;
 
-	//* container operation *//
-
-	void Push(const std::string& name);
-
-	//* process option *//
-
-	void TransitionScene();
-
-	void UpdateScene();
-
-	void LateUpdateScene();
-
-	//* getter *//
-
-	bool IsEmpty() const;
+	void Update() override;
 
 private:
 
@@ -45,14 +35,24 @@ private:
 	// private variables
 	//=========================================================================================
 
-	std::deque<std::unique_ptr<BaseScene>> scenes_;
+	//* game objects *//
 
-	std::unique_ptr<const SceneFactory> factory_;
+	std::unique_ptr<MonoBehaviour> skylight_;
+
+	std::unique_ptr<PerformanceActor> performance_;
+
+	std::unique_ptr<PerspectiveCamera> camera_;
+	std::unique_ptr<Player> player_;
+
+	std::unique_ptr<CollectibleItems> items_;
+
+	std::unique_ptr<MonoBehaviour> demoText_;
+	std::unique_ptr<MonoBehaviour> text_;
 
 	//=========================================================================================
-	// private methods
+	// public methods
 	//=========================================================================================
 
-	BaseScene* GetCurrentScene() const;
+	void SetCollisionCallback();
 
 };

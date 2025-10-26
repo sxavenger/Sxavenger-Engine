@@ -4,7 +4,6 @@
 // include
 //-----------------------------------------------------------------------------------------
 //* engine
-#include <Engine/System/Runtime/Input/Input.h>
 #include <Engine/Component/Components/Transform/TransformComponent.h>
 #include <Engine/Module/GameObject/GameObject.h>
 #include <Engine/Adapter/Parameter/SerializeParameter.h>
@@ -12,14 +11,10 @@
 #include <Engine/Preview/Content/UContentModel.h>
 #include <Engine/Preview/Content/UContentObserver.h>
 
-//* demo
-#include <Demo/Object/PerspectiveCamera.h>
-
 ////////////////////////////////////////////////////////////////////////////////////////////
-// EmissiveCubes class
+// CollectibleItems class
 ////////////////////////////////////////////////////////////////////////////////////////////
-//! @brief 発光キューブ群オブジェクト.
-class EmissiveCubes
+class CollectibleItems
 	: public GameObject {
 public:
 
@@ -35,35 +30,25 @@ public:
 
 	void Update() override;
 
-	//* setter *//
-
-	void SetCamera(PerspectiveCamera* camera) { camera_ = camera; }
-
 private:
 
 	//=========================================================================================
 	// private variables
 	//=========================================================================================
 
-	//* input *//
-
-	const KeyboardInput* keyboard_ = nullptr;
+	static const size_t kItemCount = 6;
 
 	//* asset *//
 
 	UContentObserver<UContentModel> model_;
 
-	//* external *//
-
-	const PerspectiveCamera* camera_ = nullptr;
-
 	//* children *//
 
-	std::array<std::unique_ptr<MonoBehaviour>, 6> cubes_;
+	std::array<std::unique_ptr<MonoBehaviour>, kItemCount> cubes_;
 
 	//* parameter *//
 
-	const std::array<Color3f, 6> colors_ = {
+	const std::array<Color3f, kItemCount> colors_ = {
 		Color3f{0.53f, 0.93f, 0.94f},
 		Color3f{0.91f, 0.89f, 0.71f},
 		Color3f{0.82f, 0.63f, 0.96f},

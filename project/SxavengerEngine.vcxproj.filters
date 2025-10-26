@@ -252,9 +252,6 @@
     <ClInclude Include="Demo\GameLoop\PreviewGameLoop.h">
       <Filter>Demo\GameLoop</Filter>
     </ClInclude>
-    <ClInclude Include="Demo\Object\EmissiveCubes.h">
-      <Filter>Demo\Object</Filter>
-    </ClInclude>
     <ClInclude Include="Demo\Object\PerspectiveCamera.h">
       <Filter>Demo\Object</Filter>
     </ClInclude>
@@ -278,15 +275,6 @@
     </ClInclude>
     <ClInclude Include="Engine\Adapter\Parameter\SerializeParameter.h">
       <Filter>Engine\Adapter\Parameter</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Adapter\Scene\BaseScene.h">
-      <Filter>Engine\Adapter\Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Adapter\Scene\BaseSceneFactory.h">
-      <Filter>Engine\Adapter\Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Adapter\Scene\SceneController.h">
-      <Filter>Engine\Adapter\Scene</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Component\ComponentHelper.h">
       <Filter>Engine\Component</Filter>
@@ -930,6 +918,12 @@
     <ClInclude Include="externals\meshoptimizer\meshoptimizer.h">
       <Filter>externals\meshoptimizer</Filter>
     </ClInclude>
+    <ClInclude Include="Demo\Object\CollectibleItems.h" />
+    <ClInclude Include="Engine\Adapter\Scene\BaseScene.h" />
+    <ClInclude Include="Engine\Adapter\Scene\SceneController.h" />
+    <ClInclude Include="Engine\Adapter\Scene\SceneFactory.h" />
+    <ClInclude Include="Demo\Scene\TitleScene.h" />
+    <ClInclude Include="Demo\Scene\GameScene.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Demo\Entity\Player.cpp">
@@ -943,9 +937,6 @@
     </ClCompile>
     <ClCompile Include="Demo\GameLoop\PreviewGameLoop.cpp">
       <Filter>Demo\GameLoop</Filter>
-    </ClCompile>
-    <ClCompile Include="Demo\Object\EmissiveCubes.cpp">
-      <Filter>Demo\Object</Filter>
     </ClCompile>
     <ClCompile Include="Demo\Object\PerspectiveCamera.cpp">
       <Filter>Demo\Object</Filter>
@@ -964,15 +955,6 @@
     </ClCompile>
     <ClCompile Include="Engine\Adapter\Actor\SkyLightActor.cpp">
       <Filter>Engine\Adapter\Actor</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\Adapter\Scene\BaseScene.cpp">
-      <Filter>Engine\Adapter\Scene</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\Adapter\Scene\BaseSceneFactory.cpp">
-      <Filter>Engine\Adapter\Scene</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\Adapter\Scene\SceneController.cpp">
-      <Filter>Engine\Adapter\Scene</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Component\ComponentHelper.cpp">
       <Filter>Engine\Component</Filter>
@@ -1560,5 +1542,11 @@
       <Filter>externals\stb</Filter>
     </ClCompile>
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Demo\Object\CollectibleItems.cpp" />
+    <ClCompile Include="Engine\Adapter\Scene\BaseScene.cpp" />
+    <ClCompile Include="Engine\Adapter\Scene\SceneController.cpp" />
+    <ClCompile Include="Engine\Adapter\Scene\SceneFactory.cpp" />
+    <ClCompile Include="Demo\Scene\GameScene.cpp" />
+    <ClCompile Include="Demo\Scene\TitleScene.cpp" />
   </ItemGroup>
 </Project>

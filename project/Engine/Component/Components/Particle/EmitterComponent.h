@@ -55,7 +55,7 @@ public:
 
 	//* emitter option *//
 
-	void Update(const DirectXQueueContext* context);
+	void Update();
 
 private:
 

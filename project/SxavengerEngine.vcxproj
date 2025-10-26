@@ -81,7 +81,7 @@
       <PreprocessorDefinitions>_PROFILE="$(Configuration)";NOMINMAX;DEBUG;_DEVELOPMENT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>.;externals\nlohmann;externals\meshoptimizer;externals\imgui\imguizmo;externals\imgui;externals\DirectXTex;externals\DirectXMesh;externals\assimp\include;externals\magic_enum;externals\stb;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
-      <Optimization>Disabled</Optimization>
+      <Optimization>Custom</Optimization>
       <MinimalRebuild>false</MinimalRebuild>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
@@ -167,10 +167,15 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Demo\Entity\Player.h" />
+    <ClInclude Include="Demo\Object\CollectibleItems.h" />
+    <ClInclude Include="Demo\Scene\GameScene.h" />
+    <ClInclude Include="Demo\Scene\TitleScene.h" />
+    <ClInclude Include="Engine\Adapter\Scene\BaseScene.h" />
+    <ClInclude Include="Engine\Adapter\Scene\SceneController.h" />
+    <ClInclude Include="Engine\Adapter\Scene\SceneFactory.h" />
     <ClInclude Include="Engine\GameLoop\BetaSystemGameLoop.h" />
     <ClInclude Include="Demo\GameLoop\DemoGameLoop.h" />
     <ClInclude Include="Demo\GameLoop\PreviewGameLoop.h" />
-    <ClInclude Include="Demo\Object\EmissiveCubes.h" />
     <ClInclude Include="Demo\Object\PerspectiveCamera.h" />
     <ClInclude Include="Engine\Adapter\Actor\AtmosphereActor.h" />
     <ClInclude Include="Engine\Adapter\Actor\ControllableCameraActor.h" />
@@ -179,9 +184,6 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Engine\Adapter\Actor\SkyLightActor.h" />
     <ClInclude Include="Engine\Adapter\Parameter\SerializeGui.h" />
     <ClInclude Include="Engine\Adapter\Parameter\SerializeParameter.h" />
-    <ClInclude Include="Engine\Adapter\Scene\BaseScene.h" />
-    <ClInclude Include="Engine\Adapter\Scene\BaseSceneFactory.h" />
-    <ClInclude Include="Engine\Adapter\Scene\SceneController.h" />
     <ClInclude Include="Engine\Component\ComponentHelper.h" />
     <ClInclude Include="Engine\Component\Components\Armature\ArmatureComponent.h" />
     <ClInclude Include="Engine\Component\Components\Audio\AudioController.h" />
@@ -399,19 +401,21 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Demo\Entity\Player.cpp" />
+    <ClCompile Include="Demo\Object\CollectibleItems.cpp" />
+    <ClCompile Include="Demo\Scene\GameScene.cpp" />
+    <ClCompile Include="Demo\Scene\TitleScene.cpp" />
+    <ClCompile Include="Engine\Adapter\Scene\BaseScene.cpp" />
+    <ClCompile Include="Engine\Adapter\Scene\SceneController.cpp" />
+    <ClCompile Include="Engine\Adapter\Scene\SceneFactory.cpp" />
     <ClCompile Include="Engine\GameLoop\BetaSystemGameLoop.cpp" />
     <ClCompile Include="Demo\GameLoop\DemoGameLoop.cpp" />
     <ClCompile Include="Demo\GameLoop\PreviewGameLoop.cpp" />
-    <ClCompile Include="Demo\Object\EmissiveCubes.cpp" />
     <ClCompile Include="Demo\Object\PerspectiveCamera.cpp" />
     <ClCompile Include="Engine\Adapter\Actor\AtmosphereActor.cpp" />
     <ClCompile Include="Engine\Adapter\Actor\ControllableCameraActor.cpp" />
     <ClCompile Include="Engine\Adapter\Actor\PerformanceActor.cpp" />
     <ClCompile Include="Engine\Adapter\Actor\PivotCameraActor.cpp" />
     <ClCompile Include="Engine\Adapter\Actor\SkyLightActor.cpp" />
-    <ClCompile Include="Engine\Adapter\Scene\BaseScene.cpp" />
-    <ClCompile Include="Engine\Adapter\Scene\BaseSceneFactory.cpp" />
-    <ClCompile Include="Engine\Adapter\Scene\SceneController.cpp" />
     <ClCompile Include="Engine\Component\ComponentHelper.cpp" />
     <ClCompile Include="Engine\Component\Components\Armature\ArmatureComponent.cpp" />
     <ClCompile Include="Engine\Component\Components\Audio\AudioController.cpp" />

@@ -39,7 +39,7 @@ Vector3f EmitterComponent::Sphere::Emit() const {
 void EmitterComponent::Init() {
 }
 
-void EmitterComponent::Update(const DirectXQueueContext* context) {
+void EmitterComponent::Update() {
 
 	timer_.AddDeltaTime();
 
@@ -49,8 +49,7 @@ void EmitterComponent::Update(const DirectXQueueContext* context) {
 
 	timer_ = { TimePointf<TimeUnit::second>::Mod(timer_, time_).time };
 
-	// TODO: パーティクルの生成処理
-	context;
+
 }
 
 const TransformComponent* EmitterComponent::RequireTransform() const {
