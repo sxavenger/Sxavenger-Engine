@@ -24,8 +24,7 @@ const std::array<DXGI_FORMAT, FDeferredGBuffer::kLayoutCount> FDeferredGBuffer::
 
 void FDeferredGBuffer::Init(const Vector2ui& size) {
 	for (size_t j = 0; j < kLayoutCount; ++j) {
-		buffers_[j] = std::make_unique<FBaseTexture>();
-		buffers_[j]->Create(size, kFormats_[j]);
+		buffers_[j] = std::make_unique<FBaseTexture>(size, kFormats_[j], FBaseTexture::Flag::All);
 
 		// nameの設定
 		std::string name = "FDeferredGBuffer | ";

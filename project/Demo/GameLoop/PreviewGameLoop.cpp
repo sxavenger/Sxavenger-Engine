@@ -76,7 +76,7 @@ void PreviewGameLoop::InitGame() {
 	compute_.CreateBlob(kAssetsDirectory / "shaders" / "Test.cs.hlsl");
 	compute_.ReflectionPipeline(SxavengerSystem::GetDxDevice());
 
-	texture_.Create({1, 1}, DXGI_FORMAT_R8G8B8A8_UNORM);
+	texture_.Create({1, 1}, DXGI_FORMAT_R8G8B8A8_UNORM, FBaseTexture::Flag::All);
 
 	constant_.Create(SxavengerSystem::GetDxDevice());
 	constant_.At() = Color4f::Convert(0xFF00FFFF);

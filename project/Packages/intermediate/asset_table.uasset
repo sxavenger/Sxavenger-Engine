@@ -9411,6 +9411,10 @@
 		"assets/models/Bistro/Bistro.gltf",
 		"class UAssetMaterial"
 	],
+	"e4da5153-34e1-4cf4-a8122b29a7fd50ab": [
+		"assets/textures/uvchecker.png",
+		"class UAssetTexture"
+	],
 	"e4fcb5eb-287c-4a8e-867c367c4178b817": [
 		"assets/models/Bistro/Bistro.gltf",
 		"class UAssetMesh"

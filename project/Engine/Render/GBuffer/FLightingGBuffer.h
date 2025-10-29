@@ -28,6 +28,8 @@ public:
 		Indirect_Atlas_Specular,
 		Indirect_Reservoir_Diffuse,
 		Indirect_Reservoir_Specular,
+		Indirect_Upscale_Diffuse,
+		Indirect_Upscale_Specular,
 		Indirect_Moment,
 		Indirect,
 	};

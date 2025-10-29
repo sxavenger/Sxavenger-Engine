@@ -53,6 +53,15 @@ private:
 
 	std::unique_ptr<PerformanceActor> performance_;
 
+	//* test *//
+
+	UAssetParameter<UAssetTexture> texture_;
+	FBaseTexture downsample_;
+	FBaseTexture upscale_;
+
+	DxObject::ReflectionComputePipelineState pipelineA_;
+	DxObject::ReflectionComputePipelineState pipelineB_;
+
 	//=========================================================================================
 	// private methods
 	//=========================================================================================

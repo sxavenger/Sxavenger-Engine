@@ -19,6 +19,8 @@ const std::array<DXGI_FORMAT, FLightingGBuffer::kLayoutCount_> FLightingGBuffer:
 	FMainGBuffer::kColorFormat,    //!< Indirect_Atlas_Specular
 	FMainGBuffer::kColorFormat,    //!< Indirect_Reservoir_Diffuse
 	FMainGBuffer::kColorFormat,    //!< Indirect_Reservoir_Specular
+	FMainGBuffer::kColorFormat,    //!< Indirect_Upscale_Diffuse
+	FMainGBuffer::kColorFormat,    //!< Indirect_Upscale_Specular
 	DXGI_FORMAT_R32G32B32A32_UINT, //!< Indirect_Moment
 	FMainGBuffer::kColorFormat,    //!< Indirect
 };
@@ -30,21 +32,24 @@ const std::array<DXGI_FORMAT, FLightingGBuffer::kLayoutCount_> FLightingGBuffer:
 void FLightingGBuffer::Init(const Vector2ui& size) {
 
 	//!< 最終Lighting結果格納用
-	buffers_[static_cast<uint8_t>(Layout::Direct)]   = std::make_unique<FBaseTexture>(size, GetFormat(Layout::Direct));
-	buffers_[static_cast<uint8_t>(Layout::Indirect)] = std::make_unique<FBaseTexture>(size, GetFormat(Layout::Indirect));
+	buffers_[static_cast<uint8_t>(Layout::Direct)]   = std::make_unique<FBaseTexture>(size, GetFormat(Layout::Direct), FBaseTexture::Flag::All);
+	buffers_[static_cast<uint8_t>(Layout::Indirect)] = std::make_unique<FBaseTexture>(size, GetFormat(Layout::Indirect), FBaseTexture::Flag::All);
+
+	buffers_[static_cast<uint8_t>(Layout::Indirect_Upscale_Diffuse)]  = std::make_unique<FBaseTexture>(size, GetFormat(Layout::Indirect_Upscale_Diffuse), FBaseTexture::Flag::All);
+	buffers_[static_cast<uint8_t>(Layout::Indirect_Upscale_Specular)] = std::make_unique<FBaseTexture>(size, GetFormat(Layout::Indirect_Upscale_Specular), FBaseTexture::Flag::All);
 
 	downsize_ = size / 4u;
 
 	//!< Indirect結果格納用
-	buffers_[static_cast<uint8_t>(Layout::Indirect_Reservoir_Diffuse)]  = std::make_unique<FBaseTexture>(downsize_, GetFormat(Layout::Indirect_Reservoir_Diffuse));
-	buffers_[static_cast<uint8_t>(Layout::Indirect_Reservoir_Specular)] = std::make_unique<FBaseTexture>(downsize_, GetFormat(Layout::Indirect_Reservoir_Specular));
-	buffers_[static_cast<uint8_t>(Layout::Indirect_Moment)]             = std::make_unique<FBaseTexture>(downsize_, GetFormat(Layout::Indirect_Moment));
+	buffers_[static_cast<uint8_t>(Layout::Indirect_Reservoir_Diffuse)]  = std::make_unique<FBaseTexture>(downsize_, GetFormat(Layout::Indirect_Reservoir_Diffuse), FBaseTexture::Flag::All);
+	buffers_[static_cast<uint8_t>(Layout::Indirect_Reservoir_Specular)] = std::make_unique<FBaseTexture>(downsize_, GetFormat(Layout::Indirect_Reservoir_Specular), FBaseTexture::Flag::All);
+	buffers_[static_cast<uint8_t>(Layout::Indirect_Moment)]             = std::make_unique<FBaseTexture>(downsize_, GetFormat(Layout::Indirect_Moment), FBaseTexture::Flag::All);
 
 	atlas_ = GetAtlasSize(config_.maxSampleCount);
 
 	//!< Indirect Atlas
-	buffers_[static_cast<uint8_t>(Layout::Indirect_Atlas_Diffuse)]  = std::make_unique<FBaseTexture>(downsize_ * atlas_, GetFormat(Layout::Indirect_Atlas_Diffuse));
-	buffers_[static_cast<uint8_t>(Layout::Indirect_Atlas_Specular)] = std::make_unique<FBaseTexture>(downsize_ * atlas_, GetFormat(Layout::Indirect_Atlas_Specular));
+	buffers_[static_cast<uint8_t>(Layout::Indirect_Atlas_Diffuse)]  = std::make_unique<FBaseTexture>(downsize_ * atlas_, GetFormat(Layout::Indirect_Atlas_Diffuse), FBaseTexture::Flag::All);
+	buffers_[static_cast<uint8_t>(Layout::Indirect_Atlas_Specular)] = std::make_unique<FBaseTexture>(downsize_ * atlas_, GetFormat(Layout::Indirect_Atlas_Specular), FBaseTexture::Flag::All);
 	
 }
 
