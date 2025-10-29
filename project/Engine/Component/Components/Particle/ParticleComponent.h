@@ -3,179 +3,76 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
+//* particle
+#include "ParticleElement.h"
+
 //* component
 #include "../BaseComponent.h"
+#include "../Camera/CameraComponent.h"
 
 //* engine
-#include <Engine/System/DirectX/DxObject/DxDimensionBuffer.h>
 #include <Engine/System/DirectX/DxObject/DxGraphicsPipelineState.h>
-#include <Engine/System/Runtime/Performance/TimePoint.h>
+#include <Engine/System/DirectX/DxObject/DxDimensionBuffer.h>
 #include <Engine/System/Runtime/Performance/DeltaTimePoint.h>
 #include <Engine/Content/InputGeometry/InputPrimitive.h>
-#include <Engine/Component/Components/Camera/CameraComponent.h>
+#include <Engine/Preview/Asset/UAssetTexture.h>
+#include <Engine/Preview/Asset/UAssetParameter.h>
 
 //* lib
-#include <Lib/Geometry/Vector3.h>
-#include <Lib/Geometry/Color3.h>
-#include <Lib/Transform/Transform.h>
 #include <Lib/Motion/Motion.h>
-
-//* c++
-#include <memory>
-#include <functional>
-#include <list>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // ParticleComponent class
 ////////////////////////////////////////////////////////////////////////////////////////////
-class ParticleComponent final
+class ParticleComponent
 	: public BaseComponent {
 public:
 
 	////////////////////////////////////////////////////////////////////////////////////////////
-	// Albedo structure
+	// Parameter structure
 	////////////////////////////////////////////////////////////////////////////////////////////
-	struct Albedo {
+	struct Parameter {
 	public:
-
-		////////////////////////////////////////////////////////////////////////////////////////////
-		// Type enum class
-		////////////////////////////////////////////////////////////////////////////////////////////
-		enum class Type : uint32_t {
-			Value   = 0,
-			Texture = 1
-		};
-
-	public:
-
-		//=========================================================================================
-		// public methods
-		//=========================================================================================
-
-		void Init();
-
-		void SetValue(const Color3f& _albedo);
-
-		void SetTexture(uint32_t _index, const Color3f& _albedo = kWhite3<float>);
 
 		//=========================================================================================
 		// public variables
 		//=========================================================================================
 
-		Type type;
-
-		Color3f albedo;
-		uint32_t index;
-
+		TimePointf<TimeUnit::second> time = { 0.0f };
+		MotionT<Vector3f> scale           = MotionT<Vector3f>::CreateLinear(kUnit3<float>, kOrigin3<float>);
+		MotionT<float> velocity           = MotionT<float>::CreateLinear(1.0f, 0.0f);
+		MotionT<Color3f> color            = MotionT<Color3f>::CreateLinear(kWhite3<float>, kBlack3<float>);
+		MotionT<float> transparent        = MotionT<float>::CreateLinear(1.0f, 0.0f);
+		
 	};
 
 	////////////////////////////////////////////////////////////////////////////////////////////
-	// Transparent structure
+	// Instance structure
 	////////////////////////////////////////////////////////////////////////////////////////////
-	struct Transparent {
-	public:
-
-		////////////////////////////////////////////////////////////////////////////////////////////
-		// Type enum class
-		////////////////////////////////////////////////////////////////////////////////////////////
-		enum class Type : uint32_t {
-			Value   = 0,
-			Texture = 1
-		};
-
+	struct Instance {
 	public:
 
 		//=========================================================================================
 		// public methods
 		//=========================================================================================
-
-		void Init();
-
-		void SetValue(float _transparent);
-
-		void SetTexture(uint32_t _index, float _transparent = 1.0f);
-
-		//=========================================================================================
-		// public variables
-		//=========================================================================================
-
-		Type type;
-
-		float    transparent;
-		uint32_t index;
-
-	};
-
-	////////////////////////////////////////////////////////////////////////////////////////////
-	// Particle structure
-	////////////////////////////////////////////////////////////////////////////////////////////
-	struct Particle {
-	public:
-
-		//=========================================================================================
-		// public methods
-		//=========================================================================================
-
-		void Init();
-
-		//=========================================================================================
-		// public variables
-		//=========================================================================================
-
-		Albedo albedo;
-		Transparent transparent;
-
-		uint32_t isBillboard; //!< flag
-		// todo: Y軸billboardを追加.
-
-	};
-
-	////////////////////////////////////////////////////////////////////////////////////////////
-	// Element structure
-	////////////////////////////////////////////////////////////////////////////////////////////
-	struct Element {
-	public:
-
-		//=========================================================================================
-		// public methods
-		//=========================================================================================
-
-		void Init();
 
 		void Update();
 
-		//* getter *//
-
-		bool IsDelete() const;
-
-		Matrix4x4 GetMat() const;
-
-		Particle GetParticle() const;
-
 		//=========================================================================================
 		// public variables
 		//=========================================================================================
 
-		//* time
-		DeltaTimePointf<TimeUnit::second> time;
-		TimePointf<TimeUnit::second>      lifeTime;
+		DeltaTimePointf<TimeUnit::second> timer = {};
 
-		//* transform
-		QuaternionTransform transform;
-		MotionT<Vector3f> velocity;
-		MotionT<Vector3f> size;
+		bool isDelete = false;
 
-		//* color
-		Color4f color;
-		MotionT<Color3f> albedo;
-		MotionT<float> transparent;
+		QuaternionTransform transform = {};
+		Vector3f velocity             = kOrigin3<float>;
 
-		//* textures
-		std::optional<uint32_t> albedoIndex;
-		std::optional<uint32_t> transparentIndex;
+		Color3f color     = kWhite3<float>;
+		float transparent = 1.0f;
 
-		//* parameter
-		bool isBillboard = false;
+		Parameter parameter = {};
 	};
 
 public:
@@ -184,17 +81,22 @@ public:
 	// public methods
 	//=========================================================================================
 
-	ParticleComponent(MonoBehaviour* behaviour) : BaseComponent(behaviour) {}
-	~ParticleComponent() override = default;
+	ParticleComponent(MonoBehaviour* behaviour);
+	~ParticleComponent() = default;
 
-	void Init(uint32_t count, BlendMode mode = BlendMode::kBlendModeNormal);
+	void ShowComponentInspector() override;
+
+	void Init(uint32_t elementCount, BlendMode mode);
 
 	void Update();
 
+	//* particle option *//
 
 	void SetPrimitive(InputPrimitive&& primitive);
 
-	Element& Emit(const Vector3f& position);
+	void SetFunction(const std::function<Parameter()>& function) { function_ = function; }
+
+	void Emit(const Vector3f& position, const Vector3f& direction);
 
 	void DrawParticle(const DirectXQueueContext* context, const CameraComponent* camera);
 
@@ -204,37 +106,36 @@ private:
 	// private variables
 	//=========================================================================================
 
-	//* emitter paraemter *//
+	UAssetParameter<UAssetTexture> albedoTexture_;
+	UAssetParameter<UAssetTexture> transparentTexture_;
 
-	//std::function<Vector3f()> emitFunction_;
+	std::function<Parameter()> function_ = []() { return Parameter(); }; //!< HACK!!!
 
-	//* particle parameter *//
+	std::list<Instance> instances_;
 
-	//* particle *//
+	//* buffers *//
+
+	std::unique_ptr<DxObject::DimensionBuffer<ParticleElement>> elements_;
+	std::unique_ptr<DxObject::DimensionBuffer<TransformationMatrix>> matrices_;
+
+	uint32_t elementCount_ = 0;
 
 	// primtive mesh
 	std::optional<InputPrimitive> primitive_;
 
-	// transforms
-	std::unique_ptr<DxObject::DimensionBuffer<TransformationMatrix>> matrices_;
-
-	// particle
-	std::unique_ptr<DxObject::DimensionBuffer<Particle>> particles_;
-
-
-	// intermediate
-	uint32_t instance_ = 0;
-
-	// element
-	std::list<Element> elements_;
-
-	//* HACK: pipeline *//
+	//* pipeline *//
 
 	std::unique_ptr<DxObject::ReflectionGraphicsPipelineState> pipeline_;
+	// HACK:
 
 	//=========================================================================================
 	// private methods
 	//=========================================================================================
 
-	void AssingBuffer();
+	void CreatePipeline(BlendMode mode);
+
+	void UpdateInstance();
+
+	void UpdateBuffers();
+
 };

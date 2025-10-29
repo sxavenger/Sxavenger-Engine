@@ -7,7 +7,6 @@
 // buffers
 //=========================================================================================
 
-
 ////////////////////////////////////////////////////////////////////////////////////////////
 // main
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -17,8 +16,9 @@ void main(
 	uint groupThreadId : SV_GroupThreadID,
 	uint groupId : SV_GroupID,
 	in payload Payload payload,
-	out vertices GeometryPSInput vert[_MAX_VERTICES],
-	out indices uint3 prim[_MAX_INDICES]) {
+	out vertices GeometryPSInput vertices[_MAX_VERTICES],
+	out indices uint3 indices[_MAX_INDICES],
+	out primitives Primitive primitives[_MAX_INDICES]) {
 
 	uint meshletIndex  = payload.meshletIndices[groupId];
 	uint instanceIndex = payload.instanceIndices[groupId];
@@ -32,8 +32,13 @@ void main(
 	SetMeshOutputCounts(meshlet.vertexCount, meshlet.triangleCount);
 
 	if (groupThreadId < meshlet.triangleCount) {
-		uint packedIndex    = gPrimitives[meshlet.triangleOffset + groupThreadId];
-		prim[groupThreadId] = UnpackPrimitiveIndex(packedIndex);
+		uint packedIndex       = gPrimitives[meshlet.triangleOffset + groupThreadId];
+		uint3 tris             = UnpackPrimitiveIndex(packedIndex);
+		indices[groupThreadId] = tris;
+
+		// TODO: Primitive Culling.
+
+		primitives[groupThreadId].isCull = false;
 	}
 
 	if (groupThreadId < meshlet.vertexCount) {
@@ -53,7 +58,7 @@ void main(
 
 		output.instanceId = instanceIndex;
 
-		vert[groupThreadId] = output;
+		vertices[groupThreadId] = output;
 		
 	}
 }

@@ -40,8 +40,8 @@ void SceneController::TransitionScene() {
 			break;
 	}
 
-	if (!transition.name.empty()) {
-		Push(transition.name); //!< 次のシーンをプッシュ
+	for (const std::string& name : transition.names) {
+		Push(name); //!< 遷移先シーンを追加
 	}
 }
 

@@ -1,21 +1,43 @@
 #include "Motion.h"
 
-////////////////////////////////////////////////////////////////////////////////////////////
-// MotionMode methods
-////////////////////////////////////////////////////////////////////////////////////////////
+//-----------------------------------------------------------------------------------------
+// include
+//-----------------------------------------------------------------------------------------
+//* c++
+#include <algorithm>
 
+////////////////////////////////////////////////////////////////////////////////////////////
+// MotionT class methods
+////////////////////////////////////////////////////////////////////////////////////////////
 float GetMotionT(MotionMode mode, float t) {
 	switch (mode) {
+		case MotionMode::Default:
+			return t;
+
 		case MotionMode::Clamp:
 			return std::clamp(t, 0.0f, 1.0f);
-
+			
 		case MotionMode::Wrap:
-			return std::fmod(t, 1.0f);
+			return t - std::floor(t);
 
 		case MotionMode::Mirror:
-			return 1.0f - std::abs(std::fmod(t, 2.0f) - 1.0f);
+			{
+				float ft = std::floor(t);
+				float p  = t - ft;
 
-		default:
-			return t;
+				if (static_cast<int32_t>(ft) % 2 == 1) {
+					p = 1.0f - p;
+				}
+
+				return p;
+			}
+
+		case MotionMode::WrapOne:
+			return GetMotionT(MotionMode::Wrap, t * 2.0f);
+
+		case MotionMode::MirrorOne:
+			return GetMotionT(MotionMode::Mirror, t * 2.0f);
 	}
+
+	return 0.0f;
 }

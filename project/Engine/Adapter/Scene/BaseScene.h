@@ -4,6 +4,7 @@
 // include
 //-----------------------------------------------------------------------------------------
 //* c++
+#include <vector>
 #include <string>
 #include <optional>
 #include <concepts>
@@ -35,8 +36,8 @@ public:
 		// public variables
 		//=========================================================================================
 		
-		Destruction destruction; //!< 破棄方法
-		std::string name;        //!< 次のScene名
+		Destruction destruction;        //!< 破棄方法
+		std::vector<std::string> names; //!< 遷移先シーン名リスト
 
 	};
 

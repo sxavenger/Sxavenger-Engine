@@ -3,17 +3,14 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
-//* c++
-#include <stdexcept>
+//* engine
+#include <Engine/System/Utility/Logger.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // SceneFactory class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 std::unique_ptr<BaseScene> SceneFactory::CreateScene(const std::string& name) const {
-	if (!factory_.contains(name)) {
-		throw std::runtime_error("SceneFactory::CreateScene: Scene not found: " + name);
-	}
-
+	Exception::Assert(factory_.contains(name), "scene not found. name: " + name);
 	return factory_.at(name)();
 }

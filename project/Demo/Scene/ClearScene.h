@@ -7,12 +7,13 @@
 #include <Engine/Adapter/Scene/BaseScene.h>
 
 //* engine
+#include <Engine/System/Runtime/Performance/DeltaTimePoint.h>
 #include <Engine/Component/Entity/MonoBehaviour.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// TitleScene class
+// ClearScene class
 ////////////////////////////////////////////////////////////////////////////////////////////
-class TitleScene
+class ClearScene
 	: public BaseScene {
 public:
 
@@ -30,6 +31,9 @@ private:
 	// private variables
 	//=========================================================================================
 
-	std::unique_ptr<MonoBehaviour> camera_;
+	TimePointf<TimeUnit::second> time_       = { 2.0f };
+	DeltaTimePointf<TimeUnit::second> timer_ = { 0.0f };
+
+	std::unique_ptr<MonoBehaviour> fade_ = nullptr;
 
 };

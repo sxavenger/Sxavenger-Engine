@@ -129,8 +129,11 @@ void PostProcessAutoExposure::ShowInspectorImGui() {
 		size
 	);
 
-	//float t = debugAverageLuminance_->At(0) / (parameter_->At().maxLogLuminance - parameter_->At().minLogLuminance);
-	//ImGui::ProgressBar(t, { ImGui::GetContentRegionAvail().x, 0.0f }, "## luminance");
+	float avarage = debugAverageLuminance_->At(0);
+	float t = (avarage - parameter_->At().minLogLuminance) / (parameter_->At().maxLogLuminance - parameter_->At().minLogLuminance);
+
+	// FIXME
+	ImGui::ProgressBar(t, { size.x, 0.0f }, std::format("avarage luminance: {}", avarage).c_str());
 
 	
 }

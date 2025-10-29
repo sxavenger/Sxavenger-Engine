@@ -97,7 +97,6 @@ void GameScene::Init() {
 		text->SetText(t);
 	}
 	
-
 	sSceneObjects->InputJsonFromFilepath("assets/scene/collision_sponza.scene");
 
 }
@@ -113,6 +112,15 @@ void GameScene::Update() {
 
 	player_->Update();
 	camera_->Update();
+
+	items_->Update();
+
+	if (items_->IsCollected()) {
+		Transition transition = {};
+		transition.names = { "Clear" };
+
+		BaseScene::SetTransition(transition);
+	}
 
 }
 

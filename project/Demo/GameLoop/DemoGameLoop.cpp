@@ -15,6 +15,7 @@
 //* demo
 #include <Demo/Scene/TitleScene.h>
 #include <Demo/Scene/GameScene.h>
+#include <Demo/Scene/ClearScene.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // DemoGameLoop class methods
@@ -50,6 +51,7 @@ void DemoGameLoop::InitGame() {
 	factory_ = std::make_unique<SceneFactory>();
 	factory_->Register<TitleScene>("Title");
 	factory_->Register<GameScene>("Game");
+	factory_->Register<ClearScene>("Clear");
 
 	controller_ = std::make_unique<SceneController>();
 	controller_->Init(std::move(factory_));
@@ -96,9 +98,8 @@ void DemoGameLoop::UpdateGame() {
 	//-----------------------------------------------------------------------------------------
 
 	ComponentHelper::UpdateSkinning();
-	// todo: engine側のgameloopに移動.
-
 	ComponentHelper::UpdateParticle();
+	// todo: engine側のgameloopに移動.
 
 }
 

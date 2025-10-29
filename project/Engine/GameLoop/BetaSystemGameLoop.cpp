@@ -14,8 +14,6 @@
 #include <Engine/Component/Components/SpriteRenderer/SpriteRendererComponent.h>
 #include <Engine/Component/Components/Particle/ParticleComponent.h>
 #include <Engine/Component/Components/PostProcessLayer/PostProcessLayerComponent.h>
-#include <Engine/Component/Components/Particle/GPUParticleComponent.h>
-#include <Engine/Component/Components/Particle/EmitterComponent.h>
 #include <Engine/Component/Components/Transform/RectTransformComponent.h>
 #include <Engine/Component/Components/TextRenderer/TextRendererComponent.h>
 #include <Engine/Component/Components/Audio/AudioSourceComponent.h>
@@ -143,8 +141,6 @@ void BetaSystemGameLoop::UpdateSystem() {
 
 	ComponentHelper::UpdateSkinning();
 	// todo: engine側のgameloopに移動.
-
-	ComponentHelper::UpdateParticle();
 
 }
 

@@ -192,7 +192,7 @@ public:
 
 	//* inspector option *//
 
-	virtual void ShowInspector() override;
+	void ShowInspector() override;
 
 	virtual void LateUpdateInspector() override;
 
@@ -201,6 +201,10 @@ public:
 	json PerseToJson() const override;
 
 	void InputJson(const json& data) override;
+
+	void LoadComponent();
+
+	void SaveComponent();
 
 protected:
 
@@ -258,6 +262,8 @@ private:
 	//* helper *//
 
 	static MonoBehaviour* GetElement(const HierarchyElement& child);
+
+	std::filesystem::path GetFilepath() const;
 
 };
 

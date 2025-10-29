@@ -212,6 +212,17 @@ void MonoBehaviour::ShowInspector() {
 	ImGui::SeparatorText("inspectable");
 	Inspectable();
 
+	ImGui::Separator();
+	if (ImGui::Button("Load")) {
+		LoadComponent();
+	}
+
+	ImGui::SameLine();
+
+	if (ImGui::Button("Save")) {
+		SaveComponent();
+	}
+
 }
 
 void MonoBehaviour::LateUpdateInspector() {
@@ -280,6 +291,22 @@ void MonoBehaviour::InputJson(const json& data) {
 
 }
 
+void MonoBehaviour::LoadComponent() {
+	std::filesystem::path filepath = GetFilepath();
+
+	json data;
+	if (JsonHandler::LoadFromJson(filepath, data)) {
+		InputJson(data);
+	}
+}
+
+void MonoBehaviour::SaveComponent() {
+	std::filesystem::path filepath = GetFilepath();
+
+	json data = PerseToJson();
+	JsonHandler::WriteToJson(filepath, data);
+}
+
 MonoBehaviour::HierarchyIterator MonoBehaviour::AddHierarchy(HierarchyElement&& child) {
 	return children_.emplace(children_.end(), std::move(child));
 }
@@ -305,4 +332,8 @@ void MonoBehaviour::ApplyContainerIterator() {
 MonoBehaviour* MonoBehaviour::GetElement(const HierarchyElement& child) {
 	static GetPtrVisitor visitor;
 	return std::visit(visitor, child);
+}
+
+std::filesystem::path MonoBehaviour::GetFilepath() const {
+	return kAssetsDirectory / "behaviour" / (name_ + ".behaviour");
 }

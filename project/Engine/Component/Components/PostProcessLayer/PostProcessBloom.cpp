@@ -50,6 +50,10 @@ void PostProcessBloom::Process(const DirectXQueueContext* context, const Process
 	FProcessTexture* source    = process->GetPrevTexture(2);
 	FProcessTexture* luminance = process->GetPrevTexture(1);
 	FProcessTexture* output    = process->GetCurrentTexture();
+
+	source->TransitionBeginUnordered(context);
+	source->GenerateMipmap(context);
+	source->TransitionEndUnordered(context);
 	
 	{ //!< luminanceの生成
 

@@ -33,9 +33,9 @@ void PerspectiveCamera::Awake() {
 
 	{
 		auto exposure = process->AddPostProcess<PostProcessAutoExposure>();
-		exposure->GetParameter().minLogLuminance = -10.0f;
-		exposure->GetParameter().maxLogLuminance = 8.8f;
-		exposure->GetParameter().compensation    = -6.0f;
+		exposure->GetParameter().minLogLuminance = -5.0f;
+		exposure->GetParameter().maxLogLuminance = 20.0f;
+		exposure->GetParameter().compensation    = -3.0f;
 	}
 	
 	process->AddPostProcess<PostProcessLocalExposure>(false);

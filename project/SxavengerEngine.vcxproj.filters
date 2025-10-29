@@ -342,15 +342,6 @@
     <ClInclude Include="Engine\Component\Components\Particle\EmitterComponent.h">
       <Filter>Engine\Component\Components\Particle</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Component\Components\Particle\GPUParticleComponent.h">
-      <Filter>Engine\Component\Components\Particle</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Component\Components\Particle\ParticleComponent.h">
-      <Filter>Engine\Component\Components\Particle</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Component\Components\Particle\ParticleConfig.h">
-      <Filter>Engine\Component\Components\Particle</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\Component\Components\PostProcessLayer\BasePostProcess.h">
       <Filter>Engine\Component\Components\PostProcessLayer</Filter>
     </ClInclude>
@@ -924,6 +915,10 @@
     <ClInclude Include="Engine\Adapter\Scene\SceneFactory.h" />
     <ClInclude Include="Demo\Scene\TitleScene.h" />
     <ClInclude Include="Demo\Scene\GameScene.h" />
+    <ClInclude Include="Demo\Scene\ClearScene.h" />
+    <ClInclude Include="Engine\Component\Components\Particle\ParticleComponent.h" />
+    <ClInclude Include="Engine\Component\Components\Particle\ParticleElement.h" />
+    <ClInclude Include="Demo\Object\CollectibleCube.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Demo\Entity\Player.cpp">
@@ -1017,15 +1012,6 @@
       <Filter>Engine\Component\Components\MeshRenderer</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Component\Components\Particle\EmitterComponent.cpp">
-      <Filter>Engine\Component\Components\Particle</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\Component\Components\Particle\GPUParticleComponent.cpp">
-      <Filter>Engine\Component\Components\Particle</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\Component\Components\Particle\ParticleComponent.cpp">
-      <Filter>Engine\Component\Components\Particle</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\Component\Components\Particle\ParticleConfig.cpp">
       <Filter>Engine\Component\Components\Particle</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Component\Components\PostProcessLayer\PostProcessAutoExposure.cpp">
@@ -1548,5 +1534,9 @@
     <ClCompile Include="Engine\Adapter\Scene\SceneFactory.cpp" />
     <ClCompile Include="Demo\Scene\GameScene.cpp" />
     <ClCompile Include="Demo\Scene\TitleScene.cpp" />
+    <ClCompile Include="Demo\Scene\ClearScene.cpp" />
+    <ClCompile Include="Engine\Component\Components\Particle\ParticleComponent.cpp" />
+    <ClCompile Include="Engine\Component\Components\Particle\ParticleElement.cpp" />
+    <ClCompile Include="Demo\Object\CollectibleCube.cpp" />
   </ItemGroup>
 </Project>

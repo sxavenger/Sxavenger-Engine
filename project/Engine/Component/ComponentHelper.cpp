@@ -16,6 +16,7 @@
 #include "Components/Light/Punctual/DirectionalLightComponent.h"
 #include "Components/Light/Punctual/PointLightComponent.h"
 #include "Components/Light/Punctual/SpotLightComponent.h"
+#include "Components/Particle/EmitterComponent.h"
 #include "Components/Particle/ParticleComponent.h"
 #include "Components/Light/Environment/SkyLightComponent.h"
 #include "Components/Collider/ColliderComponent.h"
@@ -51,14 +52,18 @@ void ComponentHelper::UpdateTransform() {
 }
 
 void ComponentHelper::UpdateSkinning() {
-	sComponentStorage->ForEach<SkinnedMeshRendererComponent>([](SkinnedMeshRendererComponent* renderer) {
+	sComponentStorage->ForEachActive<SkinnedMeshRendererComponent>([](SkinnedMeshRendererComponent* renderer) {
 		renderer->Skinning();
 	});
 }
 
 void ComponentHelper::UpdateParticle() {
-	sComponentStorage->ForEach<ParticleComponent>([](ParticleComponent* particle) {
-		particle->Update();
+	sComponentStorage->ForEachActive<EmitterComponent>([](EmitterComponent* component) {
+		component->Update();
+	});
+
+	sComponentStorage->ForEachActive<ParticleComponent>([](ParticleComponent* component) {
+		component->Update();
 	});
 }
 

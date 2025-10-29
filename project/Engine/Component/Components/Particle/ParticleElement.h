@@ -11,13 +11,13 @@
 #include <Lib/Geometry/Vector3.h>
 #include <Lib/Geometry/Color3.h>
 
-////////////////////////////////////////////////////////////////////////////////////////////
-// ParticleConfig class
-////////////////////////////////////////////////////////////////////////////////////////////
-class ParticleConfig {
-public:
+_PUSH_GPU_BUFFER_ALIGNAS
 
-	_PUSH_GPU_BUFFER_ALIGNAS
+////////////////////////////////////////////////////////////////////////////////////////////
+// ParticleElement structure
+////////////////////////////////////////////////////////////////////////////////////////////
+struct ParticleElement {
+public:
 
 	////////////////////////////////////////////////////////////////////////////////////////////
 	// Albedo structure
@@ -93,51 +93,24 @@ public:
 
 	};
 
-	////////////////////////////////////////////////////////////////////////////////////////////
-	// Config structure
-	////////////////////////////////////////////////////////////////////////////////////////////
-	struct Config {
-	public:
-
-		//=========================================================================================
-		// public methods
-		//=========================================================================================
-
-		void Init();
-
-		//=========================================================================================
-		// public variables
-		//=========================================================================================
-
-		_GPU_BUFFER_ALIGNAS Albedo albedo;
-		_GPU_BUFFER_ALIGNAS Transparent transparent;
-
-		uint32_t isBillboard; //!< flag
-		// todo: Y軸billboardを追加.
-
-	};
-
-	_POP_GPU_BUFFER_ALIGNAS
-
 public:
 
 	//=========================================================================================
 	// public methods
 	//=========================================================================================
 
-	void Create(uint32_t count);
-
-	Config& At(size_t index);
-	const Config& At(size_t index) const;
-
-	const D3D12_GPU_VIRTUAL_ADDRESS& GetGPUVirtualAddress() const;
-
-private:
+	void Init();
 
 	//=========================================================================================
-	// private variables
+	// public variables
 	//=========================================================================================
 
-	std::unique_ptr<DxObject::DimensionBuffer<Config>> buffer_;
+	Albedo albedo;
+	Transparent transparent;
+
+	uint32_t isBillboard; //!< flag
+	// todo: Y軸billboardを追加.
 	
 };
+
+_POP_GPU_BUFFER_ALIGNAS

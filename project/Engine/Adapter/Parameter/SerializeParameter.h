@@ -115,3 +115,106 @@ template <typename T>
 inline std::filesystem::path SerializeParameter<T>::GetFilepath() const {
 	return kAssetsDirectory / "Parameter" / std::filesystem::path(current_).replace_extension(".json");
 }
+
+
+////////////////////////////////////////////////////////////////////////////////////////////
+// SerializeParameter structure vector<T>
+////////////////////////////////////////////////////////////////////////////////////////////
+//! @brief ParameterをJsonファイルに保存/読み込みするためのクラス.
+template <typename T>
+struct SerializeParameter<std::vector<T>> {
+public:
+
+	//=========================================================================================
+	// public methods
+	//=========================================================================================
+
+	SerializeParameter() = delete;
+	SerializeParameter(const std::string& label, const std::vector<T>& value = {}, const std::source_location& location = std::source_location::current())
+		: label_(label), current_(std::filesystem::path(location.file_name()).filename()) {
+		//!< parameterの読み込み
+		defaultValue_ = value;
+		Read();
+	}
+
+	void Read();
+
+	void Save() const;
+
+	std::vector<T>& Get() { return value_; }
+
+	const std::vector<T>& Get() const { return value_; }
+
+	const std::string& Label() const { return label_; }
+
+	//* operator *//
+
+	SerializeParameter& operator=(const std::vector<T>& rhs) { value_ = rhs; return *this; }
+	SerializeParameter& operator=(std::vector<T>&& rhs) { value_ = std::move(rhs); return *this; }
+
+	operator std::vector<T>& () { return value_; }
+	operator const std::vector<T>& () const { return value_; }
+
+private:
+
+	//=========================================================================================
+	// private variables
+	//=========================================================================================
+
+	std::vector<T> value_;
+	std::vector<T> defaultValue_ = {};
+
+	const std::string label_;
+
+	const std::filesystem::path current_;
+
+	//=========================================================================================
+	// private methods
+	//=========================================================================================
+
+	std::filesystem::path GetFilepath() const;
+
+};
+
+////////////////////////////////////////////////////////////////////////////////////////////
+// SerializeParameter structure vector<T> template methods
+////////////////////////////////////////////////////////////////////////////////////////////
+
+template <typename T>
+inline void SerializeParameter<std::vector<T>>::Read() {
+	std::filesystem::path filepath = GetFilepath();
+
+	if (!std::filesystem::exists(filepath)) {
+		value_ = defaultValue_;
+		return;
+	}
+
+	json data = JsonHandler::LoadFromJson(filepath);
+	if (!data.contains(label_)) {
+		value_ = defaultValue_;
+		return;
+	}
+
+	value_.clear();
+
+	for (const auto& item : data[label_]) {
+		value_.emplace_back(JsonSerializeFormatter<T>::Deserialize(item));
+	}
+}
+
+template <typename T>
+inline void SerializeParameter<std::vector<T>>::Save() const {
+	json data = json::object();
+	data[label_] = json::array();
+
+	for (const auto& item : value_) {
+		data[label_].emplace_back(JsonSerializeFormatter<T>::Serialize(item));
+	}
+
+	JsonHandler::OverwriteToJson(GetFilepath(), data);
+}
+
+template <typename T>
+inline std::filesystem::path SerializeParameter<std::vector<T>>::GetFilepath() const {
+	return kAssetsDirectory / "Parameter" / std::filesystem::path(current_).replace_extension(".json");
+}

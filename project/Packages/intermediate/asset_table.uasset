@@ -3355,6 +3355,10 @@
 		"assets/models/PBR_Sphere_Test/model/PBR_Sphere.gltf",
 		"class UAssetMesh"
 	],
+	"50052630-e9ad-45e5-a5cd44bee27e88d8": [
+		"assets/textures/particleDemo.png",
+		"class UAssetTexture"
+	],
 	"501948b0-538b-4544-aadcee341ea77e65": [
 		"assets/models/PBR_Sphere_Test/model/PBR_Sphere.gltf",
 		"class UAssetMesh"

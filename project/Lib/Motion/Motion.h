@@ -3,13 +3,9 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
-//* engine
-#include <Engine/System/Runtime/Performance/TimePoint.h>
-
 //* c++
-#include <concepts>
+#include <cstdint>
 #include <functional>
-#include <algorithm>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // MotionMode enum class
@@ -19,47 +15,23 @@ enum class MotionMode : uint8_t {
 	Clamp,
 	Wrap,
 	Mirror,
+	WrapOne,
+	MirrorOne,
 };
 float GetMotionT(MotionMode mode, float t);
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // MotionT class
 ////////////////////////////////////////////////////////////////////////////////////////////
-template <class _Ty>
+template <typename T>
 class MotionT {
 public:
 
 	////////////////////////////////////////////////////////////////////////////////////////////
 	// using
 	////////////////////////////////////////////////////////////////////////////////////////////
-
-	using MotionFunction        = std::function<_Ty(const _Ty&, const _Ty&, float)>;
+	using MotionFunction        = std::function<T(const T&, const T&, float)>;
 	using InterpolationFunction = std::function<float(float)>;
-
-
-	////////////////////////////////////////////////////////////////////////////////////////////
-	// Parameter structure
-	////////////////////////////////////////////////////////////////////////////////////////////
-	struct Parameter {
-	public:
-
-		//=========================================================================================
-		// public variables
-		//=========================================================================================
-
-		_Ty start;
-		_Ty end;
-
-		//* motion *//
-
-		MotionMode mode = MotionMode::Default;
-
-		//* function *//
-
-		std::function<_Ty(const _Ty&, const _Ty&, float)> motionFunc = Lerp;
-		std::function<float(float)> interpolationFunc = LinearInterpolation;
-
-	};
 
 public:
 
@@ -67,84 +39,73 @@ public:
 	// public methods
 	//=========================================================================================
 
+	//* constructor & destructor *//
+
 	MotionT() = default;
-
-	MotionT(const _Ty& start, const _Ty& end, MotionMode mode = MotionMode::Default)
-		: start_(start), end_(end), mode_(mode) {
-		motionFunc_ = Lerp;
-		interpolationFunc_ = LinearInterpolation;
-	}
-
-	MotionT(const Parameter& param)
-		: start_(param.start), end_(param.end), mode_(param.mode) {
-		motionFunc_        = param.motionFunc;
-		interpolationFunc_ = param.interpolationFunc;
-	}
+	MotionT(const T& start, const T& end, MotionMode mode = MotionMode::Default);
+	MotionT(const T& start, const T& end, const InterpolationFunction& interpolation = LinearInterpolation, MotionMode mode = MotionMode::Default);
 
 	//* motion option *//
 
-	void SetParameter(const Parameter& param);
+	T Get(float t) const;
 
-	void SetStart(const _Ty& start) { start_ = start; }
+	//* static common methods *//
 
-	void SetEnd(const _Ty& end) { end_ = end; }
-
-	void SetMotionFunction(const MotionFunction& function) { motionFunc_ = function; }
-
-	void SetInterpolationFunction(const InterpolationFunction& function) { interpolationFunc_ = function; }
-
-	//* motion methods *//
-
-	_Ty GetMotion(float t) const;
-
-	//* static methods *//
-	
 	static float LinearInterpolation(float t) {
 		return t;
 	}
 
-	static _Ty Lerp(const _Ty& begin, const _Ty& end, float t) {
+	static T Lerp(const T& begin, const T& end, float t) {
 		return begin + (end - begin) * t;
 	}
 
-protected:
+	static MotionT<T> CreateLinear(const T& start, const T& end) { return MotionT<T>(start, end, MotionMode::Default); }
+	static MotionT<T> CreateMode(const T& start, const T& end, MotionMode mode) { return MotionT<T>(start, end, mode); }
+	static MotionT<T> CreateInterpolation(const T& start, const T& end, const InterpolationFunction& interpolation, MotionMode mode) { return MotionT<T>(start, end, interpolation, mode); }
+
+private:
 
 	//=========================================================================================
-	// protected variables
+	// private variables
 	//=========================================================================================
 
-	_Ty start_;
-	_Ty end_;
+	//* value *//
 
-	//* motion *//
+	T start_;
+	T end_;
 
-	MotionMode mode_;
+	//* mode *//
+
+	MotionMode mode_ = MotionMode::Default;
 
 	//* function *//
 
-	std::function<_Ty(const _Ty&, const _Ty&, float)> motionFunc_ = Lerp; //!< lerp, slerp, etc...
-	InterpolationFunction interpolationFunc_ = LinearInterpolation;
+	MotionFunction motionFunction_               = Lerp;
+	InterpolationFunction interpolationFunction_ = LinearInterpolation;
 
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// MotionT class template methods
+// MotionT class template method
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-template <class _Ty>
-inline void MotionT<_Ty>::SetParameter(const Parameter& param) {
-	start_             = param.start;
-	end_               = param.end;
-	mode_              = param.mode;
-	motionFunc_        = param.motionFunc;
-	interpolationFunc_ = param.interpolationFunc;
+template <typename T>
+inline MotionT<T>::MotionT(const T& start, const T& end, MotionMode mode) {
+	start_ = start;
+	end_   = end;
+	mode_ = mode;
 }
 
-template <class _Ty>
-_Ty MotionT<_Ty>::GetMotion(float t) const {
-	return motionFunc_(
-		start_,
-		end_,
-		interpolationFunc_(GetMotionT(mode_, t))
-	);
+template <typename T>
+inline MotionT<T>::MotionT(const T& start, const T& end, const InterpolationFunction& interpolation, MotionMode mode) {
+	start_                 = start;
+	end_                   = end;
+	interpolationFunction_ = interpolation;
+	mode_                  = mode;
+}
+
+template <typename T>
+inline T MotionT<T>::Get(float t) const {
+	t = interpolationFunction_(GetMotionT(mode_, t));
+	return motionFunction_(start_, end_, t);
 }

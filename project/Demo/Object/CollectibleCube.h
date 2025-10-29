@@ -4,40 +4,26 @@
 // include
 //-----------------------------------------------------------------------------------------
 //* engine
-#include <Engine/Component/Components/Transform/TransformComponent.h>
 #include <Engine/Module/GameObject/GameObject.h>
 #include <Engine/Adapter/Parameter/SerializeParameter.h>
 #include <Engine/Adapter/Parameter/SerializeGui.h>
 #include <Engine/Preview/Content/UContentModel.h>
 #include <Engine/Preview/Content/UContentObserver.h>
 
-//* demo
-#include "CollectibleCube.h"
-
 ////////////////////////////////////////////////////////////////////////////////////////////
-// CollectibleItems class
+// CollectibleCube class
 ////////////////////////////////////////////////////////////////////////////////////////////
-class CollectibleItems
-	: public GameObject {
+class CollectibleCube
+	: public MonoBehaviour {
 public:
 
 	//=========================================================================================
 	// public methods
 	//=========================================================================================
 
-	void Load() override;
+	void Init();
 
-	void Awake() override;
-
-	void Start() override;
-
-	void Update() override;
-
-	void Inspectable() override;
-
-	//* getter *//
-
-	bool IsCollected() const;
+	void Update();
 
 private:
 
@@ -45,22 +31,12 @@ private:
 	// private variables
 	//=========================================================================================
 
-	static const size_t kItemCount = 6;
+	//* behaviour *//
 
-	//* children *//
+	MonoBehaviour* cube_[2];
 
-	std::array<CollectibleCube*, kItemCount> cubes_;
+	//* asset *//
 
-	SerializeParameter<std::vector<Vector3f>> positions_{
-		"CollectibleItems::positions",
-		{
-			{ 5.0f, 0.4f, 0.0f },
-			{ -5.0f, 0.4f, 0.0f },
-			{ 0.0f, 0.4f, 5.0f },
-			{ 0.0f, 0.4f, -5.0f },
-			{ 3.5f, 0.4f, 3.5f },
-			{ -3.5f, 0.4f, -3.5f }
-		},
-	};
+	UContentObserver<UContentModel> model_;
 
 };

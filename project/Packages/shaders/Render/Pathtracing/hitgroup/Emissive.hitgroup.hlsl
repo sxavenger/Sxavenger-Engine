@@ -87,7 +87,7 @@ _CLOSESTHIT void mainEmissiveClosesthit(inout Payload payload, in Attribute attr
 	Surface surface;
 	surface.GetSurface(attribute);
 
-	payload.indirect.rgb = surface.albedo * 12.0f;
+	payload.indirect.rgb = surface.albedo;
 	payload.indirect.a   = 1.0f;
 	
 }

@@ -167,12 +167,16 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Demo\Entity\Player.h" />
+    <ClInclude Include="Demo\Object\CollectibleCube.h" />
     <ClInclude Include="Demo\Object\CollectibleItems.h" />
+    <ClInclude Include="Demo\Scene\ClearScene.h" />
     <ClInclude Include="Demo\Scene\GameScene.h" />
     <ClInclude Include="Demo\Scene\TitleScene.h" />
     <ClInclude Include="Engine\Adapter\Scene\BaseScene.h" />
     <ClInclude Include="Engine\Adapter\Scene\SceneController.h" />
     <ClInclude Include="Engine\Adapter\Scene\SceneFactory.h" />
+    <ClInclude Include="Engine\Component\Components\Particle\ParticleComponent.h" />
+    <ClInclude Include="Engine\Component\Components\Particle\ParticleElement.h" />
     <ClInclude Include="Engine\GameLoop\BetaSystemGameLoop.h" />
     <ClInclude Include="Demo\GameLoop\DemoGameLoop.h" />
     <ClInclude Include="Demo\GameLoop\PreviewGameLoop.h" />
@@ -206,9 +210,6 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Engine\Component\Components\MeshRenderer\PrimitiveRendererComponent.h" />
     <ClInclude Include="Engine\Component\Components\MeshRenderer\SkinnedMeshRendererComponent.h" />
     <ClInclude Include="Engine\Component\Components\Particle\EmitterComponent.h" />
-    <ClInclude Include="Engine\Component\Components\Particle\GPUParticleComponent.h" />
-    <ClInclude Include="Engine\Component\Components\Particle\ParticleComponent.h" />
-    <ClInclude Include="Engine\Component\Components\Particle\ParticleConfig.h" />
     <ClInclude Include="Engine\Component\Components\PostProcessLayer\BasePostProcess.h" />
     <ClInclude Include="Engine\Component\Components\PostProcessLayer\PostProcessAutoExposure.h" />
     <ClInclude Include="Engine\Component\Components\PostProcessLayer\PostProcessBloom.h" />
@@ -401,12 +402,16 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Demo\Entity\Player.cpp" />
+    <ClCompile Include="Demo\Object\CollectibleCube.cpp" />
     <ClCompile Include="Demo\Object\CollectibleItems.cpp" />
+    <ClCompile Include="Demo\Scene\ClearScene.cpp" />
     <ClCompile Include="Demo\Scene\GameScene.cpp" />
     <ClCompile Include="Demo\Scene\TitleScene.cpp" />
     <ClCompile Include="Engine\Adapter\Scene\BaseScene.cpp" />
     <ClCompile Include="Engine\Adapter\Scene\SceneController.cpp" />
     <ClCompile Include="Engine\Adapter\Scene\SceneFactory.cpp" />
+    <ClCompile Include="Engine\Component\Components\Particle\ParticleComponent.cpp" />
+    <ClCompile Include="Engine\Component\Components\Particle\ParticleElement.cpp" />
     <ClCompile Include="Engine\GameLoop\BetaSystemGameLoop.cpp" />
     <ClCompile Include="Demo\GameLoop\DemoGameLoop.cpp" />
     <ClCompile Include="Demo\GameLoop\PreviewGameLoop.cpp" />
@@ -437,9 +442,6 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="Engine\Component\Components\MeshRenderer\PrimitiveRendererComponent.cpp" />
     <ClCompile Include="Engine\Component\Components\MeshRenderer\SkinnedMeshRendererComponent.cpp" />
     <ClCompile Include="Engine\Component\Components\Particle\EmitterComponent.cpp" />
-    <ClCompile Include="Engine\Component\Components\Particle\GPUParticleComponent.cpp" />
-    <ClCompile Include="Engine\Component\Components\Particle\ParticleComponent.cpp" />
-    <ClCompile Include="Engine\Component\Components\Particle\ParticleConfig.cpp" />
     <ClCompile Include="Engine\Component\Components\PostProcessLayer\PostProcessAutoExposure.cpp" />
     <ClCompile Include="Engine\Component\Components\PostProcessLayer\PostProcessBloom.cpp" />
     <ClCompile Include="Engine\Component\Components\PostProcessLayer\PostProcessChromaticAberration.cpp" />

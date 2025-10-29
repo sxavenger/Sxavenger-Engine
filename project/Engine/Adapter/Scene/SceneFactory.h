@@ -32,6 +32,8 @@ public:
 	template <SceneConcept T>
 	void Register(const std::string& name);
 
+	//! @brief 登録された名前からシーンを生成する.
+	//! @throw シーンが見つからなかった場合に例外スローとなる.
 	std::unique_ptr<BaseScene> CreateScene(const std::string& name) const;
 
 private:

@@ -4086,10 +4086,10 @@
 				"component": "class TransformComponent",
 				"transform": {
 					"rotate": {
-						"w": 0.3778579831123352,
-						"x": 0.9042974710464478,
-						"y": 0.07659577578306198,
-						"z": -0.18330997228622437
+						"w": 0.7822863459587097,
+						"x": 0.5903885960578918,
+						"y": 0.15857721865177155,
+						"z": -0.11967736482620239
 					},
 					"scale": {
 						"x": 1.0,
@@ -9330,7 +9330,7 @@
 						"mesh": "b588a232-ffb6-4019-98d370d53e9c5397"
 					}
 				],
-				"isActive": true,
+				"isActive": false,
 				"isRenamable": true,
 				"name": "SM_Desert_Terrain"
 			}
@@ -9358,7 +9358,7 @@
 				}
 			}
 		],
-		"isActive": true,
+		"isActive": false,
 		"isRenamable": true,
 		"name": "Desert_Terrain"
 	}

@@ -9,43 +9,24 @@
 #include <Engine/Component/Components/Transform/RectTransformComponent.h>
 #include <Engine/Component/Components/TextRenderer/TextRendererComponent.h>
 #include <Engine/Component/ComponentHelper.h>
+#include <Engine/Adapter/Parameter/SerializeGui.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // CollectibleItems class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 void CollectibleItems::Load() {
-	model_ = sUContentStorage->Import<UContentModel>("assets/models/primitive/cube_skeleton.obj");
 }
 
 void CollectibleItems::Awake() {
 	MonoBehaviour::SetName("collectible items");
 
 	for (size_t i = 0; i < cubes_.size(); ++i) {
-		cubes_[i] = std::make_unique<MonoBehaviour>();
-		cubes_[i]->SetName("collectible item");
+		std::unique_ptr<CollectibleCube> cube = std::make_unique<CollectibleCube>();
+		cubes_[i] = cube.get();
+		MonoBehaviour::AddChild(std::move(cube));
 
-		ComponentHelper::CreateStaticMeshBehaviour(cubes_[i].get(), model_.Get());
-
-		ComponentHelper::DetachBehaviourMaterial(cubes_[i].get());
-		ComponentHelper::ModifyBehaviourMaterial(cubes_[i].get(), [this, i](UAssetMaterial* material) {
-			material->SetMode(UAssetMaterial::Mode::Opaque);
-			material->GetBuffer().albedo.SetValue(colors_[i]);
-		});
-
-		cubes_[i]->AddComponent<TransformComponent>();
-
-		auto collider = cubes_[i]->AddComponent<ColliderComponent>();
-		collider->SetColliderBoundingSphere();
-		collider->SetTag("item");
-
-		auto process = cubes_[i]->AddComponent<PostProcessLayerComponent>();
-		process->AddPostProcess<PostProcessChromaticAberration>();
-		process->AddPostProcess<PostProcessRadialBlur>();
-
-		process->SetTag(PostProcessLayerComponent::Tag::Volume);
-
-		MonoBehaviour::AddChild(cubes_[i].get());
+		cubes_[i]->Init();
 	}
 
 }
@@ -53,16 +34,33 @@ void CollectibleItems::Awake() {
 void CollectibleItems::Start() {
 	for (size_t i = 0; i < cubes_.size(); ++i) {
 		auto transform = cubes_[i]->GetComponent<TransformComponent>();
-
-		// TODO: 外部ファイルから読み込み
-		transform->scale = { 0.4f, 0.4f, 0.4f };
-		transform->translate = {
-			5.0f * std::cos(kTau * static_cast<float>(i) / static_cast<float>(cubes_.size())),
-			0.4f,
-			5.0f * std::sin(kTau * static_cast<float>(i) / static_cast<float>(cubes_.size()))
-		};
+		transform->GetTransform().translate = positions_.Get()[i];
 	}
 }
 
 void CollectibleItems::Update() {
+	for (const auto& cube : cubes_) {
+		cube->Update();
+	}
+}
+
+void CollectibleItems::Inspectable() {
+	if (ImGui::Button("Save Positions")) {
+		for (size_t i = 0; i < cubes_.size(); ++i) {
+			auto transform = cubes_[i]->GetComponent<TransformComponent>();
+			positions_.Get()[i] = transform->GetTransform().translate;
+		}
+
+		positions_.Save();
+	}
+}
+
+bool CollectibleItems::IsCollected() const {
+	bool isActive = false;
+
+	for (const auto& cube : cubes_) {
+		isActive |= cube->IsActive();
+	};
+
+	return !isActive;
 }

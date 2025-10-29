@@ -40,7 +40,7 @@ void main(uint3 dispathThreadId : SV_DispatchThreadID) {
 
 	//* Octaweb sampling を採用
 
-	static const uint kDensity   = 8;  //!< 方向ごとのsampling数 <= 羽枚数としてparameter化する
+	static const uint kDensity   = 14; //!< 方向ごとのsampling数 <= 羽枚数としてparameter化する
 	static const uint kCount     = 8; //!< sampling方向数 
 
 	float weight_sum     = 1.0f;
@@ -53,7 +53,7 @@ void main(uint3 dispathThreadId : SV_DispatchThreadID) {
 
 		float inc = kTau / cnt;
 
-		float lod = (i / kCount) * 4.0f;
+		float lod = (float(i) / float(kCount)) * 4.0f;
 
 		for (float j = 0; j < cnt; ++j) {
 			float theta   = j * inc;
@@ -62,8 +62,9 @@ void main(uint3 dispathThreadId : SV_DispatchThreadID) {
 			float2 uv    = (float2(index) + offset) / float2(size);
 			float weight = Gaussian2d(offset, gParameter.radius);
 
-			luminance_sum += gLuminance.SampleLevel(gSampler, uv, lod) * gInput.SampleLevel(gSampler, uv, 0) * weight;
-			weight_sum    += weight;
+			luminance_sum += gLuminance.SampleLevel(gSampler, uv, 0) * gInput.SampleLevel(gSampler, uv, 0) * weight;
+			luminance_sum += gLuminance.SampleLevel(gSampler, uv, lod) * gInput.SampleLevel(gSampler, uv, lod) * weight;
+			weight_sum    += weight * weight;
 			
 		}
 	}
