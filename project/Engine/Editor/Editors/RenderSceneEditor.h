@@ -182,8 +182,8 @@ private:
 
 	//* imgui *//
 
-	ImDrawList* sceneWindow_  = nullptr;
-	ImDrawList* canvasWindow_ = nullptr;
+	ImDrawList* sceneWindowDrawer_  = nullptr;
+	ImDrawList* canvasWindowDrawer_ = nullptr;
 
 	std::optional<GuizmoUsed> gizmoUsed_ = std::nullopt;
 	GuizmoOperation gizmoOperation_      = GuizmoOperation::Translate;
@@ -194,6 +194,13 @@ private:
 	UAssetParameter<UAssetTexture> icons_[static_cast<uint32_t>(Icon::Camera) + 1];
 
 	Vector2f iconSize_ = { 32.0f, 32.0f };
+
+	//* window *//
+
+	//std::weak_ptr<DirectXWindowContext> gameWindow_;
+	//!< MainRendererの描画はUser依存なので現システムだと描画できない
+
+	std::weak_ptr<DirectXWindowContext> sceneWindow_;
 
 	//=========================================================================================
 	// private methods

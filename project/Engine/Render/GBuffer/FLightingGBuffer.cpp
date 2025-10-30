@@ -38,7 +38,7 @@ void FLightingGBuffer::Init(const Vector2ui& size) {
 	buffers_[static_cast<uint8_t>(Layout::Indirect_Resolution_Diffuse)]  = std::make_unique<FBaseTexture>(size, GetFormat(Layout::Indirect_Resolution_Diffuse), FBaseTexture::Flag::All);
 	buffers_[static_cast<uint8_t>(Layout::Indirect_Resolution_Specular)] = std::make_unique<FBaseTexture>(size, GetFormat(Layout::Indirect_Resolution_Specular), FBaseTexture::Flag::All);
 
-	downsize_ = size / 4u;
+	downsize_ = size / 2u;
 
 	//!< Indirect結果格納用
 	buffers_[static_cast<uint8_t>(Layout::Indirect_Reservoir_Diffuse)]  = std::make_unique<FBaseTexture>(downsize_, GetFormat(Layout::Indirect_Reservoir_Diffuse), FBaseTexture::Flag::All);

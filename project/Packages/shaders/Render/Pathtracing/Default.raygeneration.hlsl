@@ -18,7 +18,7 @@ _RAYGENERATION void mainRaygeneration() {
 	uint2 index     = DispatchRaysIndex().xy;
 	uint2 dimension = DispatchRaysDimensions().xy;
 
-	static const uint kDownSample = 4;
+	static const uint kDownSample = 2;
 	static const uint kAtlas      = 16;
 	// TODO: atlasのサイズを変更できるようにする
 

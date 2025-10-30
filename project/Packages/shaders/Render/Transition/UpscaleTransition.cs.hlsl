@@ -51,7 +51,7 @@ void main(uint3 dispatchThreadId : SV_DispatchThreadID) {
 	
 	float2 scale = (float2)GetInputDimension() / (float2)size;
 
-	float2 position = (float2(index) + 0.5f) * scale - 0.5f;
+	float2 position = (float2(index)) * scale;
 
 	uint2 b  = (uint2)floor(position);
 	float2 f = frac(position);
