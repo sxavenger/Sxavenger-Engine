@@ -16,7 +16,7 @@ void TitleScene::Init() {
 
 	camera_ = std::make_unique<MonoBehaviour>();
 	camera_->SetName("title_camera");
-	camera_->LoadComponent();
+	camera_->LoadComponent(kAssetsDirectory / "behaviour" / "title_camera.behaviour");
 
 }
 

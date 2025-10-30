@@ -202,9 +202,9 @@ public:
 
 	void InputJson(const json& data) override;
 
-	void LoadComponent();
+	void LoadComponent(const std::filesystem::path& filepath);
 
-	void SaveComponent();
+	void SaveComponent(const std::filesystem::path& filepath);
 
 protected:
 
@@ -262,8 +262,6 @@ private:
 	//* helper *//
 
 	static MonoBehaviour* GetElement(const HierarchyElement& child);
-
-	std::filesystem::path GetFilepath() const;
 
 };
 
