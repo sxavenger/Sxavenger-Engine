@@ -382,40 +382,31 @@ void RenderSceneEditor::ShowCaptureMenu() {
 		ImGui::SeparatorText("capture");
 
 		if (ImGui::Button("scene window capture")) {
-			TextureExporter::Export(
-				SxavengerSystem::GetDirectQueueContext(),
-				TextureExporter::TextureDimension::Texture2D,
-				textures_->GetGBuffer(FMainGBuffer::Layout::Scene)->GetResource(),
-				DxObject::kDefaultScreenViewFormat,
-				"capture_scene.png"
-			);
+			auto filepath = WinApp::GetSaveFilepath(L"画像(Scene-Capture)の保存先", std::filesystem::current_path(), { L"画像ファイル", L"*.png; *.jpg; *.hdr; *.tga; *.dds;" }, L".png");
+
+			if (filepath.has_value()) {
+				TextureExporter::Export(
+					SxavengerSystem::GetDirectQueueContext(),
+					TextureExporter::TextureDimension::Texture2D,
+					textures_->GetGBuffer(FMainGBuffer::Layout::Scene)->GetResource(),
+					DxObject::kDefaultScreenViewFormat,
+					filepath.value()
+				);
+			}
 		}
 
 		if (ImGui::Button("game window capture")) {
-			TextureExporter::Export(
-				SxavengerSystem::GetDirectQueueContext(),
-				TextureExporter::TextureDimension::Texture2D,
-				FMainRender::GetInstance()->GetTextures()->GetGBuffer(FMainGBuffer::Layout::Scene)->GetResource(),
-				DxObject::kDefaultScreenViewFormat,
-				"game_scene.png"
-			);
-		}
+			auto filepath = WinApp::GetSaveFilepath(L"画像(Game-Capture)の保存先", std::filesystem::current_path(), { L"画像ファイル", L"*.png; *.jpg; *.hdr; *.tga; *.dds;" }, L".png");
 
-		if (ImGui::Button("[DEBUG] process")) {
-
-			auto process = textures_->GetProcessTextures();
-
-			process->GetCurrentTexture()->TransitionBeginUnordered(SxavengerSystem::GetDirectQueueContext());
-			process->GetCurrentTexture()->GenerateMipmap(SxavengerSystem::GetDirectQueueContext());
-			process->GetCurrentTexture()->TransitionEndUnordered(SxavengerSystem::GetDirectQueueContext());
-
-			TextureExporter::Export(
-				SxavengerSystem::GetDirectQueueContext(),
-				TextureExporter::TextureDimension::Texture2D,
-				process->GetCurrentTexture()->GetResource(),
-				DxObject::kDefaultScreenViewFormat,
-				"debug_process.dds"
-			);
+			if (filepath.has_value()) {
+				TextureExporter::Export(
+					SxavengerSystem::GetDirectQueueContext(),
+					TextureExporter::TextureDimension::Texture2D,
+					FMainRender::GetInstance()->GetTextures()->GetGBuffer(FMainGBuffer::Layout::Scene)->GetResource(),
+					DxObject::kDefaultScreenViewFormat,
+					filepath.value()
+				);
+			}
 		}
 
 		ImGui::EndMenu();

@@ -126,8 +126,8 @@ public:
 	//! @brief 非同期タスクを追加
 	//! @param[in] execution 実行するスレッド
 	//! @param[in] function 実行する関数
-	//! @note functionなのでTaskの完了を待機.
-	static void PushTaskAndWait(AsyncExecution execution, const AsyncTask::Function& function);
+	//! @return 追加されたタスク
+	static std::shared_ptr<AsyncTask> PushTask(AsyncExecution execution, const AsyncTask::Function& function);
 
 	static AsyncThreadCollection* GetAsyncThreadCollection();
 

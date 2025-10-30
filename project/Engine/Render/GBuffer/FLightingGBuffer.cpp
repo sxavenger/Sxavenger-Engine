@@ -19,8 +19,8 @@ const std::array<DXGI_FORMAT, FLightingGBuffer::kLayoutCount_> FLightingGBuffer:
 	FMainGBuffer::kColorFormat,    //!< Indirect_Atlas_Specular
 	FMainGBuffer::kColorFormat,    //!< Indirect_Reservoir_Diffuse
 	FMainGBuffer::kColorFormat,    //!< Indirect_Reservoir_Specular
-	FMainGBuffer::kColorFormat,    //!< Indirect_Upscale_Diffuse
-	FMainGBuffer::kColorFormat,    //!< Indirect_Upscale_Specular
+	FMainGBuffer::kColorFormat,    //!< Indirect_Resolution_Diffuse
+	FMainGBuffer::kColorFormat,    //!< Indirect_Resolution_Specular
 	DXGI_FORMAT_R32G32B32A32_UINT, //!< Indirect_Moment
 	FMainGBuffer::kColorFormat,    //!< Indirect
 };
@@ -35,8 +35,8 @@ void FLightingGBuffer::Init(const Vector2ui& size) {
 	buffers_[static_cast<uint8_t>(Layout::Direct)]   = std::make_unique<FBaseTexture>(size, GetFormat(Layout::Direct), FBaseTexture::Flag::All);
 	buffers_[static_cast<uint8_t>(Layout::Indirect)] = std::make_unique<FBaseTexture>(size, GetFormat(Layout::Indirect), FBaseTexture::Flag::All);
 
-	buffers_[static_cast<uint8_t>(Layout::Indirect_Upscale_Diffuse)]  = std::make_unique<FBaseTexture>(size, GetFormat(Layout::Indirect_Upscale_Diffuse), FBaseTexture::Flag::All);
-	buffers_[static_cast<uint8_t>(Layout::Indirect_Upscale_Specular)] = std::make_unique<FBaseTexture>(size, GetFormat(Layout::Indirect_Upscale_Specular), FBaseTexture::Flag::All);
+	buffers_[static_cast<uint8_t>(Layout::Indirect_Resolution_Diffuse)]  = std::make_unique<FBaseTexture>(size, GetFormat(Layout::Indirect_Resolution_Diffuse), FBaseTexture::Flag::All);
+	buffers_[static_cast<uint8_t>(Layout::Indirect_Resolution_Specular)] = std::make_unique<FBaseTexture>(size, GetFormat(Layout::Indirect_Resolution_Specular), FBaseTexture::Flag::All);
 
 	downsize_ = size / 4u;
 
@@ -50,6 +50,13 @@ void FLightingGBuffer::Init(const Vector2ui& size) {
 	//!< Indirect Atlas
 	buffers_[static_cast<uint8_t>(Layout::Indirect_Atlas_Diffuse)]  = std::make_unique<FBaseTexture>(downsize_ * atlas_, GetFormat(Layout::Indirect_Atlas_Diffuse), FBaseTexture::Flag::All);
 	buffers_[static_cast<uint8_t>(Layout::Indirect_Atlas_Specular)] = std::make_unique<FBaseTexture>(downsize_ * atlas_, GetFormat(Layout::Indirect_Atlas_Specular), FBaseTexture::Flag::All);
+
+	for (size_t i = 0; i < kLayoutCount_; ++i) {
+		// nameの設定
+		std::string name = "FLightingGBuffer | ";
+		name += magic_enum::enum_name(static_cast<FLightingGBuffer::Layout>(i));
+		buffers_[i]->GetResource()->SetName(ToWString(name).c_str());
+	}
 	
 }
 
