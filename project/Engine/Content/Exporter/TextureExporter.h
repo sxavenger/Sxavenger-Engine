@@ -35,7 +35,7 @@ public:
 	static void Export(
 		const DirectXQueueContext* context,
 		TextureDimension dimension, ID3D12Resource* texture, DXGI_FORMAT format,
-		const std::filesystem::path& filename
+		const std::filesystem::path& filepath
 	);
 
 private:
@@ -48,8 +48,6 @@ private:
 
 	static DirectX::WICCodecs GetExtensionCodecs(const std::filesystem::path& extension);
 
-	static void ExportTexture(const std::filesystem::path& filename, const DirectX::ScratchImage& image);
-
-	static void CreateFolder();
+	static void ExportTexture(const std::filesystem::path& filepath, const DirectX::ScratchImage& image);
 
 };

@@ -133,7 +133,11 @@ void FRenderCorePathtracing::CreateDenoiser() {
 		denoiser = std::make_unique<CustomReflectionComputePipeline>();
 		denoiser->CreateContent(kPackagesShaderDirectory / "render" / "denoiser" / "EdgeStopping.cs.hlsl");
 		denoiser->RegisterBlob();
-		denoiser->ReflectionPipeline(SxavengerSystem::GetDxDevice());
+
+		DxObject::SamplerBindDesc desc = {};
+		desc.SetSamplerAnisotropic("gSampler", DxObject::SamplerMode::MODE_CLAMP, 16);
+
+		denoiser->ReflectionPipeline(SxavengerSystem::GetDxDevice(), desc);
 	}
 
 }

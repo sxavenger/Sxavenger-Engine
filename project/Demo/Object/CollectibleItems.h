@@ -4,7 +4,6 @@
 // include
 //-----------------------------------------------------------------------------------------
 //* engine
-#include <Engine/System/Runtime/Input/Input.h>
 #include <Engine/Component/Components/Transform/TransformComponent.h>
 #include <Engine/Module/GameObject/GameObject.h>
 #include <Engine/Adapter/Parameter/SerializeParameter.h>
@@ -13,13 +12,12 @@
 #include <Engine/Preview/Content/UContentObserver.h>
 
 //* demo
-#include <Demo/Object/PerspectiveCamera.h>
+#include "CollectibleCube.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// EmissiveCubes class
+// CollectibleItems class
 ////////////////////////////////////////////////////////////////////////////////////////////
-//! @brief 発光キューブ群オブジェクト.
-class EmissiveCubes
+class CollectibleItems
 	: public GameObject {
 public:
 
@@ -35,9 +33,11 @@ public:
 
 	void Update() override;
 
-	//* setter *//
+	void Inspectable() override;
 
-	void SetCamera(PerspectiveCamera* camera) { camera_ = camera; }
+	//* getter *//
+
+	bool IsCollected() const;
 
 private:
 
@@ -45,31 +45,22 @@ private:
 	// private variables
 	//=========================================================================================
 
-	//* input *//
-
-	const KeyboardInput* keyboard_ = nullptr;
-
-	//* asset *//
-
-	UContentObserver<UContentModel> model_;
-
-	//* external *//
-
-	const PerspectiveCamera* camera_ = nullptr;
+	static const size_t kItemCount = 6;
 
 	//* children *//
 
-	std::array<std::unique_ptr<MonoBehaviour>, 6> cubes_;
+	std::array<CollectibleCube*, kItemCount> cubes_;
 
-	//* parameter *//
-
-	const std::array<Color3f, 6> colors_ = {
-		Color3f{0.53f, 0.93f, 0.94f},
-		Color3f{0.91f, 0.89f, 0.71f},
-		Color3f{0.82f, 0.63f, 0.96f},
-		Color3f{0.71f, 0.8f, 0.88f},
-		Color3f{0.96f, 0.84f, 0.24f},
-		Color3f{1.0f, 0.6f, 0.64f},
+	SerializeParameter<std::vector<Vector3f>> positions_{
+		"CollectibleItems::positions",
+		{
+			{ 5.0f, 0.4f, 0.0f },
+			{ -5.0f, 0.4f, 0.0f },
+			{ 0.0f, 0.4f, 5.0f },
+			{ 0.0f, 0.4f, -5.0f },
+			{ 3.5f, 0.4f, 3.5f },
+			{ -3.5f, 0.4f, -3.5f }
+		},
 	};
 
 };

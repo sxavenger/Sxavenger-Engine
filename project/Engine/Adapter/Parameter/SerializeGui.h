@@ -152,3 +152,45 @@ public:
 	}
 
 };
+
+////////////////////////////////////////////////////////////////////////////////////////////
+// SerializeGuiFormatter structure for vector scalar
+////////////////////////////////////////////////////////////////////////////////////////////
+template <SxImGui::ScalerConcept T>
+struct SerializeGuiFormatter<std::vector<T>> {
+public:
+
+	static bool DragScalars3(SerializeParameter<std::vector<Vector3<T>>>& param, float v_speed = 1.0f, const std::optional<T>& v_min = std::nullopt, const std::optional<T>& v_max = std::nullopt, const char* format = SxImGui::GetImGuiFormat<T>(), ImGuiSliderFlags flags = ImGuiSliderFlags_None) {
+
+		std::string label = "## " + param.Label();
+
+		// パラメータが空の場合の処理
+		if (param.Get().empty()) {
+			ImGui::Text("No elements to display for %s", label.c_str());
+			return false;
+		}
+
+		bool changed = false;
+
+		// 各要素に対する UI を生成
+		for (size_t i = 0; i < param.Get().size(); ++i) {
+			// DragScalarN の呼び出し
+			changed |= SxImGui::DragScalarN<T, 3>((label + std::to_string(i)).c_str(), &param.Get()[i].x, v_speed, v_min, v_max, format, flags);
+
+			
+			ImGui::SameLine();
+
+			// ボタンの配置
+			if (ImGui::Button(std::format("{}[{}]", param.Label(), i).c_str())) {
+				param.Save();
+			}
+
+			// 各要素の間にスペースを追加
+			ImGui::Spacing();
+		}
+
+		return changed;
+
+	}
+
+};

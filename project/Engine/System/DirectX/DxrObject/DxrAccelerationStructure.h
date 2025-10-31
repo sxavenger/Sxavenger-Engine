@@ -130,7 +130,7 @@ public:
 
 	const D3D12_GPU_VIRTUAL_ADDRESS GetGPUVirtualAddress() const { return asbuffer->GetGPUVirtualAddress(); }
 
-	const std::vector<Instance>& GetInstances() const { return instances_; }
+	const std::list<Instance>& GetInstances() const { return instances_; }
 
 	const size_t GetInstanceDescCount() const { return descs_->GetSize(); }
 
@@ -140,7 +140,8 @@ private:
 	// private variables
 	//=========================================================================================
 
-	std::vector<Instance> instances_;
+	std::list<Instance> instances_;
+	size_t previousInstanceCount_ = 0;
 
 	std::unique_ptr<DxObject::DimensionBuffer<D3D12_RAYTRACING_INSTANCE_DESC>> descs_;
 

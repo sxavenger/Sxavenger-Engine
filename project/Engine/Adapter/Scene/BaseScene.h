@@ -4,48 +4,87 @@
 // include
 //-----------------------------------------------------------------------------------------
 //* c++
+#include <vector>
+#include <string>
+#include <optional>
 #include <concepts>
 
-//-----------------------------------------------------------------------------------------
-// forward
-//-----------------------------------------------------------------------------------------
-class SceneController;
-
 ////////////////////////////////////////////////////////////////////////////////////////////
-// Interface Scene class
+// BaseScene class
 ////////////////////////////////////////////////////////////////////////////////////////////
-//! @brief Sceneの基底クラス
 class BaseScene {
 public:
 
+	////////////////////////////////////////////////////////////////////////////////////////////
+	// Transition structure
+	////////////////////////////////////////////////////////////////////////////////////////////
+	struct Transition {
+	public:
+
+		////////////////////////////////////////////////////////////////////////////////////////////
+		// Destruction enum class
+		////////////////////////////////////////////////////////////////////////////////////////////
+		enum class Destruction : uint8_t {
+			None,   //!< シーンを破棄しない
+			Single, //!< 現在のシーンのみ破棄
+			All     //!< 全てのシーンを破棄
+		};
+
+	public:
+
+		//=========================================================================================
+		// public variables
+		//=========================================================================================
+		
+		Destruction destruction;        //!< 破棄方法
+		std::vector<std::string> names; //!< 遷移先シーン名リスト
+
+	};
+
+public:
+
 	//=========================================================================================
-	// public method
+	// public methods
 	//=========================================================================================
 
 	virtual ~BaseScene() = default;
 
 	virtual void Init() = 0;
+	// todo: Load(), Awake(), Start()で分ける.
 
 	virtual void Update() = 0;
 
-	virtual void Draw() = 0;
+	virtual void LateUpdate() {}
 
-	virtual void Term() = 0;
+	//* transition operation *//
 
-	void SetController(SceneController* controller) { controller_ = controller; }
+	//! @brief シーン遷移が発生しているかを取得する.
+	bool IsTransition() const;
+
+	//! @brief シーン遷移情報を取得する.
+	//! @throw シーン遷移情報が存在しない場合に例外スローとなる.
+	const Transition& GetTransition() const;
 
 protected:
 
 	//=========================================================================================
-	// protected variables
+	// protected methods
 	//=========================================================================================
 
-	SceneController* controller_ = nullptr;
+	void SetTransition(const Transition& transition);
+
+private:
+
+	//=========================================================================================
+	// private variables
+	//=========================================================================================
+	
+	std::optional<Transition> transition_; //!< シーン遷移情報
 
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // concept
 ////////////////////////////////////////////////////////////////////////////////////////////
-template <class T>
-concept DerivedFromScene = std::derived_from<T, BaseScene>;
+template <typename T>
+concept SceneConcept = std::derived_from<T, BaseScene>;

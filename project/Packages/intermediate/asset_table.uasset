@@ -3355,6 +3355,10 @@
 		"assets/models/PBR_Sphere_Test/model/PBR_Sphere.gltf",
 		"class UAssetMesh"
 	],
+	"50052630-e9ad-45e5-a5cd44bee27e88d8": [
+		"assets/textures/particleDemo.png",
+		"class UAssetTexture"
+	],
 	"501948b0-538b-4544-aadcee341ea77e65": [
 		"assets/models/PBR_Sphere_Test/model/PBR_Sphere.gltf",
 		"class UAssetMesh"
@@ -9406,6 +9410,10 @@
 	"e4d5f580-5b77-4124-b102a84534758d3a": [
 		"assets/models/Bistro/Bistro.gltf",
 		"class UAssetMaterial"
+	],
+	"e4da5153-34e1-4cf4-a8122b29a7fd50ab": [
+		"assets/textures/uvchecker.png",
+		"class UAssetTexture"
 	],
 	"e4fcb5eb-287c-4a8e-867c367c4178b817": [
 		"assets/models/Bistro/Bistro.gltf",

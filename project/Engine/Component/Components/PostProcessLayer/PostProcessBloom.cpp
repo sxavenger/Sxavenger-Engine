@@ -17,9 +17,9 @@ _DXOBJECT_USING
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 void PostProcessBloom::Parameter::Init() {
-	intensity = 1.0f;
+	intensity = 0.5f;
 	threshold = 0.0f;
-	radius    = 0.2f;
+	radius    = 3.0f;
 }
 
 void PostProcessBloom::Parameter::SetImGuiCommand() {
@@ -50,6 +50,10 @@ void PostProcessBloom::Process(const DirectXQueueContext* context, const Process
 	FProcessTexture* source    = process->GetPrevTexture(2);
 	FProcessTexture* luminance = process->GetPrevTexture(1);
 	FProcessTexture* output    = process->GetCurrentTexture();
+
+	source->TransitionBeginUnordered(context);
+	source->GenerateMipmap(context);
+	source->TransitionEndUnordered(context);
 	
 	{ //!< luminanceの生成
 

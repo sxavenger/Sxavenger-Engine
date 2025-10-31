@@ -5,7 +5,6 @@
 ////////////////////////////////////////////////////////////////////////////////////////////
 namespace {
 	//* system orign
-	static std::unique_ptr<WinApp>                sWinApp                = nullptr; //!< win app system
 	static std::unique_ptr<DirectXCommon>         sDirectXCommon         = nullptr; //!< DirectX12 system
 	static std::unique_ptr<DirectXQueueContext>   sDirectQueueContext    = nullptr; //!< direct queue context
 	static std::unique_ptr<Performance>           sPerformance           = nullptr; //!< performance system
@@ -25,8 +24,7 @@ void SxavengerSystem::Init() {
 
 	Logger::EngineLog("Engine Version: " + kSxavengerEngineVersion);
 
-	sWinApp = std::make_unique<WinApp>();
-	sWinApp->Init();
+	WinApp::Init();
 
 	sDirectXCommon = std::make_unique<DirectXCommon>();
 	sDirectXCommon->Init();
@@ -46,6 +44,7 @@ void SxavengerSystem::Init() {
 }
 
 void SxavengerSystem::Term() {
+	WinApp::Term();
 }
 
 void SxavengerSystem::Shutdown() {
@@ -119,7 +118,7 @@ bool SxavengerSystem::IsPressKey(KeyId id) {
 }
 
 bool SxavengerSystem::IsTriggerKey(KeyId id) {
-	return  sInput->IsTriggerKey(id);
+	return sInput->IsTriggerKey(id);
 }
 
 bool SxavengerSystem::IsReleaseKey(KeyId id) {
@@ -170,14 +169,14 @@ void SxavengerSystem::PushTask(AsyncExecution execution, const std::shared_ptr<A
 	sAsyncThreadCollection->PushTask(execution, task);
 }
 
-void SxavengerSystem::PushTaskAndWait(AsyncExecution execution, const AsyncTask::Function& function) {
+std::shared_ptr<AsyncTask> SxavengerSystem::PushTask(AsyncExecution execution, const AsyncTask::Function& function) {
 	std::shared_ptr<AsyncTask> task = std::make_shared<AsyncTask>();
 	task->SetFunction(function);
-	task->SetTag("wait task");
+	task->SetTag("function task");
 
 	sAsyncThreadCollection->PushTask(execution, task);
 
-	task->Wait();
+	return task;
 }
 
 AsyncThreadCollection* SxavengerSystem::GetAsyncThreadCollection() {

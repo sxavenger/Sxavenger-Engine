@@ -5,47 +5,39 @@
 //-----------------------------------------------------------------------------------------
 //* scene
 #include "BaseScene.h"
-#include "BaseSceneFactory.h"
+#include "SceneFactory.h"
+
+//* c++
+#include <memory>
+#include <deque>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // SceneController class
 ////////////////////////////////////////////////////////////////////////////////////////////
-//! @brief Scene管理クラス
 class SceneController {
 public:
 
 	//=========================================================================================
-	// public method
+	// public methods
 	//=========================================================================================
 
-	SceneController()  = default;
-	~SceneController() = default;
+	void Init(std::unique_ptr<const SceneFactory>&& factory);
 
-	void Init(const std::string& startSceneKey);
+	//* container operation *//
 
-	void Term();
+	void Push(const std::string& name);
 
-	//* scene factory option *//
+	//* process option *//
 
-	void RequestNextScene(const std::string& key);
-
-	void SetSceneFactory(std::unique_ptr<const BaseSceneFactory>&& factory) { factory_ = std::move(factory); }
-
-	void ActivateNextScene();
-
-	//* scene option *//
-
-	void InitScene();
+	void TransitionScene();
 
 	void UpdateScene();
 
-	void DrawScene();
-
-	void TermScene();
+	void LateUpdateScene();
 
 	//* getter *//
 
-	BaseScene* GetScene() { return scene_.get(); }
+	bool IsEmpty() const;
 
 private:
 
@@ -53,13 +45,14 @@ private:
 	// private variables
 	//=========================================================================================
 
-	std::unique_ptr<BaseScene> scene_;
-	std::unique_ptr<BaseScene> nextScene_ = nullptr;
+	std::deque<std::unique_ptr<BaseScene>> scenes_;
 
-	std::unique_ptr<const BaseSceneFactory> factory_;
+	std::unique_ptr<const SceneFactory> factory_;
 
 	//=========================================================================================
 	// private methods
 	//=========================================================================================
+
+	BaseScene* GetCurrentScene() const;
 
 };

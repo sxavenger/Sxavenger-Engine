@@ -192,7 +192,7 @@ public:
 
 	//* inspector option *//
 
-	virtual void ShowInspector() override;
+	void ShowInspector() override;
 
 	virtual void LateUpdateInspector() override;
 
@@ -201,6 +201,10 @@ public:
 	json PerseToJson() const override;
 
 	void InputJson(const json& data) override;
+
+	void LoadComponent(const std::filesystem::path& filepath);
+
+	void SaveComponent(const std::filesystem::path& filepath);
 
 protected:
 

@@ -14,8 +14,6 @@
 #include <Engine/Component/Components/SpriteRenderer/SpriteRendererComponent.h>
 #include <Engine/Component/Components/Particle/ParticleComponent.h>
 #include <Engine/Component/Components/PostProcessLayer/PostProcessLayerComponent.h>
-#include <Engine/Component/Components/Particle/GPUParticleComponent.h>
-#include <Engine/Component/Components/Particle/EmitterComponent.h>
 #include <Engine/Component/Components/Transform/RectTransformComponent.h>
 #include <Engine/Component/Components/TextRenderer/TextRendererComponent.h>
 #include <Engine/Component/Components/Audio/AudioSourceComponent.h>
@@ -69,11 +67,6 @@ void BetaSystemGameLoop::InitSystem() {
 	light->SetRadiance(sUContentStorage->Import<UContentTexture>("assets/textures/textureCube/sky_radiance.dds")->GetId());
 	light->SetEnvironment(sUContentStorage->Import<UContentTexture>("assets/textures/textureCube/sky_environment.dds")->GetId());
 
-	//leadParticle_ = std::make_unique<LeadParticle>();
-	//leadParticle_->Load();
-	//leadParticle_->Awake();
-	//leadParticle_->Start();
-
 	behaviour_ = std::make_unique<MonoBehaviour>();
 	behaviour_->AddComponent<TransformComponent>();
 	behaviour_->AddComponent<PostProcessLayerComponent>();
@@ -102,8 +95,6 @@ void BetaSystemGameLoop::InitSystem() {
 
 	performance_ = std::make_unique<PerformanceActor>();
 	performance_->Init();
-
-	//* test *//
 
 }
 
@@ -144,7 +135,8 @@ void BetaSystemGameLoop::UpdateSystem() {
 	ComponentHelper::UpdateSkinning();
 	// todo: engine側のgameloopに移動.
 
-	ComponentHelper::UpdateParticle();
+	//* test *//
+	
 
 }
 

@@ -212,6 +212,27 @@ void MonoBehaviour::ShowInspector() {
 	ImGui::SeparatorText("inspectable");
 	Inspectable();
 
+	ImGui::Separator();
+
+	if (ImGui::Button("Load")) {
+		auto filepath = WinApp::GetOpenFilepath(L"behaviourを選択", std::filesystem::current_path(), { L"behaviourファイル", L"*.behaviour" });
+
+		if (filepath.has_value()) {
+			LoadComponent(filepath.value());
+		}
+	}
+
+	ImGui::SameLine();
+
+	if (ImGui::Button("Save")) {
+		auto filepath = WinApp::GetSaveFilepath(L"behaviourを保存", std::filesystem::current_path(), { L"behaviourファイル", L"*.behaviour" }, ".behaviour");
+
+		if (filepath.has_value()) {
+			SaveComponent(filepath.value());
+		}
+		
+	}
+
 }
 
 void MonoBehaviour::LateUpdateInspector() {
@@ -278,6 +299,18 @@ void MonoBehaviour::InputJson(const json& data) {
 		ptr->InputJson(childData);
 	}
 
+}
+
+void MonoBehaviour::LoadComponent(const std::filesystem::path& filepath) {
+	json data;
+	if (JsonHandler::LoadFromJson(filepath, data)) {
+		InputJson(data);
+	}
+}
+
+void MonoBehaviour::SaveComponent(const std::filesystem::path& filepath) {
+	json data = PerseToJson();
+	JsonHandler::WriteToJson(filepath, data);
 }
 
 MonoBehaviour::HierarchyIterator MonoBehaviour::AddHierarchy(HierarchyElement&& child) {

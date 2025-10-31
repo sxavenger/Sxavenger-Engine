@@ -105,11 +105,13 @@ void RenderSceneEditor::Render() {
 		return;
 	}
 
+	auto context = SxavengerSystem::GetDirectQueueContext();
+
 	config_.colorSpace = SxavengerSystem::GetMainWindow()->GetColorSpace();
-	FMainRender::GetInstance()->GetContext()->Render(SxavengerSystem::GetDirectQueueContext(), config_);
+	FMainRender::GetInstance()->GetContext()->Render(context, config_);
 
 	//* Debug Render *//
-	textures_->BeginRenderTargetMainTransparent(SxavengerSystem::GetDirectQueueContext());
+	textures_->BeginRenderTargetMainTransparent(context);
 
 	CameraComponent* camera = camera_->GetComponent<CameraComponent>();
 
@@ -121,9 +123,16 @@ void RenderSceneEditor::Render() {
 		SxavengerContent::PushAxis(point_, 1.0f);
 	}
 
-	SxavengerContent::GetDebugPrimitive()->DrawToScene(SxavengerSystem::GetDirectQueueContext(), camera);
+	SxavengerContent::GetDebugPrimitive()->DrawToScene(context, camera);
 
-	textures_->EndRenderTargetMainTransparent(SxavengerSystem::GetDirectQueueContext());
+	textures_->EndRenderTargetMainTransparent(context);
+
+	if (!sceneWindow_.expired()) {
+		auto ptr = sceneWindow_.lock();
+		ptr->BeginRenderWindow(context);
+		FPresenter::Present(context, ptr->GetSize(), textures_->GetGBuffer(FMainGBuffer::Layout::Scene)->GetGPUHandleSRV());
+		ptr->EndRenderWindow(context);
+	}
 }
 
 void RenderSceneEditor::Manipulate(MonoBehaviour* behaviour) {
@@ -131,7 +140,7 @@ void RenderSceneEditor::Manipulate(MonoBehaviour* behaviour) {
 		return;
 	}
 
-	SxImGuizmo::SetDrawlist(sceneWindow_);
+	SxImGuizmo::SetDrawlist(sceneWindowDrawer_);
 
 	SxImGuizmo::Operation operation = SxImGuizmo::NONE;
 
@@ -210,7 +219,7 @@ void RenderSceneEditor::ManipulateCanvas(MonoBehaviour* behaviour) {
 		return;
 	}
 
-	SxImGuizmo::SetDrawlist(canvasWindow_);
+	SxImGuizmo::SetDrawlist(canvasWindowDrawer_);
 	SxImGuizmo::SetOrthographic(true);
 
 	SxImGuizmo::Operation operation = SxImGuizmo::NONE;
@@ -314,6 +323,8 @@ void RenderSceneEditor::ShowSceneMenu() {
 
 		SxImGui::HelpMarker("(!)", "[alt] + [up] || [down]");
 
+		ImGui::EndDisabled();
+
 		// process
 		ImGui::Text("process");
 		ImGui::Separator();
@@ -324,7 +335,22 @@ void RenderSceneEditor::ShowSceneMenu() {
 		ImGui::Separator();
 		ImGui::Checkbox("enable indirect lighting", &config_.isEnableIndirectLighting);
 
-		ImGui::EndDisabled();
+		// window
+		ImGui::Text("window");
+		ImGui::Separator();
+
+		if (sceneWindow_.expired()) { //!< windowが表示されていない場合.
+			if (ImGui::Button("open")) {
+				sceneWindow_ = SxavengerSystem::CreateSubWindow(kMainWindowSize, L"Scene Window (Editor)", DirectXWindowContext::ProcessCategory::Window);
+			}
+
+		} else { //!< windowが表示されている場合
+			if (ImGui::Button("close")) {
+				sceneWindow_.lock()->Close();
+				sceneWindow_.reset();
+			}
+			
+		}
 		
 		ImGui::EndMenu();
 	}
@@ -382,40 +408,31 @@ void RenderSceneEditor::ShowCaptureMenu() {
 		ImGui::SeparatorText("capture");
 
 		if (ImGui::Button("scene window capture")) {
-			TextureExporter::Export(
-				SxavengerSystem::GetDirectQueueContext(),
-				TextureExporter::TextureDimension::Texture2D,
-				textures_->GetGBuffer(FMainGBuffer::Layout::Scene)->GetResource(),
-				DxObject::kDefaultScreenViewFormat,
-				"capture_scene.png"
-			);
+			auto filepath = WinApp::GetSaveFilepath(L"画像(Scene-Capture)の保存先", std::filesystem::current_path(), { L"画像ファイル", L"*.png; *.jpg; *.hdr; *.tga; *.dds;" }, L".png");
+
+			if (filepath.has_value()) {
+				TextureExporter::Export(
+					SxavengerSystem::GetDirectQueueContext(),
+					TextureExporter::TextureDimension::Texture2D,
+					textures_->GetGBuffer(FMainGBuffer::Layout::Scene)->GetResource(),
+					DxObject::kDefaultScreenViewFormat,
+					filepath.value()
+				);
+			}
 		}
 
 		if (ImGui::Button("game window capture")) {
-			TextureExporter::Export(
-				SxavengerSystem::GetDirectQueueContext(),
-				TextureExporter::TextureDimension::Texture2D,
-				FMainRender::GetInstance()->GetTextures()->GetGBuffer(FMainGBuffer::Layout::Scene)->GetResource(),
-				DxObject::kDefaultScreenViewFormat,
-				"game_scene.png"
-			);
-		}
+			auto filepath = WinApp::GetSaveFilepath(L"画像(Game-Capture)の保存先", std::filesystem::current_path(), { L"画像ファイル", L"*.png; *.jpg; *.hdr; *.tga; *.dds;" }, L".png");
 
-		if (ImGui::Button("[DEBUG] process")) {
-
-			auto process = textures_->GetProcessTextures();
-
-			process->GetCurrentTexture()->TransitionBeginUnordered(SxavengerSystem::GetDirectQueueContext());
-			process->GetCurrentTexture()->GenerateMipmap(SxavengerSystem::GetDirectQueueContext());
-			process->GetCurrentTexture()->TransitionEndUnordered(SxavengerSystem::GetDirectQueueContext());
-
-			TextureExporter::Export(
-				SxavengerSystem::GetDirectQueueContext(),
-				TextureExporter::TextureDimension::Texture2D,
-				process->GetCurrentTexture()->GetResource(),
-				DxObject::kDefaultScreenViewFormat,
-				"debug_process.dds"
-			);
+			if (filepath.has_value()) {
+				TextureExporter::Export(
+					SxavengerSystem::GetDirectQueueContext(),
+					TextureExporter::TextureDimension::Texture2D,
+					FMainRender::GetInstance()->GetTextures()->GetGBuffer(FMainGBuffer::Layout::Scene)->GetResource(),
+					DxObject::kDefaultScreenViewFormat,
+					filepath.value()
+				);
+			}
 		}
 
 		ImGui::EndMenu();
@@ -507,7 +524,7 @@ void RenderSceneEditor::ShowSceneWindow() {
 		ImGui::EndMenuBar();
 	}
 
-	sceneWindow_ = ImGui::GetWindowDrawList();
+	sceneWindowDrawer_ = ImGui::GetWindowDrawList();
 
 	sceneRect_ = SetImGuiImageFullWindow(
 		checkerboard_.Get()->GetGPUHandleSRV(),
@@ -571,7 +588,7 @@ void RenderSceneEditor::ShowCanvasWindow() {
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, { 0, 0 });
 	ImGui::Begin("Canvas ## Render Scene Editor", nullptr, BaseEditor::GetWindowFlag() | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
 
-	canvasWindow_ = ImGui::GetWindowDrawList();
+	canvasWindowDrawer_ = ImGui::GetWindowDrawList();
 
 	canvasRect_ = SetImGuiImageFullWindow(
 		checkerboard_.Get()->GetGPUHandleSRV(),
@@ -588,7 +605,7 @@ void RenderSceneEditor::ShowCanvasWindow() {
 }
 
 void RenderSceneEditor::ShowInfoTextScene() {
-	if (sceneWindow_ == nullptr) {
+	if (sceneWindowDrawer_ == nullptr) {
 		return;
 	}
 
@@ -605,7 +622,7 @@ void RenderSceneEditor::ShowInfoTextScene() {
 }
 
 void RenderSceneEditor::ShowIconScene() {
-	if (sceneWindow_ == nullptr) {
+	if (sceneWindowDrawer_ == nullptr) {
 		return;
 	}
 
@@ -671,6 +688,8 @@ void RenderSceneEditor::ShowIconScene() {
 }
 
 void RenderSceneEditor::UpdateKeyShortcut() {
+
+	//const KeyboardInput* keyboard = SxavengerSystem::GetKeyboardInput();
 
 	// bufferの切り替え
 	if (SxavengerSystem::IsPressKey(KeyId::KEY_LALT) && SxavengerSystem::IsTriggerKey(KeyId::KEY_UP)) { //!< left alt + Up
@@ -1068,7 +1087,7 @@ void RenderSceneEditor::DisplayGBufferTexture(GBuffer buffer) {
 }
 
 void RenderSceneEditor::RenderIcon(BaseInspector* inspector, Icon icon, const Vector3f& position, const Color4f& color) {
-	if (sceneWindow_ == nullptr) {
+	if (sceneWindowDrawer_ == nullptr) {
 		return;
 	}
 
@@ -1091,7 +1110,7 @@ void RenderSceneEditor::RenderIcon(BaseInspector* inspector, Icon icon, const Ve
 	rect.max = { sceneRect_.pos.x + screen.x + kOffset.x, sceneRect_.pos.y + screen.y + kOffset.y };
 
 	// icon shadow
-	sceneWindow_->AddImage(
+	sceneWindowDrawer_->AddImage(
 		icons_[static_cast<uint32_t>(icon)].Get()->GetGPUHandleSRV().ptr,
 		{ rect.min.x, rect.min.y + 1.0f },
 		{ rect.max.x, rect.max.y + 1.0f },
@@ -1101,7 +1120,7 @@ void RenderSceneEditor::RenderIcon(BaseInspector* inspector, Icon icon, const Ve
 	);
 
 	// main icon
-	sceneWindow_->AddImage(
+	sceneWindowDrawer_->AddImage(
 		icons_[static_cast<uint32_t>(icon)].Get()->GetGPUHandleSRV().ptr,
 		{ rect.min.x, rect.min.y },
 		{ rect.max.x, rect.max.y },
@@ -1131,5 +1150,5 @@ void RenderSceneEditor::RenderTextSceneWindow(ImVec2& position, const std::strin
 	ImVec2 size = ImGui::CalcTextSize(text.c_str());
 	position.y -= size.y;
 
-	sceneWindow_->AddText(ImVec2(position.x, position.y), color, text.c_str());
+	sceneWindowDrawer_->AddText(ImVec2(position.x, position.y), color, text.c_str());
 }

@@ -56,6 +56,8 @@ void FRenderPassDeferredLighting::Render(const DirectXQueueContext* context, con
 		
 		{
 
+			TransitionUpscaleIndirectBuffer(context, config);
+
 			PassIndirectDenoiser(context, config);
 
 		}
@@ -66,7 +68,7 @@ void FRenderPassDeferredLighting::Render(const DirectXQueueContext* context, con
 		ClearPassIndirect(context, config.buffer);
 	}
 
-	LightingPassTransition(context, config);
+	TransitionLightingPass(context, config);
 
 }
 
@@ -465,8 +467,8 @@ void FRenderPassDeferredLighting::PassIndirectDenoiser(const DirectXQueueContext
 	DxObject::BindBufferDesc desc = {};
 	desc.Set32bitConstants("Dimension", 2, &config.buffer->GetSize());
 	desc.SetHandle("gOutput",            config.buffer->GetGBuffer(FLightingGBuffer::Layout::Indirect)->GetGPUHandleUAV());
-	desc.SetHandle("gReservoirDiffuse",  config.buffer->GetGBuffer(FLightingGBuffer::Layout::Indirect_Reservoir_Diffuse)->GetGPUHandleSRV());
-	desc.SetHandle("gReservoirSpecular", config.buffer->GetGBuffer(FLightingGBuffer::Layout::Indirect_Reservoir_Specular)->GetGPUHandleSRV());
+	desc.SetHandle("gReservoirDiffuse",  config.buffer->GetGBuffer(FLightingGBuffer::Layout::Indirect_Resolution_Diffuse)->GetGPUHandleSRV());
+	desc.SetHandle("gReservoirSpecular", config.buffer->GetGBuffer(FLightingGBuffer::Layout::Indirect_Resolution_Specular)->GetGPUHandleSRV());
 	desc.SetHandle("gMoment",            config.buffer->GetGBuffer(FLightingGBuffer::Layout::Indirect_Moment)->GetGPUHandleSRV());
 
 	//* parameter
@@ -483,7 +485,53 @@ void FRenderPassDeferredLighting::PassIndirectDenoiser(const DirectXQueueContext
 
 }
 
-void FRenderPassDeferredLighting::LightingPassTransition(const DirectXQueueContext* context, const Config& config) {
+void FRenderPassDeferredLighting::TransitionUpscaleIndirectBuffer(const DirectXQueueContext* context, const Config& config) {
+
+	auto commandList = context->GetCommandList();
+
+	auto core = FRenderCore::GetInstance()->GetTransition();
+	
+
+	std::array<D3D12_RESOURCE_BARRIER, 2> barriers = {
+		config.buffer->GetGBuffer(FLightingGBuffer::Layout::Indirect_Resolution_Diffuse)->TransitionBeginUnordered(),
+		config.buffer->GetGBuffer(FLightingGBuffer::Layout::Indirect_Resolution_Specular)->TransitionBeginUnordered()
+	};
+
+	commandList->ResourceBarrier(static_cast<UINT>(barriers.size()), barriers.data());
+
+	core->SetPipeline(FRenderCoreTransition::Transition::UpscaleTransition, context);
+
+	{ //!< Diffuse
+		DxObject::BindBufferDesc desc = {};
+		desc.Set32bitConstants("Dimension", 2, &config.buffer->GetSize());
+		desc.SetHandle("gInput",  config.buffer->GetGBuffer(FLightingGBuffer::Layout::Indirect_Reservoir_Diffuse)->GetGPUHandleSRV());
+		desc.SetHandle("gOutput", config.buffer->GetGBuffer(FLightingGBuffer::Layout::Indirect_Resolution_Diffuse)->GetGPUHandleUAV());
+
+		core->BindComputeBuffer(FRenderCoreTransition::Transition::UpscaleTransition, context, desc);
+		core->Dispatch(context, config.buffer->GetSize());
+	}
+
+	{ //!< Specular
+		
+		DxObject::BindBufferDesc desc = {};
+		desc.Set32bitConstants("Dimension", 2, &config.buffer->GetSize());
+		desc.SetHandle("gInput",  config.buffer->GetGBuffer(FLightingGBuffer::Layout::Indirect_Reservoir_Specular)->GetGPUHandleSRV());
+		desc.SetHandle("gOutput", config.buffer->GetGBuffer(FLightingGBuffer::Layout::Indirect_Resolution_Specular)->GetGPUHandleUAV());
+
+		core->BindComputeBuffer(FRenderCoreTransition::Transition::UpscaleTransition, context, desc);
+		core->Dispatch(context, config.buffer->GetSize());
+	}
+
+	barriers = {
+		config.buffer->GetGBuffer(FLightingGBuffer::Layout::Indirect_Resolution_Diffuse)->TransitionEndUnordered(),
+		config.buffer->GetGBuffer(FLightingGBuffer::Layout::Indirect_Resolution_Specular)->TransitionEndUnordered()
+	};
+
+	commandList->ResourceBarrier(static_cast<UINT>(barriers.size()), barriers.data());
+
+}
+
+void FRenderPassDeferredLighting::TransitionLightingPass(const DirectXQueueContext* context, const Config& config) {
 
 	config.buffer->BeginUnorderedMainScene(context);
 

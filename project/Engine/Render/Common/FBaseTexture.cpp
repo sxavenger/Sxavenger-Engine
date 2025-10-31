@@ -14,13 +14,14 @@ _DXOBJECT_USING
 // FBaseTexture class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-void FBaseTexture::Create(const Vector2ui& size, DXGI_FORMAT format) {
+void FBaseTexture::Create(const Vector2ui& size, DXGI_FORMAT format, Sxl::Flag<Flag> flag) {
 
 	// deviceの取り出し
 	auto device = SxavengerSystem::GetDxDevice()->GetDevice();
 
 	// 引数の保存
 	format_ = format;
+	flag_   = flag;
 	size_   = size;
 
 	{ //!< resourceの生成
@@ -38,18 +39,16 @@ void FBaseTexture::Create(const Vector2ui& size, DXGI_FORMAT format) {
 		desc.Format           = format;
 		desc.SampleDesc.Count = 1;
 		desc.Dimension        = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
-		desc.Flags            = D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET | D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS;
+		desc.Flags            = GetResourceFlags();
 
-		// clearValueの設定
-		D3D12_CLEAR_VALUE clearValue = {};
-		clearValue.Format = format;
+		std::optional<D3D12_CLEAR_VALUE> clearValue = GetClearValue();
 
 		auto hr = device->CreateCommittedResource(
 			&prop,
 			D3D12_HEAP_FLAG_NONE,
 			&desc,
 			kDefaultState_,
-			&clearValue,
+			clearValue.has_value() ? &clearValue.value() : nullptr,
 			IID_PPV_ARGS(&resource_)
 		);
 		DxObject::Assert(hr, L"texture create failed.");
@@ -57,7 +56,7 @@ void FBaseTexture::Create(const Vector2ui& size, DXGI_FORMAT format) {
 		resource_->SetName(L"FTexture");
 	}
 
-	{ //!< RTVの生成
+	if (flag_.Test(Flag::RenderTarget)) { //!< RTVの生成
 
 		// handleの取得
 		descriptorRTV_ = SxavengerSystem::GetDescriptor(kDescriptor_RTV);
@@ -75,7 +74,7 @@ void FBaseTexture::Create(const Vector2ui& size, DXGI_FORMAT format) {
 		);
 	}
 
-	{ //!< UAVの生成
+	if (flag_.Test(Flag::UnorderedAccess)) { //!< UAVの生成
 
 		// handleの取得
 		descriptorUAV_ = SxavengerSystem::GetDescriptor(kDescriptor_UAV);
@@ -113,6 +112,7 @@ void FBaseTexture::Create(const Vector2ui& size, DXGI_FORMAT format) {
 			descriptorSRV_.GetCPUHandle()
 		);
 	}
+	
 }
 
 void FBaseTexture::Term() {
@@ -123,6 +123,8 @@ void FBaseTexture::Term() {
 }
 
 D3D12_RESOURCE_BARRIER FBaseTexture::TransitionBeginRenderTarget() const {
+	Exception::Assert(flag_.Test(Flag::RenderTarget), "texture is not render target.");
+
 	D3D12_RESOURCE_BARRIER barrier = {};
 	barrier.Type                   = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
 	barrier.Transition.StateBefore = kDefaultState_;
@@ -164,6 +166,7 @@ void FBaseTexture::ClearRenderTarget(const DirectXQueueContext* context) const {
 }
 
 D3D12_RESOURCE_BARRIER FBaseTexture::TransitionBeginUnordered() const {
+	Exception::Assert(flag_.Test(Flag::UnorderedAccess), "texture is not unordered access.");
 
 	D3D12_RESOURCE_BARRIER barrier = {};
 	barrier.Type                   = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
@@ -230,4 +233,28 @@ void FBaseTexture::BarrierUAV(const DirectXQueueContext* context) const {
 	barrier.UAV.pResource          = GetResource();
 
 	context->GetCommandList()->ResourceBarrier(1, &barrier);
+}
+
+D3D12_RESOURCE_FLAGS FBaseTexture::GetResourceFlags() const {
+	D3D12_RESOURCE_FLAGS flags = D3D12_RESOURCE_FLAG_NONE;
+
+	if (flag_.Test(Flag::RenderTarget)) {
+		flags |= D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET;
+	}
+
+	if (flag_.Test(Flag::UnorderedAccess)) {
+		flags |= D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS;
+	}
+
+	return flags;
+}
+
+std::optional<D3D12_CLEAR_VALUE> FBaseTexture::GetClearValue() const {
+	if (!flag_.Test(Flag::RenderTarget)) {
+		return std::nullopt;
+	}
+
+	D3D12_CLEAR_VALUE clearValue = {};
+	clearValue.Format = format_;
+	return clearValue;
 }
