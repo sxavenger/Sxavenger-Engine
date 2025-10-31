@@ -3,6 +3,7 @@ on:
     push:
         branches:
             - "master"
+			- "feature/_3.4"
 
 env:
     # リポジトリのルートディレクトリを基点としたslnのfilepath
@@ -21,7 +22,7 @@ jobs:
             - name: Add MSBuild to PATH
               uses: microsoft/setup-msbuild@v2
               with:
-                msbuild_architecture: x64
+                msbuild-architecture: x64
 
             - name: Build
               run: msbuild ${{env.SOLUTION_FILE_PATH}} /p:Platform=x64,Configuration=${{env.CONFIGURATION}}
