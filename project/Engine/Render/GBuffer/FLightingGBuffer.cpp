@@ -19,8 +19,6 @@ const std::array<DXGI_FORMAT, FLightingGBuffer::kLayoutCount_> FLightingGBuffer:
 	FMainGBuffer::kColorFormat,    //!< Indirect_Atlas_Specular
 	FMainGBuffer::kColorFormat,    //!< Indirect_Reservoir_Diffuse
 	FMainGBuffer::kColorFormat,    //!< Indirect_Reservoir_Specular
-	FMainGBuffer::kColorFormat,    //!< Indirect_Resolution_Diffuse
-	FMainGBuffer::kColorFormat,    //!< Indirect_Resolution_Specular
 	DXGI_FORMAT_R32G32B32A32_UINT, //!< Indirect_Moment
 	FMainGBuffer::kColorFormat,    //!< Indirect
 };
@@ -34,9 +32,6 @@ void FLightingGBuffer::Init(const Vector2ui& size) {
 	//!< 最終Lighting結果格納用
 	buffers_[static_cast<uint8_t>(Layout::Direct)]   = std::make_unique<FBaseTexture>(size, GetFormat(Layout::Direct), FBaseTexture::Flag::All);
 	buffers_[static_cast<uint8_t>(Layout::Indirect)] = std::make_unique<FBaseTexture>(size, GetFormat(Layout::Indirect), FBaseTexture::Flag::All);
-
-	buffers_[static_cast<uint8_t>(Layout::Indirect_Resolution_Diffuse)]  = std::make_unique<FBaseTexture>(size, GetFormat(Layout::Indirect_Resolution_Diffuse), FBaseTexture::Flag::All);
-	buffers_[static_cast<uint8_t>(Layout::Indirect_Resolution_Specular)] = std::make_unique<FBaseTexture>(size, GetFormat(Layout::Indirect_Resolution_Specular), FBaseTexture::Flag::All);
 
 	downsize_ = size / 2u;
 
