@@ -81,7 +81,7 @@
       <PreprocessorDefinitions>_PROFILE="$(Configuration)";NOMINMAX;DEBUG;_DEVELOPMENT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>.;externals\nlohmann;externals\meshoptimizer;externals\imgui\imguizmo;externals\imgui;externals\DirectXTex;externals\DirectXMesh;externals\assimp\include;externals\magic_enum;externals\stb;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
-      <Optimization>Custom</Optimization>
+      <Optimization>Disabled</Optimization>
       <MinimalRebuild>false</MinimalRebuild>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
@@ -167,20 +167,14 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Demo\Entity\Player.h" />
+    <ClInclude Include="Demo\GameLoop\DemoGameLoop.h" />
+    <ClInclude Include="Demo\GameLoop\PreviewGameLoop.h" />
     <ClInclude Include="Demo\Object\CollectibleCube.h" />
     <ClInclude Include="Demo\Object\CollectibleItems.h" />
+    <ClInclude Include="Demo\Object\PerspectiveCamera.h" />
     <ClInclude Include="Demo\Scene\ClearScene.h" />
     <ClInclude Include="Demo\Scene\GameScene.h" />
     <ClInclude Include="Demo\Scene\TitleScene.h" />
-    <ClInclude Include="Engine\Adapter\Scene\BaseScene.h" />
-    <ClInclude Include="Engine\Adapter\Scene\SceneController.h" />
-    <ClInclude Include="Engine\Adapter\Scene\SceneFactory.h" />
-    <ClInclude Include="Engine\Component\Components\Particle\ParticleComponent.h" />
-    <ClInclude Include="Engine\Component\Components\Particle\ParticleElement.h" />
-    <ClInclude Include="Engine\GameLoop\BetaSystemGameLoop.h" />
-    <ClInclude Include="Demo\GameLoop\DemoGameLoop.h" />
-    <ClInclude Include="Demo\GameLoop\PreviewGameLoop.h" />
-    <ClInclude Include="Demo\Object\PerspectiveCamera.h" />
     <ClInclude Include="Engine\Adapter\Actor\AtmosphereActor.h" />
     <ClInclude Include="Engine\Adapter\Actor\ControllableCameraActor.h" />
     <ClInclude Include="Engine\Adapter\Actor\PerformanceActor.h" />
@@ -188,6 +182,9 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Engine\Adapter\Actor\SkyLightActor.h" />
     <ClInclude Include="Engine\Adapter\Parameter\SerializeGui.h" />
     <ClInclude Include="Engine\Adapter\Parameter\SerializeParameter.h" />
+    <ClInclude Include="Engine\Adapter\Scene\BaseScene.h" />
+    <ClInclude Include="Engine\Adapter\Scene\SceneController.h" />
+    <ClInclude Include="Engine\Adapter\Scene\SceneFactory.h" />
     <ClInclude Include="Engine\Component\ComponentHelper.h" />
     <ClInclude Include="Engine\Component\Components\Armature\ArmatureComponent.h" />
     <ClInclude Include="Engine\Component\Components\Audio\AudioController.h" />
@@ -210,6 +207,8 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Engine\Component\Components\MeshRenderer\PrimitiveRendererComponent.h" />
     <ClInclude Include="Engine\Component\Components\MeshRenderer\SkinnedMeshRendererComponent.h" />
     <ClInclude Include="Engine\Component\Components\Particle\EmitterComponent.h" />
+    <ClInclude Include="Engine\Component\Components\Particle\ParticleComponent.h" />
+    <ClInclude Include="Engine\Component\Components\Particle\ParticleElement.h" />
     <ClInclude Include="Engine\Component\Components\PostProcessLayer\BasePostProcess.h" />
     <ClInclude Include="Engine\Component\Components\PostProcessLayer\PostProcessAutoExposure.h" />
     <ClInclude Include="Engine\Component\Components\PostProcessLayer\PostProcessBloom.h" />
@@ -256,6 +255,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Engine\Editor\Editors\HierarchyEditor.h" />
     <ClInclude Include="Engine\Editor\Editors\InspectorEditor.h" />
     <ClInclude Include="Engine\Editor\Editors\RenderSceneEditor.h" />
+    <ClInclude Include="Engine\GameLoop\BetaSystemGameLoop.h" />
     <ClInclude Include="Engine\GameLoop\EditorEngineGameLoop.h" />
     <ClInclude Include="Engine\GameLoop\FeatureLevelGameLoop.h" />
     <ClInclude Include="Engine\GameLoop\SxavengerEngineGameLoop.h" />
@@ -402,25 +402,22 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Demo\Entity\Player.cpp" />
+    <ClCompile Include="Demo\GameLoop\DemoGameLoop.cpp" />
+    <ClCompile Include="Demo\GameLoop\PreviewGameLoop.cpp" />
     <ClCompile Include="Demo\Object\CollectibleCube.cpp" />
     <ClCompile Include="Demo\Object\CollectibleItems.cpp" />
+    <ClCompile Include="Demo\Object\PerspectiveCamera.cpp" />
     <ClCompile Include="Demo\Scene\ClearScene.cpp" />
     <ClCompile Include="Demo\Scene\GameScene.cpp" />
     <ClCompile Include="Demo\Scene\TitleScene.cpp" />
-    <ClCompile Include="Engine\Adapter\Scene\BaseScene.cpp" />
-    <ClCompile Include="Engine\Adapter\Scene\SceneController.cpp" />
-    <ClCompile Include="Engine\Adapter\Scene\SceneFactory.cpp" />
-    <ClCompile Include="Engine\Component\Components\Particle\ParticleComponent.cpp" />
-    <ClCompile Include="Engine\Component\Components\Particle\ParticleElement.cpp" />
-    <ClCompile Include="Engine\GameLoop\BetaSystemGameLoop.cpp" />
-    <ClCompile Include="Demo\GameLoop\DemoGameLoop.cpp" />
-    <ClCompile Include="Demo\GameLoop\PreviewGameLoop.cpp" />
-    <ClCompile Include="Demo\Object\PerspectiveCamera.cpp" />
     <ClCompile Include="Engine\Adapter\Actor\AtmosphereActor.cpp" />
     <ClCompile Include="Engine\Adapter\Actor\ControllableCameraActor.cpp" />
     <ClCompile Include="Engine\Adapter\Actor\PerformanceActor.cpp" />
     <ClCompile Include="Engine\Adapter\Actor\PivotCameraActor.cpp" />
     <ClCompile Include="Engine\Adapter\Actor\SkyLightActor.cpp" />
+    <ClCompile Include="Engine\Adapter\Scene\BaseScene.cpp" />
+    <ClCompile Include="Engine\Adapter\Scene\SceneController.cpp" />
+    <ClCompile Include="Engine\Adapter\Scene\SceneFactory.cpp" />
     <ClCompile Include="Engine\Component\ComponentHelper.cpp" />
     <ClCompile Include="Engine\Component\Components\Armature\ArmatureComponent.cpp" />
     <ClCompile Include="Engine\Component\Components\Audio\AudioController.cpp" />
@@ -442,6 +439,8 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="Engine\Component\Components\MeshRenderer\PrimitiveRendererComponent.cpp" />
     <ClCompile Include="Engine\Component\Components\MeshRenderer\SkinnedMeshRendererComponent.cpp" />
     <ClCompile Include="Engine\Component\Components\Particle\EmitterComponent.cpp" />
+    <ClCompile Include="Engine\Component\Components\Particle\ParticleComponent.cpp" />
+    <ClCompile Include="Engine\Component\Components\Particle\ParticleElement.cpp" />
     <ClCompile Include="Engine\Component\Components\PostProcessLayer\PostProcessAutoExposure.cpp" />
     <ClCompile Include="Engine\Component\Components\PostProcessLayer\PostProcessBloom.cpp" />
     <ClCompile Include="Engine\Component\Components\PostProcessLayer\PostProcessChromaticAberration.cpp" />
@@ -482,6 +481,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="Engine\Editor\Editors\HierarchyEditor.cpp" />
     <ClCompile Include="Engine\Editor\Editors\InspectorEditor.cpp" />
     <ClCompile Include="Engine\Editor\Editors\RenderSceneEditor.cpp" />
+    <ClCompile Include="Engine\GameLoop\BetaSystemGameLoop.cpp" />
     <ClCompile Include="Engine\GameLoop\EditorEngineGameLoop.cpp" />
     <ClCompile Include="Engine\GameLoop\FeatureLevelGameLoop.cpp" />
     <ClCompile Include="Engine\GameLoop\SxavengerEngineGameLoop.cpp" />

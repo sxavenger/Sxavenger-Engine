@@ -13,6 +13,9 @@
     <Filter Include="Demo\Object">
       <UniqueIdentifier>{B0871EDB-1C3D-97D0-A531-91A711E68DD4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Demo\Scene">
+      <UniqueIdentifier>{076AD5A9-F321-17F7-5C29-F0524800B2E7}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Engine">
       <UniqueIdentifier>{DBC7D3B0-C769-FE86-B024-12DB9C6585D7}</UniqueIdentifier>
     </Filter>
@@ -243,17 +246,29 @@
     <ClInclude Include="Demo\Entity\Player.h">
       <Filter>Demo\Entity</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\GameLoop\BetaSystemGameLoop.h">
-      <Filter>Demo\GameLoop</Filter>
-    </ClInclude>
     <ClInclude Include="Demo\GameLoop\DemoGameLoop.h">
       <Filter>Demo\GameLoop</Filter>
     </ClInclude>
     <ClInclude Include="Demo\GameLoop\PreviewGameLoop.h">
       <Filter>Demo\GameLoop</Filter>
     </ClInclude>
+    <ClInclude Include="Demo\Object\CollectibleCube.h">
+      <Filter>Demo\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="Demo\Object\CollectibleItems.h">
+      <Filter>Demo\Object</Filter>
+    </ClInclude>
     <ClInclude Include="Demo\Object\PerspectiveCamera.h">
       <Filter>Demo\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="Demo\Scene\ClearScene.h">
+      <Filter>Demo\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Demo\Scene\GameScene.h">
+      <Filter>Demo\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Demo\Scene\TitleScene.h">
+      <Filter>Demo\Scene</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Adapter\Actor\AtmosphereActor.h">
       <Filter>Engine\Adapter\Actor</Filter>
@@ -275,6 +290,15 @@
     </ClInclude>
     <ClInclude Include="Engine\Adapter\Parameter\SerializeParameter.h">
       <Filter>Engine\Adapter\Parameter</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Adapter\Scene\BaseScene.h">
+      <Filter>Engine\Adapter\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Adapter\Scene\SceneController.h">
+      <Filter>Engine\Adapter\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Adapter\Scene\SceneFactory.h">
+      <Filter>Engine\Adapter\Scene</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Component\ComponentHelper.h">
       <Filter>Engine\Component</Filter>
@@ -340,6 +364,12 @@
       <Filter>Engine\Component\Components\MeshRenderer</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Component\Components\Particle\EmitterComponent.h">
+      <Filter>Engine\Component\Components\Particle</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Component\Components\Particle\ParticleComponent.h">
+      <Filter>Engine\Component\Components\Particle</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Component\Components\Particle\ParticleElement.h">
       <Filter>Engine\Component\Components\Particle</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Component\Components\PostProcessLayer\BasePostProcess.h">
@@ -479,6 +509,9 @@
     </ClInclude>
     <ClInclude Include="Engine\Editor\Editors\RenderSceneEditor.h">
       <Filter>Engine\Editor\Editors</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\GameLoop\BetaSystemGameLoop.h">
+      <Filter>Engine\GameLoop</Filter>
     </ClInclude>
     <ClInclude Include="Engine\GameLoop\EditorEngineGameLoop.h">
       <Filter>Engine\GameLoop</Filter>
@@ -714,9 +747,6 @@
     <ClInclude Include="Engine\System\DirectX\DxObject\DxResourceDimensionBuffer.h">
       <Filter>Engine\System\DirectX\DxObject</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\System\DirectX\DxObject\DxResourceStateTracker.h">
-      <Filter>Engine\System\DirectX\DxObject</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\System\DirectX\DxObject\DxResourceStorage.h">
       <Filter>Engine\System\DirectX\DxObject</Filter>
     </ClInclude>
@@ -909,23 +939,11 @@
     <ClInclude Include="externals\meshoptimizer\meshoptimizer.h">
       <Filter>externals\meshoptimizer</Filter>
     </ClInclude>
-    <ClInclude Include="Demo\Object\CollectibleItems.h" />
-    <ClInclude Include="Engine\Adapter\Scene\BaseScene.h" />
-    <ClInclude Include="Engine\Adapter\Scene\SceneController.h" />
-    <ClInclude Include="Engine\Adapter\Scene\SceneFactory.h" />
-    <ClInclude Include="Demo\Scene\TitleScene.h" />
-    <ClInclude Include="Demo\Scene\GameScene.h" />
-    <ClInclude Include="Demo\Scene\ClearScene.h" />
-    <ClInclude Include="Engine\Component\Components\Particle\ParticleComponent.h" />
-    <ClInclude Include="Engine\Component\Components\Particle\ParticleElement.h" />
-    <ClInclude Include="Demo\Object\CollectibleCube.h" />
+    <ClInclude Include="Engine\System\DirectX\DxObject\DxResourceStateTracker.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Demo\Entity\Player.cpp">
       <Filter>Demo\Entity</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\GameLoop\BetaSystemGameLoop.cpp">
-      <Filter>Demo\GameLoop</Filter>
     </ClCompile>
     <ClCompile Include="Demo\GameLoop\DemoGameLoop.cpp">
       <Filter>Demo\GameLoop</Filter>
@@ -933,8 +951,23 @@
     <ClCompile Include="Demo\GameLoop\PreviewGameLoop.cpp">
       <Filter>Demo\GameLoop</Filter>
     </ClCompile>
+    <ClCompile Include="Demo\Object\CollectibleCube.cpp">
+      <Filter>Demo\Object</Filter>
+    </ClCompile>
+    <ClCompile Include="Demo\Object\CollectibleItems.cpp">
+      <Filter>Demo\Object</Filter>
+    </ClCompile>
     <ClCompile Include="Demo\Object\PerspectiveCamera.cpp">
       <Filter>Demo\Object</Filter>
+    </ClCompile>
+    <ClCompile Include="Demo\Scene\ClearScene.cpp">
+      <Filter>Demo\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Demo\Scene\GameScene.cpp">
+      <Filter>Demo\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Demo\Scene\TitleScene.cpp">
+      <Filter>Demo\Scene</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Adapter\Actor\AtmosphereActor.cpp">
       <Filter>Engine\Adapter\Actor</Filter>
@@ -950,6 +983,15 @@
     </ClCompile>
     <ClCompile Include="Engine\Adapter\Actor\SkyLightActor.cpp">
       <Filter>Engine\Adapter\Actor</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Adapter\Scene\BaseScene.cpp">
+      <Filter>Engine\Adapter\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Adapter\Scene\SceneController.cpp">
+      <Filter>Engine\Adapter\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Adapter\Scene\SceneFactory.cpp">
+      <Filter>Engine\Adapter\Scene</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Component\ComponentHelper.cpp">
       <Filter>Engine\Component</Filter>
@@ -1012,6 +1054,12 @@
       <Filter>Engine\Component\Components\MeshRenderer</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Component\Components\Particle\EmitterComponent.cpp">
+      <Filter>Engine\Component\Components\Particle</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Component\Components\Particle\ParticleComponent.cpp">
+      <Filter>Engine\Component\Components\Particle</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Component\Components\Particle\ParticleElement.cpp">
       <Filter>Engine\Component\Components\Particle</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Component\Components\PostProcessLayer\PostProcessAutoExposure.cpp">
@@ -1133,6 +1181,9 @@
     </ClCompile>
     <ClCompile Include="Engine\Editor\Editors\RenderSceneEditor.cpp">
       <Filter>Engine\Editor\Editors</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\GameLoop\BetaSystemGameLoop.cpp">
+      <Filter>Engine\GameLoop</Filter>
     </ClCompile>
     <ClCompile Include="Engine\GameLoop\EditorEngineGameLoop.cpp">
       <Filter>Engine\GameLoop</Filter>
@@ -1528,15 +1579,5 @@
       <Filter>externals\stb</Filter>
     </ClCompile>
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="Demo\Object\CollectibleItems.cpp" />
-    <ClCompile Include="Engine\Adapter\Scene\BaseScene.cpp" />
-    <ClCompile Include="Engine\Adapter\Scene\SceneController.cpp" />
-    <ClCompile Include="Engine\Adapter\Scene\SceneFactory.cpp" />
-    <ClCompile Include="Demo\Scene\GameScene.cpp" />
-    <ClCompile Include="Demo\Scene\TitleScene.cpp" />
-    <ClCompile Include="Demo\Scene\ClearScene.cpp" />
-    <ClCompile Include="Engine\Component\Components\Particle\ParticleComponent.cpp" />
-    <ClCompile Include="Engine\Component\Components\Particle\ParticleElement.cpp" />
-    <ClCompile Include="Demo\Object\CollectibleCube.cpp" />
   </ItemGroup>
 </Project>
