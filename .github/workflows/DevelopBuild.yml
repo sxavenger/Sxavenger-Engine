@@ -3,7 +3,6 @@ on:
     push:
         branches:
             - "master"
-			- "feature/_3.4"
 
 env:
     # リポジトリのルートディレクトリを基点としたslnのfilepath
