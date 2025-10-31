@@ -20,6 +20,7 @@
 ////////////////////////////////////////////////////////////////////////////////////////////
 // SxavengerLogger class
 ////////////////////////////////////////////////////////////////////////////////////////////
+//! @brief ログ管理クラス.
 class SxavengerLogger {
 public:
 
@@ -88,6 +89,8 @@ public:
 
 	static const Container& GetStacks() { return stacks_; }
 
+	static const std::thread::id GetMainThreadId() { return mainThreadId_; }
+
 private:
 
 	//=========================================================================================
@@ -97,6 +100,8 @@ private:
 	//* thread safety *//
 
 	static std::mutex mutex_;
+
+	static inline const std::thread::id mainThreadId_ = std::this_thread::get_id();
 
 	//* file output parameter *//
 

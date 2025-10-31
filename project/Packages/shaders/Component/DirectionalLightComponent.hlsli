@@ -43,6 +43,7 @@ struct DirectionalLightComponent {
 		desc.Direction = l;
 		desc.TMin      = kTMin;
 		desc.TMax      = kTMax;
+		
 		float attenuation_shadow = shadow.TraceShadow(desc, scene);
 		
 		return attenuation_shadow;

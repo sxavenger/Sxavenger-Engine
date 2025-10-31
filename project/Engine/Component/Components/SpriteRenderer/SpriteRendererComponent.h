@@ -8,7 +8,7 @@
 #include "../Transform/RectTransformComponent.h"
 
 //* engine
-#include <Engine/System/DirectX/DxObject/DxDimensionBuffer.h>
+#include <Engine/System/DirectX/DxObject/DxConstantBuffer.h>
 #include <Engine/Content/InputGeometry/InputUIVertex.h>
 #include <Engine/Preview/Asset/UAssetTexture.h>
 #include <Engine/Preview/Asset/UAssetParameter.h>
@@ -26,6 +26,7 @@
 ////////////////////////////////////////////////////////////////////////////////////////////
 // SpriteRendererComponent class
 ////////////////////////////////////////////////////////////////////////////////////////////
+//! @brief 2DSprite描画component.
 class SpriteRendererComponent final
 	: public BaseComponent {
 public:
@@ -98,7 +99,7 @@ private:
 	//* transform buffer *//
 
 	Transform2d transformUV_;
-	std::unique_ptr<DxObject::DimensionBuffer<Matrix4x4>> bufferUV_;
+	std::unique_ptr<DxObject::ConstantBuffer<Matrix4x4>> bufferUV_;
 
 	// todo: unityを参考にして使いやすくする.
 	// filedとか

@@ -119,12 +119,6 @@ D3D12_INPUT_LAYOUT_DESC GraphicsPipelineDesc::GetInputLayout() const {
 	return result;
 }
 
-//=========================================================================================
-// static variables
-//=========================================================================================
-
-BlendState* GraphicsPipelineState::blendState_ = nullptr;
-
 ////////////////////////////////////////////////////////////////////////////////////////////
 // GraphicsPipelineState class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -201,10 +195,6 @@ void GraphicsPipelineState::SetPipeline(CommandContext* context, const Vector2ui
 	SetPipeline(context, viewport, rect);
 }
 
-void GraphicsPipelineState::SetExternal(BlendState* blendState) {
-	blendState_ = blendState;
-}
-
 D3D12_SHADER_BYTECODE GraphicsPipelineState::GetBytecode(GraphicsShaderType type, bool isRequired) {
 	if (!blobs_[static_cast<uint8_t>(type)].has_value()) {
 		Exception::Assert(!isRequired, "required blob is not set."); //!< 絶対的に使用されるblobが設定されていない.
@@ -217,7 +207,7 @@ D3D12_SHADER_BYTECODE GraphicsPipelineState::GetBytecode(GraphicsShaderType type
 D3D12_RENDER_TARGET_BLEND_DESC GraphicsPipelineState::GetRenderTargetBlendDesc(const BlendOption& option) const {
 	if (std::holds_alternative<BlendMode>(option)) {
 		BlendMode blendMode = std::get<BlendMode>(option);
-		return blendState_->GetDesc(blendMode);
+		return BlendState::GetDesc(blendMode);
 
 	} else if (std::holds_alternative<D3D12_RENDER_TARGET_BLEND_DESC>(option)) {
 		return std::get<D3D12_RENDER_TARGET_BLEND_DESC>(option);

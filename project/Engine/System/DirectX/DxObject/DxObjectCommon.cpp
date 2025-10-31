@@ -87,7 +87,7 @@ UINT _DXOBJECT RoundUp(UINT round, UINT thread) {
 	return (round + thread - 1) / thread;
 }
 
-Vector3ui RoundUp(const Vector3ui& round, const Vector3ui& thread) {
+Vector3ui _DXOBJECT RoundUp(const Vector3ui& round, const Vector3ui& thread) {
 	return { RoundUp(round.x, thread.x), RoundUp(round.y, thread.y), RoundUp(round.z, thread.z) };
 }
 

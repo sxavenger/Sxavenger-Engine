@@ -33,5 +33,10 @@ struct CameraComponent {
 		clip /= clip.w; //!< perspective divide
 		return clip.xyz;
 	}
+
+	float3 GetDirection() {
+		static const float3 forward = float3(0.0f, 0.0f, 1.0f);
+		return normalize(mul(forward, (float3x3)world));
+	}
 	
 };

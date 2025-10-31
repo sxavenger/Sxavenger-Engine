@@ -7,7 +7,6 @@ _DXOBJECT_USING
 
 void BaseDimensionBuffer::Release() {
 	if (resource_ != nullptr) {
-		resource_->Unmap(0, nullptr);
 		resource_.Reset();
 		address_ = std::nullopt;
 	}
@@ -34,11 +33,8 @@ void BaseDimensionBuffer::Create(Device* devices, uint32_t size) {
 		size_ * stride_
 	);
 
-	UpdateAddress();
-}
-
-void BaseDimensionBuffer::UpdateAddress() {
-	address_ = (resource_ != nullptr) ? std::optional<D3D12_GPU_VIRTUAL_ADDRESS>{ resource_->GetGPUVirtualAddress() } : std::nullopt;
+	// addressの更新
+	address_ = resource_->GetGPUVirtualAddress();
 }
 
 bool BaseDimensionBuffer::CheckIndex(size_t index) const {
@@ -57,7 +53,7 @@ const D3D12_INDEX_BUFFER_VIEW IndexDimensionBuffer::GetIndexBufferView() const {
 	D3D12_INDEX_BUFFER_VIEW result = {};
 	result.Format         = DXGI_FORMAT_R32_UINT;
 	result.BufferLocation = GetGPUVirtualAddress();
-	result.SizeInBytes    = static_cast<UINT>(stride_ * size_);
+	result.SizeInBytes    = static_cast<UINT>(GetByteSize());
 	return result;
 }
 
@@ -69,11 +65,15 @@ const UINT LineIndexDimensionBuffer::GetIndexCount() const {
 	return size_ * 2;
 }
 
+const UINT* LineIndexDimensionBuffer::GetIndexData() const {
+	return reinterpret_cast<const UINT*>(GetData());
+}
+
 const D3D12_INDEX_BUFFER_VIEW LineIndexDimensionBuffer::GetIndexBufferView() const {
 	D3D12_INDEX_BUFFER_VIEW result = {};
 	result.Format         = DXGI_FORMAT_R32_UINT;
 	result.BufferLocation = GetGPUVirtualAddress();
-	result.SizeInBytes    = static_cast<UINT>(stride_ * size_);
+	result.SizeInBytes    = static_cast<UINT>(GetByteSize());
 	return result;
 }
 
@@ -85,10 +85,14 @@ const UINT TriangleIndexDimensionBuffer::GetIndexCount() const {
 	return size_ * 3;
 }
 
+const UINT* TriangleIndexDimensionBuffer::GetIndexData() const {
+	return reinterpret_cast<const UINT*>(GetData());
+}
+
 const D3D12_INDEX_BUFFER_VIEW TriangleIndexDimensionBuffer::GetIndexBufferView() const {
 	D3D12_INDEX_BUFFER_VIEW result = {};
 	result.Format         = DXGI_FORMAT_R32_UINT;
 	result.BufferLocation = GetGPUVirtualAddress();
-	result.SizeInBytes    = static_cast<UINT>(stride_ * size_);
+	result.SizeInBytes    = static_cast<UINT>(GetByteSize());
 	return result;
 }

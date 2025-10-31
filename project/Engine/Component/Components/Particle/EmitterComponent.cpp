@@ -6,7 +6,7 @@ _DXOBJECT_USING
 //-----------------------------------------------------------------------------------------
 //* component
 #include "../../Entity/MonoBehaviour.h"
-#include "../Particle/GPUParticleComponent.h"
+#include "../Transform/TransformComponent.h"
 
 //* engine
 #include <Engine/System/SxavengerSystem.h>
@@ -15,33 +15,40 @@ _DXOBJECT_USING
 #include <Lib/Adapter/Random/Random.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// Emitter structure methods
+// Sphere structure methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-void EmitterComponent::Emitter::Init() {
-	count  = 64;
-	radius = 1.0f;
-}
+EmitterComponent::BaseEmitter::Output EmitterComponent::Sphere::Emit() const {
 
-void EmitterComponent::Emitter::Seed() {
-	seed = { Random::UniformDistribution<float>(0.0f, 1.0f), Random::UniformDistribution<float>(0.0f, 1.0f), Random::UniformDistribution<float>(0.0f, 1.0f) };
+	float r = Random::NormalDistributionRange(0.0f, radius);
+
+	Vector2f angle = {
+		Random::UniformDistribution(0.0f, kTau),
+		Random::UniformDistribution(0.0f, kTau)
+	};
+
+	Output output = {};
+
+	output.direction = {
+		std::cos(angle.y) * std::cos(angle.x),
+		std::sin(angle.y),
+		std::cos(angle.y) * std::sin(angle.x)
+	};
+
+	output.position = output.direction * r;
+
+	return output;
+
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // EmitterComponent class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-void EmitterComponent::Init() {
-	emitter_ = std::make_unique<DimensionBuffer<Emitter>>();
-	emitter_->Create(SxavengerSystem::GetDxDevice(), 1);
-	emitter_->At(0).Init();
-
-	pipeline_ = std::make_unique<ReflectionComputePipelineState>();
-	pipeline_->CreateBlob(kPackagesShaderDirectory / "render/Particle/GPUParticle/emitter.cs.hlsl");
-	pipeline_->ReflectionPipeline(SxavengerSystem::GetDxDevice());
+EmitterComponent::EmitterComponent(MonoBehaviour* behaviour) : BaseComponent(behaviour) {
 }
 
-void EmitterComponent::Update(const DirectXQueueContext* context) {
+void EmitterComponent::Update() {
 
 	timer_.AddDeltaTime();
 
@@ -51,42 +58,24 @@ void EmitterComponent::Update(const DirectXQueueContext* context) {
 
 	timer_ = { TimePointf<TimeUnit::second>::Mod(timer_, time_).time };
 
-	// emit処理
-	EmitGPUParticle(context);
-
-}
-
-void EmitterComponent::EmitGPUParticle(const DirectXQueueContext* context) {
-
-	auto component = GetBehaviour()->GetComponent<GPUParticleComponent>();
-
-	if (component == nullptr) {
-		return;
+	ParticleComponent* particle = GetParticleComponent();
+	if (particle == nullptr) {
+		return; //!< ParticleComponentが存在しない場合は何もしない
 	}
 
-	emitter_->At(0).Seed();
+	for (uint32_t i = 0; i < count_; ++i) {
+		BaseEmitter::Output output = emitter_.Emit();
+		output.position += RequireTransform()->GetPosition();
 
-	// todo: pipelineの設定
-	pipeline_->SetPipeline(context->GetDxCommand());
+		particle->Emit(output.position, output.direction);
+	}
 
-	BindBufferDesc desc = {};
-	//* emitter
-	desc.SetAddress("gEmitter",   emitter_->GetGPUVirtualAddress());
-	desc.SetAddress("gTransform", RequireTransform()->GetGPUVirtualAddress());
-
-	//* particle
-	desc.SetAddress("gParticles", component->buffer_->GetGPUVirtualAddress());
-	desc.Set32bitConstants("Dimension", 1, &component->buffer_->GetDimension());
-	
-	//* free list
-	desc.SetHandle("gConsumeFreeIndex", component->freeList_->GetAppendCousumeGPUHandleUAV());
-	desc.SetAddress("gCounter",         component->freeList_->GetCounterGPUVirtualAddress());
-
-	pipeline_->BindComputeBuffer(context->GetDxCommand(), desc);
-	pipeline_->Dispatch(context->GetDxCommand(), { 1, 1, 1 });
-	
 }
 
 const TransformComponent* EmitterComponent::RequireTransform() const {
-	return GetBehaviour()->RequireComponent<TransformComponent>();
+	return BaseComponent::GetBehaviour()->RequireComponent<TransformComponent>();
+}
+
+ParticleComponent* EmitterComponent::GetParticleComponent() const {
+	return BaseComponent::GetBehaviour()->GetComponent<ParticleComponent>();
 }

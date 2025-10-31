@@ -59,6 +59,8 @@ public:
 
 	void Setup(const DirectXQueueContext* context, const DirectX::ScratchImage& image);
 
+	void Update(const DirectXQueueContext* context);
+
 	void Reset();
 
 	//* inspector option *//
@@ -85,6 +87,8 @@ private:
 	ComPtr<ID3D12Resource> resource_;
 	DxObject::Descriptor   descriptorSRV_;
 
+	bool isTransition_ = false;
+
 	//* parameter *//
 
 	Metadata metadata_ = {};
@@ -96,6 +100,6 @@ private:
 	//* texture helper methods *//
 
 	ComPtr<ID3D12Resource> CreateTextureResource(const DirectX::TexMetadata& metadata) const;
-	ComPtr<ID3D12Resource> UploadTextureData(const DirectXQueueContext* context, ID3D12Resource* texture, const DirectX::ScratchImage& image) const;
+	_NODISCARD ComPtr<ID3D12Resource> UploadTextureData(const DirectXQueueContext* context, ID3D12Resource* texture, const DirectX::ScratchImage& image) const;
 
 };

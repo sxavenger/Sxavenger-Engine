@@ -31,7 +31,7 @@ void ArmatureComponent::SetSkeleton(const Uuid& skeleton) {
 
 void ArmatureComponent::UpdateAnimation(const Animation& animation, TimePointd<TimeUnit::second> time, bool isLoop) {
 	if (referenceSkeleton_.Empty()) {
-		Logger::WarningRuntime("warning | [ArmatureComponent] UpdateAnimation", "reference skeleton is empty.");
+		Logger::WarningRuntime("[ArmatureComponent]", "reference skeleton is empty.");
 		return;
 	}
 
@@ -44,7 +44,7 @@ void ArmatureComponent::TransitionAnimation(
 	float t) {
 
 	if (referenceSkeleton_.Empty()) {
-		Logger::WarningRuntime("warning | [ArmatureComponent] TransitionAnimation", "reference skeleton is empty.");
+		Logger::WarningRuntime("[ArmatureComponent]", "reference skeleton is empty.");
 		return;
 	}
 

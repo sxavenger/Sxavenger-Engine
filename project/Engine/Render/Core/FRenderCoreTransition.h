@@ -28,6 +28,7 @@ public:
 		MipmapTransition,
 		VelocityTransition,
 		MomentTransition,
+		UpscaleTransition,
 	};
 
 public:
@@ -62,7 +63,7 @@ private:
 	static inline const Vector2ui kNumThreadSize_         = { 16, 16 };
 	static inline const std::filesystem::path kDirectory_ = kPackagesShaderDirectory / "render" / "Transition";
 
-	static inline const size_t kTransitionCount_ = magic_enum::enum_count<Transition>() + 1;
+	static inline const size_t kTransitionCount_ = magic_enum::enum_count<Transition>();
 
 	std::array<std::unique_ptr<CustomReflectionComputePipeline>, kTransitionCount_> transitions_;
 	std::unique_ptr<DxObject::ReflectionGraphicsPipelineState> presenter_;

@@ -13,6 +13,7 @@
 //////////////////////////////////////////////////////////////////////////////////////////
 // DevelopEditor class
 //////////////////////////////////////////////////////////////////////////////////////////
+//! @brief 開発者向け関連Editorクラス
 class DevelopEditor final
 	: public BaseEditor {
 public:
@@ -65,6 +66,7 @@ private:
 	void ShowProcessMenu();
 	void ShowSystemMenu();
 	void ShowThreadMenu();
+	void ShowInputMenu();
 
 	void ShowPerformanceWindow();
 	void ShowConsole();

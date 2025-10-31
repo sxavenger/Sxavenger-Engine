@@ -18,6 +18,7 @@ _DXOBJECT_NAMESPACE_BEGIN
 ////////////////////////////////////////////////////////////////////////////////////////////
 // CommandContext class
 ////////////////////////////////////////////////////////////////////////////////////////////
+//! @brief DirectXのCommand関係を管理するクラス
 class CommandContext {
 public:
 
@@ -31,6 +32,8 @@ public:
 	void Init(Device* device, uint32_t allocatorCount = 1, D3D12_COMMAND_LIST_TYPE type = D3D12_COMMAND_LIST_TYPE_DIRECT);
 
 	void Term();
+
+	void SetName(const std::wstring& name) const;
 
 	//* command option *//
 

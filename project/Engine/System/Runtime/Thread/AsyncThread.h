@@ -8,6 +8,7 @@
 
 //* engine
 #include <Engine/System/DirectX/Context/DirectXQueueContext.h>
+#include <Engine/System/UI/ISystemDebugGui.h>
 
 //* c++
 #include <thread>
@@ -28,6 +29,7 @@ static inline constexpr uint8_t kAsyncExecutionCount = static_cast<uint8_t>(Asyn
 ////////////////////////////////////////////////////////////////////////////////////////////
 // AsyncThread class
 ////////////////////////////////////////////////////////////////////////////////////////////
+//! @brief 非同期スレッドクラス.
 class AsyncThread {
 public:
 
@@ -36,7 +38,15 @@ public:
 	////////////////////////////////////////////////////////////////////////////////////////////
 
 	using ConditionFunction = std::function<bool()>;
-	using MainFunction      = std::function<void(const AsyncThread*)>;
+	using MainFunction      = std::function<void(AsyncThread*)>;
+
+	////////////////////////////////////////////////////////////////////////////////////////////
+	// Status enum class
+	////////////////////////////////////////////////////////////////////////////////////////////
+	enum class Status : bool {
+		Wait,
+		Run,
+	};
 
 public:
 
@@ -49,17 +59,26 @@ public:
 		const MainFunction& main, const ConditionFunction& condition = []() { return true; }
 	);
 
-	void SetTerminate(bool isTerminate = true) { isTerminated_ = isTerminate; }
-
+	//! @brief threadを終了する
 	void Shutdown();
 
 	//* thread option *//
 
+	void SetStatus(Status status) { status_ = status; }
+
+	Status GetStatus() const { return status_; }
+
 	const DirectXQueueContext* GetContext() const;
 
+	//! @brief threadのcontextを要求する
+	//! @throw contextが存在しない場合(AsyncExecution::None)に例外をスローする
 	const DirectXQueueContext* RequireContext() const;
 
+	void SetTerminate(bool isTerminate = true) { isTerminated_ = isTerminate; }
+
 	const bool IsTerminated() const { return isTerminated_; }
+
+	const std::thread::id GetId() const { return thread_.get_id(); }
 
 private:
 
@@ -75,6 +94,8 @@ private:
 	MainFunction      main_;
 
 	AsyncExecution execution_ = AsyncExecution::None;
+
+	Status status_ = Status::Wait;
 
 	//* context *//
 
@@ -93,7 +114,8 @@ private:
 ////////////////////////////////////////////////////////////////////////////////////////////
 // AsyncThreadPool class
 ////////////////////////////////////////////////////////////////////////////////////////////
-class AsyncThreadPool {
+class AsyncThreadPool
+	: public ISystemDebugGui {
 public:
 
 	//=========================================================================================
@@ -107,6 +129,10 @@ public:
 	//* task option *//
 
 	void PushTask(const std::shared_ptr<AsyncTask>& task);
+
+	//* debug gui *//
+
+	void SystemDebugGui() override;
 
 private:
 
@@ -124,6 +150,5 @@ private:
 	//* task queue *//
 
 	std::queue<std::shared_ptr<AsyncTask>> queue_;
-	
 
 };

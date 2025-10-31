@@ -19,6 +19,7 @@
 
 std::string  ToString(const std::wstring& str);
 std::wstring ToWString(const std::string& str);
+std::wstring ToWString(const std::string_view& str);
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // helpers

@@ -16,6 +16,7 @@ class AsyncThread;
 ////////////////////////////////////////////////////////////////////////////////////////////
 // AsyncTask class
 ////////////////////////////////////////////////////////////////////////////////////////////
+//! @brief 非同期タスククラス.
 class AsyncTask {
 public:
 
@@ -45,14 +46,17 @@ public:
 
 	virtual void Execute(const AsyncThread* thread);
 
+	//! @brief タスクの実行関数を設定する
 	void SetFunction(const Function& function) { function_ = function; }
 
 	//* task option *//
 
 	const Status GetStatus() const { return status_; }
 
+	//! @brief 指定したステータスになるまで待機する
 	void Wait(Status status = Status::Completed) const;
 
+	//! @brief タスクが完了しているか確認する
 	bool IsCompleted() const { return status_ == Status::Completed; }
 
 	void SetStatus(Status status) { status_ = status; }

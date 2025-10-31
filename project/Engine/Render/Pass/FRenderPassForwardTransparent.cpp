@@ -10,6 +10,7 @@
 #include <Engine/Component/Components/ComponentStorage.h>
 #include <Engine/Component/Components/MeshRenderer/MeshRendererComponent.h>
 #include <Engine/Component/Components/MeshRenderer/SkinnedMeshRendererComponent.h>
+#include <Engine/Component/Components/Particle/ParticleComponent.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // FRenderPassDeferredBase class methods
@@ -28,6 +29,8 @@ void FRenderPassForwardTransparent::Render(const DirectXQueueContext* context, c
 	PassStaticMesh(context, config);
 
 	PassSkinnedMesh(context, config);
+
+	PassParticles(context, config);
 
 	EndPassRenderTarget(context, config.buffer);
 
@@ -126,7 +129,7 @@ void FRenderPassForwardTransparent::PassStaticMesh(const DirectXQueueContext* co
 			return; //!< 不適格component.
 		}
 
-		auto transform = component->GetTransform();
+		auto transform = component->RequireTransform();
 
 		auto mesh     = component->GetMesh();
 		auto material = component->GetMaterial();
@@ -165,7 +168,7 @@ void FRenderPassForwardTransparent::PassSkinnedMesh(const DirectXQueueContext* c
 			return; //!< 不適格component.
 		}
 
-		auto transform = component->GetTransform();
+		auto transform = component->RequireTransform();
 
 		auto mesh     = component->GetMesh();
 		auto material = component->GetMaterial();
@@ -186,6 +189,14 @@ void FRenderPassForwardTransparent::PassSkinnedMesh(const DirectXQueueContext* c
 		mesh->DrawCall(context, 1);
 		//!< todo: インスタンス描画対応
 
+	});
+
+}
+
+void FRenderPassForwardTransparent::PassParticles(const DirectXQueueContext* context, const Config& config) {
+
+	sComponentStorage->ForEachActive<ParticleComponent>([&](ParticleComponent* component) {
+		component->DrawParticle(context, config.camera);
 	});
 
 }

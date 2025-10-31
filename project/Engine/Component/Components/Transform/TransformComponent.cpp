@@ -14,19 +14,15 @@ _DXOBJECT_USING
 // TransformComponent class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
+TransformComponent::TransformComponent(MonoBehaviour* behaviour) : BaseComponent(behaviour) {
+	buffer_ = std::make_unique<ConstantBuffer<TransformationMatrix>>();
+	buffer_->Create(SxavengerSystem::GetDxDevice());
+	buffer_->At().Init();
+}
+
 void TransformComponent::ShowComponentInspector() {
 	transform_.SetImGuiCommand();
 	UpdateMatrix();
-}
-
-void TransformComponent::CreateBuffer() {
-	if (buffer_ != nullptr) {
-		return;
-	}
-
-	buffer_ = std::make_unique<DimensionBuffer<TransformationMatrix>>();
-	buffer_->Create(SxavengerSystem::GetDxDevice(), 1);
-	(*buffer_)[0].Init();
 }
 
 const D3D12_GPU_VIRTUAL_ADDRESS& TransformComponent::GetGPUVirtualAddress() const {
@@ -44,7 +40,7 @@ const Vector3f TransformComponent::GetDirection() const {
 
 const TransformationMatrix& TransformComponent::GetTransformationMatrix() const {
 	Exception::Assert(buffer_ != nullptr, "transform buffer is not craete.");
-	return (*buffer_)[0];
+	return buffer_->At();
 }
 
 void TransformComponent::UpdateMatrix() {
@@ -71,7 +67,7 @@ bool TransformComponent::HasParent() const {
 
 void TransformComponent::TransferGPU() {
 	if (buffer_ != nullptr) {
-		(*buffer_)[0].Transfer(mat_);
+		buffer_->At().Transfer(mat_);
 	}
 }
 

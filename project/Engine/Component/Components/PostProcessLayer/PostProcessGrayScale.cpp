@@ -37,9 +37,9 @@ void PostProcessGrayScale::Parameter::SetImGuiCommand() {
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 void PostProcessGrayScale::Init() {
-	parameter_ = std::make_unique<DxObject::DimensionBuffer<Parameter>>();
-	parameter_->Create(SxavengerSystem::GetDxDevice(), 1);
-	parameter_->At(0).Init();
+	parameter_ = std::make_unique<ConstantBuffer<Parameter>>();
+	parameter_->Create(SxavengerSystem::GetDxDevice());
+	parameter_->At().Init();
 
 	name_ = "Gray Scale";
 }
@@ -73,5 +73,5 @@ void PostProcessGrayScale::Process(const DirectXQueueContext* context, const Pro
 }
 
 void PostProcessGrayScale::ShowInspectorImGui() {
-	parameter_->At(0).SetImGuiCommand();
+	parameter_->At().SetImGuiCommand();
 }

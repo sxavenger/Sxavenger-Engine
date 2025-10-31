@@ -70,7 +70,7 @@ public:
 		//* camera setting *//
 
 		const CameraComponent* camera = nullptr;
-		CameraComponent::Tag tag      = CameraComponent::Tag::GameCamera;
+		CameraComponent::Tag tag      = CameraComponent::Tag::Game;
 		//!< cameraが直接指定されていない場合, tagのcameraを使用する
 
 		//* option *//

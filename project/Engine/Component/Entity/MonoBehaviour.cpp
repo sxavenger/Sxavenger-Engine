@@ -56,21 +56,12 @@ void MonoBehaviour::SetActive(bool isActive) {
 	}
 }
 
-void MonoBehaviour::SetView(bool isView) {
-	isView_ = isView;
-
-	for (const auto& child : children_) {
-		MonoBehaviour* ptr = GetElement(child);
-		ptr->SetView(isView);
-	}
-}
-
 void MonoBehaviour::SetName(const std::string& name) {
 	if (isRenamable_) {
 		name_ = name;
 
 	} else {
-		Logger::WarningRuntime("warning | [MonoBehaviour]::SetName", "behaviour is not renamable.");
+		Logger::WarningRuntime("[MonoBehaviour]", "behaviour is not renamable.");
 	}
 }
 
@@ -83,7 +74,7 @@ BaseComponent* MonoBehaviour::AddComponent(const std::string& component) {
 		components_[type] = sComponentStorage->RegisterComponent(component, this);
 
 	} else {
-		Logger::WarningRuntime("warning | [MonoBehaviour]::AddComponent", "component is already added. component is only one.");
+		Logger::WarningRuntime("[MonoBehaviour]", "component is already added. component is only one.");
 	}
 
 	return components_[type]->get();
@@ -96,7 +87,7 @@ void MonoBehaviour::RemoveComponent(const std::type_info* type) {
 		components_.Erase(type);
 
 	} else {
-		Logger::WarningRuntime("warning | [MonoBehaviour]::RemoveComponent", "component is not found. type: " + std::string(type->name()));
+		Logger::WarningRuntime("[MonoBehaviour]", "component is not found. type: " + std::string(type->name()));
 	}
 }
 
@@ -221,6 +212,27 @@ void MonoBehaviour::ShowInspector() {
 	ImGui::SeparatorText("inspectable");
 	Inspectable();
 
+	ImGui::Separator();
+
+	if (ImGui::Button("Load")) {
+		auto filepath = WinApp::GetOpenFilepath(L"behaviourを選択", std::filesystem::current_path(), { L"behaviourファイル", L"*.behaviour" });
+
+		if (filepath.has_value()) {
+			LoadComponent(filepath.value());
+		}
+	}
+
+	ImGui::SameLine();
+
+	if (ImGui::Button("Save")) {
+		auto filepath = WinApp::GetSaveFilepath(L"behaviourを保存", std::filesystem::current_path(), { L"behaviourファイル", L"*.behaviour" }, ".behaviour");
+
+		if (filepath.has_value()) {
+			SaveComponent(filepath.value());
+		}
+		
+	}
+
 }
 
 void MonoBehaviour::LateUpdateInspector() {
@@ -241,7 +253,6 @@ json MonoBehaviour::PerseToJson() const {
 	root["name"]        = name_;
 	root["isRenamable"] = isRenamable_;
 	root["isActive"]    = isActive_;
-	root["isView"]      = isView_;
 
 	//* components
 	json& components = root["components"] = json::array();
@@ -266,7 +277,6 @@ void MonoBehaviour::InputJson(const json& data) {
 	name_        = data.value("name", "new behaviour");
 	isRenamable_ = data.value("isRenamable", true);
 	isActive_    = data.value("isActive", true);
-	isView_      = data.value("isView", true);
 
 	//* components
 	components_.Clear();
@@ -289,6 +299,18 @@ void MonoBehaviour::InputJson(const json& data) {
 		ptr->InputJson(childData);
 	}
 
+}
+
+void MonoBehaviour::LoadComponent(const std::filesystem::path& filepath) {
+	json data;
+	if (JsonHandler::LoadFromJson(filepath, data)) {
+		InputJson(data);
+	}
+}
+
+void MonoBehaviour::SaveComponent(const std::filesystem::path& filepath) {
+	json data = PerseToJson();
+	JsonHandler::WriteToJson(filepath, data);
 }
 
 MonoBehaviour::HierarchyIterator MonoBehaviour::AddHierarchy(HierarchyElement&& child) {

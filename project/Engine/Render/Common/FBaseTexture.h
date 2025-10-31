@@ -7,10 +7,26 @@
 #include <Engine/System/DirectX/DxObject/DxDescriptor.h>
 #include <Engine/System/DirectX/Context/DirectXQueueContext.h>
 
+//* lib
+#include <Lib/Sxl/Flag.h>
+
 ////////////////////////////////////////////////////////////////////////////////////////////
 // FBaseTexture class
 ////////////////////////////////////////////////////////////////////////////////////////////
 class FBaseTexture {
+public:
+
+	////////////////////////////////////////////////////////////////////////////////////////////
+	// Flag enum class
+	////////////////////////////////////////////////////////////////////////////////////////////
+	enum class Flag: uint8_t{
+		None            = 0,
+		RenderTarget    = 1 << 0,
+		UnorderedAccess = 1 << 1,
+
+		All = RenderTarget | UnorderedAccess
+	};
+
 public:
 
 	//=========================================================================================
@@ -18,9 +34,10 @@ public:
 	//=========================================================================================
 
 	FBaseTexture() = default;
+	FBaseTexture(const Vector2ui& size, DXGI_FORMAT format, Sxl::Flag<Flag> flag) { Create(size, format, flag); }
 	virtual ~FBaseTexture() { Term(); }
 
-	void Create(const Vector2ui& size, DXGI_FORMAT format);
+	void Create(const Vector2ui& size, DXGI_FORMAT format, Sxl::Flag<Flag> flag);
 
 	void Term();
 
@@ -63,10 +80,12 @@ public:
 
 	static const D3D12_RESOURCE_STATES GetDefaultState() { return kDefaultState_; }
 
-protected:
+	const Vector2ui& GetSize() const { return size_; }
+
+private:
 
 	//=========================================================================================
-	// protected variables
+	// private variables
 	//=========================================================================================
 
 	//* directx12 *//
@@ -79,10 +98,22 @@ protected:
 
 	//* parameter *//
 
+	Vector2ui size_;
+
 	DXGI_FORMAT format_;
+
+	Sxl::Flag<Flag> flag_ = Flag::None;
 
 	//* default state *//
 
 	static inline constexpr D3D12_RESOURCE_STATES kDefaultState_ = D3D12_RESOURCE_STATE_ALL_SHADER_RESOURCE;
+
+	//=========================================================================================
+	// private methods
+	//=========================================================================================
+
+	D3D12_RESOURCE_FLAGS GetResourceFlags() const;
+
+	std::optional<D3D12_CLEAR_VALUE> GetClearValue() const;
 
 };

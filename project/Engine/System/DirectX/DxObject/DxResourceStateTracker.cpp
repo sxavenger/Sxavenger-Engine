@@ -15,7 +15,7 @@ bool ResourceStateTracker::IsExpectedState(D3D12_RESOURCE_STATES state) const {
 	return state == state_;
 }
 
-void ResourceStateTracker::TransitionToExpectedState(CommandContext* context, D3D12_RESOURCE_STATES state) {
+void ResourceStateTracker::Transition(const CommandContext* context, D3D12_RESOURCE_STATES state) {
 	if (IsExpectedState(state)) {
 		return;
 	}
@@ -28,13 +28,12 @@ void ResourceStateTracker::TransitionToExpectedState(CommandContext* context, D3
 	barrier.Transition.StateAfter  = state;
 	barrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
 
-	context->GetCommandList()->ResourceBarrier(1, &barrier);
-
-	// 遷移後の状態を期待値として保存する.
 	state_ = state;
+
+	context->GetCommandList()->ResourceBarrier(1, &barrier);
 }
 
-DxObject::ResourceStateTracker ResourceStateTracker::CreateCommittedResource(DxObject::Device* device, D3D12_HEAP_PROPERTIES* prop, D3D12_HEAP_FLAGS flags, D3D12_RESOURCE_DESC* desc, D3D12_RESOURCE_STATES state, D3D12_CLEAR_VALUE* clearValue) {
+ResourceStateTracker ResourceStateTracker::CreateCommittedResource(DxObject::Device* device, D3D12_HEAP_PROPERTIES* prop, D3D12_HEAP_FLAGS flags, D3D12_RESOURCE_DESC* desc, D3D12_RESOURCE_STATES state, D3D12_CLEAR_VALUE* clearValue) {
 	DxObject::ResourceStateTracker result;
 	
 	auto hr = device->GetDevice()->CreateCommittedResource(

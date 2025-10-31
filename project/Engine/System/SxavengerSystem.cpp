@@ -5,7 +5,6 @@
 ////////////////////////////////////////////////////////////////////////////////////////////
 namespace {
 	//* system orign
-	static std::unique_ptr<WinApp>                sWinApp                = nullptr; //!< win app system
 	static std::unique_ptr<DirectXCommon>         sDirectXCommon         = nullptr; //!< DirectX12 system
 	static std::unique_ptr<DirectXQueueContext>   sDirectQueueContext    = nullptr; //!< direct queue context
 	static std::unique_ptr<Performance>           sPerformance           = nullptr; //!< performance system
@@ -24,17 +23,15 @@ namespace {
 void SxavengerSystem::Init() {
 
 	Logger::EngineLog("Engine Version: " + kSxavengerEngineVersion);
-	Logger::EngineLog(std::format("Build Profile: {}", _PROFILE));
-	Logger::EngineThreadLog("this thread is main thread.");
 
-	sWinApp = std::make_unique<WinApp>();
-	sWinApp->Init();
+	WinApp::Init();
 
 	sDirectXCommon = std::make_unique<DirectXCommon>();
 	sDirectXCommon->Init();
 
 	sDirectQueueContext = std::make_unique<DirectXQueueContext>();
-	sDirectQueueContext->Init(3, DirectXQueueContext::RenderQueue::Direct); //!< allocator count
+	sDirectQueueContext->Init(2, DirectXQueueContext::RenderQueue::Direct);
+	sDirectQueueContext->SetName(L"main");
 
 	sPerformance = std::make_unique<Performance>();
 
@@ -47,6 +44,12 @@ void SxavengerSystem::Init() {
 }
 
 void SxavengerSystem::Term() {
+	WinApp::Term();
+}
+
+void SxavengerSystem::Shutdown() {
+	sAsyncThreadCollection->Term();
+	sInput->Shutdown();
 }
 
 _DXOBJECT Descriptor SxavengerSystem::GetDescriptor(_DXOBJECT DescriptorType type) {
@@ -115,11 +118,23 @@ bool SxavengerSystem::IsPressKey(KeyId id) {
 }
 
 bool SxavengerSystem::IsTriggerKey(KeyId id) {
-	return  sInput->IsTriggerKey(id);
+	return sInput->IsTriggerKey(id);
 }
 
 bool SxavengerSystem::IsReleaseKey(KeyId id) {
 	return sInput->IsReleaseKey(id);
+}
+
+const KeyboardInput* SxavengerSystem::GetKeyboardInput() {
+	return sInput->GetKeyboardInput();
+}
+
+const MouseInput* SxavengerSystem::GetMouseInput() {
+	return sInput->GetMouseInput();
+}
+
+const GamepadInput* SxavengerSystem::GetGamepadInput(uint8_t number) {
+	return sInput->GetGamepadInput(number);
 }
 
 Input* SxavengerSystem::GetInput() {
@@ -154,18 +169,18 @@ void SxavengerSystem::PushTask(AsyncExecution execution, const std::shared_ptr<A
 	sAsyncThreadCollection->PushTask(execution, task);
 }
 
-void SxavengerSystem::PushTaskAndWait(AsyncExecution execution, const AsyncTask::Function& function) {
+std::shared_ptr<AsyncTask> SxavengerSystem::PushTask(AsyncExecution execution, const AsyncTask::Function& function) {
 	std::shared_ptr<AsyncTask> task = std::make_shared<AsyncTask>();
 	task->SetFunction(function);
-	task->SetTag("wait task");
+	task->SetTag("function task");
 
 	sAsyncThreadCollection->PushTask(execution, task);
 
-	task->Wait();
+	return task;
 }
 
-void SxavengerSystem::ShutdownAsyncThread() {
-	sAsyncThreadCollection->Term();
+AsyncThreadCollection* SxavengerSystem::GetAsyncThreadCollection() {
+	return sAsyncThreadCollection.get();
 }
 
 void SxavengerSystem::BeginImGuiFrame() {

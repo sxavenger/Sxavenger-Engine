@@ -6,13 +6,16 @@
 //* DXOBJECT
 #include "DxObjectCommon.h"
 
+//* externals
+#include <magic_enum.hpp>
+
 //* c++
 #include <array>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // BlendMode enum class
 ////////////////////////////////////////////////////////////////////////////////////////////
-enum class BlendMode : uint32_t {
+enum class BlendMode : uint8_t {
 	kBlendModeNone,            //!< ブレンドなし
 	kBlendModeNormal,          //!< 通常αブレンド
 	kBlendModeNormal_AlphaMax, //!< αブレンド(アルファ最大)
@@ -31,6 +34,7 @@ _DXOBJECT_NAMESPACE_BEGIN
 ////////////////////////////////////////////////////////////////////////////////////////////
 // BlendState class
 ////////////////////////////////////////////////////////////////////////////////////////////
+//! @brief 共通BlendState設定クラス
 class BlendState {
 public:
 
@@ -38,14 +42,7 @@ public:
 	// public method
 	//=========================================================================================
 
-	BlendState()  = default;
-	~BlendState() { Term(); }
-
-	void Init();
-
-	void Term();
-
-	const D3D12_RENDER_TARGET_BLEND_DESC& GetDesc(BlendMode mode) { return descs_[static_cast<uint32_t>(mode)]; }
+	static const D3D12_RENDER_TARGET_BLEND_DESC& GetDesc(BlendMode mode) { return descs_[static_cast<uint32_t>(mode)]; }
 
 private:
 
@@ -53,7 +50,7 @@ private:
 	// private methods
 	//=========================================================================================
 
-	std::array<D3D12_RENDER_TARGET_BLEND_DESC, static_cast<uint32_t>(BlendMode::kBlendModeScreen) + 1> descs_;
+	static std::array<D3D12_RENDER_TARGET_BLEND_DESC, magic_enum::enum_count<BlendMode>()> descs_;
 
 };
 

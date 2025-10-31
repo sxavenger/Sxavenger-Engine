@@ -41,6 +41,10 @@ struct PointLightComponent {
 		
 		float attenuation_distance = Square(saturate(1.0f - Square(distance / radius))) / (Square(distance) + 1.0f);
 
+		if (attenuation_distance <= 0.0f) {
+			return 0.0f;
+		}
+
 		static const float kTMin = 0.001f;
 		static const float kTMax = 10000.0f;
 
@@ -49,6 +53,7 @@ struct PointLightComponent {
 		desc.Direction = l;
 		desc.TMin      = kTMin;
 		desc.TMax      = distance;
+		
 		float attenuation_shadow = shadow.TraceShadow(desc, scene);
 		
 		return attenuation_distance * attenuation_shadow;

@@ -97,7 +97,6 @@ void ImGuiController::BeginFrame() {
 	ImGui_ImplWin32_NewFrame();
 	ImGui::NewFrame();
 
-	ImGuizmo::BeginFrame();
 	SxImGuizmo::BeginFrame();
 }
 

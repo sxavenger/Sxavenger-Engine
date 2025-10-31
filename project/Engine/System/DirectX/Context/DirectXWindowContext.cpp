@@ -305,7 +305,7 @@ ComPtr<IDXGIOutput6> DirectXWindowContext::GetOutput6() {
 void DirectXWindowContext::CheckSupportHDR() {
 
 	if (swapChain_ == nullptr) {
-		Logger::WarningRuntime("[DirectXWindowContext] warning | window is not create.");
+		Logger::WarningRuntime("[DirectXWindowContext]", "window is not create.");
 		return; //!< windowが生成されていない.
 	}
 

@@ -38,4 +38,6 @@ private:
 
 	void PassSkinnedMesh(const DirectXQueueContext* context, const Config& config);
 
+	void PassParticles(const DirectXQueueContext* context, const Config& config);
+
 };

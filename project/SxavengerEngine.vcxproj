@@ -167,22 +167,24 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Demo\Entity\Player.h" />
-    <ClInclude Include="Demo\GameLoop\BetaSystemGameLoop.h" />
     <ClInclude Include="Demo\GameLoop\DemoGameLoop.h" />
     <ClInclude Include="Demo\GameLoop\PreviewGameLoop.h" />
-    <ClInclude Include="Demo\Object\EmissiveCubes.h" />
+    <ClInclude Include="Demo\Object\CollectibleCube.h" />
+    <ClInclude Include="Demo\Object\CollectibleItems.h" />
     <ClInclude Include="Demo\Object\PerspectiveCamera.h" />
+    <ClInclude Include="Demo\Scene\ClearScene.h" />
+    <ClInclude Include="Demo\Scene\GameScene.h" />
+    <ClInclude Include="Demo\Scene\TitleScene.h" />
     <ClInclude Include="Engine\Adapter\Actor\AtmosphereActor.h" />
     <ClInclude Include="Engine\Adapter\Actor\ControllableCameraActor.h" />
-    <ClInclude Include="Engine\Adapter\Actor\ParameterActor.h" />
     <ClInclude Include="Engine\Adapter\Actor\PerformanceActor.h" />
     <ClInclude Include="Engine\Adapter\Actor\PivotCameraActor.h" />
     <ClInclude Include="Engine\Adapter\Actor\SkyLightActor.h" />
     <ClInclude Include="Engine\Adapter\Parameter\SerializeGui.h" />
     <ClInclude Include="Engine\Adapter\Parameter\SerializeParameter.h" />
     <ClInclude Include="Engine\Adapter\Scene\BaseScene.h" />
-    <ClInclude Include="Engine\Adapter\Scene\BaseSceneFactory.h" />
     <ClInclude Include="Engine\Adapter\Scene\SceneController.h" />
+    <ClInclude Include="Engine\Adapter\Scene\SceneFactory.h" />
     <ClInclude Include="Engine\Component\ComponentHelper.h" />
     <ClInclude Include="Engine\Component\Components\Armature\ArmatureComponent.h" />
     <ClInclude Include="Engine\Component\Components\Audio\AudioController.h" />
@@ -205,9 +207,8 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Engine\Component\Components\MeshRenderer\PrimitiveRendererComponent.h" />
     <ClInclude Include="Engine\Component\Components\MeshRenderer\SkinnedMeshRendererComponent.h" />
     <ClInclude Include="Engine\Component\Components\Particle\EmitterComponent.h" />
-    <ClInclude Include="Engine\Component\Components\Particle\GPUParticleComponent.h" />
     <ClInclude Include="Engine\Component\Components\Particle\ParticleComponent.h" />
-    <ClInclude Include="Engine\Component\Components\Particle\ParticleConfig.h" />
+    <ClInclude Include="Engine\Component\Components\Particle\ParticleElement.h" />
     <ClInclude Include="Engine\Component\Components\PostProcessLayer\BasePostProcess.h" />
     <ClInclude Include="Engine\Component\Components\PostProcessLayer\PostProcessAutoExposure.h" />
     <ClInclude Include="Engine\Component\Components\PostProcessLayer\PostProcessBloom.h" />
@@ -243,7 +244,6 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Engine\Content\SxavengerContent.h" />
     <ClInclude Include="Engine\Content\TextureBuffer\BaseOffscreenTexture.h" />
     <ClInclude Include="Engine\Content\TextureBuffer\DepthTexture.h" />
-    <ClInclude Include="Engine\Content\TextureBuffer\MultiViewTextureBuffer.h" />
     <ClInclude Include="Engine\Content\TextureBuffer\OffscreenTextureCollection.h" />
     <ClInclude Include="Engine\Content\TextureBuffer\RenderTexture.h" />
     <ClInclude Include="Engine\Content\TextureBuffer\UnorderedTexture.h" />
@@ -255,6 +255,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Engine\Editor\Editors\HierarchyEditor.h" />
     <ClInclude Include="Engine\Editor\Editors\InspectorEditor.h" />
     <ClInclude Include="Engine\Editor\Editors\RenderSceneEditor.h" />
+    <ClInclude Include="Engine\GameLoop\BetaSystemGameLoop.h" />
     <ClInclude Include="Engine\GameLoop\EditorEngineGameLoop.h" />
     <ClInclude Include="Engine\GameLoop\FeatureLevelGameLoop.h" />
     <ClInclude Include="Engine\GameLoop\SxavengerEngineGameLoop.h" />
@@ -288,7 +289,6 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Engine\Render\Common\FLUTTexture.h" />
     <ClInclude Include="Engine\Render\Common\FPriorityTexture.h" />
     <ClInclude Include="Engine\Render\Common\FProcessTexture.h" />
-    <ClInclude Include="Engine\Render\Common\FTexture.h" />
     <ClInclude Include="Engine\Render\Core\FRenderCoreGeometry.h" />
     <ClInclude Include="Engine\Render\Core\FRenderCoreLayer.h" />
     <ClInclude Include="Engine\Render\Core\FRenderCoreLight.h" />
@@ -324,6 +324,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Engine\System\DirectX\DxObject\DxBlendState.h" />
     <ClInclude Include="Engine\System\DirectX\DxObject\DxCommandContext.h" />
     <ClInclude Include="Engine\System\DirectX\DxObject\DxComputePipelineState.h" />
+    <ClInclude Include="Engine\System\DirectX\DxObject\DxConstantBuffer.h" />
     <ClInclude Include="Engine\System\DirectX\DxObject\DxDepthStencil.h" />
     <ClInclude Include="Engine\System\DirectX\DxObject\DxDescriptor.h" />
     <ClInclude Include="Engine\System\DirectX\DxObject\DxDescriptorHeaps.h" />
@@ -332,15 +333,14 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Engine\System\DirectX\DxObject\DxGraphicsPipelineState.h" />
     <ClInclude Include="Engine\System\DirectX\DxObject\DxObjectCommon.h" />
     <ClInclude Include="Engine\System\DirectX\DxObject\DxReadbackDimensionBuffer.h" />
+    <ClInclude Include="Engine\System\DirectX\DxObject\DxResourceDimensionBuffer.h" />
     <ClInclude Include="Engine\System\DirectX\DxObject\DxResourceStateTracker.h" />
     <ClInclude Include="Engine\System\DirectX\DxObject\DxResourceStorage.h" />
-    <ClInclude Include="Engine\System\DirectX\DxObject\DxResourceTracker.h" />
     <ClInclude Include="Engine\System\DirectX\DxObject\DxRootSignatureDesc.h" />
     <ClInclude Include="Engine\System\DirectX\DxObject\DxShaderBlob.h" />
     <ClInclude Include="Engine\System\DirectX\DxObject\DxShaderCompiler.h" />
     <ClInclude Include="Engine\System\DirectX\DxObject\DxSwapChain.h" />
     <ClInclude Include="Engine\System\DirectX\DxObject\DxUnorderedDimensionBuffer.h" />
-    <ClInclude Include="Engine\System\DirectX\DxObject\DxVectorDimensionBuffer.h" />
     <ClInclude Include="Engine\System\DirectX\DxrObject\DxrAccelerationStructure.h" />
     <ClInclude Include="Engine\System\DirectX\DxrObject\DxrBindBuffer.h" />
     <ClInclude Include="Engine\System\DirectX\DxrObject\DxrExportGroup.h" />
@@ -395,25 +395,29 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Lib\Sxl\OptimizedPathMap.h" />
     <ClInclude Include="Lib\Sxl\OptimizedPathSet.h" />
     <ClInclude Include="Lib\Sxl\SxavengerLibrary.h" />
+    <ClInclude Include="Lib\Sxl\Utility.h" />
     <ClInclude Include="Lib\Traits.h" />
     <ClInclude Include="Lib\Transform\Transform.h" />
+    <ClInclude Include="externals\meshoptimizer\meshoptimizer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Demo\Entity\Player.cpp" />
-    <ClCompile Include="Demo\GameLoop\BetaSystemGameLoop.cpp" />
     <ClCompile Include="Demo\GameLoop\DemoGameLoop.cpp" />
     <ClCompile Include="Demo\GameLoop\PreviewGameLoop.cpp" />
-    <ClCompile Include="Demo\Object\EmissiveCubes.cpp" />
+    <ClCompile Include="Demo\Object\CollectibleCube.cpp" />
+    <ClCompile Include="Demo\Object\CollectibleItems.cpp" />
     <ClCompile Include="Demo\Object\PerspectiveCamera.cpp" />
+    <ClCompile Include="Demo\Scene\ClearScene.cpp" />
+    <ClCompile Include="Demo\Scene\GameScene.cpp" />
+    <ClCompile Include="Demo\Scene\TitleScene.cpp" />
     <ClCompile Include="Engine\Adapter\Actor\AtmosphereActor.cpp" />
     <ClCompile Include="Engine\Adapter\Actor\ControllableCameraActor.cpp" />
-    <ClCompile Include="Engine\Adapter\Actor\ParameterActor.cpp" />
     <ClCompile Include="Engine\Adapter\Actor\PerformanceActor.cpp" />
     <ClCompile Include="Engine\Adapter\Actor\PivotCameraActor.cpp" />
     <ClCompile Include="Engine\Adapter\Actor\SkyLightActor.cpp" />
     <ClCompile Include="Engine\Adapter\Scene\BaseScene.cpp" />
-    <ClCompile Include="Engine\Adapter\Scene\BaseSceneFactory.cpp" />
     <ClCompile Include="Engine\Adapter\Scene\SceneController.cpp" />
+    <ClCompile Include="Engine\Adapter\Scene\SceneFactory.cpp" />
     <ClCompile Include="Engine\Component\ComponentHelper.cpp" />
     <ClCompile Include="Engine\Component\Components\Armature\ArmatureComponent.cpp" />
     <ClCompile Include="Engine\Component\Components\Audio\AudioController.cpp" />
@@ -435,9 +439,8 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="Engine\Component\Components\MeshRenderer\PrimitiveRendererComponent.cpp" />
     <ClCompile Include="Engine\Component\Components\MeshRenderer\SkinnedMeshRendererComponent.cpp" />
     <ClCompile Include="Engine\Component\Components\Particle\EmitterComponent.cpp" />
-    <ClCompile Include="Engine\Component\Components\Particle\GPUParticleComponent.cpp" />
     <ClCompile Include="Engine\Component\Components\Particle\ParticleComponent.cpp" />
-    <ClCompile Include="Engine\Component\Components\Particle\ParticleConfig.cpp" />
+    <ClCompile Include="Engine\Component\Components\Particle\ParticleElement.cpp" />
     <ClCompile Include="Engine\Component\Components\PostProcessLayer\PostProcessAutoExposure.cpp" />
     <ClCompile Include="Engine\Component\Components\PostProcessLayer\PostProcessBloom.cpp" />
     <ClCompile Include="Engine\Component\Components\PostProcessLayer\PostProcessChromaticAberration.cpp" />
@@ -467,7 +470,6 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="Engine\Content\SxavengerContent.cpp" />
     <ClCompile Include="Engine\Content\TextureBuffer\BaseOffscreenTexture.cpp" />
     <ClCompile Include="Engine\Content\TextureBuffer\DepthTexture.cpp" />
-    <ClCompile Include="Engine\Content\TextureBuffer\MultiViewTextureBuffer.cpp" />
     <ClCompile Include="Engine\Content\TextureBuffer\OffscreenTextureCollection.cpp" />
     <ClCompile Include="Engine\Content\TextureBuffer\RenderTexture.cpp" />
     <ClCompile Include="Engine\Content\TextureBuffer\UnorderedTexture.cpp" />
@@ -479,6 +481,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="Engine\Editor\Editors\HierarchyEditor.cpp" />
     <ClCompile Include="Engine\Editor\Editors\InspectorEditor.cpp" />
     <ClCompile Include="Engine\Editor\Editors\RenderSceneEditor.cpp" />
+    <ClCompile Include="Engine\GameLoop\BetaSystemGameLoop.cpp" />
     <ClCompile Include="Engine\GameLoop\EditorEngineGameLoop.cpp" />
     <ClCompile Include="Engine\GameLoop\FeatureLevelGameLoop.cpp" />
     <ClCompile Include="Engine\GameLoop\SxavengerEngineGameLoop.cpp" />
@@ -510,7 +513,6 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="Engine\Render\Common\FLUTTexture.cpp" />
     <ClCompile Include="Engine\Render\Common\FPriorityTexture.cpp" />
     <ClCompile Include="Engine\Render\Common\FProcessTexture.cpp" />
-    <ClCompile Include="Engine\Render\Common\FTexture.cpp" />
     <ClCompile Include="Engine\Render\Core\FRenderCoreGeometry.cpp" />
     <ClCompile Include="Engine\Render\Core\FRenderCoreLayer.cpp" />
     <ClCompile Include="Engine\Render\Core\FRenderCoreLight.cpp" />
@@ -545,6 +547,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="Engine\System\DirectX\DxObject\DxBlendState.cpp" />
     <ClCompile Include="Engine\System\DirectX\DxObject\DxCommandContext.cpp" />
     <ClCompile Include="Engine\System\DirectX\DxObject\DxComputePipelineState.cpp" />
+    <ClCompile Include="Engine\System\DirectX\DxObject\DxConstantBuffer.cpp" />
     <ClCompile Include="Engine\System\DirectX\DxObject\DxDepthStencil.cpp" />
     <ClCompile Include="Engine\System\DirectX\DxObject\DxDescriptor.cpp" />
     <ClCompile Include="Engine\System\DirectX\DxObject\DxDescriptorHeaps.cpp" />
@@ -552,14 +555,13 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="Engine\System\DirectX\DxObject\DxDimensionBuffer.cpp" />
     <ClCompile Include="Engine\System\DirectX\DxObject\DxGraphicsPipelineState.cpp" />
     <ClCompile Include="Engine\System\DirectX\DxObject\DxObjectCommon.cpp" />
+    <ClCompile Include="Engine\System\DirectX\DxObject\DxResourceDimensionBuffer.cpp" />
     <ClCompile Include="Engine\System\DirectX\DxObject\DxResourceStateTracker.cpp" />
     <ClCompile Include="Engine\System\DirectX\DxObject\DxResourceStorage.cpp" />
-    <ClCompile Include="Engine\System\DirectX\DxObject\DxResourceTracker.cpp" />
     <ClCompile Include="Engine\System\DirectX\DxObject\DxRootSignatureDesc.cpp" />
     <ClCompile Include="Engine\System\DirectX\DxObject\DxShaderBlob.cpp" />
     <ClCompile Include="Engine\System\DirectX\DxObject\DxShaderCompiler.cpp" />
     <ClCompile Include="Engine\System\DirectX\DxObject\DxSwapChain.cpp" />
-    <ClCompile Include="Engine\System\DirectX\DxObject\DxVectorDimensionBuffer.cpp" />
     <ClCompile Include="Engine\System\DirectX\DxrObject\DxrAccelerationStructure.cpp" />
     <ClCompile Include="Engine\System\DirectX\DxrObject\DxrBindBuffer.cpp" />
     <ClCompile Include="Engine\System\DirectX\DxrObject\DxrExportGroup.cpp" />
@@ -594,6 +596,22 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="Lib\Geometry\Quaternion.cpp" />
     <ClCompile Include="Lib\Motion\Motion.cpp" />
     <ClCompile Include="Lib\Transform\Transform.cpp" />
+    <ClCompile Include="externals\meshoptimizer\allocator.cpp" />
+    <ClCompile Include="externals\meshoptimizer\clusterizer.cpp" />
+    <ClCompile Include="externals\meshoptimizer\indexanalyzer.cpp" />
+    <ClCompile Include="externals\meshoptimizer\indexcodec.cpp" />
+    <ClCompile Include="externals\meshoptimizer\indexgenerator.cpp" />
+    <ClCompile Include="externals\meshoptimizer\overdrawoptimizer.cpp" />
+    <ClCompile Include="externals\meshoptimizer\partition.cpp" />
+    <ClCompile Include="externals\meshoptimizer\quantization.cpp" />
+    <ClCompile Include="externals\meshoptimizer\rasterizer.cpp" />
+    <ClCompile Include="externals\meshoptimizer\simplifier.cpp" />
+    <ClCompile Include="externals\meshoptimizer\spatialorder.cpp" />
+    <ClCompile Include="externals\meshoptimizer\stripifier.cpp" />
+    <ClCompile Include="externals\meshoptimizer\vcacheoptimizer.cpp" />
+    <ClCompile Include="externals\meshoptimizer\vertexcodec.cpp" />
+    <ClCompile Include="externals\meshoptimizer\vertexfilter.cpp" />
+    <ClCompile Include="externals\meshoptimizer\vfetchoptimizer.cpp" />
     <ClCompile Include="externals\stb\Stb_include.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>

@@ -8,6 +8,13 @@
 #include "DxDevice.h"
 #include "DxCommandContext.h"
 
+//* lib
+#include <Lib/Traits.h>
+
+//* c++
+#include <list>
+#include <mutex>
+
 ////////////////////////////////////////////////////////////////////////////////////////////
 // DXOBJECT
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -23,27 +30,23 @@ public:
 	// public methods
 	//=========================================================================================
 
-	//* resource option *//
-
-	ID3D12Resource* Get() const { return resource_.Get(); }
+	//_NODISCARD std::unique_lock<std::mutex> Transition(const CommandContext* context, D3D12_RESOURCE_STATES state);
 
 	void SetName(const wchar_t* name);
 
-	//* state tracker option *//
-
 	bool IsExpectedState(D3D12_RESOURCE_STATES state) const;
 
-	void TransitionToExpectedState(CommandContext* context, D3D12_RESOURCE_STATES state);
+	void Transition(const CommandContext* context, D3D12_RESOURCE_STATES state);
 
-	//* helper option *//
+	ID3D12Resource* Get() const { return resource_.Get(); }
 
-	static DxObject::ResourceStateTracker CreateCommittedResource(
-		DxObject::Device* device,
+	static ResourceStateTracker CreateCommittedResource(
+		Device* device,
 		D3D12_HEAP_PROPERTIES* prop,
 		D3D12_HEAP_FLAGS flags,
 		D3D12_RESOURCE_DESC* desc,
 		D3D12_RESOURCE_STATES state,
-		D3D12_CLEAR_VALUE* clearValue = nullptr
+		D3D12_CLEAR_VALUE* clearValue
 	);
 
 private:
@@ -58,4 +61,3 @@ private:
 };
 
 _DXOBJECT_NAMESPACE_END
-

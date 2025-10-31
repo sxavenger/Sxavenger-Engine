@@ -26,16 +26,16 @@ void PerspectiveCamera::Awake() {
 	transform_ = MonoBehaviour::AddComponent<TransformComponent>();
 	camera_    = MonoBehaviour::AddComponent<CameraComponent>();
 
-	camera_->SetTag(CameraComponent::Tag::GameCamera);
+	camera_->SetTag(CameraComponent::Tag::Game);
 
 	auto process = MonoBehaviour::AddComponent<PostProcessLayerComponent>();
 	process->SetTag(PostProcessLayerComponent::Tag::Local);
 
 	{
 		auto exposure = process->AddPostProcess<PostProcessAutoExposure>();
-		exposure->GetParameter().minLogLuminance = -10.0f;
+		exposure->GetParameter().minLogLuminance = -5.0f;
 		exposure->GetParameter().maxLogLuminance = 20.0f;
-		exposure->GetParameter().compensation    = -6.0f;
+		exposure->GetParameter().compensation    = -3.0f;
 	}
 	
 	process->AddPostProcess<PostProcessLocalExposure>(false);
@@ -126,7 +126,7 @@ void PerspectiveCamera::InputFirstPerson() {
 	mouse_->ShowCousor(false);
 
 	// ホイールでfocus距離を変更
-	float wheel = mouse_->GetDeltaWheel();
+	float wheel = mouse_->GetDeltaWheelNormalized();
 
 	if (wheel != 0.0f) {
 		camera_->GetProjection().focal += wheel;

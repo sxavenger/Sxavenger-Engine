@@ -6,11 +6,9 @@
 //* component
 #include "../BaseComponent.h"
 #include "../Transform/TransformComponent.h"
+#include "ParticleComponent.h"
 
 //* engine
-#include <Engine/System/DirectX/DxObject/DxDimensionBuffer.h>
-#include <Engine/System/DirectX/DxObject/DxComputePipelineState.h>
-#include <Engine/System/DirectX/Context/DirectXQueueContext.h>
 #include <Engine/System/Runtime/Performance/DeltaTimePoint.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -21,30 +19,58 @@ class EmitterComponent final
 public:
 
 	////////////////////////////////////////////////////////////////////////////////////////////
-	// Emitter structure
+	// Emit structure
 	////////////////////////////////////////////////////////////////////////////////////////////
-	struct Emitter {
-		//!< Sphere Emitter想定
-		// TODO: 他のEmitterも実装する
+	struct BaseEmitter {
+	public:
+
+		////////////////////////////////////////////////////////////////////////////////////////////
+		// Output structure
+		////////////////////////////////////////////////////////////////////////////////////////////
+		struct Output {
+		public:
+
+			//=========================================================================================
+			// public variables
+			//=========================================================================================
+
+			Vector3f position  = kOrigin3<float>;
+			Vector3f direction = kOrigin3<float>;
+
+		};
+
 	public:
 
 		//=========================================================================================
 		// public methods
 		//=========================================================================================
 
-		void Init();
+		virtual Output Emit() const = 0;
 
-		void Seed();
+	};
+
+	////////////////////////////////////////////////////////////////////////////////////////////
+	// Sphere structure
+	////////////////////////////////////////////////////////////////////////////////////////////
+	struct Sphere
+		: public BaseEmitter {
+	public:
+
+		//=========================================================================================
+		// public methods
+		//=========================================================================================
+
+		Output Emit() const override;
 
 		//=========================================================================================
 		// public variables
 		//=========================================================================================
 
-		Vector3f seed;
-		uint32_t count;
-		float radius;
+		float radius = 0.1f;
 
 	};
+
+
 
 public:
 
@@ -52,14 +78,14 @@ public:
 	// public methods
 	//=========================================================================================
 
-	EmitterComponent(MonoBehaviour* behaviour) : BaseComponent(behaviour) { Init(); }
+	EmitterComponent(MonoBehaviour* behaviour);
 	~EmitterComponent() override = default;
-
-	void Init();
 
 	//* emitter option *//
 
-	void Update(const DirectXQueueContext* context);
+	void Update();
+
+	void SetEmitCount(uint32_t count) { count_ = count; }
 
 private:
 
@@ -67,24 +93,19 @@ private:
 	// private variables
 	//=========================================================================================
 
-	std::unique_ptr<DxObject::DimensionBuffer<Emitter>> emitter_;
-
-	TimePointf<TimeUnit::second> time_       = {};
+	TimePointf<TimeUnit::second> time_       = { 0.1f };
 	DeltaTimePointf<TimeUnit::second> timer_ = {};
 
+	uint32_t count_ = 4;
 
-	std::unique_ptr<DxObject::ReflectionComputePipelineState> pipeline_; //!< HACK
-
+	Sphere emitter_;
 
 	//=========================================================================================
 	// private methods
 	//=========================================================================================
 
-	void EmitGPUParticle(const DirectXQueueContext* context);
-	void EmitCPUParticle();
-
-	//* helepr methods *//
-
 	const TransformComponent* RequireTransform() const;
+
+	ParticleComponent* GetParticleComponent() const;
 
 };

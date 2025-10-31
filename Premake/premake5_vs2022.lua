@@ -28,12 +28,20 @@ workspace "SxavengerEngine"
 		kind "StaticLib"
 		language "C++"
 
+		configmap {
+        	["Develop"] = "Release",
+ 		}
+
 	-- DirectXMesh
 	externalproject "DirectXMesh"
 		location "externals/DirectXMesh"
 		filename "DirectXMesh_Desktop_2022_Win10"
 		kind "StaticLib"
 		language "C++"
+		
+		configmap {
+        	["Develop"] = "Release",
+ 		}
 	
 	-- imgui
 	externalproject "imgui"
@@ -41,6 +49,10 @@ workspace "SxavengerEngine"
 		filename "imgui"
 		kind "StaticLib"
 		language "C++"
+		
+		configmap {
+        	["Develop"] = "Release",
+ 		}
 	
 -------------------------------------------------------------------------------------------
 -- main project
@@ -57,8 +69,11 @@ project "SxavengerEngine"
 	files {
 		"*.cpp",
 		"*.h",
-
+		
+		-- TODO: 専用のsolutionを作成する
 		"externals/stb/Stb_include.cpp",
+		"externals/meshoptimizer/*.h",
+		"externals/meshoptimizer/*.cpp",
 
 		"Lib/**.h",
 		"Lib/**.cpp",

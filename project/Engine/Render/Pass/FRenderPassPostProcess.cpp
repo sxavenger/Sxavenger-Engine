@@ -46,7 +46,7 @@ void FRenderPassPostProcess::Render(const DirectXQueueContext* context, const Co
 		auto transform = component->GetTransform();
 
 		if (transform == nullptr) {
-			Logger::WarningRuntime("warning | [FRenderPassPostProcess]::ProcessPostProcessPass [Volume]", "PostProcessLayerComponent [Volume] has no transform.");
+			Logger::WarningRuntime("[FRenderPassPostProcess]", "PostProcessLayerComponent [Volume] has no transform.");
 			return; //!< Transformがない場合は処理しない
 		}
 

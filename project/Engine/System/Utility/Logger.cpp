@@ -43,6 +43,8 @@ void SxavengerLogger::Init() {
 	file << "# "  << "Sxavenger Engine Log" << "\n";
 	file << "## " << "engine version: " << kSxavengerEngineVersion << "\n";
 #endif
+
+	Logger::EngineLog(std::format("Build Profile: {}", _PROFILE));
 }
 
 void SxavengerLogger::LogA(const std::string& mes) {
@@ -93,7 +95,16 @@ _NORETURN void SxavengerLogger::ExceptionA(const std::string& label, const std::
 	// thread
 	std::ostringstream threadMes;
 	threadMes << "[thread]" << "  \n";
-	threadMes << " id: " << std::this_thread::get_id() << "\n";
+
+	std::thread::id id = std::this_thread::get_id();
+
+	if (id == mainThreadId_) {
+		threadMes << " main thread\n";
+
+	} else {
+		threadMes << " id: " << id << "\n";
+	}
+
 	OutputA(threadMes.str());
 
 #ifdef _OUTPUT_SXAVENGER_LOG_FILE
@@ -146,7 +157,16 @@ _NORETURN void SxavengerLogger::ExceptionW(const std::wstring& label, const std:
 	// thread
 	std::wostringstream threadMes;
 	threadMes << "[thread]" << "  \n";
-	threadMes << " id: " << std::this_thread::get_id() << "\n";
+
+	std::thread::id id = std::this_thread::get_id();
+
+	if (id == mainThreadId_) {
+		threadMes << " main thread\n";
+
+	} else {
+		threadMes << " id: " << id << "\n";
+	}
+	
 	OutputW(threadMes.str());
 
 #ifdef _OUTPUT_SXAVENGER_LOG_FILE
@@ -232,13 +252,34 @@ void Logger::EngineLog(const std::wstring& log) {
 
 void Logger::EngineThreadLog(const std::string& log) {
 	std::ostringstream tag;
-	tag << "[Sxavenger Engine] [thread id: " << std::this_thread::get_id() << "] >> ";
+	tag << "[Sxavenger Engine] ";
+
+	std::thread::id id = std::this_thread::get_id();
+
+	if (id == SxavengerLogger::GetMainThreadId()) {
+		tag << "[main thread] >> ";
+
+	} else {
+		tag << "[thread id: " << id << "] >> ";
+	}
+
 	SxavengerLogger::LogA(tag.str() + log);
+
 }
 
 void Logger::EngineThreadLog(const std::wstring& log) {
 	std::wostringstream tag;
-	tag << L"[Sxavenger Engine] [thread id: " << std::this_thread::get_id() << L"] >> ";
+	tag << L"[Sxavenger Engine] ";
+
+	std::thread::id id = std::this_thread::get_id();
+
+	if (id == SxavengerLogger::GetMainThreadId()) {
+		tag << L"[main thread] >> ";
+
+	} else {
+		tag << L"[thread id: " << id << L"] >> ";
+	}
+
 	SxavengerLogger::LogW(tag.str() + log);
 }
 

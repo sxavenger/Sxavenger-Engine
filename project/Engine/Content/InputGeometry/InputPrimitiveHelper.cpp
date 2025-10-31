@@ -172,8 +172,8 @@ InputPrimitive InputPrimitiveHelper::CreateCube(const Vector3f& size) {
 	vertex->At(23).texcoord = { 1.0f, 1.0f };
 
 	//!< インデックスの設定 (各面2つの三角形)
-	for (int i = 0; i < 6; ++i) {
-		int base = i * 4;
+	for (uint32_t i = 0; i < 6; ++i) {
+		uint32_t base = i * 4;
 		index->At(i * 2)     = { base, base + 1, base + 2 };
 		index->At(i * 2 + 1) = { base, base + 2, base + 3 };
 	}

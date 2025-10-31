@@ -110,6 +110,7 @@ public:
 ////////////////////////////////////////////////////////////////////////////////////////////
 // GraphicsPipelineState class
 ////////////////////////////////////////////////////////////////////////////////////////////
+//! @brief GraphicsPipelineを管理するクラス.
 class GraphicsPipelineState {
 public:
 
@@ -137,19 +138,11 @@ public:
 	void SetPipeline(CommandContext* context, const D3D12_VIEWPORT& viewport, const D3D12_RECT& rect) const;
 	void SetPipeline(CommandContext* context, const Vector2ui& windowSize = kMainWindowSize) const;
 
-	//* external methods *//
-
-	static void SetExternal(BlendState* blendState);
-
 protected:
 
 	//=========================================================================================
 	// protected variables
 	//=========================================================================================
-
-	//* external *//
-
-	static BlendState* blendState_;
 
 	//* blob *//
 

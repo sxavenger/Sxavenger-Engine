@@ -38,6 +38,13 @@ public:
 		return dist(seed_);
 	}
 
+	template <std::floating_point T = float>
+	static T NormalDistributionRange(T min, T max) {
+		std::normal_distribution<T> dist(0.0f, 0.3f);
+		T distribution = std::max(std::abs(dist(seed_)), 1.0f);
+		return min + (max - min) * distribution;
+	}
+
 private:
 
 	//=========================================================================================

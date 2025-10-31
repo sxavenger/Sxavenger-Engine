@@ -53,6 +53,9 @@ void ShaderCompiler::Init() {
 }
 
 void ShaderCompiler::Term() {
+	utils_.Reset();
+	compiler_.Reset();
+	includeHandler_.Reset();
 	Logger::EngineLog("[_DXOBJECT ShaderCompiler] term.");
 }
 
@@ -148,4 +151,9 @@ ComPtr<ID3D12ShaderReflection> ShaderCompiler::Reflection(IDxcBlob* blob) {
 	DxObject::Assert(hr, L"shader reflection is failed.");
 
 	return result;
+}
+
+ShaderCompiler* ShaderCompiler::GetInstance() {
+	static ShaderCompiler instance;
+	return &instance;
 }

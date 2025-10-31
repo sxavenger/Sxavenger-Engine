@@ -5,6 +5,7 @@
 //-----------------------------------------------------------------------------------------
 //* external
 #include <magic_enum.hpp>
+#include <imgui.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // AsyncThread class methods
@@ -19,9 +20,12 @@ void AsyncThread::Create(AsyncExecution execution, const MainFunction& main, con
 
 	thread_ = std::thread([this]() {
 		Logger::EngineThreadLog(std::string("[AsyncThread] begin thread. execution: ") + magic_enum::enum_name(execution_).data());
+
+		// main loop
 		while (!isTerminated_ && condition_()) {
 			main_(this);
 		}
+
 		Logger::EngineThreadLog("[AsyncThread] end thread.");
 	});
 
@@ -36,6 +40,10 @@ void AsyncThread::Create(AsyncExecution execution, const MainFunction& main, con
 	uint32_t count                        = GetAllocatorCount(execution_);
 
 	context_->Init(count, type);
+
+	std::wstringstream id;
+	id << thread_.get_id();
+	context_->SetName(std::format(L"Async Thread [id: {}]", id.str()));
 }
 
 void AsyncThread::Shutdown() {
@@ -95,11 +103,11 @@ void AsyncThreadPool::Create(AsyncExecution execution, size_t size) {
 	for (auto& thread : threads_) {
 		thread.Create(
 			execution,
-			[this](const AsyncThread* th) {
+			[this](AsyncThread* th) {
 
 				std::shared_ptr<AsyncTask> task = nullptr;
 
-				{
+				{ //!< task queue にアクセス
 					std::unique_lock<std::mutex> lock(mutex_);
 					condition_.wait(lock, [this, th]() { return th->IsTerminated() || !queue_.empty(); });
 
@@ -116,20 +124,26 @@ void AsyncThreadPool::Create(AsyncExecution execution, size_t size) {
 					}
 				}
 
-				if (task->GetStatus() != AsyncTask::Status::Pending) {
-					return;
+				{ //!< task の実行
+					if (task->GetStatus() != AsyncTask::Status::Pending) {
+						return;
+					}
+
+					th->SetStatus(AsyncThread::Status::Run);
+
+					task->SetStatus(AsyncTask::Status::Running);
+					task->Execute(th);
+
+					if (auto context = th->GetContext()) {
+						context->ExecuteAllAllocators(); //!< commandの実行
+					}
+
+					task->SetStatus(AsyncTask::Status::Completed);
+					Logger::EngineThreadLog("[AsyncThread] task completed. tag: " + task->GetTag());
+
+					th->SetStatus(AsyncThread::Status::Wait);
 				}
-
-				// todo: thread log output.
-				task->SetStatus(AsyncTask::Status::Running);
-				task->Execute(th);
-
-				if (auto context = th->GetContext()) {
-					context->ExecuteAllAllocators(); //!< commandの実行
-				}
-
-				task->SetStatus(AsyncTask::Status::Completed);
-				Logger::EngineThreadLog("[AsyncThread] task completed. tag: " + task->GetTag());
+				
 			}
 		);
 	}
@@ -163,4 +177,41 @@ void AsyncThreadPool::PushTask(const std::shared_ptr<AsyncTask>& task) {
 	Logger::EngineThreadLog("[AsyncThreadPool] task pushed. tag: " + task->GetTag());
 
 	condition_.notify_one();
+}
+
+void AsyncThreadPool::SystemDebugGui() {
+	ImGui::Text("thread count:    %u", threads_.size());
+	ImGui::Text("task queue size: %u", queue_.size());
+
+	{
+		ImGui::BeginTable("## async thread pool threads table", 2, ImGuiTableFlags_RowBg | ImGuiTableFlags_Borders);
+		ImGui::TableSetupColumn("id");
+		ImGui::TableSetupColumn("status");
+		ImGui::TableHeadersRow();
+
+		for (const auto& thread : threads_) {
+			ImGui::TableNextRow();
+
+			{ //!< id
+				ImGui::TableNextColumn();
+				std::ostringstream id;
+				id << thread.GetId();
+				ImGui::Text(id.str().c_str());
+				ImGui::SameLine();
+				ImGui::Dummy({ 16.0f, 0.0f });
+			}
+
+			{ //!< status
+				ImGui::TableNextColumn();
+				AsyncThread::Status status = thread.GetStatus();
+
+				ImGui::BeginDisabled(status == AsyncThread::Status::Wait);
+				ImGui::Text(magic_enum::enum_name(status).data());
+				ImGui::EndDisabled();
+			}
+		}
+
+		ImGui::EndTable();
+	}
+
 }

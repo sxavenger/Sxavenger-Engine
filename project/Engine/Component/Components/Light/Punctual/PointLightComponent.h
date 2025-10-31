@@ -66,6 +66,8 @@ public:
 
 	//* behaviour component option *//
 
+	//! @brief TransformComponentを取得
+	//! @throw TransformComponentがEntityに存在しない場合に例外をスローする
 	const TransformComponent* RequireTransform() const;
 
 	//* serialization option *//
@@ -80,6 +82,6 @@ private:
 	// private variables
 	//=========================================================================================
 
-	std::unique_ptr<DxObject::DimensionBuffer<Parameter>> parameter_;
+	std::unique_ptr<DxObject::ConstantBuffer<Parameter>> parameter_;
 
 };

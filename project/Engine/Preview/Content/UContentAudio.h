@@ -13,10 +13,6 @@ class UContentAudio
 	: public UBaseContent {
 public:
 
-	//=========================================================================================
-	// public methods
-	//=========================================================================================
-
 	UContentAudio()           = default;
 	~UContentAudio() override = default;
 

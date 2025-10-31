@@ -47,21 +47,51 @@ public:
 
 	//* storage option *//
 
+	//! @brief Contentの読み込み 
+	//! @tparam T Contentの型
+	//! @param[in] filepath Contentのファイルパス
+	//! @param[in] param 読み込みパラメータ
+	//! @return 読み込んだContentの共有ポインタ
 	template <UContentConcept T>
 	std::shared_ptr<T> Import(const std::filesystem::path& filepath, const std::any& param = std::any());
 
+	//! @brief Contentの再読み込み
+	//! @tparam T Contentの型
+	//! @param[in] filepath Contentのファイルパス
+	//! @param[in] param 読み込みパラメータ
+	//! @return 読み込んだContentの共有ポインタ
 	template <UContentConcept T>
 	std::shared_ptr<T> Reload(const std::filesystem::path& filepath, const std::any& param = std::any());
 
+	//! @brief Contentの直接登録
+	//! @param[in] type Contentの型情報
+	//! @param[in] content 登録するContentの共有ポインタ
 	void Emplace(const std::type_info* type, const std::shared_ptr<UBaseContent>& content);
 
+	//! @brief Contentの登録（存在しない場合のみ）
+	//! @param[in] type Contentの型情報
+	//! @param[in] content 登録するContentの共有ポインタ
 	void TryEmplace(const std::type_info* type, const std::shared_ptr<UBaseContent>& content);
 
+	//! @brief Contentの取得
+	//! @tparam T Contentの型
+	//! @param[in] filepath Contentのファイルパス
+	//! @retval ptr     取得したContentの共有ポインタ
+	//! @retval nullptr Contentが存在しない場合
 	template <UContentConcept T>
 	std::shared_ptr<T> GetContent(const std::filesystem::path& filepath) const;
 
+	//! @brief Contentの取得
+	//! @param[in] type Contentの型情報
+	//! @param[in] filepath Contentのファイルパス
+	//! @retval ptr 取得したContentの基底共有ポインタ
+	//! @retval nullptr Contentが存在しない場合
 	std::shared_ptr<UBaseContent> GetContent(const std::type_info* type, const std::filesystem::path& filepath) const;
 
+	//! @brief 指定したfilepathのContent型情報を取得
+	//! @param filepath Contentのファイルパス
+	//! @retval ptr 取得したContentの型情報
+	//! @retval nullptr Contentが存在しない場合
 	const std::type_info* GetType(const std::filesystem::path& filepath) const;
 
 	//* imgui option *//

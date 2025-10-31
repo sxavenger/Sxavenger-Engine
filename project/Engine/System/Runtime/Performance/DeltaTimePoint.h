@@ -25,7 +25,10 @@ public:
 
 	//* delta time option *//
 
+	//! @brief DeltaTimeを加算する
 	void AddDeltaTime();
+
+	//! @brief DeltaTimeを減算する
 	void SubtractionDeltaTime();
 
 };

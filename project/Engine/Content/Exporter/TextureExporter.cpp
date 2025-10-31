@@ -16,7 +16,7 @@
 void TextureExporter::Export(
 	const DirectXQueueContext* context,
 	TextureDimension dimension, ID3D12Resource* texture, DXGI_FORMAT format,
-	const std::filesystem::path& filename) {
+	const std::filesystem::path& filepath) {
 
 	auto device = SxavengerSystem::GetDxDevice()->GetDevice();
 
@@ -125,9 +125,9 @@ void TextureExporter::Export(
 		image = std::move(converted);
 	}
 
-	ExportTexture(filename, image);
+	ExportTexture(filepath, image);
 
-	Logger::CommentRuntime("texture exported.", filename.generic_string());
+	Logger::CommentRuntime("[TextureExporter]", "texture exported. \n filename: " + filepath.filename().generic_string());
 }
 
 DirectX::ScratchImage TextureExporter::GetImage(TextureDimension dimension, const D3D12_RESOURCE_DESC& desc) {
@@ -182,12 +182,9 @@ DirectX::WICCodecs TextureExporter::GetExtensionCodecs(const std::filesystem::pa
 	}
 }
 
-void TextureExporter::ExportTexture(const std::filesystem::path& filename, const DirectX::ScratchImage& image) {
+void TextureExporter::ExportTexture(const std::filesystem::path& filepath, const DirectX::ScratchImage& image) {
 
-	const std::filesystem::path& extension = filename.extension();
-	const std::filesystem::path filepath  = "Capture" / filename;
-
-	CreateFolder();
+	const std::filesystem::path& extension = filepath.extension();
 
 	HRESULT hr = {};
 
@@ -200,10 +197,6 @@ void TextureExporter::ExportTexture(const std::filesystem::path& filename, const
 	} else {
 		hr = DirectX::SaveToWICFile(*image.GetImages(), DirectX::WIC_FLAGS_NONE, DirectX::GetWICCodec(GetExtensionCodecs(extension)), filepath.generic_wstring().c_str());
 	}
-}
 
-void TextureExporter::CreateFolder() {
-	if (!std::filesystem::exists("Capture")) {
-		std::filesystem::create_directory("Capture");
-	}
+	DxObject::Assert(hr, L"texture export failed.");
 }

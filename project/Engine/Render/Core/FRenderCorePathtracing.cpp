@@ -8,14 +8,6 @@ _DXROBJECT_USING
 #include <Engine/System/SxavengerSystem.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// Reservoir structure methods
-////////////////////////////////////////////////////////////////////////////////////////////
-
-void FRenderCorePathtracing::Config::Update() {
-	isResetMoment = false;
-}
-
-////////////////////////////////////////////////////////////////////////////////////////////
 // FRenderCorePathtracing class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -141,7 +133,11 @@ void FRenderCorePathtracing::CreateDenoiser() {
 		denoiser = std::make_unique<CustomReflectionComputePipeline>();
 		denoiser->CreateContent(kPackagesShaderDirectory / "render" / "denoiser" / "EdgeStopping.cs.hlsl");
 		denoiser->RegisterBlob();
-		denoiser->ReflectionPipeline(SxavengerSystem::GetDxDevice());
+
+		DxObject::SamplerBindDesc desc = {};
+		desc.SetSamplerAnisotropic("gSampler", DxObject::SamplerMode::MODE_CLAMP, 16);
+
+		denoiser->ReflectionPipeline(SxavengerSystem::GetDxDevice(), desc);
 	}
 
 }
@@ -156,38 +152,40 @@ void FRenderCorePathtracing::CreateContext() {
 		//* lighting textures
 		desc.SetHandleUAV(0, 0, 1); //!< gReservoirDiffuse
 		desc.SetHandleUAV(1, 1, 1); //!< gReservoirSpecular
-		desc.SetHandleUAV(2, 2, 1); //!< gIndirectMoment
+		desc.SetHandleUAV(2, 2, 1); //!< gAtlasDiffuse
+		desc.SetHandleUAV(3, 3, 1); //!< gAtlasSpecular
+		desc.SetHandleUAV(4, 4, 1); //!< gIndirectMoment
 
 		//* scene
-		desc.SetVirtualSRV(3, 0, 1); //!< gScene
+		desc.SetVirtualSRV(5, 0, 1); //!< gScene
 
 		//* deferred textures
-		desc.SetVirtualCBV(4, 0, 1); //!< gDeferredBufferIndex
+		desc.SetVirtualCBV(6, 0, 1); //!< gDeferredBufferIndex
 
 		//* camera
-		desc.SetVirtualCBV(5, 1, 1); //!< gCamera
+		desc.SetVirtualCBV(7, 1, 1); //!< gCamera
 
 		//* config
-		desc.Set32bitConstants(6, DxObject::ShaderVisibility::VISIBILITY_ALL, 3, 2, 1); //!< Config
+		desc.Set32bitConstants(8, DxObject::ShaderVisibility::VISIBILITY_ALL, 3, 2, 1); //!< Config
 
 		//* light
 		// Directional Light
-		desc.SetVirtualCBV(7, 0, 2); //!< gDirectionalLightCount
-		desc.SetVirtualSRV(8, 0, 2); //!< gDirectionalLightTransforms
-		desc.SetVirtualSRV(9, 1, 2); //!< gDirectionalLights
+		desc.SetVirtualCBV(9, 0, 2); //!< gDirectionalLightCount
+		desc.SetVirtualSRV(10, 0, 2); //!< gDirectionalLightTransforms
+		desc.SetVirtualSRV(11, 1, 2); //!< gDirectionalLights
 
 		// Point Light
-		desc.SetVirtualCBV(10, 1, 2);  //!< gPointLightCount
-		desc.SetVirtualSRV(11, 2, 2); //!< gPointLightTransforms
-		desc.SetVirtualSRV(12, 3, 2); //!< gPointLights
+		desc.SetVirtualCBV(12, 1, 2);  //!< gPointLightCount
+		desc.SetVirtualSRV(13, 2, 2); //!< gPointLightTransforms
+		desc.SetVirtualSRV(14, 3, 2); //!< gPointLights
 
 		// Spot Light
-		desc.SetVirtualCBV(13, 2, 2); //!< gSpotLightCount
-		desc.SetVirtualSRV(14, 4, 2); //!< gSpotLightTransforms
-		desc.SetVirtualSRV(15, 5, 2); //!< gSpotLights
+		desc.SetVirtualCBV(15, 2, 2); //!< gSpotLightCount
+		desc.SetVirtualSRV(16, 4, 2); //!< gSpotLightTransforms
+		desc.SetVirtualSRV(17, 5, 2); //!< gSpotLights
 
 		// Sky Light
-		desc.SetVirtualCBV(16, 3, 2);                                                                 //!< gSkyLight
+		desc.SetVirtualCBV(18, 3, 2);                                                                 //!< gSkyLight
 		desc.SetSamplerLinear(DxObject::MODE_WRAP, DxObject::ShaderVisibility::VISIBILITY_ALL, 0, 2); //!< gSampler
 
 		context_->CreateRootSignature(SxavengerSystem::GetDxDevice(), desc);

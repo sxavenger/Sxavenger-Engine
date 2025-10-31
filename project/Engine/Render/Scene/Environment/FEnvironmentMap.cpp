@@ -20,7 +20,7 @@ void FEnvironmentMap::IrradianceMap::Create(const Vector2ui& _size) {
 }
 
 void FEnvironmentMap::IrradianceMap::Dispatch(const DirectXQueueContext* context, const D3D12_GPU_DESCRIPTOR_HANDLE& environment) {
-	asyncResource.TransitionToExpectedState(
+	asyncResource.Transition(
 		context->GetDxCommand(),
 		D3D12_RESOURCE_STATE_UNORDERED_ACCESS
 	);
@@ -41,13 +41,13 @@ void FEnvironmentMap::IrradianceMap::Commit(const DirectXQueueContext* context) 
 	// 条件: Dispatch(...)と同時に呼び出されないように調整する.
 
 	// async resourceの状態を変更
-	asyncResource.TransitionToExpectedState(
+	asyncResource.Transition(
 		context->GetDxCommand(),
 		D3D12_RESOURCE_STATE_COPY_SOURCE
 	);
 
 	// main resourceの状態を変更
-	mainResource.TransitionToExpectedState(
+	mainResource.Transition(
 		context->GetDxCommand(),
 		D3D12_RESOURCE_STATE_COPY_DEST
 	);
@@ -60,7 +60,7 @@ void FEnvironmentMap::IrradianceMap::Commit(const DirectXQueueContext* context) 
 
 const DxObject::Descriptor& FEnvironmentMap::IrradianceMap::UseDescriptorSRV(const DirectXQueueContext* context) {
 	// SRVを使える状態に遷移
-	mainResource.TransitionToExpectedState(
+	mainResource.Transition(
 		context->GetDxCommand(),
 		D3D12_RESOURCE_STATE_ALL_SHADER_RESOURCE
 	);
@@ -192,7 +192,7 @@ void FEnvironmentMap::RadianceMap::Create(const Vector2ui& _size) {
 }
 
 void FEnvironmentMap::RadianceMap::Dispatch(const DirectXQueueContext* context, const D3D12_GPU_DESCRIPTOR_HANDLE& environment) {
-	asyncResource.TransitionToExpectedState(
+	asyncResource.Transition(
 		context->GetDxCommand(),
 		D3D12_RESOURCE_STATE_UNORDERED_ACCESS
 	);
@@ -214,13 +214,13 @@ void FEnvironmentMap::RadianceMap::Commit(const DirectXQueueContext* context) {
 	// 条件: Dispatch(...)と同時に呼び出されないように調整する.
 	
 	// async resourceの状態を変更
-	asyncResource.TransitionToExpectedState(
+	asyncResource.Transition(
 		context->GetDxCommand(),
 		D3D12_RESOURCE_STATE_COPY_SOURCE
 	);
 
 	// main resourceの状態を変更
-	mainResource.TransitionToExpectedState(
+	mainResource.Transition(
 		context->GetDxCommand(),
 		D3D12_RESOURCE_STATE_COPY_DEST
 	);
@@ -233,7 +233,7 @@ void FEnvironmentMap::RadianceMap::Commit(const DirectXQueueContext* context) {
 
 const DxObject::Descriptor& FEnvironmentMap::RadianceMap::UseDescriptorSRV(const DirectXQueueContext* context) {
 	// SRVを使える状態に遷移
-	mainResource.TransitionToExpectedState(
+	mainResource.Transition(
 		context->GetDxCommand(),
 		D3D12_RESOURCE_STATE_ALL_SHADER_RESOURCE
 	);

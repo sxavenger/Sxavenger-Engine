@@ -39,19 +39,11 @@ public:
 
 	D3D12_SHADER_BYTECODE GetBytecode() const;
 
-	//* setter *//
-
-	static void SetExternal(DxObject::ShaderCompiler* compiler) { compiler_ = compiler; }
-
 private:
 
 	//=========================================================================================
 	// private variables
 	//=========================================================================================
-
-	//* external *//
-
-	static DxObject::ShaderCompiler* compiler_;
 
 	//* blob *//
 	 

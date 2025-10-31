@@ -7,7 +7,7 @@
 #include "../BaseComponent.h"
 
 //* engine
-#include <Engine/System/DirectX/DxObject/DxDimensionBuffer.h>
+#include <Engine/System/DirectX/DxObject/DxConstantBuffer.h>
 
 //* lib
 #include <Lib/Geometry/Matrix4x4.h>
@@ -19,6 +19,7 @@
 ////////////////////////////////////////////////////////////////////////////////////////////
 // TransformComponent class
 ////////////////////////////////////////////////////////////////////////////////////////////
+//! @brief 3D空間の変換情報component.
 class TransformComponent final
 	: public BaseComponent {
 public:
@@ -27,7 +28,7 @@ public:
 	// public methods
 	//=========================================================================================
 
-	TransformComponent(MonoBehaviour* behaviour) : BaseComponent(behaviour) { CreateBuffer(); }
+	TransformComponent(MonoBehaviour* behaviour);
 	~TransformComponent() override = default;
 
 	//* component option *//
@@ -36,14 +37,14 @@ public:
 
 	//* buffer option *//
 
-	void CreateBuffer();
-
 	const D3D12_GPU_VIRTUAL_ADDRESS& GetGPUVirtualAddress() const;
 
 	//* transform option *//
 
+	//! @brief 行列を更新
 	void UpdateMatrix();
 
+	//! @brief 親が存在するか確認
 	bool HasParent() const;
 
 	const QuaternionTransform& GetTransform() const { return transform_; }
@@ -88,7 +89,7 @@ private:
 
 	//* buffer *//
 
-	std::unique_ptr<DxObject::DimensionBuffer<TransformationMatrix>> buffer_;
+	std::unique_ptr<DxObject::ConstantBuffer<TransformationMatrix>> buffer_;
 
 	//=========================================================================================
 	// private methods

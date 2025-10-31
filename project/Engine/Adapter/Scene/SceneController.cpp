@@ -1,65 +1,81 @@
 #include "SceneController.h"
 
-//-----------------------------------------------------------------------------------------
-// include
-//-----------------------------------------------------------------------------------------
-//* engine
-#include <Engine/System/Utility/Logger.h>
-#include <Engine/Editor/EditorEngine.h>
-
 ////////////////////////////////////////////////////////////////////////////////////////////
 // SceneController class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-void SceneController::Init(const std::string& startSceneKey) {
-	//* init begin scene
-	if (factory_ != nullptr) {
-		scene_ = factory_->CreateScene(startSceneKey);
+void SceneController::Init(std::unique_ptr<const SceneFactory>&& factory) {
+	factory_ = std::move(factory);
+}
+
+void SceneController::Push(const std::string& name) {
+	std::unique_ptr<BaseScene> scene = factory_->CreateScene(name);
+	scene->Init();
+
+	scenes_.emplace_back(std::move(scene));
+}
+
+void SceneController::TransitionScene() {
+
+	// 現在のシーンを取得
+	BaseScene* scene = GetCurrentScene();
+
+	if (scene == nullptr) {
+		return; //!< シーンが存在しない場合は何もしない
+	}
+	
+	if (!scene->IsTransition()) {
+		return; //!< シーン遷移が発生していない場合は何もしない
 	}
 
-	InitScene();
-}
+	const BaseScene::Transition transition = scene->GetTransition();
 
-void SceneController::Term() {
-	TermScene();
-	nextScene_.reset();
-}
+	switch (transition.destruction) {
+		case BaseScene::Transition::Destruction::Single:
+			scenes_.pop_back(); //!< 現在のシーンのみ破棄
+			break;
 
-void SceneController::RequestNextScene(const std::string& key) {
-	if (factory_ != nullptr) {
-		nextScene_ = factory_->CreateScene(key);
+		case BaseScene::Transition::Destruction::All:
+			scenes_.clear(); //!< 全てのシーンを破棄
+			break;
 	}
-}
 
-void SceneController::ActivateNextScene() {
-	if (nextScene_ != nullptr) {
-		TermScene();
-		scene_ = std::move(nextScene_);
-		InitScene();
-	}
-}
-
-void SceneController::InitScene() {
-	if (scene_ != nullptr) {
-		scene_->Init();
-		scene_->SetController(this);
+	for (const std::string& name : transition.names) {
+		Push(name); //!< 遷移先シーンを追加
 	}
 }
 
 void SceneController::UpdateScene() {
-	if (scene_ != nullptr) {
-		scene_->Update();
+	// 現在のシーンを取得
+	BaseScene* scene = GetCurrentScene();
+
+	if (scene == nullptr) {
+		return; //!< シーンが存在しない場合は何もしない
 	}
+
+	scene->Update();
 }
 
-void SceneController::DrawScene() {
-	if (scene_ != nullptr) {
-		scene_->Draw();
+void SceneController::LateUpdateScene() {
+	// 現在のシーンを取得
+	BaseScene* scene = GetCurrentScene();
+
+	if (scene == nullptr) {
+		return; //!< シーンが存在しない場合は何もしない
 	}
+
+	scene->LateUpdate();
 }
 
-void SceneController::TermScene() {
-	if (scene_ != nullptr) {
-		scene_->Term();
+bool SceneController::IsEmpty() const {
+	return scenes_.empty();
+}
+
+BaseScene* SceneController::GetCurrentScene() const {
+	if (scenes_.empty()) {
+		return nullptr;
 	}
+
+	// 最後尾のシーンを取得
+	return scenes_.back().get();
 }

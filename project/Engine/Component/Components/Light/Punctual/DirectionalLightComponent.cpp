@@ -29,13 +29,13 @@ void DirectionalLightComponent::Parameter::Init() {
 DirectionalLightComponent::DirectionalLightComponent(MonoBehaviour* behaviour)
 	: BaseComponent(behaviour) {
 
-	parameter_ = std::make_unique<DimensionBuffer<Parameter>>();
-	parameter_->Create(SxavengerSystem::GetDxDevice(), 1);
-	parameter_->At(0).Init();
+	parameter_ = std::make_unique<ConstantBuffer<Parameter>>();
+	parameter_->Create(SxavengerSystem::GetDxDevice());
+	parameter_->At().Init();
 }
 
 void DirectionalLightComponent::ShowComponentInspector() {
-	auto& parameter = parameter_->At(0);
+	auto& parameter = parameter_->At();
 	ImGui::ColorEdit3("color", &parameter.color.r);
 
 	std::string format = "%.3flux";
@@ -55,12 +55,12 @@ const D3D12_GPU_VIRTUAL_ADDRESS& DirectionalLightComponent::GetGPUVirtualAddress
 
 const DirectionalLightComponent::Parameter& DirectionalLightComponent::GetParameter() const {
 	Exception::Assert(parameter_ != nullptr, "directional light buffer is not create.");
-	return parameter_->At(0);
+	return parameter_->At();
 }
 
 DirectionalLightComponent::Parameter& DirectionalLightComponent::GetParameter() {
 	Exception::Assert(parameter_ != nullptr, "directional light buffer is not create.");
-	return parameter_->At(0);
+	return parameter_->At();
 }
 
 const TransformComponent* DirectionalLightComponent::RequireTransform() const {
@@ -70,17 +70,17 @@ const TransformComponent* DirectionalLightComponent::RequireTransform() const {
 json DirectionalLightComponent::PerseToJson() const {
 	json data = json::object();
 
-	data["color"]           = JsonSerializeFormatter<Color3f>::Serialize(parameter_->At(0).color);
-	data["intensity"]       = JsonSerializeFormatter<float>::Serialize(parameter_->At(0).intensity);
-	data["shadow_strength"] = JsonSerializeFormatter<float>::Serialize(parameter_->At(0).shadow.strength);
-	data["shadow_flag"]     = JsonSerializeFormatter<uint32_t>::Serialize(parameter_->At(0).shadow.flag.Get());
+	data["color"]           = JsonSerializeFormatter<Color3f>::Serialize(parameter_->At().color);
+	data["intensity"]       = JsonSerializeFormatter<float>::Serialize(parameter_->At().intensity);
+	data["shadow_strength"] = JsonSerializeFormatter<float>::Serialize(parameter_->At().shadow.strength);
+	data["shadow_flag"]     = JsonSerializeFormatter<uint32_t>::Serialize(parameter_->At().shadow.flag.Get());
 
 	return data;
 }
 
 void DirectionalLightComponent::InputJson(const json& data) {
-	parameter_->At(0).color           = JsonSerializeFormatter<Color3f>::Deserialize(data["color"]);
-	parameter_->At(0).intensity       = JsonSerializeFormatter<float>::Deserialize(data["intensity"]);
-	parameter_->At(0).shadow.strength = JsonSerializeFormatter<float>::Deserialize(data["shadow_strength"]);
-	parameter_->At(0).shadow.flag     = JsonSerializeFormatter<uint32_t>::Deserialize(data["shadow_flag"]);
+	parameter_->At().color           = JsonSerializeFormatter<Color3f>::Deserialize(data["color"]);
+	parameter_->At().intensity       = JsonSerializeFormatter<float>::Deserialize(data["intensity"]);
+	parameter_->At().shadow.strength = JsonSerializeFormatter<float>::Deserialize(data["shadow_strength"]);
+	parameter_->At().shadow.flag     = JsonSerializeFormatter<uint32_t>::Deserialize(data["shadow_flag"]);
 }

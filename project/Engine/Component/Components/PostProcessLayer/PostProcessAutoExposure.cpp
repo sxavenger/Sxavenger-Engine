@@ -35,9 +35,9 @@ void PostProcessAutoExposure::Parameter::SetImGuiCommand() {
 void PostProcessAutoExposure::Init() {
 	name_ = "Auto Exposure";
 
-	parameter_ = std::make_unique<DimensionBuffer<Parameter>>();
-	parameter_->Create(SxavengerSystem::GetDxDevice(), 1);
-	parameter_->At(0).Init();
+	parameter_ = std::make_unique<ConstantBuffer<Parameter>>();
+	parameter_->Create(SxavengerSystem::GetDxDevice());
+	parameter_->At().Init();
 
 	histgram_ = std::make_unique<UnorderedDimensionBuffer<uint32_t>>();
 	histgram_->Create(SxavengerSystem::GetDxDevice(), kGroupCount_);
@@ -97,7 +97,7 @@ void PostProcessAutoExposure::Process(const DirectXQueueContext* context, const 
 }
 
 void PostProcessAutoExposure::ShowInspectorImGui() {
-	parameter_->At(0).SetImGuiCommand();
+	parameter_->At().SetImGuiCommand();
 
 	ReadbackDimensionBuffer<uint32_t>::Readback(
 		SxavengerSystem::GetDxDevice(),
@@ -113,14 +113,14 @@ void PostProcessAutoExposure::ShowInspectorImGui() {
 		debugAverageLuminance_.get()
 	);
 
-	auto itr = std::max_element(debugHistgram_->GetSpan().begin(), debugHistgram_->GetSpan().end());
+	uint32_t sum = std::accumulate(debugHistgram_->GetSpan().begin(), debugHistgram_->GetSpan().end(), 0);
 
 	ImVec2 cursor = ImGui::GetCursorPos();
 	ImVec2 size   = { ImGui::GetContentRegionAvail().x, 80.0f };
 
 	SxImGui::PlotHistogramFunc(
 		"## histogram",
-		[&](uint32_t index) { return static_cast<float>(debugHistgram_->At(index)) / (*itr); },
+		[&](uint32_t index) { return sum != 0 ? static_cast<float>(debugHistgram_->At(index)) / static_cast<float>(sum) : 0; },
 		debugHistgram_->GetSize(),
 		0,
 		NULL,
@@ -129,18 +129,21 @@ void PostProcessAutoExposure::ShowInspectorImGui() {
 		size
 	);
 
-	//float t = debugAverageLuminance_->At(0) / (parameter_->At(0).maxLogLuminance - parameter_->At(0).minLogLuminance);
-	//ImGui::ProgressBar(t, { ImGui::GetContentRegionAvail().x, 0.0f }, "## luminance");
+	float avarage = debugAverageLuminance_->At(0);
+	float t = (avarage - parameter_->At().minLogLuminance) / (parameter_->At().maxLogLuminance - parameter_->At().minLogLuminance);
+
+	// FIXME
+	ImGui::ProgressBar(t, { size.x, 0.0f }, std::format("avarage luminance: {}", avarage).c_str());
 
 	
 }
 
 const PostProcessAutoExposure::Parameter& PostProcessAutoExposure::GetParameter() const {
 	Exception::Assert(parameter_ != nullptr, "auto exposure parameter buffer is not create.");
-	return parameter_->At(0);
+	return parameter_->At();
 }
 
 PostProcessAutoExposure::Parameter& PostProcessAutoExposure::GetParameter() {
 	Exception::Assert(parameter_ != nullptr, "auto exposure parameter buffer is not create.");
-	return parameter_->At(0);
+	return parameter_->At();
 }

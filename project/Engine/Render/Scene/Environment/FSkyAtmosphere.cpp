@@ -42,7 +42,7 @@ void FSkyAtmosphere::AtmosphereMap::Dispatch(const DirectXQueueContext* context)
 
 	pipeline->SetPipeline(context->GetDxCommand());
 
-	asyncResource.TransitionToExpectedState(context->GetDxCommand(), D3D12_RESOURCE_STATE_UNORDERED_ACCESS);
+	asyncResource.Transition(context->GetDxCommand(), D3D12_RESOURCE_STATE_UNORDERED_ACCESS);
 
 	BindBufferDesc desc = {};
 	desc.SetHandle("gAtmosphere", asyncDescriptorUAV.GetGPUHandle());
@@ -52,19 +52,19 @@ void FSkyAtmosphere::AtmosphereMap::Dispatch(const DirectXQueueContext* context)
 	Vector3ui threadGroup = { RoundUp(size.x, 16), RoundUp(size.y, 16), 6 };
 	pipeline->Dispatch(context->GetDxCommand(), threadGroup);
 
-	asyncResource.TransitionToExpectedState(context->GetDxCommand(), D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE);
+	asyncResource.Transition(context->GetDxCommand(), D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE);
 
 }
 
 void FSkyAtmosphere::AtmosphereMap::Commit(const DirectXQueueContext* context) {
 	// async resourceの状態を変更
-	asyncResource.TransitionToExpectedState(
+	asyncResource.Transition(
 		context->GetDxCommand(),
 		D3D12_RESOURCE_STATE_COPY_SOURCE
 	);
 
 	// main resourceの状態を変更
-	mainResource.TransitionToExpectedState(
+	mainResource.Transition(
 		context->GetDxCommand(),
 		D3D12_RESOURCE_STATE_COPY_DEST
 	);
@@ -77,7 +77,7 @@ void FSkyAtmosphere::AtmosphereMap::Commit(const DirectXQueueContext* context) {
 
 const DxObject::Descriptor& FSkyAtmosphere::AtmosphereMap::UseDescriptorSRV(const DirectXQueueContext* context) {
 	// SRVを使える状態に遷移
-	mainResource.TransitionToExpectedState(
+	mainResource.Transition(
 		context->GetDxCommand(),
 		D3D12_RESOURCE_STATE_ALL_SHADER_RESOURCE
 	);

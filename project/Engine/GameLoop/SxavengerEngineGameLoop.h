@@ -9,6 +9,7 @@
 ////////////////////////////////////////////////////////////////////////////////////////////
 // SxavengerEngineGameLoop class
 ////////////////////////////////////////////////////////////////////////////////////////////
+//! @brief SxavengerEngine用GameLoopクラス
 class SxavengerEngineGameLoop
 	: public GameLoop::Interface {
 public:
@@ -32,6 +33,6 @@ private:
 	void CreateWhite1x1();
 	void CreateCheckerboard();
 
-	void UpdateMaterials();
+	void UpdateAsset();
 
 };

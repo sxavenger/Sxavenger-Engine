@@ -25,8 +25,7 @@ void UAssetTexture::Metadata::Assign(const DirectX::TexMetadata& metadata) {
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 void UAssetTexture::Setup(const DirectXQueueContext* context, const DirectX::ScratchImage& image) {
-	context->RequestQueue(DirectXQueueContext::RenderQueue::Compute); //!< ComputeQueue以上を使用
-	// FIXME: CopyQueueを使用するようにする
+	context->RequestQueue(DirectXQueueContext::RenderQueue::Copy); //!< CopyQueue以上を使用
 
 	// metadataの取得
 	const DirectX::TexMetadata& metadata = image.GetMetadata();
@@ -67,11 +66,31 @@ void UAssetTexture::Setup(const DirectXQueueContext* context, const DirectX::Scr
 	// metadataの保存
 	metadata_.Assign(metadata);
 
+	isTransition_ = false;
+
 	// textureをuploadさせる.
 	context->ExecuteAllAllocators();
 
 	UBaseAsset::Complete();
 	Logger::EngineThreadLog(std::format("[UAssetTexture]: texture setup complete. uuid: {}", UBaseAsset::GetId().Serialize()));
+}
+
+void UAssetTexture::Update(const DirectXQueueContext* context) {
+	if (!UBaseAsset::IsComplete() || isTransition_) {
+		return;
+	}
+	context->RequestQueue(DirectXQueueContext::RenderQueue::Direct); //!< DirectQueue以上を使用
+
+	D3D12_RESOURCE_BARRIER barrier = {};
+	barrier.Type                   = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+	barrier.Transition.pResource   = resource_.Get();
+	barrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
+	barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_COPY_DEST;
+	barrier.Transition.StateAfter  = D3D12_RESOURCE_STATE_ALL_SHADER_RESOURCE;
+
+	context->GetCommandList()->ResourceBarrier(1, &barrier);
+
+	isTransition_ = true;
 }
 
 void UAssetTexture::Reset() {
@@ -151,11 +170,11 @@ ComPtr<ID3D12Resource> UAssetTexture::CreateTextureResource(const DirectX::TexMe
 		&prop,
 		D3D12_HEAP_FLAG_NONE,
 		&desc,
-		D3D12_RESOURCE_STATE_COPY_DEST,
+		D3D12_RESOURCE_STATE_COMMON,
 		nullptr,
 		IID_PPV_ARGS(&resource)
 	);
-	DxObject::Assert(SUCCEEDED(hr), L"texture resource create failed.");
+	DxObject::Assert(hr, L"texture resource create failed.");
 
 	resource->SetName(L"UAsset | Texture");
 	return resource;
@@ -170,20 +189,9 @@ ComPtr<ID3D12Resource> UAssetTexture::UploadTextureData(const DirectXQueueContex
 	DirectX::PrepareUpload(device, image.GetImages(), image.GetImageCount(), image.GetMetadata(), subresource);
 
 	uint64_t intermediateSize = GetRequiredIntermediateSize(texture, 0, UINT(subresource.size()));
-	ComPtr<ID3D12Resource> intermediateResource = CreateBufferResource(device, intermediateSize);
+	ComPtr<ID3D12Resource> intermediateResource = CreateBufferResource(device, D3D12_HEAP_TYPE_UPLOAD, intermediateSize, D3D12_RESOURCE_FLAG_NONE, D3D12_RESOURCE_STATE_COPY_SOURCE);
+
 	UpdateSubresources(commandList, texture, intermediateResource.Get(), 0, 0, UINT(subresource.size()), subresource.data());
-
-	// 転送後は利用できるように D3D12_RESOUCE_STATE_COPY_DESC -> D3D12_RESOUCE_STATE_GENETIC_READ へ変更
-	// todo: copy queueで行わないようにする.
-	D3D12_RESOURCE_BARRIER barrier = {};
-	barrier.Type                   = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
-	barrier.Flags                  = D3D12_RESOURCE_BARRIER_FLAG_NONE;
-	barrier.Transition.pResource   = texture;
-	barrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
-	barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_COPY_DEST;
-	barrier.Transition.StateAfter  = D3D12_RESOURCE_STATE_COMMON;
-
-	commandList->ResourceBarrier(1, &barrier);
 
 	intermediateResource->SetName(L"UAsset | intermediate upload resource");
 	return intermediateResource;

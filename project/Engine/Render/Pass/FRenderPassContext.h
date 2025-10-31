@@ -16,10 +16,6 @@
 class FRenderPassContext {
 public:
 
-	//=========================================================================================
-	// public methods
-	//=========================================================================================
-
 	//* render option *//
 
 	void Render(const DirectXQueueContext* context, const FBaseRenderPass::Config& config);
@@ -40,7 +36,7 @@ private:
 	std::list<std::unique_ptr<FBaseRenderPass>> passes_;
 
 	//=========================================================================================
-	// private methods
+	// public methods
 	//=========================================================================================
 
 	static FBaseRenderPass::Config ApplyConfig(const FBaseRenderPass::Config& config);

@@ -25,9 +25,9 @@ void PostProcessChromaticAberration::Parameter::SetImGuiCommand() {
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 void PostProcessChromaticAberration::Init() {
-	parameter_ = std::make_unique<DimensionBuffer<Parameter>>();
-	parameter_->Create(SxavengerSystem::GetDxDevice(), 1);
-	parameter_->At(0).Init();
+	parameter_ = std::make_unique<ConstantBuffer<Parameter>>();
+	parameter_->Create(SxavengerSystem::GetDxDevice());
+	parameter_->At().Init();
 
 	name_ = "Chromatic Aberration";
 }
@@ -61,5 +61,5 @@ void PostProcessChromaticAberration::Process(const DirectXQueueContext* context,
 }
 
 void PostProcessChromaticAberration::ShowInspectorImGui() {
-	parameter_->At(0).SetImGuiCommand();
+	parameter_->At().SetImGuiCommand();
 }

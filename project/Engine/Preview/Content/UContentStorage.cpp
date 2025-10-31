@@ -20,7 +20,7 @@ void UContentStorage::Emplace(const std::type_info* type, const std::shared_ptr<
 
 void UContentStorage::TryEmplace(const std::type_info* type, const std::shared_ptr<UBaseContent>& content) {
 	if (Contains(type, content->GetFilepath())) {
-		Logger::CommentRuntime("[UAssetStorage]: content is already registered in storage.", content->GetFilepath().generic_string());
+		Logger::CommentRuntime("[UAssetStorage]", "content is already registered in storage. \n filepath: " + content->GetFilepath().generic_string());
 		return;
 	}
 
