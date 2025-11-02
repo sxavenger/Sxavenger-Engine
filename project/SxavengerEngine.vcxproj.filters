@@ -747,6 +747,9 @@
     <ClInclude Include="Engine\System\DirectX\DxObject\DxResourceDimensionBuffer.h">
       <Filter>Engine\System\DirectX\DxObject</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\System\DirectX\DxObject\DxResourceStateTracker.h">
+      <Filter>Engine\System\DirectX\DxObject</Filter>
+    </ClInclude>
     <ClInclude Include="Engine\System\DirectX\DxObject\DxResourceStorage.h">
       <Filter>Engine\System\DirectX\DxObject</Filter>
     </ClInclude>
@@ -939,7 +942,6 @@
     <ClInclude Include="externals\meshoptimizer\meshoptimizer.h">
       <Filter>externals\meshoptimizer</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\System\DirectX\DxObject\DxResourceStateTracker.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Demo\Entity\Player.cpp">

@@ -61,8 +61,6 @@ void DemoGameLoop::InitGame() {
 
 void DemoGameLoop::TermGame() {
 	controller_.reset();
-	sSceneObjects->Clear();
-	// hack: ここに記述していいのか?
 }
 
 void DemoGameLoop::UpdateGame() {

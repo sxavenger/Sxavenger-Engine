@@ -11,6 +11,7 @@
 #include <Engine/Render/FMainRender.h>
 #include <Engine/Component/Components/Audio/AudioController.h>
 #include <Engine/Component/ComponentHelper.h>
+#include <Engine/Module/Scene/SceneObjects.h>
 
 //* c++
 #include <limits>
@@ -37,6 +38,8 @@ void SxavengerEngineGameLoop::Init(GameLoop::Context* context) {
 	});
 
 	context->SetProcess(GameLoop::Process::Term, std::nullopt, [this]() {
+		sSceneObjects->Clear();
+
 		FMainRender::GetInstance()->Term();
 		FRenderCore::GetInstance()->Term();
 
