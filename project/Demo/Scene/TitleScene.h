@@ -22,6 +22,8 @@ public:
 
 	void Init() override;
 
+	void Start() override;
+
 	void Update() override;
 
 private:
@@ -31,5 +33,7 @@ private:
 	//=========================================================================================
 
 	std::unique_ptr<MonoBehaviour> camera_;
+
+	std::unique_ptr<MonoBehaviour> title_;
 
 };

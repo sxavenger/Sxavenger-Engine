@@ -20,11 +20,19 @@ void TitleScene::Init() {
 
 }
 
+void TitleScene::Start() {
+
+	title_ = std::make_unique<MonoBehaviour>();
+	title_->SetName("title");
+	title_->LoadComponent(kAssetsDirectory / "behaviour" / "title.behaviour");
+	
+}
+
 void TitleScene::Update() {
 
 	const KeyboardInput* keyboard = SxavengerSystem::GetKeyboardInput();
 
-	if (keyboard->IsTrigger(KeyId::KEY_SPACE)) {
+	if (keyboard->IsPressAny()) {
 		Transition transition = {};
 		transition.destruction = Transition::Destruction::Single;
 

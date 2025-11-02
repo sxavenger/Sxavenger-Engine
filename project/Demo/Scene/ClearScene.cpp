@@ -23,6 +23,9 @@ void ClearScene::Init() {
 	fade_->AddComponent<SpriteRendererComponent>();
 }
 
+void ClearScene::Start() {
+}
+
 void ClearScene::Update() {
 
 	timer_.AddDeltaTime();

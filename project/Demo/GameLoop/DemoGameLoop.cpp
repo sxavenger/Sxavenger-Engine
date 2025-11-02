@@ -48,16 +48,14 @@ void DemoGameLoop::InitGame() {
 	main_ = SxavengerSystem::CreateMainWindow(kMainWindowSize, L"Sxavenger Engine Demo").lock();
 	main_->SetIcon("packages/icon/SxavengerEngineIcon.ico", { 32, 32 });
 
-	factory_ = std::make_unique<SceneFactory>();
-	factory_->Register<TitleScene>("Title");
-	factory_->Register<GameScene>("Game");
-	factory_->Register<ClearScene>("Clear");
+	std::unique_ptr<SceneFactory> factory = std::make_unique<SceneFactory>();
+	factory->Register<TitleScene>("Title");
+	factory->Register<GameScene>("Game");
+	factory->Register<ClearScene>("Clear");
 
 	controller_ = std::make_unique<SceneController>();
-	controller_->Init(std::move(factory_));
-
-	controller_->Push("Game");
-	controller_->Push("Title");
+	controller_->Init(std::move(factory));
+	controller_->BeginState({ "Game", "Title" });
 
 }
 

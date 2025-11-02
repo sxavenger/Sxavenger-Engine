@@ -171,6 +171,7 @@ json TextRendererComponent::PerseToJson() const {
 	component["text"]  = ToString(text_);
 	component["font"]  = font_.Serialize();
 	component["color"] = JsonSerializeFormatter<Color4f>::Serialize(color_);
+	component["size"]  = size_;
 
 	return component;
 }
@@ -191,4 +192,5 @@ void TextRendererComponent::InputJson(const json& data) {
 	font_ = font;
 
 	color_ = JsonSerializeFormatter<Color4f>::Deserialize(data["color"]);
+	size_  = JsonSerializeFormatter<float>::Deserialize(data["size"]);
 }
