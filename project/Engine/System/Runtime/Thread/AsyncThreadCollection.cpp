@@ -18,9 +18,17 @@ void AsyncThreadCollection::Init() {
 	pools_[static_cast<uint8_t>(AsyncExecution::Compute)].Create(AsyncExecution::Compute, 1);
 }
 
-void AsyncThreadCollection::Term() {
+void AsyncThreadCollection::SetTerminate() {
 	for (auto& pool : pools_) {
-		pool.Term();
+		pool.SetTerminate();
+	}
+}
+
+void AsyncThreadCollection::Shutdown() {
+	SetTerminate();
+
+	for (auto& pool : pools_) {
+		pool.Shutdown();
 	}
 }
 

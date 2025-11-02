@@ -149,14 +149,18 @@ void AsyncThreadPool::Create(AsyncExecution execution, size_t size) {
 	}
 }
 
-void AsyncThreadPool::Term() {
-
-	// threadの終了
+void AsyncThreadPool::SetTerminate() {
+	// threadの終了を通知
 	for (auto& thread : threads_) {
 		thread.SetTerminate();
 	}
 
+	// threadの終了
 	condition_.notify_all();
+}
+
+void AsyncThreadPool::Shutdown() {
+	SetTerminate();
 
 	for (auto& thread : threads_) {
 		thread.Shutdown();
