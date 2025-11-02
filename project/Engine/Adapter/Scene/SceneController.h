@@ -23,9 +23,7 @@ public:
 
 	void Init(std::unique_ptr<const SceneFactory>&& factory);
 
-	//* container operation *//
-
-	void Push(const std::string& name);
+	void BeginState(const std::initializer_list<std::string>& names);
 
 	//* process option *//
 
@@ -53,6 +51,10 @@ private:
 	// private methods
 	//=========================================================================================
 
+	void Push(const std::string& name);
+
 	BaseScene* GetCurrentScene() const;
+
+	void StartScene();
 
 };

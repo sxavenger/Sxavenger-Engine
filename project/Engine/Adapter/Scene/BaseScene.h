@@ -52,6 +52,8 @@ public:
 	virtual void Init() = 0;
 	// todo: Load(), Awake(), Start()で分ける.
 
+	virtual void Start() = 0;
+
 	virtual void Update() = 0;
 
 	virtual void LateUpdate() {}

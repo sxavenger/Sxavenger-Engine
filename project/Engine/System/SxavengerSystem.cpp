@@ -48,7 +48,8 @@ void SxavengerSystem::Term() {
 }
 
 void SxavengerSystem::Shutdown() {
-	sAsyncThreadCollection->Term();
+	sAsyncThreadCollection->SetTerminate();
+	sAsyncThreadCollection->Shutdown();
 	sInput->Shutdown();
 }
 

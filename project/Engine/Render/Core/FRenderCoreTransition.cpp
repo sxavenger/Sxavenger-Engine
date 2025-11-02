@@ -11,7 +11,6 @@ void FRenderCoreTransition::Init() {
 	CreateTransition(Transition::MipmapTransition,   kDirectory_ / "MipmapTransition.cs.hlsl");
 	CreateTransition(Transition::VelocityTransition, kDirectory_ / "VelocityTransition.cs.hlsl");
 	CreateTransition(Transition::MomentTransition,   kDirectory_ / "MomentTransition.cs.hlsl");
-	CreateTransition(Transition::UpscaleTransition,  kDirectory_ / "UpscaleTransition.cs.hlsl");
 }
 
 void FRenderCoreTransition::SetPipeline(Transition transition, const DirectXQueueContext* context) {

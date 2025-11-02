@@ -1,0 +1,39 @@
+{
+	"children": [],
+	"components": [
+		{
+			"component": "class RectTransformComponent",
+			"transform": {
+				"pivot": {
+					"x": 0.5,
+					"y": 0.5
+				},
+				"priority": 0.0,
+				"rotate": 0.0,
+				"scale": {
+					"x": 300.0,
+					"y": 70.0
+				},
+				"translate": {
+					"x": 873.1023559570313,
+					"y": 535.3931274414063
+				}
+			}
+		},
+		{
+			"color": {
+				"a": 1.0,
+				"b": 1.0,
+				"g": 1.0,
+				"r": 1.0
+			},
+			"component": "class TextRendererComponent",
+			"font": "2211a5b6-4aec-4e4b-9da39116d70ad86d",
+			"size": 51.0,
+			"text": "press any key"
+		}
+	],
+	"isActive": true,
+	"isRenamable": true,
+	"name": "title"
+}

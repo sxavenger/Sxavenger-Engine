@@ -107,11 +107,17 @@ public:
 
 	//* keyboard input option *//
 
+	bool IsEnableAcquire(InputType type = InputType::Main_Current) const;
+
+	bool GetKey(KeyId id, InputType type = InputType::Main_Current) const;
+
 	bool IsPress(KeyId id) const;
 
 	bool IsTrigger(KeyId id) const;
 
 	bool IsRelease(KeyId id) const;
+
+	bool IsPressAny() const;
 
 	//* debug gui *//
 
@@ -385,6 +391,11 @@ public:
 	void Shutdown();
 
 	void Update();
+
+	//* input option *//
+
+	//void SetAcquire(bool isAcquire);
+	// TODO: Game側のInputとEditor側のInputで分ける必要があるかも...?
 
 	//* key input option *//
 

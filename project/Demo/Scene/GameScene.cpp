@@ -58,6 +58,12 @@ void GameScene::Init() {
 
 	camera_->SetSubject(player_->GetComponent<TransformComponent>());
 	player_->SetCamera(camera_.get());
+	
+	sSceneObjects->InputJsonFromFilepath("assets/scene/collision_sponza.scene");
+
+}
+
+void GameScene::Start() {
 
 	{
 		demoText_ = std::make_unique<MonoBehaviour>();
@@ -96,8 +102,6 @@ void GameScene::Init() {
 
 		text->SetText(t);
 	}
-	
-	sSceneObjects->InputJsonFromFilepath("assets/scene/collision_sponza.scene");
 
 }
 

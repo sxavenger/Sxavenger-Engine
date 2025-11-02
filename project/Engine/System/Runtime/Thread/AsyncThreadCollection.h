@@ -26,11 +26,13 @@ public:
 	//=========================================================================================
 
 	AsyncThreadCollection() = default;
-	~AsyncThreadCollection() { Term(); }
+	~AsyncThreadCollection() { Shutdown(); }
 
 	void Init();
 
-	void Term();
+	void SetTerminate();
+
+	void Shutdown();
 
 	//* task option *//
 

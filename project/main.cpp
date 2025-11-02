@@ -19,7 +19,7 @@
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 	std::unique_ptr<GameLoop::Collection> collection = std::make_unique<GameLoop::Collection>();
-	//collection->Push<FeatureLevelGameLoop>();
+	collection->Push<FeatureLevelGameLoop>(); //!< FeatureLevelの確認
 	
 	collection->Push<SxavengerEngineGameLoop>();
 

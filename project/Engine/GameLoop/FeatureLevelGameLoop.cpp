@@ -44,7 +44,7 @@ void FeatureLevelGameLoop::CheckFeatureLevel() {
 bool FeatureLevelGameLoop::CheckFactory() {
 
 	auto hr = CreateDXGIFactory(IID_PPV_ARGS(&factory_));
-	file_ << "[IDXGIFactory7] CreateDXGIFactory(...): " << (SUCCEEDED(hr) ? "true" : "false") << std::endl;
+	file_ << std::format("[IDXGIFactory7] CreateDXGIFactory(...): {}", SUCCEEDED(hr)) << std::endl;
 
 	if (FAILED(hr)) {
 		return false;
@@ -52,8 +52,7 @@ bool FeatureLevelGameLoop::CheckFactory() {
 
 	BOOL isTearingSupport = false;
 	hr = factory_->CheckFeatureSupport(DXGI_FEATURE_PRESENT_ALLOW_TEARING, &isTearingSupport, sizeof(BOOL));
-
-	file_ << "[IDXGIFactory7] CheckFeatureSupport(DXGI_FEATURE_PRESENT_ALLOW_TEARING) = " << (isTearingSupport ? "true" : "false") << std::endl;
+	file_ << std::format("[IDXGIFactory7] CheckFeatureSupport(DXGI_FEATURE_PRESENT_ALLOW_TEARING) = {}", isTearingSupport) << std::endl;
 
 	return true;
 }

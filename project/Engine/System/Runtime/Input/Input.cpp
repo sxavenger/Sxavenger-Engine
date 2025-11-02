@@ -77,34 +77,44 @@ void KeyboardInput::UpdateInputState() {
 }
 
 bool KeyboardInput::IsPress(KeyId id) const {
-	if (!inputs_[static_cast<uint8_t>(InputType::Main_Current)].IsEnableAcquire()) {
+	if (!IsEnableAcquire(InputType::Main_Current)) {
 		return false;
 	}
 
-	return inputs_[static_cast<uint8_t>(InputType::Main_Current)].GetKey(id);
+	return GetKey(id, InputType::Main_Current);
 }
 
 bool KeyboardInput::IsTrigger(KeyId id) const {
-	if (!inputs_[static_cast<uint8_t>(InputType::Main_Current)].IsEnableAcquire()) {
+	if (!IsEnableAcquire(InputType::Main_Current)) {
 		return false;
 	}
 
-	return inputs_[static_cast<uint8_t>(InputType::Main_Current)].GetKey(id)
-		&& !inputs_[static_cast<uint8_t>(InputType::Main_Previous)].GetKey(id);
+	return GetKey(id, InputType::Main_Current) && !GetKey(id, InputType::Main_Previous);
 }
 
 bool KeyboardInput::IsRelease(KeyId id) const {
-	if (!inputs_[static_cast<uint8_t>(InputType::Main_Current)].IsEnableAcquire()) {
+	if (!IsEnableAcquire(InputType::Main_Current)) {
 		return false;
 	}
 
-	return !inputs_[static_cast<uint8_t>(InputType::Main_Current)].GetKey(id)
-		&& inputs_[static_cast<uint8_t>(InputType::Main_Previous)].GetKey(id);
+	return !GetKey(id, InputType::Main_Current) && GetKey(id, InputType::Main_Previous);
+}
+
+bool KeyboardInput::IsPressAny() const {
+	if (!IsEnableAcquire(InputType::Main_Current)) {
+		return false;
+	}
+
+	return std::any_of(
+		inputs_[static_cast<uint8_t>(InputType::Main_Current)].keys.begin(),
+		inputs_[static_cast<uint8_t>(InputType::Main_Current)].keys.end(),
+		[](BYTE key) { return key; }
+	);
 }
 
 void KeyboardInput::SystemDebugGui() {
 	
-	bool isEnableAcquire = inputs_[static_cast<uint8_t>(InputType::Main_Current)].IsEnableAcquire();
+	bool isEnableAcquire = IsEnableAcquire(InputType::Main_Current);
 	ImGui::Text("Acquire State: %s", isEnableAcquire ? "Enable" : "Disable");
 
 	ImGui::BeginDisabled(!isEnableAcquire);
@@ -175,6 +185,14 @@ bool KeyboardInput::SetCooperativeLevel(const DirectXWindowContext* window) {
 	}
 
 	return true;
+}
+
+bool KeyboardInput::IsEnableAcquire(InputType type) const {
+	return inputs_[static_cast<uint8_t>(type)].IsEnableAcquire();
+}
+
+bool KeyboardInput::GetKey(KeyId id, InputType type) const {
+	return inputs_[static_cast<uint8_t>(type)].GetKey(id);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////

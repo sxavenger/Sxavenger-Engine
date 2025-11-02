@@ -50,10 +50,6 @@ void PostProcessBloom::Process(const DirectXQueueContext* context, const Process
 	FProcessTexture* source    = process->GetPrevTexture(2);
 	FProcessTexture* luminance = process->GetPrevTexture(1);
 	FProcessTexture* output    = process->GetCurrentTexture();
-
-	source->TransitionBeginUnordered(context);
-	source->GenerateMipmap(context);
-	source->TransitionEndUnordered(context);
 	
 	{ //!< luminanceの生成
 
@@ -69,10 +65,6 @@ void PostProcessBloom::Process(const DirectXQueueContext* context, const Process
 
 		core->BindComputeBuffer(FRenderCoreProcess::ProcessType::BloomLuminance, context, desc);
 		core->Dispatch(context, info.buffer->GetSize());
-
-		// mipmap生成
-		luminance->BarrierUAV(context);
-		luminance->GenerateMipmap(context);
 
 		luminance->TransitionEndUnordered(context);
 	}

@@ -990,28 +990,6 @@ void RenderSceneEditor::DisplayGBufferTexture(GBuffer buffer) {
 			);
 			break;
 
-		case GBuffer::Lighting_GBuffer:
-			SetImGuiImagesFullWindowEnable(
-				{
-					{ textures_->GetGBuffer(FLightingGBuffer::Layout::Direct)->GetGPUHandleSRV(),   GBuffer::Direct },
-					{ textures_->GetGBuffer(FLightingGBuffer::Layout::Indirect)->GetGPUHandleSRV(), GBuffer::Indirect },
-				},
-				textures_->GetSize(),
-				isRender_
-			);
-			break;
-
-		case GBuffer::Indirect_Reservoir:
-			SetImGuiImagesFullWindowEnable(
-				{
-					{ textures_->GetGBuffer(FLightingGBuffer::Layout::Indirect_Reservoir_Diffuse)->GetGPUHandleSRV(),  GBuffer::Indirect_Reservoir_Diffuse },
-					{ textures_->GetGBuffer(FLightingGBuffer::Layout::Indirect_Reservoir_Specular)->GetGPUHandleSRV(), GBuffer::Indirect_Reservoir_Specular },
-				},
-				textures_->GetSize(),
-				isRender_
-			);
-			break;
-
 		case GBuffer::Albedo:
 			SetImGuiImageFullWindowEnable(
 				textures_->GetGBuffer(FDeferredGBuffer::Layout::Albedo)->GetGPUHandleSRV(),
@@ -1052,6 +1030,17 @@ void RenderSceneEditor::DisplayGBufferTexture(GBuffer buffer) {
 			);
 			break;
 
+		case GBuffer::Lighting_GBuffer:
+			SetImGuiImagesFullWindowEnable(
+				{
+					{ textures_->GetGBuffer(FLightingGBuffer::Layout::Direct)->GetGPUHandleSRV(),   GBuffer::Direct },
+					{ textures_->GetGBuffer(FLightingGBuffer::Layout::Indirect)->GetGPUHandleSRV(), GBuffer::Indirect },
+				},
+				textures_->GetSize(),
+				isRender_
+			);
+			break;
+
 		case GBuffer::Direct:
 			SetImGuiImageFullWindowEnable(
 				textures_->GetGBuffer(FLightingGBuffer::Layout::Direct)->GetGPUHandleSRV(),
@@ -1068,6 +1057,17 @@ void RenderSceneEditor::DisplayGBufferTexture(GBuffer buffer) {
 			);
 			break;
 
+		case GBuffer::Indirect_Reservoir:
+			SetImGuiImagesFullWindowEnable(
+				{
+					{ textures_->GetGBuffer(FLightingGBuffer::Layout::Indirect_Reservoir_Diffuse)->GetGPUHandleSRV(),  GBuffer::Indirect_Reservoir_Diffuse },
+					{ textures_->GetGBuffer(FLightingGBuffer::Layout::Indirect_Reservoir_Specular)->GetGPUHandleSRV(), GBuffer::Indirect_Reservoir_Specular },
+				},
+				textures_->GetSize(),
+				isRender_
+			);
+			break;
+
 		case GBuffer::Indirect_Reservoir_Diffuse:
 			SetImGuiImageFullWindowEnable(
 				textures_->GetGBuffer(FLightingGBuffer::Layout::Indirect_Reservoir_Diffuse)->GetGPUHandleSRV(),
@@ -1079,6 +1079,33 @@ void RenderSceneEditor::DisplayGBufferTexture(GBuffer buffer) {
 		case GBuffer::Indirect_Reservoir_Specular:
 			SetImGuiImageFullWindowEnable(
 				textures_->GetGBuffer(FLightingGBuffer::Layout::Indirect_Reservoir_Specular)->GetGPUHandleSRV(),
+				textures_->GetSize(),
+				isRender_
+			);
+			break;
+
+		case GBuffer::Indirect_Atlas:
+			SetImGuiImagesFullWindowEnable(
+				{
+					{ textures_->GetGBuffer(FLightingGBuffer::Layout::Indirect_Atlas_Diffuse)->GetGPUHandleSRV(),  GBuffer::Indirect_Atlas_Diffuse },
+					{ textures_->GetGBuffer(FLightingGBuffer::Layout::Indirect_Atlas_Specular)->GetGPUHandleSRV(), GBuffer::Indirect_Atlas_Specular },
+				},
+				textures_->GetSize(),
+				isRender_
+			);
+			break;
+
+		case GBuffer::Indirect_Atlas_Diffuse:
+			SetImGuiImageFullWindowEnable(
+				textures_->GetGBuffer(FLightingGBuffer::Layout::Indirect_Atlas_Diffuse)->GetGPUHandleSRV(),
+				textures_->GetSize(),
+				isRender_
+			);
+			break;
+
+		case GBuffer::Indirect_Atlas_Specular:
+			SetImGuiImageFullWindowEnable(
+				textures_->GetGBuffer(FLightingGBuffer::Layout::Indirect_Atlas_Specular)->GetGPUHandleSRV(),
 				textures_->GetSize(),
 				isRender_
 			);

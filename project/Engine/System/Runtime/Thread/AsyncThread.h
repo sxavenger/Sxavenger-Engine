@@ -124,7 +124,9 @@ public:
 
 	void Create(AsyncExecution execution, size_t size);
 
-	void Term();
+	void SetTerminate();
+
+	void Shutdown();
 
 	//* task option *//
 

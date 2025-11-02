@@ -8,11 +8,12 @@ void SceneController::Init(std::unique_ptr<const SceneFactory>&& factory) {
 	factory_ = std::move(factory);
 }
 
-void SceneController::Push(const std::string& name) {
-	std::unique_ptr<BaseScene> scene = factory_->CreateScene(name);
-	scene->Init();
+void SceneController::BeginState(const std::initializer_list<std::string>& names) {
+	for (const std::string& name : names) {
+		Push(name); //!< 遷移先シーンを追加
+	}
 
-	scenes_.emplace_back(std::move(scene));
+	StartScene();
 }
 
 void SceneController::TransitionScene() {
@@ -43,6 +44,9 @@ void SceneController::TransitionScene() {
 	for (const std::string& name : transition.names) {
 		Push(name); //!< 遷移先シーンを追加
 	}
+
+	StartScene();
+
 }
 
 void SceneController::UpdateScene() {
@@ -78,4 +82,23 @@ BaseScene* SceneController::GetCurrentScene() const {
 
 	// 最後尾のシーンを取得
 	return scenes_.back().get();
+}
+
+void SceneController::Push(const std::string& name) {
+	std::unique_ptr<BaseScene> scene = factory_->CreateScene(name);
+	scene->Init();
+
+	scenes_.emplace_back(std::move(scene));
+}
+
+void SceneController::StartScene() {
+
+	// 現在のシーンを取得
+	BaseScene* scene = GetCurrentScene();
+
+	if (scene == nullptr) {
+		return; //!< シーンが存在しない場合は何もしない
+	}
+
+	scene->Start();
 }

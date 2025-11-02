@@ -56,8 +56,6 @@ private:
 
 	void PassIndirectDenoiser(const DirectXQueueContext* context, const Config& config);
 
-	void TransitionUpscaleIndirectBuffer(const DirectXQueueContext* context, const Config& config);
-
 	void TransitionLightingPass(const DirectXQueueContext* context, const Config& config);
 
 

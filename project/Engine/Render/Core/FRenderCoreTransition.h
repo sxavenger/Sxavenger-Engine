@@ -28,7 +28,6 @@ public:
 		MipmapTransition,
 		VelocityTransition,
 		MomentTransition,
-		UpscaleTransition,
 	};
 
 public:

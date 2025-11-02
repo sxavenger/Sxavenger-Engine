@@ -23,6 +23,8 @@ public:
 
 	void Init() override;
 
+	void Start() override;
+
 	void Update() override;
 
 private:

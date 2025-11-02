@@ -33,7 +33,6 @@ private:
 
 	std::shared_ptr<DirectXWindowContext> main_;
 
-	std::unique_ptr<SceneFactory> factory_;
 	std::unique_ptr<SceneController> controller_;
 
 	//=========================================================================================
