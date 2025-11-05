@@ -63,6 +63,15 @@ void FRenderCoreProcess::Init() {
 	//!< tonemap
 	CreatePipeline(CompositeType::Tonemap, "CompositeProcess/Tonemap.cs.hlsl");
 
+	{
+		DxObject::SamplerBindDesc desc = {};
+		desc.SetSamplerLinear("gSampler", DxObject::SamplerMode::MODE_CLAMP);
+
+		//!< fxaa
+		CreatePipeline(CompositeType::FXAA, "CompositeProcess/FXAA/Fxaa.cs.hlsl", desc);
+	}
+	
+
 }
 
 void FRenderCoreProcess::SetPipeline(ProcessType type, const DirectXQueueContext* context) {

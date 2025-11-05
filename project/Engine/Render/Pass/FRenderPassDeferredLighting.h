@@ -17,9 +17,6 @@ public:
 	// public methods
 	//=========================================================================================
 
-	FRenderPassDeferredLighting()           = default;
-	~FRenderPassDeferredLighting() override = default;
-
 	void Render(const DirectXQueueContext* context, const Config& config) override;
 
 private:

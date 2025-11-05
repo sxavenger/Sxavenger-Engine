@@ -311,7 +311,6 @@ void RenderSceneEditor::ShowSceneMenu() {
 		ImGui::Separator();
 
 		if (ImGui::BeginCombo("GBuffer", magic_enum::enum_name(buffer_).data())) {
-		
 			for (const auto& [value, name] : magic_enum::enum_entries<GBuffer>()) {
 				if (ImGui::Selectable(name.data(), (value == buffer_))) {
 					buffer_ = value;
@@ -328,6 +327,17 @@ void RenderSceneEditor::ShowSceneMenu() {
 		// process
 		ImGui::Text("process");
 		ImGui::Separator();
+
+		if (ImGui::BeginCombo("anti-aliasing", magic_enum::enum_name(config_.antiAliasing).data())) {
+			for (const auto& [value, name] : magic_enum::enum_entries<FBaseRenderPass::Config::AntiAliasing>()) {
+				if (ImGui::Selectable(name.data(), (value == config_.antiAliasing))) {
+					config_.antiAliasing = value;
+				}
+			}
+
+			ImGui::EndCombo();
+		}
+
 		ImGui::Checkbox("enable post process", &config_.isEnablePostProcess);
 		ImGui::Checkbox("enable tonemap",      &config_.isEnableTonemap);
 

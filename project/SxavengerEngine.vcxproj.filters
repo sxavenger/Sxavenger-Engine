@@ -942,6 +942,7 @@
     <ClInclude Include="externals\meshoptimizer\meshoptimizer.h">
       <Filter>externals\meshoptimizer</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\Render\Pass\FRenderPassAntiAliacing.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Demo\Entity\Player.cpp">
@@ -1581,5 +1582,6 @@
       <Filter>externals\stb</Filter>
     </ClCompile>
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Engine\Render\Pass\FRenderPassAntiAliacing.cpp" />
   </ItemGroup>
 </Project>

@@ -6,6 +6,7 @@
 //* render
 #include "Pass/FRenderPassDeferredBase.h"
 #include "Pass/FRenderPassDeferredLighting.h"
+#include "Pass/FRenderPassAntiAliacing.h"
 #include "Pass/FRenderPassForwardTransparent.h"
 #include "Pass/FRenderPassPostProcess.h"
 #include "Pass/FRenderPassTonemap.h"
@@ -26,6 +27,7 @@ void FMainRender::Init() {
 	context_->Add<FRenderPassDeferredBase>();
 	context_->Add<FRenderPassDeferredLighting>();
 	context_->Add<FRenderPassForwardTransparent>();
+	context_->Add<FRenderPassAntiAliasing>();
 	context_->Add<FRenderPassPostProcess>();
 	context_->Add<FRenderPassTonemap>();
 	context_->Add<FRenderPassCanvas>();
