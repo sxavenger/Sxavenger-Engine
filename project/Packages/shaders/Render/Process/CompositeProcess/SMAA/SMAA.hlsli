@@ -538,6 +538,9 @@
 #define SMAA_BRANCH [branch]
 #endif
 #if defined(SMAA_HLSL_4) || defined(SMAA_HLSL_4_1)
+#if !defined(SMAALINEARSAMPLER) && !defined(SMAAPOINTSAMPLER)
+#error you must define SMAALINEARSAMPLER and SMAAPOINTSAMPLER samplers.
+#endif
 #define SMAATexture2D(tex) Texture2D tex
 #define SMAATexturePass2D(tex) tex
 #define SMAASampleLevelZero(tex, coord) tex.SampleLevel(SMAALINEARSAMPLER, coord, 0)
