@@ -32,7 +32,7 @@ public:
 		enum class AntiAliasing : uint8_t {
 			None,
 			FXAA,
-			SMAA,
+			SMAA_1x,
 		};
 
 		////////////////////////////////////////////////////////////////////////////////////////////
@@ -40,12 +40,9 @@ public:
 		////////////////////////////////////////////////////////////////////////////////////////////
 		enum class Status : size_t {
 			Success = 0,
-
-			Error_GBuffer = 1 << 0,
-
+			Error_GBuffer   = 1 << 0,
 			Warning_Camera  = 1 << 1,
 			Warning_Scene   = 1 << 2,
-
 
 			Geometry_Warning = Warning_Camera | Warning_Scene,
 		};

@@ -626,6 +626,7 @@ void RenderSceneEditor::ShowInfoTextScene() {
 	RenderTextSceneWindow(position, std::format(" isEnableTonemap:          {}", config_.isEnableTonemap));
 	RenderTextSceneWindow(position, std::format(" isEnablePostProcess:      {}", config_.isEnablePostProcess));
 	RenderTextSceneWindow(position, std::format(" isEnableIndirectLighting: {}", config_.isEnableIndirectLighting));
+	RenderTextSceneWindow(position, std::format(" Anti-Aliasing:            {}", magic_enum::enum_name(config_.antiAliasing)));
 	RenderTextSceneWindow(position, std::format("> Config"));
 	RenderTextSceneWindow(position, std::format("GBuffer | {}", magic_enum::enum_name(buffer_)));
 

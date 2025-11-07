@@ -25,7 +25,7 @@ void FRenderPassAntiAliasing::Render(const DirectXQueueContext* context, const C
 			ProcessFXAA(context, config.buffer);
 			break;
 
-		case Config::AntiAliasing::SMAA:
+		case Config::AntiAliasing::SMAA_1x:
 			ProcessSMAA(context, config.buffer);
 			break;
 	}
