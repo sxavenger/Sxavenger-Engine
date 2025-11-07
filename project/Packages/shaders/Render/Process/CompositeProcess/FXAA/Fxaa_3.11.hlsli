@@ -709,7 +709,7 @@ NOTE the other tuning knobs are now in the shader function inputs!
 #if 1
 		// allows the tonemapper to not output Luma in alpha channel to use a R10G10BA2
 		FxaaFloat FxaaLuma(FxaaFloat4 rgba) {
-    return dot(rgba.rgb, FxaaFloat3(0.299f, 0.587f, 0.114f));
+	return dot(rgba.rgb, FxaaFloat3(0.2722287168f, 0.6740817658f, 0.0536895174f));
 }
 
 #else

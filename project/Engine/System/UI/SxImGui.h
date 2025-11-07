@@ -50,6 +50,9 @@ namespace SxImGui {
 	template <ScalerConcept T, int32_t N>
 	bool InputScalarN(const char* label, T* v, const char* format = GetImGuiFormat<T>(), ImGuiInputTextFlags flags = ImGuiInputTextFlags_None);
 
+	template <ScalerConcept T>
+	bool InputScalar(const char* label, T* v, const char* format = GetImGuiFormat<T>(), ImGuiInputTextFlags flags = ImGuiInputTextFlags_None);
+
 	//=========================================================================================
 	// methods
 	//=========================================================================================
@@ -156,6 +159,11 @@ bool SxImGui::SliderScalarN(const char* label, T* v, const T v_min, const T v_ma
 template <SxImGui::ScalerConcept T, int32_t N>
 bool SxImGui::InputScalarN(const char* label, T* v, const char* format, ImGuiInputTextFlags flags) {
 	return ImGui::InputScalarN(label, SxImGui::GetImGuiDataType<T>(), v, N, NULL, NULL, format, flags);
+}
+
+template <SxImGui::ScalerConcept T>
+bool SxImGui::InputScalar(const char* label, T* v, const char* format, ImGuiInputTextFlags flags) {
+	return ImGui::InputScalar(label, SxImGui::GetImGuiDataType<T>(), v, NULL, NULL, format, flags);
 }
 
 template <typename T>

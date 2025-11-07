@@ -32,7 +32,10 @@ void FRenderCore::Init() {
 	transition_ = std::make_unique<FRenderCoreTransition>();
 	transition_->Init();
 
-	brdfLut_ = sUContentStorage->Import<UContentTexture>(kPackagesDirectory / "textures/rendering/brdf_lut.png", UContentTexture::Option{ UContentTexture::Encoding::Intensity, false })->GetId();
+	brdfLut_ = sUContentStorage->Import<UContentTexture>(kPackagesDirectory / "textures/rendering/brdf_lut.png",   UContentTexture::Option{ UContentTexture::Encoding::Intensity, false })->GetId();
+
+	smaaArea_   = sUContentStorage->Import<UContentTexture>(kPackagesDirectory / "textures/rendering/smaaAreaTex.dds", UContentTexture::Option{ UContentTexture::Encoding::Intensity, false })->GetId();
+	smaaSearch_ = sUContentStorage->Import<UContentTexture>(kPackagesDirectory / "textures/rendering/smaaSearchTex.dds", UContentTexture::Option{ UContentTexture::Encoding::Intensity, false })->GetId();
 }
 
 void FRenderCore::Term() {
@@ -42,10 +45,6 @@ void FRenderCore::Term() {
 	layer_.reset();
 	process_.reset();
 	transition_.reset();
-}
-
-const D3D12_GPU_DESCRIPTOR_HANDLE& FRenderCore::GetBRDFLut() const {
-	return brdfLut_.WaitGet()->GetGPUHandleSRV();
 }
 
 FRenderCore* FRenderCore::GetInstance() {

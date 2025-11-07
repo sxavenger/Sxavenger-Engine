@@ -44,6 +44,9 @@ public:
 	enum class CompositeType : uint32_t {
 		Tonemap,
 		FXAA,
+		SMAA_EdgeDetection,
+		SMAA_BlendWeight,
+		SMAA_NeighborhoodBlending,
 	};
 
 public:
@@ -84,6 +87,8 @@ private:
 	static inline const Vector2ui kNumThreadSize_ = { 16, 16 };
 
 	static inline const std::filesystem::path kDirectory_ = kPackagesShaderDirectory / "Render" / "Process";
+
+
 
 	//=========================================================================================
 	// private methods

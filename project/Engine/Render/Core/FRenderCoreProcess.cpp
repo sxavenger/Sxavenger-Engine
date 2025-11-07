@@ -71,7 +71,16 @@ void FRenderCoreProcess::Init() {
 		CreatePipeline(CompositeType::FXAA, "CompositeProcess/FXAA/Fxaa.cs.hlsl", desc);
 	}
 	
+	{
+		DxObject::SamplerBindDesc desc = {};
+		desc.SetSamplerLinear("gLinearSampler", DxObject::SamplerMode::MODE_CLAMP);
+		desc.SetSamplerPoint("gPointSampler",   DxObject::SamplerMode::MODE_CLAMP);
 
+		//!< smaa
+		CreatePipeline(CompositeType::SMAA_EdgeDetection,        "CompositeProcess/SMAA/SmaaEdgeDetection.cs.hlsl",        desc);
+		CreatePipeline(CompositeType::SMAA_BlendWeight,          "CompositeProcess/SMAA/SmaaBlendWeight.cs.hlsl",          desc);
+		CreatePipeline(CompositeType::SMAA_NeighborhoodBlending, "CompositeProcess/SMAA/SmaaNeighborhoodBlending.cs.hlsl", desc);
+	}
 }
 
 void FRenderCoreProcess::SetPipeline(ProcessType type, const DirectXQueueContext* context) {

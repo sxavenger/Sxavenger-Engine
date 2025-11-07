@@ -89,4 +89,6 @@ private:
 
 	Sxl::Flag<MeshInstanceMask> mask_ = MeshInstanceMask::Default;
 
+	uint8_t stencil_ = 0;
+
 };

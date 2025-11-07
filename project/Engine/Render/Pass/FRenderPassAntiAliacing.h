@@ -31,4 +31,6 @@ private:
 
 	void ProcessFXAA(const DirectXQueueContext* context, FRenderTargetBuffer* buffer);
 
+	void ProcessSMAA(const DirectXQueueContext* context, FRenderTargetBuffer* buffer);
+
 };

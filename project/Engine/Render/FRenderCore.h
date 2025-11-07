@@ -46,7 +46,11 @@ public:
 
 	FRenderCoreTransition* GetTransition() { return transition_.get(); }
 
-	const D3D12_GPU_DESCRIPTOR_HANDLE& GetBRDFLut() const;
+	const D3D12_GPU_DESCRIPTOR_HANDLE& GetBRDFLut() const { return brdfLut_.WaitGet()->GetGPUHandleSRV(); }
+
+	const D3D12_GPU_DESCRIPTOR_HANDLE& GetSMAAAreaTexture() const { return smaaArea_.WaitGet()->GetGPUHandleSRV(); }
+
+	const D3D12_GPU_DESCRIPTOR_HANDLE& GetSMAASearchTexture() const { return smaaSearch_.WaitGet()->GetGPUHandleSRV(); }
 
 	//* singleton *//
 
@@ -68,5 +72,8 @@ private:
 	//* textures *//
 
 	UAssetParameter<UAssetTexture> brdfLut_;
+
+	UAssetParameter<UAssetTexture> smaaArea_;
+	UAssetParameter<UAssetTexture> smaaSearch_;
 
 };

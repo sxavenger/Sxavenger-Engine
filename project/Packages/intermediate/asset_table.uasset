@@ -5483,6 +5483,10 @@
 		"assets/models/Bistro/Bistro.gltf",
 		"class UAssetMesh"
 	],
+	"84713dab-a8b1-4c58-8c58b7e2deb168a1": [
+		"packages/textures/rendering/smaaSearchTex.dds",
+		"class UAssetTexture"
+	],
 	"8482eaad-ce9f-4502-9111befbdae6d972": [
 		"assets/models/Bistro/Bistro.gltf",
 		"class UAssetMesh"
@@ -9486,6 +9490,10 @@
 	"e6a0f826-be38-4bea-a92d49df7a2098bb": [
 		"assets/models/Bistro/Bistro.gltf",
 		"class UAssetMesh"
+	],
+	"e6add46d-5736-405f-97bad83ec8a89fe2": [
+		"packages/textures/rendering/smaaAreaTex.dds",
+		"class UAssetTexture"
 	],
 	"e6cbc29c-0eed-4ce8-89f964645d0713f4": [
 		"assets/models/Bistro/Bistro.gltf",

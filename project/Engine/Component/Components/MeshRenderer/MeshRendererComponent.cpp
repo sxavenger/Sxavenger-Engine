@@ -37,6 +37,8 @@ void MeshRendererComponent::ShowComponentInspector() {
 		}
 		ImGui::EndCombo();
 	}
+
+	SxImGui::InputScalar<uint8_t>("stencil", &stencil_);
 }
 
 const TransformComponent* MeshRendererComponent::RequireTransform() const {
@@ -50,6 +52,7 @@ json MeshRendererComponent::PerseToJson() const {
 	data["material"] = material_.Serialize();
 	data["mask"]     = mask_.Get();
 	data["isEnable"] = isEnable_;
+	data["stencil"]  = stencil_;
 
 	return data;
 }
@@ -76,6 +79,9 @@ void MeshRendererComponent::InputJson(const json& data) {
 
 	mask_     = static_cast<MeshInstanceMask>(data["mask"].get<uint8_t>());
 	isEnable_ = data["isEnable"].get<bool>();
+
+	//stencil_  = data["stencil"].get<uint8_t>();
+	// TODO: 古いデータとの互換性のため、一旦コメントアウト
 }
 
 std::shared_ptr<UAssetMesh> MeshRendererComponent::GetMesh() const {
