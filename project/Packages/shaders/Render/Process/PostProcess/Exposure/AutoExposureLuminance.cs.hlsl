@@ -17,7 +17,7 @@ uint CalculateBin(float3 color) {
 	}
 
 	float logLuminance = saturate((log2(luminance) - gParameter.minLogLuminance) * kLogLuminanceRangeInv);
-	return uint(logLuminance * 254.0 + 1.0);
+	return uint(logLuminance * (_GROUP_SIZE - 1) + 1.0);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
