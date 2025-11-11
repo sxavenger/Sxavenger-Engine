@@ -81,6 +81,8 @@ public:
 	template <UAssetConcept T>
 	const std::unordered_map<Uuid, std::shared_ptr<UBaseAsset>>& GetAssetStorage();
 
+	const Storage& GetStorage() const { return storage_; }
+
 	//* table option *//
 
 	void Serialize() const;

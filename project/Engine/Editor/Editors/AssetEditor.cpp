@@ -41,10 +41,45 @@ void AssetEditor::Init() {
 }
 
 void AssetEditor::ShowMainMenu() {
+	ShowAssetMenu();
 }
 
 void AssetEditor::ShowWindow() {
 	ShowAssetWindow();
+}
+
+void AssetEditor::ShowAssetMenu() {
+	if (ImGui::BeginMenu("asset")) {
+
+		ImGui::SeparatorText("asset storage info");
+
+		ImGui::BeginTable("## asset storage info table", 2, ImGuiTableFlags_Borders | ImGuiTableFlags_RowBg);
+		ImGui::TableSetupColumn("type");
+		ImGui::TableSetupColumn("count");
+		ImGui::TableHeadersRow();
+
+		for (const auto& [type, storage] : sUAssetStorage->GetStorage()) {
+			ImGui::TableNextRow();
+
+			{ //!< type
+				ImGui::TableNextColumn();
+				ImGui::Text(type->name());
+				ImGui::SameLine();
+				ImGui::Dummy({ 8.0f, 0.0f });
+			}
+
+			{ //!< storage count
+				ImGui::TableNextColumn();
+				ImGui::Text(std::format("{}", storage.size()).c_str());
+				ImGui::SameLine();
+				ImGui::Dummy({ 8.0f, 0.0f });
+			}
+			
+		}
+
+		ImGui::EndTable();
+		ImGui::EndMenu();
+	}
 }
 
 void AssetEditor::ShowAssetWindow() {

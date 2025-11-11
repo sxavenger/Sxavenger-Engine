@@ -68,6 +68,8 @@ private:
 
 	//* show imgui component *//
 
+	void ShowAssetMenu();
+
 	void ShowAssetWindow();
 
 	//* imgui helper *//
