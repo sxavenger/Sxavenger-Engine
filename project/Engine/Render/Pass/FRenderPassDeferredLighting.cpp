@@ -316,6 +316,7 @@ void FRenderPassDeferredLighting::PassSpotLight(const DirectXQueueContext* conte
 }
 
 void FRenderPassDeferredLighting::PassSkyLight(const DirectXQueueContext* context, const Config& config) {
+	//!< TODO: DirectSkyLightingの実装
 
 	DxObject::BindBufferDesc parameter = {};
 	// common parameter
