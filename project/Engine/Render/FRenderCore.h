@@ -12,8 +12,8 @@
 #include "Core/FRenderCoreTransition.h"
 
 //* engine
-#include <Engine/Preview/Asset/UAssetTexture.h>
-#include <Engine/Preview/Asset/UAssetParameter.h>
+#include <Engine/Preview/Asset/AssetTexture.h>
+#include <Engine/Preview/Asset/AssetParameter.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // FRenderCore class
@@ -71,9 +71,9 @@ private:
 
 	//* textures *//
 
-	UAssetParameter<UAssetTexture> brdfLut_;
+	AssetParameter<AssetTexture> brdfLut_;
 
-	UAssetParameter<UAssetTexture> smaaArea_;
-	UAssetParameter<UAssetTexture> smaaSearch_;
+	AssetParameter<AssetTexture> smaaArea_;
+	AssetParameter<AssetTexture> smaaSearch_;
 
 };

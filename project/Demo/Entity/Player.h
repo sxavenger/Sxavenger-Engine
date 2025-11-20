@@ -10,9 +10,9 @@
 #include <Engine/Module/GameObject/GameObject.h>
 #include <Engine/Adapter/Parameter/SerializeParameter.h>
 #include <Engine/Adapter/Parameter/SerializeGui.h>
-#include <Engine/Preview/Content/UContentModel.h>
-#include <Engine/Preview/Content/UContentAnimation.h>
-#include <Engine/Preview/Content/UContentObserver.h>
+#include <Engine/Preview/Content/ContentModel.h>
+#include <Engine/Preview/Content/ContentAnimation.h>
+#include <Engine/Preview/Content/ContentObserver.h>
 
 //* demo
 #include <Demo/Object/PerspectiveCamera.h>
@@ -89,8 +89,8 @@ private:
 
 	//* asset *//
 
-	UContentObserver<UContentModel> model_;
-	std::array<UContentObserver<UContentAnimation>, magic_enum::enum_count<AnimationType>()> animators_;
+	ContentObserver<ContentModel> model_;
+	std::array<ContentObserver<ContentAnimation>, magic_enum::enum_count<AnimationType>()> animators_;
 
 	//* children *//
 

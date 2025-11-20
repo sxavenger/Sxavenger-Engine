@@ -7,8 +7,8 @@
 #include "../BaseComponent.h"
 
 //* engine
-#include <Engine/Preview/Asset/UAssetAudioClip.h>
-#include <Engine/Preview/Asset/UAssetParameter.h>
+#include <Engine/Preview/Asset/AssetAudioClip.h>
+#include <Engine/Preview/Asset/AssetParameter.h>
 
 //* xaudio2
 #include <xaudio2.h>
@@ -74,7 +74,7 @@ public:
 
 	void Stop();
 
-	void PlayOneShot(const std::optional<UAssetParameter<UAssetAudioClip>>& audio = std::nullopt);
+	void PlayOneShot(const std::optional<AssetParameter<AssetAudioClip>>& audio = std::nullopt);
 
 	void SetTag(Tag tag) { tag_ = tag; }
 
@@ -82,7 +82,7 @@ public:
 
 	void SetLoop(bool isLoop) { isLoop_ = isLoop; }
 
-	void SetAudio(const UAssetParameter<UAssetAudioClip>& audio) { audio_ = audio; }
+	void SetAudio(const AssetParameter<AssetAudioClip>& audio) { audio_ = audio; }
 
 
 private:
@@ -100,7 +100,7 @@ private:
 
 	//* audio clip *//
 
-	UAssetParameter<UAssetAudioClip> audio_ = nullptr;
+	AssetParameter<AssetAudioClip> audio_ = nullptr;
 
 	//* handle *//
 

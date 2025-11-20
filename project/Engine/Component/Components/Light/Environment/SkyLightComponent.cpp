@@ -57,7 +57,7 @@ void SkyLightComponent::Init() {
 	parameter_->At().Init();
 }
 
-void SkyLightComponent::SetEnvironment(const UAssetParameter<UAssetTexture>& texture) {
+void SkyLightComponent::SetEnvironment(const AssetParameter<AssetTexture>& texture) {
 	environment_ = texture;
 	parameter_->At().SetEnvironment(environment_.WaitRequire()->GetDescriptorSRV().GetIndex());
 }
@@ -67,7 +67,7 @@ void SkyLightComponent::SetEnvironment(const DxObject::Descriptor& texture) {
 	parameter_->At().SetEnvironment(texture.GetIndex());
 }
 
-void SkyLightComponent::SetIrradiance(const UAssetParameter<UAssetTexture>& texture) {
+void SkyLightComponent::SetIrradiance(const AssetParameter<AssetTexture>& texture) {
 	irradiance_ = texture;
 	parameter_->At().SetIrradiance(irradiance_.WaitRequire()->GetDescriptorSRV().GetIndex());
 }
@@ -77,7 +77,7 @@ void SkyLightComponent::SetIrradiance(const DxObject::Descriptor& texture) {
 	parameter_->At().SetIrradiance(texture.GetIndex());
 }
 
-void SkyLightComponent::SetRadiance(const UAssetParameter<UAssetTexture>& texture) {
+void SkyLightComponent::SetRadiance(const AssetParameter<AssetTexture>& texture) {
 	radiance_ = texture;
 	parameter_->At().SetRadiance(radiance_.WaitRequire()->GetDescriptorSRV().GetIndex(), radiance_.WaitRequire()->GetMetadata().miplevels);
 }

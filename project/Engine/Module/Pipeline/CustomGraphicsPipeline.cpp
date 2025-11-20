@@ -6,19 +6,19 @@ _DXOBJECT_USING
 //-----------------------------------------------------------------------------------------
 //* engine
 #include <Engine/System/SxavengerSystem.h>
-#include <Engine/Preview/Content/UContentStorage.h>
+#include <Engine/Preview/Content/ContentStorage.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Base CustomGraphicsPipeline class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 
-void BaseCustomGraphicsPipeline::SetContent(const std::shared_ptr<UContentBlob>& blob, DxObject::GraphicsShaderType type) {
+void BaseCustomGraphicsPipeline::SetContent(const std::shared_ptr<ContentBlob>& blob, DxObject::GraphicsShaderType type) {
 	contents_[static_cast<uint8_t>(type)].emplace() = blob;
 }
 
 void BaseCustomGraphicsPipeline::CreateContent(const std::filesystem::path& filepath, DxObject::GraphicsShaderType type) {
-	std::shared_ptr<UContentBlob> blob = sUContentStorage->Import<UContentBlob>(filepath, ToProfile(type));
+	std::shared_ptr<ContentBlob> blob = sContentStorage->Import<ContentBlob>(filepath, ToProfile(type));
 	SetContent(blob, type);
 }
 
@@ -35,7 +35,7 @@ void BaseCustomGraphicsPipeline::ReloadContent() {
 }
 
 bool BaseCustomGraphicsPipeline::CheckAsset() const {
-	return std::any_of(contents_.begin(), contents_.end(), [](const std::optional<UContentObserver<UContentBlob>>& asset) {
+	return std::any_of(contents_.begin(), contents_.end(), [](const std::optional<ContentObserver<ContentBlob>>& asset) {
 		return asset.has_value() && (*asset).IsExpired();
 	});
 }

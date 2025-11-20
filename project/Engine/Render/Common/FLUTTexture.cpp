@@ -12,7 +12,7 @@ _DXOBJECT_USING
 // FLUTTexture class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-void FLUTTexture::Create(const std::shared_ptr<UAssetTexture>& texture, const Vector2ui& tile) {
+void FLUTTexture::Create(const std::shared_ptr<AssetTexture>& texture, const Vector2ui& tile) {
 
 	// 引数の保存
 	texture_ = texture;

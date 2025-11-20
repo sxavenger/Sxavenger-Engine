@@ -13,8 +13,8 @@
 //* engine
 #include <Engine/System/Runtime/Performance/TimePoint.h>
 #include <Engine/Content/Animation/Animation.h>
-#include <Engine/Preview/Content/UContentModel.h>
-#include <Engine/Preview/Asset/UAssetMaterial.h>
+#include <Engine/Preview/Content/ContentModel.h>
+#include <Engine/Preview/Asset/AssetMaterial.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // ComponentHelper class
@@ -61,11 +61,11 @@ public:
 	static std::unique_ptr<MonoBehaviour> CreateSpotLightMonoBehaviour();
 
 	//* mesh
-	static void CreateStaticMeshBehaviour(MonoBehaviour* root, const std::shared_ptr<UContentModel>& model);
-	static std::unique_ptr<MonoBehaviour> CreateStaticMeshBehaviour(const std::shared_ptr<UContentModel>& model);
+	static void CreateStaticMeshBehaviour(MonoBehaviour* root, const std::shared_ptr<ContentModel>& model);
+	static std::unique_ptr<MonoBehaviour> CreateStaticMeshBehaviour(const std::shared_ptr<ContentModel>& model);
 
-	static void CreateSkinnedMeshBehaviour(MonoBehaviour* root, const std::shared_ptr<UContentModel>& model);
-	static std::unique_ptr<MonoBehaviour> CreateSkinnedMeshBehaviour(const std::shared_ptr<UContentModel>& model);
+	static void CreateSkinnedMeshBehaviour(MonoBehaviour* root, const std::shared_ptr<ContentModel>& model);
+	static std::unique_ptr<MonoBehaviour> CreateSkinnedMeshBehaviour(const std::shared_ptr<ContentModel>& model);
 
 	//* option helper *//
 
@@ -95,7 +95,7 @@ public:
 
 	static void DetachBehaviourMaterial(MonoBehaviour* root);
 
-	static void ModifyBehaviourMaterial(MonoBehaviour* root, const std::function<void(UAssetMaterial*)>& function);
+	static void ModifyBehaviourMaterial(MonoBehaviour* root, const std::function<void(AssetMaterial*)>& function);
 
 	//* component helper *//
 
