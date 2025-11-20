@@ -59,19 +59,19 @@ void FScene::SetupTopLevelAS(const DirectXQueueContext* context) {
 			// todo: missing material を用意する
 		}
 
-		std::shared_ptr<UAssetMesh> mesh         = component->GetMesh();
-		std::shared_ptr<UAssetMaterial> material = component->GetMaterial();
+		std::shared_ptr<AssetMesh> mesh         = component->GetMesh();
+		std::shared_ptr<AssetMaterial> material = component->GetMaterial();
 
 		mesh->Update(context); //!< meshの更新
 
 		FRenderCoreRestir::HitgroupExportType type = {};
 
 		switch (material->GetMode()) {
-			case UAssetMaterial::Mode::Opaque:
+			case AssetMaterial::Mode::Opaque:
 				type = FRenderCoreRestir::HitgroupExportType::Mesh;
 				break;
 
-			case UAssetMaterial::Mode::Emissive:
+			case AssetMaterial::Mode::Emissive:
 				type = FRenderCoreRestir::HitgroupExportType::Emissive;
 				break;
 
@@ -104,18 +104,18 @@ void FScene::SetupTopLevelAS(const DirectXQueueContext* context) {
 			// todo: missing material を用意する
 		}
 
-		std::shared_ptr<UAssetMaterial> material = component->GetMaterial();
+		std::shared_ptr<AssetMaterial> material = component->GetMaterial();
 
 		component->Update(context); //!< meshの更新
 
 		FRenderCoreRestir::HitgroupExportType type = {};
 
 		switch (material->GetMode()) {
-			case UAssetMaterial::Mode::Opaque:
+			case AssetMaterial::Mode::Opaque:
 				type = FRenderCoreRestir::HitgroupExportType::Mesh;
 				break;
 
-			case UAssetMaterial::Mode::Emissive:
+			case AssetMaterial::Mode::Emissive:
 				type = FRenderCoreRestir::HitgroupExportType::Emissive;
 				break;
 

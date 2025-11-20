@@ -4,7 +4,7 @@
 // include
 //-----------------------------------------------------------------------------------------
 //* engine
-#include <Engine/Preview/Content/UContentStorage.h>
+#include <Engine/Preview/Content/ContentStorage.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // SceneObjects class methods
@@ -24,7 +24,7 @@ void SceneObjects::OutputJson(const std::filesystem::path& filepath) const {
 	}
 
 	JsonHandler::WriteToJson(filepath, root);
-	sUContentStorage->Reload<UContentScene>(filepath);
+	sContentStorage->Reload<ContentScene>(filepath);
 }
 
 void SceneObjects::InputJson(const json& data) {
@@ -38,7 +38,7 @@ void SceneObjects::InputJson(const json& data) {
 }
 
 void SceneObjects::InputJsonFromFilepath(const std::filesystem::path& filepath) {
-	std::shared_ptr<UContentScene> content = sUContentStorage->Import<UContentScene>(filepath);
+	std::shared_ptr<ContentScene> content = sContentStorage->Import<ContentScene>(filepath);
 	content->WaitComplete(); // contentの読み込みを待つ
 
 	InputJson(content->GetData());

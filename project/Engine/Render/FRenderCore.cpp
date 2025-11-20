@@ -7,7 +7,7 @@ _DXOBJECT_USING
 //* engine
 #include <Engine/System/Config/SxavengerConfig.h>
 #include <Engine/System/SxavengerSystem.h>
-#include <Engine/Preview/Content/UContentStorage.h>
+#include <Engine/Preview/Content/ContentStorage.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // FRenderCore class methods
@@ -32,10 +32,10 @@ void FRenderCore::Init() {
 	transition_ = std::make_unique<FRenderCoreTransition>();
 	transition_->Init();
 
-	brdfLut_ = sUContentStorage->Import<UContentTexture>(kPackagesDirectory / "textures/rendering/brdf_lut.png",   UContentTexture::Option{ UContentTexture::Encoding::Intensity, false })->GetId();
+	brdfLut_ = sContentStorage->Import<ContentTexture>(kPackagesDirectory / "textures/rendering/brdf_lut.png",   ContentTexture::Option{ ContentTexture::Encoding::Intensity, false })->GetId();
 
-	smaaArea_   = sUContentStorage->Import<UContentTexture>(kPackagesDirectory / "textures/rendering/smaaAreaTex.dds", UContentTexture::Option{ UContentTexture::Encoding::Intensity, false })->GetId();
-	smaaSearch_ = sUContentStorage->Import<UContentTexture>(kPackagesDirectory / "textures/rendering/smaaSearchTex.dds", UContentTexture::Option{ UContentTexture::Encoding::Intensity, false })->GetId();
+	smaaArea_   = sContentStorage->Import<ContentTexture>(kPackagesDirectory / "textures/rendering/smaaAreaTex.dds", ContentTexture::Option{ ContentTexture::Encoding::Intensity, false })->GetId();
+	smaaSearch_ = sContentStorage->Import<ContentTexture>(kPackagesDirectory / "textures/rendering/smaaSearchTex.dds", ContentTexture::Option{ ContentTexture::Encoding::Intensity, false })->GetId();
 }
 
 void FRenderCore::Term() {

@@ -8,8 +8,8 @@
 
 //* engine
 #include <Engine/System/UI/SxImGui.h>
-#include <Engine/Preview/Content/UContentStorage.h>
-#include <Engine/Preview/Asset/UAssetStorage.h>
+#include <Engine/Preview/Content/ContentStorage.h>
+#include <Engine/Preview/Asset/AssetStorage.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // TextRendererComponent class methods
@@ -40,7 +40,7 @@ void TextRendererComponent::ShowComponentInspector() {
 	// TODO: MultilineInputTextFuncを使用する
 
 	if (ImGui::BeginCombo("font", font_.GetStr().c_str())) {
-		for (const auto& id : sUAssetStorage->GetAssetStorage<UAssetFont>() | std::views::keys) {
+		for (const auto& id : sAssetStorage->GetAssetStorage<AssetFont>() | std::views::keys) {
 			if (ImGui::Selectable(id.Serialize().c_str(), font_ == id)) {
 				font_ = id; //!< 選択されたfontを設定
 			}
@@ -48,7 +48,7 @@ void TextRendererComponent::ShowComponentInspector() {
 		ImGui::EndCombo();
 	}
 
-	sUContentStorage->DragAndDropTargetContentFunc<UContentFont>([this](const std::shared_ptr<UContentFont>& content) {
+	sContentStorage->DragAndDropTargetContentFunc<ContentFont>([this](const std::shared_ptr<ContentFont>& content) {
 		content->WaitComplete();
 		font_ = content->GetId();
 	});
@@ -72,7 +72,7 @@ void TextRendererComponent::PerseText() {
 	}
 
 	// fontの取得
-	const std::shared_ptr<UAssetFont> font = font_.WaitRequire();
+	const std::shared_ptr<AssetFont> font = font_.WaitRequire();
 
 	const RectTransformComponent* component = GetRectTransform();
 	Vector2f scale = component->GetTransform().scale;
@@ -102,7 +102,7 @@ void TextRendererComponent::PerseText() {
 			continue;
 		}
 
-		const UAssetFont::GlyphInfo& glyph = font->GetGlyphInfo(c);
+		const AssetFont::GlyphInfo& glyph = font->GetGlyphInfo(c);
 
 		// 描画位置の計算
 		Vector2f position = cursor + glyph.offset;
@@ -184,9 +184,9 @@ void TextRendererComponent::InputJson(const json& data) {
 	Uuid font = Uuid::Deserialize(data["font"].get<std::string>());
 
 	// fontのuuidが存在しない場合は, tableから読み込み
-	if (!sUAssetStorage->Contains<UAssetFont>(font)) {
-		const auto& filepath = sUAssetStorage->GetFilepath(font);
-		sUContentStorage->Import<UContentFont>(filepath);
+	if (!sAssetStorage->Contains<AssetFont>(font)) {
+		const auto& filepath = sAssetStorage->GetFilepath(font);
+		sContentStorage->Import<ContentFont>(filepath);
 	}
 
 	font_ = font;

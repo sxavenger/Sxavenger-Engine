@@ -46,7 +46,7 @@ void SkyLightActor::Update(bool isWait) {
 void SkyLightActor::Inspectable() {
 }
 
-void SkyLightActor::SetTexture(const UAssetParameter<UAssetTexture>& texture) {
+void SkyLightActor::SetTexture(const AssetParameter<AssetTexture>& texture) {
 	texture_ = texture;
 }
 

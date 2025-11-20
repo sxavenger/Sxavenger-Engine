@@ -27,7 +27,7 @@ void SxavengerEngineGameLoop::Init(GameLoop::Context* context) {
 		CreateWhite1x1();
 		CreateCheckerboard();
 
-		sUAssetStorage->Deserialize();
+		sAssetStorage->Deserialize();
 
 		ComponentHelper::RegisterComponents();
 		sAudioController->Init();
@@ -46,7 +46,7 @@ void SxavengerEngineGameLoop::Init(GameLoop::Context* context) {
 		SxavengerSystem::Shutdown();
 		SxavengerSystem::ExecuteAllAllocator();
 
-		sUAssetStorage->Serialize();
+		sAssetStorage->Serialize();
 	});
 
 	context->SetProcess(GameLoop::Process::Begin, 0, [this]() {
@@ -88,8 +88,8 @@ void SxavengerEngineGameLoop::Init(GameLoop::Context* context) {
 
 void SxavengerEngineGameLoop::Term() {
 	sAudioController->Term();
-	sUAssetStorage->Term();
-	sUContentStorage->Term();
+	sAssetStorage->Term();
+	sContentStorage->Term();
 	SxavengerContent::Term();
 	SxavengerSystem::Term();
 }
@@ -139,11 +139,11 @@ void SxavengerEngineGameLoop::CreateCheckerboard() {
 }
 
 void SxavengerEngineGameLoop::UpdateAsset() {
-	sUAssetStorage->ForEach<UAssetMaterial>([](UAssetMaterial* asset) {
+	sAssetStorage->ForEach<AssetMaterial>([](AssetMaterial* asset) {
 		asset->Update();
 	});
 
-	sUAssetStorage->ForEach<UAssetTexture>([](UAssetTexture* asset) {
+	sAssetStorage->ForEach<AssetTexture>([](AssetTexture* asset) {
 		asset->Update(SxavengerSystem::GetDirectQueueContext());
 	});
 }

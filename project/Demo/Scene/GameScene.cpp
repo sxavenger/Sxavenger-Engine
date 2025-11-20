@@ -25,9 +25,9 @@ void GameScene::Init() {
 		skylight_ = std::make_unique<MonoBehaviour>();
 		skylight_->SetName("skylight");
 		auto light = skylight_->AddComponent<SkyLightComponent>();
-		light->SetIrradiance(sUContentStorage->Import<UContentTexture>("assets/textures/textureCube/sky_irradiance.dds")->GetId());
-		light->SetRadiance(sUContentStorage->Import<UContentTexture>("assets/textures/textureCube/sky_radiance.dds")->GetId());
-		light->SetEnvironment(sUContentStorage->Import<UContentTexture>("assets/textures/textureCube/sky_environment.dds")->GetId());
+		light->SetIrradiance(sContentStorage->Import<ContentTexture>("assets/textures/textureCube/sky_irradiance.dds")->GetId());
+		light->SetRadiance(sContentStorage->Import<ContentTexture>("assets/textures/textureCube/sky_radiance.dds")->GetId());
+		light->SetEnvironment(sContentStorage->Import<ContentTexture>("assets/textures/textureCube/sky_environment.dds")->GetId());
 	}
 
 	{ //!< performance
@@ -74,7 +74,7 @@ void GameScene::Start() {
 		transform.translate = { 16.0f, 0.0f };
 
 		auto text = demoText_->AddComponent<TextRendererComponent>();
-		text->SetFont(sUContentStorage->Import<UContentFont>("assets/font/MPLUSRounded1c-Regular.ttf")->GetId());
+		text->SetFont(sContentStorage->Import<ContentFont>("assets/font/MPLUSRounded1c-Regular.ttf")->GetId());
 		text->SetSize(32.0f);
 		text->SetText(L"Sxavenger Engine Demo : Sponza");
 	}
@@ -89,7 +89,7 @@ void GameScene::Start() {
 		transform.translate = { 16.0f, 760.0f };
 
 		auto text = text_->AddComponent<TextRendererComponent>();
-		text->SetFont(sUContentStorage->Import<UContentFont>("assets/font/MPLUSRounded1c-Regular.ttf")->GetId());
+		text->SetFont(sContentStorage->Import<ContentFont>("assets/font/MPLUSRounded1c-Regular.ttf")->GetId());
 		text->SetSize(20.0f);
 
 		std::wstring t = L"";

@@ -8,8 +8,8 @@
 #include <Engine/System/DirectX/Context/DirectXQueueContext.h>
 
 //* engine
-#include <Engine/Preview/Content/UContentBlob.h>
-#include <Engine/Preview/Content/UContentObserver.h>
+#include <Engine/Preview/Content/ContentBlob.h>
+#include <Engine/Preview/Content/ContentObserver.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Base CustomGraphicsPipeline class
@@ -27,7 +27,7 @@ public:
 
 	//* asset option *//
 
-	void SetContent(const std::shared_ptr<UContentBlob>& blob, DxObject::GraphicsShaderType type);
+	void SetContent(const std::shared_ptr<ContentBlob>& blob, DxObject::GraphicsShaderType type);
 	void CreateContent(const std::filesystem::path& filepath, DxObject::GraphicsShaderType type);
 
 	void ClearContent();
@@ -45,7 +45,7 @@ protected:
 	// protected variables
 	//=========================================================================================
 
-	std::array<std::optional<UContentObserver<UContentBlob>>, static_cast<uint8_t>(DxObject::GraphicsShaderType::ps) + 1> contents_;
+	std::array<std::optional<ContentObserver<ContentBlob>>, static_cast<uint8_t>(DxObject::GraphicsShaderType::ps) + 1> contents_;
 
 	//=========================================================================================
 	// protected methods

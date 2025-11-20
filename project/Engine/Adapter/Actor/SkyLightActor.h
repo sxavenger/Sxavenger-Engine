@@ -6,8 +6,8 @@
 //* engine
 #include <Engine/Component/Entity/MonoBehaviour.h>
 #include <Engine/Render/Scene/Environment/FEnvironmentMap.h>
-#include <Engine/Preview/Asset/UAssetTexture.h>
-#include <Engine/Preview/Asset/UAssetParameter.h>
+#include <Engine/Preview/Asset/AssetTexture.h>
+#include <Engine/Preview/Asset/AssetParameter.h>
 
 //* component
 #include <Engine/Component/Components/Light/Environment/SkyLightComponent.h>
@@ -37,7 +37,7 @@ public:
 
 	//* option *//
 
-	void SetTexture(const UAssetParameter<UAssetTexture>& texture);
+	void SetTexture(const AssetParameter<AssetTexture>& texture);
 
 private:
 
@@ -53,6 +53,6 @@ private:
 
 	//* texture *//
 
-	UAssetParameter<UAssetTexture> texture_; //!< sky lightの環境テクスチャ
+	AssetParameter<AssetTexture> texture_; //!< sky lightの環境テクスチャ
 
 };

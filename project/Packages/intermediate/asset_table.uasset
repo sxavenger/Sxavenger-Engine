@@ -1849,7 +1849,7 @@
 	],
 	"17a8e1d2-4710-43c8-94547b9877bb7d43": [
 		"assets/textures/textureCube/sky_environment.dds",
-		"class UAssetTexture"
+		"class AssetTexture"
 	],
 	"17afae09-ce50-4208-a47873d6dd225581": [
 		"assets/models/Bistro/Bistro.gltf",
@@ -2697,7 +2697,7 @@
 	],
 	"2211a5b6-4aec-4e4b-9da39116d70ad86d": [
 		"assets/font/MPLUSRounded1c-Regular.ttf",
-		"class UAssetFont"
+		"class AssetFont"
 	],
 	"22148b6a-063c-4b48-a20ce65d5768465f": [
 		"assets/models/SunTemple/SunTemple.gltf",
@@ -4357,7 +4357,7 @@
 	],
 	"36ea2dae-857a-426f-bafcaf251ad5b021": [
 		"Packages/textures/icon/scene.png",
-		"class UAssetTexture"
+		"class AssetTexture"
 	],
 	"36ff572a-a285-46a9-ba9390a2aeadcf30": [
 		"assets/models/SunTemple_v4/SunTemple/SunTemple.fbx",
@@ -5869,7 +5869,7 @@
 	],
 	"482c1173-ef18-4f9f-a5200d90a9464250": [
 		"Packages/textures/icon/folder.png",
-		"class UAssetTexture"
+		"class AssetTexture"
 	],
 	"483d13ce-4fec-47f7-929ec434928bd86a": [
 		"assets/models/Bistro/Bistro.gltf",
@@ -7221,7 +7221,7 @@
 	],
 	"596c8f42-b448-42f8-b5fcc182da914814": [
 		"assets/textures/LUT/lut_reddish.png",
-		"class UAssetTexture"
+		"class AssetTexture"
 	],
 	"59823cef-32c5-48ce-95450455ff99f925": [
 		"assets/models/SunTemple_v4/SunTemple/SunTemple.fbx",
@@ -7237,7 +7237,7 @@
 	],
 	"59a6dce3-4881-47d9-846cb7efbb388b60": [
 		"packages/textures/icon/scene_directionalLight.png",
-		"class UAssetTexture"
+		"class AssetTexture"
 	],
 	"59a8101c-8b33-4497-9fa6f50d3ed6e5d7": [
 		"assets/models/cornell_box/cornell-box.obj",
@@ -7717,7 +7717,7 @@
 	],
 	"5f8ddf5a-3e19-400f-a0b0812386b0ae94": [
 		"Packages/textures/icon/file.png",
-		"class UAssetTexture"
+		"class AssetTexture"
 	],
 	"5f8ef5f1-f39c-41ea-bcd0f0746a98ccda": [
 		"assets/models/SunTemple/SunTemple.gltf",
@@ -7961,7 +7961,7 @@
 	],
 	"62c4e1ec-e403-45d3-b902ebfd70c21fa1": [
 		"packages/textures/icon/mode_local.png",
-		"class UAssetTexture"
+		"class AssetTexture"
 	],
 	"62dd3573-dfde-4354-82c397fd2b7ca2e3": [
 		"assets/models/SunTemple_v4/SunTemple/SunTemple.fbx",
@@ -8709,7 +8709,7 @@
 	],
 	"6ca27104-b9b8-4dd5-8138baed9543205c": [
 		"packages/textures/icon/operation_rotate.png",
-		"class UAssetTexture"
+		"class AssetTexture"
 	],
 	"6ce9e59c-f138-4c10-a386181361b32eab": [
 		"assets/models/SunTemple_v4/SunTemple/SunTemple.fbx",
@@ -8749,7 +8749,7 @@
 	],
 	"6d3f38f2-6b22-445b-a9436460aa79dc97": [
 		"assets/textures/LUT/lut_sepia.png",
-		"class UAssetTexture"
+		"class AssetTexture"
 	],
 	"6d476501-67cc-43f3-b4b60d8f30c427dc": [
 		"assets/models/Bistro/Bistro.gltf",
@@ -10865,7 +10865,7 @@
 	],
 	"86c63f0c-cc90-4c10-bc47741404f84006": [
 		"packages/textures/icon/scene_spotLight.png",
-		"class UAssetTexture"
+		"class AssetTexture"
 	],
 	"86cca4ca-7598-4fdd-a356da26365af9ac": [
 		"assets/models/SunTemple_v4/SunTemple/SunTemple.fbx",
@@ -11025,7 +11025,7 @@
 	],
 	"89193e0e-728f-4612-835f8196d10a8476": [
 		"packages/textures/icon/scene_volume.png",
-		"class UAssetTexture"
+		"class AssetTexture"
 	],
 	"89231ac8-d9af-4656-ae3ffde8c4077254": [
 		"assets/models/SunTemple/SunTemple.gltf",
@@ -11037,7 +11037,7 @@
 	],
 	"89281672-c146-409e-8a802b7c904e39c9": [
 		"assets/textures/textureCube/sky_irradiance.dds",
-		"class UAssetTexture"
+		"class AssetTexture"
 	],
 	"89422815-d8f8-46d1-b90dee975a7fd54b": [
 		"assets/models/SunTemple_v4/SunTemple/SunTemple.fbx",
@@ -12745,7 +12745,7 @@
 	],
 	"9f4ad404-6a12-4675-ac3c0e4746681b11": [
 		"packages/textures/icon/mode_world.png",
-		"class UAssetTexture"
+		"class AssetTexture"
 	],
 	"9f4e3e97-68d1-4a0f-ae7776666c5aac5d": [
 		"assets/models/Metoro/textures/MI_Concrete_2_BaseColor.png",
@@ -12773,7 +12773,7 @@
 	],
 	"9fc436b6-0271-4bea-b4e304e2e938dbef": [
 		"packages/textures/icon/grid.png",
-		"class UAssetTexture"
+		"class AssetTexture"
 	],
 	"9fcc9abe-34bd-4e7a-84d70fd3a0293dc6": [
 		"assets/models/SunTemple/SunTemple.gltf",
@@ -13429,7 +13429,7 @@
 	],
 	"a7e7fef0-fdda-423c-8e83f7713d9315f3": [
 		"Packages/textures/icon/model.png",
-		"class UAssetTexture"
+		"class AssetTexture"
 	],
 	"a8008dc7-ef8f-45a7-9e1d37e934c8dbd9": [
 		"assets/models/PBR_Sphere_Test/model/PBR_Sphere.gltf",
@@ -13489,7 +13489,7 @@
 	],
 	"a89b0626-597b-46e0-be6b2c9bea71f810": [
 		"assets/textures/LUT/lut_greenish.png",
-		"class UAssetTexture"
+		"class AssetTexture"
 	],
 	"a8a05823-35f9-4f76-a32a4dde53680016": [
 		"assets/models/SunTemple_v4/SunTemple/SunTemple.fbx",
@@ -16065,7 +16065,7 @@
 	],
 	"c87c6a9a-830a-490a-a4f5bf26e5a73edc": [
 		"Packages/textures/icon/texture.png",
-		"class UAssetTexture"
+		"class AssetTexture"
 	],
 	"c88bd6b8-0026-444e-b09e73b2483e7501": [
 		"assets/models/SunTemple/SunTemple.gltf",
@@ -16365,7 +16365,7 @@
 	],
 	"ccce2228-9d2a-449c-b3184be81f8c7929": [
 		"packages/textures/icon/operation_scale.png",
-		"class UAssetTexture"
+		"class AssetTexture"
 	],
 	"cccf92fe-e334-44e4-aa80884930a25125": [
 		"assets/models/Bistro/Bistro.gltf",
@@ -16805,7 +16805,7 @@
 	],
 	"d1cbc0bd-25cc-41b9-bc0cb503251c0730": [
 		"assets/textures/textureCube/sky_radiance.dds",
-		"class UAssetTexture"
+		"class AssetTexture"
 	],
 	"d1f10379-a08d-47f0-958b51e743afd054": [
 		"assets/models/human/idle.gltf",
@@ -17909,7 +17909,7 @@
 	],
 	"e02a7d8f-9f90-4a54-be9a344ef1e32fdb": [
 		"packages/textures/icon/scene_pointLight.png",
-		"class UAssetTexture"
+		"class AssetTexture"
 	],
 	"e04897fc-2aea-4392-85a5ca469f5d6ba1": [
 		"assets/models/Bistro/Bistro.gltf",
@@ -18261,7 +18261,7 @@
 	],
 	"e4ca0583-a1c1-4f95-b27a027c5574f4c4": [
 		"packages/textures/checker_black.png",
-		"class UAssetTexture"
+		"class AssetTexture"
 	],
 	"e4d5f580-5b77-4124-b102a84534758d3a": [
 		"assets/models/Bistro/Bistro.gltf",
@@ -18645,7 +18645,7 @@
 	],
 	"e93f7a67-6b86-4cb4-925a6ab841fe0ea2": [
 		"Packages/textures/icon/shader.png",
-		"class UAssetTexture"
+		"class AssetTexture"
 	],
 	"e94891b2-4b2d-47d9-ac3f5f05a5d8ecaf": [
 		"assets/models/SunTemple/SunTemple.gltf",
@@ -18905,7 +18905,7 @@
 	],
 	"ec66df79-7c1b-4287-a099b282ee06d253": [
 		"packages/textures/icon/operation_translate.png",
-		"class UAssetTexture"
+		"class AssetTexture"
 	],
 	"ec6ba869-8329-4abb-8e50c7cd3e0dcec5": [
 		"assets/models/SunTemple/SunTemple.gltf",
@@ -19541,7 +19541,7 @@
 	],
 	"f401fafc-3b84-43d5-bd3f6b3a98af9d2f": [
 		"packages/textures/icon/scene_camera.png",
-		"class UAssetTexture"
+		"class AssetTexture"
 	],
 	"f40fb6e2-e73f-40e3-be9a871795b8bd21": [
 		"assets/models/SunTemple/SunTemple.gltf",

@@ -163,7 +163,7 @@ void FRenderPassDeferredBase::PassStaticMesh(const DirectXQueueContext* context,
 
 		const auto& meshlet = mesh->GetInputMesh().GetMeshlet();
 
-		if (material->GetMode() != UAssetMaterial::Mode::Opaque) {
+		if (material->GetMode() != AssetMaterial::Mode::Opaque) {
 			return; //!< 透明なジオメトリは別のパスで描画
 		}
 
@@ -202,7 +202,7 @@ void FRenderPassDeferredBase::PassSkinnedMesh(const DirectXQueueContext* context
 
 		auto material = component->GetMaterial();
 		
-		if (material->GetMode() != UAssetMaterial::Mode::Opaque) {
+		if (material->GetMode() != AssetMaterial::Mode::Opaque) {
 			return; //!< 透明なジオメトリは別のパスで描画
 		}
 

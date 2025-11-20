@@ -128,14 +128,14 @@ void PostProcessLUT::ShowInspectorImGui() {
 
 		ImGui::InvisibleButton("## lut texture drag and drop", target);
 
-		sUContentStorage->DragAndDropTargetContentFunc<UContentTexture>([this](const std::shared_ptr<UContentTexture>& content) {
+		sContentStorage->DragAndDropTargetContentFunc<ContentTexture>([this](const std::shared_ptr<ContentTexture>& content) {
 			content->WaitComplete(); // contentの読み込みを待つ
 			CreateTexture(SxavengerSystem::GetDirectQueueContext(), content->GetId(), tile_);
 		});
 	}
 }
 
-void PostProcessLUT::CreateTexture(const DirectXQueueContext* context, const UAssetParameter<UAssetTexture>& texture, const Vector2ui& tile) {
+void PostProcessLUT::CreateTexture(const DirectXQueueContext* context, const AssetParameter<AssetTexture>& texture, const Vector2ui& tile) {
 
 	// 引数の保存
 	referenceTexture_ = texture;

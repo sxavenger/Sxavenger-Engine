@@ -7,8 +7,8 @@
 #include <Engine/Component/ComponentHelper.h>
 #include <Engine/Component/Components/Collider/ColliderComponent.h>
 #include <Engine/Component/Components/MeshRenderer/SkinnedMeshRendererComponent.h>
-#include <Engine/Preview/Asset/UAssetAnimation.h>
-#include <Engine/Preview/Asset/UAssetParameter.h>
+#include <Engine/Preview/Asset/AssetAnimation.h>
+#include <Engine/Preview/Asset/AssetParameter.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Player class methods
@@ -16,12 +16,12 @@
 
 void Player::Load() {
 	// modelの読み込み
-	model_ = sUContentStorage->Import<UContentModel>("assets/models/human/idle.gltf");
+	model_ = sContentStorage->Import<ContentModel>("assets/models/human/idle.gltf");
 
 	// animatorの読み込み
-	animators_[static_cast<uint8_t>(AnimationType::Idle)] = sUContentStorage->Import<UContentAnimation>("assets/models/human/idle.gltf");
-	animators_[static_cast<uint8_t>(AnimationType::Walk)] = sUContentStorage->Import<UContentAnimation>("assets/models/human/walking.gltf");
-	animators_[static_cast<uint8_t>(AnimationType::Dash)] = sUContentStorage->Import<UContentAnimation>("assets/models/human/dash.gltf");
+	animators_[static_cast<uint8_t>(AnimationType::Idle)] = sContentStorage->Import<ContentAnimation>("assets/models/human/idle.gltf");
+	animators_[static_cast<uint8_t>(AnimationType::Walk)] = sContentStorage->Import<ContentAnimation>("assets/models/human/walking.gltf");
+	animators_[static_cast<uint8_t>(AnimationType::Dash)] = sContentStorage->Import<ContentAnimation>("assets/models/human/dash.gltf");
 }
 
 void Player::Awake() {
@@ -176,7 +176,7 @@ void Player::Move() {
 void Player::UpdateArmature() {
 
 	animationState_.time.AddDeltaTime();
-	UAssetParameter<UAssetAnimation> animationA = animators_[static_cast<uint8_t>(animationState_.type)].WaitGet()->GetAnimation(0);
+	AssetParameter<AssetAnimation> animationA = animators_[static_cast<uint8_t>(animationState_.type)].WaitGet()->GetAnimation(0);
 
 	if (preAnimationState_.has_value()) {
 
@@ -184,7 +184,7 @@ void Player::UpdateArmature() {
 
 		float t = Saturate(static_cast<float>(animationTransitionTime_.time / 0.5));
 
-		UAssetParameter<UAssetAnimation> animationB = animators_[static_cast<uint8_t>((*preAnimationState_).type)].WaitGet()->GetAnimation(0);
+		AssetParameter<AssetAnimation> animationB = animators_[static_cast<uint8_t>((*preAnimationState_).type)].WaitGet()->GetAnimation(0);
 
 		ComponentHelper::ApplyAnimationTransition(
 			this,

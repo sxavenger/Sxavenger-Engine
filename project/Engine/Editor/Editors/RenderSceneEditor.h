@@ -10,8 +10,8 @@
 #include <Engine/Component/Entity/MonoBehaviour.h>
 #include <Engine/Render/FRenderTargetBuffer.h>
 #include <Engine/Render/Pass/FBaseRenderPass.h>
-#include <Engine/Preview/Asset/UAssetTexture.h>
-#include <Engine/Preview/Asset/UAssetParameter.h>
+#include <Engine/Preview/Asset/AssetTexture.h>
+#include <Engine/Preview/Asset/AssetParameter.h>
 
 //* lib
 #include <Lib/Geometry/Vector2.h>
@@ -31,7 +31,7 @@
 // RenderSceneEditor class
 ////////////////////////////////////////////////////////////////////////////////////////////
 //! @brief Rendering用SceneEditorクラス
-class RenderSceneEditor
+class RenderSceneEditor final
 	: public BaseEditor {
 public:
 
@@ -143,11 +143,11 @@ private:
 
 	//* texture *//
 
-	UAssetParameter<UAssetTexture> checkerboard_; //!< checker board texture
+	AssetParameter<AssetTexture> checkerboard_; //!< checker board texture
 
-	UAssetParameter<UAssetTexture> operationTexture_[3];
-	UAssetParameter<UAssetTexture> modeTexture_[2];
-	UAssetParameter<UAssetTexture> gridTexture_;
+	AssetParameter<AssetTexture> operationTexture_[3];
+	AssetParameter<AssetTexture> modeTexture_[2];
+	AssetParameter<AssetTexture> gridTexture_;
 
 	//* renderer *//
 
@@ -188,7 +188,7 @@ private:
 
 	//* icon *//
 
-	UAssetParameter<UAssetTexture> icons_[static_cast<uint32_t>(Icon::Camera) + 1];
+	AssetParameter<AssetTexture> icons_[static_cast<uint32_t>(Icon::Camera) + 1];
 
 	Vector2f iconSize_ = { 32.0f, 32.0f };
 

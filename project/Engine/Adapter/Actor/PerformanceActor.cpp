@@ -4,7 +4,7 @@
 // include
 //-----------------------------------------------------------------------------------------
 //* engine
-#include <Engine/Preview/Content/UContentStorage.h>
+#include <Engine/Preview/Content/ContentStorage.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // PerformanceActor class methods
@@ -20,7 +20,7 @@ void PerformanceActor::Init(const Vector2f& position) {
 	transform.pivot     = { 0, 0 };
 	transform.scale     = { 128.0f, 33.0f };
 
-	text_->SetFont(sUContentStorage->Import<UContentFont>("assets/font/MPLUSRounded1c-Regular.ttf")->GetId());
+	text_->SetFont(sContentStorage->Import<ContentFont>("assets/font/MPLUSRounded1c-Regular.ttf")->GetId());
 	text_->SetSize(24.0f);
 	text_->SetText(L"---");
 }
