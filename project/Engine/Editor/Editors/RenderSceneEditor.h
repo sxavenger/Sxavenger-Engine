@@ -128,12 +128,6 @@ private:
 		Lighting_GBuffer,
 		Direct,
 		Indirect,
-		Indirect_Reservoir,
-		Indirect_Reservoir_Diffuse,
-		Indirect_Reservoir_Specular,
-		Indirect_Atlas,
-		Indirect_Atlas_Diffuse,
-		Indirect_Atlas_Specular,
 	};
 
 private:

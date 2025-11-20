@@ -1,22 +1,16 @@
 #pragma once
 
-////////////////////////////////////////////////////////////////////////////////////////////
-// define
-////////////////////////////////////////////////////////////////////////////////////////////
-
-// shaders
-#define _RAYGENERATION [shader("raygeneration")]
-#define _ANYHIT        [shader("anyhit")]
-#define _CLOSESTHIT    [shader("closesthit")]
-#define _MISS          [shader("miss")]
-
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
+#include "RestirCommon.hlsli"
+
 //* library
 #include "../../Library/Hammersley.hlsli"
 #include "../../Library/ImportanceSample.hlsli"
-#include "../../Library/Random.hlsli"
+
+//* content
+#include "../../Content/Random.hlsli"
 
 //* component
 #include "../../Component/CameraComponent.hlsli"
@@ -30,23 +24,41 @@
 //* common
 #include "../DeferredBufferIndex.hlsli"
 
+////////////////////////////////////////////////////////////////////////////////////////////
+// define
+////////////////////////////////////////////////////////////////////////////////////////////
+
+//* shaders
+#define _RAYGENERATION [shader("raygeneration")]
+#define _ANYHIT        [shader("anyhit")]
+#define _CLOSESTHIT    [shader("closesthit")]
+#define _MISS          [shader("miss")]
+
+////////////////////////////////////////////////////////////////////////////////////////////
+// Config variables
+////////////////////////////////////////////////////////////////////////////////////////////
+
+static const float kTMin = 0.001f;
+static const float kTMax = 10000.0f;
+
+static const uint kFlag    = RAY_FLAG_CULL_BACK_FACING_TRIANGLES;
+static const uint kRayMask = 0xFF;
+
+static const uint kMaxRecursionDepth = 3;
+
 //=========================================================================================
 // global buffers
 //=========================================================================================
 
-//* lighting textures
-RWTexture2D<float4> gReservoirDiffuse  : register(u0, space1);
-RWTexture2D<float4> gReservoirSpecular : register(u1, space1);
-RWTexture2D<float4> gAtlasDiffuse      : register(u2, space1);
-RWTexture2D<float4> gAtlasSpecular     : register(u3, space1);
-RWTexture2D<uint4> gMoment             : register(u4, space1);
+RWStructuredBuffer<Reservoir> gInitalizeReservoir : register(u0, space1);
+RWStructuredBuffer<Moment> gMoment                : register(u1, space1);
+//!< array size [DispatchRaysDimensions().x * DispatchRaysDimensions().y]
 
 //* scene
 RaytracingAccelerationStructure gScene : register(t0, space1);
 
 //* deferred index
 ConstantBuffer<DeferredBufferIndexConstantBuffer> gDeferredBufferIndex : register(b0, space1);
-
 
 //* camera
 ConstantBuffer<CameraComponent> gCamera : register(b1, space1);
@@ -64,6 +76,10 @@ cbuffer Config : register(b2, space1) {
 	uint samplesPerFrame;
 	
 };
+
+cbuffer Seed : register(b3, space1) {
+	uint3 seed;
+}
 
 //* light
 struct LightCount {
@@ -83,23 +99,12 @@ StructuredBuffer<PointLightComponent> gPointLights         : register(t3, space2
 // Spot Light
 ConstantBuffer<LightCount> gSpotLightCount                : register(b2, space2);
 StructuredBuffer<TransformComponent> gSpotLightTransforms : register(t4, space2);
-StructuredBuffer<SpotLightComponent> gSpotLights         : register(t5, space2);
+StructuredBuffer<SpotLightComponent> gSpotLights          : register(t5, space2);
 
 // Sky Light
 ConstantBuffer<SkyLightComponent> gSkyLight : register(b3, space2);
 SamplerState gSkySampler                    : register(s0, space2);
-
-////////////////////////////////////////////////////////////////////////////////////////////
-// Config variables
-////////////////////////////////////////////////////////////////////////////////////////////
-
-static const float kTMin = 0.001f;
-static const float kTMax = 10000.0f;
-
-static const uint kFlag    = RAY_FLAG_CULL_BACK_FACING_TRIANGLES;
-static const uint kRayMask = 0xFF;
-
-static const uint kMaxRecursionDepth = 3;
+//!< TODO: Direct SkyLight に切り替える
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Payload structure
@@ -110,21 +115,16 @@ struct Payload {
 	// public variables
 	//=========================================================================================
 
-	//* ray primary
-
 	uint count;
-
-	//* parameter
-
-	float4 indirect;
+	float3 lo;
 	
 	//=========================================================================================
 	// public methods
 	//=========================================================================================
 
 	void Reset() {
-		count    = 0;
-		indirect = float4(0.0f, 0.0f, 0.0f, 0.0f);
+		count = 0;
+		lo    = float3(0.0f, 0.0f, 0.0f);
 	}
 
 	//* recursion methods *//
@@ -185,17 +185,6 @@ struct Attribute {
 // common methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-uint GetOffset(uint2 index) {
-	return Xorshift::xorshift32(index.x * index.y + 1);
-}
-
-uint CalculateRandamizeSampleValue(uint currentSampleIndex, uint offset) {
-	static const uint kDivision = maxSampleCount / 16;
-	uint divisionIndex = kDivision * ((currentSampleIndex + offset) % maxSampleCount);
-	
-	return (divisionIndex % maxSampleCount) + (divisionIndex / maxSampleCount);
-}
-
 Payload TracePrimaryRay(RayDesc desc, uint flag = kFlag) {
 	Payload payload;
 	payload.Reset();
@@ -205,3 +194,4 @@ Payload TracePrimaryRay(RayDesc desc, uint flag = kFlag) {
 
 	return payload;
 }
+

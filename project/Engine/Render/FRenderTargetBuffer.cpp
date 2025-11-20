@@ -49,15 +49,6 @@ void FRenderTargetBuffer::EndRenderTargetDeferred(const DirectXQueueContext* con
 	deferred_.TransitionEndRenderTarget(context);
 }
 
-void FRenderTargetBuffer::BeginRenderTargetLightingDirect(const DirectXQueueContext* context) {
-	lighting_.TransitionBeginRenderTargetDirect(context);
-	lighting_.ClearRenderTargetDirect(context);
-}
-
-void FRenderTargetBuffer::EndRenderTargetLightingDirect(const DirectXQueueContext* context) {
-	lighting_.TransitionEndRenderTargetDirect(context);
-}
-
 void FRenderTargetBuffer::BeginUnorderedMainScene(const DirectXQueueContext* context) {
 	main_.TransitionBeginUnorderedScene(context);
 }
@@ -92,31 +83,6 @@ void FRenderTargetBuffer::BeginPostProcess(const DirectXQueueContext* context) {
 
 void FRenderTargetBuffer::EndPostProcess(const DirectXQueueContext* context) {
 	process_->EndProcess(context, main_.GetGBuffer(FMainGBuffer::Layout::Scene));
-}
-
-void FRenderTargetBuffer::BeginProcessDenoiser(const DirectXQueueContext* context) {
-	process_->BeginProcess(context, { lighting_.GetGBuffer(FLightingGBuffer::Layout::Indirect_Reservoir_Diffuse), lighting_.GetGBuffer(FLightingGBuffer::Layout::Indirect_Reservoir_Specular) });
-
-	auto commandList = context->GetCommandList();
-
-	std::array<D3D12_RESOURCE_BARRIER, 2> barriers = {};
-	for (uint32_t i = 0; i < 2; ++i) {
-		barriers[i] = process_->GetPrevTexture(i)->TransitionBeginUnordered();
-	}
-
-	commandList->ResourceBarrier(static_cast<UINT>(barriers.size()), barriers.data());
-
-	for (uint32_t i = 0; i < 2; ++i) {
-		process_->GetPrevTexture(i)->GenerateMipmap(context);
-		barriers[i] = process_->GetPrevTexture(i)->TransitionEndUnordered();
-	}
-
-	commandList->ResourceBarrier(static_cast<UINT>(barriers.size()), barriers.data());
-
-}
-
-void FRenderTargetBuffer::EndProcessDenoiser(const DirectXQueueContext* context) {
-	process_->EndProcess(context, lighting_.GetGBuffer(FLightingGBuffer::Layout::Indirect));
 }
 
 FBaseTexture* FRenderTargetBuffer::GetGBuffer(FDeferredGBuffer::Layout layout) {

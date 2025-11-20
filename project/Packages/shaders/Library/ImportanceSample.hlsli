@@ -35,6 +35,10 @@ float3 ImportanceSampleLambert(float2 xi, float3 n) {
 	return normalize(h.x * tangentX + h.y * tangentY + h.z * n);
 }
 
+float ImportanceSampleLambertPDF(float3 wi, float3 n) {
+	return max(dot(wi, n), 0) * rcp(kPi);
+}
+
 float3 ImportanceSampleGGX(float2 xi, float roughness, float3 n) {
 	float a = roughness * roughness;
 

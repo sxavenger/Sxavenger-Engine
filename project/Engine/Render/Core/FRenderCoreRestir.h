@@ -10,14 +10,17 @@
 #include <Engine/System/Config/SxavengerConfig.h>
 #include <Engine/Module/Pipeline/CustomComputePipeline.h>
 
+//* externals
+#include <magic_enum.hpp>
+
 //* c++
 #include <array>
 #include <type_traits>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// FRenderCorePathtracing class
+// FRenderCoreRestir class
 ////////////////////////////////////////////////////////////////////////////////////////////
-class FRenderCorePathtracing {
+class FRenderCoreRestir {
 public:
 
 	////////////////////////////////////////////////////////////////////////////////////////////
@@ -26,7 +29,6 @@ public:
 	enum class RaygenerationExportType : uint32_t {
 		Default,
 	};
-	static inline constexpr uint32_t kRaygenerationExportTypeCount = static_cast<uint32_t>(RaygenerationExportType::Default) + 1;
 
 	////////////////////////////////////////////////////////////////////////////////////////////
 	// MissExportType enum class
@@ -34,7 +36,6 @@ public:
 	enum class MissExportType : uint32_t {
 		Default,
 	};
-	static inline constexpr uint32_t kMissExportTypeCount = static_cast<uint32_t>(MissExportType::Default) + 1;
 
 	////////////////////////////////////////////////////////////////////////////////////////////
 	// HitgroupExportType enum class
@@ -43,15 +44,6 @@ public:
 		Mesh,
 		Emissive,
 	};
-	static inline constexpr uint32_t kHitgroupExportTypeCount = static_cast<uint32_t>(HitgroupExportType::Emissive) + 1;
-
-	////////////////////////////////////////////////////////////////////////////////////////////
-	// DenoiserType enum class
-	////////////////////////////////////////////////////////////////////////////////////////////
-	enum class DenoiserType : uint32_t {
-		EdgeStopping
-	};
-	static inline constexpr uint32_t kDenoiserTypeCount = static_cast<uint32_t>(DenoiserType::EdgeStopping) + 1;
 
 	////////////////////////////////////////////////////////////////////////////////////////////
 	// Config structure
@@ -63,8 +55,56 @@ public:
 		// public variables
 		//=========================================================================================
 
-		uint32_t maxSampleCount  = 16 * 16; //!< 合計sample数
-		uint32_t samplesPerFrame = 1;       //!< frameごとのsample数
+		uint32_t maxSampleCount  = 1024; //!< 合計sample数
+		uint32_t samplesPerFrame = 1;    //!< frameごとのsample数
+	};
+
+	////////////////////////////////////////////////////////////////////////////////////////////
+	// Seed structure
+	////////////////////////////////////////////////////////////////////////////////////////////
+	struct Seed {
+	public:
+
+		//=========================================================================================
+		// public methods
+		//=========================================================================================
+
+		Seed() { Set(); }
+
+		void Set();
+
+		//=========================================================================================
+		// public variables
+		//=========================================================================================
+
+		std::array<uint32_t, 3> seed; //!< シード値
+
+	};
+
+
+	////////////////////////////////////////////////////////////////////////////////////////////
+	// Reservoir structure
+	////////////////////////////////////////////////////////////////////////////////////////////
+	struct Reservoir {
+	public:
+
+		//=========================================================================================
+		// public methods
+		//=========================================================================================
+
+		std::array<float, 4> data;
+		float weight;
+		float w;
+		uint32_t m;
+
+	};
+
+	////////////////////////////////////////////////////////////////////////////////////////////
+	// Process enum class
+	////////////////////////////////////////////////////////////////////////////////////////////
+	enum class Process : uint8_t {
+		Temporal,
+		Texture
 	};
 
 public:
@@ -72,9 +112,6 @@ public:
 	//=========================================================================================
 	// public methods
 	//=========================================================================================
-
-	FRenderCorePathtracing()  = default;
-	~FRenderCorePathtracing() = default;
 
 	void Init();
 
@@ -84,19 +121,19 @@ public:
 	const DxrObject::ExportGroup* GetExportGroup(MissExportType miss) const;
 	const DxrObject::ExportGroup* GetExportGroup(HitgroupExportType hitgroup) const;
 
-	//* denoiser option *//
-
-	void SetDenoiserPipeline(DenoiserType type, const DirectXQueueContext* context);
-
-	void BindDenoiserBuffer(DenoiserType type, const DirectXQueueContext* context, const DxObject::BindBufferDesc& desc);
-
-	void DispatchDenoiser(const DirectXQueueContext* context, const Vector2ui& size);
-
 	//* context option *//
 
 	void UpdateShaderTable(const DxrObject::TopLevelAS* topLevelAS);
 
 	DxrObject::StateObjectContext* GetContext() const { return context_.get(); }
+
+	//* pipeline option *//
+
+	void SetPipeline(Process process, const DirectXQueueContext* context) const;
+
+	void BindComputeBuffer(Process process, const DirectXQueueContext* context, const DxObject::BindBufferDesc& desc) const;
+
+	void Dispatch(const DirectXQueueContext* context, const Vector2ui& size) const;
 
 private:
 
@@ -106,37 +143,32 @@ private:
 
 	//* export groups *//
 
-	std::array<std::pair<DxrObject::RaytracingBlob, DxrObject::ExportGroup>, kRaygenerationExportTypeCount> raygenerationExportGroups_;
-	std::array<std::pair<DxrObject::RaytracingBlob, DxrObject::ExportGroup>, kMissExportTypeCount>          missExportGroups_;
-	std::array<std::pair<DxrObject::RaytracingBlob, DxrObject::ExportGroup>, kHitgroupExportTypeCount>      hitgroupExportGroups_;
+	std::array<std::pair<DxrObject::RaytracingBlob, DxrObject::ExportGroup>, magic_enum::enum_count<RaygenerationExportType>()> raygenerationExportGroups_;
+	std::array<std::pair<DxrObject::RaytracingBlob, DxrObject::ExportGroup>, magic_enum::enum_count<MissExportType>()>          missExportGroups_;
+	std::array<std::pair<DxrObject::RaytracingBlob, DxrObject::ExportGroup>, magic_enum::enum_count<HitgroupExportType>()>      hitgroupExportGroups_;
 
-	static inline const std::filesystem::path kDirectory_ = kPackagesShaderDirectory / "render/pathtracing";
+	static inline const std::filesystem::path kDirectory_ = kPackagesShaderDirectory / "render/ReSTIR";
 
 	//* context *//
 
 	std::unique_ptr<DxrObject::StateObjectContext> context_;
 
-	//* denoiser *//
+	//* pipelines *//
 
-	std::array<std::unique_ptr<CustomReflectionComputePipeline>, kDenoiserTypeCount> denoisers_;
+	static inline const Vector3ui kThreadGroupSize_ = Vector3ui(16, 16, 1);
+
+	std::array<std::unique_ptr<CustomReflectionComputePipeline>, magic_enum::enum_count<Process>()> pipelines_;
 
 	//=========================================================================================
-	// private methods
+	// private variables
 	//=========================================================================================
 
 	void CreateRaygeneration();
-
 	void CreateMiss();
-
 	void CreateHitgroup();
-
-	void CreateDenoiser();
-
 	void CreateContext();
 
-	template <typename _Ty>
-	static constexpr std::underlying_type_t<_Ty> GetIndex(const _Ty& _enum) {
-		return static_cast<std::underlying_type_t<_Ty>>(_enum);
-	}
+	void CreatePipeline();
+	void CreateComputePipeline(Process process, const std::filesystem::path& filepath);
 
 };

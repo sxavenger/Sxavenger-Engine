@@ -621,9 +621,6 @@
     <ClInclude Include="Engine\Render\Core\FRenderCoreLight.h">
       <Filter>Engine\Render\Core</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Render\Core\FRenderCorePathtracing.h">
-      <Filter>Engine\Render\Core</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\Render\Core\FRenderCoreProcess.h">
       <Filter>Engine\Render\Core</Filter>
     </ClInclude>
@@ -943,6 +940,7 @@
       <Filter>externals\meshoptimizer</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Render\Pass\FRenderPassAntiAliacing.h" />
+    <ClInclude Include="Engine\Render\Core\FRenderCoreRestir.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Demo\Entity\Player.cpp">
@@ -1290,9 +1288,6 @@
     <ClCompile Include="Engine\Render\Core\FRenderCoreLight.cpp">
       <Filter>Engine\Render\Core</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Render\Core\FRenderCorePathtracing.cpp">
-      <Filter>Engine\Render\Core</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\Render\Core\FRenderCoreProcess.cpp">
       <Filter>Engine\Render\Core</Filter>
     </ClCompile>
@@ -1583,5 +1578,6 @@
     </ClCompile>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Engine\Render\Pass\FRenderPassAntiAliacing.cpp" />
+    <ClCompile Include="Engine\Render\Core\FRenderCoreRestir.cpp" />
   </ItemGroup>
 </Project>

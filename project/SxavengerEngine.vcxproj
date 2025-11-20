@@ -292,8 +292,8 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Engine\Render\Core\FRenderCoreGeometry.h" />
     <ClInclude Include="Engine\Render\Core\FRenderCoreLayer.h" />
     <ClInclude Include="Engine\Render\Core\FRenderCoreLight.h" />
-    <ClInclude Include="Engine\Render\Core\FRenderCorePathtracing.h" />
     <ClInclude Include="Engine\Render\Core\FRenderCoreProcess.h" />
+    <ClInclude Include="Engine\Render\Core\FRenderCoreRestir.h" />
     <ClInclude Include="Engine\Render\Core\FRenderCoreTransition.h" />
     <ClInclude Include="Engine\Render\FMainRender.h" />
     <ClInclude Include="Engine\Render\FPresenter.h" />
@@ -517,8 +517,8 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="Engine\Render\Core\FRenderCoreGeometry.cpp" />
     <ClCompile Include="Engine\Render\Core\FRenderCoreLayer.cpp" />
     <ClCompile Include="Engine\Render\Core\FRenderCoreLight.cpp" />
-    <ClCompile Include="Engine\Render\Core\FRenderCorePathtracing.cpp" />
     <ClCompile Include="Engine\Render\Core\FRenderCoreProcess.cpp" />
+    <ClCompile Include="Engine\Render\Core\FRenderCoreRestir.cpp" />
     <ClCompile Include="Engine\Render\Core\FRenderCoreTransition.cpp" />
     <ClCompile Include="Engine\Render\FMainRender.cpp" />
     <ClCompile Include="Engine\Render\FPresenter.cpp" />

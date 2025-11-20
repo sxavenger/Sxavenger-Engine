@@ -45,9 +45,6 @@ public:
 	void BeginRenderTargetDeferred(const DirectXQueueContext* context);
 	void EndRenderTargetDeferred(const DirectXQueueContext* context);
 
-	void BeginRenderTargetLightingDirect(const DirectXQueueContext* context);
-	void EndRenderTargetLightingDirect(const DirectXQueueContext* context);
-
 	void BeginUnorderedMainScene(const DirectXQueueContext* context);
 	void EndUnorderedMainScene(const DirectXQueueContext* context);
 
@@ -59,9 +56,6 @@ public:
 
 	void BeginPostProcess(const DirectXQueueContext* context);
 	void EndPostProcess(const DirectXQueueContext* context);
-
-	void BeginProcessDenoiser(const DirectXQueueContext* context);
-	void EndProcessDenoiser(const DirectXQueueContext* context);
 
 	//* GBuffer option *//
 

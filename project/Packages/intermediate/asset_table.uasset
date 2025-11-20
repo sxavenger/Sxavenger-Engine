@@ -307,6 +307,10 @@
 		"assets/models/Bistro/Bistro.gltf",
 		"class UAssetMesh"
 	],
+	"039b829a-068d-461f-8e896ae32ce45397": [
+		"assets/models/ChessBoard/ABeautifulGame.gltf",
+		"class UAssetMaterial"
+	],
 	"039d2521-2e4b-4ca3-addd5a4e4a313625": [
 		"assets/models/SunTemple/SunTemple.gltf",
 		"class UAssetMesh"
@@ -363,6 +367,10 @@
 		"assets/models/SunTemple/textures/M_Soul_Rocks2_Inst_0_BaseColor-M_Soul_Rocks2_Inst_0_BaseColor.png",
 		"class UAssetTexture"
 	],
+	"0478fa5f-9e3b-40c4-a907bb6b0295cc4b": [
+		"assets/models/ChessBoard/queen_white_base_color.jpg",
+		"class UAssetTexture"
+	],
 	"048efd8b-fdf6-4d31-a2e0e62c60959fbb": [
 		"assets/models/SunTemple/SunTemple.gltf",
 		"class UAssetMesh"
@@ -386,6 +394,10 @@
 	"04e222a2-44e8-47b5-b9392af94421eec7": [
 		"assets/models/Bistro/Bistro.gltf",
 		"class UAssetMesh"
+	],
+	"0500b6d9-4a87-4885-88cc71d4fd18ce6d": [
+		"assets/models/ChessBoard/ABeautifulGame.gltf",
+		"class UAssetMaterial"
 	],
 	"0501173f-611f-401b-8e984995aae581ea": [
 		"assets/models/SunTemple/SunTemple.gltf",
@@ -598,6 +610,10 @@
 	"07940a85-8844-4f7e-8410f0089ced7933": [
 		"assets/models/Bistro/Bistro.gltf",
 		"class UAssetMesh"
+	],
+	"0795605c-54af-4462-b23ac72df693111e": [
+		"assets/models/ChessBoard/Knight_ORM.jpg",
+		"class UAssetTexture"
 	],
 	"0799bfa3-1c99-4fb7-bb48842680cd6b04": [
 		"assets/models/SunTemple/SunTemple.gltf",
@@ -819,6 +835,10 @@
 		"assets/models/SunTemple/SunTemple.gltf",
 		"class UAssetMesh"
 	],
+	"09e42b55-876a-4c83-a1760f21799c31f3": [
+		"assets/models/ChessBoard/Bishop_black_ORM.jpg",
+		"class UAssetTexture"
+	],
 	"09f087f6-815c-4b96-806ae06f1e3c3b7b": [
 		"assets/models/SunTemple_v4/SunTemple/SunTemple.fbx",
 		"class UAssetMesh"
@@ -893,6 +913,10 @@
 	],
 	"0aeebc68-6a93-45c4-95c03661ec095052": [
 		"assets/models/SunTemple/SunTemple.gltf",
+		"class UAssetMesh"
+	],
+	"0af01d3c-fb73-49a9-845b187759d7f04a": [
+		"assets/models/ChessBoard/ABeautifulGame.gltf",
 		"class UAssetMesh"
 	],
 	"0af34109-b75a-41cb-9146165ebe33e39d": [
@@ -1083,6 +1107,10 @@
 		"assets/models/Bistro/Bistro.gltf",
 		"class UAssetMesh"
 	],
+	"0d71aba3-a97e-434c-a281beccde49b638": [
+		"assets/models/ChessBoard/Castle_ORM.jpg",
+		"class UAssetTexture"
+	],
 	"0d72bea2-9f67-40e6-a5231df6a2b81c52": [
 		"assets/models/Bistro/Bistro.gltf",
 		"class UAssetMaterial"
@@ -1222,6 +1250,10 @@
 	"0f2b9a8f-733e-4ac5-8835a5b8e87c200a": [
 		"assets/models/SunTemple/SunTemple.gltf",
 		"class UAssetMesh"
+	],
+	"0f2f9670-e60b-4fa6-b05bbbd25beeb3ef": [
+		"assets/models/ChessBoard/ABeautifulGame.gltf",
+		"class UAssetMaterial"
 	],
 	"0f376c83-7058-4426-90923f7605462087": [
 		"assets/models/PBR_Sphere_Test/model/PBR_Sphere.gltf",
@@ -1963,6 +1995,10 @@
 		"assets/models/SunTemple/SunTemple.gltf",
 		"class UAssetMesh"
 	],
+	"19bde7f2-a66b-4ac6-b75ccd7a3061887b": [
+		"assets/models/ChessBoard/Pawn_ORM.jpg",
+		"class UAssetTexture"
+	],
 	"19cd96ed-fa69-49bd-8bb454a4705840a0": [
 		"assets/models/Bistro/Bistro.gltf",
 		"class UAssetMesh"
@@ -2327,6 +2363,10 @@
 		"assets/models/SunTemple/SunTemple.gltf",
 		"class UAssetMesh"
 	],
+	"1e53571f-16b5-45f0-a6f7095fb963e905": [
+		"assets/models/ChessBoard/Castle_normal.jpg",
+		"class UAssetTexture"
+	],
 	"1e5bb3c4-f86b-407c-a2070f3f70e175ac": [
 		"assets/models/SunTemple/SunTemple.gltf",
 		"class UAssetMesh"
@@ -2386,6 +2426,10 @@
 	"1ee273db-259c-47a6-aff489b64b11765d": [
 		"assets/models/SunTemple/SunTemple.gltf",
 		"class UAssetMesh"
+	],
+	"1ee4a969-a14e-4050-ac41bc9c0bb1beca": [
+		"assets/models/ChessBoard/Queen_white_normal.jpg",
+		"class UAssetTexture"
 	],
 	"1ee77eb2-458a-4756-a665f9a4315c891f": [
 		"assets/models/SunTemple_v4/SunTemple/SunTemple.fbx",
@@ -2475,6 +2519,10 @@
 		"assets/models/SunTemple/SunTemple.gltf",
 		"class UAssetMesh"
 	],
+	"20196b1b-46e6-4e2e-980359cd8beb607f": [
+		"assets/models/ChessBoard/Knight_normal.jpg",
+		"class UAssetTexture"
+	],
 	"20242e1e-af17-49e0-95ba5d4959ed9eec": [
 		"assets/models/Bistro/Bistro.gltf",
 		"class UAssetMesh"
@@ -2527,6 +2575,10 @@
 		"assets/models/SunTemple_v4/SunTemple/SunTemple.fbx",
 		"class UAssetMesh"
 	],
+	"20c761c6-ab42-4442-b9ce3ba55eccc183": [
+		"assets/models/ChessBoard/ABeautifulGame.gltf",
+		"class UAssetMesh"
+	],
 	"20cc24f5-59e4-466f-9a3845ce6b88bb25": [
 		"assets/models/Bistro/Bistro.gltf",
 		"class UAssetMesh"
@@ -2575,6 +2627,10 @@
 		"assets/models/Bistro/Bistro.gltf",
 		"class UAssetMesh"
 	],
+	"21648fae-58a9-4cca-b5dcfe3eda9ab389": [
+		"assets/models/ChessBoard/bishop_black_base_color.jpg",
+		"class UAssetTexture"
+	],
 	"2165ce54-e996-4466-b7be276d8c894492": [
 		"assets/models/Bistro/Bistro.gltf",
 		"class UAssetMesh"
@@ -2586,6 +2642,10 @@
 	"217631ca-66c1-4194-92e5fb0d3ab85889": [
 		"assets/models/Bistro/Bistro.gltf",
 		"class UAssetMesh"
+	],
+	"218b2024-1c07-4b1f-9fac70f1a77e3f9c": [
+		"assets/models/ChessBoard/ABeautifulGame.gltf",
+		"class UAssetMaterial"
 	],
 	"21965c92-5070-42e8-9fc3165c68702407": [
 		"assets/models/Bistro/Bistro.gltf",
@@ -2863,6 +2923,10 @@
 		"assets/models/SunTemple_v4/SunTemple/SunTemple.fbx",
 		"class UAssetMesh"
 	],
+	"2443ae9c-7815-4bb3-8df1ead924ad3c84": [
+		"assets/models/ChessBoard/king_black_base_color.jpg",
+		"class UAssetTexture"
+	],
 	"2443dc3f-142b-4941-88d71106cae793cf": [
 		"assets/models/SunTemple_v4/SunTemple/SunTemple.fbx",
 		"class UAssetMesh"
@@ -3003,6 +3067,10 @@
 		"assets/models/Bistro/Bistro.gltf",
 		"class UAssetMesh"
 	],
+	"25f0b51e-ed73-45c8-a72d2a974a569dfb": [
+		"assets/models/ChessBoard/King_white_ORM.jpg",
+		"class UAssetTexture"
+	],
 	"25ff0160-5cbd-4fe4-9bc3ecd267a30a5c": [
 		"assets/models/SunTemple/SunTemple.gltf",
 		"class UAssetMesh"
@@ -3062,6 +3130,10 @@
 	"26a7d0fe-456c-4892-b9341184e14ad42a": [
 		"assets/models/SunTemple/SunTemple.gltf",
 		"class UAssetMesh"
+	],
+	"26c1a10a-6790-4df0-a68de096bac03f2d": [
+		"assets/models/ChessBoard/ABeautifulGame.gltf",
+		"class UAssetMaterial"
 	],
 	"26c535c5-c22a-4b37-88045d2718c0d884": [
 		"assets/models/SunTemple/SunTemple.gltf",
@@ -3426,6 +3498,10 @@
 	"2bcceb11-c5bb-4d38-9e5bca3678b4d8de": [
 		"assets/models/Bistro/Bistro.gltf",
 		"class UAssetMesh"
+	],
+	"2bdbe626-cba8-4547-85f31e69a41cd22b": [
+		"assets/models/ChessBoard/ABeautifulGame.gltf",
+		"class UAssetSkeleton"
 	],
 	"2bfefd72-c0c2-48f5-898b2102d57d8f15": [
 		"assets/models/SunTemple/textures/M_Soul_Rocks2_Inst_9_BaseColor-M_Soul_Rocks2_Inst_9_BaseColor.png",
@@ -3974,6 +4050,10 @@
 	"32dcca79-d37c-4fb9-9743ae0c49e7fa88": [
 		"assets/models/SunTemple_v4/SunTemple/SunTemple.fbx",
 		"class UAssetMesh"
+	],
+	"32dfbff0-65d7-4708-a5d040ea6400c559": [
+		"assets/models/ChessBoard/bishop_white_base_color.jpg",
+		"class UAssetTexture"
 	],
 	"32e1fb61-3b95-4f50-bbd363b1b05c83ed": [
 		"assets/models/Bistro/Bistro.gltf",
@@ -4691,6 +4771,10 @@
 		"assets/models/SunTemple_v4/SunTemple/SunTemple.fbx",
 		"class UAssetMesh"
 	],
+	"3b52b591-eaba-40be-8d38e408a39320b8": [
+		"assets/models/ChessBoard/Bishop_white_ORM.jpg",
+		"class UAssetTexture"
+	],
 	"3b710c66-796e-47a0-bf75cc042efbd66e": [
 		"assets/models/Bistro/Bistro.gltf",
 		"class UAssetMesh"
@@ -4823,6 +4907,10 @@
 		"assets/models/Bistro/Bistro.gltf",
 		"class UAssetMesh"
 	],
+	"3d2e6057-4280-4373-ad7215cbf914de7a": [
+		"assets/models/ChessBoard/ABeautifulGame.gltf",
+		"class UAssetMesh"
+	],
 	"3d399748-5878-4971-97ca69ae6e59f952": [
 		"assets/models/Bistro/Bistro.gltf",
 		"class UAssetMesh"
@@ -4953,6 +5041,10 @@
 	],
 	"3e9fa66c-395a-4ab5-bcd058c606410b30": [
 		"assets/models/Metoro/textures/T_Fusebox_N.png",
+		"class UAssetTexture"
+	],
+	"3ea0d77c-e9f7-4c83-b9fe65f3bb64ddee": [
+		"assets/models/ChessBoard/bishop_white_normal.jpg",
 		"class UAssetTexture"
 	],
 	"3ea12ab8-b622-4d70-a3d784ab03d9d583": [
@@ -5455,6 +5547,10 @@
 		"assets/models/Bistro/Bistro.gltf",
 		"class UAssetMaterial"
 	],
+	"4430de2b-fe1f-4937-8d4c1fd115d157c8": [
+		"assets/models/ChessBoard/King_black_normal.jpg",
+		"class UAssetTexture"
+	],
 	"444783b1-9511-4cda-b01efb5cc10d073e": [
 		"assets/models/SunTemple_v4/SunTemple/SunTemple.fbx",
 		"class UAssetMesh"
@@ -5783,6 +5879,10 @@
 		"assets/models/Bistro/textures/MASTER_Light_Bulb_Normal.png",
 		"class UAssetTexture"
 	],
+	"485ecdd1-b279-4bd9-9ca5c8921c549cd8": [
+		"assets/models/ChessBoard/King_black_ORM.jpg",
+		"class UAssetTexture"
+	],
 	"48670bc3-e670-4dae-92b3ada1539ad04d": [
 		"assets/models/Bistro/textures/MASTER_Wood_Painted_Cyan_Normal.png",
 		"class UAssetTexture"
@@ -5861,6 +5961,10 @@
 	],
 	"4998d1a4-6904-4f7a-93bcacdfafba43b3": [
 		"assets/models/SunTemple_v4/SunTemple/SunTemple.fbx",
+		"class UAssetMesh"
+	],
+	"49993097-7136-45f3-9a2b7a2e8bce50d4": [
+		"assets/models/ChessBoard/ABeautifulGame.gltf",
 		"class UAssetMesh"
 	],
 	"499ba03a-5151-4c88-a4c7b31486ad809a": [
@@ -5997,6 +6101,10 @@
 	],
 	"4b1898a1-b511-44d3-931ab53c2b1c6f48": [
 		"assets/models/Bistro/Bistro.gltf",
+		"class UAssetMesh"
+	],
+	"4b519e6c-8245-4aa7-9316d02b63e95269": [
+		"assets/models/ChessBoard/ABeautifulGame.gltf",
 		"class UAssetMesh"
 	],
 	"4b56022a-0e36-4edf-85d38830d8d46ed8": [
@@ -6253,6 +6361,10 @@
 	],
 	"4ecd2fce-3771-4fe0-814860c7a67f68c1": [
 		"assets/models/SunTemple/textures/M_Soul_Rocks2_Inst_10_BaseColor-M_Soul_Rocks2_Inst_10_BaseColor.png",
+		"class UAssetTexture"
+	],
+	"4ed26bbb-da4e-4d7e-96201aed490ec59d": [
+		"assets/models/ChessBoard/Chessboard_ORM.jpg",
 		"class UAssetTexture"
 	],
 	"4ed66e33-139a-4c3f-9439af85f346649e": [
@@ -6595,6 +6707,10 @@
 		"assets/models/Bistro/Bistro.gltf",
 		"class UAssetMesh"
 	],
+	"529b4747-1e3b-4ce9-ad59876e55e9aebc": [
+		"assets/models/ChessBoard/ABeautifulGame.gltf",
+		"class UAssetMaterial"
+	],
 	"529cf6b3-01a5-4f36-bfadee60c0a6de90": [
 		"assets/models/Bistro/Bistro.gltf",
 		"class UAssetMesh"
@@ -6819,6 +6935,10 @@
 		"assets/models/Bistro/Bistro.gltf",
 		"class UAssetMesh"
 	],
+	"556e317d-e972-4147-b4503ad02d6cdae0": [
+		"assets/models/ChessBoard/ABeautifulGame.gltf",
+		"class UAssetMaterial"
+	],
 	"558a0c86-e802-46c0-9280986b0dd71a19": [
 		"assets/models/SunTemple_v4/SunTemple/SunTemple.fbx",
 		"class UAssetMesh"
@@ -6987,6 +7107,10 @@
 		"assets/models/SunTemple/SunTemple.gltf",
 		"class UAssetMesh"
 	],
+	"577a449c-0955-4126-99d5c99b496ea8cc": [
+		"assets/models/ChessBoard/ABeautifulGame.gltf",
+		"class UAssetMesh"
+	],
 	"578391a2-7d35-47fb-a734c7d969bccc45": [
 		"assets/models/PBR_Sphere_Test/model/PBR_Sphere.gltf",
 		"class UAssetMaterial"
@@ -7010,6 +7134,10 @@
 	"57c3cce8-3aff-4ffd-851afc2f2eaf13b7": [
 		"assets/models/SunTemple_v4/SunTemple/SunTemple.fbx",
 		"class UAssetMesh"
+	],
+	"57ff3477-fab7-4fcb-b8160cb05bb0dc12": [
+		"assets/models/ChessBoard/ABeautifulGame.gltf",
+		"class UAssetMaterial"
 	],
 	"581377bd-cc1e-4f2f-a1bb3bfe0b3f7fd8": [
 		"assets/models/SunTemple_v4/SunTemple/SunTemple.fbx",
@@ -8231,6 +8359,10 @@
 		"assets/models/Bistro/Bistro.gltf",
 		"class UAssetMesh"
 	],
+	"684f25ae-54b0-43a2-85ccb98867eb1305": [
+		"assets/models/ChessBoard/King_white_normal.jpg",
+		"class UAssetTexture"
+	],
 	"6853178d-4a31-4610-8f8da6d6fac05462": [
 		"assets/models/Bistro/Bistro.gltf",
 		"class UAssetMesh"
@@ -8275,6 +8407,10 @@
 		"assets/models/SunTemple_v4/SunTemple/SunTemple.fbx",
 		"class UAssetMesh"
 	],
+	"691a0ef3-c5fc-4e3c-bb4667f07b272105": [
+		"assets/models/ChessBoard/queen_black_base_color.jpg",
+		"class UAssetTexture"
+	],
 	"692762ff-95b5-436c-9da8fae07c57e3c3": [
 		"assets/models/SunTemple_v4/SunTemple/Textures/M_Arch_Inst_Red_0_BaseColor.dds",
 		"class UAssetTexture"
@@ -8318,6 +8454,10 @@
 	"696d01b5-5c66-48fb-940db8643020036f": [
 		"assets/models/PBR_Sphere_Test/model/PBR_Sphere.gltf",
 		"class UAssetMesh"
+	],
+	"696dc340-d137-46a0-bea7f69b45bb481f": [
+		"assets/models/ChessBoard/ABeautifulGame.gltf",
+		"class UAssetMaterial"
 	],
 	"69760aec-8c4f-4df1-bf86d951cae47caf": [
 		"assets/models/SunTemple/SunTemple.gltf",
@@ -9355,6 +9495,10 @@
 		"assets/models/Bistro/Bistro.gltf",
 		"class UAssetMesh"
 	],
+	"75db57c6-edd2-4471-bc9038aa496115e7": [
+		"assets/models/ChessBoard/ABeautifulGame.gltf",
+		"class UAssetMaterial"
+	],
 	"75e94525-37c5-451d-8bf3d8372412b53e": [
 		"assets/models/Metoro/Metoro.gltf",
 		"class UAssetMesh"
@@ -9641,6 +9785,10 @@
 	],
 	"7953b2df-4777-48ec-9a7567f7e15e737b": [
 		"assets/models/SunTemple_v4/SunTemple/SunTemple.fbx",
+		"class UAssetMesh"
+	],
+	"795c9ca1-6036-449e-b0e00773bebe249e": [
+		"assets/models/ChessBoard/ABeautifulGame.gltf",
 		"class UAssetMesh"
 	],
 	"79756ee0-5e71-41d7-a909c9496b1384dc": [
@@ -10647,6 +10795,10 @@
 		"assets/models/SunTemple_v4/SunTemple/SunTemple.fbx",
 		"class UAssetMaterial"
 	],
+	"862caf12-f717-41b9-ace66a11e1e4be8b": [
+		"assets/models/ChessBoard/ABeautifulGame.gltf",
+		"class UAssetMaterial"
+	],
 	"863340e9-4351-468f-a4a27d00774dd053": [
 		"assets/models/Bistro/Bistro.gltf",
 		"class UAssetMesh"
@@ -11002,6 +11154,10 @@
 	"8b654c03-8d2e-4560-bd69c25c2716f528": [
 		"assets/models/SunTemple/textures/M_StoneCeiling_Inst_0_BaseColor-M_StoneCeiling_Inst_0_BaseColor.png",
 		"class UAssetTexture"
+	],
+	"8b670f0c-8fae-4910-a6f77f706c14d148": [
+		"assets/models/ChessBoard/ABeautifulGame.gltf",
+		"class UAssetMesh"
 	],
 	"8b719caf-9513-43e2-8ff4c59d9d374ae8": [
 		"assets/models/SunTemple_v4/SunTemple/SunTemple.fbx",
@@ -12351,6 +12507,10 @@
 		"assets/models/SunTemple/SunTemple.gltf",
 		"class UAssetMaterial"
 	],
+	"9bf3ff84-ded4-4bc1-936b2fb71ee5ee0e": [
+		"assets/models/ChessBoard/ABeautifulGame.gltf",
+		"class UAssetMesh"
+	],
 	"9bf67628-2291-4acc-97153fb2b6e89eda": [
 		"assets/models/SunTemple_v4/SunTemple/Textures/M_Soul_Rocks2_Inst_7_BaseColor.dds",
 		"class UAssetTexture"
@@ -12402,6 +12562,10 @@
 	"9ca2ee3a-9214-48ec-afd48021f88e6200": [
 		"assets/models/SunTemple/SunTemple.gltf",
 		"class UAssetMesh"
+	],
+	"9ca405a2-d40e-4adc-84d756ca265c2811": [
+		"assets/models/ChessBoard/castle_black_base_color.jpg",
+		"class UAssetTexture"
 	],
 	"9cada3b2-f21e-4f49-acc127f9a164eebc": [
 		"assets/models/Bistro/Bistro.gltf",
@@ -12570,6 +12734,10 @@
 	"9f2de500-cab2-4eb3-91c54c7ea08602c0": [
 		"assets/models/SunTemple/SunTemple.gltf",
 		"class UAssetMesh"
+	],
+	"9f32b57a-2f43-4f72-8e35b3c769a21de5": [
+		"assets/models/ChessBoard/knight_white_base_color.jpg",
+		"class UAssetTexture"
 	],
 	"9f379f2f-3c9a-4ba8-b80cf4881b0a2249": [
 		"assets/models/SunTemple_v4/SunTemple/SunTemple.fbx",
@@ -13294,6 +13462,10 @@
 	"a85c3fa7-fdc5-4a0f-a035f628fab5adac": [
 		"assets/models/PBR_Sphere_Test/model/PBR_Sphere.gltf",
 		"class UAssetMesh"
+	],
+	"a85d1e09-e04a-4027-951c4b112ed8590c": [
+		"assets/models/ChessBoard/chessboard_normal.jpg",
+		"class UAssetTexture"
 	],
 	"a872a190-c455-4301-8a8a597e09abf102": [
 		"assets/models/SunTemple_v4/SunTemple/SunTemple.fbx",
@@ -14247,6 +14419,10 @@
 		"assets/models/Bistro/Bistro.gltf",
 		"class UAssetMaterial"
 	],
+	"b47e35eb-4ef7-43cf-9ec62f389c617123": [
+		"assets/models/ChessBoard/Pawn_normal.jpg",
+		"class UAssetTexture"
+	],
 	"b495a2d4-53fc-45fa-84908986883eea3f": [
 		"assets/models/SunTemple_v4/SunTemple/SunTemple.fbx",
 		"class UAssetMesh"
@@ -14654,6 +14830,10 @@
 	"b94ffa02-4b37-4c36-a02e6f39bbb1d1db": [
 		"assets/models/Bistro/Bistro.gltf",
 		"class UAssetMesh"
+	],
+	"b9560b81-133a-4c5c-8d3f11a1af6bf58c": [
+		"assets/models/ChessBoard/Queen_white_ORM.jpg",
+		"class UAssetTexture"
 	],
 	"b97d528a-c0b0-4c40-accd1943e584ddae": [
 		"assets/models/SunTemple_v4/SunTemple/SunTemple.fbx",
@@ -15271,6 +15451,10 @@
 		"assets/models/SunTemple/SunTemple.gltf",
 		"class UAssetMesh"
 	],
+	"c1422cd1-4b43-41f0-9009446e2cf6ae94": [
+		"assets/models/ChessBoard/Queen_black_ORM.jpg",
+		"class UAssetTexture"
+	],
 	"c142c257-6082-4211-998e7e84ef3d98af": [
 		"assets/models/Bistro/Bistro.gltf",
 		"class UAssetMesh"
@@ -15453,6 +15637,10 @@
 	],
 	"c2d4087a-382e-4cc8-9a7fee0cbbc9cbdf": [
 		"assets/models/SunTemple_v4/SunTemple/SunTemple.fbx",
+		"class UAssetMesh"
+	],
+	"c2f3581e-bfa8-4513-a3c609e49d912a6a": [
+		"assets/models/ChessBoard/ABeautifulGame.gltf",
 		"class UAssetMesh"
 	],
 	"c305c2f2-f91e-46cf-aa01bea88e4f1226": [
@@ -15662,6 +15850,10 @@
 	"c5396900-cb3c-4a9a-ba96f64507544232": [
 		"assets/models/Bistro/Bistro.gltf",
 		"class UAssetMesh"
+	],
+	"c53fd5cb-e6d3-4b8c-8aa5e2f598fe0439": [
+		"assets/models/ChessBoard/bishop_black_normal.jpg",
+		"class UAssetTexture"
 	],
 	"c550753b-987a-4afc-9b5f81f1a4647398": [
 		"assets/models/SunTemple_v4/SunTemple/SunTemple.fbx",
@@ -15942,6 +16134,10 @@
 	"c93d491a-452f-4c6b-af25531838887f45": [
 		"assets/models/Bistro/textures/Shopsign_Pharmacy_Emissive_BaseColor-Shopsign_Pharmacy_Emissive_BaseColor.png",
 		"class UAssetTexture"
+	],
+	"c942ebcf-f2dc-4488-887792af66dd041e": [
+		"assets/models/ChessBoard/ABeautifulGame.gltf",
+		"class UAssetMaterial"
 	],
 	"c946fae5-d505-4e67-9c17364eca9dc99e": [
 		"assets/models/SunTemple/SunTemple.gltf",
@@ -16331,6 +16527,10 @@
 		"assets/models/tree_sponza/7441062115984513793.jpg",
 		"class UAssetTexture"
 	],
+	"cedbe375-6268-4f63-be8da6d1d61a0f90": [
+		"assets/models/ChessBoard/ABeautifulGame.gltf",
+		"class UAssetMesh"
+	],
 	"cf03f86e-0bf8-4df8-82ab32fe89178186": [
 		"assets/models/Bistro/Bistro.gltf",
 		"class UAssetMesh"
@@ -16398,6 +16598,10 @@
 	"cfa40be7-5dfe-438b-8d931163cd0142ce": [
 		"assets/models/SunTemple_v4/SunTemple/SunTemple.fbx",
 		"class UAssetMaterial"
+	],
+	"cfaf51c8-a528-4ee1-93089b5f7acf3ade": [
+		"assets/models/ChessBoard/chessboard_base_color.jpg",
+		"class UAssetTexture"
 	],
 	"cfb6244f-b753-4fb4-9965749aa4beb5a3": [
 		"assets/models/Bistro/Bistro.gltf",
@@ -16835,6 +17039,10 @@
 		"assets/models/SunTemple/SunTemple.gltf",
 		"class UAssetMesh"
 	],
+	"d54deabe-2bfc-4109-b9a56ce75db94fa5": [
+		"assets/models/ChessBoard/ABeautifulGame.gltf",
+		"class UAssetMesh"
+	],
 	"d54ee5ff-d25f-482a-968ed30beff1c6ac": [
 		"assets/models/SunTemple/SunTemple.gltf",
 		"class UAssetMesh"
@@ -16878,6 +17086,10 @@
 	"d5b83571-871a-46ee-a91dc35d6d22803b": [
 		"assets/models/SunTemple/SunTemple.gltf",
 		"class UAssetMesh"
+	],
+	"d5eee258-3f75-47fd-9b7e1f976482bfe1": [
+		"assets/models/ChessBoard/ABeautifulGame.gltf",
+		"class UAssetMaterial"
 	],
 	"d5f3ce0c-4176-420e-818b75a51ac45e3b": [
 		"assets/models/Bistro/Bistro.gltf",
@@ -17006,6 +17218,10 @@
 	"d756db50-4062-4135-929a2716783950e5": [
 		"assets/models/SunTemple/SunTemple.gltf",
 		"class UAssetMesh"
+	],
+	"d758c418-4a89-429b-93f27b6d2f556e92": [
+		"assets/models/ChessBoard/king_white_base_color.jpg",
+		"class UAssetTexture"
 	],
 	"d75e0749-3480-4dba-b188a803ea23685d": [
 		"assets/models/SunTemple/SunTemple.gltf",
@@ -17715,6 +17931,10 @@
 		"assets/models/SunTemple/SunTemple.gltf",
 		"class UAssetMesh"
 	],
+	"e0f3cf47-9fbe-4129-8df4abea76e0667a": [
+		"assets/models/ChessBoard/ABeautifulGame.gltf",
+		"class UAssetMaterial"
+	],
 	"e0fdbd46-c1f6-4191-a36f6634b77a89d5": [
 		"assets/models/SunTemple_v4/SunTemple/SunTemple.fbx",
 		"class UAssetMesh"
@@ -17777,6 +17997,10 @@
 	],
 	"e19b6a31-34c3-4c3b-86c92a9d86cb54b0": [
 		"assets/models/SunTemple/SunTemple.gltf",
+		"class UAssetMesh"
+	],
+	"e1b72bf0-7726-48ae-944930a91bd79d25": [
+		"assets/models/ChessBoard/ABeautifulGame.gltf",
 		"class UAssetMesh"
 	],
 	"e1bde8d2-c07b-4a86-b5d5a824c730a2fb": [
@@ -18027,6 +18251,10 @@
 		"assets/models/SunTemple/SunTemple.gltf",
 		"class UAssetMesh"
 	],
+	"e4a6df00-b4bf-4071-ab8fa8d7be8b2c99": [
+		"assets/models/ChessBoard/ABeautifulGame.gltf",
+		"class UAssetMesh"
+	],
 	"e4a789b0-ece2-41bd-81bf702e9c24988c": [
 		"assets/models/Bistro/Bistro.gltf",
 		"class UAssetMesh"
@@ -18118,6 +18346,10 @@
 	"e5b36cef-5f2a-487e-abdf07ab542c092a": [
 		"assets/models/SunTemple_v4/SunTemple/SunTemple.fbx",
 		"class UAssetMesh"
+	],
+	"e5c8357c-59d7-49b8-95ff250cfc60cbbb": [
+		"assets/models/ChessBoard/knight_black_base_color.jpg",
+		"class UAssetTexture"
 	],
 	"e5e04110-0be3-404f-8709d5e1ea99c7a7": [
 		"assets/models/SunTemple/SunTemple.gltf",
@@ -18534,6 +18766,10 @@
 	"ead6d986-01a2-4ae5-9775c6e8ae30aee7": [
 		"assets/models/Bistro/Bistro.gltf",
 		"class UAssetMesh"
+	],
+	"eafb886a-7120-4de4-993d3396101f1c66": [
+		"assets/models/ChessBoard/pawn_white_base_color.jpg",
+		"class UAssetTexture"
 	],
 	"eb0228f7-51e6-49b4-83c57fd8de15e526": [
 		"assets/models/SunTemple_v4/SunTemple/SunTemple.fbx",
@@ -19127,6 +19363,10 @@
 		"assets/models/SunTemple_v4/SunTemple/SunTemple.fbx",
 		"class UAssetMesh"
 	],
+	"f226d29f-5d01-410b-8316209745af4b01": [
+		"assets/models/ChessBoard/ABeautifulGame.gltf",
+		"class UAssetMaterial"
+	],
 	"f2292ef1-0909-46b3-9cdcbf778921a2bd": [
 		"assets/models/Bistro/Bistro.gltf",
 		"class UAssetMesh"
@@ -19154,6 +19394,10 @@
 	"f28d3467-06c6-4fef-a92486442de7311e": [
 		"assets/models/Bistro/Bistro.gltf",
 		"class UAssetMesh"
+	],
+	"f28e944e-e742-4f78-a22008c751b7e055": [
+		"assets/models/ChessBoard/castle_white_base_color.jpg",
+		"class UAssetTexture"
 	],
 	"f2966574-cb2b-4f4c-b1ad9d1147dc456d": [
 		"assets/models/Bistro/Bistro.gltf",
@@ -19423,6 +19667,10 @@
 		"assets/models/SunTemple_v4/SunTemple/SunTemple.fbx",
 		"class UAssetMaterial"
 	],
+	"f570de3f-2cfc-4585-a01c408e11358787": [
+		"assets/models/ChessBoard/ABeautifulGame.gltf",
+		"class UAssetMesh"
+	],
 	"f5732a5b-3c15-4fb0-8413f4c3c4aed245": [
 		"assets/models/tree_sponza/Sponza.gltf",
 		"class UAssetMesh"
@@ -19503,6 +19751,10 @@
 		"assets/models/Bistro/Bistro.gltf",
 		"class UAssetMesh"
 	],
+	"f6f0434b-315e-4c7b-add852a31c52f148": [
+		"assets/models/ChessBoard/ABeautifulGame.gltf",
+		"class UAssetMaterial"
+	],
 	"f6f31235-5d8d-4e9f-b8cbf464605d5d83": [
 		"assets/models/Bistro/Bistro.gltf",
 		"class UAssetMesh"
@@ -19582,6 +19834,10 @@
 	"f8007cd2-fcc3-4a99-98a29a0d5928e57f": [
 		"assets/models/Bistro/Bistro.gltf",
 		"class UAssetMesh"
+	],
+	"f80d0910-cfcd-4e8b-b6f162c6362a91a6": [
+		"assets/models/ChessBoard/pawn_black_base_color.jpg",
+		"class UAssetTexture"
 	],
 	"f82a66cb-51db-4b6c-a4190002a451c7a4": [
 		"assets/models/PBR_Sphere_Test/model/PBR_Sphere.gltf",
@@ -19738,6 +19994,10 @@
 	"faa62fee-3eea-46f3-b9c6d32b7e5668e7": [
 		"assets/models/SunTemple_v4/SunTemple/SunTemple.fbx",
 		"class UAssetMesh"
+	],
+	"fac18e6c-7d54-46cb-9a99435fec77a2b4": [
+		"assets/models/ChessBoard/Queen_black_normal.jpg",
+		"class UAssetTexture"
 	],
 	"fadd862b-ad33-41f4-8521c2557f762ad6": [
 		"assets/models/tree_sponza/Sponza.gltf",

@@ -6,7 +6,7 @@
 //* core
 #include "Core/FRenderCoreGeometry.h"
 #include "Core/FRenderCoreLight.h"
-#include "Core/FRenderCorePathtracing.h"
+#include "Core/FRenderCoreRestir.h"
 #include "Core/FRenderCoreLayer.h"
 #include "Core/FRenderCoreProcess.h"
 #include "Core/FRenderCoreTransition.h"
@@ -38,7 +38,7 @@ public:
 
 	FRenderCoreLight* GetLight() { return light_.get(); }
 
-	FRenderCorePathtracing* GetPathtracing() { return pathtracing_.get(); }
+	FRenderCoreRestir* GetRestir() { return restir_.get(); }
 
 	FRenderCoreLayer* GetLayer() { return layer_.get(); }
 
@@ -64,7 +64,7 @@ private:
 
 	std::unique_ptr<FRenderCoreGeometry>    geometry_;
 	std::unique_ptr<FRenderCoreLight>       light_;
-	std::unique_ptr<FRenderCorePathtracing> pathtracing_;
+	std::unique_ptr<FRenderCoreRestir>      restir_;
 	std::unique_ptr<FRenderCoreLayer>       layer_;
 	std::unique_ptr<FRenderCoreProcess>     process_;
 	std::unique_ptr<FRenderCoreTransition>  transition_;
