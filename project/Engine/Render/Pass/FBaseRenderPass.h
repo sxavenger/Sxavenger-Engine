@@ -47,6 +47,19 @@ public:
 			Geometry_Warning = Warning_Camera | Warning_Scene,
 		};
 
+		////////////////////////////////////////////////////////////////////////////////////////////
+		// Option enum class
+		////////////////////////////////////////////////////////////////////////////////////////////
+		enum class Option : size_t {
+			IndirectLighting = 1 << 0,
+			PostProcess      = 1 << 1,
+			Tonemap          = 1 << 2,
+
+			Debug_WhiteAlbedo = 1 << 10,
+
+			Default = PostProcess | Tonemap,
+		};
+
 	public:
 
 		//=========================================================================================
@@ -82,11 +95,7 @@ public:
 		//* option *//
 
 		AntiAliasing antiAliasing = AntiAliasing::FXAA;
-
-		bool isEnableIndirectLighting = false;
-		bool isEnablePostProcess      = true;
-		bool isEnableTonemap          = true;
-		// todo: optionをflagで管理する
+		Sxl::Flag<Option> option  = Option::Default;
 
 	private:
 

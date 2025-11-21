@@ -60,10 +60,9 @@ void RenderSceneEditor::Init() {
 	textures_->Create(kMainWindowSize);
 
 	config_ = {};
-	config_.buffer              = textures_.get();
-	config_.tag                 = CameraComponent::Tag::Editor;
-	config_.isEnablePostProcess = false;
-	config_.isEnableTonemap     = true;
+	config_.buffer = textures_.get();
+	config_.tag    = CameraComponent::Tag::Editor;
+	config_.option = FBaseRenderPass::Config::Option::Tonemap;
 
 	icons_[static_cast<uint32_t>(Icon::Volume)]           = sContentStorage->Import<ContentTexture>("packages/textures/icon/scene_volume.png")->GetId();
 	icons_[static_cast<uint32_t>(Icon::DirectionalLight)] = sContentStorage->Import<ContentTexture>("packages/textures/icon/scene_directionalLight.png")->GetId();
@@ -338,12 +337,12 @@ void RenderSceneEditor::ShowSceneMenu() {
 			ImGui::EndCombo();
 		}
 
-		ImGui::Checkbox("enable post process", &config_.isEnablePostProcess);
-		ImGui::Checkbox("enable tonemap",      &config_.isEnableTonemap);
-
-		ImGui::Text("lighting");
-		ImGui::Separator();
-		ImGui::Checkbox("enable indirect lighting", &config_.isEnableIndirectLighting);
+		for (const auto& [value, name] : magic_enum::enum_entries<FBaseRenderPass::Config::Option>()) {
+			if (value == FBaseRenderPass::Config::Option::Default) {
+				continue;
+			}
+			SxImGui::CheckBoxFlags(name.data(), &config_.option.Get(), static_cast<size_t>(value));
+		}
 
 		// window
 		ImGui::Text("window");
@@ -376,12 +375,23 @@ void RenderSceneEditor::ShowGameMenu() {
 		// process
 		ImGui::Text("process");
 		ImGui::Separator();
-		ImGui::Checkbox("enable post process", &config.isEnablePostProcess);
-		ImGui::Checkbox("enable tonemap",      &config.isEnableTonemap);
 
-		ImGui::Text("lighting");
-		ImGui::Separator();
-		ImGui::Checkbox("enable indirect lighting", &config.isEnableIndirectLighting);
+		if (ImGui::BeginCombo("anti-aliasing", magic_enum::enum_name(config.antiAliasing).data())) {
+			for (const auto& [value, name] : magic_enum::enum_entries<FBaseRenderPass::Config::AntiAliasing>()) {
+				if (ImGui::Selectable(name.data(), (value == config.antiAliasing))) {
+					config.antiAliasing = value;
+				}
+			}
+
+			ImGui::EndCombo();
+		}
+
+		for (const auto& [value, name] : magic_enum::enum_entries<FBaseRenderPass::Config::Option>()) {
+			if (value == FBaseRenderPass::Config::Option::Default) {
+				continue;
+			}
+			SxImGui::CheckBoxFlags(name.data(), &config.option.Get(), static_cast<size_t>(value));
+		}
 
 		ImGui::EndMenu();
 	}
@@ -623,10 +633,10 @@ void RenderSceneEditor::ShowInfoTextScene() {
 
 	ImVec2 position = { sceneRect_.pos.x + kPadding.x, sceneRect_.pos.y + sceneRect_.size.y - kPadding.y };
 
-	RenderTextSceneWindow(position, std::format(" isEnableTonemap:          {}", config_.isEnableTonemap));
-	RenderTextSceneWindow(position, std::format(" isEnablePostProcess:      {}", config_.isEnablePostProcess));
-	RenderTextSceneWindow(position, std::format(" isEnableIndirectLighting: {}", config_.isEnableIndirectLighting));
-	RenderTextSceneWindow(position, std::format(" Anti-Aliasing:            {}", magic_enum::enum_name(config_.antiAliasing)));
+	RenderTextSceneWindow(position, std::format(" Tonemap:          {}", config_.option.Test(FBaseRenderPass::Config::Option::Tonemap)));
+	RenderTextSceneWindow(position, std::format(" PostProcess:      {}", config_.option.Test(FBaseRenderPass::Config::Option::PostProcess)));
+	RenderTextSceneWindow(position, std::format(" IndirectLighting: {}", config_.option.Test(FBaseRenderPass::Config::Option::IndirectLighting)));
+	RenderTextSceneWindow(position, std::format(" Anti-Aliasing:    {}", magic_enum::enum_name(config_.antiAliasing)));
 	RenderTextSceneWindow(position, std::format("> Config"));
 	RenderTextSceneWindow(position, std::format("GBuffer | {}", magic_enum::enum_name(buffer_)));
 

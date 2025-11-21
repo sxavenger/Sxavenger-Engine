@@ -53,6 +53,12 @@ namespace SxImGui {
 	template <ScalerConcept T>
 	bool InputScalar(const char* label, T* v, const char* format = GetImGuiFormat<T>(), ImGuiInputTextFlags flags = ImGuiInputTextFlags_None);
 
+	template <typename T>
+	bool RadioButton(const char* label, T* v, T v_button);
+
+	template <typename T>
+	bool CheckBoxFlags(const char* label, T* flags, T flags_value);
+
 	//=========================================================================================
 	// methods
 	//=========================================================================================
@@ -62,9 +68,6 @@ namespace SxImGui {
 
 	bool DragFloat(const char* label, float* v, float v_speed = 1.0f, const std::optional<float>& v_min = std::nullopt, const std::optional<float>& v_max = std::nullopt, const char* format = "%.3f", ImGuiSliderFlags flags = ImGuiSliderFlags_None);
 	bool DragFloat2(const char* label, float v[2], float v_speed = 1.0f, const std::optional<float>& v_min = std::nullopt, const std::optional<float>& v_max = std::nullopt, const char* format = "%.3f", ImGuiSliderFlags flags = ImGuiSliderFlags_None);
-
-	template <typename T>
-	bool RadioButton(const char* label, T* v, T v_button);
 
 	bool SelectImageButton(const char* id, ImTextureID texture_id, const ImVec2& image_size, bool is_selected);
 
@@ -93,9 +96,6 @@ namespace SxImGui {
 	bool IsMouseClickedRect(const ImVec2& min, const ImVec2& max, ImGuiMouseButton button = ImGuiMouseButton_Left);
 
 	void HelpMarker(const char* label, const char* text, bool isSameline = true);
-
-	template <typename T>
-	bool CheckBoxFlags(const char* label, T* flags, T flags_value);
 
 	void Image(ImTextureRef handle, const ImVec2& size);
 

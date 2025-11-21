@@ -109,7 +109,7 @@ void GameScene::Update() {
 
 	if (SxavengerSystem::IsTriggerKey(KeyId::KEY_P)) {
 		auto& config = FMainRender::GetInstance()->GetConfig();
-		config.isEnableIndirectLighting = !config.isEnableIndirectLighting;
+		config.option.Inverse(FBaseRenderPass::Config::Option::IndirectLighting);
 	}
 
 	performance_->Update();

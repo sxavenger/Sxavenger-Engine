@@ -42,7 +42,7 @@ void FRenderPassDeferredLighting::Render(const DirectXQueueContext* context, con
 	}
 
 
-	if (config.isEnableIndirectLighting) { //* Indirect Lighting
+	if (config.option.Test(FBaseRenderPass::Config::Option::IndirectLighting)) { //* Indirect Lighting
 
 		{
 			BeginPassIndirectLighting(context, config.buffer);
@@ -307,8 +307,9 @@ void FRenderPassDeferredLighting::PassSkyLight(const DirectXQueueContext* contex
 	// BRDF LUT
 	parameter.SetHandle("gBRDFLut", FRenderCore::GetInstance()->GetBRDFLut());
 
-	if (!config.isEnableIndirectLighting) {
+	if (!config.option.Test(FBaseRenderPass::Config::Option::IndirectLighting)) {
 		//!< IndirectLightingが有効な場合はIndirectLightPassで処理する
+		// TODO: DirectSkyLightVisibilityの実装
 
 		//* Irradiance/Radiance
 		FRenderCore::GetInstance()->GetLight()->SetPipeline(

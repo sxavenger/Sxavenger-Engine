@@ -12,7 +12,7 @@
 
 void FRenderPassTonemap::Render(const DirectXQueueContext* context, const Config& config) {
 
-	if (!config.isEnableTonemap) {
+	if (!config.option.Test(FBaseRenderPass::Config::Option::Tonemap)) {
 		return;
 	}
 
