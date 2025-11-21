@@ -11,8 +11,8 @@
 #include <Engine/System/Utility/Logger.h>
 #include <Engine/System/UI/SxImGui.h>
 #include <Engine/Content/SxavengerContent.h>
-#include <Engine/Preview/Asset/UAssetStorage.h>
-#include <Engine/Preview/Content/UContentStorage.h>
+#include <Engine/Preview/Asset/AssetStorage.h>
+#include <Engine/Preview/Content/ContentStorage.h>
 
 //=========================================================================================
 // static cosnt variables
@@ -84,9 +84,9 @@ void ArmatureComponent::InputJson(const json& data) {
 
 	// skeletonのuuidが存在しない場合は, tableから読み込み
 
-	if (!sUAssetStorage->Contains<UAssetSkeleton>(skeleton)) {
-		const auto& filepath = sUAssetStorage->GetFilepath(skeleton);
-		sUContentStorage->Import<UContentModel>(filepath);
+	if (!sAssetStorage->Contains<AssetSkeleton>(skeleton)) {
+		const auto& filepath = sAssetStorage->GetFilepath(skeleton);
+		sContentStorage->Import<ContentModel>(filepath);
 	}
 
 	SetSkeleton(skeleton);

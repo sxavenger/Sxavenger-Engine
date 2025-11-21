@@ -6,14 +6,14 @@
 //* core
 #include "Core/FRenderCoreGeometry.h"
 #include "Core/FRenderCoreLight.h"
-#include "Core/FRenderCorePathtracing.h"
+#include "Core/FRenderCoreRestir.h"
 #include "Core/FRenderCoreLayer.h"
 #include "Core/FRenderCoreProcess.h"
 #include "Core/FRenderCoreTransition.h"
 
 //* engine
-#include <Engine/Preview/Asset/UAssetTexture.h>
-#include <Engine/Preview/Asset/UAssetParameter.h>
+#include <Engine/Preview/Asset/AssetTexture.h>
+#include <Engine/Preview/Asset/AssetParameter.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // FRenderCore class
@@ -38,7 +38,7 @@ public:
 
 	FRenderCoreLight* GetLight() { return light_.get(); }
 
-	FRenderCorePathtracing* GetPathtracing() { return pathtracing_.get(); }
+	FRenderCoreRestir* GetRestir() { return restir_.get(); }
 
 	FRenderCoreLayer* GetLayer() { return layer_.get(); }
 
@@ -64,16 +64,16 @@ private:
 
 	std::unique_ptr<FRenderCoreGeometry>    geometry_;
 	std::unique_ptr<FRenderCoreLight>       light_;
-	std::unique_ptr<FRenderCorePathtracing> pathtracing_;
+	std::unique_ptr<FRenderCoreRestir>      restir_;
 	std::unique_ptr<FRenderCoreLayer>       layer_;
 	std::unique_ptr<FRenderCoreProcess>     process_;
 	std::unique_ptr<FRenderCoreTransition>  transition_;
 
 	//* textures *//
 
-	UAssetParameter<UAssetTexture> brdfLut_;
+	AssetParameter<AssetTexture> brdfLut_;
 
-	UAssetParameter<UAssetTexture> smaaArea_;
-	UAssetParameter<UAssetTexture> smaaSearch_;
+	AssetParameter<AssetTexture> smaaArea_;
+	AssetParameter<AssetTexture> smaaSearch_;
 
 };

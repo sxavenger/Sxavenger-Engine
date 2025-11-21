@@ -10,8 +10,8 @@
 //* engine
 #include <Engine/System/DirectX/DxObject/DxConstantBuffer.h>
 #include <Engine/Content/InputGeometry/InputUIVertex.h>
-#include <Engine/Preview/Asset/UAssetTexture.h>
-#include <Engine/Preview/Asset/UAssetParameter.h>
+#include <Engine/Preview/Asset/AssetTexture.h>
+#include <Engine/Preview/Asset/AssetParameter.h>
 
 //* lib
 #include <Lib/Geometry/Color4.h>
@@ -68,7 +68,7 @@ public:
 
 	void DrawCall(const DirectXQueueContext* context);
 
-	const UAssetParameter<UAssetTexture>& GetTextureParameter() const { return texture_; }
+	const AssetParameter<AssetTexture>& GetTextureParameter() const { return texture_; }
 
 	const D3D12_GPU_VIRTUAL_ADDRESS& GetGPUVirtualAddressUV() const { return bufferUV_->GetGPUVirtualAddress(); }
 
@@ -104,7 +104,7 @@ private:
 	// todo: unityを参考にして使いやすくする.
 	// filedとか
 
-	UAssetParameter<UAssetTexture> texture_ = nullptr;
+	AssetParameter<AssetTexture> texture_ = nullptr;
 
 	//=========================================================================================
 	// private methods

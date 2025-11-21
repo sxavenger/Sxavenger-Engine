@@ -47,7 +47,6 @@ struct SkyLightComponent {
 		TextureCube<float4> environment = ResourceDescriptorHeap[environmentIndex];
 		
 		float4 color = environment.SampleLevel(sample, direction, 0);
-		color.rgb = ACES::IDT_sRGB_AP0(color.rgb);
 		color.rgb *= intensity;
 		return color;
 	}
@@ -60,7 +59,6 @@ struct SkyLightComponent {
 		TextureCube<float4> irradiance = ResourceDescriptorHeap[irradianceIndex];
 
 		float4 color = irradiance.SampleLevel(sample, direction, 0);
-		color.rgb = ACES::IDT_sRGB_AP0(color.rgb);
 		color.rgb *= intensity;
 		return color;
 	}
@@ -74,7 +72,6 @@ struct SkyLightComponent {
 		TextureCube<float4> radiance = ResourceDescriptorHeap[irradianceIndex];
 		
 		float4 color = radiance.SampleLevel(sample, direction, lod);
-		color.rgb = ACES::IDT_sRGB_AP0(color.rgb);
 		color.rgb *= intensity;
 		return color;
 	}

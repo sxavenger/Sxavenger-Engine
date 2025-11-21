@@ -24,7 +24,7 @@
 
 #include "Engine/Component/Components/Light/Environment/SkyLightComponent.h"
 
-#include "Engine/Preview/Content/UContentStorage.h"
+#include "Engine/Preview/Content/ContentStorage.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // BetaSystemGameLoop class methods
@@ -63,9 +63,9 @@ void BetaSystemGameLoop::InitSystem() {
 
 	offlineSkylight_ = std::make_unique<MonoBehaviour>();
 	auto light = offlineSkylight_->AddComponent<SkyLightComponent>();
-	light->SetIrradiance(sUContentStorage->Import<UContentTexture>("assets/textures/textureCube/sky_irradiance.dds")->GetId());
-	light->SetRadiance(sUContentStorage->Import<UContentTexture>("assets/textures/textureCube/sky_radiance.dds")->GetId());
-	light->SetEnvironment(sUContentStorage->Import<UContentTexture>("assets/textures/textureCube/sky_environment.dds")->GetId());
+	light->SetIrradiance(sContentStorage->Import<ContentTexture>("assets/textures/textureCube/sky_irradiance.dds")->GetId());
+	light->SetRadiance(sContentStorage->Import<ContentTexture>("assets/textures/textureCube/sky_radiance.dds")->GetId());
+	light->SetEnvironment(sContentStorage->Import<ContentTexture>("assets/textures/textureCube/sky_environment.dds")->GetId());
 
 	behaviour_ = std::make_unique<MonoBehaviour>();
 	behaviour_->AddComponent<TransformComponent>();
@@ -77,18 +77,18 @@ void BetaSystemGameLoop::InitSystem() {
 	behaviour_->GetComponent<PostProcessLayerComponent>()->AddPostProcess<PostProcessRadialBlur>();
 	behaviour_->GetComponent<PostProcessLayerComponent>()->AddPostProcess<PostProcessMotionBlur>();
 
-	sUContentStorage->Import<UContentTexture>("assets/textures/LUT/lut_greenish.png", UContentTexture::Option{ UContentTexture::Encoding::Intensity, false });
-	sUContentStorage->Import<UContentTexture>("assets/textures/LUT/lut_reddish.png", UContentTexture::Option{ UContentTexture::Encoding::Intensity, false });
-	sUContentStorage->Import<UContentTexture>("assets/textures/LUT/lut_sepia.png", UContentTexture::Option{ UContentTexture::Encoding::Intensity, false });
+	sContentStorage->Import<ContentTexture>("assets/textures/LUT/lut_greenish.png", ContentTexture::Option{ ContentTexture::Encoding::Intensity, false });
+	sContentStorage->Import<ContentTexture>("assets/textures/LUT/lut_reddish.png", ContentTexture::Option{ ContentTexture::Encoding::Intensity, false });
+	sContentStorage->Import<ContentTexture>("assets/textures/LUT/lut_sepia.png", ContentTexture::Option{ ContentTexture::Encoding::Intensity, false });
 
-	const auto& texture = sUContentStorage->Import<UContentTexture>("assets/textures/LUT/lut_reddish.png", UContentTexture::Option{ UContentTexture::Encoding::Intensity, false })->GetId();
+	const auto& texture = sContentStorage->Import<ContentTexture>("assets/textures/LUT/lut_reddish.png", ContentTexture::Option{ ContentTexture::Encoding::Intensity, false })->GetId();
 	auto lut = behaviour_->GetComponent<PostProcessLayerComponent>()->AddPostProcess<PostProcessLUT>();
 	lut->CreateTexture(SxavengerSystem::GetDirectQueueContext(), texture, { 16, 16 });
 
 	auto t = behaviour_->AddComponent<RectTransformComponent>();
 	auto text = behaviour_->AddComponent<TextRendererComponent>();
 
-	text->SetFont(sUContentStorage->Import<UContentFont>("assets/font/MPLUSRounded1c-Regular.ttf")->GetId());
+	text->SetFont(sContentStorage->Import<ContentFont>("assets/font/MPLUSRounded1c-Regular.ttf")->GetId());
 	text->SetText(L"Sxavenger Engine");
 
 	t->GetTransform().translate = { 200.0f, 200.0f };

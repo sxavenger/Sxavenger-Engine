@@ -9,8 +9,8 @@
 
 //* engine
 #include <Engine/System/DirectX/DxObject/DxConstantBuffer.h>
-#include <Engine/Preview/Asset/UAssetTexture.h>
-#include <Engine/Preview/Asset/UAssetParameter.h>
+#include <Engine/Preview/Asset/AssetTexture.h>
+#include <Engine/Preview/Asset/AssetParameter.h>
 
 //* lib
 #include <Lib/Sxl/Flag.h>
@@ -21,7 +21,7 @@
 ////////////////////////////////////////////////////////////////////////////////////////////
 // SkyLightComponent class
 ////////////////////////////////////////////////////////////////////////////////////////////
-class SkyLightComponent
+class SkyLightComponent final
 	: public BaseComponent {
 public:
 
@@ -83,13 +83,13 @@ public:
 
 	//* component option *//
 
-	void SetEnvironment(const UAssetParameter<UAssetTexture>& texture);
+	void SetEnvironment(const AssetParameter<AssetTexture>& texture);
 	void SetEnvironment(const DxObject::Descriptor& texture);
 
-	void SetIrradiance(const UAssetParameter<UAssetTexture>& texture);
+	void SetIrradiance(const AssetParameter<AssetTexture>& texture);
 	void SetIrradiance(const DxObject::Descriptor& texture);
 
-	void SetRadiance(const UAssetParameter<UAssetTexture>& texture);
+	void SetRadiance(const AssetParameter<AssetTexture>& texture);
 	void SetRadiance(const DxObject::Descriptor& texture, uint32_t mipmaps = 0);
 
 	void SetIntensity(float intensity);
@@ -113,8 +113,8 @@ private:
 	std::unique_ptr<DxObject::ConstantBuffer<Parameter>> parameter_;
 
 	//* serialize用
-	UAssetParameter<UAssetTexture> environment_;
-	UAssetParameter<UAssetTexture> irradiance_;
-	UAssetParameter<UAssetTexture> radiance_;
+	AssetParameter<AssetTexture> environment_;
+	AssetParameter<AssetTexture> irradiance_;
+	AssetParameter<AssetTexture> radiance_;
 
 };

@@ -9,8 +9,8 @@
 //* engine
 #include <Engine/System/DirectX/DxObject/DxConstantBuffer.h>
 #include <Engine/Render/Common/FLUTTexture.h>
-#include <Engine/Preview/Asset/UAssetTexture.h>
-#include <Engine/Preview/Asset/UAssetParameter.h>
+#include <Engine/Preview/Asset/AssetTexture.h>
+#include <Engine/Preview/Asset/AssetParameter.h>
 
 //* c++
 #include <memory>
@@ -43,7 +43,7 @@ public:
 
 	//* option *//
 
-	void CreateTexture(const DirectXQueueContext* context, const UAssetParameter<UAssetTexture>& texture, const Vector2ui& tile);
+	void CreateTexture(const DirectXQueueContext* context, const AssetParameter<AssetTexture>& texture, const Vector2ui& tile);
 
 private:
 
@@ -51,7 +51,7 @@ private:
 	// private variables
 	//=========================================================================================
 
-	UAssetParameter<UAssetTexture> referenceTexture_;
+	AssetParameter<AssetTexture> referenceTexture_;
 
 	std::unique_ptr<FLUTTexture> texture_;
 	std::unique_ptr<DxObject::ConstantBuffer<Parameter>> parameter_;

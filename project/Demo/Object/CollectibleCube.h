@@ -7,8 +7,8 @@
 #include <Engine/Module/GameObject/GameObject.h>
 #include <Engine/Adapter/Parameter/SerializeParameter.h>
 #include <Engine/Adapter/Parameter/SerializeGui.h>
-#include <Engine/Preview/Content/UContentModel.h>
-#include <Engine/Preview/Content/UContentObserver.h>
+#include <Engine/Preview/Content/ContentModel.h>
+#include <Engine/Preview/Content/ContentObserver.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // CollectibleCube class
@@ -37,6 +37,6 @@ private:
 
 	//* asset *//
 
-	UContentObserver<UContentModel> model_;
+	ContentObserver<ContentModel> model_;
 
 };

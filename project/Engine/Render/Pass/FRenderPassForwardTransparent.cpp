@@ -134,7 +134,7 @@ void FRenderPassForwardTransparent::PassStaticMesh(const DirectXQueueContext* co
 		auto mesh     = component->GetMesh();
 		auto material = component->GetMaterial();
 
-		if (material->GetMode() == UAssetMaterial::Mode::Opaque) {
+		if (material->GetMode() == AssetMaterial::Mode::Opaque) {
 			return; //!< 不透明なジオメトリは別のパスで描画
 		}
 
@@ -173,7 +173,7 @@ void FRenderPassForwardTransparent::PassSkinnedMesh(const DirectXQueueContext* c
 		auto mesh     = component->GetMesh();
 		auto material = component->GetMaterial();
 
-		if (material->GetMode() == UAssetMaterial::Mode::Opaque) {
+		if (material->GetMode() == AssetMaterial::Mode::Opaque) {
 			return; //!< 透明なジオメトリは別のパスで描画
 		}
 

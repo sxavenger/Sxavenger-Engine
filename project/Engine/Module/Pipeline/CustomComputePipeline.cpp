@@ -6,18 +6,18 @@ _DXOBJECT_USING
 //-----------------------------------------------------------------------------------------
 //* engine
 #include <Engine/System/SxavengerSystem.h>
-#include <Engine/Preview/Content/UContentStorage.h>
+#include <Engine/Preview/Content/ContentStorage.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Base CustomComputePipeline class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-void BaseCustomComputePipeline::SetContent(const std::shared_ptr<UContentBlob>& blob) {
+void BaseCustomComputePipeline::SetContent(const std::shared_ptr<ContentBlob>& blob) {
 	content_.emplace() = blob;
 }
 
 void BaseCustomComputePipeline::CreateContent(const std::filesystem::path& filepath) {
-	std::shared_ptr<UContentBlob> blob = sUContentStorage->Import<UContentBlob>(filepath, CompileProfile::cs);
+	std::shared_ptr<ContentBlob> blob = sContentStorage->Import<ContentBlob>(filepath, CompileProfile::cs);
 	SetContent(blob);
 }
 

@@ -13,7 +13,7 @@
 #include <Engine/Component/Entity/MonoBehaviourContainer.h>
 #include <Engine/Component/ComponentHelper.h>
 #include <Engine/Module/Scene/SceneObjects.h>
-#include <Engine/Preview/Content/UContentStorage.h>
+#include <Engine/Preview/Content/ContentStorage.h>
 
 //* external
 #include <imgui.h>
@@ -183,7 +183,7 @@ void HierarchyEditor::ShowHierarchyWindow() {
 		ImGui::SetCursorScreenPos(contentPos);
 		ImGui::InvisibleButton("## DropTarget UContentModel", contentSize);
 
-		sUContentStorage->DragAndDropTargetContentFunc<UContentModel>([this](const std::shared_ptr<UContentModel>& content) {
+		sContentStorage->DragAndDropTargetContentFunc<ContentModel>([this](const std::shared_ptr<ContentModel>& content) {
 			std::unique_ptr<SceneObject> object = std::make_unique<SceneObject>();
 			object->SetName(content->GetFilepath().stem().generic_string());
 
@@ -195,7 +195,7 @@ void HierarchyEditor::ShowHierarchyWindow() {
 		ImGui::SetCursorScreenPos(contentPos);
 		ImGui::InvisibleButton("## DropTarget Scene", contentSize);
 
-		sUContentStorage->DragAndDropTargetContentFunc<UContentScene>([this](const std::shared_ptr<UContentScene>& content) {
+		sContentStorage->DragAndDropTargetContentFunc<ContentScene>([this](const std::shared_ptr<ContentScene>& content) {
 			content->WaitComplete(); // contentの読み込みを待つ
 			sSceneObjects->InputJson(content->GetData());
 			sceneFileName_ = content->GetFilepath().filename();

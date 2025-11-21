@@ -5,6 +5,7 @@
 //-----------------------------------------------------------------------------------------
 //* library
 #include "Math.hlsli"
+#include "BRDF.hlsli"
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // sample methods
@@ -35,6 +36,10 @@ float3 ImportanceSampleLambert(float2 xi, float3 n) {
 	return normalize(h.x * tangentX + h.y * tangentY + h.z * n);
 }
 
+float ImportanceSampleLambertPDF(float3 wi, float3 n) {
+	return max(dot(wi, n), 0) * rcp(kPi);
+}
+
 float3 ImportanceSampleGGX(float2 xi, float roughness, float3 n) {
 	float a = roughness * roughness;
 
@@ -51,4 +56,15 @@ float3 ImportanceSampleGGX(float2 xi, float roughness, float3 n) {
 	TangentSpace(n, tangentX, tangentY);
 
 	return normalize(h.x * tangentX + h.y * tangentY + h.z * n);
+}
+
+float ImportanceSampleGGXPDF(float3 wi, float roughness, float3 n, float3 v) {
+	float3 h = normalize(wi + v);
+
+	float NdotH = max(dot(n, h), 0.0f);
+	float VdotH = max(dot(v, h), 0.0f);
+	
+	float d = D_GGX(NdotH, roughness);
+
+	return (d * NdotH) * rcp(4.0f * max(VdotH, kEpsilon));
 }

@@ -10,8 +10,8 @@
 //* engine
 #include <Engine/System/DirectX/Context/DirectXQueueContext.h>
 #include <Engine/Content/InputGeometry/InputUIVertex.h>
-#include <Engine/Preview/Asset/UAssetFont.h>
-#include <Engine/Preview/Asset/UAssetParameter.h>
+#include <Engine/Preview/Asset/AssetFont.h>
+#include <Engine/Preview/Asset/AssetParameter.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // TextRendererComponent class
@@ -34,7 +34,7 @@ public:
 
 	void SetText(const std::wstring& text);
 
-	void SetFont(const UAssetParameter<UAssetFont>& font) { font_ = font; }
+	void SetFont(const AssetParameter<AssetFont>& font) { font_ = font; }
 
 	void SetSize(float size) { size_ = size; }
 
@@ -52,7 +52,7 @@ public:
 
 	bool IsEnable() const { return !text_.empty() && !font_.Empty(); }
 
-	const std::shared_ptr<UAssetFont> GetFont() const { return font_.WaitRequire(); }
+	const std::shared_ptr<AssetFont> GetFont() const { return font_.WaitRequire(); }
 
 	//! @brief AssetのFontSizeとParameterのFonstSize比率を取得
 	float GetFontSizeRatio() const;
@@ -76,7 +76,7 @@ private:
 
 	std::wstring text_;
 
-	UAssetParameter<UAssetFont> font_;
+	AssetParameter<AssetFont> font_;
 
 	Color4f color_ = kWhite4<float>;
 

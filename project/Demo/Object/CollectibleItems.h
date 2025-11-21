@@ -8,8 +8,6 @@
 #include <Engine/Module/GameObject/GameObject.h>
 #include <Engine/Adapter/Parameter/SerializeParameter.h>
 #include <Engine/Adapter/Parameter/SerializeGui.h>
-#include <Engine/Preview/Content/UContentModel.h>
-#include <Engine/Preview/Content/UContentObserver.h>
 
 //* demo
 #include "CollectibleCube.h"

@@ -8,8 +8,8 @@
 
 //* engine
 #include <Engine/Content/Animation/Skeleton.h>
-#include <Engine/Preview/Asset/UAssetSkeleton.h>
-#include <Engine/Preview/Asset/UAssetParameter.h>
+#include <Engine/Preview/Asset/AssetSkeleton.h>
+#include <Engine/Preview/Asset/AssetParameter.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // ArmatureComponent class
@@ -63,7 +63,7 @@ private:
 	// private variables
 	//=========================================================================================
 
-	UAssetParameter<UAssetSkeleton> referenceSkeleton_;
+	AssetParameter<AssetSkeleton> referenceSkeleton_;
 	Skeleton skeleton_;
 
 

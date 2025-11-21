@@ -19,8 +19,8 @@
 #include <Engine/Component/Components/Light/Punctual/SpotLightComponent.h>
 #include <Engine/Component/Components/PostProcessLayer/PostProcessLayerComponent.h>
 #include <Engine/Render/FMainRender.h>
-#include <Engine/Preview/Asset/UAssetStorage.h>
-#include <Engine/Preview/Content/UContentStorage.h>
+#include <Engine/Preview/Asset/AssetStorage.h>
+#include <Engine/Preview/Content/ContentStorage.h>
 
 //* lib
 #include <Lib/Geometry/VectorComparision.h>
@@ -34,16 +34,16 @@
 
 void RenderSceneEditor::Init() {
 
-	checkerboard_ = sUContentStorage->Import<UContentTexture>("packages/textures/checker_black.png")->GetId();
+	checkerboard_ = sContentStorage->Import<ContentTexture>("packages/textures/checker_black.png")->GetId();
 
-	operationTexture_[static_cast<uint32_t>(GuizmoOperation::Translate)] = sUContentStorage->Import<UContentTexture>("packages/textures/icon/operation_translate.png")->GetId();
-	operationTexture_[static_cast<uint32_t>(GuizmoOperation::Rotate)]    = sUContentStorage->Import<UContentTexture>("packages/textures/icon/operation_rotate.png")->GetId();
-	operationTexture_[static_cast<uint32_t>(GuizmoOperation::Scale)]     = sUContentStorage->Import<UContentTexture>("packages/textures/icon/operation_scale.png")->GetId();
+	operationTexture_[static_cast<uint32_t>(GuizmoOperation::Translate)] = sContentStorage->Import<ContentTexture>("packages/textures/icon/operation_translate.png")->GetId();
+	operationTexture_[static_cast<uint32_t>(GuizmoOperation::Rotate)]    = sContentStorage->Import<ContentTexture>("packages/textures/icon/operation_rotate.png")->GetId();
+	operationTexture_[static_cast<uint32_t>(GuizmoOperation::Scale)]     = sContentStorage->Import<ContentTexture>("packages/textures/icon/operation_scale.png")->GetId();
 
-	modeTexture_[SxImGuizmo::World] = sUContentStorage->Import<UContentTexture>("packages/textures/icon/mode_world.png")->GetId();
-	modeTexture_[SxImGuizmo::Local] = sUContentStorage->Import<UContentTexture>("packages/textures/icon/mode_local.png")->GetId();
+	modeTexture_[SxImGuizmo::World] = sContentStorage->Import<ContentTexture>("packages/textures/icon/mode_world.png")->GetId();
+	modeTexture_[SxImGuizmo::Local] = sContentStorage->Import<ContentTexture>("packages/textures/icon/mode_local.png")->GetId();
 
-	gridTexture_ = sUContentStorage->Import<UContentTexture>("packages/textures/icon/grid.png")->GetId();
+	gridTexture_ = sContentStorage->Import<ContentTexture>("packages/textures/icon/grid.png")->GetId();
 
 	camera_ = std::make_unique<MonoBehaviour>();
 	camera_->SetName("editor camera");
@@ -65,11 +65,11 @@ void RenderSceneEditor::Init() {
 	config_.isEnablePostProcess = false;
 	config_.isEnableTonemap     = true;
 
-	icons_[static_cast<uint32_t>(Icon::Volume)]           = sUContentStorage->Import<UContentTexture>("packages/textures/icon/scene_volume.png")->GetId();
-	icons_[static_cast<uint32_t>(Icon::DirectionalLight)] = sUContentStorage->Import<UContentTexture>("packages/textures/icon/scene_directionalLight.png")->GetId();
-	icons_[static_cast<uint32_t>(Icon::PointLight)]       = sUContentStorage->Import<UContentTexture>("packages/textures/icon/scene_pointLight.png")->GetId();
-	icons_[static_cast<uint32_t>(Icon::SpotLight)]        = sUContentStorage->Import<UContentTexture>("packages/textures/icon/scene_spotLight.png")->GetId();
-	icons_[static_cast<uint32_t>(Icon::Camera)]           = sUContentStorage->Import<UContentTexture>("packages/textures/icon/scene_camera.png")->GetId();
+	icons_[static_cast<uint32_t>(Icon::Volume)]           = sContentStorage->Import<ContentTexture>("packages/textures/icon/scene_volume.png")->GetId();
+	icons_[static_cast<uint32_t>(Icon::DirectionalLight)] = sContentStorage->Import<ContentTexture>("packages/textures/icon/scene_directionalLight.png")->GetId();
+	icons_[static_cast<uint32_t>(Icon::PointLight)]       = sContentStorage->Import<ContentTexture>("packages/textures/icon/scene_pointLight.png")->GetId();
+	icons_[static_cast<uint32_t>(Icon::SpotLight)]        = sContentStorage->Import<ContentTexture>("packages/textures/icon/scene_spotLight.png")->GetId();
+	icons_[static_cast<uint32_t>(Icon::Camera)]           = sContentStorage->Import<ContentTexture>("packages/textures/icon/scene_camera.png")->GetId();
 	
 
 }
@@ -1063,60 +1063,6 @@ void RenderSceneEditor::DisplayGBufferTexture(GBuffer buffer) {
 		case GBuffer::Indirect:
 			SetImGuiImageFullWindowEnable(
 				textures_->GetGBuffer(FLightingGBuffer::Layout::Indirect)->GetGPUHandleSRV(),
-				textures_->GetSize(),
-				isRender_
-			);
-			break;
-
-		case GBuffer::Indirect_Reservoir:
-			SetImGuiImagesFullWindowEnable(
-				{
-					{ textures_->GetGBuffer(FLightingGBuffer::Layout::Indirect_Reservoir_Diffuse)->GetGPUHandleSRV(),  GBuffer::Indirect_Reservoir_Diffuse },
-					{ textures_->GetGBuffer(FLightingGBuffer::Layout::Indirect_Reservoir_Specular)->GetGPUHandleSRV(), GBuffer::Indirect_Reservoir_Specular },
-				},
-				textures_->GetSize(),
-				isRender_
-			);
-			break;
-
-		case GBuffer::Indirect_Reservoir_Diffuse:
-			SetImGuiImageFullWindowEnable(
-				textures_->GetGBuffer(FLightingGBuffer::Layout::Indirect_Reservoir_Diffuse)->GetGPUHandleSRV(),
-				textures_->GetSize(),
-				isRender_
-			);
-			break;
-
-		case GBuffer::Indirect_Reservoir_Specular:
-			SetImGuiImageFullWindowEnable(
-				textures_->GetGBuffer(FLightingGBuffer::Layout::Indirect_Reservoir_Specular)->GetGPUHandleSRV(),
-				textures_->GetSize(),
-				isRender_
-			);
-			break;
-
-		case GBuffer::Indirect_Atlas:
-			SetImGuiImagesFullWindowEnable(
-				{
-					{ textures_->GetGBuffer(FLightingGBuffer::Layout::Indirect_Atlas_Diffuse)->GetGPUHandleSRV(),  GBuffer::Indirect_Atlas_Diffuse },
-					{ textures_->GetGBuffer(FLightingGBuffer::Layout::Indirect_Atlas_Specular)->GetGPUHandleSRV(), GBuffer::Indirect_Atlas_Specular },
-				},
-				textures_->GetSize(),
-				isRender_
-			);
-			break;
-
-		case GBuffer::Indirect_Atlas_Diffuse:
-			SetImGuiImageFullWindowEnable(
-				textures_->GetGBuffer(FLightingGBuffer::Layout::Indirect_Atlas_Diffuse)->GetGPUHandleSRV(),
-				textures_->GetSize(),
-				isRender_
-			);
-			break;
-
-		case GBuffer::Indirect_Atlas_Specular:
-			SetImGuiImageFullWindowEnable(
-				textures_->GetGBuffer(FLightingGBuffer::Layout::Indirect_Atlas_Specular)->GetGPUHandleSRV(),
 				textures_->GetSize(),
 				isRender_
 			);

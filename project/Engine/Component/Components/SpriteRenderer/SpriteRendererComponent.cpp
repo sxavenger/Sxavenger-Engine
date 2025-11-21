@@ -9,7 +9,7 @@ _DXOBJECT_USING
 
 //* engine
 #include <Engine/System/UI/SxImGui.h>
-#include <Engine/Preview/Content/UContentStorage.h>
+#include <Engine/Preview/Content/ContentStorage.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // SpriteRendererComponent class methods
@@ -36,7 +36,7 @@ void SpriteRendererComponent::ShowComponentInspector() {
 	ImGui::SameLine();
 
 	if (ImGui::BeginCombo("## texture", texture_.GetStr().c_str())) {
-		for (const auto& id : sUAssetStorage->GetAssetStorage<UAssetTexture>() | std::views::keys) {
+		for (const auto& id : sAssetStorage->GetAssetStorage<AssetTexture>() | std::views::keys) {
 			if (ImGui::Selectable(id.Serialize().c_str(), texture_ == id)) {
 				texture_ = id; //!< 選択されたtextureを設定
 				// todo: 2d texture以外は設定しない
@@ -45,7 +45,7 @@ void SpriteRendererComponent::ShowComponentInspector() {
 		ImGui::EndCombo();
 	}
 
-	sUContentStorage->DragAndDropTargetContentFunc<UContentTexture>([this](const std::shared_ptr<UContentTexture>& content) {
+	sContentStorage->DragAndDropTargetContentFunc<ContentTexture>([this](const std::shared_ptr<ContentTexture>& content) {
 		content->WaitComplete();
 		texture_ = content->GetId();
 	});
@@ -131,9 +131,9 @@ void SpriteRendererComponent::InputJson(const json& data) {
 
 		// textureのuuidが存在しない場合は, tableから読み込み
 
-		if (!sUAssetStorage->Contains<UAssetTexture>(texture)) {
-			const auto& filepath = sUAssetStorage->GetFilepath(texture);
-			sUContentStorage->Import<UContentTexture>(filepath);
+		if (!sAssetStorage->Contains<AssetTexture>(texture)) {
+			const auto& filepath = sAssetStorage->GetFilepath(texture);
+			sContentStorage->Import<ContentTexture>(filepath);
 		}
 
 		texture_ = texture;
@@ -180,7 +180,7 @@ void SpriteRendererComponent::TransferColor() {
 
 void SpriteRendererComponent::ShowTexture() {
 
-	const std::shared_ptr<UAssetTexture> texture = texture_.WaitRequire();
+	const std::shared_ptr<AssetTexture> texture = texture_.WaitRequire();
 
 	Vector2ui size = texture->GetMetadata().size;
 
