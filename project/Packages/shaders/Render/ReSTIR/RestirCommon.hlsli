@@ -22,7 +22,11 @@ struct Sample {
 	// public variables
 	//=========================================================================================
 	
-	float3 lo;
+	float3 xv; //!< visible point position
+	float3 nv; //!< visible point normal
+	float3 xs; //!< sample point position
+	float3 ns; //!< sample point normal
+	float3 lo; //!< sample radiance
 	float pdf;
 	
 };
@@ -37,9 +41,9 @@ struct Reservoir {
 	//=========================================================================================
 
 	Sample sample;
-	float weight;
-	float w;
-	uint m;
+	float weight; //!< wsum
+	float w;      //!< W
+	uint m;       //!< M
 
 	//=========================================================================================
 	// public methods
@@ -59,7 +63,15 @@ struct Reservoir {
 
 	}
 
-	//static Reservoir Merge(Reservoir a, Reservoir b) {}
+	//! @brief reservoir merge
+	//! @param reservoir[in] merge source reservoir
+	//! @param p_hat[in] estimated sample weight of the target reservoir
+	//! @param r[in] random value [0, 1]
+	void Merge(Reservoir reservoir, float p_hat, float r) {
+		uint m0 = m;
+		Update(reservoir.sample, p_hat * reservoir.w * reservoir.m, r);
+		m = m0 + reservoir.m;
+	}
 	
 };
 

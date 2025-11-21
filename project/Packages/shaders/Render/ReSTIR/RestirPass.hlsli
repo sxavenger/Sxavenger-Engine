@@ -30,6 +30,7 @@ cbuffer Seed : register(b1, space1) {
 // common methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-uint GetIndex1d(uint2 pixel) {
+//! @brief 2d Pixel To 1d Index
+uint Flatten(uint2 pixel) {
 	return pixel.y * dimension.x + pixel.x;
 }

@@ -92,7 +92,7 @@ public:
 		// public methods
 		//=========================================================================================
 
-		std::array<float, 4> data;
+		std::array<float, 16> data;
 		float weight;
 		float w;
 		uint32_t m;
@@ -104,6 +104,7 @@ public:
 	////////////////////////////////////////////////////////////////////////////////////////////
 	enum class Process : uint8_t {
 		Temporal,
+		Spatial,
 		Texture
 	};
 

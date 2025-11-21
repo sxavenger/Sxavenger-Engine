@@ -29,7 +29,7 @@ void main(uint3 dispatchThreadId : SV_DispatchThreadID) {
 		return; //!< 範囲外
 	}
 
-	uint p = GetIndex1d(pixel);
+	uint p = Flatten(pixel);
 
 	Reservoir s = gInitalizeReservoir[p];
 	Reservoir r = gTemporalReservoir[p];

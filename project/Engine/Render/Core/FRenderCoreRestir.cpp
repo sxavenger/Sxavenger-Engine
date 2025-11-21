@@ -190,7 +190,7 @@ void FRenderCoreRestir::CreateContext() {
 
 		// 仮paraemter
 		desc.SetAttributeStride(4 * 2);
-		desc.SetPayloadStride(4 * 4);
+		desc.SetPayloadStride(4 * 11);
 		desc.SetMaxRecursionDepth(3);
 
 		context_->CreateStateObject(SxavengerSystem::GetDxDevice(), std::move(desc));
@@ -200,6 +200,7 @@ void FRenderCoreRestir::CreateContext() {
 
 void FRenderCoreRestir::CreatePipeline() {
 	CreateComputePipeline(Process::Temporal, kDirectory_ / "RestirTemporal.cs.hlsl");
+	CreateComputePipeline(Process::Spatial,  kDirectory_ / "RestirSpatial.cs.hlsl");
 	CreateComputePipeline(Process::Texture,  kDirectory_ / "RestirTexture.cs.hlsl");
 }
 

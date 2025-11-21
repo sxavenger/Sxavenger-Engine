@@ -224,6 +224,8 @@ _CLOSESTHIT void mainClosesthit(inout Payload payload, in Attribute attribute) {
 		lo += CalculateSpotLight(i, surface);
 	}
 
-	payload.lo = lo;
+	payload.lo       = lo;
+	payload.position = surface.position;
+	payload.normal   = surface.normal;
 	
 }

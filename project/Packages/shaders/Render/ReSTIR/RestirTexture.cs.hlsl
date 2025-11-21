@@ -22,9 +22,6 @@ RWTexture2D<float4>           gIndirect  : register(u1);
 //* deferred index
 ConstantBuffer<DeferredBufferIndexConstantBuffer> gDeferredBufferIndex : register(b0);
 
-//* camera
-ConstantBuffer<CameraComponent> gCamera : register(b1);
-
 ////////////////////////////////////////////////////////////////////////////////////////////
 // main
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -37,7 +34,7 @@ void main(uint3 dispatchThreadId : SV_DispatchThreadID) {
 		return; //!< 範囲外
 	}
 
-	uint p = GetIndex1d(pixel);
+	uint p = Flatten(pixel);
 
 	Reservoir r = gReservoir[p];
 

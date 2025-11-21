@@ -47,12 +47,16 @@ _RAYGENERATION void mainRaygeneration() {
 	for (uint i = 0; i < samplesPerFrame; ++i) {
 		//!< XXX: samplesPerFrameが1じゃないとオーバーランする.
 
-		//!< cosine weighted hemisphere sampling で実装.
 		float2 xi = Hammersley(moment.GetRandamizeSampleIndex(i, maxSampleCount), maxSampleCount);
-		float3 wi = ImportanceSampleLambert(xi, surface.normal);
 
-		float pdf = ImportanceSampleLambertPDF(wi, surface.normal);
-		
+		//!< GGX Importance Sample を使用
+		float3 wi = ImportanceSampleGGX(xi, surface.roughness, surface.normal);
+
+		//* cameraからの方向ベクトルを取得
+		float3 v = normalize(gCamera.GetPosition() - surface.position); //!< cameraからの方向ベクトルを取得
+
+		float pdf = ImportanceSampleGGXPDF(wi, surface.roughness, surface.normal, v);
+
 		RayDesc desc;
 		desc.Origin    = surface.position;
 		desc.Direction = wi;
@@ -63,9 +67,6 @@ _RAYGENERATION void mainRaygeneration() {
 
 		//* Lightの情報を取得
 		float3 l = wi; //!< lightの方向ベクトル
-
-		//* cameraからの方向ベクトルを取得
-		float3 v = normalize(gCamera.GetPosition() - surface.position); //!< cameraからの方向ベクトルを取得
 
 		//* 計算
 		float3 h = normalize(l + v);
@@ -98,6 +99,10 @@ _RAYGENERATION void mainRaygeneration() {
 
 		Sample sample;
 		sample.lo  = color;
+		sample.xv  = surface.position;
+		sample.nv  = surface.normal;
+		sample.xs  = payload.position;
+		sample.ns  = payload.normal;
 		sample.pdf = pdf;
 
 		float w = dot(sample.lo, ACES::AP1_RGB2Y) * rcp(max(pdf, kEpsilon));

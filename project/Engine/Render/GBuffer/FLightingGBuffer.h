@@ -35,6 +35,7 @@ public:
 	enum class Reservoir : uint8_t {
 		Initialize,
 		Temporal,
+		Spatial,
 	};
 
 public:

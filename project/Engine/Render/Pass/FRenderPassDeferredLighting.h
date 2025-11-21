@@ -49,6 +49,7 @@ private:
 
 	void PassIndirectReservoirInitialize(const DirectXQueueContext* context, const Config& config);
 	void PassIndirectReservoirTemporal(const DirectXQueueContext* context, const Config& config);
+	void PassIndirectReservoirSpatial(const DirectXQueueContext* context, const Config& config);
 	void PassIndirectReservoirTexture(const DirectXQueueContext* context, const Config& config);
 
 	void TransitionLightingPass(const DirectXQueueContext* context, const Config& config);

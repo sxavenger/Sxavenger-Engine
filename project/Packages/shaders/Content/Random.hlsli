@@ -1,7 +1,7 @@
 #pragma once
 
-#ifndef RANDOM
-#define RANDOM
+#ifndef RANDOM_HLSLI
+#define RANDOM_HLSLI
 
 //-----------------------------------------------------------------------------------------
 // include

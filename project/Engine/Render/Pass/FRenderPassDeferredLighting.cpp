@@ -49,6 +49,7 @@ void FRenderPassDeferredLighting::Render(const DirectXQueueContext* context, con
 
 			PassIndirectReservoirInitialize(context, config);
 			PassIndirectReservoirTemporal(context, config);
+			//PassIndirectReservoirSpatial(context, config);
 			PassIndirectReservoirTexture(context, config);
 
 			EndPassIndirectLighting(context, config.buffer);
@@ -100,6 +101,7 @@ void FRenderPassDeferredLighting::BeginPassIndirectLighting(const DirectXQueueCo
 	std::vector<D3D12_RESOURCE_BARRIER> barriers = {
 		buffer->GetLightingGBuffer().GetReservoir(FLightingGBuffer::Reservoir::Initialize)->TransitionBeginUnordered(),
 		buffer->GetLightingGBuffer().GetReservoir(FLightingGBuffer::Reservoir::Temporal)->TransitionBeginUnordered(),
+		buffer->GetLightingGBuffer().GetReservoir(FLightingGBuffer::Reservoir::Spatial)->TransitionBeginUnordered(),
 		buffer->GetLightingGBuffer().GetMoment()->TransitionBeginUnordered(),
 	};
 
@@ -116,6 +118,7 @@ void FRenderPassDeferredLighting::EndPassIndirectLighting(const DirectXQueueCont
 	std::vector<D3D12_RESOURCE_BARRIER> barriers = {
 		buffer->GetLightingGBuffer().GetReservoir(FLightingGBuffer::Reservoir::Initialize)->TransitionEndUnordered(),
 		buffer->GetLightingGBuffer().GetReservoir(FLightingGBuffer::Reservoir::Temporal)->TransitionEndUnordered(),
+		buffer->GetLightingGBuffer().GetReservoir(FLightingGBuffer::Reservoir::Spatial)->TransitionEndUnordered(),
 		buffer->GetLightingGBuffer().GetMoment()->TransitionEndUnordered(),
 	};
 
@@ -418,6 +421,29 @@ void FRenderPassDeferredLighting::PassIndirectReservoirTemporal(const DirectXQue
 	core->BindComputeBuffer(FRenderCoreRestir::Process::Temporal, context, desc);
 	core->Dispatch(context, config.buffer->GetSize());
 
+	config.buffer->GetLightingGBuffer().GetReservoir(FLightingGBuffer::Reservoir::Temporal)->Barrier(context->GetDxCommand());
+
+}
+
+void FRenderPassDeferredLighting::PassIndirectReservoirSpatial(const DirectXQueueContext* context, const Config& config) {
+
+	auto core = FRenderCore::GetInstance()->GetRestir();
+	core->SetPipeline(FRenderCoreRestir::Process::Spatial, context);
+
+	DxObject::BindBufferDesc desc = {};
+	desc.Set32bitConstants("Dimension", 2, &config.buffer->GetSize());
+	FRenderCoreRestir::Seed seed = {};
+	desc.Set32bitConstants("Seed", 3, &seed);
+	desc.SetAddress("gTemporalReservoir",   config.buffer->GetLightingGBuffer().GetReservoir(FLightingGBuffer::Reservoir::Temporal)->GetGPUVirtualAddress());
+	desc.SetAddress("gSpatialReservoir",    config.buffer->GetLightingGBuffer().GetReservoir(FLightingGBuffer::Reservoir::Spatial)->GetGPUVirtualAddress());
+	desc.SetAddress("gDeferredBufferIndex", config.buffer->GetIndexBufferAddress());
+	desc.SetAddress("gScene",               config.scene->GetTopLevelAS().GetGPUVirtualAddress());
+
+	core->BindComputeBuffer(FRenderCoreRestir::Process::Spatial, context, desc);
+	core->Dispatch(context, config.buffer->GetSize());
+
+	config.buffer->GetLightingGBuffer().GetReservoir(FLightingGBuffer::Reservoir::Spatial)->Barrier(context->GetDxCommand());
+
 }
 
 void FRenderPassDeferredLighting::PassIndirectReservoirTexture(const DirectXQueueContext* context, const Config& config) {
@@ -432,7 +458,6 @@ void FRenderPassDeferredLighting::PassIndirectReservoirTexture(const DirectXQueu
 	desc.SetAddress("gReservoir",           config.buffer->GetLightingGBuffer().GetReservoir(FLightingGBuffer::Reservoir::Temporal)->GetGPUVirtualAddress());
 	desc.SetHandle("gIndirect",             config.buffer->GetGBuffer(FLightingGBuffer::Layout::Indirect)->GetGPUHandleUAV());
 	desc.SetAddress("gDeferredBufferIndex", config.buffer->GetIndexBufferAddress());
-	desc.SetAddress("gCamera",              config.camera->GetGPUVirtualAddress());
 
 	core->BindComputeBuffer(FRenderCoreRestir::Process::Texture, context, desc);
 	core->Dispatch(context, config.buffer->GetSize());

@@ -117,14 +117,19 @@ struct Payload {
 
 	uint count;
 	float3 lo;
+	float3 position;
+	uint pad;
+	float3 normal;
 	
 	//=========================================================================================
 	// public methods
 	//=========================================================================================
 
 	void Reset() {
-		count = 0;
-		lo    = float3(0.0f, 0.0f, 0.0f);
+		count    = 0;
+		lo       = float3(0.0f, 0.0f, 0.0f);
+		position = float3(0.0f, 0.0f, 0.0f);
+		normal   = float3(0.0f, 0.0f, 0.0f);
 	}
 
 	//* recursion methods *//
