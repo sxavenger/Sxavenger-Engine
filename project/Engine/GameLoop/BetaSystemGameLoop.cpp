@@ -67,34 +67,10 @@ void BetaSystemGameLoop::InitSystem() {
 	light->SetRadiance(sContentStorage->Import<ContentTexture>("assets/textures/textureCube/sky_radiance.dds")->GetId());
 	light->SetEnvironment(sContentStorage->Import<ContentTexture>("assets/textures/textureCube/sky_environment.dds")->GetId());
 
-	behaviour_ = std::make_unique<MonoBehaviour>();
-	behaviour_->AddComponent<TransformComponent>();
-	behaviour_->AddComponent<PostProcessLayerComponent>();
-	behaviour_->GetComponent<PostProcessLayerComponent>()->SetTag(PostProcessLayerComponent::Tag::None);
-	behaviour_->GetComponent<PostProcessLayerComponent>()->AddPostProcess<PostProcessAutoExposure>();
-	behaviour_->GetComponent<PostProcessLayerComponent>()->AddPostProcess<PostProcessLocalExposure>(false);
-	behaviour_->GetComponent<PostProcessLayerComponent>()->AddPostProcess<PostProcessChromaticAberration>();
-	behaviour_->GetComponent<PostProcessLayerComponent>()->AddPostProcess<PostProcessRadialBlur>();
-	behaviour_->GetComponent<PostProcessLayerComponent>()->AddPostProcess<PostProcessMotionBlur>();
-
-	sContentStorage->Import<ContentTexture>("assets/textures/LUT/lut_greenish.png", ContentTexture::Option{ ContentTexture::Encoding::Intensity, false });
-	sContentStorage->Import<ContentTexture>("assets/textures/LUT/lut_reddish.png", ContentTexture::Option{ ContentTexture::Encoding::Intensity, false });
-	sContentStorage->Import<ContentTexture>("assets/textures/LUT/lut_sepia.png", ContentTexture::Option{ ContentTexture::Encoding::Intensity, false });
-
-	const auto& texture = sContentStorage->Import<ContentTexture>("assets/textures/LUT/lut_reddish.png", ContentTexture::Option{ ContentTexture::Encoding::Intensity, false })->GetId();
-	auto lut = behaviour_->GetComponent<PostProcessLayerComponent>()->AddPostProcess<PostProcessLUT>();
-	lut->CreateTexture(SxavengerSystem::GetDirectQueueContext(), texture, { 16, 16 });
-
-	auto t = behaviour_->AddComponent<RectTransformComponent>();
-	auto text = behaviour_->AddComponent<TextRendererComponent>();
-
-	text->SetFont(sContentStorage->Import<ContentFont>("assets/font/MPLUSRounded1c-Regular.ttf")->GetId());
-	text->SetText(L"Sxavenger Engine");
-
-	t->GetTransform().translate = { 200.0f, 200.0f };
-
 	performance_ = std::make_unique<PerformanceActor>();
 	performance_->Init();
+
+
 
 }
 
