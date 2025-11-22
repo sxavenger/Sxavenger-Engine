@@ -199,6 +199,7 @@ void FRenderCoreRestir::CreateContext() {
 }
 
 void FRenderCoreRestir::CreatePipeline() {
+	CreateComputePipeline(Process::Reset,    kDirectory_ / "RestirReset.cs.hlsl");
 	CreateComputePipeline(Process::Temporal, kDirectory_ / "RestirTemporal.cs.hlsl");
 	CreateComputePipeline(Process::Spatial,  kDirectory_ / "RestirSpatial.cs.hlsl");
 	CreateComputePipeline(Process::Texture,  kDirectory_ / "RestirTexture.cs.hlsl");

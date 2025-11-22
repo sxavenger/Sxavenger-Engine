@@ -38,15 +38,12 @@ private:
 	void ClearPassIndirect(const DirectXQueueContext* context, FRenderTargetBuffer* buffer);
 
 	void PassEmpty(const DirectXQueueContext* context, const Config& config);
-
 	void PassDirectionalLight(const DirectXQueueContext* context, const Config& config);
-
 	void PassPointLight(const DirectXQueueContext* context, const Config& config);
-
 	void PassSpotLight(const DirectXQueueContext* context, const Config& config);
-
 	void PassSkyLight(const DirectXQueueContext* context, const Config& config);
 
+	void PassIndirectReservoirReset(const DirectXQueueContext* context, const Config& config);
 	void PassIndirectReservoirInitialize(const DirectXQueueContext* context, const Config& config);
 	void PassIndirectReservoirTemporal(const DirectXQueueContext* context, const Config& config);
 	void PassIndirectReservoirSpatial(const DirectXQueueContext* context, const Config& config);

@@ -55,7 +55,7 @@ uint2 GetNeighbor(uint2 p, float radius, float2 r) {
 }
 
 bool GeometricSimilarity(DeferredSurface s1, DeferredSurface s2) {
-	if (dot(s1.normal, s2.normal) < 0.9912028119f) { //!< cos(25deg)
+	if (dot(s1.normal, s2.normal) < 0.9902680687f) { //!< cos(25deg)
 		return false;
 	}
 
@@ -93,13 +93,13 @@ float ComputeJacobian(Reservoir rn, DeferredSurface q, DeferredSurface n) {
 bool IsVisible(float3 p1, float3 p2) {
 	//!< p1からp2への可視判定
 
-	static const float kTMin = 0.001f;
+	static const float kTMin = 0.01f;
 
 	RayDesc desc;
 	desc.Origin    = p1;
 	desc.Direction = normalize(p2 - p1);
 	desc.TMin      = kTMin;
-	desc.TMax      = distance(p2, p1);
+	desc.TMax      = length(p2 - p1) - kTMin;
 	
 #ifdef _INLINE_RAYTRACING
 		RayQuery<0> q;
@@ -152,7 +152,7 @@ void main(uint3 dispatchThreadId : SV_DispatchThreadID) {
 
 	for (uint i = 0; i < iteration; ++i) {
 
-		uint2 neighbor = GetNeighbor(pixel, 2.0f, random.Generate2d());
+		uint2 neighbor = GetNeighbor(pixel, 4.0f, random.Generate2d());
 
 		if (any(neighbor >= dimension)) {
 			continue; //!< 範囲外
@@ -163,9 +163,9 @@ void main(uint3 dispatchThreadId : SV_DispatchThreadID) {
 			continue; //!< surfaceが存在しない
 		}
 
-		//if (!GeometricSimilarity(surface, neighbor_surface)) {
-		//	continue; //!< 幾何学的に類似していない
-		//}
+		if (!GeometricSimilarity(surface, neighbor_surface)) {
+			continue; //!< 幾何学的に類似していない
+		}
 
 		uint q = Flatten(neighbor);
 

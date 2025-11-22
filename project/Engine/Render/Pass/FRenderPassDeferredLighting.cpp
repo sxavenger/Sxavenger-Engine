@@ -47,9 +47,11 @@ void FRenderPassDeferredLighting::Render(const DirectXQueueContext* context, con
 		{
 			BeginPassIndirectLighting(context, config.buffer);
 
+			PassIndirectReservoirReset(context, config);
 			PassIndirectReservoirInitialize(context, config);
 			PassIndirectReservoirTemporal(context, config);
 			//PassIndirectReservoirSpatial(context, config);
+			//!< FIXME: Spatial Resamplingの修正
 			PassIndirectReservoirTexture(context, config);
 
 			EndPassIndirectLighting(context, config.buffer);
@@ -354,6 +356,23 @@ void FRenderPassDeferredLighting::PassSkyLight(const DirectXQueueContext* contex
 		FRenderCore::GetInstance()->GetLight()->DrawCall(context);
 
 	});
+
+}
+
+void FRenderPassDeferredLighting::PassIndirectReservoirReset(const DirectXQueueContext* context, const Config& config) {
+
+	auto core = FRenderCore::GetInstance()->GetRestir();
+	core->SetPipeline(FRenderCoreRestir::Process::Reset, context);
+
+	DxObject::BindBufferDesc desc = {};
+	desc.Set32bitConstants("Dimension", 2, &config.buffer->GetSize());
+	desc.SetAddress("gTemporalReservoir", config.buffer->GetLightingGBuffer().GetReservoir(FLightingGBuffer::Reservoir::Temporal)->GetGPUVirtualAddress());
+	desc.SetAddress("gSpatialReservoir",  config.buffer->GetLightingGBuffer().GetReservoir(FLightingGBuffer::Reservoir::Spatial)->GetGPUVirtualAddress());
+	desc.SetAddress("gMoment",            config.buffer->GetLightingGBuffer().GetMoment()->GetGPUVirtualAddress());
+	desc.SetHandle("gVelocity", config.buffer->GetGBuffer(FDeferredGBuffer::Layout::Velocity)->GetGPUHandleSRV());
+
+	core->BindComputeBuffer(FRenderCoreRestir::Process::Reset, context, desc);
+	core->Dispatch(context, config.buffer->GetSize());
 
 }
 
