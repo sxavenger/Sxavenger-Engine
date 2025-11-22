@@ -117,7 +117,7 @@
 	],
 	"01605d7a-6b25-4c12-b5f0d909171f4a3c": [
 		"assets/models/Metoro/Metoro.gltf",
-		"class UAssetMaterial"
+		"class AssetMaterial"
 	],
 	"017cc27d-eed4-4c07-b438ff09b2d00077": [
 		"assets/models/Bistro/Bistro.gltf",
@@ -317,7 +317,7 @@
 	],
 	"039e7662-a16d-4ebe-8c2dff0c0666e6fb": [
 		"assets/models/Metoro/Metoro.gltf",
-		"class UAssetMaterial"
+		"class AssetMaterial"
 	],
 	"03a8cc7d-9c49-4c5d-ae52e72cda65979e": [
 		"assets/models/SunTemple/SunTemple.gltf",
@@ -513,7 +513,7 @@
 	],
 	"067a9454-da52-4cf3-a7593b4dbe1b35d3": [
 		"assets/models/Metoro/Metoro.gltf",
-		"class UAssetMesh"
+		"class AssetMesh"
 	],
 	"067f8fff-7c8d-4549-a3ab5cac9d6d4896": [
 		"assets/models/Bistro/Bistro.gltf",
@@ -709,7 +709,7 @@
 	],
 	"087431a6-0443-4a72-9fb4df4840765592": [
 		"assets/models/Metoro/Metoro.gltf",
-		"class UAssetMesh"
+		"class AssetMesh"
 	],
 	"0877698c-eb42-4640-aeab5685dbdf87d4": [
 		"assets/models/Bistro/Bistro.gltf",
@@ -829,7 +829,7 @@
 	],
 	"09ba48ab-9110-466f-a97a3f1603455f52": [
 		"assets/models/Metoro/Metoro.gltf",
-		"class UAssetMesh"
+		"class AssetMesh"
 	],
 	"09d2c064-2179-4a7d-b623257bf6f4bac4": [
 		"assets/models/SunTemple/SunTemple.gltf",
@@ -873,7 +873,7 @@
 	],
 	"0a9322a6-2d5d-461c-a87ea0969718a3d9": [
 		"assets/models/Metoro/textures/MI_Metal_Normal.png",
-		"class UAssetTexture"
+		"class AssetTexture"
 	],
 	"0a979066-7359-42be-84c22a895b3403b4": [
 		"assets/models/SunTemple_v4/SunTemple/SunTemple.fbx",
@@ -897,7 +897,7 @@
 	],
 	"0ab6c515-332b-48de-bb295295f3366457": [
 		"assets/models/Metoro/Metoro.gltf",
-		"class UAssetMesh"
+		"class AssetMesh"
 	],
 	"0acf7639-ef0b-476c-b02852f340221fbf": [
 		"assets/models/Bistro/Bistro.gltf",
@@ -905,7 +905,7 @@
 	],
 	"0ad03409-ca9c-4834-8b18596a257436c5": [
 		"assets/models/Metoro/Metoro.gltf",
-		"class UAssetMesh"
+		"class AssetMesh"
 	],
 	"0ae3a850-8f3c-47cd-99cf6af4705b7aa1": [
 		"assets/models/Bistro/Bistro.gltf",
@@ -1285,7 +1285,7 @@
 	],
 	"0f8d74c0-82b9-4b77-b609c8f993c5ef7f": [
 		"assets/models/Metoro/Metoro.gltf",
-		"class UAssetMesh"
+		"class AssetMesh"
 	],
 	"0fb21fe5-9ad0-45f1-886883738b2ef589": [
 		"assets/models/SunTemple/textures/M_Dome_2_0_BaseColor-M_Dome_2_0_BaseColor.png",
@@ -1361,7 +1361,7 @@
 	],
 	"10cc8bd6-00f2-4dbb-a6a101d1d1bc9734": [
 		"assets/models/Metoro/textures/MI_Guidelights_BaseColor.png",
-		"class UAssetTexture"
+		"class AssetTexture"
 	],
 	"10d2e367-3cee-4148-9aaca1ea5f9cb2c4": [
 		"assets/models/SunTemple_v4/SunTemple/SunTemple.fbx",
@@ -1509,7 +1509,7 @@
 	],
 	"12f07a11-3814-4f3b-a46be2c961716875": [
 		"assets/models/Metoro/textures/MI_Concrete_2_Normal.png",
-		"class UAssetTexture"
+		"class AssetTexture"
 	],
 	"12f1e5e2-9962-4bc5-94c592e88670beec": [
 		"assets/models/SunTemple_v4/SunTemple/SunTemple.fbx",
@@ -1973,7 +1973,7 @@
 	],
 	"19281964-6339-4294-beae13de78658b4b": [
 		"assets/models/Metoro/textures/T_Wirestuff_Rusty_Normal.png",
-		"class UAssetTexture"
+		"class AssetTexture"
 	],
 	"192d683d-a4c0-46c5-8da5315f1f5d9ac3": [
 		"assets/models/Bistro/Bistro.gltf",
@@ -2397,7 +2397,7 @@
 	],
 	"1e9b28ef-a438-4395-921b77d9668cbd05": [
 		"assets/models/Metoro/Metoro.gltf",
-		"class UAssetMesh"
+		"class AssetMesh"
 	],
 	"1e9c5878-8ebc-434a-8afa2ecee11995bc": [
 		"assets/models/SunTemple_v4/SunTemple/SunTemple.fbx",
@@ -2529,7 +2529,7 @@
 	],
 	"202e9275-6a19-412f-99225a02ee7a5b32": [
 		"assets/models/Metoro/Metoro.gltf",
-		"class UAssetMesh"
+		"class AssetMesh"
 	],
 	"2049cb29-6f31-45be-99a0c2787f2725a0": [
 		"assets/models/SunTemple_v4/SunTemple/SunTemple.fbx",
@@ -2597,7 +2597,7 @@
 	],
 	"20f21eea-cb40-4e1d-8d07a6a7eda57100": [
 		"assets/models/Metoro/Metoro.gltf",
-		"class UAssetMesh"
+		"class AssetMesh"
 	],
 	"20f6e398-6ace-4bc3-ab9dfedd11e2999e": [
 		"assets/models/SunTemple_v4/SunTemple/SunTemple.fbx",
@@ -2609,7 +2609,7 @@
 	],
 	"21155e15-9ece-4dd8-b4fabcd1c913949c": [
 		"assets/models/Metoro/Metoro.gltf",
-		"class UAssetMaterial"
+		"class AssetMaterial"
 	],
 	"2130f087-02c6-415a-b18edd2927966e6d": [
 		"assets/models/SunTemple/SunTemple.gltf",
@@ -2785,7 +2785,7 @@
 	],
 	"22bce614-72cb-49ec-878f2feb8a46183d": [
 		"assets/models/Metoro/Metoro.gltf",
-		"class UAssetMaterial"
+		"class AssetMaterial"
 	],
 	"22bd457e-1626-48da-a6c3ba989008e70b": [
 		"assets/models/PBR_Sphere_Test/Model/PBR_Sphere.gltf",
@@ -3053,7 +3053,7 @@
 	],
 	"25ab65e1-5b47-4739-abf68c5d4e0a2afc": [
 		"assets/models/Metoro/textures/MI_Metal_MetallicRoughness.png",
-		"class UAssetTexture"
+		"class AssetTexture"
 	],
 	"25b1a7e1-d908-4b5c-a808e8d3e7fe4a10": [
 		"assets/models/Bistro/textures/Pavement_Cobblestone_Wet_Leaves_BLENDSHADER_BaseColor-Pavement_Cobblestone_Wet_Leaves_BLENDSHADER_BaseColor.png",
@@ -3149,7 +3149,7 @@
 	],
 	"26edb56e-643b-4e4d-a4e56e91b0f0b13a": [
 		"assets/models/Metoro/Metoro.gltf",
-		"class UAssetMesh"
+		"class AssetMesh"
 	],
 	"27270027-c8bd-44db-b2c72c0ca132f293": [
 		"assets/models/SunTemple_v4/SunTemple/SunTemple.fbx",
@@ -3261,7 +3261,7 @@
 	],
 	"290e4c2d-8877-4161-a46c66cf48e9fc4c": [
 		"assets/models/Metoro/Metoro.gltf",
-		"class UAssetMaterial"
+		"class AssetMaterial"
 	],
 	"291344a5-d69d-477a-895eff7aec3834d0": [
 		"assets/models/Bistro/Bistro.gltf",
@@ -3521,7 +3521,7 @@
 	],
 	"2c318744-cc39-4e83-b93d82367bfbe3e4": [
 		"assets/models/Metoro/textures/MI_Metal_BaseColor.png",
-		"class UAssetTexture"
+		"class AssetTexture"
 	],
 	"2c31fe8d-355b-4855-9496657e967588d4": [
 		"assets/models/SunTemple_v4/SunTemple/SunTemple.fbx",
@@ -3709,7 +3709,7 @@
 	],
 	"2e654b93-faf2-41f0-88a60a9ddbabffe9": [
 		"assets/models/Metoro/textures/MI_Sign_BaseColor.png",
-		"class UAssetTexture"
+		"class AssetTexture"
 	],
 	"2e80e125-b5ff-447e-8ca8c47ed483fe4e": [
 		"assets/models/PBR_Sphere_Test/Model/PBR_Sphere.gltf",
@@ -3741,7 +3741,7 @@
 	],
 	"2ed5da5f-4ad6-4bd0-9587ca391b59935d": [
 		"assets/models/Metoro/Metoro.gltf",
-		"class UAssetMesh"
+		"class AssetMesh"
 	],
 	"2ee8f92b-0d07-4d3b-81ff0e059057c5ec": [
 		"assets/models/Bistro/Bistro.gltf",
@@ -4109,7 +4109,7 @@
 	],
 	"33870f87-23d3-407c-8303a9c20ffe8d13": [
 		"assets/models/Metoro/Metoro.gltf",
-		"class UAssetMesh"
+		"class AssetMesh"
 	],
 	"33923af2-414a-42f8-99a3fddbe2024504": [
 		"assets/models/SunTemple_v4/SunTemple/SunTemple.fbx",
@@ -4173,7 +4173,7 @@
 	],
 	"3444fd34-ca2f-4b2e-90c1c95e8d140900": [
 		"assets/models/Metoro/textures/MI_Wires_Occlusion-MI_Wires_MetallicRoughness.png",
-		"class UAssetTexture"
+		"class AssetTexture"
 	],
 	"346a3d73-e482-4d7a-8af662efd463569b": [
 		"assets/models/SunTemple/SunTemple.gltf",
@@ -4257,7 +4257,7 @@
 	],
 	"35cc5f2d-9671-4f44-88b7c75db878feba": [
 		"assets/models/Metoro/Metoro.gltf",
-		"class UAssetMesh"
+		"class AssetMesh"
 	],
 	"35d5305d-a393-4247-ad363c3fc3f44325": [
 		"assets/models/SunTemple_v4/SunTemple/SunTemple.fbx",
@@ -4293,7 +4293,7 @@
 	],
 	"3636475a-8c3d-4d6a-a7b2564b96b74087": [
 		"assets/models/Metoro/Metoro.gltf",
-		"class UAssetMesh"
+		"class AssetMesh"
 	],
 	"3645ab17-294a-4467-b7faf17cfe3d86b4": [
 		"assets/models/Bistro/Bistro.gltf",
@@ -4333,7 +4333,7 @@
 	],
 	"36bfd95f-1646-455a-b7961352b29d3e15": [
 		"assets/models/Metoro/Metoro.gltf",
-		"class UAssetMesh"
+		"class AssetMesh"
 	],
 	"36c458b7-4cca-4481-9eab5baf42fa3eb4": [
 		"assets/models/Bistro/Bistro.gltf",
@@ -4565,7 +4565,7 @@
 	],
 	"388159a4-36bf-4fbb-8e59c472b5020302": [
 		"assets/models/Metoro/Metoro.gltf",
-		"class UAssetSkeleton"
+		"class AssetSkeleton"
 	],
 	"3887ca7e-ea2b-48a6-83c1183ac4a8c199": [
 		"assets/models/SunTemple_v4/SunTemple/SunTemple.fbx",
@@ -4701,7 +4701,7 @@
 	],
 	"3aaf2400-2e69-4c81-bfc93f0cf683dd82": [
 		"assets/models/Metoro/Metoro.gltf",
-		"class UAssetMaterial"
+		"class AssetMaterial"
 	],
 	"3ab2b9a8-6270-4165-896960f520b90ac1": [
 		"assets/models/SunTemple/SunTemple.gltf",
@@ -4889,7 +4889,7 @@
 	],
 	"3cccd196-c325-43ed-ad4b276094ee0727": [
 		"assets/models/Metoro/textures/WorldGridMaterial_BaseColor.png",
-		"class UAssetTexture"
+		"class AssetTexture"
 	],
 	"3cd35b89-81d5-49c1-9173ab94c6f6e3b5": [
 		"assets/models/Bistro/Bistro.gltf",
@@ -4985,7 +4985,7 @@
 	],
 	"3e2e3229-096c-4bc7-97ead706618c97da": [
 		"assets/models/Metoro/Metoro.gltf",
-		"class UAssetMesh"
+		"class AssetMesh"
 	],
 	"3e313c4a-89b8-4ade-bb8f24d49ad1f997": [
 		"assets/models/SunTemple/SunTemple.gltf",
@@ -5041,7 +5041,7 @@
 	],
 	"3e9fa66c-395a-4ab5-bcd058c606410b30": [
 		"assets/models/Metoro/textures/T_Fusebox_N.png",
-		"class UAssetTexture"
+		"class AssetTexture"
 	],
 	"3ea0d77c-e9f7-4c83-b9fe65f3bb64ddee": [
 		"assets/models/ChessBoard/bishop_white_normal.jpg",
@@ -6245,7 +6245,7 @@
 	],
 	"4d65d85d-b174-4aef-ae29e3aaf74d70d7": [
 		"assets/models/Metoro/Metoro.gltf",
-		"class UAssetMesh"
+		"class AssetMesh"
 	],
 	"4d7ff9ce-e7a5-43b8-b5a5ef21cd73a07a": [
 		"assets/models/Bistro/Bistro.gltf",
@@ -6313,7 +6313,7 @@
 	],
 	"4e45193d-fc1a-40de-933e499aa8666428": [
 		"assets/models/Metoro/Metoro.gltf",
-		"class UAssetMesh"
+		"class AssetMesh"
 	],
 	"4e51961a-fdb9-4a27-80c2828ab33a8fd2": [
 		"assets/models/SunTemple_v4/SunTemple/SunTemple.fbx",
@@ -6877,7 +6877,7 @@
 	],
 	"54aa2924-5ddc-465f-9747dcd784ca7a2d": [
 		"assets/models/Metoro/textures/MI_Concrete_3_BaseColor.png",
-		"class UAssetTexture"
+		"class AssetTexture"
 	],
 	"54ad8d27-617d-4656-be93cfb087991d8e": [
 		"assets/models/PBR_Sphere_Test/Model/PBR_Sphere.gltf",
@@ -7101,7 +7101,7 @@
 	],
 	"57628910-3d44-4f4b-b2dc6f26d0332f96": [
 		"assets/models/Metoro/Metoro.gltf",
-		"class UAssetMesh"
+		"class AssetMesh"
 	],
 	"576e377e-0bbd-4264-99131ea6d47f0d3b": [
 		"assets/models/SunTemple/SunTemple.gltf",
@@ -7501,7 +7501,7 @@
 	],
 	"5cf643fd-9cf9-440f-8f975089d5f63cd6": [
 		"assets/models/Metoro/textures/T_Fences_Default_Normal.png",
-		"class UAssetTexture"
+		"class AssetTexture"
 	],
 	"5cf76bd7-eb15-4826-892251d4ddb59e5e": [
 		"assets/models/SunTemple_v4/SunTemple/Textures/M_BottomTrim_Inst_UTile4_0_Normal.dds",
@@ -7733,7 +7733,7 @@
 	],
 	"5fc4b313-7be7-447a-b323525473c1fa87": [
 		"assets/models/Metoro/Metoro.gltf",
-		"class UAssetMesh"
+		"class AssetMesh"
 	],
 	"5fc77043-af0f-4ad3-9a805b8617688fb9": [
 		"assets/models/tree_sponza/14170708867020035030.jpg",
@@ -7745,7 +7745,7 @@
 	],
 	"5fe2e009-c429-410d-a77c24d4dc15e896": [
 		"assets/models/Metoro/Metoro.gltf",
-		"class UAssetMesh"
+		"class AssetMesh"
 	],
 	"5fec9f2f-2eeb-492a-ba82d97f4f6458b0": [
 		"assets/models/cornell_box/cornell-box.obj",
@@ -8077,7 +8077,7 @@
 	],
 	"6465c71d-77aa-4dac-af2689ff0e578cb7": [
 		"assets/models/Metoro/Metoro.gltf",
-		"class UAssetMaterial"
+		"class AssetMaterial"
 	],
 	"647dcbe2-f4ef-4d89-9167e9aa113ed040": [
 		"assets/models/Bistro/textures/MASTER_Brick_Large_White_BaseColor-MASTER_Brick_Large_White_BaseColor.png",
@@ -8201,7 +8201,7 @@
 	],
 	"6617a48a-c58d-4a5d-86712abcd08a158d": [
 		"assets/models/Metoro/Metoro.gltf",
-		"class UAssetMesh"
+		"class AssetMesh"
 	],
 	"66371860-4e00-4def-ab8fb5c9757547b8": [
 		"assets/models/SunTemple_v4/SunTemple/SunTemple.fbx",
@@ -8725,7 +8725,7 @@
 	],
 	"6d00ce8a-6bc2-4736-bb800b97c6fff960": [
 		"assets/models/Metoro/Metoro.gltf",
-		"class UAssetMesh"
+		"class AssetMesh"
 	],
 	"6d01380d-d371-4ac8-807dab2448decba6": [
 		"assets/models/SunTemple/SunTemple.gltf",
@@ -8773,7 +8773,7 @@
 	],
 	"6d9b717f-a522-4656-964587e4bce3de9e": [
 		"assets/models/Metoro/Metoro.gltf",
-		"class UAssetMesh"
+		"class AssetMesh"
 	],
 	"6d9beea4-8156-4631-b16df749e1e61b33": [
 		"assets/models/SunTemple/SunTemple.gltf",
@@ -9121,7 +9121,7 @@
 	],
 	"715b292e-15d5-4b13-989894fcbeff2f5b": [
 		"assets/models/Metoro/Metoro.gltf",
-		"class UAssetMaterial"
+		"class AssetMaterial"
 	],
 	"715bd159-099f-4bc7-9854195fa6beb908": [
 		"assets/models/Bistro/Bistro.gltf",
@@ -9501,7 +9501,7 @@
 	],
 	"75e94525-37c5-451d-8bf3d8372412b53e": [
 		"assets/models/Metoro/Metoro.gltf",
-		"class UAssetMesh"
+		"class AssetMesh"
 	],
 	"75f2f519-713a-4c2d-8fe9efefa90da17b": [
 		"assets/models/Bistro/Bistro.gltf",
@@ -9677,7 +9677,7 @@
 	],
 	"77f96ad2-95f3-4397-b70887fd3bb3942c": [
 		"assets/models/Metoro/Metoro.gltf",
-		"class UAssetMaterial"
+		"class AssetMaterial"
 	],
 	"77ff23bd-8d55-4e02-a1e8f9104071adb8": [
 		"assets/models/SunTemple_v4/SunTemple/SunTemple.fbx",
@@ -10421,7 +10421,7 @@
 	],
 	"80f06480-961d-42ff-aeba2096b3f112e9": [
 		"assets/models/Metoro/textures/MI_Guidelights_Occlusion-MI_Guidelights_MetallicRoughness.png",
-		"class UAssetTexture"
+		"class AssetTexture"
 	],
 	"8109a96e-bc20-4235-ab1bfaa9ded4afd1": [
 		"assets/models/SunTemple/SunTemple.gltf",
@@ -10613,7 +10613,7 @@
 	],
 	"83bfa27a-9401-4f98-be9f2d77697f5184": [
 		"assets/models/Metoro/Metoro.gltf",
-		"class UAssetMesh"
+		"class AssetMesh"
 	],
 	"83c6efb7-20f3-4b8b-90a39a5815314a78": [
 		"assets/models/SunTemple/SunTemple.gltf",
@@ -10629,7 +10629,7 @@
 	],
 	"83e0b72f-cb22-47b5-86df354b53e8905b": [
 		"assets/models/Metoro/Metoro.gltf",
-		"class UAssetMesh"
+		"class AssetMesh"
 	],
 	"83ee23e1-f24a-4a20-bddc8939109c462c": [
 		"assets/models/SunTemple_v4/SunTemple/SunTemple.fbx",
@@ -10977,7 +10977,7 @@
 	],
 	"884bc822-fca0-4fb3-9e80aedf1419cd8f": [
 		"assets/models/Metoro/textures/WorldGridMaterial_MetallicRoughness.png",
-		"class UAssetTexture"
+		"class AssetTexture"
 	],
 	"886d9f36-3be2-4b59-8a67d18379ece845": [
 		"assets/models/SunTemple/textures/M_Soul_Rocks2_Inst_11_BaseColor-M_Soul_Rocks2_Inst_11_BaseColor.png",
@@ -11625,7 +11625,7 @@
 	],
 	"913a4ac5-555a-4c0d-acc3a91d8097675f": [
 		"assets/models/Metoro/Metoro.gltf",
-		"class UAssetMesh"
+		"class AssetMesh"
 	],
 	"914152fa-6dc1-4b5e-ab2bf6b646006583": [
 		"assets/models/Bistro/Bistro.gltf",
@@ -11997,7 +11997,7 @@
 	],
 	"95ec8041-d038-4deb-ade2b2570f7c90c5": [
 		"assets/models/Metoro/textures/MI_Fences_Occlusion-MI_Fences_MetallicRoughness.png",
-		"class UAssetTexture"
+		"class AssetTexture"
 	],
 	"95ed8645-2285-4d73-b30f0222ef0c344d": [
 		"assets/models/Bistro/Bistro.gltf",
@@ -12201,7 +12201,7 @@
 	],
 	"97fd6973-a0f1-4504-92dbd3adb281ba7d": [
 		"assets/models/Metoro/Metoro.gltf",
-		"class UAssetMesh"
+		"class AssetMesh"
 	],
 	"9806f785-10f6-4b19-b3f85349710d8920": [
 		"assets/models/Bistro/Bistro.gltf",
@@ -12221,7 +12221,7 @@
 	],
 	"9850fd96-cdef-4701-b373ce9626432581": [
 		"assets/models/Metoro/Metoro.gltf",
-		"class UAssetMaterial"
+		"class AssetMaterial"
 	],
 	"986a9c6d-a926-4428-815c19a7145c1044": [
 		"assets/models/SunTemple_v4/SunTemple/SunTemple.fbx",
@@ -12269,7 +12269,7 @@
 	],
 	"9912c903-bfb9-43a0-80bd270ee89a94cd": [
 		"assets/models/Metoro/textures/WorldGridMaterial_Normal.png",
-		"class UAssetTexture"
+		"class AssetTexture"
 	],
 	"9914630e-bc07-4b34-8a6b2745bdc19c1e": [
 		"assets/models/Bistro/Bistro.gltf",
@@ -12489,7 +12489,7 @@
 	],
 	"9b71ef3a-c5f9-40da-a0acd0ed705c86bd": [
 		"assets/models/Metoro/Metoro.gltf",
-		"class UAssetMaterial"
+		"class AssetMaterial"
 	],
 	"9b81bcca-e839-4794-93262421f2de773f": [
 		"assets/models/SunTemple_v4/SunTemple/SunTemple.fbx",
@@ -12749,7 +12749,7 @@
 	],
 	"9f4e3e97-68d1-4a0f-ae7776666c5aac5d": [
 		"assets/models/Metoro/textures/MI_Concrete_2_BaseColor.png",
-		"class UAssetTexture"
+		"class AssetTexture"
 	],
 	"9f579b14-79bc-4934-bd925db71643d886": [
 		"assets/models/Bistro/Bistro.gltf",
@@ -12813,7 +12813,7 @@
 	],
 	"a018da97-ad51-4821-bf01381f4f1bca81": [
 		"assets/models/Metoro/Metoro.gltf",
-		"class UAssetMesh"
+		"class AssetMesh"
 	],
 	"a03e39f1-ad87-463e-86ead62006a400e6": [
 		"assets/models/Bistro/Bistro.gltf",
@@ -12829,7 +12829,7 @@
 	],
 	"a09b6b89-9f73-47ae-8266b886bcfd1637": [
 		"assets/models/Metoro/textures/MI_Concrete_1_Normal.png",
-		"class UAssetTexture"
+		"class AssetTexture"
 	],
 	"a0a68146-5c0f-4a2c-879ea98e3eefefb2": [
 		"assets/models/SunTemple/SunTemple.gltf",
@@ -13253,7 +13253,7 @@
 	],
 	"a5a38c82-1a15-42ec-8759aacfd599731f": [
 		"assets/models/Metoro/Metoro.gltf",
-		"class UAssetMesh"
+		"class AssetMesh"
 	],
 	"a5a9fddb-eb6b-491a-9f9a6cb7f1f0d598": [
 		"assets/models/PBR_Sphere_Test/Model/PBR_Sphere.gltf",
@@ -13453,7 +13453,7 @@
 	],
 	"a8515f31-e375-4b8c-97a5b0184585b597": [
 		"assets/models/Metoro/Metoro.gltf",
-		"class UAssetMesh"
+		"class AssetMesh"
 	],
 	"a8531a3a-cf71-400f-9d9ee09c364d0243": [
 		"assets/models/Bistro/Bistro.gltf",
@@ -14209,7 +14209,7 @@
 	],
 	"b145d268-0a3e-43af-aaee4957d27dc1ac": [
 		"assets/models/Metoro/textures/MI_Concrete_1_MetallicRoughness.png",
-		"class UAssetTexture"
+		"class AssetTexture"
 	],
 	"b1482b7f-2a83-4c00-af18c2ffd5cf3c84": [
 		"assets/models/SunTemple_v4/SunTemple/SunTemple.fbx",
@@ -15081,7 +15081,7 @@
 	],
 	"bc604a66-3ebb-4adb-b157a8aea42befbd": [
 		"assets/models/Metoro/Metoro.gltf",
-		"class UAssetMesh"
+		"class AssetMesh"
 	],
 	"bc692d49-d635-4d32-9d9b9c2aba56aeb7": [
 		"assets/models/SunTemple/SunTemple.gltf",
@@ -15325,7 +15325,7 @@
 	],
 	"bfb88765-6143-4b78-86452fbfb45c7e9b": [
 		"assets/models/Metoro/textures/MI_Concrete_3_MetallicRoughness.png",
-		"class UAssetTexture"
+		"class AssetTexture"
 	],
 	"bfc33bfc-7b5b-46d9-a113b7a7dc4bb90a": [
 		"assets/models/Bistro/Bistro.gltf",
@@ -15681,7 +15681,7 @@
 	],
 	"c34cc18b-b5bc-4e7c-be82706c1d6f7c8e": [
 		"assets/models/Metoro/Metoro.gltf",
-		"class UAssetMesh"
+		"class AssetMesh"
 	],
 	"c35511f1-d457-4b12-a7cd9a2d4632f647": [
 		"assets/models/SunTemple_v4/SunTemple/Textures/M_Rocks_Inst_2_BaseColor.dds",
@@ -15789,7 +15789,7 @@
 	],
 	"c47fb739-fade-45ca-8ae6b737e72c7a61": [
 		"assets/models/Metoro/textures/MI_Sign_Occlusion-MI_Sign_MetallicRoughness.png",
-		"class UAssetTexture"
+		"class AssetTexture"
 	],
 	"c4823dfd-95b5-4c1a-a09e130f9e355cd0": [
 		"assets/models/Bistro/Bistro.gltf",
@@ -15989,7 +15989,7 @@
 	],
 	"c799cf3e-975c-4ee4-91e288340811f9c1": [
 		"assets/models/Metoro/textures/T_Sign_Default_Normal.png",
-		"class UAssetTexture"
+		"class AssetTexture"
 	],
 	"c7a1d07c-30a1-4cc0-99d945493a0a3328": [
 		"assets/models/PBR_Sphere_Test/Model/PBR_Sphere.gltf",
@@ -16617,7 +16617,7 @@
 	],
 	"cfce9c0e-f141-425d-b06632868d4c5fcd": [
 		"assets/models/Metoro/textures/MI_Concrete_3_Normal.png",
-		"class UAssetTexture"
+		"class AssetTexture"
 	],
 	"cfe1516a-807f-4f15-86cb6f00d72ad344": [
 		"assets/models/Bistro/Bistro.gltf",
@@ -16641,7 +16641,7 @@
 	],
 	"d00d4b6c-6d6f-432e-8e7a5eb3cc46617f": [
 		"assets/models/Metoro/textures/MI_Wires_BaseColor.png",
-		"class UAssetTexture"
+		"class AssetTexture"
 	],
 	"d00fb738-026b-41fa-bd305ed38d2de8f3": [
 		"assets/models/SunTemple_v4/SunTemple/SunTemple.fbx",
@@ -16701,11 +16701,11 @@
 	],
 	"d0ce6dc9-5987-40c4-936f35e2ea871c34": [
 		"assets/models/Metoro/Metoro.gltf",
-		"class UAssetMesh"
+		"class AssetMesh"
 	],
 	"d0d64668-ae26-4bb8-a58994981a335fee": [
 		"assets/models/Metoro/Metoro.gltf",
-		"class UAssetMesh"
+		"class AssetMesh"
 	],
 	"d0dafddf-6d16-43f9-b8df674fa5e96531": [
 		"assets/models/PBR_Sphere_Test/Model/PBR_Sphere.gltf",
@@ -17129,7 +17129,7 @@
 	],
 	"d6799525-fac7-4888-a608cc76ae2ada08": [
 		"assets/models/Metoro/Metoro.gltf",
-		"class UAssetMesh"
+		"class AssetMesh"
 	],
 	"d67ccdb9-be5b-4101-8df815530b2f3733": [
 		"assets/models/Bistro/Bistro.gltf",
@@ -18045,7 +18045,7 @@
 	],
 	"e23d0e63-baee-4c31-a9410fd38c1b24dc": [
 		"assets/models/Metoro/Metoro.gltf",
-		"class UAssetMaterial"
+		"class AssetMaterial"
 	],
 	"e23fcdb8-f0a8-4d21-a31ea14a376ededc": [
 		"assets/models/tree_sponza/Sponza.gltf",
@@ -18325,7 +18325,7 @@
 	],
 	"e575f8d3-8e2e-483c-a06f7a91ad74a5bc": [
 		"assets/models/Metoro/Metoro.gltf",
-		"class UAssetMaterial"
+		"class AssetMaterial"
 	],
 	"e57d51c1-67a7-46e8-9d9352d352da9935": [
 		"assets/models/SunTemple_v4/SunTemple/SunTemple.fbx",
@@ -18369,7 +18369,7 @@
 	],
 	"e5f26311-d13d-4fe7-b748deb5eb4bd135": [
 		"assets/models/Metoro/Metoro.gltf",
-		"class UAssetMesh"
+		"class AssetMesh"
 	],
 	"e5f2864d-845d-4106-9c6f0fa94d6aa096": [
 		"assets/models/SunTemple/SunTemple.gltf",
@@ -18593,7 +18593,7 @@
 	],
 	"e88a2ae8-440e-470f-9a374891fcdb11e4": [
 		"assets/models/Metoro/textures/MI_Fences_BaseColor.png",
-		"class UAssetTexture"
+		"class AssetTexture"
 	],
 	"e8a2cc29-57b9-4469-9f3aaf70322ade73": [
 		"assets/models/SunTemple/SunTemple.gltf",
@@ -18849,15 +18849,15 @@
 	],
 	"ebdf2436-c068-4711-a2d39230e87e4df8": [
 		"assets/models/Metoro/Metoro.gltf",
-		"class UAssetMesh"
+		"class AssetMesh"
 	],
 	"ebe8e1ae-3a6e-48d5-bed3e43dacd3ce46": [
 		"assets/models/Metoro/Metoro.gltf",
-		"class UAssetMesh"
+		"class AssetMesh"
 	],
 	"ebebd8ae-3b8e-4f93-96cdb87fcd1a4832": [
 		"assets/models/Metoro/textures/MI_Concrete_2_MetallicRoughness.png",
-		"class UAssetTexture"
+		"class AssetTexture"
 	],
 	"ebecd687-0bfc-4546-a3f24cab251c3f90": [
 		"assets/models/tree_sponza/Sponza.gltf",
@@ -18953,7 +18953,7 @@
 	],
 	"ecc71f9f-5023-4ec1-9ca6cf39048dff3b": [
 		"assets/models/Metoro/textures/M_Fusebox_BaseColor.png",
-		"class UAssetTexture"
+		"class AssetTexture"
 	],
 	"ecc98bb1-c602-44f6-9d15d4d7548cb8c3": [
 		"assets/models/SunTemple_v4/SunTemple/SunTemple.fbx",
@@ -18977,7 +18977,7 @@
 	],
 	"ecf76ca8-84df-4daf-866e7c4001ce26ef": [
 		"assets/models/Metoro/Metoro.gltf",
-		"class UAssetMesh"
+		"class AssetMesh"
 	],
 	"ecf94439-a19a-4744-a3b8f2c0e1733d6e": [
 		"assets/models/Bistro/Bistro.gltf",
@@ -19025,7 +19025,7 @@
 	],
 	"ede0c279-dbcd-4921-898a6ac76fe6f872": [
 		"assets/models/Metoro/Metoro.gltf",
-		"class UAssetMaterial"
+		"class AssetMaterial"
 	],
 	"ee00bbc6-b6e0-4fcf-9034ad55242dfc52": [
 		"assets/models/SunTemple_v4/SunTemple/SunTemple.fbx",
@@ -19433,7 +19433,7 @@
 	],
 	"f2f45452-ef61-4abc-a14a73bbc9274758": [
 		"assets/models/Metoro/Metoro.gltf",
-		"class UAssetMesh"
+		"class AssetMesh"
 	],
 	"f30c2241-c88a-4614-b05439cac54320eb": [
 		"assets/models/Bistro/Bistro.gltf",
@@ -19617,7 +19617,7 @@
 	],
 	"f4e90bfc-a3cb-4952-bb772c35d9bfa9a4": [
 		"assets/models/Metoro/textures/MI_Concrete_1_BaseColor.png",
-		"class UAssetTexture"
+		"class AssetTexture"
 	],
 	"f4eb54b9-3348-471a-91ed3ef688524ccc": [
 		"assets/models/SunTemple/SunTemple.gltf",
@@ -19845,7 +19845,7 @@
 	],
 	"f82e0022-1737-462a-a900363644390678": [
 		"assets/models/Metoro/textures/M_Fusebox_Occlusion-M_Fusebox_MetallicRoughness.png",
-		"class UAssetTexture"
+		"class AssetTexture"
 	],
 	"f838d8f3-bd91-422d-a707dcd974942a51": [
 		"assets/models/SunTemple/SunTemple.gltf",
@@ -20205,7 +20205,7 @@
 	],
 	"fdf35810-d103-4bf3-86016357be21333b": [
 		"assets/models/Metoro/textures/T_GuideLights_Default_Normal.png",
-		"class UAssetTexture"
+		"class AssetTexture"
 	],
 	"fe010f69-b007-4629-9364e8ad15a1ea22": [
 		"assets/models/SunTemple_v4/SunTemple/SunTemple.fbx",

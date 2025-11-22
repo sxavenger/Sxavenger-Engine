@@ -152,7 +152,7 @@ void main(uint3 dispatchThreadId : SV_DispatchThreadID) {
 
 	for (uint i = 0; i < iteration; ++i) {
 
-		uint2 neighbor = GetNeighbor(pixel, 4.0f, random.Generate2d());
+		uint2 neighbor = GetNeighbor(pixel, 8.0f, random.Generate2d());
 
 		if (any(neighbor >= dimension)) {
 			continue; //!< 範囲外
@@ -175,9 +175,9 @@ void main(uint3 dispatchThreadId : SV_DispatchThreadID) {
 		float p_hat = dot(rn.sample.lo, ACES::AP1_RGB2Y);
 		float p_q   = j > 0.0f ? p_hat * rcp(j) : 0.0f;
 
-		//if (!IsVisible(rs.sample.xv, rn.sample.xs)) {
-		//	p_q = 0.0f;
-		//}
+		if (all(rn.sample.xs != 0.0f) && !IsVisible(rs.sample.xv, rn.sample.xs)) {
+			p_q = 0.0f;
+		}
 
 		rs.Merge(rn, p_q, random.Generate1d());
 

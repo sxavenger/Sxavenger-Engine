@@ -50,7 +50,7 @@ void FRenderPassDeferredLighting::Render(const DirectXQueueContext* context, con
 			PassIndirectReservoirReset(context, config);
 			PassIndirectReservoirInitialize(context, config);
 			PassIndirectReservoirTemporal(context, config);
-			//PassIndirectReservoirSpatial(context, config);
+			PassIndirectReservoirSpatial(context, config);
 			//!< FIXME: Spatial Resamplingの修正
 			PassIndirectReservoirTexture(context, config);
 
