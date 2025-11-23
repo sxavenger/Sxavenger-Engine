@@ -501,7 +501,7 @@
 	],
 	"0664fbac-2c6b-44e0-b2cb1c7192e9792f": [
 		"assets/models/primitive/cube_skeleton.obj",
-		"class UAssetMaterial"
+		"class AssetMaterial"
 	],
 	"066d9624-7520-4e15-9d3e3988b1a59cf4": [
 		"assets/models/Bistro/Bistro.gltf",
@@ -2377,7 +2377,7 @@
 	],
 	"1e63cfcc-1fdd-4bf0-8fe3aca0016fe2ba": [
 		"assets/models/primitive/cube_skeleton.obj",
-		"class UAssetSkeleton"
+		"class AssetSkeleton"
 	],
 	"1e6b8919-79b8-49e4-befa1e9dcc8f7cc5": [
 		"assets/models/SunTemple_v4/SunTemple/SunTemple.fbx",
@@ -6149,7 +6149,7 @@
 	],
 	"4bf27c39-a5d1-4312-b8054b52a6aa6b39": [
 		"assets/models/human/dash.gltf",
-		"class UAssetAnimation"
+		"class AssetAnimation"
 	],
 	"4bf39794-d87e-45dd-96001e48a9d159a5": [
 		"assets/models/SunTemple_v4/SunTemple/SunTemple.fbx",
@@ -6465,7 +6465,7 @@
 	],
 	"50052630-e9ad-45e5-a5cd44bee27e88d8": [
 		"assets/textures/particleDemo.png",
-		"class UAssetTexture"
+		"class AssetTexture"
 	],
 	"5005efa2-1ba7-4533-82767a7e0f0e050b": [
 		"assets/models/SunTemple/SunTemple.gltf",
@@ -6525,7 +6525,7 @@
 	],
 	"50841159-cef2-49ff-afb2e10015f208a7": [
 		"assets/models/human/idle.gltf",
-		"class UAssetMesh"
+		"class AssetMesh"
 	],
 	"508c8282-45d2-49e6-9004ec06d45be5ec": [
 		"assets/models/Bistro/Bistro.gltf",
@@ -7525,7 +7525,7 @@
 	],
 	"5d27df27-a1f7-4297-9de50118537e36aa": [
 		"assets/models/human/idle.gltf",
-		"class UAssetMaterial"
+		"class AssetMaterial"
 	],
 	"5d3c5ca1-1333-4bf4-8b4b7b84eae1ab83": [
 		"assets/models/SunTemple/SunTemple.gltf",
@@ -9325,7 +9325,7 @@
 	],
 	"742d093a-8a53-4574-b408467fade12b33": [
 		"assets/models/human/idle.gltf",
-		"class UAssetAnimation"
+		"class AssetAnimation"
 	],
 	"74305507-a70e-49fb-8804ee049f79d8c9": [
 		"assets/models/Bistro/Bistro.gltf",
@@ -11165,7 +11165,7 @@
 	],
 	"8b9b763f-fa37-4871-b0e2dff8b87cc421": [
 		"assets/models/human/walking.gltf",
-		"class UAssetAnimation"
+		"class AssetAnimation"
 	],
 	"8ba52063-e3cb-497a-b1f5ed4e72419b90": [
 		"assets/models/SunTemple_v4/SunTemple/Textures/M_FloorTiles2_Inst_Inst_Inst_0_Normal.dds",
@@ -11201,7 +11201,7 @@
 	],
 	"8c30b316-38de-446f-b002b5d674c82252": [
 		"assets/models/human/idle.gltf",
-		"class UAssetSkeleton"
+		"class AssetSkeleton"
 	],
 	"8c3869de-7561-46d4-aaf892e9428a8aa1": [
 		"assets/models/SunTemple_v4/SunTemple/SunTemple.fbx",
@@ -11965,7 +11965,7 @@
 	],
 	"955747ae-57bc-4fb5-9b4d14a65c59ebaf": [
 		"assets/models/human/idle.gltf",
-		"class UAssetMesh"
+		"class AssetMesh"
 	],
 	"9560ae85-8040-4127-bea3dfd07e32ca63": [
 		"assets/models/Bistro/Bistro.gltf",
@@ -13729,7 +13729,7 @@
 	],
 	"abe3ceb8-1f70-45d9-a3420f72a69328f3": [
 		"assets/models/primitive/cube_skeleton.obj",
-		"class UAssetMesh"
+		"class AssetMesh"
 	],
 	"ac05b3ce-382e-4477-ac80119cb5de8bd6": [
 		"assets/models/Bistro/Bistro.gltf",
@@ -14913,7 +14913,7 @@
 	],
 	"ba9f6991-b2bb-4e7b-baeef9f12973140d": [
 		"assets/models/human/idle.gltf",
-		"class UAssetMaterial"
+		"class AssetMaterial"
 	],
 	"baa3c8fb-19e6-4454-bd88b1cf463926db": [
 		"assets/models/Bistro/Bistro.gltf",
@@ -16809,7 +16809,7 @@
 	],
 	"d1f10379-a08d-47f0-958b51e743afd054": [
 		"assets/models/human/idle.gltf",
-		"class UAssetMaterial"
+		"class AssetMaterial"
 	],
 	"d21b147b-907f-4154-88067e21c1a2a1be": [
 		"assets/models/Bistro/Bistro.gltf",

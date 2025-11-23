@@ -17,9 +17,9 @@ _DXOBJECT_USING
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 void PostProcessBloom::Parameter::Init() {
-	intensity = 0.5f;
+	intensity = 0.2f;
 	threshold = 0.0f;
-	radius    = 3.0f;
+	radius    = 1.0f;
 }
 
 void PostProcessBloom::Parameter::SetImGuiCommand() {
