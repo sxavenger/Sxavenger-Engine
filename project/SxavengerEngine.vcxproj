@@ -197,6 +197,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Engine\Component\Components\Collider\CollisionHelper.h" />
     <ClInclude Include="Engine\Component\Components\Collider\CollisionManager.h" />
     <ClInclude Include="Engine\Component\Components\ComponentStorage.h" />
+    <ClInclude Include="Engine\Component\Components\Light\Environment\SkyAtmosphereComponent.h" />
     <ClInclude Include="Engine\Component\Components\Light\Environment\SkyLightComponent.h" />
     <ClInclude Include="Engine\Component\Components\Light\LightCommon.h" />
     <ClInclude Include="Engine\Component\Components\Light\Punctual\DirectionalLightComponent.h" />
@@ -431,6 +432,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="Engine\Component\Components\Collider\CollisionHelper.cpp" />
     <ClCompile Include="Engine\Component\Components\Collider\CollisionManager.cpp" />
     <ClCompile Include="Engine\Component\Components\ComponentStorage.cpp" />
+    <ClCompile Include="Engine\Component\Components\Light\Environment\SkyAtmosphereComponent.cpp" />
     <ClCompile Include="Engine\Component\Components\Light\Environment\SkyLightComponent.cpp" />
     <ClCompile Include="Engine\Component\Components\Light\LightCommon.cpp" />
     <ClCompile Include="Engine\Component\Components\Light\Punctual\DirectionalLightComponent.cpp" />

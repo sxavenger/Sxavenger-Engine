@@ -175,7 +175,7 @@ void main(uint3 dispatchThreadId : SV_DispatchThreadID) {
 		float p_hat = dot(rn.sample.lo, ACES::AP1_RGB2Y);
 		float p_q   = j > 0.0f ? p_hat * rcp(j) : 0.0f;
 
-		if (all(rn.sample.xs != 0.0f) && !IsVisible(rs.sample.xv, rn.sample.xs)) {
+		if (!IsVisible(rs.sample.xv, rn.sample.xs)) {
 			p_q = 0.0f;
 		}
 
