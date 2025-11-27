@@ -23,8 +23,10 @@
 #include <Engine/Content/InputGeometry/InputPrimitiveHelper.h>
 
 #include "Engine/Component/Components/Light/Environment/SkyLightComponent.h"
+#include "Engine/Component/Components/Light/Environment/SkyAtmosphereComponent.h"
 
 #include "Engine/Preview/Content/ContentStorage.h"
+
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // BetaSystemGameLoop class methods
@@ -70,7 +72,7 @@ void BetaSystemGameLoop::InitSystem() {
 	performance_ = std::make_unique<PerformanceActor>();
 	performance_->Init();
 
-
+	performance_->AddComponent<SkyAtmosphereComponent>()->CreateTransmittance(SxavengerSystem::GetDirectQueueContext());
 
 }
 
