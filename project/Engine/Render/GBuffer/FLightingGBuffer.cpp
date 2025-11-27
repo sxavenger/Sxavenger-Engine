@@ -13,6 +13,7 @@
 const std::array<DXGI_FORMAT, FLightingGBuffer::kLayoutCount_> FLightingGBuffer::kFormats_ = {
 	FMainGBuffer::kColorFormat, //!< Direct
 	FMainGBuffer::kColorFormat, //!< Indirect_Reservoir
+	FMainGBuffer::kColorFormat, //!< Indirect_Denoiser
 	FMainGBuffer::kColorFormat, //!< Indirect
 	
 };
@@ -27,6 +28,7 @@ void FLightingGBuffer::Init(const Vector2ui& size) {
 	buffers_[static_cast<uint8_t>(Layout::Direct)]             = std::make_unique<FBaseTexture>(size, GetFormat(Layout::Direct),             FBaseTexture::Flag::All);
 	buffers_[static_cast<uint8_t>(Layout::Indirect)]           = std::make_unique<FBaseTexture>(size, GetFormat(Layout::Indirect),           FBaseTexture::Flag::All);
 	buffers_[static_cast<uint8_t>(Layout::Indirect_Reservoir)] = std::make_unique<FBaseTexture>(size, GetFormat(Layout::Indirect_Reservoir), FBaseTexture::Flag::All);
+	buffers_[static_cast<uint8_t>(Layout::Indirect_Denoise)]   = std::make_unique<FBaseTexture>(size, GetFormat(Layout::Indirect_Denoise),   FBaseTexture::Flag::All);
 
 	for (size_t i = 0; i < kLayoutCount_; ++i) {
 		// nameの設定

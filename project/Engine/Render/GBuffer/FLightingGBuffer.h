@@ -26,6 +26,7 @@ public:
 	enum class Layout : uint8_t {
 		Direct,
 		Indirect_Reservoir,
+		Indirect_Denoise,
 		Indirect,
 	};
 

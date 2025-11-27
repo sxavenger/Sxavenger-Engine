@@ -106,7 +106,8 @@ public:
 		Reset,
 		Temporal,
 		Spatial,
-		Texture
+		Texture,
+		EdgeStopping,
 	};
 
 public:

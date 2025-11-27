@@ -478,6 +478,7 @@ void FRenderPassDeferredLighting::PassIndirectReservoirTexture(const DirectXQueu
 	desc.SetAddress("gReservoir",           config.buffer->GetLightingGBuffer().GetReservoir(FLightingGBuffer::Reservoir::Temporal)->GetGPUVirtualAddress());
 	desc.SetHandle("gIndirect",             config.buffer->GetGBuffer(FLightingGBuffer::Layout::Indirect)->GetGPUHandleUAV());
 	desc.SetAddress("gDeferredBufferIndex", config.buffer->GetIndexBufferAddress());
+	desc.SetAddress("gCamera",              config.camera->GetGPUVirtualAddress());
 
 	core->BindComputeBuffer(FRenderCoreRestir::Process::Texture, context, desc);
 	core->Dispatch(context, config.buffer->GetSize());
