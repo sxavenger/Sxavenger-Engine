@@ -64,6 +64,10 @@ public:
 	constexpr _Ty& operator[](size_t index) noexcept;
 	constexpr const _Ty& operator[](size_t index) const noexcept;
 
+	//* methods *//
+
+	Vector3<_Ty> GetVector3() const noexcept { return { x, y, z }; }
+
 	//=========================================================================================
 	// variables
 	//=========================================================================================

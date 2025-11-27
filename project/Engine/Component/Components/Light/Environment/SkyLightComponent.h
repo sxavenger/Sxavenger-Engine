@@ -75,9 +75,9 @@ public:
 	//=========================================================================================
 
 	SkyLightComponent(MonoBehaviour* behaviour) : BaseComponent(behaviour) { Init(); }
-	virtual ~SkyLightComponent() = default;
+	~SkyLightComponent() override = default;
 
-	virtual void ShowComponentInspector() override;
+	void ShowComponentInspector() override;
 
 	void Init();
 
