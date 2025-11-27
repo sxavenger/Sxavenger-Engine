@@ -54,7 +54,7 @@ public:
 
 	FBaseTexture* GetGBuffer(Layout layout) const;
 
-	DxObject::UnorderedDimensionBuffer<FRenderCoreRestir::Reservoir>* GetReservoir(Reservoir reservoir) const;
+	DxObject::UnorderedDimensionBuffer<FRenderCoreRestir::Reservoir<16>>* GetReservoir(Reservoir reservoir) const;
 
 	DxObject::UnorderedDimensionBuffer<Vector2ui>* GetMoment() const { return moment_.get(); }
 
@@ -79,8 +79,12 @@ private:
 	std::array<std::unique_ptr<FBaseTexture>, kLayoutCount_> buffers_ = {};
 
 
-	std::array<std::unique_ptr<DxObject::UnorderedDimensionBuffer<FRenderCoreRestir::Reservoir>>, magic_enum::enum_count<Reservoir>()> reservoirs_ = {};
+	std::array<std::unique_ptr<DxObject::UnorderedDimensionBuffer<FRenderCoreRestir::Reservoir<16>>>, magic_enum::enum_count<Reservoir>()> reservoirs_ = {};
 	std::unique_ptr<DxObject::UnorderedDimensionBuffer<Vector2ui>> moment_ = nullptr;
+
+
+	std::unique_ptr<DxObject::UnorderedDimensionBuffer<FRenderCoreRestir::Reservoir<7>>> environmentReservoir_ = nullptr;
+	std::unique_ptr<DxObject::UnorderedDimensionBuffer<Vector2ui>> environmentMoment_ = nullptr;
 
 	//* parameter *//
 

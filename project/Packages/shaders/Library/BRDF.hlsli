@@ -64,9 +64,9 @@ float V_HeightCorrelated(float NdotV, float NdotL, float roughness) {
 	const float a  = roughness * roughness;
 	const float a2 = a * a;
 
-	float lamda_v = NdotV * sqrt((-NdotL * a2 + NdotL) * NdotL + a2);
-	float lamda_l = NdotL * sqrt((-NdotV * a2 + NdotV) * NdotV + a2);
-
+	float lamda_v = NdotL * sqrt(NdotV * (NdotV - NdotV * a2) + a2);
+	float lamda_l = NdotV * sqrt(NdotL * (NdotL - NdotL * a2) + a2);
+	
 	return 0.5f * rcp(lamda_v + lamda_l);
 
 }

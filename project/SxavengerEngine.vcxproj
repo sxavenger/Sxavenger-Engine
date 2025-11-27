@@ -304,7 +304,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Engine\Render\GBuffer\FLightingGBuffer.h" />
     <ClInclude Include="Engine\Render\GBuffer\FMainGBuffer.h" />
     <ClInclude Include="Engine\Render\Pass\FBaseRenderPass.h" />
-    <ClInclude Include="Engine\Render\Pass\FRenderPassAntiAliacing.h" />
+    <ClInclude Include="Engine\Render\Pass\FRenderPassAntiAliasing.h" />
     <ClInclude Include="Engine\Render\Pass\FRenderPassCanvas.h" />
     <ClInclude Include="Engine\Render\Pass\FRenderPassContext.h" />
     <ClInclude Include="Engine\Render\Pass\FRenderPassDeferredBase.h" />
@@ -530,7 +530,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="Engine\Render\GBuffer\FLightingGBuffer.cpp" />
     <ClCompile Include="Engine\Render\GBuffer\FMainGBuffer.cpp" />
     <ClCompile Include="Engine\Render\Pass\FBaseRenderPass.cpp" />
-    <ClCompile Include="Engine\Render\Pass\FRenderPassAntiAliacing.cpp" />
+    <ClCompile Include="Engine\Render\Pass\FRenderPassAntiAliasing.cpp" />
     <ClCompile Include="Engine\Render\Pass\FRenderPassCanvas.cpp" />
     <ClCompile Include="Engine\Render\Pass\FRenderPassContext.cpp" />
     <ClCompile Include="Engine\Render\Pass\FRenderPassDeferredBase.cpp" />

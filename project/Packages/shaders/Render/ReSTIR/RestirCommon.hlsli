@@ -98,12 +98,6 @@ struct Moment {
 		return moment;
 	}
 
-	void CheckOffset(uint2 pixel) {
-		if (offset == 0) {
-			offset = Xorshift::xorshift32(pixel.x * pixel.y) + 1;
-		}
-	}
-
 	uint GetRandamizeSampleIndex(uint i, uint maxSampleCount) {
 		const uint kDivision = maxSampleCount / 16;
 		uint divisionIndex = kDivision * ((index + i + offset) % maxSampleCount);

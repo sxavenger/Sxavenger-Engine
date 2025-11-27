@@ -939,7 +939,7 @@
     <ClInclude Include="externals\meshoptimizer\meshoptimizer.h">
       <Filter>externals\meshoptimizer</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Render\Pass\FRenderPassAntiAliacing.h" />
+    <ClInclude Include="Engine\Render\Pass\FRenderPassAntiAliasing.h" />
     <ClInclude Include="Engine\Render\Core\FRenderCoreRestir.h" />
     <ClInclude Include="Engine\Component\Components\Light\Environment\SkyAtmosphereComponent.h" />
   </ItemGroup>
@@ -1578,7 +1578,7 @@
       <Filter>externals\stb</Filter>
     </ClCompile>
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="Engine\Render\Pass\FRenderPassAntiAliacing.cpp" />
+    <ClCompile Include="Engine\Render\Pass\FRenderPassAntiAliasing.cpp" />
     <ClCompile Include="Engine\Render\Core\FRenderCoreRestir.cpp" />
     <ClCompile Include="Engine\Component\Components\Light\Environment\SkyAtmosphereComponent.cpp" />
   </ItemGroup>

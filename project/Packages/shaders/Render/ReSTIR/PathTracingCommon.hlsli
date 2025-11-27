@@ -6,7 +6,6 @@
 #include "RestirCommon.hlsli"
 
 //* library
-#include "../../Library/Hammersley.hlsli"
 #include "../../Library/ImportanceSample.hlsli"
 
 //* content
