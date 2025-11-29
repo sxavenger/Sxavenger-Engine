@@ -12,6 +12,7 @@
 #include <Engine/Component/Components/Light/Punctual/PointLightComponent.h>
 #include <Engine/Component/Components/Light/Punctual/SpotLightComponent.h>
 #include <Engine/Component/Components/Light/Environment/SkyLightComponent.h>
+#include <Engine/Component/Components/Light/Environment/SkyAtmosphereComponent.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // FRenderPassDeferredLighting class methods
@@ -37,6 +38,7 @@ void FRenderPassDeferredLighting::Render(const DirectXQueueContext* context, con
 
 		//!< Sky light
 		PassSkyLight(context, config);
+		PassSkyAtmosphere(context, config);
 
 		EndPassDirectLighting(context, config.buffer);
 	}
@@ -351,6 +353,33 @@ void FRenderPassDeferredLighting::PassSkyLight(const DirectXQueueContext* contex
 
 		FRenderCore::GetInstance()->GetLight()->BindGraphicsBuffer(
 			FRenderCoreLight::LightType::SkyLightEnvironment, context, parameter
+		);
+
+		FRenderCore::GetInstance()->GetLight()->DrawCall(context);
+
+	});
+
+}
+
+void FRenderPassDeferredLighting::PassSkyAtmosphere(const DirectXQueueContext* context, const Config& config) {
+
+	DxObject::BindBufferDesc parameter = {};
+	// common parameter
+	parameter.SetAddress("gCamera", config.camera->GetGPUVirtualAddress());
+	parameter.Set32bitConstants("Dimension", 2, &config.buffer->GetSize());
+
+	//* Environment
+	FRenderCore::GetInstance()->GetLight()->SetPipeline(
+		FRenderCoreLight::LightType::SkyAtmosphereEnvironment, context, config.buffer->GetSize()
+	);
+
+	sComponentStorage->ForEachActive<SkyAtmosphereComponent>([&](SkyAtmosphereComponent* component) {
+
+		// sky light parameter
+		parameter.SetHandle("gEnvironment", component->GetGPUHandleSRV());
+
+		FRenderCore::GetInstance()->GetLight()->BindGraphicsBuffer(
+			FRenderCoreLight::LightType::SkyAtmosphereEnvironment, context, parameter
 		);
 
 		FRenderCore::GetInstance()->GetLight()->DrawCall(context);

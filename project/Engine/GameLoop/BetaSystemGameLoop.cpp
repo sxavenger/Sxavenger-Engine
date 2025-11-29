@@ -72,8 +72,12 @@ void BetaSystemGameLoop::InitSystem() {
 	performance_ = std::make_unique<PerformanceActor>();
 	performance_->Init();
 
-	performance_->AddComponent<SkyAtmosphereComponent>()->CreateTransmittance(SxavengerSystem::GetDirectQueueContext());
-
+	behaviour_ = std::make_unique<MonoBehaviour>();
+	behaviour_->AddComponent<TransformComponent>();
+	behaviour_->AddComponent<SkyAtmosphereComponent>();
+	behaviour_->GetComponent<SkyAtmosphereComponent>()->CreateTransmittance();
+	behaviour_->GetComponent<SkyAtmosphereComponent>()->CreateMultipleScattering();
+	behaviour_->GetComponent<SkyAtmosphereComponent>()->CreateSkyCube();
 }
 
 void BetaSystemGameLoop::TermSystem() {
@@ -90,7 +94,10 @@ void BetaSystemGameLoop::UpdateSystem() {
 
 	performance_->Update();
 
-	//leadParticle_->Update();
+	behaviour_->GetComponent<SkyAtmosphereComponent>()->UpdateTransmittance(SxavengerSystem::GetDirectQueueContext());
+	behaviour_->GetComponent<SkyAtmosphereComponent>()->UpdateMultipleScattering(SxavengerSystem::GetDirectQueueContext());
+	behaviour_->GetComponent<SkyAtmosphereComponent>()->UpdateMultipleScattering(SxavengerSystem::GetDirectQueueContext());
+	behaviour_->GetComponent<SkyAtmosphereComponent>()->UpdateSkyCube(SxavengerSystem::GetDirectQueueContext());
 
 	//-----------------------------------------------------------------------------------------
 	// SystemUpdate...?

@@ -31,6 +31,7 @@ public:
 		SkyLight,
 		VisibilitySkyLight,
 		SkyLightEnvironment,
+		SkyAtmosphereEnvironment,
 	};
 
 public:
