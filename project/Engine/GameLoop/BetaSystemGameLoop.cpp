@@ -63,16 +63,18 @@ void BetaSystemGameLoop::InitSystem() {
 	camera_->Init();
 	camera_->GetComponent<CameraComponent>()->SetTag(CameraComponent::Tag::Game);
 
-	offlineSkylight_ = std::make_unique<MonoBehaviour>();
-	auto light = offlineSkylight_->AddComponent<SkyLightComponent>();
+	skylight_ = std::make_unique<MonoBehaviour>();
+	auto light = skylight_->AddComponent<SkyLightComponent>();
 	light->SetIrradiance(sContentStorage->Import<ContentTexture>("assets/textures/textureCube/sky_irradiance.dds")->GetId());
 	light->SetRadiance(sContentStorage->Import<ContentTexture>("assets/textures/textureCube/sky_radiance.dds")->GetId());
 	light->SetEnvironment(sContentStorage->Import<ContentTexture>("assets/textures/textureCube/sky_environment.dds")->GetId());
 
+	behaviour_ = std::make_unique<MonoBehaviour>();
+	behaviour_->AddComponent<TransformComponent>();
+	behaviour_->AddComponent<SkyAtmosphereComponent>();
+
 	performance_ = std::make_unique<PerformanceActor>();
 	performance_->Init();
-
-	performance_->AddComponent<SkyAtmosphereComponent>()->CreateTransmittance(SxavengerSystem::GetDirectQueueContext());
 
 }
 
@@ -88,9 +90,12 @@ void BetaSystemGameLoop::UpdateSystem() {
 	//atmosphere_->Update();
 	camera_->Update();
 
-	performance_->Update();
+	behaviour_->GetComponent<SkyAtmosphereComponent>()->UpdateTransmittance(SxavengerSystem::GetDirectQueueContext());
+	behaviour_->GetComponent<SkyAtmosphereComponent>()->UpdateMultipleScattering(SxavengerSystem::GetDirectQueueContext());
+	behaviour_->GetComponent<SkyAtmosphereComponent>()->UpdateMultipleScattering(SxavengerSystem::GetDirectQueueContext());
+	behaviour_->GetComponent<SkyAtmosphereComponent>()->UpdateSkyCube(SxavengerSystem::GetDirectQueueContext());
 
-	//leadParticle_->Update();
+	performance_->Update();
 
 	//-----------------------------------------------------------------------------------------
 	// SystemUpdate...?

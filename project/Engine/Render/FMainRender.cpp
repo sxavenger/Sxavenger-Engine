@@ -6,7 +6,7 @@
 //* render
 #include "Pass/FRenderPassDeferredBase.h"
 #include "Pass/FRenderPassDeferredLighting.h"
-#include "Pass/FRenderPassAntiAliacing.h"
+#include "Pass/FRenderPassAntiAliasing.h"
 #include "Pass/FRenderPassForwardTransparent.h"
 #include "Pass/FRenderPassPostProcess.h"
 #include "Pass/FRenderPassTonemap.h"

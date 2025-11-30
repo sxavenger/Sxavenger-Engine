@@ -270,9 +270,6 @@
     <ClInclude Include="Demo\Scene\TitleScene.h">
       <Filter>Demo\Scene</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Adapter\Actor\AtmosphereActor.h">
-      <Filter>Engine\Adapter\Actor</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\Adapter\Actor\ControllableCameraActor.h">
       <Filter>Engine\Adapter\Actor</Filter>
     </ClInclude>
@@ -939,9 +936,10 @@
     <ClInclude Include="externals\meshoptimizer\meshoptimizer.h">
       <Filter>externals\meshoptimizer</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Render\Pass\FRenderPassAntiAliacing.h" />
+    <ClInclude Include="Engine\Render\Pass\FRenderPassAntiAliasing.h" />
     <ClInclude Include="Engine\Render\Core\FRenderCoreRestir.h" />
     <ClInclude Include="Engine\Component\Components\Light\Environment\SkyAtmosphereComponent.h" />
+    <ClInclude Include="Engine\Adapter\Actor\SkyDailyCycleActor.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Demo\Entity\Player.cpp">
@@ -970,9 +968,6 @@
     </ClCompile>
     <ClCompile Include="Demo\Scene\TitleScene.cpp">
       <Filter>Demo\Scene</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\Adapter\Actor\AtmosphereActor.cpp">
-      <Filter>Engine\Adapter\Actor</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Adapter\Actor\ControllableCameraActor.cpp">
       <Filter>Engine\Adapter\Actor</Filter>
@@ -1578,8 +1573,9 @@
       <Filter>externals\stb</Filter>
     </ClCompile>
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="Engine\Render\Pass\FRenderPassAntiAliacing.cpp" />
+    <ClCompile Include="Engine\Render\Pass\FRenderPassAntiAliasing.cpp" />
     <ClCompile Include="Engine\Render\Core\FRenderCoreRestir.cpp" />
     <ClCompile Include="Engine\Component\Components\Light\Environment\SkyAtmosphereComponent.cpp" />
+    <ClCompile Include="Engine\Adapter\Actor\SkyDailyCycleActor.cpp" />
   </ItemGroup>
 </Project>

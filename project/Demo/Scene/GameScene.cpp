@@ -21,13 +21,8 @@ void GameScene::Init() {
 
 	SetCollisionCallback();
 
-	{ //!< skylight
-		skylight_ = std::make_unique<MonoBehaviour>();
-		skylight_->SetName("skylight");
-		auto light = skylight_->AddComponent<SkyLightComponent>();
-		light->SetIrradiance(sContentStorage->Import<ContentTexture>("assets/textures/textureCube/sky_irradiance.dds")->GetId());
-		light->SetRadiance(sContentStorage->Import<ContentTexture>("assets/textures/textureCube/sky_radiance.dds")->GetId());
-		light->SetEnvironment(sContentStorage->Import<ContentTexture>("assets/textures/textureCube/sky_environment.dds")->GetId());
+	{ //!< sky daily cycle
+		skyDailyCycle_ = std::make_unique<SkyDailyCycleActor>();
 	}
 
 	{ //!< performance
@@ -58,6 +53,8 @@ void GameScene::Init() {
 
 	camera_->SetSubject(player_->GetComponent<TransformComponent>());
 	player_->SetCamera(camera_.get());
+
+
 	
 	sSceneObjects->InputJsonFromFilepath("assets/scene/collision_sponza.scene");
 
@@ -76,7 +73,7 @@ void GameScene::Start() {
 		auto text = demoText_->AddComponent<TextRendererComponent>();
 		text->SetFont(sContentStorage->Import<ContentFont>("assets/font/MPLUSRounded1c-Regular.ttf")->GetId());
 		text->SetSize(32.0f);
-		text->SetText(L"Sxavenger Engine Demo : Sponza");
+		text->SetText(L"Sxavenger Engine Demo");
 	}
 
 	{
@@ -93,11 +90,12 @@ void GameScene::Start() {
 		text->SetSize(20.0f);
 
 		std::wstring t = L"";
-		t += L"[WASD]            : いどう\n";
+		t += L"[W][A][S][D]      : いどう\n";
 		t += L"[LSHIFT] + [WASD] : ダッシュ\n";
 		t += L"[みぎクリック]      : してんいどう\n";
 		t += L"[L]               : ライトをつける/けす\n";
 		t += L"[P]               : パストレーシングモード\n";
+		t += L"[<][>]            : たいようのいどう\n";
 		t += L"[ESC]             : ゲームしゅうりょう\n";
 
 		text->SetText(t);
@@ -112,12 +110,23 @@ void GameScene::Update() {
 		config.option.Inverse(FBaseRenderPass::Config::Option::IndirectLighting);
 	}
 
+	if (SxavengerSystem::IsPressKey(KeyId::KEY_LEFT)) {
+		sunAngle_.x -= 0.01f;
+	}
+
+	if (SxavengerSystem::IsPressKey(KeyId::KEY_RIGHT)) {
+		sunAngle_.x += 0.01f;
+	}
+
 	performance_->Update();
 
 	player_->Update();
 	camera_->Update();
 
 	items_->Update();
+
+	skyDailyCycle_->Update();
+	skyDailyCycle_->GetComponent<TransformComponent>()->rotate = Quaternion::ToQuaternion(sunAngle_);
 
 	if (items_->IsCollected()) {
 		Transition transition = {};

@@ -85,6 +85,7 @@ public:
 	////////////////////////////////////////////////////////////////////////////////////////////
 	// Reservoir structure
 	////////////////////////////////////////////////////////////////////////////////////////////
+	template <size_t N>
 	struct Reservoir {
 	public:
 
@@ -92,7 +93,7 @@ public:
 		// public methods
 		//=========================================================================================
 
-		std::array<float, 16> data;
+		std::array<float, N> data;
 		float weight;
 		float w;
 		uint32_t m;
@@ -106,7 +107,8 @@ public:
 		Reset,
 		Temporal,
 		Spatial,
-		Texture
+		Texture,
+		EdgeStopping,
 	};
 
 public:

@@ -23,7 +23,9 @@ _RAYGENERATION void mainRaygeneration() {
 
 	Moment moment = gMoment[p];
 
-	moment.CheckOffset(index);
+	if (moment.offset == 0) {
+		moment.offset = Xorshift::xorshift32(index.x * index.y) + 1;
+	}
 
 	Reservoir reservoir = (Reservoir)0;
 
@@ -44,17 +46,15 @@ _RAYGENERATION void mainRaygeneration() {
 
 	static const float3 kMinFrenel = float3(0.04f, 0.04f, 0.04f); //!< 非金属の最小Frenel値
 
-	for (uint i = 0; i < samplesPerFrame; ++i) {
-		//!< XXX: samplesPerFrameが1じゃないとオーバーランする.
+	//* cameraからの方向ベクトルを取得
+	float3 v = normalize(gCamera.GetPosition() - surface.position); //!< cameraからの方向ベクトルを取得
+
+	for (uint i = 0; i < min(samplesPerFrame, maxSampleCount - moment.index); ++i) {
 
 		float2 xi = Hammersley(moment.GetRandamizeSampleIndex(i, maxSampleCount), maxSampleCount);
 
 		//!< GGX Importance Sample を使用
 		float3 wi = ImportanceSampleGGX(xi, surface.roughness, surface.normal);
-
-		//* cameraからの方向ベクトルを取得
-		float3 v = normalize(gCamera.GetPosition() - surface.position); //!< cameraからの方向ベクトルを取得
-
 		float pdf = ImportanceSampleGGXPDF(wi, surface.roughness, surface.normal, v);
 
 		RayDesc desc;
@@ -66,7 +66,10 @@ _RAYGENERATION void mainRaygeneration() {
 		Payload payload = TracePrimaryRay(desc, kFlag);
 
 		//* Lightの情報を取得
-		float3 l = wi; //!< lightの方向ベクトル
+		float3 l = wi; //!< lightからの方向ベクトルを取得
+
+		//* cameraからの方向ベクトルを取得
+		float3 v = normalize(gCamera.GetPosition() - surface.position); //!< cameraからの方向ベクトルを取得
 
 		//* 計算
 		float3 h = normalize(l + v);
@@ -94,7 +97,7 @@ _RAYGENERATION void mainRaygeneration() {
 
 		float3 diffuseBRDF  = DiffuseBRDF(diffuseAlbedo);
 		float3 specularBRDF = SpecularBRDF(f, vh, d);
-		
+
 		float3 color = (diffuseBRDF + specularBRDF) * NdotL * payload.lo;
 
 		Sample sample;
@@ -116,7 +119,7 @@ _RAYGENERATION void mainRaygeneration() {
 	gInitalizeReservoir[p] = reservoir;
 
 	//!< momentの更新
-	moment.index += samplesPerFrame;
+	moment.index += min(samplesPerFrame, maxSampleCount - moment.index);
 	gMoment[p]    = moment;
 	
 }

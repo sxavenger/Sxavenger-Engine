@@ -174,7 +174,8 @@ void FRenderCoreRestir::CreateContext() {
 		desc.SetVirtualSRV(15, 5, 2); //!< gSpotLights
 
 		// Sky Light
-		desc.SetVirtualCBV(16, 3, 2);                                                                 //!< gSkyLight
+		desc.SetVirtualCBV(16, 3, 2); //!< gSkyLight
+
 		desc.SetSamplerLinear(DxObject::MODE_WRAP, DxObject::ShaderVisibility::VISIBILITY_ALL, 0, 2); //!< gSampler
 
 		context_->CreateRootSignature(SxavengerSystem::GetDxDevice(), desc);
@@ -199,10 +200,11 @@ void FRenderCoreRestir::CreateContext() {
 }
 
 void FRenderCoreRestir::CreatePipeline() {
-	CreateComputePipeline(Process::Reset,    kDirectory_ / "RestirReset.cs.hlsl");
-	CreateComputePipeline(Process::Temporal, kDirectory_ / "RestirTemporal.cs.hlsl");
-	CreateComputePipeline(Process::Spatial,  kDirectory_ / "RestirSpatial.cs.hlsl");
-	CreateComputePipeline(Process::Texture,  kDirectory_ / "RestirTexture.cs.hlsl");
+	CreateComputePipeline(Process::Reset,        kDirectory_ / "RestirReset.cs.hlsl");
+	CreateComputePipeline(Process::Temporal,     kDirectory_ / "RestirTemporal.cs.hlsl");
+	CreateComputePipeline(Process::Spatial,      kDirectory_ / "RestirSpatial.cs.hlsl");
+	CreateComputePipeline(Process::Texture,      kDirectory_ / "RestirTexture.cs.hlsl");
+	CreateComputePipeline(Process::EdgeStopping, kDirectory_ / "EdgeStopping.cs.hlsl");
 }
 
 void FRenderCoreRestir::CreateComputePipeline(Process process, const std::filesystem::path& filepath) {

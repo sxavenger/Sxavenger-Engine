@@ -179,6 +179,10 @@ void main(uint3 dispatchThreadId : SV_DispatchThreadID) {
 			p_q = 0.0f;
 		}
 
+		if (p_q <= 0.0f) {
+			continue; //!< 貢献度が無い
+		}
+
 		rs.Merge(rn, p_q, random.Generate1d());
 
 		Set set;
@@ -197,6 +201,13 @@ void main(uint3 dispatchThreadId : SV_DispatchThreadID) {
 		}
 	}
 
-	rs.w = all(rs.sample.lo != 0.0f) ? rs.weight * rcp(z * dot(rs.sample.lo, ACES::AP1_RGB2Y)) : 0.0f;
+	if (all(rs.sample.lo != 0.0f)) {
+		float luminance = dot(rs.sample.lo, ACES::AP1_RGB2Y);
+		rs.w = rs.weight / (z * luminance);
+		
+	} else {
+		rs.w = 0.0f;
+	}
+	
 	gSpatialReservoir[p] = rs;
 }

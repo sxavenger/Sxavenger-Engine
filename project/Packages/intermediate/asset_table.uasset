@@ -15251,6 +15251,10 @@
 		"assets/models/Bistro/Bistro.gltf",
 		"class AssetMesh"
 	],
+	"bed4f3b1-14d5-4421-b378d269d0a1906d": [
+		"assets/textures/textureCube/sky_night.dds",
+		"class AssetTexture"
+	],
 	"bed58d28-b2ba-46f9-be87db7b673cb69c": [
 		"assets/models/SunTemple/SunTemple.gltf",
 		"class UAssetMesh"

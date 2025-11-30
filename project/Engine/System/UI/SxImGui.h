@@ -44,6 +44,9 @@ namespace SxImGui {
 	template <ScalerConcept T, int32_t N>
 	bool DragScalarN(const char* label, T* v, float v_speed = 1.0f, const std::optional<T>& v_min = std::nullopt, const std::optional<T>& v_max = std::nullopt, const char* format = GetImGuiFormat<T>(), ImGuiSliderFlags flags = ImGuiSliderFlags_None);
 
+	template <ScalerConcept T>
+	bool DragScalar(const char* label, T* v, float v_speed = 1.0f, const std::optional<T>& v_min = std::nullopt, const std::optional<T>& v_max = std::nullopt, const char* format = GetImGuiFormat<T>(), ImGuiSliderFlags flags = ImGuiSliderFlags_None);
+
 	template <ScalerConcept T, int32_t N>
 	bool SliderScalarN(const char* label, T* v, const T v_min, const T v_max, const char* format = GetImGuiFormat<T>(), ImGuiSliderFlags flags = ImGuiSliderFlags_None);
 
@@ -147,8 +150,13 @@ constexpr const char* SxImGui::GetImGuiFormat() {
 
 template <SxImGui::ScalerConcept T, int32_t N>
 bool SxImGui::DragScalarN(const char* label, T* v, float v_speed, const std::optional<T>& v_min, const std::optional<T>& v_max, const char* format, ImGuiSliderFlags flags) {
-	std::pair<T, T> range = { v_min.value_or(std::numeric_limits<T>::min()), v_max.value_or(std::numeric_limits<T>::max()) };
+	std::pair<T, T> range = { v_min.value_or(std::numeric_limits<T>::lowest()), v_max.value_or(std::numeric_limits<T>::max()) };
 	return ImGui::DragScalarN(label, SxImGui::GetImGuiDataType<T>(), v, N, v_speed, &range.first, &range.second, format, flags);
+}
+
+template <SxImGui::ScalerConcept T>
+bool SxImGui::DragScalar(const char* label, T* v, float v_speed, const std::optional<T>& v_min, const std::optional<T>& v_max, const char* format, ImGuiSliderFlags flags) {
+	return SxImGui::DragScalarN<T, 1>(label, v, v_speed, v_min, v_max, format, flags);
 }
 
 template <SxImGui::ScalerConcept T, int32_t N>

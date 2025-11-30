@@ -42,6 +42,7 @@ private:
 	void PassPointLight(const DirectXQueueContext* context, const Config& config);
 	void PassSpotLight(const DirectXQueueContext* context, const Config& config);
 	void PassSkyLight(const DirectXQueueContext* context, const Config& config);
+	void PassSkyAtmosphere(const DirectXQueueContext* context, const Config& config);
 
 	void PassIndirectReservoirReset(const DirectXQueueContext* context, const Config& config);
 	void PassIndirectReservoirInitialize(const DirectXQueueContext* context, const Config& config);

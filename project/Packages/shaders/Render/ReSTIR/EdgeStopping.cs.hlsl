@@ -1,24 +1,17 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
-#include "Denoiser.hlsli"
+#include "RestirPass.hlsli"
 #include "../DeferredBufferIndex.hlsli"
 #include "../../Library/Math.hlsli"
 #include "../../Library/ACES.hlsli"
-
-//=========================================================================================
-// define
-//=========================================================================================
-
-#define _NUM_THREAD_X 16
-#define _NUM_THREAD_Y 16
 
 //=========================================================================================
 // buffer
 //=========================================================================================
 
 //* output texture
-RWTexture2D<float4> gOutput : register(u0);
+RWTexture2D<float4> gIndirect : register(u0);
 
 cbuffer Parameter : register(b1) { //!< test
 	float sigma_n;
@@ -27,42 +20,22 @@ cbuffer Parameter : register(b1) { //!< test
 };
 
 //* input texture
-Texture2D<float4> gReservoirDiffuse  : register(t0);
-Texture2D<float4> gReservoirSpecular : register(t1);
-Texture2D<uint3> gMoment             : register(t2);
+Texture2D<float4> gReservoirTexture  : register(t0);
 SamplerState gSampler                : register(s0);
 
 ConstantBuffer<DeferredBufferIndexConstantBuffer> gDeferredBufferIndex : register(b0);
-
-////////////////////////////////////////////////////////////////////////////////////////////
-// Config cbuffer 32bitconstants.
-////////////////////////////////////////////////////////////////////////////////////////////
-cbuffer Config : register(b2, space1) {
-
-	//=========================================================================================
-	// public variables
-	//=========================================================================================
-	
-	uint maxSampleCount;
-	uint samplesPerFrame;
-	
-};
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 float4 GetIndirectReservoir(uint2 index) {
-	return gReservoirDiffuse[index] + gReservoirSpecular[index];
+	return gReservoirTexture.Load(int3(index, 0));
+
 }
 
 float4 SampleIndirectReservoir(float2 uv, float lod) {
-	return gReservoirDiffuse.SampleLevel(gSampler, uv, lod) + gReservoirSpecular.SampleLevel(gSampler, uv, lod);
-}
-
-float4 SampleIndirectReservoir(float2 uv, float lod_diffuse, float lod_specular) {
-	return gReservoirDiffuse.SampleLevel(gSampler, uv, lod_diffuse) + gReservoirSpecular.SampleLevel(gSampler, uv, lod_specular);
-
+	return gReservoirTexture.SampleLevel(gSampler, uv, lod);
 }
 
 float CalculateExpDepthWeight(float p, float q) {
@@ -108,18 +81,18 @@ void main(uint3 dispatchThreadId : SV_DispatchThreadID) {
 
 	uint2 index = dispatchThreadId.xy;
 
-	if (CheckOutOfRange(index)) {
+	if (any(index >= dimension)) {
 		return;
 	}
 
 	DeferredSurface surface;
 	if (!surface.GetSurface(gDeferredBufferIndex.Get(), index)) {
-		gOutput[index] = float4(0.0f, 0.0f, 0.0f, 0.0f);
+		gIndirect[index] = float4(0.0f, 0.0f, 0.0f, 0.0f);
 		return;
 	}
 
 	float weight    = 1.0f;
-	float3 variance = SampleIndirectReservoir(float2(index) / float2(size), 0.0f).rgb;
+	float3 variance = GetIndirectReservoir(index).rgb;
 
 	//!< A-Trousを採用
 	
@@ -136,8 +109,8 @@ void main(uint3 dispatchThreadId : SV_DispatchThreadID) {
 
 			int2 sample_pos = int2(index) + offsets[j] * (1u << i);
 
-			if (CheckOutOfRange(sample_pos)) {
-				continue;
+			if (any(sample_pos >= dimension)) {
+				return;
 			}
 
 			DeferredSurface sample_surface;
@@ -151,14 +124,9 @@ void main(uint3 dispatchThreadId : SV_DispatchThreadID) {
 
 			float w = exp(exp_w);
 			w *= CalculateNormalWeight(surface.normal, sample_surface.normal); //!< 法線
-			//w *= Gaussian2D(offsets[j] * i, 1.0f); //!< ガウシアン
+			w *= Gaussian2D(offsets[j] * i, 1.0f); //!< ガウシアン
 
-			float2 uv = float2(sample_pos) / float2(size);
-
-			float2 lod = float2(
-				(1.0f - float(gMoment[sample_pos].y) / maxSampleCount) * i / float(kRecursionCount - 1.0f) * 6.0f,
-				(1.0f - float(gMoment[sample_pos].z) / maxSampleCount) * i / float(kRecursionCount - 1.0f) * 6.0f
-			);
+			float2 uv = float2(sample_pos) / float2(dimension);
 			
 			variance += SampleIndirectReservoir(uv, 0.0f).rgb * w;
 			weight   += w;
@@ -167,6 +135,6 @@ void main(uint3 dispatchThreadId : SV_DispatchThreadID) {
 
 	variance /= weight;
 
-	gOutput[index].rgb = variance;
-	gOutput[index].a   = 1.0f;
+	gIndirect[index].rgb = variance;
+	gIndirect[index].a   = 1.0f;
 }
