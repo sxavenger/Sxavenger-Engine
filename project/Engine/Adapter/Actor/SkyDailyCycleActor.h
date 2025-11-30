@@ -10,6 +10,7 @@
 
 //* component
 #include <Engine/Component/Components/Transform/TransformComponent.h>
+#include <Engine/Component/Components/Light/Punctual/DirectionalLightComponent.h>
 #include <Engine/Component/Components/Light/Environment/SkyLightComponent.h>
 #include <Engine/Component/Components/Light/Environment/SkyAtmosphereComponent.h>
 
@@ -28,6 +29,8 @@ public:
 
 	void Update();
 
+	void Inspectable() override;
+
 	void SetNightEnvironmentTexture(const AssetParameter<AssetTexture>& texture);
 
 private:
@@ -44,7 +47,7 @@ private:
 
 	//* parameters *//
 
-	float dayIntensity_   = 1.0f;
+	float dayIntensity_   = 100.0f;
 	float nightIntensity_ = 1.0f;
 
 };

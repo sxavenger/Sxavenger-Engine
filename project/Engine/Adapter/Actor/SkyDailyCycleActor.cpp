@@ -1,5 +1,11 @@
 #include "SkyDailyCycleActor.h"
 
+//-----------------------------------------------------------------------------------------
+// include
+//-----------------------------------------------------------------------------------------
+//* engine
+#include <Engine/System/UI/SxImGui.h>
+
 ////////////////////////////////////////////////////////////////////////////////////////////
 // SkyDailyCycleActor class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -10,6 +16,10 @@ SkyDailyCycleActor::SkyDailyCycleActor() {
 	transform_     = MonoBehaviour::AddComponent<TransformComponent>();
 	skyLight_      = MonoBehaviour::AddComponent<SkyLightComponent>();
 	skyAtmosphere_ = MonoBehaviour::AddComponent<SkyAtmosphereComponent>();
+	MonoBehaviour::AddComponent<DirectionalLightComponent>();
+
+	transform_->GetTransform().rotate = Quaternion::ToQuaternion({ kPi / 2.2f, 0.0f, 0.0f });
+	//!< 初期回転を設定
 
 }
 
@@ -27,6 +37,11 @@ void SkyDailyCycleActor::Update() {
 	skyAtmosphere_->SetIntensity(dayIntensity_);
 	skyLight_->SetIntensity(angle * nightIntensity_);
 
+}
+
+void SkyDailyCycleActor::Inspectable() {
+	SxImGui::DragScalar<float>("Day Intensity", &dayIntensity_,     0.1f, 0.0f);
+	SxImGui::DragScalar<float>("Night Intensity", &nightIntensity_, 0.1f, 0.0f);
 }
 
 void SkyDailyCycleActor::SetNightEnvironmentTexture(const AssetParameter<AssetTexture>& texture) {

@@ -17,6 +17,6 @@ _MISS void mainMiss(inout Payload payload) {
 
 	payload.lo = float3(0.0f, 0.0f, 0.0f);
 	payload.lo += gSkyLight.GetEnvironment(gSkySampler, WorldRayDirection()).rgb;
-	payload.lo += gSkyAtmosphere.GetEnvironment(gSkySampler, WorldRayDirection()).rgb;
+	
 	
 }

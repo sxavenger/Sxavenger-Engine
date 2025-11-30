@@ -4183,46 +4183,6 @@
 		"name": "walls"
 	},
 	{
-		"children": [],
-		"components": [
-			{
-				"component": "class TransformComponent",
-				"transform": {
-					"rotate": {
-						"w": 0.9524697065353394,
-						"x": 0.270281046628952,
-						"y": -0.13519538938999176,
-						"z": 0.038364067673683167
-					},
-					"scale": {
-						"x": 1.0,
-						"y": 1.0,
-						"z": 1.0
-					},
-					"translate": {
-						"x": 3.974559783935547,
-						"y": 2.6672708988189697,
-						"z": 1.450573205947876
-					}
-				}
-			},
-			{
-				"color": {
-					"b": 1.0,
-					"g": 1.0,
-					"r": 1.0
-				},
-				"component": "class DirectionalLightComponent",
-				"intensity": 10.0,
-				"shadow_flag": 16,
-				"shadow_strength": 1.0
-			}
-		],
-		"isActive": true,
-		"isRenamable": true,
-		"name": "Directional Light"
-	},
-	{
 		"children": [
 			{
 				"children": [],
@@ -9455,27 +9415,27 @@
 								"z": 1.0
 							},
 							"translate": {
-								"x": -1.281699776649475,
-								"y": 14.342178344726563,
-								"z": 15.173163414001465
+								"x": 1.0329259634017944,
+								"y": 12.015681266784668,
+								"z": 15.178263664245605
 							}
 						}
 					},
 					{
 						"color": {
-							"b": 1.0,
-							"g": 1.0,
-							"r": 1.0
+							"b": 0.729411780834198,
+							"g": 0.8235294222831726,
+							"r": 0.886274516582489
 						},
 						"component": "class PointLightComponent",
-						"intensity": 7.0,
-						"radius": 31.299999237060547,
+						"intensity": 50.0,
+						"radius": 50.0,
 						"shadow_flag": 16,
 						"shadow_strength": 0.0,
 						"unit": "Candela"
 					}
 				],
-				"isActive": false,
+				"isActive": true,
 				"isRenamable": true,
 				"name": "Point Light[0]"
 			},
@@ -9497,33 +9457,33 @@
 								"z": 1.0
 							},
 							"translate": {
-								"x": -0.27157658338546753,
-								"y": 11.420243263244629,
-								"z": -11.400537490844727
+								"x": 1.5076056718826294,
+								"y": 12.050755500793457,
+								"z": -11.399147987365723
 							}
 						}
 					},
 					{
 						"color": {
-							"b": 1.0,
-							"g": 1.0,
-							"r": 1.0
+							"b": 0.7299256324768066,
+							"g": 0.822120726108551,
+							"r": 0.8860103487968445
 						},
 						"component": "class PointLightComponent",
-						"intensity": 7.0,
-						"radius": 25.600000381469727,
+						"intensity": 50.0,
+						"radius": 50.0,
 						"shadow_flag": 16,
 						"shadow_strength": 0.0,
 						"unit": "Candela"
 					}
 				],
-				"isActive": false,
+				"isActive": true,
 				"isRenamable": true,
 				"name": "Point Light[1]"
 			}
 		],
 		"components": [],
-		"isActive": false,
+		"isActive": true,
 		"isRenamable": true,
 		"name": "Environment Light"
 	},

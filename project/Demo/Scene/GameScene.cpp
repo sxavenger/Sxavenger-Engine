@@ -21,13 +21,8 @@ void GameScene::Init() {
 
 	SetCollisionCallback();
 
-	{ //!< skylight
-		skylight_ = std::make_unique<MonoBehaviour>();
-		skylight_->SetName("skylight");
-		auto light = skylight_->AddComponent<SkyLightComponent>();
-		light->SetIrradiance(sContentStorage->Import<ContentTexture>("assets/textures/textureCube/sky_irradiance.dds")->GetId());
-		light->SetRadiance(sContentStorage->Import<ContentTexture>("assets/textures/textureCube/sky_radiance.dds")->GetId());
-		light->SetEnvironment(sContentStorage->Import<ContentTexture>("assets/textures/textureCube/sky_environment.dds")->GetId());
+	{ //!< sky daily cycle
+		skyDailyCycle_ = std::make_unique<SkyDailyCycleActor>();
 	}
 
 	{ //!< performance
@@ -58,6 +53,8 @@ void GameScene::Init() {
 
 	camera_->SetSubject(player_->GetComponent<TransformComponent>());
 	player_->SetCamera(camera_.get());
+
+
 	
 	sSceneObjects->InputJsonFromFilepath("assets/scene/collision_sponza.scene");
 
@@ -76,7 +73,7 @@ void GameScene::Start() {
 		auto text = demoText_->AddComponent<TextRendererComponent>();
 		text->SetFont(sContentStorage->Import<ContentFont>("assets/font/MPLUSRounded1c-Regular.ttf")->GetId());
 		text->SetSize(32.0f);
-		text->SetText(L"Sxavenger Engine Demo : Sponza");
+		text->SetText(L"Sxavenger Engine Demo");
 	}
 
 	{
@@ -118,6 +115,8 @@ void GameScene::Update() {
 	camera_->Update();
 
 	items_->Update();
+
+	skyDailyCycle_->Update();
 
 	if (items_->IsCollected()) {
 		Transition transition = {};
