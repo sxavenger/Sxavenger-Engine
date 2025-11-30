@@ -90,11 +90,12 @@ void GameScene::Start() {
 		text->SetSize(20.0f);
 
 		std::wstring t = L"";
-		t += L"[WASD]            : いどう\n";
+		t += L"[W][A][S][D]      : いどう\n";
 		t += L"[LSHIFT] + [WASD] : ダッシュ\n";
 		t += L"[みぎクリック]      : してんいどう\n";
 		t += L"[L]               : ライトをつける/けす\n";
 		t += L"[P]               : パストレーシングモード\n";
+		t += L"[<][>]            : たいようのいどう\n";
 		t += L"[ESC]             : ゲームしゅうりょう\n";
 
 		text->SetText(t);
@@ -109,6 +110,14 @@ void GameScene::Update() {
 		config.option.Inverse(FBaseRenderPass::Config::Option::IndirectLighting);
 	}
 
+	if (SxavengerSystem::IsPressKey(KeyId::KEY_LEFT)) {
+		sunAngle_.x -= 0.01f;
+	}
+
+	if (SxavengerSystem::IsPressKey(KeyId::KEY_RIGHT)) {
+		sunAngle_.x += 0.01f;
+	}
+
 	performance_->Update();
 
 	player_->Update();
@@ -117,6 +126,7 @@ void GameScene::Update() {
 	items_->Update();
 
 	skyDailyCycle_->Update();
+	skyDailyCycle_->GetComponent<TransformComponent>()->rotate = Quaternion::ToQuaternion(sunAngle_);
 
 	if (items_->IsCollected()) {
 		Transition transition = {};

@@ -41,6 +41,7 @@ private:
 	//* game objects *//
 
 	std::unique_ptr<SkyDailyCycleActor> skyDailyCycle_;
+	Vector3f sunAngle_ = { kPi / 2.0f, 0.1f, 0.0f };
 
 	std::unique_ptr<PerformanceActor> performance_;
 
