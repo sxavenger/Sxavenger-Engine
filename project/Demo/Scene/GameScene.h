@@ -8,6 +8,7 @@
 
 //* engine
 #include <Engine/Adapter/Actor/PerformanceActor.h>
+#include <Engine/Adapter/Actor/SkyDailyCycleActor.h>
 
 //* demo
 #include <Demo/Object/PerspectiveCamera.h>
@@ -39,7 +40,8 @@ private:
 
 	//* game objects *//
 
-	std::unique_ptr<MonoBehaviour> skylight_;
+	std::unique_ptr<SkyDailyCycleActor> skyDailyCycle_;
+	Vector3f sunAngle_ = { kPi / 2.0f, 0.1f, 0.0f };
 
 	std::unique_ptr<PerformanceActor> performance_;
 

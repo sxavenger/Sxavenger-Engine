@@ -11,14 +11,14 @@ _DXOBJECT_USING
 #include <Engine/System/UI/SxImGui.h>
 #include <Engine/System/SxavengerSystem.h>
 #include <Engine/Content/SxavengerContent.h>
-#include <Engine/Preview/Asset/UAssetStorage.h>
-#include <Engine/Preview/Content/UContentStorage.h>
+#include <Engine/Preview/Asset/AssetStorage.h>
+#include <Engine/Preview/Content/ContentStorage.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // InputSkinnedMesh structure methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-void SkinnedMeshRendererComponent::InputSkinnedMesh::Create(const DirectXQueueContext* context, const std::shared_ptr<UAssetMesh>& mesh) {
+void SkinnedMeshRendererComponent::InputSkinnedMesh::Create(const DirectXQueueContext* context, const std::shared_ptr<AssetMesh>& mesh) {
 	CreateVetex(mesh);
 	CreateBottomLevelAS(context, mesh);
 	isCreateMesh = true;
@@ -29,12 +29,12 @@ void SkinnedMeshRendererComponent::InputSkinnedMesh::UpdateBottomLevelAS(const D
 	bottomLevelAS.Update(context->GetDxCommand());
 }
 
-void SkinnedMeshRendererComponent::InputSkinnedMesh::CreateVetex(const std::shared_ptr<UAssetMesh>& mesh) {
+void SkinnedMeshRendererComponent::InputSkinnedMesh::CreateVetex(const std::shared_ptr<AssetMesh>& mesh) {
 	vertex = std::make_unique<VertexUnorderedDimensionBuffer<MeshVertexData>>();
 	vertex->Create(SxavengerSystem::GetDxDevice(), mesh->GetInputVertex()->GetSize());
 }
 
-void SkinnedMeshRendererComponent::InputSkinnedMesh::CreateBottomLevelAS(const DirectXQueueContext* context, const std::shared_ptr<UAssetMesh>& mesh) {
+void SkinnedMeshRendererComponent::InputSkinnedMesh::CreateBottomLevelAS(const DirectXQueueContext* context, const std::shared_ptr<AssetMesh>& mesh) {
 	D3D12_RAYTRACING_GEOMETRY_DESC desc = {};
 	desc.Type                                 = D3D12_RAYTRACING_GEOMETRY_TYPE_TRIANGLES;
 	desc.Flags                                = D3D12_RAYTRACING_GEOMETRY_FLAG_NONE;
@@ -66,7 +66,7 @@ void SkinnedMeshRendererComponent::CreateMesh(const Uuid& referenceMesh) {
 	CreateCluster();
 }
 
-void SkinnedMeshRendererComponent::CreateMesh(const std::shared_ptr<UAssetMesh>& referenceMesh) {
+void SkinnedMeshRendererComponent::CreateMesh(const std::shared_ptr<AssetMesh>& referenceMesh) {
 	// 参照先のmeshを保持
 	referenceMesh_ = referenceMesh;
 
@@ -109,7 +109,7 @@ void SkinnedMeshRendererComponent::DrawCall(const DirectXQueueContext* context, 
 	context->GetCommandList()->DrawIndexedInstanced(referenceMesh_.Require()->GetInputIndex()->GetIndexCount(), instanceCount, 0, 0, 0);
 }
 
-std::shared_ptr<UAssetMaterial> SkinnedMeshRendererComponent::GetMaterial() const {
+std::shared_ptr<AssetMaterial> SkinnedMeshRendererComponent::GetMaterial() const {
 	return material_.Require();
 }
 
@@ -135,14 +135,14 @@ void SkinnedMeshRendererComponent::InputJson(const json& data) {
 
 	// referenceMesh, materialのuuidが存在しない場合は, tableから読み込み
 
-	if (!sUAssetStorage->Contains<UAssetMesh>(referenceMesh)) {
-		const auto& filepath = sUAssetStorage->GetFilepath(referenceMesh);
-		sUContentStorage->Import<UContentModel>(filepath);
+	if (!sAssetStorage->Contains<AssetMesh>(referenceMesh)) {
+		const auto& filepath = sAssetStorage->GetFilepath(referenceMesh);
+		sContentStorage->Import<ContentModel>(filepath);
 	}
 
-	if (!sUAssetStorage->Contains<UAssetMesh>(material)) {
-		const auto& filepath = sUAssetStorage->GetFilepath(material);
-		sUContentStorage->Import<UContentModel>(filepath);
+	if (!sAssetStorage->Contains<AssetMesh>(material)) {
+		const auto& filepath = sAssetStorage->GetFilepath(material);
+		sContentStorage->Import<ContentModel>(filepath);
 	}
 
 	CreateMesh(referenceMesh);

@@ -62,7 +62,7 @@ void main(uint3 dispathThreadId : SV_DispatchThreadID) {
 			float2 uv    = (float2(index) + offset) / float2(size);
 			float weight = Gaussian2d(offset, rad);
 
-			luminance_sum += gLuminance.SampleLevel(gSampler, uv, 0) * gInput.SampleLevel(gSampler, uv, 0) * weight;
+			luminance_sum += gLuminance.SampleLevel(gSampler, uv, 0) * weight;
 			weight_sum    += weight;
 			
 		}

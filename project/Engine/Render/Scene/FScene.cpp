@@ -59,20 +59,20 @@ void FScene::SetupTopLevelAS(const DirectXQueueContext* context) {
 			// todo: missing material を用意する
 		}
 
-		std::shared_ptr<UAssetMesh> mesh         = component->GetMesh();
-		std::shared_ptr<UAssetMaterial> material = component->GetMaterial();
+		std::shared_ptr<AssetMesh> mesh         = component->GetMesh();
+		std::shared_ptr<AssetMaterial> material = component->GetMaterial();
 
 		mesh->Update(context); //!< meshの更新
 
-		FRenderCorePathtracing::HitgroupExportType type = {};
+		FRenderCoreRestir::HitgroupExportType type = {};
 
 		switch (material->GetMode()) {
-			case UAssetMaterial::Mode::Opaque:
-				type = FRenderCorePathtracing::HitgroupExportType::Mesh;
+			case AssetMaterial::Mode::Opaque:
+				type = FRenderCoreRestir::HitgroupExportType::Mesh;
 				break;
 
-			case UAssetMaterial::Mode::Emissive:
-				type = FRenderCorePathtracing::HitgroupExportType::Emissive;
+			case AssetMaterial::Mode::Emissive:
+				type = FRenderCoreRestir::HitgroupExportType::Emissive;
 				break;
 
 			default:
@@ -90,7 +90,7 @@ void FScene::SetupTopLevelAS(const DirectXQueueContext* context) {
 		instance.instanceId    = 0;
 
 		//* ExportGroupの設定
-		instance.expt = FRenderCore::GetInstance()->GetPathtracing()->GetExportGroup(type);
+		instance.expt = FRenderCore::GetInstance()->GetRestir()->GetExportGroup(type);
 		instance.parameter.SetAddress(0, mesh->GetInputVertex()->GetGPUVirtualAddress());
 		instance.parameter.SetAddress(1, mesh->GetInputIndex()->GetGPUVirtualAddress());
 		instance.parameter.SetAddress(2, material->GetGPUVirtualAddress());
@@ -104,19 +104,19 @@ void FScene::SetupTopLevelAS(const DirectXQueueContext* context) {
 			// todo: missing material を用意する
 		}
 
-		std::shared_ptr<UAssetMaterial> material = component->GetMaterial();
+		std::shared_ptr<AssetMaterial> material = component->GetMaterial();
 
 		component->Update(context); //!< meshの更新
 
-		FRenderCorePathtracing::HitgroupExportType type = {};
+		FRenderCoreRestir::HitgroupExportType type = {};
 
 		switch (material->GetMode()) {
-			case UAssetMaterial::Mode::Opaque:
-				type = FRenderCorePathtracing::HitgroupExportType::Mesh;
+			case AssetMaterial::Mode::Opaque:
+				type = FRenderCoreRestir::HitgroupExportType::Mesh;
 				break;
 
-			case UAssetMaterial::Mode::Emissive:
-				type = FRenderCorePathtracing::HitgroupExportType::Emissive;
+			case AssetMaterial::Mode::Emissive:
+				type = FRenderCoreRestir::HitgroupExportType::Emissive;
 				break;
 
 			default:
@@ -134,7 +134,7 @@ void FScene::SetupTopLevelAS(const DirectXQueueContext* context) {
 		instance.instanceId    = 0;
 
 		//* ExportGroupの設定
-		instance.expt = FRenderCore::GetInstance()->GetPathtracing()->GetExportGroup(type);
+		instance.expt = FRenderCore::GetInstance()->GetRestir()->GetExportGroup(type);
 		instance.parameter.SetAddress(0, component->GetInputVertex()->GetGPUVirtualAddress());
 		instance.parameter.SetAddress(1, component->GetInputIndex()->GetGPUVirtualAddress());
 		instance.parameter.SetAddress(2, material->GetGPUVirtualAddress());
@@ -147,7 +147,7 @@ void FScene::SetupTopLevelAS(const DirectXQueueContext* context) {
 
 void FScene::SetupStateObject() {
 	// TopLevelASに設定
-	FRenderCore::GetInstance()->GetPathtracing()->UpdateShaderTable(&topLevelAS_);
+	FRenderCore::GetInstance()->GetRestir()->UpdateShaderTable(&topLevelAS_);
 }
 
 void FScene::SetupLightContainer() {

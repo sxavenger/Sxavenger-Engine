@@ -15,9 +15,9 @@
 #include <Engine/System/DirectX/DxObject/DxUnorderedDimensionBuffer.h>
 #include <Engine/System/DirectX/DxObject/DxBindBuffer.h>
 #include <Engine/Content/Animation/SkinCluster.h>
-#include <Engine/Preview/Asset/UAssetMesh.h>
-#include <Engine/Preview/Asset/UAssetMaterial.h>
-#include <Engine/Preview/Asset/UAssetParameter.h>
+#include <Engine/Preview/Asset/AssetMesh.h>
+#include <Engine/Preview/Asset/AssetMaterial.h>
+#include <Engine/Preview/Asset/AssetParameter.h>
 
 //* lib
 #include <Lib/Sxl/Flag.h>
@@ -49,7 +49,7 @@ public:
 		// public methods
 		//=========================================================================================
 
-		void Create(const DirectXQueueContext* context, const std::shared_ptr<UAssetMesh>& mesh);
+		void Create(const DirectXQueueContext* context, const std::shared_ptr<AssetMesh>& mesh);
 
 		void UpdateBottomLevelAS(const DirectXQueueContext* context);
 
@@ -82,9 +82,9 @@ public:
 		// private methods
 		//=========================================================================================
 
-		void CreateVetex(const std::shared_ptr<UAssetMesh>& mesh);
+		void CreateVetex(const std::shared_ptr<AssetMesh>& mesh);
 
-		void CreateBottomLevelAS(const DirectXQueueContext* context, const std::shared_ptr<UAssetMesh>& mesh);
+		void CreateBottomLevelAS(const DirectXQueueContext* context, const std::shared_ptr<AssetMesh>& mesh);
 
 	};
 
@@ -101,10 +101,10 @@ public:
 	void ShowComponentInspector() override;
 
 	void CreateMesh(const Uuid& referenceMesh);
-	void CreateMesh(const std::shared_ptr<UAssetMesh>& referenceMesh);
+	void CreateMesh(const std::shared_ptr<AssetMesh>& referenceMesh);
 
 	void SetMaterial(const Uuid& id) { material_ = id; }
-	void SetMaterial(const std::shared_ptr<UAssetMaterial>& material) { material_ = material; }
+	void SetMaterial(const std::shared_ptr<AssetMaterial>& material) { material_ = material; }
 
 	//! @brief スキニング処理を行う
 	void Skinning();
@@ -121,8 +121,8 @@ public:
 
 	//* getter *//
 
-	std::shared_ptr<UAssetMaterial> GetMaterial() const;
-	const UAssetParameter<UAssetMaterial>& GetMaterialParameter() const { return material_; }
+	std::shared_ptr<AssetMaterial> GetMaterial() const;
+	const AssetParameter<AssetMaterial>& GetMaterialParameter() const { return material_; }
 
 	const InputSkinnedMesh::InputUnorderedVertex* GetInputVertex() const { return mesh_.vertex.get(); }
 	const InputMesh::InputIndex* GetInputIndex() const { return referenceMesh_.Require()->GetInputIndex(); }
@@ -153,8 +153,8 @@ private:
 
 	//* reference *//
 
-	UAssetParameter<UAssetMesh> referenceMesh_;
-	UAssetParameter<UAssetMaterial> material_;
+	AssetParameter<AssetMesh> referenceMesh_;
+	AssetParameter<AssetMaterial> material_;
 
 	InputSkinnedMesh mesh_;
 	SkinCluster cluster_;

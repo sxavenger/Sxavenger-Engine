@@ -1,7 +1,7 @@
 #pragma once
 
-#ifndef _MATH_INCLUDE //!< include guard
-#define _MATH_INCLUDE
+#ifndef _MATH_LIBRAY
+#define _MATH_LIBRAY
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // constants
@@ -15,8 +15,6 @@ static const float kTauInv = 1.0f / kTau;
 
 static const float kEpsilon = 1.192092896e-07f;
 
-float Square(float x) {
-	return x * x;
-}
+float Square(float value) { return value * value; }
 
 #endif

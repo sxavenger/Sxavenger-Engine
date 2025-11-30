@@ -6,14 +6,14 @@
 //* core
 #include "Core/FRenderCoreGeometry.h"
 #include "Core/FRenderCoreLight.h"
-#include "Core/FRenderCorePathtracing.h"
+#include "Core/FRenderCoreRestir.h"
 #include "Core/FRenderCoreLayer.h"
 #include "Core/FRenderCoreProcess.h"
 #include "Core/FRenderCoreTransition.h"
 
 //* engine
-#include <Engine/Preview/Asset/UAssetTexture.h>
-#include <Engine/Preview/Asset/UAssetParameter.h>
+#include <Engine/Preview/Asset/AssetTexture.h>
+#include <Engine/Preview/Asset/AssetParameter.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // FRenderCore class
@@ -38,7 +38,7 @@ public:
 
 	FRenderCoreLight* GetLight() { return light_.get(); }
 
-	FRenderCorePathtracing* GetPathtracing() { return pathtracing_.get(); }
+	FRenderCoreRestir* GetRestir() { return restir_.get(); }
 
 	FRenderCoreLayer* GetLayer() { return layer_.get(); }
 
@@ -46,7 +46,11 @@ public:
 
 	FRenderCoreTransition* GetTransition() { return transition_.get(); }
 
-	const D3D12_GPU_DESCRIPTOR_HANDLE& GetBRDFLut() const;
+	const D3D12_GPU_DESCRIPTOR_HANDLE& GetBRDFLut() const { return brdfLut_.WaitGet()->GetGPUHandleSRV(); }
+
+	const D3D12_GPU_DESCRIPTOR_HANDLE& GetSMAAAreaTexture() const { return smaaArea_.WaitGet()->GetGPUHandleSRV(); }
+
+	const D3D12_GPU_DESCRIPTOR_HANDLE& GetSMAASearchTexture() const { return smaaSearch_.WaitGet()->GetGPUHandleSRV(); }
 
 	//* singleton *//
 
@@ -60,13 +64,16 @@ private:
 
 	std::unique_ptr<FRenderCoreGeometry>    geometry_;
 	std::unique_ptr<FRenderCoreLight>       light_;
-	std::unique_ptr<FRenderCorePathtracing> pathtracing_;
+	std::unique_ptr<FRenderCoreRestir>      restir_;
 	std::unique_ptr<FRenderCoreLayer>       layer_;
 	std::unique_ptr<FRenderCoreProcess>     process_;
 	std::unique_ptr<FRenderCoreTransition>  transition_;
 
 	//* textures *//
 
-	UAssetParameter<UAssetTexture> brdfLut_;
+	AssetParameter<AssetTexture> brdfLut_;
+
+	AssetParameter<AssetTexture> smaaArea_;
+	AssetParameter<AssetTexture> smaaSearch_;
 
 };

@@ -27,18 +27,37 @@ public:
 	public:
 
 		////////////////////////////////////////////////////////////////////////////////////////////
+		// AntiAliasing enum class
+		////////////////////////////////////////////////////////////////////////////////////////////
+		enum class AntiAliasing : uint8_t {
+			None,
+			FXAA,
+			SMAA_1x,
+		};
+
+		////////////////////////////////////////////////////////////////////////////////////////////
 		// Status enum class
 		////////////////////////////////////////////////////////////////////////////////////////////
 		enum class Status : size_t {
 			Success = 0,
-
-			Error_GBuffer = 1 << 0,
-
+			Error_GBuffer   = 1 << 0,
 			Warning_Camera  = 1 << 1,
 			Warning_Scene   = 1 << 2,
 
-
 			Geometry_Warning = Warning_Camera | Warning_Scene,
+		};
+
+		////////////////////////////////////////////////////////////////////////////////////////////
+		// Option enum class
+		////////////////////////////////////////////////////////////////////////////////////////////
+		enum class Option : size_t {
+			IndirectLighting = 1 << 0,
+			PostProcess      = 1 << 1,
+			Tonemap          = 1 << 2,
+
+			Debug_WhiteAlbedo = 1 << 10,
+
+			Default = PostProcess | Tonemap,
 		};
 
 	public:
@@ -75,10 +94,8 @@ public:
 
 		//* option *//
 
-		bool isEnableIndirectLighting = false;
-		bool isEnablePostProcess      = true;
-		bool isEnableTonemap          = true;
-		// todo: optionをflagで管理する
+		AntiAliasing antiAliasing = AntiAliasing::FXAA;
+		Sxl::Flag<Option> option  = Option::Default;
 
 	private:
 

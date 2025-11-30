@@ -270,9 +270,6 @@
     <ClInclude Include="Demo\Scene\TitleScene.h">
       <Filter>Demo\Scene</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Adapter\Actor\AtmosphereActor.h">
-      <Filter>Engine\Adapter\Actor</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\Adapter\Actor\ControllableCameraActor.h">
       <Filter>Engine\Adapter\Actor</Filter>
     </ClInclude>
@@ -537,64 +534,64 @@
     <ClInclude Include="Engine\Module\Scene\SceneObjects.h">
       <Filter>Engine\Module\Scene</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Preview\Asset\UAssetAnimation.h">
+    <ClInclude Include="Engine\Preview\Asset\AssetAnimation.h">
       <Filter>Engine\Preview\Asset</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Preview\Asset\UAssetAudioClip.h">
+    <ClInclude Include="Engine\Preview\Asset\AssetAudioClip.h">
       <Filter>Engine\Preview\Asset</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Preview\Asset\UAssetFont.h">
+    <ClInclude Include="Engine\Preview\Asset\AssetFont.h">
       <Filter>Engine\Preview\Asset</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Preview\Asset\UAssetMaterial.h">
+    <ClInclude Include="Engine\Preview\Asset\AssetMaterial.h">
       <Filter>Engine\Preview\Asset</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Preview\Asset\UAssetMesh.h">
+    <ClInclude Include="Engine\Preview\Asset\AssetMesh.h">
       <Filter>Engine\Preview\Asset</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Preview\Asset\UAssetParameter.h">
+    <ClInclude Include="Engine\Preview\Asset\AssetParameter.h">
       <Filter>Engine\Preview\Asset</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Preview\Asset\UAssetSkeleton.h">
+    <ClInclude Include="Engine\Preview\Asset\AssetSkeleton.h">
       <Filter>Engine\Preview\Asset</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Preview\Asset\UAssetStorage.h">
+    <ClInclude Include="Engine\Preview\Asset\AssetStorage.h">
       <Filter>Engine\Preview\Asset</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Preview\Asset\UAssetTexture.h">
+    <ClInclude Include="Engine\Preview\Asset\AssetTexture.h">
       <Filter>Engine\Preview\Asset</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Preview\Asset\UBaseAsset.h">
+    <ClInclude Include="Engine\Preview\Asset\BaseAsset.h">
       <Filter>Engine\Preview\Asset</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Preview\Content\UBaseContent.h">
+    <ClInclude Include="Engine\Preview\Content\BaseContent.h">
       <Filter>Engine\Preview\Content</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Preview\Content\UContentAnimation.h">
+    <ClInclude Include="Engine\Preview\Content\ContentAnimation.h">
       <Filter>Engine\Preview\Content</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Preview\Content\UContentAudio.h">
+    <ClInclude Include="Engine\Preview\Content\ContentAudio.h">
       <Filter>Engine\Preview\Content</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Preview\Content\UContentBlob.h">
+    <ClInclude Include="Engine\Preview\Content\ContentBlob.h">
       <Filter>Engine\Preview\Content</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Preview\Content\UContentFont.h">
+    <ClInclude Include="Engine\Preview\Content\ContentFont.h">
       <Filter>Engine\Preview\Content</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Preview\Content\UContentModel.h">
+    <ClInclude Include="Engine\Preview\Content\ContentModel.h">
       <Filter>Engine\Preview\Content</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Preview\Content\UContentObserver.h">
+    <ClInclude Include="Engine\Preview\Content\ContentObserver.h">
       <Filter>Engine\Preview\Content</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Preview\Content\UContentScene.h">
+    <ClInclude Include="Engine\Preview\Content\ContentScene.h">
       <Filter>Engine\Preview\Content</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Preview\Content\UContentStorage.h">
+    <ClInclude Include="Engine\Preview\Content\ContentStorage.h">
       <Filter>Engine\Preview\Content</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Preview\Content\UContentTexture.h">
+    <ClInclude Include="Engine\Preview\Content\ContentTexture.h">
       <Filter>Engine\Preview\Content</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Render\Common\FBaseTexture.h">
@@ -619,9 +616,6 @@
       <Filter>Engine\Render\Core</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Render\Core\FRenderCoreLight.h">
-      <Filter>Engine\Render\Core</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Render\Core\FRenderCorePathtracing.h">
       <Filter>Engine\Render\Core</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Render\Core\FRenderCoreProcess.h">
@@ -942,6 +936,10 @@
     <ClInclude Include="externals\meshoptimizer\meshoptimizer.h">
       <Filter>externals\meshoptimizer</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\Render\Pass\FRenderPassAntiAliasing.h" />
+    <ClInclude Include="Engine\Render\Core\FRenderCoreRestir.h" />
+    <ClInclude Include="Engine\Component\Components\Light\Environment\SkyAtmosphereComponent.h" />
+    <ClInclude Include="Engine\Adapter\Actor\SkyDailyCycleActor.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Demo\Entity\Player.cpp">
@@ -970,9 +968,6 @@
     </ClCompile>
     <ClCompile Include="Demo\Scene\TitleScene.cpp">
       <Filter>Demo\Scene</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\Adapter\Actor\AtmosphereActor.cpp">
-      <Filter>Engine\Adapter\Actor</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Adapter\Actor\ControllableCameraActor.cpp">
       <Filter>Engine\Adapter\Actor</Filter>
@@ -1211,58 +1206,58 @@
     <ClCompile Include="Engine\Module\Scene\SceneObjects.cpp">
       <Filter>Engine\Module\Scene</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Preview\Asset\UAssetAnimation.cpp">
+    <ClCompile Include="Engine\Preview\Asset\AssetAnimation.cpp">
       <Filter>Engine\Preview\Asset</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Preview\Asset\UAssetAudioClip.cpp">
+    <ClCompile Include="Engine\Preview\Asset\AssetAudioClip.cpp">
       <Filter>Engine\Preview\Asset</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Preview\Asset\UAssetFont.cpp">
+    <ClCompile Include="Engine\Preview\Asset\AssetFont.cpp">
       <Filter>Engine\Preview\Asset</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Preview\Asset\UAssetMaterial.cpp">
+    <ClCompile Include="Engine\Preview\Asset\AssetMaterial.cpp">
       <Filter>Engine\Preview\Asset</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Preview\Asset\UAssetMesh.cpp">
+    <ClCompile Include="Engine\Preview\Asset\AssetMesh.cpp">
       <Filter>Engine\Preview\Asset</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Preview\Asset\UAssetSkeleton.cpp">
+    <ClCompile Include="Engine\Preview\Asset\AssetSkeleton.cpp">
       <Filter>Engine\Preview\Asset</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Preview\Asset\UAssetStorage.cpp">
+    <ClCompile Include="Engine\Preview\Asset\AssetStorage.cpp">
       <Filter>Engine\Preview\Asset</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Preview\Asset\UAssetTexture.cpp">
+    <ClCompile Include="Engine\Preview\Asset\AssetTexture.cpp">
       <Filter>Engine\Preview\Asset</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Preview\Asset\UBaseAsset.cpp">
+    <ClCompile Include="Engine\Preview\Asset\BaseAsset.cpp">
       <Filter>Engine\Preview\Asset</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Preview\Content\UBaseContent.cpp">
+    <ClCompile Include="Engine\Preview\Content\BaseContent.cpp">
       <Filter>Engine\Preview\Content</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Preview\Content\UContentAnimation.cpp">
+    <ClCompile Include="Engine\Preview\Content\ContentAnimation.cpp">
       <Filter>Engine\Preview\Content</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Preview\Content\UContentAudio.cpp">
+    <ClCompile Include="Engine\Preview\Content\ContentAudio.cpp">
       <Filter>Engine\Preview\Content</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Preview\Content\UContentBlob.cpp">
+    <ClCompile Include="Engine\Preview\Content\ContentBlob.cpp">
       <Filter>Engine\Preview\Content</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Preview\Content\UContentFont.cpp">
+    <ClCompile Include="Engine\Preview\Content\ContentFont.cpp">
       <Filter>Engine\Preview\Content</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Preview\Content\UContentModel.cpp">
+    <ClCompile Include="Engine\Preview\Content\ContentModel.cpp">
       <Filter>Engine\Preview\Content</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Preview\Content\UContentScene.cpp">
+    <ClCompile Include="Engine\Preview\Content\ContentScene.cpp">
       <Filter>Engine\Preview\Content</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Preview\Content\UContentStorage.cpp">
+    <ClCompile Include="Engine\Preview\Content\ContentStorage.cpp">
       <Filter>Engine\Preview\Content</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Preview\Content\UContentTexture.cpp">
+    <ClCompile Include="Engine\Preview\Content\ContentTexture.cpp">
       <Filter>Engine\Preview\Content</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Render\Common\FBaseTexture.cpp">
@@ -1287,9 +1282,6 @@
       <Filter>Engine\Render\Core</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Render\Core\FRenderCoreLight.cpp">
-      <Filter>Engine\Render\Core</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\Render\Core\FRenderCorePathtracing.cpp">
       <Filter>Engine\Render\Core</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Render\Core\FRenderCoreProcess.cpp">
@@ -1581,5 +1573,9 @@
       <Filter>externals\stb</Filter>
     </ClCompile>
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Engine\Render\Pass\FRenderPassAntiAliasing.cpp" />
+    <ClCompile Include="Engine\Render\Core\FRenderCoreRestir.cpp" />
+    <ClCompile Include="Engine\Component\Components\Light\Environment\SkyAtmosphereComponent.cpp" />
+    <ClCompile Include="Engine\Adapter\Actor\SkyDailyCycleActor.cpp" />
   </ItemGroup>
 </Project>

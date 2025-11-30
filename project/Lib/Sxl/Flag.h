@@ -32,16 +32,21 @@ public:
 
 	~FlagMask() = default;
 
+	//* check mask option  *//
+
 	constexpr bool Test(_Mask mask) const { return (mask_ & mask) == mask; }
 	constexpr bool Test(_Bit bit) const { return Test(static_cast<_Mask>(bit)); }
 
 	constexpr bool Any(_Mask mask) const { return (mask_ & mask) != 0; }
 	constexpr bool Any(_Bit bit) const { return Any(static_cast<_Mask>(bit)); }
 
-	//* *//
+	//* mask option  *//
 
 	constexpr void Clear() { mask_ = NULL; }
 	constexpr void Clear(_Mask mask) { mask_ &= ~mask; }
+
+	constexpr void Inverse(_Mask mask) { mask_ ^= mask; }
+	constexpr void Inverse(_Bit bit) { Inverse(static_cast<_Mask>(bit)); }
 
 	//* getter *//
 

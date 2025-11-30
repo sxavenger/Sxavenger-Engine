@@ -37,6 +37,12 @@ public:
 
 	void Barrier(CommandContext* context);
 
+	D3D12_RESOURCE_BARRIER TransitionBeginUnordered();
+	void TransitionBeginUnordered(const CommandContext* context);
+
+	D3D12_RESOURCE_BARRIER TransitionEndUnordered();
+	void TransitionEndUnordered(const CommandContext* context);
+
 private:
 };
 
@@ -94,6 +100,40 @@ inline void UnorderedDimensionBuffer<T>::Barrier(CommandContext* context) {
 	barrier.Type          = D3D12_RESOURCE_BARRIER_TYPE_UAV;
 	barrier.UAV.pResource = GetResource();
 
+	context->GetCommandList()->ResourceBarrier(1, &barrier);
+}
+
+template <class T>
+inline D3D12_RESOURCE_BARRIER UnorderedDimensionBuffer<T>::TransitionBeginUnordered() {
+	D3D12_RESOURCE_BARRIER barrier = {};
+	barrier.Type                   = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+	barrier.Transition.pResource   = GetResource();
+	barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_COMMON;
+	barrier.Transition.StateAfter  = D3D12_RESOURCE_STATE_UNORDERED_ACCESS;
+
+	return barrier;
+}
+
+template <class T>
+inline void UnorderedDimensionBuffer<T>::TransitionBeginUnordered(const CommandContext* context) {
+	D3D12_RESOURCE_BARRIER barrier = TransitionBeginUnordered();
+	context->GetCommandList()->ResourceBarrier(1, &barrier);
+}
+
+template <class T>
+inline D3D12_RESOURCE_BARRIER UnorderedDimensionBuffer<T>::TransitionEndUnordered() {
+	D3D12_RESOURCE_BARRIER barrier = {};
+	barrier.Type                   = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+	barrier.Transition.pResource   = GetResource();
+	barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_UNORDERED_ACCESS;
+	barrier.Transition.StateAfter  = D3D12_RESOURCE_STATE_COMMON;
+
+	return barrier;
+}
+
+template <class T>
+inline void UnorderedDimensionBuffer<T>::TransitionEndUnordered(const CommandContext* context) {
+	D3D12_RESOURCE_BARRIER barrier = TransitionEndUnordered();
 	context->GetCommandList()->ResourceBarrier(1, &barrier);
 }
 

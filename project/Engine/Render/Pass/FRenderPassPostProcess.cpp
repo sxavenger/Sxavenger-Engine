@@ -14,7 +14,7 @@
 
 void FRenderPassPostProcess::Render(const DirectXQueueContext* context, const Config& config) {
 
-	if (!config.isEnablePostProcess) {
+	if (!config.option.Test(FBaseRenderPass::Config::Option::PostProcess)) {
 		return;
 	}
 

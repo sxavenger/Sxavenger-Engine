@@ -6,6 +6,9 @@
 #include <Engine/System/Config/SxavengerConfig.h>
 #include <Engine/Module/Pipeline/CustomComputePipeline.h>
 
+//* external
+#include <magic_enum.hpp>
+
 //* c++
 #include <array>
 
@@ -34,16 +37,17 @@ public:
 		ConvertLUTTexture,
 		LUT
 	};
-	static inline const uint32_t kProcessTypeCount = static_cast<uint32_t>(ProcessType::LUT) + 1;
 
 	////////////////////////////////////////////////////////////////////////////////////////////
 	// CompositeType enum class
 	////////////////////////////////////////////////////////////////////////////////////////////
 	enum class CompositeType : uint32_t {
-		Tonemap
+		Tonemap,
+		FXAA,
+		SMAA_EdgeDetection,
+		SMAA_BlendWeight,
+		SMAA_NeighborhoodBlending,
 	};
-	static inline const uint32_t kCompositeTypeCount = static_cast<uint32_t>(CompositeType::Tonemap) + 1;
-
 
 public:
 
@@ -77,12 +81,14 @@ private:
 	// private variables
 	//=========================================================================================
 
-	std::array<std::unique_ptr<CustomReflectionComputePipeline>, kProcessTypeCount> processes_;
-	std::array<std::unique_ptr<CustomReflectionComputePipeline>, kCompositeTypeCount> composites_;
+	std::array<std::unique_ptr<CustomReflectionComputePipeline>, magic_enum::enum_count<ProcessType>()> processes_;
+	std::array<std::unique_ptr<CustomReflectionComputePipeline>, magic_enum::enum_count<CompositeType>()> composites_;
 
 	static inline const Vector2ui kNumThreadSize_ = { 16, 16 };
 
 	static inline const std::filesystem::path kDirectory_ = kPackagesShaderDirectory / "Render" / "Process";
+
+
 
 	//=========================================================================================
 	// private methods

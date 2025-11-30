@@ -17,9 +17,6 @@ public:
 	// public methods
 	//=========================================================================================
 
-	FRenderPassDeferredLighting()           = default;
-	~FRenderPassDeferredLighting() override = default;
-
 	void Render(const DirectXQueueContext* context, const Config& config) override;
 
 private:
@@ -41,20 +38,17 @@ private:
 	void ClearPassIndirect(const DirectXQueueContext* context, FRenderTargetBuffer* buffer);
 
 	void PassEmpty(const DirectXQueueContext* context, const Config& config);
-
 	void PassDirectionalLight(const DirectXQueueContext* context, const Config& config);
-
 	void PassPointLight(const DirectXQueueContext* context, const Config& config);
-
 	void PassSpotLight(const DirectXQueueContext* context, const Config& config);
-
 	void PassSkyLight(const DirectXQueueContext* context, const Config& config);
+	void PassSkyAtmosphere(const DirectXQueueContext* context, const Config& config);
 
-	void PassIndirectMomentTranslate(const DirectXQueueContext* context, const Config& config);
-
-	void PassIndirectLight(const DirectXQueueContext* context, const Config& config);
-
-	void PassIndirectDenoiser(const DirectXQueueContext* context, const Config& config);
+	void PassIndirectReservoirReset(const DirectXQueueContext* context, const Config& config);
+	void PassIndirectReservoirInitialize(const DirectXQueueContext* context, const Config& config);
+	void PassIndirectReservoirTemporal(const DirectXQueueContext* context, const Config& config);
+	void PassIndirectReservoirSpatial(const DirectXQueueContext* context, const Config& config);
+	void PassIndirectReservoirTexture(const DirectXQueueContext* context, const Config& config);
 
 	void TransitionLightingPass(const DirectXQueueContext* context, const Config& config);
 

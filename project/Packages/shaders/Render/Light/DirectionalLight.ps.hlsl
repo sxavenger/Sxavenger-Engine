@@ -25,7 +25,7 @@ PSOutput main(PSInput input) {
 	surface.GetSurface(input.position.xy);
 
 	//* Lightの情報を取得
-	float3 l          = gParameters[input.instanceId].GetDirectionFromSurface(gTransforms[input.instanceId].GetDirection()); //!< lightの方向ベクトル
+	float3 l = gParameters[input.instanceId].GetDirectionFromSurface(gTransforms[input.instanceId].GetDirection()); //!< lightの方向ベクトル
 
 	//* cameraからの方向ベクトルを取得
 	float3 v = normalize(gCamera.GetPosition() - surface.position); //!< cameraからの方向ベクトルを取得

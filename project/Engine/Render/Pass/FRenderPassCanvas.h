@@ -17,9 +17,6 @@ public:
 	// public methods
 	//=========================================================================================
 
-	FRenderPassCanvas()           = default;
-	~FRenderPassCanvas() override = default;
-
 	void Render(const DirectXQueueContext* context, const Config& config) override;
 
 private:

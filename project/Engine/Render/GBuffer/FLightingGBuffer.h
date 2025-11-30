@@ -5,9 +5,10 @@
 //-----------------------------------------------------------------------------------------
 //* render
 #include "../Common/FBaseTexture.h"
-#include "../Core/FRenderCorePathtracing.h"
+#include "../Core/FRenderCoreRestir.h"
 
 //* engine
+#include <Engine/System/DirectX/DxObject/DxUnorderedDimensionBuffer.h>
 #include <Engine/System/DirectX/Context/DirectXQueueContext.h>
 
 //* external
@@ -24,12 +25,18 @@ public:
 	////////////////////////////////////////////////////////////////////////////////////////////
 	enum class Layout : uint8_t {
 		Direct,
-		Indirect_Atlas_Diffuse,
-		Indirect_Atlas_Specular, 
-		Indirect_Reservoir_Diffuse,
-		Indirect_Reservoir_Specular,
-		Indirect_Moment,
+		Indirect_Reservoir,
+		Indirect_Denoise,
 		Indirect,
+	};
+
+	////////////////////////////////////////////////////////////////////////////////////////////
+	// Reservoir enum class
+	////////////////////////////////////////////////////////////////////////////////////////////
+	enum class Reservoir : uint8_t {
+		Initialize,
+		Temporal,
+		Spatial,
 	};
 
 public:
@@ -43,33 +50,17 @@ public:
 
 	void Init(const Vector2ui& size);
 
-	//* direct transition option *//
-
-	void TransitionBeginRenderTargetDirect(const DirectXQueueContext* context);
-
-	void TransitionEndRenderTargetDirect(const DirectXQueueContext* context);
-
-	void ClearRenderTargetDirect(const DirectXQueueContext* context);
-
-	void TransitionBeginUnorderedDirect(const DirectXQueueContext* context);
-
-	void TransitionEndUnorderedDirect(const DirectXQueueContext* context);
-
-	//* indirect transition option *//
-
-	void TransitionBeginRenderTargetIndirect(const DirectXQueueContext* context);
-
-	void TransitionEndRenderTargetIndirect(const DirectXQueueContext* context);
-
-	void ClearRenderTargetIndirect(const DirectXQueueContext* context);
-
 	//* getter *//
 
 	FBaseTexture* GetGBuffer(Layout layout) const;
 
+	DxObject::UnorderedDimensionBuffer<FRenderCoreRestir::Reservoir<16>>* GetReservoir(Reservoir reservoir) const;
+
+	DxObject::UnorderedDimensionBuffer<Vector2ui>* GetMoment() const { return moment_.get(); }
+
 	static DXGI_FORMAT GetFormat(Layout layout);
 
-	FRenderCorePathtracing::Config& GetConfig() { return config_; }
+	FRenderCoreRestir::Config& GetConfig() { return config_; }
 
 private:
 
@@ -85,20 +76,18 @@ private:
 
 	//* buffer *//
 
-	std::array<std::unique_ptr<FBaseTexture>, kLayoutCount_> buffers_      = {};
-	//std::array<std::unique_ptr<FBaseTexture>, kLayoutCount_> intermediate_ = {};
+	std::array<std::unique_ptr<FBaseTexture>, kLayoutCount_> buffers_ = {};
+
+
+	std::array<std::unique_ptr<DxObject::UnorderedDimensionBuffer<FRenderCoreRestir::Reservoir<16>>>, magic_enum::enum_count<Reservoir>()> reservoirs_ = {};
+	std::unique_ptr<DxObject::UnorderedDimensionBuffer<Vector2ui>> moment_ = nullptr;
+
+
+	std::unique_ptr<DxObject::UnorderedDimensionBuffer<FRenderCoreRestir::Reservoir<7>>> environmentReservoir_ = nullptr;
+	std::unique_ptr<DxObject::UnorderedDimensionBuffer<Vector2ui>> environmentMoment_ = nullptr;
 
 	//* parameter *//
 
-	FRenderCorePathtracing::Config config_ = {};
-
-	Vector2ui downsize_ = {};
-	uint32_t atlas_     = NULL;
-
-	//=========================================================================================
-	// private methods
-	//=========================================================================================
-
-	static uint32_t GetAtlasSize(uint32_t sampleCount);
+	FRenderCoreRestir::Config config_ = {};
 
 };

@@ -12,7 +12,7 @@ _DXOBJECT_USING
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 void LightCommon::InlineShadow::Init() {
-	strength = 0.5f;
+	strength = 1.0f;
 	flag     = D3D12_RAY_FLAG_CULL_BACK_FACING_TRIANGLES;
 }
 

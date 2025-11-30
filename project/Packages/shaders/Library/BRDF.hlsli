@@ -1,5 +1,8 @@
 #pragma once
 
+#ifndef BRDF_LIBRARY
+#define BRDF_LIBRARY
+
 /*
 # reference
 > UE4 PBR:
@@ -24,7 +27,7 @@
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 float3 DiffuseBRDF(float3 diffuse) {
-	return diffuse / kPi;
+	return diffuse * rcp(kPi);
 }
 
 //! @brief FresnelReflectance(Spherical Gaussian)
@@ -47,8 +50,8 @@ float G_Schlick(float NdotV, float NdotL, float roughness) {
 	const float a = roughness * roughness;
 	const float k = a * 0.5f;
 
-	float g1_v = NdotV / (NdotV * (1.0f - k) + k); //!< G1(v)
-	float g1_l = NdotL / (NdotL * (1.0f - k) + k); //!< G1(l)
+	float g1_v = NdotV * rcp(NdotV * (1.0f - k) + k); //!< G1(v)
+	float g1_l = NdotL * rcp(NdotL * (1.0f - k) + k); //!< G1(l)
 
 	return g1_v * g1_l;
 }
@@ -61,13 +64,10 @@ float V_HeightCorrelated(float NdotV, float NdotL, float roughness) {
 	const float a  = roughness * roughness;
 	const float a2 = a * a;
 
-	//float lamda_v = NdotL * sqrt(NdotV * NdotV * (1.0f - a2) + a2);
-	//float lamda_l = NdotV * sqrt(NdotL * NdotL * (1.0f - a2) + a2);
-
-	float lamda_v = NdotV * sqrt((-NdotL * a2 + NdotL) * NdotL + a2);
-	float lamda_l = NdotL * sqrt((-NdotV * a2 + NdotV) * NdotV + a2);
-
-	return 0.5f / (lamda_v + lamda_l);
+	float lamda_v = NdotL * sqrt(NdotV * (NdotV - NdotV * a2) + a2);
+	float lamda_l = NdotV * sqrt(NdotL * (NdotL - NdotL * a2) + a2);
+	
+	return 0.5f * rcp(lamda_v + lamda_l);
 
 }
 
@@ -82,7 +82,7 @@ float D_GGX(float NdotH, float roughness) {
 
 	float f = (NdotH * a2 - NdotH) * NdotH + 1.0f;
 
-	return a2 / (kPi * f * f);
+	return a2 * rcp(kPi * f * f);
 }
 
 //! @brief SpecularBRDF
@@ -95,7 +95,7 @@ float3 SpecularBRDF(float3 f, float g, float d, float NdotL, float NdotV) {
 	NdotL = saturate(NdotL + kEpsilon);
 	NdotV = saturate(NdotV + kEpsilon);
 	
-	return (f * g * d) / (4.0f * NdotL * NdotV);
+	return (f * g * d) * rcp(4.0f * NdotL * NdotV);
 }
 
 //! @brief SpecularBRDF
@@ -105,3 +105,5 @@ float3 SpecularBRDF(float3 f, float g, float d, float NdotL, float NdotV) {
 float3 SpecularBRDF(float3 f, float v, float d) {
 	return f * v * d;
 }
+
+#endif

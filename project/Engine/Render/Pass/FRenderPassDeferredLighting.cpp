@@ -12,6 +12,7 @@
 #include <Engine/Component/Components/Light/Punctual/PointLightComponent.h>
 #include <Engine/Component/Components/Light/Punctual/SpotLightComponent.h>
 #include <Engine/Component/Components/Light/Environment/SkyLightComponent.h>
+#include <Engine/Component/Components/Light/Environment/SkyAtmosphereComponent.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // FRenderPassDeferredLighting class methods
@@ -37,27 +38,25 @@ void FRenderPassDeferredLighting::Render(const DirectXQueueContext* context, con
 
 		//!< Sky light
 		PassSkyLight(context, config);
+		PassSkyAtmosphere(context, config);
 
 		EndPassDirectLighting(context, config.buffer);
 	}
 
 
-	if (config.isEnableIndirectLighting) { //* Indirect Lighting
+	if (config.option.Test(FBaseRenderPass::Config::Option::IndirectLighting)) { //* Indirect Lighting
 
 		{
 			BeginPassIndirectLighting(context, config.buffer);
 
-			//PassIndirectMomentTranslate(context, config);
-
-			PassIndirectLight(context, config);
+			PassIndirectReservoirReset(context, config);
+			PassIndirectReservoirInitialize(context, config);
+			PassIndirectReservoirTemporal(context, config);
+			PassIndirectReservoirSpatial(context, config);
+			//!< FIXME: Spatial Resamplingの修正
+			PassIndirectReservoirTexture(context, config);
 
 			EndPassIndirectLighting(context, config.buffer);
-		}
-		
-		{
-
-			PassIndirectDenoiser(context, config);
-
 		}
 		
 
@@ -103,20 +102,12 @@ void FRenderPassDeferredLighting::BeginPassIndirectLighting(const DirectXQueueCo
 
 	auto commandList = context->GetCommandList();
 
-	static const size_t kBufferCount = 5;
-
-	std::array<FBaseTexture*, kBufferCount> buffers = {
-		buffer->GetGBuffer(FLightingGBuffer::Layout::Indirect_Reservoir_Diffuse),
-		buffer->GetGBuffer(FLightingGBuffer::Layout::Indirect_Reservoir_Specular),
-		buffer->GetGBuffer(FLightingGBuffer::Layout::Indirect_Atlas_Diffuse),
-		buffer->GetGBuffer(FLightingGBuffer::Layout::Indirect_Atlas_Specular),
-		buffer->GetGBuffer(FLightingGBuffer::Layout::Indirect_Moment)
+	std::vector<D3D12_RESOURCE_BARRIER> barriers = {
+		buffer->GetLightingGBuffer().GetReservoir(FLightingGBuffer::Reservoir::Initialize)->TransitionBeginUnordered(),
+		buffer->GetLightingGBuffer().GetReservoir(FLightingGBuffer::Reservoir::Temporal)->TransitionBeginUnordered(),
+		buffer->GetLightingGBuffer().GetReservoir(FLightingGBuffer::Reservoir::Spatial)->TransitionBeginUnordered(),
+		buffer->GetLightingGBuffer().GetMoment()->TransitionBeginUnordered(),
 	};
-
-	std::array<D3D12_RESOURCE_BARRIER, kBufferCount> barriers = {};
-	for (size_t i = 0; i < buffers.size(); ++i) {
-		barriers[i] = buffers[i]->TransitionBeginUnordered();
-	}
 
 	commandList->ResourceBarrier(static_cast<UINT>(barriers.size()), barriers.data());
 
@@ -128,18 +119,12 @@ void FRenderPassDeferredLighting::EndPassIndirectLighting(const DirectXQueueCont
 
 	static const size_t kBufferCount = 5;
 
-	std::array<FBaseTexture*, kBufferCount> buffers = {
-		buffer->GetGBuffer(FLightingGBuffer::Layout::Indirect_Reservoir_Diffuse),
-		buffer->GetGBuffer(FLightingGBuffer::Layout::Indirect_Reservoir_Specular),
-		buffer->GetGBuffer(FLightingGBuffer::Layout::Indirect_Atlas_Diffuse),
-		buffer->GetGBuffer(FLightingGBuffer::Layout::Indirect_Atlas_Specular),
-		buffer->GetGBuffer(FLightingGBuffer::Layout::Indirect_Moment)
+	std::vector<D3D12_RESOURCE_BARRIER> barriers = {
+		buffer->GetLightingGBuffer().GetReservoir(FLightingGBuffer::Reservoir::Initialize)->TransitionEndUnordered(),
+		buffer->GetLightingGBuffer().GetReservoir(FLightingGBuffer::Reservoir::Temporal)->TransitionEndUnordered(),
+		buffer->GetLightingGBuffer().GetReservoir(FLightingGBuffer::Reservoir::Spatial)->TransitionEndUnordered(),
+		buffer->GetLightingGBuffer().GetMoment()->TransitionEndUnordered(),
 	};
-
-	std::array<D3D12_RESOURCE_BARRIER, kBufferCount> barriers = {};
-	for (size_t i = 0; i < buffers.size(); ++i) {
-		barriers[i] = buffers[i]->TransitionEndUnordered();
-	}
 
 	commandList->ResourceBarrier(static_cast<UINT>(barriers.size()), barriers.data());
 
@@ -158,18 +143,11 @@ void FRenderPassDeferredLighting::ClearPassIndirect(const DirectXQueueContext* c
 
 	auto commandList = context->GetCommandList();
 
-	static const size_t kBufferCount = 6;
-
-	std::array<FBaseTexture*, kBufferCount> buffers = {
-		buffer->GetGBuffer(FLightingGBuffer::Layout::Indirect_Reservoir_Diffuse),
-		buffer->GetGBuffer(FLightingGBuffer::Layout::Indirect_Reservoir_Specular),
-		buffer->GetGBuffer(FLightingGBuffer::Layout::Indirect_Atlas_Diffuse),
-		buffer->GetGBuffer(FLightingGBuffer::Layout::Indirect_Atlas_Specular),
-		buffer->GetGBuffer(FLightingGBuffer::Layout::Indirect_Moment),
+	std::vector<FBaseTexture*> buffers = {
 		buffer->GetGBuffer(FLightingGBuffer::Layout::Indirect)
 	};
 
-	std::array<D3D12_RESOURCE_BARRIER, kBufferCount> barriers = {};
+	std::vector<D3D12_RESOURCE_BARRIER> barriers(buffers.size());
 	for (size_t i = 0; i < buffers.size(); ++i) {
 		barriers[i] = buffers[i]->TransitionBeginRenderTarget();
 	}
@@ -316,6 +294,7 @@ void FRenderPassDeferredLighting::PassSpotLight(const DirectXQueueContext* conte
 }
 
 void FRenderPassDeferredLighting::PassSkyLight(const DirectXQueueContext* context, const Config& config) {
+	//!< TODO: DirectSkyLightingの実装
 
 	DxObject::BindBufferDesc parameter = {};
 	// common parameter
@@ -332,8 +311,9 @@ void FRenderPassDeferredLighting::PassSkyLight(const DirectXQueueContext* contex
 	// BRDF LUT
 	parameter.SetHandle("gBRDFLut", FRenderCore::GetInstance()->GetBRDFLut());
 
-	if (!config.isEnableIndirectLighting) {
+	if (!config.option.Test(FBaseRenderPass::Config::Option::IndirectLighting)) {
 		//!< IndirectLightingが有効な場合はIndirectLightPassで処理する
+		// TODO: DirectSkyLightVisibilityの実装
 
 		//* Irradiance/Radiance
 		FRenderCore::GetInstance()->GetLight()->SetPipeline(
@@ -381,103 +361,156 @@ void FRenderPassDeferredLighting::PassSkyLight(const DirectXQueueContext* contex
 
 }
 
-void FRenderPassDeferredLighting::PassIndirectMomentTranslate(const DirectXQueueContext* context, const Config& config) {
-
-	auto core = FRenderCore::GetInstance()->GetTransition();
-	core->SetPipeline(FRenderCoreTransition::Transition::MomentTransition, context);
+void FRenderPassDeferredLighting::PassSkyAtmosphere(const DirectXQueueContext* context, const Config& config) {
 
 	DxObject::BindBufferDesc parameter = {};
+	// common parameter
+	parameter.SetAddress("gCamera", config.camera->GetGPUVirtualAddress());
 	parameter.Set32bitConstants("Dimension", 2, &config.buffer->GetSize());
 
-	parameter.SetHandle("gMoment",                     config.buffer->GetGBuffer(FLightingGBuffer::Layout::Indirect_Moment)->GetGPUHandleUAV());
-	parameter.SetHandle("gReservoirDiffuse",           config.buffer->GetGBuffer(FLightingGBuffer::Layout::Indirect_Reservoir_Diffuse)->GetGPUHandleUAV());
-	parameter.SetHandle("gReservoirSpecular",          config.buffer->GetGBuffer(FLightingGBuffer::Layout::Indirect_Reservoir_Specular)->GetGPUHandleUAV());
-	//parameter.SetHandle("gReferenceMoment",            config.buffer->GetLightingGBuffer().GetIntermediate(FLightingGBuffer::Layout::Indirect_Moment)->GetGPUHandleSRV());
-	//parameter.SetHandle("gReferenceReservoirDiffuse",  config.buffer->GetLightingGBuffer().GetIntermediate(FLightingGBuffer::Layout::Indirect_Reservoir_Diffuse)->GetGPUHandleSRV());
-	//parameter.SetHandle("gReferenceReservoirSpecular", config.buffer->GetLightingGBuffer().GetIntermediate(FLightingGBuffer::Layout::Indirect_Reservoir_Specular)->GetGPUHandleSRV());
+	//* Environment
+	FRenderCore::GetInstance()->GetLight()->SetPipeline(
+		FRenderCoreLight::LightType::SkyAtmosphereEnvironment, context, config.buffer->GetSize()
+	);
 
-	parameter.SetHandle("gVelocity", config.buffer->GetGBuffer(FDeferredGBuffer::Layout::Velocity)->GetGPUHandleSRV());
+	sComponentStorage->ForEachActive<SkyAtmosphereComponent>([&](SkyAtmosphereComponent* component) {
 
-	core->BindComputeBuffer(FRenderCoreTransition::Transition::MomentTransition, context, parameter);
-	core->Dispatch(context, config.buffer->GetGBuffer(FLightingGBuffer::Layout::Indirect_Moment)->GetSize());
+		// sky light parameter
+		parameter.SetAddress("gParameter", component->GetGPUVirtualAddress());
+
+		FRenderCore::GetInstance()->GetLight()->BindGraphicsBuffer(
+			FRenderCoreLight::LightType::SkyAtmosphereEnvironment, context, parameter
+		);
+
+		FRenderCore::GetInstance()->GetLight()->DrawCall(context);
+
+	});
 
 }
 
-void FRenderPassDeferredLighting::PassIndirectLight(const DirectXQueueContext* context, const Config& config) {
+void FRenderPassDeferredLighting::PassIndirectReservoirReset(const DirectXQueueContext* context, const Config& config) {
 
-	auto core = FRenderCore::GetInstance()->GetPathtracing();
+	auto core = FRenderCore::GetInstance()->GetRestir();
+	core->SetPipeline(FRenderCoreRestir::Process::Reset, context);
+
+	DxObject::BindBufferDesc desc = {};
+	desc.Set32bitConstants("Dimension", 2, &config.buffer->GetSize());
+	desc.SetAddress("gTemporalReservoir", config.buffer->GetLightingGBuffer().GetReservoir(FLightingGBuffer::Reservoir::Temporal)->GetGPUVirtualAddress());
+	desc.SetAddress("gSpatialReservoir",  config.buffer->GetLightingGBuffer().GetReservoir(FLightingGBuffer::Reservoir::Spatial)->GetGPUVirtualAddress());
+	desc.SetAddress("gMoment",            config.buffer->GetLightingGBuffer().GetMoment()->GetGPUVirtualAddress());
+	desc.SetHandle("gVelocity", config.buffer->GetGBuffer(FDeferredGBuffer::Layout::Velocity)->GetGPUHandleSRV());
+
+	core->BindComputeBuffer(FRenderCoreRestir::Process::Reset, context, desc);
+	core->Dispatch(context, config.buffer->GetSize());
+
+}
+
+void FRenderPassDeferredLighting::PassIndirectReservoirInitialize(const DirectXQueueContext* context, const Config& config) {
+
+	auto core = FRenderCore::GetInstance()->GetRestir();
 	core->GetContext()->SetStateObject(context->GetDxCommand());
 
 	auto commandList = context->GetCommandList();
 
-	//* lighting texture
-	commandList->SetComputeRootDescriptorTable(0, config.buffer->GetGBuffer(FLightingGBuffer::Layout::Indirect_Reservoir_Diffuse)->GetGPUHandleUAV());
-	commandList->SetComputeRootDescriptorTable(1, config.buffer->GetGBuffer(FLightingGBuffer::Layout::Indirect_Reservoir_Specular)->GetGPUHandleUAV());
-	commandList->SetComputeRootDescriptorTable(2, config.buffer->GetGBuffer(FLightingGBuffer::Layout::Indirect_Atlas_Diffuse)->GetGPUHandleUAV());
-	commandList->SetComputeRootDescriptorTable(3, config.buffer->GetGBuffer(FLightingGBuffer::Layout::Indirect_Atlas_Specular)->GetGPUHandleUAV());
-	commandList->SetComputeRootDescriptorTable(4, config.buffer->GetGBuffer(FLightingGBuffer::Layout::Indirect_Moment)->GetGPUHandleUAV());
+	commandList->SetComputeRootUnorderedAccessView(0, config.buffer->GetLightingGBuffer().GetReservoir(FLightingGBuffer::Reservoir::Initialize)->GetGPUVirtualAddress()); //!< gInitializeReservoir
+	commandList->SetComputeRootUnorderedAccessView(1, config.buffer->GetLightingGBuffer().GetMoment()->GetGPUVirtualAddress());                                           //!< gMoment
 
 	//* scene
-	commandList->SetComputeRootShaderResourceView(5, config.scene->GetTopLevelAS().GetGPUVirtualAddress());
+	commandList->SetComputeRootShaderResourceView(2, config.scene->GetTopLevelAS().GetGPUVirtualAddress());
 
 	//* deferred textures
-	commandList->SetComputeRootConstantBufferView(6, config.buffer->GetIndexBufferAddress());
+	commandList->SetComputeRootConstantBufferView(3, config.buffer->GetIndexBufferAddress());
 
 	//* camera
-	commandList->SetComputeRootConstantBufferView(7, config.camera->GetGPUVirtualAddress());
+	commandList->SetComputeRootConstantBufferView(4, config.camera->GetGPUVirtualAddress());
 
 	//* config
-	commandList->SetComputeRoot32BitConstants(8, 3, &config.buffer->GetLightingGBuffer().GetConfig(), 0);
+	commandList->SetComputeRoot32BitConstants(5, 2, &config.buffer->GetLightingGBuffer().GetConfig(), 0);
+	FRenderCoreRestir::Seed seed = {};
+	commandList->SetComputeRoot32BitConstants(6, 3, &seed, 0);
 
 	//* light
 	// Directional Light
-	commandList->SetComputeRootConstantBufferView(9,  config.scene->directionalLightCount_->GetGPUVirtualAddress());
-	commandList->SetComputeRootShaderResourceView(10, config.scene->directionalLightTransforms_->GetGPUVirtualAddress());
-	commandList->SetComputeRootShaderResourceView(11, config.scene->directionalLightParams_->GetGPUVirtualAddress());
+	commandList->SetComputeRootConstantBufferView(7, config.scene->directionalLightCount_->GetGPUVirtualAddress());
+	commandList->SetComputeRootShaderResourceView(8, config.scene->directionalLightTransforms_->GetGPUVirtualAddress());
+	commandList->SetComputeRootShaderResourceView(9, config.scene->directionalLightParams_->GetGPUVirtualAddress());
 
 	// Point Light
-	commandList->SetComputeRootConstantBufferView(12,  config.scene->pointLightCount_->GetGPUVirtualAddress());
-	commandList->SetComputeRootShaderResourceView(13, config.scene->pointLightTransforms_->GetGPUVirtualAddress());
-	commandList->SetComputeRootShaderResourceView(14, config.scene->pointLightParams_->GetGPUVirtualAddress());
+	commandList->SetComputeRootConstantBufferView(10, config.scene->pointLightCount_->GetGPUVirtualAddress());
+	commandList->SetComputeRootShaderResourceView(11, config.scene->pointLightTransforms_->GetGPUVirtualAddress());
+	commandList->SetComputeRootShaderResourceView(12, config.scene->pointLightParams_->GetGPUVirtualAddress());
 
 	// Spot Light
-	commandList->SetComputeRootConstantBufferView(15, config.scene->spotLightCount_->GetGPUVirtualAddress());
-	commandList->SetComputeRootShaderResourceView(16, config.scene->spotLightTransforms_->GetGPUVirtualAddress());
-	commandList->SetComputeRootShaderResourceView(17, config.scene->spotLightParams_->GetGPUVirtualAddress());
+	commandList->SetComputeRootConstantBufferView(13, config.scene->spotLightCount_->GetGPUVirtualAddress());
+	commandList->SetComputeRootShaderResourceView(14, config.scene->spotLightTransforms_->GetGPUVirtualAddress());
+	commandList->SetComputeRootShaderResourceView(15, config.scene->spotLightParams_->GetGPUVirtualAddress());
 
 	// Sky Light
 	sComponentStorage->ForEachActive<SkyLightComponent>([&](SkyLightComponent* component) {
-		commandList->SetComputeRootConstantBufferView(18, component->GetGPUVirtualAddress());
+		commandList->SetComputeRootConstantBufferView(16, component->GetGPUVirtualAddress());
 	});
 	
 
-	core->GetContext()->DispatchRays(context->GetDxCommand(), config.buffer->GetGBuffer(FLightingGBuffer::Layout::Indirect_Moment)->GetSize());
+	core->GetContext()->DispatchRays(context->GetDxCommand(), config.buffer->GetSize());
 
 }
 
-void FRenderPassDeferredLighting::PassIndirectDenoiser(const DirectXQueueContext* context, const Config& config) {
+void FRenderPassDeferredLighting::PassIndirectReservoirTemporal(const DirectXQueueContext* context, const Config& config) {
 
-	auto core = FRenderCore::GetInstance()->GetPathtracing();
-	core->SetDenoiserPipeline(FRenderCorePathtracing::DenoiserType::EdgeStopping, context);
-
-	config.buffer->GetGBuffer(FLightingGBuffer::Layout::Indirect)->TransitionBeginUnordered(context);
+	auto core = FRenderCore::GetInstance()->GetRestir();
+	core->SetPipeline(FRenderCoreRestir::Process::Temporal, context);
 
 	DxObject::BindBufferDesc desc = {};
 	desc.Set32bitConstants("Dimension", 2, &config.buffer->GetSize());
-	desc.SetHandle("gOutput",            config.buffer->GetGBuffer(FLightingGBuffer::Layout::Indirect)->GetGPUHandleUAV());
-	desc.SetHandle("gReservoirDiffuse",  config.buffer->GetGBuffer(FLightingGBuffer::Layout::Indirect_Reservoir_Diffuse)->GetGPUHandleSRV());
-	desc.SetHandle("gReservoirSpecular", config.buffer->GetGBuffer(FLightingGBuffer::Layout::Indirect_Reservoir_Specular)->GetGPUHandleSRV());
-	desc.SetHandle("gMoment",            config.buffer->GetGBuffer(FLightingGBuffer::Layout::Indirect_Moment)->GetGPUHandleSRV());
+	FRenderCoreRestir::Seed seed = {};
+	desc.Set32bitConstants("Seed", 3, &seed);
+	desc.SetAddress("gInitalizeReservoir", config.buffer->GetLightingGBuffer().GetReservoir(FLightingGBuffer::Reservoir::Initialize)->GetGPUVirtualAddress());
+	desc.SetAddress("gTemporalReservoir",  config.buffer->GetLightingGBuffer().GetReservoir(FLightingGBuffer::Reservoir::Temporal)->GetGPUVirtualAddress());
 
-	//* parameter
-	static const Vector3f test = { 128.0f, 0.1f, 0.1f };
-	desc.Set32bitConstants("Parameter", 3, &test);
+	core->BindComputeBuffer(FRenderCoreRestir::Process::Temporal, context, desc);
+	core->Dispatch(context, config.buffer->GetSize());
 
-	//* deferred textures
+	config.buffer->GetLightingGBuffer().GetReservoir(FLightingGBuffer::Reservoir::Temporal)->Barrier(context->GetDxCommand());
+
+}
+
+void FRenderPassDeferredLighting::PassIndirectReservoirSpatial(const DirectXQueueContext* context, const Config& config) {
+
+	auto core = FRenderCore::GetInstance()->GetRestir();
+	core->SetPipeline(FRenderCoreRestir::Process::Spatial, context);
+
+	DxObject::BindBufferDesc desc = {};
+	desc.Set32bitConstants("Dimension", 2, &config.buffer->GetSize());
+	FRenderCoreRestir::Seed seed = {};
+	desc.Set32bitConstants("Seed", 3, &seed);
+	desc.SetAddress("gTemporalReservoir",   config.buffer->GetLightingGBuffer().GetReservoir(FLightingGBuffer::Reservoir::Temporal)->GetGPUVirtualAddress());
+	desc.SetAddress("gSpatialReservoir",    config.buffer->GetLightingGBuffer().GetReservoir(FLightingGBuffer::Reservoir::Spatial)->GetGPUVirtualAddress());
 	desc.SetAddress("gDeferredBufferIndex", config.buffer->GetIndexBufferAddress());
+	desc.SetAddress("gScene",               config.scene->GetTopLevelAS().GetGPUVirtualAddress());
 
-	core->BindDenoiserBuffer(FRenderCorePathtracing::DenoiserType::EdgeStopping, context, desc);
-	core->DispatchDenoiser(context, config.buffer->GetSize());
+	core->BindComputeBuffer(FRenderCoreRestir::Process::Spatial, context, desc);
+	core->Dispatch(context, config.buffer->GetSize());
+
+	config.buffer->GetLightingGBuffer().GetReservoir(FLightingGBuffer::Reservoir::Spatial)->Barrier(context->GetDxCommand());
+
+}
+
+void FRenderPassDeferredLighting::PassIndirectReservoirTexture(const DirectXQueueContext* context, const Config& config) {
+
+	config.buffer->GetGBuffer(FLightingGBuffer::Layout::Indirect)->TransitionBeginUnordered(context);
+
+	auto core = FRenderCore::GetInstance()->GetRestir();
+	core->SetPipeline(FRenderCoreRestir::Process::Texture, context);
+
+	DxObject::BindBufferDesc desc = {};
+	desc.Set32bitConstants("Dimension", 2, &config.buffer->GetSize());
+	desc.SetAddress("gReservoir",           config.buffer->GetLightingGBuffer().GetReservoir(FLightingGBuffer::Reservoir::Temporal)->GetGPUVirtualAddress());
+	desc.SetHandle("gIndirect",             config.buffer->GetGBuffer(FLightingGBuffer::Layout::Indirect)->GetGPUHandleUAV());
+	desc.SetAddress("gDeferredBufferIndex", config.buffer->GetIndexBufferAddress());
+	desc.SetAddress("gCamera",              config.camera->GetGPUVirtualAddress());
+
+	core->BindComputeBuffer(FRenderCoreRestir::Process::Texture, context, desc);
+	core->Dispatch(context, config.buffer->GetSize());
 
 	config.buffer->GetGBuffer(FLightingGBuffer::Layout::Indirect)->TransitionEndUnordered(context);
 

@@ -140,7 +140,7 @@ std::unique_ptr<MonoBehaviour> ComponentHelper::CreateSpotLightMonoBehaviour() {
 	return root;
 }
 
-void ComponentHelper::CreateStaticMeshBehaviour(MonoBehaviour* root, const std::shared_ptr<UContentModel>& model) {
+void ComponentHelper::CreateStaticMeshBehaviour(MonoBehaviour* root, const std::shared_ptr<ContentModel>& model) {
 	model->WaitComplete();
 
 	// modelのnodeから階層構造を作成
@@ -156,8 +156,8 @@ void ComponentHelper::CreateStaticMeshBehaviour(MonoBehaviour* root, const std::
 			// componentが1つの場合, そのままMeshRendererComponentを追加
 			const uint32_t meshIndex = node.meshIndices.front();
 
-			auto mesh     = sUAssetStorage->GetAsset<UAssetMesh>(model->GetMeshId(meshIndex));
-			auto material = sUAssetStorage->GetAsset<UAssetMaterial>(model->GetMeshToMaterialId(meshIndex));
+			auto mesh     = sAssetStorage->GetAsset<AssetMesh>(model->GetMeshId(meshIndex));
+			auto material = sAssetStorage->GetAsset<AssetMaterial>(model->GetMeshToMaterialId(meshIndex));
 
 			auto renderer = child->AddComponent<MeshRendererComponent>();
 			renderer->SetMesh(mesh->GetId());
@@ -167,8 +167,8 @@ void ComponentHelper::CreateStaticMeshBehaviour(MonoBehaviour* root, const std::
 			// componentが一つしか付けられないので苦肉の策
 			for (auto& meshIndex : node.meshIndices) {
 
-				auto mesh     = sUAssetStorage->GetAsset<UAssetMesh>(model->GetMeshId(meshIndex));
-				auto material = sUAssetStorage->GetAsset<UAssetMaterial>(model->GetMeshToMaterialId(meshIndex));
+				auto mesh     = sAssetStorage->GetAsset<AssetMesh>(model->GetMeshId(meshIndex));
+				auto material = sAssetStorage->GetAsset<AssetMaterial>(model->GetMeshToMaterialId(meshIndex));
 
 				auto behaviour = std::make_unique<MonoBehaviour>();
 				behaviour->SetName(mesh->GetName());
@@ -196,7 +196,7 @@ void ComponentHelper::CreateStaticMeshBehaviour(MonoBehaviour* root, const std::
 	function(root, model->GetRoot());
 }
 
-std::unique_ptr<MonoBehaviour> ComponentHelper::CreateStaticMeshBehaviour(const std::shared_ptr<UContentModel>& model) {
+std::unique_ptr<MonoBehaviour> ComponentHelper::CreateStaticMeshBehaviour(const std::shared_ptr<ContentModel>& model) {
 	auto root = std::make_unique<MonoBehaviour>();
 	root->SetName(model->GetFilepath().stem().string());
 
@@ -205,7 +205,7 @@ std::unique_ptr<MonoBehaviour> ComponentHelper::CreateStaticMeshBehaviour(const 
 	return std::move(root);
 }
 
-void ComponentHelper::CreateSkinnedMeshBehaviour(MonoBehaviour* root, const std::shared_ptr<UContentModel>& model) {
+void ComponentHelper::CreateSkinnedMeshBehaviour(MonoBehaviour* root, const std::shared_ptr<ContentModel>& model) {
 	model->WaitComplete();
 
 	{ //!< ArmatureComponent
@@ -219,8 +219,8 @@ void ComponentHelper::CreateSkinnedMeshBehaviour(MonoBehaviour* root, const std:
 	// meshの登録
 	for (size_t i = 0; i < model->GetMeshCount(); ++i) {
 
-		auto mesh     = sUAssetStorage->GetAsset<UAssetMesh>(model->GetMeshId(i));
-		auto material = sUAssetStorage->GetAsset<UAssetMaterial>(model->GetMeshToMaterialId(i));
+		auto mesh     = sAssetStorage->GetAsset<AssetMesh>(model->GetMeshId(i));
+		auto material = sAssetStorage->GetAsset<AssetMaterial>(model->GetMeshToMaterialId(i));
 
 		auto child = std::make_unique<MonoBehaviour>();
 		child->SetName(mesh->GetName());
@@ -239,7 +239,7 @@ void ComponentHelper::CreateSkinnedMeshBehaviour(MonoBehaviour* root, const std:
 	}
 }
 
-std::unique_ptr<MonoBehaviour> ComponentHelper::CreateSkinnedMeshBehaviour(const std::shared_ptr<UContentModel>& model) {
+std::unique_ptr<MonoBehaviour> ComponentHelper::CreateSkinnedMeshBehaviour(const std::shared_ptr<ContentModel>& model) {
 	auto root = std::make_unique<MonoBehaviour>();
 	root->SetName(model->GetFilepath().stem().string());
 
@@ -300,8 +300,8 @@ void ComponentHelper::DetachBehaviourMaterial(MonoBehaviour* root) {
 
 	ComponentHelper::ForEachBehaviour(root, [](MonoBehaviour* behaviour) {
 		if (auto component = behaviour->GetComponent<MeshRendererComponent>()) {
-			std::shared_ptr<UAssetMaterial> material = std::make_shared<UAssetMaterial>(std::nullopt);
-			std::shared_ptr<UAssetMaterial> reference = component->GetMaterial();
+			std::shared_ptr<AssetMaterial> material = std::make_shared<AssetMaterial>(std::nullopt);
+			std::shared_ptr<AssetMaterial> reference = component->GetMaterial();
 			reference->WaitComplete();
 			reference->Wait();
 			reference->Update();
@@ -312,8 +312,8 @@ void ComponentHelper::DetachBehaviourMaterial(MonoBehaviour* root) {
 		}
 
 		if (auto component = behaviour->GetComponent<SkinnedMeshRendererComponent>()) {
-			std::shared_ptr<UAssetMaterial> material = std::make_shared<UAssetMaterial>(std::nullopt);
-			std::shared_ptr<UAssetMaterial> reference = component->GetMaterial();
+			std::shared_ptr<AssetMaterial> material = std::make_shared<AssetMaterial>(std::nullopt);
+			std::shared_ptr<AssetMaterial> reference = component->GetMaterial();
 			reference->WaitComplete();
 			reference->Wait();
 			reference->Update();
@@ -325,17 +325,17 @@ void ComponentHelper::DetachBehaviourMaterial(MonoBehaviour* root) {
 	});
 }
 
-void ComponentHelper::ModifyBehaviourMaterial(MonoBehaviour* root, const std::function<void(UAssetMaterial*)>& function) {
+void ComponentHelper::ModifyBehaviourMaterial(MonoBehaviour* root, const std::function<void(AssetMaterial*)>& function) {
 	// material parameterがptrであるcomponentに対してfunctionを実行
 	ComponentHelper::ForEachBehaviour(root, [&](MonoBehaviour* behaviour) {
 		if (auto component = behaviour->GetComponent<MeshRendererComponent>()) {
-			if (component->GetMaterialParameter().GetState() == UAssetParameter<UAssetMaterial>::State::Ptr) {
+			if (component->GetMaterialParameter().GetState() == AssetState::Ptr) {
 				function(component->GetMaterial().get());
 			}
 		}
 
 		if (auto component = behaviour->GetComponent<SkinnedMeshRendererComponent>()) {
-			if (component->GetMaterialParameter().GetState() == UAssetParameter<UAssetMaterial>::State::Ptr) {
+			if (component->GetMaterialParameter().GetState() == AssetState::Ptr) {
 				function(component->GetMaterial().get());
 			}
 		}

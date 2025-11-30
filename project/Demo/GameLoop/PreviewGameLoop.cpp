@@ -7,8 +7,8 @@ _DXOBJECT_USING
 //* engine
 #include <Engine/System/DirectX/DxObject/DxResourceStorage.h>
 #include <Engine/Content/SxavengerContent.h>
-#include <Engine/Preview/Content/UContentStorage.h>
-#include <Engine/Preview/Asset/UAssetStorage.h>
+#include <Engine/Preview/Content/ContentStorage.h>
+#include <Engine/Preview/Asset/AssetStorage.h>
 
 #include <Engine/Render/FRenderCore.h>
 #include <Engine/Render/FPresenter.h>
@@ -60,8 +60,8 @@ void PreviewGameLoop::Init(GameLoop::Context* context) {
 }
 
 void PreviewGameLoop::Term() {
-	sUAssetStorage->Term();
-	sUContentStorage->Term();
+	sAssetStorage->Term();
+	sContentStorage->Term();
 	SxavengerContent::Term();
 	SxavengerSystem::Term();
 }

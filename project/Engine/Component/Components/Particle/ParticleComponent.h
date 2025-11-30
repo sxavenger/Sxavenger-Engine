@@ -15,8 +15,8 @@
 #include <Engine/System/DirectX/DxObject/DxDimensionBuffer.h>
 #include <Engine/System/Runtime/Performance/DeltaTimePoint.h>
 #include <Engine/Content/InputGeometry/InputPrimitive.h>
-#include <Engine/Preview/Asset/UAssetTexture.h>
-#include <Engine/Preview/Asset/UAssetParameter.h>
+#include <Engine/Preview/Asset/AssetTexture.h>
+#include <Engine/Preview/Asset/AssetParameter.h>
 
 //* lib
 #include <Lib/Motion/Motion.h>
@@ -106,8 +106,8 @@ private:
 	// private variables
 	//=========================================================================================
 
-	UAssetParameter<UAssetTexture> albedoTexture_;
-	UAssetParameter<UAssetTexture> transparentTexture_;
+	AssetParameter<AssetTexture> albedoTexture_;
+	AssetParameter<AssetTexture> transparentTexture_;
 
 	std::function<Parameter()> function_ = []() { return Parameter(); }; //!< HACK!!!
 

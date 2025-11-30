@@ -7,8 +7,8 @@ _DXOBJECT_USING
 //* engine
 #include <Engine/System/SxavengerSystem.h>
 #include <Engine/Render/GBuffer/FMainGBuffer.h>
-#include <Engine/Preview/Content/UContentTexture.h>
-#include <Engine/Preview/Content/UContentStorage.h>
+#include <Engine/Preview/Content/ContentTexture.h>
+#include <Engine/Preview/Content/ContentStorage.h>
 
 //* externals
 #include <imgui.h>
@@ -42,8 +42,8 @@ ParticleComponent::ParticleComponent(MonoBehaviour* behaviour) : BaseComponent(b
 	elements_ = std::make_unique<DxObject::DimensionBuffer<ParticleElement>>();
 	matrices_ = std::make_unique<DxObject::DimensionBuffer<TransformationMatrix>>();
 
-	albedoTexture_      = sUContentStorage->Import<UContentTexture>("assets/textures/particleDemo.png")->GetId();
-	transparentTexture_ = sUContentStorage->Import<UContentTexture>("assets/textures/particleDemo.png")->GetId();
+	albedoTexture_      = sContentStorage->Import<ContentTexture>("assets/textures/particleDemo.png")->GetId();
+	transparentTexture_ = sContentStorage->Import<ContentTexture>("assets/textures/particleDemo.png")->GetId();
 }
 
 void ParticleComponent::ShowComponentInspector() {

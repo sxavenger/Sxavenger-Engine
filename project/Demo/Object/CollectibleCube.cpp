@@ -21,7 +21,7 @@
 
 void CollectibleCube::Init() {
 
-	model_ = sUContentStorage->Import<UContentModel>("assets/models/primitive/cube_skeleton.obj");
+	model_ = sContentStorage->Import<ContentModel>("assets/models/primitive/cube_skeleton.obj");
 
 	MonoBehaviour::SetName("collectible cube");
 
@@ -43,8 +43,8 @@ void CollectibleCube::Init() {
 
 		ComponentHelper::CreateStaticMeshBehaviour(cube_[0], model_.Get());
 		ComponentHelper::DetachBehaviourMaterial(cube_[0]);
-		ComponentHelper::ModifyBehaviourMaterial(cube_[0], [this](UAssetMaterial* material) {
-			material->SetMode(UAssetMaterial::Mode::Emissive);
+		ComponentHelper::ModifyBehaviourMaterial(cube_[0], [this](AssetMaterial* material) {
+			material->SetMode(AssetMaterial::Mode::Emissive);
 			material->GetBuffer().albedo.SetValue({ 12.0f, 0.0f, 0.0f });
 		});
 
@@ -61,8 +61,8 @@ void CollectibleCube::Init() {
 
 		ComponentHelper::CreateStaticMeshBehaviour(cube_[1], model_.Get());
 		ComponentHelper::DetachBehaviourMaterial(cube_[1]);
-		ComponentHelper::ModifyBehaviourMaterial(cube_[1], [this](UAssetMaterial* material) {
-			material->SetMode(UAssetMaterial::Mode::Emissive);
+		ComponentHelper::ModifyBehaviourMaterial(cube_[1], [this](AssetMaterial* material) {
+			material->SetMode(AssetMaterial::Mode::Emissive);
 			material->GetBuffer().albedo.SetValue({ 6.0f, 0.0f, 0.0f });
 		});
 

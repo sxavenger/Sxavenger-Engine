@@ -13,7 +13,6 @@
 #include <Engine/Render/FPresenter.h>
 #include <Engine/Render/Scene/FScene.h>
 
-#include <Engine/Adapter/Actor/AtmosphereActor.h>
 #include <Engine/Adapter/Actor/SkyLightActor.h>
 #include <Engine/Adapter/Actor/ControllableCameraActor.h>
 #include <Engine/Adapter/Actor/PerformanceActor.h>
@@ -46,9 +45,7 @@ private:
 
 	std::unique_ptr<ControllableCameraActor> camera_;
 
-	std::unique_ptr<SkyLightActor> skylight_;
-	std::unique_ptr<MonoBehaviour> offlineSkylight_;
-
+	std::unique_ptr<MonoBehaviour> skylight_;
 	std::unique_ptr<MonoBehaviour> behaviour_;
 
 	std::unique_ptr<PerformanceActor> performance_;

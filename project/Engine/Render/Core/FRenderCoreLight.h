@@ -27,12 +27,11 @@ public:
 		Point,
 		Spot,
 
-		//!< Area light
-		//Rect,
-
 		//!< Sky light
 		SkyLight,
+		VisibilitySkyLight,
 		SkyLightEnvironment,
+		SkyAtmosphereEnvironment,
 	};
 
 public:

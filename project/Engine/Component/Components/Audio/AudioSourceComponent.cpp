@@ -61,7 +61,7 @@ void AudioSourceComponent::Stop() {
 	}
 }
 
-void AudioSourceComponent::PlayOneShot(const std::optional<UAssetParameter<UAssetAudioClip>>& audio) {
+void AudioSourceComponent::PlayOneShot(const std::optional<AssetParameter<AssetAudioClip>>& audio) {
 
 	auto clip = audio.value_or(audio_).WaitRequire();
 

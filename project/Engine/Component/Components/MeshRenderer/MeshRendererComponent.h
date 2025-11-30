@@ -11,9 +11,9 @@
 #include "../Transform/TransformComponent.h"
 
 //* engine
-#include <Engine/Preview/Asset/UAssetMesh.h>
-#include <Engine/Preview/Asset/UAssetMaterial.h>
-#include <Engine/Preview/Asset/UAssetParameter.h>
+#include <Engine/Preview/Asset/AssetMesh.h>
+#include <Engine/Preview/Asset/AssetMaterial.h>
+#include <Engine/Preview/Asset/AssetParameter.h>
 
 //* lib
 #include <Lib/Sxl/Flag.h>
@@ -41,10 +41,10 @@ public:
 	//* setter *//
 
 	void SetMesh(const Uuid& mesh) { mesh_ = mesh; }
-	void SetMesh(const std::shared_ptr<UAssetMesh>& mesh) { mesh_ = mesh; }
+	void SetMesh(const std::shared_ptr<AssetMesh>& mesh) { mesh_ = mesh; }
 
 	void SetMaterial(const Uuid& material) { material_ = material; }
-	void SetMaterial(const std::shared_ptr<UAssetMaterial>& material) { material_ = material; }
+	void SetMaterial(const std::shared_ptr<AssetMaterial>& material) { material_ = material; }
 
 	void SetEnable(bool isEnable = true) { isEnable_ = isEnable; }
 
@@ -52,11 +52,11 @@ public:
 
 	bool IsEnable() const { return !mesh_.Empty() && !material_.Empty() && isEnable_; }
 
-	std::shared_ptr<UAssetMesh> GetMesh() const;
-	std::shared_ptr<UAssetMaterial> GetMaterial() const;
+	std::shared_ptr<AssetMesh> GetMesh() const;
+	std::shared_ptr<AssetMaterial> GetMaterial() const;
 
-	const UAssetParameter<UAssetMesh>& GetMeshParameter() const { return mesh_; }
-	const UAssetParameter<UAssetMaterial>& GetMaterialParameter() const { return material_; }
+	const AssetParameter<AssetMesh>& GetMeshParameter() const { return mesh_; }
+	const AssetParameter<AssetMaterial>& GetMaterialParameter() const { return material_; }
 
 	uint8_t GetMask() const { return mask_.Get(); }
 
@@ -82,11 +82,13 @@ private:
 
 	//* parameter *//
 
-	UAssetParameter<UAssetMesh> mesh_;
-	UAssetParameter<UAssetMaterial> material_;
+	AssetParameter<AssetMesh> mesh_;
+	AssetParameter<AssetMaterial> material_;
 
 	//* config *//
 
 	Sxl::Flag<MeshInstanceMask> mask_ = MeshInstanceMask::Default;
+
+	uint8_t stencil_ = 0;
 
 };
