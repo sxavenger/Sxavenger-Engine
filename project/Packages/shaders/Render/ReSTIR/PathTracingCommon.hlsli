@@ -19,6 +19,7 @@
 #include "../../Component/PointLightComponent.hlsli"
 #include "../../Component/SpotLightComponent.hlsli"
 #include "../../Component/SkyLightComponent.hlsli"
+#include "../../Component/SkyAtmosphereComponent.hlsli"
 
 //* common
 #include "../DeferredBufferIndex.hlsli"
@@ -102,7 +103,11 @@ StructuredBuffer<SpotLightComponent> gSpotLights          : register(t5, space2)
 
 // Sky Light
 ConstantBuffer<SkyLightComponent> gSkyLight : register(b3, space2);
-SamplerState gSkySampler                    : register(s0, space2);
+
+// Sky Atmosphere
+ConstantBuffer<SkyAtmosphereComponent> gSkyAtmosphere : register(b4, space2);
+
+SamplerState gSkySampler : register(s0, space2);
 //!< TODO: Direct SkyLight に切り替える
 
 ////////////////////////////////////////////////////////////////////////////////////////////

@@ -49,6 +49,9 @@ struct Atmosphere {
 
 	float3 ground_albedo;
 	float multi_scattering_factor;
+
+	float intensity;
+	
 };
 
 //=========================================================================================

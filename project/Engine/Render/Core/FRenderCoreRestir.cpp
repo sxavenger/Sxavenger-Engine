@@ -174,7 +174,8 @@ void FRenderCoreRestir::CreateContext() {
 		desc.SetVirtualSRV(15, 5, 2); //!< gSpotLights
 
 		// Sky Light
-		desc.SetVirtualCBV(16, 3, 2);                                                                 //!< gSkyLight
+		desc.SetVirtualCBV(16, 3, 2); //!< gSkyLight
+
 		desc.SetSamplerLinear(DxObject::MODE_WRAP, DxObject::ShaderVisibility::VISIBILITY_ALL, 0, 2); //!< gSampler
 
 		context_->CreateRootSignature(SxavengerSystem::GetDxDevice(), desc);

@@ -5,16 +5,18 @@
 //-----------------------------------------------------------------------------------------
 //* engine
 #include <Engine/Component/Entity/MonoBehaviour.h>
-#include <Engine/Render/Scene/Environment/FSkyAtmosphere.h>
+#include <Engine/Preview/Asset/AssetTexture.h>
+#include <Engine/Preview/Asset/AssetParameter.h>
 
 //* component
+#include <Engine/Component/Components/Transform/TransformComponent.h>
 #include <Engine/Component/Components/Light/Environment/SkyLightComponent.h>
+#include <Engine/Component/Components/Light/Environment/SkyAtmosphereComponent.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// AtomosphereActor class
+// SkyDailyCycleActor class
 ////////////////////////////////////////////////////////////////////////////////////////////
-//! @brief 動的大気を表現するクラス
-class AtmosphereActor
+class SkyDailyCycleActor
 	: public MonoBehaviour {
 public:
 
@@ -22,16 +24,11 @@ public:
 	// public methods
 	//=========================================================================================
 
-	AtmosphereActor() = default;
-	~AtmosphereActor() { Term(); }
-
-	void Init(const Vector2f& size);
-
-	void Term();
+	SkyDailyCycleActor();
 
 	void Update();
 
-	void Inspectable() override;
+	void SetNightEnvironmentTexture(const AssetParameter<AssetTexture>& texture);
 
 private:
 
@@ -39,14 +36,15 @@ private:
 	// private variables
 	//=========================================================================================
 
-	FSkyAtmosphere atmosphere_;
-
 	//* components *//
 
-	SkyLightComponent* skyLightComponent_;
+	TransformComponent* transform_;
+	SkyLightComponent* skyLight_;
+	SkyAtmosphereComponent* skyAtmosphere_;
 
-	//* parameter *//
+	//* parameters *//
 
-	bool isUpdateAtmosphere_ = true;
+	float dayIntensity_   = 1.0f;
+	float nightIntensity_ = 1.0f;
 
 };

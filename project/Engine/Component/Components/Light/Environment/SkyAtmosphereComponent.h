@@ -16,31 +16,24 @@
 #include <Engine/System/DirectX/Context/DirectXQueueContext.h>
 #include <Engine/System/DirectX/DirectXAlignment.h>
 
+//* external
+#include <magic_enum.hpp>
+
 ////////////////////////////////////////////////////////////////////////////////////////////
 // SkyAtmosphereComponent class
 ////////////////////////////////////////////////////////////////////////////////////////////
 class SkyAtmosphereComponent final
 	: public BaseComponent {
 public:
-
-	////////////////////////////////////////////////////////////////////////////////////////////
-	// Texture structure
-	////////////////////////////////////////////////////////////////////////////////////////////
-	struct Texture {
-	public:
-
-		ComPtr<ID3D12Resource> resource;
-		DxObject::Descriptor descriptorUAV;
-		DxObject::Descriptor descriptorSRV;
-
-	};
+	// TODO: コンポーネント変数, 関数の整理
+	// FIXME: DirectionalLightとして色を自動設定する.
 	
 	_PUSH_GPU_BUFFER_ALIGNAS
 
 	////////////////////////////////////////////////////////////////////////////////////////////
-	// Parameter structure
+	// Atmosphere structure
 	////////////////////////////////////////////////////////////////////////////////////////////
-	struct _GPU_BUFFER_ALIGNAS Parameter {
+	struct _GPU_BUFFER_ALIGNAS Atmosphere {
 	public:
 
 		Vector3f rayleigh_scattering;
@@ -63,6 +56,8 @@ public:
 		Color3f ground_albedo;
 		float multi_scattering_factor;
 
+		float intensity;
+
 
 		void Init();
 
@@ -70,7 +65,50 @@ public:
 
 	};
 
+	////////////////////////////////////////////////////////////////////////////////////////////
+	// Flag enum class
+	////////////////////////////////////////////////////////////////////////////////////////////
+	enum class Flag : uint32_t {
+		None        = 0,
+		Environment = 1 << 0,
+	};
+
+	////////////////////////////////////////////////////////////////////////////////////////////
+	// Parameter structure
+	////////////////////////////////////////////////////////////////////////////////////////////
+	struct _GPU_BUFFER_ALIGNAS Parameter {
+	public:
+
+		//=========================================================================================
+		// public methods
+		//=========================================================================================
+
+		void Init();
+
+		void SetEnvironment(const DxObject::Descriptor& descriptorSRV);
+
+		//=========================================================================================
+		// public variables
+		//=========================================================================================
+
+		Sxl::Flag<Flag> flags;
+
+		uint32_t environment;
+
+	};
+
 	_POP_GPU_BUFFER_ALIGNAS
+
+	////////////////////////////////////////////////////////////////////////////////////////////
+	// Type enum class
+	////////////////////////////////////////////////////////////////////////////////////////////
+	enum class Type : uint8_t {
+		Transmittance,
+		MultipleScattering,
+		SkyView,
+		SkyCube,
+		// TODO: SkyViewからSkyCubeへの変換 Aerial影
+	};
 
 public:
 
@@ -83,21 +121,14 @@ public:
 
 	void ShowComponentInspector() override;
 
-	void CreateTransmittance();
 	void UpdateTransmittance(const DirectXQueueContext* context);
-
-	void CreateMultipleScattering();
 	void UpdateMultipleScattering(const DirectXQueueContext* context);
-
-	void CreateSkyView();
 	void UpdateSkyView(const DirectXQueueContext* context);
-
-	void CreateSkyCube();
 	void UpdateSkyCube(const DirectXQueueContext* context);
 
-	const D3D12_GPU_DESCRIPTOR_HANDLE& GetGPUHandleSRV() const {
-		return skyCube_.descriptorSRV.GetGPUHandle();
-	}
+	void SetIntensity(float intensity);
+
+	const D3D12_GPU_VIRTUAL_ADDRESS& GetGPUVirtualAddress() const;
 
 	//=========================================================================================
 	// public methods
@@ -107,20 +138,32 @@ public:
 
 private:
 
+	////////////////////////////////////////////////////////////////////////////////////////////
+	// Texture structure
+	////////////////////////////////////////////////////////////////////////////////////////////
+	struct Texture {
+	public:
+
+		ComPtr<ID3D12Resource> resource;
+		DxObject::Descriptor descriptorUAV;
+		DxObject::Descriptor descriptorSRV;
+
+	};
+
+private:
+
 	//=========================================================================================
 	// private variables
 	//=========================================================================================
 
 	//* parameter *//
 
+	std::unique_ptr<DxObject::ConstantBuffer<Atmosphere>> atmosphere_;
 	std::unique_ptr<DxObject::ConstantBuffer<Parameter>> parameter_;
 
 	//* precomputed textures *//
 
-	Texture transmittance_;
-	Texture multipleScattering_;
-	Texture skyView_;
-	Texture skyCube_;
+	std::array<Texture, magic_enum::enum_count<Type>()> textures_;
 
 	//* pipeline state *//
 
@@ -128,5 +171,14 @@ private:
 	DxObject::ReflectionComputePipelineState pipeline2_;
 	DxObject::ReflectionComputePipelineState pipeline3_;
 	DxObject::ReflectionComputePipelineState pipeline4_;
+
+	//=========================================================================================
+	// private methods
+	//=========================================================================================
+
+	void CreateTransmittance();
+	void CreateMultipleScattering();
+	void CreateSkyView();
+	void CreateSkyCube();
 
 };

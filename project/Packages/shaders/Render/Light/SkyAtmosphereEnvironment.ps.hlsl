@@ -7,13 +7,16 @@
 #include "../../Library/BRDF.hlsli"
 #include "../../Library/ACES.hlsli"
 
+//* component
+#include "../../Component/SkyAtmosphereComponent.hlsli"
+
 //=========================================================================================
 // buffers
 //=========================================================================================
 
 SamplerState gSampler : register(s0);
 
-TextureCube<float4> gEnvironment : register(t0);
+ConstantBuffer<SkyAtmosphereComponent> gParameter : register(b0);
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // main
@@ -27,7 +30,7 @@ PSOutput main(PSInput input) {
 	float3 target    = mul(float4(d.x, -d.y, 1.0f, 1.0f), gCamera.projInv).xyz;
 	float3 direction = mul(float4(target, 0.0f), gCamera.world).xyz;
 
-	float4 color = gEnvironment.SampleLevel(gSampler, direction, 0);
+	float4 color = gParameter.GetEnvironment(gSampler, direction);
 	
 	output.color.rgb = ACES::IDT_sRGB_AP1(color.rgb);
 	output.color.a   = 1.0f;

@@ -376,7 +376,7 @@ void FRenderPassDeferredLighting::PassSkyAtmosphere(const DirectXQueueContext* c
 	sComponentStorage->ForEachActive<SkyAtmosphereComponent>([&](SkyAtmosphereComponent* component) {
 
 		// sky light parameter
-		parameter.SetHandle("gEnvironment", component->GetGPUHandleSRV());
+		parameter.SetAddress("gParameter", component->GetGPUVirtualAddress());
 
 		FRenderCore::GetInstance()->GetLight()->BindGraphicsBuffer(
 			FRenderCoreLight::LightType::SkyAtmosphereEnvironment, context, parameter

@@ -175,10 +175,10 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Demo\Scene\ClearScene.h" />
     <ClInclude Include="Demo\Scene\GameScene.h" />
     <ClInclude Include="Demo\Scene\TitleScene.h" />
-    <ClInclude Include="Engine\Adapter\Actor\AtmosphereActor.h" />
     <ClInclude Include="Engine\Adapter\Actor\ControllableCameraActor.h" />
     <ClInclude Include="Engine\Adapter\Actor\PerformanceActor.h" />
     <ClInclude Include="Engine\Adapter\Actor\PivotCameraActor.h" />
+    <ClInclude Include="Engine\Adapter\Actor\SkyDailyCycleActor.h" />
     <ClInclude Include="Engine\Adapter\Actor\SkyLightActor.h" />
     <ClInclude Include="Engine\Adapter\Parameter\SerializeGui.h" />
     <ClInclude Include="Engine\Adapter\Parameter\SerializeParameter.h" />
@@ -412,10 +412,10 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="Demo\Scene\ClearScene.cpp" />
     <ClCompile Include="Demo\Scene\GameScene.cpp" />
     <ClCompile Include="Demo\Scene\TitleScene.cpp" />
-    <ClCompile Include="Engine\Adapter\Actor\AtmosphereActor.cpp" />
     <ClCompile Include="Engine\Adapter\Actor\ControllableCameraActor.cpp" />
     <ClCompile Include="Engine\Adapter\Actor\PerformanceActor.cpp" />
     <ClCompile Include="Engine\Adapter\Actor\PivotCameraActor.cpp" />
+    <ClCompile Include="Engine\Adapter\Actor\SkyDailyCycleActor.cpp" />
     <ClCompile Include="Engine\Adapter\Actor\SkyLightActor.cpp" />
     <ClCompile Include="Engine\Adapter\Scene\BaseScene.cpp" />
     <ClCompile Include="Engine\Adapter\Scene\SceneController.cpp" />

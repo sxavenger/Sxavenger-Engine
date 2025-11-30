@@ -202,7 +202,7 @@ SingleScattering IntegrateScatteregLuminance(float3 world_pos, float3 world_dir,
 		//float planet_shadow = ComputePlanetShadow(sample_pos, sun_dir, kPlanetCenter + 0.01f * zenith, atmosphere.bottom_radius);
 		//float shadow = get_sample_shadow(atmosphere, sample_pos, 0);
 
-		float3 scattered_luminance = 1.0f * (transmittance_to_sun * phase_times_scattering + multi_scattered_luminance * medium.scattering);
+		float3 scattered_luminance = atmosphere.intensity * (transmittance_to_sun * phase_times_scattering + multi_scattered_luminance * medium.scattering);
 
 		float3 intergrated_luminance = (scattered_luminance - scattered_luminance * sample_transmittance) / medium.extinction;
 		result.luminance     += result.transmittance * intergrated_luminance;

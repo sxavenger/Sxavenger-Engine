@@ -11,10 +11,10 @@
 #include <Engine/System/UI/SxImGui.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// Parameter structure methods
+// Atmosphere structure methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-void SkyAtmosphereComponent::Parameter::Init() {
+void SkyAtmosphereComponent::Atmosphere::Init() {
 
 	// rayleigh
 	rayleigh_scattering        = Vector3f(0.005802f, 0.013558f, 0.033100f);
@@ -28,7 +28,7 @@ void SkyAtmosphereComponent::Parameter::Init() {
 	// absorption
 	absorption_extinction = Vector3f(0.000650f, 0.001881f, 0.000085f);
 
-	absorption_density_0_layer_height  = 25.0f;
+	absorption_density_0_layer_height  = 0.0f;
 	absorption_density_0_linear_term   = 0.0f;
 	absorption_density_0_constant_term = 1.0f;
 	absorption_density_1_linear_term   = -0.008f;
@@ -41,9 +41,11 @@ void SkyAtmosphereComponent::Parameter::Init() {
 	ground_albedo = Color3f(0.1f, 0.1f, 0.1f);
 	multi_scattering_factor = 1.0f;
 
+	intensity = 1.0f;
+
 }
 
-void SkyAtmosphereComponent::Parameter::Inspector() {
+void SkyAtmosphereComponent::Atmosphere::Inspector() {
 	// Rayleigh parameters
 	if (ImGui::TreeNodeEx("Rayleigh", ImGuiTreeNodeFlags_Framed)) {
 		ImGui::ColorEdit3("Scattering", &rayleigh_scattering.x);
@@ -83,6 +85,26 @@ void SkyAtmosphereComponent::Parameter::Inspector() {
 		ImGui::ColorEdit3("Ground Albedo", &ground_albedo.r);
 		ImGui::TreePop();
 	}
+
+	if (ImGui::TreeNodeEx("Sun", ImGuiTreeNodeFlags_Framed)) {
+		SxImGui::DragScalar("Intensity", &intensity, 0.1f);
+		ImGui::TreePop();
+	}
+
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////
+// Parameter structure methods
+////////////////////////////////////////////////////////////////////////////////////////////
+
+void SkyAtmosphereComponent::Parameter::Init() {
+	flags       = Flag::None;
+	environment = NULL;
+}
+
+void SkyAtmosphereComponent::Parameter::SetEnvironment(const DxObject::Descriptor& descriptorSRV) {
+	flags |= Flag::Environment;
+	environment = descriptorSRV.GetIndex();
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -90,19 +112,90 @@ void SkyAtmosphereComponent::Parameter::Inspector() {
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 SkyAtmosphereComponent::SkyAtmosphereComponent(MonoBehaviour* behaviour) : BaseComponent(behaviour) {
+	atmosphere_ = std::make_unique<DxObject::ConstantBuffer<Atmosphere>>();
+	atmosphere_->Create(SxavengerSystem::GetDxDevice());
+	atmosphere_->At().Init();
+
 	parameter_ = std::make_unique<DxObject::ConstantBuffer<Parameter>>();
 	parameter_->Create(SxavengerSystem::GetDxDevice());
 	parameter_->At().Init();
+
+	CreateTransmittance();
+	CreateMultipleScattering();
+	//CreateSkyView();
+	CreateSkyCube();
 }
 
 void SkyAtmosphereComponent::ShowComponentInspector() {
 
-	SxImGui::Image(transmittance_.descriptorSRV.GetGPUHandle().ptr, ImVec2(256.0f, 64.0f));
-	SxImGui::Image(multipleScattering_.descriptorSRV.GetGPUHandle().ptr, ImVec2(32, 32));
+	SxImGui::Image(textures_[static_cast<uint8_t>(Type::Transmittance)].descriptorSRV.GetGPUHandle().ptr, ImVec2(256.0f, 64.0f));
+	SxImGui::Image(textures_[static_cast<uint8_t>(Type::MultipleScattering)].descriptorSRV.GetGPUHandle().ptr, ImVec2(32, 32));
 	//SxImGui::Image(skyView_.descriptorSRV.GetGPUHandle().ptr, ImVec2(200.0f, 100.0f));
 
-	parameter_->At().Inspector();
+	atmosphere_->At().Inspector();
 
+}
+
+void SkyAtmosphereComponent::UpdateTransmittance(const DirectXQueueContext* context) {
+
+	pipeline1_.SetPipeline(context->GetDxCommand());
+
+	DxObject::BindBufferDesc desc = {};
+	desc.Set32bitConstants("Dimension", 2, std::array<UINT, 2>{ 256, 64 }.data());
+	desc.SetHandle("gTransmittance", textures_[static_cast<uint8_t>(Type::Transmittance)].descriptorUAV.GetGPUHandle());
+	desc.SetAddress("gAtmosphere",   atmosphere_->GetGPUVirtualAddress());
+
+	pipeline1_.BindComputeBuffer(context->GetDxCommand(), desc);
+	pipeline1_.Dispatch(context->GetDxCommand(), { DxObject::RoundUp(256, 16), DxObject::RoundUp(64, 16), 1 });
+}
+
+void SkyAtmosphereComponent::UpdateMultipleScattering(const DirectXQueueContext* context) {
+
+	pipeline2_.SetPipeline(context->GetDxCommand());
+
+	DxObject::BindBufferDesc desc = {};
+	desc.Set32bitConstants("Dimension", 2, std::array<UINT, 2>{ 32, 32 }.data());
+	desc.SetHandle("gTransmittance", textures_[static_cast<uint8_t>(Type::Transmittance)].descriptorSRV.GetGPUHandle());
+	desc.SetHandle("gMultipleScattering", textures_[static_cast<uint8_t>(Type::MultipleScattering)].descriptorUAV.GetGPUHandle());
+	desc.SetAddress("gAtmosphere", atmosphere_->GetGPUVirtualAddress());
+
+	pipeline2_.BindComputeBuffer(context->GetDxCommand(), desc);
+	pipeline2_.Dispatch(context->GetDxCommand(), { 32, 32, 1 });
+
+}
+
+void SkyAtmosphereComponent::UpdateSkyView(const DirectXQueueContext* context) {
+
+	pipeline3_.SetPipeline(context->GetDxCommand());
+
+	DxObject::BindBufferDesc desc = {};
+	desc.Set32bitConstants("Dimension", 2, std::array<UINT, 2>{ 200, 100 }.data());
+	desc.SetHandle("gSkyView",            textures_[static_cast<uint8_t>(Type::SkyView)].descriptorUAV.GetGPUHandle());
+	desc.SetHandle("gTransmittance",      textures_[static_cast<uint8_t>(Type::Transmittance)].descriptorSRV.GetGPUHandle());
+	desc.SetHandle("gMultipleScattering", textures_[static_cast<uint8_t>(Type::MultipleScattering)].descriptorSRV.GetGPUHandle());
+	desc.SetAddress("gAtmosphere",        atmosphere_->GetGPUVirtualAddress());
+	desc.SetAddress("gTransform",         RequireTransform()->GetGPUVirtualAddress());
+
+	pipeline3_.BindComputeBuffer(context->GetDxCommand(), desc);
+	pipeline3_.Dispatch(context->GetDxCommand(), { DxObject::RoundUp(200, 16), DxObject::RoundUp(100, 16), 1 });
+
+}
+
+void SkyAtmosphereComponent::UpdateSkyCube(const DirectXQueueContext* context) {
+
+	pipeline4_.SetPipeline(context->GetDxCommand());
+
+	DxObject::BindBufferDesc desc = {};
+	desc.Set32bitConstants("Dimension", 2, std::array<UINT, 2>{ 128, 128 }.data());
+	desc.SetHandle("gSkyCube",            textures_[static_cast<uint8_t>(Type::SkyCube)].descriptorUAV.GetGPUHandle());
+	desc.SetHandle("gTransmittance",      textures_[static_cast<uint8_t>(Type::Transmittance)].descriptorSRV.GetGPUHandle());
+	desc.SetHandle("gMultipleScattering", textures_[static_cast<uint8_t>(Type::MultipleScattering)].descriptorSRV.GetGPUHandle());
+	desc.SetAddress("gAtmosphere",        atmosphere_->GetGPUVirtualAddress());
+	desc.SetAddress("gTransform",         RequireTransform()->GetGPUVirtualAddress());
+
+	pipeline4_.BindComputeBuffer(context->GetDxCommand(), desc);
+	pipeline4_.Dispatch(context->GetDxCommand(), { DxObject::RoundUp(128, 16), DxObject::RoundUp(128, 16), 6 });
+	
 }
 
 void SkyAtmosphereComponent::CreateTransmittance() {
@@ -132,14 +225,14 @@ void SkyAtmosphereComponent::CreateTransmittance() {
 			&desc,
 			D3D12_RESOURCE_STATE_COMMON,
 			nullptr,
-			IID_PPV_ARGS(&transmittance_.resource)
+			IID_PPV_ARGS(&textures_[static_cast<uint8_t>(Type::Transmittance)].resource)
 		);
 		DxObject::Assert(hr, L"texture create failed.");
 	}
 
 	{ //!< descriptorUAVの生成
 		// handleの取得
-		transmittance_.descriptorUAV = SxavengerSystem::GetDescriptor(DxObject::kDescriptor_UAV);
+		textures_[static_cast<uint8_t>(Type::Transmittance)].descriptorUAV = SxavengerSystem::GetDescriptor(DxObject::kDescriptor_UAV);
 
 		// descの設定
 		D3D12_UNORDERED_ACCESS_VIEW_DESC desc = {};
@@ -148,16 +241,16 @@ void SkyAtmosphereComponent::CreateTransmittance() {
 
 		// UAVの生成
 		device->CreateUnorderedAccessView(
-			transmittance_.resource.Get(),
+			textures_[static_cast<uint8_t>(Type::Transmittance)].resource.Get(),
 			nullptr,
 			&desc,
-			transmittance_.descriptorUAV.GetCPUHandle()
+			textures_[static_cast<uint8_t>(Type::Transmittance)].descriptorUAV.GetCPUHandle()
 		);
 	}
 
 	{ //!< descriptorSRVの生成
 		// handleの取得
-		transmittance_.descriptorSRV = SxavengerSystem::GetDescriptor(DxObject::kDescriptor_SRV);
+		textures_[static_cast<uint8_t>(Type::Transmittance)].descriptorSRV = SxavengerSystem::GetDescriptor(DxObject::kDescriptor_SRV);
 
 		// descの設定
 		D3D12_SHADER_RESOURCE_VIEW_DESC desc = {};
@@ -168,27 +261,14 @@ void SkyAtmosphereComponent::CreateTransmittance() {
 
 		// SRVの生成
 		device->CreateShaderResourceView(
-			transmittance_.resource.Get(),
+			textures_[static_cast<uint8_t>(Type::Transmittance)].resource.Get(),
 			&desc,
-			transmittance_.descriptorSRV.GetCPUHandle()
+			textures_[static_cast<uint8_t>(Type::Transmittance)].descriptorSRV.GetCPUHandle()
 		);
 	}
 
 	pipeline1_.CreateBlob(kPackagesShaderDirectory / "Render" / "Atmosphere" / "Transmittance.cs.hlsl");
 	pipeline1_.ReflectionPipeline(SxavengerSystem::GetDxDevice());
-}
-
-void SkyAtmosphereComponent::UpdateTransmittance(const DirectXQueueContext* context) {
-
-	pipeline1_.SetPipeline(context->GetDxCommand());
-
-	DxObject::BindBufferDesc desc = {};
-	desc.Set32bitConstants("Dimension", 2, std::array<UINT, 2>{ 256, 64 }.data());
-	desc.SetHandle("gTransmittance", transmittance_.descriptorUAV.GetGPUHandle());
-	desc.SetAddress("gAtmosphere", parameter_->GetGPUVirtualAddress());
-
-	pipeline1_.BindComputeBuffer(context->GetDxCommand(), desc);
-	pipeline1_.Dispatch(context->GetDxCommand(), { DxObject::RoundUp(256, 16), DxObject::RoundUp(64, 16), 1 });
 }
 
 void SkyAtmosphereComponent::CreateMultipleScattering() {
@@ -218,14 +298,14 @@ void SkyAtmosphereComponent::CreateMultipleScattering() {
 			&desc,
 			D3D12_RESOURCE_STATE_COMMON,
 			nullptr,
-			IID_PPV_ARGS(&multipleScattering_.resource)
+			IID_PPV_ARGS(&textures_[static_cast<uint8_t>(Type::MultipleScattering)].resource)
 		);
 		DxObject::Assert(hr, L"texture create failed.");
 	}
 
 	{ //!< descriptorUAVの生成
 		// handleの取得
-		multipleScattering_.descriptorUAV = SxavengerSystem::GetDescriptor(DxObject::kDescriptor_UAV);
+		textures_[static_cast<uint8_t>(Type::MultipleScattering)].descriptorUAV = SxavengerSystem::GetDescriptor(DxObject::kDescriptor_UAV);
 
 		// descの設定
 		D3D12_UNORDERED_ACCESS_VIEW_DESC desc = {};
@@ -234,16 +314,16 @@ void SkyAtmosphereComponent::CreateMultipleScattering() {
 
 		// UAVの生成
 		device->CreateUnorderedAccessView(
-			multipleScattering_.resource.Get(),
+			textures_[static_cast<uint8_t>(Type::MultipleScattering)].resource.Get(),
 			nullptr,
 			&desc,
-			multipleScattering_.descriptorUAV.GetCPUHandle()
+			textures_[static_cast<uint8_t>(Type::MultipleScattering)].descriptorUAV.GetCPUHandle()
 		);
 	}
 
 	{ //!< descriptorSRVの生成
 		// handleの取得
-		multipleScattering_.descriptorSRV = SxavengerSystem::GetDescriptor(DxObject::kDescriptor_SRV);
+		textures_[static_cast<uint8_t>(Type::MultipleScattering)].descriptorSRV = SxavengerSystem::GetDescriptor(DxObject::kDescriptor_SRV);
 
 		// descの設定
 		D3D12_SHADER_RESOURCE_VIEW_DESC desc = {};
@@ -254,9 +334,9 @@ void SkyAtmosphereComponent::CreateMultipleScattering() {
 
 		// SRVの生成
 		device->CreateShaderResourceView(
-			multipleScattering_.resource.Get(),
+			textures_[static_cast<uint8_t>(Type::MultipleScattering)].resource.Get(),
 			&desc,
-			multipleScattering_.descriptorSRV.GetCPUHandle()
+			textures_[static_cast<uint8_t>(Type::MultipleScattering)].descriptorSRV.GetCPUHandle()
 		);
 	}
 
@@ -266,21 +346,6 @@ void SkyAtmosphereComponent::CreateMultipleScattering() {
 	desc.SetSamplerLinear("gSampler", DxObject::SamplerMode::MODE_CLAMP);
 
 	pipeline2_.ReflectionPipeline(SxavengerSystem::GetDxDevice(), desc);
-}
-
-void SkyAtmosphereComponent::UpdateMultipleScattering(const DirectXQueueContext* context) {
-
-	pipeline2_.SetPipeline(context->GetDxCommand());
-
-	DxObject::BindBufferDesc desc = {};
-	desc.Set32bitConstants("Dimension", 2, std::array<UINT, 2>{ 32, 32 }.data());
-	desc.SetHandle("gTransmittance", transmittance_.descriptorSRV.GetGPUHandle());
-	desc.SetHandle("gMultipleScattering", multipleScattering_.descriptorUAV.GetGPUHandle());
-	desc.SetAddress("gAtmosphere", parameter_->GetGPUVirtualAddress());
-
-	pipeline2_.BindComputeBuffer(context->GetDxCommand(), desc);
-	pipeline2_.Dispatch(context->GetDxCommand(), { 32, 32, 1 });
-
 }
 
 void SkyAtmosphereComponent::CreateSkyView() {
@@ -310,14 +375,14 @@ void SkyAtmosphereComponent::CreateSkyView() {
 			&desc,
 			D3D12_RESOURCE_STATE_COMMON,
 			nullptr,
-			IID_PPV_ARGS(&skyView_.resource)
+			IID_PPV_ARGS(&textures_[static_cast<uint8_t>(Type::SkyView)].resource)
 		);
 		DxObject::Assert(hr, L"texture create failed.");
 	}
 
 	{ //!< descriptorUAVの生成
 		// handleの取得
-		skyView_.descriptorUAV = SxavengerSystem::GetDescriptor(DxObject::kDescriptor_UAV);
+		textures_[static_cast<uint8_t>(Type::SkyView)].descriptorUAV = SxavengerSystem::GetDescriptor(DxObject::kDescriptor_UAV);
 
 		// descの設定
 		D3D12_UNORDERED_ACCESS_VIEW_DESC desc = {};
@@ -326,16 +391,16 @@ void SkyAtmosphereComponent::CreateSkyView() {
 
 		// UAVの生成
 		device->CreateUnorderedAccessView(
-			skyView_.resource.Get(),
+			textures_[static_cast<uint8_t>(Type::SkyView)].resource.Get(),
 			nullptr,
 			&desc,
-			skyView_.descriptorUAV.GetCPUHandle()
+			textures_[static_cast<uint8_t>(Type::SkyView)].descriptorUAV.GetCPUHandle()
 		);
 	}
 
 	{ //!< descriptorSRVの生成
 		// handleの取得
-		skyView_.descriptorSRV = SxavengerSystem::GetDescriptor(DxObject::kDescriptor_SRV);
+		textures_[static_cast<uint8_t>(Type::SkyView)].descriptorSRV = SxavengerSystem::GetDescriptor(DxObject::kDescriptor_SRV);
 
 		// descの設定
 		D3D12_SHADER_RESOURCE_VIEW_DESC desc = {};
@@ -346,9 +411,9 @@ void SkyAtmosphereComponent::CreateSkyView() {
 
 		// SRVの生成
 		device->CreateShaderResourceView(
-			skyView_.resource.Get(),
+			textures_[static_cast<uint8_t>(Type::SkyView)].resource.Get(),
 			&desc,
-			skyView_.descriptorSRV.GetCPUHandle()
+			textures_[static_cast<uint8_t>(Type::SkyView)].descriptorSRV.GetCPUHandle()
 		);
 	}
 
@@ -358,23 +423,6 @@ void SkyAtmosphereComponent::CreateSkyView() {
 	desc.SetSamplerLinear("gSampler", DxObject::SamplerMode::MODE_CLAMP);
 
 	pipeline3_.ReflectionPipeline(SxavengerSystem::GetDxDevice(), desc);
-
-}
-
-void SkyAtmosphereComponent::UpdateSkyView(const DirectXQueueContext* context) {
-
-	pipeline3_.SetPipeline(context->GetDxCommand());
-
-	DxObject::BindBufferDesc desc = {};
-	desc.Set32bitConstants("Dimension", 2, std::array<UINT, 2>{ 200, 100 }.data());
-	desc.SetHandle("gSkyView",            skyView_.descriptorUAV.GetGPUHandle());
-	desc.SetHandle("gTransmittance",      transmittance_.descriptorSRV.GetGPUHandle());
-	desc.SetHandle("gMultipleScattering", multipleScattering_.descriptorSRV.GetGPUHandle());
-	desc.SetAddress("gAtmosphere",        parameter_->GetGPUVirtualAddress());
-	desc.SetAddress("gTransform",         RequireTransform()->GetGPUVirtualAddress());
-
-	pipeline3_.BindComputeBuffer(context->GetDxCommand(), desc);
-	pipeline3_.Dispatch(context->GetDxCommand(), { DxObject::RoundUp(200, 16), DxObject::RoundUp(100, 16), 1 });
 
 }
 
@@ -405,14 +453,14 @@ void SkyAtmosphereComponent::CreateSkyCube() {
 			&desc,
 			D3D12_RESOURCE_STATE_COMMON,
 			nullptr,
-			IID_PPV_ARGS(&skyCube_.resource)
+			IID_PPV_ARGS(&textures_[static_cast<uint8_t>(Type::SkyCube)].resource)
 		);
 		DxObject::Assert(hr, L"texture create failed.");
 	}
 
 	{ //!< descriptorUAVの生成
 		// handleの取得
-		skyCube_.descriptorUAV = SxavengerSystem::GetDescriptor(DxObject::kDescriptor_UAV);
+		textures_[static_cast<uint8_t>(Type::SkyCube)].descriptorUAV = SxavengerSystem::GetDescriptor(DxObject::kDescriptor_UAV);
 
 		// descの設定
 		D3D12_UNORDERED_ACCESS_VIEW_DESC desc = {};
@@ -422,16 +470,16 @@ void SkyAtmosphereComponent::CreateSkyCube() {
 
 		// UAVの生成
 		device->CreateUnorderedAccessView(
-			skyCube_.resource.Get(),
+			textures_[static_cast<uint8_t>(Type::SkyCube)].resource.Get(),
 			nullptr,
 			&desc,
-			skyCube_.descriptorUAV.GetCPUHandle()
+			textures_[static_cast<uint8_t>(Type::SkyCube)].descriptorUAV.GetCPUHandle()
 		);
 	}
 
 	{ //!< descriptorSRVの生成
 		// handleの取得
-		skyCube_.descriptorSRV = SxavengerSystem::GetDescriptor(DxObject::kDescriptor_SRV);
+		textures_[static_cast<uint8_t>(Type::SkyCube)].descriptorSRV = SxavengerSystem::GetDescriptor(DxObject::kDescriptor_SRV);
 
 		// descの設定
 		D3D12_SHADER_RESOURCE_VIEW_DESC desc = {};
@@ -442,9 +490,9 @@ void SkyAtmosphereComponent::CreateSkyCube() {
 
 		// SRVの生成
 		device->CreateShaderResourceView(
-			skyCube_.resource.Get(),
+			textures_[static_cast<uint8_t>(Type::SkyCube)].resource.Get(),
 			&desc,
-			skyCube_.descriptorSRV.GetCPUHandle()
+			textures_[static_cast<uint8_t>(Type::SkyCube)].descriptorSRV.GetCPUHandle()
 		);
 	}
 
@@ -455,23 +503,16 @@ void SkyAtmosphereComponent::CreateSkyCube() {
 
 	pipeline4_.ReflectionPipeline(SxavengerSystem::GetDxDevice(), desc);
 
+	parameter_->At().SetEnvironment(textures_[static_cast<uint8_t>(Type::SkyCube)].descriptorSRV);
+
 }
 
-void SkyAtmosphereComponent::UpdateSkyCube(const DirectXQueueContext* context) {
+void SkyAtmosphereComponent::SetIntensity(float intensity) {
+	atmosphere_->At().intensity = intensity;
+}
 
-	pipeline4_.SetPipeline(context->GetDxCommand());
-
-	DxObject::BindBufferDesc desc = {};
-	desc.Set32bitConstants("Dimension", 2, std::array<UINT, 2>{ 128, 128 }.data());
-	desc.SetHandle("gSkyCube",            skyCube_.descriptorUAV.GetGPUHandle());
-	desc.SetHandle("gTransmittance",      transmittance_.descriptorSRV.GetGPUHandle());
-	desc.SetHandle("gMultipleScattering", multipleScattering_.descriptorSRV.GetGPUHandle());
-	desc.SetAddress("gAtmosphere",        parameter_->GetGPUVirtualAddress());
-	desc.SetAddress("gTransform",         RequireTransform()->GetGPUVirtualAddress());
-
-	pipeline4_.BindComputeBuffer(context->GetDxCommand(), desc);
-	pipeline4_.Dispatch(context->GetDxCommand(), { DxObject::RoundUp(128, 16), DxObject::RoundUp(128, 16), 6 });
-	
+const D3D12_GPU_VIRTUAL_ADDRESS& SkyAtmosphereComponent::GetGPUVirtualAddress() const {
+	return parameter_->GetGPUVirtualAddress();
 }
 
 const TransformComponent* SkyAtmosphereComponent::RequireTransform() const {
