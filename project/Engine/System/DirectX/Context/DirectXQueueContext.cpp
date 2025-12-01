@@ -8,6 +8,9 @@ _DXOBJECT_USING
 #include <Engine/System/Utility/Logger.h>
 #include <Engine/System/SxavengerSystem.h>
 
+//* external
+//#include <pix3.h>
+
 ////////////////////////////////////////////////////////////////////////////////////////////
 // DirectXQueueContext class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -47,6 +50,20 @@ void DirectXQueueContext::ExecuteAllAllocators() const {
 
 	context_->ExecuteAllAllocators();
 	SetDescriptorHeap();
+}
+
+void DirectXQueueContext::BeginEvent(const std::wstring& name) const {
+	if (context_ == nullptr) {
+		return;
+	}
+
+	name;
+}
+
+void DirectXQueueContext::EndEvent() const {
+	if (context_ == nullptr) {
+		return;
+	}
 }
 
 bool DirectXQueueContext::IsSupportQueue(RenderQueue type) const {

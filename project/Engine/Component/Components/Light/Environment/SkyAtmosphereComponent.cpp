@@ -138,6 +138,12 @@ void SkyAtmosphereComponent::ShowComponentInspector() {
 
 void SkyAtmosphereComponent::UpdateTransmittance(const DirectXQueueContext* context) {
 
+	context->GetDxCommand()->TransitionResourceState(
+		textures_[static_cast<uint8_t>(Type::Transmittance)].resource.Get(),
+		D3D12_RESOURCE_STATE_ALL_SHADER_RESOURCE,
+		D3D12_RESOURCE_STATE_UNORDERED_ACCESS
+	);
+
 	pipeline1_.SetPipeline(context->GetDxCommand());
 
 	DxObject::BindBufferDesc desc = {};
@@ -147,9 +153,21 @@ void SkyAtmosphereComponent::UpdateTransmittance(const DirectXQueueContext* cont
 
 	pipeline1_.BindComputeBuffer(context->GetDxCommand(), desc);
 	pipeline1_.Dispatch(context->GetDxCommand(), { DxObject::RoundUp(256, 16), DxObject::RoundUp(64, 16), 1 });
+
+	context->GetDxCommand()->TransitionResourceState(
+		textures_[static_cast<uint8_t>(Type::Transmittance)].resource.Get(),
+		D3D12_RESOURCE_STATE_UNORDERED_ACCESS,
+		D3D12_RESOURCE_STATE_ALL_SHADER_RESOURCE
+	);
 }
 
 void SkyAtmosphereComponent::UpdateMultipleScattering(const DirectXQueueContext* context) {
+
+	context->GetDxCommand()->TransitionResourceState(
+		textures_[static_cast<uint8_t>(Type::MultipleScattering)].resource.Get(),
+		D3D12_RESOURCE_STATE_ALL_SHADER_RESOURCE,
+		D3D12_RESOURCE_STATE_UNORDERED_ACCESS
+	);
 
 	pipeline2_.SetPipeline(context->GetDxCommand());
 
@@ -162,9 +180,21 @@ void SkyAtmosphereComponent::UpdateMultipleScattering(const DirectXQueueContext*
 	pipeline2_.BindComputeBuffer(context->GetDxCommand(), desc);
 	pipeline2_.Dispatch(context->GetDxCommand(), { 32, 32, 1 });
 
+	context->GetDxCommand()->TransitionResourceState(
+		textures_[static_cast<uint8_t>(Type::MultipleScattering)].resource.Get(),
+		D3D12_RESOURCE_STATE_UNORDERED_ACCESS,
+		D3D12_RESOURCE_STATE_ALL_SHADER_RESOURCE
+	);
+
 }
 
 void SkyAtmosphereComponent::UpdateSkyView(const DirectXQueueContext* context) {
+
+	context->GetDxCommand()->TransitionResourceState(
+		textures_[static_cast<uint8_t>(Type::SkyView)].resource.Get(),
+		D3D12_RESOURCE_STATE_ALL_SHADER_RESOURCE,
+		D3D12_RESOURCE_STATE_UNORDERED_ACCESS
+	);
 
 	pipeline3_.SetPipeline(context->GetDxCommand());
 
@@ -179,9 +209,21 @@ void SkyAtmosphereComponent::UpdateSkyView(const DirectXQueueContext* context) {
 	pipeline3_.BindComputeBuffer(context->GetDxCommand(), desc);
 	pipeline3_.Dispatch(context->GetDxCommand(), { DxObject::RoundUp(200, 16), DxObject::RoundUp(100, 16), 1 });
 
+	context->GetDxCommand()->TransitionResourceState(
+		textures_[static_cast<uint8_t>(Type::SkyView)].resource.Get(),
+		D3D12_RESOURCE_STATE_UNORDERED_ACCESS,
+		D3D12_RESOURCE_STATE_ALL_SHADER_RESOURCE
+	);
+
 }
 
 void SkyAtmosphereComponent::UpdateSkyCube(const DirectXQueueContext* context) {
+
+	context->GetDxCommand()->TransitionResourceState(
+		textures_[static_cast<uint8_t>(Type::SkyCube)].resource.Get(),
+		D3D12_RESOURCE_STATE_ALL_SHADER_RESOURCE,
+		D3D12_RESOURCE_STATE_UNORDERED_ACCESS
+	);
 
 	pipeline4_.SetPipeline(context->GetDxCommand());
 
@@ -195,6 +237,12 @@ void SkyAtmosphereComponent::UpdateSkyCube(const DirectXQueueContext* context) {
 
 	pipeline4_.BindComputeBuffer(context->GetDxCommand(), desc);
 	pipeline4_.Dispatch(context->GetDxCommand(), { DxObject::RoundUp(128, 16), DxObject::RoundUp(128, 16), 6 });
+
+	context->GetDxCommand()->TransitionResourceState(
+		textures_[static_cast<uint8_t>(Type::SkyCube)].resource.Get(),
+		D3D12_RESOURCE_STATE_UNORDERED_ACCESS,
+		D3D12_RESOURCE_STATE_ALL_SHADER_RESOURCE
+	);
 	
 }
 
@@ -223,7 +271,7 @@ void SkyAtmosphereComponent::CreateTransmittance() {
 			&prop,
 			D3D12_HEAP_FLAG_NONE,
 			&desc,
-			D3D12_RESOURCE_STATE_COMMON,
+			D3D12_RESOURCE_STATE_ALL_SHADER_RESOURCE,
 			nullptr,
 			IID_PPV_ARGS(&textures_[static_cast<uint8_t>(Type::Transmittance)].resource)
 		);
@@ -296,7 +344,7 @@ void SkyAtmosphereComponent::CreateMultipleScattering() {
 			&prop,
 			D3D12_HEAP_FLAG_NONE,
 			&desc,
-			D3D12_RESOURCE_STATE_COMMON,
+			D3D12_RESOURCE_STATE_ALL_SHADER_RESOURCE,
 			nullptr,
 			IID_PPV_ARGS(&textures_[static_cast<uint8_t>(Type::MultipleScattering)].resource)
 		);
@@ -373,7 +421,7 @@ void SkyAtmosphereComponent::CreateSkyView() {
 			&prop,
 			D3D12_HEAP_FLAG_NONE,
 			&desc,
-			D3D12_RESOURCE_STATE_COMMON,
+			D3D12_RESOURCE_STATE_ALL_SHADER_RESOURCE,
 			nullptr,
 			IID_PPV_ARGS(&textures_[static_cast<uint8_t>(Type::SkyView)].resource)
 		);
@@ -451,7 +499,7 @@ void SkyAtmosphereComponent::CreateSkyCube() {
 			&prop,
 			D3D12_HEAP_FLAG_NONE,
 			&desc,
-			D3D12_RESOURCE_STATE_COMMON,
+			D3D12_RESOURCE_STATE_ALL_SHADER_RESOURCE,
 			nullptr,
 			IID_PPV_ARGS(&textures_[static_cast<uint8_t>(Type::SkyCube)].resource)
 		);

@@ -44,6 +44,13 @@ public:
 	//! @brief 全てのAllocatorを実行する
 	void ExecuteAllAllocators() const;
 
+	//! @brief CommandList上でイベントを開始する
+	//! @param[in] name イベント名
+	void BeginEvent(const std::wstring& name) const;
+
+	//! @brief CommandList上でイベントを終了する
+	void EndEvent() const;
+
 	//! @brief 指定したRenderQueueが対応されているか確認する
 	//! @retval true  実行可能
 	//! @retval false 実行不可能

@@ -86,9 +86,6 @@ private:
 
 	void ForEachDirectory(const std::filesystem::path& path, const std::function<void(const std::filesystem::directory_entry&)>& func);
 
-	static bool OpenShellExecuteApp(const std::filesystem::path& filepath);
-	static bool OpenShellExecuteExplorer(const std::filesystem::path& filepath);
-
 	template <ContentConcept T>
 	void RegisterExtension(const std::filesystem::path& extension);
 

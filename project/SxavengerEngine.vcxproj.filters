@@ -279,6 +279,9 @@
     <ClInclude Include="Engine\Adapter\Actor\PivotCameraActor.h">
       <Filter>Engine\Adapter\Actor</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\Adapter\Actor\SkyDailyCycleActor.h">
+      <Filter>Engine\Adapter\Actor</Filter>
+    </ClInclude>
     <ClInclude Include="Engine\Adapter\Actor\SkyLightActor.h">
       <Filter>Engine\Adapter\Actor</Filter>
     </ClInclude>
@@ -332,6 +335,9 @@
     </ClInclude>
     <ClInclude Include="Engine\Component\Components\ComponentStorage.h">
       <Filter>Engine\Component\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Component\Components\Light\Environment\SkyAtmosphereComponent.h">
+      <Filter>Engine\Component\Components\Light\Environment</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Component\Components\Light\Environment\SkyLightComponent.h">
       <Filter>Engine\Component\Components\Light\Environment</Filter>
@@ -621,6 +627,9 @@
     <ClInclude Include="Engine\Render\Core\FRenderCoreProcess.h">
       <Filter>Engine\Render\Core</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\Render\Core\FRenderCoreRestir.h">
+      <Filter>Engine\Render\Core</Filter>
+    </ClInclude>
     <ClInclude Include="Engine\Render\Core\FRenderCoreTransition.h">
       <Filter>Engine\Render\Core</Filter>
     </ClInclude>
@@ -646,6 +655,9 @@
       <Filter>Engine\Render\GBuffer</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Render\Pass\FBaseRenderPass.h">
+      <Filter>Engine\Render\Pass</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Render\Pass\FRenderPassAntiAliasing.h">
       <Filter>Engine\Render\Pass</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Render\Pass\FRenderPassCanvas.h">
@@ -936,10 +948,6 @@
     <ClInclude Include="externals\meshoptimizer\meshoptimizer.h">
       <Filter>externals\meshoptimizer</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Render\Pass\FRenderPassAntiAliasing.h" />
-    <ClInclude Include="Engine\Render\Core\FRenderCoreRestir.h" />
-    <ClInclude Include="Engine\Component\Components\Light\Environment\SkyAtmosphereComponent.h" />
-    <ClInclude Include="Engine\Adapter\Actor\SkyDailyCycleActor.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Demo\Entity\Player.cpp">
@@ -976,6 +984,9 @@
       <Filter>Engine\Adapter\Actor</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Adapter\Actor\PivotCameraActor.cpp">
+      <Filter>Engine\Adapter\Actor</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Adapter\Actor\SkyDailyCycleActor.cpp">
       <Filter>Engine\Adapter\Actor</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Adapter\Actor\SkyLightActor.cpp">
@@ -1025,6 +1036,9 @@
     </ClCompile>
     <ClCompile Include="Engine\Component\Components\ComponentStorage.cpp">
       <Filter>Engine\Component\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Component\Components\Light\Environment\SkyAtmosphereComponent.cpp">
+      <Filter>Engine\Component\Components\Light\Environment</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Component\Components\Light\Environment\SkyLightComponent.cpp">
       <Filter>Engine\Component\Components\Light\Environment</Filter>
@@ -1287,6 +1301,9 @@
     <ClCompile Include="Engine\Render\Core\FRenderCoreProcess.cpp">
       <Filter>Engine\Render\Core</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\Render\Core\FRenderCoreRestir.cpp">
+      <Filter>Engine\Render\Core</Filter>
+    </ClCompile>
     <ClCompile Include="Engine\Render\Core\FRenderCoreTransition.cpp">
       <Filter>Engine\Render\Core</Filter>
     </ClCompile>
@@ -1312,6 +1329,9 @@
       <Filter>Engine\Render\GBuffer</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Render\Pass\FBaseRenderPass.cpp">
+      <Filter>Engine\Render\Pass</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Render\Pass\FRenderPassAntiAliasing.cpp">
       <Filter>Engine\Render\Pass</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Render\Pass\FRenderPassCanvas.cpp">
@@ -1573,9 +1593,5 @@
       <Filter>externals\stb</Filter>
     </ClCompile>
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="Engine\Render\Pass\FRenderPassAntiAliasing.cpp" />
-    <ClCompile Include="Engine\Render\Core\FRenderCoreRestir.cpp" />
-    <ClCompile Include="Engine\Component\Components\Light\Environment\SkyAtmosphereComponent.cpp" />
-    <ClCompile Include="Engine\Adapter\Actor\SkyDailyCycleActor.cpp" />
   </ItemGroup>
 </Project>

@@ -161,37 +161,6 @@ void AssetEditor::ForEachDirectory(const std::filesystem::path& path, const std:
 	}
 }
 
-bool AssetEditor::OpenShellExecuteApp(const std::filesystem::path& filepath) {
-	HINSTANCE result = ShellExecute(nullptr, L"open", filepath.c_str(), nullptr, nullptr, SW_SHOWNORMAL);
-
-	bool isSuccess = (reinterpret_cast<intptr_t>(result) > 32);
-
-	if (isSuccess) {
-		Logger::CommentRuntime("[AssetEditor]", "shell execute application. \n filepath: " + filepath.generic_string());
-
-	} else {
-		Logger::WarningRuntime("[AssetEditor]", "shell execute application failed. \n filepath: " + filepath.generic_string());
-	}
-
-	return isSuccess;
-}
-
-bool AssetEditor::OpenShellExecuteExplorer(const std::filesystem::path& filepath) {
-	// FIXME: explorerで開けない
-	HINSTANCE result = ShellExecute(nullptr, L"open", L"explorer.exe", filepath.wstring().c_str(), nullptr, SW_SHOWNORMAL);
-
-	bool isSuccess = (reinterpret_cast<intptr_t>(result) > 32);
-
-	if (isSuccess) {
-		Logger::CommentRuntime("[AssetEditor]", "shell execute explorer. \n filepath: " + filepath.generic_string());
-
-	} else {
-		Logger::WarningRuntime("[AssetEditor]", "shell execute explorer failed. \n filepath: " + filepath.generic_string());
-	}
-
-	return isSuccess;
-}
-
 void AssetEditor::ShowAssetDirectoryTable(const std::filesystem::path& path) {
 
 	bool isDirectory   = std::filesystem::is_directory(path);
@@ -310,7 +279,7 @@ void AssetEditor::ShowAssetLayout() {
 				ImGui::SeparatorText("folder context menu");
 
 				if (ImGui::Selectable("Open in Explorer")) {
-					OpenShellExecuteExplorer(part);
+					WinApp::OpenExplorer(part);
 				}
 
 				ImGui::EndPopup();
@@ -338,7 +307,7 @@ void AssetEditor::ShowAssetLayout() {
 			}
 
 			if (SxImGui::IsDoubleClickItem()) {
-				OpenShellExecuteApp(part);
+				WinApp::OpenApplication(part);
 			}
 
 			std::string label = "file context menu ##" + part.filename().generic_string();
@@ -346,7 +315,7 @@ void AssetEditor::ShowAssetLayout() {
 				ImGui::SeparatorText("file context menu");
 
 				if (ImGui::Selectable("Open in Explorer")) {
-					OpenShellExecuteExplorer(part);
+					WinApp::OpenExplorer(part);
 				}
 
 				if (ImGui::Selectable("Import")) {

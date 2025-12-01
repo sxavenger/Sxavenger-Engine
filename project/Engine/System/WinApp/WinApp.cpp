@@ -9,6 +9,8 @@
 
 //* windows
 #include <shobjidl.h>
+#include <shellapi.h>
+#include <shlobj.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // WinApp class methods
@@ -31,7 +33,7 @@ std::optional<std::filesystem::path> WinApp::GetSaveFilepath(const std::wstring&
 
 	ComPtr<IFileSaveDialog> dialog;
 	auto hr = CoCreateInstance(CLSID_FileSaveDialog, nullptr, CLSCTX_ALL, IID_PPV_ARGS(&dialog));
-	Exception::Assert(SUCCEEDED(hr), "WinApp::GetSaveFilename", "failed to create FileSaveDialog instance.");
+	//Exception::Assert(SUCCEEDED(hr), "WinApp::GetSaveFilename", "failed to create FileSaveDialog instance.");
 
 	dialog->SetTitle(title.c_str());
 
@@ -68,7 +70,7 @@ std::optional<std::filesystem::path> WinApp::GetOpenFilepath(const std::wstring&
 
 	ComPtr<IFileOpenDialog> dialog;
 	auto hr = CoCreateInstance(CLSID_FileOpenDialog, nullptr, CLSCTX_ALL, IID_PPV_ARGS(&dialog));
-	Exception::Assert(SUCCEEDED(hr), "WinApp::GetSaveFilename", "failed to create FileOpenDialog instance.");
+	//Exception::Assert(SUCCEEDED(hr), "WinApp::GetSaveFilename", "failed to create FileOpenDialog instance.");
 
 	dialog->SetTitle(title.c_str());
 
@@ -98,4 +100,47 @@ std::optional<std::filesystem::path> WinApp::GetOpenFilepath(const std::wstring&
 	}
 
 	return {};
+}
+
+bool WinApp::OpenExplorer(const std::filesystem::path& filepath) {
+
+	PIDLIST_ABSOLUTE pidl = nullptr;
+
+	HRESULT hr = SHParseDisplayName(
+		std::filesystem::absolute(filepath).c_str(),
+		nullptr,
+		&pidl,
+		0,
+		nullptr
+	);
+
+	if (FAILED(hr) || pidl == nullptr) {
+		return false;
+	}
+
+	hr = SHOpenFolderAndSelectItems(
+		pidl,
+		0,
+		nullptr,
+		0
+	);
+
+	CoTaskMemFree(pidl);
+	return SUCCEEDED(hr);
+
+}
+
+bool WinApp::OpenApplication(const std::filesystem::path& filepath) {
+
+	HINSTANCE result = ShellExecuteW(
+		nullptr,
+		L"open",
+		filepath.c_str(),
+		nullptr,
+		nullptr,
+		SW_SHOWNORMAL
+	);
+
+	return reinterpret_cast<intptr_t>(result) > 32;
+	
 }

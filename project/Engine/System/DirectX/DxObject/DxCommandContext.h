@@ -41,11 +41,19 @@ public:
 
 	void ExecuteAllAllocators();
 
+	void BeginEvent(const std::wstring& name);
+
+	void EndEvent();
+
 	//* getter *//
 
 	ID3D12GraphicsCommandList6* GetCommandList() const { return commandList_.Get(); }
 
 	ID3D12CommandQueue* GetCommandQueue() const { return commandQueue_.Get(); }
+
+	//* helper methods *//
+
+	void TransitionResourceState(ID3D12Resource* resource, D3D12_RESOURCE_STATES before, D3D12_RESOURCE_STATES after);
 
 private:
 
@@ -71,6 +79,8 @@ private:
 
 	uint32_t allocatorCount_;
 	uint32_t currentIndex_;
+
+	//* event *//
 
 	//=========================================================================================
 	// private methods

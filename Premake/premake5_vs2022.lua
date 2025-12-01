@@ -31,17 +31,6 @@ workspace "SxavengerEngine"
 		configmap {
         	["Develop"] = "Release",
  		}
-
-	-- DirectXMesh
-	externalproject "DirectXMesh"
-		location "externals/DirectXMesh"
-		filename "DirectXMesh_Desktop_2022_Win10"
-		kind "StaticLib"
-		language "C++"
-		
-		configmap {
-        	["Develop"] = "Release",
- 		}
 	
 	-- imgui
 	externalproject "imgui"
@@ -102,20 +91,20 @@ project "SxavengerEngine"
 	-- 追加include
 	includedirs {
 		"%{prj.location}",
-    	"%{prj.location}/externals/nlohmann",
-    	"%{prj.location}/externals/meshoptimizer",
-    	"%{prj.location}/externals/imgui/imguizmo",
-    	"%{prj.location}/externals/imgui",
-    	"%{prj.location}/externals/DirectXTex",
-    	"%{prj.location}/externals/DirectXMesh",
-    	"%{prj.location}/externals/assimp/include",
-    	"%{prj.location}/externals/magic_enum",
-    	"%{prj.location}/externals/stb",
+    	"%{prj.location}/externals/nlohmann", -- [nlohmann json](https://github.com/nlohmann/json.git)
+    	"%{prj.location}/externals/meshoptimizer", -- [meshoptimizer](https://github.com/zeux/meshoptimizer.git)
+    	"%{prj.location}/externals/imgui", -- [ImGui](https://github.com/ocornut/imgui.git)
+    	"%{prj.location}/externals/imgui/imguizmo", -- [ImGuizmo](https://github.com/CedricGuillemet/ImGuizmo.git)
+    	"%{prj.location}/externals/DirectXTex", -- [DirectXTex](https://github.com/microsoft/DirectXTex.git)
+    	"%{prj.location}/externals/assimp/include", -- [assimp](https://github.com/assimp/assimp.git)
+    	"%{prj.location}/externals/magic_enum", -- [magic_enum](https://github.com/Neargye/magic_enum.git)
+    	"%{prj.location}/externals/stb", -- [stb](https://github.com/nothings/stb.git)
+    	"%{prj.location}/externals/PixEventRuntime/include", -- [WinPixEventRuntime](https://github.com/microsoft/PixEvents.git)
 	}
 
 	-- 依存プロジェクト
-	dependson { "DirectXTex", "DirectXMesh", "imgui" }
-	links     { "DirectXTex", "DirectXMesh", "imgui" }
+	dependson { "DirectXTex", "imgui" }
+	links     { "DirectXTex", "imgui" }
 
 	-- ビルドオプション(共通)
 	warnings "High"
@@ -146,8 +135,15 @@ project "SxavengerEngine"
 		defines { "DEBUG", "_DEVELOPMENT" }
 
 		-- リンカー設定
-		libdirs { "%{prj.location}/externals/assimp/lib/Debug" }
-		links { "assimp-vc143-mtd" }
+		libdirs {
+			"%{prj.location}/externals/assimp/lib/Debug",
+			"%{prj.location}/externals/PixEventRuntime/lib/Debug",
+		}
+
+		links {
+			"assimp-vc143-mtd",
+			"WinPixEventRuntime"
+		}
 		
 		-- ビルド後イベント
 		postbuildcommands {
@@ -164,8 +160,15 @@ project "SxavengerEngine"
 		defines { "NDEBUG", "_DEVELOPMENT" }
 
 		-- リンカー設定
-		libdirs { "%{prj.location}/externals/assimp/lib/Release" }
-		links { "assimp-vc143-mt" }
+		libdirs {
+			"%{prj.location}/externals/assimp/lib/Release",
+			"%{prj.location}/externals/PixEventRuntime/lib/Release"
+		}
+
+		links {
+			"assimp-vc143-mt",
+			"WinPixEventRuntime"
+		}
 		
 		-- ビルド後イベント
 		postbuildcommands {
@@ -181,8 +184,15 @@ project "SxavengerEngine"
 		defines { "NDEBUG" }
 
 		-- リンカー設定
-		libdirs { "%{prj.location}/externals/assimp/lib/Release" }
-		links { "assimp-vc143-mt" }
+		libdirs {
+			"%{prj.location}/externals/assimp/lib/Release",
+			"%{prj.location}/externals/PixEventRuntime/lib/Release"
+		}
+
+		links {
+			"assimp-vc143-mt",
+			"WinPixEventRuntime"
+		}
 		
 		-- ビルド後イベント
 		postbuildcommands {

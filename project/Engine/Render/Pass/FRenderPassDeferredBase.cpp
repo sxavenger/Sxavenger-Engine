@@ -23,6 +23,8 @@ void FRenderPassDeferredBase::Render(const DirectXQueueContext* context, const C
 		return;
 	}
 
+	context->BeginEvent(L"RenderPass - DeferredBase");
+
 	{ //!< Render Target Pass
 		BeginPassRenderTarget(context, config.buffer);
 
@@ -40,6 +42,8 @@ void FRenderPassDeferredBase::Render(const DirectXQueueContext* context, const C
 
 		EndPassVelocity(context, config.buffer);
 	}
+
+	context->EndEvent();
 }
 
 void FRenderPassDeferredBase::BeginPassRenderTarget(const DirectXQueueContext* context, FRenderTargetBuffer* buffer) {
