@@ -54,14 +54,6 @@ void CommandContext::ExecuteAllAllocators() {
 	Reset(currentIndex_);
 }
 
-void CommandContext::BeginEvent(const std::wstring& name) {
-	commandList_->BeginEvent(0, name.c_str(), static_cast<UINT>(name.size() * sizeof(wchar_t)));
-}
-
-void CommandContext::EndEvent() {
-	commandList_->EndEvent();
-}
-
 void CommandContext::TransitionResourceState(ID3D12Resource* resource, D3D12_RESOURCE_STATES before, D3D12_RESOURCE_STATES after) {
 	D3D12_RESOURCE_BARRIER barrier = {};
 	barrier.Type                   = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;

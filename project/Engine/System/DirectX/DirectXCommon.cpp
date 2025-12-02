@@ -7,6 +7,7 @@ _DXROBJECT_USING
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 void DirectXCommon::Init() {
+
 	//* DXOBJECTの初期化
 	device_ = std::make_unique<Device>();
 	device_->Init();

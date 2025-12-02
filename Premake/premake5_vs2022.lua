@@ -99,7 +99,6 @@ project "SxavengerEngine"
     	"%{prj.location}/externals/assimp/include", -- [assimp](https://github.com/assimp/assimp.git)
     	"%{prj.location}/externals/magic_enum", -- [magic_enum](https://github.com/Neargye/magic_enum.git)
     	"%{prj.location}/externals/stb", -- [stb](https://github.com/nothings/stb.git)
-    	"%{prj.location}/externals/PixEventRuntime/include", -- [WinPixEventRuntime](https://github.com/microsoft/PixEvents.git)
 	}
 
 	-- 依存プロジェクト
@@ -136,18 +135,16 @@ project "SxavengerEngine"
 
 		-- リンカー設定
 		libdirs {
-			"%{prj.location}/externals/assimp/lib/Debug",
-			"%{prj.location}/externals/PixEventRuntime/lib/Debug",
+			"%{prj.location}/externals/assimp/lib/Debug"
 		}
 
 		links {
-			"assimp-vc143-mtd",
-			"WinPixEventRuntime"
+			"assimp-vc143-mtd"
 		}
 		
 		-- ビルド後イベント
 		postbuildcommands {
-			'copy "$(SolutionDir)externals\\assimp\\lib\\Debug\\assimp-vc143-mtd.dll" "$(TargetDir)assimp-vc143-mtd.dll"'
+			'copy "$(SolutionDir)externals\\assimp\\lib\\Debug\\assimp-vc143-mtd.dll" "$(TargetDir)assimp-vc143-mtd.dll"',
 		}
 
 	-- Develop
@@ -161,18 +158,16 @@ project "SxavengerEngine"
 
 		-- リンカー設定
 		libdirs {
-			"%{prj.location}/externals/assimp/lib/Release",
-			"%{prj.location}/externals/PixEventRuntime/lib/Release"
+			"%{prj.location}/externals/assimp/lib/Release"
 		}
 
 		links {
-			"assimp-vc143-mt",
-			"WinPixEventRuntime"
+			"assimp-vc143-mt"
 		}
 		
 		-- ビルド後イベント
 		postbuildcommands {
-			'copy "$(SolutionDir)externals\\assimp\\lib\\Release\\assimp-vc143-mt.dll" "$(TargetDir)assimp-vc143-mt.dll"'
+			'copy "$(SolutionDir)externals\\assimp\\lib\\Release\\assimp-vc143-mt.dll" "$(TargetDir)assimp-vc143-mt.dll"',
 		}
 
 	-- Release
@@ -185,13 +180,11 @@ project "SxavengerEngine"
 
 		-- リンカー設定
 		libdirs {
-			"%{prj.location}/externals/assimp/lib/Release",
-			"%{prj.location}/externals/PixEventRuntime/lib/Release"
+			"%{prj.location}/externals/assimp/lib/Release"
 		}
 
 		links {
-			"assimp-vc143-mt",
-			"WinPixEventRuntime"
+			"assimp-vc143-mt"
 		}
 		
 		-- ビルド後イベント

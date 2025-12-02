@@ -8,8 +8,8 @@ _DXOBJECT_USING
 #include <Engine/System/Utility/Logger.h>
 #include <Engine/System/SxavengerSystem.h>
 
-//* external
-//#include <pix3.h>
+//* windows
+#include <pix.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // DirectXQueueContext class methods
@@ -57,13 +57,15 @@ void DirectXQueueContext::BeginEvent(const std::wstring& name) const {
 		return;
 	}
 
-	name;
+	PIXBeginEvent(context_->GetCommandList(), 0, name.c_str());
 }
 
 void DirectXQueueContext::EndEvent() const {
 	if (context_ == nullptr) {
 		return;
 	}
+
+	PIXEndEvent(context_->GetCommandList());
 }
 
 bool DirectXQueueContext::IsSupportQueue(RenderQueue type) const {

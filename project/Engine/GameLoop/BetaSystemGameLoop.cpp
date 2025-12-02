@@ -63,6 +63,13 @@ void BetaSystemGameLoop::InitSystem() {
 	camera_->Init();
 	camera_->GetComponent<CameraComponent>()->SetTag(CameraComponent::Tag::Game);
 
+	process_ = std::make_unique<MonoBehaviour>();
+	auto process = process_->AddComponent<PostProcessLayerComponent>();
+	process->SetTag(PostProcessLayerComponent::Tag::Global);
+	process->AddPostProcess<PostProcessAutoExposure>();
+	process->AddPostProcess<PostProcessLocalExposure>(false);
+	process->AddPostProcess<PostProcessBloom>();
+
 	skylight_ = std::make_unique<MonoBehaviour>();
 	auto light = skylight_->AddComponent<SkyLightComponent>();
 	light->SetIrradiance(sContentStorage->Import<ContentTexture>("assets/textures/textureCube/sky_irradiance.dds")->GetId());

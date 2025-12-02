@@ -16,7 +16,7 @@ void FRenderPassAntiAliasing::Render(const DirectXQueueContext* context, const C
 		return;
 	}
 
-	// FXAA以外が追加された場合, 分岐する
+	context->BeginEvent(L"RenderPass - AntiAliasing");
 
 	BeginProcessAntiAliasing(context, config.buffer);
 
@@ -31,6 +31,8 @@ void FRenderPassAntiAliasing::Render(const DirectXQueueContext* context, const C
 	}
 
 	EndProcessAntiAliasing(context, config.buffer);
+
+	context->EndEvent();
 
 }
 

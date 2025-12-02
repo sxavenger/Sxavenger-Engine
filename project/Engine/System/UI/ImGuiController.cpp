@@ -107,7 +107,9 @@ void ImGuiController::EndFrame() {
 void ImGuiController::Render(DirectXQueueContext* context) {
 	context->RequestQueue(DirectXQueueContext::RenderQueue::Direct);
 #ifdef _DEVELOPMENT
+	context->BeginEvent(L"ImGui Render");
 	ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(), context->GetCommandList());
+	context->EndEvent();
 #endif // _DEVELOPMENT
 }
 

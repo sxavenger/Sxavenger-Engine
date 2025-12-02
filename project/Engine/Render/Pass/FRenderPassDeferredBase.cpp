@@ -17,13 +17,13 @@
 
 void FRenderPassDeferredBase::Render(const DirectXQueueContext* context, const Config& config) {
 
+	context->BeginEvent(L"RenderPass - DeferredBase");
+
 	// waning処理
 	if (config.CheckStatus(FBaseRenderPass::Config::Status::Geometry_Warning)) {
 		ClearPass(context, config.buffer);
 		return;
 	}
-
-	context->BeginEvent(L"RenderPass - DeferredBase");
 
 	{ //!< Render Target Pass
 		BeginPassRenderTarget(context, config.buffer);
@@ -223,7 +223,6 @@ void FRenderPassDeferredBase::PassSkinnedMesh(const DirectXQueueContext* context
 	
 
 	});
-
 }
 
 void FRenderPassDeferredBase::BeginPassVelocity(const DirectXQueueContext* context, FRenderTargetBuffer* buffer) {

@@ -22,6 +22,8 @@ void FRenderPassPostProcess::Render(const DirectXQueueContext* context, const Co
 		return;
 	}
 
+	context->BeginEvent(L"RenderPass - PostProcess");
+
 	config.buffer->BeginPostProcess(context);
 
 	BasePostProcess::ProcessInfo info = {};
@@ -69,5 +71,7 @@ void FRenderPassPostProcess::Render(const DirectXQueueContext* context, const Co
 
 
 	config.buffer->EndPostProcess(context);
+
+	context->EndEvent();
 
 }

@@ -41,10 +41,6 @@ public:
 
 	void ExecuteAllAllocators();
 
-	void BeginEvent(const std::wstring& name);
-
-	void EndEvent();
-
 	//* getter *//
 
 	ID3D12GraphicsCommandList6* GetCommandList() const { return commandList_.Get(); }

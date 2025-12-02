@@ -18,6 +18,9 @@
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 void FRenderPassCanvas::Render(const DirectXQueueContext* context, const Config& config) {
+
+	context->BeginEvent(L"RenderPass - Canvas");
+
 	config.buffer->BeginRenderTargetMainUI(context);
 
 	PassSprite(context, config);
@@ -25,6 +28,8 @@ void FRenderPassCanvas::Render(const DirectXQueueContext* context, const Config&
 	PassText(context, config);
 
 	config.buffer->EndRenderTargetMainUI(context);
+
+	context->EndEvent();
 }
 
 void FRenderPassCanvas::PassSprite(const DirectXQueueContext* context, const Config& config) {

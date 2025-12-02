@@ -44,6 +44,7 @@ private:
 	std::shared_ptr<DirectXWindowContext> main_;
 
 	std::unique_ptr<ControllableCameraActor> camera_;
+	std::unique_ptr<MonoBehaviour> process_;
 
 	std::unique_ptr<MonoBehaviour> skylight_;
 	std::unique_ptr<MonoBehaviour> behaviour_;

@@ -19,6 +19,8 @@
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 void FRenderPassDeferredLighting::Render(const DirectXQueueContext* context, const Config& config) {
+
+	context->BeginEvent(L"RenderPass - DeferredLighting");
 	
 	if (config.CheckStatus(Config::Status::Geometry_Warning)) {
 		ClearPassDirect(context, config.buffer);
@@ -28,6 +30,8 @@ void FRenderPassDeferredLighting::Render(const DirectXQueueContext* context, con
 
 	{ //* Direct Lighting
 		BeginPassDirectLighting(context, config.buffer);
+
+		context->BeginEvent(L"Direct Lighting Passes");
 
 		PassEmpty(context, config);
 
@@ -40,11 +44,15 @@ void FRenderPassDeferredLighting::Render(const DirectXQueueContext* context, con
 		PassSkyLight(context, config);
 		PassSkyAtmosphere(context, config);
 
+		context->EndEvent();
+
 		EndPassDirectLighting(context, config.buffer);
 	}
 
 
 	if (config.option.Test(FBaseRenderPass::Config::Option::IndirectLighting)) { //* Indirect Lighting
+
+		context->BeginEvent(L"Indirect Lighting Passes");
 
 		{
 			BeginPassIndirectLighting(context, config.buffer);
@@ -58,6 +66,8 @@ void FRenderPassDeferredLighting::Render(const DirectXQueueContext* context, con
 
 			EndPassIndirectLighting(context, config.buffer);
 		}
+
+		context->EndEvent();
 		
 
 	} else {
@@ -66,6 +76,8 @@ void FRenderPassDeferredLighting::Render(const DirectXQueueContext* context, con
 	}
 
 	TransitionLightingPass(context, config);
+
+	context->EndEvent();
 
 }
 

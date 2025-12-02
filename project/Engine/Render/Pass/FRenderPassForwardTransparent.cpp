@@ -18,6 +18,8 @@
 
 void FRenderPassForwardTransparent::Render(const DirectXQueueContext* context, const Config& config) {
 
+	context->BeginEvent(L"RenderPass - ForwardTransparent");
+
 	// waning処理
 	if (config.CheckStatus(FBaseRenderPass::Config::Status::Geometry_Warning)) {
 		ClearPass(context, config.buffer);
@@ -33,6 +35,8 @@ void FRenderPassForwardTransparent::Render(const DirectXQueueContext* context, c
 	PassParticles(context, config);
 
 	EndPassRenderTarget(context, config.buffer);
+
+	context->EndEvent();
 
 }
 
