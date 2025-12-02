@@ -28,7 +28,7 @@
 ////////////////////////////////////////////////////////////////////////////////////////////
 //! @brief Animation付きメッシュ描画component.
 class SkinnedMeshRendererComponent final
-	: public BaseComponent {
+	: public BaseComponent, public MeshRendererCommon {
 public:
 
 	////////////////////////////////////////////////////////////////////////////////////////////
@@ -117,8 +117,6 @@ public:
 
 	void DrawCall(const DirectXQueueContext* context, uint32_t instanceCount = 1) const;
 
-	void SetEnable(bool isEnable = true) { isEnable_ = isEnable; }
-
 	//* getter *//
 
 	std::shared_ptr<AssetMaterial> GetMaterial() const;
@@ -158,10 +156,6 @@ private:
 
 	InputSkinnedMesh mesh_;
 	SkinCluster cluster_;
-
-	Sxl::Flag<MeshInstanceMask> mask_ = MeshInstanceMask::Default;
-
-	bool isEnable_ = true;
 
 	//!< todo: instance描画
 
