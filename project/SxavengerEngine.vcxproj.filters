@@ -949,6 +949,7 @@
       <Filter>externals\meshoptimizer</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Render\Storage\SurfaceCacheStorage.h" />
+    <ClInclude Include="Engine\System\Runtime\Input\InputHelper.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Demo\Entity\Player.cpp">
@@ -1595,5 +1596,6 @@
     </ClCompile>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Engine\Render\Storage\SurfaceCacheStorage.cpp" />
+    <ClCompile Include="Engine\System\Runtime\Input\InputHelper.cpp" />
   </ItemGroup>
 </Project>

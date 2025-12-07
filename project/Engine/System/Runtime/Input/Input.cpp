@@ -552,7 +552,7 @@ bool GamepadInput::IsConnect() const {
 }
 
 bool GamepadInput::IsPress(GamepadButtonId id) const {
-	if (!inputs_[static_cast<uint8_t>(InputType::Main_Current)].IsConnect()) {
+	if (!IsConnect()) {
 		return false;
 	}
 
@@ -560,7 +560,7 @@ bool GamepadInput::IsPress(GamepadButtonId id) const {
 }
 
 bool GamepadInput::IsPress(GamepadTriggerId id) const {
-	if (!inputs_[static_cast<uint8_t>(InputType::Main_Current)].IsConnect()) {
+	if (!IsConnect()) {
 		return false;
 	}
 
@@ -568,7 +568,7 @@ bool GamepadInput::IsPress(GamepadTriggerId id) const {
 }
 
 bool GamepadInput::IsTrigger(GamepadButtonId id) const {
-	if (!inputs_[static_cast<uint8_t>(InputType::Main_Current)].IsConnect()) {
+	if (!IsConnect()) {
 		return false;
 	}
 
@@ -577,7 +577,7 @@ bool GamepadInput::IsTrigger(GamepadButtonId id) const {
 }
 
 bool GamepadInput::IsTrigger(GamepadTriggerId id) const {
-	if (!inputs_[static_cast<uint8_t>(InputType::Main_Current)].IsConnect()) {
+	if (!IsConnect()) {
 		return false;
 	}
 
@@ -586,7 +586,7 @@ bool GamepadInput::IsTrigger(GamepadTriggerId id) const {
 }
 
 bool GamepadInput::IsRelease(GamepadButtonId id) const {
-	if (!inputs_[static_cast<uint8_t>(InputType::Main_Current)].IsConnect()) {
+	if (!IsConnect()) {
 		return false;
 	}
 
@@ -595,7 +595,7 @@ bool GamepadInput::IsRelease(GamepadButtonId id) const {
 }
 
 bool GamepadInput::IsRelease(GamepadTriggerId id) const {
-	if (!inputs_[static_cast<uint8_t>(InputType::Main_Current)].IsConnect()) {
+	if (!IsConnect()) {
 		return false;
 	}
 
@@ -604,7 +604,7 @@ bool GamepadInput::IsRelease(GamepadTriggerId id) const {
 }
 
 Vector2i GamepadInput::GetStick(GamepadStickId id) const {
-	if (!inputs_[static_cast<uint8_t>(InputType::Main_Current)].IsConnect()) {
+	if (!IsConnect()) {
 		return {};
 	}
 
@@ -612,7 +612,7 @@ Vector2i GamepadInput::GetStick(GamepadStickId id) const {
 }
 
 Vector2f GamepadInput::GetStickNormalized(GamepadStickId id) const {
-	return (static_cast<Vector2f>(GetStick(id)) / static_cast<float>(SHRT_MAX)).Normalize();
+	return static_cast<Vector2f>(GetStick(id)) / static_cast<float>(SHRT_MAX);
 }
 
 void GamepadInput::SystemDebugGui() {

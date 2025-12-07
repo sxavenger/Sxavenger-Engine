@@ -442,7 +442,4 @@ private:
 
 	std::array<std::unique_ptr<GamepadInput>, XUSER_MAX_COUNT> gamepads_;
 
-
-	// todo: stringからinput取得する仕組みを作る
-
 };
