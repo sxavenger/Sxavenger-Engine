@@ -92,6 +92,9 @@ public:
 		CameraComponent::Tag tag      = CameraComponent::Tag::Game;
 		//!< cameraが直接指定されていない場合, tagのcameraを使用する
 
+		const CameraComponent* cullCamera = nullptr; //!< culling用camera
+		//!< culling用cameraが直接指定されていない場合, cameraと同じものを使用する
+
 		//* option *//
 
 		AntiAliasing antiAliasing = AntiAliasing::FXAA;

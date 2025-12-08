@@ -64,9 +64,9 @@ public:
 		// MeshletTriangle structure
 		////////////////////////////////////////////////////////////////////////////////////////////
 		struct MeshletTriangle {
-			uint32_t i0      : 10;
-			uint32_t i1      : 10;
-			uint32_t i2      : 10;
+			uint32_t i0 : 10;
+			uint32_t i1 : 10;
+			uint32_t i2 : 10;
 			//!< 1頂点当たり10bit(uint8_t)で表現
 		};
 
@@ -79,6 +79,17 @@ public:
 			uint32_t vertexCount;
 			uint32_t triangleCount;
 			//!< meshopt_Meshlet と同じレイアウトで作成する
+		};
+
+		////////////////////////////////////////////////////////////////////////////////////////////
+		// MeshletBounds structure
+		////////////////////////////////////////////////////////////////////////////////////////////
+		struct MeshletBounds {
+			Vector3f center;
+			float    radius;
+			Vector3f coneAxis;
+			Vector3f coneApex;
+			float    coneCutoff;
 		};
 
 	public:
@@ -101,6 +112,7 @@ public:
 		std::unique_ptr<DxObject::DimensionBuffer<uint32_t>>        uniqueVertexIndices;
 		std::unique_ptr<DxObject::DimensionBuffer<MeshletTriangle>> primitiveIndices;
 		std::unique_ptr<DxObject::DimensionBuffer<MeshletData>>     meshlets;
+		std::unique_ptr<DxObject::DimensionBuffer<MeshletBounds>>   meshletBounds;
 
 		// TODO: culldataを生成.
 

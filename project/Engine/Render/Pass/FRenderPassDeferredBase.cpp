@@ -153,7 +153,8 @@ void FRenderPassDeferredBase::PassStaticMesh(const DirectXQueueContext* context,
 
 	// common parameterの設定
 	DxObject::BindBufferDesc parameter = {};
-	parameter.SetAddress("gCamera", config.camera->GetGPUVirtualAddress());
+	parameter.SetAddress("gCamera",     config.camera->GetGPUVirtualAddress());
+	parameter.SetAddress("gCullCamera", config.cullCamera->GetGPUVirtualAddress());
 
 	sComponentStorage->ForEachActive<MeshRendererComponent>([&](MeshRendererComponent* component) {
 		if (!component->IsEnable()) {
@@ -180,6 +181,7 @@ void FRenderPassDeferredBase::PassStaticMesh(const DirectXQueueContext* context,
 		parameter.SetAddress("gIndices",    meshlet.uniqueVertexIndices->GetGPUVirtualAddress());
 		parameter.SetAddress("gMeshlets",   meshlet.meshlets->GetGPUVirtualAddress());
 		parameter.SetAddress("gPrimitives", meshlet.primitiveIndices->GetGPUVirtualAddress());
+		parameter.SetAddress("gBounds",     meshlet.meshletBounds->GetGPUVirtualAddress());
 		 
 		core->BindGraphicsBuffer(FRenderCoreGeometry::Type::Deferred_MeshMS, context, parameter);
 		meshlet.Dispatch(context, 1);

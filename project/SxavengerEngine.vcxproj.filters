@@ -154,6 +154,9 @@
     <Filter Include="Engine\Render\Scene\Environment">
       <UniqueIdentifier>{0B10D28A-77F3-E0CA-80F6-0E07EC58A71B}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Engine\Render\Storage">
+      <UniqueIdentifier>{2E2AD0F3-9A96-8BEE-638A-234CCFB5AD56}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Engine\System">
       <UniqueIdentifier>{8FF69A5A-FBB6-1691-C4F1-5F0E30715B6D}</UniqueIdentifier>
     </Filter>
@@ -249,9 +252,6 @@
     <ClInclude Include="Demo\GameLoop\DemoGameLoop.h">
       <Filter>Demo\GameLoop</Filter>
     </ClInclude>
-    <ClInclude Include="Demo\GameLoop\PreviewGameLoop.h">
-      <Filter>Demo\GameLoop</Filter>
-    </ClInclude>
     <ClInclude Include="Demo\Object\CollectibleCube.h">
       <Filter>Demo\Object</Filter>
     </ClInclude>
@@ -305,6 +305,15 @@
     </ClInclude>
     <ClInclude Include="Engine\Component\Components\Armature\ArmatureComponent.h">
       <Filter>Engine\Component\Components\Armature</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Component\Components\Audio\Audio3dListenerComponent.h">
+      <Filter>Engine\Component\Components\Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Component\Components\Audio\Audio3dSourceComponent.h">
+      <Filter>Engine\Component\Components\Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Component\Components\Audio\AudioCommon.h">
+      <Filter>Engine\Component\Components\Audio</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Component\Components\Audio\AudioController.h">
       <Filter>Engine\Component\Components\Audio</Filter>
@@ -693,6 +702,9 @@
     <ClInclude Include="Engine\Render\Scene\FScene.h">
       <Filter>Engine\Render\Scene</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\Render\Storage\SurfaceCacheStorage.h">
+      <Filter>Engine\Render\Storage</Filter>
+    </ClInclude>
     <ClInclude Include="Engine\System\Config\SxavengerConfig.h">
       <Filter>Engine\System\Config</Filter>
     </ClInclude>
@@ -805,6 +817,9 @@
       <Filter>Engine\System\Runtime\GameLoop</Filter>
     </ClInclude>
     <ClInclude Include="Engine\System\Runtime\Input\Input.h">
+      <Filter>Engine\System\Runtime\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\System\Runtime\Input\InputHelper.h">
       <Filter>Engine\System\Runtime\Input</Filter>
     </ClInclude>
     <ClInclude Include="Engine\System\Runtime\Input\InputId.h">
@@ -948,17 +963,12 @@
     <ClInclude Include="externals\meshoptimizer\meshoptimizer.h">
       <Filter>externals\meshoptimizer</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Render\Storage\SurfaceCacheStorage.h" />
-    <ClInclude Include="Engine\System\Runtime\Input\InputHelper.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Demo\Entity\Player.cpp">
       <Filter>Demo\Entity</Filter>
     </ClCompile>
     <ClCompile Include="Demo\GameLoop\DemoGameLoop.cpp">
-      <Filter>Demo\GameLoop</Filter>
-    </ClCompile>
-    <ClCompile Include="Demo\GameLoop\PreviewGameLoop.cpp">
       <Filter>Demo\GameLoop</Filter>
     </ClCompile>
     <ClCompile Include="Demo\Object\CollectibleCube.cpp">
@@ -1008,6 +1018,15 @@
     </ClCompile>
     <ClCompile Include="Engine\Component\Components\Armature\ArmatureComponent.cpp">
       <Filter>Engine\Component\Components\Armature</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Component\Components\Audio\Audio3dListenerComponent.cpp">
+      <Filter>Engine\Component\Components\Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Component\Components\Audio\Audio3dSourceComponent.cpp">
+      <Filter>Engine\Component\Components\Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Component\Components\Audio\AudioCommon.cpp">
+      <Filter>Engine\Component\Components\Audio</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Component\Components\Audio\AudioController.cpp">
       <Filter>Engine\Component\Components\Audio</Filter>
@@ -1369,6 +1388,9 @@
     <ClCompile Include="Engine\Render\Scene\FScene.cpp">
       <Filter>Engine\Render\Scene</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\Render\Storage\SurfaceCacheStorage.cpp">
+      <Filter>Engine\Render\Storage</Filter>
+    </ClCompile>
     <ClCompile Include="Engine\System\Config\SxavengerConfig.cpp">
       <Filter>Engine\System\Config</Filter>
     </ClCompile>
@@ -1472,6 +1494,9 @@
       <Filter>Engine\System\Runtime\GameLoop</Filter>
     </ClCompile>
     <ClCompile Include="Engine\System\Runtime\Input\Input.cpp">
+      <Filter>Engine\System\Runtime\Input</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\System\Runtime\Input\InputHelper.cpp">
       <Filter>Engine\System\Runtime\Input</Filter>
     </ClCompile>
     <ClCompile Include="Engine\System\Runtime\Performance\DeltaTimePoint.cpp">
@@ -1595,7 +1620,5 @@
       <Filter>externals\stb</Filter>
     </ClCompile>
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="Engine\Render\Storage\SurfaceCacheStorage.cpp" />
-    <ClCompile Include="Engine\System\Runtime\Input\InputHelper.cpp" />
   </ItemGroup>
 </Project>

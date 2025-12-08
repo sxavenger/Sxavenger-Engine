@@ -18,4 +18,6 @@ StructuredBuffer<MeshVertex> gVertices : register(t10);
 StructuredBuffer<uint> gIndices        : register(t11);
 StructuredBuffer<Meshlet> gMeshlets    : register(t12);
 StructuredBuffer<uint> gPrimitives     : register(t13);
+StructuredBuffer<Bounds> gBounds       : register(t14);
 
+ConstantBuffer<CameraComponent> gCullCamera : register(b11);
