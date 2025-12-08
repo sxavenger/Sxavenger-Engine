@@ -18,6 +18,7 @@
 #include <Engine/Component/Components/Light/Punctual/PointLightComponent.h>
 #include <Engine/Component/Components/Light/Punctual/SpotLightComponent.h>
 #include <Engine/Component/Components/PostProcessLayer/PostProcessLayerComponent.h>
+#include <Engine/Component/ComponentHelper.h>
 #include <Engine/Render/FMainRender.h>
 #include <Engine/Preview/Asset/AssetStorage.h>
 #include <Engine/Preview/Content/ContentStorage.h>
@@ -324,7 +325,7 @@ void RenderSceneEditor::ShowSceneMenu() {
 		ImGui::EndDisabled();
 
 		// process
-		ImGui::Text("process");
+		ImGui::Text("process option");
 		ImGui::Separator();
 
 		if (ImGui::BeginCombo("anti-aliasing", magic_enum::enum_name(config_.antiAliasing).data())) {
@@ -342,6 +343,13 @@ void RenderSceneEditor::ShowSceneMenu() {
 				continue;
 			}
 			SxImGui::CheckBoxFlags(name.data(), &config_.option.Get(), static_cast<size_t>(value));
+		}
+
+		ImGui::Text("debug option");
+		ImGui::Separator();
+
+		if (ImGui::Checkbox("cull camera", &isDebugCulling_)) {
+			config_.cullCamera = isDebugCulling_ ? ComponentHelper::GetCameraComponent(CameraComponent::Tag::Game) : nullptr;
 		}
 
 		// window

@@ -157,6 +157,7 @@ private:
 	std::unique_ptr<MonoBehaviour>       camera_;   //!< scene camera
 
 	FBaseRenderPass::Config config_ = {};
+	bool isDebugCulling_ = false;
 
 	bool isFocusGameWindow_  = false;
 	bool isFocusSceneWindow_ = false;

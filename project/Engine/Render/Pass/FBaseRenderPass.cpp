@@ -23,7 +23,7 @@ void FBaseRenderPass::Config::AttachStatus() {
 		Logger::WarningRuntime("[FBaseRenderPass]", "scene is not set.");
 	}
 
-	if (camera == nullptr) {
+	if (camera == nullptr || cullCamera == nullptr) {
 		status |= Status::Warning_Camera;
 		Logger::WarningRuntime("[FBaseRenderPass]", "camera is not set.");
 	}

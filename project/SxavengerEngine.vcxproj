@@ -168,7 +168,6 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
   <ItemGroup>
     <ClInclude Include="Demo\Entity\Player.h" />
     <ClInclude Include="Demo\GameLoop\DemoGameLoop.h" />
-    <ClInclude Include="Demo\GameLoop\PreviewGameLoop.h" />
     <ClInclude Include="Demo\Object\CollectibleCube.h" />
     <ClInclude Include="Demo\Object\CollectibleItems.h" />
     <ClInclude Include="Demo\Object\PerspectiveCamera.h" />
@@ -410,7 +409,6 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
   <ItemGroup>
     <ClCompile Include="Demo\Entity\Player.cpp" />
     <ClCompile Include="Demo\GameLoop\DemoGameLoop.cpp" />
-    <ClCompile Include="Demo\GameLoop\PreviewGameLoop.cpp" />
     <ClCompile Include="Demo\Object\CollectibleCube.cpp" />
     <ClCompile Include="Demo\Object\CollectibleItems.cpp" />
     <ClCompile Include="Demo\Object\PerspectiveCamera.cpp" />

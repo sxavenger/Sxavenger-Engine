@@ -60,6 +60,10 @@ void InputMesh::Meshlet::CreateMeshlet(const TriangleInputAssembler<MeshVertexDa
 	std::vector<MeshletData> _meshlet;
 	_meshlet.reserve(meshletCount);
 
+	std::vector<MeshletBounds> _meshletBounds;
+	_meshletBounds.reserve(meshletCount);
+
+	//!< meshlet情報の格納
 	for (size_t i = 0; i < meshletCount; ++i) {
 
 		const auto& m = meshlet[i];
@@ -92,6 +96,30 @@ void InputMesh::Meshlet::CreateMeshlet(const TriangleInputAssembler<MeshVertexDa
 
 	}
 
+	//!< boundingの生成
+	for (size_t i = 0; i < meshletCount; ++i) {
+
+		const auto& m = meshlet[i];
+
+		meshopt_Bounds data = meshopt_computeMeshletBounds(
+			&meshletVertex[m.vertex_offset],        //!< メッシュレット内のユニーク頂点インデックス
+			&meshletPrimitives[m.triangle_offset],  //!< メッシュレット内の三角形 (i0,i1,i2) の並び
+			m.triangle_count,                       //!< 三角形数
+			&vertex->GetData()->position.x,        //!< 全頂点の位置バッファ
+			vertex->GetSize(),                     //!< 全頂点数
+			vertex->GetStride()                    //!< 頂点のストライド
+		);
+
+		MeshletBounds bounds = {};
+		bounds.center    = { data.center[0], data.center[1], data.center[2] };
+		bounds.radius    = data.radius;
+		bounds.coneApex  = { data.cone_apex[0], data.cone_apex[1], data.cone_apex[2] };
+		bounds.coneAxis  = { data.cone_axis[0], data.cone_axis[1], data.cone_axis[2] };
+		bounds.coneCutoff = data.cone_cutoff;
+
+		_meshletBounds.emplace_back(bounds);
+	}
+
 	{
 		// _DXOBJECT Deviceの取り出し
 		auto device = SxavengerSystem::GetDxDevice();
@@ -107,6 +135,10 @@ void InputMesh::Meshlet::CreateMeshlet(const TriangleInputAssembler<MeshVertexDa
 		primitiveIndices = std::make_unique<DimensionBuffer<MeshletTriangle>>();
 		primitiveIndices->Create(device, static_cast<uint32_t>(_primitiveIndices.size()));
 		primitiveIndices->Memcpy(_primitiveIndices.data());
+
+		meshletBounds = std::make_unique<DimensionBuffer<MeshletBounds>>();
+		meshletBounds->Create(device, static_cast<uint32_t>(_meshletBounds.size()));
+		meshletBounds->Memcpy(_meshletBounds.data());
 
 	}
 
