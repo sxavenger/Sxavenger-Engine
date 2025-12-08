@@ -13,7 +13,7 @@
 // ContentFont class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-void ContentFont::AsyncLoad(_MAYBE_UNUSED const DirectXQueueContext* context) {
+void ContentFont::AsyncLoad(MAYBE_UNUSED const DirectXQueueContext* context) {
 	BaseContent::CheckExist();
 
 	Load(context, BaseContent::GetFilepath());

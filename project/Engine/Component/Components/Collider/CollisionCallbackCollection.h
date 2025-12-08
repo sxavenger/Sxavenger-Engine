@@ -25,7 +25,7 @@ public:
 	// using
 	////////////////////////////////////////////////////////////////////////////////////////////
 
-	using OnCollisionFunction = std::function<void(_MAYBE_UNUSED ColliderComponent* const, _MAYBE_UNUSED ColliderComponent* const)>; //!< OnCollision関数
+	using OnCollisionFunction = std::function<void(MAYBE_UNUSED ColliderComponent* const, MAYBE_UNUSED ColliderComponent* const)>; //!< OnCollision関数
 	//!< 制約: ColliderComponent*の順番はtagの昇順である.
 
 	////////////////////////////////////////////////////////////////////////////////////////////

@@ -5,6 +5,7 @@
 //-----------------------------------------------------------------------------------------
 //* component
 #include "../BaseComponent.h"
+#include "../Transform/TransformComponent.h"
 
 //* audio
 #include "AudioCommon.h"
@@ -15,40 +16,41 @@
 
 //* xaudio2
 #include <xaudio2.h>
-
-//* c++
-#include <optional>
+#include <x3daudio.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// AudioSourceComponent class
+// Audio3dSourceComponent class
 ////////////////////////////////////////////////////////////////////////////////////////////
-class AudioSourceComponent final
+class Audio3dSourceComponent final
 	: public BaseComponent {
+public:
+
+	////////////////////////////////////////////////////////////////////////////////////////////
+	// Channel enum class
+	////////////////////////////////////////////////////////////////////////////////////////////
+	enum class Channel : UINT32 {
+		Monoral = 1,
+		Stereo  = 2,
+	};
+
 public:
 
 	//=========================================================================================
 	// public methods
 	//=========================================================================================
-
-	AudioSourceComponent(MonoBehaviour* behaviour) : BaseComponent(behaviour) {}
-	~AudioSourceComponent() override { Stop(); }
-
-	//* component option *//
+	
+	Audio3dSourceComponent(MonoBehaviour* behaviour) : BaseComponent(behaviour) {}
+	~Audio3dSourceComponent() override = default;
 
 	void Play();
 
-	void Stop();
-
-	void PlayOneShot(const std::optional<AssetParameter<AssetAudioClip>>& audio = std::nullopt);
-
-	void SetTag(AudioHandle::Tag tag) { tag_ = tag; }
+	void Update(const X3DAUDIO_LISTENER& listener);
 
 	void SetVolume(float volume);
 
 	void SetLoop(bool isLoop) { isLoop_ = isLoop; }
 
 	void SetAudio(const AssetParameter<AssetAudioClip>& audio) { audio_ = audio; }
-
 
 private:
 
@@ -58,18 +60,33 @@ private:
 
 	//* parameter *//
 
-	AudioHandle::Tag tag_ = AudioHandle::Tag::SE;
-
 	float volume_ = 1.0f;
-	bool isLoop_  = false;
+	bool isLoop_ = false;
+
+	Channel channel_ = Channel::Stereo;
 
 	//* audio clip *//
 
 	AssetParameter<AssetAudioClip> audio_ = nullptr;
 
-	//* handle *//
+	//* audio handle *//
 
 	std::unique_ptr<AudioHandle> handle_ = nullptr;
 
+	static inline std::array<float, 2> kDefaultStereoAzimuths = { kPi * 0.25f, kPi * 0.75f };
+	
+	//=========================================================================================
+	// private methods
+	//=========================================================================================
+
+	//* behaviour methods *//
+
+	const TransformComponent* RequireTransform() const;
+
+	//* helper methods *//
+
+	const X3DAUDIO_EMITTER GetEmitter() const;
+
+	
 
 };

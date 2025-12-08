@@ -19453,7 +19453,7 @@
 	],
 	"f33a7764-673b-40c3-8795179e4bc94691": [
 		"assets/sounds/fanfare.wav",
-		"class UAssetAudioClip"
+		"class AssetAudioClip"
 	],
 	"f345ddf1-aa75-441f-900ee23fe9db17a4": [
 		"assets/models/Bistro/Bistro.gltf",

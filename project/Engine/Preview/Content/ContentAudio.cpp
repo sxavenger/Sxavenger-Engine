@@ -17,7 +17,7 @@
 // ContentAudio class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-void ContentAudio::AsyncLoad(_MAYBE_UNUSED const DirectXQueueContext* context) {
+void ContentAudio::AsyncLoad(MAYBE_UNUSED const DirectXQueueContext* context) {
 	BaseContent::CheckExist();
 
 	Load(BaseContent::GetFilepath());

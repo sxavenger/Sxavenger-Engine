@@ -17,6 +17,8 @@
 #include <Engine/Component/Components/Transform/RectTransformComponent.h>
 #include <Engine/Component/Components/TextRenderer/TextRendererComponent.h>
 #include <Engine/Component/Components/Audio/AudioSourceComponent.h>
+#include <Engine/Component/Components/Audio/Audio3dListenerComponent.h>
+#include <Engine/Component/Components/Audio/Audio3dSourceComponent.h>
 #include <Engine/Component/ComponentHelper.h>
 #include <Engine/System/Runtime/Performance/DeltaTimePoint.h>
 #include <Engine/Render/FRenderCore.h>
@@ -62,6 +64,7 @@ void BetaSystemGameLoop::InitSystem() {
 	camera_ = std::make_unique<ControllableCameraActor>();
 	camera_->Init();
 	camera_->GetComponent<CameraComponent>()->SetTag(CameraComponent::Tag::Game);
+	camera_->AddComponent<Audio3dListenerComponent>();
 
 	process_ = std::make_unique<MonoBehaviour>();
 	auto process = process_->AddComponent<PostProcessLayerComponent>();
@@ -79,6 +82,11 @@ void BetaSystemGameLoop::InitSystem() {
 	behaviour_ = std::make_unique<MonoBehaviour>();
 	behaviour_->AddComponent<TransformComponent>();
 	behaviour_->AddComponent<SkyAtmosphereComponent>();
+
+	auto audio = behaviour_->AddComponent<Audio3dSourceComponent>();
+	audio->SetAudio(sContentStorage->Import<ContentAudio>("assets/sounds/fanfare.wav")->GetId());
+	audio->SetLoop(true);
+	audio->Play();
 
 	performance_ = std::make_unique<PerformanceActor>();
 	performance_->Init();
@@ -124,6 +132,8 @@ void BetaSystemGameLoop::UpdateSystem() {
 
 	ComponentHelper::UpdateSkinning();
 	// todo: engine側のgameloopに移動.
+
+	ComponentHelper::UpdateAudio3d();
 
 	//* test *//
 	

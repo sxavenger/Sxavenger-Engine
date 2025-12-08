@@ -45,7 +45,7 @@ public:
 
 	//* descriptor option *//
 
-	_NODISCARD Descriptor GetDescriptor();
+	NODISCARD Descriptor GetDescriptor();
 
 	void DeleteDescriptor(Descriptor& descriptor);
 
@@ -120,7 +120,7 @@ public:
 
 	//* descriptor option *//
 
-	_NODISCARD Descriptor GetDescriptor(DescriptorType type);
+	NODISCARD Descriptor GetDescriptor(DescriptorType type);
 
 	void DeleteDescriptor(Descriptor& descriptor);
 

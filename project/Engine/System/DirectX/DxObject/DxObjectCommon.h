@@ -137,14 +137,14 @@ constexpr DXGI_FORMAT ConvertToSRGB(DXGI_FORMAT format) {
 	}
 }
 
-_NODISCARD ComPtr<ID3D12Resource> CreateBufferResource(
+NODISCARD ComPtr<ID3D12Resource> CreateBufferResource(
 	ID3D12Device* device,
 	D3D12_HEAP_TYPE heapType,
 	size_t sizeInBytes,
 	D3D12_RESOURCE_FLAGS flags, D3D12_RESOURCE_STATES state
 );
 
-_NODISCARD ComPtr<ID3D12Resource> CreateBufferResource(
+NODISCARD ComPtr<ID3D12Resource> CreateBufferResource(
 	ID3D12Device* device,
 	size_t sizeInBytes
 );

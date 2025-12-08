@@ -31,7 +31,7 @@ Vector2f InputHelper::GetDirection(const KeyboardInput* input, const std::array<
 	return direction;
 }
 
-Vector2f InputHelper::GetDirection(const GamepadInput* input, GamepadStickId id, float deadzone = 0.0f) {
+Vector2f InputHelper::GetDirection(const GamepadInput* input, GamepadStickId id, float deadzone) {
 	if (!input->IsConnect()) { //!< コントローラーが接続されていない
 		return {};
 	}

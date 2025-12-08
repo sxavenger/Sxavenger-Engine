@@ -95,22 +95,18 @@ CompileProfile _DXOBJECT ToProfile(GraphicsShaderType type) {
 	switch (type) {
 		case GraphicsShaderType::vs:
 			return CompileProfile::vs;
-			break;
 
 		case GraphicsShaderType::gs:
 			return CompileProfile::gs;
-			break;
 
 		case GraphicsShaderType::ms:
 			return CompileProfile::ms;
-			break;
+			
 		case GraphicsShaderType::as:
 			return CompileProfile::as;
-			break;
 
 		case GraphicsShaderType::ps:
 			return CompileProfile::ps;
-			break;
 	}
 
 	Exception::Assert(false, "Graphics Shader Type is undefine.");

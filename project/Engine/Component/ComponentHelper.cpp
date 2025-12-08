@@ -20,6 +20,8 @@
 #include "Components/Particle/ParticleComponent.h"
 #include "Components/Light/Environment/SkyLightComponent.h"
 #include "Components/Collider/ColliderComponent.h"
+#include "Components/Audio/Audio3dListenerComponent.h"
+#include "Components/Audio/Audio3dSourceComponent.h"
 
 //* c++
 #include <execution>
@@ -64,6 +66,23 @@ void ComponentHelper::UpdateParticle() {
 
 	sComponentStorage->ForEachActive<ParticleComponent>([](ParticleComponent* component) {
 		component->Update();
+	});
+}
+
+void ComponentHelper::UpdateAudio3d() {
+
+	std::optional<X3DAUDIO_LISTENER> listener = std::nullopt;
+
+	sComponentStorage->ForEachActive<Audio3dListenerComponent>([&](Audio3dListenerComponent* component) {
+		listener = component->GetListener(); //!< 最後に見つけたlistenerを使う
+	});
+
+	if (!listener.has_value()) {
+		return;
+	}
+
+	sComponentStorage->ForEachActive<Audio3dSourceComponent>([&](Audio3dSourceComponent* component) {
+		component->Update(listener.value());
 	});
 }
 

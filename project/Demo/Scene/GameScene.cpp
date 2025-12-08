@@ -141,13 +141,13 @@ void GameScene::SetCollisionCallback() {
 
 	sCollisionManager->SetOnCollisionFunctionStay(
 		"Player", "Wall",
-		[](_MAYBE_UNUSED ColliderComponent* const player, _MAYBE_UNUSED ColliderComponent* const wall) {
+		[](MAYBE_UNUSED ColliderComponent* const player, MAYBE_UNUSED ColliderComponent* const wall) {
 		CollisionHelper::PushBackAABB(player, wall);
 	});
 
 	sCollisionManager->SetOnCollisionFunctionStay(
 		"item", "Player",
-		[](_MAYBE_UNUSED ColliderComponent* const item, _MAYBE_UNUSED ColliderComponent* const player) {
+		[](MAYBE_UNUSED ColliderComponent* const item, MAYBE_UNUSED ColliderComponent* const player) {
 		// 取得状態へ遷移.
 		item->GetBehaviour()->SetActive(false);
 	});

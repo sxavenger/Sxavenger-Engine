@@ -4,7 +4,7 @@
 // ContentBlob class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-void ContentBlob::AsyncLoad(_MAYBE_UNUSED const DirectXQueueContext* context) {
+void ContentBlob::AsyncLoad(MAYBE_UNUSED const DirectXQueueContext* context) {
 	BaseContent::CheckExist();
 
 	// このcontentはparameter(profile)が設定されているのが前提

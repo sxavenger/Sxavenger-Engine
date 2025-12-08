@@ -7,29 +7,6 @@
 #include "AudioController.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// AudioHandle structure methods
-////////////////////////////////////////////////////////////////////////////////////////////
-
-AudioSourceComponent::AudioHandle::~AudioHandle() {
-	Stop();
-	source->DestroyVoice();
-}
-
-void AudioSourceComponent::AudioHandle::Play() {
-	auto hr = source->Start();
-	DxObject::Assert(hr, L"IXAudio2SourceVoice start failed.");
-}
-
-void AudioSourceComponent::AudioHandle::Stop() {
-	source->Stop();
-	source->FlushSourceBuffers();
-}
-
-void AudioSourceComponent::AudioHandle::SetVolume(float volume) {
-	source->SetVolume(volume);
-}
-
-////////////////////////////////////////////////////////////////////////////////////////////
 // AudioSourceComponent class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -55,7 +32,7 @@ void AudioSourceComponent::Play() {
 }
 
 void AudioSourceComponent::Stop() {
-	if (handle_) {
+	if (handle_ != nullptr) {
 		handle_->Stop();
 		handle_.reset();
 	}

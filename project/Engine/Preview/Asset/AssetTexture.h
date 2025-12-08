@@ -100,6 +100,6 @@ private:
 	//* texture helper methods *//
 
 	ComPtr<ID3D12Resource> CreateTextureResource(const DirectX::TexMetadata& metadata) const;
-	_NODISCARD ComPtr<ID3D12Resource> UploadTextureData(const DirectXQueueContext* context, ID3D12Resource* texture, const DirectX::ScratchImage& image) const;
+	NODISCARD ComPtr<ID3D12Resource> UploadTextureData(const DirectXQueueContext* context, ID3D12Resource* texture, const DirectX::ScratchImage& image) const;
 
 };

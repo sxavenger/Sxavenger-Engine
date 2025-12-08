@@ -4,7 +4,7 @@
 // ContentBlob class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-void ContentScene::AsyncLoad(_MAYBE_UNUSED const DirectXQueueContext* context) {
+void ContentScene::AsyncLoad(MAYBE_UNUSED const DirectXQueueContext* context) {
 	BaseContent::CheckExist();
 
 	Load(BaseContent::GetFilepath());

@@ -13,7 +13,7 @@
 // ContentTexture class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-void ContentTexture::AsyncLoad(_MAYBE_UNUSED const DirectXQueueContext* context) {
+void ContentTexture::AsyncLoad(MAYBE_UNUSED const DirectXQueueContext* context) {
 	BaseContent::CheckExist();
 
 	Option option = GetOption();

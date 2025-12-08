@@ -13,7 +13,7 @@
 // ContentAnimation class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-void ContentAnimation::AsyncLoad(_MAYBE_UNUSED const DirectXQueueContext* context) {
+void ContentAnimation::AsyncLoad(MAYBE_UNUSED const DirectXQueueContext* context) {
 	BaseContent::CheckExist();
 
 	uint32_t option = 0; //!< default option

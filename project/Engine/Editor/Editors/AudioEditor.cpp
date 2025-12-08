@@ -30,7 +30,7 @@ void AudioEditor::ShowWindow() {
 }
 
 void AudioEditor::ShowAudioMenu() {
-	for (const auto& [value, name] : magic_enum::enum_entries<AudioSourceComponent::Tag>()) {
+	for (const auto& [value, name] : magic_enum::enum_entries<AudioHandle::Tag>()) {
 		float volume = sAudioController->GetVolume(value);
 		if (ImGui::SliderFloat(name.data(), &volume, 0.0f, 1.0f, "%.2f")) {
 			sAudioController->SetVolume(value, volume);

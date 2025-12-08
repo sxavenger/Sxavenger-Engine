@@ -5,9 +5,7 @@
 //-----------------------------------------------------------------------------------------
 //* component
 #include "../BaseComponent.h"
-
-//* audio
-#include "AudioCommon.h"
+#include "../Transform/TransformComponent.h"
 
 //* engine
 #include <Engine/Preview/Asset/AssetAudioClip.h>
@@ -15,40 +13,29 @@
 
 //* xaudio2
 #include <xaudio2.h>
-
-//* c++
-#include <optional>
+#include <x3daudio.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// AudioSourceComponent class
+// Audio3dListenerComponent class
 ////////////////////////////////////////////////////////////////////////////////////////////
-class AudioSourceComponent final
+class Audio3dListenerComponent final
 	: public BaseComponent {
+public:
+
 public:
 
 	//=========================================================================================
 	// public methods
 	//=========================================================================================
 
-	AudioSourceComponent(MonoBehaviour* behaviour) : BaseComponent(behaviour) {}
-	~AudioSourceComponent() override { Stop(); }
+	Audio3dListenerComponent(MonoBehaviour* behaviour) : BaseComponent(behaviour) {}
+	~Audio3dListenerComponent() override = default;
 
-	//* component option *//
+	const X3DAUDIO_LISTENER GetListener() const;
 
-	void Play();
+	uint32_t GetPriority() const { return priority_; }
 
-	void Stop();
-
-	void PlayOneShot(const std::optional<AssetParameter<AssetAudioClip>>& audio = std::nullopt);
-
-	void SetTag(AudioHandle::Tag tag) { tag_ = tag; }
-
-	void SetVolume(float volume);
-
-	void SetLoop(bool isLoop) { isLoop_ = isLoop; }
-
-	void SetAudio(const AssetParameter<AssetAudioClip>& audio) { audio_ = audio; }
-
+	void SetPriority(uint32_t priority) { priority_ = priority; }
 
 private:
 
@@ -56,20 +43,12 @@ private:
 	// private variables
 	//=========================================================================================
 
-	//* parameter *//
+	uint32_t priority_ = 0;
 
-	AudioHandle::Tag tag_ = AudioHandle::Tag::SE;
+	//=========================================================================================
+	// private methods
+	//=========================================================================================
 
-	float volume_ = 1.0f;
-	bool isLoop_  = false;
-
-	//* audio clip *//
-
-	AssetParameter<AssetAudioClip> audio_ = nullptr;
-
-	//* handle *//
-
-	std::unique_ptr<AudioHandle> handle_ = nullptr;
-
+	const TransformComponent* RequireTransform() const;
 
 };

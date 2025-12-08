@@ -4,13 +4,14 @@
 // include
 //-----------------------------------------------------------------------------------------
 //* audio
-#include "AudioSourceComponent.h"
+#include "AudioCommon.h"
 
 //* engine
 #include <Engine/System/Utility/ComPtr.h>
 
 //* xaudio2
 #include <xaudio2.h>
+#include <x3daudio.h>
 
 //* external
 #include <magic_enum.hpp>
@@ -42,17 +43,30 @@ public:
 
 	//* controller option *//
 
-	void SetVolume(AudioSourceComponent::Tag tag, float volume);
+	void SetVolume(AudioHandle::Tag tag, float volume);
 
-	float GetVolume(AudioSourceComponent::Tag tag) const;
+	float GetVolume(AudioHandle::Tag tag) const;
 
-	IXAudio2SubmixVoice* GetSubmix(AudioSourceComponent::Tag tag) const { return submix_[static_cast<size_t>(tag)]; }
+	IXAudio2SubmixVoice* GetSubmix(AudioHandle::Tag tag) const { return submix_[static_cast<size_t>(tag)]; }
 
-	IXAudio2SourceVoice* CreateSource(AudioSourceComponent::Tag tag, const WAVEFORMATEX& format);
+	XAUDIO2_VOICE_DETAILS GetVoiceDetails(AudioHandle::Tag tag) const;
+
+	IXAudio2SourceVoice* CreateSource(AudioHandle::Tag tag, const WAVEFORMATEX& format);
+
+	void CalculateAudio3d(const X3DAUDIO_LISTENER& listener, const X3DAUDIO_EMITTER& emitter, X3DAUDIO_DSP_SETTINGS& setting) const;
 	
 	//* singleton *//
 
 	static AudioController* GetInstance();
+
+	//=========================================================================================
+	// public varaibles
+	//=========================================================================================
+
+	//* parameter *//
+
+	static inline const UINT32 kDefaultInputChannel = 2;     //!< 入力チャンネル数
+	static inline const UINT32 kDefaultSampleRate   = 44100; //!< サンプルレート
 
 private:
 
@@ -65,12 +79,9 @@ private:
 	ComPtr<IXAudio2> xaudio_;
 
 	IXAudio2MasteringVoice* master_                                                               = nullptr;
-	std::array<IXAudio2SubmixVoice*, magic_enum::enum_count<AudioSourceComponent::Tag>()> submix_ = {};
+	std::array<IXAudio2SubmixVoice*, magic_enum::enum_count<AudioHandle::Tag>()> submix_ = {};
 
-	//* parameter *//
-
-	static inline const UINT32 kDefaultInputChannel = 2;     //!< 入力チャンネル数
-	static inline const UINT32 kDefaultSampleRate   = 44100; //!< サンプルレート
+	X3DAUDIO_HANDLE handle_;
 	
 	//=========================================================================================
 	// private methods

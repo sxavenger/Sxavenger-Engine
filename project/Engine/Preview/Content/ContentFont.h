@@ -27,7 +27,7 @@ public:
 	ContentFont()           = default;
 	~ContentFont() override = default;
 
-	void AsyncLoad(_MAYBE_UNUSED const DirectXQueueContext* context) override;
+	void AsyncLoad(MAYBE_UNUSED const DirectXQueueContext* context) override;
 
 	AsyncExecution GetAsyncExecution() const { return AsyncExecution::Compute; }
 

@@ -13,7 +13,7 @@
 // ContentModel class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-void ContentModel::AsyncLoad(_MAYBE_UNUSED const DirectXQueueContext* context) {
+void ContentModel::AsyncLoad(MAYBE_UNUSED const DirectXQueueContext* context) {
 	BaseContent::CheckExist();
 
 	uint32_t option

@@ -33,7 +33,7 @@ public:
 
 	//* async task option *//
 
-	virtual void AsyncLoad(_MAYBE_UNUSED const DirectXQueueContext* context) = 0;
+	virtual void AsyncLoad(MAYBE_UNUSED const DirectXQueueContext* context) = 0;
 
 	virtual AsyncExecution GetAsyncExecution() const = 0;
 

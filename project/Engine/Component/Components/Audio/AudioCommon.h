@@ -3,47 +3,49 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
-//* ucontent
-#include "BaseContent.h"
-
-//* lib
-//#include <Lib/Adapter/Uuid/Uuid.h>
-
-//* engine
-#include <Engine/System/DirectX/DxObject/DxShaderBlob.h>
+//* xaudio2
+#include <xaudio2.h>
+#include <x3daudio.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// ContentBlob class
+// AudioHandle structure
 ////////////////////////////////////////////////////////////////////////////////////////////
-class ContentBlob final
-	: public BaseContent {
+struct AudioHandle {
+public:
+
+	////////////////////////////////////////////////////////////////////////////////////////////
+	// Tag enum class
+	////////////////////////////////////////////////////////////////////////////////////////////
+	enum class Tag : uint8_t {
+		SE,  //!< Sound Effect
+		BGM, //!< Background Music
+	};
+
 public:
 
 	//=========================================================================================
 	// public methods
 	//=========================================================================================
 
-	ContentBlob() = default;
-	~ContentBlob() override = default;
+	AudioHandle(IXAudio2SourceVoice* source) : source(source) {}
+	~AudioHandle();
 
-	void AsyncLoad(MAYBE_UNUSED const DirectXQueueContext* context) override;
+	void Play();
 
-	AsyncExecution GetAsyncExecution() const { return AsyncExecution::None; }
+	void Stop();
 
-	void AttachUuid() override;
+	void SetVolume(float volume);
 
-	//* content option *//
+	void Flash();
 
-	void Load(const std::filesystem::path& filepath, const DxObject::CompileProfile& profile);
+	IXAudio2SourceVoice* GetSource() const { return source; }
 
-	const DxObject::ShaderBlob& GetBlob() const;
-
-private:
+	XAUDIO2_VOICE_DETAILS GetVoiceDetails() const;
 
 	//=========================================================================================
-	// private variables
+	// public variables
 	//=========================================================================================
 
-	DxObject::ShaderBlob blob_;
+	IXAudio2SourceVoice* const source = nullptr;
 
 };

@@ -39,6 +39,8 @@ public:
 
 	static void UpdateParticle();
 
+	static void UpdateAudio3d();
+
 	//* create helper *//
 
 	//* common

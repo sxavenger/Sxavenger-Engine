@@ -9247,7 +9247,7 @@
 						"unit": "Lumen"
 					}
 				],
-				"isActive": true,
+				"isActive": false,
 				"isRenamable": true,
 				"name": "Spot Light[0]"
 			},
@@ -9293,7 +9293,7 @@
 						"unit": "Lumen"
 					}
 				],
-				"isActive": true,
+				"isActive": false,
 				"isRenamable": true,
 				"name": "Spot Light[1]"
 			},
@@ -9339,7 +9339,7 @@
 						"unit": "Lumen"
 					}
 				],
-				"isActive": true,
+				"isActive": false,
 				"isRenamable": true,
 				"name": "Spot Light[2]"
 			},
@@ -9385,13 +9385,13 @@
 						"unit": "Lumen"
 					}
 				],
-				"isActive": true,
+				"isActive": false,
 				"isRenamable": true,
 				"name": "Spot Light[3]"
 			}
 		],
 		"components": [],
-		"isActive": true,
+		"isActive": false,
 		"isRenamable": true,
 		"name": "Light Container"
 	},

@@ -67,13 +67,11 @@ void SurfaceCacheStorage::Cache::Create(const Vector2ui& size) {
 
 void SurfaceCacheStorage::CreateCache(uint32_t id) {
 
-	auto device = SxavengerSystem::GetDxDevice()->GetDevice();
+	id;
+
+	/*auto device = SxavengerSystem::GetDxDevice()->GetDevice();
 
 	Cache cache;
-	cache.Create({ 12, 12 });
+	cache.Create({ 12, 12 });*/
 
-}
-
-const SurfaceCacheStorage::Cache& SurfaceCacheStorage::GetCache(uint32_t id) const {
-	
 }
