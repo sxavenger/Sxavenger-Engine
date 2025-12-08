@@ -316,6 +316,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Engine\Render\Scene\Environment\FEnvironmentMap.h" />
     <ClInclude Include="Engine\Render\Scene\Environment\FSkyAtmosphere.h" />
     <ClInclude Include="Engine\Render\Scene\FScene.h" />
+    <ClInclude Include="Engine\Render\Storage\SurfaceCacheStorage.h" />
     <ClInclude Include="Engine\System\Config\SxavengerConfig.h" />
     <ClInclude Include="Engine\System\DirectX\Context\DirectXQueueContext.h" />
     <ClInclude Include="Engine\System\DirectX\Context\DirectXWindowContext.h" />
@@ -354,6 +355,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Engine\System\Runtime\Framework\IFramework.h" />
     <ClInclude Include="Engine\System\Runtime\GameLoop\GameLoop.h" />
     <ClInclude Include="Engine\System\Runtime\Input\Input.h" />
+    <ClInclude Include="Engine\System\Runtime\Input\InputHelper.h" />
     <ClInclude Include="Engine\System\Runtime\Input\InputId.h" />
     <ClInclude Include="Engine\System\Runtime\Performance\DeltaTimePoint.h" />
     <ClInclude Include="Engine\System\Runtime\Performance\Performance.h" />
@@ -542,6 +544,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="Engine\Render\Scene\Environment\FEnvironmentMap.cpp" />
     <ClCompile Include="Engine\Render\Scene\Environment\FSkyAtmosphere.cpp" />
     <ClCompile Include="Engine\Render\Scene\FScene.cpp" />
+    <ClCompile Include="Engine\Render\Storage\SurfaceCacheStorage.cpp" />
     <ClCompile Include="Engine\System\Config\SxavengerConfig.cpp" />
     <ClCompile Include="Engine\System\DirectX\Context\DirectXQueueContext.cpp" />
     <ClCompile Include="Engine\System\DirectX\Context\DirectXWindowContext.cpp" />
@@ -577,6 +580,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="Engine\System\Runtime\Framework\IFramework.cpp" />
     <ClCompile Include="Engine\System\Runtime\GameLoop\GameLoop.cpp" />
     <ClCompile Include="Engine\System\Runtime\Input\Input.cpp" />
+    <ClCompile Include="Engine\System\Runtime\Input\InputHelper.cpp" />
     <ClCompile Include="Engine\System\Runtime\Performance\DeltaTimePoint.cpp" />
     <ClCompile Include="Engine\System\Runtime\Performance\Performance.cpp" />
     <ClCompile Include="Engine\System\Runtime\Performance\RunTimeTracker.cpp" />

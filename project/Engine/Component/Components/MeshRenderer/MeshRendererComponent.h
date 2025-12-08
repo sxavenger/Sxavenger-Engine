@@ -26,7 +26,7 @@
 ////////////////////////////////////////////////////////////////////////////////////////////
 //! @brief 3Dメッシュの描画component.
 class MeshRendererComponent final
-	: public BaseComponent {
+	: public BaseComponent, public MeshRendererCommon {
 public:
 
 	//=========================================================================================
@@ -46,19 +46,15 @@ public:
 	void SetMaterial(const Uuid& material) { material_ = material; }
 	void SetMaterial(const std::shared_ptr<AssetMaterial>& material) { material_ = material; }
 
-	void SetEnable(bool isEnable = true) { isEnable_ = isEnable; }
-
 	//* getter *//
 
-	bool IsEnable() const { return !mesh_.Empty() && !material_.Empty() && isEnable_; }
+	bool IsEnable() const;
 
 	std::shared_ptr<AssetMesh> GetMesh() const;
 	std::shared_ptr<AssetMaterial> GetMaterial() const;
 
 	const AssetParameter<AssetMesh>& GetMeshParameter() const { return mesh_; }
 	const AssetParameter<AssetMaterial>& GetMaterialParameter() const { return material_; }
-
-	uint8_t GetMask() const { return mask_.Get(); }
 
 	//* behaviour option *//
 
@@ -78,17 +74,9 @@ private:
 	// private variables
 	//=========================================================================================
 
-	bool isEnable_ = true;
-
 	//* parameter *//
 
 	AssetParameter<AssetMesh> mesh_;
 	AssetParameter<AssetMaterial> material_;
-
-	//* config *//
-
-	Sxl::Flag<MeshInstanceMask> mask_ = MeshInstanceMask::Default;
-
-	uint8_t stencil_ = 0;
 
 };

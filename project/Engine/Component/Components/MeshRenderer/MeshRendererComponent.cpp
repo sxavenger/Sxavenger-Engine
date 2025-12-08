@@ -84,6 +84,10 @@ void MeshRendererComponent::InputJson(const json& data) {
 	// TODO: 古いデータとの互換性のため、一旦コメントアウト
 }
 
+bool MeshRendererComponent::IsEnable() const {
+	return isEnable_ && !mesh_.Empty() && !material_.Empty();
+}
+
 std::shared_ptr<AssetMesh> MeshRendererComponent::GetMesh() const {
 	return mesh_.Require();
 }
