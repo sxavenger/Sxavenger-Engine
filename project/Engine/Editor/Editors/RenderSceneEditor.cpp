@@ -108,6 +108,8 @@ void RenderSceneEditor::Render() {
 	auto context = SxavengerSystem::GetDirectQueueContext();
 
 	config_.colorSpace = SxavengerSystem::GetMainWindow()->GetColorSpace();
+	config_.cullCamera = isDebugCulling_ ? ComponentHelper::GetCameraComponent(CameraComponent::Tag::Game) : nullptr;
+
 	FMainRender::GetInstance()->GetContext()->Render(context, config_);
 
 	//* Debug Render *//
@@ -348,9 +350,7 @@ void RenderSceneEditor::ShowSceneMenu() {
 		ImGui::Text("debug option");
 		ImGui::Separator();
 
-		if (ImGui::Checkbox("cull camera", &isDebugCulling_)) {
-			config_.cullCamera = isDebugCulling_ ? ComponentHelper::GetCameraComponent(CameraComponent::Tag::Game) : nullptr;
-		}
+		ImGui::Checkbox("cull camera", &isDebugCulling_);
 
 		// window
 		ImGui::Text("window");

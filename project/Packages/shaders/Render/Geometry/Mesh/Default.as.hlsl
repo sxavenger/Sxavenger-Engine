@@ -24,7 +24,7 @@ bool VisibleMeshlet(Bounds bounds, TransformComponent transform) {
 
 	[unroll]
 	for (uint i = 0; i < 6; ++i) {
-		if ((dot(frustum.planes[i].xyz, center) + frustum.planes[i].w) <= -radius) {
+		if ((dot(frustum.planes[i].xyz, center) + frustum.planes[i].w) < -radius) {
 			return false;
 		}
 	}

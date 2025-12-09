@@ -53,6 +53,8 @@ void FMainRender::Render(const DirectXQueueContext* context, DirectXWindowContex
 }
 
 void FMainRender::PresentMain(const DirectXQueueContext* context) {
+	context->BeginEvent(L"Present Main");
+
 	FPresenter::Present(
 		context, kMainWindowSize,
 		buffer_->GetGBuffer(FMainGBuffer::Layout::Scene)->GetGPUHandleSRV()
@@ -62,6 +64,8 @@ void FMainRender::PresentMain(const DirectXQueueContext* context) {
 		context, kMainWindowSize,
 		buffer_->GetGBuffer(FMainGBuffer::Layout::UI)->GetGPUHandleSRV()
 	);
+
+	context->EndEvent();
 }
 
 FMainRender* FMainRender::GetInstance() {
