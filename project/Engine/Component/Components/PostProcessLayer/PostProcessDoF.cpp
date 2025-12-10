@@ -1,5 +1,5 @@
 #include "PostProcessDoF.h"
-_DXOBJECT_USING
+DXOBJECT_USING
 
 //-----------------------------------------------------------------------------------------
 // include

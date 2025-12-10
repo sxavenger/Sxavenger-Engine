@@ -1,5 +1,5 @@
 #include "DxDescriptorHeaps.h"
-_DXOBJECT_USING
+DXOBJECT_USING
 
 //-----------------------------------------------------------------------------------------
 // include
@@ -36,7 +36,7 @@ void DescriptorPool::Init(
 	// handleSizeを取得
 	descriptorHandleSize_ = device->GetDescriptorHandleIncrementSize(descriptorHeapType_);
 
-	Logger::EngineLog(std::format("[_DXOBJECT DescriptorPool] descriptor heap type: {}, visibility: {}, count: {}", magic_enum::enum_name(descriptorHeapType), shaderVisible, descriptorMaxCount));
+	Logger::EngineLog(std::format("[DXOBJECT DescriptorPool] descriptor heap type: {}, visibility: {}, count: {}", magic_enum::enum_name(descriptorHeapType), shaderVisible, descriptorMaxCount));
 }
 
 void DescriptorPool::Term() {
@@ -132,11 +132,11 @@ void DescriptorHeaps::Init(Device* device) {
 	pools_[DescriptorType::kDescriptor_CBV_SRV_UAV] = std::make_unique<DescriptorPool>();
 	pools_[DescriptorType::kDescriptor_CBV_SRV_UAV]->Init(device, D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, true, SxavengerConfig::GetConfig().descriptorCount_SRV_CBV_UAV);
 
-	Logger::EngineLog("[_DXOBJECT DescriptorHeaps] complete initialize.");
+	Logger::EngineLog("[DXOBJECT DescriptorHeaps] complete initialize.");
 }
 
 void DescriptorHeaps::Term() {
-	Logger::EngineLog("[_DXOBJECT DescriptorHeaps] term.");
+	Logger::EngineLog("[DXOBJECT DescriptorHeaps] term.");
 }
 
 Descriptor DescriptorHeaps::GetDescriptor(DescriptorType type) {

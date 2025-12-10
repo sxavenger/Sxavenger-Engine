@@ -1,5 +1,5 @@
 #include "InputMesh.h"
-_DXOBJECT_USING
+DXOBJECT_USING
 
 //-----------------------------------------------------------------------------------------
 // include
@@ -121,7 +121,7 @@ void InputMesh::Meshlet::CreateMeshlet(const TriangleInputAssembler<MeshVertexDa
 	}
 
 	{
-		// _DXOBJECT Deviceの取り出し
+		// DXOBJECT Deviceの取り出し
 		auto device = SxavengerSystem::GetDxDevice();
 
 		meshlets = std::make_unique<DimensionBuffer<MeshletData>>();

@@ -28,15 +28,15 @@
 // DXOBJECT DEFINE
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-#define _DXOBJECT_NAMESPACE_BEGIN namespace DxObject {
-#define _DXOBJECT_NAMESPACE_END   }
-#define _DXOBJECT                 DxObject::
-#define _DXOBJECT_USING           using namespace DxObject;
+#define DXOBJECT_NAMESPACE_BEGIN namespace DxObject {
+#define DXOBJECT_NAMESPACE_END   }
+#define DXOBJECT                 DxObject::
+#define DXOBJECT_USING           using namespace DxObject;
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // DXOBJECT Common
 ////////////////////////////////////////////////////////////////////////////////////////////
-_DXOBJECT_NAMESPACE_BEGIN
+DXOBJECT_NAMESPACE_BEGIN
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // using
@@ -170,4 +170,4 @@ constexpr const DXGI_FORMAT kDefaultOffscreenFormat  = kDefaultScreenFormat;    
 constexpr const DXGI_FORMAT kDefaultDepthFormat     = DXGI_FORMAT_D32_FLOAT_S8X24_UINT;
 constexpr const DXGI_FORMAT kDefaultDepthViewFormat = DXGI_FORMAT_R32_FLOAT_X8X24_TYPELESS;
 
-_DXOBJECT_NAMESPACE_END
+DXOBJECT_NAMESPACE_END

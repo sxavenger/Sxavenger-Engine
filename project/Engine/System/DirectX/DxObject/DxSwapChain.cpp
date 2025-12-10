@@ -1,5 +1,5 @@
 #include "DxSwapChain.h"
-_DXOBJECT_USING
+DXOBJECT_USING
 
 //-----------------------------------------------------------------------------------------
 // include
@@ -121,7 +121,7 @@ void SwapChain::SetColorSpace(const DXGI_OUTPUT_DESC1& desc) {
 	);
 	DxObject::Assert(hr, L"HDR metadata setting failed.");
 
-	Logger::EngineLog(std::format("[_DXOBJECT SwapChain] color space changed: {}", magic_enum::enum_name(colorSpace_)));
+	Logger::EngineLog(std::format("[DXOBJECT SwapChain] color space changed: {}", magic_enum::enum_name(colorSpace_)));
 }
 
 D3D12_RESOURCE_BARRIER SwapChain::GetBackBufferTransitionBarrier(D3D12_RESOURCE_STATES stateBefore, D3D12_RESOURCE_STATES stateAfter) const {
@@ -191,7 +191,7 @@ void SwapChain::CreateRenderTargetView(Device* device, DescriptorHeaps* descript
 
 	if (isSRGB) {
 		if (format == DxObject::ConvertToSRGB(format)) {
-			Logger::EngineLog("[_DXOBJECT SwapChain] warning | SRGB format is not found.");
+			Logger::EngineLog("[DXOBJECT SwapChain] warning | SRGB format is not found.");
 		}
 
 		format = DxObject::ConvertToSRGB(format);

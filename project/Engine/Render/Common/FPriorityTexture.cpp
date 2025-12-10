@@ -1,5 +1,5 @@
 #include "FPriorityTexture.h"
-_DXOBJECT_USING
+DXOBJECT_USING
 
 //-----------------------------------------------------------------------------------------
 // include

@@ -1,5 +1,5 @@
 #include "PostProcessLocalExposure.h"
-_DXOBJECT_USING
+DXOBJECT_USING
 
 //-----------------------------------------------------------------------------------------
 // include

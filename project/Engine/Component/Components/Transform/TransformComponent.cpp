@@ -1,5 +1,5 @@
 #include "TransformComponent.h"
-_DXOBJECT_USING
+DXOBJECT_USING
 
 //-----------------------------------------------------------------------------------------
 // include

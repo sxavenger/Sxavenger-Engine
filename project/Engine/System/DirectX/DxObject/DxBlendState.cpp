@@ -1,5 +1,5 @@
 #include "DxBlendState.h"
-_DXOBJECT_USING
+DXOBJECT_USING
 
 //=========================================================================================
 // static const variables

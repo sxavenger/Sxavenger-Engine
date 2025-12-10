@@ -1,5 +1,5 @@
 #include "PostProcessMotionBlur.h"
-_DXOBJECT_USING
+DXOBJECT_USING
 
 //-----------------------------------------------------------------------------------------
 // include

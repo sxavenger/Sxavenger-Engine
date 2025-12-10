@@ -1,5 +1,5 @@
 #include "PostProcessLUT.h"
-_DXOBJECT_USING
+DXOBJECT_USING
 
 //-----------------------------------------------------------------------------------------
 // include

@@ -1,5 +1,5 @@
 #include "DxDevice.h"
-_DXOBJECT_USING
+DXOBJECT_USING
 
 //-----------------------------------------------------------------------------------------
 // include
@@ -36,11 +36,11 @@ void Device::Init() {
 	Exception::Assert(isRayTracingEnabled_, "Raytracing version failed.");
 	Exception::Assert(isMeshShaderEnabled_, "Mesh shader version failed.");
 
-	Logger::EngineLog("[_DXOBJECT Device] complete initialize.");
+	Logger::EngineLog("[DXOBJECT Device] complete initialize.");
 }
 
 void Device::Term() {
-	Logger::EngineLog("[_DXOBJECT Device] term.");
+	Logger::EngineLog("[DXOBJECT Device] term.");
 }
 
 void Device::CheckDeviceStatus() const {
