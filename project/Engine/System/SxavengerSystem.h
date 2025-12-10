@@ -35,11 +35,11 @@ public:
 	// DirectXCommon option
 	//-----------------------------------------------------------------------------------------
 
-	NODISCARD static _DXOBJECT Descriptor GetDescriptor(_DXOBJECT DescriptorType type);
+	NODISCARD static DXOBJECT Descriptor GetDescriptor(DXOBJECT DescriptorType type);
 
-	static _DXOBJECT Device* GetDxDevice();
+	static DXOBJECT Device* GetDxDevice();
 
-	static _DXOBJECT DescriptorHeaps* GetDxDescriptorHeaps();
+	static DXOBJECT DescriptorHeaps* GetDxDescriptorHeaps();
 
 	//-----------------------------------------------------------------------------------------
 	// DirectXQueueContext main thread option

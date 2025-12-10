@@ -53,15 +53,15 @@ void SxavengerSystem::Shutdown() {
 	sInput->Shutdown();
 }
 
-_DXOBJECT Descriptor SxavengerSystem::GetDescriptor(_DXOBJECT DescriptorType type) {
+DXOBJECT Descriptor SxavengerSystem::GetDescriptor(DXOBJECT DescriptorType type) {
 	return sDirectXCommon->GetDesriptorHeaps()->GetDescriptor(type);
 }
 
-_DXOBJECT Device* SxavengerSystem::GetDxDevice() {
+DXOBJECT Device* SxavengerSystem::GetDxDevice() {
 	return sDirectXCommon->GetDevice();
 }
 
-_DXOBJECT DescriptorHeaps* SxavengerSystem::GetDxDescriptorHeaps() {
+DXOBJECT DescriptorHeaps* SxavengerSystem::GetDxDescriptorHeaps() {
 	return sDirectXCommon->GetDesriptorHeaps();
 }
 

@@ -1,5 +1,5 @@
 #include "DxShaderCompiler.h"
-_DXOBJECT_USING
+DXOBJECT_USING
 
 //-----------------------------------------------------------------------------------------
 // include
@@ -49,14 +49,14 @@ void ShaderCompiler::Init() {
 	hr = utils_->CreateDefaultIncludeHandler(&includeHandler_);
 	DxObject::Assert(hr, L"dxc include handler create failed.");
 
-	Logger::EngineLog("[_DXOBJECT ShaderCompiler] complete initialize.");
+	Logger::EngineLog("[DXOBJECT ShaderCompiler] complete initialize.");
 }
 
 void ShaderCompiler::Term() {
 	utils_.Reset();
 	compiler_.Reset();
 	includeHandler_.Reset();
-	Logger::EngineLog("[_DXOBJECT ShaderCompiler] term.");
+	Logger::EngineLog("[DXOBJECT ShaderCompiler] term.");
 }
 
 ComPtr<IDxcBlob> ShaderCompiler::Compile(
@@ -132,7 +132,7 @@ ComPtr<IDxcBlob> ShaderCompiler::Compile(
 	hr = shaderResult->GetOutput(DXC_OUT_OBJECT, IID_PPV_ARGS(&blob), nullptr);
 	DxObject::Assert(hr, L"shader compile failed.");
 
-	Logger::EngineThreadLog(std::format("[_DXOBJECT ShaderCompiler] shader compiled. filepath: {}, profile: {}", filepath.generic_string(), magic_enum::enum_name(profile)));
+	Logger::EngineThreadLog(std::format("[DXOBJECT ShaderCompiler] shader compiled. filepath: {}, profile: {}", filepath.generic_string(), magic_enum::enum_name(profile)));
 	return blob;
 }
 
