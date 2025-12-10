@@ -4,10 +4,10 @@
 // include
 //-----------------------------------------------------------------------------------------
 //* geometry
-#include "GeometryVertex.hlsli"
 #include "GeometryRenderTarget.hlsli"
 
 //* content
+#include "../../Content/Mesh.hlsli"
 #include "../../Content/Material.hlsli"
 
 //* component
