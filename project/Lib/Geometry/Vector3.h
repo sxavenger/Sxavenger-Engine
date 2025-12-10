@@ -264,6 +264,9 @@ constexpr Vector3<_Ty> kUnitY3 = { 0, 1, 0 };
 template <class _Ty = float>
 constexpr Vector3<_Ty> kUnitZ3 = { 0, 0, 1 };
 
+template <class _Ty = float>
+constexpr Vector3<_Ty> kInfinity3 = { std::numeric_limits<_Ty>::infinity(), std::numeric_limits<_Ty>::infinity(), std::numeric_limits<_Ty>::infinity() };
+
 //* directions
 template <class _Ty = float>
 constexpr Vector3<_Ty> kForward3 = kUnitZ3<_Ty>;

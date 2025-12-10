@@ -288,6 +288,10 @@ void DebugPrimitive::PushBox(const Vector3f& min, const Vector3f& max, const Col
 	PushLine(v3, v7, color, thickness);
 }
 
+void DebugPrimitive::PushBox(const Vector3f& position, const Vector3f& min, const Vector3f& max, const Color4f& color, float thickness) {
+	PushBox(position + min, position + max, color, thickness);
+}
+
 void DebugPrimitive::PushCube(const Vector3f& center, const Vector3f& size, const Color4f& color, float thickness) {
 	Vector3f min = center - size * 0.5f;
 	Vector3f max = center + size * 0.5f;

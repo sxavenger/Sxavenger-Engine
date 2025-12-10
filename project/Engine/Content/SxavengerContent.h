@@ -93,6 +93,14 @@ public:
 	//! @param[in] thickness 線の太さ
 	static void PushBox(const Vector3f& min, const Vector3f& max, const Color4f& color, float thickness = 0.0f);
 
+	//! @brief LinePrimitiveのBox描画
+	//! @param[in] position 位置座標
+	//! @param[in] min 最小座標
+	//! @param[in] max 最大座標
+	//! @param[in] color 色
+	//! @param[in] thickness 線の太さ
+	static void PushBox(const Vector3f& position, const Vector3f& min, const Vector3f& max, const Color4f& color, float thickness = 0.0f);
+
 	//! @brief LinePrimitiveのCube描画
 	//! @param[in] center 中心座標
 	//! @param[in] size サイズ

@@ -24,6 +24,9 @@ void AssetMesh::Setup(const aiMesh* mesh) {
 		const aiVector3D& position  = mesh->mVertices[element];
 		(*vertex)[element].position = ConvertPosition4(position);
 
+		bound.first  = Vector3f::Min(bound.first, ConvertPosition3(position));
+		bound.second = Vector3f::Max(bound.second, ConvertPosition3(position));
+
 		//!< normal
 		if (mesh->HasNormals()) {
 			const aiVector3D& normal  = mesh->mNormals[element];

@@ -8,6 +8,7 @@
 
 //* engine
 #include <Engine/System/UI/SxImGui.h>
+#include <Engine/Content/SxavengerContent.h>
 #include <Engine/Preview/Asset/AssetStorage.h>
 #include <Engine/Preview/Content/ContentStorage.h>
 

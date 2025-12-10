@@ -64,6 +64,8 @@ public:
 
 	const std::string& GetName() const { return name_; }
 
+	const std::pair<Vector3f, Vector3f>& GetBound() const { return bound; }
+
 private:
 
 	//=========================================================================================
@@ -75,6 +77,11 @@ private:
 	std::optional<uint32_t>                          materialIndex_;
 	std::unordered_map<std::string, JointWeightData> jointWeights_;
 	std::string                                      name_;
+
+	//* test parameter
+
+	std::pair<Vector3f, Vector3f> bound = { kInfinity3<float>, -kInfinity3<float> };
+	//!< first: min, second: max
 
 	//=========================================================================================
 	// private methods
