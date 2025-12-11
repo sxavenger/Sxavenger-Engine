@@ -1,9 +1,12 @@
 #include "WindowCollection.h"
+SXAVENGER_ENGINE_USING
 
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
 //* engine
+#include <Engine/System/Utility/Convert.h>
+#include <Engine/System/Utility/StreamLogger.h>
 #include <Engine/System/UI/SxImGui.h>
 
 //* external
@@ -28,7 +31,7 @@ std::weak_ptr<DirectXWindowContext> WindowCollection::CreateMainWindow(const Vec
 
 std::weak_ptr<DirectXWindowContext> WindowCollection::CreateSubWindow(const Vector2ui& size, const std::wstring& name, DirectXWindowContext::ProcessCategory category, const Color4f& color) {
 	if (windows_.contains(name)) {
-		Logger::EngineLog(L"warninig | window with name '" + name + L"' already exists.");
+		StreamLogger::EngineLog(L"warninig | window with name '" + name + L"' already exists.");
 		return windows_.at(name);
 	}
 

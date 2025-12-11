@@ -3,15 +3,10 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
-//* lib
-#include <Lib/Geometry/Vector2.h>
-
-//* win32
-#include <winnt.h>
+#include <wrl.h>
 
 //-----------------------------------------------------------------------------------------
-// Environments
+// using
 //-----------------------------------------------------------------------------------------
-
-static const Vector2ui kMainWindowSize  = { 1280, 720 };
-static const LPCWSTR   kMainWindowTitle = L"Sxavenger Engine 3.4";
+template <typename T>
+using ComPtr = Microsoft::WRL::ComPtr<T>;

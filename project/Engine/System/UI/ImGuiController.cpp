@@ -1,11 +1,14 @@
 #include "ImGuiController.h"
+SXAVENGER_ENGINE_USING
 DXOBJECT_USING
 
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
 //* engine
-#include <Engine/System/SxavengerSystem.h>
+#include <Engine/System/Utility/StreamLogger.h>
+#include <Engine/System/Configuration/Configration.h>
+#include <Engine/System/System.h>
 #include <Engine/System/UI/SxImGuizmo.h>
 
 //=========================================================================================
@@ -13,7 +16,7 @@ DXOBJECT_USING
 //=========================================================================================
 
 const std::filesystem::path ImGuiController::kImGuiLayoutFilepath_       = "imgui.ini";
-const std::filesystem::path ImGuiController::kImGuiSampleLayoutFilepath_ = "packages/ini/imgui.ini";
+const std::filesystem::path ImGuiController::kImGuiSampleLayoutFilepath_ = kPackagesDirectory / "ini" / "imgui.ini";
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // ImGuiController class methods
@@ -31,19 +34,19 @@ void ImGuiController::Init(DirectXWindowContext* main) {
 	ImGui_ImplWin32_Init(main->GetHwnd());
 
 	ImGui_ImplDX12_InitInfo info = {};
-	info.Device            = SxavengerSystem::GetDxDevice()->GetDevice();
-	info.CommandQueue      = SxavengerSystem::GetDirectQueueContext()->GetCommandQueue();
+	info.Device            = System::GetDxDevice()->GetDevice();
+	info.CommandQueue      = System::GetDirectQueueContext()->GetCommandQueue();
 	info.NumFramesInFlight = DxObject::SwapChain::GetBufferCount();
 	info.RTVFormat         = DxObject::kDefaultScreenViewFormat;
 	info.DSVFormat         = DxObject::kDefaultDepthFormat;
-	info.SrvDescriptorHeap = SxavengerSystem::GetDxDescriptorHeaps()->GetDescriptorHeap(kDescriptor_CBV_SRV_UAV);
+	info.SrvDescriptorHeap = System::GetDxDescriptorHeaps()->GetDescriptorHeap(kDescriptor_CBV_SRV_UAV);
 
 	info.UserData = &descriptorsSRV_;
 
 	info.SrvDescriptorAllocFn = [](ImGui_ImplDX12_InitInfo* info, D3D12_CPU_DESCRIPTOR_HANDLE* cpuHandle, D3D12_GPU_DESCRIPTOR_HANDLE* gpuHandle) {
 		// descriptorの追加
 		auto& descriptors = *static_cast<std::list<DxObject::Descriptor>*>(info->UserData);
-		descriptors.emplace_back(SxavengerSystem::GetDxDescriptorHeaps()->GetDescriptor(kDescriptor_SRV));
+		descriptors.emplace_back(System::GetDxDescriptorHeaps()->GetDescriptor(kDescriptor_SRV));
 
 		// handleの取得
 		auto& descriptor = descriptors.back();
@@ -75,7 +78,7 @@ void ImGuiController::Init(DirectXWindowContext* main) {
 	if (!std::filesystem::exists(kImGuiLayoutFilepath_) && std::filesystem::exists(kImGuiSampleLayoutFilepath_)) {
 		//!< iniファイルが存在しない場合はコピー
 		std::filesystem::copy(kImGuiSampleLayoutFilepath_, kImGuiLayoutFilepath_, std::filesystem::copy_options::overwrite_existing);
-		Logger::EngineLog("[ImGuiController]: imgui layout copyed.");
+		StreamLogger::EngineLog("[ImGuiController]: imgui layout copyed.");
 	}
 #endif
 
@@ -235,7 +238,7 @@ void ImGuiController::SettingImGui() {
 	// imgui dockingブランチを参照...
 	
 	{ //!< fontの変更 english
-		std::filesystem::path filepath = "packages/font/FiraMono-Regular.ttf";
+		std::filesystem::path filepath = kPackagesDirectory / "font" / "FiraMono-Regular.ttf";
 		io.Fonts->AddFontFromFileTTF(filepath.generic_string().c_str(), 14.0f);
 	}
 
@@ -253,7 +256,7 @@ void ImGuiController::SettingImGui() {
 			static_cast<ImWchar>(0)
 		};
 
-		std::filesystem::path filepath = "packages/font/MPLUSRounded1c-Regular.ttf";
+		std::filesystem::path filepath = kPackagesDirectory / "font" / "MPLUSRounded1c-Regular.ttf";
 		io.Fonts->AddFontFromFileTTF(filepath.generic_string().c_str(), 16.0f, &config, ranges);
 	}
 

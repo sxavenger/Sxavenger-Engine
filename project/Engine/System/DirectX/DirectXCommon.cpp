@@ -1,6 +1,7 @@
 #include "DirectXCommon.h"
+SXAVENGER_ENGINE_USING
 DXOBJECT_USING
-_DXROBJECT_USING
+DXROBJECT_USING
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // DirectXCommon class methods

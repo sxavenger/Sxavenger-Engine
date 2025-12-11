@@ -810,7 +810,7 @@
     <ClInclude Include="Engine\System\DirectX\DxrObject\DxrStateObjectContext.h">
       <Filter>Engine\System\DirectX\DxrObject</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\System\Runtime\Framework\IFramework.h">
+    <ClInclude Include="Engine\System\Runtime\Framework\FrameworkInterface.h">
       <Filter>Engine\System\Runtime\Framework</Filter>
     </ClInclude>
     <ClInclude Include="Engine\System\Runtime\GameLoop\GameLoop.h">
@@ -870,9 +870,6 @@
     <ClInclude Include="Engine\System\Utility\UtilityCommon.h">
       <Filter>Engine\System\Utility</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\System\WinApp\WinApp.h">
-      <Filter>Engine\System\WinApp</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\System\Window\WindowCollection.h">
       <Filter>Engine\System\Window</Filter>
     </ClInclude>
@@ -895,9 +892,6 @@
       <Filter>Lib</Filter>
     </ClInclude>
     <ClInclude Include="Lib\Easing.h">
-      <Filter>Lib</Filter>
-    </ClInclude>
-    <ClInclude Include="Lib\Environment.h">
       <Filter>Lib</Filter>
     </ClInclude>
     <ClInclude Include="Lib\Geometry\Color3.h">
@@ -963,6 +957,16 @@
     <ClInclude Include="externals\meshoptimizer\meshoptimizer.h">
       <Filter>externals\meshoptimizer</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\Foundation.h" />
+    <ClInclude Include="Engine\System\Utility\StreamLogger.h" />
+    <ClInclude Include="Engine\System\Utility\RuntimeLogger.h" />
+    <ClInclude Include="Engine\System\WinApp\WinApp.h" />
+    <ClInclude Include="Engine\System\Configuration\Configration.h" />
+    <ClInclude Include="Engine\System\System.h" />
+    <ClInclude Include="Engine\System\Utility\Convert.h" />
+    <ClInclude Include="Engine\System\Runtime\Execution\ExecutionInterface.h" />
+    <ClInclude Include="Engine\System\Runtime\Execution\ExecutionContext.h" />
+    <ClInclude Include="Engine\System\Runtime\Execution\ExecutionPipeline.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Demo\Entity\Player.cpp">
@@ -1487,9 +1491,6 @@
     <ClCompile Include="Engine\System\DirectX\DxrObject\DxrStateObjectContext.cpp">
       <Filter>Engine\System\DirectX\DxrObject</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\System\Runtime\Framework\IFramework.cpp">
-      <Filter>Engine\System\Runtime\Framework</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\System\Runtime\GameLoop\GameLoop.cpp">
       <Filter>Engine\System\Runtime\GameLoop</Filter>
     </ClCompile>
@@ -1537,9 +1538,6 @@
     </ClCompile>
     <ClCompile Include="Engine\System\Utility\UtilityCommon.cpp">
       <Filter>Engine\System\Utility</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\System\WinApp\WinApp.cpp">
-      <Filter>Engine\System\WinApp</Filter>
     </ClCompile>
     <ClCompile Include="Engine\System\Window\WindowCollection.cpp">
       <Filter>Engine\System\Window</Filter>
@@ -1620,5 +1618,13 @@
       <Filter>externals\stb</Filter>
     </ClCompile>
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Engine\System\Utility\RuntimeLogger.cpp" />
+    <ClCompile Include="Engine\System\Utility\StreamLogger.cpp" />
+    <ClCompile Include="Engine\System\WinApp\WinApp.cpp" />
+    <ClCompile Include="Engine\System\Configuration\Configration.cpp" />
+    <ClCompile Include="Engine\System\System.cpp" />
+    <ClCompile Include="Engine\System\Utility\Convert.cpp" />
+    <ClCompile Include="Engine\System\Runtime\Execution\ExecutionContext.cpp" />
+    <ClCompile Include="Engine\System\Runtime\Execution\ExecutionPipeline.cpp" />
   </ItemGroup>
 </Project>

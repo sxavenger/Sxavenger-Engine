@@ -1,12 +1,13 @@
 #include "DirectXQueueContext.h"
+SXAVENGER_ENGINE_USING
 DXOBJECT_USING
 
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
 //* engine
-#include <Engine/System/Utility/Logger.h>
-#include <Engine/System/SxavengerSystem.h>
+#include <Engine/System/Utility/StreamLogger.h>
+#include <Engine/System/System.h>
 
 //* windows
 #include <pix.h>
@@ -26,7 +27,7 @@ void DirectXQueueContext::Init(uint32_t allocator, RenderQueue type) {
 
 	// contextの生成
 	context_ = std::make_unique<DxObject::CommandContext>();
-	context_->Init(SxavengerSystem::GetDxDevice(), allocator, GetCommandListType(type));
+	context_->Init(System::GetDxDevice(), allocator, GetCommandListType(type));
 	SetDescriptorHeap();
 }
 

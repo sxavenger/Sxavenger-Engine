@@ -10,8 +10,8 @@
 #include "../DxObject/DxSwapChain.h"
 #include "../DxObject/DxDepthStencil.h"
 
-//* engine
-#include <Engine/System/UI/ISystemDebugGui.h>
+//* enine
+#include <Engine/Foundation.h>
 
 //* windows
 #include <windef.h>
@@ -23,6 +23,12 @@
 //* c++
 #include <string>
 #include <memory>
+#include <filesystem>
+
+////////////////////////////////////////////////////////////////////////////////////////////
+// Sxavenger Engine namespace
+////////////////////////////////////////////////////////////////////////////////////////////
+SXAVENGER_ENGINE_NAMESPACE_BEGIN
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // DirectXWindowContext class
@@ -179,3 +185,5 @@ private:
 	void InitDirectXWindow();
 
 };
+
+SXAVENGER_ENGINE_NAMESPACE_END

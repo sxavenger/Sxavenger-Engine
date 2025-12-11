@@ -1,11 +1,12 @@
 #include "WinApp.h"
+SXAVENGER_ENGINE_USING
 
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
 //* engine
 #include "../Utility/ComPtr.h"
-#include "../Utility/Logger.h"
+#include "../Utility/StreamLogger.h"
 
 //* windows
 #include <shobjidl.h>
@@ -33,7 +34,6 @@ std::optional<std::filesystem::path> WinApp::GetSaveFilepath(const std::wstring&
 
 	ComPtr<IFileSaveDialog> dialog;
 	auto hr = CoCreateInstance(CLSID_FileSaveDialog, nullptr, CLSCTX_ALL, IID_PPV_ARGS(&dialog));
-	//Exception::Assert(SUCCEEDED(hr), "WinApp::GetSaveFilename", "failed to create FileSaveDialog instance.");
 
 	dialog->SetTitle(title.c_str());
 
@@ -70,7 +70,6 @@ std::optional<std::filesystem::path> WinApp::GetOpenFilepath(const std::wstring&
 
 	ComPtr<IFileOpenDialog> dialog;
 	auto hr = CoCreateInstance(CLSID_FileOpenDialog, nullptr, CLSCTX_ALL, IID_PPV_ARGS(&dialog));
-	//Exception::Assert(SUCCEEDED(hr), "WinApp::GetSaveFilename", "failed to create FileOpenDialog instance.");
 
 	dialog->SetTitle(title.c_str());
 

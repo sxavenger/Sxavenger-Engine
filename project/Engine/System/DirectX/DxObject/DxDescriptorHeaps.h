@@ -11,6 +11,9 @@
 //* engine
 #include <Engine/System/UI/ISystemDebugGui.h>
 
+//* lib
+#include <Lib/CXXAttributeConfig.h>
+
 // c++
 #include <queue>
 #include <memory>

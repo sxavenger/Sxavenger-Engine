@@ -4,11 +4,18 @@
 // include
 //-----------------------------------------------------------------------------------------
 //* engine
+#include <Engine/Foundation.h>
 #include <Engine/System/DirectX/Context/DirectXWindowContext.h>
+#include <Engine/System/UI/ISystemDebugGui.h>
 
 //* c++
 #include <memory>
 #include <unordered_map>
+
+////////////////////////////////////////////////////////////////////////////////////////////
+// Sxavenger Engine namespace
+////////////////////////////////////////////////////////////////////////////////////////////
+SXAVENGER_ENGINE_NAMESPACE_BEGIN
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // WindowCollection class
@@ -69,3 +76,5 @@ private:
 	void RemoveClosedWindow();
 
 };
+
+SXAVENGER_ENGINE_NAMESPACE_END
