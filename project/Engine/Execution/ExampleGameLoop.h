@@ -9,6 +9,7 @@
 //* engine
 #include <Engine/Foundation.h>
 #include <Engine/System/DirectX/Context/DirectXWindowContext.h>
+#include <Engine/Module/GameObject/GameObject.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Sxavenger Engine namespace
@@ -36,7 +37,13 @@ private:
 	// private variables
 	//=========================================================================================
 
+	//* window *//
+
 	std::shared_ptr<DirectXWindowContext> main_;
+
+	//* gameobject *//
+
+	std::unique_ptr<GameObject> atmosphere_;
 
 	//=========================================================================================
 	// private methods

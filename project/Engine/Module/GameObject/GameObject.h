@@ -6,6 +6,7 @@
 //* engine
 #include <Engine/Foundation.h>
 #include <Engine/Components/Entity/BehaviourAddress.h>
+#include <Engine/Components/Entity/MonoBehaviour.h>	
 
 //* c++
 #include <string>

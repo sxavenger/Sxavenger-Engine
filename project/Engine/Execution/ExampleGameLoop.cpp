@@ -7,6 +7,8 @@ SXAVENGER_ENGINE_USING
 //* engine
 #include <Engine/System/Configuration/Configuration.h>
 #include <Engine/System/System.h>
+#include <Engine/Components/Component/Transform/TransformComponent.h>
+#include <Engine/Components/Component/Light/Environment/SkyAtmosphereComponent.h>
 #include <Engine/Components/Component/ComponentHelper.h>
 #include <Engine/Render/FMainRender.h>
 #include <Engine/Editors/EditorEngine.h>
@@ -45,6 +47,10 @@ void ExampleGameLoop::InitSystem() {
 		L"[Sxavenger Engine / Sxx Engine] Example Window"
 	).lock();
 
+	atmosphere_ = std::make_unique<GameObject>();
+	(*atmosphere_)->AddComponent<TransformComponent>();
+	(*atmosphere_)->AddComponent<SkyAtmosphereComponent>();
+
 }
 
 void ExampleGameLoop::TermSystem() {
@@ -56,7 +62,9 @@ void ExampleGameLoop::UpdateSystem() {
 	// Update
 	//-----------------------------------------------------------------------------------------
 
-
+	(*atmosphere_)->GetComponent<SkyAtmosphereComponent>()->UpdateTransmittance(System::GetDirectQueueContext());
+	(*atmosphere_)->GetComponent<SkyAtmosphereComponent>()->UpdateMultipleScattering(System::GetDirectQueueContext());
+	(*atmosphere_)->GetComponent<SkyAtmosphereComponent>()->UpdateSkyCube(System::GetDirectQueueContext());
 
 	//-----------------------------------------------------------------------------------------
 	// SystemUpdate...?
