@@ -238,36 +238,60 @@ void DevelopEditor::ShowConsole() {
 	ImGui::Begin("Console ## Engine Developer Editor", nullptr, BaseEditor::GetWindowFlag());
 
 	//* console option *//
-	static ImColor colors[magic_enum::enum_count<RuntimeLogger::Type>()] = {
-		ImGui::GetStyle().Colors[ImGuiCol_Text],
-		ImColor(100, 100, 100, 255),
-		ImColor(250, 250, 0, 255),
-		ImColor(250, 0, 0, 255),
+
+	static std::pair<const char*, ImColor> kStyles[magic_enum::enum_count<RuntimeLogger::Type>()] = {
+		{ "-", ImGui::GetStyle().Colors[ImGuiCol_Text] },
+		{ "●", ImVec4(0.80f, 0.80f, 0.80f, 1.0f) },
+		{ "!", ImVec4(1.00f, 0.80f, 0.20f, 1.0f) },
+		{ "x", ImVec4(1.00f, 0.30f, 0.30f, 1.0f) },
 	};
 
 	if (ImGui::BeginTable("## console table", 2, ImGuiTableFlags_ScrollY | ImGuiTableFlags_ScrollX | ImGuiTableFlags_BordersH)) {
 
-		ImGui::TableSetupColumn("label");
-		ImGui::TableSetupColumn("detail");
+		ImGui::TableSetupColumn("Log");
 		ImGui::TableHeadersRow();
 
-		for (const auto& log : RuntimeLogger::GetLogs() | std::views::filter([](const auto&) { return true; })) {
-			// TODO: Filter機能実装
+		for (const auto& log : RuntimeLogger::GetLogs()) {
+
+			const auto& style = kStyles[static_cast<uint32_t>(log.type)];
+
 			ImGui::TableNextRow();
+			ImGui::TableNextColumn();
 
-			// TODO: Log表示の実装
+			ImGui::PushID(&log);
 
-			{ //!< label
-				ImGui::TableNextColumn();
-				ImGui::TextColored(colors[static_cast<uint32_t>(log.type)], log.label.c_str());
-			}
+			// 行全体を Selectable にする
+			ImGui::Selectable(
+				"##log_row",
+				false,
+				ImGuiSelectableFlags_SpanAllColumns
+			);
 
-			{ //!< detail
-				ImGui::TableNextColumn();
-				ImGui::Text(std::format("{} [x{}]", log.category, log.count).c_str());
-			}
+			ImGui::SameLine();
 
-			
+			// アイコン
+			ImGui::TextColored(style.second, "%s", style.first);
+			ImGui::SameLine();
+
+			// メインログテキスト
+			ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(style.second));
+			ImGui::TextWrapped("%s", log.label.c_str());
+			ImGui::PopStyleColor();
+
+			// 補助情報（薄く）
+			ImGui::SameLine(0.0f, 12.0f);
+			ImGui::PushStyleColor(
+				ImGuiCol_Text,
+				ImVec4(0.55f, 0.55f, 0.55f, 1.0f)
+			);
+			ImGui::Text(
+				"[%s] x%u",
+				log.category.c_str(),
+				log.count
+			);
+			ImGui::PopStyleColor();
+
+			ImGui::PopID();
 		}
 
 		ImGui::EndTable();

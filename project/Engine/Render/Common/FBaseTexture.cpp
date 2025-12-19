@@ -118,10 +118,10 @@ void FBaseTexture::Create(const Vector2ui& size, DXGI_FORMAT format, Sxl::Flag<F
 }
 
 void FBaseTexture::Term() {
-	resource_.Reset();
 	descriptorSRV_.Delete();
 	descriptorRTV_.Delete();
 	descriptorUAV_.Delete();
+	resource_.Reset();
 }
 
 D3D12_RESOURCE_BARRIER FBaseTexture::TransitionBeginRenderTarget() const {

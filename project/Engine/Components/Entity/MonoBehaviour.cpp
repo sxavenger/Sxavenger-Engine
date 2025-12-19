@@ -10,6 +10,8 @@ SXAVENGER_ENGINE_USING
 //* engine
 #include <Engine/System/UI/SxImGui.h>
 #include <Engine/System/WinApp/WinApp.h>
+#include <Engine/Editors/EditorEngine.h>
+#include <Engine/Editors/Editor/RenderSceneEditor.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // MonoBehaviour class methods
@@ -227,13 +229,13 @@ void MonoBehaviour::ShowInspector() {
 
 void MonoBehaviour::LateUpdateInspector() {
 	// Manipulateの設定
-	/*sEditorEngine->ExecuteEditorFunction<RenderSceneEditor>([&](RenderSceneEditor* editor) {
+	sEditorEngine->ExecuteEditorFunction<RenderSceneEditor>([&](RenderSceneEditor* editor) {
 		editor->Manipulate(this);
 	});
 
 	sEditorEngine->ExecuteEditorFunction<RenderSceneEditor>([&](RenderSceneEditor* editor) {
 		editor->ManipulateCanvas(this);
-	});*/
+	});
 }
 
 json MonoBehaviour::PerseToJson() const {

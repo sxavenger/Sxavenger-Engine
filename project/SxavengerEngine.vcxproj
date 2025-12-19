@@ -240,6 +240,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Engine\Editors\EditorEngine.h" />
     <ClInclude Include="Engine\Execution\EditorExecution.h" />
     <ClInclude Include="Engine\Execution\EngineExecution.h" />
+    <ClInclude Include="Engine\Execution\ExampleGameLoop.h" />
     <ClInclude Include="Engine\Execution\FeatureLevelExecution.h" />
     <ClInclude Include="Engine\Foundation.h" />
     <ClInclude Include="Engine\Graphics\Animation\Animation.h" />
@@ -454,6 +455,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="Engine\Editors\EditorEngine.cpp" />
     <ClCompile Include="Engine\Execution\EditorExecution.cpp" />
     <ClCompile Include="Engine\Execution\EngineExecution.cpp" />
+    <ClCompile Include="Engine\Execution\ExampleGameLoop.cpp" />
     <ClCompile Include="Engine\Execution\FeatureLevelExecution.cpp" />
     <ClCompile Include="Engine\Graphics\Animation\Animation.cpp" />
     <ClCompile Include="Engine\Graphics\Animation\Skeleton.cpp" />

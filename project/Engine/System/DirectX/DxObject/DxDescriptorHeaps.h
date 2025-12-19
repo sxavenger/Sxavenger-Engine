@@ -18,6 +18,7 @@
 #include <queue>
 #include <memory>
 #include <array>
+#include <mutex>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // DXOBJECT
@@ -88,6 +89,10 @@ private:
 	//* config *//
 
 	bool shaderVisible_ = false;
+
+	//* thread *//
+
+	std::mutex mutex_;
 
 	//=========================================================================================
 	// private methods

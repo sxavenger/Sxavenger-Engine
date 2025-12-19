@@ -48,7 +48,8 @@ void DescriptorPool::Term() {
 }
 
 Descriptor DescriptorPool::GetDescriptor() {
-	// TODO: multi thread 用にmutexを用意
+	std::unique_lock<std::mutex> lock(mutex_);
+	
 	Descriptor result = {};
 
 	result.index_ = GetCurrentDescriptorIndex();
@@ -68,7 +69,7 @@ Descriptor DescriptorPool::GetDescriptor() {
 }
 
 void DescriptorPool::DeleteDescriptor(Descriptor& descriptor) {
-	// TODO: multi thread 用にmutexを用意
+	std::unique_lock<std::mutex> lock(mutex_);
 	
 	//!< 空き配列に挿入
 	descriptorFreeIndices_.emplace(descriptor.index_);

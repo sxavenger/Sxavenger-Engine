@@ -1,6 +1,6 @@
 Sxavenger Engine [Sxx Engine] Stream Logger
 version: 3.4
-[StreamLogger] initalize. filename: 2025-12-20_04-35-04.log
+[StreamLogger] initalize. filename: 2025-12-20_05-45-19.log
 [Sxavenger Engine] >> [Config] loaded user config. filepath: packages/config/config_Debug.json
 [Sxavenger Engine] >> [Config] title: Sxavenger Engine 3.4
 [Sxavenger Engine] >> [Config] resolution: (1280, 720)
@@ -24,12 +24,12 @@ version: 3.4
 [Sxavenger Engine] >> [DXOBJECT DescriptorPool] descriptor heap type: D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, visibility: true, count: 512
 [Sxavenger Engine] >> [DXOBJECT DescriptorHeaps] complete initialize.
 [Sxavenger Engine] >> [DXOBJECT ShaderCompiler] complete initialize.
-[Sxavenger Engine] [thread id: 16676] >> [AsyncThread] begin thread. execution: None
-[Sxavenger Engine] [thread id: 1756] >> [AsyncThread] begin thread. execution: None
-[Sxavenger Engine] [thread id: 24852] >> [AsyncThread] begin thread. execution: Copy
-[Sxavenger Engine] [thread id: 24948] >> [AsyncThread] begin thread. execution: Copy
-[Sxavenger Engine] [thread id: 16000] >> [AsyncThread] begin thread. execution: Copy
-[Sxavenger Engine] [thread id: 13396] >> [AsyncThread] begin thread. execution: Compute
+[Sxavenger Engine] [thread id: 3284] >> [AsyncThread] begin thread. execution: None
+[Sxavenger Engine] [thread id: 8128] >> [AsyncThread] begin thread. execution: None
+[Sxavenger Engine] [thread id: 17200] >> [AsyncThread] begin thread. execution: Copy
+[Sxavenger Engine] [thread id: 16696] >> [AsyncThread] begin thread. execution: Copy
+[Sxavenger Engine] [thread id: 16412] >> [AsyncThread] begin thread. execution: Copy
+[Sxavenger Engine] [thread id: 15676] >> [AsyncThread] begin thread. execution: Compute
 [Sxavenger Engine] [main thread] >> [DXOBJECT ShaderCompiler] shader compiled. filepath: packages/shaders/render/skinning/skinning.cs.hlsl, profile: cs
 [Sxavenger Engine] [main thread] >> [DXOBJECT ShaderCompiler] shader compiled. filepath: packages/shaders/render/debug/Line/PrimitiveLine.vs.hlsl, profile: vs
 [Sxavenger Engine] [main thread] >> [DXOBJECT ShaderCompiler] shader compiled. filepath: packages/shaders/render/debug/Line/PrimitiveLine.gs.hlsl, profile: gs
@@ -43,7 +43,7 @@ version: 3.4
 [Sxavenger Engine] [main thread] >> [DXOBJECT ShaderCompiler] shader compiled. filepath: packages/shaders/render/debug/Point/PrimitivePoint.vs.hlsl, profile: vs
 [Sxavenger Engine] [main thread] >> [DXOBJECT ShaderCompiler] shader compiled. filepath: packages/shaders/render/debug/Point/PrimitivePoint.gs.hlsl, profile: gs
 [Sxavenger Engine] [main thread] >> [DXOBJECT ShaderCompiler] shader compiled. filepath: packages/shaders/render/debug/Point/PrimitivePoint.ps.hlsl, profile: ps
-[Execution::Context]: Begin Execution Context. ptr: 0x1d66fe565e8
+[Execution::Context]: Begin Execution Context. ptr: 0x2c2589dc148
 [FeatureLevelExecution] >> check feature levels.
 [FeatureLevelExecution] >> [IDXGIFactory7] CreateDXGIFactory(...): true
 [FeatureLevelExecution] >> [IDXGIFactory7] CheckFeatureSupport(DXGI_FEATURE_PRESENT_ALLOW_TEARING) = 1
@@ -55,65 +55,65 @@ version: 3.4
 [FeatureLevelExecution] >> feature levels complete.
 [Sxavenger Engine] >> [AssetStorage]: asset storage uuid table deserialized.
 [Sxavenger Engine] [main thread] >> [AsyncThreadPool] task pushed. tag: packages/shaders/render/Geometry/Mesh/Default.vs.hlsl
-[Sxavenger Engine] [thread id: 16676] >> [AsyncThreadPool] task poped. tag: packages/shaders/render/Geometry/Mesh/Default.vs.hlsl
+[Sxavenger Engine] [thread id: 3284] >> [AsyncThreadPool] task poped. tag: packages/shaders/render/Geometry/Mesh/Default.vs.hlsl
 [Sxavenger Engine] [main thread] >> [AsyncThreadPool] task pushed. tag: packages/shaders/render/Geometry/Mesh/Forward.ps.hlsl
-[Sxavenger Engine] [thread id: 1756] >> [AsyncThreadPool] task poped. tag: packages/shaders/render/Geometry/Mesh/Forward.ps.hlsl
-[Sxavenger Engine] [thread id: 1756] >> [DXOBJECT ShaderCompiler] shader compiled. filepath: packages/shaders/render/Geometry/Mesh/Forward.ps.hlsl, profile: ps
-[Sxavenger Engine] [thread id: 1756] >> [AsyncThread] task completed. tag: packages/shaders/render/Geometry/Mesh/Forward.ps.hlsl
-[Sxavenger Engine] [thread id: 16676] >> [DXOBJECT ShaderCompiler] shader compiled. filepath: packages/shaders/render/Geometry/Mesh/Default.vs.hlsl, profile: vs
-[Sxavenger Engine] [thread id: 16676] >> [AsyncThread] task completed. tag: packages/shaders/render/Geometry/Mesh/Default.vs.hlsl
+[Sxavenger Engine] [thread id: 8128] >> [AsyncThreadPool] task poped. tag: packages/shaders/render/Geometry/Mesh/Forward.ps.hlsl
+[Sxavenger Engine] [thread id: 8128] >> [DXOBJECT ShaderCompiler] shader compiled. filepath: packages/shaders/render/Geometry/Mesh/Forward.ps.hlsl, profile: ps
+[Sxavenger Engine] [thread id: 8128] >> [AsyncThread] task completed. tag: packages/shaders/render/Geometry/Mesh/Forward.ps.hlsl
+[Sxavenger Engine] [thread id: 3284] >> [DXOBJECT ShaderCompiler] shader compiled. filepath: packages/shaders/render/Geometry/Mesh/Default.vs.hlsl, profile: vs
+[Sxavenger Engine] [thread id: 3284] >> [AsyncThread] task completed. tag: packages/shaders/render/Geometry/Mesh/Default.vs.hlsl
 [Sxavenger Engine] [main thread] >> [AsyncThreadPool] task pushed. tag: packages/shaders/render/Geometry/Mesh/Deferred.ps.hlsl
-[Sxavenger Engine] [thread id: 1756] >> [AsyncThreadPool] task poped. tag: packages/shaders/render/Geometry/Mesh/Deferred.ps.hlsl
-[Sxavenger Engine] [thread id: 1756] >> [DXOBJECT ShaderCompiler] shader compiled. filepath: packages/shaders/render/Geometry/Mesh/Deferred.ps.hlsl, profile: ps
-[Sxavenger Engine] [thread id: 1756] >> [AsyncThread] task completed. tag: packages/shaders/render/Geometry/Mesh/Deferred.ps.hlsl
+[Sxavenger Engine] [thread id: 8128] >> [AsyncThreadPool] task poped. tag: packages/shaders/render/Geometry/Mesh/Deferred.ps.hlsl
+[Sxavenger Engine] [thread id: 8128] >> [DXOBJECT ShaderCompiler] shader compiled. filepath: packages/shaders/render/Geometry/Mesh/Deferred.ps.hlsl, profile: ps
+[Sxavenger Engine] [thread id: 8128] >> [AsyncThread] task completed. tag: packages/shaders/render/Geometry/Mesh/Deferred.ps.hlsl
 [Sxavenger Engine] [main thread] >> [AsyncThreadPool] task pushed. tag: packages/shaders/render/Geometry/Mesh/Default.as.hlsl
-[Sxavenger Engine] [thread id: 16676] >> [AsyncThreadPool] task poped. tag: packages/shaders/render/Geometry/Mesh/Default.as.hlsl
+[Sxavenger Engine] [thread id: 3284] >> [AsyncThreadPool] task poped. tag: packages/shaders/render/Geometry/Mesh/Default.as.hlsl
 [Sxavenger Engine] [main thread] >> [AsyncThreadPool] task pushed. tag: packages/shaders/render/Geometry/Mesh/Default.ms.hlsl
-[Sxavenger Engine] [thread id: 1756] >> [AsyncThreadPool] task poped. tag: packages/shaders/render/Geometry/Mesh/Default.ms.hlsl
-[Sxavenger Engine] [thread id: 16676] >> [DXOBJECT ShaderCompiler] shader compiled. filepath: packages/shaders/render/Geometry/Mesh/Default.as.hlsl, profile: as
-[Sxavenger Engine] [thread id: 16676] >> [AsyncThread] task completed. tag: packages/shaders/render/Geometry/Mesh/Default.as.hlsl
-[Sxavenger Engine] [thread id: 1756] >> [DXOBJECT ShaderCompiler] shader compiled. filepath: packages/shaders/render/Geometry/Mesh/Default.ms.hlsl, profile: ms
-[Sxavenger Engine] [thread id: 1756] >> [AsyncThread] task completed. tag: packages/shaders/render/Geometry/Mesh/Default.ms.hlsl
+[Sxavenger Engine] [thread id: 8128] >> [AsyncThreadPool] task poped. tag: packages/shaders/render/Geometry/Mesh/Default.ms.hlsl
+[Sxavenger Engine] [thread id: 3284] >> [DXOBJECT ShaderCompiler] shader compiled. filepath: packages/shaders/render/Geometry/Mesh/Default.as.hlsl, profile: as
+[Sxavenger Engine] [thread id: 3284] >> [AsyncThread] task completed. tag: packages/shaders/render/Geometry/Mesh/Default.as.hlsl
+[Sxavenger Engine] [thread id: 8128] >> [DXOBJECT ShaderCompiler] shader compiled. filepath: packages/shaders/render/Geometry/Mesh/Default.ms.hlsl, profile: ms
+[Sxavenger Engine] [thread id: 8128] >> [AsyncThread] task completed. tag: packages/shaders/render/Geometry/Mesh/Default.ms.hlsl
 [Sxavenger Engine] [main thread] >> [AsyncThreadPool] task pushed. tag: packages/shaders/render/Particle/GPUParticle/GPUParticle.vs.hlsl
-[Sxavenger Engine] [thread id: 16676] >> [AsyncThreadPool] task poped. tag: packages/shaders/render/Particle/GPUParticle/GPUParticle.vs.hlsl
+[Sxavenger Engine] [thread id: 3284] >> [AsyncThreadPool] task poped. tag: packages/shaders/render/Particle/GPUParticle/GPUParticle.vs.hlsl
 [Sxavenger Engine] [main thread] >> [AsyncThreadPool] task pushed. tag: packages/shaders/render/Particle/GPUParticle/GPUParticle.ps.hlsl
-[Sxavenger Engine] [thread id: 1756] >> [AsyncThreadPool] task poped. tag: packages/shaders/render/Particle/GPUParticle/GPUParticle.ps.hlsl
-[Sxavenger Engine] [thread id: 16676] >> [DXOBJECT ShaderCompiler] shader compiled. filepath: packages/shaders/render/Particle/GPUParticle/GPUParticle.vs.hlsl, profile: vs
-[Sxavenger Engine] [thread id: 1756] >> [DXOBJECT ShaderCompiler] shader compiled. filepath: packages/shaders/render/Particle/GPUParticle/GPUParticle.ps.hlsl, profile: ps
-[Sxavenger Engine] [thread id: 16676] >> [AsyncThread] task completed. tag: packages/shaders/render/Particle/GPUParticle/GPUParticle.vs.hlsl
-[Sxavenger Engine] [thread id: 1756] >> [AsyncThread] task completed. tag: packages/shaders/render/Particle/GPUParticle/GPUParticle.ps.hlsl
+[Sxavenger Engine] [thread id: 8128] >> [AsyncThreadPool] task poped. tag: packages/shaders/render/Particle/GPUParticle/GPUParticle.ps.hlsl
+[Sxavenger Engine] [thread id: 8128] >> [DXOBJECT ShaderCompiler] shader compiled. filepath: packages/shaders/render/Particle/GPUParticle/GPUParticle.ps.hlsl, profile: ps
+[Sxavenger Engine] [thread id: 8128] >> [AsyncThread] task completed. tag: packages/shaders/render/Particle/GPUParticle/GPUParticle.ps.hlsl
+[Sxavenger Engine] [thread id: 3284] >> [DXOBJECT ShaderCompiler] shader compiled. filepath: packages/shaders/render/Particle/GPUParticle/GPUParticle.vs.hlsl, profile: vs
+[Sxavenger Engine] [thread id: 3284] >> [AsyncThread] task completed. tag: packages/shaders/render/Particle/GPUParticle/GPUParticle.vs.hlsl
 [Sxavenger Engine] [main thread] >> [AsyncThreadPool] task pushed. tag: packages/shaders/render/light/LightRender2d.vs.hlsl
-[Sxavenger Engine] [thread id: 16676] >> [AsyncThreadPool] task poped. tag: packages/shaders/render/light/LightRender2d.vs.hlsl
+[Sxavenger Engine] [thread id: 8128] >> [AsyncThreadPool] task poped. tag: packages/shaders/render/light/LightRender2d.vs.hlsl
 [Sxavenger Engine] [main thread] >> [AsyncThreadPool] task pushed. tag: packages/shaders/render/light/Empty.ps.hlsl
-[Sxavenger Engine] [thread id: 1756] >> [AsyncThreadPool] task poped. tag: packages/shaders/render/light/Empty.ps.hlsl
-[Sxavenger Engine] [thread id: 16676] >> [DXOBJECT ShaderCompiler] shader compiled. filepath: packages/shaders/render/light/LightRender2d.vs.hlsl, profile: vs
-[Sxavenger Engine] [thread id: 16676] >> [AsyncThread] task completed. tag: packages/shaders/render/light/LightRender2d.vs.hlsl
-[Sxavenger Engine] [thread id: 1756] >> [DXOBJECT ShaderCompiler] shader compiled. filepath: packages/shaders/render/light/Empty.ps.hlsl, profile: ps
-[Sxavenger Engine] [thread id: 1756] >> [AsyncThread] task completed. tag: packages/shaders/render/light/Empty.ps.hlsl
+[Sxavenger Engine] [thread id: 3284] >> [AsyncThreadPool] task poped. tag: packages/shaders/render/light/Empty.ps.hlsl
+[Sxavenger Engine] [thread id: 8128] >> [DXOBJECT ShaderCompiler] shader compiled. filepath: packages/shaders/render/light/LightRender2d.vs.hlsl, profile: vs
+[Sxavenger Engine] [thread id: 8128] >> [AsyncThread] task completed. tag: packages/shaders/render/light/LightRender2d.vs.hlsl
+[Sxavenger Engine] [thread id: 3284] >> [DXOBJECT ShaderCompiler] shader compiled. filepath: packages/shaders/render/light/Empty.ps.hlsl, profile: ps
+[Sxavenger Engine] [thread id: 3284] >> [AsyncThread] task completed. tag: packages/shaders/render/light/Empty.ps.hlsl
 [Sxavenger Engine] [main thread] >> [AsyncThreadPool] task pushed. tag: packages/shaders/render/light/DirectionalLight.ps.hlsl
-[Sxavenger Engine] [thread id: 16676] >> [AsyncThreadPool] task poped. tag: packages/shaders/render/light/DirectionalLight.ps.hlsl
-[Sxavenger Engine] [thread id: 16676] >> [DXOBJECT ShaderCompiler] shader compiled. filepath: packages/shaders/render/light/DirectionalLight.ps.hlsl, profile: ps
-[Sxavenger Engine] [thread id: 16676] >> [AsyncThread] task completed. tag: packages/shaders/render/light/DirectionalLight.ps.hlsl
+[Sxavenger Engine] [thread id: 8128] >> [AsyncThreadPool] task poped. tag: packages/shaders/render/light/DirectionalLight.ps.hlsl
+[Sxavenger Engine] [thread id: 8128] >> [DXOBJECT ShaderCompiler] shader compiled. filepath: packages/shaders/render/light/DirectionalLight.ps.hlsl, profile: ps
+[Sxavenger Engine] [thread id: 8128] >> [AsyncThread] task completed. tag: packages/shaders/render/light/DirectionalLight.ps.hlsl
 [Sxavenger Engine] [main thread] >> [AsyncThreadPool] task pushed. tag: packages/shaders/render/light/PointLight.ps.hlsl
-[Sxavenger Engine] [thread id: 1756] >> [AsyncThreadPool] task poped. tag: packages/shaders/render/light/PointLight.ps.hlsl
-[Sxavenger Engine] [thread id: 1756] >> [DXOBJECT ShaderCompiler] shader compiled. filepath: packages/shaders/render/light/PointLight.ps.hlsl, profile: ps
-[Sxavenger Engine] [thread id: 1756] >> [AsyncThread] task completed. tag: packages/shaders/render/light/PointLight.ps.hlsl
+[Sxavenger Engine] [thread id: 3284] >> [AsyncThreadPool] task poped. tag: packages/shaders/render/light/PointLight.ps.hlsl
+[Sxavenger Engine] [thread id: 3284] >> [DXOBJECT ShaderCompiler] shader compiled. filepath: packages/shaders/render/light/PointLight.ps.hlsl, profile: ps
+[Sxavenger Engine] [thread id: 3284] >> [AsyncThread] task completed. tag: packages/shaders/render/light/PointLight.ps.hlsl
 [Sxavenger Engine] [main thread] >> [AsyncThreadPool] task pushed. tag: packages/shaders/render/light/SpotLight.ps.hlsl
-[Sxavenger Engine] [thread id: 16676] >> [AsyncThreadPool] task poped. tag: packages/shaders/render/light/SpotLight.ps.hlsl
-[Sxavenger Engine] [thread id: 16676] >> [DXOBJECT ShaderCompiler] shader compiled. filepath: packages/shaders/render/light/SpotLight.ps.hlsl, profile: ps
-[Sxavenger Engine] [thread id: 16676] >> [AsyncThread] task completed. tag: packages/shaders/render/light/SpotLight.ps.hlsl
+[Sxavenger Engine] [thread id: 8128] >> [AsyncThreadPool] task poped. tag: packages/shaders/render/light/SpotLight.ps.hlsl
+[Sxavenger Engine] [thread id: 8128] >> [DXOBJECT ShaderCompiler] shader compiled. filepath: packages/shaders/render/light/SpotLight.ps.hlsl, profile: ps
+[Sxavenger Engine] [thread id: 8128] >> [AsyncThread] task completed. tag: packages/shaders/render/light/SpotLight.ps.hlsl
 [Sxavenger Engine] [main thread] >> [AsyncThreadPool] task pushed. tag: packages/shaders/render/light/SkyLight.ps.hlsl
-[Sxavenger Engine] [thread id: 1756] >> [AsyncThreadPool] task poped. tag: packages/shaders/render/light/SkyLight.ps.hlsl
-[Sxavenger Engine] [thread id: 1756] >> [DXOBJECT ShaderCompiler] shader compiled. filepath: packages/shaders/render/light/SkyLight.ps.hlsl, profile: ps
-[Sxavenger Engine] [thread id: 1756] >> [AsyncThread] task completed. tag: packages/shaders/render/light/SkyLight.ps.hlsl
+[Sxavenger Engine] [thread id: 3284] >> [AsyncThreadPool] task poped. tag: packages/shaders/render/light/SkyLight.ps.hlsl
+[Sxavenger Engine] [thread id: 3284] >> [DXOBJECT ShaderCompiler] shader compiled. filepath: packages/shaders/render/light/SkyLight.ps.hlsl, profile: ps
+[Sxavenger Engine] [thread id: 3284] >> [AsyncThread] task completed. tag: packages/shaders/render/light/SkyLight.ps.hlsl
 [Sxavenger Engine] [main thread] >> [AsyncThreadPool] task pushed. tag: packages/shaders/render/light/SkyLightEnvironment.ps.hlsl
-[Sxavenger Engine] [thread id: 16676] >> [AsyncThreadPool] task poped. tag: packages/shaders/render/light/SkyLightEnvironment.ps.hlsl
-[Sxavenger Engine] [thread id: 16676] >> [DXOBJECT ShaderCompiler] shader compiled. filepath: packages/shaders/render/light/SkyLightEnvironment.ps.hlsl, profile: ps
-[Sxavenger Engine] [thread id: 16676] >> [AsyncThread] task completed. tag: packages/shaders/render/light/SkyLightEnvironment.ps.hlsl
+[Sxavenger Engine] [thread id: 8128] >> [AsyncThreadPool] task poped. tag: packages/shaders/render/light/SkyLightEnvironment.ps.hlsl
+[Sxavenger Engine] [thread id: 8128] >> [DXOBJECT ShaderCompiler] shader compiled. filepath: packages/shaders/render/light/SkyLightEnvironment.ps.hlsl, profile: ps
+[Sxavenger Engine] [thread id: 8128] >> [AsyncThread] task completed. tag: packages/shaders/render/light/SkyLightEnvironment.ps.hlsl
 [Sxavenger Engine] [main thread] >> [AsyncThreadPool] task pushed. tag: packages/shaders/render/light/SkyAtmosphereEnvironment.ps.hlsl
-[Sxavenger Engine] [thread id: 1756] >> [AsyncThreadPool] task poped. tag: packages/shaders/render/light/SkyAtmosphereEnvironment.ps.hlsl
-[Sxavenger Engine] [thread id: 1756] >> [DXOBJECT ShaderCompiler] shader compiled. filepath: packages/shaders/render/light/SkyAtmosphereEnvironment.ps.hlsl, profile: ps
-[Sxavenger Engine] [thread id: 1756] >> [AsyncThread] task completed. tag: packages/shaders/render/light/SkyAtmosphereEnvironment.ps.hlsl
+[Sxavenger Engine] [thread id: 3284] >> [AsyncThreadPool] task poped. tag: packages/shaders/render/light/SkyAtmosphereEnvironment.ps.hlsl
+[Sxavenger Engine] [thread id: 3284] >> [DXOBJECT ShaderCompiler] shader compiled. filepath: packages/shaders/render/light/SkyAtmosphereEnvironment.ps.hlsl, profile: ps
+[Sxavenger Engine] [thread id: 3284] >> [AsyncThread] task completed. tag: packages/shaders/render/light/SkyAtmosphereEnvironment.ps.hlsl
 [Sxavenger Engine] [main thread] >> [DXOBJECT ShaderCompiler] shader compiled. filepath: packages/shaders/render/ReSTIR/Default.raygeneration.hlsl, profile: lib
 [Sxavenger Engine] [main thread] >> [DXOBJECT ShaderCompiler] shader compiled. filepath: packages/shaders/render/ReSTIR/Default.miss.hlsl, profile: lib
 [Sxavenger Engine] [main thread] >> [DXOBJECT ShaderCompiler] shader compiled. filepath: packages/shaders/render/ReSTIR/hitgroup/Mesh.hitgroup.hlsl, profile: lib
@@ -124,131 +124,131 @@ version: 3.4
 [Sxavenger Engine] [main thread] >> [DXOBJECT ShaderCompiler] shader compiled. filepath: packages/shaders/render/ReSTIR/RestirTexture.cs.hlsl, profile: cs
 [Sxavenger Engine] [main thread] >> [DXOBJECT ShaderCompiler] shader compiled. filepath: packages/shaders/render/ReSTIR/EdgeStopping.cs.hlsl, profile: cs
 [Sxavenger Engine] [main thread] >> [AsyncThreadPool] task pushed. tag: packages/shaders/render/canvas/sprite.vs.hlsl
-[Sxavenger Engine] [thread id: 16676] >> [AsyncThreadPool] task poped. tag: packages/shaders/render/canvas/sprite.vs.hlsl
+[Sxavenger Engine] [thread id: 8128] >> [AsyncThreadPool] task poped. tag: packages/shaders/render/canvas/sprite.vs.hlsl
 [Sxavenger Engine] [main thread] >> [AsyncThreadPool] task pushed. tag: packages/shaders/render/canvas/sprite.ps.hlsl
-[Sxavenger Engine] [thread id: 1756] >> [AsyncThreadPool] task poped. tag: packages/shaders/render/canvas/sprite.ps.hlsl
-[Sxavenger Engine] [thread id: 1756] >> [DXOBJECT ShaderCompiler] shader compiled. filepath: packages/shaders/render/canvas/sprite.ps.hlsl, profile: ps
-[Sxavenger Engine] [thread id: 1756] >> [AsyncThread] task completed. tag: packages/shaders/render/canvas/sprite.ps.hlsl
-[Sxavenger Engine] [thread id: 16676] >> [DXOBJECT ShaderCompiler] shader compiled. filepath: packages/shaders/render/canvas/sprite.vs.hlsl, profile: vs
-[Sxavenger Engine] [thread id: 16676] >> [AsyncThread] task completed. tag: packages/shaders/render/canvas/sprite.vs.hlsl
+[Sxavenger Engine] [thread id: 3284] >> [AsyncThreadPool] task poped. tag: packages/shaders/render/canvas/sprite.ps.hlsl
+[Sxavenger Engine] [thread id: 3284] >> [DXOBJECT ShaderCompiler] shader compiled. filepath: packages/shaders/render/canvas/sprite.ps.hlsl, profile: ps
+[Sxavenger Engine] [thread id: 3284] >> [AsyncThread] task completed. tag: packages/shaders/render/canvas/sprite.ps.hlsl
+[Sxavenger Engine] [thread id: 8128] >> [DXOBJECT ShaderCompiler] shader compiled. filepath: packages/shaders/render/canvas/sprite.vs.hlsl, profile: vs
+[Sxavenger Engine] [thread id: 8128] >> [AsyncThread] task completed. tag: packages/shaders/render/canvas/sprite.vs.hlsl
 [Sxavenger Engine] [main thread] >> [AsyncThreadPool] task pushed. tag: packages/shaders/render/canvas/text.vs.hlsl
-[Sxavenger Engine] [thread id: 1756] >> [AsyncThreadPool] task poped. tag: packages/shaders/render/canvas/text.vs.hlsl
+[Sxavenger Engine] [thread id: 3284] >> [AsyncThreadPool] task poped. tag: packages/shaders/render/canvas/text.vs.hlsl
 [Sxavenger Engine] [main thread] >> [AsyncThreadPool] task pushed. tag: packages/shaders/render/canvas/text.ps.hlsl
-[Sxavenger Engine] [thread id: 16676] >> [AsyncThreadPool] task poped. tag: packages/shaders/render/canvas/text.ps.hlsl
-[Sxavenger Engine] [thread id: 16676] >> [DXOBJECT ShaderCompiler] shader compiled. filepath: packages/shaders/render/canvas/text.ps.hlsl, profile: ps
-[Sxavenger Engine] [thread id: 16676] >> [AsyncThread] task completed. tag: packages/shaders/render/canvas/text.ps.hlsl
-[Sxavenger Engine] [thread id: 1756] >> [DXOBJECT ShaderCompiler] shader compiled. filepath: packages/shaders/render/canvas/text.vs.hlsl, profile: vs
-[Sxavenger Engine] [thread id: 1756] >> [AsyncThread] task completed. tag: packages/shaders/render/canvas/text.vs.hlsl
+[Sxavenger Engine] [thread id: 8128] >> [AsyncThreadPool] task poped. tag: packages/shaders/render/canvas/text.ps.hlsl
+[Sxavenger Engine] [thread id: 3284] >> [DXOBJECT ShaderCompiler] shader compiled. filepath: packages/shaders/render/canvas/text.vs.hlsl, profile: vs
+[Sxavenger Engine] [thread id: 3284] >> [AsyncThread] task completed. tag: packages/shaders/render/canvas/text.vs.hlsl
+[Sxavenger Engine] [thread id: 8128] >> [DXOBJECT ShaderCompiler] shader compiled. filepath: packages/shaders/render/canvas/text.ps.hlsl, profile: ps
+[Sxavenger Engine] [thread id: 8128] >> [AsyncThread] task completed. tag: packages/shaders/render/canvas/text.ps.hlsl
 [Sxavenger Engine] [main thread] >> [AsyncThreadPool] task pushed. tag: packages/shaders/Render/Process/PostProcess/GrayScale.cs.hlsl
-[Sxavenger Engine] [thread id: 16676] >> [AsyncThreadPool] task poped. tag: packages/shaders/Render/Process/PostProcess/GrayScale.cs.hlsl
-[Sxavenger Engine] [thread id: 16676] >> [DXOBJECT ShaderCompiler] shader compiled. filepath: packages/shaders/Render/Process/PostProcess/GrayScale.cs.hlsl, profile: cs
-[Sxavenger Engine] [thread id: 16676] >> [AsyncThread] task completed. tag: packages/shaders/Render/Process/PostProcess/GrayScale.cs.hlsl
+[Sxavenger Engine] [thread id: 3284] >> [AsyncThreadPool] task poped. tag: packages/shaders/Render/Process/PostProcess/GrayScale.cs.hlsl
+[Sxavenger Engine] [thread id: 3284] >> [DXOBJECT ShaderCompiler] shader compiled. filepath: packages/shaders/Render/Process/PostProcess/GrayScale.cs.hlsl, profile: cs
+[Sxavenger Engine] [thread id: 3284] >> [AsyncThread] task completed. tag: packages/shaders/Render/Process/PostProcess/GrayScale.cs.hlsl
 [Sxavenger Engine] [main thread] >> [AsyncThreadPool] task pushed. tag: packages/shaders/Render/Process/PostProcess/Exposure/AutoExposureLuminance.cs.hlsl
-[Sxavenger Engine] [thread id: 1756] >> [AsyncThreadPool] task poped. tag: packages/shaders/Render/Process/PostProcess/Exposure/AutoExposureLuminance.cs.hlsl
-[Sxavenger Engine] [thread id: 1756] >> [DXOBJECT ShaderCompiler] shader compiled. filepath: packages/shaders/Render/Process/PostProcess/Exposure/AutoExposureLuminance.cs.hlsl, profile: cs
-[Sxavenger Engine] [thread id: 1756] >> [AsyncThread] task completed. tag: packages/shaders/Render/Process/PostProcess/Exposure/AutoExposureLuminance.cs.hlsl
+[Sxavenger Engine] [thread id: 8128] >> [AsyncThreadPool] task poped. tag: packages/shaders/Render/Process/PostProcess/Exposure/AutoExposureLuminance.cs.hlsl
+[Sxavenger Engine] [thread id: 8128] >> [DXOBJECT ShaderCompiler] shader compiled. filepath: packages/shaders/Render/Process/PostProcess/Exposure/AutoExposureLuminance.cs.hlsl, profile: cs
+[Sxavenger Engine] [thread id: 8128] >> [AsyncThread] task completed. tag: packages/shaders/Render/Process/PostProcess/Exposure/AutoExposureLuminance.cs.hlsl
 [Sxavenger Engine] [main thread] >> [AsyncThreadPool] task pushed. tag: packages/shaders/Render/Process/PostProcess/Exposure/AutoExposureAverage.cs.hlsl
-[Sxavenger Engine] [thread id: 16676] >> [AsyncThreadPool] task poped. tag: packages/shaders/Render/Process/PostProcess/Exposure/AutoExposureAverage.cs.hlsl
-[Sxavenger Engine] [thread id: 16676] >> [DXOBJECT ShaderCompiler] shader compiled. filepath: packages/shaders/Render/Process/PostProcess/Exposure/AutoExposureAverage.cs.hlsl, profile: cs
-[Sxavenger Engine] [thread id: 16676] >> [AsyncThread] task completed. tag: packages/shaders/Render/Process/PostProcess/Exposure/AutoExposureAverage.cs.hlsl
+[Sxavenger Engine] [thread id: 3284] >> [AsyncThreadPool] task poped. tag: packages/shaders/Render/Process/PostProcess/Exposure/AutoExposureAverage.cs.hlsl
+[Sxavenger Engine] [thread id: 3284] >> [DXOBJECT ShaderCompiler] shader compiled. filepath: packages/shaders/Render/Process/PostProcess/Exposure/AutoExposureAverage.cs.hlsl, profile: cs
+[Sxavenger Engine] [thread id: 3284] >> [AsyncThread] task completed. tag: packages/shaders/Render/Process/PostProcess/Exposure/AutoExposureAverage.cs.hlsl
 [Sxavenger Engine] [main thread] >> [AsyncThreadPool] task pushed. tag: packages/shaders/Render/Process/PostProcess/Exposure/AutoExposureApply.cs.hlsl
-[Sxavenger Engine] [thread id: 1756] >> [AsyncThreadPool] task poped. tag: packages/shaders/Render/Process/PostProcess/Exposure/AutoExposureApply.cs.hlsl
-[Sxavenger Engine] [thread id: 1756] >> [DXOBJECT ShaderCompiler] shader compiled. filepath: packages/shaders/Render/Process/PostProcess/Exposure/AutoExposureApply.cs.hlsl, profile: cs
-[Sxavenger Engine] [thread id: 1756] >> [AsyncThread] task completed. tag: packages/shaders/Render/Process/PostProcess/Exposure/AutoExposureApply.cs.hlsl
+[Sxavenger Engine] [thread id: 8128] >> [AsyncThreadPool] task poped. tag: packages/shaders/Render/Process/PostProcess/Exposure/AutoExposureApply.cs.hlsl
+[Sxavenger Engine] [thread id: 8128] >> [DXOBJECT ShaderCompiler] shader compiled. filepath: packages/shaders/Render/Process/PostProcess/Exposure/AutoExposureApply.cs.hlsl, profile: cs
+[Sxavenger Engine] [thread id: 8128] >> [AsyncThread] task completed. tag: packages/shaders/Render/Process/PostProcess/Exposure/AutoExposureApply.cs.hlsl
 [Sxavenger Engine] [main thread] >> [AsyncThreadPool] task pushed. tag: packages/shaders/Render/Process/PostProcess/Exposure/LocalExposure.cs.hlsl
-[Sxavenger Engine] [thread id: 16676] >> [AsyncThreadPool] task poped. tag: packages/shaders/Render/Process/PostProcess/Exposure/LocalExposure.cs.hlsl
-[Sxavenger Engine] [thread id: 16676] >> [DXOBJECT ShaderCompiler] shader compiled. filepath: packages/shaders/Render/Process/PostProcess/Exposure/LocalExposure.cs.hlsl, profile: cs
-[Sxavenger Engine] [thread id: 16676] >> [AsyncThread] task completed. tag: packages/shaders/Render/Process/PostProcess/Exposure/LocalExposure.cs.hlsl
+[Sxavenger Engine] [thread id: 3284] >> [AsyncThreadPool] task poped. tag: packages/shaders/Render/Process/PostProcess/Exposure/LocalExposure.cs.hlsl
+[Sxavenger Engine] [thread id: 3284] >> [DXOBJECT ShaderCompiler] shader compiled. filepath: packages/shaders/Render/Process/PostProcess/Exposure/LocalExposure.cs.hlsl, profile: cs
+[Sxavenger Engine] [thread id: 3284] >> [AsyncThread] task completed. tag: packages/shaders/Render/Process/PostProcess/Exposure/LocalExposure.cs.hlsl
 [Sxavenger Engine] [main thread] >> [AsyncThreadPool] task pushed. tag: packages/shaders/Render/Process/PostProcess/DoF.cs.hlsl
-[Sxavenger Engine] [thread id: 1756] >> [AsyncThreadPool] task poped. tag: packages/shaders/Render/Process/PostProcess/DoF.cs.hlsl
-[Sxavenger Engine] [thread id: 1756] >> [DXOBJECT ShaderCompiler] shader compiled. filepath: packages/shaders/Render/Process/PostProcess/DoF.cs.hlsl, profile: cs
-[Sxavenger Engine] [thread id: 1756] >> [AsyncThread] task completed. tag: packages/shaders/Render/Process/PostProcess/DoF.cs.hlsl
+[Sxavenger Engine] [thread id: 8128] >> [AsyncThreadPool] task poped. tag: packages/shaders/Render/Process/PostProcess/DoF.cs.hlsl
+[Sxavenger Engine] [thread id: 8128] >> [DXOBJECT ShaderCompiler] shader compiled. filepath: packages/shaders/Render/Process/PostProcess/DoF.cs.hlsl, profile: cs
+[Sxavenger Engine] [thread id: 8128] >> [AsyncThread] task completed. tag: packages/shaders/Render/Process/PostProcess/DoF.cs.hlsl
 [Sxavenger Engine] [main thread] >> [AsyncThreadPool] task pushed. tag: packages/shaders/Render/Process/PostProcess/Bloom/BloomLuminance.cs.hlsl
-[Sxavenger Engine] [thread id: 16676] >> [AsyncThreadPool] task poped. tag: packages/shaders/Render/Process/PostProcess/Bloom/BloomLuminance.cs.hlsl
-[Sxavenger Engine] [thread id: 16676] >> [DXOBJECT ShaderCompiler] shader compiled. filepath: packages/shaders/Render/Process/PostProcess/Bloom/BloomLuminance.cs.hlsl, profile: cs
-[Sxavenger Engine] [thread id: 16676] >> [AsyncThread] task completed. tag: packages/shaders/Render/Process/PostProcess/Bloom/BloomLuminance.cs.hlsl
+[Sxavenger Engine] [thread id: 3284] >> [AsyncThreadPool] task poped. tag: packages/shaders/Render/Process/PostProcess/Bloom/BloomLuminance.cs.hlsl
+[Sxavenger Engine] [thread id: 3284] >> [DXOBJECT ShaderCompiler] shader compiled. filepath: packages/shaders/Render/Process/PostProcess/Bloom/BloomLuminance.cs.hlsl, profile: cs
+[Sxavenger Engine] [thread id: 3284] >> [AsyncThread] task completed. tag: packages/shaders/Render/Process/PostProcess/Bloom/BloomLuminance.cs.hlsl
 [Sxavenger Engine] [main thread] >> [AsyncThreadPool] task pushed. tag: packages/shaders/Render/Process/PostProcess/Bloom/BloomApply.cs.hlsl
-[Sxavenger Engine] [thread id: 1756] >> [AsyncThreadPool] task poped. tag: packages/shaders/Render/Process/PostProcess/Bloom/BloomApply.cs.hlsl
-[Sxavenger Engine] [thread id: 1756] >> [DXOBJECT ShaderCompiler] shader compiled. filepath: packages/shaders/Render/Process/PostProcess/Bloom/BloomApply.cs.hlsl, profile: cs
-[Sxavenger Engine] [thread id: 1756] >> [AsyncThread] task completed. tag: packages/shaders/Render/Process/PostProcess/Bloom/BloomApply.cs.hlsl
+[Sxavenger Engine] [thread id: 8128] >> [AsyncThreadPool] task poped. tag: packages/shaders/Render/Process/PostProcess/Bloom/BloomApply.cs.hlsl
+[Sxavenger Engine] [thread id: 8128] >> [DXOBJECT ShaderCompiler] shader compiled. filepath: packages/shaders/Render/Process/PostProcess/Bloom/BloomApply.cs.hlsl, profile: cs
+[Sxavenger Engine] [thread id: 8128] >> [AsyncThread] task completed. tag: packages/shaders/Render/Process/PostProcess/Bloom/BloomApply.cs.hlsl
 [Sxavenger Engine] [main thread] >> [AsyncThreadPool] task pushed. tag: packages/shaders/Render/Process/PostProcess/RadialBlur.cs.hlsl
-[Sxavenger Engine] [thread id: 16676] >> [AsyncThreadPool] task poped. tag: packages/shaders/Render/Process/PostProcess/RadialBlur.cs.hlsl
-[Sxavenger Engine] [thread id: 16676] >> [DXOBJECT ShaderCompiler] shader compiled. filepath: packages/shaders/Render/Process/PostProcess/RadialBlur.cs.hlsl, profile: cs
-[Sxavenger Engine] [thread id: 16676] >> [AsyncThread] task completed. tag: packages/shaders/Render/Process/PostProcess/RadialBlur.cs.hlsl
+[Sxavenger Engine] [thread id: 3284] >> [AsyncThreadPool] task poped. tag: packages/shaders/Render/Process/PostProcess/RadialBlur.cs.hlsl
+[Sxavenger Engine] [thread id: 3284] >> [DXOBJECT ShaderCompiler] shader compiled. filepath: packages/shaders/Render/Process/PostProcess/RadialBlur.cs.hlsl, profile: cs
+[Sxavenger Engine] [thread id: 3284] >> [AsyncThread] task completed. tag: packages/shaders/Render/Process/PostProcess/RadialBlur.cs.hlsl
 [Sxavenger Engine] [main thread] >> [AsyncThreadPool] task pushed. tag: packages/shaders/Render/Process/PostProcess/MotionBlur.cs.hlsl
-[Sxavenger Engine] [thread id: 1756] >> [AsyncThreadPool] task poped. tag: packages/shaders/Render/Process/PostProcess/MotionBlur.cs.hlsl
-[Sxavenger Engine] [thread id: 1756] >> [DXOBJECT ShaderCompiler] shader compiled. filepath: packages/shaders/Render/Process/PostProcess/MotionBlur.cs.hlsl, profile: cs
-[Sxavenger Engine] [thread id: 1756] >> [AsyncThread] task completed. tag: packages/shaders/Render/Process/PostProcess/MotionBlur.cs.hlsl
+[Sxavenger Engine] [thread id: 8128] >> [AsyncThreadPool] task poped. tag: packages/shaders/Render/Process/PostProcess/MotionBlur.cs.hlsl
+[Sxavenger Engine] [thread id: 8128] >> [DXOBJECT ShaderCompiler] shader compiled. filepath: packages/shaders/Render/Process/PostProcess/MotionBlur.cs.hlsl, profile: cs
+[Sxavenger Engine] [thread id: 8128] >> [AsyncThread] task completed. tag: packages/shaders/Render/Process/PostProcess/MotionBlur.cs.hlsl
 [Sxavenger Engine] [main thread] >> [AsyncThreadPool] task pushed. tag: packages/shaders/Render/Process/PostProcess/ChromaticAberration.cs.hlsl
-[Sxavenger Engine] [thread id: 16676] >> [AsyncThreadPool] task poped. tag: packages/shaders/Render/Process/PostProcess/ChromaticAberration.cs.hlsl
-[Sxavenger Engine] [thread id: 16676] >> [DXOBJECT ShaderCompiler] shader compiled. filepath: packages/shaders/Render/Process/PostProcess/ChromaticAberration.cs.hlsl, profile: cs
-[Sxavenger Engine] [thread id: 16676] >> [AsyncThread] task completed. tag: packages/shaders/Render/Process/PostProcess/ChromaticAberration.cs.hlsl
+[Sxavenger Engine] [thread id: 3284] >> [AsyncThreadPool] task poped. tag: packages/shaders/Render/Process/PostProcess/ChromaticAberration.cs.hlsl
+[Sxavenger Engine] [thread id: 3284] >> [DXOBJECT ShaderCompiler] shader compiled. filepath: packages/shaders/Render/Process/PostProcess/ChromaticAberration.cs.hlsl, profile: cs
+[Sxavenger Engine] [thread id: 3284] >> [AsyncThread] task completed. tag: packages/shaders/Render/Process/PostProcess/ChromaticAberration.cs.hlsl
 [Sxavenger Engine] [main thread] >> [AsyncThreadPool] task pushed. tag: packages/shaders/Render/Process/PostProcess/Vignette.cs.hlsl
-[Sxavenger Engine] [thread id: 1756] >> [AsyncThreadPool] task poped. tag: packages/shaders/Render/Process/PostProcess/Vignette.cs.hlsl
-[Sxavenger Engine] [thread id: 1756] >> [DXOBJECT ShaderCompiler] shader compiled. filepath: packages/shaders/Render/Process/PostProcess/Vignette.cs.hlsl, profile: cs
-[Sxavenger Engine] [thread id: 1756] >> [AsyncThread] task completed. tag: packages/shaders/Render/Process/PostProcess/Vignette.cs.hlsl
+[Sxavenger Engine] [thread id: 8128] >> [AsyncThreadPool] task poped. tag: packages/shaders/Render/Process/PostProcess/Vignette.cs.hlsl
+[Sxavenger Engine] [thread id: 8128] >> [DXOBJECT ShaderCompiler] shader compiled. filepath: packages/shaders/Render/Process/PostProcess/Vignette.cs.hlsl, profile: cs
+[Sxavenger Engine] [thread id: 8128] >> [AsyncThread] task completed. tag: packages/shaders/Render/Process/PostProcess/Vignette.cs.hlsl
 [Sxavenger Engine] [main thread] >> [AsyncThreadPool] task pushed. tag: packages/shaders/Render/Process/PostProcess/ConvertLUTTexture.cs.hlsl
-[Sxavenger Engine] [thread id: 16676] >> [AsyncThreadPool] task poped. tag: packages/shaders/Render/Process/PostProcess/ConvertLUTTexture.cs.hlsl
-[Sxavenger Engine] [thread id: 16676] >> [DXOBJECT ShaderCompiler] shader compiled. filepath: packages/shaders/Render/Process/PostProcess/ConvertLUTTexture.cs.hlsl, profile: cs
-[Sxavenger Engine] [thread id: 16676] >> [AsyncThread] task completed. tag: packages/shaders/Render/Process/PostProcess/ConvertLUTTexture.cs.hlsl
+[Sxavenger Engine] [thread id: 3284] >> [AsyncThreadPool] task poped. tag: packages/shaders/Render/Process/PostProcess/ConvertLUTTexture.cs.hlsl
+[Sxavenger Engine] [thread id: 3284] >> [DXOBJECT ShaderCompiler] shader compiled. filepath: packages/shaders/Render/Process/PostProcess/ConvertLUTTexture.cs.hlsl, profile: cs
+[Sxavenger Engine] [thread id: 3284] >> [AsyncThread] task completed. tag: packages/shaders/Render/Process/PostProcess/ConvertLUTTexture.cs.hlsl
 [Sxavenger Engine] [main thread] >> [AsyncThreadPool] task pushed. tag: packages/shaders/Render/Process/PostProcess/LUT.cs.hlsl
-[Sxavenger Engine] [thread id: 1756] >> [AsyncThreadPool] task poped. tag: packages/shaders/Render/Process/PostProcess/LUT.cs.hlsl
-[Sxavenger Engine] [thread id: 1756] >> [DXOBJECT ShaderCompiler] shader compiled. filepath: packages/shaders/Render/Process/PostProcess/LUT.cs.hlsl, profile: cs
-[Sxavenger Engine] [thread id: 1756] >> [AsyncThread] task completed. tag: packages/shaders/Render/Process/PostProcess/LUT.cs.hlsl
+[Sxavenger Engine] [thread id: 8128] >> [AsyncThreadPool] task poped. tag: packages/shaders/Render/Process/PostProcess/LUT.cs.hlsl
+[Sxavenger Engine] [thread id: 8128] >> [DXOBJECT ShaderCompiler] shader compiled. filepath: packages/shaders/Render/Process/PostProcess/LUT.cs.hlsl, profile: cs
+[Sxavenger Engine] [thread id: 8128] >> [AsyncThread] task completed. tag: packages/shaders/Render/Process/PostProcess/LUT.cs.hlsl
 [Sxavenger Engine] [main thread] >> [AsyncThreadPool] task pushed. tag: packages/shaders/Render/Process/CompositeProcess/Tonemap.cs.hlsl
-[Sxavenger Engine] [thread id: 16676] >> [AsyncThreadPool] task poped. tag: packages/shaders/Render/Process/CompositeProcess/Tonemap.cs.hlsl
-[Sxavenger Engine] [thread id: 16676] >> [DXOBJECT ShaderCompiler] shader compiled. filepath: packages/shaders/Render/Process/CompositeProcess/Tonemap.cs.hlsl, profile: cs
-[Sxavenger Engine] [thread id: 16676] >> [AsyncThread] task completed. tag: packages/shaders/Render/Process/CompositeProcess/Tonemap.cs.hlsl
+[Sxavenger Engine] [thread id: 3284] >> [AsyncThreadPool] task poped. tag: packages/shaders/Render/Process/CompositeProcess/Tonemap.cs.hlsl
+[Sxavenger Engine] [thread id: 3284] >> [DXOBJECT ShaderCompiler] shader compiled. filepath: packages/shaders/Render/Process/CompositeProcess/Tonemap.cs.hlsl, profile: cs
+[Sxavenger Engine] [thread id: 3284] >> [AsyncThread] task completed. tag: packages/shaders/Render/Process/CompositeProcess/Tonemap.cs.hlsl
 [Sxavenger Engine] [main thread] >> [AsyncThreadPool] task pushed. tag: packages/shaders/Render/Process/CompositeProcess/FXAA/Fxaa.cs.hlsl
-[Sxavenger Engine] [thread id: 1756] >> [AsyncThreadPool] task poped. tag: packages/shaders/Render/Process/CompositeProcess/FXAA/Fxaa.cs.hlsl
-[Sxavenger Engine] [thread id: 1756] >> [DXOBJECT ShaderCompiler] shader compiled. filepath: packages/shaders/Render/Process/CompositeProcess/FXAA/Fxaa.cs.hlsl, profile: cs
-[Sxavenger Engine] [thread id: 1756] >> [AsyncThread] task completed. tag: packages/shaders/Render/Process/CompositeProcess/FXAA/Fxaa.cs.hlsl
+[Sxavenger Engine] [thread id: 8128] >> [AsyncThreadPool] task poped. tag: packages/shaders/Render/Process/CompositeProcess/FXAA/Fxaa.cs.hlsl
+[Sxavenger Engine] [thread id: 8128] >> [DXOBJECT ShaderCompiler] shader compiled. filepath: packages/shaders/Render/Process/CompositeProcess/FXAA/Fxaa.cs.hlsl, profile: cs
+[Sxavenger Engine] [thread id: 8128] >> [AsyncThread] task completed. tag: packages/shaders/Render/Process/CompositeProcess/FXAA/Fxaa.cs.hlsl
 [Sxavenger Engine] [main thread] >> [AsyncThreadPool] task pushed. tag: packages/shaders/Render/Process/CompositeProcess/SMAA/SmaaEdgeDetection.cs.hlsl
-[Sxavenger Engine] [thread id: 16676] >> [AsyncThreadPool] task poped. tag: packages/shaders/Render/Process/CompositeProcess/SMAA/SmaaEdgeDetection.cs.hlsl
-[Sxavenger Engine] [thread id: 16676] >> [DXOBJECT ShaderCompiler] shader compiled. filepath: packages/shaders/Render/Process/CompositeProcess/SMAA/SmaaEdgeDetection.cs.hlsl, profile: cs
-[Sxavenger Engine] [thread id: 16676] >> [AsyncThread] task completed. tag: packages/shaders/Render/Process/CompositeProcess/SMAA/SmaaEdgeDetection.cs.hlsl
+[Sxavenger Engine] [thread id: 3284] >> [AsyncThreadPool] task poped. tag: packages/shaders/Render/Process/CompositeProcess/SMAA/SmaaEdgeDetection.cs.hlsl
+[Sxavenger Engine] [thread id: 3284] >> [DXOBJECT ShaderCompiler] shader compiled. filepath: packages/shaders/Render/Process/CompositeProcess/SMAA/SmaaEdgeDetection.cs.hlsl, profile: cs
+[Sxavenger Engine] [thread id: 3284] >> [AsyncThread] task completed. tag: packages/shaders/Render/Process/CompositeProcess/SMAA/SmaaEdgeDetection.cs.hlsl
 [Sxavenger Engine] [main thread] >> [AsyncThreadPool] task pushed. tag: packages/shaders/Render/Process/CompositeProcess/SMAA/SmaaBlendWeight.cs.hlsl
-[Sxavenger Engine] [thread id: 1756] >> [AsyncThreadPool] task poped. tag: packages/shaders/Render/Process/CompositeProcess/SMAA/SmaaBlendWeight.cs.hlsl
-[Sxavenger Engine] [thread id: 1756] >> [DXOBJECT ShaderCompiler] shader compiled. filepath: packages/shaders/Render/Process/CompositeProcess/SMAA/SmaaBlendWeight.cs.hlsl, profile: cs
-[Sxavenger Engine] [thread id: 1756] >> [AsyncThread] task completed. tag: packages/shaders/Render/Process/CompositeProcess/SMAA/SmaaBlendWeight.cs.hlsl
+[Sxavenger Engine] [thread id: 8128] >> [AsyncThreadPool] task poped. tag: packages/shaders/Render/Process/CompositeProcess/SMAA/SmaaBlendWeight.cs.hlsl
+[Sxavenger Engine] [thread id: 8128] >> [DXOBJECT ShaderCompiler] shader compiled. filepath: packages/shaders/Render/Process/CompositeProcess/SMAA/SmaaBlendWeight.cs.hlsl, profile: cs
+[Sxavenger Engine] [thread id: 8128] >> [AsyncThread] task completed. tag: packages/shaders/Render/Process/CompositeProcess/SMAA/SmaaBlendWeight.cs.hlsl
 [Sxavenger Engine] [main thread] >> [AsyncThreadPool] task pushed. tag: packages/shaders/Render/Process/CompositeProcess/SMAA/SmaaNeighborhoodBlending.cs.hlsl
-[Sxavenger Engine] [thread id: 16676] >> [AsyncThreadPool] task poped. tag: packages/shaders/Render/Process/CompositeProcess/SMAA/SmaaNeighborhoodBlending.cs.hlsl
-[Sxavenger Engine] [thread id: 16676] >> [DXOBJECT ShaderCompiler] shader compiled. filepath: packages/shaders/Render/Process/CompositeProcess/SMAA/SmaaNeighborhoodBlending.cs.hlsl, profile: cs
-[Sxavenger Engine] [thread id: 16676] >> [AsyncThread] task completed. tag: packages/shaders/Render/Process/CompositeProcess/SMAA/SmaaNeighborhoodBlending.cs.hlsl
+[Sxavenger Engine] [thread id: 3284] >> [AsyncThreadPool] task poped. tag: packages/shaders/Render/Process/CompositeProcess/SMAA/SmaaNeighborhoodBlending.cs.hlsl
+[Sxavenger Engine] [thread id: 3284] >> [DXOBJECT ShaderCompiler] shader compiled. filepath: packages/shaders/Render/Process/CompositeProcess/SMAA/SmaaNeighborhoodBlending.cs.hlsl, profile: cs
+[Sxavenger Engine] [thread id: 3284] >> [AsyncThread] task completed. tag: packages/shaders/Render/Process/CompositeProcess/SMAA/SmaaNeighborhoodBlending.cs.hlsl
 [Sxavenger Engine] [main thread] >> [DXOBJECT ShaderCompiler] shader compiled. filepath: packages/shaders/render/presenter/presenter.vs.hlsl, profile: vs
 [Sxavenger Engine] [main thread] >> [DXOBJECT ShaderCompiler] shader compiled. filepath: packages/shaders/render/presenter/presenter.ps.hlsl, profile: ps
 [Sxavenger Engine] [main thread] >> [AsyncThreadPool] task pushed. tag: packages/shaders/render/Transition/LightingTransition.cs.hlsl
-[Sxavenger Engine] [thread id: 1756] >> [AsyncThreadPool] task poped. tag: packages/shaders/render/Transition/LightingTransition.cs.hlsl
-[Sxavenger Engine] [thread id: 1756] >> [DXOBJECT ShaderCompiler] shader compiled. filepath: packages/shaders/render/Transition/LightingTransition.cs.hlsl, profile: cs
-[Sxavenger Engine] [thread id: 1756] >> [AsyncThread] task completed. tag: packages/shaders/render/Transition/LightingTransition.cs.hlsl
+[Sxavenger Engine] [thread id: 8128] >> [AsyncThreadPool] task poped. tag: packages/shaders/render/Transition/LightingTransition.cs.hlsl
+[Sxavenger Engine] [thread id: 8128] >> [DXOBJECT ShaderCompiler] shader compiled. filepath: packages/shaders/render/Transition/LightingTransition.cs.hlsl, profile: cs
+[Sxavenger Engine] [thread id: 8128] >> [AsyncThread] task completed. tag: packages/shaders/render/Transition/LightingTransition.cs.hlsl
 [Sxavenger Engine] [main thread] >> [AsyncThreadPool] task pushed. tag: packages/shaders/render/Transition/MipmapTransition.cs.hlsl
-[Sxavenger Engine] [thread id: 16676] >> [AsyncThreadPool] task poped. tag: packages/shaders/render/Transition/MipmapTransition.cs.hlsl
-[Sxavenger Engine] [thread id: 16676] >> [DXOBJECT ShaderCompiler] shader compiled. filepath: packages/shaders/render/Transition/MipmapTransition.cs.hlsl, profile: cs
-[Sxavenger Engine] [thread id: 16676] >> [AsyncThread] task completed. tag: packages/shaders/render/Transition/MipmapTransition.cs.hlsl
+[Sxavenger Engine] [thread id: 3284] >> [AsyncThreadPool] task poped. tag: packages/shaders/render/Transition/MipmapTransition.cs.hlsl
+[Sxavenger Engine] [thread id: 3284] >> [DXOBJECT ShaderCompiler] shader compiled. filepath: packages/shaders/render/Transition/MipmapTransition.cs.hlsl, profile: cs
+[Sxavenger Engine] [thread id: 3284] >> [AsyncThread] task completed. tag: packages/shaders/render/Transition/MipmapTransition.cs.hlsl
 [Sxavenger Engine] [main thread] >> [AsyncThreadPool] task pushed. tag: packages/shaders/render/Transition/VelocityTransition.cs.hlsl
-[Sxavenger Engine] [thread id: 1756] >> [AsyncThreadPool] task poped. tag: packages/shaders/render/Transition/VelocityTransition.cs.hlsl
-[Sxavenger Engine] [thread id: 1756] >> [DXOBJECT ShaderCompiler] shader compiled. filepath: packages/shaders/render/Transition/VelocityTransition.cs.hlsl, profile: cs
-[Sxavenger Engine] [thread id: 1756] >> [AsyncThread] task completed. tag: packages/shaders/render/Transition/VelocityTransition.cs.hlsl
+[Sxavenger Engine] [thread id: 8128] >> [AsyncThreadPool] task poped. tag: packages/shaders/render/Transition/VelocityTransition.cs.hlsl
+[Sxavenger Engine] [thread id: 8128] >> [DXOBJECT ShaderCompiler] shader compiled. filepath: packages/shaders/render/Transition/VelocityTransition.cs.hlsl, profile: cs
+[Sxavenger Engine] [thread id: 8128] >> [AsyncThread] task completed. tag: packages/shaders/render/Transition/VelocityTransition.cs.hlsl
 [Sxavenger Engine] [main thread] >> [AsyncThreadPool] task pushed. tag: packages/textures/rendering/brdf_lut.png
-[Sxavenger Engine] [thread id: 24852] >> [AsyncThreadPool] task poped. tag: packages/textures/rendering/brdf_lut.png
+[Sxavenger Engine] [thread id: 17200] >> [AsyncThreadPool] task poped. tag: packages/textures/rendering/brdf_lut.png
 [Sxavenger Engine] [main thread] >> [AsyncThreadPool] task pushed. tag: packages/textures/rendering/smaaAreaTex.dds
-[Sxavenger Engine] [thread id: 24948] >> [AsyncThreadPool] task poped. tag: packages/textures/rendering/smaaAreaTex.dds
+[Sxavenger Engine] [thread id: 16696] >> [AsyncThreadPool] task poped. tag: packages/textures/rendering/smaaAreaTex.dds
 [Sxavenger Engine] [main thread] >> [AsyncThreadPool] task pushed. tag: packages/textures/rendering/smaaSearchTex.dds
-[Sxavenger Engine] [thread id: 16000] >> [AsyncThreadPool] task poped. tag: packages/textures/rendering/smaaSearchTex.dds
+[Sxavenger Engine] [thread id: 16412] >> [AsyncThreadPool] task poped. tag: packages/textures/rendering/smaaSearchTex.dds
 [Sxavenger Engine] >> [DXOBJECT DescriptorPool D3D12_DESCRIPTOR_HEAP_TYPE_RTV] create descriptor index: 0.
 [Sxavenger Engine] >> [DXOBJECT DescriptorPool D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV] create descriptor index: 0.
 [Sxavenger Engine] >> [DXOBJECT DescriptorPool D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV] create descriptor index: 1.
 [Sxavenger Engine] >> [DXOBJECT DescriptorPool D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV] create descriptor index: 2.
 [Sxavenger Engine] >> [DXOBJECT DescriptorPool D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV] create descriptor index: 3.
 [Sxavenger Engine] >> [DXOBJECT DescriptorPool D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV] create descriptor index: 4.
-[Sxavenger Engine] [thread id: 24948] >> [AssetTexture]: texture setup complete. uuid: b4e7fa36-111c-499e-a028b6a74a74b142
-[Sxavenger Engine] [thread id: 16000] >> [AssetTexture]: texture setup complete. uuid: 443bb579-cccd-4cce-accde5461eeccec4
-[Sxavenger Engine] [thread id: 24852] >> [AssetTexture]: texture setup complete. uuid: 3f53c3c7-17cf-440e-b30518592e9bdb4b
+[Sxavenger Engine] [thread id: 16412] >> [AssetTexture]: texture setup complete. uuid: 443bb579-cccd-4cce-accde5461eeccec4
 [Sxavenger Engine] >> [DXOBJECT DescriptorPool D3D12_DESCRIPTOR_HEAP_TYPE_RTV] create descriptor index: 1.
-[Sxavenger Engine] [thread id: 24948] >> [AsyncThread] task completed. tag: packages/textures/rendering/smaaAreaTex.dds
-[Sxavenger Engine] [thread id: 16000] >> [AsyncThread] task completed. tag: packages/textures/rendering/smaaSearchTex.dds
+[Sxavenger Engine] [thread id: 17200] >> [AssetTexture]: texture setup complete. uuid: 3f53c3c7-17cf-440e-b30518592e9bdb4b
+[Sxavenger Engine] [thread id: 16696] >> [AssetTexture]: texture setup complete. uuid: b4e7fa36-111c-499e-a028b6a74a74b142
 [Sxavenger Engine] >> [DXOBJECT DescriptorPool D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV] create descriptor index: 5.
-[Sxavenger Engine] [thread id: 24852] >> [AsyncThread] task completed. tag: packages/textures/rendering/brdf_lut.png
+[Sxavenger Engine] [thread id: 16412] >> [AsyncThread] task completed. tag: packages/textures/rendering/smaaSearchTex.dds
+[Sxavenger Engine] [thread id: 17200] >> [AsyncThread] task completed. tag: packages/textures/rendering/brdf_lut.png
+[Sxavenger Engine] [thread id: 16696] >> [AsyncThread] task completed. tag: packages/textures/rendering/smaaAreaTex.dds
 [Sxavenger Engine] >> [DXOBJECT DescriptorPool D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV] create descriptor index: 6.
 [Sxavenger Engine] >> [DXOBJECT DescriptorPool D3D12_DESCRIPTOR_HEAP_TYPE_RTV] create descriptor index: 2.
 [Sxavenger Engine] >> [DXOBJECT DescriptorPool D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV] create descriptor index: 7.
@@ -324,48 +324,48 @@ version: 3.4
 [Sxavenger Engine] >> [DXOBJECT DescriptorPool D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV] create descriptor index: 65.
 [Sxavenger Engine] >> [DXOBJECT DescriptorPool D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV] create descriptor index: 66.
 [Sxavenger Engine] [main thread] >> [AsyncThreadPool] task pushed. tag: packages/textures/checker_black.png
-[Sxavenger Engine] [thread id: 24948] >> [AsyncThreadPool] task poped. tag: packages/textures/checker_black.png
+[Sxavenger Engine] [thread id: 16412] >> [AsyncThreadPool] task poped. tag: packages/textures/checker_black.png
 [Sxavenger Engine] [main thread] >> [AsyncThreadPool] task pushed. tag: packages/textures/icon/operation_translate.png
-[Sxavenger Engine] [thread id: 16000] >> [AsyncThreadPool] task poped. tag: packages/textures/icon/operation_translate.png
+[Sxavenger Engine] [thread id: 17200] >> [AsyncThreadPool] task poped. tag: packages/textures/icon/operation_translate.png
 [Sxavenger Engine] [main thread] >> [AsyncThreadPool] task pushed. tag: packages/textures/icon/operation_rotate.png
-[Sxavenger Engine] [thread id: 24852] >> [AsyncThreadPool] task poped. tag: packages/textures/icon/operation_rotate.png
+[Sxavenger Engine] [thread id: 16696] >> [AsyncThreadPool] task poped. tag: packages/textures/icon/operation_rotate.png
 [Sxavenger Engine] [main thread] >> [AsyncThreadPool] task pushed. tag: packages/textures/icon/operation_scale.png
-[Sxavenger Engine] >> [DXOBJECT DescriptorPool D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV] create descriptor index: 67.
 [Sxavenger Engine] [main thread] >> [AsyncThreadPool] task pushed. tag: packages/textures/icon/mode_world.png
-[Sxavenger Engine] [thread id: 16000] >> [AssetTexture]: texture setup complete. uuid: f31f206f-8b71-45be-920f985b55197484
-[Sxavenger Engine] >> [DXOBJECT DescriptorPool D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV] create descriptor index: 68.
+[Sxavenger Engine] >> [DXOBJECT DescriptorPool D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV] create descriptor index: 67.
 [Sxavenger Engine] [main thread] >> [AsyncThreadPool] task pushed. tag: packages/textures/icon/mode_local.png
-[Sxavenger Engine] [thread id: 16000] >> [AsyncThread] task completed. tag: packages/textures/icon/operation_translate.png
-[Sxavenger Engine] [thread id: 24852] >> [AssetTexture]: texture setup complete. uuid: da94b293-5d57-446f-8ef3560508621ed2
+[Sxavenger Engine] [thread id: 17200] >> [AssetTexture]: texture setup complete. uuid: f31f206f-8b71-45be-920f985b55197484
+[Sxavenger Engine] >> [DXOBJECT DescriptorPool D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV] create descriptor index: 68.
+[Sxavenger Engine] [thread id: 17200] >> [AsyncThread] task completed. tag: packages/textures/icon/operation_translate.png
+[Sxavenger Engine] [thread id: 16696] >> [AssetTexture]: texture setup complete. uuid: da94b293-5d57-446f-8ef3560508621ed2
 [Sxavenger Engine] [main thread] >> [AsyncThreadPool] task pushed. tag: packages/textures/icon/grid.png
-[Sxavenger Engine] [thread id: 16000] >> [AsyncThreadPool] task poped. tag: packages/textures/icon/operation_scale.png
-[Sxavenger Engine] [thread id: 24852] >> [AsyncThread] task completed. tag: packages/textures/icon/operation_rotate.png
-[Sxavenger Engine] [thread id: 24852] >> [AsyncThreadPool] task poped. tag: packages/textures/icon/mode_world.png
-[Sxavenger Engine] >> [MonoBehaviourStorage] registered behaviour. address: 0x1d64ddbb500
-[Sxavenger Engine] >> [DXOBJECT DescriptorPool D3D12_DESCRIPTOR_HEAP_TYPE_RTV] create descriptor index: 11.
+[Sxavenger Engine] [thread id: 17200] >> [AsyncThreadPool] task poped. tag: packages/textures/icon/operation_scale.png
+[Sxavenger Engine] [thread id: 16696] >> [AsyncThread] task completed. tag: packages/textures/icon/operation_rotate.png
+[Sxavenger Engine] >> [MonoBehaviourStorage] registered behaviour. address: 0x2c276766150
+[Sxavenger Engine] [thread id: 16696] >> [AsyncThreadPool] task poped. tag: packages/textures/icon/mode_world.png
 [Sxavenger Engine] >> [DXOBJECT DescriptorPool D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV] create descriptor index: 69.
+[Sxavenger Engine] >> [DXOBJECT DescriptorPool D3D12_DESCRIPTOR_HEAP_TYPE_RTV] create descriptor index: 11.
 [Sxavenger Engine] >> [DXOBJECT DescriptorPool D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV] create descriptor index: 70.
+[Sxavenger Engine] [thread id: 17200] >> [AssetTexture]: texture setup complete. uuid: 3662c189-64f0-4993-98919c8ee2f16311
 [Sxavenger Engine] >> [DXOBJECT DescriptorPool D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV] create descriptor index: 71.
+[Sxavenger Engine] [thread id: 16696] >> [AssetTexture]: texture setup complete. uuid: 327385a7-6cca-499e-9c2597768a679e1d
 [Sxavenger Engine] >> [DXOBJECT DescriptorPool D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV] create descriptor index: 72.
-[Sxavenger Engine] [thread id: 16000] >> [AssetTexture]: texture setup complete. uuid: 3662c189-64f0-4993-98919c8ee2f16311
-[Sxavenger Engine] [thread id: 24852] >> [AssetTexture]: texture setup complete. uuid: 327385a7-6cca-499e-9c2597768a679e1d
+[Sxavenger Engine] [thread id: 17200] >> [AsyncThread] task completed. tag: packages/textures/icon/operation_scale.png
+[Sxavenger Engine] [thread id: 16696] >> [AsyncThread] task completed. tag: packages/textures/icon/mode_world.png
+[Sxavenger Engine] [thread id: 17200] >> [AsyncThreadPool] task poped. tag: packages/textures/icon/mode_local.png
 [Sxavenger Engine] >> [DXOBJECT DescriptorPool D3D12_DESCRIPTOR_HEAP_TYPE_RTV] create descriptor index: 12.
-[Sxavenger Engine] [thread id: 16000] >> [AsyncThread] task completed. tag: packages/textures/icon/operation_scale.png
-[Sxavenger Engine] [thread id: 24852] >> [AsyncThread] task completed. tag: packages/textures/icon/mode_world.png
+[Sxavenger Engine] [thread id: 16696] >> [AsyncThreadPool] task poped. tag: packages/textures/icon/grid.png
 [Sxavenger Engine] >> [DXOBJECT DescriptorPool D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV] create descriptor index: 73.
-[Sxavenger Engine] [thread id: 16000] >> [AsyncThreadPool] task poped. tag: packages/textures/icon/mode_local.png
-[Sxavenger Engine] [thread id: 24852] >> [AsyncThreadPool] task poped. tag: packages/textures/icon/grid.png
 [Sxavenger Engine] >> [DXOBJECT DescriptorPool D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV] create descriptor index: 74.
 [Sxavenger Engine] >> [DXOBJECT DescriptorPool D3D12_DESCRIPTOR_HEAP_TYPE_RTV] create descriptor index: 13.
 [Sxavenger Engine] >> [DXOBJECT DescriptorPool D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV] create descriptor index: 75.
 [Sxavenger Engine] >> [DXOBJECT DescriptorPool D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV] create descriptor index: 76.
+[Sxavenger Engine] [thread id: 17200] >> [AssetTexture]: texture setup complete. uuid: 33f21412-a4d2-4bd9-afdf1d3acbf2d534
 [Sxavenger Engine] >> [DXOBJECT DescriptorPool D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV] create descriptor index: 77.
-[Sxavenger Engine] [thread id: 16000] >> [AssetTexture]: texture setup complete. uuid: 33f21412-a4d2-4bd9-afdf1d3acbf2d534
 [Sxavenger Engine] >> [DXOBJECT DescriptorPool D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV] create descriptor index: 78.
-[Sxavenger Engine] [thread id: 24852] >> [AssetTexture]: texture setup complete. uuid: f0793bfb-8a99-47e3-942a90d3e53d3d39
-[Sxavenger Engine] [thread id: 16000] >> [AsyncThread] task completed. tag: packages/textures/icon/mode_local.png
+[Sxavenger Engine] [thread id: 17200] >> [AsyncThread] task completed. tag: packages/textures/icon/mode_local.png
+[Sxavenger Engine] [thread id: 16696] >> [AssetTexture]: texture setup complete. uuid: f0793bfb-8a99-47e3-942a90d3e53d3d39
 [Sxavenger Engine] >> [DXOBJECT DescriptorPool D3D12_DESCRIPTOR_HEAP_TYPE_RTV] create descriptor index: 14.
-[Sxavenger Engine] [thread id: 24852] >> [AsyncThread] task completed. tag: packages/textures/icon/grid.png
+[Sxavenger Engine] [thread id: 16696] >> [AsyncThread] task completed. tag: packages/textures/icon/grid.png
 [Sxavenger Engine] >> [DXOBJECT DescriptorPool D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV] create descriptor index: 79.
 [Sxavenger Engine] >> [DXOBJECT DescriptorPool D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV] create descriptor index: 80.
 [Sxavenger Engine] >> [DXOBJECT DescriptorPool D3D12_DESCRIPTOR_HEAP_TYPE_RTV] create descriptor index: 15.
@@ -430,86 +430,94 @@ version: 3.4
 [Sxavenger Engine] >> [DXOBJECT DescriptorPool D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV] create descriptor index: 131.
 [Sxavenger Engine] >> [DXOBJECT DescriptorPool D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV] create descriptor index: 132.
 [Sxavenger Engine] [main thread] >> [AsyncThreadPool] task pushed. tag: packages/textures/icon/scene_volume.png
-[Sxavenger Engine] [thread id: 16000] >> [AsyncThreadPool] task poped. tag: packages/textures/icon/scene_volume.png
+[Sxavenger Engine] [thread id: 17200] >> [AsyncThreadPool] task poped. tag: packages/textures/icon/scene_volume.png
 [Sxavenger Engine] [main thread] >> [AsyncThreadPool] task pushed. tag: packages/textures/icon/scene_directionalLight.png
-[Sxavenger Engine] [thread id: 24852] >> [AsyncThreadPool] task poped. tag: packages/textures/icon/scene_directionalLight.png
+[Sxavenger Engine] [thread id: 16696] >> [AsyncThreadPool] task poped. tag: packages/textures/icon/scene_directionalLight.png
 [Sxavenger Engine] [main thread] >> [AsyncThreadPool] task pushed. tag: packages/textures/icon/scene_pointLight.png
-[Sxavenger Engine] [main thread] >> [AsyncThreadPool] task pushed. tag: packages/textures/icon/scene_spotLight.png
 [Sxavenger Engine] >> [DXOBJECT DescriptorPool D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV] create descriptor index: 133.
+[Sxavenger Engine] [main thread] >> [AsyncThreadPool] task pushed. tag: packages/textures/icon/scene_spotLight.png
+[Sxavenger Engine] [thread id: 17200] >> [AssetTexture]: texture setup complete. uuid: a174b25b-7ad5-49f0-849b7a0ff54761eb
 [Sxavenger Engine] >> [DXOBJECT DescriptorPool D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV] create descriptor index: 134.
-[Sxavenger Engine] [thread id: 16000] >> [AssetTexture]: texture setup complete. uuid: a174b25b-7ad5-49f0-849b7a0ff54761eb
-[Sxavenger Engine] [thread id: 24852] >> [AssetTexture]: texture setup complete. uuid: 2c3afc51-647f-4fda-9e47ade14f98e849
+[Sxavenger Engine] [thread id: 17200] >> [AsyncThread] task completed. tag: packages/textures/icon/scene_volume.png
+[Sxavenger Engine] [thread id: 16696] >> [AssetTexture]: texture setup complete. uuid: 2c3afc51-647f-4fda-9e47ade14f98e849
+[Sxavenger Engine] [thread id: 17200] >> [AsyncThreadPool] task poped. tag: packages/textures/icon/scene_pointLight.png
 [Sxavenger Engine] [main thread] >> [AsyncThreadPool] task pushed. tag: packages/textures/icon/scene_camera.png
-[Sxavenger Engine] [thread id: 16000] >> [AsyncThread] task completed. tag: packages/textures/icon/scene_volume.png
-[Sxavenger Engine] [thread id: 24852] >> [AsyncThread] task completed. tag: packages/textures/icon/scene_directionalLight.png
-[Sxavenger Engine] [thread id: 16000] >> [AsyncThreadPool] task poped. tag: packages/textures/icon/scene_pointLight.png
-[Sxavenger Engine] [thread id: 24852] >> [AsyncThreadPool] task poped. tag: packages/textures/icon/scene_spotLight.png
+[Sxavenger Engine] [thread id: 16696] >> [AsyncThread] task completed. tag: packages/textures/icon/scene_directionalLight.png
+[Sxavenger Engine] [thread id: 16696] >> [AsyncThreadPool] task poped. tag: packages/textures/icon/scene_spotLight.png
 [Sxavenger Engine] [main thread] >> [AsyncThreadPool] task pushed. tag: Packages/textures/icon/folder.png
-[Sxavenger Engine] [main thread] >> [AsyncThreadPool] task pushed. tag: Packages/textures/icon/file.png
-[Sxavenger Engine] [main thread] >> [AsyncThreadPool] task pushed. tag: Packages/textures/icon/texture.png
 [Sxavenger Engine] >> [DXOBJECT DescriptorPool D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV] create descriptor index: 135.
+[Sxavenger Engine] [main thread] >> [AsyncThreadPool] task pushed. tag: Packages/textures/icon/file.png
+[Sxavenger Engine] [thread id: 17200] >> [AssetTexture]: texture setup complete. uuid: 6ba62532-5bad-407e-9f18ff8ad2a187f4
 [Sxavenger Engine] >> [DXOBJECT DescriptorPool D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV] create descriptor index: 136.
-[Sxavenger Engine] [thread id: 16000] >> [AssetTexture]: texture setup complete. uuid: 6ba62532-5bad-407e-9f18ff8ad2a187f4
-[Sxavenger Engine] [thread id: 24852] >> [AssetTexture]: texture setup complete. uuid: aa9eee08-5a8a-49e6-a1f3c173949b6b75
+[Sxavenger Engine] [thread id: 17200] >> [AsyncThread] task completed. tag: packages/textures/icon/scene_pointLight.png
+[Sxavenger Engine] [thread id: 16696] >> [AssetTexture]: texture setup complete. uuid: aa9eee08-5a8a-49e6-a1f3c173949b6b75
+[Sxavenger Engine] [main thread] >> [AsyncThreadPool] task pushed. tag: Packages/textures/icon/texture.png
+[Sxavenger Engine] [thread id: 16696] >> [AsyncThread] task completed. tag: packages/textures/icon/scene_spotLight.png
+[Sxavenger Engine] [thread id: 17200] >> [AsyncThreadPool] task poped. tag: packages/textures/icon/scene_camera.png
+[Sxavenger Engine] [thread id: 16696] >> [AsyncThreadPool] task poped. tag: Packages/textures/icon/folder.png
 [Sxavenger Engine] [main thread] >> [AsyncThreadPool] task pushed. tag: Packages/textures/icon/model.png
-[Sxavenger Engine] [thread id: 16000] >> [AsyncThread] task completed. tag: packages/textures/icon/scene_pointLight.png
-[Sxavenger Engine] [thread id: 24852] >> [AsyncThread] task completed. tag: packages/textures/icon/scene_spotLight.png
-[Sxavenger Engine] [thread id: 16000] >> [AsyncThreadPool] task poped. tag: packages/textures/icon/scene_camera.png
-[Sxavenger Engine] [thread id: 24852] >> [AsyncThreadPool] task poped. tag: Packages/textures/icon/folder.png
 [Sxavenger Engine] [main thread] >> [AsyncThreadPool] task pushed. tag: Packages/textures/icon/shader.png
-[Sxavenger Engine] [main thread] >> [AsyncThreadPool] task pushed. tag: Packages/textures/icon/scene.png
 [Sxavenger Engine] >> [DXOBJECT DescriptorPool D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV] create descriptor index: 137.
 [Sxavenger Engine] >> [DXOBJECT DescriptorPool D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV] create descriptor index: 138.
-[Execution::Context] warning: loop condition is empty.
-[Sxavenger Engine] [thread id: 24852] >> [AssetTexture]: texture setup complete. uuid: 7fac270f-5af5-49c2-9cc1179b8c98448a
-[Sxavenger Engine] [thread id: 16000] >> [AssetTexture]: texture setup complete. uuid: 746b1d79-f309-4f74-80c62106e1932741
-[Sxavenger Engine] >> [MonoBehaviourStorage] pushed behaviour unregister queue. address: 0x1d64ddbb500
-[Sxavenger Engine] [thread id: 24852] >> [AsyncThread] task completed. tag: Packages/textures/icon/folder.png
-[Sxavenger Engine] [thread id: 16000] >> [AsyncThread] task completed. tag: packages/textures/icon/scene_camera.png
-[Sxavenger Engine] [thread id: 24852] >> [AsyncThreadPool] task poped. tag: Packages/textures/icon/file.png
-[Sxavenger Engine] [thread id: 16000] >> [AsyncThreadPool] task poped. tag: Packages/textures/icon/texture.png
+[Sxavenger Engine] [thread id: 17200] >> [AssetTexture]: texture setup complete. uuid: 746b1d79-f309-4f74-80c62106e1932741
+[Sxavenger Engine] [main thread] >> [AsyncThreadPool] task pushed. tag: Packages/textures/icon/scene.png
+[Sxavenger Engine] [thread id: 16696] >> [AssetTexture]: texture setup complete. uuid: 7fac270f-5af5-49c2-9cc1179b8c98448a
+[Sxavenger Engine] [thread id: 17200] >> [AsyncThread] task completed. tag: packages/textures/icon/scene_camera.png
+[Sxavenger Engine] [thread id: 17200] >> [AsyncThreadPool] task poped. tag: Packages/textures/icon/file.png
+[Sxavenger Engine] [thread id: 16696] >> [AsyncThread] task completed. tag: Packages/textures/icon/folder.png
+[Sxavenger Engine] [thread id: 16696] >> [AsyncThreadPool] task poped. tag: Packages/textures/icon/texture.png
+[Sxavenger Engine] >> [DXOBJECT DescriptorPool D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV] create descriptor index: 139.
+[Sxavenger Engine] [thread id: 17200] >> [AssetTexture]: texture setup complete. uuid: 2e198845-dad2-4643-8e559a23a7a31e2c
+[Sxavenger Engine] >> [DXOBJECT DescriptorPool D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV] create descriptor index: 140.
+[Sxavenger Engine] [thread id: 17200] >> [AsyncThread] task completed. tag: Packages/textures/icon/file.png
+[Sxavenger Engine] [thread id: 16696] >> [AssetTexture]: texture setup complete. uuid: 0e335303-86ac-4487-80743fba6e28749a
+[Sxavenger Engine] [thread id: 17200] >> [AsyncThreadPool] task poped. tag: Packages/textures/icon/model.png
+[Sxavenger Engine] [thread id: 16696] >> [AsyncThread] task completed. tag: Packages/textures/icon/texture.png
+[Sxavenger Engine] [thread id: 16696] >> [AsyncThreadPool] task poped. tag: Packages/textures/icon/shader.png
+[Sxavenger Engine] >> [DXOBJECT DescriptorPool D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV] create descriptor index: 141.
+[Sxavenger Engine] >> [DXOBJECT DescriptorPool D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV] create descriptor index: 142.
+[Sxavenger Engine] [thread id: 16696] >> [AssetTexture]: texture setup complete. uuid: 2b1ee179-42d3-4b9c-9b34a545538361fa
+[Sxavenger Engine] [thread id: 17200] >> [AssetTexture]: texture setup complete. uuid: 502c3bbb-b671-4d13-8a1ed6efb601da3c
+[Sxavenger Engine] [thread id: 16696] >> [AsyncThread] task completed. tag: Packages/textures/icon/shader.png
+[Sxavenger Engine] [thread id: 17200] >> [AsyncThread] task completed. tag: Packages/textures/icon/model.png
+[Sxavenger Engine] [thread id: 16696] >> [AsyncThreadPool] task poped. tag: Packages/textures/icon/scene.png
+[Sxavenger Engine] >> [DXOBJECT DescriptorPool D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV] create descriptor index: 143.
+[Sxavenger Engine] [thread id: 16696] >> [AssetTexture]: texture setup complete. uuid: 51261c41-0072-469a-abda69a44e35356a
+[Sxavenger Engine] [thread id: 16696] >> [AsyncThread] task completed. tag: Packages/textures/icon/scene.png
+[Sxavenger Engine] >> [DXOBJECT DescriptorPool D3D12_DESCRIPTOR_HEAP_TYPE_RTV] create descriptor index: 22.
+[Sxavenger Engine] >> [DXOBJECT DescriptorPool D3D12_DESCRIPTOR_HEAP_TYPE_RTV] create descriptor index: 23.
+[Sxavenger Engine] >> [DXOBJECT DescriptorPool D3D12_DESCRIPTOR_HEAP_TYPE_DSV] create descriptor index: 4.
+[Sxavenger Engine] >> [DirectXWindowContext]: show window. name: [Sxavenger Engine / Sxx Engine] Example Window, hwnd: 0x802b2
+[Sxavenger Engine] [thread id: 9748] >> [Input] begin input thread.
+[Sxavenger Engine] >> [DXOBJECT DescriptorPool D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV] create descriptor index: 144.
+[Sxavenger Engine] [thread id: 16412] >> [AssetTexture]: texture setup complete. uuid: 51e30a10-02da-4bfe-8e2e58838e30b0a7
+[Sxavenger Engine] [thread id: 16412] >> [AsyncThread] task completed. tag: packages/textures/checker_black.png
+[Sxavenger Engine] >> [DXOBJECT DescriptorPool D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV] create descriptor index: 145.
+[Sxavenger Engine] >> [MonoBehaviourStorage] pushed behaviour unregister queue. address: 0x2c276766150
 [Sxavenger Engine] >> [DXOBJECT DescriptorPool D3D12_DESCRIPTOR_HEAP_TYPE_DSV] delete descriptor index: 2.
 [Sxavenger Engine] >> [DXOBJECT DescriptorPool D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV] delete descriptor index: 95.
 [Sxavenger Engine] >> [DXOBJECT DescriptorPool D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV] delete descriptor index: 96.
 [Sxavenger Engine] >> [DXOBJECT DescriptorPool D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV] delete descriptor index: 94.
 [Sxavenger Engine] >> [DXOBJECT DescriptorPool D3D12_DESCRIPTOR_HEAP_TYPE_RTV] delete descriptor index: 21.
-[Sxavenger Engine] >> [DXOBJECT DescriptorPool D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV] create descriptor index: 95.
 [Sxavenger Engine] >> [DXOBJECT DescriptorPool D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV] delete descriptor index: 93.
-[Sxavenger Engine] >> [DXOBJECT DescriptorPool D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV] create descriptor index: 96.
-[Sxavenger Engine] [thread id: 24852] >> [AssetTexture]: texture setup complete. uuid: 2e198845-dad2-4643-8e559a23a7a31e2c
 [Sxavenger Engine] >> [DXOBJECT DescriptorPool D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV] delete descriptor index: 92.
-[Sxavenger Engine] [thread id: 16000] >> [AssetTexture]: texture setup complete. uuid: 0e335303-86ac-4487-80743fba6e28749a
-[Sxavenger Engine] [thread id: 24852] >> [AsyncThread] task completed. tag: Packages/textures/icon/file.png
-[Sxavenger Engine] [thread id: 24852] >> [AsyncThreadPool] task poped. tag: Packages/textures/icon/model.png
 [Sxavenger Engine] >> [DXOBJECT DescriptorPool D3D12_DESCRIPTOR_HEAP_TYPE_RTV] delete descriptor index: 20.
 [Sxavenger Engine] >> [DXOBJECT DescriptorPool D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV] delete descriptor index: 91.
-[Sxavenger Engine] [thread id: 16000] >> [AsyncThread] task completed. tag: Packages/textures/icon/texture.png
-[Sxavenger Engine] [thread id: 16000] >> [AsyncThreadPool] task poped. tag: Packages/textures/icon/shader.png
 [Sxavenger Engine] >> [DXOBJECT DescriptorPool D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV] delete descriptor index: 86.
 [Sxavenger Engine] >> [DXOBJECT DescriptorPool D3D12_DESCRIPTOR_HEAP_TYPE_RTV] delete descriptor index: 17.
 [Sxavenger Engine] >> [DXOBJECT DescriptorPool D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV] delete descriptor index: 85.
-[Sxavenger Engine] >> [DXOBJECT DescriptorPool D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV] create descriptor index: 94.
-[Sxavenger Engine] >> [DXOBJECT DescriptorPool D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV] create descriptor index: 93.
 [Sxavenger Engine] >> [DXOBJECT DescriptorPool D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV] delete descriptor index: 90.
-[Sxavenger Engine] [thread id: 24852] >> [AssetTexture]: texture setup complete. uuid: 502c3bbb-b671-4d13-8a1ed6efb601da3c
-[Sxavenger Engine] [thread id: 16000] >> [AssetTexture]: texture setup complete. uuid: 2b1ee179-42d3-4b9c-9b34a545538361fa
 [Sxavenger Engine] >> [DXOBJECT DescriptorPool D3D12_DESCRIPTOR_HEAP_TYPE_RTV] delete descriptor index: 19.
-[Sxavenger Engine] [thread id: 24852] >> [AsyncThread] task completed. tag: Packages/textures/icon/model.png
 [Sxavenger Engine] >> [DXOBJECT DescriptorPool D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV] delete descriptor index: 89.
-[Sxavenger Engine] [thread id: 16000] >> [AsyncThread] task completed. tag: Packages/textures/icon/shader.png
-[Sxavenger Engine] [thread id: 24852] >> [AsyncThreadPool] task poped. tag: Packages/textures/icon/scene.png
 [Sxavenger Engine] >> [DXOBJECT DescriptorPool D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV] delete descriptor index: 88.
 [Sxavenger Engine] >> [DXOBJECT DescriptorPool D3D12_DESCRIPTOR_HEAP_TYPE_RTV] delete descriptor index: 18.
 [Sxavenger Engine] >> [DXOBJECT DescriptorPool D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV] delete descriptor index: 87.
 [Sxavenger Engine] >> [DXOBJECT DescriptorPool D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV] delete descriptor index: 84.
 [Sxavenger Engine] >> [DXOBJECT DescriptorPool D3D12_DESCRIPTOR_HEAP_TYPE_RTV] delete descriptor index: 16.
 [Sxavenger Engine] >> [DXOBJECT DescriptorPool D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV] delete descriptor index: 83.
-[Sxavenger Engine] >> [DXOBJECT DescriptorPool D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV] create descriptor index: 92.
 [Sxavenger Engine] >> [DXOBJECT DescriptorPool D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV] delete descriptor index: 82.
-[Sxavenger Engine] [thread id: 24852] >> [AssetTexture]: texture setup complete. uuid: 51261c41-0072-469a-abda69a44e35356a
 [Sxavenger Engine] >> [DXOBJECT DescriptorPool D3D12_DESCRIPTOR_HEAP_TYPE_RTV] delete descriptor index: 15.
 [Sxavenger Engine] >> [DXOBJECT DescriptorPool D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV] delete descriptor index: 81.
-[Sxavenger Engine] [thread id: 24852] >> [AsyncThread] task completed. tag: Packages/textures/icon/scene.png
 [Sxavenger Engine] >> [DXOBJECT DescriptorPool D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV] delete descriptor index: 80.
 [Sxavenger Engine] >> [DXOBJECT DescriptorPool D3D12_DESCRIPTOR_HEAP_TYPE_RTV] delete descriptor index: 14.
 [Sxavenger Engine] >> [DXOBJECT DescriptorPool D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV] delete descriptor index: 79.
@@ -521,7 +529,7 @@ version: 3.4
 [Sxavenger Engine] >> [DXOBJECT DescriptorPool D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV] delete descriptor index: 73.
 [Sxavenger Engine] >> [DXOBJECT DescriptorPool D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV] delete descriptor index: 72.
 [Sxavenger Engine] >> [DXOBJECT DescriptorPool D3D12_DESCRIPTOR_HEAP_TYPE_RTV] delete descriptor index: 11.
-[Sxavenger Engine] >> [DXOBJECT DescriptorPool D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV] delete descriptor index: 70.
+[Sxavenger Engine] >> [DXOBJECT DescriptorPool D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV] delete descriptor index: 71.
 [Sxavenger Engine] >> [DXOBJECT DescriptorPool D3D12_DESCRIPTOR_HEAP_TYPE_DSV] delete descriptor index: 0.
 [Sxavenger Engine] >> [DXOBJECT DescriptorPool D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV] delete descriptor index: 25.
 [Sxavenger Engine] >> [DXOBJECT DescriptorPool D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV] delete descriptor index: 26.
@@ -555,42 +563,40 @@ version: 3.4
 [Sxavenger Engine] >> [DXOBJECT DescriptorPool D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV] delete descriptor index: 6.
 [Sxavenger Engine] >> [DXOBJECT DescriptorPool D3D12_DESCRIPTOR_HEAP_TYPE_RTV] delete descriptor index: 1.
 [Sxavenger Engine] >> [DXOBJECT DescriptorPool D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV] delete descriptor index: 5.
-[Sxavenger Engine] >> [DXOBJECT DescriptorPool D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV] delete descriptor index: 4.
-[Sxavenger Engine] >> [DXOBJECT DescriptorPool D3D12_DESCRIPTOR_HEAP_TYPE_RTV] delete descriptor index: 0.
-[Sxavenger Engine] >> [DXOBJECT DescriptorPool D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV] delete descriptor index: 2.
-[Sxavenger Engine] >> [AssetStorage]: asset storage uuid table serialized.
-[Sxavenger Engine] [thread id: 16000] >> [AsyncThread] end thread.
-[Sxavenger Engine] [thread id: 1756] >> [AsyncThread] end thread.
-[Sxavenger Engine] [thread id: 24852] >> [AsyncThread] end thread.
-[Sxavenger Engine] [thread id: 13396] >> [AsyncThread] end thread.
-[Sxavenger Engine] [thread id: 16676] >> [AsyncThread] end thread.
-[Sxavenger Engine] >> [DXOBJECT DescriptorPool D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV] create descriptor index: 91.
-[Sxavenger Engine] [thread id: 24948] >> [AssetTexture]: texture setup complete. uuid: 51e30a10-02da-4bfe-8e2e58838e30b0a7
-[Sxavenger Engine] [thread id: 24948] >> [AsyncThread] task completed. tag: packages/textures/checker_black.png
-[Sxavenger Engine] [thread id: 24948] >> [AsyncThread] end thread.
-[Execution::Context]: End Execution Context. ptr: 0x1d66fe565e8
-[Sxavenger Engine] >> [MonoBehaviourStorage] unregistered behaviour. address: 0x1d64ddbb500
-[Sxavenger Engine] >> [MonoBehaviourStorage] term.
 [Sxavenger Engine] >> [DXOBJECT DescriptorPool D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV] delete descriptor index: 3.
+[Sxavenger Engine] >> [DXOBJECT DescriptorPool D3D12_DESCRIPTOR_HEAP_TYPE_RTV] delete descriptor index: 0.
 [Sxavenger Engine] >> [DXOBJECT DescriptorPool D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV] delete descriptor index: 0.
+[Sxavenger Engine] >> [AssetStorage]: asset storage uuid table serialized.
+[Sxavenger Engine] [thread id: 9748] >> [Input] end input thread.
+[Sxavenger Engine] [thread id: 3284] >> [AsyncThread] end thread.
+[Sxavenger Engine] [thread id: 16412] >> [AsyncThread] end thread.
+[Sxavenger Engine] [thread id: 8128] >> [AsyncThread] end thread.
+[Sxavenger Engine] [thread id: 16696] >> [AsyncThread] end thread.
+[Sxavenger Engine] [thread id: 15676] >> [AsyncThread] end thread.
+[Sxavenger Engine] [thread id: 17200] >> [AsyncThread] end thread.
+[Execution::Context]: End Execution Context. ptr: 0x2c2589dc148
+[Sxavenger Engine] >> [MonoBehaviourStorage] unregistered behaviour. address: 0x2c276766150
+[Sxavenger Engine] >> [MonoBehaviourStorage] term.
+[Sxavenger Engine] >> [DXOBJECT DescriptorPool D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV] delete descriptor index: 2.
+[Sxavenger Engine] >> [DXOBJECT DescriptorPool D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV] delete descriptor index: 4.
 [Sxavenger Engine] >> [DXOBJECT DescriptorPool D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV] delete descriptor index: 134.
 [Sxavenger Engine] >> [DXOBJECT DescriptorPool D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV] delete descriptor index: 68.
 [Sxavenger Engine] >> [DXOBJECT DescriptorPool D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV] delete descriptor index: 67.
 [Sxavenger Engine] >> [DXOBJECT DescriptorPool D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV] delete descriptor index: 1.
-[Sxavenger Engine] >> [DXOBJECT DescriptorPool D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV] delete descriptor index: 91.
+[Sxavenger Engine] >> [DXOBJECT DescriptorPool D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV] delete descriptor index: 144.
 [Sxavenger Engine] >> [DXOBJECT DescriptorPool D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV] delete descriptor index: 69.
-[Sxavenger Engine] >> [DXOBJECT DescriptorPool D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV] delete descriptor index: 71.
+[Sxavenger Engine] >> [DXOBJECT DescriptorPool D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV] delete descriptor index: 70.
 [Sxavenger Engine] >> [DXOBJECT DescriptorPool D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV] delete descriptor index: 75.
 [Sxavenger Engine] >> [DXOBJECT DescriptorPool D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV] delete descriptor index: 77.
 [Sxavenger Engine] >> [DXOBJECT DescriptorPool D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV] delete descriptor index: 133.
 [Sxavenger Engine] >> [DXOBJECT DescriptorPool D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV] delete descriptor index: 135.
 [Sxavenger Engine] >> [DXOBJECT DescriptorPool D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV] delete descriptor index: 136.
-[Sxavenger Engine] >> [DXOBJECT DescriptorPool D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV] delete descriptor index: 138.
 [Sxavenger Engine] >> [DXOBJECT DescriptorPool D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV] delete descriptor index: 137.
-[Sxavenger Engine] >> [DXOBJECT DescriptorPool D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV] delete descriptor index: 95.
-[Sxavenger Engine] >> [DXOBJECT DescriptorPool D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV] delete descriptor index: 96.
-[Sxavenger Engine] >> [DXOBJECT DescriptorPool D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV] delete descriptor index: 94.
-[Sxavenger Engine] >> [DXOBJECT DescriptorPool D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV] delete descriptor index: 93.
-[Sxavenger Engine] >> [DXOBJECT DescriptorPool D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV] delete descriptor index: 92.
+[Sxavenger Engine] >> [DXOBJECT DescriptorPool D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV] delete descriptor index: 138.
+[Sxavenger Engine] >> [DXOBJECT DescriptorPool D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV] delete descriptor index: 139.
+[Sxavenger Engine] >> [DXOBJECT DescriptorPool D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV] delete descriptor index: 140.
+[Sxavenger Engine] >> [DXOBJECT DescriptorPool D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV] delete descriptor index: 142.
+[Sxavenger Engine] >> [DXOBJECT DescriptorPool D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV] delete descriptor index: 141.
+[Sxavenger Engine] >> [DXOBJECT DescriptorPool D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV] delete descriptor index: 143.
 [Sxavenger Engine] >> [DXOBJECT DescriptorPool D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV] delete descriptor index: 63.
 [Sxavenger Engine] >> [DXOBJECT DescriptorPool D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV] delete descriptor index: 65.

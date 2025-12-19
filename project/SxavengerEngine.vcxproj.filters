@@ -855,6 +855,7 @@
     <ClInclude Include="externals\meshoptimizer\meshoptimizer.h">
       <Filter>externals\meshoptimizer</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\Execution\ExampleGameLoop.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\Assets\Asset\AssetAnimation.cpp">
@@ -1443,5 +1444,6 @@
       <Filter>externals\stb</Filter>
     </ClCompile>
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Engine\Execution\ExampleGameLoop.cpp" />
   </ItemGroup>
 </Project>

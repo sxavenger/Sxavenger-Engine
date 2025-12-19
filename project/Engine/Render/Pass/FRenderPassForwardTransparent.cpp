@@ -19,13 +19,13 @@ SXAVENGER_ENGINE_USING
 
 void FRenderPassForwardTransparent::Render(const DirectXQueueContext* context, const Config& config) {
 
-	context->BeginEvent(L"RenderPass - ForwardTransparent");
-
 	// waning処理
 	if (config.CheckStatus(FBaseRenderPass::Config::Status::Geometry_Warning)) {
 		ClearPass(context, config.buffer);
 		return;
 	}
+
+	context->BeginEvent(L"RenderPass - ForwardTransparent");
 
 	BeginPassRenderTarget(context, config.buffer);
 

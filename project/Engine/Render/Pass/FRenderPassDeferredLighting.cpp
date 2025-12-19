@@ -20,14 +20,14 @@ SXAVENGER_ENGINE_USING
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 void FRenderPassDeferredLighting::Render(const DirectXQueueContext* context, const Config& config) {
-
-	context->BeginEvent(L"RenderPass - DeferredLighting");
 	
 	if (config.CheckStatus(Config::Status::Geometry_Warning)) {
 		ClearPassDirect(context, config.buffer);
 		ClearPassIndirect(context, config.buffer);
 		return;
 	}
+
+	context->BeginEvent(L"RenderPass - DeferredLighting");
 
 	{ //* Direct Lighting
 		BeginPassDirectLighting(context, config.buffer);
