@@ -9,6 +9,7 @@ namespace {
 	static std::unique_ptr<DirectXCommon>         sDirectXCommon         = nullptr; //!< DirectX12 system
 	static std::unique_ptr<DirectXQueueContext>   sDirectQueueContext    = nullptr; //!< direct queue context
 	static std::unique_ptr<Performance>           sPerformance           = nullptr; //!< performance system
+	static std::unique_ptr<LapTimer>              sLapTimer              = nullptr; //!< lap timer system
 	static std::unique_ptr<AsyncThreadCollection> sAsyncThreadCollection = nullptr; //!< async thread system
 
 	//* system user
@@ -33,6 +34,7 @@ void System::Init() {
 	sDirectQueueContext->SetName(L"main");
 
 	sPerformance = std::make_unique<Performance>();
+	sLapTimer    = std::make_unique<LapTimer>();
 
 	sAsyncThreadCollection = std::make_unique<AsyncThreadCollection>();
 	sAsyncThreadCollection->Init();
@@ -143,26 +145,32 @@ Input* System::GetInput() {
 
 void System::BeginPerformace() {
 	sPerformance->Begin();
+	sLapTimer->Begin();
 }
 
 void System::EndPerformace() {
+	sLapTimer->End();
 	sPerformance->End();
 }
 
-TimePointd<TimeUnit::second> System::GetDeltaTime() {
-	return sPerformance->GetDeltaTime();
+TimePointd<TimeUnit::second> System::GetDeltaTimed() {
+	return sPerformance->GetDeltaTimed();
 }
 
 TimePointf<TimeUnit::second> System::GetDeltaTimef() {
-	return sPerformance->GetDeltaTime();
+	return sPerformance->GetDeltaTimef();
 }
 
-void System::RecordLap(const std::string& name) {
-	sPerformance->RecordLap(name);
+void System::Record(const std::string& name) {
+	sLapTimer->Record(name);
 }
 
 Performance* System::GetPerformance() {
 	return sPerformance.get();
+}
+
+LapTimer* System::GetLapTimer() {
+	return sLapTimer.get();
 }
 
 void System::PushTask(AsyncExecution execution, const std::shared_ptr<AsyncTask>& task) {

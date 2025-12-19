@@ -1,0 +1,51 @@
+Sxavenger Engine [Sxx Engine] Stream Logger
+version: 3.4
+[StreamLogger] initalize. filename: 2025-12-20_04-13-19.log
+[Sxavenger Engine] >> [Config] loaded user config. filepath: packages/config/config_Develop.json
+[Sxavenger Engine] >> [Config] title: Sxavenger Engine 3.4
+[Sxavenger Engine] >> [Config] resolution: (1280, 720)
+[Sxavenger Engine] >> [Config] enableDebugLayer: false
+[Sxavenger Engine] >> [Config] enableGPUBasedValidation: false
+[Sxavenger Engine] >> [Config] descriptorCount_SRV_CBV_UAV: 512
+[Sxavenger Engine] >> [Config] descriptorCount_RTV: 64
+[Sxavenger Engine] >> [Config] descriptorCount_DSV: 8
+[Sxavenger Engine] >> [Config] tearing: true
+[Sxavenger Engine] >> [Config] frame rate lock: true
+[Sxavenger Engine] >> [Config] target frame rate: 60
+[Sxavenger Engine] >> [Config] shader optimization: true
+[Sxavenger Engine] >> [DXOBEJCT Device] Use Adapter: NVIDIA GeForce RTX 3060 Laptop GPU
+[Sxavenger Engine] >> [DXOBEJCT Device] D3D_FEATURE_LEVEL: 12.2
+[Sxavenger Engine] >> [DXOBEJCT Device] feature levels - shader model: D3D_SHADER_MODEL_6_6
+[Sxavenger Engine] >> [DXOBEJCT Device] feature levels - raytracing tier: D3D12_RAYTRACING_TIER_1_1
+[Sxavenger Engine] >> [DXOBEJCT Device] feature levels - mesh shader tier: D3D12_MESH_SHADER_TIER_1
+[Sxavenger Engine] >> [DXOBJECT Device] complete initialize.
+[Sxavenger Engine] >> [DXOBJECT DescriptorPool] descriptor heap type: D3D12_DESCRIPTOR_HEAP_TYPE_RTV, visibility: false, count: 64
+[Sxavenger Engine] >> [DXOBJECT DescriptorPool] descriptor heap type: D3D12_DESCRIPTOR_HEAP_TYPE_DSV, visibility: false, count: 8
+[Sxavenger Engine] >> [DXOBJECT DescriptorPool] descriptor heap type: D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, visibility: true, count: 512
+[Sxavenger Engine] >> [DXOBJECT DescriptorHeaps] complete initialize.
+[Sxavenger Engine] >> [DXOBJECT ShaderCompiler] complete initialize.
+[Sxavenger Engine] [thread id: 10448] >> [AsyncThread] begin thread. execution: None
+[Sxavenger Engine] [thread id: 22168] >> [AsyncThread] begin thread. execution: None
+[Sxavenger Engine] [thread id: 19720] >> [AsyncThread] begin thread. execution: Copy
+[Sxavenger Engine] [thread id: 25764] >> [AsyncThread] begin thread. execution: Copy
+[Sxavenger Engine] [thread id: 9268] >> [AsyncThread] begin thread. execution: Copy
+[Sxavenger Engine] [thread id: 26796] >> [AsyncThread] begin thread. execution: Compute
+//=========================================================================================
+
+[Error ExceptionA]: Sxavenger Engine Exception.
+
+[location]
+ filename: C:\Users\k023g\Desktop\Projects\SxavengerEngine\project\Engine\System\DirectX\DxObject\DxShaderCompiler.cpp
+ function: class Microsoft::WRL::ComPtr<struct IDxcBlob> __cdecl DxObject::ShaderCompiler::Compile(const class std::filesystem::path &,enum DxObject::CompileProfile,const class std::basic_string<wchar_t,struct std::char_traits<wchar_t>,class std::allocator<wchar_t> > &)
+ line:     74
+
+[label]
+ hlsl not found.
+
+[detail]
+ filepath: packages/shader/render/skinning/skinning.cs.hlsl
+
+[thread]
+ main thread
+
+//=========================================================================================

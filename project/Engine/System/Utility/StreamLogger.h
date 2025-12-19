@@ -40,8 +40,8 @@ public:
 	static void Log(const std::string& message);
 	static void Log(const std::wstring& message);
 
-	NORETURN static void Exception(const std::string& label, const std::string& detail, const std::source_location& location = std::source_location::current());
-	NORETURN static void Exception(const std::wstring& label, const std::wstring& detail, const std::source_location& location = std::source_location::current());
+	NORETURN static void Exception(const std::string& label, const std::string& detail = "", const std::source_location& location = std::source_location::current());
+	NORETURN static void Exception(const std::wstring& label, const std::wstring& detail = L"", const std::source_location& location = std::source_location::current());
 
 	//* engine log option *//
 
@@ -55,6 +55,26 @@ public:
 
 	static void AssertA(bool expression, const std::string& label = "", const std::string& detail = "", const std::source_location& location = std::source_location::current());
 	static void AssertW(bool expression, const std::wstring& label = L"", const std::wstring& detail = L"", const std::source_location& location = std::source_location::current());
+
+private:
+
+	////////////////////////////////////////////////////////////////////////////////////////////
+	// ExceptionMessage structure
+	////////////////////////////////////////////////////////////////////////////////////////////
+	template <typename T>
+	struct ExceptionMessage {
+	public:
+
+		//=========================================================================================
+		// public variables
+		//=========================================================================================
+
+		T location;
+		T thread;
+		T label;
+		T detail;
+
+	};
 
 private:
 
@@ -75,6 +95,8 @@ private:
 
 	static std::filesystem::path filename_;
 
+	static inline bool isInitialized_ = false;
+
 	//=========================================================================================
 	// private methods
 	//=========================================================================================
@@ -94,6 +116,8 @@ private:
 	static void OutputA(const std::string& message);
 	static void OutputW(const std::wstring& message);
 
+	static void OutputSeparator();
+
 	//* debug break method *//
 
 	NORETURN static void DebugBreak();
@@ -108,6 +132,14 @@ private:
 
 	static std::string GetTagMessageA(const std::string& tag, const std::string& text);
 	static std::wstring GetTagMessageW(const std::wstring& tag, const std::wstring& text);
+
+	//* output exception helper methods *//
+
+	static ExceptionMessage<std::string> PerseExceptionMessageA(const std::source_location& location, std::thread::id id, const std::string& label, const std::string& detail);
+	static ExceptionMessage<std::wstring> PerseExceptionMessageW(const std::source_location& location, std::thread::id id, const std::wstring& label, const std::wstring& detail);
+
+	static void OpenExceptionWindowA(const ExceptionMessage<std::string>& message);
+	static void OpenExceptionWindowW(const ExceptionMessage<std::wstring>& message);
 
 };
 

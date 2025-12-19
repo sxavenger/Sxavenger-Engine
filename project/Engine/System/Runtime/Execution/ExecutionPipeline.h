@@ -59,7 +59,7 @@ namespace Execution {
 
 	template <InterfaceConcept T>
 	void Pipeline::Push() {
-		auto& ptr = interfaces_.emplace_back(std::make_shared<T>());
+		auto& ptr = interfaces_.emplace_back(std::make_unique<T>());
 		ptr->Init(this);
 	}
 

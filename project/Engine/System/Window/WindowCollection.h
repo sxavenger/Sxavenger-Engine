@@ -20,7 +20,7 @@ SXAVENGER_ENGINE_NAMESPACE_BEGIN
 ////////////////////////////////////////////////////////////////////////////////////////////
 // WindowCollection class
 ////////////////////////////////////////////////////////////////////////////////////////////
-//! @brief Windowを管理するクラス.
+//! @brief windowを管理するクラス.
 class WindowCollection
 	: public ISystemDebugGui {
 public:
@@ -46,9 +46,12 @@ public:
 	void PresentWindows();
 
 	//! @brief メインウィンドウの取得
+	//! @return windowのptr
 	DirectXWindowContext* GetMainWindow() const { return main_.get(); }
 
 	//! @brief フォーカスされているウィンドウの取得
+	//! @retval ptr フォーカスされているwindowのptr
+	//! @retval nullptr windowが存在しない
 	DirectXWindowContext* GetForcusWindow() const;
 
 	//* debug option *//

@@ -6,6 +6,7 @@ DXOBJECT_USING
 // include
 //-----------------------------------------------------------------------------------------
 //* engine
+#include <Engine/System/Utility/Convert.h>
 #include <Engine/System/Utility/StreamLogger.h>
 #include <Engine/System/System.h>
 
@@ -74,21 +75,21 @@ bool DirectXQueueContext::IsSupportQueue(RenderQueue type) const {
 }
 
 void DirectXQueueContext::RequestQueue(RenderQueue type) const {
-	Exception::Assert(IsSupportQueue(type), "[DirectXQueueContext] request queue type don't match.");
+	StreamLogger::AssertA(IsSupportQueue(type), "[DirectXQueueContext] request queue type don't match.");
 }
 
 DxObject::CommandContext* DirectXQueueContext::GetDxCommand() const {
-	Exception::Assert(context_ != nullptr, "[DirectXQueueContext] context is not create.");
+	StreamLogger::AssertA(context_ != nullptr, "[DirectXQueueContext] context is not create.");
 	return context_.get();
 }
 
 ID3D12GraphicsCommandList6* DirectXQueueContext::GetCommandList() const {
-	Exception::Assert(context_ != nullptr, "[DirectXQueueContext] context is not create.");
+	StreamLogger::AssertA(context_ != nullptr, "[DirectXQueueContext] context is not create.");
 	return context_->GetCommandList();
 }
 
 ID3D12CommandQueue* DirectXQueueContext::GetCommandQueue() const {
-	Exception::Assert(context_ != nullptr, "[DirectXQueueContext] context is not create.");
+	StreamLogger::AssertA(context_ != nullptr, "[DirectXQueueContext] context is not create.");
 	return context_->GetCommandQueue();
 }
 
@@ -115,7 +116,7 @@ void DirectXQueueContext::SetDescriptorHeap() const {
 	}
 
 	ID3D12DescriptorHeap* descriptorHeaps[] = {
-		SxavengerSystem::GetDxDescriptorHeaps()->GetDescriptorHeap(kDescriptor_CBV_SRV_UAV)
+		System::GetDxDescriptorHeaps()->GetDescriptorHeap(kDescriptor_CBV_SRV_UAV)
 	};
 
 	context_->GetCommandList()->SetDescriptorHeaps(_countof(descriptorHeaps), descriptorHeaps);

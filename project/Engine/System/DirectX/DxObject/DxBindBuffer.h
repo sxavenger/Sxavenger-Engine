@@ -27,6 +27,7 @@ DXOBJECT_NAMESPACE_BEGIN
 // BindBufferType enum class
 ////////////////////////////////////////////////////////////////////////////////////////////
 enum class BindBufferType : uint8_t {
+	None,
 	k32bitConstants,
 	kVirtual_CBV,
 	kVirtual_SRV,

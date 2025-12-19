@@ -14,3 +14,5 @@
 #define SXAVENGER_ENGINE_NAMESPACE_END   }
 #define SXAVENGER_ENGINE_USING           using namespace SxxEngine;
 #define SXAVENGER_ENGINE                 SxxEngine::
+
+namespace SxxEngine {}

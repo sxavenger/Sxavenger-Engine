@@ -1,11 +1,13 @@
 #include "DxSwapChain.h"
+SXAVENGER_ENGINE_USING
 DXOBJECT_USING
 
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
 //* engine
-#include <Engine/System/Config/SxavengerConfig.h>
+#include <Engine/System/Utility/StreamLogger.h>
+#include <Engine/System/Configuration/Configuration.h>
 
 //* external
 #include <magic_enum.hpp>
@@ -34,7 +36,7 @@ void SwapChain::Present() {
 	UINT syncInterval = {};
 	UINT flags        = {};
 
-	if (SxavengerConfig::GetConfig().isTearingAllowed && SxavengerConfig::GetSupport().isSupportTearing) {
+	if (Configuration::GetConfig().isTearingAllowed && Configuration::GetSupport().isSupportTearing) {
 		syncInterval = 0;
 		flags        = DXGI_PRESENT_ALLOW_TEARING;
 
@@ -121,7 +123,7 @@ void SwapChain::SetColorSpace(const DXGI_OUTPUT_DESC1& desc) {
 	);
 	DxObject::Assert(hr, L"HDR metadata setting failed.");
 
-	Logger::EngineLog(std::format("[DXOBJECT SwapChain] color space changed: {}", magic_enum::enum_name(colorSpace_)));
+	StreamLogger::EngineLog(std::format("[DXOBJECT SwapChain] color space changed: {}", magic_enum::enum_name(colorSpace_)));
 }
 
 D3D12_RESOURCE_BARRIER SwapChain::GetBackBufferTransitionBarrier(D3D12_RESOURCE_STATES stateBefore, D3D12_RESOURCE_STATES stateAfter) const {
@@ -191,7 +193,7 @@ void SwapChain::CreateRenderTargetView(Device* device, DescriptorHeaps* descript
 
 	if (isSRGB) {
 		if (format == DxObject::ConvertToSRGB(format)) {
-			Logger::EngineLog("[DXOBJECT SwapChain] warning | SRGB format is not found.");
+			StreamLogger::EngineLog("[DXOBJECT SwapChain] warning | SRGB format is not found.");
 		}
 
 		format = DxObject::ConvertToSRGB(format);

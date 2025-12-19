@@ -3,6 +3,14 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
+//* engine
+#include <Engine/Foundation.h>
+#include <Engine/System/Utility/ComPtr.h>
+
+//* lib
+#include <Lib/CXXAttributeConfig.h>
+#include <Lib/Geometry/Vector3.h>
+
 //* DirectX12
 #include <d3d12.h>
 #include <dxgi1_6.h>
@@ -10,13 +18,7 @@
 //* c++
 #include <cstdint>
 #include <variant>
-
-//* engine
-#include <Engine/System/Utility/ComPtr.h>
-#include <Engine/System/Utility/Logger.h>
-
-//* lib
-#include <Lib/Geometry/Vector3.h>
+#include <source_location>
 
 //-----------------------------------------------------------------------------------------
 // comment

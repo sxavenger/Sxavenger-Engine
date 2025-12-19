@@ -15,19 +15,29 @@ SXAVENGER_ENGINE_USING
 // static variable
 //=========================================================================================
 
-std::filesystem::path StreamLogger::filename_ = kDirectory_ / GetStreamLogFilename();
+std::filesystem::path StreamLogger::filename_ = GetStreamLogFilename();
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // StreamLogger class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 void StreamLogger::Init() {
+	if (isInitialized_) LIKELY {
+		return;
+	}
+
 	std::filesystem::create_directories(kDirectory_); //!< directoryの作成
 
-	std::ofstream file(filename_, std::ofstream::out | std::ofstream::trunc); //!< fileの作成
-	file << "Sxavenger Engine [Sxx Engine] Stream Log" << "\n";
-	file << "version: " << SXAVENGER_ENGINE_VERSION << "\n";
-	file << "profile: " << _PROFILE << "\n";
+	{
+		std::ofstream file(kDirectory_ / filename_, std::ofstream::out | std::ofstream::trunc); //!< fileの作成
+		file << "Sxavenger Engine [Sxx Engine] Stream Logger" << "\n";
+		file << "version: " << SXAVENGER_ENGINE_VERSION << "\n";
+		//file << "profile: " << _PROFILE << "\n";
+	}
+
+	StreamLogger::Log(std::format("[StreamLogger] initalize. filename: {}", filename_.string()));
+
+	isInitialized_ = true;
 }
 
 void StreamLogger::Log(const std::string& message) {
@@ -42,63 +52,59 @@ void StreamLogger::Log(const std::wstring& message) {
 
 NORETURN void StreamLogger::Exception(const std::string& label, const std::string& detail, const std::source_location& location) {
 
+	ExceptionMessage<std::string> message = StreamLogger::PerseExceptionMessageA(location, std::this_thread::get_id(), label, detail);
+
 	{
 		std::unique_lock<std::mutex> lock(mutex_);
+		StreamLogger::OutputSeparator();
 
-		StreamLogger::OutputA("\n[Error ExceptionA]: Sxavenger Engine Exception.\n\n");
+		StreamLogger::OutputA("\n[Error ExceptionA]: Sxavenger Engine Exception.\n");
 
 		// location
-		std::string locationMessage = StreamLogger::GetLocationMessageA(location);
-		StreamLogger::OutputConsoleA(locationMessage);
+		StreamLogger::OutputA(message.location);
 
 		// label
-		if (!label.empty()) {
-			std::string labelMessage = StreamLogger::GetTagMessageA("label", label);
-			StreamLogger::OutputConsoleA(labelMessage);
-		}
+		StreamLogger::OutputA(message.label);
 
 		// detail
-		if (!detail.empty()) {
-			std::string detailMessage = StreamLogger::GetTagMessageA("detail", detail);
-			StreamLogger::OutputConsoleA(detailMessage);
-		}
+		StreamLogger::OutputA(message.detail);
 
 		// thread
-		std::string threadMessage = StreamLogger::GetThreadMessageA(std::this_thread::get_id());
-		OutputConsoleA(threadMessage);
+		StreamLogger::OutputA(message.thread);
+
+		StreamLogger::OutputSeparator();
 	}
 
+	StreamLogger::OpenExceptionWindowA(message);
 	StreamLogger::DebugBreak();
 }
 
 NORETURN void StreamLogger::Exception(const std::wstring& label, const std::wstring& detail, const std::source_location& location) {
 
+	ExceptionMessage<std::wstring> message = StreamLogger::PerseExceptionMessageW(location, std::this_thread::get_id(), label, detail);
+
 	{
 		std::unique_lock<std::mutex> lock(mutex_);
+		StreamLogger::OutputSeparator();
 
-		StreamLogger::OutputW(L"\n[Error ExceptionW]: Sxavenger Engine Exception.\n\n");
+		StreamLogger::OutputW(L"\n[Error ExceptionW]: Sxavenger Engine Exception.\n");
 
 		// location
-		std::wstring locationMessage = StreamLogger::GetLocationMessageW(location);
-		StreamLogger::OutputConsoleW(locationMessage);
+		StreamLogger::OutputW(message.location);
 
 		// label
-		if (!label.empty()) {
-			std::wstring labelMessage = StreamLogger::GetTagMessageW(L"label", label);
-			StreamLogger::OutputConsoleW(labelMessage);
-		}
+		StreamLogger::OutputW(message.label);
 
 		// detail
-		if (!detail.empty()) {
-			std::wstring detailMessage = StreamLogger::GetTagMessageW(L"detail", detail);
-			StreamLogger::OutputConsoleW(detailMessage);
-		}
+		StreamLogger::OutputW(message.detail);
 
 		// thread
-		std::wstring threadMessage = StreamLogger::GetThreadMessageW(std::this_thread::get_id());
-		OutputConsoleW(threadMessage);
+		StreamLogger::OutputW(message.thread);
+
+		StreamLogger::OutputSeparator();
 	}
 
+	StreamLogger::OpenExceptionWindowW(message);
 	StreamLogger::DebugBreak();
 }
 
@@ -162,7 +168,7 @@ void StreamLogger::AssertW(bool expression, const std::wstring& label, const std
 
 std::filesystem::path StreamLogger::GetStreamLogFilename() {
 
-	std::chrono::system_clock::time_point current = std::chrono::system_clock::now();
+	std::chrono::sys_seconds current = std::chrono::floor<std::chrono::seconds>(std::chrono::system_clock::now());
 	std::chrono::zoned_time time{ std::chrono::current_zone(), current };
 
 	return std::format("{:%Y-%m-%d_%H-%M-%S}.log", time);
@@ -179,12 +185,12 @@ void StreamLogger::OutputConsoleW(const std::wstring& message) {
 }
 
 void StreamLogger::OutputFileA(const std::string& message) {
-	std::ofstream file(filename_, mode_);
+	std::ofstream file(kDirectory_ / filename_, mode_);
 	file << message << "\n";
 }
 
 void StreamLogger::OutputFileW(const std::wstring& message) {
-	std::wofstream file(filename_, mode_);
+	std::wofstream file(kDirectory_ / filename_, mode_);
 	file << message << "\n";
 }
 
@@ -196,6 +202,11 @@ void StreamLogger::OutputA(const std::string& message) {
 void StreamLogger::OutputW(const std::wstring& message) {
 	OutputConsoleW(message);
 	OutputFileW(message);
+}
+
+void StreamLogger::OutputSeparator() {
+	static const std::string separator = "//=========================================================================================";
+	StreamLogger::OutputA(separator);
 }
 
 NORETURN void StreamLogger::DebugBreak() {
@@ -264,4 +275,55 @@ std::wstring StreamLogger::GetTagMessageW(const std::wstring& tag, const std::ws
 	message << L" " << text << L"\n";
 
 	return message.str();
+}
+
+StreamLogger::ExceptionMessage<std::string> StreamLogger::PerseExceptionMessageA(const std::source_location& location, std::thread::id id, const std::string& label, const std::string& detail) {
+	ExceptionMessage<std::string> message;
+
+	message.location = StreamLogger::GetLocationMessageA(location);
+	message.thread   = StreamLogger::GetThreadMessageA(id);
+
+	if (!label.empty()) {
+		message.label  = StreamLogger::GetTagMessageA("label", label);
+	}
+
+	if (!detail.empty()) {
+		message.detail = StreamLogger::GetTagMessageA("detail", detail);
+	}
+
+	return message;
+}
+
+StreamLogger::ExceptionMessage<std::wstring> StreamLogger::PerseExceptionMessageW(const std::source_location& location, std::thread::id id, const std::wstring& label, const std::wstring& detail) {
+	ExceptionMessage<std::wstring> message;
+	message.location = StreamLogger::GetLocationMessageW(location);
+	message.thread   = StreamLogger::GetThreadMessageW(id);
+
+	if (!label.empty()) {
+		message.label  = StreamLogger::GetTagMessageW(L"label", label);
+	}
+
+	if (!detail.empty()) {
+		message.detail = StreamLogger::GetTagMessageW(L"detail", detail);
+	}
+
+	return message;
+}
+
+void StreamLogger::OpenExceptionWindowA(const ExceptionMessage<std::string>& message) {
+	MessageBoxA(
+		NULL,
+		(message.location + "\n" + message.label).c_str(),
+		"Sxavenger Engine Exception",
+		MB_TASKMODAL | MB_ICONHAND | MB_TOPMOST
+	);
+}
+
+void StreamLogger::OpenExceptionWindowW(const ExceptionMessage<std::wstring>& message) {
+	MessageBoxW(
+		NULL,
+		(message.location + L"\n" + message.label).c_str(),
+		L"Sxavenger Engine Exception",
+		MB_TASKMODAL | MB_ICONHAND | MB_TOPMOST
+	);
 }

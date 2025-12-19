@@ -12,9 +12,11 @@
 #include "DxRootSignatureDesc.h"
 #include "DxBindBuffer.h"
 
+//* engine
+#include <Engine/System/Configuration/Configuration.h>
+
 //* lib
 #include <Lib/Geometry/Vector2.h>
-#include <Lib/Environment.h>
 
 //* c++
 #include <array>
@@ -136,7 +138,7 @@ public:
 	//* setting pipeline *//
 
 	void SetPipeline(CommandContext* context, const D3D12_VIEWPORT& viewport, const D3D12_RECT& rect) const;
-	void SetPipeline(CommandContext* context, const Vector2ui& windowSize = kMainWindowSize) const;
+	void SetPipeline(CommandContext* context, const Vector2ui& windowSize = SXAVENGER_ENGINE Configuration::GetConfig().resolution) const;
 
 protected:
 

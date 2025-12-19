@@ -1,9 +1,13 @@
 #include "DxGraphicsPipelineState.h"
+SXAVENGER_ENGINE_USING
 DXOBJECT_USING
 
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
+//* engine
+#include <Engine/System/Utility/StreamLogger.h>
+
 //* DirectX12
 #include <d3dx12.h>
 
@@ -75,17 +79,17 @@ void GraphicsPipelineDesc::SetPrimitive(PrimitiveType type) {
 
 void GraphicsPipelineDesc::SetRTVFormat(DXGI_FORMAT format) {
 	rtvFormats.emplace_back(format);
-	Exception::Assert(rtvFormats.size() < D3D12_SIMULTANEOUS_RENDER_TARGET_COUNT, "RTV Format must be within D3D12_SIMULTANEOUS_RENDER_TARGET_COUNT"); //!< RTVの設定限界
+	StreamLogger::AssertA(rtvFormats.size() < D3D12_SIMULTANEOUS_RENDER_TARGET_COUNT, "RTV Format must be within D3D12_SIMULTANEOUS_RENDER_TARGET_COUNT"); //!< RTVの設定限界
 }
 
 void GraphicsPipelineDesc::SetRTVFormat(uint8_t index, DXGI_FORMAT format) {
 	rtvFormats[index] = format;
-	Exception::Assert(rtvFormats.size() < D3D12_SIMULTANEOUS_RENDER_TARGET_COUNT, "RTV Format must be within D3D12_SIMULTANEOUS_RENDER_TARGET_COUNT"); //!< RTVの設定限界
+	StreamLogger::AssertA(rtvFormats.size() < D3D12_SIMULTANEOUS_RENDER_TARGET_COUNT, "RTV Format must be within D3D12_SIMULTANEOUS_RENDER_TARGET_COUNT"); //!< RTVの設定限界
 }
 
 void GraphicsPipelineDesc::SetRTVFormats(uint8_t size, const DXGI_FORMAT formats[]) {
 	rtvFormats.insert(rtvFormats.end(), formats, formats + size);
-	Exception::Assert(rtvFormats.size() < D3D12_SIMULTANEOUS_RENDER_TARGET_COUNT, "RTV Format must be within D3D12_SIMULTANEOUS_RENDER_TARGET_COUNT"); //!< RTVの設定限界
+	StreamLogger::AssertA(rtvFormats.size() < D3D12_SIMULTANEOUS_RENDER_TARGET_COUNT, "RTV Format must be within D3D12_SIMULTANEOUS_RENDER_TARGET_COUNT"); //!< RTVの設定限界
 }
 
 void GraphicsPipelineDesc::SetDSVFormat(DXGI_FORMAT format) {
@@ -197,7 +201,7 @@ void GraphicsPipelineState::SetPipeline(CommandContext* context, const Vector2ui
 
 D3D12_SHADER_BYTECODE GraphicsPipelineState::GetBytecode(GraphicsShaderType type, bool isRequired) {
 	if (!blobs_[static_cast<uint8_t>(type)].has_value()) {
-		Exception::Assert(!isRequired, "required blob is not set."); //!< 絶対的に使用されるblobが設定されていない.
+		StreamLogger::AssertA(!isRequired, "required blob is not set."); //!< 絶対的に使用されるblobが設定されていない.
 		return {};
 	}
 
@@ -213,8 +217,7 @@ D3D12_RENDER_TARGET_BLEND_DESC GraphicsPipelineState::GetRenderTargetBlendDesc(c
 		return std::get<D3D12_RENDER_TARGET_BLEND_DESC>(option);
 	}
 
-	Exception::Assert(false, "is not define option.");
-	return {};
+	StreamLogger::Exception("is not define option.");
 }
 
 D3D12_BLEND_DESC GraphicsPipelineState::GetBlendDesc() const {
@@ -378,7 +381,7 @@ void ReflectionGraphicsPipelineState::BindGraphicsBuffer(CommandContext* context
 
 void ReflectionGraphicsPipelineState::TrySetBlobToTable(GraphicsShaderType type, ShaderVisibility visibility, bool isRequired) {
 	if (!blobs_[static_cast<uint8_t>(type)].has_value()) {
-		Exception::Assert(!isRequired, "required blob is not set."); //!< 絶対的に使用されるblobが設定されていない.
+		StreamLogger::AssertA(!isRequired, "required blob is not set."); //!< 絶対的に使用されるblobが設定されていない.
 		return; //!< blobが登録されていないのでreturn
 	}
 

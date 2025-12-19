@@ -1,5 +1,12 @@
 #include "DxAppendConsumeBuffer.h"
+SXAVENGER_ENGINE_USING
 DXOBJECT_USING
+
+//-----------------------------------------------------------------------------------------
+// include
+//-----------------------------------------------------------------------------------------
+//* engine
+#include <Engine/System/Utility/StreamLogger.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // BaseAppendConsumeBuffer class methods
@@ -17,12 +24,12 @@ void BaseAppendConsumeBuffer::Release() {
 }
 
 const D3D12_GPU_DESCRIPTOR_HANDLE& BaseAppendConsumeBuffer::GetAppendCousumeGPUHandleUAV() const {
-	Exception::Assert(resource_ != nullptr, "append consume buffer is not create."); //!< UAVが生成されていない
+	StreamLogger::AssertA(resource_ != nullptr, "append consume buffer is not create."); //!< UAVが生成されていない
 	return descriptorUAV_.GetGPUHandle();
 }
 
 const D3D12_GPU_VIRTUAL_ADDRESS& BaseAppendConsumeBuffer::GetCounterGPUVirtualAddress() const {
-	Exception::Assert(counterAddress_.has_value(), "append consume buffer (counter) is not create."); //!< counterが生成されていない
+	StreamLogger::AssertA(counterAddress_.has_value(), "append consume buffer (counter) is not create."); //!< counterが生成されていない
 	return counterAddress_.value();
 }
 

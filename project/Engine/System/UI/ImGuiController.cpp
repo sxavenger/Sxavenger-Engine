@@ -7,7 +7,7 @@ DXOBJECT_USING
 //-----------------------------------------------------------------------------------------
 //* engine
 #include <Engine/System/Utility/StreamLogger.h>
-#include <Engine/System/Configuration/Configration.h>
+#include <Engine/System/Configuration/Configuration.h>
 #include <Engine/System/System.h>
 #include <Engine/System/UI/SxImGuizmo.h>
 

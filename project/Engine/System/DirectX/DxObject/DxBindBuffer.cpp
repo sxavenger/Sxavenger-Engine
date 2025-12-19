@@ -1,6 +1,14 @@
 #include "DxBindBuffer.h"
 DXOBJECT_USING
 
+//-----------------------------------------------------------------------------------------
+// include
+//-----------------------------------------------------------------------------------------
+//* engine
+#include <Engine/System/Utility/StreamLogger.h>
+
+SXAVENGER_ENGINE_USING
+
 ////////////////////////////////////////////////////////////////////////////////////////////
 // BindBufferDesc structure methods
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -32,17 +40,17 @@ bool BindBufferDesc::Contains(const std::string& name) const {
 }
 
 const BindBufferDesc::Constant32bits& BindBufferDesc::Get32bitConstants(const std::string& name) const {
-	Exception::Assert(std::holds_alternative<Constant32bits>(container_.at(name)), "type is not same.");
+	StreamLogger::AssertA(std::holds_alternative<Constant32bits>(container_.at(name)), "type is not same.");
 	return std::get<Constant32bits>(container_.at(name));
 }
 
 const D3D12_GPU_VIRTUAL_ADDRESS& BindBufferDesc::GetAddress(const std::string& name) const {
-	Exception::Assert(std::holds_alternative<D3D12_GPU_VIRTUAL_ADDRESS>(container_.at(name)), "type is not same.");
+	StreamLogger::AssertA(std::holds_alternative<D3D12_GPU_VIRTUAL_ADDRESS>(container_.at(name)), "type is not same.");
 	return std::get<D3D12_GPU_VIRTUAL_ADDRESS>(container_.at(name));
 }
 
 const D3D12_GPU_DESCRIPTOR_HANDLE& BindBufferDesc::GetHandle(const std::string& name) const {
-	Exception::Assert(std::holds_alternative<D3D12_GPU_DESCRIPTOR_HANDLE>(container_.at(name)), "type is not same.");
+	StreamLogger::AssertA(std::holds_alternative<D3D12_GPU_DESCRIPTOR_HANDLE>(container_.at(name)), "type is not same.");
 	return std::get<D3D12_GPU_DESCRIPTOR_HANDLE>(container_.at(name));
 }
 
@@ -87,7 +95,7 @@ bool SamplerBindDesc::Contains(const std::string& name) const {
 }
 
 D3D12_STATIC_SAMPLER_DESC SamplerBindDesc::GetSampler(const std::string& name, ShaderVisibility stage, UINT shaderRegister, UINT registerSpace) const {
-	Exception::Assert(Contains(name), "sampler is not found. sampler name: " + name);
+	StreamLogger::AssertA(Contains(name), "sampler is not found. sampler name: " + name);
 
 	D3D12_STATIC_SAMPLER_DESC desc = samplers_.at(name);
 	desc.ShaderRegister   = shaderRegister;
@@ -110,7 +118,7 @@ void BindBufferTable::BindBufferInfo::Create(ID3D12ShaderReflection* reflection,
 	bindBufferType = ToBindBufferType(_desc.Type);
 
 	if (bindBufferType == BindBufferType::kVirtual_CBV && std::isupper(_desc.Name[0])) {
-		//!< "G---"から始まるConstantBufferは32bitConstantsに変更
+		//!< "X---"から始まるConstantBufferは32bitConstantsに変更
 		bindBufferType = BindBufferType::k32bitConstants;
 		ID3D12ShaderReflectionConstantBuffer* constantbuffer = reflection->GetConstantBufferByName(_desc.Name);
 		D3D12_SHADER_BUFFER_DESC desc = {};
@@ -173,7 +181,6 @@ GraphicsRootSignatureDesc BindBufferTable::CreateGraphicsRootSignatureDesc() {
 			case BindBufferType::kSampler:
 				desc.SetSamplerLinear(MODE_WRAP, info.visibility, info.registerNum, info.registerSpace);
 				continue;
-				break;
 		}
 
 		info.rootParam = rootIndex;
@@ -224,7 +231,6 @@ GraphicsRootSignatureDesc BindBufferTable::CreateGraphicsRootSignatureDesc(const
 					desc.SetSamplerLinear(MODE_WRAP, info.visibility, info.registerNum, info.registerSpace);
 				}
 				continue;
-				break;
 		}
 
 		info.rootParam = rootIndex;
@@ -246,7 +252,7 @@ ComputeRootSignatureDesc BindBufferTable::CreateComputeRootSignatureDesc() {
 
 	for (auto& [name, info] : table_) {
 
-		Exception::Assert(info.visibility == ShaderVisibility::VISIBILITY_ALL, "buffer visibility is not VISIBILITY_ALL");
+		StreamLogger::AssertA(info.visibility == ShaderVisibility::VISIBILITY_ALL, "buffer visibility is not VISIBILITY_ALL");
 
 		switch (info.bindBufferType) {
 			case BindBufferType::k32bitConstants:
@@ -276,7 +282,6 @@ ComputeRootSignatureDesc BindBufferTable::CreateComputeRootSignatureDesc() {
 			case BindBufferType::kSampler:
 				desc.SetSamplerLinear(MODE_WRAP, info.visibility, info.registerNum, info.registerSpace);
 				continue;
-				break;
 		}
 
 		info.rootParam = rootIndex;
@@ -293,7 +298,7 @@ ComputeRootSignatureDesc BindBufferTable::CreateComputeRootSignatureDesc(const S
 
 	for (auto& [name, info] : table_) {
 
-		Exception::Assert(info.visibility == ShaderVisibility::VISIBILITY_ALL, "buffer visibility is not VISIBILITY_ALL");
+		StreamLogger::AssertA(info.visibility == ShaderVisibility::VISIBILITY_ALL, "buffer visibility is not VISIBILITY_ALL");
 
 		switch (info.bindBufferType) {
 			case BindBufferType::k32bitConstants:
@@ -330,7 +335,6 @@ ComputeRootSignatureDesc BindBufferTable::CreateComputeRootSignatureDesc(const S
 					desc.SetSamplerLinear(MODE_WRAP, info.visibility, info.registerNum, info.registerSpace);
 				}
 				continue;
-				break;
 		}
 
 		info.rootParam = rootIndex;
@@ -358,7 +362,7 @@ void BindBufferTable::BindGraphicsBuffer(CommandContext* context, const BindBuff
 			continue;
 		}
 
-		Exception::Assert(desc.Contains(name), "buffer is not found. buffer name: " + name);
+		StreamLogger::AssertA(desc.Contains(name), "buffer is not found. buffer name: " + name);
 
 		UINT index = info.rootParam.value();
 
@@ -400,7 +404,7 @@ void BindBufferTable::BindComputeBuffer(CommandContext* context, const BindBuffe
 			continue;
 		}
 
-		Exception::Assert(desc.Contains(name), "buffer is not found. buffer name: " + name);
+		StreamLogger::AssertA(desc.Contains(name), "buffer is not found. buffer name: " + name);
 
 		UINT index  = info.rootParam.value();
 
@@ -436,36 +440,27 @@ BindBufferType BindBufferTable::ToBindBufferType(D3D_SHADER_INPUT_TYPE type) {
 	switch (type) {
 		case D3D_SHADER_INPUT_TYPE::D3D_SIT_CBUFFER:
 			return BindBufferType::kVirtual_CBV;
-			break;
 
 		case D3D_SHADER_INPUT_TYPE::D3D_SIT_TEXTURE:
 			return BindBufferType::kHandle_SRV;
-			break;
 
 		case D3D_SHADER_INPUT_TYPE::D3D_SIT_SAMPLER:
 			return BindBufferType::kSampler;
-			break;
 
 		case D3D_SHADER_INPUT_TYPE::D3D_SIT_UAV_RWTYPED:
 		case D3D_SHADER_INPUT_TYPE::D3D_SIT_UAV_RWSTRUCTURED_WITH_COUNTER:
 			return BindBufferType::kHandle_UAV;
-			break;
 
 		case D3D_SHADER_INPUT_TYPE::D3D_SIT_STRUCTURED:
 		case D3D_SHADER_INPUT_TYPE::D3D_SIT_RTACCELERATIONSTRUCTURE:
 			return BindBufferType::kVirtual_SRV;
-			break;
 
 		case D3D_SHADER_INPUT_TYPE::D3D_SIT_UAV_RWSTRUCTURED:
 			return BindBufferType::kVirtual_UAV;
-			break;
 
 		default:
-			Exception::Assert(false, "D3D_SHADER_INPUT_TYPE is undefine.");
-			break;
+			StreamLogger::Exception("D3D_SHADER_INPUT_TYPE is undefine.");
 	}
-
-	return {};
 }
 
 void BindBufferTable::InsertBindBuffer(ID3D12ShaderReflection* reflection, const D3D12_SHADER_INPUT_BIND_DESC& desc, ShaderVisibility visibility) {
@@ -478,8 +473,8 @@ void BindBufferTable::InsertBindBuffer(ID3D12ShaderReflection* reflection, const
 		//* visibility all になるかの確認
 		BindBufferInfo& preInfo = table_.at(desc.Name);
 
-		Exception::Assert(info.type == preInfo.type, "buffer is conflict.");                                                                       //!< bufferの型が違う.
-		Exception::Assert(info.registerNum == preInfo.registerNum && info.registerSpace == preInfo.registerSpace, "buffer is not same register."); //!< register関係が違う
+		StreamLogger::AssertA(info.type == preInfo.type, "buffer is conflict.");                                                                       //!< bufferの型が違う.
+		StreamLogger::AssertA(info.registerNum == preInfo.registerNum && info.registerSpace == preInfo.registerSpace, "buffer is not same register."); //!< register関係が違う
 
 		// allに変更
 		preInfo.visibility = ShaderVisibility::VISIBILITY_ALL;

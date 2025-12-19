@@ -15,7 +15,7 @@ SXAVENGER_ENGINE_USING
 // Convert string methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-std::string ToString(const std::wstring& str) {
+std::string SXAVENGER_ENGINE ToString(const std::wstring& str) {
 	if (str.empty()) {
 		return std::string();
 	}
@@ -30,7 +30,7 @@ std::string ToString(const std::wstring& str) {
 	return result;
 }
 
-std::wstring ToWString(const std::string& str) {
+std::wstring SXAVENGER_ENGINE ToWString(const std::string& str) {
 	if (str.empty()) {
 		return std::wstring();
 	}
@@ -46,7 +46,7 @@ std::wstring ToWString(const std::string& str) {
 
 }
 
-std::wstring ToWString(const std::string_view& str) {
+std::wstring SXAVENGER_ENGINE ToWString(const std::string_view& str) {
 	if (str.empty()) {
 		return std::wstring();
 	}
@@ -61,7 +61,7 @@ std::wstring ToWString(const std::string_view& str) {
 	return result;
 }
 
-std::string GetCurrentDateTime(char separatorDate, char separatorDateTime, char separatorTime) {
+std::string SXAVENGER_ENGINE GetCurrentDateTime(char separatorDate, char separatorDateTime, char separatorTime) {
 
 	auto now = std::chrono::zoned_time{ std::chrono::current_zone(), std::chrono::system_clock::now() };
 	auto local = now.get_local_time();

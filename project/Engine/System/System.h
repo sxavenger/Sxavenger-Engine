@@ -8,7 +8,7 @@
 
 //* system
 #include "WinApp/WinApp.h"
-#include "Configuration/Configration.h"
+#include "Configuration/Configuration.h"
 #include "Utility/StreamLogger.h"
 #include "Utility/RuntimeLogger.h"
 #include "DirectX/DirectXCommon.h"
@@ -17,6 +17,8 @@
 #include "Window/WindowCollection.h"
 #include "Runtime/Input/Input.h"
 #include "Runtime/Performance/Performance.h"
+#include "Runtime/Performance/LapTimer.h"
+
 #include "Runtime/Thread/AsyncThreadCollection.h"
 #include "UI/ImGuiController.h"
 
@@ -118,12 +120,14 @@ public:
 
 	static void EndPerformace();
 
-	static TimePointd<TimeUnit::second> GetDeltaTime();
+	static TimePointd<TimeUnit::second> GetDeltaTimed();
 	static TimePointf<TimeUnit::second> GetDeltaTimef();
 
-	static void RecordLap(const std::string& name);
+	static void Record(const std::string& name);
 
 	static Performance* GetPerformance();
+
+	static LapTimer* GetLapTimer();
 
 	//-----------------------------------------------------------------------------------------
 	// Async thread collection option

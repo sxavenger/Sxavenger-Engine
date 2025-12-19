@@ -2,7 +2,7 @@
 // include
 //-----------------------------------------------------------------------------------------
 //* geometry
-#include "../Geometry/GeometryVertex.hlsli"
+#include "../../Content/Mesh.hlsli"
 
 //* common
 #include "../../Component/TransformComponent.hlsli"

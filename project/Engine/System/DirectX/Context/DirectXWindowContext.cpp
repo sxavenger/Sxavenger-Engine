@@ -14,7 +14,7 @@ extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg
 //* engine
 #include <Engine/System/Utility/StreamLogger.h>
 #include <Engine/System/Utility/RuntimeLogger.h>
-#include <Engine/System/SxavengerSystem.h>
+#include <Engine/System/System.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // DirectXWindowContext class methods
@@ -280,7 +280,7 @@ ComPtr<IDXGIOutput6> DirectXWindowContext::GetOutput6() {
 	ComPtr<IDXGIOutput> current;
 
 	for (UINT i = 0;
-		SxavengerSystem::GetDxDevice()->GetAdapter()->EnumOutputs(i, &current) != DXGI_ERROR_NOT_FOUND;
+		System::GetDxDevice()->GetAdapter()->EnumOutputs(i, &current) != DXGI_ERROR_NOT_FOUND;
 		++i) {
 
 		// displayの情報を取得
@@ -375,12 +375,12 @@ void DirectXWindowContext::InitDirectXWindow() {
 	// swapchainの生成
 	swapChain_ = std::make_unique<DxObject::SwapChain>();
 	swapChain_->Init(
-		SxavengerSystem::GetDxDevice(), SxavengerSystem::GetDxDescriptorHeaps(), SxavengerSystem::GetDirectQueueContext()->GetDxCommand(),
+		System::GetDxDevice(), System::GetDxDescriptorHeaps(), System::GetDirectQueueContext()->GetDxCommand(),
 		DxObject::kDefaultScreenFormat, size_, hwnd_
 	);
 
 	// depth stencilの生成
 	depthStencil_ = std::make_unique<DxObject::DepthStencil>();
-	depthStencil_->Init(SxavengerSystem::GetDxDevice(), SxavengerSystem::GetDxDescriptorHeaps(), size_);
+	depthStencil_->Init(System::GetDxDevice(), System::GetDxDescriptorHeaps(), size_);
 
 }

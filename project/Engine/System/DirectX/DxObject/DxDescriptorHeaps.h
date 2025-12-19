@@ -107,7 +107,7 @@ private:
 ////////////////////////////////////////////////////////////////////////////////////////////
 //! @brief すべてのDescriptorPoolを管理するクラス.
 class DescriptorHeaps
-	: public ISystemDebugGui {
+	: public SXAVENGER_ENGINE ISystemDebugGui {
 public:
 
 	//=========================================================================================
@@ -129,17 +129,11 @@ public:
 
 	//* getter *//
 
-	const uint32_t GetDescriptorMaxCount(DescriptorType type) const {
-		return pools_.at(type)->GetDescriptorMaxCount();
-	}
+	const uint32_t GetDescriptorMaxCount(DescriptorType type) const { return pools_.at(type)->GetDescriptorMaxCount(); }
 
-	ID3D12DescriptorHeap* const GetDescriptorHeap(DescriptorType type) const {
-		return pools_.at(type)->GetDescriptorHeap();
-	}
+	ID3D12DescriptorHeap* const GetDescriptorHeap(DescriptorType type) const { return pools_.at(type)->GetDescriptorHeap(); }
 
-	DescriptorPool* const GetDescriptorPool(DescriptorType type) const {
-		return pools_.at(type).get();
-	}
+	DescriptorPool* const GetDescriptorPool(DescriptorType type) const { return pools_.at(type).get(); }
 
 	//* imgui option *//
 

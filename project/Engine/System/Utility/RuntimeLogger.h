@@ -28,6 +28,7 @@ public:
 	// Type enum class
 	////////////////////////////////////////////////////////////////////////////////////////////
 	enum class Type : uint8_t {
+		Default,
 		Comment,
 		Warning,
 		Error,
@@ -73,9 +74,14 @@ public:
 
 	static void Log(Type type, const std::string& category, const std::string& label);
 
+	static void LogDefault(const std::string& category, const std::string& label);
 	static void LogComment(const std::string& category, const std::string& label);
 	static void LogWarning(const std::string& category, const std::string& label);
 	static void LogError(const std::string& category, const std::string& label);
+
+	//* getter *//
+
+	static const std::list<Data>& GetLogs() { return logs_; }
 
 private:
 

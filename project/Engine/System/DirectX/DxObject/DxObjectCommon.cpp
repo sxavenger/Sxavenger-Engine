@@ -1,8 +1,12 @@
 #include "DxObjectCommon.h"
+SXAVENGER_ENGINE_USING
 
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
+//* engine
+#include <Engine/System/Utility/StreamLogger.h>
+
 //* windows
 #include <comdef.h>
 
@@ -16,7 +20,7 @@ ComPtr<ID3D12Resource> DXOBJECT CreateBufferResource(
 	size_t sizeInBytes,
 	D3D12_RESOURCE_FLAGS flags, D3D12_RESOURCE_STATES state) {
 
-	Exception::Assert(sizeInBytes != 0);
+	StreamLogger::AssertA(sizeInBytes != 0);
 
 	ComPtr<ID3D12Resource> result;
 
@@ -49,7 +53,7 @@ ComPtr<ID3D12Resource> DXOBJECT CreateBufferResource(
 ComPtr<ID3D12Resource> DXOBJECT CreateBufferResource(
 	ID3D12Device* device, size_t sizeInBytes) {
 
-	Exception::Assert(sizeInBytes != 0);
+	StreamLogger::AssertA(sizeInBytes != 0);
 
 	ComPtr<ID3D12Resource> result;
 
@@ -82,7 +86,7 @@ ComPtr<ID3D12Resource> DXOBJECT CreateBufferResource(
 }
 
 UINT DXOBJECT RoundUp(UINT round, UINT thread) {
-	Exception::Assert(thread > 0);
+	StreamLogger::AssertA(thread > 0, "round up thread is zero.");
 	return (round + thread - 1) / thread;
 }
 
@@ -108,10 +112,9 @@ DXOBJECT CompileProfile DXOBJECT ToProfile(GraphicsShaderType type) {
 			return CompileProfile::ps;
 	}
 
-	Exception::Assert(false, "Graphics Shader Type is undefine.");
-	return {};
+	StreamLogger::Exception("Graphics Shader Type is undefine.");
 }
 
 void DXOBJECT Assert(HRESULT hr, const std::wstring& label, const std::source_location& location) {
-	Exception::AssertW(SUCCEEDED(hr), label, std::format(L"_com_error: {}", _com_error(hr).ErrorMessage()), location);
+	StreamLogger::AssertW(SUCCEEDED(hr), label, std::format(L"_com_error: {}", _com_error(hr).ErrorMessage()), location);
 }

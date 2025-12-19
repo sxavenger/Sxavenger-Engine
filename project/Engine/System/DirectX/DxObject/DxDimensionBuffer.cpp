@@ -1,5 +1,12 @@
 #include "DxDimensionBuffer.h"
+SXAVENGER_ENGINE_USING
 DXOBJECT_USING
+
+//-----------------------------------------------------------------------------------------
+// include
+//-----------------------------------------------------------------------------------------
+//* engine
+#include <Engine/System/Utility/StreamLogger.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // BaseDimensionBuffer class methods
@@ -15,7 +22,7 @@ void BaseDimensionBuffer::Release() {
 }
 
 const D3D12_GPU_VIRTUAL_ADDRESS& BaseDimensionBuffer::GetGPUVirtualAddress() const {
-	Exception::Assert(address_.has_value(), "Dimension Buffer not create.");
+	StreamLogger::AssertA(address_.has_value(), "Dimension Buffer not create.");
 	return address_.value();
 }
 

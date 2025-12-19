@@ -105,8 +105,6 @@ private:
 	bool CheckRaytracingEnable();
 	bool CheckMeshShaderEnable();
 
-	bool CheckLaunchFromPIX();
-
 };
 
 DXOBJECT_NAMESPACE_END

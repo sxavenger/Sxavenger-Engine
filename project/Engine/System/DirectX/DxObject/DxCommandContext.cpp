@@ -1,5 +1,12 @@
 #include "DxCommandContext.h"
+SXAVENGER_ENGINE_USING
 DXOBJECT_USING
+
+//-----------------------------------------------------------------------------------------
+// include
+//-----------------------------------------------------------------------------------------
+//* engine
+#include <Engine/System/Utility/StreamLogger.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // CommandContext class methods
@@ -119,7 +126,7 @@ void CommandContext::CreateFence(ID3D12Device* device) {
 	fenceEvent_ = CreateEvent(
 		NULL, FALSE, FALSE, NULL
 	);
-	Exception::Assert(fenceEvent_ != nullptr, "fence event is nullptr.");
+	StreamLogger::AssertA(fenceEvent_ != nullptr, "fence event is nullptr.");
 }
 
 void CommandContext::Close() {

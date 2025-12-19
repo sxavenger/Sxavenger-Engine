@@ -4,6 +4,7 @@
 // include
 //-----------------------------------------------------------------------------------------
 //* DXOBJECT
+#include <Engine/Foundation.h>
 #include <Engine/System/DirectX/DxObject/DxObjectCommon.h>
 
 //* c++

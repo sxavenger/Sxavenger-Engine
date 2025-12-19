@@ -7,6 +7,9 @@
 #include "DxObjectCommon.h"
 #include "DxDevice.h"
 
+//* engine
+#include <Engine/System/Utility/StreamLogger.h>
+
 //* c++
 #include <optional>
 #include <span>
@@ -232,13 +235,13 @@ inline void DimensionBuffer<T>::Unmap() {
 
 template <class T>
 inline T& DimensionBuffer<T>::At(size_t index) {
-	Exception::Assert(CheckIndex(index), "Dimension Buffer out of range.");
+	SXAVENGER_ENGINE StreamLogger::AssertA(CheckIndex(index), "Dimension Buffer out of range.");
 	return datas_[index];
 }
 
 template <class T>
 inline const T& DimensionBuffer<T>::At(size_t index) const {
-	Exception::Assert(CheckIndex(index), "Dimension Buffer out of range.");
+	SXAVENGER_ENGINE StreamLogger::AssertA(CheckIndex(index), "Dimension Buffer out of range.");
 	return datas_[index];
 }
 
@@ -259,13 +262,13 @@ inline void DimensionBuffer<T>::Fill(const T& value) {
 
 template <class T>
 inline T& DimensionBuffer<T>::operator[](size_t index) {
-	Exception::Assert(CheckIndex(index), "Dimension Buffer out of range.");
+	SXAVENGER_ENGINE StreamLogger::AssertA(CheckIndex(index), "Dimension Buffer out of range.");
 	return datas_[index];
 }
 
 template <class T>
 inline const T& DimensionBuffer<T>::operator[](size_t index) const {
-	Exception::Assert(CheckIndex(index), "Dimension Buffer out of range.");
+	SXAVENGER_ENGINE StreamLogger::AssertA(CheckIndex(index), "Dimension Buffer out of range.");
 	return datas_[index];
 }
 
