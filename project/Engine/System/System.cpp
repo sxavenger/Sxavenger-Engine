@@ -103,6 +103,10 @@ void System::PresentWindows() {
 	sWindowCollection->PresentWindows();
 }
 
+void System::RemoveClosedWindow() {
+	sWindowCollection->RemoveClosedWindow();
+}
+
 DirectXWindowContext* System::GetMainWindow() {
 	return sWindowCollection->GetMainWindow();
 }

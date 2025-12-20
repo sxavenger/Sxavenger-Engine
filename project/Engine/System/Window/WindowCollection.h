@@ -45,6 +45,9 @@ public:
 	//! @brief 全てのwindowのPresent実行.
 	void PresentWindows();
 
+	//! @brief 閉じられたウィンドウの削除
+	void RemoveClosedWindow();
+
 	//! @brief メインウィンドウの取得
 	//! @return windowのptr
 	DirectXWindowContext* GetMainWindow() const { return main_.get(); }
@@ -69,14 +72,13 @@ private:
 	std::shared_ptr<DirectXWindowContext> main_;
 
 	std::unordered_map<std::wstring, std::shared_ptr<DirectXWindowContext>> windows_;
-
 	std::unordered_map<HWND, DirectXWindowContext*> hwnds_;
+
+	std::queue<std::shared_ptr<DirectXWindowContext>> removeQueue_;
 
 	//=========================================================================================
 	// private methods
 	//=========================================================================================
-
-	void RemoveClosedWindow();
 
 };
 

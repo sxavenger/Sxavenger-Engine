@@ -86,6 +86,9 @@ public:
 	//! @brief 全てのwindowのPresent実行.
 	static void PresentWindows();
 
+	//! @brief 閉じられたウィンドウの削除
+	static void RemoveClosedWindow();
+
 	//! @brief メインウィンドウの取得
 	static DirectXWindowContext* GetMainWindow();
 

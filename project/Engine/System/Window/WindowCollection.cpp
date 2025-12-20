@@ -70,8 +70,6 @@ bool WindowCollection::ProcessMessage() {
 		return false;
 	}
 
-	RemoveClosedWindow();
-
 	return true;
 }
 
@@ -84,6 +82,24 @@ void WindowCollection::PresentWindows() {
 		window->Present();
 	}
 }
+
+void WindowCollection::RemoveClosedWindow() {
+
+	while (!removeQueue_.empty()) {
+		removeQueue_.pop();
+	}
+
+	std::erase_if(windows_, [&](const auto& pair) {
+		if (!pair.second->IsOpenWindow()) {
+			hwnds_.erase(pair.second->GetHwnd());
+			removeQueue_.push(pair.second);
+			return true; // remove this window
+		}
+
+		return false;
+	});
+}
+
 
 DirectXWindowContext* WindowCollection::GetForcusWindow() const {
 
@@ -134,16 +150,4 @@ void WindowCollection::SystemDebugGui() {
 			SetForegroundWindow(window->GetHwnd());
 		}
 	}
-}
-
-void WindowCollection::RemoveClosedWindow() {
-	std::erase_if(windows_, [&](const auto& pair) {
-		if (!pair.second->IsOpenWindow()) {
-			hwnds_.erase(pair.second->GetHwnd());
-			return true; // remove this window
-		}
-
-		return false;
-	});
-
 }

@@ -105,9 +105,10 @@ void EngineExecution::SetProcess(Execution::Context* context) {
 		//System::TransitionAllocator();
 		System::ExecuteAllAllocator();
 		//!< ダブルバッファ変更時, TransitionAllocatorに設定
-		//! 
+		
 		System::Record("render [gpu execution]");
 
+		System::RemoveClosedWindow();
 		System::PresentWindows();
 
 		Graphics::ResetPrimtive();
