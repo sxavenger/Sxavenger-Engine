@@ -140,13 +140,13 @@ void HierarchyEditor::ShowHierarchyWindow() {
 
 	if (hierarchyBuf_.empty()) {
 		//!< 通常表示
-		sMonoBehaviourStorage->ForEachRoot([this](MonoBehaviour* behaviour) {
+		sMonoBehaviourStorage->ForEachRootOnly([this](MonoBehaviour* behaviour) {
 			HierarchySelectable(behaviour);
 		});
 		
 	} else {
 		//!< フィルター表示
-		sMonoBehaviourStorage->ForEachRoot([this](MonoBehaviour* behaviour) {
+		sMonoBehaviourStorage->ForEachRootOnly([this](MonoBehaviour* behaviour) {
 			HierarchySelectableFilter(behaviour, hierarchyBuf_);
 		});
 	}

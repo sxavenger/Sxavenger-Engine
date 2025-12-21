@@ -76,13 +76,15 @@ MonoBehaviour* MonoBehaviourStorage::GetBehaviour(const BehaviourAddress& addres
 }
 
 void MonoBehaviourStorage::ForEachRoot(const std::function<void(MonoBehaviour*)>& function) const {
-	for (const auto& root : behaviours_ | std::views::values) {
-		if (root->HasParent()) {
-			continue; //!< rootでなければスキップ
-		}
-
+	for (const auto& root : behaviours_ | std::views::values | std::views::filter([](const std::unique_ptr<MonoBehaviour>& behaviour) { return !behaviour->HasParent(); })) {
 		function(root.get());
 		root->ForEachChild(function);
+	}
+}
+
+void MonoBehaviourStorage::ForEachRootOnly(const std::function<void(MonoBehaviour*)>& function) const {
+	for (const auto& root : behaviours_ | std::views::values | std::views::filter([](const std::unique_ptr<MonoBehaviour>& behaviour) { return !behaviour->HasParent(); })) {
+		function(root.get());
 	}
 }
 

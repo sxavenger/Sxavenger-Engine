@@ -153,8 +153,8 @@ void System::BeginPerformace() {
 }
 
 void System::EndPerformace() {
-	sLapTimer->End();
 	sPerformance->End();
+	sLapTimer->End();
 }
 
 TimePointd<TimeUnit::second> System::GetDeltaTimed() {

@@ -46,6 +46,8 @@ public:
 
 	void ForEachRoot(const std::function<void(MonoBehaviour*)>& function) const;
 
+	void ForEachRootOnly(const std::function<void(MonoBehaviour*)>& function) const;
+
 	//* singleton *//
 
 	static MonoBehaviourStorage* GetInstance();

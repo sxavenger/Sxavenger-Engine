@@ -1,38 +1,266 @@
 {
+	"00384553-2160-4fce-934b36feb9a39dc5": [
+		"assets/models/tree_sponza/3371964815757888145.jpg",
+		"class SxxEngine::AssetTexture"
+	],
+	"01827b4a-29e2-4ae1-87c649606f60fb41": [
+		"assets/models/tree_sponza/14118779221266351425.jpg",
+		"class SxxEngine::AssetTexture"
+	],
+	"01e4d03a-0059-44cf-89c74e92a8caf9d5": [
+		"assets/models/tree_sponza/Sponza.gltf",
+		"class SxxEngine::AssetMesh"
+	],
+	"03ebb9ae-ada0-41aa-9b40c5bbb87db4aa": [
+		"assets/models/tree_sponza/4910669866631290573.jpg",
+		"class SxxEngine::AssetTexture"
+	],
+	"04007c55-97d9-452c-b19e78a6d3df4059": [
+		"assets/models/tree_sponza/Sponza.gltf",
+		"class SxxEngine::AssetMesh"
+	],
+	"05f2fc0c-034c-44d0-ada7d553b1b1f152": [
+		"assets/models/tree_sponza/Sponza.gltf",
+		"class SxxEngine::AssetMesh"
+	],
+	"089ca3f0-6b18-44bd-b36ce60699fc95e7": [
+		"assets/models/tree_sponza/Sponza.gltf",
+		"class SxxEngine::AssetMesh"
+	],
+	"08e0c6a9-c700-4ff8-99e437d7061e78ad": [
+		"assets/models/tree_sponza/Sponza.gltf",
+		"class SxxEngine::AssetMesh"
+	],
+	"09d70621-d1fb-4499-9e0aed102f258ca5": [
+		"assets/models/tree_sponza/Sponza.gltf",
+		"class SxxEngine::AssetMaterial"
+	],
+	"0cb814e1-9682-4fcf-b12e768861365514": [
+		"assets/models/tree_sponza/8051790464816141987.jpg",
+		"class SxxEngine::AssetTexture"
+	],
+	"0dd5c23c-4e47-4e07-b7a1a1a986e72030": [
+		"assets/models/tree_sponza/Sponza.gltf",
+		"class SxxEngine::AssetMaterial"
+	],
 	"0e335303-86ac-4487-80743fba6e28749a": [
 		"Packages/textures/icon/texture.png",
+		"class SxxEngine::AssetTexture"
+	],
+	"0ff2fc44-93ee-45a8-ad895dc0fc3e9b7e": [
+		"assets/models/tree_sponza/Sponza.gltf",
+		"class SxxEngine::AssetMesh"
+	],
+	"112dcb9d-73e7-4eda-9316091011dba57d": [
+		"assets/models/tree_sponza/13196865903111448057.jpg",
+		"class SxxEngine::AssetTexture"
+	],
+	"11f08410-dcc0-48a4-a9da4978c2f842a8": [
+		"assets/models/tree_sponza/Sponza.gltf",
+		"class SxxEngine::AssetMesh"
+	],
+	"1360fbda-fca2-41b3-9e21a8dba3c7c7bd": [
+		"assets/models/tree_sponza/Sponza.gltf",
+		"class SxxEngine::AssetMesh"
+	],
+	"17cb89d4-5dd8-452c-b8eac2a5668b3d33": [
+		"assets/models/tree_sponza/4871783166746854860.jpg",
+		"class SxxEngine::AssetTexture"
+	],
+	"17cc6a7c-1a89-44a7-925eef80f2ca8023": [
+		"assets/models/tree_sponza/Sponza.gltf",
+		"class SxxEngine::AssetMesh"
+	],
+	"18c0966c-8642-4e5a-939ee9846739eeaf": [
+		"assets/models/tree_sponza/16885566240357350108.jpg",
+		"class SxxEngine::AssetTexture"
+	],
+	"1901fca6-ebb7-44b8-af6827d3338b7dff": [
+		"assets/models/tree_sponza/2374361008830720677.jpg",
+		"class SxxEngine::AssetTexture"
+	],
+	"191380b6-165b-4614-8d75fc0791205184": [
+		"assets/models/tree_sponza/8114461559286000061.jpg",
+		"class SxxEngine::AssetTexture"
+	],
+	"1b2d6950-b5be-4319-94531ffe95d0b424": [
+		"assets/models/tree_sponza/11872827283454512094.jpg",
+		"class SxxEngine::AssetTexture"
+	],
+	"1bf9eb01-b70b-46d6-b981763797102c37": [
+		"assets/models/tree_sponza/Sponza.gltf",
+		"class SxxEngine::AssetMaterial"
+	],
+	"1c16607f-c9d4-4c4c-a8f3bb84e8f7c274": [
+		"assets/models/tree_sponza/8747919177698443163.jpg",
+		"class SxxEngine::AssetTexture"
+	],
+	"1d9f03b6-61af-4680-a86b7d4fc869f7b4": [
+		"assets/models/tree_sponza/Sponza.gltf",
+		"class SxxEngine::AssetMesh"
+	],
+	"22876a75-037e-4e50-9474ed04653ed856": [
+		"assets/models/tree_sponza/Sponza.gltf",
+		"class SxxEngine::AssetMesh"
+	],
+	"238f1faa-9a52-4e30-8244a4c5b60e283c": [
+		"assets/models/tree_sponza/Sponza.gltf",
+		"class SxxEngine::AssetMesh"
+	],
+	"26015eda-f53a-4e96-ab72fcb7bb328856": [
+		"assets/models/tree_sponza/Sponza.gltf",
+		"class SxxEngine::AssetMesh"
+	],
+	"290a1375-9d5e-4587-96234dc7810926c4": [
+		"assets/models/tree_sponza/Sponza.gltf",
+		"class SxxEngine::AssetMesh"
+	],
+	"2a2b7999-c22d-41d9-bca8be81849ec76d": [
+		"assets/models/tree_sponza/Sponza.gltf",
+		"class SxxEngine::AssetMesh"
+	],
+	"2b0eea38-8e33-47fa-bba24d21aa2fac11": [
+		"assets/models/tree_sponza/14650633544276105767.jpg",
 		"class SxxEngine::AssetTexture"
 	],
 	"2b1ee179-42d3-4b9c-9b34a545538361fa": [
 		"Packages/textures/icon/shader.png",
 		"class SxxEngine::AssetTexture"
 	],
+	"2bba392c-36a5-4614-a390a3d96feef2e1": [
+		"assets/models/tree_sponza/Sponza.gltf",
+		"class SxxEngine::AssetMesh"
+	],
 	"2c3afc51-647f-4fda-9e47ade14f98e849": [
 		"packages/textures/icon/scene_directionalLight.png",
 		"class SxxEngine::AssetTexture"
+	],
+	"2d229f59-d36c-42c7-92b84cd6ecc5dac3": [
+		"assets/models/tree_sponza/Sponza.gltf",
+		"class SxxEngine::AssetMesh"
+	],
+	"2d7d43cc-7219-4dac-b84fb96a166b0b74": [
+		"assets/models/tree_sponza/Sponza.gltf",
+		"class SxxEngine::AssetMaterial"
 	],
 	"2e198845-dad2-4643-8e559a23a7a31e2c": [
 		"Packages/textures/icon/file.png",
 		"class SxxEngine::AssetTexture"
 	],
+	"2ea9f37f-2a1f-4288-8ea27655bd2b66b0": [
+		"assets/models/tree_sponza/Sponza.gltf",
+		"class SxxEngine::AssetMaterial"
+	],
+	"2f7696d2-ea60-4acc-9f2c05244e3e0b1e": [
+		"assets/models/tree_sponza/Sponza.gltf",
+		"class SxxEngine::AssetMesh"
+	],
+	"2fbfa6f7-695b-42cc-b3bfc716cf6ae7ae": [
+		"assets/models/tree_sponza/17556969131407844942.jpg",
+		"class SxxEngine::AssetTexture"
+	],
+	"31de1b41-3d23-43e7-b4129821cc2c22ee": [
+		"assets/models/tree_sponza/Sponza.gltf",
+		"class SxxEngine::AssetMesh"
+	],
 	"327385a7-6cca-499e-9c2597768a679e1d": [
 		"packages/textures/icon/mode_world.png",
+		"class SxxEngine::AssetTexture"
+	],
+	"336d249f-2179-444d-ab6d2d7b93f82281": [
+		"assets/models/tree_sponza/7056944414013900257.jpg",
 		"class SxxEngine::AssetTexture"
 	],
 	"33f21412-a4d2-4bd9-afdf1d3acbf2d534": [
 		"packages/textures/icon/mode_local.png",
 		"class SxxEngine::AssetTexture"
 	],
+	"35f3f4de-11e2-461f-8537c969ab7fda7e": [
+		"assets/models/tree_sponza/Sponza.gltf",
+		"class SxxEngine::AssetMesh"
+	],
 	"3662c189-64f0-4993-98919c8ee2f16311": [
 		"packages/textures/icon/operation_scale.png",
 		"class SxxEngine::AssetTexture"
+	],
+	"3693bc2f-0db8-4b3d-812b1a9c21a9f4d1": [
+		"assets/models/tree_sponza/2969916736137545357.jpg",
+		"class SxxEngine::AssetTexture"
+	],
+	"36cdf0ff-ee44-4ad5-b9cdd727ec3e9074": [
+		"assets/models/tree_sponza/Sponza.gltf",
+		"class SxxEngine::AssetMesh"
+	],
+	"3885f5d3-ded5-4c77-80cf1484e5cbdeb1": [
+		"assets/models/tree_sponza/Sponza.gltf",
+		"class SxxEngine::AssetMesh"
+	],
+	"39022ae3-dafa-4ee4-9a93dca9752b75a2": [
+		"assets/models/tree_sponza/5823059166183034438.jpg",
+		"class SxxEngine::AssetTexture"
+	],
+	"3b0e8c17-dcca-43b8-9bb2b80a8f4cf116": [
+		"assets/models/tree_sponza/8006627369776289000.png",
+		"class SxxEngine::AssetTexture"
+	],
+	"3b34db2c-5a66-43d8-9ef823ec9caffa1a": [
+		"assets/models/tree_sponza/Sponza.gltf",
+		"class SxxEngine::AssetMesh"
+	],
+	"3b4e0a7f-55f2-432a-8a379a2fec62f769": [
+		"assets/models/tree_sponza/Sponza.gltf",
+		"class SxxEngine::AssetMesh"
+	],
+	"3c3a63a4-0371-4cde-b2beaa5fb6234485": [
+		"assets/models/tree_sponza/Sponza.gltf",
+		"class SxxEngine::AssetMesh"
+	],
+	"3d6d5acf-7892-42ec-95b9d976390ff3df": [
+		"assets/models/tree_sponza/Sponza.gltf",
+		"class SxxEngine::AssetMaterial"
+	],
+	"3e595e84-e78d-4367-8ecdf726843e20e5": [
+		"assets/models/tree_sponza/Sponza.gltf",
+		"class SxxEngine::AssetMesh"
 	],
 	"3f53c3c7-17cf-440e-b30518592e9bdb4b": [
 		"packages/textures/rendering/brdf_lut.png",
 		"class SxxEngine::AssetTexture"
 	],
+	"40c494a9-f252-4a9c-a71cce2c6de971ca": [
+		"assets/models/tree_sponza/9916269861720640319.jpg",
+		"class SxxEngine::AssetTexture"
+	],
+	"410505cc-f23e-445a-bf32037dda949451": [
+		"assets/models/tree_sponza/1219024358953944284.jpg",
+		"class SxxEngine::AssetTexture"
+	],
+	"4146235b-f92b-431a-84736b03ad3219cb": [
+		"assets/models/tree_sponza/7815564343179553343.jpg",
+		"class SxxEngine::AssetTexture"
+	],
 	"443bb579-cccd-4cce-accde5461eeccec4": [
 		"packages/textures/rendering/smaaSearchTex.dds",
+		"class SxxEngine::AssetTexture"
+	],
+	"4865feb5-ec29-43ab-ad5b0c42b5994979": [
+		"assets/models/tree_sponza/Sponza.gltf",
+		"class SxxEngine::AssetMesh"
+	],
+	"4acbd22c-8e56-4a31-b2cc069bcb749212": [
+		"assets/models/tree_sponza/Sponza.gltf",
+		"class SxxEngine::AssetMesh"
+	],
+	"4cb27d70-7b9c-453b-857b165df4f881ce": [
+		"assets/models/tree_sponza/Sponza.gltf",
+		"class SxxEngine::AssetMesh"
+	],
+	"4e59a0b3-73f1-4ed7-af0fcb20662e91e0": [
+		"assets/models/tree_sponza/Sponza.gltf",
+		"class SxxEngine::AssetMesh"
+	],
+	"4e7057bf-cafb-46d1-9bbc155df42e92ec": [
+		"assets/models/tree_sponza/13824894030729245199.jpg",
 		"class SxxEngine::AssetTexture"
 	],
 	"502c3bbb-b671-4d13-8a1ed6efb601da3c": [
@@ -43,44 +271,612 @@
 		"Packages/textures/icon/scene.png",
 		"class SxxEngine::AssetTexture"
 	],
+	"514b7ca1-662f-411d-801423099a2ba6e5": [
+		"assets/models/tree_sponza/Sponza.gltf",
+		"class SxxEngine::AssetMaterial"
+	],
+	"515fff82-90c5-478b-a58c247d09ef51d3": [
+		"assets/models/tree_sponza/Sponza.gltf",
+		"class SxxEngine::AssetMesh"
+	],
 	"51e30a10-02da-4bfe-8e2e58838e30b0a7": [
 		"packages/textures/checker_black.png",
+		"class SxxEngine::AssetTexture"
+	],
+	"5651e80b-e45d-4187-97b563fb92c9e86f": [
+		"assets/models/tree_sponza/Sponza.gltf",
+		"class SxxEngine::AssetSkeleton"
+	],
+	"57acc68e-0ab0-4a3a-ab3943c926f6f048": [
+		"assets/models/tree_sponza/Sponza.gltf",
+		"class SxxEngine::AssetMesh"
+	],
+	"59415591-20cd-4f7a-bdfa7f5634e32a42": [
+		"assets/models/tree_sponza/Sponza.gltf",
+		"class SxxEngine::AssetMaterial"
+	],
+	"59772796-cd28-4a82-a15f5eedb713ab57": [
+		"assets/models/tree_sponza/Sponza.gltf",
+		"class SxxEngine::AssetMesh"
+	],
+	"598519e3-6670-4a54-b4846261fd451445": [
+		"assets/models/tree_sponza/6593109234861095314.jpg",
+		"class SxxEngine::AssetTexture"
+	],
+	"59f16506-a03b-4a13-836759eccca31ac0": [
+		"assets/models/tree_sponza/6667038893015345571.jpg",
+		"class SxxEngine::AssetTexture"
+	],
+	"5a6c7fa5-4526-4bf2-a118125d52f15640": [
+		"assets/models/tree_sponza/Sponza.gltf",
+		"class SxxEngine::AssetMesh"
+	],
+	"5bc4c4ad-6d47-4711-b5058b47e8dd7978": [
+		"assets/models/tree_sponza/715093869573992647.jpg",
+		"class SxxEngine::AssetTexture"
+	],
+	"5c41a6fc-5edf-4ac7-bd249d7b7eb3eb2b": [
+		"assets/models/tree_sponza/Sponza.gltf",
+		"class SxxEngine::AssetMesh"
+	],
+	"5e761b18-b089-4562-8f22f7771d67d81a": [
+		"assets/models/tree_sponza/13982482287905699490.jpg",
+		"class SxxEngine::AssetTexture"
+	],
+	"5edc2751-82d9-4eaa-95f25486378af62c": [
+		"assets/models/tree_sponza/Sponza.gltf",
+		"class SxxEngine::AssetMaterial"
+	],
+	"619ebe76-7b50-47fe-859d64aa7e092a62": [
+		"assets/models/tree_sponza/Sponza.gltf",
+		"class SxxEngine::AssetMesh"
+	],
+	"6203bbee-82b5-4083-947914fafd4c6a22": [
+		"assets/models/tree_sponza/Sponza.gltf",
+		"class SxxEngine::AssetMesh"
+	],
+	"624d6412-4a6f-41e2-a55afd53dfad686f": [
+		"assets/models/tree_sponza/Sponza.gltf",
+		"class SxxEngine::AssetMesh"
+	],
+	"629ebb91-b9c5-43b1-84d7b6380fa24e8d": [
+		"assets/models/tree_sponza/Sponza.gltf",
+		"class SxxEngine::AssetMesh"
+	],
+	"62f12097-2969-41b7-bb23c679d677d23c": [
+		"assets/models/tree_sponza/Sponza.gltf",
+		"class SxxEngine::AssetMesh"
+	],
+	"67e40dc4-f705-45cc-968b0adffa519d71": [
+		"assets/models/tree_sponza/Sponza.gltf",
+		"class SxxEngine::AssetMesh"
+	],
+	"691290eb-a2c8-465f-bd8b69e03c597d4e": [
+		"assets/models/tree_sponza/4675343432951571524.jpg",
+		"class SxxEngine::AssetTexture"
+	],
+	"6993ee3d-b9f1-413d-b5c3425f1038608b": [
+		"assets/models/tree_sponza/Sponza.gltf",
+		"class SxxEngine::AssetMaterial"
+	],
+	"69b195e1-855e-49a3-bc55afc5602066bc": [
+		"assets/models/tree_sponza/Sponza.gltf",
+		"class SxxEngine::AssetMaterial"
+	],
+	"6abfa113-7c35-4e21-b73708bdd94fc3d6": [
+		"assets/models/tree_sponza/Sponza.gltf",
+		"class SxxEngine::AssetMesh"
+	],
+	"6ad0ecbd-f2a1-4e8e-bcb202dd0e5b0d60": [
+		"assets/models/tree_sponza/2299742237651021498.jpg",
 		"class SxxEngine::AssetTexture"
 	],
 	"6ba62532-5bad-407e-9f18ff8ad2a187f4": [
 		"packages/textures/icon/scene_pointLight.png",
 		"class SxxEngine::AssetTexture"
 	],
+	"6c716bd2-3cb0-40d0-a4b1daa1175a4fe5": [
+		"assets/models/tree_sponza/2411100444841994089.jpg",
+		"class SxxEngine::AssetTexture"
+	],
+	"6d4d678a-ddbb-4081-9ac5bb9e075c716a": [
+		"assets/models/tree_sponza/466164707995436622.jpg",
+		"class SxxEngine::AssetTexture"
+	],
+	"6fafeb53-890b-44cf-bb5d7a823875d6dd": [
+		"assets/models/tree_sponza/8783994986360286082.jpg",
+		"class SxxEngine::AssetTexture"
+	],
+	"6fd6e93a-f6e5-4d5e-b763afc7e52ce696": [
+		"assets/models/tree_sponza/2775690330959970771.jpg",
+		"class SxxEngine::AssetTexture"
+	],
+	"70c91d35-4512-448f-b1793769b75a02be": [
+		"assets/models/tree_sponza/3455394979645218238.jpg",
+		"class SxxEngine::AssetTexture"
+	],
+	"7178d3a0-d91c-4901-8683e499df5f6626": [
+		"assets/models/tree_sponza/Sponza.gltf",
+		"class SxxEngine::AssetMesh"
+	],
+	"71fdb4cd-0c02-4ed7-92f3b1d33fb3bb6a": [
+		"assets/models/tree_sponza/Sponza.gltf",
+		"class SxxEngine::AssetMesh"
+	],
+	"736b61ed-ad7e-4ab4-8556baaca5d018f5": [
+		"assets/models/tree_sponza/759203620573749278.jpg",
+		"class SxxEngine::AssetTexture"
+	],
+	"73d69aa8-72e3-4dbc-8e815468185e4db3": [
+		"assets/models/tree_sponza/Sponza.gltf",
+		"class SxxEngine::AssetMesh"
+	],
 	"746b1d79-f309-4f74-80c62106e1932741": [
 		"packages/textures/icon/scene_camera.png",
 		"class SxxEngine::AssetTexture"
 	],
+	"74c2b6fd-ed86-407c-9ffa9d6ea6eda79b": [
+		"assets/models/tree_sponza/332936164838540657.jpg",
+		"class SxxEngine::AssetTexture"
+	],
+	"750e0df5-83f3-436d-a293a405a2f4eac9": [
+		"assets/models/tree_sponza/Sponza.gltf",
+		"class SxxEngine::AssetMesh"
+	],
+	"75811626-ac67-4d2e-afad58a26bbef946": [
+		"assets/models/tree_sponza/2051777328469649772.jpg",
+		"class SxxEngine::AssetTexture"
+	],
+	"76cbebf6-7392-4785-86b2ac38e5e503c2": [
+		"assets/models/tree_sponza/Sponza.gltf",
+		"class SxxEngine::AssetMesh"
+	],
+	"7a377e02-6d50-4242-95fae200cc23c6bb": [
+		"assets/models/tree_sponza/Sponza.gltf",
+		"class SxxEngine::AssetMesh"
+	],
+	"7aee9633-5d40-4145-bdd6978d5142e4fa": [
+		"assets/models/tree_sponza/Sponza.gltf",
+		"class SxxEngine::AssetMesh"
+	],
+	"7b5eb2e1-588d-4ccd-b4125afd5cc02a89": [
+		"assets/models/tree_sponza/Sponza.gltf",
+		"class SxxEngine::AssetMesh"
+	],
 	"7fac270f-5af5-49c2-9cc1179b8c98448a": [
 		"Packages/textures/icon/folder.png",
+		"class SxxEngine::AssetTexture"
+	],
+	"8301134e-c98b-4e93-943ba3f401cb514e": [
+		"assets/models/tree_sponza/Sponza.gltf",
+		"class SxxEngine::AssetMesh"
+	],
+	"835fb4a8-ac92-4187-9da70c2c69f238ac": [
+		"assets/models/tree_sponza/Sponza.gltf",
+		"class SxxEngine::AssetMaterial"
+	],
+	"84cfe45b-fe0c-4088-8e509ca07307a668": [
+		"assets/models/tree_sponza/Sponza.gltf",
+		"class SxxEngine::AssetMesh"
+	],
+	"85ba6969-7461-44c4-af2227adacf3322f": [
+		"assets/models/tree_sponza/Sponza.gltf",
+		"class SxxEngine::AssetMesh"
+	],
+	"8952fcd2-c3ea-47e8-867c87f1d8ec6317": [
+		"assets/models/tree_sponza/Sponza.gltf",
+		"class SxxEngine::AssetMesh"
+	],
+	"8aa2900a-ded7-4429-b45957e6da9de1c0": [
+		"assets/models/tree_sponza/Sponza.gltf",
+		"class SxxEngine::AssetMesh"
+	],
+	"8ac5813f-e28f-4867-97400979f0d03076": [
+		"assets/models/tree_sponza/14267839433702832875.jpg",
+		"class SxxEngine::AssetTexture"
+	],
+	"8ac95251-5bd1-4704-9cd095f7f2662eef": [
+		"assets/models/tree_sponza/Sponza.gltf",
+		"class SxxEngine::AssetMaterial"
+	],
+	"8c16b476-138c-4595-87ebeb6209664608": [
+		"assets/models/tree_sponza/Sponza.gltf",
+		"class SxxEngine::AssetMesh"
+	],
+	"8d1e3a6e-3d86-4fdf-9dba81bb361b38c0": [
+		"assets/models/tree_sponza/17876391417123941155.jpg",
+		"class SxxEngine::AssetTexture"
+	],
+	"8da44451-bd27-48f9-ac3679b52c6274ba": [
+		"assets/models/tree_sponza/Sponza.gltf",
+		"class SxxEngine::AssetMesh"
+	],
+	"8fa4ed69-8bc1-4a3f-b66514bacd7db052": [
+		"assets/models/tree_sponza/4975155472559461469.jpg",
+		"class SxxEngine::AssetTexture"
+	],
+	"932ae8f2-8959-40c1-bc760494d9c73755": [
+		"assets/models/tree_sponza/8481240838833932244.jpg",
+		"class SxxEngine::AssetTexture"
+	],
+	"96db2abb-a3f6-49e9-aa15d2233c6d89f0": [
+		"assets/models/tree_sponza/Sponza.gltf",
+		"class SxxEngine::AssetMesh"
+	],
+	"9777bae7-7bcc-47c1-9e9a8d8417dfc6f5": [
+		"assets/models/tree_sponza/5061699253647017043.png",
+		"class SxxEngine::AssetTexture"
+	],
+	"978e095f-e94a-4b3c-96262e9caa833f80": [
+		"assets/models/tree_sponza/Sponza.gltf",
+		"class SxxEngine::AssetMesh"
+	],
+	"985ba026-8d2a-4d23-bad72a72a0158d12": [
+		"assets/models/tree_sponza/2185409758123873465.jpg",
+		"class SxxEngine::AssetTexture"
+	],
+	"9c4b05ea-2aa6-4903-947b8781a43f65c3": [
+		"assets/models/tree_sponza/Sponza.gltf",
+		"class SxxEngine::AssetMesh"
+	],
+	"9dd26a28-ec4b-4c25-8b9f1d293b9e30b0": [
+		"assets/models/tree_sponza/Sponza.gltf",
+		"class SxxEngine::AssetMesh"
+	],
+	"9e6b4f98-5db6-4b62-aa350e46bec3ab1e": [
+		"assets/models/tree_sponza/Sponza.gltf",
+		"class SxxEngine::AssetMaterial"
+	],
+	"a028ef21-f054-4b20-90344f823b6d62ab": [
+		"assets/models/tree_sponza/4601176305987539675.jpg",
+		"class SxxEngine::AssetTexture"
+	],
+	"a144a23b-0978-4554-8288494c02009366": [
+		"assets/models/tree_sponza/5792855332885324923.jpg",
 		"class SxxEngine::AssetTexture"
 	],
 	"a174b25b-7ad5-49f0-849b7a0ff54761eb": [
 		"packages/textures/icon/scene_volume.png",
 		"class SxxEngine::AssetTexture"
 	],
+	"a67d60a3-8239-4fcb-b01b9326ca817ea8": [
+		"assets/models/tree_sponza/7268504077753552595.jpg",
+		"class SxxEngine::AssetTexture"
+	],
+	"a767a43b-a60c-410e-8c670a371e207b68": [
+		"assets/models/tree_sponza/Sponza.gltf",
+		"class SxxEngine::AssetMaterial"
+	],
+	"a8b02c12-743e-468d-ae5d7eeb613293e8": [
+		"assets/models/tree_sponza/Sponza.gltf",
+		"class SxxEngine::AssetMesh"
+	],
+	"a9360aeb-7e50-4d1a-ad771b57650abfb7": [
+		"assets/models/tree_sponza/16275776544635328252.png",
+		"class SxxEngine::AssetTexture"
+	],
 	"aa9eee08-5a8a-49e6-a1f3c173949b6b75": [
 		"packages/textures/icon/scene_spotLight.png",
+		"class SxxEngine::AssetTexture"
+	],
+	"abcb47fe-ea0d-441c-9920c54ef98ef877": [
+		"assets/models/tree_sponza/7441062115984513793.jpg",
+		"class SxxEngine::AssetTexture"
+	],
+	"ac53b1b7-47c6-42ec-a631ffbee9fbc7c0": [
+		"assets/models/tree_sponza/Sponza.gltf",
+		"class SxxEngine::AssetMesh"
+	],
+	"aca4b16b-3be5-47b0-be8615d95f428e5e": [
+		"assets/models/tree_sponza/Sponza.gltf",
+		"class SxxEngine::AssetMesh"
+	],
+	"ae2efd4b-92a6-4dfa-963f46313da7c323": [
+		"assets/models/tree_sponza/Sponza.gltf",
+		"class SxxEngine::AssetMesh"
+	],
+	"ae595da1-3642-4657-9c9d3dd900aa4a0c": [
+		"assets/models/tree_sponza/16299174074766089871.jpg",
+		"class SxxEngine::AssetTexture"
+	],
+	"ae9af468-6967-4557-86178982c9c59328": [
+		"assets/models/tree_sponza/Sponza.gltf",
+		"class SxxEngine::AssetMesh"
+	],
+	"aeb2b785-ef62-4cc7-ab923d27d0006037": [
+		"assets/models/tree_sponza/Sponza.gltf",
+		"class SxxEngine::AssetMesh"
+	],
+	"aef4b12c-f45e-4d52-96068ef30ed876fa": [
+		"assets/models/tree_sponza/12501374198249454378.jpg",
+		"class SxxEngine::AssetTexture"
+	],
+	"af2092ab-a08f-448c-882667ec8f96ab69": [
+		"assets/models/tree_sponza/Sponza.gltf",
+		"class SxxEngine::AssetMesh"
+	],
+	"b2c8b6f0-4a8c-47e6-a91cf72efeb1ef4d": [
+		"assets/models/tree_sponza/Sponza.gltf",
+		"class SxxEngine::AssetMesh"
+	],
+	"b3e482bc-16e5-4e3d-8bdba266e7ee5325": [
+		"assets/models/tree_sponza/8750083169368950601.jpg",
 		"class SxxEngine::AssetTexture"
 	],
 	"b4e7fa36-111c-499e-a028b6a74a74b142": [
 		"packages/textures/rendering/smaaAreaTex.dds",
 		"class SxxEngine::AssetTexture"
 	],
+	"b680ba02-18c0-492d-9d069a072292287b": [
+		"assets/models/tree_sponza/Sponza.gltf",
+		"class SxxEngine::AssetMesh"
+	],
+	"b82aa7af-d534-4562-91f6dc4c54cfcb20": [
+		"assets/models/tree_sponza/Sponza.gltf",
+		"class SxxEngine::AssetMesh"
+	],
+	"b856c0f0-c01e-45a4-847c03b208e2537c": [
+		"assets/models/tree_sponza/Sponza.gltf",
+		"class SxxEngine::AssetMesh"
+	],
+	"b96f804f-899b-4111-b442990015b23e40": [
+		"assets/models/tree_sponza/Sponza.gltf",
+		"class SxxEngine::AssetMesh"
+	],
+	"bc41707f-f631-4139-8d7f7aa203350110": [
+		"assets/models/tree_sponza/Sponza.gltf",
+		"class SxxEngine::AssetMaterial"
+	],
+	"bf59a921-f032-4312-8e162b2aca05bd69": [
+		"assets/models/tree_sponza/Sponza.gltf",
+		"class SxxEngine::AssetMesh"
+	],
+	"bfd626dc-7c33-47a2-acff9b9e50947539": [
+		"assets/models/tree_sponza/Sponza.gltf",
+		"class SxxEngine::AssetMaterial"
+	],
+	"c13daf80-65e0-436e-ad2d11f5013ca664": [
+		"assets/models/tree_sponza/6772804448157695701.jpg",
+		"class SxxEngine::AssetTexture"
+	],
+	"c264b468-1b82-4962-8ec9862566ef9be2": [
+		"assets/models/tree_sponza/Sponza.gltf",
+		"class SxxEngine::AssetMesh"
+	],
+	"c3567e55-392a-49f6-b04f83eeea8128cb": [
+		"assets/models/tree_sponza/Sponza.gltf",
+		"class SxxEngine::AssetMaterial"
+	],
+	"c4270be8-3ccd-4cab-a1f3488ceb121b27": [
+		"assets/models/tree_sponza/Sponza.gltf",
+		"class SxxEngine::AssetMaterial"
+	],
+	"c4efb1bd-e871-4ef4-891b3c19836d1176": [
+		"assets/models/tree_sponza/Sponza.gltf",
+		"class SxxEngine::AssetMesh"
+	],
+	"c7284697-15a8-4d05-97356fd1d3a399db": [
+		"assets/models/tree_sponza/6047387724914829168.jpg",
+		"class SxxEngine::AssetTexture"
+	],
+	"c77a4996-2f01-4128-9c8448cc27ea5fc4": [
+		"assets/models/tree_sponza/Sponza.gltf",
+		"class SxxEngine::AssetMesh"
+	],
+	"c8101b0b-eb9e-4f6e-8e30acc070af27e1": [
+		"assets/models/tree_sponza/Sponza.gltf",
+		"class SxxEngine::AssetMesh"
+	],
+	"c867dccd-540a-400b-bf0e4aef0905749d": [
+		"assets/models/tree_sponza/Sponza.gltf",
+		"class SxxEngine::AssetMesh"
+	],
+	"c920b76a-0f50-4333-b0f73f3ec6cf7423": [
+		"assets/models/tree_sponza/Sponza.gltf",
+		"class SxxEngine::AssetMesh"
+	],
+	"c927b144-d711-4817-a18a8be5e86b946e": [
+		"assets/models/tree_sponza/Sponza.gltf",
+		"class SxxEngine::AssetMaterial"
+	],
+	"cb42335f-bc85-4594-a7490431a08ba78d": [
+		"assets/models/tree_sponza/10381718147657362067.jpg",
+		"class SxxEngine::AssetTexture"
+	],
+	"cb90fc0e-ce05-470c-9079174636cd9574": [
+		"assets/models/tree_sponza/white.png",
+		"class SxxEngine::AssetTexture"
+	],
+	"cd6a7434-4316-4722-8454a213f740ef71": [
+		"assets/models/tree_sponza/Sponza.gltf",
+		"class SxxEngine::AssetMesh"
+	],
+	"ce435974-79fa-4f73-970cf4509ff7da2b": [
+		"assets/models/tree_sponza/9288698199695299068.jpg",
+		"class SxxEngine::AssetTexture"
+	],
+	"cf7b305f-516b-434d-a6b188d6a70a432d": [
+		"assets/models/tree_sponza/Sponza.gltf",
+		"class SxxEngine::AssetMesh"
+	],
+	"d219023e-7a8a-4231-936465aa893fa447": [
+		"assets/models/tree_sponza/11474523244911310074.jpg",
+		"class SxxEngine::AssetTexture"
+	],
+	"d28f05c6-f170-4795-b9b614497ff874db": [
+		"assets/models/tree_sponza/Sponza.gltf",
+		"class SxxEngine::AssetMaterial"
+	],
+	"d39c3b97-7284-4346-a4430eefac51b345": [
+		"assets/models/tree_sponza/14170708867020035030.jpg",
+		"class SxxEngine::AssetTexture"
+	],
+	"d3cea162-a8f3-49f1-b066cb136da387cf": [
+		"assets/models/tree_sponza/4477655471536070370.jpg",
+		"class SxxEngine::AssetTexture"
+	],
+	"d4a2393e-7682-4184-a759c34217bd275a": [
+		"assets/models/tree_sponza/Sponza.gltf",
+		"class SxxEngine::AssetMesh"
+	],
+	"d4d9b6e1-59ee-430d-98962b8ad0866a9d": [
+		"assets/models/tree_sponza/Sponza.gltf",
+		"class SxxEngine::AssetMesh"
+	],
+	"d5ace778-45fd-4486-9db37d2f8381cbc6": [
+		"assets/models/tree_sponza/Sponza.gltf",
+		"class SxxEngine::AssetMaterial"
+	],
+	"d6a7d89d-877a-4167-9d55c02225bc8a9c": [
+		"assets/models/tree_sponza/Sponza.gltf",
+		"class SxxEngine::AssetMesh"
+	],
+	"d7473651-7a6f-439c-b71a5e923a127118": [
+		"assets/models/tree_sponza/Sponza.gltf",
+		"class SxxEngine::AssetMesh"
+	],
+	"d830d49b-c4f8-417c-915a9a7c85ca9070": [
+		"assets/models/tree_sponza/3628158980083700836.jpg",
+		"class SxxEngine::AssetTexture"
+	],
+	"da39fa72-edb1-4adb-96d9a66eb583bcab": [
+		"assets/models/tree_sponza/Sponza.gltf",
+		"class SxxEngine::AssetMesh"
+	],
 	"da94b293-5d57-446f-8ef3560508621ed2": [
 		"packages/textures/icon/operation_rotate.png",
 		"class SxxEngine::AssetTexture"
+	],
+	"db66ab05-119b-436f-a52e58cf1a126204": [
+		"assets/models/tree_sponza/Sponza.gltf",
+		"class SxxEngine::AssetMaterial"
+	],
+	"db80f5d5-78df-4379-b5405f74e1c64135": [
+		"assets/models/tree_sponza/15722799267630235092.jpg",
+		"class SxxEngine::AssetTexture"
+	],
+	"df45f47f-675f-4baf-9fd4721692a6aa6c": [
+		"assets/models/tree_sponza/Sponza.gltf",
+		"class SxxEngine::AssetMesh"
+	],
+	"df7cc9be-7fee-490a-be2e62acb49668f5": [
+		"assets/models/tree_sponza/Sponza.gltf",
+		"class SxxEngine::AssetMesh"
+	],
+	"e00744bf-46a2-41bb-8b667ddb41dd9eed": [
+		"assets/models/tree_sponza/11490520546946913238.jpg",
+		"class SxxEngine::AssetTexture"
+	],
+	"e0f3ae52-afad-410c-9ebe67cd384c8d1f": [
+		"assets/models/tree_sponza/8773302468495022225.jpg",
+		"class SxxEngine::AssetTexture"
+	],
+	"e16c7225-1c83-4591-a24569dcbd7b8888": [
+		"assets/models/tree_sponza/Sponza.gltf",
+		"class SxxEngine::AssetMesh"
+	],
+	"e1f12b6d-af9c-4d7b-ab32a58ea8a6bfdf": [
+		"assets/models/tree_sponza/11968150294050148237.jpg",
+		"class SxxEngine::AssetTexture"
+	],
+	"e2d110fa-4198-4a7f-b5a93845ee4c0f86": [
+		"assets/models/tree_sponza/Sponza.gltf",
+		"class SxxEngine::AssetMesh"
+	],
+	"e3cf9a7a-9f90-47fb-a2399e7006362d92": [
+		"assets/models/tree_sponza/7645212358685992005.jpg",
+		"class SxxEngine::AssetTexture"
+	],
+	"e3f86ab4-8930-4e61-89c9e97210310a7d": [
+		"assets/models/tree_sponza/10388182081421875623.jpg",
+		"class SxxEngine::AssetTexture"
+	],
+	"e4ea9021-e587-44ef-b12b99fe1982a1cc": [
+		"assets/models/tree_sponza/Sponza.gltf",
+		"class SxxEngine::AssetMaterial"
+	],
+	"e6420381-3c81-47b1-ac91bbd77e5d1fd4": [
+		"assets/models/tree_sponza/755318871556304029.jpg",
+		"class SxxEngine::AssetTexture"
+	],
+	"e7d3f2dd-133c-4f6a-86325f3ef5f3ab46": [
+		"assets/models/tree_sponza/Sponza.gltf",
+		"class SxxEngine::AssetMesh"
+	],
+	"e8c5ba34-c2ec-4635-ad58aa4c351dedfb": [
+		"assets/models/tree_sponza/Sponza.gltf",
+		"class SxxEngine::AssetMesh"
+	],
+	"e94a53be-12f2-47cb-90156a1041e6261d": [
+		"assets/models/tree_sponza/Sponza.gltf",
+		"class SxxEngine::AssetMesh"
+	],
+	"e985e1d2-a42c-48b3-9cb4097febdf9a84": [
+		"assets/models/tree_sponza/Sponza.gltf",
+		"class SxxEngine::AssetMesh"
+	],
+	"ea8fa602-9453-41fe-be33fb1907e8e2a7": [
+		"assets/models/tree_sponza/Sponza.gltf",
+		"class SxxEngine::AssetMesh"
+	],
+	"ec6c2292-8a92-4c99-a49b665c4f70b712": [
+		"assets/models/tree_sponza/Sponza.gltf",
+		"class SxxEngine::AssetMesh"
+	],
+	"edfbb0f9-ebca-4d96-a17a83b41c12ad78": [
+		"assets/models/tree_sponza/3827035219084910048.jpg",
+		"class SxxEngine::AssetTexture"
+	],
+	"ef4bffec-84ad-4599-bdd25410c28d3fc3": [
+		"assets/models/tree_sponza/Sponza.gltf",
+		"class SxxEngine::AssetMesh"
+	],
+	"ef8a8073-3e97-4238-9407cb29a7f39ba8": [
+		"assets/models/tree_sponza/Sponza.gltf",
+		"class SxxEngine::AssetMaterial"
 	],
 	"f0793bfb-8a99-47e3-942a90d3e53d3d39": [
 		"packages/textures/icon/grid.png",
 		"class SxxEngine::AssetTexture"
 	],
+	"f2a38c11-6e26-46c1-aad4d8990382a2f7": [
+		"assets/models/tree_sponza/6151467286084645207.jpg",
+		"class SxxEngine::AssetTexture"
+	],
 	"f31f206f-8b71-45be-920f985b55197484": [
 		"packages/textures/icon/operation_translate.png",
 		"class SxxEngine::AssetTexture"
+	],
+	"f50d18b8-229b-4b68-aac3372c02774a5c": [
+		"assets/models/tree_sponza/Sponza.gltf",
+		"class SxxEngine::AssetMesh"
+	],
+	"f776817b-2299-4e5a-aa614118610ef1c3": [
+		"assets/models/tree_sponza/Sponza.gltf",
+		"class SxxEngine::AssetMesh"
+	],
+	"fb82010b-fd60-4eb2-a03ce1b6c5cca8bb": [
+		"assets/models/tree_sponza/Sponza.gltf",
+		"class SxxEngine::AssetMesh"
+	],
+	"fc37528e-ced4-4c05-89727d2ab8d694fa": [
+		"assets/models/tree_sponza/15295713303328085182.jpg",
+		"class SxxEngine::AssetTexture"
+	],
+	"fddc1224-be51-4c91-8ede14d0feb3b0f8": [
+		"assets/models/tree_sponza/Sponza.gltf",
+		"class SxxEngine::AssetMaterial"
+	],
+	"feaff1b3-31f1-46b0-8c3a1bf578e9ccae": [
+		"assets/models/tree_sponza/Sponza.gltf",
+		"class SxxEngine::AssetMesh"
+	],
+	"feda8029-acc1-4315-acd36942b9233d2c": [
+		"assets/models/tree_sponza/8503262930880235456.jpg",
+		"class SxxEngine::AssetTexture"
+	],
+	"ff2ecea0-39a1-4f05-b7ac758c472a3ea7": [
+		"assets/models/tree_sponza/Sponza.gltf",
+		"class SxxEngine::AssetMesh"
 	]
 }
