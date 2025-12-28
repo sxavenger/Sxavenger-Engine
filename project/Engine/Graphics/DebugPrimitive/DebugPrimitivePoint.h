@@ -36,7 +36,7 @@ private:
 	// private variables
 	//=========================================================================================
 
-	static const uint32_t kMaxPointNum = (1 << 10);
+	static const uint32_t kMaxPointNum = (1 << 12);
 
 };
 

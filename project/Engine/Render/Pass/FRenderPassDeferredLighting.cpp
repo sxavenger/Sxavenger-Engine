@@ -80,9 +80,14 @@ void FRenderPassDeferredLighting::Render(const DirectXQueueContext* context, con
 	}
 
 	if (config.option.Test(FBaseRenderPass::Config::Option::Preview)) {
+
+		context->BeginEvent(L"Probe Lighting Passes");
+
 		PassProbeReservoir(context, config);
 		PassProbeUpdate(context, config);
 		PassProbeEvaluation(context, config);
+
+		context->EndEvent();
 	}
 
 	TransitionLightingPass(context, config);
@@ -600,7 +605,7 @@ void FRenderPassDeferredLighting::PassProbeUpdate(const DirectXQueueContext* con
 	buffer->GetProbeGBuffer().TransitionBeginUnordered(context);
 
 	DxObject::BindBufferDesc desc = {};
-	desc.SetHandle("gProbeSample", buffer->GetProbeGBuffer().GetGBuffer(FProbeGBuffer::Probe::Sample)->GetGPUHandleSRV());
+	desc.SetHandle("gProbeSample", buffer->GetProbeGBuffer().GetGBuffer(FProbeGBuffer::Probe::Sample)->GetGPUHandleUAV());
 	desc.SetHandle("gProbeReservoir", buffer->GetProbeGBuffer().GetGBuffer(FProbeGBuffer::Probe::Reservoir)->GetGPUHandleUAV());
 	desc.SetHandle("gProbeMoment", buffer->GetProbeGBuffer().GetGBuffer(FProbeGBuffer::Probe::Moment)->GetGPUHandleUAV());
 	desc.SetHandle("gProbeIrradiance", buffer->GetProbeGBuffer().GetGBuffer(FProbeGBuffer::Probe::Irradiance)->GetGPUHandleUAV());
