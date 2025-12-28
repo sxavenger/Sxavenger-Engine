@@ -35,6 +35,10 @@
 		"assets/models/sponza/Sponza.gltf",
 		"class SxxEngine::AssetMaterial"
 	],
+	"09f76d30-c774-4924-9a087748b44c2908": [
+		"assets/models/cornell_box/cornell-box.obj",
+		"class SxxEngine::AssetMaterial"
+	],
 	"0cb814e1-9682-4fcf-b12e768861365514": [
 		"assets/models/sponza/8051790464816141987.jpg",
 		"class SxxEngine::AssetTexture"
@@ -69,6 +73,10 @@
 	],
 	"17cc6a7c-1a89-44a7-925eef80f2ca8023": [
 		"assets/models/sponza/Sponza.gltf",
+		"class SxxEngine::AssetMesh"
+	],
+	"1828a72c-f5bd-4500-ab65b833a5843680": [
+		"assets/models/cornell_box/cornell-box.obj",
 		"class SxxEngine::AssetMesh"
 	],
 	"18c0966c-8642-4e5a-939ee9846739eeaf": [
@@ -119,6 +127,10 @@
 		"assets/models/sponza/Sponza.gltf",
 		"class SxxEngine::AssetMesh"
 	],
+	"2aeb0d98-7de5-49ce-ae69813574d737da": [
+		"assets/models/cornell_box/cornell-box.obj",
+		"class SxxEngine::AssetMaterial"
+	],
 	"2b0eea38-8e33-47fa-bba24d21aa2fac11": [
 		"assets/models/sponza/14650633544276105767.jpg",
 		"class SxxEngine::AssetTexture"
@@ -166,6 +178,10 @@
 	"327385a7-6cca-499e-9c2597768a679e1d": [
 		"packages/textures/icon/mode_world.png",
 		"class SxxEngine::AssetTexture"
+	],
+	"32d520ea-0366-4320-9338e1eb1ad424f3": [
+		"assets/models/cornell_box/cornell-box.obj",
+		"class SxxEngine::AssetMesh"
 	],
 	"336d249f-2179-444d-ab6d2d7b93f82281": [
 		"assets/models/sponza/7056944414013900257.jpg",
@@ -239,6 +255,10 @@
 		"assets/models/sponza/7815564343179553343.jpg",
 		"class SxxEngine::AssetTexture"
 	],
+	"417ce4c3-6042-4081-854ab5692e33aa5e": [
+		"assets/models/cornell_box/cornell-box.obj",
+		"class SxxEngine::AssetMesh"
+	],
 	"43852a12-37d3-4fab-91eb9a91eb69b277": [
 		"assets/models/tree/tree.gltf",
 		"class SxxEngine::AssetMaterial"
@@ -253,6 +273,10 @@
 	],
 	"4acbd22c-8e56-4a31-b2cc069bcb749212": [
 		"assets/models/sponza/Sponza.gltf",
+		"class SxxEngine::AssetMesh"
+	],
+	"4c09e129-dc68-46da-9eada3a112baac43": [
+		"assets/models/cornell_box/cornell-box.obj",
 		"class SxxEngine::AssetMesh"
 	],
 	"4c692cc3-31aa-44e3-a89c5e28bbc3c843": [
@@ -291,13 +315,25 @@
 		"packages/textures/checker_black.png",
 		"class SxxEngine::AssetTexture"
 	],
+	"521be6f1-a94e-4edf-b25e540a07a80497": [
+		"assets/models/cornell_box/cornell-box.obj",
+		"class SxxEngine::AssetMesh"
+	],
 	"532dcd37-c488-4332-a1eb9cbcee46ce1e": [
 		"assets/models/tree/MI_EuropeanBeech_Decoration_BaseColor.png",
 		"class SxxEngine::AssetTexture"
 	],
+	"5443c363-8ee0-4247-aa11b049a86dc7bb": [
+		"assets/models/cornell_box/cornell-box.obj",
+		"class SxxEngine::AssetMesh"
+	],
 	"5651e80b-e45d-4187-97b563fb92c9e86f": [
 		"assets/models/sponza/Sponza.gltf",
 		"class SxxEngine::AssetSkeleton"
+	],
+	"570eb925-8aee-4169-96eae56f323f837a": [
+		"assets/models/cornell_box/cornell-box.obj",
+		"class SxxEngine::AssetMaterial"
 	],
 	"57acc68e-0ab0-4a3a-ab3943c926f6f048": [
 		"assets/models/sponza/Sponza.gltf",
@@ -631,6 +667,10 @@
 		"assets/models/sponza/Sponza.gltf",
 		"class SxxEngine::AssetMesh"
 	],
+	"acc2b0a6-948d-4da4-9451e8a20828d367": [
+		"assets/models/cornell_box/cornell-box.obj",
+		"class SxxEngine::AssetMesh"
+	],
 	"ae2efd4b-92a6-4dfa-963f46313da7c323": [
 		"assets/models/sponza/Sponza.gltf",
 		"class SxxEngine::AssetMesh"
@@ -691,6 +731,10 @@
 		"assets/models/sponza/Sponza.gltf",
 		"class SxxEngine::AssetMaterial"
 	],
+	"bd1cdc60-caa6-40b9-aff01e919c32526a": [
+		"assets/models/cornell_box/cornell-box.obj",
+		"class SxxEngine::AssetSkeleton"
+	],
 	"bf59a921-f032-4312-8e162b2aca05bd69": [
 		"assets/models/sponza/Sponza.gltf",
 		"class SxxEngine::AssetMesh"
@@ -714,6 +758,10 @@
 	"c3afdfcd-8bce-4202-9ea5d1b334447911": [
 		"assets/models/tree/tree.gltf",
 		"class SxxEngine::AssetSkeleton"
+	],
+	"c3c314ca-c9b9-4846-beadf8749aa12798": [
+		"assets/models/cornell_box/cornell-box.obj",
+		"class SxxEngine::AssetMaterial"
 	],
 	"c4270be8-3ccd-4cab-a1f3488ceb121b27": [
 		"assets/models/sponza/Sponza.gltf",
@@ -807,9 +855,17 @@
 		"assets/models/sponza/Sponza.gltf",
 		"class SxxEngine::AssetMesh"
 	],
+	"d8205398-0ebd-4b92-baf7d1cd999fd283": [
+		"assets/models/cornell_box/cornell-box.obj",
+		"class SxxEngine::AssetMesh"
+	],
 	"d830d49b-c4f8-417c-915a9a7c85ca9070": [
 		"assets/models/sponza/3628158980083700836.jpg",
 		"class SxxEngine::AssetTexture"
+	],
+	"d849072e-c8e3-4bae-9f63caff5e184520": [
+		"assets/models/cornell_box/cornell-box.obj",
+		"class SxxEngine::AssetMaterial"
 	],
 	"da39fa72-edb1-4adb-96d9a66eb583bcab": [
 		"assets/models/sponza/Sponza.gltf",

@@ -151,60 +151,68 @@ void MonoBehaviour::ShowInspector() {
 
 	SxImGui::InputText("## name", name_);
 
+	ImGui::Text(std::format("mobility - {}", magic_enum::enum_name(mobility_)).c_str());
+
 	ImGui::EndDisabled();
 
-	ImGui::Separator();
-	ImGui::SeparatorText("components");
+	{
+		ImGui::Separator();
+		ImGui::SeparatorText("components");
 
-	std::queue<const std::type_info*> deleteQueue;
+		std::queue<const std::type_info*> deleteQueue;
 
-	for (const auto& [type, component] : GetComponents()) {
-		ImGui::PushID(type->name());
+		for (const auto& [type, component] : GetComponents()) {
+			ImGui::PushID(type->name());
 
-		if (ImGui::Button(":")) {
-			deleteQueue.emplace(type);
-		}
-
-		ImGui::SameLine();
-
-		// ???: child window に変更...?
-		if (ImGui::CollapsingHeader(type->name(), ImGuiTreeNodeFlags_DefaultOpen)) {
-			(*component)->ShowComponentInspector();
-		}
-
-		ImGui::PopID();
-	}
-
-	while (!deleteQueue.empty()) {
-		RemoveComponent(deleteQueue.front());
-		deleteQueue.pop();
-	}
-
-	//* componentの追加
-	//!< 中央に配置
-	ImGui::Dummy(ImVec2(0.0f, 4.0f)); // 上にスペースを追加
-	const ImVec2 size = { 160, 0 }; //!< y軸は自動調整
-	ImGui::SetCursorPosX((ImGui::GetContentRegionAvail().x - size.x) * 0.5f);
-
-	if (ImGui::Button("Add Component", size)) {
-		ImGui::OpenPopup("## Add Component Popup");
-	}
-
-	if (ImGui::BeginPopup("## Add Component Popup")) {
-		ImGui::SeparatorText("Add Component Command");
-		for (const auto& name : sComponentStorage->GetFactory() | std::views::keys) {
-			if (ImGui::MenuItem(name.c_str())) {
-				AddComponent(name);
+			if (ImGui::Button(":")) {
+				deleteQueue.emplace(type);
 			}
+
+			ImGui::SameLine();
+
+			// ???: child window に変更...?
+			if (ImGui::CollapsingHeader(type->name(), ImGuiTreeNodeFlags_DefaultOpen)) {
+				(*component)->ShowComponentInspector();
+			}
+
+			ImGui::PopID();
 		}
 
-		ImGui::EndPopup();
+		while (!deleteQueue.empty()) {
+			RemoveComponent(deleteQueue.front());
+			deleteQueue.pop();
+		}
+
+		//* componentの追加
+		//!< 中央に配置
+		ImGui::Dummy(ImVec2(0.0f, 4.0f)); // 上にスペースを追加
+		const ImVec2 size = { 160, 0 }; //!< y軸は自動調整
+		ImGui::SetCursorPosX((ImGui::GetContentRegionAvail().x - size.x) * 0.5f);
+
+		if (ImGui::Button("Add Component", size)) {
+			ImGui::OpenPopup("## Add Component Popup");
+		}
+
+		if (ImGui::BeginPopup("## Add Component Popup")) {
+			ImGui::SeparatorText("Add Component Command");
+			for (const auto& name : sComponentStorage->GetFactory() | std::views::keys) {
+				if (ImGui::MenuItem(name.c_str())) {
+					AddComponent(name);
+				}
+			}
+
+			ImGui::EndPopup();
+		}
+	}
+	
+	{
+		ImGui::SeparatorText("inspectable");
+		if (inspectable_ != nullptr) {
+			inspectable_();
+		}
 	}
 
-	ImGui::SeparatorText("inspectable");
-	if (inspectable_ != nullptr) {
-		inspectable_();
-	}
+	
 
 	ImGui::Separator();
 
@@ -224,6 +232,12 @@ void MonoBehaviour::ShowInspector() {
 		if (filepath.has_value()) {
 			SaveComponent(filepath.value());
 		}
+	}
+
+	ImGui::SameLine();
+
+	if (ImGui::Button("Delete Behaviour")) {
+		sMonoBehaviourStorage->PushUnregisterQueue(this->GetAddress());
 	}
 }
 

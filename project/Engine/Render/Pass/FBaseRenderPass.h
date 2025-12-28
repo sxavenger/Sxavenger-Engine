@@ -60,7 +60,7 @@ public:
 			PostProcess      = 1 << 1,
 			Tonemap          = 1 << 2,
 
-			Debug_WhiteAlbedo = 1 << 10,
+			Preview = 1 << 3,
 
 			Default = PostProcess | Tonemap,
 		};

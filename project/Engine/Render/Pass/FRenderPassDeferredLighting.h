@@ -58,6 +58,10 @@ private:
 	void PassIndirectReservoirSpatial(const DirectXQueueContext* context, const Config& config);
 	void PassIndirectReservoirTexture(const DirectXQueueContext* context, const Config& config);
 
+	void PassProbeReservoir(const DirectXQueueContext* context, const Config& config);
+	void PassProbeUpdate(const DirectXQueueContext* context, const Config& config);
+	void PassProbeEvaluation(const DirectXQueueContext* context, const Config& config);
+
 	void TransitionLightingPass(const DirectXQueueContext* context, const Config& config);
 
 

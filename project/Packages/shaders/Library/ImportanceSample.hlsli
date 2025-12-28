@@ -32,7 +32,7 @@ void TangentSpace(float3 n, out float3 t, out float3 b) {
 	b = float3(bv, s + n.y * n.y * a, -n.y);
 }
 
-float3 ImportanceSampleLambert(float2 xi, float3 n) {
+float3 ImportanceSampleCosineWeight(float2 xi, float3 n) {
 
 	float r = sqrt(xi.x);
 	float phi = kTau * xi.y;
@@ -48,7 +48,7 @@ float3 ImportanceSampleLambert(float2 xi, float3 n) {
 	return normalize(h.x * tangentX + h.y * tangentY + h.z * n);
 }
 
-float ImportanceSampleLambertPDF(float3 wi, float3 n) {
+float ImportanceSampleCosineWeightPDF(float3 wi, float3 n) {
 	return max(dot(wi, n), 0) * rcp(kPi);
 }
 
@@ -73,10 +73,30 @@ float3 ImportanceSampleGGX(float2 xi, float roughness, float3 n) {
 float ImportanceSampleGGXPDF(float3 wi, float roughness, float3 n, float3 v) {
 	float3 h = normalize(wi + v);
 
-	float NdotH = max(dot(n, h), 0.0f);
-	float VdotH = max(dot(v, h), 0.0f);
+	BxDFContext context;
+	context.NdotH = max(dot(n, h), 0.0f);
+	context.VdotH = max(dot(v, h), 0.0f);
 	
-	float d = D_GGX(NdotH, roughness);
+	float d = D_GGX(context, roughness);
 
-	return (d * NdotH) * rcp(4.0f * max(VdotH, kEpsilon));
+	return (d * context.NdotH) * rcp(4.0f * max(context.VdotH, kEpsilon));
+}
+
+float3 FibonacciSpiral(uint i, uint n) {
+	/* #reference
+	 - https://www.cmu.edu/biolphys/deserno/pdf/sphere_equi.pdf
+	*/
+
+	static const float kGoldenAngle = 2.399963229728653f; //!< kPi * (3.0f - sqrt(5.0f))
+
+	const float y = 1.0f - (2.0f * i + 1.0f) * rcp(n);
+	const float r = sqrt(1.0f - y * y);
+
+	float phi = i * kGoldenAngle;
+
+	const float x = r * cos(phi);
+	const float z = r * sin(phi);
+
+	return float3(x, y, z);
+
 }

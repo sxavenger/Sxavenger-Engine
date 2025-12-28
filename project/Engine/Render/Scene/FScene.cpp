@@ -152,6 +152,7 @@ void FScene::SetupTopLevelAS(const DirectXQueueContext* context) {
 void FScene::SetupStateObject() {
 	// TopLevelASに設定
 	FRenderCore::GetInstance()->GetRestir()->UpdateShaderTable(&topLevelAS_);
+	FRenderCore::GetInstance()->GetProbe()->UpdateShaderTable(&topLevelAS_); //!< HACK
 }
 
 void FScene::SetupLightContainer() {

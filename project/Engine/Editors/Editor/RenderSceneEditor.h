@@ -177,9 +177,10 @@ private:
 
 	bool isMoveCamera_ = false;
 
-	//* grid *//
+	//* draw primitive *//
 
-	bool isRenderGrid_ = true;
+	bool isRenderGrid_  = true;
+	bool isRenderProbe_ = false;
 
 	//* imgui *//
 

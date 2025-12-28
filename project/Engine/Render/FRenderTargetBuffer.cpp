@@ -19,6 +19,7 @@ void FRenderTargetBuffer::Create(const Vector2ui& size) {
 
 	deferred_.Init(size_);
 	lighting_.Init(size_);
+	probe_.Init();
 	main_.Init(size_);
 
 	depth_ = std::make_unique<FDepthTexture>();

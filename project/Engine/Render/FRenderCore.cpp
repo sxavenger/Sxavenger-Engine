@@ -23,6 +23,9 @@ void FRenderCore::Init() {
 	restir_ = std::make_unique<FRenderCoreRestir>();
 	restir_->Init();
 
+	probe_ = std::make_unique<FRenderCoreProbe>();
+	probe_->Init();
+
 	canvas_ = std::make_unique<FRenderCoreCanvas>();
 	canvas_->Init();
 
@@ -42,6 +45,7 @@ void FRenderCore::Term() {
 	geometry_.reset();
 	light_.reset();
 	restir_.reset();
+	probe_.reset();
 	canvas_.reset();
 	process_.reset();
 	transition_.reset();

@@ -11,16 +11,6 @@ SXAVENGER_ENGINE_USING
 #include <Lib/Adapter/Random/Random.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// Seed structure methods
-////////////////////////////////////////////////////////////////////////////////////////////
-
-void FRenderCoreRestir::Seed::Set() {
-	std::generate(seed.begin(), seed.end(), []() {
-		return Random::UniformDistribution<uint32_t>(std::numeric_limits<uint32_t>::min(), std::numeric_limits<uint32_t>::max());
-	});
-}
-
-////////////////////////////////////////////////////////////////////////////////////////////
 // FRenderCoreRestir class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -168,7 +158,7 @@ void FRenderCoreRestir::CreateContext() {
 		desc.SetVirtualSRV(9, 1, 2); //!< gDirectionalLights
 
 		// Point Light
-		desc.SetVirtualCBV(10, 1, 2);  //!< gPointLightCount
+		desc.SetVirtualCBV(10, 1, 2); //!< gPointLightCount
 		desc.SetVirtualSRV(11, 2, 2); //!< gPointLightTransforms
 		desc.SetVirtualSRV(12, 3, 2); //!< gPointLights
 
@@ -207,7 +197,7 @@ void FRenderCoreRestir::CreatePipeline() {
 	CreateComputePipeline(Process::Reset,        kDirectory / "RestirReset.cs.hlsl");
 	CreateComputePipeline(Process::Temporal,     kDirectory / "RestirTemporal.cs.hlsl");
 	CreateComputePipeline(Process::Spatial,      kDirectory / "RestirSpatial.cs.hlsl");
-	CreateComputePipeline(Process::Texture,      kDirectory / "RestirTexture.cs.hlsl");
+	CreateComputePipeline(Process::Texture,     kDirectory / "RestirTexture.cs.hlsl");
 	CreateComputePipeline(Process::EdgeStopping, kDirectory / "EdgeStopping.cs.hlsl");
 }
 

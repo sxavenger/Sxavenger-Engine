@@ -115,8 +115,6 @@ void AssetEditor::ShowAssetWindow() {
 		ImGui::PopStyleColor();
 	}
 
-	ImGui::DragFloat("icon size", &iconSize_, 1.0f, 16.0f, 128.0f, "%.0f px", ImGuiSliderFlags_AlwaysClamp);
-
 	ImGui::End();
 	ImGui::PopStyleVar();
 

@@ -510,12 +510,6 @@
     <ClInclude Include="Engine\Module\Pipeline\CustomGraphicsPipeline.h">
       <Filter>Engine\Module\Pipeline</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Module\Scene\SceneObject.h">
-      <Filter>Engine\Module\Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Module\Scene\SceneObjects.h">
-      <Filter>Engine\Module\Scene</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\Render\Common\FBaseTexture.h">
       <Filter>Engine\Render\Common</Filter>
     </ClInclude>
@@ -856,6 +850,9 @@
       <Filter>externals\meshoptimizer</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Execution\ExampleGameLoop.h" />
+    <ClInclude Include="Engine\Render\GBuffer\FProbeGBuffer.h" />
+    <ClInclude Include="Engine\Render\Core\FRenderCoreProbe.h" />
+    <ClInclude Include="Engine\Module\Actor\ControllableCameraActor.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\Assets\Asset\AssetAnimation.cpp">
@@ -1130,12 +1127,6 @@
     </ClCompile>
     <ClCompile Include="Engine\Module\Pipeline\CustomGraphicsPipeline.cpp">
       <Filter>Engine\Module\Pipeline</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\Module\Scene\SceneObject.cpp">
-      <Filter>Engine\Module\Scene</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\Module\Scene\SceneObjects.cpp">
-      <Filter>Engine\Module\Scene</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Render\Common\FBaseTexture.cpp">
       <Filter>Engine\Render\Common</Filter>
@@ -1445,5 +1436,8 @@
     </ClCompile>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Engine\Execution\ExampleGameLoop.cpp" />
+    <ClCompile Include="Engine\Render\GBuffer\FProbeGBuffer.cpp" />
+    <ClCompile Include="Engine\Render\Core\FRenderCoreProbe.cpp" />
+    <ClCompile Include="Engine\Module\Actor\ControllableCameraActor.cpp" />
   </ItemGroup>
 </Project>

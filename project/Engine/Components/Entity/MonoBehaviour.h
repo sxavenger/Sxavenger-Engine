@@ -46,6 +46,14 @@ public:
 	using Hierarchy = std::unordered_set<BehaviourAddress, BehaviourAddress::Hash, BehaviourAddress::Hash>;
 	// TODO: orderが必要ならlistに変更, iterator管理も必要
 
+	////////////////////////////////////////////////////////////////////////////////////////////
+	// Mobility enum class
+	////////////////////////////////////////////////////////////////////////////////////////////
+	enum class Mobility : uint8_t {
+		Static,
+		Movable
+	};
+
 public:
 
 	//=========================================================================================
@@ -55,11 +63,15 @@ public:
 	MonoBehaviour();
 	~MonoBehaviour();
 
-	//* behaviour option *//
+	//* status option *//
 
 	void SetActive(bool isActive);
 
 	bool IsActive() const { return isActive_; }
+
+	void SetMobility(Mobility mobility) { mobility_ = mobility; }
+
+	Mobility GetMobility() const { return mobility_; }
 
 	void SetRenamable(bool isRenamable);
 
@@ -200,21 +212,26 @@ private:
 	// private variables
 	//=========================================================================================
 
-	//* name
+	//* status *//
+
 	std::string name_ = "new behaviour";
 	bool isRenamable_ = true; //!< systemとして使われない限りtrue.
 
-	//* flag
 	bool isActive_ = true;
 
-	//* components
+	Mobility mobility_ = Mobility::Movable;
+
+	//* components *//
+
 	Components components_;
 
-	//* hierarchy
+	//* hierarchy *//
+
 	BehaviourAddress parent_ = nullptr;
 	Hierarchy children_;
 
-	//* inspectable
+	//* inspectable *//
+
 	std::function<void()> inspectable_ = nullptr;
 
 	//=========================================================================================

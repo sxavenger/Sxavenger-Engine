@@ -213,6 +213,17 @@ void StateObjectContext::DispatchRays(DxObject::CommandContext* context, const V
 	context->GetCommandList()->DispatchRays(&desc);
 }
 
+void StateObjectContext::DispatchRays(DxObject::CommandContext* context, const Vector3ui& size) const {
+
+	D3D12_DISPATCH_RAYS_DESC desc = dispatchDesc_;
+	desc.Width  = size.x;
+	desc.Height = size.y;
+	desc.Depth  = size.z;
+
+	context->GetCommandList()->DispatchRays(&desc);
+
+}
+
 void StateObjectContext::BindDXGILibrarySubobject(CD3DX12_STATE_OBJECT_DESC& desc) {
 
 	//!< blobごとにexportを仕分け

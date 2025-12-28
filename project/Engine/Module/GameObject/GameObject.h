@@ -31,7 +31,7 @@ public:
 	GameObject(const std::string& name);
 	GameObject(BehaviourAddress&& address) : address_(std::move(address)) {}
 
-	~GameObject();
+	virtual ~GameObject();
 
 	//* operator [access] *//
 
@@ -41,10 +41,10 @@ public:
 
 	MonoBehaviour* GetBehaviour() const { return address_.Get(); }
 
-private:
+protected:
 
 	//=========================================================================================
-	// private variables
+	// protected variables
 	//=========================================================================================
 
 	BehaviourAddress address_ = nullptr;

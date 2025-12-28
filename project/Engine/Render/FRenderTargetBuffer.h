@@ -4,12 +4,13 @@
 // include
 //-----------------------------------------------------------------------------------------
 //* render
-#include "GBuffer/FDeferredGBuffer.h"
-#include "GBuffer/FLightingGBuffer.h"
-#include "GBuffer/FMainGBuffer.h"
 #include "Common/FDepthTexture.h"
 #include "Common/FProcessTexture.h"
 #include "Common/FPriorityTexture.h"
+#include "GBuffer/FDeferredGBuffer.h"
+#include "GBuffer/FLightingGBuffer.h"
+#include "GBuffer/FProbeGBuffer.h"
+#include "GBuffer/FMainGBuffer.h"
 
 //* engine
 #include <Engine/Foundation.h>
@@ -74,6 +75,8 @@ public:
 
 	FLightingGBuffer& GetLightingGBuffer() { return lighting_; }
 
+	FProbeGBuffer& GetProbeGBuffer() { return probe_; }
+
 	FMainGBuffer& GetMainGBuffer() { return main_; }
 
 	const D3D12_GPU_VIRTUAL_ADDRESS& GetIndexBufferAddress() const;
@@ -102,6 +105,7 @@ private:
 
 	FDeferredGBuffer deferred_;
 	FLightingGBuffer lighting_;
+	FProbeGBuffer    probe_;
 	FMainGBuffer     main_;
 
 	//* depth stencil parameter *//

@@ -13,7 +13,6 @@ SXAVENGER_ENGINE_USING
 #include <Engine/Components/Component/Audio/AudioController.h>
 #include <Engine/Components/Component/ComponentHelper.h>
 #include <Engine/Components/Entity/MonoBehaviourStorage.h>
-#include <Engine/Module/Scene/SceneObjects.h>
 #include <Engine/Render/FRenderCore.h>
 #include <Engine/Render/FMainRender.h>
 
@@ -66,8 +65,6 @@ void EngineExecution::SetProcess(Execution::Context* context) {
 	context->SetProcess(Execution::Process::Term, std::nullopt, [this]() {
 		FMainRender::GetInstance()->Term();
 		FRenderCore::GetInstance()->Term();
-
-		sSceneObjects->Clear();
 
 		sAssetStorage->Serialize();
 

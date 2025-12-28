@@ -15,7 +15,6 @@ SXAVENGER_ENGINE_USING
 #include <Engine/Assets/Content/ContentStorage.h>
 #include <Engine/Components/Entity/MonoBehaviourStorage.h>
 #include <Engine/Components/Entity/BehaviourHelper.h>
-#include <Engine/Module/Scene/SceneObjects.h>
 
 //* external
 #include <imgui.h>
@@ -33,6 +32,9 @@ void HierarchyEditor::ShowMainMenu() {
 
 void HierarchyEditor::ShowWindow() {
 	ShowHierarchyWindow();
+}
+
+void HierarchyEditor::LateUpdate() {
 }
 
 void HierarchyEditor::ShowHierarchyMenu() {
@@ -56,7 +58,8 @@ void HierarchyEditor::ShowActorMenu() {
 		ImGui::Separator();
 
 		if (ImGui::MenuItem("Behaviour")) {
-			sSceneObjects->AddObject(BehaviourHelper::CreateTransformBehaviour());
+			BehaviourAddress address = BehaviourHelper::CreateTransformBehaviour();
+			address->SetMobility(MonoBehaviour::Mobility::Static);
 		}
 
 		ImGui::Dummy({ 0, 4 });
@@ -65,15 +68,18 @@ void HierarchyEditor::ShowActorMenu() {
 		ImGui::Separator();
 
 		if (ImGui::MenuItem("Directional Light")) {
-			sSceneObjects->AddObject(BehaviourHelper::CreateDirectionalLightBehaviour());
+			BehaviourAddress address = BehaviourHelper::CreateDirectionalLightBehaviour();
+			address->SetMobility(MonoBehaviour::Mobility::Static);
 		}
 
 		if (ImGui::MenuItem("Point Light")) {
-			sSceneObjects->AddObject(BehaviourHelper::CreatePointLightBehaviour());
+			BehaviourAddress address =  BehaviourHelper::CreatePointLightBehaviour();
+			address->SetMobility(MonoBehaviour::Mobility::Static);
 		}
 
 		if (ImGui::MenuItem("Spot Light")) {
-			sSceneObjects->AddObject(BehaviourHelper::CreateSpotLightBehaviour());
+			BehaviourAddress address = BehaviourHelper::CreateSpotLightBehaviour();
+			address->SetMobility(MonoBehaviour::Mobility::Static);
 		}
 
 		ImGui::EndMenu();
@@ -94,7 +100,8 @@ void HierarchyEditor::ShowSceneMenu() {
 			);
 
 			if (filepath.has_value()) {
-				sSceneObjects->InputJson(JsonHandler::LoadFromJson(filepath.value()));
+				sMonoBehaviourStorage->ClearStaticBehaviours();
+				sMonoBehaviourStorage->InputJson(JsonHandler::LoadFromJson(filepath.value()));
 			}
 
 			RuntimeLogger::LogComment("[HierarchyEditor]", "load scene.");
@@ -112,14 +119,17 @@ void HierarchyEditor::ShowSceneMenu() {
 			);
 
 			if (filepath.has_value()) {
-				sSceneObjects->OutputJson(filepath.value());
+				JsonHandler::WriteToJson(
+					filepath.value(),
+					sMonoBehaviourStorage->PerseToJson()
+				);
 			}
 
 			RuntimeLogger::LogComment("[HierarchyEditor]", "save scene.");
 		}
 
 		if (ImGui::Button("clear")) {
-			sSceneObjects->Clear();
+			sMonoBehaviourStorage->ClearStaticBehaviours();
 			RuntimeLogger::LogComment("[HierarchyEditor]", "clear scene.");
 		}
 
@@ -172,8 +182,7 @@ void HierarchyEditor::ShowHierarchyWindow() {
 		sContentStorage->DragAndDropTargetContentFunc<ContentModel>([this](const std::shared_ptr<ContentModel>& content) {
 			BehaviourAddress address = BehaviourHelper::CreateStaticMeshBehaviour(content);
 			address->SetName(content->GetFilepath().stem().generic_string());
-
-			sSceneObjects->AddObject(std::move(address));
+			address->SetMobility(MonoBehaviour::Mobility::Static);
 		});
 
 		ImGui::SetCursorScreenPos(contentPos);
@@ -181,15 +190,11 @@ void HierarchyEditor::ShowHierarchyWindow() {
 
 		sContentStorage->DragAndDropTargetContentFunc<ContentScene>([this](const std::shared_ptr<ContentScene>& content) {
 			content->WaitComplete(); // contentの読み込みを待つ
-			sSceneObjects->InputJson(content->GetData());
+			sMonoBehaviourStorage->InputJson(content->GetData());
 		});
 	}
 
 	ImGui::End();
-}
-
-void HierarchyEditor::LateUpdate() {
-	sSceneObjects->Update();
 }
 
 void HierarchyEditor::ForEachBehaviourHierarchy(const MonoBehaviour::Hierarchy& hierarchy, const std::function<void(MonoBehaviour*)>& function) {

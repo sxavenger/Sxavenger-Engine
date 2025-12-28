@@ -25,6 +25,7 @@ SXAVENGER_ENGINE_USING
 #include <Engine/Components/Entity/MonoBehaviour.h>
 #include <Engine/Module/Exporter/TextureExporter.h>
 #include <Engine/Render/FMainRender.h>
+#include <Engine/Render/FRenderCore.h>
 
 //* lib
 #include <Lib/Geometry/VectorComparision.h>
@@ -121,6 +122,37 @@ void RenderSceneEditor::Render() {
 
 	if (isRenderGrid_) {
 		Graphics::PushGrid(camera->GetCamera().world, camera->GetCamera().projInv, { 64, 64 }, 64);
+	}
+
+	if (isRenderProbe_) {
+		//* debug primitive draw
+
+		FRenderCoreProbe::Config conf = {};
+
+		if (auto c = ComponentHelper::GetCameraComponent(CameraComponent::Tag::Game)) {
+			for (size_t x = 0; x < conf.probeCount.x; ++x) {
+				for (size_t y = 0; y < conf.probeCount.y; ++y) {
+					for (size_t z = 0; z < conf.probeCount.z; ++z) {
+
+						Vector3f offset_count = Vector3f(float(x), float(y), float(z)) - Vector3f(conf.probeCount) / 2.0f;
+						Vector3f probe_position = c->GetPosition().Floor() + offset_count * conf.probeOffset;
+
+						Graphics::PushPoint(
+							probe_position,
+							Color4f(
+								std::lerp(0.1f, 1.0f, float(x) / float(conf.probeCount.x - 1)),
+								std::lerp(0.1f, 1.0f, float(y) / float(conf.probeCount.y - 1)),
+								std::lerp(0.1f, 1.0f, float(z) / float(conf.probeCount.z - 1)),
+								1.0f),
+							2.0f
+						);
+
+					}
+				}
+			}
+		}
+
+		
 	}
 
 	if (isMoveCamera_) {
@@ -353,6 +385,8 @@ void RenderSceneEditor::ShowSceneMenu() {
 		ImGui::Separator();
 
 		ImGui::Checkbox("cull camera", &isDebugCulling_);
+		ImGui::Checkbox("render grid", &isRenderGrid_);
+		ImGui::Checkbox("render probe", &isRenderProbe_);
 
 		// window
 		ImGui::Text("window");

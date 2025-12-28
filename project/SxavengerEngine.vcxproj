@@ -264,12 +264,11 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Engine\Graphics\TextureBuffer\BaseOffscreenTexture.h" />
     <ClInclude Include="Engine\Graphics\TextureBuffer\OffscreenTextureCollection.h" />
     <ClInclude Include="Engine\Graphics\TextureBuffer\UnorderedTexture.h" />
+    <ClInclude Include="Engine\Module\Actor\ControllableCameraActor.h" />
     <ClInclude Include="Engine\Module\Exporter\TextureExporter.h" />
     <ClInclude Include="Engine\Module\GameObject\GameObject.h" />
     <ClInclude Include="Engine\Module\Pipeline\CustomComputePipeline.h" />
     <ClInclude Include="Engine\Module\Pipeline\CustomGraphicsPipeline.h" />
-    <ClInclude Include="Engine\Module\Scene\SceneObject.h" />
-    <ClInclude Include="Engine\Module\Scene\SceneObjects.h" />
     <ClInclude Include="Engine\Render\Common\FBaseTexture.h" />
     <ClInclude Include="Engine\Render\Common\FDepthTexture.h" />
     <ClInclude Include="Engine\Render\Common\FLUTTexture.h" />
@@ -278,6 +277,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Engine\Render\Core\FRenderCoreCanvas.h" />
     <ClInclude Include="Engine\Render\Core\FRenderCoreGeometry.h" />
     <ClInclude Include="Engine\Render\Core\FRenderCoreLight.h" />
+    <ClInclude Include="Engine\Render\Core\FRenderCoreProbe.h" />
     <ClInclude Include="Engine\Render\Core\FRenderCoreProcess.h" />
     <ClInclude Include="Engine\Render\Core\FRenderCoreRestir.h" />
     <ClInclude Include="Engine\Render\Core\FRenderCoreTransition.h" />
@@ -288,6 +288,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Engine\Render\GBuffer\FDeferredGBuffer.h" />
     <ClInclude Include="Engine\Render\GBuffer\FLightingGBuffer.h" />
     <ClInclude Include="Engine\Render\GBuffer\FMainGBuffer.h" />
+    <ClInclude Include="Engine\Render\GBuffer\FProbeGBuffer.h" />
     <ClInclude Include="Engine\Render\Pass\FBaseRenderPass.h" />
     <ClInclude Include="Engine\Render\Pass\FRenderPassAntiAliasing.h" />
     <ClInclude Include="Engine\Render\Pass\FRenderPassCanvas.h" />
@@ -473,12 +474,11 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="Engine\Graphics\TextureBuffer\BaseOffscreenTexture.cpp" />
     <ClCompile Include="Engine\Graphics\TextureBuffer\OffscreenTextureCollection.cpp" />
     <ClCompile Include="Engine\Graphics\TextureBuffer\UnorderedTexture.cpp" />
+    <ClCompile Include="Engine\Module\Actor\ControllableCameraActor.cpp" />
     <ClCompile Include="Engine\Module\Exporter\TextureExporter.cpp" />
     <ClCompile Include="Engine\Module\GameObject\GameObject.cpp" />
     <ClCompile Include="Engine\Module\Pipeline\CustomComputePipeline.cpp" />
     <ClCompile Include="Engine\Module\Pipeline\CustomGraphicsPipeline.cpp" />
-    <ClCompile Include="Engine\Module\Scene\SceneObject.cpp" />
-    <ClCompile Include="Engine\Module\Scene\SceneObjects.cpp" />
     <ClCompile Include="Engine\Render\Common\FBaseTexture.cpp" />
     <ClCompile Include="Engine\Render\Common\FDepthTexture.cpp" />
     <ClCompile Include="Engine\Render\Common\FLUTTexture.cpp" />
@@ -487,6 +487,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="Engine\Render\Core\FRenderCoreCanvas.cpp" />
     <ClCompile Include="Engine\Render\Core\FRenderCoreGeometry.cpp" />
     <ClCompile Include="Engine\Render\Core\FRenderCoreLight.cpp" />
+    <ClCompile Include="Engine\Render\Core\FRenderCoreProbe.cpp" />
     <ClCompile Include="Engine\Render\Core\FRenderCoreProcess.cpp" />
     <ClCompile Include="Engine\Render\Core\FRenderCoreRestir.cpp" />
     <ClCompile Include="Engine\Render\Core\FRenderCoreTransition.cpp" />
@@ -497,6 +498,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="Engine\Render\GBuffer\FDeferredGBuffer.cpp" />
     <ClCompile Include="Engine\Render\GBuffer\FLightingGBuffer.cpp" />
     <ClCompile Include="Engine\Render\GBuffer\FMainGBuffer.cpp" />
+    <ClCompile Include="Engine\Render\GBuffer\FProbeGBuffer.cpp" />
     <ClCompile Include="Engine\Render\Pass\FBaseRenderPass.cpp" />
     <ClCompile Include="Engine\Render\Pass\FRenderPassAntiAliasing.cpp" />
     <ClCompile Include="Engine\Render\Pass\FRenderPassCanvas.cpp" />

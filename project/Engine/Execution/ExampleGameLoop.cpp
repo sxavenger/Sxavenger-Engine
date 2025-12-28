@@ -9,6 +9,7 @@ SXAVENGER_ENGINE_USING
 #include <Engine/System/System.h>
 #include <Engine/Components/Component/Transform/TransformComponent.h>
 #include <Engine/Components/Component/Light/Environment/SkyAtmosphereComponent.h>
+#include <Engine/Components/Component/Light/Environment/SkyLightComponent.h>
 #include <Engine/Components/Component/ComponentHelper.h>
 #include <Engine/Render/FMainRender.h>
 #include <Engine/Editors/EditorEngine.h>
@@ -50,6 +51,9 @@ void ExampleGameLoop::InitSystem() {
 	atmosphere_ = std::make_unique<GameObject>();
 	(*atmosphere_)->AddComponent<TransformComponent>();
 	(*atmosphere_)->AddComponent<SkyAtmosphereComponent>();
+	(*atmosphere_)->AddComponent<SkyLightComponent>();
+
+	camera_ = std::make_unique<ControllableCameraActor>();
 
 }
 
@@ -65,6 +69,8 @@ void ExampleGameLoop::UpdateSystem() {
 	(*atmosphere_)->GetComponent<SkyAtmosphereComponent>()->UpdateTransmittance(System::GetDirectQueueContext());
 	(*atmosphere_)->GetComponent<SkyAtmosphereComponent>()->UpdateMultipleScattering(System::GetDirectQueueContext());
 	(*atmosphere_)->GetComponent<SkyAtmosphereComponent>()->UpdateSkyCube(System::GetDirectQueueContext());
+
+	camera_->Update();
 
 	//-----------------------------------------------------------------------------------------
 	// SystemUpdate...?

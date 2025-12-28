@@ -60,15 +60,16 @@ BehaviourAddress BehaviourHelper::CreateCameraBehaviour() {
 void BehaviourHelper::CreateDirectionalLightBehaviour(const BehaviourAddress& address) {
 	address->AddComponent<TransformComponent>();
 	address->AddComponent<DirectionalLightComponent>();
-
-	// 初期値の設定
-	auto transform = address->GetComponent<TransformComponent>();
-	transform->rotate = Quaternion::AxisAngle(Vector3f{ 1.0f, 0.1f, 0.0f }.Normalize(), kPi / 2.0f);
 }
 
 BehaviourAddress BehaviourHelper::CreateDirectionalLightBehaviour() {
 	BehaviourAddress address = BehaviourHelper::Create("directional light");
 	BehaviourHelper::CreateDirectionalLightBehaviour(address);
+
+	// 初期値の設定
+	auto transform = address->GetComponent<TransformComponent>();
+	transform->rotate = Quaternion::AxisAngle(Vector3f{ 1.0f, 0.1f, 0.0f }.Normalize(), kPi / 2.2f);
+
 	return address;
 }
 

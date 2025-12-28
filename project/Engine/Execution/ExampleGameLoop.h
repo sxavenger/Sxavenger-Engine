@@ -10,6 +10,7 @@
 #include <Engine/Foundation.h>
 #include <Engine/System/DirectX/Context/DirectXWindowContext.h>
 #include <Engine/Module/GameObject/GameObject.h>
+#include <Engine/Module/Actor/ControllableCameraActor.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Sxavenger Engine namespace
@@ -44,6 +45,7 @@ private:
 	//* gameobject *//
 
 	std::unique_ptr<GameObject> atmosphere_;
+	std::unique_ptr<ControllableCameraActor> camera_;
 
 	//=========================================================================================
 	// private methods

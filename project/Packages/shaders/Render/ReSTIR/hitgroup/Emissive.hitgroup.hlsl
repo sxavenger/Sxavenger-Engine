@@ -66,7 +66,7 @@ struct Surface {
 ////////////////////////////////////////////////////////////////////////////////////////////
 // anyhit main entry point
 ////////////////////////////////////////////////////////////////////////////////////////////
-_ANYHIT void mainEmissiveAnyhit(inout Payload payload, in Attribute attribute) {
+ANYHIT void mainEmissiveAnyhit(inout Payload payload, in Attribute attribute) {
 
 	MeshVertex vertex = GetWorldVertex(attribute);
 
@@ -82,7 +82,7 @@ _ANYHIT void mainEmissiveAnyhit(inout Payload payload, in Attribute attribute) {
 ////////////////////////////////////////////////////////////////////////////////////////////
 // closesthit main entry point
 ////////////////////////////////////////////////////////////////////////////////////////////
-_CLOSESTHIT void mainEmissiveClosesthit(inout Payload payload, in Attribute attribute) {
+CLOSESTHIT void mainEmissiveClosesthit(inout Payload payload, in Attribute attribute) {
 
 	Surface surface;
 	surface.GetSurface(attribute);

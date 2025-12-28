@@ -13,6 +13,7 @@ SXAVENGER_ENGINE_USING
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 void MonoBehaviourStorage::Term() {
+	ClearStaticBehaviours();
 	UnregisterBehaviour();
 
 	if (!behaviours_.empty()) {
@@ -52,6 +53,13 @@ void MonoBehaviourStorage::PushUnregisterQueue(BehaviourAddress& address) {
 	StreamLogger::EngineLog(std::format("[MonoBehaviourStorage] pushed behaviour unregister queue. address: 0x{:x}", value));
 }
 
+void MonoBehaviourStorage::PushUnregisterQueue(uintptr_t address) {
+	StreamLogger::AssertA(behaviours_.contains(address), std::format("behaviour address not found. address: 0x{:x}", address));
+
+	unregister_.emplace(address);
+	StreamLogger::EngineLog(std::format("[MonoBehaviourStorage] pushed behaviour unregister queue. (address emplace) address: 0x{:x}", address));
+}
+
 void MonoBehaviourStorage::UnregisterBehaviour() {
 	while (!unregister_.empty()) {
 		uintptr_t address = unregister_.front();
@@ -86,6 +94,34 @@ void MonoBehaviourStorage::ForEachRootOnly(const std::function<void(MonoBehaviou
 	for (const auto& root : behaviours_ | std::views::values | std::views::filter([](const std::unique_ptr<MonoBehaviour>& behaviour) { return !behaviour->HasParent(); })) {
 		function(root.get());
 	}
+}
+
+void MonoBehaviourStorage::ClearStaticBehaviours() {
+	for (const auto& [address, behaviour] : behaviours_) {
+		if (behaviour->GetMobility() == MonoBehaviour::Mobility::Static) {
+			unregister_.emplace(address);
+		}
+	}
+}
+
+void MonoBehaviourStorage::InputJson(const json& data) {
+	for (const auto& behaviourData : data) {
+		BehaviourAddress address = RegisterBehaviour();
+		address->InputJson(behaviourData);
+		address->SetMobility(MonoBehaviour::Mobility::Static);
+	}
+}
+
+json MonoBehaviourStorage::PerseToJson() const {
+	json root = json::array();
+
+	for (const auto& [address, behaviour] : behaviours_) {
+		if (behaviour->GetMobility() == MonoBehaviour::Mobility::Static) {
+			root.emplace_back(behaviour->PerseToJson());
+		}
+	}
+
+	return root;
 }
 
 MonoBehaviourStorage* MonoBehaviourStorage::GetInstance() {

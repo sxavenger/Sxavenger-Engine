@@ -35,6 +35,7 @@ public:
 	BehaviourAddress RegisterBehaviour();
 
 	void PushUnregisterQueue(BehaviourAddress& address);
+	void PushUnregisterQueue(uintptr_t address); //!< Warning: 内部でのみ使用する.
 
 	void UnregisterBehaviour();
 
@@ -47,6 +48,14 @@ public:
 	void ForEachRoot(const std::function<void(MonoBehaviour*)>& function) const;
 
 	void ForEachRootOnly(const std::function<void(MonoBehaviour*)>& function) const;
+
+	//* static behaviour option *//
+
+	void ClearStaticBehaviours();
+
+	void InputJson(const json& data);
+
+	json PerseToJson() const;
 
 	//* singleton *//
 

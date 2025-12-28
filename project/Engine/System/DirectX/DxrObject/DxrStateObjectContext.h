@@ -124,6 +124,7 @@ public:
 	void SetStateObject(DxObject::CommandContext* context) const;
 
 	void DispatchRays(DxObject::CommandContext* context, const Vector2ui& size) const;
+	void DispatchRays(DxObject::CommandContext* context, const Vector3ui& size) const;
 
 private:
 
