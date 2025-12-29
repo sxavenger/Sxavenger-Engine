@@ -65,10 +65,10 @@ public:
 		// public variables
 		//=========================================================================================
 
-		Vector3ui probeCount = Vector3ui{ 8, 8, 8 };
+		Vector3ui probeCount = Vector3ui{ 12, 12, 12 };
 		uint32_t sampleCount = 16;
 		Vector2ui resolution = Vector2ui{ 16, 16 };
-		float probeOffset    = 4.0f;
+		float probeOffset    = 2.0f;
 		float hysteresis     = 0.85f;  // [0.85, 0.98]
 
 	};
