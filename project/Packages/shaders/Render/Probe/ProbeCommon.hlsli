@@ -36,6 +36,7 @@ struct ProbeCage {
 	//=========================================================================================
 
 	uint3 probeIndices[8];
+	float weight[8];
 
 	//=========================================================================================
 	// public methods
@@ -57,6 +58,21 @@ struct ProbeCage {
 		float3 grid_pos = relative_position / config.probeOffset + float3(config.probeCount) / 2.0f;
 		uint3 base_index = (uint3)floor(grid_pos);
 
+		float3 cellMinProbePos =
+			base_position +
+			(float3(base_index) - float3(config.probeCount) / 2.0f)
+			* config.probeOffset;
+
+		float3 t = (surface_position - cellMinProbePos) / config.probeOffset;
+		t = saturate(t);
+
+		float wx0 = 1.0f - t.x;
+		float wx1 = t.x;
+		float wy0 = 1.0f - t.y;
+		float wy1 = t.y;
+		float wz0 = 1.0f - t.z;
+		float wz1 = t.z;
+
 		// 8 頂点（2x2x2）
 		uint idx = 0;
 		[unroll]
@@ -66,13 +82,19 @@ struct ProbeCage {
 				[unroll]
 				for (uint x = 0; x < 2; ++x) {
 					uint3 probe_index = base_index + uint3(x, y, z);
-
-					// グリッド境界チェック
 					if (any(probe_index >= config.probeCount)) {
 						return false;
 					}
 
-					cage.probeIndices[idx++] = probe_index;
+					cage.probeIndices[idx] = probe_index;
+
+					float wx = (x == 0) ? wx0 : wx1;
+					float wy = (y == 0) ? wy0 : wy1;
+					float wz = (z == 0) ? wz0 : wz1;
+
+					cage.weight[idx] = wx * wy * wz;
+
+					++idx;
 				}
 			}
 		}

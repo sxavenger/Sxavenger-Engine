@@ -1,0 +1,440 @@
+[
+	{
+		"children": [
+			{
+				"children": [
+					{
+						"children": [],
+						"components": [
+							{
+								"component": "class SxxEngine::TransformComponent",
+								"transform": {
+									"rotate": {
+										"w": 1.0,
+										"x": -0.0,
+										"y": -0.0,
+										"z": 0.0
+									},
+									"scale": {
+										"x": 1.0,
+										"y": 1.0,
+										"z": 1.0
+									},
+									"translate": {
+										"x": 0.0,
+										"y": 0.0,
+										"z": -0.0
+									}
+								}
+							},
+							{
+								"component": "class SxxEngine::MeshRendererComponent",
+								"isEnable": true,
+								"mask": 255,
+								"material": "d849072e-c8e3-4bae-9f63caff5e184520",
+								"mesh": "521be6f1-a94e-4edf-b25e540a07a80497",
+								"stencil": 0
+							}
+						],
+						"isActive": true,
+						"isRenamable": true,
+						"name": "area_light"
+					},
+					{
+						"children": [],
+						"components": [
+							{
+								"component": "class SxxEngine::TransformComponent",
+								"transform": {
+									"rotate": {
+										"w": 1.0,
+										"x": -0.0,
+										"y": -0.0,
+										"z": 0.0
+									},
+									"scale": {
+										"x": 1.0,
+										"y": 1.0,
+										"z": 1.0
+									},
+									"translate": {
+										"x": 0.0,
+										"y": 0.0,
+										"z": -0.0
+									}
+								}
+							},
+							{
+								"component": "class SxxEngine::MeshRendererComponent",
+								"isEnable": true,
+								"mask": 255,
+								"material": "570eb925-8aee-4169-96eae56f323f837a",
+								"mesh": "32d520ea-0366-4320-9338e1eb1ad424f3",
+								"stencil": 0
+							}
+						],
+						"isActive": true,
+						"isRenamable": true,
+						"name": "back_wall"
+					},
+					{
+						"children": [],
+						"components": [
+							{
+								"component": "class SxxEngine::TransformComponent",
+								"transform": {
+									"rotate": {
+										"w": 1.0,
+										"x": -0.0,
+										"y": -0.0,
+										"z": 0.0
+									},
+									"scale": {
+										"x": 1.0,
+										"y": 1.0,
+										"z": 1.0
+									},
+									"translate": {
+										"x": 0.0,
+										"y": 0.0,
+										"z": -0.0
+									}
+								}
+							},
+							{
+								"component": "class SxxEngine::MeshRendererComponent",
+								"isEnable": true,
+								"mask": 255,
+								"material": "09f76d30-c774-4924-9a087748b44c2908",
+								"mesh": "1828a72c-f5bd-4500-ab65b833a5843680",
+								"stencil": 0
+							}
+						],
+						"isActive": true,
+						"isRenamable": true,
+						"name": "left_wall"
+					},
+					{
+						"children": [],
+						"components": [
+							{
+								"component": "class SxxEngine::TransformComponent",
+								"transform": {
+									"rotate": {
+										"w": 1.0,
+										"x": -0.0,
+										"y": -0.0,
+										"z": 0.0
+									},
+									"scale": {
+										"x": 1.0,
+										"y": 1.0,
+										"z": 1.0
+									},
+									"translate": {
+										"x": 0.0,
+										"y": 0.0,
+										"z": -0.0
+									}
+								}
+							},
+							{
+								"component": "class SxxEngine::MeshRendererComponent",
+								"isEnable": true,
+								"mask": 255,
+								"material": "570eb925-8aee-4169-96eae56f323f837a",
+								"mesh": "5443c363-8ee0-4247-aa11b049a86dc7bb",
+								"stencil": 0
+							}
+						],
+						"isActive": true,
+						"isRenamable": true,
+						"name": "short_box"
+					},
+					{
+						"children": [],
+						"components": [
+							{
+								"component": "class SxxEngine::TransformComponent",
+								"transform": {
+									"rotate": {
+										"w": 1.0,
+										"x": -0.0,
+										"y": -0.0,
+										"z": 0.0
+									},
+									"scale": {
+										"x": 1.0,
+										"y": 1.0,
+										"z": 1.0
+									},
+									"translate": {
+										"x": 0.0,
+										"y": 0.0,
+										"z": -0.0
+									}
+								}
+							},
+							{
+								"component": "class SxxEngine::MeshRendererComponent",
+								"isEnable": true,
+								"mask": 255,
+								"material": "570eb925-8aee-4169-96eae56f323f837a",
+								"mesh": "acc2b0a6-948d-4da4-9451e8a20828d367",
+								"stencil": 0
+							}
+						],
+						"isActive": true,
+						"isRenamable": true,
+						"name": "floor"
+					},
+					{
+						"children": [],
+						"components": [
+							{
+								"component": "class SxxEngine::TransformComponent",
+								"transform": {
+									"rotate": {
+										"w": 1.0,
+										"x": -0.0,
+										"y": -0.0,
+										"z": 0.0
+									},
+									"scale": {
+										"x": 1.0,
+										"y": 1.0,
+										"z": 1.0
+									},
+									"translate": {
+										"x": 0.0,
+										"y": 0.0,
+										"z": -0.0
+									}
+								}
+							},
+							{
+								"component": "class SxxEngine::MeshRendererComponent",
+								"isEnable": true,
+								"mask": 255,
+								"material": "570eb925-8aee-4169-96eae56f323f837a",
+								"mesh": "4c09e129-dc68-46da-9eada3a112baac43",
+								"stencil": 0
+							}
+						],
+						"isActive": true,
+						"isRenamable": true,
+						"name": "ceiling"
+					},
+					{
+						"children": [],
+						"components": [
+							{
+								"component": "class SxxEngine::TransformComponent",
+								"transform": {
+									"rotate": {
+										"w": 1.0,
+										"x": -0.0,
+										"y": -0.0,
+										"z": 0.0
+									},
+									"scale": {
+										"x": 1.0,
+										"y": 1.0,
+										"z": 1.0
+									},
+									"translate": {
+										"x": 0.0,
+										"y": 0.0,
+										"z": -0.0
+									}
+								}
+							},
+							{
+								"component": "class SxxEngine::MeshRendererComponent",
+								"isEnable": true,
+								"mask": 255,
+								"material": "2aeb0d98-7de5-49ce-ae69813574d737da",
+								"mesh": "d8205398-0ebd-4b92-baf7d1cd999fd283",
+								"stencil": 0
+							}
+						],
+						"isActive": true,
+						"isRenamable": true,
+						"name": "right_wall"
+					},
+					{
+						"children": [],
+						"components": [
+							{
+								"component": "class SxxEngine::TransformComponent",
+								"transform": {
+									"rotate": {
+										"w": 1.0,
+										"x": -0.0,
+										"y": -0.0,
+										"z": 0.0
+									},
+									"scale": {
+										"x": 1.0,
+										"y": 1.0,
+										"z": 1.0
+									},
+									"translate": {
+										"x": 0.0,
+										"y": 0.0,
+										"z": -0.0
+									}
+								}
+							},
+							{
+								"component": "class SxxEngine::MeshRendererComponent",
+								"isEnable": true,
+								"mask": 255,
+								"material": "570eb925-8aee-4169-96eae56f323f837a",
+								"mesh": "417ce4c3-6042-4081-854ab5692e33aa5e",
+								"stencil": 0
+							}
+						],
+						"isActive": true,
+						"isRenamable": true,
+						"name": "tall_box"
+					}
+				],
+				"components": [
+					{
+						"component": "class SxxEngine::TransformComponent",
+						"transform": {
+							"rotate": {
+								"w": 1.0,
+								"x": -0.0,
+								"y": -0.0,
+								"z": 0.0
+							},
+							"scale": {
+								"x": 1.0,
+								"y": 1.0,
+								"z": 1.0
+							},
+							"translate": {
+								"x": 0.0,
+								"y": 0.0,
+								"z": -0.0
+							}
+						}
+					}
+				],
+				"isActive": true,
+				"isRenamable": true,
+				"name": "cornell-box.obj"
+			}
+		],
+		"components": [
+			{
+				"component": "class SxxEngine::TransformComponent",
+				"transform": {
+					"rotate": {
+						"w": 1.0,
+						"x": -4.6035935952204454e-07,
+						"y": 3.9692018709052096e-19,
+						"z": -8.621963819982481e-13
+					},
+					"scale": {
+						"x": 4.0,
+						"y": 4.0,
+						"z": 4.0
+					},
+					"translate": {
+						"x": 2.4080967903137207,
+						"y": -10.502874374389648,
+						"z": -12.142541885375977
+					}
+				}
+			}
+		],
+		"isActive": true,
+		"isRenamable": true,
+		"name": "cornell-box"
+	},
+	{
+		"children": [],
+		"components": [
+			{
+				"component": "class SxxEngine::TransformComponent",
+				"transform": {
+					"rotate": {
+						"w": 0.7777525186538696,
+						"x": 0.592479407787323,
+						"y": -0.1669921576976776,
+						"z": 0.127211794257164
+					},
+					"scale": {
+						"x": 1.0,
+						"y": 1.0,
+						"z": 1.0
+					},
+					"translate": {
+						"x": 2.3319454193115234,
+						"y": 0.0,
+						"z": 0.0
+					}
+				}
+			},
+			{
+				"color": {
+					"b": 1.0,
+					"g": 1.0,
+					"r": 1.0
+				},
+				"component": "class SxxEngine::DirectionalLightComponent",
+				"intensity": 10.0,
+				"shadow_flag": 0,
+				"shadow_strength": 1.0
+			}
+		],
+		"isActive": false,
+		"isRenamable": true,
+		"name": "directional light"
+	},
+	{
+		"children": [],
+		"components": [
+			{
+				"component": "class SxxEngine::TransformComponent",
+				"transform": {
+					"rotate": {
+						"w": 1.0,
+						"x": 0.0,
+						"y": 0.0,
+						"z": 0.0
+					},
+					"scale": {
+						"x": 1.0,
+						"y": 1.0,
+						"z": 1.0
+					},
+					"translate": {
+						"x": 1.2552127838134766,
+						"y": 5.980274200439453,
+						"z": 0.0
+					}
+				}
+			},
+			{
+				"color": {
+					"b": 1.0,
+					"g": 1.0,
+					"r": 1.0
+				},
+				"component": "class SxxEngine::PointLightComponent",
+				"intensity": 2000.0,
+				"radius": 65.0999984741211,
+				"shadow_flag": 16,
+				"shadow_strength": 1.0,
+				"unit": "Candela"
+			}
+		],
+		"isActive": true,
+		"isRenamable": true,
+		"name": "point light"
+	}
+]

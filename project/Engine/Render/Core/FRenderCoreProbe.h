@@ -10,6 +10,7 @@
 #include <Engine/System/DirectX/DxrObject/DxrRaytracingBlob.h>
 #include <Engine/System/DirectX/DxrObject/DxrStateObjectContext.h>
 #include <Engine/Module/Pipeline/CustomComputePipeline.h>
+#include <Engine/Module/Pipeline/CustomGraphicsPipeline.h>
 
 //* lib
 #include <Lib/Geometry/Vector2.h>
@@ -64,9 +65,9 @@ public:
 		// public variables
 		//=========================================================================================
 
-		Vector3ui probeCount = Vector3ui{ 12, 12, 12 };
-		uint32_t sampleCount = 32;
-		Vector2ui resolution = Vector2ui{ 8, 8 };
+		Vector3ui probeCount = Vector3ui{ 8, 8, 8 };
+		uint32_t sampleCount = 16;
+		Vector2ui resolution = Vector2ui{ 16, 16 };
 		float probeOffset    = 4.0f;
 		float hysteresis     = 0.85f;  // [0.85, 0.98]
 
@@ -109,6 +110,14 @@ public:
 	void Dispatch(const DirectXQueueContext* context, const Vector2ui& size) const;
 	void Dispatch(const DirectXQueueContext* context, const Vector3ui& size) const;
 
+	//* graphics pipeline option *//
+
+	void SetGraphicsPipeline(const DirectXQueueContext* context) const;
+
+	void BindGraphicsBuffer(const DirectXQueueContext* context, const DxObject::BindBufferDesc& desc) const;
+
+	void DrawCall(const DirectXQueueContext* context) const;
+
 private:
 
 	//=========================================================================================
@@ -132,6 +141,8 @@ private:
 	static inline const Vector3ui kThreadGroupSize = Vector3ui(16, 16, 1);
 
 	std::array<std::unique_ptr<CustomReflectionComputePipeline>, magic_enum::enum_count<Process>()> pipelines_;
+
+	std::unique_ptr< CustomReflectionGraphicsPipeline> probeDebugPipeline_;
 
 	//=========================================================================================
 	// private variables

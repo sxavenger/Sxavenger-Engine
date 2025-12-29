@@ -23,32 +23,29 @@ RAYGENERATION void mainRaygeneration() {
 	uint3 probeIndex = dispatchIndex / uint3(Config.probeResolution, 1);
 
 	if (reservoir.m >= Config.sampleCount) {
-		return; //!< sample数が上限に達している場合は終了.
+		return; //!<
 	}
 
 	Reservoir newReservoir = (Reservoir)0;
 
-	{ //!< generate new reservior sample
-
+	{ 
 		float2 xi = Hammersley(reservoir.m, Config.sampleCount);
 		float3 wi = ImportanceSampleCosineWeight(xi, direction);
+		
+		Payload payload = TracePrimaryRay(GetProbePosition(probeIndex, Config, float3(1, 1, 1)), wi);
 
-		Payload payload = TracePrimaryRay(GetProbePosition(probeIndex, Config, gCamera.GetPosition()), wi);
-
-		Sample sample;
-		sample.lo  = payload.lo;
+		Sample sample = (Sample)0;
+		sample.lo  = payload.lo * max(dot(wi, direction), 0.0f);
 		sample.pdf = ImportanceSampleCosineWeightPDF(wi, direction);
 
-		float w = dot(sample.lo, ACES::AP1_RGB2Y) / max(sample.pdf, kEpsilon);
-
-		newReservoir.Update(sample, w, random.Generate1d());
+		newReservoir.Update(sample, dot(sample.lo, ACES::AP1_RGB2Y) / max(sample.pdf, kEpsilon), random.Generate1d());
 	}
 
-	{ //!< temporal reservoir update
+	{
 		float p_hat = dot(newReservoir.sample.lo, ACES::AP1_RGB2Y);
 		float p_q   = newReservoir.sample.pdf;
-		float w     = p_q > 0.0f ? p_hat * rcp(p_q) : 0.0f;
 
+		float w = p_q > 0.0f ? p_hat * rcp(p_q) : 0.0f;
 		reservoir.Update(newReservoir.sample, w, random.Generate1d());
 
 		p_hat = dot(reservoir.sample.lo, ACES::AP1_RGB2Y);

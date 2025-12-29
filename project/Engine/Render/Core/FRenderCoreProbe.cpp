@@ -48,6 +48,24 @@ void FRenderCoreProbe::Dispatch(const DirectXQueueContext* context, const Vector
 	context->GetCommandList()->Dispatch(dispatch.x, dispatch.y, dispatch.z);
 }
 
+void FRenderCoreProbe::SetGraphicsPipeline(const DirectXQueueContext* context) const {
+	probeDebugPipeline_->SetPipeline(context->GetDxCommand());
+}
+
+void FRenderCoreProbe::BindGraphicsBuffer(const DirectXQueueContext* context, const DxObject::BindBufferDesc& desc) const {
+	probeDebugPipeline_->BindGraphicsBuffer(context->GetDxCommand(), desc);
+}
+
+void FRenderCoreProbe::DrawCall(const DirectXQueueContext* context) const {
+
+	Config conf = {};
+
+	const uint32_t kLatitude  = 8;  //!< 緯度分割
+	const uint32_t kLongitude = 16; //!< 経度分割
+
+	context->GetCommandList()->DrawInstanced(kLatitude * kLongitude * 6, conf.probeCount.x * conf.probeCount.y * conf.probeCount.z, 0, 0);
+}
+
 void FRenderCoreProbe::CreateRaygeneration() {
 
 	{ //!< Default
@@ -182,12 +200,39 @@ void FRenderCoreProbe::CreateContext() {
 }
 
 void FRenderCoreProbe::CreatePipeline() {
+	//* process
 	{
 		DxObject::SamplerBindDesc desc = {};
-		desc.SetSamplerLinear("gSampler", DxObject::SamplerMode::MODE_CLAMP);
+		desc.SetSamplerPoint("gSampler", DxObject::SamplerMode::MODE_CLAMP);
 
 		CreateComputePipeline(Process::Update,   kDirectory / "ProbeUpdate.cs.hlsl", desc);
 		CreateComputePipeline(Process::Evaluate, kDirectory / "ProbeEvaluate.cs.hlsl", desc);
+	}
+
+	//* graphics
+	{
+		probeDebugPipeline_ = std::make_unique<CustomReflectionGraphicsPipeline>();
+		probeDebugPipeline_->CreateBlob(kDirectory / "DebugProbe.vs.hlsl", DxObject::GraphicsShaderType::vs);
+		probeDebugPipeline_->CreateBlob(kDirectory / "DebugProbe.ps.hlsl", DxObject::GraphicsShaderType::ps);
+
+		DxObject::SamplerBindDesc sampler = {};
+		sampler.SetSamplerPoint("gSampler", DxObject::SamplerMode::MODE_CLAMP);
+
+		probeDebugPipeline_->ReflectionRootSignature(System::GetDxDevice(), sampler);
+
+		DxObject::GraphicsPipelineDesc desc = {};
+		desc.SetRasterizer(D3D12_CULL_MODE_BACK, D3D12_FILL_MODE_SOLID);
+		desc.SetDepthStencil(true);
+
+		desc.SetBlendMode(0, BlendMode::kBlendModeNormal);
+		desc.SetIndependentBlendEnable(false);
+
+		desc.SetPrimitive(DxObject::PrimitiveType::TrianglList);
+
+		desc.SetRTVFormat(DxObject::kDefaultOffscreenFormat);
+		desc.SetDSVFormat(DxObject::kDefaultDepthFormat);
+
+		probeDebugPipeline_->CreatePipeline(System::GetDxDevice(), desc);
 	}
 	
 }

@@ -115,6 +115,8 @@ void RenderSceneEditor::Render() {
 
 	FMainRender::GetInstance()->GetContext()->Render(context, config_);
 
+	context->BeginEvent(L"RenderSceneEditor | Transparent Render");
+
 	//* Debug Render *//
 	textures_->BeginRenderTargetMainTransparent(context);
 
@@ -129,29 +131,16 @@ void RenderSceneEditor::Render() {
 
 		FRenderCoreProbe::Config conf = {};
 
-		if (auto c = ComponentHelper::GetCameraComponent(CameraComponent::Tag::Game)) {
-			for (size_t x = 0; x < conf.probeCount.x; ++x) {
-				for (size_t y = 0; y < conf.probeCount.y; ++y) {
-					for (size_t z = 0; z < conf.probeCount.z; ++z) {
+		auto core = FRenderCore::GetInstance()->GetProbe();
+		core->SetGraphicsPipeline(context);
 
-						Vector3f offset_count = Vector3f(float(x), float(y), float(z)) - Vector3f(conf.probeCount) / 2.0f;
-						Vector3f probe_position = c->GetPosition().Floor() + offset_count * conf.probeOffset;
+		DxObject::BindBufferDesc desc = {};
+		desc.Set32bitConstants("Config", 8, &conf);
+		desc.SetAddress("gCamera", camera->GetGPUVirtualAddress());
+		desc.SetHandle("gProbeIrradiance", textures_->GetProbeGBuffer().GetGBuffer(FProbeGBuffer::Probe::Irradiance)->GetGPUHandleSRV());
 
-						Graphics::PushPoint(
-							probe_position,
-							Color4f(
-								std::lerp(0.1f, 1.0f, float(x) / float(conf.probeCount.x - 1)),
-								std::lerp(0.1f, 1.0f, float(y) / float(conf.probeCount.y - 1)),
-								std::lerp(0.1f, 1.0f, float(z) / float(conf.probeCount.z - 1)),
-								1.0f),
-							2.0f
-						);
-
-					}
-				}
-			}
-		}
-
+		core->BindGraphicsBuffer(context, desc);
+		core->DrawCall(context);
 		
 	}
 
@@ -162,6 +151,8 @@ void RenderSceneEditor::Render() {
 	Graphics::GetDebugPrimitive()->DrawToScene(context, camera->GetGPUVirtualAddress());
 
 	textures_->EndRenderTargetMainTransparent(context);
+
+	context->EndEvent();
 
 	if (!sceneWindow_.expired()) {
 		auto ptr = sceneWindow_.lock();

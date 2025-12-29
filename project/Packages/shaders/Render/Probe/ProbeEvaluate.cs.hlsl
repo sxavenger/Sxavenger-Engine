@@ -46,7 +46,7 @@ float3 GetProbeIndirect(float3 direction, uint3 probeIndex) {
 
 	float3 irradiance = gProbeIrradiance.SampleLevel(gSampler, float3(probe_uv, probeIndex.z), 0).rgb;
 
-	return lerp(irradiance, color * w, 1.0f - Config.hysteresis);
+	return irradiance;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -68,7 +68,7 @@ void main(uint3 dispatchThreadId : SV_DispatchThreadID) {
 	}
 
 	ProbeCage cage;
-	if (!ProbeCage::GetCage(Config, surface.position, gCamera.GetPosition(), cage)) {
+	if (!ProbeCage::GetCage(Config, surface.position, float3(1, 1, 1), cage)) {
 		gIndirect[pixel] = float4(1.0f, 0.0f, 0.0f, 1.0f);
 		return; //!< プローブ範囲外
 	}
@@ -77,16 +77,15 @@ void main(uint3 dispatchThreadId : SV_DispatchThreadID) {
 	float3 indirect_sum = float3(0.0f, 0.0f, 0.0f);
 
 	for (uint i = 0; i < 8; ++i) {
-		uint3 probeIndex        = cage.probeIndices[i];
-		float3 probePosition    = GetProbePosition(probeIndex, Config, gCamera.GetPosition());
-		float3 probeDirection   = normalize(probePosition - surface.position); //!< Surfaceからprobeへの方向ベクトル
+		uint3 probeIndex       = cage.probeIndices[i];
+		float3 probePosition   = GetProbePosition(probeIndex, Config, float3(1, 1, 1));
+		float3 probeDirection  = normalize(probePosition - surface.position); //!< Surfaceからprobeへの方向ベクトル
 
-		float3 color = GetProbeIndirect(probeDirection, probeIndex);
+		float3 color = GetProbeIndirect(surface.normal, probeIndex);
 
-		float3 weight_dist = 1.0f - abs(probePosition - surface.position) / (Config.probeOffset);
 		float weight_back = max(dot(surface.normal, probeDirection), 0.0f);
 
-		float weight = weight_dist.x * weight_dist.y * weight_dist.z * weight_back;
+		float weight = cage.weight[i];
 
 		indirect_sum += color * weight;
 		weight_sum   += weight;
