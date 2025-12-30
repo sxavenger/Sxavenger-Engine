@@ -27,21 +27,21 @@ void Skeleton::Update(const Animation& animation, TimePointd<TimeUnit::second> t
 }
 
 void Skeleton::TransitionAnimation(
-	const Animation& animationA, TimePointd<TimeUnit::second> timeA, bool isLoopA,
-	const Animation& animationB, TimePointd<TimeUnit::second> timeB, bool isLoopB,
+	const Animation& prevAnimation, TimePointd<TimeUnit::second> prevTime, bool prevIsLoop,
+	const Animation& currAnimation, TimePointd<TimeUnit::second> currTime, bool currIsLoop,
 	float t) {
 
-	if (isLoopA) {
-		timeA = Mod(timeA, animationA.duration);
+	if (prevIsLoop) {
+		prevTime = Mod(prevTime, prevAnimation.duration);
 	}
 
-	if (isLoopB) {
-		timeB = Mod(timeB, animationB.duration);
+	if (currIsLoop) {
+		currTime = Mod(currTime, currAnimation.duration);
 	}
 
 	ApplyTransitionAnimation(
-		animationA, timeA,
-		animationB, timeB,
+		prevAnimation, prevTime,
+		currAnimation, currTime,
 		t
 	);
 
@@ -108,31 +108,31 @@ void Skeleton::ApplyAnimation(const Animation& animation, TimePointd<TimeUnit::s
 }
 
 void Skeleton::ApplyTransitionAnimation(
-	const Animation& animationA, TimePointd<TimeUnit::second> timeA,
-	const Animation& animationB, TimePointd<TimeUnit::second> timeB,
+	const Animation& prevAnimation, TimePointd<TimeUnit::second> prevTime,
+	const Animation& currAnimation, TimePointd<TimeUnit::second> currTime,
 	float t) {
 
 	for (auto& joint : joints) {
 
-		std::optional<QuaternionTransform> transformA = GetTransform(joint.name, animationA, timeA);
-		std::optional<QuaternionTransform> transformB = GetTransform(joint.name, animationB, timeB);
+		std::optional<QuaternionTransform> prevTransform = GetTransform(joint.name, prevAnimation, prevTime);
+		std::optional<QuaternionTransform> currTransform = GetTransform(joint.name, currAnimation, currTime);
 
-		if (!(transformA.has_value() && transformB.has_value())) {
+		if (!(prevTransform.has_value() && currTransform.has_value())) {
 			continue;
 		}
 
 		// 見つからなかった場合, defaultを入れておく
-		if (!transformA.has_value()) {
-			transformA = QuaternionTransform();
+		if (!prevTransform.has_value()) {
+			prevTransform = QuaternionTransform();
 		}
 
-		if (!transformB.has_value()) {
-			transformB = QuaternionTransform();
+		if (!currTransform.has_value()) {
+			currTransform = QuaternionTransform();
 		}
 
-		joint.transform.scale     = Vector3f::Lerp(transformA.value().scale, transformB.value().scale, t);
-		joint.transform.rotate    = Quaternion::Slerp(transformA.value().rotate, transformB.value().rotate, t);
-		joint.transform.translate = Vector3f::Lerp(transformA.value().translate, transformB.value().translate, t);
+		joint.transform.scale     = Vector3f::Lerp(prevTransform.value().scale, currTransform.value().scale, t);
+		joint.transform.rotate    = Quaternion::Slerp(prevTransform.value().rotate, currTransform.value().rotate, t);
+		joint.transform.translate = Vector3f::Lerp(prevTransform.value().translate, currTransform.value().translate, t);
 	}
 }
 

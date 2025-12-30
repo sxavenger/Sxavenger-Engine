@@ -113,6 +113,32 @@ bool KeyboardInput::IsPressAny() const {
 	);
 }
 
+Vector2i KeyboardInput::GetDirection(const std::array<KeyId, 4>& keys) const {
+	if (!IsEnableAcquire(InputType::Main_Current)) {
+		return {};
+	}
+
+	Vector2i direction = {};
+
+	if (IsPress(keys[0])) { // Up
+		direction.y += 1;
+	}
+
+	if (IsPress(keys[1])) { // Down
+		direction.y -= 1;
+	}
+
+	if (IsPress(keys[2])) { // Left
+		direction.x -= 1;
+	}
+
+	if (IsPress(keys[3])) { // Right
+		direction.x += 1;
+	}
+
+	return direction;
+}
+
 void KeyboardInput::SystemDebugGui() {
 	
 	bool isEnableAcquire = IsEnableAcquire(InputType::Main_Current);
@@ -520,8 +546,7 @@ void GamepadInput::AsyncUpdate() {
 	}
 
 	if (current.dwPacketNumber == input.xinput.dwPacketNumber) {
-		//!< 前回と同じ状態
-		return;
+		return; //!< 前回と同じ状態
 	}
 
 	// 現在の状態にスタックさせる

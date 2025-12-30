@@ -11,12 +11,9 @@ SXAVENGER_ENGINE_USING
 // GameObject class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-GameObject::GameObject() {
-	address_ = BehaviourHelper::Create("GameObject");
-}
-
 GameObject::GameObject(const std::string& name) {
 	address_ = BehaviourHelper::Create(name);
+	address_->SetInspectable([this]() { Inspectable(); });
 }
 
 GameObject::~GameObject() {

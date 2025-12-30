@@ -127,6 +127,13 @@ public:
 
 	bool IsPressAny() const;
 
+	//* keyboard input helper *//
+
+	//! @brief 入力状態から方向ベクトルを取得する
+	//! @param keys 方向キーのKeyId配列 { 上, 下, 左, 右 }
+	//! @return 
+	Vector2i GetDirection(const std::array<KeyId, 4>& keys) const;
+
 	//* debug gui *//
 
 	//! @brief デバッグGUIの表示

@@ -42,7 +42,7 @@ void SkyAtmosphereComponent::Atmosphere::Init() {
 	ground_albedo = Color3f(0.1f, 0.1f, 0.1f);
 	multi_scattering_factor = 1.0f;
 
-	intensity = 1.0f;
+	intensity = 80.0f;
 
 }
 

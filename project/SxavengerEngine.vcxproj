@@ -166,6 +166,11 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Demo\Camera\CameraHandle.h" />
+    <ClInclude Include="Demo\Camera\PerspectiveCamera.h" />
+    <ClInclude Include="Demo\Execution\DemoGameLoop.h" />
+    <ClInclude Include="Demo\Player\Player.h" />
+    <ClInclude Include="Demo\Player\PlayerHandle.h" />
     <ClInclude Include="Engine\Assets\Asset\AssetAnimation.h" />
     <ClInclude Include="Engine\Assets\Asset\AssetAudioClip.h" />
     <ClInclude Include="Engine\Assets\Asset\AssetFont.h" />
@@ -267,6 +272,8 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Engine\Module\Actor\ControllableCameraActor.h" />
     <ClInclude Include="Engine\Module\Exporter\TextureExporter.h" />
     <ClInclude Include="Engine\Module\GameObject\GameObject.h" />
+    <ClInclude Include="Engine\Module\Parameter\SerializeGui.h" />
+    <ClInclude Include="Engine\Module\Parameter\SerializeParameter.h" />
     <ClInclude Include="Engine\Module\Pipeline\CustomComputePipeline.h" />
     <ClInclude Include="Engine\Module\Pipeline\CustomGraphicsPipeline.h" />
     <ClInclude Include="Engine\Render\Common\FBaseTexture.h" />
@@ -386,6 +393,11 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="externals\meshoptimizer\meshoptimizer.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Demo\Camera\CameraHandle.cpp" />
+    <ClCompile Include="Demo\Camera\PerspectiveCamera.cpp" />
+    <ClCompile Include="Demo\Execution\DemoGameLoop.cpp" />
+    <ClCompile Include="Demo\Player\Player.cpp" />
+    <ClCompile Include="Demo\Player\PlayerHandle.cpp" />
     <ClCompile Include="Engine\Assets\Asset\AssetAnimation.cpp" />
     <ClCompile Include="Engine\Assets\Asset\AssetAudioClip.cpp" />
     <ClCompile Include="Engine\Assets\Asset\AssetFont.cpp" />

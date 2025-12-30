@@ -211,6 +211,10 @@
 		"assets/models/sponza/Sponza.gltf",
 		"class SxxEngine::AssetMesh"
 	],
+	"388765d4-c46f-4e26-95acebb15961e4d2": [
+		"assets/models/human/walking.gltf",
+		"class SxxEngine::AssetAnimation"
+	],
 	"39022ae3-dafa-4ee4-9a93dca9752b75a2": [
 		"assets/models/sponza/5823059166183034438.jpg",
 		"class SxxEngine::AssetTexture"
@@ -286,6 +290,10 @@
 	"4cb27d70-7b9c-453b-857b165df4f881ce": [
 		"assets/models/sponza/Sponza.gltf",
 		"class SxxEngine::AssetMesh"
+	],
+	"4da8cc73-088f-4410-9b165ac1a9fffc79": [
+		"assets/models/human/dash.gltf",
+		"class SxxEngine::AssetAnimation"
 	],
 	"4e59a0b3-73f1-4ed7-af0fcb20662e91e0": [
 		"assets/models/sponza/Sponza.gltf",
@@ -423,6 +431,10 @@
 		"assets/models/sponza/Sponza.gltf",
 		"class SxxEngine::AssetMaterial"
 	],
+	"6a61b8b5-148d-400b-804e3d848a1b4b39": [
+		"Assets/models/human/idle.gltf",
+		"class SxxEngine::AssetMaterial"
+	],
 	"6abfa113-7c35-4e21-b73708bdd94fc3d6": [
 		"assets/models/sponza/Sponza.gltf",
 		"class SxxEngine::AssetMesh"
@@ -519,6 +531,10 @@
 		"assets/models/tree/MI_EuropeanBeech_TwoSided_MetallicRoughness.png",
 		"class SxxEngine::AssetTexture"
 	],
+	"7e39e87e-ad6c-4645-85f5acdc889f21c7": [
+		"Assets/models/human/idle.gltf",
+		"class SxxEngine::AssetMesh"
+	],
 	"7fac270f-5af5-49c2-9cc1179b8c98448a": [
 		"Packages/textures/icon/folder.png",
 		"class SxxEngine::AssetTexture"
@@ -550,6 +566,10 @@
 	"8952fcd2-c3ea-47e8-867c87f1d8ec6317": [
 		"assets/models/sponza/Sponza.gltf",
 		"class SxxEngine::AssetMesh"
+	],
+	"89cbefcc-031e-43f2-b1c873e10a9d3028": [
+		"Assets/models/human/idle.gltf",
+		"class SxxEngine::AssetMaterial"
 	],
 	"8aa2900a-ded7-4429-b45957e6da9de1c0": [
 		"assets/models/sponza/Sponza.gltf",
@@ -586,6 +606,10 @@
 	"932ae8f2-8959-40c1-bc760494d9c73755": [
 		"assets/models/sponza/8481240838833932244.jpg",
 		"class SxxEngine::AssetTexture"
+	],
+	"933060aa-8127-4876-912b03f0f2a744b2": [
+		"Assets/models/human/idle.gltf",
+		"class SxxEngine::AssetMaterial"
 	],
 	"96db2abb-a3f6-49e9-aa15d2233c6d89f0": [
 		"assets/models/sponza/Sponza.gltf",
@@ -811,6 +835,10 @@
 		"assets/models/sponza/9288698199695299068.jpg",
 		"class SxxEngine::AssetTexture"
 	],
+	"ce9b0cfa-e5f9-4cc0-91b468937f30ed42": [
+		"assets/models/human/idle.gltf",
+		"class SxxEngine::AssetAnimation"
+	],
 	"cf7b305f-516b-434d-a6b188d6a70a432d": [
 		"assets/models/sponza/Sponza.gltf",
 		"class SxxEngine::AssetMesh"
@@ -874,6 +902,10 @@
 	"da94b293-5d57-446f-8ef3560508621ed2": [
 		"packages/textures/icon/operation_rotate.png",
 		"class SxxEngine::AssetTexture"
+	],
+	"db3170df-3cdd-40c4-86c245e3856d6b19": [
+		"Assets/models/human/idle.gltf",
+		"class SxxEngine::AssetSkeleton"
 	],
 	"db66ab05-119b-436f-a52e58cf1a126204": [
 		"assets/models/sponza/Sponza.gltf",
@@ -978,6 +1010,10 @@
 	"f082043b-2d05-4b4d-b29f06dc42571fd5": [
 		"assets/models/tree/MI_EuropeanBeech_TwoSided_BaseColor.png",
 		"class SxxEngine::AssetTexture"
+	],
+	"f29e0aee-14ab-427c-8ca21190e1b493c8": [
+		"Assets/models/human/idle.gltf",
+		"class SxxEngine::AssetMesh"
 	],
 	"f2a38c11-6e26-46c1-aad4d8990382a2f7": [
 		"assets/models/sponza/6151467286084645207.jpg",

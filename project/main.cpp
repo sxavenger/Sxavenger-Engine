@@ -9,7 +9,7 @@
 #include <Engine/Execution/EngineExecution.h>
 #include <Engine/Execution/EditorExecution.h>
 #include <Engine/Execution/ExampleGameLoop.h>
-//#include <Demo/GameLoop/DemoGameLoop.h>
+#include <Demo/Execution/DemoGameLoop.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // main
@@ -25,8 +25,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	pipeline->Push<SxxEngine::EditorExecution>();
 #endif
 
-	pipeline->Push<SxxEngine::ExampleGameLoop>();
-	//collection->Push<DemoGameLoop>();
+	//pipeline->Push<SxxEngine::ExampleGameLoop>();
+	pipeline->Push<DemoGameLoop>();
 
 	pipeline->Run();
 

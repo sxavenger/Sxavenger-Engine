@@ -1,0 +1,15 @@
+{
+	"animations": [
+		"ce9b0cfa-e5f9-4cc0-91b468937f30ed42"
+	],
+	"materials": [
+		"933060aa-8127-4876-912b03f0f2a744b2",
+		"89cbefcc-031e-43f2-b1c873e10a9d3028",
+		"6a61b8b5-148d-400b-804e3d848a1b4b39"
+	],
+	"meshes": [
+		"7e39e87e-ad6c-4645-85f5acdc889f21c7",
+		"f29e0aee-14ab-427c-8ca21190e1b493c8"
+	],
+	"skeleton": "db3170df-3cdd-40c4-86c245e3856d6b19"
+}

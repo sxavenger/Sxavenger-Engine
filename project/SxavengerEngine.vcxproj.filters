@@ -853,6 +853,13 @@
     <ClInclude Include="Engine\Render\GBuffer\FProbeGBuffer.h" />
     <ClInclude Include="Engine\Render\Core\FRenderCoreProbe.h" />
     <ClInclude Include="Engine\Module\Actor\ControllableCameraActor.h" />
+    <ClInclude Include="Demo\Execution\DemoGameLoop.h" />
+    <ClInclude Include="Demo\Player\Player.h" />
+    <ClInclude Include="Engine\Module\Parameter\SerializeParameter.h" />
+    <ClInclude Include="Engine\Module\Parameter\SerializeGui.h" />
+    <ClInclude Include="Demo\Player\PlayerHandle.h" />
+    <ClInclude Include="Demo\Camera\CameraHandle.h" />
+    <ClInclude Include="Demo\Camera\PerspectiveCamera.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\Assets\Asset\AssetAnimation.cpp">
@@ -1439,5 +1446,10 @@
     <ClCompile Include="Engine\Render\GBuffer\FProbeGBuffer.cpp" />
     <ClCompile Include="Engine\Render\Core\FRenderCoreProbe.cpp" />
     <ClCompile Include="Engine\Module\Actor\ControllableCameraActor.cpp" />
+    <ClCompile Include="Demo\Execution\DemoGameLoop.cpp" />
+    <ClCompile Include="Demo\Player\Player.cpp" />
+    <ClCompile Include="Demo\Player\PlayerHandle.cpp" />
+    <ClCompile Include="Demo\Camera\CameraHandle.cpp" />
+    <ClCompile Include="Demo\Camera\PerspectiveCamera.cpp" />
   </ItemGroup>
 </Project>

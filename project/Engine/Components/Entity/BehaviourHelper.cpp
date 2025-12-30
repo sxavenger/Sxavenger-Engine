@@ -157,9 +157,15 @@ void BehaviourHelper::ApplyAnimation(const BehaviourAddress& address, const Anim
 	child->GetComponent<ArmatureComponent>()->UpdateAnimation(animation, time, isLoop);
 }
 
-void BehaviourHelper::ApplyAnimationTransition(const BehaviourAddress& address, const Animation& animationA, TimePointd<TimeUnit::second> timeA, bool isLoopA, const Animation& animationB, TimePointd<TimeUnit::second> timeB, bool isLoopB, float transitionT) {
+void BehaviourHelper::ApplyAnimationTransition(
+	const BehaviourAddress& address,
+	const Animation& prevAnimation, TimePointd<TimeUnit::second> prevTime, bool prevIsLoop,
+	const Animation& currAnimation, TimePointd<TimeUnit::second> currTime, bool currIsLoop,
+	float transitionT) {
 	auto child = address->FindChild(ArmatureComponent::kArmatureName);
-	child->GetComponent<ArmatureComponent>()->TransitionAnimation(animationA, timeA, isLoopA, animationB, timeB, isLoopB, transitionT);
+	child->GetComponent<ArmatureComponent>()->TransitionAnimation(
+		prevAnimation, prevTime, prevIsLoop, currAnimation, currTime, currIsLoop, transitionT
+	);
 }
 
 void BehaviourHelper::CreateStaticMeshBehaviourNode(const BehaviourAddress& parent, const BornNode& node, const std::shared_ptr<ContentModel>& model) {

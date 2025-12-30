@@ -67,8 +67,8 @@ public:
 
 	static void ApplyAnimationTransition(
 		const BehaviourAddress& address,
-		const Animation& animationA, TimePointd<TimeUnit::second> timeA, bool isLoopA,
-		const Animation& animationB, TimePointd<TimeUnit::second> timeB, bool isLoopB,
+		const Animation& prevAnimation, TimePointd<TimeUnit::second> prevTime, bool prevIsLoop,
+		const Animation& currAnimation, TimePointd<TimeUnit::second> currTime, bool currIsLoop,
 		float transitionT
 	);
 

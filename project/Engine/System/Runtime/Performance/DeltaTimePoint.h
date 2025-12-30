@@ -45,12 +45,12 @@ public:
 
 template <TimeUnit _Unit, std::floating_point _Value>
 inline void DeltaTimePoint<_Unit, _Value>::AddDeltaTime() {
-	this->time += static_cast<_Value>(System::GetDeltaTime().time);
+	this->time += static_cast<_Value>(System::GetDeltaTimed().time);
 }
 
 template <TimeUnit _Unit, std::floating_point _Value>
 inline void DeltaTimePoint<_Unit, _Value>::SubtractionDeltaTime() {
-	this->time -= static_cast<_Value>(System::GetDeltaTime().time);
+	this->time -= static_cast<_Value>(System::GetDeltaTimed().time);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
