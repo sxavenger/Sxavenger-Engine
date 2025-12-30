@@ -37,9 +37,13 @@ public:
 
 	Vector3f CalculateMoveFront(const Vector3f& vector) const;
 
+	Quaternion CalculateForward() const;
+
 	//* setter *//
 
 	void SetAround(const Vector2f& around) { around_ = around; }
+
+	void SetTarget(const SxxEngine::BehaviourAddress& target) { target_ = target; }
 
 private:
 
@@ -64,6 +68,8 @@ private:
 	float distance_      = 12.0f;
 
 	Vector2f around_ = {};
+
+	SxxEngine::BehaviourAddress target_ = nullptr;
 
 	//=========================================================================================
 	// private methods

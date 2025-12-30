@@ -12,6 +12,7 @@
 #include "ContentScene.h"
 #include "ContentFont.h"
 #include "ContentAudio.h"
+#include "ContentBehaviour.h"
 
 //* engine
 #include <Engine/Foundation.h>

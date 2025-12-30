@@ -1,0 +1,335 @@
+[
+	{
+		"children": [],
+		"components": [
+			{
+				"component": "class SxxEngine::TransformComponent",
+				"transform": {
+					"rotate": {
+						"w": 0.9880115389823914,
+						"x": 0.0,
+						"y": 0.15438009798526764,
+						"z": 0.0
+					},
+					"scale": {
+						"x": 0.30000001192092896,
+						"y": 0.30000001192092896,
+						"z": 0.30000001192092896
+					},
+					"translate": {
+						"x": 0.29383790493011475,
+						"y": 0.3213406205177307,
+						"z": 0.3122169077396393
+					}
+				}
+			},
+			{
+				"component": "class SxxEngine::MeshRendererComponent",
+				"isEnable": true,
+				"mask": 255,
+				"material": "11ce3050-89a0-47e9-b97b80d6973c52e1",
+				"mesh": "863a1d2f-0ae1-414c-a362601a6692015f",
+				"stencil": 0
+			}
+		],
+		"isActive": true,
+		"isRenamable": true,
+		"name": "object[1]"
+	},
+	{
+		"children": [],
+		"components": [
+			{
+				"component": "class SxxEngine::TransformComponent",
+				"transform": {
+					"rotate": {
+						"w": 0.9492354393005371,
+						"x": 0.0,
+						"y": -0.31456655263900757,
+						"z": 0.0
+					},
+					"scale": {
+						"x": 0.30000001192092896,
+						"y": 0.30000001192092896,
+						"z": 0.30000001192092896
+					},
+					"translate": {
+						"x": -0.31316816806793213,
+						"y": 0.3253929018974304,
+						"z": 0.8679251670837402
+					}
+				}
+			},
+			{
+				"component": "class SxxEngine::MeshRendererComponent",
+				"isEnable": true,
+				"mask": 255,
+				"material": "11ce3050-89a0-47e9-b97b80d6973c52e1",
+				"mesh": "863a1d2f-0ae1-414c-a362601a6692015f",
+				"stencil": 0
+			}
+		],
+		"isActive": true,
+		"isRenamable": true,
+		"name": "object[3]"
+	},
+	{
+		"children": [],
+		"components": [
+			{
+				"component": "class SxxEngine::TransformComponent",
+				"transform": {
+					"rotate": {
+						"w": 1.0,
+						"x": -0.0,
+						"y": -0.0,
+						"z": 0.0
+					},
+					"scale": {
+						"x": 10.0,
+						"y": 0.11999999731779099,
+						"z": 10.0
+					},
+					"translate": {
+						"x": 0.0,
+						"y": -0.09290403127670288,
+						"z": 0.0
+					}
+				}
+			},
+			{
+				"component": "class SxxEngine::MeshRendererComponent",
+				"isEnable": true,
+				"mask": 255,
+				"material": "11ce3050-89a0-47e9-b97b80d6973c52e1",
+				"mesh": "863a1d2f-0ae1-414c-a362601a6692015f",
+				"stencil": 0
+			}
+		],
+		"isActive": true,
+		"isRenamable": true,
+		"name": "concrete_floor"
+	},
+	{
+		"children": [],
+		"components": [
+			{
+				"component": "class SxxEngine::TransformComponent",
+				"transform": {
+					"rotate": {
+						"w": 0.950796365737915,
+						"x": 0.0,
+						"y": -0.30981647968292236,
+						"z": 0.0
+					},
+					"scale": {
+						"x": 0.30000001192092896,
+						"y": 0.30000001192092896,
+						"z": 0.30000001192092896
+					},
+					"translate": {
+						"x": -0.4327049255371094,
+						"y": 0.3138079047203064,
+						"z": 0.0
+					}
+				}
+			},
+			{
+				"component": "class SxxEngine::MeshRendererComponent",
+				"isEnable": true,
+				"mask": 255,
+				"material": "11ce3050-89a0-47e9-b97b80d6973c52e1",
+				"mesh": "863a1d2f-0ae1-414c-a362601a6692015f",
+				"stencil": 0
+			}
+		],
+		"isActive": true,
+		"isRenamable": true,
+		"name": "object[0]"
+	},
+	{
+		"children": [],
+		"components": [
+			{
+				"component": "class SxxEngine::TransformComponent",
+				"transform": {
+					"rotate": {
+						"w": 0.9921976923942566,
+						"x": 0.0,
+						"y": 0.1246747300028801,
+						"z": 0.0
+					},
+					"scale": {
+						"x": 0.30000001192092896,
+						"y": 0.30000001192092896,
+						"z": 0.30000001192092896
+					},
+					"translate": {
+						"x": -0.08556880056858063,
+						"y": 0.9203585386276245,
+						"z": 0.3280615508556366
+					}
+				}
+			},
+			{
+				"component": "class SxxEngine::MeshRendererComponent",
+				"isEnable": true,
+				"mask": 255,
+				"material": "11ce3050-89a0-47e9-b97b80d6973c52e1",
+				"mesh": "863a1d2f-0ae1-414c-a362601a6692015f",
+				"stencil": 0
+			}
+		],
+		"isActive": true,
+		"isRenamable": true,
+		"name": "object[2]"
+	},
+	{
+		"children": [],
+		"components": [
+			{
+				"component": "class SxxEngine::TransformComponent",
+				"transform": {
+					"rotate": {
+						"w": 0.9376465082168579,
+						"x": 1.184845110913102e-09,
+						"y": 0.3475903570652008,
+						"z": -3.1961926438839328e-09
+					},
+					"scale": {
+						"x": 1.1799999475479126,
+						"y": 3.259999990463257,
+						"z": 1.5099999904632568
+					},
+					"translate": {
+						"x": 3.178626298904419,
+						"y": 1.1011595726013184,
+						"z": -3.4958817958831787
+					}
+				}
+			},
+			{
+				"component": "class SxxEngine::MeshRendererComponent",
+				"isEnable": true,
+				"mask": 255,
+				"material": "11ce3050-89a0-47e9-b97b80d6973c52e1",
+				"mesh": "863a1d2f-0ae1-414c-a362601a6692015f",
+				"stencil": 0
+			}
+		],
+		"isActive": true,
+		"isRenamable": true,
+		"name": "concrete_floor"
+	},
+	{
+		"children": [],
+		"components": [
+			{
+				"component": "class SxxEngine::TransformComponent",
+				"transform": {
+					"rotate": {
+						"w": 0.9538469910621643,
+						"x": -1.0236212988345983e-09,
+						"y": -0.30029308795928955,
+						"z": -3.2514169134856274e-09
+					},
+					"scale": {
+						"x": 0.49000000953674316,
+						"y": 3.0199999809265137,
+						"z": 0.6200000047683716
+					},
+					"translate": {
+						"x": -3.9422459602355957,
+						"y": 1.1011595726013184,
+						"z": -1.557127594947815
+					}
+				}
+			},
+			{
+				"component": "class SxxEngine::MeshRendererComponent",
+				"isEnable": true,
+				"mask": 255,
+				"material": "11ce3050-89a0-47e9-b97b80d6973c52e1",
+				"mesh": "863a1d2f-0ae1-414c-a362601a6692015f",
+				"stencil": 0
+			}
+		],
+		"isActive": true,
+		"isRenamable": true,
+		"name": "concrete_floor"
+	},
+	{
+		"children": [],
+		"components": [
+			{
+				"component": "class SxxEngine::TransformComponent",
+				"transform": {
+					"rotate": {
+						"w": 0.9476507306098938,
+						"x": 1.0884407819489184e-09,
+						"y": 0.3193087875843048,
+						"z": -3.2302960306651585e-09
+					},
+					"scale": {
+						"x": 1.1699999570846558,
+						"y": 3.0199999809265137,
+						"z": 0.6200000047683716
+					},
+					"translate": {
+						"x": -0.28843867778778076,
+						"y": 1.1011595726013184,
+						"z": 4.922375679016113
+					}
+				}
+			},
+			{
+				"component": "class SxxEngine::MeshRendererComponent",
+				"isEnable": true,
+				"mask": 255,
+				"material": "11ce3050-89a0-47e9-b97b80d6973c52e1",
+				"mesh": "863a1d2f-0ae1-414c-a362601a6692015f",
+				"stencil": 0
+			}
+		],
+		"isActive": true,
+		"isRenamable": true,
+		"name": "concrete_floor"
+	},
+	{
+		"children": [],
+		"components": [
+			{
+				"component": "class SxxEngine::TransformComponent",
+				"transform": {
+					"rotate": {
+						"w": 0.8571192622184753,
+						"x": 0.30999279022216797,
+						"y": 0.2295631766319275,
+						"z": -0.3413967788219452
+					},
+					"scale": {
+						"x": 1.0,
+						"y": 1.0,
+						"z": 1.0
+					},
+					"translate": {
+						"x": 0.0,
+						"y": 3.792128324508667,
+						"z": 0.0
+					}
+				}
+			},
+			{
+				"component": "class SxxEngine::MeshRendererComponent",
+				"isEnable": true,
+				"mask": 255,
+				"material": "11ce3050-89a0-47e9-b97b80d6973c52e1",
+				"mesh": "863a1d2f-0ae1-414c-a362601a6692015f",
+				"stencil": 0
+			}
+		],
+		"isActive": true,
+		"isRenamable": true,
+		"name": "concrete_floor"
+	}
+]

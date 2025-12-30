@@ -38,6 +38,7 @@ void AssetEditor::Init() {
 	RegisterExtension<ContentFont>(".ttf");
 	RegisterExtension<ContentAudio>(".wav");
 	RegisterExtension<ContentAudio>(".mp3");
+	RegisterExtension<ContentBehaviour>(".behaviour");
 
 }
 

@@ -54,6 +54,8 @@ public:
 	void SetWalk(const Vector3f& velocity);
 	void SetDash(const Vector3f& velocity);
 
+	void SetFacingQuaternion(const Quaternion& quaternion);
+
 private:
 
 	////////////////////////////////////////////////////////////////////////////////////////////

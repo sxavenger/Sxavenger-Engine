@@ -49,8 +49,12 @@ const std::type_info* ContentStorage::GetType(const std::filesystem::path& filep
 
 void ContentStorage::DragAndDropSource(const std::type_info* type, const std::filesystem::path& filepath) {
 	if (ImGui::BeginDragDropSource()) {
+
+		std::string name   = type->name();
+		std::string substr = name.substr(name.find_last_of(':') + 1);
+
 		// payloadを設定
-		ImGui::SetDragDropPayload(type->name(), filepath.generic_string().c_str(), filepath.generic_string().size() + 1);
+		ImGui::SetDragDropPayload(substr.c_str(), filepath.generic_string().c_str(), filepath.generic_string().size() + 1);
 
 		// ドラッグ中の表示
 		ImGui::Text(type->name());
@@ -65,7 +69,11 @@ std::optional<std::filesystem::path> ContentStorage::DragAndDropTargetFilepath(c
 	std::optional<std::filesystem::path> result = std::nullopt;
 
 	if (ImGui::BeginDragDropTarget()) {
-		if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload(type->name())) {
+
+		std::string name   = type->name();
+		std::string substr = name.substr(name.find_last_of(':') + 1);
+
+		if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload(substr.c_str())) {
 			result = std::filesystem::path(static_cast<const char*>(payload->Data));
 		}
 

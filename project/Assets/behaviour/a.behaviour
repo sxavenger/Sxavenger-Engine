@@ -1,0 +1,37 @@
+{
+	"children": [],
+	"components": [
+		{
+			"component": "class SxxEngine::TransformComponent",
+			"transform": {
+				"rotate": {
+					"w": 0.9538469910621643,
+					"x": -1.0236212988345983e-09,
+					"y": -0.30029308795928955,
+					"z": -3.2514169134856274e-09
+				},
+				"scale": {
+					"x": 1.1699999570846558,
+					"y": 3.0199999809265137,
+					"z": 0.6200000047683716
+				},
+				"translate": {
+					"x": -3.9422459602355957,
+					"y": 1.1011595726013184,
+					"z": -1.557127594947815
+				}
+			}
+		},
+		{
+			"component": "class SxxEngine::MeshRendererComponent",
+			"isEnable": true,
+			"mask": 255,
+			"material": "11ce3050-89a0-47e9-b97b80d6973c52e1",
+			"mesh": "863a1d2f-0ae1-414c-a362601a6692015f",
+			"stencil": 0
+		}
+	],
+	"isActive": true,
+	"isRenamable": true,
+	"name": "concrete_floor"
+}

@@ -53,9 +53,24 @@ Vector3f PerspectiveCamera::CalculateMoveFront(const Vector3f& vector) const {
 	return front;
 }
 
+Quaternion PerspectiveCamera::CalculateForward() const {
+	Vector3f direction = Quaternion::RotateVector(kForward3<float>, rotation_);
+	direction = Vector3f{ direction.x, 0.0f, direction.z }.Normalize();
+
+	Vector3f forward = {};
+
+	// ロール, ピッチ, ロー回転
+	forward.y = std::atan2(direction.x, direction.z);
+
+	float length = Vector3f{ direction.x, 0.0f, direction.z }.Length();
+	forward.x = std::atan2(-direction.y, length);
+
+	return Quaternion::ToQuaternion(forward);
+}
+
 void PerspectiveCamera::UpdateFirstPerson() {
 
-	angle_ += around_ * (*sensitivity_);
+	angle_ += around_ * (*sensitivity_) * Vector2f { 1.0f, -1.0f };
 
 	// 回転の制限
 	angle_.y = std::clamp(angle_.y, -kPi / 2.5f, kPi / 2.5f);
@@ -63,7 +78,13 @@ void PerspectiveCamera::UpdateFirstPerson() {
 	rotation_ = Quaternion::AxisAngle(kUnitY3<float>, angle_.x) * Quaternion::AxisAngle(kUnitX3<float>, angle_.y);
 
 	distance_ = 0.0f;
-	point_ = offset_;
+	point_ = {};
+
+	if (target_ != nullptr) {
+		if (auto transform = target_->GetComponent<TransformComponent>()) {
+			point_ = transform->GetPosition() + Quaternion::RotateVector((*offset_), transform->rotate);
+		}
+	}
 }
 
 void PerspectiveCamera::UpdateView() {

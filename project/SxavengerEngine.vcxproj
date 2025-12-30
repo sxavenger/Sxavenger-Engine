@@ -184,6 +184,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Engine\Assets\Content\BaseContent.h" />
     <ClInclude Include="Engine\Assets\Content\ContentAnimation.h" />
     <ClInclude Include="Engine\Assets\Content\ContentAudio.h" />
+    <ClInclude Include="Engine\Assets\Content\ContentBehaviour.h" />
     <ClInclude Include="Engine\Assets\Content\ContentBlob.h" />
     <ClInclude Include="Engine\Assets\Content\ContentFont.h" />
     <ClInclude Include="Engine\Assets\Content\ContentModel.h" />
@@ -410,6 +411,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="Engine\Assets\Content\BaseContent.cpp" />
     <ClCompile Include="Engine\Assets\Content\ContentAnimation.cpp" />
     <ClCompile Include="Engine\Assets\Content\ContentAudio.cpp" />
+    <ClCompile Include="Engine\Assets\Content\ContentBehaviour.cpp" />
     <ClCompile Include="Engine\Assets\Content\ContentBlob.cpp" />
     <ClCompile Include="Engine\Assets\Content\ContentFont.cpp" />
     <ClCompile Include="Engine\Assets\Content\ContentModel.cpp" />

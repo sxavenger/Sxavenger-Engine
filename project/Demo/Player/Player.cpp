@@ -68,6 +68,11 @@ void Player::SetDash(const Vector3f& velocity) {
 	velocity_ = velocity.Normalize() * (*dashSpeed_);
 }
 
+void Player::SetFacingQuaternion(const Quaternion& quaternion) {
+	auto transform = (*this)->GetComponent<TransformComponent>();
+	transform->rotate = Quaternion::Slerp(transform->rotate, quaternion, 0.4f);
+}
+
 void Player::SetAnimationState(AnimationType type) {
 	if (currentAnimationState_.type == type) {
 		return; //!< 変更なし

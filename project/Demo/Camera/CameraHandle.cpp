@@ -24,7 +24,7 @@ void CameraHandle::Update() {
 	direction_ = {};
 
 	Vector2f keyboardDirection = GetKeyboardDirection();
-	Vector2f mouseDirection    = GetMouseDirection();
+	Vector2f mouseDirection    = /*GetMouseDirection();*/ {};
 	Vector2f gamepadDirection  = GetGamepadDirection();
 
 	float keyboardLength = keyboardDirection.Length();

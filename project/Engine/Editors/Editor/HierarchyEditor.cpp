@@ -177,7 +177,7 @@ void HierarchyEditor::ShowHierarchyWindow() {
 
 		//* UContentModel
 		ImGui::SetCursorScreenPos(contentPos);
-		ImGui::InvisibleButton("## DropTarget ContentModel", contentSize);
+		ImGui::InvisibleButton("## DropTarget Content DragAndDrop", contentSize);
 
 		sContentStorage->DragAndDropTargetContentFunc<ContentModel>([this](const std::shared_ptr<ContentModel>& content) {
 			BehaviourAddress address = BehaviourHelper::CreateStaticMeshBehaviour(content);
@@ -185,12 +185,16 @@ void HierarchyEditor::ShowHierarchyWindow() {
 			address->SetMobility(MonoBehaviour::Mobility::Static);
 		});
 
-		ImGui::SetCursorScreenPos(contentPos);
-		ImGui::InvisibleButton("## DropTarget Scene", contentSize);
-
 		sContentStorage->DragAndDropTargetContentFunc<ContentScene>([this](const std::shared_ptr<ContentScene>& content) {
 			content->WaitComplete(); // contentの読み込みを待つ
 			sMonoBehaviourStorage->InputJson(content->GetData());
+		});
+
+		sContentStorage->DragAndDropTargetContentFunc<ContentBehaviour>([this](const std::shared_ptr<ContentBehaviour>& content) {
+			content->WaitComplete(); // contentの読み込みを待つ
+			BehaviourAddress address = BehaviourHelper::Create();
+			address->InputJson(content->GetData());
+			address->SetMobility(MonoBehaviour::Mobility::Static);
 		});
 	}
 

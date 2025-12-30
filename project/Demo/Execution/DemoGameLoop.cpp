@@ -67,7 +67,8 @@ void DemoGameLoop::InitSystem() {
 
 	player_->Awake();
 	camera_->Awake();
-	(*player_)->AddChild(camera_->GetAddress());
+
+	camera_->SetTarget(player_->GetAddress());
 }
 
 void DemoGameLoop::TermSystem() {
@@ -101,6 +102,8 @@ void DemoGameLoop::UpdateSystem() {
 
 	camera_->SetAround(cameraHandle_->GetDirection());
 	camera_->Update();
+
+	player_->SetFacingQuaternion(camera_->CalculateForward());
 
 	//-----------------------------------------------------------------------------------------
 	// SystemUpdate...?

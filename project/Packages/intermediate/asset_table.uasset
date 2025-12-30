@@ -27,6 +27,10 @@
 		"assets/models/sponza/Sponza.gltf",
 		"class SxxEngine::AssetMesh"
 	],
+	"08cbb2a9-a0b8-41ae-adb5e29da367760d": [
+		"assets/models/cube/concrete_floor.gltf",
+		"class SxxEngine::AssetMaterial"
+	],
 	"08e0c6a9-c700-4ff8-99e437d7061e78ad": [
 		"assets/models/sponza/Sponza.gltf",
 		"class SxxEngine::AssetMesh"
@@ -58,6 +62,10 @@
 	"112dcb9d-73e7-4eda-9316091011dba57d": [
 		"assets/models/sponza/13196865903111448057.jpg",
 		"class SxxEngine::AssetTexture"
+	],
+	"11ce3050-89a0-47e9-b97b80d6973c52e1": [
+		"assets/models/cube/concrete_floor.gltf",
+		"class SxxEngine::AssetMaterial"
 	],
 	"11f08410-dcc0-48a4-a9da4978c2f842a8": [
 		"assets/models/sponza/Sponza.gltf",
@@ -219,6 +227,10 @@
 		"assets/models/sponza/5823059166183034438.jpg",
 		"class SxxEngine::AssetTexture"
 	],
+	"3a59240b-2d64-4ebc-aeff323c8ff74264": [
+		"assets/models/cube/textures/concrete_floor_worn_001_arm_1k.png.png",
+		"class SxxEngine::AssetTexture"
+	],
 	"3b0e8c17-dcca-43b8-9bb2b80a8f4cf116": [
 		"assets/models/sponza/8006627369776289000.png",
 		"class SxxEngine::AssetTexture"
@@ -331,6 +343,10 @@
 		"assets/models/tree/MI_EuropeanBeech_Decoration_BaseColor.png",
 		"class SxxEngine::AssetTexture"
 	],
+	"53f32297-aa2d-44e5-aaafb15086619e20": [
+		"assets/models/cube/textures/concrete_floor_worn_001_nor_dx_1k.png.png",
+		"class SxxEngine::AssetTexture"
+	],
 	"5443c363-8ee0-4247-aa11b049a86dc7bb": [
 		"assets/models/cornell_box/cornell-box.obj",
 		"class SxxEngine::AssetMesh"
@@ -386,6 +402,10 @@
 	"5c41a6fc-5edf-4ac7-bd249d7b7eb3eb2b": [
 		"assets/models/sponza/Sponza.gltf",
 		"class SxxEngine::AssetMesh"
+	],
+	"5c6cc6e5-e166-4531-928ee006863d720f": [
+		"assets/models/cube/textures/concrete_floor_worn_001_nor_dx_1k.png",
+		"class SxxEngine::AssetTexture"
 	],
 	"5e761b18-b089-4562-8f22f7771d67d81a": [
 		"assets/models/sponza/13982482287905699490.jpg",
@@ -519,6 +539,10 @@
 		"assets/models/tree/MI_EuropeanBeech_Tileable_Normal.png",
 		"class SxxEngine::AssetTexture"
 	],
+	"7ac2f7b7-9e34-46c0-86fb929d1d4c1094": [
+		"assets/models/cube/concrete_floor.gltf",
+		"class SxxEngine::AssetSkeleton"
+	],
 	"7aee9633-5d40-4145-bdd6978d5142e4fa": [
 		"assets/models/sponza/Sponza.gltf",
 		"class SxxEngine::AssetMesh"
@@ -563,6 +587,10 @@
 		"assets/models/sponza/Sponza.gltf",
 		"class SxxEngine::AssetMesh"
 	],
+	"863a1d2f-0ae1-414c-a362601a6692015f": [
+		"assets/models/cube/concrete_floor.gltf",
+		"class SxxEngine::AssetMesh"
+	],
 	"8952fcd2-c3ea-47e8-867c87f1d8ec6317": [
 		"assets/models/sponza/Sponza.gltf",
 		"class SxxEngine::AssetMesh"
@@ -586,6 +614,10 @@
 	"8c16b476-138c-4595-87ebeb6209664608": [
 		"assets/models/sponza/Sponza.gltf",
 		"class SxxEngine::AssetMesh"
+	],
+	"8c719d4b-00ce-464b-b5d066f8c2c772f0": [
+		"assets/models/cube/concrete_floor.gltf",
+		"class SxxEngine::AssetSkeleton"
 	],
 	"8d1e3a6e-3d86-4fdf-9dba81bb361b38c0": [
 		"assets/models/sponza/17876391417123941155.jpg",
@@ -639,6 +671,10 @@
 		"assets/models/sponza/Sponza.gltf",
 		"class SxxEngine::AssetMaterial"
 	],
+	"9ec4f022-765b-428d-a53ad14e5910919f": [
+		"assets/models/cube/textures/concrete_floor_worn_001_ao_1k.png.png",
+		"class SxxEngine::AssetTexture"
+	],
 	"a028ef21-f054-4b20-90344f823b6d62ab": [
 		"assets/models/sponza/4601176305987539675.jpg",
 		"class SxxEngine::AssetTexture"
@@ -667,6 +703,10 @@
 		"assets/models/sponza/Sponza.gltf",
 		"class SxxEngine::AssetMaterial"
 	],
+	"a8110889-0822-4583-b82e876e990c4d3f": [
+		"assets/models/cube/concrete_floor.gltf",
+		"class SxxEngine::AssetMesh"
+	],
 	"a8b02c12-743e-468d-ae5d7eeb613293e8": [
 		"assets/models/sponza/Sponza.gltf",
 		"class SxxEngine::AssetMesh"
@@ -679,8 +719,16 @@
 		"packages/textures/icon/scene_spotLight.png",
 		"class SxxEngine::AssetTexture"
 	],
+	"aa9f04b9-f1b0-472f-accecee8e558d360": [
+		"assets/models/cube/concrete_floor.gltf",
+		"class SxxEngine::AssetMaterial"
+	],
 	"abcb47fe-ea0d-441c-9920c54ef98ef877": [
 		"assets/models/sponza/7441062115984513793.jpg",
+		"class SxxEngine::AssetTexture"
+	],
+	"abf9254b-7f5e-4575-9e5d8f1145524372": [
+		"assets/models/cube/textures/concrete_floor_worn_001_arm_1k.png",
 		"class SxxEngine::AssetTexture"
 	],
 	"ac53b1b7-47c6-42ec-a631ffbee9fbc7c0": [
@@ -751,6 +799,10 @@
 		"assets/models/sponza/Sponza.gltf",
 		"class SxxEngine::AssetMesh"
 	],
+	"baffa884-9f8b-4c8f-bc6ba40c26641e48": [
+		"assets/models/cube/concrete_floor.gltf",
+		"class SxxEngine::AssetMaterial"
+	],
 	"bc41707f-f631-4139-8d7f7aa203350110": [
 		"assets/models/sponza/Sponza.gltf",
 		"class SxxEngine::AssetMaterial"
@@ -770,6 +822,10 @@
 	"c13daf80-65e0-436e-ad2d11f5013ca664": [
 		"assets/models/sponza/6772804448157695701.jpg",
 		"class SxxEngine::AssetTexture"
+	],
+	"c1a5a067-c5cd-47fe-abdee959fc495ca0": [
+		"assets/models/cube/concrete_floor.gltf",
+		"class SxxEngine::AssetMaterial"
 	],
 	"c264b468-1b82-4962-8ec9862566ef9be2": [
 		"assets/models/sponza/Sponza.gltf",
@@ -839,6 +895,10 @@
 		"assets/models/human/idle.gltf",
 		"class SxxEngine::AssetAnimation"
 	],
+	"cf0b70e1-e55c-4f8b-8965918d5799cbc4": [
+		"assets/models/cube/concrete_floor.gltf",
+		"class SxxEngine::AssetMaterial"
+	],
 	"cf7b305f-516b-434d-a6b188d6a70a432d": [
 		"assets/models/sponza/Sponza.gltf",
 		"class SxxEngine::AssetMesh"
@@ -870,6 +930,10 @@
 	"d4d9b6e1-59ee-430d-98962b8ad0866a9d": [
 		"assets/models/sponza/Sponza.gltf",
 		"class SxxEngine::AssetMesh"
+	],
+	"d5349118-659d-41e3-9110836e01d070af": [
+		"assets/models/cube/textures/concrete_floor_worn_001_ao_1k.png",
+		"class SxxEngine::AssetTexture"
 	],
 	"d5ace778-45fd-4486-9db37d2f8381cbc6": [
 		"assets/models/sponza/Sponza.gltf",
@@ -903,6 +967,10 @@
 		"packages/textures/icon/operation_rotate.png",
 		"class SxxEngine::AssetTexture"
 	],
+	"daf2d366-91bb-4473-a5ba19a2ad3cceca": [
+		"assets/models/cube/concrete_floor.gltf",
+		"class SxxEngine::AssetMesh"
+	],
 	"db3170df-3cdd-40c4-86c245e3856d6b19": [
 		"Assets/models/human/idle.gltf",
 		"class SxxEngine::AssetSkeleton"
@@ -934,6 +1002,10 @@
 	"e1035cc4-51fd-42d5-83073b15b96450c8": [
 		"assets/models/tree/MI_EuropeanBeech_Decoration_Normal.png",
 		"class SxxEngine::AssetTexture"
+	],
+	"e11f6ae9-0d00-4328-a6bb06aa523747fb": [
+		"assets/models/cube/concrete_floor.gltf",
+		"class SxxEngine::AssetSkeleton"
 	],
 	"e16c7225-1c83-4591-a24569dcbd7b8888": [
 		"assets/models/sponza/Sponza.gltf",

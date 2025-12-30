@@ -860,6 +860,7 @@
     <ClInclude Include="Demo\Player\PlayerHandle.h" />
     <ClInclude Include="Demo\Camera\CameraHandle.h" />
     <ClInclude Include="Demo\Camera\PerspectiveCamera.h" />
+    <ClInclude Include="Engine\Assets\Content\ContentBehaviour.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\Assets\Asset\AssetAnimation.cpp">
@@ -1451,5 +1452,6 @@
     <ClCompile Include="Demo\Player\PlayerHandle.cpp" />
     <ClCompile Include="Demo\Camera\CameraHandle.cpp" />
     <ClCompile Include="Demo\Camera\PerspectiveCamera.cpp" />
+    <ClCompile Include="Engine\Assets\Content\ContentBehaviour.cpp" />
   </ItemGroup>
 </Project>
