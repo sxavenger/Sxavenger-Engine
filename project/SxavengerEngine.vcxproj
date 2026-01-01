@@ -169,6 +169,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Demo\Camera\CameraHandle.h" />
     <ClInclude Include="Demo\Camera\PerspectiveCamera.h" />
     <ClInclude Include="Demo\Execution\DemoGameLoop.h" />
+    <ClInclude Include="Demo\Interact\InteractItem.h" />
     <ClInclude Include="Demo\Player\Player.h" />
     <ClInclude Include="Demo\Player\PlayerHandle.h" />
     <ClInclude Include="Engine\Assets\Asset\AssetAnimation.h" />
@@ -397,6 +398,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="Demo\Camera\CameraHandle.cpp" />
     <ClCompile Include="Demo\Camera\PerspectiveCamera.cpp" />
     <ClCompile Include="Demo\Execution\DemoGameLoop.cpp" />
+    <ClCompile Include="Demo\Interact\InteractItem.cpp" />
     <ClCompile Include="Demo\Player\Player.cpp" />
     <ClCompile Include="Demo\Player\PlayerHandle.cpp" />
     <ClCompile Include="Engine\Assets\Asset\AssetAnimation.cpp" />

@@ -24,6 +24,7 @@ GeometryPSInput main(MeshVertex input, uint instanceId : SV_InstanceID) {
 	output.bitangent = normalize(gTransforms[instanceId].TransformNormal(input.bitangent));
 
 	output.instanceId = instanceId;
+	output.clip       = output.position.z; //!< near分のclip
 	
 	return output;
 }

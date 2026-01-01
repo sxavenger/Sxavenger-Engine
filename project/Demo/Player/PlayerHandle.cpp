@@ -20,6 +20,42 @@ PlayerHandle::PlayerHandle() {
 
 void PlayerHandle::Update() {
 
+	UpdateMove();
+	UpdateInteract();
+
+}
+
+Vector2f PlayerHandle::GetKeyboardDirection() const {
+	return keyboard_->GetDirection(moveKeys_);
+}
+
+Vector2f PlayerHandle::GetGamepadDirection() const {
+	Vector2f inclination = gamepad0_->GetStickNormalized(moveStick_);
+
+	//!< deadzoneの決定
+	float length = std::abs(inclination.x) + std::abs(inclination.y) / 2.0f;
+
+	if (length < deadzone_) {
+		return {};
+	}
+
+	//!< deadzoneを考慮したスケール計算
+	float scale = (length - deadzone_) / (1.0f - deadzone_);
+
+	Vector2f direction = inclination.Normalize();
+	return direction * scale;
+}
+
+bool PlayerHandle::IsDashKeyboard() const {
+	return keyboard_->IsPress(dashKey_);
+}
+
+bool PlayerHandle::IsDashGamepad() const {
+	return gamepad0_->IsPress(dashButton_);
+}
+
+void PlayerHandle::UpdateMove() {
+
 	Vector2f keyboardDirection = GetKeyboardDirection();
 	Vector2f gamepadDirection  = GetGamepadDirection();
 
@@ -53,31 +89,7 @@ void PlayerHandle::Update() {
 
 }
 
-Vector2f PlayerHandle::GetKeyboardDirection() const {
-	return keyboard_->GetDirection(moveKeys_);
-}
-
-Vector2f PlayerHandle::GetGamepadDirection() const {
-	Vector2f inclination = gamepad0_->GetStickNormalized(moveStick_);
-
-	//!< deadzoneの決定
-	float length = std::abs(inclination.x) + std::abs(inclination.y) / 2.0f;
-
-	if (length < deadzone_) {
-		return {};
-	}
-
-	//!< deadzoneを考慮したスケール計算
-	float scale = (length - deadzone_) / (1.0f - deadzone_);
-
-	Vector2f direction = inclination.Normalize();
-	return direction * scale;
-}
-
-bool PlayerHandle::IsDashKeyboard() const {
-	return keyboard_->IsPress(dashKey_);
-}
-
-bool PlayerHandle::IsDashGamepad() const {
-	return gamepad0_->IsPress(dashButton_);
+void PlayerHandle::UpdateInteract() {
+	isInteract_
+		= keyboard_->IsTrigger(interactKey_) || gamepad0_->IsTrigger(interactButton_);
 }

@@ -73,14 +73,16 @@ private:
 		KeyId::KEY_A,
 		KeyId::KEY_D
 	};
-
 	KeyId dashKey_ = KeyId::KEY_LSHIFT;
+
+	KeyId interactKey_ = KeyId::KEY_F;
 
 	//* gamepad
 
-	GamepadStickId moveStick_ = GamepadStickId::STICK_LEFT;
-
+	GamepadStickId moveStick_   = GamepadStickId::STICK_LEFT;
 	GamepadButtonId dashButton_ = GamepadButtonId::BUTTON_X;
+
+	GamepadButtonId interactButton_ = GamepadButtonId::BUTTON_A;
 
 	//* parameter *//
 
@@ -93,6 +95,8 @@ private:
 	Vector3f moveVector_  = {};
 	MoveState moveState_  = MoveState::Idle;
 
+	bool isInteract_ = false;
+
 	//=========================================================================================
 	// private methods
 	//=========================================================================================
@@ -104,5 +108,9 @@ private:
 	bool IsDashKeyboard() const;
 
 	bool IsDashGamepad() const;
+
+	void UpdateMove();
+
+	void UpdateInteract();
 
 };

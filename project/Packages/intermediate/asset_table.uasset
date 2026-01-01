@@ -75,6 +75,10 @@
 		"assets/models/sponza/Sponza.gltf",
 		"class SxxEngine::AssetMesh"
 	],
+	"1665180e-958f-4e54-8603ec877dc2e5e4": [
+		"assets/models/PictureFrame/textures/wood_table_worn_diff_1k.png",
+		"class SxxEngine::AssetTexture"
+	],
 	"17cb89d4-5dd8-452c-b8eac2a5668b3d33": [
 		"assets/models/sponza/4871783166746854860.jpg",
 		"class SxxEngine::AssetTexture"
@@ -118,6 +122,10 @@
 	"22876a75-037e-4e50-9474ed04653ed856": [
 		"assets/models/sponza/Sponza.gltf",
 		"class SxxEngine::AssetMesh"
+	],
+	"22a39c77-fe0e-4cc1-886c77fa9075a4d0": [
+		"assets/models/PictureFrame/picture_frame.gltf",
+		"class SxxEngine::AssetMaterial"
 	],
 	"238f1faa-9a52-4e30-8244a4c5b60e283c": [
 		"assets/models/sponza/Sponza.gltf",
@@ -559,6 +567,10 @@
 		"Assets/models/human/idle.gltf",
 		"class SxxEngine::AssetMesh"
 	],
+	"7e4e03af-e80c-438d-bf0b0258691002b4": [
+		"assets/models/PictureFrame/picture_frame.gltf",
+		"class SxxEngine::AssetMaterial"
+	],
 	"7fac270f-5af5-49c2-9cc1179b8c98448a": [
 		"Packages/textures/icon/folder.png",
 		"class SxxEngine::AssetTexture"
@@ -782,6 +794,10 @@
 	"b680ba02-18c0-492d-9d069a072292287b": [
 		"assets/models/sponza/Sponza.gltf",
 		"class SxxEngine::AssetMesh"
+	],
+	"b7991210-23c4-420e-bdcfd2304352ba96": [
+		"assets/models/PictureFrame/picture_frame.gltf",
+		"class SxxEngine::AssetSkeleton"
 	],
 	"b82aa7af-d534-4562-91f6dc4c54cfcb20": [
 		"assets/models/sponza/Sponza.gltf",
@@ -1063,6 +1079,10 @@
 		"assets/models/sponza/Sponza.gltf",
 		"class SxxEngine::AssetMesh"
 	],
+	"ed9ede1a-882d-40ba-98bfc89ad626ee3a": [
+		"assets/models/PictureFrame/textures/wood_table_worn_nor_dx_1k.png",
+		"class SxxEngine::AssetTexture"
+	],
 	"edfbb0f9-ebca-4d96-a17a83b41c12ad78": [
 		"assets/models/sponza/3827035219084910048.jpg",
 		"class SxxEngine::AssetTexture"
@@ -1107,6 +1127,10 @@
 		"assets/models/sponza/Sponza.gltf",
 		"class SxxEngine::AssetMesh"
 	],
+	"f8a5f3f7-2690-45f0-86345a97f105cf30": [
+		"assets/models/PictureFrame/textures/wood_table_worn_arm_1k.png",
+		"class SxxEngine::AssetTexture"
+	],
 	"fb82010b-fd60-4eb2-a03ce1b6c5cca8bb": [
 		"assets/models/sponza/Sponza.gltf",
 		"class SxxEngine::AssetMesh"
@@ -1129,6 +1153,10 @@
 	],
 	"ff2ecea0-39a1-4f05-b7ac758c472a3ea7": [
 		"assets/models/sponza/Sponza.gltf",
+		"class SxxEngine::AssetMesh"
+	],
+	"ff84d5f9-ed59-43b8-a21a797a9b78d06f": [
+		"assets/models/PictureFrame/picture_frame.gltf",
 		"class SxxEngine::AssetMesh"
 	]
 }

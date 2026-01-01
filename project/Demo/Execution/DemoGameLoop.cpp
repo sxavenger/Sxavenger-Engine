@@ -52,6 +52,7 @@ void DemoGameLoop::InitSystem() {
 	(*atmosphere_)->AddComponent<TransformComponent>();
 	(*atmosphere_)->AddComponent<SkyAtmosphereComponent>();
 	(*atmosphere_)->AddComponent<SkyLightComponent>();
+	(*atmosphere_)->AddComponent<DirectionalLightComponent>();
 
 	//* ptr作成 / load *//
 
