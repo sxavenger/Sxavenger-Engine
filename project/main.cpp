@@ -25,8 +25,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	pipeline->Push<SxxEngine::EditorExecution>();
 #endif
 
-	//pipeline->Push<SxxEngine::ExampleGameLoop>();
-	pipeline->Push<DemoGameLoop>();
+	pipeline->Push<SxxEngine::ExampleGameLoop>();
+	//pipeline->Push<DemoGameLoop>();
 
 	pipeline->Run();
 

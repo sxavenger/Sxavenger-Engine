@@ -11,6 +11,7 @@
 #include <Engine/System/DirectX/Context/DirectXWindowContext.h>
 #include <Engine/Module/GameObject/GameObject.h>
 #include <Engine/Module/Actor/ControllableCameraActor.h>
+#include <Engine/Module/Actor/PerformanceActor.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Sxavenger Engine namespace
@@ -46,6 +47,11 @@ private:
 
 	std::unique_ptr<GameObject> atmosphere_;
 	std::unique_ptr<ControllableCameraActor> camera_;
+
+	std::unique_ptr<PerformanceActor> performance_;
+
+	std::unique_ptr<GameObject> demoText_;
+	std::unique_ptr<GameObject> instructionText_;
 
 	//=========================================================================================
 	// private methods

@@ -675,6 +675,10 @@
 		"assets/models/tree/MI_EuropeanBeech_Trunk_05_MetallicRoughness.png",
 		"class SxxEngine::AssetTexture"
 	],
+	"90a667c8-4a02-41b9-9a9b70e270bf8f14": [
+		"assets/font/MPLUSRounded1c-Regular.ttf",
+		"class SxxEngine::AssetFont"
+	],
 	"932ae8f2-8959-40c1-bc760494d9c73755": [
 		"assets/models/sponza/8481240838833932244.jpg",
 		"class SxxEngine::AssetTexture"
@@ -1122,6 +1126,10 @@
 	"ea8fa602-9453-41fe-be33fb1907e8e2a7": [
 		"assets/models/sponza/Sponza.gltf",
 		"class SxxEngine::AssetMesh"
+	],
+	"eaa48a53-9cf6-43b9-b0aad6e9c813a8a9": [
+		"packages/font/MPLUSRounded1c-Regular.ttf",
+		"class SxxEngine::AssetFont"
 	],
 	"ec6c2292-8a92-4c99-a49b665c4f70b712": [
 		"assets/models/sponza/Sponza.gltf",
